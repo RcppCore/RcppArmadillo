@@ -20,7 +20,7 @@ LazyLoad: \tab yes\cr
 }
 }
 \author{
-Maintainer: RcppArmadillo developpers <RcppArmadillo@r-enthusiasts.com>
+Maintainer: Romain Francois <RomainAndDirk@r-enthusiasts.com>
 }
 \references{
 Armadillo project: \url{http://arma.sourceforge.net/}
