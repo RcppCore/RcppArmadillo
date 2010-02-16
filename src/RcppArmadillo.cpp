@@ -23,3 +23,17 @@ SEXP RcppArmadilloExample(){
 	return output ;
 }
 
+SEXP RcppArmadilloExample_as( SEXP input_ ){
+	using namespace Rcpp ;
+	using namespace arma ;
+	
+	List input(input_) ;
+	imat m1 = input[0] ; /* implicit as */
+	mat  m2 = input[1] ; /* implicit as */
+	
+	List res(2) ;
+	res[0] = accu( m1 ) ;
+	res[1] = accu( m2 ) ;
+	
+	return res ;
+}
