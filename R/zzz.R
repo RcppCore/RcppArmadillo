@@ -1,5 +1,5 @@
 
-example <- function(){
-	str( .Call( "RcppArmadilloExample", PACKAGE = "RcppArmadillo" ) ) 
+RcppArmadilloExample <- function(){
+	.Call( "RcppArmadilloExample", PACKAGE = "RcppArmadillo" )
 }
 
