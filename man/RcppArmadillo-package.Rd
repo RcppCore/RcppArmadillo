@@ -15,12 +15,12 @@ Package: \tab RcppArmadillo\cr
 Type: \tab Package\cr
 Version: \tab 0.0.0\cr
 Date: \tab 2010-02-16\cr
-License: \tab LGPL-3\cr
+License: \tab GPL-2\cr
 LazyLoad: \tab yes\cr
 }
 }
 \author{
-Maintainer: Romain Francois <RomainAndDirk@r-enthusiasts.com>
+Maintainer: Dirk and Romain <RomainAndDirk@r-enthusiasts.com>
 }
 \references{
 Armadillo project: \url{http://arma.sourceforge.net/}

@@ -4,9 +4,9 @@ Title: Rcpp/Armadillo translation layer
 Version: 0.0.0
 Date: 2010-02-16
 Author: Romain Francois and Dirk Eddelbuettel
-Maintainer: Romain Francois <RomainAndDirk@r-enthusiasts.com>
+Maintainer: Dirk and Romain <RomainAndDirk@r-enthusiasts.com>
 Description: The package eases integration of armadillo types with Rcpp
-License: LGPL-3
+License: GPL-2
 LazyLoad: yes
 Depends: Rcpp (>= 0.7.7)
 SystemRequirements: armadillo
