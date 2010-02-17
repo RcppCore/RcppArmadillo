@@ -4,21 +4,63 @@ SEXP RcppArmadilloExample(){
 	using namespace Rcpp ;
 	using namespace arma ;
 	
-	List output(4); 
+	List output(3); 
+	List matrices(4) ;
+	List rows(2) ;
+	List cols(2) ;
 	
 	imat x1 = eye<imat>( 3,3 ) ;
 	x1.swap_rows(0,1)  ;
-	output[0] = x1 ;
+	matrices[0] = x1 ;
 	
 	mat x2 = eye<mat>( 3,3 ) ;
 	x2.swap_rows(0,1)  ;
-	output[1] = x2 ;
+	matrices[1] = x2 ;
 	
-	colvec y1 = zeros<colvec>(5,1);
-	output[2] = y1  ;
+	fmat x3 = eye<fmat>( 3, 3 );
+	x3.swap_rows(0,1)  ;
+	matrices[2] = x3 ;
 	
-	rowvec y2 = zeros<mat>(1,5);
-	output[3] = y2  ;
+	umat x4 = eye<umat>( 3, 3 );
+	x4.swap_rows(0,1)  ;
+	matrices[3] = x4 ;
+	
+	colvec r1 = zeros<mat>(5,1);
+	cols[0] = r1  ;
+	
+	fcolvec r2 = zeros<fmat>(5,1);
+	cols[1] = r2  ;
+	
+	rowvec c1 = zeros<mat>(1,5);
+	rows[0] = c1  ;
+	
+	frowvec c2 = zeros<fmat>(1,5);
+	rows[1] = c2  ;
+	
+	std::vector<std::string> names(4) ;
+	names[0] = "Mat<int>" ;
+	names[1] = "Mat<double>" ;
+	names[2] = "Mat<float>" ;
+	names[3] = "Mat<unsigned int>" ;
+	matrices.names() = names ;
+	
+	names.resize(2) ;
+	names[0] = "Row<double>" ;
+	names[1] = "Row<float>" ;
+	rows.names() = names ;
+	
+	names[0] = "Col<double>" ;
+	names[1] = "Col<float>" ;
+	cols.names() = names ;
+	
+	output[0] = matrices;
+	output[1] = rows ;
+	output[2] = cols ;
+	
+	names[0] = "matrices : Mat<T>" ; 
+	names[1] = "rows : Row<T>" ;
+	names.push_back( "columns : Col<T>" );
+	output.names() = names ;
 	
 	return output ;
 }
