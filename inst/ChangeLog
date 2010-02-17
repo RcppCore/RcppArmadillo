@@ -1,6 +1,7 @@
 2010-02-17  Romain Francois <romain@r-enthusiasts.com>
 
-	* added support for as<Mat<T>> with T %in% int, double, float, unsigned int
+	* added support for as<Mat<T>> as<Row<T>> and as<Col<T>> 
+	with T in : int, double, float, unsigned int
 	
 2010-02-16  Romain Francois <romain@r-enthusiasts.com>
 

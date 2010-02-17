@@ -23,7 +23,7 @@ SEXP RcppArmadilloExample(){
 	return output ;
 }
 
-SEXP RcppArmadilloExample_as( SEXP input_ ){
+SEXP RcppArmadilloExample_as_Mat( SEXP input_ ){
 	using namespace Rcpp ;
 	
 	List input(input_) ;
@@ -31,6 +31,42 @@ SEXP RcppArmadilloExample_as( SEXP input_ ){
 	arma::mat  m2 = input[1] ; /* implicit as */
 	arma::umat m3 = input[0] ; /* implicit as */
 	arma::fmat m4 = input[1] ; /* implicit as */
+	
+	List res(4) ;
+	res[0] = arma::accu( m1 ) ;
+	res[1] = arma::accu( m2 ) ;
+	res[2] = arma::accu( m3 ) ;
+	res[3] = arma::accu( m4 ) ;
+	
+	return res ;
+}
+
+SEXP RcppArmadilloExample_as_Col( SEXP input_ ){
+	using namespace Rcpp ;
+	
+	List input(input_) ;
+	arma::icolvec m1 = input[0] ; /* implicit as */
+	arma::colvec  m2 = input[1] ; /* implicit as */
+	arma::ucolvec m3 = input[0] ; /* implicit as */
+	arma::fcolvec m4 = input[1] ; /* implicit as */
+	
+	List res(4) ;
+	res[0] = arma::accu( m1 ) ;
+	res[1] = arma::accu( m2 ) ;
+	res[2] = arma::accu( m3 ) ;
+	res[3] = arma::accu( m4 ) ;
+	
+	return res ;
+}
+
+SEXP RcppArmadilloExample_as_Row( SEXP input_ ){
+	using namespace Rcpp ;
+	
+	List input(input_) ;
+	arma::irowvec m1 = input[0] ; /* implicit as */
+	arma::rowvec  m2 = input[1] ; /* implicit as */
+	arma::urowvec m3 = input[0] ; /* implicit as */
+	arma::frowvec m4 = input[1] ; /* implicit as */
 	
 	List res(4) ;
 	res[0] = arma::accu( m1 ) ;
