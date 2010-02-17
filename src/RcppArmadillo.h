@@ -34,31 +34,76 @@ RcppExport SEXP RcppArmadilloExample_as_Row( SEXP );
 #define RCPPARMA_COPY_CAST(in,out,n,TYPE) for( int i=0; i<n; i++) { out[i] = static_cast<TYPE>(in[i]) ; } 
 
 namespace Rcpp{
+namespace RcppArmadillo{
 
-/* wrap */
-
-template <typename T> SEXP wrap ( const arma::Mat<T>& mat ){
-	SimpleVector< traits::r_sexptype_traits<T>::rtype > vec( 
-		Dimension( mat.n_rows, mat.n_cols ) );
+/* needs cast : float, unsigned int */
+template <typename T> SEXP wrap_Mat__dispatch( const arma::Mat<T>& mat, ::Rcpp::traits::true_type ){
+	::Rcpp::SimpleVector< ::Rcpp::traits::r_sexptype_traits<T>::rtype > vec( 
+		::Rcpp::Dimension( mat.n_rows, mat.n_cols ) );
+	typedef typename ::Rcpp::traits::storage_type< ::Rcpp::traits::r_sexptype_traits<T>::rtype >::type STORAGE_TYPE ;  
 	int n = mat.n_elem ;
-	RCPPARMA_COPY(mat,vec,n)
-	return vec ; 
-} ;
-
-template <typename T> SEXP wrap( const arma::Col<T>& column ){
-	int n = column.n_rows ;
-	SimpleVector< traits::r_sexptype_traits<T>::rtype > vec( 
-		Dimension( n, 1 ) );
-	RCPPARMA_COPY(column,vec,n)
+	RCPPARMA_COPY_CAST(mat,vec,n,STORAGE_TYPE);
 	return vec ;
 }
 
-template <typename T> SEXP wrap( const arma::Row<T>& row ){
-	int n = row.n_cols ;
-	SimpleVector< traits::r_sexptype_traits<T>::rtype > vec( 
-		Dimension( 1, n ) );
-	RCPPARMA_COPY(row,vec,n)
+/* no cast : double, int */
+template <typename T> SEXP wrap_Mat__dispatch( const arma::Mat<T>& mat, ::Rcpp::traits::false_type ){
+	::Rcpp::SimpleVector< ::Rcpp::traits::r_sexptype_traits<T>::rtype > vec( 
+		::Rcpp::Dimension( mat.n_rows, mat.n_cols ) );
+	int n = mat.n_elem ;
+	RCPPARMA_COPY(mat,vec,n) ;
 	return vec ;
+}
+
+
+template <typename T> SEXP wrap_Col__dispatch( const arma::Col<T>& column, ::Rcpp::traits::true_type ){
+	int n = column.n_rows ;
+	::Rcpp::SimpleVector< ::Rcpp::traits::r_sexptype_traits<T>::rtype > vec( 
+		::Rcpp::Dimension( n, 1 ) );
+	typedef typename ::Rcpp::traits::storage_type< ::Rcpp::traits::r_sexptype_traits<T>::rtype >::type STORAGE_TYPE ;  
+	RCPPARMA_COPY_CAST(column,vec,n,STORAGE_TYPE) ;
+	return vec ;
+}
+
+template <typename T> SEXP wrap_Col__dispatch( const arma::Col<T>& column, ::Rcpp::traits::false_type ){
+	int n = column.n_rows ;
+	::Rcpp::SimpleVector< ::Rcpp::traits::r_sexptype_traits<T>::rtype > vec( 
+		::Rcpp::Dimension( n, 1 ) );
+	RCPPARMA_COPY(column,vec,n) ;
+	return vec ;
+}
+
+template <typename T> SEXP wrap_Row__dispatch( const arma::Row<T>& row, ::Rcpp::traits::true_type){
+	int n = row.n_cols ;
+	::Rcpp::SimpleVector< ::Rcpp::traits::r_sexptype_traits<T>::rtype > vec( 
+		::Rcpp::Dimension( 1, n ) );
+	typedef typename ::Rcpp::traits::storage_type< ::Rcpp::traits::r_sexptype_traits<T>::rtype >::type STORAGE_TYPE ;  
+	RCPPARMA_COPY_CAST(row,vec,n,STORAGE_TYPE) ;
+	return vec ;
+}
+
+template <typename T> SEXP wrap_Row__dispatch( const arma::Row<T>& row, ::Rcpp::traits::false_type){
+	int n = row.n_cols ;
+	::Rcpp::SimpleVector< ::Rcpp::traits::r_sexptype_traits<T>::rtype > vec( 
+		::Rcpp::Dimension( 1, n ) );
+	RCPPARMA_COPY(row,vec,n) ;
+	return vec ;
+}
+
+} /* namespace RcppArmadillo */
+	
+/* wrap */
+
+template <typename T> SEXP wrap ( const arma::Mat<T>& mat ){
+	return RcppArmadillo::wrap_Mat__dispatch( mat, typename ::Rcpp::traits::r_sexptype_needscast<T>() ) ;
+} ;
+
+template <typename T> SEXP wrap( const arma::Col<T>& column ){
+	return RcppArmadillo::wrap_Col__dispatch( column, typename ::Rcpp::traits::r_sexptype_needscast<T>() ) ;
+}
+
+template <typename T> SEXP wrap( const arma::Row<T>& row ){
+	return RcppArmadillo::wrap_Row__dispatch( row, typename ::Rcpp::traits::r_sexptype_needscast<T>() ) ;
 }
 
 #ifdef HAS_CUBE
@@ -66,7 +111,7 @@ template <typename T> SEXP wrap( const arma::Cube<T>& cube ){
 	int n = cube.n_elem;
 	SimpleVector< traits::r_sexptype_traits<T>::rtype > vec( 
 		Dimension( cube.n_rows, cube.n_cols, cube.n_slices ) );
-	RCPPARMA_COPY(cube,vec,n)
+	RCPPARMA_COPY(cube,vec,n);
 	return vec ;
 }
 #endif
