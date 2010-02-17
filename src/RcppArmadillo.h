@@ -125,10 +125,7 @@ namespace RcppArmadillo{
 
 /* when a cast is needed */
 template <typename T> ::arma::Mat<T> convert_Mat__dispatch( SEXP x, T, ::Rcpp::traits::true_type ){
-	if( !Rf_isMatrix(x) ){
-		throw std::range_error( "not a matrix" ) ;
-	}
-	::Rcpp::SimpleVector< ::Rcpp::traits::r_sexptype_traits<T>::rtype > input(x);
+	::Rcpp::SimpleMatrix< ::Rcpp::traits::r_sexptype_traits<T>::rtype > input(x);
 	::Rcpp::IntegerVector dim = input.attr("dim") ;
 	::arma::Mat<T> out( dim[0], dim[1] ) ;
 	int n = dim[0] * dim[1] ;
@@ -138,10 +135,7 @@ template <typename T> ::arma::Mat<T> convert_Mat__dispatch( SEXP x, T, ::Rcpp::t
 
 /* when no cast is needed */
 template <typename T> ::arma::Mat<T> convert_Mat__dispatch( SEXP x, T, ::Rcpp::traits::false_type ){
-	if( !Rf_isMatrix(x) ){
-		throw std::range_error( "not a matrix" ) ;
-	}
-	::Rcpp::SimpleVector< ::Rcpp::traits::r_sexptype_traits<T>::rtype > input(x);
+	::Rcpp::SimpleMatrix< ::Rcpp::traits::r_sexptype_traits<T>::rtype > input(x);
 	::Rcpp::IntegerVector dim = input.attr("dim") ;
 	::arma::Mat<T> out( dim[0], dim[1] ) ;
 	int n = dim[0] * dim[1] ;
@@ -196,8 +190,7 @@ template <typename T> ::arma::Mat<T> convert_Row( SEXP x, T t){
 	return convert_Row__dispatch( x, t, typename ::Rcpp::traits::r_sexptype_needscast<T>() ) ;
 }
 
-
-}
+} /* namespace RcppArmadillo */
 
 /* as */
 
