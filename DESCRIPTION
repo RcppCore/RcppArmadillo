@@ -8,6 +8,6 @@ Maintainer: Dirk and Romain <RomainAndDirk@r-enthusiasts.com>
 Description: The package eases integration of armadillo types with Rcpp
 License: GPL-2
 LazyLoad: yes
-Depends: Rcpp (>= 0.7.7.2)
+Depends: Rcpp (>= 0.7.7.3)
 SystemRequirements: armadillo
 Packaged: 2010-02-16 14:17:09 UTC; romain
