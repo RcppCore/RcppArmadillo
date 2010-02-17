@@ -25,15 +25,18 @@ SEXP RcppArmadilloExample(){
 
 SEXP RcppArmadilloExample_as( SEXP input_ ){
 	using namespace Rcpp ;
-	using namespace arma ;
 	
 	List input(input_) ;
-	imat m1 = input[0] ; /* implicit as */
-	mat  m2 = input[1] ; /* implicit as */
+	arma::imat m1 = input[0] ; /* implicit as */
+	arma::mat  m2 = input[1] ; /* implicit as */
+	arma::umat m3 = input[0] ; /* implicit as */
+	arma::fmat m4 = input[1] ; /* implicit as */
 	
-	List res(2) ;
-	res[0] = accu( m1 ) ;
-	res[1] = accu( m2 ) ;
+	List res(4) ;
+	res[0] = arma::accu( m1 ) ;
+	res[1] = arma::accu( m2 ) ;
+	res[2] = arma::accu( m3 ) ;
+	res[3] = arma::accu( m4 ) ;
 	
 	return res ;
 }
