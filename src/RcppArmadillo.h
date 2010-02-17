@@ -14,7 +14,9 @@ namespace Rcpp{
 	template <typename T> SEXP wrap ( const arma::Mat<T>& ) ;
 	template <typename T> SEXP wrap ( const arma::Row<T>& ) ;
 	template <typename T> SEXP wrap ( const arma::Col<T>& ) ;
-	       
+#ifdef HAS_CUBE
+	template <typename T> SEXP wrap ( const arma::Cube<T>& ) ;
+#endif
 	RCPPARMA_FORWARD(int)
 	RCPPARMA_FORWARD(double)
 	RCPPARMA_FORWARD(float)
@@ -39,9 +41,7 @@ template <typename T> SEXP wrap ( const arma::Mat<T>& mat ){
 	SimpleVector< traits::r_sexptype_traits<T>::rtype > vec( 
 		Dimension( mat.n_rows, mat.n_cols ) );
 	int n = mat.n_elem ;
-	for( int i=0; i<n; i++){
-		vec[i] = mat[i] ;
-	}
+	RCPPARMA_COPY(mat,vec,n)
 	return vec ; 
 } ;
 
@@ -49,9 +49,7 @@ template <typename T> SEXP wrap( const arma::Col<T>& column ){
 	int n = column.n_rows ;
 	SimpleVector< traits::r_sexptype_traits<T>::rtype > vec( 
 		Dimension( n, 1 ) );
-	for( int i=0; i<n; i++){
-		vec[i] = column[i] ;
-	}
+	RCPPARMA_COPY(column,vec,n)
 	return vec ;
 }
 
@@ -59,11 +57,19 @@ template <typename T> SEXP wrap( const arma::Row<T>& row ){
 	int n = row.n_cols ;
 	SimpleVector< traits::r_sexptype_traits<T>::rtype > vec( 
 		Dimension( 1, n ) );
-	for( int i=0; i<n; i++){
-		vec[i] = row[i] ;
-	}
+	RCPPARMA_COPY(row,vec,n)
 	return vec ;
 }
+
+#ifdef HAS_CUBE
+template <typename T> SEXP wrap( const arma::Cube<T>& cube ){
+	int n = cube.n_elem;
+	SimpleVector< traits::r_sexptype_traits<T>::rtype > vec( 
+		Dimension( cube.n_rows, cube.n_cols, cube.n_slices ) );
+	RCPPARMA_COPY(cube,vec,n)
+	return vec ;
+}
+#endif
 
 } // namespace Rcpp
 
