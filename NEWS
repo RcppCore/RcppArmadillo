@@ -1,0 +1,10 @@
+0.1-0	(under development)
+
+    o	support for Rcpp implicit wrap of these types :
+    	Mat<T>, Col<T>, Row<T>, Cube<T> where T is one of : 
+    	int, unsigned int, double, float
+    	
+    o	support for Rcpp implicit as of these types :
+    	Mat<T>, Col<T>, Row<T> where R is one of :
+    	int, unsigned int, double, float
+
