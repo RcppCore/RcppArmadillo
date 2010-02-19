@@ -2,7 +2,7 @@ Package: RcppArmadillo
 Type: Package
 Title: Rcpp/Armadillo translation layer
 Version: 0.0.1
-Date: 2010-02-16
+Date: $Date$
 Author: Romain Francois and Dirk Eddelbuettel
 Maintainer: Dirk and Romain <RomainAndDirk@r-enthusiasts.com>
 Description: The package eases integration of armadillo types with Rcpp
@@ -10,4 +10,5 @@ License: GPL-2
 LazyLoad: yes
 Depends: Rcpp (>= 0.7.7.7)
 SystemRequirements: armadillo
+OS_type: unix
 Packaged: 2010-02-16 14:17:09 UTC; romain
