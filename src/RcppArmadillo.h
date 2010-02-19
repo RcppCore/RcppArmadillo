@@ -27,6 +27,8 @@
 
 /* forward declarations */
 namespace Rcpp{
+	
+	/* support for wrap */
 	template <typename T> SEXP wrap ( const arma::Mat<T>& ) ;
 	template <typename T> SEXP wrap ( const arma::Row<T>& ) ;
 	template <typename T> SEXP wrap ( const arma::Col<T>& ) ;
@@ -35,11 +37,8 @@ namespace Rcpp{
 	template <typename T> SEXP wrap ( const arma::Cube<T>& ) ;
 #endif
 
-	// template <typename T> arma::Mat<TYPE> as< arma::Mat<TYPE> >( SEXP ) ;
-	// template <typename T> arma::Col<TYPE> as< arma::Col<TYPE> >( SEXP ) ;
-	// template <typename T> arma::Row<TYPE> as< arma::Row<TYPE> >( SEXP ) ;
-
 namespace traits{
+	/* support for as */
 	template <typename T> class Exporter< arma::Mat<T> > ;
 	template <typename T> class Exporter< arma::Row<T> > ;
 	template <typename T> class Exporter< arma::Col<T> > ;
@@ -47,7 +46,7 @@ namespace traits{
 // #ifdef HAS_CUBE
 // 	template <typename T> class Exporter< arma::Cube<T> > ;
 // #endif
-} // namemspace traits 
+} // namespace traits 
 
 }
 
@@ -102,7 +101,7 @@ public:
 	FieldImporter( const arma::field<T>& data_ ) : data(data_){}
 	inline int size() const { return data.n_elem ; }
 	inline T get(int i) const { return data[i] ; }
-	SEXP wrap( int i) const { return ::Rcpp::wrap( data[i] ) ; } 
+	inline SEXP wrap( int i) const { return ::Rcpp::wrap( data[i] ) ; } 
 private:
 	const arma::field<T>& data ;
 } ;
@@ -116,12 +115,13 @@ template <typename T> SEXP wrap( const arma::field<T>& data){
 }
 
 
+/* support for Rcpp::as */
 
 namespace traits{
 	
 template <typename T> 
 class Exporter< arma::Col<T> > : public IndexingExporter< arma::Col<T>, T > {
-public:
+public: 
 	Exporter(SEXP x) : IndexingExporter< arma::Col<T>, T >(x){}
 }; 
 
