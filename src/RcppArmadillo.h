@@ -25,11 +25,6 @@
 #include <RcppCommon.h>
 #include <armadillo>
 
-#define RCPPARMA_FORWARD(TYPE) \
-	template <> arma::Mat<TYPE> as< arma::Mat<TYPE> >( SEXP ) ; \
-	template <> arma::Col<TYPE> as< arma::Col<TYPE> >( SEXP ) ; \
-	template <> arma::Row<TYPE> as< arma::Row<TYPE> >( SEXP ) ; 
-
 /* forward declarations */
 namespace Rcpp{
 	template <typename T> SEXP wrap ( const arma::Mat<T>& ) ;
@@ -40,10 +35,20 @@ namespace Rcpp{
 	template <typename T> SEXP wrap ( const arma::Cube<T>& ) ;
 #endif
 
-	RCPPARMA_FORWARD(int)
-	RCPPARMA_FORWARD(double)
-	RCPPARMA_FORWARD(float)
-	RCPPARMA_FORWARD(arma::s32)
+	// template <typename T> arma::Mat<TYPE> as< arma::Mat<TYPE> >( SEXP ) ;
+	// template <typename T> arma::Col<TYPE> as< arma::Col<TYPE> >( SEXP ) ;
+	// template <typename T> arma::Row<TYPE> as< arma::Row<TYPE> >( SEXP ) ;
+
+namespace traits{
+	template <typename T> class Exporter< arma::Mat<T> > ;
+	template <typename T> class Exporter< arma::Row<T> > ;
+	template <typename T> class Exporter< arma::Col<T> > ;
+// template <typename T> class Exporter< arma::field<T> > ;
+// #ifdef HAS_CUBE
+// 	template <typename T> class Exporter< arma::Cube<T> > ;
+// #endif
+} // namemspace traits 
+
 }
 
 #include <Rcpp.h>
@@ -112,94 +117,27 @@ template <typename T> SEXP wrap( const arma::field<T>& data){
 
 
 
+namespace traits{
+	
+template <typename T> 
+class Exporter< arma::Col<T> > : public IndexingExporter< arma::Col<T>, T > {
+public:
+	Exporter(SEXP x) : IndexingExporter< arma::Col<T>, T >(x){}
+}; 
 
-namespace RcppArmadillo{
+template <typename T> 
+class Exporter< arma::Row<T> > : public IndexingExporter< arma::Row<T>, T > {
+public:
+	Exporter(SEXP x) : IndexingExporter< arma::Row<T>, T >(x){}
+}; 
 
-/* when a cast is needed */
-template <typename T> ::arma::Mat<T> convert_Mat__dispatch( SEXP x, T, ::Rcpp::traits::true_type ){
-	::Rcpp::SimpleMatrix< ::Rcpp::traits::r_sexptype_traits<T>::rtype > input(x);
-	::Rcpp::IntegerVector dim = input.attr("dim") ;
-	::arma::Mat<T> out( dim[0], dim[1] ) ;
-	int n = dim[0] * dim[1] ;
-	RCPPARMA_COPY_CAST(input, out, n, T) ;
-	return out;
-}
-
-/* when no cast is needed */
-template <typename T> ::arma::Mat<T> convert_Mat__dispatch( SEXP x, T, ::Rcpp::traits::false_type ){
-	::Rcpp::SimpleMatrix< ::Rcpp::traits::r_sexptype_traits<T>::rtype > input(x);
-	::Rcpp::IntegerVector dim = input.attr("dim") ;
-	::arma::Mat<T> out( dim[0], dim[1] ) ;
-	int n = dim[0] * dim[1] ;
-	RCPPARMA_COPY(input, out, n) ;
-	return out;
-}
-
-/* when a cast is needed */
-template <typename T> ::arma::Col<T> convert_Col__dispatch( SEXP x, T, ::Rcpp::traits::true_type ){
-	::Rcpp::SimpleVector< ::Rcpp::traits::r_sexptype_traits<T>::rtype > input(x);
-	int n = input.size() ;
-	::arma::Col<T> out( n ) ;
-	RCPPARMA_COPY_CAST(input, out, n, T) ;
-	return out;
-}
-
-/* when no cast is needed */
-template <typename T> ::arma::Col<T> convert_Col__dispatch( SEXP x, T, ::Rcpp::traits::false_type ){
-	::Rcpp::SimpleVector< ::Rcpp::traits::r_sexptype_traits<T>::rtype > input(x);
-	int n = input.size() ;
-	::arma::Col<T> out( n ) ;
-	RCPPARMA_COPY(input, out, n) ;
-	return out;
-}
-
-/* when a cast is needed */
-template <typename T> ::arma::Row<T> convert_Row__dispatch( SEXP x, T, ::Rcpp::traits::true_type ){
-	::Rcpp::SimpleVector< ::Rcpp::traits::r_sexptype_traits<T>::rtype > input(x);
-	int n = input.size() ;
-	::arma::Row<T> out( n ) ;
-	RCPPARMA_COPY_CAST(input, out, n, T) ;
-	return out;
-}
-
-/* when no cast is needed */
-template <typename T> ::arma::Row<T> convert_Row__dispatch( SEXP x, T, ::Rcpp::traits::false_type ){
-	::Rcpp::SimpleVector< ::Rcpp::traits::r_sexptype_traits<T>::rtype > input(x);
-	int n = input.size() ;
-	::arma::Row<T> out( n ) ;
-	RCPPARMA_COPY(input, out, n) ;
-	return out;
-}
-
-/* dispatch depending on whether the type of data in the R vector is the same as T */
-template <typename T> ::arma::Mat<T> convert_Mat( SEXP x, T t){
-	return convert_Mat__dispatch( x, t, typename ::Rcpp::traits::r_sexptype_needscast<T>() ) ;
-}
-template <typename T> ::arma::Col<T> convert_Col( SEXP x, T t){
-	return convert_Col__dispatch( x, t, typename ::Rcpp::traits::r_sexptype_needscast<T>() ) ;
-}
-template <typename T> ::arma::Mat<T> convert_Row( SEXP x, T t){
-	return convert_Row__dispatch( x, t, typename ::Rcpp::traits::r_sexptype_needscast<T>() ) ;
-}
-
-} /* namespace RcppArmadillo */
-
-/* as */
-
-#define GENERATE_CONVERTERS(TYPE)  \
-	template<> arma::Mat<TYPE> as< arma::Mat<TYPE> >(SEXP x){ return RcppArmadillo::convert_Mat<TYPE>(x, TYPE()) ; } ; \
-	template<> arma::Col<TYPE> as< arma::Col<TYPE> >(SEXP x){ return RcppArmadillo::convert_Col<TYPE>(x, TYPE()) ; } ; \
-	template<> arma::Row<TYPE> as< arma::Row<TYPE> >(SEXP x){ return RcppArmadillo::convert_Row<TYPE>(x, TYPE()) ; } ;
-
-GENERATE_CONVERTERS(int)
-GENERATE_CONVERTERS(arma::u32)
-GENERATE_CONVERTERS(double)
-GENERATE_CONVERTERS(float)
-
-#undef GENERATE_CONVERTER
-#undef RCPPARMA_COPY
-#undef RCPPARMA_COPY_CAST
-#undef RCPPARMA_FORWARD
+template <typename T> 
+class Exporter< arma::Mat<T> > : public MatrixExporter< arma::Mat<T>, T > {
+public:
+	Exporter(SEXP x) : MatrixExporter< arma::Mat<T>, T >(x){}
+}; 
+	
+} // namespace traits
 
 }
 
