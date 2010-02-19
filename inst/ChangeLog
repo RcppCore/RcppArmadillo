@@ -1,3 +1,7 @@
+2010-02-19  Romain Francois <romain@r-enthusiasts.com>
+
+	* added support for field<T> where T is wrappable
+
 2010-02-17  Romain Francois <romain@r-enthusiasts.com>
 
 	* added support for as<Mat<T>> as<Row<T>> and as<Col<T>> 

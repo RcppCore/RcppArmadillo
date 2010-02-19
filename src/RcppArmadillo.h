@@ -35,6 +35,7 @@ namespace Rcpp{
 	template <typename T> SEXP wrap ( const arma::Mat<T>& ) ;
 	template <typename T> SEXP wrap ( const arma::Row<T>& ) ;
 	template <typename T> SEXP wrap ( const arma::Col<T>& ) ;
+	template <typename T> SEXP wrap ( const arma::field<T>& ) ;
 #ifdef HAS_CUBE
 	template <typename T> SEXP wrap ( const arma::Cube<T>& ) ;
 #endif
@@ -87,11 +88,31 @@ template <typename T> SEXP wrap( const arma::Cube<T>& cube ){
 }
 #endif
 
-} // namespace Rcpp
-
-
-namespace Rcpp{
+namespace RcppArmadillo {
 	
+/* Importer class for field<T> */
+template <typename T> class FieldImporter {
+public:
+	typedef T r_import_type ;
+	FieldImporter( const arma::field<T>& data_ ) : data(data_){}
+	inline int size() const { return data.n_elem ; }
+	inline T get(int i) const { return data[i] ; }
+	SEXP wrap( int i) const { return ::Rcpp::wrap( data[i] ) ; } 
+private:
+	const arma::field<T>& data ;
+} ;
+
+} // namespace RcppArmadillo
+
+template <typename T> SEXP wrap( const arma::field<T>& data){
+	RObject x = wrap( RcppArmadillo::FieldImporter<T>( data ) ) ;
+	x.attr("dim" ) = Dimension( data.n_rows, data.n_cols ) ;
+	return x ;
+}
+
+
+
+
 namespace RcppArmadillo{
 
 /* when a cast is needed */

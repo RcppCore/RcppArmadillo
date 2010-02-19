@@ -25,7 +25,7 @@ SEXP RcppArmadilloExample(){
 	using namespace Rcpp ;
 	using namespace arma ;
 	
-	List output(3); 
+	List output(4); 
 	List matrices(4) ;
 	List rows(2) ;
 	List cols(2) ;
@@ -74,13 +74,36 @@ SEXP RcppArmadilloExample(){
 	names[1] = "Col<float>" ;
 	cols.names() = names ;
 	
+	
+	List fields ;
+	field<int> f1( 2, 2 ) ;
+	f1( 0, 0 ) = 0 ; 
+	f1( 1, 0 ) = 1 ; 
+	f1( 0, 1 ) = 2 ; 
+	f1( 1, 1 ) = 3 ; 
+	fields["field<int>"] = f1 ;
+	field<std::string> f2(2,2) ;
+	f2( 0, 0 ) = "a" ; 
+	f2( 1, 0 ) = "b" ; 
+	f2( 0, 1 ) = "c" ; 
+	f2( 1, 1 ) = "d" ; 
+	fields["field<std::string>"] = f2 ;
+	field<colvec> f3(2,2) ;
+	f3(0,0) = zeros<mat>(5,1) ;
+	f3(1,0) = zeros<mat>(4,1) ;
+	f3(0,1) = zeros<mat>(3,1) ;
+	f3(1,1) = zeros<mat>(2,1) ;
+	fields["field<colvec>"] = f3 ;
+	
 	output[0] = matrices;
 	output[1] = rows ;
 	output[2] = cols ;
+	output[3] = fields ;
 	
 	names[0] = "matrices : Mat<T>" ; 
 	names[1] = "rows : Row<T>" ;
 	names.push_back( "columns : Col<T>" );
+	names.push_back( "fields  : field<T>" );
 	output.names() = names ;
 	
 	return output ;
