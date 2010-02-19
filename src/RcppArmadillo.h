@@ -57,9 +57,6 @@ RcppExport SEXP RcppArmadilloExample_as_Mat( SEXP );
 RcppExport SEXP RcppArmadilloExample_as_Col( SEXP );
 RcppExport SEXP RcppArmadilloExample_as_Row( SEXP );
 
-#define RCPPARMA_COPY(in,out,n) for( int i=0; i<n; i++) { out[i] = in[i] ; } 
-#define RCPPARMA_COPY_CAST(in,out,n,TYPE) for( int i=0; i<n; i++) { out[i] = static_cast<TYPE>(in[i]) ; } 
-
 namespace Rcpp{
 namespace RcppArmadillo{
 
