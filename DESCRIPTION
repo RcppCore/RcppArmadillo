@@ -1,7 +1,7 @@
 Package: RcppArmadillo
 Type: Package
 Title: Rcpp/Armadillo translation layer
-Version: 0.0.1
+Version: 0.0.2
 Date: $Date$
 Author: Romain Francois and Dirk Eddelbuettel
 Maintainer: Dirk and Romain <RomainAndDirk@r-enthusiasts.com>

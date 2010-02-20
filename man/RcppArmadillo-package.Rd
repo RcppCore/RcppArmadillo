@@ -1,6 +1,7 @@
 \name{RcppArmadillo-package}
 \alias{RcppArmadillo-package}
 \alias{RcppArmadillo}
+\alias{RcppArmadilloExample}
 \docType{package}
 \title{
 Rcpp and Armadillon translation layer

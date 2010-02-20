@@ -24,29 +24,32 @@
 
 #include <RcppCommon.h>
 #include <armadillo>
+#include <RcppArmadilloDefines.h>
 
 /* forward declarations */
-namespace Rcpp{
+namespace Rcpp {
 	
-	/* support for wrap */
-	template <typename T> SEXP wrap ( const arma::Mat<T>& ) ;
-	template <typename T> SEXP wrap ( const arma::Row<T>& ) ;
-	template <typename T> SEXP wrap ( const arma::Col<T>& ) ;
-	template <typename T> SEXP wrap ( const arma::field<T>& ) ;
-#ifdef HAS_CUBE
-	template <typename T> SEXP wrap ( const arma::Cube<T>& ) ;
-#endif
+    /* support for wrap */
+    template <typename T> SEXP wrap ( const arma::Mat<T>& ) ;
+    template <typename T> SEXP wrap ( const arma::Row<T>& ) ;
+    template <typename T> SEXP wrap ( const arma::Col<T>& ) ;
+    template <typename T> SEXP wrap ( const arma::field<T>& ) ;
+    #if ARMA_HAS_CUBE
+    template <typename T> SEXP wrap ( const arma::Cube<T>& ) ;
+    #endif
 
-namespace traits{
+    namespace traits {
+
 	/* support for as */
 	template <typename T> class Exporter< arma::Mat<T> > ;
 	template <typename T> class Exporter< arma::Row<T> > ;
 	template <typename T> class Exporter< arma::Col<T> > ;
 // template <typename T> class Exporter< arma::field<T> > ;
-// #ifdef HAS_CUBE
+// #ifdef ARMA_HAS_CUBE
 // 	template <typename T> class Exporter< arma::Cube<T> > ;
 // #endif
-} // namespace traits 
+
+    } // namespace traits 
 
 }
 
@@ -58,54 +61,55 @@ RcppExport SEXP RcppArmadilloExample_as_Col( SEXP );
 RcppExport SEXP RcppArmadilloExample_as_Row( SEXP );
 
 namespace Rcpp{
-namespace RcppArmadillo{
 
-template <typename T>
-SEXP arma_wrap( const T& object, const ::Rcpp::Dimension& dim){
-	::Rcpp::RObject x = ::Rcpp::wrap( object.memptr() , object.memptr() + object.n_elem ) ;
-	x.attr( "dim" ) = dim ;
-	return x; 
-}
+    namespace RcppArmadillo{
 
-} /* namespace RcppArmadillo */
+	template <typename T>
+	SEXP arma_wrap( const T& object, const ::Rcpp::Dimension& dim){
+	    ::Rcpp::RObject x = ::Rcpp::wrap( object.memptr() , object.memptr() + object.n_elem ) ;
+	    x.attr( "dim" ) = dim ;
+	    return x; 
+	}
+
+    } /* namespace RcppArmadillo */
 	
-/* wrap */
+    /* wrap */
 
-template <typename T> SEXP wrap ( const arma::Mat<T>& data ){
+    template <typename T> SEXP wrap ( const arma::Mat<T>& data ){
 	return RcppArmadillo::arma_wrap( data, Dimension( data.n_rows, data.n_cols ) ) ;
-} ;
+    } ;
 
-template <typename T> SEXP wrap( const arma::Col<T>& data ){
+    template <typename T> SEXP wrap( const arma::Col<T>& data ){
 	return RcppArmadillo::arma_wrap( data, Dimension( data.n_elem, 1) ) ;
-} ;
+    } ;
 
-template <typename T> SEXP wrap( const arma::Row<T>& data ){
+    template <typename T> SEXP wrap( const arma::Row<T>& data ){
 	return RcppArmadillo::arma_wrap(data, Dimension( 1, data.n_elem ) ) ;
-} ;
+    } ;
 
-#ifdef HAS_CUBE
-template <typename T> SEXP wrap( const arma::Cube<T>& cube ){
+    #if ARMA_HAS_CUBE
+    template <typename T> SEXP wrap( const arma::Cube<T>& data ){
 	return RcppArmadillo::arma_wrap(data, Dimension(  data.n_rows, data.n_cols, data.n_slices ) ) ;
-}
-#endif
+    }
+    #endif
 
-namespace RcppArmadillo {
+    namespace RcppArmadillo {
 	
-/* Importer class for field<T> */
-template <typename T> class FieldImporter {
-public:
-	typedef T r_import_type ;
-	FieldImporter( const arma::field<T>& data_ ) : data(data_){}
-	inline int size() const { return data.n_elem ; }
-	inline T get(int i) const { return data[i] ; }
-	inline SEXP wrap( int i) const { return ::Rcpp::wrap( data[i] ) ; } 
-private:
-	const arma::field<T>& data ;
-} ;
+	/* Importer class for field<T> */
+	template <typename T> class FieldImporter {
+	public:
+	    typedef T r_import_type ;
+	    FieldImporter( const arma::field<T>& data_ ) : data(data_){}
+	    inline int size() const { return data.n_elem ; }
+	    inline T get(int i) const { return data[i] ; }
+	    inline SEXP wrap( int i) const { return ::Rcpp::wrap( data[i] ) ; } 
+	private:
+	    const arma::field<T>& data ;
+	} ;
 
-} // namespace RcppArmadillo
+    } // namespace RcppArmadillo
 
-template <typename T> SEXP wrap( const arma::field<T>& data){
+    template <typename T> SEXP wrap( const arma::field<T>& data){
 	RObject x = wrap( RcppArmadillo::FieldImporter<T>( data ) ) ;
 	x.attr("dim" ) = Dimension( data.n_rows, data.n_cols ) ;
 	return x ;
@@ -114,27 +118,27 @@ template <typename T> SEXP wrap( const arma::field<T>& data){
 
 /* support for Rcpp::as */
 
-namespace traits{
+    namespace traits {
 	
-template <typename T> 
-class Exporter< arma::Col<T> > : public IndexingExporter< arma::Col<T>, T > {
-public: 
-	Exporter(SEXP x) : IndexingExporter< arma::Col<T>, T >(x){}
-}; 
+	template <typename T> 
+	class Exporter< arma::Col<T> > : public IndexingExporter< arma::Col<T>, T > {
+	public: 
+	    Exporter(SEXP x) : IndexingExporter< arma::Col<T>, T >(x){}
+	}; 
 
-template <typename T> 
-class Exporter< arma::Row<T> > : public IndexingExporter< arma::Row<T>, T > {
-public:
-	Exporter(SEXP x) : IndexingExporter< arma::Row<T>, T >(x){}
-}; 
+	template <typename T> 
+	class Exporter< arma::Row<T> > : public IndexingExporter< arma::Row<T>, T > {
+	public:
+	    Exporter(SEXP x) : IndexingExporter< arma::Row<T>, T >(x){}
+	}; 
 
-template <typename T> 
-class Exporter< arma::Mat<T> > : public MatrixExporter< arma::Mat<T>, T > {
-public:
-	Exporter(SEXP x) : MatrixExporter< arma::Mat<T>, T >(x){}
-}; 
+	template <typename T> 
+	class Exporter< arma::Mat<T> > : public MatrixExporter< arma::Mat<T>, T > {
+	public:
+	    Exporter(SEXP x) : MatrixExporter< arma::Mat<T>, T >(x){}
+	}; 
 	
-} // namespace traits
+    } // namespace traits
 
 }
 
