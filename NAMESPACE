@@ -1,3 +1,7 @@
 useDynLib(RcppArmadillo)
 
-export(RcppArmadilloExample)
+export(RcppArmadilloExample
+## ?       RcppArmadilloExample_as_Mat,
+## ?       RcppArmadilloExample_as_Col,
+## ?       RcppArmadilloExample_as_Row
+       )
