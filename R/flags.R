@@ -26,8 +26,17 @@
     res <- sprintf('%s -I%s', rcpp, arma)
 }
 
+.__LdFlags <- function(Rcpp = TRUE, ...){
+    rcpp <- ifelse( Rcpp, Rcpp:::LdFlags(...) , "" )
+    arma <- c("-larmadillo" )
+    paste( rcpp, arma, sep = " " )
+}
+
 CxxFlags <- function(Rcpp = TRUE, ...){
     cat( .__CxxFlags(Rcpp = Rcpp, ...), sep = " " )
 }
 
+LdFlags <- function(Rcpp = TRUE, ...){
+    cat( .__LdFlags(Rcpp, ... ), sep = "" )
+}
 ## no ldflags as user packages would not need to link to RcppArmadillo.so
