@@ -1,4 +1,3 @@
-
 ## Copyright (C)       2010 Dirk Eddelbuettel and Romain Francois
 ##
 ## This file is part of RcppArmadillo.
