@@ -4464,7 +4464,7 @@ PKG_LIBS="${PKG_LIBS} $rcpp_ldflags"
 
 ARMA_HAS_CUBE="$arma_version070"
 
-ac_config_files="$ac_config_files inst/include/RcppArmadilloDefines.h"
+ac_config_files="$ac_config_files src/Makevars inst/include/RcppArmadilloDefines.h"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -5074,6 +5074,7 @@ cat >>$CONFIG_STATUS <<\_ACEOF || ac_write_fail=1
 for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
+    "src/Makevars") CONFIG_FILES="$CONFIG_FILES src/Makevars" ;;
     "inst/include/RcppArmadilloDefines.h") CONFIG_FILES="$CONFIG_FILES inst/include/RcppArmadilloDefines.h" ;;
 
   *) { { $as_echo "$as_me:$LINENO: error: invalid argument: $ac_config_target" >&5

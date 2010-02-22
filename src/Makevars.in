@@ -1,0 +1,8 @@
+## -*- mode: makefile; -*-
+
+## Configure tells us about locations for
+## both Rcpp (ie libRcpp.so and Rcpp.h) and 
+## Armadillo headers and library via the variables
+PKG_CPPFLAGS =		@PKG_CPPFLAGS@ -I. -I../inst/include
+PKG_LIBS =		@PKG_LIBS@
+
