@@ -1,0 +1,20 @@
+\documentclass[10pt]{article}
+%\VignetteIndexEntry{RcppArmadillo-unitTests}
+\usepackage{vmargin}
+\setmargrb{0.75in}{0.75in}{0.75in}{0.75in}
+
+\usepackage[colorlinks]{hyperref}
+\author{Dirk Eddelbuettel \and Romain Fran\c{c}ois}
+\title{RcppArmadillo : Unit testing results}
+\begin{document}
+\maketitle
+
+\begin{verbatim}
+<<echo=F,results=tex>>=
+if( file.exists( "unitTests-results/RcppArmadillo-unitTests.txt" ) ){
+	writeLines( readLines( "unitTests-results/RcppArmadillo-unitTests.txt" ) )
+}
+@
+\end{verbatim}
+
+\end{document}
