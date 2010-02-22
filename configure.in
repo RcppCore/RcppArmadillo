@@ -89,6 +89,6 @@ fi
 AC_SUBST([PKG_CPPFLAGS],["${PKG_CPPFLAGS} $rcpp_cxxflags"])
 AC_SUBST([PKG_LIBS],["${PKG_LIBS} $rcpp_ldflags"])
 AC_SUBST([ARMA_HAS_CUBE],["$arma_version070"])
-AC_CONFIG_FILES([inst/include/RcppArmadilloDefines.h])
+AC_CONFIG_FILES([src/Makevars inst/include/RcppArmadilloDefines.h])
 AC_OUTPUT
 echo "Completed configuration and ready to build."
