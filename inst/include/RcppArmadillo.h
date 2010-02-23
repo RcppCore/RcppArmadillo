@@ -38,6 +38,12 @@ namespace Rcpp {
     template <typename T> SEXP wrap ( const arma::Cube<T>& ) ;
     #endif
 
+    template <typename T1, typename T2, typename glue_type> 
+    SEXP wrap(const arma::Glue<T1, T2, glue_type>& X ) ;
+    
+    template <typename T1, typename op_type>
+    SEXP wrap(const arma::Op<T1, op_type>& X ) ;
+    
     namespace traits {
 
 	/* support for as */
@@ -109,14 +115,26 @@ namespace Rcpp{
 
     } // namespace RcppArmadillo
 
-    template <typename T> SEXP wrap( const arma::field<T>& data){
+    template <typename T> 
+    SEXP wrap( const arma::field<T>& data){
 	RObject x = wrap( RcppArmadillo::FieldImporter<T>( data ) ) ;
 	x.attr("dim" ) = Dimension( data.n_rows, data.n_cols ) ;
 	return x ;
-}
+    }
+    
+    /* TODO: maybe we could use the advanced constructor to avoid creating the 
+             temporary Mat */
+    template <typename T1, typename T2, typename glue_type>
+    SEXP wrap(const arma::Glue<T1, T2, glue_type>& X ){
+    	    return wrap( arma::Mat<typename T1::elem_type>(X) ) ;
+    }
 
+    template <typename T1, typename op_type>
+    SEXP wrap(const arma::Op<T1, op_type>& X ){
+    	    return wrap( arma::Mat<typename T1::elem_type>(X) ) ;
+    }
 
-/* support for Rcpp::as */
+    /* support for Rcpp::as */
 
     namespace traits {
 	
