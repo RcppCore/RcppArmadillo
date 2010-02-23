@@ -18,7 +18,7 @@
 # along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
 test.wrap.R <- function(){
-	res <- .Call( "RcppArmadillo_wrap" )
+	res <- .Call( "RcppArmadillo_wrap", PACKAGE = "RcppArmadillo" )
 	
 	checkEquals( res[[1]][[1]], matrix(as.integer((diag(3))),nr=3), msg = "eye<imat>(3,3)" )
 	checkEquals( res[[1]][[2]], diag(3), msg = "eye<mat>(3,3)" )
@@ -34,6 +34,16 @@ test.wrap.R <- function(){
 	checkEquals( res[[4]][[1]], matrix(0:3, ncol = 2, nrow=2), msg = "field<int>" )
 	checkEquals( res[[4]][[2]], matrix(letters[1:4], ncol = 2, nrow=2), msg = "field<std::string>" )
 }                           
+
+test.wrap.Glue <- function(){
+	res <- .Call( "RcppArmadillo_wrap_Glue", PACKAGE = "RcppArmadillo" )
+	checkEquals( res[[1]], 2*diag(3), msg = "wrap(Glue)" )
+}
+
+test.wrap.Op <- function(){
+	res <- .Call( "RcppArmadillo_wrap_Op", PACKAGE = "RcppArmadillo" )
+	checkEquals( res[[1]], -1*diag(3), msg = "wrap(Op)" )
+}
 
 test.as.Mat <- function(){
 	

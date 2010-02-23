@@ -138,3 +138,21 @@ extern "C" SEXP RcppArmadillo_as_Row(SEXP input_){
 	
 }
 
+extern "C" SEXP RcppArmadillo_wrap_Glue(){
+	
+	arma::mat m1 = eye<mat>( 3, 3 ) ;
+	arma::mat m2 = eye<mat>( 3, 3 ) ;
+	
+	List res ;
+	res["mat+mat"] = m1 + m2 ;
+	return res ;
+}
+
+extern "C" SEXP RcppArmadillo_wrap_Op(){
+	arma::mat m1 = eye<mat>( 3, 3 ) ;
+	
+	List res ;
+	res["mat+mat"] = - m1 ;
+	return res ;
+	
+}
