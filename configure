@@ -4233,7 +4233,7 @@ fi
 
 ## second check the lib itself
 arma_savedlibs="$LIBS"
-LIBS="$LIBS -larmadillo"
+LIBS="$LIBS -larmadillo -lpthread"
 cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
 _ACEOF
