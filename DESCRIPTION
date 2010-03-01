@@ -1,7 +1,7 @@
 Package: RcppArmadillo
 Type: Package
 Title: Rcpp/Armadillo translation layer
-Version: 0.0.2
+Version: 0.0.3
 Date: $Date$
 Author: Romain Francois and Dirk Eddelbuettel
 Maintainer: Dirk and Romain <RomainAndDirk@r-enthusiasts.com>
@@ -24,7 +24,7 @@ Description: R and Armadillo integration using Rcpp
  capabilities of the Rcpp package for seamless R and C++ integration/
 License: GPL (>= 2)
 LazyLoad: yes
-Depends: Rcpp (>= 0.7.7.9)
-SystemRequirements: Armadillo
-URL: http://arma.sourceforge.net/, http://cran.r-project.org/package=Rcpp
+Depends: Rcpp (>= 0.7.7.12)
+SystemRequirements: Armadillo (>= 0.6.12)
+URL: http://arma.sourceforge.net/, http://cran.r-project.org/package=RcppArmadillo
 OS_type: unix
