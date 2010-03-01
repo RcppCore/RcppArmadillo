@@ -1,11 +1,15 @@
+2010-03-01  Dirk Eddelbuettel  <edd@debian.org>
+
+	* configure.in: Add configure support to test for version 0.9.0
+
 2010-02-23  Romain Francois <romain@r-enthusiasts.com>
 
 	* inst/include/RcppArmadillo.h: support for wrap( arma::Glue )
 	and wrap( arma::Op ) enabling wrap()'ing arbitrary expressions
-	involving arma::Mat objects, for example wrap( m1 + m2 ), or 
-	wrap( -m1 ) 
-	
-	* inst/unitTests/runit.RcppArmadillo.R: new unit test for 
+	involving arma::Mat objects, for example wrap( m1 + m2 ), or
+	wrap( -m1 )
+
+	* inst/unitTests/runit.RcppArmadillo.R: new unit test for
 	wrap( Glue ) and wrap( Op )
 
 2010-02-20  Dirk Eddelbuettel  <edd@debian.org>

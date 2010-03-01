@@ -21,3 +21,4 @@
 // along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
 #define ARMA_HAS_CUBE @ARMA_HAS_CUBE@
+#define ARMA_VERSION_GE_090 @ARMA_VERSION_GE_090@
