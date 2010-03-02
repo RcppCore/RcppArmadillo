@@ -110,8 +110,8 @@ fi
 
 ## now use all these
 AC_SUBST([PKG_CPPFLAGS],["${PKG_CPPFLAGS} $rcpp_cxxflags"])
-AC_SUBST([PKG_LIBS],["${PKG_LIBS} $rcpp_ldflags"])
-AC_SUBST([ARMA_HAS_CUBE],["$arma_version070"])
+AC_SUBST([PKG_LIBS],["${PKG_LIBS} $rcpp_ldflags -larmadillo -lpthread"])
+AC_SUBST([ARMA_VERSION_GE_070],["$arma_version070"])
 AC_SUBST([ARMA_VERSION_GE_090],["$arma_version090"])
 AC_CONFIG_FILES([src/Makevars inst/include/RcppArmadilloDefines.h])
 AC_OUTPUT
