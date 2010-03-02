@@ -19,21 +19,21 @@
 
 test.wrap.R <- function(){
 	res <- .Call( "RcppArmadillo_wrap", PACKAGE = "RcppArmadillo" )
-	
+
 	checkEquals( res[[1]][[1]], matrix(as.integer((diag(3))),nr=3), msg = "eye<imat>(3,3)" )
 	checkEquals( res[[1]][[2]], diag(3), msg = "eye<mat>(3,3)" )
 	checkEquals( res[[1]][[3]], diag(3), msg = "eye<fmat>(3,3)" )
 	checkEquals( res[[1]][[4]], matrix(as.integer((diag(3))),nr=3), msg = "eye<umat>(3,3)" )
-	
+
 	checkEquals( res[[2]][[1]], matrix(0, ncol = 5, nrow=1), msg = "zeros<mat>(5,1)" )
 	checkEquals( res[[2]][[2]], matrix(0, ncol = 5, nrow=1), msg = "zeros<fmat>(5,1)" )
-	
+
 	checkEquals( res[[3]][[1]], matrix(0, ncol = 1, nrow=5), msg = "zeros<mat>(1,5)" )
 	checkEquals( res[[3]][[2]], matrix(0, ncol = 1, nrow=5), msg = "zeros<mat>(1,5)" )
-	
+
 	checkEquals( res[[4]][[1]], matrix(0:3, ncol = 2, nrow=2), msg = "field<int>" )
 	checkEquals( res[[4]][[2]], matrix(letters[1:4], ncol = 2, nrow=2), msg = "field<std::string>" )
-}                           
+}
 
 test.wrap.Glue <- function(){
 	res <- .Call( "RcppArmadillo_wrap_Glue", PACKAGE = "RcppArmadillo" )
@@ -46,7 +46,7 @@ test.wrap.Op <- function(){
 }
 
 test.as.Mat <- function(){
-	
+
 	integer_mat <- matrix( as.integer(diag(4)), ncol = 4, nrow = 4 )
 	numeric_mat <- diag(5)
 	res <- .Call( "RcppArmadillo_as_Mat",
@@ -67,5 +67,19 @@ test.as.Row <- function(){
 	      list( 1:10, as.numeric(1:10) ),
 	      PACKAGE = "RcppArmadillo" )
 	checkEquals( unlist( res ), rep(55.0, 4 ), msg = "as<Row>" )
+}
+
+test.fastLm <- function() {
+    data(trees)
+    flm <- .Call("fastLm",
+                 log(trees$Volume),
+                 cbind(rep(1,31), log(treesGirth)),
+                 PACKAGE="RcppArmadillo")
+    fit <- lm(log(Volume) ~ log(Girth), data=trees)
+
+    checkEquals( as.numeric(flm$coef), as.numeric(coef(fit)),
+                msg="fastLm.coef")
+    checkEquals( as.numeric(flm$stderr), as.numeric(coef(summary(fit))[,2]),
+                msg="fastLm.stderr")
 }
 

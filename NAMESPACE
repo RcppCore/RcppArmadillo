@@ -1,2 +1,3 @@
 useDynLib( RcppArmadillo)
 
+export(fastLm)                          # the only visible function here
