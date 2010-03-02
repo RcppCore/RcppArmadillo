@@ -34,7 +34,7 @@ namespace Rcpp {
     template <typename T> SEXP wrap ( const arma::Row<T>& ) ;
     template <typename T> SEXP wrap ( const arma::Col<T>& ) ;
     template <typename T> SEXP wrap ( const arma::field<T>& ) ;
-    #if ARMA_HAS_CUBE
+    #if ARMA_VERSION_GE_070
     template <typename T> SEXP wrap ( const arma::Cube<T>& ) ;
     #endif
 
@@ -59,7 +59,7 @@ namespace Rcpp {
 	template <typename T> class Exporter< arma::Row<T> > ;
 	template <typename T> class Exporter< arma::Col<T> > ;
 // template <typename T> class Exporter< arma::field<T> > ;
-// #ifdef ARMA_HAS_CUBE
+// #ifdef ARMA_VERSION_GE_070
 // 	template <typename T> class Exporter< arma::Cube<T> > ;
 // #endif
 
@@ -101,7 +101,7 @@ namespace Rcpp{
 	return RcppArmadillo::arma_wrap(data, Dimension( 1, data.n_elem ) ) ;
     } ;
 
-    #if ARMA_HAS_CUBE
+    #if ARMA_VERSION_GE_070
     template <typename T> SEXP wrap( const arma::Cube<T>& data ){
 	return RcppArmadillo::arma_wrap(data, Dimension(  data.n_rows, data.n_cols, data.n_slices ) ) ;
     }
