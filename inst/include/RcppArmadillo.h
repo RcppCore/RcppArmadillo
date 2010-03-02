@@ -44,6 +44,14 @@ namespace Rcpp {
     template <typename T1, typename op_type>
     SEXP wrap(const arma::Op<T1, op_type>& X ) ;
     
+    #if ARMA_VERSION_GE_090
+    template <typename T1, typename T2, typename glue_type> 
+    SEXP wrap(const arma::eGlue<T1, T2, glue_type>& X ) ;
+    
+    template <typename T1, typename op_type>
+    SEXP wrap(const arma::eOp<T1, op_type>& X ) ;
+    #endif 
+    
     namespace traits {
 
 	/* support for as */
@@ -133,6 +141,19 @@ namespace Rcpp{
     SEXP wrap(const arma::Op<T1, op_type>& X ){
     	    return wrap( arma::Mat<typename T1::elem_type>(X) ) ;
     }
+    
+    /* TODO: will do better when I can use 0.9.0 */
+    #if ARMA_VERSION_GE_090
+    template <typename T1, typename T2, typename glue_type>
+    SEXP wrap(const arma::eGlue<T1, T2, glue_type>& X ){
+    	    return wrap( arma::Mat<typename T1::elem_type>(X) ) ;
+    }
+
+    template <typename T1, typename op_type>
+    SEXP wrap(const arma::eOp<T1, op_type>& X ){
+    	    return wrap( arma::Mat<typename T1::elem_type>(X) ) ;
+    }
+    #endif
 
     /* support for Rcpp::as */
 
