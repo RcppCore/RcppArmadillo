@@ -1,3 +1,9 @@
+2010-03-03  Romain Francois <romain@r-enthusiasts.com>
+
+	* inst/include/RcppArmadillo.h: avoid an extra memory copy when 
+	possible (i.e. in wrap( eGlue) and wrap( eOp ) when the elem_type
+	is int or double).
+	
 2010-03-02  Dirk Eddelbuettel  <edd@dexter>
 
 	* src/RcppArmadillo.cpp: Added bare-bones 'fastLm' function
