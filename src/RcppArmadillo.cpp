@@ -198,7 +198,8 @@ extern "C" SEXP fastLm(SEXP sy, SEXP sX) {
 
     arma::colvec resid = y - X*coef; 
 
-    arma::mat covmat = trans(resid) * resid / (n-k) * arma::inv(arma::trans(X)*X);
+    double sig2 = SCALAR( trans(resid)*resid/(n-k) );
+    arma::mat covmat = sig2 * arma::inv(arma::trans(X)*X);
     arma::colvec stderrest = sqrt(covmat.diag());
 
     Rcpp::Pairlist res(Rcpp::Named( "coef", coef),

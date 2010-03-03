@@ -3,6 +3,11 @@
 	* inst/include/RcppArmadillo.h: avoid an extra memory copy when 
 	possible (i.e. in wrap( eGlue) and wrap( eOp ) when the elem_type
 	is int or double).
+
+	* inst/include/RcppArmadilloDefines.in.h added the SCALAR macro 
+	to take care of the 0.9.0 api change
+
+	* src/RcppArmadillo.cpp : fix a runtime error uisng the SCALAR macro
 	
 2010-03-02  Dirk Eddelbuettel  <edd@dexter>
 
