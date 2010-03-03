@@ -144,14 +144,52 @@ namespace Rcpp{
     
     /* TODO: will do better when I can use 0.9.0 */
     #if ARMA_VERSION_GE_090
+    namespace RcppArmadillo{
+    	
+    	/* we can intercept and directly build the resulting matrix using 
+    	   memory allocated by R */
+    	template <typename T1, typename T2, typename eglue_type>
+    	SEXP wrap_eglue( const arma::eGlue<T1, T2, eglue_type>& X, ::Rcpp::traits::false_type ){
+    		int n_rows = X.P1.n_rows ;
+    		int n_cols = X.P1.n_cols ;
+    		typedef typename ::Rcpp::Vector< ::Rcpp::traits::r_sexptype_traits< typename T1::elem_type>::rtype > VECTOR ;
+    		VECTOR res(::Rcpp::Dimension( n_rows , n_cols )) ;
+    		::arma::Mat<typename T1::elem_type> result( res.begin(), n_rows, n_cols, false ) ;
+    		result = X ;
+    		return res ;
+    	}
+    	
+    	template <typename T1, typename T2, typename eglue_type>
+    	SEXP wrap_eglue( const arma::eGlue<T1, T2, eglue_type>& X, ::Rcpp::traits::true_type ){
+    		return ::Rcpp::wrap( arma::Mat<typename T1::elem_type>(X) ) ;
+    	}
+    	
+    	template <typename T1, typename eop_type>
+    	SEXP wrap_eop( const arma::eOp<T1,eop_type>& X, ::Rcpp::traits::false_type ){
+    		int n_rows = X.P.n_rows ;
+    		int n_cols = X.P.n_cols ;
+    		typedef typename ::Rcpp::Vector< ::Rcpp::traits::r_sexptype_traits< typename T1::elem_type>::rtype > VECTOR ;
+    		VECTOR res(::Rcpp::Dimension( n_rows , n_cols )) ;
+    		::arma::Mat<typename T1::elem_type> result( res.begin(), n_rows, n_cols, false ) ;
+    		result = X ;
+    		return res ;
+    	}
+    	
+    	template <typename T1, typename eop_type>
+    	SEXP wrap_eop( const arma::eOp<T1,eop_type>& X, ::Rcpp::traits::true_type ){
+    		return ::Rcpp::wrap( arma::Mat<typename T1::elem_type>(X) ) ;
+    	}
+    	
+    } // namespace RcppArmadillo
+    
     template <typename T1, typename T2, typename glue_type>
     SEXP wrap(const arma::eGlue<T1, T2, glue_type>& X ){
-    	    return wrap( arma::Mat<typename T1::elem_type>(X) ) ;
+    	return RcppArmadillo::wrap_eglue( X, typename traits::r_sexptype_needscast<typename T1::elem_type>::type() ) ;
     }
 
     template <typename T1, typename op_type>
     SEXP wrap(const arma::eOp<T1, op_type>& X ){
-    	    return wrap( arma::Mat<typename T1::elem_type>(X) ) ;
+    	    return RcppArmadillo::wrap_eop( X, typename traits::r_sexptype_needscast<typename T1::elem_type>::type() ) ;
     }
     #endif
 
