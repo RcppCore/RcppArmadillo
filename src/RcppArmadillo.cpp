@@ -183,8 +183,7 @@ extern "C" SEXP fastLm(SEXP sy, SEXP sX) {
 
     Rcpp::NumericVector yr(sy);
     Rcpp::NumericMatrix Xr(sX);
-    std::vector<int> dims = Xr.attr("dim") ;
-    int n = dims[0], k = dims[1];
+    int n = Xr.nrow(), k = Xr.ncol() ;
 
 #if ARMA_VERSION_GE_090
     arma::mat X(Xr.begin(), n, k, false);   // reuses memory and avoids extra copy
@@ -199,6 +198,29 @@ extern "C" SEXP fastLm(SEXP sy, SEXP sX) {
     arma::colvec resid = y - X*coef; 
 
     double sig2 = SCALAR( trans(resid)*resid/(n-k) );
+    
+    /* [Romain] I think we can use the diagvec function here, which might 
+                be more efficient since we would not need to use the 
+                temporary covmat. Something like : 
+                
+    	 arma::colvec stderrest = sqrt( sig2 * diagvec( arma::inv(arma::trans(X)*X)) );
+    	 
+    	and since sqrt is an eOp type of operation, we don't have to create the 
+    	arma::colvec explicitely and can directly wrap it up in R. 
+    	
+    	Rcpp::List res ;
+    	res["coef"] = coef ;
+    	res["stderr"] = sqrt( sig2 * diagvec( arma::inv(arma::trans(X)*X)) ) ;
+    	return res ;
+    	
+    	or with Pairlist :
+    	
+    	Rcpp::Pairlist res(
+    		Rcpp::Named( "coef" ) = coef,
+    		Rcpp::Named( "stderr") = sqrt( sig2 * diagvec( arma::inv(arma::trans(X)*X)) )
+    	);
+    
+    */
     arma::mat covmat = sig2 * arma::inv(arma::trans(X)*X);
     arma::colvec stderrest = sqrt(covmat.diag());
 
