@@ -28,7 +28,6 @@
 
 /* forward declarations */
 namespace Rcpp {
-	
     /* support for wrap */
     template <typename T> SEXP wrap ( const arma::Mat<T>& ) ;
     template <typename T> SEXP wrap ( const arma::Row<T>& ) ;
@@ -50,6 +49,19 @@ namespace Rcpp {
     
     template <typename T1, typename op_type>
     SEXP wrap(const arma::eOp<T1, op_type>& X ) ;
+    
+    /* TODO: maybe we can move those out of if( 0.9.0 ) */
+    template <typename T1, typename op_type>
+    SEXP wrap(const arma::OpCube<T1,op_type>& X ) ;
+    
+    template <typename T1, typename T2, typename glue_type>
+    SEXP wrap(const arma::GlueCube<T1,T2,glue_type>& X ) ;
+    
+    template <typename T1, typename op_type>
+    SEXP wrap(const arma::eOpCube<T1,op_type>& X ) ;
+    
+    template <typename T1, typename T2, typename glue_type>
+    SEXP wrap(const arma::eGlueCube<T1,T2,glue_type>& X ) ;
     #endif 
     
     namespace traits {
@@ -144,6 +156,17 @@ namespace Rcpp{
     
     /* TODO: will do better when I can use 0.9.0 */
     #if ARMA_VERSION_GE_090
+    
+    template <typename T1, typename op_type>
+    SEXP wrap(const arma::OpCube<T1,op_type>& X ){
+    	return wrap( arma::Cube<typename T1::elem_type>(X) ) ;
+    }
+    
+    template <typename T1, typename T2, typename glue_type>
+    SEXP wrap(const arma::GlueCube<T1,T2,glue_type>& X ){
+    	return wrap( arma::Cube<typename T1::elem_type>(X) ) ;
+    }
+    
     namespace RcppArmadillo{
     	
     	/* we can intercept and directly build the resulting matrix using 
@@ -190,6 +213,16 @@ namespace Rcpp{
     template <typename T1, typename op_type>
     SEXP wrap(const arma::eOp<T1, op_type>& X ){
     	    return RcppArmadillo::wrap_eop( X, typename traits::r_sexptype_needscast<typename T1::elem_type>::type() ) ;
+    }
+    
+    template <typename T1, typename op_type>
+    SEXP wrap(const arma::eOpCube<T1,op_type>& X ){
+    	return wrap( arma::Cube<typename T1::elem_type>(X) ) ;
+    }
+    
+    template <typename T1, typename T2, typename glue_type>
+    SEXP wrap(const arma::eGlueCube<T1,T2,glue_type>& X ){
+    	return wrap( arma::Cube<typename T1::elem_type>(X) ) ;
     }
     #endif
 
