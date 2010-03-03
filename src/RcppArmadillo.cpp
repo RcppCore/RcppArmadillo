@@ -206,3 +206,19 @@ extern "C" SEXP fastLm(SEXP sy, SEXP sX) {
                        Rcpp::Named( "stderr", stderrest));
     return res;
 }
+
+extern "C" SEXP armadillo_version(SEXP single_){
+	struct arma::arma_version av;
+	bool single = Rcpp::as<bool>( single_) ;
+	if( single ){
+		return Rcpp::wrap( 10000*av.major + 100*av.minor + av.patch ) ;
+	}
+	Rcpp::IntegerVector version(3); 
+	version = av.major, av.minor, av.patch ;
+	Rcpp::CharacterVector names(3); 
+	names = "major", "minor", "patch" ;
+	version.names() = names ;
+	version.attr("class" ) = "armadillo_version" ;
+	return version ;
+}
+
