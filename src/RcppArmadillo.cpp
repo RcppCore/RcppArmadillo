@@ -219,7 +219,16 @@ extern "C" SEXP fastLm(SEXP sy, SEXP sX) {
     		Rcpp::Named( "coef" ) = coef,
     		Rcpp::Named( "stderr") = sqrt( sig2 * diagvec( arma::inv(arma::trans(X)*X)) )
     	);
-    
+    	
+    	or even the sugary: 
+    	
+    	using namespace Rcpp;
+    	Pairlist res(
+    		_["coef"] = coef,
+    		_["stderr"] = sqrt( sig2 * diagvec( arma::inv(arma::trans(X)*X)) )
+    	);
+    	
+    	
     */
     arma::mat covmat = sig2 * arma::inv(arma::trans(X)*X);
     arma::colvec stderrest = sqrt(covmat.diag());
