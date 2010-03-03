@@ -1,4 +1,3 @@
-
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
 // RcppArmadilloDefines.h: Configure-generated defines for Rcpp/Armadillo glue
@@ -26,7 +25,7 @@
 #define ARMA_VERSION_GE_070 @ARMA_VERSION_GE_070@
 #define ARMA_VERSION_GE_090 @ARMA_VERSION_GE_090@
 
-#ifdef ARMA_VERSION_GE_090
+#if ARMA_VERSION_GE_090
 #define SCALAR(X) ::arma::as_scalar(X)
 #else
 #define SCALAR(X) X

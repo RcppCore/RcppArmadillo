@@ -26,156 +26,156 @@ using namespace arma ;
 	
 extern "C" SEXP RcppArmadillo_wrap(){
 	
-	List output(4); 
-	List matrices(4) ;
-	List rows(2) ;
-	List cols(2) ;
+    List output(4); 
+    List matrices(4) ;
+    List rows(2) ;
+    List cols(2) ;
 	
-	imat x1 = eye<imat>( 3,3 ) ;
-	// x1.swap_rows(0,1)  ;
-	matrices[0] = x1 ;
+    imat x1 = eye<imat>( 3,3 ) ;
+    // x1.swap_rows(0,1)  ;
+    matrices[0] = x1 ;
 	
-	mat x2 = eye<mat>( 3,3 ) ;
-	// x2.swap_rows(0,1)  ;
-	matrices[1] = x2 ;
+    mat x2 = eye<mat>( 3,3 ) ;
+    // x2.swap_rows(0,1)  ;
+    matrices[1] = x2 ;
 	
-	fmat x3 = eye<fmat>( 3, 3 );
-	// x3.swap_rows(0,1)  ;
-	matrices[2] = x3 ;
+    fmat x3 = eye<fmat>( 3, 3 );
+    // x3.swap_rows(0,1)  ;
+    matrices[2] = x3 ;
 	
-	umat x4 = eye<umat>( 3, 3 );
-	// x4.swap_rows(0,1)  ;
-	matrices[3] = x4 ;
+    umat x4 = eye<umat>( 3, 3 );
+    // x4.swap_rows(0,1)  ;
+    matrices[3] = x4 ;
 	
-	colvec r1 = zeros<mat>(5,1);
-	cols[0] = r1  ;
+    colvec r1 = zeros<mat>(5,1);
+    cols[0] = r1  ;
 	
-	fcolvec r2 = zeros<fmat>(5,1);
-	cols[1] = r2  ;
+    fcolvec r2 = zeros<fmat>(5,1);
+    cols[1] = r2  ;
 	
-	rowvec c1 = zeros<mat>(1,5);
-	rows[0] = c1  ;
+    rowvec c1 = zeros<mat>(1,5);
+    rows[0] = c1  ;
 	
-	frowvec c2 = zeros<fmat>(1,5);
-	rows[1] = c2  ;
+    frowvec c2 = zeros<fmat>(1,5);
+    rows[1] = c2  ;
 	
-	std::vector<std::string> names(4) ;
-	names[0] = "Mat<int>" ;
-	names[1] = "Mat<double>" ;
-	names[2] = "Mat<float>" ;
-	names[3] = "Mat<unsigned int>" ;
-	matrices.names() = names ;
+    std::vector<std::string> names(4) ;
+    names[0] = "Mat<int>" ;
+    names[1] = "Mat<double>" ;
+    names[2] = "Mat<float>" ;
+    names[3] = "Mat<unsigned int>" ;
+    matrices.names() = names ;
 	
-	names.resize(2) ;
-	names[0] = "Row<double>" ;
-	names[1] = "Row<float>" ;
-	rows.names() = names ;
+    names.resize(2) ;
+    names[0] = "Row<double>" ;
+    names[1] = "Row<float>" ;
+    rows.names() = names ;
 	
-	names[0] = "Col<double>" ;
-	names[1] = "Col<float>" ;
-	cols.names() = names ;
+    names[0] = "Col<double>" ;
+    names[1] = "Col<float>" ;
+    cols.names() = names ;
 	
-	List fields ;
-	field<int> f1( 2, 2 ) ;
-	f1( 0, 0 ) = 0 ; 
-	f1( 1, 0 ) = 1 ; 
-	f1( 0, 1 ) = 2 ; 
-	f1( 1, 1 ) = 3 ; 
-	fields["field<int>"] = f1 ;
-	field<std::string> f2(2,2) ;
-	f2( 0, 0 ) = "a" ; 
-	f2( 1, 0 ) = "b" ; 
-	f2( 0, 1 ) = "c" ; 
-	f2( 1, 1 ) = "d" ; 
-	fields["field<std::string>"] = f2 ;
-	field<colvec> f3(2,2) ;
-	f3(0,0) = zeros<mat>(5,1) ;
-	f3(1,0) = zeros<mat>(4,1) ;
-	f3(0,1) = zeros<mat>(3,1) ;
-	f3(1,1) = zeros<mat>(2,1) ;
-	fields["field<colvec>"] = f3 ;
+    List fields ;
+    field<int> f1( 2, 2 ) ;
+    f1( 0, 0 ) = 0 ; 
+    f1( 1, 0 ) = 1 ; 
+    f1( 0, 1 ) = 2 ; 
+    f1( 1, 1 ) = 3 ; 
+    fields["field<int>"] = f1 ;
+    field<std::string> f2(2,2) ;
+    f2( 0, 0 ) = "a" ; 
+    f2( 1, 0 ) = "b" ; 
+    f2( 0, 1 ) = "c" ; 
+    f2( 1, 1 ) = "d" ; 
+    fields["field<std::string>"] = f2 ;
+    field<colvec> f3(2,2) ;
+    f3(0,0) = zeros<mat>(5,1) ;
+    f3(1,0) = zeros<mat>(4,1) ;
+    f3(0,1) = zeros<mat>(3,1) ;
+    f3(1,1) = zeros<mat>(2,1) ;
+    fields["field<colvec>"] = f3 ;
 	
-	output[0] = matrices;
-	output[1] = rows ;
-	output[2] = cols ;
-	output[3] = fields ;
+    output[0] = matrices;
+    output[1] = rows ;
+    output[2] = cols ;
+    output[3] = fields ;
 	
-	names[0] = "matrices : Mat<T>" ; 
-	names[1] = "rows : Row<T>" ;
-	names.push_back( "columns : Col<T>" );
-	names.push_back( "fields  : field<T>" );
-	output.names() = names ;
+    names[0] = "matrices : Mat<T>" ; 
+    names[1] = "rows : Row<T>" ;
+    names.push_back( "columns : Col<T>" );
+    names.push_back( "fields  : field<T>" );
+    output.names() = names ;
 	
-	return output ;
+    return output ;
 	
 }
 
 extern "C" SEXP RcppArmadillo_as_Mat(SEXP input_){
 
-	List input(input_) ;
-	arma::imat m1 = input[0] ; /* implicit as */
-	arma::mat  m2 = input[1] ; /* implicit as */
-	arma::umat m3 = input[0] ; /* implicit as */
-	arma::fmat m4 = input[1] ; /* implicit as */
+    List input(input_) ;
+    arma::imat m1 = input[0] ; /* implicit as */
+    arma::mat  m2 = input[1] ; /* implicit as */
+    arma::umat m3 = input[0] ; /* implicit as */
+    arma::fmat m4 = input[1] ; /* implicit as */
 	
-	List res(4) ;
-	res[0] = arma::accu( m1 ) ;
-	res[1] = arma::accu( m2 ) ;
-	res[2] = arma::accu( m3 ) ;
-	res[3] = arma::accu( m4 ) ;
+    List res(4) ;
+    res[0] = arma::accu( m1 ) ;
+    res[1] = arma::accu( m2 ) ;
+    res[2] = arma::accu( m3 ) ;
+    res[3] = arma::accu( m4 ) ;
 	
-	return res ;
+    return res ;
 }
 
 extern "C" SEXP RcppArmadillo_as_Col( SEXP input_){
-	List input(input_) ;
-	arma::icolvec m1 = input[0] ; /* implicit as */
-	arma::colvec  m2 = input[1] ; /* implicit as */
-	arma::ucolvec m3 = input[0] ; /* implicit as */
-	arma::fcolvec m4 = input[1] ; /* implicit as */
+    List input(input_) ;
+    arma::icolvec m1 = input[0] ; /* implicit as */
+    arma::colvec  m2 = input[1] ; /* implicit as */
+    arma::ucolvec m3 = input[0] ; /* implicit as */
+    arma::fcolvec m4 = input[1] ; /* implicit as */
 	
-	List res(4) ;
-	res[0] = arma::accu( m1 ) ;
-	res[1] = arma::accu( m2 ) ;
-	res[2] = arma::accu( m3 ) ;
-	res[3] = arma::accu( m4 ) ;
+    List res(4) ;
+    res[0] = arma::accu( m1 ) ;
+    res[1] = arma::accu( m2 ) ;
+    res[2] = arma::accu( m3 ) ;
+    res[3] = arma::accu( m4 ) ;
 	
-	return res ;
+    return res ;
 }
 
 extern "C" SEXP RcppArmadillo_as_Row(SEXP input_){
-	List input(input_) ;
-	arma::irowvec m1 = input[0] ; /* implicit as */
-	arma::rowvec  m2 = input[1] ; /* implicit as */
-	arma::urowvec m3 = input[0] ; /* implicit as */
-	arma::frowvec m4 = input[1] ; /* implicit as */
+    List input(input_) ;
+    arma::irowvec m1 = input[0] ; /* implicit as */
+    arma::rowvec  m2 = input[1] ; /* implicit as */
+    arma::urowvec m3 = input[0] ; /* implicit as */
+    arma::frowvec m4 = input[1] ; /* implicit as */
 	
-	List res(4) ;
-	res[0] = arma::accu( m1 ) ;
-	res[1] = arma::accu( m2 ) ;
-	res[2] = arma::accu( m3 ) ;
-	res[3] = arma::accu( m4 ) ;
+    List res(4) ;
+    res[0] = arma::accu( m1 ) ;
+    res[1] = arma::accu( m2 ) ;
+    res[2] = arma::accu( m3 ) ;
+    res[3] = arma::accu( m4 ) ;
 	
-	return res ;
+    return res ;
 	
 }
 
 extern "C" SEXP RcppArmadillo_wrap_Glue(){
 	
-	arma::mat m1 = eye<mat>( 3, 3 ) ;
-	arma::mat m2 = eye<mat>( 3, 3 ) ;
+    arma::mat m1 = eye<mat>( 3, 3 ) ;
+    arma::mat m2 = eye<mat>( 3, 3 ) ;
 	
-	List res ;
-	res["mat+mat"] = m1 + m2 ;
-	return res ;
+    List res ;
+    res["mat+mat"] = m1 + m2 ;
+    return res ;
 }
 
 extern "C" SEXP RcppArmadillo_wrap_Op(){
-	arma::mat m1 = eye<mat>( 3, 3 ) ;
+    arma::mat m1 = eye<mat>( 3, 3 ) ;
 	
-	List res ;
-	res["mat+mat"] = - m1 ;
-	return res ;
+    List res ;
+    res["mat+mat"] = - m1 ;
+    return res ;
 	
 }
 
@@ -197,59 +197,30 @@ extern "C" SEXP fastLm(SEXP sy, SEXP sX) {
 
     arma::colvec resid = y - X*coef; 
 
-    double sig2 = SCALAR( trans(resid)*resid/(n-k) );
-    
-    /* [Romain] I think we can use the diagvec function here, which might 
-                be more efficient since we would not need to use the 
-                temporary covmat. Something like : 
-                
-    	 arma::colvec stderrest = sqrt( sig2 * diagvec( arma::inv(arma::trans(X)*X)) );
-    	 
-    	and since sqrt is an eOp type of operation, we don't have to create the 
-    	arma::colvec explicitely and can directly wrap it up in R. 
-    	
-    	Rcpp::List res ;
-    	res["coef"] = coef ;
-    	res["stderr"] = sqrt( sig2 * diagvec( arma::inv(arma::trans(X)*X)) ) ;
-    	return res ;
-    	
-    	or with Pairlist :
-    	
-    	Rcpp::Pairlist res(
-    		Rcpp::Named( "coef" ) = coef,
-    		Rcpp::Named( "stderr") = sqrt( sig2 * diagvec( arma::inv(arma::trans(X)*X)) )
-    	);
-    	
-    	or even the sugary: 
-    	
-    	using namespace Rcpp;
-    	Pairlist res(
-    		_["coef"] = coef,
-    		_["stderr"] = sqrt( sig2 * diagvec( arma::inv(arma::trans(X)*X)) )
-    	);
-    	
-    	
-    */
-    arma::mat covmat = sig2 * arma::inv(arma::trans(X)*X);
-    arma::colvec stderrest = sqrt(covmat.diag());
-
+#if ARMA_VERSION_GE_090
+    double sig2 = arma::as_scalar( trans(resid)*resid/(n-k) );
+#else
+    double sig2 = ( trans(resid)*resid/(n-k) );
+#endif
+ 
+    arma::colvec stderrest = sqrt( sig2 * diagvec( arma::inv(arma::trans(X)*X)) );
     Rcpp::Pairlist res(Rcpp::Named( "coef", coef),
                        Rcpp::Named( "stderr", stderrest));
     return res;
 }
 
 extern "C" SEXP armadillo_version(SEXP single_){
-	struct arma::arma_version av;
-	bool single = Rcpp::as<bool>( single_) ;
-	if( single ){
-		return Rcpp::wrap( 10000*av.major + 100*av.minor + av.patch ) ;
-	}
-	Rcpp::IntegerVector version(3); 
-	version = av.major, av.minor, av.patch ;
-	Rcpp::CharacterVector names(3); 
-	names = "major", "minor", "patch" ;
-	version.names() = names ;
-	version.attr("class" ) = "armadillo_version" ;
-	return version ;
+    struct arma::arma_version av;
+    bool single = Rcpp::as<bool>( single_) ;
+    if( single ){
+	return Rcpp::wrap( 10000*av.major + 100*av.minor + av.patch ) ;
+    }
+    Rcpp::IntegerVector version(3); 
+    version = av.major, av.minor, av.patch ;
+    Rcpp::CharacterVector names(3); 
+    names = "major", "minor", "patch" ;
+    version.names() = names ;
+    version.attr("class" ) = "armadillo_version" ;
+    return version ;
 }
 
