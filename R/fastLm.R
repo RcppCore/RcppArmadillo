@@ -25,3 +25,18 @@ fastLm <- function(y, X) {
 
     res <- .Call("fastLm", y, X, package="RcppArmadillo")
 }
+
+## What would be nice here:
+##
+##  fastLm <- function(x, ...) UseMethod("fastLm")
+##
+##  fastLm.formula <- ...
+##
+##  fastLm.default <- ...
+##
+##  print.fastLm <- function(x, ...)
+##
+##  summary.fastLm <- function(object, ...
+##
+##  print.summary.fastLm <- ...
+
