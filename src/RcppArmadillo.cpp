@@ -171,42 +171,12 @@ extern "C" SEXP RcppArmadillo_wrap_Glue(){
 }
 
 extern "C" SEXP RcppArmadillo_wrap_Op(){
+
     arma::mat m1 = eye<mat>( 3, 3 ) ;
 	
     List res ;
     res["mat+mat"] = - m1 ;
     return res ;
-	
-}
-
-extern "C" SEXP fastLm(SEXP sy, SEXP sX) {
-
-    Rcpp::NumericVector yr(sy);
-    Rcpp::NumericMatrix Xr(sX);
-    int n = Xr.nrow(), k = Xr.ncol() ;
-
-#if ARMA_VERSION_GE_090
-    arma::mat X(Xr.begin(), n, k, false);   // reuses memory and avoids extra copy
-#else
-    arma::mat X(Xr.begin(), n, k);
-#endif
-
-    arma::colvec y(yr.begin(), yr.size());
-
-    arma::colvec coef = solve(X, y);            // fit model y ~ X
-
-    arma::colvec resid = y - X*coef; 
-
-#if ARMA_VERSION_GE_090
-    double sig2 = arma::as_scalar( trans(resid)*resid/(n-k) );
-#else
-    double sig2 = ( trans(resid)*resid/(n-k) );
-#endif
- 
-    arma::colvec stderrest = sqrt( sig2 * diagvec( arma::inv(arma::trans(X)*X)) );
-    Rcpp::Pairlist res(Rcpp::Named( "coef", coef),
-                       Rcpp::Named( "stderr", stderrest));
-    return res;
 }
 
 extern "C" SEXP armadillo_version(SEXP single_){
