@@ -4,7 +4,7 @@ Title: Rcpp/Armadillo translation layer
 Version: 0.0.4
 Date: $Date$
 Author: Romain Francois and Dirk Eddelbuettel
-Maintainer: Dirk and Romain <RomainAndDirk@r-enthusiasts.com>
+Maintainer: Dirk Eddelbuettel and Romain Francois <RomainAndDirk@r-enthusiasts.com>
 Description: R and Armadillo integration using Rcpp
  Armadillo is a C++ linear algebra library aiming towards a good balance 
  between speed and ease of use. Integer, floating point and complex 
