@@ -26,9 +26,12 @@ fastLm(y, X)
 }
 \value{
   \code{fastLm} returns a list with two components:
-  \item{coef}{a vector of coefficients}
-  \item{stderr}{a vector of the (estimated_ standard error of the
-	coefficient estimate}
+  \item{coefficients}{a vector of coefficients}
+  \item{stderr}{a vector of the (estimated) standard errors of the coefficient estimates}
+
+  In other words, no actual \sQuote{fastLm} object is provided unlike
+  for \code{\link{lm()}} or \code{\link[MASS]{rlm}} but rather just a
+  simple list unlike \code{\link{lm.fit}}.
 }
 \seealso{\code{\link{lm}}, \code{\link{lm.fit}}} 
 \references{Armadillo project: \url{http://arma.sourceforge.net/}}
@@ -38,7 +41,7 @@ fastLm(y, X)
 }
 \examples{
   data(trees)
-  fastLm( log(trees$Volume),  cbind(rep(1,31), log(trees$Girth)) )
+  flm <- fastLm( log(trees$Volume),  cbind(rep(1,31), log(trees$Girth)) )
 }
 \keyword{regression}
 
