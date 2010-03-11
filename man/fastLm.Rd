@@ -30,7 +30,7 @@ fastLm(y, X)
   \item{stderr}{a vector of the (estimated) standard errors of the coefficient estimates}
 
   In other words, no actual \sQuote{fastLm} object is provided unlike
-  for \code{\link{lm()}} or \code{\link[MASS]{rlm}} but rather just a
+  for \code{\link{lm}} or \code{\link[MASS]{rlm}} but rather just a
   simple list unlike \code{\link{lm.fit}}.
 }
 \seealso{\code{\link{lm}}, \code{\link{lm.fit}}} 
