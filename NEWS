@@ -1,4 +1,4 @@
-0.1-0	(under development)
+0.1.0	2010-03-11
 
     o	the fastLm() implementation of a bare-bones lm() fit
 	(using Armadillo's solve() function) provides an example
