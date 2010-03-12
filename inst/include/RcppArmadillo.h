@@ -103,15 +103,15 @@ namespace Rcpp{
 
     template <typename T> SEXP wrap ( const arma::Mat<T>& data ){
 	return RcppArmadillo::arma_wrap( data, Dimension( data.n_rows, data.n_cols ) ) ;
-    } ;
+    }
 
     template <typename T> SEXP wrap( const arma::Col<T>& data ){
 	return RcppArmadillo::arma_wrap( data, Dimension( data.n_elem, 1) ) ;
-    } ;
+    }
 
     template <typename T> SEXP wrap( const arma::Row<T>& data ){
 	return RcppArmadillo::arma_wrap(data, Dimension( 1, data.n_elem ) ) ;
-    } ;
+    }
 
     #if ARMA_VERSION_GE_070
     template <typename T> SEXP wrap( const arma::Cube<T>& data ){
