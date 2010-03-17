@@ -21,6 +21,8 @@
 
 #include <RcppArmadillo.h>
 
+// [romain]: what about "using namespace arma; " in the function
+
 extern "C" SEXP fastLm(SEXP ys, SEXP Xs) {
 
     Rcpp::NumericVector yr(ys);			// creates Rcpp vector from SEXP
@@ -35,20 +37,21 @@ extern "C" SEXP fastLm(SEXP ys, SEXP Xs) {
     arma::colvec y(yr.begin(), yr.size());
 #endif
 
-    arma::colvec coef = solve(X, y);            // fit model y ~ X
-
-    arma::colvec resid = y - X*coef; 		// residuals
+	arma::colvec coef = arma::solve(X, y);            // fit model y ~ X
+	arma::colvec resid = y - X*coef; 		// residuals
 
 #if ARMA_VERSION_GE_090
     double sig2 = arma::as_scalar( trans(resid)*resid/(n-k) );
 #else
-    double sig2 = ( trans(resid)*resid/(n-k) );
+	double sig2 = ( arma::trans(resid)*resid/(n-k) );
 #endif
     						// std.error of estimate 
-    arma::colvec stderrest = sqrt( sig2 * diagvec( arma::inv(arma::trans(X)*X)) );
+    arma::colvec stderrest = arma::sqrt( sig2 * arma::diagvec( arma::inv(arma::trans(X)*X)) );
 
-    Rcpp::Pairlist res(Rcpp::Named( "coefficients", coef),
-                       Rcpp::Named( "stderr", stderrest));
-    return res;
+    return Rcpp::make_list( 
+    	Rcpp::Named("coefficients") = coef,
+    	Rcpp::Named("stderr")       = stderrest
+    ) ;
+    
 }
 
