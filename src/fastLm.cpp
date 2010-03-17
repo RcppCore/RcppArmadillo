@@ -21,8 +21,6 @@
 
 #include <RcppArmadillo.h>
 
-// [romain]: what about "using namespace arma; " in the function
-
 extern "C" SEXP fastLm(SEXP ys, SEXP Xs) {
 
     Rcpp::NumericVector yr(ys);			// creates Rcpp vector from SEXP
@@ -41,7 +39,7 @@ extern "C" SEXP fastLm(SEXP ys, SEXP Xs) {
 	arma::colvec resid = y - X*coef; 		// residuals
 
 #if ARMA_VERSION_GE_090
-    double sig2 = arma::as_scalar( trans(resid)*resid/(n-k) );
+	double sig2 = arma::as_scalar( arma::trans(resid)*resid/(n-k) );
 #else
 	double sig2 = ( arma::trans(resid)*resid/(n-k) );
 #endif
