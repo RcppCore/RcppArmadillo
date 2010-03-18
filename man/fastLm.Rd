@@ -23,6 +23,21 @@ fastLm(y, X)
   It does not provide a formula interface. It does check for missing
   values. It does (yet?) return a proper object with suitable accessor
   functions. That's why we call it bare-bones.
+
+  Lastly, one must be be careful in timing comparisons of
+  \code{\link{lm}} and friends versus this approach based on
+  \code{Armadillo}. The reason that \code{Armadillo} can do something
+  like \code{\link{lm.fit}} faster than the functions in the stats
+  package is because \code{Armadillo} uses the Lapack version of the QR
+  decomposition while the stats package uses a \emph{modified} Linpack
+  version.  Hence \code{Armadillo} uses level-3 BLAS code whereas the
+  stats package uses level-1 BLAS.  However, \code{Armadillo} will choke
+  on rank-deficient model matrices whereas the functions from the stats
+  package will handle them properly due to the modified Linpack code.
+  Statisticians want a pivoting scheme of \dQuote{pivot only on
+  (apparent) rank deficiency} and numerical analysts have no idea why
+  statisticians want this so it is not part of conventional linear
+  algebra software.
 }
 \value{
   \code{fastLm} returns a list with two components:
