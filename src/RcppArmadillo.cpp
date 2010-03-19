@@ -25,20 +25,18 @@ using namespace Rcpp ;
 
 extern "C" SEXP RcppArmadillo_wrap(){
 	
-    // using the Named(.) = . notation
-    List cols = make_list( 
-    	Named( "Col<double>" ) = arma::zeros<arma::mat>(5,1), 
-    	Named( "Col<float>" )  = arma::zeros<arma::fmat>(5,1)
+    // using the Argument(.) = . notation
+    List cols = List::create( 
+    	Argument( "Col<double>" ) = arma::zeros<arma::mat>(5,1), 
+    	Argument( "Col<float>" )  = arma::zeros<arma::fmat>(5,1)
     	) ; 
-    
-    // using the Named( . , . ) notation
-    List rows = make_list( 
-    	Named( "Row<double>", arma::zeros<arma::mat>(1,5) ),
-    	Named( "Row<float>" , arma::zeros<arma::fmat>(1,5) )
+    List rows = List::create( 
+    	Argument( "Row<double>") = arma::zeros<arma::mat>(1,5),
+    	Argument( "Row<float>" ) = arma::zeros<arma::fmat>(1,5)
     	) ;
 	
     // using the _[.] = . notation
-    List matrices = make_list( 
+    List matrices = List::create( 
     	_["Mat<int>"]          = arma::eye<arma::imat>( 3,3 ), 
     	_["Mat<double>"]       = arma::eye<arma::mat>( 3,3 ),
     	_["Mat<float>"]        = arma::eye<arma::fmat>( 3, 3 ), 
@@ -68,7 +66,7 @@ extern "C" SEXP RcppArmadillo_wrap(){
     f3(1,1) = arma::zeros<arma::mat>(2,1) ;
     fields["field<colvec>"] = f3 ;
 	
-    List output = make_list( 
+    List output = List::create( 
     	_["matrices : Mat<T>"]  = matrices, 
     	_["rows : Row<T>"]      = rows,
     	_["columns : Col<T>"]   = cols, 
@@ -86,7 +84,7 @@ extern "C" SEXP RcppArmadillo_as_Mat(SEXP input_){
     arma::umat m3 = input[0] ; /* implicit as */
     arma::fmat m4 = input[1] ; /* implicit as */
 	
-    List res = make_list( 
+    List res = List::create( 
     	arma::accu( m1 ),
     	arma::accu( m2 ),
     	arma::accu( m3 ),
@@ -102,7 +100,7 @@ extern "C" SEXP RcppArmadillo_as_Col( SEXP input_){
     arma::ucolvec m3 = input[0] ; /* implicit as */
     arma::fcolvec m4 = input[1] ; /* implicit as */
 	
-    List res = make_list( 
+    List res = List::create( 
     	arma::accu( m1 ),
     	arma::accu( m2 ),
     	arma::accu( m3 ),
@@ -118,7 +116,7 @@ extern "C" SEXP RcppArmadillo_as_Row(SEXP input_){
     arma::urowvec m3 = input[0] ; /* implicit as */
     arma::frowvec m4 = input[1] ; /* implicit as */
 	
-    List res = make_list( 
+    List res = List::create( 
     	arma::accu( m1 ),
     	arma::accu( m2 ),
     	arma::accu( m3 ),
@@ -151,12 +149,11 @@ extern "C" SEXP armadillo_version(SEXP single_){
     if( single ){
 	return Rcpp::wrap( 10000*av.major + 100*av.minor + av.patch ) ;
     }
-    IntegerVector version(3); 
-    version = av.major, av.minor, av.patch ;
-    CharacterVector names(3); 
-    names = "major", "minor", "patch" ;
-    version.names() = names ;
-    version.attr("class" ) = "armadillo_version" ;
+    IntegerVector version = IntegerVector::create( 
+    	_["major"] = av.major, 
+    	_["minor"] = av.minor, 
+    	_["patch"] = av.patch
+    	) ;
     return version ;
 }
 
