@@ -46,9 +46,9 @@ extern "C" SEXP fastLm(SEXP ys, SEXP Xs) {
     						// std.error of estimate 
     arma::colvec stderrest = arma::sqrt( sig2 * arma::diagvec( arma::inv(arma::trans(X)*X)) );
 
-    return Rcpp::make_list( 
-    	Rcpp::Named("coefficients") = coef,
-    	Rcpp::Named("stderr")       = stderrest
+    return Rcpp::List::create( 
+    	Rcpp::Argument("coefficients") = coef,
+    	Rcpp::Argument("stderr")       = stderrest
     ) ;
     
 }
