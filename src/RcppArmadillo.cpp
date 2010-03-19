@@ -25,14 +25,16 @@ using namespace Rcpp ;
 
 extern "C" SEXP RcppArmadillo_wrap(){
 	
-    // using the Argument(.) = . notation
+    // using the Named(.) = . notation
     List cols = List::create( 
-    	Argument( "Col<double>" ) = arma::zeros<arma::mat>(5,1), 
-    	Argument( "Col<float>" )  = arma::zeros<arma::fmat>(5,1)
-    	) ; 
+    	Named( "Col<double>" ) = arma::zeros<arma::mat>(5,1), 
+    	Named( "Col<float>" )  = arma::zeros<arma::fmat>(5,1)
+    	) ;
+    
+    // using the Named(., .)  notation
     List rows = List::create( 
-    	Argument( "Row<double>") = arma::zeros<arma::mat>(1,5),
-    	Argument( "Row<float>" ) = arma::zeros<arma::fmat>(1,5)
+    	Named( "Row<double>",  arma::zeros<arma::mat>(1,5)  ),
+    	Named( "Row<float>" ,  arma::zeros<arma::fmat>(1,5) )
     	) ;
 	
     // using the _[.] = . notation
