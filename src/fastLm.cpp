@@ -44,7 +44,12 @@ extern "C" SEXP fastLm(SEXP ys, SEXP Xs) {
 	double sig2 = ( arma::trans(resid)*resid/(n-k) );
 #endif
     						// std.error of estimate 
+#if ARMA_VERSION_GE_090
     arma::colvec stderrest = arma::sqrt( sig2 * arma::diagvec( arma::inv(arma::trans(X)*X)) );
+#else
+    arma::mat xtxinv = arma::inv(arma::trans(X)*X);
+    arma::colvec stderrest = arma::sqrt( sig2 * xtxinv.diag() );
+#endif
 
     return Rcpp::List::create( 
     	Rcpp::Named("coefficients") = coef,

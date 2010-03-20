@@ -1,7 +1,11 @@
+2010-03-20  Dirk Eddelbuettel  <edd@max.nulle.part>
+
+	* src/fastLm.cpp: Small fix for Armadillo 0.8.2
+
 2010-03-17   Romain Francois <romain@r-enthusiasts.com>
 
 	* src/fastLm.cpp: added some arma:: prefix
-	
+
 	* src/RcppArmadillo.cpp: update examples to use make_list and showcase
 	various ways to use them : Named(.)=., _[.] = , Named( ., . )
 
