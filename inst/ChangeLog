@@ -1,8 +1,7 @@
 2010-04-03  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Set SystemRequirements: to Boost, remove OS_type
-	  restriction now that RcppArmadillo includes Armadillo headers,
-	  add Doug to Authors and Maintainers
+	* DESCRIPTION: Remove OS_type restriction now that RcppArmadillo
+	  includes Armadillo headers, add Doug to Authors and Maintainers
 
 2010-04-03  Douglas Bates  <bates@stat.wisc.edu>
 
