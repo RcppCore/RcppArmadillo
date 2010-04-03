@@ -1,0 +1,477 @@
+// Copyright (C) 2010 NICTA and the authors listed below
+// http://nicta.com.au
+// 
+// Authors:
+// - Conrad Sanderson (conradsand at ieee dot org)
+// 
+// This file is part of the Armadillo C++ library.
+// It is provided without any warranty of fitness
+// for any purpose. You can redistribute this file
+// and/or modify it under the terms of the GNU
+// Lesser General Public License (LGPL) as published
+// by the Free Software Foundation, either version 3
+// of the License or (at your option) any later version.
+// (see http://www.opensource.org/licenses for more info)
+
+
+//! \addtogroup running_stat_vec
+//! @{
+
+
+
+template<typename eT>
+running_stat_vec<eT>::~running_stat_vec()
+  {
+  arma_extra_debug_sigprint_this(this);
+  }
+
+
+
+template<typename eT>
+running_stat_vec<eT>::running_stat_vec(const bool in_calc_cov)
+  : calc_cov(in_calc_cov)
+  {
+  arma_extra_debug_sigprint_this(this);
+  }
+
+
+
+//! update statistics to reflect new sample
+template<typename eT>
+template<typename T1>
+inline
+void
+running_stat_vec<eT>::operator() (const Base<typename get_pod_type<eT>::result, T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  //typedef typename get_pod_type<eT>::result T;
+  
+  const unwrap<T1>        tmp(X.get_ref());
+  const Mat<eT>& sample = tmp.M;
+  
+  arma_check( (sample.is_finite() == false), "running_stat_vec: given sample has non-finite elements" );
+  
+  running_stat_vec_aux::update_stats(*this, sample);
+  }
+
+
+
+//! update statistics to reflect new sample (version for complex numbers)
+template<typename eT>
+template<typename T1>
+inline
+void
+running_stat_vec<eT>::operator() (const Base<std::complex<typename get_pod_type<eT>::result>, T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  //typedef typename std::complex<typename get_pod_type<eT>::result> eT;
+  
+  const unwrap<T1>        tmp(X.get_ref());
+  const Mat<eT>& sample = tmp.M;
+  
+  arma_check( (sample.is_finite() == false), "running_stat_vec: given sample has non-finite elements" );
+  
+  running_stat_vec_aux::update_stats(*this, sample);
+  }
+
+
+
+//! set all statistics to zero
+template<typename eT>
+inline
+void
+running_stat_vec<eT>::reset()
+  {
+  arma_extra_debug_sigprint();
+  
+  counter.reset();
+  
+  r_mean.reset();
+  r_var.reset();
+  r_cov.reset();
+  
+  min_val.reset();
+  max_val.reset();
+  
+  min_val_norm.reset();
+  max_val_norm.reset();
+  }
+
+
+
+//! mean or average value
+template<typename eT>
+inline
+Mat<eT>
+running_stat_vec<eT>::mean()
+  const
+  {
+  arma_extra_debug_sigprint();
+  
+  return r_mean;
+  }
+
+
+
+//! variance
+template<typename eT>
+inline
+Mat<typename get_pod_type<eT>::result>
+running_stat_vec<eT>::var(const u32 norm_type)
+  const
+  {
+  arma_extra_debug_sigprint();
+  
+  const T N = counter.value();
+  
+  if(N > T(1))
+    {
+    if(norm_type == 0)
+      {
+      return r_var;
+      }
+    else
+      {
+      const T N_minus_1 = counter.value_minus_1();
+      return (N_minus_1/N) * r_var;
+      }
+    }
+  else
+    {
+    return zeros< Mat<typename get_pod_type<eT>::result> >(r_mean.n_rows, r_mean.n_cols);
+    }
+  
+  }
+
+
+
+//! standard deviation
+template<typename eT>
+inline
+Mat<typename get_pod_type<eT>::result>
+running_stat_vec<eT>::stddev(const u32 norm_type)
+  const
+  {
+  arma_extra_debug_sigprint();
+  
+  return sqrt( (*this).var(norm_type) );
+  }
+
+
+
+//! covariance
+template<typename eT>
+inline
+Mat<eT>
+running_stat_vec<eT>::cov(const u32 norm_type)
+  const
+  {
+  arma_extra_debug_sigprint();
+  
+  if(calc_cov == true)
+    {
+    const T N = counter.value();
+    
+    if(N > T(1))
+      {
+      if(norm_type == 0)
+        {
+        return r_cov;
+        }
+      else
+        {
+        const T N_minus_1 = counter.value_minus_1();
+        return (N_minus_1/N) * r_cov;
+        }
+      }
+    else
+      {
+      return zeros< Mat<eT> >(r_mean.n_rows, r_mean.n_cols);
+      }
+    }
+  else
+    {
+    return Mat<eT>();
+    }
+  
+  }
+
+
+
+//! vector with minimum values
+template<typename eT>
+inline
+Mat<eT>
+running_stat_vec<eT>::min()
+const
+  {
+  arma_extra_debug_sigprint();
+
+  return min_val;
+  }
+
+
+
+//! vector with maximum values
+template<typename eT>
+inline
+Mat<eT>
+running_stat_vec<eT>::max()
+const
+  {
+  arma_extra_debug_sigprint();
+
+  return max_val;
+  }
+
+
+
+//
+
+
+
+//! update statistics to reflect new sample
+template<typename eT>
+inline
+void
+running_stat_vec_aux::update_stats(running_stat_vec<eT>& x, const Mat<eT>& sample)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename running_stat_vec<eT>::T T;
+  
+  const T N = x.counter.value();
+  
+  if(N > T(0))
+    {
+    arma_debug_assert_same_size(x.r_mean, sample, "running_stat_vec(): dimensionality mismatch");
+    
+    const u32 n_elem      = sample.n_elem;
+    const eT* sample_mem  = sample.memptr();
+          eT* r_mean_mem  = x.r_mean.memptr();
+           T* r_var_mem   = x.r_var.memptr();
+          eT* min_val_mem = x.min_val.memptr();
+          eT* max_val_mem = x.max_val.memptr();
+    
+    const T  N_plus_1   = x.counter.value_plus_1();
+    const T  N_minus_1  = x.counter.value_minus_1();
+    
+    if(x.calc_cov == true)
+      {
+      const Mat<eT> tmp1 = sample - x.r_mean;
+      
+      Mat<eT> tmp2;
+      
+      if(sample.n_cols == 1)
+        {
+        tmp2 = tmp1*trans(tmp1);
+        }
+      else
+        {
+        tmp2 = trans(tmp1)*tmp1;
+        }
+      
+      x.r_cov *= (N_minus_1/N);
+      x.r_cov += tmp2 / N_plus_1;
+      }
+    
+    
+    for(u32 i=0; i<n_elem; ++i)
+      {
+      const eT val = sample_mem[i];
+      
+      if(val < min_val_mem[i])
+        {
+        min_val_mem[i] = val;
+        }
+      
+      if(val > max_val_mem[i])
+        {
+        max_val_mem[i] = val;
+        }
+        
+      const eT r_mean_val = r_mean_mem[i];
+      const eT tmp        = val - r_mean_val;
+    
+      r_var_mem[i] = N_minus_1/N * r_var_mem[i] + (tmp*tmp)/N_plus_1;
+      
+      r_mean_mem[i] = r_mean_val + (val - r_mean_val)/N_plus_1;
+      }
+    }
+  else
+    {
+    arma_debug_check( (sample.is_vec() == false), "running_stat_vec(): given sample is not a vector");
+    
+    x.r_mean.set_size(sample.n_rows, sample.n_cols);
+    
+    x.r_var.zeros(sample.n_rows, sample.n_cols);
+    
+    if(x.calc_cov == true)
+      {
+      x.r_cov.zeros(sample.n_elem, sample.n_elem);
+      }
+    
+    x.min_val.set_size(sample.n_rows, sample.n_cols);
+    x.max_val.set_size(sample.n_rows, sample.n_cols);
+    
+    
+    const u32 n_elem      = sample.n_elem;
+    const eT* sample_mem  = sample.memptr();
+          eT* r_mean_mem  = x.r_mean.memptr();
+          eT* min_val_mem = x.min_val.memptr();
+          eT* max_val_mem = x.max_val.memptr();
+          
+    
+    for(u32 i=0; i<n_elem; ++i)
+      {
+      const eT val = sample_mem[i];
+      
+      r_mean_mem[i]  = val;
+      min_val_mem[i] = val;
+      max_val_mem[i] = val;
+      }
+    }
+  
+  x.counter++;
+  }
+
+
+
+//! update statistics to reflect new sample (version for complex numbers)
+template<typename T>
+inline
+void
+running_stat_vec_aux::update_stats(running_stat_vec< std::complex<T> >& x, const Mat<T>& sample)
+  {
+  arma_extra_debug_sigprint();
+  
+  const Mat< std::complex<T> > tmp = conv_to< Mat< std::complex<T> > >::from(sample);
+  
+  running_stat_vec_aux::update_stats(x, tmp);
+  }
+
+
+
+//! alter statistics to reflect new sample (version for complex numbers)
+template<typename T>
+inline
+void
+running_stat_vec_aux::update_stats(running_stat_vec< std::complex<T> >& x, const Mat< std::complex<T> >& sample)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename std::complex<T> eT;
+  
+  const T N = x.counter.value();
+  
+  if(N > T(0))
+    {
+    arma_debug_assert_same_size(x.r_mean, sample, "running_stat_vec(): dimensionality mismatch");
+    
+    const u32 n_elem           = sample.n_elem;
+    const eT* sample_mem       = sample.memptr();
+          eT* r_mean_mem       = x.r_mean.memptr();
+           T* r_var_mem        = x.r_var.memptr();
+          eT* min_val_mem      = x.min_val.memptr();
+          eT* max_val_mem      = x.max_val.memptr();
+           T* min_val_norm_mem = x.min_val_norm.memptr();
+           T* max_val_norm_mem = x.max_val_norm.memptr();
+    
+    const T  N_plus_1   = x.counter.value_plus_1();
+    const T  N_minus_1  = x.counter.value_minus_1();
+    
+    if(x.calc_cov == true)
+      {
+      const Mat<eT> tmp1 = sample - x.r_mean;
+      
+      Mat<eT> tmp2;
+      
+      if(sample.n_cols == 1)
+        {
+        tmp2 = conj(tmp1)*trans(tmp1);
+        }
+      else
+        {
+        tmp2 = trans(conj(tmp1))*tmp1;
+        }
+      
+      x.r_cov *= (N_minus_1/N);
+      x.r_cov += tmp2 / N_plus_1;
+      }
+    
+    
+    for(u32 i=0; i<n_elem; ++i)
+      {
+      const eT& val      = sample_mem[i];
+      const  T  val_norm = std::norm(val);
+      
+      if(val_norm < min_val_norm_mem[i])
+        {
+        min_val_norm_mem[i] = val_norm;
+        min_val_mem[i]      = val;
+        }
+      
+      if(val_norm > max_val_norm_mem[i])
+        {
+        max_val_norm_mem[i] = val_norm;
+        max_val_mem[i]      = val;
+        }
+      
+      const eT& r_mean_val = r_mean_mem[i];
+      
+      r_var_mem[i] = N_minus_1/N * r_var_mem[i] + std::norm(val - r_mean_val)/N_plus_1;
+      
+      r_mean_mem[i] = r_mean_val + (val - r_mean_val)/N_plus_1;
+      }
+    
+    }
+  else
+    {
+    arma_debug_check( (sample.is_vec() == false), "running_stat_vec(): given sample is not a vector");
+    
+    x.r_mean.set_size(sample.n_rows, sample.n_cols);
+    
+    x.r_var.zeros(sample.n_rows, sample.n_cols);
+    
+    if(x.calc_cov == true)
+      {
+      x.r_cov.zeros(sample.n_elem, sample.n_elem);
+      }
+    
+    x.min_val.set_size(sample.n_rows, sample.n_cols);
+    x.max_val.set_size(sample.n_rows, sample.n_cols);
+    
+    x.min_val_norm.set_size(sample.n_rows, sample.n_cols);
+    x.max_val_norm.set_size(sample.n_rows, sample.n_cols);
+    
+    
+    const u32 n_elem           = sample.n_elem;
+    const eT* sample_mem       = sample.memptr();
+          eT* r_mean_mem       = x.r_mean.memptr();
+          eT* min_val_mem      = x.min_val.memptr();
+          eT* max_val_mem      = x.max_val.memptr();
+           T* min_val_norm_mem = x.min_val_norm.memptr();
+           T* max_val_norm_mem = x.max_val_norm.memptr();
+    
+    for(u32 i=0; i<n_elem; ++i)
+      {
+      const eT& val      = sample_mem[i];
+      const  T  val_norm = std::norm(val);
+      
+      r_mean_mem[i]  = val;
+      min_val_mem[i] = val;
+      max_val_mem[i] = val;
+      
+      min_val_norm_mem[i] = val_norm;
+      max_val_norm_mem[i] = val_norm;
+      }
+    }
+  
+  x.counter++;
+  }
+
+
+
+//! @}
