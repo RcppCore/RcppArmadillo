@@ -4,7 +4,7 @@ Title: Rcpp/Armadillo translation layer
 Version: 0.1.2
 Date: $Date$
 Author: Romain Francois and Dirk Eddelbuettel
-Maintainer: Dirk Eddelbuettel and Romain Francois <RomainAndDirk@r-enthusiasts.com>
+Maintainer: Dirk Eddelbuettel and Romain Francois <RcppArmadillo-authors@r-enthusiasts.com>
 Description: R and Armadillo integration using Rcpp
  Armadillo is a C++ linear algebra library aiming towards a good balance 
  between speed and ease of use. Integer, floating point and complex 
@@ -26,6 +26,5 @@ License: GPL (>= 2)
 LinkingTo: Rcpp
 LazyLoad: yes
 Depends: Rcpp (>= 0.7.10.2)
-SystemRequirements: Armadillo (>= 0.6.10), Boost
-URL: http://arma.sourceforge.net/, http://dirk.eddelbuettel.com/code/rcpp.html
+URL: http://arma.sourceforge.net/, http://dirk.eddelbuettel.com/code/rcpp.html, http://romainfrancois.blog.free.fr/index.php?category/R-package/RcppArmadillo
 OS_type: unix
