@@ -1,6 +1,5 @@
 
 rm -f  config.log config.status confdefs.h \
-       src/Makevars inst/include/RcppArmadilloDefines.h \
        src/*.o src/*.so \
        */*~ *~
 rm -rf autom4te.cache
