@@ -1,3 +1,12 @@
+2010-03-20  Douglas Bates  <bates@stat.wisc.edu>
+
+	* inst/include/armadillo: Added the armadillo headers and the
+	armadillo_bits directory.  This is from the armadillo sources with
+	only the armadillo_bits/config.hpp file modified.
+
+	* configure: and many other configuration files.  Removed the
+	foo.in files, modified cleanup not to remove the target files.
+
 2010-03-20  Dirk Eddelbuettel  <edd@max.nulle.part>
 
 	* src/fastLm.cpp: Small fix for Armadillo 0.8.2
