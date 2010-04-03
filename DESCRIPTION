@@ -1,7 +1,7 @@
 Package: RcppArmadillo
 Type: Package
 Title: Rcpp/Armadillo translation layer
-Version: 0.1.2
+Version: 0.1.0.2
 Date: $Date$
 Author: Romain Francois and Dirk Eddelbuettel and Doug Bates
 Maintainer: Romain and Dirk and Doug <RcppArmadillo-authors@r-enthusiasts.com>
@@ -26,5 +26,4 @@ License: GPL (>= 2)
 LinkingTo: Rcpp
 LazyLoad: yes
 Depends: Rcpp (>= 0.7.10.2)
-SystemRequirements: Boost
 URL: http://arma.sourceforge.net/, http://dirk.eddelbuettel.com/code/rcpp.html, http://romainfrancois.blog.free.fr/index.php?category/R-package/RcppArmadillo
