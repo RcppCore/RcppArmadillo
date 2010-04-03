@@ -1,0 +1,8 @@
+## -*- mode: makefile; -*-
+
+## Configure tells us about locations for
+## both Rcpp (ie libRcpp.so and Rcpp.h) and 
+## Armadillo headers and library via the variables
+PKG_CXXFLAGS=$(shell Rscript -e "Rcpp:::CxxFlags()"|sed /^WARNING/d) -I. -I../inst/include
+PKG_LIBS=$(shell Rscript -e "Rcpp:::LdFlags()"|sed /^WARNING/d) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
+
