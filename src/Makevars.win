@@ -1,8 +1,9 @@
 ## This assumes that we can call Rscript to ask Rcpp about its locations
 ## Use the R_HOME indirection to support installations of multiple R version
-PKG_LIBS = `$(R_HOME)/bin/Rscript --vanilla -e 'Rcpp:::LdFlags()'`
-PKG_CPPFLAGS = `$(R_HOME)/bin/Rscript --vanilla -e 'Rcpp:::CxxFlags()'`
+PKG_LIBS = $(shell $(R_HOME)/bin/Rscript --vanilla -e 'Rcpp:::LdFlags()')
+PKG_CPPFLAGS = $(shell $(R_HOME)/bin/Rscript --vanilla -e 'Rcpp:::CxxFlags()')
 
 INCLUDE_DIR=../inst/include
-PKG_CPPFLAGS += $(INCLUDE_DIR)
+PKG_CPPFLAGS += -I$(INCLUDE_DIR) -I.
 
+PKG_LIBS += $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
