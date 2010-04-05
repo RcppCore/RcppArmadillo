@@ -24,7 +24,6 @@
 
 #include <RcppCommon.h>
 #include <armadillo>
-#include <RcppArmadilloDefines.h>
 
 /* forward declarations */
 namespace Rcpp {
@@ -33,17 +32,14 @@ namespace Rcpp {
     template <typename T> SEXP wrap ( const arma::Row<T>& ) ;
     template <typename T> SEXP wrap ( const arma::Col<T>& ) ;
     template <typename T> SEXP wrap ( const arma::field<T>& ) ;
-    #if ARMA_VERSION_GE_070
     template <typename T> SEXP wrap ( const arma::Cube<T>& ) ;
-    #endif
-
+    
     template <typename T1, typename T2, typename glue_type> 
     SEXP wrap(const arma::Glue<T1, T2, glue_type>& X ) ;
     
     template <typename T1, typename op_type>
     SEXP wrap(const arma::Op<T1, op_type>& X ) ;
     
-    #if ARMA_VERSION_GE_090
     template <typename T1, typename T2, typename glue_type> 
     SEXP wrap(const arma::eGlue<T1, T2, glue_type>& X ) ;
     
@@ -62,7 +58,6 @@ namespace Rcpp {
     
     template <typename T1, typename T2, typename glue_type>
     SEXP wrap(const arma::eGlueCube<T1,T2,glue_type>& X ) ;
-    #endif 
     
     namespace traits {
 
@@ -71,9 +66,7 @@ namespace Rcpp {
 	template <typename T> class Exporter< arma::Row<T> > ;
 	template <typename T> class Exporter< arma::Col<T> > ;
 // template <typename T> class Exporter< arma::field<T> > ;
-// #ifdef ARMA_VERSION_GE_070
-// 	template <typename T> class Exporter< arma::Cube<T> > ;
-// #endif
+// template <typename T> class Exporter< arma::Cube<T> > ;
 
     } // namespace traits 
 
@@ -113,12 +106,10 @@ namespace Rcpp{
 	return RcppArmadillo::arma_wrap(data, Dimension( 1, data.n_elem ) ) ;
     }
 
-    #if ARMA_VERSION_GE_070
     template <typename T> SEXP wrap( const arma::Cube<T>& data ){
 	return RcppArmadillo::arma_wrap(data, Dimension(  data.n_rows, data.n_cols, data.n_slices ) ) ;
     }
-    #endif
-
+    
     namespace RcppArmadillo {
 	
 	/* Importer class for field<T> */
@@ -153,9 +144,6 @@ namespace Rcpp{
     SEXP wrap(const arma::Op<T1, op_type>& X ){
     	    return wrap( arma::Mat<typename T1::elem_type>(X) ) ;
     }
-    
-    /* TODO: will do better when I can use 0.9.0 */
-    #if ARMA_VERSION_GE_090
     
     template <typename T1, typename op_type>
     SEXP wrap(const arma::OpCube<T1,op_type>& X ){
@@ -224,8 +212,7 @@ namespace Rcpp{
     SEXP wrap(const arma::eGlueCube<T1,T2,glue_type>& X ){
     	return wrap( arma::Cube<typename T1::elem_type>(X) ) ;
     }
-    #endif
-
+    
     /* support for Rcpp::as */
 
     namespace traits {
