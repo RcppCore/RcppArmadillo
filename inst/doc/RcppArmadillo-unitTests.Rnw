@@ -4,7 +4,7 @@
 \setmargrb{0.75in}{0.75in}{0.75in}{0.75in}
 
 \usepackage[colorlinks]{hyperref}
-\author{Dirk Eddelbuettel \and Romain Fran\c{c}ois}
+\author{Dirk Eddelbuettel, Romain Fran\c{c}ois and Douglas Bates}
 \title{RcppArmadillo : Unit testing results}
 \begin{document}
 \maketitle
