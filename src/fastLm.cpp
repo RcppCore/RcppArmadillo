@@ -27,29 +27,15 @@ extern "C" SEXP fastLm(SEXP ys, SEXP Xs) {
     Rcpp::NumericMatrix Xr(Xs);			// creates Rcpp matrix from SEXP
     int n = Xr.nrow(), k = Xr.ncol();
 
-#if ARMA_VERSION_GE_090
     arma::mat X(Xr.begin(), n, k, false);   	// reuses memory and avoids extra copy
     arma::colvec y(yr.begin(), yr.size(), false);
-#else
-    arma::mat X(Xr.begin(), n, k);
-    arma::colvec y(yr.begin(), yr.size());
-#endif
 
 	arma::colvec coef = arma::solve(X, y);            // fit model y ~ X
 	arma::colvec resid = y - X*coef; 		// residuals
 
-#if ARMA_VERSION_GE_090
 	double sig2 = arma::as_scalar( arma::trans(resid)*resid/(n-k) );
-#else
-	double sig2 = ( arma::trans(resid)*resid/(n-k) );
-#endif
     						// std.error of estimate 
-#if ARMA_VERSION_GE_090
     arma::colvec stderrest = arma::sqrt( sig2 * arma::diagvec( arma::inv(arma::trans(X)*X)) );
-#else
-    arma::mat xtxinv = arma::inv(arma::trans(X)*X);
-    arma::colvec stderrest = arma::sqrt( sig2 * xtxinv.diag() );
-#endif
 
     return Rcpp::List::create( 
     	Rcpp::Named("coefficients") = coef,
