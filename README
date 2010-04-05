@@ -1,0 +1,39 @@
+
+
+===== typical use =====
+
+to use RcppArmadillo, you need to create a package that : 
+
+- contains the following line in its DESCRIPTION file: 
+
+LinkingTo: RcppArmadillo
+
+- contains a src/Mavevars (and src/Makevars.win) with: 
+
+PKG_CXXFLAGS=$(shell Rscript -e "Rcpp:::CxxFlags()"|sed /^WARNING/d)
+PKG_LIBS=$(shell Rscript -e "Rcpp:::LdFlags()"|sed /^WARNING/d) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
+
+- include the RcppArmadillo header :
+
+#include <RcppArmadillo.h> 
+
+
+
+===== options : atlas and boost =====
+
+armadillo can optionally use atlas and boost. Please refer to the 
+armadillo documentation http://arma.sourceforge.net/
+
+RcppArmadillo does not force these features. it is up to the third party package 
+to enable these them for their package.
+
+If your package wants to make use of these features, you can add a subset of 
+these lines before #include <RcppArmadillo.h> 
+
+#define ARMA_USE_BOOST
+#define ARMA_USE_BOOST_DATE
+#define ARMA_USE_ATLAS
+
+when you do so, you must make sure that the corresponding features are 
+available, which typically involves writing a configure file. Refer to 
+Writing R Extensions for the procedure.
