@@ -10,8 +10,8 @@ LinkingTo: RcppArmadillo
 
 - contains a src/Mavevars (and src/Makevars.win) with: 
 
-PKG_CXXFLAGS=$(shell Rscript -e "Rcpp:::CxxFlags()"|sed /^WARNING/d)
-PKG_LIBS=$(shell Rscript -e "Rcpp:::LdFlags()"|sed /^WARNING/d) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
+PKG_CXXFLAGS=$(shell Rscript -e "Rcpp:::CxxFlags()" )
+PKG_LIBS=$(shell Rscript -e "Rcpp:::LdFlags()" ) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
 
 - include the RcppArmadillo header :
 
