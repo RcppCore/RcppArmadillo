@@ -1,9 +1,15 @@
+0.2.0   (under development)
+
+    o   Armadillo sources (using release 0.9.4) are now included in the package
+   	    using a standardized build suitable for our purposes (not assuming
+   	    Boost or Atlas) -- see the new README for details
+
 0.1.0	2010-03-11
 
     o	the fastLm() implementation of a bare-bones lm() fit
-	(using Armadillo's solve() function) provides an example
-	of how efficient code can be written compactly using 
-	the combination of Rcpp, RcppAramadillo and Armadillo
+ 	    (using Armadillo's solve() function) provides an example
+	    of how efficient code can be written compactly using 
+	    the combination of Rcpp, RcppAramadillo and Armadillo
 
     o	support for Rcpp implicit wrap of these types :
     	Mat<T>, Col<T>, Row<T>, Cube<T> where T is one of : 
