@@ -22,62 +22,8 @@
 #ifndef RcppArmadillo__RcppArmadillo__h
 #define RcppArmadillo__RcppArmadillo__h
 
-#include <RcppCommon.h>
-#include <armadillo>
-
-/* forward declarations */
-namespace Rcpp {
-    /* support for wrap */
-    template <typename T> SEXP wrap ( const arma::Mat<T>& ) ;
-    template <typename T> SEXP wrap ( const arma::Row<T>& ) ;
-    template <typename T> SEXP wrap ( const arma::Col<T>& ) ;
-    template <typename T> SEXP wrap ( const arma::field<T>& ) ;
-    template <typename T> SEXP wrap ( const arma::Cube<T>& ) ;
-    
-    template <typename T1, typename T2, typename glue_type> 
-    SEXP wrap(const arma::Glue<T1, T2, glue_type>& X ) ;
-    
-    template <typename T1, typename op_type>
-    SEXP wrap(const arma::Op<T1, op_type>& X ) ;
-    
-    template <typename T1, typename T2, typename glue_type> 
-    SEXP wrap(const arma::eGlue<T1, T2, glue_type>& X ) ;
-    
-    template <typename T1, typename op_type>
-    SEXP wrap(const arma::eOp<T1, op_type>& X ) ;
-    
-    /* TODO: maybe we can move those out of if( 0.9.0 ) */
-    template <typename T1, typename op_type>
-    SEXP wrap(const arma::OpCube<T1,op_type>& X ) ;
-    
-    template <typename T1, typename T2, typename glue_type>
-    SEXP wrap(const arma::GlueCube<T1,T2,glue_type>& X ) ;
-    
-    template <typename T1, typename op_type>
-    SEXP wrap(const arma::eOpCube<T1,op_type>& X ) ;
-    
-    template <typename T1, typename T2, typename glue_type>
-    SEXP wrap(const arma::eGlueCube<T1,T2,glue_type>& X ) ;
-    
-    namespace traits {
-
-	/* support for as */
-	template <typename T> class Exporter< arma::Mat<T> > ;
-	template <typename T> class Exporter< arma::Row<T> > ;
-	template <typename T> class Exporter< arma::Col<T> > ;
-// template <typename T> class Exporter< arma::field<T> > ;
-// template <typename T> class Exporter< arma::Cube<T> > ;
-
-    } // namespace traits 
-
-}
-
+#include <RcppArmadilloForward.h>
 #include <Rcpp.h>
-
-RcppExport SEXP RcppArmadilloExample() ;
-RcppExport SEXP RcppArmadilloExample_as_Mat( SEXP );
-RcppExport SEXP RcppArmadilloExample_as_Col( SEXP );
-RcppExport SEXP RcppArmadilloExample_as_Row( SEXP );
 
 namespace Rcpp{
 
