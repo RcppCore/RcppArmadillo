@@ -2,7 +2,7 @@
 //
 // RcppArmadillo.cpp: Rcpp/Armadillo glue
 //
-// Copyright (C)  2010 Dirk Eddelbuettel and Romain Francois
+// Copyright (C)  2010 Dirk Eddelbuettel, Romain Francois and Douglas Bates
 //
 // This file is part of RcppArmadillo.
 //

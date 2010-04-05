@@ -52,7 +52,7 @@ fastLm(y, X)
 \references{Armadillo project: \url{http://arma.sourceforge.net/}}
 \author{
   Armadillo is written by Conrad Sanderson. RcppArmadillo is written by
-  Romain Francois and Dirk Eddelbuettel.
+  Romain Francois, Dirk Eddelbuettel and Douglas Bates.
 }
 \examples{
   data(trees)
