@@ -6,14 +6,14 @@ to use RcppArmadillo, you need to create a package that :
 
 - contains the following line in its DESCRIPTION file: 
 
-LinkingTo: RcppArmadillo
+LinkingTo: Rcpp, RcppArmadillo
 
 - contains a src/Mavevars (and src/Makevars.win) with: 
 
-PKG_CXXFLAGS=$(shell Rscript -e "Rcpp:::CxxFlags()" )
 PKG_LIBS=$(shell Rscript -e "Rcpp:::LdFlags()" ) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
 
-- include the RcppArmadillo header :
+- include the RcppArmadillo.h header. It already includes Rcpp.h so there is no
+need to include Rcpp.h as well
 
 #include <RcppArmadillo.h> 
 
@@ -37,3 +37,13 @@ these lines before #include <RcppArmadillo.h>
 when you do so, you must make sure that the corresponding features are 
 available, which typically involves writing a configure file. Refer to 
 Writing R Extensions for the procedure.
+
+
+===== questions =====
+
+Please use the Rcpp-devel mailing list on r-forge 
+for questions about RcppArmadillo (subscribe first).
+https://lists.r-forge.r-project.org/cgi-bin/mailman/listinfo/rcpp-devel
+
+Questions about armadillo itself should be directed to the armadillo forum
+http://sourceforge.net/apps/phpbb/arma/
