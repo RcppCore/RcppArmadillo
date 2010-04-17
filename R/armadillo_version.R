@@ -16,6 +16,6 @@
 ## along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
 armadillo_version <- function(single = FALSE){
-	.Cpp( "armadillo_version", isTRUE(single), PACKAGE = "RcppArmadillo" )
+	.Call( "armadillo_version", isTRUE(single), PACKAGE = "RcppArmadillo" )
 }
 

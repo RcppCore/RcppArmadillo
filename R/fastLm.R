@@ -23,7 +23,7 @@ fastLm <- function(y, X) {
     stopifnot(is.matrix(X))
     stopifnot(nrow(y)==nrow(X))
 
-    res <- .Cpp("fastLm", y, X, package="RcppArmadillo")
+    res <- .Call("fastLm", y, X, package="RcppArmadillo")
 }
 
 ## What would be nice here:
