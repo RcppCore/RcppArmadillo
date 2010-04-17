@@ -18,7 +18,7 @@
 # along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
 test.wrap.R <- function(){
-	res <- .Cpp( "RcppArmadillo_wrap", PACKAGE = "RcppArmadillo" )
+	res <- .Call( "RcppArmadillo_wrap", PACKAGE = "RcppArmadillo" )
 
 	checkEquals( res[[1]][[1]], matrix(as.integer((diag(3))),nr=3), msg = "eye<imat>(3,3)" )
 	checkEquals( res[[1]][[2]], diag(3), msg = "eye<mat>(3,3)" )
@@ -36,12 +36,12 @@ test.wrap.R <- function(){
 }
 
 test.wrap.Glue <- function(){
-	res <- .Cpp( "RcppArmadillo_wrap_Glue", PACKAGE = "RcppArmadillo" )
+	res <- .Call( "RcppArmadillo_wrap_Glue", PACKAGE = "RcppArmadillo" )
 	checkEquals( res[[1]], 2*diag(3), msg = "wrap(Glue)" )
 }
 
 test.wrap.Op <- function(){
-	res <- .Cpp( "RcppArmadillo_wrap_Op", PACKAGE = "RcppArmadillo" )
+	res <- .Call( "RcppArmadillo_wrap_Op", PACKAGE = "RcppArmadillo" )
 	checkEquals( res[[1]], -1*diag(3), msg = "wrap(Op)" )
 }
 
@@ -49,21 +49,21 @@ test.as.Mat <- function(){
 
 	integer_mat <- matrix( as.integer(diag(4)), ncol = 4, nrow = 4 )
 	numeric_mat <- diag(5)
-	res <- .Cpp( "RcppArmadillo_as_Mat",
+	res <- .Call( "RcppArmadillo_as_Mat",
 		list( integer_mat, numeric_mat ),
 		PACKAGE = "RcppArmadillo" )
 	checkEquals( unlist( res), c(4L, 5L, 4L, 5L ), msg = "as<Mat>" )
 }
 
 test.as.Col <- function(){
-	res <- .Cpp( "RcppArmadillo_as_Col",
+	res <- .Call( "RcppArmadillo_as_Col",
 	      list( 1:10, as.numeric(1:10) ),
 	      PACKAGE = "RcppArmadillo" )
 	checkEquals( unlist( res ), rep(55.0, 4 ), msg = "as<Col>" )
 }
 
 test.as.Row <- function(){
-	res <- .Cpp( "RcppArmadillo_as_Row",
+	res <- .Call( "RcppArmadillo_as_Row",
 	      list( 1:10, as.numeric(1:10) ),
 	      PACKAGE = "RcppArmadillo" )
 	checkEquals( unlist( res ), rep(55.0, 4 ), msg = "as<Row>" )
@@ -71,7 +71,7 @@ test.as.Row <- function(){
 
 test.fastLm <- function() {
     data(trees)
-    flm <- .Cpp("fastLm",
+    flm <- .Call("fastLm",
                  log(trees$Volume),
                  cbind(rep(1,31), log(trees$Girth)),
                  PACKAGE="RcppArmadillo")

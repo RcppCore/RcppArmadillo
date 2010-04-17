@@ -159,3 +159,10 @@ extern "C" SEXP armadillo_version(SEXP single_){
     return version ;
 }
 
+#if defined(WIN32)
+#include <R_ext/Rdynload.h>
+void R_init_RcppArmadillo(DllInfo* info){
+	std::set_terminate( forward_uncaught_exceptions_to_r ) ;
+}
+#endif
+
