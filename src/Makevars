@@ -1,5 +1,5 @@
 ## -*- mode: makefile; -*-
 
-PKG_CXXFLAGS=$(shell Rscript -e "Rcpp:::CxxFlags()") -I. -I../inst/include
+PKG_CXXFLAGS=-I../inst/include
 PKG_LIBS=$(shell Rscript -e "Rcpp:::LdFlags()") $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
 
