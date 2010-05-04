@@ -1,3 +1,4 @@
-useDynLib( RcppArmadillo)
+useDynLib(RcppArmadillo)
 
-export(fastLm)                          # the only visible function here
+export(fastLm)
+export(RcppArmadillo.package.skeleton)
