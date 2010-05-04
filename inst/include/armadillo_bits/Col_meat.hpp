@@ -796,4 +796,61 @@ Col<eT>::load(std::istream& is, const file_type type)
   }
 
 
+
+template<typename eT>
+inline
+typename Col<eT>::row_iterator
+Col<eT>::begin_row(const u32 row_num)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (row_num >= Mat<eT>::n_rows), "begin_row(): index out of bounds");
+  
+  return Mat<eT>::memptr() + row_num;
+  }
+
+
+
+template<typename eT>
+inline
+typename Col<eT>::const_row_iterator
+Col<eT>::begin_row(const u32 row_num) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (row_num >= Mat<eT>::n_rows), "begin_row(): index out of bounds");
+  
+  return Mat<eT>::memptr() + row_num;
+  }
+
+
+
+template<typename eT>
+inline
+typename Col<eT>::row_iterator
+Col<eT>::end_row(const u32 row_num)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (row_num >= Mat<eT>::n_rows), "end_row(): index out of bounds");
+  
+  return Mat<eT>::memptr() + row_num + 1;
+  }
+
+
+
+template<typename eT>
+inline
+typename Col<eT>::const_row_iterator
+Col<eT>::end_row(const u32 row_num) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (row_num >= Mat<eT>::n_rows), "end_row(): index out of bounds");
+  
+  return Mat<eT>::memptr() + row_num + 1;
+  }
+
+
+
 //! @}

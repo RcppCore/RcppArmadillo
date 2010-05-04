@@ -1,7 +1,7 @@
 Package: RcppArmadillo
 Type: Package
 Title: Rcpp/Armadillo translation layer
-Version: 0.1.0.3
+Version: 0.1.0.4
 Date: $Date$
 Author: Romain Francois, Dirk Eddelbuettel and Doug Bates
 Maintainer: Romain, Dirk and Doug <RcppArmadillo-authors@r-enthusiasts.com>
@@ -19,6 +19,9 @@ Description: R and Armadillo integration using Rcpp
  .
  This library is useful if C++ has been decided as the language of choice 
  (due to speed and/or integration capabilities), rather than another language.
+ .
+ The RcppArmadillo package includes the header from the templated Armadillo 
+ library.
  .
  This Armadillo / C integration provides a nice illustration of the 
  capabilities of the Rcpp package for seamless R and C++ integration/

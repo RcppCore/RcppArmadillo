@@ -2521,6 +2521,384 @@ Mat<eT>::load(std::istream& is, const file_type type)
 
 
 
+template<typename eT>
+inline
+Mat<eT>::row_iterator::row_iterator(Mat<eT>& in_M, const u32 in_row)
+  : M  (in_M  )
+  , row(in_row)
+  , col(0     )
+  {
+  arma_extra_debug_sigprint();
+  }
+
+
+
+template<typename eT>
+inline
+eT&
+Mat<eT>::row_iterator::operator*()
+  {
+  return M.at(row,col);
+  }
+
+
+
+template<typename eT>
+inline
+typename Mat<eT>::row_iterator&
+Mat<eT>::row_iterator::operator++()
+  {
+  ++col;
+  
+  if(col >= M.n_cols)
+    {
+    col = 0;
+    ++row;
+    }
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+inline
+void
+Mat<eT>::row_iterator::operator++(int)
+  {
+  operator++();
+  }
+
+
+
+template<typename eT>
+inline
+typename Mat<eT>::row_iterator&
+Mat<eT>::row_iterator::operator--()
+  {
+  if(col > 0)
+    {
+    --col;
+    }
+  else
+    {
+    if(row > 0)
+      {
+      col = M.n_cols - 1;
+      --row;
+      }
+    }
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+inline
+void
+Mat<eT>::row_iterator::operator--(int)
+  {
+  operator--();
+  }
+
+
+
+template<typename eT>
+inline
+bool
+Mat<eT>::row_iterator::operator!=(const typename Mat<eT>::row_iterator& X) const
+  {
+  return ( (row != X.row) || (col != X.col) ) ? true : false;
+  }
+
+
+
+template<typename eT>
+inline
+bool
+Mat<eT>::row_iterator::operator==(const typename Mat<eT>::row_iterator& X) const
+  {
+  return ( (row == X.row) && (col == X.col) ) ? true : false;
+  }
+
+
+
+template<typename eT>
+inline
+Mat<eT>::const_row_iterator::const_row_iterator(const Mat<eT>& in_M, const u32 in_row)
+  : M  (in_M  )
+  , row(in_row)
+  , col(0     )
+  {
+  arma_extra_debug_sigprint();
+  }
+
+
+
+template<typename eT>
+inline
+Mat<eT>::const_row_iterator::const_row_iterator(const Mat<eT>::row_iterator& X)
+  : M  (X.M)
+  , row(X.row)
+  , col(X.col)
+  {
+  arma_extra_debug_sigprint();
+  }
+
+
+
+template<typename eT>
+inline
+eT
+Mat<eT>::const_row_iterator::operator*() const
+  {
+  return M.at(row,col);
+  }
+
+
+
+template<typename eT>
+inline
+typename Mat<eT>::const_row_iterator&
+Mat<eT>::const_row_iterator::operator++()
+  {
+  ++col;
+  
+  if(col >= M.n_cols)
+    {
+    col = 0;
+    ++row;
+    }
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+inline
+void
+Mat<eT>::const_row_iterator::operator++(int)
+  {
+  operator++();
+  }
+
+
+
+template<typename eT>
+inline
+typename Mat<eT>::const_row_iterator&
+Mat<eT>::const_row_iterator::operator--()
+  {
+  if(col > 0)
+    {
+    --col;
+    }
+  else
+    {
+    if(row > 0)
+      {
+      col = M.n_cols - 1;
+      --row;
+      }
+    }
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+inline
+void
+Mat<eT>::const_row_iterator::operator--(int)
+  {
+  operator--();
+  }
+
+
+
+template<typename eT>
+inline
+bool
+Mat<eT>::const_row_iterator::operator!=(const typename Mat<eT>::const_row_iterator& X) const
+  {
+  return ( (row != X.row) || (col != X.col) ) ? true : false;
+  }
+
+
+
+template<typename eT>
+inline
+bool
+Mat<eT>::const_row_iterator::operator==(const typename Mat<eT>::const_row_iterator& X) const
+  {
+  return ( (row == X.row) && (col == X.col) ) ? true : false;
+  }
+
+
+
+template<typename eT>
+inline
+typename Mat<eT>::iterator
+Mat<eT>::begin()
+  {
+  arma_extra_debug_sigprint();
+  
+  return memptr();
+  }
+
+
+
+template<typename eT>
+inline
+typename Mat<eT>::const_iterator
+Mat<eT>::begin() const
+  {
+  arma_extra_debug_sigprint();
+  
+  return memptr();
+  }
+
+
+
+template<typename eT>
+inline
+typename Mat<eT>::iterator
+Mat<eT>::end()
+  {
+  arma_extra_debug_sigprint();
+  
+  return memptr() + n_elem;
+  }
+
+
+
+template<typename eT>
+inline
+typename Mat<eT>::const_iterator
+Mat<eT>::end() const
+  {
+  arma_extra_debug_sigprint();
+  
+  return memptr() + n_elem;
+  }
+  
+
+
+template<typename eT>
+inline
+typename Mat<eT>::col_iterator
+Mat<eT>::begin_col(const u32 col_num)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (col_num >= n_cols), "begin_col(): index out of bounds");
+  
+  return colptr(col_num);
+  }
+
+
+
+template<typename eT>
+inline
+typename Mat<eT>::const_col_iterator
+Mat<eT>::begin_col(const u32 col_num) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (col_num >= n_cols), "begin_col(): index out of bounds");
+  
+  return colptr(col_num);
+  }
+
+
+
+template<typename eT>
+inline
+typename Mat<eT>::col_iterator
+Mat<eT>::end_col(const u32 col_num)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (col_num >= n_cols), "end_col(): index out of bounds");
+  
+  return colptr(col_num) + n_rows;
+  }
+
+
+
+template<typename eT>
+inline
+typename Mat<eT>::const_col_iterator
+Mat<eT>::end_col(const u32 col_num) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (col_num >= n_cols), "end_col(): index out of bounds");
+  
+  return colptr(col_num) + n_rows;
+  }
+  
+
+
+template<typename eT>
+inline
+typename Mat<eT>::row_iterator
+Mat<eT>::begin_row(const u32 row_num)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (row_num >= n_rows), "Mat::begin_row(): index out of bounds" );
+  
+  return typename Mat<eT>::row_iterator(*this, row_num);
+  }
+
+
+
+template<typename eT>
+inline
+typename Mat<eT>::const_row_iterator
+Mat<eT>::begin_row(const u32 row_num) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (row_num >= n_rows), "Mat::begin_row(): index out of bounds" );
+  
+  return typename Mat<eT>::const_row_iterator(*this, row_num);
+  }
+
+
+
+template<typename eT>
+inline
+typename Mat<eT>::row_iterator
+Mat<eT>::end_row(const u32 row_num)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (row_num >= n_rows), "Mat::end_row(): index out of bounds" );
+  
+  return typename Mat<eT>::row_iterator(*this, row_num + 1);
+  }
+
+
+
+template<typename eT>
+inline
+typename Mat<eT>::const_row_iterator
+Mat<eT>::end_row(const u32 row_num) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (row_num >= n_rows), "Mat::end_row(): index out of bounds" );
+  
+  return typename Mat<eT>::const_row_iterator(*this, row_num + 1);
+  }
+
+
+
 //! prefix ++
 template<typename eT>
 arma_inline

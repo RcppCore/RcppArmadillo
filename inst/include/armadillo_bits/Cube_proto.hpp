@@ -167,6 +167,27 @@ class Cube : public BaseCube< eT, Cube<eT> >
   inline void load(      std::istream& is,   const file_type type = auto_detect);
   
   
+  // iterators
+  
+  typedef       eT*       iterator;
+  typedef const eT* const_iterator;
+  
+  typedef       eT*       slice_iterator;
+  typedef const eT* const_slice_iterator;
+  
+  inline       iterator begin();
+  inline const_iterator begin() const;
+  
+  inline       iterator end();
+  inline const_iterator end()   const;
+  
+  inline       slice_iterator begin_slice(const u32 slice_num);
+  inline const_slice_iterator begin_slice(const u32 slice_num) const;
+  
+  inline       slice_iterator end_slice(const u32 slice_num);
+  inline const_slice_iterator end_slice(const u32 slice_num)   const;
+  
+  
   protected:
   
   inline void init(const u32 in_rows, const u32 in_cols, const u32 in_slices);

@@ -1864,6 +1864,110 @@ Cube<eT>::load(std::istream& is, const file_type type)
 
 
 
+template<typename eT>
+inline
+typename Cube<eT>::iterator
+Cube<eT>::begin()
+  {
+  arma_extra_debug_sigprint();
+  
+  return memptr();
+  }
+
+
+
+template<typename eT>
+inline
+typename Cube<eT>::const_iterator
+Cube<eT>::begin() const
+  {
+  arma_extra_debug_sigprint();
+  
+  return memptr();
+  }
+
+
+
+template<typename eT>
+inline
+typename Cube<eT>::iterator
+Cube<eT>::end()
+  {
+  arma_extra_debug_sigprint();
+  
+  return memptr() + n_elem;
+  }
+
+
+
+template<typename eT>
+inline
+typename Cube<eT>::const_iterator
+Cube<eT>::end() const
+  {
+  arma_extra_debug_sigprint();
+  
+  return memptr() + n_elem;
+  }
+  
+
+
+template<typename eT>
+inline
+typename Cube<eT>::slice_iterator
+Cube<eT>::begin_slice(const u32 slice_num)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (slice_num >= n_slices), "begin_slice(): index out of bounds");
+  
+  return slice_memptr(slice_num);
+  }
+
+
+
+template<typename eT>
+inline
+typename Cube<eT>::const_slice_iterator
+Cube<eT>::begin_slice(const u32 slice_num) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (slice_num >= n_slices), "begin_slice(): index out of bounds");
+  
+  return slice_memptr(slice_num);
+  }
+
+
+
+template<typename eT>
+inline
+typename Cube<eT>::slice_iterator
+Cube<eT>::end_slice(const u32 slice_num)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (slice_num >= n_slices), "end_slice(): index out of bounds");
+  
+  return slice_memptr(slice_num) + n_elem_slice;
+  }
+
+
+
+template<typename eT>
+inline
+typename Cube<eT>::const_slice_iterator
+Cube<eT>::end_slice(const u32 slice_num) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (slice_num >= n_slices), "end_slice(): index out of bounds");
+  
+  return slice_memptr(slice_num) + n_elem_slice;
+  }
+
+
+
 //! prefix ++
 template<typename eT>
 arma_inline

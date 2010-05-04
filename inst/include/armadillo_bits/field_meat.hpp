@@ -720,6 +720,241 @@ field<oT>::create_objects()
 
 
 
+template<typename oT>
+inline
+field<oT>::iterator::iterator(field<oT>& in_M, const bool at_end)
+  : M(in_M)
+  , i( (at_end == false) ? 0 : in_M.n_elem )
+  {
+  arma_extra_debug_sigprint();
+  }
+
+
+
+template<typename oT>
+inline
+oT&
+field<oT>::iterator::operator*()
+  {
+  return M[i];
+  }
+
+
+
+template<typename oT>
+inline
+typename field<oT>::iterator&
+field<oT>::iterator::operator++()
+  {
+  ++i;
+  
+  return *this;
+  }
+
+
+
+template<typename oT>
+inline
+void
+field<oT>::iterator::operator++(int)
+  {
+  operator++();
+  }
+
+
+
+template<typename oT>
+inline
+typename field<oT>::iterator&
+field<oT>::iterator::operator--()
+  {
+  if(i > 0)
+    {
+    --i;
+    }
+  
+  return *this;
+  }
+
+
+
+template<typename oT>
+inline
+void
+field<oT>::iterator::operator--(int)
+  {
+  operator--();
+  }
+
+
+
+template<typename oT>
+inline
+bool
+field<oT>::iterator::operator!=(const typename field<oT>::iterator& X) const
+  {
+  return (i != X.i);
+  }
+
+
+
+template<typename oT>
+inline
+bool
+field<oT>::iterator::operator==(const typename field<oT>::iterator& X) const
+  {
+  return (i == X.i);
+  }
+
+
+
+template<typename oT>
+inline
+field<oT>::const_iterator::const_iterator(const field<oT>& in_M, const bool at_end)
+  : M(in_M)
+  , i( (at_end == false) ? 0 : in_M.n_elem )
+  {
+  arma_extra_debug_sigprint();
+  }
+
+
+
+template<typename oT>
+inline
+field<oT>::const_iterator::const_iterator(const field<oT>::iterator& X)
+  : M(X.M)
+  , i(X.i)
+  {
+  arma_extra_debug_sigprint();
+  }
+
+
+
+template<typename oT>
+inline
+const oT&
+field<oT>::const_iterator::operator*() const
+  {
+  return M[i];
+  }
+
+
+
+template<typename oT>
+inline
+typename field<oT>::const_iterator&
+field<oT>::const_iterator::operator++()
+  {
+  ++i;
+  
+  return *this;
+  }
+
+
+
+template<typename oT>
+inline
+void
+field<oT>::const_iterator::operator++(int)
+  {
+  operator++();
+  }
+
+
+
+template<typename oT>
+inline
+typename field<oT>::const_iterator&
+field<oT>::const_iterator::operator--()
+  {
+  if(i > 0)
+    {
+    --i;
+    }
+  
+  return *this;
+  }
+
+
+
+template<typename oT>
+inline
+void
+field<oT>::const_iterator::operator--(int)
+  {
+  operator--();
+  }
+
+
+
+template<typename oT>
+inline
+bool
+field<oT>::const_iterator::operator!=(const typename field<oT>::const_iterator& X) const
+  {
+  return (i != X.i);
+  }
+
+
+
+template<typename oT>
+inline
+bool
+field<oT>::const_iterator::operator==(const typename field<oT>::const_iterator& X) const
+  {
+  return (i == X.i);
+  }
+
+
+
+template<typename oT>
+inline
+typename field<oT>::iterator
+field<oT>::begin()
+  {
+  arma_extra_debug_sigprint();
+  
+  return field<oT>::iterator(*this);
+  }
+
+
+
+template<typename oT>
+inline
+typename field<oT>::const_iterator
+field<oT>::begin() const
+  {
+  arma_extra_debug_sigprint();
+  
+  return field<oT>::const_iterator(*this);
+  }
+
+
+
+template<typename oT>
+inline
+typename field<oT>::iterator
+field<oT>::end()
+  {
+  arma_extra_debug_sigprint();
+  
+  return field<oT>::iterator(*this, true);
+  }
+
+
+
+template<typename oT>
+inline
+typename field<oT>::const_iterator
+field<oT>::end() const
+  {
+  arma_extra_debug_sigprint();
+  
+  return field<oT>::const_iterator(*this, true);
+  }
+  
+
+
 //
 //
 //
