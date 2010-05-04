@@ -60,9 +60,9 @@ The important steps are
 \Sexpr[results=rd, echo=FALSE, stage=render]{
 paste( 
 	"\\\\preformatted{Depends: Rcpp (>=", 
-	packageDescription("Rcpp")[["Version"]] ,
+	utils::packageDescription("Rcpp")[["Version"]] ,
 	"), RcppArmadillo (>= ",
-	packageDescription("RcppArmadillo")[["Version"]] ,
+	utils::packageDescription("RcppArmadillo")[["Version"]] ,
 	")\\nLinkingTo: Rcpp, RcppArmadillo\\n}", sep = "" ) 	
 }
 

@@ -2,3 +2,4 @@ useDynLib(RcppArmadillo)
 
 export(fastLm)
 export(RcppArmadillo.package.skeleton)
+
