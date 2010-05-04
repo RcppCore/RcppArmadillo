@@ -104,7 +104,18 @@ class Col : public Mat<eT>, public BaseVec< eT, Col<eT> >
   
   inline void load(const std::string   name, const file_type type = auto_detect);
   inline void load(      std::istream& is,   const file_type type = auto_detect);
+  
+  
+  typedef       eT*       row_iterator;
+  typedef const eT* const_row_iterator;
+  
+  inline       row_iterator begin_row(const u32 row_num);
+  inline const_row_iterator begin_row(const u32 row_num) const;
+  
+  inline       row_iterator end_row  (const u32 row_num);
+  inline const_row_iterator end_row  (const u32 row_num) const;
   };
+
 
 
 //! @}

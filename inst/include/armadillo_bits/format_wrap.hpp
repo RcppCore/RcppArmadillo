@@ -22,7 +22,7 @@
 namespace arma_boost
   {
   
-  #if defined(ARMA_USE_BOOST)
+  #if defined(ARMA_USE_BOOST_FORMAT)
 
     using boost::format;
     using boost::basic_format;

@@ -1225,7 +1225,7 @@ diskio::load_auto_detect(Mat<eT>& x, const std::string& name, std::istream& f)
   static const std::string ARMA_MAT_TXT = "ARMA_MAT_TXT";
   static const std::string ARMA_MAT_BIN = "ARMA_MAT_BIN";
   static const std::string           P5 = "P5";
-
+  
   podarray<char> raw_header(ARMA_MAT_TXT.length() + 1);
   
   std::streampos pos = f.tellg();
@@ -1233,6 +1233,7 @@ diskio::load_auto_detect(Mat<eT>& x, const std::string& name, std::istream& f)
   f.read(raw_header.memptr(), ARMA_MAT_TXT.length());
   raw_header[ARMA_MAT_TXT.length()] = '\0';
   
+  f.clear();
   f.seekg(pos);
   
   const std::string header = raw_header.mem;
@@ -1721,6 +1722,7 @@ diskio::load_auto_detect(Cube<eT>& x, const std::string& name, std::istream& f)
   f.read(raw_header.memptr(), ARMA_CUB_TXT.length());
   raw_header[ARMA_CUB_TXT.length()] = '\0';
   
+  f.clear();
   f.seekg(pos);
   
   const std::string header = raw_header.mem;
@@ -2081,9 +2083,12 @@ diskio::load_auto_detect(field<T1>& x, const std::string& name, std::istream& f)
   podarray<char> raw_header(ARMA_FLD_BIN.length() + 1);
   
   std::streampos pos = f.tellg();
+  
   f.read(raw_header.memptr(), ARMA_FLD_BIN.length());
+  
+  f.clear();
   f.seekg(pos);
-
+  
   raw_header[ARMA_FLD_BIN.length()] = '\0';
   
   const std::string header = raw_header.mem;

@@ -104,6 +104,59 @@ class field
   inline void load(      std::istream& is,   const file_type type = auto_detect);
   
   
+  // iterators
+  
+  class iterator
+    {
+    public:
+    
+    inline iterator(field<oT>& in_M, const bool at_end = false);
+    
+    inline oT& operator* ();
+    
+    inline iterator& operator++();
+    inline void      operator++(int);
+    
+    inline iterator& operator--();
+    inline void      operator--(int);
+    
+    inline bool operator!=(const iterator& X) const;
+    inline bool operator==(const iterator& X) const;
+    
+    arma_aligned field<oT>& M;
+    arma_aligned u32        i;
+    };
+  
+  
+  class const_iterator
+    {
+    public:
+    
+    const_iterator(const field<oT>& in_M, const bool at_end = false);
+    const_iterator(const iterator& X);
+    
+    inline const oT& operator*() const;
+    
+    inline const_iterator& operator++();
+    inline void            operator++(int);
+    
+    inline const_iterator& operator--();
+    inline void            operator--(int);
+    
+    inline bool operator!=(const const_iterator& X) const;
+    inline bool operator==(const const_iterator& X) const;
+    
+    arma_aligned const field<oT>& M;
+    arma_aligned       u32        i;
+    };
+  
+  inline       iterator begin();
+  inline const_iterator begin() const;
+  
+  inline       iterator end();
+  inline const_iterator end()   const;
+  
+  
   private:
   
   inline void init(const field<oT>& x);

@@ -24,8 +24,8 @@ class Mat : public Base< eT, Mat<eT> >
   {
   public:
   
-  typedef eT                                       elem_type;  //!< the type of elements stored in the matrix
-  typedef typename get_pod_type<elem_type>::result pod_type;   //!< if eT is non-complex, pod_type is same as eT. otherwise, pod_type is the underlying type used by std::complex
+  typedef eT                                elem_type;  //!< the type of elements stored in the matrix
+  typedef typename get_pod_type<eT>::result pod_type;   //!< if eT is non-complex, pod_type is same as eT. otherwise, pod_type is the underlying type used by std::complex
   
   const u32  n_rows;      //!< number of rows in the matrix (read-only)
   const u32  n_cols;      //!< number of columns in the matrix (read-only)
@@ -214,7 +214,80 @@ class Mat : public Base< eT, Mat<eT> >
   inline void load(      std::istream& is,   const file_type type = auto_detect);
   
   
-  protected: 
+  // iterators
+  
+  typedef       eT*       iterator;
+  typedef const eT* const_iterator;
+  
+  typedef       eT*       col_iterator;
+  typedef const eT* const_col_iterator;
+  
+  class row_iterator
+    {
+    public:
+    
+    inline row_iterator(Mat<eT>& in_M, const u32 in_row);
+    
+    inline eT& operator* ();
+    
+    inline row_iterator& operator++();
+    inline void          operator++(int);
+    
+    inline row_iterator& operator--();
+    inline void          operator--(int);
+    
+    inline bool operator!=(const row_iterator& X) const;
+    inline bool operator==(const row_iterator& X) const;
+    
+    arma_aligned Mat<eT>& M;
+    arma_aligned u32      row;
+    arma_aligned u32      col;
+    };
+  
+  
+  class const_row_iterator
+    {
+    public:
+    
+    const_row_iterator(const Mat<eT>& in_M, const u32 in_row);
+    const_row_iterator(const row_iterator& X);
+    
+    inline eT operator*() const;
+    
+    inline const_row_iterator& operator++();
+    inline void                operator++(int);
+    
+    inline const_row_iterator& operator--();
+    inline void                operator--(int);
+    
+    inline bool operator!=(const const_row_iterator& X) const;
+    inline bool operator==(const const_row_iterator& X) const;
+    
+    arma_aligned const Mat<eT>& M;
+    arma_aligned       u32      row;
+    arma_aligned       u32      col;
+    };
+  
+  inline       iterator begin();
+  inline const_iterator begin() const;
+  
+  inline       iterator end();
+  inline const_iterator end()   const;
+  
+  inline       col_iterator begin_col(const u32 col_num);
+  inline const_col_iterator begin_col(const u32 col_num) const;
+  
+  inline       col_iterator end_col  (const u32 col_num);
+  inline const_col_iterator end_col  (const u32 col_num) const;
+  
+  inline       row_iterator begin_row(const u32 row_num);
+  inline const_row_iterator begin_row(const u32 row_num) const;
+  
+  inline       row_iterator end_row  (const u32 row_num);
+  inline const_row_iterator end_row  (const u32 row_num) const;
+  
+  
+  protected:
   
   inline void init(const u32 in_rows, const u32 in_cols);
   inline void init(const std::string& text);
@@ -223,6 +296,7 @@ class Mat : public Base< eT, Mat<eT> >
   inline Mat(const char junk, const eT* aux_mem, const u32 aux_n_rows, const u32 aux_n_cols);
   
   friend class Cube<eT>;
+  friend class glue_join;
   };
 
 
