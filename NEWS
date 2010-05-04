@@ -2,7 +2,11 @@
 
     o   Armadillo sources (using release 0.9.6) are now included in the package
    	using a standardized build suitable for our purposes (not assuming
-   	Boost or Atlas) -- see the new README for details
+   	Boost or Atlas) -- see ?RcppArmadillo for details
+   	
+   	o	New R function RcppArmadillo.package.skeleton, similar to 
+   	Rcpp::Rcpp.package.skeleton, but targetting use of RcppArmadillo
+   	
 
 0.1.0	2010-03-11
 
