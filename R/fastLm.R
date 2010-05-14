@@ -34,6 +34,7 @@ fastLm.default <- function(x, y, ...) {
     y <- as.numeric(y)
 
     res <- fastLmCall(y, x)
+    res$coefficients <- res$coefficient[,1] # force into single-col vector
 
     names(res$coefficients) <- colnames(res$vcov) <- rownames(res$vcov) <- colnames(x)
 
@@ -86,7 +87,6 @@ fastLm.formula <- function(formula, data=list(), ...) {
     y <- model.response(mf)
 
     res <- fastLm.default(x, y, ...)
-    names(res$coefficients) <- colnames(x) <- colnames(res$vcov) <- rownames(res$vcov) <- colnames(x)
     res$call <- match.call()
     res$formula <- formula
     res
