@@ -86,13 +86,13 @@ test.fastLm <- function() {
                 msg="fastLm.stderr")
 }
 
-test.fastLmFormula <- function() {
+test.fastLm.formula <- function() {
     data(trees)
     flm <- fastLm(log(Volume) ~ log(Girth), data=trees)
     fit <- lm(log(Volume) ~ log(Girth), data=trees)
 
-    checkEquals(flm$coef, coef(fit), msg="fastLm.coef")
+    checkEquals(flm$coef, coef(fit), msg="fastLm.formula.coef")
     checkEquals(as.numeric(flm$stderr), as.numeric(coef(summary(fit))[,2]),
-                msg="fastLm.stderr")
+                msg="fastLm.formula.stderr")
 }
 
