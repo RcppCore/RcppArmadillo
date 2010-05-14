@@ -1,5 +1,12 @@
 \name{fastLm}
 \alias{fastLm}
+\alias{fastLmCall}
+\alias{fastLm.default}
+\alias{fastLm.formula}
+\alias{print.fastLm}
+\alias{summary.fastLm}
+\alias{print.summary.fastLm}
+\alias{predict.fastLm}
 \concept{regression}
 \title{Bare-bones linear model fitting function}
 \description{
@@ -7,11 +14,25 @@
   function of \code{Armadillo} linear algebra library.
 }
 \usage{
-fastLm(y, X)
+fastLmCall(y, X)
+
+fastLm(x, ...)
+\method{fastLm}{default}(x, y, ...)
+\method{fastLm}{formula}(formula, data = list(), ...)
+\method{print}{fastLm}(x, ...)
+\method{summary}{fastLm}(object, ...)
+\method{predict}{fastLm}(object, newdata=NULL, ...)
 }
 \arguments{
   \item{y}{a vector containing the explained variable.}
   \item{X}{a data.frame or matrix containing the explanatory variables.}
+  \item{x}{a numeric design matrix for the model.}
+  \item{formula}{a symbolic description of the model to be fit.}
+  \item{data}{an optional data frame containing the variables in the model.}
+  \item{newdata}{an optional data frame containing the variables for
+    which a model prediction is desired.}
+  \item{object}{an object of class \code{"fastLm"}, i.e. a fitted model}
+  \item{\ldots}{not used}
 }
 \details{
   Linear models should be estimated using the \code{\link{lm}} function. In
@@ -55,8 +76,19 @@ fastLm(y, X)
   Romain Francois, Dirk Eddelbuettel and Douglas Bates.
 }
 \examples{
+  require(datasets)
   data(trees)
-  flm <- fastLm( log(trees$Volume),  cbind(rep(1,31), log(trees$Girth)) )
+
+  ## bare-bones direct interface
+  flm <- fastLmCall( log(trees$Volume),  cbind(1, log(trees$Girth)) )
+  print(flm)
+
+  ## standard R interface for formula or data returning object of class fastLm
+  flmmod <- fastLm( log(Volume) ~ log(Girth), data=trees)
+  summary(flmmod)
 }
 \keyword{regression}
+
+
+
 

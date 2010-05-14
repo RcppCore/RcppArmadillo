@@ -1,9 +1,20 @@
+2010-05-13  Dirk Eddelbuettel  <edd@dexter>
+
+	* R/fastLm.R: fastLm() is now generic and has a formula interface as
+	well as methods for print, summary, predict to behave like a standard
+	model fitting function
+
+	* R/fastLm.Rd: Added documentation for new methods
+
+	* src/fastLm.cpp: Small additions to returned parameters to support
+	new functionality
+
 2010-05-04   Romain Francois <romain@r-enthusiasts.com>
 
 	* R/RcppArmadillo.package.skeleton.R: new package skeleton function
 	similar to Rcpp::Rcpp.package.skeleton but targetting
 	use of RcppArmadillo
-	
+
 	* README: removed and promoted to additional documentation in ?RcppArmadillo
 
 2010-05-03  Dirk Eddelbuettel  <edd@debian.org>

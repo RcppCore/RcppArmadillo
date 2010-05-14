@@ -23,24 +23,36 @@
 
 extern "C" SEXP fastLm(SEXP ys, SEXP Xs) {
 
-    Rcpp::NumericVector yr(ys);			// creates Rcpp vector from SEXP
-    Rcpp::NumericMatrix Xr(Xs);			// creates Rcpp matrix from SEXP
-    int n = Xr.nrow(), k = Xr.ncol();
+    try {
+	Rcpp::NumericVector yr(ys);			// creates Rcpp vector from SEXP
+	Rcpp::NumericMatrix Xr(Xs);			// creates Rcpp matrix from SEXP
+	int n = Xr.nrow(), k = Xr.ncol();
 
-    arma::mat X(Xr.begin(), n, k, false);   	// reuses memory and avoids extra copy
-    arma::colvec y(yr.begin(), yr.size(), false);
+	arma::mat X(Xr.begin(), n, k, false);   	// reuses memory and avoids extra copy
+	arma::colvec y(yr.begin(), yr.size(), false);
 
-	arma::colvec coef = arma::solve(X, y);            // fit model y ~ X
+	arma::colvec coef = arma::solve(X, y);      // fit model y ~ X
 	arma::colvec resid = y - X*coef; 		// residuals
 
 	double sig2 = arma::as_scalar( arma::trans(resid)*resid/(n-k) );
-    						// std.error of estimate 
-    arma::colvec stderrest = arma::sqrt( sig2 * arma::diagvec( arma::inv(arma::trans(X)*X)) );
+    						
+	arma::mat covmat = sig2 * arma::inv(arma::trans(X)*X); 	// covmat
+	arma::colvec stderrest = arma::sqrt(arma::diagvec(covmat));	// std.error of estimate 
 
-    return Rcpp::List::create( 
-    	Rcpp::Named("coefficients") = coef,
-    	Rcpp::Named("stderr")       = stderrest
-    ) ;
-    
+	return Rcpp::List::create(Rcpp::Named("coefficients") = coef,
+				  Rcpp::Named("stderr")       = stderrest,
+				  Rcpp::Named("vcov")         = covmat,
+				  Rcpp::Named("df")           = n - k
+				  );
+
+    } catch( std::exception &ex ) {
+	forward_exception_to_r( ex );
+    } catch(...) { 
+	::Rf_error( "c++ exception (unknown reason)" ); 
+    }
 }
+
+
+
+
 

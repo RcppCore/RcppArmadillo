@@ -1,5 +1,11 @@
 useDynLib(RcppArmadillo)
 
-export(fastLm)
+export(fastLmCall,
+       fastLm,
+       fastLm.default,
+       fastLm.formula,
+       print.fastLm,
+       summary.fastLm,
+       print.summary.fastLm)
 export(RcppArmadillo.package.skeleton)
 
