@@ -76,13 +76,23 @@ test.fastLm <- function() {
     data(trees)
     flm <- .Call("fastLm",
                  log(trees$Volume),
-                 cbind(rep(1,31), log(trees$Girth)),
+                 cbind(1, log(trees$Girth)),
                  PACKAGE="RcppArmadillo")
     fit <- lm(log(Volume) ~ log(Girth), data=trees)
 
-    checkEquals( as.numeric(flm$coef), as.numeric(coef(fit)),
+    checkEquals( as.numeric(flm$coefficients), as.numeric(coef(fit)),
                 msg="fastLm.coef")
     checkEquals( as.numeric(flm$stderr), as.numeric(coef(summary(fit))[,2]),
+                msg="fastLm.stderr")
+}
+
+test.fastLmFormula <- function() {
+    data(trees)
+    flm <- fastLm(log(Volume) ~ log(Girth), data=trees)
+    fit <- lm(log(Volume) ~ log(Girth), data=trees)
+
+    checkEquals(flm$coef, coef(fit), msg="fastLm.coef")
+    checkEquals(as.numeric(flm$stderr), as.numeric(coef(summary(fit))[,2]),
                 msg="fastLm.stderr")
 }
 
