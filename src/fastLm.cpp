@@ -49,6 +49,7 @@ extern "C" SEXP fastLm(SEXP ys, SEXP Xs) {
     } catch(...) { 
 	::Rf_error( "c++ exception (unknown reason)" ); 
     }
+    return R_NilValue; // -Wall
 }
 
 
