@@ -43,3 +43,6 @@
     #define ARMA_ATLAS_INCLUDE_DIR  /usr/include
   #endif
 #endif
+
+#include <RcppArmadilloConfig.h>
+

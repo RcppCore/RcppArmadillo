@@ -1,3 +1,7 @@
+2010-05-17   Romain Francois <romain@r-enthusiasts.com>
+
+	* inst/include/RcppArmadillo.h: workaround for win64
+
 2010-05-13  Dirk Eddelbuettel  <edd@dexter>
 
 	* R/fastLm.R: fastLm() is now generic and has a formula interface as
