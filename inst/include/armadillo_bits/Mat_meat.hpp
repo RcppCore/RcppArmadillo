@@ -2638,7 +2638,7 @@ Mat<eT>::const_row_iterator::const_row_iterator(const Mat<eT>& in_M, const u32 i
 
 template<typename eT>
 inline
-Mat<eT>::const_row_iterator::const_row_iterator(const Mat<eT>::row_iterator& X)
+Mat<eT>::const_row_iterator::const_row_iterator(const typename Mat<eT>::row_iterator& X)
   : M  (X.M)
   , row(X.row)
   , col(X.col)

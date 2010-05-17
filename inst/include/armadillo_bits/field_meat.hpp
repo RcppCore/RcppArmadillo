@@ -821,7 +821,7 @@ field<oT>::const_iterator::const_iterator(const field<oT>& in_M, const bool at_e
 
 template<typename oT>
 inline
-field<oT>::const_iterator::const_iterator(const field<oT>::iterator& X)
+field<oT>::const_iterator::const_iterator(const typename field<oT>::iterator& X)
   : M(X.M)
   , i(X.i)
   {
