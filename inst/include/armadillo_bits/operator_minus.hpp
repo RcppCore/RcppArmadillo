@@ -81,6 +81,70 @@ operator-
 
 
 
+//! non-complex Base - complex scalar (experimental)
+template<typename T1>
+arma_inline
+Mat<typename std::complex<typename T1::pod_type> >
+operator-
+  (
+  const Base<typename T1::pod_type, T1>&     X,
+  const std::complex<typename T1::pod_type>& k
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename std::complex<typename T1::pod_type> eT;
+  typedef typename T1::pod_type                         T;
+  
+  const Proxy<T1> A(X.get_ref());
+  
+  Mat<eT> out(A.n_rows, A.n_cols);
+  
+  const u32 n_elem  = A.n_elem;
+        eT* out_mem = out.memptr();
+  
+  for(u32 i=0; i<n_elem; ++i)
+    {
+    out_mem[i] = A[i] - k;
+    }
+  
+  return out;
+  }
+
+
+
+//! complex scalar - non-complex Base (experimental)
+template<typename T1>
+arma_inline
+Mat<typename std::complex<typename T1::pod_type> >
+operator-
+  (
+  const std::complex<typename T1::pod_type>& k,
+  const Base<typename T1::pod_type, T1>&     X
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename std::complex<typename T1::pod_type> eT;
+  typedef typename T1::pod_type                         T;
+  
+  const Proxy<T1> A(X.get_ref());
+  
+  Mat<eT> out(A.n_rows, A.n_cols);
+  
+  const u32 n_elem  = A.n_elem;
+        eT* out_mem = out.memptr();
+  
+  for(u32 i=0; i<n_elem; ++i)
+    {
+    out_mem[i] = k - A[i];
+    }
+  
+  return out;
+  }
+
+
+
 //! subtraction of Base objects with same element type
 template<typename T1, typename T2>
 arma_inline
