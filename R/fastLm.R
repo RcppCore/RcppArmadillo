@@ -18,7 +18,7 @@
 ## You should have received a copy of the GNU General Public License
 ## along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
-fastLmCall <- function(y, X) {
+fastLmPure <- function(y, X) {
 
     stopifnot(is.matrix(X))
     stopifnot(nrow(y)==nrow(X))
@@ -33,7 +33,7 @@ fastLm.default <- function(x, y, ...) {
     x <- as.matrix(x)
     y <- as.numeric(y)
 
-    res <- fastLmCall(y, x)
+    res <- fastLmPure(y, x)
 
     res$coefficients <- res$coefficient[,1] # force into single-col vector
 
