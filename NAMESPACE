@@ -1,9 +1,10 @@
 useDynLib(RcppArmadillo)
 
-export(fastLmCall,
+export(fastLmPure,
        fastLm,
        fastLm.default,
        fastLm.formula,
+       predict.fastLm,
        print.fastLm,
        summary.fastLm,
        print.summary.fastLm)
