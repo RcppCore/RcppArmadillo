@@ -14,7 +14,7 @@ meta-programming.
 
 This library is useful if C++ has been decided as the language of choice 
 (due to speed and/or integration capabilities), rather than another language 
-like Matlab ¨ or Octave. It is distributed under a license that is useful in 
+like Matlab or Octave. It is distributed under a license that is useful in 
 both open-source and commercial contexts.
 
 Armadillo is primarily developed by Conrad Sanderson at NICTA (Australia),
@@ -47,7 +47,8 @@ extern "C" SEXP fastLm(SEXP ys, SEXP Xs) {
     arma::colvec coef = arma::solve(X, y);      // fit model y ~ X
     arma::colvec resid = y - X*coef;            // residuals
 
-    double sig2 = arma::as_scalar( arma::trans(resid)*resid/(n-k) );
+    double sig2 = std::inner_product(resid.begin(), resid.end(), resid.begin(), double())/(n-k);
+
                                                 // std.error of estimate
     arma::colvec stderrest = arma::sqrt( sig2 * arma::diagvec( arma::inv(arma::trans(X)*X)) );
 
@@ -58,10 +59,14 @@ extern "C" SEXP fastLm(SEXP ys, SEXP Xs) {
 
 }
 
+Note however that you may not want to compute a linear regression fit this
+way in order to protect from numerical inaccuracies on rank-deficient
+problems. The help page for fastLm() provides an examples.
+
 
 ===== Using RcppArmadillo in other packages =====
 
-RcppArmadillo is designed so that its classes are used from other packages. 
+RcppArmadillo is designed so that its classes can be used from other packages. 
 
 Using RcppArmadillo requires: 
 
@@ -69,21 +74,21 @@ Using RcppArmadillo requires:
    typically achieved by adding this line in the DESCRIPTION file of the 
    client package:
    
-   LinkingTo : Rcpp, RcppArmadillo
+      LinkingTo : Rcpp, RcppArmadillo
    
    and the following line in the package code: 
    
-   #include <RcppArmadillo.h>
+      #include <RcppArmadillo.h>
    
  - Linking against Rcpp dynamic or shared library and librairies needed
    by Armadillo, which is achieved by adding this line in the src/Makevars
    file of the client package: 
    
-   PKG_LIBS = $(shell $(R_HOME)/bin/Rscript -e "Rcpp:::LdFlags()" ) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
+     PKG_LIBS = $(shell $(R_HOME)/bin/Rscript -e "Rcpp:::LdFlags()" ) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
 
    and this line in the file src/Makevars.win: 
    
-   PKG_LIBS = $(shell Rscript.exe -e "Rcpp:::LdFlags()") $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
+     PKG_LIBS = $(shell Rscript.exe -e "Rcpp:::LdFlags()") $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
 
 RcppArmadillo contains a function RcppArmadillo.package.skeleton, modelled
 after package.skeleton from the utils package in base r, that creates a 
@@ -130,7 +135,9 @@ Questions about Armadillo itself should be directed to its forum
 http://sourceforge.net/apps/phpbb/arma/
 
 
- -- Doug Bates, Dirk Eddelbuettel and Romain Francois
-    Madison, WI, USA; Chicago, IL, USA; and Montpellier, France
-	May 2010
+ -- Romain Francois, Montpellier, France
+    Dirk Eddelbuettel, Chicago, IL, USA
+    Doug Bates, Madison, WI, USA
+
+    May 2010
 

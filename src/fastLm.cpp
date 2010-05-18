@@ -36,8 +36,7 @@ extern "C" SEXP fastLm(SEXP ys, SEXP Xs) {
 
 	double sig2 = std::inner_product(resid.begin(), resid.end(),
 					 resid.begin(), double())/(n-k);
-//	    arma::as_scalar( arma::trans(resid)*resid/(n-k) );
-    						
+
 							// std.error of estimate 
 	arma::colvec stderrest = arma::sqrt(sig2 * arma::diagvec( arma::inv(arma::trans(X)*X) ));	
 
