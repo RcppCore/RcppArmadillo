@@ -13,8 +13,8 @@ The package eases the integration of Armadillo types with Rcpp
 \tabular{ll}{
 Package: \tab RcppArmadillo\cr
 Type: \tab Package\cr
-Version: \tab 0.0.0\cr
-Date: \tab 2010-02-16\cr
+Version: \tab 0.2.0\cr
+Date: \tab 2010-05-18\cr
 License: \tab GPL (>= 2)\cr
 LazyLoad: \tab yes\cr
 }
@@ -59,9 +59,7 @@ The important steps are
 
 \Sexpr[results=rd, echo=FALSE, stage=render]{
 paste( 
-	"\\\\preformatted{Depends: Rcpp (>=", 
-	utils::packageDescription("Rcpp")[["Version"]] ,
-	"), RcppArmadillo (>= ",
+	"\\\\preformatted{Depends: Rcpp (>= 0.8.0), RcppArmadillo (>= ",
 	utils::packageDescription("RcppArmadillo")[["Version"]] ,
 	")\\nLinkingTo: Rcpp, RcppArmadillo\\n}", sep = "" ) 	
 }
@@ -72,7 +70,7 @@ paste(
 \preformatted{PKG_LIBS = $(shell $(R_HOME)/bin/Rscript -e "Rcpp:::LdFlags()" ) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS) }
 
 and this line to the Makevars.win: 
-\preformatted{PKG_LIBS = $(shell Rscript.exe -e "Rcpp:::LdFlags()") $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS) }
+\preformatted{PKG_LIBS = $(shell $(R_HOME)/bin/Rscript.exe -e "Rcpp:::LdFlags()") $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS) }
 
 }
 }
