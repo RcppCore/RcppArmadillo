@@ -1,3 +1,9 @@
+2010-05-17  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.2.0
+
+	* inst/include/*: updated to Armadillo 0.9.8
+
 2010-05-17   Romain Francois <romain@r-enthusiasts.com>
 
 	* inst/include/RcppArmadillo.h: workaround for win64
@@ -16,14 +22,15 @@
 2010-05-04   Romain Francois <romain@r-enthusiasts.com>
 
 	* R/RcppArmadillo.package.skeleton.R: new package skeleton function
-	similar to Rcpp::Rcpp.package.skeleton but targetting
-	use of RcppArmadillo
+	similar to Rcpp::Rcpp.package.skeleton but targetting use of
+	RcppArmadillo
 
-	* README: removed and promoted to additional documentation in ?RcppArmadillo
+	* README: removed and promoted to additional documentation in
+	?RcppArmadillo
 
 2010-05-03  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/* : update to armadillo 0.9.6
+	* inst/include/* : updated to armadillo 0.9.6
 
 2010-04-03  Dirk Eddelbuettel  <edd@debian.org>
 
