@@ -52,13 +52,16 @@ fastLm(x, ...)
   package is because \code{Armadillo} uses the Lapack version of the QR
   decomposition while the stats package uses a \emph{modified} Linpack
   version.  Hence \code{Armadillo} uses level-3 BLAS code whereas the
-  stats package uses level-1 BLAS.  However, \code{Armadillo} will choke
+  stats package uses level-1 BLAS.  However, \code{Armadillo} will
+  either fail or, worse, produce completely incorrect answers
   on rank-deficient model matrices whereas the functions from the stats
   package will handle them properly due to the modified Linpack code.
-  Statisticians want a pivoting scheme of \dQuote{pivot only on
-  (apparent) rank deficiency} and numerical analysts have no idea why
-  statisticians want this so it is not part of conventional linear
-  algebra software.
+
+  An example of the type of situation requiring extra care in checking
+  for rank deficiency is a two-way layout with missing cells (see the
+  examples section).  These cases require a special pivoting scheme of
+  \dQuote{pivot only on (apparent) rank deficiency} which is not part of
+  conventional linear algebra software.
 }
 \value{
   \code{fastLm} returns a list with three components:
@@ -87,6 +90,17 @@ fastLm(x, ...)
   ## standard R interface for formula or data returning object of class fastLm
   flmmod <- fastLm( log(Volume) ~ log(Girth), data=trees)
   summary(flmmod)
+
+  ## case where fastLm breaks down
+  dd <- data.frame(f1 = gl(4, 6, labels = LETTERS[1:4]),
+                   f2 = gl(3, 2, labels = letters[1:3]))[-(7:8), ]
+  xtabs(~ f2 + f1, dd)     # one missing cell
+  mm <- model.matrix(~ f1 * f2, dd)
+  kappa(mm)                # large, indicating rank deficiency
+  set.seed(1)
+  dd$y <- mm \%*\% seq_len(ncol(mm)) + rnorm(nrow(mm), sd = 0.1)
+  summary(lm(y ~ f1 * f2, dd))     # detects rank deficiency
+  summary(fastLm(y ~ f1 * f2, dd)) # some huge coefficients
 }
 \keyword{regression}
 
