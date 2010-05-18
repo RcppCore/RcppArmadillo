@@ -32,16 +32,14 @@ extern "C" SEXP fastLm(SEXP ys, SEXP Xs) {
 	arma::colvec y(yr.begin(), yr.size(), false);
 
 	arma::colvec coef = arma::solve(X, y);      	// fit model y ~ X
-	arma::colvec resid = y - X*coef; 		// residuals
+	arma::colvec res = y - X*coef;			// residuals
 
-	double sig2 = std::inner_product(resid.begin(), resid.end(),
-					 resid.begin(), double())/(n-k);
-
-							// std.error of estimate 
-	arma::colvec stderrest = arma::sqrt(sig2 * arma::diagvec( arma::inv(arma::trans(X)*X) ));	
+	double s2 = std::inner_product(res.begin(), res.end(), res.begin(), double())/(n - k);
+							// std.errors of coefficients
+	arma::colvec stderr = arma::sqrt(s2 * arma::diagvec( arma::inv(arma::trans(X)*X) ));	
 
 	return Rcpp::List::create(Rcpp::Named("coefficients") = coef,
-				  Rcpp::Named("stderr")       = stderrest,
+				  Rcpp::Named("stderr")       = stderr,
 				  Rcpp::Named("df")           = n - k
 				  );
 
