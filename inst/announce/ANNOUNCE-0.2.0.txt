@@ -36,27 +36,24 @@ RcppArmadillo via the fastLm() function):
 #include <RcppArmadillo.h>
 
 extern "C" SEXP fastLm(SEXP ys, SEXP Xs) {
-
-    Rcpp::NumericVector yr(ys);                 // creates Rcpp vector from SEXP
-    Rcpp::NumericMatrix Xr(Xs);                 // creates Rcpp matrix from SEXP
+    Rcpp::NumericVector yr(ys);			// creates Rcpp vector from SEXP
+    Rcpp::NumericMatrix Xr(Xs);			// creates Rcpp matrix from SEXP
     int n = Xr.nrow(), k = Xr.ncol();
 
     arma::mat X(Xr.begin(), n, k, false);       // reuses memory and avoids extra copy
     arma::colvec y(yr.begin(), yr.size(), false);
 
     arma::colvec coef = arma::solve(X, y);      // fit model y ~ X
-    arma::colvec resid = y - X*coef;            // residuals
+    arma::colvec res = y - X*coef;		// residuals
 
-    double sig2 = std::inner_product(resid.begin(), resid.end(), resid.begin(), double())/(n-k);
+    double s2 = std::inner_product(res.begin(), res.end(), res.begin(), double())/(n - k);
+						// std.errors of coefficients
+    arma::colvec stderr = arma::sqrt(s2 * arma::diagvec( arma::inv(arma::trans(X)*X) ));	
 
-                                                // std.error of estimate
-    arma::colvec stderrest = arma::sqrt( sig2 * arma::diagvec( arma::inv(arma::trans(X)*X)) );
-
-    return Rcpp::List::create(
-        Rcpp::Named("coefficients") = coef,
-        Rcpp::Named("stderr")       = stderrest
-    ) ;
-
+    return Rcpp::List::create(Rcpp::Named("coefficients") = coef,
+ 			      Rcpp::Named("stderr")       = stderr,
+			      Rcpp::Named("df")           = n - k
+			      );
 }
 
 Note however that you may not want to compute a linear regression fit this
