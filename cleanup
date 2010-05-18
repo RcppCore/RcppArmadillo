@@ -2,5 +2,8 @@
 
 rm -f  config.log config.status confdefs.h \
        src/*.o src/*.so \
+       inst/doc/RcppArmadillo-unitTests.out \
+       inst/doc/RcppArmadillo-unitTests.aux \
+       inst/doc/RcppArmadillo-unitTests.log \
        */*~ *~
 rm -rf autom4te.cache
