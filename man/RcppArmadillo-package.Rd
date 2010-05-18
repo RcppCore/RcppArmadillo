@@ -57,12 +57,10 @@ The important steps are
 	\item Depend and link to Rcpp and RcppArmadillo by adding these lines to 
 	the DESCRIPTION file: 
 
-\Sexpr[results=rd, echo=FALSE, stage=render]{
-paste( 
-	"\\\\preformatted{Depends: Rcpp (>= 0.8.0), RcppArmadillo (>= ",
-	utils::packageDescription("RcppArmadillo")[["Version"]] ,
-	")\\nLinkingTo: Rcpp, RcppArmadillo\\n}", sep = "" ) 	
-}
+	\preformatted{
+	  Depends: Rcpp (>= 0.8.0), RcppArmadillo (>= 0.2.0)
+	  LinkingTo: Rcpp, RcppArmadillo
+	  }
 
 	\item Link against the Rcpp, blas and lapack libraries, by adding this line
 	in the Makevars
@@ -71,7 +69,6 @@ paste(
 
 and this line to the Makevars.win: 
 \preformatted{PKG_LIBS = $(shell $(R_HOME)/bin/Rscript.exe -e "Rcpp:::LdFlags()") $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS) }
-
 }
 }
 
