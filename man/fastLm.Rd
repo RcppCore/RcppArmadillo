@@ -64,13 +64,13 @@ fastLm(x, ...)
   conventional linear algebra software.
 }
 \value{
-  \code{fastLm} returns a list with three components:
+  \code{fastLmPure} returns a list with three components:
   \item{coefficients}{a vector of coefficients}
   \item{stderr}{a vector of the (estimated) standard errors of the coefficient estimates}
   \item{df}{a scalar denoting the degrees of freedom in the model}
  
   \code{fastLm} returns a richer object which also includes the
-  residuals and call similar to the \code{\link{lm}} or
+  residuals, fitted values and call argument similar to the \code{\link{lm}} or
   \code{\link[MASS]{rlm}} functions..
 }
 \seealso{\code{\link{lm}}, \code{\link{lm.fit}}} 
