@@ -58,7 +58,7 @@ extern "C" SEXP fastLm(SEXP ys, SEXP Xs) {
 
 Note however that you may not want to compute a linear regression fit this
 way in order to protect from numerical inaccuracies on rank-deficient
-problems. The help page for fastLm() provides an examples.
+problems. The help page for fastLm() provides an example.
 
 
 ===== Using RcppArmadillo in other packages =====
