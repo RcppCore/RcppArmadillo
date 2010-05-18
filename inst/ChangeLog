@@ -1,6 +1,15 @@
-2010-05-17  Dirk Eddelbuettel  <edd@debian.org>
+2010-05-18  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.2.0
+
+2010-05-18  Douglas Bates  <bates@stat.wisc.edu>
+
+	* man/fastLm/Rd: Added rank-deficient example to illustrate possible
+	problems with fastLmPure() and fastLm()
+
+	* src/fastLm/cpp: Compute sig2 via std::inner_product
+
+2010-05-17  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/*: updated to Armadillo 0.9.8
 
