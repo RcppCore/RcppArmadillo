@@ -1,34 +1,37 @@
 
 ===== Armadillo =====
 
-Armadillo is a C++ linear algebra library (matrix maths) aiming towards a 
-good balance between speed and ease of use. Integer, floating point and complex
-numbers are supported, as well as a subset of trigonometric and statistics 
-functions. Various matrix decompositions are provided through optional 
+Armadillo is a C++ linear algebra library aiming towards a good balance
+between speed and ease of use. Integer, floating point and complex numbers
+are supported, as well as a subset of trigonometric and statistics
+functions. Various matrix decompositions are provided through optional
 integration with LAPACK and ATLAS libraries.
 
-A delayed evaluation approach is employed (during compile time) to combine several
-operations into one and reduce (or eliminate) the need for temporaries. 
-This is accomplished through recursive templates and template meta-programming.
+A delayed evaluation approach is employed (during compile time) to combine
+several operations into one and reduce (or eliminate) the need for
+temporaries.  This is accomplished through recursive templates and template
+meta-programming.
 
 This library is useful if C++ has been decided as the language of choice 
 (due to speed and/or integration capabilities), rather than another language 
 like Matlab ¨ or Octave. It is distributed under a license that is useful in 
 both open-source and commercial contexts.
 
-Armadillo is primarily developed at NICTA (Australia), with contributions from around the world.
+Armadillo is primarily developed by Conrad Sanderson at NICTA (Australia),
+with contributions from around the world.
 
 
 ===== RcppArmadillo =====
 
-RcppArmadillo is an R package that facilitates using armadillo classes
+RcppArmadillo is an R package that facilitates using Armadillo classes
 in R packages through Rcpp. It achieves the integration by extending Rcpp's
-data interchange concepts to armadillo classes. 
+data interchange concepts to Armadillo classes. 
 
 
 ===== Example =====
 
-Here is a simple implementation of a fast linear regression (provided by RcppArmadillo via the fastLm() function):
+Here is a simple implementation of a fast linear regression (provided by
+RcppArmadillo via the fastLm() function):
 
 #include <RcppArmadillo.h>
 
@@ -59,7 +62,9 @@ extern "C" SEXP fastLm(SEXP ys, SEXP Xs) {
 ===== Using RcppArmadillo in other packages =====
 
 RcppArmadillo is designed so that its classes are used from other packages. 
+
 Using RcppArmadillo requires: 
+
  - Using the header files provided by Rcpp and RcppArmadillo. This is 
    typically achieved by adding this line in the DESCRIPTION file of the 
    client package:
@@ -71,7 +76,7 @@ Using RcppArmadillo requires:
    #include <RcppArmadillo.h>
    
  - Linking against Rcpp dynamic or shared library and librairies needed
-   by armadillo, which is achieved by adding this line in the src/Makevars
+   by Armadillo, which is achieved by adding this line in the src/Makevars
    file of the client package: 
    
    PKG_LIBS = $(shell $(R_HOME)/bin/Rscript -e "Rcpp:::LdFlags()" ) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
@@ -95,9 +100,9 @@ Source code for unit test functions are stored in the unitTests directory
 of the installed package and the results are collected in the 
 "RcppArmadillo-unitTests" vignette. 
 
-We run unit tests before sending the package to CRAN on as many systems
-as possible, including Mac OSX (Snow Leopard), Debian, Ubuntu, Fedora 12 (64bit), 
-Win 32 and Win64. 
+We run unit tests before sending the package to CRAN on as many systems as
+possible, including Mac OSX (Snow Leopard), Debian, Ubuntu, Fedora 12
+(64bit), Win 32 and Win64.
 
 Unit tests can also be run from the installed package by executing
 
@@ -117,14 +122,15 @@ Romain's blog : http://romainfrancois.blog.free.fr/index.php?category/R-package/
 
 ===== Support =====
 
-Questions about RcppArmadillo should be directed to the Rcpp-devel mailing list
-https://lists.r-forge.r-project.org/cgi-bin/mailman/listinfo/rcpp-devel
+Questions about RcppArmadillo should be directed to the Rcpp-devel mailing
+list at
+  https://lists.r-forge.r-project.org/cgi-bin/mailman/listinfo/rcpp-devel
 
 Questions about Armadillo itself should be directed to its forum
 http://sourceforge.net/apps/phpbb/arma/
 
 
  -- Doug Bates, Dirk Eddelbuettel and Romain Francois
-    Chicago, IL, USA, and Montpellier, France
+    Madison, WI, USA; Chicago, IL, USA; and Montpellier, France
 	May 2010
 
