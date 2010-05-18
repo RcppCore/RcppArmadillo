@@ -8,7 +8,7 @@
 
 	* inst/include/RcppArmadillo.h: workaround for win64
 
-2010-05-13  Dirk Eddelbuettel  <edd@dexter>
+2010-05-13  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/fastLm.R: fastLm() is now generic and has a formula interface as
 	well as methods for print, summary, predict to behave like a standard
@@ -46,7 +46,7 @@
 	* configure: and many other configuration files.  Removed the
 	foo.in files, modified cleanup not to remove the target files.
 
-2010-03-20  Dirk Eddelbuettel  <edd@max.nulle.part>
+2010-03-20  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/fastLm.cpp: Small fix for Armadillo 0.8.2
 
@@ -76,7 +76,7 @@
 
 	* src/RcppArmadillo.cpp : fix a runtime error uisng the SCALAR macro
 
-2010-03-02  Dirk Eddelbuettel  <edd@dexter>
+2010-03-02  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/RcppArmadillo.cpp: Added bare-bones 'fastLm' function
 	* R/fastLm.R: Added fastLm R wrapper for C++ fastLm
