@@ -1,3 +1,7 @@
+2010-05-27   Romain Francois <romain@r-enthusiasts.com>
+
+	* R/flags.R: added RcppArmadillo:::CxxFlags() 
+
 2010-05-18  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.2.0
