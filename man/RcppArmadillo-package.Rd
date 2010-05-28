@@ -68,7 +68,7 @@ The important steps are
 \preformatted{PKG_LIBS = $(shell $(R_HOME)/bin/Rscript -e "Rcpp:::LdFlags()" ) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS) }
 
 and this line to the Makevars.win: 
-\preformatted{PKG_LIBS = $(shell $(R_HOME)/bin/Rscript.exe -e "Rcpp:::LdFlags()") $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS) }
+\preformatted{PKG_LIBS = $(shell $(R_HOME)/bin${R_ARCH_BIN}/Rscript.exe -e "Rcpp:::LdFlags()") $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS) }
 }
 }
 
