@@ -15,7 +15,7 @@
 ## You should have received a copy of the GNU General Public License
 ## along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
-inline_cxx_plugin <- Rcpp:::Rcpp.plugin.maker(
+inlineCxxPlugin <- Rcpp:::Rcpp.plugin.maker(
 	include.before = "#include <RcppArmadillo.h>", 
 	libs           = "$(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)", 
 	package        = "RcppArmadillo"
