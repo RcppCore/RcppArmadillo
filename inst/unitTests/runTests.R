@@ -1,5 +1,13 @@
 pkg <- "RcppArmadillo"
 
+if( ! require( "inline", character.only = TRUE, quietly = TRUE ) ){
+	stop( "The inline package is required to run RcppArmadillo unit tests" )
+}
+
+if( compareVersion( packageDescription( "inline" )[["Version"]], "0.3.4.2" ) < 0 ){
+	stop( "RcppArmadillo unit tests need at least the version 0.3.4.2 of inline" )
+}
+
 if(require("RUnit", quietly = TRUE)) {
 
     is_local <- function(){

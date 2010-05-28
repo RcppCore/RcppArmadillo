@@ -17,12 +17,63 @@
 # You should have received a copy of the GNU General Public License
 # along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
-.setUp <- function(){
-    suppressMessages(require(datasets))
-}
-
 test.wrap.R <- function(){
-    res <- .Call( "RcppArmadillo_wrap", PACKAGE = "RcppArmadillo" )
+	
+	fx <- cxxfunction( , '
+	
+    // using the Named(.) = . notation
+    List cols = List::create( 
+    	Named( "Col<double>" ) = arma::zeros<arma::mat>(5,1), 
+    	Named( "Col<float>" )  = arma::zeros<arma::fmat>(5,1)
+    	) ;
+    
+    // using the Named(., .)  notation
+    List rows = List::create( 
+    	Named( "Row<double>",  arma::zeros<arma::mat>(1,5)  ),
+    	Named( "Row<float>" ,  arma::zeros<arma::fmat>(1,5) )
+    	) ;
+	
+    // using the _[.] = . notation
+    List matrices = List::create( 
+    	_["Mat<int>"]          = arma::eye<arma::imat>( 3,3 ), 
+    	_["Mat<double>"]       = arma::eye<arma::mat>( 3,3 ),
+    	_["Mat<float>"]        = arma::eye<arma::fmat>( 3, 3 ), 
+    	_["Mat<unsigned int>"] = arma::eye<arma::umat>( 3, 3 )
+    	) ;
+    
+    // creating an empty list and grow it on demand
+    List fields ;
+    arma::field<int> f1( 2, 2 ) ;
+    f1( 0, 0 ) = 0 ; 
+    f1( 1, 0 ) = 1 ; 
+    f1( 0, 1 ) = 2 ; 
+    f1( 1, 1 ) = 3 ; 
+    fields["field<int>"] = f1 ;
+    
+    arma::field<std::string> f2(2,2) ;
+    f2( 0, 0 ) = "a" ; 
+    f2( 1, 0 ) = "b" ; 
+    f2( 0, 1 ) = "c" ; 
+    f2( 1, 1 ) = "d" ; 
+    fields["field<std::string>"] = f2 ;
+    
+    arma::field<arma::colvec> f3(2,2) ;
+    f3(0,0) = arma::zeros<arma::mat>(5,1) ;
+    f3(1,0) = arma::zeros<arma::mat>(4,1) ;
+    f3(0,1) = arma::zeros<arma::mat>(3,1) ;
+    f3(1,1) = arma::zeros<arma::mat>(2,1) ;
+    fields["field<colvec>"] = f3 ;
+	
+    List output = List::create( 
+    	_["matrices : Mat<T>"]  = matrices, 
+    	_["rows : Row<T>"]      = rows,
+    	_["columns : Col<T>"]   = cols, 
+    	_["fields  : field<T>"] = fields ) ;
+    
+    return output ;
+	' , plugin = "RcppArmadillo" )
+	
+    res <- fx()
 
     checkEquals( res[[1]][[1]], matrix(as.integer((diag(3))),nr=3), msg = "eye<imat>(3,3)" )
     checkEquals( res[[1]][[2]], diag(3), msg = "eye<mat>(3,3)" )
@@ -40,59 +91,103 @@ test.wrap.R <- function(){
 }
 
 test.wrap.Glue <- function(){
-    res <- .Call( "RcppArmadillo_wrap_Glue", PACKAGE = "RcppArmadillo" )
+    
+	fx <- cxxfunction( , '
+	
+    arma::mat m1 = arma::eye<arma::mat>( 3, 3 ) ;
+    arma::mat m2 = arma::eye<arma::mat>( 3, 3 ) ;
+	                     
+    List res ;                                  
+    res["mat+mat"] = m1 + m2 ;
+    return res ;
+	
+	', plugin = "RcppArmadillo" )
+	
+	res <- fx()
     checkEquals( res[[1]], 2*diag(3), msg = "wrap(Glue)" )
 }
 
 test.wrap.Op <- function(){
-    res <- .Call( "RcppArmadillo_wrap_Op", PACKAGE = "RcppArmadillo" )
+	
+	fx <- cxxfunction( , '
+	
+	arma::mat m1 = arma::eye<arma::mat>( 3, 3 ) ;
+	
+    List res ;
+    res["- mat"] = - m1 ;
+    return res ;
+	
+	', plugin = "RcppArmadillo" )
+    res <- fx()
     checkEquals( res[[1]], -1*diag(3), msg = "wrap(Op)" )
 }
 
 test.as.Mat <- function(){
+	
+	fx <- cxxfunction( signature(input_ = "list" ) , '
+	    List input(input_) ;
+    	arma::imat m1 = input[0] ; /* implicit as */
+    	arma::mat  m2 = input[1] ; /* implicit as */
+    	arma::umat m3 = input[0] ; /* implicit as */
+    	arma::fmat m4 = input[1] ; /* implicit as */
+		
+    	List res = List::create( 
+    		arma::accu( m1 ),
+    		arma::accu( m2 ),
+    		arma::accu( m3 ),
+    		arma::accu( m4 ) ) ;
+    	
+    	return res ;
+    ', plugin = "RcppArmadillo" )
+	
     integer_mat <- matrix( as.integer(diag(4)), ncol = 4, nrow = 4 )
     numeric_mat <- diag(5)
-    res <- .Call( "RcppArmadillo_as_Mat",
-                 list( integer_mat, numeric_mat ),
-                 PACKAGE = "RcppArmadillo" )
+    res <- fx( list( integer_mat, numeric_mat ) )
     checkEquals( unlist( res), c(4L, 5L, 4L, 5L ), msg = "as<Mat>" )
 }
 
 test.as.Col <- function(){
-    res <- .Call( "RcppArmadillo_as_Col",
-                 list( 1:10, as.numeric(1:10) ),
-                 PACKAGE = "RcppArmadillo" )
+	fx <- cxxfunction( signature(input_ = "list" ) , '
+		
+    List input(input_) ;
+    arma::icolvec m1 = input[0] ; /* implicit as */
+    arma::colvec  m2 = input[1] ; /* implicit as */
+    arma::ucolvec m3 = input[0] ; /* implicit as */
+    arma::fcolvec m4 = input[1] ; /* implicit as */
+	
+    List res = List::create( 
+    	arma::accu( m1 ),
+    	arma::accu( m2 ),
+    	arma::accu( m3 ),
+    	arma::accu( m4 ) ) ;
+    
+    return res ;
+	
+	', plugin = "RcppArmadillo" )
+	
+    res <- fx( list( 1:10, as.numeric(1:10) ) )
     checkEquals( unlist( res ), rep(55.0, 4 ), msg = "as<Col>" )
 }
 
 test.as.Row <- function(){
-    res <- .Call( "RcppArmadillo_as_Row",
-                 list( 1:10, as.numeric(1:10) ),
-                 PACKAGE = "RcppArmadillo" )
+	fx <- cxxfunction( signature(input_ = "list" ) , '
+
+    List input(input_) ;
+    arma::irowvec m1 = input[0] ; /* implicit as */
+    arma::rowvec  m2 = input[1] ; /* implicit as */
+    arma::urowvec m3 = input[0] ; /* implicit as */
+    arma::frowvec m4 = input[1] ; /* implicit as */
+	
+    List res = List::create( 
+    	arma::accu( m1 ),
+    	arma::accu( m2 ),
+    	arma::accu( m3 ),
+    	arma::accu( m4 ) ) ;
+    return res ;
+	
+	', plugin = "RcppArmadillo" )
+
+    res <- fx( list( 1:10, as.numeric(1:10) ) )
     checkEquals( unlist( res ), rep(55.0, 4 ), msg = "as<Row>" )
-}
-
-test.fastLm <- function() {
-    data(trees)
-    flm <- .Call("fastLm",
-                 log(trees$Volume),
-                 cbind(1, log(trees$Girth)),
-                 PACKAGE="RcppArmadillo")
-    fit <- lm(log(Volume) ~ log(Girth), data=trees)
-
-    checkEquals(as.numeric(flm$coefficients), as.numeric(coef(fit)),
-                msg="fastLm.coef")
-    checkEquals(as.numeric(flm$stderr), as.numeric(coef(summary(fit))[,2]),
-                msg="fastLm.stderr")
-}
-
-test.fastLm.formula <- function() {
-    data(trees)
-    flm <- fastLm(log(Volume) ~ log(Girth), data=trees)
-    fit <- lm(log(Volume) ~ log(Girth), data=trees)
-
-    checkEquals(flm$coefficients, coef(fit), msg="fastLm.formula.coef")
-    checkEquals(as.numeric(flm$stderr), as.numeric(coef(summary(fit))[,2]),
-                msg="fastLm.formula.stderr")
 }
 
