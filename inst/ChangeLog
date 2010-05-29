@@ -1,6 +1,12 @@
 2010-05-27   Romain Francois <romain@r-enthusiasts.com>
 
-	* R/flags.R: added RcppArmadillo:::CxxFlags() 
+	* R/flags.R: added RcppArmadillo:::CxxFlags()
+
+2010-05-19   Romain Francois <romain@r-enthusiasts.com>
+
+	* DESCRIPTION: Release 0.2.1
+
+	* src/fastLm.cpp: Rename stderr to std_err
 
 2010-05-18  Dirk Eddelbuettel  <edd@debian.org>
 
