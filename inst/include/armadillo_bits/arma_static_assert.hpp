@@ -14,30 +14,25 @@
 // (see http://www.opensource.org/licenses for more info)
 
 
-//! \addtogroup eGlueCube
+//! \addtogroup arma_static_assert
 //! @{
 
 
 
-template<typename T1, typename T2, typename eglue_type>
-arma_inline
-eGlueCube<T1,T2,eglue_type>::~eGlueCube()
+//! Classes for primitive compile time assertions (until the next version of C++)
+template<bool> struct arma_static_assert;
+template<>     struct arma_static_assert<true> {};
+
+
+template<bool val>
+struct arma_type_check
   {
-  arma_extra_debug_sigprint();
-  }
-
-
-
-template<typename T1, typename T2, typename eglue_type>
-arma_inline
-eGlueCube<T1,T2,eglue_type>::eGlueCube(const T1& in_A, const T2& in_B)
-  : P1(in_A)
-  , P2(in_B)
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_assert_same_size(P1.n_rows, P1.n_cols, P1.n_slices, P2.n_rows, P2.n_cols, P2.n_slices, eglue_type::text());
-  }
+  arma_inline static void apply()
+    {
+    arma_static_assert<!val> ERROR___INCORRECT_TYPE;
+    ERROR___INCORRECT_TYPE = ERROR___INCORRECT_TYPE;
+    }
+  };
 
 
 

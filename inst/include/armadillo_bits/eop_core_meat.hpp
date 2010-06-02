@@ -70,21 +70,21 @@ eop_core<eop_type>::process(const eOp<T1, eop_type>& x, const typename T1::elem_
   else if(is_same_type<eop_type, eop_scalar_div_pre   >::value == true) { return x.aux / val;              }
   else if(is_same_type<eop_type, eop_scalar_div_post  >::value == true) { return val / x.aux;              }
   else if(is_same_type<eop_type, eop_square           >::value == true) { return val*val;                  }
-  else if(is_same_type<eop_type, eop_sqrt             >::value == true) { return std::sqrt(val);           }
-  else if(is_same_type<eop_type, eop_log10            >::value == true) { return std::log10(val);          }
-  else if(is_same_type<eop_type, eop_log              >::value == true) { return std::log(val);            }
+  else if(is_same_type<eop_type, eop_sqrt             >::value == true) { return eop_aux::sqrt(val);       }
+  else if(is_same_type<eop_type, eop_log10            >::value == true) { return eop_aux::log10(val);      }
+  else if(is_same_type<eop_type, eop_log              >::value == true) { return eop_aux::log(val);        }
   else if(is_same_type<eop_type, eop_trunc_log        >::value == true) { return eop_aux::trunc_log(val);  }
-  else if(is_same_type<eop_type, eop_exp              >::value == true) { return std::exp(val);            }
+  else if(is_same_type<eop_type, eop_exp              >::value == true) { return eop_aux::exp(val);        }
   else if(is_same_type<eop_type, eop_trunc_exp        >::value == true) { return eop_aux::trunc_exp(val);  }
-  else if(is_same_type<eop_type, eop_cos              >::value == true) { return std::cos(val);            }
-  else if(is_same_type<eop_type, eop_sin              >::value == true) { return std::sin(val);            }
-  else if(is_same_type<eop_type, eop_tan              >::value == true) { return std::tan(val);            }
+  else if(is_same_type<eop_type, eop_cos              >::value == true) { return eop_aux::cos(val);        }
+  else if(is_same_type<eop_type, eop_sin              >::value == true) { return eop_aux::sin(val);        }
+  else if(is_same_type<eop_type, eop_tan              >::value == true) { return eop_aux::tan(val);        }
   else if(is_same_type<eop_type, eop_acos             >::value == true) { return eop_aux::acos(val);       }
   else if(is_same_type<eop_type, eop_asin             >::value == true) { return eop_aux::asin(val);       }
   else if(is_same_type<eop_type, eop_atan             >::value == true) { return eop_aux::atan(val);       }
-  else if(is_same_type<eop_type, eop_cosh             >::value == true) { return std::cosh(val);           }
-  else if(is_same_type<eop_type, eop_sinh             >::value == true) { return std::sinh(val);           }
-  else if(is_same_type<eop_type, eop_tanh             >::value == true) { return std::tanh(val);           }
+  else if(is_same_type<eop_type, eop_cosh             >::value == true) { return eop_aux::cosh(val);       }
+  else if(is_same_type<eop_type, eop_sinh             >::value == true) { return eop_aux::sinh(val);       }
+  else if(is_same_type<eop_type, eop_tanh             >::value == true) { return eop_aux::tanh(val);       }
   else if(is_same_type<eop_type, eop_acosh            >::value == true) { return eop_aux::acosh(val);      }
   else if(is_same_type<eop_type, eop_asinh            >::value == true) { return eop_aux::asinh(val);      }
   else if(is_same_type<eop_type, eop_atanh            >::value == true) { return eop_aux::atanh(val);      }
@@ -194,6 +194,9 @@ eop_core<eop_type>::apply_unwrap(Mat<typename T1::elem_type>& out, const eOp<T1,
   typedef typename T1::elem_type eT;
   
   const Proxy<T1>& P = x.P;
+  
+//   cout << "*** P.n_rows = " << P.n_rows << endl;
+//   cout << "*** P.n_cols = " << P.n_cols << endl;
   
   out.set_size(P.n_rows, P.n_cols);
   

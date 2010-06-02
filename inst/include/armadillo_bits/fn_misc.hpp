@@ -80,6 +80,24 @@ linspace(const double start, const double end, const u32 num, const u32 dim = 0)
 
 
 
+template<typename eT, typename T1>
+inline
+const mtOp<u32, T1, op_find>
+find(const Base<eT,T1>& X, const u32 k = 0, const char* direction = "first")
+  {
+  arma_extra_debug_sigprint();
+  
+  const char sig = direction[0];
+  
+  arma_debug_check( (sig != 'f' && sig != 'F' && sig != 'l' && sig != 'L'), "find(): 3rd input argument must be \"first\" or \"last\"" );
+  
+  const u32 type = (sig == 'f' || sig == 'F') ? 0 : 1;
+  
+  return mtOp<u32, T1, op_find>(X.get_ref(), k, type);
+  }
+
+
+
 //
 // real
 
@@ -109,25 +127,12 @@ real(const BaseCube<typename T1::pod_type, T1>& X)
 
 template<typename T1>
 inline
-Mat<typename T1::pod_type>
+const mtOp<typename T1::pod_type, T1, op_real>
 real(const Base<std::complex<typename T1::pod_type>, T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::pod_type T;
-  
-  const Proxy<T1> A(X.get_ref());
-  
-  Mat<T> out(A.n_rows, A.n_cols);
-  
-  T* out_mem = out.memptr();
-  
-  for(u32 i=0; i<out.n_elem; ++i)
-    {
-    out_mem[i] = std::real(A[i]);
-    }
-  
-  return out;
+  return mtOp<typename T1::pod_type, T1, op_real>( X.get_ref() );
   }
 
 
@@ -190,25 +195,12 @@ imag(const BaseCube<typename T1::pod_type,T1>& X)
 
 template<typename T1>
 inline
-Mat<typename T1::pod_type>
-imag(const Base<std::complex<typename T1::pod_type>,T1>& X)
+const mtOp<typename T1::pod_type, T1, op_imag>
+imag(const Base<std::complex<typename T1::pod_type>, T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::pod_type T;
-  
-  const Proxy<T1> A(X.get_ref());
-  
-  Mat<T> out(A.n_rows, A.n_cols);
-  
-  T* out_mem = out.memptr();
-  
-  for(u32 i=0; i<out.n_elem; ++i)
-    {
-    out_mem[i] = std::imag(A[i]);
-    }
-  
-  return out;
+  return mtOp<typename T1::pod_type, T1, op_imag>( X.get_ref() );
   }
 
 
@@ -434,30 +426,12 @@ abs(const BaseCube<typename T1::elem_type,T1>& X)
 
 template<typename T1>
 inline
-Mat<typename T1::pod_type>
-abs(const Base< std::complex<typename T1::pod_type>,T1>& X)
+const mtOp<typename T1::pod_type, T1, op_abs>
+abs(const Base<std::complex<typename T1::pod_type>, T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  const Proxy<T1> A(X.get_ref());
-
-  // if T1 is a complex matrix,
-  // pod_type is the underlying type used by std::complex;
-  // otherwise pod_type is the same as elem_type
-  
-  typedef typename T1::elem_type  in_eT;
-  typedef typename T1::pod_type  out_eT;
-
-  Mat<out_eT> out(A.n_rows, A.n_cols);
-  
-  out_eT* out_mem = out.memptr();
-  
-  for(u32 i=0; i<out.n_elem; ++i)
-    {
-    out_mem[i] = std::abs(A[i]);
-    }
-  
-  return out;
+  return mtOp<typename T1::pod_type, T1, op_abs>( X.get_ref() );
   }
 
 
@@ -520,13 +494,13 @@ fabs(const BaseCube<typename T1::pod_type,T1>& X)
 
 
 template<typename T1>
-arma_inline
-Mat<typename T1::pod_type>
-fabs(const Base< std::complex<typename T1::pod_type>,T1>& X)
+inline
+const mtOp<typename T1::pod_type, T1, op_abs>
+fabs(const Base<std::complex<typename T1::pod_type>, T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  return abs(X);
+  return mtOp<typename T1::pod_type, T1, op_abs>( X.get_ref() );
   }
 
 

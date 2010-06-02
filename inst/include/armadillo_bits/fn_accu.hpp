@@ -96,6 +96,36 @@ accu(const Base<typename T1::elem_type,T1>& X)
 
 
 
+//! explicit handling of Hamming norm (also known as zero norm)
+template<typename T1>
+arma_inline
+arma_warn_unused
+u32
+accu(const mtOp<u32,T1,op_rel_noteq>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const Proxy<T1> A(X.m);
+  
+  const u32 n_elem = A.n_elem;
+  const eT  val    = X.aux;
+  
+  u32 n_nonzero = 0;
+  for(u32 i=0; i<n_elem; ++i)
+    {
+    if(A[i] != val)
+      {
+      ++n_nonzero;
+      }
+    }
+  
+  return n_nonzero;
+  }
+
+
+
 //! accumulate the elements of a cube
 template<typename T1>
 arma_hot

@@ -42,11 +42,30 @@ class op_htrans;
 class op_inv;
 class op_sum;
 class op_diagmat;
+class op_abs;
 
 class eop_conj;
 
 class glue_times;
 class glue_times_diag;
+
+class glue_rel_lt;
+class glue_rel_gt;
+class glue_rel_lteq;
+class glue_rel_gteq;
+class glue_rel_eq;
+class glue_rel_noteq;
+
+class op_rel_lt_pre;
+class op_rel_lt_post;
+class op_rel_gt_pre;
+class op_rel_gt_post;
+class op_rel_lteq_pre;
+class op_rel_lteq_post;
+class op_rel_gteq_pre;
+class op_rel_gteq_post;
+class op_rel_eq;
+class op_rel_noteq;
 
 template<const bool, const bool, const bool, const bool> class gemm;
 template<const bool, const bool, const bool>             class gemv;
@@ -57,8 +76,12 @@ template<typename T1, typename eop_type> class eOp;
 template<typename T1, typename  op_type> class  OpCube; 
 template<typename T1, typename eop_type> class eOpCube; 
 
-template<typename T1, typename T2, typename  glue_type> class  Glue;
-template<typename T1, typename T2, typename eglue_type> class eGlue;
+template<typename T1, typename T2, typename  glue_type> class   Glue;
+template<typename T1, typename T2, typename eglue_type> class  eGlue;
+
+template<typename out_eT, typename T1,              typename op_type  > class mtOp;
+template<typename out_eT, typename T1, typename T2, typename glue_type> class mtGlue;
+
 
 template<typename T1, typename T2, typename  glue_type> class  GlueCube;
 template<typename T1, typename T2, typename eglue_type> class eGlueCube;

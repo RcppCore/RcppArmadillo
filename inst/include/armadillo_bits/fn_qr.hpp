@@ -40,7 +40,9 @@ qr(Mat<typename T1::elem_type>& Q, Mat<typename T1::elem_type>& R, const Base<ty
   
   if(ok == false)
     {
-    arma_print("qr(): matrix factorisation failed");
+    Q.reset();
+    R.reset();
+    arma_print("qr(): factorisation failed");
     }
   
   }

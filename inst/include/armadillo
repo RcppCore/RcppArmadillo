@@ -89,12 +89,13 @@ namespace arma
   // preliminaries
   
   #include "armadillo_bits/forward_proto.hpp"
-  #include "armadillo_bits/static_assert.hpp"
+  #include "armadillo_bits/arma_static_assert.hpp"
   #include "armadillo_bits/typedef.hpp"
   #include "armadillo_bits/format_wrap.hpp"
   #include "armadillo_bits/cmath_wrap.hpp"
   #include "armadillo_bits/constants.hpp"
-  #include "armadillo_bits/version.hpp"
+  #include "armadillo_bits/arma_version.hpp"
+  #include "armadillo_bits/arma_config.hpp"
   #include "armadillo_bits/traits.hpp"
   #include "armadillo_bits/promote_type.hpp"
   #include "armadillo_bits/upgrade_val.hpp"
@@ -139,9 +140,11 @@ namespace arma
   #include "armadillo_bits/eOp_proto.hpp"
   #include "armadillo_bits/eOpCube_proto.hpp"
   
+  #include "armadillo_bits/mtOp_proto.hpp"
   
   #include "armadillo_bits/Glue_proto.hpp"
   #include "armadillo_bits/eGlue_proto.hpp"
+  #include "armadillo_bits/mtGlue_proto.hpp"
   
   #include "armadillo_bits/GlueCube_proto.hpp"
   #include "armadillo_bits/eGlueCube_proto.hpp"
@@ -177,13 +180,24 @@ namespace arma
   #include "armadillo_bits/op_flip_proto.hpp"
   #include "armadillo_bits/op_princomp_proto.hpp"
   #include "armadillo_bits/op_princomp_cov_proto.hpp"
+  #include "armadillo_bits/op_misc_proto.hpp"
+  #include "armadillo_bits/op_relational_proto.hpp"
+  #include "armadillo_bits/op_find_proto.hpp"
+  #include "armadillo_bits/op_chol_proto.hpp"
+  #include "armadillo_bits/op_cx_scalar_proto.hpp"
   
   #include "armadillo_bits/glue_times_proto.hpp"
+  #include "armadillo_bits/glue_mixed_proto.hpp"
   #include "armadillo_bits/glue_cov_proto.hpp"
   #include "armadillo_bits/glue_cor_proto.hpp"
   #include "armadillo_bits/glue_kron_proto.hpp"
   #include "armadillo_bits/glue_cross_proto.hpp"
   #include "armadillo_bits/glue_join_proto.hpp"
+  #include "armadillo_bits/glue_relational_proto.hpp"
+  #include "armadillo_bits/glue_solve_proto.hpp"
+  
+  
+  // for tests & experiments
   
   
   //
@@ -208,6 +222,8 @@ namespace arma
   #include "armadillo_bits/Op_meat.hpp"
   #include "armadillo_bits/OpCube_meat.hpp"
   
+  #include "armadillo_bits/mtOp_meat.hpp"
+  
   #include "armadillo_bits/Glue_meat.hpp"
   #include "armadillo_bits/GlueCube_meat.hpp"
   
@@ -218,6 +234,8 @@ namespace arma
   
   #include "armadillo_bits/eGlue_meat.hpp"
   #include "armadillo_bits/eGlueCube_meat.hpp"
+
+  #include "armadillo_bits/mtGlue_meat.hpp"
   
   #include "armadillo_bits/eglue_misc.hpp"
   #include "armadillo_bits/eglue_cube_misc.hpp"
@@ -305,7 +323,6 @@ namespace arma
   #include "armadillo_bits/fn_princomp_cov.hpp"
   #include "armadillo_bits/fn_cross.hpp"
   #include "armadillo_bits/fn_join.hpp"
-  #include "armadillo_bits/fn_find.hpp"
   
   //
   // class meat
@@ -363,13 +380,21 @@ namespace arma
   #include "armadillo_bits/op_flip_meat.hpp"
   #include "armadillo_bits/op_princomp_meat.hpp"
   #include "armadillo_bits/op_princomp_cov_meat.hpp"
+  #include "armadillo_bits/op_misc_meat.hpp"
+  #include "armadillo_bits/op_relational_meat.hpp"
+  #include "armadillo_bits/op_find_meat.hpp"
+  #include "armadillo_bits/op_chol_meat.hpp"
+  #include "armadillo_bits/op_cx_scalar_meat.hpp"
   
   #include "armadillo_bits/glue_times_meat.hpp"
+  #include "armadillo_bits/glue_mixed_meat.hpp"
   #include "armadillo_bits/glue_cov_meat.hpp"
   #include "armadillo_bits/glue_cor_meat.hpp"
   #include "armadillo_bits/glue_kron_meat.hpp"
   #include "armadillo_bits/glue_cross_meat.hpp"
   #include "armadillo_bits/glue_join_meat.hpp"
+  #include "armadillo_bits/glue_relational_meat.hpp"
+  #include "armadillo_bits/glue_solve_meat.hpp"
   }
   
 #endif

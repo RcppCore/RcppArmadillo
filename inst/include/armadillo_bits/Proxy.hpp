@@ -330,4 +330,64 @@ class Proxy< eGlue<T1, T2, eglue_type > >
 
 
 
+template<typename out_eT, typename T1, typename op_type>
+class Proxy< mtOp<out_eT, T1, op_type> >
+  {
+  public:
+  
+  typedef          out_eT                       elem_type;
+  typedef typename get_pod_type<out_eT>::result pod_type;
+  typedef          Mat<out_eT>                  stored_type;
+  
+  const Mat<out_eT> Q;
+  
+  const u32 n_rows;
+  const u32 n_cols;
+  const u32 n_elem;
+  
+  inline explicit Proxy(const mtOp<out_eT, T1, op_type>& A)
+    : Q(A)
+    , n_rows(Q.n_rows)
+    , n_cols(Q.n_cols)
+    , n_elem(Q.n_elem)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  arma_inline elem_type operator[] (const u32 i)                  const { return Q[i];          }
+  arma_inline elem_type at         (const u32 row, const u32 col) const { return Q.at(row,col); }
+  };
+
+
+
+template<typename out_eT, typename T1, typename T2, typename glue_type>
+class Proxy< mtGlue<out_eT, T1, T2, glue_type > >
+  {
+  public:
+  
+  typedef          out_eT                       elem_type;
+  typedef typename get_pod_type<out_eT>::result pod_type;
+  typedef          Mat<out_eT>                  stored_type;
+  
+  const Mat<out_eT> Q;
+  
+  const u32 n_rows;
+  const u32 n_cols;
+  const u32 n_elem;
+  
+  inline explicit Proxy(const mtGlue<out_eT, T1, T2, glue_type>& A)
+    : Q(A)
+    , n_rows(Q.n_rows)
+    , n_cols(Q.n_cols)
+    , n_elem(Q.n_elem)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  arma_inline elem_type operator[] (const u32 i)                  const { return Q[i];          }
+  arma_inline elem_type at         (const u32 row, const u32 col) const { return Q.at(row,col); }
+  };
+
+
+
 //! @}

@@ -525,6 +525,53 @@ Row<eT>::operator*=(const eOp<T1, eop_type>& X)
 
 
 template<typename eT>
+template<typename T1, typename op_type>
+inline
+Row<eT>::Row(const mtOp<eT, T1, op_type>& X)
+  : Mat<eT>(X)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (Mat<eT>::n_rows > 1), "Row(): incompatible dimensions" );
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+const Row<eT>&
+Row<eT>::operator=(const mtOp<eT, T1, op_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>::operator=(X);
+  
+  arma_debug_check( (Mat<eT>::n_rows > 1), "Row(): incompatible dimensions" );
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+const Row<eT>&
+Row<eT>::operator*=(const mtOp<eT, T1, op_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>::operator*=(X);
+  
+  arma_debug_check( (Mat<eT>::n_rows > 1), "Row(): incompatible dimensions" );
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
 template<typename T1, typename T2, typename glue_type>
 inline
 Row<eT>::Row(const Glue<T1, T2, glue_type>& X)
@@ -606,6 +653,53 @@ template<typename T1, typename T2, typename eglue_type>
 inline
 const Row<eT>&
 Row<eT>::operator*=(const eGlue<T1, T2, eglue_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>::operator*=(X);
+  
+  arma_debug_check( (Mat<eT>::n_rows > 1), "Row(): incompatible dimensions" );
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename T2, typename glue_type>
+inline
+Row<eT>::Row(const mtGlue<eT, T1, T2, glue_type>& X)
+  : Mat<eT>(X)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (Mat<eT>::n_rows > 1), "Row(): incompatible dimensions" );
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename T2, typename glue_type>
+inline
+const Row<eT>&
+Row<eT>::operator=(const mtGlue<eT, T1, T2, glue_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>::operator=(X);
+  
+  arma_debug_check( (Mat<eT>::n_rows > 1), "Row(): incompatible dimensions" );
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename T2, typename glue_type>
+inline
+const Row<eT>&
+Row<eT>::operator*=(const mtGlue<eT, T1, T2, glue_type>& X)
   {
   arma_extra_debug_sigprint();
   

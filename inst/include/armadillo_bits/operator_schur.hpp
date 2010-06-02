@@ -40,8 +40,8 @@ operator%
 
 //! element-wise multiplication of Base objects with different element types
 template<typename T1, typename T2>
-arma_inline
-Mat<typename promote_type<typename T1::elem_type, typename T2::elem_type>::result>
+inline
+const mtGlue<typename promote_type<typename T1::elem_type, typename T2::elem_type>::result, T1, T2, glue_mixed_schur>
 operator%
   (
   const Base< typename force_different_type<typename T1::elem_type, typename T2::elem_type>::T1_result, T1>& X,
@@ -57,22 +57,7 @@ operator%
   
   promote_type<eT1,eT2>::check();
   
-  const Proxy<T1> A(X.get_ref());
-  const Proxy<T2> B(Y.get_ref());
-  
-  arma_debug_assert_same_size(A, B, "element-wise matrix multiplication");
-  
-  Mat<out_eT> out(A.n_rows, A.n_cols);
-
-        out_eT* out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
-  
-  for(u32 i=0; i<n_elem; ++i)
-    {
-    out_mem[i] = upgrade_val<eT1,eT2>::apply(A[i]) * upgrade_val<eT1,eT2>::apply(B[i]);
-    }
-  
-  return out;
+  return mtGlue<out_eT, T1, T2, glue_mixed_schur>( X.get_ref(), Y.get_ref() );
   }
 
 

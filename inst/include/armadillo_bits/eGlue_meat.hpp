@@ -36,7 +36,7 @@ eGlue<T1,T2,eglue_type>::eGlue(const T1& in_A, const T2& in_B)
   {
   arma_extra_debug_sigprint();
   
-  arma_assert_same_size(P1.n_rows, P1.n_cols, P2.n_rows, P2.n_cols, eglue_type::id());
+  arma_assert_same_size(P1.n_rows, P1.n_cols, P2.n_rows, P2.n_cols, eglue_type::text());
   }
 
 

@@ -14,43 +14,26 @@
 // (see http://www.opensource.org/licenses for more info)
 
 
-//! \addtogroup eglue_misc
+//! \addtogroup mtGlue
 //! @{
 
 
 
-class eglue_plus : public eglue_core<eglue_plus>
+template<typename out_eT, typename T1, typename T2, typename glue_type>
+class mtGlue : public Base<out_eT, mtGlue<out_eT, T1, T2, glue_type> >
   {
   public:
   
-  inline static const char* text() { return "matrix addition"; }
-  };
-
-
-
-class eglue_minus : public eglue_core<eglue_minus>
-  {
-  public:
+  typedef          out_eT                       elem_type;
+  typedef typename get_pod_type<out_eT>::result pod_type;
   
-  inline static const char* text() { return "matrix subtraction"; }
-  };
-
-
-
-class eglue_div : public eglue_core<eglue_div>
-  {
-  public:
+  arma_inline  mtGlue(const T1& in_A, const T2& in_B);
+  arma_inline  mtGlue(const T1& in_A, const T2& in_B, const u32 in_aux_u32);
+  arma_inline ~mtGlue();
   
-  inline static const char* text() { return "element-wise matrix division"; }
-  };
-
-
-
-class eglue_schur : public eglue_core<eglue_schur>
-  {
-  public:
-  
-  inline static const char* text() { return "element-wise matrix multiplication"; }
+  const T1& A;       //!< first operand
+  const T2& B;       //!< second operand
+  const u32 aux_u32; //!< storage of auxiliary data, u32 format
   };
 
 

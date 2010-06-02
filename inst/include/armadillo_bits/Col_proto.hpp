@@ -80,6 +80,10 @@ class Col : public Mat<eT>, public BaseVec< eT, Col<eT> >
   template<typename T1, typename eop_type> inline const Col&  operator=(const eOp<T1, eop_type>& X);
   template<typename T1, typename eop_type> inline const Col& operator*=(const eOp<T1, eop_type>& X);
   
+  template<typename T1, typename op_type> inline                   Col(const mtOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline const Col&  operator=(const mtOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline const Col& operator*=(const mtOp<eT, T1, op_type>& X);
+  
   template<typename T1, typename T2, typename glue_type> inline                   Col(const Glue<T1, T2, glue_type>& X);
   template<typename T1, typename T2, typename glue_type> inline const Col&  operator=(const Glue<T1, T2, glue_type>& X);
   template<typename T1, typename T2, typename glue_type> inline const Col& operator*=(const Glue<T1, T2, glue_type>& X);
@@ -87,6 +91,10 @@ class Col : public Mat<eT>, public BaseVec< eT, Col<eT> >
   template<typename T1, typename T2, typename eglue_type> inline                   Col(const eGlue<T1, T2, eglue_type>& X);
   template<typename T1, typename T2, typename eglue_type> inline const Col&  operator=(const eGlue<T1, T2, eglue_type>& X);
   template<typename T1, typename T2, typename eglue_type> inline const Col& operator*=(const eGlue<T1, T2, eglue_type>& X);
+  
+  template<typename T1, typename T2, typename glue_type> inline                   Col(const mtGlue<eT, T1, T2, glue_type>& X);
+  template<typename T1, typename T2, typename glue_type> inline const Col&  operator=(const mtGlue<eT, T1, T2, glue_type>& X);
+  template<typename T1, typename T2, typename glue_type> inline const Col& operator*=(const mtGlue<eT, T1, T2, glue_type>& X);
   
   inline void  set_size(const u32 n_elem);
   inline void  set_size(const u32 n_rows, const u32 n_cols);

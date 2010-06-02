@@ -134,6 +134,14 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename T1, typename eop_type> inline const Mat& operator%=(const eOp<T1, eop_type>& X);
   template<typename T1, typename eop_type> inline const Mat& operator/=(const eOp<T1, eop_type>& X);
   
+  template<typename T1, typename op_type> inline                   Mat(const mtOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline const Mat&  operator=(const mtOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline const Mat& operator+=(const mtOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline const Mat& operator-=(const mtOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline const Mat& operator*=(const mtOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline const Mat& operator%=(const mtOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline const Mat& operator/=(const mtOp<eT, T1, op_type>& X);
+  
   template<typename T1, typename T2, typename glue_type> inline                   Mat(const Glue<T1, T2, glue_type>& X);
   template<typename T1, typename T2, typename glue_type> inline const Mat&  operator=(const Glue<T1, T2, glue_type>& X);
   template<typename T1, typename T2, typename glue_type> inline const Mat& operator+=(const Glue<T1, T2, glue_type>& X);
@@ -152,6 +160,14 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename T1, typename T2, typename eglue_type> inline const Mat& operator*=(const eGlue<T1, T2, eglue_type>& X);
   template<typename T1, typename T2, typename eglue_type> inline const Mat& operator%=(const eGlue<T1, T2, eglue_type>& X);
   template<typename T1, typename T2, typename eglue_type> inline const Mat& operator/=(const eGlue<T1, T2, eglue_type>& X);
+  
+  template<typename T1, typename T2, typename glue_type> inline                   Mat(const mtGlue<eT, T1, T2, glue_type>& X);
+  template<typename T1, typename T2, typename glue_type> inline const Mat&  operator=(const mtGlue<eT, T1, T2, glue_type>& X);
+  template<typename T1, typename T2, typename glue_type> inline const Mat& operator+=(const mtGlue<eT, T1, T2, glue_type>& X);
+  template<typename T1, typename T2, typename glue_type> inline const Mat& operator-=(const mtGlue<eT, T1, T2, glue_type>& X);
+  template<typename T1, typename T2, typename glue_type> inline const Mat& operator*=(const mtGlue<eT, T1, T2, glue_type>& X);
+  template<typename T1, typename T2, typename glue_type> inline const Mat& operator%=(const mtGlue<eT, T1, T2, glue_type>& X);
+  template<typename T1, typename T2, typename glue_type> inline const Mat& operator/=(const mtGlue<eT, T1, T2, glue_type>& X);
   
   
   arma_inline eT& operator[] (const u32 i);

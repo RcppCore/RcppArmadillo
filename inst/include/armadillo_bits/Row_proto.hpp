@@ -73,21 +73,29 @@ class Row : public Mat<eT>, public BaseVec< eT, Row<eT> >
   arma_inline       subview_row<eT> cols(const u32 in_col1, const u32 in_col2);
   arma_inline const subview_row<eT> cols(const u32 in_col1, const u32 in_col2) const;
   
-  template<typename T1, typename op_type> inline                   Row(const Op<T1, op_type> &X);
-  template<typename T1, typename op_type> inline const Row&  operator=(const Op<T1, op_type> &X);
-  template<typename T1, typename op_type> inline const Row& operator*=(const Op<T1, op_type> &X);
+  template<typename T1, typename op_type> inline                   Row(const Op<T1, op_type>& X);
+  template<typename T1, typename op_type> inline const Row&  operator=(const Op<T1, op_type>& X);
+  template<typename T1, typename op_type> inline const Row& operator*=(const Op<T1, op_type>& X);
   
-  template<typename T1, typename eop_type> inline                   Row(const eOp<T1, eop_type> &X);
-  template<typename T1, typename eop_type> inline const Row&  operator=(const eOp<T1, eop_type> &X);
-  template<typename T1, typename eop_type> inline const Row& operator*=(const eOp<T1, eop_type> &X);
+  template<typename T1, typename eop_type> inline                   Row(const eOp<T1, eop_type>& X);
+  template<typename T1, typename eop_type> inline const Row&  operator=(const eOp<T1, eop_type>& X);
+  template<typename T1, typename eop_type> inline const Row& operator*=(const eOp<T1, eop_type>& X);
   
-  template<typename T1, typename T2, typename glue_type> inline                   Row(const Glue<T1, T2, glue_type> &X);
-  template<typename T1, typename T2, typename glue_type> inline const Row&  operator=(const Glue<T1, T2, glue_type> &X);
-  template<typename T1, typename T2, typename glue_type> inline const Row& operator*=(const Glue<T1, T2, glue_type> &X);
+  template<typename T1, typename op_type> inline                   Row(const mtOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline const Row&  operator=(const mtOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline const Row& operator*=(const mtOp<eT, T1, op_type>& X);
   
-  template<typename T1, typename T2, typename eglue_type> inline                   Row(const eGlue<T1, T2, eglue_type> &X);
-  template<typename T1, typename T2, typename eglue_type> inline const Row&  operator=(const eGlue<T1, T2, eglue_type> &X);
-  template<typename T1, typename T2, typename eglue_type> inline const Row& operator*=(const eGlue<T1, T2, eglue_type> &X);
+  template<typename T1, typename T2, typename glue_type> inline                   Row(const Glue<T1, T2, glue_type>& X);
+  template<typename T1, typename T2, typename glue_type> inline const Row&  operator=(const Glue<T1, T2, glue_type>& X);
+  template<typename T1, typename T2, typename glue_type> inline const Row& operator*=(const Glue<T1, T2, glue_type>& X);
+  
+  template<typename T1, typename T2, typename eglue_type> inline                   Row(const eGlue<T1, T2, eglue_type>& X);
+  template<typename T1, typename T2, typename eglue_type> inline const Row&  operator=(const eGlue<T1, T2, eglue_type>& X);
+  template<typename T1, typename T2, typename eglue_type> inline const Row& operator*=(const eGlue<T1, T2, eglue_type>& X);
+  
+  template<typename T1, typename T2, typename glue_type> inline                   Row(const mtGlue<eT, T1, T2, glue_type>& X);
+  template<typename T1, typename T2, typename glue_type> inline const Row&  operator=(const mtGlue<eT, T1, T2, glue_type>& X);
+  template<typename T1, typename T2, typename glue_type> inline const Row& operator*=(const mtGlue<eT, T1, T2, glue_type>& X);
   
   inline void  set_size(const u32 N);
   inline void  set_size(const u32 n_rows, const u32 n_cols);

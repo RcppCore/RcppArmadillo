@@ -27,67 +27,28 @@
 //! This function will also try to provide approximate solutions
 //! to under-determined as well as over-determined systems (non-square A matrices).
 
-template<typename eT, typename T1, typename T2>
+template<typename T1, typename T2>
 inline
-bool
-solve(Mat<eT>& X, const Base<eT,T1>& A_in, const Base<eT,T2>& B_in)
+const Glue<T1, T2, glue_solve>
+solve(const Base<typename T1::elem_type,T1>& A, const Base<typename T1::elem_type,T2>& B)
   {
   arma_extra_debug_sigprint();
   
-  const unwrap<T1> tmp1(A_in.get_ref());
-  const unwrap<T2> tmp2(B_in.get_ref());
-  
-  const Mat<eT>& A = tmp1.M;
-  const Mat<eT>& B = tmp2.M;
-  
-  arma_debug_check( (A.n_rows != B.n_rows), "solve(): number of rows in A and B must be the same" );
-  
-  bool status;
-  
-  if(A.n_rows == A.n_cols)
-    {
-    status = auxlib::solve(X, A, B);
-    }
-  else
-  if(A.n_rows > A.n_cols)
-    {
-    arma_extra_debug_print("solve(): detected over-determined system");
-    status = auxlib::solve_od(X, A, B);
-    }
-  else
-    {
-    arma_extra_debug_print("solve(): detected under-determined system");
-    status = auxlib::solve_ud(X, A, B);
-    }
-  
-  if(status == false)
-    {
-    X.reset();
-    }
-  
-  return status;
+  return Glue<T1, T2, glue_solve>(A.get_ref(), B.get_ref());
   }
 
 
 
-template<typename eT, typename T1, typename T2>
+template<typename T1, typename T2>
 inline
-Mat<eT>
-solve(const Base<eT,T1>& A_in, const Base<eT,T2>& B_in)
+bool
+solve(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& A, const Base<typename T1::elem_type,T2>& B)
   {
   arma_extra_debug_sigprint();
   
-  Mat<eT> X;
-  const bool status = solve(X, A_in, B_in);
+  out = solve(A,B);
   
-  if(status == false)
-    {
-    arma_print("solve(): solution not found");
-    
-    X.reset();
-    }
-  
-  return X;
+  return (out.n_elem == 0) ? false : true;
   }
 
 
