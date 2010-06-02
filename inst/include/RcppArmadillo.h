@@ -137,6 +137,26 @@ namespace Rcpp{
     		return ::Rcpp::wrap( arma::Mat<typename T1::elem_type>(X) ) ;
     	}
     	
+    	template<typename out_eT, typename T1, typename op_type>
+    	SEXP wrap_mtop( const arma::mtOp<out_eT,T1,op_type>& X, ::Rcpp::traits::false_type ){
+    		// int n_rows = X.P.n_rows ;
+    		// int n_cols = X.P.n_cols ;
+    		// typedef typename ::Rcpp::Vector< ::Rcpp::traits::r_sexptype_traits< typename T1::elem_type>::rtype > VECTOR ;
+    		// VECTOR res(::Rcpp::Dimension( n_rows , n_cols )) ;
+    		// ::arma::Mat<typename T1::elem_type> result( res.begin(), n_rows, n_cols, false ) ;
+    		// result = X ;
+    		// return res ;
+    		return ::Rcpp::wrap( arma::Mat<out_eT>(X) ) ;
+    	}
+    	
+    	template<typename out_eT, typename T1, typename op_type>
+    	SEXP wrap_mtop( const arma::mtOp<out_eT,T1,op_type>& X, ::Rcpp::traits::true_type ){
+    		return ::Rcpp::wrap( arma::Mat<out_eT>(X) ) ;
+    	}
+    	
+    	
+    	
+    	
     } // namespace RcppArmadillo
     
     template <typename T1, typename T2, typename glue_type>
@@ -159,6 +179,11 @@ namespace Rcpp{
     	return wrap( arma::Cube<typename T1::elem_type>(X) ) ;
     }
     
+    template<typename out_eT, typename T1, typename op_type>
+    SEXP wrap( const arma::mtOp<out_eT,T1,op_type>& X ){
+    	return RcppArmadillo::wrap_mtop( X, typename traits::r_sexptype_needscast<out_eT>::type() ) ;
+    }
+
     /* support for Rcpp::as */
 
     namespace traits {

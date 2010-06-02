@@ -191,3 +191,34 @@ test.as.Row <- function(){
     checkEquals( unlist( res ), rep(55.0, 4 ), msg = "as<Row>" )
 }
 
+test.cxmat <- function(){
+	
+	fx <- cxxfunction( signature() , '
+
+    arma::cx_mat m1  = arma::eye<arma::cx_mat> ( 3, 3 ) ;
+    arma::cx_fmat m2 = arma::eye<arma::cx_fmat>( 3, 3 ) ;
+    return List::create( _["double"] = m1, _["float"] = m2 ) ;
+    
+	', plugin = "RcppArmadillo" )
+	checkEquals( fx(), 
+		list( double = (1+0i)*diag(3), float = (1+0i)*diag(3) ), 
+		msg = "support for complex matrices" )
+	
+}
+
+test.mtOp <- function(){
+
+	fx <- cxxfunction( signature() , '
+
+	std::complex<double> x( 1.0, 2.0 ) ;
+    arma::mat m1  = arma::eye<arma::mat> ( 3, 3 ) ;
+
+    return wrap( x * m1 ) ;
+    
+	', plugin = "RcppArmadillo" )
+	checkEquals( fx(), 
+		(1+2i)*diag(3), 
+		msg = "support for mtOp" )
+	
+}
+
