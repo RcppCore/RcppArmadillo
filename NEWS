@@ -9,8 +9,14 @@
 		as a complex and an arma::mat, which have been introduced in
 		armadillo 0.9.10
 		
+	o	wrap support for mtGlue, i.e. operations involving matrices of mixed 
+		types such as an arma::mat and an arma::imat, which have been introduced
+		in armadillo 0.9.10
+		
 	o	Included an inline plugin to support the plugin system introduced
-		in inline 0.3.5
+		in inline 0.3.5. The unit tests have moved from the src directory 
+		to the unit test directory (similar to Rcpp) using cxxfunction with the
+		RcppArmadillo plugin. 
 		
 0.2.1   2010-05-19
 
