@@ -14,28 +14,8 @@
 // (see http://www.opensource.org/licenses for more info)
 
 
-//! \addtogroup version
+//! \addtogroup arma_config
 //! @{
-
-
-
-struct arma_version
-  {
-  static const unsigned int major = 0;
-  static const unsigned int minor = 9;
-  static const unsigned int patch = 8;
-  
-  static
-  inline
-  std::string
-  as_string()
-    {
-    std::stringstream ss;
-    ss << arma_version::major << '.' << arma_version::minor << '.' << arma_version::patch;
-    
-    return ss.str();
-    }
-  };
 
 
 

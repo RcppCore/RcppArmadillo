@@ -85,6 +85,37 @@ class unwrap< Col<eT> >
 
 
 
+template<typename out_eT, typename T1, typename T2, typename glue_type>
+class unwrap< mtGlue<out_eT, T1, T2, glue_type> >
+  {
+  public:
+  
+  inline unwrap(const mtGlue<out_eT, T1, T2, glue_type>& A)
+    : M(A)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const Mat<out_eT> M;
+  };
+
+
+template<typename out_eT, typename T1, typename op_type>
+class unwrap< mtOp<out_eT, T1, op_type> >
+  {
+  public:
+  
+  inline unwrap(const mtOp<out_eT, T1, op_type>& A)
+    : M(A)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const Mat<out_eT> M;
+  };
+
+
+
 //
 //
 //

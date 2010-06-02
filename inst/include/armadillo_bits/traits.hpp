@@ -219,6 +219,58 @@ struct is_op_diagmat< Op<T1,op_diagmat> >
 //
 
 
+template<typename T>
+struct is_op_rel
+  { static const bool value = false; };
+
+template<typename out_eT, typename T1>
+struct is_op_rel< mtOp<out_eT, T1, op_rel_lt_pre> >
+  { static const bool value = true; };
+
+template<typename out_eT, typename T1>
+struct is_op_rel< mtOp<out_eT, T1, op_rel_lt_post> >
+  { static const bool value = true; };
+
+template<typename out_eT, typename T1>
+struct is_op_rel< mtOp<out_eT, T1, op_rel_gt_pre> >
+  { static const bool value = true; };
+
+template<typename out_eT, typename T1>
+struct is_op_rel< mtOp<out_eT, T1, op_rel_gt_post> >
+  { static const bool value = true; };
+
+template<typename out_eT, typename T1>
+struct is_op_rel< mtOp<out_eT, T1, op_rel_lteq_pre> >
+  { static const bool value = true; };
+
+template<typename out_eT, typename T1>
+struct is_op_rel< mtOp<out_eT, T1, op_rel_lteq_post> >
+  { static const bool value = true; };
+
+template<typename out_eT, typename T1>
+struct is_op_rel< mtOp<out_eT, T1, op_rel_gteq_pre> >
+  { static const bool value = true; };
+
+template<typename out_eT, typename T1>
+struct is_op_rel< mtOp<out_eT, T1, op_rel_gteq_post> >
+  { static const bool value = true; };
+
+template<typename out_eT, typename T1>
+struct is_op_rel< mtOp<out_eT, T1, op_rel_eq> >
+  { static const bool value = true; };
+
+template<typename out_eT, typename T1>
+struct is_op_rel< mtOp<out_eT, T1, op_rel_noteq> >
+  { static const bool value = true; };
+
+
+
+//
+//
+//
+
+
+
 template<typename T1>
 struct is_arma_type
   {

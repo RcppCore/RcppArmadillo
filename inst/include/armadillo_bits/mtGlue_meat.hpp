@@ -14,29 +14,40 @@
 // (see http://www.opensource.org/licenses for more info)
 
 
-//! \addtogroup eGlueCube
+//! \addtogroup mtGlue
 //! @{
 
 
 
-template<typename T1, typename T2, typename eglue_type>
-arma_inline
-eGlueCube<T1,T2,eglue_type>::~eGlueCube()
+template<typename out_eT, typename T1, typename T2, typename glue_type>
+inline
+mtGlue<out_eT,T1,T2,glue_type>::mtGlue(const T1& in_A, const T2& in_B)
+  : A(in_A)
+  , B(in_B)
+  , aux_u32(aux_u32)
   {
   arma_extra_debug_sigprint();
   }
 
 
 
-template<typename T1, typename T2, typename eglue_type>
-arma_inline
-eGlueCube<T1,T2,eglue_type>::eGlueCube(const T1& in_A, const T2& in_B)
-  : P1(in_A)
-  , P2(in_B)
+template<typename out_eT, typename T1, typename T2, typename glue_type>
+inline
+mtGlue<out_eT,T1,T2,glue_type>::mtGlue(const T1& in_A, const T2& in_B, const u32 in_aux_u32)
+  : A(in_A)
+  , B(in_B)
+  , aux_u32(in_aux_u32)
   {
   arma_extra_debug_sigprint();
-  
-  arma_assert_same_size(P1.n_rows, P1.n_cols, P1.n_slices, P2.n_rows, P2.n_cols, P2.n_slices, eglue_type::text());
+  }
+
+
+
+template<typename out_eT, typename T1, typename T2, typename glue_type>
+inline
+mtGlue<out_eT,T1,T2,glue_type>::~mtGlue()
+  {
+  arma_extra_debug_sigprint();
   }
 
 

@@ -351,24 +351,6 @@ glue_times::apply_inplace_plus(Mat<typename T1::elem_type>& out, const Glue<T1, 
 
 
 
-//! matrix multiplication with different element types
-template<typename eT1, typename eT2>
-inline
-void
-glue_times::apply_mixed(Mat<typename promote_type<eT1,eT2>::result>& out, const Mat<eT1>& X, const Mat<eT2>& Y)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename promote_type<eT1,eT2>::result out_eT;
-  
-  arma_debug_assert_mul_size(X,Y, "matrix multiply");
-  
-  out.set_size(X.n_rows,Y.n_cols);
-  gemm_mixed<>::apply(out, X, Y);
-  }
-
-
-
 template<typename eT>
 arma_inline
 u32

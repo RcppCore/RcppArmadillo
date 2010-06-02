@@ -1,0 +1,202 @@
+// Copyright (C) 2010 NICTA and the authors listed below
+// http://nicta.com.au
+// 
+// Authors:
+// - Conrad Sanderson (conradsand at ieee dot org)
+// 
+// This file is part of the Armadillo C++ library.
+// It is provided without any warranty of fitness
+// for any purpose. You can redistribute this file
+// and/or modify it under the terms of the GNU
+// Lesser General Public License (LGPL) as published
+// by the Free Software Foundation, either version 3
+// of the License or (at your option) any later version.
+// (see http://www.opensource.org/licenses for more info)
+
+
+//! \addtogroup op_cx_scalar
+//! @{
+
+
+
+template<typename T1>
+inline
+void
+op_cx_scalar_times::apply
+  (
+        Mat< typename std::complex<typename T1::pod_type> >& out,
+  const mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_times>& X
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename std::complex<typename T1::pod_type> eT;
+  typedef typename T1::pod_type                         T;
+  
+  const Proxy<T1> A(X.m);
+  
+  out.set_size(A.n_rows, A.n_cols);
+  
+  const u32 n_elem  = A.n_elem;
+  const eT  k       = X.aux_out_eT;
+        eT* out_mem = out.memptr();
+  
+  for(u32 i=0; i<n_elem; ++i)
+    {
+    out_mem[i] = A[i] * k;
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_cx_scalar_plus::apply
+  (
+        Mat< typename std::complex<typename T1::pod_type> >& out,
+  const mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_plus>& X
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename std::complex<typename T1::pod_type> eT;
+  typedef typename T1::pod_type                         T;
+  
+  const Proxy<T1> A(X.m);
+  
+  out.set_size(A.n_rows, A.n_cols);
+  
+  const u32 n_elem  = A.n_elem;
+  const eT  k       = X.aux_out_eT;
+        eT* out_mem = out.memptr();
+  
+  for(u32 i=0; i<n_elem; ++i)
+    {
+    out_mem[i] = A[i] + k;
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_cx_scalar_minus_pre::apply
+  (
+        Mat< typename std::complex<typename T1::pod_type> >& out,
+  const mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_minus_pre>& X
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename std::complex<typename T1::pod_type> eT;
+  typedef typename T1::pod_type                         T;
+  
+  const Proxy<T1> A(X.m);
+  
+  out.set_size(A.n_rows, A.n_cols);
+  
+  const u32 n_elem  = A.n_elem;
+  const eT  k       = X.aux_out_eT;
+        eT* out_mem = out.memptr();
+  
+  for(u32 i=0; i<n_elem; ++i)
+    {
+    out_mem[i] = k - A[i];
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_cx_scalar_minus_post::apply
+  (
+        Mat< typename std::complex<typename T1::pod_type> >& out,
+  const mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_minus_post>& X
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename std::complex<typename T1::pod_type> eT;
+  typedef typename T1::pod_type                         T;
+  
+  const Proxy<T1> A(X.m);
+  
+  out.set_size(A.n_rows, A.n_cols);
+  
+  const u32 n_elem  = A.n_elem;
+  const eT  k       = X.aux_out_eT;
+        eT* out_mem = out.memptr();
+  
+  for(u32 i=0; i<n_elem; ++i)
+    {
+    out_mem[i] = A[i] - k;
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_cx_scalar_div_pre::apply
+  (
+        Mat< typename std::complex<typename T1::pod_type> >& out,
+  const mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_div_pre>& X
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename std::complex<typename T1::pod_type> eT;
+  typedef typename T1::pod_type                         T;
+  
+  const Proxy<T1> A(X.m);
+  
+  out.set_size(A.n_rows, A.n_cols);
+  
+  const u32 n_elem  = A.n_elem;
+  const eT  k       = X.aux_out_eT;
+        eT* out_mem = out.memptr();
+  
+  for(u32 i=0; i<n_elem; ++i)
+    {
+    out_mem[i] = k / A[i];
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_cx_scalar_div_post::apply
+  (
+        Mat< typename std::complex<typename T1::pod_type> >& out,
+  const mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_div_post>& X
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename std::complex<typename T1::pod_type> eT;
+  typedef typename T1::pod_type                         T;
+  
+  const Proxy<T1> A(X.m);
+  
+  out.set_size(A.n_rows, A.n_cols);
+  
+  const u32 n_elem  = A.n_elem;
+  const eT  k       = X.aux_out_eT;
+        eT* out_mem = out.memptr();
+  
+  for(u32 i=0; i<n_elem; ++i)
+    {
+    out_mem[i] = A[i] / k;
+    }
+  }
+
+
+
+//! @}

@@ -14,30 +14,28 @@
 // (see http://www.opensource.org/licenses for more info)
 
 
-//! \addtogroup eGlueCube
+//! \addtogroup arma_version
 //! @{
 
 
 
-template<typename T1, typename T2, typename eglue_type>
-arma_inline
-eGlueCube<T1,T2,eglue_type>::~eGlueCube()
+struct arma_version
   {
-  arma_extra_debug_sigprint();
-  }
-
-
-
-template<typename T1, typename T2, typename eglue_type>
-arma_inline
-eGlueCube<T1,T2,eglue_type>::eGlueCube(const T1& in_A, const T2& in_B)
-  : P1(in_A)
-  , P2(in_B)
-  {
-  arma_extra_debug_sigprint();
+  static const unsigned int major = 0;
+  static const unsigned int minor = 9;
+  static const unsigned int patch = 10;
   
-  arma_assert_same_size(P1.n_rows, P1.n_cols, P1.n_slices, P2.n_rows, P2.n_cols, P2.n_slices, eglue_type::text());
-  }
+  static
+  inline
+  std::string
+  as_string()
+    {
+    std::stringstream ss;
+    ss << arma_version::major << '.' << arma_version::minor << '.' << arma_version::patch;
+    
+    return ss.str();
+    }
+  };
 
 
 

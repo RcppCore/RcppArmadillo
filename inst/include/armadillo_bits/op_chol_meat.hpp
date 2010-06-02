@@ -14,25 +14,33 @@
 // (see http://www.opensource.org/licenses for more info)
 
 
-//! \addtogroup static_assert
+//! \addtogroup op_chol
 //! @{
 
 
 
-//! Classes for primitive compile time assertions (until the next version of C++)
-template<bool> struct arma_static_assert;
-template<>     struct arma_static_assert<true> {};
-
-
-template<bool val>
-struct arma_type_check
+template<typename T1>
+inline
+void
+op_chol::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_chol>& X)
   {
-  arma_inline static void apply()
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const unwrap_check<T1> tmp(X.m, out);
+  const Mat<eT>&     A = tmp.M;
+  
+  arma_debug_check( (A.is_square() == false), "chol(): given matrix is not square");
+  
+  const bool ok = auxlib::chol(out, A);
+  
+  if(ok == false)
     {
-    arma_static_assert<!val> ERROR___INCORRECT_TYPE;
-    ERROR___INCORRECT_TYPE = ERROR___INCORRECT_TYPE;
+    out.reset();
+    arma_print("chol(): matrix factorisation failed");
     }
-  };
+  }
 
 
 

@@ -64,7 +64,7 @@ operator+
 //! non-complex Base + complex scalar (experimental)
 template<typename T1>
 arma_inline
-Mat<typename std::complex<typename T1::pod_type> >
+const mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_plus>
 operator+
   (
   const Base<typename T1::pod_type, T1>&     X,
@@ -73,22 +73,7 @@ operator+
   {
   arma_extra_debug_sigprint();
   
-  typedef typename std::complex<typename T1::pod_type> eT;
-  typedef typename T1::pod_type                         T;
-  
-  const Proxy<T1> A(X.get_ref());
-  
-  Mat<eT> out(A.n_rows, A.n_cols);
-  
-  const u32 n_elem  = A.n_elem;
-        eT* out_mem = out.memptr();
-  
-  for(u32 i=0; i<n_elem; ++i)
-    {
-    out_mem[i] = A[i] + k;
-    }
-  
-  return out;
+  return mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_plus>('j', X.get_ref(), k);
   }
 
 
@@ -96,7 +81,7 @@ operator+
 //! complex scalar + non-complex Base (experimental)
 template<typename T1>
 arma_inline
-Mat<typename std::complex<typename T1::pod_type> >
+const mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_plus>
 operator+
   (
   const std::complex<typename T1::pod_type>& k,
@@ -105,22 +90,7 @@ operator+
   {
   arma_extra_debug_sigprint();
   
-  typedef typename std::complex<typename T1::pod_type> eT;
-  typedef typename T1::pod_type                         T;
-  
-  const Proxy<T1> A(X.get_ref());
-  
-  Mat<eT> out(A.n_rows, A.n_cols);
-  
-  const u32 n_elem  = A.n_elem;
-        eT* out_mem = out.memptr();
-  
-  for(u32 i=0; i<n_elem; ++i)
-    {
-    out_mem[i] = k + A[i];
-    }
-  
-  return out;
+  return mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_plus>('j', X.get_ref(), k);  // NOTE: order is swapped
   }
 
 
@@ -144,8 +114,8 @@ operator+
 
 //! addition of Base objects with different element types
 template<typename T1, typename T2>
-arma_inline
-Mat<typename promote_type<typename T1::elem_type, typename T2::elem_type>::result>
+inline
+const mtGlue<typename promote_type<typename T1::elem_type, typename T2::elem_type>::result, T1, T2, glue_mixed_plus>
 operator+
   (
   const Base< typename force_different_type<typename T1::elem_type, typename T2::elem_type>::T1_result, T1>& X,
@@ -161,22 +131,7 @@ operator+
   
   promote_type<eT1,eT2>::check();
   
-  const Proxy<T1> A(X.get_ref());
-  const Proxy<T2> B(Y.get_ref());
-  
-  arma_debug_assert_same_size(A, B, "matrix addition");
-  
-  Mat<out_eT> out(A.n_rows, A.n_cols);
-
-        out_eT* out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
-  
-  for(u32 i=0; i<n_elem; ++i)
-    {
-    out_mem[i] = upgrade_val<eT1,eT2>::apply(A[i]) + upgrade_val<eT1,eT2>::apply(B[i]);
-    }
-  
-  return out;
+  return mtGlue<out_eT, T1, T2, glue_mixed_plus>( X.get_ref(), Y.get_ref() );
   }
 
 

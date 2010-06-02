@@ -19,10 +19,10 @@
 
 
 
-template<typename T1>
+template<typename eT, typename T1>
 inline
 std::ostream&
-operator<< (std::ostream& o, const Base<typename T1::elem_type,T1>& X)
+operator<< (std::ostream& o, const Base<eT,T1>& X)
   {
   arma_extra_debug_sigprint();
   

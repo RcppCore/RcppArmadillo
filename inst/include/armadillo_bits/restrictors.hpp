@@ -19,6 +19,11 @@
 
 
 
+// structures for template based restrictions of input/output arguments
+// (part of the SFINAE approach)
+// http://en.wikipedia.org/wiki/SFINAE
+
+
 template<typename T> struct arma_scalar_only { };
 
 template<> struct arma_scalar_only<char>   { typedef char   result; };
@@ -73,6 +78,66 @@ template<typename T> struct arma_float_only { };
 
 template<> struct arma_float_only<float>  { typedef float  result; };
 template<> struct arma_float_only<double> { typedef double result; };
+
+
+
+template<typename T> struct arma_float_or_cx_only { };
+
+template<> struct arma_float_or_cx_only< float >                { typedef float                result; };
+template<> struct arma_float_or_cx_only< double >               { typedef double               result; };
+template<> struct arma_float_or_cx_only< std::complex<float>  > { typedef std::complex<float>  result; };
+template<> struct arma_float_or_cx_only< std::complex<double> > { typedef std::complex<double> result; };
+
+
+
+template<typename T> struct arma_cx_only { };
+template<typename T> struct arma_cx_only< std::complex<T> > { typedef std::complex<T> result; };
+
+
+
+template<typename T> struct arma_not_cx                    { typedef T result; };
+template<typename T> struct arma_not_cx< std::complex<T> > { };
+
+
+
+template<typename T> struct arma_op_rel_only { };
+
+template<> struct arma_op_rel_only< op_rel_lt_pre    > { typedef int result; };
+template<> struct arma_op_rel_only< op_rel_lt_post   > { typedef int result; };
+template<> struct arma_op_rel_only< op_rel_gt_pre    > { typedef int result; };
+template<> struct arma_op_rel_only< op_rel_gt_post   > { typedef int result; };
+template<> struct arma_op_rel_only< op_rel_lteq_pre  > { typedef int result; };
+template<> struct arma_op_rel_only< op_rel_lteq_post > { typedef int result; };
+template<> struct arma_op_rel_only< op_rel_gteq_pre  > { typedef int result; };
+template<> struct arma_op_rel_only< op_rel_gteq_post > { typedef int result; };
+template<> struct arma_op_rel_only< op_rel_eq        > { typedef int result; };
+template<> struct arma_op_rel_only< op_rel_noteq     > { typedef int result; };
+
+
+
+template<typename T> struct arma_not_op_rel { typedef int result; };
+
+template<> struct arma_not_op_rel< op_rel_lt_pre    > { };
+template<> struct arma_not_op_rel< op_rel_lt_post   > { };
+template<> struct arma_not_op_rel< op_rel_gt_pre    > { };
+template<> struct arma_not_op_rel< op_rel_gt_post   > { };
+template<> struct arma_not_op_rel< op_rel_lteq_pre  > { };
+template<> struct arma_not_op_rel< op_rel_lteq_post > { };
+template<> struct arma_not_op_rel< op_rel_gteq_pre  > { };
+template<> struct arma_not_op_rel< op_rel_gteq_post > { };
+template<> struct arma_not_op_rel< op_rel_eq        > { };
+template<> struct arma_not_op_rel< op_rel_noteq     > { };
+
+
+
+template<typename T> struct arma_glue_rel_only { };
+
+template<> struct arma_glue_rel_only< glue_rel_lt    > { typedef int result; };
+template<> struct arma_glue_rel_only< glue_rel_gt    > { typedef int result; };
+template<> struct arma_glue_rel_only< glue_rel_lteq  > { typedef int result; };
+template<> struct arma_glue_rel_only< glue_rel_gteq  > { typedef int result; };
+template<> struct arma_glue_rel_only< glue_rel_eq    > { typedef int result; };
+template<> struct arma_glue_rel_only< glue_rel_noteq > { typedef int result; };
 
 
 

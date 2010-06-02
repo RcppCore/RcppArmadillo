@@ -307,14 +307,7 @@ norm(const Base<typename T1::elem_type,T1>& X, const u32 k)
   {
   arma_extra_debug_sigprint();
   
-  if(is_Mat<T1>::value == true)
-    {
-    return norm_unwrap(X, k);
-    }
-  else
-    {
-    return norm_proxy(X, k);
-    }
+  return (is_Mat<T1>::value == true) ? norm_unwrap(X, k) : norm_proxy(X, k);
   }
 
 
@@ -327,14 +320,7 @@ norm(const Base<typename T1::elem_type,T1>& X, const char* method)
   {
   arma_extra_debug_sigprint();
   
-  if(is_Mat<T1>::value == true)
-    {
-    return norm_unwrap(X, method);
-    }
-  else
-    {
-    return norm_proxy(X, method);
-    }
+  return (is_Mat<T1>::value == true) ? norm_unwrap(X, method) : norm_proxy(X, method);
   }
 
 

@@ -40,7 +40,7 @@ kron(const Base<typename T1::elem_type,T1>& A, const Base<typename T1::elem_type
 //! with the matrices having different element types
 template<typename T, typename T1, typename T2>
 inline
-Mat<typename promote_type<typename T1::elem_type,typename T2::elem_type>::result>
+Mat<typename eT_promoter<T1,T2>::eT>
 kron(const Base<std::complex<T>,T1>& X, const Base<T,T2>& Y)
   {
   arma_extra_debug_sigprint();
@@ -52,8 +52,8 @@ kron(const Base<std::complex<T>,T1>& X, const Base<T,T2>& Y)
   const unwrap<T1> tmp1(X.get_ref());
   const unwrap<T2> tmp2(Y.get_ref());
   
-  const Mat< eT1 >& A = tmp1.M;
-  const Mat<T>&     B = tmp2.M;
+  const Mat<eT1>& A = tmp1.M;
+  const Mat<T  >& B = tmp2.M;
 
   Mat<eT1> out;
   
@@ -69,7 +69,7 @@ kron(const Base<std::complex<T>,T1>& X, const Base<T,T2>& Y)
 //! with the matrices having different element types
 template<typename T, typename T1, typename T2>
 inline
-Mat<typename promote_type<typename T1::elem_type,typename T2::elem_type>::result>
+Mat<typename eT_promoter<T1,T2>::eT>
 kron(const Base<T,T1>& X, const Base<std::complex<T>,T2>& Y)
   {
   arma_extra_debug_sigprint();
@@ -81,8 +81,8 @@ kron(const Base<T,T1>& X, const Base<std::complex<T>,T2>& Y)
   const unwrap<T1> tmp1(X.get_ref());
   const unwrap<T2> tmp2(Y.get_ref());
   
-  const Mat<T>&     A = tmp1.M;
-  const Mat< eT2 >& B = tmp2.M;
+  const Mat<T  >& A = tmp1.M;
+  const Mat<eT2>& B = tmp2.M;
 
   Mat<eT2> out;
   

@@ -144,7 +144,14 @@ template<> struct promote_type<u8, u16> : public promote_type_ok { typedef u16 r
 
 template<> struct promote_type<u8, s8> : public promote_type_ok { typedef s8 result; };  // s16 ?
 
-  
-  
+
+
+template<typename T1, typename T2>
+struct eT_promoter
+  {
+  typedef typename promote_type<typename T1::elem_type, typename T2::elem_type>::result eT;
+  };
+
+
 
 //! @}

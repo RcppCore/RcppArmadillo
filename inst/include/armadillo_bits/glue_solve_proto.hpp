@@ -14,31 +14,20 @@
 // (see http://www.opensource.org/licenses for more info)
 
 
-//! \addtogroup eGlueCube
+
+//! \addtogroup glue_solve
 //! @{
 
 
 
-template<typename T1, typename T2, typename eglue_type>
-arma_inline
-eGlueCube<T1,T2,eglue_type>::~eGlueCube()
+class glue_solve
   {
-  arma_extra_debug_sigprint();
-  }
+  public:
 
-
-
-template<typename T1, typename T2, typename eglue_type>
-arma_inline
-eGlueCube<T1,T2,eglue_type>::eGlueCube(const T1& in_A, const T2& in_B)
-  : P1(in_A)
-  , P2(in_B)
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_assert_same_size(P1.n_rows, P1.n_cols, P1.n_slices, P2.n_rows, P2.n_cols, P2.n_slices, eglue_type::text());
-  }
+  template<typename T1, typename T2> inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_solve>& X);
+  };
 
 
 
 //! @}
+

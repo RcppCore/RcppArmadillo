@@ -14,30 +14,41 @@
 // (see http://www.opensource.org/licenses for more info)
 
 
-//! \addtogroup eGlueCube
+//! \addtogroup op_misc
 //! @{
 
 
 
-template<typename T1, typename T2, typename eglue_type>
-arma_inline
-eGlueCube<T1,T2,eglue_type>::~eGlueCube()
+class op_real
   {
-  arma_extra_debug_sigprint();
-  }
-
-
-
-template<typename T1, typename T2, typename eglue_type>
-arma_inline
-eGlueCube<T1,T2,eglue_type>::eGlueCube(const T1& in_A, const T2& in_B)
-  : P1(in_A)
-  , P2(in_B)
-  {
-  arma_extra_debug_sigprint();
+  public:
   
-  arma_assert_same_size(P1.n_rows, P1.n_cols, P1.n_slices, P2.n_rows, P2.n_cols, P2.n_slices, eglue_type::text());
-  }
+  template<typename T1>
+  inline static void apply( Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_type, T1, op_real>& X);
+  
+  };
+
+
+
+class op_imag
+  {
+  public:
+  
+  template<typename T1>
+  inline static void apply( Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_type, T1, op_imag>& X);
+  
+  };
+
+
+
+class op_abs
+  {
+  public:
+  
+  template<typename T1>
+  inline static void apply( Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_type, T1, op_abs>& X);
+  
+  };
 
 
 
