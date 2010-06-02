@@ -222,3 +222,20 @@ test.mtOp <- function(){
 	
 }
 
+test.mtGlue <- function(){
+
+	fx <- cxxfunction( signature() , '
+
+	arma::imat m2 = arma::eye<arma::imat> ( 3, 3 ) ;
+	arma::mat m1  = arma::eye<arma::mat> ( 3, 3 ) ;
+
+    return wrap( m1 + m2 ) ;
+    
+	', plugin = "RcppArmadillo" )
+	checkEquals( fx(), 
+		2.0 * diag(3) , 
+		msg = "support for mtOp" )
+	
+}
+
+

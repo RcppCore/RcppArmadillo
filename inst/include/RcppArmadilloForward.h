@@ -61,6 +61,9 @@ namespace Rcpp {
     template<typename out_eT, typename T1, typename op_type>
     SEXP wrap( const arma::mtOp<out_eT,T1,op_type>& X ) ;
 
+    template<typename out_eT, typename T1, typename T2, typename glue_type>
+    SEXP wrap( const arma::mtGlue<out_eT,T1,T2,glue_type>& X );
+    
     namespace traits {
 
 	/* support for as */
