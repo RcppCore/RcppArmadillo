@@ -24,7 +24,7 @@ Description: R and Armadillo integration using Rcpp
  library.
  .
  This Armadillo / C integration provides a nice illustration of the 
- capabilities of the Rcpp package for seamless R and C++ integration/
+ capabilities of the Rcpp package for seamless R and C++ integration.
 License: GPL (>= 2)
 LazyLoad: yes
 Depends: R (>= 2.10.0), Rcpp (>= 0.8.0.2)

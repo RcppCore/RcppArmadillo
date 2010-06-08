@@ -1,11 +1,11 @@
 pkg <- "RcppArmadillo"
 
 if( ! require( "inline", character.only = TRUE, quietly = TRUE ) ){
-	stop( "The inline package is required to run RcppArmadillo unit tests" )
+    stop( "The inline package is required to run RcppArmadillo unit tests" )
 }
 
-if( compareVersion( packageDescription( "inline" )[["Version"]], "0.3.4.4" ) < 0 ){
-	stop( "RcppArmadillo unit tests need at least the version 0.3.4.4 of inline" )
+if( compareVersion( packageDescription( "inline" )[["Version"]], "0.3.5" ) < 0 ){
+    stop( "RcppArmadillo unit tests need at least the version 0.3.5 of inline" )
 }
 
 if(require("RUnit", quietly = TRUE)) {
@@ -16,7 +16,7 @@ if(require("RUnit", quietly = TRUE)) {
     	FALSE
     }
     if( is_local() ) path <- getwd()
-    
+
     library(package=pkg, character.only = TRUE)
     if(!(exists("path") && file.exists(path)))
         path <- system.file("unitTests", package = pkg)
@@ -36,51 +36,51 @@ if(require("RUnit", quietly = TRUE)) {
     } else { ## run from shell / Rscript / R CMD Batch / ...
         ## Run
         tests <- runTestSuite(testSuite)
-        
+
         output <- NULL
-        
+
         process_args <- function(argv){
-        	if( !is.null(argv) && length(argv) > 0 ){
-        		rx <- "^--output=(.*)$"
-        		g  <- grep( rx, argv, value = TRUE )
-        		if( length(g) ){
-        			sub( rx, "\\1", g[1L] )
-        		}
-        	}
+            if( !is.null(argv) && length(argv) > 0 ){
+                rx <- "^--output=(.*)$"
+                g  <- grep( rx, argv, value = TRUE )
+                if( length(g) ){
+                    sub( rx, "\\1", g[1L] )
+                }
+            }
         }
-        
-        # give a chance to the user to customize where he/she wants 
-        # the unit tests results to be stored with the --output= command 
+
+        # give a chance to the user to customize where he/she wants
+        # the unit tests results to be stored with the --output= command
         # line argument
         if( exists( "argv",  globalenv() ) ){
-        	# littler
-        	output <- process_args(argv)
+            ## littler
+            output <- process_args(argv)
         } else {
-        	# Rscript
-        	output <- process_args(commandArgs(TRUE))
+            ## Rscript
+            output <- process_args(commandArgs(TRUE))
         }
-        
+
         # if it did not work, try to use /tmp
         if( is.null(output) ){
-        	if( file.exists( "/tmp" ) ){
-        		output <- "/tmp"
-        	} else{
-        		output <- getwd()
-        	}
+            if( file.exists( "/tmp" ) ){
+                output <- "/tmp"
+            } else{
+                output <- getwd()
+            }
         }
-        
+
         ## Print results
         output.txt  <- file.path( output, sprintf("%s-unitTests.txt", pkg))
         output.html <- file.path( output, sprintf("%s-unitTests.html", pkg))
-       
+
         printTextProtocol(tests, fileName=output.txt)
         message( sprintf( "saving txt unit test report to '%s'", output.txt ) )
-        
+
         ## Print HTML version to a file
         ## printHTMLProtocol has problems on Mac OS X
         if (Sys.info()["sysname"] != "Darwin"){
-        	message( sprintf( "saving html unit test report to '%s'", output.html ) )
-        	printHTMLProtocol(tests, fileName=output.html)
+            message( sprintf( "saving html unit test report to '%s'", output.html ) )
+            printHTMLProtocol(tests, fileName=output.html)
         }
 
         ##  stop() if there are any failures i.e. FALSE to unit test.
@@ -89,12 +89,12 @@ if(require("RUnit", quietly = TRUE)) {
         if( (err$nFail + err$nErr) > 0) {
             stop( sprintf( "unit test problems: %d failures, %d errors", err$nFail, err$nErr) )
         } else{
-        	success <- err$nTestFunc - err$nFail - err$nErr - err$nDeactivated
-        	cat( sprintf( "%d / %d\n", success, err$nTestFunc ) )
+            success <- err$nTestFunc - err$nFail - err$nErr - err$nDeactivated
+            cat( sprintf( "%d / %d\n", success, err$nTestFunc ) )
         }
     }
 } else {
     cat("R package 'RUnit' cannot be loaded -- no unit tests run\n",
-    "for package", pkg,"\n")
+        "for package", pkg,"\n")
 }
 
