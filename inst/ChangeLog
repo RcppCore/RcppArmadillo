@@ -1,10 +1,10 @@
 2010-06-02   Romain Francois <romain@r-enthusiasts.com>
 
 	* inst/include/* : upgrade to armadillo 0.9.10
-	
-	* inst/include/* : support for new mtOp and mtGlue, introduced in 
+
+	* inst/include/* : support for new mtOp and mtGlue, introduced in
 	armadillo 0.9.10
-	
+
 2010-05-27   Romain Francois <romain@r-enthusiasts.com>
 
 	* R/flags.R: added RcppArmadillo:::CxxFlags()
