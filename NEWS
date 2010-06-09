@@ -1,4 +1,4 @@
-0.2.2	(under development)
+0.2.2	2010-06-09
 
     o   Added RcppArmadillo:::CxxFlags for cases where RcppArmadillo is 
 	not used via a package
