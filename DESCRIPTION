@@ -23,11 +23,11 @@ Description: R and Armadillo integration using Rcpp
  The RcppArmadillo package includes the header from the templated Armadillo 
  library.
  .
- This Armadillo / C integration provides a nice illustration of the 
+ This Armadillo integration provides a nice illustration of the 
  capabilities of the Rcpp package for seamless R and C++ integration.
 License: GPL (>= 2)
 LazyLoad: yes
-Depends: R (>= 2.10.0), Rcpp (>= 0.8.0.2)
+Depends: R (>= 2.10.0), Rcpp (>= 0.8.1)
 LinkingTo: Rcpp
 Suggests: inline, RUnit
 SystemRequirements: GNU make
