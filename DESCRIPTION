@@ -1,7 +1,7 @@
 Package: RcppArmadillo
 Type: Package
 Title: Rcpp/Armadillo bridge
-Version: 0.2.1.3
+Version: 0.2.2
 Date: $Date$
 Author: Romain Francois, Dirk Eddelbuettel and Doug Bates
 Maintainer: Romain, Dirk and Doug <RcppArmadillo-authors@r-enthusiasts.com>
