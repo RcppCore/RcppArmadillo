@@ -1,23 +1,23 @@
 0.2.2	2010-06-09
 
     o   Added RcppArmadillo:::CxxFlags for cases where RcppArmadillo is 
-	not used via a package
+        not used via a package
 
     o   Upgraded to Armadillo 0.9.10 'Chilli Espresso'
 
     o   Wrap support for mtOp, i.e. operations involving mixed types such 
-	as a complex and an arma::mat, which have been introduced in
-	armadillo 0.9.10
-		
+        as a complex and an arma::mat, which have been introduced in
+        armadillo 0.9.10
+        
     o   Wrap support for mtGlue, i.e. operations involving matrices of mixed 
-	types such as an arma::mat and an arma::imat, which have been introduced
-	in armadillo 0.9.10
-		
+        types such as an arma::mat and an arma::imat, which have been introduced
+        in armadillo 0.9.10
+        
     o   Included an inline plugin to support the plugin system introduced
-	in inline 0.3.5. The unit tests have moved from the src directory 
-	to the unit test directory (similar to Rcpp) using cxxfunction with the
-	RcppArmadillo plugin. 
-		
+        in inline 0.3.5. The unit tests have moved from the src directory 
+        to the unit test directory (similar to Rcpp) using cxxfunction with the
+        RcppArmadillo plugin. 
+        
 0.2.1   2010-05-19
 
     o   Bug-fix release permitting compilation on Windows

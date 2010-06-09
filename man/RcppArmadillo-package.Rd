@@ -13,8 +13,8 @@ The package eases the integration of Armadillo types with Rcpp
 \tabular{ll}{
 Package: \tab RcppArmadillo\cr
 Type: \tab Package\cr
-Version: \tab 0.2.1\cr
-Date: \tab 2010-05-19\cr
+Version: \tab 0.2.2\cr
+Date: \tab 2010-06-09\cr
 License: \tab GPL (>= 2)\cr
 LazyLoad: \tab yes\cr
 }
