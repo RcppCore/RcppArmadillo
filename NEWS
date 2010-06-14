@@ -1,3 +1,7 @@
+0.2.3	(under development)
+
+	o	better configuration to detect suncc (suncc does not have std::isfinite)
+
 0.2.2	2010-06-09
 
     o   Added RcppArmadillo:::CxxFlags for cases where RcppArmadillo is 
