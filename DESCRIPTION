@@ -1,7 +1,7 @@
 Package: RcppArmadillo
 Type: Package
 Title: Rcpp/Armadillo bridge
-Version: 0.2.2
+Version: 0.2.2.1
 Date: $Date$
 Author: Romain Francois, Dirk Eddelbuettel and Doug Bates
 Maintainer: Romain, Dirk and Doug <RcppArmadillo-authors@r-enthusiasts.com>
@@ -27,7 +27,7 @@ Description: R and Armadillo integration using Rcpp
  capabilities of the Rcpp package for seamless R and C++ integration.
 License: GPL (>= 2)
 LazyLoad: yes
-Depends: R (>= 2.10.0), Rcpp (>= 0.8.1)
+Depends: R (>= 2.10.0), Rcpp (>= 0.8.2)
 LinkingTo: Rcpp
 Suggests: inline, RUnit
 SystemRequirements: GNU make
