@@ -33,6 +33,10 @@
 */
 #if defined(__SUNPRO_CC)
 #undef ARMA_HAVE_STD_ISFINITE
+#undef ARMA_HAVE_STD_SNPRINTF
+#undef ARMA_HAVE_LOG1P
+#undef ARMA_HAVE_STD_ISINF
+#undef ARMA_HAVE_STD_ISNAN
 #endif
 
 #endif
