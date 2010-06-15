@@ -1,6 +1,10 @@
+2010-06-14  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.2.3
+
 2010-06-14   Romain Francois <romain@r-enthusiasts.com>
 
-	* inst/include/RcppArmadilloConfig.h: helping suncc
+	* inst/include/RcppArmadilloConfig.h: Addition cconfig helping suncc
 
 2010-06-09  Dirk Eddelbuettel  <edd@debian.org>
 
