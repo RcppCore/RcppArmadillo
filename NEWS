@@ -1,6 +1,6 @@
-0.2.3	(under development)
+0.2.3   2010-06-14
 
-	o	better configuration to detect suncc (suncc does not have std::isfinite)
+    o   Better configuration to detect suncc (which does not have std::isfinite)
 
 0.2.2	2010-06-09
 

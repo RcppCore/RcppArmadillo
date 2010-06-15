@@ -29,7 +29,8 @@
 
 /* 
    suncc does not have std::isfinite (which is not standard)
-   so we tell armadillo not to use it
+   so we tell armadillo not to use it, and comment out a few 
+   others while we are at it
 */
 #if defined(__SUNPRO_CC)
 #undef ARMA_HAVE_STD_ISFINITE
