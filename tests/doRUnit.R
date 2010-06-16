@@ -24,7 +24,7 @@ if(require("RUnit", quietly = TRUE)) {
     ## without this, we get unit test failures
     Sys.setenv( R_TESTS = "" )
 
-    Rcpp.unit.test.output.dir <- getwd()
+    RcppArmadillo.unit.test.output.dir <- getwd()
 
     source(file.path(path, "runTests.R"), echo = TRUE)
 
