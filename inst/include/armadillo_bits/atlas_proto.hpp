@@ -24,10 +24,10 @@ namespace atlas
   using ::CblasNoTrans;
   using ::CblasTrans;
   
-//   using ::cblas_sdot;
-//   using ::cblas_ddot;
-//   using ::cblas_cdotu_sub;
-//   using ::cblas_zdotu_sub;
+  using ::cblas_sdot;
+  using ::cblas_ddot;
+  using ::cblas_cdotu_sub;
+  using ::cblas_zdotu_sub;
   
   using ::cblas_sgemv;
   using ::cblas_dgemv;
@@ -57,37 +57,64 @@ namespace atlas
   inline static const T&  tmp_real(const std::complex<T>& X) { return X.real(); }
   
   
-//   template<typename eT>
-//   inline
-//   void
-//   cblas_dot(const int N, const eT *X, const int incX, const eT *Y, const int incY, eT& out)
-//     {
-//     arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
-//     
-//     if(is_float<eT>::value == true)
-//       {
-//       typedef float T;
-//       out = eT( cblas_sdot(N, (const T*)X, incX, (const T*)Y, incY) );
-//       }
-//     else
-//     if(is_double<eT>::value == true)
-//       {
-//       typedef double T;
-//       out = eT( cblas_ddot(N, (const T*)X, incX, (const T*)Y, incY) );
-//       }
-//     else
-//     if(is_supported_complex_float<eT>::value == true)
-//       {
-//       typedef std::complex<float> T;
-//       cblas_cdotu_sub(N, (const T*)X, incX, (const T*)Y, incY, (T*)&out);
-//       }
-//     else
-//     if(is_supported_complex_double<eT>::value == true)
-//       {
-//       typedef std::complex<double> T;
-//       cblas_zdotu_sub(N, (const T*)X, incX, (const T*)Y, incY, (T*)&out);
-//       }
-//     }
+  
+  template<typename eT>
+  arma_inline
+  eT
+  cblas_dot(const int N, const eT* X, const eT* Y)
+    {
+    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    
+    if(is_float<eT>::value == true)
+      {
+      typedef float T;
+      return eT( cblas_sdot(N, (const T*)X, 1, (const T*)Y, 1) );
+      }
+    else
+    if(is_double<eT>::value == true)
+      {
+      typedef double T;
+      return eT( cblas_ddot(N, (const T*)X, 1, (const T*)Y, 1) );
+      }
+    else
+      {
+      return eT(0);
+      }
+    }
+  
+  
+  
+  template<typename eT>
+  arma_inline
+  eT
+  cx_cblas_dot(const int N, const eT* X, const eT* Y)
+    {
+    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    
+    if(is_supported_complex_float<eT>::value == true)
+      {
+      typedef typename std::complex<float> T;
+      
+      T out;    
+      cblas_cdotu_sub(N, (const T*)X, 1, (const T*)Y, 1, &out);
+      
+      return eT(out);
+      }
+    else
+    if(is_supported_complex_double<eT>::value == true)
+      {
+      typedef typename std::complex<double> T;
+      
+      T out;
+      cblas_zdotu_sub(N, (const T*)X, 1, (const T*)Y, 1, &out);
+      
+      return eT(out);
+      }
+    else
+      {
+      return eT(0);
+      }
+    }
   
   
   

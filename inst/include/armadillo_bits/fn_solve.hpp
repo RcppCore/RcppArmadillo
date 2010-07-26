@@ -30,7 +30,12 @@
 template<typename T1, typename T2>
 inline
 const Glue<T1, T2, glue_solve>
-solve(const Base<typename T1::elem_type,T1>& A, const Base<typename T1::elem_type,T2>& B)
+solve
+  (
+  const Base<typename T1::elem_type,T1>& A,
+  const Base<typename T1::elem_type,T2>& B,
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  )
   {
   arma_extra_debug_sigprint();
   
@@ -42,7 +47,13 @@ solve(const Base<typename T1::elem_type,T1>& A, const Base<typename T1::elem_typ
 template<typename T1, typename T2>
 inline
 bool
-solve(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& A, const Base<typename T1::elem_type,T2>& B)
+solve
+  (
+  Mat<typename T1::elem_type>& out,
+  const Base<typename T1::elem_type,T1>& A,
+  const Base<typename T1::elem_type,T2>& B,
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  )
   {
   arma_extra_debug_sigprint();
   

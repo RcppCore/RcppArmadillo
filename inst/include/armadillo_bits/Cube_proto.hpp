@@ -160,11 +160,18 @@ class Cube : public BaseCube< eT, Cube<eT> >
   
   inline void reset();
   
-  inline void save(const std::string   name, const file_type type = arma_binary) const;
-  inline void save(      std::ostream& os,   const file_type type = arma_binary) const;
   
-  inline void load(const std::string   name, const file_type type = auto_detect);
-  inline void load(      std::istream& is,   const file_type type = auto_detect);
+  inline bool save(const std::string   name, const file_type type = arma_binary, const bool print_status = true) const;
+  inline bool save(      std::ostream& os,   const file_type type = arma_binary, const bool print_status = true) const;
+  
+  inline bool load(const std::string   name, const file_type type = auto_detect, const bool print_status = true);
+  inline bool load(      std::istream& is,   const file_type type = auto_detect, const bool print_status = true);
+  
+  inline bool quiet_save(const std::string   name, const file_type type = arma_binary) const;
+  inline bool quiet_save(      std::ostream& os,   const file_type type = arma_binary) const;
+  
+  inline bool quiet_load(const std::string   name, const file_type type = auto_detect);
+  inline bool quiet_load(      std::istream& is,   const file_type type = auto_detect);
   
   
   // iterators

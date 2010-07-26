@@ -24,7 +24,7 @@ template<typename T1>
 inline
 arma_warn_unused
 typename T1::elem_type
-det(const Base<typename T1::elem_type,T1>& X)
+det(const Base<typename T1::elem_type,T1>& X, const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
   
@@ -72,7 +72,7 @@ template<typename T1>
 inline
 arma_warn_unused
 typename T1::elem_type
-det(const Op<T1,op_inv>& in)
+det(const Op<T1,op_inv>& in, const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
   
@@ -92,7 +92,7 @@ template<typename T1>
 inline
 arma_warn_unused
 typename T1::elem_type
-det(const Op<T1,op_trans>& in)
+det(const Op<T1,op_trans>& in, const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
   

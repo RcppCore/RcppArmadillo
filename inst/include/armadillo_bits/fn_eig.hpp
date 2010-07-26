@@ -28,7 +28,7 @@
 template<typename T1>
 inline
 void
-eig_sym(Col<typename T1::pod_type>& eigval, const Base<typename T1::elem_type,T1>& X)
+eig_sym(Col<typename T1::pod_type>& eigval, const Base<typename T1::elem_type,T1>& X, const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
   
@@ -49,7 +49,7 @@ eig_sym(Col<typename T1::pod_type>& eigval, const Base<typename T1::elem_type,T1
 template<typename T1>
 inline
 Col<typename T1::pod_type>
-eig_sym(const Base<typename T1::elem_type,T1>& X)
+eig_sym(const Base<typename T1::elem_type,T1>& X, const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
   
@@ -68,7 +68,8 @@ eig_sym
   (
   Col<typename T1::pod_type>& eigval,
   Mat<typename T1::elem_type>& eigvec,
-  const Base<typename T1::elem_type,T1>& X
+  const Base<typename T1::elem_type,T1>& X,
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
   )
   {
   arma_extra_debug_sigprint();
@@ -98,7 +99,8 @@ eig_gen
   Col< std::complex<typename T1::pod_type> >& eigval, 
   Mat<typename T1::elem_type>&                l_eigvec,
   Mat<typename T1::elem_type>&                r_eigvec,
-  const Base<typename T1::elem_type,T1>&      X
+  const Base<typename T1::elem_type,T1>&      X,
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
   )
   {
   arma_extra_debug_sigprint();
@@ -124,7 +126,8 @@ eig_gen
   Col< std::complex<eT> >& eigval, 
   Mat< std::complex<eT> >& eigvec,
   const Base<eT, T1>& X, 
-  const char side = 'r'
+  const char side = 'r',
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
   )
   {
   arma_extra_debug_sigprint();
@@ -149,6 +152,7 @@ eig_gen
       
     default:
       arma_stop("eig_gen(): parameter 'side' is invalid");
+      return;
     }
 
 
@@ -201,7 +205,8 @@ eig_gen
   Col< std::complex<T> >& eigval, 
   Mat< std::complex<T> >& eigvec,
   const Base<std::complex<T>, T1>& X, 
-  const char side = 'r'
+  const char side = 'r',
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
   )
   {
   arma_extra_debug_sigprint();

@@ -27,45 +27,45 @@
 
   namespace itpp
     {
-  
+    
+    //! dummy itpp::Mat class, to prevent compilation errors
     template<typename eT>
     class Mat
       {
       public:
+      
+      ~Mat()                      {}
+      Mat()                       {}
+      Mat(int n_rows, int n_cols) {}
+      Mat(const Mat& m)           {}
+      
+      const Mat& operator=(const Mat& m) { return *this; }
 
-      int rows() const { return 0; }
-      int cols() const { return 0; }
-      int size() const { return 0; }      
+            int rows()  const { return 0; }
+            int cols()  const { return 0; }
+            int size()  const { return 0; }      
       const eT* _data() const { return 0; }
-      eT* _data() { return 0; }
-
-
-      private:
-  
-      Mat();
-      Mat(const Mat& m);
-      const Mat& operator=(const Mat& m);
-      ~Mat();
-      };
+            eT* _data()       { return 0; }
+     };
   
   
+    //! dummy itpp::Vec class, to prevent compilation errors
     template<typename eT>
     class Vec
       {
       public:
-
-      int size() const  { return 0; }      
-      int length() const { return 0; }      
-      const eT* _data() const { return 0; }
-      eT* _data() { return 0; }
-
-
-      private:
-  
-      Vec();
-      Vec(const Vec& m);
-      const Vec& operator=(const Vec& m);
-      ~Vec();
+      
+      ~Vec()            {}
+      Vec()             {}
+      Vec(int length)   {}
+      Vec(const Vec& m) {}
+      
+      const Vec& operator=(const Vec& m) { return *this; }
+      
+            int size()   const { return 0; }      
+            int length() const { return 0; }      
+      const eT* _data()  const { return 0; }
+            eT* _data()        { return 0; }
       };
     
     typedef Mat<short int> smat;

@@ -57,6 +57,9 @@ class subview : public Base<eT, subview<eT> >
   inline void operator*= (const eT val);
   inline void operator/= (const eT val);
   
+  template<typename T1> inline void operator_equ_mat  (const Base<eT,T1>& x);
+  template<typename T1> inline void operator_equ_proxy(const Base<eT,T1>& x);
+  
   // deliberately returning void
   template<typename T1> inline void operator=  (const Base<eT,T1>& x);
   template<typename T1> inline void operator+= (const Base<eT,T1>& x);

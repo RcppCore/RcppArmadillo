@@ -30,7 +30,7 @@ struct upgrade_val
   
   arma_inline
   static
-  const typename promote_type<T1,T2>::result
+  typename promote_type<T1,T2>::result
   apply(const T1 x)
     {
     typedef typename promote_type<T1,T2>::result out_type;
@@ -39,7 +39,7 @@ struct upgrade_val
   
   arma_inline
   static
-  const typename promote_type<T1,T2>::result
+  typename promote_type<T1,T2>::result
   apply(const T2 x)
     {
     typedef typename promote_type<T1,T2>::result out_type;
@@ -70,7 +70,7 @@ struct upgrade_val< std::complex<T>, T2 >
   typedef T               T2_result;
   
   arma_inline static const std::complex<T>& apply(const std::complex<T>& x) { return x;    }
-  arma_inline static const T                apply(const T2 x)               { return T(x); }
+  arma_inline static       T                apply(const T2 x)               { return T(x); }
   };
 
 
@@ -81,7 +81,7 @@ struct upgrade_val< T1, std::complex<T> >
   typedef T               T1_result;
   typedef std::complex<T> T2_result;
   
-  arma_inline static const T                apply(const T1 x)               { return T(x); }
+  arma_inline static       T                apply(const T1 x)               { return T(x); }
   arma_inline static const std::complex<T>& apply(const std::complex<T>& x) { return x;    }
   };
 
@@ -94,7 +94,7 @@ struct upgrade_val< std::complex<float>, double >
   typedef double               T2_result;
   
   arma_inline static const std::complex<double> apply(const std::complex<float>& x) { return std::complex<double>(x); }
-  arma_inline static const double               apply(const double x)               { return x; }
+  arma_inline static       double               apply(const double x)               { return x; }
   };
 
 
@@ -104,7 +104,7 @@ struct upgrade_val< double, std::complex<float> >
   typedef double              T1_result;
   typedef std::complex<float> T2_result;
   
-  arma_inline static const double               apply(const double x)               { return x; }
+  arma_inline static       double               apply(const double x)               { return x; }
   arma_inline static const std::complex<double> apply(const std::complex<float>& x) { return std::complex<double>(x); }
   };
 
@@ -140,7 +140,7 @@ struct upgrade_val< std::complex<double>, float >
   typedef double               T2_result;
   
   arma_inline static const std::complex<double>& apply(const std::complex<double>& x) { return x; }
-  arma_inline static const double                apply(const float x)                 { return double(x); }
+  arma_inline static       double                apply(const float x)                 { return double(x); }
   };
 
 
@@ -150,7 +150,7 @@ struct upgrade_val< float, std::complex<double> >
   typedef double               T1_result;
   typedef std::complex<double> T2_result;
   
-  arma_inline static const double                apply(const float x)                 { return double(x); }
+  arma_inline static       double                apply(const float x)                 { return double(x); }
   arma_inline static const std::complex<double>& apply(const std::complex<double>& x) { return x; }
   };
 

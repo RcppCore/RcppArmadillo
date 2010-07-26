@@ -36,7 +36,7 @@ extern "C" SEXP fastLm(SEXP ys, SEXP Xs) {
 
 	double s2 = std::inner_product(res.begin(), res.end(), res.begin(), double())/(n - k);
 							// std.errors of coefficients
-	arma::colvec std_err = arma::sqrt(s2 * arma::diagvec( arma::inv(arma::trans(X)*X) ));	
+	arma::colvec std_err = arma::sqrt(s2 * arma::diagvec( arma::pinv(arma::trans(X)*X) ));	
 
 	return Rcpp::List::create(Rcpp::Named("coefficients") = coef,
 				  Rcpp::Named("stderr")       = std_err,

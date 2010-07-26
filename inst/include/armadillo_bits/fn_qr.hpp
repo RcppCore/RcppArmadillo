@@ -22,7 +22,13 @@
 template<typename T1>
 inline
 void
-qr(Mat<typename T1::elem_type>& Q, Mat<typename T1::elem_type>& R, const Base<typename T1::elem_type,T1>& X)
+qr
+  (
+  Mat<typename T1::elem_type>& Q,
+  Mat<typename T1::elem_type>& R,
+  const Base<typename T1::elem_type,T1>& X,
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  )
   {
   arma_extra_debug_sigprint();
   

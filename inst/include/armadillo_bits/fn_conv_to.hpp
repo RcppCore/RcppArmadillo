@@ -18,105 +18,67 @@
 //! @{
 
 
-//
-//
-// conversions between various mat types
 
-template<typename out_eT, typename in_eT>
-arma_inline
-void
-copy_complex_elem(out_eT& out, const in_eT& in)
-  {
-  //arma_extra_debug_sigprint();
-  
-  out = out_eT(in);
-  }
-
-
-
-template<typename out_eT, typename in_T>
-arma_inline
-void
-copy_complex_elem(out_eT& out, const std::complex<in_T>& in)
-  {
-  //arma_extra_debug_sigprint();
-  
-  out = out_eT( in.real() );
-  }
-
-
-
-template<typename out_T, typename in_T>
-arma_inline
-void
-copy_complex_elem(std::complex<out_T>& out, const std::complex<in_T>& in)
-  {
-  //arma_extra_debug_sigprint();
-  
-  typedef std::complex<out_T> out_eT;
-  out = out_eT(in);
-  }
-
-
-
-//
-// scalar family
-
-
+//! conversion from Armadillo Base and BaseCube objects to scalars
+//! (kept only for compatibility with old code; use as_scalar() instead for Base objects like Mat)
 template<typename out_eT>
 class conv_to
   {
   public:
   
-  inline static out_eT from(const Mat< out_eT >& in);
-
-  template<typename in_eT>
-  inline static out_eT from(const Mat< in_eT >& in);
+  template<typename in_eT, typename T1>
+  inline static out_eT from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
 
   template<typename in_eT, typename T1>
-  inline static out_eT from(const Base<in_eT,T1>& in);
-
-  //
-
-  inline static out_eT from(const Cube< out_eT >& in);
-
-  template<typename in_eT>
-  inline static out_eT from(const Cube< in_eT >& in);
-
+  inline static out_eT from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
+  
   template<typename in_eT, typename T1>
-  inline static out_eT from(const BaseCube<in_eT,T1>& in);
+  inline static out_eT from(const BaseCube<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
+  
+  template<typename in_eT, typename T1>
+  inline static out_eT from(const BaseCube<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
   };
 
 
 
 template<typename out_eT>
+template<typename in_eT, typename T1>
 inline
 out_eT
-conv_to<out_eT>::from(const Mat<out_eT>& in)
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_debug_check( (in.n_elem != 1), "conv_to<>: matrix doesn't have exactly one element" );
-  
-  return in.mem[0];
-  }
-
-
-
-template<typename out_eT>
-template<typename in_eT>
-inline
-out_eT
-conv_to<out_eT>::from(const Mat<in_eT>& in)
+conv_to<out_eT>::from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk)
   {
   arma_extra_debug_sigprint();
   
   arma_type_check< is_supported_elem_type<out_eT>::value == false >::apply();
   
-  arma_debug_check( (in.n_elem != 1), "conv_to<>: matrix doesn't have exactly one element" );
+  const unwrap<T1>      tmp(in.get_ref());
+  const Mat<in_eT>& X = tmp.M;
+  
+  arma_debug_check( (X.n_elem != 1), "conv_to(): given object doesn't have exactly one element" );
+  
+  return out_eT(X.mem[0]);
+  }
+
+
+
+template<typename out_eT>
+template<typename in_eT, typename T1>
+inline
+out_eT
+conv_to<out_eT>::from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_type_check< is_supported_elem_type<out_eT>::value == false >::apply();
+  
+  const unwrap<T1>      tmp(in.get_ref());
+  const Mat<in_eT>& X = tmp.M;
+  
+  arma_debug_check( (X.n_elem != 1), "conv_to(): given object doesn't have exactly one element" );
   
   out_eT out;
-  copy_complex_elem(out, in.mem[0]);
+  
+  syslib::convert_cx_scalar(out, X.mem[0]);
   
   return out;
   }
@@ -127,49 +89,18 @@ template<typename out_eT>
 template<typename in_eT, typename T1>
 inline
 out_eT
-conv_to<out_eT>::from(const Base<in_eT,T1>& in)
+conv_to<out_eT>::from(const BaseCube<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk)
   {
   arma_extra_debug_sigprint();
   
   arma_type_check< is_supported_elem_type<out_eT>::value == false >::apply();
   
-  const unwrap<T1> tmp(in.get_ref());
-
-  return conv_to<out_eT>::from( tmp.M );
-  }
-
-
-
-template<typename out_eT>
-inline
-out_eT
-conv_to<out_eT>::from(const Cube<out_eT>& in)
-  {
-  arma_extra_debug_sigprint();
+  const unwrap_cube<T1>  tmp(in.get_ref());
+  const Cube<in_eT>& X = tmp.M;
   
-  arma_debug_check( (in.n_elem != 1), "conv_to<>: cube doesn't have exactly one element" );
+  arma_debug_check( (X.n_elem != 1), "conv_to(): given object doesn't have exactly one element" );
   
-  return in.mem[0];
-  }
-
-
-
-template<typename out_eT>
-template<typename in_eT>
-inline
-out_eT
-conv_to<out_eT>::from(const Cube<in_eT>& in)
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_type_check< is_supported_elem_type<out_eT>::value == false >::apply();
-  
-  arma_debug_check( (in.n_elem != 1), "conv_to<>: cube doesn't have exactly one element" );
-  
-  out_eT out;
-  copy_complex_elem(out, in.mem[0]);
-  
-  return out;
+  return out_eT(X.mem[0]);
   }
 
 
@@ -178,97 +109,80 @@ template<typename out_eT>
 template<typename in_eT, typename T1>
 inline
 out_eT
-conv_to<out_eT>::from(const BaseCube<in_eT,T1>& in)
+conv_to<out_eT>::from(const BaseCube<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk)
   {
   arma_extra_debug_sigprint();
   
   arma_type_check< is_supported_elem_type<out_eT>::value == false >::apply();
   
-  const unwrap_cube<T1> tmp(in.get_ref());
-
-  return conv_to<out_eT>::from( tmp.M );
+  const unwrap_cube<T1>  tmp(in.get_ref());
+  const Cube<in_eT>& X = tmp.M;
+  
+  arma_debug_check( (X.n_elem != 1), "conv_to(): given object doesn't have exactly one element" );
+  
+  out_eT out;
+  
+  syslib::convert_cx_scalar(out, X.mem[0]);
+  
+  return out;
   }
 
 
 
-//
-//
-// Mat family
-
+//! conversion to Armadillo matrices from Armadillo Base objects,
+//! as well as from std::vector, itpp::Mat and itpp::Vec
 template<typename out_eT>
 class conv_to< Mat<out_eT> >
   {
   public:
   
-  template<typename in_eT>
-  inline static Mat<out_eT> from(const Mat< in_eT >& in);
-  
-  template<typename in_T>
-  inline static Mat<out_eT> from(const Mat< std::complex<in_T> >& in);
+  template<typename in_eT, typename T1>
+  inline static Mat<out_eT> from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
   
   template<typename in_eT, typename T1>
-  inline static Mat<out_eT> from(const Base<in_eT,T1>& in);
+  inline static Mat<out_eT> from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
   
-  
-  
-//   template<typename in_eT>
-//   inline static Mat<out_eT> from(const std::vector< in_eT >& in);
-//   
-//   template<typename in_eT>
-//   inline static Mat<out_eT> from(const std::vector< std::complex<in_eT> >& in);
   
   
   template<typename in_eT>
-  inline static Mat<out_eT> from(const itpp::Mat< in_eT >& in);
+  inline static Mat<out_eT> from(const std::vector<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
   
-  template<typename in_T>
-  inline static Mat<out_eT> from(const itpp::Mat< std::complex<in_T> >& in);
+  template<typename in_eT>
+  inline static Mat<out_eT> from(const std::vector<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
+  
+  
+  
+  template<typename in_eT>
+  inline static Mat<out_eT> from(const itpp::Mat<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
+  
+  template<typename in_eT>
+  inline static Mat<out_eT> from(const itpp::Mat<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
+  
+  
+  
+  template<typename in_eT>
+  inline static Mat<out_eT> from(const itpp::Vec<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
+  
+  template<typename in_eT>
+  inline static Mat<out_eT> from(const itpp::Vec<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
   };
 
 
 
 template<typename out_eT>
-template<typename in_eT>
+template<typename in_eT, typename T1>
 inline
 Mat<out_eT>
-conv_to< Mat<out_eT> >::from(const Mat<in_eT>& in)
+conv_to< Mat<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk)
   {
   arma_extra_debug_sigprint();
   
-  Mat<out_eT> out(in.n_rows, in.n_cols);
+  const unwrap<T1>      tmp(in.get_ref());
+  const Mat<in_eT>& X = tmp.M;
   
-  const in_eT*  in_mem = in.mem;
-  out_eT*      out_mem = out.memptr();
+  Mat<out_eT> out(X.n_rows, X.n_cols);
   
-  for(u32 i=0; i<out.n_elem; ++i)
-    {
-    out_mem[i] = out_eT( in_mem[i] );
-    }
-  
-  return out;
-  }
-
-
-
-template<typename out_eT>
-template<typename in_T>
-inline
-Mat<out_eT>
-conv_to< Mat<out_eT> >::from(const Mat< std::complex<in_T> >& in)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef std::complex<in_T> in_eT; 
-  
-  Mat<out_eT> out(in.n_rows, in.n_cols);
-  
-  const in_eT*  in_mem = in.mem;
-  out_eT*      out_mem = out.memptr();
-  
-  for(u32 i=0; i<out.n_elem; ++i)
-    {
-    copy_complex_elem(out_mem[i], in_mem[i]);
-    }
+  syslib::copy_and_convert_elem( out.memptr(), X.memptr(), out.n_elem );
   
   return out;
   }
@@ -279,13 +193,18 @@ template<typename out_eT>
 template<typename in_eT, typename T1>
 inline
 Mat<out_eT>
-conv_to< Mat<out_eT> >::from(const Base<in_eT,T1>& in)
+conv_to< Mat<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk)
   {
   arma_extra_debug_sigprint();
   
-  const unwrap<T1> tmp(in.get_ref());
-
-  return conv_to< Mat<out_eT> >::from( tmp.M );
+  const unwrap<T1>      tmp(in.get_ref());
+  const Mat<in_eT>& X = tmp.M;
+  
+  Mat<out_eT> out(X.n_rows, X.n_cols);
+  
+  syslib::copy_and_convert_cx_elem( out.memptr(), X.memptr(), out.n_elem );
+  
+  return out;
   }
 
 
@@ -294,18 +213,24 @@ template<typename out_eT>
 template<typename in_eT>
 inline
 Mat<out_eT>
-conv_to< Mat<out_eT> >::from(const itpp::Mat<in_eT>& in)
+conv_to< Mat<out_eT> >::from(const std::vector<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk)
   {
   arma_extra_debug_sigprint();
   
-  Mat<out_eT> out(in.rows(), in.cols());
+  Mat<out_eT> out(in.size(), 1);
   
-  const in_eT*  in_mem = in._data();
-  out_eT*      out_mem = out.memptr();
+  typename std::vector<in_eT>::const_iterator in_begin = in.begin();
+  typename std::vector<in_eT>::const_iterator in_end   = in.end();
   
-  for(u32 i=0; i<out.n_elem; ++i)
+  typename Mat<out_eT>::iterator out_begin = out.begin();
+  typename Mat<out_eT>::iterator out_end   = out.end();
+  
+  typename std::vector<in_eT>::const_iterator in_it;
+  typename Mat<out_eT>::iterator              out_it;
+  
+  for(in_it = in_begin, out_it = out_begin; (in_it != in_end) && (out_it != out_end); ++in_it, ++out_it)
     {
-    out_mem[i] = out_eT( in_mem[i] );
+    (*out_it) = out_eT(*in_it);
     }
   
   return out;
@@ -314,23 +239,30 @@ conv_to< Mat<out_eT> >::from(const itpp::Mat<in_eT>& in)
 
 
 template<typename out_eT>
-template<typename in_T>
+template<typename in_eT>
 inline
 Mat<out_eT>
-conv_to< Mat<out_eT> >::from(const itpp::Mat< std::complex<in_T> >& in)
+conv_to< Mat<out_eT> >::from(const std::vector<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk)
   {
   arma_extra_debug_sigprint();
   
-  typedef std::complex<in_T> in_eT; 
+  Mat<out_eT> out(in.size(), 1);
   
-  Mat<out_eT> out(in.rows(), in.cols());
+  typename std::vector<in_eT>::const_iterator in_begin = in.begin();
+  typename std::vector<in_eT>::const_iterator in_end   = in.end();
   
-  const in_eT*  in_mem = in._data();
-  out_eT*      out_mem = out.memptr();
+  typename Mat<out_eT>::iterator out_begin = out.begin();
+  typename Mat<out_eT>::iterator out_end   = out.end();
   
-  for(u32 i=0; i<out.n_elem; ++i)
+  typename std::vector<in_eT>::const_iterator in_it;
+  typename Mat<out_eT>::iterator              out_it;
+  
+  for(in_it = in_begin, out_it = out_begin; (in_it != in_end) && (out_it != out_end); ++in_it, ++out_it)
     {
-    copy_complex_elem(out_mem[i], in_mem[i]);
+          out_eT& out_elem = (*out_it);
+    const in_eT&  in_elem  = (*in_it);
+    
+    syslib::convert_cx_scalar(out_elem, in_elem);
     }
   
   return out;
@@ -338,104 +270,130 @@ conv_to< Mat<out_eT> >::from(const itpp::Mat< std::complex<in_T> >& in)
 
 
 
-//
-//
-// Row family
+template<typename out_eT>
+template<typename in_eT>
+inline
+Mat<out_eT>
+conv_to< Mat<out_eT> >::from(const itpp::Mat<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<out_eT> out(in.rows(), in.cols());
+  
+  syslib::copy_and_convert_elem( out.memptr(), in._data(), out.n_elem );
+  
+  return out;
+  }
 
+
+
+template<typename out_eT>
+template<typename in_eT>
+inline
+Mat<out_eT>
+conv_to< Mat<out_eT> >::from(const itpp::Mat<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<out_eT> out(in.rows(), in.cols());
+  
+  syslib::copy_and_convert_cx_elem( out.memptr(), in._data(), out.n_elem );
+  
+  return out;
+  }
+
+
+
+template<typename out_eT>
+template<typename in_eT>
+inline
+Mat<out_eT>
+conv_to< Mat<out_eT> >::from(const itpp::Vec<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<out_eT> out(in.length(), 1);
+  
+  syslib::copy_and_convert_elem( out.memptr(), in._data(), out.n_elem );
+  
+  return out;
+  }
+
+
+
+template<typename out_eT>
+template<typename in_eT>
+inline
+Mat<out_eT>
+conv_to< Mat<out_eT> >::from(const itpp::Vec<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<out_eT> out(in.length(), 1);
+  
+  syslib::copy_and_convert_cx_elem( out.memptr(), in._data(), out.n_elem );
+  
+  return out;
+  }
+
+
+
+//! conversion to Armadillo row vectors from Armadillo Base objects,
+//! as well as from std::vector, itpp::Mat and itpp::Vec
 template<typename out_eT>
 class conv_to< Row<out_eT> >
   {
   public:
   
-  inline static Row<out_eT> from(const Mat< out_eT >& in);
-  
-  template<typename in_eT>
-  inline static Row<out_eT> from(const Mat< in_eT >& in);
-  
-  template<typename in_T>  
-  inline static Row<out_eT> from(const Mat< std::complex<in_T> >& in);
+  template<typename in_eT, typename T1>
+  inline static Row<out_eT> from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
   
   template<typename in_eT, typename T1>
-  inline static Row<out_eT> from(const Base<in_eT,T1>& in);
+  inline static Row<out_eT> from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
   
   
   
   template<typename in_eT>
-  inline static Row<out_eT> from(const itpp::Vec< in_eT >& in);
+  inline static Row<out_eT> from(const std::vector<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
   
-  template<typename in_T>  
-  inline static Row<out_eT> from(const itpp::Vec< std::complex<in_T> >& in);
+  template<typename in_eT>
+  inline static Row<out_eT> from(const std::vector<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
   
-  //inline static Row<out_eT> from(const Col< out_eT >& in);
-  //template<typename in_eT> inline static Row<out_eT> from(const Col< in_eT >& in);
-  //template<typename in_T>  inline static Row<out_eT> from(const Col< std::complex<in_T> >& in);
   
+  
+  template<typename in_eT>
+  inline static Row<out_eT> from(const itpp::Mat<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
+  
+  template<typename in_eT>
+  inline static Row<out_eT> from(const itpp::Mat<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
+  
+  
+  
+  template<typename in_eT>
+  inline static Row<out_eT> from(const itpp::Vec<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
+  
+  template<typename in_eT>
+  inline static Row<out_eT> from(const itpp::Vec<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
   };
 
 
 
 template<typename out_eT>
+template<typename in_eT, typename T1>
 inline
 Row<out_eT>
-conv_to< Row<out_eT> >::from(const Mat<out_eT>& in)
+conv_to< Row<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (in.n_rows > 1), "conv_to<>: given matrix has more than one row");
-  Row<out_eT> out(in.n_cols);
+  const unwrap<T1>      tmp(in.get_ref());
+  const Mat<in_eT>& X = tmp.M;
   
-  syslib::copy_elem(out.memptr(), in.mem, out.n_elem);
+  arma_debug_check( (X.is_vec() == false), "conv_to(): given object can't be interpreted as a vector" );
   
+  Row<out_eT> out(X.n_elem);
   
-  return out;
-  }
-
-
-
-template<typename out_eT>
-template<typename in_eT>
-inline
-Row<out_eT>
-conv_to< Row<out_eT> >::from(const Mat<in_eT>& in)
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_debug_check( (in.n_rows > 1), "conv_to<>: given matrix has more than one row");
-  Row<out_eT> out(in.n_cols);
-  
-  const in_eT*  in_mem = in.mem;
-  out_eT*      out_mem = out.memptr();
-  
-  for(u32 i=0; i<out.n_elem; ++i)
-    {
-    out_mem[i] = out_eT( in_mem[i] );
-    }
-  
-  return out;
-  }
-
-
-
-template<typename out_eT>
-template<typename in_T>
-inline
-Row<out_eT>
-conv_to< Row<out_eT> >::from(const Mat< std::complex<in_T> >& in)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef std::complex<in_T> in_eT; 
-  
-  arma_debug_check( (in.n_rows > 1), "conv_to<>: given matrix has more than one row");
-  Row<out_eT> out(in.n_cols);
-  
-  const in_eT*  in_mem = in.mem;
-  out_eT*      out_mem = out.memptr();
-  
-  for(u32 i=0; i<out.n_elem; ++i)
-    {
-    copy_complex_elem(out_mem[i], in_mem[i]);
-    }
+  syslib::copy_and_convert_elem( out.memptr(), X.memptr(), out.n_elem );
   
   return out;
   }
@@ -446,13 +404,20 @@ template<typename out_eT>
 template<typename in_eT, typename T1>
 inline
 Row<out_eT>
-conv_to< Row<out_eT> >::from(const Base<in_eT,T1>& in)
+conv_to< Row<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk)
   {
   arma_extra_debug_sigprint();
-
-  const unwrap<T1> tmp(in.get_ref());
   
-  return conv_to< Row<out_eT> >::from( tmp.M );
+  const unwrap<T1>      tmp(in.get_ref());
+  const Mat<in_eT>& X = tmp.M;
+  
+  arma_debug_check( (X.is_vec() == false), "conv_to(): given object can't be interpreted as a vector" );
+  
+  Row<out_eT> out(X.n_rows, X.n_cols);
+  
+  syslib::copy_and_convert_cx_elem( out.memptr(), X.memptr(), out.n_elem );
+  
+  return out;
   }
 
 
@@ -461,18 +426,24 @@ template<typename out_eT>
 template<typename in_eT>
 inline
 Row<out_eT>
-conv_to< Row<out_eT> >::from(const itpp::Vec<in_eT>& in)
+conv_to< Row<out_eT> >::from(const std::vector<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk)
   {
   arma_extra_debug_sigprint();
   
-  Row<out_eT> out(in.length());
+  Row<out_eT> out( in.size() );
   
-  const in_eT*  in_mem = in._data();
-  out_eT*      out_mem = out.memptr();
+  typename std::vector<in_eT>::const_iterator in_begin = in.begin();
+  typename std::vector<in_eT>::const_iterator in_end   = in.end();
   
-  for(u32 i=0; i<out.n_elem; ++i)
+  typename Col<out_eT>::iterator out_begin = out.begin();
+  typename Col<out_eT>::iterator out_end   = out.end();
+  
+  typename std::vector<in_eT>::const_iterator in_it;
+  typename Col<out_eT>::iterator              out_it;
+  
+  for(in_it = in_begin, out_it = out_begin; (in_it != in_end) && (out_it != out_end); ++in_it, ++out_it)
     {
-    out_mem[i] = out_eT( in_mem[i] );
+    (*out_it) = out_eT(*in_it);
     }
   
   return out;
@@ -481,23 +452,30 @@ conv_to< Row<out_eT> >::from(const itpp::Vec<in_eT>& in)
 
 
 template<typename out_eT>
-template<typename in_T>
+template<typename in_eT>
 inline
 Row<out_eT>
-conv_to< Row<out_eT> >::from(const itpp::Vec< std::complex<in_T> >& in)
+conv_to< Row<out_eT> >::from(const std::vector<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk)
   {
   arma_extra_debug_sigprint();
   
-  typedef std::complex<in_T> in_eT; 
+  Row<out_eT> out( in.size() );
   
-  Row<out_eT> out(in.length());
+  typename std::vector<in_eT>::const_iterator in_begin = in.begin();
+  typename std::vector<in_eT>::const_iterator in_end   = in.end();
   
-  const in_eT*  in_mem = in._data();
-  out_eT*      out_mem = out.memptr();
+  typename Col<out_eT>::iterator out_begin = out.begin();
+  typename Col<out_eT>::iterator out_end   = out.end();
   
-  for(u32 i=0; i<out.n_elem; ++i)
+  typename std::vector<in_eT>::const_iterator in_it;
+  typename Col<out_eT>::iterator              out_it;
+  
+  for(in_it = in_begin, out_it = out_begin; (in_it != in_end) && (out_it != out_end); ++in_it, ++out_it)
     {
-    copy_complex_elem(out_mem[i], in_mem[i]);
+          out_eT& out_elem = (*out_it);
+    const in_eT&  in_elem  = (*in_it);
+    
+    syslib::convert_cx_scalar(out_elem, in_elem);
     }
   
   return out;
@@ -505,163 +483,136 @@ conv_to< Row<out_eT> >::from(const itpp::Vec< std::complex<in_T> >& in)
 
 
 
-// template<typename out_eT>
-// inline
-// Row<out_eT>
-// conv_to< Row<out_eT> >::from(const Col<out_eT>& in)
-//   {
-//   arma_extra_debug_sigprint();
-//   
-//   return trans(in);
-//   }
-// 
-// 
-// 
-// template<typename out_eT>
-// template<typename in_eT>
-// inline
-// Row<out_eT>
-// conv_to< Row<out_eT> >::from(const Col<in_eT>& in)
-//   {
-//   arma_extra_debug_sigprint();
-//   
-//   Row<out_eT> out(in.n_rows);
-//   
-//   const in_eT*  in_mem = in.mem;
-//   out_eT*      out_mem = out.memptr();
-//   
-//   for(u32 i=0; i<out.n_elem; ++i)
-//     {
-//     out_mem[i] = out_eT( in_mem[i] );
-//     }
-//   
-//   return out;
-//   }
-// 
-// 
-// 
-// template<typename out_eT>
-// template<typename in_T>
-// inline
-// Row<out_eT>
-// conv_to< Row<out_eT> >::from(const Col< std::complex<in_T> >& in)
-//   {
-//   arma_extra_debug_sigprint();
-//   
-//   typedef std::complex<in_T> in_eT; 
-//   
-//   Row<out_eT> out(in.n_rows);
-//   
-//   const in_eT*  in_mem = in.mem;
-//   out_eT*      out_mem = out.memptr();
-//   
-//   for(u32 i=0; i<out.n_elem; ++i)
-//     {
-//     copy_complex_elem(out_mem[i], in_mem[i]);
-//     }
-//   
-//   return out;
-//   }
+template<typename out_eT>
+template<typename in_eT>
+inline
+Row<out_eT>
+conv_to< Row<out_eT> >::from(const itpp::Mat<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk)
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool is_vec = ( (in.rows() == 1) || (in.cols() == 1) );
+  
+  arma_debug_check( (is_vec == false), "conv_to(): given object can't be interpreted as a vector" );
+  
+  Row<out_eT> out(in.rows() * in.cols());
+  
+  syslib::copy_and_convert_elem( out.memptr(), in._data(), out.n_elem );
+  
+  return out;
+  }
 
 
 
-//
-//
-// Col family
+template<typename out_eT>
+template<typename in_eT>
+inline
+Row<out_eT>
+conv_to< Row<out_eT> >::from(const itpp::Mat<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk)
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool is_vec = ( (in.rows() == 1) || (in.cols() == 1) );
+  
+  Row<out_eT> out(in.rows() * in.cols());
+  
+  syslib::copy_and_convert_cx_elem( out.memptr(), in._data(), out.n_elem );
+  
+  return out;
+  }
 
+
+
+template<typename out_eT>
+template<typename in_eT>
+inline
+Row<out_eT>
+conv_to< Row<out_eT> >::from(const itpp::Vec<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk)
+  {
+  arma_extra_debug_sigprint();
+  
+  Row<out_eT> out(in.length());
+  
+  syslib::copy_and_convert_elem( out.memptr(), in._data(), out.n_elem );
+  
+  return out;
+  }
+
+
+
+template<typename out_eT>
+template<typename in_eT>
+inline
+Row<out_eT>
+conv_to< Row<out_eT> >::from(const itpp::Vec<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk)
+  {
+  arma_extra_debug_sigprint();
+  
+  Row<out_eT> out(in.length());
+  
+  syslib::copy_and_convert_cx_elem( out.memptr(), in._data(), out.n_elem );
+  
+  return out;
+  }
+
+
+
+//! conversion to Armadillo column vectors from Armadillo Base objects,
+//! as well as from std::vector, itpp::Mat and itpp::Vec
 template<typename out_eT>
 class conv_to< Col<out_eT> >
   {
   public:
   
-  inline static Col<out_eT> from(const Mat< out_eT >& in);
-  
-  template<typename in_eT>
-  inline static Col<out_eT> from(const Mat< in_eT >& in);
-  
-  template<typename in_T>
-  inline static Col<out_eT> from(const Mat< std::complex<in_T> >& in);
+  template<typename in_eT, typename T1>
+  inline static Col<out_eT> from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
   
   template<typename in_eT, typename T1>
-  inline static Col<out_eT> from(const Base<in_eT,T1>& in);
+  inline static Col<out_eT> from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
   
   
   
   template<typename in_eT>
-  inline static Col<out_eT> from(const itpp::Vec< in_eT >& in);
+  inline static Col<out_eT> from(const std::vector<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
   
-  template<typename in_T>
-  inline static Col<out_eT> from(const itpp::Vec< std::complex<in_T> >& in);
-
-//   inline static Col<out_eT> from(const Row< out_eT >& in);
-//   template<typename in_eT> inline static Col<out_eT> from(const Row< in_eT >& in);
-//   template<typename in_T>  inline static Col<out_eT> from(const Row< std::complex<in_T> >& in);
+  template<typename in_eT>
+  inline static Col<out_eT> from(const std::vector<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
   
+  
+  
+  template<typename in_eT>
+  inline static Col<out_eT> from(const itpp::Mat<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
+  
+  template<typename in_eT>
+  inline static Col<out_eT> from(const itpp::Mat<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
+  
+  
+  
+  template<typename in_eT>
+  inline static Col<out_eT> from(const itpp::Vec<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
+  
+  template<typename in_eT>
+  inline static Col<out_eT> from(const itpp::Vec<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
   };
 
 
 
 template<typename out_eT>
+template<typename in_eT, typename T1>
 inline
 Col<out_eT>
-conv_to< Col<out_eT> >::from(const Mat<out_eT>& in)
+conv_to< Col<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (in.n_cols > 1), "conv_to<>: given matrix has more than one column");
-  Col<out_eT> out(in.n_rows);
+  const unwrap<T1>      tmp(in.get_ref());
+  const Mat<in_eT>& X = tmp.M;
   
-  syslib::copy_elem(out.memptr(), in.mem, out.n_elem);
+  arma_debug_check( (X.is_vec() == false), "conv_to(): given object can't be interpreted as a vector" );
   
-  return out;
-  }
-
-
-
-template<typename out_eT>
-template<typename in_eT>
-inline
-Col<out_eT>
-conv_to< Col<out_eT> >::from(const Mat<in_eT>& in)
-  {
-  arma_extra_debug_sigprint();
+  Col<out_eT> out(X.n_elem);
   
-  arma_debug_check( (in.n_cols > 1), "conv_to<>: given matrix has more than one column");
-  Col<out_eT> out(in.n_rows);
-  
-  const in_eT*  in_mem = in.mem;
-  out_eT*      out_mem = out.memptr();
-  
-  for(u32 i=0; i<out.n_elem; ++i)
-    {
-    out_mem[i] = out_eT( in_mem[i] );
-    }
-  
-  return out;
-  }
-
-
-
-template<typename out_eT>
-template<typename in_T>
-inline
-Col<out_eT>
-conv_to< Col<out_eT> >::from(const Mat< std::complex<in_T> >& in)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef std::complex<in_T> in_eT; 
-  
-  arma_debug_check( (in.n_cols > 1), "conv_to<>: given matrix has more than one column");
-  Col<out_eT> out(in.n_rows);
-  
-  const in_eT*  in_mem = in.mem;
-  out_eT*      out_mem = out.memptr();
-  
-  for(u32 i=0; i<out.n_elem; ++i)
-    {
-    copy_complex_elem(out_mem[i], in_mem[i]);
-    }
+  syslib::copy_and_convert_elem( out.memptr(), X.memptr(), out.n_elem );
   
   return out;
   }
@@ -672,13 +623,20 @@ template<typename out_eT>
 template<typename in_eT, typename T1>
 inline
 Col<out_eT>
-conv_to< Col<out_eT> >::from(const Base<in_eT,T1>& in)
+conv_to< Col<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk)
   {
   arma_extra_debug_sigprint();
   
-  const unwrap<T1> tmp(in.get_ref());
+  const unwrap<T1>      tmp(in.get_ref());
+  const Mat<in_eT>& X = tmp.M;
   
-  return conv_to< Col<out_eT> >::from( tmp.M );
+  arma_debug_check( (X.is_vec() == false), "conv_to(): given object can't be interpreted as a vector" );
+  
+  Col<out_eT> out(X.n_rows, X.n_cols);
+  
+  syslib::copy_and_convert_cx_elem( out.memptr(), X.memptr(), out.n_elem );
+  
+  return out;
   }
 
 
@@ -687,18 +645,24 @@ template<typename out_eT>
 template<typename in_eT>
 inline
 Col<out_eT>
-conv_to< Col<out_eT> >::from(const itpp::Vec<in_eT>& in)
+conv_to< Col<out_eT> >::from(const std::vector<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk)
   {
   arma_extra_debug_sigprint();
   
-  Col<out_eT> out(in.length());
+  Col<out_eT> out( in.size() );
   
-  const in_eT*  in_mem = in._data();
-  out_eT*      out_mem = out.memptr();
+  typename std::vector<in_eT>::const_iterator in_begin = in.begin();
+  typename std::vector<in_eT>::const_iterator in_end   = in.end();
   
-  for(u32 i=0; i<out.n_elem; ++i)
+  typename Col<out_eT>::iterator out_begin = out.begin();
+  typename Col<out_eT>::iterator out_end   = out.end();
+  
+  typename std::vector<in_eT>::const_iterator in_it;
+  typename Col<out_eT>::iterator              out_it;
+  
+  for(in_it = in_begin, out_it = out_begin; (in_it != in_end) && (out_it != out_end); ++in_it, ++out_it)
     {
-    out_mem[i] = out_eT( in_mem[i] );
+    (*out_it) = out_eT(*in_it);
     }
   
   return out;
@@ -707,23 +671,30 @@ conv_to< Col<out_eT> >::from(const itpp::Vec<in_eT>& in)
 
 
 template<typename out_eT>
-template<typename in_T>
+template<typename in_eT>
 inline
 Col<out_eT>
-conv_to< Col<out_eT> >::from(const itpp::Vec< std::complex<in_T> >& in)
+conv_to< Col<out_eT> >::from(const std::vector<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk)
   {
   arma_extra_debug_sigprint();
   
-  typedef std::complex<in_T> in_eT; 
+  Col<out_eT> out( in.size() );
   
-  Col<out_eT> out(in.length());
+  typename std::vector<in_eT>::const_iterator in_begin = in.begin();
+  typename std::vector<in_eT>::const_iterator in_end   = in.end();
   
-  const in_eT*  in_mem = in._data();
-  out_eT*      out_mem = out.memptr();
+  typename Col<out_eT>::iterator out_begin = out.begin();
+  typename Col<out_eT>::iterator out_end   = out.end();
   
-  for(u32 i=0; i<out.n_elem; ++i)
+  typename std::vector<in_eT>::const_iterator in_it;
+  typename Col<out_eT>::iterator              out_it;
+  
+  for(in_it = in_begin, out_it = out_begin; (in_it != in_end) && (out_it != out_end); ++in_it, ++out_it)
     {
-    copy_complex_elem(out_mem[i], in_mem[i]);
+          out_eT& out_elem = (*out_it);
+    const in_eT&  in_elem  = (*in_it);
+    
+    syslib::convert_cx_scalar(out_elem, in_elem);
     }
   
   return out;
@@ -731,129 +702,109 @@ conv_to< Col<out_eT> >::from(const itpp::Vec< std::complex<in_T> >& in)
 
 
 
-// template<typename out_eT>
-// inline
-// Col<out_eT>
-// conv_to< Col<out_eT> >::from(const Row<out_eT>& in)
-//   {
-//   arma_extra_debug_sigprint();
-//   
-//   return trans(in);
-//   }
-// 
-// 
-// 
-// template<typename out_eT>
-// template<typename in_eT>
-// inline
-// Col<out_eT>
-// conv_to< Col<out_eT> >::from(const Row<in_eT>& in)
-//   {
-//   arma_extra_debug_sigprint();
-//   
-//   Col<out_eT> out(in.n_cols);
-//   
-//   const in_eT*  in_mem = in.mem;
-//   out_eT*      out_mem = out.memptr();
-//   
-//   for(u32 i=0; i<out.n_elem; ++i)
-//     {
-//     out_mem[i] = out_eT( in_mem[i] );
-//     }
-//   
-//   return out;
-//   }
-// 
-// 
-// 
-// template<typename out_eT>
-// template<typename in_T>
-// inline
-// Col<out_eT>
-// conv_to< Col<out_eT> >::from(const Row< std::complex<in_T> >& in)
-//   {
-//   arma_extra_debug_sigprint();
-//   
-//   typedef std::complex<in_T> in_eT; 
-//   
-//   Col<out_eT> out(in.n_cols);
-//   
-//   const in_eT*  in_mem = in.mem;
-//   out_eT*      out_mem = out.memptr();
-//   
-//   for(u32 i=0; i<out.n_elem; ++i)
-//     {
-//     copy_complex_elem(out_mem[i], in_mem[i]);
-//     }
-//   
-//   return out;
-//   }
+template<typename out_eT>
+template<typename in_eT>
+inline
+Col<out_eT>
+conv_to< Col<out_eT> >::from(const itpp::Mat<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk)
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool is_vec = ( (in.rows() == 1) || (in.cols() == 1) );
+  
+  arma_debug_check( (is_vec == false), "conv_to(): given object can't be interpreted as a vector" );
+  
+  Col<out_eT> out(in.rows() * in.cols());
+  
+  syslib::copy_and_convert_elem( out.memptr(), in._data(), out.n_elem );
+  
+  return out;
+  }
 
 
 
-//
-//
-// Cube family
+template<typename out_eT>
+template<typename in_eT>
+inline
+Col<out_eT>
+conv_to< Col<out_eT> >::from(const itpp::Mat<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk)
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool is_vec = ( (in.rows() == 1) || (in.cols() == 1) );
+  
+  Col<out_eT> out(in.rows() * in.cols());
+  
+  syslib::copy_and_convert_cx_elem( out.memptr(), in._data(), out.n_elem );
+  
+  return out;
+  }
 
+
+
+template<typename out_eT>
+template<typename in_eT>
+inline
+Col<out_eT>
+conv_to< Col<out_eT> >::from(const itpp::Vec<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk)
+  {
+  arma_extra_debug_sigprint();
+  
+  Col<out_eT> out( in.length() );
+  
+  syslib::copy_and_convert_elem( out.memptr(), in._data(), out.n_elem );
+  
+  return out;
+  }
+
+
+
+template<typename out_eT>
+template<typename in_eT>
+inline
+Col<out_eT>
+conv_to< Col<out_eT> >::from(const itpp::Vec<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk)
+  {
+  arma_extra_debug_sigprint();
+  
+  Col<out_eT> out( in.length() );
+  
+  syslib::copy_and_convert_cx_elem( out.memptr(), in._data(), out.n_elem );
+  
+  return out;
+  }
+
+
+
+//! conversion to Armadillo cubes from Armadillo BaseCube objects
 template<typename out_eT>
 class conv_to< Cube<out_eT> >
   {
   public:
   
-  template<typename in_eT>
-  inline static Cube<out_eT> from(const Cube< in_eT >& in);
-  
-  template<typename in_T>
-  inline static Cube<out_eT> from(const Cube< std::complex<in_T> >& in);
+  template<typename in_eT, typename T1>
+  inline static Cube<out_eT> from(const BaseCube<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
   
   template<typename in_eT, typename T1>
-  inline static Cube<out_eT> from(const BaseCube<in_eT,T1>& in);
+  inline static Cube<out_eT> from(const BaseCube<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
   };
 
 
 
 template<typename out_eT>
-template<typename in_eT>
+template<typename in_eT, typename T1>
 inline
 Cube<out_eT>
-conv_to< Cube<out_eT> >::from(const Cube<in_eT>& in)
+conv_to< Cube<out_eT> >::from(const BaseCube<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk)
   {
   arma_extra_debug_sigprint();
   
-  Cube<out_eT> out(in.n_rows, in.n_cols, in.n_slices);
+  const unwrap_cube<T1>  tmp( in.get_ref() );
+  const Cube<in_eT>& X = tmp.M;
   
-  const in_eT*  in_mem = in.mem;
-  out_eT*      out_mem = out.memptr();
+  Cube<out_eT> out(X.n_rows, X.n_cols, X.n_slices);
   
-  for(u32 i=0; i<out.n_elem; ++i)
-    {
-    out_mem[i] = out_eT( in_mem[i] );
-    }
-  
-  return out;
-  }
-
-
-
-template<typename out_eT>
-template<typename in_T>
-inline
-Cube<out_eT>
-conv_to< Cube<out_eT> >::from(const Cube< std::complex<in_T> >& in)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef std::complex<in_T> in_eT; 
-  
-  Cube<out_eT> out(in.n_rows, in.n_cols, in.n_slices);
-  
-  const in_eT*  in_mem = in.mem;
-  out_eT*      out_mem = out.memptr();
-  
-  for(u32 i=0; i<out.n_elem; ++i)
-    {
-    copy_complex_elem(out_mem[i], in_mem[i]);
-    }
+  syslib::copy_and_convert_elem( out.memptr(), X.memptr(), out.n_elem );
   
   return out;
   }
@@ -864,200 +815,139 @@ template<typename out_eT>
 template<typename in_eT, typename T1>
 inline
 Cube<out_eT>
-conv_to< Cube<out_eT> >::from(const BaseCube<in_eT,T1>& in)
+conv_to< Cube<out_eT> >::from(const BaseCube<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk)
   {
   arma_extra_debug_sigprint();
   
-  const unwrap_cube<T1> tmp(in.get_ref());
-
-  return conv_to< Mat<out_eT> >::from( tmp.M );
+  const unwrap_cube<T1>  tmp( in.get_ref() );
+  const Cube<in_eT>& X = tmp.M;
+  
+  Cube<out_eT> out(X.n_rows, X.n_cols, X.n_slices);
+  
+  syslib::copy_and_convert_cx_elem( out.memptr(), X.memptr(), out.n_elem );
+  
+  return out;
   }
 
 
 
-//
-//
-// itpp::Mat family
+//! conversion to std::vector from Armadillo Base objects
+template<typename out_eT>
+class conv_to< std::vector<out_eT> >
+  {
+  public:
+  
+  template<typename in_eT, typename T1>
+  inline static std::vector<out_eT> from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
+  
+  template<typename in_eT, typename T1>
+  inline static std::vector<out_eT> from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
+  };
 
 
 
+template<typename out_eT>
+template<typename in_eT, typename T1>
+inline
+std::vector<out_eT>
+conv_to< std::vector<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk)
+  {
+  arma_extra_debug_sigprint();
+  
+  const unwrap<T1>      tmp(in.get_ref());
+  const Mat<in_eT>& X = tmp.M;
+  
+  arma_debug_check( (X.is_vec() == false), "conv_to(): given object can't be interpreted as a vector" );
+  
+  std::vector<out_eT> out(X.n_elem);
+  
+  typename Mat<in_eT>::const_iterator X_begin = X.begin();
+  typename Mat<in_eT>::const_iterator X_end   = X.end();
+
+  typename std::vector<out_eT>::iterator out_begin = out.begin();
+  typename std::vector<out_eT>::iterator out_end   = out.end();
+  
+  typename Mat<in_eT>::const_iterator    X_it;
+  typename std::vector<out_eT>::iterator out_it;
+  
+  for(X_it = X_begin, out_it = out_begin; (X_it != X_end) && (out_it != out_end); ++X_it, ++out_it)
+    {
+    (*out_it) = out_eT(*X_it);
+    }
+  
+  return out;
+  }
+
+
+
+template<typename out_eT>
+template<typename in_eT, typename T1>
+inline
+std::vector<out_eT>
+conv_to< std::vector<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk)
+  {
+  arma_extra_debug_sigprint();
+  
+  const unwrap<T1>      tmp(in.get_ref());
+  const Mat<in_eT>& X = tmp.M;
+  
+  arma_debug_check( (X.is_vec() == false), "conv_to(): given object can't be interpreted as a vector" );
+  
+  std::vector<out_eT> out(X.n_elem);
+  
+  typename Mat<in_eT>::const_iterator X_begin = X.begin();
+  typename Mat<in_eT>::const_iterator X_end   = X.end();
+
+  typename std::vector<out_eT>::iterator out_begin = out.begin();
+  typename std::vector<out_eT>::iterator out_end   = out.end();
+  
+  typename Mat<in_eT>::const_iterator    X_it;
+  typename std::vector<out_eT>::iterator out_it;
+  
+  for(X_it = X_begin, out_it = out_begin; (X_it != X_end) && (out_it != out_end); ++X_it, ++out_it)
+    {
+          out_eT& out_elem = (*out_it);
+    const in_eT&  X_elem   = (*X_it);
+    
+    syslib::convert_cx_scalar(out_elem, X_elem);
+    }
+  
+  return out;
+  }
+
+
+
+//! conversion to itpp::Mat from Armadillo Base objects
 template<typename out_eT>
 class conv_to< itpp::Mat<out_eT> >
   {
   public:
   
-  inline static itpp::Mat<out_eT> from(const Mat< out_eT >& in);
-  
-  inline static itpp::Mat<out_eT> from(const Col< out_eT >& in);
-  
-  inline static itpp::Mat<out_eT> from(const Row< out_eT >& in);
-
-  
-  
-  template<typename in_eT>
-  inline static itpp::Mat<out_eT> from(const Mat< in_eT >& in);
-  
-  template<typename in_eT>
-  inline static itpp::Mat<out_eT> from(const Col< in_eT >& in);
-  
-  template<typename in_eT>
-  inline static itpp::Mat<out_eT> from(const Row< in_eT >& in);
-  
-  
-  template<typename in_T>
-  inline static itpp::Mat<out_eT> from(const Mat< std::complex<in_T> >& in);
-  
-  template<typename in_T>
-  inline static itpp::Mat<out_eT> from(const Col< std::complex<in_T> >& in);
-  
-  template<typename in_T>
-  inline static itpp::Mat<out_eT> from(const Row< std::complex<in_T> >& in);
-  
-  
+  template<typename in_eT, typename T1>
+  inline static itpp::Mat<out_eT> from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
   
   template<typename in_eT, typename T1>
-  inline static itpp::Mat<out_eT> from(const Base<in_eT,T1>& in);
-  
+  inline static itpp::Mat<out_eT> from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
   };
 
 
 
 template<typename out_eT>
+template<typename in_eT, typename T1>
 inline
 itpp::Mat<out_eT>
-conv_to< itpp::Mat<out_eT> >::from(const Mat<out_eT>& in)
+conv_to< itpp::Mat<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk)
   {
   arma_extra_debug_sigprint();
   
-  itpp::Mat<out_eT> out(in.n_rows, in.n_cols);
+  const unwrap<T1>      tmp( in.get_ref() );
+  const Mat<in_eT>& X = tmp.M;
   
-  syslib::copy_elem(out._data(), in.mem, in.n_elem);
+  itpp::Mat<out_eT> out(X.n_rows, X.n_cols);
+  
+  syslib::copy_and_convert_elem( out._data(), X.memptr(), X.n_elem );
   
   return out;
-  }
-
-
-
-template<typename out_eT>
-inline
-itpp::Mat<out_eT>
-conv_to< itpp::Mat<out_eT> >::from(const Col<out_eT>& in)
-  {
-  arma_extra_debug_sigprint();
-  
-  return conv_to< itpp::Mat<out_eT> >::from( reinterpret_cast<const Mat<out_eT>& >(in) );
-  }
-
-
-
-template<typename out_eT>
-inline
-itpp::Mat<out_eT>
-conv_to< itpp::Mat<out_eT> >::from(const Row<out_eT>& in)
-  {
-  arma_extra_debug_sigprint();
-  
-  return conv_to< itpp::Mat<out_eT> >::from( reinterpret_cast<const Mat<out_eT>& >(in) );
-  }
-
-
-
-template<typename out_eT>
-template<typename in_eT>
-inline
-itpp::Mat<out_eT>
-conv_to< itpp::Mat<out_eT> >::from(const Mat<in_eT>& in)
-  {
-  arma_extra_debug_sigprint();
-  
-  itpp::Mat<out_eT> out(in.n_rows, in.n_cols);
-  
-  const in_eT* in_mem = in.memptr();
-  out_eT*     out_mem = out._data();
-  
-  for(u32 i=0; i<in.n_elem; ++i)
-    {
-    out_mem[i] = out_eT( in_mem[i] );
-    }
-  
-  return out;
-  }
-
-
-
-template<typename out_eT>
-template<typename in_eT>
-inline
-itpp::Mat<out_eT>
-conv_to< itpp::Mat<out_eT> >::from(const Col<in_eT>& in)
-  {
-  arma_extra_debug_sigprint();
-  
-  return conv_to< itpp::Mat<out_eT> >::from( reinterpret_cast<const Mat<in_eT>& >(in) );
-  }
-
-
-
-template<typename out_eT>
-template<typename in_eT>
-inline
-itpp::Mat<out_eT>
-conv_to< itpp::Mat<out_eT> >::from(const Row<in_eT>& in)
-  {
-  arma_extra_debug_sigprint();
-  
-  return conv_to< itpp::Mat<out_eT> >::from( reinterpret_cast<const Mat<in_eT>& >(in) );
-  }
-
-
-
-template<typename out_eT>
-template<typename in_T>
-inline
-itpp::Mat<out_eT>
-conv_to< itpp::Mat<out_eT> >::from(const Mat< std::complex<in_T> >& in)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef std::complex<in_T> in_eT; 
-  
-  itpp::Mat<out_eT> out(in.n_rows, in.n_cols);
-  
-  const in_eT* in_mem = in.memptr();
-  out_eT*     out_mem = out._data();
-  
-  for(u32 i=0; i<in.n_elem; ++i)
-    {
-    copy_complex_elem(out_mem[i], in_mem[i]);
-    }
-  
-  return out;
-  }
-
-
-
-template<typename out_eT>
-template<typename in_T>
-inline
-itpp::Mat<out_eT>
-conv_to< itpp::Mat<out_eT> >::from(const Col< std::complex<in_T> >& in)
-  {
-  arma_extra_debug_sigprint();
-  
-  return conv_to< itpp::Mat<out_eT> >::from( reinterpret_cast<const Mat< std::complex<in_T> >& >(in) );
-  }
-
-
-
-template<typename out_eT>
-template<typename in_T>
-inline
-itpp::Mat<out_eT>
-conv_to< itpp::Mat<out_eT> >::from(const Row< std::complex<in_T> >& in)
-  {
-  arma_extra_debug_sigprint();
-  
-  return conv_to< itpp::Mat<out_eT> >::from( reinterpret_cast<const Mat< std::complex<in_T> >& >(in) );
   }
 
 
@@ -1066,217 +956,54 @@ template<typename out_eT>
 template<typename in_eT, typename T1>
 inline
 itpp::Mat<out_eT>
-conv_to< itpp::Mat<out_eT> >::from(const Base<in_eT,T1>& in)
+conv_to< itpp::Mat<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk)
   {
   arma_extra_debug_sigprint();
   
-  const unwrap<T1> tmp(in.get_ref());
-
-  return conv_to< itpp::Mat<out_eT> >::from( tmp.M );
+  const unwrap<T1>      tmp( in.get_ref() );
+  const Mat<in_eT>& X = tmp.M;
+  
+  itpp::Mat<out_eT> out(X.n_rows, X.n_cols);
+  
+  syslib::copy_and_convert_cx_elem( out._data(), X.memptr(), X.n_elem );
+  
+  return out;
   }
 
 
 
-//
-//
-// itpp::Vec family
 
+//! conversion to itpp::Vec from Armadillo Base objects
 template<typename out_eT>
 class conv_to< itpp::Vec<out_eT> >
   {
   public:
   
-  inline static itpp::Vec<out_eT> from(const Mat< out_eT >& in);
-  
-  template<typename in_eT>
-  inline static itpp::Vec<out_eT> from(const Mat< in_eT >& in);
-  
-  template<typename in_T>  
-  inline static itpp::Vec<out_eT> from(const Mat< std::complex<in_T> >& in);
-  
-  
-  
-  template<typename in_eT>
-  inline static itpp::Vec<out_eT> from(const Col< in_eT >& in);
-  
-  template<typename in_eT>
-  inline static itpp::Vec<out_eT> from(const Row< in_eT >& in);
-  
-  
-  
-  template<typename in_T>  
-  inline static itpp::Vec<out_eT> from(const Col< std::complex<in_T> >& in);
-  
-  template<typename in_T>  
-  inline static itpp::Vec<out_eT> from(const Row< std::complex<in_T> >& in);
-  
-  
+  template<typename in_eT, typename T1>
+  inline static itpp::Vec<out_eT> from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
   
   template<typename in_eT, typename T1>
-  inline static itpp::Vec<out_eT> from(const Base<in_eT,T1>& in);
+  inline static itpp::Vec<out_eT> from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
   };
 
 
 
 template<typename out_eT>
+template<typename in_eT, typename T1>
 inline
 itpp::Vec<out_eT>
-conv_to< itpp::Vec<out_eT> >::from(const Mat<out_eT>& in)
+conv_to< itpp::Vec<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( ( (in.n_cols != 1) && (in.n_rows != 1) ), "conv_to<>: given matrix can't be interpreted as a vector");
+  const unwrap<T1>      tmp( in.get_ref() );
+  const Mat<in_eT>& X = tmp.M;
   
-  itpp::Vec<out_eT> out(in.n_elem);
+  arma_debug_check( (X.is_vec() == false), "conv_to(): given object can't be interpreted as a vector" );
   
-  syslib::copy_elem(out._data(), in.mem, in.n_elem);
+  itpp::Vec<out_eT> out(X.n_elem);
   
-  return out;
-  }
-
-
-
-template<typename out_eT>
-template<typename in_eT>
-inline
-itpp::Vec<out_eT>
-conv_to< itpp::Vec<out_eT> >::from(const Mat<in_eT>& in)
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_debug_check( ( (in.n_cols != 1) && (in.n_rows != 1) ), "conv_to<>: given matrix can't be interpreted as a vector");
-  itpp::Vec<out_eT> out(in.n_elem);
-  
-  const in_eT*  in_mem = in.memptr();
-  out_eT*      out_mem = out._data();
-  
-  for(u32 i=0; i<in.n_elem; ++i)
-    {
-    out_mem[i] = out_eT( in_mem[i] );
-    }
-  
-  return out;
-  }
-
-
-
-template<typename out_eT>
-template<typename in_T>
-inline
-itpp::Vec<out_eT>
-conv_to< itpp::Vec<out_eT> >::from(const Mat< std::complex<in_T> >& in)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef std::complex<in_T> in_eT; 
-  
-  arma_debug_check( ( (in.n_cols != 1) && (in.n_rows != 1) ), "conv_to<>: given matrix can't be interpreted as a vector");
-  
-  itpp::Vec<out_eT> out(in.n_elem);
-  
-  const in_eT*  in_mem = in.memptr();
-  out_eT*      out_mem = out._data();
-  
-  for(u32 i=0; i<in.n_elem; ++i)
-    {
-    copy_complex_elem(out_mem[i], in_mem[i]);
-    }
-  
-  return out;
-  }
-
-
-
-template<typename out_eT>
-template<typename in_eT>
-inline
-itpp::Vec<out_eT>
-conv_to< itpp::Vec<out_eT> >::from(const Col<in_eT>& in)
-  {
-  arma_extra_debug_sigprint();
-  
-  itpp::Vec<out_eT> out(in.n_elem);
-  
-  const in_eT*  in_mem = in.memptr();
-  out_eT*      out_mem = out._data();
-  
-  for(u32 i=0; i<in.n_elem; ++i)
-    {
-    out_mem[i] = out_eT( in_mem[i] );
-    }
-  
-  return out;
-  }
-
-
-
-template<typename out_eT>
-template<typename in_T>
-inline
-itpp::Vec<out_eT>
-conv_to< itpp::Vec<out_eT> >::from(const Col< std::complex<in_T> >& in)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef std::complex<in_T> in_eT; 
-  
-  itpp::Vec<out_eT> out(in.n_elem);
-  
-  const in_eT*  in_mem = in.memptr();
-  out_eT*      out_mem = out._data();
-  
-  for(u32 i=0; i<in.n_elem; ++i)
-    {
-    copy_complex_elem(out_mem[i], in_mem[i]);
-    }
-  
-  return out;
-  }
-
-
-
-template<typename out_eT>
-template<typename in_eT>
-inline
-itpp::Vec<out_eT>
-conv_to< itpp::Vec<out_eT> >::from(const Row<in_eT>& in)
-  {
-  arma_extra_debug_sigprint();
-  
-  itpp::Vec<out_eT> out(in.n_elem);
-  
-  const in_eT*  in_mem = in.memptr();
-  out_eT*      out_mem = out._data();
-  
-  for(u32 i=0; i<in.n_elem; ++i)
-    {
-    out_mem[i] = out_eT( in_mem[i] );
-    }
-  
-  return out;
-  }
-
-
-
-template<typename out_eT>
-template<typename in_T>
-inline
-itpp::Vec<out_eT>
-conv_to< itpp::Vec<out_eT> >::from(const Row< std::complex<in_T> >& in)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef std::complex<in_T> in_eT; 
-  
-  itpp::Vec<out_eT> out(in.n_elem);
-  
-  const in_eT*  in_mem = in.memptr();
-  out_eT*      out_mem = out._data();
-  
-  for(u32 i=0; i<in.n_elem; ++i)
-    {
-    copy_complex_elem(out_mem[i], in_mem[i]);
-    }
+  syslib::copy_and_convert_elem( out._data(), X.memptr(), X.n_elem );
   
   return out;
   }
@@ -1287,14 +1014,20 @@ template<typename out_eT>
 template<typename in_eT, typename T1>
 inline
 itpp::Vec<out_eT>
-conv_to< itpp::Vec<out_eT> >::from(const Base<in_eT,T1>& in)
+conv_to< itpp::Vec<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk)
   {
   arma_extra_debug_sigprint();
   
-  const unwrap<T1> tmp(in.get_ref());
-
-  return conv_to< itpp::Vec<out_eT> >::from( tmp.M );
+  const unwrap<T1>      tmp( in.get_ref() );
+  const Mat<in_eT>& X = tmp.M;
+  
+  itpp::Vec<out_eT> out(X.n_elem);
+  
+  syslib::copy_and_convert_cx_elem( out._data(), X.memptr(), X.n_elem );
+  
+  return out;
   }
+
 
 
 //! @}

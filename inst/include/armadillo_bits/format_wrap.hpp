@@ -492,6 +492,57 @@ namespace arma_boost
         
   #endif
   
+  
+  template<typename T> struct string_only              { };
+  template<>           struct string_only<std::string> { typedef std::string result; };
+  
+  template<typename T> struct char_only                { };
+  template<>           struct char_only<char         > { typedef char        result; };
+
+  template<typename T>
+  struct basic_format_only { };
+  
+  #if defined(ARMA_USE_BOOST_FORMAT)
+    template<typename T>
+    struct basic_format_only< basic_format<T>      > { typedef basic_format<T>     result; };
+  #else
+    template<typename T1, typename T2>
+    struct basic_format_only< basic_format<T1, T2> > { typedef basic_format<T1,T2> result; };
+  #endif
+
+
+
+  template<typename T1>
+  inline
+  static
+  const T1&
+  str_wrapper(const T1& x, const typename string_only<T1>::result* junk = 0)
+    {
+    return x;
+    }
+  
+  
+  
+  template<typename T1>
+  inline
+  static
+  const T1*
+  str_wrapper(const T1* x, const typename char_only<T1>::result* junk = 0)
+    {
+    return x;
+    }
+  
+  
+    
+  template<typename T1>
+  inline
+  static
+  std::string
+  str_wrapper(const T1& x, const typename basic_format_only<T1>::result* junk = 0)
+    {
+    return str(x);
+    }
+  
   }
 
 //! @}

@@ -14,33 +14,21 @@
 // (see http://www.opensource.org/licenses for more info)
 
 
-//! \addtogroup fn_chol
+//! \addtogroup fn_conv
 //! @{
 
 
 
-template<typename T1>
+//! Convolution, which is also equivalent to polynomial multiplication and FIR digital filtering.
+
+template<typename T1, typename T2>
 inline
-const Op<T1, op_chol>
-chol(const Base<typename T1::elem_type,T1>& X, const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0)
+const Glue<T1, T2, glue_conv>
+conv(const Base<typename T1::elem_type,T1>& A, const Base<typename T1::elem_type,T2>& B)
   {
   arma_extra_debug_sigprint();
   
-  return Op<T1, op_chol>(X.get_ref());
-  }
-
-
-
-template<typename T1>
-inline
-bool
-chol(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& X, const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0)
-  {
-  arma_extra_debug_sigprint();
-  
-  out = chol(X);
-  
-  return (out.n_elem == 0) ? false : true;
+  return Glue<T1, T2, glue_conv>(A.get_ref(), B.get_ref());
   }
 
 

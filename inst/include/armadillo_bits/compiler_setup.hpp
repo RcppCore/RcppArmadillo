@@ -22,34 +22,46 @@
 #define arma_inline  inline
 #define arma_aligned
 #define arma_warn_unused
+#define arma_deprecated
 
 #if defined(__GNUG__)
-
+  
   #if (__GNUC__ < 4)
     #error "*** Need a newer compiler ***"
   #endif
   
-  #if (__GNUC_MINOR__ >= 3)
+  #define ARMA_GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
+  
+  #define ARMA_GOOD_COMPILER
+  #undef  ARMA_HAVE_STD_TR1
+  
+  #undef  arma_pure
+  #undef  arma_const
+  #undef  arma_inline
+  #undef  arma_aligned
+  #undef  arma_warn_unused
+  #undef  arma_deprecated
+  
+  #define arma_pure               __attribute__((pure))
+  #define arma_const              __attribute__((const))
+  #define arma_inline      inline __attribute__((always_inline))
+  #define arma_aligned            __attribute__((aligned))
+  #define arma_warn_unused        __attribute__((warn_unused_result))
+  #define arma_deprecated         __attribute__((deprecated))
+  
+  #if (ARMA_GCC_VERSION >= 40200)
+    #define ARMA_HAVE_STD_TR1
+  #endif
+  
+  #if (ARMA_GCC_VERSION >= 40300)
     #undef  arma_hot
     #undef  arma_cold
     
     #define arma_hot  __attribute__((hot))
     #define arma_cold __attribute__((cold))
   #endif
-
-  #undef  arma_pure
-  #undef  arma_const
-  #undef  arma_inline
-  #undef  arma_aligned
-  #undef  arma_warn_unused
-
-  #define arma_pure               __attribute__((pure))
-  #define arma_const              __attribute__((const))
-  #define arma_inline      inline __attribute__((always_inline))
-  #define arma_aligned            __attribute__((aligned))
-  #define arma_warn_unused        __attribute__((warn_unused_result))
   
-  #define ARMA_GOOD_COMPILER
+  #undef ARMA_GCC_VERSION
   
 #elif defined(__INTEL_COMPILER)
   
@@ -58,24 +70,48 @@
   #endif
   
   #define ARMA_GOOD_COMPILER
+  #undef  ARMA_HAVE_STD_TR1
   
-#elif defined(_MSC_VER)
+  #if (__INTEL_COMPILER <= 1110)
+    #undef ARMA_HAVE_STD_ISFINITE
+  #endif
+
+#endif
+
+
+#if defined(_MSC_VER)
   
   #pragma message ("*** WARNING: This compiler may have an incomplete implementation of the C++ standard ***")
+  
   #undef ARMA_GOOD_COMPILER
-
+  #undef ARMA_HAVE_STD_ISFINITE
+  #undef ARMA_HAVE_STD_SNPRINTF
+  #undef ARMA_HAVE_LOG1P
+  #undef ARMA_HAVE_STD_ISINF
+  #undef ARMA_HAVE_STD_ISNAN
+  #undef ARMA_HAVE_STD_TR1
+  
+  #undef  arma_inline
+  #define arma_inline inline __forceinline
+  
 #endif
 
 
 #if defined(__CUDACC__)
   #undef ARMA_HAVE_STD_ISFINITE
+  #undef ARMA_HAVE_STD_SNPRINTF
+  #undef ARMA_HAVE_LOG1P
   #undef ARMA_HAVE_STD_ISINF
   #undef ARMA_HAVE_STD_ISNAN
+  #undef ARMA_HAVE_STD_TR1
 #endif
 
 
-#if defined(__INTEL_COMPILER)
-  #if (__INTEL_COMPILER <= 1110)
-    #undef ARMA_HAVE_STD_ISFINITE
-  #endif
+#if defined(__SUNPRO_CC)
+  #undef ARMA_HAVE_STD_ISFINITE
+  #undef ARMA_HAVE_STD_SNPRINTF
+  #undef ARMA_HAVE_LOG1P
+  #undef ARMA_HAVE_STD_ISINF
+  #undef ARMA_HAVE_STD_ISNAN
+  #undef ARMA_HAVE_STD_TR1
 #endif

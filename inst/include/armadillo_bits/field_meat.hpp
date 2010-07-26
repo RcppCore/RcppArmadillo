@@ -556,48 +556,166 @@ field<oT>::reset_objects()
 
 template<typename oT>
 inline
-void
-field<oT>::save(const std::string name, const file_type type) const
+bool
+field<oT>::save(const std::string name, const file_type type, const bool print_status) const
   {
   arma_extra_debug_sigprint();
   
-  field_aux::save(*this, name, type);
+  std::string err_msg;
+  const bool save_okay = field_aux::save(*this, name, type, err_msg);
+  
+  if( (print_status == true) && (save_okay == false) )
+    {
+    if(err_msg.length() > 0)
+      {
+      arma_print("field::save(): ", err_msg, name);
+      }
+    else
+      {
+      arma_print("field::save(): couldn't write to ", name);
+      }
+    }
+  
+  return save_okay;
   }
 
 
 
 template<typename oT>
 inline
-void
-field<oT>::save(std::ostream& os, const file_type type) const
+bool
+field<oT>::save(std::ostream& os, const file_type type, const bool print_status) const
   {
   arma_extra_debug_sigprint();
   
-  field_aux::save(*this, os, type);
+  std::string err_msg;
+  const bool save_okay = field_aux::save(*this, os, type, err_msg);
+  
+  if( (print_status == true) && (save_okay == false) )
+    {
+    if(err_msg.length() > 0)
+      {
+      arma_print("field::save(): ", err_msg, "[ostream]");
+      }
+    else
+      {
+      arma_print("field::save(): couldn't write to [ostream]");
+      }
+    }
+  
+  return save_okay;
   }
 
 
 
 template<typename oT>
 inline
-void
-field<oT>::load(const std::string name, const file_type type)
+bool
+field<oT>::load(const std::string name, const file_type type, const bool print_status)
   {
   arma_extra_debug_sigprint();
   
-  field_aux::load(*this, name, type);
+  std::string err_msg;
+  const bool load_okay = field_aux::load(*this, name, type, err_msg);
+  
+  if( (print_status == true) && (load_okay == false) )
+    {
+    if(err_msg.length() > 0)
+      {
+      arma_print("field::load(): ", err_msg, name);
+      }
+    else
+      {
+      arma_print("field::load(): couldn't read from ", name);
+      }
+    }
+  
+  if(load_okay == false)
+    {
+    (*this).reset();
+    }
+  
+  return load_okay;
   }
 
 
 
 template<typename oT>
 inline
-void
-field<oT>::load(std::istream& is, const file_type type)
+bool
+field<oT>::load(std::istream& is, const file_type type, const bool print_status)
   {
   arma_extra_debug_sigprint();
   
-  field_aux::load(*this, is, type);
+  std::string err_msg;
+  const bool load_okay = field_aux::load(*this, is, type, err_msg);
+  
+  if( (print_status == true) && (load_okay == false) )
+    {
+    if(err_msg.length() > 0)
+      {
+      arma_print("field::load(): ", err_msg, "[istream]");
+      }
+    else
+      {
+      arma_print("field::load(): couldn't read from [istream]");
+      }
+    }
+  
+  if(load_okay == false)
+    {
+    (*this).reset();
+    }
+  
+  return load_okay;
+  }
+
+
+
+template<typename oT>
+inline
+bool
+field<oT>::quiet_save(const std::string name, const file_type type) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).save(name, type, false);
+  }
+
+
+
+template<typename oT>
+inline
+bool
+field<oT>::quiet_save(std::ostream& os, const file_type type) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).save(os, type, false);
+  }
+
+
+
+template<typename oT>
+inline
+bool
+field<oT>::quiet_load(const std::string name, const file_type type)
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).load(name, type, false);
+  }
+
+
+
+template<typename oT>
+inline
+bool
+field<oT>::quiet_load(std::istream& is, const file_type type)
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).load(is, type, false);
   }
 
 
@@ -1056,73 +1174,80 @@ field_aux::reset_objects(field< std::string >& x)
 
 template<typename oT>
 inline
-void
-field_aux::save(const field<oT>& x, const std::string& name, const file_type type)
+bool
+field_aux::save(const field<oT>& x, const std::string& name, const file_type type, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
   
-  arma_print("field_aux::save(): sorry, saving this type of field is currently not supported");
+  err_msg = " [sorry, saving/loading this type of field is currently not supported] filename = ";
+  
+  return false;
   }
 
 
 
 template<typename oT>
 inline
-void
-field_aux::save(const field<oT>& x, std::ostream& os, const file_type type)
+bool
+field_aux::save(const field<oT>& x, std::ostream& os, const file_type type, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
   
-  arma_print("field_aux::save(): sorry, saving this type of field is currently not supported");
+  err_msg = " [sorry, saving/loading this type of field is currently not supported] filename = ";
+  
+  return false;
   }
 
 
 
 template<typename oT>
 inline
-void
-field_aux::load(field<oT>& x, const std::string& name, const file_type type)
+bool
+field_aux::load(field<oT>& x, const std::string& name, const file_type type, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
   
-  arma_print("field_aux::load(): sorry, loading this type of field is currently not supported");
-  x.reset();
+  err_msg = " [sorry, saving/loading this type of field is currently not supported] filename = ";
+  
+  return false;
   }
 
 
 
 template<typename oT>
 inline
-void
-field_aux::load(field<oT>& x, std::istream& is, const file_type type)
+bool
+field_aux::load(field<oT>& x, std::istream& is, const file_type type, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
   
-  arma_print("field_aux::load(): sorry, loading this type of field is currently not supported");
-  x.reset();
+  err_msg = " [sorry, saving/loading this type of field is currently not supported] filename = ";
+  
+  return false;
   }
 
 
 
 template<typename eT>
 inline
-void
-field_aux::save(const field< Mat<eT> >& x, const std::string& name, const file_type type)
+bool
+field_aux::save(const field< Mat<eT> >& x, const std::string& name, const file_type type, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
   
   switch(type)
     {
     case arma_binary:
-      diskio::save_arma_binary(x, name);
+      return diskio::save_arma_binary(x, name);
       break;
       
     case ppm_binary:
-      diskio::save_ppm_binary(x, name);
+      return diskio::save_ppm_binary(x, name);
       break;
     
     default:
-      arma_stop("field_aux::save(): unsupported type");
+      err_msg = " [unsupported type] filename = ";
+      return false;
     }
   }
 
@@ -1130,23 +1255,24 @@ field_aux::save(const field< Mat<eT> >& x, const std::string& name, const file_t
 
 template<typename eT>
 inline
-void
-field_aux::save(const field< Mat<eT> >& x, std::ostream& os, const file_type type)
+bool
+field_aux::save(const field< Mat<eT> >& x, std::ostream& os, const file_type type, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
   
   switch(type)
     {
     case arma_binary:
-      diskio::save_arma_binary(x, "[ostream]", os);
+      return diskio::save_arma_binary(x, os);
       break;
       
     case ppm_binary:
-      diskio::save_ppm_binary(x, "[ostream]", os);
+      return diskio::save_ppm_binary(x, os);
       break;
     
     default:
-      arma_stop("field_aux::save(): unsupported type");
+      err_msg = " [unsupported type] filename = ";
+      return false;
     }
   }
 
@@ -1154,55 +1280,28 @@ field_aux::save(const field< Mat<eT> >& x, std::ostream& os, const file_type typ
 
 template<typename eT>
 inline
-void
-field_aux::load(field< Mat<eT> >& x, const std::string& name, const file_type type)
-  {
-  arma_extra_debug_sigprint();
-  
-  switch(type)
-    {
-    case auto_detect:
-      diskio::load_auto_detect(x, name);
-      break;
-    
-    case arma_binary:
-      diskio::load_arma_binary(x, name);
-      break;
-      
-    case ppm_binary:
-      diskio::load_ppm_binary(x, name);
-      break;
-    
-    default:
-      arma_stop("field_aux::load(): unsupported type");
-    }
-  }
-
-
-
-template<typename eT>
-inline
-void
-field_aux::load(field< Mat<eT> >& x, std::istream& is, const file_type type)
+bool
+field_aux::load(field< Mat<eT> >& x, const std::string& name, const file_type type, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
   
   switch(type)
     {
     case auto_detect:
-      diskio::load_auto_detect(x, "[istream]", is);
+      return diskio::load_auto_detect(x, name, err_msg);
       break;
     
     case arma_binary:
-      diskio::load_arma_binary(x, "[istream]", is);
+      return diskio::load_arma_binary(x, name, err_msg);
       break;
       
     case ppm_binary:
-      diskio::load_ppm_binary(x, "[istream]", is);
+      return diskio::load_ppm_binary(x, name, err_msg);
       break;
     
     default:
-      arma_stop("field_aux::load(): unsupported type");
+      err_msg = " [unsupported type] filename = ";
+      return false;
     }
   }
 
@@ -1210,75 +1309,28 @@ field_aux::load(field< Mat<eT> >& x, std::istream& is, const file_type type)
 
 template<typename eT>
 inline
-void
-field_aux::save(const field< Col<eT> >& x, const std::string& name, const file_type type)
-  {
-  arma_extra_debug_sigprint();
-  
-  switch(type)
-    {
-    case arma_binary:
-      diskio::save_arma_binary(x, name);
-      break;
-      
-    case ppm_binary:
-      diskio::save_ppm_binary(x, name);
-      break;
-    
-    default:
-      arma_stop("field_aux::save(): unsupported type");
-    }
-  }
-
-
-
-template<typename eT>
-inline
-void
-field_aux::save(const field< Col<eT> >& x, std::ostream& os, const file_type type)
-  {
-  arma_extra_debug_sigprint();
-  
-  switch(type)
-    {
-    case arma_binary:
-      diskio::save_arma_binary(x, "[ostream]", os);
-      break;
-      
-    case ppm_binary:
-      diskio::save_ppm_binary(x, "[ostream]", os);
-      break;
-    
-    default:
-      arma_stop("field_aux::save(): unsupported type");
-    }
-  }
-
-
-
-template<typename eT>
-inline
-void
-field_aux::load(field< Col<eT> >& x, const std::string& name, const file_type type)
+bool
+field_aux::load(field< Mat<eT> >& x, std::istream& is, const file_type type, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
   
   switch(type)
     {
     case auto_detect:
-      diskio::load_auto_detect(x, name);
+      return diskio::load_auto_detect(x, is, err_msg);
       break;
     
     case arma_binary:
-      diskio::load_arma_binary(x, name);
+      return diskio::load_arma_binary(x, is, err_msg);
       break;
       
     case ppm_binary:
-      diskio::load_ppm_binary(x, name);
+      return diskio::load_ppm_binary(x, is, err_msg);
       break;
     
     default:
-      arma_stop("field_aux::load(): unsupported type");
+      err_msg = " [unsupported type] filename = ";
+      return false;
     }
   }
 
@@ -1286,27 +1338,78 @@ field_aux::load(field< Col<eT> >& x, const std::string& name, const file_type ty
 
 template<typename eT>
 inline
-void
-field_aux::load(field< Col<eT> >& x, std::istream& is, const file_type type)
+bool
+field_aux::save(const field< Col<eT> >& x, const std::string& name, const file_type type, std::string& err_msg)
+  {
+  arma_extra_debug_sigprint();
+  
+  switch(type)
+    {
+    case arma_binary:
+      return diskio::save_arma_binary(x, name);
+      break;
+      
+    case ppm_binary:
+      return diskio::save_ppm_binary(x, name);
+      break;
+    
+    default:
+      err_msg = " [unsupported type] filename = ";
+      return false;
+    }
+  }
+
+
+
+template<typename eT>
+inline
+bool
+field_aux::save(const field< Col<eT> >& x, std::ostream& os, const file_type type, std::string& err_msg)
+  {
+  arma_extra_debug_sigprint();
+  
+  switch(type)
+    {
+    case arma_binary:
+      return diskio::save_arma_binary(x, os);
+      break;
+      
+    case ppm_binary:
+      return diskio::save_ppm_binary(x, os);
+      break;
+    
+    default:
+      err_msg = " [unsupported type] filename = ";
+      return false;
+    }
+  }
+
+
+
+template<typename eT>
+inline
+bool
+field_aux::load(field< Col<eT> >& x, const std::string& name, const file_type type, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
   
   switch(type)
     {
     case auto_detect:
-      diskio::load_auto_detect(x, "[istream]", is);
+      return diskio::load_auto_detect(x, name, err_msg);
       break;
     
     case arma_binary:
-      diskio::load_arma_binary(x, "[istream]", is);
+      return diskio::load_arma_binary(x, name, err_msg);
       break;
       
     case ppm_binary:
-      diskio::load_ppm_binary(x, "[istream]", is);
+      return diskio::load_ppm_binary(x, name, err_msg);
       break;
     
     default:
-      arma_stop("field_aux::load(): unsupported type");
+      err_msg = " [unsupported type] filename = ";
+      return false;
     }
   }
 
@@ -1314,75 +1417,28 @@ field_aux::load(field< Col<eT> >& x, std::istream& is, const file_type type)
 
 template<typename eT>
 inline
-void
-field_aux::save(const field< Row<eT> >& x, const std::string& name, const file_type type)
-  {
-  arma_extra_debug_sigprint();
-  
-  switch(type)
-    {
-    case arma_binary:
-      diskio::save_arma_binary(x, name);
-      break;
-      
-    case ppm_binary:
-      diskio::save_ppm_binary(x, name);
-      break;
-    
-    default:
-      arma_stop("field_aux::save(): unsupported type");
-    }
-  }
-
-
-
-template<typename eT>
-inline
-void
-field_aux::save(const field< Row<eT> >& x, std::ostream& os, const file_type type)
-  {
-  arma_extra_debug_sigprint();
-  
-  switch(type)
-    {
-    case arma_binary:
-      diskio::save_arma_binary(x, "[ostream]", os);
-      break;
-      
-    case ppm_binary:
-      diskio::save_ppm_binary(x, "[ostream]", os);
-      break;
-    
-    default:
-      arma_stop("field_aux::save(): unsupported type");
-    }
-  }
-
-
-
-template<typename eT>
-inline
-void
-field_aux::load(field< Row<eT> >& x, const std::string& name, const file_type type)
+bool
+field_aux::load(field< Col<eT> >& x, std::istream& is, const file_type type, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
   
   switch(type)
     {
     case auto_detect:
-      diskio::load_auto_detect(x, name);
+      return diskio::load_auto_detect(x, is, err_msg);
       break;
     
     case arma_binary:
-      diskio::load_arma_binary(x, name);
+      return diskio::load_arma_binary(x, is, err_msg);
       break;
       
     case ppm_binary:
-      diskio::load_ppm_binary(x, name);
+      return diskio::load_ppm_binary(x, is, err_msg);
       break;
     
     default:
-      arma_stop("field_aux::load(): unsupported type");
+      err_msg = " [unsupported type] filename = ";
+      return false;
     }
   }
 
@@ -1390,27 +1446,78 @@ field_aux::load(field< Row<eT> >& x, const std::string& name, const file_type ty
 
 template<typename eT>
 inline
-void
-field_aux::load(field< Row<eT> >& x, std::istream& is, const file_type type)
+bool
+field_aux::save(const field< Row<eT> >& x, const std::string& name, const file_type type, std::string& err_msg)
+  {
+  arma_extra_debug_sigprint();
+  
+  switch(type)
+    {
+    case arma_binary:
+      return diskio::save_arma_binary(x, name, err_msg);
+      break;
+      
+    case ppm_binary:
+      return diskio::save_ppm_binary(x, name, err_msg);
+      break;
+    
+    default:
+      err_msg = " [unsupported type] filename = ";
+      return false;
+    }
+  }
+
+
+
+template<typename eT>
+inline
+bool
+field_aux::save(const field< Row<eT> >& x, std::ostream& os, const file_type type, std::string& err_msg)
+  {
+  arma_extra_debug_sigprint();
+  
+  switch(type)
+    {
+    case arma_binary:
+      return diskio::save_arma_binary(x, os, err_msg);
+      break;
+      
+    case ppm_binary:
+      return diskio::save_ppm_binary(x, os, err_msg);
+      break;
+    
+    default:
+      err_msg = " [unsupported type] filename = ";
+      return false;
+    }
+  }
+
+
+
+template<typename eT>
+inline
+bool
+field_aux::load(field< Row<eT> >& x, const std::string& name, const file_type type, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
   
   switch(type)
     {
     case auto_detect:
-      diskio::load_auto_detect(x, "[istream]", is);
+      return diskio::load_auto_detect(x, name, err_msg);
       break;
     
     case arma_binary:
-      diskio::load_arma_binary(x, "[istream]", is);
+      return diskio::load_arma_binary(x, name, err_msg);
       break;
       
     case ppm_binary:
-      diskio::load_ppm_binary(x, "[istream]", is);
+      return diskio::load_ppm_binary(x, name, err_msg);
       break;
     
     default:
-      arma_stop("field_aux::load(): unsupported type");
+      err_msg = " [unsupported type] filename = ";
+      return false;
     }
   }
 
@@ -1418,75 +1525,28 @@ field_aux::load(field< Row<eT> >& x, std::istream& is, const file_type type)
 
 template<typename eT>
 inline
-void
-field_aux::save(const field< Cube<eT> >& x, const std::string& name, const file_type type)
-  {
-  arma_extra_debug_sigprint();
-  
-  switch(type)
-    {
-    case arma_binary:
-      diskio::save_arma_binary(x, name);
-      break;
-      
-    case ppm_binary:
-      diskio::save_ppm_binary(x, name);
-      break;
-    
-    default:
-      arma_stop("field_aux::save(): unsupported type");
-    }
-  }
-
-
-
-template<typename eT>
-inline
-void
-field_aux::save(const field< Cube<eT> >& x, std::ostream& os, const file_type type)
-  {
-  arma_extra_debug_sigprint();
-  
-  switch(type)
-    {
-    case arma_binary:
-      diskio::save_arma_binary(x, "[ostream]", os);
-      break;
-      
-    case ppm_binary:
-      diskio::save_ppm_binary(x, "[ostream]", os);
-      break;
-    
-    default:
-      arma_stop("field_aux::save(): unsupported type");
-    }
-  }
-
-
-
-template<typename eT>
-inline
-void
-field_aux::load(field< Cube<eT> >& x, const std::string& name, const file_type type)
+bool
+field_aux::load(field< Row<eT> >& x, std::istream& is, const file_type type, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
   
   switch(type)
     {
     case auto_detect:
-      diskio::load_auto_detect(x, name);
+      return diskio::load_auto_detect(x, is, err_msg);
       break;
     
     case arma_binary:
-      diskio::load_arma_binary(x, name);
+      return diskio::load_arma_binary(x, is, err_msg);
       break;
       
     case ppm_binary:
-      diskio::load_ppm_binary(x, name);
+      return diskio::load_ppm_binary(x, is, err_msg);
       break;
     
     default:
-      arma_stop("field_aux::load(): unsupported type");
+      err_msg = " [unsupported type] filename = ";
+      return false;
     }
   }
 
@@ -1494,72 +1554,156 @@ field_aux::load(field< Cube<eT> >& x, const std::string& name, const file_type t
 
 template<typename eT>
 inline
-void
-field_aux::load(field< Cube<eT> >& x, std::istream& is, const file_type type)
+bool
+field_aux::save(const field< Cube<eT> >& x, const std::string& name, const file_type type, std::string& err_msg)
+  {
+  arma_extra_debug_sigprint();
+  
+  switch(type)
+    {
+    case arma_binary:
+      return diskio::save_arma_binary(x, name, err_msg);
+      break;
+      
+    case ppm_binary:
+      return diskio::save_ppm_binary(x, name, err_msg);
+      break;
+    
+    default:
+      err_msg = " [unsupported type] filename = ";
+      return false;
+    }
+  }
+
+
+
+template<typename eT>
+inline
+bool
+field_aux::save(const field< Cube<eT> >& x, std::ostream& os, const file_type type, std::string& err_msg)
+  {
+  arma_extra_debug_sigprint();
+  
+  switch(type)
+    {
+    case arma_binary:
+      return diskio::save_arma_binary(x, os, err_msg);
+      break;
+      
+    case ppm_binary:
+      return diskio::save_ppm_binary(x, os, err_msg);
+      break;
+    
+    default:
+      err_msg = " [unsupported type] filename = ";
+      return false;
+    }
+  }
+
+
+
+template<typename eT>
+inline
+bool
+field_aux::load(field< Cube<eT> >& x, const std::string& name, const file_type type, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
   
   switch(type)
     {
     case auto_detect:
-      diskio::load_auto_detect(x, "[istream]", is);
+      return diskio::load_auto_detect(x, name, err_msg);
       break;
     
     case arma_binary:
-      diskio::load_arma_binary(x, "[istream]", is);
+      return diskio::load_arma_binary(x, name, err_msg);
       break;
       
     case ppm_binary:
-      diskio::load_ppm_binary(x, "[istream]", is);
+      return diskio::load_ppm_binary(x, name, err_msg);
       break;
     
     default:
-      arma_stop("field_aux::load(): unsupported type");
+      err_msg = " [unsupported type] filename = ";
+      return false;
+    }
+  }
+
+
+
+template<typename eT>
+inline
+bool
+field_aux::load(field< Cube<eT> >& x, std::istream& is, const file_type type, std::string& err_msg)
+  {
+  arma_extra_debug_sigprint();
+  
+  switch(type)
+    {
+    case auto_detect:
+      return diskio::load_auto_detect(x, is, err_msg);
+      break;
+    
+    case arma_binary:
+      return diskio::load_arma_binary(x, is, err_msg);
+      break;
+      
+    case ppm_binary:
+      return diskio::load_ppm_binary(x, is, err_msg);
+      break;
+    
+    default:
+      err_msg = " [unsupported type] filename = ";
+      return false;
     }
   }
 
 
 
 inline
-void
-field_aux::save(const field< std::string >& x, const std::string& name, const file_type type)
+bool
+field_aux::save(const field< std::string >& x, const std::string& name, const file_type type, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
   
-  diskio::save_std_string(x, name);
+  err_msg.clear();
+  
+  return diskio::save_std_string(x, name);
   }
 
 
 
 inline
-void
-field_aux::save(const field< std::string >& x, std::ostream& os, const file_type type)
+bool
+field_aux::save(const field< std::string >& x, std::ostream& os, const file_type type, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
   
-  diskio::save_std_string(x, "[ostream]", os);
+  err_msg.clear();
+  
+  return diskio::save_std_string(x, os);
   }
 
 
 
 inline
-void
-field_aux::load(field< std::string >& x, const std::string& name, const file_type type)
+bool
+field_aux::load(field< std::string >& x, const std::string& name, const file_type type, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
   
-  diskio::load_std_string(x, name);
+  return diskio::load_std_string(x, name, err_msg);
   }
 
 
 
 inline
-void
-field_aux::load(field< std::string >& x, std::istream& is, const file_type type)
+bool
+field_aux::load(field< std::string >& x, std::istream& is, const file_type type, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
   
-  diskio::load_std_string(x, "[istream]", is);
+  return diskio::load_std_string(x, is, err_msg);
   }
 
 

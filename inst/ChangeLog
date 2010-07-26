@@ -1,3 +1,13 @@
+2010-07-25  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/* : upgrade to armadillo 0.9.52 "Monkey Wrench"
+
+	* src/fastLm.cpp: Switch from inv() (which now throws a warning on
+	(near) singular matrices and returns an empty matrix) to the
+	Moore-Penrose generalised inverse pinv() which allows us to continue
+	the example in the manual page. Of course, for standard use inv() is
+	doing the right thing by issueing the warning.
+
 2010-06-14  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.2.3

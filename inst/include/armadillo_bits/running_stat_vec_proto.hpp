@@ -33,19 +33,23 @@ class running_stat_vec
   inline ~running_stat_vec();
   inline  running_stat_vec(const bool in_calc_cov = false);
   
-  template<typename T1> inline void operator() (const Base<               T,  T1>& X);
-  template<typename T1> inline void operator() (const Base< std::complex<T>,  T1>& X);
+  inline running_stat_vec(const running_stat_vec& in_rsv);
+  
+  inline const running_stat_vec& operator=(const running_stat_vec& in_rsv);
+  
+  template<typename T1> arma_hot inline void operator() (const Base<               T,  T1>& X);
+  template<typename T1> arma_hot inline void operator() (const Base< std::complex<T>,  T1>& X);
   
   inline void reset();
   
-  inline Mat<eT>  mean() const;
+  inline const Mat<eT>&  mean() const;
   
-  inline Mat< T>  var   (const u32 norm_type = 0) const;
-  inline Mat< T>  stddev(const u32 norm_type = 0) const;
-  inline Mat<eT>  cov   (const u32 norm_type = 0) const;
+  inline const Mat< T>&  var   (const u32 norm_type = 0);
+  inline       Mat< T>   stddev(const u32 norm_type = 0) const;
+  inline const Mat<eT>&  cov   (const u32 norm_type = 0);
   
-  inline Mat<eT> min() const;
-  inline Mat<eT> max() const;
+  inline const Mat<eT>& min() const;
+  inline const Mat<eT>& max() const;
   
   //
   //
@@ -65,6 +69,12 @@ class running_stat_vec
   
   arma_aligned Mat< T> min_val_norm;
   arma_aligned Mat< T> max_val_norm;
+  
+  arma_aligned Mat< T> r_var_dummy;
+  arma_aligned Mat<eT> r_cov_dummy;
+  
+  arma_aligned Mat<eT> tmp1;
+  arma_aligned Mat<eT> tmp2;
   
   friend class running_stat_vec_aux;
   };

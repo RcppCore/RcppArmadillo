@@ -33,13 +33,12 @@ class field
   const u32 n_rows;     //!< number of rows in the field (read-only)
   const u32 n_cols;     //!< number of columns in the field (read-only)
   const u32 n_elem;     //!< number of elements in the field (read-only)
-
+  
+  
   private:
   
-  //! pointer to memory used by the object
-  arma_aligned oT** mem;
-  arma_aligned oT*  mem_local[ 16 ];
-  //!< Internal memory, to avoid calling the 'new' operator for small amounts of memory
+  arma_aligned oT** mem;             //!< pointer to memory used by the object
+  arma_aligned oT*  mem_local[ 16 ]; //!< Internal memory, to avoid calling the 'new' operator for small amounts of memory
   
   
   public:
@@ -97,11 +96,19 @@ class field
   inline void reset();
   inline void reset_objects();
   
-  inline void save(const std::string   name, const file_type type = arma_binary) const;
-  inline void save(      std::ostream& os,   const file_type type = arma_binary) const;
   
-  inline void load(const std::string   name, const file_type type = auto_detect);
-  inline void load(      std::istream& is,   const file_type type = auto_detect);
+  inline bool save(const std::string   name, const file_type type = arma_binary, const bool print_status = true) const;
+  inline bool save(      std::ostream& os,   const file_type type = arma_binary, const bool print_status = true) const;
+  
+  inline bool load(const std::string   name, const file_type type = auto_detect, const bool print_status = true);
+  inline bool load(      std::istream& is,   const file_type type = auto_detect, const bool print_status = true);
+  
+  
+  inline bool quiet_save(const std::string   name, const file_type type = arma_binary) const;
+  inline bool quiet_save(      std::ostream& os,   const file_type type = arma_binary) const;
+  
+  inline bool quiet_load(const std::string   name, const file_type type = auto_detect);
+  inline bool quiet_load(      std::istream& is,   const file_type type = auto_detect);
   
   
   // iterators
@@ -183,35 +190,35 @@ class field_aux
                         inline static void reset_objects(field< std::string >& x);
   
   
-  template<typename oT> inline static void save(const field< oT >& x,          const std::string& name, const file_type type);
-  template<typename oT> inline static void save(const field< oT >& x,          std::ostream& os,        const file_type type);
-  template<typename oT> inline static void load(      field< oT >& x,          const std::string& name, const file_type type);
-  template<typename oT> inline static void load(      field< oT >& x,          std::istream& is,        const file_type type);
+  template<typename oT> inline static bool save(const field< oT >& x,       const std::string& name, const file_type type, std::string& err_msg);
+  template<typename oT> inline static bool save(const field< oT >& x,       std::ostream& os,        const file_type type, std::string& err_msg);
+  template<typename oT> inline static bool load(      field< oT >& x,       const std::string& name, const file_type type, std::string& err_msg);
+  template<typename oT> inline static bool load(      field< oT >& x,       std::istream& is,        const file_type type, std::string& err_msg);
 
-  template<typename eT> inline static void save(const field< Mat<eT> >& x,     const std::string& name, const file_type type);
-  template<typename eT> inline static void save(const field< Mat<eT> >& x,     std::ostream& os,        const file_type type);
-  template<typename eT> inline static void load(      field< Mat<eT> >& x,     const std::string& name, const file_type type);
-  template<typename eT> inline static void load(      field< Mat<eT> >& x,     std::istream& is,        const file_type type);
+  template<typename eT> inline static bool save(const field< Mat<eT> >& x,  const std::string& name, const file_type type, std::string& err_msg);
+  template<typename eT> inline static bool save(const field< Mat<eT> >& x,  std::ostream& os,        const file_type type, std::string& err_msg);
+  template<typename eT> inline static bool load(      field< Mat<eT> >& x,  const std::string& name, const file_type type, std::string& err_msg);
+  template<typename eT> inline static bool load(      field< Mat<eT> >& x,  std::istream& is,        const file_type type, std::string& err_msg);
   
-  template<typename eT> inline static void save(const field< Col<eT> >& x,     const std::string& name, const file_type type);
-  template<typename eT> inline static void save(const field< Col<eT> >& x,     std::ostream& os,        const file_type type);
-  template<typename eT> inline static void load(      field< Col<eT> >& x,     const std::string& name, const file_type type);
-  template<typename eT> inline static void load(      field< Col<eT> >& x,     std::istream& is,        const file_type type);
+  template<typename eT> inline static bool save(const field< Col<eT> >& x,  const std::string& name, const file_type type, std::string& err_msg);
+  template<typename eT> inline static bool save(const field< Col<eT> >& x,  std::ostream& os,        const file_type type, std::string& err_msg);
+  template<typename eT> inline static bool load(      field< Col<eT> >& x,  const std::string& name, const file_type type, std::string& err_msg);
+  template<typename eT> inline static bool load(      field< Col<eT> >& x,  std::istream& is,        const file_type type, std::string& err_msg);
   
-  template<typename eT> inline static void save(const field< Row<eT> >& x,     const std::string& name, const file_type type);
-  template<typename eT> inline static void save(const field< Row<eT> >& x,     std::ostream& os,        const file_type type);
-  template<typename eT> inline static void load(      field< Row<eT> >& x,     const std::string& name, const file_type type);
-  template<typename eT> inline static void load(      field< Row<eT> >& x,     std::istream& is,        const file_type type);
+  template<typename eT> inline static bool save(const field< Row<eT> >& x,  const std::string& name, const file_type type, std::string& err_msg);
+  template<typename eT> inline static bool save(const field< Row<eT> >& x,  std::ostream& os,        const file_type type, std::string& err_msg);
+  template<typename eT> inline static bool load(      field< Row<eT> >& x,  const std::string& name, const file_type type, std::string& err_msg);
+  template<typename eT> inline static bool load(      field< Row<eT> >& x,  std::istream& is,        const file_type type, std::string& err_msg);
 
-  template<typename eT> inline static void save(const field< Cube<eT> >& x,    const std::string& name, const file_type type);
-  template<typename eT> inline static void save(const field< Cube<eT> >& x,    std::ostream& os,        const file_type type);
-  template<typename eT> inline static void load(      field< Cube<eT> >& x,    const std::string& name, const file_type type);
-  template<typename eT> inline static void load(      field< Cube<eT> >& x,    std::istream& is,        const file_type type);
+  template<typename eT> inline static bool save(const field< Cube<eT> >& x, const std::string& name, const file_type type, std::string& err_msg);
+  template<typename eT> inline static bool save(const field< Cube<eT> >& x, std::ostream& os,        const file_type type, std::string& err_msg);
+  template<typename eT> inline static bool load(      field< Cube<eT> >& x, const std::string& name, const file_type type, std::string& err_msg);
+  template<typename eT> inline static bool load(      field< Cube<eT> >& x, std::istream& is,        const file_type type, std::string& err_msg);
   
-                        inline static void save(const field< std::string >& x, const std::string& name, const file_type type);
-                        inline static void save(const field< std::string >& x, std::ostream& os,        const file_type type);
-                        inline static void load(      field< std::string >& x, const std::string& name, const file_type type);
-                        inline static void load(      field< std::string >& x, std::istream& is,        const file_type type);
+  inline static bool save(const field< std::string >& x, const std::string& name, const file_type type, std::string& err_msg);
+  inline static bool save(const field< std::string >& x, std::ostream& os,        const file_type type, std::string& err_msg);
+  inline static bool load(      field< std::string >& x, const std::string& name, const file_type type, std::string& err_msg);
+  inline static bool load(      field< std::string >& x, std::istream& is,        const file_type type, std::string& err_msg);
   
   };
 

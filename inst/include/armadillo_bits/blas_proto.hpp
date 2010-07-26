@@ -21,6 +21,9 @@ namespace blas
   {
   extern "C"
     {
+    float  sdot_(const int* n, const float*  x, const int* incx, const float*  y, const int* incy);
+    double ddot_(const int* n, const double* x, const int* incx, const double* y, const int* incy);
+    
     void sgemv_(const char* transA, const int* m, const int* n, const float*  alpha, const float*  A, const int* ldA, const float*  x, const int* incx, const float*  beta, float*  y, const int* incy);
     void dgemv_(const char* transA, const int* m, const int* n, const double* alpha, const double* A, const int* ldA, const double* x, const int* incx, const double* beta, double* y, const int* incy);
     void cgemv_(const char* transA, const int* m, const int* n, const void*   alpha, const void*   A, const int* ldA, const void*   x, const int* incx, const void*   beta, void*   y, const int* incy);
@@ -31,39 +34,40 @@ namespace blas
     void cgemm_(const char* transA, const char* transB, const int* m, const int* n, const int* k, const void*   alpha, const void*   A, const int* ldA, const void*   B, const int* ldB, const void*   beta, void*   C, const int* ldC);
     void zgemm_(const char* transA, const char* transB, const int* m, const int* n, const int* k, const void*   alpha, const void*   A, const int* ldA, const void*   B, const int* ldB, const void*   beta, void*   C, const int* ldC);
 
-//     float  sdot_(const int* n, const float*  x, const int* incx, const float*  y, const int* incy);
-//     double ddot_(const int* n, const double* x, const int* incx, const double* y, const int* incy);
-
-//     void   dswap_(const int* n, double* x, const int* incx, double* y, const int* incy);
-//     void   dscal_(const int* n, const double* alpha, double* x, const int* incx);
-//     void   dcopy_(const int* n, const double* x, const int* incx, double* y, const int* incy);
-//     void   daxpy_(const int* n, const double* alpha, const double* x, const int* incx, double* y, const int* incy);
-//     void    dger_(const int* m, const int* n, const double* alpha, const double* x, const int* incx, const double* y, const int* incy, double* A, const int* ldA);
+    // void   dswap_(const int* n, double* x, const int* incx, double* y, const int* incy);
+    // void   dscal_(const int* n, const double* alpha, double* x, const int* incx);
+    // void   dcopy_(const int* n, const double* x, const int* incx, double* y, const int* incy);
+    // void   daxpy_(const int* n, const double* alpha, const double* x, const int* incx, double* y, const int* incy);
+    // void    dger_(const int* m, const int* n, const double* alpha, const double* x, const int* incx, const double* y, const int* incy, double* A, const int* ldA);
     }
   
   
   
-//   template<typename eT>
-//   inline
-//   eT
-//   dot_(const int* n, const eT* x, const int* incx, const eT* y, const int* incy)
-//     {
-//     arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
-//     
-//     if(is_float<eT>::value == true)
-//       {
-//       typedef float T;
-//       return sdot_(n, (const T*)x, incx, (const T*)y, incy);
-//       }
-//     else
-//     if(is_double<eT>::value == true)
-//       {
-//       typedef double T;
-//       return ddot_(n, (const T*)x, incx, (const T*)y, incy);
-//       }
-//     
-//     return eT();  // prevent compiler warnings
-//     }
+  template<typename eT>
+  arma_inline
+  eT
+  dot_(const int* n, const eT* x, const eT* y)
+    {
+    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    
+    const int inc = 1;
+    
+    if(is_float<eT>::value == true)
+      {
+      typedef float T;
+      return eT( sdot_(n, (const T*)x, &inc, (const T*)y, &inc) );
+      }
+    else
+    if(is_double<eT>::value == true)
+      {
+      typedef double T;
+      return eT( ddot_(n, (const T*)x, &inc, (const T*)y, &inc) );
+      }
+    else
+      {
+      return eT(0);  // prevent compiler warnings
+      }
+    }
   
   
   

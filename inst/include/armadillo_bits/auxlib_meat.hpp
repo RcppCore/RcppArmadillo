@@ -473,7 +473,7 @@ auxlib::det(const Mat<eT>& X)
             }
           }
         
-        return val * eT(sign);
+        return ( (sign < 0) ? -val : val );
         }
       #elif defined(ARMA_USE_LAPACK)
         {
@@ -502,7 +502,7 @@ auxlib::det(const Mat<eT>& X)
             }
           }
         
-        return val * eT(sign);
+        return ( (sign < 0) ? -val : val );
         }
       #else
         {

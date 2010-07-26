@@ -176,7 +176,33 @@ template<typename eT>
 template<typename T1>
 inline
 void
-subview<eT>::operator= (const Base<eT,T1>& in)
+subview<eT>::operator_equ_mat(const Base<eT,T1>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  const unwrap<T1>   tmp(in.get_ref());
+  const Mat<eT>& x = tmp.M;
+  
+  subview<eT>& t = *this;
+  
+  arma_debug_assert_same_size(t, x, "insert into submatrix");
+  
+  const u32 t_n_cols = t.n_cols;
+  const u32 t_n_rows = t.n_rows;
+  
+  for(u32 col=0; col<t_n_cols; ++col)
+    {
+    syslib::copy_elem( t.colptr(col), x.colptr(col), t_n_rows );
+    }
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+void
+subview<eT>::operator_equ_proxy(const Base<eT,T1>& in)
   {
   arma_extra_debug_sigprint();
   
@@ -186,17 +212,32 @@ subview<eT>::operator= (const Base<eT,T1>& in)
   
   arma_debug_assert_same_size(t, x, "insert into submatrix");
   
+  const u32 t_n_cols = t.n_cols;
+  const u32 t_n_rows = t.n_rows;
   
-  for(u32 col = 0; col<t.n_cols; ++col)
+  for(u32 col = 0; col<t_n_cols; ++col)
     {
     eT* t_coldata = t.colptr(col);
     
-    for(u32 row = 0; row<t.n_rows; ++row)
+    for(u32 row = 0; row<t_n_rows; ++row)
       {
       t_coldata[row] = x.at(row,col);
       }
-      
     }
+  
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+arma_inline
+void
+subview<eT>::operator= (const Base<eT,T1>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  (is_Mat<T1>::value == true) ? operator_equ_mat(in) : operator_equ_proxy(in);
   }
 
 
@@ -335,19 +376,14 @@ subview<eT>::operator= (const subview<eT>& x_in)
   
   arma_debug_assert_same_size(t, x, "insert into submatrix");
   
+  const u32 t_n_cols = t.n_cols;
+  const u32 t_n_rows = t.n_rows;
   
-  for(u32 col = 0; col<t.n_cols; ++col)
+  for(u32 col = 0; col<t_n_cols; ++col)
     {
-          eT* t_coldata = t.colptr(col);
-    const eT* x_coldata = x.colptr(col);
-    
-    for(u32 row = 0; row<t.n_rows; ++row)
-      {
-      t_coldata[row] = x_coldata[row];
-      }
-    
+    syslib::copy_elem( t.colptr(col), x.colptr(col), t_n_rows );
     }
-    
+  
   if(overlap)
     {
     delete tmp_subview;
@@ -774,13 +810,7 @@ subview<eT>::extract(Mat<eT>& actual_out, const subview<eT>& in)
     
     for(u32 col = 0; col<n_cols; ++col)   
       {
-            eT* out_coldata = out.colptr(col);
-      const eT*  in_coldata =  in.colptr(col);
-      
-      for(u32 row = 0; row<n_rows; ++row)
-        {
-        out_coldata[row] = in_coldata[row];
-        }
+      syslib::copy_elem( out.colptr(col), in.colptr(col), n_rows );
       }
     }
   

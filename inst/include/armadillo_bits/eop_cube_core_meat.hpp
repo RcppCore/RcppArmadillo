@@ -68,22 +68,22 @@ eop_cube_core<eop_cube_type>::process(const eOpCube<T1, eop_cube_type>& x, const
   else if(is_same_type<eop_cube_type, eop_cube_scalar_div_pre   >::value == true) { return x.aux / val;             }
   else if(is_same_type<eop_cube_type, eop_cube_scalar_div_post  >::value == true) { return val / x.aux;             }
   else if(is_same_type<eop_cube_type, eop_cube_square           >::value == true) { return val*val;                 }
-  else if(is_same_type<eop_cube_type, eop_cube_sqrt             >::value == true) { return std::sqrt(val);          }
-  else if(is_same_type<eop_cube_type, eop_cube_log10            >::value == true) { return std::log10(val);         }
-  else if(is_same_type<eop_cube_type, eop_cube_log              >::value == true) { return std::log(val);           }
-  else if(is_same_type<eop_cube_type, eop_cube_trunc_log        >::value == true) { return eop_aux::trunc_log(val); }
-  else if(is_same_type<eop_cube_type, eop_cube_exp              >::value == true) { return std::exp(val);           }
-  else if(is_same_type<eop_cube_type, eop_cube_trunc_exp        >::value == true) { return eop_aux::trunc_exp(val); }
-  else if(is_same_type<eop_cube_type, eop_cube_cos              >::value == true) { return std::cos(val);           }
-  else if(is_same_type<eop_cube_type, eop_cube_cosh             >::value == true) { return std::cosh(val);          }
+  else if(is_same_type<eop_cube_type, eop_cube_sqrt             >::value == true) { return eop_aux::sqrt(val);      }
+  else if(is_same_type<eop_cube_type, eop_cube_log10            >::value == true) { return eop_aux::log10(val);     }
+  else if(is_same_type<eop_cube_type, eop_cube_log              >::value == true) { return eop_aux::log(val);       }
+  else if(is_same_type<eop_cube_type, eop_cube_trunc_log        >::value == true) { return    arma::trunc_log(val); }
+  else if(is_same_type<eop_cube_type, eop_cube_exp              >::value == true) { return eop_aux::exp(val);       }
+  else if(is_same_type<eop_cube_type, eop_cube_trunc_exp        >::value == true) { return    arma::trunc_exp(val); }
+  else if(is_same_type<eop_cube_type, eop_cube_cos              >::value == true) { return eop_aux::cos(val);       }
+  else if(is_same_type<eop_cube_type, eop_cube_cosh             >::value == true) { return eop_aux::cosh(val);      }
   else if(is_same_type<eop_cube_type, eop_cube_acos             >::value == true) { return eop_aux::acos(val);      }
   else if(is_same_type<eop_cube_type, eop_cube_acosh            >::value == true) { return eop_aux::acosh(val);     }
-  else if(is_same_type<eop_cube_type, eop_cube_sin              >::value == true) { return std::sin(val);           }
-  else if(is_same_type<eop_cube_type, eop_cube_sinh             >::value == true) { return std::sinh(val);          }
+  else if(is_same_type<eop_cube_type, eop_cube_sin              >::value == true) { return eop_aux::sin(val);       }
+  else if(is_same_type<eop_cube_type, eop_cube_sinh             >::value == true) { return eop_aux::sinh(val);      }
   else if(is_same_type<eop_cube_type, eop_cube_asin             >::value == true) { return eop_aux::asin(val);      }
   else if(is_same_type<eop_cube_type, eop_cube_asinh            >::value == true) { return eop_aux::asinh(val);     }
-  else if(is_same_type<eop_cube_type, eop_cube_tan              >::value == true) { return std::tan(val);           }
-  else if(is_same_type<eop_cube_type, eop_cube_tanh             >::value == true) { return std::tanh(val);          }
+  else if(is_same_type<eop_cube_type, eop_cube_tan              >::value == true) { return eop_aux::tan(val);       }
+  else if(is_same_type<eop_cube_type, eop_cube_tanh             >::value == true) { return eop_aux::tanh(val);      }
   else if(is_same_type<eop_cube_type, eop_cube_atan             >::value == true) { return eop_aux::atan(val);      }
   else if(is_same_type<eop_cube_type, eop_cube_atanh            >::value == true) { return eop_aux::atanh(val);     }
   else if(is_same_type<eop_cube_type, eop_cube_eps              >::value == true) { return eop_aux::direct_eps(val);}
