@@ -1723,33 +1723,39 @@ Cube<eT>::reset()
 //! save the cube to a file
 template<typename eT>
 inline
-void
-Cube<eT>::save(const std::string name, const file_type type) const
+bool
+Cube<eT>::save(const std::string name, const file_type type, const bool print_status) const
   {
   arma_extra_debug_sigprint();
+  
+  bool save_okay;
   
   switch(type)
     {
     case raw_ascii:
-      diskio::save_raw_ascii(*this, name);
+      save_okay = diskio::save_raw_ascii(*this, name);
       break;
     
     case arma_ascii:
-      diskio::save_arma_ascii(*this, name);
+      save_okay = diskio::save_arma_ascii(*this, name);
       break;
     
     case arma_binary:
-      diskio::save_arma_binary(*this, name);
+      save_okay = diskio::save_arma_binary(*this, name);
       break;
       
     case ppm_binary:
-      diskio::save_ppm_binary(*this, name);
+      save_okay = diskio::save_ppm_binary(*this, name);
       break;
 
     default:
-      arma_stop("Cube::save(): unsupported file type");
+      arma_warn(print_status, "Cube::save(): unsupported file type");
+      save_okay = false;
     }
   
+  arma_warn( (print_status && (save_okay == false)), "Cube::save(): couldn't write to ", name);
+  
+  return save_okay;
   }
 
 
@@ -1757,33 +1763,39 @@ Cube<eT>::save(const std::string name, const file_type type) const
 //! save the cube to a stream
 template<typename eT>
 inline
-void
-Cube<eT>::save(std::ostream& os, const file_type type) const
+bool
+Cube<eT>::save(std::ostream& os, const file_type type, const bool print_status) const
   {
   arma_extra_debug_sigprint();
+  
+  bool save_okay;
   
   switch(type)
     {
     case raw_ascii:
-      diskio::save_raw_ascii(*this, "[ostream]", os);
+      save_okay = diskio::save_raw_ascii(*this, os);
       break;
     
     case arma_ascii:
-      diskio::save_arma_ascii(*this, "[ostream]", os);
+      save_okay = diskio::save_arma_ascii(*this, os);
       break;
     
     case arma_binary:
-      diskio::save_arma_binary(*this, "[ostream]", os);
+      save_okay = diskio::save_arma_binary(*this, os);
       break;
       
     case ppm_binary:
-      diskio::save_ppm_binary(*this, "[ostream]", os);
+      save_okay = diskio::save_ppm_binary(*this, os);
       break;
 
     default:
-      arma_stop("Cube::save(): unsupported file type");
+      arma_warn(print_status, "Cube::save(): unsupported file type");
+      save_okay = false;
     }
   
+  arma_warn( (print_status && (save_okay == false)), "Cube::save(): couldn't write to given stream");
+  
+  return save_okay;
   }
 
 
@@ -1791,37 +1803,59 @@ Cube<eT>::save(std::ostream& os, const file_type type) const
 //! load a cube from a file
 template<typename eT>
 inline
-void
-Cube<eT>::load(const std::string name, const file_type type)
+bool
+Cube<eT>::load(const std::string name, const file_type type, const bool print_status)
   {
   arma_extra_debug_sigprint();
+  
+  bool load_okay;
+  std::string err_msg;
   
   switch(type)
     {
     case auto_detect:
-      diskio::load_auto_detect(*this, name);
+      load_okay = diskio::load_auto_detect(*this, name, err_msg);
       break;
     
     case raw_ascii:
-      diskio::load_raw_ascii(*this, name);
+      load_okay = diskio::load_raw_ascii(*this, name, err_msg);
       break;
     
     case arma_ascii:
-      diskio::load_arma_ascii(*this, name);
+      load_okay = diskio::load_arma_ascii(*this, name, err_msg);
       break;
     
     case arma_binary:
-      diskio::load_arma_binary(*this, name);
+      load_okay = diskio::load_arma_binary(*this, name, err_msg);
       break;
       
     case ppm_binary:
-      diskio::load_ppm_binary(*this, name);
+      load_okay = diskio::load_ppm_binary(*this, name, err_msg);
       break;
 
     default:
-      arma_stop("Cube::load(): unsupported file type");
+      arma_warn(print_status, "Cube::load(): unsupported file type");
+      load_okay = false;
     }
   
+  if( (print_status == true) && (load_okay == false) )
+    {
+    if(err_msg.length() > 0)
+      {
+      arma_print("Cube::load(): ", err_msg, name);
+      }
+    else
+      {
+      arma_print("Cube::load(): couldn't read ", name);
+      }
+    }
+  
+  if(load_okay == false)
+    {
+    (*this).reset();
+    }
+    
+  return load_okay;
   }
 
 
@@ -1829,37 +1863,112 @@ Cube<eT>::load(const std::string name, const file_type type)
 //! load a cube from a stream
 template<typename eT>
 inline
-void
-Cube<eT>::load(std::istream& is, const file_type type)
+bool
+Cube<eT>::load(std::istream& is, const file_type type, const bool print_status)
   {
   arma_extra_debug_sigprint();
+  
+  bool load_okay;
+  std::string err_msg;
   
   switch(type)
     {
     case auto_detect:
-      diskio::load_auto_detect(*this, "[istream]", is);
+      load_okay = diskio::load_auto_detect(*this, is, err_msg);
       break;
     
     case raw_ascii:
-      diskio::load_raw_ascii(*this, "[istream]", is);
+      load_okay = diskio::load_raw_ascii(*this, is, err_msg);
       break;
     
     case arma_ascii:
-      diskio::load_arma_ascii(*this, "[istream]", is);
+      load_okay = diskio::load_arma_ascii(*this, is, err_msg);
       break;
     
     case arma_binary:
-      diskio::load_arma_binary(*this, "[istream]", is);
+      load_okay = diskio::load_arma_binary(*this, is, err_msg);
       break;
       
     case ppm_binary:
-      diskio::load_ppm_binary(*this, "[istream]", is);
+      load_okay = diskio::load_ppm_binary(*this, is, err_msg);
       break;
     
     default:
-      arma_stop("Cube::load(): unsupported file type");
+      arma_warn(print_status, "Cube::load(): unsupported file type");
+      load_okay = false;
     }
   
+  
+  if( (print_status == true) && (load_okay == false) )
+    {
+    if(err_msg.length() > 0)
+      {
+      arma_print("Cube::load(): ", err_msg, "the given stream");
+      }
+    else
+      {
+      arma_print("Cube::load(): couldn't load from the given stream");
+      }
+    }
+  
+  if(load_okay == false)
+    {
+    (*this).reset();
+    }
+    
+  return load_okay;
+  }
+
+
+
+//! save the cube to a file, without printing any error messages
+template<typename eT>
+inline
+bool
+Cube<eT>::quiet_save(const std::string name, const file_type type) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).save(name, type, false);
+  }
+
+
+
+//! save the cube to a stream, without printing any error messages
+template<typename eT>
+inline
+bool
+Cube<eT>::quiet_save(std::ostream& os, const file_type type) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).save(os, type, false);
+  }
+
+
+
+//! load a cube from a file, without printing any error messages
+template<typename eT>
+inline
+bool
+Cube<eT>::quiet_load(const std::string name, const file_type type)
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).load(name, type, false);
+  }
+
+
+
+//! load a cube from a stream, without printing any error messages
+template<typename eT>
+inline
+bool
+Cube<eT>::quiet_load(std::istream& is, const file_type type)
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).load(is, type, false);
   }
 
 

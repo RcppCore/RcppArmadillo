@@ -14,34 +14,18 @@
 // (see http://www.opensource.org/licenses for more info)
 
 
-//! \addtogroup fn_chol
+
+//! \addtogroup glue_toeplitz
 //! @{
 
 
 
-template<typename T1>
-inline
-const Op<T1, op_chol>
-chol(const Base<typename T1::elem_type,T1>& X, const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0)
+class glue_toeplitz
   {
-  arma_extra_debug_sigprint();
+  public:
   
-  return Op<T1, op_chol>(X.get_ref());
-  }
-
-
-
-template<typename T1>
-inline
-bool
-chol(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& X, const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0)
-  {
-  arma_extra_debug_sigprint();
-  
-  out = chol(X);
-  
-  return (out.n_elem == 0) ? false : true;
-  }
+  template<typename T1, typename T2> inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue_toeplitz>& in);
+  };
 
 
 

@@ -20,7 +20,7 @@
 
 
 template<typename eT>
-struct eop_aux_rand
+struct eop_aux_randu
   {
   arma_inline
   operator eT ()
@@ -32,12 +32,12 @@ struct eop_aux_rand
 
   
 template<typename T>
-struct eop_aux_rand< std::complex<T> >
+struct eop_aux_randu< std::complex<T> >
   {
   arma_inline
   operator std::complex<T> ()
     {
-    return std::complex<T>( T(eop_aux_rand<T>()), T(eop_aux_rand<T>()) );
+    return std::complex<T>( T(eop_aux_randu<T>()), T(eop_aux_randu<T>()) );
     }
   };
 
@@ -123,37 +123,25 @@ class eop_aux
   {
   public:
   
-  #if defined(ARMA_USE_BOOST)
-    #define arma_boost_wrap(trig_fn, val) ( (boost::math::trig_fn)(val) )
-  #else
-    #define arma_boost_wrap(trig_fn, val) ( arma_stop( #trig_fn "(): need Boost libraries" ), val )
-  #endif
+  template<typename eT> arma_inline static typename arma_integral_only<eT>::result    acos  (const eT& x) { return std::acos(double(x)); }
+  template<typename eT> arma_inline static typename arma_integral_only<eT>::result    asin  (const eT& x) { return std::asin(double(x)); }
+  template<typename eT> arma_inline static typename arma_integral_only<eT>::result    atan  (const eT& x) { return std::atan(double(x)); }
   
-  template<typename eT> arma_inline static typename arma_integral_only<eT>::result acos (const eT& x) { return std::acos(double(x)); }
-  template<typename eT> arma_inline static typename arma_integral_only<eT>::result asin (const eT& x) { return std::asin(double(x)); }
-  template<typename eT> arma_inline static typename arma_integral_only<eT>::result atan (const eT& x) { return std::atan(double(x)); }
+  template<typename eT> arma_inline static typename arma_float_only<eT>::result       acos  (const eT& x) { return std::acos(x); }
+  template<typename eT> arma_inline static typename arma_float_only<eT>::result       asin  (const eT& x) { return std::asin(x); }
+  template<typename eT> arma_inline static typename arma_float_only<eT>::result       atan  (const eT& x) { return std::atan(x); }
   
-  template<typename eT> arma_inline static typename arma_float_only<eT>::result acos (const eT& x) { return std::acos(x); }
-  template<typename eT> arma_inline static typename arma_float_only<eT>::result asin (const eT& x) { return std::asin(x); }
-  template<typename eT> arma_inline static typename arma_float_only<eT>::result atan (const eT& x) { return std::atan(x); }
+  template<typename eT> arma_inline static typename arma_cx_only<eT>::result          acos  (const eT& x) { return arma_acos(x); }
+  template<typename eT> arma_inline static typename arma_cx_only<eT>::result          asin  (const eT& x) { return arma_asin(x); }
+  template<typename eT> arma_inline static typename arma_cx_only<eT>::result          atan  (const eT& x) { return arma_atan(x); }
   
-  template<typename  T> arma_inline static std::complex<T> acos (const std::complex<T>& x) { return arma_boost_wrap(acos,  x); }
-  template<typename  T> arma_inline static std::complex<T> asin (const std::complex<T>& x) { return arma_boost_wrap(asin,  x); }
-  template<typename  T> arma_inline static std::complex<T> atan (const std::complex<T>& x) { return arma_boost_wrap(atan,  x); }
-
-  template<typename eT> arma_inline static typename arma_integral_only<eT>::result acosh (const eT& x) { return arma_boost_wrap(acosh, double(x)); }
-  template<typename eT> arma_inline static typename arma_integral_only<eT>::result asinh (const eT& x) { return arma_boost_wrap(asinh, double(x)); }
-  template<typename eT> arma_inline static typename arma_integral_only<eT>::result atanh (const eT& x) { return arma_boost_wrap(atanh, double(x)); }
-
-  template<typename eT> arma_inline static typename arma_float_only<eT>::result acosh (const eT& x) { return arma_boost_wrap(acosh, x); }
-  template<typename eT> arma_inline static typename arma_float_only<eT>::result asinh (const eT& x) { return arma_boost_wrap(asinh, x); }
-  template<typename eT> arma_inline static typename arma_float_only<eT>::result atanh (const eT& x) { return arma_boost_wrap(atanh, x); }
+  template<typename eT> arma_inline static typename arma_integral_only<eT>::result    acosh (const eT& x) { return arma_acosh(double(x)); }
+  template<typename eT> arma_inline static typename arma_integral_only<eT>::result    asinh (const eT& x) { return arma_asinh(double(x)); }
+  template<typename eT> arma_inline static typename arma_integral_only<eT>::result    atanh (const eT& x) { return arma_atanh(double(x)); }
   
-  template<typename  T> arma_inline static std::complex<T> acosh (const std::complex<T>& x) { return arma_boost_wrap(acosh, x); }
-  template<typename  T> arma_inline static std::complex<T> asinh (const std::complex<T>& x) { return arma_boost_wrap(asinh, x); }
-  template<typename  T> arma_inline static std::complex<T> atanh (const std::complex<T>& x) { return arma_boost_wrap(atanh, x); }
-  
-  #undef arma_boost_wrap
+  template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result acosh (const eT& x) { return arma_acosh(x); }
+  template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result asinh (const eT& x) { return arma_asinh(x); }
+  template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result atanh (const eT& x) { return arma_atanh(x); }
   
   template<typename eT> arma_inline static eT              conj(const eT&              x) { return x;            }
   template<typename  T> arma_inline static std::complex<T> conj(const std::complex<T>& x) { return std::conj(x); }
@@ -180,133 +168,48 @@ class eop_aux
   template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result sinh  (const eT& x) { return std::sinh (x); }
   template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result tanh  (const eT& x) { return std::tanh (x); }
   
-  template<typename T1, typename T2> arma_inline static
-  T1    pow(const T1    base, const T2 exponent) { return std::pow(base, exponent); }
-  
-  template<typename T2> arma_inline static
-  char  pow(const char  base, const T2 exponent) { typedef char  out_t; return out_t( std::pow(double(base), double(exponent) ) ); }
-  
-  template<typename T2> arma_inline static
-  short pow(const short base, const T2 exponent) { typedef short out_t; return out_t( std::pow(double(base), double(exponent) ) ); }
-  
-  template<typename T2> arma_inline static
-  int   pow(const int   base, const T2 exponent) { typedef int   out_t; return out_t( std::pow(double(base), double(exponent) ) ); }
-  
-  template<typename T2> arma_inline static
-  long  pow(const long  base, const T2 exponent) { typedef long  out_t; return out_t( std::pow(double(base), double(exponent) ) ); }
   
   
-  template<typename T2> arma_inline static
-  unsigned char  pow(const unsigned char  base, const T2 exponent) { typedef unsigned char  out_t; return out_t( std::pow(double(base), double(exponent) ) ); }
-  
-  template<typename T2> arma_inline static
-  unsigned short pow(const unsigned short base, const T2 exponent) { typedef unsigned short out_t; return out_t( std::pow(double(base), double(exponent) ) ); }
-  
-  template<typename T2> arma_inline static
-  unsigned int   pow(const unsigned int   base, const T2 exponent) { typedef unsigned int   out_t; return out_t( std::pow(double(base), double(exponent) ) ); }
-  
-  template<typename T2> arma_inline static
-  unsigned long  pow(const unsigned long  base, const T2 exponent) { typedef unsigned long  out_t; return out_t( std::pow(double(base), double(exponent) ) ); }
-
-  
-
-  template<typename T1> arma_inline static
-  T1 pow_int(const    T1    base, const int exponent) { return std::pow(base, exponent); }
-  
-  arma_inline static
-  char  pow_int(const char  base, const int exponent) { typedef char  out_t; return out_t( std::pow(double(base), exponent) ); }
-  
-  arma_inline static
-  short pow_int(const short base, const int exponent) { typedef short out_t; return out_t( std::pow(double(base), exponent) ); }
-  
-  arma_inline static
-  int   pow_int(const int   base, const int exponent) { typedef int   out_t; return out_t( std::pow(double(base), exponent) ); }
-  
-  arma_inline static
-  long  pow_int(const long  base, const int exponent) { typedef long  out_t; return out_t( std::pow(double(base), exponent) ); }
-  
-  
-  arma_inline static
-  unsigned char  pow_int(const unsigned char  base, const int exponent) { typedef unsigned char  out_t; return out_t( std::pow(double(base), exponent) ); }
-
-  arma_inline static
-  unsigned short pow_int(const unsigned short base, const int exponent) { typedef unsigned short out_t; return out_t( std::pow(double(base), exponent) ); }
-  
-  arma_inline static
-  unsigned int   pow_int(const unsigned int   base, const int exponent) { typedef unsigned int   out_t; return out_t( std::pow(double(base), exponent) ); }
-  
-  arma_inline static
-  unsigned long  pow_int(const unsigned long  base, const int exponent) { typedef unsigned long  out_t; return out_t( std::pow(double(base), exponent) ); }
-  
-  
-  
-  
-  template<typename eT>
-  inline
+  template<typename T1, typename T2>
+  arma_inline
   static
-  eT
-  trunc_exp(const eT x)
+  typename arma_float_or_cx_only<T1>::result
+  pow(const T1 base, const T2 exponent)
     {
-    if(std::numeric_limits<eT>::is_iec559 && (x >= Math<eT>::log_max() ))
-      {
-      return std::numeric_limits<eT>::max();
-      }
-    else
-      {
-      return std::exp(x);
-      }
+    return std::pow(base, exponent);
     }
   
   
   
-  template<typename T>
-  inline
+  template<typename T1, typename T2>
+  arma_inline
   static
-  std::complex<T>
-  trunc_exp(const std::complex<T>& x)
+  typename arma_integral_only<T1>::result
+  pow(const T1 base, const T2 exponent)
     {
-    return std::exp(x);
+    return T1( std::pow( double(base), double(exponent) ) );
     }
   
   
   
-  template<typename eT>
-  inline 
+  template<typename T1>
+  arma_inline
   static
-  eT
-  trunc_log(const eT x)
-    {
-    if(std::numeric_limits<eT>::is_iec559)
-      {
-      if(x == std::numeric_limits<eT>::infinity())
-        {
-        return Math<eT>::log_max();
-        }
-      else
-      if(x <= eT(0))
-        {
-        return Math<eT>::log_min();
-        }
-      else
-        {
-        return std::log(x);
-        }
-      }
-    else
-      {
-      return std::log(x);
-      }
+  typename arma_float_or_cx_only<T1>::result
+  pow_int(const T1 base, const int exponent)
+    { 
+    return std::pow(base, exponent);
     }
   
   
   
-  template<typename T>
-  inline 
+  template<typename T1>
+  arma_inline
   static
-  std::complex<T>
-  trunc_log(const std::complex<T>& x)
-    {
-    return std::log(x);
+  typename arma_integral_only<T1>::result
+  pow_int(const T1 base, const int exponent)
+    { 
+    return T1( std::pow( double(base), exponent) );
     }
   
   
@@ -384,11 +287,11 @@ class eop_aux
   eT
   generate()
     {
-         if(is_same_type<eop_type, eop_rand          >::value == true) { return eT(eop_aux_rand<eT>());  }
+         if(is_same_type<eop_type, eop_randu         >::value == true) { return eT(eop_aux_randu<eT>()); }
     else if(is_same_type<eop_type, eop_randn         >::value == true) { return eT(eop_aux_randn<eT>()); }
     else if(is_same_type<eop_type, eop_zeros         >::value == true) { return eT(0);                   }
     else if(is_same_type<eop_type, eop_ones_full     >::value == true) { return eT(1);                   }
-    else if(is_same_type<eop_type, eop_cube_rand     >::value == true) { return eT(eop_aux_rand<eT>());  }
+    else if(is_same_type<eop_type, eop_cube_randu    >::value == true) { return eT(eop_aux_randu<eT>()); }
     else if(is_same_type<eop_type, eop_cube_randn    >::value == true) { return eT(eop_aux_randn<eT>()); }
     else if(is_same_type<eop_type, eop_cube_zeros    >::value == true) { return eT(0);                   }
     else if(is_same_type<eop_type, eop_cube_ones_full>::value == true) { return eT(1);                   }

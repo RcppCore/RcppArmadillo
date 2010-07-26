@@ -26,7 +26,7 @@ class eop_core
   
   arma_inline static const char* error_msg() { return ""; }
   
-  arma_inline static const bool size_ok(const u32 n_rows, const u32 n_cols) { return true; }
+  arma_inline static       bool size_ok(const u32 n_rows, const u32 n_cols) { return true; }
 
   
   template<typename T1> arma_hot arma_inline static typename T1::elem_type get_elem(const eOp<T1, eop_type>& x, const u32 i);
@@ -86,18 +86,18 @@ class eop_ones_diag : public eop_core<eop_ones_diag>
   
   arma_inline static const char* error_msg() { return "eye(): given size is not square"; }
   
-  arma_inline static const bool size_ok(const u32 n_rows, const u32 n_cols) { return (n_rows == n_cols); }
+  arma_inline static bool size_ok(const u32 n_rows, const u32 n_cols) { return (n_rows == n_cols); }
   };
 
 
 class eop_ones_full : public eop_core<eop_ones_full>{};
-class eop_rand      : public eop_core<eop_rand>     {};
+class eop_randu     : public eop_core<eop_randu>    {};
 class eop_randn     : public eop_core<eop_randn>    {};
 class eop_zeros     : public eop_core<eop_zeros>    {};
 
 template<typename T1> struct is_generator                { static const bool value = false; };
 template<>            struct is_generator<eop_ones_full> { static const bool value = true;  };
-template<>            struct is_generator<eop_rand>      { static const bool value = true;  };
+template<>            struct is_generator<eop_randu>     { static const bool value = true;  };
 template<>            struct is_generator<eop_randn>     { static const bool value = true;  };
 template<>            struct is_generator<eop_zeros>     { static const bool value = true;  };
 

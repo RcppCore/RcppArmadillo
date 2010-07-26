@@ -35,7 +35,8 @@ princomp
          Mat<typename T1::elem_type>&    score_out,
          Col<typename T1::pod_type>&     latent_out,
          Col<typename T1::elem_type>&    tsquared_out,
-  const Base<typename T1::elem_type,T1>& X
+  const Base<typename T1::elem_type,T1>& X,
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
   )
   {
   arma_extra_debug_sigprint();
@@ -63,7 +64,8 @@ princomp
          Mat<typename T1::elem_type>&    coeff_out,
          Mat<typename T1::elem_type>&    score_out,
          Col<typename T1::pod_type>&     latent_out,
-  const Base<typename T1::elem_type,T1>& X
+  const Base<typename T1::elem_type,T1>& X,
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
   )
   {
   arma_extra_debug_sigprint();
@@ -89,7 +91,8 @@ princomp
   (
          Mat<typename T1::elem_type>&    coeff_out,
          Mat<typename T1::elem_type>&    score_out,
-  const Base<typename T1::elem_type,T1>& X
+  const Base<typename T1::elem_type,T1>& X,
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
   )
   {
   arma_extra_debug_sigprint();
@@ -110,7 +113,11 @@ princomp
 template<typename T1>
 inline
 const Op<T1, op_princomp>
-princomp(const Base<typename T1::elem_type,T1>& X)
+princomp
+  (
+  const Base<typename T1::elem_type,T1>& X,
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  )
   {
   arma_extra_debug_sigprint();
 

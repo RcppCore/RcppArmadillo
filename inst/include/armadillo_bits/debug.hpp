@@ -25,6 +25,7 @@
 template<typename T1>
 inline
 void
+arma_cold
 arma_stop(const T1& x)
   {
   std::cerr.flush();
@@ -46,6 +47,7 @@ arma_stop(const T1& x)
 
 inline
 void
+arma_cold
 arma_print()
   {
   std::cout << std::endl;
@@ -55,6 +57,7 @@ arma_print()
 template<typename T1>
 inline
 void
+arma_cold
 arma_print(const T1& x)
   {
   std::cout << x << std::endl;
@@ -65,6 +68,7 @@ arma_print(const T1& x)
 template<typename T1, typename T2>
 inline
 void
+arma_cold
 arma_print(const T1& x, const T2& y)
   {
   std::cout << x << y << std::endl;
@@ -72,23 +76,17 @@ arma_print(const T1& x, const T2& y)
 
 
 
-#ifdef ARMA_USE_BOOST_FORMAT
-  template<typename T1>
-  inline
-  void
-  arma_print(const arma_boost::basic_format<T1>& x)
-    {
-    std::cout << x << std::endl;
-    }
-#else
-  template<typename T1, typename T2>
-  inline
-  void
-  arma_print(const arma_boost::basic_format<T1,T2>& x)
-    {
-    std::cout << x << std::endl;
-    }
-#endif
+template<typename T1, typename T2, typename T3>
+inline
+void
+arma_cold
+arma_print(const T1& x, const T2& y, const T3& z)
+  {
+  std::cout << x << y << z << std::endl;
+  }
+
+
+
 
 
 
@@ -139,23 +137,6 @@ arma_bktprint(const T1& x, const T2& y)
 
 
 
-#ifdef ARMA_USE_BOOST_FORMAT
-  template<typename T1>
-  inline
-  void
-  arma_bktprint(const arma_boost::basic_format<T1>& x)
-    {
-    std::cout << " [" << x << ']' << std::endl;
-    }
-#else
-  template<typename T1, typename T2>
-  inline
-  void
-  arma_bktprint(const arma_boost::basic_format<T1,T2>& x)
-    {
-    std::cout << " [" << x << ']' << std::endl;
-    }
-#endif
 
 
 
@@ -202,27 +183,6 @@ arma_warn(const bool state, const T1& x, const T2& y)
   }
 
 
-#ifdef ARMA_USE_BOOST_FORMAT
-  template<typename T1>
-  inline
-  void
-  arma_hot
-  arma_warn(const bool state, const arma_boost::basic_format<T1>& x)
-    {
-    if(state==true)
-      arma_print(x);
-    }
-#else
-  template<typename T1, typename T2>
-  inline
-  void
-  arma_hot
-  arma_warn(const bool state, const arma_boost::basic_format<T1,T2>& x)
-    {
-    if(state==true)
-      arma_print(x);
-    }
-#endif
 
 
 
@@ -238,7 +198,7 @@ arma_check(const bool state, const T1& x)
   {
   if(state==true)
     {
-    arma_stop(x);
+    arma_stop(arma_boost::str_wrapper(x));
     }
   }
 
@@ -256,31 +216,7 @@ arma_check(const bool state, const T1& x, const T2& y)
   }
 
 
-#ifdef ARMA_USE_BOOST_FORMAT
-  template<typename T1>
-  inline
-  void
-  arma_hot
-  arma_check(const bool state, const arma_boost::basic_format<T1>& x)
-    {
-    if(state==true)
-      {
-      arma_stop(str(x));
-      }
-    }
-#else
-  template<typename T1, typename T2>
-  inline
-  void
-  arma_hot
-  arma_check(const bool state, const arma_boost::basic_format<T1,T2>& x)
-    {
-    if(state==true)
-      {
-      arma_stop(str(x));
-      }
-    }
-#endif
+
 
 
 
@@ -291,6 +227,7 @@ arma_check(const bool state, const T1& x, const T2& y)
 
 inline
 std::string
+arma_cold
 arma_incompat_size_string(const u32 A_n_rows, const u32 A_n_cols, const u32 B_n_rows, const u32 B_n_cols, const char* x)
   {
   std::stringstream tmp;
@@ -449,6 +386,7 @@ arma_assert_same_size(const subview<eT1>& A, const Proxy<eT2>& B, const char* x)
 
 
 inline
+arma_cold
 std::string
 arma_incompat_size_string(const u32 A_n_rows, const u32 A_n_cols, const u32 A_n_slices, const u32 B_n_rows, const u32 B_n_cols, const u32 B_n_slices, const char* x)
   {
@@ -775,6 +713,7 @@ arma_assert_mul_size(const subview<eT1>& A, const subview<eT2>& B, const char* x
       public:
       
       inline
+      arma_cold
       arma_first_extra_debug_message()
         {
         std::cout << "@ ---" << '\n';

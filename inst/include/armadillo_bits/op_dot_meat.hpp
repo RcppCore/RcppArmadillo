@@ -19,20 +19,22 @@
 
 
 
-//! for two arrays
+
+//! for two arrays, generic version
 template<typename eT>
-inline
 arma_hot
 arma_pure
+inline
 eT
-op_dot::direct_dot(const u32 n_elem, const eT* const A, const eT* const B)
+op_dot::direct_dot_arma(const u32 n_elem, const eT* const A, const eT* const B)
   {
   arma_extra_debug_sigprint();
   
   eT val1 = eT(0);
   eT val2 = eT(0);
   
-  u32 i,j;
+  u32 i, j;
+  
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
     val1 += A[i] * B[i];
@@ -44,16 +46,91 @@ op_dot::direct_dot(const u32 n_elem, const eT* const A, const eT* const B)
     val1 += A[i] * B[i];
     }
   
-  return val1+val2;
+  return val1 + val2;
   }
+
+
+
+//! for two arrays, float and double version
+template<typename eT>
+arma_hot
+arma_pure
+inline
+typename arma_float_only<eT>::result
+op_dot::direct_dot(const u32 n_elem, const eT* const A, const eT* const B)
+  {
+  arma_extra_debug_sigprint();
+  
+  if( n_elem <= (128/sizeof(eT)) )
+    {
+    return op_dot::direct_dot_arma(n_elem, A, B);
+    }
+  else
+    {
+    #if defined(ARMA_USE_ATLAS)
+      {
+      return atlas::cblas_dot(n_elem, A, B);
+      }
+    #elif defined(ARMA_USE_BLAS)
+      {
+      const int n = n_elem;
+      return blas::dot_(&n, A, B);
+      }
+    #else
+      {
+      return op_dot::direct_dot_arma(n_elem, A, B);
+      }
+    #endif
+    }
+  }
+
+
+
+//! for two arrays, complex version
+template<typename eT>
+inline
+arma_hot
+arma_pure
+typename arma_cx_only<eT>::result
+op_dot::direct_dot(const u32 n_elem, const eT* const A, const eT* const B)
+  {
+  #if defined(ARMA_USE_ATLAS)
+    {
+    return atlas::cx_cblas_dot(n_elem, A, B);
+    }
+  #elif defined(ARMA_USE_BLAS)
+    {
+    // TODO: work out the mess with zdotu() and zdotu_sub() in BLAS
+    return op_dot::direct_dot_arma(n_elem, A, B);
+    }
+  #else
+    {
+    return op_dot::direct_dot_arma(n_elem, A, B);
+    }
+  #endif
+  }
+
+
+
+//! for two arrays, integral version
+template<typename eT>
+arma_hot
+arma_pure
+inline
+typename arma_integral_only<eT>::result
+op_dot::direct_dot(const u32 n_elem, const eT* const A, const eT* const B)
+  {
+  return op_dot::direct_dot_arma(n_elem, A, B);
+  }
+
 
 
 
 //! for three arrays
 template<typename eT>
-inline
 arma_hot
 arma_pure
+inline
 eT
 op_dot::direct_dot(const u32 n_elem, const eT* const A, const eT* const B, const eT* C)
   {
@@ -72,8 +149,8 @@ op_dot::direct_dot(const u32 n_elem, const eT* const A, const eT* const B, const
 
 
 template<typename T1, typename T2>
-arma_inline
 arma_hot
+arma_inline
 typename T1::elem_type
 op_dot::apply(const Base<typename T1::elem_type,T1>& X, const Base<typename T1::elem_type,T2>& Y)
   {
@@ -92,8 +169,8 @@ op_dot::apply(const Base<typename T1::elem_type,T1>& X, const Base<typename T1::
 
 
 template<typename T1, typename T2>
-arma_inline
 arma_hot
+arma_inline
 typename T1::elem_type
 op_dot::apply_unwrap(const Base<typename T1::elem_type,T1>& X, const Base<typename T1::elem_type,T2>& Y)
   {
@@ -115,8 +192,8 @@ op_dot::apply_unwrap(const Base<typename T1::elem_type,T1>& X, const Base<typena
 
 
 template<typename T1, typename T2>
-inline
 arma_hot
+inline
 typename T1::elem_type
 op_dot::apply_proxy(const Base<typename T1::elem_type,T1>& X, const Base<typename T1::elem_type,T2>& Y)
   {
@@ -147,8 +224,8 @@ op_dot::apply_proxy(const Base<typename T1::elem_type,T1>& X, const Base<typenam
 
 
 template<typename T1, typename T2>
-arma_inline
 arma_hot
+arma_inline
 typename T1::elem_type
 op_norm_dot::apply(const Base<typename T1::elem_type,T1>& X, const Base<typename T1::elem_type,T2>& Y)
   {
@@ -167,8 +244,8 @@ op_norm_dot::apply(const Base<typename T1::elem_type,T1>& X, const Base<typename
 
 
 template<typename T1, typename T2>
-inline
 arma_hot
+inline
 typename T1::elem_type
 op_norm_dot::apply_unwrap(const Base<typename T1::elem_type,T1>& X, const Base<typename T1::elem_type,T2>& Y)
   {
@@ -203,14 +280,14 @@ op_norm_dot::apply_unwrap(const Base<typename T1::elem_type,T1>& X, const Base<t
     acc3 += tmpA * tmpB;
     }
     
-  return acc3 / ( std::sqrt(acc1 * acc2) );   // TODO: this only makes sense for eT = float, double or complex
+  return acc3 / ( std::sqrt(acc1 * acc2) );
   }
 
 
 
 template<typename T1, typename T2>
-inline
 arma_hot
+inline
 typename T1::elem_type
 op_norm_dot::apply_proxy(const Base<typename T1::elem_type,T1>& X, const Base<typename T1::elem_type,T2>& Y)
   {
@@ -239,7 +316,7 @@ op_norm_dot::apply_proxy(const Base<typename T1::elem_type,T1>& X, const Base<ty
     acc3 += tmpA * tmpB;
     }
     
-  return acc3 / ( std::sqrt(acc1 * acc2) );   // TODO: this only makes sense for eT = float, double or complex
+  return acc3 / ( std::sqrt(acc1 * acc2) );
   }
 
 

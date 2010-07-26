@@ -36,9 +36,49 @@ running_stat_vec<eT>::running_stat_vec(const bool in_calc_cov)
 
 
 
+template<typename eT>
+running_stat_vec<eT>::running_stat_vec(const running_stat_vec<eT>& in_rsv)
+  : calc_cov    (in_rsv.calc_cov)
+  , counter     (in_rsv.counter)
+  , r_mean      (in_rsv.r_mean)
+  , r_var       (in_rsv.r_var)
+  , r_cov       (in_rsv.r_cov)
+  , min_val     (in_rsv.min_val)
+  , max_val     (in_rsv.max_val)
+  , min_val_norm(in_rsv.min_val_norm)
+  , max_val_norm(in_rsv.max_val_norm)
+  {
+  arma_extra_debug_sigprint_this(this);
+  }
+
+
+
+template<typename eT>
+const running_stat_vec<eT>&
+running_stat_vec<eT>::operator=(const running_stat_vec<eT>& in_rsv)
+  {
+  arma_extra_debug_sigprint();
+  
+  access::rw(calc_cov) = in_rsv.calc_cov;
+  
+  counter      = in_rsv.counter;
+  r_mean       = in_rsv.r_mean;
+  r_var        = in_rsv.r_var;
+  r_cov        = in_rsv.r_cov;
+  min_val      = in_rsv.min_val;
+  max_val      = in_rsv.max_val;
+  min_val_norm = in_rsv.min_val_norm;
+  max_val_norm = in_rsv.max_val_norm;
+  
+  return *this;
+  }
+
+
+
 //! update statistics to reflect new sample
 template<typename eT>
 template<typename T1>
+arma_hot
 inline
 void
 running_stat_vec<eT>::operator() (const Base<typename get_pod_type<eT>::result, T1>& X)
@@ -60,6 +100,7 @@ running_stat_vec<eT>::operator() (const Base<typename get_pod_type<eT>::result, 
 //! update statistics to reflect new sample (version for complex numbers)
 template<typename eT>
 template<typename T1>
+arma_hot
 inline
 void
 running_stat_vec<eT>::operator() (const Base<std::complex<typename get_pod_type<eT>::result>, T1>& X)
@@ -97,6 +138,12 @@ running_stat_vec<eT>::reset()
   
   min_val_norm.reset();
   max_val_norm.reset();
+  
+  r_var_dummy.reset();
+  r_cov_dummy.reset();
+  
+  tmp1.reset();
+  tmp2.reset();
   }
 
 
@@ -104,9 +151,8 @@ running_stat_vec<eT>::reset()
 //! mean or average value
 template<typename eT>
 inline
-Mat<eT>
-running_stat_vec<eT>::mean()
-  const
+const Mat<eT>&
+running_stat_vec<eT>::mean() const
   {
   arma_extra_debug_sigprint();
   
@@ -118,9 +164,8 @@ running_stat_vec<eT>::mean()
 //! variance
 template<typename eT>
 inline
-Mat<typename get_pod_type<eT>::result>
+const Mat<typename get_pod_type<eT>::result>&
 running_stat_vec<eT>::var(const u32 norm_type)
-  const
   {
   arma_extra_debug_sigprint();
   
@@ -135,12 +180,17 @@ running_stat_vec<eT>::var(const u32 norm_type)
     else
       {
       const T N_minus_1 = counter.value_minus_1();
-      return (N_minus_1/N) * r_var;
+      
+      r_var_dummy = (N_minus_1/N) * r_var;
+      
+      return r_var_dummy;
       }
     }
   else
     {
-    return zeros< Mat<typename get_pod_type<eT>::result> >(r_mean.n_rows, r_mean.n_cols);
+    r_var_dummy.zeros(r_mean.n_rows, r_mean.n_cols);
+    
+    return r_var_dummy;
     }
   
   }
@@ -151,12 +201,29 @@ running_stat_vec<eT>::var(const u32 norm_type)
 template<typename eT>
 inline
 Mat<typename get_pod_type<eT>::result>
-running_stat_vec<eT>::stddev(const u32 norm_type)
-  const
+running_stat_vec<eT>::stddev(const u32 norm_type) const
   {
   arma_extra_debug_sigprint();
   
-  return sqrt( (*this).var(norm_type) );
+  const T N = counter.value();
+  
+  if(N > T(1))
+    {
+    if(norm_type == 0)
+      {
+      return sqrt(r_var);
+      }
+    else
+      {
+      const T N_minus_1 = counter.value_minus_1();
+      
+      return sqrt( (N_minus_1/N) * r_var );
+      }
+    }
+  else
+    {
+    return Mat<T>();
+    }
   }
 
 
@@ -164,9 +231,8 @@ running_stat_vec<eT>::stddev(const u32 norm_type)
 //! covariance
 template<typename eT>
 inline
-Mat<eT>
+const Mat<eT>&
 running_stat_vec<eT>::cov(const u32 norm_type)
-  const
   {
   arma_extra_debug_sigprint();
   
@@ -183,17 +249,24 @@ running_stat_vec<eT>::cov(const u32 norm_type)
       else
         {
         const T N_minus_1 = counter.value_minus_1();
-        return (N_minus_1/N) * r_cov;
+        
+        r_cov_dummy = (N_minus_1/N) * r_cov;
+        
+        return r_cov_dummy;
         }
       }
     else
       {
-      return zeros< Mat<eT> >(r_mean.n_rows, r_mean.n_cols);
+      r_cov_dummy.zeros(r_mean.n_rows, r_mean.n_cols);
+      
+      return r_cov_dummy;
       }
     }
   else
     {
-    return Mat<eT>();
+    r_cov_dummy.reset();
+    
+    return r_cov_dummy;
     }
   
   }
@@ -203,9 +276,8 @@ running_stat_vec<eT>::cov(const u32 norm_type)
 //! vector with minimum values
 template<typename eT>
 inline
-Mat<eT>
-running_stat_vec<eT>::min()
-const
+const Mat<eT>&
+running_stat_vec<eT>::min() const
   {
   arma_extra_debug_sigprint();
 
@@ -217,9 +289,8 @@ const
 //! vector with maximum values
 template<typename eT>
 inline
-Mat<eT>
-running_stat_vec<eT>::max()
-const
+const Mat<eT>&
+running_stat_vec<eT>::max() const
   {
   arma_extra_debug_sigprint();
 
@@ -260,9 +331,10 @@ running_stat_vec_aux::update_stats(running_stat_vec<eT>& x, const Mat<eT>& sampl
     
     if(x.calc_cov == true)
       {
-      const Mat<eT> tmp1 = sample - x.r_mean;
+      Mat<eT>& tmp1 = x.tmp1;
+      Mat<eT>& tmp2 = x.tmp2;
       
-      Mat<eT> tmp2;
+      tmp1 = sample - x.r_mean;
       
       if(sample.n_cols == 1)
         {
@@ -384,9 +456,10 @@ running_stat_vec_aux::update_stats(running_stat_vec< std::complex<T> >& x, const
     
     if(x.calc_cov == true)
       {
-      const Mat<eT> tmp1 = sample - x.r_mean;
+      Mat<eT>& tmp1 = x.tmp1;
+      Mat<eT>& tmp2 = x.tmp2;
       
-      Mat<eT> tmp2;
+      tmp1 = sample - x.r_mean;
       
       if(sample.n_cols == 1)
         {

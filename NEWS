@@ -1,3 +1,13 @@
+0.2.4   under development
+
+    o   Upgraded to Armadillo 0.9.52 'Monkey Wrench'
+
+    o   src/fastLm.cpp: Switch from inv() to pinv() as inv() now tests for
+        singular matrices and warns and returns an empty matrix which stops
+        the example fastLm() implementation on the manual page -- and while
+        this is generally reasonably it makes sense here to continue which
+        the Moore-Penrose inverse allows us to do
+
 0.2.3   2010-06-14
 
     o   Better configuration to detect suncc (which does not have std::isfinite)

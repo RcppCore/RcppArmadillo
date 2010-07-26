@@ -33,7 +33,8 @@ princomp_cov
          Mat<typename T1::elem_type>&    coeff_out,
          Col<typename T1::pod_type>&     latent_out,
          Col<typename T1::pod_type>&     explained_out,
-  const Base<typename T1::elem_type,T1>& X
+  const Base<typename T1::elem_type,T1>& X,
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
   )
   {
   arma_extra_debug_sigprint();
@@ -59,7 +60,8 @@ princomp_cov
   (
          Mat<typename T1::elem_type>&    coeff_out,
          Col<typename T1::pod_type>&     latent_out,
-  const Base<typename T1::elem_type,T1>& X
+  const Base<typename T1::elem_type,T1>& X,
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
   )
   {
   arma_extra_debug_sigprint();
@@ -80,7 +82,11 @@ princomp_cov
 template<typename T1>
 inline
 const Op<T1, op_princomp_cov>
-princomp_cov(const Base<typename T1::elem_type,T1>& X)
+princomp_cov
+  (
+  const Base<typename T1::elem_type,T1>& X,
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  )
   {
   arma_extra_debug_sigprint();
 

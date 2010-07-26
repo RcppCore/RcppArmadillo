@@ -36,6 +36,20 @@ glue_join::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_join>& 
   
   const u32 join_type = X.aux_u32;
   
+  
+  if(A.n_elem == 0)
+    {
+    out = B;
+    return;
+    }
+  
+  if(B.n_elem == 0)
+    {
+    out = A;
+    return;
+    }
+  
+  
   if(join_type == 0)
     {
     arma_debug_check( (A.n_cols != B.n_cols), "join_cols(): number of columns must be the same" );

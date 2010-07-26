@@ -471,7 +471,7 @@ struct is_complex_float
   { static const bool value = false; };
 
 template<>
-struct is_complex< std::complex<float> >
+struct is_complex_float< std::complex<float> >
   { static const bool value = true; };
 
 

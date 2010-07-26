@@ -73,9 +73,9 @@ eop_core<eop_type>::process(const eOp<T1, eop_type>& x, const typename T1::elem_
   else if(is_same_type<eop_type, eop_sqrt             >::value == true) { return eop_aux::sqrt(val);       }
   else if(is_same_type<eop_type, eop_log10            >::value == true) { return eop_aux::log10(val);      }
   else if(is_same_type<eop_type, eop_log              >::value == true) { return eop_aux::log(val);        }
-  else if(is_same_type<eop_type, eop_trunc_log        >::value == true) { return eop_aux::trunc_log(val);  }
+  else if(is_same_type<eop_type, eop_trunc_log        >::value == true) { return    arma::trunc_log(val);  }
   else if(is_same_type<eop_type, eop_exp              >::value == true) { return eop_aux::exp(val);        }
-  else if(is_same_type<eop_type, eop_trunc_exp        >::value == true) { return eop_aux::trunc_exp(val);  }
+  else if(is_same_type<eop_type, eop_trunc_exp        >::value == true) { return    arma::trunc_exp(val);  }
   else if(is_same_type<eop_type, eop_cos              >::value == true) { return eop_aux::cos(val);        }
   else if(is_same_type<eop_type, eop_sin              >::value == true) { return eop_aux::sin(val);        }
   else if(is_same_type<eop_type, eop_tan              >::value == true) { return eop_aux::tan(val);        }

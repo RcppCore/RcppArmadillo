@@ -836,11 +836,11 @@ Row<eT>::ones(const u32 in_n_rows, const u32 in_n_cols)
 template<typename eT>
 inline
 void
-Row<eT>::load(const std::string name, const file_type type)
+Row<eT>::load(const std::string name, const file_type type, const bool print_status)
   {
   arma_extra_debug_sigprint();
   
-  Mat<eT>::load(name,type);
+  Mat<eT>::load(name, type, print_status);
   
   arma_debug_check( (Mat<eT>::n_rows > 1), "Row(): incompatible dimensions" );
   }
@@ -850,11 +850,39 @@ Row<eT>::load(const std::string name, const file_type type)
 template<typename eT>
 inline
 void
-Row<eT>::load(std::istream& is, const file_type type)
+Row<eT>::load(std::istream& is, const file_type type, const bool print_status)
   {
   arma_extra_debug_sigprint();
   
-  Mat<eT>::load(is, type);
+  Mat<eT>::load(is, type, print_status);
+  
+  arma_debug_check( (Mat<eT>::n_rows > 1), "Row(): incompatible dimensions" );
+  }
+
+
+
+template<typename eT>
+inline
+void
+Row<eT>::quiet_load(const std::string name, const file_type type)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>::quiet_load(name, type);
+  
+  arma_debug_check( (Mat<eT>::n_rows > 1), "Row(): incompatible dimensions" );
+  }
+
+
+
+template<typename eT>
+inline
+void
+Row<eT>::quiet_load(std::istream& is, const file_type type)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>::quiet_load(is, type);
   
   arma_debug_check( (Mat<eT>::n_rows > 1), "Row(): incompatible dimensions" );
   }

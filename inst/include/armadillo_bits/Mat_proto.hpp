@@ -198,16 +198,16 @@ class Mat : public Base< eT, Mat<eT> >
   
   inline void print(const std::string extra_text = "") const;
   inline void print(std::ostream& user_stream, const std::string extra_text = "") const;
-
+  
   inline void print_trans(const std::string extra_text = "") const;
   inline void print_trans(std::ostream& user_stream, const std::string extra_text = "") const;
-
+  
   inline void raw_print(const std::string extra_text = "") const;
   inline void raw_print(std::ostream& user_stream, const std::string extra_text = "") const;
-
+  
   inline void raw_print_trans(const std::string extra_text = "") const;
   inline void raw_print_trans(std::ostream& user_stream, const std::string extra_text = "") const;
-
+  
   template<typename eT2>
   inline void copy_size(const Mat<eT2>& m);
   
@@ -223,11 +223,18 @@ class Mat : public Base< eT, Mat<eT> >
   
   inline void reset();
   
-  inline void save(const std::string   name, const file_type type = arma_binary) const;
-  inline void save(      std::ostream& os,   const file_type type = arma_binary) const;
   
-  inline void load(const std::string   name, const file_type type = auto_detect);
-  inline void load(      std::istream& is,   const file_type type = auto_detect);
+  inline bool save(const std::string   name, const file_type type = arma_binary, const bool print_status = true) const;
+  inline bool save(      std::ostream& os,   const file_type type = arma_binary, const bool print_status = true) const;
+  
+  inline bool load(const std::string   name, const file_type type = auto_detect, const bool print_status = true);
+  inline bool load(      std::istream& is,   const file_type type = auto_detect, const bool print_status = true);
+  
+  inline bool quiet_save(const std::string   name, const file_type type = arma_binary) const;
+  inline bool quiet_save(      std::ostream& os,   const file_type type = arma_binary) const;
+  
+  inline bool quiet_load(const std::string   name, const file_type type = auto_detect);
+  inline bool quiet_load(      std::istream& is,   const file_type type = auto_detect);
   
   
   // iterators

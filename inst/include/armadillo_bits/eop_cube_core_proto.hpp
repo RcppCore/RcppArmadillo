@@ -78,13 +78,13 @@ class eop_cube_pow_int           : public eop_cube_core<eop_cube_pow_int>       
 
 
 class eop_cube_ones_full : public eop_cube_core<eop_cube_ones_full> {};
-class eop_cube_rand      : public eop_cube_core<eop_cube_rand>      {};
+class eop_cube_randu     : public eop_cube_core<eop_cube_randu>     {};
 class eop_cube_randn     : public eop_cube_core<eop_cube_randn>     {};
 class eop_cube_zeros     : public eop_cube_core<eop_cube_zeros>     {};
 
 template<typename T1> struct is_cube_generator                     { static const bool value = false; };
 template<>            struct is_cube_generator<eop_cube_ones_full> { static const bool value = true;  };
-template<>            struct is_cube_generator<eop_cube_rand>      { static const bool value = true;  };
+template<>            struct is_cube_generator<eop_cube_randu>     { static const bool value = true;  };
 template<>            struct is_cube_generator<eop_cube_randn>     { static const bool value = true;  };
 template<>            struct is_cube_generator<eop_cube_zeros>     { static const bool value = true;  };
 

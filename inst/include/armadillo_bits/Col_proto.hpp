@@ -110,8 +110,12 @@ class Col : public Mat<eT>, public BaseVec< eT, Col<eT> >
   inline void ones(const u32 n_elem);
   inline void ones(const u32 n_rows, const u32 n_cols);
   
-  inline void load(const std::string   name, const file_type type = auto_detect);
-  inline void load(      std::istream& is,   const file_type type = auto_detect);
+  
+  inline void load(const std::string   name, const file_type type = auto_detect, const bool print_status = true);
+  inline void load(      std::istream& is,   const file_type type = auto_detect, const bool print_status = true);
+  
+  inline void quiet_load(const std::string   name, const file_type type = auto_detect);
+  inline void quiet_load(      std::istream& is,   const file_type type = auto_detect);
   
   
   typedef       eT*       row_iterator;
