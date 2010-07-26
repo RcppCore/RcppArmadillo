@@ -4,8 +4,8 @@
 
 	* src/fastLm.cpp: Switch from inv() (which now throws a warning on
 	(near) singular matrices and returns an empty matrix) to the
-	Moore-Penrose generalised inverse pinv() which allows us to continue
-	the example in the manual page. Of course, for standard use inv() is
+	Moore-Penrose pseudo-inverse pinv() which allows us to continue
+	the example from the manual page. Of course, for standard use inv() is
 	doing the right thing by issueing the warning.
 
 2010-06-14  Dirk Eddelbuettel  <edd@debian.org>
