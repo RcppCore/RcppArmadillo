@@ -28,7 +28,7 @@ Description: R and Armadillo integration using Rcpp
  capabilities of the Rcpp package for seamless R and C++ integration.
 License: GPL (>= 2)
 LazyLoad: yes
-Depends: R (>= 2.10.0), Rcpp (>= 0.8.2)
+Depends: R (>= 2.10.0), Rcpp (>= 0.8.4)
 LinkingTo: Rcpp
 Suggests: inline, RUnit
 SystemRequirements: GNU make
