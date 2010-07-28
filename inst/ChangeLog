@@ -1,6 +1,11 @@
-2010-07-27  Dirk Eddelbuettel  <edd@debian.org>
+2010-07-28    <deddelbuettel@WTSTAT-08>
 
 	* DESCRIPTION: Release 0.2.4
+
+	* inst/include/armadillo_bits: Added small patch to not use asinh,
+	acosh and atanh on win32 as the (older) MinGW compiler cannot cope.
+	This problem will go away once R 2.12 is released as it requires
+	gcc / g++ 4.5.
 
 2010-07-25  Dirk Eddelbuettel  <edd@debian.org>
 
