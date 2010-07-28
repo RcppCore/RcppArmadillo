@@ -1,9 +1,9 @@
 // Copyright (C) 2010 NICTA and the authors listed below
 // http://nicta.com.au
-// 
+//
 // Authors:
 // - Conrad Sanderson (conradsand at ieee dot org)
-// 
+//
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
 // for any purpose. You can redistribute this file
@@ -25,53 +25,59 @@
 #define arma_deprecated
 
 #if defined(__GNUG__)
-  
+
   #if (__GNUC__ < 4)
     #error "*** Need a newer compiler ***"
   #endif
-  
+
   #define ARMA_GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
-  
+
   #define ARMA_GOOD_COMPILER
   #undef  ARMA_HAVE_STD_TR1
-  
+
   #undef  arma_pure
   #undef  arma_const
   #undef  arma_inline
   #undef  arma_aligned
   #undef  arma_warn_unused
   #undef  arma_deprecated
-  
+
   #define arma_pure               __attribute__((pure))
   #define arma_const              __attribute__((const))
   #define arma_inline      inline __attribute__((always_inline))
   #define arma_aligned            __attribute__((aligned))
   #define arma_warn_unused        __attribute__((warn_unused_result))
   #define arma_deprecated         __attribute__((deprecated))
-  
+
   #if (ARMA_GCC_VERSION >= 40200)
     #define ARMA_HAVE_STD_TR1
   #endif
-  
+
   #if (ARMA_GCC_VERSION >= 40300)
     #undef  arma_hot
     #undef  arma_cold
-    
+
     #define arma_hot  __attribute__((hot))
     #define arma_cold __attribute__((cold))
   #endif
-  
+
+  #if (ARMA_GCC_VERSION < 40300)
+     #if defined __MINGW32_VERSION
+        #define ARMA_OLD_MINGW
+     #endif
+  #endif
+
   #undef ARMA_GCC_VERSION
-  
+
 #elif defined(__INTEL_COMPILER)
-  
+
   #if (__INTEL_COMPILER < 1000)
     #error "*** Need a newer compiler ***"
   #endif
-  
+
   #define ARMA_GOOD_COMPILER
   #undef  ARMA_HAVE_STD_TR1
-  
+
   #if (__INTEL_COMPILER <= 1110)
     #undef ARMA_HAVE_STD_ISFINITE
   #endif
@@ -80,9 +86,9 @@
 
 
 #if defined(_MSC_VER)
-  
+
   #pragma message ("*** WARNING: This compiler may have an incomplete implementation of the C++ standard ***")
-  
+
   #undef ARMA_GOOD_COMPILER
   #undef ARMA_HAVE_STD_ISFINITE
   #undef ARMA_HAVE_STD_SNPRINTF
@@ -90,10 +96,10 @@
   #undef ARMA_HAVE_STD_ISINF
   #undef ARMA_HAVE_STD_ISNAN
   #undef ARMA_HAVE_STD_TR1
-  
+
   #undef  arma_inline
   #define arma_inline inline __forceinline
-  
+
 #endif
 
 
