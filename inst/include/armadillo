@@ -18,9 +18,6 @@
 #define ARMA_INCLUDES
 
 
-#include "armadillo_bits/config.hpp"
-#include "armadillo_bits/compiler_setup.hpp"
-
 #include <cstdlib>
 #include <cstring>
 #include <climits>
@@ -34,6 +31,10 @@
 #include <algorithm>
 #include <complex>
 #include <vector>
+
+
+#include "armadillo_bits/config.hpp"
+#include "armadillo_bits/compiler_setup.hpp"
 
 
 #if defined(ARMA_HAVE_GETTIMEOFDAY)
@@ -135,6 +136,8 @@ namespace arma
   
   #include "armadillo_bits/Base.hpp"
   #include "armadillo_bits/BaseCube.hpp"
+  
+  #include "armadillo_bits/injector_proto.hpp"
   
   #include "armadillo_bits/Mat_proto.hpp"
   #include "armadillo_bits/Col_proto.hpp"
@@ -364,6 +367,8 @@ namespace arma
   
   #include "armadillo_bits/podarray_meat.hpp"
   #include "armadillo_bits/auxlib_meat.hpp"
+  
+  #include "armadillo_bits/injector_meat.hpp"
   
   #include "armadillo_bits/Mat_meat.hpp"
   #include "armadillo_bits/Col_meat.hpp"

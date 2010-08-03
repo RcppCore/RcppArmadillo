@@ -97,6 +97,11 @@ class Mat : public Base< eT, Mat<eT> >
   inline const Mat& operator%=(const diagview<eT>& X);
   inline const Mat& operator/=(const diagview<eT>& X);
   
+  
+  inline mat_injector<Mat> operator<<(const eT val);
+  inline mat_injector<Mat> operator<<(const injector_helper x);
+  
+  
   arma_inline       subview_row<eT> row(const u32 row_num);
   arma_inline const subview_row<eT> row(const u32 row_num) const;
   
@@ -212,6 +217,7 @@ class Mat : public Base< eT, Mat<eT> >
   inline void copy_size(const Mat<eT2>& m);
   
   inline void  set_size(const u32 in_rows, const u32 in_cols);
+  inline void   reshape(const u32 in_rows, const u32 in_cols, const u32 dim = 0);
   
   arma_hot inline void fill(const eT val);
   

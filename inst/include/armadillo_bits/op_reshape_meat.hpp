@@ -37,42 +37,82 @@ op_reshape::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reshape>& in)
   
   const u32 in_n_elem = in_n_rows * in_n_cols;
   
-  arma_debug_check( (A.n_elem != in_n_elem), "reshape(): incompatible dimensions");
-  
-  if(in.aux == eT(0))
+  if(A.n_elem == in_n_elem)
     {
-    if(&out != &A)
+    if(in.aux == eT(0))
       {
-      out.set_size(in_n_rows, in_n_cols);
-      syslib::copy_elem( out.memptr(), A.memptr(), out.n_elem );
+      if(&out != &A)
+        {
+        out.set_size(in_n_rows, in_n_cols);
+        syslib::copy_elem( out.memptr(), A.memptr(), out.n_elem );
+        }
+      else
+        {
+        access::rw(out.n_rows) = in_n_rows;
+        access::rw(out.n_cols) = in_n_cols;
+        }
       }
     else
       {
-      access::rw(out.n_rows) = in_n_rows;
-      access::rw(out.n_cols) = in_n_cols;
+      unwrap_check< Mat<eT> > tmp(A, out);
+      const Mat<eT>& B      = tmp.M;
+
+      out.set_size(in_n_rows, in_n_cols);
+      
+      eT* out_mem = out.memptr();
+      u32 i = 0;
+      
+      for(u32 row=0; row<B.n_rows; ++row)
+        {
+        for(u32 col=0; col<B.n_cols; ++col)
+          {
+          out_mem[i] = B.at(row,col);
+          ++i;
+          }
+        }
+        
       }
     }
   else
     {
-    unwrap_check< Mat<eT> > tmp(A, out);
-    const Mat<eT>& B      = tmp.M;
-
+    const unwrap_check< Mat<eT> > tmp(A, out);
+    const Mat<eT>& B            = tmp.M;
+    
+    const u32 n_elem_to_copy = (std::min)(B.n_elem, in_n_elem);
+    
     out.set_size(in_n_rows, in_n_cols);
     
     eT* out_mem = out.memptr();
-    u32 i = 0;
     
-    for(u32 row=0; row<B.n_rows; ++row)
+    if(in.aux == eT(0))
       {
-      for(u32 col=0; col<B.n_cols; ++col)
+      syslib::copy_elem( out_mem, B.memptr(), n_elem_to_copy );
+      }
+    else
+      {
+      u32 row = 0;
+      u32 col = 0;
+      
+      for(u32 i=0; i<n_elem_to_copy; ++i)
         {
         out_mem[i] = B.at(row,col);
-        ++i;
+        
+        ++col;
+        
+        if(col >= B.n_cols)
+          {
+          col = 0;
+          ++row;
+          }
         }
       }
-      
+    
+    for(u32 i=n_elem_to_copy; i<in_n_elem; ++i)
+      {
+      out_mem[i] = eT(0);
+      }
+    
     }
-  
   }
 
 
@@ -95,46 +135,93 @@ op_reshape::apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_reshape>
   
   const u32 in_n_elem = in_n_rows * in_n_cols * in_n_slices;
   
-  arma_debug_check( (A.n_elem != in_n_elem), "reshape(): incompatible dimensions");
-  
-  if(in.aux == eT(0))
+  if(A.n_elem == in_n_elem)
     {
-    if(&out != &A)
+    if(in.aux == eT(0))
       {
-      out.set_size(in_n_rows, in_n_cols, in_n_slices);
-      syslib::copy_elem( out.memptr(), A.memptr(), out.n_elem );
+      if(&out != &A)
+        {
+        out.set_size(in_n_rows, in_n_cols, in_n_slices);
+        syslib::copy_elem( out.memptr(), A.memptr(), out.n_elem );
+        }
+      else
+        {
+        access::rw(out.n_rows)   = in_n_rows;
+        access::rw(out.n_cols)   = in_n_cols;
+        access::rw(out.n_slices) = in_n_slices;
+        }
       }
     else
       {
-      access::rw(out.n_rows)   = in_n_rows;
-      access::rw(out.n_cols)   = in_n_cols;
-      access::rw(out.n_slices) = in_n_slices;
+      unwrap_cube_check< Cube<eT> > tmp(A, out);
+      const Cube<eT>& B           = tmp.M;
+      
+      out.set_size(in_n_rows, in_n_cols, in_n_slices);
+      
+      eT* out_mem = out.memptr();
+      u32 i = 0;
+      
+      for(u32 slice=0; slice<B.n_slices; ++slice)
+        {
+        for(u32 row=0; row<B.n_rows; ++row)
+          {
+          for(u32 col=0; col<B.n_cols; ++col)
+            {
+            out_mem[i] = B.at(row,col,slice);
+            ++i;
+            }
+          }
+        }
+        
       }
     }
   else
     {
-    unwrap_cube_check< Cube<eT> > tmp(A, out);
-    const Cube<eT>& B           = tmp.M;
+    const unwrap_cube_check< Cube<eT> > tmp(A, out);
+    const Cube<eT>& B                 = tmp.M;
+    
+    const u32 n_elem_to_copy = (std::min)(B.n_elem, in_n_elem);
     
     out.set_size(in_n_rows, in_n_cols, in_n_slices);
     
     eT* out_mem = out.memptr();
-    u32 i = 0;
     
-    for(u32 slice=0; slice<B.n_slices; ++slice)
+    if(in.aux == eT(0))
       {
-      for(u32 row=0; row<B.n_rows; ++row)
+      syslib::copy_elem( out_mem, B.memptr(), n_elem_to_copy );
+      }
+    else
+      {
+      u32 row   = 0;
+      u32 col   = 0;
+      u32 slice = 0;
+      
+      for(u32 i=0; i<n_elem_to_copy; ++i)
         {
-        for(u32 col=0; col<B.n_cols; ++col)
+        out_mem[i] = B.at(row,col,slice);
+        
+        ++col;
+        
+        if(col >= B.n_cols)
           {
-          out_mem[i] = B.at(row,col,slice);
-          ++i;
+          col = 0;
+          ++row;
+          
+          if(row >= B.n_rows)
+            {
+            row = 0;
+            ++slice;
+            }
           }
         }
       }
-      
+    
+    for(u32 i=n_elem_to_copy; i<in_n_elem; ++i)
+      {
+      out_mem[i] = eT(0);
+      }
+    
     }
-  
   }
 
 

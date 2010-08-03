@@ -1,9 +1,9 @@
 // Copyright (C) 2010 NICTA and the authors listed below
 // http://nicta.com.au
-//
+// 
 // Authors:
 // - Conrad Sanderson (conradsand at ieee dot org)
-//
+// 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
 // for any purpose. You can redistribute this file
@@ -30,7 +30,7 @@ struct eop_aux_randu
   };
 
 
-
+  
 template<typename T>
 struct eop_aux_randu< std::complex<T> >
   {
@@ -53,20 +53,20 @@ struct eop_aux_randn
   //   {
   //   const u32 N  = 12;  // N must be >= 12 and an even number
   //   const u32 N2 = N/2;
-  //
+  //   
   //   eT acc = eT(0);
-  //
+  //   
   //   for(u32 i=0; i<N2; ++i)
   //     {
   //     const eT tmp1 = eT(std::rand()) / eT(RAND_MAX);
   //     const eT tmp2 = eT(std::rand()) / eT(RAND_MAX);
   //     acc += tmp1+tmp2;
   //     }
-  //
+  //   
   //   return acc - eT(N2);
   //   }
-
-
+  
+  
   // polar form of the Box-Muller transformation
   // http://en.wikipedia.org/wiki/Box-Muller_transformation
   // http://en.wikipedia.org/wiki/Marsaglia_polar_method
@@ -75,11 +75,11 @@ struct eop_aux_randn
     {
     // make sure we are internally using at least floats
     typedef typename promote_type<eT,float>::result eTp;
-
+    
     eTp tmp1;
     eTp tmp2;
     eTp w;
-
+    
     do
       {
       tmp1 = eTp(2) * eTp(std::rand()) / eTp(RAND_MAX) - eTp(1);
@@ -87,11 +87,11 @@ struct eop_aux_randn
       w = tmp1*tmp1 + tmp2*tmp2;
       }
     while ( w >= eTp(1) );
-
+    
     return eT( tmp1 * std::sqrt( (eTp(-2) * std::log(w)) / w) );
     }
-
-
+  
+  
   // other methods:
   // http://en.wikipedia.org/wiki/Ziggurat_algorithm
   //
@@ -122,32 +122,30 @@ struct eop_aux_randn< std::complex<T> >
 class eop_aux
   {
   public:
-
+  
   template<typename eT> arma_inline static typename arma_integral_only<eT>::result    acos  (const eT& x) { return std::acos(double(x)); }
   template<typename eT> arma_inline static typename arma_integral_only<eT>::result    asin  (const eT& x) { return std::asin(double(x)); }
   template<typename eT> arma_inline static typename arma_integral_only<eT>::result    atan  (const eT& x) { return std::atan(double(x)); }
-
+  
   template<typename eT> arma_inline static typename arma_float_only<eT>::result       acos  (const eT& x) { return std::acos(x); }
   template<typename eT> arma_inline static typename arma_float_only<eT>::result       asin  (const eT& x) { return std::asin(x); }
   template<typename eT> arma_inline static typename arma_float_only<eT>::result       atan  (const eT& x) { return std::atan(x); }
-
+  
   template<typename eT> arma_inline static typename arma_cx_only<eT>::result          acos  (const eT& x) { return arma_acos(x); }
   template<typename eT> arma_inline static typename arma_cx_only<eT>::result          asin  (const eT& x) { return arma_asin(x); }
   template<typename eT> arma_inline static typename arma_cx_only<eT>::result          atan  (const eT& x) { return arma_atan(x); }
-
-#if !defined(ARMA_OLD_MINGW)
+  
   template<typename eT> arma_inline static typename arma_integral_only<eT>::result    acosh (const eT& x) { return arma_acosh(double(x)); }
   template<typename eT> arma_inline static typename arma_integral_only<eT>::result    asinh (const eT& x) { return arma_asinh(double(x)); }
   template<typename eT> arma_inline static typename arma_integral_only<eT>::result    atanh (const eT& x) { return arma_atanh(double(x)); }
-
+  
   template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result acosh (const eT& x) { return arma_acosh(x); }
   template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result asinh (const eT& x) { return arma_asinh(x); }
   template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result atanh (const eT& x) { return arma_atanh(x); }
-#endif
-
+  
   template<typename eT> arma_inline static eT              conj(const eT&              x) { return x;            }
   template<typename  T> arma_inline static std::complex<T> conj(const std::complex<T>& x) { return std::conj(x); }
-
+  
   template<typename eT> arma_inline static typename arma_integral_only<eT>::result sqrt  (const eT& x) { return std::sqrt (double(x)); }
   template<typename eT> arma_inline static typename arma_integral_only<eT>::result log10 (const eT& x) { return std::log10(double(x)); }
   template<typename eT> arma_inline static typename arma_integral_only<eT>::result log   (const eT& x) { return std::log  (double(x)); }
@@ -158,7 +156,7 @@ class eop_aux
   template<typename eT> arma_inline static typename arma_integral_only<eT>::result cosh  (const eT& x) { return std::cosh (double(x)); }
   template<typename eT> arma_inline static typename arma_integral_only<eT>::result sinh  (const eT& x) { return std::sinh (double(x)); }
   template<typename eT> arma_inline static typename arma_integral_only<eT>::result tanh  (const eT& x) { return std::tanh (double(x)); }
-
+  
   template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result sqrt  (const eT& x) { return std::sqrt (x); }
   template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result log10 (const eT& x) { return std::log10(x); }
   template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result log   (const eT& x) { return std::log  (x); }
@@ -169,9 +167,9 @@ class eop_aux
   template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result cosh  (const eT& x) { return std::cosh (x); }
   template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result sinh  (const eT& x) { return std::sinh (x); }
   template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result tanh  (const eT& x) { return std::tanh (x); }
-
-
-
+  
+  
+  
   template<typename T1, typename T2>
   arma_inline
   static
@@ -180,9 +178,9 @@ class eop_aux
     {
     return std::pow(base, exponent);
     }
-
-
-
+  
+  
+  
   template<typename T1, typename T2>
   arma_inline
   static
@@ -191,31 +189,31 @@ class eop_aux
     {
     return T1( std::pow( double(base), double(exponent) ) );
     }
-
-
-
+  
+  
+  
   template<typename T1>
   arma_inline
   static
   typename arma_float_or_cx_only<T1>::result
   pow_int(const T1 base, const int exponent)
-    {
+    { 
     return std::pow(base, exponent);
     }
-
-
-
+  
+  
+  
   template<typename T1>
   arma_inline
   static
   typename arma_integral_only<T1>::result
   pow_int(const T1 base, const int exponent)
-    {
+    { 
     return T1( std::pow( double(base), exponent) );
     }
-
-
-
+  
+  
+  
   template<typename eT>
   arma_inline
   static
@@ -224,9 +222,9 @@ class eop_aux
     {
     return eT(0);
     }
-
-
-
+  
+  
+  
   template<typename eT>
   inline
   static
@@ -234,22 +232,22 @@ class eop_aux
   direct_eps(const eT& x)
     {
     //arma_extra_debug_sigprint();
-
+    
     // acording to IEEE Standard for Floating-Point Arithmetic (IEEE 754)
     // the mantissa length for double is 53 bits = std::numeric_limits<double>::digits
     // the mantissa length for float  is 24 bits = std::numeric_limits<float >::digits
-
+    
     //return std::pow( std::numeric_limits<eT>::radix, (std::floor(std::log10(std::abs(x))/std::log10(std::numeric_limits<eT>::radix))-(std::numeric_limits<eT>::digits-1)) );
-
+    
     const eT radix_eT     = eT(std::numeric_limits<eT>::radix);
     const eT digits_m1_eT = eT(std::numeric_limits<eT>::digits - 1);
-
+    
     // return std::pow( radix_eT, eT(std::floor(std::log10(std::abs(x))/std::log10(radix_eT)) - digits_m1_eT) );
     return eop_aux::pow( radix_eT, eT(std::floor(std::log10(std::abs(x))/std::log10(radix_eT)) - digits_m1_eT) );
     }
-
-
-
+  
+  
+  
   template<typename T>
   inline
   static
@@ -257,32 +255,32 @@ class eop_aux
   direct_eps(const std::complex<T>& x)
     {
     //arma_extra_debug_sigprint();
-
+    
     //return std::pow( std::numeric_limits<T>::radix, (std::floor(std::log10(std::abs(x))/std::log10(std::numeric_limits<T>::radix))-(std::numeric_limits<T>::digits-1)) );
-
+    
     const T radix_T     = T(std::numeric_limits<T>::radix);
     const T digits_m1_T = T(std::numeric_limits<T>::digits - 1);
-
+    
     return std::pow( radix_T, T(std::floor(std::log10(std::abs(x))/std::log10(radix_T)) - digits_m1_T) );
     }
-
-
-
+  
+  
+  
   //! work around a bug in GCC 4.4
   template<typename eT> arma_inline static
   typename arma_unsigned_integral_only<eT>::result arma_abs(const eT& x)              { return x;           }
-
+  
   template<typename eT> arma_inline static
   typename arma_signed_integral_only<eT>::result   arma_abs(const eT& x)              { return std::abs(x); }
-
+  
   template<typename eT> arma_inline static
   typename arma_float_only<eT>::result             arma_abs(const eT& x)              { return std::abs(x); }
-
+  
   template<typename T> arma_inline static
   typename arma_float_only<T>::result              arma_abs(const std::complex<T>& x) { return std::abs(x); }
-
-
-
+  
+  
+  
   template<typename eT, typename eop_type>
   arma_inline
   static
@@ -299,7 +297,7 @@ class eop_aux
     else if(is_same_type<eop_type, eop_cube_ones_full>::value == true) { return eT(1);                   }
     else                                                               { return eT(0);                   }
     }
-
+  
   };
 
 

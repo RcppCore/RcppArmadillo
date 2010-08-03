@@ -66,6 +66,8 @@ class Row : public Mat<eT>, public BaseVec< eT, Row<eT> >
   inline explicit            Row(const diagview<eT>& X);
   inline const Row&    operator=(const diagview<eT>& X);
   inline const Row&   operator*=(const diagview<eT>& X);
+
+  inline mat_injector<Row> operator<<(const eT val);
   
   arma_inline eT& col(const u32 col_num);
   arma_inline eT  col(const u32 col_num) const;
@@ -99,6 +101,7 @@ class Row : public Mat<eT>, public BaseVec< eT, Row<eT> >
   
   inline void  set_size(const u32 N);
   inline void  set_size(const u32 n_rows, const u32 n_cols);
+  inline void   reshape(const u32 n_rows, const u32 n_cols, const u32 dim = 0);
   
   template<typename eT2>
   inline void copy_size(const Mat<eT2>& m);

@@ -1617,6 +1617,19 @@ Cube<eT>::set_size(const u32 in_n_rows, const u32 in_n_cols, const u32 in_n_slic
 
 
 
+//! change the cube to have user specified dimensions (data is preserved)
+template<typename eT>
+inline
+void
+Cube<eT>::reshape(const u32 in_rows, const u32 in_cols, const u32 in_slices, const u32 dim)
+  {
+  arma_extra_debug_sigprint();
+  
+  *this = arma::reshape(*this, in_rows, in_cols, in_slices, dim);
+  }
+
+
+
 //! change the cube (without preserving data) to have the same dimensions as the given cube 
 template<typename eT>
 template<typename eT2>

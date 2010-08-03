@@ -23,6 +23,7 @@
 #define RcppArmadillo__RcppArmadilloForward__h
 
 #include <RcppCommon.h>
+
 #include <armadillo>
 
 /* forward declarations */

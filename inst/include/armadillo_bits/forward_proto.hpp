@@ -23,6 +23,7 @@ template<typename eT> class Mat;
 template<typename eT> class Col;
 template<typename eT> class Row;
 template<typename eT> class Cube;
+template<typename oT> class field;
 
 template<typename eT> class subview;
 template<typename eT> class subview_col;
@@ -88,6 +89,20 @@ template<typename T1, typename T2, typename eglue_type> class eGlueCube;
 
 template<typename T1> class Proxy;
 template<typename T1> class ProxyCube;
+
+
+
+//! \addtogroup injector
+//! @{
+
+
+enum injector_helper
+  {
+  endr  //!< indicate "end of row", similar conceptual meaning to std::endl
+  };
+
+
+//! @}
 
 
 
