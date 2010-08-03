@@ -1035,6 +1035,26 @@ Mat<eT>::operator/=(const diagview<eT>& X)
 
 
 
+template<typename eT>
+inline
+mat_injector< Mat<eT> >
+Mat<eT>::operator<<(const eT val)
+  {
+  return mat_injector< Mat<eT> >(*this, val);
+  }
+
+
+
+template<typename eT>
+inline
+mat_injector< Mat<eT> >
+Mat<eT>::operator<<(const injector_helper x)
+  {
+  return mat_injector< Mat<eT> >(*this, x);
+  }
+
+
+
 //! creation of subview (row vector)
 template<typename eT>
 arma_inline
@@ -2496,11 +2516,24 @@ Mat<eT>::raw_print_trans(std::ostream& user_stream, const std::string extra_text
 template<typename eT>
 inline
 void
-Mat<eT>::set_size(const u32 in_n_rows, const u32 in_n_cols)
+Mat<eT>::set_size(const u32 in_rows, const u32 in_cols)
   {
   arma_extra_debug_sigprint();
   
-  init(in_n_rows, in_n_cols);
+  init(in_rows, in_cols);
+  }
+
+
+
+//! change the matrix to have user specified dimensions (data is preserved)
+template<typename eT>
+inline
+void
+Mat<eT>::reshape(const u32 in_rows, const u32 in_cols, const u32 dim)
+  {
+  arma_extra_debug_sigprint();
+  
+  *this = arma::reshape(*this, in_rows, in_cols, dim);
   }
 
 

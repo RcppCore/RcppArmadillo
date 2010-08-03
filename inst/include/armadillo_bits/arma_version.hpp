@@ -19,18 +19,25 @@
 
 
 
+#define ARMA_VERSION_MAJOR 0
+#define ARMA_VERSION_MINOR 9
+#define ARMA_VERSION_PATCH 58
+#define ARMA_VERSION_NAME  "Killer Bush Turkey"
+// http://en.wikipedia.org/wiki/Australian_Brush-turkey
+
+
 struct arma_version
   {
-  static const unsigned int major = 0;
-  static const unsigned int minor = 9;
-  static const unsigned int patch = 52;
+  static const unsigned int major = ARMA_VERSION_MAJOR;
+  static const unsigned int minor = ARMA_VERSION_MINOR;
+  static const unsigned int patch = ARMA_VERSION_PATCH;
   
   static
   inline
   std::string
   as_string()
     {
-    const char* nickname = "Monkey Wrench";
+    const char* nickname = ARMA_VERSION_NAME;
     
     std::stringstream ss;
     ss << arma_version::major

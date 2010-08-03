@@ -71,7 +71,7 @@ op_princomp::direct_princomp
     //U.reset();  // TODO: do we need this ?  U will get automatically deleted anyway
     
     // normalize the eigenvalues
-    s /= std::sqrt(n_rows - 1);
+    s /= std::sqrt( double(n_rows - 1) );
     
     // project the samples to the principals
     score_out *= coeff_out;
@@ -179,7 +179,7 @@ op_princomp::direct_princomp
     // U.reset();
     
     // normalize the eigenvalues
-    s /= std::sqrt(n_rows - 1);
+    s /= std::sqrt( double(n_rows - 1) );
     
     // project the samples to the principals
     score_out *= coeff_out;
@@ -265,7 +265,7 @@ op_princomp::direct_princomp
     // U.reset();
     
     // normalize the eigenvalues
-    s /= std::sqrt(n_rows - 1);
+    s /= std::sqrt( double(n_rows - 1) );
     
     // project the samples to the principals
     score_out *= coeff_out;
@@ -390,7 +390,7 @@ op_princomp::direct_princomp
     //U.reset();
     
     // normalize the eigenvalues
-    s /= std::sqrt(n_rows - 1);
+    s /= std::sqrt( double(n_rows - 1) );
     
     // project the samples to the principals
     score_out *= coeff_out;
@@ -496,7 +496,7 @@ op_princomp::direct_princomp
     // U.reset();
     
     // normalize the eigenvalues
-    s /= std::sqrt(n_rows - 1);
+    s /= std::sqrt( double(n_rows - 1) );
     
     // project the samples to the principals
     score_out *= coeff_out;
@@ -581,7 +581,7 @@ op_princomp::direct_princomp
     // U.reset();
     
     // normalize the eigenvalues
-    s /= std::sqrt(n_rows - 1);
+    s /= std::sqrt( double(n_rows - 1) );
 
     // project the samples to the principals
     score_out *= coeff_out;

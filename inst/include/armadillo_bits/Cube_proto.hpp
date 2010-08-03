@@ -147,6 +147,7 @@ class Cube : public BaseCube< eT, Cube<eT> >
   inline void raw_print(std::ostream& user_stream, const std::string extra_text = "") const;
 
   inline void  set_size(const u32 in_rows, const u32 in_cols, const u32 in_slices);
+  inline void   reshape(const u32 in_rows, const u32 in_cols, const u32 in_slices, const u32 dim = 0);
   
   template<typename eT2> inline void copy_size(const Cube<eT2>& m);
 

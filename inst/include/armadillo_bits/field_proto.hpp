@@ -20,6 +20,13 @@
 
 
 
+struct field_prealloc_n_elem
+  {
+  static const u32 val = 16;
+  };
+
+
+
 //! A lightweight 2D container for abitrary objects
 //! (the objects must have a copy constructor)
 
@@ -38,7 +45,8 @@ class field
   private:
   
   arma_aligned oT** mem;             //!< pointer to memory used by the object
-  arma_aligned oT*  mem_local[ 16 ]; //!< Internal memory, to avoid calling the 'new' operator for small amounts of memory
+  arma_aligned oT*  mem_local[ field_prealloc_n_elem::val ];
+  //!< Internal memory, to avoid calling the 'new' operator for small amounts of memory
   
   
   public:
@@ -72,6 +80,9 @@ class field
   
   arma_inline       oT& operator()(const u32 row, const u32 col);
   arma_inline const oT& operator()(const u32 row, const u32 col) const;
+  
+  inline field_injector<field> operator<<(const oT& val);
+  inline field_injector<field> operator<<(const injector_helper x);
   
   inline       subview_field<oT> row(const u32 row_num);
   inline const subview_field<oT> row(const u32 row_num) const;

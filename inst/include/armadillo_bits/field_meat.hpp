@@ -282,6 +282,26 @@ field<oT>::at(const u32 in_row, const u32 in_col) const
 
 
 
+template<typename oT>
+inline
+field_injector< field<oT> >
+field<oT>::operator<<(const oT& val)
+  {
+  return field_injector< field<oT> >(*this, val);
+  }
+
+
+
+template<typename oT>
+inline
+field_injector< field<oT> >
+field<oT>::operator<<(const injector_helper x)
+  {
+  return field_injector< field<oT> >(*this, x);
+  }
+
+
+
 //! creation of subview_field (row of a field)
 template<typename oT>
 inline

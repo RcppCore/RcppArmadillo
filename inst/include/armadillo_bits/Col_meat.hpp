@@ -408,6 +408,16 @@ Col<eT>::operator*=(const diagview<eT>& X)
 
 
 template<typename eT>
+inline
+mat_injector< Col<eT> >
+Col<eT>::operator<<(const eT val)
+  {
+  return mat_injector< Col<eT> >(*this, val);
+  }
+
+
+
+template<typename eT>
 arma_inline
 eT&
 Col<eT>::row(const u32 row_num)
@@ -762,6 +772,20 @@ Col<eT>::set_size(const u32 in_n_rows, const u32 in_n_cols)
   Mat<eT>::set_size( in_n_rows, (std::min)( u32(1), in_n_cols ) );
   
   arma_debug_check( (in_n_cols > 1), "Col::set_size(): incompatible dimensions" );
+  }
+
+
+
+template<typename eT>
+inline
+void
+Col<eT>::reshape(const u32 in_rows, const u32 in_cols, const u32 dim)
+  {
+  arma_extra_debug_sigprint();
+
+  Mat<eT>::reshape(in_rows, in_cols, dim);
+  
+  arma_debug_check( (in_cols > 1), "Col::set_size(): incompatible dimensions" );
   }
 
 

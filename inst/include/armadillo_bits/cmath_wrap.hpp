@@ -1,9 +1,9 @@
 // Copyright (C) 2010 NICTA and the authors listed below
 // http://nicta.com.au
-//
+// 
 // Authors:
 // - Conrad Sanderson (conradsand at ieee dot org)
-//
+// 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
 // for any purpose. You can redistribute this file
@@ -115,11 +115,11 @@ arma_isfinite(const std::complex<T>& x)
 // complex acosh
 // complex asinh
 // complex atanh
-//
-//
+// 
+// 
 // If TR1 not present and Boost math not present,
 // we have our own rudimentary versions of:
-//
+// 
 // real    acosh
 // real    asinh
 // real    atanh
@@ -223,7 +223,7 @@ arma_acosh(const eT x)
   }
 
 
-#if !defined(ARMA_OLD_MINGW)
+
 template<typename eT>
 arma_inline
 eT
@@ -336,7 +336,6 @@ arma_atanh(const std::complex<T>& x)
   #endif
   }
 
-#endif
 
 
 #undef arma_boost_wrap

@@ -1,9 +1,9 @@
 // Copyright (C) 2010 NICTA and the authors listed below
 // http://nicta.com.au
-//
+// 
 // Authors:
 // - Conrad Sanderson (conradsand at ieee dot org)
-//
+// 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
 // for any purpose. You can redistribute this file
@@ -23,17 +23,17 @@ template<typename eop_cube_type>
 class eop_cube_core
   {
   public:
-
+  
   template<typename T1> arma_hot arma_inline static typename T1::elem_type get_elem(const eOpCube<T1, eop_cube_type>& x, const u32 i);
   template<typename T1> arma_hot arma_inline static typename T1::elem_type get_elem(const eOpCube<T1, eop_cube_type>& x, const u32 row, const u32 col, const u32 slice);
-
+  
   template<typename T1> arma_hot arma_inline static typename T1::elem_type process(const eOpCube<T1, eop_cube_type>& x, const typename T1::elem_type val);
-
+  
   template<typename T1> arma_hot arma_inline static void apply(Cube<typename T1::elem_type>& out, const eOpCube<T1, eop_cube_type>& x);
-
+  
   template<typename T1> arma_hot inline static void apply_proxy (Cube<typename T1::elem_type>& out, const eOpCube<T1, eop_cube_type>& x);
   template<typename T1> arma_hot inline static void apply_unwrap(Cube<typename T1::elem_type>& out, const eOpCube<T1, eop_cube_type>& x);
-
+  
   template<typename T1> arma_hot inline static void apply_inplace_plus (Cube<typename T1::elem_type>& out, const eOpCube<T1, eop_cube_type>& x);
   template<typename T1> arma_hot inline static void apply_inplace_minus(Cube<typename T1::elem_type>& out, const eOpCube<T1, eop_cube_type>& x);
   template<typename T1> arma_hot inline static void apply_inplace_schur(Cube<typename T1::elem_type>& out, const eOpCube<T1, eop_cube_type>& x);
@@ -60,21 +60,15 @@ class eop_cube_trunc_exp         : public eop_cube_core<eop_cube_trunc_exp>     
 class eop_cube_cos               : public eop_cube_core<eop_cube_cos>               {};
 class eop_cube_cosh              : public eop_cube_core<eop_cube_cosh>              {};
 class eop_cube_acos              : public eop_cube_core<eop_cube_acos>              {};
-#if !defined(ARMA_OLD_MINGW)
 class eop_cube_acosh             : public eop_cube_core<eop_cube_acosh>             {};
-#endif
 class eop_cube_sin               : public eop_cube_core<eop_cube_sin>               {};
 class eop_cube_sinh              : public eop_cube_core<eop_cube_sinh>              {};
 class eop_cube_asin              : public eop_cube_core<eop_cube_asin>              {};
-#if !defined(ARMA_OLD_MINGW)
 class eop_cube_asinh             : public eop_cube_core<eop_cube_asinh>             {};
-#endif
 class eop_cube_tan               : public eop_cube_core<eop_cube_tan>               {};
 class eop_cube_tanh              : public eop_cube_core<eop_cube_tanh>              {};
 class eop_cube_atan              : public eop_cube_core<eop_cube_atan>              {};
-#if !defined(ARMA_OLD_MINGW)
 class eop_cube_atanh             : public eop_cube_core<eop_cube_atanh>             {};
-#endif
 class eop_cube_eps               : public eop_cube_core<eop_cube_eps>               {};
 class eop_cube_abs               : public eop_cube_core<eop_cube_abs>               {};
 class eop_cube_conj              : public eop_cube_core<eop_cube_conj>              {};
