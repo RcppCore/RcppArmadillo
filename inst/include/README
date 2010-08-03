@@ -1,0 +1,15 @@
+to upgrade to a new release of armadillo: 
+
+- copy the armadillo file here
+- replace the armadillo_bits directory by the one from the armadillo source
+- edit the armadillo file so that #include "armadillo_bits/config.hpp" is surrounded by RcppArmadillo includes: 
+
+
+// RcppArmadillo: add the R defines
+#include <Rconfig.h>
+
+#include "armadillo_bits/config.hpp"
+
+// RcppArmadillo: add the RcppArmadillo configuration
+#include <RcppArmadilloConfig.h>
+
