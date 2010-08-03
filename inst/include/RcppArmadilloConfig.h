@@ -22,6 +22,20 @@
 #ifndef RcppArmadillo__RcppArmadilloConfig__h
 #define RcppArmadillo__RcppArmadilloConfig__h
 
+#if !defined(ARMA_USE_LAPACK)
+#define ARMA_USE_LAPACK
+#endif
+
+#if !defined(ARMA_USE_BLAS)
+#define ARMA_USE_BLAS
+#endif
+
+#define ARMA_HAVE_STD_ISFINITE
+#define ARMA_HAVE_STD_ISINF
+#define ARMA_HAVE_STD_ISNAN
+#define ARMA_HAVE_STD_SNPRINTF
+
+
 /* TODO: we might need to undef this on other platforms as well */
 #if defined(__GNUC__) && defined(_WIN64)
 #undef ARMA_HAVE_STD_SNPRINTF

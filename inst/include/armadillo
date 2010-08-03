@@ -33,7 +33,14 @@
 #include <vector>
 
 
+// RcppArmadillo: add the R defines
+#include <Rconfig.h>
+
 #include "armadillo_bits/config.hpp"
+
+// RcppArmadillo: add the RcppArmadillo configuration
+#include <RcppArmadilloConfig.h>
+
 #include "armadillo_bits/compiler_setup.hpp"
 
 
