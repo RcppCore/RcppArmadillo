@@ -74,6 +74,19 @@ template<> struct arma_signed_integral_only<long>   { typedef long   result; };
 
 
 
+template<typename T> struct arma_signed_only { };
+
+template<> struct arma_signed_only<char>   { typedef char   result; };
+template<> struct arma_signed_only<short>  { typedef short  result; };
+template<> struct arma_signed_only<int>    { typedef int    result; };
+template<> struct arma_signed_only<long>   { typedef long   result; };
+template<> struct arma_signed_only<float>  { typedef float  result; };
+template<> struct arma_signed_only<double> { typedef double result; };
+
+template<typename T> struct arma_signed_only< std::complex<T> > { typedef std::complex<T> result; };
+
+
+
 template<typename T> struct arma_float_only { };
 
 template<> struct arma_float_only<float>  { typedef float  result; };

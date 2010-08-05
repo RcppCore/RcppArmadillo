@@ -123,51 +123,53 @@ class eop_aux
   {
   public:
   
-  template<typename eT> arma_inline static typename arma_integral_only<eT>::result    acos  (const eT& x) { return std::acos(double(x)); }
-  template<typename eT> arma_inline static typename arma_integral_only<eT>::result    asin  (const eT& x) { return std::asin(double(x)); }
-  template<typename eT> arma_inline static typename arma_integral_only<eT>::result    atan  (const eT& x) { return std::atan(double(x)); }
+  template<typename eT> arma_inline static typename arma_integral_only<eT>::result    acos  (const eT x) { return eT( std::acos(double(x)) ); }
+  template<typename eT> arma_inline static typename arma_integral_only<eT>::result    asin  (const eT x) { return eT( std::asin(double(x)) ); }
+  template<typename eT> arma_inline static typename arma_integral_only<eT>::result    atan  (const eT x) { return eT( std::atan(double(x)) ); }
   
-  template<typename eT> arma_inline static typename arma_float_only<eT>::result       acos  (const eT& x) { return std::acos(x); }
-  template<typename eT> arma_inline static typename arma_float_only<eT>::result       asin  (const eT& x) { return std::asin(x); }
-  template<typename eT> arma_inline static typename arma_float_only<eT>::result       atan  (const eT& x) { return std::atan(x); }
+  template<typename eT> arma_inline static typename arma_float_only<eT>::result       acos  (const eT x) { return std::acos(x); }
+  template<typename eT> arma_inline static typename arma_float_only<eT>::result       asin  (const eT x) { return std::asin(x); }
+  template<typename eT> arma_inline static typename arma_float_only<eT>::result       atan  (const eT x) { return std::atan(x); }
   
-  template<typename eT> arma_inline static typename arma_cx_only<eT>::result          acos  (const eT& x) { return arma_acos(x); }
-  template<typename eT> arma_inline static typename arma_cx_only<eT>::result          asin  (const eT& x) { return arma_asin(x); }
-  template<typename eT> arma_inline static typename arma_cx_only<eT>::result          atan  (const eT& x) { return arma_atan(x); }
+  template<typename eT> arma_inline static typename arma_cx_only<eT>::result          acos  (const eT x) { return arma_acos(x); }
+  template<typename eT> arma_inline static typename arma_cx_only<eT>::result          asin  (const eT x) { return arma_asin(x); }
+  template<typename eT> arma_inline static typename arma_cx_only<eT>::result          atan  (const eT x) { return arma_atan(x); }
   
-  template<typename eT> arma_inline static typename arma_integral_only<eT>::result    acosh (const eT& x) { return arma_acosh(double(x)); }
-  template<typename eT> arma_inline static typename arma_integral_only<eT>::result    asinh (const eT& x) { return arma_asinh(double(x)); }
-  template<typename eT> arma_inline static typename arma_integral_only<eT>::result    atanh (const eT& x) { return arma_atanh(double(x)); }
+  template<typename eT> arma_inline static typename arma_integral_only<eT>::result    acosh (const eT x) { return eT( arma_acosh(double(x)) ); }
+  template<typename eT> arma_inline static typename arma_integral_only<eT>::result    asinh (const eT x) { return eT( arma_asinh(double(x)) ); }
+  template<typename eT> arma_inline static typename arma_integral_only<eT>::result    atanh (const eT x) { return eT( arma_atanh(double(x)) ); }
   
-  template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result acosh (const eT& x) { return arma_acosh(x); }
-  template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result asinh (const eT& x) { return arma_asinh(x); }
-  template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result atanh (const eT& x) { return arma_atanh(x); }
+  template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result acosh (const eT x) { return arma_acosh(x); }
+  template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result asinh (const eT x) { return arma_asinh(x); }
+  template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result atanh (const eT x) { return arma_atanh(x); }
   
-  template<typename eT> arma_inline static eT              conj(const eT&              x) { return x;            }
-  template<typename  T> arma_inline static std::complex<T> conj(const std::complex<T>& x) { return std::conj(x); }
+  template<typename eT> arma_inline static typename arma_not_cx<eT>::result conj(const eT              x) { return x;            }
+  template<typename  T> arma_inline static          std::complex<T>         conj(const std::complex<T> x) { return std::conj(x); }
   
-  template<typename eT> arma_inline static typename arma_integral_only<eT>::result sqrt  (const eT& x) { return std::sqrt (double(x)); }
-  template<typename eT> arma_inline static typename arma_integral_only<eT>::result log10 (const eT& x) { return std::log10(double(x)); }
-  template<typename eT> arma_inline static typename arma_integral_only<eT>::result log   (const eT& x) { return std::log  (double(x)); }
-  template<typename eT> arma_inline static typename arma_integral_only<eT>::result exp   (const eT& x) { return std::exp  (double(x)); }
-  template<typename eT> arma_inline static typename arma_integral_only<eT>::result cos   (const eT& x) { return std::cos  (double(x)); }
-  template<typename eT> arma_inline static typename arma_integral_only<eT>::result sin   (const eT& x) { return std::sin  (double(x)); }
-  template<typename eT> arma_inline static typename arma_integral_only<eT>::result tan   (const eT& x) { return std::tan  (double(x)); }
-  template<typename eT> arma_inline static typename arma_integral_only<eT>::result cosh  (const eT& x) { return std::cosh (double(x)); }
-  template<typename eT> arma_inline static typename arma_integral_only<eT>::result sinh  (const eT& x) { return std::sinh (double(x)); }
-  template<typename eT> arma_inline static typename arma_integral_only<eT>::result tanh  (const eT& x) { return std::tanh (double(x)); }
+  template<typename eT> arma_inline static typename arma_integral_only<eT>::result sqrt  (const eT x) { return eT( std::sqrt (double(x)) ); }
+  template<typename eT> arma_inline static typename arma_integral_only<eT>::result log10 (const eT x) { return eT( std::log10(double(x)) ); }
+  template<typename eT> arma_inline static typename arma_integral_only<eT>::result log   (const eT x) { return eT( std::log  (double(x)) ); }
+  template<typename eT> arma_inline static typename arma_integral_only<eT>::result exp   (const eT x) { return eT( std::exp  (double(x)) ); }
+  template<typename eT> arma_inline static typename arma_integral_only<eT>::result cos   (const eT x) { return eT( std::cos  (double(x)) ); }
+  template<typename eT> arma_inline static typename arma_integral_only<eT>::result sin   (const eT x) { return eT( std::sin  (double(x)) ); }
+  template<typename eT> arma_inline static typename arma_integral_only<eT>::result tan   (const eT x) { return eT( std::tan  (double(x)) ); }
+  template<typename eT> arma_inline static typename arma_integral_only<eT>::result cosh  (const eT x) { return eT( std::cosh (double(x)) ); }
+  template<typename eT> arma_inline static typename arma_integral_only<eT>::result sinh  (const eT x) { return eT( std::sinh (double(x)) ); }
+  template<typename eT> arma_inline static typename arma_integral_only<eT>::result tanh  (const eT x) { return eT( std::tanh (double(x)) ); }
   
-  template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result sqrt  (const eT& x) { return std::sqrt (x); }
-  template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result log10 (const eT& x) { return std::log10(x); }
-  template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result log   (const eT& x) { return std::log  (x); }
-  template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result exp   (const eT& x) { return std::exp  (x); }
-  template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result cos   (const eT& x) { return std::cos  (x); }
-  template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result sin   (const eT& x) { return std::sin  (x); }
-  template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result tan   (const eT& x) { return std::tan  (x); }
-  template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result cosh  (const eT& x) { return std::cosh (x); }
-  template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result sinh  (const eT& x) { return std::sinh (x); }
-  template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result tanh  (const eT& x) { return std::tanh (x); }
+  template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result sqrt  (const eT x) { return std::sqrt (x); }
+  template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result log10 (const eT x) { return std::log10(x); }
+  template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result log   (const eT x) { return std::log  (x); }
+  template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result exp   (const eT x) { return std::exp  (x); }
+  template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result cos   (const eT x) { return std::cos  (x); }
+  template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result sin   (const eT x) { return std::sin  (x); }
+  template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result tan   (const eT x) { return std::tan  (x); }
+  template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result cosh  (const eT x) { return std::cosh (x); }
+  template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result sinh  (const eT x) { return std::sinh (x); }
+  template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result tanh  (const eT x) { return std::tanh (x); }
   
+  template<typename eT> arma_inline static typename arma_unsigned_integral_only<eT>::result neg (const eT x) { return  x; }
+  template<typename eT> arma_inline static typename arma_signed_only<eT>::result            neg (const eT x) { return -x; }
   
   
   template<typename T1, typename T2>
@@ -218,7 +220,7 @@ class eop_aux
   arma_inline
   static
   typename arma_integral_only<eT>::result
-  direct_eps(const eT& x)
+  direct_eps(const eT x)
     {
     return eT(0);
     }
@@ -229,7 +231,7 @@ class eop_aux
   inline
   static
   typename arma_float_only<eT>::result
-  direct_eps(const eT& x)
+  direct_eps(const eT x)
     {
     //arma_extra_debug_sigprint();
     
@@ -252,7 +254,7 @@ class eop_aux
   inline
   static
   typename arma_float_only<T>::result
-  direct_eps(const std::complex<T>& x)
+  direct_eps(const std::complex<T> x)
     {
     //arma_extra_debug_sigprint();
     
@@ -268,16 +270,16 @@ class eop_aux
   
   //! work around a bug in GCC 4.4
   template<typename eT> arma_inline static
-  typename arma_unsigned_integral_only<eT>::result arma_abs(const eT& x)              { return x;           }
+  typename arma_unsigned_integral_only<eT>::result arma_abs(const eT x)              { return x;           }
   
   template<typename eT> arma_inline static
-  typename arma_signed_integral_only<eT>::result   arma_abs(const eT& x)              { return std::abs(x); }
+  typename arma_signed_integral_only<eT>::result   arma_abs(const eT x)              { return std::abs(x); }
   
   template<typename eT> arma_inline static
-  typename arma_float_only<eT>::result             arma_abs(const eT& x)              { return std::abs(x); }
+  typename arma_float_only<eT>::result             arma_abs(const eT x)              { return std::abs(x); }
   
   template<typename T> arma_inline static
-  typename arma_float_only<T>::result              arma_abs(const std::complex<T>& x) { return std::abs(x); }
+  typename arma_float_only<T>::result              arma_abs(const std::complex<T> x) { return std::abs(x); }
   
   
   

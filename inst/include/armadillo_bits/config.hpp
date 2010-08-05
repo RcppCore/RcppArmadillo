@@ -13,6 +13,8 @@
 // of the License or (at your option) any later version.
 // (see http://www.opensource.org/licenses for more info)
 
+
+
 #if !defined(ARMA_USE_LAPACK)
 // #define ARMA_USE_LAPACK
 #endif
@@ -40,4 +42,3 @@
 
 // #define ARMA_EXTRA_DEBUG
 // #define ARMA_NO_DEBUG
-

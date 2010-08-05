@@ -1,3 +1,20 @@
+2010-08-04  Dirk Eddelbuettel  <edd@debian.org>
+
+	* Upgraded to Armadillo 0.9.60 "Killer Bush Turkey" with changes:
+	  - More flexible reshape(), allowing significantly different
+	    matrix sizes
+	  - Added matrix initialisation via the << operator
+	  - Fixes for compilation issues under Mac OS X with GCC 4.2/4.0
+	    hybrid
+
+2010-08-03   Romain Francois <romain@r-enthusiasts.com>
+
+	* Upgraded to Armadillo 0.9.58 beta for testing purposes
+
+        * inst/include/armadillo: Reworked so that armadillo_bits/
+	  directory can be included as is without minor tweaks to
+	  armadillo_bits/config.hpp
+
 2010-07-28  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.2.4

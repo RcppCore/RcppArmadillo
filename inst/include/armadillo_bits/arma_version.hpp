@@ -21,7 +21,7 @@
 
 #define ARMA_VERSION_MAJOR 0
 #define ARMA_VERSION_MINOR 9
-#define ARMA_VERSION_PATCH 58
+#define ARMA_VERSION_PATCH 60
 #define ARMA_VERSION_NAME  "Killer Bush Turkey"
 // http://en.wikipedia.org/wiki/Australian_Brush-turkey
 
