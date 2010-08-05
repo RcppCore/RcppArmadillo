@@ -60,14 +60,14 @@ eop_cube_core<eop_cube_type>::process(const eOpCube<T1, eop_cube_type>& x, const
   
   // the optimiser will keep only one return statement
   
-       if(is_same_type<eop_cube_type, eop_cube_neg              >::value == true) { return -val;                    }
-  else if(is_same_type<eop_cube_type, eop_cube_scalar_plus      >::value == true) { return val + x.aux;             }
+       if(is_same_type<eop_cube_type, eop_cube_scalar_plus      >::value == true) { return val + x.aux;             }
   else if(is_same_type<eop_cube_type, eop_cube_scalar_minus_pre >::value == true) { return x.aux - val;             }
   else if(is_same_type<eop_cube_type, eop_cube_scalar_minus_post>::value == true) { return val - x.aux;             }
   else if(is_same_type<eop_cube_type, eop_cube_scalar_times     >::value == true) { return val * x.aux;             }
   else if(is_same_type<eop_cube_type, eop_cube_scalar_div_pre   >::value == true) { return x.aux / val;             }
   else if(is_same_type<eop_cube_type, eop_cube_scalar_div_post  >::value == true) { return val / x.aux;             }
   else if(is_same_type<eop_cube_type, eop_cube_square           >::value == true) { return val*val;                 }
+  else if(is_same_type<eop_cube_type, eop_cube_neg              >::value == true) { return eop_aux::neg(val);       }
   else if(is_same_type<eop_cube_type, eop_cube_sqrt             >::value == true) { return eop_aux::sqrt(val);      }
   else if(is_same_type<eop_cube_type, eop_cube_log10            >::value == true) { return eop_aux::log10(val);     }
   else if(is_same_type<eop_cube_type, eop_cube_log              >::value == true) { return eop_aux::log(val);       }

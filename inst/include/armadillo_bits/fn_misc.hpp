@@ -357,7 +357,7 @@ exp(const BaseCube<typename T1::elem_type,T1>& A)
 template<typename T1>
 arma_inline
 const eOp<T1, eop_abs>
-abs(const Base<typename T1::elem_type,T1>& X)
+abs(const Base<typename T1::elem_type,T1>& X, const typename arma_not_cx<typename T1::elem_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
   
@@ -369,7 +369,7 @@ abs(const Base<typename T1::elem_type,T1>& X)
 template<typename T1>
 arma_inline
 const eOpCube<T1, eop_cube_abs>
-abs(const BaseCube<typename T1::elem_type,T1>& X)
+abs(const BaseCube<typename T1::elem_type,T1>& X, const typename arma_not_cx<typename T1::elem_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
   
@@ -381,7 +381,7 @@ abs(const BaseCube<typename T1::elem_type,T1>& X)
 template<typename T1>
 inline
 const mtOp<typename T1::pod_type, T1, op_abs>
-abs(const Base<std::complex<typename T1::pod_type>, T1>& X)
+abs(const Base<std::complex<typename T1::pod_type>, T1>& X, const typename arma_cx_only<typename T1::elem_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
   
@@ -392,8 +392,8 @@ abs(const Base<std::complex<typename T1::pod_type>, T1>& X)
 
 template<typename T1>
 inline
-Mat<typename T1::pod_type>
-abs(const BaseCube< std::complex<typename T1::pod_type>,T1>& X)
+Cube<typename T1::pod_type>
+abs(const BaseCube< std::complex<typename T1::pod_type>,T1>& X, const typename arma_cx_only<typename T1::elem_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
   
@@ -426,7 +426,7 @@ abs(const BaseCube< std::complex<typename T1::pod_type>,T1>& X)
 template<typename T1>
 arma_inline
 const eOp<T1, eop_abs>
-fabs(const Base<typename T1::pod_type,T1>& X)
+fabs(const Base<typename T1::pod_type,T1>& X, const typename arma_not_cx<typename T1::elem_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
   
@@ -438,7 +438,7 @@ fabs(const Base<typename T1::pod_type,T1>& X)
 template<typename T1>
 arma_inline
 const eOpCube<T1, eop_cube_abs>
-fabs(const BaseCube<typename T1::pod_type,T1>& X)
+fabs(const BaseCube<typename T1::pod_type,T1>& X, const typename arma_not_cx<typename T1::elem_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
   
@@ -450,7 +450,7 @@ fabs(const BaseCube<typename T1::pod_type,T1>& X)
 template<typename T1>
 inline
 const mtOp<typename T1::pod_type, T1, op_abs>
-fabs(const Base<std::complex<typename T1::pod_type>, T1>& X)
+fabs(const Base<std::complex<typename T1::pod_type>, T1>& X, const typename arma_cx_only<typename T1::elem_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
   
@@ -461,8 +461,8 @@ fabs(const Base<std::complex<typename T1::pod_type>, T1>& X)
 
 template<typename T1>
 arma_inline
-Mat<typename T1::pod_type>
-fabs(const BaseCube< std::complex<typename T1::pod_type>,T1>& X)
+Cube<typename T1::pod_type>
+fabs(const BaseCube< std::complex<typename T1::pod_type>,T1>& X, const typename arma_cx_only<typename T1::elem_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
   
