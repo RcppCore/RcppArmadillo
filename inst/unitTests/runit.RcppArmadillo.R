@@ -239,3 +239,18 @@ test.mtGlue <- function(){
 }
 
 
+test.sugar <- function(){
+
+	fx <- cxxfunction( signature(x= "numeric") , '
+	NumericVector xx(x) ;
+	arma::mat m = forward( xx + xx ) ; 
+	
+    return wrap( m ) ;
+    
+	', plugin = "RcppArmadillo" )
+	checkEquals( fx(1:10), 
+		matrix( 2*(1:10), nrow = 10 ) , 
+		msg = "RcppArmadillo and sugar" )
+	
+}
+
