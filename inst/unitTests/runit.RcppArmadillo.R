@@ -254,3 +254,20 @@ test.sugar <- function(){
 	
 }
 
+test.sugar.cplx <- function(){
+
+	fx <- cxxfunction( signature(x= "complex") , '
+	ComplexVector xx(x) ;
+	arma::cx_mat m = forward( exp( xx ) ) ; 
+	
+    return wrap( m ) ;
+    
+	', plugin = "RcppArmadillo" )
+	x <- 1:10*(1+1i) 
+	checkEquals( fx(x), 
+		matrix( exp(x), nrow = 10 ) , 
+		msg = "RcppArmadillo and sugar (complex)" )
+	
+}
+
+

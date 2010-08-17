@@ -39,6 +39,7 @@ namespace RcppArmadillo{
 		){
 			const SUGAR& m = in.m ;
 			int n = m.size() ;
+			// deal with dimensions
 			out.set_size( n, 1 ) ;
 			mat_iterator first = out.begin(), last = out.end();
 			// perhaps we should just use std::copy
@@ -46,9 +47,50 @@ namespace RcppArmadillo{
 				*first++ = m[i];
 			}
 		}
-	  
 	} ;
 
+	template <bool NA, typename T>
+	class Complex_Imposter {
+		public:
+			typedef typename Rcpp::VectorBase<CPLXSXP,NA,T> SUGAR_EXP ;
+			typedef std::complex<double> elem_type ;
+		
+			Complex_Imposter( const SUGAR_EXP& vec_) : vec(vec_){}
+			inline int size() const { return vec.size() ; }
+			inline std::complex<double> operator[]( int i ) const {
+				Rcomplex x = vec[i] ;
+				return std::complex<double>( x.r, x.i ) ;
+			}
+			
+		private:
+			const SUGAR_EXP& vec ;
+	} ;
+
+	
+	
+	template <bool NA, typename T>
+	class r_complex_forward {
+		public:
+			typedef std::complex<double> T1 ;
+			typedef Complex_Imposter<NA,T> SUGAR ;
+			typedef arma::Mat<T1>::iterator mat_iterator ;
+		
+		inline static void apply(
+			arma::Mat<T1>& out, 
+			const arma::Op< Complex_Imposter<NA,T> , r_complex_forward<NA,T> >& in
+		){
+			const SUGAR& m = in.m ;
+			int n = m.size() ;
+			// deal with dimensions
+			out.set_size( n, 1 ) ;
+			mat_iterator first = out.begin(), last = out.end();
+			for( int i=0; first != last ; ++i){
+				*first++ = m[i] ;
+			}
+		}
+			
+	} ;
+	
 }
 
 
@@ -60,6 +102,19 @@ inline arma::Op<
 forward( const VectorBase<RTYPE,NA,T>& x ) {
 	return arma::Op< VectorBase<RTYPE,NA,T> , RcppArmadillo::r_forward<RTYPE,NA,T> >( x ) ;
 }
+
+
+template <bool NA, typename T>
+inline arma::Op< 
+	RcppArmadillo::Complex_Imposter<NA,T> , 
+	RcppArmadillo::r_complex_forward<NA,T>
+>
+forward( const VectorBase<CPLXSXP,NA,T>& x ) {
+	return arma::Op< 
+		RcppArmadillo::Complex_Imposter<NA,T> ,
+		RcppArmadillo::r_complex_forward<NA,T> >( x ) ;
+}
+
 
 
 } // Rcpp
