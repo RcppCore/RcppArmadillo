@@ -244,7 +244,6 @@ test.sugar <- function(){
 	fx <- cxxfunction( signature(x= "numeric") , '
 	NumericVector xx(x) ;
 	arma::mat m = forward( xx + xx ) ; 
-	
     return wrap( m ) ;
     
 	', plugin = "RcppArmadillo" )
