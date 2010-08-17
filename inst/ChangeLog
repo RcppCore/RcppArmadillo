@@ -1,3 +1,14 @@
+2010-08-17   Romain Francois <romain@r-enthusiasts.com>
+
+	* inst/include/RcppArmadilloWrap.h : extracted from RcppArmadillo.h
+
+	* inst/include/RcppArmadilloSugar.h : preliminary code to more interoperability
+	between Rcpp sugar and armadillo. Defines the Rcpp::forward that allows
+	forwarding the result of a sugar expression so that it is used in a Mat
+	constructor. (needs more testing)
+	
+	* inst/unitTests/runit.RcppArmadillo.R : initial test for sugar/armadillo
+
 2010-08-04  Dirk Eddelbuettel  <edd@debian.org>
 
 	* Upgraded to Armadillo 0.9.60 "Killer Bush Turkey" with changes:
