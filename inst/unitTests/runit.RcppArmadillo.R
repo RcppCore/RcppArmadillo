@@ -269,4 +269,17 @@ test.sugar.cplx <- function(){
 	
 }
 
+test.armadillo.sugar.ctor <- function(){
+
+	fx <- cxxfunction( signature(x= "numeric") , '
+	NumericVector xx(x) ;
+	arma::mat m = xx + xx ; 
+    return wrap( m + m ) ;
+    
+	', plugin = "RcppArmadillo" )
+	checkEquals( fx(1:10), 
+		matrix( 4*(1:10), nrow = 10 ) , 
+		msg = "Mat( sugar expression )" )
+	
+}
 
