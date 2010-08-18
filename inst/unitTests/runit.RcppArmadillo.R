@@ -283,3 +283,18 @@ test.armadillo.sugar.ctor <- function(){
 	
 }
 
+
+test.armadillo.sugar.matrix.ctor <- function(){
+
+	fx <- cxxfunction( signature(x= "numeric") , '
+	NumericVector xx(x) ;
+	arma::mat m = diag( xx ) ; 
+    return wrap( m ) ;
+    
+	', plugin = "RcppArmadillo" )
+	checkEquals( fx(1:10), 
+		diag( 1:10 ) , 
+		msg = "Mat( sugar expression )" )
+	
+}
+
