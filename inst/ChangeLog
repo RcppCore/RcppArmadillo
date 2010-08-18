@@ -1,3 +1,13 @@
+2010-08-18   Romain Francois <romain@r-enthusiasts.com>
+
+	* inst/include/armadillo_bits/Mat_meat.hpp : not so intrusive patch that allows
+	RcppArmadillo to add its own Mat constructors
+	* inst/include/armadillo_bits/Mat_proto.hpp : same
+	
+	* inst/include/RcppArmadillo/Mat_proto.h : Mat constructor that takes a sugar
+	expression 
+	* inst/include/RcppArmadillo/Mat_meat.h : implementation
+
 2010-08-17   Romain Francois <romain@r-enthusiasts.com>
 
 	* inst/include/RcppArmadilloWrap.h : extracted from RcppArmadillo.h

@@ -26,6 +26,9 @@
 #include <Rconfig.h>
 #include <RcppArmadilloConfig.h>
 
+#define ARMADILLO_EXTRA_MAT_PROTO "RcppArmadillo/Mat_proto.h"
+#define ARMADILLO_EXTRA_MAT_MEAT  "RcppArmadillo/Mat_meat.h"
+
 #include <armadillo>
 
 /* forward declarations */
