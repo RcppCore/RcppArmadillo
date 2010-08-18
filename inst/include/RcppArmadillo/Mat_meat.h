@@ -38,12 +38,38 @@ inline Mat<eT>::Mat( const Rcpp::VectorBase<RTYPE,NA,VECTOR>& X )
 	// std::complex<double> != Rcomplex
 	isnt_same_type<eT, typename Rcpp::traits::storage_type<RTYPE>::type >::check();
   	
-	u32 n = X.size() ;
-	set_size( n, 1 ) ;
+	set_size( X.size(), 1 ) ;
 		
 	iterator first = begin(), last = end(); 
 	for( u32 i=0; first != last; ++i){
 		*first++ = X[i] ;
+	}
+}
+
+template <typename eT>
+template <int RTYPE, bool NA, typename MATRIX>
+inline Mat<eT>::Mat( const Rcpp::MatrixBase<RTYPE,NA,MATRIX>& X ) 
+	: n_rows( 0 )
+	, n_cols( 0 )
+	, n_elem( 0 )
+	, use_aux_mem(false)
+	, mem(mem)
+{
+	
+	arma_extra_debug_sigprint_this(this);
+	
+	// TODO : deal with complex expressions because 
+	// std::complex<double> != Rcomplex
+	isnt_same_type<eT, typename Rcpp::traits::storage_type<RTYPE>::type >::check();
+  	
+	u32 nr = X.nrow(), nc = X.ncol(), i_col, i_row ;
+	set_size( nr, nc ) ;
+		
+	iterator first = begin() ;
+	for( i_col=0; i_col < nc; ++i_col){
+		for( i_row = 0; i_row < nr ; ++i_row ){
+			*first++ = X(i_row,i_col) ;
+		}
 	}
 }
 

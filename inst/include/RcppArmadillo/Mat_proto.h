@@ -26,4 +26,7 @@
 template <int RTYPE, bool NA, typename VECTOR>
 inline Mat( const Rcpp::VectorBase<RTYPE,NA,VECTOR>& X ) ;
 
+template <int RTYPE, bool NA, typename VECTOR>
+inline Mat( const Rcpp::MatrixBase<RTYPE,NA,VECTOR>& X ) ;
+
 #endif
