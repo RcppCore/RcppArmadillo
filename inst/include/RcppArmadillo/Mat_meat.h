@@ -40,9 +40,9 @@ inline Mat<eT>::Mat( const Rcpp::VectorBase<RTYPE,NA,VECTOR>& X )
   	
 	set_size( X.size(), 1 ) ;
 		
-	iterator first = begin(), last = end(); 
-	for( u32 i=0; first != last; ++i){
-		*first++ = X[i] ;
+	eT* ptr = memptr() ;
+	for( u32 i=0; i<n_elem; ++i){
+		ptr[i] = X[i] ;
 	}
 }
 
@@ -62,13 +62,13 @@ inline Mat<eT>::Mat( const Rcpp::MatrixBase<RTYPE,NA,MATRIX>& X )
 	// std::complex<double> != Rcomplex
 	isnt_same_type<eT, typename Rcpp::traits::storage_type<RTYPE>::type >::check();
   	
-	u32 nr = X.nrow(), nc = X.ncol(), i_col, i_row ;
+	u32 nr = X.nrow(), nc = X.ncol(), i_col, i_row, k ;
 	set_size( nr, nc ) ;
 		
-	iterator first = begin() ;
-	for( i_col=0; i_col < nc; ++i_col){
-		for( i_row = 0; i_row < nr ; ++i_row ){
-			*first++ = X(i_row,i_col) ;
+	eT* ptr = memptr() ;
+	for( i_col=0, k=0 ; i_col < nc; ++i_col){
+		for( i_row = 0; i_row < nr ; ++i_row, ++k ){
+			ptr[k] = X(i_row,i_col) ;
 		}
 	}
 }
