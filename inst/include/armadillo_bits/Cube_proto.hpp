@@ -113,6 +113,10 @@ class Cube : public BaseCube< eT, Cube<eT> >
   template<typename T1, typename T2, typename eglue_type> inline const Cube& operator%=(const eGlueCube<T1, T2, eglue_type>& X);
   template<typename T1, typename T2, typename eglue_type> inline const Cube& operator/=(const eGlueCube<T1, T2, eglue_type>& X);
   
+#ifdef ARMA_EXTRA_CUBE_PROTO
+#include ARMA_EXTRA_CUBE_PROTO
+#endif
+
   arma_inline eT& operator[] (const u32 i);
   arma_inline eT  operator[] (const u32 i) const;
   arma_inline eT& operator() (const u32 i);

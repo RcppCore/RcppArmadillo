@@ -2233,5 +2233,8 @@ Cube_aux::postfix_mm(Cube< std::complex<T> >& x)
   }
 
 
+#ifdef ARMA_EXTRA_CUBE_MEAT
+#include ARMA_EXTRA_CUBE_MEAT
+#endif
 
 //! @}
