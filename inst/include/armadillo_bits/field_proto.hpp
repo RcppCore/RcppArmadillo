@@ -63,6 +63,10 @@ class field
   inline explicit field(const u32 n_elem_in);
   inline          field(const u32 n_rows_in, const u32 n_cols_in);
   
+#ifdef ARMA_EXTRA_FIELD_PROTO
+#include ARMA_EXTRA_FIELD_PROTO
+#endif
+
   inline void  set_size(const u32 n_obj_in);
   inline void  set_size(const u32 n_rows_in, const u32 n_cols_in);
   
