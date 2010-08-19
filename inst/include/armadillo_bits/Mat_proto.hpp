@@ -174,8 +174,8 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename T1, typename T2, typename glue_type> inline const Mat& operator%=(const mtGlue<eT, T1, T2, glue_type>& X);
   template<typename T1, typename T2, typename glue_type> inline const Mat& operator/=(const mtGlue<eT, T1, T2, glue_type>& X);
   
-#ifdef ARMADILLO_EXTRA_MAT_PROTO
-#include ARMADILLO_EXTRA_MAT_PROTO
+#ifdef ARMA_EXTRA_MAT_PROTO
+#include ARMA_EXTRA_MAT_PROTO
 #endif
   
   arma_inline eT& operator[] (const u32 i);

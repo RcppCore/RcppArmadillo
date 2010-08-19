@@ -3416,8 +3416,8 @@ Mat_aux::postfix_mm(Mat< std::complex<T> >& x)
   }
 
 
-#ifdef ARMADILLO_EXTRA_MAT_MEAT
-#include ARMADILLO_EXTRA_MAT_MEAT
+#ifdef ARMA_EXTRA_MAT_MEAT
+#include ARMA_EXTRA_MAT_MEAT
 #endif
 
 
