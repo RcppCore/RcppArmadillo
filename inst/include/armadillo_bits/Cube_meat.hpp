@@ -98,19 +98,29 @@ Cube<eT>::init(const u32 in_n_rows, const u32 in_n_cols, const u32 in_n_slices)
   arma_extra_debug_sigprint( arma_boost::format("in_n_rows = %d, in_n_cols = %d, in_n_slices = %d") % in_n_rows % in_n_cols % in_n_slices );
   
   const u32 new_n_elem = in_n_rows * in_n_cols * in_n_slices;
-
+  
   if(n_elem == new_n_elem)
     {
     if( (n_rows != in_n_rows) || (n_cols != in_n_cols) || (n_slices != in_n_slices) )
       {
       delete_mat();
-
-      access::rw(n_rows)       = in_n_rows;
-      access::rw(n_cols)       = in_n_cols;
-      access::rw(n_elem_slice) = in_n_rows*in_n_cols;
-      access::rw(n_slices)     = in_n_slices;
-    
-      create_mat();
+      
+      if(new_n_elem > 0)
+        {
+        access::rw(n_rows)       = in_n_rows;
+        access::rw(n_cols)       = in_n_cols;
+        access::rw(n_elem_slice) = in_n_rows*in_n_cols;
+        access::rw(n_slices)     = in_n_slices;
+        
+        create_mat();
+        }
+      else
+        {
+        access::rw(n_rows)       = 0;
+        access::rw(n_cols)       = 0;
+        access::rw(n_elem_slice) = 0;
+        access::rw(n_slices)     = 0;
+        }
       }
     }
   else
@@ -118,11 +128,11 @@ Cube<eT>::init(const u32 in_n_rows, const u32 in_n_cols, const u32 in_n_slices)
     arma_debug_check
       (
       (use_aux_mem == true),
-      "Cube::init(): can't change the amount of memory as auxiliary memory is in use"
+      "Cube::init(): can't change the size as auxiliary memory is in use"
       );
-      
+    
     delete_mat();
-
+    
     if(n_elem > sizeof(mem_local)/sizeof(eT) )
       {
       delete [] mem;
@@ -138,24 +148,24 @@ Cube<eT>::init(const u32 in_n_rows, const u32 in_n_cols, const u32 in_n_slices)
       arma_check( (mem == 0), "Cube::init(): out of memory" );
       }
     
-    access::rw(n_elem) = new_n_elem;
-
-    if(new_n_elem == 0)
+    if(new_n_elem > 0)
       {
+      access::rw(n_elem)       = new_n_elem;
+      access::rw(n_rows)       = in_n_rows;
+      access::rw(n_cols)       = in_n_cols;
+      access::rw(n_elem_slice) = in_n_rows*in_n_cols;
+      access::rw(n_slices)     = in_n_slices;
+      
+      create_mat();
+      }
+    else
+      {
+      access::rw(n_elem)       = 0;
       access::rw(n_rows)       = 0;
       access::rw(n_cols)       = 0;
       access::rw(n_elem_slice) = 0;
       access::rw(n_slices)     = 0;
       }
-    else
-      {
-      access::rw(n_rows)       = in_n_rows;
-      access::rw(n_cols)       = in_n_cols;
-      access::rw(n_elem_slice) = in_n_rows*in_n_cols;
-      access::rw(n_slices)     = in_n_slices;
-      }
-      
-    create_mat();
     }
   }
 
@@ -816,6 +826,64 @@ const subview_cube<eT>
 Cube<eT>::subcube(const u32 in_row1, const u32 in_col1, const u32 in_slice1, const u32 in_row2, const u32 in_col2, const u32 in_slice2) const
   {
   arma_extra_debug_sigprint();
+  
+  arma_debug_check
+    (
+    (in_row1 >  in_row2) || (in_col1 >  in_col2) || (in_slice1 >  in_slice2) ||
+    (in_row2 >= n_rows)  || (in_col2 >= n_cols)  || (in_slice2 >= n_slices),
+    "Cube::subcube(): indices out of bounds or incorrectly used"
+    );
+    
+  return subview_cube<eT>(*this, in_row1, in_col1, in_slice1, in_row2, in_col2, in_slice2);
+  }
+
+
+
+//! creation of subview_cube (generic subcube)
+template<typename eT>
+arma_inline
+subview_cube<eT>
+Cube<eT>::subcube(const span& row_span, const span& col_span, const span& slice_span)
+  {
+  arma_extra_debug_sigprint();
+  
+  const u32 in_row1 = row_span.a;
+  const u32 in_row2 = row_span.b;
+  
+  const u32 in_col1 = col_span.a;
+  const u32 in_col2 = col_span.b;
+  
+  const u32 in_slice1 = slice_span.a;
+  const u32 in_slice2 = slice_span.b;
+  
+  arma_debug_check
+    (
+    (in_row1 >  in_row2) || (in_col1 >  in_col2) || (in_slice1 >  in_slice2) ||
+    (in_row2 >= n_rows)  || (in_col2 >= n_cols)  || (in_slice2 >= n_slices),
+    "Cube::subcube(): indices out of bounds or incorrectly used"
+    );
+  
+  return subview_cube<eT>(*this, in_row1, in_col1, in_slice1, in_row2, in_col2, in_slice2);
+  }
+
+
+
+//! creation of subview_cube (generic subcube)
+template<typename eT>
+arma_inline
+const subview_cube<eT>
+Cube<eT>::subcube(const span& row_span, const span& col_span, const span& slice_span) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const u32 in_row1 = row_span.a;
+  const u32 in_row2 = row_span.b;
+  
+  const u32 in_col1 = col_span.a;
+  const u32 in_col2 = col_span.b;
+  
+  const u32 in_slice1 = slice_span.a;
+  const u32 in_slice2 = slice_span.b;
   
   arma_debug_check
     (
@@ -2233,8 +2301,11 @@ Cube_aux::postfix_mm(Cube< std::complex<T> >& x)
   }
 
 
+
 #ifdef ARMA_EXTRA_CUBE_MEAT
-#include ARMA_EXTRA_CUBE_MEAT
+  #include ARMA_INCFILE_WRAP(ARMA_EXTRA_CUBE_MEAT)
 #endif
+
+
 
 //! @}

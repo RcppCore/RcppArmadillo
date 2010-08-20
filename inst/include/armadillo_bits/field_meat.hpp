@@ -1726,9 +1726,12 @@ field_aux::load(field< std::string >& x, std::istream& is, const file_type type,
   return diskio::load_std_string(x, is, err_msg);
   }
 
+
+
 #ifdef ARMA_EXTRA_FIELD_MEAT
-#include ARMA_EXTRA_FIELD_MEAT
+  #include ARMA_INCFILE_WRAP(ARMA_EXTRA_FIELD_MEAT)
 #endif
+
 
 
 //! @}

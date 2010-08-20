@@ -32,6 +32,7 @@
 #include <complex>
 #include <vector>
 
+
 #include "armadillo_bits/config.hpp"
 #include "armadillo_bits/compiler_setup.hpp"
 
@@ -67,8 +68,10 @@
 #endif
 
 
+#define ARMA_INCFILE_WRAP(x) <x>
+
+
 #if defined(ARMA_USE_ATLAS)
-  
   #if !defined(ARMA_ATLAS_INCLUDE_DIR)
     extern "C"
       {
@@ -76,26 +79,23 @@
       #include <clapack.h>
       }
   #else
-  
     #define ARMA_STR1(x) x
     #define ARMA_STR2(x) ARMA_STR1(x)
-    #define ARMA_STR3(x) <x>
-
+    
     #define ARMA_CBLAS   ARMA_STR2(ARMA_ATLAS_INCLUDE_DIR)ARMA_STR2(cblas.h)
     #define ARMA_CLAPACK ARMA_STR2(ARMA_ATLAS_INCLUDE_DIR)ARMA_STR2(clapack.h)
-      
+    
     extern "C"
       {
-      #include ARMA_STR3(ARMA_CBLAS)
-      #include ARMA_STR3(ARMA_CLAPACK)
+      #include ARMA_INCFILE_WRAP(ARMA_CBLAS)
+      #include ARMA_INCFILE_WRAP(ARMA_CLAPACK)
       }
-
+    
     #undef ARMA_STR1
     #undef ARMA_STR2
-    #undef ARMA_STR3
     #undef ARMA_CBLAS
     #undef ARMA_CLAPACK
-  #endif  
+  #endif
 #endif
 
 
@@ -120,6 +120,7 @@ namespace arma
   #include "armadillo_bits/upgrade_val.hpp"
   #include "armadillo_bits/restrictors.hpp"
   #include "armadillo_bits/access.hpp"
+  #include "armadillo_bits/span.hpp"
   
   
   //

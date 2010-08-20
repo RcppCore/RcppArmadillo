@@ -99,9 +99,6 @@ class Row : public Mat<eT>, public BaseVec< eT, Row<eT> >
   template<typename T1, typename T2, typename glue_type> inline const Row&  operator=(const mtGlue<eT, T1, T2, glue_type>& X);
   template<typename T1, typename T2, typename glue_type> inline const Row& operator*=(const mtGlue<eT, T1, T2, glue_type>& X);
   
-#ifdef ARMA_EXTRA_ROW_PROTO
-#include ARMA_EXTRA_ROW_PROTO
-#endif
 
   inline void  set_size(const u32 N);
   inline void  set_size(const u32 n_rows, const u32 n_cols);
@@ -134,6 +131,12 @@ class Row : public Mat<eT>, public BaseVec< eT, Row<eT> >
   
   inline       row_iterator end_row  (const u32 row_num);
   inline const_row_iterator end_row  (const u32 row_num) const;
+  
+  
+  #ifdef ARMA_EXTRA_ROW_PROTO
+    #include ARMA_INCFILE_WRAP(ARMA_EXTRA_ROW_PROTO)
+  #endif
+  
   };
 
 

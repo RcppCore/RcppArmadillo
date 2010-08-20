@@ -83,8 +83,10 @@ class Cube : public BaseCube< eT, Cube<eT> >
   
   arma_inline       subview_cube<eT> subcube(const u32 in_row1, const u32 in_col1, const u32 in_slice1, const u32 in_row2, const u32 in_col2, const u32 in_slice2);
   arma_inline const subview_cube<eT> subcube(const u32 in_row1, const u32 in_col1, const u32 in_slice1, const u32 in_row2, const u32 in_col2, const u32 in_slice2) const;
-
-
+  
+  arma_inline       subview_cube<eT> subcube(const span& row_span, const span& col_span, const span& slice_span);
+  arma_inline const subview_cube<eT> subcube(const span& row_span, const span& col_span, const span& slice_span) const;
+  
   template<typename T1, typename op_type> inline                   Cube(const OpCube<T1, op_type>& X);
   template<typename T1, typename op_type> inline const Cube&  operator=(const OpCube<T1, op_type>& X);
   template<typename T1, typename op_type> inline const Cube& operator+=(const OpCube<T1, op_type>& X);
@@ -113,10 +115,7 @@ class Cube : public BaseCube< eT, Cube<eT> >
   template<typename T1, typename T2, typename eglue_type> inline const Cube& operator%=(const eGlueCube<T1, T2, eglue_type>& X);
   template<typename T1, typename T2, typename eglue_type> inline const Cube& operator/=(const eGlueCube<T1, T2, eglue_type>& X);
   
-#ifdef ARMA_EXTRA_CUBE_PROTO
-#include ARMA_EXTRA_CUBE_PROTO
-#endif
-
+  
   arma_inline eT& operator[] (const u32 i);
   arma_inline eT  operator[] (const u32 i) const;
   arma_inline eT& operator() (const u32 i);
@@ -198,6 +197,11 @@ class Cube : public BaseCube< eT, Cube<eT> >
   
   inline       slice_iterator end_slice(const u32 slice_num);
   inline const_slice_iterator end_slice(const u32 slice_num)   const;
+
+
+  #ifdef ARMA_EXTRA_CUBE_PROTO
+    #include ARMA_INCFILE_WRAP(ARMA_EXTRA_CUBE_PROTO)
+  #endif
   
   
   protected:

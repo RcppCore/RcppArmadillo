@@ -724,6 +724,7 @@ arma_assert_mul_size(const subview<eT1>& A, const subview<eT2>& B, const char* x
         std::cout << "@ arma_config::boost      = " << arma_config::boost      << '\n';
         std::cout << "@ arma_config::boost_date = " << arma_config::boost_date << '\n';
         std::cout << "@ arma_config::good_comp  = " << arma_config::good_comp  << '\n';
+        std::cout << "@ arma_config::extra_code = " << arma_config::extra_code << '\n';
         std::cout << "@ sizeof(int)  = " << sizeof(int)  << '\n';
         std::cout << "@ sizeof(int*) = " << sizeof(int*) << '\n';
         std::cout << "@ sizeof(long) = " << sizeof(long) << '\n';
