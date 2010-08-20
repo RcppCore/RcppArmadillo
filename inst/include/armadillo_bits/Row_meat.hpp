@@ -967,9 +967,12 @@ Row<eT>::end_row(const u32 row_num) const
   return Mat<eT>::memptr() + Mat<eT>::n_cols;
   }
 
+
+
 #ifdef ARMA_EXTRA_ROW_MEAT
-#include ARMA_EXTRA_ROW_MEAT
+  #include ARMA_INCFILE_WRAP(ARMA_EXTRA_ROW_MEAT)
 #endif
+
 
 
 //! @}

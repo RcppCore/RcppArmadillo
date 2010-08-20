@@ -87,7 +87,7 @@ Mat<eT>::init(const u32 in_n_rows, const u32 in_n_cols)
   arma_extra_debug_sigprint( arma_boost::format("in_n_rows = %d, in_n_cols = %d") % in_n_rows % in_n_cols );
   
   const u32 new_n_elem = in_n_rows * in_n_cols;
-
+  
   if(n_elem == new_n_elem)
     {
     access::rw(n_rows) = in_n_rows;
@@ -98,9 +98,9 @@ Mat<eT>::init(const u32 in_n_rows, const u32 in_n_cols)
     arma_debug_check
       (
       (use_aux_mem == true),
-      "Mat::init(): can't change the amount of memory as auxiliary memory is in use"
+      "Mat::init(): can't change the size as auxiliary memory is in use"
       );
-
+    
     if(n_elem > sizeof(mem_local)/sizeof(eT) )
       {
       delete [] mem;
@@ -117,18 +117,14 @@ Mat<eT>::init(const u32 in_n_rows, const u32 in_n_cols)
       }
     
     access::rw(n_elem) = new_n_elem;
-
-    if(new_n_elem == 0)
-      {
-      access::rw(n_rows) = 0;
-      access::rw(n_cols) = 0;
-      }
-    else
-      {
-      access::rw(n_rows) = in_n_rows;
-      access::rw(n_cols) = in_n_cols;
-      }
-    
+    access::rw(n_rows) = in_n_rows;
+    access::rw(n_cols) = in_n_cols;
+    }
+  
+  if(new_n_elem == 0)
+    {
+    access::rw(n_rows) = 0;
+    access::rw(n_cols) = 0;
     }
   }
 
@@ -1229,6 +1225,56 @@ Mat<eT>::submat(const u32 in_row1, const u32 in_col1, const u32 in_row2, const u
 
 
 
+//! creation of subview (submatrix)
+template<typename eT>
+arma_inline
+subview<eT>
+Mat<eT>::submat(const span& row_span, const span& col_span)
+  {
+  arma_extra_debug_sigprint();
+  
+  const u32 in_row1 = row_span.a;
+  const u32 in_row2 = row_span.b;
+  
+  const u32 in_col1 = col_span.a;
+  const u32 in_col2 = col_span.b;
+  
+  arma_debug_check
+    (
+    (in_row1 > in_row2) || (in_col1 >  in_col2) || (in_row2 >= n_rows) || (in_col2 >= n_cols),
+    "Mat::submat(): indices out of bounds or incorrectly used"
+    );
+  
+  return subview<eT>(*this, in_row1, in_col1, in_row2, in_col2);
+  }
+
+
+
+//! creation of subview (generic submatrix)
+template<typename eT>
+arma_inline
+const subview<eT>
+Mat<eT>::submat(const span& row_span, const span& col_span) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const u32 in_row1 = row_span.a;
+  const u32 in_row2 = row_span.b;
+  
+  const u32 in_col1 = col_span.a;
+  const u32 in_col2 = col_span.b;
+  
+  arma_debug_check
+    (
+    (in_row1 > in_row2) || (in_col1 >  in_col2) || (in_row2 >= n_rows) || (in_col2 >= n_cols),
+    "Mat::submat(): indices out of bounds or incorrectly used"
+    );
+    
+  return subview<eT>(*this, in_row1, in_col1, in_row2, in_col2);
+  }
+
+
+
 //! creation of diagview (diagonal)
 template<typename eT>
 arma_inline
@@ -2288,6 +2334,17 @@ Mat<eT>::is_finite() const
     }
 
   return true;
+  }
+
+
+
+//! returns true if the matrix has no elements
+template<typename eT>
+arma_inline
+bool
+Mat<eT>::is_empty() const
+  {
+  return (n_elem == 0);
   }
 
 
@@ -3416,9 +3473,11 @@ Mat_aux::postfix_mm(Mat< std::complex<T> >& x)
   }
 
 
+
 #ifdef ARMA_EXTRA_MAT_MEAT
-#include ARMA_EXTRA_MAT_MEAT
+  #include ARMA_INCFILE_WRAP(ARMA_EXTRA_MAT_MEAT)
 #endif
+
 
 
 //! @}

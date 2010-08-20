@@ -996,8 +996,11 @@ Col<eT>::end_row(const u32 row_num) const
   }
 
 
+
 #ifdef ARMA_EXTRA_COL_MEAT
-#include ARMA_EXTRA_COL_MEAT
+  #include ARMA_INCFILE_WRAP(ARMA_EXTRA_COL_MEAT)
 #endif
+
+
 
 //! @}

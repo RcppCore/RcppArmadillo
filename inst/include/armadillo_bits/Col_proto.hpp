@@ -98,10 +98,6 @@ class Col : public Mat<eT>, public BaseVec< eT, Col<eT> >
   template<typename T1, typename T2, typename glue_type> inline const Col&  operator=(const mtGlue<eT, T1, T2, glue_type>& X);
   template<typename T1, typename T2, typename glue_type> inline const Col& operator*=(const mtGlue<eT, T1, T2, glue_type>& X);
   
-#ifdef ARMA_EXTRA_COL_PROTO
-#include ARMA_EXTRA_COL_PROTO
-#endif
-
   inline void  set_size(const u32 n_elem);
   inline void  set_size(const u32 n_rows, const u32 n_cols);
   inline void   reshape(const u32 n_rows, const u32 n_cols, const u32 dim = 0);
@@ -133,6 +129,12 @@ class Col : public Mat<eT>, public BaseVec< eT, Col<eT> >
   
   inline       row_iterator end_row  (const u32 row_num);
   inline const_row_iterator end_row  (const u32 row_num) const;
+  
+  
+  #ifdef ARMA_EXTRA_COL_PROTO
+    #include ARMA_INCFILE_WRAP(ARMA_EXTRA_COL_PROTO)
+  #endif
+  
   };
 
 

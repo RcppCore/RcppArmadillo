@@ -116,7 +116,10 @@ class Mat : public Base< eT, Mat<eT> >
   
   arma_inline       subview<eT> submat(const u32 in_row1, const u32 in_col1, const u32 in_row2, const u32 in_col2);
   arma_inline const subview<eT> submat(const u32 in_row1, const u32 in_col1, const u32 in_row2, const u32 in_col2) const;
-
+  
+  arma_inline       subview<eT> submat(const span& row_span, const span& col_span);
+  arma_inline const subview<eT> submat(const span& row_span, const span& col_span) const;
+  
   arma_inline       diagview<eT> diag(const s32 in_id = 0);
   arma_inline const diagview<eT> diag(const s32 in_id = 0) const;
     
@@ -174,10 +177,6 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename T1, typename T2, typename glue_type> inline const Mat& operator%=(const mtGlue<eT, T1, T2, glue_type>& X);
   template<typename T1, typename T2, typename glue_type> inline const Mat& operator/=(const mtGlue<eT, T1, T2, glue_type>& X);
   
-#ifdef ARMA_EXTRA_MAT_PROTO
-#include ARMA_EXTRA_MAT_PROTO
-#endif
-  
   arma_inline eT& operator[] (const u32 i);
   arma_inline eT  operator[] (const u32 i) const;
   arma_inline eT& operator() (const u32 i);
@@ -194,9 +193,10 @@ class Mat : public Base< eT, Mat<eT> >
   arma_inline const Mat& operator--();
   arma_inline void       operator--(int);
   
-  arma_inline bool is_vec() const;
+  arma_inline bool is_vec()    const;
   arma_inline bool is_square() const;
   arma_inline bool is_finite() const;
+  arma_inline bool is_empty()  const;
   
   arma_inline       eT* colptr(const u32 in_col);
   arma_inline const eT* colptr(const u32 in_col) const;
@@ -216,11 +216,13 @@ class Mat : public Base< eT, Mat<eT> >
   inline void raw_print_trans(const std::string extra_text = "") const;
   inline void raw_print_trans(std::ostream& user_stream, const std::string extra_text = "") const;
   
+  
   template<typename eT2>
   inline void copy_size(const Mat<eT2>& m);
   
   inline void  set_size(const u32 in_rows, const u32 in_cols);
   inline void   reshape(const u32 in_rows, const u32 in_cols, const u32 dim = 0);
+  
   
   arma_hot inline void fill(const eT val);
   
@@ -246,7 +248,10 @@ class Mat : public Base< eT, Mat<eT> >
   inline bool quiet_load(      std::istream& is,   const file_type type = auto_detect);
   
   
-  // iterators
+  // for container-like functionality
+  
+  typedef eT  value_type;
+  typedef u32 size_type;
   
   typedef       eT*       iterator;
   typedef const eT* const_iterator;
@@ -317,6 +322,16 @@ class Mat : public Base< eT, Mat<eT> >
   
   inline       row_iterator end_row  (const u32 row_num);
   inline const_row_iterator end_row  (const u32 row_num) const;
+  
+  // inline      void clear();
+  // inline      void resize(const u32 in_n_elem);
+  // arma_inline bool empty() const;
+  // arma_inline u32  size()  const;
+  
+  
+  #ifdef ARMA_EXTRA_MAT_PROTO
+    #include ARMA_INCFILE_WRAP(ARMA_EXTRA_MAT_PROTO)
+  #endif
   
   
   protected:

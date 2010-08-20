@@ -75,6 +75,19 @@ struct arma_config
   #else
     static const bool good_comp = false;
   #endif
+  
+  
+  #if (  \
+         defined(ARMA_EXTRA_MAT_PROTO)   || defined(ARMA_EXTRA_MAT_MEAT)   \
+      || defined(ARMA_EXTRA_COL_PROTO)   || defined(ARMA_EXTRA_COL_MEAT)   \
+      || defined(ARMA_EXTRA_ROW_PROTO)   || defined(ARMA_EXTRA_ROW_MEAT)   \
+      || defined(ARMA_EXTRA_CUBE_PROTO)  || defined(ARMA_EXTRA_CUBE_MEAT)  \
+      || defined(ARMA_EXTRA_FIELD_PROTO) || defined(ARMA_EXTRA_FIELD_MEAT) \
+      )
+    static const bool extra_code = true;
+  #else
+    static const bool extra_code = false;
+  #endif
   };
 
 
