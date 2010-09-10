@@ -25,9 +25,11 @@
 template <typename eT>
 template <int RTYPE, bool NA, typename VECTOR>
 inline Mat<eT>::Mat( const Rcpp::VectorBase<RTYPE,NA,VECTOR>& X ) 
-	: n_rows( 0 )
-	, n_cols( 0 )
-	, n_elem( 0 )
+	: n_rows(0)
+	, n_cols(0)
+	, n_elem(0)
+	, vec_state(1)
+	, mem_state(0)
 	, mem(mem)
 {
 	
@@ -37,8 +39,8 @@ inline Mat<eT>::Mat( const Rcpp::VectorBase<RTYPE,NA,VECTOR>& X )
 	// std::complex<double> != Rcomplex
 	isnt_same_type<eT, typename Rcpp::traits::storage_type<RTYPE>::type >::check();
   	
-	set_size( X.size(), 1 ) ;
-		
+	set_size(X.size(), 1);
+	
 	eT* ptr = memptr() ;
 	for( u32 i=0; i<n_elem; ++i){
 		ptr[i] = X[i] ;
@@ -51,6 +53,8 @@ inline Mat<eT>::Mat( const Rcpp::MatrixBase<RTYPE,NA,MATRIX>& X )
 	: n_rows( 0 )
 	, n_cols( 0 )
 	, n_elem( 0 )
+	, vec_state(0)
+	, mem_state(0)
 	, mem(mem)
 {
 	

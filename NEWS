@@ -1,3 +1,11 @@
+0.2.6   (future)
+
+    o   Upgraded to Armadillo 0.9.70 "Subtropical Winter Safari"
+    
+    o	arma::Mat, arma::Row and arma::Col get constructor that take vector
+    	or matrix sugar expressions. See the unit test "test.armadillo.sugar.ctor" 
+    	and "test.armadillo.sugar.matrix.ctor" for examples.
+
 0.2.5   2010-08-05
 
     o   Upgraded to Armadillo 0.9.60 "Killer Bush Turkey"
