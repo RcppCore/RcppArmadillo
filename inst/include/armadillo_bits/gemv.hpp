@@ -79,14 +79,17 @@ class gemv_arma
         {
         // col is interpreted as row when storing the results in 'y'
         
-        const eT* A_coldata = A.colptr(col);
         
-        eT acc = eT(0);
-        for(u32 row=0; row < A_n_rows; ++row)
-          {
-          acc += A_coldata[row] * x[row];
-          }
-      
+        // const eT* A_coldata = A.colptr(col);
+        // 
+        // eT acc = eT(0);
+        // for(u32 row=0; row < A_n_rows; ++row)
+        //   {
+        //   acc += A_coldata[row] * x[row];
+        //   }
+        
+        const eT acc = op_dot::direct_dot_arma(A_n_rows, A.colptr(col), x);
+        
         if( (use_alpha == false) && (use_beta == false) )
           {
           y[col] = acc;

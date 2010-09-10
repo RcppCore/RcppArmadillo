@@ -21,8 +21,8 @@
 
 #define ARMA_VERSION_MAJOR 0
 #define ARMA_VERSION_MINOR 9
-#define ARMA_VERSION_PATCH 61
-#define ARMA_VERSION_NAME  "Subtropical Winter Safari (devel)"
+#define ARMA_VERSION_PATCH 70
+#define ARMA_VERSION_NAME  "Subtropical Winter Safari"
 
 
 struct arma_version

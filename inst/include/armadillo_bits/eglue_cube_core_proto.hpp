@@ -28,6 +28,9 @@ struct eglue_cube_core
   
   template<typename T1, typename T2> arma_hot inline static void apply(Cube<typename T1::elem_type>& out, const eGlueCube<T1, T2, eglue_type>& x);
   
+  template<typename T1, typename T2> arma_hot inline static void apply_proxy (Cube<typename T1::elem_type>& out, const eGlueCube<T1, T2, eglue_type>& x);
+  template<typename T1, typename T2> arma_hot inline static void apply_unwrap(Cube<typename T1::elem_type>& out, const eGlueCube<T1, T2, eglue_type>& x);
+  
   template<typename T1, typename T2> arma_hot inline static void apply_inplace_plus (Cube<typename T1::elem_type>& out, const eGlueCube<T1, T2, eglue_type>& x);
   template<typename T1, typename T2> arma_hot inline static void apply_inplace_minus(Cube<typename T1::elem_type>& out, const eGlueCube<T1, T2, eglue_type>& x);
   template<typename T1, typename T2> arma_hot inline static void apply_inplace_schur(Cube<typename T1::elem_type>& out, const eGlueCube<T1, T2, eglue_type>& x);

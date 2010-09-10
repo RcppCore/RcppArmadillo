@@ -18,7 +18,7 @@
 //! @{
 
 
-#if UCHAR_MAX == 0xff
+#if UCHAR_MAX >= 0xff
   //! unsigned 8 bit type
   typedef unsigned char u8;
   typedef          char s8;
@@ -30,7 +30,7 @@
 // "signed char" is not the same as "char". 
 // see http://www.embedded.com/columns/programmingpointers/206107018
 
-#if USHRT_MAX == 0xffff
+#if USHRT_MAX >= 0xffff
   //! unsigned 16 bit type  
   typedef unsigned short u16;
   typedef          short s16;
@@ -39,10 +39,10 @@
 #endif
 
 
-#if   UINT_MAX  == 0xffffffff
+#if   UINT_MAX  >= 0xffffffff
   typedef unsigned int  u32;
   typedef          int  s32;
-#elif ULONG_MAX == 0xffffffff
+#elif ULONG_MAX >= 0xffffffff
   typedef unsigned long u32;
   typedef          long s32;
 #else

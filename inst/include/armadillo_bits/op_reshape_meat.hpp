@@ -46,17 +46,28 @@ op_reshape::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reshape>& in)
         out.set_size(in_n_rows, in_n_cols);
         syslib::copy_elem( out.memptr(), A.memptr(), out.n_elem );
         }
-      else
+      else  // &out == &A, i.e. inplace resize
         {
-        access::rw(out.n_rows) = in_n_rows;
-        access::rw(out.n_cols) = in_n_cols;
+        const bool same_size = ( (out.n_rows == in_n_rows) && (out.n_cols == in_n_cols) );
+        
+        if(same_size == false)
+          {
+          arma_debug_check
+            (
+            (out.mem_state == 3),
+            "reshape(): size can't be changed as template based size specification is in use"
+            );
+          
+          access::rw(out.n_rows) = in_n_rows;
+          access::rw(out.n_cols) = in_n_cols;
+          }
         }
       }
     else
       {
       unwrap_check< Mat<eT> > tmp(A, out);
       const Mat<eT>& B      = tmp.M;
-
+      
       out.set_size(in_n_rows, in_n_cols);
       
       eT* out_mem = out.memptr();
@@ -144,11 +155,27 @@ op_reshape::apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_reshape>
         out.set_size(in_n_rows, in_n_cols, in_n_slices);
         syslib::copy_elem( out.memptr(), A.memptr(), out.n_elem );
         }
-      else
+      else  // &out == &A, i.e. inplace resize
         {
-        access::rw(out.n_rows)   = in_n_rows;
-        access::rw(out.n_cols)   = in_n_cols;
-        access::rw(out.n_slices) = in_n_slices;
+        const bool same_size = ( (out.n_rows == in_n_rows) && (out.n_cols == in_n_cols) && (out.n_slices == in_n_slices) );
+        
+        if(same_size == false)
+          {
+          arma_debug_check
+            (
+            (out.mem_state == 3),
+            "reshape(): size can't be changed as template based size specification is in use"
+            );
+          
+          out.delete_mat();
+          
+          access::rw(out.n_rows)       = in_n_rows;
+          access::rw(out.n_cols)       = in_n_cols;
+          access::rw(out.n_elem_slice) = in_n_rows * in_n_cols;
+          access::rw(out.n_slices)     = in_n_slices;
+          
+          out.create_mat();
+          }
         }
       }
     else

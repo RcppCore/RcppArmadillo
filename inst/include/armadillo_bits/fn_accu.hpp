@@ -32,26 +32,7 @@ accu_unwrap(const Base<typename T1::elem_type,T1>& X)
   const unwrap<T1>   tmp(X.get_ref());
   const Mat<eT>& A = tmp.M;
   
-  const eT* A_mem = A.memptr();
-  const u32 N     = A.n_elem;
-  
-  eT val1 = eT(0);
-  eT val2 = eT(0);
-  
-  u32 i,j;
-  
-  for(i=0, j=1; j<N; i+=2, j+=2)
-    {
-    val1 += A_mem[i];
-    val2 += A_mem[j];
-    }
-  
-  if(i < N)
-    {
-    val1 += A_mem[i];
-    }
-  
-  return val1 + val2;
+  return arrayops::accumulate( A.memptr(), A.n_elem );
   }
 
 
@@ -187,17 +168,14 @@ accu(const subview<eT>& S)
   {
   arma_extra_debug_sigprint();  
   
+  const u32 S_n_rows = S.n_rows;
+  const u32 S_n_cols = S.n_cols;
+  
   eT val = eT(0);
   
-  for(u32 col=0; col<S.n_cols; ++col)
+  for(u32 col=0; col<S_n_cols; ++col)
     {
-    const eT* coldata = S.colptr(col);
-    
-    for(u32 row=0; row<S.n_rows; ++row)
-      {
-      val += coldata[row];
-      }
-    
+    val += arrayops::accumulate( S.colptr(col), S_n_rows );
     }
   
   return val;
@@ -243,17 +221,7 @@ accu(const subview_col<eT>& S)
   {
   arma_extra_debug_sigprint();
   
-  const eT* S_colptr = S.colptr(0);
-  const u32 n_rows   = S.n_rows;
-  
-  eT val = eT(0);
-  
-  for(u32 row=0; row<n_rows; ++row)
-    {
-    val += S_colptr[row];
-    }
-  
-  return val;
+  return arrayops::accumulate( S.colptr(0), S.n_rows );
   }
 
 

@@ -22,7 +22,7 @@
 //! Generate a vector with all elements set to one
 arma_inline
 const eOp<colvec, eop_ones_full>
-ones(const u32 n_elem, const arma_Mat_Col_Row_only<colvec>::result* junk = 0)
+ones(const u32 n_elem)
   {
   arma_extra_debug_sigprint();
   
@@ -53,7 +53,7 @@ ones(const u32 n_elem, const typename arma_Mat_Col_Row_only<vec_type>::result* j
 //! Delayed generation of a dense matrix with all elements set to one
 arma_inline
 const eOp<mat, eop_ones_full>
-ones(const u32 n_rows, const u32 n_cols, const arma_Mat_Col_Row_only<mat>::result* junk = 0)
+ones(const u32 n_rows, const u32 n_cols)
   {
   arma_extra_debug_sigprint();
   
@@ -78,7 +78,7 @@ ones(const u32 n_rows, const u32 n_cols, const typename arma_Mat_Col_Row_only<ma
 
 arma_inline
 const eOpCube<cube, eop_cube_ones_full>
-ones(const u32 n_rows, const u32 n_cols, const u32 n_slices, const arma_Cube_only<cube>::result* junk = 0)
+ones(const u32 n_rows, const u32 n_cols, const u32 n_slices)
   {
   arma_extra_debug_sigprint();
   
@@ -104,7 +104,7 @@ ones(const u32 n_rows, const u32 n_cols, const u32 n_slices, const typename arma
 //! Delayed generation of a diagonal matrix with the diagonal elements set to one
 arma_inline
 const eOp<mat, eop_ones_diag>
-eye(const u32 n_rows, const u32 n_cols, const arma_Mat_Col_Row_only<mat>::result* junk = 0)
+eye(const u32 n_rows, const u32 n_cols)
   {
   arma_extra_debug_sigprint();
   

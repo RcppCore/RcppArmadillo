@@ -28,8 +28,6 @@ class access
   //! internal function to obtain the real part of either a plain number or a complex number
   template<typename eT> arma_inline static const eT& tmp_real(const eT&              X) { return X;        }
   template<typename  T> arma_inline static const   T tmp_real(const std::complex<T>& X) { return X.real(); }
-
-
   };
 
 

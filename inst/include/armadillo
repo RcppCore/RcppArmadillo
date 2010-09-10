@@ -127,6 +127,7 @@ namespace arma
   // class prototypes
   
   #include "armadillo_bits/syslib_proto.hpp"
+  #include "armadillo_bits/arrayops_proto.hpp"
   #include "armadillo_bits/podarray_proto.hpp"
   
   #include "armadillo_bits/blas_proto.hpp"
