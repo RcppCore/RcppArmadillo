@@ -308,7 +308,7 @@ test.armadillo.sugar.matrix.ctor <- function(){
 	arma::colvec co = outer( xx, yy, ::norm ) ;
 	arma::rowvec ro = outer( yy, xx, ::norm ) ;
     return List::create( 
-    	_["mat"] = m + m, 
+    	_["mat"] = m + m , 
     	_["rowvec"] = ro, 
     	_["colvec"] = co 
     ); 
