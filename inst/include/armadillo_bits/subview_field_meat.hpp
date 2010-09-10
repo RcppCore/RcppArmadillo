@@ -287,8 +287,9 @@ subview_field<oT>::check_overlap(const subview_field<oT>& x) const
       ( (x.aux_col2 >= t.aux_col1) && (x.aux_col2 <= t.aux_col2) )
       );
     
+    const bool overlap = ( (row_overlap == true) && (col_overlap == true) );
     
-    return (row_overlap & col_overlap);
+    return overlap;
     }
   }
 

@@ -97,23 +97,7 @@ glue_join::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_join>& 
       C.submat(0, A.n_cols, C.n_rows-1, C.n_cols-1) = B;
       }
     
-    if(C.n_elem > sizeof(C.mem_local)/sizeof(eT))
-      {
-      out.reset();
-      
-      access::rw(out.n_elem) = C.n_elem;
-      access::rw(out.n_rows) = C.n_rows;
-      access::rw(out.n_cols) = C.n_cols;
-      access::rw(out.mem   ) = C.mem;
-      
-      access::rw(C.n_elem) = 0;
-      access::rw(C.n_rows) = 0;
-      access::rw(C.n_cols) = 0;
-      }
-    else
-      {
-      out = C;
-      }
+    out.steal_mem(C);
     }
   
   }

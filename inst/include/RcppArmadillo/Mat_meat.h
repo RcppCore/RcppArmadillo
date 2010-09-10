@@ -28,7 +28,6 @@ inline Mat<eT>::Mat( const Rcpp::VectorBase<RTYPE,NA,VECTOR>& X )
 	: n_rows( 0 )
 	, n_cols( 0 )
 	, n_elem( 0 )
-	, use_aux_mem(false)
 	, mem(mem)
 {
 	
@@ -52,7 +51,6 @@ inline Mat<eT>::Mat( const Rcpp::MatrixBase<RTYPE,NA,MATRIX>& X )
 	: n_rows( 0 )
 	, n_cols( 0 )
 	, n_elem( 0 )
-	, use_aux_mem(false)
 	, mem(mem)
 {
 	

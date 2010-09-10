@@ -28,44 +28,29 @@ class Col : public Mat<eT>, public BaseVec< eT, Col<eT> >
   typedef typename get_pod_type<eT>::result pod_type;
   
   
-  inline                     Col();
-  inline explicit            Col(const u32 n_elem);
-  inline                     Col(const u32 in_rows, const u32 in_cols);
+  inline          Col();
+  inline explicit Col(const u32 n_elem);
+  inline          Col(const u32 in_rows, const u32 in_cols);
   
-  inline                     Col(const char*        text);
-  inline const Col&    operator=(const char*        text);
-  inline                     Col(const std::string& text);
-  inline const Col&    operator=(const std::string& text);
+  inline                  Col(const char*        text);
+  inline const Col& operator=(const char*        text);
+  inline                  Col(const std::string& text);
+  inline const Col& operator=(const std::string& text);
   
-  inline                     Col(const Col& X);
-  inline const Col&    operator=(const Col& X);
+  inline const Col& operator=(const eT val);
+    
+  template<typename T1> inline                   Col(const Base<eT,T1>& X);
+  template<typename T1> inline const Col&  operator=(const Base<eT,T1>& X);
   
-  //inline explicit            Col(const Mat<eT>& X);
-  inline                     Col(const Mat<eT>& X);
-  inline const Col&    operator=(const Mat<eT>& X);
-  inline const Col&   operator*=(const Mat<eT>& X);
-  
-  inline Col(      eT* aux_mem, const u32 aux_n_rows, const u32 aux_n_cols, const bool copy_aux_mem = true);
-  inline Col(const eT* aux_mem, const u32 aux_n_rows, const u32 aux_n_cols);
-  
-  inline Col(      eT* aux_mem, const u32 aux_length, const bool copy_aux_mem = true);
+  inline Col(      eT* aux_mem, const u32 aux_length, const bool copy_aux_mem = true, const bool strict = true);
   inline Col(const eT* aux_mem, const u32 aux_length);
   
   template<typename T1, typename T2>
   inline explicit Col(const Base<pod_type,T1>& A, const Base<pod_type,T2>& B);
   
-  inline                     Col(const subview<eT>& X);
-  inline const Col&    operator=(const subview<eT>& X);
-  inline const Col&   operator*=(const subview<eT>& X);
+  inline                  Col(const subview_cube<eT>& X);
+  inline const Col& operator=(const subview_cube<eT>& X);
   
-  inline                     Col(const subview_cube<eT>& X);
-  inline const Col&    operator=(const subview_cube<eT>& X);
-  inline const Col&   operator*=(const subview_cube<eT>& X);
-  
-  inline                     Col(const diagview<eT>& X);
-  inline const Col&    operator=(const diagview<eT>& X);
-  inline const Col&   operator*=(const diagview<eT>& X);
-
   inline mat_injector<Col> operator<<(const eT val);
   
   arma_inline eT& row(const u32 row_num);
@@ -73,52 +58,6 @@ class Col : public Mat<eT>, public BaseVec< eT, Col<eT> >
   
   arma_inline       subview_col<eT> rows(const u32 in_row1, const u32 in_row2);
   arma_inline const subview_col<eT> rows(const u32 in_row1, const u32 in_row2) const;
-  
-  template<typename T1, typename op_type> inline                   Col(const Op<T1, op_type>& X);
-  template<typename T1, typename op_type> inline const Col&  operator=(const Op<T1, op_type>& X);
-  template<typename T1, typename op_type> inline const Col& operator*=(const Op<T1, op_type>& X);
-  
-  template<typename T1, typename eop_type> inline                   Col(const eOp<T1, eop_type>& X);
-  template<typename T1, typename eop_type> inline const Col&  operator=(const eOp<T1, eop_type>& X);
-  template<typename T1, typename eop_type> inline const Col& operator*=(const eOp<T1, eop_type>& X);
-  
-  template<typename T1, typename op_type> inline                   Col(const mtOp<eT, T1, op_type>& X);
-  template<typename T1, typename op_type> inline const Col&  operator=(const mtOp<eT, T1, op_type>& X);
-  template<typename T1, typename op_type> inline const Col& operator*=(const mtOp<eT, T1, op_type>& X);
-  
-  template<typename T1, typename T2, typename glue_type> inline                   Col(const Glue<T1, T2, glue_type>& X);
-  template<typename T1, typename T2, typename glue_type> inline const Col&  operator=(const Glue<T1, T2, glue_type>& X);
-  template<typename T1, typename T2, typename glue_type> inline const Col& operator*=(const Glue<T1, T2, glue_type>& X);
-  
-  template<typename T1, typename T2, typename eglue_type> inline                   Col(const eGlue<T1, T2, eglue_type>& X);
-  template<typename T1, typename T2, typename eglue_type> inline const Col&  operator=(const eGlue<T1, T2, eglue_type>& X);
-  template<typename T1, typename T2, typename eglue_type> inline const Col& operator*=(const eGlue<T1, T2, eglue_type>& X);
-  
-  template<typename T1, typename T2, typename glue_type> inline                   Col(const mtGlue<eT, T1, T2, glue_type>& X);
-  template<typename T1, typename T2, typename glue_type> inline const Col&  operator=(const mtGlue<eT, T1, T2, glue_type>& X);
-  template<typename T1, typename T2, typename glue_type> inline const Col& operator*=(const mtGlue<eT, T1, T2, glue_type>& X);
-  
-  inline void  set_size(const u32 n_elem);
-  inline void  set_size(const u32 n_rows, const u32 n_cols);
-  inline void   reshape(const u32 n_rows, const u32 n_cols, const u32 dim = 0);
-  
-  template<typename eT2>
-  inline void copy_size(const Mat<eT2>& m);
-  
-  inline void zeros();
-  inline void zeros(const u32 n_elem);
-  inline void zeros(const u32 n_rows, const u32 n_cols);
-  
-  inline void ones();
-  inline void ones(const u32 n_elem);
-  inline void ones(const u32 n_rows, const u32 n_cols);
-  
-  
-  inline void load(const std::string   name, const file_type type = auto_detect, const bool print_status = true);
-  inline void load(      std::istream& is,   const file_type type = auto_detect, const bool print_status = true);
-  
-  inline void quiet_load(const std::string   name, const file_type type = auto_detect);
-  inline void quiet_load(      std::istream& is,   const file_type type = auto_detect);
   
   
   typedef       eT*       row_iterator;
@@ -129,6 +68,41 @@ class Col : public Mat<eT>, public BaseVec< eT, Col<eT> >
   
   inline       row_iterator end_row  (const u32 row_num);
   inline const_row_iterator end_row  (const u32 row_num) const;
+  
+  
+  template<u32 fixed_n_elem>
+  class fixed : public Col<eT>
+    {
+    private:
+    
+    arma_aligned eT mem_local_extra[ ( fixed_n_elem > Mat_prealloc::mem_n_elem ) ? fixed_n_elem : 1 ];
+    
+    arma_inline void mem_setup();
+    arma_inline void swap_rows_cols() { access::rw(Mat<eT>::n_cols) = fixed_n_elem; access::rw(Mat<eT>::n_rows) = 1; }
+    
+    public:
+    
+    inline fixed() { mem_setup(); }
+    
+    inline                fixed(const char*        text) { mem_setup(); swap_rows_cols(); Col<eT>::operator=(text);               }
+    inline const Col& operator=(const char*        text) {              swap_rows_cols(); Col<eT>::operator=(text); return *this; }
+    inline                fixed(const std::string& text) { mem_setup(); swap_rows_cols(); Col<eT>::operator=(text);               }
+    inline const Col& operator=(const std::string& text) {              swap_rows_cols(); Col<eT>::operator=(text); return *this; }
+    
+    inline const Col& operator=(const eT val) { Col<eT>::operator=(val); return *this; }
+    
+    template<typename T1>
+    inline fixed(const Base<eT,T1>& A) { mem_setup(); Col<eT>::operator=(A.get_ref()); }
+    
+    template<typename T1>
+    inline const Col& operator=(const Base<eT,T1>& A) { Col<eT>::operator=(A.get_ref()); return *this; }
+    
+    template<typename T1, typename T2>
+    inline explicit fixed(const Base<pod_type,T1>& A, const Base<pod_type,T2>& B) { mem_setup(); Col<eT>::init(A,B); }
+    
+    inline                fixed(const subview_cube<eT>& X) { mem_setup(); Col<eT>::operator=(X);               }
+    inline const Col& operator=(const subview_cube<eT>& X) {              Col<eT>::operator=(X); return *this; }
+    };
   
   
   #ifdef ARMA_EXTRA_COL_PROTO

@@ -65,14 +65,16 @@ class gemm_emul_cache
         
         for(u32 col_B=0; col_B < B_n_cols; ++col_B)
           {
-          const eT* B_coldata = B.colptr(col_B);
+          // const eT* B_coldata = B.colptr(col_B);
+          // 
+          // eT acc = eT(0);
+          // for(u32 i=0; i < B_n_rows; ++i)
+          //   {
+          //   acc += A_rowdata[i] * B_coldata[i];
+          //   }
           
-          eT acc = eT(0);
-          for(u32 i=0; i < B_n_rows; ++i)
-            {
-            acc += A_rowdata[i] * B_coldata[i];
-            }
-        
+          const eT acc = op_dot::direct_dot_arma(B_n_rows, A_rowdata, B.colptr(col_B));
+          
           if( (use_alpha == false) && (use_beta == false) )
             {
             C.at(row_A,col_B) = acc;
@@ -107,14 +109,16 @@ class gemm_emul_cache
         
         for(u32 col_B=0; col_B < B_n_cols; ++col_B)
           {
-          const eT* B_coldata = B.colptr(col_B);
+          // const eT* B_coldata = B.colptr(col_B);
+          // 
+          // eT acc = eT(0);
+          // for(u32 i=0; i < B_n_rows; ++i)
+          //   {
+          //   acc += A_coldata[i] * B_coldata[i];
+          //   }
           
-          eT acc = eT(0);
-          for(u32 i=0; i < B_n_rows; ++i)
-            {
-            acc += A_coldata[i] * B_coldata[i];
-            }
-        
+          const eT acc = op_dot::direct_dot_arma(B_n_rows, A_coldata, B.colptr(col_B));
+          
           if( (use_alpha == false) && (use_beta == false) )
             {
             C.at(col_A,col_B) = acc;
@@ -167,14 +171,16 @@ class gemm_emul_cache
         
         for(u32 col_A=0; col_A < A_n_cols; ++col_A)
           {
-          const eT* A_coldata = A.colptr(col_A);
+          // const eT* A_coldata = A.colptr(col_A);
+          // 
+          // eT acc = eT(0);
+          // for(u32 i=0; i < A_n_rows; ++i)
+          //   {
+          //   acc += B_rowdata[i] * A_coldata[i];
+          //   }
           
-          eT acc = eT(0);
-          for(u32 i=0; i < A_n_rows; ++i)
-            {
-            acc += B_rowdata[i] * A_coldata[i];
-            }
-        
+          const eT acc = op_dot::direct_dot_arma(A_n_rows, B_rowdata, A.colptr(col_A));
+          
           if( (use_alpha == false) && (use_beta == false) )
             {
             C.at(col_A,row_B) = acc;

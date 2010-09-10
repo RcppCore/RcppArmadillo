@@ -550,6 +550,7 @@ field<oT>::fill(const oT& x)
 
 
 
+//! reset the field to an empty state (i.e. the field will have no objects)
 template<typename oT>
 inline
 void
@@ -562,6 +563,7 @@ field<oT>::reset()
 
 
 
+//! reset each object
 template<typename oT>
 inline
 void
@@ -570,6 +572,39 @@ field<oT>::reset_objects()
   arma_extra_debug_sigprint();
   
   field_aux::reset_objects(*this);
+  }
+
+
+
+//! returns true if the field has no objects
+template<typename oT>
+arma_inline
+bool
+field<oT>::is_empty() const
+  {
+  return (n_elem == 0);
+  }
+
+
+
+//! returns true if the given index is currently in range
+template<typename oT>
+arma_inline
+bool
+field<oT>::in_range(const u32 i) const
+  {
+  return (i < n_elem);
+  }
+
+
+
+//! returns true if the given location is currently in range
+template<typename oT>
+arma_inline
+bool
+field<oT>::in_range(const u32 in_row, const u32 in_col) const
+  {
+  return ( (in_row < n_rows) && (in_col < n_cols) );
   }
 
 

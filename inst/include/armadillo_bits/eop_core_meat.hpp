@@ -152,7 +152,15 @@ eop_core<eop_type>::apply_proxy(Mat<typename T1::elem_type>& out, const eOp<T1, 
     
   if(is_generator<eop_type>::value == true)
     {
-    for(u32 i=0; i<n_elem; ++i)
+    u32 i,j;
+    
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+      {
+      out_mem[i] = eop_aux::generate<eT,eop_type>();
+      out_mem[j] = eop_aux::generate<eT,eop_type>();
+      }
+    
+    if(i < n_elem)
       {
       out_mem[i] = eop_aux::generate<eT,eop_type>();
       }
@@ -172,7 +180,15 @@ eop_core<eop_type>::apply_proxy(Mat<typename T1::elem_type>& out, const eOp<T1, 
       }
     else
       {
-      for(u32 i=0; i<n_elem; ++i)
+      u32 i,j;
+      
+      for(i=0, j=1; j<n_elem; i+=2, j+=2)
+        {
+        out_mem[i] = eop_core<eop_type>::process(x, P[i]);
+        out_mem[j] = eop_core<eop_type>::process(x, P[j]);
+        }
+      
+      if(i < n_elem)
         {
         out_mem[i] = eop_core<eop_type>::process(x, P[i]);
         }
@@ -208,7 +224,15 @@ eop_core<eop_type>::apply_unwrap(Mat<typename T1::elem_type>& out, const eOp<T1,
   
   if(is_generator<eop_type>::value == true)
     {
-    for(u32 i=0; i<n_elem; ++i)
+    u32 i,j;
+    
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+      {
+      out_mem[i] = eop_aux::generate<eT,eop_type>();
+      out_mem[j] = eop_aux::generate<eT,eop_type>();
+      }
+    
+    if(i < n_elem)
       {
       out_mem[i] = eop_aux::generate<eT,eop_type>();
       }
@@ -230,7 +254,15 @@ eop_core<eop_type>::apply_unwrap(Mat<typename T1::elem_type>& out, const eOp<T1,
       {
       const eT* A_mem = A.memptr();
       
-      for(u32 i=0; i<n_elem; ++i)
+      u32 i,j;
+      
+      for(i=0, j=1; j<n_elem; i+=2, j+=2)
+        {
+        out_mem[i] = eop_core<eop_type>::process(x, A_mem[i]);
+        out_mem[j] = eop_core<eop_type>::process(x, A_mem[j]);
+        }
+      
+      if(i < n_elem)
         {
         out_mem[i] = eop_core<eop_type>::process(x, A_mem[i]);
         }
@@ -410,8 +442,10 @@ eop_core<eop_type>::apply_inplace_div(Mat<typename T1::elem_type>& out, const eO
       {
       for(u32 col=0; col<P.n_rows; ++col)
         {
-        for(u32 row=0;     row<col;      ++row) { out.at(row,col) /= eT(0); }
-        for(u32 row=col+1; row<P.n_rows; ++row) { out.at(row,col) /= eT(0); }
+        const eT zero = eT(0);
+        
+        for(u32 row=0;     row<col;      ++row) { out.at(row,col) /= zero; }
+        for(u32 row=col+1; row<P.n_rows; ++row) { out.at(row,col) /= zero; }
         }
       }
     else

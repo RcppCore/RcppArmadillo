@@ -1,7 +1,7 @@
 Package: RcppArmadillo
 Type: Package
 Title: Rcpp integration for Armadillo templated linear algebra library
-Version: 0.2.5.1
+Version: 0.2.5.2
 Date: $Date$
 Author: Romain Francois, Dirk Eddelbuettel and Doug Bates
 Maintainer: Romain, Dirk and Doug <RcppArmadillo-authors@r-enthusiasts.com>
@@ -28,7 +28,7 @@ Description: R and Armadillo integration using Rcpp
  capabilities of the Rcpp package for seamless R and C++ integration.
 License: GPL (>= 2)
 LazyLoad: yes
-Depends: R (>= 2.10.0), Rcpp (>= 0.8.5.8)
+Depends: R (>= 2.10.0), Rcpp (>= 0.8.6)
 LinkingTo: Rcpp
 Suggests: inline, RUnit
 SystemRequirements: GNU make

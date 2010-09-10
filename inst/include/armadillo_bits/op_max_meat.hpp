@@ -20,6 +20,7 @@
 
 //! find the maximum value in an array
 template<typename eT>
+arma_pure
 inline 
 eT
 op_max::direct_max(const eT* const X, const u32 n_elem)
@@ -28,13 +29,32 @@ op_max::direct_max(const eT* const X, const u32 n_elem)
   
   eT max_val = X[0];
   
-  for(u32 i=1; i<n_elem; ++i)
+  u32 i,j;
+  
+  for(i=1, j=2; j<n_elem; i+=2, j+=2)
     {
-    const eT tmp_val = X[i];
+    const eT X_i = X[i];
     
-    if(tmp_val > max_val)
+    if(X_i > max_val)
       {
-      max_val = tmp_val;
+      max_val = X_i;
+      }
+    
+    const eT X_j = X[j];
+    
+    if(X_j > max_val)
+      {
+      max_val = X_j;
+      }
+    }
+  
+  if(i < n_elem)
+    {
+    const eT X_i = X[i];
+    
+    if(X_i > max_val)
+      {
+      max_val = X_i;
       }
     }
   
@@ -51,9 +71,10 @@ op_max::direct_max(const subview<eT>& X)
   {
   arma_extra_debug_sigprint();
   
-  eT max_val = X[0];
+  const u32 X_n_elem = X.n_elem;
+        eT  max_val  = X[0];
   
-  for(u32 i=1; i<X.n_elem; ++i)
+  for(u32 i=1; i<X_n_elem; ++i)
     {
     eT tmp_val = X[i];
     
@@ -76,9 +97,10 @@ op_max::direct_max(const diagview<eT>& X)
   {
   arma_extra_debug_sigprint();
   
-  eT max_val = X[0];
+  const u32 X_n_elem = X.n_elem;
+        eT  max_val  = X[0];
   
-  for(u32 i=1; i<X.n_elem; ++i)
+  for(u32 i=1; i<X_n_elem; ++i)
     {
     eT tmp_val = X[i];
     
@@ -114,16 +136,18 @@ op_max::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_max>& in)
   const u32 dim = in.aux_u32_a;
   arma_debug_check( (dim > 1), "max(): incorrect usage. dim must be 0 or 1");
   
+  const u32 X_n_rows = X.n_rows;
+  const u32 X_n_cols = X.n_cols;
   
   if(dim == 0)
     {
     arma_extra_debug_print("op_max::apply(), dim = 0");
     
-    out.set_size(1, X.n_cols);
+    out.set_size(1, X_n_cols);
     
-    for(u32 col=0; col<X.n_cols; ++col)
+    for(u32 col=0; col<X_n_cols; ++col)
       {
-      out[col] = op_max::direct_max( X.colptr(col), X.n_rows );
+      out[col] = op_max::direct_max( X.colptr(col), X_n_rows );
       }
     }
   else
@@ -131,13 +155,13 @@ op_max::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_max>& in)
     {
     arma_extra_debug_print("op_max::apply(), dim = 1");
     
-    out.set_size(X.n_rows, 1);
+    out.set_size(X_n_rows, 1);
     
-    for(u32 row=0; row<X.n_rows; ++row)
+    for(u32 row=0; row<X_n_rows; ++row)
       {
       eT max_val = X.at(row,0);
       
-      for(u32 col=1; col<X.n_cols; ++col)
+      for(u32 col=1; col<X_n_cols; ++col)
         {
         const eT tmp_val = X.at(row,col);
         
@@ -192,10 +216,11 @@ op_max::direct_max(const subview< std::complex<T> >& X)
   {
   arma_extra_debug_sigprint();
   
-  u32 index   = 0;
-  T   max_val = std::abs(X[index]);
+  const u32 X_n_elem = X.n_elem;
+        u32 index    = 0;
+        T   max_val  = std::abs(X[index]);
   
-  for(u32 i=1; i<X.n_elem; ++i)
+  for(u32 i=1; i<X_n_elem; ++i)
     {
     const T tmp_val = std::abs(X[i]);
     
@@ -219,10 +244,11 @@ op_max::direct_max(const diagview< std::complex<T> >& X)
   {
   arma_extra_debug_sigprint();
   
-  u32 index   = 0;
-  T   max_val = std::abs(X[index]);
+  const u32 X_n_elem = X.n_elem;
+        u32 index    = 0;
+        T   max_val  = std::abs(X[index]);
   
-  for(u32 i=1; i<X.n_elem; ++i)
+  for(u32 i=1; i<X_n_elem; ++i)
     {
     const T tmp_val = std::abs(X[i]);
     
@@ -255,16 +281,18 @@ inline void op_max::apply(Mat< std::complex<T> >& out, const Op<T1,op_max>& in)
   const u32 dim = in.aux_u32_a;
   arma_debug_check( (dim > 1), "max(): incorrect usage. dim must be 0 or 1");
   
+  const u32 X_n_rows = X.n_rows;
+  const u32 X_n_cols = X.n_cols;
   
   if(dim == 0)  // column-wise max
     {
     arma_extra_debug_print("op_max::apply(), dim = 0");
     
-    out.set_size(1, X.n_cols);
+    out.set_size(1, X_n_cols);
     
-    for(u32 col=0; col<X.n_cols; ++col)
+    for(u32 col=0; col<X_n_cols; ++col)
       {
-      out[col] = op_max::direct_max( X.colptr(col), X.n_rows );
+      out[col] = op_max::direct_max( X.colptr(col), X_n_rows );
       }
     }
   else
@@ -272,9 +300,9 @@ inline void op_max::apply(Mat< std::complex<T> >& out, const Op<T1,op_max>& in)
     {
     arma_extra_debug_print("op_max::apply(), dim = 1");
     
-    out.set_size(X.n_rows, 1);
+    out.set_size(X_n_rows, 1);
     
-    for(u32 row=0; row<X.n_rows; ++row)
+    for(u32 row=0; row<X_n_rows; ++row)
       {
       u32 index   = 0;
       T   max_val = std::abs(X.at(row,index));

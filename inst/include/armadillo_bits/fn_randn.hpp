@@ -39,7 +39,7 @@ randn()
 //! Generate a vector with all elements set to random values with a gaussian distribution (zero mean, unit variance)
 arma_inline
 const eOp<colvec, eop_randn>
-randn(const u32 n_elem, const arma_Mat_Col_Row_only<colvec>::result* junk = 0)
+randn(const u32 n_elem)
   {
   arma_extra_debug_sigprint();
   
@@ -70,7 +70,7 @@ randn(const u32 n_elem, const typename arma_Mat_Col_Row_only<vec_type>::result* 
 //! Generate a dense matrix with all elements set to random values with a gaussian distribution (zero mean, unit variance)
 arma_inline
 const eOp<mat, eop_randn>
-randn(const u32 n_rows, const u32 n_cols, const arma_Mat_Col_Row_only<mat>::result* junk = 0)
+randn(const u32 n_rows, const u32 n_cols)
   {
   arma_extra_debug_sigprint();
   
@@ -93,7 +93,7 @@ randn(const u32 n_rows, const u32 n_cols, const typename arma_Mat_Col_Row_only<m
 
 arma_inline
 const eOpCube<cube, eop_cube_randn>
-randn(const u32 n_rows, const u32 n_cols, const u32 n_slices, const arma_Cube_only<cube>::result* junk = 0)
+randn(const u32 n_rows, const u32 n_cols, const u32 n_slices)
   {
   arma_extra_debug_sigprint();
   

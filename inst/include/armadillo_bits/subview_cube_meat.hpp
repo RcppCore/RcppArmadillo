@@ -96,20 +96,17 @@ subview_cube<eT>::operator+= (const eT val)
   {
   arma_extra_debug_sigprint();
   
-  for(u32 slice = 0; slice < n_slices; ++slice)
+  const u32 local_n_rows   = n_rows;
+  const u32 local_n_cols   = n_cols;
+  const u32 local_n_slices = n_slices;
+  
+  for(u32 slice = 0; slice < local_n_slices; ++slice)
     {
-    for(u32 col = 0; col < n_cols; ++col)
+    for(u32 col = 0; col < local_n_cols; ++col)
       {
-      eT* coldata = slice_colptr(slice,col);
-      
-      for(u32 row = 0; row < n_rows; ++row)
-        {
-        coldata[row] += val;
-        }
-      
+      arrayops::inplace_plus( slice_colptr(slice,col), val, local_n_rows );
       }
     }
-
   }
 
 
@@ -121,17 +118,15 @@ subview_cube<eT>::operator-= (const eT val)
   {
   arma_extra_debug_sigprint();
   
-  for(u32 slice = 0; slice < n_slices; ++slice)
+  const u32 local_n_rows   = n_rows;
+  const u32 local_n_cols   = n_cols;
+  const u32 local_n_slices = n_slices;
+  
+  for(u32 slice = 0; slice < local_n_slices; ++slice)
     {
-    for(u32 col = 0; col<n_cols; ++col)
+    for(u32 col = 0; col < local_n_cols; ++col)
       {
-      eT* coldata = slice_colptr(slice,col);
-      
-      for(u32 row = 0; row<n_rows; ++row)
-        {
-        coldata[row] -= val;
-        }
-      
+      arrayops::inplace_minus( slice_colptr(slice,col), val, local_n_rows );
       }
     }
   }
@@ -145,19 +140,17 @@ subview_cube<eT>::operator*= (const eT val)
   {
   arma_extra_debug_sigprint();
   
-  for(u32 slice = 0; slice < n_slices; ++slice)
+  const u32 local_n_rows   = n_rows;
+  const u32 local_n_cols   = n_cols;
+  const u32 local_n_slices = n_slices;
+  
+  for(u32 slice = 0; slice < local_n_slices; ++slice)
     {
-    for(u32 col = 0; col<n_cols; ++col)
+    for(u32 col = 0; col < local_n_cols; ++col)
       {
-      eT* coldata = slice_colptr(slice,col);
-      
-      for(u32 row = 0; row<n_rows; ++row)
-        {
-        coldata[row] *= val;
-        }
-      
+      arrayops::inplace_mul( slice_colptr(slice,col), val, local_n_rows );
       }
-    }  
+    }
   }
 
 
@@ -169,19 +162,17 @@ subview_cube<eT>::operator/= (const eT val)
   {
   arma_extra_debug_sigprint();
   
-  for(u32 slice = 0; slice < n_slices; ++slice)
+  const u32 local_n_rows   = n_rows;
+  const u32 local_n_cols   = n_cols;
+  const u32 local_n_slices = n_slices;
+  
+  for(u32 slice = 0; slice < local_n_slices; ++slice)
     {
-    for(u32 col = 0; col<n_cols; ++col)
+    for(u32 col = 0; col < local_n_cols; ++col)
       {
-      eT* coldata = slice_colptr(slice,col);
-      
-      for(u32 row = 0; row<n_rows; ++row)
-        {
-        coldata[row] /= val;
-        }
-      
+      arrayops::inplace_div( slice_colptr(slice,col), val, local_n_rows );
       }
-    }  
+    }
   }
 
 
@@ -201,19 +192,15 @@ subview_cube<eT>::operator= (const BaseCube<eT,T1>& in)
   
   arma_debug_assert_same_size(t, x, "copy into subcube");
   
+  const u32 t_n_rows   = t.n_rows;
+  const u32 t_n_cols   = t.n_cols;
+  const u32 t_n_slices = t.n_slices;
   
-  for(u32 slice = 0; slice < t.n_slices; ++slice)
+  for(u32 slice = 0; slice < t_n_slices; ++slice)
     {
-    for(u32 col = 0; col < t.n_cols; ++col)
+    for(u32 col = 0; col < t_n_cols; ++col)
       {
-            eT* t_coldata = t.slice_colptr(slice,col);
-      const eT* x_coldata = x.slice_colptr(slice,col);
-      
-      for(u32 row = 0; row < t.n_rows; ++row)
-        {
-        t_coldata[row] = x_coldata[row];
-        }
-        
+      syslib::copy_elem( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
       }
     }
   }
@@ -235,20 +222,17 @@ subview_cube<eT>::operator+= (const BaseCube<eT,T1>& in)
   
   arma_debug_assert_same_size(t, x, "cube addition");
   
-  for(u32 slice = 0; slice < t.n_slices; ++slice)
+  const u32 t_n_rows   = t.n_rows;
+  const u32 t_n_cols   = t.n_cols;
+  const u32 t_n_slices = t.n_slices;
+  
+  for(u32 slice = 0; slice < t_n_slices; ++slice)
     {
-    for(u32 col = 0; col < t.n_cols; ++col)
+    for(u32 col = 0; col < t_n_cols; ++col)
       {
-            eT* t_coldata = t.slice_colptr(slice,col);
-      const eT* x_coldata = x.slice_colptr(slice,col);
-      
-      for(u32 row = 0; row < t.n_rows; ++row)
-        {
-        t_coldata[row] += x_coldata[row];
-        }
+      arrayops::inplace_plus( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
       }
     }
-  
   }
 
 
@@ -268,20 +252,17 @@ subview_cube<eT>::operator-= (const BaseCube<eT,T1>& in)
   
   arma_debug_assert_same_size(t, x, "cube subtraction");
   
+  const u32 t_n_rows   = t.n_rows;
+  const u32 t_n_cols   = t.n_cols;
+  const u32 t_n_slices = t.n_slices;
   
-  for(u32 slice = 0; slice < t.n_slices; ++slice)
+  for(u32 slice = 0; slice < t_n_slices; ++slice)
     {
-    for(u32 col = 0; col < t.n_cols; ++col)
+    for(u32 col = 0; col < t_n_cols; ++col)
       {
-            eT* t_coldata = t.slice_colptr(slice,col);
-      const eT* x_coldata = x.slice_colptr(slice,col);
-      
-      for(u32 row = 0; row < t.n_rows; ++row)
-        {
-        t_coldata[row] -= x_coldata[row];
-        }
+      arrayops::inplace_minus( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
       }
-    }  
+    }
   }
 
 
@@ -301,20 +282,17 @@ subview_cube<eT>::operator%= (const BaseCube<eT,T1>& in)
   
   arma_debug_assert_same_size(t, x, "cube schur product");
   
-  for(u32 slice = 0; slice < t.n_slices; ++slice)
+  const u32 t_n_rows   = t.n_rows;
+  const u32 t_n_cols   = t.n_cols;
+  const u32 t_n_slices = t.n_slices;
+  
+  for(u32 slice = 0; slice < t_n_slices; ++slice)
     {
-    for(u32 col = 0; col<t.n_cols; ++col)
+    for(u32 col = 0; col < t_n_cols; ++col)
       {
-            eT* t_coldata = t.slice_colptr(slice,col);
-      const eT* x_coldata = x.slice_colptr(slice,col);
-      
-      for(u32 row = 0; row<t.n_rows; ++row)
-        {
-        t_coldata[row] *= x_coldata[row];
-        }
+      arrayops::inplace_mul( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
       }
     }
-  
   }
 
 
@@ -334,21 +312,17 @@ subview_cube<eT>::operator/= (const BaseCube<eT,T1>& in)
   
   arma_debug_assert_same_size(t, x, "element-wise cube division");
   
+  const u32 t_n_rows   = t.n_rows;
+  const u32 t_n_cols   = t.n_cols;
+  const u32 t_n_slices = t.n_slices;
   
-  for(u32 slice = 0; slice < t.n_slices; ++slice)
+  for(u32 slice = 0; slice < t_n_slices; ++slice)
     {
-    for(u32 col = 0; col<t.n_cols; ++col)
+    for(u32 col = 0; col < t_n_cols; ++col)
       {
-            eT* t_coldata = t.slice_colptr(slice,col);
-      const eT* x_coldata = x.slice_colptr(slice,col);
-      
-      for(u32 row = 0; row<t.n_rows; ++row)
-        {
-        t_coldata[row] /= x_coldata[row];
-        }
+      arrayops::inplace_div( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
       }
     }
-  
   }
 
 
@@ -371,18 +345,15 @@ subview_cube<eT>::operator= (const subview_cube<eT>& x_in)
   
   arma_debug_assert_same_size(t, x, "copy into subcube");
   
+  const u32 t_n_rows   = t.n_rows;
+  const u32 t_n_cols   = t.n_cols;
+  const u32 t_n_slices = t.n_slices;
   
-  for(u32 slice = 0; slice < t.n_slices; ++slice)
+  for(u32 slice = 0; slice < t_n_slices; ++slice)
     {
-    for(u32 col = 0; col < t.n_cols; ++col)
+    for(u32 col = 0; col < t_n_cols; ++col)
       {
-            eT* t_coldata = t.slice_colptr(slice,col);
-      const eT* x_coldata = x.slice_colptr(slice,col);
-      
-      for(u32 row = 0; row < t.n_rows; ++row)
-        {
-        t_coldata[row] = x_coldata[row];
-        }
+      syslib::copy_elem( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
       }
     }
     
@@ -413,21 +384,18 @@ subview_cube<eT>::operator+= (const subview_cube<eT>& x_in)
   
   arma_debug_assert_same_size(t, x, "cube addition");
   
+  const u32 t_n_rows   = t.n_rows;
+  const u32 t_n_cols   = t.n_cols;
+  const u32 t_n_slices = t.n_slices;
   
-  for(u32 slice = 0; slice < t.n_slices; ++slice)
+  for(u32 slice = 0; slice < t_n_slices; ++slice)
     {
-    for(u32 col = 0; col < t.n_cols; ++col)
+    for(u32 col = 0; col < t_n_cols; ++col)
       {
-            eT* t_coldata = t.slice_colptr(slice,col);
-      const eT* x_coldata = x.slice_colptr(slice,col);
-      
-      for(u32 row = 0; row < t.n_rows; ++row)
-        {
-        t_coldata[row] += x_coldata[row];
-        }
+      arrayops::inplace_plus( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
       }
     }
-    
+  
   if(overlap)
     {
     delete tmp_subview_cube;
@@ -455,21 +423,18 @@ subview_cube<eT>::operator-= (const subview_cube<eT>& x_in)
   
   arma_debug_assert_same_size(t, x, "cube subtraction");
   
+  const u32 t_n_rows   = t.n_rows;
+  const u32 t_n_cols   = t.n_cols;
+  const u32 t_n_slices = t.n_slices;
   
-  for(u32 slice = 0; slice < t.n_slices; ++slice)
+  for(u32 slice = 0; slice < t_n_slices; ++slice)
     {
-    for(u32 col = 0; col < t.n_cols; ++col)
+    for(u32 col = 0; col < t_n_cols; ++col)
       {
-            eT* t_coldata = t.slice_colptr(slice,col);
-      const eT* x_coldata = x.slice_colptr(slice,col);
-      
-      for(u32 row = 0; row < t.n_rows; ++row)
-        {
-        t_coldata[row] -= x_coldata[row];
-        }
+      arrayops::inplace_minus( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
       }
     }
-    
+  
   if(overlap)
     {
     delete tmp_subview_cube;
@@ -497,21 +462,18 @@ subview_cube<eT>::operator%= (const subview_cube<eT>& x_in)
   
   arma_debug_assert_same_size(t, x, "element-wise cube multiplication");
   
+  const u32 t_n_rows   = t.n_rows;
+  const u32 t_n_cols   = t.n_cols;
+  const u32 t_n_slices = t.n_slices;
   
-  for(u32 slice = 0; slice < t.n_slices; ++slice)
+  for(u32 slice = 0; slice < t_n_slices; ++slice)
     {
-    for(u32 col = 0; col < t.n_cols; ++col)
+    for(u32 col = 0; col < t_n_cols; ++col)
       {
-            eT* t_coldata = t.slice_colptr(slice,col);
-      const eT* x_coldata = x.slice_colptr(slice,col);
-      
-      for(u32 row = 0; row < t.n_rows; ++row)
-        {
-        t_coldata[row] *= x_coldata[row];
-        }
+      arrayops::inplace_mul( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
       }
     }
-    
+  
   if(overlap)
     {
     delete tmp_subview_cube;
@@ -539,21 +501,18 @@ subview_cube<eT>::operator/= (const subview_cube<eT>& x_in)
   
   arma_debug_assert_same_size(t, x, "element-wise cube division");
   
+  const u32 t_n_rows   = t.n_rows;
+  const u32 t_n_cols   = t.n_cols;
+  const u32 t_n_slices = t.n_slices;
   
-  for(u32 slice = 0; slice < t.n_slices; ++slice)
+  for(u32 slice = 0; slice < t_n_slices; ++slice)
     {
-    for(u32 col = 0; col < t.n_cols; ++col)
+    for(u32 col = 0; col < t_n_cols; ++col)
       {
-            eT* t_coldata = t.slice_colptr(slice,col);
-      const eT* x_coldata = x.slice_colptr(slice,col);
-      
-      for(u32 row = 0; row < t.n_rows; ++row)
-        {
-        t_coldata[row] /= x_coldata[row];
-        }
+      arrayops::inplace_div( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
       }
     }
-    
+  
   if(overlap)
     {
     delete tmp_subview_cube;
@@ -579,17 +538,13 @@ subview_cube<eT>::operator= (const Base<eT,T1>& in)
   
   arma_debug_assert_same_size(t, x, "copy into subcube");
   
+  const u32 t_n_rows     = t.n_rows;
+  const u32 t_n_cols     = t.n_cols;
+  const u32 t_aux_slice1 = t.aux_slice1;
   
-  for(u32 col = 0; col < t.n_cols; ++col)
+  for(u32 col = 0; col < t_n_cols; ++col)
     {
-          eT* t_coldata = t.slice_colptr(t.aux_slice1, col);
-    const eT* x_coldata = x.colptr(col);
-    
-    for(u32 row = 0; row < t.n_rows; ++row)
-      {
-      t_coldata[row] = x_coldata[row];
-      }
-      
+    syslib:copy_elem( t.slice_colptr(t_aux_slice1, col), x.colptr(col), t_n_rows );
     }
   }
 
@@ -610,15 +565,13 @@ subview_cube<eT>::operator+= (const Base<eT,T1>& in)
   
   arma_debug_assert_same_size(t, x, "cube addition");
   
-  for(u32 col = 0; col < t.n_cols; ++col)
+  const u32 t_n_rows     = t.n_rows;
+  const u32 t_n_cols     = t.n_cols;
+  const u32 t_aux_slice1 = t.aux_slice1;
+  
+  for(u32 col = 0; col < t_n_cols; ++col)
     {
-          eT* t_coldata = t.slice_colptr(t.aux_slice1, col);
-    const eT* x_coldata = x.colptr(col);
-    
-    for(u32 row = 0; row < t.n_rows; ++row)
-      {
-      t_coldata[row] += x_coldata[row];
-      }
+    arrayops::inplace_plus( t.slice_colptr(t_aux_slice1, col), x.colptr(col), t_n_rows );
     }
   }
 
@@ -639,15 +592,13 @@ subview_cube<eT>::operator-= (const Base<eT,T1>& in)
   
   arma_debug_assert_same_size(t, x, "cube subtraction");
   
-  for(u32 col = 0; col < t.n_cols; ++col)
+  const u32 t_n_rows     = t.n_rows;
+  const u32 t_n_cols     = t.n_cols;
+  const u32 t_aux_slice1 = t.aux_slice1;
+  
+  for(u32 col = 0; col < t_n_cols; ++col)
     {
-          eT* t_coldata = t.slice_colptr(t.aux_slice1, col);
-    const eT* x_coldata = x.colptr(col);
-    
-    for(u32 row = 0; row < t.n_rows; ++row)
-      {
-      t_coldata[row] -= x_coldata[row];
-      }
+    arrayops::inplace_minus( t.slice_colptr(t_aux_slice1, col), x.colptr(col), t_n_rows );
     }
   }
 
@@ -668,15 +619,13 @@ subview_cube<eT>::operator%= (const Base<eT,T1>& in)
   
   arma_debug_assert_same_size(t, x, "cube schur product");
   
-  for(u32 col = 0; col<t.n_cols; ++col)
+  const u32 t_n_rows     = t.n_rows;
+  const u32 t_n_cols     = t.n_cols;
+  const u32 t_aux_slice1 = t.aux_slice1;
+  
+  for(u32 col = 0; col < t_n_cols; ++col)
     {
-          eT* t_coldata = t.slice_colptr(t.aux_slice1, col);
-    const eT* x_coldata = x.colptr(col);
-    
-    for(u32 row = 0; row<t.n_rows; ++row)
-      {
-      t_coldata[row] *= x_coldata[row];
-      }
+    arrayops::inplace_mul( t.slice_colptr(t_aux_slice1, col), x.colptr(col), t_n_rows );
     }
   }
 
@@ -697,16 +646,13 @@ subview_cube<eT>::operator/= (const Base<eT,T1>& in)
   
   arma_debug_assert_same_size(t, x, "element-wise cube division");
   
+  const u32 t_n_rows     = t.n_rows;
+  const u32 t_n_cols     = t.n_cols;
+  const u32 t_aux_slice1 = t.aux_slice1;
   
-  for(u32 col = 0; col<t.n_cols; ++col)
+  for(u32 col = 0; col < t_n_cols; ++col)
     {
-          eT* t_coldata = t.slice_colptr(t.aux_slice1, col);
-    const eT* x_coldata = x.colptr(col);
-    
-    for(u32 row = 0; row<t.n_rows; ++row)
-      {
-      t_coldata[row] /= x_coldata[row];
-      }
+    arrayops::inplace_div( t.slice_colptr(t_aux_slice1, col), x.colptr(col), t_n_rows );
     }
   }
 
@@ -719,16 +665,15 @@ subview_cube<eT>::fill(const eT val)
   {
   arma_extra_debug_sigprint();
 
-  for(u32 slice = 0; slice < n_slices; ++slice)
+  const u32 local_n_rows   = n_rows;
+  const u32 local_n_cols   = n_cols;
+  const u32 local_n_slices = n_slices;
+  
+  for(u32 slice = 0; slice < local_n_slices; ++slice)
     {
-    for(u32 col = 0; col < n_cols; ++col)
+    for(u32 col = 0; col < local_n_cols; ++col)
       {
-      eT* coldata = slice_colptr(slice,col);
-      
-      for(u32 row = 0; row < n_rows; ++row)
-        {
-        coldata[row] = val;
-        }
+      arrayops::inplace_set( slice_colptr(slice,col), val, local_n_rows );
       }
     }
   
@@ -765,8 +710,6 @@ arma_inline
 eT&
 subview_cube<eT>::operator[](const u32 i)
   {
-  arma_check( (m_ptr == 0), "subview_cube::operator[]: cube is read-only");
-  
   const u32 in_slice = i / n_elem_slice;
   const u32 offset   = in_slice * n_elem_slice;
   const u32 j        = i - offset;
@@ -803,7 +746,6 @@ arma_inline
 eT&
 subview_cube<eT>::operator()(const u32 i)
   {
-  arma_check( (m_ptr == 0), "subview_cube::operator(): matrix is read-only");
   arma_debug_check( (i >= n_elem), "subview_cube::operator(): index out of bounds");
   
   const u32 in_slice = i / n_elem_slice;
@@ -844,7 +786,6 @@ arma_inline
 eT&
 subview_cube<eT>::operator()(const u32 in_row, const u32 in_col, const u32 in_slice)
   {
-  arma_check( (m_ptr == 0), "subview_cube::operator(): matrix is read-only");
   arma_debug_check( ( (in_row >= n_rows) || (in_col >= n_cols) || (in_slice >= n_slices) ), "subview_cube::operator(): location out of bounds");
   
   const u32 index = (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
@@ -871,8 +812,6 @@ arma_inline
 eT&
 subview_cube<eT>::at(const u32 in_row, const u32 in_col, const u32 in_slice)
   {
-  arma_check( (m_ptr == 0), "subview_cube::at(): cube is read-only");
-  
   const u32 index = (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
   return access::rw( (*m_ptr).mem[index] );
   }
@@ -895,8 +834,6 @@ arma_inline
 eT*
 subview_cube<eT>::slice_colptr(const u32 in_slice, const u32 in_col)
   {
-  arma_check( (m_ptr == 0), "subview_cube::slice_colptr(): cube is read-only");
-    
   return & access::rw((*m_ptr).mem[  (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1  ]);
   }
 
@@ -946,7 +883,9 @@ subview_cube<eT>::check_overlap(const subview_cube<eT>& x) const
       ( (x.aux_slice2 >= t.aux_slice1) && (x.aux_slice2 <= t.aux_slice2) )
       );
     
-    return (row_overlap & col_overlap & slice_overlap);
+    const bool overlap = ( (row_overlap == true) && (col_overlap == true) && (slice_overlap == true) );
+    
+    return overlap;
     }
   }
 
@@ -999,18 +938,11 @@ subview_cube<eT>::extract(Cube<eT>& actual_out, const subview_cube<eT>& in)
   arma_extra_debug_print(arma_boost::format("out.n_rows = %d   out.n_cols = %d    out.n_slices = %d    in.m.n_rows = %d   in.m.n_cols = %d   in.m.n_slices = %d") % out.n_rows % out.n_cols % out.n_slices % in.m.n_rows % in.m.n_cols % in.m.n_slices);
   
   
-  for(u32 slice = 0; slice<n_slices; ++slice)
+  for(u32 slice = 0; slice < n_slices; ++slice)
     {
-    for(u32 col = 0; col<n_cols; ++col)
+    for(u32 col = 0; col < n_cols; ++col)
       {
-            eT* out_coldata = out.slice_colptr(slice,col);
-      const eT*  in_coldata =  in.slice_colptr(slice,col);
-      
-      for(u32 row = 0; row<n_rows; ++row)
-        {
-        out_coldata[row] = in_coldata[row];
-        }
-      
+      syslib::copy_elem( out.slice_colptr(slice,col), in.slice_colptr(slice,col), n_rows );
       }
     }
   
@@ -1035,17 +967,15 @@ subview_cube<eT>::extract(Mat<eT>& out, const subview_cube<eT>& in)
   
   arma_debug_check( (in.n_slices != 1), "subview_cube::extract(): given subcube doesn't have exactly one slice" );
   
-  out.set_size(in.n_rows, in.n_cols);
+  const u32 n_rows     = in.n_rows;
+  const u32 n_cols     = in.n_cols;
+  const u32 aux_slice1 = in.aux_slice1;
   
-  for(u32 col = 0; col < in.n_cols; ++col)
+  out.set_size(n_rows, n_cols);
+  
+  for(u32 col = 0; col < n_cols; ++col)
     {
-    const eT* in_coldata  = in.slice_colptr(in.aux_slice1, col);
-          eT* out_coldata = out.colptr(col);
-    
-    for(u32 row = 0; row < in.n_rows; ++row)
-      {
-      out_coldata[row] = in_coldata[row];
-      }
+    syslib::copy_elem( out.colptr(col), in.slice_colptr(aux_slice1, col), n_rows );
     }
   }
 
@@ -1069,13 +999,7 @@ subview_cube<eT>::plus_inplace(Cube<eT>& out, const subview_cube<eT>& in)
     {
     for(u32 col = 0; col<n_cols; ++col)
       {
-            eT* out_coldata = out.slice_colptr(slice,col);
-      const eT*  in_coldata =  in.slice_colptr(slice,col);
-      
-      for(u32 row = 0; row<n_rows; ++row)
-        {
-        out_coldata[row] += in_coldata[row];
-        }
+      arrayops::inplace_plus( out.slice_colptr(slice,col), in.slice_colptr(slice,col), n_rows );
       }
     }
   }
@@ -1100,13 +1024,7 @@ subview_cube<eT>::minus_inplace(Cube<eT>& out, const subview_cube<eT>& in)
     {
     for(u32 col = 0; col<n_cols; ++col)
       {
-            eT* out_coldata = out.slice_colptr(slice,col);
-      const eT*  in_coldata =  in.slice_colptr(slice,col);
-      
-      for(u32 row = 0; row<n_rows; ++row)
-        {
-        out_coldata[row] -= in_coldata[row];
-        }
+      arrayops::inplace_minus( out.slice_colptr(slice,col), in.slice_colptr(slice,col), n_rows );
       }
     }
   }
@@ -1131,13 +1049,7 @@ subview_cube<eT>::schur_inplace(Cube<eT>& out, const subview_cube<eT>& in)
     {
     for(u32 col = 0; col<n_cols; ++col)
       {
-            eT* out_coldata = out.slice_colptr(slice,col);
-      const eT*  in_coldata =  in.slice_colptr(slice,col);
-      
-      for(u32 row = 0; row<n_rows; ++row)
-        {
-        out_coldata[row] *= in_coldata[row];
-        }
+      arrayops::inplace_mul( out.slice_colptr(slice,col), in.slice_colptr(slice,col), n_rows );
       }
     }
   }
@@ -1162,13 +1074,7 @@ subview_cube<eT>::div_inplace(Cube<eT>& out, const subview_cube<eT>& in)
     {
     for(u32 col = 0; col<n_cols; ++col)
       {
-            eT* out_coldata = out.slice_colptr(slice,col);
-      const eT*  in_coldata =  in.slice_colptr(slice,col);
-      
-      for(u32 row = 0; row<n_rows; ++row)
-        {
-        out_coldata[row] /= in_coldata[row];
-        }
+      arrayops::inplace_div( out.slice_colptr(slice,col), in.slice_colptr(slice,col), n_rows );
       }
     }
   }
@@ -1185,17 +1091,14 @@ subview_cube<eT>::plus_inplace(Mat<eT>& out, const subview_cube<eT>& in)
   
   arma_debug_assert_same_size(out, in, "matrix addition");
   
-  for(u32 col = 0; col < in.n_cols; ++col)
+  const u32 in_n_rows     = in.n_rows;
+  const u32 in_n_cols     = in.n_cols;
+  const u32 in_aux_slice1 = in.aux_slice1;
+  
+  for(u32 col = 0; col < in_n_cols; ++col)
     {
-    const eT* in_coldata  = in.slice_colptr(in.aux_slice1, col);
-          eT* out_coldata = out.colptr(col);
-    
-    for(u32 row = 0; row < in.n_rows; ++row)
-      {
-      out_coldata[row] += in_coldata[row];
-      }
+    arrayops::inplace_plus( out.colptr(col), in.slice_colptr(in_aux_slice1, col), in_n_rows );
     }
-    
   }
 
 
@@ -1210,17 +1113,14 @@ subview_cube<eT>::minus_inplace(Mat<eT>& out, const subview_cube<eT>& in)
   
   arma_debug_assert_same_size(out, in, "matrix subtraction");
   
-  for(u32 col = 0; col < in.n_cols; ++col)
+  const u32 in_n_rows     = in.n_rows;
+  const u32 in_n_cols     = in.n_cols;
+  const u32 in_aux_slice1 = in.aux_slice1;
+  
+  for(u32 col = 0; col < in_n_cols; ++col)
     {
-    const eT* in_coldata  = in.slice_colptr(in.aux_slice1, col);
-          eT* out_coldata = out.colptr(col);
-    
-    for(u32 row = 0; row < in.n_rows; ++row)
-      {
-      out_coldata[row] -= in_coldata[row];
-      }
+    arrayops::inplace_minus( out.colptr(col), in.slice_colptr(in_aux_slice1, col), in_n_rows );
     }
-    
   }
 
 
@@ -1235,17 +1135,14 @@ subview_cube<eT>::schur_inplace(Mat<eT>& out, const subview_cube<eT>& in)
   
   arma_debug_assert_same_size(out, in, "matrix schur product");
   
-  for(u32 col = 0; col < in.n_cols; ++col)
+  const u32 in_n_rows     = in.n_rows;
+  const u32 in_n_cols     = in.n_cols;
+  const u32 in_aux_slice1 = in.aux_slice1;
+  
+  for(u32 col = 0; col < in_n_cols; ++col)
     {
-    const eT* in_coldata  = in.slice_colptr(in.aux_slice1, col);
-          eT* out_coldata = out.colptr(col);
-    
-    for(u32 row = 0; row < in.n_rows; ++row)
-      {
-      out_coldata[row] *= in_coldata[row];
-      }
+    arrayops::inplace_mul( out.colptr(col), in.slice_colptr(in_aux_slice1, col), in_n_rows );
     }
-    
   }
 
 
@@ -1260,17 +1157,14 @@ subview_cube<eT>::div_inplace(Mat<eT>& out, const subview_cube<eT>& in)
   
   arma_debug_assert_same_size(out, in, "matrix element-wise division");
   
-  for(u32 col = 0; col < in.n_cols; ++col)
+  const u32 in_n_rows     = in.n_rows;
+  const u32 in_n_cols     = in.n_cols;
+  const u32 in_aux_slice1 = in.aux_slice1;
+  
+  for(u32 col = 0; col < in_n_cols; ++col)
     {
-    const eT* in_coldata  = in.slice_colptr(in.aux_slice1, col);
-          eT* out_coldata = out.colptr(col);
-    
-    for(u32 row = 0; row < in.n_rows; ++row)
-      {
-      out_coldata[row] /= in_coldata[row];
-      }
+    arrayops::inplace_div( out.colptr(col), in.slice_colptr(in_aux_slice1, col), in_n_rows );
     }
-    
   }
 
 

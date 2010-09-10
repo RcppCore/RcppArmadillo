@@ -107,6 +107,11 @@ class field
   inline void reset();
   inline void reset_objects();
   
+  arma_inline bool is_empty() const;
+  
+  arma_inline bool in_range(const u32 i) const;
+  arma_inline bool in_range(const u32 in_row, const u32 in_col) const;
+  
   
   inline bool save(const std::string   name, const file_type type = arma_binary, const bool print_status = true) const;
   inline bool save(      std::ostream& os,   const file_type type = arma_binary, const bool print_status = true) const;

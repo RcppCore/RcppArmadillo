@@ -20,7 +20,8 @@
 
 //! find the mean value of an array
 template<typename eT>
-inline 
+arma_pure
+inline
 eT
 op_mean::direct_mean(const eT* const X, const u32 n_elem)
   {
@@ -28,7 +29,15 @@ op_mean::direct_mean(const eT* const X, const u32 n_elem)
   
   eT val = eT(0);
   
-  for(u32 i=0; i<n_elem; ++i)
+  u32 i,j;
+  
+  for(i=0, j=1; j<n_elem; i+=2, j+=2)
+    {
+    val += X[i];
+    val += X[j];
+    }
+  
+  if(i < n_elem)
     {
     val += X[i];
     }
@@ -46,14 +55,15 @@ op_mean::direct_mean(const subview<eT>& X)
   {
   arma_extra_debug_sigprint();
   
-  eT val = eT(0);
+  const u32 X_n_elem = X.n_elem;
+        eT  val      = eT(0);
   
-  for(u32 i=0; i<X.n_elem; ++i)
+  for(u32 i=0; i<X_n_elem; ++i)
     {
     val += X[i];
     }
   
-  return val / eT(X.n_elem);
+  return val / eT(X_n_elem);
   }
 
 
@@ -66,14 +76,15 @@ op_mean::direct_mean(const diagview<eT>& X)
   {
   arma_extra_debug_sigprint();
   
-  eT val = eT(0);
+  const u32 X_n_elem = X.n_elem;
+        eT  val      = eT(0);
   
-  for(u32 i=0; i<X.n_elem; ++i)
+  for(u32 i=0; i<X_n_elem; ++i)
     {
     val += X[i];
     }
   
-  return val / eT(X.n_elem);
+  return val / eT(X_n_elem);
   }
 
 
@@ -99,16 +110,18 @@ op_mean::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_mean>& in)
   const u32 dim = in.aux_u32_a;
   arma_debug_check( (dim > 1), "mean(): incorrect usage. dim must be 0 or 1");
   
+  const u32 X_n_rows = X.n_rows;
+  const u32 X_n_cols = X.n_cols;
   
   if(dim == 0)
     {
     arma_extra_debug_print("op_mean::apply(), dim = 0");
     
-    out.set_size(1, X.n_cols);
+    out.set_size(1, X_n_cols);
     
-    for(u32 col=0; col<X.n_cols; ++col)
+    for(u32 col=0; col<X_n_cols; ++col)
       {
-      out[col] = op_mean::direct_mean( X.colptr(col), X.n_rows );
+      out[col] = op_mean::direct_mean( X.colptr(col), X_n_rows );
       }
     }
   else
@@ -116,18 +129,18 @@ op_mean::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_mean>& in)
     {
     arma_extra_debug_print("op_mean::apply(), dim = 1");
     
-    out.set_size(X.n_rows, 1);
+    out.set_size(X_n_rows, 1);
     
-    for(u32 row=0; row<X.n_rows; ++row)
+    for(u32 row=0; row<X_n_rows; ++row)
       {
       eT val = eT(0);
       
-      for(u32 col=0; col<X.n_cols; ++col)
+      for(u32 col=0; col<X_n_cols; ++col)
         {
         val += X.at(row,col);
         }
       
-      out[row] = val / eT(X.n_cols);
+      out[row] = val / eT(X_n_cols);
       
       }
     

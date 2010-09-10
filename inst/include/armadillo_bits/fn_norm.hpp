@@ -23,74 +23,35 @@ template<typename T1>
 arma_hot
 inline
 typename T1::pod_type
-norm_unwrap(const Base<typename T1::elem_type,T1>& X, const u32 k)
+norm_unwrap(const Base<typename T1::elem_type, T1>& X, const u32 k)
   {
   arma_extra_debug_sigprint();
   
   typedef typename T1::elem_type eT;
-  typedef typename T1::pod_type   T;
   
   const unwrap<T1>   tmp(X.get_ref());
   const Mat<eT>& A = tmp.M;
-
+  
   arma_debug_check(    (A.n_elem == 0),                      "norm(): given object has no elements"  );
   arma_debug_check( !( (A.n_rows == 1) || (A.n_cols == 1) ), "norm(): given object must be a vector" );
-  arma_debug_check(    (k == 0),                             "norm(): k must be greater than zero"   );
-
+  
   const eT* A_mem = A.memptr();
   const u32 N     = A.n_elem;
-
-  if(k==1)
-    {
-    T acc = T(0);
-    
-    for(u32 i=0; i<N; ++i)
-      {
-      acc += std::abs(A_mem[i]);
-      }
-    
-    return acc;
-    }
-  else
-  if(k==2)
-    {
-    if(is_complex<eT>::value == false)
-      {
-      eT acc = eT(0);
-      
-      for(u32 i=0; i<N; ++i)
-        {
-        const eT tmp = A_mem[i];
-        acc += tmp*tmp;
-        }
-      
-      return std::sqrt(access::tmp_real(acc));
-      }
-    else
-      {
-      T acc = T(0);
-      
-      for(u32 i=0; i<N; ++i)
-        {
-        const T tmp = std::abs(A_mem[i]);
-        acc += tmp*tmp;
-        }
-      
-      return std::sqrt(acc);
-      }
-    }
-  else
-    {
-    T acc = T(0);
-    
-    for(u32 i=0; i<N; ++i)
-      {
-      acc += std::pow(std::abs(A_mem[i]), int(k));
-      }
-    
-    return std::pow(acc, T(1)/T(k));
-    }
   
+  switch(k)
+    {
+    case 1:
+      return arrayops::norm_1( A_mem, N );
+      break;
+    
+    case 2:
+      return arrayops::norm_2( A_mem, N );
+      break;
+    
+    default:
+      arma_debug_check( (k == 0), "norm(): k must be greater than zero" );
+      return arrayops::norm_k( A_mem, N, int(k) );
+    }
   }
 
 
@@ -99,7 +60,7 @@ template<typename T1>
 arma_hot
 inline
 typename T1::pod_type
-norm_unwrap(const Base<typename T1::elem_type,T1>& X, const char* method)
+norm_unwrap(const Base<typename T1::elem_type, T1>& X, const char* method)
   {
   arma_extra_debug_sigprint();
   
@@ -119,36 +80,12 @@ norm_unwrap(const Base<typename T1::elem_type,T1>& X, const char* method)
   
   if( (sig == 'i') || (sig == 'I') || (sig == '+') )   // max norm
     {
-    T max_val = std::abs(A_mem[0]);
-    
-    for(u32 i=1; i<N; ++i)
-      {
-      const T tmp_val = std::abs(A_mem[i]);
-      
-      if(tmp_val > max_val)
-        {
-        max_val = tmp_val; 
-        }
-      }
-    
-    return max_val;
+    return arrayops::norm_max(A_mem, N);
     }
   else
   if(sig == '-')   // min norm
     {
-    T min_val = std::abs(A_mem[0]);
-    
-    for(u32 i=1; i<N; ++i)
-      {
-      const T tmp_val = std::abs(A_mem[i]);
-      
-      if(tmp_val < min_val)
-        {
-        min_val = tmp_val; 
-        }
-      }
-    
-    return min_val;
+    return arrayops::norm_min(A_mem, N);
     }
   else
     {
@@ -156,7 +93,194 @@ norm_unwrap(const Base<typename T1::elem_type,T1>& X, const char* method)
     
     return T(0);
     }
+  }
+
+
+
+template<typename T1>
+arma_hot
+arma_inline
+typename T1::pod_type
+norm_1_proxy(const Proxy<T1>& A)
+  {
+  typedef typename T1::pod_type T;
   
+  T acc = T(0);
+  
+  const u32 N = A.n_elem;
+  
+  u32 i,j;
+  
+  for(i=0, j=1; j<N; i+=2, j+=2)
+    {
+    acc += std::abs(A[i]);
+    acc += std::abs(A[j]);
+    }
+  
+  if(i < N)
+    {
+    acc += std::abs(A[i]);
+    }
+  
+  return acc;
+  }
+
+
+
+template<typename T1>
+arma_hot
+arma_inline
+typename T1::pod_type
+norm_2_proxy(const Proxy<T1>& A, const typename arma_not_cx<typename T1::elem_type>::result* junk = 0)
+  {
+  typedef typename T1::pod_type T;
+  
+  T acc = T(0);
+  
+  const u32 N = A.n_elem;
+  
+  u32 i,j;
+  
+  for(i=0, j=1; j<N; i+=2, j+=2)
+    {
+    const T tmp_i = A[i];
+    const T tmp_j = A[j];
+    
+    acc += tmp_i * tmp_i;
+    acc += tmp_j * tmp_j;
+    }
+  
+  if(i < N)
+    {
+    const T tmp_i = A[i];
+    
+    acc += tmp_i * tmp_i;
+    }
+  
+  return std::sqrt(acc);
+  }
+
+
+
+template<typename T1>
+arma_hot
+arma_inline
+typename T1::pod_type
+norm_2_proxy(const Proxy<T1>& A, const typename arma_cx_only<typename T1::elem_type>::result* junk = 0)
+  {
+  typedef typename T1::pod_type T;
+  
+  T acc = T(0);
+  
+  const u32 N = A.n_elem;
+  
+  for(u32 i=0; i<N; ++i)
+    {
+    const T tmp = std::abs(A[i]);
+    acc += tmp*tmp;
+    }
+  
+  return std::sqrt(acc);
+  }
+
+
+
+template<typename T1>
+arma_hot
+arma_inline
+typename T1::pod_type
+norm_k_proxy(const Proxy<T1>& A, const int k)
+  {
+  typedef typename T1::pod_type T;
+  
+  T acc = T(0);
+  
+  const u32 N = A.n_elem;
+  
+  u32 i,j;
+  
+  for(i=0, j=1; j<N; i+=2, j+=2)
+    {
+    acc += std::pow(std::abs(A[i]), k);
+    acc += std::pow(std::abs(A[j]), k);
+    }
+  
+  if(i < N)
+    {
+    acc += std::pow(std::abs(A[i]), k);
+    }
+  
+  return std::pow(acc, T(1)/T(k));
+  }
+
+
+
+template<typename T1>
+arma_hot
+arma_inline
+typename T1::pod_type
+norm_max_proxy(const Proxy<T1>& A)
+  {
+  typedef typename T1::pod_type T;
+  
+  const u32 N = A.n_elem;
+  
+  T max_val = std::abs(A[0]);
+  
+  u32 i,j;
+  
+  for(i=1, j=2; j<N; i+=2, j+=2)
+    {
+    const T tmp_i = std::abs(A[i]);
+    const T tmp_j = std::abs(A[j]);
+    
+    if(max_val < tmp_i) { max_val = tmp_i; }
+    if(max_val < tmp_j) { max_val = tmp_j; }
+    }
+  
+  if(i < N)
+    {
+    const T tmp_i = std::abs(A[i]);
+    
+    if(max_val < tmp_i) { max_val = tmp_i; }
+    }
+  
+  return max_val;
+  }
+
+
+
+template<typename T1>
+arma_hot
+arma_inline
+typename T1::pod_type
+norm_min_proxy(const Proxy<T1>& A)
+  {
+  typedef typename T1::pod_type T;
+  
+  const u32 N = A.n_elem;
+  
+  T min_val = std::abs(A[0]);
+  
+  u32 i,j;
+  
+  for(i=1, j=2; j<N; i+=2, j+=2)
+    {
+    const T tmp_i = std::abs(A[i]);
+    const T tmp_j = std::abs(A[j]);
+    
+    if(min_val > tmp_i) { min_val = tmp_i; }
+    if(min_val > tmp_j) { min_val = tmp_j; }
+    }
+  
+  if(i < N)
+    {
+    const T tmp_i = std::abs(A[i]);
+    
+    if(min_val > tmp_i) { min_val = tmp_i; }
+    }
+  
+  return min_val;
   }
 
 
@@ -165,7 +289,7 @@ template<typename T1>
 arma_hot
 inline
 typename T1::pod_type
-norm_proxy(const Base<typename T1::elem_type,T1>& X, const u32 k)
+norm_proxy(const Base<typename T1::elem_type, T1>& X, const u32 k)
   {
   arma_extra_debug_sigprint();
   
@@ -176,61 +300,24 @@ norm_proxy(const Base<typename T1::elem_type,T1>& X, const u32 k)
   
   arma_debug_check(    (A.n_elem == 0),                      "norm(): given object has no elements"  );
   arma_debug_check( !( (A.n_rows == 1) || (A.n_cols == 1) ), "norm(): given object must be a vector" );
-  arma_debug_check(    (k == 0),                             "norm(): k must be greater than zero"   );
   
-  const u32 N = A.n_elem;
-  
-  if(k==1)
+  switch(k)
     {
-    T acc = T(0);
+    case 1:
+      return norm_1_proxy(A);
+      break;
     
-    for(u32 i=0; i<N; ++i)
-      {
-      acc += std::abs(A[i]);
-      }
+    case 2:
+      return norm_2_proxy(A);
+      break;
     
-    return acc;
-    }
-  else
-  if(k==2)
-    {
-    if(is_complex<eT>::value == false)
+    default:
       {
-      eT acc = eT(0);
+      arma_debug_check( (k == 0), "norm(): k must be greater than zero"   );
       
-      for(u32 i=0; i<N; ++i)
-        {
-        const eT tmp = A[i];
-        acc += tmp*tmp;
-        }
-      
-      return std::sqrt(access::tmp_real(acc));
-      }
-    else
-      {
-      T acc = T(0);
-      
-      for(u32 i=0; i<N; ++i)
-        {
-        const T tmp = std::abs(A[i]);
-        acc += tmp*tmp;
-        }
-      
-      return std::sqrt(acc);
+      return norm_k_proxy(A, k);
       }
     }
-  else
-    {
-    T acc = T(0);
-    
-    for(u32 i=0; i<N; ++i)
-      {
-      acc += std::pow(std::abs(A[i]), int(k));
-      }
-    
-    return std::pow(acc, T(1)/T(k));
-    }
-  
   }
 
 
@@ -239,7 +326,7 @@ template<typename T1>
 arma_hot
 inline
 typename T1::pod_type
-norm_proxy(const Base<typename T1::elem_type,T1>& X, const char* method)
+norm_proxy(const Base<typename T1::elem_type, T1>& X, const char* method)
   {
   arma_extra_debug_sigprint();
   
@@ -250,43 +337,17 @@ norm_proxy(const Base<typename T1::elem_type,T1>& X, const char* method)
   
   arma_debug_check(    (A.n_elem == 0),                      "norm(): given object has no elements"  );
   arma_debug_check( !( (A.n_rows == 1) || (A.n_cols == 1) ), "norm(): given object must be a vector" );
-  
-  const u32 N = A.n_elem;
   
   const char sig = method[0];
   
   if( (sig == 'i') || (sig == 'I') || (sig == '+') )   // max norm
     {
-    T max_val = std::abs(A[0]);
-    
-    for(u32 i=1; i<N; ++i)
-      {
-      const T tmp_val = std::abs(A[i]);
-      
-      if(tmp_val > max_val)
-        {
-        max_val = tmp_val; 
-        }
-      }
-    
-    return max_val;
+    return norm_max_proxy(A);
     }
   else
   if(sig == '-')   // min norm
     {
-    T min_val = std::abs(A[0]);
-    
-    for(u32 i=1; i<N; ++i)
-      {
-      const T tmp_val = std::abs(A[i]);
-      
-      if(tmp_val < min_val)
-        {
-        min_val = tmp_val; 
-        }
-      }
-    
-    return min_val;
+    return norm_min_proxy(A);
     }
   else
     {
@@ -303,7 +364,12 @@ template<typename T1>
 arma_inline
 arma_warn_unused
 typename T1::pod_type
-norm(const Base<typename T1::elem_type,T1>& X, const u32 k)
+norm
+  (
+  const Base<typename T1::elem_type,T1>& X,
+  const u32 k,
+  const typename arma_float_or_cx_only<typename T1::elem_type>::result* junk = 0
+  )
   {
   arma_extra_debug_sigprint();
   
@@ -316,7 +382,12 @@ template<typename T1>
 arma_inline
 arma_warn_unused
 typename T1::pod_type
-norm(const Base<typename T1::elem_type,T1>& X, const char* method)
+norm
+  (
+  const Base<typename T1::elem_type,T1>& X,
+  const char* method,
+  const typename arma_float_or_cx_only<typename T1::elem_type>::result* junk = 0
+  )
   {
   arma_extra_debug_sigprint();
   
