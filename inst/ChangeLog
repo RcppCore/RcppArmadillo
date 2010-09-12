@@ -1,3 +1,7 @@
+2010-09-12  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.2.5
+
 2010-09-10   Romain Francois <romain@r-enthusiasts.com>
 
 	* inst/include/* : update to armadillo 0.9.70
@@ -7,9 +11,9 @@
 	* inst/include/armadillo_bits/Mat_meat.hpp : not so intrusive patch that allows
 	RcppArmadillo to add its own Mat constructors
 	* inst/include/armadillo_bits/Mat_proto.hpp : same
-	
+
 	* inst/include/RcppArmadillo/Mat_proto.h : Mat constructor that takes a sugar
-	expression 
+	expression
 	* inst/include/RcppArmadillo/Mat_meat.h : implementation
 
 2010-08-17   Romain Francois <romain@r-enthusiasts.com>
@@ -20,10 +24,12 @@
 	between Rcpp sugar and armadillo. Defines the Rcpp::forward that allows
 	forwarding the result of a sugar expression so that it is used in a Mat
 	constructor. (needs more testing)
-	
+
 	* inst/unitTests/runit.RcppArmadillo.R : initial test for sugar/armadillo
 
 2010-08-04  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.2.5
 
 	* Upgraded to Armadillo 0.9.60 "Killer Bush Turkey" with changes:
 	  - More flexible reshape(), allowing significantly different
