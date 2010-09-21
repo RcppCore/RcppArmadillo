@@ -136,13 +136,22 @@ struct is_Op< Op<T1,op_type> >
  
 
 template<typename T>
-struct is_OpCube
+struct is_eOp
   { static const bool value = false; };
  
-template<typename T1, typename op_type>
-struct is_OpCube< OpCube<T1,op_type> >
+template<typename T1, typename eop_type>
+struct is_eOp< eOp<T1,eop_type> >
   { static const bool value = true; };
+ 
 
+template<typename T>
+struct is_mtOp
+  { static const bool value = false; };
+ 
+template<typename eT, typename T1, typename op_type>
+struct is_mtOp< mtOp<eT, T1, op_type> >
+  { static const bool value = true; };
+ 
 
 template<typename T>
 struct is_Glue
@@ -154,12 +163,25 @@ struct is_Glue< Glue<T1,T2,glue_type> >
 
 
 template<typename T>
-struct is_GlueCube
+struct is_eGlue
   { static const bool value = false; };
  
-template<typename T1, typename T2, typename glue_type>
-struct is_GlueCube< GlueCube<T1,T2,glue_type> >
+template<typename T1, typename T2, typename eglue_type>
+struct is_eGlue< eGlue<T1,T2,eglue_type> >
   { static const bool value = true; };
+
+
+template<typename T>
+struct is_mtGlue
+  { static const bool value = false; };
+ 
+template<typename eT, typename T1, typename T2, typename glue_type>
+struct is_mtGlue< mtGlue<eT, T1, T2, glue_type> >
+  { static const bool value = true; };
+
+
+//
+//
 
 
 template<typename T>
@@ -180,32 +202,6 @@ struct is_glue_times_diag< Glue<T1,T2,glue_times_diag> >
   { static const bool value = true; };
 
 
-
-//
-//
-//
-
-
-
-
-template<typename T>
-struct is_eOp
-  { static const bool value = false; };
- 
-template<typename T1, typename eop_type>
-struct is_eOp< eOp<T1,eop_type> >
-  { static const bool value = true; };
- 
-
-template<typename T>
-struct is_eGlue
-  { static const bool value = false; };
- 
-template<typename T1, typename T2, typename eglue_type>
-struct is_eGlue< eGlue<T1,T2,eglue_type> >
-  { static const bool value = true; };
-
-
 template<typename T>
 struct is_op_diagmat
   { static const bool value = false; };
@@ -213,6 +209,65 @@ struct is_op_diagmat
 template<typename T1>
 struct is_op_diagmat< Op<T1,op_diagmat> >
   { static const bool value = true; };
+
+
+//
+//
+
+
+template<typename T>
+struct is_OpCube
+  { static const bool value = false; };
+ 
+template<typename T1, typename op_type>
+struct is_OpCube< OpCube<T1,op_type> >
+  { static const bool value = true; };
+
+
+template<typename T>
+struct is_eOpCube
+  { static const bool value = false; };
+ 
+template<typename T1, typename eop_type>
+struct is_eOpCube< eOpCube<T1,eop_type> >
+  { static const bool value = true; };
+ 
+
+template<typename T>
+struct is_mtOpCube
+  { static const bool value = false; };
+ 
+template<typename eT, typename T1, typename op_type>
+struct is_mtOpCube< mtOpCube<eT, T1, op_type> >
+  { static const bool value = true; };
+ 
+
+template<typename T>
+struct is_GlueCube
+  { static const bool value = false; };
+ 
+template<typename T1, typename T2, typename glue_type>
+struct is_GlueCube< GlueCube<T1,T2,glue_type> >
+  { static const bool value = true; };
+
+
+template<typename T>
+struct is_eGlueCube
+  { static const bool value = false; };
+ 
+template<typename T1, typename T2, typename eglue_type>
+struct is_eGlueCube< eGlueCube<T1,T2,eglue_type> >
+  { static const bool value = true; };
+
+
+template<typename T>
+struct is_mtGlueCube
+  { static const bool value = false; };
+ 
+template<typename eT, typename T1, typename T2, typename glue_type>
+struct is_mtGlueCube< mtGlueCube<eT, T1, T2, glue_type> >
+  { static const bool value = true; };
+
 
 //
 //
@@ -277,11 +332,13 @@ struct is_arma_type
   static const bool value
   =  is_Mat<T1>::value
   || is_Op<T1>::value
+  || is_eOp<T1>::value
+  || is_mtOp<T1>::value
   || is_Glue<T1>::value
+  || is_eGlue<T1>::value
+  || is_mtGlue<T1>::value
   || is_subview<T1>::value
   || is_diagview<T1>::value
-  || is_eOp<T1>::value
-  || is_eGlue<T1>::value
   ;
   };
 
@@ -293,7 +350,11 @@ struct is_arma_cube_type
   static const bool value
   =  is_Cube<T1>::value
   || is_OpCube<T1>::value
+  || is_eOpCube<T1>::value
+  || is_mtOpCube<T1>::value
   || is_GlueCube<T1>::value
+  || is_eGlueCube<T1>::value
+  || is_mtGlueCube<T1>::value
   || is_subview_cube<T1>::value
   ;
   };

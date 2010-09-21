@@ -145,6 +145,8 @@ namespace arma
   #include "armadillo_bits/Row_proto.hpp"
   #include "armadillo_bits/Cube_proto.hpp"
   
+  #include "armadillo_bits/typedef_fixed.hpp"
+  
   #include "armadillo_bits/field_proto.hpp"
   #include "armadillo_bits/subview_proto.hpp"
   #include "armadillo_bits/subview_field_proto.hpp"
@@ -164,6 +166,7 @@ namespace arma
   #include "armadillo_bits/eOpCube_proto.hpp"
   
   #include "armadillo_bits/mtOp_proto.hpp"
+  #include "armadillo_bits/mtOpCube_proto.hpp"
   
   #include "armadillo_bits/Glue_proto.hpp"
   #include "armadillo_bits/eGlue_proto.hpp"
@@ -171,12 +174,10 @@ namespace arma
   
   #include "armadillo_bits/GlueCube_proto.hpp"
   #include "armadillo_bits/eGlueCube_proto.hpp"
+  #include "armadillo_bits/mtGlueCube_proto.hpp"
   
   #include "armadillo_bits/eop_core_proto.hpp"
-  #include "armadillo_bits/eop_cube_core_proto.hpp"
-  
   #include "armadillo_bits/eglue_core_proto.hpp"
-  #include "armadillo_bits/eglue_cube_core_proto.hpp"
   
   #include "armadillo_bits/op_diagmat_proto.hpp"
   #include "armadillo_bits/op_diagvec_proto.hpp"
@@ -248,6 +249,7 @@ namespace arma
   #include "armadillo_bits/OpCube_meat.hpp"
   
   #include "armadillo_bits/mtOp_meat.hpp"
+  #include "armadillo_bits/mtOpCube_meat.hpp"
   
   #include "armadillo_bits/Glue_meat.hpp"
   #include "armadillo_bits/GlueCube_meat.hpp"
@@ -261,9 +263,7 @@ namespace arma
   #include "armadillo_bits/eGlueCube_meat.hpp"
 
   #include "armadillo_bits/mtGlue_meat.hpp"
-  
-  #include "armadillo_bits/eglue_misc.hpp"
-  #include "armadillo_bits/eglue_cube_misc.hpp"
+  #include "armadillo_bits/mtGlueCube_meat.hpp"
   
   
   //
@@ -361,10 +361,7 @@ namespace arma
   #include "armadillo_bits/gemm_mixed.hpp"
   
   #include "armadillo_bits/eop_core_meat.hpp"
-  #include "armadillo_bits/eop_cube_core_meat.hpp"
-  
   #include "armadillo_bits/eglue_core_meat.hpp"
-  #include "armadillo_bits/eglue_cube_core_meat.hpp"
   
   #include "armadillo_bits/podarray_meat.hpp"
   #include "armadillo_bits/auxlib_meat.hpp"

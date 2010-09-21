@@ -29,7 +29,7 @@ class diagview : public Base<eT, diagview<eT> >
   
   typedef eT                                elem_type;
   typedef typename get_pod_type<eT>::result pod_type;
-
+  
   const u32 row_offset;
   const u32 col_offset;
   
@@ -49,22 +49,28 @@ class diagview : public Base<eT, diagview<eT> >
   
   inline ~diagview();
   
-  template<typename T1>
-  inline void operator=(const Base<eT,T1>& x);
-  
   inline void operator=(const diagview& x);
+  
+  
+  template<typename T1> inline void operator= (const Base<eT,T1>& x);
+  template<typename T1> inline void operator+=(const Base<eT,T1>& x);
+  template<typename T1> inline void operator-=(const Base<eT,T1>& x);
+  template<typename T1> inline void operator%=(const Base<eT,T1>& x);
+  template<typename T1> inline void operator/=(const Base<eT,T1>& x);
+  
   
   arma_inline eT& operator[](const u32 i);
   arma_inline eT  operator[](const u32 i) const;
   
   arma_inline eT& operator()(const u32 i);
   arma_inline eT  operator()(const u32 i) const;
-
+  
   arma_inline eT& at(const u32 in_n_row, const u32 in_n_col);
   arma_inline eT  at(const u32 in_n_row, const u32 in_n_col) const;
    
   arma_inline eT& operator()(const u32 in_n_row, const u32 in_n_col);
   arma_inline eT  operator()(const u32 in_n_row, const u32 in_n_col) const;
+  
   
   inline void fill(const eT val);
   inline void zeros();

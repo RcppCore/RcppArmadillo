@@ -92,24 +92,24 @@ randu(const u32 n_rows, const u32 n_cols, const typename arma_Mat_Col_Row_only<m
 
 
 arma_inline
-const eOpCube<cube, eop_cube_randu>
+const eOpCube<cube, eop_randu>
 randu(const u32 n_rows, const u32 n_cols, const u32 n_slices)
   {
   arma_extra_debug_sigprint();
   
-  return eOpCube<cube, eop_cube_randu>(n_rows, n_cols, n_slices);
+  return eOpCube<cube, eop_randu>(n_rows, n_cols, n_slices);
   }
 
 
 
 template<typename cube_type>
 arma_inline
-const eOpCube<cube_type, eop_cube_randu>
+const eOpCube<cube_type, eop_randu>
 randu(const u32 n_rows, const u32 n_cols, const u32 n_slices, const typename arma_Cube_only<cube_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
   
-  return eOpCube<cube_type, eop_cube_randu>(n_rows, n_cols, n_slices);
+  return eOpCube<cube_type, eop_randu>(n_rows, n_cols, n_slices);
   }
 
 
@@ -135,14 +135,14 @@ rand(const u32 n_rows, const u32 n_cols)
 
 inline
 arma_deprecated
-const eOpCube<cube, eop_cube_randu>
+const eOpCube<cube, eop_randu>
 rand(const u32 n_rows, const u32 n_cols, const u32 n_slices)
   {
   arma_extra_debug_sigprint();
   
   arma_print("rand() is deprecated; please use randu() instead");
   
-  return eOpCube<cube, eop_cube_randu>(n_rows, n_cols, n_slices);
+  return eOpCube<cube, eop_randu>(n_rows, n_cols, n_slices);
   }
 
 
@@ -167,7 +167,7 @@ rand(const u32 n_rows, const u32 n_cols)
 template<typename cube_type>
 inline
 arma_deprecated
-const eOpCube<cube_type, eop_cube_randu>
+const eOpCube<cube_type, eop_randu>
 rand(const u32 n_rows, const u32 n_cols, const u32 n_slices)
   {
   arma_extra_debug_sigprint();
@@ -176,7 +176,7 @@ rand(const u32 n_rows, const u32 n_cols, const u32 n_slices)
   
   arma_print("rand() is deprecated; please use randu() instead");
   
-  return eOpCube<cube_type, eop_cube_randu>(n_rows, n_cols, n_slices);
+  return eOpCube<cube_type, eop_randu>(n_rows, n_cols, n_slices);
   }
 
 

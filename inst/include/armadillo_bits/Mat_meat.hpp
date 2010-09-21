@@ -469,35 +469,36 @@ inline
 void
 Mat<eT>::init
   (
-  const Base<typename Mat<eT>::pod_type,T1>& A,
-  const Base<typename Mat<eT>::pod_type,T2>& B
+  const Base<typename Mat<eT>::pod_type, T1>& A,
+  const Base<typename Mat<eT>::pod_type, T2>& B
   )
   {
   arma_extra_debug_sigprint();
   
-  arma_type_check< is_complex<eT>::value == false >::apply();   //!< compile-time abort if eT isn't std::complex
+  typedef typename T1::elem_type      T;
+  typedef typename Proxy<T1>::ea_type ea_type1;
+  typedef typename Proxy<T2>::ea_type ea_type2;
   
-  typedef typename T1::elem_type T;
-  arma_type_check< is_complex<T>::value == true >::apply();   //!< compile-time abort if T is std::complex
+  arma_type_check< is_complex<eT>::value == false >::apply();   //!< compile-time abort if eT isn't std::complex
+  arma_type_check< is_complex< T>::value == true  >::apply();   //!< compile-time abort if T is std::complex
   
   isnt_same_type<std::complex<T>, eT>::check();   //!< compile-time abort if types are not compatible
   
-  const unwrap<T1> tmp_A(A.get_ref());
-  const unwrap<T2> tmp_B(B.get_ref());
-  
-  const Mat<T>& X = tmp_A.M;
-  const Mat<T>& Y = tmp_B.M;
+  const Proxy<T1> X(A.get_ref());
+  const Proxy<T2> Y(B.get_ref());
   
   arma_assert_same_size(X, Y, "Mat()");
   
-  init(X.n_rows, Y.n_cols);
+  init(X.get_n_rows(), X.get_n_cols());
   
-  const T* X_mem = X.mem;
-  const T* Y_mem = Y.mem;
+  const u32      N       = n_elem;
+        eT*      out_mem = memptr();
+        ea_type1 PX      = X.get_ea();
+        ea_type2 PY      = Y.get_ea();
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(u32 i=0; i<N; ++i)
     {
-    access::rw(mem[i]) = std::complex<T>(X_mem[i], Y_mem[i]);
+    out_mem[i] = std::complex<T>(PX[i], PY[i]);
     }
   }
 
@@ -2979,92 +2980,233 @@ Mat<eT>::copy_size(const Mat<eT2>& m)
 template<typename eT>
 arma_hot
 inline
-void
+const Mat<eT>&
 Mat<eT>::fill(const eT val)
   {
   arma_extra_debug_sigprint();
   
   arrayops::inplace_set( memptr(), val, n_elem );
+  
+  return *this;
   }
 
 
 
 template<typename eT>
 inline
-void
+const Mat<eT>&
 Mat<eT>::zeros()
   {
   arma_extra_debug_sigprint();
   
-  fill(eT(0));
+  return fill(eT(0));
   }
 
 
 
 template<typename eT>
 inline
-void
+const Mat<eT>&
 Mat<eT>::zeros(const u32 in_elem)
   {
   arma_extra_debug_sigprint();
   
   set_size(in_elem);
   
-  fill(eT(0));
+  return fill(eT(0));
   }
 
 
 
 template<typename eT>
 inline
-void
+const Mat<eT>&
 Mat<eT>::zeros(const u32 in_rows, const u32 in_cols)
   {
-  arma_extra_debug_sigprint( arma_boost::format("in_rows = %d, in_cols = %d") % in_rows % in_cols );
+  arma_extra_debug_sigprint();
 
   set_size(in_rows, in_cols);
   
-  fill(eT(0));
+  return fill(eT(0));
   }
 
 
 
 template<typename eT>
 inline
-void
+const Mat<eT>&
 Mat<eT>::ones()
   {
   arma_extra_debug_sigprint();
   
-  fill(eT(1));
+  return fill(eT(1));
   }
 
 
 
 template<typename eT>
 inline
-void
+const Mat<eT>&
 Mat<eT>::ones(const u32 in_elem)
   {
   arma_extra_debug_sigprint();
   
   set_size(in_elem);
   
-  fill(eT(1));
+  return fill(eT(1));
   }
 
 
 
 template<typename eT>
 inline
-void
+const Mat<eT>&
 Mat<eT>::ones(const u32 in_rows, const u32 in_cols)
   {
-  arma_extra_debug_sigprint( arma_boost::format("in_rows = %d, in_cols = %d") % in_rows % in_cols );
+  arma_extra_debug_sigprint();
 
   set_size(in_rows, in_cols);
   
-  fill(eT(1));
+  return fill(eT(1));
+  }
+
+
+
+template<typename eT>
+inline
+const Mat<eT>&
+Mat<eT>::randu()
+  {
+  arma_extra_debug_sigprint();
+  
+  const u32 N   = n_elem;
+        eT* ptr = memptr();
+  
+  u32 i,j;
+  
+  for(i=0, j=1; j<N; i+=2, j+=2)
+    {
+    ptr[i] = eT(eop_aux_randu<eT>());
+    ptr[j] = eT(eop_aux_randu<eT>());
+    }
+  
+  if(i < N)
+    {
+    ptr[i] = eT(eop_aux_randu<eT>());
+    }
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+inline
+const Mat<eT>&
+Mat<eT>::randu(const u32 in_elem)
+  {
+  arma_extra_debug_sigprint();
+  
+  set_size(in_elem);
+  
+  return (*this).randu();
+  }
+
+
+
+template<typename eT>
+inline
+const Mat<eT>&
+Mat<eT>::randu(const u32 in_rows, const u32 in_cols)
+  {
+  arma_extra_debug_sigprint();
+  
+  set_size(in_rows, in_cols);
+  
+  return (*this).randu();
+  }
+
+
+
+template<typename eT>
+inline
+const Mat<eT>&
+Mat<eT>::randn()
+  {
+  arma_extra_debug_sigprint();
+  
+  const u32 N   = n_elem;
+        eT* ptr = memptr();
+  
+  for(u32 i=0; i<N; ++i)
+    {
+    ptr[i] = eT(eop_aux_randn<eT>());
+    }
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+inline
+const Mat<eT>&
+Mat<eT>::randn(const u32 in_elem)
+  {
+  arma_extra_debug_sigprint();
+  
+  set_size(in_elem);
+  
+  return (*this).randn();
+  }
+
+
+
+template<typename eT>
+inline
+const Mat<eT>&
+Mat<eT>::randn(const u32 in_rows, const u32 in_cols)
+  {
+  arma_extra_debug_sigprint();
+  
+  set_size(in_rows, in_cols);
+  
+  return (*this).randn();
+  }
+
+
+
+template<typename eT>
+inline
+const Mat<eT>&
+Mat<eT>::eye()
+  {
+  arma_extra_debug_sigprint();
+  
+  fill(eT(0));
+  
+  const u32 N = (std::min)(n_rows, n_cols);
+  
+  for(u32 i=0; i<N; ++i)
+    {
+    at(i,i) = eT(1);
+    }
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+inline
+const Mat<eT>&
+Mat<eT>::eye(const u32 in_rows, const u32 in_cols)
+  {
+  arma_extra_debug_sigprint();
+  
+  set_size(in_rows, in_cols);
+  
+  return (*this).eye();
   }
 
 
@@ -3918,25 +4060,13 @@ void
 Mat_aux::set_real(Mat<eT>& out, const Base<eT,T1>& X)
   {
   arma_extra_debug_sigprint();
-
+  
   const unwrap<T1>   tmp(X.get_ref());
   const Mat<eT>& A = tmp.M;
-
+  
   arma_debug_assert_same_size( out, A, "Mat::set_real()" );
   
   out = A;
-  }
-
-
-
-template<typename T, typename T1>
-inline
-void
-Mat_aux::set_real(Mat< std::complex<T> >& out, const Base<T,T1>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  (is_Mat<T1>::value == true) ? Mat_aux::set_real_via_unwrap(out, X) : Mat_aux::set_real_via_proxy(out, X);
   }
 
 
@@ -3954,116 +4084,52 @@ Mat_aux::set_imag(Mat<eT>& out, const Base<eT,T1>& X)
 template<typename T, typename T1>
 inline
 void
+Mat_aux::set_real(Mat< std::complex<T> >& out, const Base<T,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename std::complex<T>    eT;
+  typedef typename Proxy<T1>::ea_type ea_type;
+  
+  const Proxy<T1> A(X.get_ref());
+  
+  arma_debug_assert_same_size( out, A, "Mat::set_real()" );
+  
+  const u32     n_elem  = out.n_elem;
+        eT*     out_mem = out.memptr();
+        ea_type PA      = A.get_ea();
+  
+  for(u32 i=0; i<n_elem; ++i)
+    {
+    //out_mem[i].real() = PA[i];
+    out_mem[i] = std::complex<T>( PA[i], out_mem[i].imag() );
+    }
+  }
+
+
+
+template<typename T, typename T1>
+inline
+void
 Mat_aux::set_imag(Mat< std::complex<T> >& out, const Base<T,T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  (is_Mat<T1>::value == true) ? Mat_aux::set_imag_via_unwrap(out, X) : Mat_aux::set_imag_via_proxy(out, X);
-  }
-
-
-
-template<typename T, typename T1>
-inline
-void
-Mat_aux::set_real_via_unwrap(Mat< std::complex<T> >& out, const Base<T,T1>& X)
-  {
-  arma_extra_debug_sigprint();
+  typedef typename std::complex<T>    eT;
+  typedef typename Proxy<T1>::ea_type ea_type;
   
-  typedef typename std::complex<T> eT;
-  
-  const unwrap<T1>  tmp(X.get_ref());
-  const Mat<T>& A = tmp.M;
-  
-  arma_debug_assert_same_size( out, A, "Mat::set_real()" );
-  
-  const u32 n_elem = out.n_elem;
-  
-  const  T* A_mem   = A.memptr();
-        eT* out_mem = out.memptr();
-  
-  for(u32 i=0; i<n_elem; ++i)
-    {
-    //out_mem[i].real() = A_mem[i];
-    out_mem[i] = std::complex<T>( A_mem[i], out_mem[i].imag() );
-    }
-  }
-
-
-
-template<typename T, typename T1>
-inline
-void
-Mat_aux::set_imag_via_unwrap(Mat< std::complex<T> >& out, const Base<T,T1>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename std::complex<T> eT;
-  
-  const unwrap<T1>  tmp(X.get_ref());
-  const Mat<T>& A = tmp.M;
+  const Proxy<T1> A(X.get_ref());
   
   arma_debug_assert_same_size( out, A, "Mat::set_imag()" );
   
-  const u32 n_elem = out.n_elem;
-  
-  const  T* A_mem   = A.memptr();
-        eT* out_mem = out.memptr();
-  
-  for(u32 i=0; i<n_elem; ++i)
-    {
-    // out_mem[i].imag() = A_mem[i];
-    out_mem[i] = std::complex<T>(out_mem[i].real(), A_mem[i]);
-    }
-  }
-
-
-
-template<typename T, typename T1>
-inline
-void
-Mat_aux::set_real_via_proxy(Mat< std::complex<T> >& out, const Base<T,T1>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename std::complex<T> eT;
-  
-  const Proxy<T1> P(X.get_ref());
-  
-  arma_debug_assert_same_size( out.n_rows, out.n_cols, P.n_rows, P.n_cols, "Mat::set_real()" );
-  
-  const u32 n_elem  = out.n_elem;
-        eT* out_mem = out.memptr();
+  const u32     n_elem  = out.n_elem;
+        eT*     out_mem = out.memptr();
+        ea_type PA      = A.get_ea();
   
   for(u32 i=0; i<n_elem; ++i)
     {
-    //out_mem[i].real() = P[i];
-    out_mem[i] = std::complex<T>( P[i], out_mem[i].imag() );
-    }
-  }
-
-
-
-template<typename T, typename T1>
-inline
-void
-Mat_aux::set_imag_via_proxy(Mat< std::complex<T> >& out, const Base<T,T1>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename std::complex<T> eT;
-  
-  const Proxy<T1> P(X.get_ref());
-  
-  arma_debug_assert_same_size( out.n_rows, out.n_cols, P.n_rows, P.n_cols, "Mat::set_imag()" );
-  
-  const u32 n_elem  = out.n_elem;
-        eT* out_mem = out.memptr();
-  
-  for(u32 i=0; i<n_elem; ++i)
-    {
-    //out_mem[i].imag() = P[i];
-    out_mem[i] = std::complex<T>( out_mem[i].real(), P[i] );
+    //out_mem[i].imag() = PA[i];
+    out_mem[i] = std::complex<T>( out_mem[i].real(), PA[i] );
     }
   }
 

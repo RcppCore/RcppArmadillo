@@ -84,13 +84,15 @@ eOpCube<T1, eop_type>::eOpCube(const BaseCube<typename T1::elem_type, T1>& in_m,
 
 
 
+//! used by eop_randu, eop_randn, eop_zeros, eop_ones (i.e. element generators);
+//! the proxy P is invalid for generators and must not be used.
 template<typename T1, typename eop_type>
 eOpCube<T1, eop_type>::eOpCube(const u32 in_n_rows, const u32 in_n_cols, const u32 in_n_slices)
-  : P         (in_n_rows, in_n_cols, in_n_slices)
+  : P         (P)
   , aux       (aux)
-  , aux_u32_a (aux_u32_a)
-  , aux_u32_b (aux_u32_b)
-  , aux_u32_c (aux_u32_c)
+  , aux_u32_a (in_n_rows)
+  , aux_u32_b (in_n_cols)
+  , aux_u32_c (in_n_slices)
   {
   arma_extra_debug_sigprint();
   }
@@ -101,6 +103,94 @@ template<typename T1, typename eop_type>
 eOpCube<T1, eop_type>::~eOpCube()
   {
   arma_extra_debug_sigprint();
+  }
+
+
+
+template<typename T1, typename eop_type>
+arma_inline
+u32
+eOpCube<T1, eop_type>::get_n_rows() const
+  {
+  return (is_generator<eop_type>::value == false) ? P.get_n_rows() : aux_u32_a;
+  }
+  
+
+
+template<typename T1, typename eop_type>
+arma_inline
+u32
+eOpCube<T1, eop_type>::get_n_cols() const
+  {
+  return (is_generator<eop_type>::value == false) ? P.get_n_cols() : aux_u32_b;
+  }
+
+
+
+template<typename T1, typename eop_type>
+arma_inline
+u32
+eOpCube<T1, eop_type>::get_n_elem_slice() const
+  {
+  return (is_generator<eop_type>::value == false) ? P.get_n_elem_slice() : (aux_u32_a * aux_u32_b);
+  }
+
+
+
+template<typename T1, typename eop_type>
+arma_inline
+u32
+eOpCube<T1, eop_type>::get_n_slices() const
+  {
+  return (is_generator<eop_type>::value == false) ? P.get_n_slices() : aux_u32_c;
+  }
+
+
+
+template<typename T1, typename eop_type>
+arma_inline
+u32
+eOpCube<T1, eop_type>::get_n_elem() const
+  {
+  return (is_generator<eop_type>::value == false) ? P.get_n_elem() : (aux_u32_a * aux_u32_b * aux_u32_c);
+  }
+
+
+
+template<typename T1, typename eop_type>
+arma_inline
+typename T1::elem_type
+eOpCube<T1, eop_type>::operator[] (const u32 i) const
+  {
+  typedef typename T1::elem_type eT;
+  
+  if(is_generator<eop_type>::value == true)
+    {
+    return eop_aux::generate<eT,eop_type>();
+    }
+  else
+    {
+    return eop_core<eop_type>::process(P[i], aux);
+    }
+  }
+
+
+
+template<typename T1, typename eop_type>
+arma_inline
+typename T1::elem_type
+eOpCube<T1, eop_type>::at(const u32 row, const u32 col, const u32 slice) const
+  {
+  typedef typename T1::elem_type eT;
+  
+  if(is_generator<eop_type>::value == true)
+    {
+    return eop_aux::generate<eT,eop_type>();
+    }
+  else
+    {
+    return eop_core<eop_type>::process(P.at(row, col, slice), aux);
+    }
   }
 
 

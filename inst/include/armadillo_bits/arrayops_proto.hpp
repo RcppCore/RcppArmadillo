@@ -239,20 +239,21 @@ class arrayops
     {
     u32 i,j;
     
-    eT acc = eT(0);
+    eT acc1 = eT(0);
+    eT acc2 = eT(0);
     
     for(i=0, j=1; j<n_elem; i+=2, j+=2)
       {
-      acc += src[i];
-      acc += src[j];
+      acc1 += src[i];
+      acc2 += src[j];
       }
     
     if(i < n_elem)
       {
-      acc += src[i];
+      acc1 += src[i];
       }
     
-    return acc;
+    return acc1 + acc2;
     }
   
   

@@ -26,85 +26,85 @@ namespace lapack
   extern "C"
     {
     // LU factorisation
-    void sgetrf_(int* m, int* n,  float* a, int* lda, int* ipiv, int* info);
-    void dgetrf_(int* m, int* n, double* a, int* lda, int* ipiv, int* info);
-    void cgetrf_(int* m, int* n,   void* a, int* lda, int* ipiv, int* info);
-    void zgetrf_(int* m, int* n,   void* a, int* lda, int* ipiv, int* info);
+    void sgetrf_(blas_int* m, blas_int* n,  float* a, blas_int* lda, blas_int* ipiv, blas_int* info);
+    void dgetrf_(blas_int* m, blas_int* n, double* a, blas_int* lda, blas_int* ipiv, blas_int* info);
+    void cgetrf_(blas_int* m, blas_int* n,   void* a, blas_int* lda, blas_int* ipiv, blas_int* info);
+    void zgetrf_(blas_int* m, blas_int* n,   void* a, blas_int* lda, blas_int* ipiv, blas_int* info);
     
     // matrix inversion
-    void sgetri_(int* n,  float* a, int* lda, int* ipiv,  float* work, int* lwork, int* info);
-    void dgetri_(int* n, double* a, int* lda, int* ipiv, double* work, int* lwork, int* info);
-    void cgetri_(int* n,  void*  a, int* lda, int* ipiv,   void* work, int* lwork, int* info);
-    void zgetri_(int* n,  void*  a, int* lda, int* ipiv,   void* work, int* lwork, int* info);
+    void sgetri_(blas_int* n,  float* a, blas_int* lda, blas_int* ipiv,  float* work, blas_int* lwork, blas_int* info);
+    void dgetri_(blas_int* n, double* a, blas_int* lda, blas_int* ipiv, double* work, blas_int* lwork, blas_int* info);
+    void cgetri_(blas_int* n,  void*  a, blas_int* lda, blas_int* ipiv,   void* work, blas_int* lwork, blas_int* info);
+    void zgetri_(blas_int* n,  void*  a, blas_int* lda, blas_int* ipiv,   void* work, blas_int* lwork, blas_int* info);
     
     // eigenvector decomposition of symmetric real matrices
-    void ssyev_(char* jobz, char* uplo, int* n,  float* a, int* lda,  float* w,  float* work, int* lwork, int* info);
-    void dsyev_(char* jobz, char* uplo, int* n, double* a, int* lda, double* w, double* work, int* lwork, int* info);
+    void ssyev_(char* jobz, char* uplo, blas_int* n,  float* a, blas_int* lda,  float* w,  float* work, blas_int* lwork, blas_int* info);
+    void dsyev_(char* jobz, char* uplo, blas_int* n, double* a, blas_int* lda, double* w, double* work, blas_int* lwork, blas_int* info);
 
     // eigenvector decomposition of hermitian matrices (complex)
-    void cheev_(char* jobz, char* uplo, int* n,   void* a, int* lda,  float* w,   void* work, int* lwork,  float* rwork, int* info);
-    void zheev_(char* jobz, char* uplo, int* n,   void* a, int* lda, double* w,   void* work, int* lwork, double* rwork, int* info);
+    void cheev_(char* jobz, char* uplo, blas_int* n,   void* a, blas_int* lda,  float* w,   void* work, blas_int* lwork,  float* rwork, blas_int* info);
+    void zheev_(char* jobz, char* uplo, blas_int* n,   void* a, blas_int* lda, double* w,   void* work, blas_int* lwork, double* rwork, blas_int* info);
 
     // eigenvector decomposition of general real matrices
-    void sgeev_(char* jobvl, char* jobvr, int* n,  float* a, int* lda,  float* wr,  float* wi,  float* vl, int* ldvl,  float* vr, int* ldvr,  float* work, int* lwork, int* info);
-    void dgeev_(char* jobvl, char* jobvr, int* n, double* a, int* lda, double* wr, double* wi, double* vl, int* ldvl, double* vr, int* ldvr, double* work, int* lwork, int* info);
+    void sgeev_(char* jobvl, char* jobvr, blas_int* n,  float* a, blas_int* lda,  float* wr,  float* wi,  float* vl, blas_int* ldvl,  float* vr, blas_int* ldvr,  float* work, blas_int* lwork, blas_int* info);
+    void dgeev_(char* jobvl, char* jobvr, blas_int* n, double* a, blas_int* lda, double* wr, double* wi, double* vl, blas_int* ldvl, double* vr, blas_int* ldvr, double* work, blas_int* lwork, blas_int* info);
 
     // eigenvector decomposition of general complex matrices
-    void cgeev_(char* jobvr, char* jobvl, int* n, void* a, int* lda, void* w, void* vl, int* ldvl, void* vr, int* ldvr, void* work, int* lwork,  float* rwork, int* info);
-    void zgeev_(char* jobvl, char* jobvr, int* n, void* a, int* lda, void* w, void* vl, int *ldvl, void* vr, int *ldvr, void* work, int* lwork, double* rwork, int* info);
+    void cgeev_(char* jobvr, char* jobvl, blas_int* n, void* a, blas_int* lda, void* w, void* vl, blas_int* ldvl, void* vr, blas_int* ldvr, void* work, blas_int* lwork,  float* rwork, blas_int* info);
+    void zgeev_(char* jobvl, char* jobvr, blas_int* n, void* a, blas_int* lda, void* w, void* vl, blas_int* ldvl, void* vr, blas_int* ldvr, void* work, blas_int* lwork, double* rwork, blas_int* info);
 
     // Cholesky decomposition
-    void spotrf_(char* uplo, int* n,  float* a, int* lda, int* info);
-    void dpotrf_(char* uplo, int* n, double* a, int* lda, int* info);
-    void cpotrf_(char* uplo, int* n,   void* a, int* lda, int* info);
-    void zpotrf_(char* uplo, int* n,   void* a, int* lda, int* info);
+    void spotrf_(char* uplo, blas_int* n,  float* a, blas_int* lda, blas_int* info);
+    void dpotrf_(char* uplo, blas_int* n, double* a, blas_int* lda, blas_int* info);
+    void cpotrf_(char* uplo, blas_int* n,   void* a, blas_int* lda, blas_int* info);
+    void zpotrf_(char* uplo, blas_int* n,   void* a, blas_int* lda, blas_int* info);
 
     // QR decomposition
-    void sgeqrf_(int* m, int* n,  float* a, int* lda,  float* tau,  float* work, int* lwork, int* info);
-    void dgeqrf_(int* m, int* n, double* a, int* lda, double* tau, double* work, int* lwork, int* info);
-    void cgeqrf_(int* m, int* n,   void* a, int* lda,   void* tau,   void* work, int* lwork, int* info);
-    void zgeqrf_(int* m, int* n,   void* a, int* lda,   void* tau,   void* work, int* lwork, int* info);
+    void sgeqrf_(blas_int* m, blas_int* n,  float* a, blas_int* lda,  float* tau,  float* work, blas_int* lwork, blas_int* info);
+    void dgeqrf_(blas_int* m, blas_int* n, double* a, blas_int* lda, double* tau, double* work, blas_int* lwork, blas_int* info);
+    void cgeqrf_(blas_int* m, blas_int* n,   void* a, blas_int* lda,   void* tau,   void* work, blas_int* lwork, blas_int* info);
+    void zgeqrf_(blas_int* m, blas_int* n,   void* a, blas_int* lda,   void* tau,   void* work, blas_int* lwork, blas_int* info);
 
     // Q matrix calculation from QR decomposition (real matrices)
-    void sorgqr_(int* m, int* n, int* k,  float* a, int* lda,  float* tau,  float* work, int* lwork, int* info);
-    void dorgqr_(int* m, int* n, int* k, double* a, int* lda, double* tau, double* work, int* lwork, int* info);
+    void sorgqr_(blas_int* m, blas_int* n, blas_int* k,  float* a, blas_int* lda,  float* tau,  float* work, blas_int* lwork, blas_int* info);
+    void dorgqr_(blas_int* m, blas_int* n, blas_int* k, double* a, blas_int* lda, double* tau, double* work, blas_int* lwork, blas_int* info);
     
     // Q matrix calculation from QR decomposition (complex matrices)
-    void cungqr_(int* m, int* n, int* k,   void* a, int* lda,   void* tau,   void* work, int* lwork, int* info);
-    void zungqr_(int* m, int* n, int* k,   void* a, int* lda,   void* tau,   void* work, int* lwork, int* info);
+    void cungqr_(blas_int* m, blas_int* n, blas_int* k,   void* a, blas_int* lda,   void* tau,   void* work, blas_int* lwork, blas_int* info);
+    void zungqr_(blas_int* m, blas_int* n, blas_int* k,   void* a, blas_int* lda,   void* tau,   void* work, blas_int* lwork, blas_int* info);
 
     // SVD (real matrices)
-    void sgesvd_(char* jobu, char* jobvt, int* m, int* n, float*  a, int* lda, float*  s, float*  u, int* ldu, float*  vt, int* ldvt, float*  work, int* lwork, int* info);
-    void dgesvd_(char* jobu, char* jobvt, int* m, int* n, double* a, int* lda, double* s, double* u, int* ldu, double* vt, int* ldvt, double* work, int* lwork, int* info);
+    void sgesvd_(char* jobu, char* jobvt, blas_int* m, blas_int* n, float*  a, blas_int* lda, float*  s, float*  u, blas_int* ldu, float*  vt, blas_int* ldvt, float*  work, blas_int* lwork, blas_int* info);
+    void dgesvd_(char* jobu, char* jobvt, blas_int* m, blas_int* n, double* a, blas_int* lda, double* s, double* u, blas_int* ldu, double* vt, blas_int* ldvt, double* work, blas_int* lwork, blas_int* info);
     
     // SVD (complex matrices)
-    void cgesvd_(char* jobu, char* jobvt, int* m, int* n, void*   a, int* lda, float*  s, void*   u, int* ldu, void*   vt, int* ldvt, void*   work, int* lwork, float*  rwork, int* info);
-    void zgesvd_(char* jobu, char* jobvt, int* m, int* n, void*   a, int* lda, double* s, void*   u, int* ldu, void*   vt, int* ldvt, void*   work, int* lwork, double* rwork, int* info);
+    void cgesvd_(char* jobu, char* jobvt, blas_int* m, blas_int* n, void*   a, blas_int* lda, float*  s, void*   u, blas_int* ldu, void*   vt, blas_int* ldvt, void*   work, blas_int* lwork, float*  rwork, blas_int* info);
+    void zgesvd_(char* jobu, char* jobvt, blas_int* m, blas_int* n, void*   a, blas_int* lda, double* s, void*   u, blas_int* ldu, void*   vt, blas_int* ldvt, void*   work, blas_int* lwork, double* rwork, blas_int* info);
 
     // solve system of linear equations, using LU decomposition
-    void sgesv_(int* n, int* nrhs, float*  a, int* lda, int* ipiv, float*  b, int* ldb, int* info);
-    void dgesv_(int* n, int* nrhs, double* a, int* lda, int* ipiv, double* b, int* ldb, int* info);
-    void cgesv_(int* n, int* nrhs, void*   a, int* lda, int* ipiv, void*   b, int* ldb, int* info);
-    void zgesv_(int* n, int* nrhs, void*   a, int* lda, int* ipiv, void*   b, int* ldb, int* info);
+    void sgesv_(blas_int* n, blas_int* nrhs, float*  a, blas_int* lda, blas_int* ipiv, float*  b, blas_int* ldb, blas_int* info);
+    void dgesv_(blas_int* n, blas_int* nrhs, double* a, blas_int* lda, blas_int* ipiv, double* b, blas_int* ldb, blas_int* info);
+    void cgesv_(blas_int* n, blas_int* nrhs, void*   a, blas_int* lda, blas_int* ipiv, void*   b, blas_int* ldb, blas_int* info);
+    void zgesv_(blas_int* n, blas_int* nrhs, void*   a, blas_int* lda, blas_int* ipiv, void*   b, blas_int* ldb, blas_int* info);
 
     // solve over/underdetermined system of linear equations
-    void sgels_(char* trans, int* m, int* n, int* nrhs, float*  a, int* lda, float*  b, int* ldb, float*  work, int* lwork, int* info);
-    void dgels_(char* trans, int* m, int* n, int* nrhs, double* a, int* lda, double* b, int* ldb, double* work, int* lwork, int* info);
-    void cgels_(char* trans, int* m, int* n, int* nrhs, void*   a, int *lda, void*   b, int* ldb, void*   work, int* lwork, int* info);
-    void zgels_(char* trans, int* m, int* n, int* nrhs, void*   a, int *lda, void*   b, int* ldb, void*   work, int* lwork, int* info);
+    void sgels_(char* trans, blas_int* m, blas_int* n, blas_int* nrhs, float*  a, blas_int* lda, float*  b, blas_int* ldb, float*  work, blas_int* lwork, blas_int* info);
+    void dgels_(char* trans, blas_int* m, blas_int* n, blas_int* nrhs, double* a, blas_int* lda, double* b, blas_int* ldb, double* work, blas_int* lwork, blas_int* info);
+    void cgels_(char* trans, blas_int* m, blas_int* n, blas_int* nrhs, void*   a, blas_int* lda, void*   b, blas_int* ldb, void*   work, blas_int* lwork, blas_int* info);
+    void zgels_(char* trans, blas_int* m, blas_int* n, blas_int* nrhs, void*   a, blas_int* lda, void*   b, blas_int* ldb, void*   work, blas_int* lwork, blas_int* info);
 
-    // void dgeqp3_(int* m, int* n, double* a, int* lda, int* jpvt, double* tau, double* work, int* lwork, int* info);
-    // void dormqr_(char* side, char* trans, int* m, int* n, int* k, double* a, int* lda, double* tau, double* c, int* ldc, double* work, int* lwork, int* info);
-    // void  dposv_(char* uplo, int* n, int* nrhs, double* a, int* lda, double* b, int* ldb, int* info);
-    // void dtrtrs_(char* uplo, char* trans, char* diag, int* n, int* nrhs, double* a, int* lda, double* b, int* ldb, int* info);
-    // void  dgees_(char* jobvs, char* sort, int* select, int* n, double* a, int* lda, int* sdim, double* wr, double* wi, double* vs, int* ldvs, double* work, int* lwork, int* bwork, int* info);
+    // void dgeqp3_(blas_int* m, blas_int* n, double* a, blas_int* lda, blas_int* jpvt, double* tau, double* work, blas_int* lwork, blas_int* info);
+    // void dormqr_(char* side, char* trans, blas_int* m, blas_int* n, blas_int* k, double* a, blas_int* lda, double* tau, double* c, blas_int* ldc, double* work, blas_int* lwork, blas_int* info);
+    // void  dposv_(char* uplo, blas_int* n, blas_int* nrhs, double* a, blas_int* lda, double* b, blas_int* ldb, blas_int* info);
+    // void dtrtrs_(char* uplo, char* trans, char* diag, blas_int* n, blas_int* nrhs, double* a, blas_int* lda, double* b, blas_int* ldb, blas_int* info);
+    // void  dgees_(char* jobvs, char* sort, blas_int* select, blas_int* n, double* a, blas_int* lda, blas_int* sdim, double* wr, double* wi, double* vs, blas_int* ldvs, double* work, blas_int* lwork, blas_int* bwork, blas_int* info);
     
     }
 
   template<typename eT>
   inline
   void
-  getrf_(int* m, int* n, eT* a, int* lda, int* ipiv, int* info)
+  getrf_(blas_int* m, blas_int* n, eT* a, blas_int* lda, blas_int* ipiv, blas_int* info)
     {
     arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
     
@@ -138,7 +138,7 @@ namespace lapack
   template<typename eT>
   inline
   void
-  getri_(int* n,  eT* a, int* lda, int* ipiv, eT* work, int* lwork, int* info)
+  getri_(blas_int* n,  eT* a, blas_int* lda, blas_int* ipiv, eT* work, blas_int* lwork, blas_int* info)
     {
     arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
     
@@ -172,7 +172,7 @@ namespace lapack
   template<typename eT>
   inline
   void
-  syev_(char* jobz, char* uplo, int* n, eT* a, int* lda, eT* w,  eT* work, int* lwork, int* info)
+  syev_(char* jobz, char* uplo, blas_int* n, eT* a, blas_int* lda, eT* w,  eT* work, blas_int* lwork, blas_int* info)
     {
     arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
     
@@ -196,10 +196,10 @@ namespace lapack
   void
   heev_
     (
-    char* jobz, char* uplo, int* n,
-    eT* a, int* lda, typename eT::value_type* w,
-    eT* work, int* lwork, typename eT::value_type* rwork,
-    int* info
+    char* jobz, char* uplo, blas_int* n,
+    eT* a, blas_int* lda, typename eT::value_type* w,
+    eT* work, blas_int* lwork, typename eT::value_type* rwork,
+    blas_int* info
     )
     {
     arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
@@ -225,11 +225,11 @@ namespace lapack
   void
   geev_
     (
-    char* jobvl, char* jobvr, int* n, 
-    eT* a, int* lda, eT* wr, eT* wi, eT* vl, 
-    int* ldvl, eT* vr, int* ldvr, 
-    eT* work, int* lwork,
-    int* info
+    char* jobvl, char* jobvr, blas_int* n, 
+    eT* a, blas_int* lda, eT* wr, eT* wi, eT* vl, 
+    blas_int* ldvl, eT* vr, blas_int* ldvr, 
+    eT* work, blas_int* lwork,
+    blas_int* info
     )
     {
     arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
@@ -253,12 +253,12 @@ namespace lapack
   void
   cx_geev_
     (
-    char* jobvl, char* jobvr, int* n, 
-    eT* a, int* lda, eT* w, 
-    eT* vl, int* ldvl, 
-    eT* vr, int* ldvr, 
-    eT* work, int* lwork, typename eT::value_type* rwork, 
-    int* info
+    char* jobvl, char* jobvr, blas_int* n, 
+    eT* a, blas_int* lda, eT* w, 
+    eT* vl, blas_int* ldvl, 
+    eT* vr, blas_int* ldvr, 
+    eT* work, blas_int* lwork, typename eT::value_type* rwork, 
+    blas_int* info
     )
     {
     arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
@@ -284,7 +284,7 @@ namespace lapack
   template<typename eT>
   inline
   void
-  potrf_(char* uplo, int* n, eT* a, int* lda, int* info)
+  potrf_(char* uplo, blas_int* n, eT* a, blas_int* lda, blas_int* info)
     {
     arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
     
@@ -319,7 +319,7 @@ namespace lapack
   template<typename eT>
   inline
   void
-  geqrf_(int* m, int* n, eT* a, int* lda, eT* tau, eT* work, int* lwork, int* info)
+  geqrf_(blas_int* m, blas_int* n, eT* a, blas_int* lda, eT* tau, eT* work, blas_int* lwork, blas_int* info)
     {
     arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
     
@@ -354,7 +354,7 @@ namespace lapack
   template<typename eT>
   inline
   void
-  orgqr_(int* m, int* n, int* k, eT* a, int* lda, eT* tau, eT* work, int* lwork, int* info)
+  orgqr_(blas_int* m, blas_int* n, blas_int* k, eT* a, blas_int* lda, eT* tau, eT* work, blas_int* lwork, blas_int* info)
     {
     arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
     
@@ -376,7 +376,7 @@ namespace lapack
   template<typename eT>
   inline
   void
-  ungqr_(int* m, int* n, int* k, eT* a, int* lda, eT* tau, eT* work, int* lwork, int* info)
+  ungqr_(blas_int* m, blas_int* n, blas_int* k, eT* a, blas_int* lda, eT* tau, eT* work, blas_int* lwork, blas_int* info)
     {
     arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
     
@@ -399,9 +399,9 @@ namespace lapack
   void
   gesvd_
     (
-    char* jobu, char* jobvt, int* m, int* n, eT* a, int* lda,
-    eT* s, eT* u, int* ldu, eT* vt, int* ldvt,
-    eT* work, int* lwork, int* info
+    char* jobu, char* jobvt, blas_int* m, blas_int* n, eT* a, blas_int* lda,
+    eT* s, eT* u, blas_int* ldu, eT* vt, blas_int* ldvt,
+    eT* work, blas_int* lwork, blas_int* info
     )
     {
     arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
@@ -426,9 +426,9 @@ namespace lapack
   void
   cx_gesvd_
     (
-    char* jobu, char* jobvt, int* m, int* n, std::complex<T>* a, int* lda,
-    T* s, std::complex<T>* u, int* ldu, std::complex<T>* vt, int* ldvt, 
-    std::complex<T>* work, int* lwork, T* rwork, int* info
+    char* jobu, char* jobvt, blas_int* m, blas_int* n, std::complex<T>* a, blas_int* lda,
+    T* s, std::complex<T>* u, blas_int* ldu, std::complex<T>* vt, blas_int* ldvt, 
+    std::complex<T>* work, blas_int* lwork, T* rwork, blas_int* info
     )
     {
     arma_type_check<is_supported_blas_type<T>::value == false>::apply();
@@ -462,7 +462,7 @@ namespace lapack
   template<typename eT>
   inline
   void
-  gesv_(int* n, int* nrhs, eT* a, int* lda, int* ipiv, eT* b, int* ldb, int* info)
+  gesv_(blas_int* n, blas_int* nrhs, eT* a, blas_int* lda, blas_int* ipiv, eT* b, blas_int* ldb, blas_int* info)
     {
     arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
     
@@ -496,8 +496,8 @@ namespace lapack
   template<typename eT>
   inline
   void
-//sgels_(char* trans, int* m, int* n, int* nrhs, float*  a, int* lda, float*  b, int* ldb, float*  work, int* lwork, int* info);
-  gels_(char* trans, int* m, int* n, int* nrhs, eT* a, int* lda, eT* b, int* ldb, eT* work, int* lwork, int* info)
+//sgels_(char* trans, blas_int* m, blas_int* n, blas_int* nrhs, float*  a, blas_int* lda, float*  b, blas_int* ldb, float*  work, blas_int* lwork, blas_int* info);
+  gels_(char* trans, blas_int* m, blas_int* n, blas_int* nrhs, eT* a, blas_int* lda, eT* b, blas_int* ldb, eT* work, blas_int* lwork, blas_int* info)
     {
     arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
     

@@ -43,4 +43,16 @@ join_rows(const Base<typename T1::elem_type,T1>& A, const Base<typename T1::elem
 
 
 
+template<typename T1, typename T2>
+inline
+const GlueCube<T1, T2, glue_join>
+join_slices(const BaseCube<typename T1::elem_type,T1>& A, const BaseCube<typename T1::elem_type,T2>& B)
+  {
+  arma_extra_debug_sigprint();
+  
+  return GlueCube<T1, T2, glue_join>(A.get_ref(), B.get_ref());
+  }
+
+
+
 //! @}

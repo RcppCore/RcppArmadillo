@@ -38,7 +38,7 @@ operator+
 //! BaseCube + scalar
 template<typename T1>
 arma_inline
-const eOpCube<T1, eop_cube_scalar_plus>
+const eOpCube<T1, eop_scalar_plus>
 operator+
   (
   const BaseCube<typename T1::elem_type,T1>& X,
@@ -47,7 +47,7 @@ operator+
   {
   arma_extra_debug_sigprint();
   
-  return eOpCube<T1, eop_cube_scalar_plus>(X.get_ref(), k);
+  return eOpCube<T1, eop_scalar_plus>(X.get_ref(), k);
   }
 
 
@@ -55,7 +55,7 @@ operator+
 //! scalar + BaseCube
 template<typename T1>
 arma_inline
-const eOpCube<T1, eop_cube_scalar_plus>
+const eOpCube<T1, eop_scalar_plus>
 operator+
   (
   const typename T1::elem_type               k,
@@ -64,7 +64,41 @@ operator+
   {
   arma_extra_debug_sigprint();
   
-  return eOpCube<T1, eop_cube_scalar_plus>(X.get_ref(), k);
+  return eOpCube<T1, eop_scalar_plus>(X.get_ref(), k);
+  }
+
+
+
+//! non-complex BaseCube + complex scalar (experimental)
+template<typename T1>
+arma_inline
+const mtOpCube<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_plus>
+operator+
+  (
+  const BaseCube<typename T1::pod_type, T1>& X,
+  const std::complex<typename T1::pod_type>& k
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  return mtOpCube<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_plus>('j', X.get_ref(), k);
+  }
+
+
+
+//! complex scalar + non-complex BaseCube (experimental)
+template<typename T1>
+arma_inline
+const mtOpCube<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_plus>
+operator+
+  (
+  const std::complex<typename T1::pod_type>& k,
+  const BaseCube<typename T1::pod_type, T1>& X
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  return mtOpCube<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_plus>('j', X.get_ref(), k);  // NOTE: order is swapped
   }
 
 
@@ -72,7 +106,7 @@ operator+
 //! addition of BaseCube objects with same element type
 template<typename T1, typename T2>
 arma_inline
-const eGlueCube<T1, T2, eglue_cube_plus>
+const eGlueCube<T1, T2, eglue_plus>
 operator+
   (
   const BaseCube<typename T1::elem_type,T1>& X,
@@ -81,15 +115,15 @@ operator+
   {
   arma_extra_debug_sigprint();
   
-  return eGlueCube<T1, T2, eglue_cube_plus>(X.get_ref(), Y.get_ref());
+  return eGlueCube<T1, T2, eglue_plus>(X.get_ref(), Y.get_ref());
   }
 
 
 
 //! addition of BaseCube objects with different element types
 template<typename T1, typename T2>
-arma_inline
-Cube<typename promote_type<typename T1::elem_type, typename T2::elem_type>::result>
+inline
+const mtGlueCube<typename promote_type<typename T1::elem_type, typename T2::elem_type>::result, T1, T2, glue_mixed_plus>
 operator+
   (
   const BaseCube< typename force_different_type<typename T1::elem_type, typename T2::elem_type>::T1_result, T1>& X,
@@ -105,22 +139,7 @@ operator+
   
   promote_type<eT1,eT2>::check();
   
-  const ProxyCube<T1> A(X.get_ref());
-  const ProxyCube<T2> B(Y.get_ref());
-  
-  arma_debug_assert_same_size(A, B, "cube addition");
-  
-  Cube<out_eT> out(A.n_rows, A.n_cols, A.n_slices);
-
-        out_eT* out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
-  
-  for(u32 i=0; i<n_elem; ++i)
-    {
-    out_mem[i] = upgrade_val<eT1,eT2>::apply(A[i]) + upgrade_val<eT1,eT2>::apply(B[i]);
-    }
-  
-  return out;
+  return mtGlueCube<out_eT, T1, T2, glue_mixed_plus>( X.get_ref(), Y.get_ref() );
   }
 
 

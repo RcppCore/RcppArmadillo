@@ -25,6 +25,9 @@ class op_rel_lt_pre
   
   template<typename T1>
   inline static void apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_lt_pre>& X);
+  
+  template<typename T1>
+  inline static void apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_lt_pre>& X);
   };
 
 
@@ -35,6 +38,9 @@ class op_rel_lt_post
   
   template<typename T1>
   inline static void apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_lt_post>& X);
+  
+  template<typename T1>
+  inline static void apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_lt_post>& X);
   };
 
 
@@ -45,6 +51,9 @@ class op_rel_gt_pre
   
   template<typename T1>
   inline static void apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_gt_pre>& X);
+  
+  template<typename T1>
+  inline static void apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_gt_pre>& X);
   };
 
 
@@ -55,6 +64,9 @@ class op_rel_gt_post
   
   template<typename T1>
   inline static void apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_gt_post>& X);
+  
+  template<typename T1>
+  inline static void apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_gt_post>& X);
   };
 
 
@@ -65,6 +77,9 @@ class op_rel_lteq_pre
   
   template<typename T1>
   inline static void apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_lteq_pre>& X);
+  
+  template<typename T1>
+  inline static void apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_lteq_pre>& X);
   };
 
 
@@ -75,6 +90,9 @@ class op_rel_lteq_post
   
   template<typename T1>
   inline static void apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_lteq_post>& X);
+  
+  template<typename T1>
+  inline static void apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_lteq_post>& X);
   };
 
 
@@ -85,6 +103,9 @@ class op_rel_gteq_pre
   
   template<typename T1>
   inline static void apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_gteq_pre>& X);
+  
+  template<typename T1>
+  inline static void apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_gteq_pre>& X);
   };
 
 
@@ -95,6 +116,9 @@ class op_rel_gteq_post
   
   template<typename T1>
   inline static void apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_gteq_post>& X);
+  
+  template<typename T1>
+  inline static void apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_gteq_post>& X);
   };
 
 
@@ -105,6 +129,9 @@ class op_rel_eq
   
   template<typename T1>
   inline static void apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_eq>& X);
+  
+  template<typename T1>
+  inline static void apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_eq>& X);
   };
 
 
@@ -115,6 +142,9 @@ class op_rel_noteq
   
   template<typename T1>
   inline static void apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_noteq>& X);
+  
+  template<typename T1>
+  inline static void apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_noteq>& X);
   };
 
 

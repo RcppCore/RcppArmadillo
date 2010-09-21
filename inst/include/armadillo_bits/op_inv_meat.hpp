@@ -32,7 +32,7 @@ op_inv::apply(Mat<eT>& out, const Mat<eT>& A)
   
   arma_debug_check( !A.is_square(), "op_inv::apply(): matrix must be square" );
   
-  const bool status = (&out != &A) ? auxlib::inv_noalias(out, A) : auxlib::inv_inplace(out);
+  const bool status = auxlib::inv(out, A);
   
   if(status == false)
     {

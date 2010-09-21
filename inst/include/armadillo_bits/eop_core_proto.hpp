@@ -24,26 +24,29 @@ class eop_core
   {
   public:
   
-  arma_inline static const char* error_msg() { return ""; }
+  // matrices
   
-  arma_inline static       bool size_ok(const u32 n_rows, const u32 n_cols) { return true; }
-
-  
-  template<typename T1> arma_hot arma_inline static typename T1::elem_type get_elem(const eOp<T1, eop_type>& x, const u32 i);
-  template<typename T1> arma_hot arma_inline static typename T1::elem_type get_elem(const eOp<T1, eop_type>& x, const u32 row, const u32 col);
-  
-  template<typename T1> arma_hot arma_inline static typename T1::elem_type process(const eOp<T1, eop_type>& x, const typename T1::elem_type val);
-
-  template<typename T1> arma_hot arma_inline static void apply(Mat<typename T1::elem_type>& out, const eOp<T1, eop_type>& x);
-  
-  template<typename T1> arma_hot inline static void apply_proxy (Mat<typename T1::elem_type>& out, const eOp<T1, eop_type>& x);
-  template<typename T1> arma_hot inline static void apply_unwrap(Mat<typename T1::elem_type>& out, const eOp<T1, eop_type>& x);
+  template<typename T1> arma_hot inline static void apply(Mat<typename T1::elem_type>& out, const eOp<T1, eop_type>& x);
   
   template<typename T1> arma_hot inline static void apply_inplace_plus (Mat<typename T1::elem_type>& out, const eOp<T1, eop_type>& x);
   template<typename T1> arma_hot inline static void apply_inplace_minus(Mat<typename T1::elem_type>& out, const eOp<T1, eop_type>& x);
   template<typename T1> arma_hot inline static void apply_inplace_schur(Mat<typename T1::elem_type>& out, const eOp<T1, eop_type>& x);
   template<typename T1> arma_hot inline static void apply_inplace_div  (Mat<typename T1::elem_type>& out, const eOp<T1, eop_type>& x);
   
+  
+  // cubes
+  
+  template<typename T1> arma_hot inline static void apply(Cube<typename T1::elem_type>& out, const eOpCube<T1, eop_type>& x);
+  
+  template<typename T1> arma_hot inline static void apply_inplace_plus (Cube<typename T1::elem_type>& out, const eOpCube<T1, eop_type>& x);
+  template<typename T1> arma_hot inline static void apply_inplace_minus(Cube<typename T1::elem_type>& out, const eOpCube<T1, eop_type>& x);
+  template<typename T1> arma_hot inline static void apply_inplace_schur(Cube<typename T1::elem_type>& out, const eOpCube<T1, eop_type>& x);
+  template<typename T1> arma_hot inline static void apply_inplace_div  (Cube<typename T1::elem_type>& out, const eOpCube<T1, eop_type>& x);
+  
+  
+  // common
+  
+  template<typename eT> arma_hot arma_pure arma_inline static eT process(const eT val, const eT k);
   };
 
 
@@ -57,10 +60,13 @@ class eop_scalar_div_pre    : public eop_core<eop_scalar_div_pre>    {};
 class eop_scalar_div_post   : public eop_core<eop_scalar_div_post>   {};
 class eop_square            : public eop_core<eop_square>            {};
 class eop_sqrt              : public eop_core<eop_sqrt>              {};
-class eop_log10             : public eop_core<eop_log10>             {};
 class eop_log               : public eop_core<eop_log>               {};
+class eop_log2              : public eop_core<eop_log2>              {};
+class eop_log10             : public eop_core<eop_log10>             {};
 class eop_trunc_log         : public eop_core<eop_trunc_log>         {};
 class eop_exp               : public eop_core<eop_exp>               {};
+class eop_exp2              : public eop_core<eop_exp2>              {};
+class eop_exp10             : public eop_core<eop_exp10>             {};
 class eop_trunc_exp         : public eop_core<eop_trunc_exp>         {};
 class eop_cos               : public eop_core<eop_cos>               {};
 class eop_sin               : public eop_core<eop_sin>               {};
@@ -79,27 +85,18 @@ class eop_abs               : public eop_core<eop_abs>               {};
 class eop_conj              : public eop_core<eop_conj>              {};
 class eop_pow               : public eop_core<eop_pow>               {};
 class eop_pow_int           : public eop_core<eop_pow_int>           {};
-
-class eop_ones_diag : public eop_core<eop_ones_diag>
-  {
-  public:
-  
-  arma_inline static const char* error_msg() { return "eye(): given size is not square"; }
-  
-  arma_inline static bool size_ok(const u32 n_rows, const u32 n_cols) { return (n_rows == n_cols); }
-  };
-
-
-class eop_ones_full : public eop_core<eop_ones_full>{};
-class eop_randu     : public eop_core<eop_randu>    {};
-class eop_randn     : public eop_core<eop_randn>    {};
-class eop_zeros     : public eop_core<eop_zeros>    {};
+class eop_randu             : public eop_core<eop_randu>             {};
+class eop_randn             : public eop_core<eop_randn>             {};
+class eop_zeros             : public eop_core<eop_zeros>             {};
+class eop_ones_full         : public eop_core<eop_ones_full>         {};
+class eop_ones_diag         : public eop_core<eop_ones_diag>         {};
 
 template<typename T1> struct is_generator                { static const bool value = false; };
-template<>            struct is_generator<eop_ones_full> { static const bool value = true;  };
 template<>            struct is_generator<eop_randu>     { static const bool value = true;  };
 template<>            struct is_generator<eop_randn>     { static const bool value = true;  };
 template<>            struct is_generator<eop_zeros>     { static const bool value = true;  };
+template<>            struct is_generator<eop_ones_full> { static const bool value = true;  };
+template<>            struct is_generator<eop_ones_diag> { static const bool value = true;  };
 
 
 

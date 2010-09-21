@@ -14,27 +14,41 @@
 // (see http://www.opensource.org/licenses for more info)
 
 
-//! \addtogroup mtGlue
+//! \addtogroup mtGlueCube
 //! @{
 
 
 
 template<typename out_eT, typename T1, typename T2, typename glue_type>
-class mtGlue : public Base<out_eT, mtGlue<out_eT, T1, T2, glue_type> >
+inline
+mtGlueCube<out_eT,T1,T2,glue_type>::mtGlueCube(const T1& in_A, const T2& in_B)
+  : A(in_A)
+  , B(in_B)
+  , aux_u32(aux_u32)
   {
-  public:
-  
-  typedef          out_eT                       elem_type;
-  typedef typename get_pod_type<out_eT>::result pod_type;
-  
-  arma_inline  mtGlue(const T1& in_A, const T2& in_B);
-  arma_inline  mtGlue(const T1& in_A, const T2& in_B, const u32 in_aux_u32);
-  arma_inline ~mtGlue();
-  
-  arma_aligned const T1& A;       //!< first operand
-  arma_aligned const T2& B;       //!< second operand
-  arma_aligned const u32 aux_u32; //!< storage of auxiliary data, u32 format
-  };
+  arma_extra_debug_sigprint();
+  }
+
+
+
+template<typename out_eT, typename T1, typename T2, typename glue_type>
+inline
+mtGlueCube<out_eT,T1,T2,glue_type>::mtGlueCube(const T1& in_A, const T2& in_B, const u32 in_aux_u32)
+  : A(in_A)
+  , B(in_B)
+  , aux_u32(in_aux_u32)
+  {
+  arma_extra_debug_sigprint();
+  }
+
+
+
+template<typename out_eT, typename T1, typename T2, typename glue_type>
+inline
+mtGlueCube<out_eT,T1,T2,glue_type>::~mtGlueCube()
+  {
+  arma_extra_debug_sigprint();
+  }
 
 
 

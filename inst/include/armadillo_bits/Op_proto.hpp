@@ -44,10 +44,10 @@ class Op : public Base<typename T1::elem_type, Op<T1, op_type> >
   inline         ~Op();
     
   
-  const T1&       m;          //!< storage of reference to the operand (e.g. a matrix)
-  const elem_type aux;        //!< storage of auxiliary data, user defined format
-  const u32       aux_u32_a;  //!< storage of auxiliary data, u32 format
-  const u32       aux_u32_b;  //!< storage of auxiliary data, u32 format
+  arma_aligned const T1&       m;          //!< storage of reference to the operand (e.g. a matrix)
+  arma_aligned const elem_type aux;        //!< storage of auxiliary data, user defined format
+  arma_aligned const u32       aux_u32_a;  //!< storage of auxiliary data, u32 format
+  arma_aligned const u32       aux_u32_b;  //!< storage of auxiliary data, u32 format
   
   };
 

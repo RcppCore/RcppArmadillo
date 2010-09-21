@@ -90,7 +90,16 @@ running_stat_vec<eT>::operator() (const Base<typename get_pod_type<eT>::result, 
   const unwrap<T1>        tmp(X.get_ref());
   const Mat<eT>& sample = tmp.M;
   
-  arma_check( (sample.is_finite() == false), "running_stat_vec: given sample has non-finite elements" );
+  if( sample.is_empty() )
+    {
+    return;
+    }
+  
+  if( sample.is_finite() == false )
+    {
+    arma_print("running_stat_vec: sample ignored as it has non-finite elements");
+    return;
+    }
   
   running_stat_vec_aux::update_stats(*this, sample);
   }
@@ -112,7 +121,16 @@ running_stat_vec<eT>::operator() (const Base<std::complex<typename get_pod_type<
   const unwrap<T1>        tmp(X.get_ref());
   const Mat<eT>& sample = tmp.M;
   
-  arma_check( (sample.is_finite() == false), "running_stat_vec: given sample has non-finite elements" );
+  if( sample.is_empty() )
+    {
+    return;
+    }
+  
+  if( sample.is_finite() == false )
+    {
+    arma_print("running_stat_vec: sample ignored as it has non-finite elements");
+    return;
+    }
   
   running_stat_vec_aux::update_stats(*this, sample);
   }

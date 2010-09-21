@@ -28,10 +28,16 @@ class auxlib
   // inv
   
   template<typename eT>
-  inline static bool inv_noalias(Mat<eT>& out, const Mat<eT>& X);
+  inline static bool inv(Mat<eT>& out, const Mat<eT>& X);
   
   template<typename eT>
-  inline static bool inv_inplace(Mat<eT>& X);
+  inline static bool inv_noalias_tinymat(Mat<eT>& out, const Mat<eT>& X, const u32 N);
+  
+  template<typename eT>
+  inline static bool inv_inplace_tinymat(Mat<eT>& X, const u32 N);
+  
+  template<typename eT>
+  inline static bool inv_lapack(Mat<eT>& out, const Mat<eT>& X);
   
   
   //
@@ -39,6 +45,16 @@ class auxlib
   
   template<typename eT>
   inline static eT det(const Mat<eT>& X);
+  
+  template<typename eT>
+  inline static eT det_tinymat(const Mat<eT>& X, const u32 N);
+  
+  template<typename eT>
+  inline static eT det_lapack(const Mat<eT>& X);
+  
+  
+  //  
+  // log_det
   
   template<typename eT>
   inline static void log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const Mat<eT>& X);
@@ -108,6 +124,7 @@ class auxlib
   inline static bool svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, const Mat< std::complex<T> >& X);
   
   
+  //
   // solve
   
   template<typename eT>

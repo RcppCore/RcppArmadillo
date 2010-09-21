@@ -28,8 +28,8 @@ template<typename oT> class field;
 template<typename eT> class subview;
 template<typename eT> class subview_col;
 template<typename eT> class subview_row;
+template<typename eT> class subview_cube;
 template<typename oT> class subview_field;
-template<typename oT> class subview_cube;
 
 template<typename eT> class diagview;
 
@@ -71,21 +71,24 @@ class op_rel_noteq;
 template<const bool, const bool, const bool, const bool> class gemm;
 template<const bool, const bool, const bool>             class gemv;
 
-template<typename T1, typename  op_type> class  Op; 
-template<typename T1, typename eop_type> class eOp;
 
-template<typename T1, typename  op_type> class  OpCube; 
-template<typename T1, typename eop_type> class eOpCube; 
+template<                 typename T1, typename  op_type> class   Op; 
+template<                 typename T1, typename eop_type> class  eOp;
+template<typename out_eT, typename T1, typename  op_type> class mtOp;
 
-template<typename T1, typename T2, typename  glue_type> class   Glue;
-template<typename T1, typename T2, typename eglue_type> class  eGlue;
-
-template<typename out_eT, typename T1,              typename op_type  > class mtOp;
-template<typename out_eT, typename T1, typename T2, typename glue_type> class mtGlue;
+template<                 typename T1, typename T2, typename  glue_type> class   Glue;
+template<                 typename T1, typename T2, typename eglue_type> class  eGlue;
+template<typename out_eT, typename T1, typename T2, typename  glue_type> class mtGlue;
 
 
-template<typename T1, typename T2, typename  glue_type> class  GlueCube;
-template<typename T1, typename T2, typename eglue_type> class eGlueCube;
+template<                 typename T1, typename  op_type> class   OpCube; 
+template<                 typename T1, typename eop_type> class  eOpCube; 
+template<typename out_eT, typename T1, typename  op_type> class mtOpCube;
+
+template<                 typename T1, typename T2, typename  glue_type> class   GlueCube;
+template<                 typename T1, typename T2, typename eglue_type> class  eGlueCube;
+template<typename out_eT, typename T1, typename T2, typename  glue_type> class mtGlueCube;
+
 
 template<typename T1> class Proxy;
 template<typename T1> class ProxyCube;

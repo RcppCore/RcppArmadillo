@@ -92,24 +92,24 @@ randn(const u32 n_rows, const u32 n_cols, const typename arma_Mat_Col_Row_only<m
 
 
 arma_inline
-const eOpCube<cube, eop_cube_randn>
+const eOpCube<cube, eop_randn>
 randn(const u32 n_rows, const u32 n_cols, const u32 n_slices)
   {
   arma_extra_debug_sigprint();
   
-  return eOpCube<cube, eop_cube_randn>(n_rows, n_cols, n_slices);
+  return eOpCube<cube, eop_randn>(n_rows, n_cols, n_slices);
   }
 
 
 
 template<typename cube_type>
 arma_inline
-const eOpCube<cube_type, eop_cube_randn>
+const eOpCube<cube_type, eop_randn>
 randn(const u32 n_rows, const u32 n_cols, const u32 n_slices, const typename arma_Cube_only<cube_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
   
-  return eOpCube<cube_type, eop_cube_randn>(n_rows, n_cols, n_slices);
+  return eOpCube<cube_type, eop_randn>(n_rows, n_cols, n_slices);
   }
 
 

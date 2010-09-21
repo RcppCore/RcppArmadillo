@@ -191,29 +191,88 @@ Cube<eT>::init
   const BaseCube<typename Cube<eT>::pod_type,T2>& B
   )
   {
-  arma_type_check< is_complex<eT>::value == false >::apply();   //!< compile-time abort if eT isn't std::complex
+  arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type T;
-  arma_type_check< is_complex<T>::value == true >::apply();   //!< compile-time abort if T is std::complex
+  typedef typename T1::elem_type          T;
+  typedef typename ProxyCube<T1>::ea_type ea_type1;
+  typedef typename ProxyCube<T2>::ea_type ea_type2;
+  
+  arma_type_check< is_complex<eT>::value == false >::apply();   //!< compile-time abort if eT isn't std::complex
+  arma_type_check< is_complex< T>::value == true  >::apply();   //!< compile-time abort if T is std::complex
   
   isnt_same_type<std::complex<T>, eT>::check();   //!< compile-time abort if types are not compatible
   
-  const unwrap_cube<T1> tmp_A(A.get_ref());
-  const unwrap_cube<T2> tmp_B(B.get_ref());
-  
-  const Cube<T>& X = tmp_A.M;
-  const Cube<T>& Y = tmp_B.M;
+  const ProxyCube<T1> X(A.get_ref());
+  const ProxyCube<T2> Y(B.get_ref());
   
   arma_assert_same_size(X, Y, "Cube()");
   
-  init(X.n_rows, X.n_cols, X.n_slices);
+  init(X.get_n_rows(), X.get_n_cols(), X.get_n_slices());
   
-  const T* X_mem = X.mem;
-  const T* Y_mem = Y.mem;
+  const u32      N       = n_elem;
+        eT*      out_mem = memptr();
+        ea_type1 PX      = X.get_ea();
+        ea_type2 PY      = Y.get_ea();
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(u32 i=0; i<N; ++i)
     {
-    access::rw(mem[i]) = std::complex<T>(X_mem[i], Y_mem[i]);
+    out_mem[i] = std::complex<T>(PX[i], PY[i]);
+    }
+  }
+
+
+
+//! try to steal the memory from a given cube; 
+//! if memory can't be stolen, copy the given cube
+template<typename eT>
+inline
+void
+Cube<eT>::steal_mem(Cube<eT>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(this != &x)
+    {
+    if( (x.mem_state == 0) && (x.n_elem > Cube_prealloc::mem_n_elem) )
+      {
+      reset();
+      
+      const u32 x_n_slices = x.n_slices;
+      
+      access::rw(n_rows)       = x.n_rows;
+      access::rw(n_cols)       = x.n_cols;
+      access::rw(n_elem_slice) = x.n_elem_slice;
+      access::rw(n_slices)     = x_n_slices;
+      access::rw(n_elem)       = x.n_elem;
+      access::rw(mem)          = x.mem;
+      
+      if(x_n_slices > Cube_prealloc::mat_ptrs_size)
+        {
+        access::rw(  mat_ptrs) = x.mat_ptrs;
+        access::rw(x.mat_ptrs) = 0;
+        }
+      else
+        {
+        access::rw(mat_ptrs) = const_cast< const Mat<eT>** >(mat_ptrs_local);
+        
+        for(u32 i=0; i < x_n_slices; ++i)
+          {
+            mat_ptrs[i] = x.mat_ptrs[i];
+          x.mat_ptrs[i] = 0;
+          }
+        }
+      
+      access::rw(x.n_rows)       = 0;
+      access::rw(x.n_cols)       = 0;
+      access::rw(x.n_elem_slice) = 0;
+      access::rw(x.n_slices)     = 0;
+      access::rw(x.n_elem)       = 0;
+      access::rw(x.mem)          = 0;
+      }
+    else
+      {
+      init(x);
+      }
     }
   }
 
@@ -816,6 +875,153 @@ Cube<eT>::subcube(const span& row_span, const span& col_span, const span& slice_
 
 
 
+//! remove specified slice
+template<typename eT>
+inline
+void
+Cube<eT>::shed_slice(const u32 slice_num)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( slice_num >= n_slices, "Cube::shed_slice(): out of bounds");
+  
+  shed_slices(slice_num, slice_num);
+  }
+
+
+
+//! remove specified slices
+template<typename eT>
+inline
+void
+Cube<eT>::shed_slices(const u32 in_slice1, const u32 in_slice2)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check
+    (
+    (in_slice1 > in_slice2) || (in_slice2 >= n_slices),
+    "Cube::shed_slices(): indices out of bounds or incorrectly used"
+    );
+  
+  const u32 n_keep_front = in_slice1;
+  const u32 n_keep_back  = n_slices - (in_slice2 + 1);
+  
+  Cube<eT> X(n_rows, n_cols, n_keep_front + n_keep_back);
+  
+  if(n_keep_front > 0)
+    {
+    X.slices( 0, (n_keep_front-1) ) = slices( 0, (in_slice1-1) );
+    }
+  
+  if(n_keep_back > 0)
+    {
+    X.slices( n_keep_front,  (n_keep_front+n_keep_back-1) ) = slices( (in_slice2+1), (n_slices-1) );
+    }
+  
+  steal_mem(X);
+  }
+
+
+
+//! insert N slices at the specified slice position,
+//! optionally setting the elements of the inserted slices to zero
+template<typename eT>
+inline
+void
+Cube<eT>::insert_slices(const u32 slice_num, const u32 N, const bool set_to_zero)
+  {
+  arma_extra_debug_sigprint();
+  
+  const u32 t_n_slices = n_slices;
+  
+  const u32 A_n_slices = slice_num;
+  const u32 B_n_slices = t_n_slices - slice_num;
+  
+  // insertion at slice_num == n_slices is in effect an append operation
+  arma_debug_check( (slice_num > t_n_slices), "Cube::insert_slices(): out of bounds");
+  
+  if(N > 0)
+    {
+    Cube<eT> out(n_rows, n_cols, t_n_slices + N);
+    
+    if(A_n_slices > 0)
+      {
+      out.slices(0, A_n_slices-1) = slices(0, A_n_slices-1);
+      }
+    
+    if(B_n_slices > 0)
+      {
+      out.slices(slice_num + N, t_n_slices + N - 1) = slices(slice_num, t_n_slices-1);
+      }
+    
+    if(set_to_zero == true)
+      {
+      //out.slices(slice_num, slice_num + N - 1).zeros();
+      
+      for(u32 i=slice_num; i < (slice_num + N); ++i)
+        {
+        out.slice(i).zeros();
+        }
+      }
+    
+    steal_mem(out);
+    }
+  }
+
+
+
+//! insert the given object at the specified slice position; 
+//! the given object must have the same number of rows and columns as the cube
+template<typename eT>
+template<typename T1>
+inline
+void
+Cube<eT>::insert_slices(const u32 slice_num, const BaseCube<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  const unwrap_cube<T1> tmp(X.get_ref());
+  const Cube<eT>& C   = tmp.M;
+  
+  const u32 N = C.n_slices;
+  
+  const u32 t_n_slices = n_slices;
+  
+  const u32 A_n_slices = slice_num;
+  const u32 B_n_slices = t_n_slices - slice_num;
+  
+  // insertion at row_num == n_rows is in effect an append operation
+  arma_debug_check( (slice_num  >  t_n_slices), "Cube::insert_rows(): out of bounds");
+  
+  arma_debug_check
+    (
+    ( (C.n_rows != n_rows) || (C.n_cols != n_cols) ),
+    "Cube::insert_slices(): given object has an incompatible dimensions"
+    );
+  
+  if(N > 0)
+    {
+    Cube<eT> out(n_rows, n_cols, t_n_slices + N);
+    
+    if(A_n_slices > 0)
+      {
+      out.slices(0, A_n_slices-1) = slices(0, A_n_slices-1);
+      }
+    
+    if(B_n_slices > 0)
+      {
+      out.slices(slice_num + N, t_n_slices + N - 1) = slices(slice_num, t_n_slices - 1);
+      }
+    
+    out.slices(slice_num, slice_num + N - 1) = C;
+    
+    steal_mem(out);
+    }
+  }
+
+
+
 //! create a cube from OpCube, i.e. run the previously delayed unary operations
 template<typename eT>
 template<typename T1, typename op_type>
@@ -1038,6 +1244,107 @@ Cube<eT>::operator/=(const eOpCube<T1, eop_type>& X)
   eop_type::apply_inplace_div(*this, X);
   
   return *this;
+  }
+
+
+
+//! EXPERIMENTAL
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+Cube<eT>::Cube(const mtOpCube<eT, T1, op_type>& X)
+  : n_rows(0)
+  , n_cols(0)
+  , n_elem_slice(0)
+  , n_slices(0)
+  , n_elem(0)
+  , mem_state(0)
+  , mat_ptrs(mat_ptrs)
+  , mem(mem)
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  op_type::apply(*this, X);
+  }
+
+
+
+//! EXPERIMENTAL
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+const Cube<eT>&
+Cube<eT>::operator=(const mtOpCube<eT, T1, op_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  op_type::apply(*this, X);
+  
+  return *this;
+  }
+
+
+
+//! EXPERIMENTAL
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+const Cube<eT>&
+Cube<eT>::operator+=(const mtOpCube<eT, T1, op_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  const Cube<eT> m(X);
+  
+  return (*this).operator+=(m);
+  }
+
+
+
+//! EXPERIMENTAL
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+const Cube<eT>&
+Cube<eT>::operator-=(const mtOpCube<eT, T1, op_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  const Cube<eT> m(X);
+  
+  return (*this).operator-=(m);
+  }
+
+
+
+//! EXPERIMENTAL
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+const Cube<eT>&
+Cube<eT>::operator%=(const mtOpCube<eT, T1, op_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  const Cube<eT> m(X);
+  
+  return (*this).operator%=(m);
+  }
+
+
+
+//! EXPERIMENTAL
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+const Cube<eT>&
+Cube<eT>::operator/=(const mtOpCube<eT, T1, op_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  const Cube<eT> m(X);
+  
+  return (*this).operator/=(m);
   }
 
 
@@ -1266,6 +1573,107 @@ Cube<eT>::operator/=(const eGlueCube<T1, T2, eglue_type>& X)
   eglue_type::apply_inplace_div(*this, X);
   
   return *this;
+  }
+
+
+
+//! EXPERIMENTAL
+template<typename eT>
+template<typename T1, typename T2, typename glue_type>
+inline
+Cube<eT>::Cube(const mtGlueCube<eT, T1, T2, glue_type>& X)
+  : n_rows(0)
+  , n_cols(0)
+  , n_elem_slice(0)
+  , n_slices(0)
+  , n_elem(0)
+  , mem_state(0)
+  , mat_ptrs(mat_ptrs)
+  , mem(mem)
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  glue_type::apply(*this, X);
+  }
+
+
+
+//! EXPERIMENTAL
+template<typename eT>
+template<typename T1, typename T2, typename glue_type>
+inline
+const Cube<eT>&
+Cube<eT>::operator=(const mtGlueCube<eT, T1, T2, glue_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  glue_type::apply(*this, X);
+  
+  return *this;
+  }
+
+
+
+//! EXPERIMENTAL
+template<typename eT>
+template<typename T1, typename T2, typename glue_type>
+inline
+const Cube<eT>&
+Cube<eT>::operator+=(const mtGlueCube<eT, T1, T2, glue_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  const Cube<eT> m(X);
+  
+  return (*this).operator+=(m);
+  }
+
+
+
+//! EXPERIMENTAL
+template<typename eT>
+template<typename T1, typename T2, typename glue_type>
+inline
+const Cube<eT>&
+Cube<eT>::operator-=(const mtGlueCube<eT, T1, T2, glue_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  const Cube<eT> m(X);
+  
+  return (*this).operator-=(m);
+  }
+
+
+
+//! EXPERIMENTAL
+template<typename eT>
+template<typename T1, typename T2, typename glue_type>
+inline
+const Cube<eT>&
+Cube<eT>::operator%=(const mtGlueCube<eT, T1, T2, glue_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  const Cube<eT> m(X);
+  
+  return (*this).operator%=(m);
+  }
+
+
+
+//! EXPERIMENTAL
+template<typename eT>
+template<typename T1, typename T2, typename glue_type>
+inline
+const Cube<eT>&
+Cube<eT>::operator/=(const mtGlueCube<eT, T1, T2, glue_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  const Cube<eT> m(X);
+  
+  return (*this).operator/=(m);
   }
 
 
@@ -1667,64 +2075,150 @@ Cube<eT>::copy_size(const Cube<eT2>& m)
 //! fill the cube with the specified value
 template<typename eT>
 inline
-void
+const Cube<eT>&
 Cube<eT>::fill(const eT val)
   {
   arma_extra_debug_sigprint();
   
   arrayops::inplace_set( memptr(), val, n_elem );
+  
+  return *this;
   }
 
 
 
 template<typename eT>
 inline
-void
+const Cube<eT>&
 Cube<eT>::zeros()
   {
   arma_extra_debug_sigprint();
   
-  fill(eT(0));
+  return (*this).fill(eT(0));
   }
 
 
 
 template<typename eT>
 inline
-void
+const Cube<eT>&
 Cube<eT>::zeros(const u32 in_rows, const u32 in_cols, const u32 in_slices)
   {
-  arma_extra_debug_sigprint( arma_boost::format("in_rows = %d, in_cols = %d, in_slices = %d") % in_rows % in_cols % in_slices );
+  arma_extra_debug_sigprint();
   
   set_size(in_rows, in_cols, in_slices);
   
-  fill(eT(0));
+  return (*this).fill(eT(0));
   }
 
 
 
 template<typename eT>
 inline
-void
+const Cube<eT>&
 Cube<eT>::ones()
   {
   arma_extra_debug_sigprint();
   
-  fill(eT(1));
+  return (*this).fill(eT(1));
   }
 
 
 
 template<typename eT>
 inline
-void
+const Cube<eT>&
 Cube<eT>::ones(const u32 in_rows, const u32 in_cols, const u32 in_slices)
   {
-  arma_extra_debug_sigprint( arma_boost::format("in_rows = %d, in_cols = %d, in_slices = %d") % in_rows % in_cols % in_slices );
+  arma_extra_debug_sigprint();
   
   set_size(in_rows, in_cols, in_slices);
   
-  fill(eT(1));
+  return (*this).fill(eT(1));
+  }
+
+
+
+template<typename eT>
+inline
+const Cube<eT>&
+Cube<eT>::randu()
+  {
+  arma_extra_debug_sigprint();
+  
+  const u32 N   = n_elem;
+        eT* ptr = memptr();
+  
+  u32 i,j;
+  
+  for(i=0, j=1; j<N; i+=2, j+=2)
+    {
+    ptr[i] = eT(eop_aux_randu<eT>());
+    ptr[j] = eT(eop_aux_randu<eT>());
+    }
+  
+  if(i < N)
+    {
+    ptr[i] = eT(eop_aux_randu<eT>());
+    }
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+inline
+const Cube<eT>&
+Cube<eT>::randu(const u32 in_rows, const u32 in_cols, const u32 in_slices)
+  {
+  arma_extra_debug_sigprint();
+  
+  set_size(in_rows, in_cols, in_slices);
+  
+  return (*this).randu();
+  }
+
+
+
+template<typename eT>
+inline
+const Cube<eT>&
+Cube<eT>::randn()
+  {
+  arma_extra_debug_sigprint();
+  
+  const u32 N   = n_elem;
+        eT* ptr = memptr();
+  
+  u32 i,j;
+  
+  for(i=0, j=1; j<N; i+=2, j+=2)
+    {
+    ptr[i] = eT(eop_aux_randn<eT>());
+    ptr[j] = eT(eop_aux_randn<eT>());
+    }
+  
+  if(i < N)
+    {
+    ptr[i] = eT(eop_aux_randn<eT>());
+    }
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+inline
+const Cube<eT>&
+Cube<eT>::randn(const u32 in_rows, const u32 in_cols, const u32 in_slices)
+  {
+  arma_extra_debug_sigprint();
+  
+  set_size(in_rows, in_cols, in_slices);
+  
+  return (*this).randn();
   }
 
 
@@ -2311,25 +2805,13 @@ void
 Cube_aux::set_real(Cube<eT>& out, const BaseCube<eT,T1>& X)
   {
   arma_extra_debug_sigprint();
-
+  
   const unwrap_cube<T1> tmp(X.get_ref());
   const Cube<eT>& A   = tmp.M;
-
+  
   arma_debug_assert_same_size( out, A, "Cube::set_real()" );
   
   out = A;
-  }
-
-
-
-template<typename T, typename T1>
-inline
-void
-Cube_aux::set_real(Cube< std::complex<T> >& out, const BaseCube<T,T1>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  (is_Cube<T1>::value == true) ? Cube_aux::set_real_via_unwrap(out, X) : Cube_aux::set_real_via_proxy(out, X);
   }
 
 
@@ -2347,116 +2829,62 @@ Cube_aux::set_imag(Cube<eT>& out, const BaseCube<eT,T1>& X)
 template<typename T, typename T1>
 inline
 void
+Cube_aux::set_real(Cube< std::complex<T> >& out, const BaseCube<T,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename std::complex<T>        eT;
+  typedef typename ProxyCube<T1>::ea_type ea_type;
+  
+  const ProxyCube<T1> A(X.get_ref());
+  
+  arma_debug_assert_same_size
+    (
+    out.n_rows, out.n_cols, out.n_slices,
+    A.get_n_rows(), A.get_n_cols(), A.get_n_slices(),
+    "Cube::set_real()"
+    );
+  
+  const u32     n_elem  = out.n_elem;
+        eT*     out_mem = out.memptr();
+        ea_type PA      = A.get_ea();
+  
+  for(u32 i=0; i<n_elem; ++i)
+    {
+    //out_mem[i].real() = PA[i];
+    out_mem[i] = std::complex<T>( PA[i], out_mem[i].imag() );
+    }
+  }
+
+
+
+template<typename T, typename T1>
+inline
+void
 Cube_aux::set_imag(Cube< std::complex<T> >& out, const BaseCube<T,T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  (is_Cube<T1>::value == true) ? Cube_aux::set_imag_via_unwrap(out, X) : Cube_aux::set_imag_via_proxy(out, X);
-  }
-
-
-
-template<typename T, typename T1>
-inline
-void
-Cube_aux::set_real_via_unwrap(Cube< std::complex<T> >& out, const BaseCube<T,T1>& X)
-  {
-  arma_extra_debug_sigprint();
+  typedef typename std::complex<T>        eT;
+  typedef typename ProxyCube<T1>::ea_type ea_type;
   
-  typedef typename std::complex<T> eT;
+  const ProxyCube<T1> A(X.get_ref());
   
-  const unwrap_cube<T1> tmp(X.get_ref());
-  const Cube<T>& A    = tmp.M;
+  arma_debug_assert_same_size
+    (
+    out.n_rows, out.n_cols, out.n_slices,
+    A.get_n_rows(), A.get_n_cols(), A.get_n_slices(),
+    "Cube::set_imag()"
+    );
   
-  arma_debug_assert_same_size( out, A, "Cube::set_real()" );
-  
-  const u32 n_elem = out.n_elem;
-  
-  const  T* A_mem   = A.memptr();
-        eT* out_mem = out.memptr();
+  const u32     n_elem  = out.n_elem;
+        eT*     out_mem = out.memptr();
+        ea_type PA      = A.get_ea();
   
   for(u32 i=0; i<n_elem; ++i)
     {
-    //out_mem[i].real() = A_mem[i];
-    out_mem[i] = std::complex<T>( A_mem[i], out_mem[i].imag() );
-    }
-  }
-
-
-
-template<typename T, typename T1>
-inline
-void
-Cube_aux::set_imag_via_unwrap(Cube< std::complex<T> >& out, const BaseCube<T,T1>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename std::complex<T> eT;
-  
-  const unwrap_cube<T1> tmp(X.get_ref());
-  const Cube<T>& A    = tmp.M;
-  
-  arma_debug_assert_same_size( out, A, "Cube::set_imag()" );
-  
-  const u32 n_elem = out.n_elem;
-  
-  const  T* A_mem   = A.memptr();
-        eT* out_mem = out.memptr();
-  
-  for(u32 i=0; i<n_elem; ++i)
-    {
-    // out_mem[i].imag() = A_mem[i];
-    out_mem[i] = std::complex<T>(out_mem[i].real(), A_mem[i]);
-    }
-  }
-
-
-
-template<typename T, typename T1>
-inline
-void
-Cube_aux::set_real_via_proxy(Cube< std::complex<T> >& out, const BaseCube<T,T1>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename std::complex<T> eT;
-  
-  const ProxyCube<T1> P(X.get_ref());
-  
-  arma_debug_assert_same_size( out.n_rows, out.n_cols, out.n_slices, P.n_rows, P.n_cols, P.n_slices, "Cube::set_real()" );
-  
-  const u32 n_elem  = out.n_elem;
-        eT* out_mem = out.memptr();
-  
-  for(u32 i=0; i<n_elem; ++i)
-    {
-    //out_mem[i].real() = P[i];
-    out_mem[i] = std::complex<T>( P[i], out_mem[i].imag() );
-    }
-  }
-
-
-
-template<typename T, typename T1>
-inline
-void
-Cube_aux::set_imag_via_proxy(Cube< std::complex<T> >& out, const BaseCube<T,T1>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename std::complex<T> eT;
-  
-  const ProxyCube<T1> P(X.get_ref());
-  
-  arma_debug_assert_same_size( out.n_rows, out.n_cols, out.n_slices, P.n_rows, P.n_cols, P.n_slices, "Cube::set_imag()" );
-  
-  const u32 n_elem  = out.n_elem;
-        eT* out_mem = out.memptr();
-  
-  for(u32 i=0; i<n_elem; ++i)
-    {
-    //out_mem[i].imag() = P[i];
-    out_mem[i] = std::complex<T>( out_mem[i].real(), P[i] );
+    //out_mem[i].imag() = PA[i];
+    out_mem[i] = std::complex<T>( out_mem[i].real(), PA[i] );
     }
   }
 

@@ -45,7 +45,7 @@ class Mat : public Base< eT, Mat<eT> >
   // mem_state = 0: normal matrix that can be resized; 
   // mem_state = 1: use auxiliary memory until change in the number of elements is requested;  
   // mem_state = 2: use auxiliary memory and don't allow the number of elements to be changed; 
-  // mem_state = 3: fixed size via template based size specification.
+  // mem_state = 3: fixed size (e.g. via template based size specification).
   
   arma_aligned const eT* const mem;  //!< pointer to the memory used by the matrix (memory is read-only)
   
@@ -256,15 +256,26 @@ class Mat : public Base< eT, Mat<eT> >
   inline void  set_size(const u32 in_rows, const u32 in_cols);
   inline void   reshape(const u32 in_rows, const u32 in_cols, const u32 dim = 0);
   
-  arma_hot inline void fill(const eT val);
+  arma_hot inline const Mat& fill(const eT val);
   
-  inline void zeros();
-  inline void zeros(const u32 in_elem);
-  inline void zeros(const u32 in_rows, const u32 in_cols);
+  inline const Mat& zeros();
+  inline const Mat& zeros(const u32 in_elem);
+  inline const Mat& zeros(const u32 in_rows, const u32 in_cols);
   
-  inline void ones();
-  inline void ones(const u32 in_elem);
-  inline void ones(const u32 in_rows, const u32 in_cols);
+  inline const Mat& ones();
+  inline const Mat& ones(const u32 in_elem);
+  inline const Mat& ones(const u32 in_rows, const u32 in_cols);
+  
+  inline const Mat& randu();
+  inline const Mat& randu(const u32 in_elem);
+  inline const Mat& randu(const u32 in_rows, const u32 in_cols);
+  
+  inline const Mat& randn();
+  inline const Mat& randn(const u32 in_elem);
+  inline const Mat& randn(const u32 in_rows, const u32 in_cols);
+  
+  inline const Mat& eye();
+  inline const Mat& eye(const u32 in_rows, const u32 in_cols);
   
   inline void reset();
   
@@ -445,12 +456,6 @@ class Mat_aux
   
   template<typename eT, typename T1> inline static void set_imag(Mat<eT>&                out, const Base<eT,T1>& X);
   template<typename T,  typename T1> inline static void set_imag(Mat< std::complex<T> >& out, const Base< T,T1>& X);
-  
-  template<typename T,  typename T1> inline static void set_real_via_unwrap(Mat< std::complex<T> >& out, const Base< T,T1>& X);
-  template<typename T,  typename T1> inline static void set_imag_via_unwrap(Mat< std::complex<T> >& out, const Base< T,T1>& X);
-  
-  template<typename T,  typename T1> inline static void set_real_via_proxy(Mat< std::complex<T> >& out, const Base< T,T1>& X);
-  template<typename T,  typename T1> inline static void set_imag_via_proxy(Mat< std::complex<T> >& out, const Base< T,T1>& X);
   };
 
 

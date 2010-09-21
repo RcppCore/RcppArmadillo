@@ -21,24 +21,24 @@ namespace blas
   {
   extern "C"
     {
-    float  sdot_(const int* n, const float*  x, const int* incx, const float*  y, const int* incy);
-    double ddot_(const int* n, const double* x, const int* incx, const double* y, const int* incy);
+    float  sdot_(const blas_int* n, const float*  x, const blas_int* incx, const float*  y, const blas_int* incy);
+    double ddot_(const blas_int* n, const double* x, const blas_int* incx, const double* y, const blas_int* incy);
     
-    void sgemv_(const char* transA, const int* m, const int* n, const float*  alpha, const float*  A, const int* ldA, const float*  x, const int* incx, const float*  beta, float*  y, const int* incy);
-    void dgemv_(const char* transA, const int* m, const int* n, const double* alpha, const double* A, const int* ldA, const double* x, const int* incx, const double* beta, double* y, const int* incy);
-    void cgemv_(const char* transA, const int* m, const int* n, const void*   alpha, const void*   A, const int* ldA, const void*   x, const int* incx, const void*   beta, void*   y, const int* incy);
-    void zgemv_(const char* transA, const int* m, const int* n, const void*   alpha, const void*   A, const int* ldA, const void*   x, const int* incx, const void*   beta, void*   y, const int* incy);
+    void sgemv_(const char* transA, const blas_int* m, const blas_int* n, const float*  alpha, const float*  A, const blas_int* ldA, const float*  x, const blas_int* incx, const float*  beta, float*  y, const blas_int* incy);
+    void dgemv_(const char* transA, const blas_int* m, const blas_int* n, const double* alpha, const double* A, const blas_int* ldA, const double* x, const blas_int* incx, const double* beta, double* y, const blas_int* incy);
+    void cgemv_(const char* transA, const blas_int* m, const blas_int* n, const void*   alpha, const void*   A, const blas_int* ldA, const void*   x, const blas_int* incx, const void*   beta, void*   y, const blas_int* incy);
+    void zgemv_(const char* transA, const blas_int* m, const blas_int* n, const void*   alpha, const void*   A, const blas_int* ldA, const void*   x, const blas_int* incx, const void*   beta, void*   y, const blas_int* incy);
     
-    void sgemm_(const char* transA, const char* transB, const int* m, const int* n, const int* k, const float*  alpha, const float*  A, const int* ldA, const float*  B, const int* ldB, const float*  beta, float*  C, const int* ldC);
-    void dgemm_(const char* transA, const char* transB, const int* m, const int* n, const int* k, const double* alpha, const double* A, const int* ldA, const double* B, const int* ldB, const double* beta, double* C, const int* ldC);
-    void cgemm_(const char* transA, const char* transB, const int* m, const int* n, const int* k, const void*   alpha, const void*   A, const int* ldA, const void*   B, const int* ldB, const void*   beta, void*   C, const int* ldC);
-    void zgemm_(const char* transA, const char* transB, const int* m, const int* n, const int* k, const void*   alpha, const void*   A, const int* ldA, const void*   B, const int* ldB, const void*   beta, void*   C, const int* ldC);
-
-    // void   dswap_(const int* n, double* x, const int* incx, double* y, const int* incy);
-    // void   dscal_(const int* n, const double* alpha, double* x, const int* incx);
-    // void   dcopy_(const int* n, const double* x, const int* incx, double* y, const int* incy);
-    // void   daxpy_(const int* n, const double* alpha, const double* x, const int* incx, double* y, const int* incy);
-    // void    dger_(const int* m, const int* n, const double* alpha, const double* x, const int* incx, const double* y, const int* incy, double* A, const int* ldA);
+    void sgemm_(const char* transA, const char* transB, const blas_int* m, const blas_int* n, const blas_int* k, const float*  alpha, const float*  A, const blas_int* ldA, const float*  B, const blas_int* ldB, const float*  beta, float*  C, const blas_int* ldC);
+    void dgemm_(const char* transA, const char* transB, const blas_int* m, const blas_int* n, const blas_int* k, const double* alpha, const double* A, const blas_int* ldA, const double* B, const blas_int* ldB, const double* beta, double* C, const blas_int* ldC);
+    void cgemm_(const char* transA, const char* transB, const blas_int* m, const blas_int* n, const blas_int* k, const void*   alpha, const void*   A, const blas_int* ldA, const void*   B, const blas_int* ldB, const void*   beta, void*   C, const blas_int* ldC);
+    void zgemm_(const char* transA, const char* transB, const blas_int* m, const blas_int* n, const blas_int* k, const void*   alpha, const void*   A, const blas_int* ldA, const void*   B, const blas_int* ldB, const void*   beta, void*   C, const blas_int* ldC);
+    
+    // void   dswap_(const blas_int* n, double* x, const blas_int* incx, double* y, const blas_int* incy);
+    // void   dscal_(const blas_int* n, const double* alpha, double* x, const blas_int* incx);
+    // void   dcopy_(const blas_int* n, const double* x, const blas_int* incx, double* y, const blas_int* incy);
+    // void   daxpy_(const blas_int* n, const double* alpha, const double* x, const blas_int* incx, double* y, const blas_int* incy);
+    // void    dger_(const blas_int* m, const blas_int* n, const double* alpha, const double* x, const blas_int* incx, const double* y, const blas_int* incy, double* A, const blas_int* ldA);
     }
   
   
@@ -46,11 +46,11 @@ namespace blas
   template<typename eT>
   arma_inline
   eT
-  dot_(const int* n, const eT* x, const eT* y)
+  dot_(const blas_int* n, const eT* x, const eT* y)
     {
     arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
     
-    const int inc = 1;
+    const blas_int inc = 1;
     
     if(is_float<eT>::value == true)
       {
@@ -74,7 +74,7 @@ namespace blas
   template<typename eT>
   inline
   void
-  gemv_(const char* transA, const int* m, const int* n, const eT* alpha, const eT* A, const int* ldA, const eT* x, const int* incx, const eT* beta, eT* y, const int* incy)
+  gemv_(const char* transA, const blas_int* m, const blas_int* n, const eT* alpha, const eT* A, const blas_int* ldA, const eT* x, const blas_int* incx, const eT* beta, eT* y, const blas_int* incy)
     {
     arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
     
@@ -109,7 +109,7 @@ namespace blas
   template<typename eT>
   inline
   void
-  gemm_(const char* transA, const char* transB, const int* m, const int* n, const int* k, const eT* alpha, const eT* A, const int* ldA, const eT* B, const int* ldB, const eT* beta, eT* C, const int* ldC)
+  gemm_(const char* transA, const char* transB, const blas_int* m, const blas_int* n, const blas_int* k, const eT* alpha, const eT* A, const blas_int* ldA, const eT* B, const blas_int* ldB, const eT* beta, eT* C, const blas_int* ldC)
     {
     arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
     

@@ -35,10 +35,10 @@ op_cx_scalar_times::apply
   
   const Proxy<T1> A(X.m);
   
-  out.set_size(A.n_rows, A.n_cols);
+  out.set_size(A.get_n_rows(), A.get_n_cols());
   
-  const u32 n_elem  = A.n_elem;
   const eT  k       = X.aux_out_eT;
+  const u32 n_elem  = out.n_elem;
         eT* out_mem = out.memptr();
   
   for(u32 i=0; i<n_elem; ++i)
@@ -65,10 +65,10 @@ op_cx_scalar_plus::apply
   
   const Proxy<T1> A(X.m);
   
-  out.set_size(A.n_rows, A.n_cols);
+  out.set_size(A.get_n_rows(), A.get_n_cols());
   
-  const u32 n_elem  = A.n_elem;
   const eT  k       = X.aux_out_eT;
+  const u32 n_elem  = out.n_elem;
         eT* out_mem = out.memptr();
   
   for(u32 i=0; i<n_elem; ++i)
@@ -95,10 +95,10 @@ op_cx_scalar_minus_pre::apply
   
   const Proxy<T1> A(X.m);
   
-  out.set_size(A.n_rows, A.n_cols);
+  out.set_size(A.get_n_rows(), A.get_n_cols());
   
-  const u32 n_elem  = A.n_elem;
   const eT  k       = X.aux_out_eT;
+  const u32 n_elem  = out.n_elem;
         eT* out_mem = out.memptr();
   
   for(u32 i=0; i<n_elem; ++i)
@@ -125,10 +125,10 @@ op_cx_scalar_minus_post::apply
   
   const Proxy<T1> A(X.m);
   
-  out.set_size(A.n_rows, A.n_cols);
+  out.set_size(A.get_n_rows(), A.get_n_cols());
   
-  const u32 n_elem  = A.n_elem;
   const eT  k       = X.aux_out_eT;
+  const u32 n_elem  = out.n_elem;
         eT* out_mem = out.memptr();
   
   for(u32 i=0; i<n_elem; ++i)
@@ -155,10 +155,10 @@ op_cx_scalar_div_pre::apply
   
   const Proxy<T1> A(X.m);
   
-  out.set_size(A.n_rows, A.n_cols);
+  out.set_size(A.get_n_rows(), A.get_n_cols());
   
-  const u32 n_elem  = A.n_elem;
   const eT  k       = X.aux_out_eT;
+  const u32 n_elem  = out.n_elem;
         eT* out_mem = out.memptr();
   
   for(u32 i=0; i<n_elem; ++i)
@@ -185,10 +185,196 @@ op_cx_scalar_div_post::apply
   
   const Proxy<T1> A(X.m);
   
-  out.set_size(A.n_rows, A.n_cols);
+  out.set_size(A.get_n_rows(), A.get_n_cols());
   
-  const u32 n_elem  = A.n_elem;
   const eT  k       = X.aux_out_eT;
+  const u32 n_elem  = out.n_elem;
+        eT* out_mem = out.memptr();
+  
+  for(u32 i=0; i<n_elem; ++i)
+    {
+    out_mem[i] = A[i] / k;
+    }
+  }
+
+
+
+//
+//
+//
+
+
+
+template<typename T1>
+inline
+void
+op_cx_scalar_times::apply
+  (
+           Cube< typename std::complex<typename T1::pod_type> >& out,
+  const mtOpCube<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_times>& X
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename std::complex<typename T1::pod_type> eT;
+  typedef typename T1::pod_type                         T;
+  
+  const ProxyCube<T1> A(X.m);
+  
+  out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
+  
+  const eT  k       = X.aux_out_eT;
+  const u32 n_elem  = out.n_elem;
+        eT* out_mem = out.memptr();
+  
+  for(u32 i=0; i<n_elem; ++i)
+    {
+    out_mem[i] = A[i] * k;
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_cx_scalar_plus::apply
+  (
+           Cube< typename std::complex<typename T1::pod_type> >& out,
+  const mtOpCube<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_plus>& X
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename std::complex<typename T1::pod_type> eT;
+  typedef typename T1::pod_type                         T;
+  
+  const ProxyCube<T1> A(X.m);
+  
+  out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
+  
+  const eT  k       = X.aux_out_eT;
+  const u32 n_elem  = out.n_elem;
+        eT* out_mem = out.memptr();
+  
+  for(u32 i=0; i<n_elem; ++i)
+    {
+    out_mem[i] = A[i] + k;
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_cx_scalar_minus_pre::apply
+  (
+           Cube< typename std::complex<typename T1::pod_type> >& out,
+  const mtOpCube<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_minus_pre>& X
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename std::complex<typename T1::pod_type> eT;
+  typedef typename T1::pod_type                         T;
+  
+  const ProxyCube<T1> A(X.m);
+  
+  out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
+  
+  const eT  k       = X.aux_out_eT;
+  const u32 n_elem  = out.n_elem;
+        eT* out_mem = out.memptr();
+  
+  for(u32 i=0; i<n_elem; ++i)
+    {
+    out_mem[i] = k - A[i];
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_cx_scalar_minus_post::apply
+  (
+           Cube< typename std::complex<typename T1::pod_type> >& out,
+  const mtOpCube<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_minus_post>& X
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename std::complex<typename T1::pod_type> eT;
+  typedef typename T1::pod_type                         T;
+  
+  const ProxyCube<T1> A(X.m);
+  
+  out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
+  
+  const eT  k       = X.aux_out_eT;
+  const u32 n_elem  = out.n_elem;
+        eT* out_mem = out.memptr();
+  
+  for(u32 i=0; i<n_elem; ++i)
+    {
+    out_mem[i] = A[i] - k;
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_cx_scalar_div_pre::apply
+  (
+           Cube< typename std::complex<typename T1::pod_type> >& out,
+  const mtOpCube<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_div_pre>& X
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename std::complex<typename T1::pod_type> eT;
+  typedef typename T1::pod_type                         T;
+  
+  const ProxyCube<T1> A(X.m);
+  
+  out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
+  
+  const eT  k       = X.aux_out_eT;
+  const u32 n_elem  = out.n_elem;
+        eT* out_mem = out.memptr();
+  
+  for(u32 i=0; i<n_elem; ++i)
+    {
+    out_mem[i] = k / A[i];
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_cx_scalar_div_post::apply
+  (
+           Cube< typename std::complex<typename T1::pod_type> >& out,
+  const mtOpCube<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_div_post>& X
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename std::complex<typename T1::pod_type> eT;
+  typedef typename T1::pod_type                         T;
+  
+  const ProxyCube<T1> A(X.m);
+  
+  out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
+  
+  const eT  k       = X.aux_out_eT;
+  const u32 n_elem  = out.n_elem;
         eT* out_mem = out.memptr();
   
   for(u32 i=0; i<n_elem; ++i)

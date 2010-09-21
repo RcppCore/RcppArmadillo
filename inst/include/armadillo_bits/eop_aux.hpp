@@ -171,6 +171,69 @@ class eop_aux
   template<typename eT> arma_inline static typename arma_unsigned_integral_only<eT>::result neg (const eT x) { return  x; }
   template<typename eT> arma_inline static typename arma_signed_only<eT>::result            neg (const eT x) { return -x; }
   
+  template<typename eT>
+  arma_inline
+  static
+  typename arma_integral_only<eT>::result
+  log2 (const eT x)
+    {
+    return eT( std::log(double(x))/ double(0.69314718055994530942) );
+    }
+  
+  
+  template<typename eT>
+  arma_inline
+  static
+  typename arma_float_or_cx_only<eT>::result
+  log2 (const eT x)
+    {
+    typedef typename get_pod_type<eT>::result T;
+    return std::log(x) / T(0.69314718055994530942);
+    }
+  
+  
+  template<typename eT>
+  arma_inline
+  static
+  typename arma_integral_only<eT>::result
+  exp10 (const eT x)
+    {
+    return eT( std::pow(double(10), double(x)) );
+    }
+  
+  
+  template<typename eT>
+  arma_inline
+  static
+  typename
+  arma_float_or_cx_only<eT>::result
+  exp10 (const eT x)
+    {
+    typedef typename get_pod_type<eT>::result T;
+    return std::pow( T(10), x);
+    }
+  
+  
+  template<typename eT>
+  arma_inline
+  static
+  typename arma_integral_only<eT>::result
+  exp2 (const eT x)
+    {
+    return eT( std::pow(double(2), double(x)) );
+    }
+  
+  
+  template<typename eT>
+  arma_inline
+  static
+  typename arma_float_or_cx_only<eT>::result
+  exp2 (const eT x)
+    {
+    typedef typename get_pod_type<eT>::result T;
+    return std::pow( T(2), x);
+    }
+  
   
   template<typename T1, typename T2>
   arma_inline
@@ -289,15 +352,11 @@ class eop_aux
   eT
   generate()
     {
-         if(is_same_type<eop_type, eop_randu         >::value == true) { return eT(eop_aux_randu<eT>()); }
-    else if(is_same_type<eop_type, eop_randn         >::value == true) { return eT(eop_aux_randn<eT>()); }
-    else if(is_same_type<eop_type, eop_zeros         >::value == true) { return eT(0);                   }
-    else if(is_same_type<eop_type, eop_ones_full     >::value == true) { return eT(1);                   }
-    else if(is_same_type<eop_type, eop_cube_randu    >::value == true) { return eT(eop_aux_randu<eT>()); }
-    else if(is_same_type<eop_type, eop_cube_randn    >::value == true) { return eT(eop_aux_randn<eT>()); }
-    else if(is_same_type<eop_type, eop_cube_zeros    >::value == true) { return eT(0);                   }
-    else if(is_same_type<eop_type, eop_cube_ones_full>::value == true) { return eT(1);                   }
-    else                                                               { return eT(0);                   }
+         if(is_same_type<eop_type, eop_ones_full>::value == true) { return eT(1);                   }
+    else if(is_same_type<eop_type, eop_zeros    >::value == true) { return eT(0);                   }
+    else if(is_same_type<eop_type, eop_randu    >::value == true) { return eT(eop_aux_randu<eT>()); }
+    else if(is_same_type<eop_type, eop_randn    >::value == true) { return eT(eop_aux_randn<eT>()); }
+    else                                                          { return eT();                    }
     }
   
   };

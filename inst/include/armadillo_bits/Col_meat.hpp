@@ -311,6 +311,118 @@ Col<eT>::rows(const u32 in_row1, const u32 in_row2)
 
 
 
+//! remove specified row
+template<typename eT>
+inline
+void
+Col<eT>::shed_row(const u32 row_num)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( row_num >= Mat<eT>::n_rows, "Col::shed_row(): out of bounds");
+  
+  shed_rows(row_num, row_num);
+  }
+
+
+
+//! remove specified rows
+template<typename eT>
+inline
+void
+Col<eT>::shed_rows(const u32 in_row1, const u32 in_row2)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check
+    (
+    (in_row1 > in_row2) || (in_row2 >= Mat<eT>::n_rows),
+    "Col::shed_rows(): indices out of bounds or incorrectly used"
+    );
+  
+  const u32 n_keep_front = in_row1;
+  const u32 n_keep_back  = Mat<eT>::n_rows - (in_row2 + 1);
+  
+  Col<eT> X(n_keep_front + n_keep_back);
+  
+        eT* X_mem = X.memptr();
+  const eT* t_mem = (*this).memptr();
+  
+  if(n_keep_front > 0)
+    {
+    syslib::copy_elem( X_mem, t_mem, n_keep_front );
+    }
+  
+  if(n_keep_back > 0)
+    {
+    syslib::copy_elem( &(X_mem[n_keep_front]), &(t_mem[in_row2+1]), n_keep_back);
+    }
+  
+  steal_mem(X);
+  }
+
+
+
+//! insert N rows at the specified row position,
+//! optionally setting the elements of the inserted rows to zero
+template<typename eT>
+inline
+void
+Col<eT>::insert_rows(const u32 row_num, const u32 N, const bool set_to_zero)
+  {
+  arma_extra_debug_sigprint();
+  
+  const u32 t_n_rows = Mat<eT>::n_rows;
+  
+  const u32 A_n_rows = row_num;
+  const u32 B_n_rows = t_n_rows - row_num;
+  
+  // insertion at row_num == n_rows is in effect an append operation
+  arma_debug_check( (row_num > t_n_rows), "Col::insert_rows(): out of bounds");
+  
+  if(N > 0)
+    {
+    Col<eT> out(t_n_rows + N);
+    
+          eT* out_mem = out.memptr();
+    const eT*   t_mem = (*this).memptr();
+    
+    if(A_n_rows > 0)
+      {
+      syslib::copy_elem( out_mem, t_mem, A_n_rows );
+      }
+    
+    if(B_n_rows > 0)
+      {
+      syslib::copy_elem( &(out_mem[row_num + N]), &(t_mem[row_num]), B_n_rows );
+      }
+    
+    if(set_to_zero == true)
+      {
+      arrayops::inplace_set( &(out_mem[row_num]), eT(0), N );
+      }
+    
+    steal_mem(out);
+    }
+  }
+
+
+
+//! insert the given object at the specified row position; 
+//! the given object must have one column
+template<typename eT>
+template<typename T1>
+inline
+void
+Col<eT>::insert_rows(const u32 row_num, const Base<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>::insert_rows(row_num, X);
+  }
+
+
+
 template<typename eT>
 inline
 typename Col<eT>::row_iterator

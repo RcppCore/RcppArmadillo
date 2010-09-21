@@ -26,12 +26,20 @@ class eGlueCube : public BaseCube<typename T1::elem_type, eGlueCube<T1, T2, eglu
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  const ProxyCube<T1> P1;
-  const ProxyCube<T2> P2;
+  arma_aligned const ProxyCube<T1> P1;
+  arma_aligned const ProxyCube<T2> P2;
   
   arma_inline ~eGlueCube();
   arma_inline  eGlueCube(const T1& in_A, const T2& in_B);
   
+  arma_inline u32 get_n_rows()       const;
+  arma_inline u32 get_n_cols()       const;
+  arma_inline u32 get_n_elem_slice() const;
+  arma_inline u32 get_n_slices()     const;
+  arma_inline u32 get_n_elem()       const;
+  
+  arma_inline elem_type operator[] (const u32 i)                                   const;
+  arma_inline elem_type at         (const u32 row, const u32 col, const u32 slice) const;
   };
 
 

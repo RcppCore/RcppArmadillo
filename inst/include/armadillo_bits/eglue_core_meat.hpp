@@ -19,140 +19,98 @@
 
 
 
-template<typename eglue_type>
-template<typename T1, typename T2>
-arma_inline
-typename T1::elem_type
-eglue_core<eglue_type>::get_elem(const eGlue<T1, T2, eglue_type>& x, const u32 i)
+class eglue_plus : public eglue_core<eglue_plus>
   {
-  // arma_extra_debug_sigprint();
+  public:
   
-  typedef typename T1::elem_type eT;
-  
-  // the optimiser will keep only one return statement
-  
-       if(is_same_type<eglue_type, eglue_plus >::value == true) { return x.P1[i] + x.P2[i]; }
-  else if(is_same_type<eglue_type, eglue_minus>::value == true) { return x.P1[i] - x.P2[i]; }
-  else if(is_same_type<eglue_type, eglue_div  >::value == true) { return x.P1[i] / x.P2[i]; }
-  else if(is_same_type<eglue_type, eglue_schur>::value == true) { return x.P1[i] * x.P2[i]; }
-  else
-    {
-    arma_stop("eglue_core::get_elem(): unhandled eglue_type");
-    return eT(0);
-    }
-  }
+  inline static const char* text() { return "addition"; }
+  };
 
 
 
-template<typename eglue_type>
-template<typename T1, typename T2>
-arma_inline
-typename T1::elem_type
-eglue_core<eglue_type>::get_elem(const eGlue<T1, T2, eglue_type>& x, const u32 row, const u32 col)
+class eglue_minus : public eglue_core<eglue_minus>
   {
-  // arma_extra_debug_sigprint();
+  public:
   
-  typedef typename T1::elem_type eT;
+  inline static const char* text() { return "subtraction"; }
+  };
+
+
+
+class eglue_div : public eglue_core<eglue_div>
+  {
+  public:
   
-       if(is_same_type<eglue_type, eglue_plus >::value == true) { return x.P1.at(row,col) + x.P2.at(row,col); }
-  else if(is_same_type<eglue_type, eglue_minus>::value == true) { return x.P1.at(row,col) - x.P2.at(row,col); }
-  else if(is_same_type<eglue_type, eglue_div  >::value == true) { return x.P1.at(row,col) / x.P2.at(row,col); }
-  else if(is_same_type<eglue_type, eglue_schur>::value == true) { return x.P1.at(row,col) * x.P2.at(row,col); }
-  else
-    {
-    arma_stop("eglue_core::get_elem(): unhandled eglue_type");
-    return eT(0);
-    }
-  }
+  inline static const char* text() { return "element-wise division"; }
+  };
+
+
+
+class eglue_schur : public eglue_core<eglue_schur>
+  {
+  public:
+  
+  inline static const char* text() { return "element-wise multiplication"; }
+  };
+
+
+
+//
+// matrices
 
 
 
 template<typename eglue_type>
 template<typename T1, typename T2>
-arma_inline
+arma_hot
+inline
 void
 eglue_core<eglue_type>::apply(Mat<typename T1::elem_type>& out, const eGlue<T1, T2, eglue_type>& x)
   {
   arma_extra_debug_sigprint();
   
-  if( (is_Mat<T1>::value == true) && (is_Mat<T2>::value == true) )
-    {
-    eglue_core<eglue_type>::apply_unwrap(out, x);
-    }
-  else
-    {
-    eglue_core<eglue_type>::apply_proxy(out, x);
-    }
-  }
-
-
-
-template<typename eglue_type>
-template<typename T1, typename T2>
-arma_hot
-inline
-void
-eglue_core<eglue_type>::apply_proxy(Mat<typename T1::elem_type>& out, const eGlue<T1, T2, eglue_type>& x)
-  {
-  arma_extra_debug_sigprint();
+  out.set_size(x.get_n_rows(), x.get_n_cols());
   
-  // eglue_type::apply_proxy() function is not allowed to unwrap things
-  // (in order to get the input into a common format).
-  // the proxy class is already providing objects with element access
+  typedef typename T1::elem_type      eT;
+  typedef typename Proxy<T1>::ea_type ea_type1;
+  typedef typename Proxy<T2>::ea_type ea_type2;
   
-  typedef typename T1::elem_type eT;
-  
-  const Proxy<T1>& P1 = x.P1;
-  const Proxy<T2>& P2 = x.P2;
-  
-  out.set_size(P1.n_rows, P1.n_cols);
+  ea_type1 P1 = x.P1.get_ea();
+  ea_type2 P2 = x.P2.get_ea();
   
         eT* out_mem = out.memptr();
-  const u32 n_elem  = P1.n_elem;
+  const u32 n_elem  = out.n_elem;
   
-       if(is_same_type<eglue_type, eglue_plus >::value == true) for(u32 i=0; i<n_elem; ++i) { out_mem[i] = P1[i] + P2[i]; }
-  else if(is_same_type<eglue_type, eglue_minus>::value == true) for(u32 i=0; i<n_elem; ++i) { out_mem[i] = P1[i] - P2[i]; }
-  else if(is_same_type<eglue_type, eglue_div  >::value == true) for(u32 i=0; i<n_elem; ++i) { out_mem[i] = P1[i] / P2[i]; }
-  else if(is_same_type<eglue_type, eglue_schur>::value == true) for(u32 i=0; i<n_elem; ++i) { out_mem[i] = P1[i] * P2[i]; }
+  #undef  arma_applier
+  #define arma_applier(operator) \
+    {\
+    u32 i,j;\
+    \
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)\
+      {\
+      eT tmp_i = P1[i];\
+      eT tmp_j = P1[j];\
+      \
+      tmp_i operator##= P2[i];\
+      tmp_j operator##= P2[j];\
+      \
+      out_mem[i] = tmp_i;\
+      out_mem[j] = tmp_j;\
+      }\
+    \
+    if(i < n_elem)\
+      {\
+      out_mem[i] = P1[i] operator P2[i];\
+      }\
+    }
+  
+       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(+); }
+  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(-); }
+  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(/); }
+  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(*); }
   else
     {
     arma_stop("eglue_core::apply_proxy(): unhandled eglue_type");
-    }
-  }
-
-
-
-template<typename eglue_type>
-template<typename T1, typename T2>
-arma_hot
-inline
-void
-eglue_core<eglue_type>::apply_unwrap(Mat<typename T1::elem_type>& out, const eGlue<T1, T2, eglue_type>& x)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  const unwrap<typename Proxy<T1>::stored_type> tmp1(x.P1.Q);
-  const unwrap<typename Proxy<T2>::stored_type> tmp2(x.P2.Q);
-  
-  const Mat<eT>& A = tmp1.M;
-  const Mat<eT>& B = tmp2.M;
-  
-  out.set_size(A.n_rows, A.n_cols);
-  
-        eT* out_mem = out.memptr();
-  const eT* A_mem   = A.memptr();
-  const eT* B_mem   = B.memptr();
-  const u32 n_elem  = A.n_elem;
-  
-       if(is_same_type<eglue_type, eglue_plus >::value == true) for(u32 i=0; i<n_elem; ++i) { out_mem[i] = A_mem[i] + B_mem[i]; }
-  else if(is_same_type<eglue_type, eglue_minus>::value == true) for(u32 i=0; i<n_elem; ++i) { out_mem[i] = A_mem[i] - B_mem[i]; }
-  else if(is_same_type<eglue_type, eglue_div  >::value == true) for(u32 i=0; i<n_elem; ++i) { out_mem[i] = A_mem[i] / B_mem[i]; }
-  else if(is_same_type<eglue_type, eglue_schur>::value == true) for(u32 i=0; i<n_elem; ++i) { out_mem[i] = A_mem[i] * B_mem[i]; }
-  else
-    {
-    arma_stop("eglue_core::apply_unwrap(): unhandled eglue_type");
     }
   }
 
@@ -167,20 +125,45 @@ eglue_core<eglue_type>::apply_inplace_plus(Mat<typename T1::elem_type>& out, con
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
+  arma_debug_assert_same_size(out, x.P1, "addition");
   
-  const Proxy<T1>& P1 = x.P1;
-  const Proxy<T2>& P2 = x.P2;
+  typedef typename T1::elem_type      eT;
+  typedef typename Proxy<T1>::ea_type ea_type1;
+  typedef typename Proxy<T2>::ea_type ea_type2;
   
-  arma_assert_same_size(out.n_rows, out.n_cols, P1.n_rows, P1.n_cols, "matrix addition");
+  ea_type1 P1 = x.P1.get_ea();
+  ea_type2 P2 = x.P2.get_ea();
   
         eT* out_mem = out.memptr();
-  const u32 n_elem  = P1.n_elem;
+  const u32 n_elem  = out.n_elem;
   
-       if(is_same_type<eglue_type, eglue_plus >::value == true) for(u32 i=0; i<n_elem; ++i) { out_mem[i] += P1[i] + P2[i]; }
-  else if(is_same_type<eglue_type, eglue_minus>::value == true) for(u32 i=0; i<n_elem; ++i) { out_mem[i] += P1[i] - P2[i]; }
-  else if(is_same_type<eglue_type, eglue_div  >::value == true) for(u32 i=0; i<n_elem; ++i) { out_mem[i] += P1[i] / P2[i]; }
-  else if(is_same_type<eglue_type, eglue_schur>::value == true) for(u32 i=0; i<n_elem; ++i) { out_mem[i] += P1[i] * P2[i]; }
+  #undef  arma_applier
+  #define arma_applier(operator) \
+    {\
+    u32 i,j;\
+    \
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)\
+      {\
+      eT tmp_i = P1[i];\
+      eT tmp_j = P1[j];\
+      \
+      tmp_i operator##= P2[i];\
+      tmp_j operator##= P2[j];\
+      \
+      out_mem[i] += tmp_i;\
+      out_mem[j] += tmp_j;\
+      }\
+    \
+    if(i < n_elem)\
+      {\
+      out_mem[i] += P1[i] operator P2[i];\
+      }\
+    }
+  
+       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(+); }
+  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(-); }
+  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(/); }
+  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(*); }
   else
     {
     arma_stop("eglue_core::apply_inplace_plus(): unhandled eglue_type");
@@ -198,20 +181,45 @@ eglue_core<eglue_type>::apply_inplace_minus(Mat<typename T1::elem_type>& out, co
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
+  arma_debug_assert_same_size(out, x.P1, "subtraction");
   
-  const Proxy<T1>& P1 = x.P1;
-  const Proxy<T2>& P2 = x.P2;
+  typedef typename T1::elem_type      eT;
+  typedef typename Proxy<T1>::ea_type ea_type1;
+  typedef typename Proxy<T2>::ea_type ea_type2;
   
-  arma_assert_same_size(out.n_rows, out.n_cols, P1.n_rows, P1.n_cols, "matrix subtraction");
+  ea_type1 P1 = x.P1.get_ea();
+  ea_type2 P2 = x.P2.get_ea();
   
         eT* out_mem = out.memptr();
-  const u32 n_elem  = P1.n_elem;
+  const u32 n_elem  = out.n_elem;
   
-       if(is_same_type<eglue_type, eglue_plus >::value == true) for(u32 i=0; i<n_elem; ++i) { out_mem[i] -= P1[i] + P2[i]; }
-  else if(is_same_type<eglue_type, eglue_minus>::value == true) for(u32 i=0; i<n_elem; ++i) { out_mem[i] -= P1[i] - P2[i]; }
-  else if(is_same_type<eglue_type, eglue_div  >::value == true) for(u32 i=0; i<n_elem; ++i) { out_mem[i] -= P1[i] / P2[i]; }
-  else if(is_same_type<eglue_type, eglue_schur>::value == true) for(u32 i=0; i<n_elem; ++i) { out_mem[i] -= P1[i] * P2[i]; }
+  #undef  arma_applier
+  #define arma_applier(operator) \
+    {\
+    u32 i,j;\
+    \
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)\
+      {\
+      eT tmp_i = P1[i];\
+      eT tmp_j = P1[j];\
+      \
+      tmp_i operator##= P2[i];\
+      tmp_j operator##= P2[j];\
+      \
+      out_mem[i] -= tmp_i;\
+      out_mem[j] -= tmp_j;\
+      }\
+    \
+    if(i < n_elem)\
+      {\
+      out_mem[i] -= P1[i] operator P2[i];\
+      }\
+    }
+  
+       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(+); }
+  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(-); }
+  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(/); }
+  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(*); }
   else 
     {
     arma_stop("eglue_core::apply_inplace_minus(): unhandled eglue_type");
@@ -229,20 +237,45 @@ eglue_core<eglue_type>::apply_inplace_schur(Mat<typename T1::elem_type>& out, co
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
+  arma_debug_assert_same_size(out, x.P1, "element-wise multiplication");
   
-  const Proxy<T1>& P1 = x.P1;
-  const Proxy<T2>& P2 = x.P2;
+  typedef typename T1::elem_type      eT;
+  typedef typename Proxy<T1>::ea_type ea_type1;
+  typedef typename Proxy<T2>::ea_type ea_type2;
   
-  arma_assert_same_size(out.n_rows, out.n_cols, P1.n_rows, P1.n_cols, "element-wise matrix multiplication");
+  ea_type1 P1 = x.P1.get_ea();
+  ea_type2 P2 = x.P2.get_ea();
   
         eT* out_mem = out.memptr();
-  const u32 n_elem  = P1.n_elem;
+  const u32 n_elem  = out.n_elem;
   
-       if(is_same_type<eglue_type, eglue_plus >::value == true) for(u32 i=0; i<n_elem; ++i) { out_mem[i] *= P1[i] + P2[i]; }
-  else if(is_same_type<eglue_type, eglue_minus>::value == true) for(u32 i=0; i<n_elem; ++i) { out_mem[i] *= P1[i] - P2[i]; }
-  else if(is_same_type<eglue_type, eglue_div  >::value == true) for(u32 i=0; i<n_elem; ++i) { out_mem[i] *= P1[i] / P2[i]; }
-  else if(is_same_type<eglue_type, eglue_schur>::value == true) for(u32 i=0; i<n_elem; ++i) { out_mem[i] *= P1[i] * P2[i]; }
+  #undef  arma_applier
+  #define arma_applier(operator) \
+    {\
+    u32 i,j;\
+    \
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)\
+      {\
+      eT tmp_i = P1[i];\
+      eT tmp_j = P1[j];\
+      \
+      tmp_i operator##= P2[i];\
+      tmp_j operator##= P2[j];\
+      \
+      out_mem[i] *= tmp_i;\
+      out_mem[j] *= tmp_j;\
+      }\
+    \
+    if(i < n_elem)\
+      {\
+      out_mem[i] *= P1[i] operator P2[i];\
+      }\
+    }
+  
+       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(+); }
+  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(-); }
+  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(/); }
+  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(*); }
   else
     {
     arma_stop("eglue_core::apply_inplace_schur(): unhandled eglue_type");
@@ -260,20 +293,330 @@ eglue_core<eglue_type>::apply_inplace_div(Mat<typename T1::elem_type>& out, cons
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
+  arma_debug_assert_same_size(out, x.P1, "element-wise division");
   
-  const Proxy<T1>& P1 = x.P1;
-  const Proxy<T2>& P2 = x.P2;
+  typedef typename T1::elem_type      eT;
+  typedef typename Proxy<T1>::ea_type ea_type1;
+  typedef typename Proxy<T2>::ea_type ea_type2;
   
-  arma_assert_same_size(out.n_rows, out.n_cols, P1.n_rows, P1.n_cols, "element-wise matrix division");
+  ea_type1 P1 = x.P1.get_ea();
+  ea_type2 P2 = x.P2.get_ea();
   
         eT* out_mem = out.memptr();
-  const u32 n_elem  = P1.n_elem;
+  const u32 n_elem  = out.n_elem;
   
-       if(is_same_type<eglue_type, eglue_plus >::value == true) for(u32 i=0; i<n_elem; ++i) { out_mem[i] /= P1[i] + P2[i]; }
-  else if(is_same_type<eglue_type, eglue_minus>::value == true) for(u32 i=0; i<n_elem; ++i) { out_mem[i] /= P1[i] - P2[i]; }
-  else if(is_same_type<eglue_type, eglue_div  >::value == true) for(u32 i=0; i<n_elem; ++i) { out_mem[i] /= P1[i] / P2[i]; }
-  else if(is_same_type<eglue_type, eglue_schur>::value == true) for(u32 i=0; i<n_elem; ++i) { out_mem[i] /= P1[i] * P2[i]; }
+  #undef  arma_applier
+  #define arma_applier(operator) \
+    {\
+    u32 i,j;\
+    \
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)\
+      {\
+      eT tmp_i = P1[i];\
+      eT tmp_j = P1[j];\
+      \
+      tmp_i operator##= P2[i];\
+      tmp_j operator##= P2[j];\
+      \
+      out_mem[i] /= tmp_i;\
+      out_mem[j] /= tmp_j;\
+      }\
+    \
+    if(i < n_elem)\
+      {\
+      out_mem[i] /= P1[i] operator P2[i];\
+      }\
+    }
+  
+       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(+); }
+  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(-); }
+  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(/); }
+  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(*); }
+  else
+    {
+    arma_stop("eglue_core::apply_inplace_div(): unhandled eglue_type");
+    }
+  }
+
+
+
+//
+// cubes
+
+
+
+template<typename eglue_type>
+template<typename T1, typename T2>
+arma_hot
+inline
+void
+eglue_core<eglue_type>::apply(Cube<typename T1::elem_type>& out, const eGlueCube<T1, T2, eglue_type>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  out.set_size(x.get_n_rows(), x.get_n_cols(), x.get_n_slices());
+  
+  typedef typename T1::elem_type          eT;
+  typedef typename ProxyCube<T1>::ea_type ea_type1;
+  typedef typename ProxyCube<T2>::ea_type ea_type2;
+  
+  ea_type1 P1 = x.P1.get_ea();
+  ea_type2 P2 = x.P2.get_ea();
+  
+        eT* out_mem = out.memptr();
+  const u32 n_elem  = out.n_elem;
+  
+  #undef  arma_applier
+  #define arma_applier(operator) \
+    {\
+    u32 i,j;\
+    \
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)\
+      {\
+      eT tmp_i = P1[i];\
+      eT tmp_j = P1[j];\
+      \
+      tmp_i operator##= P2[i];\
+      tmp_j operator##= P2[j];\
+      \
+      out_mem[i] = tmp_i;\
+      out_mem[j] = tmp_j;\
+      }\
+    \
+    if(i < n_elem)\
+      {\
+      out_mem[i] = P1[i] operator P2[i];\
+      }\
+    }
+  
+       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(+); }
+  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(-); }
+  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(/); }
+  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(*); }
+  else
+    {
+    arma_stop("eglue_core::apply_proxy(): unhandled eglue_type");
+    }
+  }
+
+
+
+template<typename eglue_type>
+template<typename T1, typename T2>
+arma_hot
+inline
+void
+eglue_core<eglue_type>::apply_inplace_plus(Cube<typename T1::elem_type>& out, const eGlueCube<T1, T2, eglue_type>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_assert_same_size(out.n_rows, out.n_cols, out.n_slices, x.get_n_rows(), x.get_n_cols(), x.get_n_slices(), "addition");
+  
+  typedef typename T1::elem_type          eT;
+  typedef typename ProxyCube<T1>::ea_type ea_type1;
+  typedef typename ProxyCube<T2>::ea_type ea_type2;
+  
+  ea_type1 P1 = x.P1.get_ea();
+  ea_type2 P2 = x.P2.get_ea();
+  
+  const u32 n_elem  = out.n_elem;
+        eT* out_mem = out.memptr();
+  
+  #undef  arma_applier
+  #define arma_applier(operator) \
+    {\
+    u32 i,j;\
+    \
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)\
+      {\
+      eT tmp_i = P1[i];\
+      eT tmp_j = P1[j];\
+      \
+      tmp_i operator##= P2[i];\
+      tmp_j operator##= P2[j];\
+      \
+      out_mem[i] += tmp_i;\
+      out_mem[j] += tmp_j;\
+      }\
+    \
+    if(i < n_elem)\
+      {\
+      out_mem[i] += P1[i] operator P2[i];\
+      }\
+    }
+  
+       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(+); }
+  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(-); }
+  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(/); }
+  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(*); }
+  else
+    {
+    arma_stop("eglue_core::apply_inplace_plus(): unhandled eglue_type");
+    }
+  }
+
+
+
+template<typename eglue_type>
+template<typename T1, typename T2>
+arma_hot
+inline
+void
+eglue_core<eglue_type>::apply_inplace_minus(Cube<typename T1::elem_type>& out, const eGlueCube<T1, T2, eglue_type>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_assert_same_size(out.n_rows, out.n_cols, out.n_slices, x.get_n_rows(), x.get_n_cols(), x.get_n_slices(), "subtraction");
+  
+  typedef typename T1::elem_type          eT;
+  typedef typename ProxyCube<T1>::ea_type ea_type1;
+  typedef typename ProxyCube<T2>::ea_type ea_type2;
+  
+  ea_type1 P1 = x.P1.get_ea();
+  ea_type2 P2 = x.P2.get_ea();
+  
+  const u32 n_elem  = out.n_elem;
+        eT* out_mem = out.memptr();
+  
+  #undef  arma_applier
+  #define arma_applier(operator) \
+    {\
+    u32 i,j;\
+    \
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)\
+      {\
+      eT tmp_i = P1[i];\
+      eT tmp_j = P1[j];\
+      \
+      tmp_i operator##= P2[i];\
+      tmp_j operator##= P2[j];\
+      \
+      out_mem[i] -= tmp_i;\
+      out_mem[j] -= tmp_j;\
+      }\
+    \
+    if(i < n_elem)\
+      {\
+      out_mem[i] -= P1[i] operator P2[i];\
+      }\
+    }
+  
+       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(+); }
+  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(-); }
+  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(/); }
+  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(*); }
+  else 
+    {
+    arma_stop("eglue_core::apply_inplace_minus(): unhandled eglue_type");
+    }
+  }
+
+
+
+template<typename eglue_type>
+template<typename T1, typename T2>
+arma_hot
+inline
+void
+eglue_core<eglue_type>::apply_inplace_schur(Cube<typename T1::elem_type>& out, const eGlueCube<T1, T2, eglue_type>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_assert_same_size(out.n_rows, out.n_cols, out.n_slices, x.get_n_rows(), x.get_n_cols(), x.get_n_slices(), "element-wise multiplication");
+  
+  typedef typename T1::elem_type          eT;
+  typedef typename ProxyCube<T1>::ea_type ea_type1;
+  typedef typename ProxyCube<T2>::ea_type ea_type2;
+  
+  ea_type1 P1 = x.P1.get_ea();
+  ea_type2 P2 = x.P2.get_ea();
+  
+  const u32 n_elem  = out.n_elem;
+        eT* out_mem = out.memptr();
+  
+  #undef  arma_applier
+  #define arma_applier(operator) \
+    {\
+    u32 i,j;\
+    \
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)\
+      {\
+      eT tmp_i = P1[i];\
+      eT tmp_j = P1[j];\
+      \
+      tmp_i operator##= P2[i];\
+      tmp_j operator##= P2[j];\
+      \
+      out_mem[i] *= tmp_i;\
+      out_mem[j] *= tmp_j;\
+      }\
+    \
+    if(i < n_elem)\
+      {\
+      out_mem[i] *= P1[i] operator P2[i];\
+      }\
+    }
+  
+       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(+); }
+  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(-); }
+  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(/); }
+  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(*); }
+  else
+    {
+    arma_stop("eglue_core::apply_inplace_schur(): unhandled eglue_type");
+    }
+  }
+
+
+
+template<typename eglue_type>
+template<typename T1, typename T2>
+arma_hot
+inline
+void
+eglue_core<eglue_type>::apply_inplace_div(Cube<typename T1::elem_type>& out, const eGlueCube<T1, T2, eglue_type>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_assert_same_size(out.n_rows, out.n_cols, out.n_slices, x.get_n_rows(), x.get_n_cols(), x.get_n_slices(), "element-wise division");
+  
+  typedef typename T1::elem_type          eT;
+  typedef typename ProxyCube<T1>::ea_type ea_type1;
+  typedef typename ProxyCube<T2>::ea_type ea_type2;
+  
+  ea_type1 P1 = x.P1.get_ea();
+  ea_type2 P2 = x.P2.get_ea();
+  
+  const u32 n_elem  = out.n_elem;
+        eT* out_mem = out.memptr();
+  
+  #undef  arma_applier
+  #define arma_applier(operator) \
+    {\
+    u32 i,j;\
+    \
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)\
+      {\
+      eT tmp_i = P1[i];\
+      eT tmp_j = P1[j];\
+      \
+      tmp_i operator##= P2[i];\
+      tmp_j operator##= P2[j];\
+      \
+      out_mem[i] /= tmp_i;\
+      out_mem[j] /= tmp_j;\
+      }\
+    \
+    if(i < n_elem)\
+      {\
+      out_mem[i] /= P1[i] operator P2[i];\
+      }\
+    }
+  
+       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(+); }
+  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(-); }
+  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(/); }
+  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(*); }
   else
     {
     arma_stop("eglue_core::apply_inplace_div(): unhandled eglue_type");

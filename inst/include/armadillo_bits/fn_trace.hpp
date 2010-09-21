@@ -31,9 +31,9 @@ trace(const Base<typename T1::elem_type,T1>& X)
   
   const Proxy<T1> A(X.get_ref());
 
-  arma_debug_check( (A.n_rows != A.n_cols), "trace(): matrix must be square sized" );
+  arma_debug_check( (A.get_n_rows() != A.get_n_cols()), "trace(): matrix must be square sized" );
   
-  const u32 N   = A.n_rows;
+  const u32 N   = A.get_n_rows();
         eT  val = eT(0);
   
   for(u32 i=0; i<N; ++i)
