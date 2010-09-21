@@ -96,6 +96,11 @@
   #undef  arma_inline
   #define arma_inline inline __forceinline
   
+  // #if (_MSC_VER >= 1400)
+  //   #undef  arma_aligned
+  //   #define arma_aligned __declspec(align(16))
+  // #endif
+  
 #endif
 
 

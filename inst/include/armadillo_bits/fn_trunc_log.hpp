@@ -80,12 +80,12 @@ trunc_log(const Base<typename T1::elem_type,T1>& A)
 
 template<typename T1>
 arma_inline
-const eOpCube<T1, eop_cube_trunc_log>
+const eOpCube<T1, eop_trunc_log>
 trunc_log(const BaseCube<typename T1::elem_type,T1>& A)
   {
   arma_extra_debug_sigprint();
   
-  return eOpCube<T1, eop_cube_trunc_log>(A.get_ref());
+  return eOpCube<T1, eop_trunc_log>(A.get_ref());
   }
 
 

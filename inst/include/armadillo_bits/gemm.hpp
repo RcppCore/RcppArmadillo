@@ -416,7 +416,7 @@ class gemm
     {
     arma_extra_debug_sigprint();
     
-    if( ((A.n_elem <= 64u) && (B.n_elem <= 64u)) )
+    if( ((A.n_elem < 64u) && (B.n_elem < 64u)) )
       {
       gemm_emul_simple<do_trans_A, do_trans_B, use_alpha, use_beta>::apply(C,A,B,alpha,beta);
       }
@@ -451,14 +451,14 @@ class gemm
         const char trans_A = (do_trans_A) ? 'T' : 'N';
         const char trans_B = (do_trans_B) ? 'T' : 'N';
         
-        const int m   = C.n_rows;
-        const int n   = C.n_cols;
-        const int k   = (do_trans_A) ? A.n_rows : A.n_cols;
+        const blas_int m   = C.n_rows;
+        const blas_int n   = C.n_cols;
+        const blas_int k   = (do_trans_A) ? A.n_rows : A.n_cols;
         
         const eT local_alpha = (use_alpha) ? alpha : eT(1);
         
-        const int lda = (do_trans_A) ? k : m;
-        const int ldb = (do_trans_B) ? n : k;
+        const blas_int lda = (do_trans_A) ? k : m;
+        const blas_int ldb = (do_trans_B) ? n : k;
         
         const eT local_beta  = (use_beta) ? beta : eT(0);
         

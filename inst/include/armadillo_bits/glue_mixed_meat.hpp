@@ -86,7 +86,7 @@ glue_mixed_plus::apply(Mat<typename eT_promoter<T1,T2>::eT>& out, const mtGlue<t
   
   arma_debug_assert_same_size(A, B, "matrix addition");
   
-  out.set_size(A.n_rows, A.n_cols);
+  out.set_size(A.get_n_rows(), A.get_n_cols());
   
         out_eT* out_mem = out.memptr();
   const u32     n_elem  = out.n_elem;
@@ -119,7 +119,7 @@ glue_mixed_minus::apply(Mat<typename eT_promoter<T1,T2>::eT>& out, const mtGlue<
   
   arma_debug_assert_same_size(A, B, "matrix subtraction");
   
-  out.set_size(A.n_rows, A.n_cols);
+  out.set_size(A.get_n_rows(), A.get_n_cols());
   
         out_eT* out_mem = out.memptr();
   const u32     n_elem  = out.n_elem;
@@ -152,7 +152,7 @@ glue_mixed_div::apply(Mat<typename eT_promoter<T1,T2>::eT>& out, const mtGlue<ty
   
   arma_debug_assert_same_size(A, B, "element-wise matrix division");
   
-  out.set_size(A.n_rows, A.n_cols);
+  out.set_size(A.get_n_rows(), A.get_n_cols());
   
         out_eT* out_mem = out.memptr();
   const u32     n_elem  = out.n_elem;
@@ -185,7 +185,145 @@ glue_mixed_schur::apply(Mat<typename eT_promoter<T1,T2>::eT>& out, const mtGlue<
   
   arma_debug_assert_same_size(A, B, "element-wise matrix multiplication");
   
-  out.set_size(A.n_rows, A.n_cols);
+  out.set_size(A.get_n_rows(), A.get_n_cols());
+  
+        out_eT* out_mem = out.memptr();
+  const u32     n_elem  = out.n_elem;
+  
+  for(u32 i=0; i<n_elem; ++i)
+    {
+    out_mem[i] = upgrade_val<eT1,eT2>::apply(A[i]) * upgrade_val<eT1,eT2>::apply(B[i]);
+    }
+  }
+
+
+
+//
+//
+//
+
+
+
+//! cube addition with different element types
+template<typename T1, typename T2>
+inline
+void
+glue_mixed_plus::apply(Cube<typename eT_promoter<T1,T2>::eT>& out, const mtGlueCube<typename eT_promoter<T1,T2>::eT, T1, T2, glue_mixed_plus>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT1;
+  typedef typename T2::elem_type eT2;
+  
+  typedef typename promote_type<eT1,eT2>::result out_eT;
+  
+  promote_type<eT1,eT2>::check();
+  
+  const ProxyCube<T1> A(X.A);
+  const ProxyCube<T2> B(X.B);
+  
+  arma_debug_assert_same_size(A, B, "cube addition");
+  
+  out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
+  
+        out_eT* out_mem = out.memptr();
+  const u32     n_elem  = out.n_elem;
+  
+  for(u32 i=0; i<n_elem; ++i)
+    {
+    out_mem[i] = upgrade_val<eT1,eT2>::apply(A[i]) + upgrade_val<eT1,eT2>::apply(B[i]);
+    }
+  }
+
+
+
+//! cube subtraction with different element types
+template<typename T1, typename T2>
+inline
+void
+glue_mixed_minus::apply(Cube<typename eT_promoter<T1,T2>::eT>& out, const mtGlueCube<typename eT_promoter<T1,T2>::eT, T1, T2, glue_mixed_minus>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT1;
+  typedef typename T2::elem_type eT2;
+  
+  typedef typename promote_type<eT1,eT2>::result out_eT;
+  
+  promote_type<eT1,eT2>::check();
+  
+  const ProxyCube<T1> A(X.A);
+  const ProxyCube<T2> B(X.B);
+  
+  arma_debug_assert_same_size(A, B, "cube subtraction");
+  
+  out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
+  
+        out_eT* out_mem = out.memptr();
+  const u32     n_elem  = out.n_elem;
+  
+  for(u32 i=0; i<n_elem; ++i)
+    {
+    out_mem[i] = upgrade_val<eT1,eT2>::apply(A[i]) - upgrade_val<eT1,eT2>::apply(B[i]);
+    }
+  }
+
+
+
+//! element-wise cube division with different element types
+template<typename T1, typename T2>
+inline
+void
+glue_mixed_div::apply(Cube<typename eT_promoter<T1,T2>::eT>& out, const mtGlueCube<typename eT_promoter<T1,T2>::eT, T1, T2, glue_mixed_div>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT1;
+  typedef typename T2::elem_type eT2;
+  
+  typedef typename promote_type<eT1,eT2>::result out_eT;
+  
+  promote_type<eT1,eT2>::check();
+  
+  const ProxyCube<T1> A(X.A);
+  const ProxyCube<T2> B(X.B);
+  
+  arma_debug_assert_same_size(A, B, "element-wise cube division");
+  
+  out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
+  
+        out_eT* out_mem = out.memptr();
+  const u32     n_elem  = out.n_elem;
+  
+  for(u32 i=0; i<n_elem; ++i)
+    {
+    out_mem[i] = upgrade_val<eT1,eT2>::apply(A[i]) / upgrade_val<eT1,eT2>::apply(B[i]);
+    }
+  }
+
+
+
+//! element-wise cube multiplication with different element types
+template<typename T1, typename T2>
+inline
+void
+glue_mixed_schur::apply(Cube<typename eT_promoter<T1,T2>::eT>& out, const mtGlueCube<typename eT_promoter<T1,T2>::eT, T1, T2, glue_mixed_schur>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT1;
+  typedef typename T2::elem_type eT2;
+  
+  typedef typename promote_type<eT1,eT2>::result out_eT;
+  
+  promote_type<eT1,eT2>::check();
+  
+  const ProxyCube<T1> A(X.A);
+  const ProxyCube<T2> B(X.B);
+  
+  arma_debug_assert_same_size(A, B, "element-wise cube multiplication");
+  
+  out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
   
         out_eT* out_mem = out.memptr();
   const u32     n_elem  = out.n_elem;

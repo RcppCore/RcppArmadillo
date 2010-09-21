@@ -21,8 +21,9 @@
 
 #define ARMA_VERSION_MAJOR 0
 #define ARMA_VERSION_MINOR 9
-#define ARMA_VERSION_PATCH 70
-#define ARMA_VERSION_NAME  "Subtropical Winter Safari"
+#define ARMA_VERSION_PATCH 80
+#define ARMA_VERSION_NAME  "Chihuahua Muncher"
+// http://www.brisbanetimes.com.au/environment/leaping-sharks-are-no-bull-20100906-14wyq.html
 
 
 struct arma_version

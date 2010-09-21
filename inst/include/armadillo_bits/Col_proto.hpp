@@ -60,6 +60,13 @@ class Col : public Mat<eT>, public BaseVec< eT, Col<eT> >
   arma_inline const subview_col<eT> rows(const u32 in_row1, const u32 in_row2) const;
   
   
+  inline void shed_row (const u32 row_num);
+  inline void shed_rows(const u32 in_row1, const u32 in_row2);
+  
+                        inline void insert_rows(const u32 row_num, const u32 N, const bool set_to_zero = true);
+  template<typename T1> inline void insert_rows(const u32 row_num, const Base<eT,T1>& X);
+  
+  
   typedef       eT*       row_iterator;
   typedef const eT* const_row_iterator;
   

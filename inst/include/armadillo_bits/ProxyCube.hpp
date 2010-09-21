@@ -31,6 +31,9 @@ class ProxyCube
 
 
 
+// ea_type is the "element accessor" type,
+// which can provide access to elements via operator[]
+
 template<typename eT>
 class ProxyCube< Cube<eT> >
   {
@@ -39,40 +42,26 @@ class ProxyCube< Cube<eT> >
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Cube<eT>                                 stored_type;
+  typedef const eT*                                ea_type;
   
-  
-  const Cube<eT>& Q;
-  
-  const u32 n_rows;
-  const u32 n_cols;
-  const u32 n_elem_slice;
-  const u32 n_slices;
-  const u32 n_elem;
+  arma_aligned const Cube<eT>& Q;
   
   inline explicit ProxyCube(const Cube<eT>& A)
-    : Q           (A)
-    , n_rows      (A.n_rows)
-    , n_cols      (A.n_cols)
-    , n_elem_slice(A.n_elem_slice)
-    , n_slices    (A.n_slices)
-    , n_elem      (A.n_elem)
+    : Q(A)
     {
     arma_extra_debug_sigprint();
     }
   
-  inline explicit ProxyCube(const u32 in_n_rows, const u32 in_n_cols, const u32 in_n_slices)
-    : Q           (Q)
-    , n_rows      (in_n_rows)
-    , n_cols      (in_n_cols)
-    , n_elem_slice(in_n_rows*in_n_cols)
-    , n_slices    (in_n_slices)
-    , n_elem      (in_n_rows*in_n_cols*in_n_slices)
-    {
-    arma_extra_debug_sigprint();
-    }
+  arma_inline u32 get_n_rows()       const { return Q.n_rows;       }
+  arma_inline u32 get_n_cols()       const { return Q.n_cols;       }
+  arma_inline u32 get_n_elem_slice() const { return Q.n_elem_slice; }
+  arma_inline u32 get_n_slices()     const { return Q.n_slices;     }
+  arma_inline u32 get_n_elem()       const { return Q.n_elem;       }
   
   arma_inline elem_type operator[] (const u32 i)                                   const { return Q[i];                  }
   arma_inline elem_type at         (const u32 row, const u32 col, const u32 slice) const { return Q.at(row, col, slice); }
+  
+  arma_inline ea_type get_ea() const { return Q.memptr(); }
   };
 
 
@@ -85,28 +74,26 @@ class ProxyCube< OpCube<T1, op_type> >
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Cube<elem_type>                          stored_type;
+  typedef const elem_type*                         ea_type;
   
-  const Cube<elem_type> Q;
-  
-  const u32 n_rows;
-  const u32 n_cols;
-  const u32 n_elem_slice;
-  const u32 n_slices;
-  const u32 n_elem;
+  arma_aligned const Cube<elem_type> Q;
   
   inline explicit ProxyCube(const OpCube<T1, op_type>& A)
-    : Q           (A)
-    , n_rows      (Q.n_rows)
-    , n_cols      (Q.n_cols)
-    , n_elem_slice(Q.n_elem_slice)
-    , n_slices    (Q.n_slices)
-    , n_elem      (Q.n_elem)
+    : Q(A)
     {
     arma_extra_debug_sigprint();
     }
   
+  arma_inline u32 get_n_rows()       const { return Q.n_rows;       }
+  arma_inline u32 get_n_cols()       const { return Q.n_cols;       }
+  arma_inline u32 get_n_elem_slice() const { return Q.n_elem_slice; }
+  arma_inline u32 get_n_slices()     const { return Q.n_slices;     }
+  arma_inline u32 get_n_elem()       const { return Q.n_elem;       }
+  
   arma_inline elem_type operator[] (const u32 i)                                   const { return Q[i];                  }
   arma_inline elem_type at         (const u32 row, const u32 col, const u32 slice) const { return Q.at(row, col, slice); }
+  
+  arma_inline ea_type get_ea() const { return Q.memptr(); }
   };
 
 
@@ -119,28 +106,26 @@ class ProxyCube< GlueCube<T1, T2, glue_type> >
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Cube<elem_type>                          stored_type;
+  typedef const elem_type*                         ea_type;
   
-  const Cube<elem_type> Q;
-  
-  const u32 n_rows;
-  const u32 n_cols;
-  const u32 n_elem_slice;
-  const u32 n_slices;
-  const u32 n_elem;
+  arma_aligned const Cube<elem_type> Q;
   
   inline explicit ProxyCube(const GlueCube<T1, T2, glue_type>& A)
-    : Q           (A)
-    , n_rows      (Q.n_rows)
-    , n_cols      (Q.n_cols)
-    , n_elem_slice(Q.n_elem_slice)
-    , n_slices    (Q.n_slices)
-    , n_elem      (Q.n_elem)
+    : Q(A)
     {
     arma_extra_debug_sigprint();
     }
 
+  arma_inline u32 get_n_rows()       const { return Q.n_rows;       }
+  arma_inline u32 get_n_cols()       const { return Q.n_cols;       }
+  arma_inline u32 get_n_elem_slice() const { return Q.n_elem_slice; }
+  arma_inline u32 get_n_slices()     const { return Q.n_slices;     }
+  arma_inline u32 get_n_elem()       const { return Q.n_elem;       }
+  
   arma_inline elem_type operator[] (const u32 i)                                   const { return Q[i];                  }
   arma_inline elem_type at         (const u32 row, const u32 col, const u32 slice) const { return Q.at(row, col, slice); }
+  
+  arma_inline ea_type get_ea() const { return Q.memptr(); }
   };
 
 
@@ -153,30 +138,27 @@ class ProxyCube< subview_cube<eT> >
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef subview_cube<eT>                         stored_type;
+  typedef const subview_cube<eT>&                  ea_type;
   
-  const subview_cube<eT>& Q;
-  
-  const u32 n_rows;
-  const u32 n_cols;
-  const u32 n_elem_slice;
-  const u32 n_slices;
-  const u32 n_elem;
+  arma_aligned const subview_cube<eT>& Q;
   
   inline explicit ProxyCube(const subview_cube<eT>& A)
-    : Q           (A)
-    , n_rows      (A.n_rows)
-    , n_cols      (A.n_cols)
-    , n_elem_slice(A.n_elem_slice)
-    , n_slices    (A.n_slices)
-    , n_elem      (A.n_elem)
+    : Q(A)
     {
     arma_extra_debug_sigprint();
     }
   
+  arma_inline u32 get_n_rows()       const { return Q.n_rows;       }
+  arma_inline u32 get_n_cols()       const { return Q.n_cols;       }
+  arma_inline u32 get_n_elem_slice() const { return Q.n_elem_slice; }
+  arma_inline u32 get_n_slices()     const { return Q.n_slices;     }
+  arma_inline u32 get_n_elem()       const { return Q.n_elem;       }
+  
   arma_inline elem_type operator[] (const u32 i)                                   const { return Q[i];                  }
   arma_inline elem_type at         (const u32 row, const u32 col, const u32 slice) const { return Q.at(row, col, slice); }
+  
+  arma_inline ea_type get_ea() const { return Q; }
   };
-
 
 
 
@@ -188,28 +170,26 @@ class ProxyCube< eOpCube<T1, eop_type > >
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef eOpCube<T1, eop_type>                    stored_type;
+  typedef const eOpCube<T1, eop_type>&             ea_type;
   
-  const eOpCube<T1, eop_type>& Q;
-  
-  const u32 n_rows;
-  const u32 n_cols;
-  const u32 n_elem_slice;
-  const u32 n_slices;
-  const u32 n_elem;
+  arma_aligned const eOpCube<T1, eop_type>& Q;
   
   inline explicit ProxyCube(const eOpCube<T1, eop_type>& A)
-    : Q           (A)
-    , n_rows      (A.P.n_rows)
-    , n_cols      (A.P.n_cols)
-    , n_elem_slice(A.P.n_elem_slice)
-    , n_slices    (A.P.n_slices)
-    , n_elem      (A.P.n_elem)
+    : Q(A)
     {
     arma_extra_debug_sigprint();
     }
   
-  arma_inline elem_type operator[] (const u32 i)                                   const { return eop_type::get_elem(Q, i);               }
-  arma_inline elem_type at         (const u32 row, const u32 col, const u32 slice) const { return eop_type::get_elem(Q, row, col, slice); }
+  arma_inline u32 get_n_rows()       const { return Q.get_n_rows();       }
+  arma_inline u32 get_n_cols()       const { return Q.get_n_cols();       }
+  arma_inline u32 get_n_elem_slice() const { return Q.get_n_elem_slice(); }
+  arma_inline u32 get_n_slices()     const { return Q.get_n_slices();     }
+  arma_inline u32 get_n_elem()       const { return Q.get_n_elem();       }
+  
+  arma_inline elem_type operator[] (const u32 i)                                   const { return Q[i];                  }
+  arma_inline elem_type at         (const u32 row, const u32 col, const u32 slice) const { return Q.at(row, col, slice); }
+  
+  arma_inline ea_type get_ea() const { return Q; }
   };
 
 
@@ -222,28 +202,90 @@ class ProxyCube< eGlueCube<T1, T2, eglue_type > >
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef eGlueCube<T1, T2, eglue_type>            stored_type;
+  typedef const eGlueCube<T1, T2, eglue_type>&     ea_type;
   
-  const eGlueCube<T1, T2, eglue_type>& Q;
-  
-  const u32 n_rows;
-  const u32 n_cols;
-  const u32 n_elem_slice;
-  const u32 n_slices;
-  const u32 n_elem;
+  arma_aligned const eGlueCube<T1, T2, eglue_type>& Q;
   
   inline explicit ProxyCube(const eGlueCube<T1, T2, eglue_type>& A)
-    : Q           (A)
-    , n_rows      (A.P1.n_rows)
-    , n_cols      (A.P1.n_cols)
-    , n_elem_slice(A.P1.n_elem_slice)
-    , n_slices    (A.P1.n_slices)
-    , n_elem      (A.P1.n_elem)
+    : Q(A)
     {
     arma_extra_debug_sigprint();
     }
   
-  arma_inline elem_type operator[] (const u32 i)                                   const { return eglue_type::get_elem(Q, i);               }
-  arma_inline elem_type at         (const u32 row, const u32 col, const u32 slice) const { return eglue_type::get_elem(Q, row, col, slice); }
+  arma_inline u32 get_n_rows()       const { return Q.get_n_rows();       }
+  arma_inline u32 get_n_cols()       const { return Q.get_n_cols();       }
+  arma_inline u32 get_n_elem_slice() const { return Q.get_n_elem_slice(); }
+  arma_inline u32 get_n_slices()     const { return Q.get_n_slices();     }
+  arma_inline u32 get_n_elem()       const { return Q.get_n_elem();       }
+  
+  arma_inline elem_type operator[] (const u32 i)                                   const { return Q[i];                  }
+  arma_inline elem_type at         (const u32 row, const u32 col, const u32 slice) const { return Q.at(row, col, slice); }
+  
+  arma_inline ea_type get_ea() const { return Q; }
+  };
+
+
+
+template<typename out_eT, typename T1, typename op_type>
+class ProxyCube< mtOpCube<out_eT, T1, op_type> >
+  {
+  public:
+  
+  typedef          out_eT                       elem_type;
+  typedef typename get_pod_type<out_eT>::result pod_type;
+  typedef          Cube<out_eT>                 stored_type;
+  typedef          const elem_type*             ea_type;
+  
+  arma_aligned const Cube<out_eT> Q;
+  
+  inline explicit ProxyCube(const mtOpCube<out_eT, T1, op_type>& A)
+    : Q(A)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  arma_inline u32 get_n_rows()       const { return Q.n_rows;       }
+  arma_inline u32 get_n_cols()       const { return Q.n_cols;       }
+  arma_inline u32 get_n_elem_slice() const { return Q.n_elem_slice; }
+  arma_inline u32 get_n_slices()     const { return Q.n_slices;     }
+  arma_inline u32 get_n_elem()       const { return Q.n_elem;       }
+  
+  arma_inline elem_type operator[] (const u32 i)                                   const { return Q[i];                  }
+  arma_inline elem_type at         (const u32 row, const u32 col, const u32 slice) const { return Q.at(row, col, slice); }
+  
+  arma_inline ea_type get_ea() const { return Q.memptr(); }
+  };
+
+
+
+template<typename out_eT, typename T1, typename T2, typename glue_type>
+class ProxyCube< mtGlueCube<out_eT, T1, T2, glue_type > >
+  {
+  public:
+  
+  typedef          out_eT                       elem_type;
+  typedef typename get_pod_type<out_eT>::result pod_type;
+  typedef          Cube<out_eT>                 stored_type;
+  typedef          const elem_type*             ea_type;
+  
+  arma_aligned const Cube<out_eT> Q;
+  
+  inline explicit ProxyCube(const mtGlueCube<out_eT, T1, T2, glue_type>& A)
+    : Q(A)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  arma_inline u32 get_n_rows()       const { return Q.n_rows;       }
+  arma_inline u32 get_n_cols()       const { return Q.n_cols;       }
+  arma_inline u32 get_n_elem_slice() const { return Q.n_elem_slice; }
+  arma_inline u32 get_n_slices()     const { return Q.n_slices;     }
+  arma_inline u32 get_n_elem()       const { return Q.n_elem;       }
+  
+  arma_inline elem_type operator[] (const u32 i)                                   const { return Q[i];                  }
+  arma_inline elem_type at         (const u32 row, const u32 col, const u32 slice) const { return Q.at(row, col, slice); }
+  
+  arma_inline ea_type get_ea() const { return Q.memptr(); }
   };
 
 

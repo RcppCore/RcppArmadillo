@@ -77,31 +77,32 @@ ones(const u32 n_rows, const u32 n_cols, const typename arma_Mat_Col_Row_only<ma
 
 
 arma_inline
-const eOpCube<cube, eop_cube_ones_full>
+const eOpCube<cube, eop_ones_full>
 ones(const u32 n_rows, const u32 n_cols, const u32 n_slices)
   {
   arma_extra_debug_sigprint();
   
-  return eOpCube<cube, eop_cube_ones_full>(n_rows, n_cols, n_slices);
+  return eOpCube<cube, eop_ones_full>(n_rows, n_cols, n_slices);
   }
 
 
 
 template<typename cube_type>
 arma_inline
-const eOpCube<cube_type, eop_cube_ones_full>
+const eOpCube<cube_type, eop_ones_full>
 ones(const u32 n_rows, const u32 n_cols, const u32 n_slices, const typename arma_Cube_only<cube_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
   
   arma_type_check<is_Cube<cube_type>::value == false>::apply();
   
-  return eOpCube<cube_type, eop_cube_ones_full>(n_rows, n_cols, n_slices);
+  return eOpCube<cube_type, eop_ones_full>(n_rows, n_cols, n_slices);
   }
 
 
 
-//! Delayed generation of a diagonal matrix with the diagonal elements set to one
+//! Delayed generation of a matrix with the elements along the main diagonal set to one
+//! and off-diagonal elements set to zero
 arma_inline
 const eOp<mat, eop_ones_diag>
 eye(const u32 n_rows, const u32 n_cols)

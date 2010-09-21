@@ -43,12 +43,12 @@ class Cube : public BaseCube< eT, Cube<eT> >
   const u32  n_slices;     //!< number of slices in the cube (read-only)
   const u32  n_elem;       //!< number of elements in the cube (read-only)
   const u32  mem_state;
-
+  
   // mem_state = 0: normal cube that can be resized; 
   // mem_state = 1: use auxiliary memory until change in the number of elements is requested;  
   // mem_state = 2: use auxiliary memory and don't allow the number of elements to be changed; 
-  // mem_state = 3: fixed size via template based size specification.
-
+  // mem_state = 3: fixed size (e.g. via template based size specification).
+  
   
   arma_aligned const Mat<eT>** const mat_ptrs; //!< pointer to an array containing pointers to Mat instances (one for each slice)
   arma_aligned const eT*       const mem;      //!< pointer to the memory used by the cube (memory is read-only)
@@ -80,17 +80,17 @@ class Cube : public BaseCube< eT, Cube<eT> >
   inline const Cube& operator-=(const Cube& m);
   inline const Cube& operator%=(const Cube& m);
   inline const Cube& operator/=(const Cube& m);
-
+  
   template<typename T1, typename T2>
   inline explicit Cube(const BaseCube<pod_type,T1>& A, const BaseCube<pod_type,T2>& B);
-
+  
   inline                   Cube(const subview_cube<eT>& X);
   inline const Cube&  operator=(const subview_cube<eT>& X);
   inline const Cube& operator+=(const subview_cube<eT>& X);
   inline const Cube& operator-=(const subview_cube<eT>& X);
   inline const Cube& operator%=(const subview_cube<eT>& X);
   inline const Cube& operator/=(const subview_cube<eT>& X);
-
+  
   arma_inline       Mat<eT>& slice(const u32 in_slice);
   arma_inline const Mat<eT>& slice(const u32 in_slice) const;
   
@@ -102,6 +102,17 @@ class Cube : public BaseCube< eT, Cube<eT> >
   
   arma_inline       subview_cube<eT> subcube(const span& row_span, const span& col_span, const span& slice_span);
   arma_inline const subview_cube<eT> subcube(const span& row_span, const span& col_span, const span& slice_span) const;
+  
+  
+  inline void shed_slice(const u32 slice_num);
+  
+  inline void shed_slices(const u32 in_slice1, const u32 in_slice2);
+  
+  inline void insert_slices(const u32 slice_num, const u32 N, const bool set_to_zero = true);
+  
+  template<typename T1>
+  inline void insert_slices(const u32 row_num, const BaseCube<eT,T1>& X);
+  
   
   template<typename T1, typename op_type> inline                   Cube(const OpCube<T1, op_type>& X);
   template<typename T1, typename op_type> inline const Cube&  operator=(const OpCube<T1, op_type>& X);
@@ -117,6 +128,13 @@ class Cube : public BaseCube< eT, Cube<eT> >
   template<typename T1, typename eop_type> inline const Cube& operator%=(const eOpCube<T1, eop_type>& X);
   template<typename T1, typename eop_type> inline const Cube& operator/=(const eOpCube<T1, eop_type>& X);
   
+  template<typename T1, typename op_type> inline                   Cube(const mtOpCube<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline const Cube&  operator=(const mtOpCube<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline const Cube& operator+=(const mtOpCube<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline const Cube& operator-=(const mtOpCube<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline const Cube& operator%=(const mtOpCube<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline const Cube& operator/=(const mtOpCube<eT, T1, op_type>& X);
+  
   template<typename T1, typename T2, typename glue_type> inline                   Cube(const GlueCube<T1, T2, glue_type>& X);
   template<typename T1, typename T2, typename glue_type> inline const Cube&  operator=(const GlueCube<T1, T2, glue_type>& X);
   template<typename T1, typename T2, typename glue_type> inline const Cube& operator+=(const GlueCube<T1, T2, glue_type>& X);
@@ -130,6 +148,13 @@ class Cube : public BaseCube< eT, Cube<eT> >
   template<typename T1, typename T2, typename eglue_type> inline const Cube& operator-=(const eGlueCube<T1, T2, eglue_type>& X);
   template<typename T1, typename T2, typename eglue_type> inline const Cube& operator%=(const eGlueCube<T1, T2, eglue_type>& X);
   template<typename T1, typename T2, typename eglue_type> inline const Cube& operator/=(const eGlueCube<T1, T2, eglue_type>& X);
+  
+  template<typename T1, typename T2, typename glue_type> inline                   Cube(const mtGlueCube<eT, T1, T2, glue_type>& X);
+  template<typename T1, typename T2, typename glue_type> inline const Cube&  operator=(const mtGlueCube<eT, T1, T2, glue_type>& X);
+  template<typename T1, typename T2, typename glue_type> inline const Cube& operator+=(const mtGlueCube<eT, T1, T2, glue_type>& X);
+  template<typename T1, typename T2, typename glue_type> inline const Cube& operator-=(const mtGlueCube<eT, T1, T2, glue_type>& X);
+  template<typename T1, typename T2, typename glue_type> inline const Cube& operator%=(const mtGlueCube<eT, T1, T2, glue_type>& X);
+  template<typename T1, typename T2, typename glue_type> inline const Cube& operator/=(const mtGlueCube<eT, T1, T2, glue_type>& X);
   
   
   arma_inline eT& operator[] (const u32 i);
@@ -174,13 +199,19 @@ class Cube : public BaseCube< eT, Cube<eT> >
   
   template<typename eT2> inline void copy_size(const Cube<eT2>& m);
   
-  inline void fill(const eT val);
+  inline const Cube& fill(const eT val);
   
-  inline void zeros();
-  inline void zeros(const u32 in_rows, const u32 in_cols, const u32 in_slices);
+  inline const Cube& zeros();
+  inline const Cube& zeros(const u32 in_rows, const u32 in_cols, const u32 in_slices);
   
-  inline void ones();
-  inline void ones(const u32 in_rows, const u32 in_cols, const u32 in_slices);
+  inline const Cube& ones();
+  inline const Cube& ones(const u32 in_rows, const u32 in_cols, const u32 in_slices);
+  
+  inline const Cube& randu();
+  inline const Cube& randu(const u32 in_rows, const u32 in_cols, const u32 in_slices);
+  
+  inline const Cube& randn();
+  inline const Cube& randn(const u32 in_rows, const u32 in_cols, const u32 in_slices);
   
   inline void reset();
   
@@ -266,11 +297,13 @@ class Cube : public BaseCube< eT, Cube<eT> >
   template<typename T1, typename T2>
   inline void init(const BaseCube<pod_type,T1>& A, const BaseCube<pod_type,T2>& B);
   
+  inline void steal_mem(Cube& X);
   
   inline void delete_mat();
   inline void create_mat();
   
   friend class op_reshape;
+  friend class glue_join;
   };
 
 
@@ -278,7 +311,7 @@ class Cube : public BaseCube< eT, Cube<eT> >
 class Cube_aux
   {
   public:
-
+  
   template<typename eT> arma_inline static void prefix_pp(Cube<eT>& x);
   template<typename T>  arma_inline static void prefix_pp(Cube< std::complex<T> >& x);
   
@@ -292,16 +325,10 @@ class Cube_aux
   template<typename T>  arma_inline static void postfix_mm(Cube< std::complex<T> >& x);
   
   template<typename eT, typename T1> inline static void set_real(Cube<eT>&                out, const BaseCube<eT,T1>& X);
-  template<typename T,  typename T1> inline static void set_real(Cube< std::complex<T> >& out, const BaseCube< T,T1>& X);
-  
   template<typename eT, typename T1> inline static void set_imag(Cube<eT>&                out, const BaseCube<eT,T1>& X);
+  
+  template<typename T,  typename T1> inline static void set_real(Cube< std::complex<T> >& out, const BaseCube< T,T1>& X);
   template<typename T,  typename T1> inline static void set_imag(Cube< std::complex<T> >& out, const BaseCube< T,T1>& X);
-  
-  template<typename T,  typename T1> inline static void set_real_via_unwrap(Cube< std::complex<T> >& out, const BaseCube< T,T1>& X);
-  template<typename T,  typename T1> inline static void set_imag_via_unwrap(Cube< std::complex<T> >& out, const BaseCube< T,T1>& X);
-  
-  template<typename T,  typename T1> inline static void set_real_via_proxy(Cube< std::complex<T> >& out, const BaseCube< T,T1>& X);
-  template<typename T,  typename T1> inline static void set_imag_via_proxy(Cube< std::complex<T> >& out, const BaseCube< T,T1>& X);
   };
 
 

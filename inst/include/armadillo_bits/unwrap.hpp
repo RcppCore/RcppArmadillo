@@ -281,99 +281,6 @@ class partial_unwrap
 
 
 
-template<typename T1>
-class partial_unwrap< Op<T1, op_trans> >
-  {
-  public:
-  
-  typedef typename T1::elem_type eT;
-  
-  inline
-  partial_unwrap(const Op<T1,op_trans>& A)
-    : do_trans(true)
-    , do_times(false)
-    , val     (1)
-    , M       (A.m)
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  inline
-  ~partial_unwrap()
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  const bool    do_trans;
-  const bool    do_times;
-  const eT      val;
-  const Mat<eT> M;
-  };
-
-
-
-template<typename T1>
-class partial_unwrap< Op<T1, op_trans2> >
-  {
-  public:
-  
-  typedef typename T1::elem_type eT;
-  
-  inline
-  partial_unwrap(const Op<T1,op_trans2>& A)
-    : do_trans(true)
-    , do_times(true)
-    , val     (A.aux)
-    , M       (A.m)
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  inline
-  ~partial_unwrap()
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  const bool    do_trans;
-  const bool    do_times;
-  const eT      val;
-  const Mat<eT> M;
-  };
-
-
-
-template<typename T1>
-class partial_unwrap< eOp<T1, eop_scalar_times> >
-  {
-  public:
-  
-  typedef typename T1::elem_type eT;
-  
-  inline
-  partial_unwrap(const eOp<T1,eop_scalar_times>& A)
-    : do_trans(false)
-    , do_times(true)
-    , val     (A.aux)
-    , M       (A.P.Q)
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  inline
-  ~partial_unwrap()
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  const bool    do_trans;
-  const bool    do_times;
-  const eT      val;
-  const Mat<eT> M;
-  };
-
-
-
 template<typename eT>
 class partial_unwrap< Mat<eT> >
   {
@@ -396,95 +303,6 @@ class partial_unwrap< Mat<eT> >
     arma_extra_debug_sigprint();
     }
   
-  
-  const bool     do_trans;
-  const bool     do_times;
-  const eT       val;
-  const Mat<eT>& M;
-  };
-
-
-
-template<typename eT>
-class partial_unwrap< Op< Mat<eT>, op_trans> >
-  {
-  public:
-  
-  inline
-  partial_unwrap(const Op< Mat<eT>, op_trans>& A)
-    : do_trans(true)
-    , do_times(false)
-    , val     (1)
-    , M       (A.m)
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  inline
-  ~partial_unwrap()
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  
-  const bool     do_trans;
-  const bool     do_times;
-  const eT       val;
-  const Mat<eT>& M;
-  };
-
-
-
-template<typename eT>
-class partial_unwrap< Op< Mat<eT>, op_trans2> >
-  {
-  public:
-  
-  inline
-  partial_unwrap(const Op< Mat<eT>, op_trans2>& A)
-    : do_trans(true)
-    , do_times(true)
-    , val     (A.aux)
-    , M       (A.m)
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  inline
-  ~partial_unwrap()
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  
-  const bool     do_trans;
-  const bool     do_times;
-  const eT       val;
-  const Mat<eT>& M;
-  };
-
-
-
-template<typename eT>
-class partial_unwrap< eOp<Mat<eT>, eop_scalar_times> >
-  {
-  public:
-  
-  inline
-  partial_unwrap(const eOp<Mat<eT>,eop_scalar_times>& A)
-    : do_trans(false)
-    , do_times(true)
-    , val     (A.aux)
-    , M       (A.P.Q)
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  inline
-  ~partial_unwrap()
-    {
-    arma_extra_debug_sigprint();
-    }
   
   const bool     do_trans;
   const bool     do_times;
@@ -526,6 +344,98 @@ class partial_unwrap< Row<eT> >
 
 
 template<typename eT>
+class partial_unwrap< Col<eT> >
+  {
+  public:
+  
+  inline
+  partial_unwrap(const Col<eT>& A)
+    : do_trans(false)
+    , do_times(false)
+    , val     (1)
+    , M       (A)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  
+  inline
+  ~partial_unwrap()
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  
+  const bool     do_trans;
+  const bool     do_times;
+  const eT       val;
+  const Mat<eT>& M;
+  };
+
+
+
+template<typename T1>
+class partial_unwrap< Op<T1, op_trans> >
+  {
+  public:
+  
+  typedef typename T1::elem_type eT;
+  
+  inline
+  partial_unwrap(const Op<T1,op_trans>& A)
+    : do_trans(true)
+    , do_times(false)
+    , val     (1)
+    , M       (A.m)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  inline
+  ~partial_unwrap()
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const bool    do_trans;
+  const bool    do_times;
+  const eT      val;
+  const Mat<eT> M;
+  };
+
+
+
+template<typename eT>
+class partial_unwrap< Op< Mat<eT>, op_trans> >
+  {
+  public:
+  
+  inline
+  partial_unwrap(const Op< Mat<eT>, op_trans>& A)
+    : do_trans(true)
+    , do_times(false)
+    , val     (1)
+    , M       (A.m)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  inline
+  ~partial_unwrap()
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  
+  const bool     do_trans;
+  const bool     do_times;
+  const eT       val;
+  const Mat<eT>& M;
+  };
+
+
+
+template<typename eT>
 class partial_unwrap< Op< Row<eT>, op_trans> >
   {
   public:
@@ -535,6 +445,97 @@ class partial_unwrap< Op< Row<eT>, op_trans> >
     : do_trans(true)
     , do_times(false)
     , val     (1)
+    , M       (A.m)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  inline
+  ~partial_unwrap()
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  
+  const bool     do_trans;
+  const bool     do_times;
+  const eT       val;
+  const Mat<eT>& M;
+  };
+
+
+
+template<typename eT>
+class partial_unwrap< Op< Col<eT>, op_trans> >
+  {
+  public:
+  
+  inline
+  partial_unwrap(const Op< Col<eT>, op_trans>& A)
+    : do_trans(true)
+    , do_times(false)
+    , val     (1)
+    , M       (A.m)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  inline
+  ~partial_unwrap()
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  
+  const bool     do_trans;
+  const bool     do_times;
+  const eT       val;
+  const Mat<eT>& M;
+  };
+
+
+
+template<typename T1>
+class partial_unwrap< Op<T1, op_trans2> >
+  {
+  public:
+  
+  typedef typename T1::elem_type eT;
+  
+  inline
+  partial_unwrap(const Op<T1,op_trans2>& A)
+    : do_trans(true)
+    , do_times(true)
+    , val     (A.aux)
+    , M       (A.m)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  inline
+  ~partial_unwrap()
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const bool    do_trans;
+  const bool    do_times;
+  const eT      val;
+  const Mat<eT> M;
+  };
+
+
+
+template<typename eT>
+class partial_unwrap< Op< Mat<eT>, op_trans2> >
+  {
+  public:
+  
+  inline
+  partial_unwrap(const Op< Mat<eT>, op_trans2>& A)
+    : do_trans(true)
+    , do_times(true)
+    , val     (A.aux)
     , M       (A.m)
     {
     arma_extra_debug_sigprint();
@@ -586,12 +587,73 @@ class partial_unwrap< Op< Row<eT>, op_trans2> >
 
 
 template<typename eT>
-class partial_unwrap< eOp<Row<eT>, eop_scalar_times> >
+class partial_unwrap< Op< Col<eT>, op_trans2> >
   {
   public:
   
   inline
-  partial_unwrap(const eOp<Row<eT>,eop_scalar_times>& A)
+  partial_unwrap(const Op< Col<eT>, op_trans2>& A)
+    : do_trans(true)
+    , do_times(true)
+    , val     (A.aux)
+    , M       (A.m)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  inline
+  ~partial_unwrap()
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  
+  const bool     do_trans;
+  const bool     do_times;
+  const eT       val;
+  const Mat<eT>& M;
+  };
+
+
+
+template<typename T1>
+class partial_unwrap< eOp<T1, eop_scalar_times> >
+  {
+  public:
+  
+  typedef typename T1::elem_type eT;
+  
+  inline
+  partial_unwrap(const eOp<T1,eop_scalar_times>& A)
+    : do_trans(false)
+    , do_times(true)
+    , val     (A.aux)
+    , M       (A.P.Q)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  inline
+  ~partial_unwrap()
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const bool    do_trans;
+  const bool    do_times;
+  const eT      val;
+  const Mat<eT> M;
+  };
+
+
+
+template<typename eT>
+class partial_unwrap< eOp<Mat<eT>, eop_scalar_times> >
+  {
+  public:
+  
+  inline
+  partial_unwrap(const eOp<Mat<eT>,eop_scalar_times>& A)
     : do_trans(false)
     , do_times(true)
     , val     (A.aux)
@@ -615,77 +677,16 @@ class partial_unwrap< eOp<Row<eT>, eop_scalar_times> >
 
 
 template<typename eT>
-class partial_unwrap< Col<eT> >
+class partial_unwrap< eOp<Row<eT>, eop_scalar_times> >
   {
   public:
   
   inline
-  partial_unwrap(const Col<eT>& A)
+  partial_unwrap(const eOp<Row<eT>,eop_scalar_times>& A)
     : do_trans(false)
-    , do_times(false)
-    , val     (1)
-    , M       (A)
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  
-  inline
-  ~partial_unwrap()
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  
-  const bool     do_trans;
-  const bool     do_times;
-  const eT       val;
-  const Mat<eT>& M;
-  };
-
-
-
-template<typename eT>
-class partial_unwrap< Op< Col<eT>, op_trans> >
-  {
-  public:
-  
-  inline
-  partial_unwrap(const Op< Col<eT>, op_trans>& A)
-    : do_trans(true)
-    , do_times(false)
-    , val     (1)
-    , M       (A.m)
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  inline
-  ~partial_unwrap()
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  
-  const bool     do_trans;
-  const bool     do_times;
-  const eT       val;
-  const Mat<eT>& M;
-  };
-
-
-
-template<typename eT>
-class partial_unwrap< Op< Col<eT>, op_trans2> >
-  {
-  public:
-  
-  inline
-  partial_unwrap(const Op< Col<eT>, op_trans2>& A)
-    : do_trans(true)
     , do_times(true)
     , val     (A.aux)
-    , M       (A.m)
+    , M       (A.P.Q)
     {
     arma_extra_debug_sigprint();
     }
@@ -695,7 +696,6 @@ class partial_unwrap< Op< Col<eT>, op_trans2> >
     {
     arma_extra_debug_sigprint();
     }
-  
   
   const bool     do_trans;
   const bool     do_times;
@@ -769,99 +769,6 @@ class partial_unwrap_check
 
 
 
-template<typename T1>
-class partial_unwrap_check< Op<T1, op_trans> >
-  {
-  public:
-  
-  typedef typename T1::elem_type eT;
-  
-  inline
-  partial_unwrap_check(const Op<T1,op_trans>& A, const Mat<eT>& B)
-    : do_trans(true)
-    , do_times(false)
-    , val     (1)
-    , M       (A.m)
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  inline
-  ~partial_unwrap_check()
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  const bool    do_trans;
-  const bool    do_times;
-  const eT      val;
-  const Mat<eT> M;
-  };
-
-
-
-template<typename T1>
-class partial_unwrap_check< Op<T1, op_trans2> >
-  {
-  public:
-  
-  typedef typename T1::elem_type eT;
-  
-  inline
-  partial_unwrap_check(const Op<T1,op_trans2>& A, const Mat<eT>& B)
-    : do_trans(true)
-    , do_times(true)
-    , val     (A.aux)
-    , M       (A.m)
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  inline
-  ~partial_unwrap_check()
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  const bool    do_trans;
-  const bool    do_times;
-  const eT      val;
-  const Mat<eT> M;
-  };
-
-
-
-template<typename T1>
-class partial_unwrap_check< eOp<T1, eop_scalar_times> >
-  {
-  public:
-  
-  typedef typename T1::elem_type eT;
-  
-  inline
-  partial_unwrap_check(const eOp<T1,eop_scalar_times>& A, const Mat<eT>& B)
-    : do_trans(false)
-    , do_times(true)
-    , val     (A.aux)
-    , M       (A.P.Q)
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  inline
-  ~partial_unwrap_check()
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  const bool    do_trans;
-  const bool    do_times;
-  const eT      val;
-  const Mat<eT> M;
-  };
-
-
-
 template<typename eT>
 class partial_unwrap_check< Mat<eT> >
   {
@@ -896,111 +803,6 @@ class partial_unwrap_check< Mat<eT> >
   const bool     do_times;
   const eT       val;
   const Mat<eT>* M_local;
-  const Mat<eT>& M;
-  };
-
-
-
-template<typename eT>
-class partial_unwrap_check< Op< Mat<eT>, op_trans> >
-  {
-  public:
-  
-  inline
-  partial_unwrap_check(const Op< Mat<eT>, op_trans>& A, const Mat<eT>& B)
-    : do_trans(true)
-    , do_times(false)
-    , val     (1)
-    , M_local ( (&A.m == &B) ? new Mat<eT>(A.m) : 0   )
-    , M       ( (&A.m == &B) ? (*M_local)       : A.m )
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  inline
-  ~partial_unwrap_check()
-    {
-    arma_extra_debug_sigprint();
-    
-    if(M_local)
-      {
-      delete M_local;
-      }
-    }
-  
-  
-  // the order below is important
-  const bool     do_trans;
-  const bool     do_times;
-  const eT       val;
-  const Mat<eT>* M_local;
-  const Mat<eT>& M;
-  };
-
-
-
-template<typename eT>
-class partial_unwrap_check< Op< Mat<eT>, op_trans2> >
-  {
-  public:
-  
-  inline
-  partial_unwrap_check(const Op< Mat<eT>, op_trans2>& A, const Mat<eT>& B)
-    : do_trans(true)
-    , do_times(true)
-    , val     (A.aux)
-    , M_local ( (&A.m == &B) ? new Mat<eT>(A.m) : 0   )
-    , M       ( (&A.m == &B) ? (*M_local)       : A.m )
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  inline
-  ~partial_unwrap_check()
-    {
-    arma_extra_debug_sigprint();
-    
-    if(M_local)
-      {
-      delete M_local;
-      }
-    }
-  
-  
-  // the order below is important
-  const bool     do_trans;
-  const bool     do_times;
-  const eT       val;
-  const Mat<eT>* M_local;
-  const Mat<eT>& M;
-  };
-
-
-
-template<typename eT>
-class partial_unwrap_check< eOp<Mat<eT>, eop_scalar_times> >
-  {
-  public:
-  
-  inline
-  partial_unwrap_check(const eOp<Mat<eT>,eop_scalar_times>& A, const Mat<eT>& B)
-    : do_trans(false)
-    , do_times(true)
-    , val     (A.aux)
-    , M       (A.P.Q)
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  inline
-  ~partial_unwrap_check()
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  const bool     do_trans;
-  const bool     do_times;
-  const eT       val;
   const Mat<eT>& M;
   };
 
@@ -1046,6 +848,114 @@ class partial_unwrap_check< Row<eT> >
 
 
 template<typename eT>
+class partial_unwrap_check< Col<eT> >
+  {
+  public:
+  
+  inline
+  partial_unwrap_check(const Col<eT>& A, const Mat<eT>& B)
+    : do_trans(false)
+    , do_times(false)
+    , val     (1)
+    , M_local ( (&A == &B) ? new Mat<eT>(A) : 0 )
+    , M       ( (&A == &B) ? (*M_local)     : A )
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  
+  inline
+  ~partial_unwrap_check()
+    {
+    arma_extra_debug_sigprint();
+    
+    if(M_local)
+      {
+      delete M_local;
+      }
+    }
+  
+  
+  // the order below is important
+  const bool     do_trans;
+  const bool     do_times;
+  const eT       val;
+  const Mat<eT>* M_local;
+  const Mat<eT>& M;
+  };
+
+
+
+template<typename T1>
+class partial_unwrap_check< Op<T1, op_trans> >
+  {
+  public:
+  
+  typedef typename T1::elem_type eT;
+  
+  inline
+  partial_unwrap_check(const Op<T1,op_trans>& A, const Mat<eT>& B)
+    : do_trans(true)
+    , do_times(false)
+    , val     (1)
+    , M       (A.m)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  inline
+  ~partial_unwrap_check()
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const bool    do_trans;
+  const bool    do_times;
+  const eT      val;
+  const Mat<eT> M;
+  };
+
+
+
+template<typename eT>
+class partial_unwrap_check< Op< Mat<eT>, op_trans> >
+  {
+  public:
+  
+  inline
+  partial_unwrap_check(const Op< Mat<eT>, op_trans>& A, const Mat<eT>& B)
+    : do_trans(true)
+    , do_times(false)
+    , val     (1)
+    , M_local ( (&A.m == &B) ? new Mat<eT>(A.m) : 0   )
+    , M       ( (&A.m == &B) ? (*M_local)       : A.m )
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  inline
+  ~partial_unwrap_check()
+    {
+    arma_extra_debug_sigprint();
+    
+    if(M_local)
+      {
+      delete M_local;
+      }
+    }
+  
+  
+  // the order below is important
+  const bool     do_trans;
+  const bool     do_times;
+  const eT       val;
+  const Mat<eT>* M_local;
+  const Mat<eT>& M;
+  };
+
+
+
+template<typename eT>
 class partial_unwrap_check< Op< Row<eT>, op_trans> >
   {
   public:
@@ -1055,6 +965,113 @@ class partial_unwrap_check< Op< Row<eT>, op_trans> >
     : do_trans(true)
     , do_times(false)
     , val     (1)
+    , M_local ( (&A.m == &B) ? new Mat<eT>(A.m) : 0   )
+    , M       ( (&A.m == &B) ? (*M_local)       : A.m )
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  inline
+  ~partial_unwrap_check()
+    {
+    arma_extra_debug_sigprint();
+    
+    if(M_local)
+      {
+      delete M_local;
+      }
+    }
+  
+  
+  // the order below is important
+  const bool     do_trans;
+  const bool     do_times;
+  const eT       val;
+  const Mat<eT>* M_local;
+  const Mat<eT>& M;
+  };
+
+
+
+template<typename eT>
+class partial_unwrap_check< Op< Col<eT>, op_trans> >
+  {
+  public:
+  
+  inline
+  partial_unwrap_check(const Op< Col<eT>, op_trans>& A, const Mat<eT>& B)
+    : do_trans(true)
+    , do_times(false)
+    , val     (1)
+    , M_local ( (&A.m == &B) ? new Mat<eT>(A.m) : 0   )
+    , M       ( (&A.m == &B) ? (*M_local)       : A.m )
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  inline
+  ~partial_unwrap_check()
+    {
+    arma_extra_debug_sigprint();
+    
+    if(M_local)
+      {
+      delete M_local;
+      }
+    }
+  
+  
+  // the order below is important
+  const bool     do_trans;
+  const bool     do_times;
+  const eT       val;
+  const Mat<eT>* M_local;
+  const Mat<eT>& M;
+  };
+
+
+
+template<typename T1>
+class partial_unwrap_check< Op<T1, op_trans2> >
+  {
+  public:
+  
+  typedef typename T1::elem_type eT;
+  
+  inline
+  partial_unwrap_check(const Op<T1,op_trans2>& A, const Mat<eT>& B)
+    : do_trans(true)
+    , do_times(true)
+    , val     (A.aux)
+    , M       (A.m)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  inline
+  ~partial_unwrap_check()
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const bool    do_trans;
+  const bool    do_times;
+  const eT      val;
+  const Mat<eT> M;
+  };
+
+
+
+template<typename eT>
+class partial_unwrap_check< Op< Mat<eT>, op_trans2> >
+  {
+  public:
+  
+  inline
+  partial_unwrap_check(const Op< Mat<eT>, op_trans2>& A, const Mat<eT>& B)
+    : do_trans(true)
+    , do_times(true)
+    , val     (A.aux)
     , M_local ( (&A.m == &B) ? new Mat<eT>(A.m) : 0   )
     , M       ( (&A.m == &B) ? (*M_local)       : A.m )
     {
@@ -1122,112 +1139,6 @@ class partial_unwrap_check< Op< Row<eT>, op_trans2> >
 
 
 template<typename eT>
-class partial_unwrap_check< eOp<Row<eT>, eop_scalar_times> >
-  {
-  public:
-  
-  inline
-  partial_unwrap_check(const eOp<Row<eT>,eop_scalar_times>& A, const Mat<eT>& B)
-    : do_trans(false)
-    , do_times(true)
-    , val     (A.aux)
-    , M       (A.P.Q)
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  inline
-  ~partial_unwrap_check()
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  const bool     do_trans;
-  const bool     do_times;
-  const eT       val;
-  const Mat<eT>& M;
-  };
-
-
-
-template<typename eT>
-class partial_unwrap_check< Col<eT> >
-  {
-  public:
-  
-  inline
-  partial_unwrap_check(const Col<eT>& A, const Mat<eT>& B)
-    : do_trans(false)
-    , do_times(false)
-    , val     (1)
-    , M_local ( (&A == &B) ? new Mat<eT>(A) : 0 )
-    , M       ( (&A == &B) ? (*M_local)     : A )
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  
-  inline
-  ~partial_unwrap_check()
-    {
-    arma_extra_debug_sigprint();
-    
-    if(M_local)
-      {
-      delete M_local;
-      }
-    }
-  
-  
-  // the order below is important
-  const bool     do_trans;
-  const bool     do_times;
-  const eT       val;
-  const Mat<eT>* M_local;
-  const Mat<eT>& M;
-  };
-
-
-
-template<typename eT>
-class partial_unwrap_check< Op< Col<eT>, op_trans> >
-  {
-  public:
-  
-  inline
-  partial_unwrap_check(const Op< Col<eT>, op_trans>& A, const Mat<eT>& B)
-    : do_trans(true)
-    , do_times(false)
-    , val     (1)
-    , M_local ( (&A.m == &B) ? new Mat<eT>(A.m) : 0   )
-    , M       ( (&A.m == &B) ? (*M_local)       : A.m )
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  inline
-  ~partial_unwrap_check()
-    {
-    arma_extra_debug_sigprint();
-    
-    if(M_local)
-      {
-      delete M_local;
-      }
-    }
-  
-  
-  // the order below is important
-  const bool     do_trans;
-  const bool     do_times;
-  const eT       val;
-  const Mat<eT>* M_local;
-  const Mat<eT>& M;
-  };
-
-
-
-template<typename eT>
 class partial_unwrap_check< Op< Col<eT>, op_trans2> >
   {
   public:
@@ -1260,6 +1171,95 @@ class partial_unwrap_check< Op< Col<eT>, op_trans2> >
   const bool     do_times;
   const eT       val;
   const Mat<eT>* M_local;
+  const Mat<eT>& M;
+  };
+
+
+
+template<typename T1>
+class partial_unwrap_check< eOp<T1, eop_scalar_times> >
+  {
+  public:
+  
+  typedef typename T1::elem_type eT;
+  
+  inline
+  partial_unwrap_check(const eOp<T1,eop_scalar_times>& A, const Mat<eT>& B)
+    : do_trans(false)
+    , do_times(true)
+    , val     (A.aux)
+    , M       (A.P.Q)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  inline
+  ~partial_unwrap_check()
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const bool    do_trans;
+  const bool    do_times;
+  const eT      val;
+  const Mat<eT> M;
+  };
+
+
+
+template<typename eT>
+class partial_unwrap_check< eOp<Mat<eT>, eop_scalar_times> >
+  {
+  public:
+  
+  inline
+  partial_unwrap_check(const eOp<Mat<eT>,eop_scalar_times>& A, const Mat<eT>& B)
+    : do_trans(false)
+    , do_times(true)
+    , val     (A.aux)
+    , M       (A.P.Q)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  inline
+  ~partial_unwrap_check()
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const bool     do_trans;
+  const bool     do_times;
+  const eT       val;
+  const Mat<eT>& M;
+  };
+
+
+
+template<typename eT>
+class partial_unwrap_check< eOp<Row<eT>, eop_scalar_times> >
+  {
+  public:
+  
+  inline
+  partial_unwrap_check(const eOp<Row<eT>,eop_scalar_times>& A, const Mat<eT>& B)
+    : do_trans(false)
+    , do_times(true)
+    , val     (A.aux)
+    , M       (A.P.Q)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  inline
+  ~partial_unwrap_check()
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const bool     do_trans;
+  const bool     do_times;
+  const eT       val;
   const Mat<eT>& M;
   };
 

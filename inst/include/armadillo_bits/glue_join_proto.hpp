@@ -23,8 +23,12 @@
 class glue_join
   {
   public:
-
-  template<typename T1, typename T2> inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_join>& X);
+  
+  template<typename T1, typename T2>
+  inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_join>& X);
+  
+  template<typename T1, typename T2>
+  inline static void apply(Cube<typename T1::elem_type>& out, const GlueCube<T1,T2,glue_join>& X);
   };
 
 

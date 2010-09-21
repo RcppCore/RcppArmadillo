@@ -29,9 +29,32 @@ op_real::apply( Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_typ
   
   const Proxy<T1> A(X.m);
   
-  out.set_size(A.n_rows, A.n_cols);
+  out.set_size(A.get_n_rows(), A.get_n_cols());
   
-  const u32 n_elem  = A.n_elem;
+  const u32 n_elem  = out.n_elem;
+        T*  out_mem = out.memptr();
+  
+  for(u32 i=0; i<n_elem; ++i)
+    {
+    out_mem[i] = std::real(A[i]);
+    }
+  }
+
+
+
+template<typename T1>
+inline void
+op_real::apply( Cube<typename T1::pod_type>& out, const mtOpCube<typename T1::pod_type, T1, op_real>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::pod_type T;
+  
+  const ProxyCube<T1> A(X.m);
+  
+  out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
+  
+  const u32 n_elem  = out.n_elem;
         T*  out_mem = out.memptr();
   
   for(u32 i=0; i<n_elem; ++i)
@@ -52,9 +75,32 @@ op_imag::apply( Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_typ
   
   const Proxy<T1> A(X.m);
   
-  out.set_size(A.n_rows, A.n_cols);
+  out.set_size(A.get_n_rows(), A.get_n_cols());
   
-  const u32 n_elem  = A.n_elem;
+  const u32 n_elem  = out.n_elem;
+        T*  out_mem = out.memptr();
+  
+  for(u32 i=0; i<n_elem; ++i)
+    {
+    out_mem[i] = std::imag(A[i]);
+    }
+  }
+
+
+
+template<typename T1>
+inline void
+op_imag::apply( Cube<typename T1::pod_type>& out, const mtOpCube<typename T1::pod_type, T1, op_imag>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::pod_type T;
+  
+  const ProxyCube<T1> A(X.m);
+  
+  out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
+  
+  const u32 n_elem  = out.n_elem;
         T*  out_mem = out.memptr();
   
   for(u32 i=0; i<n_elem; ++i)
@@ -75,9 +121,32 @@ op_abs::apply( Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_type
   
   const Proxy<T1> A(X.m);
   
-  out.set_size(A.n_rows, A.n_cols);
+  out.set_size(A.get_n_rows(), A.get_n_cols());
   
-  const u32 n_elem  = A.n_elem;
+  const u32 n_elem  = out.n_elem;
+        T*  out_mem = out.memptr();
+  
+  for(u32 i=0; i<n_elem; ++i)
+    {
+    out_mem[i] = std::abs(A[i]);
+    }
+  }
+
+
+
+template<typename T1>
+inline void
+op_abs::apply( Cube<typename T1::pod_type>& out, const mtOpCube<typename T1::pod_type, T1, op_abs>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::pod_type T;
+  
+  const ProxyCube<T1> A(X.m);
+  
+  out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
+  
+  const u32 n_elem  = out.n_elem;
         T*  out_mem = out.memptr();
   
   for(u32 i=0; i<n_elem; ++i)

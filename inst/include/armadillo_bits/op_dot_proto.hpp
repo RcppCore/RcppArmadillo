@@ -65,11 +65,6 @@ class op_norm_dot
   template<typename T1, typename T2>
   arma_hot arma_inline static typename T1::elem_type apply(const Base<typename T1::elem_type,T1>& X, const Base<typename T1::elem_type,T2>& Y);
   
-  template<typename T1, typename T2>
-  arma_hot inline static typename T1::elem_type apply_unwrap(const Base<typename T1::elem_type,T1>& X, const Base<typename T1::elem_type,T2>& Y);
-  
-  template<typename T1, typename T2>
-  arma_hot inline static typename T1::elem_type apply_proxy (const Base<typename T1::elem_type,T1>& X, const Base<typename T1::elem_type,T2>& Y);
   };
 
 

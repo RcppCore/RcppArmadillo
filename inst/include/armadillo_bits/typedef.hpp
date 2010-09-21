@@ -49,6 +49,8 @@
   #error "don't know how to typedef 'u32' on this system"
 #endif
 
+
+
 // //
 // // only supported by C++0x, via #include <cstdint>, or by C99, via #include <stdint.h>
 // 
@@ -63,6 +65,15 @@
 //
 // //! signed 32 bit type
 // typedef int32_t s32;
+
+
+
+#if !defined(ARMA_BLAS_LONG_INT)
+  typedef int  blas_int;
+#else
+  typedef long blas_int;
+#endif
+
 
 
 typedef std::complex<float>  cx_float;

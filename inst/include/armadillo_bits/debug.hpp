@@ -259,9 +259,15 @@ void
 arma_hot
 arma_assert_same_size(const Mat<eT1>& A, const Mat<eT2>& B, const char* x)
   {
-  if( (A.n_rows != B.n_rows) || (A.n_cols != B.n_cols) )
+  const u32 A_n_rows = A.n_rows;
+  const u32 A_n_cols = A.n_cols;
+  
+  const u32 B_n_rows = B.n_rows;
+  const u32 B_n_cols = B.n_cols;
+  
+  if( (A_n_rows != B_n_rows) || (A_n_cols != B_n_cols) )
     {
-    arma_stop( arma_incompat_size_string(A.n_rows, A.n_cols, B.n_rows, B.n_cols, x) );
+    arma_stop( arma_incompat_size_string(A_n_rows, A_n_cols, B_n_rows, B_n_cols, x) );
     }
   }
 
@@ -274,9 +280,15 @@ void
 arma_hot
 arma_assert_same_size(const Proxy<eT1>& A, const Proxy<eT2>& B, const char* x)
   {
-  if( (A.n_rows != B.n_rows) || (A.n_cols != B.n_cols) )
+  const u32 A_n_rows = A.get_n_rows();
+  const u32 A_n_cols = A.get_n_cols();
+  
+  const u32 B_n_rows = B.get_n_rows();
+  const u32 B_n_cols = B.get_n_cols();
+  
+  if( (A_n_rows != B_n_rows) || (A_n_cols != B_n_cols) )
     {
-    arma_stop( arma_incompat_size_string(A.n_rows, A.n_cols, B.n_rows, B.n_cols, x) );
+    arma_stop( arma_incompat_size_string(A_n_rows, A_n_cols, B_n_rows, B_n_cols, x) );
     }
   }
 
@@ -288,9 +300,15 @@ void
 arma_hot
 arma_assert_same_size(const subview<eT1>& A, const subview<eT2>& B, const char* x)
   {
-  if( (A.n_rows != B.n_rows) || (A.n_cols != B.n_cols) )
+  const u32 A_n_rows = A.n_rows;
+  const u32 A_n_cols = A.n_cols;
+  
+  const u32 B_n_rows = B.n_rows;
+  const u32 B_n_cols = B.n_cols;
+  
+  if( (A_n_rows != B_n_rows) || (A_n_cols != B_n_cols) )
     {
-    arma_stop( arma_incompat_size_string(A.n_rows, A.n_cols, B.n_rows, B.n_cols, x) );
+    arma_stop( arma_incompat_size_string(A_n_rows, A_n_cols, B_n_rows, B_n_cols, x) );
     }
   }
 
@@ -302,9 +320,15 @@ void
 arma_hot
 arma_assert_same_size(const Mat<eT1>& A, const subview<eT2>& B, const char* x)
   {
-  if( (A.n_rows != B.n_rows) || (A.n_cols != B.n_cols) )
+  const u32 A_n_rows = A.n_rows;
+  const u32 A_n_cols = A.n_cols;
+  
+  const u32 B_n_rows = B.n_rows;
+  const u32 B_n_cols = B.n_cols;
+  
+  if( (A_n_rows != B_n_rows) || (A_n_cols != B_n_cols) )
     {
-    arma_stop( arma_incompat_size_string(A.n_rows, A.n_cols, B.n_rows, B.n_cols, x) );
+    arma_stop( arma_incompat_size_string(A_n_rows, A_n_cols, B_n_rows, B_n_cols, x) );
     }
   }
 
@@ -316,9 +340,15 @@ void
 arma_hot
 arma_assert_same_size(const subview<eT1>& A, const Mat<eT2>& B, const char* x)
   {
-  if( (A.n_rows != B.n_rows) || (A.n_cols != B.n_cols) )
+  const u32 A_n_rows = A.n_rows;
+  const u32 A_n_cols = A.n_cols;
+  
+  const u32 B_n_rows = B.n_rows;
+  const u32 B_n_cols = B.n_cols;
+  
+  if( (A_n_rows != B_n_rows) || (A_n_cols != B_n_cols) )
     {
-    arma_stop( arma_incompat_size_string(A.n_rows, A.n_cols, B.n_rows, B.n_cols, x) );
+    arma_stop( arma_incompat_size_string(A_n_rows, A_n_cols, B_n_rows, B_n_cols, x) );
     }
   }
 
@@ -330,9 +360,15 @@ void
 arma_hot
 arma_assert_same_size(const Mat<eT1>& A, const Proxy<eT2>& B, const char* x)
   {
-  if( (A.n_rows != B.n_rows) || (A.n_cols != B.n_cols) )
+  const u32 A_n_rows = A.n_rows;
+  const u32 A_n_cols = A.n_cols;
+  
+  const u32 B_n_rows = B.get_n_rows();
+  const u32 B_n_cols = B.get_n_cols();
+  
+  if( (A_n_rows != B_n_rows) || (A_n_cols != B_n_cols) )
     {
-    arma_stop ( arma_incompat_size_string(A.n_rows, A.n_cols, B.n_rows, B.n_cols, x) );
+    arma_stop( arma_incompat_size_string(A_n_rows, A_n_cols, B_n_rows, B_n_cols, x) );
     }
   }
 
@@ -344,9 +380,15 @@ void
 arma_hot
 arma_assert_same_size(const Proxy<eT1>& A, const Mat<eT2>& B, const char* x)
   {
-  if( (A.n_rows != B.n_rows) || (A.n_cols != B.n_cols) )
+  const u32 A_n_rows = A.get_n_rows();
+  const u32 A_n_cols = A.get_n_cols();
+  
+  const u32 B_n_rows = B.n_rows;
+  const u32 B_n_cols = B.n_cols;
+  
+  if( (A_n_rows != B_n_rows) || (A_n_cols != B_n_cols) )
     {
-    arma_stop( arma_incompat_size_string(A.n_rows, A.n_cols, B.n_rows, B.n_cols, x) );
+    arma_stop( arma_incompat_size_string(A_n_rows, A_n_cols, B_n_rows, B_n_cols, x) );
     }
   }
 
@@ -358,9 +400,15 @@ void
 arma_hot
 arma_assert_same_size(const Proxy<eT1>& A, const subview<eT2>& B, const char* x)
   {
-  if( (A.n_rows != B.n_rows) || (A.n_cols != B.n_cols) )
+  const u32 A_n_rows = A.get_n_rows();
+  const u32 A_n_cols = A.get_n_cols();
+  
+  const u32 B_n_rows = B.n_rows;
+  const u32 B_n_cols = B.n_cols;
+  
+  if( (A_n_rows != B_n_rows) || (A_n_cols != B_n_cols) )
     {
-    arma_stop( arma_incompat_size_string(A.n_rows, A.n_cols, B.n_rows, B.n_cols, x) );
+    arma_stop( arma_incompat_size_string(A_n_rows, A_n_cols, B_n_rows, B_n_cols, x) );
     }
   }
 
@@ -372,9 +420,15 @@ void
 arma_hot
 arma_assert_same_size(const subview<eT1>& A, const Proxy<eT2>& B, const char* x)
   {
-  if( (A.n_rows != B.n_rows) || (A.n_cols != B.n_cols) )
+  const u32 A_n_rows = A.n_rows;
+  const u32 A_n_cols = A.n_cols;
+  
+  const u32 B_n_rows = B.get_n_rows();
+  const u32 B_n_cols = B.get_n_cols();
+  
+  if( (A_n_rows != B_n_rows) || (A_n_cols != B_n_cols) )
     {
-    arma_stop( arma_incompat_size_string(A.n_rows, A.n_cols, B.n_rows, B.n_cols, x) );
+    arma_stop( arma_incompat_size_string(A_n_rows, A_n_cols, B_n_rows, B_n_cols, x) );
     }
   }
 
@@ -476,9 +530,17 @@ void
 arma_hot
 arma_assert_same_size(const ProxyCube<eT1>& A, const ProxyCube<eT2>& B, const char* x)
   {
-  if( (A.n_rows != B.n_rows) || (A.n_cols != B.n_cols) || (A.n_slices != B.n_slices))
+  const u32 A_n_rows   = A.get_n_rows();
+  const u32 A_n_cols   = A.get_n_cols();
+  const u32 A_n_slices = A.get_n_slices();
+  
+  const u32 B_n_rows   = B.get_n_rows();
+  const u32 B_n_cols   = B.get_n_cols();
+  const u32 B_n_slices = B.get_n_slices();
+  
+  if( (A_n_rows != B_n_rows) || (A_n_cols != B_n_cols) || (A_n_slices != B_n_slices))
     {
-    arma_stop( arma_incompat_size_string(A.n_rows, A.n_cols, A.n_slices, B.n_rows, B.n_cols, B.n_slices, x) );
+    arma_stop( arma_incompat_size_string(A_n_rows, A_n_cols, A_n_slices, B_n_rows, B_n_cols, B_n_slices, x) );
     }
   }
 
@@ -570,9 +632,12 @@ void
 arma_hot
 arma_assert_mul_size(const Mat<eT1>& A, const Mat<eT2>& B, const char* x)
   {
-  if(A.n_cols != B.n_rows)
+  const u32 A_n_cols = A.n_cols;
+  const u32 B_n_rows = B.n_rows;
+  
+  if(A_n_cols != B_n_rows)
     {
-    arma_stop( arma_incompat_size_string(A.n_rows, A.n_cols, B.n_rows, B.n_cols, x) );
+    arma_stop( arma_incompat_size_string(A.n_rows, A_n_cols, B_n_rows, B.n_cols, x) );
     }
   }
 

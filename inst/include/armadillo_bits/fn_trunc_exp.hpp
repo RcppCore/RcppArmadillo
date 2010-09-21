@@ -74,12 +74,12 @@ trunc_exp(const Base<typename T1::elem_type,T1>& A)
 
 template<typename T1>
 arma_inline
-const eOpCube<T1, eop_cube_trunc_exp>
+const eOpCube<T1, eop_trunc_exp>
 trunc_exp(const BaseCube<typename T1::elem_type,T1>& A)
   {
   arma_extra_debug_sigprint();
   
-  return eOpCube<T1, eop_cube_trunc_exp>(A.get_ref());
+  return eOpCube<T1, eop_trunc_exp>(A.get_ref());
   }
 
 

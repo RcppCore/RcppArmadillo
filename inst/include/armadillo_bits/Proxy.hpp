@@ -31,6 +31,9 @@ class Proxy
 
 
 
+// ea_type is the "element accessor" type,
+// which can provide access to elements via operator[]
+
 template<typename eT>
 class Proxy< Mat<eT> >
   {
@@ -39,33 +42,24 @@ class Proxy< Mat<eT> >
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Mat<eT>                                  stored_type;
+  typedef const eT*                                ea_type;
   
-  const Mat<eT>& Q;
-  
-  const u32 n_rows;
-  const u32 n_cols;
-  const u32 n_elem;
+  arma_aligned const Mat<eT>& Q;
   
   inline explicit Proxy(const Mat<eT>& A)
     : Q(A)
-    , n_rows(A.n_rows)
-    , n_cols(A.n_cols)
-    , n_elem(A.n_elem)
     {
     arma_extra_debug_sigprint();
     }
   
-  inline explicit Proxy(const u32 in_n_rows, const u32 in_n_cols)
-    : Q(Q)
-    , n_rows(in_n_rows)
-    , n_cols(in_n_cols)
-    , n_elem(in_n_rows*in_n_cols)
-    {
-    arma_extra_debug_sigprint();
-    }
+  arma_inline u32 get_n_rows() const { return Q.n_rows; }
+  arma_inline u32 get_n_cols() const { return Q.n_cols; }
+  arma_inline u32 get_n_elem() const { return Q.n_elem; }
   
   arma_inline elem_type operator[] (const u32 i)                  const { return Q[i];           }
   arma_inline elem_type at         (const u32 row, const u32 col) const { return Q.at(row, col); }
+  
+  arma_inline ea_type get_ea() const { return Q.memptr(); }
   };
 
 
@@ -78,33 +72,24 @@ class Proxy< Col<eT> >
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Col<eT>                                  stored_type;
+  typedef const eT*                                ea_type;
   
-  const Col<eT>& Q;
-  
-  const u32 n_rows;
-  const u32 n_cols;
-  const u32 n_elem;
+  arma_aligned const Col<eT>& Q;
   
   inline explicit Proxy(const Col<eT>& A)
     : Q(A)
-    , n_rows(A.n_rows)
-    , n_cols(A.n_cols)
-    , n_elem(A.n_elem)
     {
     arma_extra_debug_sigprint();
     }
   
-  inline explicit Proxy(const u32 in_n_rows, const u32 in_n_cols)
-    : Q(Q)
-    , n_rows(in_n_rows)
-    , n_cols(in_n_cols)
-    , n_elem(in_n_rows*in_n_cols)
-    {
-    arma_extra_debug_sigprint();
-    }
+  arma_inline u32 get_n_rows() const { return Q.n_rows; }
+  arma_inline u32 get_n_cols() const { return Q.n_cols; }
+  arma_inline u32 get_n_elem() const { return Q.n_elem; }
   
   arma_inline elem_type operator[] (const u32 i)                  const { return Q[i];           }
   arma_inline elem_type at         (const u32 row, const u32 col) const { return Q.at(row, col); }
+  
+  arma_inline ea_type get_ea() const { return Q.memptr(); }
   };
 
 
@@ -117,33 +102,24 @@ class Proxy< Row<eT> >
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Row<eT>                                  stored_type;
+  typedef const eT*                                ea_type;
   
-  const Row<eT>& Q;
-  
-  const u32 n_rows;
-  const u32 n_cols;
-  const u32 n_elem;
+  arma_aligned const Row<eT>& Q;
   
   inline explicit Proxy(const Row<eT>& A)
     : Q(A)
-    , n_rows(A.n_rows)
-    , n_cols(A.n_cols)
-    , n_elem(A.n_elem)
     {
     arma_extra_debug_sigprint();
     }
   
-  inline explicit Proxy(const u32 in_n_rows, const u32 in_n_cols)
-    : Q(Q)
-    , n_rows(in_n_rows)
-    , n_cols(in_n_cols)
-    , n_elem(in_n_rows*in_n_cols)
-    {
-    arma_extra_debug_sigprint();
-    }
+  arma_inline u32 get_n_rows() const { return Q.n_rows; }
+  arma_inline u32 get_n_cols() const { return Q.n_cols; }
+  arma_inline u32 get_n_elem() const { return Q.n_elem; }
   
   arma_inline elem_type operator[] (const u32 i)                  const { return Q[i];           }
   arma_inline elem_type at         (const u32 row, const u32 col) const { return Q.at(row, col); }
+  
+  arma_inline ea_type get_ea() const { return Q.memptr(); }
   };
 
 
@@ -156,24 +132,24 @@ class Proxy< Op<T1, op_type> >
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Mat<elem_type>                           stored_type;
+  typedef const elem_type*                         ea_type;
   
-  const Mat<elem_type> Q;
-  
-  const u32 n_rows;
-  const u32 n_cols;
-  const u32 n_elem;
+  arma_aligned const Mat<elem_type> Q;
   
   inline explicit Proxy(const Op<T1, op_type>& A)
     : Q(A)
-    , n_rows(Q.n_rows)
-    , n_cols(Q.n_cols)
-    , n_elem(Q.n_elem)
     {
     arma_extra_debug_sigprint();
     }
   
+  arma_inline u32 get_n_rows() const { return Q.n_rows; }
+  arma_inline u32 get_n_cols() const { return Q.n_cols; }
+  arma_inline u32 get_n_elem() const { return Q.n_elem; }
+  
   arma_inline elem_type operator[] (const u32 i)                  const { return Q[i];           }
   arma_inline elem_type at         (const u32 row, const u32 col) const { return Q.at(row, col); }
+  
+  arma_inline ea_type get_ea() const { return Q.memptr(); }
   };
 
 
@@ -186,24 +162,24 @@ class Proxy< Glue<T1, T2, glue_type> >
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Mat<elem_type>                           stored_type;
+  typedef const elem_type*                         ea_type;
   
-  const Mat<elem_type> Q;
-  
-  const u32 n_rows;
-  const u32 n_cols;
-  const u32 n_elem;
+  arma_aligned const Mat<elem_type> Q;
   
   inline explicit Proxy(const Glue<T1, T2, glue_type>& A)
     : Q(A)
-    , n_rows(Q.n_rows)
-    , n_cols(Q.n_cols)
-    , n_elem(Q.n_elem)
     {
     arma_extra_debug_sigprint();
     }
 
+  arma_inline u32 get_n_rows() const { return Q.n_rows; }
+  arma_inline u32 get_n_cols() const { return Q.n_cols; }
+  arma_inline u32 get_n_elem() const { return Q.n_elem; }
+  
   arma_inline elem_type operator[] (const u32 i)                  const { return Q[i];           }
   arma_inline elem_type at         (const u32 row, const u32 col) const { return Q.at(row, col); }
+  
+  arma_inline ea_type get_ea() const { return Q.memptr(); }
   };
 
 
@@ -216,24 +192,24 @@ class Proxy< subview<eT> >
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef subview<eT>                              stored_type;
+  typedef const subview<eT>&                       ea_type;
   
-  const subview<eT>& Q;
-  
-  const u32 n_rows;
-  const u32 n_cols;
-  const u32 n_elem;
+  arma_aligned const subview<eT>& Q;
   
   inline explicit Proxy(const subview<eT>& A)
     : Q(A)
-    , n_rows(A.n_rows)
-    , n_cols(A.n_cols)
-    , n_elem(A.n_elem)
     {
     arma_extra_debug_sigprint();
     }
   
+  arma_inline u32 get_n_rows() const { return Q.n_rows; }
+  arma_inline u32 get_n_cols() const { return Q.n_cols; }
+  arma_inline u32 get_n_elem() const { return Q.n_elem; }
+  
   arma_inline elem_type operator[] (const u32 i)                  const { return Q[i];           }
   arma_inline elem_type at         (const u32 row, const u32 col) const { return Q.at(row, col); }
+  
+  arma_inline ea_type get_ea() const { return Q; }
   };
 
 
@@ -247,24 +223,24 @@ class Proxy< diagview<eT> >
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef diagview<eT>                             stored_type;
+  typedef const diagview<eT>&                      ea_type;
   
-  const diagview<eT>& Q;
-  
-  const u32 n_rows;
-  const u32 n_cols;
-  const u32 n_elem;
+  arma_aligned const diagview<eT>& Q;
   
   inline explicit Proxy(const diagview<eT>& A)
     : Q(A)
-    , n_rows(A.n_rows)
-    , n_cols(A.n_cols)
-    , n_elem(A.n_elem)
     {
     arma_extra_debug_sigprint();
     }
   
+  arma_inline u32 get_n_rows() const { return Q.n_rows; }
+  arma_inline u32 get_n_cols() const { return Q.n_cols; }
+  arma_inline u32 get_n_elem() const { return Q.n_elem; }
+  
   arma_inline elem_type operator[] (const u32 i)                  const { return Q[i];           }
   arma_inline elem_type at         (const u32 row, const u32 col) const { return Q.at(row, col); }
+  
+  arma_inline ea_type get_ea() const { return Q; }
   };
 
 
@@ -278,24 +254,24 @@ class Proxy< eOp<T1, eop_type > >
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef eOp<T1, eop_type>                        stored_type;
+  typedef const eOp<T1, eop_type>&                 ea_type;
   
-  const eOp<T1, eop_type>& Q;
-  
-  const u32 n_rows;
-  const u32 n_cols;
-  const u32 n_elem;
+  arma_aligned const eOp<T1, eop_type>& Q;
   
   inline explicit Proxy(const eOp<T1, eop_type>& A)
     : Q(A)
-    , n_rows(A.P.n_rows)
-    , n_cols(A.P.n_cols)
-    , n_elem(A.P.n_elem)
     {
     arma_extra_debug_sigprint();
     }
   
-  arma_inline elem_type operator[] (const u32 i)                  const { return eop_type::get_elem(Q, i);       }
-  arma_inline elem_type at         (const u32 row, const u32 col) const { return eop_type::get_elem(Q, row,col); }
+  arma_inline u32 get_n_rows() const { return Q.get_n_rows(); }
+  arma_inline u32 get_n_cols() const { return Q.get_n_cols(); }
+  arma_inline u32 get_n_elem() const { return Q.get_n_elem(); }
+  
+  arma_inline elem_type operator[] (const u32 i)                  const { return Q[i];           }
+  arma_inline elem_type at         (const u32 row, const u32 col) const { return Q.at(row, col); }
+  
+  arma_inline ea_type get_ea() const { return Q; }
   };
 
 
@@ -308,24 +284,24 @@ class Proxy< eGlue<T1, T2, eglue_type > >
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef eGlue<T1, T2, eglue_type>                stored_type;
+  typedef const eGlue<T1, T2, eglue_type>&         ea_type;
   
-  const eGlue<T1, T2, eglue_type>& Q;
-  
-  const u32 n_rows;
-  const u32 n_cols;
-  const u32 n_elem;
+  arma_aligned const eGlue<T1, T2, eglue_type>& Q;
   
   inline explicit Proxy(const eGlue<T1, T2, eglue_type>& A)
     : Q(A)
-    , n_rows(A.P1.n_rows)
-    , n_cols(A.P1.n_cols)
-    , n_elem(A.P1.n_elem)
     {
     arma_extra_debug_sigprint();
     }
   
-  arma_inline elem_type operator[] (const u32 i)                  const { return eglue_type::get_elem(Q, i);        }
-  arma_inline elem_type at         (const u32 row, const u32 col) const { return eglue_type::get_elem(Q, row, col); }
+  arma_inline u32 get_n_rows() const { return Q.get_n_rows(); }
+  arma_inline u32 get_n_cols() const { return Q.get_n_cols(); }
+  arma_inline u32 get_n_elem() const { return Q.get_n_elem(); }
+  
+  arma_inline elem_type operator[] (const u32 i)                  const { return Q[i];           }
+  arma_inline elem_type at         (const u32 row, const u32 col) const { return Q.at(row, col); }
+  
+  arma_inline ea_type get_ea() const { return Q; }
   };
 
 
@@ -338,24 +314,24 @@ class Proxy< mtOp<out_eT, T1, op_type> >
   typedef          out_eT                       elem_type;
   typedef typename get_pod_type<out_eT>::result pod_type;
   typedef          Mat<out_eT>                  stored_type;
+  typedef          const elem_type*             ea_type;
   
-  const Mat<out_eT> Q;
-  
-  const u32 n_rows;
-  const u32 n_cols;
-  const u32 n_elem;
+  arma_aligned const Mat<out_eT> Q;
   
   inline explicit Proxy(const mtOp<out_eT, T1, op_type>& A)
     : Q(A)
-    , n_rows(Q.n_rows)
-    , n_cols(Q.n_cols)
-    , n_elem(Q.n_elem)
     {
     arma_extra_debug_sigprint();
     }
   
+  arma_inline u32 get_n_rows() const { return Q.n_rows; }
+  arma_inline u32 get_n_cols() const { return Q.n_cols; }
+  arma_inline u32 get_n_elem() const { return Q.n_elem; }
+  
   arma_inline elem_type operator[] (const u32 i)                  const { return Q[i];          }
   arma_inline elem_type at         (const u32 row, const u32 col) const { return Q.at(row,col); }
+  
+  arma_inline ea_type get_ea() const { return Q.memptr(); }
   };
 
 
@@ -368,24 +344,24 @@ class Proxy< mtGlue<out_eT, T1, T2, glue_type > >
   typedef          out_eT                       elem_type;
   typedef typename get_pod_type<out_eT>::result pod_type;
   typedef          Mat<out_eT>                  stored_type;
+  typedef          const elem_type*             ea_type;
   
-  const Mat<out_eT> Q;
-  
-  const u32 n_rows;
-  const u32 n_cols;
-  const u32 n_elem;
+  arma_aligned const Mat<out_eT> Q;
   
   inline explicit Proxy(const mtGlue<out_eT, T1, T2, glue_type>& A)
     : Q(A)
-    , n_rows(Q.n_rows)
-    , n_cols(Q.n_cols)
-    , n_elem(Q.n_elem)
     {
     arma_extra_debug_sigprint();
     }
   
+  arma_inline u32 get_n_rows() const { return Q.n_rows; }
+  arma_inline u32 get_n_cols() const { return Q.n_cols; }
+  arma_inline u32 get_n_elem() const { return Q.n_elem; }
+  
   arma_inline elem_type operator[] (const u32 i)                  const { return Q[i];          }
   arma_inline elem_type at         (const u32 row, const u32 col) const { return Q.at(row,col); }
+  
+  arma_inline ea_type get_ea() const { return Q.memptr(); }
   };
 
 

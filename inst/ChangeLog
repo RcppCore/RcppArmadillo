@@ -1,10 +1,14 @@
+2010-09-21  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/*: Update to Armadillo 0.9.80 "Chihuahua Muncher"
+
 2010-09-12  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.2.5
 
 2010-09-10   Romain Francois <romain@r-enthusiasts.com>
 
-	* inst/include/* : update to armadillo 0.9.70
+	* inst/include/* : Update to Armadillo 0.9.70 "Subtropical Winter Safari"
 
 2010-08-18   Romain Francois <romain@r-enthusiasts.com>
 

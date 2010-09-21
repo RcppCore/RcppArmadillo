@@ -19,60 +19,40 @@
 
 
 
-template<typename T1>
-arma_hot
-inline
-typename T1::elem_type
-accu_unwrap(const Base<typename T1::elem_type,T1>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  const unwrap<T1>   tmp(X.get_ref());
-  const Mat<eT>& A = tmp.M;
-  
-  return arrayops::accumulate( A.memptr(), A.n_elem );
-  }
-
-
-
-template<typename T1>
-arma_hot
-inline
-typename T1::elem_type
-accu_proxy(const Base<typename T1::elem_type,T1>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  const Proxy<T1> A(X.get_ref());
-  
-  const u32 N = A.n_elem;
-  
-  eT val = eT(0);
-  
-  for(u32 i=0; i<N; ++i)
-    {
-    val += A[i];
-    }
-  
-  return val;
-  }
-
-
-
 //! accumulate the elements of a matrix
 template<typename T1>
-arma_inline
-arma_warn_unused
+arma_hot
+inline
 typename T1::elem_type
 accu(const Base<typename T1::elem_type,T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  return (is_Mat<T1>::value == true) ? accu_unwrap(X) : accu_proxy(X);
+  typedef typename T1::elem_type      eT;
+  typedef typename Proxy<T1>::ea_type ea_type;
+  
+  const Proxy<T1> A(X.get_ref());
+  
+        ea_type P      = A.get_ea();
+  const u32     n_elem = A.get_n_elem();
+  
+  eT val1 = eT(0);
+  eT val2 = eT(0);
+  
+  u32 i,j;
+  
+  for(i=0, j=1; j<n_elem; i+=2, j+=2)
+    {
+    val1 += P[i];
+    val2 += P[j];
+    }
+  
+  if(i < n_elem)
+    {
+    val1 += P[i];
+    }
+  
+  return val1 + val2;
   }
 
 
@@ -90,7 +70,7 @@ accu(const mtOp<u32,T1,op_rel_noteq>& X)
   
   const Proxy<T1> A(X.m);
   
-  const u32 n_elem = A.n_elem;
+  const u32 n_elem = A.get_n_elem();
   const eT  val    = X.aux;
   
   u32 n_nonzero = 0;
@@ -117,20 +97,31 @@ accu(const BaseCube<typename T1::elem_type,T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
+  typedef typename T1::elem_type          eT;
+  typedef typename ProxyCube<T1>::ea_type ea_type;
   
   const ProxyCube<T1> A(X.get_ref());
   
-  const u32 n_elem = A.n_elem;
+        ea_type P      = A.get_ea();
+  const u32     n_elem = A.get_n_elem();
   
-  eT val = eT(0);
+  eT val1 = eT(0);
+  eT val2 = eT(0);
   
-  for(u32 i=0; i<n_elem; ++i)
+  u32 i,j;
+  
+  for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    val += A[i];
+    val1 += P[i];
+    val2 += P[j];
     }
   
-  return val;
+  if(i < n_elem)
+    {
+    val1 += P[i];
+    }
+  
+  return val1 + val2;
   }
 
 

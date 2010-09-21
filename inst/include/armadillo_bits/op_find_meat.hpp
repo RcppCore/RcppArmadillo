@@ -36,7 +36,7 @@ op_find::helper
   
   const Proxy<T1> P(X.get_ref());
   
-  const u32 n_elem = P.n_elem;
+  const u32 n_elem = P.get_n_elem();
   
   indices.set_size(n_elem, 1);
   
@@ -76,7 +76,7 @@ op_find::helper
   
   const Proxy<T1> P(X.m);
   
-  const u32 n_elem = P.n_elem;
+  const u32 n_elem = P.get_n_elem();
   
   indices.set_size(n_elem, 1);
   
@@ -132,7 +132,7 @@ op_find::helper
   
   const Proxy<T1> P(X.m);
   
-  const u32 n_elem = P.n_elem;
+  const u32 n_elem = P.get_n_elem();
   
   indices.set_size(n_elem, 1);
   
@@ -183,7 +183,7 @@ op_find::helper
   
   arma_debug_assert_same_size(A, B, "relational operator");
   
-  const u32 n_elem = A.n_elem;
+  const u32 n_elem = A.get_n_elem();
   
   indices.set_size(n_elem, 1);
   
@@ -236,7 +236,7 @@ op_find::helper
   
   arma_debug_assert_same_size(A, B, "relational operator");
   
-  const u32 n_elem = A.n_elem;
+  const u32 n_elem = A.get_n_elem();
   
   indices.set_size(n_elem, 1);
   

@@ -19,45 +19,75 @@
 //! @{
 
 
+
 //! immediate matrix inverse
 template<typename eT>
 inline
 bool
-auxlib::inv_noalias(Mat<eT>& out, const Mat<eT>& X)
+auxlib::inv(Mat<eT>& out, const Mat<eT>& X)
   {
   arma_extra_debug_sigprint();
   
-  switch(X.n_rows)
+  const u32 N = X.n_rows;
+  
+  if(N <= 4)
+    {
+    const bool status = (&out != &X) ? auxlib::inv_noalias_tinymat(out, X, N) : auxlib::inv_inplace_tinymat(out, N);
+    
+    return (status == true) ? true : auxlib::inv_lapack(out, X);
+    }
+  else
+    {
+    return auxlib::inv_lapack(out, X);
+    }
+  }
+
+
+
+template<typename eT>
+inline
+bool
+auxlib::inv_noalias_tinymat(Mat<eT>& out, const Mat<eT>& X, const u32 N)
+  {
+  arma_extra_debug_sigprint();
+  
+  bool det_ok = true;
+  
+  out.set_size(N,N);
+  
+  switch(N)
     {
     case 1:
       {
-      out.set_size(1,1);
       out[0] = eT(1) / X[0];
       };
       break;
       
     case 2:
       {
-      out.set_size(2,2);
-      
       const eT a = X.at(0,0);
       const eT b = X.at(0,1);
       const eT c = X.at(1,0);
       const eT d = X.at(1,1);
       
-      const eT k = eT(1) / (a*d - b*c);
+      const eT tmp_det = (a*d - b*c);
       
-      out.at(0,0) =  d*k;
-      out.at(0,1) = -b*k;
-      out.at(1,0) = -c*k;
-      out.at(1,1) =  a*k;
+      if(tmp_det != eT(0))
+        {
+        out.at(0,0) =  d / tmp_det;
+        out.at(0,1) = -b / tmp_det;
+        out.at(1,0) = -c / tmp_det;
+        out.at(1,1) =  a / tmp_det;
+        }
+      else
+        {
+        det_ok = false;
+        }
       };
       break;
     
     case 3:
       {
-      out.set_size(3,3);
-      
       const eT* X_col0 = X.colptr(0);
       const eT a11 = X_col0[0];
       const eT a21 = X_col0[1];
@@ -73,135 +103,82 @@ auxlib::inv_noalias(Mat<eT>& out, const Mat<eT>& X)
       const eT a23 = X_col2[1];
       const eT a33 = X_col2[2];
       
-      const eT k = eT(1) / ( a11*(a33*a22 - a32*a23) - a21*(a33*a12-a32*a13) + a31*(a23*a12 - a22*a13) );
+      const eT tmp_det = a11*(a33*a22 - a32*a23) - a21*(a33*a12-a32*a13) + a31*(a23*a12 - a22*a13);
       
-      
-      eT* out_col0 = out.colptr(0);
-      out_col0[0] =  (a33*a22 - a32*a23) * k;
-      out_col0[1] = -(a33*a21 - a31*a23) * k;
-      out_col0[2] =  (a32*a21 - a31*a22) * k;
-      
-      eT* out_col1 = out.colptr(1);
-      out_col1[0] = -(a33*a12 - a32*a13) * k;
-      out_col1[1] =  (a33*a11 - a31*a13) * k;
-      out_col1[2] = -(a32*a11 - a31*a12) * k;
-      
-      eT* out_col2 = out.colptr(2);
-      out_col2[0] =  (a23*a12 - a22*a13) * k;
-      out_col2[1] = -(a23*a11 - a21*a13) * k;
-      out_col2[2] =  (a22*a11 - a21*a12) * k;
+      if(tmp_det != eT(0))
+        {
+        eT* out_col0 = out.colptr(0);
+        out_col0[0] =  (a33*a22 - a32*a23) / tmp_det;
+        out_col0[1] = -(a33*a21 - a31*a23) / tmp_det;
+        out_col0[2] =  (a32*a21 - a31*a22) / tmp_det;
+        
+        eT* out_col1 = out.colptr(1);
+        out_col1[0] = -(a33*a12 - a32*a13) / tmp_det;
+        out_col1[1] =  (a33*a11 - a31*a13) / tmp_det;
+        out_col1[2] = -(a32*a11 - a31*a12) / tmp_det;
+        
+        eT* out_col2 = out.colptr(2);
+        out_col2[0] =  (a23*a12 - a22*a13) / tmp_det;
+        out_col2[1] = -(a23*a11 - a21*a13) / tmp_det;
+        out_col2[2] =  (a22*a11 - a21*a12) / tmp_det;
+        }
+      else
+        {
+        det_ok = false;
+        }
       };
       break;
       
     case 4:
       {
-      out.set_size(4,4);
+      const eT tmp_det = det(X);
       
-      out.at(0,0) = X.at(1,2)*X.at(2,3)*X.at(3,1) - X.at(1,3)*X.at(2,2)*X.at(3,1) + X.at(1,3)*X.at(2,1)*X.at(3,2) - X.at(1,1)*X.at(2,3)*X.at(3,2) - X.at(1,2)*X.at(2,1)*X.at(3,3) + X.at(1,1)*X.at(2,2)*X.at(3,3);
-      out.at(1,0) = X.at(1,3)*X.at(2,2)*X.at(3,0) - X.at(1,2)*X.at(2,3)*X.at(3,0) - X.at(1,3)*X.at(2,0)*X.at(3,2) + X.at(1,0)*X.at(2,3)*X.at(3,2) + X.at(1,2)*X.at(2,0)*X.at(3,3) - X.at(1,0)*X.at(2,2)*X.at(3,3);
-      out.at(2,0) = X.at(1,1)*X.at(2,3)*X.at(3,0) - X.at(1,3)*X.at(2,1)*X.at(3,0) + X.at(1,3)*X.at(2,0)*X.at(3,1) - X.at(1,0)*X.at(2,3)*X.at(3,1) - X.at(1,1)*X.at(2,0)*X.at(3,3) + X.at(1,0)*X.at(2,1)*X.at(3,3);
-      out.at(3,0) = X.at(1,2)*X.at(2,1)*X.at(3,0) - X.at(1,1)*X.at(2,2)*X.at(3,0) - X.at(1,2)*X.at(2,0)*X.at(3,1) + X.at(1,0)*X.at(2,2)*X.at(3,1) + X.at(1,1)*X.at(2,0)*X.at(3,2) - X.at(1,0)*X.at(2,1)*X.at(3,2);
-      
-      out.at(0,1) = X.at(0,3)*X.at(2,2)*X.at(3,1) - X.at(0,2)*X.at(2,3)*X.at(3,1) - X.at(0,3)*X.at(2,1)*X.at(3,2) + X.at(0,1)*X.at(2,3)*X.at(3,2) + X.at(0,2)*X.at(2,1)*X.at(3,3) - X.at(0,1)*X.at(2,2)*X.at(3,3);
-      out.at(1,1) = X.at(0,2)*X.at(2,3)*X.at(3,0) - X.at(0,3)*X.at(2,2)*X.at(3,0) + X.at(0,3)*X.at(2,0)*X.at(3,2) - X.at(0,0)*X.at(2,3)*X.at(3,2) - X.at(0,2)*X.at(2,0)*X.at(3,3) + X.at(0,0)*X.at(2,2)*X.at(3,3);
-      out.at(2,1) = X.at(0,3)*X.at(2,1)*X.at(3,0) - X.at(0,1)*X.at(2,3)*X.at(3,0) - X.at(0,3)*X.at(2,0)*X.at(3,1) + X.at(0,0)*X.at(2,3)*X.at(3,1) + X.at(0,1)*X.at(2,0)*X.at(3,3) - X.at(0,0)*X.at(2,1)*X.at(3,3);
-      out.at(3,1) = X.at(0,1)*X.at(2,2)*X.at(3,0) - X.at(0,2)*X.at(2,1)*X.at(3,0) + X.at(0,2)*X.at(2,0)*X.at(3,1) - X.at(0,0)*X.at(2,2)*X.at(3,1) - X.at(0,1)*X.at(2,0)*X.at(3,2) + X.at(0,0)*X.at(2,1)*X.at(3,2);
-      
-      out.at(0,2) = X.at(0,2)*X.at(1,3)*X.at(3,1) - X.at(0,3)*X.at(1,2)*X.at(3,1) + X.at(0,3)*X.at(1,1)*X.at(3,2) - X.at(0,1)*X.at(1,3)*X.at(3,2) - X.at(0,2)*X.at(1,1)*X.at(3,3) + X.at(0,1)*X.at(1,2)*X.at(3,3);
-      out.at(1,2) = X.at(0,3)*X.at(1,2)*X.at(3,0) - X.at(0,2)*X.at(1,3)*X.at(3,0) - X.at(0,3)*X.at(1,0)*X.at(3,2) + X.at(0,0)*X.at(1,3)*X.at(3,2) + X.at(0,2)*X.at(1,0)*X.at(3,3) - X.at(0,0)*X.at(1,2)*X.at(3,3);
-      out.at(2,2) = X.at(0,1)*X.at(1,3)*X.at(3,0) - X.at(0,3)*X.at(1,1)*X.at(3,0) + X.at(0,3)*X.at(1,0)*X.at(3,1) - X.at(0,0)*X.at(1,3)*X.at(3,1) - X.at(0,1)*X.at(1,0)*X.at(3,3) + X.at(0,0)*X.at(1,1)*X.at(3,3);
-      out.at(3,2) = X.at(0,2)*X.at(1,1)*X.at(3,0) - X.at(0,1)*X.at(1,2)*X.at(3,0) - X.at(0,2)*X.at(1,0)*X.at(3,1) + X.at(0,0)*X.at(1,2)*X.at(3,1) + X.at(0,1)*X.at(1,0)*X.at(3,2) - X.at(0,0)*X.at(1,1)*X.at(3,2);
-      
-      out.at(0,3) = X.at(0,3)*X.at(1,2)*X.at(2,1) - X.at(0,2)*X.at(1,3)*X.at(2,1) - X.at(0,3)*X.at(1,1)*X.at(2,2) + X.at(0,1)*X.at(1,3)*X.at(2,2) + X.at(0,2)*X.at(1,1)*X.at(2,3) - X.at(0,1)*X.at(1,2)*X.at(2,3);
-      out.at(1,3) = X.at(0,2)*X.at(1,3)*X.at(2,0) - X.at(0,3)*X.at(1,2)*X.at(2,0) + X.at(0,3)*X.at(1,0)*X.at(2,2) - X.at(0,0)*X.at(1,3)*X.at(2,2) - X.at(0,2)*X.at(1,0)*X.at(2,3) + X.at(0,0)*X.at(1,2)*X.at(2,3);
-      out.at(2,3) = X.at(0,3)*X.at(1,1)*X.at(2,0) - X.at(0,1)*X.at(1,3)*X.at(2,0) - X.at(0,3)*X.at(1,0)*X.at(2,1) + X.at(0,0)*X.at(1,3)*X.at(2,1) + X.at(0,1)*X.at(1,0)*X.at(2,3) - X.at(0,0)*X.at(1,1)*X.at(2,3);
-      out.at(3,3) = X.at(0,1)*X.at(1,2)*X.at(2,0) - X.at(0,2)*X.at(1,1)*X.at(2,0) + X.at(0,2)*X.at(1,0)*X.at(2,1) - X.at(0,0)*X.at(1,2)*X.at(2,1) - X.at(0,1)*X.at(1,0)*X.at(2,2) + X.at(0,0)*X.at(1,1)*X.at(2,2);      
-      
-      out /= det(X);
+      if(tmp_det != eT(0))
+        {
+        out.at(0,0) = ( X.at(1,2)*X.at(2,3)*X.at(3,1) - X.at(1,3)*X.at(2,2)*X.at(3,1) + X.at(1,3)*X.at(2,1)*X.at(3,2) - X.at(1,1)*X.at(2,3)*X.at(3,2) - X.at(1,2)*X.at(2,1)*X.at(3,3) + X.at(1,1)*X.at(2,2)*X.at(3,3) ) / tmp_det;
+        out.at(1,0) = ( X.at(1,3)*X.at(2,2)*X.at(3,0) - X.at(1,2)*X.at(2,3)*X.at(3,0) - X.at(1,3)*X.at(2,0)*X.at(3,2) + X.at(1,0)*X.at(2,3)*X.at(3,2) + X.at(1,2)*X.at(2,0)*X.at(3,3) - X.at(1,0)*X.at(2,2)*X.at(3,3) ) / tmp_det;
+        out.at(2,0) = ( X.at(1,1)*X.at(2,3)*X.at(3,0) - X.at(1,3)*X.at(2,1)*X.at(3,0) + X.at(1,3)*X.at(2,0)*X.at(3,1) - X.at(1,0)*X.at(2,3)*X.at(3,1) - X.at(1,1)*X.at(2,0)*X.at(3,3) + X.at(1,0)*X.at(2,1)*X.at(3,3) ) / tmp_det;
+        out.at(3,0) = ( X.at(1,2)*X.at(2,1)*X.at(3,0) - X.at(1,1)*X.at(2,2)*X.at(3,0) - X.at(1,2)*X.at(2,0)*X.at(3,1) + X.at(1,0)*X.at(2,2)*X.at(3,1) + X.at(1,1)*X.at(2,0)*X.at(3,2) - X.at(1,0)*X.at(2,1)*X.at(3,2) ) / tmp_det;
+        
+        out.at(0,1) = ( X.at(0,3)*X.at(2,2)*X.at(3,1) - X.at(0,2)*X.at(2,3)*X.at(3,1) - X.at(0,3)*X.at(2,1)*X.at(3,2) + X.at(0,1)*X.at(2,3)*X.at(3,2) + X.at(0,2)*X.at(2,1)*X.at(3,3) - X.at(0,1)*X.at(2,2)*X.at(3,3) ) / tmp_det;
+        out.at(1,1) = ( X.at(0,2)*X.at(2,3)*X.at(3,0) - X.at(0,3)*X.at(2,2)*X.at(3,0) + X.at(0,3)*X.at(2,0)*X.at(3,2) - X.at(0,0)*X.at(2,3)*X.at(3,2) - X.at(0,2)*X.at(2,0)*X.at(3,3) + X.at(0,0)*X.at(2,2)*X.at(3,3) ) / tmp_det;
+        out.at(2,1) = ( X.at(0,3)*X.at(2,1)*X.at(3,0) - X.at(0,1)*X.at(2,3)*X.at(3,0) - X.at(0,3)*X.at(2,0)*X.at(3,1) + X.at(0,0)*X.at(2,3)*X.at(3,1) + X.at(0,1)*X.at(2,0)*X.at(3,3) - X.at(0,0)*X.at(2,1)*X.at(3,3) ) / tmp_det;
+        out.at(3,1) = ( X.at(0,1)*X.at(2,2)*X.at(3,0) - X.at(0,2)*X.at(2,1)*X.at(3,0) + X.at(0,2)*X.at(2,0)*X.at(3,1) - X.at(0,0)*X.at(2,2)*X.at(3,1) - X.at(0,1)*X.at(2,0)*X.at(3,2) + X.at(0,0)*X.at(2,1)*X.at(3,2) ) / tmp_det;
+        
+        out.at(0,2) = ( X.at(0,2)*X.at(1,3)*X.at(3,1) - X.at(0,3)*X.at(1,2)*X.at(3,1) + X.at(0,3)*X.at(1,1)*X.at(3,2) - X.at(0,1)*X.at(1,3)*X.at(3,2) - X.at(0,2)*X.at(1,1)*X.at(3,3) + X.at(0,1)*X.at(1,2)*X.at(3,3) ) / tmp_det;
+        out.at(1,2) = ( X.at(0,3)*X.at(1,2)*X.at(3,0) - X.at(0,2)*X.at(1,3)*X.at(3,0) - X.at(0,3)*X.at(1,0)*X.at(3,2) + X.at(0,0)*X.at(1,3)*X.at(3,2) + X.at(0,2)*X.at(1,0)*X.at(3,3) - X.at(0,0)*X.at(1,2)*X.at(3,3) ) / tmp_det;
+        out.at(2,2) = ( X.at(0,1)*X.at(1,3)*X.at(3,0) - X.at(0,3)*X.at(1,1)*X.at(3,0) + X.at(0,3)*X.at(1,0)*X.at(3,1) - X.at(0,0)*X.at(1,3)*X.at(3,1) - X.at(0,1)*X.at(1,0)*X.at(3,3) + X.at(0,0)*X.at(1,1)*X.at(3,3) ) / tmp_det;
+        out.at(3,2) = ( X.at(0,2)*X.at(1,1)*X.at(3,0) - X.at(0,1)*X.at(1,2)*X.at(3,0) - X.at(0,2)*X.at(1,0)*X.at(3,1) + X.at(0,0)*X.at(1,2)*X.at(3,1) + X.at(0,1)*X.at(1,0)*X.at(3,2) - X.at(0,0)*X.at(1,1)*X.at(3,2) ) / tmp_det;
+        
+        out.at(0,3) = ( X.at(0,3)*X.at(1,2)*X.at(2,1) - X.at(0,2)*X.at(1,3)*X.at(2,1) - X.at(0,3)*X.at(1,1)*X.at(2,2) + X.at(0,1)*X.at(1,3)*X.at(2,2) + X.at(0,2)*X.at(1,1)*X.at(2,3) - X.at(0,1)*X.at(1,2)*X.at(2,3) ) / tmp_det;
+        out.at(1,3) = ( X.at(0,2)*X.at(1,3)*X.at(2,0) - X.at(0,3)*X.at(1,2)*X.at(2,0) + X.at(0,3)*X.at(1,0)*X.at(2,2) - X.at(0,0)*X.at(1,3)*X.at(2,2) - X.at(0,2)*X.at(1,0)*X.at(2,3) + X.at(0,0)*X.at(1,2)*X.at(2,3) ) / tmp_det;
+        out.at(2,3) = ( X.at(0,3)*X.at(1,1)*X.at(2,0) - X.at(0,1)*X.at(1,3)*X.at(2,0) - X.at(0,3)*X.at(1,0)*X.at(2,1) + X.at(0,0)*X.at(1,3)*X.at(2,1) + X.at(0,1)*X.at(1,0)*X.at(2,3) - X.at(0,0)*X.at(1,1)*X.at(2,3) ) / tmp_det;
+        out.at(3,3) = ( X.at(0,1)*X.at(1,2)*X.at(2,0) - X.at(0,2)*X.at(1,1)*X.at(2,0) + X.at(0,2)*X.at(1,0)*X.at(2,1) - X.at(0,0)*X.at(1,2)*X.at(2,1) - X.at(0,1)*X.at(1,0)*X.at(2,2) + X.at(0,0)*X.at(1,1)*X.at(2,2) ) / tmp_det;
+        }
+      else
+        {
+        det_ok = false;
+        }
       };
       break;
-      
-    default:
-      {
-      #if defined(ARMA_USE_ATLAS)
-        {
-        out = X;
-        podarray<int> ipiv(out.n_rows);
-        
-        int info = atlas::clapack_getrf(atlas::CblasColMajor, out.n_rows, out.n_cols, out.memptr(), out.n_rows, ipiv.memptr());
-        
-        if(info == 0)
-          {
-          info = atlas::clapack_getri(atlas::CblasColMajor, out.n_rows, out.memptr(), out.n_rows, ipiv.memptr());
-          }
-        
-        return (info == 0);
-        }
-      #elif defined(ARMA_USE_LAPACK)
-        {
-        out = X;
-        
-        int n_rows = out.n_rows;
-        int n_cols = out.n_cols;
-        int info   = 0;
-        
-        podarray<int> ipiv(out.n_rows);
-        
-        // 84 was empirically found -- it is the maximum value suggested by LAPACK (as provided by ATLAS v3.6)
-        // based on tests with various matrix types on 32-bit and 64-bit machines
-        //
-        // the "work" array is deliberately long so that a secondary (time-consuming)
-        // memory allocation is avoided, if possible
-        
-        int work_len = (std::max)(1, n_rows*84);
-        podarray<eT> work(work_len);
-        
-        lapack::getrf_(&n_rows, &n_cols, out.memptr(), &n_rows, ipiv.memptr(), &info);
-        
-        if(info == 0)
-          {
-          // query for optimum size of work_len
-          
-          int work_len_tmp = -1;
-          lapack::getri_(&n_rows, out.memptr(), &n_rows, ipiv.memptr(), work.memptr(), &work_len_tmp, &info);
-          
-          if(info == 0)
-            {
-            int proposed_work_len = static_cast<int>(access::tmp_real(work[0]));
-            
-            // if necessary, allocate more memory
-            if(work_len < proposed_work_len)
-              {
-              work_len = proposed_work_len;
-              work.set_size(work_len);
-              }
-            }
-          
-          lapack::getri_(&n_rows, out.memptr(), &n_rows, ipiv.memptr(), work.memptr(), &work_len, &info);
-          }
-        
-        return (info == 0);
-        }
-      #else
-        {
-        arma_stop("inv(): need ATLAS or LAPACK");
-        }
-      #endif
-      };
-    }
     
-  return true;
+    default:
+      ;
+    }
+
+  return det_ok;
   }
-  
-  
-  
-//! immediate inplace matrix inverse
+
+
+
 template<typename eT>
 inline
 bool
-auxlib::inv_inplace(Mat<eT>& X)
+auxlib::inv_inplace_tinymat(Mat<eT>& X, const u32 N)
   {
   arma_extra_debug_sigprint();
+  
+  bool det_ok = true;
   
   // for more info, see:
   // http://www.dr-lex.34sp.com/random/matrix_inv.html
@@ -209,7 +186,7 @@ auxlib::inv_inplace(Mat<eT>& X)
   // http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
   // http://www.geometrictools.com//LibFoundation/Mathematics/Wm4Matrix4.inl
   
-  switch(X.n_rows)
+  switch(N)
     {
     case 1:
       {
@@ -224,12 +201,19 @@ auxlib::inv_inplace(Mat<eT>& X)
       const eT c = X.at(1,0);
       const eT d = X.at(1,1);
       
-      const eT k = eT(1) / (a*d - b*c);
+      const eT tmp_det = (a*d - b*c);
       
-      X.at(0,0) =  d*k;
-      X.at(0,1) = -b*k;
-      X.at(1,0) = -c*k;
-      X.at(1,1) =  a*k;
+      if(tmp_det != eT(0))
+        {
+        X.at(0,0) =  d / tmp_det;
+        X.at(0,1) = -b / tmp_det;
+        X.at(1,0) = -c / tmp_det;
+        X.at(1,1) =  a / tmp_det;
+        }
+      else
+        {
+        det_ok = false;
+        }
       };
       break;
     
@@ -251,133 +235,189 @@ auxlib::inv_inplace(Mat<eT>& X)
       const eT a23 = X_col2[1];
       const eT a33 = X_col2[2];
       
-      const eT k = eT(1) / ( a11*(a33*a22 - a32*a23) - a21*(a33*a12-a32*a13) + a31*(a23*a12 - a22*a13) );
+      const eT tmp_det = a11*(a33*a22 - a32*a23) - a21*(a33*a12-a32*a13) + a31*(a23*a12 - a22*a13);
       
-      X_col0[0] =  (a33*a22 - a32*a23) * k;
-      X_col0[1] = -(a33*a21 - a31*a23) * k;
-      X_col0[2] =  (a32*a21 - a31*a22) * k;
-      
-      X_col1[0] = -(a33*a12 - a32*a13) * k;
-      X_col1[1] =  (a33*a11 - a31*a13) * k;
-      X_col1[2] = -(a32*a11 - a31*a12) * k;
-      
-      X_col2[0] =  (a23*a12 - a22*a13) * k;
-      X_col2[1] = -(a23*a11 - a21*a13) * k;
-      X_col2[2] =  (a22*a11 - a21*a12) * k;
+      if(tmp_det != eT(0))
+        {
+        X_col0[0] =  (a33*a22 - a32*a23) / tmp_det;
+        X_col0[1] = -(a33*a21 - a31*a23) / tmp_det;
+        X_col0[2] =  (a32*a21 - a31*a22) / tmp_det;
+        
+        X_col1[0] = -(a33*a12 - a32*a13) / tmp_det;
+        X_col1[1] =  (a33*a11 - a31*a13) / tmp_det;
+        X_col1[2] = -(a32*a11 - a31*a12) / tmp_det;
+        
+        X_col2[0] =  (a23*a12 - a22*a13) / tmp_det;
+        X_col2[1] = -(a23*a11 - a21*a13) / tmp_det;
+        X_col2[2] =  (a22*a11 - a21*a12) / tmp_det;
+        }
+      else
+        {
+        det_ok = false;
+        }
       };
       break;
       
     case 4:
       {
-      const Mat<eT> A(X);
+      const eT tmp_det = det(X);
       
-      X.at(0,0) = A.at(1,2)*A.at(2,3)*A.at(3,1) - A.at(1,3)*A.at(2,2)*A.at(3,1) + A.at(1,3)*A.at(2,1)*A.at(3,2) - A.at(1,1)*A.at(2,3)*A.at(3,2) - A.at(1,2)*A.at(2,1)*A.at(3,3) + A.at(1,1)*A.at(2,2)*A.at(3,3);
-      X.at(1,0) = A.at(1,3)*A.at(2,2)*A.at(3,0) - A.at(1,2)*A.at(2,3)*A.at(3,0) - A.at(1,3)*A.at(2,0)*A.at(3,2) + A.at(1,0)*A.at(2,3)*A.at(3,2) + A.at(1,2)*A.at(2,0)*A.at(3,3) - A.at(1,0)*A.at(2,2)*A.at(3,3);
-      X.at(2,0) = A.at(1,1)*A.at(2,3)*A.at(3,0) - A.at(1,3)*A.at(2,1)*A.at(3,0) + A.at(1,3)*A.at(2,0)*A.at(3,1) - A.at(1,0)*A.at(2,3)*A.at(3,1) - A.at(1,1)*A.at(2,0)*A.at(3,3) + A.at(1,0)*A.at(2,1)*A.at(3,3);
-      X.at(3,0) = A.at(1,2)*A.at(2,1)*A.at(3,0) - A.at(1,1)*A.at(2,2)*A.at(3,0) - A.at(1,2)*A.at(2,0)*A.at(3,1) + A.at(1,0)*A.at(2,2)*A.at(3,1) + A.at(1,1)*A.at(2,0)*A.at(3,2) - A.at(1,0)*A.at(2,1)*A.at(3,2);
-      
-      X.at(0,1) = A.at(0,3)*A.at(2,2)*A.at(3,1) - A.at(0,2)*A.at(2,3)*A.at(3,1) - A.at(0,3)*A.at(2,1)*A.at(3,2) + A.at(0,1)*A.at(2,3)*A.at(3,2) + A.at(0,2)*A.at(2,1)*A.at(3,3) - A.at(0,1)*A.at(2,2)*A.at(3,3);
-      X.at(1,1) = A.at(0,2)*A.at(2,3)*A.at(3,0) - A.at(0,3)*A.at(2,2)*A.at(3,0) + A.at(0,3)*A.at(2,0)*A.at(3,2) - A.at(0,0)*A.at(2,3)*A.at(3,2) - A.at(0,2)*A.at(2,0)*A.at(3,3) + A.at(0,0)*A.at(2,2)*A.at(3,3);
-      X.at(2,1) = A.at(0,3)*A.at(2,1)*A.at(3,0) - A.at(0,1)*A.at(2,3)*A.at(3,0) - A.at(0,3)*A.at(2,0)*A.at(3,1) + A.at(0,0)*A.at(2,3)*A.at(3,1) + A.at(0,1)*A.at(2,0)*A.at(3,3) - A.at(0,0)*A.at(2,1)*A.at(3,3);
-      X.at(3,1) = A.at(0,1)*A.at(2,2)*A.at(3,0) - A.at(0,2)*A.at(2,1)*A.at(3,0) + A.at(0,2)*A.at(2,0)*A.at(3,1) - A.at(0,0)*A.at(2,2)*A.at(3,1) - A.at(0,1)*A.at(2,0)*A.at(3,2) + A.at(0,0)*A.at(2,1)*A.at(3,2);
-      
-      X.at(0,2) = A.at(0,2)*A.at(1,3)*A.at(3,1) - A.at(0,3)*A.at(1,2)*A.at(3,1) + A.at(0,3)*A.at(1,1)*A.at(3,2) - A.at(0,1)*A.at(1,3)*A.at(3,2) - A.at(0,2)*A.at(1,1)*A.at(3,3) + A.at(0,1)*A.at(1,2)*A.at(3,3);
-      X.at(1,2) = A.at(0,3)*A.at(1,2)*A.at(3,0) - A.at(0,2)*A.at(1,3)*A.at(3,0) - A.at(0,3)*A.at(1,0)*A.at(3,2) + A.at(0,0)*A.at(1,3)*A.at(3,2) + A.at(0,2)*A.at(1,0)*A.at(3,3) - A.at(0,0)*A.at(1,2)*A.at(3,3);
-      X.at(2,2) = A.at(0,1)*A.at(1,3)*A.at(3,0) - A.at(0,3)*A.at(1,1)*A.at(3,0) + A.at(0,3)*A.at(1,0)*A.at(3,1) - A.at(0,0)*A.at(1,3)*A.at(3,1) - A.at(0,1)*A.at(1,0)*A.at(3,3) + A.at(0,0)*A.at(1,1)*A.at(3,3);
-      X.at(3,2) = A.at(0,2)*A.at(1,1)*A.at(3,0) - A.at(0,1)*A.at(1,2)*A.at(3,0) - A.at(0,2)*A.at(1,0)*A.at(3,1) + A.at(0,0)*A.at(1,2)*A.at(3,1) + A.at(0,1)*A.at(1,0)*A.at(3,2) - A.at(0,0)*A.at(1,1)*A.at(3,2);
-      
-      X.at(0,3) = A.at(0,3)*A.at(1,2)*A.at(2,1) - A.at(0,2)*A.at(1,3)*A.at(2,1) - A.at(0,3)*A.at(1,1)*A.at(2,2) + A.at(0,1)*A.at(1,3)*A.at(2,2) + A.at(0,2)*A.at(1,1)*A.at(2,3) - A.at(0,1)*A.at(1,2)*A.at(2,3);
-      X.at(1,3) = A.at(0,2)*A.at(1,3)*A.at(2,0) - A.at(0,3)*A.at(1,2)*A.at(2,0) + A.at(0,3)*A.at(1,0)*A.at(2,2) - A.at(0,0)*A.at(1,3)*A.at(2,2) - A.at(0,2)*A.at(1,0)*A.at(2,3) + A.at(0,0)*A.at(1,2)*A.at(2,3);
-      X.at(2,3) = A.at(0,3)*A.at(1,1)*A.at(2,0) - A.at(0,1)*A.at(1,3)*A.at(2,0) - A.at(0,3)*A.at(1,0)*A.at(2,1) + A.at(0,0)*A.at(1,3)*A.at(2,1) + A.at(0,1)*A.at(1,0)*A.at(2,3) - A.at(0,0)*A.at(1,1)*A.at(2,3);
-      X.at(3,3) = A.at(0,1)*A.at(1,2)*A.at(2,0) - A.at(0,2)*A.at(1,1)*A.at(2,0) + A.at(0,2)*A.at(1,0)*A.at(2,1) - A.at(0,0)*A.at(1,2)*A.at(2,1) - A.at(0,1)*A.at(1,0)*A.at(2,2) + A.at(0,0)*A.at(1,1)*A.at(2,2);      
-      
-      X /= det(A);
+      if(tmp_det != eT(0))
+        {
+        const Mat<eT> A(X);
+        
+        X.at(0,0) = ( A.at(1,2)*A.at(2,3)*A.at(3,1) - A.at(1,3)*A.at(2,2)*A.at(3,1) + A.at(1,3)*A.at(2,1)*A.at(3,2) - A.at(1,1)*A.at(2,3)*A.at(3,2) - A.at(1,2)*A.at(2,1)*A.at(3,3) + A.at(1,1)*A.at(2,2)*A.at(3,3) ) / tmp_det;
+        X.at(1,0) = ( A.at(1,3)*A.at(2,2)*A.at(3,0) - A.at(1,2)*A.at(2,3)*A.at(3,0) - A.at(1,3)*A.at(2,0)*A.at(3,2) + A.at(1,0)*A.at(2,3)*A.at(3,2) + A.at(1,2)*A.at(2,0)*A.at(3,3) - A.at(1,0)*A.at(2,2)*A.at(3,3) ) / tmp_det;
+        X.at(2,0) = ( A.at(1,1)*A.at(2,3)*A.at(3,0) - A.at(1,3)*A.at(2,1)*A.at(3,0) + A.at(1,3)*A.at(2,0)*A.at(3,1) - A.at(1,0)*A.at(2,3)*A.at(3,1) - A.at(1,1)*A.at(2,0)*A.at(3,3) + A.at(1,0)*A.at(2,1)*A.at(3,3) ) / tmp_det;
+        X.at(3,0) = ( A.at(1,2)*A.at(2,1)*A.at(3,0) - A.at(1,1)*A.at(2,2)*A.at(3,0) - A.at(1,2)*A.at(2,0)*A.at(3,1) + A.at(1,0)*A.at(2,2)*A.at(3,1) + A.at(1,1)*A.at(2,0)*A.at(3,2) - A.at(1,0)*A.at(2,1)*A.at(3,2) ) / tmp_det;
+        
+        X.at(0,1) = ( A.at(0,3)*A.at(2,2)*A.at(3,1) - A.at(0,2)*A.at(2,3)*A.at(3,1) - A.at(0,3)*A.at(2,1)*A.at(3,2) + A.at(0,1)*A.at(2,3)*A.at(3,2) + A.at(0,2)*A.at(2,1)*A.at(3,3) - A.at(0,1)*A.at(2,2)*A.at(3,3) ) / tmp_det;
+        X.at(1,1) = ( A.at(0,2)*A.at(2,3)*A.at(3,0) - A.at(0,3)*A.at(2,2)*A.at(3,0) + A.at(0,3)*A.at(2,0)*A.at(3,2) - A.at(0,0)*A.at(2,3)*A.at(3,2) - A.at(0,2)*A.at(2,0)*A.at(3,3) + A.at(0,0)*A.at(2,2)*A.at(3,3) ) / tmp_det;
+        X.at(2,1) = ( A.at(0,3)*A.at(2,1)*A.at(3,0) - A.at(0,1)*A.at(2,3)*A.at(3,0) - A.at(0,3)*A.at(2,0)*A.at(3,1) + A.at(0,0)*A.at(2,3)*A.at(3,1) + A.at(0,1)*A.at(2,0)*A.at(3,3) - A.at(0,0)*A.at(2,1)*A.at(3,3) ) / tmp_det;
+        X.at(3,1) = ( A.at(0,1)*A.at(2,2)*A.at(3,0) - A.at(0,2)*A.at(2,1)*A.at(3,0) + A.at(0,2)*A.at(2,0)*A.at(3,1) - A.at(0,0)*A.at(2,2)*A.at(3,1) - A.at(0,1)*A.at(2,0)*A.at(3,2) + A.at(0,0)*A.at(2,1)*A.at(3,2) ) / tmp_det;
+        
+        X.at(0,2) = ( A.at(0,2)*A.at(1,3)*A.at(3,1) - A.at(0,3)*A.at(1,2)*A.at(3,1) + A.at(0,3)*A.at(1,1)*A.at(3,2) - A.at(0,1)*A.at(1,3)*A.at(3,2) - A.at(0,2)*A.at(1,1)*A.at(3,3) + A.at(0,1)*A.at(1,2)*A.at(3,3) ) / tmp_det;
+        X.at(1,2) = ( A.at(0,3)*A.at(1,2)*A.at(3,0) - A.at(0,2)*A.at(1,3)*A.at(3,0) - A.at(0,3)*A.at(1,0)*A.at(3,2) + A.at(0,0)*A.at(1,3)*A.at(3,2) + A.at(0,2)*A.at(1,0)*A.at(3,3) - A.at(0,0)*A.at(1,2)*A.at(3,3) ) / tmp_det;
+        X.at(2,2) = ( A.at(0,1)*A.at(1,3)*A.at(3,0) - A.at(0,3)*A.at(1,1)*A.at(3,0) + A.at(0,3)*A.at(1,0)*A.at(3,1) - A.at(0,0)*A.at(1,3)*A.at(3,1) - A.at(0,1)*A.at(1,0)*A.at(3,3) + A.at(0,0)*A.at(1,1)*A.at(3,3) ) / tmp_det;
+        X.at(3,2) = ( A.at(0,2)*A.at(1,1)*A.at(3,0) - A.at(0,1)*A.at(1,2)*A.at(3,0) - A.at(0,2)*A.at(1,0)*A.at(3,1) + A.at(0,0)*A.at(1,2)*A.at(3,1) + A.at(0,1)*A.at(1,0)*A.at(3,2) - A.at(0,0)*A.at(1,1)*A.at(3,2) ) / tmp_det;
+        
+        X.at(0,3) = ( A.at(0,3)*A.at(1,2)*A.at(2,1) - A.at(0,2)*A.at(1,3)*A.at(2,1) - A.at(0,3)*A.at(1,1)*A.at(2,2) + A.at(0,1)*A.at(1,3)*A.at(2,2) + A.at(0,2)*A.at(1,1)*A.at(2,3) - A.at(0,1)*A.at(1,2)*A.at(2,3) ) / tmp_det;
+        X.at(1,3) = ( A.at(0,2)*A.at(1,3)*A.at(2,0) - A.at(0,3)*A.at(1,2)*A.at(2,0) + A.at(0,3)*A.at(1,0)*A.at(2,2) - A.at(0,0)*A.at(1,3)*A.at(2,2) - A.at(0,2)*A.at(1,0)*A.at(2,3) + A.at(0,0)*A.at(1,2)*A.at(2,3) ) / tmp_det;
+        X.at(2,3) = ( A.at(0,3)*A.at(1,1)*A.at(2,0) - A.at(0,1)*A.at(1,3)*A.at(2,0) - A.at(0,3)*A.at(1,0)*A.at(2,1) + A.at(0,0)*A.at(1,3)*A.at(2,1) + A.at(0,1)*A.at(1,0)*A.at(2,3) - A.at(0,0)*A.at(1,1)*A.at(2,3) ) / tmp_det;
+        X.at(3,3) = ( A.at(0,1)*A.at(1,2)*A.at(2,0) - A.at(0,2)*A.at(1,1)*A.at(2,0) + A.at(0,2)*A.at(1,0)*A.at(2,1) - A.at(0,0)*A.at(1,2)*A.at(2,1) - A.at(0,1)*A.at(1,0)*A.at(2,2) + A.at(0,0)*A.at(1,1)*A.at(2,2) ) / tmp_det;
+        }
+      else
+        {
+        det_ok = false;
+        }
       };
       break;
       
     default:
-      {
-      #if defined(ARMA_USE_ATLAS)
-        {
-        Mat<eT>& out = X;
-        podarray<int> ipiv(out.n_rows);
-        
-        int info = atlas::clapack_getrf(atlas::CblasColMajor, out.n_rows, out.n_cols, out.memptr(), out.n_rows, ipiv.memptr());
-        
-        if(info == 0)
-          {
-          info = atlas::clapack_getri(atlas::CblasColMajor, out.n_rows, out.memptr(), out.n_rows, ipiv.memptr());
-          }
-        
-        return (info == 0);
-        }
-      #elif defined(ARMA_USE_LAPACK)
-        {
-        Mat<eT>& out = X;
-        
-        int n_rows = out.n_rows;
-        int n_cols = out.n_cols;
-        int info   = 0;
-        
-        podarray<int> ipiv(out.n_rows);
-        
-        // 84 was empirically found -- it is the maximum value suggested by LAPACK (as provided by ATLAS v3.6)
-        // based on tests with various matrix types on 32-bit and 64-bit machines
-        //
-        // the "work" array is deliberately long so that a secondary (time-consuming)
-        // memory allocation is avoided, if possible
-        
-        int work_len = (std::max)(1, n_rows*84);
-        podarray<eT> work(work_len);
-        
-        lapack::getrf_(&n_rows, &n_cols, out.memptr(), &n_rows, ipiv.memptr(), &info);
-        
-        if(info == 0)
-          {
-          // query for optimum size of work_len
-          
-          int work_len_tmp = -1;
-          lapack::getri_(&n_rows, out.memptr(), &n_rows, ipiv.memptr(), work.memptr(), &work_len_tmp, &info);
-          
-          if(info == 0)
-            {
-            int proposed_work_len = static_cast<int>(access::tmp_real(work[0]));
-            
-            // if necessary, allocate more memory
-            if(work_len < proposed_work_len)
-              {
-              work_len = proposed_work_len;
-              work.set_size(work_len);
-              }
-            }
-          
-          lapack::getri_(&n_rows, out.memptr(), &n_rows, ipiv.memptr(), work.memptr(), &work_len, &info);
-          }
-        
-        return (info == 0);
-        }
-      #else
-        {
-        arma_stop("inv(): need ATLAS or LAPACK");
-        }
-      #endif
-      }
-    
+      ;
     }
   
-  return true;
+  return det_ok;
   }
 
 
-//! immediate determinant of a matrix using ATLAS or LAPACK
+
+template<typename eT>
+inline
+bool
+auxlib::inv_lapack(Mat<eT>& out, const Mat<eT>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(&out != &X)
+    {
+    out = X;
+    }
+  
+  #if defined(ARMA_USE_ATLAS)
+    {
+    podarray<int> ipiv(out.n_rows);
+    
+    int info = atlas::clapack_getrf(atlas::CblasColMajor, out.n_rows, out.n_cols, out.memptr(), out.n_rows, ipiv.memptr());
+    
+    if(info == 0)
+      {
+      info = atlas::clapack_getri(atlas::CblasColMajor, out.n_rows, out.memptr(), out.n_rows, ipiv.memptr());
+      }
+    
+    return (info == 0);
+    }
+  #elif defined(ARMA_USE_LAPACK)
+    {
+    blas_int n_rows = out.n_rows;
+    blas_int n_cols = out.n_cols;
+    blas_int info   = 0;
+    
+    podarray<blas_int> ipiv(out.n_rows);
+    
+    // 84 was empirically found -- it is the maximum value suggested by LAPACK (as provided by ATLAS v3.6)
+    // based on tests with various matrix types on 32-bit and 64-bit machines
+    //
+    // the "work" array is deliberately long so that a secondary (time-consuming)
+    // memory allocation is avoided, if possible
+    
+    blas_int work_len = (std::max)(1, n_rows*84);
+    podarray<eT> work(work_len);
+    
+    lapack::getrf_(&n_rows, &n_cols, out.memptr(), &n_rows, ipiv.memptr(), &info);
+    
+    if(info == 0)
+      {
+      // query for optimum size of work_len
+      
+      blas_int work_len_tmp = -1;
+      lapack::getri_(&n_rows, out.memptr(), &n_rows, ipiv.memptr(), work.memptr(), &work_len_tmp, &info);
+      
+      if(info == 0)
+        {
+        blas_int proposed_work_len = static_cast<blas_int>(access::tmp_real(work[0]));
+        
+        // if necessary, allocate more memory
+        if(work_len < proposed_work_len)
+          {
+          work_len = proposed_work_len;
+          work.set_size(work_len);
+          }
+        }
+      
+      lapack::getri_(&n_rows, out.memptr(), &n_rows, ipiv.memptr(), work.memptr(), &work_len, &info);
+      }
+    
+    return (info == 0);
+    }
+  #else
+    {
+    arma_stop("inv(): need ATLAS or LAPACK");
+    return false;
+    }
+  #endif
+  }
+
+
+
 template<typename eT>
 inline
 eT
 auxlib::det(const Mat<eT>& X)
   {
+  const u32 N = X.n_rows;
+  
+  switch(N)
+    {
+    case 0:
+    case 1:
+    case 2:
+      return auxlib::det_tinymat(X, N);
+      break;
+    
+    case 3:
+    case 4:
+      {
+      const eT tmp_det = auxlib::det_tinymat(X, N);
+      return (tmp_det != eT(0)) ? tmp_det : auxlib::det_lapack(X);
+      }
+      break;
+      
+    default:
+      return auxlib::det_lapack(X);
+    }
+  }
+
+
+
+template<typename eT>
+inline
+eT
+auxlib::det_tinymat(const Mat<eT>& X, const u32 N)
+  {
   arma_extra_debug_sigprint();
   
-  switch(X.n_rows)
+  switch(N)
     {
     case 0:
       return eT(0);
@@ -390,6 +430,14 @@ auxlib::det(const Mat<eT>& X)
     
     case 3:
       {
+      // const double tmp1 = X.at(0,0) * X.at(1,1) * X.at(2,2);
+      // const double tmp2 = X.at(0,1) * X.at(1,2) * X.at(2,0);
+      // const double tmp3 = X.at(0,2) * X.at(1,0) * X.at(2,1);
+      // const double tmp4 = X.at(2,0) * X.at(1,1) * X.at(0,2);
+      // const double tmp5 = X.at(2,1) * X.at(1,2) * X.at(0,0);
+      // const double tmp6 = X.at(2,2) * X.at(1,0) * X.at(0,1);
+      // return (tmp1+tmp2+tmp3) - (tmp4+tmp5+tmp6);
+      
       const eT* a_col0 = X.colptr(0);
       const eT  a11    = a_col0[0];
       const eT  a21    = a_col0[1];
@@ -406,14 +454,6 @@ auxlib::det(const Mat<eT>& X)
       const eT  a33    = a_col2[2];
       
       return ( a11*(a33*a22 - a32*a23) - a21*(a33*a12-a32*a13) + a31*(a23*a12 - a22*a13) );
-      
-      // const double tmp1 = X.at(0,0) * X.at(1,1) * X.at(2,2);
-      // const double tmp2 = X.at(0,1) * X.at(1,2) * X.at(2,0);
-      // const double tmp3 = X.at(0,2) * X.at(1,0) * X.at(2,1);
-      // const double tmp4 = X.at(2,0) * X.at(1,1) * X.at(0,2);
-      // const double tmp5 = X.at(2,1) * X.at(1,2) * X.at(0,0);
-      // const double tmp6 = X.at(2,2) * X.at(1,0) * X.at(0,1);
-      // return (tmp1+tmp2+tmp3) - (tmp4+tmp5+tmp6);
       }
       
     case 4:
@@ -447,71 +487,83 @@ auxlib::det(const Mat<eT>& X)
       
       return val;
       }
-      
-    default:  
-      {
-      #if defined(ARMA_USE_ATLAS)
-        {
-        Mat<eT> tmp = X;
-        podarray<int> ipiv(tmp.n_rows);
-        
-        atlas::clapack_getrf(atlas::CblasColMajor, tmp.n_rows, tmp.n_cols, tmp.memptr(), tmp.n_rows, ipiv.memptr());
-        
-        // on output tmp appears to be L+U_alt, where U_alt is U with the main diagonal set to zero
-        eT val = tmp.at(0,0);
-        for(u32 i=1; i < tmp.n_rows; ++i)
-          {
-          val *= tmp.at(i,i);
-          }
-        
-        int sign = +1;
-        for(u32 i=0; i < tmp.n_rows; ++i)
-          {
-          if( int(i) != ipiv.mem[i] )  // NOTE: no adjustment required, as the clapack version of getrf() assumes counting from 0
-            {
-            sign *= -1;
-            }
-          }
-        
-        return ( (sign < 0) ? -val : val );
-        }
-      #elif defined(ARMA_USE_LAPACK)
-        {
-        Mat<eT> tmp = X;
-        podarray<int> ipiv(tmp.n_rows);
-        
-        int info   = 0;
-        int n_rows = int(tmp.n_rows);
-        int n_cols = int(tmp.n_cols);
-        
-        lapack::getrf_(&n_rows, &n_cols, tmp.memptr(), &n_rows, ipiv.memptr(), &info);
-        
-        // on output tmp appears to be L+U_alt, where U_alt is U with the main diagonal set to zero
-        eT val = tmp.at(0,0);
-        for(u32 i=1; i < tmp.n_rows; ++i)
-          {
-          val *= tmp.at(i,i);
-          }
-        
-        int sign = +1;
-        for(u32 i=0; i < tmp.n_rows; ++i)
-          {
-          if( int(i) != (ipiv.mem[i] - 1) )  // NOTE: adjustment of -1 is required as Fortran counts from 1
-            {
-            sign *= -1;
-            }
-          }
-        
-        return ( (sign < 0) ? -val : val );
-        }
-      #else
-        {
-        arma_stop("det(): need ATLAS or LAPACK");
-        return eT(0);
-        }
-      #endif
-      }
+    
+    default:
+      return eT(0);
+      ;
     }
+  }
+
+
+
+//! immediate determinant of a matrix using ATLAS or LAPACK
+template<typename eT>
+inline
+eT
+auxlib::det_lapack(const Mat<eT>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  #if defined(ARMA_USE_ATLAS)
+    {
+    Mat<eT> tmp = X;
+    podarray<int> ipiv(tmp.n_rows);
+    
+    atlas::clapack_getrf(atlas::CblasColMajor, tmp.n_rows, tmp.n_cols, tmp.memptr(), tmp.n_rows, ipiv.memptr());
+    
+    // on output tmp appears to be L+U_alt, where U_alt is U with the main diagonal set to zero
+    eT val = tmp.at(0,0);
+    for(u32 i=1; i < tmp.n_rows; ++i)
+      {
+      val *= tmp.at(i,i);
+      }
+    
+    int sign = +1;
+    for(u32 i=0; i < tmp.n_rows; ++i)
+      {
+      if( int(i) != ipiv.mem[i] )  // NOTE: no adjustment required, as the clapack version of getrf() assumes counting from 0
+        {
+        sign *= -1;
+        }
+      }
+    
+    return ( (sign < 0) ? -val : val );
+    }
+  #elif defined(ARMA_USE_LAPACK)
+    {
+    Mat<eT> tmp = X;
+    podarray<blas_int> ipiv(tmp.n_rows);
+    
+    blas_int info   = 0;
+    blas_int n_rows = blas_int(tmp.n_rows);
+    blas_int n_cols = blas_int(tmp.n_cols);
+    
+    lapack::getrf_(&n_rows, &n_cols, tmp.memptr(), &n_rows, ipiv.memptr(), &info);
+    
+    // on output tmp appears to be L+U_alt, where U_alt is U with the main diagonal set to zero
+    eT val = tmp.at(0,0);
+    for(u32 i=1; i < tmp.n_rows; ++i)
+      {
+      val *= tmp.at(i,i);
+      }
+    
+    blas_int sign = +1;
+    for(u32 i=0; i < tmp.n_rows; ++i)
+      {
+      if( blas_int(i) != (ipiv.mem[i] - 1) )  // NOTE: adjustment of -1 is required as Fortran counts from 1
+        {
+        sign *= -1;
+        }
+      }
+    
+    return ( (sign < 0) ? -val : val );
+    }
+  #else
+    {
+    arma_stop("det(): need ATLAS or LAPACK");
+    return eT(0);
+    }
+  #endif
   }
 
 
@@ -560,11 +612,11 @@ auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const 
   #elif defined(ARMA_USE_LAPACK)
     {
     Mat<eT> tmp = X;
-    podarray<int> ipiv(tmp.n_rows);
+    podarray<blas_int> ipiv(tmp.n_rows);
     
-    int info   = 0;
-    int n_rows = int(tmp.n_rows);
-    int n_cols = int(tmp.n_cols);
+    blas_int info   = 0;
+    blas_int n_rows = blas_int(tmp.n_rows);
+    blas_int n_cols = blas_int(tmp.n_cols);
     
     lapack::getrf_(&n_rows, &n_cols, tmp.memptr(), &n_rows, ipiv.memptr(), &info);
     
@@ -583,7 +635,7 @@ auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const 
     
     for(u32 i=0; i < tmp.n_rows; ++i)
       {
-      if( int(i) != (ipiv.mem[i] - 1) )  // NOTE: adjustment of -1 is required as Fortran counts from 1
+      if( blas_int(i) != (ipiv.mem[i] - 1) )  // NOTE: adjustment of -1 is required as Fortran counts from 1
         {
         sign *= -1;
         }
@@ -608,7 +660,7 @@ auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const 
 template<typename eT>
 inline
 void
-auxlib::lu(Mat<eT>& L, Mat<eT>& U, podarray<int>& ipiv, const Mat<eT>& X)
+auxlib::lu(Mat<eT>& L, Mat<eT>& U, podarray<blas_int>& ipiv, const Mat<eT>& X)
   {
   arma_extra_debug_sigprint();
   
@@ -627,10 +679,10 @@ auxlib::lu(Mat<eT>& L, Mat<eT>& U, podarray<int>& ipiv, const Mat<eT>& X)
     #elif defined(ARMA_USE_LAPACK)
       {
       ipiv.set_size(U.n_rows);
-      int info = 0;
+      blas_int info = 0;
       
-      int n_rows = U.n_rows;
-      int n_cols = U.n_cols;
+      blas_int n_rows = U.n_rows;
+      blas_int n_cols = U.n_cols;
       
       lapack::getrf_(&n_rows, &n_cols, U.memptr(), &n_rows, ipiv.memptr(), &info);
       
@@ -681,7 +733,7 @@ auxlib::lu(Mat<eT>& L, Mat<eT>& U, Mat<eT>& P, const Mat<eT>& X)
   {
   arma_extra_debug_sigprint();
   
-  podarray<int> ipiv;
+  podarray<blas_int> ipiv;
   auxlib::lu(L, U, ipiv, X);
   
   const u32 n = ipiv.n_elem;
@@ -720,7 +772,7 @@ auxlib::lu(Mat<eT>& L, Mat<eT>& U, const Mat<eT>& X)
   {
   arma_extra_debug_sigprint();
   
-  podarray<int> ipiv;
+  podarray<blas_int> ipiv;
   auxlib::lu(L, U, ipiv, X);
   }
   
@@ -747,14 +799,14 @@ auxlib::eig_sym(Col<eT>& eigval, const Mat<eT>& A_orig)
     char jobz  = 'N';
     char uplo  = 'U';
     
-    int n_rows = A.n_rows;
-    int lwork  = (std::max)(1,3*n_rows-1);
+    blas_int n_rows = A.n_rows;
+    blas_int lwork  = (std::max)(1,3*n_rows-1);
     
     eigval.set_size(n_rows);
     podarray<eT> work(lwork);
   
     Mat<eT> A_copy = A;
-    int info;
+    blas_int info;
 
     arma_extra_debug_print("lapack::syev_()");
     lapack::syev_(&jobz, &uplo, &n_rows, A_copy.memptr(), &n_rows, eigval.memptr(), work.memptr(), &lwork, &info);
@@ -785,9 +837,9 @@ auxlib::eig_sym(Col<T>& eigval, const Mat< std::complex<T> >& A)
     char jobz  = 'N'; 
     char uplo  = 'U';
 
-    int n_rows = A.n_rows;
-    int lda    = A.n_rows;
-    int lwork  = (std::max)(1, 2*n_rows - 1);  // TODO: automatically find best size of lwork
+    blas_int n_rows = A.n_rows;
+    blas_int lda    = A.n_rows;
+    blas_int lwork  = (std::max)(1, 2*n_rows - 1);  // TODO: automatically find best size of lwork
 
     eigval.set_size(n_rows);
 
@@ -795,7 +847,7 @@ auxlib::eig_sym(Col<T>& eigval, const Mat< std::complex<T> >& A)
     podarray<T>  rwork( (std::max)(1, 3*n_rows - 2) );
   
     Mat<eT> A_copy = A;
-    int info;
+    blas_int info;
   
     arma_extra_debug_print("lapack::heev_()");
     lapack::heev_(&jobz, &uplo, &n_rows, A_copy.memptr(), &lda, eigval.memptr(), work.memptr(), &lwork, rwork.memptr(), &info);
@@ -836,14 +888,14 @@ auxlib::eig_sym(Col<eT>& eigval, Mat<eT>& eigvec, const Mat<eT>& A_orig)
     char jobz  = 'V';
     char uplo  = 'U';
     
-    int n_rows = A.n_rows;
-    int lwork  = (std::max)(1, 3*n_rows-1);
+    blas_int n_rows = A.n_rows;
+    blas_int lwork  = (std::max)(1, 3*n_rows-1);
     
     eigval.set_size(n_rows);
     podarray<eT> work(lwork);
   
     eigvec = A;
-    int info;
+    blas_int info;
     
     arma_extra_debug_print("lapack::syev_()");
     lapack::syev_(&jobz, &uplo, &n_rows, eigvec.memptr(), &n_rows, eigval.memptr(), work.memptr(), &lwork, &info);
@@ -878,9 +930,9 @@ auxlib::eig_sym(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Mat< std::
     char jobz  = 'V';
     char uplo  = 'U';
 
-    int n_rows = A.n_rows;
-    int lda    = A.n_rows;
-    int lwork  = (std::max)(1, 2*n_rows - 1);  // TODO: automatically find best size of lwork
+    blas_int n_rows = A.n_rows;
+    blas_int lda    = A.n_rows;
+    blas_int lwork  = (std::max)(1, 2*n_rows - 1);  // TODO: automatically find best size of lwork
     
     eigval.set_size(n_rows);
 
@@ -888,7 +940,7 @@ auxlib::eig_sym(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Mat< std::
     podarray<T>  rwork( (std::max)(1, 3*n_rows - 2) );
   
     eigvec = A;
-    int info;
+    blas_int info;
   
     arma_extra_debug_print("lapack::heev_()");
     lapack::heev_(&jobz, &uplo, &n_rows, eigvec.memptr(), &lda, eigval.memptr(), work.memptr(), &lwork, rwork.memptr(), &info);
@@ -956,9 +1008,9 @@ auxlib::eig_gen
       }
 
        
-    int n_rows = A.n_rows;
-    int lda    = A.n_rows;
-    int lwork  = (std::max)(1, 4*n_rows);  // TODO: automatically find best size of lwork
+    blas_int n_rows = A.n_rows;
+    blas_int lda    = A.n_rows;
+    blas_int lwork  = (std::max)(1, 4*n_rows);  // TODO: automatically find best size of lwork
     
     eigval.set_size(n_rows);
     l_eigvec.set_size(n_rows, n_rows);
@@ -971,7 +1023,7 @@ auxlib::eig_gen
     podarray<T> wi(n_rows);
     
     Mat<T> A_copy = A;
-    int info;
+    blas_int info;
     
     arma_extra_debug_print("lapack::cx_geev_()");
     lapack::geev_(&jobvl, &jobvr, &n_rows, A_copy.memptr(), &lda, wr.memptr(), wi.memptr(), l_eigvec.memptr(), &n_rows, r_eigvec.memptr(), &n_rows, work.memptr(), &lwork, &info);
@@ -1051,9 +1103,9 @@ auxlib::eig_gen
       }
     
        
-    int n_rows = A.n_rows;
-    int lda    = A.n_rows;
-    int lwork  = (std::max)(1, 4*n_rows);  // TODO: automatically find best size of lwork
+    blas_int n_rows = A.n_rows;
+    blas_int lda    = A.n_rows;
+    blas_int lwork  = (std::max)(1, 4*n_rows);  // TODO: automatically find best size of lwork
     
     eigval.set_size(n_rows);
     l_eigvec.set_size(n_rows, n_rows);
@@ -1063,7 +1115,7 @@ auxlib::eig_gen
     podarray<T>  rwork( (std::max)(1, 3*n_rows) );  // was 2,3
     
     Mat<eT> A_copy = A;
-    int info;
+    blas_int info;
     
     arma_extra_debug_print("lapack::cx_geev_()");
     lapack::cx_geev_(&jobvl, &jobvr, &n_rows, A_copy.memptr(), &lda, eigval.memptr(), l_eigvec.memptr(), &n_rows, r_eigvec.memptr(), &n_rows, work.memptr(), &lwork, rwork.memptr(), &info);
@@ -1087,10 +1139,10 @@ auxlib::chol(Mat<eT>& out, const Mat<eT>& X)
   
   #if defined(ARMA_USE_LAPACK)
     {
-    char uplo = 'U';
-    int  n    = X.n_rows;
-    int  lda  = X.n_rows;
-    int  info;
+    char      uplo = 'U';
+    blas_int  n    = X.n_rows;
+    blas_int  lda  = X.n_rows;
+    blas_int  info;
     
     out = X;
     lapack::potrf_(&uplo, &n, out.memptr(), &lda, &info);
@@ -1125,12 +1177,12 @@ auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Mat<eT>& X)
   
   #if defined(ARMA_USE_LAPACK)
     {
-    int m            = static_cast<int>(X.n_rows);
-    int n            = static_cast<int>(X.n_cols);
-    int work_len     = (std::max)(1,n);
-    int work_len_tmp;
-    int k            = (std::min)(m,n);
-    int info;
+    blas_int m            = static_cast<blas_int>(X.n_rows);
+    blas_int n            = static_cast<blas_int>(X.n_cols);
+    blas_int work_len     = (std::max)(1,n);
+    blas_int work_len_tmp;
+    blas_int k            = (std::min)(m,n);
+    blas_int info;
     
     podarray<eT> tau(k);
     podarray<eT> work(work_len);
@@ -1143,7 +1195,7 @@ auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Mat<eT>& X)
     
     if(info == 0)
       {
-      work_len = static_cast<int>(access::tmp_real(work[0]));
+      work_len = static_cast<blas_int>(access::tmp_real(work[0]));
       work.set_size(work_len);
       }
     
@@ -1180,7 +1232,7 @@ auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Mat<eT>& X)
       
       if(info == 0)
         {
-        work_len = static_cast<int>(access::tmp_real(work[0]));
+        work_len = static_cast<blas_int>(access::tmp_real(work[0]));
         work.set_size(work_len);
         }
       
@@ -1195,7 +1247,7 @@ auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Mat<eT>& X)
       
       if(info == 0)
         {
-        work_len = static_cast<int>(access::tmp_real(work[0]));
+        work_len = static_cast<blas_int>(access::tmp_real(work[0]));
         work.set_size(work_len);
         }
       
@@ -1231,13 +1283,13 @@ auxlib::svd(Col<eT>& S, const Mat<eT>& X)
     char jobu  = 'N';
     char jobvt = 'N';
     
-    int  m     = A.n_rows;
-    int  n     = A.n_cols;
-    int  lda   = A.n_rows;
-    int  ldu   = U.n_rows;
-    int  ldvt  = V.n_rows;
-    int  lwork = 2 * (std::max)(1, (std::max)( (3*(std::min)(m,n) + (std::max)(m,n)), 5*(std::min)(m,n) ) );
-    int  info;
+    blas_int  m     = A.n_rows;
+    blas_int  n     = A.n_cols;
+    blas_int  lda   = A.n_rows;
+    blas_int  ldu   = U.n_rows;
+    blas_int  ldvt  = V.n_rows;
+    blas_int  lwork = 2 * (std::max)(1, (std::max)( (3*(std::min)(m,n) + (std::max)(m,n)), 5*(std::min)(m,n) ) );
+    blas_int  info;
     
     S.set_size( (std::min)(m, n) );
     
@@ -1245,7 +1297,7 @@ auxlib::svd(Col<eT>& S, const Mat<eT>& X)
   
   
     // let gesvd_() calculate the optimum size of the workspace
-    int lwork_tmp = -1;
+    blas_int lwork_tmp = -1;
     
     lapack::gesvd_<eT>
       (
@@ -1261,7 +1313,7 @@ auxlib::svd(Col<eT>& S, const Mat<eT>& X)
     
     if(info == 0)
       {
-      int proposed_lwork = static_cast<int>(work[0]);
+      blas_int proposed_lwork = static_cast<blas_int>(work[0]);
       
       if(proposed_lwork > lwork)
         {
@@ -1313,13 +1365,13 @@ auxlib::svd(Col<T>& S, const Mat< std::complex<T> >& X)
     char jobu  = 'N';
     char jobvt = 'N';
     
-    int  m     = A.n_rows;
-    int  n     = A.n_cols;
-    int  lda   = A.n_rows;
-    int  ldu   = U.n_rows;
-    int  ldvt  = V.n_rows;
-    int  lwork = 2 * (std::max)(1, 2*(std::min)(m,n)+(std::max)(m,n) );
-    int  info;
+    blas_int  m     = A.n_rows;
+    blas_int  n     = A.n_cols;
+    blas_int  lda   = A.n_rows;
+    blas_int  ldu   = U.n_rows;
+    blas_int  ldvt  = V.n_rows;
+    blas_int  lwork = 2 * (std::max)(1, 2*(std::min)(m,n)+(std::max)(m,n) );
+    blas_int  info;
     
     S.set_size( (std::min)(m,n) );
     
@@ -1327,7 +1379,7 @@ auxlib::svd(Col<T>& S, const Mat< std::complex<T> >& X)
     podarray<T>  rwork( 5*(std::min)(m,n) );
   
     // let gesvd_() calculate the optimum size of the workspace
-    int lwork_tmp = -1;
+    blas_int lwork_tmp = -1;
     
     lapack::cx_gesvd_<T>
       (
@@ -1344,7 +1396,7 @@ auxlib::svd(Col<T>& S, const Mat< std::complex<T> >& X)
     
     if(info == 0)
       {
-      int proposed_lwork = static_cast<int>(real(work[0]));
+      blas_int proposed_lwork = static_cast<blas_int>(real(work[0]));
       if(proposed_lwork > lwork)
         {
         lwork = proposed_lwork;
@@ -1394,20 +1446,20 @@ auxlib::svd(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Mat<eT>& X)
     char jobu  = 'A';
     char jobvt = 'A';
     
-    int  m     = A.n_rows;
-    int  n     = A.n_cols;
-    int  lda   = A.n_rows;
-    int  ldu   = U.n_rows;
-    int  ldvt  = V.n_rows;
-    int  lwork = 2 * (std::max)(1, (std::max)( (3*(std::min)(m,n) + (std::max)(m,n)), 5*(std::min)(m,n) ) );
-    int  info;
+    blas_int  m     = A.n_rows;
+    blas_int  n     = A.n_cols;
+    blas_int  lda   = A.n_rows;
+    blas_int  ldu   = U.n_rows;
+    blas_int  ldvt  = V.n_rows;
+    blas_int  lwork = 2 * (std::max)(1, (std::max)( (3*(std::min)(m,n) + (std::max)(m,n)), 5*(std::min)(m,n) ) );
+    blas_int  info;
     
     
     S.set_size( (std::min)(m,n) );
     podarray<eT> work(lwork);
   
     // let gesvd_() calculate the optimum size of the workspace
-    int lwork_tmp = -1;
+    blas_int lwork_tmp = -1;
     
     lapack::gesvd_<eT>
       (
@@ -1423,7 +1475,7 @@ auxlib::svd(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Mat<eT>& X)
     
     if(info == 0)
       {
-      int proposed_lwork = static_cast<int>(work[0]);
+      blas_int proposed_lwork = static_cast<blas_int>(work[0]);
       if(proposed_lwork > lwork)
         {
         lwork = proposed_lwork;
@@ -1476,13 +1528,13 @@ auxlib::svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, con
     char jobu  = 'A';
     char jobvt = 'A';
     
-    int  m     = A.n_rows;
-    int  n     = A.n_cols;
-    int  lda   = A.n_rows;
-    int  ldu   = U.n_rows;
-    int  ldvt  = V.n_rows;
-    int  lwork = 2 * (std::max)(1, 2*(std::min)(m,n)+(std::max)(m,n) );
-    int  info;
+    blas_int  m     = A.n_rows;
+    blas_int  n     = A.n_cols;
+    blas_int  lda   = A.n_rows;
+    blas_int  ldu   = U.n_rows;
+    blas_int  ldvt  = V.n_rows;
+    blas_int  lwork = 2 * (std::max)(1, 2*(std::min)(m,n)+(std::max)(m,n) );
+    blas_int  info;
     
     S.set_size( (std::min)(m,n) );
     
@@ -1490,7 +1542,7 @@ auxlib::svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, con
     podarray<T>  rwork( 5*(std::min)(m,n) );
   
     // let gesvd_() calculate the optimum size of the workspace
-    int lwork_tmp = -1;
+    blas_int lwork_tmp = -1;
     lapack::cx_gesvd_<T>
      (
      &jobu, &jobvt,
@@ -1506,7 +1558,7 @@ auxlib::svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, con
     
     if(info == 0)
       {
-      int proposed_lwork = static_cast<int>(real(work[0]));
+      blas_int proposed_lwork = static_cast<blas_int>(real(work[0]));
       if(proposed_lwork > lwork)
         {
         lwork = proposed_lwork;
@@ -1553,13 +1605,13 @@ auxlib::solve(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
   
   #if defined(ARMA_USE_LAPACK)
     {
-    int n    = A.n_rows;
-    int lda  = A.n_rows;
-    int ldb  = A.n_rows;
-    int nrhs = B.n_cols;
-    int info;
+    blas_int n    = A.n_rows;
+    blas_int lda  = A.n_rows;
+    blas_int ldb  = A.n_rows;
+    blas_int nrhs = B.n_cols;
+    blas_int info;
     
-    podarray<int> ipiv(n);
+    podarray<blas_int> ipiv(n);
     
     out = B;
     Mat<eT> A_copy = A;
@@ -1592,13 +1644,13 @@ auxlib::solve_od(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
     {
     char trans = 'N';
     
-    int  m     = A.n_rows;
-    int  n     = A.n_cols;
-    int  lda   = A.n_rows;
-    int  ldb   = A.n_rows;
-    int  nrhs  = B.n_cols;
-    int  lwork = n + (std::max)(n, nrhs);
-    int  info;
+    blas_int  m     = A.n_rows;
+    blas_int  n     = A.n_cols;
+    blas_int  lda   = A.n_rows;
+    blas_int  ldb   = A.n_rows;
+    blas_int  nrhs  = B.n_cols;
+    blas_int  lwork = n + (std::max)(n, nrhs);
+    blas_int  info;
     
     Mat<eT> A_copy = A;
     Mat<eT> tmp    = B;
@@ -1656,13 +1708,13 @@ auxlib::solve_ud(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
     {
     char trans = 'N';
     
-    int  m     = A.n_rows;
-    int  n     = A.n_cols;
-    int  lda   = A.n_rows;
-    int  ldb   = A.n_cols;
-    int  nrhs  = B.n_cols;
-    int  lwork = m + (std::max)(m,nrhs);
-    int  info;
+    blas_int  m     = A.n_rows;
+    blas_int  n     = A.n_cols;
+    blas_int  lda   = A.n_rows;
+    blas_int  ldb   = A.n_cols;
+    blas_int  nrhs  = B.n_cols;
+    blas_int  lwork = m + (std::max)(m,nrhs);
+    blas_int  info;
     
     
     Mat<eT> A_copy = A;

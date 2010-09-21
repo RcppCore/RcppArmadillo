@@ -165,16 +165,16 @@ class gemv
         {
         arma_extra_debug_print("blas::gemv_()");
         
-        const char trans_A     = (do_trans_A) ? 'T' : 'N';
-        const int  m           = A.n_rows;
-        const int  n           = A.n_cols;
-        const eT   local_alpha = (use_alpha) ? alpha : eT(1);
-        //const int  lda         = A.n_rows;
-        const int  inc         = 1;
-        const eT   local_beta  = (use_beta) ? beta : eT(0);
+        const char      trans_A     = (do_trans_A) ? 'T' : 'N';
+        const blas_int  m           = A.n_rows;
+        const blas_int  n           = A.n_cols;
+        const eT        local_alpha = (use_alpha) ? alpha : eT(1);
+        //const blas_int  lda         = A.n_rows;
+        const blas_int  inc         = 1;
+        const eT        local_beta  = (use_beta) ? beta : eT(0);
         
         arma_extra_debug_print( arma_boost::format("blas::gemv_(): trans_A = %c") % trans_A );
-
+        
         blas::gemv_<eT>
           (
           &trans_A,

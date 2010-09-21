@@ -97,6 +97,11 @@ sort_index(const Base<typename T1::elem_type,T1>& X, const u32 sort_type = 0)
   const unwrap<T1> tmp(X.get_ref());
   const Mat<eT>& A = tmp.M;
   
+  if(A.is_empty() == true)
+    {
+    return umat();
+    }
+  
   arma_debug_check( (A.is_vec() == false), "sort_index(): currently only handles vectors");
   
   typedef typename umat::elem_type out_elem_type;

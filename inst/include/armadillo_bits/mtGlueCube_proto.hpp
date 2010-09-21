@@ -14,22 +14,22 @@
 // (see http://www.opensource.org/licenses for more info)
 
 
-//! \addtogroup mtGlue
+//! \addtogroup mtGlueCube
 //! @{
 
 
 
 template<typename out_eT, typename T1, typename T2, typename glue_type>
-class mtGlue : public Base<out_eT, mtGlue<out_eT, T1, T2, glue_type> >
+class mtGlueCube : public BaseCube<out_eT, mtGlueCube<out_eT, T1, T2, glue_type> >
   {
   public:
   
   typedef          out_eT                       elem_type;
   typedef typename get_pod_type<out_eT>::result pod_type;
   
-  arma_inline  mtGlue(const T1& in_A, const T2& in_B);
-  arma_inline  mtGlue(const T1& in_A, const T2& in_B, const u32 in_aux_u32);
-  arma_inline ~mtGlue();
+  arma_inline  mtGlueCube(const T1& in_A, const T2& in_B);
+  arma_inline  mtGlueCube(const T1& in_A, const T2& in_B, const u32 in_aux_u32);
+  arma_inline ~mtGlueCube();
   
   arma_aligned const T1& A;       //!< first operand
   arma_aligned const T2& B;       //!< second operand
