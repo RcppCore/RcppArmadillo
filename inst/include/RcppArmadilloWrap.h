@@ -120,8 +120,8 @@ namespace Rcpp{
     	
     	template <typename T1, typename eop_type>
     	SEXP wrap_eop( const arma::eOp<T1,eop_type>& X, ::Rcpp::traits::false_type ){
-    		int n_rows = X.P.n_rows ;
-    		int n_cols = X.P.n_cols ;
+		int n_rows = X.P.get_n_rows();
+    		int n_cols = X.P.get_n_cols();
     		typedef typename ::Rcpp::Vector< ::Rcpp::traits::r_sexptype_traits< typename T1::elem_type>::rtype > VECTOR ;
     		VECTOR res(::Rcpp::Dimension( n_rows , n_cols )) ;
     		::arma::Mat<typename T1::elem_type> result( res.begin(), n_rows, n_cols, false ) ;
