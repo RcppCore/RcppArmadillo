@@ -1,4 +1,4 @@
-// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
+// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 4 -*-
 //
 // RcppArmadilloWrap.h: Rcpp/Armadillo glue
 //
@@ -104,13 +104,13 @@ namespace Rcpp{
     	   memory allocated by R */
     	template <typename T1, typename T2, typename eglue_type>
     	SEXP wrap_eglue( const arma::eGlue<T1, T2, eglue_type>& X, ::Rcpp::traits::false_type ){
-		int n_rows = X.P1.get_n_rows() ;
-    		int n_cols = X.P1.get_n_cols() ;
-    		typedef typename ::Rcpp::Vector< ::Rcpp::traits::r_sexptype_traits< typename T1::elem_type>::rtype > VECTOR ;
-    		VECTOR res(::Rcpp::Dimension( n_rows , n_cols )) ;
-    		::arma::Mat<typename T1::elem_type> result( res.begin(), n_rows, n_cols, false ) ;
-    		result = X ;
-    		return res ;
+            int n_rows = X.P1.get_n_rows() ;
+            int n_cols = X.P1.get_n_cols() ;
+            typedef typename ::Rcpp::Vector< ::Rcpp::traits::r_sexptype_traits< typename T1::elem_type>::rtype > VECTOR ;
+            VECTOR res(::Rcpp::Dimension( n_rows , n_cols )) ;
+            ::arma::Mat<typename T1::elem_type> result( res.begin(), n_rows, n_cols, false ) ;
+            result = X ;
+            return res ;
     	}
     	
     	template <typename T1, typename T2, typename eglue_type>
@@ -120,13 +120,14 @@ namespace Rcpp{
     	
     	template <typename T1, typename eop_type>
     	SEXP wrap_eop( const arma::eOp<T1,eop_type>& X, ::Rcpp::traits::false_type ){
-		int n_rows = X.P.get_n_rows();
-    		int n_cols = X.P.get_n_cols();
-    		typedef typename ::Rcpp::Vector< ::Rcpp::traits::r_sexptype_traits< typename T1::elem_type>::rtype > VECTOR ;
-    		VECTOR res(::Rcpp::Dimension( n_rows , n_cols )) ;
-    		::arma::Mat<typename T1::elem_type> result( res.begin(), n_rows, n_cols, false ) ;
-    		result = X ;
-    		return res ;
+            // int n_rows = X.P.get_n_rows();
+            // int n_cols = X.P.get_n_cols();
+            // typedef typename ::Rcpp::Vector< ::Rcpp::traits::r_sexptype_traits< typename T1::elem_type>::rtype > VECTOR ;
+            // VECTOR res(::Rcpp::Dimension( n_rows , n_cols )) ;
+            // ::arma::Mat<typename T1::elem_type> result( res.begin(), n_rows, n_cols) ; // , false ) ;
+            // result = X ;
+            // return res ;
+            return ::Rcpp::wrap( arma::Mat<typename T1::elem_type>(X) ) ;
     	}
     	
     	template <typename T1, typename eop_type>
