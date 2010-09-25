@@ -1,16 +1,24 @@
+2010-09-25  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.2.7
+
+2010-09-25  Romain Francois <romain@r-enthusiasts.com>
+
+	* inst/include/RcppArmadilloWrap.h: Updated for Armadillo 0.9.80
+
 2010-09-21  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/*: Update to Armadillo 0.9.80 "Chihuahua Muncher"
 
 2010-09-12  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.5
+	* DESCRIPTION: Release 0.2.6
 
-2010-09-10   Romain Francois <romain@r-enthusiasts.com>
+2010-09-10  Romain Francois <romain@r-enthusiasts.com>
 
 	* inst/include/* : Update to Armadillo 0.9.70 "Subtropical Winter Safari"
 
-2010-08-18   Romain Francois <romain@r-enthusiasts.com>
+2010-08-18  Romain Francois <romain@r-enthusiasts.com>
 
 	* inst/include/armadillo_bits/Mat_meat.hpp : not so intrusive patch that allows
 	RcppArmadillo to add its own Mat constructors
@@ -20,7 +28,7 @@
 	expression
 	* inst/include/RcppArmadillo/Mat_meat.h : implementation
 
-2010-08-17   Romain Francois <romain@r-enthusiasts.com>
+2010-08-17  Romain Francois <romain@r-enthusiasts.com>
 
 	* inst/include/RcppArmadilloWrap.h : extracted from RcppArmadillo.h
 
@@ -42,7 +50,7 @@
 	  - Fixes for compilation issues under Mac OS X with GCC 4.2/4.0
 	    hybrid
 
-2010-08-03   Romain Francois <romain@r-enthusiasts.com>
+2010-08-03  Romain Francois <romain@r-enthusiasts.com>
 
 	* Upgraded to Armadillo 0.9.58 beta for testing purposes
 
@@ -73,7 +81,7 @@
 
 	* DESCRIPTION: Release 0.2.3
 
-2010-06-14   Romain Francois <romain@r-enthusiasts.com>
+2010-06-14  Romain Francois <romain@r-enthusiasts.com>
 
 	* inst/include/RcppArmadilloConfig.h: Addition cconfig helping suncc
 
@@ -81,18 +89,18 @@
 
 	* DESCRIPTION: Release 0.2.2
 
-2010-06-02   Romain Francois <romain@r-enthusiasts.com>
+2010-06-02  Romain Francois <romain@r-enthusiasts.com>
 
 	* inst/include/* : upgrade to armadillo 0.9.10
 
 	* inst/include/* : support for new mtOp and mtGlue, introduced in
 	armadillo 0.9.10
 
-2010-05-27   Romain Francois <romain@r-enthusiasts.com>
+2010-05-27  Romain Francois <romain@r-enthusiasts.com>
 
 	* R/flags.R: added RcppArmadillo:::CxxFlags()
 
-2010-05-19   Romain Francois <romain@r-enthusiasts.com>
+2010-05-19  Romain Francois <romain@r-enthusiasts.com>
 
 	* DESCRIPTION: Release 0.2.1
 
@@ -113,7 +121,7 @@
 
 	* inst/include/*: updated to Armadillo 0.9.8
 
-2010-05-17   Romain Francois <romain@r-enthusiasts.com>
+2010-05-17  Romain Francois <romain@r-enthusiasts.com>
 
 	* inst/include/RcppArmadillo.h: workaround for win64
 
@@ -128,7 +136,7 @@
 	* src/fastLm.cpp: Small additions to returned parameters to support
 	new functionality
 
-2010-05-04   Romain Francois <romain@r-enthusiasts.com>
+2010-05-04  Romain Francois <romain@r-enthusiasts.com>
 
 	* R/RcppArmadillo.package.skeleton.R: new package skeleton function
 	similar to Rcpp::Rcpp.package.skeleton but targetting use of
@@ -159,7 +167,7 @@
 
 	* src/fastLm.cpp: Small fix for Armadillo 0.8.2
 
-2010-03-17   Romain Francois <romain@r-enthusiasts.com>
+2010-03-17  Romain Francois <romain@r-enthusiasts.com>
 
 	* src/fastLm.cpp: added some arma:: prefix
 
