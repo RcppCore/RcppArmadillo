@@ -20,8 +20,8 @@
 test.wrap.R <- function(){
 	
 	fx <- cxxfunction( , '
-	
-    // using the Named(.) = . notation
+	   
+	// using the Named(.) = . notation
     List cols = List::create( 
     	Named( "Col<double>" ) = arma::zeros<arma::mat>(5,1), 
     	Named( "Col<float>" )  = arma::zeros<arma::fmat>(5,1)
