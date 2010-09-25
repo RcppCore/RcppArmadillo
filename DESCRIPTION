@@ -21,8 +21,8 @@ Description: R and Armadillo integration using Rcpp
  (due to speed and/or integration capabilities), rather than another language.
  .
  The RcppArmadillo package includes the header files from the templated
- Armadillo library. Thus users do not need to install Armadillo itself in
- order to use RcppArmadillo.
+ Armadillo library (currently version 0.9.80). Thus users do not need to
+ install Armadillo itself in order to use RcppArmadillo.
  .
  This Armadillo integration provides a nice illustration of the 
  capabilities of the Rcpp package for seamless R and C++ integration.
