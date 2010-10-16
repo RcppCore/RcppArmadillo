@@ -1,9 +1,6 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
-// - Ian Cullinan (ian dot cullinan at nicta dot com dot au)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2009-2010 Ian Cullinan
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -178,11 +175,6 @@ class field
   
   inline       iterator end();
   inline const_iterator end()   const;
-
-  
-  #ifdef ARMA_EXTRA_FIELD_PROTO
-    #include ARMA_INCFILE_WRAP(ARMA_EXTRA_FIELD_PROTO)
-  #endif
   
   
   private:
@@ -195,6 +187,13 @@ class field
   
   friend class field_aux;
   friend class subview_field<oT>;
+  
+  
+  public:
+  
+  #ifdef ARMA_EXTRA_FIELD_PROTO
+    #include ARMA_INCFILE_WRAP(ARMA_EXTRA_FIELD_PROTO)
+  #endif
   };
 
 

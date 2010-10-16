@@ -1,8 +1,5 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -405,37 +402,6 @@ struct isnt_same_type<T1,T1>
 
 
 template<typename T1>
-struct isnt_fltpt
-  {
-  static const bool value = true;
-  
-  inline static void check()
-    {
-    arma_static_assert<false> ERROR___TYPE_MISMATCH;
-    ERROR___TYPE_MISMATCH = ERROR___TYPE_MISMATCH;
-    }
-  };
-
-
-
-struct isnt_fltpt_false
-  {
-  static const bool value = false;
-  
-  arma_inline static void check() {}
-  };
-
-
-
-template<> struct isnt_fltpt< float >                : public isnt_fltpt_false {};
-template<> struct isnt_fltpt< double >               : public isnt_fltpt_false {};
-template<> struct isnt_fltpt< long double >          : public isnt_fltpt_false {};
-template<> struct isnt_fltpt< std::complex<float> >  : public isnt_fltpt_false {};
-template<> struct isnt_fltpt< std::complex<double> > : public isnt_fltpt_false {};
-
-
-
-template<typename T1>
 struct is_u8
   { static const bool value = false; };
 
@@ -651,6 +617,12 @@ struct is_signed
   {
   static const bool value = (T(-1) < T(0));
   };
+
+
+template<> struct is_signed<unsigned char > { static const bool value = false; };
+template<> struct is_signed<unsigned short> { static const bool value = false; };
+template<> struct is_signed<unsigned int  > { static const bool value = false; };
+template<> struct is_signed<unsigned long > { static const bool value = false; };
 
 
 

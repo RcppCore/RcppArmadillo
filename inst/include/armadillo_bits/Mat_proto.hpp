@@ -1,8 +1,5 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -123,6 +120,9 @@ class Mat : public Base< eT, Mat<eT> >
   arma_inline       subview_col<eT> col(const u32 col_num);
   arma_inline const subview_col<eT> col(const u32 col_num) const;
   
+  inline            Col<eT>  unsafe_col(const u32 col_num);
+  inline      const Col<eT>  unsafe_col(const u32 col_num) const;
+  
   arma_inline       subview<eT> rows(const u32 in_row1, const u32 in_row2);
   arma_inline const subview<eT> rows(const u32 in_row1, const u32 in_row2) const;
   
@@ -206,15 +206,15 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename T1, typename T2, typename glue_type> inline const Mat& operator%=(const mtGlue<eT, T1, T2, glue_type>& X);
   template<typename T1, typename T2, typename glue_type> inline const Mat& operator/=(const mtGlue<eT, T1, T2, glue_type>& X);
   
-  arma_inline eT& operator[] (const u32 i);
-  arma_inline eT  operator[] (const u32 i) const;
-  arma_inline eT& operator() (const u32 i);
-  arma_inline eT  operator() (const u32 i) const;
+  arma_inline arma_warn_unused eT& operator[] (const u32 i);
+  arma_inline arma_warn_unused eT  operator[] (const u32 i) const;
+  arma_inline arma_warn_unused eT& operator() (const u32 i);
+  arma_inline arma_warn_unused eT  operator() (const u32 i) const;
   
-  arma_inline eT& at         (const u32 in_row, const u32 in_col);
-  arma_inline eT  at         (const u32 in_row, const u32 in_col) const;
-  arma_inline eT& operator() (const u32 in_row, const u32 in_col);
-  arma_inline eT  operator() (const u32 in_row, const u32 in_col) const;
+  arma_inline arma_warn_unused eT& at         (const u32 in_row, const u32 in_col);
+  arma_inline arma_warn_unused eT  at         (const u32 in_row, const u32 in_col) const;
+  arma_inline arma_warn_unused eT& operator() (const u32 in_row, const u32 in_col);
+  arma_inline arma_warn_unused eT  operator() (const u32 in_row, const u32 in_col) const;
   
   arma_inline const Mat& operator++();
   arma_inline void       operator++(int);
@@ -222,19 +222,19 @@ class Mat : public Base< eT, Mat<eT> >
   arma_inline const Mat& operator--();
   arma_inline void       operator--(int);
   
-  arma_inline bool is_vec()    const;
-  arma_inline bool is_square() const;
-  arma_inline bool is_finite() const;
-  arma_inline bool is_empty()  const;
+  arma_inline arma_warn_unused bool is_vec()    const;
+  arma_inline arma_warn_unused bool is_square() const;
+  arma_inline arma_warn_unused bool is_finite() const;
+  arma_inline arma_warn_unused bool is_empty()  const;
   
-  arma_inline bool in_range(const u32 i) const;
-  arma_inline bool in_range(const u32 in_row, const u32 in_col) const;
+  arma_inline arma_warn_unused bool in_range(const u32 i) const;
+  arma_inline arma_warn_unused bool in_range(const u32 in_row, const u32 in_col) const;
   
-  arma_inline       eT* colptr(const u32 in_col);
-  arma_inline const eT* colptr(const u32 in_col) const;
+  arma_inline arma_warn_unused       eT* colptr(const u32 in_col);
+  arma_inline arma_warn_unused const eT* colptr(const u32 in_col) const;
   
-  arma_inline       eT* memptr();
-  arma_inline const eT* memptr() const;
+  arma_inline arma_warn_unused       eT* memptr();
+  arma_inline arma_warn_unused const eT* memptr() const;
   
   inline void print(const std::string extra_text = "") const;
   inline void print(std::ostream& user_stream, const std::string extra_text = "") const;
@@ -411,11 +411,6 @@ class Mat : public Base< eT, Mat<eT> >
     };
   
   
-  #ifdef ARMA_EXTRA_MAT_PROTO
-    #include ARMA_INCFILE_WRAP(ARMA_EXTRA_MAT_PROTO)
-  #endif
-  
-  
   protected:
   
   inline void init(const u32 in_rows, const u32 in_cols);
@@ -431,6 +426,13 @@ class Mat : public Base< eT, Mat<eT> >
   
   friend class Cube<eT>;
   friend class glue_join;
+  
+  
+  public:
+  
+  #ifdef ARMA_EXTRA_MAT_PROTO
+    #include ARMA_INCFILE_WRAP(ARMA_EXTRA_MAT_PROTO)
+  #endif
   };
 
 

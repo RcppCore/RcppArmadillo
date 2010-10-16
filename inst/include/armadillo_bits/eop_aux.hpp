@@ -1,8 +1,5 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
+// Copyright (C) 2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2010 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -257,33 +254,11 @@ class eop_aux
   
   
   
-  template<typename T1>
-  arma_inline
-  static
-  typename arma_float_or_cx_only<T1>::result
-  pow_int(const T1 base, const int exponent)
-    { 
-    return std::pow(base, exponent);
-    }
-  
-  
-  
-  template<typename T1>
-  arma_inline
-  static
-  typename arma_integral_only<T1>::result
-  pow_int(const T1 base, const int exponent)
-    { 
-    return T1( std::pow( double(base), exponent) );
-    }
-  
-  
-  
   template<typename eT>
   arma_inline
   static
   typename arma_integral_only<eT>::result
-  direct_eps(const eT x)
+  direct_eps(const eT)
     {
     return eT(0);
     }

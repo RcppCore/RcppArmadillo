@@ -1,8 +1,5 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
+// Copyright (C) 2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2010 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -652,6 +649,9 @@ arma_inline
 eT
 eop_core<eop_type>::process(const eT val, const eT k)
   {
+  arma_ignore(val);
+  arma_ignore(k);
+  
   arma_stop("eop_core::process(): unhandled eop_type");
   return eT(0);
   }
@@ -677,82 +677,82 @@ template<> template<typename eT> arma_hot arma_const arma_inline eT
 eop_core<eop_scalar_div_post  >::process(const eT val, const eT k) { return val / k;                  }
 
 template<> template<typename eT> arma_hot arma_const arma_inline eT
-eop_core<eop_square           >::process(const eT val, const eT k) { return val*val;                  }
+eop_core<eop_square           >::process(const eT val, const eT  ) { return val*val;                  }
 
 template<> template<typename eT> arma_hot arma_const arma_inline eT
-eop_core<eop_neg              >::process(const eT val, const eT k) { return eop_aux::neg(val);        }
+eop_core<eop_neg              >::process(const eT val, const eT  ) { return eop_aux::neg(val);        }
 
 template<> template<typename eT> arma_hot arma_pure arma_inline eT
-eop_core<eop_sqrt             >::process(const eT val, const eT k) { return eop_aux::sqrt(val);       }
+eop_core<eop_sqrt             >::process(const eT val, const eT  ) { return eop_aux::sqrt(val);       }
 
 template<> template<typename eT> arma_hot arma_pure arma_inline eT
-eop_core<eop_log              >::process(const eT val, const eT k) { return eop_aux::log(val);        }
+eop_core<eop_log              >::process(const eT val, const eT  ) { return eop_aux::log(val);        }
 
 template<> template<typename eT> arma_hot arma_pure arma_inline eT
-eop_core<eop_log2             >::process(const eT val, const eT k) { return eop_aux::log2(val);       }
+eop_core<eop_log2             >::process(const eT val, const eT  ) { return eop_aux::log2(val);       }
 
 template<> template<typename eT> arma_hot arma_pure arma_inline eT
-eop_core<eop_log10            >::process(const eT val, const eT k) { return eop_aux::log10(val);      }
+eop_core<eop_log10            >::process(const eT val, const eT  ) { return eop_aux::log10(val);      }
 
 template<> template<typename eT> arma_hot arma_pure arma_inline eT
-eop_core<eop_trunc_log        >::process(const eT val, const eT k) { return    arma::trunc_log(val);  }
+eop_core<eop_trunc_log        >::process(const eT val, const eT  ) { return    arma::trunc_log(val);  }
 
 template<> template<typename eT> arma_hot arma_pure arma_inline eT
-eop_core<eop_exp              >::process(const eT val, const eT k) { return eop_aux::exp(val);        }
+eop_core<eop_exp              >::process(const eT val, const eT  ) { return eop_aux::exp(val);        }
 
 template<> template<typename eT> arma_hot arma_pure arma_inline eT
-eop_core<eop_exp2             >::process(const eT val, const eT k) { return eop_aux::exp2(val);       }
+eop_core<eop_exp2             >::process(const eT val, const eT  ) { return eop_aux::exp2(val);       }
 
 template<> template<typename eT> arma_hot arma_pure arma_inline eT
-eop_core<eop_exp10            >::process(const eT val, const eT k) { return eop_aux::exp10(val);      }
+eop_core<eop_exp10            >::process(const eT val, const eT  ) { return eop_aux::exp10(val);      }
 
 template<> template<typename eT> arma_hot arma_pure arma_inline eT
-eop_core<eop_trunc_exp        >::process(const eT val, const eT k) { return    arma::trunc_exp(val);  }
+eop_core<eop_trunc_exp        >::process(const eT val, const eT  ) { return    arma::trunc_exp(val);  }
 
 template<> template<typename eT> arma_hot arma_pure arma_inline eT
-eop_core<eop_cos              >::process(const eT val, const eT k) { return eop_aux::cos(val);        }
+eop_core<eop_cos              >::process(const eT val, const eT  ) { return eop_aux::cos(val);        }
 
 template<> template<typename eT> arma_hot arma_pure arma_inline eT
-eop_core<eop_sin              >::process(const eT val, const eT k) { return eop_aux::sin(val);        }
+eop_core<eop_sin              >::process(const eT val, const eT  ) { return eop_aux::sin(val);        }
 
 template<> template<typename eT> arma_hot arma_pure arma_inline eT
-eop_core<eop_tan              >::process(const eT val, const eT k) { return eop_aux::tan(val);        }
+eop_core<eop_tan              >::process(const eT val, const eT  ) { return eop_aux::tan(val);        }
 
 template<> template<typename eT> arma_hot arma_pure arma_inline eT
-eop_core<eop_acos             >::process(const eT val, const eT k) { return eop_aux::acos(val);       }
+eop_core<eop_acos             >::process(const eT val, const eT  ) { return eop_aux::acos(val);       }
 
 template<> template<typename eT> arma_hot arma_pure arma_inline eT
-eop_core<eop_asin             >::process(const eT val, const eT k) { return eop_aux::asin(val);       }
+eop_core<eop_asin             >::process(const eT val, const eT  ) { return eop_aux::asin(val);       }
 
 template<> template<typename eT> arma_hot arma_pure arma_inline eT
-eop_core<eop_atan             >::process(const eT val, const eT k) { return eop_aux::atan(val);       }
+eop_core<eop_atan             >::process(const eT val, const eT  ) { return eop_aux::atan(val);       }
 
 template<> template<typename eT> arma_hot arma_pure arma_inline eT
-eop_core<eop_cosh             >::process(const eT val, const eT k) { return eop_aux::cosh(val);       }
+eop_core<eop_cosh             >::process(const eT val, const eT  ) { return eop_aux::cosh(val);       }
 
 template<> template<typename eT> arma_hot arma_pure arma_inline eT
-eop_core<eop_sinh             >::process(const eT val, const eT k) { return eop_aux::sinh(val);       }
+eop_core<eop_sinh             >::process(const eT val, const eT  ) { return eop_aux::sinh(val);       }
 
 template<> template<typename eT> arma_hot arma_pure arma_inline eT
-eop_core<eop_tanh             >::process(const eT val, const eT k) { return eop_aux::tanh(val);       }
+eop_core<eop_tanh             >::process(const eT val, const eT  ) { return eop_aux::tanh(val);       }
 
 template<> template<typename eT> arma_hot arma_pure arma_inline eT
-eop_core<eop_acosh            >::process(const eT val, const eT k) { return eop_aux::acosh(val);      }
+eop_core<eop_acosh            >::process(const eT val, const eT  ) { return eop_aux::acosh(val);      }
 
 template<> template<typename eT> arma_hot arma_pure arma_inline eT
-eop_core<eop_asinh            >::process(const eT val, const eT k) { return eop_aux::asinh(val);      }
+eop_core<eop_asinh            >::process(const eT val, const eT  ) { return eop_aux::asinh(val);      }
 
 template<> template<typename eT> arma_hot arma_pure arma_inline eT
-eop_core<eop_atanh            >::process(const eT val, const eT k) { return eop_aux::atanh(val);      }
+eop_core<eop_atanh            >::process(const eT val, const eT  ) { return eop_aux::atanh(val);      }
 
 template<> template<typename eT> arma_hot arma_pure arma_inline eT
-eop_core<eop_eps              >::process(const eT val, const eT k) { return eop_aux::direct_eps(val); }
+eop_core<eop_eps              >::process(const eT val, const eT  ) { return eop_aux::direct_eps(val); }
 
 template<> template<typename eT> arma_hot arma_pure arma_inline eT
-eop_core<eop_abs              >::process(const eT val, const eT k) { return eop_aux::arma_abs(val);   }
+eop_core<eop_abs              >::process(const eT val, const eT  ) { return eop_aux::arma_abs(val);   }
 
 template<> template<typename eT> arma_hot arma_pure arma_inline eT
-eop_core<eop_conj             >::process(const eT val, const eT k) { return eop_aux::conj(val);       }
+eop_core<eop_conj             >::process(const eT val, const eT  ) { return eop_aux::conj(val);       }
 
 template<> template<typename eT> arma_hot arma_pure arma_inline eT
 eop_core<eop_pow              >::process(const eT val, const eT k) { return eop_aux::pow(val, k);     }

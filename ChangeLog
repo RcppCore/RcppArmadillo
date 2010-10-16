@@ -1,3 +1,12 @@
+2010-10-16  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.2.8
+
+	* inst/include/*: Update to Armadillo 0.9.90 "Water Dragon"
+
+	* NEWS: moved to inst/NEWS so that it gets installed with the package
+	* inst/ChangeLog: moved to top-level enabling 'C-x 4 a' lookups
+
 2010-09-25  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.2.7

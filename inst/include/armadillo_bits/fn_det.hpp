@@ -1,8 +1,5 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -28,14 +25,9 @@ det(const Base<typename T1::elem_type,T1>& X, const typename arma_blas_type_only
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
+  arma_ignore(junk);
   
-  const unwrap<T1>   tmp(X.get_ref());
-  const Mat<eT>& A = tmp.M;
-  
-  arma_debug_check( !A.is_square(), "det(): matrix must be square" );
-  
-  return auxlib::det(A);
+  return auxlib::det(X);
   }
 
 
@@ -76,8 +68,9 @@ det(const Op<T1,op_inv>& in, const typename arma_blas_type_only<typename T1::ele
   {
   arma_extra_debug_sigprint();
   
+  arma_ignore(junk);
+  
   typedef typename T1::elem_type eT;
-  isnt_fltpt<eT>::check();
   
   eT tmp = det(in.m);
   arma_warn( (tmp == eT(0)), "det(): warning: denominator is zero" );
@@ -95,6 +88,8 @@ typename T1::elem_type
 det(const Op<T1,op_trans>& in, const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
+  
+  arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
   

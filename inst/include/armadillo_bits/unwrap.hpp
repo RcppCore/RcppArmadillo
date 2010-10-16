@@ -1,8 +1,5 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -133,6 +130,7 @@ class unwrap_check
     : M(A)
     {
     arma_extra_debug_sigprint();
+    arma_ignore(B);
     }
   
   inline
@@ -752,6 +750,7 @@ class partial_unwrap_check
     , M       (A)
     {
     arma_extra_debug_sigprint();
+    arma_ignore(B);
     }
   
   
@@ -901,6 +900,7 @@ class partial_unwrap_check< Op<T1, op_trans> >
     , M       (A.m)
     {
     arma_extra_debug_sigprint();
+    arma_ignore(B);
     }
   
   inline
@@ -1191,6 +1191,7 @@ class partial_unwrap_check< eOp<T1, eop_scalar_times> >
     , M       (A.P.Q)
     {
     arma_extra_debug_sigprint();
+    arma_ignore(B);
     }
   
   inline
@@ -1220,6 +1221,7 @@ class partial_unwrap_check< eOp<Mat<eT>, eop_scalar_times> >
     , M       (A.P.Q)
     {
     arma_extra_debug_sigprint();
+    arma_ignore(B);
     }
   
   inline
@@ -1249,6 +1251,7 @@ class partial_unwrap_check< eOp<Row<eT>, eop_scalar_times> >
     , M       (A.P.Q)
     {
     arma_extra_debug_sigprint();
+    arma_ignore(B);
     }
   
   inline
@@ -1278,6 +1281,7 @@ class partial_unwrap_check< eOp<Col<eT>, eop_scalar_times> >
     , M       (A.P.Q)
     {
     arma_extra_debug_sigprint();
+    arma_ignore(B);
     }
   
   inline

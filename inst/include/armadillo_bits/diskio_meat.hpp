@@ -1,9 +1,6 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
-// - Ian Cullinan (ian dot cullinan at nicta dot com dot au)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2009-2010 Ian Cullinan
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -31,6 +28,8 @@ diskio::gen_txt_header(const Mat<eT>& x)
   {
   arma_type_check<diskio::is_supported_type<eT>::value == false>::apply();
 
+  arma_ignore(x);
+  
   if(is_u8<eT>::value == true)
     {
     return std::string("ARMA_MAT_TXT_IU001");
@@ -101,6 +100,8 @@ diskio::gen_bin_header(const Mat<eT>& x)
   {
   arma_type_check<diskio::is_supported_type<eT>::value == false>::apply();
   
+  arma_ignore(x);
+  
   if(is_u8<eT>::value == true)
     {
     return std::string("ARMA_MAT_BIN_IU001");
@@ -170,6 +171,8 @@ std::string
 diskio::gen_txt_header(const Cube<eT>& x)
   {
   arma_type_check<diskio::is_supported_type<eT>::value == false>::apply();
+  
+  arma_ignore(x);
 
   if(is_u8<eT>::value == true)
     {
@@ -240,6 +243,8 @@ std::string
 diskio::gen_bin_header(const Cube<eT>& x)
   {
   arma_type_check<diskio::is_supported_type<eT>::value == false>::apply();
+  
+  arma_ignore(x);
   
   if(is_u8<eT>::value == true)
     {

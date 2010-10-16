@@ -1,8 +1,5 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -30,15 +27,7 @@ op_inv::apply(Mat<eT>& out, const Mat<eT>& A)
   // - auxlib::inv() copies A to out before inversion
   // - for 2x2 and 3x3 matrices the code is alias safe
   
-  arma_debug_check( !A.is_square(), "op_inv::apply(): matrix must be square" );
-  
-  const bool status = auxlib::inv(out, A);
-  
-  if(status == false)
-    {
-    arma_warn( true, "inv(): matrix appears to be singular" );
-    out.set_size(0,0);
-    }
+  auxlib::inv(out, A);
   }
 
 
@@ -61,10 +50,7 @@ op_inv::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv>& X)
     }
   else
     {
-    const unwrap<T1>   tmp(X.m);
-    const Mat<eT>& A = tmp.M;
-  
-    op_inv::apply(out, A);
+    auxlib::inv(out, X.m);
     }
   }
 

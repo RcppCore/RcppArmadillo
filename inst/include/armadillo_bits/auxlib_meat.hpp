@@ -1,9 +1,6 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
-// - Edmund Highcock (edmund dot highcock at merton dot ox dot ac dot uk)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2009      Edmund Highcock
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -21,6 +18,42 @@
 
 
 //! immediate matrix inverse
+template<typename eT, typename T1>
+inline
+bool
+auxlib::inv(Mat<eT>& out, const Base<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  bool status;
+  
+  out = X.get_ref();
+  
+  arma_debug_check( (out.is_square() == false), "inv(): given matrix is not square" );
+  
+  const u32 N = out.n_rows;
+  
+  if(N <= 4)
+    {
+    status = auxlib::inv_inplace_tinymat(out, N);
+    }
+    
+  if( (N > 4) || (status == false) )
+    {
+    status = auxlib::inv_inplace_lapack(out);
+    }
+  
+  if(status == false)
+    {
+    arma_print("inv(): matrix appears to be singular" );
+    out.reset();
+    }
+  
+  return status;
+  }
+
+
+
 template<typename eT>
 inline
 bool
@@ -28,18 +61,30 @@ auxlib::inv(Mat<eT>& out, const Mat<eT>& X)
   {
   arma_extra_debug_sigprint();
   
+  arma_debug_check( (X.is_square() == false), "inv(): given matrix is not square" );
+  
+  bool status;
+  
   const u32 N = X.n_rows;
   
   if(N <= 4)
     {
-    const bool status = (&out != &X) ? auxlib::inv_noalias_tinymat(out, X, N) : auxlib::inv_inplace_tinymat(out, N);
-    
-    return (status == true) ? true : auxlib::inv_lapack(out, X);
+    status = (&out != &X) ? auxlib::inv_noalias_tinymat(out, X, N) : auxlib::inv_inplace_tinymat(out, N);
     }
-  else
+  
+  if( (N > 4) || (status == false) )
     {
-    return auxlib::inv_lapack(out, X);
+    out = X;
+    status = auxlib::inv_inplace_lapack(out);
     }
+  
+  if(status == false)
+    {
+    arma_print("inv(): matrix appears to be singular" );
+    out.reset();
+    }
+  
+  return status;
   }
 
 
@@ -165,7 +210,7 @@ auxlib::inv_noalias_tinymat(Mat<eT>& out, const Mat<eT>& X, const u32 N)
     default:
       ;
     }
-
+  
   return det_ok;
   }
 
@@ -305,14 +350,9 @@ auxlib::inv_inplace_tinymat(Mat<eT>& X, const u32 N)
 template<typename eT>
 inline
 bool
-auxlib::inv_lapack(Mat<eT>& out, const Mat<eT>& X)
+auxlib::inv_inplace_lapack(Mat<eT>& out)
   {
   arma_extra_debug_sigprint();
-  
-  if(&out != &X)
-    {
-    out = X;
-    }
   
   #if defined(ARMA_USE_ATLAS)
     {
@@ -341,17 +381,17 @@ auxlib::inv_lapack(Mat<eT>& out, const Mat<eT>& X)
     // the "work" array is deliberately long so that a secondary (time-consuming)
     // memory allocation is avoided, if possible
     
-    blas_int work_len = (std::max)(1, n_rows*84);
+    blas_int work_len = (std::max)(blas_int(1), n_rows*84);
     podarray<eT> work(work_len);
     
-    lapack::getrf_(&n_rows, &n_cols, out.memptr(), &n_rows, ipiv.memptr(), &info);
+    lapack::getrf(&n_rows, &n_cols, out.memptr(), &n_rows, ipiv.memptr(), &info);
     
     if(info == 0)
       {
       // query for optimum size of work_len
       
       blas_int work_len_tmp = -1;
-      lapack::getri_(&n_rows, out.memptr(), &n_rows, ipiv.memptr(), work.memptr(), &work_len_tmp, &info);
+      lapack::getri(&n_rows, out.memptr(), &n_rows, ipiv.memptr(), work.memptr(), &work_len_tmp, &info);
       
       if(info == 0)
         {
@@ -365,13 +405,14 @@ auxlib::inv_lapack(Mat<eT>& out, const Mat<eT>& X)
           }
         }
       
-      lapack::getri_(&n_rows, out.memptr(), &n_rows, ipiv.memptr(), work.memptr(), &work_len, &info);
+      lapack::getri(&n_rows, out.memptr(), &n_rows, ipiv.memptr(), work.memptr(), &work_len, &info);
       }
     
     return (info == 0);
     }
   #else
     {
+    arma_ignore(out);
     arma_stop("inv(): need ATLAS or LAPACK");
     return false;
     }
@@ -380,32 +421,41 @@ auxlib::inv_lapack(Mat<eT>& out, const Mat<eT>& X)
 
 
 
-template<typename eT>
+template<typename eT, typename T1>
 inline
 eT
-auxlib::det(const Mat<eT>& X)
+auxlib::det(const Base<eT,T1>& X)
   {
-  const u32 N = X.n_rows;
+  const unwrap<T1>   tmp(X.get_ref());
+  const Mat<eT>& A = tmp.M;
+  
+  arma_debug_check( !A.is_square(), "det(): matrix is not square" );
+  
+  const bool make_copy = (is_Mat<T1>::value == true) ? true : false;
+  
+  const u32 N = A.n_rows;
   
   switch(N)
     {
     case 0:
     case 1:
     case 2:
-      return auxlib::det_tinymat(X, N);
+      return auxlib::det_tinymat(A, N);
       break;
     
     case 3:
     case 4:
       {
-      const eT tmp_det = auxlib::det_tinymat(X, N);
-      return (tmp_det != eT(0)) ? tmp_det : auxlib::det_lapack(X);
+      const eT tmp_det = auxlib::det_tinymat(A, N);
+      return (tmp_det != eT(0)) ? tmp_det : auxlib::det_lapack(A, make_copy);
       }
       break;
-      
+    
     default:
-      return auxlib::det_lapack(X);
+      return auxlib::det_lapack(A, make_copy);
     }
+  
+  return eT(0);  // prevent compiler warnings
   }
 
 
@@ -500,13 +550,21 @@ auxlib::det_tinymat(const Mat<eT>& X, const u32 N)
 template<typename eT>
 inline
 eT
-auxlib::det_lapack(const Mat<eT>& X)
+auxlib::det_lapack(const Mat<eT>& X, const bool make_copy)
   {
   arma_extra_debug_sigprint();
   
+  Mat<eT> X_copy;
+  
+  if(make_copy == true)
+    {
+    X_copy = X;
+    }
+  
+  Mat<eT>& tmp = (make_copy == true) ? X_copy : const_cast< Mat<eT>& >(X);
+  
   #if defined(ARMA_USE_ATLAS)
     {
-    Mat<eT> tmp = X;
     podarray<int> ipiv(tmp.n_rows);
     
     atlas::clapack_getrf(atlas::CblasColMajor, tmp.n_rows, tmp.n_cols, tmp.memptr(), tmp.n_rows, ipiv.memptr());
@@ -531,14 +589,13 @@ auxlib::det_lapack(const Mat<eT>& X)
     }
   #elif defined(ARMA_USE_LAPACK)
     {
-    Mat<eT> tmp = X;
     podarray<blas_int> ipiv(tmp.n_rows);
     
     blas_int info   = 0;
     blas_int n_rows = blas_int(tmp.n_rows);
     blas_int n_cols = blas_int(tmp.n_cols);
     
-    lapack::getrf_(&n_rows, &n_cols, tmp.memptr(), &n_rows, ipiv.memptr(), &info);
+    lapack::getrf(&n_rows, &n_cols, tmp.memptr(), &n_rows, ipiv.memptr(), &info);
     
     // on output tmp appears to be L+U_alt, where U_alt is U with the main diagonal set to zero
     eT val = tmp.at(0,0);
@@ -560,6 +617,9 @@ auxlib::det_lapack(const Mat<eT>& X)
     }
   #else
     {
+    arma_ignore(X);
+    arma_ignore(make_copy);
+    arma_ignore(tmp);
     arma_stop("det(): need ATLAS or LAPACK");
     return eT(0);
     }
@@ -569,10 +629,10 @@ auxlib::det_lapack(const Mat<eT>& X)
 
 
 //! immediate log determinant of a matrix using ATLAS or LAPACK
-template<typename eT>
+template<typename eT, typename T1>
 inline
 void
-auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const Mat<eT>& X)
+auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const Base<eT,T1>& X)
   {
   arma_extra_debug_sigprint();
   
@@ -580,7 +640,9 @@ auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const 
   
   #if defined(ARMA_USE_ATLAS)
     {
-    Mat<eT> tmp = X;
+    Mat<eT> tmp(X.get_ref());
+    arma_debug_check( (tmp.is_square() == false), "log_det(): given matrix is not square" );
+    
     podarray<int> ipiv(tmp.n_rows);
     
     atlas::clapack_getrf(atlas::CblasColMajor, tmp.n_rows, tmp.n_cols, tmp.memptr(), tmp.n_rows, ipiv.memptr());
@@ -611,14 +673,16 @@ auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const 
     }
   #elif defined(ARMA_USE_LAPACK)
     {
-    Mat<eT> tmp = X;
+    Mat<eT> tmp(X.get_ref());
+    arma_debug_check( (tmp.is_square() == false), "log_det(): given matrix is not square" );
+    
     podarray<blas_int> ipiv(tmp.n_rows);
     
     blas_int info   = 0;
     blas_int n_rows = blas_int(tmp.n_rows);
     blas_int n_cols = blas_int(tmp.n_cols);
     
-    lapack::getrf_(&n_rows, &n_cols, tmp.memptr(), &n_rows, ipiv.memptr(), &info);
+    lapack::getrf(&n_rows, &n_cols, tmp.memptr(), &n_rows, ipiv.memptr(), &info);
     
     // on output tmp appears to be L+U_alt, where U_alt is U with the main diagonal set to zero
     
@@ -657,163 +721,224 @@ auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const 
 
 
 //! immediate LU decomposition of a matrix using ATLAS or LAPACK
-template<typename eT>
+template<typename eT, typename T1>
 inline
 void
-auxlib::lu(Mat<eT>& L, Mat<eT>& U, podarray<blas_int>& ipiv, const Mat<eT>& X)
+auxlib::lu(Mat<eT>& L, Mat<eT>& U, podarray<blas_int>& ipiv, const Base<eT,T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  U = X;
+  U = X.get_ref();
+  
+  if(U.is_empty())
+    {
+    ipiv.reset();
+    L.reset();
+    return;
+    }
+  
+  const u32 U_n_rows = U.n_rows;
+  const u32 U_n_cols = U.n_cols;
   
   #if defined(ARMA_USE_ATLAS) || defined(ARMA_USE_LAPACK)
     {
-    
     #if defined(ARMA_USE_ATLAS)
       {
-      ipiv.set_size(U.n_rows);
-    
+      ipiv.set_size( (std::min)(U_n_rows, U_n_cols) );
+      
       //int info = 
-      atlas::clapack_getrf(atlas::CblasColMajor, U.n_rows, U.n_cols, U.memptr(), U.n_rows, ipiv.memptr());
+      atlas::clapack_getrf(atlas::CblasColMajor, U_n_rows, U_n_cols, U.memptr(), U_n_rows, ipiv.memptr());
       }
     #elif defined(ARMA_USE_LAPACK)
       {
-      ipiv.set_size(U.n_rows);
+      ipiv.set_size( (std::min)(U_n_rows, U_n_cols) );
+      
       blas_int info = 0;
       
-      blas_int n_rows = U.n_rows;
-      blas_int n_cols = U.n_cols;
+      blas_int n_rows = U_n_rows;
+      blas_int n_cols = U_n_cols;
       
-      lapack::getrf_(&n_rows, &n_cols, U.memptr(), &n_rows, ipiv.memptr(), &info);
+      
+      lapack::getrf(&n_rows, &n_cols, U.memptr(), &n_rows, ipiv.memptr(), &info);
       
       // take into account that Fortran counts from 1
-      for(u32 i=0; i<U.n_rows; ++i)
-        {
-        ipiv[i] -= 1;
-        }
-      
+      arrayops::inplace_minus(ipiv.memptr(), blas_int(1), ipiv.n_elem);
       }
     #endif
     
+    L.copy_size(U);
     
-    L.set_size(U.n_rows, U.n_rows);
-    
-    for(u32 col=0; col<L.n_cols; ++col)
+    for(u32 col=0; col < U_n_cols; ++col)
       {
-      
-      for(u32 row=0; row<col; ++row)
+      for(u32 row=0; (row < col) && (row < U_n_rows); ++row)
         {
         L.at(row,col) = eT(0);
         }
       
-      L.at(col,col) = eT(1);
+      if( L.in_range(col,col) == true )
+        {
+        L.at(col,col) = eT(1);
+        }
       
-      for(u32 row=col+1; row<L.n_rows; ++row)
+      for(u32 row = (col+1); row < U_n_rows; ++row)
         {
         L.at(row,col) = U.at(row,col);
         U.at(row,col) = eT(0);
         }
-      
       }
     }
   #else
     {
+    arma_ignore(L);
+    arma_ignore(ipiv);
+    arma_ignore(U_n_rows);
+    arma_ignore(U_n_cols);
     arma_stop("lu(): need ATLAS or LAPACK");
     }
   #endif
-  
   }
 
 
 
-template<typename eT>
+template<typename eT, typename T1>
 inline
 void
-auxlib::lu(Mat<eT>& L, Mat<eT>& U, Mat<eT>& P, const Mat<eT>& X)
+auxlib::lu(Mat<eT>& L, Mat<eT>& U, Mat<eT>& P, const Base<eT,T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  podarray<blas_int> ipiv;
-  auxlib::lu(L, U, ipiv, X);
+  podarray<blas_int> ipiv1;
+  auxlib::lu(L, U, ipiv1, X);
   
-  const u32 n = ipiv.n_elem;
-
-  Mat<u32> P_tmp(n,n);
-  Mat<u32> ident = eye< Mat<u32> >(n,n);
+  const u32 n      = ipiv1.n_elem;
+  const u32 P_rows = U.n_rows;
   
-  for(u32 i=n; i>0; --i)
+  podarray<blas_int> ipiv2(P_rows);
+  
+  const blas_int* ipiv1_mem = ipiv1.memptr();
+        blas_int* ipiv2_mem = ipiv2.memptr();
+  
+  for(u32 i=0; i<P_rows; ++i)
     {
-    const u32 j = i-1;
-    const u32 k = ipiv[j];
-    
-    ident.swap_rows(j,k);
-    
-    if(i == n)
-      {
-      P_tmp = ident;
-      }
-    else
-      {
-      P_tmp *= ident;
-      }
-    
-    ident.swap_rows(j,k);
+    ipiv2_mem[i] = i;
     }
   
-  P = conv_to< Mat<eT> >::from(P_tmp);
+  for(u32 i=0; i<n; ++i)
+    {
+    const u32 k = ipiv1_mem[i];
+    
+    if( ipiv2_mem[i] != ipiv2_mem[k] )
+      {
+      std::swap( ipiv2_mem[i], ipiv2_mem[k] );
+      }
+    }
+  
+  P.zeros(P_rows, P_rows);
+  
+  for(u32 row=0; row<P_rows; ++row)
+    {
+    P.at(row, ipiv2_mem[row]) = eT(1);
+    }
+  
+  if(L.n_cols > U.n_rows)
+    {
+    L.shed_cols(U.n_rows, L.n_cols-1);
+    }
+    
+  if(U.n_rows > L.n_cols)
+    {
+    U.shed_rows(L.n_cols, U.n_rows-1);
+    }
   }
 
 
 
-template<typename eT>
+template<typename eT, typename T1>
 inline
 void
-auxlib::lu(Mat<eT>& L, Mat<eT>& U, const Mat<eT>& X)
+auxlib::lu(Mat<eT>& L, Mat<eT>& U, const Base<eT,T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  podarray<blas_int> ipiv;
-  auxlib::lu(L, U, ipiv, X);
-  }
+  podarray<blas_int> ipiv1;
+  auxlib::lu(L, U, ipiv1, X);
   
+  const u32 n      = ipiv1.n_elem;
+  const u32 P_rows = U.n_rows;
+  
+  podarray<blas_int> ipiv2(P_rows);
+  
+  const blas_int* ipiv1_mem = ipiv1.memptr();
+        blas_int* ipiv2_mem = ipiv2.memptr();
+  
+  for(u32 i=0; i<P_rows; ++i)
+    {
+    ipiv2_mem[i] = i;
+    }
+  
+  for(u32 i=0; i<n; ++i)
+    {
+    const u32 k = ipiv1_mem[i];
+    
+    if( ipiv2_mem[i] != ipiv2_mem[k] )
+      {
+      std::swap( ipiv2_mem[i], ipiv2_mem[k] );
+      L.swap_rows( u32(ipiv2_mem[i]), u32(ipiv2_mem[k]) );
+      }
+    }
+  
+  if(L.n_cols > U.n_rows)
+    {
+    L.shed_cols(U.n_rows, L.n_cols-1);
+    }
+    
+  if(U.n_rows > L.n_cols)
+    {
+    U.shed_rows(L.n_cols, U.n_rows-1);
+    }
+  }
+
 
 
 //! immediate eigenvalues of a symmetric real matrix using LAPACK
-template<typename eT>
+template<typename eT, typename T1>
 inline
-void
-auxlib::eig_sym(Col<eT>& eigval, const Mat<eT>& A_orig)
+bool
+auxlib::eig_sym(Col<eT>& eigval, const Base<eT,T1>& X)
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_LAPACK)
     {
-    const unwrap_check<Mat<eT> > tmp(A_orig, eigval);
-    const Mat<eT>& A = tmp.M;
+    Mat<eT> A(X.get_ref());
     
-    arma_debug_check( (A.n_rows != A.n_cols), "eig_sym(): given matrix is not square");
+    arma_debug_check( (A.is_square() == false), "eig_sym(): given matrix is not square");
     
     // rudimentary "better-than-nothing" test for symmetry
     //arma_debug_check( (A.at(A.n_rows-1, 0) != A.at(0, A.n_cols-1)), "auxlib::eig(): given matrix is not symmetric" );
-
+    
     char jobz  = 'N';
     char uplo  = 'U';
     
     blas_int n_rows = A.n_rows;
-    blas_int lwork  = (std::max)(1,3*n_rows-1);
+    blas_int lwork  = (std::max)(blas_int(1), 3*n_rows-1);
     
     eigval.set_size(n_rows);
     podarray<eT> work(lwork);
-  
-    Mat<eT> A_copy = A;
+    
     blas_int info;
-
-    arma_extra_debug_print("lapack::syev_()");
-    lapack::syev_(&jobz, &uplo, &n_rows, A_copy.memptr(), &n_rows, eigval.memptr(), work.memptr(), &lwork, &info);
+    
+    arma_extra_debug_print("lapack::syev()");
+    lapack::syev(&jobz, &uplo, &n_rows, A.memptr(), &n_rows, eigval.memptr(), work.memptr(), &lwork, &info);
+    
+    return (info == 0);
     }
   #else
     {
+    arma_ignore(eigval);
+    arma_ignore(X);
     arma_stop("eig_sym(): need LAPACK");
+    return false;
     }
   #endif
   }
@@ -821,40 +946,45 @@ auxlib::eig_sym(Col<eT>& eigval, const Mat<eT>& A_orig)
 
 
 //! immediate eigenvalues of a hermitian complex matrix using LAPACK
-template<typename T> 
+template<typename T, typename T1>
 inline
-void
-auxlib::eig_sym(Col<T>& eigval, const Mat< std::complex<T> >& A)
+bool
+auxlib::eig_sym(Col<T>& eigval, const Base<std::complex<T>,T1>& X)
   {
   arma_extra_debug_sigprint();
-
+  
   typedef typename std::complex<T> eT;
   
   #if defined(ARMA_USE_LAPACK)
     {
-    arma_debug_check( (A.n_rows != A.n_cols), "eig_sym(): given matrix is not hermitian");
-
+    Mat<eT> A(X.get_ref());
+    arma_debug_check( (A.is_square() == false), "eig_sym(): given matrix is not hermitian");
+    
     char jobz  = 'N'; 
     char uplo  = 'U';
-
+    
     blas_int n_rows = A.n_rows;
     blas_int lda    = A.n_rows;
-    blas_int lwork  = (std::max)(1, 2*n_rows - 1);  // TODO: automatically find best size of lwork
-
+    blas_int lwork  = (std::max)(blas_int(1), 2*n_rows - 1);  // TODO: automatically find best size of lwork
+    
     eigval.set_size(n_rows);
-
+    
     podarray<eT> work(lwork);
-    podarray<T>  rwork( (std::max)(1, 3*n_rows - 2) );
-  
-    Mat<eT> A_copy = A;
+    podarray<T>  rwork( (std::max)(blas_int(1), 3*n_rows - 2) );
+    
     blas_int info;
-  
-    arma_extra_debug_print("lapack::heev_()");
-    lapack::heev_(&jobz, &uplo, &n_rows, A_copy.memptr(), &lda, eigval.memptr(), work.memptr(), &lwork, rwork.memptr(), &info);
+    
+    arma_extra_debug_print("lapack::heev()");
+    lapack::heev(&jobz, &uplo, &n_rows, A.memptr(), &lda, eigval.memptr(), work.memptr(), &lwork, rwork.memptr(), &info);
+    
+    return (info == 0);
     }
   #else
     {
+    arma_ignore(eigval);
+    arma_ignore(X);
     arma_stop("eig_sym(): need LAPACK");
+    return false;
     }
   #endif
   }
@@ -862,95 +992,95 @@ auxlib::eig_sym(Col<T>& eigval, const Mat< std::complex<T> >& A)
 
 
 //! immediate eigenvalues and eigenvectors of a symmetric real matrix using LAPACK
-template<typename eT>
+template<typename eT, typename T1>
 inline
-void
-auxlib::eig_sym(Col<eT>& eigval, Mat<eT>& eigvec, const Mat<eT>& A_orig)
+bool
+auxlib::eig_sym(Col<eT>& eigval, Mat<eT>& eigvec, const Base<eT,T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  // TODO: check for aliasing
-  
   #if defined(ARMA_USE_LAPACK)
     {
-    const unwrap_check< Mat<eT> > tmp1(A_orig, eigval);
-    const Mat<eT>& A_tmp = tmp1.M;
+    eigvec = X.get_ref();
     
-    const unwrap_check< Mat<eT> > tmp2(A_tmp, eigvec);
-    const Mat<eT>& A = tmp2.M;
-    
-    arma_debug_check( (A.n_rows != A.n_cols), "eig_sym(): given matrix is not square" );
+    arma_debug_check( (eigvec.is_square() == false), "eig_sym(): given matrix is not square" );
     
     // rudimentary "better-than-nothing" test for symmetry
     //arma_debug_check( (A.at(A.n_rows-1, 0) != A.at(0, A.n_cols-1)), "auxlib::eig(): given matrix is not symmetric" );
     
-    
     char jobz  = 'V';
     char uplo  = 'U';
     
-    blas_int n_rows = A.n_rows;
-    blas_int lwork  = (std::max)(1, 3*n_rows-1);
+    blas_int n_rows = eigvec.n_rows;
+    blas_int lwork  = (std::max)(blas_int(1), 3*n_rows-1);
     
     eigval.set_size(n_rows);
     podarray<eT> work(lwork);
-  
-    eigvec = A;
+    
     blas_int info;
     
-    arma_extra_debug_print("lapack::syev_()");
-    lapack::syev_(&jobz, &uplo, &n_rows, eigvec.memptr(), &n_rows, eigval.memptr(), work.memptr(), &lwork, &info);
+    arma_extra_debug_print("lapack::syev()");
+    lapack::syev(&jobz, &uplo, &n_rows, eigvec.memptr(), &n_rows, eigval.memptr(), work.memptr(), &lwork, &info);
+    
+    return (info == 0);
     }
   #else
     {
+    arma_ignore(eigval);
+    arma_ignore(eigvec);
+    arma_ignore(X);
     arma_stop("eig_sym(): need LAPACK");
+    return false;
     }
   #endif
-  
   }
 
 
 
 //! immediate eigenvalues and eigenvectors of a hermitian complex matrix using LAPACK
-template<typename T>
+template<typename T, typename T1>
 inline
-void
-auxlib::eig_sym(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Mat< std::complex<T> >& A_orig) 
+bool
+auxlib::eig_sym(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Base<std::complex<T>,T1>& X)
   {
   arma_extra_debug_sigprint();
   
   typedef typename std::complex<T> eT;
-
+  
   #if defined(ARMA_USE_LAPACK)
     {
-    const unwrap_check< Mat<eT> > tmp(A_orig, eigvec);
-    const Mat<eT>& A = tmp.M;
+    eigvec = X.get_ref();
     
-    arma_debug_check( (A.n_rows != A.n_cols), "eig_sym(): given matrix is not hermitian" );
+    arma_debug_check( (eigvec.is_square() == false), "eig_sym(): given matrix is not hermitian" );
     
     char jobz  = 'V';
     char uplo  = 'U';
-
-    blas_int n_rows = A.n_rows;
-    blas_int lda    = A.n_rows;
-    blas_int lwork  = (std::max)(1, 2*n_rows - 1);  // TODO: automatically find best size of lwork
+    
+    blas_int n_rows = eigvec.n_rows;
+    blas_int lda    = eigvec.n_rows;
+    blas_int lwork  = (std::max)(blas_int(1), 2*n_rows - 1);  // TODO: automatically find best size of lwork
     
     eigval.set_size(n_rows);
-
+    
     podarray<eT> work(lwork);
-    podarray<T>  rwork( (std::max)(1, 3*n_rows - 2) );
-  
-    eigvec = A;
+    podarray<T>  rwork( (std::max)(blas_int(1), 3*n_rows - 2) );
+    
     blas_int info;
-  
-    arma_extra_debug_print("lapack::heev_()");
-    lapack::heev_(&jobz, &uplo, &n_rows, eigvec.memptr(), &lda, eigval.memptr(), work.memptr(), &lwork, rwork.memptr(), &info);
+    
+    arma_extra_debug_print("lapack::heev()");
+    lapack::heev(&jobz, &uplo, &n_rows, eigvec.memptr(), &lda, eigval.memptr(), work.memptr(), &lwork, rwork.memptr(), &info);
+    
+    return (info == 0);
     }
   #else
     {
+    arma_ignore(eigval);
+    arma_ignore(eigvec);
+    arma_ignore(X);
     arma_stop("eig_sym(): need LAPACK");
+    return false;
     }
   #endif
-  
   }
 
 
@@ -958,29 +1088,28 @@ auxlib::eig_sym(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Mat< std::
 //! Eigenvalues and eigenvectors of a general square real matrix using LAPACK.
 //! The argument 'side' specifies which eigenvectors should be calculated
 //! (see code for mode details).
-template<typename T>
+template<typename T, typename T1>
 inline
-void
+bool
 auxlib::eig_gen
   (
   Col< std::complex<T> >& eigval,
   Mat<T>& l_eigvec,
   Mat<T>& r_eigvec,
-  const Mat<T>& A, 
+  const Base<T,T1>& X,
   const char side
   )
   {
   arma_extra_debug_sigprint();
-
-  // TODO: check for aliasing
   
   #if defined(ARMA_USE_LAPACK)
     {
-    arma_debug_check( (A.n_rows != A.n_cols), "eig_gen(): given matrix is not square" );
+    Mat<T> A(X.get_ref());
+    arma_debug_check( (A.is_square() == false), "eig_gen(): given matrix is not square" );
     
     char jobvl;
     char jobvr;
-
+    
     switch(side)
       {
       case 'l':  // left
@@ -1002,22 +1131,22 @@ auxlib::eig_gen
         jobvl = 'N';
         jobvr = 'N';
         break;
-
+      
       default:
         arma_stop("eig_gen(): parameter 'side' is invalid");
       }
-
+    
        
     blas_int n_rows = A.n_rows;
     blas_int lda    = A.n_rows;
-    blas_int lwork  = (std::max)(1, 4*n_rows);  // TODO: automatically find best size of lwork
+    blas_int lwork  = (std::max)(blas_int(1), 4*n_rows);  // TODO: automatically find best size of lwork
     
     eigval.set_size(n_rows);
     l_eigvec.set_size(n_rows, n_rows);
     r_eigvec.set_size(n_rows, n_rows);
     
     podarray<T> work(lwork);
-    podarray<T> rwork( (std::max)(1, 3*n_rows) );
+    podarray<T> rwork( (std::max)(blas_int(1), 3*n_rows) );
     
     podarray<T> wr(n_rows);
     podarray<T> wi(n_rows);
@@ -1025,8 +1154,8 @@ auxlib::eig_gen
     Mat<T> A_copy = A;
     blas_int info;
     
-    arma_extra_debug_print("lapack::cx_geev_()");
-    lapack::geev_(&jobvl, &jobvr, &n_rows, A_copy.memptr(), &lda, wr.memptr(), wi.memptr(), l_eigvec.memptr(), &n_rows, r_eigvec.memptr(), &n_rows, work.memptr(), &lwork, &info);
+    arma_extra_debug_print("lapack::geev()");
+    lapack::geev(&jobvl, &jobvr, &n_rows, A_copy.memptr(), &lda, wr.memptr(), wi.memptr(), l_eigvec.memptr(), &n_rows, r_eigvec.memptr(), &n_rows, work.memptr(), &lwork, &info);
     
     
     eigval.set_size(n_rows);
@@ -1035,13 +1164,19 @@ auxlib::eig_gen
       eigval[i] = std::complex<T>(wr[i], wi[i]);
       }
     
+    return (info == 0);
     }
   #else
     {
+    arma_ignore(eigval);
+    arma_ignore(l_eigvec);
+    arma_ignore(r_eigvec);
+    arma_ignore(X);
+    arma_ignore(side);
     arma_stop("eig_gen(): need LAPACK");
+    return false;
     }
   #endif
-  
   }
 
 
@@ -1051,31 +1186,30 @@ auxlib::eig_gen
 //! Eigenvalues and eigenvectors of a general square complex matrix using LAPACK
 //! The argument 'side' specifies which eigenvectors should be calculated
 //! (see code for mode details).
-template<typename T>
+template<typename T, typename T1>
 inline
-void
+bool
 auxlib::eig_gen
   (
   Col< std::complex<T> >& eigval,
   Mat< std::complex<T> >& l_eigvec, 
   Mat< std::complex<T> >& r_eigvec, 
-  const Mat< std::complex<T> >& A, 
+  const Base< std::complex<T>, T1 >& X, 
   const char side
   )
   {
   arma_extra_debug_sigprint();
-
-  // TODO: check for aliasing
   
   typedef typename std::complex<T> eT;
-
+  
   #if defined(ARMA_USE_LAPACK)
     {
-    arma_debug_check( (A.n_rows != A.n_cols), "eig_gen(): given matrix is not square" );
+    Mat<eT> A(X.get_ref());
+    arma_debug_check( (A.is_square() == false), "eig_gen(): given matrix is not square" );
     
     char jobvl;
     char jobvr;
-
+    
     switch(side)
       {
       case 'l':  // left
@@ -1097,7 +1231,7 @@ auxlib::eig_gen
         jobvl = 'N';
         jobvr = 'N';
         break;
-
+      
       default:
         arma_stop("eig_gen(): parameter 'side' is invalid");
       }
@@ -1105,52 +1239,63 @@ auxlib::eig_gen
        
     blas_int n_rows = A.n_rows;
     blas_int lda    = A.n_rows;
-    blas_int lwork  = (std::max)(1, 4*n_rows);  // TODO: automatically find best size of lwork
+    blas_int lwork  = (std::max)(blas_int(1), 4*n_rows);  // TODO: automatically find best size of lwork
     
     eigval.set_size(n_rows);
     l_eigvec.set_size(n_rows, n_rows);
     r_eigvec.set_size(n_rows, n_rows);
     
     podarray<eT> work(lwork);
-    podarray<T>  rwork( (std::max)(1, 3*n_rows) );  // was 2,3
+    podarray<T>  rwork( (std::max)(blas_int(1), 3*n_rows) );  // was 2,3
     
-    Mat<eT> A_copy = A;
     blas_int info;
     
-    arma_extra_debug_print("lapack::cx_geev_()");
-    lapack::cx_geev_(&jobvl, &jobvr, &n_rows, A_copy.memptr(), &lda, eigval.memptr(), l_eigvec.memptr(), &n_rows, r_eigvec.memptr(), &n_rows, work.memptr(), &lwork, rwork.memptr(), &info);
+    arma_extra_debug_print("lapack::cx_geev()");
+    lapack::cx_geev(&jobvl, &jobvr, &n_rows, A.memptr(), &lda, eigval.memptr(), l_eigvec.memptr(), &n_rows, r_eigvec.memptr(), &n_rows, work.memptr(), &lwork, rwork.memptr(), &info);
+    
+    return (info == 0);
     }
   #else
     {
+    arma_ignore(eigval);
+    arma_ignore(l_eigvec);
+    arma_ignore(r_eigvec);
+    arma_ignore(X);
+    arma_ignore(side);
     arma_stop("eig_gen(): need LAPACK");
+    return false;
     }
   #endif
-  
   }
 
 
 
-template<typename eT> 
+template<typename eT, typename T1>
 inline
 bool
-auxlib::chol(Mat<eT>& out, const Mat<eT>& X)
+auxlib::chol(Mat<eT>& out, const Base<eT,T1>& X)
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_LAPACK)
     {
+    out = X.get_ref();
+    
+    arma_debug_check( (out.is_square() == false), "chol(): given matrix is not square" );
+    
+    const u32 out_n_rows = out.n_rows;
+    
     char      uplo = 'U';
-    blas_int  n    = X.n_rows;
-    blas_int  lda  = X.n_rows;
+    blas_int  n    = out_n_rows;
     blas_int  info;
     
-    out = X;
-    lapack::potrf_(&uplo, &n, out.memptr(), &lda, &info);
+    lapack::potrf(&uplo, &n, out.memptr(), &n, &info);
     
-    for(u32 col=0; col<X.n_rows; ++col)
+    for(u32 col=0; col<out_n_rows; ++col)
       {
       eT* colptr = out.colptr(col);
-      for(u32 row=col+1; row<X.n_rows; ++row)
+      
+      for(u32 row=(col+1); row < out_n_rows; ++row)
         {
         colptr[row] = eT(0);
         }
@@ -1160,6 +1305,8 @@ auxlib::chol(Mat<eT>& out, const Mat<eT>& X)
     }
   #else
     {
+    arma_ignore(out);
+    arma_ignore(X);
     arma_stop("chol(): need LAPACK");
     return false;
     }
@@ -1168,18 +1315,29 @@ auxlib::chol(Mat<eT>& out, const Mat<eT>& X)
 
 
 
-template<typename eT>
+template<typename eT, typename T1>
 inline
 bool 
-auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Mat<eT>& X)
+auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_LAPACK)
     {
-    blas_int m            = static_cast<blas_int>(X.n_rows);
-    blas_int n            = static_cast<blas_int>(X.n_cols);
-    blas_int work_len     = (std::max)(1,n);
+    R = X.get_ref();
+    
+    if(R.is_empty())
+      {
+      Q.reset();
+      return false;
+      }
+    
+    const u32 R_n_rows = R.n_rows;
+    const u32 R_n_cols = R.n_cols;
+    
+    blas_int m            = static_cast<blas_int>(R_n_rows);
+    blas_int n            = static_cast<blas_int>(R_n_cols);
+    blas_int work_len     = (std::max)(blas_int(1),n);
     blas_int work_len_tmp;
     blas_int k            = (std::min)(m,n);
     blas_int info;
@@ -1187,11 +1345,9 @@ auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Mat<eT>& X)
     podarray<eT> tau(k);
     podarray<eT> work(work_len);
     
-    R = X;
-    
     // query for the optimum value of work_len
     work_len_tmp = -1;
-    lapack::geqrf_(&m, &n, R.memptr(), &m, tau.memptr(), work.memptr(), &work_len_tmp, &info);
+    lapack::geqrf(&m, &n, R.memptr(), &m, tau.memptr(), work.memptr(), &work_len_tmp, &info);
     
     if(info == 0)
       {
@@ -1199,36 +1355,29 @@ auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Mat<eT>& X)
       work.set_size(work_len);
       }
     
-    lapack::geqrf_(&m, &n, R.memptr(), &m, tau.memptr(), work.memptr(), &work_len, &info);
+    lapack::geqrf(&m, &n, R.memptr(), &m, tau.memptr(), work.memptr(), &work_len, &info);
     
-    Q.set_size(X.n_rows, X.n_rows);
+    Q.set_size(R_n_rows, R_n_rows);
     
-          eT* Q_mem = Q.memptr();
-    const eT* R_mem = R.mem;
+    syslib::copy_elem( Q.memptr(), R.memptr(), (std::min)(Q.n_elem, R.n_elem) );
     
-    const u32 n_elem_copy = (std::min)(Q.n_elem, R.n_elem);
-    for(u32 i=0; i < n_elem_copy; ++i)
-      {
-      Q_mem[i] = R_mem[i];
-      }
-    
-    
+    //
     // construct R
-    for(u32 row=0; row < R.n_rows; ++row)
+    
+    for(u32 col=0; col < R_n_cols; ++col)
       {
-      const u32 n_elem_tmp = (std::min)(row, R.n_cols);
-      for(u32 col=0; col < n_elem_tmp; ++col)
+      for(u32 row=(col+1); row < R_n_rows; ++row)
         {
         R.at(row,col) = eT(0);
         }
       }
-      
+    
     
     if( (is_float<eT>::value == true) || (is_double<eT>::value == true) )
       {
       // query for the optimum value of work_len
       work_len_tmp = -1;
-      lapack::orgqr_(&m, &m, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &work_len_tmp, &info);
+      lapack::orgqr(&m, &m, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &work_len_tmp, &info);
       
       if(info == 0)
         {
@@ -1236,14 +1385,14 @@ auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Mat<eT>& X)
         work.set_size(work_len);
         }
       
-      lapack::orgqr_(&m, &m, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &work_len, &info);
+      lapack::orgqr(&m, &m, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &work_len, &info);
       }
     else
     if( (is_supported_complex_float<eT>::value == true) || (is_supported_complex_double<eT>::value == true) )
       {
       // query for the optimum value of work_len
       work_len_tmp = -1;
-      lapack::ungqr_(&m, &m, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &work_len_tmp, &info);
+      lapack::ungqr(&m, &m, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &work_len_tmp, &info);
       
       if(info == 0)
         {
@@ -1251,13 +1400,16 @@ auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Mat<eT>& X)
         work.set_size(work_len);
         }
       
-      lapack::ungqr_(&m, &m, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &work_len, &info);
+      lapack::ungqr(&m, &m, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &work_len, &info);
       }
     
     return (info == 0);
     }
   #else
     {
+    arma_ignore(Q);
+    arma_ignore(R);
+    arma_ignore(X);
     arma_stop("qr(): need LAPACK");
     return false;
     }
@@ -1266,16 +1418,25 @@ auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Mat<eT>& X)
 
 
 
-template<typename eT> 
+template<typename eT, typename T1>
 inline
 bool
-auxlib::svd(Col<eT>& S, const Mat<eT>& X)
+auxlib::svd(Col<eT>& S, const Base<eT,T1>& X, u32& X_n_rows, u32& X_n_cols)
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_LAPACK)
     {
-    Mat<eT> A = X;
+    Mat<eT> A(X.get_ref());
+    
+    X_n_rows = A.n_rows;
+    X_n_cols = A.n_cols;
+    
+    if(A.is_empty())
+      {
+      S.reset();
+      return false;
+      }
     
     Mat<eT> U(1, 1);
     Mat<eT> V(1, A.n_cols);
@@ -1288,7 +1449,7 @@ auxlib::svd(Col<eT>& S, const Mat<eT>& X)
     blas_int  lda   = A.n_rows;
     blas_int  ldu   = U.n_rows;
     blas_int  ldvt  = V.n_rows;
-    blas_int  lwork = 2 * (std::max)(1, (std::max)( (3*(std::min)(m,n) + (std::max)(m,n)), 5*(std::min)(m,n) ) );
+    blas_int  lwork = 2 * (std::max)(blas_int(1), (std::max)( (3*(std::min)(m,n) + (std::max)(m,n)), 5*(std::min)(m,n) ) );
     blas_int  info;
     
     S.set_size( (std::min)(m, n) );
@@ -1299,7 +1460,7 @@ auxlib::svd(Col<eT>& S, const Mat<eT>& X)
     // let gesvd_() calculate the optimum size of the workspace
     blas_int lwork_tmp = -1;
     
-    lapack::gesvd_<eT>
+    lapack::gesvd<eT>
       (
       &jobu, &jobvt,
       &m,&n,
@@ -1321,7 +1482,7 @@ auxlib::svd(Col<eT>& S, const Mat<eT>& X)
         work.set_size(lwork);
         }
       
-      lapack::gesvd_<eT>
+      lapack::gesvd<eT>
         (
         &jobu, &jobvt,
         &m, &n,
@@ -1338,6 +1499,10 @@ auxlib::svd(Col<eT>& S, const Mat<eT>& X)
     }
   #else
     {
+    arma_ignore(S);
+    arma_ignore(X);
+    arma_ignore(X_n_rows);
+    arma_ignore(X_n_cols);
     arma_stop("svd(): need LAPACK");
     return false;
     }
@@ -1345,11 +1510,11 @@ auxlib::svd(Col<eT>& S, const Mat<eT>& X)
   }
 
 
-  
-template<typename T>
+
+template<typename T, typename T1>
 inline
 bool
-auxlib::svd(Col<T>& S, const Mat< std::complex<T> >& X)
+auxlib::svd(Col<T>& S, const Base<std::complex<T>, T1>& X, u32& X_n_rows, u32& X_n_cols)
   {
   arma_extra_debug_sigprint();
   
@@ -1357,7 +1522,16 @@ auxlib::svd(Col<T>& S, const Mat< std::complex<T> >& X)
   
   #if defined(ARMA_USE_LAPACK)
     {
-    Mat<eT> A = X;
+    Mat<eT> A(X.get_ref());
+    
+    X_n_rows = A.n_rows;
+    X_n_cols = A.n_cols;
+    
+    if(A.is_empty())
+      {
+      S.reset();
+      return false;
+      }
     
     Mat<eT> U(1, 1);
     Mat<eT> V(1, A.n_cols);
@@ -1370,18 +1544,18 @@ auxlib::svd(Col<T>& S, const Mat< std::complex<T> >& X)
     blas_int  lda   = A.n_rows;
     blas_int  ldu   = U.n_rows;
     blas_int  ldvt  = V.n_rows;
-    blas_int  lwork = 2 * (std::max)(1, 2*(std::min)(m,n)+(std::max)(m,n) );
+    blas_int  lwork = 2 * (std::max)(blas_int(1), 2*(std::min)(m,n)+(std::max)(m,n) );
     blas_int  info;
     
     S.set_size( (std::min)(m,n) );
     
     podarray<eT> work(lwork);
     podarray<T>  rwork( 5*(std::min)(m,n) );
-  
+    
     // let gesvd_() calculate the optimum size of the workspace
     blas_int lwork_tmp = -1;
     
-    lapack::cx_gesvd_<T>
+    lapack::cx_gesvd<T>
       (
       &jobu, &jobvt,
       &m, &n,
@@ -1403,7 +1577,7 @@ auxlib::svd(Col<T>& S, const Mat< std::complex<T> >& X)
         work.set_size(lwork);
         }
       
-      lapack::cx_gesvd_<T>
+      lapack::cx_gesvd<T>
         (
         &jobu, &jobvt,
         &m, &n,
@@ -1421,6 +1595,11 @@ auxlib::svd(Col<T>& S, const Mat< std::complex<T> >& X)
     }
   #else
     {
+    arma_ignore(S);
+    arma_ignore(X);
+    arma_ignore(X_n_rows);
+    arma_ignore(X_n_cols);
+
     arma_stop("svd(): need LAPACK");
     return false;
     }
@@ -1429,16 +1608,50 @@ auxlib::svd(Col<T>& S, const Mat< std::complex<T> >& X)
 
 
 
-template<typename eT>
+template<typename eT, typename T1>
 inline
 bool
-auxlib::svd(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Mat<eT>& X)
+auxlib::svd(Col<eT>& S, const Base<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  u32 junk;
+  return auxlib::svd(S, X, junk, junk);
+  }
+
+
+
+template<typename T, typename T1>
+inline
+bool
+auxlib::svd(Col<T>& S, const Base<std::complex<T>, T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  u32 junk;
+  return auxlib::svd(S, X, junk, junk);
+  }
+
+
+
+template<typename eT, typename T1>
+inline
+bool
+auxlib::svd(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_LAPACK)
     {
-    Mat<eT> A = X;
+    Mat<eT> A(X.get_ref());
+    
+    if(A.is_empty())
+      {
+      U.reset();
+      S.reset();
+      V.reset();
+      return false;
+      }
     
     U.set_size(A.n_rows, A.n_rows);
     V.set_size(A.n_cols, A.n_cols);
@@ -1451,7 +1664,7 @@ auxlib::svd(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Mat<eT>& X)
     blas_int  lda   = A.n_rows;
     blas_int  ldu   = U.n_rows;
     blas_int  ldvt  = V.n_rows;
-    blas_int  lwork = 2 * (std::max)(1, (std::max)( (3*(std::min)(m,n) + (std::max)(m,n)), 5*(std::min)(m,n) ) );
+    blas_int  lwork = 2 * (std::max)(blas_int(1), (std::max)( (3*(std::min)(m,n) + (std::max)(m,n)), 5*(std::min)(m,n) ) );
     blas_int  info;
     
     
@@ -1461,7 +1674,7 @@ auxlib::svd(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Mat<eT>& X)
     // let gesvd_() calculate the optimum size of the workspace
     blas_int lwork_tmp = -1;
     
-    lapack::gesvd_<eT>
+    lapack::gesvd<eT>
       (
       &jobu, &jobvt,
       &m, &n,
@@ -1482,7 +1695,7 @@ auxlib::svd(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Mat<eT>& X)
         work.set_size(lwork);
         }
       
-      lapack::gesvd_<eT>
+      lapack::gesvd<eT>
         (
         &jobu, &jobvt,
         &m, &n,
@@ -1501,6 +1714,10 @@ auxlib::svd(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Mat<eT>& X)
     }
   #else
     {
+    arma_ignore(U);
+    arma_ignore(S);
+    arma_ignore(V);
+    arma_ignore(X);
     arma_stop("svd(): need LAPACK");
     return false;
     }
@@ -1509,10 +1726,10 @@ auxlib::svd(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Mat<eT>& X)
 
 
 
-template<typename T>
+template<typename T, typename T1>
 inline
 bool
-auxlib::svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, const Mat< std::complex<T> >& X)
+auxlib::svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, const Base< std::complex<T>, T1>& X)
   {
   arma_extra_debug_sigprint();
   
@@ -1520,7 +1737,15 @@ auxlib::svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, con
   
   #if defined(ARMA_USE_LAPACK)
     {
-    Mat<eT> A = X;
+    Mat<eT> A(X.get_ref());
+    
+    if(A.is_empty())
+      {
+      U.reset();
+      S.reset();
+      V.reset();
+      return false;
+      }
     
     U.set_size(A.n_rows, A.n_rows);
     V.set_size(A.n_cols, A.n_cols);
@@ -1533,17 +1758,17 @@ auxlib::svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, con
     blas_int  lda   = A.n_rows;
     blas_int  ldu   = U.n_rows;
     blas_int  ldvt  = V.n_rows;
-    blas_int  lwork = 2 * (std::max)(1, 2*(std::min)(m,n)+(std::max)(m,n) );
+    blas_int  lwork = 2 * (std::max)(blas_int(1), 2*(std::min)(m,n)+(std::max)(m,n) );
     blas_int  info;
     
     S.set_size( (std::min)(m,n) );
     
     podarray<eT> work(lwork);
     podarray<T>  rwork( 5*(std::min)(m,n) );
-  
+    
     // let gesvd_() calculate the optimum size of the workspace
     blas_int lwork_tmp = -1;
-    lapack::cx_gesvd_<T>
+    lapack::cx_gesvd<T>
      (
      &jobu, &jobvt,
      &m, &n,
@@ -1565,7 +1790,7 @@ auxlib::svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, con
         work.set_size(lwork);
         }
       
-      lapack::cx_gesvd_<T>
+      lapack::cx_gesvd<T>
         (
         &jobu, &jobvt,
         &m, &n,
@@ -1585,6 +1810,10 @@ auxlib::svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, con
     }
   #else
     {
+    arma_ignore(U);
+    arma_ignore(S);
+    arma_ignore(V);
+    arma_ignore(X);
     arma_stop("svd(): need LAPACK");
     return false;
     }
@@ -1603,6 +1832,12 @@ auxlib::solve(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
   {
   arma_extra_debug_sigprint();
   
+  if(A.is_empty() || B.is_empty())
+    {
+    out.reset();
+    return false;
+    }
+  
   #if defined(ARMA_USE_LAPACK)
     {
     blas_int n    = A.n_rows;
@@ -1616,12 +1851,15 @@ auxlib::solve(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
     out = B;
     Mat<eT> A_copy = A;
   
-    lapack::gesv_<eT>(&n, &nrhs, A_copy.memptr(), &lda, ipiv.memptr(), out.memptr(), &ldb, &info);
+    lapack::gesv<eT>(&n, &nrhs, A_copy.memptr(), &lda, ipiv.memptr(), out.memptr(), &ldb, &info);
   
     return (info == 0);
     }
   #else
     {
+    arma_ignore(out);
+    arma_ignore(A);
+    arma_ignore(B);
     arma_stop("solve(): need LAPACK");
     return false;
     }
@@ -1639,6 +1877,12 @@ bool
 auxlib::solve_od(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
   {
   arma_extra_debug_sigprint();
+  
+  if(A.is_empty() || B.is_empty())
+    {
+    out.reset();
+    return false;
+    }
   
   #if defined(ARMA_USE_LAPACK)
     {
@@ -1658,13 +1902,13 @@ auxlib::solve_od(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
     
     podarray<eT> work(lwork);
     
-    arma_extra_debug_print("lapack::gels_()");
+    arma_extra_debug_print("lapack::gels()");
     
     // NOTE:
     // the dgels() function in the lapack library supplied by ATLAS 3.6
     // seems to have problems
     
-    lapack::gels_<eT>
+    lapack::gels<eT>
       (
       &trans, &m, &n, &nrhs,
       A_copy.memptr(), &lda,
@@ -1673,7 +1917,7 @@ auxlib::solve_od(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
       &info
       );
     
-    arma_extra_debug_print("lapack::gels_() -- finished");
+    arma_extra_debug_print("lapack::gels() -- finished");
     
     out.set_size(A.n_cols, B.n_cols);
     
@@ -1686,6 +1930,9 @@ auxlib::solve_od(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
     }
   #else
     {
+    arma_ignore(out);
+    arma_ignore(A);
+    arma_ignore(B);
     arma_stop("auxlib::solve_od(): need LAPACK");
     return false;
     }
@@ -1703,6 +1950,12 @@ bool
 auxlib::solve_ud(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
   {
   arma_extra_debug_sigprint();
+  
+  if(A.is_empty() || B.is_empty())
+    {
+    out.reset();
+    return false;
+    }
   
   #if defined(ARMA_USE_LAPACK)
     {
@@ -1736,13 +1989,13 @@ auxlib::solve_ud(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
     
     podarray<eT> work(lwork);
     
-    arma_extra_debug_print("lapack::gels_()");
+    arma_extra_debug_print("lapack::gels()");
     
     // NOTE:
     // the dgels() function in the lapack library supplied by ATLAS 3.6
     // seems to have problems
     
-    lapack::gels_<eT>
+    lapack::gels<eT>
       (
       &trans, &m, &n, &nrhs,
       A_copy.memptr(), &lda,
@@ -1751,7 +2004,7 @@ auxlib::solve_ud(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
       &info
       );
     
-    arma_extra_debug_print("lapack::gels_() -- finished");
+    arma_extra_debug_print("lapack::gels() -- finished");
     
     out.set_size(A.n_cols, B.n_cols);
     
@@ -1764,6 +2017,9 @@ auxlib::solve_ud(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
     }
   #else
     {
+    arma_ignore(out);
+    arma_ignore(A);
+    arma_ignore(B);
     arma_stop("auxlib::solve_ud(): need LAPACK");
     return false;
     }

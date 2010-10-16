@@ -1,9 +1,6 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
-// - Edmund Highcock (edmund dot highcock at merton dot ox dot ac dot uk)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2009      Edmund Highcock
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -27,101 +24,111 @@ class auxlib
   //
   // inv
   
+  template<typename eT, typename T1>
+  inline static bool inv(Mat<eT>& out, const Base<eT,T1>& X);
+  
   template<typename eT>
-  inline static bool inv(Mat<eT>& out, const Mat<eT>& X);
+  inline static bool inv(Mat<eT>& out, const Mat<eT>& A);
   
   template<typename eT>
   inline static bool inv_noalias_tinymat(Mat<eT>& out, const Mat<eT>& X, const u32 N);
   
   template<typename eT>
-  inline static bool inv_inplace_tinymat(Mat<eT>& X, const u32 N);
+  inline static bool inv_inplace_tinymat(Mat<eT>& out, const u32 N);
   
   template<typename eT>
-  inline static bool inv_lapack(Mat<eT>& out, const Mat<eT>& X);
+  inline static bool inv_inplace_lapack(Mat<eT>& out);
   
   
   //
   // det
   
-  template<typename eT>
-  inline static eT det(const Mat<eT>& X);
+  template<typename eT, typename T1>
+  inline static eT det(const Base<eT,T1>& X);
   
   template<typename eT>
   inline static eT det_tinymat(const Mat<eT>& X, const u32 N);
   
   template<typename eT>
-  inline static eT det_lapack(const Mat<eT>& X);
+  inline static eT det_lapack(const Mat<eT>& X, const bool make_copy);
   
   
-  //  
+  //
   // log_det
   
-  template<typename eT>
-  inline static void log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const Mat<eT>& X);
+  template<typename eT, typename T1>
+  inline static void log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const Base<eT,T1>& X);
   
   
   //
   // lu
   
-  template<typename eT>
-  inline static void lu(Mat<eT>& L, Mat<eT>& U, podarray<int>& ipiv, const Mat<eT>& X_orig);
+  template<typename eT, typename T1>
+  inline static void lu(Mat<eT>& L, Mat<eT>& U, podarray<blas_int>& ipiv, const Base<eT,T1>& X);
   
-  template<typename eT>
-  inline static void lu(Mat<eT>& L, Mat<eT>& U, Mat<eT>& P, const Mat<eT>& X);
+  template<typename eT, typename T1>
+  inline static void lu(Mat<eT>& L, Mat<eT>& U, Mat<eT>& P, const Base<eT,T1>& X);
   
-  template<typename eT>
-  inline static void lu(Mat<eT>& L, Mat<eT>& U, const Mat<eT>& X);
+  template<typename eT, typename T1>
+  inline static void lu(Mat<eT>& L, Mat<eT>& U, const Base<eT,T1>& X);
   
   
   //
   // eig
   
-  template<typename eT> 
-  inline static void eig_sym(Col<eT>& eigval, const Mat<eT>& A);
+  template<typename eT, typename T1> 
+  inline static bool eig_sym(Col<eT>& eigval, const Base<eT,T1>& X);
   
-  template<typename T> 
-  inline static void eig_sym(Col<T>& eigval, const Mat< std::complex<T> >& A);
-
-  template<typename eT>
-  inline static void eig_sym(Col<eT>& eigval, Mat<eT>& eigvec, const Mat<eT>& A);
+  template<typename T, typename T1> 
+  inline static bool eig_sym(Col<T>& eigval, const Base<std::complex<T>,T1>& X);
   
-  template<typename T>
-  inline static void eig_sym(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Mat< std::complex<T> >& A);
-
-  template<typename eT>
-  inline static void eig_gen(Col< std::complex<eT> >& eigval, Mat<eT>& l_eigvec, Mat<eT>& r_eigvec, const Mat<eT>& A, const char side);
-
-  template<typename T>
-  inline static void eig_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& l_eigvec, Mat< std::complex<T> >& r_eigvec, const Mat< std::complex<T> >& A, const char side);
+  template<typename eT, typename T1>
+  inline static bool eig_sym(Col<eT>& eigval, Mat<eT>& eigvec, const Base<eT,T1>& X);
+  
+  template<typename T, typename T1>
+  inline static bool eig_sym(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Base<std::complex<T>,T1>& X);
+  
+  template<typename T, typename T1>
+  inline static bool eig_gen(Col< std::complex<T> >& eigval, Mat<T>& l_eigvec, Mat<T>& r_eigvec, const Base<T,T1>& X, const char side);
+  
+  template<typename T, typename T1>
+  inline static bool eig_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& l_eigvec, Mat< std::complex<T> >& r_eigvec, const Base< std::complex<T>, T1 >& X, const char side);
+  
   
   //
   // chol
   
-  template<typename eT>
-  inline static bool chol(Mat<eT>& out, const Mat<eT>& X);
+  template<typename eT, typename T1>
+  inline static bool chol(Mat<eT>& out, const Base<eT,T1>& X);
   
   
   //
   // qr
   
-  template<typename eT>
-  inline static bool qr(Mat<eT>& Q, Mat<eT>& R, const Mat<eT>& X);
+  template<typename eT, typename T1>
+  inline static bool qr(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X);
   
   
   //
   // svd
   
-  template<typename eT>
-  inline static bool svd(Col<eT>& S, const Mat<eT>& X);
+  template<typename eT, typename T1>
+  inline static bool svd(Col<eT>& S, const Base<eT,T1>& X, u32& n_rows, u32& n_cols);
   
-  template<typename T>
-  inline static bool svd(Col<T>& S, const Mat< std::complex<T> >& X);
+  template<typename T, typename T1>
+  inline static bool svd(Col<T>& S, const Base<std::complex<T>, T1>& X, u32& n_rows, u32& n_cols);
   
-  template<typename eT>
-  inline static bool svd(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Mat<eT>& X);
+  template<typename eT, typename T1>
+  inline static bool svd(Col<eT>& S, const Base<eT,T1>& X);
   
-  template<typename T>
-  inline static bool svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, const Mat< std::complex<T> >& X);
+  template<typename T, typename T1>
+  inline static bool svd(Col<T>& S, const Base<std::complex<T>, T1>& X);
+  
+  template<typename eT, typename T1>
+  inline static bool svd(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X);
+  
+  template<typename T, typename T1>
+  inline static bool svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, const Base< std::complex<T>, T1>& X);
   
   
   //

@@ -1,8 +1,5 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -123,6 +120,9 @@ inline
 u32
 arma_ostream::modify_stream(std::ostream& o, const std::complex<T>* data, const u32 n_elem)
   {
+  arma_ignore(data);
+  arma_ignore(n_elem);
+  
   o.unsetf(ios::showbase);
   o.unsetf(ios::uppercase);
   o.fill(' ');
@@ -136,7 +136,7 @@ arma_ostream::modify_stream(std::ostream& o, const std::complex<T>* data, const 
   
   o.precision(3);
   cell_width = 2 + 2*(1 + 3 + o.precision() + 5) + 1;
-
+  
   return cell_width;
   }
 

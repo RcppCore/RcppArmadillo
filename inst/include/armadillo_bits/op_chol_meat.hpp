@@ -1,8 +1,5 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -26,19 +23,12 @@ op_chol::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_chol>& X)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
+  const bool status = auxlib::chol(out, X.m);
   
-  const unwrap_check<T1> tmp(X.m, out);
-  const Mat<eT>&     A = tmp.M;
-  
-  arma_debug_check( (A.is_square() == false), "chol(): given matrix is not square");
-  
-  const bool ok = auxlib::chol(out, A);
-  
-  if(ok == false)
+  if(status == false)
     {
+    arma_print("chol(): failed to converge");
     out.reset();
-    arma_print("chol(): matrix factorisation failed");
     }
   }
 

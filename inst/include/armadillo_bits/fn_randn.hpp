@@ -1,8 +1,5 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -55,6 +52,8 @@ randn(const u32 n_elem, const typename arma_Mat_Col_Row_only<vec_type>::result* 
   {
   arma_extra_debug_sigprint();
   
+  arma_ignore(junk);
+  
   if(is_Row<vec_type>::value == true)
     {
     return eOp<vec_type, eop_randn>(1, n_elem);
@@ -86,6 +85,8 @@ randn(const u32 n_rows, const u32 n_cols, const typename arma_Mat_Col_Row_only<m
   {
   arma_extra_debug_sigprint();
   
+  arma_ignore(junk);
+  
   return eOp<mat_type, eop_randn>(n_rows, n_cols);
   }
 
@@ -108,6 +109,8 @@ const eOpCube<cube_type, eop_randn>
 randn(const u32 n_rows, const u32 n_cols, const u32 n_slices, const typename arma_Cube_only<cube_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
+  
+  arma_ignore(junk);
   
   return eOpCube<cube_type, eop_randn>(n_rows, n_cols, n_slices);
   }

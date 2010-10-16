@@ -1,8 +1,5 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -57,6 +54,8 @@ arma_inline
 typename T1::pod_type
 norm_2(const Proxy<T1>& A, const typename arma_not_cx<typename T1::elem_type>::result* junk = 0)
   {
+  arma_ignore(junk);
+  
   typedef typename T1::pod_type       T;
   typedef typename Proxy<T1>::ea_type ea_type;
   
@@ -94,6 +93,8 @@ arma_inline
 typename T1::pod_type
 norm_2(const Proxy<T1>& A, const typename arma_cx_only<typename T1::elem_type>::result* junk = 0)
   {
+  arma_ignore(junk);
+  
   typedef typename T1::pod_type       T;
   typedef typename Proxy<T1>::ea_type ea_type;
   
@@ -232,6 +233,8 @@ norm
   {
   arma_extra_debug_sigprint();
   
+  arma_ignore(junk);
+  
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
   
@@ -273,6 +276,8 @@ norm
   )
   {
   arma_extra_debug_sigprint();
+  
+  arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;

@@ -1,8 +1,5 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -90,6 +87,7 @@ mtOpCube<out_eT, T1, op_type>::mtOpCube(const char junk, const T1& in_m, const o
   , aux_u32_c(aux_u32_c)
   {
   arma_extra_debug_sigprint();
+  arma_ignore(junk);
   }
 
 

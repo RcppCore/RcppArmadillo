@@ -1,8 +1,5 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -35,6 +32,8 @@ linspace
   )
   {
   arma_extra_debug_sigprint();
+  
+  arma_ignore(junk);
   
   arma_debug_check( (num < 2), "linspace(): num must be >= 2");
   
@@ -413,6 +412,8 @@ abs(const Base<typename T1::elem_type,T1>& X, const typename arma_not_cx<typenam
   {
   arma_extra_debug_sigprint();
   
+  arma_ignore(junk);
+  
   return eOp<T1, eop_abs>(X.get_ref());
   }
 
@@ -424,6 +425,8 @@ const eOpCube<T1, eop_abs>
 abs(const BaseCube<typename T1::elem_type,T1>& X, const typename arma_not_cx<typename T1::elem_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
+  
+  arma_ignore(junk);
   
   return eOpCube<T1, eop_abs>(X.get_ref());
   }
@@ -437,6 +440,8 @@ abs(const Base<std::complex<typename T1::pod_type>, T1>& X, const typename arma_
   {
   arma_extra_debug_sigprint();
   
+  arma_ignore(junk);
+  
   return mtOp<typename T1::pod_type, T1, op_abs>( X.get_ref() );
   }
 
@@ -448,6 +453,8 @@ const mtOpCube<typename T1::pod_type, T1, op_abs>
 abs(const BaseCube< std::complex<typename T1::pod_type>,T1>& X, const typename arma_cx_only<typename T1::elem_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
+  
+  arma_ignore(junk);
   
   return mtOpCube<typename T1::pod_type, T1, op_abs>( X.get_ref() );
   }
@@ -464,6 +471,8 @@ fabs(const Base<typename T1::pod_type,T1>& X, const typename arma_not_cx<typenam
   {
   arma_extra_debug_sigprint();
   
+  arma_ignore(junk);
+  
   return eOp<T1, eop_abs>(X.get_ref());
   }
 
@@ -475,6 +484,8 @@ const eOpCube<T1, eop_abs>
 fabs(const BaseCube<typename T1::pod_type,T1>& X, const typename arma_not_cx<typename T1::elem_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
+  
+  arma_ignore(junk);
   
   return eOpCube<T1, eop_abs>(X.get_ref());
   }
@@ -488,6 +499,8 @@ fabs(const Base<std::complex<typename T1::pod_type>, T1>& X, const typename arma
   {
   arma_extra_debug_sigprint();
   
+  arma_ignore(junk);
+  
   return mtOp<typename T1::pod_type, T1, op_abs>( X.get_ref() );
   }
 
@@ -499,6 +512,8 @@ const mtOpCube<typename T1::pod_type, T1, op_abs>
 fabs(const BaseCube< std::complex<typename T1::pod_type>,T1>& X, const typename arma_cx_only<typename T1::elem_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
+  
+  arma_ignore(junk);
   
   return abs(X);
   }
@@ -703,53 +718,6 @@ pow(const BaseCube<typename T1::elem_type,T1>& A, const typename T1::elem_type::
   
   return eOpCube<T1, eop_pow>(A.get_ref(), eT(exponent));
   }
-
-
-
-// #if defined(ARMA_GOOD_COMPILER)
-// 
-// 
-// // pow_s32  (integer exponent)
-// 
-// template<typename T1>
-// arma_inline
-// const eOp<T1, eop_pow_int>
-// pow(const Base<typename T1::elem_type,T1>& A, const int exponent)
-//   {
-//   arma_extra_debug_sigprint();
-//   
-//   if(exponent >= 0)
-//     {
-//     return eOp<T1, eop_pow_int>(A.get_ref(), exponent, 0);
-//     }
-//   else
-//     {
-//     return eOp<T1, eop_pow_int>(A.get_ref(), -exponent, 1);
-//     }
-//   }
-// 
-// 
-// 
-// template<typename T1>
-// arma_inline
-// const eOpCube<T1, eop_pow_int>
-// pow(const BaseCube<typename T1::elem_type,T1>& A, const int exponent)
-//   {
-//   arma_extra_debug_sigprint();
-//   
-//   if(exponent >= 0)
-//     {
-//     return eOpCube<T1, eop_pow_int>(A.get_ref(),  exponent, 0);
-//     }
-//   else
-//     {
-//     return eOpCube<T1, eop_pow_int>(A.get_ref(), -exponent, 1);
-//     }
-//   }
-// 
-// 
-// 
-// #endif
 
 
 

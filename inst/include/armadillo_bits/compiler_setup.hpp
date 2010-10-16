@@ -1,8 +1,5 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -23,6 +20,15 @@
 #define arma_aligned
 #define arma_warn_unused
 #define arma_deprecated
+#define arma_ignore(variable)  ((void)(variable))
+#define arma_fortran(function) function
+
+
+#if defined(ARMA_BLAS_UNDERSCORE)
+  #undef  arma_fortran
+  #define arma_fortran(function) function##_
+#endif
+
 
 #if defined(__GNUG__)
   
@@ -121,4 +127,25 @@
   #undef ARMA_HAVE_STD_ISINF
   #undef ARMA_HAVE_STD_ISNAN
   #undef ARMA_HAVE_STD_TR1
+#endif
+
+
+
+// 
+// whoever defined macros with the names "min" and "max" should be permanently removed from the gene pool
+
+#if defined(min)
+  #undef min
+  
+  #if defined(_MSC_VER)
+    #pragma message ("detected min macro and undefined it; you may wish to define NOMINMAX before including any windows header")
+  #endif
+#endif
+
+#if defined(max)
+  #undef max
+  
+  #if defined(_MSC_VER)
+    #pragma message ("detected max macro and undefined it; you may wish to define NOMINMAX before including any windows header")
+  #endif
 #endif

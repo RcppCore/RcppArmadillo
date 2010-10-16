@@ -1,9 +1,6 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
-// - Ian Cullinan (ian dot cullinan at nicta dot com dot au)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2009-2010 Ian Cullinan
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -1721,6 +1718,8 @@ field_aux::save(const field< std::string >& x, const std::string& name, const fi
   {
   arma_extra_debug_sigprint();
   
+  arma_ignore(type);
+  
   err_msg.clear();
   
   return diskio::save_std_string(x, name);
@@ -1733,6 +1732,8 @@ bool
 field_aux::save(const field< std::string >& x, std::ostream& os, const file_type type, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
+  
+  arma_ignore(type);
   
   err_msg.clear();
   
@@ -1747,6 +1748,8 @@ field_aux::load(field< std::string >& x, const std::string& name, const file_typ
   {
   arma_extra_debug_sigprint();
   
+  arma_ignore(type);
+  
   return diskio::load_std_string(x, name, err_msg);
   }
 
@@ -1757,6 +1760,8 @@ bool
 field_aux::load(field< std::string >& x, std::istream& is, const file_type type, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
+  
+  arma_ignore(type);
   
   return diskio::load_std_string(x, is, err_msg);
   }

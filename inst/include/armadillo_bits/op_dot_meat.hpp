@@ -1,8 +1,5 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -74,7 +71,7 @@ op_dot::direct_dot(const u32 n_elem, const eT* const A, const eT* const B)
     #elif defined(ARMA_USE_BLAS)
       {
       const blas_int n = n_elem;
-      return blas::dot_(&n, A, B);
+      return blas::dot(&n, A, B);
       }
     #else
       {

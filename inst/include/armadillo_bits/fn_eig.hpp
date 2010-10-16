@@ -1,9 +1,6 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
-// - Edmund Highcock (edmund dot highcock at merton dot ox dot ac dot uk)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2009      Edmund Highcock
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -27,20 +24,30 @@
 //! Eigenvalues of real/complex symmetric/hermitian matrix X
 template<typename T1>
 inline
-void
-eig_sym(Col<typename T1::pod_type>& eigval, const Base<typename T1::elem_type,T1>& X, const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0)
+bool
+eig_sym
+  (
+         Col<typename T1::pod_type>&     eigval,
+  const Base<typename T1::elem_type,T1>& X,
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  )
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
+  arma_ignore(junk);
   
   // unwrap_check not used as T1::elem_type and T1::pod_type may not be the same.
-  // furthermore, it doesn't matter if A is an alias of S, as auxlib::eig() makes a copy of A
-
-  const unwrap<T1> tmp(X.get_ref());
-  const Mat<eT>& A = tmp.M;
-
-  auxlib::eig_sym(eigval, A);
+  // furthermore, it doesn't matter if X is an alias of eigval, as auxlib::eig_sym() makes a copy of X
+  
+  const bool status = auxlib::eig_sym(eigval, X);
+  
+  if(status == false)
+    {
+    arma_print("eig_sym(): failed to converge");
+    eigval.reset();
+    }
+  
+  return status;
   }
 
 
@@ -49,9 +56,15 @@ eig_sym(Col<typename T1::pod_type>& eigval, const Base<typename T1::elem_type,T1
 template<typename T1>
 inline
 Col<typename T1::pod_type>
-eig_sym(const Base<typename T1::elem_type,T1>& X, const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0)
+eig_sym
+  (
+  const Base<typename T1::elem_type,T1>& X,
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  )
   {
   arma_extra_debug_sigprint();
+  
+  arma_ignore(junk);
   
   Col<typename T1::pod_type> out;
   eig_sym(out, X);
@@ -60,26 +73,35 @@ eig_sym(const Base<typename T1::elem_type,T1>& X, const typename arma_blas_type_
   }
 
 
+
 //! Eigenvalues and eigenvectors of real/complex symmetric/hermitian matrix X
 template<typename T1> 
 inline
-void
+bool
 eig_sym
   (
-  Col<typename T1::pod_type>& eigval,
-  Mat<typename T1::elem_type>& eigvec,
+         Col<typename T1::pod_type>&     eigval,
+         Mat<typename T1::elem_type>&    eigvec,
   const Base<typename T1::elem_type,T1>& X,
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
   )
   {
   arma_extra_debug_sigprint();
-
-  typedef typename T1::elem_type eT;
   
-  const unwrap<T1> tmp(X.get_ref());
-  const Mat<eT>& A = tmp.M;
+  arma_ignore(junk);
   
-  auxlib::eig_sym(eigval, eigvec, A);
+  arma_debug_check( ( ((void*)(&eigval)) == ((void*)(&eigvec)) ), "eig_sym(): eigval is an alias of eigvec" );
+  
+  const bool status = auxlib::eig_sym(eigval, eigvec, X);
+  
+  if(status == false)
+    {
+    arma_print("eig_sym(): failed to converge");
+    eigval.reset();
+    eigvec.reset();
+    }
+  
+  return status;
   }
 
 
@@ -93,24 +115,47 @@ eig_sym
 //! Eigenvalues and eigenvectors (both left and right) of general real/complex square matrix X
 template<typename T1>
 inline
-void
+bool
 eig_gen
   (
-  Col< std::complex<typename T1::pod_type> >& eigval, 
-  Mat<typename T1::elem_type>&                l_eigvec,
-  Mat<typename T1::elem_type>&                r_eigvec,
-  const Base<typename T1::elem_type,T1>&      X,
+         Col< std::complex<typename T1::pod_type> >& eigval, 
+         Mat<typename T1::elem_type>&                l_eigvec,
+         Mat<typename T1::elem_type>&                r_eigvec,
+  const Base<typename T1::elem_type,T1>&             X,
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
   )
   {
   arma_extra_debug_sigprint();
-
-  typedef typename T1::elem_type eT;
   
-  const unwrap<T1> tmp(X.get_ref());
-  const Mat<eT>& A = tmp.M;
-
-  auxlib::eig_gen(eigval, l_eigvec, r_eigvec, A, 'b');
+  arma_ignore(junk);
+  
+  arma_debug_check
+    (
+    ((&l_eigvec) == (&r_eigvec)),
+    "eig_gen(): l_eigvec is an alias of r_eigvec"
+    );
+  
+  arma_debug_check
+    (
+      (
+      (((void*)(&eigval)) == ((void*)(&l_eigvec)))
+      ||
+      (((void*)(&eigval)) == ((void*)(&r_eigvec)))
+      ),
+    "eig_gen(): eigval is an alias of l_eigvec or r_eigvec"
+    );
+  
+  const bool status = auxlib::eig_gen(eigval, l_eigvec, r_eigvec, X, 'b');
+  
+  if(status == false)
+    {
+    arma_print("eig_gen(): failed to converge");
+    eigval.reset();
+    l_eigvec.reset();
+    r_eigvec.reset();
+    }
+  
+  return status;
   }
 
 
@@ -120,44 +165,54 @@ eig_gen
 //! 'r' for right (default) and 'l' for left.
 template<typename eT, typename T1>
 inline
-void
+bool
 eig_gen
   (
-  Col< std::complex<eT> >& eigval, 
-  Mat< std::complex<eT> >& eigvec,
-  const Base<eT, T1>& X, 
-  const char side = 'r',
+        Col< std::complex<eT> >& eigval, 
+        Mat< std::complex<eT> >& eigvec,
+  const Base<eT, T1>&            X, 
+  const char                     side = 'r',
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
   )
   {
   arma_extra_debug_sigprint();
-
+  
+  arma_ignore(junk);
+  
   //std::cout << "real" << std::endl;
-
-  const unwrap<T1> tmp(X.get_ref());
-  const Mat<eT>& A = tmp.M;
-
+  
+  arma_debug_check( ( ((void*)(&eigval)) == ((void*)(&eigvec)) ), "eig_gen(): eigval is an alias of eigvec" );
+  
   Mat<eT> dummy_eigvec;
   Mat<eT> tmp_eigvec;
+  
+  bool status;
   
   switch(side)
     {
     case 'r':
-      auxlib::eig_gen(eigval, dummy_eigvec, tmp_eigvec, A, side);
+      status = auxlib::eig_gen(eigval, dummy_eigvec, tmp_eigvec, X, side);
       break;
-
+    
     case 'l':
-      auxlib::eig_gen(eigval, tmp_eigvec, dummy_eigvec, A, side);
+      status = auxlib::eig_gen(eigval, tmp_eigvec, dummy_eigvec, X, side);
       break;
       
     default:
       arma_stop("eig_gen(): parameter 'side' is invalid");
-      return;
+      status = false;
     }
-
-
-  const u32 n = A.n_rows;
-
+  
+  if(status == false)
+    {
+    arma_print("eig_gen(): failed to converge");
+    eigval.reset();
+    eigvec.reset();
+    return false;
+    }
+  
+  const u32 n = eigval.n_elem;
+  
   if(n > 0)
     {
     eigvec.set_size(n,n);
@@ -168,28 +223,29 @@ eig_gen
         {
         // eigvec.col(j)   = Mat< std::complex<eT> >( tmp_eigvec.col(j),  tmp_eigvec.col(j+1) );
         // eigvec.col(j+1) = Mat< std::complex<eT> >( tmp_eigvec.col(j), -tmp_eigvec.col(j+1) );
-
+        
         for(u32 i=0; i<n; ++i)
           {
           eigvec.at(i,j)   = std::complex<eT>( tmp_eigvec.at(i,j),  tmp_eigvec.at(i,j+1) );
           eigvec.at(i,j+1) = std::complex<eT>( tmp_eigvec.at(i,j), -tmp_eigvec.at(i,j+1) );
           }
-
+        
         ++j;
         }
       else
         {
         // eigvec.col(i) = tmp_eigvec.col(i);
-
+        
         for(u32 i=0; i<n; ++i)
           {
           eigvec.at(i,j) = std::complex<eT>(tmp_eigvec.at(i,j), eT(0));
           }
-
+        
         }
       }
     }
-
+  
+  return true;
   }
 
 
@@ -199,39 +255,51 @@ eig_gen
 //! 'r' for right (default) and 'l' for left.
 template<typename T, typename T1>
 inline
-void
+bool
 eig_gen
   (
-  Col< std::complex<T> >& eigval, 
-  Mat< std::complex<T> >& eigvec,
+         Col<std::complex<T> >&    eigval, 
+         Mat<std::complex<T> >&    eigvec,
   const Base<std::complex<T>, T1>& X, 
-  const char side = 'r',
+  const char                       side = 'r',
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
   )
   {
   arma_extra_debug_sigprint();
+  
+  arma_ignore(junk);
+  
   //std::cout << "complex" << std::endl;
-
-  typedef typename std::complex<T> eT;
-
-  const unwrap<T1> tmp(X.get_ref());
-  const Mat<eT>& A = tmp.M;
-
-  Mat<eT> dummy_eigvec;
+  
+  arma_debug_check( ( ((void*)(&eigval)) == ((void*)(&eigvec)) ), "eig_gen(): eigval is an alias of eigvec" );
+  
+  Mat< std::complex<T> > dummy_eigvec;
+  
+  bool status;
   
   switch(side)
     {
     case 'r':
-      auxlib::eig_gen(eigval, dummy_eigvec, eigvec, A, side);
+      status = auxlib::eig_gen(eigval, dummy_eigvec, eigvec, X, side);
       break;
-
+    
     case 'l':
-      auxlib::eig_gen(eigval, eigvec, dummy_eigvec, A, side);
+      status = auxlib::eig_gen(eigval, eigvec, dummy_eigvec, X, side);
       break;
       
     default:
       arma_stop("eig_gen(): parameter 'side' is invalid");
+      status = false;
     }
+  
+  if(status == false)
+    {
+    arma_print("eig_gen(): failed to converge");
+    eigval.reset();
+    eigvec.reset();
+    }
+  
+  return status;
   }
 
 
