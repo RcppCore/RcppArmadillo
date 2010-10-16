@@ -1,8 +1,5 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -61,6 +58,7 @@ class podarray
   arma_inline eT  operator() (const u32 i) const;
   
   inline void set_size(const u32 new_n_elem);
+  inline void reset();
   
   inline void fill(const eT val);
   

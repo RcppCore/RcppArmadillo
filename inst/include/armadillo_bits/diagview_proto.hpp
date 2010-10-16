@@ -1,8 +1,5 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -22,8 +19,8 @@
 template<typename eT>
 class diagview : public Base<eT, diagview<eT> >
   {
-  public:   const Mat<eT>& m;
-  protected:      Mat<eT>* m_ptr;
+  public:    arma_aligned const Mat<eT>& m;
+  protected: arma_aligned       Mat<eT>* m_ptr;
   
   public:
   

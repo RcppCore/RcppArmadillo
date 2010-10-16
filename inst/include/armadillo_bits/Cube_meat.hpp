@@ -1,8 +1,5 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -1681,6 +1678,7 @@ Cube<eT>::operator/=(const mtGlueCube<eT, T1, T2, glue_type>& X)
 //! linear element accessor (treats the cube as a vector); bounds checking not done when ARMA_NO_DEBUG is defined
 template<typename eT>
 arma_inline
+arma_warn_unused
 eT&
 Cube<eT>::operator() (const u32 i)
   {
@@ -1693,6 +1691,7 @@ Cube<eT>::operator() (const u32 i)
 //! linear element accessor (treats the cube as a vector); bounds checking not done when ARMA_NO_DEBUG is defined
 template<typename eT>
 arma_inline
+arma_warn_unused
 eT
 Cube<eT>::operator() (const u32 i) const
   {
@@ -1704,6 +1703,7 @@ Cube<eT>::operator() (const u32 i) const
 //! linear element accessor (treats the cube as a vector); no bounds check.  
 template<typename eT>
 arma_inline
+arma_warn_unused
 eT&
 Cube<eT>::operator[] (const u32 i)
   {
@@ -1715,6 +1715,7 @@ Cube<eT>::operator[] (const u32 i)
 //! linear element accessor (treats the cube as a vector); no bounds check
 template<typename eT>
 arma_inline
+arma_warn_unused
 eT
 Cube<eT>::operator[] (const u32 i) const
   {
@@ -1726,6 +1727,7 @@ Cube<eT>::operator[] (const u32 i) const
 //! element accessor; bounds checking not done when ARMA_NO_DEBUG is defined
 template<typename eT>
 arma_inline
+arma_warn_unused
 eT&
 Cube<eT>::operator() (const u32 in_row, const u32 in_col, const u32 in_slice)
   {
@@ -1746,6 +1748,7 @@ Cube<eT>::operator() (const u32 in_row, const u32 in_col, const u32 in_slice)
 //! element accessor; bounds checking not done when ARMA_NO_DEBUG is defined
 template<typename eT>
 arma_inline
+arma_warn_unused
 eT
 Cube<eT>::operator() (const u32 in_row, const u32 in_col, const u32 in_slice) const
   {
@@ -1766,6 +1769,7 @@ Cube<eT>::operator() (const u32 in_row, const u32 in_col, const u32 in_slice) co
 //! element accessor; no bounds check
 template<typename eT>
 arma_inline
+arma_warn_unused
 eT&
 Cube<eT>::at(const u32 in_row, const u32 in_col, const u32 in_slice)
   {
@@ -1777,6 +1781,7 @@ Cube<eT>::at(const u32 in_row, const u32 in_col, const u32 in_slice)
 //! element accessor; no bounds check
 template<typename eT>
 arma_inline
+arma_warn_unused
 eT
 Cube<eT>::at(const u32 in_row, const u32 in_col, const u32 in_slice) const
   {
@@ -1834,6 +1839,7 @@ Cube<eT>::operator--(int)
 //! returns true if all of the elements are finite
 template<typename eT>
 arma_inline
+arma_warn_unused
 bool
 Cube<eT>::is_finite() const
   {
@@ -1853,6 +1859,7 @@ Cube<eT>::is_finite() const
 //! returns true if the cube has no elements
 template<typename eT>
 arma_inline
+arma_warn_unused
 bool
 Cube<eT>::is_empty() const
   {
@@ -1864,6 +1871,7 @@ Cube<eT>::is_empty() const
 //! returns true if the given index is currently in range
 template<typename eT>
 arma_inline
+arma_warn_unused
 bool
 Cube<eT>::in_range(const u32 i) const
   {
@@ -1875,6 +1883,7 @@ Cube<eT>::in_range(const u32 i) const
 //! returns true if the given location is currently in range
 template<typename eT>
 arma_inline
+arma_warn_unused
 bool
 Cube<eT>::in_range(const u32 in_row, const u32 in_col, const u32 in_slice) const
   {
@@ -1886,6 +1895,7 @@ Cube<eT>::in_range(const u32 in_row, const u32 in_col, const u32 in_slice) const
 //! returns a pointer to array of eTs used by the cube
 template<typename eT>
 arma_inline
+arma_warn_unused
 eT*
 Cube<eT>::memptr()
   {
@@ -1897,6 +1907,7 @@ Cube<eT>::memptr()
 //! returns a pointer to array of eTs used by the cube
 template<typename eT>
 arma_inline
+arma_warn_unused
 const eT*
 Cube<eT>::memptr() const
   {
@@ -1908,6 +1919,7 @@ Cube<eT>::memptr() const
 //! returns a pointer to array of eTs used by the specified slice in the cube
 template<typename eT>
 arma_inline
+arma_warn_unused
 eT*
 Cube<eT>::slice_memptr(const u32 slice)
   {
@@ -1919,6 +1931,7 @@ Cube<eT>::slice_memptr(const u32 slice)
 //! returns a pointer to array of eTs used by the specified slice in the cube
 template<typename eT>
 arma_inline
+arma_warn_unused
 const eT*
 Cube<eT>::slice_memptr(const u32 slice) const
   {
@@ -1930,6 +1943,7 @@ Cube<eT>::slice_memptr(const u32 slice) const
 //! returns a pointer to array of eTs used by the specified slice in the cube
 template<typename eT>
 arma_inline
+arma_warn_unused
 eT*
 Cube<eT>::slice_colptr(const u32 slice, const u32 col)
   {
@@ -1941,6 +1955,7 @@ Cube<eT>::slice_colptr(const u32 slice, const u32 col)
 //! returns a pointer to array of eTs used by the specified slice in the cube
 template<typename eT>
 arma_inline
+arma_warn_unused
 const eT*
 Cube<eT>::slice_colptr(const u32 slice, const u32 col) const
   {

@@ -1,8 +1,5 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
+// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2010 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -39,6 +36,8 @@ solve
   {
   arma_extra_debug_sigprint();
   
+  arma_ignore(junk);
+  
   return Glue<T1, T2, glue_solve>(A.get_ref(), B.get_ref());
   }
 
@@ -56,6 +55,8 @@ solve
   )
   {
   arma_extra_debug_sigprint();
+  
+  arma_ignore(junk);
   
   out = solve(A,B);
   

@@ -1,9 +1,6 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
-// - Dimitrios Bouzas (dimitris dot mpouzas at gmail dot com)
+// Copyright (C) 2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2010 Conrad Sanderson
+// Copyright (C) 2010 Dimitrios Bouzas
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -64,11 +61,14 @@ op_find::helper
   (
   Mat<u32>& indices,
   const mtOp<u32, T1, op_type>& X,
-  const typename arma_op_rel_only<op_type>::result junk1,
+  const typename arma_op_rel_only<op_type>::result           junk1,
   const typename arma_not_cx<typename T1::elem_type>::result junk2
   )
   {
   arma_extra_debug_sigprint();
+  
+  arma_ignore(junk1);
+  arma_ignore(junk2);
   
   typedef typename T1::elem_type eT;
   
@@ -168,12 +168,16 @@ op_find::helper
   (
   Mat<u32>& indices,
   const mtGlue<u32, T1, T2, glue_type>& X,
-  const typename arma_glue_rel_only<glue_type>::result junk1,
+  const typename arma_glue_rel_only<glue_type>::result       junk1,
   const typename arma_not_cx<typename T1::elem_type>::result junk2,
   const typename arma_not_cx<typename T2::elem_type>::result junk3
   )
   {
   arma_extra_debug_sigprint();
+  
+  arma_ignore(junk1);
+  arma_ignore(junk2);
+  arma_ignore(junk3);
   
   typedef typename T1::elem_type eT1;
   typedef typename T2::elem_type eT2;
@@ -224,12 +228,16 @@ op_find::helper
   (
   Mat<u32>& indices,
   const mtGlue<u32, T1, T2, glue_type>& X,
-  const typename arma_glue_rel_only<glue_type>::result junk1,
+  const typename arma_glue_rel_only<glue_type>::result        junk1,
   const typename arma_cx_only<typename T1::elem_type>::result junk2,
   const typename arma_cx_only<typename T2::elem_type>::result junk3
   )
   {
   arma_extra_debug_sigprint();
+  
+  arma_ignore(junk1);
+  arma_ignore(junk2);
+  arma_ignore(junk3);
   
   const Proxy<T1> A(X.A);
   const Proxy<T2> B(X.B);

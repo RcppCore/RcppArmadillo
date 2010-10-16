@@ -1,8 +1,5 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -157,15 +154,15 @@ class Cube : public BaseCube< eT, Cube<eT> >
   template<typename T1, typename T2, typename glue_type> inline const Cube& operator/=(const mtGlueCube<eT, T1, T2, glue_type>& X);
   
   
-  arma_inline eT& operator[] (const u32 i);
-  arma_inline eT  operator[] (const u32 i) const;
-  arma_inline eT& operator() (const u32 i);
-  arma_inline eT  operator() (const u32 i) const;
+  arma_inline arma_warn_unused eT& operator[] (const u32 i);
+  arma_inline arma_warn_unused eT  operator[] (const u32 i) const;
+  arma_inline arma_warn_unused eT& operator() (const u32 i);
+  arma_inline arma_warn_unused eT  operator() (const u32 i) const;
   
-  arma_inline eT& at         (const u32 in_row, const u32 in_col, const u32 in_slice);
-  arma_inline eT  at         (const u32 in_row, const u32 in_col, const u32 in_slice) const;
-  arma_inline eT& operator() (const u32 in_row, const u32 in_col, const u32 in_slice);
-  arma_inline eT  operator() (const u32 in_row, const u32 in_col, const u32 in_slice) const;
+  arma_inline arma_warn_unused eT& at         (const u32 in_row, const u32 in_col, const u32 in_slice);
+  arma_inline arma_warn_unused eT  at         (const u32 in_row, const u32 in_col, const u32 in_slice) const;
+  arma_inline arma_warn_unused eT& operator() (const u32 in_row, const u32 in_col, const u32 in_slice);
+  arma_inline arma_warn_unused eT  operator() (const u32 in_row, const u32 in_col, const u32 in_slice) const;
   
   arma_inline const Cube& operator++();
   arma_inline void        operator++(int);
@@ -173,20 +170,20 @@ class Cube : public BaseCube< eT, Cube<eT> >
   arma_inline const Cube& operator--();
   arma_inline void        operator--(int);
   
-  arma_inline bool is_finite() const;
-  arma_inline bool is_empty()  const;
+  arma_inline arma_warn_unused bool is_finite() const;
+  arma_inline arma_warn_unused bool is_empty()  const;
   
-  arma_inline bool in_range(const u32 i) const;
-  arma_inline bool in_range(const u32 in_row, const u32 in_col, const u32 in_slice) const;
+  arma_inline arma_warn_unused bool in_range(const u32 i) const;
+  arma_inline arma_warn_unused bool in_range(const u32 in_row, const u32 in_col, const u32 in_slice) const;
   
-  arma_inline       eT* memptr();
-  arma_inline const eT* memptr() const;
+  arma_inline arma_warn_unused       eT* memptr();
+  arma_inline arma_warn_unused const eT* memptr() const;
   
-  arma_inline       eT* slice_memptr(const u32 slice);
-  arma_inline const eT* slice_memptr(const u32 slice) const;
+  arma_inline arma_warn_unused       eT* slice_memptr(const u32 slice);
+  arma_inline arma_warn_unused const eT* slice_memptr(const u32 slice) const;
   
-  arma_inline       eT* slice_colptr(const u32 in_slice, const u32 in_col);
-  arma_inline const eT* slice_colptr(const u32 in_slice, const u32 in_col) const;
+  arma_inline arma_warn_unused       eT* slice_colptr(const u32 in_slice, const u32 in_col);
+  arma_inline arma_warn_unused const eT* slice_colptr(const u32 in_slice, const u32 in_col) const;
   
   inline void print(const std::string extra_text = "") const;
   inline void print(std::ostream& user_stream, const std::string extra_text = "") const;
@@ -284,11 +281,6 @@ class Cube : public BaseCube< eT, Cube<eT> >
     };
   
   
-  #ifdef ARMA_EXTRA_CUBE_PROTO
-    #include ARMA_INCFILE_WRAP(ARMA_EXTRA_CUBE_PROTO)
-  #endif
-  
-  
   protected:
   
   inline void init(const u32 in_rows, const u32 in_cols, const u32 in_slices);
@@ -304,6 +296,13 @@ class Cube : public BaseCube< eT, Cube<eT> >
   
   friend class op_reshape;
   friend class glue_join;
+  
+  
+  public:
+  
+  #ifdef ARMA_EXTRA_CUBE_PROTO
+    #include ARMA_INCFILE_WRAP(ARMA_EXTRA_CUBE_PROTO)
+  #endif
   };
 
 

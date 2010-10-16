@@ -1,8 +1,5 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -630,6 +627,7 @@ Mat<eT>::Mat(const char junk, const eT* aux_mem, const u32 aux_n_rows, const u32
   , mem      (aux_mem              )
   {
   arma_extra_debug_sigprint_this(this);
+  arma_ignore(junk);
   }
 
 
@@ -1142,6 +1140,44 @@ Mat<eT>::col(const u32 col_num) const
   arma_debug_check( col_num >= n_cols, "Mat::col(): out of bounds");
   
   return subview_col<eT>(*this, col_num);
+  }
+
+
+
+//! create a Col object which uses memory from an existing matrix object.
+//! this approach is currently not alias safe
+//! and does not take into account that the parent matrix object could be deleted.
+//! if deleted memory is accessed by the created Col object,
+//! it will cause memory corruption and/or a crash
+template<typename eT>
+inline
+Col<eT>
+Mat<eT>::unsafe_col(const u32 col_num)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( col_num >= n_cols, "Mat::unsafe_col(): out of bounds");
+  
+  return Col<eT>(colptr(col_num), n_rows, false, true);
+  }
+
+
+
+//! create a Col object which uses memory from an existing matrix object.
+//! this approach is currently not alias safe
+//! and does not take into account that the parent matrix object could be deleted.
+//! if deleted memory is accessed by the created Col object,
+//! it will cause memory corruption and/or a crash
+template<typename eT>
+inline
+const Col<eT>
+Mat<eT>::unsafe_col(const u32 col_num) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( col_num >= n_cols, "Mat::unsafe_col(): out of bounds");
+  
+  return Col<eT>(const_cast<eT*>(colptr(col_num)), n_rows, false, true);
   }
 
 
@@ -2482,6 +2518,7 @@ Mat<eT>::operator/=(const mtGlue<eT, T1, T2, glue_type>& X)
 //! linear element accessor (treats the matrix as a vector); bounds checking not done when ARMA_NO_DEBUG is defined
 template<typename eT>
 arma_inline
+arma_warn_unused
 eT&
 Mat<eT>::operator() (const u32 i)
   {
@@ -2494,6 +2531,7 @@ Mat<eT>::operator() (const u32 i)
 //! linear element accessor (treats the matrix as a vector); bounds checking not done when ARMA_NO_DEBUG is defined
 template<typename eT>
 arma_inline
+arma_warn_unused
 eT
 Mat<eT>::operator() (const u32 i) const
   {
@@ -2505,6 +2543,7 @@ Mat<eT>::operator() (const u32 i) const
 //! linear element accessor (treats the matrix as a vector); no bounds check.  
 template<typename eT>
 arma_inline
+arma_warn_unused
 eT&
 Mat<eT>::operator[] (const u32 i)
   {
@@ -2516,6 +2555,7 @@ Mat<eT>::operator[] (const u32 i)
 //! linear element accessor (treats the matrix as a vector); no bounds check
 template<typename eT>
 arma_inline
+arma_warn_unused
 eT
 Mat<eT>::operator[] (const u32 i) const
   {
@@ -2527,6 +2567,7 @@ Mat<eT>::operator[] (const u32 i) const
 //! element accessor; bounds checking not done when ARMA_NO_DEBUG is defined
 template<typename eT>
 arma_inline
+arma_warn_unused
 eT&
 Mat<eT>::operator() (const u32 in_row, const u32 in_col)
   {
@@ -2539,6 +2580,7 @@ Mat<eT>::operator() (const u32 in_row, const u32 in_col)
 //! element accessor; bounds checking not done when ARMA_NO_DEBUG is defined
 template<typename eT>
 arma_inline
+arma_warn_unused
 eT
 Mat<eT>::operator() (const u32 in_row, const u32 in_col) const
   {
@@ -2551,6 +2593,7 @@ Mat<eT>::operator() (const u32 in_row, const u32 in_col) const
 //! element accessor; no bounds check
 template<typename eT>
 arma_inline
+arma_warn_unused
 eT&
 Mat<eT>::at(const u32 in_row, const u32 in_col)
   {
@@ -2562,6 +2605,7 @@ Mat<eT>::at(const u32 in_row, const u32 in_col)
 //! element accessor; no bounds check
 template<typename eT>
 arma_inline
+arma_warn_unused
 eT
 Mat<eT>::at(const u32 in_row, const u32 in_col) const
   {
@@ -2619,6 +2663,7 @@ Mat<eT>::operator--(int)
 //! returns true if the object can be interpreted as a column or row vector
 template<typename eT>
 arma_inline
+arma_warn_unused
 bool
 Mat<eT>::is_vec() const
   {
@@ -2630,6 +2675,7 @@ Mat<eT>::is_vec() const
 //! returns true if the object has the same number of non-zero rows and columnns
 template<typename eT>
 arma_inline
+arma_warn_unused
 bool
 Mat<eT>::is_square() const
   {
@@ -2641,17 +2687,34 @@ Mat<eT>::is_square() const
 //! returns true if all of the elements are finite
 template<typename eT>
 arma_inline
+arma_warn_unused
 bool
 Mat<eT>::is_finite() const
   {
-  for(u32 i=0; i<n_elem; ++i)
+  const u32 N   = n_elem;
+  const eT* ptr = memptr();
+  
+  u32 i,j;
+  
+  for(i=0, j=1; j<N; i+=2, j+=2)
     {
-    if(arma_isfinite(mem[i]) == false)
+    const eT ptr_i = ptr[i];
+    const eT ptr_j = ptr[j];
+    
+    if( (arma_isfinite(ptr_i) == false) || (arma_isfinite(ptr_j) == false))
       {
       return false;
       }
     }
-
+  
+  if(i<N)
+    {
+    if(arma_isfinite(ptr[i]) == false)
+      {
+      return false;
+      }
+    }
+  
   return true;
   }
 
@@ -2660,6 +2723,7 @@ Mat<eT>::is_finite() const
 //! returns true if the matrix has no elements
 template<typename eT>
 arma_inline
+arma_warn_unused
 bool
 Mat<eT>::is_empty() const
   {
@@ -2671,6 +2735,7 @@ Mat<eT>::is_empty() const
 //! returns true if the given index is currently in range
 template<typename eT>
 arma_inline
+arma_warn_unused
 bool
 Mat<eT>::in_range(const u32 i) const
   {
@@ -2682,6 +2747,7 @@ Mat<eT>::in_range(const u32 i) const
 //! returns true if the given location is currently in range
 template<typename eT>
 arma_inline
+arma_warn_unused
 bool
 Mat<eT>::in_range(const u32 in_row, const u32 in_col) const
   {
@@ -2693,6 +2759,7 @@ Mat<eT>::in_range(const u32 in_row, const u32 in_col) const
 //! returns a pointer to array of eTs for a specified column; no bounds check
 template<typename eT>
 arma_inline
+arma_warn_unused
 eT*
 Mat<eT>::colptr(const u32 in_col)
   {
@@ -2704,6 +2771,7 @@ Mat<eT>::colptr(const u32 in_col)
 //! returns a pointer to array of eTs for a specified column; no bounds check
 template<typename eT>
 arma_inline
+arma_warn_unused
 const eT*
 Mat<eT>::colptr(const u32 in_col) const
   {
@@ -2715,6 +2783,7 @@ Mat<eT>::colptr(const u32 in_col) const
 //! returns a pointer to array of eTs used by the matrix
 template<typename eT>
 arma_inline
+arma_warn_unused
 eT*
 Mat<eT>::memptr()
   {
@@ -2726,6 +2795,7 @@ Mat<eT>::memptr()
 //! returns a pointer to array of eTs used by the matrix
 template<typename eT>
 arma_inline
+arma_warn_unused
 const eT*
 Mat<eT>::memptr() const
   {

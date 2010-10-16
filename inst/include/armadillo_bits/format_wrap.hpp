@@ -1,8 +1,5 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -518,6 +515,8 @@ namespace arma_boost
   const T1&
   str_wrapper(const T1& x, const typename string_only<T1>::result* junk = 0)
     {
+    arma_ignore(junk);
+    
     return x;
     }
   
@@ -529,17 +528,21 @@ namespace arma_boost
   const T1*
   str_wrapper(const T1* x, const typename char_only<T1>::result* junk = 0)
     {
+    arma_ignore(junk);
+    
     return x;
     }
   
   
-    
+  
   template<typename T1>
   inline
   static
   std::string
   str_wrapper(const T1& x, const typename basic_format_only<T1>::result* junk = 0)
     {
+    arma_ignore(junk);
+    
     return str(x);
     }
   

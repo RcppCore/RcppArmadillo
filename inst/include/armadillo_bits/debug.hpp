@@ -1,8 +1,5 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -781,8 +778,13 @@ arma_assert_mul_size(const subview<eT1>& A, const subview<eT2>& B, const char* x
       arma_cold
       arma_first_extra_debug_message()
         {
+        const char* nickname = ARMA_VERSION_NAME;
+        
         std::cout << "@ ---" << '\n';
-        std::cout << "@ Armadillo " << arma_version::major << '.' << arma_version::minor << '.' << arma_version::patch << '\n';
+        std::cout << "@ Armadillo "
+                  << arma_version::major << '.' << arma_version::minor << '.' << arma_version::patch
+                  << " (" << nickname << ")\n";
+        
         std::cout << "@ arma_config::atlas      = " << arma_config::atlas      << '\n';
         std::cout << "@ arma_config::lapack     = " << arma_config::lapack     << '\n';
         std::cout << "@ arma_config::blas       = " << arma_config::blas       << '\n';
@@ -790,9 +792,10 @@ arma_assert_mul_size(const subview<eT1>& A, const subview<eT2>& B, const char* x
         std::cout << "@ arma_config::boost_date = " << arma_config::boost_date << '\n';
         std::cout << "@ arma_config::good_comp  = " << arma_config::good_comp  << '\n';
         std::cout << "@ arma_config::extra_code = " << arma_config::extra_code << '\n';
-        std::cout << "@ sizeof(int)  = " << sizeof(int)  << '\n';
-        std::cout << "@ sizeof(int*) = " << sizeof(int*) << '\n';
-        std::cout << "@ sizeof(long) = " << sizeof(long) << '\n';
+        std::cout << "@ sizeof(void*)    = " << sizeof(void*)    << '\n';
+        std::cout << "@ sizeof(int)      = " << sizeof(int)      << '\n';
+        std::cout << "@ sizeof(long)     = " << sizeof(long)     << '\n';
+        std::cout << "@ sizeof(blas_int) = " << sizeof(blas_int) << '\n';
         std::cout << "@ ---" << std::endl;
         }
       

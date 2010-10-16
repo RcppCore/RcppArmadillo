@@ -1,9 +1,6 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
-// - Dimitrios Bouzas (dimitris dot mpouzas at gmail dot com)
+// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2010 Dimitrios Bouzas
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -40,7 +37,7 @@ op_pinv::direct_pinv(Mat<eT>& out, const Mat<eT>& A, eT tol)
   
   if(status == false)
     {
-    out.set_size(0,0);
+    out.reset();
     return;
     }
   
@@ -51,8 +48,11 @@ op_pinv::direct_pinv(Mat<eT>& out, const Mat<eT>& A, eT tol)
     }
    
   // count non zero valued elements in s
-  u32 count = 0; 
-  for(u32 i = 0; i < s.n_elem; ++i)
+  
+  const u32 s_n_rows = s.n_rows;
+        u32 count    = 0;
+  
+  for(u32 i=0; i < s_n_rows; ++i)
     {
     if(s[i] > tol)
       {
@@ -64,18 +64,22 @@ op_pinv::direct_pinv(Mat<eT>& out, const Mat<eT>& A, eT tol)
   if(count != 0)
     {
     // reduce the length of s in order to contain only the values above tolerance
-    s = s.rows(0,count-1);
+    if(count < s_n_rows)
+      {
+      //s = s.rows(0,count-1);
+      s.shed_rows(count, s_n_rows-1);
+      }
     
     // set the elements of s equal to their reciprocals
     s = eT(1) / s;
     
     if(A.n_cols <= A.n_rows)
       {
-      out = V.cols(0,count-1) * diagmat(s) * trans(U.cols(0,count-1));
+      out = ( V.n_cols > count ? V.cols(0,count-1) : V ) * diagmat(s) * trans( U.n_cols > count ? U.cols(0,count-1) : U );
       }
     else
       {
-      out = U.cols(0,count-1) * diagmat(s) * trans(V.cols(0,count-1));
+      out = ( U.n_cols > count ? U.cols(0,count-1) : U ) * diagmat(s) * trans( V.n_cols > count ? V.cols(0,count-1) : V );
       }
     }
   else
@@ -107,7 +111,7 @@ op_pinv::direct_pinv(Mat< std::complex<T> >& out, const Mat< std::complex<T> >& 
   
   if(status == false)
     {
-    out.set_size(0,0);
+    out.reset();
     return;
     }
  
@@ -119,8 +123,11 @@ op_pinv::direct_pinv(Mat< std::complex<T> >& out, const Mat< std::complex<T> >& 
   
   
   // count non zero valued elements in s
-  u32 count = 0;
-  for(u32 i = 0; i < s.n_elem; ++i)
+  
+  const u32 s_n_rows = s.n_rows;
+        u32 count    = 0;
+  
+  for(u32 i = 0; i < s_n_rows; ++i)
     {
     if(s[i] > tol)
       {
@@ -131,18 +138,22 @@ op_pinv::direct_pinv(Mat< std::complex<T> >& out, const Mat< std::complex<T> >& 
   if(count != 0)
     {
     // reduce the length of s in order to contain only the values above tolerance
-    s = s.rows(0,count-1);
+    if(count < s_n_rows)
+      {
+      // s = s.rows(0,count-1);
+      s.shed_rows(count, s_n_rows-1);
+      }
 
     // set the elements of s equal to their reciprocals
     s = T(1) / s;
     
     if(n_rows >= n_cols)
       {
-      out = V.cols(0,count-1) * diagmat(s) * htrans(U.cols(0,count-1));
+      out = ( V.n_cols > count ? V.cols(0,count-1) : V ) * diagmat(s) * htrans( U.n_cols > count ? U.cols(0,count-1) : U );
       }
     else
       {
-      out = U.cols(0,count-1) * diagmat(s) * htrans(V.cols(0,count-1));
+      out = ( U.n_cols > count ? U.cols(0,count-1) : U ) * diagmat(s) * htrans( V.n_cols > count ? V.cols(0,count-1) : V );
       }
     }
   else
@@ -166,8 +177,8 @@ op_pinv::apply(Mat<typename T1::pod_type>& out, const Op<T1,op_pinv>& in)
   
   arma_debug_check((tol < eT(0)), "pinv(): tol must be >= 0");
   
-  const unwrap_check<T1> tmp(in.m, out);
-  const Mat<eT>& A     = tmp.M;
+  const unwrap<T1>   tmp(in.m);
+  const Mat<eT>& A = tmp.M;
   
   op_pinv::direct_pinv(out, A, tol);
   }
@@ -181,16 +192,15 @@ op_pinv::apply(Mat< std::complex<typename T1::pod_type> >& out, const Op<T1,op_p
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::pod_type T;
-  
-  typedef typename std::complex<typename T1::pod_type> eT;
+  typedef typename T1::pod_type     T;
+  typedef typename std::complex<T> eT;
   
   const T tol = in.aux.real();
   
   arma_debug_check((tol < T(0)), "pinv(): tol must be >= 0");
   
-  const unwrap_check<T1> tmp(in.m, out);
-  const Mat<eT>& A     = tmp.M;
+  const unwrap<T1>   tmp(in.m);
+  const Mat<eT>& A = tmp.M;
   
   op_pinv::direct_pinv(out, A, tol);
   }

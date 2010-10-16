@@ -1,9 +1,6 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
-// - Dimitrios Bouzas (dimitris dot mpouzas at gmail dot com)
+// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2010 Dimitrios Bouzas
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -27,28 +24,30 @@ u32
 rank
   (
   const Base<typename T1::elem_type,T1>& X,
-  typename T1::pod_type tol = 0.0,
+        typename T1::pod_type            tol = 0.0,
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
   )
   {
   arma_extra_debug_sigprint();
   
+  arma_ignore(junk);
+  
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
   
-  const unwrap<T1>   tmp(X.get_ref());
-  const Mat<eT>& A = tmp.M;
-  
+  u32    X_n_rows;
+  u32    X_n_cols;
   Col<T> s;
-  const bool status = auxlib::svd(s, A);
+  
+  const bool status = auxlib::svd(s, X, X_n_rows, X_n_cols);
   
   if(status == true)
     {
     if(tol == T(0))
       {
-      tol = (std::max)(A.n_rows, A.n_cols) * eop_aux::direct_eps(max(s));
+      tol = (std::max)(X_n_rows, X_n_cols) * eop_aux::direct_eps(max(s));
       }
-      
+    
     // count non zero valued elements in s
     
     const T*  s_mem  = s.memptr();
@@ -67,10 +66,9 @@ rank
     }
   else
     {
-    arma_print("rank(): singular value decomposition failed");
+    arma_print("rank(): failed to converge");
     return u32(0);
     }
-   
   }
 
 

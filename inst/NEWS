@@ -1,3 +1,14 @@
+0.2.8   2010-10-16
+
+    o   Upgraded to Armadillo 0.9.90 "Water Dragon":
+
+         * Added unsafe_col()
+         * Speedups and bugfixes in lu()
+         * Minimisation of pedantic compiler warnings
+
+    o   Switched NEWS and ChangeLog between inst/ and the top-level directory
+        so that NEWS (this file) gets installed with the package
+
 0.2.7   2010-09-25
 
     o   Upgraded to Armadillo 0.9.80 "Chihuahua Muncher":

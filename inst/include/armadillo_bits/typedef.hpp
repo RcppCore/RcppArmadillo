@@ -1,8 +1,5 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -28,7 +25,9 @@
 
 // NOTE:
 // "signed char" is not the same as "char". 
-// see http://www.embedded.com/columns/programmingpointers/206107018
+// http://www.embedded.com/columns/programmingpointers/206107018
+// http://en.wikipedia.org/wiki/C_variable_types_and_declarations
+
 
 #if USHRT_MAX >= 0xffff
   //! unsigned 16 bit type  
@@ -68,10 +67,12 @@
 
 
 
-#if !defined(ARMA_BLAS_LONG_INT)
-  typedef int  blas_int;
+#if   defined(ARMA_BLAS_LONG_LONG)
+  typedef long long blas_int;
+#elif defined(ARMA_BLAS_LONG)
+  typedef long      blas_int;
 #else
-  typedef long blas_int;
+  typedef int       blas_int;
 #endif
 
 
@@ -145,5 +146,6 @@ namespace junk
   
     };
   }
+
 
 //! @}

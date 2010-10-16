@@ -1,8 +1,5 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -163,7 +160,7 @@ class gemv
         }
       #elif defined(ARMA_USE_BLAS)
         {
-        arma_extra_debug_print("blas::gemv_()");
+        arma_extra_debug_print("blas::gemv()");
         
         const char      trans_A     = (do_trans_A) ? 'T' : 'N';
         const blas_int  m           = A.n_rows;
@@ -173,9 +170,9 @@ class gemv
         const blas_int  inc         = 1;
         const eT        local_beta  = (use_beta) ? beta : eT(0);
         
-        arma_extra_debug_print( arma_boost::format("blas::gemv_(): trans_A = %c") % trans_A );
+        arma_extra_debug_print( arma_boost::format("blas::gemv(): trans_A = %c") % trans_A );
         
-        blas::gemv_<eT>
+        blas::gemv<eT>
           (
           &trans_A,
           &m,

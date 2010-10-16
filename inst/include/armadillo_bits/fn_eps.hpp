@@ -1,9 +1,6 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
-// - Dimitrios Bouzas (dimitris dot mpouzas at gmail dot com)
+// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2010 Dimitrios Bouzas
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -30,6 +27,8 @@ eps(const Base<typename T1::elem_type, T1>& X, const typename arma_not_cx<typena
   {
   arma_extra_debug_sigprint();
   
+  arma_ignore(junk);
+  
   typedef typename T1::elem_type eT;
   
   return eOp<T1, eop_eps>(X.get_ref());
@@ -45,6 +44,8 @@ Mat< typename T1::pod_type >
 eps(const Base< std::complex<typename T1::pod_type>, T1>& X, const typename arma_cx_only<typename T1::elem_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
+  
+  arma_ignore(junk);
   
   typedef typename T1::pod_type   T;
   typedef typename T1::elem_type eT;
@@ -75,6 +76,8 @@ arma_warn_unused
 typename arma_integral_only<eT>::result
 eps(const eT& x)
   {
+  arma_ignore(x);
+  
   return eT(0);
   }
 

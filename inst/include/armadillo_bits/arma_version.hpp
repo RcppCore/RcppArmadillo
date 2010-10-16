@@ -1,8 +1,5 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
+// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2010 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -21,9 +18,9 @@
 
 #define ARMA_VERSION_MAJOR 0
 #define ARMA_VERSION_MINOR 9
-#define ARMA_VERSION_PATCH 80
-#define ARMA_VERSION_NAME  "Chihuahua Muncher"
-// http://www.brisbanetimes.com.au/environment/leaping-sharks-are-no-bull-20100906-14wyq.html
+#define ARMA_VERSION_PATCH 90
+#define ARMA_VERSION_NAME  "Water Dragon"
+// http://en.wikipedia.org/wiki/Australian_Water_Dragon
 
 
 struct arma_version

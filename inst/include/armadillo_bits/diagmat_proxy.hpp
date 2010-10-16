@@ -1,8 +1,5 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -150,6 +147,7 @@ class diagmat_proxy_check
     , n_elem( P_is_vec ? P.n_elem : P.n_rows )
     {
     arma_extra_debug_sigprint();
+    arma_ignore(out);
     arma_debug_check( (P_is_vec == false) && (P.n_rows != P.n_cols), "diagmat(): only vectors and square matrices are accepted" );
     }
   

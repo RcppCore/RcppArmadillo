@@ -1,8 +1,5 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
+// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2010 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -68,7 +65,7 @@ diagview<eT>::operator= (const diagview<eT>& x)
   
   diagview<eT>& t = *this;
   
-  arma_debug_check( (t.n_elem != x.n_elem), "diagview::operator=(): diagonals have incompatible lengths");
+  arma_debug_check( (t.n_elem != x.n_elem), "diagview: diagonals have incompatible lengths");
   
         Mat<eT>& t_m = *(t.m_ptr);
   const Mat<eT>& x_m = x.m;
@@ -105,7 +102,7 @@ diagview<eT>::operator= (const Base<eT,T1>& o)
   arma_debug_check
     (
     ( (t.n_elem != x.n_elem) || (x.is_vec() == false) ),
-    "diagview::operator=(): given object has incompatible size"
+    "diagview: given object has incompatible size"
     );
   
   Mat<eT>& t_m = *(t.m_ptr);
@@ -140,7 +137,7 @@ diagview<eT>::operator+=(const Base<eT,T1>& o)
   arma_debug_check
     (
     ( (t.n_elem != x.n_elem) || (x.is_vec() == false) ),
-    "diagview::operator=(): given object has incompatible size"
+    "diagview: given object has incompatible size"
     );
   
   Mat<eT>& t_m = *(t.m_ptr);
@@ -175,7 +172,7 @@ diagview<eT>::operator-=(const Base<eT,T1>& o)
   arma_debug_check
     (
     ( (t.n_elem != x.n_elem) || (x.is_vec() == false) ),
-    "diagview::operator=(): given object has incompatible size"
+    "diagview: given object has incompatible size"
     );
   
   Mat<eT>& t_m = *(t.m_ptr);
@@ -210,7 +207,7 @@ diagview<eT>::operator%=(const Base<eT,T1>& o)
   arma_debug_check
     (
     ( (t.n_elem != x.n_elem) || (x.is_vec() == false) ),
-    "diagview::operator=(): given object has incompatible size"
+    "diagview: given object has incompatible size"
     );
   
   Mat<eT>& t_m = *(t.m_ptr);
@@ -245,7 +242,7 @@ diagview<eT>::operator/=(const Base<eT,T1>& o)
   arma_debug_check
     (
     ( (t.n_elem != x.n_elem) || (x.is_vec() == false) ),
-    "diagview::operator=(): given object has incompatible size"
+    "diagview: given object has incompatible size"
     );
   
   Mat<eT>& t_m = *(t.m_ptr);
@@ -309,7 +306,7 @@ diagview<eT>::plus_inplace(Mat<eT>& out, const diagview<eT>& in)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(out.n_rows, out.n_cols, in.n_rows, 1, "matrix addition");
+  arma_debug_assert_same_size(out.n_rows, out.n_cols, in.n_rows, 1, "addition");
   
   const Mat<eT>& in_m = in.m;
   
@@ -335,7 +332,7 @@ diagview<eT>::minus_inplace(Mat<eT>& out, const diagview<eT>& in)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(out.n_rows, out.n_cols, in.n_rows, 1, "matrix subtraction");
+  arma_debug_assert_same_size(out.n_rows, out.n_cols, in.n_rows, 1, "subtraction");
   
   const Mat<eT>& in_m = in.m;
   
@@ -361,7 +358,7 @@ diagview<eT>::schur_inplace(Mat<eT>& out, const diagview<eT>& in)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(out.n_rows, out.n_cols, in.n_rows, 1, "element-wise matrix multiplication");
+  arma_debug_assert_same_size(out.n_rows, out.n_cols, in.n_rows, 1, "element-wise multiplication");
   
   const Mat<eT>& in_m = in.m;
   
@@ -387,7 +384,7 @@ diagview<eT>::div_inplace(Mat<eT>& out, const diagview<eT>& in)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(out.n_rows, out.n_cols, in.n_rows, 1, "element-wise matrix division");
+  arma_debug_assert_same_size(out.n_rows, out.n_cols, in.n_rows, 1, "element-wise division");
   
   const Mat<eT>& in_m = in.m;
   
@@ -517,12 +514,7 @@ diagview<eT>::zeros()
   {
   arma_extra_debug_sigprint();
   
-  Mat<eT>& x = (*m_ptr);
-  
-  for(u32 i=0; i<n_elem; ++i)
-    {
-    x.at(i+row_offset, i+col_offset) = eT(0);
-    }
+  (*this).fill(eT(0));
   }
 
 
@@ -534,12 +526,7 @@ diagview<eT>::ones()
   {
   arma_extra_debug_sigprint();
   
-  Mat<eT>& x = (*m_ptr);
-  
-  for(u32 i=0; i<n_elem; ++i)
-    {
-    x.at(i+row_offset, i+col_offset) = eT(1);
-    }
+  (*this).fill(eT(1));
   }
 
 

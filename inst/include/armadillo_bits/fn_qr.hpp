@@ -1,8 +1,5 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
+// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2010 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -18,40 +15,35 @@
 //! @{
 
 
+
 //! QR decomposition
 template<typename T1>
 inline
 void
 qr
   (
-  Mat<typename T1::elem_type>& Q,
-  Mat<typename T1::elem_type>& R,
+         Mat<typename T1::elem_type>&    Q,
+         Mat<typename T1::elem_type>&    R,
   const Base<typename T1::elem_type,T1>& X,
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
   )
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
-
+  arma_ignore(junk);
+  
   arma_debug_check( (&Q == &R), "qr(): Q and R are the same object");
   
-  const unwrap_check<T1> tmp1(X.get_ref(), Q);
-  const Mat<eT>&     A = tmp1.M;
+  const bool status = auxlib::qr(Q, R, X);
   
-  const unwrap_check< Mat<eT> > tmp2(A, R);
-  const Mat<eT>&            B = tmp2.M;
-  
-  const bool ok = auxlib::qr(Q, R, B);
-  
-  if(ok == false)
+  if(status == false)
     {
+    arma_print("qr(): failed to converge");
     Q.reset();
     R.reset();
-    arma_print("qr(): factorisation failed");
     }
-  
   }
+
 
 
 //! @}

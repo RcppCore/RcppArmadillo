@@ -1,9 +1,6 @@
-// Copyright (C) 2010 NICTA and the authors listed below
-// http://nicta.com.au
-// 
-// Authors:
-// - Conrad Sanderson (conradsand at ieee dot org)
-// - Dimitrios Bouzas (dimitris dot mpouzas at gmail dot com)
+// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2010 Dimitrios Bouzas
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -31,6 +28,8 @@ pinv
   )
   {
   arma_extra_debug_sigprint();
+  
+  arma_ignore(junk);
   
   return Op<T1, op_pinv>(X.get_ref(), tol);
   }
