@@ -66,12 +66,15 @@ op_dot::direct_dot(const u32 n_elem, const eT* const A, const eT* const B)
     {
     #if defined(ARMA_USE_ATLAS)
       {
+      arma_extra_debug_print("atlas::cblas_dot()");
+      
       return atlas::cblas_dot(n_elem, A, B);
       }
     #elif defined(ARMA_USE_BLAS)
       {
-      const blas_int n = n_elem;
-      return blas::dot(&n, A, B);
+      arma_extra_debug_print("blas::dot()");
+      
+      return blas::dot(n_elem, A, B);
       }
     #else
       {
@@ -93,6 +96,8 @@ op_dot::direct_dot(const u32 n_elem, const eT* const A, const eT* const B)
   {
   #if defined(ARMA_USE_ATLAS)
     {
+    arma_extra_debug_print("atlas::cx_cblas_dot()");
+    
     return atlas::cx_cblas_dot(n_elem, A, B);
     }
   #elif defined(ARMA_USE_BLAS)

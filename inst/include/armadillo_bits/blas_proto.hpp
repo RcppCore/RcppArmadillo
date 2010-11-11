@@ -20,8 +20,8 @@ namespace blas
   {
   extern "C"
     {
-    float  arma_fortran(sdot)(const blas_int* n, const float*  x, const blas_int* incx, const float*  y, const blas_int* incy);
-    double arma_fortran(ddot)(const blas_int* n, const double* x, const blas_int* incx, const double* y, const blas_int* incy);
+    float  arma_fortran(sdot)(blas_int* n, const float*  x, blas_int* incx, const float*  y, blas_int* incy);
+    double arma_fortran(ddot)(blas_int* n, const double* x, blas_int* incx, const double* y, blas_int* incy);
     
     void arma_fortran(sgemv)(const char* transA, const blas_int* m, const blas_int* n, const float*  alpha, const float*  A, const blas_int* ldA, const float*  x, const blas_int* incx, const float*  beta, float*  y, const blas_int* incy);
     void arma_fortran(dgemv)(const char* transA, const blas_int* m, const blas_int* n, const double* alpha, const double* A, const blas_int* ldA, const double* x, const blas_int* incx, const double* beta, double* y, const blas_int* incy);
@@ -43,29 +43,41 @@ namespace blas
   
   
   template<typename eT>
-  arma_inline
+  inline
   eT
-  dot(const blas_int* n, const eT* x, const eT* y)
+  dot(const u32 n_elem, const eT* x, const eT* y)
     {
-    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    arma_ignore(n_elem);
+    arma_ignore(x);
+    arma_ignore(y);
     
-    const blas_int inc = 1;
+    return eT(0);
+    }
+  
+  
+  
+  template<>
+  inline
+  float
+  dot(const u32 n_elem, const float* x, const float* y)
+    {
+    blas_int n   = blas_int(n_elem);
+    blas_int inc = blas_int(1);
     
-    if(is_float<eT>::value == true)
-      {
-      typedef float T;
-      return eT( arma_fortran(sdot)(n, (const T*)x, &inc, (const T*)y, &inc) );
-      }
-    else
-    if(is_double<eT>::value == true)
-      {
-      typedef double T;
-      return eT( arma_fortran(ddot)(n, (const T*)x, &inc, (const T*)y, &inc) );
-      }
-    else
-      {
-      return eT(0);  // prevent compiler warnings
-      }
+    return arma_fortran(sdot)(&n, x, &inc, y, &inc);
+    }
+  
+  
+  
+  template<>
+  inline
+  double
+  dot(const u32 n_elem, const double* x, const double* y)
+    {
+    blas_int n   = blas_int(n_elem);
+    blas_int inc = blas_int(1);
+    
+    return arma_fortran(ddot)(&n, x, &inc, y, &inc);
     }
   
   

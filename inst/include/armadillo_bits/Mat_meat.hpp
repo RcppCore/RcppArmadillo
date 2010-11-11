@@ -2660,6 +2660,18 @@ Mat<eT>::operator--(int)
 
 
 
+//! returns true if the matrix has no elements
+template<typename eT>
+arma_inline
+arma_warn_unused
+bool
+Mat<eT>::is_empty() const
+  {
+  return (n_elem == 0);
+  }
+
+
+
 //! returns true if the object can be interpreted as a column or row vector
 template<typename eT>
 arma_inline
@@ -2686,7 +2698,7 @@ Mat<eT>::is_square() const
 
 //! returns true if all of the elements are finite
 template<typename eT>
-arma_inline
+inline
 arma_warn_unused
 bool
 Mat<eT>::is_finite() const
@@ -2698,10 +2710,10 @@ Mat<eT>::is_finite() const
   
   for(i=0, j=1; j<N; i+=2, j+=2)
     {
-    const eT ptr_i = ptr[i];
-    const eT ptr_j = ptr[j];
+    const eT val_i = ptr[i];
+    const eT val_j = ptr[j];
     
-    if( (arma_isfinite(ptr_i) == false) || (arma_isfinite(ptr_j) == false))
+    if( (arma_isfinite(val_i) == false) || (arma_isfinite(val_j) == false) )
       {
       return false;
       }
@@ -2716,18 +2728,6 @@ Mat<eT>::is_finite() const
     }
   
   return true;
-  }
-
-
-
-//! returns true if the matrix has no elements
-template<typename eT>
-arma_inline
-arma_warn_unused
-bool
-Mat<eT>::is_empty() const
-  {
-  return (n_elem == 0);
   }
 
 

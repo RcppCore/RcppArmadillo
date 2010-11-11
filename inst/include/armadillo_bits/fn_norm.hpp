@@ -18,10 +18,12 @@
 
 template<typename T1>
 arma_hot
-arma_inline
+inline
 typename T1::pod_type
-norm_1(const Proxy<T1>& A)
+arma_vec_norm_1(const Proxy<T1>& A)
   {
+  arma_extra_debug_sigprint();
+  
   typedef typename T1::pod_type T;
   typedef typename Proxy<T1>::ea_type ea_type;
   
@@ -50,10 +52,11 @@ norm_1(const Proxy<T1>& A)
 
 template<typename T1>
 arma_hot
-arma_inline
+inline
 typename T1::pod_type
-norm_2(const Proxy<T1>& A, const typename arma_not_cx<typename T1::elem_type>::result* junk = 0)
+arma_vec_norm_2(const Proxy<T1>& A, const typename arma_not_cx<typename T1::elem_type>::result* junk = 0)
   {
+  arma_extra_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename T1::pod_type       T;
@@ -89,10 +92,11 @@ norm_2(const Proxy<T1>& A, const typename arma_not_cx<typename T1::elem_type>::r
 
 template<typename T1>
 arma_hot
-arma_inline
+inline
 typename T1::pod_type
-norm_2(const Proxy<T1>& A, const typename arma_cx_only<typename T1::elem_type>::result* junk = 0)
+arma_vec_norm_2(const Proxy<T1>& A, const typename arma_cx_only<typename T1::elem_type>::result* junk = 0)
   {
+  arma_extra_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename T1::pod_type       T;
@@ -116,10 +120,12 @@ norm_2(const Proxy<T1>& A, const typename arma_cx_only<typename T1::elem_type>::
 
 template<typename T1>
 arma_hot
-arma_inline
+inline
 typename T1::pod_type
-norm_k(const Proxy<T1>& A, const int k)
+arma_vec_norm_k(const Proxy<T1>& A, const int k)
   {
+  arma_extra_debug_sigprint();
+  
   typedef typename T1::pod_type       T;
   typedef typename Proxy<T1>::ea_type ea_type;
   
@@ -148,10 +154,12 @@ norm_k(const Proxy<T1>& A, const int k)
 
 template<typename T1>
 arma_hot
-arma_inline
+inline
 typename T1::pod_type
-norm_max(const Proxy<T1>& A)
+arma_vec_norm_max(const Proxy<T1>& A)
   {
+  arma_extra_debug_sigprint();
+  
   typedef typename T1::pod_type       T;
   typedef typename Proxy<T1>::ea_type ea_type;
   
@@ -185,10 +193,12 @@ norm_max(const Proxy<T1>& A)
 
 template<typename T1>
 arma_hot
-arma_inline
+inline
 typename T1::pod_type
-norm_min(const Proxy<T1>& A)
+arma_vec_norm_min(const Proxy<T1>& A)
   {
+  arma_extra_debug_sigprint();
+  
   typedef typename T1::pod_type       T;
   typedef typename Proxy<T1>::ea_type ea_type;
   
@@ -221,7 +231,66 @@ norm_min(const Proxy<T1>& A)
 
 
 template<typename T1>
-arma_inline
+inline
+typename T1::pod_type
+arma_mat_norm_1(const Proxy<T1>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  typedef typename T1::pod_type   T;
+  
+  const unwrap<typename Proxy<T1>::stored_type> tmp(A.Q);
+  const Mat<eT>& X = tmp.M;
+  
+  // TODO: this can be sped up with a dedicated implementation
+  return as_scalar( max( sum(abs(X)), 1) );
+  }
+
+
+
+template<typename T1>
+inline
+typename T1::pod_type
+arma_mat_norm_2(const Proxy<T1>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  typedef typename T1::pod_type   T;
+  
+  const unwrap<typename Proxy<T1>::stored_type> tmp(A.Q);
+  const Mat<eT>& X = tmp.M;
+  
+  Col<T> S;
+  svd(S, X);
+  
+  return (S.n_elem > 0) ? max(S) : T(0);
+  }
+
+
+
+template<typename T1>
+inline
+typename T1::pod_type
+arma_mat_norm_inf(const Proxy<T1>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  typedef typename T1::pod_type   T;
+  
+  const unwrap<typename Proxy<T1>::stored_type> tmp(A.Q);
+  const Mat<eT>& X = tmp.M;
+  
+  // TODO: this can be sped up with a dedicated implementation
+  return as_scalar( max( sum(abs(X),1) ) );
+  }
+
+
+
+template<typename T1>
+inline
 arma_warn_unused
 typename T1::pod_type
 norm
@@ -232,7 +301,6 @@ norm
   )
   {
   arma_extra_debug_sigprint();
-  
   arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
@@ -240,24 +308,47 @@ norm
   
   const Proxy<T1> A(X.get_ref());
   
-  arma_debug_check(    (A.get_n_elem() == 0),                            "norm(): given object has no elements"  );
-  arma_debug_check( !( (A.get_n_rows() == 1) || (A.get_n_cols() == 1) ), "norm(): given object must be a vector" );
-  
-  switch(k)
+  if(A.get_n_elem() == 0)
     {
-    case 1:
-      return norm_1(A);
-      break;
-    
-    case 2:
-      return norm_2(A);
-      break;
-    
-    default:
+    return T(0);
+    }
+  
+  const bool is_vec = (A.get_n_rows() == 1) || (A.get_n_cols() == 1);
+  
+  if(is_vec == true)
+    {
+    switch(k)
       {
-      arma_debug_check( (k == 0), "norm(): k must be greater than zero"   );
+      case 1:
+        return arma_vec_norm_1(A);
+        break;
       
-      return norm_k(A, k);
+      case 2:
+        return arma_vec_norm_2(A);
+        break;
+      
+      default:
+        {
+        arma_debug_check( (k == 0), "norm(): k must be greater than zero"   );
+        return arma_vec_norm_k(A, k);
+        }
+      }
+    }
+  else
+    {
+    switch(k)
+      {
+      case 1:
+        return arma_mat_norm_1(A);
+        break;
+      
+      case 2:
+        return arma_mat_norm_2(A);
+        break;
+      
+      default:
+        arma_stop("norm(): unsupported matrix norm type");
+        return T(0);
       }
     }
   }
@@ -265,7 +356,7 @@ norm
 
 
 template<typename T1>
-arma_inline
+inline
 arma_warn_unused
 typename T1::pod_type
 norm
@@ -276,7 +367,6 @@ norm
   )
   {
   arma_extra_debug_sigprint();
-  
   arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
@@ -284,27 +374,53 @@ norm
   
   const Proxy<T1> A(X.get_ref());
   
-  arma_debug_check(    (A.get_n_elem() == 0),                            "norm(): given object has no elements"  );
-  arma_debug_check( !( (A.get_n_rows() == 1) || (A.get_n_cols() == 1) ), "norm(): given object must be a vector" );
-  
-  const char sig = method[0];
-  
-  if( (sig == 'i') || (sig == 'I') || (sig == '+') )   // max norm
+  if(A.get_n_elem() == 0)
     {
-    return norm_max(A);
-    }
-  else
-  if(sig == '-')   // min norm
-    {
-    return norm_min(A);
-    }
-  else
-    {
-    arma_stop("norm(): unknown norm type");
-    
     return T(0);
     }
   
+  const char sig    = method[0];
+  const bool is_vec = (A.get_n_rows() == 1) || (A.get_n_cols() == 1);
+  
+  if(is_vec == true)
+    {
+    if( (sig == 'i') || (sig == 'I') || (sig == '+') )   // max norm
+      {
+      return arma_vec_norm_max(A);
+      }
+    else
+    if(sig == '-')   // min norm
+      {
+      return arma_vec_norm_min(A);
+      }
+    else
+    if( (sig == 'f') || (sig == 'F') )
+      {
+      return arma_vec_norm_2(A);
+      }
+    else
+      {
+      arma_stop("norm(): unsupported vector norm type");
+      return T(0);
+      }
+    }
+  else
+    {
+    if( (sig == 'i') || (sig == 'I') || (sig == '+') )   // inf norm
+      {
+      return arma_mat_norm_inf(A);
+      }
+    else
+    if( (sig == 'f') || (sig == 'F') )
+      {
+      return arma_vec_norm_2(A);
+      }
+    else
+      {
+      arma_stop("norm(): unsupported matrix norm type");
+      return T(0);
+      }
+    }
   }
 
 

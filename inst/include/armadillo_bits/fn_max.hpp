@@ -18,10 +18,9 @@
 //! \brief
 //! Delayed 'maximum values' operation.
 //! The dimension, along which the maxima are found, is set via 'dim'.
-//! For dim = 0, the maximum value of each column is found.
-//! For dim = 1, the maximum value of each row is found.
+//! For dim = 0, the maximum value of each column is found (i.e. searches by traversing across rows).
+//! For dim = 1, the maximum value of each row is found (i.e. searches by traversing across columns).
 //! The default is dim = 0.
-//! NOTE: This function works differently than in Matlab/Octave.
 
 template<typename T1>
 arma_inline

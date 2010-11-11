@@ -222,10 +222,10 @@ class Mat : public Base< eT, Mat<eT> >
   arma_inline const Mat& operator--();
   arma_inline void       operator--(int);
   
+  arma_inline arma_warn_unused bool is_empty()  const;
   arma_inline arma_warn_unused bool is_vec()    const;
   arma_inline arma_warn_unused bool is_square() const;
-  arma_inline arma_warn_unused bool is_finite() const;
-  arma_inline arma_warn_unused bool is_empty()  const;
+       inline arma_warn_unused bool is_finite() const;
   
   arma_inline arma_warn_unused bool in_range(const u32 i) const;
   arma_inline arma_warn_unused bool in_range(const u32 in_row, const u32 in_col) const;
