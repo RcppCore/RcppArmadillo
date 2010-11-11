@@ -30,7 +30,20 @@
 #endif
 
 
-#if defined(__GNUG__)
+#if defined(__INTEL_COMPILER)
+  
+  #if (__INTEL_COMPILER < 1000)
+    #error "*** Need a newer compiler ***"
+  #endif
+  
+  #define ARMA_GOOD_COMPILER
+  #undef  ARMA_HAVE_STD_TR1
+  
+  #if (__INTEL_COMPILER <= 1110)
+    #undef ARMA_HAVE_STD_ISFINITE
+  #endif
+  
+#elif defined(__GNUG__)
   
   #if (__GNUC__ < 4)
     #error "*** Need a newer compiler ***"
@@ -71,19 +84,6 @@
   
   #undef ARMA_GCC_VERSION
   
-#elif defined(__INTEL_COMPILER)
-  
-  #if (__INTEL_COMPILER < 1000)
-    #error "*** Need a newer compiler ***"
-  #endif
-  
-  #define ARMA_GOOD_COMPILER
-  #undef  ARMA_HAVE_STD_TR1
-  
-  #if (__INTEL_COMPILER <= 1110)
-    #undef ARMA_HAVE_STD_ISFINITE
-  #endif
-
 #endif
 
 

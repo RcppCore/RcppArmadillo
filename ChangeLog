@@ -1,3 +1,9 @@
+2010-11-11  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.2.9
+
+	* inst/include/*: Update to Armadillo 0.9.92 "Wall Street Gangster"
+
 2010-10-16  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.2.8

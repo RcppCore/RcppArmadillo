@@ -1,3 +1,10 @@
+0.2.9   2010-11-11
+
+    o   Upgraded to Armadillo 0.9.92 "Wall Street Gangster":
+
+         * Fixes for compilation issues under the Intel C++ compiler
+         * Added matrix norms
+
 0.2.8   2010-10-16
 
     o   Upgraded to Armadillo 0.9.90 "Water Dragon":

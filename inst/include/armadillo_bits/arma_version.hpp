@@ -18,9 +18,9 @@
 
 #define ARMA_VERSION_MAJOR 0
 #define ARMA_VERSION_MINOR 9
-#define ARMA_VERSION_PATCH 90
-#define ARMA_VERSION_NAME  "Water Dragon"
-// http://en.wikipedia.org/wiki/Australian_Water_Dragon
+#define ARMA_VERSION_PATCH 92
+#define ARMA_VERSION_NAME  "Wall Street Gangster"
+
 
 
 struct arma_version
