@@ -19,6 +19,7 @@
 
 .setUp <- function(){
     suppressMessages(require(datasets))
+    suppressMessages(require(RcppArmadillo))
 }
 
 test.fastLm <- function() {
@@ -26,7 +27,7 @@ test.fastLm <- function() {
     flm <- .Call("fastLm",
                  log(trees$Volume),
                  cbind(1, log(trees$Girth)),
-                 PACKAGE="RcppArmadillo")
+                 package="RcppArmadillo")
     fit <- lm(log(Volume) ~ log(Girth), data=trees)
 
     checkEquals(as.numeric(flm$coefficients), as.numeric(coef(fit)),
