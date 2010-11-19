@@ -31,5 +31,4 @@ LazyLoad: yes
 Depends: R (>= 2.10.0), Rcpp (>= 0.8.6)
 LinkingTo: Rcpp
 Suggests: inline, RUnit
-SystemRequirements: GNU make
 URL: http://arma.sourceforge.net/, http://dirk.eddelbuettel.com/code/rcpp.armadillo.html, http://romainfrancois.blog.free.fr/index.php?category/R-package/RcppArmadillo
