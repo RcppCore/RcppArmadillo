@@ -1,3 +1,7 @@
+0.2.10  TBD
+
+    o   summary() for fastLm() objects now returns r.squared and adj.r.squared
+
 0.2.9   2010-11-11
 
     o   Upgraded to Armadillo 0.9.92 "Wall Street Gangster":
