@@ -1,8 +1,12 @@
+2010-11-19  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/fastLm.R: Also provide two R-squared measures in summary method
+
 2010-11-19  Romain Francois <romain@r-enthusiasts.com>
 
 	* DESCRIPTION: remove dependency on GNU make
-	
-	* R/RcppArmadillo.package.skeleton.R: updated skeleton generator so that the 
+
+	* R/RcppArmadillo.package.skeleton.R: updated skeleton generator so that the
 	dependency on GNU make is removed
 
 2010-11-11  Dirk Eddelbuettel  <edd@debian.org>

@@ -67,8 +67,22 @@ summary.fastLm <- function(object, ...) {
     rownames(TAB) <- names(object$coefficients)
     colnames(TAB) <- c("Estimate", "StdErr", "t.value", "p.value")
 
+    ## cf src/stats/R/lm.R and case with no weights and an intercept
+    f <- object$fitted.values
+    r <- object$residuals
+    mss <- sum((f - mean(f))^2)
+    rss <- sum(r^2)
+
+    r.squared <- mss/(mss + rss)
+    df.int <- 1 		# case of intercept
+    n <- length(f)
+    rdf <- object$df
+    adj.r.squared <- 1 - (1 - r.squared) * ((n - df.int)/rdf)
+
     res <- list(call=object$call,
-                coefficients=TAB)
+                coefficients=TAB,
+                r.squared=r.squared,
+                adj.r.squared=adj.r.squared)
 
     class(res) <- "summary.fastLm"
     res
@@ -80,6 +94,11 @@ print.summary.fastLm <- function(x, ...) {
     cat("\n")
 
     printCoefmat(x$coefficients, P.value=TRUE, has.Pvalue=TRUE)
+    digits <- max(3, getOption("digits") - 3)
+    cat("Multiple R-squared: ", formatC(x$r.squared, digits=digits),
+        ",\tAdjusted R-squared: ",formatC(x$adj.r.squared, digits=digits),
+        "\n", sep="")
+    invisible(x)
 }
 
 fastLm.formula <- function(formula, data=list(), ...) {
