@@ -60,12 +60,10 @@ RcppArmadillo.package.skeleton <- function(
 			"Depends" = sprintf( "Rcpp (>= %s), RcppArmadillo (>= %s) ", 
 				packageDescription("Rcpp")[["Version"]], 
 				packageDescription("RcppArmadillo")[["Version"]]), 
-			"LinkingTo" = "Rcpp, RcppArmadillo", 
-			"SystemRequirements" = "GNU make" )
+			"LinkingTo" = "Rcpp, RcppArmadillo" )
 		write.dcf( x, file = DESCRIPTION )
 		message( " >> added Depends: Rcpp, RcppArmadillo" )
 		message( " >> added LinkingTo: Rcpp, RcppArmadillo" )
-		message( " >> added SystemRequirements: GNU make" )
 	}
 	
 	# if there is a NAMESPACE, add a useDynLib
