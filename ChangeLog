@@ -1,3 +1,9 @@
+2010-11-25  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.2.10
+
+	* inst/include/*: Update to Armadillo 1.0.0 "Antipodean Antileech”
+
 2010-11-19  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/fastLm.R: Also provide two R-squared measures in summary method
@@ -6,8 +12,8 @@
 
 	* DESCRIPTION: remove dependency on GNU make
 
-	* R/RcppArmadillo.package.skeleton.R: updated skeleton generator so that the
-	dependency on GNU make is removed
+	* R/RcppArmadillo.package.skeleton.R: updated skeleton generator so
+	that the dependency on GNU make is removed
 
 2010-11-11  Dirk Eddelbuettel  <edd@debian.org>
 

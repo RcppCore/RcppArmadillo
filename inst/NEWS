@@ -1,5 +1,14 @@
-0.2.10  TBD
+0.2.10  2010-11-25
 
+    o   Upgraded to Armadillo 1.0.0 "Antipodean Antileech"
+
+         * After 2 1/2 years of collaborative development, we are proud to
+	   release the 1.0 milestone version. 
+         * Many thanks are extended to all contributors and bug reporters.
+
+    o   R/RcppArmadillo.package.skeleton.R: Updated to no longer rely on GNU
+        make for builds of packages using RcppArmadillo
+ 
     o   summary() for fastLm() objects now returns r.squared and adj.r.squared
 
 0.2.9   2010-11-11
