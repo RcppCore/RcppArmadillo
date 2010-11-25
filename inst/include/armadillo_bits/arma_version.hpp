@@ -16,10 +16,17 @@
 
 
 
-#define ARMA_VERSION_MAJOR 0
-#define ARMA_VERSION_MINOR 9
-#define ARMA_VERSION_PATCH 92
-#define ARMA_VERSION_NAME  "Wall Street Gangster"
+#define ARMA_VERSION_MAJOR 1
+#define ARMA_VERSION_MINOR 0
+#define ARMA_VERSION_PATCH 0
+#define ARMA_VERSION_NAME  "Antipodean Antileech"
+
+// http://dictionary.reference.com/browse/leech
+// 
+// 2. a person who clings to another for personal gain,
+// esp. without giving anything in return, and usually
+// with the implication or effect of exhausting the
+// other's resources; parasite. 
 
 
 
