@@ -2,9 +2,8 @@
 all: clean RcppArmadillo-unitTests.pdf
 
 clean:
-	touch RcppArmadillo-unitTests.pdf
-	rm RcppArmadillo-unitTests.pdf
-	
+	rm -f RcppArmadillo-unitTests.pdf
+
 RcppArmadillo-unitTests.pdf:
 	rm -fr unitTests-results/*
 	Rscript unitTests/RcppArmadillo-unitTests.R
