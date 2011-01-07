@@ -1,3 +1,16 @@
+0.2.11  2011-01-06
+
+    o   Upgraded to Armadillo Version 1.1.0   “Climate Vandal”
+
+         * Extended submatrix views, including access to elements whose
+           indices are specified in a separate vector
+         * Added handling of raw binary files by save/load functions
+	 * Added cumsum()
+	 * Added interpretation of matrices as triangular via
+           trimatu()/trimatl() 
+	 * Faster solve(), inv() via explicit handling of triangular matrices 
+	 * The stream for logging of errors and warnings can now be changed 
+
 0.2.10  2010-11-25
 
     o   Upgraded to Armadillo 1.0.0 "Antipodean Antileech"
