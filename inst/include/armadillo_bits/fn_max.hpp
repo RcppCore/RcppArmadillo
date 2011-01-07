@@ -164,4 +164,21 @@ max(const diagview<eT>& A)
 
 
 
+template<typename eT, typename T1>
+inline
+arma_warn_unused
+eT
+max(const subview_elem1<eT,T1>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  const Mat<eT> X(A);
+  
+  arma_debug_check( (X.n_elem == 0), "max(): given matrix has no elements" );
+  
+  return op_max::direct_max(X.mem, X.n_elem);
+  }
+
+
+
 //! @}

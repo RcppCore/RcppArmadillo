@@ -173,36 +173,77 @@ subview<eT>::operator/= (const eT val)
 
 template<typename eT>
 template<typename T1>
-arma_inline
+inline
 void
 subview<eT>::operator= (const Base<eT,T1>& in)
   {
   arma_extra_debug_sigprint();
   
-  const unwrap<T1>   tmp(in.get_ref());
-  const Mat<eT>& x = tmp.M;
+  const Proxy<T1> P(in.get_ref());
   
   subview<eT>& t = *this;
   
-  arma_debug_assert_same_size(t, x, "insert into submatrix");
-  
   const u32 t_n_rows = t.n_rows;
   const u32 t_n_cols = t.n_cols;
-  
-  if(t_n_rows == 1)
-    {
-    const eT* x_mem = x.memptr();
     
-    for(u32 col=0; col<t_n_cols; ++col)
+  arma_debug_assert_same_size(t, P, "insert into submatrix");
+  
+  const bool alias = P.is_alias(t.m);
+  
+  arma_extra_debug_warn(alias, "aliasing detected");
+  
+  if( (alias == true) || (is_Mat<typename Proxy<T1>::stored_type>::value == true) )
+    {
+    const unwrap_check<typename Proxy<T1>::stored_type> tmp(P.Q, t.m);
+    const Mat<eT>& x = tmp.M;
+    
+    if(t_n_rows == 1)
       {
-      at(0,col) = x_mem[col];
+      const eT* x_mem = x.memptr();
+      
+      for(u32 col=0; col<t_n_cols; ++col)
+        {
+        at(0,col) = x_mem[col];
+        }
+      }
+    else
+      {
+      for(u32 col=0; col<t_n_cols; ++col)
+        {
+        syslib::copy_elem( t.colptr(col), x.colptr(col), t_n_rows );
+        }
       }
     }
   else
     {
-    for(u32 col=0; col<t_n_cols; ++col)
+    if(t_n_rows == 1)
       {
-      syslib::copy_elem( t.colptr(col), x.colptr(col), t_n_rows );
+      for(u32 col=0; col<t_n_cols; ++col)
+        {
+        at(0,col) = P[col];
+        }
+      }
+    else
+      {
+      for(u32 col=0; col<t_n_cols; ++col)
+        {
+        eT* t_col_data = t.colptr(col);
+        
+        u32 i,j;
+        for(i=0, j=1; j<t_n_rows; i+=2, j+=2)
+          {
+          const eT tmp1 = P.at(i,col);
+          const eT tmp2 = P.at(j,col);
+          
+          t_col_data[i] = tmp1;
+          t_col_data[j] = tmp2;
+          }
+        
+        if(i < t_n_rows)
+          {
+          t_col_data[i] = P.at(i,col);
+          }
+        }
       }
     }
   }
@@ -217,30 +258,71 @@ subview<eT>::operator+= (const Base<eT,T1>& in)
   {
   arma_extra_debug_sigprint();
   
-  const unwrap<T1>   tmp(in.get_ref());
-  const Mat<eT>& x = tmp.M;
+  const Proxy<T1> P(in.get_ref());
   
   subview<eT>& t = *this;
-  
-  arma_debug_assert_same_size(t, x, "matrix addition");
   
   const u32 t_n_rows = t.n_rows;
   const u32 t_n_cols = t.n_cols;
   
-  if(t_n_rows == 1)
+  arma_debug_assert_same_size(t, P, "addition");
+  
+  const bool alias = P.is_alias(t.m);
+  
+  arma_extra_debug_warn(alias, "aliasing detected");
+  
+  if( (alias == true) || (is_Mat<typename Proxy<T1>::stored_type>::value == true) )
     {
-    const eT* x_mem = x.memptr();
+    const unwrap_check<typename Proxy<T1>::stored_type> tmp(P.Q, t.m);
+    const Mat<eT>& x = tmp.M;
     
-    for(u32 col=0; col<t_n_cols; ++col)
+    if(t_n_rows == 1)
       {
-      at(0,col) += x_mem[col];
+      const eT* x_mem = x.memptr();
+      
+      for(u32 col=0; col<t_n_cols; ++col)
+        {
+        at(0,col) += x_mem[col];
+        }
+      }
+    else
+      {
+      for(u32 col=0; col<t_n_cols; ++col)
+        {
+        arrayops::inplace_plus( t.colptr(col), x.colptr(col), t_n_rows );
+        }
       }
     }
   else
     {
-    for(u32 col=0; col<t_n_cols; ++col)
+    if(t_n_rows == 1)
       {
-      arrayops::inplace_plus( t.colptr(col), x.colptr(col), t_n_rows );
+      for(u32 col=0; col<t_n_cols; ++col)
+        {
+        at(0,col) += P[col];
+        }
+      }
+    else
+      {
+      for(u32 col=0; col<t_n_cols; ++col)
+        {
+        eT* t_col_data = t.colptr(col);
+        
+        u32 i,j;
+        for(i=0, j=1; j<t_n_rows; i+=2, j+=2)
+          {
+          const eT val1 = P.at(i,col);
+          const eT val2 = P.at(j,col);
+          
+          t_col_data[i] += val1;
+          t_col_data[j] += val2;
+          }
+        
+        if(i < t_n_rows)
+          {
+          t_col_data[i] += P.at(i,col);
+          }
+        }
       }
     }
   }
@@ -255,30 +337,69 @@ subview<eT>::operator-= (const Base<eT,T1>& in)
   {
   arma_extra_debug_sigprint();
   
-  const unwrap<T1>   tmp(in.get_ref());
-  const Mat<eT>& x = tmp.M;
+  const Proxy<T1> P(in.get_ref());
   
   subview<eT>& t = *this;
-  
-  arma_debug_assert_same_size(t, x, "matrix subtraction");
   
   const u32 t_n_rows = t.n_rows;
   const u32 t_n_cols = t.n_cols;
   
-  if(t_n_rows == 1)
+  arma_debug_assert_same_size(t, P, "subtraction");
+  
+  const bool alias = P.is_alias(t.m);
+  
+  if( (alias == true) || (is_Mat<typename Proxy<T1>::stored_type>::value == true) )
     {
-    const eT* x_mem = x.memptr();
+    const unwrap_check<typename Proxy<T1>::stored_type> tmp(P.Q, t.m);
+    const Mat<eT>& x = tmp.M;
     
-    for(u32 col=0; col<t_n_cols; ++col)
+    if(t_n_rows == 1)
       {
-      at(0,col) -= x_mem[col];
+      const eT* x_mem = x.memptr();
+      
+      for(u32 col=0; col<t_n_cols; ++col)
+        {
+        at(0,col) -= x_mem[col];
+        }
+      }
+    else
+      {
+      for(u32 col=0; col<t_n_cols; ++col)
+        {
+        arrayops::inplace_minus( t.colptr(col), x.colptr(col), t_n_rows );
+        }
       }
     }
   else
     {
-    for(u32 col=0; col<t_n_cols; ++col)
+    if(t_n_rows == 1)
       {
-      arrayops::inplace_minus( t.colptr(col), x.colptr(col), t_n_rows );
+      for(u32 col=0; col<t_n_cols; ++col)
+        {
+        at(0,col) -= P[col];
+        }
+      }
+    else
+      {
+      for(u32 col=0; col<t_n_cols; ++col)
+        {
+        eT* t_col_data = t.colptr(col);
+        
+        u32 i,j;
+        for(i=0, j=1; j<t_n_rows; i+=2, j+=2)
+          {
+          const eT val1 = P.at(i,col);
+          const eT val2 = P.at(j,col);
+          
+          t_col_data[i] -= val1;
+          t_col_data[j] -= val2;
+          }
+        
+        if(i < t_n_rows)
+          {
+          t_col_data[i] -= P.at(i,col);
+          }
+        }
       }
     }
   }
@@ -293,30 +414,71 @@ subview<eT>::operator%= (const Base<eT,T1>& in)
   {
   arma_extra_debug_sigprint();
   
-  const unwrap<T1>   tmp(in.get_ref());
-  const Mat<eT>& x = tmp.M;
+  const Proxy<T1> P(in.get_ref());
   
   subview<eT>& t = *this;
-  
-  arma_debug_assert_same_size(t, x, "matrix schur product");
   
   const u32 t_n_rows = t.n_rows;
   const u32 t_n_cols = t.n_cols;
   
-  if(t_n_rows == 1)
+  arma_debug_assert_same_size(t, P, "element-wise multiplication");
+  
+  const bool alias = P.is_alias(t.m);
+  
+  arma_extra_debug_warn(alias, "aliasing detected");
+  
+  if( (alias == true) || (is_Mat<typename Proxy<T1>::stored_type>::value == true) )
     {
-    const eT* x_mem = x.memptr();
+    const unwrap_check<typename Proxy<T1>::stored_type> tmp(P.Q, t.m);
+    const Mat<eT>& x = tmp.M;
     
-    for(u32 col=0; col<t_n_cols; ++col)
+    if(t_n_rows == 1)
       {
-      at(0,col) *= x_mem[col];
+      const eT* x_mem = x.memptr();
+      
+      for(u32 col=0; col<t_n_cols; ++col)
+        {
+        at(0,col) *= x_mem[col];
+        }
+      }
+    else
+      {
+      for(u32 col=0; col<t_n_cols; ++col)
+        {
+        arrayops::inplace_mul( t.colptr(col), x.colptr(col), t_n_rows );
+        }
       }
     }
   else
     {
-    for(u32 col=0; col<t_n_cols; ++col)
+    if(t_n_rows == 1)
       {
-      arrayops::inplace_mul( t.colptr(col), x.colptr(col), t_n_rows );
+      for(u32 col=0; col<t_n_cols; ++col)
+        {
+        at(0,col) *= P[col];
+        }
+      }
+    else
+      {
+      for(u32 col=0; col<t_n_cols; ++col)
+        {
+        eT* t_col_data = t.colptr(col);
+        
+        u32 i,j;
+        for(i=0, j=1; j<t_n_rows; i+=2, j+=2)
+          {
+          const eT val1 = P.at(i,col);
+          const eT val2 = P.at(j,col);
+          
+          t_col_data[i] *= val1;
+          t_col_data[j] *= val2;
+          }
+        
+        if(i < t_n_rows)
+          {
+          t_col_data[i] *= P.at(i,col);
+          }
+        }
       }
     }
   }
@@ -331,30 +493,71 @@ subview<eT>::operator/= (const Base<eT,T1>& in)
   {
   arma_extra_debug_sigprint();
   
-  const unwrap<T1>   tmp(in.get_ref());
-  const Mat<eT>& x = tmp.M;
+  const Proxy<T1> P(in.get_ref());
   
   subview<eT>& t = *this;
-  
-  arma_debug_assert_same_size(t, x, "element-wise matrix division");
   
   const u32 t_n_rows = t.n_rows;
   const u32 t_n_cols = t.n_cols;
   
-  if(t_n_rows == 1)
+  arma_debug_assert_same_size(t, P, "element-wise division");
+  
+  const bool alias = P.is_alias(t.m);
+  
+  arma_extra_debug_warn(alias, "aliasing detected");
+  
+  if( (alias == true) || (is_Mat<typename Proxy<T1>::stored_type>::value == true) )
     {
-    const eT* x_mem = x.memptr();
+    const unwrap_check<typename Proxy<T1>::stored_type> tmp(P.Q, t.m);
+    const Mat<eT>& x = tmp.M;
     
-    for(u32 col=0; col<t_n_cols; ++col)
+    if(t_n_rows == 1)
       {
-      at(0,col) /= x_mem[col];
+      const eT* x_mem = x.memptr();
+      
+      for(u32 col=0; col<t_n_cols; ++col)
+        {
+        at(0,col) /= x_mem[col];
+        }
+      }
+    else
+      {
+      for(u32 col=0; col<t_n_cols; ++col)
+        {
+        arrayops::inplace_div( t.colptr(col), x.colptr(col), t_n_rows );
+        }
       }
     }
   else
     {
-    for(u32 col=0; col<t_n_cols; ++col)
+    if(t_n_rows == 1)
       {
-      arrayops::inplace_div( t.colptr(col), x.colptr(col), t_n_rows );
+      for(u32 col=0; col<t_n_cols; ++col)
+        {
+        at(0,col) /= P[col];
+        }
+      }
+    else
+      {
+      for(u32 col=0; col<t_n_cols; ++col)
+        {
+        eT* t_col_data = t.colptr(col);
+        
+        u32 i,j;
+        for(i=0, j=1; j<t_n_rows; i+=2, j+=2)
+          {
+          const eT val1 = P.at(i,col);
+          const eT val2 = P.at(j,col);
+          
+          t_col_data[i] /= val1;
+          t_col_data[j] /= val2;
+          }
+        
+        if(i < t_n_rows)
+          {
+          t_col_data[i] /= P.at(i,col);
+          }
+        }
       }
     }
   }
@@ -421,7 +624,7 @@ subview<eT>::operator+= (const subview<eT>& x_in)
   
   subview<eT>& t = *this;
   
-  arma_debug_assert_same_size(t, x, "matrix addition");
+  arma_debug_assert_same_size(t, x, "addition");
   
   const u32 t_n_rows = t.n_rows;
   const u32 t_n_cols = t.n_cols;
@@ -465,7 +668,7 @@ subview<eT>::operator-= (const subview<eT>& x_in)
   
   subview<eT>& t = *this;
   
-  arma_debug_assert_same_size(t, x, "matrix subtraction");
+  arma_debug_assert_same_size(t, x, "subtraction");
   
   const u32 t_n_rows = t.n_rows;
   const u32 t_n_cols = t.n_cols;
@@ -510,7 +713,7 @@ subview<eT>::operator%= (const subview& x_in)
   
   subview<eT>& t = *this;
   
-  arma_debug_assert_same_size(t, x, "matrix schur product");
+  arma_debug_assert_same_size(t, x, "element-wise multiplication");
   
   const u32 t_n_rows = t.n_rows;
   const u32 t_n_cols = t.n_cols;
@@ -555,7 +758,7 @@ subview<eT>::operator/= (const subview& x_in)
   
   subview<eT>& t = *this;
   
-  arma_debug_assert_same_size(t, x, "element-wise matrix division");
+  arma_debug_assert_same_size(t, x, "element-wise division");
   
   const u32 t_n_rows = t.n_rows;
   const u32 t_n_cols = t.n_cols;
@@ -876,7 +1079,7 @@ subview<eT>::plus_inplace(Mat<eT>& out, const subview<eT>& in)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(out, in, "matrix addition");
+  arma_debug_assert_same_size(out, in, "addition");
   
   const u32 n_rows = out.n_rows;
   const u32 n_cols = out.n_cols;
@@ -909,7 +1112,7 @@ subview<eT>::minus_inplace(Mat<eT>& out, const subview<eT>& in)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(out, in, "matrix subtraction");
+  arma_debug_assert_same_size(out, in, "subtraction");
   
   const u32 n_rows = out.n_rows;
   const u32 n_cols = out.n_cols;
@@ -942,7 +1145,7 @@ subview<eT>::schur_inplace(Mat<eT>& out, const subview<eT>& in)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(out, in, "matrix schur product");
+  arma_debug_assert_same_size(out, in, "element-wise multiplication");
   
   const u32 n_rows = out.n_rows;
   const u32 n_cols = out.n_cols;
@@ -975,7 +1178,7 @@ subview<eT>::div_inplace(Mat<eT>& out, const subview<eT>& in)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(out, in, "element-wise matrix division");
+  arma_debug_assert_same_size(out, in, "element-wise division");
   
   const u32 n_rows = out.n_rows;
   const u32 n_cols = out.n_cols;

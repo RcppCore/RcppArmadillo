@@ -305,6 +305,58 @@ diskio::gen_bin_header(const Cube<eT>& x)
 
 
 inline
+bool
+diskio::is_raw_binary(std::istream& f)
+  {
+  arma_extra_debug_sigprint();
+  
+  f.clear();
+  const std::fstream::pos_type pos1 = f.tellg();
+  
+  f.clear();
+  f.seekg(0, ios::end);
+  
+  f.clear();
+  const std::fstream::pos_type pos2 = f.tellg();
+  
+  const u32 N = ( (pos1 >= 0) && (pos2 >= 0) ) ? u32(pos2 - pos1) : 0;
+  
+  f.clear();
+  f.seekg(pos1);
+  
+  podarray<unsigned char> data(N);
+  
+  unsigned char* ptr = data.memptr();
+  
+  f.clear();
+  f.read(reinterpret_cast<char*>(ptr), N);
+  
+  bool has_non_text_val = false;
+  
+  if(f.good() == true)
+    {
+    for(u32 i=0; i<N; ++i)
+      {
+      const unsigned char val = ptr[i];
+      
+      // the range checking can be made more elaborate
+      if( (val <= 8) || (val >= 123) )
+        {
+        has_non_text_val = true;
+        break;
+        }
+      }
+    }
+  
+  f.clear();
+  f.seekg(pos1);
+  
+  return has_non_text_val;
+  }
+
+
+
+inline
 char
 diskio::conv_to_hex_char(const u8 x)
   {
@@ -418,7 +470,7 @@ diskio::gen_tmp_name(const std::string& x)
 //! Safely rename a file.
 //! Before renaming, test if we can write to the final file.
 //! This should prevent:
-//! (i)  overwriting files that have been write protected,
+//! (i)  overwriting files that are write protected,
 //! (ii) overwriting directories.
 inline
 bool
@@ -513,6 +565,52 @@ diskio::save_raw_ascii(const Mat<eT>& x, std::ostream& f)
       
     f.put('\n');
     }
+  
+  return f.good();
+  }
+
+
+
+//! Save a matrix as raw binary (no header)
+template<typename eT>
+inline
+bool
+diskio::save_raw_binary(const Mat<eT>& x, const std::string& final_name)
+  {
+  arma_extra_debug_sigprint();
+  
+  const std::string tmp_name = diskio::gen_tmp_name(final_name);
+  
+  std::ofstream f(tmp_name.c_str(), std::fstream::binary);
+  
+  bool save_okay = f.is_open();
+  
+  if(save_okay == true)
+    {
+    save_okay = diskio::save_raw_binary(x, f);
+    
+    f.flush();
+    f.close();
+    
+    if(save_okay == true)
+      {
+      save_okay = diskio::safe_rename(tmp_name, final_name);
+      }
+    }
+  
+  return save_okay;
+  }
+
+
+
+template<typename eT>
+inline
+bool
+diskio::save_raw_binary(const Mat<eT>& x, std::ostream& f)
+  {
+  arma_extra_debug_sigprint();
+  
+  f.write(reinterpret_cast<const char*>(x.mem), x.n_elem*sizeof(eT));
   
   return f.good();
   }
@@ -864,6 +962,64 @@ diskio::load_raw_ascii(Mat<eT>& x, std::istream& f, std::string& err_msg)
     }
   
   return load_okay;
+  }
+
+
+
+//! Load a matrix in binary format (no header);
+//! the matrix is assumed to have one column
+template<typename eT>
+inline
+bool
+diskio::load_raw_binary(Mat<eT>& x, const std::string& name, std::string& err_msg)
+  {
+  arma_extra_debug_sigprint();
+  
+  std::ifstream f;
+  f.open(name.c_str(), std::fstream::binary);
+  
+  bool load_okay = f.is_open();
+  
+  if(load_okay == true)
+    {
+    load_okay = diskio::load_raw_binary(x, f, err_msg);
+    f.close();
+    }
+  
+  return load_okay;
+  }
+
+
+
+template<typename eT>
+inline
+bool
+diskio::load_raw_binary(Mat<eT>& x, std::istream& f, std::string& err_msg)
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(err_msg);
+  
+  f.clear();
+  const std::streampos pos1 = f.tellg();
+  
+  f.clear();
+  f.seekg(0, ios::end);
+
+  f.clear();
+  const std::streampos pos2 = f.tellg();
+  
+  const u32 N = ( (pos1 >= 0) && (pos2 >= 0) ) ? u32(pos2 - pos1) : 0;
+  
+  f.clear();
+  //f.seekg(0, ios::beg);
+  f.seekg(pos1);
+  
+  x.set_size(N / sizeof(eT), 1);
+  
+  f.clear();
+  f.read( reinterpret_cast<char *>(x.memptr()), N);
+  
+  return f.good();
   }
 
 
@@ -1244,7 +1400,14 @@ diskio::load_auto_detect(Mat<eT>& x, std::istream& f, std::string& err_msg)
     }
   else
     {
-    return load_raw_ascii(x, f, err_msg);
+    if(is_raw_binary(f) == true)
+      {
+      return load_raw_binary(x, f, err_msg);
+      }
+    else
+      {
+      return load_raw_ascii(x, f, err_msg);
+      }
     }
   }
 
@@ -1324,6 +1487,52 @@ diskio::save_raw_ascii(const Cube<eT>& x, std::ostream& f)
       f.put('\n');
       }
     }
+  
+  return f.good();
+  }
+
+
+
+//! Save a cube as raw binary (no header)
+template<typename eT>
+inline
+bool
+diskio::save_raw_binary(const Cube<eT>& x, const std::string& final_name)
+  {
+  arma_extra_debug_sigprint();
+  
+  const std::string tmp_name = diskio::gen_tmp_name(final_name);
+  
+  std::ofstream f(tmp_name.c_str(), std::fstream::binary);
+  
+  bool save_okay = f.is_open();
+  
+  if(save_okay == true)
+    {
+    save_okay = diskio::save_raw_binary(x, f);
+    
+    f.flush();
+    f.close();
+    
+    if(save_okay == true)
+      {
+      save_okay = diskio::safe_rename(tmp_name, final_name);
+      }
+    }
+  
+  return save_okay;
+  }
+
+
+
+template<typename eT>
+inline
+bool
+diskio::save_raw_binary(const Cube<eT>& x, std::ostream& f)
+  {
+  arma_extra_debug_sigprint();
+  
+  f.write(reinterpret_cast<const char*>(x.mem), x.n_elem*sizeof(eT));
   
   return f.good();
   }
@@ -1521,6 +1730,64 @@ diskio::load_raw_ascii(Cube<eT>& x, std::istream& f, std::string& err_msg)
     }
   
   return load_okay;
+  }
+
+
+
+//! Load a cube in binary format (no header);
+//! the cube is assumed to have one slice with one column
+template<typename eT>
+inline
+bool
+diskio::load_raw_binary(Cube<eT>& x, const std::string& name, std::string& err_msg)
+  {
+  arma_extra_debug_sigprint();
+  
+  std::ifstream f;
+  f.open(name.c_str(), std::fstream::binary);
+  
+  bool load_okay = f.is_open();
+  
+  if(load_okay == true)
+    {
+    load_okay = diskio::load_raw_binary(x, f, err_msg);
+    f.close();
+    }
+  
+  return load_okay;
+  }
+
+
+
+template<typename eT>
+inline
+bool
+diskio::load_raw_binary(Cube<eT>& x, std::istream& f, std::string& err_msg)
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(err_msg);
+  
+  f.clear();
+  const std::streampos pos1 = f.tellg();
+  
+  f.clear();
+  f.seekg(0, ios::end);
+  
+  f.clear();
+  const std::streampos pos2 = f.tellg();
+  
+  const u32 N = ( (pos1 >= 0) && (pos2 >= 0) ) ? u32(pos2 - pos1) : 0;
+  
+  f.clear();
+  //f.seekg(0, ios::beg);
+  f.seekg(pos1);
+  
+  x.set_size(N / sizeof(eT), 1, 1);
+  
+  f.clear();
+  f.read( reinterpret_cast<char *>(x.memptr()), N);
+  
+  return f.good();
   }
 
 
@@ -1727,7 +1994,14 @@ diskio::load_auto_detect(Cube<eT>& x, std::istream& f, std::string& err_msg)
     }
   else
     {
-    return load_raw_ascii(x, f, err_msg);
+    if(is_raw_binary(f) == true)
+      {
+      return load_raw_binary(x, f, err_msg);
+      }
+    else
+      {
+      return load_raw_ascii(x, f, err_msg);
+      }
     }
   }
 

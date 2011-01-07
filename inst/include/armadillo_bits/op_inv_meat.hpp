@@ -84,4 +84,17 @@ op_inv::apply_diag(Mat<typename T1::elem_type>& out, const Base<typename T1::ele
 
 
 
+//! inverse of T1 (triangular matrices)
+template<typename T1>
+inline
+void
+op_inv_tr::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv_tr>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  auxlib::inv_tr(out, X.m, X.aux_u32_a);
+  }
+
+
+
 //! @}

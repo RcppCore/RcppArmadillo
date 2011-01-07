@@ -69,6 +69,9 @@ class field
   arma_inline       oT& operator[](const u32 i);
   arma_inline const oT& operator[](const u32 i) const;
   
+  arma_inline       oT&         at(const u32 i);
+  arma_inline const oT&         at(const u32 i) const;
+  
   arma_inline       oT& operator()(const u32 i);
   arma_inline const oT& operator()(const u32 i) const;
   

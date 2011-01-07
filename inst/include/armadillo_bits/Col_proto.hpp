@@ -14,7 +14,7 @@
 //! \addtogroup Col
 //! @{
 
-//! Class for column vectors (matrices with only column)
+//! Class for column vectors (matrices with only one column)
 
 template<typename eT>
 class Col : public Mat<eT>, public BaseVec< eT, Col<eT> >
@@ -55,6 +55,9 @@ class Col : public Mat<eT>, public BaseVec< eT, Col<eT> >
   
   arma_inline       subview_col<eT> rows(const u32 in_row1, const u32 in_row2);
   arma_inline const subview_col<eT> rows(const u32 in_row1, const u32 in_row2) const;
+  
+  arma_inline       subview_col<eT> subvec(const u32 in_row1, const u32 in_row2);
+  arma_inline const subview_col<eT> subvec(const u32 in_row1, const u32 in_row2) const;
   
   
   inline void shed_row (const u32 row_num);

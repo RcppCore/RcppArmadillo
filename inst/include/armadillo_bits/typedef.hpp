@@ -124,6 +124,10 @@ typedef Cube<cx_double> cx_cube;
 
 
 
+typedef void* void_ptr;
+
+
+
 namespace junk
   {
   struct arma_elem_size_test

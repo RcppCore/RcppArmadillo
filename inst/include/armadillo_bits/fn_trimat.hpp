@@ -11,35 +11,31 @@
 // (see http://www.opensource.org/licenses for more info)
 
 
-
-//! \addtogroup span
+//! \addtogroup fn_trimat
 //! @{
 
 
-
-enum span_helper
+template<typename T1>
+arma_inline
+const Op<T1, op_trimat>
+trimatu(const Base<typename T1::elem_type,T1>& X)
   {
-  span_whole_vector
-  };
+  arma_extra_debug_sigprint();
+  
+  return Op<T1, op_trimat>(X.get_ref(), 0, 0);
+  }
 
 
 
-class span
+template<typename T1>
+arma_inline
+const Op<T1, op_trimat>
+trimatl(const Base<typename T1::elem_type,T1>& X)
   {
-  public:
+  arma_extra_debug_sigprint();
   
-  static const span_helper all = span_whole_vector;
-  
-  inline
-  span(const u32 in_a, const u32 in_b)
-    : a(in_a)
-    , b(in_b)
-    {
-    }
-  
-  const u32 a;
-  const u32 b;
-  };
+  return Op<T1, op_trimat>(X.get_ref(), 1, 0);
+  }
 
 
 

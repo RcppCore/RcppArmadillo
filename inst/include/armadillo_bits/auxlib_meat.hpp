@@ -423,6 +423,63 @@ auxlib::inv_inplace_lapack(Mat<eT>& out)
 
 template<typename eT, typename T1>
 inline
+bool
+auxlib::inv_tr(Mat<eT>& out, const Base<eT,T1>& X, const u32 layout)
+  {
+  arma_extra_debug_sigprint();
+  
+  out = X.get_ref();
+  
+  arma_debug_check( (out.is_square() == false), "inv(): given matrix is not square" );
+  
+  bool status;
+  
+  #if defined(ARMA_USE_LAPACK)
+    {
+    char     uplo = (layout == 0) ? 'U' : 'L';
+    char     diag = 'N';
+    blas_int n    = blas_int(out.n_rows);
+    blas_int info = 0;
+    
+    lapack::trtri(&uplo, &diag, &n, out.memptr(), &n, &info);
+    
+    status = (info == 0);
+    }
+  #else
+    {
+    arma_ignore(layout);
+    arma_stop("inv(): need LAPACK");
+    status = false;
+    }
+  #endif
+  
+  
+  if(status == false)
+    {
+    arma_print("inv(): matrix appears to be singular" );
+    out.reset();
+    }
+  else
+    {
+    if(layout == 0)
+      {
+      // upper triangular
+      out = trimatu(out);
+      }
+    else
+      {
+      // lower triangular      
+      out = trimatl(out);
+      }
+    }
+  
+  return status;
+  }
+
+
+
+template<typename eT, typename T1>
+inline
 eT
 auxlib::det(const Base<eT,T1>& X)
   {
@@ -2021,6 +2078,51 @@ auxlib::solve_ud(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
     arma_ignore(A);
     arma_ignore(B);
     arma_stop("auxlib::solve_ud(): need LAPACK");
+    return false;
+    }
+  #endif
+  }
+
+
+
+//
+// solve_tr
+
+template<typename eT>
+inline
+bool
+auxlib::solve_tr(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const u32 layout)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(A.is_empty() || B.is_empty())
+    {
+    out.reset();
+    return false;
+    }
+  
+  #if defined(ARMA_USE_LAPACK)
+    {
+    out = B;
+    
+    char     uplo  = (layout == 0) ? 'U' : 'L';
+    char     trans = 'N';
+    char     diag  = 'N';
+    blas_int n     = blas_int(A.n_rows);
+    blas_int nrhs  = blas_int(B.n_cols);
+    blas_int info  = 0;
+    
+    lapack::trtrs<eT>(&uplo, &trans, &diag, &n, &nrhs, A.memptr(), &n, out.memptr(), &n, &info);
+    
+    return (info == 0);
+    }
+  #else
+    {
+    arma_ignore(out);
+    arma_ignore(A);
+    arma_ignore(B);
+    arma_ignore(layout);
+    arma_stop("solve(): need LAPACK");
     return false;
     }
   #endif

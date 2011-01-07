@@ -147,6 +147,7 @@ namespace arma
   
   #include "armadillo_bits/field_proto.hpp"
   #include "armadillo_bits/subview_proto.hpp"
+  #include "armadillo_bits/subview_elem1_proto.hpp"
   #include "armadillo_bits/subview_field_proto.hpp"
   #include "armadillo_bits/subview_cube_proto.hpp"
   #include "armadillo_bits/diagview_proto.hpp"
@@ -207,6 +208,8 @@ namespace arma
   #include "armadillo_bits/op_find_proto.hpp"
   #include "armadillo_bits/op_chol_proto.hpp"
   #include "armadillo_bits/op_cx_scalar_proto.hpp"
+  #include "armadillo_bits/op_trimat_proto.hpp"
+  #include "armadillo_bits/op_cumsum_proto.hpp"
   
   #include "armadillo_bits/glue_times_proto.hpp"
   #include "armadillo_bits/glue_mixed_proto.hpp"
@@ -314,6 +317,7 @@ namespace arma
   #include "armadillo_bits/fn_zeros.hpp"
   #include "armadillo_bits/fn_ones.hpp"
   #include "armadillo_bits/fn_misc.hpp"
+  #include "armadillo_bits/fn_elem.hpp"
   #include "armadillo_bits/fn_norm.hpp"
   #include "armadillo_bits/fn_dot.hpp"
   #include "armadillo_bits/fn_randu.hpp"
@@ -350,6 +354,8 @@ namespace arma
   #include "armadillo_bits/fn_trunc_exp.hpp"
   #include "armadillo_bits/fn_trunc_log.hpp"
   #include "armadillo_bits/fn_toeplitz.hpp"
+  #include "armadillo_bits/fn_trimat.hpp"
+  #include "armadillo_bits/fn_cumsum.hpp"
   
   //
   // class meat
@@ -372,6 +378,7 @@ namespace arma
   #include "armadillo_bits/Cube_meat.hpp"
   #include "armadillo_bits/field_meat.hpp"
   #include "armadillo_bits/subview_meat.hpp"
+  #include "armadillo_bits/subview_elem1_meat.hpp"
   #include "armadillo_bits/subview_field_meat.hpp"
   #include "armadillo_bits/subview_cube_meat.hpp"
   #include "armadillo_bits/diagview_meat.hpp"
@@ -411,6 +418,8 @@ namespace arma
   #include "armadillo_bits/op_find_meat.hpp"
   #include "armadillo_bits/op_chol_meat.hpp"
   #include "armadillo_bits/op_cx_scalar_meat.hpp"
+  #include "armadillo_bits/op_trimat_meat.hpp"
+  #include "armadillo_bits/op_cumsum_meat.hpp"
   
   #include "armadillo_bits/glue_times_meat.hpp"
   #include "armadillo_bits/glue_mixed_meat.hpp"

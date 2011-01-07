@@ -118,4 +118,19 @@ stddev(const diagview<eT>& A, const u32 norm_type = 0)
 
 
 
+template<typename eT, typename T1>
+inline
+arma_warn_unused
+typename get_pod_type<eT>::result
+stddev(const subview_elem1<eT,T1>& A, const u32 norm_type = 0)
+  {
+  arma_extra_debug_sigprint();
+  
+  const Col<eT> X(A);
+  
+  return stddev(X, norm_type);
+  }
+
+
+
 //! @}

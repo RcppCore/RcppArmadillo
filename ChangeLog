@@ -1,13 +1,19 @@
+2011-01-06  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.2.11
+
+	* inst/include/*: Updated to Armadillo 1.1.0 "Climate Vandal"
+
 2010-12-12  Romain Francois <romain@r-enthusiasts.com>
 
-    * R/SHLIB.R: new unexported R function SHLIB, small wrapper around 
-    R CMD SHLIB
+	* R/SHLIB.R: new unexported R function SHLIB, small wrapper around R
+	CMD SHLIB
 
 2010-11-25  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.2.10
 
-	* inst/include/*: Update to Armadillo 1.0.0 "Antipodean Antileech”
+	* inst/include/*: Updated to Armadillo 1.0.0 "Antipodean Antileech”
 
 2010-11-19  Dirk Eddelbuettel  <edd@debian.org>
 
@@ -24,13 +30,13 @@
 
 	* DESCRIPTION: Release 0.2.9
 
-	* inst/include/*: Update to Armadillo 0.9.92 "Wall Street Gangster"
+	* inst/include/*: Updated to Armadillo 0.9.92 "Wall Street Gangster"
 
 2010-10-16  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.2.8
 
-	* inst/include/*: Update to Armadillo 0.9.90 "Water Dragon"
+	* inst/include/*: Updated to Armadillo 0.9.90 "Water Dragon"
 
 	* NEWS: moved to inst/NEWS so that it gets installed with the package
 	* inst/ChangeLog: moved to top-level enabling 'C-x 4 a' lookups

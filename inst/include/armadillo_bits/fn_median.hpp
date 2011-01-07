@@ -204,4 +204,19 @@ median(const diagview< std::complex<T> >& A)
 
 
 
+template<typename eT, typename T1>
+inline
+arma_warn_unused
+eT
+median(const subview_elem1<eT,T1>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  const Col<eT> X(A);
+  
+  return median(X);
+  }
+
+
+
 //! @}

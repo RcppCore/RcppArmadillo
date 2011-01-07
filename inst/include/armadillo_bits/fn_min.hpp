@@ -152,13 +152,30 @@ eT
 min(const Op<subview<eT>, op_min>& in)
   {
   arma_extra_debug_sigprint();
-  arma_extra_debug_print("max(): two consecutive max() calls detected");
+  arma_extra_debug_print("min(): two consecutive min() calls detected");
   
   const subview<eT>& X = in.m;
   
-  arma_debug_check( (X.n_elem == 0), "max(): given matrix has no elements" );
+  arma_debug_check( (X.n_elem == 0), "min(): given matrix has no elements" );
   
   return op_min::direct_min(X);
+  }
+
+
+
+template<typename eT, typename T1>
+inline
+arma_warn_unused
+eT
+min(const subview_elem1<eT,T1>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  const Mat<eT> X(A);
+  
+  arma_debug_check( (X.n_elem == 0), "min(): given matrix has no elements" );
+  
+  return op_min::direct_min(X.mem, X.n_elem);
   }
 
 
