@@ -281,6 +281,31 @@ Row<eT>::cols(const u32 in_col1, const u32 in_col2)
 
 
 
+template<typename eT>
+arma_inline
+subview_row<eT>
+Row<eT>::subvec(const u32 in_col1, const u32 in_col2)
+  {
+  arma_debug_check( ( (in_col1 > in_col2) || (in_col2 >= Mat<eT>::n_cols) ), "Row::subvec(): indices out of bounds or incorrectly used");
+  
+  return subview_row<eT>(*this, 0, in_col1, in_col2);
+  }
+
+
+
+template<typename eT>
+arma_inline
+const subview_row<eT>
+Row<eT>::subvec(const u32 in_col1, const u32 in_col2)
+  const
+  {
+  arma_debug_check( ( (in_col1 > in_col2) || (in_col2 >= Mat<eT>::n_cols) ), "Row::subvec(): indices out of bounds or incorrectly used");
+  
+  return subview_row<eT>(*this, 0, in_col1, in_col2);
+  }
+
+
+
 //! remove specified columns
 template<typename eT>
 inline

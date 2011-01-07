@@ -209,6 +209,29 @@ field<oT>::operator[] (const u32 i) const
   }
 
 
+
+//! linear element accessor (treats the field as a vector); no bounds check
+template<typename oT>
+arma_inline
+oT&
+field<oT>::at(const u32 i)
+  {
+  return (*mem[i]);
+  }
+  
+  
+  
+//! linear element accessor (treats the field as a vector); no bounds check
+template<typename oT>
+arma_inline
+const oT&
+field<oT>::at(const u32 i) const
+  {
+  return (*mem[i]);
+  }
+
+
+
 //! linear element accessor (treats the field as a vector); bounds checking not done when ARMA_NO_DEBUG is defined
 template<typename oT>
 arma_inline

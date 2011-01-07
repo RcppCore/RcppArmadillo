@@ -159,4 +159,21 @@ mean(const diagview<eT>& A)
 
 
 
+template<typename eT, typename T1>
+inline
+arma_warn_unused
+eT
+mean(const subview_elem1<eT,T1>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  const Mat<eT> X(A);
+  
+  arma_debug_check( (X.n_elem == 0), "mean(): given matrix has no elements" );
+  
+  return op_mean::direct_mean(X.mem, X.n_elem);
+  }
+
+
+
 //! @}

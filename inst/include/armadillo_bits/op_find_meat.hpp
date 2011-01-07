@@ -29,11 +29,13 @@ op_find::helper
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
+  typedef typename T1::elem_type      eT;
+  typedef typename Proxy<T1>::ea_type ea_type;
   
-  const Proxy<T1> P(X.get_ref());
+  const Proxy<T1> A(X.get_ref());
   
-  const u32 n_elem = P.get_n_elem();
+  ea_type   PA     = A.get_ea();
+  const u32 n_elem = A.get_n_elem();
   
   indices.set_size(n_elem, 1);
   
@@ -42,7 +44,7 @@ op_find::helper
   
   for(u32 i=0; i<n_elem; ++i)
     {
-    if(P[i] != eT(0))
+    if(PA[i] != eT(0))
       {
       indices_mem[n_nz] = i;
       ++n_nz;
@@ -66,17 +68,18 @@ op_find::helper
   )
   {
   arma_extra_debug_sigprint();
-  
   arma_ignore(junk1);
   arma_ignore(junk2);
   
-  typedef typename T1::elem_type eT;
+  typedef typename T1::elem_type      eT;
+  typedef typename Proxy<T1>::ea_type ea_type;
   
   const eT val = X.aux;
   
-  const Proxy<T1> P(X.m);
+  const Proxy<T1> A(X.m);
   
-  const u32 n_elem = P.get_n_elem();
+  ea_type   PA     = A.get_ea();
+  const u32 n_elem = A.get_n_elem();
   
   indices.set_size(n_elem, 1);
   
@@ -85,7 +88,7 @@ op_find::helper
   
   for(u32 i=0; i<n_elem; ++i)
     {
-    const eT tmp = P[i];
+    const eT tmp = PA[i];
     
     bool not_zero;
     
@@ -120,19 +123,23 @@ op_find::helper
   (
   Mat<u32>& indices,
   const mtOp<u32, T1, op_type>& X,
-  const typename arma_op_rel_only<op_type>::result junk1,
+  const typename arma_op_rel_only<op_type>::result            junk1,
   const typename arma_cx_only<typename T1::elem_type>::result junk2
   )
   {
   arma_extra_debug_sigprint();
+  arma_ignore(junk1);
+  arma_ignore(junk2);
   
-  typedef typename T1::elem_type eT;
+  typedef typename T1::elem_type      eT;
+  typedef typename Proxy<T1>::ea_type ea_type;
   
   const eT val = X.aux;
   
-  const Proxy<T1> P(X.m);
+  const Proxy<T1> A(X.m);
   
-  const u32 n_elem = P.get_n_elem();
+  ea_type   PA     = A.get_ea();
+  const u32 n_elem = A.get_n_elem();
   
   indices.set_size(n_elem, 1);
   
@@ -141,7 +148,7 @@ op_find::helper
   
   for(u32 i=0; i<n_elem; ++i)
     {
-    const eT tmp = P[i];
+    const eT tmp = PA[i];
     
     bool not_zero;
     
@@ -174,7 +181,6 @@ op_find::helper
   )
   {
   arma_extra_debug_sigprint();
-  
   arma_ignore(junk1);
   arma_ignore(junk2);
   arma_ignore(junk3);
@@ -182,12 +188,17 @@ op_find::helper
   typedef typename T1::elem_type eT1;
   typedef typename T2::elem_type eT2;
   
+  typedef typename Proxy<T1>::ea_type ea_type1;
+  typedef typename Proxy<T2>::ea_type ea_type2;
+  
   const Proxy<T1> A(X.A);
   const Proxy<T2> B(X.B);
   
   arma_debug_assert_same_size(A, B, "relational operator");
   
-  const u32 n_elem = A.get_n_elem();
+  ea_type1  PA     = A.get_ea();
+  ea_type2  PB     = B.get_ea();
+  const u32 n_elem = B.get_n_elem();
   
   indices.set_size(n_elem, 1);
   
@@ -196,8 +207,8 @@ op_find::helper
   
   for(u32 i=0; i<n_elem; ++i)
     {
-    const eT1 tmp1 = A[i];
-    const eT1 tmp2 = B[i];
+    const eT1 tmp1 = PA[i];
+    const eT2 tmp2 = PB[i];
     
     bool not_zero;
     
@@ -234,17 +245,21 @@ op_find::helper
   )
   {
   arma_extra_debug_sigprint();
-  
   arma_ignore(junk1);
   arma_ignore(junk2);
   arma_ignore(junk3);
+  
+  typedef typename Proxy<T1>::ea_type ea_type1;
+  typedef typename Proxy<T2>::ea_type ea_type2;
   
   const Proxy<T1> A(X.A);
   const Proxy<T2> B(X.B);
   
   arma_debug_assert_same_size(A, B, "relational operator");
   
-  const u32 n_elem = A.get_n_elem();
+  ea_type1  PA     = A.get_ea();
+  ea_type2  PB     = B.get_ea();
+  const u32 n_elem = B.get_n_elem();
   
   indices.set_size(n_elem, 1);
   
@@ -255,8 +270,8 @@ op_find::helper
     {
     bool not_zero;
     
-         if(is_same_type<glue_type, glue_rel_eq    >::value == true)  { not_zero = (A[i] == B[i]); }
-    else if(is_same_type<glue_type, glue_rel_noteq >::value == true)  { not_zero = (A[i] != B[i]); }
+         if(is_same_type<glue_type, glue_rel_eq    >::value == true)  { not_zero = (PA[i] == PB[i]); }
+    else if(is_same_type<glue_type, glue_rel_noteq >::value == true)  { not_zero = (PA[i] != PB[i]); }
     else not_zero = false;
     
     if(not_zero == true)

@@ -1065,6 +1065,115 @@ Mat<eT>::operator/=(const diagview<eT>& X)
 
 
 template<typename eT>
+template<typename T1>
+inline
+Mat<eT>::Mat(const subview_elem1<eT,T1>& X)
+  : n_rows(0)
+  , n_cols(0)
+  , n_elem(0)
+  , vec_state(0)
+  , mem_state(0)
+  //, mem(0)
+  , mem(mem)
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  this->operator=(X);
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+const Mat<eT>&
+Mat<eT>::operator=(const subview_elem1<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview_elem1<eT,T1>::extract(*this, X);
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+const Mat<eT>&
+Mat<eT>::operator+=(const subview_elem1<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview_elem1<eT,T1>::plus_inplace(*this, X);
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+const Mat<eT>&
+Mat<eT>::operator-=(const subview_elem1<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview_elem1<eT,T1>::minus_inplace(*this, X);
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+const Mat<eT>&
+Mat<eT>::operator*=(const subview_elem1<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  glue_times::apply_inplace(*this, X);
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+const Mat<eT>&
+Mat<eT>::operator%=(const subview_elem1<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview_elem1<eT,T1>::schur_inplace(*this, X);
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+const Mat<eT>&
+Mat<eT>::operator/=(const subview_elem1<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview_elem1<eT,T1>::div_inplace(*this, X);
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
 inline
 mat_injector< Mat<eT> >
 Mat<eT>::operator<<(const eT val)
@@ -1092,7 +1201,7 @@ Mat<eT>::row(const u32 row_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( row_num >= n_rows, "Mat::row(): row out of bounds" );
+  arma_debug_check( row_num >= n_rows, "Mat::row(): out of bounds" );
   
   return subview_row<eT>(*this, row_num);
   }
@@ -1107,9 +1216,79 @@ Mat<eT>::row(const u32 row_num) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( row_num >= n_rows, "Mat::row(): row out of bounds" );
+  arma_debug_check( row_num >= n_rows, "Mat::row(): out of bounds" );
   
   return subview_row<eT>(*this, row_num);
+  }
+
+
+
+template<typename eT>
+arma_inline
+subview_row<eT>
+Mat<eT>::operator()(const u32 row_num, const span_helper)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (row_num >= n_rows), "Mat::operator(): row out of bounds" );
+  
+  return subview_row<eT>(*this, row_num);
+  }
+
+
+
+template<typename eT>
+arma_inline
+const subview_row<eT>
+Mat<eT>::operator()(const u32 row_num, const span_helper) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (row_num >= n_rows), "Mat::operator(): row out of bounds" );
+  
+  return subview_row<eT>(*this, row_num);
+  }
+
+
+
+template<typename eT>
+arma_inline
+subview_row<eT>
+Mat<eT>::operator()(const u32 row_num, const span& col_span)
+  {
+  arma_extra_debug_sigprint();
+  
+  const u32 a = col_span.a;
+  const u32 b = col_span.b;
+  
+  arma_debug_check
+    (
+    (row_num >= n_rows) || (a > b) || (b >= n_cols),
+    "Mat::operator(): indices out of bounds or incorrectly used"
+    );
+  
+  return subview_row<eT>(*this, row_num, a, b);
+  }
+
+
+
+template<typename eT>
+arma_inline
+const subview_row<eT>
+Mat<eT>::operator()(const u32 row_num, const span& col_span) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const u32 a = col_span.a;
+  const u32 b = col_span.b;
+  
+  arma_debug_check
+    (
+    (row_num >= n_rows) || (a > b) || (b >= n_cols),
+    "Mat::operator(): indices out of bounds or incorrectly used"
+    );
+  
+  return subview_row<eT>(*this, row_num, a, b);
   }
 
 
@@ -1140,6 +1319,76 @@ Mat<eT>::col(const u32 col_num) const
   arma_debug_check( col_num >= n_cols, "Mat::col(): out of bounds");
   
   return subview_col<eT>(*this, col_num);
+  }
+
+
+
+template<typename eT>
+arma_inline
+subview_col<eT>
+Mat<eT>::operator()(const span_helper, const u32 col_num)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( col_num >= n_cols, "Mat::operator(): column out of bounds");
+  
+  return subview_col<eT>(*this, col_num);
+  }
+
+
+
+template<typename eT>
+arma_inline
+const subview_col<eT>
+Mat<eT>::operator()(const span_helper, const u32 col_num) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( col_num >= n_cols, "Mat::operator(): column out of bounds");
+  
+  return subview_col<eT>(*this, col_num);
+  }
+
+
+
+template<typename eT>
+arma_inline
+subview_col<eT>
+Mat<eT>::operator()(const span& row_span, const u32 col_num)
+  {
+  arma_extra_debug_sigprint();
+  
+  const u32 a = row_span.a;
+  const u32 b = row_span.b;
+  
+  arma_debug_check
+    (
+    (col_num >= n_cols) || (a > b) || (b >= n_rows),
+    "Mat::operator(): indices out of bounds or incorrectly used"
+    );
+  
+  return subview_col<eT>(*this, col_num, a, b);
+  }
+
+
+
+template<typename eT>
+arma_inline
+const subview_col<eT>
+Mat<eT>::operator()(const span& row_span, const u32 col_num) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const u32 a = row_span.a;
+  const u32 b = row_span.b;
+  
+  arma_debug_check
+    (
+    (col_num >= n_cols) || (a > b) || (b >= n_rows),
+    "Mat::operator(): indices out of bounds or incorrectly used"
+    );
+  
+  return subview_col<eT>(*this, col_num, a, b);
   }
 
 
@@ -1343,6 +1592,82 @@ Mat<eT>::submat(const span& row_span, const span& col_span) const
     
   return subview<eT>(*this, in_row1, in_col1, in_row2, in_col2);
   }
+
+
+
+template<typename eT>
+arma_inline
+subview<eT>
+Mat<eT>::operator()(const span& row_span, const span& col_span)
+  {
+  arma_extra_debug_sigprint();
+  
+  return submat(row_span, col_span);
+  }
+
+
+
+template<typename eT>
+arma_inline
+const subview<eT>
+Mat<eT>::operator()(const span& row_span, const span& col_span) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return submat(row_span, col_span);
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+arma_inline
+subview_elem1<eT,T1>
+Mat<eT>::elem(const Base<u32,T1>& a)
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_elem1<eT,T1>(*this, a);
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+arma_inline
+const subview_elem1<eT,T1>
+Mat<eT>::elem(const Base<u32,T1>& a) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_elem1<eT,T1>(*this, a);
+  }
+
+
+
+// template<typename eT>
+// template<typename T1, typename T2>
+// arma_inline
+// subview_elem2<eT,T1,T2>
+// Mat<eT>::elem(const Base<u32,T1>& a, const Base<u32,T2>& b)
+//   {
+//   arma_extra_debug_sigprint();
+//   
+//   return subview_elem2<eT,T1,T2>(*this, a, b);
+//   }
+// 
+// 
+// 
+// template<typename eT>
+// template<typename T1, typename T2>
+// arma_inline
+// const subview_elem2<eT,T1,T2>
+// Mat<eT>::elem(const Base<u32,T1>& a, const Base<u32,T2>& b) const
+//   {
+//   arma_extra_debug_sigprint();
+//   
+//   return subview_elem2<eT,T1,T2>(*this, a, b);
+//   }
 
 
 
@@ -2564,6 +2889,30 @@ Mat<eT>::operator[] (const u32 i) const
 
 
 
+//! linear element accessor (treats the matrix as a vector); no bounds check.  
+template<typename eT>
+arma_inline
+arma_warn_unused
+eT&
+Mat<eT>::at(const u32 i)
+  {
+  return access::rw(mem[i]);
+  }
+
+
+
+//! linear element accessor (treats the matrix as a vector); no bounds check
+template<typename eT>
+arma_inline
+arma_warn_unused
+eT
+Mat<eT>::at(const u32 i) const
+  {
+  return mem[i];
+  }
+
+
+
 //! element accessor; bounds checking not done when ARMA_NO_DEBUG is defined
 template<typename eT>
 arma_inline
@@ -2744,6 +3093,23 @@ Mat<eT>::in_range(const u32 i) const
 
 
 
+//! returns true if the given start and end indices are currently in range
+template<typename eT>
+arma_inline
+arma_warn_unused
+bool
+Mat<eT>::in_range(const span& x) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const u32 a = x.a;
+  const u32 b = x.b;
+  
+  return ( (a <= b) && (b < n_elem) );
+  }
+
+
+
 //! returns true if the given location is currently in range
 template<typename eT>
 arma_inline
@@ -2752,6 +3118,89 @@ bool
 Mat<eT>::in_range(const u32 in_row, const u32 in_col) const
   {
   return ( (in_row < n_rows) && (in_col < n_cols) );
+  }
+
+
+
+template<typename eT>
+arma_inline
+arma_warn_unused
+bool
+Mat<eT>::in_range(const span& row_span, const u32 in_col) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const u32 in_row1 = row_span.a;
+  const u32 in_row2 = row_span.b;
+  
+  return ( (in_row1 <= in_row2) && (in_row2 < n_rows) && (in_col < n_cols) );
+  }
+
+
+
+template<typename eT>
+arma_inline
+arma_warn_unused
+bool
+Mat<eT>::in_range(const span& row_span, const span_helper) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const u32 in_row1 = row_span.a;
+  const u32 in_row2 = row_span.b;
+  
+  return ( (in_row1 <= in_row2) && (in_row2 < n_rows) && (n_cols > 0) );
+  }
+
+
+
+template<typename eT>
+arma_inline
+arma_warn_unused
+bool
+Mat<eT>::in_range(const u32 in_row, const span& col_span) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const u32 in_col1 = col_span.a;
+  const u32 in_col2 = col_span.b;
+  
+  return ( (in_row < n_rows) && (in_col1 <= in_col2) && (in_col2 < n_cols) );
+  }
+
+
+
+template<typename eT>
+arma_inline
+arma_warn_unused
+bool
+Mat<eT>::in_range(const span_helper, const span& col_span) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const u32 in_col1 = col_span.a;
+  const u32 in_col2 = col_span.b;
+  
+  return ( (n_rows > 0) && (in_col1 <= in_col2) && (in_col2 < n_cols) );
+  }
+
+
+
+template<typename eT>
+arma_inline
+arma_warn_unused
+bool
+Mat<eT>::in_range(const span& row_span, const span& col_span) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const u32 in_row1 = row_span.a;
+  const u32 in_row2 = row_span.b;
+  
+  const u32 in_col1 = col_span.a;
+  const u32 in_col2 = col_span.b;
+  
+  return ( (in_row1 <= in_row2) && (in_row2 < n_rows) && (in_col1 <= in_col2) && (in_col2 < n_cols) );
   }
 
 
@@ -3339,6 +3788,10 @@ Mat<eT>::save(const std::string name, const file_type type, const bool print_sta
       save_okay = diskio::save_arma_ascii(*this, name);
       break;
     
+    case raw_binary:
+      save_okay = diskio::save_raw_binary(*this, name);
+      break;
+    
     case arma_binary:
       save_okay = diskio::save_arma_binary(*this, name);
       break;
@@ -3377,6 +3830,10 @@ Mat<eT>::save(std::ostream& os, const file_type type, const bool print_status) c
     
     case arma_ascii:
       save_okay = diskio::save_arma_ascii(*this, os);
+      break;
+    
+    case raw_binary:
+      save_okay = diskio::save_raw_binary(*this, os);
       break;
     
     case arma_binary:
@@ -3422,6 +3879,10 @@ Mat<eT>::load(const std::string name, const file_type type, const bool print_sta
     
     case arma_ascii:
       load_okay = diskio::load_arma_ascii(*this, name, err_msg);
+      break;
+    
+    case raw_binary:
+      load_okay = diskio::load_raw_binary(*this, name, err_msg);
       break;
     
     case arma_binary:
@@ -3482,6 +3943,10 @@ Mat<eT>::load(std::istream& is, const file_type type, const bool print_status)
     
     case arma_ascii:
       load_okay = diskio::load_arma_ascii(*this, is, err_msg);
+      break;
+    
+    case raw_binary:
+      load_okay = diskio::load_raw_binary(*this, is, err_msg);
       break;
     
     case arma_binary:

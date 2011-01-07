@@ -30,6 +30,10 @@ template<typename oT> class subview_field;
 
 template<typename eT> class diagview;
 
+template<typename eT, typename T1>              class subview_elem1;
+template<typename eT, typename T1, typename T2> class subview_elem2;
+
+
 class diskio;
 
 class op_min;
@@ -116,7 +120,8 @@ enum file_type
   auto_detect,  //!< Automatically detect the file type (file must be one of the following types)
   raw_ascii,    //!< ASCII format (text), without any other information.
   arma_ascii,   //!< Armadillo ASCII format (text), with information about matrix type and size
-  arma_binary,  //!< Armadillo binary format
+  raw_binary,   //!< raw binary format, without any other information.
+  arma_binary,  //!< Armadillo binary format, with information about matrix type and size
   pgm_binary,   //!< Portable Grey Map (greyscale image)
   ppm_binary    //!< Portable Pixel Map (colour image), used by the field and cube classes
   };

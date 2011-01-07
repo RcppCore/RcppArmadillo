@@ -280,4 +280,50 @@ op_norm_dot::apply(const Base<typename T1::elem_type,T1>& X, const Base<typename
 
 
 
+//
+// op_cdot
+
+
+
+template<typename T1, typename T2>
+arma_hot
+arma_inline
+typename T1::elem_type
+op_cdot::apply(const Base<typename T1::elem_type,T1>& X, const Base<typename T1::elem_type,T2>& Y)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type      eT;
+  typedef typename Proxy<T1>::ea_type ea_type1;
+  typedef typename Proxy<T2>::ea_type ea_type2;
+  
+  const Proxy<T1> A(X.get_ref());
+  const Proxy<T2> B(Y.get_ref());
+  
+  arma_debug_check( (A.get_n_elem() != B.get_n_elem()), "cdot(): objects must have the same number of elements" );
+  
+  const u32      N  = A.get_n_elem();
+        ea_type1 PA = A.get_ea();
+        ea_type2 PB = B.get_ea();
+  
+  eT val1 = eT(0);
+  eT val2 = eT(0);
+  
+  u32 i,j;
+  for(i=0, j=1; j<N; i+=2, j+=2)
+    {
+    val1 += std::conj(PA[i]) * PB[i];
+    val2 += std::conj(PA[j]) * PB[j];
+    }
+  
+  if(i < N)
+    {
+    val1 += conj(PA[i]) * PB[i];
+    }
+  
+  return val1 + val2;
+  }
+
+
+
 //! @}

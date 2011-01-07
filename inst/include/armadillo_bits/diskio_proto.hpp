@@ -47,6 +47,7 @@ class diskio
   template<typename eT> inline static std::string gen_txt_header(const Cube<eT>& x);
   template<typename eT> inline static std::string gen_bin_header(const Cube<eT>& x);
 
+  inline static bool is_raw_binary(std::istream& f);
   
   inline static char conv_to_hex_char(const u8 x);
   inline static void conv_to_hex(char* out, const u8 x);
@@ -60,12 +61,14 @@ class diskio
   // matrix saving
   
   template<typename eT> inline static bool save_raw_ascii  (const Mat<eT>&                x, const std::string& final_name);
+  template<typename eT> inline static bool save_raw_binary (const Mat<eT>&                x, const std::string& final_name);
   template<typename eT> inline static bool save_arma_ascii (const Mat<eT>&                x, const std::string& final_name);
   template<typename eT> inline static bool save_arma_binary(const Mat<eT>&                x, const std::string& final_name);
   template<typename eT> inline static bool save_pgm_binary (const Mat<eT>&                x, const std::string& final_name);
   template<typename  T> inline static bool save_pgm_binary (const Mat< std::complex<T> >& x, const std::string& final_name);
   
   template<typename eT> inline static bool save_raw_ascii  (const Mat<eT>&                x, std::ostream& f);
+  template<typename eT> inline static bool save_raw_binary (const Mat<eT>&                x, std::ostream& f);
   template<typename eT> inline static bool save_arma_ascii (const Mat<eT>&                x, std::ostream& f);
   template<typename eT> inline static bool save_arma_binary(const Mat<eT>&                x, std::ostream& f);
   template<typename eT> inline static bool save_pgm_binary (const Mat<eT>&                x, std::ostream& f);
@@ -76,6 +79,7 @@ class diskio
   // matrix loading
   
   template<typename eT> inline static bool load_raw_ascii  (Mat<eT>&                x, const std::string& name, std::string& err_msg);
+  template<typename eT> inline static bool load_raw_binary (Mat<eT>&                x, const std::string& name, std::string& err_msg);
   template<typename eT> inline static bool load_arma_ascii (Mat<eT>&                x, const std::string& name, std::string& err_msg);
   template<typename eT> inline static bool load_arma_binary(Mat<eT>&                x, const std::string& name, std::string& err_msg);
   template<typename eT> inline static bool load_pgm_binary (Mat<eT>&                x, const std::string& name, std::string& err_msg);
@@ -83,6 +87,7 @@ class diskio
   template<typename eT> inline static bool load_auto_detect(Mat<eT>&                x, const std::string& name, std::string& err_msg);
   
   template<typename eT> inline static bool load_raw_ascii  (Mat<eT>&                x, std::istream& f,  std::string& err_msg);
+  template<typename eT> inline static bool load_raw_binary (Mat<eT>&                x, std::istream& f,  std::string& err_msg);
   template<typename eT> inline static bool load_arma_ascii (Mat<eT>&                x, std::istream& f,  std::string& err_msg);
   template<typename eT> inline static bool load_arma_binary(Mat<eT>&                x, std::istream& f,  std::string& err_msg);
   template<typename eT> inline static bool load_pgm_binary (Mat<eT>&                x, std::istream& is, std::string& err_msg);
@@ -96,10 +101,12 @@ class diskio
   // cube saving
   
   template<typename eT> inline static bool save_raw_ascii  (const Cube<eT>& x, const std::string& name);
+  template<typename eT> inline static bool save_raw_binary (const Cube<eT>& x, const std::string& name);
   template<typename eT> inline static bool save_arma_ascii (const Cube<eT>& x, const std::string& name);
   template<typename eT> inline static bool save_arma_binary(const Cube<eT>& x, const std::string& name);
   
   template<typename eT> inline static bool save_raw_ascii  (const Cube<eT>& x, std::ostream& f);
+  template<typename eT> inline static bool save_raw_binary (const Cube<eT>& x, std::ostream& f);
   template<typename eT> inline static bool save_arma_ascii (const Cube<eT>& x, std::ostream& f);
   template<typename eT> inline static bool save_arma_binary(const Cube<eT>& x, std::ostream& f);
   
@@ -108,11 +115,13 @@ class diskio
   // cube loading
   
   template<typename eT> inline static bool load_raw_ascii  (Cube<eT>& x, const std::string& name, std::string& err_msg);
+  template<typename eT> inline static bool load_raw_binary (Cube<eT>& x, const std::string& name, std::string& err_msg);
   template<typename eT> inline static bool load_arma_ascii (Cube<eT>& x, const std::string& name, std::string& err_msg);
   template<typename eT> inline static bool load_arma_binary(Cube<eT>& x, const std::string& name, std::string& err_msg);
   template<typename eT> inline static bool load_auto_detect(Cube<eT>& x, const std::string& name, std::string& err_msg);
   
   template<typename eT> inline static bool load_raw_ascii  (Cube<eT>& x, std::istream& f, std::string& err_msg);
+  template<typename eT> inline static bool load_raw_binary (Cube<eT>& x, std::istream& f, std::string& err_msg);
   template<typename eT> inline static bool load_arma_ascii (Cube<eT>& x, std::istream& f, std::string& err_msg);
   template<typename eT> inline static bool load_arma_binary(Cube<eT>& x, std::istream& f, std::string& err_msg);
   template<typename eT> inline static bool load_auto_detect(Cube<eT>& x, std::istream& f, std::string& err_msg);

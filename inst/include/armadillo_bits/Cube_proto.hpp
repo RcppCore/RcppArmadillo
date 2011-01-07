@@ -156,11 +156,16 @@ class Cube : public BaseCube< eT, Cube<eT> >
   
   arma_inline arma_warn_unused eT& operator[] (const u32 i);
   arma_inline arma_warn_unused eT  operator[] (const u32 i) const;
+  
+  arma_inline arma_warn_unused eT& at(const u32 i);
+  arma_inline arma_warn_unused eT  at(const u32 i) const;
+  
   arma_inline arma_warn_unused eT& operator() (const u32 i);
   arma_inline arma_warn_unused eT  operator() (const u32 i) const;
   
   arma_inline arma_warn_unused eT& at         (const u32 in_row, const u32 in_col, const u32 in_slice);
   arma_inline arma_warn_unused eT  at         (const u32 in_row, const u32 in_col, const u32 in_slice) const;
+  
   arma_inline arma_warn_unused eT& operator() (const u32 in_row, const u32 in_col, const u32 in_slice);
   arma_inline arma_warn_unused eT  operator() (const u32 in_row, const u32 in_col, const u32 in_slice) const;
   
@@ -173,8 +178,10 @@ class Cube : public BaseCube< eT, Cube<eT> >
   arma_inline arma_warn_unused bool is_finite() const;
   arma_inline arma_warn_unused bool is_empty()  const;
   
+  // TODO: expand .in_range() to handle ranges specified by span
   arma_inline arma_warn_unused bool in_range(const u32 i) const;
   arma_inline arma_warn_unused bool in_range(const u32 in_row, const u32 in_col, const u32 in_slice) const;
+  
   
   arma_inline arma_warn_unused       eT* memptr();
   arma_inline arma_warn_unused const eT* memptr() const;

@@ -15,23 +15,60 @@
 //! @{
 
 
+
+template<typename T>
+inline
+std::ostream&
+arma_log_stream(std::ostream* user_stream)
+  {
+  static std::ostream* log_stream = &(std::cout);
+  
+  if(user_stream != NULL)
+    {
+    log_stream = user_stream;
+    }
+  
+  return *log_stream;
+  }
+
+
+
+// TODO: add to user documentation
+inline
+void
+set_log_stream(std::ostream& user_stream)
+  {
+  arma_log_stream<char>(&user_stream);
+  }
+
+
+
+// TODO: add to user documentation
+inline
+std::ostream&
+get_log_stream()
+  {
+  return arma_log_stream<char>(NULL);
+  }
+
+
+
 //
 // arma_stop
 
-//! print a message to std::cout and/or throw a run-time error exception
+//! print a message to get_log_stream() and/or throw a run-time error exception
 template<typename T1>
 inline
 void
 arma_cold
 arma_stop(const T1& x)
   {
-  std::cerr.flush();
-  std::cout.flush();
+  get_log_stream().flush();
   
-  std::cout << '\n';
-  std::cout << "run-time error: " << x << '\n';
-  std::cout << '\n';
-  std::cout.flush();
+  get_log_stream() << '\n';
+  get_log_stream() << "run-time error: " << x << '\n';
+  get_log_stream() << '\n';
+  get_log_stream().flush();
   
   throw std::runtime_error("");
   }
@@ -47,7 +84,7 @@ void
 arma_cold
 arma_print()
   {
-  std::cout << std::endl;
+  get_log_stream() << std::endl;
   }
 
 
@@ -57,7 +94,7 @@ void
 arma_cold
 arma_print(const T1& x)
   {
-  std::cout << x << std::endl;
+  get_log_stream() << x << std::endl;
   }
 
 
@@ -68,7 +105,7 @@ void
 arma_cold
 arma_print(const T1& x, const T2& y)
   {
-  std::cout << x << y << std::endl;
+  get_log_stream() << x << y << std::endl;
   }
 
 
@@ -79,7 +116,7 @@ void
 arma_cold
 arma_print(const T1& x, const T2& y, const T3& z)
   {
-  std::cout << x << y << z << std::endl;
+  get_log_stream() << x << y << z << std::endl;
   }
 
 
@@ -90,14 +127,15 @@ arma_print(const T1& x, const T2& y, const T3& z)
 //
 // arma_sigprint
 
-//! print a message on cout, with a preceding @ character.
+//! print a message the the log stream with a preceding @ character.
+//! by default the log stream is cout.
 //! used for printing the signature of a function
 //! (see the arma_extra_debug_sigprint macro) 
 inline
 void
 arma_sigprint(const char* x)
   {
-  std::cout << "@ " << x;
+  get_log_stream() << "@ " << x;
   }
 
 
@@ -110,7 +148,7 @@ inline
 void
 arma_bktprint()
   {
-  std::cout << std::endl;
+  get_log_stream() << std::endl;
   }
 
 
@@ -119,7 +157,7 @@ inline
 void
 arma_bktprint(const T1& x)
   {
-  std::cout << " [" << x << ']' << std::endl;
+  get_log_stream() << " [" << x << ']' << std::endl;
   }
 
 
@@ -129,7 +167,7 @@ inline
 void
 arma_bktprint(const T1& x, const T2& y)
   {
-  std::cout << " [" << x << y << ']' << std::endl;
+  get_log_stream() << " [" << x << y << ']' << std::endl;
   }
 
 
@@ -145,7 +183,7 @@ inline
 void
 arma_thisprint(void* this_ptr)
   {
-  std::cout << " [this = " << this_ptr << ']' << std::endl;
+  get_log_stream() << " [this = " << this_ptr << ']' << std::endl;
   }
 
 
@@ -780,23 +818,23 @@ arma_assert_mul_size(const subview<eT1>& A, const subview<eT2>& B, const char* x
         {
         const char* nickname = ARMA_VERSION_NAME;
         
-        std::cout << "@ ---" << '\n';
-        std::cout << "@ Armadillo "
+        get_log_stream() << "@ ---" << '\n';
+        get_log_stream() << "@ Armadillo "
                   << arma_version::major << '.' << arma_version::minor << '.' << arma_version::patch
                   << " (" << nickname << ")\n";
         
-        std::cout << "@ arma_config::atlas      = " << arma_config::atlas      << '\n';
-        std::cout << "@ arma_config::lapack     = " << arma_config::lapack     << '\n';
-        std::cout << "@ arma_config::blas       = " << arma_config::blas       << '\n';
-        std::cout << "@ arma_config::boost      = " << arma_config::boost      << '\n';
-        std::cout << "@ arma_config::boost_date = " << arma_config::boost_date << '\n';
-        std::cout << "@ arma_config::good_comp  = " << arma_config::good_comp  << '\n';
-        std::cout << "@ arma_config::extra_code = " << arma_config::extra_code << '\n';
-        std::cout << "@ sizeof(void*)    = " << sizeof(void*)    << '\n';
-        std::cout << "@ sizeof(int)      = " << sizeof(int)      << '\n';
-        std::cout << "@ sizeof(long)     = " << sizeof(long)     << '\n';
-        std::cout << "@ sizeof(blas_int) = " << sizeof(blas_int) << '\n';
-        std::cout << "@ ---" << std::endl;
+        get_log_stream() << "@ arma_config::atlas      = " << arma_config::atlas      << '\n';
+        get_log_stream() << "@ arma_config::lapack     = " << arma_config::lapack     << '\n';
+        get_log_stream() << "@ arma_config::blas       = " << arma_config::blas       << '\n';
+        get_log_stream() << "@ arma_config::boost      = " << arma_config::boost      << '\n';
+        get_log_stream() << "@ arma_config::boost_date = " << arma_config::boost_date << '\n';
+        get_log_stream() << "@ arma_config::good_comp  = " << arma_config::good_comp  << '\n';
+        get_log_stream() << "@ arma_config::extra_code = " << arma_config::extra_code << '\n';
+        get_log_stream() << "@ sizeof(void*)    = " << sizeof(void*)    << '\n';
+        get_log_stream() << "@ sizeof(int)      = " << sizeof(int)      << '\n';
+        get_log_stream() << "@ sizeof(long)     = " << sizeof(long)     << '\n';
+        get_log_stream() << "@ sizeof(blas_int) = " << sizeof(blas_int) << '\n';
+        get_log_stream() << "@ ---" << std::endl;
         }
       
       };
@@ -805,6 +843,7 @@ arma_assert_mul_size(const subview<eT1>& A, const subview<eT2>& B, const char* x
     }
 
 #endif
+
 
 
 //! @}

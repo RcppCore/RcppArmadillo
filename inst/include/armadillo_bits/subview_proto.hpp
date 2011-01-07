@@ -128,7 +128,6 @@ class subview_col : public subview<eT>
   arma_inline subview_col(const Mat<eT>& in_m, const u32 in_col, const u32 in_row1, const u32 in_row2);
   arma_inline subview_col(      Mat<eT>& in_m, const u32 in_col, const u32 in_row1, const u32 in_row2);
   
-  
   private:
   
   friend class Mat<eT>;

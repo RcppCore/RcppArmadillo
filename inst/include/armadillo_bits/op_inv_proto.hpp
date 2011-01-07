@@ -16,8 +16,7 @@
 
 
 
-//! 'invert matrix' operation
-
+//! 'invert matrix' operation (general matrices)
 class op_inv
   {
   public:
@@ -31,6 +30,17 @@ class op_inv
   template<typename T1>
   inline static void apply_diag(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type, T1>& X);
 
+  };
+
+
+
+//! 'invert matrix' operation (triangular matrices)
+class op_inv_tr
+  {
+  public:
+  
+  template<typename T1>
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv_tr>& in);
   };
 
 

@@ -35,10 +35,27 @@ solve
   )
   {
   arma_extra_debug_sigprint();
-  
   arma_ignore(junk);
   
   return Glue<T1, T2, glue_solve>(A.get_ref(), B.get_ref());
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+const Glue<T1, T2, glue_solve_tr>
+solve
+  (
+  const Op<T1, op_trimat>& A,
+  const Base<typename T1::elem_type,T2>& B,
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  )
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  return Glue<T1, T2, glue_solve_tr>(A.m, B.get_ref(), A.aux_u32_a);
   }
 
 
@@ -55,10 +72,9 @@ solve
   )
   {
   arma_extra_debug_sigprint();
-  
   arma_ignore(junk);
   
-  out = solve(A,B);
+  out = solve( A.get_ref(), B.get_ref() );
   
   return (out.n_elem == 0) ? false : true;
   }

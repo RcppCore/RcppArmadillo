@@ -37,7 +37,7 @@ sum(const Base<typename T1::elem_type,T1>& X, const u32 dim = 0)
 //! \brief
 //! Immediate 'sum all values' operation for a row vector
 template<typename eT>
-arma_inline
+inline
 arma_warn_unused
 eT
 sum(const Row<eT>& X)
@@ -52,7 +52,7 @@ sum(const Row<eT>& X)
 //! \brief
 //! Immediate 'sum all values' operation for a column vector
 template<typename eT>
-arma_inline
+inline
 arma_warn_unused
 eT
 sum(const Col<eT>& X)
@@ -69,7 +69,7 @@ sum(const Col<eT>& X)
 //! invoked, for example, by: sum(sum(A))
 
 template<typename T1>
-arma_inline
+inline
 arma_warn_unused
 typename T1::elem_type
 sum(const Op<T1, op_sum>& in)
@@ -96,7 +96,7 @@ sum(const Op<T1, op_sum>& in, const u32 dim)
 
 //! sum all values of a subview_row
 template<typename eT>
-arma_inline
+inline
 arma_warn_unused
 eT
 sum(const subview_row<eT>& X)
@@ -110,7 +110,7 @@ sum(const subview_row<eT>& X)
 
 //! sum all values of a subview_col
 template<typename eT>
-arma_inline
+inline
 arma_warn_unused
 eT
 sum(const subview_col<eT>& X)
@@ -124,7 +124,7 @@ sum(const subview_col<eT>& X)
 
 //! sum all values of a diagview
 template<typename eT>
-arma_inline
+inline
 arma_warn_unused
 eT
 sum(const diagview<eT>& X)
@@ -132,6 +132,19 @@ sum(const diagview<eT>& X)
   arma_extra_debug_sigprint();
   
   return accu(X);
+  }
+
+
+
+template<typename eT, typename T1>
+inline
+arma_warn_unused
+eT
+sum(const subview_elem1<eT,T1>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  return accu(A);
   }
 
 

@@ -245,6 +245,141 @@ class unwrap_check< Col<eT> >
 
 
 //
+//
+//
+
+
+
+template<typename T1>
+class unwrap_check_mixed
+  {
+  public:
+  
+  typedef typename T1::elem_type eT1;
+  
+  template<typename eT2>
+  inline
+  unwrap_check_mixed(const T1& A, const Mat<eT2>& B)
+    : M(A)
+    {
+    arma_extra_debug_sigprint();
+    arma_ignore(B);
+    }
+  
+  inline
+  ~unwrap_check_mixed()
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const Mat<eT1> M;
+  };
+
+
+
+template<typename eT1>
+class unwrap_check_mixed< Mat<eT1> >
+  {
+  public:
+  
+  template<typename eT2>
+  inline
+  unwrap_check_mixed(const Mat<eT1>& A, const Mat<eT2>& B)
+    : M_local( (void_ptr(&A) == void_ptr(&B)) ? new Mat<eT1>(A) : 0 )
+    , M      ( (void_ptr(&A) == void_ptr(&B)) ? (*M_local)      : A )
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  
+  inline
+  ~unwrap_check_mixed()
+    {
+    arma_extra_debug_sigprint();
+    
+    if(M_local)
+      {
+      delete M_local;
+      }
+    }
+  
+  
+  // the order below is important
+  const Mat<eT1>* M_local;
+  const Mat<eT1>& M;
+  };
+
+
+
+template<typename eT1>
+class unwrap_check_mixed< Row<eT1> >
+  {
+  public:
+  
+  template<typename eT2>
+  inline
+  unwrap_check_mixed(const Row<eT1>& A, const Mat<eT2>& B)
+    : M_local( (void_ptr(&A) == void_ptr(&B)) ? new Row<eT1>(A) : 0 )
+    , M      ( (void_ptr(&A) == void_ptr(&B)) ? (*M_local)      : A )
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  
+  inline
+  ~unwrap_check_mixed()
+    {
+    arma_extra_debug_sigprint();
+    
+    if(M_local)
+      {
+      delete M_local;
+      }
+    }
+  
+  
+  // the order below is important
+  const Row<eT1>* M_local;
+  const Row<eT1>& M;
+  };
+
+
+
+template<typename eT1>
+class unwrap_check_mixed< Col<eT1> >
+  {
+  public:
+  
+  template<typename eT2>
+  inline
+  unwrap_check_mixed(const Col<eT1>& A, const Mat<eT2>& B)
+    : M_local( (void_ptr(&A) == void_ptr(&B)) ? new Col<eT1>(A) : 0 )
+    , M      ( (void_ptr(&A) == void_ptr(&B)) ? (*M_local)      : A )
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  
+  inline
+  ~unwrap_check_mixed()
+    {
+    arma_extra_debug_sigprint();
+    
+    if(M_local)
+      {
+      delete M_local;
+      }
+    }
+  
+  
+  // the order below is important
+  const Col<eT1>* M_local;
+  const Col<eT1>& M;
+  };
+
+
+
+//
 
 
 

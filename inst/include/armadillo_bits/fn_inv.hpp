@@ -16,14 +16,17 @@
 
 
 
-//! delayed matrix inverse
+//! delayed matrix inverse (general matrices)
 template<typename T1>
 arma_inline
 const Op<T1, op_inv>
-inv(const Base<typename T1::elem_type,T1>& X, const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0)
+inv
+  (
+  const Base<typename T1::elem_type,T1>& X,
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  )
   {
   arma_extra_debug_sigprint();
-  
   arma_ignore(junk);
   
   return Op<T1, op_inv>(X.get_ref());
@@ -40,6 +43,24 @@ inv(const Op<T1, op_inv>& X)
   arma_extra_debug_sigprint();
   
   return X.m;
+  }
+
+
+
+//! delayed matrix inverse (triangular matrices)
+template<typename T1>
+arma_inline
+const Op<T1, op_inv_tr>
+inv
+  (
+  const Op<T1, op_trimat>& X,
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  )
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  return Op<T1, op_inv_tr>(X.m, X.aux_u32_a, 0);
   }
 
 

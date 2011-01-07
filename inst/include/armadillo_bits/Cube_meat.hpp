@@ -1724,6 +1724,30 @@ Cube<eT>::operator[] (const u32 i) const
 
 
 
+//! linear element accessor (treats the cube as a vector); no bounds check.  
+template<typename eT>
+arma_inline
+arma_warn_unused
+eT&
+Cube<eT>::at(const u32 i)
+  {
+  return access::rw(mem[i]);
+  }
+
+
+
+//! linear element accessor (treats the cube as a vector); no bounds check
+template<typename eT>
+arma_inline
+arma_warn_unused
+eT
+Cube<eT>::at(const u32 i) const
+  {
+  return mem[i];
+  }
+
+
+
 //! element accessor; bounds checking not done when ARMA_NO_DEBUG is defined
 template<typename eT>
 arma_inline
@@ -2296,14 +2320,18 @@ Cube<eT>::save(const std::string name, const file_type type, const bool print_st
       save_okay = diskio::save_arma_ascii(*this, name);
       break;
     
+    case raw_binary:
+      save_okay = diskio::save_raw_binary(*this, name);
+      break;
+    
     case arma_binary:
       save_okay = diskio::save_arma_binary(*this, name);
       break;
-      
+    
     case ppm_binary:
       save_okay = diskio::save_ppm_binary(*this, name);
       break;
-
+    
     default:
       arma_warn(print_status, "Cube::save(): unsupported file type");
       save_okay = false;
@@ -2336,14 +2364,18 @@ Cube<eT>::save(std::ostream& os, const file_type type, const bool print_status) 
       save_okay = diskio::save_arma_ascii(*this, os);
       break;
     
+    case raw_binary:
+      save_okay = diskio::save_raw_binary(*this, os);
+      break;
+    
     case arma_binary:
       save_okay = diskio::save_arma_binary(*this, os);
       break;
-      
+    
     case ppm_binary:
       save_okay = diskio::save_ppm_binary(*this, os);
       break;
-
+    
     default:
       arma_warn(print_status, "Cube::save(): unsupported file type");
       save_okay = false;
@@ -2381,14 +2413,18 @@ Cube<eT>::load(const std::string name, const file_type type, const bool print_st
       load_okay = diskio::load_arma_ascii(*this, name, err_msg);
       break;
     
+    case raw_binary:
+      load_okay = diskio::load_raw_binary(*this, name, err_msg);
+      break;
+    
     case arma_binary:
       load_okay = diskio::load_arma_binary(*this, name, err_msg);
       break;
-      
+    
     case ppm_binary:
       load_okay = diskio::load_ppm_binary(*this, name, err_msg);
       break;
-
+    
     default:
       arma_warn(print_status, "Cube::load(): unsupported file type");
       load_okay = false;
@@ -2441,10 +2477,14 @@ Cube<eT>::load(std::istream& is, const file_type type, const bool print_status)
       load_okay = diskio::load_arma_ascii(*this, is, err_msg);
       break;
     
+    case raw_binary:
+      load_okay = diskio::load_raw_binary(*this, is, err_msg);
+      break;
+    
     case arma_binary:
       load_okay = diskio::load_arma_binary(*this, is, err_msg);
       break;
-      
+    
     case ppm_binary:
       load_okay = diskio::load_ppm_binary(*this, is, err_msg);
       break;

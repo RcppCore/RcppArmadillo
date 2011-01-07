@@ -41,6 +41,13 @@ class auxlib
   
   
   //
+  // inv_tr
+  
+  template<typename eT, typename T1>
+  inline static bool inv_tr(Mat<eT>& out, const Base<eT,T1>& X, const u32 layout);
+  
+  
+  //
   // det
   
   template<typename eT, typename T1>
@@ -143,6 +150,12 @@ class auxlib
   template<typename eT>
   inline static bool solve_ud(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B);
   
+  
+  //
+  // solve_tr
+  
+  template<typename eT>
+  inline static bool solve_tr(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const u32 layout);
   };
 
 

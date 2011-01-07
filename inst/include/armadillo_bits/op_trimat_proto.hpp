@@ -11,34 +11,17 @@
 // (see http://www.opensource.org/licenses for more info)
 
 
-
-//! \addtogroup span
+//! \addtogroup op_trimat
 //! @{
 
 
 
-enum span_helper
-  {
-  span_whole_vector
-  };
-
-
-
-class span
+class op_trimat
   {
   public:
   
-  static const span_helper all = span_whole_vector;
-  
-  inline
-  span(const u32 in_a, const u32 in_b)
-    : a(in_a)
-    , b(in_b)
-    {
-    }
-  
-  const u32 a;
-  const u32 b;
+  template<typename T1>
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_trimat>& in);
   };
 
 

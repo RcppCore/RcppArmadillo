@@ -179,10 +179,7 @@ podarray<eT>::fill(const eT val)
   {
   arma_extra_debug_sigprint();
   
-  for(u32 i=0; i<n_elem; ++i)
-    {
-    access::rw(mem[i]) = val;
-    }
+  arrayops::inplace_set(memptr(), val, n_elem);
   }
 
 
@@ -207,7 +204,7 @@ podarray<eT>::zeros(const u32 new_n_elem)
   arma_extra_debug_sigprint();
   
   init(new_n_elem);
-  fill(0);
+  fill(eT(0));
   }
 
 
