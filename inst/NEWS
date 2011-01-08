@@ -11,6 +11,9 @@
 	 * Faster solve(), inv() via explicit handling of triangular matrices 
 	 * The stream for logging of errors and warnings can now be changed 
 
+    o   New unexported R function SHLIB, a small wrapper around R CMD SHLIB,
+        which can be used as   Rscript -e "RcppArmadillo:::SHLIB('foo.cpp')"
+
 0.2.10  2010-11-25
 
     o   Upgraded to Armadillo 1.0.0 "Antipodean Antileech"
