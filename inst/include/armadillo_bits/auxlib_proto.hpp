@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // Copyright (C) 2009      Edmund Highcock
 // 
 // This file is part of the Armadillo C++ library.
@@ -142,13 +142,13 @@ class auxlib
   // solve
   
   template<typename eT>
-  inline static bool solve(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B);
+  inline static bool solve   (Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B);
   
   template<typename eT>
-  inline static bool solve_od(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B);
+  inline static bool solve_od(Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B);
   
   template<typename eT>
-  inline static bool solve_ud(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B);
+  inline static bool solve_ud(Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B);
   
   
   //

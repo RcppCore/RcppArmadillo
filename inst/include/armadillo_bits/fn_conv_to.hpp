@@ -79,7 +79,7 @@ conv_to<out_eT>::from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_
   
   out_eT out;
   
-  syslib::convert_cx_scalar(out, X.mem[0]);
+  arrayops::convert_cx_scalar(out, X.mem[0]);
   
   return out;
   }
@@ -127,7 +127,7 @@ conv_to<out_eT>::from(const BaseCube<in_eT, T1>& in, const typename arma_cx_only
   
   out_eT out;
   
-  syslib::convert_cx_scalar(out, X.mem[0]);
+  arrayops::convert_cx_scalar(out, X.mem[0]);
   
   return out;
   }
@@ -189,7 +189,7 @@ conv_to< Mat<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_not_
   
   Mat<out_eT> out(X.n_rows, X.n_cols);
   
-  syslib::copy_and_convert_elem( out.memptr(), X.memptr(), out.n_elem );
+  arrayops::convert( out.memptr(), X.memptr(), out.n_elem );
   
   return out;
   }
@@ -211,7 +211,7 @@ conv_to< Mat<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_cx_o
   
   Mat<out_eT> out(X.n_rows, X.n_cols);
   
-  syslib::copy_and_convert_cx_elem( out.memptr(), X.memptr(), out.n_elem );
+  arrayops::convert_cx( out.memptr(), X.memptr(), out.n_elem );
   
   return out;
   }
@@ -275,7 +275,7 @@ conv_to< Mat<out_eT> >::from(const std::vector<in_eT>& in, const typename arma_c
           out_eT& out_elem = (*out_it);
     const in_eT&  in_elem  = (*in_it);
     
-    syslib::convert_cx_scalar(out_elem, in_elem);
+    arrayops::convert_cx_scalar(out_elem, in_elem);
     }
   
   return out;
@@ -295,7 +295,7 @@ conv_to< Mat<out_eT> >::from(const itpp::Mat<in_eT>& in, const typename arma_not
   
   Mat<out_eT> out(in.rows(), in.cols());
   
-  syslib::copy_and_convert_elem( out.memptr(), in._data(), out.n_elem );
+  arrayops::convert( out.memptr(), in._data(), out.n_elem );
   
   return out;
   }
@@ -314,7 +314,7 @@ conv_to< Mat<out_eT> >::from(const itpp::Mat<in_eT>& in, const typename arma_cx_
   
   Mat<out_eT> out(in.rows(), in.cols());
   
-  syslib::copy_and_convert_cx_elem( out.memptr(), in._data(), out.n_elem );
+  arrayops::convert_cx( out.memptr(), in._data(), out.n_elem );
   
   return out;
   }
@@ -333,7 +333,7 @@ conv_to< Mat<out_eT> >::from(const itpp::Vec<in_eT>& in, const typename arma_not
   
   Mat<out_eT> out(in.length(), 1);
   
-  syslib::copy_and_convert_elem( out.memptr(), in._data(), out.n_elem );
+  arrayops::convert( out.memptr(), in._data(), out.n_elem );
   
   return out;
   }
@@ -352,7 +352,7 @@ conv_to< Mat<out_eT> >::from(const itpp::Vec<in_eT>& in, const typename arma_cx_
   
   Mat<out_eT> out(in.length(), 1);
   
-  syslib::copy_and_convert_cx_elem( out.memptr(), in._data(), out.n_elem );
+  arrayops::convert_cx( out.memptr(), in._data(), out.n_elem );
   
   return out;
   }
@@ -416,7 +416,7 @@ conv_to< Row<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_not_
   
   Row<out_eT> out(X.n_elem);
   
-  syslib::copy_and_convert_elem( out.memptr(), X.memptr(), out.n_elem );
+  arrayops::convert( out.memptr(), X.memptr(), out.n_elem );
   
   return out;
   }
@@ -440,7 +440,7 @@ conv_to< Row<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_cx_o
   
   Row<out_eT> out(X.n_rows, X.n_cols);
   
-  syslib::copy_and_convert_cx_elem( out.memptr(), X.memptr(), out.n_elem );
+  arrayops::convert_cx( out.memptr(), X.memptr(), out.n_elem );
   
   return out;
   }
@@ -504,7 +504,7 @@ conv_to< Row<out_eT> >::from(const std::vector<in_eT>& in, const typename arma_c
           out_eT& out_elem = (*out_it);
     const in_eT&  in_elem  = (*in_it);
     
-    syslib::convert_cx_scalar(out_elem, in_elem);
+    arrayops::convert_cx_scalar(out_elem, in_elem);
     }
   
   return out;
@@ -528,7 +528,7 @@ conv_to< Row<out_eT> >::from(const itpp::Mat<in_eT>& in, const typename arma_not
   
   Row<out_eT> out(in.rows() * in.cols());
   
-  syslib::copy_and_convert_elem( out.memptr(), in._data(), out.n_elem );
+  arrayops::convert( out.memptr(), in._data(), out.n_elem );
   
   return out;
   }
@@ -549,7 +549,7 @@ conv_to< Row<out_eT> >::from(const itpp::Mat<in_eT>& in, const typename arma_cx_
   
   Row<out_eT> out(in.rows() * in.cols());
   
-  syslib::copy_and_convert_cx_elem( out.memptr(), in._data(), out.n_elem );
+  arrayops::convert_cx( out.memptr(), in._data(), out.n_elem );
   
   return out;
   }
@@ -568,7 +568,7 @@ conv_to< Row<out_eT> >::from(const itpp::Vec<in_eT>& in, const typename arma_not
   
   Row<out_eT> out(in.length());
   
-  syslib::copy_and_convert_elem( out.memptr(), in._data(), out.n_elem );
+  arrayops::convert( out.memptr(), in._data(), out.n_elem );
   
   return out;
   }
@@ -587,7 +587,7 @@ conv_to< Row<out_eT> >::from(const itpp::Vec<in_eT>& in, const typename arma_cx_
   
   Row<out_eT> out(in.length());
   
-  syslib::copy_and_convert_cx_elem( out.memptr(), in._data(), out.n_elem );
+  arrayops::convert_cx( out.memptr(), in._data(), out.n_elem );
   
   return out;
   }
@@ -651,7 +651,7 @@ conv_to< Col<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_not_
   
   Col<out_eT> out(X.n_elem);
   
-  syslib::copy_and_convert_elem( out.memptr(), X.memptr(), out.n_elem );
+  arrayops::convert( out.memptr(), X.memptr(), out.n_elem );
   
   return out;
   }
@@ -675,7 +675,7 @@ conv_to< Col<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_cx_o
   
   Col<out_eT> out(X.n_rows, X.n_cols);
   
-  syslib::copy_and_convert_cx_elem( out.memptr(), X.memptr(), out.n_elem );
+  arrayops::convert_cx( out.memptr(), X.memptr(), out.n_elem );
   
   return out;
   }
@@ -739,7 +739,7 @@ conv_to< Col<out_eT> >::from(const std::vector<in_eT>& in, const typename arma_c
           out_eT& out_elem = (*out_it);
     const in_eT&  in_elem  = (*in_it);
     
-    syslib::convert_cx_scalar(out_elem, in_elem);
+    arrayops::convert_cx_scalar(out_elem, in_elem);
     }
   
   return out;
@@ -763,7 +763,7 @@ conv_to< Col<out_eT> >::from(const itpp::Mat<in_eT>& in, const typename arma_not
   
   Col<out_eT> out(in.rows() * in.cols());
   
-  syslib::copy_and_convert_elem( out.memptr(), in._data(), out.n_elem );
+  arrayops::convert( out.memptr(), in._data(), out.n_elem );
   
   return out;
   }
@@ -784,7 +784,7 @@ conv_to< Col<out_eT> >::from(const itpp::Mat<in_eT>& in, const typename arma_cx_
   
   Col<out_eT> out(in.rows() * in.cols());
   
-  syslib::copy_and_convert_cx_elem( out.memptr(), in._data(), out.n_elem );
+  arrayops::convert_cx( out.memptr(), in._data(), out.n_elem );
   
   return out;
   }
@@ -803,7 +803,7 @@ conv_to< Col<out_eT> >::from(const itpp::Vec<in_eT>& in, const typename arma_not
   
   Col<out_eT> out( in.length() );
   
-  syslib::copy_and_convert_elem( out.memptr(), in._data(), out.n_elem );
+  arrayops::convert( out.memptr(), in._data(), out.n_elem );
   
   return out;
   }
@@ -822,7 +822,7 @@ conv_to< Col<out_eT> >::from(const itpp::Vec<in_eT>& in, const typename arma_cx_
   
   Col<out_eT> out( in.length() );
   
-  syslib::copy_and_convert_cx_elem( out.memptr(), in._data(), out.n_elem );
+  arrayops::convert_cx( out.memptr(), in._data(), out.n_elem );
   
   return out;
   }
@@ -859,7 +859,7 @@ conv_to< Cube<out_eT> >::from(const BaseCube<in_eT, T1>& in, const typename arma
   
   Cube<out_eT> out(X.n_rows, X.n_cols, X.n_slices);
   
-  syslib::copy_and_convert_elem( out.memptr(), X.memptr(), out.n_elem );
+  arrayops::convert( out.memptr(), X.memptr(), out.n_elem );
   
   return out;
   }
@@ -881,7 +881,7 @@ conv_to< Cube<out_eT> >::from(const BaseCube<in_eT, T1>& in, const typename arma
   
   Cube<out_eT> out(X.n_rows, X.n_cols, X.n_slices);
   
-  syslib::copy_and_convert_cx_elem( out.memptr(), X.memptr(), out.n_elem );
+  arrayops::convert_cx( out.memptr(), X.memptr(), out.n_elem );
   
   return out;
   }
@@ -970,7 +970,7 @@ conv_to< std::vector<out_eT> >::from(const Base<in_eT, T1>& in, const typename a
           out_eT& out_elem = (*out_it);
     const in_eT&  X_elem   = (*X_it);
     
-    syslib::convert_cx_scalar(out_elem, X_elem);
+    arrayops::convert_cx_scalar(out_elem, X_elem);
     }
   
   return out;
@@ -1008,7 +1008,7 @@ conv_to< itpp::Mat<out_eT> >::from(const Base<in_eT, T1>& in, const typename arm
   
   itpp::Mat<out_eT> out(X.n_rows, X.n_cols);
   
-  syslib::copy_and_convert_elem( out._data(), X.memptr(), X.n_elem );
+  arrayops::convert( out._data(), X.memptr(), X.n_elem );
   
   return out;
   }
@@ -1030,7 +1030,7 @@ conv_to< itpp::Mat<out_eT> >::from(const Base<in_eT, T1>& in, const typename arm
   
   itpp::Mat<out_eT> out(X.n_rows, X.n_cols);
   
-  syslib::copy_and_convert_cx_elem( out._data(), X.memptr(), X.n_elem );
+  arrayops::convert_cx( out._data(), X.memptr(), X.n_elem );
   
   return out;
   }
@@ -1070,7 +1070,7 @@ conv_to< itpp::Vec<out_eT> >::from(const Base<in_eT, T1>& in, const typename arm
   
   itpp::Vec<out_eT> out(X.n_elem);
   
-  syslib::copy_and_convert_elem( out._data(), X.memptr(), X.n_elem );
+  arrayops::convert( out._data(), X.memptr(), X.n_elem );
   
   return out;
   }
@@ -1092,7 +1092,7 @@ conv_to< itpp::Vec<out_eT> >::from(const Base<in_eT, T1>& in, const typename arm
   
   itpp::Vec<out_eT> out(X.n_elem);
   
-  syslib::copy_and_convert_cx_elem( out._data(), X.memptr(), X.n_elem );
+  arrayops::convert_cx( out._data(), X.memptr(), X.n_elem );
   
   return out;
   }

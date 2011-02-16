@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -126,15 +126,13 @@ namespace arma
   #include "armadillo_bits/Base.hpp"
   #include "armadillo_bits/BaseCube.hpp"
   
-  #include "armadillo_bits/syslib_proto.hpp"
-  #include "armadillo_bits/arrayops_proto.hpp"
-  #include "armadillo_bits/podarray_proto.hpp"
-  
   #include "armadillo_bits/blas_proto.hpp"
   #include "armadillo_bits/lapack_proto.hpp"
   #include "armadillo_bits/atlas_proto.hpp"
-  #include "armadillo_bits/auxlib_proto.hpp"
   
+  #include "armadillo_bits/arrayops_proto.hpp"
+  #include "armadillo_bits/podarray_proto.hpp"
+  #include "armadillo_bits/auxlib_proto.hpp"
   
   #include "armadillo_bits/injector_proto.hpp"
   
@@ -367,6 +365,7 @@ namespace arma
   #include "armadillo_bits/eop_core_meat.hpp"
   #include "armadillo_bits/eglue_core_meat.hpp"
   
+  #include "armadillo_bits/arrayops_meat.hpp"
   #include "armadillo_bits/podarray_meat.hpp"
   #include "armadillo_bits/auxlib_meat.hpp"
   

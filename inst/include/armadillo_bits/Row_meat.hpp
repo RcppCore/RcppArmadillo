@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -345,12 +345,12 @@ Row<eT>::shed_cols(const u32 in_col1, const u32 in_col2)
   
   if(n_keep_front > 0)
     {
-    syslib::copy_elem( X_mem, t_mem, n_keep_front );
+    arrayops::copy( X_mem, t_mem, n_keep_front );
     }
   
   if(n_keep_back > 0)
     {
-    syslib::copy_elem( &(X_mem[n_keep_front]), &(t_mem[in_col2+1]), n_keep_back);
+    arrayops::copy( &(X_mem[n_keep_front]), &(t_mem[in_col2+1]), n_keep_back);
     }
   
   steal_mem(X);
@@ -384,12 +384,12 @@ Row<eT>::insert_cols(const u32 col_num, const u32 N, const bool set_to_zero)
     
     if(A_n_cols > 0)
       {
-      syslib::copy_elem( out_mem, t_mem, A_n_cols );
+      arrayops::copy( out_mem, t_mem, A_n_cols );
       }
     
     if(B_n_cols > 0)
       {
-      syslib::copy_elem( &(out_mem[col_num + N]), &(t_mem[col_num]), B_n_cols );
+      arrayops::copy( &(out_mem[col_num + N]), &(t_mem[col_num]), B_n_cols );
       }
     
     if(set_to_zero == true)
@@ -489,7 +489,7 @@ Row<eT>::fixed<fixed_n_elem>::mem_setup()
     access::rw(Mat<eT>::n_elem)    = fixed_n_elem;
     access::rw(Mat<eT>::vec_state) = 2;
     access::rw(Mat<eT>::mem_state) = 3;
-    access::rw(Mat<eT>::mem)       = (fixed_n_elem > Mat_prealloc::mem_n_elem) ? mem_local_extra : Mat<eT>::mem_local;
+    access::rw(Mat<eT>::mem)       = (fixed_n_elem > arma_config::mat_prealloc) ? mem_local_extra : Mat<eT>::mem_local;
     }
   else
     {

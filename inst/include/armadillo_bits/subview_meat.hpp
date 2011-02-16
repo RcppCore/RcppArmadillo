@@ -210,7 +210,7 @@ subview<eT>::operator= (const Base<eT,T1>& in)
       {
       for(u32 col=0; col<t_n_cols; ++col)
         {
-        syslib::copy_elem( t.colptr(col), x.colptr(col), t_n_rows );
+        arrayops::copy( t.colptr(col), x.colptr(col), t_n_rows );
         }
       }
     }
@@ -596,7 +596,7 @@ subview<eT>::operator= (const subview<eT>& x_in)
     {
     for(u32 col=0; col<t_n_cols; ++col)
       {
-      syslib::copy_elem( t.colptr(col), x.colptr(col), t_n_rows );
+      arrayops::copy( t.colptr(col), x.colptr(col), t_n_rows );
       }
     }
   
@@ -1032,7 +1032,7 @@ subview<eT>::extract(Mat<eT>& actual_out, const subview<eT>& in)
       arma_extra_debug_print("subview::extract(): copying col (going across rows)");
       
       // in.colptr(0) the first column of the subview, taking into account any row offset
-      syslib::copy_elem( out.memptr(), in.colptr(0), n_rows );
+      arrayops::copy( out.memptr(), in.colptr(0), n_rows );
       }
     else   // a row vector
       {
@@ -1056,7 +1056,7 @@ subview<eT>::extract(Mat<eT>& actual_out, const subview<eT>& in)
     
     for(u32 col = 0; col<n_cols; ++col)   
       {
-      syslib::copy_elem( out.colptr(col), in.colptr(col), n_rows );
+      arrayops::copy( out.colptr(col), in.colptr(col), n_rows );
       }
     }
   

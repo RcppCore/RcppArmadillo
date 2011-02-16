@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // Copyright (C) 2009      Edmund Highcock
 // 
 // This file is part of the Armadillo C++ library.
@@ -1416,7 +1416,7 @@ auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
     
     Q.set_size(R_n_rows, R_n_rows);
     
-    syslib::copy_elem( Q.memptr(), R.memptr(), (std::min)(Q.n_elem, R.n_elem) );
+    arrayops::copy( Q.memptr(), R.memptr(), (std::min)(Q.n_elem, R.n_elem) );
     
     //
     // construct R
@@ -1879,13 +1879,13 @@ auxlib::svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, con
   }
 
 
-//! Solve a system of linear equations
-//! Assumes that A.n_rows = A.n_cols
-//! and B.n_rows = A.n_rows
+
+//! Solve a system of linear equations.
+//! Assumes that A.n_rows = A.n_cols and B.n_rows = A.n_rows
 template<typename eT>
 inline
 bool
-auxlib::solve(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
+auxlib::solve(Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B)
   {
   arma_extra_debug_sigprint();
   
@@ -1906,10 +1906,9 @@ auxlib::solve(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
     podarray<blas_int> ipiv(n);
     
     out = B;
-    Mat<eT> A_copy = A;
-  
-    lapack::gesv<eT>(&n, &nrhs, A_copy.memptr(), &lda, ipiv.memptr(), out.memptr(), &ldb, &info);
-  
+    
+    lapack::gesv<eT>(&n, &nrhs, A.memptr(), &lda, ipiv.memptr(), out.memptr(), &ldb, &info);
+    
     return (info == 0);
     }
   #else
@@ -1924,14 +1923,13 @@ auxlib::solve(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
   }
 
 
-               
+
 //! Solve an over-determined system.
-//! Assumes that A.n_rows > A.n_cols
-//! and B.n_rows = A.n_rows
+//! Assumes that A.n_rows > A.n_cols and B.n_rows = A.n_rows
 template<typename eT>
 inline
 bool
-auxlib::solve_od(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
+auxlib::solve_od(Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B)
   {
   arma_extra_debug_sigprint();
   
@@ -1953,22 +1951,18 @@ auxlib::solve_od(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
     blas_int  lwork = n + (std::max)(n, nrhs);
     blas_int  info;
     
-    Mat<eT> A_copy = A;
-    Mat<eT> tmp    = B;
-    
+    Mat<eT> tmp = B;
     
     podarray<eT> work(lwork);
     
     arma_extra_debug_print("lapack::gels()");
     
-    // NOTE:
-    // the dgels() function in the lapack library supplied by ATLAS 3.6
-    // seems to have problems
+    // NOTE: the dgels() function in the lapack library supplied by ATLAS 3.6 seems to have problems
     
     lapack::gels<eT>
       (
       &trans, &m, &n, &nrhs,
-      A_copy.memptr(), &lda,
+      A.memptr(), &lda,
       tmp.memptr(), &ldb,
       work.memptr(), &lwork,
       &info
@@ -1980,7 +1974,7 @@ auxlib::solve_od(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
     
     for(u32 col=0; col<B.n_cols; ++col)
       {
-      syslib::copy_elem( out.colptr(col), tmp.colptr(col), A.n_cols );
+      arrayops::copy( out.colptr(col), tmp.colptr(col), A.n_cols );
       }
     
     return (info == 0);
@@ -1990,7 +1984,7 @@ auxlib::solve_od(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
     arma_ignore(out);
     arma_ignore(A);
     arma_ignore(B);
-    arma_stop("auxlib::solve_od(): need LAPACK");
+    arma_stop("solve(): need LAPACK");
     return false;
     }
   #endif
@@ -1999,12 +1993,11 @@ auxlib::solve_od(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
 
 
 //! Solve an under-determined system.
-//! Assumes that A.n_rows < A.n_cols
-//! and B.n_rows = A.n_rows
+//! Assumes that A.n_rows < A.n_cols and B.n_rows = A.n_rows
 template<typename eT>
 inline
 bool
-auxlib::solve_ud(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
+auxlib::solve_ud(Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B)
   {
   arma_extra_debug_sigprint();
   
@@ -2027,8 +2020,6 @@ auxlib::solve_ud(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
     blas_int  info;
     
     
-    Mat<eT> A_copy = A;
-    
     Mat<eT> tmp;
     tmp.zeros(A.n_cols, B.n_cols);
     
@@ -2036,7 +2027,7 @@ auxlib::solve_ud(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
       {
       eT* tmp_colmem = tmp.colptr(col);
       
-      syslib::copy_elem( tmp_colmem, B.colptr(col), B.n_rows );
+      arrayops::copy( tmp_colmem, B.colptr(col), B.n_rows );
       
       for(u32 row=B.n_rows; row<A.n_cols; ++row)
         {
@@ -2048,14 +2039,12 @@ auxlib::solve_ud(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
     
     arma_extra_debug_print("lapack::gels()");
     
-    // NOTE:
-    // the dgels() function in the lapack library supplied by ATLAS 3.6
-    // seems to have problems
+    // NOTE: the dgels() function in the lapack library supplied by ATLAS 3.6 seems to have problems
     
     lapack::gels<eT>
       (
       &trans, &m, &n, &nrhs,
-      A_copy.memptr(), &lda,
+      A.memptr(), &lda,
       tmp.memptr(), &ldb,
       work.memptr(), &lwork,
       &info
@@ -2067,9 +2056,9 @@ auxlib::solve_ud(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
     
     for(u32 col=0; col<B.n_cols; ++col)
       {
-      syslib::copy_elem( out.colptr(col), tmp.colptr(col), A.n_cols );
+      arrayops::copy( out.colptr(col), tmp.colptr(col), A.n_cols );
       }
-  
+    
     return (info == 0);
     }
   #else
@@ -2077,7 +2066,7 @@ auxlib::solve_ud(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
     arma_ignore(out);
     arma_ignore(A);
     arma_ignore(B);
-    arma_stop("auxlib::solve_ud(): need LAPACK");
+    arma_stop("solve(): need LAPACK");
     return false;
     }
   #endif

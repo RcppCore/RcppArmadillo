@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -72,6 +72,10 @@
     #if defined(_GLIBCXX_USE_C99_MATH_TR1) && defined(_GLIBCXX_USE_C99_COMPLEX_TR1)
       #define ARMA_HAVE_STD_TR1
     #endif
+  #endif
+  
+  #if defined(__GXX_EXPERIMENTAL_CXX0X__)
+    #undef ARMA_HAVE_STD_TR1
   #endif
   
   #if (ARMA_GCC_VERSION >= 40300)

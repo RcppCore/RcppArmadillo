@@ -448,7 +448,7 @@ Cube<eT>::init(const Cube<eT>& x)
   if(this != &x)
     {
     init(x.n_rows, x.n_cols, x.n_slices);
-    syslib::copy_elem( memptr(), x.mem, n_elem );
+    arrayops::copy( memptr(), x.mem, n_elem );
     }
   }
 
@@ -478,7 +478,7 @@ Cube<eT>::Cube(eT* aux_mem, const u32 aux_n_rows, const u32 aux_n_cols, const u3
     {
     init(aux_n_rows, aux_n_cols, aux_n_slices);
     
-    syslib::copy_elem( memptr(), aux_mem, n_elem );
+    arrayops::copy( memptr(), aux_mem, n_elem );
     }
   else
     {
@@ -505,7 +505,7 @@ Cube<eT>::Cube(const eT* aux_mem, const u32 aux_n_rows, const u32 aux_n_cols, co
   arma_extra_debug_sigprint_this(this);
   
   init(aux_n_rows, aux_n_cols, aux_n_slices);
-  syslib::copy_elem( memptr(), aux_mem, n_elem );
+  arrayops::copy( memptr(), aux_mem, n_elem );
   }
 
 

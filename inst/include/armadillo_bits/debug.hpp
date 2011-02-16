@@ -816,24 +816,35 @@ arma_assert_mul_size(const subview<eT1>& A, const subview<eT2>& B, const char* x
       arma_cold
       arma_first_extra_debug_message()
         {
-        const char* nickname = ARMA_VERSION_NAME;
+        union
+          {
+          unsigned short a;
+          unsigned char  b[sizeof(unsigned short)];
+          } endian_test;
+          
+        endian_test.a = 1;
+        
+        const bool  little_endian = (endian_test.b[0] == 1);
+        const char* nickname      = ARMA_VERSION_NAME;
         
         get_log_stream() << "@ ---" << '\n';
         get_log_stream() << "@ Armadillo "
                   << arma_version::major << '.' << arma_version::minor << '.' << arma_version::patch
                   << " (" << nickname << ")\n";
         
-        get_log_stream() << "@ arma_config::atlas      = " << arma_config::atlas      << '\n';
-        get_log_stream() << "@ arma_config::lapack     = " << arma_config::lapack     << '\n';
-        get_log_stream() << "@ arma_config::blas       = " << arma_config::blas       << '\n';
-        get_log_stream() << "@ arma_config::boost      = " << arma_config::boost      << '\n';
-        get_log_stream() << "@ arma_config::boost_date = " << arma_config::boost_date << '\n';
-        get_log_stream() << "@ arma_config::good_comp  = " << arma_config::good_comp  << '\n';
-        get_log_stream() << "@ arma_config::extra_code = " << arma_config::extra_code << '\n';
+        get_log_stream() << "@ arma_config::mat_prealloc = " << arma_config::mat_prealloc << " element(s)\n";
+        get_log_stream() << "@ arma_config::atlas        = " << arma_config::atlas        << '\n';
+        get_log_stream() << "@ arma_config::lapack       = " << arma_config::lapack       << '\n';
+        get_log_stream() << "@ arma_config::blas         = " << arma_config::blas         << '\n';
+        get_log_stream() << "@ arma_config::boost        = " << arma_config::boost        << '\n';
+        get_log_stream() << "@ arma_config::boost_date   = " << arma_config::boost_date   << '\n';
+        get_log_stream() << "@ arma_config::good_comp    = " << arma_config::good_comp    << '\n';
+        get_log_stream() << "@ arma_config::extra_code   = " << arma_config::extra_code   << '\n';
         get_log_stream() << "@ sizeof(void*)    = " << sizeof(void*)    << '\n';
         get_log_stream() << "@ sizeof(int)      = " << sizeof(int)      << '\n';
         get_log_stream() << "@ sizeof(long)     = " << sizeof(long)     << '\n';
         get_log_stream() << "@ sizeof(blas_int) = " << sizeof(blas_int) << '\n';
+        get_log_stream() << "@ little_endian    = " << little_endian    << '\n';
         get_log_stream() << "@ ---" << std::endl;
         }
       

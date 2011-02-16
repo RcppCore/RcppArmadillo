@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -34,35 +34,28 @@ op_prod::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_prod>& in)
   const Mat<eT>& X     = tmp.M;
   
   arma_debug_check( (X.n_elem < 1), "prod(): give object has no elements");
-
   
+  const u32 X_n_rows = X.n_rows;
+  const u32 X_n_cols = X.n_cols;
+    
   if(dim == 0)  // traverse across rows (i.e. find the product in each column)
     {
-    out.set_size(1, X.n_cols);
+    out.set_size(1, X_n_cols);
     
-    for(u32 col=0; col<X.n_cols; ++col)
+    for(u32 col=0; col<X_n_cols; ++col)
       {
-      const eT* X_colptr = X.colptr(col);
-      
-      eT val = X_colptr[0];
-      
-      for(u32 row=1; row < X.n_rows; ++row)
-        {
-        val *= X_colptr[row];
-        }
-      
-      out.at(0,col) = val;
+      out.at(0,col) = arrayops::product(X.colptr(col), X_n_rows);
       }
     }
   else  // traverse across columns (i.e. find the product in each row)
     {
-    out.set_size(X.n_rows, 1);
+    out.set_size(X_n_rows, 1);
     
-    for(u32 row=0; row < X.n_rows; ++row)
+    for(u32 row=0; row < X_n_rows; ++row)
       {
       eT val = X.at(row,0);
       
-      for(u32 col=1; col < X.n_cols; ++col)
+      for(u32 col=1; col < X_n_cols; ++col)
         {
         val *= X.at(row,col);
         }

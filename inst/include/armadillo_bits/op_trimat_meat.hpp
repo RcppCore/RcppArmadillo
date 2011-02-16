@@ -44,7 +44,7 @@ op_trimat::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_trimat>& in)
         const eT* A_data   = A.colptr(i);
               eT* out_data = out.colptr(i);
         
-        syslib::copy_elem( out_data, A_data, i+1 );
+        arrayops::copy( out_data, A_data, i+1 );
         }
       }
     else
@@ -55,7 +55,7 @@ op_trimat::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_trimat>& in)
         const eT* A_data   = A.colptr(i);
               eT* out_data = out.colptr(i);
         
-        syslib::copy_elem( &out_data[i], &A_data[i], N-i );
+        arrayops::copy( &out_data[i], &A_data[i], N-i );
         }
       }
     }

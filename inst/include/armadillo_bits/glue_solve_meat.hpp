@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -25,13 +25,11 @@ glue_solve::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_solve>
   
   typedef typename T1::elem_type eT;
   
-  const unwrap_check<T1> A_tmp(X.A, out);
-  const unwrap_check<T2> B_tmp(X.B, out);
+  Mat<eT> A = X.A.get_ref();
   
-  const Mat<eT>& A = A_tmp.M;
+  const unwrap_check<T2> B_tmp(X.B, out);
   const Mat<eT>& B = B_tmp.M;
   
-  arma_debug_check( ( (&A) == (&B) ),       "solve(): A is an alias of B" );
   arma_debug_check( (A.n_rows != B.n_rows), "solve(): number of rows in A and B must be the same" );
   
   bool status;

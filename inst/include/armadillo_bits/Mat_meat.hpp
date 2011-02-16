@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -23,7 +23,7 @@ Mat<eT>::~Mat()
   
   if(mem_state == 0)
     {
-    if(n_elem > Mat_prealloc::mem_n_elem)
+    if(n_elem > arma_config::mat_prealloc)
       {
       delete [] mem;
       }
@@ -131,7 +131,7 @@ Mat<eT>::init(const u32 in_n_rows, const u32 in_n_cols)
       
       if(t_mem_state == 0)
         {
-        if(old_n_elem > Mat_prealloc::mem_n_elem )
+        if(old_n_elem > arma_config::mat_prealloc)
           {
           arma_extra_debug_print("Mat::init(): freeing memory");
           
@@ -140,7 +140,7 @@ Mat<eT>::init(const u32 in_n_rows, const u32 in_n_cols)
         }
       
       
-      if(new_n_elem <= Mat_prealloc::mem_n_elem )
+      if(new_n_elem <= arma_config::mat_prealloc)
         {
         access::rw(mem) = mem_local;
         }
@@ -453,7 +453,7 @@ Mat<eT>::init(const Mat<eT>& x)
   if(this != &x)
     {
     init(x.n_rows, x.n_cols);
-    syslib::copy_elem( memptr(), x.mem, x.n_elem );
+    arrayops::copy( memptr(), x.mem, x.n_elem );
     }
   }
 
@@ -540,7 +540,7 @@ Mat<eT>::steal_mem(Mat<eT>& x)
       }
     
     
-    if( (x_mem_state == 0) && (x_n_elem > Mat_prealloc::mem_n_elem) && (layout_ok == true) )
+    if( (x_mem_state == 0) && (x_n_elem > arma_config::mat_prealloc) && (layout_ok == true) )
       {
       reset();
       
@@ -584,7 +584,7 @@ Mat<eT>::Mat(eT* aux_mem, const u32 aux_n_rows, const u32 aux_n_cols, const bool
     {
     init(aux_n_rows, aux_n_cols);
     
-    syslib::copy_elem( memptr(), aux_mem, n_elem );
+    arrayops::copy( memptr(), aux_mem, n_elem );
     }
   }
 
@@ -607,7 +607,7 @@ Mat<eT>::Mat(const eT* aux_mem, const u32 aux_n_rows, const u32 aux_n_cols)
   
   init(aux_n_rows, aux_n_cols);
   
-  syslib::copy_elem( memptr(), aux_mem, n_elem );
+  arrayops::copy( memptr(), aux_mem, n_elem );
   }
 
 
@@ -4430,7 +4430,7 @@ Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::mem_setup()
     access::rw(Mat<eT>::n_elem)    = fixed_n_elem;
     access::rw(Mat<eT>::vec_state) = 0;
     access::rw(Mat<eT>::mem_state) = 3;
-    access::rw(Mat<eT>::mem)       = (fixed_n_elem > Mat_prealloc::mem_n_elem) ? mem_local_extra : mem_local;
+    access::rw(Mat<eT>::mem)       = (fixed_n_elem > arma_config::mat_prealloc) ? mem_local_extra : mem_local;
     }
   else
     {

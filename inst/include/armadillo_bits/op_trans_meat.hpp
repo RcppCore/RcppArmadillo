@@ -31,7 +31,7 @@ op_trans::apply_noalias(Mat<eT>& out, const Mat<eT>& A)
   
   if( (A_n_cols == 1) || (A_n_rows == 1) )
     {
-    syslib::copy_elem( out.memptr(), A.mem, A.n_elem );
+    arrayops::copy( out.memptr(), A.mem, A.n_elem );
     }
   else
     {

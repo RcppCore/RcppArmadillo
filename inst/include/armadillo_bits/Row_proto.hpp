@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -17,7 +17,7 @@
 //! Class for row vectors (matrices with only one row)
 
 template<typename eT>
-class Row : public Mat<eT>, public BaseVec< eT, Row<eT> >
+class Row : public Mat<eT>
   {
   public:
   
@@ -82,7 +82,7 @@ class Row : public Mat<eT>, public BaseVec< eT, Row<eT> >
     {
     private:
     
-    arma_aligned eT mem_local_extra[ ( fixed_n_elem > Mat_prealloc::mem_n_elem ) ? fixed_n_elem : 1 ];
+    arma_aligned eT mem_local_extra[ (fixed_n_elem > arma_config::mat_prealloc) ? fixed_n_elem : 1 ];
     
     arma_inline void mem_setup();
     
