@@ -28,8 +28,8 @@ Description: R and Armadillo integration using Rcpp
  capabilities of the Rcpp package for seamless R and C++ integration.
  .
  Armadillo is licensed under the GNU LGPL version 3 or later, while
- RcppArmadillo (the Rcpp bindings/bridge to Armadillo) is license under GNU
- GPL version 2 or later, as is the rest of Rcpp.
+ RcppArmadillo (the Rcpp bindings/bridge to Armadillo) is licenses under 
+ the GNU GPL version 2 or later, as is the rest of Rcpp.
 License: GPL (>= 2)
 LazyLoad: yes
 Depends: R (>= 2.12.0), Rcpp (>= 0.9.0)
