@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -18,6 +18,12 @@
 
 struct arma_config
   {
+  #if defined(ARMA_MAT_PREALLOC)
+    static const u32 mat_prealloc = (s32(ARMA_MAT_PREALLOC) > 0) ? u32(ARMA_MAT_PREALLOC) : 1;
+  #else
+    static const u32 mat_prealloc = 16;
+  #endif
+  
   #if defined(ARMA_USE_ATLAS)
     static const bool atlas = true;
   #else

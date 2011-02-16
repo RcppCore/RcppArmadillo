@@ -36,19 +36,4 @@ struct Base
 
 
 
-template<typename elem_type, typename derived>
-struct BaseVec
-  {
-  
-  arma_inline
-  const derived&
-  get_ref() const
-    {
-    return static_cast<const derived&>(*this);
-    }
-
-  };
-
-
-
 //! @}

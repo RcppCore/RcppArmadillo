@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -21,14 +21,22 @@
 #endif
 
 // #define ARMA_BLAS_LONG
-// uncomment the above line if your BLAS and LAPACK libraries use "long" instead of "int"
+//// Uncomment the above line if your BLAS and LAPACK libraries use "long" instead of "int"
 
 // #define ARMA_BLAS_LONG_LONG
-// uncomment the above line if your BLAS and LAPACK libraries use "long long" instead of "int"
+//// Uncomment the above line if your BLAS and LAPACK libraries use "long long" instead of "int"
 
 #define ARMA_BLAS_UNDERSCORE
-// uncomment the above line if your BLAS and LAPACK libraries have function names with a trailing underscore;
-// conversely, comment it out if the function names don't have a trailing underscore
+//// Uncomment the above line if your BLAS and LAPACK libraries have function names with a trailing underscore.
+//// Conversely, comment it out if the function names don't have a trailing underscore
+
+#if !defined(ARMA_MAT_PREALLOC)
+  #define ARMA_MAT_PREALLOC 16
+#endif
+//// This is the number of preallocated elements used by matrices and vectors;
+//// it must be an integer that is at least 1.
+//// If you mainly use lots of very small vectors (eg. <= 4 elements),
+//// change the number to the size of your vectors.
 
 // #define ARMA_USE_ATLAS
 // #define ARMA_ATLAS_INCLUDE_DIR /usr/include/

@@ -70,7 +70,7 @@ podarray<eT>::operator=(const podarray& x)
     {
     init(x.n_elem);
     
-    syslib::copy_elem( memptr(), x.memptr(), n_elem );
+    arrayops::copy( memptr(), x.memptr(), n_elem );
     }
   
   return *this;
@@ -101,7 +101,7 @@ podarray<eT>::podarray(const eT* X, const u32 new_n_elem)
   
   init(new_n_elem);
   
-  syslib::copy_elem( memptr(), X, new_n_elem );
+  arrayops::copy( memptr(), X, new_n_elem );
   }
 
 

@@ -44,7 +44,7 @@ mat_injector_row<eT>::insert(const eT val) const
     {
     B.set_size(2 * A.n_elem);
     
-    syslib::copy_elem(B.memptr(), A.memptr(), n_cols);
+    arrayops::copy(B.memptr(), A.memptr(), n_cols);
     
     B[n_cols] = val;
     ++n_cols;
@@ -173,7 +173,7 @@ mat_injector<T1>::~mat_injector()
       
       X.set_size(1, n_cols);
       
-      syslib::copy_elem( X.memptr(), (*(A[0])).A.memptr(), n_cols );
+      arrayops::copy( X.memptr(), (*(A[0])).A.memptr(), n_cols );
       }
     else
     if(is_Col<T1>::value == true)
@@ -248,7 +248,7 @@ mat_injector<T1>::end_of_row() const
   
   B.set_size( n_rows+1 );
   
-  syslib::copy_elem(B.memptr(), A.memptr(), n_rows);
+  arrayops::copy(B.memptr(), A.memptr(), n_rows);
   
   for(u32 row=n_rows; row<(n_rows+1); ++row)
     {

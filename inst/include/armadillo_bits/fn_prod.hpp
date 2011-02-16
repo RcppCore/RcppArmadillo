@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -46,17 +46,7 @@ prod(const Row<eT>& X)
   
   arma_debug_check( (X.n_elem < 1), "prod(): given object has no elements" );
   
-  const u32 n_elem = X.n_elem;
-  const eT* X_mem  = X.memptr();
-  
-  eT val = X_mem[0];
-  
-  for(u32 i=1; i<n_elem; ++i)
-    {
-    val *= X_mem[i];
-    }
-  
-  return val;
+  return arrayops::product(X.memptr(), X.n_elem);
   }
 
 
@@ -72,17 +62,7 @@ prod(const Col<eT>& X)
   
   arma_debug_check( (X.n_elem < 1), "prod(): given object has no elements" );
   
-  const u32 n_elem = X.n_elem;
-  const eT* X_mem  = X.memptr();
-  
-  eT val = X_mem[0];
-  
-  for(u32 i=1; i<n_elem; ++i)
-    {
-    val *= X_mem[i];
-    }
-  
-  return val;
+  return arrayops::product(X.memptr(), X.n_elem);
   }
 
 
@@ -171,17 +151,7 @@ prod(const subview_col<eT>& S)
   
   arma_debug_check( (S.n_elem < 1), "prod(): given object has no elements" );
   
-  const eT* S_colptr = S.colptr(0);
-  const u32 n_rows   = S.n_rows;
-  
-  eT val = S_colptr[0];
-  
-  for(u32 row=1; row<n_rows; ++row)
-    {
-    val *= S_colptr[row];
-    }
-  
-  return val;
+  return arrayops::product( S.colptr(0), S.n_rows );
   }
 
 

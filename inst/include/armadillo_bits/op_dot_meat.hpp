@@ -318,7 +318,7 @@ op_cdot::apply(const Base<typename T1::elem_type,T1>& X, const Base<typename T1:
   
   if(i < N)
     {
-    val1 += conj(PA[i]) * PB[i];
+    val1 += std::conj(PA[i]) * PB[i];
     }
   
   return val1 + val2;

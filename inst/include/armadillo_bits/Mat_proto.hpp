@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -13,13 +13,6 @@
 
 //! \addtogroup Mat
 //! @{
-
-
-
-struct Mat_prealloc
-  {
-  static const u32 mem_n_elem = 16;
-  };
 
 
 
@@ -47,7 +40,7 @@ class Mat : public Base< eT, Mat<eT> >
   arma_aligned const eT* const mem;  //!< pointer to the memory used by the matrix (memory is read-only)
   
   protected:
-  arma_aligned eT mem_local[ Mat_prealloc::mem_n_elem ];
+  arma_aligned eT mem_local[ arma_config::mat_prealloc ];
   
   
   public:
@@ -428,7 +421,7 @@ class Mat : public Base< eT, Mat<eT> >
     
     static const u32 fixed_n_elem = fixed_n_rows * fixed_n_cols;
     
-    arma_aligned eT mem_local_extra[ ( fixed_n_elem > Mat_prealloc::mem_n_elem ) ? fixed_n_elem : 1 ];
+    arma_aligned eT mem_local_extra[ (fixed_n_elem > arma_config::mat_prealloc) ? fixed_n_elem : 1 ];
     
     arma_inline void mem_setup();
     

@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -18,8 +18,8 @@
 
 #define ARMA_VERSION_MAJOR 1
 #define ARMA_VERSION_MINOR 1
-#define ARMA_VERSION_PATCH 0
-#define ARMA_VERSION_NAME  "Climate Vandal"
+#define ARMA_VERSION_PATCH 2
+#define ARMA_VERSION_NAME  "Flood Kayak"
 
 
 

@@ -197,7 +197,7 @@ subview_cube<eT>::operator= (const BaseCube<eT,T1>& in)
     {
     for(u32 col = 0; col < t_n_cols; ++col)
       {
-      syslib::copy_elem( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
+      arrayops::copy( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
       }
     }
   }
@@ -217,7 +217,7 @@ subview_cube<eT>::operator+= (const BaseCube<eT,T1>& in)
   const Cube<eT>&         x = tmp.M;
         subview_cube<eT>& t = *this;
   
-  arma_debug_assert_same_size(t, x, "cube addition");
+  arma_debug_assert_same_size(t, x, "addition");
   
   const u32 t_n_rows   = t.n_rows;
   const u32 t_n_cols   = t.n_cols;
@@ -247,7 +247,7 @@ subview_cube<eT>::operator-= (const BaseCube<eT,T1>& in)
   const Cube<eT>&         x = tmp.M;
         subview_cube<eT>& t = *this;
   
-  arma_debug_assert_same_size(t, x, "cube subtraction");
+  arma_debug_assert_same_size(t, x, "subtraction");
   
   const u32 t_n_rows   = t.n_rows;
   const u32 t_n_cols   = t.n_cols;
@@ -277,7 +277,7 @@ subview_cube<eT>::operator%= (const BaseCube<eT,T1>& in)
   const Cube<eT>&         x = tmp.M;
         subview_cube<eT>& t = *this;
   
-  arma_debug_assert_same_size(t, x, "cube schur product");
+  arma_debug_assert_same_size(t, x, "element-wise multiplication");
   
   const u32 t_n_rows   = t.n_rows;
   const u32 t_n_cols   = t.n_cols;
@@ -307,7 +307,7 @@ subview_cube<eT>::operator/= (const BaseCube<eT,T1>& in)
   const Cube<eT>&         x = tmp.M;
         subview_cube<eT>& t = *this;
   
-  arma_debug_assert_same_size(t, x, "element-wise cube division");
+  arma_debug_assert_same_size(t, x, "element-wise division");
   
   const u32 t_n_rows   = t.n_rows;
   const u32 t_n_cols   = t.n_cols;
@@ -350,7 +350,7 @@ subview_cube<eT>::operator= (const subview_cube<eT>& x_in)
     {
     for(u32 col = 0; col < t_n_cols; ++col)
       {
-      syslib::copy_elem( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
+      arrayops::copy( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
       }
     }
     
@@ -379,7 +379,7 @@ subview_cube<eT>::operator+= (const subview_cube<eT>& x_in)
   
   subview_cube<eT>& t = *this;
   
-  arma_debug_assert_same_size(t, x, "cube addition");
+  arma_debug_assert_same_size(t, x, "addition");
   
   const u32 t_n_rows   = t.n_rows;
   const u32 t_n_cols   = t.n_cols;
@@ -418,7 +418,7 @@ subview_cube<eT>::operator-= (const subview_cube<eT>& x_in)
   
   subview_cube<eT>& t = *this;
   
-  arma_debug_assert_same_size(t, x, "cube subtraction");
+  arma_debug_assert_same_size(t, x, "subtraction");
   
   const u32 t_n_rows   = t.n_rows;
   const u32 t_n_cols   = t.n_cols;
@@ -457,7 +457,7 @@ subview_cube<eT>::operator%= (const subview_cube<eT>& x_in)
   
   subview_cube<eT>& t = *this;
   
-  arma_debug_assert_same_size(t, x, "element-wise cube multiplication");
+  arma_debug_assert_same_size(t, x, "element-wise multiplication");
   
   const u32 t_n_rows   = t.n_rows;
   const u32 t_n_cols   = t.n_cols;
@@ -496,7 +496,7 @@ subview_cube<eT>::operator/= (const subview_cube<eT>& x_in)
   
   subview_cube<eT>& t = *this;
   
-  arma_debug_assert_same_size(t, x, "element-wise cube division");
+  arma_debug_assert_same_size(t, x, "element-wise division");
   
   const u32 t_n_rows   = t.n_rows;
   const u32 t_n_cols   = t.n_cols;
@@ -541,7 +541,7 @@ subview_cube<eT>::operator= (const Base<eT,T1>& in)
   
   for(u32 col = 0; col < t_n_cols; ++col)
     {
-    syslib:copy_elem( t.slice_colptr(t_aux_slice1, col), x.colptr(col), t_n_rows );
+    arrayops::copy( t.slice_colptr(t_aux_slice1, col), x.colptr(col), t_n_rows );
     }
   }
 
@@ -560,7 +560,7 @@ subview_cube<eT>::operator+= (const Base<eT,T1>& in)
   const Mat<eT>&          x = tmp.M;
         subview_cube<eT>& t = *this;
   
-  arma_debug_assert_same_size(t, x, "cube addition");
+  arma_debug_assert_same_size(t, x, "addition");
   
   const u32 t_n_rows     = t.n_rows;
   const u32 t_n_cols     = t.n_cols;
@@ -587,7 +587,7 @@ subview_cube<eT>::operator-= (const Base<eT,T1>& in)
   const Mat<eT>&          x = tmp.M;
         subview_cube<eT>& t = *this;
   
-  arma_debug_assert_same_size(t, x, "cube subtraction");
+  arma_debug_assert_same_size(t, x, "subtraction");
   
   const u32 t_n_rows     = t.n_rows;
   const u32 t_n_cols     = t.n_cols;
@@ -614,7 +614,7 @@ subview_cube<eT>::operator%= (const Base<eT,T1>& in)
   const Mat<eT>&          x = tmp.M;
         subview_cube<eT>& t = *this;
   
-  arma_debug_assert_same_size(t, x, "cube schur product");
+  arma_debug_assert_same_size(t, x, "element-wise multiplication");
   
   const u32 t_n_rows     = t.n_rows;
   const u32 t_n_cols     = t.n_cols;
@@ -641,7 +641,7 @@ subview_cube<eT>::operator/= (const Base<eT,T1>& in)
   const Mat<eT>&          x = tmp.M;
         subview_cube<eT>& t = *this;
   
-  arma_debug_assert_same_size(t, x, "element-wise cube division");
+  arma_debug_assert_same_size(t, x, "element-wise division");
   
   const u32 t_n_rows     = t.n_rows;
   const u32 t_n_cols     = t.n_cols;
@@ -939,7 +939,7 @@ subview_cube<eT>::extract(Cube<eT>& actual_out, const subview_cube<eT>& in)
     {
     for(u32 col = 0; col < n_cols; ++col)
       {
-      syslib::copy_elem( out.slice_colptr(slice,col), in.slice_colptr(slice,col), n_rows );
+      arrayops::copy( out.slice_colptr(slice,col), in.slice_colptr(slice,col), n_rows );
       }
     }
   
@@ -972,7 +972,7 @@ subview_cube<eT>::extract(Mat<eT>& out, const subview_cube<eT>& in)
   
   for(u32 col = 0; col < n_cols; ++col)
     {
-    syslib::copy_elem( out.colptr(col), in.slice_colptr(aux_slice1, col), n_rows );
+    arrayops::copy( out.colptr(col), in.slice_colptr(aux_slice1, col), n_rows );
     }
   }
 
@@ -986,7 +986,7 @@ subview_cube<eT>::plus_inplace(Cube<eT>& out, const subview_cube<eT>& in)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(out, in, "cube addition");
+  arma_debug_assert_same_size(out, in, "addition");
   
   const u32 n_rows   = out.n_rows;
   const u32 n_cols   = out.n_cols;
@@ -1011,7 +1011,7 @@ subview_cube<eT>::minus_inplace(Cube<eT>& out, const subview_cube<eT>& in)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(out, in, "cube subtraction");
+  arma_debug_assert_same_size(out, in, "subtraction");
   
   const u32 n_rows   = out.n_rows;
   const u32 n_cols   = out.n_cols;
@@ -1036,7 +1036,7 @@ subview_cube<eT>::schur_inplace(Cube<eT>& out, const subview_cube<eT>& in)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(out, in, "cube schur product");
+  arma_debug_assert_same_size(out, in, "element-wise multiplication");
   
   const u32 n_rows   = out.n_rows;
   const u32 n_cols   = out.n_cols;
@@ -1061,7 +1061,7 @@ subview_cube<eT>::div_inplace(Cube<eT>& out, const subview_cube<eT>& in)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(out, in, "element-wise cube division");
+  arma_debug_assert_same_size(out, in, "element-wise division");
   
   const u32 n_rows   = out.n_rows;
   const u32 n_cols   = out.n_cols;
@@ -1086,7 +1086,7 @@ subview_cube<eT>::plus_inplace(Mat<eT>& out, const subview_cube<eT>& in)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(out, in, "matrix addition");
+  arma_debug_assert_same_size(out, in, "addition");
   
   const u32 in_n_rows     = in.n_rows;
   const u32 in_n_cols     = in.n_cols;
@@ -1108,7 +1108,7 @@ subview_cube<eT>::minus_inplace(Mat<eT>& out, const subview_cube<eT>& in)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(out, in, "matrix subtraction");
+  arma_debug_assert_same_size(out, in, "subtraction");
   
   const u32 in_n_rows     = in.n_rows;
   const u32 in_n_cols     = in.n_cols;
@@ -1130,7 +1130,7 @@ subview_cube<eT>::schur_inplace(Mat<eT>& out, const subview_cube<eT>& in)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(out, in, "matrix schur product");
+  arma_debug_assert_same_size(out, in, "element-wise multiplication");
   
   const u32 in_n_rows     = in.n_rows;
   const u32 in_n_cols     = in.n_cols;
@@ -1152,7 +1152,7 @@ subview_cube<eT>::div_inplace(Mat<eT>& out, const subview_cube<eT>& in)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(out, in, "matrix element-wise division");
+  arma_debug_assert_same_size(out, in, "element-wise division");
   
   const u32 in_n_rows     = in.n_rows;
   const u32 in_n_cols     = in.n_cols;

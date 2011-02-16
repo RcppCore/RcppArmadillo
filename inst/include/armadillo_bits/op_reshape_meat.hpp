@@ -41,7 +41,7 @@ op_reshape::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reshape>& in)
       if(&out != &A)
         {
         out.set_size(in_n_rows, in_n_cols);
-        syslib::copy_elem( out.memptr(), A.memptr(), out.n_elem );
+        arrayops::copy( out.memptr(), A.memptr(), out.n_elem );
         }
       else  // &out == &A, i.e. inplace resize
         {
@@ -94,7 +94,7 @@ op_reshape::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reshape>& in)
     
     if(in.aux == eT(0))
       {
-      syslib::copy_elem( out_mem, B.memptr(), n_elem_to_copy );
+      arrayops::copy( out_mem, B.memptr(), n_elem_to_copy );
       }
     else
       {
@@ -150,7 +150,7 @@ op_reshape::apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_reshape>
       if(&out != &A)
         {
         out.set_size(in_n_rows, in_n_cols, in_n_slices);
-        syslib::copy_elem( out.memptr(), A.memptr(), out.n_elem );
+        arrayops::copy( out.memptr(), A.memptr(), out.n_elem );
         }
       else  // &out == &A, i.e. inplace resize
         {
@@ -212,7 +212,7 @@ op_reshape::apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_reshape>
     
     if(in.aux == eT(0))
       {
-      syslib::copy_elem( out_mem, B.memptr(), n_elem_to_copy );
+      arrayops::copy( out_mem, B.memptr(), n_elem_to_copy );
       }
     else
       {
