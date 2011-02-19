@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -27,14 +27,10 @@ class subview_cube : public BaseCube<eT, subview_cube<eT> >
   
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
-
+  
   const u32 aux_row1;
   const u32 aux_col1;
   const u32 aux_slice1;
-  
-  const u32 aux_row2;
-  const u32 aux_col2;
-  const u32 aux_slice2;
   
   const u32 n_rows;
   const u32 n_cols;
@@ -45,8 +41,8 @@ class subview_cube : public BaseCube<eT, subview_cube<eT> >
   
   protected:
   
-  arma_inline subview_cube(const Cube<eT>& in_m, const u32 in_row1, const u32 in_col1, const u32 in_slice1, const u32 in_row2, const u32 in_col2, const u32 in_slice2);
-  arma_inline subview_cube(      Cube<eT>& in_m, const u32 in_row1, const u32 in_col1, const u32 in_slice1, const u32 in_row2, const u32 in_col2, const u32 in_slice2);
+  arma_inline subview_cube(const Cube<eT>& in_m, const u32 in_row1, const u32 in_col1, const u32 in_slice1, const u32 in_n_rows, const u32 in_n_cols, const u32 in_n_slices);
+  arma_inline subview_cube(      Cube<eT>& in_m, const u32 in_row1, const u32 in_col1, const u32 in_slice1, const u32 in_n_rows, const u32 in_n_cols, const u32 in_n_slices);
   
   
   public:
@@ -77,14 +73,13 @@ class subview_cube : public BaseCube<eT, subview_cube<eT> >
   template<typename T1> inline void operator%= (const Base<eT,T1>& x);
   template<typename T1> inline void operator/= (const Base<eT,T1>& x);
 
-  inline static void extract(Cube<eT>& out, const subview_cube& in);
-  inline static void extract(Mat<eT>&  out, const subview_cube& in);
-  
+  inline static void       extract(Cube<eT>& out, const subview_cube& in);
   inline static void  plus_inplace(Cube<eT>& out, const subview_cube& in);
   inline static void minus_inplace(Cube<eT>& out, const subview_cube& in);
   inline static void schur_inplace(Cube<eT>& out, const subview_cube& in);
   inline static void   div_inplace(Cube<eT>& out, const subview_cube& in);
   
+  inline static void       extract(Mat<eT>& out, const subview_cube& in);
   inline static void  plus_inplace(Mat<eT>& out, const subview_cube& in);
   inline static void minus_inplace(Mat<eT>& out, const subview_cube& in);
   inline static void schur_inplace(Mat<eT>& out, const subview_cube& in);

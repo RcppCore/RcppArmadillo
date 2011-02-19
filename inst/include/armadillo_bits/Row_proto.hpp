@@ -45,6 +45,9 @@ class Row : public Mat<eT>
   template<typename T1, typename T2>
   inline explicit Row(const Base<pod_type,T1>& A, const Base<pod_type,T2>& B);
   
+  template<typename T1> inline                  Row(const BaseCube<eT,T1>& X);
+  template<typename T1> inline const Row& operator=(const BaseCube<eT,T1>& X);
+  
   inline                  Row(const subview_cube<eT>& X);
   inline const Row& operator=(const subview_cube<eT>& X);
   

@@ -219,7 +219,35 @@ Col<eT>::Col
 
 
 
-//! construct a column vector from given a subcube; the subcube must have exactly one column
+template<typename eT>
+template<typename T1>
+inline
+Col<eT>::Col(const BaseCube<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  access::rw(Mat<eT>::vec_state) = 1;
+  
+  Mat<eT>::operator=(X);
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+const Col<eT>&
+Col<eT>::operator=(const BaseCube<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>::operator=(X);
+  
+  return *this;
+  }
+
+
+
 template<typename eT>
 inline
 Col<eT>::Col(const subview_cube<eT>& X)
@@ -233,7 +261,6 @@ Col<eT>::Col(const subview_cube<eT>& X)
 
 
 
-//! construct a column vector from given a subcube; the subcube must have exactly one column
 template<typename eT>
 inline
 const Col<eT>&
@@ -273,8 +300,7 @@ Col<eT>::row(const u32 row_num)
 template<typename eT>
 arma_inline
 eT
-Col<eT>::row(const u32 row_num)
-  const
+Col<eT>::row(const u32 row_num) const
   {
   arma_debug_check( (row_num >= Mat<eT>::n_rows), "Col::row(): out of bounds" );
   
@@ -288,9 +314,13 @@ arma_inline
 subview_col<eT>
 Col<eT>::rows(const u32 in_row1, const u32 in_row2)
   {
+  arma_extra_debug_sigprint();
+  
   arma_debug_check( ( (in_row1 > in_row2) || (in_row2 >= Mat<eT>::n_rows) ), "Col::rows(): indices out of bounds or incorrectly used");
   
-  return subview_col<eT>(*this, 0, in_row1, in_row2);
+  const u32 subview_n_rows = in_row2 - in_row1 + 1;
+  
+  return subview_col<eT>(*this, 0, in_row1, subview_n_rows);
   }
 
 
@@ -298,12 +328,15 @@ Col<eT>::rows(const u32 in_row1, const u32 in_row2)
 template<typename eT>
 arma_inline
 const subview_col<eT>
-Col<eT>::rows(const u32 in_row1, const u32 in_row2)
-  const
+Col<eT>::rows(const u32 in_row1, const u32 in_row2) const
   {
+  arma_extra_debug_sigprint();
+  
   arma_debug_check( ( (in_row1 > in_row2) || (in_row2 >= Mat<eT>::n_rows) ), "Col::rows(): indices out of bounds or incorrectly used");
   
-  return subview_col<eT>(*this, 0, in_row1, in_row2);
+  const u32 subview_n_rows = in_row2 - in_row1 + 1;
+  
+  return subview_col<eT>(*this, 0, in_row1, subview_n_rows);
   }
 
 
@@ -313,9 +346,13 @@ arma_inline
 subview_col<eT>
 Col<eT>::subvec(const u32 in_row1, const u32 in_row2)
   {
+  arma_extra_debug_sigprint();
+  
   arma_debug_check( ( (in_row1 > in_row2) || (in_row2 >= Mat<eT>::n_rows) ), "Col::subvec(): indices out of bounds or incorrectly used");
   
-  return subview_col<eT>(*this, 0, in_row1, in_row2);
+  const u32 subview_n_rows = in_row2 - in_row1 + 1;
+  
+  return subview_col<eT>(*this, 0, in_row1, subview_n_rows);
   }
 
 
@@ -323,12 +360,15 @@ Col<eT>::subvec(const u32 in_row1, const u32 in_row2)
 template<typename eT>
 arma_inline
 const subview_col<eT>
-Col<eT>::subvec(const u32 in_row1, const u32 in_row2)
-  const
+Col<eT>::subvec(const u32 in_row1, const u32 in_row2) const
   {
+  arma_extra_debug_sigprint();
+  
   arma_debug_check( ( (in_row1 > in_row2) || (in_row2 >= Mat<eT>::n_rows) ), "Col::subvec(): indices out of bounds or incorrectly used");
   
-  return subview_col<eT>(*this, 0, in_row1, in_row2);
+  const u32 subview_n_rows = in_row2 - in_row1 + 1;
+  
+  return subview_col<eT>(*this, 0, in_row1, subview_n_rows);
   }
 
 

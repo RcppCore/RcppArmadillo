@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -14,16 +14,25 @@
 //! \addtogroup op_sort
 //! @{
 
+
+
 class op_sort
   {
   public:
+  
+  template<typename eT>
+  inline static void copy_row(eT* X, const Mat<eT>& A, const u32 row);
+  
+  template<typename eT>
+  inline static void copy_row(Mat<eT>& A, const eT* X, const u32 row);
   
   template<typename eT>
   inline static void direct_sort(eT* X, const u32 N, const u32 sort_type = 0);
   
   template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort>& in);
-  
   };
+
+
 
 //! @}

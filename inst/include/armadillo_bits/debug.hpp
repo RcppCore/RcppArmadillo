@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -33,7 +33,6 @@ arma_log_stream(std::ostream* user_stream)
 
 
 
-// TODO: add to user documentation
 inline
 void
 set_log_stream(std::ostream& user_stream)
@@ -43,7 +42,6 @@ set_log_stream(std::ostream& user_stream)
 
 
 
-// TODO: add to user documentation
 inline
 std::ostream&
 get_log_stream()
@@ -63,12 +61,14 @@ void
 arma_cold
 arma_stop(const T1& x)
   {
-  get_log_stream().flush();
+  std::ostream& log_stream = get_log_stream();
   
-  get_log_stream() << '\n';
-  get_log_stream() << "run-time error: " << x << '\n';
-  get_log_stream() << '\n';
-  get_log_stream().flush();
+  log_stream.flush();
+  
+  log_stream << '\n';
+  log_stream << "run-time error: " << x << '\n';
+  log_stream << '\n';
+  log_stream.flush();
   
   throw std::runtime_error("");
   }
@@ -252,13 +252,8 @@ arma_check(const bool state, const T1& x, const T2& y)
 
 
 
-
-
-
 //
-// functions for checking whether two matrices have the same dimensions
-
-
+// functions for generating strings indicating size errors
 
 inline
 std::string
@@ -267,10 +262,52 @@ arma_incompat_size_string(const u32 A_n_rows, const u32 A_n_cols, const u32 B_n_
   {
   std::stringstream tmp;
   
-  tmp << x << ": incompatible matrix dimensions: (" << A_n_rows << ',' << A_n_cols << ") and (" << B_n_rows << ',' << B_n_cols << ')';
+  tmp << x << ": incompatible matrix dimensions: " << A_n_rows << 'x' << A_n_cols << " and " << B_n_rows << 'x' << B_n_cols;
   
   return tmp.str();
   }
+
+
+
+inline
+arma_cold
+std::string
+arma_incompat_size_string(const u32 A_n_rows, const u32 A_n_cols, const u32 A_n_slices, const u32 B_n_rows, const u32 B_n_cols, const u32 B_n_slices, const char* x)
+  {
+  std::stringstream tmp;
+  
+  tmp << x << ": incompatible cube dimensions: " << A_n_rows << 'x' << A_n_cols << 'x' << A_n_slices << " and " << B_n_rows << 'x' << B_n_cols << 'x' << B_n_slices;
+  
+  return tmp.str();
+  }
+
+
+
+template<typename eT>
+inline
+arma_cold
+std::string
+arma_incompat_size_string(const subview_cube<eT>& Q, const Mat<eT>& A, const char* x)
+  {
+  std::stringstream tmp;
+  
+  tmp << x
+      << ": interpreting matrix as cube with dimenensions: "
+      << A.n_rows << 'x' << A.n_cols << 'x' << 1
+      << " or "
+      << A.n_rows << 'x' << 1        << 'x' << A.n_cols
+      << " or "
+      << 1        << 'x' << A.n_cols << 'x' << A.n_rows
+      << " is incompatible with cube dimensions: "
+      << Q.n_rows << 'x' << Q.n_cols << 'x' << Q.n_slices;
+      
+  return tmp.str();
+  }
+
+
+
+//
+// functions for checking whether two matrices have the same dimensions
 
 
 
@@ -475,20 +512,6 @@ arma_assert_same_size(const subview<eT1>& A, const Proxy<eT2>& B, const char* x)
 
 
 inline
-arma_cold
-std::string
-arma_incompat_size_string(const u32 A_n_rows, const u32 A_n_cols, const u32 A_n_slices, const u32 B_n_rows, const u32 B_n_cols, const u32 B_n_slices, const char* x)
-  {
-  std::stringstream tmp;
-  
-  tmp << x << ": incompatible cube dimensions: (" << A_n_rows << ',' << A_n_cols << ',' << A_n_slices << ") and (" << B_n_rows << ',' << B_n_cols << ',' << B_n_slices << ')';
-  
-  return tmp.str();
-  }
-
-
-
-inline
 void
 arma_hot
 arma_assert_same_size(const u32 A_n_rows, const u32 A_n_cols, const u32 A_n_slices, const u32 B_n_rows, const u32 B_n_cols, const u32 B_n_slices, const char* x)
@@ -642,6 +665,156 @@ arma_assert_same_size(const Mat<eT1>& A, const subview_cube<eT2>& B, const char*
 
 
 
+template<typename eT, typename T1>
+inline
+void
+arma_assert_cube_as_mat(const Mat<eT>& M, const T1& Q, const char* x, const bool check_compat_size)
+  {
+  const u32 Q_n_rows   = Q.n_rows;
+  const u32 Q_n_cols   = Q.n_cols;
+  const u32 Q_n_slices = Q.n_slices;
+  
+  const u32 M_vec_state = M.vec_state;
+  
+  if(M_vec_state == 0)
+    {
+    if( ( (Q_n_rows == 1) || (Q_n_cols == 1) || (Q_n_slices == 1) ) == false )
+      {
+      std::stringstream tmp;
+        
+      tmp << x
+          << ": can't interpret cube with dimensions "
+          << Q_n_rows << 'x' << Q_n_cols << 'x' << Q_n_slices 
+          << " as a matrix; one of the dimensions must be 1";
+      
+      arma_stop( tmp.str() );
+      }
+    }
+  else
+    {
+    if(Q_n_slices == 1)
+      {
+      if( (M_vec_state == 1) && (Q_n_cols != 1) )
+        {
+        std::stringstream tmp;
+        
+        tmp << x
+            << ": can't interpret cube with dimensions "
+            << Q_n_rows << 'x' << Q_n_cols << 'x' << Q_n_slices
+            << " as a column vector";
+        
+        arma_stop( tmp.str() );
+        }
+      
+      if( (M_vec_state == 2) && (Q_n_rows != 1) )
+        {
+        std::stringstream tmp;
+        
+        tmp << x
+            << ": can't interpret cube with dimensions "
+            << Q_n_rows << 'x' << Q_n_cols << 'x' << Q_n_slices
+            << " as a row vector";
+        
+        arma_stop( tmp.str() );
+        }
+      }
+    else
+      {
+      if( (Q_n_cols != 1) && (Q_n_rows != 1) )
+        {
+        std::stringstream tmp;
+        
+        tmp << x
+            << ": can't interpret cube with dimensions "
+            << Q_n_rows << 'x' << Q_n_cols << 'x' << Q_n_slices
+            << " as a vector";
+        
+        arma_stop( tmp.str() );
+        }
+      }
+    }
+  
+  
+  if(check_compat_size == true)
+    {
+    const u32 M_n_rows = M.n_rows;
+    const u32 M_n_cols = M.n_cols;
+    
+    if(M_vec_state == 0)
+      {
+      if(
+          (
+          ( (Q_n_rows == M_n_rows) && (Q_n_cols   == M_n_cols) )
+          ||
+          ( (Q_n_rows == M_n_rows) && (Q_n_slices == M_n_cols) )
+          ||
+          ( (Q_n_cols == M_n_cols) && (Q_n_slices == M_n_rows) )
+          )
+          == false
+        )
+        {
+        std::stringstream tmp;
+        
+        tmp << x
+            << ": can't interpret cube with dimenensions "
+            << Q_n_rows << 'x' << Q_n_cols << 'x' << Q_n_slices
+            << " as a matrix with dimensions "
+            << M_n_rows << 'x' << M_n_cols;
+        
+        arma_stop( tmp.str() );
+        }
+      }
+    else
+      {
+      if(Q_n_slices == 1)
+        {
+        if( (M_vec_state == 1) && (Q_n_rows != M_n_rows) )
+          {
+          std::stringstream tmp;
+          
+          tmp << x
+              << ": can't interpret cube with dimensions "
+              << Q_n_rows << 'x' << Q_n_cols << 'x' << Q_n_slices
+              << " as a column vector with dimensions "
+              << M_n_rows << 'x' << M_n_cols;
+          
+          arma_stop( tmp.str() );
+          }
+        
+        if( (M_vec_state == 2) && (Q_n_cols != M_n_cols) )
+          {
+          std::stringstream tmp;
+          
+          tmp << x
+              << ": can't interpret cube with dimensions "
+              << Q_n_rows << 'x' << Q_n_cols << 'x' << Q_n_slices
+              << " as a row vector with dimensions "
+              << M_n_rows << 'x' << M_n_cols;
+          
+          arma_stop( tmp.str() );
+          }
+        }
+      else
+        {
+        if( ( (M_n_cols == Q_n_slices) || (M_n_rows == Q_n_slices) ) == false )
+          {
+          std::stringstream tmp;
+          
+          tmp << x
+              << ": can't interpret cube with dimensions "
+              << Q_n_rows << 'x' << Q_n_cols << 'x' << Q_n_slices
+              << " as a vector with dimensions "
+              << M_n_rows << 'x' << M_n_cols;
+          
+          arma_stop( tmp.str() );
+          }
+        }
+      }
+    }
+  }
+
+
+
 //
 // functions for checking whether two matrices have dimensions that are compatible with the matrix multiply operation
 
@@ -764,21 +937,22 @@ arma_assert_mul_size(const subview<eT1>& A, const subview<eT2>& B, const char* x
 
 #if !defined(ARMA_NO_DEBUG) && !defined(NDEBUG)
   
-  #define arma_debug_print            arma_print
-  #define arma_debug_warn             arma_warn
-  #define arma_debug_check            arma_check
-  #define arma_debug_assert_same_size arma_assert_same_size
-  #define arma_debug_assert_mul_size  arma_assert_mul_size
-  
+  #define arma_debug_print              arma_print
+  #define arma_debug_warn               arma_warn
+  #define arma_debug_check              arma_check
+  #define arma_debug_assert_same_size   arma_assert_same_size
+  #define arma_debug_assert_mul_size    arma_assert_mul_size
+  #define arma_debug_assert_cube_as_mat arma_assert_cube_as_mat
 #else
   
   #undef ARMA_EXTRA_DEBUG
   
-  #define arma_debug_print            true ? (void)0 : arma_print
-  #define arma_debug_warn             true ? (void)0 : arma_warn
-  #define arma_debug_check            true ? (void)0 : arma_check
-  #define arma_debug_assert_same_size true ? (void)0 : arma_assert_same_size
-  #define arma_debug_assert_mul_size  true ? (void)0 : arma_assert_mul_size
+  #define arma_debug_print              true ? (void)0 : arma_print
+  #define arma_debug_warn               true ? (void)0 : arma_warn
+  #define arma_debug_check              true ? (void)0 : arma_check
+  #define arma_debug_assert_same_size   true ? (void)0 : arma_assert_same_size
+  #define arma_debug_assert_mul_size    true ? (void)0 : arma_assert_mul_size
+  #define arma_debug_assert_cube_as_mat true ? (void)0 : arma_debug_assert_cube_as_mat
 
 #endif
 

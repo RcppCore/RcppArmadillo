@@ -45,6 +45,9 @@ class Col : public Mat<eT>
   template<typename T1, typename T2>
   inline explicit Col(const Base<pod_type,T1>& A, const Base<pod_type,T2>& B);
   
+  template<typename T1> inline                  Col(const BaseCube<eT,T1>& X);
+  template<typename T1> inline const Col& operator=(const BaseCube<eT,T1>& X);
+  
   inline                  Col(const subview_cube<eT>& X);
   inline const Col& operator=(const subview_cube<eT>& X);
   

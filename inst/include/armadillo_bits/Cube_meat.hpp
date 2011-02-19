@@ -750,7 +750,9 @@ Cube<eT>::slices(const u32 in_slice1, const u32 in_slice2)
     "Cube::slices(): indices out of bounds or incorrectly used"
     );
   
-  return subview_cube<eT>(*this, 0, 0, in_slice1, ( (n_rows>0) ? n_rows-1 : 0 ), ( (n_cols>0) ? n_cols-1 : 0 ), in_slice2);
+  const u32 subcube_n_slices = in_slice2 - in_slice1 + 1;
+  
+  return subview_cube<eT>(*this, 0, 0, in_slice1, n_rows, n_cols, subcube_n_slices);
   }
 
 
@@ -769,7 +771,9 @@ Cube<eT>::slices(const u32 in_slice1, const u32 in_slice2) const
     "Cube::rows(): indices out of bounds or incorrectly used"
     );
   
-  return subview_cube<eT>(*this, 0, 0, in_slice1, ( (n_rows>0) ? n_rows-1 : 0 ), ( (n_cols>0) ? n_cols-1 : 0 ), in_slice2);
+  const u32 subcube_n_slices = in_slice2 - in_slice1 + 1;
+  
+  return subview_cube<eT>(*this, 0, 0, in_slice1, n_rows, n_cols, subcube_n_slices);
   }
 
 
@@ -789,7 +793,11 @@ Cube<eT>::subcube(const u32 in_row1, const u32 in_col1, const u32 in_slice1, con
     "Cube::subcube(): indices out of bounds or incorrectly used"
     );
   
-  return subview_cube<eT>(*this, in_row1, in_col1, in_slice1, in_row2, in_col2, in_slice2);
+  const u32 subcube_n_rows   = in_row2   - in_row1   + 1;
+  const u32 subcube_n_cols   = in_col2   - in_col1   + 1;
+  const u32 subcube_n_slices = in_slice2 - in_slice1 + 1;
+  
+  return subview_cube<eT>(*this, in_row1, in_col1, in_slice1, subcube_n_rows, subcube_n_cols, subcube_n_slices);
   }
 
 
@@ -809,65 +817,123 @@ Cube<eT>::subcube(const u32 in_row1, const u32 in_col1, const u32 in_slice1, con
     "Cube::subcube(): indices out of bounds or incorrectly used"
     );
     
-  return subview_cube<eT>(*this, in_row1, in_col1, in_slice1, in_row2, in_col2, in_slice2);
+  const u32 subcube_n_rows   = in_row2   - in_row1   + 1;
+  const u32 subcube_n_cols   = in_col2   - in_col1   + 1;
+  const u32 subcube_n_slices = in_slice2 - in_slice1 + 1;
+  
+  return subview_cube<eT>(*this, in_row1, in_col1, in_slice1, subcube_n_rows, subcube_n_cols, subcube_n_slices);
   }
 
 
 
 //! creation of subview_cube (generic subcube)
 template<typename eT>
-arma_inline
+inline
 subview_cube<eT>
 Cube<eT>::subcube(const span& row_span, const span& col_span, const span& slice_span)
   {
   arma_extra_debug_sigprint();
   
-  const u32 in_row1 = row_span.a;
-  const u32 in_row2 = row_span.b;
+  const bool row_all   = row_span.whole;
+  const bool col_all   = col_span.whole;
+  const bool slice_all = slice_span.whole;
   
-  const u32 in_col1 = col_span.a;
-  const u32 in_col2 = col_span.b;
+  const u32 local_n_rows   = n_rows;
+  const u32 local_n_cols   = n_cols;
+  const u32 local_n_slices = n_slices;
   
-  const u32 in_slice1 = slice_span.a;
-  const u32 in_slice2 = slice_span.b;
+  const u32 in_row1          = row_all   ? 0              : row_span.a;
+  const u32 in_row2          =                              row_span.b;
+  const u32 subcube_n_rows   = row_all   ? local_n_rows   : in_row2 - in_row1 + 1;
+  
+  const u32 in_col1          = col_all   ? 0              : col_span.a;
+  const u32 in_col2          =                              col_span.b;
+  const u32 subcube_n_cols   = col_all   ? local_n_cols   : in_col2 - in_col1 + 1;
+  
+  const u32 in_slice1        = slice_all ? 0              : slice_span.a;
+  const u32 in_slice2        =                              slice_span.b;
+  const u32 subcube_n_slices = slice_all ? local_n_slices : in_slice2 - in_slice1 + 1;
   
   arma_debug_check
     (
-    (in_row1 >  in_row2) || (in_col1 >  in_col2) || (in_slice1 >  in_slice2) ||
-    (in_row2 >= n_rows)  || (in_col2 >= n_cols)  || (in_slice2 >= n_slices),
+    ( row_all   ? false : ((in_row1   >  in_row2)   || (in_row2   >= local_n_rows))   )
+    ||
+    ( col_all   ? false : ((in_col1   >  in_col2)   || (in_col2   >= local_n_cols))   )
+    ||
+    ( slice_all ? false : ((in_slice1 >  in_slice2) || (in_slice2 >= local_n_slices)) )
+    ,
     "Cube::subcube(): indices out of bounds or incorrectly used"
     );
   
-  return subview_cube<eT>(*this, in_row1, in_col1, in_slice1, in_row2, in_col2, in_slice2);
+  return subview_cube<eT>(*this, in_row1, in_col1, in_slice1, subcube_n_rows, subcube_n_cols, subcube_n_slices);
   }
 
 
 
 //! creation of subview_cube (generic subcube)
 template<typename eT>
-arma_inline
+inline
 const subview_cube<eT>
 Cube<eT>::subcube(const span& row_span, const span& col_span, const span& slice_span) const
   {
   arma_extra_debug_sigprint();
   
-  const u32 in_row1 = row_span.a;
-  const u32 in_row2 = row_span.b;
+  const bool row_all   = row_span.whole;
+  const bool col_all   = col_span.whole;
+  const bool slice_all = slice_span.whole;
   
-  const u32 in_col1 = col_span.a;
-  const u32 in_col2 = col_span.b;
+  const u32 local_n_rows   = n_rows;
+  const u32 local_n_cols   = n_cols;
+  const u32 local_n_slices = n_slices;
   
-  const u32 in_slice1 = slice_span.a;
-  const u32 in_slice2 = slice_span.b;
+  const u32 in_row1          = row_all   ? 0              : row_span.a;
+  const u32 in_row2          =                              row_span.b;
+  const u32 subcube_n_rows   = row_all   ? local_n_rows   : in_row2 - in_row1 + 1;
+  
+  const u32 in_col1          = col_all   ? 0              : col_span.a;
+  const u32 in_col2          =                              col_span.b;
+  const u32 subcube_n_cols   = col_all   ? local_n_cols   : in_col2 - in_col1 + 1;
+  
+  const u32 in_slice1        = slice_all ? 0              : slice_span.a;
+  const u32 in_slice2        =                              slice_span.b;
+  const u32 subcube_n_slices = slice_all ? local_n_slices : in_slice2 - in_slice1 + 1;
   
   arma_debug_check
     (
-    (in_row1 >  in_row2) || (in_col1 >  in_col2) || (in_slice1 >  in_slice2) ||
-    (in_row2 >= n_rows)  || (in_col2 >= n_cols)  || (in_slice2 >= n_slices),
+    ( row_all   ? false : ((in_row1   >  in_row2)   || (in_row2   >= local_n_rows))   )
+    ||
+    ( col_all   ? false : ((in_col1   >  in_col2)   || (in_col2   >= local_n_cols))   )
+    ||
+    ( slice_all ? false : ((in_slice1 >  in_slice2) || (in_slice2 >= local_n_slices)) )
+    ,
     "Cube::subcube(): indices out of bounds or incorrectly used"
     );
-    
-  return subview_cube<eT>(*this, in_row1, in_col1, in_slice1, in_row2, in_col2, in_slice2);
+  
+  return subview_cube<eT>(*this, in_row1, in_col1, in_slice1, subcube_n_rows, subcube_n_cols, subcube_n_slices);
+  }
+
+
+
+template<typename eT>
+inline
+subview_cube<eT>
+Cube<eT>::operator()(const span& row_span, const span& col_span, const span& slice_span)
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).subcube(row_span, col_span, slice_span);
+  }
+
+
+
+template<typename eT>
+inline
+const subview_cube<eT>
+Cube<eT>::operator()(const span& row_span, const span& col_span, const span& slice_span) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).subcube(row_span, col_span, slice_span);
   }
 
 

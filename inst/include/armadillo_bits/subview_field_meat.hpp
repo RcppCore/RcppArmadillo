@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -31,18 +31,16 @@ subview_field<oT>::subview_field
   const field<oT>& in_f,
   const u32        in_row1,
   const u32        in_col1,
-  const u32        in_row2,
-  const u32        in_col2
+  const u32        in_n_rows,
+  const u32        in_n_cols
   )
   : f(in_f)
   , f_ptr(0)
   , aux_row1(in_row1)
   , aux_col1(in_col1)
-  , aux_row2(in_row2)
-  , aux_col2(in_col2)
-  , n_rows(1 + in_row2 - in_row1)
-  , n_cols(1 + in_col2 - in_col1)
-  , n_elem(n_rows*n_cols)
+  , n_rows(in_n_rows)
+  , n_cols(in_n_cols)
+  , n_elem(in_n_rows*in_n_cols)
   {
   arma_extra_debug_sigprint();
   }
@@ -56,18 +54,16 @@ subview_field<oT>::subview_field
         field<oT>& in_f,
   const u32        in_row1,
   const u32        in_col1,
-  const u32        in_row2,
-  const u32        in_col2
+  const u32        in_n_rows,
+  const u32        in_n_cols
   )
   : f(in_f)
   , f_ptr(&in_f)
   , aux_row1(in_row1)
   , aux_col1(in_col1)
-  , aux_row2(in_row2)
-  , aux_col2(in_col2)
-  , n_rows(1 + in_row2 - in_row1)
-  , n_cols(1 + in_col2 - in_col1)
-  , n_elem(n_rows*n_cols)
+  , n_rows(in_n_rows)
+  , n_cols(in_n_cols)
+  , n_elem(in_n_rows*in_n_cols)
   {
   arma_extra_debug_sigprint();
   }
@@ -107,7 +103,7 @@ subview_field<oT>::operator= (const subview_field<oT>& x_in)
   const bool overlap = check_overlap(x_in);
         
         field<oT>*         tmp_field   = overlap ? new field<oT>(x_in.f) : 0;
-  const subview_field<oT>* tmp_subview = overlap ? new subview_field<oT>(*tmp_field, x_in.aux_row1, x_in.aux_col1, x_in.aux_row2, x_in.aux_col2) : 0;
+  const subview_field<oT>* tmp_subview = overlap ? new subview_field<oT>(*tmp_field, x_in.aux_row1, x_in.aux_col1, x_in.n_rows, x_in.n_cols) : 0;
   const subview_field<oT>& x           = overlap ? (*tmp_subview) : x_in;
   
   subview_field<oT>& t = *this;
@@ -270,23 +266,42 @@ subview_field<oT>::check_overlap(const subview_field<oT>& x) const
     }
   else
     {
-    const bool row_overlap =
-      (
-      ( (x.aux_row1 >= t.aux_row1) && (x.aux_row1 <= t.aux_row2) )
-      || 
-      ( (x.aux_row2 >= t.aux_row1) && (x.aux_row2 <= t.aux_row2) )
-      );
-    
-    const bool col_overlap =
-      (
-      ( (x.aux_col1 >= t.aux_col1) && (x.aux_col1 <= t.aux_col2) )
-      || 
-      ( (x.aux_col2 >= t.aux_col1) && (x.aux_col2 <= t.aux_col2) )
-      );
-    
-    const bool overlap = ( (row_overlap == true) && (col_overlap == true) );
-    
-    return overlap;
+    if( (t.n_elem == 0) || (x.n_elem == 0) )
+      {
+      return false;
+      }
+    else
+      {
+      const u32 t_aux_row1 = t.aux_row1;
+      const u32 t_aux_row2 = t_aux_row1 + t.n_rows - 1;
+      
+      const u32 t_aux_col1 = t.aux_col1;
+      const u32 t_aux_col2 = t_aux_col1 + t.n_cols - 1;
+      
+      const u32 x_aux_row1 = x.aux_row1;
+      const u32 x_aux_row2 = x_aux_row1 + x.n_rows - 1;
+      
+      const u32 x_aux_col1 = x.aux_col1;
+      const u32 x_aux_col2 = x_aux_col1 + x.n_cols - 1;
+      
+      const bool row_overlap =
+        (
+        ( (x_aux_row1 >= t_aux_row1) && (x_aux_row1 <= t_aux_row2) )
+        || 
+        ( (x_aux_row2 >= t_aux_row1) && (x_aux_row2 <= t_aux_row2) )
+        );
+      
+      const bool col_overlap =
+        (
+        ( (x_aux_col1 >= t_aux_col1) && (x_aux_col1 <= t_aux_col2) )
+        || 
+        ( (x_aux_col2 >= t_aux_col1) && (x_aux_col2 <= t_aux_col2) )
+        );
+      
+      const bool overlap = ( (row_overlap == true) && (col_overlap == true) );
+      
+      return overlap;
+      }
     }
   }
 

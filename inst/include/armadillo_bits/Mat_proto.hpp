@@ -71,7 +71,15 @@ class Mat : public Base< eT, Mat<eT> >
   inline const Mat& operator*=(const Mat& m);
   inline const Mat& operator%=(const Mat& m);
   inline const Mat& operator/=(const Mat& m);
-
+  
+  template<typename T1> inline                   Mat(const BaseCube<eT,T1>& X);
+  template<typename T1> inline const Mat&  operator=(const BaseCube<eT,T1>& X);
+  template<typename T1> inline const Mat& operator+=(const BaseCube<eT,T1>& X);
+  template<typename T1> inline const Mat& operator-=(const BaseCube<eT,T1>& X);
+  template<typename T1> inline const Mat& operator*=(const BaseCube<eT,T1>& X);
+  template<typename T1> inline const Mat& operator%=(const BaseCube<eT,T1>& X);
+  template<typename T1> inline const Mat& operator/=(const BaseCube<eT,T1>& X);
+  
   template<typename T1, typename T2>
   inline explicit Mat(const Base<pod_type,T1>& A, const Base<pod_type,T2>& B);
 
@@ -111,27 +119,21 @@ class Mat : public Base< eT, Mat<eT> >
   
   
   inline mat_injector<Mat> operator<<(const eT val);
-  inline mat_injector<Mat> operator<<(const injector_helper x);
+  inline mat_injector<Mat> operator<<(const injector_end_of_row& x);
   
   
   arma_inline       subview_row<eT> row(const u32 row_num);
   arma_inline const subview_row<eT> row(const u32 row_num) const;
   
-  arma_inline       subview_row<eT> operator()(const u32 row_num, const span_helper);
-  arma_inline const subview_row<eT> operator()(const u32 row_num, const span_helper) const;
-  
-  arma_inline       subview_row<eT> operator()(const u32 row_num, const span& col_span);
-  arma_inline const subview_row<eT> operator()(const u32 row_num, const span& col_span) const;
+  inline            subview_row<eT> operator()(const u32 row_num, const span& col_span);
+  inline      const subview_row<eT> operator()(const u32 row_num, const span& col_span) const;
   
   
   arma_inline       subview_col<eT> col(const u32 col_num);
   arma_inline const subview_col<eT> col(const u32 col_num) const;
   
-  arma_inline       subview_col<eT> operator()(const span_helper,    const u32 col_num);
-  arma_inline const subview_col<eT> operator()(const span_helper,    const u32 col_num) const;
-  
-  arma_inline       subview_col<eT> operator()(const span& row_span, const u32 col_num);
-  arma_inline const subview_col<eT> operator()(const span& row_span, const u32 col_num) const;
+  inline            subview_col<eT> operator()(const span& row_span, const u32 col_num);
+  inline      const subview_col<eT> operator()(const span& row_span, const u32 col_num) const;
   
   inline            Col<eT>  unsafe_col(const u32 col_num);
   inline      const Col<eT>  unsafe_col(const u32 col_num) const;
@@ -147,11 +149,11 @@ class Mat : public Base< eT, Mat<eT> >
   arma_inline const subview<eT> submat(const u32 in_row1, const u32 in_col1, const u32 in_row2, const u32 in_col2) const;
   
   
-  arma_inline       subview<eT> submat    (const span& row_span, const span& col_span);
-  arma_inline const subview<eT> submat    (const span& row_span, const span& col_span) const;
+  inline            subview<eT> submat    (const span& row_span, const span& col_span);
+  inline      const subview<eT> submat    (const span& row_span, const span& col_span) const;
   
-  arma_inline       subview<eT> operator()(const span& row_span, const span& col_span);
-  arma_inline const subview<eT> operator()(const span& row_span, const span& col_span) const;
+  inline            subview<eT> operator()(const span& row_span, const span& col_span);
+  inline      const subview<eT> operator()(const span& row_span, const span& col_span) const;
   
   
   template<typename T1> arma_inline       subview_elem1<eT,T1> elem(const Base<u32,T1>& a);
@@ -262,9 +264,7 @@ class Mat : public Base< eT, Mat<eT> >
   
   arma_inline arma_warn_unused bool in_range(const u32         in_row,   const u32         in_col  ) const;
   arma_inline arma_warn_unused bool in_range(const span&       row_span, const u32         in_col  ) const;
-  arma_inline arma_warn_unused bool in_range(const span&       row_span, const span_helper junk    ) const;
   arma_inline arma_warn_unused bool in_range(const u32         in_row,   const span&       col_span) const;
-  arma_inline arma_warn_unused bool in_range(const span_helper junk,     const span&       col_span) const;
   arma_inline arma_warn_unused bool in_range(const span&       row_span, const span&       col_span) const;
   
   arma_inline arma_warn_unused       eT* colptr(const u32 in_col);

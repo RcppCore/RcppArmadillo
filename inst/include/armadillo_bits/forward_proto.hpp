@@ -100,11 +100,11 @@ template<typename T1> class ProxyCube;
 //! @{
 
 
-enum injector_helper
-  {
-  endr  //!< indicate "end of row", similar conceptual meaning to std::endl
-  };
+struct injector_end_of_row {};
 
+static const injector_end_of_row endr = injector_end_of_row();
+//!< endr indicates "end of row" when using the << operator;
+//!< similar conceptual meaning to std::endl
 
 //! @}
 

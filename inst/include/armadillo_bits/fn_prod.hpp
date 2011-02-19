@@ -125,13 +125,13 @@ prod(const subview_row<eT>& S)
   
   const Mat<eT>& X = S.m;
   
-  const u32 row       = S.aux_row1;
-  const u32 start_col = S.aux_col1;
-  const u32 end_col   = S.aux_col2;
+  const u32 row            = S.aux_row1;
+  const u32 start_col      = S.aux_col1;
+  const u32 end_col_plus_1 = start_col + S.n_cols;
   
-  eT val = X.at(row,start_col);
+  eT val = eT(1);
   
-  for(u32 col=start_col+1; col<=end_col; ++col)
+  for(u32 col=start_col; col<end_col_plus_1; ++col)
     {
     val *= X.at(row,col);
     }

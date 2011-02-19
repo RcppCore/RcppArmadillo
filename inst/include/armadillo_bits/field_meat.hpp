@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // Copyright (C) 2009-2010 Ian Cullinan
 // 
 // This file is part of the Armadillo C++ library.
@@ -315,7 +315,7 @@ field<oT>::operator<<(const oT& val)
 template<typename oT>
 inline
 field_injector< field<oT> >
-field<oT>::operator<<(const injector_helper x)
+field<oT>::operator<<(const injector_end_of_row& x)
   {
   return field_injector< field<oT> >(*this, x);
   }
@@ -331,7 +331,8 @@ field<oT>::row(const u32 row_num)
   arma_extra_debug_sigprint();
   
   arma_debug_check( (row_num >= n_rows), "field::row(): row out of bounds" );
-  return subview_field<oT>(*this, row_num, 0, row_num, n_cols-1);
+  
+  return subview_field<oT>(*this, row_num, 0, 1, n_cols);
   }
 
 
@@ -345,7 +346,8 @@ field<oT>::row(const u32 row_num) const
   arma_extra_debug_sigprint();
   
   arma_debug_check( (row_num >= n_rows), "field::row(): row out of bounds" );
-  return subview_field<oT>(*this, row_num, 0, row_num, n_cols-1);
+  
+  return subview_field<oT>(*this, row_num, 0, 1, n_cols);
   }
 
 
@@ -359,7 +361,8 @@ field<oT>::col(const u32 col_num)
   arma_extra_debug_sigprint();
   
   arma_debug_check( (col_num >= n_cols), "field::col(): out of bounds");
-  return subview_field<oT>(*this, 0, col_num, n_rows-1, col_num);
+  
+  return subview_field<oT>(*this, 0, col_num, n_rows, 1);
   }
 
 
@@ -373,7 +376,8 @@ field<oT>::col(const u32 col_num) const
   arma_extra_debug_sigprint();
   
   arma_debug_check( (col_num >= n_cols), "field::col(): out of bounds");
-  return subview_field<oT>(*this, 0, col_num, n_rows-1, col_num);
+  
+  return subview_field<oT>(*this, 0, col_num, n_rows, 1);
   }
 
 
@@ -392,7 +396,9 @@ field<oT>::rows(const u32 in_row1, const u32 in_row2)
     "field::rows(): indicies out of bounds or incorrectly used"
     );
   
-  return subview_field<oT>(*this, in_row1, 0, in_row2, n_cols-1);
+  const u32 subfield_n_rows = in_row2 - in_row1 + 1;
+  
+  return subview_field<oT>(*this, in_row1, 0, subfield_n_rows, n_cols);
   }
 
 
@@ -411,7 +417,9 @@ field<oT>::rows(const u32 in_row1, const u32 in_row2) const
     "field::rows(): indicies out of bounds or incorrectly used"
     );
   
-  return subview_field<oT>(*this, in_row1, 0, in_row2, n_cols-1);
+  const u32 subfield_n_rows = in_row2 - in_row1 + 1;
+  
+  return subview_field<oT>(*this, in_row1, 0, subfield_n_rows, n_cols);
   }
 
 
@@ -430,7 +438,9 @@ field<oT>::cols(const u32 in_col1, const u32 in_col2)
     "field::cols(): indicies out of bounds or incorrectly used"
     );
   
-  return subview_field<oT>(*this, 0, in_col1, n_rows-1, in_col2);
+  const u32 subfield_n_cols = in_col2 - in_col1 + 1;
+  
+  return subview_field<oT>(*this, 0, in_col1, n_rows, subfield_n_cols);
   }
 
 
@@ -449,7 +459,9 @@ field<oT>::cols(const u32 in_col1, const u32 in_col2) const
     "field::cols(): indicies out of bounds or incorrectly used"
     );
   
-  return subview_field<oT>(*this, 0, in_col1, n_rows-1, in_col2);
+  const u32 subfield_n_cols = in_col2 - in_col1 + 1;
+  
+  return subview_field<oT>(*this, 0, in_col1, n_rows, subfield_n_cols);
   }
 
 
@@ -468,7 +480,10 @@ field<oT>::subfield(const u32 in_row1, const u32 in_col1, const u32 in_row2, con
     "field::subfield(): indices out of bounds or incorrectly used"
     );
   
-  return subview_field<oT>(*this, in_row1, in_col1, in_row2, in_col2);
+  const u32 subfield_n_rows = in_row2 - in_row1 + 1;
+  const u32 subfield_n_cols = in_col2 - in_col1 + 1;
+  
+  return subview_field<oT>(*this, in_row1, in_col1, subfield_n_rows, subfield_n_cols);
   }
 
 
@@ -487,7 +502,10 @@ field<oT>::subfield(const u32 in_row1, const u32 in_col1, const u32 in_row2, con
     "field::subfield(): indices out of bounds or incorrectly used"
     );
   
-  return subview_field<oT>(*this, in_row1, in_col1, in_row2, in_col2);
+  const u32 subfield_n_rows = in_row2 - in_row1 + 1;
+  const u32 subfield_n_cols = in_col2 - in_col1 + 1;
+  
+  return subview_field<oT>(*this, in_row1, in_col1, subfield_n_rows, subfield_n_cols);
   }
 
 

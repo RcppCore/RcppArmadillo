@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -27,12 +27,9 @@ class subview : public Base<eT, subview<eT> >
   
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
-
+  
   const u32 aux_row1;
   const u32 aux_col1;
-  
-  const u32 aux_row2;
-  const u32 aux_col2;
   
   const u32 n_rows;
   const u32 n_cols;
@@ -41,8 +38,8 @@ class subview : public Base<eT, subview<eT> >
   
   protected:
   
-  arma_inline subview(const Mat<eT>& in_m, const u32 in_row1, const u32 in_col1, const u32 in_row2,  const u32 in_col2);
-  arma_inline subview(      Mat<eT>& in_m, const u32 in_row1, const u32 in_col1, const u32 in_row2,  const u32 in_col2);
+  arma_inline subview(const Mat<eT>& in_m, const u32 in_row1, const u32 in_col1, const u32 in_n_rows, const u32 in_n_cols);
+  arma_inline subview(      Mat<eT>& in_m, const u32 in_row1, const u32 in_col1, const u32 in_n_rows, const u32 in_n_cols);
   
   
   public:
@@ -125,8 +122,8 @@ class subview_col : public subview<eT>
   arma_inline subview_col(const Mat<eT>& in_m, const u32 in_col);
   arma_inline subview_col(      Mat<eT>& in_m, const u32 in_col);
   
-  arma_inline subview_col(const Mat<eT>& in_m, const u32 in_col, const u32 in_row1, const u32 in_row2);
-  arma_inline subview_col(      Mat<eT>& in_m, const u32 in_col, const u32 in_row1, const u32 in_row2);
+  arma_inline subview_col(const Mat<eT>& in_m, const u32 in_col, const u32 in_row1, const u32 in_n_rows);
+  arma_inline subview_col(      Mat<eT>& in_m, const u32 in_col, const u32 in_row1, const u32 in_n_rows);
   
   private:
   
@@ -158,8 +155,8 @@ class subview_row : public subview<eT>
   arma_inline subview_row(const Mat<eT>& in_m, const u32 in_row);
   arma_inline subview_row(      Mat<eT>& in_m, const u32 in_row);
   
-  arma_inline subview_row(const Mat<eT>& in_m, const u32 in_row, const u32 in_col1, const u32 in_col2);
-  arma_inline subview_row(      Mat<eT>& in_m, const u32 in_row, const u32 in_col1, const u32 in_col2);
+  arma_inline subview_row(const Mat<eT>& in_m, const u32 in_row, const u32 in_col1, const u32 in_n_cols);
+  arma_inline subview_row(      Mat<eT>& in_m, const u32 in_row, const u32 in_col1, const u32 in_n_cols);
   
   
   private:

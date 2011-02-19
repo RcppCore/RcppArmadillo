@@ -91,11 +91,12 @@ mat_injector<T1>::mat_injector(T1& in_X, const typename mat_injector<T1>::elem_t
 
 template<typename T1>
 inline
-mat_injector<T1>::mat_injector(T1& in_X, const injector_helper x)
+mat_injector<T1>::mat_injector(T1& in_X, const injector_end_of_row& x)
   : X(in_X)
   , n_rows(1)
   {
   arma_extra_debug_sigprint();
+  arma_ignore(x);
   
   typedef typename mat_injector<T1>::elem_type eT;
   
@@ -111,10 +112,7 @@ mat_injector<T1>::mat_injector(T1& in_X, const injector_helper x)
     A[row] = new mat_injector_row<eT>;
     }
   
-  if(x == endr)
-    {
-    (*this).end_of_row();
-    }
+  (*this).end_of_row();
   }
 
 
@@ -167,7 +165,7 @@ mat_injector<T1>::~mat_injector()
     else
     if(is_Row<T1>::value == true)
       {
-      arma_debug_check( (max_n_rows > 1), "operator<<: incompatible dimensions" );
+      arma_debug_check( (max_n_rows > 1), "matrix initialisation: incompatible dimensions" );
       
       const u32 n_cols = (*(A[0])).n_cols;
       
@@ -180,7 +178,7 @@ mat_injector<T1>::~mat_injector()
       {
       const bool is_vec = ( (max_n_rows == 1) || (max_n_cols == 1) );
       
-      arma_debug_check( (is_vec == false), "operator<<: incompatible dimensions" );
+      arma_debug_check( (is_vec == false), "matrix initialisation: incompatible dimensions" );
       
       const u32 n_elem = (std::max)(max_n_rows, max_n_cols);
       
@@ -279,17 +277,49 @@ operator<<(const mat_injector<T1>& ref, const typename mat_injector<T1>::elem_ty
 template<typename T1>
 arma_inline
 const mat_injector<T1>&
-operator<<(const mat_injector<T1>& ref, const injector_helper x)
+operator<<(const mat_injector<T1>& ref, const injector_end_of_row& x)
   {
   arma_extra_debug_sigprint();
+  arma_ignore(x);
   
-  if(x == endr)
-    {
-    ref.end_of_row();
-    }
+  ref.end_of_row();
   
   return ref;
   }
+
+
+
+//// using a mixture of operator << and , doesn't work yet
+//// e.g. A << 1, 2, 3 << endr
+//// in the above "3 << endr" requires special handling.
+//// similarly, special handling is necessary for "endr << 3"
+//// 
+// template<typename T1>
+// arma_inline
+// const mat_injector<T1>&
+// operator,(const mat_injector<T1>& ref, const typename mat_injector<T1>::elem_type val)
+//   {
+//   arma_extra_debug_sigprint();
+//   
+//   ref.insert(val);
+//   
+//   return ref;
+//   }
+
+
+
+// template<typename T1>
+// arma_inline
+// const mat_injector<T1>&
+// operator,(const mat_injector<T1>& ref, const injector_end_of_row& x)
+//   {
+//   arma_extra_debug_sigprint();
+//   arma_ignore(x);
+//   
+//   ref.end_of_row();
+//   
+//   return ref;
+//   }
 
 
 
@@ -396,11 +426,12 @@ field_injector<T1>::field_injector(T1& in_X, const typename field_injector<T1>::
 
 template<typename T1>
 inline
-field_injector<T1>::field_injector(T1& in_X, const injector_helper x)
+field_injector<T1>::field_injector(T1& in_X, const injector_end_of_row& x)
   : X(in_X)
   , n_rows(1)
   {
   arma_extra_debug_sigprint();
+  arma_ignore(x);
   
   typedef typename field_injector<T1>::object_type oT;
   
@@ -416,10 +447,7 @@ field_injector<T1>::field_injector(T1& in_X, const injector_helper x)
     A[row] = new field_injector_row<oT>;
     }
   
-  if(x == endr)
-    {
-    (*this).end_of_row();
-    }
+  (*this).end_of_row();
   }
 
 
@@ -546,14 +574,12 @@ operator<<(const field_injector<T1>& ref, const typename field_injector<T1>::obj
 template<typename T1>
 arma_inline
 const field_injector<T1>&
-operator<<(const field_injector<T1>& ref, const injector_helper x)
+operator<<(const field_injector<T1>& ref, const injector_end_of_row& x)
   {
   arma_extra_debug_sigprint();
+  arma_ignore(x);
   
-  if(x == endr)
-    {
-    ref.end_of_row();
-    }
+  ref.end_of_row();
   
   return ref;
   }

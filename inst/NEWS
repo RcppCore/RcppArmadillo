@@ -1,3 +1,11 @@
+0.2.13  2011-02-18
+
+    o   Upgraded to Armadillo Version 1.1.4   “Manta Lodge”
+
+         * Faster sort()
+         * Updated installation to detect recent versions of Intel's MKL
+         * Added interpretation of arbitrary "flat" subcubes as matrices
+
 0.2.12  2011-02-15
 
     o   Upgraded to Armadillo Version 1.1.2   “Flood Kayak”
