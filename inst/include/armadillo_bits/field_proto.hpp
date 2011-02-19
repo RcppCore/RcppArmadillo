@@ -82,7 +82,7 @@ class field
   arma_inline const oT& operator()(const u32 row, const u32 col) const;
   
   inline field_injector<field> operator<<(const oT& val);
-  inline field_injector<field> operator<<(const injector_helper x);
+  inline field_injector<field> operator<<(const injector_end_of_row& x);
   
   inline       subview_field<oT> row(const u32 row_num);
   inline const subview_field<oT> row(const u32 row_num) const;

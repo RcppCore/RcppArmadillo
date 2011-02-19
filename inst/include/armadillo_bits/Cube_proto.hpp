@@ -97,8 +97,11 @@ class Cube : public BaseCube< eT, Cube<eT> >
   arma_inline       subview_cube<eT> subcube(const u32 in_row1, const u32 in_col1, const u32 in_slice1, const u32 in_row2, const u32 in_col2, const u32 in_slice2);
   arma_inline const subview_cube<eT> subcube(const u32 in_row1, const u32 in_col1, const u32 in_slice1, const u32 in_row2, const u32 in_col2, const u32 in_slice2) const;
   
-  arma_inline       subview_cube<eT> subcube(const span& row_span, const span& col_span, const span& slice_span);
-  arma_inline const subview_cube<eT> subcube(const span& row_span, const span& col_span, const span& slice_span) const;
+  inline            subview_cube<eT> subcube(const span& row_span, const span& col_span, const span& slice_span);
+  inline      const subview_cube<eT> subcube(const span& row_span, const span& col_span, const span& slice_span) const;
+  
+  inline            subview_cube<eT> operator()(const span& row_span, const span& col_span, const span& slice_span);
+  inline      const subview_cube<eT> operator()(const span& row_span, const span& col_span, const span& slice_span) const;
   
   
   inline void shed_slice(const u32 slice_num);

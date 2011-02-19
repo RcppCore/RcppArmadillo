@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -30,9 +30,6 @@ class subview_field
   const u32 aux_row1;
   const u32 aux_col1;
   
-  const u32 aux_row2;
-  const u32 aux_col2;
-  
   const u32 n_rows;
   const u32 n_cols;
   const u32 n_elem;
@@ -40,8 +37,8 @@ class subview_field
   
   protected:
   
-  arma_inline subview_field(const field<oT>& in_f, const u32 in_row1, const u32 in_col1, const u32 in_row2,  const u32 in_col2);
-  arma_inline subview_field(      field<oT>& in_f, const u32 in_row1, const u32 in_col1, const u32 in_row2,  const u32 in_col2);
+  arma_inline subview_field(const field<oT>& in_f, const u32 in_row1, const u32 in_col1, const u32 in_n_rows, const u32 in_n_cols);
+  arma_inline subview_field(      field<oT>& in_f, const u32 in_row1, const u32 in_col1, const u32 in_n_rows, const u32 in_n_cols);
   
   
   public:

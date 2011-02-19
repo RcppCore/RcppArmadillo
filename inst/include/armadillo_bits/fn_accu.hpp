@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -183,13 +183,16 @@ accu(const subview_row<eT>& S)
   
   const Mat<eT>& X = S.m;
   
-  const u32 row       = S.aux_row1;
-  const u32 start_col = S.aux_col1;
-  const u32 end_col   = S.aux_col2;
+  const u32 row            = S.aux_row1;
+  const u32 start_col      = S.aux_col1;
+  const u32 end_col_plus_1 = start_col + S.n_cols;
+  
+  // in future versions, S.n_cols might be equal to zero,
+  // hence the loop below has a "less than" condition
   
   eT val = eT(0);
   
-  for(u32 col=start_col; col<=end_col; ++col)
+  for(u32 col=start_col; col<end_col_plus_1; ++col)
     {
     val += X.at(row,col);
     }

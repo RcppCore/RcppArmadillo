@@ -18,8 +18,8 @@
 
 #define ARMA_VERSION_MAJOR 1
 #define ARMA_VERSION_MINOR 1
-#define ARMA_VERSION_PATCH 2
-#define ARMA_VERSION_NAME  "Flood Kayak"
+#define ARMA_VERSION_PATCH 4
+#define ARMA_VERSION_NAME  "Manta Lodge"
 
 
 

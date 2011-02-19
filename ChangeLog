@@ -1,3 +1,9 @@
+2011-02-18  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.2.13
+
+	* inst/include/*: Updated to Armadillo 1.1.4 "Manta Lodge"
+
 2011-02-15  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.2.12

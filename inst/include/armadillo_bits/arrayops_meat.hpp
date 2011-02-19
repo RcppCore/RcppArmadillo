@@ -30,51 +30,43 @@ arrayops::copy(eT* dest, const eT* src, const u32 n_elem)
     {
     switch(n_elem)
       {
-      case 0:
-        break;
-      
-      case 1:
-        *dest = *src;
-        break;
-        
-      case 2:
-        dest[0] = src[0];
-        dest[1] = src[1];
-        break;
-      
-      case 3:
-        dest[0] = src[0];
-        dest[1] = src[1];
-        dest[2] = src[2];
-        break;
-      
-      case 4:
-        dest[0] = src[0];
-        dest[1] = src[1];
-        dest[2] = src[2];
-        dest[3] = src[3];
-        break;
-      
       default:
-        if( n_elem <= (128/sizeof(eT)) )
-          {
-          u32 i,j;
-          
-          for(i=0, j=1; j<n_elem; i+=2, j+=2)
-            {
-            dest[i] = src[i];
-            dest[j] = src[j];
-            }
-          
-          if(i < n_elem)
-            {
-            dest[i] = src[i];
-            }
-          }
-        else
-          {
           std::memcpy(dest, src, n_elem*sizeof(eT));
-          }
+          break;
+      case 16:
+        dest[15] = src[15];
+      case 15:
+        dest[14] = src[14];
+      case 14:
+        dest[13] = src[13];
+      case 13:
+        dest[12] = src[12];
+      case 12:
+        dest[11] = src[11];
+      case 11:
+        dest[10] = src[10];
+      case 10:
+        dest[9] = src[9];
+      case 9:
+        dest[8] = src[8];
+      case 8:
+        dest[7] = src[7];
+      case 7:
+        dest[6] = src[6];
+      case 6:
+        dest[5] = src[5];
+      case 5:
+        dest[4] = src[4];
+      case 4:
+        dest[3] = src[3];
+      case 3:
+        dest[2] = src[2];
+      case 2:
+        dest[1] = src[1];
+      case 1:
+        dest[0] = src[0];
+      case 0:
+        ;
       }
     }
   #endif

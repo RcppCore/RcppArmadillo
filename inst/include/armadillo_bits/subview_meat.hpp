@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -25,16 +25,14 @@ subview<eT>::~subview()
 
 template<typename eT>
 arma_inline
-subview<eT>::subview(const Mat<eT>& in_m, const u32 in_row1, const u32 in_col1, const u32 in_row2,  const u32 in_col2)
+subview<eT>::subview(const Mat<eT>& in_m, const u32 in_row1, const u32 in_col1, const u32 in_n_rows, const u32 in_n_cols)
   : m(in_m)
   , m_ptr(0)
   , aux_row1(in_row1)
   , aux_col1(in_col1)
-  , aux_row2(in_row2)
-  , aux_col2(in_col2)
-  , n_rows(1 + in_row2 - in_row1)
-  , n_cols(1 + in_col2 - in_col1)
-  , n_elem(n_rows*n_cols)
+  , n_rows(in_n_rows)
+  , n_cols(in_n_cols)
+  , n_elem(in_n_rows*in_n_cols)
   {
   arma_extra_debug_sigprint();
   }
@@ -43,16 +41,14 @@ subview<eT>::subview(const Mat<eT>& in_m, const u32 in_row1, const u32 in_col1, 
 
 template<typename eT>
 arma_inline
-subview<eT>::subview(Mat<eT>& in_m, const u32 in_row1, const u32 in_col1, const u32 in_row2,  const u32 in_col2)
+subview<eT>::subview(Mat<eT>& in_m, const u32 in_row1, const u32 in_col1, const u32 in_n_rows, const u32 in_n_cols)
   : m(in_m)
   , m_ptr(&in_m)
   , aux_row1(in_row1)
   , aux_col1(in_col1)
-  , aux_row2(in_row2)
-  , aux_col2(in_col2)
-  , n_rows(1 + in_row2 - in_row1)
-  , n_cols(1 + in_col2 - in_col1)
-  , n_elem(n_rows*n_cols)
+  , n_rows(in_n_rows)
+  , n_cols(in_n_cols)
+  , n_elem(in_n_rows*in_n_cols)
   {
   arma_extra_debug_sigprint();
   }
@@ -575,7 +571,7 @@ subview<eT>::operator= (const subview<eT>& x_in)
   const bool overlap = check_overlap(x_in);
   
         Mat<eT>*     tmp_mat     = overlap ? new Mat<eT>(x_in.m) : 0;
-  const subview<eT>* tmp_subview = overlap ? new subview<eT>(*tmp_mat, x_in.aux_row1, x_in.aux_col1, x_in.aux_row2, x_in.aux_col2) : 0;
+  const subview<eT>* tmp_subview = overlap ? new subview<eT>(*tmp_mat, x_in.aux_row1, x_in.aux_col1, x_in.n_rows, x_in.n_cols) : 0;
   const subview<eT>&           x = overlap ? (*tmp_subview) : x_in;
   
   subview<eT>& t = *this;
@@ -619,7 +615,7 @@ subview<eT>::operator+= (const subview<eT>& x_in)
   const bool overlap = check_overlap(x_in);
   
         Mat<eT>*     tmp_mat     = overlap ? new Mat<eT>(x_in.m) : 0;
-  const subview<eT>* tmp_subview = overlap ? new subview(*tmp_mat, x_in.aux_row1, x_in.aux_col1, x_in.aux_row2, x_in.aux_col2) : 0;
+  const subview<eT>* tmp_subview = overlap ? new subview(*tmp_mat, x_in.aux_row1, x_in.aux_col1, x_in.n_rows, x_in.n_cols) : 0;
   const subview<eT>&           x = overlap ? (*tmp_subview) : x_in;
   
   subview<eT>& t = *this;
@@ -663,7 +659,7 @@ subview<eT>::operator-= (const subview<eT>& x_in)
   const bool overlap = check_overlap(x_in);
   
         Mat<eT>*     tmp_mat     = overlap ? new Mat<eT>(x_in.m) : 0;
-  const subview<eT>* tmp_subview = overlap ? new subview(*tmp_mat, x_in.aux_row1, x_in.aux_col1, x_in.aux_row2, x_in.aux_col2) : 0;
+  const subview<eT>* tmp_subview = overlap ? new subview(*tmp_mat, x_in.aux_row1, x_in.aux_col1, x_in.n_rows, x_in.n_cols) : 0;
   const subview<eT>&           x = overlap ? (*tmp_subview) : x_in;
   
   subview<eT>& t = *this;
@@ -708,7 +704,7 @@ subview<eT>::operator%= (const subview& x_in)
   const bool overlap = check_overlap(x_in);
   
         Mat<eT>*     tmp_mat     = overlap ? new Mat<eT>(x_in.m) : 0;
-  const subview<eT>* tmp_subview = overlap ? new subview(*tmp_mat, x_in.aux_row1, x_in.aux_col1, x_in.aux_row2, x_in.aux_col2) : 0;
+  const subview<eT>* tmp_subview = overlap ? new subview(*tmp_mat, x_in.aux_row1, x_in.aux_col1, x_in.n_rows, x_in.n_cols) : 0;
   const subview<eT>&           x = overlap ? (*tmp_subview) : x_in;
   
   subview<eT>& t = *this;
@@ -753,7 +749,7 @@ subview<eT>::operator/= (const subview& x_in)
   const bool overlap = check_overlap(x_in);
   
         Mat<eT>*     tmp_mat     = overlap ? new Mat<eT>(x_in.m) : 0;
-  const subview<eT>* tmp_subview = overlap ? new subview(*tmp_mat, x_in.aux_row1, x_in.aux_col1, x_in.aux_row2, x_in.aux_col2) : 0;
+  const subview<eT>* tmp_subview = overlap ? new subview(*tmp_mat, x_in.aux_row1, x_in.aux_col1, x_in.n_rows, x_in.n_cols) : 0;
   const subview<eT>&           x = overlap ? (*tmp_subview) : x_in;
   
   subview<eT>& t = *this;
@@ -969,23 +965,49 @@ subview<eT>::check_overlap(const subview<eT>& x) const
     }
   else
     {
-    const bool row_overlap =
-      (
-      ( (x.aux_row1 >= t.aux_row1) && (x.aux_row1 <= t.aux_row2) )
-      || 
-      ( (x.aux_row2 >= t.aux_row1) && (x.aux_row2 <= t.aux_row2) )
-      );
-    
-    const bool col_overlap =
-      (
-      ( (x.aux_col1 >= t.aux_col1) && (x.aux_col1 <= t.aux_col2) )
-      || 
-      ( (x.aux_col2 >= t.aux_col1) && (x.aux_col2 <= t.aux_col2) )
-      );
-    
-    const bool overlap = ( (row_overlap == true) && (col_overlap == true) );
-    
-    return overlap;
+    if( (t.n_elem == 0) || (x.n_elem == 0) )
+      {
+      // if t.n_elem is 0, t.n_rows or t.n_cols is 0
+      // if x.n_elem is 0, x.n_rows or x.n_cols is 0
+      return false;
+      }
+    else
+      {
+      // at this stage we have a guarantee that:
+      // t.n_rows > 0, t.n_cols > 0
+      // and
+      // x.n_rows > 0, x.n_cols > 0
+      
+      const u32 t_aux_row1 = t.aux_row1;
+      const u32 t_aux_row2 = t_aux_row1 + t.n_rows - 1;
+      
+      const u32 t_aux_col1 = t.aux_col1;
+      const u32 t_aux_col2 = t_aux_col1 + t.n_cols - 1;
+      
+      const u32 x_aux_row1 = x.aux_row1;
+      const u32 x_aux_row2 = x_aux_row1 + x.n_rows - 1;
+      
+      const u32 x_aux_col1 = x.aux_col1;
+      const u32 x_aux_col2 = x_aux_col1 + x.n_cols - 1;
+      
+      const bool row_overlap =
+        (
+        ( (x_aux_row1 >= t_aux_row1) && (x_aux_row1 <= t_aux_row2) )
+        || 
+        ( (x_aux_row2 >= t_aux_row1) && (x_aux_row2 <= t_aux_row2) )
+        );
+      
+      const bool col_overlap =
+        (
+        ( (x_aux_col1 >= t_aux_col1) && (x_aux_col1 <= t_aux_col2) )
+        || 
+        ( (x_aux_col2 >= t_aux_col1) && (x_aux_col2 <= t_aux_col2) )
+        );
+      
+      const bool overlap = ( (row_overlap == true) && (col_overlap == true) );
+      
+      return overlap;
+      }
     }
   }
 
@@ -1212,7 +1234,7 @@ subview<eT>::div_inplace(Mat<eT>& out, const subview<eT>& in)
 template<typename eT>
 arma_inline
 subview_col<eT>::subview_col(const Mat<eT>& in_m, const u32 in_col)
-  : subview<eT>(in_m, 0, in_col, in_m.n_rows-1, in_col)
+  : subview<eT>(in_m, 0, in_col, in_m.n_rows, 1)
   {
   arma_extra_debug_sigprint();
   }
@@ -1222,7 +1244,7 @@ subview_col<eT>::subview_col(const Mat<eT>& in_m, const u32 in_col)
 template<typename eT>
 arma_inline
 subview_col<eT>::subview_col(Mat<eT>& in_m, const u32 in_col)
-  : subview<eT>(in_m, 0, in_col, in_m.n_rows-1, in_col)
+  : subview<eT>(in_m, 0, in_col, in_m.n_rows, 1)
   {
   arma_extra_debug_sigprint();
   }
@@ -1231,8 +1253,8 @@ subview_col<eT>::subview_col(Mat<eT>& in_m, const u32 in_col)
 
 template<typename eT>
 arma_inline
-subview_col<eT>::subview_col(const Mat<eT>& in_m, const u32 in_col, const u32 in_row1, const u32 in_row2)
-  : subview<eT>(in_m, in_row1, in_col, in_row2, in_col)
+subview_col<eT>::subview_col(const Mat<eT>& in_m, const u32 in_col, const u32 in_row1, const u32 in_n_rows)
+  : subview<eT>(in_m, in_row1, in_col, in_n_rows, 1)
   {
   arma_extra_debug_sigprint();
   }
@@ -1241,8 +1263,8 @@ subview_col<eT>::subview_col(const Mat<eT>& in_m, const u32 in_col, const u32 in
 
 template<typename eT>
 arma_inline
-subview_col<eT>::subview_col(Mat<eT>& in_m, const u32 in_col, const u32 in_row1, const u32 in_row2)
-  : subview<eT>(in_m, in_row1, in_col, in_row2, in_col)
+subview_col<eT>::subview_col(Mat<eT>& in_m, const u32 in_col, const u32 in_row1, const u32 in_n_rows)
+  : subview<eT>(in_m, in_row1, in_col, in_n_rows, 1)
   {
   arma_extra_debug_sigprint();
   }
@@ -1299,7 +1321,7 @@ subview_col<eT>::operator=(const Base<eT,T1>& X)
 template<typename eT>
 arma_inline
 subview_row<eT>::subview_row(const Mat<eT>& in_m, const u32 in_row)
-  : subview<eT>(in_m, in_row, 0, in_row, in_m.n_cols-1)
+  : subview<eT>(in_m, in_row, 0, 1, in_m.n_cols)
   {
   arma_extra_debug_sigprint();
   }
@@ -1309,7 +1331,7 @@ subview_row<eT>::subview_row(const Mat<eT>& in_m, const u32 in_row)
 template<typename eT>
 arma_inline
 subview_row<eT>::subview_row(Mat<eT>& in_m, const u32 in_row)
-  : subview<eT>(in_m, in_row, 0, in_row, in_m.n_cols-1)
+  : subview<eT>(in_m, in_row, 0, 1, in_m.n_cols)
   {
   arma_extra_debug_sigprint();
   }
@@ -1318,8 +1340,8 @@ subview_row<eT>::subview_row(Mat<eT>& in_m, const u32 in_row)
 
 template<typename eT>
 arma_inline
-subview_row<eT>::subview_row(const Mat<eT>& in_m, const u32 in_row, const u32 in_col1, const u32 in_col2)
-  : subview<eT>(in_m, in_row, in_col1, in_row, in_col2)
+subview_row<eT>::subview_row(const Mat<eT>& in_m, const u32 in_row, const u32 in_col1, const u32 in_n_cols)
+  : subview<eT>(in_m, in_row, in_col1, 1, in_n_cols)
   {
   arma_extra_debug_sigprint();
   }
@@ -1328,8 +1350,8 @@ subview_row<eT>::subview_row(const Mat<eT>& in_m, const u32 in_row, const u32 in
 
 template<typename eT>
 arma_inline
-subview_row<eT>::subview_row(Mat<eT>& in_m, const u32 in_row, const u32 in_col1, const u32 in_col2)
-  : subview<eT>(in_m, in_row, in_col1, in_row, in_col2)
+subview_row<eT>::subview_row(Mat<eT>& in_m, const u32 in_row, const u32 in_col1, const u32 in_n_cols)
+  : subview<eT>(in_m, in_row, in_col1, 1, in_n_cols)
   {
   arma_extra_debug_sigprint();
   }
