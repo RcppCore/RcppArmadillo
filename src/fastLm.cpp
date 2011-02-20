@@ -24,23 +24,20 @@
 extern "C" SEXP fastLm(SEXP ys, SEXP Xs) {
 
     try {
-	Rcpp::NumericVector yr(ys);			// creates Rcpp vector from SEXP
-	Rcpp::NumericMatrix Xr(Xs);			// creates Rcpp matrix from SEXP
-	int n = Xr.nrow(), k = Xr.ncol();
-
-	arma::mat X(Xr.begin(), n, k, false);   	// reuses memory and avoids extra copy
-	arma::colvec y(yr.begin(), yr.size(), false);
+	arma::colvec y = Rcpp::as<arma::colvec>(ys);	// direct from SEXP to arma::mat
+	arma::mat X    = Rcpp::as<arma::mat>(Xs);
+	int df = X.n_rows - X.n_cols;
 
 	arma::colvec coef = arma::solve(X, y);      	// fit model y ~ X
-	arma::colvec res = y - X*coef;			// residuals
+	arma::colvec res  = y - X*coef;			// residuals
 
-	double s2 = std::inner_product(res.begin(), res.end(), res.begin(), double())/(n - k);
+	double s2 = std::inner_product(res.begin(), res.end(), res.begin(), double())/df;
 							// std.errors of coefficients
 	arma::colvec std_err = arma::sqrt(s2 * arma::diagvec( arma::pinv(arma::trans(X)*X) ));	
 
 	return Rcpp::List::create(Rcpp::Named("coefficients") = coef,
 				  Rcpp::Named("stderr")       = std_err,
-				  Rcpp::Named("df")           = n - k
+				  Rcpp::Named("df")           = df
 				  );
 
     } catch( std::exception &ex ) {

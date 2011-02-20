@@ -1,3 +1,8 @@
+2011-02-20  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/fastLm.cpp (fastLm): Further simplified and shortened by using
+	Rcpp::as<arma::mat>() on the input data
+
 2011-02-18  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.2.13
