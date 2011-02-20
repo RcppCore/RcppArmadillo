@@ -1,3 +1,8 @@
+0.2.14  2011-ab-cd
+
+    o   fastLm code simplified further by instantiating the Armadillo matrix
+        and vector directly from the SEXP coming from R
+
 0.2.13  2011-02-18
 
     o   Upgraded to Armadillo Version 1.1.4   “Manta Lodge”
