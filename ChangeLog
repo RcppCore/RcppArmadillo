@@ -4,8 +4,10 @@
 
 	* inst/include/*: Updated to Armadillo 1.1.6 “Baby Carpet Shark”
 
-	* inst/include/RcppArmadillo/Row_meat.h: Support RTTI via vec_stat
-	* inst/include/RcppArmadillo/Col_meat.h: Support RTTI via vec_stat
+	* inst/include/RcppArmadillo/Row_meat.h: Support RTTI via vec_state
+	* inst/include/RcppArmadillo/Col_meat.h: Support RTTI via vec_state
+
+	* inst/unitTests/runit.RcppArmadillo.R: Added unit test for above
 
 2011-02-28  Dirk Eddelbuettel  <edd@debian.org>
 
