@@ -181,10 +181,11 @@ class Cube : public BaseCube< eT, Cube<eT> >
   arma_inline arma_warn_unused bool is_finite() const;
   arma_inline arma_warn_unused bool is_empty()  const;
   
-  // TODO: expand .in_range() to handle ranges specified by span
-  arma_inline arma_warn_unused bool in_range(const u32 i) const;
-  arma_inline arma_warn_unused bool in_range(const u32 in_row, const u32 in_col, const u32 in_slice) const;
+  arma_inline arma_warn_unused bool in_range(const u32   i) const;
+  arma_inline arma_warn_unused bool in_range(const span& x) const;
   
+  arma_inline arma_warn_unused bool in_range(const u32   in_row,   const u32   in_col,   const u32   in_slice)   const;
+       inline arma_warn_unused bool in_range(const span& row_span, const span& col_span, const span& slice_span) const;
   
   arma_inline arma_warn_unused       eT* memptr();
   arma_inline arma_warn_unused const eT* memptr() const;

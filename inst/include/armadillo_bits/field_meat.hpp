@@ -396,9 +396,9 @@ field<oT>::rows(const u32 in_row1, const u32 in_row2)
     "field::rows(): indicies out of bounds or incorrectly used"
     );
   
-  const u32 subfield_n_rows = in_row2 - in_row1 + 1;
+  const u32 sub_n_rows = in_row2 - in_row1 + 1;
   
-  return subview_field<oT>(*this, in_row1, 0, subfield_n_rows, n_cols);
+  return subview_field<oT>(*this, in_row1, 0, sub_n_rows, n_cols);
   }
 
 
@@ -417,9 +417,9 @@ field<oT>::rows(const u32 in_row1, const u32 in_row2) const
     "field::rows(): indicies out of bounds or incorrectly used"
     );
   
-  const u32 subfield_n_rows = in_row2 - in_row1 + 1;
+  const u32 sub_n_rows = in_row2 - in_row1 + 1;
   
-  return subview_field<oT>(*this, in_row1, 0, subfield_n_rows, n_cols);
+  return subview_field<oT>(*this, in_row1, 0, sub_n_rows, n_cols);
   }
 
 
@@ -438,9 +438,9 @@ field<oT>::cols(const u32 in_col1, const u32 in_col2)
     "field::cols(): indicies out of bounds or incorrectly used"
     );
   
-  const u32 subfield_n_cols = in_col2 - in_col1 + 1;
+  const u32 sub_n_cols = in_col2 - in_col1 + 1;
   
-  return subview_field<oT>(*this, 0, in_col1, n_rows, subfield_n_cols);
+  return subview_field<oT>(*this, 0, in_col1, n_rows, sub_n_cols);
   }
 
 
@@ -459,9 +459,9 @@ field<oT>::cols(const u32 in_col1, const u32 in_col2) const
     "field::cols(): indicies out of bounds or incorrectly used"
     );
   
-  const u32 subfield_n_cols = in_col2 - in_col1 + 1;
+  const u32 sub_n_cols = in_col2 - in_col1 + 1;
   
-  return subview_field<oT>(*this, 0, in_col1, n_rows, subfield_n_cols);
+  return subview_field<oT>(*this, 0, in_col1, n_rows, sub_n_cols);
   }
 
 
@@ -480,15 +480,15 @@ field<oT>::subfield(const u32 in_row1, const u32 in_col1, const u32 in_row2, con
     "field::subfield(): indices out of bounds or incorrectly used"
     );
   
-  const u32 subfield_n_rows = in_row2 - in_row1 + 1;
-  const u32 subfield_n_cols = in_col2 - in_col1 + 1;
+  const u32 sub_n_rows = in_row2 - in_row1 + 1;
+  const u32 sub_n_cols = in_col2 - in_col1 + 1;
   
-  return subview_field<oT>(*this, in_row1, in_col1, subfield_n_rows, subfield_n_cols);
+  return subview_field<oT>(*this, in_row1, in_col1, sub_n_rows, sub_n_cols);
   }
 
 
 
-//! creation of subview_field (generic submatrix)
+//! creation of subview_field (subfield with arbitrary dimensions)
 template<typename oT>
 inline
 const subview_field<oT>
@@ -502,10 +502,106 @@ field<oT>::subfield(const u32 in_row1, const u32 in_col1, const u32 in_row2, con
     "field::subfield(): indices out of bounds or incorrectly used"
     );
   
-  const u32 subfield_n_rows = in_row2 - in_row1 + 1;
-  const u32 subfield_n_cols = in_col2 - in_col1 + 1;
+  const u32 sub_n_rows = in_row2 - in_row1 + 1;
+  const u32 sub_n_cols = in_col2 - in_col1 + 1;
   
-  return subview_field<oT>(*this, in_row1, in_col1, subfield_n_rows, subfield_n_cols);
+  return subview_field<oT>(*this, in_row1, in_col1, sub_n_rows, sub_n_cols);
+  }
+
+
+
+//! creation of subview_field (subfield with arbitrary dimensions)
+template<typename oT>
+inline
+subview_field<oT>
+field<oT>::subfield(const span& row_span, const span& col_span)
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool row_all = row_span.whole;
+  const bool col_all = col_span.whole;
+  
+  const u32 local_n_rows = n_rows;
+  const u32 local_n_cols = n_cols;
+  
+  const u32 in_row1    = row_all ? 0            : row_span.a;
+  const u32 in_row2    =                          row_span.b;
+  const u32 sub_n_rows = row_all ? local_n_rows : in_row2 - in_row1 + 1;
+  
+  const u32 in_col1    = col_all ? 0            : col_span.a;
+  const u32 in_col2    =                          col_span.b;
+  const u32 sub_n_cols = col_all ? local_n_cols : in_col2 - in_col1 + 1;
+  
+  arma_debug_check
+    (
+    ( row_all ? false : ((in_row1 > in_row2) || (in_row2 >= local_n_rows)) )
+    ||
+    ( col_all ? false : ((in_col1 > in_col2) || (in_col2 >= local_n_cols)) )
+    ,
+    "field::subfield(): indices out of bounds or incorrectly used"
+    );
+  
+  return subview_field<oT>(*this, in_row1, in_col1, sub_n_rows, sub_n_cols);
+  }
+
+
+
+//! creation of subview_field (subfield with arbitrary dimensions)
+template<typename oT>
+inline
+const subview_field<oT>
+field<oT>::subfield(const span& row_span, const span& col_span) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool row_all = row_span.whole;
+  const bool col_all = col_span.whole;
+  
+  const u32 local_n_rows = n_rows;
+  const u32 local_n_cols = n_cols;
+  
+  const u32 in_row1    = row_all ? 0            : row_span.a;
+  const u32 in_row2    =                          row_span.b;
+  const u32 sub_n_rows = row_all ? local_n_rows : in_row2 - in_row1 + 1;
+  
+  const u32 in_col1    = col_all ? 0            : col_span.a;
+  const u32 in_col2    =                          col_span.b;
+  const u32 sub_n_cols = col_all ? local_n_cols : in_col2 - in_col1 + 1;
+  
+  arma_debug_check
+    (
+    ( row_all ? false : ((in_row1 > in_row2) || (in_row2 >= local_n_rows)) )
+    ||
+    ( col_all ? false : ((in_col1 > in_col2) || (in_col2 >= local_n_cols)) )
+    ,
+    "field::subfield(): indices out of bounds or incorrectly used"
+    );
+  
+  return subview_field<oT>(*this, in_row1, in_col1, sub_n_rows, sub_n_cols);
+  }
+
+
+
+template<typename oT>
+inline
+subview_field<oT>
+field<oT>::operator()(const span& row_span, const span& col_span)
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).subfield(row_span, col_span);
+  }
+
+
+
+template<typename oT>
+inline
+const subview_field<oT>
+field<oT>::operator()(const span& row_span, const span& col_span) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).subfield(row_span, col_span);
   }
 
 
@@ -628,6 +724,7 @@ field<oT>::is_empty() const
 //! returns true if the given index is currently in range
 template<typename oT>
 arma_inline
+arma_warn_unused
 bool
 field<oT>::in_range(const u32 i) const
   {
@@ -636,13 +733,106 @@ field<oT>::in_range(const u32 i) const
 
 
 
+//! returns true if the given start and end indices are currently in range
+template<typename oT>
+arma_inline
+arma_warn_unused
+bool
+field<oT>::in_range(const span& x) const
+  {
+  arma_extra_debug_sigprint();
+  
+  if(x.whole == true)
+    {
+    return true;
+    }
+  else
+    {
+    const u32 a = x.a;
+    const u32 b = x.b;
+    
+    return ( (a <= b) && (b < n_elem) );
+    }
+  }
+
+
+
 //! returns true if the given location is currently in range
 template<typename oT>
 arma_inline
+arma_warn_unused
 bool
 field<oT>::in_range(const u32 in_row, const u32 in_col) const
   {
   return ( (in_row < n_rows) && (in_col < n_cols) );
+  }
+
+
+
+template<typename oT>
+arma_inline
+arma_warn_unused
+bool
+field<oT>::in_range(const span& row_span, const u32 in_col) const
+  {
+  arma_extra_debug_sigprint();
+  
+  if(row_span.whole == true)
+    {
+    return (in_col < n_cols);
+    }
+  else
+    {
+    const u32 in_row1 = row_span.a;
+    const u32 in_row2 = row_span.b;
+    
+    return ( (in_row1 <= in_row2) && (in_row2 < n_rows) && (in_col < n_cols) );
+    }
+  }
+
+
+
+template<typename oT>
+arma_inline
+arma_warn_unused
+bool
+field<oT>::in_range(const u32 in_row, const span& col_span) const
+  {
+  arma_extra_debug_sigprint();
+  
+  if(col_span.whole == true)
+    {
+    return (in_row < n_rows);
+    }
+  else
+    {
+    const u32 in_col1 = col_span.a;
+    const u32 in_col2 = col_span.b;
+  
+    return ( (in_row < n_rows) && (in_col1 <= in_col2) && (in_col2 < n_cols) );
+    }
+  }
+
+
+
+template<typename oT>
+arma_inline
+arma_warn_unused
+bool
+field<oT>::in_range(const span& row_span, const span& col_span) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const u32 in_row1 = row_span.a;
+  const u32 in_row2 = row_span.b;
+  
+  const u32 in_col1 = col_span.a;
+  const u32 in_col2 = col_span.b;
+  
+  const bool rows_ok = row_span.whole ? true : ( (in_row1 <= in_row2) && (in_row2 < n_rows) );
+  const bool cols_ok = col_span.whole ? true : ( (in_col1 <= in_col2) && (in_col2 < n_cols) );
+  
+  return ( (rows_ok == true) && (cols_ok == true) );
   }
 
 

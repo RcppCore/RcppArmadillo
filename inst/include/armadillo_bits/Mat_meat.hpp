@@ -4845,6 +4845,57 @@ Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::mem_setup()
 
 
 
+template<typename eT>
+template<u32 fixed_n_rows, u32 fixed_n_cols>
+inline
+Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::fixed(eT* aux_mem, const bool copy_aux_mem)
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  if(fixed_n_elem > 0)
+    {
+    access::rw(Mat<eT>::n_rows)    = fixed_n_rows;
+    access::rw(Mat<eT>::n_cols)    = fixed_n_cols;
+    access::rw(Mat<eT>::n_elem)    = fixed_n_elem;
+    access::rw(Mat<eT>::vec_state) = 0;
+    access::rw(Mat<eT>::mem_state) = 3;
+    
+    if(copy_aux_mem == true)
+      {
+      access::rw(Mat<eT>::mem) = (fixed_n_elem > arma_config::mat_prealloc) ? mem_local_extra : mem_local;
+      
+      arrayops::copy( const_cast<eT*>(Mat<eT>::mem), aux_mem, fixed_n_elem );
+      }
+    else
+      {
+      access::rw(Mat<eT>::mem) = aux_mem;
+      }
+    }
+  else
+    {
+    access::rw(Mat<eT>::n_rows)    = 0;
+    access::rw(Mat<eT>::n_cols)    = 0;
+    access::rw(Mat<eT>::n_elem)    = 0;
+    access::rw(Mat<eT>::vec_state) = 0;
+    access::rw(Mat<eT>::mem_state) = 3;
+    access::rw(Mat<eT>::mem)       = 0;
+    }
+  }
+
+
+
+template<typename eT>
+template<u32 fixed_n_rows, u32 fixed_n_cols>
+inline
+Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::fixed(const eT* aux_mem)
+  {
+  mem_setup();
+  
+  arrayops::copy( const_cast<eT*>(Mat<eT>::mem), aux_mem, fixed_n_elem );
+  }
+
+
+
 //! prefix ++
 template<typename eT>
 arma_inline

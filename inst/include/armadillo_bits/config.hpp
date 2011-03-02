@@ -14,10 +14,17 @@
 
 #if !defined(ARMA_USE_LAPACK)
 // #define ARMA_USE_LAPACK
+//// Uncomment the above line if you have LAPACK or a fast replacement for LAPACK,
+//// such as Intel's MKL, AMD's ACML, or the Accelerate framework.
+//// LAPACK is required for matrix decompositions (eg. SVD) and matrix inverse.
 #endif
 
 #if !defined(ARMA_USE_BLAS)
 // #define ARMA_USE_BLAS
+//// Uncomment the above line if you have BLAS or a fast replacement for BLAS,
+//// such as GotoBLAS, Intel's MKL, AMD's ACML, or the Accelerate framework.
+//// BLAS is used for matrix multiplication.
+//// Without BLAS, matrix multiplication will still work, but might be slower.
 #endif
 
 // #define ARMA_BLAS_LONG
@@ -28,7 +35,7 @@
 
 #define ARMA_BLAS_UNDERSCORE
 //// Uncomment the above line if your BLAS and LAPACK libraries have function names with a trailing underscore.
-//// Conversely, comment it out if the function names don't have a trailing underscore
+//// Conversely, comment it out if the function names don't have a trailing underscore.
 
 #if !defined(ARMA_MAT_PREALLOC)
   #define ARMA_MAT_PREALLOC 16
