@@ -329,3 +329,19 @@ test.armadillo.sugar.matrix.ctor <- function(){
 
 }
 
+test.armadillo.rtti.check <- function() {
+
+    inc <- '
+    void blah(arma::mat& X) {
+         X.set_size(5,5);
+    }
+    '
+    src <- '
+    arma::vec V;
+    blah(V); // if blah() worked, we have a problem
+    '
+    fun <- cxxfunction(signature(), body=src, inc=inc, plugin = "RcppArmadillo")
+
+    checkException(fun(), msg="RTTI check on matrix constructor exception")
+
+}
