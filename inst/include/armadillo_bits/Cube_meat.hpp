@@ -1970,6 +1970,30 @@ Cube<eT>::in_range(const u32 i) const
 
 
 
+//! returns true if the given start and end indices are currently in range
+template<typename eT>
+arma_inline
+arma_warn_unused
+bool
+Cube<eT>::in_range(const span& x) const
+  {
+  arma_extra_debug_sigprint();
+  
+  if(x.whole == true)
+    {
+    return true;
+    }
+  else
+    {
+    const u32 a = x.a;
+    const u32 b = x.b;
+    
+    return ( (a <= b) && (b < n_elem) );
+    }
+  }
+
+
+
 //! returns true if the given location is currently in range
 template<typename eT>
 arma_inline
@@ -1978,6 +2002,34 @@ bool
 Cube<eT>::in_range(const u32 in_row, const u32 in_col, const u32 in_slice) const
   {
   return ( (in_row < n_rows) && (in_col < n_cols) && (in_slice < n_slices) );
+  }
+
+
+
+template<typename eT>
+inline
+arma_warn_unused
+bool
+Cube<eT>::in_range(const span& row_span, const span& col_span, const span& slice_span) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const u32 in_row1   = row_span.a;
+  const u32 in_row2   = row_span.b;
+  
+  const u32 in_col1   = col_span.a;
+  const u32 in_col2   = col_span.b;
+  
+  const u32 in_slice1 = slice_span.a;
+  const u32 in_slice2 = slice_span.b;
+  
+  
+  const bool rows_ok   = row_span.whole   ? true : ( (in_row1   <= in_row2)   && (in_row2   < n_rows)   );
+  const bool cols_ok   = col_span.whole   ? true : ( (in_col1   <= in_col2)   && (in_col2   < n_cols)   );
+  const bool slices_ok = slice_span.whole ? true : ( (in_slice1 <= in_slice2) && (in_slice2 < n_slices) );
+  
+  
+  return ( (rows_ok == true) && (cols_ok == true) && (slices_ok == true) );
   }
 
 

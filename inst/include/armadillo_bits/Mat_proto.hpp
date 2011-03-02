@@ -258,14 +258,13 @@ class Mat : public Base< eT, Mat<eT> >
   arma_inline arma_warn_unused bool is_square() const;
        inline arma_warn_unused bool is_finite() const;
   
-  // TODO: test and add expanded .in_range() to user documentation
   arma_inline arma_warn_unused bool in_range(const u32   i) const;
   arma_inline arma_warn_unused bool in_range(const span& x) const;
   
-  arma_inline arma_warn_unused bool in_range(const u32         in_row,   const u32         in_col  ) const;
-  arma_inline arma_warn_unused bool in_range(const span&       row_span, const u32         in_col  ) const;
-  arma_inline arma_warn_unused bool in_range(const u32         in_row,   const span&       col_span) const;
-  arma_inline arma_warn_unused bool in_range(const span&       row_span, const span&       col_span) const;
+  arma_inline arma_warn_unused bool in_range(const u32   in_row,   const u32   in_col  ) const;
+  arma_inline arma_warn_unused bool in_range(const span& row_span, const u32   in_col  ) const;
+  arma_inline arma_warn_unused bool in_range(const u32   in_row,   const span& col_span) const;
+  arma_inline arma_warn_unused bool in_range(const span& row_span, const span& col_span) const;
   
   arma_inline arma_warn_unused       eT* colptr(const u32 in_col);
   arma_inline arma_warn_unused const eT* colptr(const u32 in_col) const;
@@ -445,6 +444,9 @@ class Mat : public Base< eT, Mat<eT> >
     
     template<typename T1, typename T2>
     inline explicit fixed(const Base<pod_type,T1>& A, const Base<pod_type,T2>& B) { mem_setup(); Mat<eT>::init(A,B); }
+    
+    inline fixed(      eT* aux_mem, const bool copy_aux_mem = true);
+    inline fixed(const eT* aux_mem);
     };
   
   

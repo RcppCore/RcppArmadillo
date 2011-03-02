@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // Copyright (C) 2009-2010 Ian Cullinan
 // 
 // This file is part of the Armadillo C++ library.
@@ -84,6 +84,7 @@ class field
   inline field_injector<field> operator<<(const oT& val);
   inline field_injector<field> operator<<(const injector_end_of_row& x);
   
+  
   inline       subview_field<oT> row(const u32 row_num);
   inline const subview_field<oT> row(const u32 row_num) const;
   
@@ -99,6 +100,13 @@ class field
   inline       subview_field<oT> subfield(const u32 in_row1, const u32 in_col1, const u32 in_row2, const u32 in_col2);
   inline const subview_field<oT> subfield(const u32 in_row1, const u32 in_col1, const u32 in_row2, const u32 in_col2) const;
   
+  inline       subview_field<oT> subfield  (const span& row_span, const span& col_span);
+  inline const subview_field<oT> subfield  (const span& row_span, const span& col_span) const;
+  
+  inline       subview_field<oT> operator()(const span& row_span, const span& col_span);
+  inline const subview_field<oT> operator()(const span& row_span, const span& col_span) const;
+  
+  
   inline void print(const std::string extra_text = "") const;
   inline void print(std::ostream& user_stream, const std::string extra_text = "") const;
   
@@ -109,9 +117,13 @@ class field
   
   arma_inline bool is_empty() const;
   
-  arma_inline bool in_range(const u32 i) const;
-  arma_inline bool in_range(const u32 in_row, const u32 in_col) const;
+  arma_inline arma_warn_unused bool in_range(const u32   i) const;
+  arma_inline arma_warn_unused bool in_range(const span& x) const;
   
+  arma_inline arma_warn_unused bool in_range(const u32   in_row,   const u32   in_col  ) const;
+  arma_inline arma_warn_unused bool in_range(const span& row_span, const u32   in_col  ) const;
+  arma_inline arma_warn_unused bool in_range(const u32   in_row,   const span& col_span) const;
+  arma_inline arma_warn_unused bool in_range(const span& row_span, const span& col_span) const;
   
   inline bool save(const std::string   name, const file_type type = arma_binary, const bool print_status = true) const;
   inline bool save(      std::ostream& os,   const file_type type = arma_binary, const bool print_status = true) const;

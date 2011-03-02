@@ -110,6 +110,9 @@ class Col : public Mat<eT>
     template<typename T1, typename T2>
     inline explicit fixed(const Base<pod_type,T1>& A, const Base<pod_type,T2>& B) { mem_setup(); Col<eT>::init(A,B); }
     
+    inline fixed(      eT* aux_mem, const bool copy_aux_mem = true);
+    inline fixed(const eT* aux_mem);
+    
     inline                fixed(const subview_cube<eT>& X) { mem_setup(); Col<eT>::operator=(X);               }
     inline const Col& operator=(const subview_cube<eT>& X) {              Col<eT>::operator=(X); return *this; }
     };
