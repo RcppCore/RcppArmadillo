@@ -1,5 +1,9 @@
 0.2.14  2011-ab-cd
 
+    o   Support Run-Time Type Information (RTTI) on matrices by setting the
+        state variable vec_state in Row and Col instantiation, with thanks to
+        Conrad Sanderson for the hint
+
     o   fastLm code simplified further by instantiating the Armadillo matrix
         and vector directly from the SEXP coming from R
 

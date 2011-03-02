@@ -1,3 +1,8 @@
+2011-03-02  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/RcppArmadillo/Row_meat.h: Support RTTI via vec_stat
+	* inst/include/RcppArmadillo/Col_meat.h: Support RTTI via vec_stat
+
 2011-02-28  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/doc/Makefile: Call R and Rscript relative to R_HOME/bin

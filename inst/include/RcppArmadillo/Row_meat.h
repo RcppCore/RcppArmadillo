@@ -1,8 +1,8 @@
-// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
+// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 4 -*-
 //
 // Row_meat.h: Rcpp/Armadillo glue
 //
-// Copyright (C)  2010 Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2011 Dirk Eddelbuettel, Romain Francois and Douglas Bates
 //
 // This file is part of RcppArmadillo.
 //
@@ -25,20 +25,21 @@
 template <typename eT>
 template <int RTYPE, bool NA, typename VECTOR>
 inline Row<eT>::Row( const Rcpp::VectorBase<RTYPE,NA,VECTOR>& X )
-	: Mat<eT>( X )
-	{	
+	: Mat<eT>( X ) {	
 	arma_extra_debug_sigprint(this);
 	std::swap( access::rw(Mat<eT>::n_rows), access::rw(Mat<eT>::n_cols) );
-	}
+}
 
 template <typename eT>
 template <int RTYPE, bool NA, typename MATRIX>
 inline Row<eT>::Row( const Rcpp::MatrixBase<RTYPE,NA,MATRIX>& X ) 
-	: Mat<eT>( X )
-	{	
+	: Mat<eT>( X ) {	
+
 	arma_extra_debug_sigprint(this);
 	
-	arma_debug_check( (Mat<eT>::n_rows > 1), "Col(): incompatible dimensions" );
-	}
+	arma_debug_check( (Mat<eT>::n_rows > 1), "Row(): incompatible dimensions" );
+
+    access::rw(Mat<eT>::vec_state) = 2;
+}
 
 #endif
