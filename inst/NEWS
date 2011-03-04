@@ -1,10 +1,12 @@
-0.2.14  2011-03-02
+0.2.15  2011-03-04
 
     o   Upgraded to Armadillo Version 1.1.6   “Baby Carpet Shark”
 
          * fixed size matrices and vectors can use auxiliary (external) memory
          * .in_range() can use span() arguments
 	 * subfields can use span() arguments
+
+0.2.14  2011-03-02
 
     o   Support Run-Time Type Information (RTTI) on matrices by setting the
         state variable vec_state in Row and Col instantiation, with thanks to
