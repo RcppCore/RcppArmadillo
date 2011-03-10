@@ -431,6 +431,40 @@ template<typename eT>
 arma_hot
 arma_pure
 inline
+bool
+arrayops::is_finite(const eT* src, const u32 n_elem)
+  {
+  u32 i,j;
+  
+  for(i=0, j=1; j<n_elem; i+=2, j+=2)
+    {
+    const eT val_i = src[i];
+    const eT val_j = src[j];
+    
+    if( (arma_isfinite(val_i) == false) || (arma_isfinite(val_j) == false) )
+      {
+      return false;
+      }
+    }
+  
+  if(i < n_elem)
+    {
+    if(arma_isfinite(src[i]) == false)
+      {
+      return false;
+      }
+    }
+  
+  return true;
+  }
+
+
+
+// TODO: this function is currently not used
+template<typename eT>
+arma_hot
+arma_pure
+inline
 typename get_pod_type<eT>::result
 arrayops::norm_1(const eT* src, const u32 n_elem)
   {
@@ -456,6 +490,7 @@ arrayops::norm_1(const eT* src, const u32 n_elem)
 
 
 
+// TODO: this function is currently not used
 template<typename eT>
 arma_hot
 arma_pure
@@ -490,6 +525,7 @@ arrayops::norm_2(const eT* src, const u32 n_elem, const typename arma_not_cx<eT>
 
 
 
+// TODO: this function is currently not used
 template<typename T>
 arma_hot
 arma_pure
@@ -522,6 +558,7 @@ arrayops::norm_2(const std::complex<T>* src, const u32 n_elem)
 
 
 
+// TODO: this function is currently not used
 template<typename eT>
 arma_hot
 arma_pure
@@ -551,6 +588,7 @@ arrayops::norm_k(const eT* src, const u32 n_elem, const int k)
 
 
 
+// TODO: this function is currently not used
 template<typename eT>
 arma_hot
 arma_pure
@@ -585,6 +623,7 @@ arrayops::norm_max(const eT* src, const u32 n_elem)
 
 
 
+// TODO: this function is currently not used
 template<typename eT>
 arma_hot
 arma_pure

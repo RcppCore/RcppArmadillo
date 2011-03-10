@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -24,22 +24,9 @@ op_mean::direct_mean(const eT* const X, const u32 n_elem)
   {
   arma_extra_debug_sigprint();
   
-  eT val = eT(0);
+  typedef typename get_pod_type<eT>::result T;
   
-  u32 i,j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
-    {
-    val += X[i];
-    val += X[j];
-    }
-  
-  if(i < n_elem)
-    {
-    val += X[i];
-    }
-  
-  return val / eT(n_elem);
+  return arrayops::accumulate(X, n_elem) / T(n_elem);
   }
 
 
@@ -52,6 +39,8 @@ op_mean::direct_mean(const subview<eT>& X)
   {
   arma_extra_debug_sigprint();
   
+  typedef typename get_pod_type<eT>::result T;
+  
   const u32 X_n_elem = X.n_elem;
         eT  val      = eT(0);
   
@@ -60,7 +49,7 @@ op_mean::direct_mean(const subview<eT>& X)
     val += X[i];
     }
   
-  return val / eT(X_n_elem);
+  return val / T(X_n_elem);
   }
 
 
@@ -73,6 +62,8 @@ op_mean::direct_mean(const diagview<eT>& X)
   {
   arma_extra_debug_sigprint();
   
+  typedef typename get_pod_type<eT>::result T;
+  
   const u32 X_n_elem = X.n_elem;
         eT  val      = eT(0);
   
@@ -81,7 +72,7 @@ op_mean::direct_mean(const diagview<eT>& X)
     val += X[i];
     }
   
-  return val / eT(X_n_elem);
+  return val / T(X_n_elem);
   }
 
 
@@ -97,7 +88,8 @@ op_mean::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_mean>& in)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
+  typedef typename T1::elem_type            eT;
+  typedef typename get_pod_type<eT>::result  T;
   
   const unwrap_check<T1> tmp(in.m, out);
   const Mat<eT>& X = tmp.M;
@@ -137,13 +129,11 @@ op_mean::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_mean>& in)
         val += X.at(row,col);
         }
       
-      out[row] = val / eT(X_n_cols);
-      
+      out[row] = val / T(X_n_cols);
       }
-    
     }
-  
   }
 
 
 //! @}
+

@@ -1,3 +1,9 @@
+2011-03-10  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.2.16
+
+	* inst/include/*: Updated to Armadillo 1.1.8 "Kangaroo Steak"
+
 2011-03-04  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.2.15

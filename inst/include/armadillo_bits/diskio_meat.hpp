@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // Copyright (C) 2009-2010 Ian Cullinan
 // 
 // This file is part of the Armadillo C++ library.
@@ -329,7 +329,7 @@ diskio::is_raw_binary(std::istream& f)
   unsigned char* ptr = data.memptr();
   
   f.clear();
-  f.read(reinterpret_cast<char*>(ptr), N);
+  f.read( reinterpret_cast<char*>(ptr), std::streamsize(N) );
   
   bool has_non_text_val = false;
   
@@ -610,7 +610,7 @@ diskio::save_raw_binary(const Mat<eT>& x, std::ostream& f)
   {
   arma_extra_debug_sigprint();
   
-  f.write(reinterpret_cast<const char*>(x.mem), x.n_elem*sizeof(eT));
+  f.write( reinterpret_cast<const char*>(x.mem), std::streamsize(x.n_elem*sizeof(eT)) );
   
   return f.good();
   }
@@ -746,7 +746,7 @@ diskio::save_arma_binary(const Mat<eT>& x, std::ostream& f)
   f << diskio::gen_bin_header(x) << '\n';
   f << x.n_rows << ' ' << x.n_cols << '\n';
   
-  f.write(reinterpret_cast<const char*>(x.mem), x.n_elem*sizeof(eT));
+  f.write( reinterpret_cast<const char*>(x.mem), std::streamsize(x.n_elem*sizeof(eT)) );
   
   return f.good();
   }
@@ -816,7 +816,7 @@ diskio::save_pgm_binary(const Mat<eT>& x, std::ostream& f)
       }
     }
   
-  f.write(reinterpret_cast<const char*>(tmp.mem), n_elem);
+  f.write(reinterpret_cast<const char*>(tmp.mem), std::streamsize(n_elem) );
   
   return f.good();
   }
@@ -1017,7 +1017,7 @@ diskio::load_raw_binary(Mat<eT>& x, std::istream& f, std::string& err_msg)
   x.set_size(N / sizeof(eT), 1);
   
   f.clear();
-  f.read( reinterpret_cast<char *>(x.memptr()), N);
+  f.read( reinterpret_cast<char *>(x.memptr()), std::streamsize(N) );
   
   return f.good();
   }
@@ -1140,7 +1140,7 @@ diskio::load_arma_binary(Mat<eT>& x, std::istream& f, std::string& err_msg)
     f.get();
     
     x.set_size(f_n_rows,f_n_cols);
-    f.read( reinterpret_cast<char *>(x.memptr()), x.n_elem*sizeof(eT));
+    f.read( reinterpret_cast<char *>(x.memptr()), std::streamsize(x.n_elem*sizeof(eT)) );
     
     load_okay = f.good();
     }
@@ -1239,7 +1239,7 @@ diskio::load_pgm_binary(Mat<eT>& x, std::istream& f, std::string& err_msg)
         const u32 n_elem = f_n_cols*f_n_rows;
         podarray<u8> tmp(n_elem);
         
-        f.read( reinterpret_cast<char*>(tmp.memptr()), n_elem);
+        f.read( reinterpret_cast<char*>(tmp.memptr()), std::streamsize(n_elem) );
         
         u32 i = 0;
         
@@ -1262,7 +1262,7 @@ diskio::load_pgm_binary(Mat<eT>& x, std::istream& f, std::string& err_msg)
         const u32 n_elem = f_n_cols*f_n_rows;
         podarray<u16> tmp(n_elem);
         
-        f.read( reinterpret_cast<char *>(tmp.memptr()), n_elem*2);
+        f.read( reinterpret_cast<char *>(tmp.memptr()), std::streamsize(n_elem*2) );
         
         u32 i = 0;
         
@@ -1376,7 +1376,7 @@ diskio::load_auto_detect(Mat<eT>& x, std::istream& f, std::string& err_msg)
   
   std::streampos pos = f.tellg();
     
-  f.read(raw_header.memptr(), ARMA_MAT_TXT.length());
+  f.read( raw_header.memptr(), std::streamsize(ARMA_MAT_TXT.length()) );
   raw_header[ARMA_MAT_TXT.length()] = '\0';
   
   f.clear();
@@ -1532,7 +1532,7 @@ diskio::save_raw_binary(const Cube<eT>& x, std::ostream& f)
   {
   arma_extra_debug_sigprint();
   
-  f.write(reinterpret_cast<const char*>(x.mem), x.n_elem*sizeof(eT));
+  f.write( reinterpret_cast<const char*>(x.mem), std::streamsize(x.n_elem*sizeof(eT)) );
   
   return f.good();
   }
@@ -1671,7 +1671,7 @@ diskio::save_arma_binary(const Cube<eT>& x, std::ostream& f)
   f << diskio::gen_bin_header(x) << '\n';
   f << x.n_rows << ' ' << x.n_cols << ' ' << x.n_slices << '\n';
   
-  f.write(reinterpret_cast<const char*>(x.mem), x.n_elem*sizeof(eT));
+  f.write( reinterpret_cast<const char*>(x.mem), std::streamsize(x.n_elem*sizeof(eT)) );
   
   return f.good();
   }
@@ -1785,7 +1785,7 @@ diskio::load_raw_binary(Cube<eT>& x, std::istream& f, std::string& err_msg)
   x.set_size(N / sizeof(eT), 1, 1);
   
   f.clear();
-  f.read( reinterpret_cast<char *>(x.memptr()), N);
+  f.read( reinterpret_cast<char *>(x.memptr()), std::streamsize(N) );
   
   return f.good();
   }
@@ -1915,7 +1915,7 @@ diskio::load_arma_binary(Cube<eT>& x, std::istream& f, std::string& err_msg)
     f.get();
     
     x.set_size(f_n_rows, f_n_cols, f_n_slices);
-    f.read( reinterpret_cast<char *>(x.memptr()), x.n_elem*sizeof(eT));
+    f.read( reinterpret_cast<char *>(x.memptr()), std::streamsize(x.n_elem*sizeof(eT)) );
     
     load_okay = f.good();
     }
@@ -1970,7 +1970,7 @@ diskio::load_auto_detect(Cube<eT>& x, std::istream& f, std::string& err_msg)
   
   std::streampos pos = f.tellg();
   
-  f.read(raw_header.memptr(), ARMA_CUB_TXT.length());
+  f.read( raw_header.memptr(), std::streamsize(ARMA_CUB_TXT.length()) );
   raw_header[ARMA_CUB_TXT.length()] = '\0';
   
   f.clear();
@@ -2336,7 +2336,7 @@ diskio::load_auto_detect(field<T1>& x, std::istream& f, std::string& err_msg)
   
   std::streampos pos = f.tellg();
   
-  f.read(raw_header.memptr(), ARMA_FLD_BIN.length());
+  f.read( raw_header.memptr(), std::streamsize(ARMA_FLD_BIN.length()) );
   
   f.clear();
   f.seekg(pos);
@@ -2428,7 +2428,7 @@ diskio::load_ppm_binary(Cube<eT>& x, std::istream& f, std::string& err_msg)
         const u32 n_elem = 3*f_n_cols*f_n_rows;
         podarray<u8> tmp(n_elem);
         
-        f.read( reinterpret_cast<char*>(tmp.memptr()), n_elem);
+        f.read( reinterpret_cast<char*>(tmp.memptr()), std::streamsize(n_elem) );
         
         u32 i = 0;
         
@@ -2453,7 +2453,7 @@ diskio::load_ppm_binary(Cube<eT>& x, std::istream& f, std::string& err_msg)
         const u32 n_elem = 3*f_n_cols*f_n_rows;
         podarray<u16> tmp(n_elem);
         
-        f.read( reinterpret_cast<char *>(tmp.memptr()), 2*n_elem);
+        f.read( reinterpret_cast<char *>(tmp.memptr()), std::streamsize(2*n_elem) );
         
         u32 i = 0;
         
@@ -2556,7 +2556,7 @@ diskio::save_ppm_binary(const Cube<eT>& x, std::ostream& f)
   f << x.n_rows << '\n';
   f << 255 << '\n';
   
-  f.write(reinterpret_cast<const char*>(tmp.mem), n_elem);
+  f.write( reinterpret_cast<const char*>(tmp.mem), std::streamsize(n_elem) );
   
   return f.good();
   }
@@ -2639,7 +2639,7 @@ diskio::load_ppm_binary(field<T1>& x, std::istream& f, std::string& err_msg)
         const u32 n_elem = 3*f_n_cols*f_n_rows;
         podarray<u8> tmp(n_elem);
         
-        f.read( reinterpret_cast<char*>(tmp.memptr()), n_elem);
+        f.read( reinterpret_cast<char*>(tmp.memptr()), std::streamsize(n_elem) );
         
         u32 i = 0;
         
@@ -2664,7 +2664,7 @@ diskio::load_ppm_binary(field<T1>& x, std::istream& f, std::string& err_msg)
         const u32 n_elem = 3*f_n_cols*f_n_rows;
         podarray<u16> tmp(n_elem);
         
-        f.read( reinterpret_cast<char *>(tmp.memptr()), 2*n_elem);
+        f.read( reinterpret_cast<char *>(tmp.memptr()), std::streamsize(2*n_elem) );
         
         u32 i = 0;
         
@@ -2786,7 +2786,7 @@ diskio::save_ppm_binary(const field<T1>& x, std::ostream& f)
       }
     }
   
-  f.write(reinterpret_cast<const char*>(tmp.mem), n_elem);
+  f.write( reinterpret_cast<const char*>(tmp.mem), std::streamsize(n_elem) );
   
   return f.good();
   }

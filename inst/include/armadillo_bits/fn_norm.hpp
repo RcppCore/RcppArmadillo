@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -166,11 +166,11 @@ arma_vec_norm_max(const Proxy<T1>& A)
         ea_type P = A.get_ea();
   const u32     N = A.get_n_elem();
   
-  T max_val = std::abs(P[0]);
+  T max_val = (N != 1) ? priv::most_neg<T>() : std::abs(P[0]);
   
   u32 i,j;
   
-  for(i=1, j=2; j<N; i+=2, j+=2)
+  for(i=0, j=1; j<N; i+=2, j+=2)
     {
     const T tmp_i = std::abs(P[i]);
     const T tmp_j = std::abs(P[j]);
@@ -205,11 +205,11 @@ arma_vec_norm_min(const Proxy<T1>& A)
         ea_type P = A.get_ea();
   const u32     N = A.get_n_elem();
   
-  T min_val = std::abs(P[0]);
+  T min_val = (N != 1) ? priv::most_pos<T>() : std::abs(P[0]);
   
   u32 i,j;
   
-  for(i=1, j=2; j<N; i+=2, j+=2)
+  for(i=0, j=1; j<N; i+=2, j+=2)
     {
     const T tmp_i = std::abs(P[i]);
     const T tmp_j = std::abs(P[j]);
@@ -330,7 +330,7 @@ norm
       default:
         {
         arma_debug_check( (k == 0), "norm(): k must be greater than zero"   );
-        return arma_vec_norm_k(A, k);
+        return arma_vec_norm_k(A, int(k));
         }
       }
     }

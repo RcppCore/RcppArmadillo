@@ -109,7 +109,6 @@ namespace arma
   #include "armadillo_bits/arma_static_assert.hpp"
   #include "armadillo_bits/typedef.hpp"
   #include "armadillo_bits/format_wrap.hpp"
-  #include "armadillo_bits/constants.hpp"
   #include "armadillo_bits/arma_version.hpp"
   #include "armadillo_bits/arma_config.hpp"
   #include "armadillo_bits/traits.hpp"
@@ -118,6 +117,7 @@ namespace arma
   #include "armadillo_bits/restrictors.hpp"
   #include "armadillo_bits/access.hpp"
   #include "armadillo_bits/span.hpp"
+  #include "armadillo_bits/constants.hpp"
   
   
   //

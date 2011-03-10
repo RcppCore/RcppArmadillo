@@ -1,5 +1,5 @@
-// Copyright (C) 2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2010 Conrad Sanderson
+// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -101,7 +101,9 @@ template<> struct arma_float_or_cx_only< std::complex<double> > { typedef std::c
 
 
 template<typename T> struct arma_cx_only { };
-template<typename T> struct arma_cx_only< std::complex<T> > { typedef std::complex<T> result; };
+
+template<> struct arma_cx_only< std::complex<float>  > { typedef std::complex<float>  result; };
+template<> struct arma_cx_only< std::complex<double> > { typedef std::complex<double> result; };
 
 
 
@@ -170,6 +172,7 @@ template<typename eT> struct arma_Mat_Col_Row_only< Row<eT> > { typedef Row<eT> 
 
 template<typename  T> struct arma_Cube_only             { };
 template<typename eT> struct arma_Cube_only< Cube<eT> > { typedef Cube<eT> result; };
+
 
 
 //! @}

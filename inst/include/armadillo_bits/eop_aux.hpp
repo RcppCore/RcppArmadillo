@@ -1,5 +1,5 @@
-// Copyright (C) 2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2010 Conrad Sanderson
+// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -140,8 +140,8 @@ class eop_aux
   template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result asinh (const eT x) { return arma_asinh(x); }
   template<typename eT> arma_inline static typename arma_float_or_cx_only<eT>::result atanh (const eT x) { return arma_atanh(x); }
   
-  template<typename eT> arma_inline static typename arma_not_cx<eT>::result conj(const eT              x) { return x;            }
-  template<typename  T> arma_inline static          std::complex<T>         conj(const std::complex<T> x) { return std::conj(x); }
+  template<typename eT> arma_inline static typename arma_not_cx<eT>::result conj(const eT               x) { return x;            }
+  template<typename  T> arma_inline static          std::complex<T>         conj(const std::complex<T>& x) { return std::conj(x); }
   
   template<typename eT> arma_inline static typename arma_integral_only<eT>::result sqrt  (const eT x) { return eT( std::sqrt (double(x)) ); }
   template<typename eT> arma_inline static typename arma_integral_only<eT>::result log10 (const eT x) { return eT( std::log10(double(x)) ); }
@@ -167,6 +167,14 @@ class eop_aux
   
   template<typename eT> arma_inline static typename arma_unsigned_integral_only<eT>::result neg (const eT x) { return  x; }
   template<typename eT> arma_inline static typename arma_signed_only<eT>::result            neg (const eT x) { return -x; }
+  
+  template<typename eT> arma_inline static typename arma_integral_only<eT>::result floor(const eT  x) { return x;                                                }
+  template<typename eT> arma_inline static typename arma_float_only<eT>::result    floor(const eT  x) { return std::floor(x);                                    }
+  template<typename eT> arma_inline static typename arma_cx_only<eT>::result       floor(const eT& x) { return eT( std::floor(x.real()), std::floor(x.imag()) ); }
+  
+  template<typename eT> arma_inline static typename arma_integral_only<eT>::result  ceil(const eT  x) { return x;                                                }
+  template<typename eT> arma_inline static typename arma_float_only<eT>::result     ceil(const eT  x) { return std::ceil(x);                                     }
+  template<typename eT> arma_inline static typename arma_cx_only<eT>::result        ceil(const eT& x) { return eT( std::ceil(x.real()), std::ceil(x.imag()) );   }
   
   template<typename eT>
   arma_inline

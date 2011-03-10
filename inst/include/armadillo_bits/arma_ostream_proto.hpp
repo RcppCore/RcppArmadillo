@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -42,8 +42,10 @@ class arma_ostream
   template<typename eT> inline static u32 modify_stream(std::ostream& o, const eT*              data, const u32 n_elem);
   template<typename  T> inline static u32 modify_stream(std::ostream& o, const std::complex<T>* data, const u32 n_elem);
   
+  template<typename eT> inline static void print_elem_zero(std::ostream& o);
+  
   template<typename eT> arma_inline static void print_elem(std::ostream& o, const eT&              x);
-  template<typename  T> arma_inline static void print_elem(std::ostream& o, const std::complex<T>& x);
+  template<typename  T>      inline static void print_elem(std::ostream& o, const std::complex<T>& x);
 
   template<typename eT> inline static void print(std::ostream& o, const  Mat<eT>& m, const bool modify);
   template<typename eT> inline static void print(std::ostream& o, const Cube<eT>& m, const bool modify);

@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -23,15 +23,9 @@ op_var::direct_var(const eT* const X, const u32 n_elem, const u32 norm_type)
   {
   arma_extra_debug_sigprint();
   
-  eT acc1 = eT(0);
-  
-  for(u32 i=0; i<n_elem; ++i)
-    {
-    acc1 += X[i];
-    }
-  
   const eT div_val = (n_elem > 0) ? eT(n_elem) : eT(1);
-  acc1 /= div_val;
+  
+  const eT acc1 = arrayops::accumulate(X,n_elem) / div_val;
   
   eT acc2 = eT(0);
   eT acc3 = eT(0);
@@ -63,15 +57,9 @@ op_var::direct_var(const std::complex<T>* const X, const u32 n_elem, const u32 n
   
   typedef typename std::complex<T> eT;
   
-  eT acc1 = eT(0);
-  
-  for(u32 i=0; i<n_elem; ++i)
-    {
-    acc1 += X[i];
-    }
-  
   const T div_val = (n_elem > 0) ? T(n_elem) : T(1);
-  acc1 /= div_val;
+  
+  const eT acc1 = arrayops::accumulate(X,n_elem) / div_val;
   
   T  acc2 =  T(0);
   eT acc3 = eT(0);
@@ -204,11 +192,10 @@ op_var::apply(Mat< typename get_pod_type<eT>::result >& out, const Mat<eT>& X, c
       
       out[row] = op_var::direct_var(tmp_mem, n_cols, norm_type);
       }
-    
     }
-  
   }
 
 
 
 //! @}
+
