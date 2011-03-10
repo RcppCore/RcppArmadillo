@@ -1933,15 +1933,7 @@ arma_warn_unused
 bool
 Cube<eT>::is_finite() const
   {
-  for(u32 i=0; i<n_elem; ++i)
-    {
-    if(arma_isfinite(mem[i]) == false)
-      {
-      return false;
-      }
-    }
-
-  return true;
+  return arrayops::is_finite( memptr(), n_elem );
   }
 
 

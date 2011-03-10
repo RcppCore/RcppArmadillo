@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -142,6 +142,22 @@ arma_ostream::modify_stream(std::ostream& o, const std::complex<T>* data, const 
 
 
 
+template<typename eT>
+inline
+void
+arma_ostream::print_elem_zero(std::ostream& o)
+  {
+  const std::streamsize orig_precision = o.precision();
+  
+  o.precision(0);
+  
+  o << eT(0);
+  
+  o.precision(orig_precision);
+  }
+
+
+
 //! Print an element to the specified stream
 template<typename eT>
 arma_inline
@@ -154,22 +170,15 @@ arma_ostream::print_elem(std::ostream& o, const eT& x)
     }
   else
     {
-    const std::streamsize orig_precision = o.precision();
-    
-    o.precision(0);
-    
-    o << eT(0);
-    
-    o.precision(orig_precision);
+    arma_ostream::print_elem_zero<eT>(o);
     }
   }
 
 
 
 //! Print a complex element to the specified stream
-//! EXPERIMENTAL !
 template<typename T>
-arma_inline
+inline
 void
 arma_ostream::print_elem(std::ostream& o, const std::complex<T>& x)
   {
@@ -200,45 +209,42 @@ arma_ostream::print(std::ostream& o, const Mat<eT>& m, const bool modify)
   arma_extra_debug_sigprint();
   
   const arma_ostream_state stream_state(o);
-
-  u32 cell_width;
   
-  if(modify == true)
-    {
-    cell_width = arma_ostream::modify_stream(o, m.memptr(), m.n_elem);
-    }
-  else
-    {
-    cell_width = o.width();  // copy the user's cell width
-    }
+  const u32 cell_width = modify ? arma_ostream::modify_stream(o, m.memptr(), m.n_elem) : o.width();
   
-  if(cell_width > 0)
+  const u32 m_n_rows = m.n_rows;
+  const u32 m_n_cols = m.n_cols;
+  
+  if(m_n_cols > 0)
     {
-    for(u32 row=0; row < m.n_rows; ++row)
+    if(cell_width > 0)
       {
-      for(u32 col=0; col < m.n_cols; ++col)
+      for(u32 row=0; row < m_n_rows; ++row)
         {
-        // the cell width appears to be reset after each element is printed,
-        // hence we need to restore it
-        o.width(cell_width);
-        arma_ostream::print_elem(o, m.at(row,col));
-        }
+        for(u32 col=0; col < m_n_cols; ++col)
+          {
+          // the cell width appears to be reset after each element is printed,
+          // hence we need to restore it
+          o.width(cell_width);
+          arma_ostream::print_elem(o, m.at(row,col));
+          }
       
-      o << '\n';
+        o << '\n';
+        }
       }
-    }
-  else
-    {
-    for(u32 row=0; row < m.n_rows; ++row)
+    else
       {
-      for(u32 col=0; col < m.n_cols-1; ++col)
+      for(u32 row=0; row < m_n_rows; ++row)
         {
-        arma_ostream::print_elem(o, m.at(row,col));
-        o << ' ';
-        }
+        for(u32 col=0; col < m_n_cols-1; ++col)
+          {
+          arma_ostream::print_elem(o, m.at(row,col));
+          o << ' ';
+          }
       
-      arma_ostream::print_elem(o, m.at(row, m.n_cols-1));
-      o << '\n';
+        arma_ostream::print_elem(o, m.at(row, m_n_cols-1));
+        o << '\n';
+        }
       }
     }
   
@@ -258,16 +264,7 @@ arma_ostream::print(std::ostream& o, const Cube<eT>& x, const bool modify)
   
   const arma_ostream_state stream_state(o);
 
-  u32 cell_width;
-  
-  if(modify == true)
-    {
-    cell_width = arma_ostream::modify_stream(o, x.memptr(), x.n_elem);
-    }
-  else
-    {
-    cell_width = o.width();
-    }
+  const u32 cell_width = modify ? arma_ostream::modify_stream(o, x.memptr(), x.n_elem) : o.width();
   
   for(u32 slice=0; slice < x.n_slices; ++slice)
     {
@@ -293,13 +290,17 @@ arma_ostream::print(std::ostream& o, const field<oT>& x)
   arma_extra_debug_sigprint();
   
   const arma_ostream_state stream_state(o);
-
+  
   const std::streamsize cell_width = o.width();
-
-  for(u32 col=0; col<x.n_cols; ++col)
+  
+  const u32 x_n_rows = x.n_rows;
+  const u32 x_n_cols = x.n_cols;
+  
+  for(u32 col=0; col<x_n_cols; ++col)
     {
     o << "[field column " << col << ']' << '\n'; 
-    for(u32 row=0; row<x.n_rows; ++row)
+    
+    for(u32 row=0; row<x_n_rows; ++row)
       {
       o.width(cell_width);
       o << x.at(row,col) << '\n';
@@ -327,10 +328,13 @@ arma_ostream::print(std::ostream& o, const subview_field<oT>& x)
   
   const std::streamsize cell_width = o.width();
   
-  for(u32 col=0; col<x.n_cols; ++col)
+  const u32 x_n_rows = x.n_rows;
+  const u32 x_n_cols = x.n_cols;
+  
+  for(u32 col=0; col<x_n_cols; ++col)
     {
-    o << "[subfield column " << col << ']' << '\n'; 
-    for(u32 row=0; row<x.n_rows; ++row)
+    o << "[field column " << col << ']' << '\n'; 
+    for(u32 row=0; row<x_n_rows; ++row)
       {
       o.width(cell_width);
       o << x.at(row,col) << '\n';
@@ -346,3 +350,4 @@ arma_ostream::print(std::ostream& o, const subview_field<oT>& x)
 
 
 //! @}
+

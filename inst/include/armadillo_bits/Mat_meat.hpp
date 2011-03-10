@@ -2087,8 +2087,8 @@ Mat<eT>::diag(const s32 in_id)
   {
   arma_extra_debug_sigprint();
   
-  const u32 row_offset = (in_id < 0) ? -in_id : 0;
-  const u32 col_offset = (in_id > 0) ?  in_id : 0;
+  const u32 row_offset = (in_id < 0) ? u32(-in_id) : 0;
+  const u32 col_offset = (in_id > 0) ? u32( in_id) : 0;
   
   arma_debug_check
     (
@@ -3460,31 +3460,7 @@ arma_warn_unused
 bool
 Mat<eT>::is_finite() const
   {
-  const u32 N   = n_elem;
-  const eT* ptr = memptr();
-  
-  u32 i,j;
-  
-  for(i=0, j=1; j<N; i+=2, j+=2)
-    {
-    const eT val_i = ptr[i];
-    const eT val_j = ptr[j];
-    
-    if( (arma_isfinite(val_i) == false) || (arma_isfinite(val_j) == false) )
-      {
-      return false;
-      }
-    }
-  
-  if(i<N)
-    {
-    if(arma_isfinite(ptr[i]) == false)
-      {
-      return false;
-      }
-    }
-  
-  return true;
+  return arrayops::is_finite( memptr(), n_elem );
   }
 
 

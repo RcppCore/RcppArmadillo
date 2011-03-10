@@ -877,12 +877,12 @@ auxlib::lu(Mat<eT>& L, Mat<eT>& U, Mat<eT>& P, const Base<eT,T1>& X)
   
   for(u32 i=0; i<P_rows; ++i)
     {
-    ipiv2_mem[i] = i;
+    ipiv2_mem[i] = blas_int(i);
     }
   
   for(u32 i=0; i<n; ++i)
     {
-    const u32 k = ipiv1_mem[i];
+    const u32 k = u32(ipiv1_mem[i]);
     
     if( ipiv2_mem[i] != ipiv2_mem[k] )
       {
@@ -894,7 +894,7 @@ auxlib::lu(Mat<eT>& L, Mat<eT>& U, Mat<eT>& P, const Base<eT,T1>& X)
   
   for(u32 row=0; row<P_rows; ++row)
     {
-    P.at(row, ipiv2_mem[row]) = eT(1);
+    P.at(row, u32(ipiv2_mem[row])) = eT(1);
     }
   
   if(L.n_cols > U.n_rows)
@@ -930,12 +930,12 @@ auxlib::lu(Mat<eT>& L, Mat<eT>& U, const Base<eT,T1>& X)
   
   for(u32 i=0; i<P_rows; ++i)
     {
-    ipiv2_mem[i] = i;
+    ipiv2_mem[i] = blas_int(i);
     }
   
   for(u32 i=0; i<n; ++i)
     {
-    const u32 k = ipiv1_mem[i];
+    const u32 k = u32(ipiv1_mem[i]);
     
     if( ipiv2_mem[i] != ipiv2_mem[k] )
       {

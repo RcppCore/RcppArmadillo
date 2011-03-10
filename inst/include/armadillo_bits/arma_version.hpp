@@ -18,10 +18,8 @@
 
 #define ARMA_VERSION_MAJOR 1
 #define ARMA_VERSION_MINOR 1
-#define ARMA_VERSION_PATCH 6
-#define ARMA_VERSION_NAME  "Baby Carpet Shark"
-
-// http://en.wikipedia.org/wiki/Carpet_shark
+#define ARMA_VERSION_PATCH 8
+#define ARMA_VERSION_NAME  "Kangaroo Steak"
 
 
 

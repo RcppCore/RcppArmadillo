@@ -115,6 +115,11 @@ class arrayops
   
   template<typename eT>
   arma_hot arma_pure inline static
+  bool
+  is_finite(const eT* src, const u32 n_elem);
+  
+  template<typename eT>
+  arma_hot arma_pure inline static
   typename get_pod_type<eT>::result
   norm_1(const eT* src, const u32 n_elem);
   

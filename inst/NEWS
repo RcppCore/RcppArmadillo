@@ -1,3 +1,14 @@
+0.2.16  2011-03-10
+
+    o   Upgraded to Armadillo Version 1.1.8   "Kangaroo Steak"
+
+         * Added floor() and ceil()
+         * Added “not a number”: math::nan()
+         * Added infinity: math::inf()
+         * Added standalone is_finite()
+         * Faster min(), max(), mean()
+         * Bugfix for a corner case with NaNs in min() and max()
+
 0.2.15  2011-03-04
 
     o   Upgraded to Armadillo Version 1.1.6   “Baby Carpet Shark”

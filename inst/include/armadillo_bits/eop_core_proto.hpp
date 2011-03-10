@@ -1,5 +1,5 @@
-// Copyright (C) 2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2010 Conrad Sanderson
+// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -81,6 +81,8 @@ class eop_eps               : public eop_core<eop_eps>               {};
 class eop_abs               : public eop_core<eop_abs>               {};
 class eop_conj              : public eop_core<eop_conj>              {};
 class eop_pow               : public eop_core<eop_pow>               {};
+class eop_floor             : public eop_core<eop_floor>             {};
+class eop_ceil              : public eop_core<eop_ceil>              {};
 class eop_randu             : public eop_core<eop_randu>             {};
 class eop_randn             : public eop_core<eop_randn>             {};
 class eop_zeros             : public eop_core<eop_zeros>             {};

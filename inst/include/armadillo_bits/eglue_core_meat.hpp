@@ -1,5 +1,5 @@
-// Copyright (C) 2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2010 Conrad Sanderson
+// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -52,6 +52,34 @@ class eglue_schur : public eglue_core<eglue_schur>
 
 
 
+#undef arma_applier
+#undef operatorA
+#undef operatorB
+
+#define arma_applier(operatorA, operatorB) \
+  {\
+  u32 i,j;\
+  \
+  for(i=0, j=1; j<n_elem; i+=2, j+=2)\
+    {\
+    eT tmp_i = P1[i];\
+    eT tmp_j = P1[j];\
+    \
+    tmp_i operatorB##= P2[i];\
+    tmp_j operatorB##= P2[j];\
+    \
+    out_mem[i] operatorA tmp_i;\
+    out_mem[j] operatorA tmp_j;\
+    }\
+  \
+  if(i < n_elem)\
+    {\
+    out_mem[i] operatorA P1[i] operatorB P2[i];\
+    }\
+  }
+  
+
+
 //
 // matrices
 
@@ -78,33 +106,10 @@ eglue_core<eglue_type>::apply(Mat<typename T1::elem_type>& out, const eGlue<T1, 
         eT* out_mem = out.memptr();
   const u32 n_elem  = out.n_elem;
   
-  #undef  arma_applier
-  #define arma_applier(operator) \
-    {\
-    u32 i,j;\
-    \
-    for(i=0, j=1; j<n_elem; i+=2, j+=2)\
-      {\
-      eT tmp_i = P1[i];\
-      eT tmp_j = P1[j];\
-      \
-      tmp_i operator##= P2[i];\
-      tmp_j operator##= P2[j];\
-      \
-      out_mem[i] = tmp_i;\
-      out_mem[j] = tmp_j;\
-      }\
-    \
-    if(i < n_elem)\
-      {\
-      out_mem[i] = P1[i] operator P2[i];\
-      }\
-    }
-  
-       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(+); }
-  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(-); }
-  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(/); }
-  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(*); }
+       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(=, +); }
+  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(=, -); }
+  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(=, /); }
+  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(=, *); }
   else
     {
     arma_stop("eglue_core::apply_proxy(): unhandled eglue_type");
@@ -134,33 +139,10 @@ eglue_core<eglue_type>::apply_inplace_plus(Mat<typename T1::elem_type>& out, con
         eT* out_mem = out.memptr();
   const u32 n_elem  = out.n_elem;
   
-  #undef  arma_applier
-  #define arma_applier(operator) \
-    {\
-    u32 i,j;\
-    \
-    for(i=0, j=1; j<n_elem; i+=2, j+=2)\
-      {\
-      eT tmp_i = P1[i];\
-      eT tmp_j = P1[j];\
-      \
-      tmp_i operator##= P2[i];\
-      tmp_j operator##= P2[j];\
-      \
-      out_mem[i] += tmp_i;\
-      out_mem[j] += tmp_j;\
-      }\
-    \
-    if(i < n_elem)\
-      {\
-      out_mem[i] += P1[i] operator P2[i];\
-      }\
-    }
-  
-       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(+); }
-  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(-); }
-  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(/); }
-  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(*); }
+       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(+=, +); }
+  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(+=, -); }
+  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(+=, /); }
+  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(+=, *); }
   else
     {
     arma_stop("eglue_core::apply_inplace_plus(): unhandled eglue_type");
@@ -190,33 +172,10 @@ eglue_core<eglue_type>::apply_inplace_minus(Mat<typename T1::elem_type>& out, co
         eT* out_mem = out.memptr();
   const u32 n_elem  = out.n_elem;
   
-  #undef  arma_applier
-  #define arma_applier(operator) \
-    {\
-    u32 i,j;\
-    \
-    for(i=0, j=1; j<n_elem; i+=2, j+=2)\
-      {\
-      eT tmp_i = P1[i];\
-      eT tmp_j = P1[j];\
-      \
-      tmp_i operator##= P2[i];\
-      tmp_j operator##= P2[j];\
-      \
-      out_mem[i] -= tmp_i;\
-      out_mem[j] -= tmp_j;\
-      }\
-    \
-    if(i < n_elem)\
-      {\
-      out_mem[i] -= P1[i] operator P2[i];\
-      }\
-    }
-  
-       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(+); }
-  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(-); }
-  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(/); }
-  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(*); }
+       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(-=, +); }
+  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(-=, -); }
+  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(-=, /); }
+  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(-=, *); }
   else 
     {
     arma_stop("eglue_core::apply_inplace_minus(): unhandled eglue_type");
@@ -246,33 +205,10 @@ eglue_core<eglue_type>::apply_inplace_schur(Mat<typename T1::elem_type>& out, co
         eT* out_mem = out.memptr();
   const u32 n_elem  = out.n_elem;
   
-  #undef  arma_applier
-  #define arma_applier(operator) \
-    {\
-    u32 i,j;\
-    \
-    for(i=0, j=1; j<n_elem; i+=2, j+=2)\
-      {\
-      eT tmp_i = P1[i];\
-      eT tmp_j = P1[j];\
-      \
-      tmp_i operator##= P2[i];\
-      tmp_j operator##= P2[j];\
-      \
-      out_mem[i] *= tmp_i;\
-      out_mem[j] *= tmp_j;\
-      }\
-    \
-    if(i < n_elem)\
-      {\
-      out_mem[i] *= P1[i] operator P2[i];\
-      }\
-    }
-  
-       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(+); }
-  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(-); }
-  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(/); }
-  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(*); }
+       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(*=, +); }
+  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(*=, -); }
+  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(*=, /); }
+  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(*=, *); }
   else
     {
     arma_stop("eglue_core::apply_inplace_schur(): unhandled eglue_type");
@@ -302,33 +238,10 @@ eglue_core<eglue_type>::apply_inplace_div(Mat<typename T1::elem_type>& out, cons
         eT* out_mem = out.memptr();
   const u32 n_elem  = out.n_elem;
   
-  #undef  arma_applier
-  #define arma_applier(operator) \
-    {\
-    u32 i,j;\
-    \
-    for(i=0, j=1; j<n_elem; i+=2, j+=2)\
-      {\
-      eT tmp_i = P1[i];\
-      eT tmp_j = P1[j];\
-      \
-      tmp_i operator##= P2[i];\
-      tmp_j operator##= P2[j];\
-      \
-      out_mem[i] /= tmp_i;\
-      out_mem[j] /= tmp_j;\
-      }\
-    \
-    if(i < n_elem)\
-      {\
-      out_mem[i] /= P1[i] operator P2[i];\
-      }\
-    }
-  
-       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(+); }
-  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(-); }
-  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(/); }
-  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(*); }
+       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(/=, +); }
+  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(/=, -); }
+  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(/=, /); }
+  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(/=, *); }
   else
     {
     arma_stop("eglue_core::apply_inplace_div(): unhandled eglue_type");
@@ -363,33 +276,10 @@ eglue_core<eglue_type>::apply(Cube<typename T1::elem_type>& out, const eGlueCube
         eT* out_mem = out.memptr();
   const u32 n_elem  = out.n_elem;
   
-  #undef  arma_applier
-  #define arma_applier(operator) \
-    {\
-    u32 i,j;\
-    \
-    for(i=0, j=1; j<n_elem; i+=2, j+=2)\
-      {\
-      eT tmp_i = P1[i];\
-      eT tmp_j = P1[j];\
-      \
-      tmp_i operator##= P2[i];\
-      tmp_j operator##= P2[j];\
-      \
-      out_mem[i] = tmp_i;\
-      out_mem[j] = tmp_j;\
-      }\
-    \
-    if(i < n_elem)\
-      {\
-      out_mem[i] = P1[i] operator P2[i];\
-      }\
-    }
-  
-       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(+); }
-  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(-); }
-  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(/); }
-  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(*); }
+       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(=, +); }
+  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(=, -); }
+  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(=, /); }
+  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(=, *); }
   else
     {
     arma_stop("eglue_core::apply(): unhandled eglue_type");
@@ -419,33 +309,10 @@ eglue_core<eglue_type>::apply_inplace_plus(Cube<typename T1::elem_type>& out, co
   const u32 n_elem  = out.n_elem;
         eT* out_mem = out.memptr();
   
-  #undef  arma_applier
-  #define arma_applier(operator) \
-    {\
-    u32 i,j;\
-    \
-    for(i=0, j=1; j<n_elem; i+=2, j+=2)\
-      {\
-      eT tmp_i = P1[i];\
-      eT tmp_j = P1[j];\
-      \
-      tmp_i operator##= P2[i];\
-      tmp_j operator##= P2[j];\
-      \
-      out_mem[i] += tmp_i;\
-      out_mem[j] += tmp_j;\
-      }\
-    \
-    if(i < n_elem)\
-      {\
-      out_mem[i] += P1[i] operator P2[i];\
-      }\
-    }
-  
-       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(+); }
-  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(-); }
-  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(/); }
-  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(*); }
+       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(+=, +); }
+  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(+=, -); }
+  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(+=, /); }
+  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(+=, *); }
   else
     {
     arma_stop("eglue_core::apply_inplace_plus(): unhandled eglue_type");
@@ -475,33 +342,10 @@ eglue_core<eglue_type>::apply_inplace_minus(Cube<typename T1::elem_type>& out, c
   const u32 n_elem  = out.n_elem;
         eT* out_mem = out.memptr();
   
-  #undef  arma_applier
-  #define arma_applier(operator) \
-    {\
-    u32 i,j;\
-    \
-    for(i=0, j=1; j<n_elem; i+=2, j+=2)\
-      {\
-      eT tmp_i = P1[i];\
-      eT tmp_j = P1[j];\
-      \
-      tmp_i operator##= P2[i];\
-      tmp_j operator##= P2[j];\
-      \
-      out_mem[i] -= tmp_i;\
-      out_mem[j] -= tmp_j;\
-      }\
-    \
-    if(i < n_elem)\
-      {\
-      out_mem[i] -= P1[i] operator P2[i];\
-      }\
-    }
-  
-       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(+); }
-  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(-); }
-  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(/); }
-  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(*); }
+       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(-=, +); }
+  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(-=, -); }
+  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(-=, /); }
+  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(-=, *); }
   else 
     {
     arma_stop("eglue_core::apply_inplace_minus(): unhandled eglue_type");
@@ -531,33 +375,10 @@ eglue_core<eglue_type>::apply_inplace_schur(Cube<typename T1::elem_type>& out, c
   const u32 n_elem  = out.n_elem;
         eT* out_mem = out.memptr();
   
-  #undef  arma_applier
-  #define arma_applier(operator) \
-    {\
-    u32 i,j;\
-    \
-    for(i=0, j=1; j<n_elem; i+=2, j+=2)\
-      {\
-      eT tmp_i = P1[i];\
-      eT tmp_j = P1[j];\
-      \
-      tmp_i operator##= P2[i];\
-      tmp_j operator##= P2[j];\
-      \
-      out_mem[i] *= tmp_i;\
-      out_mem[j] *= tmp_j;\
-      }\
-    \
-    if(i < n_elem)\
-      {\
-      out_mem[i] *= P1[i] operator P2[i];\
-      }\
-    }
-  
-       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(+); }
-  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(-); }
-  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(/); }
-  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(*); }
+       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(*=, +); }
+  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(*=, -); }
+  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(*=, /); }
+  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(*=, *); }
   else
     {
     arma_stop("eglue_core::apply_inplace_schur(): unhandled eglue_type");
@@ -587,39 +408,19 @@ eglue_core<eglue_type>::apply_inplace_div(Cube<typename T1::elem_type>& out, con
   const u32 n_elem  = out.n_elem;
         eT* out_mem = out.memptr();
   
-  #undef  arma_applier
-  #define arma_applier(operator) \
-    {\
-    u32 i,j;\
-    \
-    for(i=0, j=1; j<n_elem; i+=2, j+=2)\
-      {\
-      eT tmp_i = P1[i];\
-      eT tmp_j = P1[j];\
-      \
-      tmp_i operator##= P2[i];\
-      tmp_j operator##= P2[j];\
-      \
-      out_mem[i] /= tmp_i;\
-      out_mem[j] /= tmp_j;\
-      }\
-    \
-    if(i < n_elem)\
-      {\
-      out_mem[i] /= P1[i] operator P2[i];\
-      }\
-    }
-  
-       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(+); }
-  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(-); }
-  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(/); }
-  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(*); }
+       if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier(/=, +); }
+  else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier(/=, -); }
+  else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier(/=, /); }
+  else if(is_same_type<eglue_type, eglue_schur>::value == true) { arma_applier(/=, *); }
   else
     {
     arma_stop("eglue_core::apply_inplace_div(): unhandled eglue_type");
     }
   }
 
+
+
+#undef  arma_applier
 
 
 //! @}

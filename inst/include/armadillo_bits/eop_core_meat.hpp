@@ -1,5 +1,5 @@
-// Copyright (C) 2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2010 Conrad Sanderson
+// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -90,6 +90,9 @@ eop_core<eop_type>::apply_inplace_plus(Mat<typename T1::elem_type>& out, const e
   
   arma_debug_assert_same_size(out.n_rows, out.n_cols, n_rows, n_cols, "addition");
   
+        eT* out_mem = out.memptr();
+  const u32 n_elem  = out.n_elem;
+  
   if(is_generator<eop_type>::value == true)
     {
     if(is_same_type<eop_type, eop_ones_diag>::value == true)
@@ -103,9 +106,6 @@ eop_core<eop_type>::apply_inplace_plus(Mat<typename T1::elem_type>& out, const e
       }
     else
       {
-            eT* out_mem = out.memptr();
-      const u32 n_elem  = out.n_elem;
-      
       for(u32 i=0; i<n_elem; ++i)
         {
         out_mem[i] += eop_aux::generate<eT,eop_type>();
@@ -116,10 +116,8 @@ eop_core<eop_type>::apply_inplace_plus(Mat<typename T1::elem_type>& out, const e
     {
     typedef typename Proxy<T1>::ea_type ea_type;
     
-    const eT      k       = x.aux;
-          ea_type P       = x.P.get_ea();
-          eT*     out_mem = out.memptr();
-    const u32     n_elem  = out.n_elem;
+    const eT      k = x.aux;
+          ea_type P = x.P.get_ea();
     
     u32 i,j;
     
@@ -157,6 +155,9 @@ eop_core<eop_type>::apply_inplace_minus(Mat<typename T1::elem_type>& out, const 
   
   arma_debug_assert_same_size(out.n_rows, out.n_cols, n_rows, n_cols, "subtraction");
   
+        eT* out_mem = out.memptr();
+  const u32 n_elem  = out.n_elem;
+  
   if(is_generator<eop_type>::value == true)
     {
     if(is_same_type<eop_type, eop_ones_diag>::value == true)
@@ -170,9 +171,6 @@ eop_core<eop_type>::apply_inplace_minus(Mat<typename T1::elem_type>& out, const 
       }
     else
       {
-            eT* out_mem = out.memptr();
-      const u32 n_elem  = out.n_elem;
-      
       for(u32 i=0; i<n_elem; ++i)
         {
         out_mem[i] -= eop_aux::generate<eT,eop_type>();
@@ -183,10 +181,8 @@ eop_core<eop_type>::apply_inplace_minus(Mat<typename T1::elem_type>& out, const 
     {
     typedef typename Proxy<T1>::ea_type ea_type;
     
-    const eT      k       = x.aux;
-          ea_type P       = x.P.get_ea();
-          eT*     out_mem = out.memptr();
-    const u32     n_elem  = out.n_elem;
+    const eT      k = x.aux;
+          ea_type P = x.P.get_ea();
     
     u32 i,j;
     
@@ -224,6 +220,9 @@ eop_core<eop_type>::apply_inplace_schur(Mat<typename T1::elem_type>& out, const 
   
   arma_debug_assert_same_size(out.n_rows, out.n_cols, n_rows, n_cols, "element-wise multiplication");
   
+        eT* out_mem = out.memptr();
+  const u32 n_elem  = out.n_elem;
+  
   if(is_generator<eop_type>::value == true)
     {
     if(is_same_type<eop_type, eop_ones_diag>::value == true)
@@ -238,9 +237,6 @@ eop_core<eop_type>::apply_inplace_schur(Mat<typename T1::elem_type>& out, const 
       }
     else
       {
-            eT* out_mem = out.memptr();
-      const u32 n_elem  = out.n_elem;
-      
       for(u32 i=0; i<n_elem; ++i)
         {
         out_mem[i] *= eop_aux::generate<eT,eop_type>();
@@ -251,10 +247,8 @@ eop_core<eop_type>::apply_inplace_schur(Mat<typename T1::elem_type>& out, const 
     {
     typedef typename Proxy<T1>::ea_type ea_type;
     
-    const eT      k       = x.aux;
-          ea_type P       = x.P.get_ea();
-          eT*     out_mem = out.memptr();
-    const u32     n_elem  = out.n_elem;
+    const eT      k = x.aux;
+          ea_type P = x.P.get_ea();
     
     u32 i,j;
     
@@ -311,9 +305,6 @@ eop_core<eop_type>::apply_inplace_div(Mat<typename T1::elem_type>& out, const eO
       }
     else
       {
-            eT* out_mem = out.memptr();
-      const u32 n_elem  = out.n_elem;
-      
       for(u32 i=0; i<n_elem; ++i)
         {
         out_mem[i] /= eop_aux::generate<eT,eop_type>();
@@ -324,10 +315,8 @@ eop_core<eop_type>::apply_inplace_div(Mat<typename T1::elem_type>& out, const eO
     {
     typedef typename Proxy<T1>::ea_type ea_type;
     
-    const eT      k       = x.aux;
-          ea_type P       = x.P.get_ea();
-          eT*     out_mem = out.memptr();
-    const u32     n_elem  = out.n_elem;
+    const eT      k = x.aux;
+          ea_type P = x.P.get_ea();
     
     u32 i,j;
     
@@ -421,13 +410,11 @@ eop_core<eop_type>::apply_inplace_plus(Cube<typename T1::elem_type>& out, const 
   
   arma_debug_assert_same_size(out.n_rows, out.n_cols, out.n_slices, n_rows, n_cols, n_slices, "addition");
   
-  eT* out_mem = out.memptr();
+        eT* out_mem = out.memptr();
+  const u32 n_elem  = out.n_elem;
   
   if(is_generator<eop_type>::value == true)
     {
-          eT* out_mem = out.memptr();
-    const u32 n_elem  = out.n_elem;
-    
     for(u32 i=0; i<n_elem; ++i)
       {
       out_mem[i] += eop_aux::generate<eT,eop_type>();
@@ -437,10 +424,8 @@ eop_core<eop_type>::apply_inplace_plus(Cube<typename T1::elem_type>& out, const 
     {
     typedef typename ProxyCube<T1>::ea_type ea_type;
     
-    const eT      k       = x.aux;
-          ea_type P       = x.P.get_ea();
-          eT*     out_mem = out.memptr();
-    const u32     n_elem  = out.n_elem;
+    const eT      k = x.aux;
+          ea_type P = x.P.get_ea();
     
     u32 i,j;
     
@@ -479,13 +464,11 @@ eop_core<eop_type>::apply_inplace_minus(Cube<typename T1::elem_type>& out, const
   
   arma_debug_assert_same_size(out.n_rows, out.n_cols, out.n_slices, n_rows, n_cols, n_slices, "subtraction");
   
-  eT* out_mem = out.memptr();
+        eT* out_mem = out.memptr();
+  const u32 n_elem  = out.n_elem;
   
   if(is_generator<eop_type>::value == true)
     {
-          eT* out_mem = out.memptr();
-    const u32 n_elem  = out.n_elem;
-    
     for(u32 i=0; i<n_elem; ++i)
       {
       out_mem[i] -= eop_aux::generate<eT,eop_type>();
@@ -495,10 +478,8 @@ eop_core<eop_type>::apply_inplace_minus(Cube<typename T1::elem_type>& out, const
     {
     typedef typename ProxyCube<T1>::ea_type ea_type;
     
-    const eT      k       = x.aux;
-          ea_type P       = x.P.get_ea();
-          eT*     out_mem = out.memptr();
-    const u32     n_elem  = out.n_elem;
+    const eT      k = x.aux;
+          ea_type P = x.P.get_ea();
     
     u32 i,j;
     
@@ -537,13 +518,11 @@ eop_core<eop_type>::apply_inplace_schur(Cube<typename T1::elem_type>& out, const
   
   arma_debug_assert_same_size(out.n_rows, out.n_cols, out.n_slices, n_rows, n_cols, n_slices, "element-wise multiplication");
   
-  eT* out_mem = out.memptr();
+        eT* out_mem = out.memptr();
+  const u32 n_elem  = out.n_elem;
   
   if(is_generator<eop_type>::value == true)
     {
-          eT* out_mem = out.memptr();
-    const u32 n_elem  = out.n_elem;
-    
     for(u32 i=0; i<n_elem; ++i)
       {
       out_mem[i] *= eop_aux::generate<eT,eop_type>();
@@ -553,10 +532,8 @@ eop_core<eop_type>::apply_inplace_schur(Cube<typename T1::elem_type>& out, const
     {
     typedef typename ProxyCube<T1>::ea_type ea_type;
     
-    const eT      k       = x.aux;
-          ea_type P       = x.P.get_ea();
-          eT*     out_mem = out.memptr();
-    const u32     n_elem  = out.n_elem;
+    const eT      k = x.aux;
+          ea_type P = x.P.get_ea();
     
     u32 i,j;
     
@@ -595,13 +572,11 @@ eop_core<eop_type>::apply_inplace_div(Cube<typename T1::elem_type>& out, const e
   
   arma_debug_assert_same_size(out.n_rows, out.n_cols, out.n_slices, n_rows, n_cols, n_slices, "element-wise division");
   
-  eT* out_mem = out.memptr();
-  
+        eT* out_mem = out.memptr();
+  const u32 n_elem  = out.n_elem;
+    
   if(is_generator<eop_type>::value == true)
     {
-          eT* out_mem = out.memptr();
-    const u32 n_elem  = out.n_elem;
-    
     for(u32 i=0; i<n_elem; ++i)
       {
       out_mem[i] /= eop_aux::generate<eT,eop_type>();
@@ -611,10 +586,8 @@ eop_core<eop_type>::apply_inplace_div(Cube<typename T1::elem_type>& out, const e
     {
     typedef typename ProxyCube<T1>::ea_type ea_type;
     
-    const eT      k       = x.aux;
-          ea_type P       = x.P.get_ea();
-          eT*     out_mem = out.memptr();
-    const u32     n_elem  = out.n_elem;
+    const eT      k = x.aux;
+          ea_type P = x.P.get_ea();
     
     u32 i,j;
     
@@ -756,6 +729,12 @@ eop_core<eop_conj             >::process(const eT val, const eT  ) { return eop_
 
 template<> template<typename eT> arma_hot arma_pure arma_inline eT
 eop_core<eop_pow              >::process(const eT val, const eT k) { return eop_aux::pow(val, k);     }
+
+template<> template<typename eT> arma_hot arma_pure arma_inline eT
+eop_core<eop_floor            >::process(const eT val, const eT  ) { return eop_aux::floor(val);      }
+
+template<> template<typename eT> arma_hot arma_pure arma_inline eT
+eop_core<eop_ceil             >::process(const eT val, const eT  ) { return eop_aux::ceil(val);       }
 
 
 

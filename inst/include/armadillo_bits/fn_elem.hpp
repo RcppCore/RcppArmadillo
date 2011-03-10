@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -624,6 +624,60 @@ pow(const BaseCube<typename T1::elem_type,T1>& A, const typename T1::elem_type::
   typedef typename T1::elem_type eT;
   
   return eOpCube<T1, eop_pow>(A.get_ref(), eT(exponent));
+  }
+
+
+
+//
+// floor
+
+template<typename T1>
+arma_inline
+const eOp<T1, eop_floor>
+floor(const Base<typename T1::elem_type,T1>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  return eOp<T1, eop_floor>(A.get_ref());
+  }
+
+
+
+template<typename T1>
+arma_inline
+const eOpCube<T1, eop_floor>
+floor(const BaseCube<typename T1::elem_type,T1>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  return eOpCube<T1, eop_floor>(A.get_ref());
+  }
+
+
+
+//
+// ceil
+
+template<typename T1>
+arma_inline
+const eOp<T1, eop_ceil>
+ceil(const Base<typename T1::elem_type,T1>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  return eOp<T1, eop_ceil>(A.get_ref());
+  }
+
+
+
+template<typename T1>
+arma_inline
+const eOpCube<T1, eop_ceil>
+ceil(const BaseCube<typename T1::elem_type,T1>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  return eOpCube<T1, eop_ceil>(A.get_ref());
   }
 
 

@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -24,20 +24,19 @@ op_min::direct_min(const eT* const X, const u32 n_elem)
   {
   arma_extra_debug_sigprint();
   
-  eT min_val = X[0];
+  eT min_val = (n_elem != 1) ? priv::most_pos<eT>() : X[0];
   
   u32 i,j;
   
-  for(i=1, j=2; j<n_elem; i+=2, j+=2)
+  for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
     const eT X_i = X[i];
+    const eT X_j = X[j];
     
     if(X_i < min_val)
       {
       min_val = X_i;
       }
-    
-    const eT X_j = X[j];
     
     if(X_j < min_val)
       {
@@ -70,9 +69,10 @@ op_min::direct_min(const subview<eT>& X)
   arma_extra_debug_sigprint();
   
   const u32 X_n_elem = X.n_elem;
-        eT  min_val  = X[0];
   
-  for(u32 i=1; i<X_n_elem; ++i)
+  eT min_val = (X_n_elem != 1) ? priv::most_pos<eT>() : X[0];
+  
+  for(u32 i=0; i<X_n_elem; ++i)
     {
     eT tmp_val = X[i];
     
@@ -96,9 +96,10 @@ op_min::direct_min(const diagview<eT>& X)
   arma_extra_debug_sigprint();
   
   const u32 X_n_elem = X.n_elem;
-        eT  min_val  = X[0];
   
-  for(u32 i=1; i<X_n_elem; ++i)
+  eT min_val = (X_n_elem != 1) ? priv::most_pos<eT>() : X[0];
+  
+  for(u32 i=0; i<X_n_elem; ++i)
     {
     eT tmp_val = X[i];
     
@@ -135,7 +136,7 @@ inline void op_min::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_min>&
   const u32 X_n_rows = X.n_rows;
   const u32 X_n_cols = X.n_cols;
   
-  if(dim == 0)  // column-wise min
+  if(dim == 0)  // min in each column
     {
     arma_extra_debug_print("op_min::apply(), dim = 0");
     
@@ -147,7 +148,7 @@ inline void op_min::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_min>&
       }
     }
   else
-  if(dim == 1)  // row-wise min
+  if(dim == 1)  // min in each row
     {
     arma_extra_debug_print("op_min::apply(), dim = 1");
     
@@ -155,9 +156,9 @@ inline void op_min::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_min>&
     
     for(u32 row=0; row<X_n_rows; ++row)
       {
-      eT min_val = X.at(row,0);
+      eT min_val = (X_n_cols != 1) ? priv::most_pos<eT>() : X.at(row,0);
       
-      for(u32 col=1; col<X_n_cols; ++col)
+      for(u32 col=0; col<X_n_cols; ++col)
         {
         const eT tmp_val = X.at(row,col);
         
@@ -168,7 +169,6 @@ inline void op_min::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_min>&
         }
       
       out[row] = min_val;
-      
       }
     
     }
@@ -186,9 +186,9 @@ op_min::direct_min(const std::complex<T>* const X, const u32 n_elem)
   arma_extra_debug_sigprint();
   
   u32 index   = 0;
-  T   min_val = std::abs(X[index]);
+  T   min_val = (n_elem != 1) ? priv::most_pos<T>() : std::abs(X[0]);
   
-  for(u32 i=1; i<n_elem; ++i)
+  for(u32 i=0; i<n_elem; ++i)
     {
     const T tmp_val = std::abs(X[i]);
     
@@ -214,9 +214,9 @@ op_min::direct_min(const subview< std::complex<T> >& X)
   
   const u32 X_n_elem = X.n_elem;
         u32 index    = 0;
-        T   min_val  = std::abs(X[index]);
+        T   min_val  = (X_n_elem != 1) ? priv::most_pos<T>() : std::abs(X[0]);
   
-  for(u32 i=1; i<X_n_elem; ++i)
+  for(u32 i=0; i<X_n_elem; ++i)
     {
     const T tmp_val = std::abs(X[i]);
     
@@ -242,9 +242,9 @@ op_min::direct_min(const diagview< std::complex<T> >& X)
   
   const u32 X_n_elem = X.n_elem;
         u32 index    = 0;
-        T   min_val  = std::abs(X[index]);
+        T   min_val  = (X_n_elem != 1) ? priv::most_pos<T>() : std::abs(X[0]);
   
-  for(u32 i=1; i<X_n_elem; ++i)
+  for(u32 i=0; i<X_n_elem; ++i)
     {
     const T tmp_val = std::abs(X[i]);
     
@@ -301,9 +301,9 @@ inline void op_min::apply(Mat< std::complex<T> >& out, const Op<T1,op_min>& in)
     for(u32 row=0; row<X_n_rows; ++row)
       {
       u32 index   = 0;
-      T   min_val = std::abs(X.at(row,index));
+      T   min_val = (X_n_cols != 1) ? priv::most_pos<T>() : std::abs(X.at(row,0));
       
-      for(u32 col=1; col<X.n_cols; ++col)
+      for(u32 col=0; col<X_n_cols; ++col)
         {
         const T tmp_val = std::abs(X.at(row,col));
         

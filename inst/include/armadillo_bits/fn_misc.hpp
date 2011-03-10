@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -113,6 +113,55 @@ log_add(eT log_a, eT log_b)
       return (log_a + std::log(1.0 + std::exp(negdelta)));
     #endif
     }
+  }
+
+
+
+template<typename eT>
+arma_inline
+arma_warn_unused
+bool
+is_finite(const eT x, const typename arma_scalar_only<eT>::result* junk = 0)
+  {
+  arma_ignore(junk);
+  
+  return arma_isfinite(x);
+  }
+
+
+
+template<typename T1>
+inline
+arma_warn_unused
+bool
+is_finite(const Base<typename T1::elem_type,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const unwrap<T1>   tmp(X.get_ref());
+  const Mat<eT>& A = tmp.M;
+  
+  return A.is_finite();
+  }
+
+
+
+template<typename T1>
+inline
+arma_warn_unused
+bool
+is_finite(const BaseCube<typename T1::elem_type,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const unwrap_cube<T1> tmp(X.get_ref());
+  const Cube<eT>& A =   tmp.M;
+  
+  return A.is_finite();
   }
 
 
