@@ -86,17 +86,7 @@ prod(const Op<T1, op_prod>& in)
   
   arma_debug_check( (X.n_elem < 1), "prod(): given object has no elements" );
   
-  const u32 n_elem = X.n_elem;
-  const eT* X_mem  = X.memptr();
-  
-  eT val = X_mem[0];
-  
-  for(u32 i=1; i<n_elem; ++i)
-    {
-    val *= X_mem[i];
-    }
-  
-  return val;
+  return arrayops::product(X.memptr(), X.n_elem);
   }
 
 

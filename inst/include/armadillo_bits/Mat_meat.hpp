@@ -4144,6 +4144,104 @@ Mat<eT>::set_imag(const Base<typename Mat<eT>::pod_type,T1>& X)
 
 
 
+template<typename eT>
+inline
+eT
+Mat<eT>::min() const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (n_elem == 0), "min(): object has no elements" );
+  
+  return op_min::direct_min(memptr(), n_elem);
+  }
+
+
+
+template<typename eT>
+inline
+eT
+Mat<eT>::max() const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (n_elem == 0), "max(): object has no elements" );
+  
+  return op_max::direct_max(memptr(), n_elem);
+  }
+
+
+
+template<typename eT>
+inline
+eT
+Mat<eT>::min(u32& index_of_min_val) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (n_elem == 0), "min(): object has no elements" );
+  
+  return op_min::direct_min(memptr(), n_elem, index_of_min_val);
+  }
+
+
+
+template<typename eT>
+inline
+eT
+Mat<eT>::max(u32& index_of_max_val) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (n_elem == 0), "max(): object has no elements" );
+  
+  return op_max::direct_max(memptr(), n_elem, index_of_max_val);
+  }
+
+
+
+template<typename eT>
+inline
+eT
+Mat<eT>::min(u32& row_of_min_val, u32& col_of_min_val) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (n_elem == 0), "min(): object has no elements" );
+  
+  u32 i;
+  
+  eT val = op_min::direct_min(memptr(), n_elem, i);
+  
+  row_of_min_val = i % n_rows;
+  col_of_min_val = i / n_rows;
+  
+  return val;
+  }
+
+
+
+template<typename eT>
+inline
+eT
+Mat<eT>::max(u32& row_of_max_val, u32& col_of_max_val) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (n_elem == 0), "max(): object has no elements" );
+  
+  u32 i;
+  
+  eT val = op_max::direct_max(memptr(), n_elem, i);
+  
+  row_of_max_val = i % n_rows;
+  col_of_max_val = i / n_rows;
+  
+  return val;
+  }
+
+
+
 //! save the matrix to a file
 template<typename eT>
 inline

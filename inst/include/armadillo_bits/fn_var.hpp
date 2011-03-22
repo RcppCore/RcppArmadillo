@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -18,22 +18,12 @@
 
 template<typename T1>
 inline
-Mat<typename T1::pod_type>
+const mtOp<typename T1::pod_type, T1, op_var>
 var(const Base<typename T1::elem_type,T1>& X, const u32 norm_type = 0, const u32 dim = 0)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type  in_eT;
-  typedef typename T1::pod_type  out_eT;
-
-  const unwrap<T1>      tmp(X.get_ref());
-  const Mat<in_eT>& A = tmp.M;
-
-  Mat<out_eT> out;
-  
-  op_var::apply(out, A, norm_type, dim);
-  
-  return out;
+  return mtOp<typename T1::pod_type, T1, op_var>(X.get_ref(), norm_type, dim);
   }
 
 

@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -44,7 +44,7 @@ glue_mixed_times::apply(Mat<typename eT_promoter<T1,T2>::eT>& out, const mtGlue<
   const Mat<eT1>& AA = A_is_alias ? *AA_ptr : A;
   const Mat<eT2>& BB = B_is_alias ? *BB_ptr : B;
   
-  arma_debug_assert_mul_size(AA, BB, "matrix multiplication");
+  arma_debug_assert_mul_size(AA, BB, "multiplication");
   
   out.set_size(AA.n_rows, BB.n_cols);
   
@@ -81,7 +81,7 @@ glue_mixed_plus::apply(Mat<typename eT_promoter<T1,T2>::eT>& out, const mtGlue<t
   const Proxy<T1> A(X.A);
   const Proxy<T2> B(X.B);
   
-  arma_debug_assert_same_size(A, B, "matrix addition");
+  arma_debug_assert_same_size(A, B, "addition");
   
   out.set_size(A.get_n_rows(), A.get_n_cols());
   
@@ -114,7 +114,7 @@ glue_mixed_minus::apply(Mat<typename eT_promoter<T1,T2>::eT>& out, const mtGlue<
   const Proxy<T1> A(X.A);
   const Proxy<T2> B(X.B);
   
-  arma_debug_assert_same_size(A, B, "matrix subtraction");
+  arma_debug_assert_same_size(A, B, "subtraction");
   
   out.set_size(A.get_n_rows(), A.get_n_cols());
   
@@ -147,7 +147,7 @@ glue_mixed_div::apply(Mat<typename eT_promoter<T1,T2>::eT>& out, const mtGlue<ty
   const Proxy<T1> A(X.A);
   const Proxy<T2> B(X.B);
   
-  arma_debug_assert_same_size(A, B, "element-wise matrix division");
+  arma_debug_assert_same_size(A, B, "element-wise division");
   
   out.set_size(A.get_n_rows(), A.get_n_cols());
   
@@ -180,7 +180,7 @@ glue_mixed_schur::apply(Mat<typename eT_promoter<T1,T2>::eT>& out, const mtGlue<
   const Proxy<T1> A(X.A);
   const Proxy<T2> B(X.B);
   
-  arma_debug_assert_same_size(A, B, "element-wise matrix multiplication");
+  arma_debug_assert_same_size(A, B, "element-wise multiplication");
   
   out.set_size(A.get_n_rows(), A.get_n_cols());
   
@@ -219,7 +219,7 @@ glue_mixed_plus::apply(Cube<typename eT_promoter<T1,T2>::eT>& out, const mtGlueC
   const ProxyCube<T1> A(X.A);
   const ProxyCube<T2> B(X.B);
   
-  arma_debug_assert_same_size(A, B, "cube addition");
+  arma_debug_assert_same_size(A, B, "addition");
   
   out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
   
@@ -252,7 +252,7 @@ glue_mixed_minus::apply(Cube<typename eT_promoter<T1,T2>::eT>& out, const mtGlue
   const ProxyCube<T1> A(X.A);
   const ProxyCube<T2> B(X.B);
   
-  arma_debug_assert_same_size(A, B, "cube subtraction");
+  arma_debug_assert_same_size(A, B, "subtraction");
   
   out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
   
@@ -285,7 +285,7 @@ glue_mixed_div::apply(Cube<typename eT_promoter<T1,T2>::eT>& out, const mtGlueCu
   const ProxyCube<T1> A(X.A);
   const ProxyCube<T2> B(X.B);
   
-  arma_debug_assert_same_size(A, B, "element-wise cube division");
+  arma_debug_assert_same_size(A, B, "element-wise division");
   
   out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
   
@@ -318,7 +318,7 @@ glue_mixed_schur::apply(Cube<typename eT_promoter<T1,T2>::eT>& out, const mtGlue
   const ProxyCube<T1> A(X.A);
   const ProxyCube<T2> B(X.B);
   
-  arma_debug_assert_same_size(A, B, "element-wise cube multiplication");
+  arma_debug_assert_same_size(A, B, "element-wise multiplication");
   
   out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
   

@@ -18,8 +18,8 @@
 
 #define ARMA_VERSION_MAJOR 1
 #define ARMA_VERSION_MINOR 1
-#define ARMA_VERSION_PATCH 8
-#define ARMA_VERSION_NAME  "Kangaroo Steak"
+#define ARMA_VERSION_PATCH 90
+#define ARMA_VERSION_NAME  "Inside Job"
 
 
 
