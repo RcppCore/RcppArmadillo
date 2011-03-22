@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -14,6 +14,7 @@
 //! \addtogroup op_mean
 //! @{
 
+
 //! Class for finding mean values of a matrix
 class op_mean
   {
@@ -21,6 +22,9 @@ class op_mean
   
   template<typename eT>
   inline static eT direct_mean(const eT* const X, const u32 N);
+  
+  template<typename eT>
+  inline static eT direct_mean(const Mat<eT>& X, const u32 row);
   
   template<typename eT>
   inline static eT direct_mean(const subview<eT>& X);
@@ -31,6 +35,20 @@ class op_mean
   template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_mean>& in);
   
+  
+  template<typename eT>
+  inline static eT direct_mean_robust(const eT* const X, const u32 N);
+  
+  template<typename eT>
+  inline static eT direct_mean_robust(const Mat<eT>& X, const u32 row);
+  
+  template<typename eT>
+  inline static eT direct_mean_robust(const subview<eT>& X);
+  
+  template<typename eT>
+  inline static eT direct_mean_robust(const diagview<eT>& X);
   };
+
+
 
 //! @}

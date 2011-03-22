@@ -60,6 +60,82 @@ op_max::direct_max(const eT* const X, const u32 n_elem)
 
 
 
+template<typename eT>
+inline
+eT
+op_max::direct_max(const eT* const X, const u32 n_elem, u32& index_of_max_val)
+  {
+  arma_extra_debug_sigprint();
+  
+  eT max_val = (n_elem != 1) ? priv::most_neg<eT>() : X[0];
+  
+  u32 best_index = 0;
+  
+  u32 i,j;
+  
+  for(i=0, j=1; j<n_elem; i+=2, j+=2)
+    {
+    const eT X_i = X[i];
+    const eT X_j = X[j];
+    
+    if(X_i > max_val)
+      {
+      max_val    = X_i;
+      best_index = i;
+      }
+    
+    if(X_j > max_val)
+      {
+      max_val    = X_j;
+      best_index = j;
+      }
+    }
+  
+  
+  if(i < n_elem)
+    {
+    const eT X_i = X[i];
+    
+    if(X_i > max_val)
+      {
+      max_val    = X_i;
+      best_index = i;
+      }
+    }
+  
+  index_of_max_val = best_index;
+  
+  return max_val;
+  }
+
+
+
+template<typename eT>
+inline
+eT
+op_max::direct_max(const Mat<eT>& X, const u32 row)
+  {
+  arma_extra_debug_sigprint();
+  
+  const u32 X_n_cols = X.n_cols;
+  
+  eT max_val = (X_n_cols != 1) ? priv::most_neg<eT>() : X.at(row,0);
+  
+  for(u32 col=0; col<X_n_cols; ++col)
+    {
+    const eT tmp_val = X.at(row,col);
+    
+    if(tmp_val > max_val)
+      {
+      max_val = tmp_val;
+      }
+    }
+  
+  return max_val;
+  }
+
+
+
 //! find the maximum value in a subview
 template<typename eT>
 inline 
@@ -156,19 +232,7 @@ op_max::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_max>& in)
     
     for(u32 row=0; row<X_n_rows; ++row)
       {
-      eT max_val = (X_n_cols != 1) ? priv::most_neg<eT>() : X.at(row,0);
-      
-      for(u32 col=0; col<X_n_cols; ++col)
-        {
-        const eT tmp_val = X.at(row,col);
-        
-        if(tmp_val > max_val)
-          {
-          max_val = tmp_val;
-          }
-        }
-      
-      out[row] = max_val;
+      out[row] = op_max::direct_max( X, row );
       }
     }
   }
@@ -198,6 +262,62 @@ op_max::direct_max(const std::complex<T>* const X, const u32 n_elem)
     }
   
   return X[index];
+  }
+
+
+
+template<typename T>
+inline
+std::complex<T>
+op_max::direct_max(const std::complex<T>* const X, const u32 n_elem, u32& index_of_max_val)
+  {
+  arma_extra_debug_sigprint();
+  
+  u32 index   = 0;
+  T   max_val = (n_elem != 1) ? priv::most_neg<T>() : std::abs(X[0]);
+  
+  for(u32 i=0; i<n_elem; ++i)
+    {
+    const T tmp_val = std::abs(X[i]);
+    
+    if(tmp_val > max_val)
+      {
+      max_val = tmp_val;
+      index   = i;
+      }
+    }
+  
+  index_of_max_val = index;
+  
+  return X[index];
+  }
+
+
+
+template<typename T>
+inline 
+std::complex<T>
+op_max::direct_max(const Mat< std::complex<T> >& X, const u32 row)
+  {
+  arma_extra_debug_sigprint();
+  
+  const u32 X_n_cols = X.n_cols;
+  
+  u32 index   = 0;
+  T   max_val = (X_n_cols != 1) ? priv::most_neg<T>() : std::abs(X.at(row,0));
+  
+  for(u32 col=0; col<X_n_cols; ++col)
+    {
+    const T tmp_val = std::abs(X.at(row,col));
+    
+    if(tmp_val > max_val)
+      {
+      max_val = tmp_val;
+      index   = col;
+      }
+    }
+  
+  return X.at(row,index);
   }
 
 
@@ -254,69 +374,6 @@ op_max::direct_max(const diagview< std::complex<T> >& X)
     }
   
   return X[index];
-  }
-
-
-
-//! Implementation for complex numbers
-template<typename T, typename T1>
-inline void op_max::apply(Mat< std::complex<T> >& out, const Op<T1,op_max>& in)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename std::complex<T> eT;
-  isnt_same_type<eT, typename T1::elem_type>::check();
-  
-  const unwrap_check<T1> tmp(in.m, out);
-  const Mat<eT>& X = tmp.M;
-  
-  arma_debug_check( (X.n_elem == 0), "max(): given matrix has no elements" );
-  
-  const u32 dim = in.aux_u32_a;
-  arma_debug_check( (dim > 1), "max(): incorrect usage. dim must be 0 or 1");
-  
-  const u32 X_n_rows = X.n_rows;
-  const u32 X_n_cols = X.n_cols;
-  
-  if(dim == 0)  // column-wise max
-    {
-    arma_extra_debug_print("op_max::apply(), dim = 0");
-    
-    out.set_size(1, X_n_cols);
-    
-    for(u32 col=0; col<X_n_cols; ++col)
-      {
-      out[col] = op_max::direct_max( X.colptr(col), X_n_rows );
-      }
-    }
-  else
-  if(dim == 1)  // row-wise max
-    {
-    arma_extra_debug_print("op_max::apply(), dim = 1");
-    
-    out.set_size(X_n_rows, 1);
-    
-    for(u32 row=0; row<X_n_rows; ++row)
-      {
-      u32 index   = 0;
-      T   max_val = (X_n_cols != 1) ? priv::most_neg<T>() : std::abs(X.at(row,0));
-      
-      for(u32 col=0; col<X_n_cols; ++col)
-        {
-        const T tmp_val = std::abs(X.at(row,col));
-        
-        if(tmp_val > max_val)
-          {
-          max_val = tmp_val;
-          index   = col;
-          }
-        }
-      
-      out[row] = X.at(row,index);
-      }
-    
-    }
-  
   }
 
 
