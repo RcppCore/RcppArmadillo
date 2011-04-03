@@ -4,6 +4,8 @@
 
 	* inst/include/*: Updated to Armadillo 1.1.92 "Jurassic Barbecue"
 
+	* inst/doc/Makefile: Do not 'clean' in 'all' target
+
 2011-03-22  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.2.17
