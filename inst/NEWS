@@ -1,3 +1,10 @@
+0.2.18  2011-04-03
+
+    o   Upgraded to Armadillo Version 1.1.92  "Jurassic Barbecue"
+
+          * Bugfix in cor()
+	  * Automatic installation now requires CMake >= 2.6
+
 0.2.17  2011-03-22
 
     o   Upgraded to Armadillo Version 1.1.90  "Inside Job"

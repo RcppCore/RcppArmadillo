@@ -320,8 +320,8 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename T1> inline void set_imag(const Base<pod_type,T1>& X);
   
   
-  inline eT min() const;
-  inline eT max() const;
+  inline arma_warn_unused eT min() const;
+  inline arma_warn_unused eT max() const;
   
   inline eT min(u32& index_of_min_val) const;
   inline eT max(u32& index_of_max_val) const;
