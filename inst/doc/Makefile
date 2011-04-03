@@ -1,5 +1,5 @@
 
-all: 	clean RcppArmadillo-unitTests.pdf
+all: 	RcppArmadillo-unitTests.pdf
 
 clean:
 	rm -f RcppArmadillo-unitTests.pdf
