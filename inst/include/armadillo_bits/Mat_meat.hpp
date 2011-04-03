@@ -4146,6 +4146,7 @@ Mat<eT>::set_imag(const Base<typename Mat<eT>::pod_type,T1>& X)
 
 template<typename eT>
 inline
+arma_warn_unused
 eT
 Mat<eT>::min() const
   {
@@ -4160,6 +4161,7 @@ Mat<eT>::min() const
 
 template<typename eT>
 inline
+arma_warn_unused
 eT
 Mat<eT>::max() const
   {

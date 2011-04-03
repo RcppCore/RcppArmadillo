@@ -2340,15 +2340,7 @@ Cube<eT>::randn()
   const u32 N   = n_elem;
         eT* ptr = memptr();
   
-  u32 i,j;
-  
-  for(i=0, j=1; j<N; i+=2, j+=2)
-    {
-    ptr[i] = eT(eop_aux_randn<eT>());
-    ptr[j] = eT(eop_aux_randn<eT>());
-    }
-  
-  if(i < N)
+  for(u32 i=0; i<N; ++i)
     {
     ptr[i] = eT(eop_aux_randn<eT>());
     }
@@ -2412,6 +2404,7 @@ Cube<eT>::set_imag(const BaseCube<typename Cube<eT>::pod_type,T1>& X)
 
 template<typename eT>
 inline
+arma_warn_unused
 eT
 Cube<eT>::min() const
   {
@@ -2426,6 +2419,7 @@ Cube<eT>::min() const
 
 template<typename eT>
 inline
+arma_warn_unused
 eT
 Cube<eT>::max() const
   {

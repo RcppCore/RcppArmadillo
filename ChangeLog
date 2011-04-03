@@ -1,3 +1,9 @@
+2011-04-03  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.2.18
+
+	* inst/include/*: Updated to Armadillo 1.1.92 "Jurassic Barbecue"
+
 2011-03-22  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.2.17
