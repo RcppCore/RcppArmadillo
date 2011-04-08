@@ -1,3 +1,7 @@
+2011-04-08  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/fastLm.R: In print.summary.fastLm(), use 'P.values' not 'P.value'
+
 2011-04-03  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.2.18

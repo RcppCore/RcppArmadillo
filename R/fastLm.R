@@ -93,7 +93,7 @@ print.summary.fastLm <- function(x, ...) {
     print(x$call)
     cat("\n")
 
-    printCoefmat(x$coefficients, P.value=TRUE, has.Pvalue=TRUE)
+    printCoefmat(x$coefficients, P.values=TRUE, has.Pvalue=TRUE)
     digits <- max(3, getOption("digits") - 3)
     cat("Multiple R-squared: ", formatC(x$r.squared, digits=digits),
         ",\tAdjusted R-squared: ",formatC(x$adj.r.squared, digits=digits),
