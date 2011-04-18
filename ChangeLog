@@ -1,3 +1,9 @@
+2011-04-18  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.2.19
+
+	* inst/include/*: Updated to Armadillo 1.2.0 "Unscrupulous Carbon Emitter"
+
 2011-04-08  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/fastLm.R: In print.summary.fastLm(), use 'P.values' not 'P.value'

@@ -34,10 +34,7 @@ namespace priv
         }
       else
         {
-        const eT a = eT(0);
-        const eT b = eT(0);
-        
-        return a / b;
+        return eT(0);
         }
       }
     
@@ -79,10 +76,7 @@ namespace priv
         }
       else
         {
-        const eT a = eT(1);
-        const eT b = eT(0);
-        
-        return a / b;
+        return std::numeric_limits<eT>::max();
         }
       }
     
@@ -281,10 +275,7 @@ namespace priv
       }
     else
       {
-      const eT a = eT(1);
-      const eT b = eT(0);
-      
-      return -(a / b);
+      return -(std::numeric_limits<eT>::max());
       }
     }
   
@@ -317,10 +308,7 @@ namespace priv
       }
     else
       {
-      const eT a = eT(1);
-      const eT b = eT(0);
-      
-      return a / b;
+      return std::numeric_limits<eT>::max();
       }
     }
   

@@ -37,6 +37,9 @@
 //// Uncomment the above line if your BLAS and LAPACK libraries have function names with a trailing underscore.
 //// Conversely, comment it out if the function names don't have a trailing underscore.
 
+// #define ARMA_BLAS_CAPITALS
+//// Uncomment the above line if your BLAS and LAPACK libraries have capitalised function names (eg. ACML on 64-bit Windows)
+
 #if !defined(ARMA_MAT_PREALLOC)
   #define ARMA_MAT_PREALLOC 16
 #endif

@@ -429,7 +429,7 @@ diskio::gen_tmp_name(const std::string& x)
     char_count += 2;
     }
   
-  const u32 x_size = x.size();
+  const u32 x_size = static_cast<u32>(x.size());
   u8 sum = 0;
   
   for(u32 i=0; i<x_size; ++i)

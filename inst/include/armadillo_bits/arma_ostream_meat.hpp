@@ -46,7 +46,7 @@ arma_ostream_state::restore(std::ostream& o) const
 
 template<typename eT>
 inline
-u32
+std::streamsize
 arma_ostream::modify_stream(std::ostream& o, const eT* data, const u32 n_elem)
   {
   o.unsetf(ios::showbase);
@@ -55,7 +55,7 @@ arma_ostream::modify_stream(std::ostream& o, const eT* data, const u32 n_elem)
   
   o.fill(' ');
   
-  u32 cell_width;
+  std::streamsize cell_width;
   
   bool use_layout_B = false;
   bool use_layout_C = false;
@@ -117,7 +117,7 @@ arma_ostream::modify_stream(std::ostream& o, const eT* data, const u32 n_elem)
 //! "better than nothing" settings for complex numbers
 template<typename T>
 inline
-u32
+std::streamsize
 arma_ostream::modify_stream(std::ostream& o, const std::complex<T>* data, const u32 n_elem)
   {
   arma_ignore(data);
@@ -132,7 +132,7 @@ arma_ostream::modify_stream(std::ostream& o, const std::complex<T>* data, const 
   o.setf(ios::right);
   o.unsetf(ios::fixed);
   
-  u32 cell_width;
+  std::streamsize cell_width;
   
   o.precision(3);
   cell_width = 2 + 2*(1 + 3 + o.precision() + 5) + 1;
@@ -210,7 +210,7 @@ arma_ostream::print(std::ostream& o, const Mat<eT>& m, const bool modify)
   
   const arma_ostream_state stream_state(o);
   
-  const u32 cell_width = modify ? arma_ostream::modify_stream(o, m.memptr(), m.n_elem) : o.width();
+  const std::streamsize cell_width = modify ? arma_ostream::modify_stream(o, m.memptr(), m.n_elem) : o.width();
   
   const u32 m_n_rows = m.n_rows;
   const u32 m_n_cols = m.n_cols;
@@ -263,8 +263,8 @@ arma_ostream::print(std::ostream& o, const Cube<eT>& x, const bool modify)
   arma_extra_debug_sigprint();
   
   const arma_ostream_state stream_state(o);
-
-  const u32 cell_width = modify ? arma_ostream::modify_stream(o, x.memptr(), x.n_elem) : o.width();
+  
+  const std::streamsize cell_width = modify ? arma_ostream::modify_stream(o, x.memptr(), x.n_elem) : o.width();
   
   for(u32 slice=0; slice < x.n_slices; ++slice)
     {

@@ -21,13 +21,15 @@
 #define arma_warn_unused
 #define arma_deprecated
 #define arma_ignore(variable)  ((void)(variable))
-#define arma_fortran(function) function
 
 
 #if defined(ARMA_BLAS_UNDERSCORE)
-  #undef  arma_fortran
-  #define arma_fortran(function) function##_
+  #define arma_fortran2(function) function##_
+#else
+  #define arma_fortran2(function) function
 #endif
+
+#define arma_fortran(function) arma_fortran2(function)
 
 
 #if defined(__INTEL_COMPILER)
@@ -93,7 +95,9 @@
 
 #if defined(_MSC_VER)
   
-  #pragma message ("*** WARNING: This compiler may have an incomplete implementation of the C++ standard ***")
+  #if (_MSC_VER < 1500)
+    #error "*** Need a newer compiler ***"
+  #endif
   
   #undef ARMA_GOOD_COMPILER
   #undef ARMA_HAVE_STD_ISFINITE
