@@ -1,7 +1,10 @@
 
 all: 	RcppArmadillo-unitTests.pdf
 
-clean:
+clean:	
+	rm -f RcppArmadillo*.log RcppArmadillo*.aux RcppArmadillo*.out RcppArmadillo*.tex
+
+pdfclean:
 	rm -f RcppArmadillo-unitTests.pdf
 
 setvars:

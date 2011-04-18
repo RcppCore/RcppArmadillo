@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // Copyright (C) 2009      Edmund Highcock
 // 
 // This file is part of the Armadillo C++ library.
@@ -16,6 +16,142 @@
 #ifdef ARMA_USE_LAPACK
 
 
+#if !defined(ARMA_BLAS_CAPITALS)
+  
+  #define arma_sgetrf sgetrf
+  #define arma_dgetrf dgetrf
+  #define arma_cgetrf cgetrf
+  #define arma_zgetrf zgetrf
+  
+  #define arma_sgetri sgetri
+  #define arma_dgetri dgetri
+  #define arma_cgetri cgetri
+  #define arma_zgetri zgetri
+  
+  #define arma_strtri strtri
+  #define arma_dtrtri dtrtri
+  #define arma_ctrtri ctrtri
+  #define arma_ztrtri ztrtri
+  
+  #define arma_ssyev  ssyev
+  #define arma_dsyev  dsyev
+  
+  #define arma_cheev  cheev
+  #define arma_zheev  zheev
+  
+  #define arma_sgeev  sgeev
+  #define arma_dgeev  dgeev
+  
+  #define arma_cgeev  cgeev
+  #define arma_zgeev  zgeev
+  
+  #define arma_spotrf spotrf
+  #define arma_dpotrf dpotrf
+  #define arma_cpotrf cpotrf
+  #define arma_zpotrf zpotrf
+  
+  #define arma_sgeqrf sgeqrf
+  #define arma_dgeqrf dgeqrf
+  #define arma_cgeqrf cgeqrf
+  #define arma_zgeqrf zgeqrf
+  
+  #define arma_sorgqr sorgqr
+  #define arma_dorgqr dorgqr
+  
+  #define arma_cungqr cungqr
+  #define arma_zungqr zungqr
+  
+  #define arma_sgesvd sgesvd
+  #define arma_dgesvd dgesvd
+  
+  #define arma_cgesvd cgesvd
+  #define arma_zgesvd zgesvd
+  
+  #define arma_sgesv  sgesv
+  #define arma_dgesv  dgesv
+  #define arma_cgesv  cgesv
+  #define arma_zgesv  zgesv
+  
+  #define arma_sgels  sgels
+  #define arma_dgels  dgels
+  #define arma_cgels  cgels
+  #define arma_zgels  zgels
+  
+  #define arma_strtrs strtrs
+  #define arma_dtrtrs dtrtrs
+  #define arma_ctrtrs ctrtrs
+  #define arma_ztrtrs ztrtrs
+
+#else
+
+  #define arma_sgetrf SGETRF
+  #define arma_dgetrf DGETRF
+  #define arma_cgetrf CGETRF
+  #define arma_zgetrf ZGETRF
+  
+  #define arma_sgetri SGETRI
+  #define arma_dgetri DGETRI
+  #define arma_cgetri CGETRI
+  #define arma_zgetri ZGETRI
+  
+  #define arma_strtri STRTRI
+  #define arma_dtrtri DTRTRI
+  #define arma_ctrtri CTRTRI
+  #define arma_ztrtri ZTRTRI
+  
+  #define arma_ssyev  SSYEV
+  #define arma_dsyev  DSYEV
+  
+  #define arma_cheev  CHEEV
+  #define arma_zheev  ZHEEV
+  
+  #define arma_sgeev  SGEEV
+  #define arma_dgeev  DGEEV
+  
+  #define arma_cgeev  CGEEV
+  #define arma_zgeev  ZGEEV
+  
+  #define arma_spotrf SPOTRF
+  #define arma_dpotrf DPOTRF
+  #define arma_cpotrf CPOTRF
+  #define arma_zpotrf ZPOTRF
+  
+  #define arma_sgeqrf SGEQRF
+  #define arma_dgeqrf DGEQRF
+  #define arma_cgeqrf CGEQRF
+  #define arma_zgeqrf ZGEQRF
+  
+  #define arma_sorgqr SORGQR
+  #define arma_dorgqr DORGQR
+  
+  #define arma_cungqr CUNGQR
+  #define arma_zungqr ZUNGQR
+  
+  #define arma_sgesvd SGESVD
+  #define arma_dgesvd DGESVD
+  
+  #define arma_cgesvd CGESVD
+  #define arma_zgesvd ZGESVD
+  
+  #define arma_sgesv  SGESV
+  #define arma_dgesv  DGESV
+  #define arma_cgesv  CGESV
+  #define arma_zgesv  ZGESV
+  
+  #define arma_sgels  SGELS
+  #define arma_dgels  DGELS
+  #define arma_cgels  CGELS
+  #define arma_zgels  ZGELS
+  
+  #define arma_strtrs STRTRS
+  #define arma_dtrtrs DTRTRS
+  #define arma_ctrtrs CTRTRS
+  #define arma_ztrtrs ZTRTRS
+
+#endif
+
+
+
 //! \namespace lapack namespace for LAPACK functions
 namespace lapack
   {
@@ -25,89 +161,89 @@ namespace lapack
   extern "C"
     {
     // LU factorisation
-    void arma_fortran(sgetrf)(blas_int* m, blas_int* n,  float* a, blas_int* lda, blas_int* ipiv, blas_int* info);
-    void arma_fortran(dgetrf)(blas_int* m, blas_int* n, double* a, blas_int* lda, blas_int* ipiv, blas_int* info);
-    void arma_fortran(cgetrf)(blas_int* m, blas_int* n,   void* a, blas_int* lda, blas_int* ipiv, blas_int* info);
-    void arma_fortran(zgetrf)(blas_int* m, blas_int* n,   void* a, blas_int* lda, blas_int* ipiv, blas_int* info);
+    void arma_fortran(arma_sgetrf)(blas_int* m, blas_int* n,  float* a, blas_int* lda, blas_int* ipiv, blas_int* info);
+    void arma_fortran(arma_dgetrf)(blas_int* m, blas_int* n, double* a, blas_int* lda, blas_int* ipiv, blas_int* info);
+    void arma_fortran(arma_cgetrf)(blas_int* m, blas_int* n,   void* a, blas_int* lda, blas_int* ipiv, blas_int* info);
+    void arma_fortran(arma_zgetrf)(blas_int* m, blas_int* n,   void* a, blas_int* lda, blas_int* ipiv, blas_int* info);
     
     // matrix inversion (using LU factorisation result)
-    void arma_fortran(sgetri)(blas_int* n,  float* a, blas_int* lda, blas_int* ipiv,  float* work, blas_int* lwork, blas_int* info);
-    void arma_fortran(dgetri)(blas_int* n, double* a, blas_int* lda, blas_int* ipiv, double* work, blas_int* lwork, blas_int* info);
-    void arma_fortran(cgetri)(blas_int* n,  void*  a, blas_int* lda, blas_int* ipiv,   void* work, blas_int* lwork, blas_int* info);
-    void arma_fortran(zgetri)(blas_int* n,  void*  a, blas_int* lda, blas_int* ipiv,   void* work, blas_int* lwork, blas_int* info);
+    void arma_fortran(arma_sgetri)(blas_int* n,  float* a, blas_int* lda, blas_int* ipiv,  float* work, blas_int* lwork, blas_int* info);
+    void arma_fortran(arma_dgetri)(blas_int* n, double* a, blas_int* lda, blas_int* ipiv, double* work, blas_int* lwork, blas_int* info);
+    void arma_fortran(arma_cgetri)(blas_int* n,  void*  a, blas_int* lda, blas_int* ipiv,   void* work, blas_int* lwork, blas_int* info);
+    void arma_fortran(arma_zgetri)(blas_int* n,  void*  a, blas_int* lda, blas_int* ipiv,   void* work, blas_int* lwork, blas_int* info);
     
     // matrix inversion (triangular matrices)
-    void arma_fortran(strtri)(char* uplo, char* diag, blas_int* n,  float* a, blas_int* lda, blas_int* info);
-    void arma_fortran(dtrtri)(char* uplo, char* diag, blas_int* n, double* a, blas_int* lda, blas_int* info);
-    void arma_fortran(ctrtri)(char* uplo, char* diag, blas_int* n,   void* a, blas_int* lda, blas_int* info);
-    void arma_fortran(ztrtri)(char* uplo, char* diag, blas_int* n,   void* a, blas_int* lda, blas_int* info);
+    void arma_fortran(arma_strtri)(char* uplo, char* diag, blas_int* n,  float* a, blas_int* lda, blas_int* info);
+    void arma_fortran(arma_dtrtri)(char* uplo, char* diag, blas_int* n, double* a, blas_int* lda, blas_int* info);
+    void arma_fortran(arma_ctrtri)(char* uplo, char* diag, blas_int* n,   void* a, blas_int* lda, blas_int* info);
+    void arma_fortran(arma_ztrtri)(char* uplo, char* diag, blas_int* n,   void* a, blas_int* lda, blas_int* info);
     
     // eigenvector decomposition of symmetric real matrices
-    void arma_fortran(ssyev)(char* jobz, char* uplo, blas_int* n,  float* a, blas_int* lda,  float* w,  float* work, blas_int* lwork, blas_int* info);
-    void arma_fortran(dsyev)(char* jobz, char* uplo, blas_int* n, double* a, blas_int* lda, double* w, double* work, blas_int* lwork, blas_int* info);
+    void arma_fortran(arma_ssyev)(char* jobz, char* uplo, blas_int* n,  float* a, blas_int* lda,  float* w,  float* work, blas_int* lwork, blas_int* info);
+    void arma_fortran(arma_dsyev)(char* jobz, char* uplo, blas_int* n, double* a, blas_int* lda, double* w, double* work, blas_int* lwork, blas_int* info);
     
     // eigenvector decomposition of hermitian matrices (complex)
-    void arma_fortran(cheev)(char* jobz, char* uplo, blas_int* n,   void* a, blas_int* lda,  float* w,   void* work, blas_int* lwork,  float* rwork, blas_int* info);
-    void arma_fortran(zheev)(char* jobz, char* uplo, blas_int* n,   void* a, blas_int* lda, double* w,   void* work, blas_int* lwork, double* rwork, blas_int* info);
+    void arma_fortran(arma_cheev)(char* jobz, char* uplo, blas_int* n,   void* a, blas_int* lda,  float* w,   void* work, blas_int* lwork,  float* rwork, blas_int* info);
+    void arma_fortran(arma_zheev)(char* jobz, char* uplo, blas_int* n,   void* a, blas_int* lda, double* w,   void* work, blas_int* lwork, double* rwork, blas_int* info);
     
     // eigenvector decomposition of general real matrices
-    void arma_fortran(sgeev)(char* jobvl, char* jobvr, blas_int* n,  float* a, blas_int* lda,  float* wr,  float* wi,  float* vl, blas_int* ldvl,  float* vr, blas_int* ldvr,  float* work, blas_int* lwork, blas_int* info);
-    void arma_fortran(dgeev)(char* jobvl, char* jobvr, blas_int* n, double* a, blas_int* lda, double* wr, double* wi, double* vl, blas_int* ldvl, double* vr, blas_int* ldvr, double* work, blas_int* lwork, blas_int* info);
+    void arma_fortran(arma_sgeev)(char* jobvl, char* jobvr, blas_int* n,  float* a, blas_int* lda,  float* wr,  float* wi,  float* vl, blas_int* ldvl,  float* vr, blas_int* ldvr,  float* work, blas_int* lwork, blas_int* info);
+    void arma_fortran(arma_dgeev)(char* jobvl, char* jobvr, blas_int* n, double* a, blas_int* lda, double* wr, double* wi, double* vl, blas_int* ldvl, double* vr, blas_int* ldvr, double* work, blas_int* lwork, blas_int* info);
     
     // eigenvector decomposition of general complex matrices
-    void arma_fortran(cgeev)(char* jobvr, char* jobvl, blas_int* n, void* a, blas_int* lda, void* w, void* vl, blas_int* ldvl, void* vr, blas_int* ldvr, void* work, blas_int* lwork,  float* rwork, blas_int* info);
-    void arma_fortran(zgeev)(char* jobvl, char* jobvr, blas_int* n, void* a, blas_int* lda, void* w, void* vl, blas_int* ldvl, void* vr, blas_int* ldvr, void* work, blas_int* lwork, double* rwork, blas_int* info);
+    void arma_fortran(arma_cgeev)(char* jobvr, char* jobvl, blas_int* n, void* a, blas_int* lda, void* w, void* vl, blas_int* ldvl, void* vr, blas_int* ldvr, void* work, blas_int* lwork,  float* rwork, blas_int* info);
+    void arma_fortran(arma_zgeev)(char* jobvl, char* jobvr, blas_int* n, void* a, blas_int* lda, void* w, void* vl, blas_int* ldvl, void* vr, blas_int* ldvr, void* work, blas_int* lwork, double* rwork, blas_int* info);
     
     // Cholesky decomposition
-    void arma_fortran(spotrf)(char* uplo, blas_int* n,  float* a, blas_int* lda, blas_int* info);
-    void arma_fortran(dpotrf)(char* uplo, blas_int* n, double* a, blas_int* lda, blas_int* info);
-    void arma_fortran(cpotrf)(char* uplo, blas_int* n,   void* a, blas_int* lda, blas_int* info);
-    void arma_fortran(zpotrf)(char* uplo, blas_int* n,   void* a, blas_int* lda, blas_int* info);
+    void arma_fortran(arma_spotrf)(char* uplo, blas_int* n,  float* a, blas_int* lda, blas_int* info);
+    void arma_fortran(arma_dpotrf)(char* uplo, blas_int* n, double* a, blas_int* lda, blas_int* info);
+    void arma_fortran(arma_cpotrf)(char* uplo, blas_int* n,   void* a, blas_int* lda, blas_int* info);
+    void arma_fortran(arma_zpotrf)(char* uplo, blas_int* n,   void* a, blas_int* lda, blas_int* info);
     
     // QR decomposition
-    void arma_fortran(sgeqrf)(blas_int* m, blas_int* n,  float* a, blas_int* lda,  float* tau,  float* work, blas_int* lwork, blas_int* info);
-    void arma_fortran(dgeqrf)(blas_int* m, blas_int* n, double* a, blas_int* lda, double* tau, double* work, blas_int* lwork, blas_int* info);
-    void arma_fortran(cgeqrf)(blas_int* m, blas_int* n,   void* a, blas_int* lda,   void* tau,   void* work, blas_int* lwork, blas_int* info);
-    void arma_fortran(zgeqrf)(blas_int* m, blas_int* n,   void* a, blas_int* lda,   void* tau,   void* work, blas_int* lwork, blas_int* info);
+    void arma_fortran(arma_sgeqrf)(blas_int* m, blas_int* n,  float* a, blas_int* lda,  float* tau,  float* work, blas_int* lwork, blas_int* info);
+    void arma_fortran(arma_dgeqrf)(blas_int* m, blas_int* n, double* a, blas_int* lda, double* tau, double* work, blas_int* lwork, blas_int* info);
+    void arma_fortran(arma_cgeqrf)(blas_int* m, blas_int* n,   void* a, blas_int* lda,   void* tau,   void* work, blas_int* lwork, blas_int* info);
+    void arma_fortran(arma_zgeqrf)(blas_int* m, blas_int* n,   void* a, blas_int* lda,   void* tau,   void* work, blas_int* lwork, blas_int* info);
     
     // Q matrix calculation from QR decomposition (real matrices)
-    void arma_fortran(sorgqr)(blas_int* m, blas_int* n, blas_int* k,  float* a, blas_int* lda,  float* tau,  float* work, blas_int* lwork, blas_int* info);
-    void arma_fortran(dorgqr)(blas_int* m, blas_int* n, blas_int* k, double* a, blas_int* lda, double* tau, double* work, blas_int* lwork, blas_int* info);
+    void arma_fortran(arma_sorgqr)(blas_int* m, blas_int* n, blas_int* k,  float* a, blas_int* lda,  float* tau,  float* work, blas_int* lwork, blas_int* info);
+    void arma_fortran(arma_dorgqr)(blas_int* m, blas_int* n, blas_int* k, double* a, blas_int* lda, double* tau, double* work, blas_int* lwork, blas_int* info);
     
     // Q matrix calculation from QR decomposition (complex matrices)
-    void arma_fortran(cungqr)(blas_int* m, blas_int* n, blas_int* k,   void* a, blas_int* lda,   void* tau,   void* work, blas_int* lwork, blas_int* info);
-    void arma_fortran(zungqr)(blas_int* m, blas_int* n, blas_int* k,   void* a, blas_int* lda,   void* tau,   void* work, blas_int* lwork, blas_int* info);
+    void arma_fortran(arma_cungqr)(blas_int* m, blas_int* n, blas_int* k,   void* a, blas_int* lda,   void* tau,   void* work, blas_int* lwork, blas_int* info);
+    void arma_fortran(arma_zungqr)(blas_int* m, blas_int* n, blas_int* k,   void* a, blas_int* lda,   void* tau,   void* work, blas_int* lwork, blas_int* info);
     
     // SVD (real matrices)
-    void arma_fortran(sgesvd)(char* jobu, char* jobvt, blas_int* m, blas_int* n, float*  a, blas_int* lda, float*  s, float*  u, blas_int* ldu, float*  vt, blas_int* ldvt, float*  work, blas_int* lwork, blas_int* info);
-    void arma_fortran(dgesvd)(char* jobu, char* jobvt, blas_int* m, blas_int* n, double* a, blas_int* lda, double* s, double* u, blas_int* ldu, double* vt, blas_int* ldvt, double* work, blas_int* lwork, blas_int* info);
+    void arma_fortran(arma_sgesvd)(char* jobu, char* jobvt, blas_int* m, blas_int* n, float*  a, blas_int* lda, float*  s, float*  u, blas_int* ldu, float*  vt, blas_int* ldvt, float*  work, blas_int* lwork, blas_int* info);
+    void arma_fortran(arma_dgesvd)(char* jobu, char* jobvt, blas_int* m, blas_int* n, double* a, blas_int* lda, double* s, double* u, blas_int* ldu, double* vt, blas_int* ldvt, double* work, blas_int* lwork, blas_int* info);
     
     // SVD (complex matrices)
-    void arma_fortran(cgesvd)(char* jobu, char* jobvt, blas_int* m, blas_int* n, void*   a, blas_int* lda, float*  s, void*   u, blas_int* ldu, void*   vt, blas_int* ldvt, void*   work, blas_int* lwork, float*  rwork, blas_int* info);
-    void arma_fortran(zgesvd)(char* jobu, char* jobvt, blas_int* m, blas_int* n, void*   a, blas_int* lda, double* s, void*   u, blas_int* ldu, void*   vt, blas_int* ldvt, void*   work, blas_int* lwork, double* rwork, blas_int* info);
+    void arma_fortran(arma_cgesvd)(char* jobu, char* jobvt, blas_int* m, blas_int* n, void*   a, blas_int* lda, float*  s, void*   u, blas_int* ldu, void*   vt, blas_int* ldvt, void*   work, blas_int* lwork, float*  rwork, blas_int* info);
+    void arma_fortran(arma_zgesvd)(char* jobu, char* jobvt, blas_int* m, blas_int* n, void*   a, blas_int* lda, double* s, void*   u, blas_int* ldu, void*   vt, blas_int* ldvt, void*   work, blas_int* lwork, double* rwork, blas_int* info);
     
     // solve system of linear equations, using LU decomposition
-    void arma_fortran(sgesv)(blas_int* n, blas_int* nrhs, float*  a, blas_int* lda, blas_int* ipiv, float*  b, blas_int* ldb, blas_int* info);
-    void arma_fortran(dgesv)(blas_int* n, blas_int* nrhs, double* a, blas_int* lda, blas_int* ipiv, double* b, blas_int* ldb, blas_int* info);
-    void arma_fortran(cgesv)(blas_int* n, blas_int* nrhs, void*   a, blas_int* lda, blas_int* ipiv, void*   b, blas_int* ldb, blas_int* info);
-    void arma_fortran(zgesv)(blas_int* n, blas_int* nrhs, void*   a, blas_int* lda, blas_int* ipiv, void*   b, blas_int* ldb, blas_int* info);
+    void arma_fortran(arma_sgesv)(blas_int* n, blas_int* nrhs, float*  a, blas_int* lda, blas_int* ipiv, float*  b, blas_int* ldb, blas_int* info);
+    void arma_fortran(arma_dgesv)(blas_int* n, blas_int* nrhs, double* a, blas_int* lda, blas_int* ipiv, double* b, blas_int* ldb, blas_int* info);
+    void arma_fortran(arma_cgesv)(blas_int* n, blas_int* nrhs, void*   a, blas_int* lda, blas_int* ipiv, void*   b, blas_int* ldb, blas_int* info);
+    void arma_fortran(arma_zgesv)(blas_int* n, blas_int* nrhs, void*   a, blas_int* lda, blas_int* ipiv, void*   b, blas_int* ldb, blas_int* info);
     
     // solve over/underdetermined system of linear equations
-    void arma_fortran(sgels)(char* trans, blas_int* m, blas_int* n, blas_int* nrhs, float*  a, blas_int* lda, float*  b, blas_int* ldb, float*  work, blas_int* lwork, blas_int* info);
-    void arma_fortran(dgels)(char* trans, blas_int* m, blas_int* n, blas_int* nrhs, double* a, blas_int* lda, double* b, blas_int* ldb, double* work, blas_int* lwork, blas_int* info);
-    void arma_fortran(cgels)(char* trans, blas_int* m, blas_int* n, blas_int* nrhs, void*   a, blas_int* lda, void*   b, blas_int* ldb, void*   work, blas_int* lwork, blas_int* info);
-    void arma_fortran(zgels)(char* trans, blas_int* m, blas_int* n, blas_int* nrhs, void*   a, blas_int* lda, void*   b, blas_int* ldb, void*   work, blas_int* lwork, blas_int* info);
+    void arma_fortran(arma_sgels)(char* trans, blas_int* m, blas_int* n, blas_int* nrhs, float*  a, blas_int* lda, float*  b, blas_int* ldb, float*  work, blas_int* lwork, blas_int* info);
+    void arma_fortran(arma_dgels)(char* trans, blas_int* m, blas_int* n, blas_int* nrhs, double* a, blas_int* lda, double* b, blas_int* ldb, double* work, blas_int* lwork, blas_int* info);
+    void arma_fortran(arma_cgels)(char* trans, blas_int* m, blas_int* n, blas_int* nrhs, void*   a, blas_int* lda, void*   b, blas_int* ldb, void*   work, blas_int* lwork, blas_int* info);
+    void arma_fortran(arma_zgels)(char* trans, blas_int* m, blas_int* n, blas_int* nrhs, void*   a, blas_int* lda, void*   b, blas_int* ldb, void*   work, blas_int* lwork, blas_int* info);
     
     // solve a triangular system of linear equations
-    void arma_fortran(strtrs)(char* uplo, char* trans, char* diag, blas_int* n, blas_int* nrhs, const float*  a, blas_int* lda, float*  b, blas_int* ldb, blas_int* info);
-    void arma_fortran(dtrtrs)(char* uplo, char* trans, char* diag, blas_int* n, blas_int* nrhs, const double* a, blas_int* lda, double* b, blas_int* ldb, blas_int* info);
-    void arma_fortran(ctrtrs)(char* uplo, char* trans, char* diag, blas_int* n, blas_int* nrhs, const void*   a, blas_int* lda, void*   b, blas_int* ldb, blas_int* info);
-    void arma_fortran(ztrtrs)(char* uplo, char* trans, char* diag, blas_int* n, blas_int* nrhs, const void*   a, blas_int* lda, void*   b, blas_int* ldb, blas_int* info);
+    void arma_fortran(arma_strtrs)(char* uplo, char* trans, char* diag, blas_int* n, blas_int* nrhs, const float*  a, blas_int* lda, float*  b, blas_int* ldb, blas_int* info);
+    void arma_fortran(arma_dtrtrs)(char* uplo, char* trans, char* diag, blas_int* n, blas_int* nrhs, const double* a, blas_int* lda, double* b, blas_int* ldb, blas_int* info);
+    void arma_fortran(arma_ctrtrs)(char* uplo, char* trans, char* diag, blas_int* n, blas_int* nrhs, const void*   a, blas_int* lda, void*   b, blas_int* ldb, blas_int* info);
+    void arma_fortran(arma_ztrtrs)(char* uplo, char* trans, char* diag, blas_int* n, blas_int* nrhs, const void*   a, blas_int* lda, void*   b, blas_int* ldb, blas_int* info);
     
-    // void arma_fortran(dgeqp3)(blas_int* m, blas_int* n, double* a, blas_int* lda, blas_int* jpvt, double* tau, double* work, blas_int* lwork, blas_int* info);
-    // void arma_fortran(dormqr)(char* side, char* trans, blas_int* m, blas_int* n, blas_int* k, double* a, blas_int* lda, double* tau, double* c, blas_int* ldc, double* work, blas_int* lwork, blas_int* info);
-    // void  arma_fortran(dposv)(char* uplo, blas_int* n, blas_int* nrhs, double* a, blas_int* lda, double* b, blas_int* ldb, blas_int* info);
-    // void  arma_fortran(dgees)(char* jobvs, char* sort, blas_int* select, blas_int* n, double* a, blas_int* lda, blas_int* sdim, double* wr, double* wi, double* vs, blas_int* ldvs, double* work, blas_int* lwork, blas_int* bwork, blas_int* info);
+    // void arma_fortran(arma_dgeqp3)(blas_int* m, blas_int* n, double* a, blas_int* lda, blas_int* jpvt, double* tau, double* work, blas_int* lwork, blas_int* info);
+    // void arma_fortran(arma_dormqr)(char* side, char* trans, blas_int* m, blas_int* n, blas_int* k, double* a, blas_int* lda, double* tau, double* c, blas_int* ldc, double* work, blas_int* lwork, blas_int* info);
+    // void  arma_fortran(arma_dposv)(char* uplo, blas_int* n, blas_int* nrhs, double* a, blas_int* lda, double* b, blas_int* ldb, blas_int* info);
+    // void  arma_fortran(arma_dgees)(char* jobvs, char* sort, blas_int* select, blas_int* n, double* a, blas_int* lda, blas_int* sdim, double* wr, double* wi, double* vs, blas_int* ldvs, double* work, blas_int* lwork, blas_int* bwork, blas_int* info);
     }
   
   
@@ -122,25 +258,25 @@ namespace lapack
     if(is_float<eT>::value == true)
       {
       typedef float T;
-      arma_fortran(sgetrf)(m, n, (T*)a, lda, ipiv, info);
+      arma_fortran(arma_sgetrf)(m, n, (T*)a, lda, ipiv, info);
       }
     else
     if(is_double<eT>::value == true)
       {
       typedef double T;
-      arma_fortran(dgetrf)(m, n, (T*)a, lda, ipiv, info);
+      arma_fortran(arma_dgetrf)(m, n, (T*)a, lda, ipiv, info);
       }
     else
     if(is_supported_complex_float<eT>::value == true)
       {
       typedef std::complex<float> T;
-      arma_fortran(cgetrf)(m, n, (T*)a, lda, ipiv, info);
+      arma_fortran(arma_cgetrf)(m, n, (T*)a, lda, ipiv, info);
       }
     else
     if(is_supported_complex_double<eT>::value == true)
       {
       typedef std::complex<double> T;
-      arma_fortran(zgetrf)(m, n, (T*)a, lda, ipiv, info);
+      arma_fortran(arma_zgetrf)(m, n, (T*)a, lda, ipiv, info);
       }
     }
     
@@ -156,25 +292,25 @@ namespace lapack
     if(is_float<eT>::value == true)
       {
       typedef float T;
-      arma_fortran(sgetri)(n, (T*)a, lda, ipiv, (T*)work, lwork, info);
+      arma_fortran(arma_sgetri)(n, (T*)a, lda, ipiv, (T*)work, lwork, info);
       }
     else
     if(is_double<eT>::value == true)
       {
       typedef double T;
-      arma_fortran(dgetri)(n, (T*)a, lda, ipiv, (T*)work, lwork, info);
+      arma_fortran(arma_dgetri)(n, (T*)a, lda, ipiv, (T*)work, lwork, info);
       }
     else
     if(is_supported_complex_float<eT>::value == true)
       {
       typedef std::complex<float> T;
-      arma_fortran(cgetri)(n, (T*)a, lda, ipiv, (T*)work, lwork, info);
+      arma_fortran(arma_cgetri)(n, (T*)a, lda, ipiv, (T*)work, lwork, info);
       }
     else
     if(is_supported_complex_double<eT>::value == true)
       {
       typedef std::complex<double> T;
-      arma_fortran(zgetri)(n, (T*)a, lda, ipiv, (T*)work, lwork, info);
+      arma_fortran(arma_zgetri)(n, (T*)a, lda, ipiv, (T*)work, lwork, info);
       }
     }
   
@@ -190,25 +326,25 @@ namespace lapack
     if(is_float<eT>::value == true)
       {
       typedef float T;
-      arma_fortran(strtri)(uplo, diag, n, (T*)a, lda, info);
+      arma_fortran(arma_strtri)(uplo, diag, n, (T*)a, lda, info);
       }
     else
     if(is_double<eT>::value == true)
       {
       typedef double T;
-      arma_fortran(dtrtri)(uplo, diag, n, (T*)a, lda, info);
+      arma_fortran(arma_dtrtri)(uplo, diag, n, (T*)a, lda, info);
       }
     else
     if(is_supported_complex_float<eT>::value == true)
       {
       typedef std::complex<float> T;
-      arma_fortran(ctrtri)(uplo, diag, n, (T*)a, lda, info);
+      arma_fortran(arma_ctrtri)(uplo, diag, n, (T*)a, lda, info);
       }
     else
     if(is_supported_complex_double<eT>::value == true)
       {
       typedef std::complex<double> T;
-      arma_fortran(ztrtri)(uplo, diag, n, (T*)a, lda, info);
+      arma_fortran(arma_ztrtri)(uplo, diag, n, (T*)a, lda, info);
       }
     }
   
@@ -224,13 +360,13 @@ namespace lapack
     if(is_float<eT>::value == true)
       {
       typedef float T;
-      arma_fortran(ssyev)(jobz, uplo, n, (T*)a, lda, (T*)w, (T*)work, lwork, info);
+      arma_fortran(arma_ssyev)(jobz, uplo, n, (T*)a, lda, (T*)w, (T*)work, lwork, info);
       }
     else
     if(is_double<eT>::value == true)
       {
       typedef double T;
-      arma_fortran(dsyev)(jobz, uplo, n, (T*)a, lda, (T*)w, (T*)work, lwork, info);
+      arma_fortran(arma_dsyev)(jobz, uplo, n, (T*)a, lda, (T*)w, (T*)work, lwork, info);
       }
     }
   
@@ -253,18 +389,18 @@ namespace lapack
       {
       typedef float T;
       typedef typename std::complex<T> cx_T;
-      arma_fortran(cheev)(jobz, uplo, n, (cx_T*)a, lda, (T*)w, (cx_T*)work, lwork, (T*)rwork, info);
+      arma_fortran(arma_cheev)(jobz, uplo, n, (cx_T*)a, lda, (T*)w, (cx_T*)work, lwork, (T*)rwork, info);
       }
     else
     if(is_supported_complex_double<eT>::value == true)
       {
       typedef double T;
       typedef typename std::complex<T> cx_T;
-      arma_fortran(zheev)(jobz, uplo, n, (cx_T*)a, lda, (T*)w, (cx_T*)work, lwork, (T*)rwork, info);
+      arma_fortran(arma_zheev)(jobz, uplo, n, (cx_T*)a, lda, (T*)w, (cx_T*)work, lwork, (T*)rwork, info);
       }
     }
   
-	 
+   
   template<typename eT>
   inline
   void
@@ -282,13 +418,13 @@ namespace lapack
     if(is_float<eT>::value == true)
       {
       typedef float T;
-      arma_fortran(sgeev)(jobvl, jobvr, n,  (T*)a, lda, (T*)wr, (T*)wi, (T*)vl, ldvl, (T*)vr, ldvr, (T*)work, lwork, info);
+      arma_fortran(arma_sgeev)(jobvl, jobvr, n,  (T*)a, lda, (T*)wr, (T*)wi, (T*)vl, ldvl, (T*)vr, ldvr, (T*)work, lwork, info);
       }
     else
     if(is_double<eT>::value == true)
       {
       typedef double T;
-      arma_fortran(dgeev)(jobvl, jobvr, n,  (T*)a, lda, (T*)wr, (T*)wi, (T*)vl, ldvl, (T*)vr, ldvr, (T*)work, lwork, info);
+      arma_fortran(arma_dgeev)(jobvl, jobvr, n,  (T*)a, lda, (T*)wr, (T*)wi, (T*)vl, ldvl, (T*)vr, ldvr, (T*)work, lwork, info);
       }
     }
 
@@ -312,14 +448,14 @@ namespace lapack
       {
       typedef float T;
       typedef typename std::complex<T> cx_T;
-      arma_fortran(cgeev)(jobvl, jobvr, n, (cx_T*)a, lda, (cx_T*)w, (cx_T*)vl, ldvl, (cx_T*)vr, ldvr, (cx_T*)work, lwork, (T*)rwork, info);
+      arma_fortran(arma_cgeev)(jobvl, jobvr, n, (cx_T*)a, lda, (cx_T*)w, (cx_T*)vl, ldvl, (cx_T*)vr, ldvr, (cx_T*)work, lwork, (T*)rwork, info);
       }
     else
     if(is_supported_complex_double<eT>::value == true)
       {
       typedef double T;
       typedef typename std::complex<T> cx_T;
-      arma_fortran(zgeev)(jobvl, jobvr, n, (cx_T*)a, lda, (cx_T*)w, (cx_T*)vl, ldvl, (cx_T*)vr, ldvr, (cx_T*)work, lwork, (T*)rwork, info);
+      arma_fortran(arma_zgeev)(jobvl, jobvr, n, (cx_T*)a, lda, (cx_T*)w, (cx_T*)vl, ldvl, (cx_T*)vr, ldvr, (cx_T*)work, lwork, (T*)rwork, info);
       }
     }
   
@@ -336,25 +472,25 @@ namespace lapack
     if(is_float<eT>::value == true)
       {
       typedef float T;
-      arma_fortran(spotrf)(uplo, n, (T*)a, lda, info);
+      arma_fortran(arma_spotrf)(uplo, n, (T*)a, lda, info);
       }
     else
     if(is_double<eT>::value == true)
       {
       typedef double T;
-      arma_fortran(dpotrf)(uplo, n, (T*)a, lda, info);
+      arma_fortran(arma_dpotrf)(uplo, n, (T*)a, lda, info);
       }
     else
     if(is_supported_complex_float<eT>::value == true)
       {
       typedef std::complex<float> T;
-      arma_fortran(cpotrf)(uplo, n, (T*)a, lda, info);
+      arma_fortran(arma_cpotrf)(uplo, n, (T*)a, lda, info);
       }
     else
     if(is_supported_complex_double<eT>::value == true)
       {
       typedef std::complex<double> T;
-      arma_fortran(zpotrf)(uplo, n, (T*)a, lda, info);
+      arma_fortran(arma_zpotrf)(uplo, n, (T*)a, lda, info);
       }
     
     }
@@ -371,25 +507,25 @@ namespace lapack
     if(is_float<eT>::value == true)
       {
       typedef float T;
-      arma_fortran(sgeqrf)(m, n, (T*)a, lda, (T*)tau, (T*)work, lwork, info);
+      arma_fortran(arma_sgeqrf)(m, n, (T*)a, lda, (T*)tau, (T*)work, lwork, info);
       }
     else
     if(is_double<eT>::value == true)
       {
       typedef double T;
-      arma_fortran(dgeqrf)(m, n, (T*)a, lda, (T*)tau, (T*)work, lwork, info);
+      arma_fortran(arma_dgeqrf)(m, n, (T*)a, lda, (T*)tau, (T*)work, lwork, info);
       }
     else
     if(is_supported_complex_float<eT>::value == true)
       {
       typedef std::complex<float> T;
-      arma_fortran(cgeqrf)(m, n, (T*)a, lda, (T*)tau, (T*)work, lwork, info);
+      arma_fortran(arma_cgeqrf)(m, n, (T*)a, lda, (T*)tau, (T*)work, lwork, info);
       }
     else
     if(is_supported_complex_double<eT>::value == true)
       {
       typedef std::complex<double> T;
-      arma_fortran(zgeqrf)(m, n, (T*)a, lda, (T*)tau, (T*)work, lwork, info);
+      arma_fortran(arma_zgeqrf)(m, n, (T*)a, lda, (T*)tau, (T*)work, lwork, info);
       }
     
     }
@@ -406,13 +542,13 @@ namespace lapack
     if(is_float<eT>::value == true)
       {
       typedef float T;
-      arma_fortran(sorgqr)(m, n, k, (T*)a, lda, (T*)tau, (T*)work, lwork, info);
+      arma_fortran(arma_sorgqr)(m, n, k, (T*)a, lda, (T*)tau, (T*)work, lwork, info);
       }
     else
     if(is_double<eT>::value == true)
       {
       typedef double T;
-      arma_fortran(dorgqr)(m, n, k, (T*)a, lda, (T*)tau, (T*)work, lwork, info);
+      arma_fortran(arma_dorgqr)(m, n, k, (T*)a, lda, (T*)tau, (T*)work, lwork, info);
       }
     }
 
@@ -428,13 +564,13 @@ namespace lapack
     if(is_supported_complex_float<eT>::value == true)
       {
       typedef float T;
-      arma_fortran(cungqr)(m, n, k, (T*)a, lda, (T*)tau, (T*)work, lwork, info);
+      arma_fortran(arma_cungqr)(m, n, k, (T*)a, lda, (T*)tau, (T*)work, lwork, info);
       }
     else
     if(is_supported_complex_double<eT>::value == true)
       {
       typedef double T;
-      arma_fortran(zungqr)(m, n, k, (T*)a, lda, (T*)tau, (T*)work, lwork, info);
+      arma_fortran(arma_zungqr)(m, n, k, (T*)a, lda, (T*)tau, (T*)work, lwork, info);
       }
     }
   
@@ -454,13 +590,13 @@ namespace lapack
     if(is_float<eT>::value == true)
       {
       typedef float T;
-      arma_fortran(sgesvd)(jobu, jobvt, m, n, (T*)a, lda, (T*)s, (T*)u, ldu, (T*)vt, ldvt, (T*)work, lwork, info);
+      arma_fortran(arma_sgesvd)(jobu, jobvt, m, n, (T*)a, lda, (T*)s, (T*)u, ldu, (T*)vt, ldvt, (T*)work, lwork, info);
       }
     else
     if(is_double<eT>::value == true)
       {
       typedef double T;
-      arma_fortran(dgesvd)(jobu, jobvt, m, n, (T*)a, lda, (T*)s, (T*)u, ldu, (T*)vt, ldvt, (T*)work, lwork, info);
+      arma_fortran(arma_dgesvd)(jobu, jobvt, m, n, (T*)a, lda, (T*)s, (T*)u, ldu, (T*)vt, ldvt, (T*)work, lwork, info);
       }
     }
   
@@ -482,7 +618,7 @@ namespace lapack
     if(is_float<T>::value == true)
       {
       typedef float bT;
-      arma_fortran(cgesvd)
+      arma_fortran(arma_cgesvd)
         (
         jobu, jobvt, m, n, (std::complex<bT>*)a, lda,
         (bT*)s, (std::complex<bT>*)u, ldu, (std::complex<bT>*)vt, ldvt,
@@ -493,7 +629,7 @@ namespace lapack
     if(is_double<T>::value == true)
       {
       typedef double bT;
-      arma_fortran(zgesvd)
+      arma_fortran(arma_zgesvd)
         (
         jobu, jobvt, m, n, (std::complex<bT>*)a, lda,
         (bT*)s, (std::complex<bT>*)u, ldu, (std::complex<bT>*)vt, ldvt,
@@ -514,25 +650,25 @@ namespace lapack
     if(is_float<eT>::value == true)
       {
       typedef float T;
-      arma_fortran(sgesv)(n, nrhs, (T*)a, lda, ipiv, (T*)b, ldb, info);
+      arma_fortran(arma_sgesv)(n, nrhs, (T*)a, lda, ipiv, (T*)b, ldb, info);
       }
     else
     if(is_double<eT>::value == true)
       {
       typedef double T;
-      arma_fortran(dgesv)(n, nrhs, (T*)a, lda, ipiv, (T*)b, ldb, info);
+      arma_fortran(arma_dgesv)(n, nrhs, (T*)a, lda, ipiv, (T*)b, ldb, info);
       }
     else
     if(is_supported_complex_float<eT>::value == true)
       {
       typedef std::complex<float> T;
-      arma_fortran(cgesv)(n, nrhs, (T*)a, lda, ipiv, (T*)b, ldb, info);
+      arma_fortran(arma_cgesv)(n, nrhs, (T*)a, lda, ipiv, (T*)b, ldb, info);
       }
     else
     if(is_supported_complex_double<eT>::value == true)
       {
       typedef std::complex<double> T;
-      arma_fortran(zgesv)(n, nrhs, (T*)a, lda, ipiv, (T*)b, ldb, info);
+      arma_fortran(arma_zgesv)(n, nrhs, (T*)a, lda, ipiv, (T*)b, ldb, info);
       }
     }
   
@@ -548,25 +684,25 @@ namespace lapack
     if(is_float<eT>::value == true)
       {
       typedef float T;
-      arma_fortran(sgels)(trans, m, n, nrhs, (T*)a, lda, (T*)b, ldb, (T*)work, lwork, info);
+      arma_fortran(arma_sgels)(trans, m, n, nrhs, (T*)a, lda, (T*)b, ldb, (T*)work, lwork, info);
       }
     else
     if(is_double<eT>::value == true)
       {
       typedef double T;
-      arma_fortran(dgels)(trans, m, n, nrhs, (T*)a, lda, (T*)b, ldb, (T*)work, lwork, info);
+      arma_fortran(arma_dgels)(trans, m, n, nrhs, (T*)a, lda, (T*)b, ldb, (T*)work, lwork, info);
       }
     else
     if(is_supported_complex_float<eT>::value == true)
       {
       typedef std::complex<float> T;
-      arma_fortran(cgels)(trans, m, n, nrhs, (T*)a, lda, (T*)b, ldb, (T*)work, lwork, info);
+      arma_fortran(arma_cgels)(trans, m, n, nrhs, (T*)a, lda, (T*)b, ldb, (T*)work, lwork, info);
       }
     else
     if(is_supported_complex_double<eT>::value == true)
       {
       typedef std::complex<double> T;
-      arma_fortran(zgels)(trans, m, n, nrhs, (T*)a, lda, (T*)b, ldb, (T*)work, lwork, info);
+      arma_fortran(arma_zgels)(trans, m, n, nrhs, (T*)a, lda, (T*)b, ldb, (T*)work, lwork, info);
       }
     }
   
@@ -582,25 +718,25 @@ namespace lapack
     if(is_float<eT>::value == true)
       {
       typedef float T;
-      arma_fortran(strtrs)(uplo, trans, diag, n, nrhs, (T*)a, lda, (T*)b, ldb, info);
+      arma_fortran(arma_strtrs)(uplo, trans, diag, n, nrhs, (T*)a, lda, (T*)b, ldb, info);
       }
     else
     if(is_double<eT>::value == true)
       {
       typedef double T;
-      arma_fortran(dtrtrs)(uplo, trans, diag, n, nrhs, (T*)a, lda, (T*)b, ldb, info);
+      arma_fortran(arma_dtrtrs)(uplo, trans, diag, n, nrhs, (T*)a, lda, (T*)b, ldb, info);
       }
     else
     if(is_supported_complex_float<eT>::value == true)
       {
       typedef std::complex<float> T;
-      arma_fortran(ctrtrs)(uplo, trans, diag, n, nrhs, (T*)a, lda, (T*)b, ldb, info);
+      arma_fortran(arma_ctrtrs)(uplo, trans, diag, n, nrhs, (T*)a, lda, (T*)b, ldb, info);
       }
     else
     if(is_supported_complex_double<eT>::value == true)
       {
       typedef std::complex<double> T;
-      arma_fortran(ztrtrs)(uplo, trans, diag, n, nrhs, (T*)a, lda, (T*)b, ldb, info);
+      arma_fortran(arma_ztrtrs)(uplo, trans, diag, n, nrhs, (T*)a, lda, (T*)b, ldb, info);
       }
     }
   

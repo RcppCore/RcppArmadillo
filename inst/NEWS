@@ -1,20 +1,28 @@
+0.2.19  2011-04-18
+
+    o   Upgraded to Armadillo version 1.2.0 "Unscrupulous Carbon Emitter"
+
+          * Added ability to use Blas & Lapack libraries with capitalised
+	    function names 
+          * Reduction of pedantic compiler warnings
+
 0.2.18  2011-04-03
 
-    o   Upgraded to Armadillo Version 1.1.92  "Jurassic Barbecue"
+    o   Upgraded to Armadillo version 1.1.92  "Jurassic Barbecue"
 
           * Bugfix in cor()
 	  * Automatic installation now requires CMake >= 2.6
 
 0.2.17  2011-03-22
 
-    o   Upgraded to Armadillo Version 1.1.90  "Inside Job"
+    o   Upgraded to Armadillo version 1.1.90  "Inside Job"
 
          * Added .min() & .max(), which can provide the extremum's location
 	 * More robust mean(), var(), stddev()
 
 0.2.16  2011-03-10
 
-    o   Upgraded to Armadillo Version 1.1.8   "Kangaroo Steak"
+    o   Upgraded to Armadillo version 1.1.8   "Kangaroo Steak"
 
          * Added floor() and ceil()
          * Added “not a number”: math::nan()
@@ -25,7 +33,7 @@
 
 0.2.15  2011-03-04
 
-    o   Upgraded to Armadillo Version 1.1.6   “Baby Carpet Shark”
+    o   Upgraded to Armadillo version 1.1.6   “Baby Carpet Shark”
 
          * fixed size matrices and vectors can use auxiliary (external) memory
          * .in_range() can use span() arguments
@@ -44,7 +52,7 @@
 
 0.2.13  2011-02-18
 
-    o   Upgraded to Armadillo Version 1.1.4   “Manta Lodge”
+    o   Upgraded to Armadillo version 1.1.4   “Manta Lodge”
 
          * Faster sort()
          * Updated installation to detect recent versions of Intel's MKL
@@ -52,7 +60,7 @@
 
 0.2.12  2011-02-15
 
-    o   Upgraded to Armadillo Version 1.1.2   “Flood Kayak”
+    o   Upgraded to Armadillo version 1.1.2   “Flood Kayak”
 
          * Faster prod()
 	 * Faster solve() for compound expressions
@@ -61,7 +69,7 @@
 
 0.2.11  2011-01-06
 
-    o   Upgraded to Armadillo Version 1.1.0   “Climate Vandal”
+    o   Upgraded to Armadillo version 1.1.0   “Climate Vandal”
 
          * Extended submatrix views, including access to elements whose
            indices are specified in a separate vector

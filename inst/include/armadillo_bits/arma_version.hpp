@@ -17,9 +17,9 @@
 
 
 #define ARMA_VERSION_MAJOR 1
-#define ARMA_VERSION_MINOR 1
-#define ARMA_VERSION_PATCH 92
-#define ARMA_VERSION_NAME  "Jurassic Barbecue"
+#define ARMA_VERSION_MINOR 2
+#define ARMA_VERSION_PATCH 0
+#define ARMA_VERSION_NAME  "Unscrupulous Carbon Emitter"
 
 
 
