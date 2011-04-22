@@ -1,3 +1,8 @@
+0.2.20  2011-xx-yy
+
+    o   Added a new subdirectory examples/ seeded with a nice Vector
+        Autoregression simulation simulation example by Lance Bachmeier
+
 0.2.19  2011-04-18
 
     o   Upgraded to Armadillo version 1.2.0 "Unscrupulous Carbon Emitter"

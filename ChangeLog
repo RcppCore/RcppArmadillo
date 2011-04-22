@@ -1,3 +1,8 @@
+2011-04-22  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/examples/varSimulation.r: New example simulating a first-order
+	vector autoregression data set via R, compiled R and RcppArmadillo 
+
 2011-04-18  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.2.19
