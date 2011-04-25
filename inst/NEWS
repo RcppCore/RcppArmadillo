@@ -3,6 +3,9 @@
     o   Added a new subdirectory examples/ seeded with a nice Vector
         Autoregression simulation simulation example by Lance Bachmeier
 
+    o   Rewrote armadillo_version as to no longer require an instance 
+        of arma::arma_version, with Thanks to Conrad for the suggestion
+
 0.2.19  2011-04-18
 
     o   Upgraded to Armadillo version 1.2.0 "Unscrupulous Carbon Emitter"
