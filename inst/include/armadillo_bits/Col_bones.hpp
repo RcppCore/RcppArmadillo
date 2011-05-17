@@ -115,6 +115,25 @@ class Col : public Mat<eT>
     
     inline                fixed(const subview_cube<eT>& X) { mem_setup(); Col<eT>::operator=(X);               }
     inline const Col& operator=(const subview_cube<eT>& X) {              Col<eT>::operator=(X); return *this; }
+    
+    inline       subview_row<eT> operator()(const u32   row_num,  const span& col_span);
+    inline const subview_row<eT> operator()(const u32   row_num,  const span& col_span) const;
+    
+    inline       subview_col<eT> operator()(const span& row_span, const u32   col_num );
+    inline const subview_col<eT> operator()(const span& row_span, const u32   col_num ) const;
+    
+    inline       subview<eT>     operator()(const span& row_span, const span& col_span);
+    inline const subview<eT>     operator()(const span& row_span, const span& col_span) const;
+    
+    arma_inline arma_warn_unused eT& at         (const u32 i);
+    arma_inline arma_warn_unused eT  at         (const u32 i) const;
+    arma_inline arma_warn_unused eT& operator() (const u32 i);
+    arma_inline arma_warn_unused eT  operator() (const u32 i) const;
+    
+    arma_inline arma_warn_unused eT& at         (const u32 in_row, const u32 in_col);
+    arma_inline arma_warn_unused eT  at         (const u32 in_row, const u32 in_col) const;
+    arma_inline arma_warn_unused eT& operator() (const u32 in_row, const u32 in_col);
+    arma_inline arma_warn_unused eT  operator() (const u32 in_row, const u32 in_col) const;
     };
   
   
