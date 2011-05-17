@@ -37,8 +37,6 @@ mean(const Row<eT>& A)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (A.n_elem == 0), "mean(): given vector has no elements" );
-  
   return op_mean::direct_mean(A.mem, A.n_elem);
   }
 
@@ -52,8 +50,6 @@ eT
 mean(const Col<eT>& A)
   {
   arma_extra_debug_sigprint();
-  
-  arma_debug_check( (A.n_elem == 0), "mean(): given vector has no elements" );
   
   return op_mean::direct_mean(A.mem, A.n_elem);
   }
@@ -76,8 +72,6 @@ mean(const Op<T1, op_mean>& in)
   
   const unwrap<T1> tmp1(in.m);
   const Mat<eT>& X = tmp1.M;
-  
-  arma_debug_check( (X.n_elem == 0), "mean(): given matrix has no elements" );
   
   return op_mean::direct_mean(X.mem, X.n_elem);
   }
@@ -104,8 +98,6 @@ mean(const subview_row<eT>& A)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (A.n_elem == 0), "mean(): given vector has no elements" );
-  
   return op_mean::direct_mean(A);
   }
 
@@ -118,8 +110,6 @@ eT
 mean(const subview_col<eT>& A)
   {
   arma_extra_debug_sigprint();
-  
-  arma_debug_check( (A.n_elem == 0), "mean(): given vector has no elements" );
   
   return op_mean::direct_mean(A);
   }
@@ -137,8 +127,6 @@ mean(const Op<subview<eT>, op_mean>& in)
   
   const subview<eT>& X = in.m;
   
-  arma_debug_check( (X.n_elem == 0), "mean(): given matrix has no elements" );
-  
   return op_mean::direct_mean(X);
   }
 
@@ -151,8 +139,6 @@ eT
 mean(const diagview<eT>& A)
   {
   arma_extra_debug_sigprint();
-  
-  arma_debug_check( (A.n_elem == 0), "mean(): given vector has no elements" );
   
   return op_mean::direct_mean(A);
   }
@@ -168,8 +154,6 @@ mean(const subview_elem1<eT,T1>& A)
   arma_extra_debug_sigprint();
   
   const Mat<eT> X(A);
-  
-  arma_debug_check( (X.n_elem == 0), "mean(): given matrix has no elements" );
   
   return op_mean::direct_mean(X.mem, X.n_elem);
   }

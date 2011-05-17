@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -80,6 +80,90 @@ diagview<eT>::operator= (const diagview<eT>& x)
   for(u32 i=0; i<t_n_elem; ++i)
     {
     t_m.at(i + t_row_offset, i + t_col_offset) = x_m.at(i + x_row_offset, i + x_col_offset);
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
+diagview<eT>::operator+=(const eT val)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>& t_m = (*m_ptr);
+  
+  const u32 t_n_elem     = n_elem;
+  const u32 t_row_offset = row_offset;
+  const u32 t_col_offset = col_offset;
+  
+  for(u32 i=0; i<t_n_elem; ++i)
+    {
+    t_m.at( i + t_row_offset,  i + t_col_offset) += val;
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
+diagview<eT>::operator-=(const eT val)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>& t_m = (*m_ptr);
+  
+  const u32 t_n_elem     = n_elem;
+  const u32 t_row_offset = row_offset;
+  const u32 t_col_offset = col_offset;
+  
+  for(u32 i=0; i<t_n_elem; ++i)
+    {
+    t_m.at( i + t_row_offset,  i + t_col_offset) -= val;
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
+diagview<eT>::operator*=(const eT val)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>& t_m = (*m_ptr);
+  
+  const u32 t_n_elem     = n_elem;
+  const u32 t_row_offset = row_offset;
+  const u32 t_col_offset = col_offset;
+  
+  for(u32 i=0; i<t_n_elem; ++i)
+    {
+    t_m.at( i + t_row_offset,  i + t_col_offset) *= val;
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
+diagview<eT>::operator/=(const eT val)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>& t_m = (*m_ptr);
+  
+  const u32 t_n_elem     = n_elem;
+  const u32 t_row_offset = row_offset;
+  const u32 t_col_offset = col_offset;
+  
+  for(u32 i=0; i<t_n_elem; ++i)
+    {
+    t_m.at( i + t_row_offset,  i + t_col_offset) /= val;
     }
   }
 
@@ -279,7 +363,8 @@ diagview<eT>::extract(Mat<eT>& actual_out, const diagview<eT>& in)
   const u32 in_row_offset = in.row_offset;
   const u32 in_col_offset = in.col_offset;
   
-  out.set_size(in_n_elem,1);
+  out.set_size( in_n_elem, in.n_cols );
+  
   eT* out_mem = out.memptr();
   
   for(u32 i=0; i<in_n_elem; ++i)
@@ -293,7 +378,6 @@ diagview<eT>::extract(Mat<eT>& actual_out, const diagview<eT>& in)
     actual_out = out;
     delete tmp;
     }
-  
   }
 
 
@@ -306,7 +390,7 @@ diagview<eT>::plus_inplace(Mat<eT>& out, const diagview<eT>& in)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(out.n_rows, out.n_cols, in.n_rows, 1, "addition");
+  arma_debug_assert_same_size(out.n_rows, out.n_cols, in.n_rows, in.n_cols, "addition");
   
   const Mat<eT>& in_m = in.m;
   
@@ -332,7 +416,7 @@ diagview<eT>::minus_inplace(Mat<eT>& out, const diagview<eT>& in)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(out.n_rows, out.n_cols, in.n_rows, 1, "subtraction");
+  arma_debug_assert_same_size(out.n_rows, out.n_cols, in.n_rows, in.n_cols, "subtraction");
   
   const Mat<eT>& in_m = in.m;
   
@@ -358,7 +442,7 @@ diagview<eT>::schur_inplace(Mat<eT>& out, const diagview<eT>& in)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(out.n_rows, out.n_cols, in.n_rows, 1, "element-wise multiplication");
+  arma_debug_assert_same_size(out.n_rows, out.n_cols, in.n_rows, in.n_cols, "element-wise multiplication");
   
   const Mat<eT>& in_m = in.m;
   
@@ -384,7 +468,7 @@ diagview<eT>::div_inplace(Mat<eT>& out, const diagview<eT>& in)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(out.n_rows, out.n_cols, in.n_rows, 1, "element-wise division");
+  arma_debug_assert_same_size(out.n_rows, out.n_cols, in.n_rows, in.n_cols, "element-wise division");
   
   const Mat<eT>& in_m = in.m;
   
@@ -425,9 +509,9 @@ diagview<eT>::operator[](const u32 i) const
 template<typename eT>
 arma_inline
 eT&
-diagview<eT>::at(const u32 row, const u32 col)
+diagview<eT>::at(const u32 i)
   {
-  return (*m_ptr).at(row+row_offset, row+col_offset);
+  return (*m_ptr).at(i+row_offset, i+col_offset);
   }
 
 
@@ -435,9 +519,9 @@ diagview<eT>::at(const u32 row, const u32 col)
 template<typename eT>
 arma_inline
 eT
-diagview<eT>::at(const u32 row, const u32 col) const
+diagview<eT>::at(const u32 i) const
   {
-  return m.at(row+row_offset, row+col_offset);
+  return m.at(i+row_offset, i+col_offset);
   }
 
 
@@ -462,6 +546,26 @@ diagview<eT>::operator()(const u32 i) const
   arma_debug_check( (i >= n_elem), "diagview::operator(): out of bounds" );
   
   return m.at(i+row_offset, i+col_offset);
+  }
+
+
+
+template<typename eT>
+arma_inline
+eT&
+diagview<eT>::at(const u32 row, const u32 col)
+  {
+  return (*m_ptr).at(row+row_offset, row+col_offset);
+  }
+
+
+
+template<typename eT>
+arma_inline
+eT
+diagview<eT>::at(const u32 row, const u32 col) const
+  {
+  return m.at(row+row_offset, row+col_offset);
   }
 
 

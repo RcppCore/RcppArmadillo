@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2011 Conrad Sanderson
 // Copyright (C) 2009-2010 Dimitrios Bouzas
 // 
 // This file is part of the Armadillo C++ library.
@@ -32,18 +32,25 @@ op_repmat::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_repmat>& in)
   const unwrap_check<T1> tmp(in.m, out);
   const Mat<eT>& X     = tmp.M;
   
-  arma_debug_check( (X.n_elem == 0), "op_repmat::apply(): given object has no elements" );
-
   const u32 copies_per_row = in.aux_u32_a;
   const u32 copies_per_col = in.aux_u32_b;
   
-  out.set_size(X.n_rows * copies_per_row, X.n_cols * copies_per_col);
+  const u32 X_n_rows = X.n_rows;
+  const u32 X_n_cols = X.n_cols;
   
-  for(u32 col = 0; col < out.n_cols; col += X.n_cols)
+  out.set_size(X_n_rows * copies_per_row, X_n_cols * copies_per_col);
+  
+  const u32 out_n_rows = out.n_rows;
+  const u32 out_n_cols = out.n_cols;
+  
+  if( (out_n_rows > 0) && (out_n_cols > 0) )
     {
-    for(u32 row = 0; row < out.n_rows; row += X.n_rows)
+    for(u32 col = 0; col < out_n_cols; col += X_n_cols)
       {
-      out.submat(row, col, row+X.n_rows-1, col+X.n_cols-1) = X;
+      for(u32 row = 0; row < out_n_rows; row += X_n_rows)
+        {
+        out.submat(row, col, row+X_n_rows-1, col+X_n_cols-1) = X;
+        }
       }
     }
   }

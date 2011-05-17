@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -41,8 +41,6 @@ min(const Row<eT>& A)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (A.n_elem == 0), "min(): given vector has no elements" );
-  
   return op_min::direct_min(A.mem, A.n_elem);
   }
 
@@ -56,8 +54,6 @@ eT
 min(const Col<eT>& A)
   {
   arma_extra_debug_sigprint();
-  
-  arma_debug_check( (A.n_elem == 0), "min(): given vector has no elements" );
   
   return op_min::direct_min(A.mem, A.n_elem);
   }
@@ -80,8 +76,6 @@ min(const Op<T1, op_min>& in)
   
   const unwrap<T1> tmp1(in.m);
   const Mat<eT>& X = tmp1.M;
-  
-  arma_debug_check( (X.n_elem == 0), "min(): given matrix has no elements" );
   
   return op_min::direct_min(X.mem, X.n_elem);
   }
@@ -108,8 +102,6 @@ min(const subview_row<eT>& A)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (A.n_elem == 0), "min(): given vector has no elements" );
-  
   return op_min::direct_min(A);
   }
 
@@ -123,8 +115,6 @@ min(const subview_col<eT>& A)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (A.n_elem == 0), "min(): given vector has no elements" );
-  
   return op_min::direct_min(A);
   }
 
@@ -137,8 +127,6 @@ eT
 min(const diagview<eT>& A)
   {
   arma_extra_debug_sigprint();
-  
-  arma_debug_check( (A.n_elem == 0), "min(): given vector has no elements" );
   
   return op_min::direct_min(A);
   }
@@ -156,8 +144,6 @@ min(const Op<subview<eT>, op_min>& in)
   
   const subview<eT>& X = in.m;
   
-  arma_debug_check( (X.n_elem == 0), "min(): given matrix has no elements" );
-  
   return op_min::direct_min(X);
   }
 
@@ -172,8 +158,6 @@ min(const subview_elem1<eT,T1>& A)
   arma_extra_debug_sigprint();
   
   const Mat<eT> X(A);
-  
-  arma_debug_check( (X.n_elem == 0), "min(): given matrix has no elements" );
   
   return op_min::direct_min(X.mem, X.n_elem);
   }

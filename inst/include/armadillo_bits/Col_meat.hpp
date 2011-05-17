@@ -549,24 +549,12 @@ Col<eT>::fixed<fixed_n_elem>::mem_setup()
   {
   arma_extra_debug_sigprint_this(this);
   
-  if(fixed_n_elem > 0)
-    {
-    access::rw(Mat<eT>::n_rows)    = fixed_n_elem;
-    access::rw(Mat<eT>::n_cols)    = 1;
-    access::rw(Mat<eT>::n_elem)    = fixed_n_elem;
-    access::rw(Mat<eT>::vec_state) = 1;
-    access::rw(Mat<eT>::mem_state) = 3;
-    access::rw(Mat<eT>::mem)       = (fixed_n_elem > arma_config::mat_prealloc) ? mem_local_extra : Mat<eT>::mem_local;
-    }
-  else
-    {
-    access::rw(Mat<eT>::n_rows)    = 0;
-    access::rw(Mat<eT>::n_cols)    = 0;
-    access::rw(Mat<eT>::n_elem)    = 0;
-    access::rw(Mat<eT>::vec_state) = 1;
-    access::rw(Mat<eT>::mem_state) = 3;
-    access::rw(Mat<eT>::mem)       = 0;
-    }
+  access::rw(Mat<eT>::n_rows)    = fixed_n_elem;
+  access::rw(Mat<eT>::n_cols)    = 1;
+  access::rw(Mat<eT>::n_elem)    = fixed_n_elem;
+  access::rw(Mat<eT>::vec_state) = 1;
+  access::rw(Mat<eT>::mem_state) = 3;
+  access::rw(Mat<eT>::mem)       = (fixed_n_elem > arma_config::mat_prealloc) ? mem_local_extra : Mat<eT>::mem_local;
   }
 
 
@@ -578,33 +566,21 @@ Col<eT>::fixed<fixed_n_elem>::fixed(eT* aux_mem, const bool copy_aux_mem)
   {
   arma_extra_debug_sigprint_this(this);
   
-  if(fixed_n_elem > 0)
+  access::rw(Mat<eT>::n_rows)    = fixed_n_elem;
+  access::rw(Mat<eT>::n_cols)    = 1;
+  access::rw(Mat<eT>::n_elem)    = fixed_n_elem;
+  access::rw(Mat<eT>::vec_state) = 1;
+  access::rw(Mat<eT>::mem_state) = 3;
+  
+  if(copy_aux_mem == true)
     {
-    access::rw(Mat<eT>::n_rows)    = fixed_n_elem;
-    access::rw(Mat<eT>::n_cols)    = 1;
-    access::rw(Mat<eT>::n_elem)    = fixed_n_elem;
-    access::rw(Mat<eT>::vec_state) = 1;
-    access::rw(Mat<eT>::mem_state) = 3;
+    access::rw(Mat<eT>::mem) = (fixed_n_elem > arma_config::mat_prealloc) ? mem_local_extra : Mat<eT>::mem_local;
     
-    if(copy_aux_mem == true)
-      {
-      access::rw(Mat<eT>::mem) = (fixed_n_elem > arma_config::mat_prealloc) ? mem_local_extra : Mat<eT>::mem_local;
-      
-      arrayops::copy( const_cast<eT*>(Mat<eT>::mem), aux_mem, fixed_n_elem );
-      }
-    else
-      {
-      access::rw(Mat<eT>::mem) = aux_mem;
-      }
+    arrayops::copy( const_cast<eT*>(Mat<eT>::mem), aux_mem, fixed_n_elem );
     }
   else
     {
-    access::rw(Mat<eT>::n_rows)    = 0;
-    access::rw(Mat<eT>::n_cols)    = 0;
-    access::rw(Mat<eT>::n_elem)    = 0;
-    access::rw(Mat<eT>::vec_state) = 1;
-    access::rw(Mat<eT>::mem_state) = 3;
-    access::rw(Mat<eT>::mem)       = 0;
+    access::rw(Mat<eT>::mem) = aux_mem;
     }
   }
 
@@ -618,6 +594,184 @@ Col<eT>::fixed<fixed_n_elem>::fixed(const eT* aux_mem)
   mem_setup();
   
   arrayops::copy( const_cast<eT*>(Mat<eT>::mem), aux_mem, fixed_n_elem );
+  }
+
+
+
+template<typename eT>
+template<u32 fixed_n_elem>
+inline
+subview_row<eT>
+Col<eT>::fixed<fixed_n_elem>::operator()(const u32 row_num, const span& col_span)
+  {
+  arma_extra_debug_sigprint();
+  
+  return Mat<eT>::operator()(row_num, col_span);
+  }
+
+
+
+template<typename eT>
+template<u32 fixed_n_elem>
+inline
+const subview_row<eT>
+Col<eT>::fixed<fixed_n_elem>::operator()(const u32 row_num, const span& col_span) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return Mat<eT>::operator()(row_num, col_span);
+  }
+
+
+
+template<typename eT>
+template<u32 fixed_n_elem>
+inline
+subview_col<eT>
+Col<eT>::fixed<fixed_n_elem>::operator()(const span& row_span, const u32 col_num)
+  {
+  arma_extra_debug_sigprint();
+  
+  return Mat<eT>::operator()(row_span, col_num);
+  }
+
+
+
+template<typename eT>
+template<u32 fixed_n_elem>
+inline
+const subview_col<eT>
+Col<eT>::fixed<fixed_n_elem>::operator()(const span& row_span, const u32 col_num) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return Mat<eT>::operator()(row_span, col_num);
+  }
+
+
+
+template<typename eT>
+template<u32 fixed_n_elem>
+inline
+subview<eT>
+Col<eT>::fixed<fixed_n_elem>::operator()(const span& row_span, const span& col_span)
+  {
+  arma_extra_debug_sigprint();
+  
+  return Mat<eT>::operator()(row_span, col_span);
+  }
+
+
+
+template<typename eT>
+template<u32 fixed_n_elem>
+inline
+const subview<eT>
+Col<eT>::fixed<fixed_n_elem>::operator()(const span& row_span, const span& col_span) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return Mat<eT>::operator()(row_span, col_span);
+  }
+
+
+
+template<typename eT>
+template<u32 fixed_n_elem>
+arma_inline
+arma_warn_unused
+eT&
+Col<eT>::fixed<fixed_n_elem>::at(const u32 i)
+  {
+  return access::rw(Mat<eT>::mem[i]);
+  }
+
+
+
+template<typename eT>
+template<u32 fixed_n_elem>
+arma_inline
+arma_warn_unused
+eT
+Col<eT>::fixed<fixed_n_elem>::at(const u32 i) const
+  {
+  return Mat<eT>::mem[i];
+  }
+
+
+
+template<typename eT>
+template<u32 fixed_n_elem>
+arma_inline
+arma_warn_unused
+eT&
+Col<eT>::fixed<fixed_n_elem>::operator() (const u32 i)
+  {
+  arma_debug_check( (i >= fixed_n_elem), "Col::fixed::operator(): out of bounds");
+  return access::rw(Mat<eT>::mem[i]);
+  }
+
+
+
+template<typename eT>
+template<u32 fixed_n_elem>
+arma_inline
+arma_warn_unused
+eT
+Col<eT>::fixed<fixed_n_elem>::operator() (const u32 i) const
+  {
+  arma_debug_check( (i >= fixed_n_elem), "Col::fixed::operator(): out of bounds");
+  return Mat<eT>::mem[i];
+  }
+
+
+
+template<typename eT>
+template<u32 fixed_n_elem>
+arma_inline
+arma_warn_unused
+eT&
+Col<eT>::fixed<fixed_n_elem>::at(const u32 in_row, const u32 in_col)
+  {
+  return access::rw(Mat<eT>::mem[in_row]);
+  }
+
+
+
+template<typename eT>
+template<u32 fixed_n_elem>
+arma_inline
+arma_warn_unused
+eT
+Col<eT>::fixed<fixed_n_elem>::at(const u32 in_row, const u32 in_col) const
+  {
+  return Mat<eT>::mem[in_row];
+  }
+
+
+
+template<typename eT>
+template<u32 fixed_n_elem>
+arma_inline
+arma_warn_unused
+eT&
+Col<eT>::fixed<fixed_n_elem>::operator() (const u32 in_row, const u32 in_col)
+  {
+  arma_debug_check( ((in_row >= fixed_n_elem) || (in_col >= 1)), "Col::fixed::operator(): out of bounds" );
+  return access::rw(Mat<eT>::mem[in_row]);
+  }
+
+
+
+template<typename eT>
+template<u32 fixed_n_elem>
+arma_inline
+arma_warn_unused
+eT
+Col<eT>::fixed<fixed_n_elem>::operator() (const u32 in_row, const u32 in_col) const
+  {
+  arma_debug_check( ((in_row >= fixed_n_elem) || (in_col >= 1)), "Col::fixed::operator(): out of bounds" );
+  return Mat<eT>::mem[in_row];
   }
 
 

@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -17,12 +17,12 @@
 
 template<typename T1>
 arma_inline
-const Op<T1, op_trans>
+const Op<T1, op_htrans>
 trans(const Base<typename T1::elem_type,T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  return Op<T1, op_trans>(X.get_ref());
+  return Op<T1, op_htrans>(X.get_ref());
   }
 
 
@@ -31,26 +31,38 @@ trans(const Base<typename T1::elem_type,T1>& X)
 template<typename T1>
 arma_inline
 const T1&
-trans(const Op<T1, op_trans>& X)
+trans(const Op<T1, op_htrans>& X)
   {
   arma_extra_debug_sigprint();
-  arma_extra_debug_print("trans(): removing op_trans");
+  arma_extra_debug_print("trans(): removing op_htrans");
   
   return X.m;
   }
 
 
 
-//! transpose of a diagonal matrix (which is square) does nothing
 template<typename T1>
 arma_inline
-const Op<T1, op_diagmat>
-trans(const Op<T1, op_diagmat>& X)
+const Op<T1, op_htrans>
+htrans(const Base<typename T1::elem_type,T1>& X)
   {
   arma_extra_debug_sigprint();
-  arma_extra_debug_print("trans(): not applying op_trans to diagonal matrix");
   
-  return X;
+  return Op<T1, op_htrans>(X.get_ref());
+  }
+
+
+
+//! two consecutive hermitian transpose operations cancel each other
+template<typename T1>
+arma_inline
+const T1&
+htrans(const Op<T1, op_htrans>& X)
+  {
+  arma_extra_debug_sigprint();
+  arma_extra_debug_print("htrans(): removing op_htrans");
+  
+  return X.m;
   }
 
 

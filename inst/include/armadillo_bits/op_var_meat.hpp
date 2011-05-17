@@ -23,7 +23,7 @@ op_var::direct_var(const eT* const X, const u32 n_elem, const u32 norm_type)
   {
   arma_extra_debug_sigprint();
   
-  if(n_elem > 1)
+  if(n_elem >= 2)
     {
     const eT acc1 = op_mean::direct_mean(X, n_elem);
     
@@ -186,7 +186,6 @@ op_var::apply(Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_type,
   const u32 norm_type = in.aux_u32_a;
   const u32 dim       = in.aux_u32_b;
   
-  arma_debug_check( (X.n_elem == 0), "var(): given matrix has no elements"             );
   arma_debug_check( (norm_type > 1), "var(): incorrect usage. norm_type must be 0 or 1");
   arma_debug_check( (dim > 1),       "var(): incorrect usage. dim must be 0 or 1"      );
   
@@ -197,11 +196,14 @@ op_var::apply(Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_type,
     {
     arma_extra_debug_print("op_var::apply(), dim = 0");
     
-    out.set_size(1, X_n_cols);
+    out.set_size( (X_n_rows > 0) ? 1 : 0, X_n_cols );
     
-    for(u32 col=0; col<X_n_cols; ++col)
+    if(X_n_rows > 0)
       {
-      out[col] = op_var::direct_var( X.colptr(col), X_n_rows, norm_type );
+      for(u32 col=0; col<X_n_cols; ++col)
+        {
+        out[col] = op_var::direct_var( X.colptr(col), X_n_rows, norm_type );
+        }
       }
     }
   else
@@ -209,20 +211,23 @@ op_var::apply(Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_type,
     {
     arma_extra_debug_print("op_var::apply(), dim = 1");
     
-    out.set_size(X_n_rows, 1);
+    out.set_size( X_n_rows, (X_n_cols > 0) ? 1 : 0 );
     
-    podarray<in_eT> tmp(X_n_cols);
-    
-    in_eT* tmp_mem = tmp.memptr();
-    
-    for(u32 row=0; row<X_n_rows; ++row)
+    if(X_n_cols > 0)
       {
-      for(u32 col=0; col<X_n_cols; ++col)
-        {
-        tmp_mem[col] = X.at(row,col);
-        }
+      podarray<in_eT> tmp(X_n_cols);
       
-      out[row] = op_var::direct_var(tmp_mem, X_n_cols, norm_type);
+      in_eT* tmp_mem = tmp.memptr();
+      
+      for(u32 row=0; row<X_n_rows; ++row)
+        {
+        for(u32 col=0; col<X_n_cols; ++col)
+          {
+          tmp_mem[col] = X.at(row,col);
+          }
+        
+        out[row] = op_var::direct_var(tmp_mem, X_n_cols, norm_type);
+        }
       }
     }
   }

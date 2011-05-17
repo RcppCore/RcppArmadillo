@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -48,11 +48,11 @@ randu(const u32 n_elem)
 template<typename vec_type>
 arma_inline
 const eOp<vec_type, eop_randu>
-randu(const u32 n_elem, const typename arma_Mat_Col_Row_only<vec_type>::result* junk = 0)
+randu(const u32 n_elem, const arma_empty_class junk1 = arma_empty_class(), const typename arma_Mat_Col_Row_only<vec_type>::result* junk2 = 0)
   {
   arma_extra_debug_sigprint();
-  
-  arma_ignore(junk);
+  arma_ignore(junk1);
+  arma_ignore(junk2);
   
   if(is_Row<vec_type>::value == true)
     {
@@ -84,7 +84,6 @@ const eOp<mat_type, eop_randu>
 randu(const u32 n_rows, const u32 n_cols, const typename arma_Mat_Col_Row_only<mat_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
-  
   arma_ignore(junk);
   
   return eOp<mat_type, eop_randu>(n_rows, n_cols);
@@ -109,7 +108,6 @@ const eOpCube<cube_type, eop_randu>
 randu(const u32 n_rows, const u32 n_cols, const u32 n_slices, const typename arma_Cube_only<cube_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
-  
   arma_ignore(junk);
   
   return eOpCube<cube_type, eop_randu>(n_rows, n_cols, n_slices);

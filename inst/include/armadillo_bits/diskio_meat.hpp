@@ -545,8 +545,8 @@ diskio::save_raw_ascii(const Mat<eT>& x, std::ostream& f)
   if( (is_float<eT>::value == true) || (is_double<eT>::value == true) )
     {
     f.setf(ios::scientific);
-    f.precision(8);
-    cell_width = 16;
+    f.precision(10);
+    cell_width = 18;
     }
   
   for(u32 row=0; row < x.n_rows; ++row)
@@ -671,8 +671,8 @@ diskio::save_arma_ascii(const Mat<eT>& x, std::ostream& f)
   if( (is_float<eT>::value == true) || (is_double<eT>::value == true) )
     {
     f.setf(ios::scientific);
-    f.precision(8);
-    cell_width = 16;
+    f.precision(10);
+    cell_width = 18;
     }
     
   for(u32 row=0; row < x.n_rows; ++row)
@@ -907,14 +907,20 @@ diskio::load_raw_ascii(Mat<eT>& x, std::istream& f, std::string& err_msg)
   while( (f.good() == true) && (load_okay == true) )
     {
     std::getline(f, line_string);
+    
     if(line_string.size() == 0)
+      {
       break;
+      }
     
     std::stringstream line_stream(line_string);
     
     u32 line_n_cols = 0;
+    
     while (line_stream >> token)
-      line_n_cols++;
+      {
+      ++line_n_cols;
+      }
     
     if(f_n_cols_found == false)
       {
@@ -940,26 +946,36 @@ diskio::load_raw_ascii(Mat<eT>& x, std::istream& f, std::string& err_msg)
     //f.seekg(start);
     
     x.set_size(f_n_rows, f_n_cols);
-  
+    
     eT val;
     
-    for(u32 row=0; row < x.n_rows; ++row)
+    for(u32 row=0; (row < x.n_rows) && (load_okay == true); ++row)
       {
-      for(u32 col=0; col < x.n_cols; ++col)
+      for(u32 col=0; (col < x.n_cols) && (load_okay == true); ++col)
         {
-        // f >> token;
-        // x.at(row,col) = eT( strtod(token.c_str(), 0) );
-        
         f >> val;
-        x.at(row,col) = val;
+        
+        if(f.fail() == false)
+          {
+          x.at(row,col) = val;
+          }
+        else
+          {
+          load_okay = false;
+          err_msg = "couldn't interpret data in ";
+          //break;
+          }
         }
       }
     }
   
-  if(f.good() == false)
+  
+  // an empty file indicates an empty matrix
+  if( (f_n_cols_found == false) && (load_okay == true) )
     {
-    load_okay = false;
+    x.reset();
     }
+  
   
   return load_okay;
   }
@@ -1464,8 +1480,8 @@ diskio::save_raw_ascii(const Cube<eT>& x, std::ostream& f)
   if( (is_float<eT>::value == true) || (is_double<eT>::value == true) )
     {
     f.setf(ios::scientific);
-    f.precision(8);
-    cell_width = 16;
+    f.precision(10);
+    cell_width = 18;
     }
   
   for(u32 slice=0; slice < x.n_slices; ++slice)
@@ -1593,8 +1609,8 @@ diskio::save_arma_ascii(const Cube<eT>& x, std::ostream& f)
   if( (is_float<eT>::value == true) || (is_double<eT>::value == true) )
     {
     f.setf(ios::scientific);
-    f.precision(8);
-    cell_width = 16;
+    f.precision(10);
+    cell_width = 18;
     }
     
   for(u32 slice=0; slice < x.n_slices; ++slice)
@@ -1692,12 +1708,15 @@ diskio::load_raw_ascii(Cube<eT>& x, const std::string& name, std::string& err_ms
   
   if(load_okay == true)
     {
-    x.set_size(tmp.n_rows, tmp.n_cols, 1);
-    
-    // make sure the loaded matrix was not empty
-    if(x.n_slices > 0)
+    if(tmp.is_empty() == false)
       {
+      x.set_size(tmp.n_rows, tmp.n_cols, 1);
+      
       x.slice(0) = tmp;
+      }
+    else
+      {
+      x.reset();
       }
     }
   
@@ -1714,18 +1733,21 @@ bool
 diskio::load_raw_ascii(Cube<eT>& x, std::istream& f, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
-
+  
   Mat<eT> tmp;
   const bool load_okay = diskio::load_raw_ascii(tmp, f, err_msg);
   
   if(load_okay == true)
     {
-    x.set_size(tmp.n_rows, tmp.n_cols, 1);
-    
-    // make sure the loaded matrix was not empty
-    if(x.n_slices > 0)
+    if(tmp.is_empty() == false)
       {
+      x.set_size(tmp.n_rows, tmp.n_cols, 1);
+      
       x.slice(0) = tmp;
+      }
+    else
+      {
+      x.reset();
       }
     }
   

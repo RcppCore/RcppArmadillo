@@ -368,66 +368,6 @@ abs(const BaseCube< std::complex<typename T1::pod_type>,T1>& X, const typename a
 
 
 //
-// fabs
-// NOTE: this function is deprecated and will be removed in version 1.3.0
-
-template<typename T1>
-arma_inline
-const eOp<T1, eop_abs>
-fabs(const Base<typename T1::pod_type,T1>& X, const typename arma_not_cx<typename T1::elem_type>::result* junk = 0)
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk);
-  arma_print("fabs() is deprecated and will be removed; use abs() instead");
-  
-  return eOp<T1, eop_abs>(X.get_ref());
-  }
-
-
-
-template<typename T1>
-arma_inline
-const eOpCube<T1, eop_abs>
-fabs(const BaseCube<typename T1::pod_type,T1>& X, const typename arma_not_cx<typename T1::elem_type>::result* junk = 0)
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk);
-  arma_print("fabs() is deprecated and will be removed; use abs() instead");
-  
-  return eOpCube<T1, eop_abs>(X.get_ref());
-  }
-
-
-
-template<typename T1>
-inline
-const mtOp<typename T1::pod_type, T1, op_abs>
-fabs(const Base<std::complex<typename T1::pod_type>, T1>& X, const typename arma_cx_only<typename T1::elem_type>::result* junk = 0)
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk);
-  arma_print("fabs() is deprecated and will be removed; use abs() instead");
-  
-  return mtOp<typename T1::pod_type, T1, op_abs>( X.get_ref() );
-  }
-
-
-
-template<typename T1>
-arma_inline
-const mtOpCube<typename T1::pod_type, T1, op_abs>
-fabs(const BaseCube< std::complex<typename T1::pod_type>,T1>& X, const typename arma_cx_only<typename T1::elem_type>::result* junk = 0)
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk);
-  arma_print("fabs() is deprecated and will be removed; use abs() instead");
-  
-  return abs(X);
-  }
-
-
-
-//
 // square
 
 template<typename T1>
@@ -563,7 +503,7 @@ conj(const eOpCube<T1, eop_conj>& A)
 // template<typename T1>
 // arma_inline
 // const Op<T1, op_htrans>
-// conj(const Op<T1, op_trans>& A)
+// conj(const Op<T1, op_strans>& A)
 //   {
 //   arma_extra_debug_sigprint();
 //   

@@ -33,38 +33,40 @@ op_sum::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sum>& in)
   const unwrap_check<T1> tmp(in.m, out);
   const Mat<eT>& X     = tmp.M;
   
-  arma_debug_check( (X.n_elem < 1), "sum(): given object has no elements");
-  
   const u32 X_n_rows = X.n_rows;
   const u32 X_n_cols = X.n_cols;
   
   if(dim == 0)  // traverse across rows (i.e. find the sum in each column)
     {
-    out.set_size(1, X_n_cols);
+    out.set_size( (X_n_rows > 0) ? 1 : 0, X_n_cols );
     
-    for(u32 col=0; col<X_n_cols; ++col)
+    if(X_n_rows > 0)
       {
-      out.at(0,col) = arrayops::accumulate( X.colptr(col), X_n_rows );
+      for(u32 col=0; col<X_n_cols; ++col)
+        {
+        out[col] = arrayops::accumulate( X.colptr(col), X_n_rows );
+        }
       }
     }
   else  // traverse across columns (i.e. find the sum in each row)
     {
-    out.set_size(X_n_rows, 1);
+    out.set_size( X_n_rows, (X_n_cols > 0) ? 1 : 0 );
     
-    for(u32 row=0; row<X_n_rows; ++row)
+    if(X_n_cols > 0)
       {
-      eT val = eT(0);
-      
-      for(u32 col=0; col<X_n_cols; ++col)
+      for(u32 row=0; row<X_n_rows; ++row)
         {
-        val += X.at(row,col);
+        eT val = eT(0);
+        
+        for(u32 col=0; col<X_n_cols; ++col)
+          {
+          val += X.at(row,col);
+          }
+      
+        out.at(row,0) = val;
         }
-    
-      out.at(row,0) = val;
       }
-    
     }
-  
   }
 
 

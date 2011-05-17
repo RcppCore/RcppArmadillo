@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -17,12 +17,12 @@
 
 
 //! \brief
-//! Matrix multplication where the matrices have different element types.
+//! Matrix multplication where the matrices have differing element types.
 //! Uses caching for speedup.
 //! Matrix 'C' is assumed to have been set to the correct size (i.e. taking into account transposes)
 
 template<const bool do_trans_A=false, const bool do_trans_B=false, const bool use_alpha=false, const bool use_beta=false>
-class gemm_mixed_cache
+class gemm_mixed_large
   {
   public:
   
@@ -55,11 +55,7 @@ class gemm_mixed_cache
       
       for(u32 row_A=0; row_A < A_n_rows; ++row_A)
         {
-        
-        for(u32 col_A=0; col_A < A_n_cols; ++col_A)
-          {
-          A_rowdata[col_A] = A.at(row_A,col_A);
-          }
+        tmp.copy_row(A, row_A);
         
         for(u32 col_B=0; col_B < B_n_cols; ++col_B)
           {
@@ -139,8 +135,11 @@ class gemm_mixed_cache
     else
     if( (do_trans_A == false) && (do_trans_B == true) )
       {
-      Mat<in_eT2> B_tmp = trans(B);
-      gemm_mixed_cache<false, false, use_alpha, use_beta>::apply(C, A, B_tmp, alpha, beta);
+      Mat<in_eT2> B_tmp;
+      
+      op_strans::apply_noalias(B_tmp, B);
+      
+      gemm_mixed_large<false, false, use_alpha, use_beta>::apply(C, A, B_tmp, alpha, beta);
       }
     else
     if( (do_trans_A == true) && (do_trans_B == true) )
@@ -152,16 +151,12 @@ class gemm_mixed_cache
       // By using the trans(A)*trans(B) = trans(B*A) equivalency,
       // transpose operations are not needed
       
-      podarray<in_eT2> tmp(B.n_cols);
+      podarray<in_eT2> tmp(B_n_cols);
       in_eT2* B_rowdata = tmp.memptr();
       
       for(u32 row_B=0; row_B < B_n_rows; ++row_B)
         {
-        
-        for(u32 col_B=0; col_B < B_n_cols; ++col_B)
-          {
-          B_rowdata[col_B] = B.at(row_B,col_B);
-          }
+        tmp.copy_row(B, row_B);
         
         for(u32 col_A=0; col_A < A_n_cols; ++col_A)
           {
@@ -207,7 +202,7 @@ class gemm_mixed_cache
 //! Simple version (no caching).
 //! Matrix 'C' is assumed to have been set to the correct size (i.e. taking into account transposes)
 template<const bool do_trans_A=false, const bool do_trans_B=false, const bool use_alpha=false, const bool use_beta=false>
-class gemm_mixed_simple
+class gemm_mixed_small
   {
   public:
   
@@ -398,7 +393,7 @@ class gemm_mixed_simple
 
 
 //! \brief
-//! Matrix multplication where the matrices have different element types.
+//! Matrix multplication where the matrices have differing element types.
 
 template<const bool do_trans_A=false, const bool do_trans_B=false, const bool use_alpha=false, const bool use_beta=false>
 class gemm_mixed
@@ -421,15 +416,35 @@ class gemm_mixed
     {
     arma_extra_debug_sigprint();
     
-    if( (A.n_elem <= 64u) && (B.n_elem <= 64u) )
+    Mat<in_eT1> tmp_A;
+    Mat<in_eT2> tmp_B;
+    
+    const bool predo_trans_A = ( (do_trans_A == true) && (is_complex<in_eT1>::value == true) );
+    const bool predo_trans_B = ( (do_trans_B == true) && (is_complex<in_eT2>::value == true) );
+    
+    if(do_trans_A)
       {
-      gemm_mixed_simple<do_trans_A, do_trans_B, use_alpha, use_beta>::apply(C,A,B,alpha,beta);
+      op_htrans::apply_noalias(tmp_A, A);
+      }
+    
+    if(do_trans_B)
+      {
+      op_htrans::apply_noalias(tmp_B, B);
+      }
+     
+    const Mat<in_eT1>& AA = (predo_trans_A == false) ? A : tmp_A;
+    const Mat<in_eT2>& BB = (predo_trans_B == false) ? B : tmp_B;
+    
+    if( (AA.n_elem <= 64u) && (BB.n_elem <= 64u) )
+      {
+      gemm_mixed_small<((predo_trans_A) ? false : do_trans_A), ((predo_trans_B) ? false : do_trans_B), use_alpha, use_beta>::apply(C, AA, BB, alpha, beta);
       }
     else
       {
-      gemm_mixed_cache<do_trans_A, do_trans_B, use_alpha, use_beta>::apply(C,A,B,alpha,beta);
+      gemm_mixed_large<((predo_trans_A) ? false : do_trans_A), ((predo_trans_B) ? false : do_trans_B), use_alpha, use_beta>::apply(C, AA, BB, alpha, beta);
       }
     }
+  
   
   };
 

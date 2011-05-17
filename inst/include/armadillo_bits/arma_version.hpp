@@ -17,9 +17,9 @@
 
 
 #define ARMA_VERSION_MAJOR 1
-#define ARMA_VERSION_MINOR 2
-#define ARMA_VERSION_PATCH 0
-#define ARMA_VERSION_NAME  "Unscrupulous Carbon Emitter"
+#define ARMA_VERSION_MINOR 99
+#define ARMA_VERSION_PATCH 1
+#define ARMA_VERSION_NAME  "v2.0 beta 1"
 
 
 

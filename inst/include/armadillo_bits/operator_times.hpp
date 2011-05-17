@@ -82,13 +82,13 @@ operator*
 //! scalar * trans(T1)
 template<typename T1>
 arma_inline
-const Op<T1, op_trans2>
+const Op<T1, op_htrans2>
 operator*
-(const typename T1::elem_type k, const Op<T1, op_trans>& X)
+(const typename T1::elem_type k, const Op<T1, op_htrans>& X)
   {
   arma_extra_debug_sigprint();
   
-  return Op<T1, op_trans2>(X.m, k);
+  return Op<T1, op_htrans2>(X.m, k);
   }
 
 
@@ -96,13 +96,13 @@ operator*
 //! trans(T1) * scalar
 template<typename T1>
 arma_inline
-const Op<T1, op_trans2>
+const Op<T1, op_htrans2>
 operator*
-(const Op<T1, op_trans>& X, const typename T1::elem_type k)
+(const Op<T1, op_htrans>& X, const typename T1::elem_type k)
   {
   arma_extra_debug_sigprint();
   
-  return Op<T1, op_trans2>(X.m, k);
+  return Op<T1, op_htrans2>(X.m, k);
   }
 
 

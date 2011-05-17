@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -16,12 +16,54 @@
 
 
 
-//! \brief
-//! Partial emulation of ATLAS/BLAS gemm(), using caching for speedup.
-//! Matrix 'C' is assumed to have been set to the correct size (i.e. taking into account transposes)
+//! for small square matrices with n_rows <= 4
+template<const bool do_trans_A=false, const bool use_alpha=false, const bool use_beta=false>
+class gemm_emul_tinysq
+  {
+  public:
+  
+  
+  template<typename eT>
+  arma_hot
+  inline
+  static
+  void
+  apply
+    (
+          Mat<eT>& C,
+    const Mat<eT>& A,
+    const Mat<eT>& B,
+    const eT alpha = eT(1),
+    const eT beta  = eT(0)
+    )
+    {
+    arma_extra_debug_sigprint();
+    
+    switch(A.n_rows)
+      {
+      case 4:
+        gemv_emul_tiny<do_trans_A, use_alpha, use_beta>::apply( C.colptr(3), A, B.colptr(3) );
+        
+      case 3:
+        gemv_emul_tiny<do_trans_A, use_alpha, use_beta>::apply( C.colptr(2), A, B.colptr(2) );
+        
+      case 2:
+        gemv_emul_tiny<do_trans_A, use_alpha, use_beta>::apply( C.colptr(1), A, B.colptr(1) );
+        
+      case 1:
+        gemv_emul_tiny<do_trans_A, use_alpha, use_beta>::apply( C.colptr(0), A, B.colptr(0) );
+        
+      default:
+        ;
+      }
+    }
+
+  };
+
+
 
 template<const bool do_trans_A=false, const bool do_trans_B=false, const bool use_alpha=false, const bool use_beta=false>
-class gemm_emul_cache
+class gemm_emul_large
   {
   public:
   
@@ -54,22 +96,10 @@ class gemm_emul_cache
       
       for(u32 row_A=0; row_A < A_n_rows; ++row_A)
         {
-        
-        for(u32 col_A=0; col_A < A_n_cols; ++col_A)
-          {
-          A_rowdata[col_A] = A.at(row_A,col_A);
-          }
+        tmp.copy_row(A, row_A);
         
         for(u32 col_B=0; col_B < B_n_cols; ++col_B)
           {
-          // const eT* B_coldata = B.colptr(col_B);
-          // 
-          // eT acc = eT(0);
-          // for(u32 i=0; i < B_n_rows; ++i)
-          //   {
-          //   acc += A_rowdata[i] * B_coldata[i];
-          //   }
-          
           const eT acc = op_dot::direct_dot_arma(B_n_rows, A_rowdata, B.colptr(col_B));
           
           if( (use_alpha == false) && (use_beta == false) )
@@ -106,14 +136,6 @@ class gemm_emul_cache
         
         for(u32 col_B=0; col_B < B_n_cols; ++col_B)
           {
-          // const eT* B_coldata = B.colptr(col_B);
-          // 
-          // eT acc = eT(0);
-          // for(u32 i=0; i < B_n_rows; ++i)
-          //   {
-          //   acc += A_coldata[i] * B_coldata[i];
-          //   }
-          
           const eT acc = op_dot::direct_dot_arma(B_n_rows, A_coldata, B.colptr(col_B));
           
           if( (use_alpha == false) && (use_beta == false) )
@@ -142,8 +164,10 @@ class gemm_emul_cache
     else
     if( (do_trans_A == false) && (do_trans_B == true) )
       {
-      Mat<eT> B_tmp = trans(B);
-      gemm_emul_cache<false, false, use_alpha, use_beta>::apply(C, A, B_tmp, alpha, beta);
+      Mat<eT> BB;
+      op_strans::apply_noalias(BB, B);
+      
+      gemm_emul_large<false, false, use_alpha, use_beta>::apply(C, A, BB, alpha, beta);
       }
     else
     if( (do_trans_A == true) && (do_trans_B == true) )
@@ -160,22 +184,10 @@ class gemm_emul_cache
       
       for(u32 row_B=0; row_B < B_n_rows; ++row_B)
         {
-        
-        for(u32 col_B=0; col_B < B_n_cols; ++col_B)
-          {
-          B_rowdata[col_B] = B.at(row_B,col_B);
-          }
+        tmp.copy_row(B, row_B);
         
         for(u32 col_A=0; col_A < A_n_cols; ++col_A)
           {
-          // const eT* A_coldata = A.colptr(col_A);
-          // 
-          // eT acc = eT(0);
-          // for(u32 i=0; i < A_n_rows; ++i)
-          //   {
-          //   acc += B_rowdata[i] * A_coldata[i];
-          //   }
-          
           const eT acc = op_dot::direct_dot_arma(A_n_rows, B_rowdata, A.colptr(col_A));
           
           if( (use_alpha == false) && (use_beta == false) )
@@ -203,17 +215,16 @@ class gemm_emul_cache
       
       }
     }
-    
+  
   };
-
-
-
-//! Partial emulation of ATLAS/BLAS gemm(), non-cached version.
-//! Matrix 'C' is assumed to have been set to the correct size (i.e. taking into account transposes)
+    
+  
+  
 template<const bool do_trans_A=false, const bool do_trans_B=false, const bool use_alpha=false, const bool use_beta=false>
-class gemm_emul_simple
+class gemm_emul
   {
   public:
+  
   
   template<typename eT>
   arma_hot
@@ -226,10 +237,12 @@ class gemm_emul_simple
     const Mat<eT>& A,
     const Mat<eT>& B,
     const eT alpha = eT(1),
-    const eT beta  = eT(0)
+    const eT beta  = eT(0),
+    const typename arma_not_cx<eT>::result* junk = 0
     )
     {
     arma_extra_debug_sigprint();
+    arma_ignore(junk);
     
     const u32 A_n_rows = A.n_rows;
     const u32 A_n_cols = A.n_cols;
@@ -237,161 +250,80 @@ class gemm_emul_simple
     const u32 B_n_rows = B.n_rows;
     const u32 B_n_cols = B.n_cols;
     
-    if( (do_trans_A == false) && (do_trans_B == false) )
+    if( (A_n_rows <= 4) && (A_n_rows == A_n_cols) && (A_n_rows == B_n_rows) && (B_n_rows == B_n_cols) )
       {
-      for(u32 row_A = 0; row_A < A_n_rows; ++row_A)
+      if(do_trans_B == false)
         {
-        for(u32 col_B = 0; col_B < B_n_cols; ++col_B)
-          {
-          const eT* B_coldata = B.colptr(col_B);
-          
-          eT acc = eT(0);
-          for(u32 i = 0; i < B_n_rows; ++i)
-            {
-            acc += A.at(row_A,i) * B_coldata[i];
-            }
-          
-          if( (use_alpha == false) && (use_beta == false) )
-            {
-            C.at(row_A,col_B) = acc;
-            }
-          else
-          if( (use_alpha == true) && (use_beta == false) )
-            {
-            C.at(row_A,col_B) = alpha * acc;
-            }
-          else
-          if( (use_alpha == false) && (use_beta == true) )
-            {
-            C.at(row_A,col_B) = acc + beta*C.at(row_A,col_B);
-            }
-          else
-          if( (use_alpha == true) && (use_beta == true) )
-            {
-            C.at(row_A,col_B) = alpha*acc + beta*C.at(row_A,col_B);
-            }
-          }
+        gemm_emul_tinysq<do_trans_A, use_alpha, use_beta>::apply(C, A, B, alpha, beta);
+        }
+      else
+        {
+        Mat<eT> BB(A_n_rows, A_n_rows);
+        op_strans::apply_noalias_tinysq(BB, B);
+        
+        gemm_emul_tinysq<do_trans_A, use_alpha, use_beta>::apply(C, A, BB, alpha, beta);
         }
       }
     else
-    if( (do_trans_A == true) && (do_trans_B == false) )
       {
-      for(u32 col_A=0; col_A < A_n_cols; ++col_A)
-        {
-        // col_A is interpreted as row_A when storing the results in matrix C
-        
-        const eT* A_coldata = A.colptr(col_A);
-        
-        for(u32 col_B=0; col_B < B_n_cols; ++col_B)
-          {
-          const eT* B_coldata = B.colptr(col_B);
-          
-          eT acc = eT(0);
-          for(u32 i=0; i < B_n_rows; ++i)
-            {
-            acc += A_coldata[i] * B_coldata[i];
-            }
-        
-          if( (use_alpha == false) && (use_beta == false) )
-            {
-            C.at(col_A,col_B) = acc;
-            }
-          else
-          if( (use_alpha == true) && (use_beta == false) )
-            {
-            C.at(col_A,col_B) = alpha * acc;
-            }
-          else
-          if( (use_alpha == false) && (use_beta == true) )
-            {
-            C.at(col_A,col_B) = acc + beta*C.at(col_A,col_B);
-            }
-          else
-          if( (use_alpha == true) && (use_beta == true) )
-            {
-            C.at(col_A,col_B) = alpha*acc + beta*C.at(col_A,col_B);
-            }
-          
-          }
-        }
-      }
-    else
-    if( (do_trans_A == false) && (do_trans_B == true) )
-      {
-      for(u32 row_A = 0; row_A < A_n_rows; ++row_A)
-        {
-        for(u32 row_B = 0; row_B < B_n_rows; ++row_B)
-          {
-          eT acc = eT(0);
-          for(u32 i = 0; i < B_n_cols; ++i)
-            {
-            acc += A.at(row_A,i) * B.at(row_B,i);
-            }
-          
-          if( (use_alpha == false) && (use_beta == false) )
-            {
-            C.at(row_A,row_B) = acc;
-            }
-          else
-          if( (use_alpha == true) && (use_beta == false) )
-            {
-            C.at(row_A,row_B) = alpha * acc;
-            }
-          else
-          if( (use_alpha == false) && (use_beta == true) )
-            {
-            C.at(row_A,row_B) = acc + beta*C.at(row_A,row_B);
-            }
-          else
-          if( (use_alpha == true) && (use_beta == true) )
-            {
-            C.at(row_A,row_B) = alpha*acc + beta*C.at(row_A,row_B);
-            }
-          }
-        }
-      }
-    else
-    if( (do_trans_A == true) && (do_trans_B == true) )
-      {
-      for(u32 row_B=0; row_B < B_n_rows; ++row_B)
-        {
-        
-        for(u32 col_A=0; col_A < A_n_cols; ++col_A)
-          {
-          const eT* A_coldata = A.colptr(col_A);
-          
-          eT acc = eT(0);
-          for(u32 i=0; i < A_n_rows; ++i)
-            {
-            acc += B.at(row_B,i) * A_coldata[i];
-            }
-        
-          if( (use_alpha == false) && (use_beta == false) )
-            {
-            C.at(col_A,row_B) = acc;
-            }
-          else
-          if( (use_alpha == true) && (use_beta == false) )
-            {
-            C.at(col_A,row_B) = alpha * acc;
-            }
-          else
-          if( (use_alpha == false) && (use_beta == true) )
-            {
-            C.at(col_A,row_B) = acc + beta*C.at(col_A,row_B);
-            }
-          else
-          if( (use_alpha == true) && (use_beta == true) )
-            {
-            C.at(col_A,row_B) = alpha*acc + beta*C.at(col_A,row_B);
-            }
-          
-          }
-        }
-      
+      gemm_emul_large<do_trans_A, do_trans_B, use_alpha, use_beta>::apply(C, A, B, alpha, beta);
       }
     }
+  
+
+
+  template<typename eT>
+  arma_hot
+  inline
+  static
+  void
+  apply
+    (
+          Mat<eT>& C,
+    const Mat<eT>& A,
+    const Mat<eT>& B,
+    const eT alpha = eT(1),
+    const eT beta  = eT(0),
+    const typename arma_cx_only<eT>::result* junk = 0
+    )
+    {
+    arma_extra_debug_sigprint();
+    arma_ignore(junk);
     
+    // "better than nothing" handling of hermitian transposes for complex number matrices
+    
+    Mat<eT> tmp_A;
+    Mat<eT> tmp_B;
+    
+    if(do_trans_A)
+      {
+      op_htrans::apply_noalias(tmp_A, A);
+      }
+    
+    if(do_trans_B)
+      {
+      op_htrans::apply_noalias(tmp_B, B);
+      }
+    
+    const Mat<eT>& AA = (do_trans_A == false) ? A : tmp_A;
+    const Mat<eT>& BB = (do_trans_B == false) ? B : tmp_B;
+    
+    const u32 A_n_rows = AA.n_rows;
+    const u32 A_n_cols = AA.n_cols;
+    
+    const u32 B_n_rows = BB.n_rows;
+    const u32 B_n_cols = BB.n_cols;
+    
+    if( (A_n_rows <= 4) && (A_n_rows == A_n_cols) && (A_n_rows == B_n_rows) && (B_n_rows == B_n_cols) )
+      {
+      gemm_emul_tinysq<false, use_alpha, use_beta>::apply(C, AA, BB, alpha, beta);
+      }
+    else
+      {
+      gemm_emul_large<false, false, use_alpha, use_beta>::apply(C, AA, BB, alpha, beta);
+      }
+    }
+
   };
 
 
@@ -413,9 +345,9 @@ class gemm
     {
     arma_extra_debug_sigprint();
     
-    if( ((A.n_elem < 64u) && (B.n_elem < 64u)) )
+    if( (A.n_elem <= 48u) && (B.n_elem <= 48u) )
       {
-      gemm_emul_simple<do_trans_A, do_trans_B, use_alpha, use_beta>::apply(C,A,B,alpha,beta);
+      gemm_emul<do_trans_A, do_trans_B, use_alpha, use_beta>::apply(C,A,B,alpha,beta);
       }
     else
       {
@@ -426,8 +358,8 @@ class gemm
         atlas::cblas_gemm<eT>
           (
           atlas::CblasColMajor,
-          (do_trans_A) ? atlas::CblasTrans : atlas::CblasNoTrans,
-          (do_trans_B) ? atlas::CblasTrans : atlas::CblasNoTrans,
+          (do_trans_A) ? ( is_complex<eT>::value ? CblasConjTrans : atlas::CblasTrans ) : atlas::CblasNoTrans,
+          (do_trans_B) ? ( is_complex<eT>::value ? CblasConjTrans : atlas::CblasTrans ) : atlas::CblasNoTrans,
           C.n_rows,
           C.n_cols,
           (do_trans_A) ? A.n_rows : A.n_cols,
@@ -445,8 +377,8 @@ class gemm
         {
         arma_extra_debug_print("blas::gemm()");
         
-        const char trans_A = (do_trans_A) ? 'T' : 'N';
-        const char trans_B = (do_trans_B) ? 'T' : 'N';
+        const char trans_A = (do_trans_A) ? ( is_complex<eT>::value ? 'C' : 'T' ) : 'N';
+        const char trans_B = (do_trans_B) ? ( is_complex<eT>::value ? 'C' : 'T' ) : 'N';
         
         const blas_int m   = C.n_rows;
         const blas_int n   = C.n_cols;
@@ -481,7 +413,7 @@ class gemm
         }
       #else
         {
-        gemm_emul_cache<do_trans_A, do_trans_B, use_alpha, use_beta>::apply(C,A,B,alpha,beta);
+        gemm_emul<do_trans_A, do_trans_B, use_alpha, use_beta>::apply(C,A,B,alpha,beta);
         }
       #endif
       }
@@ -496,14 +428,7 @@ class gemm
   void
   apply( Mat<eT>& C, const Mat<eT>& A, const Mat<eT>& B, const eT alpha = eT(1), const eT beta = eT(0) )
     {
-    if( (A.n_elem <= 64u) && (B.n_elem <= 64u) )
-      {
-      gemm_emul_simple<do_trans_A, do_trans_B, use_alpha, use_beta>::apply(C,A,B,alpha,beta);
-      }
-    else
-      {
-      gemm_emul_cache<do_trans_A, do_trans_B, use_alpha, use_beta>::apply(C,A,B,alpha,beta);
-      }
+    gemm_emul<do_trans_A, do_trans_B, use_alpha, use_beta>::apply(C,A,B,alpha,beta);
     }
   
   

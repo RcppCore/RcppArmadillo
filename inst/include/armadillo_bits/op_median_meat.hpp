@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -16,6 +16,16 @@
 
 
 
+template<typename eT>
+arma_inline
+eT
+op_median::robust_mean(const eT A, const eT B)
+  {
+  return A + (B - A)/eT(2);
+  }
+
+
+
 //! find the median value of a std::vector (contents is modified)
 template<typename eT>
 inline 
@@ -24,14 +34,16 @@ op_median::direct_median(std::vector<eT>& X)
   {
   arma_extra_debug_sigprint();
   
-  std::sort(X.begin(), X.end());
-  
   const u32 n_elem = X.size();
   const u32 half   = n_elem/2;
   
+  arma_debug_check( (n_elem == 0), "median(): given matrix has no elements" );
+  
+  std::sort(X.begin(), X.end());
+  
   if((n_elem % 2) == 0)
     {
-    return (X[half-1] + X[half]) / eT(2);
+    return op_median::robust_mean(X[half-1], X[half]);
     }
   else
     {
@@ -49,6 +61,7 @@ op_median::direct_median(const eT* X, const u32 n_elem)
   arma_extra_debug_sigprint();
   
   std::vector<eT> tmp(X, X+n_elem);
+  
   return op_median::direct_median(tmp);
   }
 
@@ -61,9 +74,11 @@ op_median::direct_median(const subview<eT>& X)
   {
   arma_extra_debug_sigprint();
   
-  std::vector<eT> tmp(X.n_elem);
+  const u32 X_n_elem = X.n_elem;
   
-  for(u32 i=0; i<X.n_elem; ++i)
+  std::vector<eT> tmp(X_n_elem);
+  
+  for(u32 i=0; i<X_n_elem; ++i)
     {
     tmp[i] = X[i];
     }
@@ -80,9 +95,11 @@ op_median::direct_median(const diagview<eT>& X)
   {
   arma_extra_debug_sigprint();
   
-  std::vector<eT> tmp(X.n_elem);
+  const u32 X_n_elem = X.n_elem;
   
-  for(u32 i=0; i<X.n_elem; ++i)
+  std::vector<eT> tmp(X_n_elem);
+  
+  for(u32 i=0; i<X_n_elem; ++i)
     {
     tmp[i] = X[i];
     }
@@ -106,54 +123,69 @@ op_median::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_median>& in)
   typedef typename T1::elem_type eT;
   
   const unwrap_check<T1> tmp(in.m, out);
-  const Mat<eT>& X = tmp.M;
+  const Mat<eT>&     X = tmp.M;
   
-  arma_debug_check( (X.n_elem == 0), "median(): given matrix has no elements" );
+  const u32 X_n_rows = X.n_rows;
+  const u32 X_n_cols = X.n_cols;
   
   const u32 dim = in.aux_u32_a;
   arma_debug_check( (dim > 1), "median(): incorrect usage. dim must be 0 or 1");
   
-  
-  if(dim == 0)  // column-wise
+  if(dim == 0)  // in each column
     {
     arma_extra_debug_print("op_median::apply(), dim = 0");
     
-    out.set_size(1, X.n_cols);
+    out.set_size((X_n_rows > 0) ? 1 : 0, X_n_cols);
     
-    std::vector<eT> tmp_vec(X.n_rows);
-    
-    for(u32 col=0; col<X.n_cols; ++col)
+    if(X_n_rows > 0)
       {
-      const eT* colmem = X.colptr(col);
+      std::vector<eT> tmp_vec(X_n_rows);
       
-      for(u32 row=0; row<X.n_rows; ++row)
+      for(u32 col=0; col<X_n_cols; ++col)
         {
-        tmp_vec[row] = colmem[row];
+        const eT* colmem = X.colptr(col);
+        
+        for(u32 row=0; row<X_n_rows; ++row)
+          {
+          tmp_vec[row] = colmem[row];
+          }
+        
+        out[col] = op_median::direct_median(tmp_vec);
         }
-      
-      out[col] = op_median::direct_median(tmp_vec);
       }
     }
   else
-  if(dim == 1)  // row-wise
+  if(dim == 1)  // in each row
     {
     arma_extra_debug_print("op_median::apply(), dim = 1");
-  
-    out.set_size(X.n_rows, 1);
     
-    std::vector<eT> tmp_vec(X.n_cols);
+    out.set_size(X_n_rows, (X_n_cols > 0) ? 1 : 0);
     
-    for(u32 row=0; row<X.n_rows; ++row)
+    if(X_n_cols > 0)
       {
-      for(u32 col=0; col<X.n_cols; ++col)
+      std::vector<eT> tmp_vec(X_n_cols);
+      
+      for(u32 row=0; row<X_n_rows; ++row)
         {
-        tmp_vec[col] = X.at(row,col);
+        for(u32 col=0; col<X_n_cols; ++col)
+          {
+          tmp_vec[col] = X.at(row,col);
+          }
+        
+        out[row] =  op_median::direct_median(tmp_vec);
         }
-  
-      out[row] = op_median::direct_median(tmp_vec);
       }
     }
-  
+  }
+
+
+
+template<typename T>
+arma_inline
+std::complex<T>
+op_median::robust_mean(const std::complex<T>& A, const std::complex<T>& B)
+  {
+  return A + (B - A)/T(2);
   }
 
 
@@ -161,26 +193,32 @@ op_median::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_median>& in)
 template<typename T>
 inline 
 void
-op_median::direct_cx_median_index(u32& out_index1, u32& out_index2, std::vector< arma_cx_median_packet<T> >& X)
+op_median::direct_cx_median_index
+  (
+  u32& out_index1, 
+  u32& out_index2, 
+  std::vector< arma_cx_median_packet<T> >& X
+  )
   {
   arma_extra_debug_sigprint();
-  
-  std::sort(X.begin(), X.end());
   
   const u32 n_elem = X.size();
   const u32 half   = n_elem/2;
   
+  arma_debug_check( (n_elem == 0), "median(): given matrix has no elements" );
+  
+  std::sort(X.begin(), X.end());
+  
   if((n_elem % 2) == 0)
     {
     out_index1 = X[half-1].index;
-    out_index2 = X[half].index;
+    out_index2 = X[half  ].index;
     }
   else
     {
     out_index1 = X[half].index;
-    out_index2 = X[half].index;
+    out_index2 = out_index1;
     }
-  
   }
 
 
@@ -188,7 +226,13 @@ op_median::direct_cx_median_index(u32& out_index1, u32& out_index2, std::vector<
 template<typename T>
 inline 
 void
-op_median::direct_cx_median_index(u32& out_index1, u32& out_index2, const std::complex<T>* X, const u32 n_elem)
+op_median::direct_cx_median_index
+  (
+  u32& out_index1, 
+  u32& out_index2, 
+  const std::complex<T>* X, 
+  const u32 n_elem
+  )
   {
   arma_extra_debug_sigprint();
   
@@ -208,7 +252,12 @@ op_median::direct_cx_median_index(u32& out_index1, u32& out_index2, const std::c
 template<typename T>
 inline 
 void
-op_median::direct_cx_median_index(u32& out_index1, u32& out_index2, const subview< std::complex<T> >&X)
+op_median::direct_cx_median_index
+  (
+  u32& out_index1, 
+  u32& out_index2, 
+  const subview< std::complex<T> >&X
+  )
   {
   arma_extra_debug_sigprint();
   
@@ -230,7 +279,12 @@ op_median::direct_cx_median_index(u32& out_index1, u32& out_index2, const subvie
 template<typename T>
 inline 
 void
-op_median::direct_cx_median_index(u32& out_index1, u32& out_index2, const diagview< std::complex<T> >&X)
+op_median::direct_cx_median_index
+  (
+  u32& out_index1, 
+  u32& out_index2, 
+  const diagview< std::complex<T> >&X
+  )
   {
   arma_extra_debug_sigprint();
   
@@ -261,66 +315,79 @@ op_median::apply(Mat< std::complex<T> >& out, const Op<T1,op_median>& in)
   isnt_same_type<eT, typename T1::elem_type>::check();
   
   const unwrap_check<T1> tmp(in.m, out);
-  const Mat<eT>& X = tmp.M;
+  const Mat<eT>&     X = tmp.M;
   
-  arma_debug_check( (X.n_elem == 0), "median(): given matrix has no elements" );
+  const u32 X_n_rows = X.n_rows;
+  const u32 X_n_cols = X.n_cols;
   
   const u32 dim = in.aux_u32_a;
   arma_debug_check( (dim > 1), "median(): incorrect usage. dim must be 0 or 1");
   
-  
-  if(dim == 0)  // column-wise
+  if(dim == 0)  // in each column
     {
     arma_extra_debug_print("op_median::apply(), dim = 0");
     
-    out.set_size(1, X.n_cols);
+    out.set_size((X_n_rows > 0) ? 1 : 0, X_n_cols);
     
-    std::vector< arma_cx_median_packet<T> > tmp_vec(X.n_rows);
-    
-    for(u32 col=0; col<X.n_cols; ++col)
+    if(X_n_rows > 0)
       {
-      const eT* colmem = X.colptr(col);
+      std::vector< arma_cx_median_packet<T> > tmp_vec(X_n_rows);
       
-      for(u32 row=0; row<X.n_rows; ++row)
+      for(u32 col=0; col<X_n_cols; ++col)
         {
-        tmp_vec[row].val   = std::abs(colmem[row]);
-        tmp_vec[row].index = row;
+        const eT* colmem = X.colptr(col);
+        
+        for(u32 row=0; row<X_n_rows; ++row)
+          {
+          tmp_vec[row].val   = std::abs(colmem[row]);
+          tmp_vec[row].index = row;
+          }
+        
+        u32 index1;
+        u32 index2;
+        op_median::direct_cx_median_index(index1, index2, tmp_vec);
+        
+        out[col] = op_median::robust_mean(colmem[index1], colmem[index2]);
         }
-      
-      u32 index1;
-      u32 index2;
-      op_median::direct_cx_median_index(index1, index2, tmp_vec);
-      
-      out[col] = (colmem[index1] + colmem[index2]) / T(2);
       }
     }
   else
-  if(dim == 1)  // row-wise
+  if(dim == 1)  // in each row
     {
     arma_extra_debug_print("op_median::apply(), dim = 1");
-  
-    out.set_size(X.n_rows, 1);
     
-    std::vector< arma_cx_median_packet<T> > tmp_vec(X.n_cols);
+    out.set_size(X_n_rows, (X_n_cols > 0) ? 1 : 0);
     
-    for(u32 row=0; row<X.n_rows; ++row)
+    if(X_n_cols > 0)
       {
-      for(u32 col=0; col<X.n_cols; ++col)
-        {
-        tmp_vec[col].val   = std::abs(X.at(row,col));
-        tmp_vec[row].index = col;
-        }
-  
-      u32 index1;
-      u32 index2;
-      op_median::direct_cx_median_index(index1, index2, tmp_vec);
+      std::vector< arma_cx_median_packet<T> > tmp_vec(X_n_cols);
       
-      out[row] = ( X.at(row,index1) + X.at(row,index2) ) / T(2);
+      for(u32 row=0; row<X_n_rows; ++row)
+        {
+        for(u32 col=0; col<X_n_cols; ++col)
+          {
+          tmp_vec[col].val   = std::abs(X.at(row,col));
+          tmp_vec[row].index = col;
+          }
+        
+        if(X_n_cols > 0)
+          {
+          u32 index1;
+          u32 index2;
+          op_median::direct_cx_median_index(index1, index2, tmp_vec);
+          
+          out[row] = op_median::robust_mean( X.at(row,index1), X.at(row,index2) );
+          }
+        else
+          {
+          out[row] = eT(0);
+          }
+        }
       }
     }
-  
   }
 
 
 
 //! @}
+
