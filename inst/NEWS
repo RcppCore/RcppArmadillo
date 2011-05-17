@@ -1,5 +1,7 @@
 0.2.20  2011-xx-yy
 
+    o   Upgraded to Armadillo test release 1.99.1
+
     o   Added a new subdirectory examples/ seeded with a nice Vector
         Autoregression simulation simulation example by Lance Bachmeier
 

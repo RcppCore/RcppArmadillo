@@ -1,12 +1,16 @@
+2011-05-16  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/*: Updated to test release 1.99.1 of Armadillo
+
 2011-04-25  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/RcppArmadillo.cpp: Rewritten armadillo_version as to no longer
-	require an instance of arma::arma_version, with Thanks to Conrad
+	require an instance of arma::arma_version, with Thanks! to Conrad
 
 2011-04-22  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/examples/varSimulation.r: New example simulating a first-order
-	vector autoregression data set via R, compiled R and RcppArmadillo 
+	* inst/examples/varSimulation.r: New example simulating of first-order
+	vector autoregression data set via R, compiled R and RcppArmadillo
 
 2011-04-18  Dirk Eddelbuettel  <edd@debian.org>
 
