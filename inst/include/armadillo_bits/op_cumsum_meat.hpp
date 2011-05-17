@@ -1,5 +1,5 @@
-// Copyright (C) 2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2010 Conrad Sanderson
+// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -26,8 +26,6 @@ op_cumsum_mat::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumsum_mat
   
   const unwrap<T1>   tmp(in.m);
   const Mat<eT>& X = tmp.M;
-  
-  arma_debug_check( (X.n_elem == 0), "cumsum(): given matrix has no elements" );
   
   const u32 dim = in.aux_u32_a;
   arma_debug_check( (dim > 1), "cumsum(): incorrect usage. dim must be 0 or 1");
@@ -91,8 +89,6 @@ op_cumsum_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumsum_vec
   
   const u32 n_elem = X.n_elem;
   
-  arma_debug_check( (n_elem == 0), "cumsum(): given vector has no elements" );
-  
   out.copy_size(X);
   
         eT* out_mem = out.memptr();
@@ -111,3 +107,4 @@ op_cumsum_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumsum_vec
 
 
 //! @}
+

@@ -97,4 +97,17 @@ op_inv_tr::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv_tr>& X)
 
 
 
+//! inverse of T1 (symmetric matrices)
+template<typename T1>
+inline
+void
+op_inv_sym::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv_sym>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  auxlib::inv_sym(out, X.m, X.aux_u32_a);
+  }
+
+
+
 //! @}

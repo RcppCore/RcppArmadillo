@@ -508,14 +508,14 @@ class partial_unwrap< Col<eT> >
 
 
 template<typename T1>
-class partial_unwrap< Op<T1, op_trans> >
+class partial_unwrap< Op<T1, op_htrans> >
   {
   public:
   
   typedef typename T1::elem_type eT;
   
   inline
-  partial_unwrap(const Op<T1,op_trans>& A)
+  partial_unwrap(const Op<T1,op_htrans>& A)
     : do_trans(true)
     , do_times(false)
     , val     (1)
@@ -539,12 +539,12 @@ class partial_unwrap< Op<T1, op_trans> >
 
 
 template<typename eT>
-class partial_unwrap< Op< Mat<eT>, op_trans> >
+class partial_unwrap< Op< Mat<eT>, op_htrans> >
   {
   public:
   
   inline
-  partial_unwrap(const Op< Mat<eT>, op_trans>& A)
+  partial_unwrap(const Op< Mat<eT>, op_htrans>& A)
     : do_trans(true)
     , do_times(false)
     , val     (1)
@@ -569,12 +569,12 @@ class partial_unwrap< Op< Mat<eT>, op_trans> >
 
 
 template<typename eT>
-class partial_unwrap< Op< Row<eT>, op_trans> >
+class partial_unwrap< Op< Row<eT>, op_htrans> >
   {
   public:
   
   inline
-  partial_unwrap(const Op< Row<eT>, op_trans>& A)
+  partial_unwrap(const Op< Row<eT>, op_htrans>& A)
     : do_trans(true)
     , do_times(false)
     , val     (1)
@@ -599,12 +599,12 @@ class partial_unwrap< Op< Row<eT>, op_trans> >
 
 
 template<typename eT>
-class partial_unwrap< Op< Col<eT>, op_trans> >
+class partial_unwrap< Op< Col<eT>, op_htrans> >
   {
   public:
   
   inline
-  partial_unwrap(const Op< Col<eT>, op_trans>& A)
+  partial_unwrap(const Op< Col<eT>, op_htrans>& A)
     : do_trans(true)
     , do_times(false)
     , val     (1)
@@ -629,14 +629,14 @@ class partial_unwrap< Op< Col<eT>, op_trans> >
 
 
 template<typename T1>
-class partial_unwrap< Op<T1, op_trans2> >
+class partial_unwrap< Op<T1, op_htrans2> >
   {
   public:
   
   typedef typename T1::elem_type eT;
   
   inline
-  partial_unwrap(const Op<T1,op_trans2>& A)
+  partial_unwrap(const Op<T1,op_htrans2>& A)
     : do_trans(true)
     , do_times(true)
     , val     (A.aux)
@@ -660,12 +660,12 @@ class partial_unwrap< Op<T1, op_trans2> >
 
 
 template<typename eT>
-class partial_unwrap< Op< Mat<eT>, op_trans2> >
+class partial_unwrap< Op< Mat<eT>, op_htrans2> >
   {
   public:
   
   inline
-  partial_unwrap(const Op< Mat<eT>, op_trans2>& A)
+  partial_unwrap(const Op< Mat<eT>, op_htrans2>& A)
     : do_trans(true)
     , do_times(true)
     , val     (A.aux)
@@ -690,12 +690,12 @@ class partial_unwrap< Op< Mat<eT>, op_trans2> >
 
 
 template<typename eT>
-class partial_unwrap< Op< Row<eT>, op_trans2> >
+class partial_unwrap< Op< Row<eT>, op_htrans2> >
   {
   public:
   
   inline
-  partial_unwrap(const Op< Row<eT>, op_trans2>& A)
+  partial_unwrap(const Op< Row<eT>, op_htrans2>& A)
     : do_trans(true)
     , do_times(true)
     , val     (A.aux)
@@ -720,12 +720,12 @@ class partial_unwrap< Op< Row<eT>, op_trans2> >
 
 
 template<typename eT>
-class partial_unwrap< Op< Col<eT>, op_trans2> >
+class partial_unwrap< Op< Col<eT>, op_htrans2> >
   {
   public:
   
   inline
-  partial_unwrap(const Op< Col<eT>, op_trans2>& A)
+  partial_unwrap(const Op< Col<eT>, op_htrans2>& A)
     : do_trans(true)
     , do_times(true)
     , val     (A.aux)
@@ -1021,14 +1021,14 @@ class partial_unwrap_check< Col<eT> >
 
 
 template<typename T1>
-class partial_unwrap_check< Op<T1, op_trans> >
+class partial_unwrap_check< Op<T1, op_htrans> >
   {
   public:
   
   typedef typename T1::elem_type eT;
   
   inline
-  partial_unwrap_check(const Op<T1,op_trans>& A, const Mat<eT>& B)
+  partial_unwrap_check(const Op<T1,op_htrans>& A, const Mat<eT>& B)
     : do_trans(true)
     , do_times(false)
     , val     (1)
@@ -1053,12 +1053,12 @@ class partial_unwrap_check< Op<T1, op_trans> >
 
 
 template<typename eT>
-class partial_unwrap_check< Op< Mat<eT>, op_trans> >
+class partial_unwrap_check< Op< Mat<eT>, op_htrans> >
   {
   public:
   
   inline
-  partial_unwrap_check(const Op< Mat<eT>, op_trans>& A, const Mat<eT>& B)
+  partial_unwrap_check(const Op< Mat<eT>, op_htrans>& A, const Mat<eT>& B)
     : do_trans(true)
     , do_times(false)
     , val     (1)
@@ -1091,12 +1091,12 @@ class partial_unwrap_check< Op< Mat<eT>, op_trans> >
 
 
 template<typename eT>
-class partial_unwrap_check< Op< Row<eT>, op_trans> >
+class partial_unwrap_check< Op< Row<eT>, op_htrans> >
   {
   public:
   
   inline
-  partial_unwrap_check(const Op< Row<eT>, op_trans>& A, const Mat<eT>& B)
+  partial_unwrap_check(const Op< Row<eT>, op_htrans>& A, const Mat<eT>& B)
     : do_trans(true)
     , do_times(false)
     , val     (1)
@@ -1129,12 +1129,12 @@ class partial_unwrap_check< Op< Row<eT>, op_trans> >
 
 
 template<typename eT>
-class partial_unwrap_check< Op< Col<eT>, op_trans> >
+class partial_unwrap_check< Op< Col<eT>, op_htrans> >
   {
   public:
   
   inline
-  partial_unwrap_check(const Op< Col<eT>, op_trans>& A, const Mat<eT>& B)
+  partial_unwrap_check(const Op< Col<eT>, op_htrans>& A, const Mat<eT>& B)
     : do_trans(true)
     , do_times(false)
     , val     (1)
@@ -1167,14 +1167,14 @@ class partial_unwrap_check< Op< Col<eT>, op_trans> >
 
 
 template<typename T1>
-class partial_unwrap_check< Op<T1, op_trans2> >
+class partial_unwrap_check< Op<T1, op_htrans2> >
   {
   public:
   
   typedef typename T1::elem_type eT;
   
   inline
-  partial_unwrap_check(const Op<T1,op_trans2>& A, const Mat<eT>& B)
+  partial_unwrap_check(const Op<T1,op_htrans2>& A, const Mat<eT>& B)
     : do_trans(true)
     , do_times(true)
     , val     (A.aux)
@@ -1198,12 +1198,12 @@ class partial_unwrap_check< Op<T1, op_trans2> >
 
 
 template<typename eT>
-class partial_unwrap_check< Op< Mat<eT>, op_trans2> >
+class partial_unwrap_check< Op< Mat<eT>, op_htrans2> >
   {
   public:
   
   inline
-  partial_unwrap_check(const Op< Mat<eT>, op_trans2>& A, const Mat<eT>& B)
+  partial_unwrap_check(const Op< Mat<eT>, op_htrans2>& A, const Mat<eT>& B)
     : do_trans(true)
     , do_times(true)
     , val     (A.aux)
@@ -1236,12 +1236,12 @@ class partial_unwrap_check< Op< Mat<eT>, op_trans2> >
 
 
 template<typename eT>
-class partial_unwrap_check< Op< Row<eT>, op_trans2> >
+class partial_unwrap_check< Op< Row<eT>, op_htrans2> >
   {
   public:
   
   inline
-  partial_unwrap_check(const Op< Row<eT>, op_trans2>& A, const Mat<eT>& B)
+  partial_unwrap_check(const Op< Row<eT>, op_htrans2>& A, const Mat<eT>& B)
     : do_trans(true)
     , do_times(true)
     , val     (A.aux)
@@ -1274,12 +1274,12 @@ class partial_unwrap_check< Op< Row<eT>, op_trans2> >
 
 
 template<typename eT>
-class partial_unwrap_check< Op< Col<eT>, op_trans2> >
+class partial_unwrap_check< Op< Col<eT>, op_htrans2> >
   {
   public:
   
   inline
-  partial_unwrap_check(const Op< Mat<eT>, op_trans2>& A, const Mat<eT>& B)
+  partial_unwrap_check(const Op< Mat<eT>, op_htrans2>& A, const Mat<eT>& B)
     : do_trans(true)
     , do_times(true)
     , val     (A.aux)

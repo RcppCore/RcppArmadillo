@@ -230,6 +230,63 @@ podarray<eT>::memptr() const
 
 
 template<typename eT>
+arma_hot
+inline
+void
+podarray<eT>::copy_row(const Mat<eT>& A, const u32 row)
+  {
+  const u32 cols = A.n_cols;
+  
+  // note: this function assumes that the podarray has been set to the correct size beforehand
+  eT* out = memptr();
+  
+  switch(cols)
+    {
+    default:
+      {
+      u32 i,j;
+      for(i=0, j=1; j < cols; i+=2, j+=2)
+        {
+        out[i] = A.at(row, i);
+        out[j] = A.at(row, j);
+        }
+      
+      if(i < cols)
+        {
+        out[i] = A.at(row, i);
+        }
+      }
+      break;
+    
+    case 8:
+      out[7] = A.at(row, 7);
+
+    case 7:
+      out[6] = A.at(row, 6);
+
+    case 6:
+      out[5] = A.at(row, 5);
+
+    case 5:
+      out[4] = A.at(row, 4);
+
+    case 4:
+      out[3] = A.at(row, 3);
+
+    case 3:
+      out[2] = A.at(row, 2);
+
+    case 2:
+      out[1] = A.at(row, 1);
+
+    case 1:
+      out[0] = A.at(row, 0);
+    }
+  }
+  
+
+
+template<typename eT>
 inline
 void
 podarray<eT>::init(const u32 new_n_elem)

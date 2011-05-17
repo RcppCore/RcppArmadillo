@@ -45,7 +45,10 @@ det(const Op<T1, op_diagmat>& X)
   
   const diagmat_proxy<T1> A(X.m);
   
-  arma_debug_check( (A.n_elem == 0), "det(): given object has no elements" );
+  if(A.n_elem == 0)
+    {
+    return eT(1);
+    }
   
   eT val = A[0];
   
@@ -85,7 +88,7 @@ template<typename T1>
 inline
 arma_warn_unused
 typename T1::elem_type
-det(const Op<T1,op_trans>& in, const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0)
+det(const Op<T1,op_htrans>& in, const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
   

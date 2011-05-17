@@ -55,7 +55,13 @@ log_det
   
   const u32 N = A.n_elem;
   
-  arma_debug_check( (N == 0), "log_det(): given matrix has no elements" );
+  if(N == 0)
+    {
+    out_val  = eT(0);
+    out_sign =  T(1);
+    
+    return;
+    }
   
   const eT x = A[0];
   

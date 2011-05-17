@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -70,9 +70,12 @@ op_reshape::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reshape>& in)
       eT* out_mem = out.memptr();
       u32 i = 0;
       
-      for(u32 row=0; row<B.n_rows; ++row)
+      const u32 B_n_rows = B.n_rows;
+      const u32 B_n_cols = B.n_cols;
+      
+      for(u32 row=0; row<B_n_rows; ++row)
         {
-        for(u32 col=0; col<B.n_cols; ++col)
+        for(u32 col=0; col<B_n_cols; ++col)
           {
           out_mem[i] = B.at(row,col);
           ++i;
@@ -101,13 +104,15 @@ op_reshape::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reshape>& in)
       u32 row = 0;
       u32 col = 0;
       
+      const u32 B_n_cols = B.n_cols;
+      
       for(u32 i=0; i<n_elem_to_copy; ++i)
         {
         out_mem[i] = B.at(row,col);
         
         ++col;
         
-        if(col >= B.n_cols)
+        if(col >= B_n_cols)
           {
           col = 0;
           ++row;
@@ -185,11 +190,15 @@ op_reshape::apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_reshape>
       eT* out_mem = out.memptr();
       u32 i = 0;
       
-      for(u32 slice=0; slice<B.n_slices; ++slice)
+      const u32 B_n_rows   = B.n_rows;
+      const u32 B_n_cols   = B.n_cols;
+      const u32 B_n_slices = B.n_slices;
+      
+      for(u32 slice=0; slice<B_n_slices; ++slice)
         {
-        for(u32 row=0; row<B.n_rows; ++row)
+        for(u32 row=0; row<B_n_rows; ++row)
           {
-          for(u32 col=0; col<B.n_cols; ++col)
+          for(u32 col=0; col<B_n_cols; ++col)
             {
             out_mem[i] = B.at(row,col,slice);
             ++i;
@@ -220,18 +229,21 @@ op_reshape::apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_reshape>
       u32 col   = 0;
       u32 slice = 0;
       
+      const u32 B_n_rows = B.n_rows;
+      const u32 B_n_cols = B.n_cols;
+      
       for(u32 i=0; i<n_elem_to_copy; ++i)
         {
         out_mem[i] = B.at(row,col,slice);
         
         ++col;
         
-        if(col >= B.n_cols)
+        if(col >= B_n_cols)
           {
           col = 0;
           ++row;
           
-          if(row >= B.n_rows)
+          if(row >= B_n_rows)
             {
             row = 0;
             ++slice;
