@@ -16,39 +16,39 @@
 
 
 
-//! for small square matrices with n_rows <= 4
+//! for tiny square matrices with n_rows <= 4
 template<const bool do_trans_A=false, const bool use_alpha=false, const bool use_beta=false>
 class gemv_emul_tiny
   {
   public:
   
   
-  template<const bool do_flip, const u32 row, const u32 col>
+  template<const u32 row, const u32 col>
   struct pos
     {
-    static const u32 n2 = (do_flip == false) ? (row + col*2) : (col + row*2);
-    static const u32 n3 = (do_flip == false) ? (row + col*3) : (col + row*3);
-    static const u32 n4 = (do_flip == false) ? (row + col*4) : (col + row*4);
+    static const u32 n2 = (do_trans_A == false) ? (row + col*2) : (col + row*2);
+    static const u32 n3 = (do_trans_A == false) ? (row + col*3) : (col + row*3);
+    static const u32 n4 = (do_trans_A == false) ? (row + col*4) : (col + row*4);
     };
   
   
   
-  template<typename eT, const bool do_alpha_mul, const bool do_beta_mul, const u32 i>
+  template<typename eT, const u32 i>
   arma_hot
   arma_inline
   static
   void
   assign(eT* y, const eT acc, const eT alpha, const eT beta)
     {
-    if(do_beta_mul == false)
+    if(use_beta == false)
       {
-      y[i] = (do_alpha_mul == false) ? acc : alpha*acc;
+      y[i] = (use_alpha == false) ? acc : alpha*acc;
       }
     else
       {
       const eT tmp = y[i];
       
-      y[i] = beta*tmp + ( (do_alpha_mul == false) ? acc : alpha*acc );
+      y[i] = beta*tmp + ( (use_alpha == false) ? acc : alpha*acc );
       }
     }
   
@@ -64,13 +64,14 @@ class gemv_emul_tiny
     arma_extra_debug_sigprint();
     
     const eT*  Am = A.memptr();
-    const bool tA = do_trans_A;
     
     switch(A.n_rows)
       {
       case 1:
         {
-        y[0] = Am[0] * x[0];
+        const eT acc = Am[0] * x[0];
+        
+        assign<eT, 0>(y, acc, alpha, beta);
         }
         break;
       
@@ -80,11 +81,11 @@ class gemv_emul_tiny
         const eT x0 = x[0];
         const eT x1 = x[1];
         
-        const eT acc0 = Am[pos<tA,0,0>::n2]*x0 + Am[pos<tA,0,1>::n2]*x1;
-        const eT acc1 = Am[pos<tA,1,0>::n2]*x0 + Am[pos<tA,1,1>::n2]*x1;
+        const eT acc0 = Am[pos<0,0>::n2]*x0 + Am[pos<0,1>::n2]*x1;
+        const eT acc1 = Am[pos<1,0>::n2]*x0 + Am[pos<1,1>::n2]*x1;
         
-        assign<eT, use_alpha, use_beta, 0>(y, acc0, alpha, beta);
-        assign<eT, use_alpha, use_beta, 1>(y, acc1, alpha, beta);
+        assign<eT, 0>(y, acc0, alpha, beta);
+        assign<eT, 1>(y, acc1, alpha, beta);
         }
         break;
       
@@ -95,13 +96,13 @@ class gemv_emul_tiny
         const eT x1 = x[1];
         const eT x2 = x[2];
         
-        const eT acc0 = Am[pos<tA,0,0>::n3]*x0 + Am[pos<tA,0,1>::n3]*x1 + Am[pos<tA,0,2>::n3]*x2;
-        const eT acc1 = Am[pos<tA,1,0>::n3]*x0 + Am[pos<tA,1,1>::n3]*x1 + Am[pos<tA,1,2>::n3]*x2;
-        const eT acc2 = Am[pos<tA,2,0>::n3]*x0 + Am[pos<tA,2,1>::n3]*x1 + Am[pos<tA,2,2>::n3]*x2;
+        const eT acc0 = Am[pos<0,0>::n3]*x0 + Am[pos<0,1>::n3]*x1 + Am[pos<0,2>::n3]*x2;
+        const eT acc1 = Am[pos<1,0>::n3]*x0 + Am[pos<1,1>::n3]*x1 + Am[pos<1,2>::n3]*x2;
+        const eT acc2 = Am[pos<2,0>::n3]*x0 + Am[pos<2,1>::n3]*x1 + Am[pos<2,2>::n3]*x2;
         
-        assign<eT, use_alpha, use_beta, 0>(y, acc0, alpha, beta);
-        assign<eT, use_alpha, use_beta, 1>(y, acc1, alpha, beta);
-        assign<eT, use_alpha, use_beta, 2>(y, acc2, alpha, beta);
+        assign<eT, 0>(y, acc0, alpha, beta);
+        assign<eT, 1>(y, acc1, alpha, beta);
+        assign<eT, 2>(y, acc2, alpha, beta);
         }
         break;
       
@@ -113,15 +114,15 @@ class gemv_emul_tiny
         const eT x2 = x[2];
         const eT x3 = x[3];
         
-        const eT acc0 = Am[pos<tA,0,0>::n4]*x0 + Am[pos<tA,0,1>::n4]*x1 + Am[pos<tA,0,2>::n4]*x2 + Am[pos<tA,0,3>::n4]*x3;
-        const eT acc1 = Am[pos<tA,1,0>::n4]*x0 + Am[pos<tA,1,1>::n4]*x1 + Am[pos<tA,1,2>::n4]*x2 + Am[pos<tA,1,3>::n4]*x3;
-        const eT acc2 = Am[pos<tA,2,0>::n4]*x0 + Am[pos<tA,2,1>::n4]*x1 + Am[pos<tA,2,2>::n4]*x2 + Am[pos<tA,2,3>::n4]*x3;
-        const eT acc3 = Am[pos<tA,3,0>::n4]*x0 + Am[pos<tA,3,1>::n4]*x1 + Am[pos<tA,3,2>::n4]*x2 + Am[pos<tA,3,3>::n4]*x3;
+        const eT acc0 = Am[pos<0,0>::n4]*x0 + Am[pos<0,1>::n4]*x1 + Am[pos<0,2>::n4]*x2 + Am[pos<0,3>::n4]*x3;
+        const eT acc1 = Am[pos<1,0>::n4]*x0 + Am[pos<1,1>::n4]*x1 + Am[pos<1,2>::n4]*x2 + Am[pos<1,3>::n4]*x3;
+        const eT acc2 = Am[pos<2,0>::n4]*x0 + Am[pos<2,1>::n4]*x1 + Am[pos<2,2>::n4]*x2 + Am[pos<2,3>::n4]*x3;
+        const eT acc3 = Am[pos<3,0>::n4]*x0 + Am[pos<3,1>::n4]*x1 + Am[pos<3,2>::n4]*x2 + Am[pos<3,3>::n4]*x3;
         
-        assign<eT, use_alpha, use_beta, 0>(y, acc0, alpha, beta);
-        assign<eT, use_alpha, use_beta, 1>(y, acc1, alpha, beta);
-        assign<eT, use_alpha, use_beta, 2>(y, acc2, alpha, beta);
-        assign<eT, use_alpha, use_beta, 3>(y, acc3, alpha, beta);
+        assign<eT, 0>(y, acc0, alpha, beta);
+        assign<eT, 1>(y, acc1, alpha, beta);
+        assign<eT, 2>(y, acc2, alpha, beta);
+        assign<eT, 3>(y, acc3, alpha, beta);
         }
         break;
       

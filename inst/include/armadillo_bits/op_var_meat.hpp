@@ -77,7 +77,7 @@ op_var::direct_var(const std::complex<T>* const X, const u32 n_elem, const u32 n
   
   typedef typename std::complex<T> eT;
   
-  if(n_elem > 1)
+  if(n_elem >= 2)
     {
     const eT acc1 = op_mean::direct_mean(X, n_elem);
     
@@ -200,9 +200,11 @@ op_var::apply(Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_type,
     
     if(X_n_rows > 0)
       {
+      out_eT* out_mem = out.memptr();
+      
       for(u32 col=0; col<X_n_cols; ++col)
         {
-        out[col] = op_var::direct_var( X.colptr(col), X_n_rows, norm_type );
+        out_mem[col] = op_var::direct_var( X.colptr(col), X_n_rows, norm_type );
         }
       }
     }
@@ -217,16 +219,14 @@ op_var::apply(Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_type,
       {
       podarray<in_eT> tmp(X_n_cols);
       
-      in_eT* tmp_mem = tmp.memptr();
+      in_eT*  tmp_mem = tmp.memptr();
+      out_eT* out_mem = out.memptr();
       
       for(u32 row=0; row<X_n_rows; ++row)
         {
-        for(u32 col=0; col<X_n_cols; ++col)
-          {
-          tmp_mem[col] = X.at(row,col);
-          }
+        tmp.copy_row(X, row);
         
-        out[row] = op_var::direct_var(tmp_mem, X_n_cols, norm_type);
+        out_mem[row] = op_var::direct_var( tmp_mem, X_n_cols, norm_type );
         }
       }
     }

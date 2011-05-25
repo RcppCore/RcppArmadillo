@@ -37,9 +37,11 @@ stddev(const Row<eT>& A, const u32 norm_type = 0)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (A.n_elem == 0), "stddev(): given vector has no elements" );
+  const u32 A_n_elem = A.n_elem;
   
-  return std::sqrt( op_var::direct_var(A.mem, A.n_elem, norm_type) );
+  arma_debug_check( (A_n_elem == 0), "stddev(): given object has no elements" );
+  
+  return std::sqrt( op_var::direct_var(A.mem, A_n_elem, norm_type) );
   }
 
 
@@ -53,9 +55,11 @@ stddev(const Col<eT>& A, const u32 norm_type = 0)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (A.n_elem == 0), "stddev(): given vector has no elements" );
+  const u32 A_n_elem = A.n_elem;
   
-  return std::sqrt( op_var::direct_var(A.mem, A.n_elem, norm_type) );
+  arma_debug_check( (A_n_elem == 0), "stddev(): given object has no elements" );
+  
+  return std::sqrt( op_var::direct_var(A.mem, A_n_elem, norm_type) );
   }
 
 
@@ -69,7 +73,7 @@ stddev(const subview_row<eT>& A, const u32 norm_type = 0)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (A.n_elem == 0), "stddev(): given vector has no elements" );
+  arma_debug_check( (A.n_elem == 0), "stddev(): given object has no elements" );
   
   return std::sqrt( op_var::direct_var(A, norm_type) );
   }
@@ -85,9 +89,9 @@ stddev(const subview_col<eT>& A, const u32 norm_type = 0)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (A.n_elem == 0), "stddev(): given vector has no elements" );
+  arma_debug_check( (A.n_elem == 0), "stddev(): given object has no elements" );
   
-  return std::sqrt( op_var::direct_var(A, norm_type) );
+  return std::sqrt( op_var::direct_var(A.colptr(0), A.n_rows, norm_type) );
   }
 
 
@@ -101,7 +105,7 @@ stddev(const diagview<eT>& A, const u32 norm_type = 0)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (A.n_elem == 0), "stddev(): given vector has no elements" );
+  arma_debug_check( (A.n_elem == 0), "stddev(): given object has no elements" );
   
   return std::sqrt( op_var::direct_var(A, norm_type) );
   }

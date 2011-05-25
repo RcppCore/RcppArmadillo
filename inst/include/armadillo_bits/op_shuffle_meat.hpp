@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2011 Conrad Sanderson
 // Copyright (C) 2009-2010 Dimitrios Bouzas
 // 
 // This file is part of the Armadillo C++ library.
@@ -29,6 +29,12 @@ op_shuffle::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_shuffle>& in)
   
   const unwrap<T1>   tmp(in.m);
   const Mat<eT>& X = tmp.M;
+  
+  if(X.is_empty())
+    {
+    out.copy_size(X);
+    return;
+    }
   
   const u32 dim = in.aux_u32_a;
   const u32 N   = (dim == 0) ? X.n_rows : X.n_cols;

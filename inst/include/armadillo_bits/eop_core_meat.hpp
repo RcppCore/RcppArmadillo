@@ -15,6 +15,96 @@
 //! @{
 
 
+#undef arma_applier_1
+#undef arma_applier_2
+#undef arma_applier_3
+#undef operatorA
+
+#define arma_applier_1(operatorA) \
+  {\
+  u32 i,j;\
+  \
+  for(i=0, j=1; j<n_elem; i+=2, j+=2)\
+    {\
+    eT tmp_i = P[i];\
+    eT tmp_j = P[j];\
+    \
+    tmp_i = eop_core<eop_type>::process(tmp_i, k);\
+    tmp_j = eop_core<eop_type>::process(tmp_j, k);\
+    \
+    out_mem[i] operatorA tmp_i;\
+    out_mem[j] operatorA tmp_j;\
+    }\
+  \
+  if(i < n_elem)\
+    {\
+    out_mem[i] operatorA eop_core<eop_type>::process(P[i], k);\
+    }\
+  }
+
+
+#define arma_applier_2(operatorA) \
+  {\
+  u32 count = 0;\
+  \
+  for(u32 col=0; col<n_cols; ++col)\
+    {\
+    u32 i,j;\
+    \
+    for(i=0, j=1; j<n_rows; i+=2, j+=2, count+=2)\
+      {\
+      eT tmp_i = P.at(i,col);\
+      eT tmp_j = P.at(j,col);\
+      \
+      tmp_i = eop_core<eop_type>::process(tmp_i, k);\
+      tmp_j = eop_core<eop_type>::process(tmp_j, k);\
+      \
+      out_mem[count  ] operatorA tmp_i;\
+      out_mem[count+1] operatorA tmp_j;\
+      }\
+    \
+    if(i < n_rows)\
+      {\
+      out_mem[count] operatorA eop_core<eop_type>::process(P.at(i,col), k);\
+      ++count;\
+      }\
+    }\
+  }
+
+
+
+#define arma_applier_3(operatorA) \
+  {\
+  u32 count = 0;\
+  \
+  for(u32 slice=0; slice<n_slices; ++slice)\
+    {\
+    for(u32 col=0; col<n_cols; ++col)\
+      {\
+      u32 i,j;\
+      \
+      for(i=0, j=1; j<n_rows; i+=2, j+=2, count+=2)\
+        {\
+        eT tmp_i = P.at(i,col,slice);\
+        eT tmp_j = P.at(j,col,slice);\
+        \
+        tmp_i = eop_core<eop_type>::process(tmp_i, k);\
+        tmp_j = eop_core<eop_type>::process(tmp_j, k);\
+        \
+        out_mem[count  ] operatorA tmp_i;\
+        out_mem[count+1] operatorA tmp_j;\
+        }\
+      \
+      if(i < n_rows)\
+        {\
+        out_mem[count] operatorA eop_core<eop_type>::process(P.at(i,col,slice), k);\
+        ++count;\
+        }\
+      }\
+    }\
+  }
+
+
 
 //
 // matrices
@@ -48,26 +138,20 @@ eop_core<eop_type>::apply(Mat<typename T1::elem_type>& out, const eOp<T1, eop_ty
     }
   else
     {
-    typedef typename Proxy<T1>::ea_type ea_type;
+    const eT  k       = x.aux;
+          eT* out_mem = out.memptr();
     
-    const eT      k       = x.aux;
-          ea_type P       = x.P.get_ea();
-          eT*     out_mem = out.memptr();
-    
-    u32 i,j;
-    
-    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+    if(Proxy<T1>::prefer_at_accessor == false)
       {
-      const eT tmp_i = eop_core<eop_type>::process(P[i], k);
-      const eT tmp_j = eop_core<eop_type>::process(P[j], k);
+      typename Proxy<T1>::ea_type P = x.P.get_ea();
       
-      out_mem[i] = tmp_i;
-      out_mem[j] = tmp_j;
+      arma_applier_1(=);
       }
-    
-    if(i < n_elem)
+    else
       {
-      out_mem[i] = eop_core<eop_type>::process(P[i], k);
+      const Proxy<T1>& P = x.P;
+      
+      arma_applier_2(=);
       }
     }
   }
@@ -114,25 +198,19 @@ eop_core<eop_type>::apply_inplace_plus(Mat<typename T1::elem_type>& out, const e
     }
   else
     {
-    typedef typename Proxy<T1>::ea_type ea_type;
+    const eT k = x.aux;
     
-    const eT      k = x.aux;
-          ea_type P = x.P.get_ea();
-    
-    u32 i,j;
-    
-    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+    if(Proxy<T1>::prefer_at_accessor == false)
       {
-      const eT tmp_i = eop_core<eop_type>::process(P[i], k);
-      const eT tmp_j = eop_core<eop_type>::process(P[j], k);
+      typename Proxy<T1>::ea_type P = x.P.get_ea();
       
-      out_mem[i] += tmp_i;
-      out_mem[j] += tmp_j;
+      arma_applier_1(+=);
       }
-    
-    if(i < n_elem)
+    else
       {
-      out_mem[i] += eop_core<eop_type>::process(P[i], k);
+      const Proxy<T1>& P = x.P;
+      
+      arma_applier_2(+=);
       }
     }
   }
@@ -179,25 +257,19 @@ eop_core<eop_type>::apply_inplace_minus(Mat<typename T1::elem_type>& out, const 
     }
   else
     {
-    typedef typename Proxy<T1>::ea_type ea_type;
+    const eT k = x.aux;
     
-    const eT      k = x.aux;
-          ea_type P = x.P.get_ea();
-    
-    u32 i,j;
-    
-    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+    if(Proxy<T1>::prefer_at_accessor == false)
       {
-      const eT tmp_i = eop_core<eop_type>::process(P[i], k);
-      const eT tmp_j = eop_core<eop_type>::process(P[j], k);
+      typename Proxy<T1>::ea_type P = x.P.get_ea();
       
-      out_mem[i] -= tmp_i;
-      out_mem[j] -= tmp_j;
+      arma_applier_1(-=);
       }
-    
-    if(i < n_elem)
+    else
       {
-      out_mem[i] -= eop_core<eop_type>::process(P[i], k);
+      const Proxy<T1>& P = x.P;
+      
+      arma_applier_2(-=);
       }
     }
   }
@@ -245,25 +317,19 @@ eop_core<eop_type>::apply_inplace_schur(Mat<typename T1::elem_type>& out, const 
     }
   else
     {
-    typedef typename Proxy<T1>::ea_type ea_type;
+    const eT k = x.aux;
     
-    const eT      k = x.aux;
-          ea_type P = x.P.get_ea();
-    
-    u32 i,j;
-    
-    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+    if(Proxy<T1>::prefer_at_accessor == false)
       {
-      const eT tmp_i = eop_core<eop_type>::process(P[i], k);
-      const eT tmp_j = eop_core<eop_type>::process(P[j], k);
+      typename Proxy<T1>::ea_type P = x.P.get_ea();
       
-      out_mem[i] *= tmp_i;
-      out_mem[j] *= tmp_j;
+      arma_applier_1(*=);
       }
-    
-    if(i < n_elem)
+    else
       {
-      out_mem[i] *= eop_core<eop_type>::process(P[i], k);
+      const Proxy<T1>& P = x.P;
+      
+      arma_applier_2(*=);
       }
     }
   }
@@ -313,25 +379,19 @@ eop_core<eop_type>::apply_inplace_div(Mat<typename T1::elem_type>& out, const eO
     }
   else
     {
-    typedef typename Proxy<T1>::ea_type ea_type;
+    const eT k = x.aux;
     
-    const eT      k = x.aux;
-          ea_type P = x.P.get_ea();
-    
-    u32 i,j;
-    
-    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+    if(Proxy<T1>::prefer_at_accessor == false)
       {
-      const eT tmp_i = eop_core<eop_type>::process(P[i], k);
-      const eT tmp_j = eop_core<eop_type>::process(P[j], k);
+      typename Proxy<T1>::ea_type P = x.P.get_ea();
       
-      out_mem[i] /= tmp_i;
-      out_mem[j] /= tmp_j;
+      arma_applier_1(/=);
       }
-    
-    if(i < n_elem)
+    else
       {
-      out_mem[i] /= eop_core<eop_type>::process(P[i], k);
+      const Proxy<T1>& P = x.P;
+      
+      arma_applier_2(/=);
       }
     }
   }
@@ -370,23 +430,20 @@ eop_core<eop_type>::apply(Cube<typename T1::elem_type>& out, const eOpCube<T1, e
     }
   else
     {
-    typedef typename ProxyCube<T1>::ea_type ea_type;
+    const eT  k       = x.aux;
+          eT* out_mem = out.memptr();
     
-    const eT      k       = x.aux;
-          ea_type P       = x.P.get_ea();
-          eT*     out_mem = out.memptr();
-    
-    u32 i,j;
-    
-    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+    if(ProxyCube<T1>::prefer_at_accessor == false)
       {
-      out_mem[i] = eop_core<eop_type>::process(P[i], k);
-      out_mem[j] = eop_core<eop_type>::process(P[j], k);
+      typename ProxyCube<T1>::ea_type P = x.P.get_ea();
+      
+      arma_applier_1(=);
       }
-    
-    if(i < n_elem)
+    else
       {
-      out_mem[i] = eop_core<eop_type>::process(P[i], k);
+      const ProxyCube<T1>& P = x.P;
+      
+      arma_applier_3(=);
       }
     }
   }
@@ -422,25 +479,19 @@ eop_core<eop_type>::apply_inplace_plus(Cube<typename T1::elem_type>& out, const 
     }
   else
     {
-    typedef typename ProxyCube<T1>::ea_type ea_type;
+    const eT k = x.aux;
     
-    const eT      k = x.aux;
-          ea_type P = x.P.get_ea();
-    
-    u32 i,j;
-    
-    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+    if(ProxyCube<T1>::prefer_at_accessor == false)
       {
-      const eT tmp_i = eop_core<eop_type>::process(P[i], k);
-      const eT tmp_j = eop_core<eop_type>::process(P[j], k);
-      
-      out_mem[i] += tmp_i;
-      out_mem[j] += tmp_j;
+      typename ProxyCube<T1>::ea_type P = x.P.get_ea();
+    
+      arma_applier_1(+=);
       }
-    
-    if(i < n_elem)
+    else
       {
-      out_mem[i] += eop_core<eop_type>::process(P[i], k);
+      const ProxyCube<T1>& P = x.P;
+      
+      arma_applier_3(+=);
       }
     }
   }
@@ -476,25 +527,19 @@ eop_core<eop_type>::apply_inplace_minus(Cube<typename T1::elem_type>& out, const
     }
   else
     {
-    typedef typename ProxyCube<T1>::ea_type ea_type;
+    const eT k = x.aux;
     
-    const eT      k = x.aux;
-          ea_type P = x.P.get_ea();
-    
-    u32 i,j;
-    
-    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+    if(ProxyCube<T1>::prefer_at_accessor == false)
       {
-      const eT tmp_i = eop_core<eop_type>::process(P[i], k);
-      const eT tmp_j = eop_core<eop_type>::process(P[j], k);
-      
-      out_mem[i] -= tmp_i;
-      out_mem[j] -= tmp_j;
+      typename ProxyCube<T1>::ea_type P = x.P.get_ea();
+    
+      arma_applier_1(-=);
       }
-    
-    if(i < n_elem)
+    else
       {
-      out_mem[i] -= eop_core<eop_type>::process(P[i], k);
+      const ProxyCube<T1>& P = x.P;
+      
+      arma_applier_3(-=);
       }
     }
   }
@@ -530,25 +575,19 @@ eop_core<eop_type>::apply_inplace_schur(Cube<typename T1::elem_type>& out, const
     }
   else
     {
-    typedef typename ProxyCube<T1>::ea_type ea_type;
+    const eT k = x.aux;
     
-    const eT      k = x.aux;
-          ea_type P = x.P.get_ea();
-    
-    u32 i,j;
-    
-    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+    if(ProxyCube<T1>::prefer_at_accessor == false)
       {
-      const eT tmp_i = eop_core<eop_type>::process(P[i], k);
-      const eT tmp_j = eop_core<eop_type>::process(P[j], k);
-      
-      out_mem[i] *= tmp_i;
-      out_mem[j] *= tmp_j;
+      typename ProxyCube<T1>::ea_type P = x.P.get_ea();
+    
+      arma_applier_1(*=);
       }
-    
-    if(i < n_elem)
+    else
       {
-      out_mem[i] *= eop_core<eop_type>::process(P[i], k);
+      const ProxyCube<T1>& P = x.P;
+      
+      arma_applier_3(*=);
       }
     }
   }
@@ -584,25 +623,19 @@ eop_core<eop_type>::apply_inplace_div(Cube<typename T1::elem_type>& out, const e
     }
   else
     {
-    typedef typename ProxyCube<T1>::ea_type ea_type;
+    const eT k = x.aux;
     
-    const eT      k = x.aux;
-          ea_type P = x.P.get_ea();
-    
-    u32 i,j;
-    
-    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+    if(ProxyCube<T1>::prefer_at_accessor == false)
       {
-      const eT tmp_i = eop_core<eop_type>::process(P[i], k);
-      const eT tmp_j = eop_core<eop_type>::process(P[j], k);
-      
-      out_mem[i] /= tmp_i;
-      out_mem[j] /= tmp_j;
+      typename ProxyCube<T1>::ea_type P = x.P.get_ea();
+    
+      arma_applier_1(/=);
       }
-    
-    if(i < n_elem)
+    else
       {
-      out_mem[i] /= eop_core<eop_type>::process(P[i], k);
+      const ProxyCube<T1>& P = x.P;
+      
+      arma_applier_3(/=);
       }
     }
   }
@@ -735,6 +768,12 @@ eop_core<eop_floor            >::process(const eT val, const eT  ) { return eop_
 
 template<> template<typename eT> arma_hot arma_pure arma_inline eT
 eop_core<eop_ceil             >::process(const eT val, const eT  ) { return eop_aux::ceil(val);       }
+
+
+
+#undef arma_applier_1
+#undef arma_applier_2
+#undef arma_applier_3
 
 
 

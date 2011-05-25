@@ -15,7 +15,7 @@
 //! @{
 
 
-//! Find the minimum value in an array
+
 template<typename eT>
 arma_pure
 inline 
@@ -136,7 +136,6 @@ op_min::direct_min(const Mat<eT>& X, const u32 row)
 
 
 
-//! find the minimum value in a subview
 template<typename eT>
 inline 
 eT
@@ -163,7 +162,6 @@ op_min::direct_min(const subview<eT>& X)
 
 
 
-//! find the minimum value in a diagview
 template<typename eT>
 inline 
 eT
@@ -202,9 +200,7 @@ inline void op_min::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_min>&
   typedef typename T1::elem_type eT;
   
   const unwrap_check<T1> tmp(in.m, out);
-  const Mat<eT>& X = tmp.M;
-  
-  arma_debug_check( (X.n_elem == 0), "min(): given matrix has no elements" );
+  const Mat<eT>&     X = tmp.M;
   
   const u32 dim = in.aux_u32_a;
   arma_debug_check( (dim > 1), "min(): incorrect usage. dim must be 0 or 1");
@@ -216,11 +212,16 @@ inline void op_min::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_min>&
     {
     arma_extra_debug_print("op_min::apply(), dim = 0");
     
-    out.set_size(1, X_n_cols);
+    out.set_size( (X_n_rows > 0) ? 1 : 0, X_n_cols );
     
-    for(u32 col=0; col<X_n_cols; ++col)
+    if(X_n_rows > 0)
       {
-      out[col] = op_min::direct_min( X.colptr(col), X_n_rows );
+      eT* out_mem = out.memptr();
+      
+      for(u32 col=0; col<X_n_cols; ++col)
+        {
+        out_mem[col] = op_min::direct_min( X.colptr(col), X_n_rows );
+        }
       }
     }
   else
@@ -228,18 +229,22 @@ inline void op_min::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_min>&
     {
     arma_extra_debug_print("op_min::apply(), dim = 1");
     
-    out.set_size(X_n_rows, 1);
+    out.set_size( X_n_rows, (X_n_cols > 0) ? 1 : 0 );
     
-    for(u32 row=0; row<X_n_rows; ++row)
+    if(X_n_cols > 0)
       {
-      out[row] = op_min::direct_min( X, row );
+      eT* out_mem = out.memptr();
+      
+      for(u32 row=0; row<X_n_rows; ++row)
+        {
+        out_mem[row] = op_min::direct_min( X, row );
+        }
       }
     }
   }
 
 
 
-//! Find the minimum value in an array (version for complex numbers)
 template<typename T>
 inline 
 std::complex<T>
@@ -322,7 +327,6 @@ op_min::direct_min(const Mat< std::complex<T> >& X, const u32 row)
 
 
 
-//! Find the minimum value in a subview (version for complex numbers)
 template<typename T>
 inline 
 std::complex<T>
@@ -350,7 +354,6 @@ op_min::direct_min(const subview< std::complex<T> >& X)
 
 
 
-//! Find the minimum value in a diagview (version for complex numbers)
 template<typename T>
 inline 
 std::complex<T>

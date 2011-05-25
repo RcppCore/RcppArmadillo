@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -25,18 +25,55 @@ class diagmat_proxy
   typedef typename get_pod_type<elem_type>::result pod_type;
   
   inline diagmat_proxy(const Base<typename T1::elem_type,T1>& X)
-    : P       (X.get_ref())
+    : P       ( X.get_ref() )
     , P_is_vec( (P.get_n_rows() == 1) || (P.get_n_cols() == 1) )
-    , n_elem  ( P_is_vec ? P.get_n_elem() : P.get_n_rows() )
+    , n_elem  ( P_is_vec ? P.get_n_elem() : (std::min)(P.get_n_elem(), P.get_n_rows()) )
     {
     arma_extra_debug_sigprint();
     
-    arma_debug_check( (P_is_vec == false) && (P.get_n_rows() != P.get_n_cols()), "diagmat(): only vectors and square matrices are accepted" );
+    arma_debug_check
+      (
+      (P_is_vec == false) && (P.get_n_rows() != P.get_n_cols()),
+      "diagmat(): only vectors and square matrices are accepted"
+      );
     }
   
   
-  arma_inline elem_type operator[] (const u32 i)                  const { return P_is_vec ? P[i] : P.at(i,i);                                         }
-  arma_inline elem_type at         (const u32 row, const u32 col) const { return (row == col) ? ( P_is_vec ? P[row] : P.at(row,row) ) : elem_type(0); }
+  arma_inline
+  elem_type
+  operator[](const u32 i) const
+    {
+    if( (Proxy<T1>::prefer_at_operator == true) || (P_is_vec == false) )
+      {
+      return P.at(i,i);
+      }
+    else
+      {
+      return P[i];
+      }
+    }
+  
+  
+  arma_inline
+  elem_type
+  at(const u32 row, const u32 col) const
+    {
+    if(row == col)
+      {
+      if( (Proxy<T1>::prefer_at_operator == true) || (P_is_vec == false) )
+        {
+        return P.at(row,row);
+        }
+      else
+        {
+        return P[row];
+        }
+      }
+    else
+      {
+      return elem_type(0);
+      }
+    }
   
   
   const Proxy<T1> P;
@@ -58,10 +95,15 @@ class diagmat_proxy< Mat<eT> >
   inline diagmat_proxy(const Mat<eT>& X)
     : P(X)
     , P_is_vec( (P.n_rows == 1) || (P.n_cols == 1) )
-    , n_elem( P_is_vec ? P.n_elem : P.n_rows )
+    , n_elem( P_is_vec ? P.n_elem : (std::min)(P.n_elem, P.n_rows) )
     {
     arma_extra_debug_sigprint();
-    arma_debug_check( (P_is_vec == false) && (P.n_rows != P.n_cols), "diagmat(): only vectors and square matrices are accepted" );
+    
+    arma_debug_check
+      (
+      (P_is_vec == false) && (P.n_rows != P.n_cols),
+      "diagmat(): only vectors and square matrices are accepted"
+      );
     }
   
   
@@ -93,8 +135,8 @@ class diagmat_proxy< Row<eT> >
     }
   
   
-  arma_inline elem_type operator[] (const u32 i)                  const { return P_is_vec ? P[i] : P.at(i,i);                                         }
-  arma_inline elem_type at         (const u32 row, const u32 col) const { return (row == col) ? ( P_is_vec ? P[row] : P.at(row,row) ) : elem_type(0); }
+  arma_inline elem_type operator[] (const u32 i)                  const { return P[i];                                                                }
+  arma_inline elem_type at         (const u32 row, const u32 col) const { return (row == col) ? P[row] : elem_type(0); }
 
 
   const Row<eT>& P;
@@ -122,8 +164,8 @@ class diagmat_proxy< Col<eT> >
     }
   
   
-  arma_inline elem_type operator[] (const u32 i)                  const { return P_is_vec ? P[i] : P.at(i,i);                                         }
-  arma_inline elem_type at         (const u32 row, const u32 col) const { return (row == col) ? ( P_is_vec ? P[row] : P.at(row,row) ) : elem_type(0); }
+  arma_inline elem_type operator[] (const u32 i)                  const { return P[i];                                 }
+  arma_inline elem_type at         (const u32 row, const u32 col) const { return (row == col) ? P[row] : elem_type(0); }
   
 
   const Col<eT>& P;
@@ -144,11 +186,16 @@ class diagmat_proxy_check
   inline diagmat_proxy_check(const Base<typename T1::elem_type,T1>& X, const Mat<typename T1::elem_type>& out)
     : P(X.get_ref())
     , P_is_vec( (P.n_rows == 1) || (P.n_cols == 1) )
-    , n_elem( P_is_vec ? P.n_elem : P.n_rows )
+    , n_elem( P_is_vec ? P.n_elem : (std::min)(P.n_elem, P.n_rows) )
     {
     arma_extra_debug_sigprint();
     arma_ignore(out);
-    arma_debug_check( (P_is_vec == false) && (P.n_rows != P.n_cols), "diagmat(): only vectors and square matrices are accepted" );
+    
+    arma_debug_check
+      (
+      (P_is_vec == false) && (P.n_rows != P.n_cols),
+      "diagmat(): only vectors and square matrices are accepted"
+      );
     }
   
   
@@ -176,11 +223,15 @@ class diagmat_proxy_check< Mat<eT> >
     : P_local ( (&X == &out) ? new Mat<eT>(X) : 0  )
     , P       ( (&X == &out) ? (*P_local)     : X  )
     , P_is_vec( (P.n_rows == 1) || (P.n_cols == 1) )
-    , n_elem  ( P_is_vec ? P.n_elem : P.n_rows     )
+    , n_elem  ( P_is_vec ? P.n_elem : (std::min)(P.n_elem, P.n_rows) )
     {
     arma_extra_debug_sigprint();
     
-    arma_debug_check( (P_is_vec == false) && (P.n_rows != P.n_cols), "diagmat(): only vectors and square matrices are accepted" );
+    arma_debug_check
+      (
+      (P_is_vec == false) && (P.n_rows != P.n_cols),
+      "diagmat(): only vectors and square matrices are accepted"
+      );
     }
   
   inline ~diagmat_proxy_check()
@@ -231,8 +282,8 @@ class diagmat_proxy_check< Row<eT> >
     }
   
   
-  arma_inline elem_type operator[] (const u32 i)                  const { return P_is_vec ? P[i] : P.at(i,i);                                         }
-  arma_inline elem_type at         (const u32 row, const u32 col) const { return (row == col) ? ( P_is_vec ? P[row] : P.at(row,row) ) : elem_type(0); }
+  arma_inline elem_type operator[] (const u32 i)                  const { return P[i];                                 }
+  arma_inline elem_type at         (const u32 row, const u32 col) const { return (row == col) ? P[row] : elem_type(0); }
   
   
   const Row<eT>* P_local;
@@ -273,8 +324,8 @@ class diagmat_proxy_check< Col<eT> >
     }
   
   
-  arma_inline elem_type operator[] (const u32 i)                  const { return P_is_vec ? P[i] : P.at(i,i);                                         }
-  arma_inline elem_type at         (const u32 row, const u32 col) const { return (row == col) ? ( P_is_vec ? P[row] : P.at(row,row) ) : elem_type(0); }
+  arma_inline elem_type operator[] (const u32 i)                  const { return P[i];                                 }
+  arma_inline elem_type at         (const u32 row, const u32 col) const { return (row == col) ? P[row] : elem_type(0); }
   
   
   const Col<eT>* P_local;

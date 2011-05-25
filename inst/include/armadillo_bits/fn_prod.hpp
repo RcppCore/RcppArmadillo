@@ -44,8 +44,6 @@ prod(const Row<eT>& X)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (X.n_elem < 1), "prod(): given object has no elements" );
-  
   return arrayops::product(X.memptr(), X.n_elem);
   }
 
@@ -59,8 +57,6 @@ eT
 prod(const Col<eT>& X)
   {
   arma_extra_debug_sigprint();
-  
-  arma_debug_check( (X.n_elem < 1), "prod(): given object has no elements" );
   
   return arrayops::product(X.memptr(), X.n_elem);
   }
@@ -84,9 +80,7 @@ prod(const Op<T1, op_prod>& in)
   const unwrap<T1>   tmp(in.m);
   const Mat<eT>& X = tmp.M;
   
-  arma_debug_check( (X.n_elem < 1), "prod(): given object has no elements" );
-  
-  return arrayops::product(X.memptr(), X.n_elem);
+  return arrayops::product( X.memptr(), X.n_elem );
   }
 
 
@@ -110,8 +104,6 @@ eT
 prod(const subview_row<eT>& S)
   {
   arma_extra_debug_sigprint();
-  
-  arma_debug_check( (S.n_elem < 1), "prod(): given object has no elements" );
   
   const Mat<eT>& X = S.m;
   
@@ -139,8 +131,6 @@ prod(const subview_col<eT>& S)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (S.n_elem < 1), "prod(): given object has no elements" );
-  
   return arrayops::product( S.colptr(0), S.n_rows );
   }
 
@@ -154,13 +144,11 @@ prod(const diagview<eT>& X)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (X.n_elem < 1), "prod(): given object has no elements" );
+  const u32 X_n_elem = X.n_elem;
   
-  const u32 n_elem = X.n_elem;
+  eT val = eT(1);
   
-  eT val = X[0];
-  
-  for(u32 i=1; i<n_elem; ++i)
+  for(u32 i=0; i<X_n_elem; ++i)
     {
     val *= X[i];
     }

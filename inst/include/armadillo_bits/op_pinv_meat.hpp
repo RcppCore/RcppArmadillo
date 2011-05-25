@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2011 Conrad Sanderson
 // Copyright (C) 2009-2010 Dimitrios Bouzas
 // 
 // This file is part of the Armadillo C++ library.
@@ -107,7 +107,7 @@ op_pinv::direct_pinv(Mat< std::complex<T> >& out, const Mat< std::complex<T> >& 
   Col< T> s;
   Mat<eT> V;
   
-  const bool status = (n_cols > n_rows) ? svd(U,s,V,htrans(A)) : svd(U,s,V,A);
+  const bool status = (n_cols > n_rows) ? svd(U,s,V,trans(A)) : svd(U,s,V,A);
   
   if(status == false)
     {
@@ -149,11 +149,11 @@ op_pinv::direct_pinv(Mat< std::complex<T> >& out, const Mat< std::complex<T> >& 
     
     if(n_rows >= n_cols)
       {
-      out = ( V.n_cols > count ? V.cols(0,count-1) : V ) * diagmat(s) * htrans( U.n_cols > count ? U.cols(0,count-1) : U );
+      out = ( V.n_cols > count ? V.cols(0,count-1) : V ) * diagmat(s) * trans( U.n_cols > count ? U.cols(0,count-1) : U );
       }
     else
       {
-      out = ( U.n_cols > count ? U.cols(0,count-1) : U ) * diagmat(s) * htrans( V.n_cols > count ? V.cols(0,count-1) : V );
+      out = ( U.n_cols > count ? U.cols(0,count-1) : U ) * diagmat(s) * trans( V.n_cols > count ? V.cols(0,count-1) : V );
       }
     }
   else

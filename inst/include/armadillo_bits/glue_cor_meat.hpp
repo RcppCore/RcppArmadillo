@@ -24,6 +24,12 @@ glue_cor::direct_cor(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const u32
   {
   arma_extra_debug_sigprint();
   
+  if(A.is_empty() || B.is_empty() )
+    {
+    out.reset();
+    return;
+    }
+  
   if(A.is_vec() && B.is_vec())
     {
     arma_debug_check( (A.n_elem != B.n_elem), "cor(): the number of elements in the two vectors must match" );
@@ -84,6 +90,12 @@ glue_cor::direct_cor(Mat< std::complex<T> >& out, const Mat< std::complex<T> >& 
   arma_extra_debug_sigprint();
   
   typedef typename std::complex<T> eT;
+  
+  if(A.is_empty() || B.is_empty() )
+    {
+    out.reset();
+    return;
+    }
   
   if(A.is_vec() && B.is_vec())
     {

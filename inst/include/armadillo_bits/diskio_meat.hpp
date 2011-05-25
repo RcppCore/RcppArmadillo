@@ -26,7 +26,7 @@ inline
 std::string
 diskio::gen_txt_header(const Mat<eT>& x)
   {
-  arma_type_check<diskio::is_supported_type<eT>::value == false>::apply();
+  arma_type_check< is_supported_elem_type<eT>::value == false >::apply();
 
   arma_ignore(x);
   
@@ -58,6 +58,11 @@ diskio::gen_txt_header(const Mat<eT>& x)
   if(is_s32<eT>::value == true)
     {
     return std::string("ARMA_MAT_TXT_IS004");
+    }
+  else
+  if(is_u64<eT>::value == true)
+    {
+    return std::string("ARMA_MAT_TXT_IU008");
     }
   else
   if(is_float<eT>::value == true)
@@ -98,7 +103,7 @@ inline
 std::string
 diskio::gen_bin_header(const Mat<eT>& x)
   {
-  arma_type_check<diskio::is_supported_type<eT>::value == false>::apply();
+  arma_type_check< is_supported_elem_type<eT>::value == false >::apply();
   
   arma_ignore(x);
   
@@ -130,6 +135,11 @@ diskio::gen_bin_header(const Mat<eT>& x)
   if(is_s32<eT>::value == true)
     {
     return std::string("ARMA_MAT_BIN_IS004");
+    }
+  else
+  if(is_u64<eT>::value == true)
+    {
+    return std::string("ARMA_MAT_BIN_IU008");
     }
   else
   if(is_float<eT>::value == true)
@@ -170,7 +180,7 @@ inline
 std::string
 diskio::gen_txt_header(const Cube<eT>& x)
   {
-  arma_type_check<diskio::is_supported_type<eT>::value == false>::apply();
+  arma_type_check< is_supported_elem_type<eT>::value == false >::apply();
   
   arma_ignore(x);
 
@@ -202,6 +212,11 @@ diskio::gen_txt_header(const Cube<eT>& x)
   if(is_s32<eT>::value == true)
     {
     return std::string("ARMA_CUB_TXT_IS004");
+    }
+  else
+  if(is_u64<eT>::value == true)
+    {
+    return std::string("ARMA_CUB_TXT_IU008");
     }
   else
   if(is_float<eT>::value == true)
@@ -242,7 +257,7 @@ inline
 std::string
 diskio::gen_bin_header(const Cube<eT>& x)
   {
-  arma_type_check<diskio::is_supported_type<eT>::value == false>::apply();
+  arma_type_check< is_supported_elem_type<eT>::value == false >::apply();
   
   arma_ignore(x);
   
@@ -274,6 +289,11 @@ diskio::gen_bin_header(const Cube<eT>& x)
   if(is_s32<eT>::value == true)
     {
     return std::string("ARMA_CUB_BIN_IS004");
+    }
+  else
+  if(is_u64<eT>::value == true)
+    {
+    return std::string("ARMA_CUB_BIN_IU008");
     }
   else
   if(is_float<eT>::value == true)

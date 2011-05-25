@@ -15,10 +15,10 @@
 //! @{
 
 
-//! find the maximum value in an array
+
 template<typename eT>
 arma_pure
-inline 
+inline
 eT
 op_max::direct_max(const eT* const X, const u32 n_elem)
   {
@@ -136,16 +136,16 @@ op_max::direct_max(const Mat<eT>& X, const u32 row)
 
 
 
-//! find the maximum value in a subview
 template<typename eT>
-inline 
+inline
 eT
 op_max::direct_max(const subview<eT>& X)
   {
   arma_extra_debug_sigprint();
   
   const u32 X_n_elem = X.n_elem;
-        eT  max_val  = (X_n_elem != 1) ? priv::most_neg<eT>() : X[0];
+  
+  eT max_val = (X_n_elem != 1) ? priv::most_neg<eT>() : X[0];
   
   for(u32 i=0; i<X_n_elem; ++i)
     {
@@ -162,16 +162,16 @@ op_max::direct_max(const subview<eT>& X)
 
 
 
-//! find the maximum value in a diagview
 template<typename eT>
-inline 
+inline
 eT
 op_max::direct_max(const diagview<eT>& X)
   {
   arma_extra_debug_sigprint();
   
   const u32 X_n_elem = X.n_elem;
-        eT  max_val  = (X_n_elem != 1) ? priv::most_neg<eT>() : X[0];
+  
+  eT max_val = (X_n_elem != 1) ? priv::most_neg<eT>() : X[0];
   
   for(u32 i=0; i<X_n_elem; ++i)
     {
@@ -204,8 +204,6 @@ op_max::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_max>& in)
   const unwrap_check<T1> tmp(in.m, out);
   const Mat<eT>& X     = tmp.M;
   
-  arma_debug_check( (X.n_elem == 0), "max(): given matrix has no elements" );
-  
   const u32 dim = in.aux_u32_a;
   arma_debug_check( (dim > 1), "max(): incorrect usage. dim must be 0 or 1");
   
@@ -216,11 +214,16 @@ op_max::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_max>& in)
     {
     arma_extra_debug_print("op_max::apply(), dim = 0");
     
-    out.set_size(1, X_n_cols);
+    out.set_size( (X_n_rows > 0) ? 1 : 0, X_n_cols );
     
-    for(u32 col=0; col<X_n_cols; ++col)
+    if(X_n_rows > 0)
       {
-      out[col] = op_max::direct_max( X.colptr(col), X_n_rows );
+      eT* out_mem = out.memptr();
+      
+      for(u32 col=0; col<X_n_cols; ++col)
+        {
+        out_mem[col] = op_max::direct_max( X.colptr(col), X_n_rows );
+        }
       }
     }
   else
@@ -228,20 +231,24 @@ op_max::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_max>& in)
     {
     arma_extra_debug_print("op_max::apply(), dim = 1");
     
-    out.set_size(X_n_rows, 1);
+    out.set_size( X_n_rows, (X_n_cols > 0) ? 1 : 0 );
     
-    for(u32 row=0; row<X_n_rows; ++row)
+    if(X_n_cols > 0)
       {
-      out[row] = op_max::direct_max( X, row );
+      eT* out_mem = out.memptr();
+      
+      for(u32 row=0; row<X_n_rows; ++row)
+        {
+        out_mem[row] = op_max::direct_max( X, row );
+        }
       }
     }
   }
 
 
 
-//! Find the maximum value in an array (version for complex numbers)
 template<typename T>
-inline 
+inline
 std::complex<T>
 op_max::direct_max(const std::complex<T>* const X, const u32 n_elem)
   {
@@ -322,17 +329,17 @@ op_max::direct_max(const Mat< std::complex<T> >& X, const u32 row)
 
 
 
-//! Find the maximum value in a subview (version for complex numbers)
 template<typename T>
-inline 
+inline
 std::complex<T>
 op_max::direct_max(const subview< std::complex<T> >& X)
   {
   arma_extra_debug_sigprint();
   
   const u32 X_n_elem = X.n_elem;
-        u32 index    = 0;
-        T   max_val  = (X_n_elem != 1) ? priv::most_neg<T>() : std::abs(X[0]);
+  
+  u32 index   = 0;
+  T   max_val = (X_n_elem != 1) ? priv::most_neg<T>() : std::abs(X[0]);
   
   for(u32 i=0; i<X_n_elem; ++i)
     {
@@ -350,7 +357,6 @@ op_max::direct_max(const subview< std::complex<T> >& X)
 
 
 
-//! Find the maximum value in a diagview (version for complex numbers)
 template<typename T>
 inline 
 std::complex<T>
@@ -359,8 +365,9 @@ op_max::direct_max(const diagview< std::complex<T> >& X)
   arma_extra_debug_sigprint();
   
   const u32 X_n_elem = X.n_elem;
-        u32 index    = 0;
-        T   max_val  = (X_n_elem != 1) ? priv::most_neg<T>() : std::abs(X[0]);
+  
+  u32 index   = 0;
+  T   max_val = (X_n_elem != 1) ? priv::most_neg<T>() : std::abs(X[0]);
   
   for(u32 i=0; i<X_n_elem; ++i)
     {

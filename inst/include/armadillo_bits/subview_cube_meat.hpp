@@ -1057,49 +1057,31 @@ subview_cube<eT>::check_overlap(const subview_cube<eT>& x) const
       }
     else
       {
-      const u32 t_aux_row1   = t.aux_row1;
-      const u32 t_aux_row2   = t_aux_row1 + t.n_rows - 1;
+      const u32 t_row_start  = t.aux_row1;
+      const u32 t_row_end_p1 = t_row_start + t.n_rows;
       
-      const u32 t_aux_col1   = t.aux_col1;
-      const u32 t_aux_col2   = t_aux_col1 + t.n_cols - 1;
+      const u32 t_col_start  = t.aux_col1;
+      const u32 t_col_end_p1 = t_col_start + t.n_cols;
       
-      const u32 t_aux_slice1 = t.aux_slice1;
-      const u32 t_aux_slice2 = t_aux_slice1 + t.n_slices - 1;
-      
-      const u32 x_aux_row1   = x.aux_row1;
-      const u32 x_aux_row2   = x_aux_row1 + x.n_rows - 1;
-      
-      const u32 x_aux_col1   = x.aux_col1;
-      const u32 x_aux_col2   = x_aux_col1 + x.n_cols - 1;
-      
-      const u32 x_aux_slice1 = x.aux_slice1;
-      const u32 x_aux_slice2 = x_aux_slice1 + x.n_slices - 1;
+      const u32 t_slice_start  = t.aux_slice1;
+      const u32 t_slice_end_p1 = t_slice_start + t.n_slices;
       
       
-      const bool row_overlap =
-        (
-        ( (x_aux_row1 >= t_aux_row1) && (x_aux_row1 <= t_aux_row2) )
-        || 
-        ( (x_aux_row2 >= t_aux_row1) && (x_aux_row2 <= t_aux_row2) )
-        );
+      const u32 x_row_start  = x.aux_row1;
+      const u32 x_row_end_p1 = x_row_start + x.n_rows;
       
-      const bool col_overlap =
-        (
-        ( (x_aux_col1 >= t_aux_col1) && (x_aux_col1 <= t_aux_col2) )
-        || 
-        ( (x_aux_col2 >= t_aux_col1) && (x_aux_col2 <= t_aux_col2) )
-        );
+      const u32 x_col_start  = x.aux_col1;
+      const u32 x_col_end_p1 = x_col_start + x.n_cols;
       
-      const bool slice_overlap =
-        (
-        ( (x_aux_slice1 >= t_aux_slice1) && (x_aux_slice1 <= t_aux_slice2) )
-        || 
-        ( (x_aux_slice2 >= t_aux_slice1) && (x_aux_slice2 <= t_aux_slice2) )
-        );
+      const u32 x_slice_start  = x.aux_slice1;
+      const u32 x_slice_end_p1 = x_slice_start + x.n_slices;
       
-      const bool overlap = ( (row_overlap == true) && (col_overlap == true) && (slice_overlap == true) );
       
-      return overlap;
+      const bool outside_rows   = ( (x_row_start   >= t_row_end_p1  ) || (t_row_start   >= x_row_end_p1  ) );
+      const bool outside_cols   = ( (x_col_start   >= t_col_end_p1  ) || (t_col_start   >= x_col_end_p1  ) );
+      const bool outside_slices = ( (x_slice_start >= t_slice_end_p1) || (t_slice_start >= x_slice_end_p1) );
+      
+      return ( (outside_rows == false) && (outside_cols == false) && (outside_slices == false) );
       }
     }
   }

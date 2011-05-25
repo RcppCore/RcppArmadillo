@@ -15,14 +15,16 @@
 //! @{
 
 
+// "better than nothing" definition for u64, until the next C++ standard
 
 template<const bool size_t_is_greater_or_equal_to_8_bytes>
-struct deduce_u64_helper_b
+struct deduce_u64
   {
   };
   
 
-template<> struct deduce_u64_helper_b<true>
+template<>
+struct deduce_u64<true>
   {
   typedef std::size_t u64;
   
@@ -31,7 +33,8 @@ template<> struct deduce_u64_helper_b<true>
   };
 
 
-template<> struct deduce_u64_helper_b<false>
+template<>
+struct deduce_u64<false>
   {
   #if (ULONG_MAX >= 0xFFFFFFFFFFFFFFFF)
     
@@ -70,38 +73,7 @@ template<> struct deduce_u64_helper_b<false>
   };
 
 
-template<const bool size_of_voidptr_is_less_than_8_bytes>
-struct deduce_u64_helper_a
-  {
-  };
-
-
-template<>
-struct deduce_u64_helper_a<true>
-  {
-  // on 32 bit systems it's not possible to allocate more than 4 Gb of memory,
-  // so we don't need to worry about indexing more than 4 Gb.
-  typedef u32 u64;
-  
-  static const u64  max   = 0xFFFFFFFF;
-  static const bool trunc = true;
-  };
-
-
-template<>
-struct deduce_u64_helper_a<false> : public deduce_u64_helper_b< (sizeof(std::size_t) >= 8) >
-  {
-  };
-
-
-
-struct deduce_u64 : public deduce_u64_helper_a< (sizeof(void*) < 8) >
-  {
-  };
-
-
-
-typedef deduce_u64::u64 u64;
+typedef deduce_u64< (sizeof(std::size_t) >= 8) >::u64 u64;
 
 
 

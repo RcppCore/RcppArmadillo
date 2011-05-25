@@ -85,36 +85,38 @@ class Row : public Mat<eT>
     {
     private:
     
-    arma_aligned eT mem_local_extra[ (fixed_n_elem > arma_config::mat_prealloc) ? fixed_n_elem : 1 ];
+    static const bool use_extra = (fixed_n_elem > arma_config::mat_prealloc);
+    
+    arma_aligned eT mem_local_extra[ (use_extra) ? fixed_n_elem : 1 ];
     
     arma_inline void mem_setup();
     
     
     public:
     
-    inline fixed() { mem_setup(); }
+    static const u32 n_rows = 1;
+    static const u32 n_cols = fixed_n_elem;
+    static const u32 n_elem = fixed_n_elem;
     
-    inline                fixed(const char*        text) { mem_setup(); Row<eT>::operator=(text);               }
-    inline const Row& operator=(const char*        text) {              Row<eT>::operator=(text); return *this; }
-    inline                fixed(const std::string& text) { mem_setup(); Row<eT>::operator=(text);               }
-    inline const Row& operator=(const std::string& text) {              Row<eT>::operator=(text); return *this; }
+    arma_inline fixed();
+    arma_inline fixed(const fixed<fixed_n_elem>& X);
+         inline fixed(const subview_cube<eT>& X);
     
-    inline const Row& operator=(const eT val) { Row<eT>::operator=(val); return *this; }
-    
-    template<typename T1>
-    inline fixed(const Base<eT,T1>& A) { mem_setup(); Row<eT>::operator=(A.get_ref()); }
-    
-    template<typename T1>
-    inline const Row& operator=(const Base<eT,T1>& A) { Row<eT>::operator=(A.get_ref()); return *this; }
-    
-    template<typename T1, typename T2>
-    inline explicit fixed(const Base<pod_type,T1>& A, const Base<pod_type,T2>& B) { mem_setup(); Row<eT>::init(A,B); }
+    template<typename T1>              inline fixed(const Base<eT,T1>& A);
+    template<typename T1, typename T2> inline fixed(const Base<pod_type,T1>& A, const Base<pod_type,T2>& B);
     
     inline fixed(      eT* aux_mem, const bool copy_aux_mem = true);
     inline fixed(const eT* aux_mem);
     
-    inline                fixed(const subview_cube<eT>& X) { mem_setup(); Row<eT>::operator=(X);               }
-    inline const Row& operator=(const subview_cube<eT>& X) {              Row<eT>::operator=(X); return *this; }
+    inline fixed(const char*        text);
+    inline fixed(const std::string& text);
+    
+    template<typename T1> inline const Row& operator=(const Base<eT,T1>& A);
+    
+    inline const Row& operator=(const eT val);
+    inline const Row& operator=(const char*        text);
+    inline const Row& operator=(const std::string& text);
+    inline const Row& operator=(const subview_cube<eT>& X);
     
     inline       subview_row<eT> operator()(const u32   row_num,  const span& col_span);
     inline const subview_row<eT> operator()(const u32   row_num,  const span& col_span) const;
@@ -125,6 +127,8 @@ class Row : public Mat<eT>
     inline       subview<eT>     operator()(const span& row_span, const span& col_span);
     inline const subview<eT>     operator()(const span& row_span, const span& col_span) const;
     
+    arma_inline arma_warn_unused eT& operator[] (const u32 i);
+    arma_inline arma_warn_unused eT  operator[] (const u32 i) const;
     arma_inline arma_warn_unused eT& at         (const u32 i);
     arma_inline arma_warn_unused eT  at         (const u32 i) const;
     arma_inline arma_warn_unused eT& operator() (const u32 i);
@@ -134,6 +138,10 @@ class Row : public Mat<eT>
     arma_inline arma_warn_unused eT  at         (const u32 in_row, const u32 in_col) const;
     arma_inline arma_warn_unused eT& operator() (const u32 in_row, const u32 in_col);
     arma_inline arma_warn_unused eT  operator() (const u32 in_row, const u32 in_col) const;
+    
+    arma_hot inline const Row<eT>& fill(const eT val);
+    arma_hot inline const Row<eT>& zeros();
+    arma_hot inline const Row<eT>& ones();
     };
   
   

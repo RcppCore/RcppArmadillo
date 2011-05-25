@@ -37,8 +37,6 @@ op_median::direct_median(std::vector<eT>& X)
   const u32 n_elem = X.size();
   const u32 half   = n_elem/2;
   
-  arma_debug_check( (n_elem == 0), "median(): given matrix has no elements" );
-  
   std::sort(X.begin(), X.end());
   
   if((n_elem % 2) == 0)
@@ -205,8 +203,6 @@ op_median::direct_cx_median_index
   const u32 n_elem = X.size();
   const u32 half   = n_elem/2;
   
-  arma_debug_check( (n_elem == 0), "median(): given matrix has no elements" );
-  
   std::sort(X.begin(), X.end());
   
   if((n_elem % 2) == 0)
@@ -312,7 +308,8 @@ op_median::apply(Mat< std::complex<T> >& out, const Op<T1,op_median>& in)
   arma_extra_debug_sigprint();
   
   typedef typename std::complex<T> eT;
-  isnt_same_type<eT, typename T1::elem_type>::check();
+  
+  arma_type_check< is_same_type<eT, typename T1::elem_type>::value == false>::apply();
   
   const unwrap_check<T1> tmp(in.m, out);
   const Mat<eT>&     X = tmp.M;

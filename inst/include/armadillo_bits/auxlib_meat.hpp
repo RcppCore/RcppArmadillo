@@ -2469,13 +2469,14 @@ auxlib::syl(Mat<eT>& X, const Mat<eT>& A, const Mat<eT>& B, const Mat<eT>& C)
     eT       scale = eT(0);
     blas_int  info = 0;
     
-    Mat<eT> Y = htrans(Z1) * C * Z2;
+    Mat<eT> Y = trans(Z1) * C * Z2;
     
     lapack::trsyl<eT>(&trana, &tranb, &isgn, &m, &n, T1.memptr(), &m, T2.memptr(), &n, Y.memptr(), &m, &scale, &info);
     
-    Y /= scale;
+    //Y /= scale;
+    Y /= (-scale);
     
-    X = Z1 * Y * htrans(Z2);
+    X = Z1 * Y * trans(Z2);
     
     status = (info == 0);
     }

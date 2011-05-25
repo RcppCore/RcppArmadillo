@@ -16,7 +16,6 @@
 
 
 //! interpret a matrix or a vector as a diagonal matrix (i.e. off-diagonal entries are zero)
-// TODO: allow placement of vector onto a sub- or super- diagonal
 template<typename T1>
 arma_inline
 const Op<T1, op_diagmat>
@@ -26,6 +25,12 @@ diagmat(const Base<typename T1::elem_type,T1>& X)
   
   return Op<T1, op_diagmat>(X.get_ref());
   }
+
+
+
+// TODO:
+// create "op_diagmat2", to allow placement of vector onto a sub- or super- diagonal.
+// op_diagmat2 is required, as other code assumes that op_diagmat indicates only the main diagonal)
 
 
 

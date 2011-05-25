@@ -80,6 +80,10 @@
     #undef ARMA_HAVE_STD_TR1
   #endif
   
+  #if defined(__clang__)
+    #undef ARMA_HAVE_STD_TR1
+  #endif
+  
   #if (ARMA_GCC_VERSION >= 40300)
     #undef  arma_hot
     #undef  arma_cold
@@ -145,15 +149,20 @@
 #if defined(min)
   #undef min
   
-  #if defined(_MSC_VER)
-    #pragma message ("detected min macro and undefined it; you may wish to define NOMINMAX before including any windows header")
+  #if defined(__GNUG__)
+    #warning         "detected 'min' macro and undefined it; you may wish to define NOMINMAX before including any windows header"
+  #elif defined(_MSC_VER)
+    #pragma message ("detected 'min' macro and undefined it; you may wish to define NOMINMAX before including any windows header")
   #endif
 #endif
 
 #if defined(max)
   #undef max
   
-  #if defined(_MSC_VER)
-    #pragma message ("detected max macro and undefined it; you may wish to define NOMINMAX before including any windows header")
+  #if defined(__GNUG__)
+    #warning         "detected 'max' macro and undefined it; you may wish to define NOMINMAX before including any windows header"
+  #elif defined(_MSC_VER)
+    #pragma message ("detected 'max' macro and undefined it; you may wish to define NOMINMAX before including any windows header")
   #endif
 #endif
+

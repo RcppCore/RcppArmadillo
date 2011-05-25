@@ -252,6 +252,26 @@ arma_check(const bool state, const T1& x, const T2& y)
 
 
 
+
+//
+// arma_set_error
+
+
+arma_inline
+void
+arma_hot
+arma_set_error(bool& err_state, char*& err_msg, const bool expression, const char* message)
+  {
+  if(expression == true)
+    {
+    err_state = true;
+    err_msg   = const_cast<char*>(message);
+    }
+  }
+
+
+
+
 //
 // functions for generating strings indicating size errors
 
@@ -940,9 +960,11 @@ arma_assert_mul_size(const subview<eT1>& A, const subview<eT2>& B, const char* x
   #define arma_debug_print              arma_print
   #define arma_debug_warn               arma_warn
   #define arma_debug_check              arma_check
+  #define arma_debug_set_error          arma_set_error
   #define arma_debug_assert_same_size   arma_assert_same_size
   #define arma_debug_assert_mul_size    arma_assert_mul_size
   #define arma_debug_assert_cube_as_mat arma_assert_cube_as_mat
+  
 #else
   
   #undef ARMA_EXTRA_DEBUG
@@ -950,11 +972,13 @@ arma_assert_mul_size(const subview<eT1>& A, const subview<eT2>& B, const char* x
   #define arma_debug_print              true ? (void)0 : arma_print
   #define arma_debug_warn               true ? (void)0 : arma_warn
   #define arma_debug_check              true ? (void)0 : arma_check
+  #define arma_debug_set_error          true ? (void)0 : arma_set_error
   #define arma_debug_assert_same_size   true ? (void)0 : arma_assert_same_size
   #define arma_debug_assert_mul_size    true ? (void)0 : arma_assert_mul_size
   #define arma_debug_assert_cube_as_mat true ? (void)0 : arma_debug_assert_cube_as_mat
 
 #endif
+
 
 
 #if defined(ARMA_EXTRA_DEBUG)

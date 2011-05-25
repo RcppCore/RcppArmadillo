@@ -1,5 +1,5 @@
-// Copyright (C) 2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2010 Conrad Sanderson
+// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -41,6 +41,8 @@ class ProxyCube< Cube<eT> >
   typedef Cube<eT>                                 stored_type;
   typedef const eT*                                ea_type;
   
+  static const bool prefer_at_accessor = false;
+  
   arma_aligned const Cube<eT>& Q;
   
   inline explicit ProxyCube(const Cube<eT>& A)
@@ -72,6 +74,8 @@ class ProxyCube< OpCube<T1, op_type> >
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Cube<elem_type>                          stored_type;
   typedef const elem_type*                         ea_type;
+  
+  static const bool prefer_at_accessor = false;
   
   arma_aligned const Cube<elem_type> Q;
   
@@ -105,6 +109,8 @@ class ProxyCube< GlueCube<T1, T2, glue_type> >
   typedef Cube<elem_type>                          stored_type;
   typedef const elem_type*                         ea_type;
   
+  static const bool prefer_at_accessor = false;
+  
   arma_aligned const Cube<elem_type> Q;
   
   inline explicit ProxyCube(const GlueCube<T1, T2, glue_type>& A)
@@ -136,6 +142,8 @@ class ProxyCube< subview_cube<eT> >
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef subview_cube<eT>                         stored_type;
   typedef const subview_cube<eT>&                  ea_type;
+  
+  static const bool prefer_at_accessor = true;
   
   arma_aligned const subview_cube<eT>& Q;
   
@@ -169,6 +177,8 @@ class ProxyCube< eOpCube<T1, eop_type > >
   typedef eOpCube<T1, eop_type>                    stored_type;
   typedef const eOpCube<T1, eop_type>&             ea_type;
   
+  static const bool prefer_at_accessor = eOpCube<T1, eop_type>::prefer_at_accessor;
+  
   arma_aligned const eOpCube<T1, eop_type>& Q;
   
   inline explicit ProxyCube(const eOpCube<T1, eop_type>& A)
@@ -200,6 +210,8 @@ class ProxyCube< eGlueCube<T1, T2, eglue_type > >
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef eGlueCube<T1, T2, eglue_type>            stored_type;
   typedef const eGlueCube<T1, T2, eglue_type>&     ea_type;
+  
+  static const bool prefer_at_accessor = eGlueCube<T1, T2, eglue_type>::prefer_at_accessor;
   
   arma_aligned const eGlueCube<T1, T2, eglue_type>& Q;
   
@@ -233,6 +245,8 @@ class ProxyCube< mtOpCube<out_eT, T1, op_type> >
   typedef          Cube<out_eT>                 stored_type;
   typedef          const elem_type*             ea_type;
   
+  static const bool prefer_at_accessor = false;
+  
   arma_aligned const Cube<out_eT> Q;
   
   inline explicit ProxyCube(const mtOpCube<out_eT, T1, op_type>& A)
@@ -264,6 +278,8 @@ class ProxyCube< mtGlueCube<out_eT, T1, T2, glue_type > >
   typedef typename get_pod_type<out_eT>::result pod_type;
   typedef          Cube<out_eT>                 stored_type;
   typedef          const elem_type*             ea_type;
+  
+  static const bool prefer_at_accessor = false;
   
   arma_aligned const Cube<out_eT> Q;
   

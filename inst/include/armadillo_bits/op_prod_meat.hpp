@@ -42,9 +42,11 @@ op_prod::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_prod>& in)
     
     if(X_n_rows > 0)
       {
+      eT* out_mem = out.memptr();
+      
       for(u32 col=0; col < X_n_cols; ++col)
         {
-        out[col] = arrayops::product(X.colptr(col), X_n_rows);
+        out_mem[col] = arrayops::product(X.colptr(col), X_n_rows);
         }
       }
     }
@@ -54,6 +56,8 @@ op_prod::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_prod>& in)
     
     if(X_n_cols > 0)
       {
+      eT* out_mem = out.memptr();
+      
       for(u32 row=0; row < X_n_rows; ++row)
         {
         eT val = X.at(row,0);
@@ -62,8 +66,8 @@ op_prod::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_prod>& in)
           {
           val *= X.at(row,col);
           }
-      
-        out.at(row,0) = val;
+        
+        out_mem[row] = val;
         }
       }
     }

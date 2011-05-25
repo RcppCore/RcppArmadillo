@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // Copyright (C) 2009-2010 Ian Cullinan
 // 
 // This file is part of the Armadillo C++ library.
@@ -20,26 +20,6 @@
 class diskio
   {
   public:
-  
-  template<typename eT>
-  struct is_supported_type
-    {
-    static const bool value = 
-      (
-      false
-      || is_u8<eT>::value
-      || is_s8<eT>::value
-      || is_u16<eT>::value
-      || is_s16<eT>::value
-      || is_u32<eT>::value
-      || is_s32<eT>::value
-      || is_float<eT>::value
-      || is_double<eT>::value
-      || is_complex_float<eT>::value
-      || is_complex_double<eT>::value
-      );
-    };
-  
   
   template<typename eT> inline static std::string gen_txt_header(const Mat<eT>& x);
   template<typename eT> inline static std::string gen_bin_header(const Mat<eT>& x);

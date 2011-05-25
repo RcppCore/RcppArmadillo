@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -16,21 +16,42 @@
 
 
 
-//! Classes for primitive compile time assertions (until the next version of C++)
+//! Classes for primitive compile time assertions and checks (until the next version of C++)
 template<bool> struct arma_static_assert;
 template<>     struct arma_static_assert<true> {};
+
+
+
+template<bool> struct arma_static_check;
+template<>     struct arma_static_check<false> {};
+
 
 
 template<bool val>
 struct arma_type_check
   {
-  arma_inline static void apply()
+  arma_inline
+  static
+  void
+  apply()
     {
-    arma_static_assert<!val> ERROR___INCORRECT_TYPE;
+    arma_static_check<val> ERROR___INCORRECT_TYPE;
     ERROR___INCORRECT_TYPE = ERROR___INCORRECT_TYPE;
     }
   };
 
+
+
+template<>
+struct arma_type_check<false>
+  {
+  arma_inline
+  static
+  void
+  apply()
+    {
+    }
+  };
 
 
 //! @}
