@@ -1,12 +1,28 @@
-0.2.20  2011-xx-yy
+0.2.20  2011-05-24
 
-    o   Upgraded to Armadillo test release 1.99.1
+    o   Upgraded to Armadillo release 1.99.2 "v2.0 beta 2" (and 1.99.1 before)
+
+          * faster inverse of symmetric matrices
+	  * faster element access for fixed size matrices
+	  * faster multiplication of tiny matrices (eg. 4x4)
+	  * faster compund expressions containing submatrices
+	  * added handling of arbitrarily sized empty matrices (eg. 5x0)
+	  * added syl()
+	  * added strans()
+	  * added symmatu()/symmatl()
+	  * added submatrices of submatrices
+	  * htrans() has been deprecated; use trans() instead
+	  * trans() now takes the complex conjugate when transposing a
+            complex matrix
+	  * .is_vec() now outputs true for empty matrices
+	  * most functions with matrix inputs no longer throw exceptions when
+            given empty matrices (eg. 5x0)
 
     o   Added a new subdirectory examples/ seeded with a nice Vector
         Autoregression simulation simulation example by Lance Bachmeier
 
     o   Rewrote armadillo_version as to no longer require an instance 
-        of arma::arma_version, with Thanks to Conrad for the suggestion
+        of arma::arma_version, with tanks to Conrad for the suggestion
 
 0.2.19  2011-04-18
 
