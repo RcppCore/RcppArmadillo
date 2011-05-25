@@ -2,7 +2,7 @@
 //
 // Mat_meat.h: Rcpp/Armadillo glue
 //
-// Copyright (C)  2010 Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2010 - 2011  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 //
 // This file is part of RcppArmadillo.
 //
@@ -37,8 +37,8 @@ inline Mat<eT>::Mat( const Rcpp::VectorBase<RTYPE,NA,VECTOR>& X )
 	
 	// TODO : deal with complex expressions because 
 	// std::complex<double> != Rcomplex
-	is_same_type<eT, typename Rcpp::traits::storage_type<RTYPE>::type >::check();
-  	
+	arma_type_check< is_same_type< eT, typename Rcpp::traits::storage_type<RTYPE>::type >::value == false >::apply();
+
 	set_size(X.size(), 1);
 	
 	eT* ptr = memptr() ;
@@ -62,7 +62,7 @@ inline Mat<eT>::Mat( const Rcpp::MatrixBase<RTYPE,NA,MATRIX>& X )
 	
 	// TODO : deal with complex expressions because 
 	// std::complex<double> != Rcomplex
-	is_same_type<eT, typename Rcpp::traits::storage_type<RTYPE>::type >::check();
+	arma_type_check< is_same_type< eT, typename Rcpp::traits::storage_type<RTYPE>::type >::value == false >::apply();
   	
 	u32 nr = X.nrow(), nc = X.ncol(), i_col, i_row, k ;
 	set_size( nr, nc ) ;
