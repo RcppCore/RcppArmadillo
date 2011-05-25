@@ -1,5 +1,5 @@
-// Copyright (C) 2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2010 Conrad Sanderson
+// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -24,37 +24,32 @@ glue_cross::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue_cros
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
+  typedef typename T1::elem_type      eT;
+  typedef typename Proxy<T1>::ea_type ea_type1;
+  typedef typename Proxy<T2>::ea_type ea_type2;
   
-  const unwrap<T1> A_tmp(X.A);
-  const unwrap<T2> B_tmp(X.B);
+  const Proxy<T1> A(X.A);
+  const Proxy<T2> B(X.B);
   
-  const Mat<eT>& A = A_tmp.M;
-  const Mat<eT>& B = B_tmp.M;
+  arma_debug_check( ((A.get_n_elem() != 3) || (B.get_n_elem() != 3)), "cross(): input vectors must have 3 elements" );
   
-  arma_debug_check( ((A.n_elem != 3) || (B.n_elem != 3)), "cross(): input vectors must have 3 elements" );
+  out.set_size(A.get_n_rows(), A.get_n_cols());
   
-  out.set_size(A.n_rows, A.n_cols);
+  eT*      out_mem = out.memptr();
+  ea_type1 PA      = A.get_ea();
+  ea_type2 PB      = B.get_ea();
   
-        eT* out_ptr = out.memptr();
-  const eT* A_ptr   = A.memptr();
-  const eT* B_ptr   = B.memptr();
+  const eT ax = PA[0];
+  const eT ay = PA[1];
+  const eT az = PA[2];
   
-  // out_ptr[0] = A_ptr[1]*B_ptr[2] - A_ptr[2]*B_ptr[1];
-  // out_ptr[1] = A_ptr[2]*B_ptr[0] - A_ptr[0]*B_ptr[2];
-  // out_ptr[2] = A_ptr[0]*B_ptr[1] - A_ptr[1]*B_ptr[0];
+  const eT bx = PB[0];
+  const eT by = PB[1];
+  const eT bz = PB[2];
   
-  const eT ax = A_ptr[0];
-  const eT ay = A_ptr[1];
-  const eT az = A_ptr[2];
-  
-  const eT bx = B_ptr[0];
-  const eT by = B_ptr[1];
-  const eT bz = B_ptr[2];
-  
-  out_ptr[0] = ay*bz - az*by;
-  out_ptr[1] = az*bx - ax*bz;
-  out_ptr[2] = ax*by - ay*bx;
+  out_mem[0] = ay*bz - az*by;
+  out_mem[1] = az*bx - ax*bz;
+  out_mem[2] = ax*by - ay*bx;
   }
 
 

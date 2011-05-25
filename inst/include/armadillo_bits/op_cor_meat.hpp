@@ -24,7 +24,13 @@ void
 op_cor::direct_cor(Mat<eT>& out, const Mat<eT>& A, const u32 norm_type)
   {
   arma_extra_debug_sigprint();
-
+  
+  if(A.is_empty())
+    {
+    out.reset();
+    return;
+    }
+  
   if(A.is_vec())
     {
     out.set_size(1,1);
@@ -56,6 +62,12 @@ op_cor::direct_cor(Mat< std::complex<T> >& out, const Mat< std::complex<T> >& A,
 
   typedef typename std::complex<T> eT;
 
+  if(A.is_empty())
+    {
+    out.reset();
+    return;
+    }
+  
   if(A.is_vec())
     {
     out.set_size(1,1);

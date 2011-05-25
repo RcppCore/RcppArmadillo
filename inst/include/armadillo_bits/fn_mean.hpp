@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -37,7 +37,11 @@ mean(const Row<eT>& A)
   {
   arma_extra_debug_sigprint();
   
-  return op_mean::direct_mean(A.mem, A.n_elem);
+  const u32 A_n_elem = A.n_elem;
+  
+  arma_debug_check( (A_n_elem == 0), "mean(): given object has no elements" );
+  
+  return op_mean::direct_mean(A.mem, A_n_elem);
   }
 
 
@@ -51,7 +55,11 @@ mean(const Col<eT>& A)
   {
   arma_extra_debug_sigprint();
   
-  return op_mean::direct_mean(A.mem, A.n_elem);
+  const u32 A_n_elem = A.n_elem;
+  
+  arma_debug_check( (A_n_elem == 0), "mean(): given object has no elements" );
+  
+  return op_mean::direct_mean(A.mem, A_n_elem);
   }
 
 
@@ -73,7 +81,11 @@ mean(const Op<T1, op_mean>& in)
   const unwrap<T1> tmp1(in.m);
   const Mat<eT>& X = tmp1.M;
   
-  return op_mean::direct_mean(X.mem, X.n_elem);
+  const u32 X_n_elem = X.n_elem;
+  
+  arma_debug_check( (X_n_elem == 0), "mean(): given object has no elements" );
+  
+  return op_mean::direct_mean(X.mem, X_n_elem);
   }
 
 
@@ -98,7 +110,11 @@ mean(const subview_row<eT>& A)
   {
   arma_extra_debug_sigprint();
   
-  return op_mean::direct_mean(A);
+  arma_debug_check( (A.n_elem == 0), "mean(): given object has no elements" );
+  
+  const eT mu = accu(A) / eT(A.n_cols);
+  
+  return is_finite(mu) ? mu : op_mean::direct_mean_robust(A);
   }
 
 
@@ -111,7 +127,9 @@ mean(const subview_col<eT>& A)
   {
   arma_extra_debug_sigprint();
   
-  return op_mean::direct_mean(A);
+  arma_debug_check( (A.n_elem == 0), "mean(): given object has no elements" );
+  
+  return op_mean::direct_mean(A.colptr(0), A.n_rows);
   }
 
 
@@ -127,6 +145,8 @@ mean(const Op<subview<eT>, op_mean>& in)
   
   const subview<eT>& X = in.m;
   
+  arma_debug_check( (X.n_elem == 0), "mean(): given object has no elements" );
+  
   return op_mean::direct_mean(X);
   }
 
@@ -139,6 +159,8 @@ eT
 mean(const diagview<eT>& A)
   {
   arma_extra_debug_sigprint();
+  
+  arma_debug_check( (A.n_elem == 0), "mean(): given object has no elements" );
   
   return op_mean::direct_mean(A);
   }
@@ -155,7 +177,11 @@ mean(const subview_elem1<eT,T1>& A)
   
   const Mat<eT> X(A);
   
-  return op_mean::direct_mean(X.mem, X.n_elem);
+  const u32 X_n_elem = X.n_elem;
+  
+  arma_debug_check( (X_n_elem == 0), "mean(): given object has no elements" );
+  
+  return op_mean::direct_mean(X.mem, X_n_elem);
   }
 
 

@@ -15,7 +15,7 @@
 //! @{
 
 
-//! find the mean value of an array
+
 template<typename eT>
 arma_pure
 inline
@@ -58,7 +58,6 @@ op_mean::direct_mean(const Mat<eT>& X, const u32 row)
 
 
 
-//! find the mean value of a subview
 template<typename eT>
 inline 
 eT
@@ -69,7 +68,8 @@ op_mean::direct_mean(const subview<eT>& X)
   typedef typename get_pod_type<eT>::result T;
   
   const u32 X_n_elem = X.n_elem;
-        eT  val      = eT(0);
+  
+  eT val = eT(0);
   
   for(u32 i=0; i<X_n_elem; ++i)
     {
@@ -83,7 +83,6 @@ op_mean::direct_mean(const subview<eT>& X)
 
 
 
-//! find the mean value of a diagview
 template<typename eT>
 inline 
 eT
@@ -94,7 +93,8 @@ op_mean::direct_mean(const diagview<eT>& X)
   typedef typename get_pod_type<eT>::result T;
   
   const u32 X_n_elem = X.n_elem;
-        eT  val      = eT(0);
+  
+  eT val = eT(0);
   
   for(u32 i=0; i<X_n_elem; ++i)
     {
@@ -125,8 +125,6 @@ op_mean::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_mean>& in)
   const unwrap_check<T1> tmp(in.m, out);
   const Mat<eT>& X = tmp.M;
   
-  arma_debug_check( (X.n_elem == 0), "mean(): given matrix has no elements" );
-  
   const u32 dim = in.aux_u32_a;
   arma_debug_check( (dim > 1), "mean(): incorrect usage. dim must be 0 or 1");
   
@@ -137,11 +135,16 @@ op_mean::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_mean>& in)
     {
     arma_extra_debug_print("op_mean::apply(), dim = 0");
     
-    out.set_size(1, X_n_cols);
+    out.set_size( (X_n_rows > 0) ? 1 : 0, X_n_cols );
     
-    for(u32 col=0; col<X_n_cols; ++col)
+    if(X_n_rows > 0)
       {
-      out[col] = op_mean::direct_mean( X.colptr(col), X_n_rows );
+      eT* out_mem = out.memptr();
+      
+      for(u32 col=0; col<X_n_cols; ++col)
+        {
+        out_mem[col] = op_mean::direct_mean( X.colptr(col), X_n_rows );
+        }
       }
     }
   else
@@ -149,11 +152,16 @@ op_mean::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_mean>& in)
     {
     arma_extra_debug_print("op_mean::apply(), dim = 1");
     
-    out.set_size(X_n_rows, 1);
+    out.set_size(X_n_rows, (X_n_cols > 0) ? 1 : 0);
     
-    for(u32 row=0; row<X_n_rows; ++row)
+    if(X_n_cols > 0)
       {
-      out[row] = op_mean::direct_mean( X, row );
+      eT* out_mem = out.memptr();
+      
+      for(u32 row=0; row<X_n_rows; ++row)
+        {
+        out_mem[row] = op_mean::direct_mean( X, row );
+        }
       }
     }
   }

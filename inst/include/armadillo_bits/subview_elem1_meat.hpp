@@ -1,5 +1,5 @@
-// Copyright (C) 2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2010 Conrad Sanderson
+// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -63,8 +63,8 @@ subview_elem1<eT,T1>::inplace_op(const eT val)
   
   arma_debug_check
     (
-    ( (aa.n_elem > 0) && (aa.is_vec() == false) ),
-    "Mat::elem(): given object isn't a vector"
+    ( aa.is_vec() == false ),
+    "Mat::elem(): given object is not a vector"
     );
   
   const u32* aa_mem    = aa.memptr();
@@ -134,8 +134,8 @@ subview_elem1<eT,T1>::inplace_op(const subview_elem1<eT,T2>& x)
     
     arma_debug_check
       (
-      ( ( (t_aa.n_elem > 0) && (t_aa.is_vec() == false) ) || ( (x_aa.n_elem > 0) && (x_aa.is_vec() == false) ) ),
-      "Mat::elem(): given object isn't a vector"
+      ( (t_aa.is_vec() == false) || (x_aa.is_vec() == false) ),
+      "Mat::elem(): given object is not a vector"
       );
     
     const u32* t_aa_mem = t_aa.memptr();
@@ -214,8 +214,8 @@ subview_elem1<eT,T1>::inplace_op(const Base<eT,T2>& x)
   
   arma_debug_check
     (
-    ( (aa.n_elem > 0) && (aa.is_vec() == false) ),
-    "Mat::elem(): given object isn't a vector"
+    ( aa.is_vec() == false ),
+    "Mat::elem(): given object is not a vector"
     );
   
   const u32* aa_mem    = aa.memptr();
@@ -566,8 +566,8 @@ subview_elem1<eT,T1>::extract(Mat<eT>& actual_out, const subview_elem1<eT,T1>& i
   
   arma_debug_check
     (
-    ( (aa.n_elem > 0) && (aa.is_vec() == false) ),
-    "Mat::elem(): given object isn't a vector"
+    ( aa.is_vec() == false ),
+    "Mat::elem(): given object is not a vector"
     );
   
   const u32* aa_mem    = aa.memptr();
@@ -632,8 +632,8 @@ subview_elem1<eT,T1>::mat_inplace_op(Mat<eT>& out, const subview_elem1& in)
   
   arma_debug_check
     (
-    ( (aa.n_elem > 0) && (aa.is_vec() == false) ),
-    "Mat::elem(): given object isn't a vector"
+    ( aa.is_vec() == false ),
+    "Mat::elem(): given object is not a vector"
     );
   
   const u32* aa_mem    = aa.memptr();

@@ -43,7 +43,7 @@ Cube<eT>::~Cube()
     access::rw(mem)          = 0;
     }
   
-  isnt_supported_elem_type<eT>::check();
+  arma_type_check< is_supported_elem_type<eT>::value == false >::apply();
   }
 
 
@@ -98,7 +98,29 @@ Cube<eT>::init(const u32 in_n_rows, const u32 in_n_cols, const u32 in_n_slices)
   
   if(same_size == false)
     {
-    arma_debug_check( (mem_state == 3), "Cube::init(): size can't be changed as template based size specification is in use" );
+    const u32 t_mem_state = mem_state;
+    
+    bool  err_state = false;
+    char* err_msg   = 0;
+    
+    arma_debug_set_error
+      (
+      err_state,
+      err_msg,
+      (t_mem_state == 3),
+      "Cube::init(): size is fixed and hence cannot be changed"
+      );
+    
+    arma_debug_set_error
+      (
+      err_state,
+      err_msg,
+      (double(in_n_rows) * double(in_n_cols) * double(in_n_slices)) > double(0xFFFFFFFF), 
+      "Cube::init(): requested size is too large"
+      );
+    
+    arma_debug_check(err_state, err_msg);
+    
     
     const u32 old_n_elem = n_elem;
     const u32 new_n_elem = in_n_rows * in_n_cols * in_n_slices;
@@ -122,11 +144,11 @@ Cube<eT>::init(const u32 in_n_rows, const u32 in_n_cols, const u32 in_n_slices)
       }
     else
       {
-      arma_debug_check( (mem_state == 2), "Cube::init(): requested size is not compatible with the size of auxiliary memory" );
+      arma_debug_check( (t_mem_state == 2), "Cube::init(): requested size is not compatible with the size of auxiliary memory" );
       
       delete_mat();
       
-      if(mem_state == 0)
+      if(t_mem_state == 0)
         {
         if(n_elem > Cube_prealloc::mem_n_elem )
           {
@@ -197,7 +219,7 @@ Cube<eT>::init
   arma_type_check< is_complex<eT>::value == false >::apply();   //!< compile-time abort if eT isn't std::complex
   arma_type_check< is_complex< T>::value == true  >::apply();   //!< compile-time abort if T is std::complex
   
-  isnt_same_type<std::complex<T>, eT>::check();   //!< compile-time abort if types are not compatible
+  arma_type_check< is_same_type< std::complex<T>, eT >::value == false >::apply();   //!< compile-time abort if types are not compatible
   
   const ProxyCube<T1> X(A.get_ref());
   const ProxyCube<T2> Y(B.get_ref());
@@ -1101,7 +1123,7 @@ Cube<eT>::Cube(const OpCube<T1, op_type>& X)
   {
   arma_extra_debug_sigprint_this(this);
 
-  isnt_same_type<eT, typename T1::elem_type>::check();
+  arma_type_check< is_same_type< eT, typename T1::elem_type >::value == false >::apply();
   
   op_type::apply(*this, X);
   }
@@ -1117,7 +1139,7 @@ Cube<eT>::operator=(const OpCube<T1, op_type>& X)
   {
   arma_extra_debug_sigprint();
 
-  isnt_same_type<eT, typename T1::elem_type>::check();
+  arma_type_check< is_same_type< eT, typename T1::elem_type >::value == false >::apply();
   
   op_type::apply(*this, X);
   
@@ -1135,7 +1157,7 @@ Cube<eT>::operator+=(const OpCube<T1, op_type>& X)
   {
   arma_extra_debug_sigprint();
   
-  isnt_same_type<eT, typename T1::elem_type>::check();
+  arma_type_check< is_same_type< eT, typename T1::elem_type >::value == false >::apply();
   
   const Cube<eT> m(X);
   
@@ -1153,7 +1175,7 @@ Cube<eT>::operator-=(const OpCube<T1, op_type>& X)
   {
   arma_extra_debug_sigprint();
   
-  isnt_same_type<eT, typename T1::elem_type>::check();
+  arma_type_check< is_same_type< eT, typename T1::elem_type >::value == false >::apply();
   
   const Cube<eT> m(X);
   
@@ -1171,7 +1193,7 @@ Cube<eT>::operator%=(const OpCube<T1, op_type>& X)
   {
   arma_extra_debug_sigprint();
   
-  isnt_same_type<eT, typename T1::elem_type>::check();
+  arma_type_check< is_same_type< eT, typename T1::elem_type >::value == false >::apply();
   
   const Cube<eT> m(X);
   
@@ -1189,7 +1211,7 @@ Cube<eT>::operator/=(const OpCube<T1, op_type>& X)
   {
   arma_extra_debug_sigprint();
   
-  isnt_same_type<eT, typename T1::elem_type>::check();
+  arma_type_check< is_same_type< eT, typename T1::elem_type >::value == false >::apply();
   
   const Cube<eT> m(X);
   
@@ -1214,7 +1236,7 @@ Cube<eT>::Cube(const eOpCube<T1, eop_type>& X)
   {
   arma_extra_debug_sigprint_this(this);
 
-  isnt_same_type<eT, typename T1::elem_type>::check();
+  arma_type_check< is_same_type< eT, typename T1::elem_type >::value == false >::apply();
   
   eop_type::apply(*this, X);
   }
@@ -1230,7 +1252,7 @@ Cube<eT>::operator=(const eOpCube<T1, eop_type>& X)
   {
   arma_extra_debug_sigprint();
 
-  isnt_same_type<eT, typename T1::elem_type>::check();
+  arma_type_check< is_same_type< eT, typename T1::elem_type >::value == false >::apply();
   
   eop_type::apply(*this, X);
   
@@ -1248,7 +1270,7 @@ Cube<eT>::operator+=(const eOpCube<T1, eop_type>& X)
   {
   arma_extra_debug_sigprint();
   
-  isnt_same_type<eT, typename T1::elem_type>::check();
+  arma_type_check< is_same_type< eT, typename T1::elem_type >::value == false >::apply();
   
   eop_type::apply_inplace_plus(*this, X);
   
@@ -1266,7 +1288,7 @@ Cube<eT>::operator-=(const eOpCube<T1, eop_type>& X)
   {
   arma_extra_debug_sigprint();
   
-  isnt_same_type<eT, typename T1::elem_type>::check();
+  arma_type_check< is_same_type< eT, typename T1::elem_type >::value == false >::apply();
   
   eop_type::apply_inplace_minus(*this, X);
   
@@ -1284,7 +1306,7 @@ Cube<eT>::operator%=(const eOpCube<T1, eop_type>& X)
   {
   arma_extra_debug_sigprint();
   
-  isnt_same_type<eT, typename T1::elem_type>::check();
+  arma_type_check< is_same_type< eT, typename T1::elem_type >::value == false >::apply();
 
   eop_type::apply_inplace_schur(*this, X);
   
@@ -1302,7 +1324,7 @@ Cube<eT>::operator/=(const eOpCube<T1, eop_type>& X)
   {
   arma_extra_debug_sigprint();
   
-  isnt_same_type<eT, typename T1::elem_type>::check();
+  arma_type_check< is_same_type< eT, typename T1::elem_type >::value == false >::apply();
 
   eop_type::apply_inplace_div(*this, X);
   
@@ -1441,8 +1463,8 @@ Cube<eT>::operator=(const GlueCube<T1, T2, glue_type>& X)
   {
   arma_extra_debug_sigprint();
   
-  isnt_same_type<eT, typename T1::elem_type>::check();
-  isnt_same_type<eT, typename T2::elem_type>::check();
+  arma_type_check< is_same_type< eT, typename T1::elem_type >::value == false >::apply();
+  arma_type_check< is_same_type< eT, typename T2::elem_type >::value == false >::apply();
   
   glue_type::apply(*this, X);
   
@@ -1459,8 +1481,8 @@ Cube<eT>::operator+=(const GlueCube<T1, T2, glue_type>& X)
   {
   arma_extra_debug_sigprint();
   
-  isnt_same_type<eT, typename T1::elem_type>::check();
-  isnt_same_type<eT, typename T2::elem_type>::check();
+  arma_type_check< is_same_type< eT, typename T1::elem_type >::value == false >::apply();
+  arma_type_check< is_same_type< eT, typename T2::elem_type >::value == false >::apply();
   
   const Cube<eT> m(X);
   
@@ -1478,8 +1500,8 @@ Cube<eT>::operator-=(const GlueCube<T1, T2, glue_type>& X)
   {
   arma_extra_debug_sigprint();
   
-  isnt_same_type<eT, typename T1::elem_type>::check();
-  isnt_same_type<eT, typename T2::elem_type>::check();
+  arma_type_check< is_same_type< eT, typename T1::elem_type >::value == false >::apply();
+  arma_type_check< is_same_type< eT, typename T2::elem_type >::value == false >::apply();
   
   const Cube<eT> m(X);
   
@@ -1497,8 +1519,8 @@ Cube<eT>::operator%=(const GlueCube<T1, T2, glue_type>& X)
   {
   arma_extra_debug_sigprint();
   
-  isnt_same_type<eT, typename T1::elem_type>::check();
-  isnt_same_type<eT, typename T2::elem_type>::check();
+  arma_type_check< is_same_type< eT, typename T1::elem_type >::value == false >::apply();
+  arma_type_check< is_same_type< eT, typename T2::elem_type >::value == false >::apply();
   
   const Cube<eT> m(X);
   
@@ -1516,8 +1538,8 @@ Cube<eT>::operator/=(const GlueCube<T1, T2, glue_type>& X)
   {
   arma_extra_debug_sigprint();
   
-  isnt_same_type<eT, typename T1::elem_type>::check();
-  isnt_same_type<eT, typename T2::elem_type>::check();
+  arma_type_check< is_same_type< eT, typename T1::elem_type >::value == false >::apply();
+  arma_type_check< is_same_type< eT, typename T2::elem_type >::value == false >::apply();
   
   const Cube<eT> m(X);
   
@@ -1555,8 +1577,8 @@ Cube<eT>::operator=(const eGlueCube<T1, T2, eglue_type>& X)
   {
   arma_extra_debug_sigprint();
   
-  isnt_same_type<eT, typename T1::elem_type>::check();
-  isnt_same_type<eT, typename T2::elem_type>::check();
+  arma_type_check< is_same_type< eT, typename T1::elem_type >::value == false >::apply();
+  arma_type_check< is_same_type< eT, typename T2::elem_type >::value == false >::apply();
   
   eglue_type::apply(*this, X);
   
@@ -1573,8 +1595,8 @@ Cube<eT>::operator+=(const eGlueCube<T1, T2, eglue_type>& X)
   {
   arma_extra_debug_sigprint();
   
-  isnt_same_type<eT, typename T1::elem_type>::check();
-  isnt_same_type<eT, typename T2::elem_type>::check();
+  arma_type_check< is_same_type< eT, typename T1::elem_type >::value == false >::apply();
+  arma_type_check< is_same_type< eT, typename T2::elem_type >::value == false >::apply();
   
   eglue_type::apply_inplace_plus(*this, X);
   
@@ -1592,8 +1614,8 @@ Cube<eT>::operator-=(const eGlueCube<T1, T2, eglue_type>& X)
   {
   arma_extra_debug_sigprint();
   
-  isnt_same_type<eT, typename T1::elem_type>::check();
-  isnt_same_type<eT, typename T2::elem_type>::check();
+  arma_type_check< is_same_type< eT, typename T1::elem_type >::value == false >::apply();
+  arma_type_check< is_same_type< eT, typename T2::elem_type >::value == false >::apply();
   
   eglue_type::apply_inplace_minus(*this, X);
   
@@ -1611,8 +1633,8 @@ Cube<eT>::operator%=(const eGlueCube<T1, T2, eglue_type>& X)
   {
   arma_extra_debug_sigprint();
   
-  isnt_same_type<eT, typename T1::elem_type>::check();
-  isnt_same_type<eT, typename T2::elem_type>::check();
+  arma_type_check< is_same_type< eT, typename T1::elem_type >::value == false >::apply();
+  arma_type_check< is_same_type< eT, typename T2::elem_type >::value == false >::apply();
   
   eglue_type::apply_inplace_schur(*this, X);
   
@@ -1630,8 +1652,8 @@ Cube<eT>::operator/=(const eGlueCube<T1, T2, eglue_type>& X)
   {
   arma_extra_debug_sigprint();
   
-  isnt_same_type<eT, typename T1::elem_type>::check();
-  isnt_same_type<eT, typename T2::elem_type>::check();
+  arma_type_check< is_same_type< eT, typename T1::elem_type >::value == false >::apply();
+  arma_type_check< is_same_type< eT, typename T2::elem_type >::value == false >::apply();
   
   eglue_type::apply_inplace_div(*this, X);
   

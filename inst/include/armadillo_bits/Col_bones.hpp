@@ -85,36 +85,39 @@ class Col : public Mat<eT>
     {
     private:
     
-    arma_aligned eT mem_local_extra[ (fixed_n_elem > arma_config::mat_prealloc) ? fixed_n_elem : 1 ];
+    static const bool use_extra = (fixed_n_elem > arma_config::mat_prealloc);
+    
+    arma_aligned eT mem_local_extra[ (use_extra) ? fixed_n_elem : 1 ];
     
     arma_inline void mem_setup();
-    arma_inline void swap_rows_cols() { access::rw(Mat<eT>::n_cols) = fixed_n_elem; access::rw(Mat<eT>::n_rows) = 1; }
+    arma_inline void change_to_row();
+    
     
     public:
     
-    inline fixed() { mem_setup(); }
+    static const u32 n_rows = fixed_n_elem;
+    static const u32 n_cols = 1;
+    static const u32 n_elem = fixed_n_elem;
     
-    inline                fixed(const char*        text) { mem_setup(); swap_rows_cols(); Col<eT>::operator=(text);               }
-    inline const Col& operator=(const char*        text) {              swap_rows_cols(); Col<eT>::operator=(text); return *this; }
-    inline                fixed(const std::string& text) { mem_setup(); swap_rows_cols(); Col<eT>::operator=(text);               }
-    inline const Col& operator=(const std::string& text) {              swap_rows_cols(); Col<eT>::operator=(text); return *this; }
+    arma_inline fixed();
+    arma_inline fixed(const fixed<fixed_n_elem>& X);
+         inline fixed(const subview_cube<eT>& X);
     
-    inline const Col& operator=(const eT val) { Col<eT>::operator=(val); return *this; }
-    
-    template<typename T1>
-    inline fixed(const Base<eT,T1>& A) { mem_setup(); Col<eT>::operator=(A.get_ref()); }
-    
-    template<typename T1>
-    inline const Col& operator=(const Base<eT,T1>& A) { Col<eT>::operator=(A.get_ref()); return *this; }
-    
-    template<typename T1, typename T2>
-    inline explicit fixed(const Base<pod_type,T1>& A, const Base<pod_type,T2>& B) { mem_setup(); Col<eT>::init(A,B); }
+    template<typename T1>              inline fixed(const Base<eT,T1>& A);
+    template<typename T1, typename T2> inline fixed(const Base<pod_type,T1>& A, const Base<pod_type,T2>& B);
     
     inline fixed(      eT* aux_mem, const bool copy_aux_mem = true);
     inline fixed(const eT* aux_mem);
     
-    inline                fixed(const subview_cube<eT>& X) { mem_setup(); Col<eT>::operator=(X);               }
-    inline const Col& operator=(const subview_cube<eT>& X) {              Col<eT>::operator=(X); return *this; }
+    inline fixed(const char*        text);
+    inline fixed(const std::string& text);
+    
+    template<typename T1> inline const Col& operator=(const Base<eT,T1>& A);
+    
+    inline const Col& operator=(const eT val);
+    inline const Col& operator=(const char*        text);
+    inline const Col& operator=(const std::string& text);
+    inline const Col& operator=(const subview_cube<eT>& X);
     
     inline       subview_row<eT> operator()(const u32   row_num,  const span& col_span);
     inline const subview_row<eT> operator()(const u32   row_num,  const span& col_span) const;
@@ -125,6 +128,8 @@ class Col : public Mat<eT>
     inline       subview<eT>     operator()(const span& row_span, const span& col_span);
     inline const subview<eT>     operator()(const span& row_span, const span& col_span) const;
     
+    arma_inline arma_warn_unused eT& operator[] (const u32 i);
+    arma_inline arma_warn_unused eT  operator[] (const u32 i) const;
     arma_inline arma_warn_unused eT& at         (const u32 i);
     arma_inline arma_warn_unused eT  at         (const u32 i) const;
     arma_inline arma_warn_unused eT& operator() (const u32 i);
@@ -134,6 +139,10 @@ class Col : public Mat<eT>
     arma_inline arma_warn_unused eT  at         (const u32 in_row, const u32 in_col) const;
     arma_inline arma_warn_unused eT& operator() (const u32 in_row, const u32 in_col);
     arma_inline arma_warn_unused eT  operator() (const u32 in_row, const u32 in_col) const;
+    
+    arma_hot inline const Col<eT>& fill(const eT val);
+    arma_hot inline const Col<eT>& zeros();
+    arma_hot inline const Col<eT>& ones();
     };
   
   

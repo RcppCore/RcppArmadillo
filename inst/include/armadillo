@@ -97,6 +97,7 @@
 
 
 #include "armadillo_bits/itpp_wrap.hpp"
+#include "armadillo_bits/undefine_conflicts.hpp"
 
 
 //! \namespace arma namespace for Armadillo classes and functions

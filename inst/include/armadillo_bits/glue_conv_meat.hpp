@@ -1,5 +1,5 @@
-// Copyright (C) 2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2010 Conrad Sanderson
+// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -24,7 +24,6 @@ glue_conv::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_conv>& 
   {
   arma_extra_debug_sigprint();
   
-  
   typedef typename T1::elem_type eT;
   
   const unwrap_check<T1> A_tmp(X.A, out);
@@ -33,8 +32,8 @@ glue_conv::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_conv>& 
   const Mat<eT>& A = A_tmp.M;
   const Mat<eT>& B = B_tmp.M;
   
-  arma_debug_check( ( (A.is_vec() == false) || (B.is_vec() == false) ), "conv(): inputs must be vectors"  );
-  arma_debug_check( ( (A.n_elem   == 0    ) || (B.n_elem   == 0    ) ), "conv(): zero-length input given" );
+  arma_debug_check( ( (A.is_vec() == false) || (B.is_vec() == false) ), "conv(): inputs must be vectors" );
+  
   
   const Mat<eT>& h = (A.n_elem <= B.n_elem) ? A : B;
   const Mat<eT>& x = (A.n_elem <= B.n_elem) ? B : A;
@@ -43,6 +42,13 @@ glue_conv::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_conv>& 
   const u32   h_n_elem = h.n_elem;
   const u32   x_n_elem = x.n_elem;
   const u32 out_n_elem = h_n_elem + x_n_elem - 1;
+  
+  
+  if( (h_n_elem == 0) || (x_n_elem == 0) )
+    {
+    out.reset();
+    return;
+    }
   
   
   (A.n_cols == 1) ? out.set_size(out_n_elem, 1) : out.set_size(1, out_n_elem);

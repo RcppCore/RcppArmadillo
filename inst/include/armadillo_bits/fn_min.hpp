@@ -41,7 +41,11 @@ min(const Row<eT>& A)
   {
   arma_extra_debug_sigprint();
   
-  return op_min::direct_min(A.mem, A.n_elem);
+  const u32 A_n_elem = A.n_elem;
+  
+  arma_debug_check( (A_n_elem == 0), "min(): given object has no elements" );
+  
+  return op_min::direct_min(A.mem, A_n_elem);
   }
 
 
@@ -55,7 +59,11 @@ min(const Col<eT>& A)
   {
   arma_extra_debug_sigprint();
   
-  return op_min::direct_min(A.mem, A.n_elem);
+  const u32 A_n_elem = A.n_elem;
+  
+  arma_debug_check( (A_n_elem == 0), "min(): given object has no elements" );
+  
+  return op_min::direct_min(A.mem, A_n_elem);
   }
 
 
@@ -77,7 +85,11 @@ min(const Op<T1, op_min>& in)
   const unwrap<T1> tmp1(in.m);
   const Mat<eT>& X = tmp1.M;
   
-  return op_min::direct_min(X.mem, X.n_elem);
+  const u32 X_n_elem = X.n_elem;
+  
+  arma_debug_check( (X_n_elem == 0), "min(): given object has no elements" );
+  
+  return op_min::direct_min(X.mem, X_n_elem);
   }
 
 
@@ -102,6 +114,8 @@ min(const subview_row<eT>& A)
   {
   arma_extra_debug_sigprint();
   
+  arma_debug_check( (A.n_elem == 0), "min(): given object has no elements" );
+  
   return op_min::direct_min(A);
   }
 
@@ -115,7 +129,9 @@ min(const subview_col<eT>& A)
   {
   arma_extra_debug_sigprint();
   
-  return op_min::direct_min(A);
+  arma_debug_check( (A.n_elem == 0), "min(): given object has no elements" );
+  
+  return op_min::direct_min(A.colptr(0), A.n_rows);
   }
 
 
@@ -127,6 +143,8 @@ eT
 min(const diagview<eT>& A)
   {
   arma_extra_debug_sigprint();
+  
+  arma_debug_check( (A.n_elem == 0), "min(): given object has no elements" );
   
   return op_min::direct_min(A);
   }
@@ -144,6 +162,8 @@ min(const Op<subview<eT>, op_min>& in)
   
   const subview<eT>& X = in.m;
   
+  arma_debug_check( (X.n_elem == 0), "min(): given object has no elements" );
+  
   return op_min::direct_min(X);
   }
 
@@ -159,7 +179,11 @@ min(const subview_elem1<eT,T1>& A)
   
   const Mat<eT> X(A);
   
-  return op_min::direct_min(X.mem, X.n_elem);
+  const u32 X_n_elem = X.n_elem;
+  
+  arma_debug_check( (X_n_elem == 0), "min(): given object has no elements" );
+  
+  return op_min::direct_min(X.mem, X_n_elem);
   }
 
 

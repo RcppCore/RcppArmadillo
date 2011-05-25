@@ -79,6 +79,11 @@ glue_toeplitz::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue_t
     
     out.set_size(A_N, B_N);
     
+    if( out.is_empty() )
+      {
+      return;
+      }
+    
     for(u32 col=0; col<B_N; ++col)
       {
       eT* col_mem = out.colptr(col);

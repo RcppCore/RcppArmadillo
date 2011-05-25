@@ -1,5 +1,5 @@
-// Copyright (C) 2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2010 Conrad Sanderson
+// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -87,11 +87,6 @@ eGlue<T1,T2,eglue_type>::operator[] (const u32 i) const
   else if(is_same_type<eglue_type, eglue_minus>::value == true) { return P1[i] - P2[i]; }
   else if(is_same_type<eglue_type, eglue_div  >::value == true) { return P1[i] / P2[i]; }
   else if(is_same_type<eglue_type, eglue_schur>::value == true) { return P1[i] * P2[i]; }
-  else
-    {
-    arma_stop("eGlue::operator[]: unhandled eglue_type");
-    return eT();
-    }
   }
 
 
@@ -108,11 +103,6 @@ eGlue<T1,T2,eglue_type>::at(const u32 row, const u32 col) const
   else if(is_same_type<eglue_type, eglue_minus>::value == true) { return P1.at(row,col) - P2.at(row,col); }
   else if(is_same_type<eglue_type, eglue_div  >::value == true) { return P1.at(row,col) / P2.at(row,col); }
   else if(is_same_type<eglue_type, eglue_schur>::value == true) { return P1.at(row,col) * P2.at(row,col); }
-  else
-    {
-    arma_stop("eGlue::at(): unhandled eglue_type");
-    return eT();
-    }
   }
 
 

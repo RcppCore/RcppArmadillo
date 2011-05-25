@@ -374,28 +374,6 @@ struct is_same_type<T1,T1>
 
 
 
-template<typename T1, typename T2>
-struct isnt_same_type
-  {
-  static const bool value = true;
-  
-  inline static void check()
-    {
-    arma_static_assert<false> ERROR___TYPE_MISMATCH;
-    ERROR___TYPE_MISMATCH = ERROR___TYPE_MISMATCH;
-    }
-  };
-
-
-template<typename T1>
-struct isnt_same_type<T1,T1>
-  {
-  static const bool value = false;
-  
-  arma_inline static void check() {}
-  };
-
-
 //
 //
 //
@@ -459,6 +437,16 @@ template<>
 struct is_s32<s32>
   { static const bool value = true; };
 
+
+
+
+template<typename T1>
+struct is_u64
+  { static const bool value = false; };
+
+template<>
+struct is_u64<u64>
+  { static const bool value = true; };
 
 
 
@@ -556,47 +544,12 @@ struct is_supported_elem_type
     is_s16<T1>::value ||
     is_u32<T1>::value ||
     is_s32<T1>::value ||
+    is_u64<T1>::value ||
     is_float<T1>::value ||
     is_double<T1>::value ||
     is_supported_complex_float<T1>::value ||
     is_supported_complex_double<T1>::value;
   };
-
-
-
-template<typename T1>
-struct isnt_supported_elem_type
-  {
-  static const bool value = true;
-  
-  inline static void check()
-    {
-    arma_static_assert<false> ERROR___UNSUPPORTED_ELEMENT_TYPE;
-    ERROR___UNSUPPORTED_ELEMENT_TYPE = ERROR___UNSUPPORTED_ELEMENT_TYPE;
-    }
-  };
-
-
-
-struct isnt_supported_elem_type_false
-  {
-  static const bool value = false;
-  
-  arma_inline static void check() {}
-  };
-
-
-
-template<> struct isnt_supported_elem_type< u8 >                   : public isnt_supported_elem_type_false {};
-template<> struct isnt_supported_elem_type< s8 >                   : public isnt_supported_elem_type_false {};
-template<> struct isnt_supported_elem_type< u16 >                  : public isnt_supported_elem_type_false {};
-template<> struct isnt_supported_elem_type< s16 >                  : public isnt_supported_elem_type_false {};
-template<> struct isnt_supported_elem_type< u32 >                  : public isnt_supported_elem_type_false {};
-template<> struct isnt_supported_elem_type< s32 >                  : public isnt_supported_elem_type_false {};
-template<> struct isnt_supported_elem_type< float >                : public isnt_supported_elem_type_false {};
-template<> struct isnt_supported_elem_type< double >               : public isnt_supported_elem_type_false {};
-template<> struct isnt_supported_elem_type< std::complex<float> >  : public isnt_supported_elem_type_false {};
-template<> struct isnt_supported_elem_type< std::complex<double> > : public isnt_supported_elem_type_false {};
 
 
 

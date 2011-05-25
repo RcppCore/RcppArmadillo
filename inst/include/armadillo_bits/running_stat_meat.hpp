@@ -181,7 +181,7 @@ running_stat<eT>::operator() (const std::complex< typename running_stat<eT>::T >
   {
   arma_extra_debug_sigprint();
   
-  isnt_same_type<eT, std::complex< typename running_stat<eT>::T > >::check();
+  arma_type_check< is_same_type<eT, std::complex< typename running_stat<eT>::T > >::value == false >::apply();
   
   if( arma_isfinite(sample) == false )
     {

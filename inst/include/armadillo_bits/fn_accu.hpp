@@ -134,6 +134,7 @@ accu(const diagview<eT>& X)
   arma_extra_debug_sigprint();  
   
   const u32 n_elem = X.n_elem;
+  
   eT val = eT(0);
   
   for(u32 i=0; i<n_elem; ++i)
@@ -156,17 +157,24 @@ accu(const subview<eT>& S)
   {
   arma_extra_debug_sigprint();  
   
-  const u32 S_n_rows = S.n_rows;
-  const u32 S_n_cols = S.n_cols;
-  
-  eT val = eT(0);
-  
-  for(u32 col=0; col<S_n_cols; ++col)
+  if(S.n_elem > 0)
     {
-    val += arrayops::accumulate( S.colptr(col), S_n_rows );
+    const u32 S_n_rows = S.n_rows;
+    const u32 S_n_cols = S.n_cols;
+    
+    eT val = eT(0);
+    
+    for(u32 col=0; col<S_n_cols; ++col)
+      {
+      val += arrayops::accumulate( S.colptr(col), S_n_rows );
+      }
+    
+    return val;
     }
-  
-  return val;
+  else
+    {
+    return eT(0);
+    }
   }
 
 
@@ -187,14 +195,22 @@ accu(const subview_row<eT>& S)
   const u32 start_col      = S.aux_col1;
   const u32 end_col_plus_1 = start_col + S.n_cols;
   
-  // in future versions, S.n_cols might be equal to zero,
+  // S.n_cols might be equal to zero,
   // hence the loop below has a "less than" condition
   
   eT val = eT(0);
   
-  for(u32 col=start_col; col<end_col_plus_1; ++col)
+  u32 i,j;
+  
+  for(i=start_col, j=start_col+1; j < end_col_plus_1; i+=2, j+=2)
     {
-    val += X.at(row,col);
+    val += X.at(row,i);
+    val += X.at(row,j);
+    }
+  
+  if(i < end_col_plus_1)
+    {
+    val += X.at(row,i);
     }
   
   return val;

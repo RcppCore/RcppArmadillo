@@ -26,6 +26,7 @@ median(const Base<typename T1::elem_type,T1>& X, const u32 dim = 0)
   }
 
 
+
 //! Immediate 'find the median value of a row vector' operation
 template<typename eT>
 inline
@@ -35,7 +36,11 @@ median(const Row<eT>& A)
   {
   arma_extra_debug_sigprint();
   
-  return op_median::direct_median(A.mem, A.n_elem);
+  const u32 A_n_elem = A.n_elem;
+  
+  arma_debug_check( (A_n_elem == 0), "median(): given object has no elements" );
+  
+  return op_median::direct_median(A.mem, A_n_elem);
   }
 
 
@@ -49,7 +54,11 @@ median(const Col<eT>& A)
   {
   arma_extra_debug_sigprint();
   
-  return op_median::direct_median(A.mem, A.n_elem);
+  const u32 A_n_elem = A.n_elem;
+  
+  arma_debug_check( (A_n_elem == 0), "median(): given object has no elements" );
+  
+  return op_median::direct_median(A.mem, A_n_elem);
   }
 
 
@@ -63,9 +72,13 @@ median(const Row< std::complex<T> >& A)
   {
   arma_extra_debug_sigprint();
   
+  const u32 A_n_elem = A.n_elem;
+  
+  arma_debug_check( (A_n_elem == 0), "median(): given object has no elements" );
+  
   u32 index1;
   u32 index2;
-  op_median::direct_cx_median_index(index1, index2, A.mem, A.n_elem);
+  op_median::direct_cx_median_index(index1, index2, A.mem, A_n_elem);
   
   return (index1 == index2) ? A.mem[index1] : op_median::robust_mean( A.mem[index1], A.mem[index2] );
   }
@@ -81,9 +94,13 @@ median(const Col< std::complex<T> >& A)
   {
   arma_extra_debug_sigprint();
   
+  const u32 A_n_elem = A.n_elem;
+  
+  arma_debug_check( (A_n_elem == 0), "median(): given object has no elements" );
+  
   u32 index1;
   u32 index2;
-  op_median::direct_cx_median_index(index1, index2, A.mem, A.n_elem);
+  op_median::direct_cx_median_index(index1, index2, A.mem, A_n_elem);
   
   return (index1 == index2) ? A.mem[index1] : op_median::robust_mean( A.mem[index1], A.mem[index2] );
   }
@@ -99,6 +116,8 @@ median(const subview_row<eT>& A)
   {
   arma_extra_debug_sigprint();
   
+  arma_debug_check( (A.n_elem == 0), "median(): given object has no elements" );
+  
   return op_median::direct_median(A);
   }
 
@@ -113,7 +132,9 @@ median(const subview_col<eT>& A)
   {
   arma_extra_debug_sigprint();
   
-  return op_median::direct_median(A);
+  arma_debug_check( (A.n_elem == 0), "median(): given object has no elements" );
+  
+  return op_median::direct_median(A.colptr(0), A.n_rows);
   }
 
 
@@ -126,6 +147,8 @@ std::complex<T>
 median(const subview_row< std::complex<T> >& A)
   {
   arma_extra_debug_sigprint();
+  
+  arma_debug_check( (A.n_elem == 0), "median(): given object has no elements" );
   
   u32 index1;
   u32 index2;
@@ -145,6 +168,8 @@ median(const subview_col< std::complex<T> >& A)
   {
   arma_extra_debug_sigprint();
   
+  arma_debug_check( (A.n_elem == 0), "median(): given object has no elements" );
+  
   u32 index1;
   u32 index2;
   op_median::direct_cx_median_index(index1, index2, A);
@@ -162,6 +187,8 @@ median(const diagview<eT>& A)
   {
   arma_extra_debug_sigprint();
   
+  arma_debug_check( (A.n_elem == 0), "median(): given object has no elements" );
+  
   return op_median::direct_median(A);
   }
 
@@ -174,6 +201,8 @@ std::complex<T>
 median(const diagview< std::complex<T> >& A)
   {
   arma_extra_debug_sigprint();
+  
+  arma_debug_check( (A.n_elem == 0), "median(): given object has no elements" );
   
   u32 index1;
   u32 index2;

@@ -69,15 +69,11 @@ op_diagmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_diagmat>& X)
     
     const u32 N = A.n_rows;
     
-    out.set_size(N,N);
+    out.zeros(N,N);
     
-    for(u32 col=0; col<N; ++col)
+    for(u32 i=0; i<N; ++i)
       {
-      for(u32 row=0;     row<col; ++row) { out.at(row,col) = eT(0); }
-      
-      out.at(col,col) = A.at(col,col);
-      
-      for(u32 row=col+1; row<N;   ++row) { out.at(row,col) = eT(0); }
+      out.at(i,i) = A.at(i,i);
       }
     }
   }

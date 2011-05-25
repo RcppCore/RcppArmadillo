@@ -1,5 +1,5 @@
-// Copyright (C) 2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2010 Conrad Sanderson
+// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -41,6 +41,8 @@ class Proxy< Mat<eT> >
   typedef Mat<eT>                                  stored_type;
   typedef const eT*                                ea_type;
   
+  static const bool prefer_at_accessor = false;
+  
   arma_aligned const Mat<eT>& Q;
   
   inline explicit Proxy(const Mat<eT>& A)
@@ -71,6 +73,8 @@ class Proxy< Col<eT> >
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Col<eT>                                  stored_type;
   typedef const eT*                                ea_type;
+  
+  static const bool prefer_at_accessor = false;
   
   arma_aligned const Col<eT>& Q;
   
@@ -103,6 +107,8 @@ class Proxy< Row<eT> >
   typedef Row<eT>                                  stored_type;
   typedef const eT*                                ea_type;
   
+  static const bool prefer_at_accessor = false;
+  
   arma_aligned const Row<eT>& Q;
   
   inline explicit Proxy(const Row<eT>& A)
@@ -133,6 +139,8 @@ class Proxy< Op<T1, op_type> >
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Mat<elem_type>                           stored_type;
   typedef const elem_type*                         ea_type;
+  
+  static const bool prefer_at_accessor = false;
   
   arma_aligned const Mat<elem_type> Q;
   
@@ -165,6 +173,8 @@ class Proxy< Glue<T1, T2, glue_type> >
   typedef Mat<elem_type>                           stored_type;
   typedef const elem_type*                         ea_type;
   
+  static const bool prefer_at_accessor = false;
+  
   arma_aligned const Mat<elem_type> Q;
   
   inline explicit Proxy(const Glue<T1, T2, glue_type>& A)
@@ -195,6 +205,8 @@ class Proxy< subview<eT> >
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef subview<eT>                              stored_type;
   typedef const subview<eT>&                       ea_type;
+  
+  static const bool prefer_at_accessor = true;
   
   arma_aligned const subview<eT>& Q;
   
@@ -227,6 +239,8 @@ class Proxy< subview_elem1<eT,T1> >
   typedef Mat<eT>                                  stored_type;
   typedef const eT*                                ea_type;
   
+  static const bool prefer_at_accessor = false;
+  
   arma_aligned const Mat<eT> Q;
   
   inline explicit Proxy(const subview_elem1<eT,T1>& A)
@@ -257,6 +271,8 @@ class Proxy< diagview<eT> >
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef diagview<eT>                             stored_type;
   typedef const diagview<eT>&                      ea_type;
+  
+  static const bool prefer_at_accessor = false;
   
   arma_aligned const diagview<eT>& Q;
   
@@ -290,6 +306,8 @@ class Proxy< eOp<T1, eop_type > >
   typedef eOp<T1, eop_type>                        stored_type;
   typedef const eOp<T1, eop_type>&                 ea_type;
   
+  static const bool prefer_at_accessor = eOp<T1, eop_type>::prefer_at_accessor;
+  
   arma_aligned const eOp<T1, eop_type>& Q;
   
   inline explicit Proxy(const eOp<T1, eop_type>& A)
@@ -320,6 +338,8 @@ class Proxy< eGlue<T1, T2, eglue_type > >
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef eGlue<T1, T2, eglue_type>                stored_type;
   typedef const eGlue<T1, T2, eglue_type>&         ea_type;
+  
+  static const bool prefer_at_accessor = eGlue<T1, T2, eglue_type>::prefer_at_accessor;
   
   arma_aligned const eGlue<T1, T2, eglue_type>& Q;
   
@@ -352,6 +372,8 @@ class Proxy< mtOp<out_eT, T1, op_type> >
   typedef          Mat<out_eT>                  stored_type;
   typedef          const elem_type*             ea_type;
   
+  static const bool prefer_at_accessor = false;
+  
   arma_aligned const Mat<out_eT> Q;
   
   inline explicit Proxy(const mtOp<out_eT, T1, op_type>& A)
@@ -382,6 +404,8 @@ class Proxy< mtGlue<out_eT, T1, T2, glue_type > >
   typedef typename get_pod_type<out_eT>::result pod_type;
   typedef          Mat<out_eT>                  stored_type;
   typedef          const elem_type*             ea_type;
+  
+  static const bool prefer_at_accessor = false;
   
   arma_aligned const Mat<out_eT> Q;
   
