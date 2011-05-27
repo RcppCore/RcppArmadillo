@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -208,29 +208,38 @@ op_dot::apply_proxy(const Base<typename T1::elem_type,T1>& X, const Base<typenam
   const Proxy<T1> A(X.get_ref());
   const Proxy<T2> B(Y.get_ref());
   
-  arma_debug_check( (A.get_n_elem() != B.get_n_elem()), "dot(): objects must have the same number of elements" );
+  const bool prefer_at_accessor = (Proxy<T1>::prefer_at_accessor) && (Proxy<T2>::prefer_at_accessor);
   
-  const u32      N  = A.get_n_elem();
-        ea_type1 PA = A.get_ea();
-        ea_type2 PB = B.get_ea();
-  
-  eT val1 = eT(0);
-  eT val2 = eT(0);
-  
-  u32 i,j;
-  
-  for(i=0, j=1; j<N; i+=2, j+=2)
+  if(prefer_at_accessor == false)
     {
-    val1 += PA[i] * PB[i];
-    val2 += PA[j] * PB[j];
-    }
+    arma_debug_check( (A.get_n_elem() != B.get_n_elem()), "dot(): objects must have the same number of elements" );
   
-  if(i < N)
+    const u32      N  = A.get_n_elem();
+          ea_type1 PA = A.get_ea();
+          ea_type2 PB = B.get_ea();
+    
+    eT val1 = eT(0);
+    eT val2 = eT(0);
+    
+    u32 i,j;
+    
+    for(i=0, j=1; j<N; i+=2, j+=2)
+      {
+      val1 += PA[i] * PB[i];
+      val2 += PA[j] * PB[j];
+      }
+    
+    if(i < N)
+      {
+      val1 += PA[i] * PB[i];
+      }
+    
+    return val1 + val2;
+    }
+  else
     {
-    val1 += PA[i] * PB[i];
+    return op_dot::apply_unwrap(A.Q, B.Q);
     }
-  
-  return val1 + val2;
   }
 
 
@@ -242,7 +251,7 @@ op_dot::apply_proxy(const Base<typename T1::elem_type,T1>& X, const Base<typenam
 
 template<typename T1, typename T2>
 arma_hot
-arma_inline
+inline
 typename T1::elem_type
 op_norm_dot::apply(const Base<typename T1::elem_type,T1>& X, const Base<typename T1::elem_type,T2>& Y)
   {
@@ -252,14 +261,66 @@ op_norm_dot::apply(const Base<typename T1::elem_type,T1>& X, const Base<typename
   typedef typename Proxy<T1>::ea_type ea_type1;
   typedef typename Proxy<T2>::ea_type ea_type2;
   
-  const Proxy<T1> A(X.get_ref());
-  const Proxy<T2> B(Y.get_ref());
+  const bool prefer_at_accessor = (Proxy<T1>::prefer_at_accessor) && (Proxy<T2>::prefer_at_accessor);
   
-  arma_debug_check( (A.get_n_elem() != B.get_n_elem()), "norm_dot(): objects must have the same number of elements" );
+  if(prefer_at_accessor == false)
+    {
+    const Proxy<T1> A(X.get_ref());
+    const Proxy<T2> B(Y.get_ref());
+    
+    arma_debug_check( (A.get_n_elem() != B.get_n_elem()), "norm_dot(): objects must have the same number of elements" );
+    
+    const u32      N  = A.get_n_elem();
+          ea_type1 PA = A.get_ea();
+          ea_type2 PB = B.get_ea();
+    
+    eT acc1 = eT(0);
+    eT acc2 = eT(0);
+    eT acc3 = eT(0);
+    
+    for(u32 i=0; i<N; ++i)
+      {
+      const eT tmpA = PA[i];
+      const eT tmpB = PB[i];
+      
+      acc1 += tmpA * tmpA;
+      acc2 += tmpB * tmpB;
+      acc3 += tmpA * tmpB;
+      }
+      
+    return acc3 / ( std::sqrt(acc1 * acc2) );
+    }
+  else
+    {
+    return op_norm_dot::apply_unwrap(X, Y);
+    }
+  }
+
+
+
+template<typename T1, typename T2>
+arma_hot
+inline
+typename T1::elem_type
+op_norm_dot::apply_unwrap(const Base<typename T1::elem_type,T1>& X, const Base<typename T1::elem_type,T2>& Y)
+  {
+  arma_extra_debug_sigprint();
   
-  const u32      N  = A.get_n_elem();
-        ea_type1 PA = A.get_ea();
-        ea_type2 PB = B.get_ea();
+  typedef typename T1::elem_type eT;
+  
+  const unwrap<T1> tmp1(X.get_ref());
+  const unwrap<T2> tmp2(Y.get_ref());
+  
+  const Mat<eT>& A = tmp1.M;
+  const Mat<eT>& B = tmp2.M;
+  
+  
+  arma_debug_check( (A.n_elem != B.n_elem), "norm_dot(): objects must have the same number of elements" );
+  
+  const u32 N = A.n_elem;
+  
+  const eT* A_mem = A.memptr();
+  const eT* B_mem = B.memptr();
   
   eT acc1 = eT(0);
   eT acc2 = eT(0);
@@ -267,8 +328,8 @@ op_norm_dot::apply(const Base<typename T1::elem_type,T1>& X, const Base<typename
   
   for(u32 i=0; i<N; ++i)
     {
-    const eT tmpA = PA[i];
-    const eT tmpB = PB[i];
+    const eT tmpA = A_mem[i];
+    const eT tmpB = B_mem[i];
     
     acc1 += tmpA * tmpA;
     acc2 += tmpB * tmpB;

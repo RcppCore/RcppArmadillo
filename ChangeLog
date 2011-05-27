@@ -1,8 +1,14 @@
+2011-05-27  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.2.21
+
+	* inst/include/*: Updated to release 1.99.3 of Armadillo
+
 2011-05-25  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.2.20
 
-	* inst/include/*: Updated to test release 1.99.2 of Armadillo
+	* inst/include/*: Updated to release 1.99.2 of Armadillo
 
 2011-05-16  Dirk Eddelbuettel  <edd@debian.org>
 

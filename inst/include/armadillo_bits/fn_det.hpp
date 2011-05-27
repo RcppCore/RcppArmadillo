@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -45,14 +45,16 @@ det(const Op<T1, op_diagmat>& X)
   
   const diagmat_proxy<T1> A(X.m);
   
-  if(A.n_elem == 0)
+  const u32 A_n_elem = A.n_elem;
+  
+  if(A_n_elem == 0)
     {
     return eT(1);
     }
   
   eT val = A[0];
   
-  for(u32 i=1; i<A.n_elem; ++i)
+  for(u32 i=1; i<A_n_elem; ++i)
     {
     val *= A[i];
     }

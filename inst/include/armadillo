@@ -109,7 +109,7 @@ namespace arma
   #include "armadillo_bits/forward_bones.hpp"
   #include "armadillo_bits/arma_static_assert.hpp"
   #include "armadillo_bits/typedef.hpp"
-  #include "armadillo_bits/typedef_u64.hpp"
+  //#include "armadillo_bits/typedef_u64.hpp"
   #include "armadillo_bits/format_wrap.hpp"
   #include "armadillo_bits/arma_version.hpp"
   #include "armadillo_bits/arma_config.hpp"

@@ -39,6 +39,7 @@ prod(const Base<typename T1::elem_type,T1>& X, const u32 dim = 0)
 //! Immediate 'product of all values' operation for a row vector
 template<typename eT>
 inline
+arma_warn_unused
 eT
 prod(const Row<eT>& X)
   {
@@ -53,6 +54,7 @@ prod(const Row<eT>& X)
 //! Immediate 'product of all values' operation for a column vector
 template<typename eT>
 inline
+arma_warn_unused
 eT
 prod(const Col<eT>& X)
   {
@@ -100,6 +102,7 @@ prod(const Op<T1, op_prod>& in, const u32 dim)
 //! product of all values of a subview_row
 template<typename eT>
 inline
+arma_warn_unused
 eT
 prod(const subview_row<eT>& S)
   {
@@ -107,15 +110,19 @@ prod(const subview_row<eT>& S)
   
   const Mat<eT>& X = S.m;
   
+  const u32 n_elem         = S.n_elem;
   const u32 row            = S.aux_row1;
   const u32 start_col      = S.aux_col1;
   const u32 end_col_plus_1 = start_col + S.n_cols;
   
   eT val = eT(1);
   
-  for(u32 col=start_col; col<end_col_plus_1; ++col)
+  if(n_elem > 0)
     {
-    val *= X.at(row,col);
+    for(u32 col=start_col; col<end_col_plus_1; ++col)
+      {
+      val *= X.at(row,col);
+      }
     }
   
   return val;
@@ -126,18 +133,20 @@ prod(const subview_row<eT>& S)
 //! product of all values of a subview_col
 template<typename eT>
 inline
+arma_warn_unused
 eT
 prod(const subview_col<eT>& S)
   {
   arma_extra_debug_sigprint();
   
-  return arrayops::product( S.colptr(0), S.n_rows );
+  return (S.n_elem > 0) ? arrayops::product( S.colptr(0), S.n_rows ) : eT(1);
   }
 
 
 
 //! product of all values of a diagview
 template<typename eT>
+arma_warn_unused
 inline
 eT
 prod(const diagview<eT>& X)

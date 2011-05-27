@@ -59,11 +59,11 @@ diskio::gen_txt_header(const Mat<eT>& x)
     {
     return std::string("ARMA_MAT_TXT_IS004");
     }
-  else
-  if(is_u64<eT>::value == true)
-    {
-    return std::string("ARMA_MAT_TXT_IU008");
-    }
+  // else
+  // if(is_u64<eT>::value == true)
+  //   {
+  //   return std::string("ARMA_MAT_TXT_IU008");
+  //   }
   else
   if(is_float<eT>::value == true)
     {
@@ -136,11 +136,11 @@ diskio::gen_bin_header(const Mat<eT>& x)
     {
     return std::string("ARMA_MAT_BIN_IS004");
     }
-  else
-  if(is_u64<eT>::value == true)
-    {
-    return std::string("ARMA_MAT_BIN_IU008");
-    }
+  // else
+  // if(is_u64<eT>::value == true)
+  //   {
+  //   return std::string("ARMA_MAT_BIN_IU008");
+  //   }
   else
   if(is_float<eT>::value == true)
     {
@@ -213,11 +213,11 @@ diskio::gen_txt_header(const Cube<eT>& x)
     {
     return std::string("ARMA_CUB_TXT_IS004");
     }
-  else
-  if(is_u64<eT>::value == true)
-    {
-    return std::string("ARMA_CUB_TXT_IU008");
-    }
+  // else
+  // if(is_u64<eT>::value == true)
+  //   {
+  //   return std::string("ARMA_CUB_TXT_IU008");
+  //   }
   else
   if(is_float<eT>::value == true)
     {
@@ -290,11 +290,11 @@ diskio::gen_bin_header(const Cube<eT>& x)
     {
     return std::string("ARMA_CUB_BIN_IS004");
     }
-  else
-  if(is_u64<eT>::value == true)
-    {
-    return std::string("ARMA_CUB_BIN_IU008");
-    }
+  // else
+  // if(is_u64<eT>::value == true)
+  //   {
+  //   return std::string("ARMA_CUB_BIN_IU008");
+  //   }
   else
   if(is_float<eT>::value == true)
     {

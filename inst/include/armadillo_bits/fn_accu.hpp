@@ -30,26 +30,46 @@ accu(const Base<typename T1::elem_type,T1>& X)
   
   const Proxy<T1> A(X.get_ref());
   
-        ea_type P      = A.get_ea();
-  const u32     n_elem = A.get_n_elem();
-  
-  eT val1 = eT(0);
-  eT val2 = eT(0);
-  
-  u32 i,j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
+  if(Proxy<T1>::prefer_at_accessor == false)
     {
-    val1 += P[i];
-    val2 += P[j];
+          ea_type P      = A.get_ea();
+    const u32     n_elem = A.get_n_elem();
+    
+    eT val1 = eT(0);
+    eT val2 = eT(0);
+    
+    u32 i,j;
+    
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+      {
+      val1 += P[i];
+      val2 += P[j];
+      }
+    
+    if(i < n_elem)
+      {
+      val1 += P[i];
+      }
+    
+    return val1 + val2;
     }
-  
-  if(i < n_elem)
+  else
     {
-    val1 += P[i];
+    const u32 n_rows = A.get_n_rows();
+    const u32 n_cols = A.get_n_cols();
+    
+    eT val = eT(0);
+    
+    for(u32 col=0; col<n_cols; ++col)
+      {
+      for(u32 row=0; row<n_rows; ++row)
+        {
+        val += A.at(row,col);
+        }
+      }
+    
+    return val;
     }
-  
-  return val1 + val2;
   }
 
 
@@ -99,26 +119,51 @@ accu(const BaseCube<typename T1::elem_type,T1>& X)
   
   const ProxyCube<T1> A(X.get_ref());
   
-        ea_type P      = A.get_ea();
-  const u32     n_elem = A.get_n_elem();
-  
-  eT val1 = eT(0);
-  eT val2 = eT(0);
-  
-  u32 i,j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
+  if(ProxyCube<T1>::prefer_at_accessor == false)
     {
-    val1 += P[i];
-    val2 += P[j];
+    
+          ea_type P      = A.get_ea();
+    const u32     n_elem = A.get_n_elem();
+    
+    eT val1 = eT(0);
+    eT val2 = eT(0);
+    
+    u32 i,j;
+    
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+      {
+      val1 += P[i];
+      val2 += P[j];
+      }
+    
+    if(i < n_elem)
+      {
+      val1 += P[i];
+      }
+    
+    return val1 + val2;
     }
-  
-  if(i < n_elem)
+  else
     {
-    val1 += P[i];
+    const u32 n_rows   = A.get_n_rows();
+    const u32 n_cols   = A.get_n_cols();
+    const u32 n_slices = A.get_n_slices();
+    
+    eT val = eT(0);
+    
+    for(u32 slice=0; slice<n_slices; ++slice)
+      {
+      for(u32 col=0; col<n_cols; ++col)
+        {
+        for(u32 row=0; row<n_rows; ++row)
+          {
+          val += A.at(row,col,slice);
+          }
+        }
+      }
+    
+    return val;
     }
-  
-  return val1 + val2;
   }
 
 
@@ -157,24 +202,21 @@ accu(const subview<eT>& S)
   {
   arma_extra_debug_sigprint();  
   
-  if(S.n_elem > 0)
+  const u32 S_n_rows = S.n_rows;
+  const u32 S_n_cols = S.n_cols;
+  const u32 S_n_elem = S.n_elem;
+  
+  eT val = eT(0);
+  
+  if(S_n_elem > 0)
     {
-    const u32 S_n_rows = S.n_rows;
-    const u32 S_n_cols = S.n_cols;
-    
-    eT val = eT(0);
-    
     for(u32 col=0; col<S_n_cols; ++col)
       {
       val += arrayops::accumulate( S.colptr(col), S_n_rows );
       }
-    
-    return val;
     }
-  else
-    {
-    return eT(0);
-    }
+  
+  return val;
   }
 
 
@@ -191,26 +233,27 @@ accu(const subview_row<eT>& S)
   
   const Mat<eT>& X = S.m;
   
-  const u32 row            = S.aux_row1;
-  const u32 start_col      = S.aux_col1;
-  const u32 end_col_plus_1 = start_col + S.n_cols;
-  
-  // S.n_cols might be equal to zero,
-  // hence the loop below has a "less than" condition
+  const u32 n_elem     = S.n_elem;
+  const u32 row        = S.aux_row1;
+  const u32 start_col  = S.aux_col1;
+  const u32 end_col_p1 = start_col + S.n_cols;
   
   eT val = eT(0);
-  
-  u32 i,j;
-  
-  for(i=start_col, j=start_col+1; j < end_col_plus_1; i+=2, j+=2)
+    
+  if(n_elem > 0)
     {
-    val += X.at(row,i);
-    val += X.at(row,j);
-    }
-  
-  if(i < end_col_plus_1)
-    {
-    val += X.at(row,i);
+    u32 i,j;
+    
+    for(i=start_col, j=start_col+1; j < end_col_p1; i+=2, j+=2)
+      {
+      val += X.at(row,i);
+      val += X.at(row,j);
+      }
+    
+    if(i < end_col_p1)
+      {
+      val += X.at(row,i);
+      }
     }
   
   return val;
@@ -228,7 +271,7 @@ accu(const subview_col<eT>& S)
   {
   arma_extra_debug_sigprint();
   
-  return arrayops::accumulate( S.colptr(0), S.n_rows );
+  return (S.n_elem > 0) ? arrayops::accumulate( S.colptr(0), S.n_rows ) : eT(0);
   }
 
 

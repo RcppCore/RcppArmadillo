@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -295,7 +295,7 @@ const Mat<eT>&
 running_stat_vec<eT>::min() const
   {
   arma_extra_debug_sigprint();
-
+  
   return min_val;
   }
 
@@ -308,8 +308,21 @@ const Mat<eT>&
 running_stat_vec<eT>::max() const
   {
   arma_extra_debug_sigprint();
-
+  
   return max_val;
+  }
+
+
+
+//! number of samples so far
+template<typename eT>
+inline
+typename get_pod_type<eT>::result
+running_stat_vec<eT>::count() const
+  {
+  arma_extra_debug_sigprint();
+  
+  return counter.value();
   }
 
 

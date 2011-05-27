@@ -2113,7 +2113,7 @@ subview<eT>::diag(const s32 in_id)
   
   arma_debug_check
     (
-    (row_offset >= n_rows) || (col_offset >= n_cols),
+    ((row_offset > 0) && (row_offset >= n_rows)) || ((col_offset > 0) && (col_offset >= n_cols)),
     "subview::diag(): requested diagonal out of bounds"
     );
   
@@ -2140,10 +2140,9 @@ subview<eT>::diag(const s32 in_id) const
   
   arma_debug_check
     (
-    (row_offset >= n_rows) || (col_offset >= n_cols),
+    ((row_offset > 0) && (row_offset >= n_rows)) || ((col_offset > 0) && (col_offset >= n_cols)),
     "subview::diag(): requested diagonal out of bounds"
     );
-  
   
   const u32 len = (std::min)(n_rows - row_offset, n_cols - col_offset);
   
@@ -2197,16 +2196,18 @@ subview<eT>::swap_cols(const u32 in_col1, const u32 in_col2)
     "subview::swap_cols(): out of bounds"
     );
   
-  eT* ptr1 = colptr(in_col1);
-  eT* ptr2 = colptr(in_col2);
-  
-  for(u32 row=0; row<n_rows; ++row)
+  if(n_elem > 0)
     {
-    const eT tmp = ptr1[row];
-    ptr1[row]    = ptr2[row];
-    ptr2[row]    = tmp;
+    eT* ptr1 = colptr(in_col1);
+    eT* ptr2 = colptr(in_col2);
+    
+    for(u32 row=0; row<n_rows; ++row)
+      {
+      const eT tmp = ptr1[row];
+      ptr1[row]    = ptr2[row];
+      ptr2[row]    = tmp;
+      }
     }
-  
   }
 
 
