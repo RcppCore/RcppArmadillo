@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -60,7 +60,10 @@ class op_norm_dot
   public:
   
   template<typename T1, typename T2>
-  arma_hot arma_inline static typename T1::elem_type apply(const Base<typename T1::elem_type,T1>& X, const Base<typename T1::elem_type,T2>& Y);
+  arma_hot inline static typename T1::elem_type apply       (const Base<typename T1::elem_type,T1>& X, const Base<typename T1::elem_type,T2>& Y);
+  
+  template<typename T1, typename T2>
+  arma_hot inline static typename T1::elem_type apply_unwrap(const Base<typename T1::elem_type,T1>& X, const Base<typename T1::elem_type,T2>& Y);
   };
 
 

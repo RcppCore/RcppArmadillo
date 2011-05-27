@@ -31,7 +31,7 @@ diagview<eT>::diagview(const Mat<eT>& in_m, const u32 in_row_offset, const u32 i
   , row_offset(in_row_offset)
   , col_offset(in_col_offset)
   , n_rows(in_len)
-  , n_cols( (in_len > 0) ? 1 : 0 )
+  , n_cols(1)
   , n_elem(in_len)
   {
   arma_extra_debug_sigprint();
@@ -47,7 +47,7 @@ diagview<eT>::diagview(Mat<eT>& in_m, const u32 in_row_offset, const u32 in_col_
   , row_offset(in_row_offset)
   , col_offset(in_col_offset)
   , n_rows(in_len)
-  , n_cols( (in_len > 0) ? 1 : 0 )
+  , n_cols(1)
   , n_elem(in_len)
   {
   arma_extra_debug_sigprint();

@@ -45,16 +45,8 @@ struct deduce_u64<false>
     
   #elif defined(ULLONG_MAX)
     
-    // safer fallback
-    typedef unsigned long u64;
-
-    // if GNU g++ and -std=c++0x is defined, we can use unsigned long long
-    #ifdef __GNUC__
-    #ifdef __GXX_EXPERIMENTAL_CXX0X__
-      typedef unsigned long long u64;
-    #endif    
-    #endif    
-
+    typedef unsigned long long u64;
+    
     static const u64  max   = 0xFFFFFFFFFFFFFFFF;
     static const bool trunc = false;
   
@@ -68,14 +60,7 @@ struct deduce_u64<false>
   
   #else
     
-    // #error "don't know how to typedef 'u64' on this system"
-    
-    // use u32 as a last resort
-    
-    typedef u32 u64;
-    
-    static const u64  max   = 0xFFFFFFFF;
-    static const bool trunc = true;
+    #error "don't know how to typedef 'u64' on this system"
     
   #endif
   };

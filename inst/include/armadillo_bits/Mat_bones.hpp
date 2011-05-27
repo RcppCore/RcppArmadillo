@@ -493,7 +493,7 @@ class Mat : public Base< eT, Mat<eT> >
   
   protected:
   
-  inline void init(const u32 in_rows, const u32 in_cols);
+  inline void init(u32 in_rows, u32 in_cols);
   inline void init(const std::string& text);
   inline void init(const Mat& x);
   

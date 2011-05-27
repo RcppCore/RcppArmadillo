@@ -31,7 +31,7 @@ class diagview : public Base<eT, diagview<eT> >
   const u32 col_offset;
   
   const u32 n_rows;  // equal to n_elem
-  const u32 n_cols;  // equal to one if n_elem > 0, otherwise equal to zero
+  const u32 n_cols;  // always 1
   const u32 n_elem;
   
   

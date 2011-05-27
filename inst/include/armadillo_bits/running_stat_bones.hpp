@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -61,13 +61,15 @@ class running_stat
   
   inline void reset();
   
-  inline eT   mean() const;
+  inline eT mean() const;
   
-  inline  T   var   (const u32 norm_type = 0) const;
-  inline  T   stddev(const u32 norm_type = 0) const;
+  inline  T var   (const u32 norm_type = 0) const;
+  inline  T stddev(const u32 norm_type = 0) const;
   
-  inline eT   min()  const;
-  inline eT   max()  const;
+  inline eT min()  const;
+  inline eT max()  const;
+  
+  inline T count() const;
   
   //
   //

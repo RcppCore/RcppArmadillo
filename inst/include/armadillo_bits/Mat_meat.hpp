@@ -82,7 +82,7 @@ Mat<eT>::Mat(const u32 in_n_rows, const u32 in_n_cols)
 template<typename eT>
 inline
 void
-Mat<eT>::init(const u32 in_n_rows, const u32 in_n_cols)
+Mat<eT>::init(u32 in_n_rows, u32 in_n_cols)
   {
   arma_extra_debug_sigprint( arma_boost::format("in_n_rows = %d, in_n_cols = %d") % in_n_rows % in_n_cols );
   
@@ -104,20 +104,31 @@ Mat<eT>::init(const u32 in_n_rows, const u32 in_n_cols)
       "Mat::init(): size is fixed and hence cannot be changed"
       );
     
-    arma_debug_set_error
-      (
-      err_state,
-      err_msg,
-        (
-        (t_vec_state > 0) &&
+    if(t_vec_state > 0)
+      {
+      if( (in_n_rows == 0) && (in_n_cols == 0) )
+        {
+        if(t_vec_state == 1)
+          {
+          in_n_cols = 1;
+          }
+        else
+        if(t_vec_state == 2)
+          {
+          in_n_rows = 1;
+          }
+        }
+      else
+        {
+        arma_debug_set_error
           (
-          ((t_vec_state == 1) && (in_n_cols > 1)) ||
-          ((t_vec_state == 2) && (in_n_rows > 1))
-          )
-        ),
-      "Mat::init(): object is a vector; requested size is not compatible"
-      );
-    
+          err_state,
+          err_msg,
+          ( ((t_vec_state == 1) && (in_n_cols != 1)) || ((t_vec_state == 2) && (in_n_rows != 1)) ),
+          "Mat::init(): object is a vector; requested size is not compatible"
+          );
+        }
+      }
     
     // ensure that n_elem can hold the result of (n_rows * n_cols)
     // (due to a limitation in the C++98 standard: there is no official "long long" variable type)
@@ -542,12 +553,12 @@ Mat<eT>::steal_mem(Mat<eT>& x)
       }
     else
       {
-      if( (t_vec_state == 1) && ( x_n_cols <= 1) )
+      if( (t_vec_state == 1) && ( x_n_cols == 1) )
         {
         layout_ok = true;
         }
       
-      if( (t_vec_state == 2) && ( x_n_rows <= 1) )
+      if( (t_vec_state == 2) && ( x_n_rows == 1) )
         {
         layout_ok = true;
         }
@@ -2101,25 +2112,18 @@ Mat<eT>::diag(const s32 in_id)
   {
   arma_extra_debug_sigprint();
   
-  if(n_elem > 0)
-    {
-    const u32 row_offset = (in_id < 0) ? u32(-in_id) : 0;
-    const u32 col_offset = (in_id > 0) ? u32( in_id) : 0;
-    
-    arma_debug_check
-      (
-      (row_offset >= n_rows) || (col_offset >= n_cols),
-      "Mat::diag(): requested diagonal out of bounds"
-      );
-    
-    const u32 len = (std::min)(n_rows - row_offset, n_cols - col_offset);
-    
-    return diagview<eT>(*this, row_offset, col_offset, len);
-    }
-  else
-    {
-    return diagview<eT>(*this, 0, 0, 0);
-    }
+  const u32 row_offset = (in_id < 0) ? u32(-in_id) : 0;
+  const u32 col_offset = (in_id > 0) ? u32( in_id) : 0;
+  
+  arma_debug_check
+    (
+    ((row_offset > 0) && (row_offset >= n_rows)) || ((col_offset > 0) && (col_offset >= n_cols)),
+    "Mat::diag(): requested diagonal out of bounds"
+    );
+  
+  const u32 len = (std::min)(n_rows - row_offset, n_cols - col_offset);
+  
+  return diagview<eT>(*this, row_offset, col_offset, len);
   }
 
 
@@ -2132,25 +2136,18 @@ Mat<eT>::diag(const s32 in_id) const
   {
   arma_extra_debug_sigprint();
   
-  if(n_elem > 0)
-    {
-    const u32 row_offset = (in_id < 0) ? -in_id : 0;
-    const u32 col_offset = (in_id > 0) ?  in_id : 0;
-    
-    arma_debug_check
-      (
-      (row_offset >= n_rows) || (col_offset >= n_cols),
-      "Mat::diag(): requested diagonal out of bounds"
-      );
-    
-    const u32 len = (std::min)(n_rows - row_offset, n_cols - col_offset);
-    
-    return diagview<eT>(*this, row_offset, col_offset, len);
-    }
-  else
-    {
-    return diagview<eT>(*this, 0, 0, 0);
-    }
+  const u32 row_offset = (in_id < 0) ? -in_id : 0;
+  const u32 col_offset = (in_id > 0) ?  in_id : 0;
+  
+  arma_debug_check
+    (
+    ((row_offset > 0) && (row_offset >= n_rows)) || ((col_offset > 0) && (col_offset >= n_cols)),
+    "Mat::diag(): requested diagonal out of bounds"
+    );
+  
+  const u32 len = (std::min)(n_rows - row_offset, n_cols - col_offset);
+  
+  return diagview<eT>(*this, row_offset, col_offset, len);
   }
 
 
@@ -2196,16 +2193,18 @@ Mat<eT>::swap_cols(const u32 in_col1, const u32 in_col2)
     "Mat::swap_cols(): out of bounds"
     );
   
-  eT* ptr1 = colptr(in_col1);
-  eT* ptr2 = colptr(in_col2);
-  
-  for(u32 row=0; row<n_rows; ++row)
+  if(n_elem > 0)
     {
-    const eT tmp = ptr1[row];
-    ptr1[row]    = ptr2[row];
-    ptr2[row]    = tmp;
+    eT* ptr1 = colptr(in_col1);
+    eT* ptr2 = colptr(in_col2);
+    
+    for(u32 row=0; row<n_rows; ++row)
+      {
+      const eT tmp = ptr1[row];
+      ptr1[row]    = ptr2[row];
+      ptr2[row]    = tmp;
+      }
     }
-  
   }
 
 
@@ -3463,10 +3462,7 @@ arma_warn_unused
 bool
 Mat<eT>::is_vec() const
   {
-  const u32 t_n_rows = n_rows;
-  const u32 t_n_cols = n_cols;
-  
-  return ( (t_n_rows == 1) || (t_n_cols == 1) || ( (t_n_rows == 0) && (t_n_cols == 0) ) );
+  return ( (n_rows == 1) || (n_cols == 1) );
   }
 
 
@@ -3847,11 +3843,11 @@ Mat<eT>::set_size(const u32 in_elem)
     {
     case 0:
     case 1:
-      init(in_elem, (in_elem > 0) ? 1 : 0);
+      init(in_elem, 1);
       break;
     
     case 2:
-      init((in_elem > 0) ? 1 : 0, in_elem);
+      init(1, in_elem);
       break;
       
     default:
@@ -4143,7 +4139,20 @@ Mat<eT>::reset()
   {
   arma_extra_debug_sigprint();
   
-  init(0,0);
+  switch(vec_state)
+    {
+    default:
+      init(0, 0);
+      break;
+      
+    case 1:
+      init(0, 1);
+      break;
+    
+    case 2:
+      init(1, 0);
+      break;
+    }
   }
 
 

@@ -22,6 +22,7 @@ Col<eT>::Col()
   {
   arma_extra_debug_sigprint();
   
+  access::rw(Mat<eT>::n_cols)    = 1;
   access::rw(Mat<eT>::vec_state) = 1;
   }
 
@@ -36,7 +37,7 @@ Col<eT>::Col(const u32 in_n_elem)
   
   access::rw(Mat<eT>::vec_state) = 1;
   
-  Mat<eT>::init(in_n_elem, (in_n_elem > 0) ? 1 : 0);
+  Mat<eT>::init(in_n_elem, 1);
   }
 
 
@@ -179,7 +180,7 @@ Col<eT>::operator=(const Base<eT,T1>& X)
 template<typename eT>
 inline
 Col<eT>::Col(eT* aux_mem, const u32 aux_length, const bool copy_aux_mem, const bool strict)
-  : Mat<eT>(aux_mem, aux_length, ((aux_length > 0) ? 1 : 0), copy_aux_mem, strict)
+  : Mat<eT>(aux_mem, aux_length, 1, copy_aux_mem, strict)
   {
   arma_extra_debug_sigprint();
   
@@ -192,7 +193,7 @@ Col<eT>::Col(eT* aux_mem, const u32 aux_length, const bool copy_aux_mem, const b
 template<typename eT>
 inline
 Col<eT>::Col(const eT* aux_mem, const u32 aux_length)
-  : Mat<eT>(aux_mem, aux_length, ((aux_length > 0) ? 1 : 0))
+  : Mat<eT>(aux_mem, aux_length, 1)
   {
   arma_extra_debug_sigprint();
   
@@ -550,7 +551,7 @@ Col<eT>::fixed<fixed_n_elem>::mem_setup()
   arma_extra_debug_sigprint();
   
   access::rw(Mat<eT>::n_rows)    = fixed_n_elem;
-  access::rw(Mat<eT>::n_cols)    = (fixed_n_elem > 0) ? 1 : 0;
+  access::rw(Mat<eT>::n_cols)    = 1;
   access::rw(Mat<eT>::n_elem)    = fixed_n_elem;
   access::rw(Mat<eT>::vec_state) = 1;
   access::rw(Mat<eT>::mem_state) = 3;
@@ -568,7 +569,7 @@ Col<eT>::fixed<fixed_n_elem>::change_to_row()
   arma_extra_debug_sigprint();
   
   access::rw(Mat<eT>::n_cols) = fixed_n_elem;
-  access::rw(Mat<eT>::n_rows) = (fixed_n_elem > 0) ? 1 : 0;
+  access::rw(Mat<eT>::n_rows) = 1;
   }
 
 
@@ -653,7 +654,7 @@ Col<eT>::fixed<fixed_n_elem>::fixed(eT* aux_mem, const bool copy_aux_mem)
   arma_extra_debug_sigprint_this(this);
   
   access::rw(Mat<eT>::n_rows)    = fixed_n_elem;
-  access::rw(Mat<eT>::n_cols)    = (fixed_n_elem > 0) ? 1 : 0;
+  access::rw(Mat<eT>::n_cols)    = 1;
   access::rw(Mat<eT>::n_elem)    = fixed_n_elem;
   access::rw(Mat<eT>::vec_state) = 1;
   access::rw(Mat<eT>::mem_state) = 3;

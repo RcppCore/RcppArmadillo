@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -50,7 +50,7 @@ arma_counter<eT>::operator++()
   else
     {
     d_count += eT(max_val);
-    i_count =  1;
+    i_count  = 0;
     }
   
   return *this;
@@ -82,8 +82,7 @@ arma_counter<eT>::reset()
 template<typename eT>
 inline
 eT
-arma_counter<eT>::value()
-const
+arma_counter<eT>::value() const
   {
   return d_count + eT(i_count);
   }
@@ -93,8 +92,7 @@ const
 template<typename eT>
 inline
 eT
-arma_counter<eT>::value_plus_1()
-const
+arma_counter<eT>::value_plus_1() const
   {
   const u32 max_val = 0xffffffff;
   
@@ -113,8 +111,7 @@ const
 template<typename eT>
 inline
 eT
-arma_counter<eT>::value_minus_1()
-const
+arma_counter<eT>::value_minus_1() const
   {
   if(i_count > 0)
     {
@@ -222,8 +219,7 @@ running_stat<eT>::reset()
 template<typename eT>
 inline
 eT
-running_stat<eT>::mean()
-const
+running_stat<eT>::mean() const
   {
   arma_extra_debug_sigprint();
   
@@ -236,8 +232,7 @@ const
 template<typename eT>
 inline
 typename running_stat<eT>::T
-running_stat<eT>::var(const u32 norm_type)
-const
+running_stat<eT>::var(const u32 norm_type) const
   {
   arma_extra_debug_sigprint();
   
@@ -267,11 +262,10 @@ const
 template<typename eT>
 inline
 typename running_stat<eT>::T
-running_stat<eT>::stddev(const u32 norm_type)
-const
+running_stat<eT>::stddev(const u32 norm_type) const
   {
   arma_extra_debug_sigprint();
-
+  
   return std::sqrt( (*this).var(norm_type) );
   }
 
@@ -281,8 +275,7 @@ const
 template<typename eT>
 inline
 eT
-running_stat<eT>::min()
-const
+running_stat<eT>::min() const
   {
   arma_extra_debug_sigprint();
   
@@ -295,12 +288,24 @@ const
 template<typename eT>
 inline
 eT
-running_stat<eT>::max()
-const
+running_stat<eT>::max() const
   {
   arma_extra_debug_sigprint();
-
+  
   return max_val;
+  }
+
+
+
+//! number of samples so far
+template<typename eT>
+inline
+typename get_pod_type<eT>::result
+running_stat<eT>::count() const
+  {
+  arma_extra_debug_sigprint();
+  
+  return counter.value();
   }
 
 

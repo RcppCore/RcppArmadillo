@@ -43,7 +43,7 @@ template<> struct promote_type<std::complex<double>, std::complex<float> > : pub
 template<> struct promote_type<std::complex<double>, float>                : public promote_type_ok { typedef std::complex<double> result; };
 template<> struct promote_type<std::complex<float>,  double>               : public promote_type_ok { typedef std::complex<double> result; };
 
-template<typename T> struct promote_type<std::complex<T>, u64> : public promote_type_ok { typedef std::complex<T> result; };
+// template<typename T> struct promote_type<std::complex<T>, u64> : public promote_type_ok { typedef std::complex<T> result; };
 template<typename T> struct promote_type<std::complex<T>, s32> : public promote_type_ok { typedef std::complex<T> result; };
 template<typename T> struct promote_type<std::complex<T>, u32> : public promote_type_ok { typedef std::complex<T> result; };
 template<typename T> struct promote_type<std::complex<T>, s16> : public promote_type_ok { typedef std::complex<T> result; };
@@ -53,7 +53,7 @@ template<typename T> struct promote_type<std::complex<T>, u8>  : public promote_
 
 
 template<> struct promote_type<double, float> : public promote_type_ok { typedef double result; };
-template<> struct promote_type<double, u64  > : public promote_type_ok { typedef double result; };
+// template<> struct promote_type<double, u64  > : public promote_type_ok { typedef double result; };
 template<> struct promote_type<double, s32  > : public promote_type_ok { typedef double result; };
 template<> struct promote_type<double, u32  > : public promote_type_ok { typedef double result; };
 template<> struct promote_type<double, s16  > : public promote_type_ok { typedef double result; };
@@ -61,7 +61,7 @@ template<> struct promote_type<double, u16  > : public promote_type_ok { typedef
 template<> struct promote_type<double, s8   > : public promote_type_ok { typedef double result; };
 template<> struct promote_type<double, u8   > : public promote_type_ok { typedef double result; };
 
-template<> struct promote_type<float, u64> : public promote_type_ok { typedef float result; };
+// template<> struct promote_type<float, u64> : public promote_type_ok { typedef float result; };
 template<> struct promote_type<float, s32> : public promote_type_ok { typedef float result; };
 template<> struct promote_type<float, u32> : public promote_type_ok { typedef float result; };
 template<> struct promote_type<float, s16> : public promote_type_ok { typedef float result; };
@@ -69,9 +69,9 @@ template<> struct promote_type<float, u16> : public promote_type_ok { typedef fl
 template<> struct promote_type<float, s8 > : public promote_type_ok { typedef float result; };
 template<> struct promote_type<float, u8 > : public promote_type_ok { typedef float result; };
 
-template<> struct promote_type<u64, u32> : public promote_type_ok { typedef u64 result; };
-template<> struct promote_type<u64, u16> : public promote_type_ok { typedef u64 result; };
-template<> struct promote_type<u64, u8 > : public promote_type_ok { typedef u64 result; };
+// template<> struct promote_type<u64, u32> : public promote_type_ok { typedef u64 result; };
+// template<> struct promote_type<u64, u16> : public promote_type_ok { typedef u64 result; };
+// template<> struct promote_type<u64, u8 > : public promote_type_ok { typedef u64 result; };
 
 template<> struct promote_type<s32, u32> : public promote_type_ok { typedef s32 result; };  // float ?  
 template<> struct promote_type<s32, s16> : public promote_type_ok { typedef s32 result; };
@@ -105,7 +105,7 @@ template<> struct promote_type<std::complex<float>, std::complex<double> > : pub
 template<> struct promote_type<float,               std::complex<double> > : public promote_type_ok { typedef std::complex<double> result; };
 template<> struct promote_type<double,              std::complex<float>  > : public promote_type_ok { typedef std::complex<double> result; };
 
-template<typename T> struct promote_type<u64, std::complex<T> > : public promote_type_ok { typedef std::complex<T> result; };
+// template<typename T> struct promote_type<u64, std::complex<T> > : public promote_type_ok { typedef std::complex<T> result; };
 template<typename T> struct promote_type<s32, std::complex<T> > : public promote_type_ok { typedef std::complex<T> result; };
 template<typename T> struct promote_type<u32, std::complex<T> > : public promote_type_ok { typedef std::complex<T> result; };
 template<typename T> struct promote_type<s16, std::complex<T> > : public promote_type_ok { typedef std::complex<T> result; };
@@ -115,7 +115,7 @@ template<typename T> struct promote_type<u8,  std::complex<T> > : public promote
 
 
 template<> struct promote_type<float, double> : public promote_type_ok { typedef double result; };
-template<> struct promote_type<u64  , double> : public promote_type_ok { typedef double result; };
+// template<> struct promote_type<u64  , double> : public promote_type_ok { typedef double result; };
 template<> struct promote_type<s32  , double> : public promote_type_ok { typedef double result; };
 template<> struct promote_type<u32  , double> : public promote_type_ok { typedef double result; };
 template<> struct promote_type<s16  , double> : public promote_type_ok { typedef double result; };
@@ -123,7 +123,7 @@ template<> struct promote_type<u16  , double> : public promote_type_ok { typedef
 template<> struct promote_type<s8   , double> : public promote_type_ok { typedef double result; };
 template<> struct promote_type<u8   , double> : public promote_type_ok { typedef double result; };
 
-template<> struct promote_type<u64, float> : public promote_type_ok { typedef float result; };
+// template<> struct promote_type<u64, float> : public promote_type_ok { typedef float result; };
 template<> struct promote_type<s32, float> : public promote_type_ok { typedef float result; };
 template<> struct promote_type<u32, float> : public promote_type_ok { typedef float result; };
 template<> struct promote_type<s16, float> : public promote_type_ok { typedef float result; };
@@ -131,9 +131,9 @@ template<> struct promote_type<u16, float> : public promote_type_ok { typedef fl
 template<> struct promote_type<s8 , float> : public promote_type_ok { typedef float result; };
 template<> struct promote_type<u8 , float> : public promote_type_ok { typedef float result; };
 
-template<> struct promote_type<u32, u64> : public promote_type_ok { typedef u64 result; };
-template<> struct promote_type<u16, u64> : public promote_type_ok { typedef u64 result; };
-template<> struct promote_type<u8,  u64> : public promote_type_ok { typedef u64 result; };
+// template<> struct promote_type<u32, u64> : public promote_type_ok { typedef u64 result; };
+// template<> struct promote_type<u16, u64> : public promote_type_ok { typedef u64 result; };
+// template<> struct promote_type<u8,  u64> : public promote_type_ok { typedef u64 result; };
 
 template<> struct promote_type<u32, s32> : public promote_type_ok { typedef s32 result; };  // float ?  
 template<> struct promote_type<s16, s32> : public promote_type_ok { typedef s32 result; };
