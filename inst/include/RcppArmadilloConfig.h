@@ -37,7 +37,7 @@
 
 
 /* TODO: we might need to undef this on other platforms as well */
-#if defined(__GNUC__) && defined(_WIN64)
+#if defined(__GNUC__) && defined(_WIN64) || defined(__FreeBSD__)
 #undef ARMA_HAVE_STD_SNPRINTF
 #endif
 

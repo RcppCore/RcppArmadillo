@@ -1,3 +1,8 @@
+2011-05-30  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/RcppArmadilloConfig.h: Enable sprintf on FreeBSD by
+	undefining ARMA_HAVE_STD_SNPRINTF thanks to patch by Rainer Hurling
+
 2011-05-27  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.2.21
