@@ -95,10 +95,9 @@ op_strans::apply_noalias_tinysq(Mat<eT>& out, const Mat<eT>& A)
 template<typename eT>
 inline
 void
-op_strans::apply_noalias(Mat<eT>& out, const Mat<eT>& A, const typename arma_not_cx<eT>::result* junk)
+op_strans::apply_noalias(Mat<eT>& out, const Mat<eT>& A)
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
   const u32 A_n_cols = A.n_cols;
   const u32 A_n_rows = A.n_rows;
@@ -126,41 +125,6 @@ op_strans::apply_noalias(Mat<eT>& out, const Mat<eT>& A, const typename arma_not
           const u32 out_row = in_col;
           out.at(out_row, out_col) = A.at(in_row, in_col);
           }
-        }
-      }
-    }
-  }
-
-
-
-//! Immediate transpose of a dense matrix
-template<typename eT>
-inline
-void
-op_strans::apply_noalias(Mat<eT>& out, const Mat<eT>& A, const typename arma_cx_only<eT>::result* junk)
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk);
-  
-  const u32 A_n_cols = A.n_cols;
-  const u32 A_n_rows = A.n_rows;
-  
-  out.set_size(A_n_cols, A_n_rows);
-  
-  if( (A_n_cols == 1) || (A_n_rows == 1) )
-    {
-    arrayops::copy( out.memptr(), A.mem, A.n_elem );
-    }
-  else
-    {
-    for(u32 in_row = 0; in_row<A_n_rows; ++in_row)
-      {
-      const u32 out_col = in_row;
-      
-      for(u32 in_col = 0; in_col<A_n_cols; ++in_col)
-        {
-        const u32 out_row = in_col;
-        out.at(out_row, out_col) = A.at(in_row, in_col);
         }
       }
     }

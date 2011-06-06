@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -19,7 +19,7 @@
 template<typename eT>
 inline
 void
-op_inv::apply(Mat<eT>& out, const Mat<eT>& A)
+op_inv::apply(Mat<eT>& out, const Mat<eT>& A, const bool slow)
   {
   arma_extra_debug_sigprint();
   
@@ -27,7 +27,7 @@ op_inv::apply(Mat<eT>& out, const Mat<eT>& A)
   // - auxlib::inv() copies A to out before inversion
   // - for 2x2 and 3x3 matrices the code is alias safe
   
-  auxlib::inv(out, A);
+  auxlib::inv(out, A, slow);
   }
 
 
@@ -50,7 +50,16 @@ op_inv::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv>& X)
     }
   else
     {
-    auxlib::inv(out, X.m);
+    const u32 mode = X.aux_u32_a;
+    
+    if(mode == 0)
+      {
+      auxlib::inv(out, X.m);
+      }
+    else
+      {
+      auxlib::inv(out, X.m, true);
+      }
     }
   }
 

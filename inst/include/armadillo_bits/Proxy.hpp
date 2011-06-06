@@ -85,7 +85,7 @@ class Proxy< Col<eT> >
     }
   
   arma_inline u32 get_n_rows() const { return Q.n_rows; }
-  arma_inline u32 get_n_cols() const { return Q.n_cols; }
+  arma_inline u32 get_n_cols() const { return 1;        }
   arma_inline u32 get_n_elem() const { return Q.n_elem; }
   
   arma_inline elem_type operator[] (const u32 i)                  const { return Q[i];           }
@@ -117,7 +117,7 @@ class Proxy< Row<eT> >
     arma_extra_debug_sigprint();
     }
   
-  arma_inline u32 get_n_rows() const { return Q.n_rows; }
+  arma_inline u32 get_n_rows() const { return 1;        }
   arma_inline u32 get_n_cols() const { return Q.n_cols; }
   arma_inline u32 get_n_elem() const { return Q.n_elem; }
   
@@ -250,7 +250,7 @@ class Proxy< subview_elem1<eT,T1> >
     }
   
   arma_inline u32 get_n_rows() const { return Q.n_rows; }
-  arma_inline u32 get_n_cols() const { return Q.n_cols; }
+  arma_inline u32 get_n_cols() const { return 1;        }
   arma_inline u32 get_n_elem() const { return Q.n_elem; }
   
   arma_inline elem_type operator[] (const u32 i)                  const { return Q[i];           }
@@ -283,7 +283,7 @@ class Proxy< diagview<eT> >
     }
   
   arma_inline u32 get_n_rows() const { return Q.n_rows; }
-  arma_inline u32 get_n_cols() const { return Q.n_cols; }
+  arma_inline u32 get_n_cols() const { return 1;        }
   arma_inline u32 get_n_elem() const { return Q.n_elem; }
   
   arma_inline elem_type operator[] (const u32 i)                  const { return Q[i];           }

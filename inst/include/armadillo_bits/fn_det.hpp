@@ -21,13 +21,18 @@ template<typename T1>
 inline
 arma_warn_unused
 typename T1::elem_type
-det(const Base<typename T1::elem_type,T1>& X, const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0)
+det
+  (
+  const Base<typename T1::elem_type,T1>& X,
+  const bool slow = false,
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  )
   {
   arma_extra_debug_sigprint();
   
   arma_ignore(junk);
   
-  return auxlib::det(X);
+  return auxlib::det(X, slow);
   }
 
 
@@ -37,9 +42,14 @@ template<typename T1>
 inline
 arma_warn_unused
 typename T1::elem_type
-det(const Op<T1, op_diagmat>& X)
+det
+  (
+  const Op<T1, op_diagmat>& X,
+  const bool slow = false
+  )
   {
   arma_extra_debug_sigprint();
+  arma_ignore(slow);
   
   typedef typename T1::elem_type eT;
   
@@ -47,14 +57,9 @@ det(const Op<T1, op_diagmat>& X)
   
   const u32 A_n_elem = A.n_elem;
   
-  if(A_n_elem == 0)
-    {
-    return eT(1);
-    }
+  eT val = eT(1);
   
-  eT val = A[0];
-  
-  for(u32 i=1; i<A_n_elem; ++i)
+  for(u32 i=0; i<A_n_elem; ++i)
     {
     val *= A[i];
     }
@@ -69,15 +74,19 @@ template<typename T1>
 inline
 arma_warn_unused
 typename T1::elem_type
-det(const Op<T1,op_inv>& in, const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0)
+det
+  (
+  const Op<T1,op_inv>& in,
+  const bool slow = false,
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  )
   {
   arma_extra_debug_sigprint();
-  
   arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
   
-  eT tmp = det(in.m);
+  eT tmp = det(in.m, slow);
   arma_warn( (tmp == eT(0)), "det(): warning: denominator is zero" );
   
   return eT(1) / tmp;
@@ -90,18 +99,21 @@ template<typename T1>
 inline
 arma_warn_unused
 typename T1::elem_type
-det(const Op<T1,op_htrans>& in, const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0)
+det
+  (
+  const Op<T1,op_htrans>& in,
+  const bool slow = false,
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
-  
   arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
   
   const unwrap<T1>   tmp(in.m);
   const Mat<eT>& X = tmp.M;
-
-  return det(X);
+  
+  return det(X, slow);
   }
 
 

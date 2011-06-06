@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -31,13 +31,14 @@ solve
   (
   const Base<typename T1::elem_type,T1>& A,
   const Base<typename T1::elem_type,T2>& B,
+  const bool slow = false,
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
   )
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  return Glue<T1, T2, glue_solve>(A.get_ref(), B.get_ref());
+  return Glue<T1, T2, glue_solve>(A.get_ref(), B.get_ref(), ((slow == false) ? 0 : 1) );
   }
 
 
@@ -49,10 +50,12 @@ solve
   (
   const Op<T1, op_trimat>& A,
   const Base<typename T1::elem_type,T2>& B,
+  const bool slow = false,
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
   )
   {
   arma_extra_debug_sigprint();
+  arma_ignore(slow);
   arma_ignore(junk);
   
   return Glue<T1, T2, glue_solve_tr>(A.m, B.get_ref(), A.aux_u32_a);
@@ -68,13 +71,14 @@ solve
   Mat<typename T1::elem_type>& out,
   const Base<typename T1::elem_type,T1>& A,
   const Base<typename T1::elem_type,T2>& B,
+  const bool slow = false,
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
   )
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  out = solve( A.get_ref(), B.get_ref() );
+  out = solve( A.get_ref(), B.get_ref(), slow );
   
   return (out.n_elem == 0) ? false : true;
   }

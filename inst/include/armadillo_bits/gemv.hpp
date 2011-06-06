@@ -16,9 +16,9 @@
 
 
 
-//! for tiny square matrices with n_rows <= 4
+//! for tiny square matrices, size <= 4x4
 template<const bool do_trans_A=false, const bool use_alpha=false, const bool use_beta=false>
-class gemv_emul_tiny
+class gemv_emul_tinysq
   {
   public:
   
@@ -159,6 +159,31 @@ class gemv_emul_large
     
     if(do_trans_A == false)
       {
+      if(A_n_rows == 1)
+        {
+        const eT acc = op_dot::direct_dot_arma(A_n_cols, A.mem, x);
+        
+        if( (use_alpha == false) && (use_beta == false) )
+          {
+          y[0] = acc;
+          }
+        else
+        if( (use_alpha == true) && (use_beta == false) )
+          {
+          y[0] = alpha * acc;
+          }
+        else
+        if( (use_alpha == false) && (use_beta == true) )
+          {
+          y[0] = acc + beta*y[0];
+          }
+        else
+        if( (use_alpha == true) && (use_beta == true) )
+          {
+          y[0] = alpha*acc + beta*y[0];
+          }
+        }
+      else
       for(u32 row=0; row < A_n_rows; ++row)
         {
         eT acc = eT(0);
@@ -250,13 +275,16 @@ class gemv_emul
     arma_extra_debug_sigprint();
     arma_ignore(junk);
     
-    if( A.n_rows > 4 )
+    const u32 A_n_rows = A.n_rows;
+    const u32 A_n_cols = A.n_cols;
+    
+    if( (A_n_rows <= 4) && (A_n_rows == A_n_cols) )
       {
-      gemv_emul_large<do_trans_A, use_alpha, use_beta>::apply(y, A, x, alpha, beta);
+      gemv_emul_tinysq<do_trans_A, use_alpha, use_beta>::apply(y, A, x, alpha, beta);
       }
     else
       {
-      gemv_emul_tiny<do_trans_A, use_alpha, use_beta>::apply(y, A, x, alpha, beta);
+      gemv_emul_large<do_trans_A, use_alpha, use_beta>::apply(y, A, x, alpha, beta);
       }
     }
   
@@ -280,13 +308,16 @@ class gemv_emul
     
     const Mat<eT>& AA = (do_trans_A == false) ? A : tmp_A;
     
-    if( AA.n_rows > 4 )
+    const u32 AA_n_rows = AA.n_rows;
+    const u32 AA_n_cols = AA.n_cols;
+    
+    if( (AA_n_rows <= 4) && (AA_n_rows == AA_n_cols) )
       {
-      gemv_emul_large<false, use_alpha, use_beta>::apply(y, AA, x, alpha, beta);
+      gemv_emul_tinysq<false, use_alpha, use_beta>::apply(y, AA, x, alpha, beta);
       }
     else
       {
-      gemv_emul_tiny<false, use_alpha, use_beta>::apply(y, AA, x, alpha, beta);
+      gemv_emul_large<false, use_alpha, use_beta>::apply(y, AA, x, alpha, beta);
       }
     }
   };

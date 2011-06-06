@@ -1,3 +1,9 @@
+2011-06-06  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.2.22
+
+	* inst/include/*: Updated to release 1.99.4 of Armadillo
+
 2011-05-30  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/RcppArmadilloConfig.h: Enable sprintf on FreeBSD by

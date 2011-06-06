@@ -33,10 +33,7 @@ class op_strans
   inline static void apply_noalias_tinysq(Mat<eT>& out, const Mat<eT>& A);
   
   template<typename eT>
-  inline static void apply_noalias(Mat<eT>& out, const Mat<eT>& A, const typename arma_not_cx<eT>::result* junk = 0);
-  
-  template<typename eT>
-  inline static void apply_noalias(Mat<eT>& out, const Mat<eT>& A, const typename arma_cx_only<eT>::result* junk = 0);
+  inline static void apply_noalias(Mat<eT>& out, const Mat<eT>& A);
   
   template<typename eT>
   inline static void apply(Mat<eT>& out, const Mat<eT>& A);
