@@ -16,7 +16,7 @@
 
 
 
-//! for small square matrices with n_rows <= 4
+//! for tiny square matrices, size <= 4x4
 template<const bool do_trans_A=false, const bool use_alpha=false, const bool use_beta=false>
 class gemm_emul_tinysq
   {
@@ -42,22 +42,22 @@ class gemm_emul_tinysq
     switch(A.n_rows)
       {
       case 4:
-        gemv_emul_tiny<do_trans_A, use_alpha, use_beta>::apply( C.colptr(3), A, B.colptr(3), alpha, beta );
+        gemv_emul_tinysq<do_trans_A, use_alpha, use_beta>::apply( C.colptr(3), A, B.colptr(3), alpha, beta );
         
       case 3:
-        gemv_emul_tiny<do_trans_A, use_alpha, use_beta>::apply( C.colptr(2), A, B.colptr(2), alpha, beta );
+        gemv_emul_tinysq<do_trans_A, use_alpha, use_beta>::apply( C.colptr(2), A, B.colptr(2), alpha, beta );
         
       case 2:
-        gemv_emul_tiny<do_trans_A, use_alpha, use_beta>::apply( C.colptr(1), A, B.colptr(1), alpha, beta );
+        gemv_emul_tinysq<do_trans_A, use_alpha, use_beta>::apply( C.colptr(1), A, B.colptr(1), alpha, beta );
         
       case 1:
-        gemv_emul_tiny<do_trans_A, use_alpha, use_beta>::apply( C.colptr(0), A, B.colptr(0), alpha, beta );
+        gemv_emul_tinysq<do_trans_A, use_alpha, use_beta>::apply( C.colptr(0), A, B.colptr(0), alpha, beta );
         
       default:
         ;
       }
     }
-
+  
   };
 
 

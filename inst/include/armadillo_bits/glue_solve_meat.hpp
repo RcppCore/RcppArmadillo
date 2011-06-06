@@ -36,7 +36,16 @@ glue_solve::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_solve>
   
   if(A.n_rows == A.n_cols)
     {
-    status = auxlib::solve(out, A, B);
+    const u32 mode = X.aux_u32;
+    
+    if(mode == 0)
+      {
+      status = auxlib::solve(out, A, B);
+      }
+    else
+      {
+      status = auxlib::solve(out, A, B, true);
+      }
     }
   else
   if(A.n_rows > A.n_cols)
@@ -74,9 +83,14 @@ glue_solve_tr::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_sol
   const Mat<eT>& A = A_tmp.M;
   const Mat<eT>& B = B_tmp.M;
   
-  arma_debug_check( ( (&A) == (&B) ),         "solve(): A is an alias of B" );
-  arma_debug_check( (A.n_rows != B.n_rows),   "solve(): number of rows in A and B must be the same" );
-  arma_debug_check( (A.is_square() == false), "solve(): A is not a square matrix" );
+  bool  err_state = false;
+  char* err_msg   = 0;
+  
+  arma_debug_set_error( err_state, err_msg, ((&A) == (&B)),           "solve(): A is an alias of B" );
+  arma_debug_set_error( err_state, err_msg, (A.n_rows != B.n_rows),   "solve(): number of rows in A and B must be the same" );
+  arma_debug_set_error( err_state, err_msg, (A.is_square() == false), "solve(): A is not a square matrix" );
+  
+  arma_debug_check(err_state, err_msg);
   
   const bool status = auxlib::solve_tr(out, A, B, X.aux_u32);
   

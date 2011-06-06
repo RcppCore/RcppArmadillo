@@ -29,6 +29,19 @@ strans(const Base<typename T1::elem_type,T1>& X, const typename arma_cx_only<typ
 
 
 
+template<typename T1>
+arma_inline
+const Op<T1, op_htrans>
+strans(const Base<typename T1::elem_type,T1>& X, const typename arma_not_cx<typename T1::elem_type>::result* junk = 0)
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  return Op<T1, op_htrans>(X.get_ref());
+  }
+
+
+
 //! two consecutive transpose operations cancel each other
 template<typename T1>
 arma_inline

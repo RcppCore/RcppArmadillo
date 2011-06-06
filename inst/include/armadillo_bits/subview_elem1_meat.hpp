@@ -585,7 +585,7 @@ subview_elem1<eT,T1>::extract(Mat<eT>& actual_out, const subview_elem1<eT,T1>& i
   Mat<eT>* tmp_out = alias ? new Mat<eT>() : 0;
   Mat<eT>& out     = alias ? *tmp_out      : actual_out;
   
-  out.set_size(aa_n_elem);
+  out.set_size(aa_n_elem, 1);
   
   eT* out_mem = out.memptr();
   
