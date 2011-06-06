@@ -1,6 +1,6 @@
 0.2.22  2011-06-06
 
-    o   Upgraded to Armadillo release 1.99.3 "v2.0 beta 3" 
+    o   Upgraded to Armadillo release 1.99.4 "v2.0 beta 4" 
 
           * fixes for handling of tiny matrices
 
