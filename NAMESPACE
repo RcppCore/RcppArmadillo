@@ -1,12 +1,12 @@
 useDynLib(RcppArmadillo)
 
 export(fastLmPure,
-       fastLm,
-       fastLm.default,
-       fastLm.formula,
-       predict.fastLm,
-       print.fastLm,
-       summary.fastLm,
-       print.summary.fastLm)
+       fastLm)
 export(RcppArmadillo.package.skeleton)
+S3method(fastLm, default)
+S3method(fastLm, formula)
+S3method(predict, fastLm)
+S3method(print, fastLm)
+S3method(summary, fastLm)
+S3method(print, summary.fastLm)
 
