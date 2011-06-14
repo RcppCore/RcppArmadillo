@@ -18,28 +18,28 @@
 ## You should have received a copy of the GNU General Public License
 ## along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
-fastLmPure <- function(y, X) {
+fastLmPure <- function(X, y) {
 
     stopifnot(is.matrix(X))
     stopifnot(nrow(y)==nrow(X))
 
-    res <- .Call("fastLm", y, X, package="RcppArmadillo")
+    .Call("fastLm", X, y, package = "RcppArmadillo")
 }
 
-fastLm <- function(x, ...) UseMethod("fastLm")
+fastLm <- function(X, ...) UseMethod("fastLm")
 
-fastLm.default <- function(x, y, ...) {
+fastLm.default <- function(X, y, ...) {
 
-    x <- as.matrix(x)
+    X <- as.matrix(X)
     y <- as.numeric(y)
 
-    res <- fastLmPure(y, x)
+    res <- fastLmPure(X, y)
 
-    res$coefficients <- res$coefficient[,1] # force into single-col vector
+    res$coefficients <- as.vector(res$coefficient)
 
-    names(res$coefficients) <- colnames(x)
+    names(res$coefficients) <- colnames(X)
 
-    res$fitted.values <- as.vector(x %*% res$coefficients)
+    res$fitted.values <- as.vector(X %*% res$coefficients)
     res$residuals <- y - res$fitted.values
     res$call <- match.call()
 
@@ -65,7 +65,7 @@ summary.fastLm <- function(object, ...) {
 
     # why do I need this here?
     rownames(TAB) <- names(object$coefficients)
-    colnames(TAB) <- c("Estimate", "StdErr", "t.value", "p.value")
+#    colnames(TAB) <- c("Estimate", "StdErr", "t.value", "p.value")
 
     ## cf src/stats/R/lm.R and case with no weights and an intercept
     f <- object$fitted.values

@@ -25,8 +25,8 @@
 test.fastLm <- function() {
     data(trees)
     flm <- .Call("fastLm",
-                 log(trees$Volume),
                  cbind(1, log(trees$Girth)),
+                 log(trees$Volume),
                  package="RcppArmadillo")
     fit <- lm(log(Volume) ~ log(Girth), data=trees)
 

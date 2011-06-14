@@ -21,23 +21,26 @@
 
 #include <RcppArmadillo.h>
 
-extern "C" SEXP fastLm(SEXP ys, SEXP Xs) {
+extern "C" SEXP fastLm(SEXP Xs, SEXP ys) {
 
     try {
-	arma::colvec y = Rcpp::as<arma::colvec>(ys);	// direct from SEXP to arma::mat
-	arma::mat X    = Rcpp::as<arma::mat>(Xs);
-	int df = X.n_rows - X.n_cols;
+	Rcpp::NumericVector yr(ys);                     // creates Rcpp vector from SEXP
+	Rcpp::NumericMatrix Xr(Xs);                     // creates Rcpp matrix from SEXP
+	int n = Xr.nrow(), k = Xr.ncol();
+	arma::mat X(Xr.begin(), n, k, false);           // reuses memory and avoids extra copy
+	arma::colvec y(yr.begin(), yr.size(), false);
+
 
 	arma::colvec coef = arma::solve(X, y);      	// fit model y ~ X
 	arma::colvec res  = y - X*coef;			// residuals
 
-	double s2 = std::inner_product(res.begin(), res.end(), res.begin(), 0.0)/df;
+	double s2 = std::inner_product(res.begin(), res.end(), res.begin(), 0.0)/(n - k);
 							// std.errors of coefficients
 	arma::colvec std_err = arma::sqrt(s2 * arma::diagvec( arma::pinv(arma::trans(X)*X) ));	
 
 	return Rcpp::List::create(Rcpp::Named("coefficients") = coef,
 				  Rcpp::Named("stderr")       = std_err,
-				  Rcpp::Named("df")           = df
+				  Rcpp::Named("df.residual")  = n - k
 				  );
 
     } catch( std::exception &ex ) {
