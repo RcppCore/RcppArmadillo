@@ -1,3 +1,8 @@
+2011-06-13  Douglas Bates <bates@stat.wisc.edu>
+
+	* NAMESPACE: Properly export S3methods as such
+	* man/fastLm.Rd: Similar updates to help page
+
 2011-06-06  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.2.22

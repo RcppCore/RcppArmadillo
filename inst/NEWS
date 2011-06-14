@@ -1,3 +1,7 @@
+0.2.23  2011-xx-yy
+
+    o   Export and document S3 methods in NAMESPACE and manual page as such
+
 0.2.22  2011-06-06
 
     o   Upgraded to Armadillo release 1.99.4 "v2.0 beta 4" 
