@@ -1,3 +1,13 @@
+2011-06-14  Douglas Bates <bates@stat.wisc.edu>
+
+	* DESCRIPTION, R/fastLm.R, inst/unitTests/runit.fastLm.R, man/fastLm.Rd,
+	  src/fastLm.cpp: Change order of arguments in fastLm.cpp and fastLm.R
+	  and documentation. New version.
+
+2011-06-14  Dirk Eddelbuettel  <edd@debian.org>
+
+	* ChangeLog, inst/NEWS: ChangeLog and NEWS entry for Doug's S3 fixes
+
 2011-06-13  Douglas Bates <bates@stat.wisc.edu>
 
 	* NAMESPACE: Properly export S3methods as such
