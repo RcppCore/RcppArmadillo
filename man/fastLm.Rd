@@ -69,8 +69,7 @@ fastLm(X, \dots)
   Romain Francois, Dirk Eddelbuettel and Douglas Bates.
 }
 \examples{
-  require(datasets)
-#  data(trees)  # Unnecessary - the datasets package uses LazyData
+  data(trees, package="datasets")
 
   ## bare-bones direct interface
   flm <- fastLmPure( cbind(1, log(trees$Girth)), log(trees$Volume) )
