@@ -1,5 +1,6 @@
 // Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
 // Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2011 Stanislav Funiak
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -19,34 +20,69 @@
 template<typename T>
 inline
 std::ostream&
-arma_log_stream(std::ostream* user_stream)
+arma_stream_err1(std::ostream* user_stream)
   {
-  static std::ostream* log_stream = &(std::cout);
+  static std::ostream* stream_err1 = &(std::cout);
   
   if(user_stream != NULL)
     {
-    log_stream = user_stream;
+    stream_err1 = user_stream;
     }
   
-  return *log_stream;
+  return *stream_err1;
+  }
+
+
+
+template<typename T>
+inline
+std::ostream&
+arma_stream_err2(std::ostream* user_stream)
+  {
+  static std::ostream* stream_err2 = &(std::cout);
+  
+  if(user_stream != NULL)
+    {
+    stream_err2 = user_stream;
+    }
+  
+  return *stream_err2;
   }
 
 
 
 inline
 void
-set_log_stream(std::ostream& user_stream)
+set_stream_err1(std::ostream& user_stream)
   {
-  arma_log_stream<char>(&user_stream);
+  arma_stream_err1<char>(&user_stream);
+  }
+
+
+
+inline
+void
+set_stream_err2(std::ostream& user_stream)
+  {
+  arma_stream_err2<char>(&user_stream);
   }
 
 
 
 inline
 std::ostream&
-get_log_stream()
+get_stream_err1()
   {
-  return arma_log_stream<char>(NULL);
+  return arma_stream_err1<char>(NULL);
+  }
+
+
+
+inline
+std::ostream&
+get_stream_err2()
+  {
+  return arma_stream_err2<char>(NULL);
   }
 
 
@@ -54,23 +90,86 @@ get_log_stream()
 //
 // arma_stop
 
-//! print a message to get_log_stream() and/or throw a run-time error exception
+//! print a message to get_stream_err1() and/or throw a logic_error exception
 template<typename T1>
 inline
 void
 arma_cold
 arma_stop(const T1& x)
   {
-  std::ostream& log_stream = get_log_stream();
+  #if defined(ARMA_PRINT_LOGIC_ERRORS)
+    {
+    std::ostream& out = get_stream_err1();
+    
+    out.flush();
+    
+    out << '\n';
+    out << "error: " << x << '\n';
+    out << '\n';
+    out.flush();
+    }
+  #else
+    {
+    arma_ignore(x);
+    }
+  #endif
   
-  log_stream.flush();
+  throw std::logic_error("");
+  }
+
+
+
+template<typename T1>
+inline
+void
+arma_cold
+arma_stop_bad_alloc(const T1& x)
+  {
+  std::ostream& out = get_stream_err1();
   
-  log_stream << '\n';
-  log_stream << "run-time error: " << x << '\n';
-  log_stream << '\n';
-  log_stream.flush();
+  out.flush();
   
-  throw std::runtime_error("");
+  out << '\n';
+  out << "error: " << x << '\n';
+  out << '\n';
+  out.flush();
+  
+  throw std::bad_alloc();
+  }
+
+
+
+//
+// arma_bad
+
+//! print a message to get_stream_err2() and/or throw a run-time error exception
+template<typename T1>
+inline
+void
+arma_cold
+arma_bad(const T1& x, const bool hurl = true)
+  {
+  #if defined(ARMA_PRINT_RUNTIME_ERRORS)
+    {
+    std::ostream& out = get_stream_err2();
+    
+    out.flush();
+    
+    out << '\n';
+    out << "error: " << x << '\n';
+    out << '\n';
+    out.flush();
+    }
+  #else
+    {
+    arma_ignore(x);
+    }
+  #endif
+  
+  if(hurl == true)
+    {
+    throw std::runtime_error("");
+    }
   }
 
 
@@ -84,7 +183,7 @@ void
 arma_cold
 arma_print()
   {
-  get_log_stream() << std::endl;
+  get_stream_err1() << std::endl;
   }
 
 
@@ -94,7 +193,7 @@ void
 arma_cold
 arma_print(const T1& x)
   {
-  get_log_stream() << x << std::endl;
+  get_stream_err1() << x << std::endl;
   }
 
 
@@ -105,7 +204,7 @@ void
 arma_cold
 arma_print(const T1& x, const T2& y)
   {
-  get_log_stream() << x << y << std::endl;
+  get_stream_err1() << x << y << std::endl;
   }
 
 
@@ -116,7 +215,7 @@ void
 arma_cold
 arma_print(const T1& x, const T2& y, const T3& z)
   {
-  get_log_stream() << x << y << z << std::endl;
+  get_stream_err1() << x << y << z << std::endl;
   }
 
 
@@ -135,7 +234,7 @@ inline
 void
 arma_sigprint(const char* x)
   {
-  get_log_stream() << "@ " << x;
+  get_stream_err1() << "@ " << x;
   }
 
 
@@ -148,7 +247,7 @@ inline
 void
 arma_bktprint()
   {
-  get_log_stream() << std::endl;
+  get_stream_err1() << std::endl;
   }
 
 
@@ -157,7 +256,7 @@ inline
 void
 arma_bktprint(const T1& x)
   {
-  get_log_stream() << " [" << x << ']' << std::endl;
+  get_stream_err1() << " [" << x << ']' << std::endl;
   }
 
 
@@ -167,7 +266,7 @@ inline
 void
 arma_bktprint(const T1& x, const T2& y)
   {
-  get_log_stream() << " [" << x << y << ']' << std::endl;
+  get_stream_err1() << " [" << x << y << ']' << std::endl;
   }
 
 
@@ -178,12 +277,11 @@ arma_bktprint(const T1& x, const T2& y)
 //
 // arma_thisprint
 
-
 inline
 void
-arma_thisprint(void* this_ptr)
+arma_thisprint(const void* this_ptr)
   {
-  get_log_stream() << " [this = " << this_ptr << ']' << std::endl;
+  get_stream_err1() << " [this = " << this_ptr << ']' << std::endl;
   }
 
 
@@ -191,16 +289,17 @@ arma_thisprint(void* this_ptr)
 //
 // arma_warn
 
-//! if state is true, print a message on cout
+
+//! print a message to the warn stream
 template<typename T1>
 inline
 void
-arma_hot
+arma_cold
 arma_warn(const bool state, const T1& x)
   {
   if(state==true)
     {
-    arma_print(x);
+    get_stream_err2() << x << std::endl;
     }
   }
 
@@ -208,16 +307,27 @@ arma_warn(const bool state, const T1& x)
 template<typename T1, typename T2>
 inline
 void
-arma_hot
+arma_cold
 arma_warn(const bool state, const T1& x, const T2& y)
   {
   if(state==true)
     {
-    arma_print(x,y);
+    get_stream_err2() << x << y << std::endl;
     }
   }
 
 
+template<typename T1, typename T2, typename T3>
+inline
+void
+arma_cold
+arma_warn(const bool state, const T1& x, const T2& y, const T3& z)
+  {
+  if(state==true)
+    {
+    get_stream_err2() << x << y << z << std::endl;
+    }
+  }
 
 
 
@@ -250,6 +360,18 @@ arma_check(const bool state, const T1& x, const T2& y)
     }
   }
 
+
+template<typename T1>
+inline
+void
+arma_hot
+arma_check_bad_alloc(const bool state, const T1& x)
+  {
+  if(state==true)
+    {
+    arma_stop_bad_alloc(x);
+    }
+  }
 
 
 
@@ -1025,25 +1147,27 @@ arma_assert_mul_size(const subview<eT1>& A, const subview<eT2>& B, const char* x
         const bool  little_endian = (endian_test.b[0] == 1);
         const char* nickname      = ARMA_VERSION_NAME;
         
-        get_log_stream() << "@ ---" << '\n';
-        get_log_stream() << "@ Armadillo "
-                  << arma_version::major << '.' << arma_version::minor << '.' << arma_version::patch
-                  << " (" << nickname << ")\n";
+        std::ostream& out = get_stream_err1();
         
-        get_log_stream() << "@ arma_config::mat_prealloc = " << arma_config::mat_prealloc << " element(s)\n";
-        get_log_stream() << "@ arma_config::atlas        = " << arma_config::atlas        << '\n';
-        get_log_stream() << "@ arma_config::lapack       = " << arma_config::lapack       << '\n';
-        get_log_stream() << "@ arma_config::blas         = " << arma_config::blas         << '\n';
-        get_log_stream() << "@ arma_config::boost        = " << arma_config::boost        << '\n';
-        get_log_stream() << "@ arma_config::boost_date   = " << arma_config::boost_date   << '\n';
-        get_log_stream() << "@ arma_config::good_comp    = " << arma_config::good_comp    << '\n';
-        get_log_stream() << "@ arma_config::extra_code   = " << arma_config::extra_code   << '\n';
-        get_log_stream() << "@ sizeof(void*)    = " << sizeof(void*)    << '\n';
-        get_log_stream() << "@ sizeof(int)      = " << sizeof(int)      << '\n';
-        get_log_stream() << "@ sizeof(long)     = " << sizeof(long)     << '\n';
-        get_log_stream() << "@ sizeof(blas_int) = " << sizeof(blas_int) << '\n';
-        get_log_stream() << "@ little_endian    = " << little_endian    << '\n';
-        get_log_stream() << "@ ---" << std::endl;
+        out << "@ ---" << '\n';
+        out << "@ Armadillo "
+            << arma_version::major << '.' << arma_version::minor << '.' << arma_version::patch
+            << " (" << nickname << ")\n";
+        
+        out << "@ arma_config::mat_prealloc = " << arma_config::mat_prealloc << " element(s)\n";
+        out << "@ arma_config::atlas        = " << arma_config::atlas        << '\n';
+        out << "@ arma_config::lapack       = " << arma_config::lapack       << '\n';
+        out << "@ arma_config::blas         = " << arma_config::blas         << '\n';
+        out << "@ arma_config::boost        = " << arma_config::boost        << '\n';
+        out << "@ arma_config::boost_date   = " << arma_config::boost_date   << '\n';
+        out << "@ arma_config::good_comp    = " << arma_config::good_comp    << '\n';
+        out << "@ arma_config::extra_code   = " << arma_config::extra_code   << '\n';
+        out << "@ sizeof(void*)    = " << sizeof(void*)    << '\n';
+        out << "@ sizeof(int)      = " << sizeof(int)      << '\n';
+        out << "@ sizeof(long)     = " << sizeof(long)     << '\n';
+        out << "@ sizeof(blas_int) = " << sizeof(blas_int) << '\n';
+        out << "@ little_endian    = " << little_endian    << '\n';
+        out << "@ ---" << std::endl;
         }
       
       };

@@ -1,6 +1,7 @@
-// Copyright (C) 2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2010 Conrad Sanderson
+// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2011 Conrad Sanderson
 // Copyright (C) 2010 Dimitrios Bouzas
+// Copyright (C) 2011 Stanislav Funiak
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -26,7 +27,7 @@
 //! tsquared_out -> Hotelling's T^2 statistic
 template<typename eT>
 inline
-void
+bool
 op_princomp::direct_princomp
   (
         Mat<eT>& coeff_out,
@@ -54,14 +55,7 @@ op_princomp::direct_princomp
     
     if(svd_ok == false)
       {
-      arma_print("princomp(): singular value decomposition failed");
-      
-      coeff_out.reset();
-      score_out.reset();
-      latent_out.reset();
-      tsquared_out.reset();
-      
-      return;
+      return false;
       }
     
     
@@ -100,30 +94,21 @@ op_princomp::direct_princomp
     // compute the eigenvalues of the principal vectors
     latent_out = s%s;
     }
-  else // single sample - row
+  else // 0 or 1 samples
     {
-    if(n_rows == 1)
-      {
-      coeff_out = eye< Mat<eT> >(n_cols, n_cols);
-      
-      score_out.copy_size(in);
-      score_out.zeros();
-      
-      latent_out.set_size(n_cols);
-      latent_out.zeros();
-      
-      tsquared_out.set_size(1);
-      tsquared_out.zeros();    
-      }
-    else
-      {
-      coeff_out.reset();
-      score_out.reset();
-      latent_out.reset();
-      tsquared_out.reset();
-      }
+    coeff_out.eye(n_cols, n_cols);
+    
+    score_out.copy_size(in);
+    score_out.zeros();
+    
+    latent_out.set_size(n_cols);
+    latent_out.zeros();
+    
+    tsquared_out.set_size(n_rows);
+    tsquared_out.zeros();
     }
   
+  return true;
   }
 
 
@@ -136,7 +121,7 @@ op_princomp::direct_princomp
 //! latent_out   -> eigenvalues of principal vectors
 template<typename eT>
 inline
-void
+bool
 op_princomp::direct_princomp
   (
         Mat<eT>& coeff_out,
@@ -163,13 +148,7 @@ op_princomp::direct_princomp
     
     if(svd_ok == false)
       {
-      arma_print("princomp(): singular value decomposition failed");
-      
-      coeff_out.reset();
-      score_out.reset();
-      latent_out.reset();
-      
-      return;
+      return false;
       }
     
     
@@ -194,26 +173,18 @@ op_princomp::direct_princomp
     latent_out = s%s;
     
     }
-  else // single sample - row
+  else // 0 or 1 samples
     {
-    if(n_rows == 1)
-      {
-      coeff_out = eye< Mat<eT> >(n_cols, n_cols);
-      
-      score_out.copy_size(in);
-      score_out.zeros();
-      
-      latent_out.set_size(n_cols);
-      latent_out.zeros(); 
-      }
-    else
-      {
-      coeff_out.reset();
-      score_out.reset();
-      latent_out.reset();
-      }
+    coeff_out.eye(n_cols, n_cols);
+    
+    score_out.copy_size(in);
+    score_out.zeros();
+    
+    latent_out.set_size(n_cols);
+    latent_out.zeros(); 
     }
   
+  return true;
   }
 
 
@@ -225,7 +196,7 @@ op_princomp::direct_princomp
 //! score_out    -> projected samples
 template<typename eT>
 inline
-void
+bool
 op_princomp::direct_princomp
   (
         Mat<eT>& coeff_out,
@@ -234,7 +205,7 @@ op_princomp::direct_princomp
   )
   {
   arma_extra_debug_sigprint();
-
+  
   const u32 n_rows = in.n_rows;
   const u32 n_cols = in.n_cols;
   
@@ -251,12 +222,7 @@ op_princomp::direct_princomp
     
     if(svd_ok == false)
       {
-      arma_print("princomp(): singular value decomposition failed");
-      
-      coeff_out.reset();
-      score_out.reset();
-      
-      return;
+      return false;
       }
     
     // U.reset();
@@ -276,20 +242,14 @@ op_princomp::direct_princomp
       s = s_tmp;
       }
     }
-  else // single sample - row
+  else // 0 or 1 samples
     {
-    if(n_rows == 1)
-      {
-      coeff_out = eye< Mat<eT> >(n_cols, n_cols);
-      score_out.copy_size(in);
-      score_out.zeros();
-      }
-    else
-      {
-      coeff_out.reset();
-      score_out.reset();
-      }
+    coeff_out.eye(n_cols, n_cols);
+    score_out.copy_size(in);
+    score_out.zeros();
     }
+  
+  return true;
   }
 
 
@@ -300,7 +260,7 @@ op_princomp::direct_princomp
 //! coeff_out    -> principal component coefficients
 template<typename eT>
 inline
-void
+bool
 op_princomp::direct_princomp
   (
         Mat<eT>& coeff_out,
@@ -321,15 +281,15 @@ op_princomp::direct_princomp
     
     if(svd_ok == false)
       {
-      arma_print("princomp(): singular value decomposition failed");
-      
-      coeff_out.reset();
+      return false;
       }
     }
   else
     {
-    coeff_out.reset();
+    coeff_out.eye(in.n_cols, in.n_cols);
     }
+  
+  return true;
   }
 
 
@@ -343,7 +303,7 @@ op_princomp::direct_princomp
 //! tsquared_out -> Hotelling's T^2 statistic
 template<typename T>
 inline
-void
+bool
 op_princomp::direct_princomp
   (
         Mat< std::complex<T> >& coeff_out,
@@ -373,14 +333,7 @@ op_princomp::direct_princomp
     
     if(svd_ok == false)
       {
-      arma_print("princomp(): singular value decomposition failed");
-      
-      coeff_out.reset();
-      score_out.reset();
-      latent_out.reset();
-      tsquared_out.reset();
-      
-      return;
+      return false;
       }
     
     
@@ -416,29 +369,21 @@ op_princomp::direct_princomp
     latent_out = s%s;
     
     }
-  else // single sample - row
+  else // 0 or 1 samples
     {
-    if(n_rows == 1)
-      {
-      coeff_out = eye< Mat<eT> >(n_cols, n_cols);
+    coeff_out.eye(n_cols, n_cols);
+    
+    score_out.copy_size(in);
+    score_out.zeros();
       
-      score_out.copy_size(in);
-      score_out.zeros();
+    latent_out.set_size(n_cols);
+    latent_out.zeros();
       
-      latent_out.set_size(n_cols);
-      latent_out.zeros();
-      
-      tsquared_out.set_size(1);
-      tsquared_out.zeros();    
-      }
-    else
-      {
-      coeff_out.reset();
-      score_out.reset();
-      latent_out.reset();
-      tsquared_out.reset();
-      }
+    tsquared_out.set_size(n_rows);
+    tsquared_out.zeros();
     }
+  
+  return true;
   }
 
 
@@ -451,7 +396,7 @@ op_princomp::direct_princomp
 //! latent_out   -> eigenvalues of principal vectors
 template<typename T>
 inline
-void
+bool
 op_princomp::direct_princomp
   (
         Mat< std::complex<T> >& coeff_out,
@@ -480,13 +425,7 @@ op_princomp::direct_princomp
     
     if(svd_ok == false)
       {
-      arma_print("princomp(): singular value decomposition failed");
-      
-      coeff_out.reset();
-      score_out.reset();
-      latent_out.reset();
-      
-      return;
+      return false;
       }
     
     
@@ -511,23 +450,18 @@ op_princomp::direct_princomp
     latent_out = s%s;
 
     }
-  else // single sample - row
+  else // 0 or 1 samples
     {
-    if(n_rows == 1)
-      {
-      coeff_out = eye< Mat<eT> >(n_cols, n_cols);
-      score_out.copy_size(in);
-      score_out.zeros();
-      latent_out.set_size(n_cols);
-      latent_out.zeros();
-      }
-    else
-      {
-      coeff_out.reset();
-      score_out.reset();
-      latent_out.reset();
-      }
+    coeff_out.eye(n_cols, n_cols);
+
+    score_out.copy_size(in);
+    score_out.zeros();
+
+    latent_out.set_size(n_cols);
+    latent_out.zeros();
     }
+  
+  return true;
   }
 
 
@@ -539,7 +473,7 @@ op_princomp::direct_princomp
 //! score_out    -> projected samples
 template<typename T>
 inline
-void
+bool
 op_princomp::direct_princomp
   (
         Mat< std::complex<T> >& coeff_out,
@@ -567,12 +501,7 @@ op_princomp::direct_princomp
     
     if(svd_ok == false)
       {
-      arma_print("princomp(): singular value decomposition failed");
-      
-      coeff_out.reset();
-      score_out.reset();
-      
-      return;
+      return false;
       }
     
     // U.reset();
@@ -589,21 +518,15 @@ op_princomp::direct_princomp
       }
 
     }
-  else // single sample - row
+  else // 0 or 1 samples
     {
-    if(n_rows == 1)
-      {
-      coeff_out = eye< Mat<eT> >(n_cols, n_cols);
-      
-      score_out.copy_size(in);
-      score_out.zeros();
-      }
-    else
-      {
-      coeff_out.reset();
-      score_out.reset();
-      }
+    coeff_out.eye(n_cols, n_cols);
+    
+    score_out.copy_size(in);
+    score_out.zeros();
     }
+  
+  return true;
   }
 
 
@@ -614,7 +537,7 @@ op_princomp::direct_princomp
 //! coeff_out    -> principal component coefficients
 template<typename T>
 inline
-void
+bool
 op_princomp::direct_princomp
   (
         Mat< std::complex<T> >& coeff_out,
@@ -637,15 +560,15 @@ op_princomp::direct_princomp
     
     if(svd_ok == false)
       {
-      arma_print("princomp(): singular value decomposition failed");
-      
-      coeff_out.reset();
+      return false;
       }
     }
   else
     {
-    coeff_out.reset();
+    coeff_out.eye(in.n_cols, in.n_cols);
     }
+  
+  return true;
   }
 
 
@@ -666,7 +589,14 @@ op_princomp::apply
   const unwrap_check<T1> tmp(in.m, out);
   const Mat<eT>& A     = tmp.M;
   
-  op_princomp::direct_princomp(out, A);
+  const bool status = op_princomp::direct_princomp(out, A);
+  
+  if(status == false)
+    {
+    out.reset();
+    
+    arma_bad("princomp(): failed to converge");
+    }
   }
 
 

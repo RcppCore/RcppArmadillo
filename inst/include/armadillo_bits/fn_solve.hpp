@@ -68,7 +68,7 @@ inline
 bool
 solve
   (
-  Mat<typename T1::elem_type>& out,
+         Mat<typename T1::elem_type>&    out,
   const Base<typename T1::elem_type,T1>& A,
   const Base<typename T1::elem_type,T2>& B,
   const bool slow = false,
@@ -78,9 +78,16 @@ solve
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  out = solve( A.get_ref(), B.get_ref(), slow );
+  try
+    {
+    out = solve( A.get_ref(), B.get_ref(), slow );
+    }
+  catch(std::runtime_error&)
+    {
+    return false;
+    }
   
-  return (out.n_elem == 0) ? false : true;
+  return true;
   }
 
 

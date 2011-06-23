@@ -133,23 +133,22 @@ op_median::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_median>& in)
     {
     arma_extra_debug_print("op_median::apply(), dim = 0");
     
-    out.set_size((X_n_rows > 0) ? 1 : 0, X_n_cols);
+    arma_debug_check( (X_n_rows == 0), "median(): given object has zero rows" );
+
+    out.set_size(1, X_n_cols);
     
-    if(X_n_rows > 0)
-      {
-      std::vector<eT> tmp_vec(X_n_rows);
+    std::vector<eT> tmp_vec(X_n_rows);
       
-      for(u32 col=0; col<X_n_cols; ++col)
+    for(u32 col=0; col<X_n_cols; ++col)
+      {
+      const eT* colmem = X.colptr(col);
+      
+      for(u32 row=0; row<X_n_rows; ++row)
         {
-        const eT* colmem = X.colptr(col);
-        
-        for(u32 row=0; row<X_n_rows; ++row)
-          {
-          tmp_vec[row] = colmem[row];
-          }
-        
-        out[col] = op_median::direct_median(tmp_vec);
+        tmp_vec[row] = colmem[row];
         }
+      
+      out[col] = op_median::direct_median(tmp_vec);
       }
     }
   else
@@ -157,21 +156,20 @@ op_median::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_median>& in)
     {
     arma_extra_debug_print("op_median::apply(), dim = 1");
     
-    out.set_size(X_n_rows, (X_n_cols > 0) ? 1 : 0);
+    arma_debug_check( (X_n_cols == 0), "median(): given object has zero columns" );
+
+    out.set_size(X_n_rows, 1);
     
-    if(X_n_cols > 0)
-      {
-      std::vector<eT> tmp_vec(X_n_cols);
+    std::vector<eT> tmp_vec(X_n_cols);
       
-      for(u32 row=0; row<X_n_rows; ++row)
+    for(u32 row=0; row<X_n_rows; ++row)
+      {
+      for(u32 col=0; col<X_n_cols; ++col)
         {
-        for(u32 col=0; col<X_n_cols; ++col)
-          {
-          tmp_vec[col] = X.at(row,col);
-          }
-        
-        out[row] =  op_median::direct_median(tmp_vec);
+        tmp_vec[col] = X.at(row,col);
         }
+      
+      out[row] =  op_median::direct_median(tmp_vec);
       }
     }
   }
@@ -324,28 +322,27 @@ op_median::apply(Mat< std::complex<T> >& out, const Op<T1,op_median>& in)
     {
     arma_extra_debug_print("op_median::apply(), dim = 0");
     
-    out.set_size((X_n_rows > 0) ? 1 : 0, X_n_cols);
+    arma_debug_check( (X_n_rows == 0), "median(): given object has zero rows" );
+
+    out.set_size(1, X_n_cols);
     
-    if(X_n_rows > 0)
+    std::vector< arma_cx_median_packet<T> > tmp_vec(X_n_rows);
+    
+    for(u32 col=0; col<X_n_cols; ++col)
       {
-      std::vector< arma_cx_median_packet<T> > tmp_vec(X_n_rows);
+      const eT* colmem = X.colptr(col);
       
-      for(u32 col=0; col<X_n_cols; ++col)
+      for(u32 row=0; row<X_n_rows; ++row)
         {
-        const eT* colmem = X.colptr(col);
-        
-        for(u32 row=0; row<X_n_rows; ++row)
-          {
-          tmp_vec[row].val   = std::abs(colmem[row]);
-          tmp_vec[row].index = row;
-          }
-        
-        u32 index1;
-        u32 index2;
-        op_median::direct_cx_median_index(index1, index2, tmp_vec);
-        
-        out[col] = op_median::robust_mean(colmem[index1], colmem[index2]);
+        tmp_vec[row].val   = std::abs(colmem[row]);
+        tmp_vec[row].index = row;
         }
+      
+      u32 index1;
+      u32 index2;
+      op_median::direct_cx_median_index(index1, index2, tmp_vec);
+        
+      out[col] = op_median::robust_mean(colmem[index1], colmem[index2]);
       }
     }
   else
@@ -353,33 +350,25 @@ op_median::apply(Mat< std::complex<T> >& out, const Op<T1,op_median>& in)
     {
     arma_extra_debug_print("op_median::apply(), dim = 1");
     
-    out.set_size(X_n_rows, (X_n_cols > 0) ? 1 : 0);
+    arma_debug_check( (X_n_cols == 0), "median(): given object has zero columns" );
+
+    out.set_size(X_n_rows, 1);
     
-    if(X_n_cols > 0)
+    std::vector< arma_cx_median_packet<T> > tmp_vec(X_n_cols);
+    
+    for(u32 row=0; row<X_n_rows; ++row)
       {
-      std::vector< arma_cx_median_packet<T> > tmp_vec(X_n_cols);
-      
-      for(u32 row=0; row<X_n_rows; ++row)
+      for(u32 col=0; col<X_n_cols; ++col)
         {
-        for(u32 col=0; col<X_n_cols; ++col)
-          {
-          tmp_vec[col].val   = std::abs(X.at(row,col));
-          tmp_vec[row].index = col;
-          }
-        
-        if(X_n_cols > 0)
-          {
-          u32 index1;
-          u32 index2;
-          op_median::direct_cx_median_index(index1, index2, tmp_vec);
-          
-          out[row] = op_median::robust_mean( X.at(row,index1), X.at(row,index2) );
-          }
-        else
-          {
-          out[row] = eT(0);
-          }
+        tmp_vec[col].val   = std::abs(X.at(row,col));
+        tmp_vec[row].index = col;
         }
+      
+      u32 index1;
+      u32 index2;
+      op_median::direct_cx_median_index(index1, index2, tmp_vec);
+      
+      out[row] = op_median::robust_mean( X.at(row,index1), X.at(row,index2) );
       }
     }
   }

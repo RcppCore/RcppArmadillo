@@ -41,7 +41,15 @@ syl
   const Mat<eT>& B = tmp_B.M;
   const Mat<eT>& C = tmp_C.M;
   
-  return auxlib::syl(out, A, B, C);
+  const bool status = auxlib::syl(out, A, B, C);
+  
+  if(status == false)
+    {
+    out.reset();
+    arma_bad("syl(): equation appears to be singular", false);
+    }
+  
+  return false;
   }
 
 
@@ -63,7 +71,13 @@ syl
   typedef typename T1::elem_type eT;
   
   Mat<eT> out;
-  syl(out, in_A, in_B, in_C);
+  const bool status = syl(out, in_A, in_B, in_C);
+  
+  if(status == false)
+    {
+    out.reset();
+    arma_bad("syl(): equation appears to be singular");
+    }
   
   return out;
   }

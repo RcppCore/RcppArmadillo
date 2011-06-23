@@ -38,37 +38,31 @@ op_prod::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_prod>& in)
     
   if(dim == 0)  // traverse across rows (i.e. find the product in each column)
     {
-    out.set_size((X_n_rows > 0) ? 1 : 0, X_n_cols);
+    out.set_size(1, X_n_cols);
     
-    if(X_n_rows > 0)
+    eT* out_mem = out.memptr();
+    
+    for(u32 col=0; col<X_n_cols; ++col)
       {
-      eT* out_mem = out.memptr();
-      
-      for(u32 col=0; col < X_n_cols; ++col)
-        {
-        out_mem[col] = arrayops::product(X.colptr(col), X_n_rows);
-        }
+      out_mem[col] = arrayops::product(X.colptr(col), X_n_rows);
       }
     }
   else  // traverse across columns (i.e. find the product in each row)
     {
-    out.set_size(X_n_rows, (X_n_cols > 0) ? 1 : 0);
+    out.set_size(X_n_rows, 1);
     
-    if(X_n_cols > 0)
+    eT* out_mem = out.memptr();
+    
+    for(u32 row=0; row<X_n_rows; ++row)
       {
-      eT* out_mem = out.memptr();
+      eT val = eT(1);
       
-      for(u32 row=0; row < X_n_rows; ++row)
+      for(u32 col=0; col<X_n_cols; ++col)
         {
-        eT val = X.at(row,0);
-        
-        for(u32 col=1; col < X_n_cols; ++col)
-          {
-          val *= X.at(row,col);
-          }
-        
-        out_mem[row] = val;
+        val *= X.at(row,col);
         }
+      
+      out_mem[row] = val;
       }
     }
   }

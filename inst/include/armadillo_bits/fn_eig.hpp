@@ -1,6 +1,7 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
-// Copyright (C) 2009      Edmund Highcock
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2009 Edmund Highcock
+// Copyright (C) 2011 Stanislav Funiak
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -33,7 +34,6 @@ eig_sym
   )
   {
   arma_extra_debug_sigprint();
-  
   arma_ignore(junk);
   
   // unwrap_check not used as T1::elem_type and T1::pod_type may not be the same.
@@ -43,8 +43,8 @@ eig_sym
   
   if(status == false)
     {
-    arma_print("eig_sym(): failed to converge");
     eigval.reset();
+    arma_bad("eig_sym(): failed to converge", false);
     }
   
   return status;
@@ -63,11 +63,16 @@ eig_sym
   )
   {
   arma_extra_debug_sigprint();
-  
   arma_ignore(junk);
   
   Col<typename T1::pod_type> out;
-  eig_sym(out, X);
+  const bool status = auxlib::eig_sym(out, X);
+
+  if(status == false)
+    {
+    out.reset();
+    arma_bad("eig_sym(): failed to converge");
+    }
   
   return out;
   }
@@ -87,7 +92,6 @@ eig_sym
   )
   {
   arma_extra_debug_sigprint();
-  
   arma_ignore(junk);
   
   arma_debug_check( ( ((void*)(&eigval)) == ((void*)(&eigvec)) ), "eig_sym(): eigval is an alias of eigvec" );
@@ -96,9 +100,9 @@ eig_sym
   
   if(status == false)
     {
-    arma_print("eig_sym(): failed to converge");
     eigval.reset();
     eigvec.reset();
+    arma_bad("eig_sym(): failed to converge", false);
     }
   
   return status;
@@ -126,7 +130,6 @@ eig_gen
   )
   {
   arma_extra_debug_sigprint();
-  
   arma_ignore(junk);
   
   arma_debug_check
@@ -149,10 +152,10 @@ eig_gen
   
   if(status == false)
     {
-    arma_print("eig_gen(): failed to converge");
     eigval.reset();
     l_eigvec.reset();
     r_eigvec.reset();
+    arma_bad("eig_gen(): failed to converge", false);
     }
   
   return status;
@@ -176,7 +179,6 @@ eig_gen
   )
   {
   arma_extra_debug_sigprint();
-  
   arma_ignore(junk);
   
   //std::cout << "real" << std::endl;
@@ -205,47 +207,48 @@ eig_gen
   
   if(status == false)
     {
-    arma_print("eig_gen(): failed to converge");
     eigval.reset();
     eigvec.reset();
-    return false;
+    arma_bad("eig_gen(): failed to converge", false);
     }
-  
-  const u32 n = eigval.n_elem;
-  
-  if(n > 0)
+  else
     {
-    eigvec.set_size(n,n);
-
-    for(u32 j=0; j<n; ++j)
+    const u32 n = eigval.n_elem;
+    
+    if(n > 0)
       {
-      if( (j < n-1) && (eigval[j] == std::conj(eigval[j+1])) )
+      eigvec.set_size(n,n);
+      
+      for(u32 j=0; j<n; ++j)
         {
-        // eigvec.col(j)   = Mat< std::complex<eT> >( tmp_eigvec.col(j),  tmp_eigvec.col(j+1) );
-        // eigvec.col(j+1) = Mat< std::complex<eT> >( tmp_eigvec.col(j), -tmp_eigvec.col(j+1) );
-        
-        for(u32 i=0; i<n; ++i)
+        if( (j < n-1) && (eigval[j] == std::conj(eigval[j+1])) )
           {
-          eigvec.at(i,j)   = std::complex<eT>( tmp_eigvec.at(i,j),  tmp_eigvec.at(i,j+1) );
-          eigvec.at(i,j+1) = std::complex<eT>( tmp_eigvec.at(i,j), -tmp_eigvec.at(i,j+1) );
+          // eigvec.col(j)   = Mat< std::complex<eT> >( tmp_eigvec.col(j),  tmp_eigvec.col(j+1) );
+          // eigvec.col(j+1) = Mat< std::complex<eT> >( tmp_eigvec.col(j), -tmp_eigvec.col(j+1) );
+          
+          for(u32 i=0; i<n; ++i)
+            {
+            eigvec.at(i,j)   = std::complex<eT>( tmp_eigvec.at(i,j),  tmp_eigvec.at(i,j+1) );
+            eigvec.at(i,j+1) = std::complex<eT>( tmp_eigvec.at(i,j), -tmp_eigvec.at(i,j+1) );
+            }
+          
+          ++j;
           }
-        
-        ++j;
-        }
-      else
-        {
-        // eigvec.col(i) = tmp_eigvec.col(i);
-        
-        for(u32 i=0; i<n; ++i)
+        else
           {
-          eigvec.at(i,j) = std::complex<eT>(tmp_eigvec.at(i,j), eT(0));
+          // eigvec.col(i) = tmp_eigvec.col(i);
+          
+          for(u32 i=0; i<n; ++i)
+            {
+            eigvec.at(i,j) = std::complex<eT>(tmp_eigvec.at(i,j), eT(0));
+            }
+          
           }
-        
         }
       }
     }
   
-  return true;
+  return status;
   }
 
 
@@ -266,7 +269,6 @@ eig_gen
   )
   {
   arma_extra_debug_sigprint();
-  
   arma_ignore(junk);
   
   //std::cout << "complex" << std::endl;
@@ -294,9 +296,9 @@ eig_gen
   
   if(status == false)
     {
-    arma_print("eig_gen(): failed to converge");
     eigval.reset();
     eigvec.reset();
+    arma_bad("eig_gen(): failed to converge", false);
     }
   
   return status;

@@ -1,4 +1,18 @@
-0.2.23  2011-xx-yy
+0.2.23  2011-05-23
+
+    o   Upgraded to Armadillo release 1.99.5 "v2.0 beta 5"
+
+          * Forms of chol(), eig_sym(), eig_gen(), inv(), lu(), pinv(),
+	    princomp(), qr(), solve(), svd(), syl() that do not return a bool
+	    indicating success now throw std::runtime_error exceptions when
+	    failures are detected 
+          * princomp_cov() has been removed; princomp() in conjunction with
+	    cov() can be used instead
+          * set_log_stream() & get_log_stream() have been replaced by
+	    set_stream_err1() & get_stream_err1()
+          * det(), inv() and solve() can be forced to use more precise
+	    algorithms for tiny matrices (≤ 4x4)
+          * Added loading & saving of matrices as CSV text files 
 
     o   fastLmPure() now uses same argument order as R's lm.fit()
 

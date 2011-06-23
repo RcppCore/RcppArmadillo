@@ -1,5 +1,5 @@
-// Copyright (C) 2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2010 Conrad Sanderson
+// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2011 Conrad Sanderson
 // Copyright (C) 2010 Dimitrios Bouzas
 // 
 // This file is part of the Armadillo C++ library.
@@ -24,7 +24,7 @@ class op_princomp
   // real element versions
   
   template<typename eT>
-  inline static void
+  inline static bool
   direct_princomp
     (      
           Mat<eT>& coeff_out,                                                     
@@ -32,7 +32,7 @@ class op_princomp
     );
                                                            
   template<typename eT>
-  inline static void
+  inline static bool
   direct_princomp
     (      
           Mat<eT>& coeff_out, 
@@ -41,7 +41,7 @@ class op_princomp
     );
                                                            
   template<typename eT>
-  inline static void
+  inline static bool
   direct_princomp
     (
           Mat<eT>& coeff_out, 
@@ -51,7 +51,7 @@ class op_princomp
     );
     
   template<typename eT>
-  inline static void
+  inline static bool
   direct_princomp
     (
           Mat<eT>& coeff_out, 
@@ -65,7 +65,7 @@ class op_princomp
   // complex element versions
   
   template<typename T>
-  inline static void
+  inline static bool
   direct_princomp
     (
           Mat< std::complex<T> >& coeff_out,
@@ -73,7 +73,7 @@ class op_princomp
     );
     
   template<typename T>
-  inline static void
+  inline static bool
   direct_princomp
     (
           Mat< std::complex<T> >& coeff_out, 
@@ -82,7 +82,7 @@ class op_princomp
     );
     
   template<typename T>
-  inline static void
+  inline static bool
   direct_princomp
     (
           Mat< std::complex<T> >& coeff_out, 
@@ -92,7 +92,7 @@ class op_princomp
     );
     
   template<typename T>
-  inline static void
+  inline static bool
   direct_princomp
     (
           Mat< std::complex<T> >& coeff_out, 

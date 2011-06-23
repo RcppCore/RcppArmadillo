@@ -44,13 +44,13 @@ class op_inv_tr
 
 
 
-//! 'invert matrix' operation (positive definite symmetric matrices)
-class op_inv_sym
+//! 'invert matrix' operation (symmetric positive definite matrices)
+class op_inv_sympd
   {
   public:
   
   template<typename T1>
-  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv_sym>& in);
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv_sympd>& in);
   };
 
 

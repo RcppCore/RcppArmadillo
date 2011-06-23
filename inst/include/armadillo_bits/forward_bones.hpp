@@ -117,12 +117,13 @@ static const injector_end_of_row endr = injector_end_of_row();
 //! @{
 
 
-//! file types supported by Armadillo
 enum file_type
   {
+  file_type_unknown,
   auto_detect,  //!< Automatically detect the file type (file must be one of the following types)
   raw_ascii,    //!< ASCII format (text), without any other information.
   arma_ascii,   //!< Armadillo ASCII format (text), with information about matrix type and size
+  csv_ascii,    //!< comma separated values (CSV), without any other information
   raw_binary,   //!< raw binary format, without any other information.
   arma_binary,  //!< Armadillo binary format, with information about matrix type and size
   pgm_binary,   //!< Portable Grey Map (greyscale image)

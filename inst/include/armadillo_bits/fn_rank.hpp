@@ -1,6 +1,7 @@
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2011 Conrad Sanderson
 // Copyright (C) 2009-2010 Dimitrios Bouzas
+// Copyright (C) 2011 Stanislav Funiak
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -29,7 +30,6 @@ rank
   )
   {
   arma_extra_debug_sigprint();
-  
   arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
@@ -40,10 +40,11 @@ rank
   Col<T> s;
   
   const bool status = auxlib::svd(s, X, X_n_rows, X_n_cols);
+  const u32  n_elem = s.n_elem;
   
   if(status == true)
     {
-    if(tol == T(0))
+    if( (tol == T(0)) && (n_elem > 0) )
       {
       tol = (std::max)(X_n_rows, X_n_cols) * eop_aux::direct_eps(max(s));
       }
@@ -51,7 +52,6 @@ rank
     // count non zero valued elements in s
     
     const T*  s_mem  = s.memptr();
-    const u32 n_elem = s.n_elem;
           u32 count  = 0;
     
     for(u32 i=0; i<n_elem; ++i)
@@ -66,7 +66,8 @@ rank
     }
   else
     {
-    arma_print("rank(): failed to converge");
+    arma_bad("rank(): failed to converge");
+    
     return u32(0);
     }
   }

@@ -1,5 +1,5 @@
-// Copyright (C) 2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2010 Conrad Sanderson
+// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -19,7 +19,7 @@
 //! log determinant of mat
 template<typename T1>
 inline
-void
+bool
 log_det
   (
         typename T1::elem_type&          out_val,
@@ -29,8 +29,9 @@ log_det
   )
   {
   arma_extra_debug_sigprint();
+  arma_ignore(junk);
   
-  auxlib::log_det(out_val, out_sign, X);
+  return auxlib::log_det(out_val, out_sign, X);
   }
 
 
@@ -47,6 +48,7 @@ log_det
   )
   {
   arma_extra_debug_sigprint();
+  arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;

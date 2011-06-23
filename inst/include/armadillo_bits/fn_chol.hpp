@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -19,10 +19,13 @@
 template<typename T1>
 inline
 const Op<T1, op_chol>
-chol(const Base<typename T1::elem_type,T1>& X, const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0)
+chol
+  (
+  const Base<typename T1::elem_type,T1>& X,
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  )
   {
   arma_extra_debug_sigprint();
-  
   arma_ignore(junk);
   
   return Op<T1, op_chol>(X.get_ref());
@@ -33,15 +36,26 @@ chol(const Base<typename T1::elem_type,T1>& X, const typename arma_blas_type_onl
 template<typename T1>
 inline
 bool
-chol(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& X, const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0)
+chol
+  (
+         Mat<typename T1::elem_type>&    out,
+  const Base<typename T1::elem_type,T1>& X,
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  )
   {
   arma_extra_debug_sigprint();
-  
   arma_ignore(junk);
   
-  out = chol(X);
+  try
+    {
+    out = chol(X);
+    }
+  catch(std::runtime_error&)
+    {
+    return false;
+    }
   
-  return (out.n_elem == 0) ? false : true;
+  return true;
   }
 
 

@@ -23,15 +23,15 @@ class diskio
   
   template<typename eT> inline static std::string gen_txt_header(const Mat<eT>& x);
   template<typename eT> inline static std::string gen_bin_header(const Mat<eT>& x);
-
+  
   template<typename eT> inline static std::string gen_txt_header(const Cube<eT>& x);
   template<typename eT> inline static std::string gen_bin_header(const Cube<eT>& x);
-
-  inline static bool is_raw_binary(std::istream& f);
+  
+  inline static file_type guess_file_type(std::istream& f);
   
   inline static char conv_to_hex_char(const u8 x);
   inline static void conv_to_hex(char* out, const u8 x);
-
+  
   inline static std::string gen_tmp_name(const std::string& x);
   
   inline static bool safe_rename(const std::string& old_name, const std::string& new_name);
@@ -43,6 +43,7 @@ class diskio
   template<typename eT> inline static bool save_raw_ascii  (const Mat<eT>&                x, const std::string& final_name);
   template<typename eT> inline static bool save_raw_binary (const Mat<eT>&                x, const std::string& final_name);
   template<typename eT> inline static bool save_arma_ascii (const Mat<eT>&                x, const std::string& final_name);
+  template<typename eT> inline static bool save_csv_ascii  (const Mat<eT>&                x, const std::string& final_name);
   template<typename eT> inline static bool save_arma_binary(const Mat<eT>&                x, const std::string& final_name);
   template<typename eT> inline static bool save_pgm_binary (const Mat<eT>&                x, const std::string& final_name);
   template<typename  T> inline static bool save_pgm_binary (const Mat< std::complex<T> >& x, const std::string& final_name);
@@ -50,6 +51,7 @@ class diskio
   template<typename eT> inline static bool save_raw_ascii  (const Mat<eT>&                x, std::ostream& f);
   template<typename eT> inline static bool save_raw_binary (const Mat<eT>&                x, std::ostream& f);
   template<typename eT> inline static bool save_arma_ascii (const Mat<eT>&                x, std::ostream& f);
+  template<typename eT> inline static bool save_csv_ascii  (const Mat<eT>&                x, std::ostream& f);
   template<typename eT> inline static bool save_arma_binary(const Mat<eT>&                x, std::ostream& f);
   template<typename eT> inline static bool save_pgm_binary (const Mat<eT>&                x, std::ostream& f);
   template<typename  T> inline static bool save_pgm_binary (const Mat< std::complex<T> >& x, std::ostream& f);
@@ -61,6 +63,7 @@ class diskio
   template<typename eT> inline static bool load_raw_ascii  (Mat<eT>&                x, const std::string& name, std::string& err_msg);
   template<typename eT> inline static bool load_raw_binary (Mat<eT>&                x, const std::string& name, std::string& err_msg);
   template<typename eT> inline static bool load_arma_ascii (Mat<eT>&                x, const std::string& name, std::string& err_msg);
+  template<typename eT> inline static bool load_csv_ascii  (Mat<eT>&                x, const std::string& name, std::string& err_msg);
   template<typename eT> inline static bool load_arma_binary(Mat<eT>&                x, const std::string& name, std::string& err_msg);
   template<typename eT> inline static bool load_pgm_binary (Mat<eT>&                x, const std::string& name, std::string& err_msg);
   template<typename  T> inline static bool load_pgm_binary (Mat< std::complex<T> >& x, const std::string& name, std::string& err_msg);
@@ -69,6 +72,7 @@ class diskio
   template<typename eT> inline static bool load_raw_ascii  (Mat<eT>&                x, std::istream& f,  std::string& err_msg);
   template<typename eT> inline static bool load_raw_binary (Mat<eT>&                x, std::istream& f,  std::string& err_msg);
   template<typename eT> inline static bool load_arma_ascii (Mat<eT>&                x, std::istream& f,  std::string& err_msg);
+  template<typename eT> inline static bool load_csv_ascii  (Mat<eT>&                x, std::istream& f,  std::string& err_msg);
   template<typename eT> inline static bool load_arma_binary(Mat<eT>&                x, std::istream& f,  std::string& err_msg);
   template<typename eT> inline static bool load_pgm_binary (Mat<eT>&                x, std::istream& is, std::string& err_msg);
   template<typename  T> inline static bool load_pgm_binary (Mat< std::complex<T> >& x, std::istream& is, std::string& err_msg);

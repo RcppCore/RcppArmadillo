@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -17,8 +17,9 @@
 
 
 template<typename T1>
-inline void
-op_real::apply( Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_type, T1, op_real>& X)
+inline
+void
+op_real::apply( Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_type, T1, op_real>& X )
   {
   arma_extra_debug_sigprint();
   
@@ -40,8 +41,9 @@ op_real::apply( Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_typ
 
 
 template<typename T1>
-inline void
-op_real::apply( Cube<typename T1::pod_type>& out, const mtOpCube<typename T1::pod_type, T1, op_real>& X)
+inline
+void
+op_real::apply( Cube<typename T1::pod_type>& out, const mtOpCube<typename T1::pod_type, T1, op_real>& X )
   {
   arma_extra_debug_sigprint();
   
@@ -63,8 +65,9 @@ op_real::apply( Cube<typename T1::pod_type>& out, const mtOpCube<typename T1::po
 
 
 template<typename T1>
-inline void
-op_imag::apply( Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_type, T1, op_imag>& X)
+inline
+void
+op_imag::apply( Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_type, T1, op_imag>& X )
   {
   arma_extra_debug_sigprint();
   
@@ -86,8 +89,9 @@ op_imag::apply( Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_typ
 
 
 template<typename T1>
-inline void
-op_imag::apply( Cube<typename T1::pod_type>& out, const mtOpCube<typename T1::pod_type, T1, op_imag>& X)
+inline
+void
+op_imag::apply( Cube<typename T1::pod_type>& out, const mtOpCube<typename T1::pod_type, T1, op_imag>& X )
   {
   arma_extra_debug_sigprint();
   
@@ -109,8 +113,9 @@ op_imag::apply( Cube<typename T1::pod_type>& out, const mtOpCube<typename T1::po
 
 
 template<typename T1>
-inline void
-op_abs::apply( Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_type, T1, op_abs>& X)
+inline
+void
+op_abs::apply( Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_type, T1, op_abs>& X )
   {
   arma_extra_debug_sigprint();
   
@@ -132,8 +137,9 @@ op_abs::apply( Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_type
 
 
 template<typename T1>
-inline void
-op_abs::apply( Cube<typename T1::pod_type>& out, const mtOpCube<typename T1::pod_type, T1, op_abs>& X)
+inline
+void
+op_abs::apply( Cube<typename T1::pod_type>& out, const mtOpCube<typename T1::pod_type, T1, op_abs>& X )
   {
   arma_extra_debug_sigprint();
   
@@ -150,6 +156,18 @@ op_abs::apply( Cube<typename T1::pod_type>& out, const mtOpCube<typename T1::pod
     {
     out_mem[i] = std::abs(A[i]);
     }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_sympd::apply( Mat<typename T1::elem_type>& out, const Op<T1, op_sympd>& X )
+  {
+  arma_extra_debug_sigprint();
+  
+  out = X.m;
   }
 
 

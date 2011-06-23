@@ -38,14 +38,7 @@ glue_solve::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_solve>
     {
     const u32 mode = X.aux_u32;
     
-    if(mode == 0)
-      {
-      status = auxlib::solve(out, A, B);
-      }
-    else
-      {
-      status = auxlib::solve(out, A, B, true);
-      }
+    status = (mode == 0) ? auxlib::solve(out, A, B) : auxlib::solve(out, A, B, true);
     }
   else
   if(A.n_rows > A.n_cols)
@@ -62,7 +55,7 @@ glue_solve::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_solve>
   if(status == false)
     {
     out.reset();
-    arma_print("solve(): solution not found");
+    arma_bad("solve(): solution not found");
     }
   }
 
@@ -97,7 +90,7 @@ glue_solve_tr::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_sol
   if(status == false)
     {
     out.reset();
-    arma_print("solve(): solution not found");
+    arma_bad("solve(): solution not found");
     }
   }
 
