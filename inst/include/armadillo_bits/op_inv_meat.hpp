@@ -27,7 +27,13 @@ op_inv::apply(Mat<eT>& out, const Mat<eT>& A, const bool slow)
   // - auxlib::inv() copies A to out before inversion
   // - for 2x2 and 3x3 matrices the code is alias safe
   
-  auxlib::inv(out, A, slow);
+  bool status = auxlib::inv(out, A, slow);
+  
+  if(status == false)
+    {
+    out.reset();
+    arma_bad("inv(): matrix appears to be singular");
+    }
   }
 
 
@@ -52,13 +58,12 @@ op_inv::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv>& X)
     {
     const u32 mode = X.aux_u32_a;
     
-    if(mode == 0)
+    const bool status = (mode == 0) ? auxlib::inv(out, X.m) : auxlib::inv(out, X.m, true);
+    
+    if(status == false)
       {
-      auxlib::inv(out, X.m);
-      }
-    else
-      {
-      auxlib::inv(out, X.m, true);
+      out.reset();
+      arma_bad("inv(): matrix appears to be singular");
       }
     }
   }
@@ -101,20 +106,32 @@ op_inv_tr::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv_tr>& X)
   {
   arma_extra_debug_sigprint();
   
-  auxlib::inv_tr(out, X.m, X.aux_u32_a);
+  const bool status = auxlib::inv_tr(out, X.m, X.aux_u32_a);
+  
+  if(status == false)
+    {
+    out.reset();
+    arma_bad("inv(): matrix appears to be singular");
+    }
   }
 
 
 
-//! inverse of T1 (symmetric matrices)
+//! inverse of T1 (symmetric positive definite matrices)
 template<typename T1>
 inline
 void
-op_inv_sym::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv_sym>& X)
+op_inv_sympd::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv_sympd>& X)
   {
   arma_extra_debug_sigprint();
   
-  auxlib::inv_sym(out, X.m, X.aux_u32_a);
+  const bool status = auxlib::inv_sympd(out, X.m, X.aux_u32_a);
+  
+  if(status == false)
+    {
+    out.reset();
+    arma_bad("inv(): matrix appears to be singular");
+    }
   }
 
 

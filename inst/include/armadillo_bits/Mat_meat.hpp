@@ -182,7 +182,7 @@ Mat<eT>::init(u32 in_n_rows, u32 in_n_cols)
         
         access::rw(mem) = new(std::nothrow) eT[new_n_elem];
         
-        arma_check( (mem == 0), "Mat::init(): out of memory" );
+        arma_check_bad_alloc( (mem == 0), "Mat::init(): out of memory" );
         }
       
       access::rw(n_elem)    = new_n_elem;
@@ -2406,33 +2406,59 @@ Mat<eT>::insert_rows(const u32 row_num, const Base<eT,T1>& X)
   const unwrap<T1>   tmp(X.get_ref());
   const Mat<eT>& C = tmp.M;
   
-  const u32 N = C.n_rows;
+  const u32 C_n_rows = C.n_rows;
+  const u32 C_n_cols = C.n_cols;
   
   const u32 t_n_rows = n_rows;
   const u32 t_n_cols = n_cols;
   
   const u32 A_n_rows = row_num;
   const u32 B_n_rows = t_n_rows - row_num;
-
-  // insertion at row_num == n_rows is in effect an append operation
-  arma_debug_check( (row_num  >  t_n_rows), "Mat::insert_rows(): out of bounds");
-  arma_debug_check( (C.n_cols != t_n_cols), "Mat::insert_rows(): given object has an incompatible number of columns");
   
-  if(N > 0)
+  bool  err_state = false;
+  char* err_msg   = 0;
+  
+  // insertion at row_num == n_rows is in effect an append operation
+  
+  arma_debug_set_error
+    (
+    err_state,
+    err_msg,
+    (row_num > t_n_rows),
+    "Mat::insert_rows(): out of bounds"
+    );
+  
+  arma_debug_set_error
+    (
+    err_state,
+    err_msg,
+    ( (C_n_cols != t_n_cols) && ( (t_n_rows > 0) || (t_n_cols > 0) ) && ( (C_n_rows > 0) || (C_n_cols > 0) ) ),
+    "Mat::insert_rows(): given object has an incompatible number of columns"
+    );
+  
+  arma_debug_check(err_state, err_msg);
+  
+  if(C_n_rows > 0)
     {
-    Mat<eT> out(t_n_rows + N, t_n_cols);
+    Mat<eT> out( t_n_rows + C_n_rows, (std::max)(t_n_cols, C_n_cols) );
     
-    if(A_n_rows > 0)
+    if(t_n_cols > 0)
       {
-      out.rows(0, A_n_rows-1) = rows(0, A_n_rows-1);
+      if(A_n_rows > 0)
+        {
+        out.rows(0, A_n_rows-1) = rows(0, A_n_rows-1);
+        }
+      
+      if( (t_n_cols > 0) && (B_n_rows > 0) )
+        {
+        out.rows(row_num + C_n_rows, t_n_rows + C_n_rows - 1) = rows(row_num, t_n_rows - 1);
+        }
       }
     
-    if(B_n_rows > 0)
+    if(C_n_cols > 0)
       {
-      out.rows(row_num + N, t_n_rows + N - 1) = rows(row_num, t_n_rows - 1);
+      out.rows(row_num, row_num + C_n_rows - 1) = C;
       }
-    
-    out.rows(row_num, row_num + N - 1) = C;
     
     steal_mem(out);
     }
@@ -2453,33 +2479,59 @@ Mat<eT>::insert_cols(const u32 col_num, const Base<eT,T1>& X)
   const unwrap<T1>   tmp(X.get_ref());
   const Mat<eT>& C = tmp.M;
   
-  const u32 N = C.n_cols;
+  const u32 C_n_rows = C.n_rows;
+  const u32 C_n_cols = C.n_cols;
   
   const u32 t_n_rows = n_rows;
   const u32 t_n_cols = n_cols;
   
   const u32 A_n_cols = col_num;
   const u32 B_n_cols = t_n_cols - col_num;
-
-  // insertion at col_num == n_cols is in effect an append operation
-  arma_debug_check( (col_num  >  t_n_cols), "Mat::insert_cols(): out of bounds");
-  arma_debug_check( (C.n_rows != t_n_rows), "Mat::insert_cols(): given object has an incompatible number of rows");
   
-  if(N > 0)
+  bool  err_state = false;
+  char* err_msg   = 0;
+  
+  // insertion at col_num == n_cols is in effect an append operation
+  
+  arma_debug_set_error
+    (
+    err_state,
+    err_msg,
+    (col_num > t_n_cols),
+    "Mat::insert_cols(): out of bounds"
+    );
+  
+  arma_debug_set_error
+    (
+    err_state,
+    err_msg,
+    ( (C_n_rows != t_n_rows) && ( (t_n_rows > 0) || (t_n_cols > 0) ) && ( (C_n_rows > 0) || (C_n_cols > 0) ) ),
+    "Mat::insert_cols(): given object has an incompatible number of rows"
+    );
+  
+  arma_debug_check(err_state, err_msg);
+  
+  if(C_n_cols > 0)
     {
-    Mat<eT> out(t_n_rows, t_n_cols + N);
+    Mat<eT> out( (std::max)(t_n_rows, C_n_rows), t_n_cols + C_n_cols );
     
-    if(A_n_cols > 0)
+    if(t_n_rows > 0)
       {
-      out.cols(0, A_n_cols-1) = cols(0, A_n_cols-1);
+      if(A_n_cols > 0)
+        {
+        out.cols(0, A_n_cols-1) = cols(0, A_n_cols-1);
+        }
+      
+      if(B_n_cols > 0)
+        {
+        out.cols(col_num + C_n_cols, t_n_cols + C_n_cols - 1) = cols(col_num, t_n_cols - 1);
+        }
       }
     
-    if(B_n_cols > 0)
+    if(C_n_rows > 0)
       {
-      out.cols(col_num + N, t_n_cols + N - 1) = cols(col_num, t_n_cols - 1);
+      out.cols(col_num, col_num + C_n_cols - 1) = C;
       }
-    
-    out.cols(col_num, col_num + N - 1) = C;
     
     steal_mem(out);
     }
@@ -3467,6 +3519,30 @@ Mat<eT>::is_vec() const
 
 
 
+//! returns true if the object can be interpreted as a row vector
+template<typename eT>
+arma_inline
+arma_warn_unused
+bool
+Mat<eT>::is_rowvec() const
+  {
+  return (n_rows == 1);
+  }
+
+
+
+//! returns true if the object can be interpreted as a column vector
+template<typename eT>
+arma_inline
+arma_warn_unused
+bool
+Mat<eT>::is_colvec() const
+  {
+  return (n_cols == 1);
+  }
+
+
+
 //! returns true if the object has the same number of non-zero rows and columnns
 template<typename eT>
 arma_inline
@@ -4303,6 +4379,10 @@ Mat<eT>::save(const std::string name, const file_type type, const bool print_sta
       save_okay = diskio::save_arma_ascii(*this, name);
       break;
     
+    case csv_ascii:
+      save_okay = diskio::save_csv_ascii(*this, name);
+      break;
+    
     case raw_binary:
       save_okay = diskio::save_raw_binary(*this, name);
       break;
@@ -4345,6 +4425,10 @@ Mat<eT>::save(std::ostream& os, const file_type type, const bool print_status) c
     
     case arma_ascii:
       save_okay = diskio::save_arma_ascii(*this, os);
+      break;
+    
+    case csv_ascii:
+      save_okay = diskio::save_csv_ascii(*this, os);
       break;
     
     case raw_binary:
@@ -4396,6 +4480,10 @@ Mat<eT>::load(const std::string name, const file_type type, const bool print_sta
       load_okay = diskio::load_arma_ascii(*this, name, err_msg);
       break;
     
+    case csv_ascii:
+      load_okay = diskio::load_csv_ascii(*this, name, err_msg);
+      break;
+    
     case raw_binary:
       load_okay = diskio::load_raw_binary(*this, name, err_msg);
       break;
@@ -4417,11 +4505,11 @@ Mat<eT>::load(const std::string name, const file_type type, const bool print_sta
     {
     if(err_msg.length() > 0)
       {
-      arma_print("Mat::load(): ", err_msg, name);
+      arma_warn(true, "Mat::load(): ", err_msg, name);
       }
     else
       {
-      arma_print("Mat::load(): couldn't read ", name);
+      arma_warn(true, "Mat::load(): couldn't read ", name);
       }
     }
   
@@ -4460,6 +4548,10 @@ Mat<eT>::load(std::istream& is, const file_type type, const bool print_status)
       load_okay = diskio::load_arma_ascii(*this, is, err_msg);
       break;
     
+    case csv_ascii:
+      load_okay = diskio::load_csv_ascii(*this, is, err_msg);
+      break;
+    
     case raw_binary:
       load_okay = diskio::load_raw_binary(*this, is, err_msg);
       break;
@@ -4482,11 +4574,11 @@ Mat<eT>::load(std::istream& is, const file_type type, const bool print_status)
     {
     if(err_msg.length() > 0)
       {
-      arma_print("Mat::load(): ", err_msg, "the given stream");
+      arma_warn(true, "Mat::load(): ", err_msg, "the given stream");
       }
     else
       {
-      arma_print("Mat::load(): couldn't load from the given stream");
+      arma_warn(true, "Mat::load(): couldn't load from the given stream");
       }
     }
   

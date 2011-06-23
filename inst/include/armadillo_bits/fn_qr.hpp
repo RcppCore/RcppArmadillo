@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -19,7 +19,7 @@
 //! QR decomposition
 template<typename T1>
 inline
-void
+bool
 qr
   (
          Mat<typename T1::elem_type>&    Q,
@@ -29,7 +29,6 @@ qr
   )
   {
   arma_extra_debug_sigprint();
-  
   arma_ignore(junk);
   
   arma_debug_check( (&Q == &R), "qr(): Q and R are the same object");
@@ -38,10 +37,12 @@ qr
   
   if(status == false)
     {
-    arma_print("qr(): failed to converge");
     Q.reset();
     R.reset();
+    arma_bad("qr(): failed to converge", false);
     }
+  
+  return false;
   }
 
 

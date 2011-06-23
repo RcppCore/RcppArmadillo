@@ -24,7 +24,7 @@ op_min::direct_min(const eT* const X, const u32 n_elem)
   {
   arma_extra_debug_sigprint();
   
-  eT min_val = (n_elem != 1) ? priv::most_pos<eT>() : X[0];
+  eT min_val = priv::most_pos<eT>();
   
   u32 i,j;
   
@@ -67,7 +67,7 @@ op_min::direct_min(const eT* const X, const u32 n_elem, u32& index_of_min_val)
   {
   arma_extra_debug_sigprint();
   
-  eT min_val = (n_elem != 1) ? priv::most_pos<eT>() : X[0];
+  eT min_val = priv::most_pos<eT>();
   
   u32 best_index = 0;
   
@@ -119,7 +119,7 @@ op_min::direct_min(const Mat<eT>& X, const u32 row)
   
   const u32 X_n_cols = X.n_cols;
   
-  eT min_val = (X_n_cols != 1) ? priv::most_pos<eT>() : X.at(row,0);
+  eT min_val = priv::most_pos<eT>();
   
   for(u32 col=0; col<X_n_cols; ++col)
     {
@@ -145,7 +145,7 @@ op_min::direct_min(const subview<eT>& X)
   
   const u32 X_n_elem = X.n_elem;
   
-  eT min_val = (X_n_elem != 1) ? priv::most_pos<eT>() : X[0];
+  eT min_val = priv::most_pos<eT>();
   
   for(u32 i=0; i<X_n_elem; ++i)
     {
@@ -171,7 +171,7 @@ op_min::direct_min(const diagview<eT>& X)
   
   const u32 X_n_elem = X.n_elem;
   
-  eT min_val = (X_n_elem != 1) ? priv::most_pos<eT>() : X[0];
+  eT min_val = priv::most_pos<eT>();;
   
   for(u32 i=0; i<X_n_elem; ++i)
     {
@@ -212,16 +212,15 @@ inline void op_min::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_min>&
     {
     arma_extra_debug_print("op_min::apply(), dim = 0");
     
-    out.set_size( (X_n_rows > 0) ? 1 : 0, X_n_cols );
+    arma_debug_check( (X_n_rows == 0), "min(): given object has zero rows" );
+
+    out.set_size(1, X_n_cols);
     
-    if(X_n_rows > 0)
+    eT* out_mem = out.memptr();
+    
+    for(u32 col=0; col<X_n_cols; ++col)
       {
-      eT* out_mem = out.memptr();
-      
-      for(u32 col=0; col<X_n_cols; ++col)
-        {
-        out_mem[col] = op_min::direct_min( X.colptr(col), X_n_rows );
-        }
+      out_mem[col] = op_min::direct_min( X.colptr(col), X_n_rows );
       }
     }
   else
@@ -229,16 +228,15 @@ inline void op_min::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_min>&
     {
     arma_extra_debug_print("op_min::apply(), dim = 1");
     
-    out.set_size( X_n_rows, (X_n_cols > 0) ? 1 : 0 );
+    arma_debug_check( (X_n_cols == 0), "min(): given object has zero columns" );
+
+    out.set_size(X_n_rows, 1);
     
-    if(X_n_cols > 0)
+    eT* out_mem = out.memptr();
+    
+    for(u32 row=0; row<X_n_rows; ++row)
       {
-      eT* out_mem = out.memptr();
-      
-      for(u32 row=0; row<X_n_rows; ++row)
-        {
-        out_mem[row] = op_min::direct_min( X, row );
-        }
+      out_mem[row] = op_min::direct_min( X, row );
       }
     }
   }
@@ -253,7 +251,7 @@ op_min::direct_min(const std::complex<T>* const X, const u32 n_elem)
   arma_extra_debug_sigprint();
   
   u32 index   = 0;
-  T   min_val = (n_elem != 1) ? priv::most_pos<T>() : std::abs(X[0]);
+  T   min_val = priv::most_pos<T>();
   
   for(u32 i=0; i<n_elem; ++i)
     {
@@ -279,7 +277,7 @@ op_min::direct_min(const std::complex<T>* const X, const u32 n_elem, u32& index_
   arma_extra_debug_sigprint();
   
   u32 index   = 0;
-  T   min_val = (n_elem != 1) ? priv::most_pos<T>() : std::abs(X[0]);
+  T   min_val = priv::most_pos<T>();
   
   for(u32 i=0; i<n_elem; ++i)
     {
@@ -309,7 +307,7 @@ op_min::direct_min(const Mat< std::complex<T> >& X, const u32 row)
   const u32 X_n_cols = X.n_cols;
   
   u32 index   = 0;
-  T   min_val = (X_n_cols != 1) ? priv::most_pos<T>() : std::abs(X.at(row,0));
+  T   min_val = priv::most_pos<T>();
   
   for(u32 col=0; col<X_n_cols; ++col)
     {
@@ -336,7 +334,7 @@ op_min::direct_min(const subview< std::complex<T> >& X)
   
   const u32 X_n_elem = X.n_elem;
         u32 index    = 0;
-        T   min_val  = (X_n_elem != 1) ? priv::most_pos<T>() : std::abs(X[0]);
+        T   min_val  = priv::most_pos<T>();
   
   for(u32 i=0; i<X_n_elem; ++i)
     {
@@ -363,7 +361,7 @@ op_min::direct_min(const diagview< std::complex<T> >& X)
   
   const u32 X_n_elem = X.n_elem;
         u32 index    = 0;
-        T   min_val  = (X_n_elem != 1) ? priv::most_pos<T>() : std::abs(X[0]);
+        T   min_val  = priv::most_pos<T>();
   
   for(u32 i=0; i<X_n_elem; ++i)
     {

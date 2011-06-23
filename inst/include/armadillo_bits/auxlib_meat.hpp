@@ -1,7 +1,8 @@
 // Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
 // Copyright (C) 2008-2011 Conrad Sanderson
-// Copyright (C)      2009 Edmund Highcock
-// Copyright (C)      2011 James Sanders
+// Copyright (C) 2009 Edmund Highcock
+// Copyright (C) 2011 James Sanders
+// Copyright (C) 2011 Stanislav Funiak
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -44,12 +45,6 @@ auxlib::inv(Mat<eT>& out, const Base<eT,T1>& X, const bool slow)
     status = auxlib::inv_inplace_lapack(out);
     }
   
-  if(status == false)
-    {
-    arma_print("inv(): matrix appears to be singular" );
-    out.reset();
-    }
-  
   return status;
   }
 
@@ -77,12 +72,6 @@ auxlib::inv(Mat<eT>& out, const Mat<eT>& X, const bool slow)
     {
     out = X;
     status = auxlib::inv_inplace_lapack(out);
-    }
-  
-  if(status == false)
-    {
-    arma_print("inv(): matrix appears to be singular" );
-    out.reset();
     }
   
   return status;
@@ -364,6 +353,11 @@ bool
 auxlib::inv_inplace_lapack(Mat<eT>& out)
   {
   arma_extra_debug_sigprint();
+
+  if(out.is_empty())
+    {
+    return true;
+    }
   
   #if defined(ARMA_USE_ATLAS)
     {
@@ -470,12 +464,7 @@ auxlib::inv_tr(Mat<eT>& out, const Base<eT,T1>& X, const u32 layout)
   #endif
   
   
-  if(status == false)
-    {
-    arma_print("inv(): matrix appears to be singular" );
-    out.reset();
-    }
-  else
+  if(status == true)
     {
     if(layout == 0)
       {
@@ -514,16 +503,29 @@ auxlib::inv_sym(Mat<eT>& out, const Base<eT,T1>& X, const u32 layout)
   
   #if defined(ARMA_USE_LAPACK)
     {
-    char     uplo = (layout == 0) ? 'U' : 'L';
-    blas_int n    = blas_int(out.n_rows);
-    blas_int info = 0;
+    char     uplo  = (layout == 0) ? 'U' : 'L';
+    blas_int n     = blas_int(out.n_rows);
+    blas_int lwork = n*n; // TODO: use lwork = -1 to determine optimal size
+    blas_int info  = 0;
     
-    lapack::potrf(&uplo, &n, out.memptr(), &n, &info);
-    lapack::potri(&uplo, &n, out.memptr(), &n, &info);
+    podarray<blas_int> ipiv;
+    ipiv.set_size(out.n_rows);
     
-    out = (layout == 0) ? symmatu(out) : symmatl(out);
+    podarray<eT> work;
+    work.set_size( u32(lwork) );
+    
+    lapack::sytrf(&uplo, &n, out.memptr(), &n, ipiv.memptr(), work.memptr(), &lwork, &info);
     
     status = (info == 0);
+    
+    if(status == true)
+      {
+      lapack::sytri(&uplo, &n, out.memptr(), &n, ipiv.memptr(), work.memptr(), &info);
+      
+      out = (layout == 0) ? symmatu(out) : symmatl(out);
+      
+      status = (info == 0);
+      }
     }
   #else
     {
@@ -533,11 +535,55 @@ auxlib::inv_sym(Mat<eT>& out, const Base<eT,T1>& X, const u32 layout)
     }
   #endif
   
-  if(status == false)
+  return status;
+  }
+
+
+
+template<typename eT, typename T1>
+inline
+bool
+auxlib::inv_sympd(Mat<eT>& out, const Base<eT,T1>& X, const u32 layout)
+  {
+  arma_extra_debug_sigprint();
+  
+  out = X.get_ref();
+  
+  arma_debug_check( (out.is_square() == false), "inv(): given matrix is not square" );
+  
+  if(out.is_empty())
     {
-    arma_print("inv(): matrix appears to be singular" );
-    out.reset();
+    return true;
     }
+  
+  bool status;
+  
+  #if defined(ARMA_USE_LAPACK)
+    {
+    char     uplo = (layout == 0) ? 'U' : 'L';
+    blas_int n    = blas_int(out.n_rows);
+    blas_int info = 0;
+    
+    lapack::potrf(&uplo, &n, out.memptr(), &n, &info);
+    
+    status = (info == 0);
+    
+    if(status == true)
+      {
+      lapack::potri(&uplo, &n, out.memptr(), &n, &info);
+    
+      out = (layout == 0) ? symmatu(out) : symmatl(out);
+    
+      status = (info == 0);
+      }
+    }
+  #else
+    {
+    arma_ignore(layout);
+    arma_stop("inv(): use of LAPACK needs to be enabled");
+    status = false;
+    }
+  #endif
   
   return status;
   }
@@ -712,6 +758,7 @@ auxlib::det_lapack(const Mat<eT>& X, const bool make_copy)
     {
     podarray<int> ipiv(tmp.n_rows);
     
+    //const int info =
     atlas::clapack_getrf(atlas::CblasColMajor, tmp.n_rows, tmp.n_cols, tmp.memptr(), tmp.n_rows, ipiv.memptr());
     
     // on output tmp appears to be L+U_alt, where U_alt is U with the main diagonal set to zero
@@ -776,7 +823,7 @@ auxlib::det_lapack(const Mat<eT>& X, const bool make_copy)
 //! immediate log determinant of a matrix using ATLAS or LAPACK
 template<typename eT, typename T1>
 inline
-void
+bool
 auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const Base<eT,T1>& X)
   {
   arma_extra_debug_sigprint();
@@ -797,7 +844,7 @@ auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const 
     
     podarray<int> ipiv(tmp.n_rows);
     
-    atlas::clapack_getrf(atlas::CblasColMajor, tmp.n_rows, tmp.n_cols, tmp.memptr(), tmp.n_rows, ipiv.memptr());
+    const int info = atlas::clapack_getrf(atlas::CblasColMajor, tmp.n_rows, tmp.n_cols, tmp.memptr(), tmp.n_rows, ipiv.memptr());
     
     // on output tmp appears to be L+U_alt, where U_alt is U with the main diagonal set to zero
     
@@ -822,6 +869,8 @@ auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const 
     
     out_val  = val;
     out_sign = T(sign);
+    
+    return (info == 0);
     }
   #elif defined(ARMA_USE_LAPACK)
     {
@@ -866,13 +915,17 @@ auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const 
     
     out_val  = val;
     out_sign = T(sign);
+    
+    return (info == 0);
     }
   #else
     {
-    arma_stop("log_det(): use of ATLAS or LAPACK needs to be enabled");
-    
     out_val  = eT(0);
     out_sign =  T(0);
+    
+    arma_stop("log_det(): use of ATLAS or LAPACK needs to be enabled");
+    
+    return false;
     }
   #endif
   }
@@ -882,32 +935,35 @@ auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const 
 //! immediate LU decomposition of a matrix using ATLAS or LAPACK
 template<typename eT, typename T1>
 inline
-void
+bool
 auxlib::lu(Mat<eT>& L, Mat<eT>& U, podarray<blas_int>& ipiv, const Base<eT,T1>& X)
   {
   arma_extra_debug_sigprint();
   
   U = X.get_ref();
   
-  if(U.is_empty())
-    {
-    L.reset();
-    U.reset();
-    ipiv.reset();
-    return;
-    }
-  
   const u32 U_n_rows = U.n_rows;
   const u32 U_n_cols = U.n_cols;
   
+  if(U.is_empty())
+    {
+    L.set_size(U_n_rows, 0);
+    U.set_size(0, U_n_cols);
+    ipiv.reset();
+    return true;
+    }
+  
   #if defined(ARMA_USE_ATLAS) || defined(ARMA_USE_LAPACK)
     {
+    bool status;
+    
     #if defined(ARMA_USE_ATLAS)
       {
       ipiv.set_size( (std::min)(U_n_rows, U_n_cols) );
       
-      //int info = 
-      atlas::clapack_getrf(atlas::CblasColMajor, U_n_rows, U_n_cols, U.memptr(), U_n_rows, ipiv.memptr());
+      int info = atlas::clapack_getrf(atlas::CblasColMajor, U_n_rows, U_n_cols, U.memptr(), U_n_rows, ipiv.memptr());
+      
+      status = (info == 0);
       }
     #elif defined(ARMA_USE_LAPACK)
       {
@@ -923,6 +979,8 @@ auxlib::lu(Mat<eT>& L, Mat<eT>& U, podarray<blas_int>& ipiv, const Base<eT,T1>& 
       
       // take into account that Fortran counts from 1
       arrayops::inplace_minus(ipiv.memptr(), blas_int(1), ipiv.n_elem);
+      
+      status = (info == 0);
       }
     #endif
     
@@ -946,12 +1004,14 @@ auxlib::lu(Mat<eT>& L, Mat<eT>& U, podarray<blas_int>& ipiv, const Base<eT,T1>& 
         U.at(row,col) = eT(0);
         }
       }
+    
+    return status;
     }
   #else
     {
-    arma_ignore(U_n_rows);
-    arma_ignore(U_n_cols);
     arma_stop("lu(): use of ATLAS or LAPACK needs to be enabled");
+    
+    return false;
     }
   #endif
   }
@@ -960,115 +1020,123 @@ auxlib::lu(Mat<eT>& L, Mat<eT>& U, podarray<blas_int>& ipiv, const Base<eT,T1>& 
 
 template<typename eT, typename T1>
 inline
-void
+bool
 auxlib::lu(Mat<eT>& L, Mat<eT>& U, Mat<eT>& P, const Base<eT,T1>& X)
   {
   arma_extra_debug_sigprint();
   
   podarray<blas_int> ipiv1;
-  auxlib::lu(L, U, ipiv1, X);
+  const bool status = auxlib::lu(L, U, ipiv1, X);
   
-  if(U.is_empty())
+  if(status == true)
     {
-    L.reset();
-    U.reset();
-    P.reset();
-    return;
-    }
-  
-  const u32 n      = ipiv1.n_elem;
-  const u32 P_rows = U.n_rows;
-  
-  podarray<blas_int> ipiv2(P_rows);
-  
-  const blas_int* ipiv1_mem = ipiv1.memptr();
-        blas_int* ipiv2_mem = ipiv2.memptr();
-  
-  for(u32 i=0; i<P_rows; ++i)
-    {
-    ipiv2_mem[i] = blas_int(i);
-    }
-  
-  for(u32 i=0; i<n; ++i)
-    {
-    const u32 k = static_cast<u32>(ipiv1_mem[i]);
-    
-    if( ipiv2_mem[i] != ipiv2_mem[k] )
+    if(U.is_empty())
       {
-      std::swap( ipiv2_mem[i], ipiv2_mem[k] );
+      // L and U have been already set to the correct empty matrices
+      P.eye(L.n_rows, L.n_rows);
+      return true;
+      }
+    
+    const u32 n      = ipiv1.n_elem;
+    const u32 P_rows = U.n_rows;
+    
+    podarray<blas_int> ipiv2(P_rows);
+    
+    const blas_int* ipiv1_mem = ipiv1.memptr();
+          blas_int* ipiv2_mem = ipiv2.memptr();
+    
+    for(u32 i=0; i<P_rows; ++i)
+      {
+      ipiv2_mem[i] = blas_int(i);
+      }
+    
+    for(u32 i=0; i<n; ++i)
+      {
+      const u32 k = static_cast<u32>(ipiv1_mem[i]);
+      
+      if( ipiv2_mem[i] != ipiv2_mem[k] )
+        {
+        std::swap( ipiv2_mem[i], ipiv2_mem[k] );
+        }
+      }
+    
+    P.zeros(P_rows, P_rows);
+    
+    for(u32 row=0; row<P_rows; ++row)
+      {
+      P.at(row, static_cast<u32>(ipiv2_mem[row])) = eT(1);
+      }
+    
+    if(L.n_cols > U.n_rows)
+      {
+      L.shed_cols(U.n_rows, L.n_cols-1);
+      }
+      
+    if(U.n_rows > L.n_cols)
+      {
+      U.shed_rows(L.n_cols, U.n_rows-1);
       }
     }
   
-  P.zeros(P_rows, P_rows);
-  
-  for(u32 row=0; row<P_rows; ++row)
-    {
-    P.at(row, static_cast<u32>(ipiv2_mem[row])) = eT(1);
-    }
-  
-  if(L.n_cols > U.n_rows)
-    {
-    L.shed_cols(U.n_rows, L.n_cols-1);
-    }
-    
-  if(U.n_rows > L.n_cols)
-    {
-    U.shed_rows(L.n_cols, U.n_rows-1);
-    }
+  return status;
   }
 
 
 
 template<typename eT, typename T1>
 inline
-void
+bool
 auxlib::lu(Mat<eT>& L, Mat<eT>& U, const Base<eT,T1>& X)
   {
   arma_extra_debug_sigprint();
   
   podarray<blas_int> ipiv1;
-  auxlib::lu(L, U, ipiv1, X);
+  const bool status = auxlib::lu(L, U, ipiv1, X);
   
-  if(U.is_empty())
+  if(status == true)
     {
-    L.reset();
-    U.reset();
-    return;
-    }
-  
-  const u32 n      = ipiv1.n_elem;
-  const u32 P_rows = U.n_rows;
-  
-  podarray<blas_int> ipiv2(P_rows);
-  
-  const blas_int* ipiv1_mem = ipiv1.memptr();
-        blas_int* ipiv2_mem = ipiv2.memptr();
-  
-  for(u32 i=0; i<P_rows; ++i)
-    {
-    ipiv2_mem[i] = blas_int(i);
-    }
-  
-  for(u32 i=0; i<n; ++i)
-    {
-    const u32 k = static_cast<u32>(ipiv1_mem[i]);
-    
-    if( ipiv2_mem[i] != ipiv2_mem[k] )
+    if(U.is_empty())
       {
-      std::swap( ipiv2_mem[i], ipiv2_mem[k] );
-      L.swap_rows( static_cast<u32>(ipiv2_mem[i]), static_cast<u32>(ipiv2_mem[k]) );
+      // L and U have been already set to the correct empty matrices
+      return true;
+      }
+    
+    const u32 n      = ipiv1.n_elem;
+    const u32 P_rows = U.n_rows;
+    
+    podarray<blas_int> ipiv2(P_rows);
+    
+    const blas_int* ipiv1_mem = ipiv1.memptr();
+          blas_int* ipiv2_mem = ipiv2.memptr();
+    
+    for(u32 i=0; i<P_rows; ++i)
+      {
+      ipiv2_mem[i] = blas_int(i);
+      }
+    
+    for(u32 i=0; i<n; ++i)
+      {
+      const u32 k = static_cast<u32>(ipiv1_mem[i]);
+      
+      if( ipiv2_mem[i] != ipiv2_mem[k] )
+        {
+        std::swap( ipiv2_mem[i], ipiv2_mem[k] );
+        L.swap_rows( static_cast<u32>(ipiv2_mem[i]), static_cast<u32>(ipiv2_mem[k]) );
+        }
+      }
+    
+    if(L.n_cols > U.n_rows)
+      {
+      L.shed_cols(U.n_rows, L.n_cols-1);
+      }
+      
+    if(U.n_rows > L.n_cols)
+      {
+      U.shed_rows(L.n_cols, U.n_rows-1);
       }
     }
   
-  if(L.n_cols > U.n_rows)
-    {
-    L.shed_cols(U.n_rows, L.n_cols-1);
-    }
-    
-  if(U.n_rows > L.n_cols)
-    {
-    U.shed_rows(L.n_cols, U.n_rows-1);
-    }
+  return status;
   }
 
 
@@ -1549,15 +1617,14 @@ auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
     {
     R = X.get_ref();
     
-    if(R.is_empty())
-      {
-      Q.reset();
-      R.reset();
-      return true;
-      }
-    
     const u32 R_n_rows = R.n_rows;
     const u32 R_n_cols = R.n_cols;
+    
+    if(R.is_empty())
+      {
+      Q.eye(R_n_rows, R_n_rows);
+      return true;
+      }
     
     blas_int m            = static_cast<blas_int>(R_n_rows);
     blas_int n            = static_cast<blas_int>(R_n_cols);
@@ -1659,8 +1726,6 @@ auxlib::svd(Col<eT>& S, const Base<eT,T1>& X, u32& X_n_rows, u32& X_n_cols)
     if(A.is_empty())
       {
       S.reset();
-      X_n_rows = 0;
-      X_n_cols = 0;
       return true;
       }
     
@@ -1756,8 +1821,6 @@ auxlib::svd(Col<T>& S, const Base<std::complex<T>, T1>& X, u32& X_n_rows, u32& X
     if(A.is_empty())
       {
       S.reset();
-      X_n_rows = 0;
-      X_n_cols = 0;
       return true;
       }
     
@@ -1875,9 +1938,9 @@ auxlib::svd(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
     
     if(A.is_empty())
       {
-      U.reset();
+      U.eye(A.n_rows, A.n_rows);
       S.reset();
-      V.reset();
+      V.eye(A.n_cols, A.n_cols);
       return true;
       }
     
@@ -1969,9 +2032,9 @@ auxlib::svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, con
     
     if(A.is_empty())
       {
-      U.reset();
+      U.eye(A.n_rows, A.n_rows);
       S.reset();
-      V.reset();
+      V.eye(A.n_cols, A.n_cols);
       return true;
       }
     
@@ -2062,8 +2125,7 @@ auxlib::solve(Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B, const bool slow)
   
   if(A.is_empty() || B.is_empty())
     {
-    out.reset();
-    A.reset();
+    out.zeros(A.n_cols, B.n_cols);
     return true;
     }
   else
@@ -2133,8 +2195,7 @@ auxlib::solve_od(Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B)
     {
     if(A.is_empty() || B.is_empty())
       {
-      out.reset();
-      A.reset();
+      out.zeros(A.n_cols, B.n_cols);
       return true;
       }
     
@@ -2202,8 +2263,7 @@ auxlib::solve_ud(Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B)
     {
     if(A.is_empty() || B.is_empty())
       {
-      out.reset();
-      A.reset();
+      out.zeros(A.n_cols, B.n_cols);
       return true;
       }
     
@@ -2286,7 +2346,7 @@ auxlib::solve_tr(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const u32 lay
     {
     if(A.is_empty() || B.is_empty())
       {
-      out.reset();
+      out.zeros(A.n_cols, B.n_cols);
       return true;
       }
     
@@ -2498,12 +2558,6 @@ auxlib::syl(Mat<eT>& X, const Mat<eT>& A, const Mat<eT>& B, const Mat<eT>& C)
     }
   #endif
   
-  
-  if(status == false)
-    {
-    arma_print("syl(): equation appears to be singular" );
-    X.reset();
-    }
   
   return status;
   }

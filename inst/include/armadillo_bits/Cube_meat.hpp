@@ -170,7 +170,7 @@ Cube<eT>::init(const u32 in_n_rows, const u32 in_n_cols, const u32 in_n_slices)
         
         access::rw(mem) = new(std::nothrow) eT[new_n_elem];
       
-        arma_check( (mem == 0), "Cube::init(): out of memory" );
+        arma_check_bad_alloc( (mem == 0), "Cube::init(): out of memory" );
         }
       
       if(new_n_elem > 0)
@@ -337,7 +337,7 @@ Cube<eT>::create_mat()
       {
       access::rw(mat_ptrs) = new(std::nothrow) const Mat<eT>*[n_slices];
       
-      arma_check( (mat_ptrs == 0), "Cube::create_mat(): out of memory" );
+      arma_check_bad_alloc( (mat_ptrs == 0), "Cube::create_mat(): out of memory" );
       }
     }
   
@@ -2668,11 +2668,11 @@ Cube<eT>::load(const std::string name, const file_type type, const bool print_st
     {
     if(err_msg.length() > 0)
       {
-      arma_print("Cube::load(): ", err_msg, name);
+      arma_warn(true, "Cube::load(): ", err_msg, name);
       }
     else
       {
-      arma_print("Cube::load(): couldn't read ", name);
+      arma_warn(true, "Cube::load(): couldn't read ", name);
       }
     }
   
@@ -2733,11 +2733,11 @@ Cube<eT>::load(std::istream& is, const file_type type, const bool print_status)
     {
     if(err_msg.length() > 0)
       {
-      arma_print("Cube::load(): ", err_msg, "the given stream");
+      arma_warn(true, "Cube::load(): ", err_msg, "the given stream");
       }
     else
       {
-      arma_print("Cube::load(): couldn't load from the given stream");
+      arma_warn(true, "Cube::load(): couldn't load from the given stream");
       }
     }
   

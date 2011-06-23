@@ -31,16 +31,29 @@ glue_join::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_join>& 
   const Mat<eT>& A = A_tmp.M;
   const Mat<eT>& B = B_tmp.M;
   
-  const u32 join_type = X.aux_u32;
+  const u32 A_n_rows = A.n_rows;
+  const u32 A_n_cols = A.n_cols;
   
+  const u32 B_n_rows = B.n_rows;
+  const u32 B_n_cols = B.n_cols;
+  
+  const u32 join_type = X.aux_u32;
   
   if(join_type == 0)
     {
-    arma_debug_check( (A.n_cols != B.n_cols), "join_cols(): number of columns must be the same" );
+    arma_debug_check
+      (
+      ( (A_n_cols != B_n_cols) && ( (A_n_rows > 0) || (A_n_cols > 0) ) && ( (B_n_rows > 0) || (B_n_cols > 0) ) ),
+      "join_cols(): number of columns must be the same"
+      );
     }
   else
     {
-    arma_debug_check( (A.n_rows != B.n_rows), "join_rows(): number of rows must be the same" );
+    arma_debug_check
+      (
+      ( (A_n_rows != B.n_rows) && ( (A_n_rows > 0) || (A_n_cols > 0) ) && ( (B_n_rows > 0) || (B_n_cols > 0) ) ),
+      "join_rows(): number of rows must be the same"
+      );
     }
   
   
@@ -48,22 +61,36 @@ glue_join::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_join>& 
     {
     if(join_type == 0)   // join columns (i.e. result matrix has more rows)
       {
-      out.set_size(A.n_rows + B.n_rows, A.n_cols);
+      out.set_size( A_n_rows + B_n_rows, (std::max)(A_n_cols, B_n_cols) );
       
       if( out.n_elem > 0 )
         {
-        out.submat(0,        0,   A.n_rows-1, out.n_cols-1) = A;
-        out.submat(A.n_rows, 0, out.n_rows-1, out.n_cols-1) = B;
+        if(A.is_empty() == false)
+          { 
+          out.submat(0,        0,   A_n_rows-1, out.n_cols-1) = A;
+          }
+          
+        if(B.is_empty() == false)
+          {
+          out.submat(A_n_rows, 0, out.n_rows-1, out.n_cols-1) = B;
+          }
         }
       }
     else   // join rows  (i.e. result matrix has more columns)
       {
-      out.set_size(A.n_rows, A.n_cols + B.n_cols);
+      out.set_size( (std::max)(A_n_rows, B_n_rows), A_n_cols + B_n_cols );
       
       if( out.n_elem > 0 )
         {
-        out.submat(0, 0,        out.n_rows-1,   A.n_cols-1) = A;
-        out.submat(0, A.n_cols, out.n_rows-1, out.n_cols-1) = B;
+        if(A.is_empty() == false)
+          {
+          out.submat(0, 0,        out.n_rows-1,   A.n_cols-1) = A;
+          }
+        
+        if(B.is_empty() == false)
+          {
+          out.submat(0, A_n_cols, out.n_rows-1, out.n_cols-1) = B;
+          }
         }
       }
     }
@@ -73,22 +100,36 @@ glue_join::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_join>& 
     
     if(join_type == 0)
       {
-      C.set_size(A.n_rows + B.n_rows, A.n_cols);
+      C.set_size( A_n_rows + B_n_rows, (std::max)(A_n_cols, B_n_cols) );
       
       if( C.n_elem > 0 )
         {
-        C.submat(0,        0, A.n_rows-1, C.n_cols-1) = A;
-        C.submat(A.n_rows, 0, C.n_rows-1, C.n_cols-1) = B;
+        if(A.is_empty() == false)
+          {
+          C.submat(0,        0, A_n_rows-1, C.n_cols-1) = A;
+          }
+        
+        if(B.is_empty() == false)
+          {
+          C.submat(A_n_rows, 0, C.n_rows-1, C.n_cols-1) = B;
+          }
         }
       }
     else
       {
-      C.set_size(A.n_rows, A.n_cols + B.n_cols);
+      C.set_size( (std::max)(A_n_rows, B_n_rows), A_n_cols + B_n_cols );
       
       if( C.n_elem > 0 )
         {
-        C.submat(0, 0,        C.n_rows-1, A.n_cols-1) = A;
-        C.submat(0, A.n_cols, C.n_rows-1, C.n_cols-1) = B;
+        if(A.is_empty() == false)
+          {
+          C.submat(0, 0,        C.n_rows-1, A_n_cols-1) = A;
+          }
+        
+        if(B.is_empty() == false)
+          {
+          C.submat(0, A_n_cols, C.n_rows-1, C.n_cols-1) = B;
+          }
         }
       }
     

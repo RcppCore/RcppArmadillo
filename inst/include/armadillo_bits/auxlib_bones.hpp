@@ -66,6 +66,13 @@ class auxlib
   
   
   //
+  // inv_sympd
+  
+  template<typename eT, typename T1>
+  inline static bool inv_sympd(Mat<eT>& out, const Base<eT,T1>& X, const u32 layout);
+  
+  
+  //
   // det
   
   template<typename eT, typename T1>
@@ -82,20 +89,20 @@ class auxlib
   // log_det
   
   template<typename eT, typename T1>
-  inline static void log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const Base<eT,T1>& X);
+  inline static bool log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const Base<eT,T1>& X);
   
   
   //
   // lu
   
   template<typename eT, typename T1>
-  inline static void lu(Mat<eT>& L, Mat<eT>& U, podarray<blas_int>& ipiv, const Base<eT,T1>& X);
+  inline static bool lu(Mat<eT>& L, Mat<eT>& U, podarray<blas_int>& ipiv, const Base<eT,T1>& X);
   
   template<typename eT, typename T1>
-  inline static void lu(Mat<eT>& L, Mat<eT>& U, Mat<eT>& P, const Base<eT,T1>& X);
+  inline static bool lu(Mat<eT>& L, Mat<eT>& U, Mat<eT>& P, const Base<eT,T1>& X);
   
   template<typename eT, typename T1>
-  inline static void lu(Mat<eT>& L, Mat<eT>& U, const Base<eT,T1>& X);
+  inline static bool lu(Mat<eT>& L, Mat<eT>& U, const Base<eT,T1>& X);
   
   
   //

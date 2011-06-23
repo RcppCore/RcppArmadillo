@@ -44,17 +44,16 @@ op_stddev::apply(Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_ty
   if(dim == 0)
     {
     arma_extra_debug_print("op_stddev::apply(), dim = 0");
+
+    arma_debug_check( (X_n_rows == 0), "stddev(): given object has zero rows" );
     
-    out.set_size( (X_n_rows > 0) ? 1 : 0, X_n_cols );
+    out.set_size(1, X_n_cols);
     
-    if(X_n_rows > 0)
+    out_eT* out_mem = out.memptr();
+    
+    for(u32 col=0; col<X_n_cols; ++col)
       {
-      out_eT* out_mem = out.memptr();
-      
-      for(u32 col=0; col<X_n_cols; ++col)
-        {
-        out_mem[col] = std::sqrt( op_var::direct_var( X.colptr(col), X_n_rows, norm_type ) );
-        }
+      out_mem[col] = std::sqrt( op_var::direct_var( X.colptr(col), X_n_rows, norm_type ) );
       }
     }
   else
@@ -62,21 +61,20 @@ op_stddev::apply(Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_ty
     {
     arma_extra_debug_print("op_stddev::apply(), dim = 1");
     
-    out.set_size( X_n_rows, (X_n_cols > 0) ? 1 : 0 );
+    arma_debug_check( (X_n_cols == 0), "stddev(): given object has zero columns" );
+
+    out.set_size(X_n_rows, 1);
     
-    if(X_n_cols > 0)
+    podarray<in_eT> tmp(X_n_cols);
+    
+    in_eT*  tmp_mem = tmp.memptr();
+    out_eT* out_mem = out.memptr();
+    
+    for(u32 row=0; row<X_n_rows; ++row)
       {
-      podarray<in_eT> tmp(X_n_cols);
+      tmp.copy_row(X, row);
       
-      in_eT*  tmp_mem = tmp.memptr();
-      out_eT* out_mem = out.memptr();
-      
-      for(u32 row=0; row<X_n_rows; ++row)
-        {
-        tmp.copy_row(X, row);
-        
-        out_mem[row] = std::sqrt( op_var::direct_var( tmp_mem, X_n_cols, norm_type) );
-        }
+      out_mem[row] = std::sqrt( op_var::direct_var( tmp_mem, X_n_cols, norm_type) );
       }
     }
   }

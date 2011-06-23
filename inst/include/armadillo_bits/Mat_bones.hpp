@@ -255,6 +255,8 @@ class Mat : public Base< eT, Mat<eT> >
   
   arma_inline arma_warn_unused bool is_empty()  const;
   arma_inline arma_warn_unused bool is_vec()    const;
+  arma_inline arma_warn_unused bool is_rowvec() const;
+  arma_inline arma_warn_unused bool is_colvec() const;
   arma_inline arma_warn_unused bool is_square() const;
        inline arma_warn_unused bool is_finite() const;
   

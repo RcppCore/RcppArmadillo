@@ -851,11 +851,11 @@ field<oT>::save(const std::string name, const file_type type, const bool print_s
     {
     if(err_msg.length() > 0)
       {
-      arma_print("field::save(): ", err_msg, name);
+      arma_warn(true, "field::save(): ", err_msg, name);
       }
     else
       {
-      arma_print("field::save(): couldn't write to ", name);
+      arma_warn(true, "field::save(): couldn't write to ", name);
       }
     }
   
@@ -878,11 +878,11 @@ field<oT>::save(std::ostream& os, const file_type type, const bool print_status)
     {
     if(err_msg.length() > 0)
       {
-      arma_print("field::save(): ", err_msg, "[ostream]");
+      arma_warn(true, "field::save(): ", err_msg, "[ostream]");
       }
     else
       {
-      arma_print("field::save(): couldn't write to [ostream]");
+      arma_warn(true, "field::save(): couldn't write to [ostream]");
       }
     }
   
@@ -905,11 +905,11 @@ field<oT>::load(const std::string name, const file_type type, const bool print_s
     {
     if(err_msg.length() > 0)
       {
-      arma_print("field::load(): ", err_msg, name);
+      arma_warn(true, "field::load(): ", err_msg, name);
       }
     else
       {
-      arma_print("field::load(): couldn't read from ", name);
+      arma_warn(true, "field::load(): couldn't read from ", name);
       }
     }
   
@@ -937,11 +937,11 @@ field<oT>::load(std::istream& is, const file_type type, const bool print_status)
     {
     if(err_msg.length() > 0)
       {
-      arma_print("field::load(): ", err_msg, "[istream]");
+      arma_warn(true, "field::load(): ", err_msg, "[istream]");
       }
     else
       {
-      arma_print("field::load(): couldn't read from [istream]");
+      arma_warn(true, "field::load(): couldn't read from [istream]");
       }
     }
   
@@ -1061,7 +1061,7 @@ field<oT>::init(const u32 n_rows_in, const u32 n_cols_in)
     else
       {
       mem = new(std::nothrow) oT* [n_elem_new];
-      arma_check( (mem == 0), "field::init(): out of memory" );
+      arma_check_bad_alloc( (mem == 0), "field::init(): out of memory" );
       }
     
     access::rw(n_elem) = n_elem_new;

@@ -98,6 +98,16 @@
   #define arma_ctrsyl ctrsyl
   #define arma_ztrsyl ztrsyl
   
+  #define arma_ssytrf ssytrf
+  #define arma_dsytrf dsytrf
+  #define arma_csytrf csytrf
+  #define arma_zsytrf zsytrf
+  
+  #define arma_ssytri ssytri
+  #define arma_dsytri dsytri
+  #define arma_csytri csytri
+  #define arma_zsytri zsytri
+  
 #else
   
   #define arma_sgetrf SGETRF
@@ -178,6 +188,16 @@
   #define arma_dtrsyl DTRSYL
   #define arma_ctrsyl CTRSYL
   #define arma_ztrsyl ZTRSYL
+  
+  #define arma_ssytrf SSYTRF
+  #define arma_dsytrf DSYTRF
+  #define arma_csytrf CSYTRF
+  #define arma_zsytrf ZSYTRF
+  
+  #define arma_ssytri SSYTRI
+  #define arma_dsytri DSYTRI
+  #define arma_csytri CSYTRI
+  #define arma_zsytri ZSYTRI
   
 #endif
 
@@ -290,6 +310,16 @@ namespace lapack
     void arma_fortran(arma_dtrsyl)(char* transa, char* transb, blas_int* isgn, blas_int* m, blas_int* n, const double* a, blas_int* lda, const double* b, blas_int* ldb, double* c, blas_int* ldc, double* scale, blas_int* info);
     void arma_fortran(arma_ctrsyl)(char* transa, char* transb, blas_int* isgn, blas_int* m, blas_int* n, const void*   a, blas_int* lda, const void*   b, blas_int* ldb, void*   c, blas_int* ldc, float*  scale, blas_int* info);
     void arma_fortran(arma_ztrsyl)(char* transa, char* transb, blas_int* isgn, blas_int* m, blas_int* n, const void*   a, blas_int* lda, const void*   b, blas_int* ldb, void*   c, blas_int* ldc, double* scale, blas_int* info);
+    
+    void arma_fortran(arma_ssytrf)(char* uplo, blas_int* n, float*  a, blas_int* lda, blas_int* ipiv, float*  work, blas_int* lwork, blas_int* info);
+    void arma_fortran(arma_dsytrf)(char* uplo, blas_int* n, double* a, blas_int* lda, blas_int* ipiv, double* work, blas_int* lwork, blas_int* info);
+    void arma_fortran(arma_csytrf)(char* uplo, blas_int* n, void*   a, blas_int* lda, blas_int* ipiv, void*   work, blas_int* lwork, blas_int* info);
+    void arma_fortran(arma_zsytrf)(char* uplo, blas_int* n, void*   a, blas_int* lda, blas_int* ipiv, void*   work, blas_int* lwork, blas_int* info);
+    
+    void arma_fortran(arma_ssytri)(char* uplo, blas_int* n, float*  a, blas_int* lda, blas_int* ipiv, float*  work, blas_int* info);
+    void arma_fortran(arma_dsytri)(char* uplo, blas_int* n, double* a, blas_int* lda, blas_int* ipiv, double* work, blas_int* info);
+    void arma_fortran(arma_csytri)(char* uplo, blas_int* n, void*   a, blas_int* lda, blas_int* ipiv, void*   work, blas_int* info);
+    void arma_fortran(arma_zsytri)(char* uplo, blas_int* n, void*   a, blas_int* lda, blas_int* ipiv, void*   work, blas_int* info);
     
     // void arma_fortran(arma_dgeqp3)(blas_int* m, blas_int* n, double* a, blas_int* lda, blas_int* jpvt, double* tau, double* work, blas_int* lwork, blas_int* info);
     // void arma_fortran(arma_dormqr)(char* side, char* trans, blas_int* m, blas_int* n, blas_int* k, double* a, blas_int* lda, double* tau, double* c, blas_int* ldc, double* work, blas_int* lwork, blas_int* info);
@@ -906,6 +936,71 @@ namespace lapack
       }
     }
   
+  
+  template<typename eT>
+  inline
+  void
+  sytrf(char* uplo, blas_int* n, eT* a, blas_int* lda, blas_int* ipiv, eT* work, blas_int* lwork, blas_int* info)
+    {
+    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    
+    if(is_float<eT>::value == true)
+      {
+      typedef float T;
+      arma_fortran(arma_ssytrf)(uplo, n, (T*)a, lda, ipiv, (T*)work, lwork, info);
+      }
+    else
+    if(is_double<eT>::value == true)
+      {
+      typedef double T;
+      arma_fortran(arma_dsytrf)(uplo, n, (T*)a, lda, ipiv, (T*)work, lwork, info);
+      }
+    else
+    if(is_supported_complex_float<eT>::value == true)
+      {
+      typedef std::complex<float> T;
+      arma_fortran(arma_csytrf)(uplo, n, (T*)a, lda, ipiv, (T*)work, lwork, info);
+      }
+    else
+    if(is_supported_complex_double<eT>::value == true)
+      {
+      typedef std::complex<double> T;
+      arma_fortran(arma_zsytrf)(uplo, n, (T*)a, lda, ipiv, (T*)work, lwork, info);
+      }
+    }
+  
+  
+  template<typename eT>
+  inline
+  void
+  sytri(char* uplo, blas_int* n, eT* a, blas_int* lda, blas_int* ipiv, eT* work, blas_int* info)
+    {
+    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    
+    if(is_float<eT>::value == true)
+      {
+      typedef float T;
+      arma_fortran(arma_ssytri)(uplo, n, (T*)a, lda, ipiv, (T*)work, info);
+      }
+    else
+    if(is_double<eT>::value == true)
+      {
+      typedef double T;
+      arma_fortran(arma_dsytri)(uplo, n, (T*)a, lda, ipiv, (T*)work, info);
+      }
+    else
+    if(is_supported_complex_float<eT>::value == true)
+      {
+      typedef std::complex<float> T;
+      arma_fortran(arma_csytri)(uplo, n, (T*)a, lda, ipiv, (T*)work, info);
+      }
+    else
+    if(is_supported_complex_double<eT>::value == true)
+      {
+      typedef std::complex<double> T;
+      arma_fortran(arma_zsytri)(uplo, n, (T*)a, lda, ipiv, (T*)work, info);
+      }
+    }
   
   
   //! @}

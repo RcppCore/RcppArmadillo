@@ -18,8 +18,8 @@
 
 #define ARMA_VERSION_MAJOR 1
 #define ARMA_VERSION_MINOR 99
-#define ARMA_VERSION_PATCH 4
-#define ARMA_VERSION_NAME  "v2.0 beta 4"
+#define ARMA_VERSION_PATCH 5
+#define ARMA_VERSION_NAME  "v2.0 beta 5"
 
 
 

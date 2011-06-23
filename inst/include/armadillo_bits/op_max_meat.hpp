@@ -24,7 +24,7 @@ op_max::direct_max(const eT* const X, const u32 n_elem)
   {
   arma_extra_debug_sigprint();
   
-  eT max_val = (n_elem != 1) ? priv::most_neg<eT>() : X[0];
+  eT max_val = priv::most_neg<eT>();
   
   u32 i,j;
   
@@ -67,7 +67,7 @@ op_max::direct_max(const eT* const X, const u32 n_elem, u32& index_of_max_val)
   {
   arma_extra_debug_sigprint();
   
-  eT max_val = (n_elem != 1) ? priv::most_neg<eT>() : X[0];
+  eT max_val = priv::most_neg<eT>();
   
   u32 best_index = 0;
   
@@ -119,7 +119,7 @@ op_max::direct_max(const Mat<eT>& X, const u32 row)
   
   const u32 X_n_cols = X.n_cols;
   
-  eT max_val = (X_n_cols != 1) ? priv::most_neg<eT>() : X.at(row,0);
+  eT max_val = priv::most_neg<eT>();
   
   for(u32 col=0; col<X_n_cols; ++col)
     {
@@ -145,7 +145,7 @@ op_max::direct_max(const subview<eT>& X)
   
   const u32 X_n_elem = X.n_elem;
   
-  eT max_val = (X_n_elem != 1) ? priv::most_neg<eT>() : X[0];
+  eT max_val = priv::most_neg<eT>();
   
   for(u32 i=0; i<X_n_elem; ++i)
     {
@@ -171,7 +171,7 @@ op_max::direct_max(const diagview<eT>& X)
   
   const u32 X_n_elem = X.n_elem;
   
-  eT max_val = (X_n_elem != 1) ? priv::most_neg<eT>() : X[0];
+  eT max_val = priv::most_neg<eT>();
   
   for(u32 i=0; i<X_n_elem; ++i)
     {
@@ -214,16 +214,15 @@ op_max::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_max>& in)
     {
     arma_extra_debug_print("op_max::apply(), dim = 0");
     
-    out.set_size( (X_n_rows > 0) ? 1 : 0, X_n_cols );
+    arma_debug_check( (X_n_rows == 0), "max(): given object has zero rows" );
+
+    out.set_size(1, X_n_cols);
     
-    if(X_n_rows > 0)
+    eT* out_mem = out.memptr();
+    
+    for(u32 col=0; col<X_n_cols; ++col)
       {
-      eT* out_mem = out.memptr();
-      
-      for(u32 col=0; col<X_n_cols; ++col)
-        {
-        out_mem[col] = op_max::direct_max( X.colptr(col), X_n_rows );
-        }
+      out_mem[col] = op_max::direct_max( X.colptr(col), X_n_rows );
       }
     }
   else
@@ -231,16 +230,15 @@ op_max::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_max>& in)
     {
     arma_extra_debug_print("op_max::apply(), dim = 1");
     
-    out.set_size( X_n_rows, (X_n_cols > 0) ? 1 : 0 );
+    arma_debug_check( (X_n_cols == 0), "max(): given object has zero columns" );
+
+    out.set_size(X_n_rows, 1);
     
-    if(X_n_cols > 0)
+    eT* out_mem = out.memptr();
+    
+    for(u32 row=0; row<X_n_rows; ++row)
       {
-      eT* out_mem = out.memptr();
-      
-      for(u32 row=0; row<X_n_rows; ++row)
-        {
-        out_mem[row] = op_max::direct_max( X, row );
-        }
+      out_mem[row] = op_max::direct_max( X, row );
       }
     }
   }
@@ -255,7 +253,7 @@ op_max::direct_max(const std::complex<T>* const X, const u32 n_elem)
   arma_extra_debug_sigprint();
   
   u32 index   = 0;
-  T   max_val = (n_elem != 1) ? priv::most_neg<T>() : std::abs(X[0]);
+  T   max_val = priv::most_neg<T>();
   
   for(u32 i=0; i<n_elem; ++i)
     {
@@ -281,7 +279,7 @@ op_max::direct_max(const std::complex<T>* const X, const u32 n_elem, u32& index_
   arma_extra_debug_sigprint();
   
   u32 index   = 0;
-  T   max_val = (n_elem != 1) ? priv::most_neg<T>() : std::abs(X[0]);
+  T   max_val = priv::most_neg<T>();
   
   for(u32 i=0; i<n_elem; ++i)
     {
@@ -311,7 +309,7 @@ op_max::direct_max(const Mat< std::complex<T> >& X, const u32 row)
   const u32 X_n_cols = X.n_cols;
   
   u32 index   = 0;
-  T   max_val = (X_n_cols != 1) ? priv::most_neg<T>() : std::abs(X.at(row,0));
+  T   max_val = priv::most_neg<T>();
   
   for(u32 col=0; col<X_n_cols; ++col)
     {
@@ -339,7 +337,7 @@ op_max::direct_max(const subview< std::complex<T> >& X)
   const u32 X_n_elem = X.n_elem;
   
   u32 index   = 0;
-  T   max_val = (X_n_elem != 1) ? priv::most_neg<T>() : std::abs(X[0]);
+  T   max_val = priv::most_neg<T>();
   
   for(u32 i=0; i<X_n_elem; ++i)
     {
@@ -367,7 +365,7 @@ op_max::direct_max(const diagview< std::complex<T> >& X)
   const u32 X_n_elem = X.n_elem;
   
   u32 index   = 0;
-  T   max_val = (X_n_elem != 1) ? priv::most_neg<T>() : std::abs(X[0]);
+  T   max_val = priv::most_neg<T>();
   
   for(u32 i=0; i<X_n_elem; ++i)
     {

@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -27,7 +27,6 @@ svd
   )
   {
   arma_extra_debug_sigprint();
-  
   arma_ignore(junk);
   
   // it doesn't matter if X is an alias of S, as auxlib::svd() makes a copy of X
@@ -36,8 +35,8 @@ svd
   
   if(status == false)
     {
-    arma_print("svd(): failed to converge");
     S.reset();
+    arma_bad("svd(): failed to converge", false);
     }
   
   return status;
@@ -55,12 +54,17 @@ svd
   )
   {
   arma_extra_debug_sigprint();
-  
   arma_ignore(junk);
   
   Col<typename T1::pod_type> out;
   
-  svd(out, X);
+  const bool status = auxlib::svd(out, X);
+  
+  if(status == false)
+    {
+    out.reset();
+    arma_bad("svd(): failed to converge");
+    }
   
   return out;
   }
@@ -80,22 +84,25 @@ svd
   )
   {
   arma_extra_debug_sigprint();
-  
   arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
   
-  arma_debug_check( ( ((void*)(&U) == (void*)(&S)) || (&U == &V) || ((void*)(&S) == (void*)(&V)) ), "svd(): two or more output objects are the same object" );
+  arma_debug_check
+    (
+    ( ((void*)(&U) == (void*)(&S)) || (&U == &V) || ((void*)(&S) == (void*)(&V)) ),
+    "svd(): two or more output objects are the same object"
+    );
   
   // auxlib::svd() makes an internal copy of X
   const bool status = auxlib::svd(U, S, V, X);
   
   if(status == false)
     {
-    arma_print("svd(): failed to converge");
     U.reset();
     S.reset();
     V.reset();
+    arma_bad("svd(): failed to converge", false);
     }
   
   return status;

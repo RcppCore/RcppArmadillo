@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -27,8 +27,8 @@ op_chol::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_chol>& X)
   
   if(status == false)
     {
-    arma_print("chol(): failed to converge");
     out.reset();
+    arma_bad("chol(): failed to converge");
     }
   }
 

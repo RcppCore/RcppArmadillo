@@ -325,8 +325,8 @@ diskio::gen_bin_header(const Cube<eT>& x)
 
 
 inline
-bool
-diskio::is_raw_binary(std::istream& f)
+file_type
+diskio::guess_file_type(std::istream& f)
   {
   arma_extra_debug_sigprint();
   
@@ -351,27 +351,54 @@ diskio::is_raw_binary(std::istream& f)
   f.clear();
   f.read( reinterpret_cast<char*>(ptr), std::streamsize(N) );
   
-  bool has_non_text_val = false;
-  
-  if(f.good() == true)
-    {
-    for(u32 i=0; i<N; ++i)
-      {
-      const unsigned char val = ptr[i];
-      
-      // the range checking can be made more elaborate
-      if( (val <= 8) || (val >= 123) )
-        {
-        has_non_text_val = true;
-        break;
-        }
-      }
-    }
+  const bool load_okay = f.good();
   
   f.clear();
   f.seekg(pos1);
   
-  return has_non_text_val;
+  bool has_binary = false;
+  bool has_comma  = false;
+  
+  if(load_okay == true)
+    {
+    u32 i = 0;
+    u32 j = (N >= 2) ? 1 : 0;
+    
+    for(; j<N; i+=2, j+=2)
+      {
+      const unsigned char val_i = ptr[i];
+      const unsigned char val_j = ptr[j];
+      
+      // the range checking can be made more elaborate
+      if( ((val_i <= 8) || (val_i >= 123)) || ((val_j <= 8) || (val_j >= 123)) )
+        {
+        has_binary = true;
+        break;
+        }
+      
+      if( (val_i == ',') || (val_j == ',') )
+        {
+        has_comma = true;
+        break;
+        }
+      }
+    }
+  else
+    {
+    return file_type_unknown;
+    }
+  
+  if(has_binary)
+    {
+    return raw_binary;
+    }
+  
+  if(has_comma)
+    {
+    return csv_ascii;
+    }
+  
+  return raw_ascii;
   }
 
 
@@ -721,6 +748,83 @@ diskio::save_arma_ascii(const Mat<eT>& x, std::ostream& f)
 
 
 
+//! Save a matrix in CSV text format (human readable)
+template<typename eT>
+inline
+bool
+diskio::save_csv_ascii(const Mat<eT>& x, const std::string& final_name)
+  {
+  arma_extra_debug_sigprint();
+  
+  const std::string tmp_name = diskio::gen_tmp_name(final_name);
+  
+  std::ofstream f(tmp_name.c_str());
+  
+  bool save_okay = f.is_open();
+  
+  if(save_okay == true)  
+    {
+    save_okay = diskio::save_csv_ascii(x, f);
+    
+    f.flush();
+    f.close();
+    
+    if(save_okay == true)
+      {
+      save_okay = diskio::safe_rename(tmp_name, final_name);
+      }
+    }
+  
+  return save_okay;
+  }
+
+
+
+//! Save a matrix in CSV text format (human readable)
+template<typename eT>
+inline
+bool
+diskio::save_csv_ascii(const Mat<eT>& x, std::ostream& f)
+  {
+  arma_extra_debug_sigprint();
+  
+  const ios::fmtflags orig_flags = f.flags();
+  
+  // TODO: need sane values for complex numbers
+  
+  if( (is_float<eT>::value == true) || (is_double<eT>::value == true) )
+    {
+    f.setf(ios::scientific);
+    f.precision(10);
+    }
+  
+  u32 x_n_rows = x.n_rows;
+  u32 x_n_cols = x.n_cols;
+  
+  for(u32 row=0; row < x_n_rows; ++row)
+    {
+    for(u32 col=0; col < x_n_cols; ++col)
+      {
+      f << x.at(row,col);
+      
+      if( col < (x_n_cols-1) )
+        {
+        f.put(',');
+        }
+      }
+    
+    f.put('\n');
+    }
+  
+  const bool save_okay = f.good();
+  
+  f.flags(orig_flags);
+  
+  return save_okay;
+  }
+
+
+
 //! Save a matrix in binary format,
 //! with a header that stores the matrix type as well as its dimensions
 template<typename eT>
@@ -909,9 +1013,10 @@ diskio::load_raw_ascii(Mat<eT>& x, std::istream& f, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
   
-  bool load_okay = true;
+  bool load_okay = f.good();
   
-  //std::fstream::pos_type start = f.tellg();
+  f.clear();
+  const std::fstream::pos_type pos1 = f.tellg();
   
   //
   // work out the size
@@ -962,8 +1067,7 @@ diskio::load_raw_ascii(Mat<eT>& x, std::istream& f, std::string& err_msg)
   if(load_okay == true)
     {
     f.clear();
-    f.seekg(0, ios::beg);
-    //f.seekg(start);
+    f.seekg(pos1);
     
     x.set_size(f_n_rows, f_n_cols);
     
@@ -1121,6 +1225,125 @@ diskio::load_arma_ascii(Mat<eT>& x, std::istream& f, std::string& err_msg)
     {
     load_okay = false;
     err_msg = "incorrect header in ";
+    }
+  
+  return load_okay;
+  }
+
+
+
+//! Load a matrix in CSV text format (human readable)
+template<typename eT>
+inline
+bool
+diskio::load_csv_ascii(Mat<eT>& x, const std::string& name, std::string& err_msg)
+  {
+  arma_extra_debug_sigprint();
+  
+  std::fstream f;
+  f.open(name.c_str(), std::fstream::in);
+  
+  bool load_okay = f.is_open();
+  
+  if(load_okay == true)
+    {
+    load_okay = diskio::load_csv_ascii(x, f, err_msg);
+    f.close();
+    }
+  
+  return load_okay;
+  }
+
+
+
+//! Load a matrix in CSV text format (human readable)
+template<typename eT>
+inline
+bool
+diskio::load_csv_ascii(Mat<eT>& x, std::istream& f, std::string& err_msg)
+  {
+  arma_extra_debug_sigprint();
+  
+  bool load_okay = f.good();
+  
+  f.clear();
+  const std::fstream::pos_type pos1 = f.tellg();
+  
+  //
+  // work out the size
+  
+  u32 f_n_rows = 0;
+  u32 f_n_cols = 0;
+  
+  std::string line_string;
+  std::string token;
+  
+  while( (f.good() == true) && (load_okay == true) )
+    {
+    std::getline(f, line_string);
+    
+    if(line_string.size() == 0)
+      {
+      break;
+      }
+    
+    std::stringstream line_stream(line_string);
+    
+    u32 line_n_cols = 0;
+    
+    while(line_stream.good() == true)
+      {
+      getline(line_stream, token, ',');
+      ++line_n_cols;
+      }
+    
+    if(f_n_cols < line_n_cols)
+      {
+      f_n_cols = line_n_cols;
+      }
+    
+    ++f_n_rows;
+    }
+  
+  f.clear();
+  f.seekg(pos1);
+  
+  x.zeros(f_n_rows, f_n_cols);
+  
+  u32 row = 0;
+  
+  while(f.good() == true)
+    {
+    std::getline(f, line_string);
+    
+    if(line_string.size() == 0)
+      {
+      break;
+      }
+    
+    std::stringstream line_stream(line_string);
+    
+    u32 col = 0;
+    
+    while(line_stream.good() == true)
+      {
+      getline(line_stream, token, ',');
+      
+      eT val;
+      
+      std::stringstream ss(token);
+      
+      ss >> val;
+      
+      if(ss.fail() == false)
+        {
+        x.at(row,col) = val;
+        }
+      
+      ++col;
+      }
+    
+    ++row;
     }
   
   return load_okay;
@@ -1436,13 +1659,25 @@ diskio::load_auto_detect(Mat<eT>& x, std::istream& f, std::string& err_msg)
     }
   else
     {
-    if(is_raw_binary(f) == true)
+    const file_type ft = guess_file_type(f);
+    
+    switch(ft)
       {
-      return load_raw_binary(x, f, err_msg);
-      }
-    else
-      {
-      return load_raw_ascii(x, f, err_msg);
+      case csv_ascii:
+        return load_csv_ascii(x, f, err_msg);
+        break;
+      
+      case raw_binary:
+        return load_raw_binary(x, f, err_msg);
+        break;
+        
+      case raw_ascii:
+        return load_raw_ascii(x, f, err_msg);
+        break;
+      
+      default:
+        err_msg = "unknown data in ";
+        return false;
       }
     }
   }
@@ -2036,13 +2271,25 @@ diskio::load_auto_detect(Cube<eT>& x, std::istream& f, std::string& err_msg)
     }
   else
     {
-    if(is_raw_binary(f) == true)
+    const file_type ft = guess_file_type(f);
+    
+    switch(ft)
       {
-      return load_raw_binary(x, f, err_msg);
-      }
-    else
-      {
-      return load_raw_ascii(x, f, err_msg);
+      // case csv_ascii:
+      //   return load_csv_ascii(x, f, err_msg);
+      //   break;
+      
+      case raw_binary:
+        return load_raw_binary(x, f, err_msg);
+        break;
+        
+      case raw_ascii:
+        return load_raw_ascii(x, f, err_msg);
+        break;
+        
+      default:
+        err_msg = "unknown data in ";
+        return false;
       }
     }
   }

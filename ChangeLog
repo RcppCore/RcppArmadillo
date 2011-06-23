@@ -1,3 +1,9 @@
+2011-06-23  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.2.23
+
+	* inst/include/*: Updated to release 1.99.5 of Armadillo
+
 2011-06-14  Douglas Bates <bates@stat.wisc.edu>
 
 	* R/fastLm.R, inst/unitTests/runit.fastLm.R, man/fastLm.Rd,

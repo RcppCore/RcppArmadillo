@@ -94,7 +94,7 @@ running_stat_vec<eT>::operator() (const Base<typename get_pod_type<eT>::result, 
   
   if( sample.is_finite() == false )
     {
-    arma_print("running_stat_vec: sample ignored as it has non-finite elements");
+    arma_warn(true, "running_stat_vec: sample ignored as it has non-finite elements");
     return;
     }
   
@@ -125,7 +125,7 @@ running_stat_vec<eT>::operator() (const Base<std::complex<typename get_pod_type<
   
   if( sample.is_finite() == false )
     {
-    arma_print("running_stat_vec: sample ignored as it has non-finite elements");
+    arma_warn(true, "running_stat_vec: sample ignored as it has non-finite elements");
     return;
     }
   
