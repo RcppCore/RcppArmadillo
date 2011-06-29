@@ -1347,7 +1347,7 @@ inline
 bool
 subview<eT>::is_vec() const
   {
-  return ( (n_rows <= 1) || (n_cols <= 1) );
+  return ( (n_rows == 1) || (n_cols == 1) );
   }
 
 
