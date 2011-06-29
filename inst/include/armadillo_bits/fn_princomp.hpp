@@ -142,6 +142,37 @@ princomp
 //! coeff_out    -> principal component coefficients
 template<typename T1>
 inline
+bool
+princomp
+  (
+         Mat<typename T1::elem_type>&    coeff_out,
+  const Base<typename T1::elem_type,T1>& X,
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const unwrap<T1>   tmp(X.get_ref());
+  const Mat<eT>& A = tmp.M;
+  
+  const bool status = op_princomp::direct_princomp(coeff_out, A);
+  
+  if(status == false)
+    {
+    coeff_out.reset();
+    
+    arma_bad("princomp(): failed to converge", false);
+    }
+  
+  return status;
+  }
+
+
+
+template<typename T1>
+inline
 const Op<T1, op_princomp>
 princomp
   (

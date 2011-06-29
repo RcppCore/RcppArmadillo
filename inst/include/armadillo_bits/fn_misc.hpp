@@ -27,48 +27,56 @@ linspace
   (
   const typename vec_type::pod_type start,
   const typename vec_type::pod_type end,
-  const u32 num,
+  const u32 num = 100u,
   const typename arma_Mat_Col_Row_only<vec_type>::result* junk = 0
   )
   {
   arma_extra_debug_sigprint();
-  
   arma_ignore(junk);
-  
-  arma_debug_check( (num < 2), "linspace(): num must be >= 2");
   
   typedef typename vec_type::elem_type eT;
   typedef typename vec_type::pod_type   T;
   
-  const u32 n_rows = (is_Row<vec_type>::value == true) ? 1   : num;
-  const u32 n_cols = (is_Row<vec_type>::value == true) ? num : 1;
-  
-  Mat<eT> x(n_rows, n_cols);
-  eT* x_mem = x.memptr();
-  
-  const u32 num_m1 = num - 1;
-  
-  if(is_non_integral<T>::value == true)
-    {
-    const T delta = (end-start)/T(num_m1);
+  vec_type x;
     
-    for(u32 i=0; i<num_m1; ++i)
+  if(num >= 2)
+    {
+    x.set_size(num);
+    
+    eT* x_mem = x.memptr();
+    
+    const u32 num_m1 = num - 1;
+    
+    if(is_non_integral<T>::value == true)
       {
-      x_mem[i] = eT(start + i*delta);
+      const T delta = (end-start)/T(num_m1);
+      
+      for(u32 i=0; i<num_m1; ++i)
+        {
+        x_mem[i] = eT(start + i*delta);
+        }
+      
+      x_mem[num_m1] = eT(end);
+      }
+    else
+      {
+      const double delta = (end >= start) ? double(end-start)/double(num_m1) : -double(start-end)/double(num_m1);
+      
+      for(u32 i=0; i<num_m1; ++i)
+        {
+        x_mem[i] = eT(double(start) + i*delta);
+        }
+      
+      x_mem[num_m1] = eT(end);
       }
     
-    x_mem[num_m1] = eT(end);
+    return x;
     }
   else
     {
-    const double delta = (end >= start) ? double(end-start)/double(num_m1) : -double(start-end)/double(num_m1);
+    x.set_size(1);
     
-    for(u32 i=0; i<num_m1; ++i)
-      {
-      x_mem[i] = eT(double(start) + i*delta);
-      }
-    
-    x_mem[num_m1] = eT(end);
+    x[0] = eT(end);
     }
   
   return x;
@@ -78,7 +86,7 @@ linspace
 
 inline
 mat
-linspace(const double start, const double end, const u32 num)
+linspace(const double start, const double end, const u32 num = 100u)
   {
   arma_extra_debug_sigprint();
   return linspace<mat>(start, end, num);

@@ -1,4 +1,34 @@
-0.2.23  2011-05-23
+0.2.24  2011-06-29
+
+    o   Upgraded to Armadillo release 2.0.0 "Carnivorous Sugar Glider"
+
+          * faster multiplication of tiny matrices (≤ 4x4)
+	  * faster compound expressions containing submatrices
+	  * faster inverse of symmetric positive definite matrices
+	  * faster element access for fixed size matrices
+	  * added handling of arbitrarily sized empty matrices (eg. 5x0)
+	  * added loading & saving of matrices as CSV text files
+	  * added .count() member function to running_stat and
+	    running_stat_vec 
+	  * added syl(), strans(), symmatu()/symmatl()
+	  * added submatrices of submatrices
+	  * det(), inv() and solve() can be forced to use more precise
+	  * algorithms for tiny matrices (≤ 4x4)
+	  * htrans() has been deprecated; use trans() instead
+	  * API change: trans() now takes the complex conjugate when
+	    transposing a complex matrix 
+	  * API change: .is_vec() now outputs true for empty vectors
+	    (eg. 0x1) 
+	  * API change: forms of chol(), eig_sym(), eig_gen(), inv(), 
+            lu(), pinv(), princomp(), qr(), solve(), svd(), syl() that do not
+	    return a bool indicating success now throw std::runtime_error
+	    exceptions when failures are detected 
+	  * API change: princomp_cov() has been removed; princomp() in 
+            conjunction with cov() can be used instead
+	  * API change: set_log_stream() & get_log_stream() have been 
+            replaced by set_stream_err1() & get_stream_err1()
+
+0.2.23  2011-06-23
 
     o   Upgraded to Armadillo release 1.99.5 "v2.0 beta 5"
 
