@@ -1,3 +1,7 @@
+0.2.25  2011-06-30
+
+    o   Upgraded to Armadillo 2.0.1 which fixes two minor compilation issues
+
 0.2.24  2011-06-29
 
     o   Upgraded to Armadillo release 2.0.0 "Carnivorous Sugar Glider"

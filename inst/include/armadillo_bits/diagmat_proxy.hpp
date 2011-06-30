@@ -43,7 +43,7 @@ class diagmat_proxy
   elem_type
   operator[](const u32 i) const
     {
-    if( (Proxy<T1>::prefer_at_operator == true) || (P_is_vec == false) )
+    if( (Proxy<T1>::prefer_at_accessor == true) || (P_is_vec == false) )
       {
       return P.at(i,i);
       }
@@ -60,7 +60,7 @@ class diagmat_proxy
     {
     if(row == col)
       {
-      if( (Proxy<T1>::prefer_at_operator == true) || (P_is_vec == false) )
+      if( (Proxy<T1>::prefer_at_accessor == true) || (P_is_vec == false) )
         {
         return P.at(row,row);
         }
