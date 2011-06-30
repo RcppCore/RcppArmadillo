@@ -839,7 +839,7 @@ auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const 
       {
       out_val  = eT(0);
       out_sign =  T(1);
-      return;
+      return true;
       }
     
     podarray<int> ipiv(tmp.n_rows);
@@ -881,7 +881,7 @@ auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const 
       {
       out_val  = eT(0);
       out_sign =  T(1);
-      return;
+      return true;
       }
     
     podarray<blas_int> ipiv(tmp.n_rows);
