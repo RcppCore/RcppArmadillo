@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -69,11 +69,31 @@ op_diagmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_diagmat>& X)
     
     const u32 N = A.n_rows;
     
-    out.zeros(N,N);
-    
-    for(u32 i=0; i<N; ++i)
+    if(&out != &A)
       {
-      out.at(i,i) = A.at(i,i);
+      // no aliasing
+      
+      out.zeros(N,N);
+      
+      for(u32 i=0; i<N; ++i)
+        {
+        out.at(i,i) = A.at(i,i);
+        }
+      }
+    else
+      {
+      // aliasing
+      
+      for(u32 i=0; i<N; ++i)
+        {
+        eT* colptr = out.colptr(i);
+        
+        // clear above the diagonal
+        arrayops::inplace_set(colptr, eT(0), i);
+        
+        // clear below the diagonal
+        arrayops::inplace_set(colptr+(i+1), eT(0), N-1-i);
+        }
       }
     }
   }
