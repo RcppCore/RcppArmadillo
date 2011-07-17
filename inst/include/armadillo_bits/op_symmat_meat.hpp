@@ -88,7 +88,7 @@ op_symmat::apply
     {
     // reflect elements across the diagonal from lower triangle to upper triangle
     
-    for(u32 col=0; col < (N-1); ++col)
+    for(u32 col=0; col < N; ++col)
       {
       const eT* coldata = out.colptr(col);
       
@@ -174,7 +174,7 @@ op_symmat::apply
     {
     // reflect elements across the diagonal from lower triangle to upper triangle
     
-    for(u32 col=0; col < (N-1); ++col)
+    for(u32 col=0; col < N; ++col)
       {
       const eT* coldata = out.colptr(col);
       

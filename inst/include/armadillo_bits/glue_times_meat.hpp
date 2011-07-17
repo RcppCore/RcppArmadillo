@@ -35,7 +35,7 @@ glue_times_redirect<N>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2
   const bool do_trans_A = tmp1.do_trans;
   const bool do_trans_B = tmp2.do_trans;
 
-  const bool use_alpha = tmp1.do_times | tmp2.do_times;
+  const bool use_alpha = tmp1.do_times || tmp2.do_times;
   const eT       alpha = use_alpha ? (tmp1.val * tmp2.val) : eT(0);
   
   glue_times::apply(out, A, B, alpha, do_trans_A, do_trans_B, use_alpha);
@@ -67,7 +67,7 @@ glue_times_redirect<3>::apply(Mat<typename T1::elem_type>& out, const Glue< Glue
   const bool do_trans_B = tmp2.do_trans;
   const bool do_trans_C = tmp3.do_trans;
   
-  const bool use_alpha = tmp1.do_times | tmp2.do_times | tmp3.do_times;
+  const bool use_alpha = tmp1.do_times || tmp2.do_times || tmp3.do_times;
   const eT       alpha = use_alpha ? (tmp1.val * tmp2.val * tmp3.val) : eT(0);
   
   glue_times::apply(out, A, B, C, alpha, do_trans_A, do_trans_B, do_trans_C, use_alpha);
@@ -102,7 +102,7 @@ glue_times_redirect<4>::apply(Mat<typename T1::elem_type>& out, const Glue< Glue
   const bool do_trans_C = tmp3.do_trans;
   const bool do_trans_D = tmp4.do_trans;
   
-  const bool use_alpha = tmp1.do_times | tmp2.do_times | tmp3.do_times | tmp4.do_times;
+  const bool use_alpha = tmp1.do_times || tmp2.do_times || tmp3.do_times || tmp4.do_times;
   const eT       alpha = use_alpha ? (tmp1.val * tmp2.val * tmp3.val * tmp4.val) : eT(0);
   
   glue_times::apply(out, A, B, C, D, alpha, do_trans_A, do_trans_B, do_trans_C, do_trans_D, use_alpha);
@@ -193,7 +193,7 @@ glue_times::apply_inplace_plus(Mat<typename T1::elem_type>& out, const Glue<T1, 
   
   const bool do_trans_A = tmp1.do_trans;
   const bool do_trans_B = tmp2.do_trans;
-  const bool use_alpha  = tmp1.do_times | tmp2.do_times | (sign < s32(0));
+  const bool use_alpha  = tmp1.do_times || tmp2.do_times || (sign < s32(0));
   
   arma_debug_assert_mul_size(A, B, do_trans_A, do_trans_B, "matrix multiplication");
   
