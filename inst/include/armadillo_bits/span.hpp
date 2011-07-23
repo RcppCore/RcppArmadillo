@@ -1,5 +1,6 @@
 // Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
 // Copyright (C) 2010-2011 Conrad Sanderson
+// Copyright (C) 2011 Stanislav Funiak
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -16,58 +17,70 @@
 //! @{
 
 
+struct span_alt {};
 
-// an "anonymous" namespace is used to avoid possible multiple definitions of span::all
-// clashing with each other during linking
-namespace
+
+template<typename Dummy = int>
+class span_base
   {
+  public:
+  static const span_alt all;
+  };
+
+
+template<typename Dummy>
+const span_alt span_base<Dummy>::all = span_alt();
+
+
+class span : public span_base<>
+  {
+  public:
+
+  u32  a;
+  u32  b;
+  bool whole;
   
-  class span
+  inline
+  span()
+    : a(a)
+    , b(b)
+    , whole(true)
     {
-    public:
-    
-    const u32  a;
-    const u32  b;
-    const bool whole;
-    
-    static const span all;
-    
-    inline
-    span()
-      : a(a)
-      , b(b)
-      , whole(true)
-      {
-      }
-    
-    
-    // TODO:
-    // if the "explicit" keyword is removed or commented out,
-    // the compiler will be able to automatically convert integers to an instance of the span class.
-    // this is useful for Cube::operator()(span&, span&, span&),
-    // but it might have unintended consequences or interactions elsewhere.
-    // as such, removal of "explicit" needs thorough testing.
-    inline
-    explicit
-    span(const u32 in_a)
-      : a(in_a)
-      , b(in_a)
-      , whole(false)
-      {
-      }
-    
-    inline
-    span(const u32 in_a, const u32 in_b)
-      : a(in_a)
-      , b(in_b)
-      , whole(false)
-      {
-      }
+    }
+  
+  
+  inline
+  span(const span_alt&)
+    : a(a)
+    , b(b)
+    , whole(true)
+    {
+    }
+  
+  // TODO:
+  // if the "explicit" keyword is removed or commented out,
+  // the compiler will be able to automatically convert integers to an instance of the span class.
+  // this is useful for Cube::operator()(span&, span&, span&),
+  // but it might have unintended consequences or interactions elsewhere.
+  // as such, removal of "explicit" needs thorough testing.
+  inline
+  explicit
+  span(const u32 in_a)
+    : a(in_a)
+    , b(in_a)
+    , whole(false)
+    {
+    }
+  
+  inline
+  span(const u32 in_a, const u32 in_b)
+    : a(in_a)
+    , b(in_b)
+    , whole(false)
+    {
+    }
 
-    };
-
-  const span span::all = span();
-  }
+  };
 
 
 

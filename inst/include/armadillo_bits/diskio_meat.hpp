@@ -1680,6 +1680,8 @@ diskio::load_auto_detect(Mat<eT>& x, std::istream& f, std::string& err_msg)
         return false;
       }
     }
+  
+  return false;
   }
 
 
@@ -2292,6 +2294,8 @@ diskio::load_auto_detect(Cube<eT>& x, std::istream& f, std::string& err_msg)
         return false;
       }
     }
+  
+  return false;
   }
 
 

@@ -25,26 +25,50 @@ arma_vec_norm_1(const Proxy<T1>& A)
   arma_extra_debug_sigprint();
   
   typedef typename T1::pod_type T;
-  typedef typename Proxy<T1>::ea_type ea_type;
-  
+
   T acc = T(0);
-  
-        ea_type P = A.get_ea();
-  const u32     N = A.get_n_elem();
-  
-  u32 i,j;
-  
-  for(i=0, j=1; j<N; i+=2, j+=2)
+    
+  if(Proxy<T1>::prefer_at_accessor == false)
     {
-    acc += std::abs(P[i]);
-    acc += std::abs(P[j]);
+    typename Proxy<T1>::ea_type P = A.get_ea();
+    
+    const u32 N = A.get_n_elem();
+    
+    u32 i,j;
+    
+    for(i=0, j=1; j<N; i+=2, j+=2)
+      {
+      acc += std::abs(P[i]);
+      acc += std::abs(P[j]);
+      }
+    
+    if(i < N)
+      {
+      acc += std::abs(P[i]);
+      }
     }
-  
-  if(i < N)
+  else
     {
-    acc += std::abs(P[i]);
+    const u32 n_rows = A.get_n_rows();
+    const u32 n_cols = A.get_n_cols();
+    
+    for(u32 col=0; col<n_cols; ++col)
+      {
+      u32 i,j;
+      
+      for(i=0, j=1; j<n_rows; i+=2, j+=2)
+        {
+        acc += std::abs(A.at(i,col));
+        acc += std::abs(A.at(j,col));
+        }
+      
+      if(i < n_rows)
+        {
+        acc += std::abs(A.at(i,col));
+        }
+      }
     }
-  
+    
   return acc;
   }
 
@@ -59,30 +83,59 @@ arma_vec_norm_2(const Proxy<T1>& A, const typename arma_not_cx<typename T1::elem
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  typedef typename T1::pod_type       T;
-  typedef typename Proxy<T1>::ea_type ea_type;
+  typedef typename T1::pod_type T;
   
   T acc = T(0);
   
-        ea_type P = A.get_ea();
-  const u32     N = A.get_n_elem();
-  
-  u32 i,j;
-  
-  for(i=0, j=1; j<N; i+=2, j+=2)
+  if(Proxy<T1>::prefer_at_accessor == false)
     {
-    const T tmp_i = P[i];
-    const T tmp_j = P[j];
+    typename Proxy<T1>::ea_type P = A.get_ea();
     
-    acc += tmp_i * tmp_i;
-    acc += tmp_j * tmp_j;
+    const u32 N = A.get_n_elem();
+    
+    u32 i,j;
+    
+    for(i=0, j=1; j<N; i+=2, j+=2)
+      {
+      const T tmp_i = P[i];
+      const T tmp_j = P[j];
+      
+      acc += tmp_i * tmp_i;
+      acc += tmp_j * tmp_j;
+      }
+    
+    if(i < N)
+      {
+      const T tmp_i = P[i];
+      
+      acc += tmp_i * tmp_i;
+      }
     }
-  
-  if(i < N)
+  else
     {
-    const T tmp_i = P[i];
+    const u32 n_rows = A.get_n_rows();
+    const u32 n_cols = A.get_n_cols();
     
-    acc += tmp_i * tmp_i;
+    for(u32 col=0; col<n_cols; ++col)
+      {
+      u32 i,j;
+      
+      for(i=0, j=1; j<n_rows; i+=2, j+=2)
+        {
+        const T tmp_i = A.at(i,col);
+        const T tmp_j = A.at(j,col);
+        
+        acc += tmp_i * tmp_i;
+        acc += tmp_j * tmp_j;
+        }
+      
+      if(i < n_rows)
+        {
+        const T tmp_i = A.at(i,col);
+        
+        acc += tmp_i * tmp_i;
+        }
+      }
     }
   
   return std::sqrt(acc);
@@ -99,18 +152,33 @@ arma_vec_norm_2(const Proxy<T1>& A, const typename arma_cx_only<typename T1::ele
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  typedef typename T1::pod_type       T;
-  typedef typename Proxy<T1>::ea_type ea_type;
+  typedef typename T1::pod_type T;
   
   T acc = T(0);
   
-        ea_type P = A.get_ea();
-  const u32     N = A.get_n_elem();
-  
-  for(u32 i=0; i<N; ++i)
+  if(Proxy<T1>::prefer_at_accessor == false)
     {
-    const T tmp = std::abs(P[i]);
-    acc += tmp*tmp;
+    typename Proxy<T1>::ea_type P = A.get_ea();
+    
+    const u32 N = A.get_n_elem();
+    
+    for(u32 i=0; i<N; ++i)
+      {
+      const T tmp = std::abs(P[i]);
+      acc += tmp*tmp;
+      }
+    }
+  else
+    {
+    const u32 n_rows = A.get_n_rows();
+    const u32 n_cols = A.get_n_cols();
+    
+    for(u32 col=0; col<n_cols; ++col)
+    for(u32 row=0; row<n_rows; ++row)
+      {
+      const T tmp = std::abs(A.at(row,col));
+      acc += tmp*tmp;
+      }
     }
   
   return std::sqrt(acc);
@@ -126,25 +194,39 @@ arma_vec_norm_k(const Proxy<T1>& A, const int k)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::pod_type       T;
-  typedef typename Proxy<T1>::ea_type ea_type;
+  typedef typename T1::pod_type T;
   
   T acc = T(0);
   
-        ea_type P = A.get_ea();
-  const u32     N = A.get_n_elem();
-  
-  u32 i,j;
-  
-  for(i=0, j=1; j<N; i+=2, j+=2)
+  if(Proxy<T1>::prefer_at_accessor == false)
     {
-    acc += std::pow(std::abs(P[i]), k);
-    acc += std::pow(std::abs(P[j]), k);
+    typename Proxy<T1>::ea_type P = A.get_ea();
+    
+    const u32 N = A.get_n_elem();
+    
+    u32 i,j;
+    
+    for(i=0, j=1; j<N; i+=2, j+=2)
+      {
+      acc += std::pow(std::abs(P[i]), k);
+      acc += std::pow(std::abs(P[j]), k);
+      }
+    
+    if(i < N)
+      {
+      acc += std::pow(std::abs(P[i]), k);
+      }
     }
-  
-  if(i < N)
+  else
     {
-    acc += std::pow(std::abs(P[i]), k);
+    const u32 n_rows = A.get_n_rows();
+    const u32 n_cols = A.get_n_cols();
+    
+    for(u32 col=0; col<n_cols; ++col)
+    for(u32 row=0; row<n_rows; ++row)
+      {
+      acc += std::pow(std::abs(A.at(row,col)), k);
+      }
     }
   
   return std::pow(acc, T(1)/T(k));

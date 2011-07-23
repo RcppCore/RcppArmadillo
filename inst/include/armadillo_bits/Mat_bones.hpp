@@ -420,10 +420,9 @@ class Mat : public Base< eT, Mat<eT> >
   inline       row_iterator end_row  (const u32 row_num);
   inline const_row_iterator end_row  (const u32 row_num) const;
   
-  // inline      void clear();
-  // inline      void resize(const u32 in_n_elem);
-  // arma_inline bool empty() const;
-  // arma_inline u32  size()  const;
+  inline void clear();
+  inline bool empty() const;
+  inline u32  size()  const;
   
   template<u32 fixed_n_rows, u32 fixed_n_cols>
   class fixed : public Mat<eT>

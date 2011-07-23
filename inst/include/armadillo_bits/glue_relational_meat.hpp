@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -16,6 +16,102 @@
 
 
 
+#undef operator_rel
+#undef operator_str
+
+#undef arma_applier_mat
+#undef arma_applier_cube
+
+
+#define arma_applier_mat(operator_rel, operator_str) \
+  {\
+  const Proxy<T1> P1(X.A);\
+  const Proxy<T2> P2(X.B);\
+  \
+  arma_debug_assert_same_size(P1, P2, operator_str);\
+  \
+  const u32 n_rows = P1.get_n_rows();\
+  const u32 n_cols = P1.get_n_cols();\
+  \
+  out.set_size(n_rows, n_cols);\
+  \
+  u32* out_mem = out.memptr();\
+  \
+  const bool prefer_at_accessor = (Proxy<T1>::prefer_at_accessor || Proxy<T2>::prefer_at_accessor);\
+  \
+  if(prefer_at_accessor == false)\
+    {\
+    typename Proxy<T1>::ea_type A = P1.get_ea();\
+    typename Proxy<T2>::ea_type B = P2.get_ea();\
+    \
+    const u32 n_elem = out.n_elem;\
+    \
+    for(u32 i=0; i<n_elem; ++i)\
+      {\
+      out_mem[i] = (A[i] operator_rel B[i]) ? u32(1) : u32(0);\
+      }\
+    }\
+  else\
+    {\
+    u32 count = 0;\
+    \
+    for(u32 col=0; col<n_cols; ++col)\
+      {\
+      for(u32 row=0; row<n_rows; ++row, ++count)\
+        {\
+        out_mem[count] = (P1.at(row,col) operator_rel P2.at(row,col)) ? u32(1) : u32(0);\
+        }\
+      }\
+    }\
+  }
+
+
+
+
+#define arma_applier_cube(operator_rel, operator_str) \
+  {\
+  const ProxyCube<T1> P1(X.A);\
+  const ProxyCube<T2> P2(X.B);\
+  \
+  arma_debug_assert_same_size(P1, P2, operator_str);\
+  \
+  const u32 n_rows   = P1.get_n_rows();\
+  const u32 n_cols   = P1.get_n_cols();\
+  const u32 n_slices = P1.get_n_slices();\
+  \
+  out.set_size(n_rows, n_cols, n_slices);\
+  \
+  u32* out_mem = out.memptr();\
+  \
+  const bool prefer_at_accessor = (ProxyCube<T1>::prefer_at_accessor || ProxyCube<T2>::prefer_at_accessor);\
+  \
+  if(prefer_at_accessor == false)\
+    {\
+    typename ProxyCube<T1>::ea_type A = P1.get_ea();\
+    typename ProxyCube<T2>::ea_type B = P2.get_ea();\
+    \
+    const u32 n_elem = out.n_elem;\
+    \
+    for(u32 i=0; i<n_elem; ++i)\
+      {\
+      out_mem[i] = (A[i] operator_rel B[i]) ? u32(1) : u32(0);\
+      }\
+    }\
+  else\
+    {\
+    u32 count = 0;\
+    \
+    for(u32 slice = 0; slice < n_slices; ++slice)\
+    for(u32 col   = 0; col   < n_cols;   ++col)\
+    for(u32 row   = 0; row   < n_rows;   ++row, ++count)\
+      {\
+      out_mem[count] = (P1.at(row,col,slice) operator_rel P2.at(row,col,slice)) ? u32(1) : u32(0);\
+      }\
+    }\
+  }
+
+
+
 template<typename T1, typename T2>
 inline
 void
@@ -27,25 +123,7 @@ glue_rel_lt::apply
   {
   arma_extra_debug_sigprint();
   
-  typedef typename Proxy<T1>::ea_type ea_type1;
-  typedef typename Proxy<T2>::ea_type ea_type2;
-  
-  const Proxy<T1> P1(X.A);
-  const Proxy<T2> P2(X.B);
-  
-  arma_debug_assert_same_size(P1, P2, "operator<");
-  
-  out.set_size(P1.get_n_rows(), P1.get_n_cols());
-  
-  const u32      n_elem  = out.n_elem;
-        u32*     out_mem = out.memptr();
-        ea_type1 A       = P1.get_ea();
-        ea_type2 B       = P2.get_ea();
-  
-  for(u32 i=0; i<n_elem; ++i)
-    {
-    out_mem[i] = (A[i] < B[i]) ? u32(1) : u32(0);
-    }
+  arma_applier_mat(<, "operator<");
   }
 
 
@@ -61,25 +139,7 @@ glue_rel_gt::apply
   {
   arma_extra_debug_sigprint();
   
-  typedef typename Proxy<T1>::ea_type ea_type1;
-  typedef typename Proxy<T2>::ea_type ea_type2;
-  
-  const Proxy<T1> P1(X.A);
-  const Proxy<T2> P2(X.B);
-  
-  arma_debug_assert_same_size(P1, P2, "operator>");
-  
-  out.set_size(P1.get_n_rows(), P1.get_n_cols());
-  
-  const u32      n_elem  = out.n_elem;
-        u32*     out_mem = out.memptr();
-        ea_type1 A       = P1.get_ea();
-        ea_type2 B       = P2.get_ea();
-  
-  for(u32 i=0; i<n_elem; ++i)
-    {
-    out_mem[i] = (A[i] > B[i]) ? u32(1) : u32(0);
-    }
+  arma_applier_mat(>, "operator>");
   }
 
 
@@ -95,25 +155,7 @@ glue_rel_lteq::apply
   {
   arma_extra_debug_sigprint();
   
-  typedef typename Proxy<T1>::ea_type ea_type1;
-  typedef typename Proxy<T2>::ea_type ea_type2;
-  
-  const Proxy<T1> P1(X.A);
-  const Proxy<T2> P2(X.B);
-  
-  arma_debug_assert_same_size(P1, P2, "operator<=");
-  
-  out.set_size(P1.get_n_rows(), P1.get_n_cols());
-  
-  const u32      n_elem  = out.n_elem;
-        u32*     out_mem = out.memptr();
-        ea_type1 A       = P1.get_ea();
-        ea_type2 B       = P2.get_ea();
-  
-  for(u32 i=0; i<n_elem; ++i)
-    {
-    out_mem[i] = (A[i] <= B[i]) ? u32(1) : u32(0);
-    }
+  arma_applier_mat(<=, "operator<=");
   }
 
 
@@ -129,25 +171,7 @@ glue_rel_gteq::apply
   {
   arma_extra_debug_sigprint();
   
-  typedef typename Proxy<T1>::ea_type ea_type1;
-  typedef typename Proxy<T2>::ea_type ea_type2;
-  
-  const Proxy<T1> P1(X.A);
-  const Proxy<T2> P2(X.B);
-  
-  arma_debug_assert_same_size(P1, P2, "operator>=");
-  
-  out.set_size(P1.get_n_rows(), P1.get_n_cols());
-  
-  const u32      n_elem  = out.n_elem;
-        u32*     out_mem = out.memptr();
-        ea_type1 A       = P1.get_ea();
-        ea_type2 B       = P2.get_ea();
-  
-  for(u32 i=0; i<n_elem; ++i)
-    {
-    out_mem[i] = (A[i] >= B[i]) ? u32(1) : u32(0);
-    }
+  arma_applier_mat(>=, "operator>=");
   }
 
 
@@ -163,25 +187,7 @@ glue_rel_eq::apply
   {
   arma_extra_debug_sigprint();
   
-  typedef typename Proxy<T1>::ea_type ea_type1;
-  typedef typename Proxy<T2>::ea_type ea_type2;
-  
-  const Proxy<T1> P1(X.A);
-  const Proxy<T2> P2(X.B);
-  
-  arma_debug_assert_same_size(P1, P2, "operator==");
-  
-  out.set_size(P1.get_n_rows(), P1.get_n_cols());
-  
-  const u32      n_elem  = out.n_elem;
-        u32*     out_mem = out.memptr();
-        ea_type1 A       = P1.get_ea();
-        ea_type2 B       = P2.get_ea();
-  
-  for(u32 i=0; i<n_elem; ++i)
-    {
-    out_mem[i] = (A[i] == B[i]) ? u32(1) : u32(0);
-    }
+  arma_applier_mat(==, "operator==");
   }
 
 
@@ -197,25 +203,7 @@ glue_rel_noteq::apply
   {
   arma_extra_debug_sigprint();
   
-  typedef typename Proxy<T1>::ea_type ea_type1;
-  typedef typename Proxy<T2>::ea_type ea_type2;
-  
-  const Proxy<T1> P1(X.A);
-  const Proxy<T2> P2(X.B);
-  
-  arma_debug_assert_same_size(P1, P2, "operator!=");
-  
-  out.set_size(P1.get_n_rows(), P1.get_n_cols());
-  
-  const u32      n_elem  = out.n_elem;
-        u32*     out_mem = out.memptr();
-        ea_type1 A       = P1.get_ea();
-        ea_type2 B       = P2.get_ea();
-  
-  for(u32 i=0; i<n_elem; ++i)
-    {
-    out_mem[i] = (A[i] != B[i]) ? u32(1) : u32(0);
-    }
+  arma_applier_mat(!=, "operator!=");
   }
 
 
@@ -237,25 +225,7 @@ glue_rel_lt::apply
   {
   arma_extra_debug_sigprint();
   
-  typedef typename ProxyCube<T1>::ea_type ea_type1;
-  typedef typename ProxyCube<T2>::ea_type ea_type2;
-  
-  const ProxyCube<T1> P1(X.A);
-  const ProxyCube<T2> P2(X.B);
-  
-  arma_debug_assert_same_size(P1, P2, "operator<");
-  
-  out.set_size(P1.get_n_rows(), P1.get_n_cols(), P1.get_n_slices());
-  
-  const u32      n_elem  = out.n_elem;
-        u32*     out_mem = out.memptr();
-        ea_type1 A       = P1.get_ea();
-        ea_type2 B       = P2.get_ea();
-  
-  for(u32 i=0; i<n_elem; ++i)
-    {
-    out_mem[i] = (A[i] < B[i]) ? u32(1) : u32(0);
-    }
+  arma_applier_cube(<, "operator<");
   }
 
 
@@ -271,25 +241,7 @@ glue_rel_gt::apply
   {
   arma_extra_debug_sigprint();
   
-  typedef typename ProxyCube<T1>::ea_type ea_type1;
-  typedef typename ProxyCube<T2>::ea_type ea_type2;
-  
-  const ProxyCube<T1> P1(X.A);
-  const ProxyCube<T2> P2(X.B);
-  
-  arma_debug_assert_same_size(P1, P2, "operator>");
-  
-  out.set_size(P1.get_n_rows(), P1.get_n_cols(), P1.get_n_slices());
-  
-  const u32      n_elem  = out.n_elem;
-        u32*     out_mem = out.memptr();
-        ea_type1 A       = P1.get_ea();
-        ea_type2 B       = P2.get_ea();
-  
-  for(u32 i=0; i<n_elem; ++i)
-    {
-    out_mem[i] = (A[i] > B[i]) ? u32(1) : u32(0);
-    }
+  arma_applier_cube(>, "operator>");
   }
 
 
@@ -305,25 +257,7 @@ glue_rel_lteq::apply
   {
   arma_extra_debug_sigprint();
   
-  typedef typename ProxyCube<T1>::ea_type ea_type1;
-  typedef typename ProxyCube<T2>::ea_type ea_type2;
-  
-  const ProxyCube<T1> P1(X.A);
-  const ProxyCube<T2> P2(X.B);
-  
-  arma_debug_assert_same_size(P1, P2, "operator<=");
-  
-  out.set_size(P1.get_n_rows(), P1.get_n_cols(), P1.get_n_slices());
-  
-  const u32      n_elem  = out.n_elem;
-        u32*     out_mem = out.memptr();
-        ea_type1 A       = P1.get_ea();
-        ea_type2 B       = P2.get_ea();
-  
-  for(u32 i=0; i<n_elem; ++i)
-    {
-    out_mem[i] = (A[i] <= B[i]) ? u32(1) : u32(0);
-    }
+  arma_applier_cube(<=, "operator<=");
   }
 
 
@@ -339,25 +273,7 @@ glue_rel_gteq::apply
   {
   arma_extra_debug_sigprint();
   
-  typedef typename ProxyCube<T1>::ea_type ea_type1;
-  typedef typename ProxyCube<T2>::ea_type ea_type2;
-  
-  const ProxyCube<T1> P1(X.A);
-  const ProxyCube<T2> P2(X.B);
-  
-  arma_debug_assert_same_size(P1, P2, "operator>=");
-  
-  out.set_size(P1.get_n_rows(), P1.get_n_cols(), P1.get_n_slices());
-  
-  const u32      n_elem  = out.n_elem;
-        u32*     out_mem = out.memptr();
-        ea_type1 A       = P1.get_ea();
-        ea_type2 B       = P2.get_ea();
-  
-  for(u32 i=0; i<n_elem; ++i)
-    {
-    out_mem[i] = (A[i] >= B[i]) ? u32(1) : u32(0);
-    }
+  arma_applier_cube(>=, "operator>=");
   }
 
 
@@ -373,25 +289,7 @@ glue_rel_eq::apply
   {
   arma_extra_debug_sigprint();
   
-  typedef typename ProxyCube<T1>::ea_type ea_type1;
-  typedef typename ProxyCube<T2>::ea_type ea_type2;
-  
-  const ProxyCube<T1> P1(X.A);
-  const ProxyCube<T2> P2(X.B);
-  
-  arma_debug_assert_same_size(P1, P2, "operator==");
-  
-  out.set_size(P1.get_n_rows(), P1.get_n_cols(), P1.get_n_slices());
-  
-  const u32      n_elem  = out.n_elem;
-        u32*     out_mem = out.memptr();
-        ea_type1 A       = P1.get_ea();
-        ea_type2 B       = P2.get_ea();
-  
-  for(u32 i=0; i<n_elem; ++i)
-    {
-    out_mem[i] = (A[i] == B[i]) ? u32(1) : u32(0);
-    }
+  arma_applier_cube(==, "operator==");
   }
 
 
@@ -407,26 +305,13 @@ glue_rel_noteq::apply
   {
   arma_extra_debug_sigprint();
   
-  typedef typename ProxyCube<T1>::ea_type ea_type1;
-  typedef typename ProxyCube<T2>::ea_type ea_type2;
-  
-  const ProxyCube<T1> P1(X.A);
-  const ProxyCube<T2> P2(X.B);
-  
-  arma_debug_assert_same_size(P1, P2, "operator!=");
-  
-  out.set_size(P1.get_n_rows(), P1.get_n_cols(), P1.get_n_slices());
-  
-  const u32      n_elem  = out.n_elem;
-        u32*     out_mem = out.memptr();
-        ea_type1 A       = P1.get_ea();
-        ea_type2 B       = P2.get_ea();
-  
-  for(u32 i=0; i<n_elem; ++i)
-    {
-    out_mem[i] = (A[i] != B[i]) ? u32(1) : u32(0);
-    }
+  arma_applier_cube(!=, "operator!=");
   }
+
+
+
+#undef arma_applier_mat
+#undef arma_applier_cube
 
 
 

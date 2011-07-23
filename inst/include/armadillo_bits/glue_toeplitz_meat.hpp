@@ -1,5 +1,7 @@
-// Copyright (C) 2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2010 Conrad Sanderson
+// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2011 Conrad Sanderson
+// Copyright (C) 2011 Alcatel Lucent
+// Copyright (C) 2011 Gerhard Schreiber
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -107,6 +109,82 @@ glue_toeplitz::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue_t
     }
   
   
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+void
+glue_toeplitz_circ::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue_toeplitz_circ>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  if( ((void*)(&in.A)) == ((void*)(&in.B)) )
+    {
+    arma_extra_debug_print("glue_toeplitz_circ::apply(): one argument version");
+    
+    const unwrap_check<T1>  tmp(in.A, out);
+    const Mat<eT>& A      = tmp.M;
+    
+    arma_debug_check( (A.is_vec() == false), "toeplitz(): input argument must be a vector" );
+    
+    const u32 N     = A.n_elem;
+    const eT* A_mem = A.memptr();
+    
+    out.set_size(N,N);
+    
+    
+    if(A.is_colvec())
+      {
+      // A is interpreted as colvec
+      
+      for(u32 col=0; col<N; ++col)
+        {
+        eT* col_mem = out.colptr(col);
+        
+        
+        u32 i = col;
+        
+        for(u32 row=0; row<col; ++row, --i)
+          {
+          col_mem[row] = A_mem[N-i];
+          }
+        
+        
+        i = 0;
+        
+        for(u32 row=col; row<N; ++row, ++i)
+          {
+          col_mem[row] = A_mem[i];
+          }      
+        }
+      
+      }
+    else
+      {
+      // A is interpreted as rowvec - probably not the computationally most efficient way to do this ;-)
+      
+      for(u32 row=0; row<N; ++row)
+        {
+        u32 i = row;
+         
+        for(u32 col=0; col<row; ++col, --i)
+          {
+          out.at(row,col) = A_mem[N-i];
+          }
+         
+        i = 0;
+         
+        for(u32 col=row; col<N; ++col, ++i)
+          {
+          out.at(row,col) = A_mem[i];
+          }
+        }
+      }
+    }
   }
 
 

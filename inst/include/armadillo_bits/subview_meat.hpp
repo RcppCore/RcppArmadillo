@@ -2212,6 +2212,102 @@ subview<eT>::swap_cols(const u32 in_col1, const u32 in_col2)
 
 
 
+template<typename eT>
+inline
+void
+subview<eT>::print(const std::string extra_text) const
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>(*this).print(extra_text);
+  }
+
+
+
+template<typename eT>
+inline
+void
+subview<eT>::print(std::ostream& user_stream, const std::string extra_text) const
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>(*this).print(user_stream, extra_text);
+  }
+
+
+
+template<typename eT>
+inline
+void
+subview<eT>::print_trans(const std::string extra_text) const
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>(*this).print_trans(extra_text);
+  }
+
+
+
+template<typename eT>
+inline
+void
+subview<eT>::print_trans(std::ostream& user_stream, const std::string extra_text) const
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>(*this).print_trans(user_stream, extra_text);
+  }
+
+
+
+template<typename eT>
+inline
+void
+subview<eT>::raw_print(const std::string extra_text) const
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>(*this).raw_print(extra_text);
+  }
+
+
+
+template<typename eT>
+inline
+void
+subview<eT>::raw_print(std::ostream& user_stream, const std::string extra_text) const
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>(*this).raw_print(user_stream, extra_text);
+  }
+
+
+
+template<typename eT>
+inline
+void
+subview<eT>::raw_print_trans(const std::string extra_text) const
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>(*this).raw_print_trans(extra_text);
+  }
+
+
+
+template<typename eT>
+inline
+void
+subview<eT>::raw_print_trans(std::ostream& user_stream, const std::string extra_text) const
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>(*this).raw_print_trans(user_stream, extra_text);
+  }
+
+
+
 // template<typename eT>
 // inline
 // subview<eT>::iter::iter(const subview<eT>& S)

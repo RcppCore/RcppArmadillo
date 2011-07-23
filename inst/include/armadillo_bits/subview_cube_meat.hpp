@@ -895,7 +895,7 @@ subview_cube<eT>::ones()
 
 
 template<typename eT>
-arma_inline
+inline
 eT&
 subview_cube<eT>::operator[](const u32 i)
   {
@@ -913,7 +913,7 @@ subview_cube<eT>::operator[](const u32 i)
 
 
 template<typename eT>
-arma_inline
+inline
 eT
 subview_cube<eT>::operator[](const u32 i) const
   {
@@ -931,7 +931,7 @@ subview_cube<eT>::operator[](const u32 i) const
 
 
 template<typename eT>
-arma_inline
+inline
 eT&
 subview_cube<eT>::operator()(const u32 i)
   {
@@ -951,7 +951,7 @@ subview_cube<eT>::operator()(const u32 i)
 
 
 template<typename eT>
-arma_inline
+inline
 eT
 subview_cube<eT>::operator()(const u32 i) const
   {

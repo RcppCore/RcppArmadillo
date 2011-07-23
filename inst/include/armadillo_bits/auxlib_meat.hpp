@@ -2114,6 +2114,297 @@ auxlib::svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, con
 
 
 
+template<typename eT, typename T1>
+inline
+bool
+auxlib::svd_thin(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X, const char mode)
+  {
+  arma_extra_debug_sigprint();
+  
+  #if defined(ARMA_USE_LAPACK)
+    {
+    Mat<eT> A(X.get_ref());
+    
+    blas_int m    = A.n_rows;
+    blas_int n    = A.n_cols;
+    blas_int lda  = A.n_rows;
+    
+    S.set_size( static_cast<u32>((std::min)(m,n)) );
+    
+    blas_int ldu  = 0;
+    blas_int ldvt = 0;
+    
+    char jobu;
+    char jobvt;
+    
+    switch(mode)
+      {
+      case 'l':
+        jobu  = 'S';
+        jobvt = 'N';
+        
+        ldu  = m;
+        ldvt = 1;
+        
+        U.set_size( static_cast<u32>(ldu), static_cast<u32>((std::min)(m,n)) );
+        V.reset();
+        
+        break;
+      
+      
+      case 'r':
+        jobu  = 'N';
+        jobvt = 'S';
+        
+        ldu = 1;
+        ldvt = (std::min)(m,n);
+        
+        U.reset();
+        V.set_size( static_cast<u32>(ldvt), static_cast<u32>(n) );
+        
+        break;
+      
+      
+      case 'b':
+        jobu  = 'S';
+        jobvt = 'S';
+        
+        ldu  = m;
+        ldvt = (std::min)(m,n);
+        
+        U.set_size( static_cast<u32>(ldu),  static_cast<u32>((std::min)(m,n)) );
+        V.set_size( static_cast<u32>(ldvt), static_cast<u32>(n)               );
+        
+        break;
+      
+      
+      default:
+        U.reset();
+        S.reset();
+        V.reset();
+        return false;
+      }
+    
+    
+    if(A.is_empty())
+      {
+      U.eye();
+      S.reset();
+      V.eye();
+      return true;
+      }
+    
+    
+    blas_int lwork = 2 * (std::max)(blas_int(1), (std::max)( (3*(std::min)(m,n) + (std::max)(m,n)), 5*(std::min)(m,n) ) );
+    blas_int info  = 0;
+    
+    
+    podarray<eT> work( static_cast<u32>(lwork) );
+    
+    // let gesvd_() calculate the optimum size of the workspace
+    blas_int lwork_tmp = -1;
+    
+    lapack::gesvd<eT>
+      (
+      &jobu, &jobvt,
+      &m, &n,
+      A.memptr(), &lda,
+      S.memptr(),
+      U.memptr(), &ldu,
+      V.memptr(), &ldvt,
+      work.memptr(), &lwork_tmp,
+      &info
+      );
+    
+    if(info == 0)
+      {
+      blas_int proposed_lwork = static_cast<blas_int>(work[0]);
+      if(proposed_lwork > lwork)
+        {
+        lwork = proposed_lwork;
+        work.set_size( static_cast<u32>(lwork) );
+        }
+      
+      lapack::gesvd<eT>
+        (
+        &jobu, &jobvt,
+        &m, &n,
+        A.memptr(), &lda,
+        S.memptr(),
+        U.memptr(), &ldu,
+        V.memptr(), &ldvt,
+        work.memptr(), &lwork,
+        &info
+        );
+      
+      op_strans::apply(V,V);  // op_strans will work out that an in-place transpose can be done
+      }
+    
+    return (info == 0);
+    }
+  #else
+    {
+    arma_ignore(U);
+    arma_ignore(S);
+    arma_ignore(V);
+    arma_ignore(X);
+    arma_ignore(mode);
+    arma_stop("svd(): use of LAPACK needs to be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
+template<typename T, typename T1>
+inline
+bool
+auxlib::svd_thin(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, const Base< std::complex<T>, T1>& X, const char mode)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef std::complex<T> eT;
+  
+  #if defined(ARMA_USE_LAPACK)
+    {
+    Mat<eT> A(X.get_ref());
+    
+    blas_int m    = A.n_rows;
+    blas_int n    = A.n_cols;
+    blas_int lda  = A.n_rows;
+    
+    S.set_size( static_cast<u32>((std::min)(m,n)) );
+    
+    blas_int ldu  = 0;
+    blas_int ldvt = 0;
+    
+    char jobu;
+    char jobvt;
+    
+    switch(mode)
+      {
+      case 'l':
+        jobu  = 'S';
+        jobvt = 'N';
+        
+        ldu  = m;
+        ldvt = 1;
+        
+        U.set_size( static_cast<u32>(ldu), static_cast<u32>((std::min)(m,n)) );
+        V.reset();
+        
+        break;
+      
+      
+      case 'r':
+        jobu  = 'N';
+        jobvt = 'S';
+        
+        ldu  = 1;
+        ldvt = (std::min)(m,n);
+        
+        U.reset();
+        V.set_size( static_cast<u32>(ldvt), static_cast<u32>(n) );
+        
+        break;
+      
+      
+      case 'b':
+        jobu  = 'S';
+        jobvt = 'S';
+        
+        ldu  = m;
+        ldvt = (std::min)(m,n);
+        
+        U.set_size( static_cast<u32>(ldu),  static_cast<u32>((std::min)(m,n)) );
+        V.set_size( static_cast<u32>(ldvt), static_cast<u32>(n)               );
+        
+        break;
+      
+      
+      default:
+        U.reset();
+        S.reset();
+        V.reset();
+        return false;
+      }
+    
+    
+    if(A.is_empty())
+      {
+      U.eye();
+      S.reset();
+      V.eye();
+      return true;
+      }
+    
+    
+    blas_int lwork = 2 * (std::max)(blas_int(1), (std::max)( (3*(std::min)(m,n) + (std::max)(m,n)), 5*(std::min)(m,n) ) );
+    blas_int info  = 0;
+    
+    
+    podarray<eT>  work( static_cast<u32>(lwork) );
+    podarray<T>  rwork( static_cast<u32>(5*(std::min)(m,n)) );
+    
+    // let gesvd_() calculate the optimum size of the workspace
+    blas_int lwork_tmp = -1;
+    
+    lapack::cx_gesvd<T>
+      (
+      &jobu, &jobvt,
+      &m, &n,
+      A.memptr(), &lda,
+      S.memptr(),
+      U.memptr(), &ldu,
+      V.memptr(), &ldvt,
+      work.memptr(), &lwork_tmp,
+      rwork.memptr(),
+      &info
+      );
+    
+    if(info == 0)
+      {
+      blas_int proposed_lwork = static_cast<blas_int>(real(work[0]));
+      if(proposed_lwork > lwork)
+        {
+        lwork = proposed_lwork;
+        work.set_size( static_cast<u32>(lwork) );
+        }
+      
+      lapack::cx_gesvd<T>
+        (
+        &jobu, &jobvt,
+        &m, &n,
+        A.memptr(), &lda,
+        S.memptr(),
+        U.memptr(), &ldu,
+        V.memptr(), &ldvt,
+        work.memptr(), &lwork,
+        rwork.memptr(),
+        &info
+        );
+      
+      op_htrans::apply(V,V);  // op_strans will work out that an in-place transpose can be done
+      }
+    
+    return (info == 0);
+    }
+  #else
+    {
+    arma_ignore(U);
+    arma_ignore(S);
+    arma_ignore(V);
+    arma_ignore(X);
+    arma_ignore(mode);
+    arma_stop("svd(): use of LAPACK needs to be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
 //! Solve a system of linear equations.
 //! Assumes that A.n_rows = A.n_cols and B.n_rows = A.n_rows
 template<typename eT>

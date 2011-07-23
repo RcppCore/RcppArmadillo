@@ -133,6 +133,19 @@ class subview : public Base<eT, subview<eT> >
   inline void swap_cols(const u32 in_col1, const u32 in_col2);
   
   
+  inline void print(const std::string extra_text = "") const;
+  inline void print(std::ostream& user_stream, const std::string extra_text = "") const;
+  
+  inline void print_trans(const std::string extra_text = "") const;
+  inline void print_trans(std::ostream& user_stream, const std::string extra_text = "") const;
+  
+  inline void raw_print(const std::string extra_text = "") const;
+  inline void raw_print(std::ostream& user_stream, const std::string extra_text = "") const;
+  
+  inline void raw_print_trans(const std::string extra_text = "") const;
+  inline void raw_print_trans(std::ostream& user_stream, const std::string extra_text = "") const;
+  
+  
   // // primitive forward iterator
   // class iter
   //   {
