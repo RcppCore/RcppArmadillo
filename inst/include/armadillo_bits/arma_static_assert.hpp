@@ -17,13 +17,21 @@
 
 
 //! Classes for primitive compile time assertions and checks (until the next version of C++)
-template<bool> struct arma_static_assert;
-template<>     struct arma_static_assert<true> {};
+template<bool x>
+struct arma_static_assert
+  {
+  static const char
+  static_error[  x ? +1 : -1 ];
+  };
 
 
 
-template<bool> struct arma_static_check;
-template<>     struct arma_static_check<false> {};
+template<bool x>
+struct arma_static_check
+  {
+  static const char
+  static_error[  x ? -1 : +1 ];
+  };
 
 
 

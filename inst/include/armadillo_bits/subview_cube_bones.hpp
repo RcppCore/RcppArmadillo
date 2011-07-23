@@ -89,11 +89,11 @@ class subview_cube : public BaseCube<eT, subview_cube<eT> >
   inline void zeros();
   inline void ones();
   
-  arma_inline eT& operator[](const u32 i);
-  arma_inline eT  operator[](const u32 i) const;
+  inline eT& operator[](const u32 i);
+  inline eT  operator[](const u32 i) const;
   
-  arma_inline eT& operator()(const u32 i);
-  arma_inline eT  operator()(const u32 i) const;
+  inline eT& operator()(const u32 i);
+  inline eT  operator()(const u32 i) const;
   
   arma_inline eT& operator()(const u32 in_row, const u32 in_col, const u32 in_slice);
   arma_inline eT  operator()(const u32 in_row, const u32 in_col, const u32 in_slice) const;

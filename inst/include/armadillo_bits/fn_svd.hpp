@@ -110,4 +110,51 @@ svd
 
 
 
+template<typename T1>
+inline
+bool
+svd_thin
+  (
+         Mat<typename T1::elem_type>&    U,
+         Col<typename T1::pod_type >&    S,
+         Mat<typename T1::elem_type>&    V,
+  const Base<typename T1::elem_type,T1>& X,
+  const char                             mode = 'b',
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  )
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  typedef typename T1::elem_type eT;
+  
+  arma_debug_check
+    (
+    ( ((void*)(&U) == (void*)(&S)) || (&U == &V) || ((void*)(&S) == (void*)(&V)) ),
+    "svd_thin(): two or more output objects are the same object"
+    );
+  
+  arma_debug_check
+    (
+    ( (mode != 'l') && (mode != 'r') && (mode != 'b') ),
+    "svd_thin(): parameter 'mode' is incorrect"
+    );
+  
+  
+  // auxlib::svd_thin() makes an internal copy of X
+  const bool status = auxlib::svd_thin(U, S, V, X, mode);
+  
+  if(status == false)
+    {
+    U.reset();
+    S.reset();
+    V.reset();
+    arma_bad("svd_thin(): failed to converge", false);
+    }
+  
+  return status;
+  }
+
+
+
 //! @}

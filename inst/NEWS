@@ -1,3 +1,14 @@
+0.2.27  2011-07-22
+
+    o   Upgraded to Armadillo release 2.1.91 "v2.2 beta 1"
+
+          * faster multiplication of small matrices
+          * faster trans()
+          * faster handling of submatrices by norm()
+          * added economical singular value decomposition: svd_thin()
+          * added circ_toeplitz()
+          * added .is_colvec() & .is_rowvec()
+
 0.2.26  2011-07-17
 
     o   Upgraded to Armadillo release 2.0.2 

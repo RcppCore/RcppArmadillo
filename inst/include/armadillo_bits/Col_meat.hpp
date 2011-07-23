@@ -374,6 +374,74 @@ Col<eT>::subvec(const u32 in_row1, const u32 in_row2) const
 
 
 
+template<typename eT>
+arma_inline
+subview_col<eT>
+Col<eT>::subvec(const span& row_span)
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool row_all = row_span.whole;
+
+  const u32 local_n_rows = Mat<eT>::n_rows;
+  
+  const u32 in_row1       = row_all ? 0            : row_span.a;
+  const u32 in_row2       =                          row_span.b;
+  const u32 subvec_n_rows = row_all ? local_n_rows : in_row2 - in_row1 + 1;
+
+  arma_debug_check( ( row_all ? false : ((in_row1 > in_row2) || (in_row2 >= local_n_rows)) ), "Col::subvec(): indices out of bounds or incorrectly used");
+  
+  return subview_col<eT>(*this, 0, in_row1, subvec_n_rows);
+  }
+
+
+
+template<typename eT>
+arma_inline
+const subview_col<eT>
+Col<eT>::subvec(const span& row_span) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool row_all = row_span.whole;
+
+  const u32 local_n_rows = Mat<eT>::n_rows;
+  
+  const u32 in_row1       = row_all ? 0            : row_span.a;
+  const u32 in_row2       =                          row_span.b;
+  const u32 subvec_n_rows = row_all ? local_n_rows : in_row2 - in_row1 + 1;
+
+  arma_debug_check( ( row_all ? false : ((in_row1 > in_row2) || (in_row2 >= local_n_rows)) ), "Col::subvec(): indices out of bounds or incorrectly used");
+  
+  return subview_col<eT>(*this, 0, in_row1, subvec_n_rows);
+  }
+
+
+
+// template<typename eT>
+// arma_inline
+// subview_col<eT>
+// Col<eT>::operator()(const span& row_span)
+//   {
+//   arma_extra_debug_sigprint();
+//   
+//   return subvec(row_span);
+//   }
+// 
+// 
+// 
+// template<typename eT>
+// arma_inline
+// const subview_col<eT>
+// Col<eT>::operator()(const span& row_span) const
+//   {
+//   arma_extra_debug_sigprint();
+//   
+//   return subvec(row_span);
+//   }
+
+
+
 //! remove specified row
 template<typename eT>
 inline
@@ -421,7 +489,7 @@ Col<eT>::shed_rows(const u32 in_row1, const u32 in_row2)
     arrayops::copy( &(X_mem[n_keep_front]), &(t_mem[in_row2+1]), n_keep_back);
     }
   
-  steal_mem(X);
+  Mat<eT>::steal_mem(X);
   }
 
 
@@ -465,7 +533,7 @@ Col<eT>::insert_rows(const u32 row_num, const u32 N, const bool set_to_zero)
       arrayops::inplace_set( &(out_mem[row_num]), eT(0), N );
       }
     
-    steal_mem(out);
+    Mat<eT>::steal_mem(out);
     }
   }
 

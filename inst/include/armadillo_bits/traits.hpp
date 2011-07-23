@@ -568,7 +568,7 @@ struct is_supported_blas_type
 template<typename T>
 struct is_signed
   {
-  static const bool value = (T(-1) < T(0));
+  static const bool value = true;
   };
 
 
@@ -582,7 +582,7 @@ template<> struct is_signed<unsigned long > { static const bool value = false; }
 template<typename T>
 struct is_non_integral
   {
-  static const bool value = (T(1.0) != T(1.1));
+  static const bool value = false;
   };
 
 
@@ -591,15 +591,6 @@ template<> struct is_non_integral<              double  > { static const bool va
 template<> struct is_non_integral< std::complex<float>  > { static const bool value = true; };
 template<> struct is_non_integral< std::complex<double> > { static const bool value = true; };
 
-template<> struct is_non_integral<         char > { static const bool value = false; };
-template<> struct is_non_integral<         short> { static const bool value = false; };
-template<> struct is_non_integral<         int  > { static const bool value = false; };
-template<> struct is_non_integral<         long > { static const bool value = false; };
-
-template<> struct is_non_integral<unsigned char > { static const bool value = false; };
-template<> struct is_non_integral<unsigned short> { static const bool value = false; };
-template<> struct is_non_integral<unsigned int  > { static const bool value = false; };
-template<> struct is_non_integral<unsigned long > { static const bool value = false; };
 
 
 

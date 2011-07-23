@@ -116,14 +116,24 @@ op_strans::apply_noalias(Mat<eT>& out, const Mat<eT>& A)
       }
     else
       {
-      for(u32 in_row = 0; in_row<A_n_rows; ++in_row)
+      for(u32 k=0; k < A_n_cols; ++k)
         {
-        const u32 out_col = in_row;
+        u32 i, j;
         
-        for(u32 in_col = 0; in_col<A_n_cols; ++in_col)
+        const eT* colptr = A.colptr(k);
+        
+        for(i=0, j=1; j < A_n_rows; i+=2, j+=2)
           {
-          const u32 out_row = in_col;
-          out.at(out_row, out_col) = A.at(in_row, in_col);
+          const eT tmp_i = colptr[i];
+          const eT tmp_j = colptr[j];
+          
+          out.at(k, i) = tmp_i;
+          out.at(k, j) = tmp_j;
+          }
+        
+        if(i < A_n_rows)
+          {
+          out.at(k, i) = colptr[i];
           }
         }
       }
@@ -145,20 +155,30 @@ op_strans::apply(Mat<eT>& out, const Mat<eT>& A)
     }
   else
     {
-    if(out.n_rows == out.n_cols)
+    const u32 n_rows = out.n_rows;
+    const u32 n_cols = out.n_cols;
+      
+    if(n_rows == n_cols)
       {
       arma_extra_debug_print("op_strans::apply(): doing in-place transpose of a square matrix");
       
-      const u32 n_rows = out.n_rows;
-      const u32 n_cols = out.n_cols;
+      const u32 N = n_rows;
       
-      for(u32 col=0; col<n_cols; ++col)
+      for(u32 k=0; k < N; ++k)
         {
-        eT* coldata = out.colptr(col);
+        eT* colptr = out.colptr(k);
         
-        for(u32 row=(col+1); row<n_rows; ++row)
+        u32 i,j;
+        
+        for(i=(k+1), j=(k+2); j < N; i+=2, j+=2)
           {
-          std::swap( out.at(col,row), coldata[row] );
+          std::swap(out.at(k,i), colptr[i]);
+          std::swap(out.at(k,j), colptr[j]);
+          }
+        
+        if(i < N)
+          {
+          std::swap(out.at(k,i), colptr[i]);
           }
         }
       }

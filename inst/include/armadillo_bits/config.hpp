@@ -75,3 +75,19 @@
   #undef ARMA_USE_ATLAS
   #undef ARMA_ATLAS_INCLUDE_DIR
 #endif
+
+#if defined(ARMA_DONT_USE_LAPACK)
+  #undef ARMA_USE_LAPACK
+#endif
+
+#if defined(ARMA_DONT_USE_BLAS)
+  #undef ARMA_USE_BLAS
+#endif
+
+#if defined(ARMA_DONT_PRINT_LOGIC_ERRORS)
+  #undef ARMA_PRINT_LOGIC_ERRORS
+#endif
+
+#if defined(ARMA_DONT_PRINT_RUNTIME_ERRORS)
+  #undef ARMA_PRINT_RUNTIME_ERRORS
+#endif

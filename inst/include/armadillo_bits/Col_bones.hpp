@@ -62,6 +62,12 @@ class Col : public Mat<eT>
   arma_inline       subview_col<eT> subvec(const u32 in_row1, const u32 in_row2);
   arma_inline const subview_col<eT> subvec(const u32 in_row1, const u32 in_row2) const;
   
+  arma_inline       subview_col<eT> subvec(const span& row_span);
+  arma_inline const subview_col<eT> subvec(const span& row_span) const;
+  
+  //arma_inline       subview_col<eT> operator()(const span& row_span);
+  //arma_inline const subview_col<eT> operator()(const span& row_span) const;
+  
   
   inline void shed_row (const u32 row_num);
   inline void shed_rows(const u32 in_row1, const u32 in_row2);

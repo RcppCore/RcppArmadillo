@@ -86,7 +86,7 @@ as_scalar_redirect<2>::apply(const Glue<T1, T2, glue_times>& X)
   const u32 B_n_rows = (tmp2.do_trans == false) ? B.n_rows : B.n_cols;
   const u32 B_n_cols = (tmp2.do_trans == false) ? B.n_cols : B.n_rows;
   
-  const eT val = tmp1.val * tmp2.val;
+  const eT val = tmp1.get_val() * tmp2.get_val();
   
   arma_debug_check( (A_n_rows != 1) || (B_n_cols != 1) || (A_n_cols != B_n_rows), "as_scalar(): incompatible dimensions" );
   
@@ -136,7 +136,7 @@ as_scalar_redirect<3>::apply(const Glue< Glue<T1, T2, glue_times>, T3, glue_time
     const u32 C_n_rows = (tmp3.do_trans == false) ? C.n_rows : C.n_cols;
     const u32 C_n_cols = (tmp3.do_trans == false) ? C.n_cols : C.n_rows;
     
-    const eT val = tmp1.val * tmp2.val * tmp3.val;
+    const eT val = tmp1.get_val() * tmp2.get_val() * tmp3.get_val();
     
     arma_debug_check
       (
@@ -192,7 +192,7 @@ as_scalar_redirect<3>::apply(const Glue< Glue<T1, T2, glue_times>, T3, glue_time
     const u32 C_n_rows = (tmp3.do_trans == false) ? C.n_rows : C.n_cols;
     const u32 C_n_cols = (tmp3.do_trans == false) ? C.n_cols : C.n_rows;
     
-    const eT val = tmp1.val * tmp2.val * tmp3.val;
+    const eT val = tmp1.get_val() * tmp2.get_val() * tmp3.get_val();
     
     arma_debug_check
       (
@@ -287,7 +287,7 @@ as_scalar_diag(const Glue< Glue<T1, T2, glue_times_diag>, T3, glue_times >& X)
   const u32 C_n_rows = (tmp3.do_trans == false) ? C.n_rows : C.n_cols;
   const u32 C_n_cols = (tmp3.do_trans == false) ? C.n_cols : C.n_rows;
   
-  const eT val = tmp1.val * tmp2.val * tmp3.val;
+  const eT val = tmp1.get_val() * tmp2.get_val() * tmp3.get_val();
   
   arma_debug_check
     (

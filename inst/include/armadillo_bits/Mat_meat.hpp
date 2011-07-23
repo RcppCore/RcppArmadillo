@@ -568,6 +568,7 @@ Mat<eT>::steal_mem(Mat<eT>& x)
     if( (x_mem_state == 0) && (x_n_elem > arma_config::mat_prealloc) && (layout_ok == true) )
       {
       reset();
+      // note: calling reset() also prevents fixed size matrices from changing size or using non-local memory
       
       access::rw(n_rows) = x_n_rows;
       access::rw(n_cols) = x_n_cols;
@@ -5018,6 +5019,39 @@ Mat<eT>::end_row(const u32 row_num) const
   arma_debug_check( (row_num >= n_rows), "Mat::end_row(): index out of bounds" );
   
   return typename Mat<eT>::const_row_iterator(*this, row_num + 1);
+  }
+
+
+
+//! resets this matrix to an empty matrix
+template<typename eT>
+inline
+void
+Mat<eT>::clear()
+  {
+  reset();
+  }
+
+
+
+//! returns true if the matrix has no elements
+template<typename eT>
+inline
+bool
+Mat<eT>::empty() const
+  {
+  return (n_elem == 0);
+  }
+
+
+
+//! returns the number of elements in this matrix
+template<typename eT>
+inline
+u32
+Mat<eT>::size() const
+  {
+  return n_elem;
   }
 
 
