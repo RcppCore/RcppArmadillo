@@ -103,10 +103,13 @@ det
   (
   const Op<T1,op_htrans>& in,
   const bool slow = false,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0)
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk1 = 0,
+  const typename         arma_not_cx<typename T1::elem_type>::result* junk2 = 0
+  )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
+  arma_ignore(junk1);
+  arma_ignore(junk2);
   
   typedef typename T1::elem_type eT;
   

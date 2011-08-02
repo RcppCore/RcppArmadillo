@@ -1,3 +1,16 @@
+0.2.28  2011-08-02
+
+    o   Upgraded to Armadillo release 2.2.1 "Blue Skies Debauchery"
+
+          * faster multiplication of small matrices
+          * faster trans()
+          * faster handling of submatrices by norm()
+          * added economical singular value decomposition: svd_thin()
+          * added circ_toeplitz()
+          * added .is_colvec() & .is_rowvec()
+          * fixes for handling of complex numbers by cov(), cor(),
+            running_stat_vec
+
 0.2.27  2011-07-22
 
     o   Upgraded to Armadillo release 2.1.91 "v2.2 beta 1"
