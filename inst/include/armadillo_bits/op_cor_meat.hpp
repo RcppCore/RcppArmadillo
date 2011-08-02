@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2011 Conrad Sanderson
 // Copyright (C) 2009-2010 Dimitrios Bouzas
 // 
 // This file is part of the Armadillo C++ library.
@@ -81,8 +81,8 @@ op_cor::direct_cor(Mat< std::complex<T> >& out, const Mat< std::complex<T> >& A,
     const Row<eT> acc = sum(A);
     const Row<T>  sd  = stddev(A);
 
-    out = trans(conj(A)) * A;
-    out -= (trans(conj(acc)) * acc)/eT(N);
+    out = trans(A) * A;               // out = strans(conj(A)) * A;
+    out -= (trans(acc) * acc)/eT(N);  // out -= (strans(conj(acc)) * acc)/eT(N);
     out /= norm_val;
 
     //out = out / (trans(sd) * sd);

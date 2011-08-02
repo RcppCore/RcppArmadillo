@@ -140,8 +140,8 @@ glue_cor::direct_cor(Mat< std::complex<T> >& out, const Mat< std::complex<T> >& 
     const u32 N = A.n_rows;
     const eT norm_val = (norm_type == 0) ? ( (N > 1) ? eT(N-1) : eT(1) ) : eT(N);
     
-    out = trans(conj(A)) * B;
-    out -= (trans(conj(sum(A))) * sum(B))/eT(N);
+    out = trans(A) * B;                     // out = strans(conj(A)) * B;
+    out -= (trans(sum(A)) * sum(B))/eT(N);  // out -= (strans(conj(sum(A))) * sum(B))/eT(N);
     out /= norm_val;
     out /= conv_to< Mat<eT> >::from( trans(stddev(A)) * stddev(B) );
     }

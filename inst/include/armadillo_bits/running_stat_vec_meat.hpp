@@ -491,11 +491,11 @@ running_stat_vec_aux::update_stats(running_stat_vec< std::complex<T> >& x, const
       
       if(sample.n_cols == 1)
         {
-        tmp2 = conj(tmp1)*trans(tmp1);
+        tmp2 = conj(tmp1)*strans(tmp1);
         }
       else
         {
-        tmp2 = trans(conj(tmp1))*tmp1;
+        tmp2 = trans(tmp1)*tmp1;  //tmp2 = strans(conj(tmp1))*tmp1;
         }
       
       x.r_cov *= (N_minus_1/N);

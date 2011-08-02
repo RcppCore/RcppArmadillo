@@ -17,9 +17,9 @@
 
 
 #define ARMA_VERSION_MAJOR 2
-#define ARMA_VERSION_MINOR 1
-#define ARMA_VERSION_PATCH 91
-#define ARMA_VERSION_NAME  "2.2 beta 1"
+#define ARMA_VERSION_MINOR 2
+#define ARMA_VERSION_PATCH 1
+#define ARMA_VERSION_NAME  "Blue Skies Debauchery"
 
 
 
