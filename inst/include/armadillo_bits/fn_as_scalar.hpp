@@ -116,71 +116,24 @@ as_scalar_redirect<3>::apply(const Glue< Glue<T1, T2, glue_times>, T3, glue_time
   const bool tmp2_do_inv     = strip1.do_inv;
   const bool tmp2_do_diagmat = strip2.do_diagmat;
   
-  const partial_unwrap<T1>            tmp1(X.A.A);
-  const partial_unwrap<T2_stripped_2> tmp2(strip2.M);
-  const partial_unwrap<T3>            tmp3(X.B);
-  
-  const Mat<eT>& A = tmp1.M;
-  const Mat<eT>& B = tmp2.M;
-  const Mat<eT>& C = tmp3.M;
-  
-  
   if(tmp2_do_diagmat == false)
     {
-    const u32 A_n_rows = (tmp1.do_trans == false) ? A.n_rows : A.n_cols;
-    const u32 A_n_cols = (tmp1.do_trans == false) ? A.n_cols : A.n_rows;
+    const Mat<eT> tmp(X);
     
-    const u32 B_n_rows = (tmp2.do_trans == false) ? B.n_rows : B.n_cols;
-    const u32 B_n_cols = (tmp2.do_trans == false) ? B.n_cols : B.n_rows;
+    arma_debug_check( (tmp.n_elem != 1), "as_scalar(): expression doesn't evaluate to exactly one element" );
     
-    const u32 C_n_rows = (tmp3.do_trans == false) ? C.n_rows : C.n_cols;
-    const u32 C_n_cols = (tmp3.do_trans == false) ? C.n_cols : C.n_rows;
-    
-    const eT val = tmp1.get_val() * tmp2.get_val() * tmp3.get_val();
-    
-    arma_debug_check
-      (
-      (A_n_rows != 1)        ||
-      (C_n_cols != 1)        ||
-      (A_n_cols != B_n_rows) ||
-      (B_n_cols != C_n_rows)
-      ,
-      "as_scalar(): incompatible dimensions"
-      );
-    
-    
-    if(tmp2_do_inv == true)
-      {
-      arma_debug_check( (B.is_square() == false), "as_scalar(): incompatible dimensions" );
-      
-      Mat<eT> B_inv;
-      
-      if(tmp2.do_trans == false)
-        {
-        op_inv::apply(B_inv, B);
-        }
-      else
-        {
-        const Mat<eT> B_trans = trans(B);
-        op_inv::apply(B_inv, B_trans);
-        }
-      
-      return val * op_dotext::direct_rowvec_mat_colvec(A.mem, B_inv, C.mem);
-      }
-    else
-      {
-      if(tmp2.do_trans == false)
-        {
-        return val * op_dotext::direct_rowvec_mat_colvec(A.mem, B, C.mem);
-        }
-      else
-        {
-        return val * op_dotext::direct_rowvec_transmat_colvec(A.mem, B, C.mem);
-        }
-      }
+    return tmp[0];
     }
   else
     {
+    const partial_unwrap<T1>            tmp1(X.A.A);
+    const partial_unwrap<T2_stripped_2> tmp2(strip2.M);
+    const partial_unwrap<T3>            tmp3(X.B);
+    
+    const Mat<eT>& A = tmp1.M;
+    const Mat<eT>& B = tmp2.M;
+    const Mat<eT>& C = tmp3.M;
+    
     const u32 A_n_rows = (tmp1.do_trans == false) ? A.n_rows : A.n_cols;
     const u32 A_n_cols = (tmp1.do_trans == false) ? A.n_cols : A.n_rows;
     
