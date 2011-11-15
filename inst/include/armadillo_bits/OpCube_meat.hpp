@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -19,62 +19,40 @@
 template<typename T1, typename op_type>
 OpCube<T1, op_type>::OpCube(const BaseCube<typename T1::elem_type, T1>& in_m)
   : m(in_m.get_ref())
-  , aux(aux)              // don't tell mum
-  , aux_u32_a(aux_u32_a)
-  , aux_u32_b(aux_u32_b)
-  , aux_u32_c(aux_u32_c)
   {
   arma_extra_debug_sigprint();
   }
-  
+
 
 
 template<typename T1, typename op_type>
 OpCube<T1, op_type>::OpCube(const BaseCube<typename T1::elem_type, T1>& in_m, const typename T1::elem_type in_aux)
   : m(in_m.get_ref())
   , aux(in_aux)
-  , aux_u32_a(aux_u32_a)
-  , aux_u32_b(aux_u32_b)
-  , aux_u32_c(aux_u32_c)
   {
   arma_extra_debug_sigprint();
   }
   
 
-
 template<typename T1, typename op_type>
-OpCube<T1, op_type>::OpCube(const BaseCube<typename T1::elem_type, T1>& in_m, const u32 in_aux_u32_a, const u32 in_aux_u32_b)
-  : m(in_m.get_ref())
-  , aux(aux)
-  , aux_u32_a(in_aux_u32_a)
-  , aux_u32_b(in_aux_u32_b)
-  , aux_u32_c(aux_u32_c)
-  {
-  arma_extra_debug_sigprint();
-  }
-
-
-
-template<typename T1, typename op_type>
-OpCube<T1, op_type>::OpCube(const BaseCube<typename T1::elem_type, T1>& in_m, const u32 in_aux_u32_a, const u32 in_aux_u32_b, const u32 in_aux_u32_c)
-  : m(in_m.get_ref())
-  , aux(aux)
-  , aux_u32_a(in_aux_u32_a)
-  , aux_u32_b(in_aux_u32_b)
-  , aux_u32_c(in_aux_u32_c)
-  {
-  arma_extra_debug_sigprint();
-  }
-
-
-
-template<typename T1, typename op_type>
-OpCube<T1, op_type>::OpCube(const BaseCube<typename T1::elem_type, T1>& in_m, const typename T1::elem_type in_aux, const u32 in_aux_u32_a, const u32 in_aux_u32_b, const u32 in_aux_u32_c)
+OpCube<T1, op_type>::OpCube(const BaseCube<typename T1::elem_type, T1>& in_m, const typename T1::elem_type in_aux, const uword in_aux_uword_a, const uword in_aux_uword_b, const uword in_aux_uword_c)
   : m(in_m.get_ref())
   , aux(in_aux)
-  , aux_u32_a(in_aux_u32_a)
-  , aux_u32_b(in_aux_u32_b)
-  , aux_u32_c(in_aux_u32_c)
+  , aux_uword_a(in_aux_uword_a)
+  , aux_uword_b(in_aux_uword_b)
+  , aux_uword_c(in_aux_uword_c)
+  {
+  arma_extra_debug_sigprint();
+  }
+
+
+
+
+template<typename T1, typename op_type>
+OpCube<T1, op_type>::OpCube(const BaseCube<typename T1::elem_type, T1>& in_m, const uword in_aux_uword_a, const uword in_aux_uword_b)
+  : m(in_m.get_ref())
+  , aux_uword_a(in_aux_uword_a)
+  , aux_uword_b(in_aux_uword_b)
   {
   arma_extra_debug_sigprint();
   }
@@ -82,16 +60,28 @@ OpCube<T1, op_type>::OpCube(const BaseCube<typename T1::elem_type, T1>& in_m, co
 
 
 template<typename T1, typename op_type>
-OpCube<T1, op_type>::OpCube(const u32 in_aux_u32_a, const u32 in_aux_u32_b, const u32 in_aux_u32_c)
-  : m(m)
-  , aux(aux)
-  , aux_u32_a(in_aux_u32_a)
-  , aux_u32_b(in_aux_u32_b)
-  , aux_u32_c(in_aux_u32_c)
+OpCube<T1, op_type>::OpCube(const BaseCube<typename T1::elem_type, T1>& in_m, const uword in_aux_uword_a, const uword in_aux_uword_b, const uword in_aux_uword_c)
+  : m(in_m.get_ref())
+  , aux_uword_a(in_aux_uword_a)
+  , aux_uword_b(in_aux_uword_b)
+  , aux_uword_c(in_aux_uword_c)
   {
   arma_extra_debug_sigprint();
   }
-  
+
+
+
+template<typename T1, typename op_type>
+OpCube<T1, op_type>::OpCube(const BaseCube<typename T1::elem_type, T1>& in_m, const uword in_aux_uword_a, const uword in_aux_uword_b, const uword in_aux_uword_c, const uword in_aux_uword_d, const char)
+  : m(in_m.get_ref())
+  , aux_uword_a(in_aux_uword_a)
+  , aux_uword_b(in_aux_uword_b)
+  , aux_uword_c(in_aux_uword_c)
+  , aux_uword_d(in_aux_uword_d)
+  {
+  arma_extra_debug_sigprint();
+  }
+
 
 
 template<typename T1, typename op_type>

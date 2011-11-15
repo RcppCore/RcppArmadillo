@@ -23,12 +23,12 @@ class auxlib
   public:
   
   
-  template<const u32 row, const u32 col>
+  template<const uword row, const uword col>
   struct pos
     {
-    static const u32 n2 = row + col*2;
-    static const u32 n3 = row + col*3;
-    static const u32 n4 = row + col*4;
+    static const uword n2 = row + col*2;
+    static const uword n3 = row + col*3;
+    static const uword n4 = row + col*4;
     };
   
   
@@ -42,10 +42,10 @@ class auxlib
   inline static bool inv(Mat<eT>& out, const Mat<eT>& A, const bool slow = false);
   
   template<typename eT>
-  inline static bool inv_noalias_tinymat(Mat<eT>& out, const Mat<eT>& X, const u32 N);
+  inline static bool inv_noalias_tinymat(Mat<eT>& out, const Mat<eT>& X, const uword N);
   
   template<typename eT>
-  inline static bool inv_inplace_tinymat(Mat<eT>& out, const u32 N);
+  inline static bool inv_inplace_tinymat(Mat<eT>& out, const uword N);
   
   template<typename eT>
   inline static bool inv_inplace_lapack(Mat<eT>& out);
@@ -55,21 +55,21 @@ class auxlib
   // inv_tr
   
   template<typename eT, typename T1>
-  inline static bool inv_tr(Mat<eT>& out, const Base<eT,T1>& X, const u32 layout);
+  inline static bool inv_tr(Mat<eT>& out, const Base<eT,T1>& X, const uword layout);
   
   
   //
   // inv_sym
   
   template<typename eT, typename T1>
-  inline static bool inv_sym(Mat<eT>& out, const Base<eT,T1>& X, const u32 layout);
+  inline static bool inv_sym(Mat<eT>& out, const Base<eT,T1>& X, const uword layout);
   
   
   //
   // inv_sympd
   
   template<typename eT, typename T1>
-  inline static bool inv_sympd(Mat<eT>& out, const Base<eT,T1>& X, const u32 layout);
+  inline static bool inv_sympd(Mat<eT>& out, const Base<eT,T1>& X, const uword layout);
   
   
   //
@@ -79,7 +79,7 @@ class auxlib
   inline static eT det(const Base<eT,T1>& X, const bool slow = false);
   
   template<typename eT>
-  inline static eT det_tinymat(const Mat<eT>& X, const u32 N);
+  inline static eT det_tinymat(const Mat<eT>& X, const uword N);
   
   template<typename eT>
   inline static eT det_lapack(const Mat<eT>& X, const bool make_copy);
@@ -145,10 +145,10 @@ class auxlib
   // svd
   
   template<typename eT, typename T1>
-  inline static bool svd(Col<eT>& S, const Base<eT,T1>& X, u32& n_rows, u32& n_cols);
+  inline static bool svd(Col<eT>& S, const Base<eT,T1>& X, uword& n_rows, uword& n_cols);
   
   template<typename T, typename T1>
-  inline static bool svd(Col<T>& S, const Base<std::complex<T>, T1>& X, u32& n_rows, u32& n_cols);
+  inline static bool svd(Col<T>& S, const Base<std::complex<T>, T1>& X, uword& n_rows, uword& n_cols);
   
   template<typename eT, typename T1>
   inline static bool svd(Col<eT>& S, const Base<eT,T1>& X);
@@ -163,10 +163,10 @@ class auxlib
   inline static bool svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, const Base< std::complex<T>, T1>& X);
   
   template<typename eT, typename T1>
-  inline static bool svd_thin(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X, const char mode);
+  inline static bool svd_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X, const char mode);
   
   template<typename T, typename T1>
-  inline static bool svd_thin(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, const Base< std::complex<T>, T1>& X, const char mode);
+  inline static bool svd_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, const Base< std::complex<T>, T1>& X, const char mode);
   
   
   //
@@ -186,7 +186,7 @@ class auxlib
   // solve_tr
   
   template<typename eT>
-  inline static bool solve_tr(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const u32 layout);
+  inline static bool solve_tr(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const uword layout);
 
 
   //

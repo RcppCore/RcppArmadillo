@@ -20,10 +20,10 @@
 
 template<typename T1>
 inline
-u32
+uword
 op_find::helper
   (
-  Mat<u32>& indices,
+  Mat<uword>& indices,
   const Base<typename T1::elem_type, T1>& X
   )
   {
@@ -35,14 +35,14 @@ op_find::helper
   const Proxy<T1> A(X.get_ref());
   
   ea_type   PA     = A.get_ea();
-  const u32 n_elem = A.get_n_elem();
+  const uword n_elem = A.get_n_elem();
   
   indices.set_size(n_elem, 1);
   
-  u32* indices_mem = indices.memptr();
-  u32  n_nz        = 0;
+  uword* indices_mem = indices.memptr();
+  uword  n_nz        = 0;
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     if(PA[i] != eT(0))
       {
@@ -58,11 +58,11 @@ op_find::helper
 
 template<typename T1, typename op_type>
 inline
-u32
+uword
 op_find::helper
   (
-  Mat<u32>& indices,
-  const mtOp<u32, T1, op_type>& X,
+  Mat<uword>& indices,
+  const mtOp<uword, T1, op_type>& X,
   const typename arma_op_rel_only<op_type>::result           junk1,
   const typename arma_not_cx<typename T1::elem_type>::result junk2
   )
@@ -79,14 +79,14 @@ op_find::helper
   const Proxy<T1> A(X.m);
   
   ea_type   PA     = A.get_ea();
-  const u32 n_elem = A.get_n_elem();
+  const uword n_elem = A.get_n_elem();
   
   indices.set_size(n_elem, 1);
   
-  u32* indices_mem = indices.memptr();
-  u32  n_nz        = 0;
+  uword* indices_mem = indices.memptr();
+  uword  n_nz        = 0;
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     const eT tmp = PA[i];
     
@@ -118,11 +118,11 @@ op_find::helper
 
 template<typename T1, typename op_type>
 inline
-u32
+uword
 op_find::helper
   (
-  Mat<u32>& indices,
-  const mtOp<u32, T1, op_type>& X,
+  Mat<uword>& indices,
+  const mtOp<uword, T1, op_type>& X,
   const typename arma_op_rel_only<op_type>::result            junk1,
   const typename arma_cx_only<typename T1::elem_type>::result junk2
   )
@@ -139,14 +139,14 @@ op_find::helper
   const Proxy<T1> A(X.m);
   
   ea_type   PA     = A.get_ea();
-  const u32 n_elem = A.get_n_elem();
+  const uword n_elem = A.get_n_elem();
   
   indices.set_size(n_elem, 1);
   
-  u32* indices_mem = indices.memptr();
-  u32  n_nz        = 0;
+  uword* indices_mem = indices.memptr();
+  uword  n_nz        = 0;
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     const eT tmp = PA[i];
     
@@ -170,11 +170,11 @@ op_find::helper
 
 template<typename T1, typename T2, typename glue_type>
 inline
-u32
+uword
 op_find::helper
   (
-  Mat<u32>& indices,
-  const mtGlue<u32, T1, T2, glue_type>& X,
+  Mat<uword>& indices,
+  const mtGlue<uword, T1, T2, glue_type>& X,
   const typename arma_glue_rel_only<glue_type>::result       junk1,
   const typename arma_not_cx<typename T1::elem_type>::result junk2,
   const typename arma_not_cx<typename T2::elem_type>::result junk3
@@ -198,14 +198,14 @@ op_find::helper
   
   ea_type1  PA     = A.get_ea();
   ea_type2  PB     = B.get_ea();
-  const u32 n_elem = B.get_n_elem();
+  const uword n_elem = B.get_n_elem();
   
   indices.set_size(n_elem, 1);
   
-  u32* indices_mem = indices.memptr();
-  u32  n_nz        = 0;
+  uword* indices_mem = indices.memptr();
+  uword  n_nz        = 0;
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     const eT1 tmp1 = PA[i];
     const eT2 tmp2 = PB[i];
@@ -234,11 +234,11 @@ op_find::helper
 
 template<typename T1, typename T2, typename glue_type>
 inline
-u32
+uword
 op_find::helper
   (
-  Mat<u32>& indices,
-  const mtGlue<u32, T1, T2, glue_type>& X,
+  Mat<uword>& indices,
+  const mtGlue<uword, T1, T2, glue_type>& X,
   const typename arma_glue_rel_only<glue_type>::result        junk1,
   const typename arma_cx_only<typename T1::elem_type>::result junk2,
   const typename arma_cx_only<typename T2::elem_type>::result junk3
@@ -259,14 +259,14 @@ op_find::helper
   
   ea_type1  PA     = A.get_ea();
   ea_type2  PB     = B.get_ea();
-  const u32 n_elem = B.get_n_elem();
+  const uword n_elem = B.get_n_elem();
   
   indices.set_size(n_elem, 1);
   
-  u32* indices_mem = indices.memptr();
-  u32  n_nz        = 0;
+  uword* indices_mem = indices.memptr();
+  uword  n_nz        = 0;
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     bool not_zero;
     
@@ -289,15 +289,15 @@ op_find::helper
 template<typename T1>
 inline
 void
-op_find::apply(Mat<u32>& out, const mtOp<u32, T1, op_find>& X)
+op_find::apply(Mat<uword>& out, const mtOp<uword, T1, op_find>& X)
   {
   arma_extra_debug_sigprint();
   
-  const u32 k    = X.aux_u32_a;
-  const u32 type = X.aux_u32_b;
+  const uword k    = X.aux_uword_a;
+  const uword type = X.aux_uword_b;
   
-  Mat<u32> indices;
-  const u32 n_nz = op_find::helper(indices, X.m);
+  Mat<uword> indices;
+  const uword n_nz = op_find::helper(indices, X.m);
   
   if(n_nz > 0)
     {

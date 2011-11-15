@@ -79,7 +79,7 @@ mat_injector<T1>::mat_injector(T1& in_X, const typename mat_injector<T1>::elem_t
   
   A.set_size(n_rows);
   
-  for(u32 row=0; row<n_rows; ++row)
+  for(uword row=0; row<n_rows; ++row)
     {
     A[row] = new mat_injector_row<eT>;
     }
@@ -107,7 +107,7 @@ mat_injector<T1>::mat_injector(T1& in_X, const injector_end_of_row& x)
   
   A.set_size(n_rows);
   
-  for(u32 row=0; row<n_rows; ++row)
+  for(uword row=0; row<n_rows; ++row)
     {
     A[row] = new mat_injector_row<eT>;
     }
@@ -129,11 +129,11 @@ mat_injector<T1>::~mat_injector()
   
   if(n_rows > 0)
     {
-    u32 max_n_cols = (*(A[0])).n_cols;
+    uword max_n_cols = (*(A[0])).n_cols;
     
-    for(u32 row=1; row<n_rows; ++row)
+    for(uword row=1; row<n_rows; ++row)
       {
-      const u32 n_cols = (*(A[row])).n_cols;
+      const uword n_cols = (*(A[row])).n_cols;
       
       if(max_n_cols < n_cols)
         {
@@ -141,22 +141,22 @@ mat_injector<T1>::~mat_injector()
         }
       }
     
-    const u32 max_n_rows = ((*(A[n_rows-1])).n_cols == 0) ? n_rows-1 : n_rows;
+    const uword max_n_rows = ((*(A[n_rows-1])).n_cols == 0) ? n_rows-1 : n_rows;
     
     if(is_Mat_only<T1>::value == true)
       {
       X.set_size(max_n_rows, max_n_cols);
       
-      for(u32 row=0; row<max_n_rows; ++row)
+      for(uword row=0; row<max_n_rows; ++row)
         {
-        const u32 n_cols = (*(A[row])).n_cols;
+        const uword n_cols = (*(A[row])).n_cols;
         
-        for(u32 col=0; col<n_cols; ++col)
+        for(uword col=0; col<n_cols; ++col)
           {
           X.at(row,col) = (*(A[row])).A[col];
           }
         
-        for(u32 col=n_cols; col<max_n_cols; ++col)
+        for(uword col=n_cols; col<max_n_cols; ++col)
           {
           X.at(row,col) = eT(0);
           }
@@ -167,7 +167,7 @@ mat_injector<T1>::~mat_injector()
       {
       arma_debug_check( (max_n_rows > 1), "matrix initialisation: incompatible dimensions" );
       
-      const u32 n_cols = (*(A[0])).n_cols;
+      const uword n_cols = (*(A[0])).n_cols;
       
       X.set_size(1, n_cols);
       
@@ -180,22 +180,22 @@ mat_injector<T1>::~mat_injector()
       
       arma_debug_check( (is_vec == false), "matrix initialisation: incompatible dimensions" );
       
-      const u32 n_elem = (std::max)(max_n_rows, max_n_cols);
+      const uword n_elem = (std::max)(max_n_rows, max_n_cols);
       
       X.set_size(n_elem, 1);
       
-      u32 i = 0;
-      for(u32 row=0; row<max_n_rows; ++row)
+      uword i = 0;
+      for(uword row=0; row<max_n_rows; ++row)
         {
-        const u32 n_cols = (*(A[0])).n_cols;
+        const uword n_cols = (*(A[0])).n_cols;
         
-        for(u32 col=0; col<n_cols; ++col)
+        for(uword col=0; col<n_cols; ++col)
           {
           X[i] = (*(A[row])).A[col];
           ++i;
           }
         
-        for(u32 col=n_cols; col<max_n_cols; ++col)
+        for(uword col=n_cols; col<max_n_cols; ++col)
           {
           X[i] = eT(0);
           ++i;
@@ -204,7 +204,7 @@ mat_injector<T1>::~mat_injector()
       }
     }
   
-  for(u32 row=0; row<n_rows; ++row)
+  for(uword row=0; row<n_rows; ++row)
     {
     delete A[row];
     }
@@ -248,7 +248,7 @@ mat_injector<T1>::end_of_row() const
   
   arrayops::copy(B.memptr(), A.memptr(), n_rows);
   
-  for(u32 row=n_rows; row<(n_rows+1); ++row)
+  for(uword row=n_rows; row<(n_rows+1); ++row)
     {
     B[row] = new mat_injector_row<eT>;
     }
@@ -378,7 +378,7 @@ field_injector_row<oT>::insert(const oT& val) const
     {
     B.set_size(2 * A.n_elem);
     
-    for(u32 i=0; i<n_cols; ++i)
+    for(uword i=0; i<n_cols; ++i)
       {
       B[i] = A[i];
       }
@@ -414,7 +414,7 @@ field_injector<T1>::field_injector(T1& in_X, const typename field_injector<T1>::
   
   A.set_size(n_rows);
   
-  for(u32 row=0; row<n_rows; ++row)
+  for(uword row=0; row<n_rows; ++row)
     {
     A[row] = new field_injector_row<oT>;
     }
@@ -442,7 +442,7 @@ field_injector<T1>::field_injector(T1& in_X, const injector_end_of_row& x)
   
   A.set_size(n_rows);
   
-  for(u32 row=0; row<n_rows; ++row)
+  for(uword row=0; row<n_rows; ++row)
     {
     A[row] = new field_injector_row<oT>;
     }
@@ -464,11 +464,11 @@ field_injector<T1>::~field_injector()
   
   if(n_rows > 0)
     {
-    u32 max_n_cols = (*(A[0])).n_cols;
+    uword max_n_cols = (*(A[0])).n_cols;
     
-    for(u32 row=1; row<n_rows; ++row)
+    for(uword row=1; row<n_rows; ++row)
       {
-      const u32 n_cols = (*(A[row])).n_cols;
+      const uword n_cols = (*(A[row])).n_cols;
       
       if(max_n_cols < n_cols)
         {
@@ -476,21 +476,21 @@ field_injector<T1>::~field_injector()
         }
       }
       
-    const u32 max_n_rows = ((*(A[n_rows-1])).n_cols == 0) ? n_rows-1 : n_rows;
+    const uword max_n_rows = ((*(A[n_rows-1])).n_cols == 0) ? n_rows-1 : n_rows;
     
     X.set_size(max_n_rows, max_n_cols);
     
-    for(u32 row=0; row<max_n_rows; ++row)
+    for(uword row=0; row<max_n_rows; ++row)
       {
-      const u32 n_cols = (*(A[row])).n_cols;
+      const uword n_cols = (*(A[row])).n_cols;
       
-      for(u32 col=0; col<n_cols; ++col)
+      for(uword col=0; col<n_cols; ++col)
         {
         const field<oT>& tmp = *((*(A[row])).AA);
         X.at(row,col) = tmp[col];
         }
       
-      for(u32 col=n_cols; col<max_n_cols; ++col)
+      for(uword col=n_cols; col<max_n_cols; ++col)
         {
         X.at(row,col) = oT();
         }
@@ -498,7 +498,7 @@ field_injector<T1>::~field_injector()
     }
   
   
-  for(u32 row=0; row<n_rows; ++row)
+  for(uword row=0; row<n_rows; ++row)
     {
     delete A[row];
     }
@@ -540,12 +540,12 @@ field_injector<T1>::end_of_row() const
   
   B.set_size( n_rows+1 );
   
-  for(u32 row=0; row<n_rows; ++row)
+  for(uword row=0; row<n_rows; ++row)
     {
     B[row] = A[row];
     }
   
-  for(u32 row=n_rows; row<(n_rows+1); ++row)
+  for(uword row=n_rows; row<(n_rows+1); ++row)
     {
     B[row] = new field_injector_row<oT>;
     }

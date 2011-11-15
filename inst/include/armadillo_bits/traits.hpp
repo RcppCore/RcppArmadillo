@@ -124,6 +124,15 @@ struct is_subview_cube< subview_cube<eT> >
 
 
 template<typename T>
+struct is_Gen
+  { static const bool value = false; };
+ 
+template<typename eT, typename gen_type>
+struct is_Gen< Gen<eT,gen_type> >
+  { static const bool value = true; };
+ 
+
+template<typename T>
 struct is_Op
   { static const bool value = false; };
  
@@ -211,6 +220,15 @@ struct is_op_diagmat< Op<T1,op_diagmat> >
 //
 //
 
+
+template<typename T>
+struct is_GenCube
+  { static const bool value = false; };
+ 
+template<typename eT, typename gen_type>
+struct is_GenCube< GenCube<eT,gen_type> >
+  { static const bool value = true; };
+ 
 
 template<typename T>
 struct is_OpCube
@@ -328,6 +346,7 @@ struct is_arma_type
   {
   static const bool value
   =  is_Mat<T1>::value
+  || is_Gen<T1>::value
   || is_Op<T1>::value
   || is_eOp<T1>::value
   || is_mtOp<T1>::value
@@ -346,6 +365,7 @@ struct is_arma_cube_type
   {
   static const bool value
   =  is_Cube<T1>::value
+  || is_GenCube<T1>::value
   || is_OpCube<T1>::value
   || is_eOpCube<T1>::value
   || is_mtOpCube<T1>::value
@@ -439,14 +459,44 @@ struct is_s32<s32>
 
 
 
+#if defined(ARMA_64BIT_WORD)
+  template<typename T1>
+  struct is_u64
+    { static const bool value = false; };
 
-// template<typename T1>
-// struct is_u64
-//   { static const bool value = false; };
-// 
-// template<>
-// struct is_u64<u64>
-//   { static const bool value = true; };
+  template<>
+  struct is_u64<u64>
+    { static const bool value = true; };
+  
+  
+  template<typename T1>
+  struct is_s64
+    { static const bool value = false; };
+
+  template<>
+  struct is_s64<s64>
+    { static const bool value = true; };
+#endif
+
+
+
+template<typename T1>
+struct is_uword
+  { static const bool value = false; };
+
+template<>
+struct is_uword<uword>
+  { static const bool value = true; };
+
+
+
+template<typename T1>
+struct is_sword
+  { static const bool value = false; };
+
+template<>
+struct is_sword<sword>
+  { static const bool value = true; };
 
 
 
@@ -544,7 +594,10 @@ struct is_supported_elem_type
     is_s16<T1>::value ||
     is_u32<T1>::value ||
     is_s32<T1>::value ||
-    // is_u64<T1>::value ||
+#if defined(ARMA_64BIT_WORD)
+    is_u64<T1>::value ||
+    is_s64<T1>::value ||
+#endif
     is_float<T1>::value ||
     is_double<T1>::value ||
     is_supported_complex_float<T1>::value ||
@@ -572,11 +625,12 @@ struct is_signed
   };
 
 
-template<> struct is_signed<unsigned char > { static const bool value = false; };
-template<> struct is_signed<unsigned short> { static const bool value = false; };
-template<> struct is_signed<unsigned int  > { static const bool value = false; };
-template<> struct is_signed<unsigned long > { static const bool value = false; };
-
+template<> struct is_signed<u8>  { static const bool value = false; };
+template<> struct is_signed<u16> { static const bool value = false; };
+template<> struct is_signed<u32> { static const bool value = false; };
+#if defined(ARMA_64BIT_WORD)
+template<> struct is_signed<u64> { static const bool value = false; };
+#endif
 
 
 template<typename T>

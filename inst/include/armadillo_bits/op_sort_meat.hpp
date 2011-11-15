@@ -83,7 +83,7 @@ class arma_descend_sort_helper< std::complex<T> >
 template<typename eT>
 inline 
 void
-op_sort::direct_sort(eT* X, const u32 n_elem, const u32 sort_type)
+op_sort::direct_sort(eT* X, const uword n_elem, const uword sort_type)
   {
   arma_extra_debug_sigprint();
   
@@ -106,11 +106,11 @@ op_sort::direct_sort(eT* X, const u32 n_elem, const u32 sort_type)
 template<typename eT>
 inline 
 void
-op_sort::copy_row(eT* X, const Mat<eT>& A, const u32 row)
+op_sort::copy_row(eT* X, const Mat<eT>& A, const uword row)
   {
-  const u32 N = A.n_cols;
+  const uword N = A.n_cols;
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<N; i+=2, j+=2)
     {
@@ -129,11 +129,11 @@ op_sort::copy_row(eT* X, const Mat<eT>& A, const u32 row)
 template<typename eT>
 inline 
 void
-op_sort::copy_row(Mat<eT>& A, const eT* X, const u32 row)
+op_sort::copy_row(Mat<eT>& A, const eT* X, const uword row)
   {
-  const u32 N = A.n_cols;
+  const uword N = A.n_cols;
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<N; i+=2, j+=2)
     {
@@ -161,8 +161,8 @@ op_sort::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort>& in)
   const unwrap<T1>   tmp(in.m);
   const Mat<eT>& X = tmp.M;
   
-  const u32 sort_type = in.aux_u32_a;
-  const u32 dim       = in.aux_u32_b;
+  const uword sort_type = in.aux_uword_a;
+  const uword dim       = in.aux_uword_b;
   
   arma_debug_check( (sort_type > 1),          "sort(): incorrect usage. sort_type must be 0 or 1");
   arma_debug_check( (dim > 1),                "sort(): incorrect usage. dim must be 0 or 1"      );
@@ -181,10 +181,10 @@ op_sort::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort>& in)
     
     out = X;
     
-    const u32 n_rows = out.n_rows;
-    const u32 n_cols = out.n_cols;
+    const uword n_rows = out.n_rows;
+    const uword n_cols = out.n_cols;
       
-    for(u32 col=0; col < n_cols; ++col)
+    for(uword col=0; col < n_cols; ++col)
       {
       op_sort::direct_sort( out.colptr(col), n_rows, sort_type );
       }
@@ -205,12 +205,12 @@ op_sort::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort>& in)
       
       out.copy_size(X);
       
-      const u32 n_rows = out.n_rows;
-      const u32 n_cols = out.n_cols;
+      const uword n_rows = out.n_rows;
+      const uword n_cols = out.n_cols;
       
       podarray<eT> tmp_array(n_cols);
       
-      for(u32 row=0; row < n_rows; ++row)
+      for(uword row=0; row < n_rows; ++row)
         {
         op_sort::copy_row(tmp_array.memptr(), X, row);
         

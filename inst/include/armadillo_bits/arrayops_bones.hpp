@@ -21,12 +21,12 @@ class arrayops
   
   template<typename eT>
   arma_hot arma_inline static void
-  copy(eT* dest, const eT* src, const u32 n_elem);
+  copy(eT* dest, const eT* src, const uword n_elem);
   
   
   template<typename eT>
   static inline void
-  copy_big(eT* dest, const eT* src, const u32 n_elem);
+  copy_big(eT* dest, const eT* src, const uword n_elem);
   
   
   // 
@@ -46,11 +46,11 @@ class arrayops
   
   template<typename out_eT, typename in_eT>
   arma_hot inline static void
-  convert(out_eT* dest, const in_eT* src, const u32 n_elem);
+  convert(out_eT* dest, const in_eT* src, const uword n_elem);
   
   template<typename out_eT, typename in_eT>
   arma_hot inline static void
-  convert_cx(out_eT* dest, const in_eT* src, const u32 n_elem);
+  convert_cx(out_eT* dest, const in_eT* src, const uword n_elem);
   
   
   // 
@@ -59,22 +59,22 @@ class arrayops
   template<typename eT>
   arma_hot inline static
   void
-  inplace_plus(eT* dest, const eT* src, const u32 n_elem);
+  inplace_plus(eT* dest, const eT* src, const uword n_elem);
   
   template<typename eT>
   arma_hot inline static
   void
-  inplace_minus(eT* dest, const eT* src, const u32 n_elem);
+  inplace_minus(eT* dest, const eT* src, const uword n_elem);
   
   template<typename eT>
   arma_hot inline static
   void
-  inplace_mul(eT* dest, const eT* src, const u32 n_elem);
+  inplace_mul(eT* dest, const eT* src, const uword n_elem);
    
   template<typename eT>
   arma_hot inline static
   void
-  inplace_div(eT* dest, const eT* src, const u32 n_elem);
+  inplace_div(eT* dest, const eT* src, const uword n_elem);
   
   
   // 
@@ -83,26 +83,26 @@ class arrayops
   template<typename eT>
   arma_hot inline static
   void
-  inplace_set(eT* dest, const eT val, const u32 n_elem);
+  inplace_set(eT* dest, const eT val, const uword n_elem);
   
   template<typename eT>
   arma_hot inline static
   void
-  inplace_plus(eT* dest, const eT val, const u32 n_elem);
+  inplace_plus(eT* dest, const eT val, const uword n_elem);
   
   template<typename eT>
   arma_hot inline static
   void
-  inplace_minus(eT* dest, const eT val, const u32 n_elem);
+  inplace_minus(eT* dest, const eT val, const uword n_elem);
   
   template<typename eT>
   arma_hot inline static void
-  inplace_mul(eT* dest, const eT val, const u32 n_elem);
+  inplace_mul(eT* dest, const eT val, const uword n_elem);
   
   template<typename eT>
   arma_hot inline static
   void
-  inplace_div(eT* dest, const eT val, const u32 n_elem);
+  inplace_div(eT* dest, const eT val, const uword n_elem);
   
   
   // 
@@ -111,47 +111,47 @@ class arrayops
   template<typename eT>
   arma_hot arma_pure inline static
   eT
-  accumulate(const eT* src, const u32 n_elem);
+  accumulate(const eT* src, const uword n_elem);
   
   template<typename eT>
   arma_hot arma_pure inline static
   eT
-  product(const eT* src, const u32 n_elem);
+  product(const eT* src, const uword n_elem);
   
   template<typename eT>
   arma_hot arma_pure inline static
   bool
-  is_finite(const eT* src, const u32 n_elem);
+  is_finite(const eT* src, const uword n_elem);
   
   template<typename eT>
   arma_hot arma_pure inline static
   typename get_pod_type<eT>::result
-  norm_1(const eT* src, const u32 n_elem);
+  norm_1(const eT* src, const uword n_elem);
   
   template<typename eT>
   arma_hot arma_pure inline static
   eT
-  norm_2(const eT* src, const u32 n_elem, const typename arma_not_cx<eT>::result* junk = 0);
+  norm_2(const eT* src, const uword n_elem, const typename arma_not_cx<eT>::result* junk = 0);
   
   template<typename T>
   arma_hot arma_pure inline static
   T
-  norm_2(const std::complex<T>* src, const u32 n_elem);
+  norm_2(const std::complex<T>* src, const uword n_elem);
   
   template<typename eT>
   arma_hot arma_pure inline static
   typename get_pod_type<eT>::result
-  norm_k(const eT* src, const u32 n_elem, const int k);
+  norm_k(const eT* src, const uword n_elem, const int k);
   
   template<typename eT>
   arma_hot arma_pure inline static
   typename get_pod_type<eT>::result
-  norm_max(const eT* src, const u32 n_elem);
+  norm_max(const eT* src, const uword n_elem);
   
   template<typename eT>
   arma_hot arma_pure inline static
   typename get_pod_type<eT>::result
-  norm_min(const eT* src, const u32 n_elem);
+  norm_min(const eT* src, const uword n_elem);
   
   };
 

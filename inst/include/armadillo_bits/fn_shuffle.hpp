@@ -24,7 +24,7 @@
 template<typename T1>
 inline
 const Op<T1, op_shuffle>
-shuffle(const Base<typename T1::elem_type,T1>& X, const u32 dim = 0)
+shuffle(const Base<typename T1::elem_type,T1>& X, const uword dim = 0)
   {
   arma_extra_debug_sigprint();
   

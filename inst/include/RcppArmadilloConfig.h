@@ -54,5 +54,10 @@
 #undef ARMA_HAVE_STD_ISNAN
 #endif
 
+// Let's be careful for now and undef this as not all compilers support this
+#if defined(ARMA_USE_CXX11)
+#undef ARMA_USE_CXX11
+#endif
+
 #endif
 

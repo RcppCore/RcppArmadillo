@@ -29,7 +29,7 @@ template<typename eT>
 inline
 arma_counter<eT>::arma_counter()
   : d_count( eT(0))
-  , i_count(u32(0))
+  , i_count(uword(0))
   {
   arma_extra_debug_sigprint_this(this);
   }
@@ -41,15 +41,13 @@ inline
 const arma_counter<eT>& 
 arma_counter<eT>::operator++()
   {
-  const u32 max_val = 0xffffffff;
-  
-  if(i_count < max_val)
+  if(i_count < ARMA_MAX_UWORD)
     {
     i_count++;
     }
   else
     {
-    d_count += eT(max_val);
+    d_count += eT(ARMA_MAX_UWORD);
     i_count  = 0;
     }
   
@@ -74,7 +72,7 @@ void
 arma_counter<eT>::reset()
   {
   d_count =  eT(0);
-  i_count = u32(0);
+  i_count = uword(0);
   }
 
 
@@ -94,15 +92,13 @@ inline
 eT
 arma_counter<eT>::value_plus_1() const
   {
-  const u32 max_val = 0xffffffff;
-  
-  if(i_count < max_val)
+  if(i_count < ARMA_MAX_UWORD)
     {
     return d_count + eT(i_count + 1);
     }
   else
     {
-    return d_count + eT(max_val) + eT(1);
+    return d_count + eT(ARMA_MAX_UWORD) + eT(1);
     }
   }
 
@@ -178,7 +174,7 @@ running_stat<eT>::operator() (const std::complex< typename running_stat<eT>::T >
   {
   arma_extra_debug_sigprint();
   
-  arma_type_check< is_same_type<eT, std::complex< typename running_stat<eT>::T > >::value == false >::apply();
+  arma_type_check(( is_same_type<eT, std::complex< typename running_stat<eT>::T > >::value == false ));
   
   if( arma_isfinite(sample) == false )
     {
@@ -232,7 +228,7 @@ running_stat<eT>::mean() const
 template<typename eT>
 inline
 typename running_stat<eT>::T
-running_stat<eT>::var(const u32 norm_type) const
+running_stat<eT>::var(const uword norm_type) const
   {
   arma_extra_debug_sigprint();
   
@@ -262,7 +258,7 @@ running_stat<eT>::var(const u32 norm_type) const
 template<typename eT>
 inline
 typename running_stat<eT>::T
-running_stat<eT>::stddev(const u32 norm_type) const
+running_stat<eT>::stddev(const uword norm_type) const
   {
   arma_extra_debug_sigprint();
   

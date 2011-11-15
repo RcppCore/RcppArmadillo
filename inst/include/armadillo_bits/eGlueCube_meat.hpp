@@ -45,7 +45,7 @@ eGlueCube<T1,T2,eglue_type>::eGlueCube(const T1& in_A, const T2& in_B)
 
 template<typename T1, typename T2, typename eglue_type>
 arma_inline
-u32
+uword
 eGlueCube<T1,T2,eglue_type>::get_n_rows() const
   {
   return P1.get_n_rows();
@@ -55,7 +55,7 @@ eGlueCube<T1,T2,eglue_type>::get_n_rows() const
 
 template<typename T1, typename T2, typename eglue_type>
 arma_inline
-u32
+uword
 eGlueCube<T1,T2,eglue_type>::get_n_cols() const
   {
   return P1.get_n_cols();
@@ -65,7 +65,7 @@ eGlueCube<T1,T2,eglue_type>::get_n_cols() const
 
 template<typename T1, typename T2, typename eglue_type>
 arma_inline
-u32
+uword
 eGlueCube<T1,T2,eglue_type>::get_n_slices() const
   {
   return P1.get_n_slices();
@@ -75,7 +75,7 @@ eGlueCube<T1,T2,eglue_type>::get_n_slices() const
 
 template<typename T1, typename T2, typename eglue_type>
 arma_inline
-u32
+uword
 eGlueCube<T1,T2,eglue_type>::get_n_elem_slice() const
   {
   return P1.get_n_elem_slice();
@@ -85,7 +85,7 @@ eGlueCube<T1,T2,eglue_type>::get_n_elem_slice() const
 
 template<typename T1, typename T2, typename eglue_type>
 arma_inline
-u32
+uword
 eGlueCube<T1,T2,eglue_type>::get_n_elem() const
   {
   return P1.get_n_elem();
@@ -96,7 +96,7 @@ eGlueCube<T1,T2,eglue_type>::get_n_elem() const
 template<typename T1, typename T2, typename eglue_type>
 arma_inline
 typename T1::elem_type
-eGlueCube<T1,T2,eglue_type>::operator[] (const u32 i) const
+eGlueCube<T1,T2,eglue_type>::operator[] (const uword i) const
   {
   typedef typename T1::elem_type eT;
   
@@ -112,7 +112,7 @@ eGlueCube<T1,T2,eglue_type>::operator[] (const u32 i) const
 template<typename T1, typename T2, typename eglue_type>
 arma_inline
 typename T1::elem_type
-eGlueCube<T1,T2,eglue_type>::at(const u32 row, const u32 col, const u32 slice) const
+eGlueCube<T1,T2,eglue_type>::at(const uword row, const uword col, const uword slice) const
   {
   typedef typename T1::elem_type eT;
   

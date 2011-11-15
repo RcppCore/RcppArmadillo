@@ -99,8 +99,8 @@ op_strans::apply_noalias(Mat<eT>& out, const Mat<eT>& A)
   {
   arma_extra_debug_sigprint();
   
-  const u32 A_n_cols = A.n_cols;
-  const u32 A_n_rows = A.n_rows;
+  const uword A_n_cols = A.n_cols;
+  const uword A_n_rows = A.n_rows;
   
   out.set_size(A_n_cols, A_n_rows);
   
@@ -116,9 +116,9 @@ op_strans::apply_noalias(Mat<eT>& out, const Mat<eT>& A)
       }
     else
       {
-      for(u32 k=0; k < A_n_cols; ++k)
+      for(uword k=0; k < A_n_cols; ++k)
         {
-        u32 i, j;
+        uword i, j;
         
         const eT* colptr = A.colptr(k);
         
@@ -155,20 +155,20 @@ op_strans::apply(Mat<eT>& out, const Mat<eT>& A)
     }
   else
     {
-    const u32 n_rows = out.n_rows;
-    const u32 n_cols = out.n_cols;
+    const uword n_rows = out.n_rows;
+    const uword n_cols = out.n_cols;
       
     if(n_rows == n_cols)
       {
       arma_extra_debug_print("op_strans::apply(): doing in-place transpose of a square matrix");
       
-      const u32 N = n_rows;
+      const uword N = n_rows;
       
-      for(u32 k=0; k < N; ++k)
+      for(uword k=0; k < N; ++k)
         {
         eT* colptr = out.colptr(k);
         
-        u32 i,j;
+        uword i,j;
         
         for(i=(k+1), j=(k+2); j < N; i+=2, j+=2)
           {
@@ -184,8 +184,10 @@ op_strans::apply(Mat<eT>& out, const Mat<eT>& A)
       }
     else
       {
-      const Mat<eT> AA = A;
-      op_strans::apply_noalias(out, AA);
+      Mat<eT> tmp;
+      op_strans::apply_noalias(tmp, A);
+      
+      out.steal_mem(tmp);
       }
     }
   }
@@ -215,18 +217,18 @@ op_strans::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_strans>& in)
 //   
 //   if((X.n_rows == 1) || (X.n_cols == 1))
 //     {
-//     const u32 old_n_rows = X.n_rows;
+//     const uword old_n_rows = X.n_rows;
 //     access::rw(X.n_rows) = X.n_cols;
 //     access::rw(X.n_cols) = old_n_rows;
 //     }
 //   else
 //   if(X.n_rows == X.n_cols)
 //     {
-//     for(u32 col=0; col < X.n_cols; ++col)
+//     for(uword col=0; col < X.n_cols; ++col)
 //       {
 //       double* X_coldata = X.colptr(col);
 //       
-//       for(u32 row=(col+1); row < X.n_rows; ++row)
+//       for(uword row=(col+1); row < X.n_rows; ++row)
 //         {
 //         std::swap( A.at(col,row), A_coldata[row] );
 //         }

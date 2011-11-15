@@ -36,14 +36,14 @@ op_shuffle::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_shuffle>& in)
     return;
     }
   
-  const u32 dim = in.aux_u32_a;
-  const u32 N   = (dim == 0) ? X.n_rows : X.n_cols;
+  const uword dim = in.aux_uword_a;
+  const uword N   = (dim == 0) ? X.n_rows : X.n_cols;
   
   // see "fn_sort_index.hpp" for the definition of "arma_sort_index_packet_ascend"
   // and the associated "operator<"
-  std::vector< arma_sort_index_packet_ascend<int,u32> > packet_vec(N);
+  std::vector< arma_sort_index_packet_ascend<int,uword> > packet_vec(N);
   
-  for(u32 i=0; i<N; ++i)
+  for(uword i=0; i<N; ++i)
     {
     packet_vec[i].val   = std::rand();
     packet_vec[i].index = i;
@@ -61,14 +61,14 @@ op_shuffle::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_shuffle>& in)
       
       if(dim == 0)
         {
-        for(u32 i=0; i<N; ++i)
+        for(uword i=0; i<N; ++i)
           {
           out.row(i) = X.row(packet_vec[i].index);
           }
         }
       else
         {
-        for(u32 i=0; i<N; ++i)
+        for(uword i=0; i<N; ++i)
           {
           out.col(i) = X.col(packet_vec[i].index);
           }
@@ -82,18 +82,18 @@ op_shuffle::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_shuffle>& in)
       // to indicate whether a particular row or column
       // has already been shuffled
       
-      for(u32 i=0; i<N; ++i)
+      for(uword i=0; i<N; ++i)
         {
         packet_vec[i].val = 0;
         }
         
       if(dim == 0)
         {
-        for(u32 i=0; i<N; ++i)
+        for(uword i=0; i<N; ++i)
           {
           if(packet_vec[i].val == 0)
             {
-            const u32 j = packet_vec[i].index;
+            const uword j = packet_vec[i].index;
             
             out.swap_rows(i, j);
             
@@ -103,11 +103,11 @@ op_shuffle::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_shuffle>& in)
         }
       else
         {
-        for(u32 i=0; i<N; ++i)
+        for(uword i=0; i<N; ++i)
           {
           if(packet_vec[i].val == 0)
             {
-            const u32 j = packet_vec[i].index;
+            const uword j = packet_vec[i].index;
             
             out.swap_cols(i, j);
             
@@ -129,7 +129,7 @@ op_shuffle::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_shuffle>& in)
         {
         if(X.n_rows > 1)  // i.e. column vector
           {
-          for(u32 i=0; i<N; ++i)
+          for(uword i=0; i<N; ++i)
             {
             out[i] = X[ packet_vec[i].index ];
             }
@@ -143,7 +143,7 @@ op_shuffle::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_shuffle>& in)
         {
         if(X.n_cols > 1)  // i.e. row vector
           {
-          for(u32 i=0; i<N; ++i)
+          for(uword i=0; i<N; ++i)
             {
             out[i] = X[ packet_vec[i].index ];
             }
@@ -162,7 +162,7 @@ op_shuffle::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_shuffle>& in)
       // to indicate whether a particular row or column
       // has already been shuffled
       
-      for(u32 i=0; i<N; ++i)
+      for(uword i=0; i<N; ++i)
         {
         packet_vec[i].val = 0;
         }
@@ -171,11 +171,11 @@ op_shuffle::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_shuffle>& in)
         {
         if(X.n_rows > 1)  // i.e. column vector
           {
-          for(u32 i=0; i<N; ++i)
+          for(uword i=0; i<N; ++i)
             {
             if(packet_vec[i].val == 0)
               {
-              const u32 j = packet_vec[i].index;
+              const uword j = packet_vec[i].index;
               
               std::swap(out[i], out[j]);
               
@@ -188,11 +188,11 @@ op_shuffle::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_shuffle>& in)
         {
         if(X.n_cols > 1)  // i.e. row vector
           {
-          for(u32 i=0; i<N; ++i)
+          for(uword i=0; i<N; ++i)
             {
             if(packet_vec[i].val == 0)
               {
-              const u32 j = packet_vec[i].index;
+              const uword j = packet_vec[i].index;
               
               std::swap(out[i], out[j]);
               

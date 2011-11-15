@@ -79,7 +79,7 @@ namespace blas
   template<typename eT>
   inline
   eT
-  dot(const u32 n_elem, const eT* x, const eT* y)
+  dot(const uword n_elem, const eT* x, const eT* y)
     {
     arma_ignore(n_elem);
     arma_ignore(x);
@@ -93,7 +93,7 @@ namespace blas
   template<>
   inline
   float
-  dot(const u32 n_elem, const float* x, const float* y)
+  dot(const uword n_elem, const float* x, const float* y)
     {
     blas_int n   = blas_int(n_elem);
     blas_int inc = blas_int(1);
@@ -106,7 +106,7 @@ namespace blas
   template<>
   inline
   double
-  dot(const u32 n_elem, const double* x, const double* y)
+  dot(const uword n_elem, const double* x, const double* y)
     {
     blas_int n   = blas_int(n_elem);
     blas_int inc = blas_int(1);
@@ -121,7 +121,7 @@ namespace blas
   void
   gemv(const char* transA, const blas_int* m, const blas_int* n, const eT* alpha, const eT* A, const blas_int* ldA, const eT* x, const blas_int* incx, const eT* beta, eT* y, const blas_int* incy)
     {
-    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    arma_type_check((is_supported_blas_type<eT>::value == false));
     
     if(is_float<eT>::value == true)
       {
@@ -156,7 +156,7 @@ namespace blas
   void
   gemm(const char* transA, const char* transB, const blas_int* m, const blas_int* n, const blas_int* k, const eT* alpha, const eT* A, const blas_int* ldA, const eT* B, const blas_int* ldB, const eT* beta, eT* C, const blas_int* ldC)
     {
-    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    arma_type_check((is_supported_blas_type<eT>::value == false));
     
     if(is_float<eT>::value == true)
       {

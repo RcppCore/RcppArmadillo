@@ -26,7 +26,7 @@
 template<typename T1>
 arma_inline
 const Op<T1, op_prod>
-prod(const Base<typename T1::elem_type,T1>& X, const u32 dim = 0)
+prod(const Base<typename T1::elem_type,T1>& X, const uword dim = 0)
   {
   arma_extra_debug_sigprint();
   
@@ -90,7 +90,7 @@ prod(const Op<T1, op_prod>& in)
 template<typename T1>
 inline
 const Op<Op<T1, op_prod>, op_prod>
-prod(const Op<T1, op_prod>& in, const u32 dim)
+prod(const Op<T1, op_prod>& in, const uword dim)
   {
   arma_extra_debug_sigprint();
   
@@ -110,16 +110,16 @@ prod(const subview_row<eT>& S)
   
   const Mat<eT>& X = S.m;
   
-  const u32 n_elem         = S.n_elem;
-  const u32 row            = S.aux_row1;
-  const u32 start_col      = S.aux_col1;
-  const u32 end_col_plus_1 = start_col + S.n_cols;
+  const uword n_elem         = S.n_elem;
+  const uword row            = S.aux_row1;
+  const uword start_col      = S.aux_col1;
+  const uword end_col_plus_1 = start_col + S.n_cols;
   
   eT val = eT(1);
   
   if(n_elem > 0)
     {
-    for(u32 col=start_col; col<end_col_plus_1; ++col)
+    for(uword col=start_col; col<end_col_plus_1; ++col)
       {
       val *= X.at(row,col);
       }
@@ -153,11 +153,11 @@ prod(const diagview<eT>& X)
   {
   arma_extra_debug_sigprint();
   
-  const u32 X_n_elem = X.n_elem;
+  const uword X_n_elem = X.n_elem;
   
   eT val = eT(1);
   
-  for(u32 i=0; i<X_n_elem; ++i)
+  for(uword i=0; i<X_n_elem; ++i)
     {
     val *= X[i];
     }

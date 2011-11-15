@@ -30,12 +30,12 @@
   \
   arma_debug_assert_same_size(P1, P2, operator_str);\
   \
-  const u32 n_rows = P1.get_n_rows();\
-  const u32 n_cols = P1.get_n_cols();\
+  const uword n_rows = P1.get_n_rows();\
+  const uword n_cols = P1.get_n_cols();\
   \
   out.set_size(n_rows, n_cols);\
   \
-  u32* out_mem = out.memptr();\
+  uword* out_mem = out.memptr();\
   \
   const bool prefer_at_accessor = (Proxy<T1>::prefer_at_accessor || Proxy<T2>::prefer_at_accessor);\
   \
@@ -44,22 +44,22 @@
     typename Proxy<T1>::ea_type A = P1.get_ea();\
     typename Proxy<T2>::ea_type B = P2.get_ea();\
     \
-    const u32 n_elem = out.n_elem;\
+    const uword n_elem = out.n_elem;\
     \
-    for(u32 i=0; i<n_elem; ++i)\
+    for(uword i=0; i<n_elem; ++i)\
       {\
-      out_mem[i] = (A[i] operator_rel B[i]) ? u32(1) : u32(0);\
+      out_mem[i] = (A[i] operator_rel B[i]) ? uword(1) : uword(0);\
       }\
     }\
   else\
     {\
-    u32 count = 0;\
+    uword count = 0;\
     \
-    for(u32 col=0; col<n_cols; ++col)\
+    for(uword col=0; col<n_cols; ++col)\
       {\
-      for(u32 row=0; row<n_rows; ++row, ++count)\
+      for(uword row=0; row<n_rows; ++row, ++count)\
         {\
-        out_mem[count] = (P1.at(row,col) operator_rel P2.at(row,col)) ? u32(1) : u32(0);\
+        out_mem[count] = (P1.at(row,col) operator_rel P2.at(row,col)) ? uword(1) : uword(0);\
         }\
       }\
     }\
@@ -75,13 +75,13 @@
   \
   arma_debug_assert_same_size(P1, P2, operator_str);\
   \
-  const u32 n_rows   = P1.get_n_rows();\
-  const u32 n_cols   = P1.get_n_cols();\
-  const u32 n_slices = P1.get_n_slices();\
+  const uword n_rows   = P1.get_n_rows();\
+  const uword n_cols   = P1.get_n_cols();\
+  const uword n_slices = P1.get_n_slices();\
   \
   out.set_size(n_rows, n_cols, n_slices);\
   \
-  u32* out_mem = out.memptr();\
+  uword* out_mem = out.memptr();\
   \
   const bool prefer_at_accessor = (ProxyCube<T1>::prefer_at_accessor || ProxyCube<T2>::prefer_at_accessor);\
   \
@@ -90,22 +90,22 @@
     typename ProxyCube<T1>::ea_type A = P1.get_ea();\
     typename ProxyCube<T2>::ea_type B = P2.get_ea();\
     \
-    const u32 n_elem = out.n_elem;\
+    const uword n_elem = out.n_elem;\
     \
-    for(u32 i=0; i<n_elem; ++i)\
+    for(uword i=0; i<n_elem; ++i)\
       {\
-      out_mem[i] = (A[i] operator_rel B[i]) ? u32(1) : u32(0);\
+      out_mem[i] = (A[i] operator_rel B[i]) ? uword(1) : uword(0);\
       }\
     }\
   else\
     {\
-    u32 count = 0;\
+    uword count = 0;\
     \
-    for(u32 slice = 0; slice < n_slices; ++slice)\
-    for(u32 col   = 0; col   < n_cols;   ++col)\
-    for(u32 row   = 0; row   < n_rows;   ++row, ++count)\
+    for(uword slice = 0; slice < n_slices; ++slice)\
+    for(uword col   = 0; col   < n_cols;   ++col)\
+    for(uword row   = 0; row   < n_rows;   ++row, ++count)\
       {\
-      out_mem[count] = (P1.at(row,col,slice) operator_rel P2.at(row,col,slice)) ? u32(1) : u32(0);\
+      out_mem[count] = (P1.at(row,col,slice) operator_rel P2.at(row,col,slice)) ? uword(1) : uword(0);\
       }\
     }\
   }
@@ -117,8 +117,8 @@ inline
 void
 glue_rel_lt::apply
   (
-        Mat   <u32>& out,
-  const mtGlue<u32, T1, T2, glue_rel_lt>& X
+        Mat   <uword>& out,
+  const mtGlue<uword, T1, T2, glue_rel_lt>& X
   )
   {
   arma_extra_debug_sigprint();
@@ -133,8 +133,8 @@ inline
 void
 glue_rel_gt::apply
   (
-        Mat   <u32>& out,
-  const mtGlue<u32, T1, T2, glue_rel_gt>& X
+        Mat   <uword>& out,
+  const mtGlue<uword, T1, T2, glue_rel_gt>& X
   )
   {
   arma_extra_debug_sigprint();
@@ -149,8 +149,8 @@ inline
 void
 glue_rel_lteq::apply
   (
-        Mat   <u32>& out,
-  const mtGlue<u32, T1, T2, glue_rel_lteq>& X
+        Mat   <uword>& out,
+  const mtGlue<uword, T1, T2, glue_rel_lteq>& X
   )
   {
   arma_extra_debug_sigprint();
@@ -165,8 +165,8 @@ inline
 void
 glue_rel_gteq::apply
   (
-        Mat   <u32>& out,
-  const mtGlue<u32, T1, T2, glue_rel_gteq>& X
+        Mat   <uword>& out,
+  const mtGlue<uword, T1, T2, glue_rel_gteq>& X
   )
   {
   arma_extra_debug_sigprint();
@@ -181,8 +181,8 @@ inline
 void
 glue_rel_eq::apply
   (
-        Mat   <u32>& out,
-  const mtGlue<u32, T1, T2, glue_rel_eq>& X
+        Mat   <uword>& out,
+  const mtGlue<uword, T1, T2, glue_rel_eq>& X
   )
   {
   arma_extra_debug_sigprint();
@@ -197,8 +197,8 @@ inline
 void
 glue_rel_noteq::apply
   (
-        Mat   <u32>& out,
-  const mtGlue<u32, T1, T2, glue_rel_noteq>& X
+        Mat   <uword>& out,
+  const mtGlue<uword, T1, T2, glue_rel_noteq>& X
   )
   {
   arma_extra_debug_sigprint();
@@ -219,8 +219,8 @@ inline
 void
 glue_rel_lt::apply
   (
-        Cube      <u32>& out,
-  const mtGlueCube<u32, T1, T2, glue_rel_lt>& X
+        Cube      <uword>& out,
+  const mtGlueCube<uword, T1, T2, glue_rel_lt>& X
   )
   {
   arma_extra_debug_sigprint();
@@ -235,8 +235,8 @@ inline
 void
 glue_rel_gt::apply
   (
-        Cube      <u32>& out,
-  const mtGlueCube<u32, T1, T2, glue_rel_gt>& X
+        Cube      <uword>& out,
+  const mtGlueCube<uword, T1, T2, glue_rel_gt>& X
   )
   {
   arma_extra_debug_sigprint();
@@ -251,8 +251,8 @@ inline
 void
 glue_rel_lteq::apply
   (
-        Cube      <u32>& out,
-  const mtGlueCube<u32, T1, T2, glue_rel_lteq>& X
+        Cube      <uword>& out,
+  const mtGlueCube<uword, T1, T2, glue_rel_lteq>& X
   )
   {
   arma_extra_debug_sigprint();
@@ -267,8 +267,8 @@ inline
 void
 glue_rel_gteq::apply
   (
-        Cube      <u32>& out,
-  const mtGlueCube<u32, T1, T2, glue_rel_gteq>& X
+        Cube      <uword>& out,
+  const mtGlueCube<uword, T1, T2, glue_rel_gteq>& X
   )
   {
   arma_extra_debug_sigprint();
@@ -283,8 +283,8 @@ inline
 void
 glue_rel_eq::apply
   (
-        Cube      <u32>& out,
-  const mtGlueCube<u32, T1, T2, glue_rel_eq>& X
+        Cube      <uword>& out,
+  const mtGlueCube<uword, T1, T2, glue_rel_eq>& X
   )
   {
   arma_extra_debug_sigprint();
@@ -299,8 +299,8 @@ inline
 void
 glue_rel_noteq::apply
   (
-        Cube      <u32>& out,
-  const mtGlueCube<u32, T1, T2, glue_rel_noteq>& X
+        Cube      <uword>& out,
+  const mtGlueCube<uword, T1, T2, glue_rel_noteq>& X
   )
   {
   arma_extra_debug_sigprint();

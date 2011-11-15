@@ -36,7 +36,7 @@ glue_solve::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_solve>
   
   if(A.n_rows == A.n_cols)
     {
-    const u32 mode = X.aux_u32;
+    const uword mode = X.aux_uword;
     
     status = (mode == 0) ? auxlib::solve(out, A, B) : auxlib::solve(out, A, B, true);
     }
@@ -85,7 +85,7 @@ glue_solve_tr::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_sol
   
   arma_debug_check(err_state, err_msg);
   
-  const bool status = auxlib::solve_tr(out, A, B, X.aux_u32);
+  const bool status = auxlib::solve_tr(out, A, B, X.aux_uword);
   
   if(status == false)
     {

@@ -64,7 +64,7 @@ inv
   arma_ignore(slow);
   arma_ignore(junk);
   
-  return Op<T1, op_inv_tr>(X.m, X.aux_u32_a, 0);
+  return Op<T1, op_inv_tr>(X.m, X.aux_uword_a, 0);
   }
 
 

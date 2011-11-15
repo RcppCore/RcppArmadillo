@@ -21,10 +21,10 @@ class op_mean
   public:
   
   template<typename eT>
-  inline static eT direct_mean(const eT* const X, const u32 N);
+  inline static eT direct_mean(const eT* const X, const uword N);
   
   template<typename eT>
-  inline static eT direct_mean(const Mat<eT>& X, const u32 row);
+  inline static eT direct_mean(const Mat<eT>& X, const uword row);
   
   template<typename eT>
   inline static eT direct_mean(const subview<eT>& X);
@@ -37,10 +37,10 @@ class op_mean
   
   
   template<typename eT>
-  inline static eT direct_mean_robust(const eT* const X, const u32 N);
+  inline static eT direct_mean_robust(const eT* const X, const uword N);
   
   template<typename eT>
-  inline static eT direct_mean_robust(const Mat<eT>& X, const u32 row);
+  inline static eT direct_mean_robust(const Mat<eT>& X, const uword row);
   
   template<typename eT>
   inline static eT direct_mean_robust(const subview<eT>& X);

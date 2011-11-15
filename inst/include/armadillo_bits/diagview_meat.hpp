@@ -25,7 +25,7 @@ diagview<eT>::~diagview()
 
 template<typename eT>
 arma_inline
-diagview<eT>::diagview(const Mat<eT>& in_m, const u32 in_row_offset, const u32 in_col_offset, const u32 in_len)
+diagview<eT>::diagview(const Mat<eT>& in_m, const uword in_row_offset, const uword in_col_offset, const uword in_len)
   : m(in_m)
   , m_ptr(0)
   , row_offset(in_row_offset)
@@ -41,7 +41,7 @@ diagview<eT>::diagview(const Mat<eT>& in_m, const u32 in_row_offset, const u32 i
 
 template<typename eT>
 arma_inline
-diagview<eT>::diagview(Mat<eT>& in_m, const u32 in_row_offset, const u32 in_col_offset, const u32 in_len)
+diagview<eT>::diagview(Mat<eT>& in_m, const uword in_row_offset, const uword in_col_offset, const uword in_len)
   : m(in_m)
   , m_ptr(&in_m)
   , row_offset(in_row_offset)
@@ -70,14 +70,14 @@ diagview<eT>::operator= (const diagview<eT>& x)
         Mat<eT>& t_m = *(t.m_ptr);
   const Mat<eT>& x_m = x.m;
   
-  const u32 t_n_elem     = t.n_elem;
-  const u32 t_row_offset = t.row_offset;
-  const u32 t_col_offset = t.col_offset;
+  const uword t_n_elem     = t.n_elem;
+  const uword t_row_offset = t.row_offset;
+  const uword t_col_offset = t.col_offset;
   
-  const u32 x_row_offset = x.row_offset;
-  const u32 x_col_offset = x.col_offset;
+  const uword x_row_offset = x.row_offset;
+  const uword x_col_offset = x.col_offset;
   
-  for(u32 i=0; i<t_n_elem; ++i)
+  for(uword i=0; i<t_n_elem; ++i)
     {
     t_m.at(i + t_row_offset, i + t_col_offset) = x_m.at(i + x_row_offset, i + x_col_offset);
     }
@@ -94,11 +94,11 @@ diagview<eT>::operator+=(const eT val)
   
   Mat<eT>& t_m = (*m_ptr);
   
-  const u32 t_n_elem     = n_elem;
-  const u32 t_row_offset = row_offset;
-  const u32 t_col_offset = col_offset;
+  const uword t_n_elem     = n_elem;
+  const uword t_row_offset = row_offset;
+  const uword t_col_offset = col_offset;
   
-  for(u32 i=0; i<t_n_elem; ++i)
+  for(uword i=0; i<t_n_elem; ++i)
     {
     t_m.at( i + t_row_offset,  i + t_col_offset) += val;
     }
@@ -115,11 +115,11 @@ diagview<eT>::operator-=(const eT val)
   
   Mat<eT>& t_m = (*m_ptr);
   
-  const u32 t_n_elem     = n_elem;
-  const u32 t_row_offset = row_offset;
-  const u32 t_col_offset = col_offset;
+  const uword t_n_elem     = n_elem;
+  const uword t_row_offset = row_offset;
+  const uword t_col_offset = col_offset;
   
-  for(u32 i=0; i<t_n_elem; ++i)
+  for(uword i=0; i<t_n_elem; ++i)
     {
     t_m.at( i + t_row_offset,  i + t_col_offset) -= val;
     }
@@ -136,11 +136,11 @@ diagview<eT>::operator*=(const eT val)
   
   Mat<eT>& t_m = (*m_ptr);
   
-  const u32 t_n_elem     = n_elem;
-  const u32 t_row_offset = row_offset;
-  const u32 t_col_offset = col_offset;
+  const uword t_n_elem     = n_elem;
+  const uword t_row_offset = row_offset;
+  const uword t_col_offset = col_offset;
   
-  for(u32 i=0; i<t_n_elem; ++i)
+  for(uword i=0; i<t_n_elem; ++i)
     {
     t_m.at( i + t_row_offset,  i + t_col_offset) *= val;
     }
@@ -157,11 +157,11 @@ diagview<eT>::operator/=(const eT val)
   
   Mat<eT>& t_m = (*m_ptr);
   
-  const u32 t_n_elem     = n_elem;
-  const u32 t_row_offset = row_offset;
-  const u32 t_col_offset = col_offset;
+  const uword t_n_elem     = n_elem;
+  const uword t_row_offset = row_offset;
+  const uword t_col_offset = col_offset;
   
-  for(u32 i=0; i<t_n_elem; ++i)
+  for(uword i=0; i<t_n_elem; ++i)
     {
     t_m.at( i + t_row_offset,  i + t_col_offset) /= val;
     }
@@ -191,13 +191,13 @@ diagview<eT>::operator= (const Base<eT,T1>& o)
   
   Mat<eT>& t_m = *(t.m_ptr);
   
-  const u32 t_n_elem     = t.n_elem;
-  const u32 t_row_offset = t.row_offset;
-  const u32 t_col_offset = t.col_offset;
+  const uword t_n_elem     = t.n_elem;
+  const uword t_row_offset = t.row_offset;
+  const uword t_col_offset = t.col_offset;
   
   const eT* x_mem = x.memptr();
   
-  for(u32 i=0; i<t_n_elem; ++i)
+  for(uword i=0; i<t_n_elem; ++i)
     {
     t_m.at( i + t_row_offset,  i + t_col_offset) = x_mem[i];
     }
@@ -226,13 +226,13 @@ diagview<eT>::operator+=(const Base<eT,T1>& o)
   
   Mat<eT>& t_m = *(t.m_ptr);
   
-  const u32 t_n_elem     = t.n_elem;
-  const u32 t_row_offset = t.row_offset;
-  const u32 t_col_offset = t.col_offset;
+  const uword t_n_elem     = t.n_elem;
+  const uword t_row_offset = t.row_offset;
+  const uword t_col_offset = t.col_offset;
   
   const eT* x_mem = x.memptr();
   
-  for(u32 i=0; i<t_n_elem; ++i)
+  for(uword i=0; i<t_n_elem; ++i)
     {
     t_m.at( i + t_row_offset,  i + t_col_offset) += x_mem[i];
     }
@@ -261,13 +261,13 @@ diagview<eT>::operator-=(const Base<eT,T1>& o)
   
   Mat<eT>& t_m = *(t.m_ptr);
   
-  const u32 t_n_elem     = t.n_elem;
-  const u32 t_row_offset = t.row_offset;
-  const u32 t_col_offset = t.col_offset;
+  const uword t_n_elem     = t.n_elem;
+  const uword t_row_offset = t.row_offset;
+  const uword t_col_offset = t.col_offset;
   
   const eT* x_mem = x.memptr();
   
-  for(u32 i=0; i<t_n_elem; ++i)
+  for(uword i=0; i<t_n_elem; ++i)
     {
     t_m.at( i + t_row_offset,  i + t_col_offset) -= x_mem[i];
     }
@@ -296,13 +296,13 @@ diagview<eT>::operator%=(const Base<eT,T1>& o)
   
   Mat<eT>& t_m = *(t.m_ptr);
   
-  const u32 t_n_elem     = t.n_elem;
-  const u32 t_row_offset = t.row_offset;
-  const u32 t_col_offset = t.col_offset;
+  const uword t_n_elem     = t.n_elem;
+  const uword t_row_offset = t.row_offset;
+  const uword t_col_offset = t.col_offset;
   
   const eT* x_mem = x.memptr();
   
-  for(u32 i=0; i<t_n_elem; ++i)
+  for(uword i=0; i<t_n_elem; ++i)
     {
     t_m.at( i + t_row_offset,  i + t_col_offset) *= x_mem[i];
     }
@@ -331,13 +331,13 @@ diagview<eT>::operator/=(const Base<eT,T1>& o)
   
   Mat<eT>& t_m = *(t.m_ptr);
   
-  const u32 t_n_elem     = t.n_elem;
-  const u32 t_row_offset = t.row_offset;
-  const u32 t_col_offset = t.col_offset;
+  const uword t_n_elem     = t.n_elem;
+  const uword t_row_offset = t.row_offset;
+  const uword t_col_offset = t.col_offset;
   
   const eT* x_mem = x.memptr();
   
-  for(u32 i=0; i<t_n_elem; ++i)
+  for(uword i=0; i<t_n_elem; ++i)
     {
     t_m.at( i + t_row_offset,  i + t_col_offset) /= x_mem[i];
     }
@@ -349,34 +349,24 @@ diagview<eT>::operator/=(const Base<eT,T1>& o)
 template<typename eT>
 inline
 void
-diagview<eT>::extract(Mat<eT>& actual_out, const diagview<eT>& in)
+diagview<eT>::extract(Mat<eT>& out, const diagview<eT>& in)
   {
   arma_extra_debug_sigprint();
   
+  // NOTE: we're assuming that the matrix has already been set to the correct size and there is no aliasing;
+  // size setting and alias checking is done by either the Mat contructor or operator=()
+  
   const Mat<eT>& in_m = in.m;
-  const bool alias = (&actual_out == &in_m);
   
-  Mat<eT>* tmp = (alias) ? new Mat<eT> : 0;
-  Mat<eT>& out = (alias) ? (*tmp)      : actual_out;
-  
-  const u32 in_n_elem     = in.n_elem;
-  const u32 in_row_offset = in.row_offset;
-  const u32 in_col_offset = in.col_offset;
-  
-  out.set_size( in_n_elem, in.n_cols );
+  const uword in_n_elem     = in.n_elem;
+  const uword in_row_offset = in.row_offset;
+  const uword in_col_offset = in.col_offset;
   
   eT* out_mem = out.memptr();
   
-  for(u32 i=0; i<in_n_elem; ++i)
+  for(uword i=0; i<in_n_elem; ++i)
     {
     out_mem[i] = in_m.at(i+in_row_offset, i+in_col_offset);
-    }
-  
-  
-  if(alias)
-    {
-    actual_out = out;
-    delete tmp;
     }
   }
 
@@ -394,13 +384,13 @@ diagview<eT>::plus_inplace(Mat<eT>& out, const diagview<eT>& in)
   
   const Mat<eT>& in_m = in.m;
   
-  const u32 in_n_elem     = in.n_elem;
-  const u32 in_row_offset = in.row_offset;
-  const u32 in_col_offset = in.col_offset;
+  const uword in_n_elem     = in.n_elem;
+  const uword in_row_offset = in.row_offset;
+  const uword in_col_offset = in.col_offset;
   
   eT* out_mem = out.memptr();
   
-  for(u32 i=0; i<in_n_elem; ++i)
+  for(uword i=0; i<in_n_elem; ++i)
     {
     out_mem[i] += in_m.at(i+in_row_offset, i+in_col_offset);
     }
@@ -420,13 +410,13 @@ diagview<eT>::minus_inplace(Mat<eT>& out, const diagview<eT>& in)
   
   const Mat<eT>& in_m = in.m;
   
-  const u32 in_n_elem     = in.n_elem;
-  const u32 in_row_offset = in.row_offset;
-  const u32 in_col_offset = in.col_offset;
+  const uword in_n_elem     = in.n_elem;
+  const uword in_row_offset = in.row_offset;
+  const uword in_col_offset = in.col_offset;
   
   eT* out_mem = out.memptr();
   
-  for(u32 i=0; i<in_n_elem; ++i)
+  for(uword i=0; i<in_n_elem; ++i)
     {
     out_mem[i] -= in_m.at(i+in_row_offset, i+in_col_offset);
     }
@@ -446,13 +436,13 @@ diagview<eT>::schur_inplace(Mat<eT>& out, const diagview<eT>& in)
   
   const Mat<eT>& in_m = in.m;
   
-  const u32 in_n_elem     = in.n_elem;
-  const u32 in_row_offset = in.row_offset;
-  const u32 in_col_offset = in.col_offset;
+  const uword in_n_elem     = in.n_elem;
+  const uword in_row_offset = in.row_offset;
+  const uword in_col_offset = in.col_offset;
   
   eT* out_mem = out.memptr();
   
-  for(u32 i=0; i<in_n_elem; ++i)
+  for(uword i=0; i<in_n_elem; ++i)
     {
     out_mem[i] *= in_m.at(i+in_row_offset, i+in_col_offset);
     }
@@ -472,13 +462,13 @@ diagview<eT>::div_inplace(Mat<eT>& out, const diagview<eT>& in)
   
   const Mat<eT>& in_m = in.m;
   
-  const u32 in_n_elem     = in.n_elem;
-  const u32 in_row_offset = in.row_offset;
-  const u32 in_col_offset = in.col_offset;
+  const uword in_n_elem     = in.n_elem;
+  const uword in_row_offset = in.row_offset;
+  const uword in_col_offset = in.col_offset;
   
   eT* out_mem = out.memptr();
   
-  for(u32 i=0; i<in_n_elem; ++i)
+  for(uword i=0; i<in_n_elem; ++i)
     {
     out_mem[i] /= in_m.at(i+in_row_offset, i+in_col_offset);
     }
@@ -489,7 +479,7 @@ diagview<eT>::div_inplace(Mat<eT>& out, const diagview<eT>& in)
 template<typename eT>
 arma_inline
 eT&
-diagview<eT>::operator[](const u32 i)
+diagview<eT>::operator[](const uword i)
   {
   return (*m_ptr).at(i+row_offset, i+col_offset);
   }
@@ -499,7 +489,7 @@ diagview<eT>::operator[](const u32 i)
 template<typename eT>
 arma_inline
 eT
-diagview<eT>::operator[](const u32 i) const
+diagview<eT>::operator[](const uword i) const
   {
   return m.at(i+row_offset, i+col_offset);
   }
@@ -509,7 +499,7 @@ diagview<eT>::operator[](const u32 i) const
 template<typename eT>
 arma_inline
 eT&
-diagview<eT>::at(const u32 i)
+diagview<eT>::at(const uword i)
   {
   return (*m_ptr).at(i+row_offset, i+col_offset);
   }
@@ -519,7 +509,7 @@ diagview<eT>::at(const u32 i)
 template<typename eT>
 arma_inline
 eT
-diagview<eT>::at(const u32 i) const
+diagview<eT>::at(const uword i) const
   {
   return m.at(i+row_offset, i+col_offset);
   }
@@ -529,7 +519,7 @@ diagview<eT>::at(const u32 i) const
 template<typename eT>
 arma_inline
 eT&
-diagview<eT>::operator()(const u32 i)
+diagview<eT>::operator()(const uword i)
   {
   arma_debug_check( (i >= n_elem), "diagview::operator(): out of bounds" );
   
@@ -541,7 +531,7 @@ diagview<eT>::operator()(const u32 i)
 template<typename eT>
 arma_inline
 eT
-diagview<eT>::operator()(const u32 i) const
+diagview<eT>::operator()(const uword i) const
   {
   arma_debug_check( (i >= n_elem), "diagview::operator(): out of bounds" );
   
@@ -553,7 +543,7 @@ diagview<eT>::operator()(const u32 i) const
 template<typename eT>
 arma_inline
 eT&
-diagview<eT>::at(const u32 row, const u32 col)
+diagview<eT>::at(const uword row, const uword col)
   {
   return (*m_ptr).at(row+row_offset, row+col_offset);
   }
@@ -563,7 +553,7 @@ diagview<eT>::at(const u32 row, const u32 col)
 template<typename eT>
 arma_inline
 eT
-diagview<eT>::at(const u32 row, const u32 col) const
+diagview<eT>::at(const uword row, const uword col) const
   {
   return m.at(row+row_offset, row+col_offset);
   }
@@ -573,7 +563,7 @@ diagview<eT>::at(const u32 row, const u32 col) const
 template<typename eT>
 arma_inline
 eT&
-diagview<eT>::operator()(const u32 row, const u32 col)
+diagview<eT>::operator()(const uword row, const uword col)
   {
   arma_debug_check( ((row >= n_elem) || (col > 0)), "diagview::operator(): out of bounds" );
   
@@ -585,7 +575,7 @@ diagview<eT>::operator()(const u32 row, const u32 col)
 template<typename eT>
 arma_inline
 eT
-diagview<eT>::operator()(const u32 row, const u32 col) const
+diagview<eT>::operator()(const uword row, const uword col) const
   {
   arma_debug_check( ((row >= n_elem) || (col > 0)), "diagview::operator(): out of bounds" );
   
@@ -603,7 +593,7 @@ diagview<eT>::fill(const eT val)
   
   Mat<eT>& x = (*m_ptr);
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     x.at(i+row_offset, i+col_offset) = val;
     }

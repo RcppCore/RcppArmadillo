@@ -23,14 +23,14 @@ arma_hot
 arma_pure
 inline
 eT
-op_dot::direct_dot_arma(const u32 n_elem, const eT* const A, const eT* const B)
+op_dot::direct_dot_arma(const uword n_elem, const eT* const A, const eT* const B)
   {
   arma_extra_debug_sigprint();
   
   eT val1 = eT(0);
   eT val2 = eT(0);
   
-  u32 i, j;
+  uword i, j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
@@ -54,7 +54,7 @@ arma_hot
 arma_pure
 inline
 typename arma_float_only<eT>::result
-op_dot::direct_dot(const u32 n_elem, const eT* const A, const eT* const B)
+op_dot::direct_dot(const uword n_elem, const eT* const A, const eT* const B)
   {
   arma_extra_debug_sigprint();
   
@@ -92,7 +92,7 @@ inline
 arma_hot
 arma_pure
 typename arma_cx_only<eT>::result
-op_dot::direct_dot(const u32 n_elem, const eT* const A, const eT* const B)
+op_dot::direct_dot(const uword n_elem, const eT* const A, const eT* const B)
   {
   #if defined(ARMA_USE_ATLAS)
     {
@@ -120,7 +120,7 @@ arma_hot
 arma_pure
 inline
 typename arma_integral_only<eT>::result
-op_dot::direct_dot(const u32 n_elem, const eT* const A, const eT* const B)
+op_dot::direct_dot(const uword n_elem, const eT* const A, const eT* const B)
   {
   return op_dot::direct_dot_arma(n_elem, A, B);
   }
@@ -134,13 +134,13 @@ arma_hot
 arma_pure
 inline
 eT
-op_dot::direct_dot(const u32 n_elem, const eT* const A, const eT* const B, const eT* C)
+op_dot::direct_dot(const uword n_elem, const eT* const A, const eT* const B, const eT* C)
   {
   arma_extra_debug_sigprint();
   
   eT val = eT(0);
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     val += A[i] * B[i] * C[i];
     }
@@ -214,14 +214,14 @@ op_dot::apply_proxy(const Base<typename T1::elem_type,T1>& X, const Base<typenam
     {
     arma_debug_check( (A.get_n_elem() != B.get_n_elem()), "dot(): objects must have the same number of elements" );
   
-    const u32      N  = A.get_n_elem();
+    const uword      N  = A.get_n_elem();
           ea_type1 PA = A.get_ea();
           ea_type2 PB = B.get_ea();
     
     eT val1 = eT(0);
     eT val2 = eT(0);
     
-    u32 i,j;
+    uword i,j;
     
     for(i=0, j=1; j<N; i+=2, j+=2)
       {
@@ -270,7 +270,7 @@ op_norm_dot::apply(const Base<typename T1::elem_type,T1>& X, const Base<typename
     
     arma_debug_check( (A.get_n_elem() != B.get_n_elem()), "norm_dot(): objects must have the same number of elements" );
     
-    const u32      N  = A.get_n_elem();
+    const uword      N  = A.get_n_elem();
           ea_type1 PA = A.get_ea();
           ea_type2 PB = B.get_ea();
     
@@ -278,7 +278,7 @@ op_norm_dot::apply(const Base<typename T1::elem_type,T1>& X, const Base<typename
     eT acc2 = eT(0);
     eT acc3 = eT(0);
     
-    for(u32 i=0; i<N; ++i)
+    for(uword i=0; i<N; ++i)
       {
       const eT tmpA = PA[i];
       const eT tmpB = PB[i];
@@ -317,7 +317,7 @@ op_norm_dot::apply_unwrap(const Base<typename T1::elem_type,T1>& X, const Base<t
   
   arma_debug_check( (A.n_elem != B.n_elem), "norm_dot(): objects must have the same number of elements" );
   
-  const u32 N = A.n_elem;
+  const uword N = A.n_elem;
   
   const eT* A_mem = A.memptr();
   const eT* B_mem = B.memptr();
@@ -326,7 +326,7 @@ op_norm_dot::apply_unwrap(const Base<typename T1::elem_type,T1>& X, const Base<t
   eT acc2 = eT(0);
   eT acc3 = eT(0);
   
-  for(u32 i=0; i<N; ++i)
+  for(uword i=0; i<N; ++i)
     {
     const eT tmpA = A_mem[i];
     const eT tmpB = B_mem[i];
@@ -363,14 +363,14 @@ op_cdot::apply(const Base<typename T1::elem_type,T1>& X, const Base<typename T1:
   
   arma_debug_check( (A.get_n_elem() != B.get_n_elem()), "cdot(): objects must have the same number of elements" );
   
-  const u32      N  = A.get_n_elem();
+  const uword      N  = A.get_n_elem();
         ea_type1 PA = A.get_ea();
         ea_type2 PB = B.get_ea();
   
   eT val1 = eT(0);
   eT val2 = eT(0);
   
-  u32 i,j;
+  uword i,j;
   for(i=0, j=1; j<N; i+=2, j+=2)
     {
     val1 += std::conj(PA[i]) * PB[i];

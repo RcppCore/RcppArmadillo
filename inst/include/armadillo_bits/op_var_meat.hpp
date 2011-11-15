@@ -19,7 +19,7 @@
 template<typename eT>
 inline
 eT
-op_var::direct_var(const eT* const X, const u32 n_elem, const u32 norm_type)
+op_var::direct_var(const eT* const X, const uword n_elem, const uword norm_type)
   {
   arma_extra_debug_sigprint();
   
@@ -30,7 +30,7 @@ op_var::direct_var(const eT* const X, const u32 n_elem, const u32 norm_type)
     eT acc2 = eT(0);
     eT acc3 = eT(0);
     
-    u32 i,j;
+    uword i,j;
     
     for(i=0, j=1; j<n_elem; i+=2, j+=2)
       {
@@ -71,7 +71,7 @@ op_var::direct_var(const eT* const X, const u32 n_elem, const u32 norm_type)
 template<typename T>
 inline
 T
-op_var::direct_var(const std::complex<T>* const X, const u32 n_elem, const u32 norm_type)
+op_var::direct_var(const std::complex<T>* const X, const uword n_elem, const uword norm_type)
   {
   arma_extra_debug_sigprint();
   
@@ -84,7 +84,7 @@ op_var::direct_var(const std::complex<T>* const X, const u32 n_elem, const u32 n
     T  acc2 =  T(0);
     eT acc3 = eT(0);
     
-    for(u32 i=0; i<n_elem; ++i)
+    for(uword i=0; i<n_elem; ++i)
       {
       const eT tmp = acc1 - X[i];
       
@@ -109,17 +109,17 @@ op_var::direct_var(const std::complex<T>* const X, const u32 n_elem, const u32 n
 template<typename eT>
 inline 
 typename get_pod_type<eT>::result
-op_var::direct_var(const subview_row<eT>& X, const u32 norm_type)
+op_var::direct_var(const subview_row<eT>& X, const uword norm_type)
   {
   arma_extra_debug_sigprint();
   
-  const u32 n_elem = X.n_elem;
+  const uword n_elem = X.n_elem;
   
   podarray<eT> tmp(n_elem);
   
   eT* tmp_mem = tmp.memptr();
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     tmp_mem[i] = X[i];
     }
@@ -133,7 +133,7 @@ op_var::direct_var(const subview_row<eT>& X, const u32 norm_type)
 template<typename eT>
 inline 
 typename get_pod_type<eT>::result
-op_var::direct_var(const subview_col<eT>& X, const u32 norm_type)
+op_var::direct_var(const subview_col<eT>& X, const uword norm_type)
   {
   arma_extra_debug_sigprint();
   
@@ -146,17 +146,17 @@ op_var::direct_var(const subview_col<eT>& X, const u32 norm_type)
 template<typename eT>
 inline 
 typename get_pod_type<eT>::result
-op_var::direct_var(const diagview<eT>& X, const u32 norm_type)
+op_var::direct_var(const diagview<eT>& X, const uword norm_type)
   {
   arma_extra_debug_sigprint();
   
-  const u32 n_elem = X.n_elem;
+  const uword n_elem = X.n_elem;
   
   podarray<eT> tmp(n_elem);
   
   eT* tmp_mem = tmp.memptr();
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     tmp_mem[i] = X[i];
     }
@@ -183,14 +183,14 @@ op_var::apply(Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_type,
   const unwrap_check_mixed<T1> tmp(in.m, out);
   const Mat<in_eT>&        X = tmp.M;
   
-  const u32 norm_type = in.aux_u32_a;
-  const u32 dim       = in.aux_u32_b;
+  const uword norm_type = in.aux_uword_a;
+  const uword dim       = in.aux_uword_b;
   
   arma_debug_check( (norm_type > 1), "var(): incorrect usage. norm_type must be 0 or 1");
   arma_debug_check( (dim > 1),       "var(): incorrect usage. dim must be 0 or 1"      );
   
-  const u32 X_n_rows = X.n_rows;
-  const u32 X_n_cols = X.n_cols;
+  const uword X_n_rows = X.n_rows;
+  const uword X_n_cols = X.n_cols;
   
   if(dim == 0)
     {
@@ -202,7 +202,7 @@ op_var::apply(Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_type,
     
     out_eT* out_mem = out.memptr();
     
-    for(u32 col=0; col<X_n_cols; ++col)
+    for(uword col=0; col<X_n_cols; ++col)
       {
       out_mem[col] = op_var::direct_var( X.colptr(col), X_n_rows, norm_type );
       }
@@ -221,7 +221,7 @@ op_var::apply(Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_type,
     in_eT*  tmp_mem = tmp.memptr();
     out_eT* out_mem = out.memptr();
     
-    for(u32 row=0; row<X_n_rows; ++row)
+    for(uword row=0; row<X_n_rows; ++row)
       {
       tmp.copy_row(X, row);
       
@@ -236,7 +236,7 @@ op_var::apply(Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_type,
 template<typename eT>
 inline
 eT
-op_var::direct_var_robust(const eT* const X, const u32 n_elem, const u32 norm_type)
+op_var::direct_var_robust(const eT* const X, const uword n_elem, const uword norm_type)
   {
   arma_extra_debug_sigprint();
   
@@ -245,7 +245,7 @@ op_var::direct_var_robust(const eT* const X, const u32 n_elem, const u32 norm_ty
     eT r_mean = X[0];
     eT r_var  = eT(0);
     
-    for(u32 i=1; i<n_elem; ++i)
+    for(uword i=1; i<n_elem; ++i)
       {
       const eT tmp      = X[i] - r_mean;
       const eT i_plus_1 = eT(i+1);
@@ -269,7 +269,7 @@ op_var::direct_var_robust(const eT* const X, const u32 n_elem, const u32 norm_ty
 template<typename T>
 inline
 T
-op_var::direct_var_robust(const std::complex<T>* const X, const u32 n_elem, const u32 norm_type)
+op_var::direct_var_robust(const std::complex<T>* const X, const uword n_elem, const uword norm_type)
   {
   arma_extra_debug_sigprint();
   
@@ -280,7 +280,7 @@ op_var::direct_var_robust(const std::complex<T>* const X, const u32 n_elem, cons
     eT r_mean = X[0];
      T r_var  = T(0);
     
-    for(u32 i=1; i<n_elem; ++i)
+    for(uword i=1; i<n_elem; ++i)
       {
       const eT tmp      = X[i] - r_mean;
       const  T i_plus_1 = T(i+1);

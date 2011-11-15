@@ -20,7 +20,7 @@
 template<typename eT>
 inline
 void
-glue_cov::direct_cov(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const u32 norm_type)
+glue_cov::direct_cov(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const uword norm_type)
   {
   arma_extra_debug_sigprint();
 
@@ -35,9 +35,9 @@ glue_cov::direct_cov(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const u32
     eT B_acc   = eT(0);
     eT out_acc = eT(0);
 
-    const u32 N = A.n_elem;
+    const uword N = A.n_elem;
 
-    for(u32 i=0; i<N; ++i)
+    for(uword i=0; i<N; ++i)
       {
       const eT A_tmp = A_ptr[i];
       const eT B_tmp = B_ptr[i];
@@ -59,7 +59,7 @@ glue_cov::direct_cov(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const u32
     {
     arma_debug_assert_same_size(A, B, "cov()");
 
-    const u32 N = A.n_rows;
+    const uword N = A.n_rows;
     const eT norm_val = (norm_type == 0) ? ( (N > 1) ? eT(N-1) : eT(1) ) : eT(N);
 
     out = trans(A) * B;
@@ -73,7 +73,7 @@ glue_cov::direct_cov(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const u32
 template<typename T>
 inline
 void
-glue_cov::direct_cov(Mat< std::complex<T> >& out, const Mat< std::complex<T> >& A, const Mat< std::complex<T> >& B, const u32 norm_type)
+glue_cov::direct_cov(Mat< std::complex<T> >& out, const Mat< std::complex<T> >& A, const Mat< std::complex<T> >& B, const uword norm_type)
   {
   arma_extra_debug_sigprint();
 
@@ -90,9 +90,9 @@ glue_cov::direct_cov(Mat< std::complex<T> >& out, const Mat< std::complex<T> >& 
     eT B_acc   = eT(0);
     eT out_acc = eT(0);
 
-    const u32 N = A.n_elem;
+    const uword N = A.n_elem;
 
-    for(u32 i=0; i<N; ++i)
+    for(uword i=0; i<N; ++i)
       {
       const eT A_tmp = A_ptr[i];
       const eT B_tmp = B_ptr[i];
@@ -114,7 +114,7 @@ glue_cov::direct_cov(Mat< std::complex<T> >& out, const Mat< std::complex<T> >& 
     {
     arma_debug_assert_same_size(A, B, "cov()");
   
-    const u32 N = A.n_rows;
+    const uword N = A.n_rows;
     const eT norm_val = (norm_type == 0) ? ( (N > 1) ? eT(N-1) : eT(1) ) : eT(N);
     
     out = trans(A) * B;                     // out = strans(conj(A)) * B;
@@ -140,7 +140,7 @@ glue_cov::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_cov>& X)
   const Mat<eT>& A = A_tmp.M;
   const Mat<eT>& B = B_tmp.M;
   
-  const u32 norm_type = X.aux_u32;
+  const uword norm_type = X.aux_uword;
 
   if(&A != &B)
     {

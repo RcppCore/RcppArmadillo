@@ -78,6 +78,10 @@
   
   #if defined(__GXX_EXPERIMENTAL_CXX0X__)
     #undef ARMA_HAVE_STD_TR1
+    
+    #if !defined(ARMA_USE_CXX11)
+      #define ARMA_USE_CXX11
+    #endif
   #endif
   
   #if defined(__clang__)
@@ -140,29 +144,3 @@
   #undef ARMA_HAVE_STD_ISNAN
   #undef ARMA_HAVE_STD_TR1
 #endif
-
-
-
-// 
-// whoever defined macros with the names "min" and "max" should be permanently removed from the gene pool
-
-#if defined(min)
-  #undef min
-  
-  #if defined(__GNUG__)
-    #warning         "detected 'min' macro and undefined it; you may wish to define NOMINMAX before including any windows header"
-  #elif defined(_MSC_VER)
-    #pragma message ("detected 'min' macro and undefined it; you may wish to define NOMINMAX before including any windows header")
-  #endif
-#endif
-
-#if defined(max)
-  #undef max
-  
-  #if defined(__GNUG__)
-    #warning         "detected 'max' macro and undefined it; you may wish to define NOMINMAX before including any windows header"
-  #elif defined(_MSC_VER)
-    #pragma message ("detected 'max' macro and undefined it; you may wish to define NOMINMAX before including any windows header")
-  #endif
-#endif
-

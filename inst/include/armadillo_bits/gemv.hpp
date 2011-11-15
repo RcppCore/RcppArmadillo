@@ -23,17 +23,17 @@ class gemv_emul_tinysq
   public:
   
   
-  template<const u32 row, const u32 col>
+  template<const uword row, const uword col>
   struct pos
     {
-    static const u32 n2 = (do_trans_A == false) ? (row + col*2) : (col + row*2);
-    static const u32 n3 = (do_trans_A == false) ? (row + col*3) : (col + row*3);
-    static const u32 n4 = (do_trans_A == false) ? (row + col*4) : (col + row*4);
+    static const uword n2 = (do_trans_A == false) ? (row + col*2) : (col + row*2);
+    static const uword n3 = (do_trans_A == false) ? (row + col*3) : (col + row*3);
+    static const uword n4 = (do_trans_A == false) ? (row + col*4) : (col + row*4);
     };
   
   
   
-  template<typename eT, const u32 i>
+  template<typename eT, const uword i>
   arma_hot
   arma_inline
   static
@@ -154,8 +154,8 @@ class gemv_emul_large
     {
     arma_extra_debug_sigprint();
     
-    const u32 A_n_rows = A.n_rows;
-    const u32 A_n_cols = A.n_cols;
+    const uword A_n_rows = A.n_rows;
+    const uword A_n_cols = A.n_cols;
     
     if(do_trans_A == false)
       {
@@ -184,11 +184,11 @@ class gemv_emul_large
           }
         }
       else
-      for(u32 row=0; row < A_n_rows; ++row)
+      for(uword row=0; row < A_n_rows; ++row)
         {
         eT acc = eT(0);
         
-        for(u32 i=0; i < A_n_cols; ++i)
+        for(uword i=0; i < A_n_cols; ++i)
           {
           acc += A.at(row,i) * x[i];
           }
@@ -217,7 +217,7 @@ class gemv_emul_large
     else
     if(do_trans_A == true)
       {
-      for(u32 col=0; col < A_n_cols; ++col)
+      for(uword col=0; col < A_n_cols; ++col)
         {
         // col is interpreted as row when storing the results in 'y'
         
@@ -225,7 +225,7 @@ class gemv_emul_large
         // const eT* A_coldata = A.colptr(col);
         // 
         // eT acc = eT(0);
-        // for(u32 row=0; row < A_n_rows; ++row)
+        // for(uword row=0; row < A_n_rows; ++row)
         //   {
         //   acc += A_coldata[row] * x[row];
         //   }
@@ -275,8 +275,8 @@ class gemv_emul
     arma_extra_debug_sigprint();
     arma_ignore(junk);
     
-    const u32 A_n_rows = A.n_rows;
-    const u32 A_n_cols = A.n_cols;
+    const uword A_n_rows = A.n_rows;
+    const uword A_n_cols = A.n_cols;
     
     if( (A_n_rows <= 4) && (A_n_rows == A_n_cols) )
       {
@@ -308,8 +308,8 @@ class gemv_emul
     
     const Mat<eT>& AA = (do_trans_A == false) ? A : tmp_A;
     
-    const u32 AA_n_rows = AA.n_rows;
-    const u32 AA_n_cols = AA.n_cols;
+    const uword AA_n_rows = AA.n_rows;
+    const uword AA_n_cols = AA.n_cols;
     
     if( (AA_n_rows <= 4) && (AA_n_rows == AA_n_cols) )
       {

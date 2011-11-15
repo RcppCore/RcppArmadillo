@@ -400,7 +400,7 @@ arma_set_error(bool& err_state, char*& err_msg, const bool expression, const cha
 inline
 std::string
 arma_cold
-arma_incompat_size_string(const u32 A_n_rows, const u32 A_n_cols, const u32 B_n_rows, const u32 B_n_cols, const char* x)
+arma_incompat_size_string(const uword A_n_rows, const uword A_n_cols, const uword B_n_rows, const uword B_n_cols, const char* x)
   {
   std::stringstream tmp;
   
@@ -414,7 +414,7 @@ arma_incompat_size_string(const u32 A_n_rows, const u32 A_n_cols, const u32 B_n_
 inline
 arma_cold
 std::string
-arma_incompat_size_string(const u32 A_n_rows, const u32 A_n_cols, const u32 A_n_slices, const u32 B_n_rows, const u32 B_n_cols, const u32 B_n_slices, const char* x)
+arma_incompat_size_string(const uword A_n_rows, const uword A_n_cols, const uword A_n_slices, const uword B_n_rows, const uword B_n_cols, const uword B_n_slices, const char* x)
   {
   std::stringstream tmp;
   
@@ -456,7 +456,7 @@ arma_incompat_size_string(const subview_cube<eT>& Q, const Mat<eT>& A, const cha
 inline
 void
 arma_hot
-arma_assert_same_size(const u32 A_n_rows, const u32 A_n_cols, const u32 B_n_rows, const u32 B_n_cols, const char* x)
+arma_assert_same_size(const uword A_n_rows, const uword A_n_cols, const uword B_n_rows, const uword B_n_cols, const char* x)
   {
   if( (A_n_rows != B_n_rows) || (A_n_cols != B_n_cols) )
     {
@@ -473,11 +473,11 @@ void
 arma_hot
 arma_assert_same_size(const Mat<eT1>& A, const Mat<eT2>& B, const char* x)
   {
-  const u32 A_n_rows = A.n_rows;
-  const u32 A_n_cols = A.n_cols;
+  const uword A_n_rows = A.n_rows;
+  const uword A_n_cols = A.n_cols;
   
-  const u32 B_n_rows = B.n_rows;
-  const u32 B_n_cols = B.n_cols;
+  const uword B_n_rows = B.n_rows;
+  const uword B_n_cols = B.n_cols;
   
   if( (A_n_rows != B_n_rows) || (A_n_cols != B_n_cols) )
     {
@@ -494,11 +494,11 @@ void
 arma_hot
 arma_assert_same_size(const Proxy<eT1>& A, const Proxy<eT2>& B, const char* x)
   {
-  const u32 A_n_rows = A.get_n_rows();
-  const u32 A_n_cols = A.get_n_cols();
+  const uword A_n_rows = A.get_n_rows();
+  const uword A_n_cols = A.get_n_cols();
   
-  const u32 B_n_rows = B.get_n_rows();
-  const u32 B_n_cols = B.get_n_cols();
+  const uword B_n_rows = B.get_n_rows();
+  const uword B_n_cols = B.get_n_cols();
   
   if( (A_n_rows != B_n_rows) || (A_n_cols != B_n_cols) )
     {
@@ -514,11 +514,11 @@ void
 arma_hot
 arma_assert_same_size(const subview<eT1>& A, const subview<eT2>& B, const char* x)
   {
-  const u32 A_n_rows = A.n_rows;
-  const u32 A_n_cols = A.n_cols;
+  const uword A_n_rows = A.n_rows;
+  const uword A_n_cols = A.n_cols;
   
-  const u32 B_n_rows = B.n_rows;
-  const u32 B_n_cols = B.n_cols;
+  const uword B_n_rows = B.n_rows;
+  const uword B_n_cols = B.n_cols;
   
   if( (A_n_rows != B_n_rows) || (A_n_cols != B_n_cols) )
     {
@@ -534,11 +534,11 @@ void
 arma_hot
 arma_assert_same_size(const Mat<eT1>& A, const subview<eT2>& B, const char* x)
   {
-  const u32 A_n_rows = A.n_rows;
-  const u32 A_n_cols = A.n_cols;
+  const uword A_n_rows = A.n_rows;
+  const uword A_n_cols = A.n_cols;
   
-  const u32 B_n_rows = B.n_rows;
-  const u32 B_n_cols = B.n_cols;
+  const uword B_n_rows = B.n_rows;
+  const uword B_n_cols = B.n_cols;
   
   if( (A_n_rows != B_n_rows) || (A_n_cols != B_n_cols) )
     {
@@ -554,11 +554,11 @@ void
 arma_hot
 arma_assert_same_size(const subview<eT1>& A, const Mat<eT2>& B, const char* x)
   {
-  const u32 A_n_rows = A.n_rows;
-  const u32 A_n_cols = A.n_cols;
+  const uword A_n_rows = A.n_rows;
+  const uword A_n_cols = A.n_cols;
   
-  const u32 B_n_rows = B.n_rows;
-  const u32 B_n_cols = B.n_cols;
+  const uword B_n_rows = B.n_rows;
+  const uword B_n_cols = B.n_cols;
   
   if( (A_n_rows != B_n_rows) || (A_n_cols != B_n_cols) )
     {
@@ -574,11 +574,11 @@ void
 arma_hot
 arma_assert_same_size(const Mat<eT1>& A, const Proxy<eT2>& B, const char* x)
   {
-  const u32 A_n_rows = A.n_rows;
-  const u32 A_n_cols = A.n_cols;
+  const uword A_n_rows = A.n_rows;
+  const uword A_n_cols = A.n_cols;
   
-  const u32 B_n_rows = B.get_n_rows();
-  const u32 B_n_cols = B.get_n_cols();
+  const uword B_n_rows = B.get_n_rows();
+  const uword B_n_cols = B.get_n_cols();
   
   if( (A_n_rows != B_n_rows) || (A_n_cols != B_n_cols) )
     {
@@ -594,11 +594,11 @@ void
 arma_hot
 arma_assert_same_size(const Proxy<eT1>& A, const Mat<eT2>& B, const char* x)
   {
-  const u32 A_n_rows = A.get_n_rows();
-  const u32 A_n_cols = A.get_n_cols();
+  const uword A_n_rows = A.get_n_rows();
+  const uword A_n_cols = A.get_n_cols();
   
-  const u32 B_n_rows = B.n_rows;
-  const u32 B_n_cols = B.n_cols;
+  const uword B_n_rows = B.n_rows;
+  const uword B_n_cols = B.n_cols;
   
   if( (A_n_rows != B_n_rows) || (A_n_cols != B_n_cols) )
     {
@@ -614,11 +614,11 @@ void
 arma_hot
 arma_assert_same_size(const Proxy<eT1>& A, const subview<eT2>& B, const char* x)
   {
-  const u32 A_n_rows = A.get_n_rows();
-  const u32 A_n_cols = A.get_n_cols();
+  const uword A_n_rows = A.get_n_rows();
+  const uword A_n_cols = A.get_n_cols();
   
-  const u32 B_n_rows = B.n_rows;
-  const u32 B_n_cols = B.n_cols;
+  const uword B_n_rows = B.n_rows;
+  const uword B_n_cols = B.n_cols;
   
   if( (A_n_rows != B_n_rows) || (A_n_cols != B_n_cols) )
     {
@@ -634,11 +634,11 @@ void
 arma_hot
 arma_assert_same_size(const subview<eT1>& A, const Proxy<eT2>& B, const char* x)
   {
-  const u32 A_n_rows = A.n_rows;
-  const u32 A_n_cols = A.n_cols;
+  const uword A_n_rows = A.n_rows;
+  const uword A_n_cols = A.n_cols;
   
-  const u32 B_n_rows = B.get_n_rows();
-  const u32 B_n_cols = B.get_n_cols();
+  const uword B_n_rows = B.get_n_rows();
+  const uword B_n_cols = B.get_n_cols();
   
   if( (A_n_rows != B_n_rows) || (A_n_cols != B_n_cols) )
     {
@@ -656,7 +656,7 @@ arma_assert_same_size(const subview<eT1>& A, const Proxy<eT2>& B, const char* x)
 inline
 void
 arma_hot
-arma_assert_same_size(const u32 A_n_rows, const u32 A_n_cols, const u32 A_n_slices, const u32 B_n_rows, const u32 B_n_cols, const u32 B_n_slices, const char* x)
+arma_assert_same_size(const uword A_n_rows, const uword A_n_cols, const uword A_n_slices, const uword B_n_rows, const uword B_n_cols, const uword B_n_slices, const char* x)
   {
   if( (A_n_rows != B_n_rows) || (A_n_cols != B_n_cols) || (A_n_slices != B_n_slices) )
     {
@@ -730,13 +730,13 @@ void
 arma_hot
 arma_assert_same_size(const ProxyCube<eT1>& A, const ProxyCube<eT2>& B, const char* x)
   {
-  const u32 A_n_rows   = A.get_n_rows();
-  const u32 A_n_cols   = A.get_n_cols();
-  const u32 A_n_slices = A.get_n_slices();
+  const uword A_n_rows   = A.get_n_rows();
+  const uword A_n_cols   = A.get_n_cols();
+  const uword A_n_slices = A.get_n_slices();
   
-  const u32 B_n_rows   = B.get_n_rows();
-  const u32 B_n_cols   = B.get_n_cols();
-  const u32 B_n_slices = B.get_n_slices();
+  const uword B_n_rows   = B.get_n_rows();
+  const uword B_n_cols   = B.get_n_cols();
+  const uword B_n_slices = B.get_n_slices();
   
   if( (A_n_rows != B_n_rows) || (A_n_cols != B_n_cols) || (A_n_slices != B_n_slices))
     {
@@ -812,11 +812,11 @@ inline
 void
 arma_assert_cube_as_mat(const Mat<eT>& M, const T1& Q, const char* x, const bool check_compat_size)
   {
-  const u32 Q_n_rows   = Q.n_rows;
-  const u32 Q_n_cols   = Q.n_cols;
-  const u32 Q_n_slices = Q.n_slices;
+  const uword Q_n_rows   = Q.n_rows;
+  const uword Q_n_cols   = Q.n_cols;
+  const uword Q_n_slices = Q.n_slices;
   
-  const u32 M_vec_state = M.vec_state;
+  const uword M_vec_state = M.vec_state;
   
   if(M_vec_state == 0)
     {
@@ -879,8 +879,8 @@ arma_assert_cube_as_mat(const Mat<eT>& M, const T1& Q, const char* x, const bool
   
   if(check_compat_size == true)
     {
-    const u32 M_n_rows = M.n_rows;
-    const u32 M_n_cols = M.n_cols;
+    const uword M_n_rows = M.n_rows;
+    const uword M_n_cols = M.n_cols;
     
     if(M_vec_state == 0)
       {
@@ -965,7 +965,7 @@ arma_assert_cube_as_mat(const Mat<eT>& M, const T1& Q, const char* x, const bool
 inline
 void
 arma_hot
-arma_assert_mul_size(const u32 A_n_rows, const u32 A_n_cols, const u32 B_n_rows, const u32 B_n_cols, const char* x)
+arma_assert_mul_size(const uword A_n_rows, const uword A_n_cols, const uword B_n_rows, const uword B_n_cols, const char* x)
   {
   if(A_n_cols != B_n_rows)
     {
@@ -982,8 +982,8 @@ void
 arma_hot
 arma_assert_mul_size(const Mat<eT1>& A, const Mat<eT2>& B, const char* x)
   {
-  const u32 A_n_cols = A.n_cols;
-  const u32 B_n_rows = B.n_rows;
+  const uword A_n_cols = A.n_cols;
+  const uword B_n_rows = B.n_rows;
   
   if(A_n_cols != B_n_rows)
     {
@@ -1000,13 +1000,13 @@ void
 arma_hot
 arma_assert_mul_size(const Mat<eT1>& A, const Mat<eT2>& B, const bool do_trans_A, const bool do_trans_B, const char* x)
   {
-  const u32 final_A_n_cols = (do_trans_A == false) ? A.n_cols : A.n_rows;
-  const u32 final_B_n_rows = (do_trans_B == false) ? B.n_rows : B.n_cols;
+  const uword final_A_n_cols = (do_trans_A == false) ? A.n_cols : A.n_rows;
+  const uword final_B_n_rows = (do_trans_B == false) ? B.n_rows : B.n_cols;
     
   if(final_A_n_cols != final_B_n_rows)
     {
-    const u32 final_A_n_rows = (do_trans_A == false) ? A.n_rows : A.n_cols;
-    const u32 final_B_n_cols = (do_trans_B == false) ? B.n_cols : B.n_rows;
+    const uword final_A_n_rows = (do_trans_A == false) ? A.n_rows : A.n_cols;
+    const uword final_B_n_cols = (do_trans_B == false) ? B.n_cols : B.n_rows;
     
     arma_stop( arma_incompat_size_string(final_A_n_rows, final_A_n_cols, final_B_n_rows, final_B_n_cols, x) );
     }
@@ -1154,15 +1154,16 @@ arma_assert_mul_size(const subview<eT1>& A, const subview<eT2>& B, const char* x
             << arma_version::major << '.' << arma_version::minor << '.' << arma_version::patch
             << " (" << nickname << ")\n";
         
-        out << "@ arma_config::mat_prealloc = " << arma_config::mat_prealloc << " element(s)\n";
-        out << "@ arma_config::atlas        = " << arma_config::atlas        << '\n';
-        out << "@ arma_config::lapack       = " << arma_config::lapack       << '\n';
-        out << "@ arma_config::blas         = " << arma_config::blas         << '\n';
-        out << "@ arma_config::boost        = " << arma_config::boost        << '\n';
-        out << "@ arma_config::boost_date   = " << arma_config::boost_date   << '\n';
-        out << "@ arma_config::good_comp    = " << arma_config::good_comp    << '\n';
-        out << "@ arma_config::extra_code   = " << arma_config::extra_code   << '\n';
+        out << "@ arma_config::mat_prealloc   = " << arma_config::mat_prealloc   << " element(s)\n";
+        out << "@ arma_config::atlas          = " << arma_config::atlas          << '\n';
+        out << "@ arma_config::lapack         = " << arma_config::lapack         << '\n';
+        out << "@ arma_config::blas           = " << arma_config::blas           << '\n';
+        out << "@ arma_config::boost          = " << arma_config::boost          << '\n';
+        out << "@ arma_config::boost_date     = " << arma_config::boost_date     << '\n';
+        out << "@ arma_config::good_comp      = " << arma_config::good_comp      << '\n';
+        out << "@ arma_config::extra_code     = " << arma_config::extra_code     << '\n';
         out << "@ sizeof(void*)    = " << sizeof(void*)    << '\n';
+        out << "@ sizeof(uword)    = " << sizeof(uword)    << '\n';
         out << "@ sizeof(int)      = " << sizeof(int)      << '\n';
         out << "@ sizeof(long)     = " << sizeof(long)     << '\n';
         out << "@ sizeof(blas_int) = " << sizeof(blas_int) << '\n';

@@ -19,7 +19,7 @@
 template<typename T1>
 inline
 void
-op_rel_lt_pre::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_lt_pre>& X)
+op_rel_lt_pre::apply(Mat<uword>& out, const mtOp<uword, T1, op_rel_lt_pre>& X)
   {
   arma_extra_debug_sigprint();
   
@@ -32,20 +32,20 @@ op_rel_lt_pre::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_lt_pre>& X)
   
   const eT      val     = X.aux;
         ea_type A       = Y.get_ea();
-        u32*    out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
+        uword*    out_mem = out.memptr();
+  const uword     n_elem  = out.n_elem;
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    out_mem[i] = (val < A[i]) ? u32(1) : u32(0);
-    out_mem[j] = (val < A[j]) ? u32(1) : u32(0);
+    out_mem[i] = (val < A[i]) ? uword(1) : uword(0);
+    out_mem[j] = (val < A[j]) ? uword(1) : uword(0);
     }
   
   if(i < n_elem)
     {
-    out_mem[i] = (val < A[i]) ? u32(1) : u32(0);
+    out_mem[i] = (val < A[i]) ? uword(1) : uword(0);
     }
   }
 
@@ -54,7 +54,7 @@ op_rel_lt_pre::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_lt_pre>& X)
 template<typename T1>
 inline
 void
-op_rel_lt_post::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_lt_post>& X)
+op_rel_lt_post::apply(Mat<uword>& out, const mtOp<uword, T1, op_rel_lt_post>& X)
   {
   arma_extra_debug_sigprint();
   
@@ -67,20 +67,20 @@ op_rel_lt_post::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_lt_post>& X)
   
   const eT      val     = X.aux;
         ea_type A       = Y.get_ea();
-        u32*    out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
+        uword*    out_mem = out.memptr();
+  const uword     n_elem  = out.n_elem;
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    out_mem[i] = (A[i] < val) ? u32(1) : u32(0);
-    out_mem[j] = (A[j] < val) ? u32(1) : u32(0);
+    out_mem[i] = (A[i] < val) ? uword(1) : uword(0);
+    out_mem[j] = (A[j] < val) ? uword(1) : uword(0);
     }
   
   if(i < n_elem)
     {
-    out_mem[i] = (A[i] < val) ? u32(1) : u32(0);
+    out_mem[i] = (A[i] < val) ? uword(1) : uword(0);
     }
   }
 
@@ -89,7 +89,7 @@ op_rel_lt_post::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_lt_post>& X)
 template<typename T1>
 inline
 void
-op_rel_gt_pre::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_gt_pre>& X)
+op_rel_gt_pre::apply(Mat<uword>& out, const mtOp<uword, T1, op_rel_gt_pre>& X)
   {
   arma_extra_debug_sigprint();
   
@@ -102,20 +102,20 @@ op_rel_gt_pre::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_gt_pre>& X)
   
   const eT      val     = X.aux;
         ea_type A       = Y.get_ea();
-        u32*    out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
+        uword*    out_mem = out.memptr();
+  const uword     n_elem  = out.n_elem;
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    out_mem[i] = (val > A[i]) ? u32(1) : u32(0);
-    out_mem[j] = (val > A[j]) ? u32(1) : u32(0);
+    out_mem[i] = (val > A[i]) ? uword(1) : uword(0);
+    out_mem[j] = (val > A[j]) ? uword(1) : uword(0);
     }
   
   if(i < n_elem)
     {
-    out_mem[i] = (val > A[i]) ? u32(1) : u32(0);
+    out_mem[i] = (val > A[i]) ? uword(1) : uword(0);
     }
   }
 
@@ -124,7 +124,7 @@ op_rel_gt_pre::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_gt_pre>& X)
 template<typename T1>
 inline
 void
-op_rel_gt_post::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_gt_post>& X)
+op_rel_gt_post::apply(Mat<uword>& out, const mtOp<uword, T1, op_rel_gt_post>& X)
   {
   arma_extra_debug_sigprint();
   
@@ -137,20 +137,20 @@ op_rel_gt_post::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_gt_post>& X)
   
   const eT      val     = X.aux;
         ea_type A       = Y.get_ea();
-        u32*    out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
+        uword*    out_mem = out.memptr();
+  const uword     n_elem  = out.n_elem;
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    out_mem[i] = (A[i] > val) ? u32(1) : u32(0);
-    out_mem[j] = (A[j] > val) ? u32(1) : u32(0);
+    out_mem[i] = (A[i] > val) ? uword(1) : uword(0);
+    out_mem[j] = (A[j] > val) ? uword(1) : uword(0);
     }
   
   if(i < n_elem)
     {
-    out_mem[i] = (A[i] > val) ? u32(1) : u32(0);
+    out_mem[i] = (A[i] > val) ? uword(1) : uword(0);
     }
   }
 
@@ -159,7 +159,7 @@ op_rel_gt_post::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_gt_post>& X)
 template<typename T1>
 inline
 void
-op_rel_lteq_pre::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_lteq_pre>& X)
+op_rel_lteq_pre::apply(Mat<uword>& out, const mtOp<uword, T1, op_rel_lteq_pre>& X)
   {
   arma_extra_debug_sigprint();
   
@@ -172,20 +172,20 @@ op_rel_lteq_pre::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_lteq_pre>& X)
   
   const eT      val     = X.aux;
         ea_type A       = Y.get_ea();
-        u32*    out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
+        uword*    out_mem = out.memptr();
+  const uword     n_elem  = out.n_elem;
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    out_mem[i] = (val <= A[i]) ? u32(1) : u32(0);
-    out_mem[j] = (val <= A[j]) ? u32(1) : u32(0);
+    out_mem[i] = (val <= A[i]) ? uword(1) : uword(0);
+    out_mem[j] = (val <= A[j]) ? uword(1) : uword(0);
     }
   
   if(i < n_elem)
     {
-    out_mem[i] = (val <= A[i]) ? u32(1) : u32(0);
+    out_mem[i] = (val <= A[i]) ? uword(1) : uword(0);
     }
   }
 
@@ -194,7 +194,7 @@ op_rel_lteq_pre::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_lteq_pre>& X)
 template<typename T1>
 inline
 void
-op_rel_lteq_post::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_lteq_post>& X)
+op_rel_lteq_post::apply(Mat<uword>& out, const mtOp<uword, T1, op_rel_lteq_post>& X)
   {
   arma_extra_debug_sigprint();
   
@@ -207,20 +207,20 @@ op_rel_lteq_post::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_lteq_post>& X)
   
   const eT      val     = X.aux;
         ea_type A       = Y.get_ea();
-        u32*    out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
+        uword*    out_mem = out.memptr();
+  const uword     n_elem  = out.n_elem;
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    out_mem[i] = (A[i] <= val) ? u32(1) : u32(0);
-    out_mem[j] = (A[j] <= val) ? u32(1) : u32(0);
+    out_mem[i] = (A[i] <= val) ? uword(1) : uword(0);
+    out_mem[j] = (A[j] <= val) ? uword(1) : uword(0);
     }
   
   if(i < n_elem)
     {
-    out_mem[i] = (A[i] <= val) ? u32(1) : u32(0);
+    out_mem[i] = (A[i] <= val) ? uword(1) : uword(0);
     }
   }
 
@@ -229,7 +229,7 @@ op_rel_lteq_post::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_lteq_post>& X)
 template<typename T1>
 inline
 void
-op_rel_gteq_pre::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_gteq_pre>& X)
+op_rel_gteq_pre::apply(Mat<uword>& out, const mtOp<uword, T1, op_rel_gteq_pre>& X)
   {
   arma_extra_debug_sigprint();
   
@@ -242,20 +242,20 @@ op_rel_gteq_pre::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_gteq_pre>& X)
   
   const eT      val     = X.aux;
         ea_type A       = Y.get_ea();
-        u32*    out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
+        uword*    out_mem = out.memptr();
+  const uword     n_elem  = out.n_elem;
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    out_mem[i] = (val >= A[i]) ? u32(1) : u32(0);
-    out_mem[j] = (val >= A[j]) ? u32(1) : u32(0);
+    out_mem[i] = (val >= A[i]) ? uword(1) : uword(0);
+    out_mem[j] = (val >= A[j]) ? uword(1) : uword(0);
     }
   
   if(i < n_elem)
     {
-    out_mem[i] = (val >= A[i]) ? u32(1) : u32(0);
+    out_mem[i] = (val >= A[i]) ? uword(1) : uword(0);
     }
   }
 
@@ -264,7 +264,7 @@ op_rel_gteq_pre::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_gteq_pre>& X)
 template<typename T1>
 inline
 void
-op_rel_gteq_post::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_gteq_post>& X)
+op_rel_gteq_post::apply(Mat<uword>& out, const mtOp<uword, T1, op_rel_gteq_post>& X)
   {
   arma_extra_debug_sigprint();
   
@@ -277,20 +277,20 @@ op_rel_gteq_post::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_gteq_post>& X)
   
   const eT      val     = X.aux;
         ea_type A       = Y.get_ea();
-        u32*    out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
+        uword*    out_mem = out.memptr();
+  const uword     n_elem  = out.n_elem;
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    out_mem[i] = (A[i] >= val) ? u32(1) : u32(0);
-    out_mem[j] = (A[j] >= val) ? u32(1) : u32(0);
+    out_mem[i] = (A[i] >= val) ? uword(1) : uword(0);
+    out_mem[j] = (A[j] >= val) ? uword(1) : uword(0);
     }
   
   if(i < n_elem)
     {
-    out_mem[i] = (A[i] >= val) ? u32(1) : u32(0);
+    out_mem[i] = (A[i] >= val) ? uword(1) : uword(0);
     }
   }
 
@@ -299,7 +299,7 @@ op_rel_gteq_post::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_gteq_post>& X)
 template<typename T1>
 inline
 void
-op_rel_eq::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_eq>& X)
+op_rel_eq::apply(Mat<uword>& out, const mtOp<uword, T1, op_rel_eq>& X)
   {
   arma_extra_debug_sigprint();
   
@@ -312,20 +312,20 @@ op_rel_eq::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_eq>& X)
   
   const eT      val     = X.aux;
         ea_type A       = Y.get_ea();
-        u32*    out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
+        uword*    out_mem = out.memptr();
+  const uword     n_elem  = out.n_elem;
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    out_mem[i] = (A[i] == val) ? u32(1) : u32(0);
-    out_mem[j] = (A[j] == val) ? u32(1) : u32(0);
+    out_mem[i] = (A[i] == val) ? uword(1) : uword(0);
+    out_mem[j] = (A[j] == val) ? uword(1) : uword(0);
     }
   
   if(i < n_elem)
     {
-    out_mem[i] = (A[i] == val) ? u32(1) : u32(0);
+    out_mem[i] = (A[i] == val) ? uword(1) : uword(0);
     }
   }
 
@@ -334,7 +334,7 @@ op_rel_eq::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_eq>& X)
 template<typename T1>
 inline
 void
-op_rel_noteq::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_noteq>& X)
+op_rel_noteq::apply(Mat<uword>& out, const mtOp<uword, T1, op_rel_noteq>& X)
   {
   arma_extra_debug_sigprint();
   
@@ -347,20 +347,20 @@ op_rel_noteq::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_noteq>& X)
   
   const eT      val     = X.aux;
         ea_type A       = Y.get_ea();
-        u32*    out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
+        uword*    out_mem = out.memptr();
+  const uword     n_elem  = out.n_elem;
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    out_mem[i] = (A[i] != val) ? u32(1) : u32(0);
-    out_mem[j] = (A[j] != val) ? u32(1) : u32(0);
+    out_mem[i] = (A[i] != val) ? uword(1) : uword(0);
+    out_mem[j] = (A[j] != val) ? uword(1) : uword(0);
     }
   
   if(i < n_elem)
     {
-    out_mem[i] = (A[i] != val) ? u32(1) : u32(0);
+    out_mem[i] = (A[i] != val) ? uword(1) : uword(0);
     }
   }
 
@@ -375,7 +375,7 @@ op_rel_noteq::apply(Mat<u32>& out, const mtOp<u32, T1, op_rel_noteq>& X)
 template<typename T1>
 inline
 void
-op_rel_lt_pre::apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_lt_pre>& X)
+op_rel_lt_pre::apply(Cube<uword>& out, const mtOpCube<uword, T1, op_rel_lt_pre>& X)
   {
   arma_extra_debug_sigprint();
   
@@ -388,20 +388,20 @@ op_rel_lt_pre::apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_lt_pre>& X)
   
   const eT      val     = X.aux;
         ea_type A       = Y.get_ea();
-        u32*    out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
+        uword*    out_mem = out.memptr();
+  const uword     n_elem  = out.n_elem;
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    out_mem[i] = (val < A[i]) ? u32(1) : u32(0);
-    out_mem[j] = (val < A[j]) ? u32(1) : u32(0);
+    out_mem[i] = (val < A[i]) ? uword(1) : uword(0);
+    out_mem[j] = (val < A[j]) ? uword(1) : uword(0);
     }
   
   if(i < n_elem)
     {
-    out_mem[i] = (val < A[i]) ? u32(1) : u32(0);
+    out_mem[i] = (val < A[i]) ? uword(1) : uword(0);
     }
   }
 
@@ -410,7 +410,7 @@ op_rel_lt_pre::apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_lt_pre>& X)
 template<typename T1>
 inline
 void
-op_rel_lt_post::apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_lt_post>& X)
+op_rel_lt_post::apply(Cube<uword>& out, const mtOpCube<uword, T1, op_rel_lt_post>& X)
   {
   arma_extra_debug_sigprint();
   
@@ -423,20 +423,20 @@ op_rel_lt_post::apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_lt_post>& X
   
   const eT      val     = X.aux;
         ea_type A       = Y.get_ea();
-        u32*    out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
+        uword*    out_mem = out.memptr();
+  const uword     n_elem  = out.n_elem;
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    out_mem[i] = (A[i] < val) ? u32(1) : u32(0);
-    out_mem[j] = (A[j] < val) ? u32(1) : u32(0);
+    out_mem[i] = (A[i] < val) ? uword(1) : uword(0);
+    out_mem[j] = (A[j] < val) ? uword(1) : uword(0);
     }
   
   if(i < n_elem)
     {
-    out_mem[i] = (A[i] < val) ? u32(1) : u32(0);
+    out_mem[i] = (A[i] < val) ? uword(1) : uword(0);
     }
   }
 
@@ -445,7 +445,7 @@ op_rel_lt_post::apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_lt_post>& X
 template<typename T1>
 inline
 void
-op_rel_gt_pre::apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_gt_pre>& X)
+op_rel_gt_pre::apply(Cube<uword>& out, const mtOpCube<uword, T1, op_rel_gt_pre>& X)
   {
   arma_extra_debug_sigprint();
   
@@ -458,20 +458,20 @@ op_rel_gt_pre::apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_gt_pre>& X)
   
   const eT      val     = X.aux;
         ea_type A       = Y.get_ea();
-        u32*    out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
+        uword*    out_mem = out.memptr();
+  const uword     n_elem  = out.n_elem;
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    out_mem[i] = (val > A[i]) ? u32(1) : u32(0);
-    out_mem[j] = (val > A[j]) ? u32(1) : u32(0);
+    out_mem[i] = (val > A[i]) ? uword(1) : uword(0);
+    out_mem[j] = (val > A[j]) ? uword(1) : uword(0);
     }
   
   if(i < n_elem)
     {
-    out_mem[i] = (val > A[i]) ? u32(1) : u32(0);
+    out_mem[i] = (val > A[i]) ? uword(1) : uword(0);
     }
   }
 
@@ -480,7 +480,7 @@ op_rel_gt_pre::apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_gt_pre>& X)
 template<typename T1>
 inline
 void
-op_rel_gt_post::apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_gt_post>& X)
+op_rel_gt_post::apply(Cube<uword>& out, const mtOpCube<uword, T1, op_rel_gt_post>& X)
   {
   arma_extra_debug_sigprint();
   
@@ -493,20 +493,20 @@ op_rel_gt_post::apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_gt_post>& X
   
   const eT      val     = X.aux;
         ea_type A       = Y.get_ea();
-        u32*    out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
+        uword*    out_mem = out.memptr();
+  const uword     n_elem  = out.n_elem;
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    out_mem[i] = (A[i] > val) ? u32(1) : u32(0);
-    out_mem[j] = (A[j] > val) ? u32(1) : u32(0);
+    out_mem[i] = (A[i] > val) ? uword(1) : uword(0);
+    out_mem[j] = (A[j] > val) ? uword(1) : uword(0);
     }
   
   if(i < n_elem)
     {
-    out_mem[i] = (A[i] > val) ? u32(1) : u32(0);
+    out_mem[i] = (A[i] > val) ? uword(1) : uword(0);
     }
   }
 
@@ -515,7 +515,7 @@ op_rel_gt_post::apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_gt_post>& X
 template<typename T1>
 inline
 void
-op_rel_lteq_pre::apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_lteq_pre>& X)
+op_rel_lteq_pre::apply(Cube<uword>& out, const mtOpCube<uword, T1, op_rel_lteq_pre>& X)
   {
   arma_extra_debug_sigprint();
   
@@ -528,20 +528,20 @@ op_rel_lteq_pre::apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_lteq_pre>&
   
   const eT      val     = X.aux;
         ea_type A       = Y.get_ea();
-        u32*    out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
+        uword*    out_mem = out.memptr();
+  const uword     n_elem  = out.n_elem;
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    out_mem[i] = (val <= A[i]) ? u32(1) : u32(0);
-    out_mem[j] = (val <= A[j]) ? u32(1) : u32(0);
+    out_mem[i] = (val <= A[i]) ? uword(1) : uword(0);
+    out_mem[j] = (val <= A[j]) ? uword(1) : uword(0);
     }
   
   if(i < n_elem)
     {
-    out_mem[i] = (val <= A[i]) ? u32(1) : u32(0);
+    out_mem[i] = (val <= A[i]) ? uword(1) : uword(0);
     }
   }
 
@@ -550,7 +550,7 @@ op_rel_lteq_pre::apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_lteq_pre>&
 template<typename T1>
 inline
 void
-op_rel_lteq_post::apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_lteq_post>& X)
+op_rel_lteq_post::apply(Cube<uword>& out, const mtOpCube<uword, T1, op_rel_lteq_post>& X)
   {
   arma_extra_debug_sigprint();
   
@@ -563,20 +563,20 @@ op_rel_lteq_post::apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_lteq_post
   
   const eT      val     = X.aux;
         ea_type A       = Y.get_ea();
-        u32*    out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
+        uword*    out_mem = out.memptr();
+  const uword     n_elem  = out.n_elem;
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    out_mem[i] = (A[i] <= val) ? u32(1) : u32(0);
-    out_mem[j] = (A[j] <= val) ? u32(1) : u32(0);
+    out_mem[i] = (A[i] <= val) ? uword(1) : uword(0);
+    out_mem[j] = (A[j] <= val) ? uword(1) : uword(0);
     }
   
   if(i < n_elem)
     {
-    out_mem[i] = (A[i] <= val) ? u32(1) : u32(0);
+    out_mem[i] = (A[i] <= val) ? uword(1) : uword(0);
     }
   }
 
@@ -585,7 +585,7 @@ op_rel_lteq_post::apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_lteq_post
 template<typename T1>
 inline
 void
-op_rel_gteq_pre::apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_gteq_pre>& X)
+op_rel_gteq_pre::apply(Cube<uword>& out, const mtOpCube<uword, T1, op_rel_gteq_pre>& X)
   {
   arma_extra_debug_sigprint();
   
@@ -598,20 +598,20 @@ op_rel_gteq_pre::apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_gteq_pre>&
   
   const eT      val     = X.aux;
         ea_type A       = Y.get_ea();
-        u32*    out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
+        uword*    out_mem = out.memptr();
+  const uword     n_elem  = out.n_elem;
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    out_mem[i] = (val >= A[i]) ? u32(1) : u32(0);
-    out_mem[j] = (val >= A[j]) ? u32(1) : u32(0);
+    out_mem[i] = (val >= A[i]) ? uword(1) : uword(0);
+    out_mem[j] = (val >= A[j]) ? uword(1) : uword(0);
     }
   
   if(i < n_elem)
     {
-    out_mem[i] = (val >= A[i]) ? u32(1) : u32(0);
+    out_mem[i] = (val >= A[i]) ? uword(1) : uword(0);
     }
   }
 
@@ -620,7 +620,7 @@ op_rel_gteq_pre::apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_gteq_pre>&
 template<typename T1>
 inline
 void
-op_rel_gteq_post::apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_gteq_post>& X)
+op_rel_gteq_post::apply(Cube<uword>& out, const mtOpCube<uword, T1, op_rel_gteq_post>& X)
   {
   arma_extra_debug_sigprint();
   
@@ -633,20 +633,20 @@ op_rel_gteq_post::apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_gteq_post
   
   const eT      val     = X.aux;
         ea_type A       = Y.get_ea();
-        u32*    out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
+        uword*    out_mem = out.memptr();
+  const uword     n_elem  = out.n_elem;
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    out_mem[i] = (A[i] >= val) ? u32(1) : u32(0);
-    out_mem[j] = (A[j] >= val) ? u32(1) : u32(0);
+    out_mem[i] = (A[i] >= val) ? uword(1) : uword(0);
+    out_mem[j] = (A[j] >= val) ? uword(1) : uword(0);
     }
   
   if(i < n_elem)
     {
-    out_mem[i] = (A[i] >= val) ? u32(1) : u32(0);
+    out_mem[i] = (A[i] >= val) ? uword(1) : uword(0);
     }
   }
 
@@ -655,7 +655,7 @@ op_rel_gteq_post::apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_gteq_post
 template<typename T1>
 inline
 void
-op_rel_eq::apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_eq>& X)
+op_rel_eq::apply(Cube<uword>& out, const mtOpCube<uword, T1, op_rel_eq>& X)
   {
   arma_extra_debug_sigprint();
   
@@ -668,20 +668,20 @@ op_rel_eq::apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_eq>& X)
   
   const eT      val     = X.aux;
         ea_type A       = Y.get_ea();
-        u32*    out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
+        uword*    out_mem = out.memptr();
+  const uword     n_elem  = out.n_elem;
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    out_mem[i] = (A[i] == val) ? u32(1) : u32(0);
-    out_mem[j] = (A[j] == val) ? u32(1) : u32(0);
+    out_mem[i] = (A[i] == val) ? uword(1) : uword(0);
+    out_mem[j] = (A[j] == val) ? uword(1) : uword(0);
     }
   
   if(i < n_elem)
     {
-    out_mem[i] = (A[i] == val) ? u32(1) : u32(0);
+    out_mem[i] = (A[i] == val) ? uword(1) : uword(0);
     }
   }
 
@@ -690,7 +690,7 @@ op_rel_eq::apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_eq>& X)
 template<typename T1>
 inline
 void
-op_rel_noteq::apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_noteq>& X)
+op_rel_noteq::apply(Cube<uword>& out, const mtOpCube<uword, T1, op_rel_noteq>& X)
   {
   arma_extra_debug_sigprint();
   
@@ -703,20 +703,20 @@ op_rel_noteq::apply(Cube<u32>& out, const mtOpCube<u32, T1, op_rel_noteq>& X)
   
   const eT      val     = X.aux;
         ea_type A       = Y.get_ea();
-        u32*    out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
+        uword*    out_mem = out.memptr();
+  const uword     n_elem  = out.n_elem;
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    out_mem[i] = (A[i] != val) ? u32(1) : u32(0);
-    out_mem[j] = (A[j] != val) ? u32(1) : u32(0);
+    out_mem[i] = (A[i] != val) ? uword(1) : uword(0);
+    out_mem[j] = (A[j] != val) ? uword(1) : uword(0);
     }
   
   if(i < n_elem)
     {
-    out_mem[i] = (A[i] != val) ? u32(1) : u32(0);
+    out_mem[i] = (A[i] != val) ? uword(1) : uword(0);
     }
   }
 

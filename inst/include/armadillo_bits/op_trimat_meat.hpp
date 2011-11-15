@@ -24,13 +24,13 @@ op_trimat::fill_zeros(Mat<eT>& out, const bool upper)
   {
   arma_extra_debug_sigprint();
   
-  const u32 N = out.n_rows;
+  const uword N = out.n_rows;
   
   if(upper)
     {
     // upper triangular: set all elements below the diagonal to zero
     
-    for(u32 i=0; i<N; ++i)
+    for(uword i=0; i<N; ++i)
       {
       eT* data = out.colptr(i);
       
@@ -41,7 +41,7 @@ op_trimat::fill_zeros(Mat<eT>& out, const bool upper)
     {
     // lower triangular: set all elements above the diagonal to zero
     
-    for(u32 i=1; i<N; ++i)
+    for(uword i=1; i<N; ++i)
       {
       eT* data = out.colptr(i);
       
@@ -66,8 +66,8 @@ op_trimat::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_trimat>& in)
   
   arma_debug_check( (A.is_square() == false), "trimatu()/trimatl(): given matrix must be square" );
   
-  const u32  N     = A.n_rows;
-  const bool upper = (in.aux_u32_a == 0);
+  const uword  N     = A.n_rows;
+  const bool upper = (in.aux_uword_a == 0);
   
   if(&out != &A)
     {
@@ -76,7 +76,7 @@ op_trimat::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_trimat>& in)
     if(upper)
       {
       // upper triangular: copy the diagonal and the elements above the diagonal
-      for(u32 i=0; i<N; ++i)
+      for(uword i=0; i<N; ++i)
         {
         const eT* A_data   = A.colptr(i);
               eT* out_data = out.colptr(i);
@@ -87,7 +87,7 @@ op_trimat::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_trimat>& in)
     else
       {
       // lower triangular: copy the diagonal and the elements below the diagonal
-      for(u32 i=0; i<N; ++i)
+      for(uword i=0; i<N; ++i)
         {
         const eT* A_data   = A.colptr(i);
               eT* out_data = out.colptr(i);
@@ -114,7 +114,7 @@ op_trimat::apply(Mat<typename T1::elem_type>& out, const Op<Op<T1, op_htrans>, o
   const unwrap<T1>   tmp(in.m.m);
   const Mat<eT>& A = tmp.M;
   
-  const bool upper = (in.aux_u32_a == 0);
+  const bool upper = (in.aux_uword_a == 0);
   
   op_trimat::apply_htrans(out, A, upper);
   }
@@ -146,7 +146,7 @@ op_trimat::apply_htrans
   
   arma_debug_check( (A.is_square() == false), "trimatu()/trimatl(): given matrix must be square" );
   
-  const u32 N = A.n_rows;
+  const uword N = A.n_rows;
   
   if(&out != &A)
     {
@@ -160,11 +160,11 @@ op_trimat::apply_htrans
     {
     // Upper triangular: but since we're transposing, we're taking the lower
     // triangular and putting it in the upper half.
-    for(u32 row = 0; row < N; ++row)
+    for(uword row = 0; row < N; ++row)
       {
       eT* out_colptr = out.colptr(row);
       
-      for(u32 col = 0; col <= row; ++col)
+      for(uword col = 0; col <= row; ++col)
         {
         //out.at(col, row) = A.at(row, col);
         out_colptr[col] = A.at(row, col);
@@ -175,9 +175,9 @@ op_trimat::apply_htrans
     {
     // Lower triangular: but since we're transposing, we're taking the upper
     // triangular and putting it in the lower half.
-    for(u32 row = 0; row < N; ++row)
+    for(uword row = 0; row < N; ++row)
       {
-      for(u32 col = row; col < N; ++col)
+      for(uword col = row; col < N; ++col)
         {
         out.at(col, row) = A.at(row, col);
         }
@@ -205,7 +205,7 @@ op_trimat::apply_htrans
   
   arma_debug_check( (A.is_square() == false), "trimatu()/trimatl(): given matrix must be square" );
   
-  const u32 N = A.n_rows;
+  const uword N = A.n_rows;
   
   if(&out != &A)
     {
@@ -216,11 +216,11 @@ op_trimat::apply_htrans
     {
     // Upper triangular: but since we're transposing, we're taking the lower
     // triangular and putting it in the upper half.
-    for(u32 row = 0; row < N; ++row)
+    for(uword row = 0; row < N; ++row)
       {
       eT* out_colptr = out.colptr(row);
       
-      for(u32 col = 0; col <= row; ++col)
+      for(uword col = 0; col <= row; ++col)
         {
         //out.at(col, row) = std::conj( A.at(row, col) );
         out_colptr[col] = std::conj( A.at(row, col) );
@@ -231,9 +231,9 @@ op_trimat::apply_htrans
     {
     // Lower triangular: but since we're transposing, we're taking the upper
     // triangular and putting it in the lower half.
-    for(u32 row = 0; row < N; ++row)
+    for(uword row = 0; row < N; ++row)
       {
-      for(u32 col = row; col < N; ++col)
+      for(uword col = row; col < N; ++col)
         {
         out.at(col, row) = std::conj( A.at(row, col) );
         }

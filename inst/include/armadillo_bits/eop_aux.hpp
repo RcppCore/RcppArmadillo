@@ -48,12 +48,12 @@ struct eop_aux_randn
   // inline
   // operator eT () const
   //   {
-  //   const u32 N  = 12;  // N must be >= 12 and an even number
-  //   const u32 N2 = N/2;
+  //   const uword N  = 12;  // N must be >= 12 and an even number
+  //   const uword N2 = N/2;
   //   
   //   eT acc = eT(0);
   //   
-  //   for(u32 i=0; i<N2; ++i)
+  //   for(uword i=0; i<N2; ++i)
   //     {
   //     const eT tmp1 = eT(std::rand()) / eT(RAND_MAX);
   //     const eT tmp2 = eT(std::rand()) / eT(RAND_MAX);
@@ -326,21 +326,6 @@ class eop_aux
   
   template<typename T> arma_inline static
   typename arma_float_only<T>::result              arma_abs(const std::complex<T> x) { return std::abs(x); }
-  
-  
-  
-  template<typename eT, typename eop_type>
-  arma_inline
-  static
-  eT
-  generate()
-    {
-         if(is_same_type<eop_type, eop_ones_full>::value == true) { return eT(1);                   }
-    else if(is_same_type<eop_type, eop_zeros    >::value == true) { return eT(0);                   }
-    else if(is_same_type<eop_type, eop_randu    >::value == true) { return eT(eop_aux_randu<eT>()); }
-    else if(is_same_type<eop_type, eop_randn    >::value == true) { return eT(eop_aux_randn<eT>()); }
-    else                                                          { return eT();                    }
-    }
   
   };
 

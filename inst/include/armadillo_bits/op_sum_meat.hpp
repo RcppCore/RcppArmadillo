@@ -25,7 +25,7 @@ op_sum::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sum>& in)
   {
   arma_extra_debug_sigprint();
   
-  const u32 dim = in.aux_u32_a;
+  const uword dim = in.aux_uword_a;
   arma_debug_check( (dim > 1), "sum(): incorrect usage. dim must be 0 or 1");
   
   typedef typename T1::elem_type eT;
@@ -33,8 +33,8 @@ op_sum::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sum>& in)
   const unwrap_check<T1> tmp(in.m, out);
   const Mat<eT>& X     = tmp.M;
   
-  const u32 X_n_rows = X.n_rows;
-  const u32 X_n_cols = X.n_cols;
+  const uword X_n_rows = X.n_rows;
+  const uword X_n_cols = X.n_cols;
   
   if(dim == 0)  // traverse across rows (i.e. find the sum in each column)
     {
@@ -42,7 +42,7 @@ op_sum::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sum>& in)
 
     eT* out_mem = out.memptr();
     
-    for(u32 col=0; col<X_n_cols; ++col)
+    for(uword col=0; col<X_n_cols; ++col)
       {
       out_mem[col] = arrayops::accumulate(X.colptr(col), X_n_rows);
       }
@@ -53,11 +53,11 @@ op_sum::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sum>& in)
     
     eT* out_mem = out.memptr();
       
-    for(u32 row=0; row<X_n_rows; ++row)
+    for(uword row=0; row<X_n_rows; ++row)
       {
       eT val = eT(0);
         
-      for(u32 col=0; col<X_n_cols; ++col)
+      for(uword col=0; col<X_n_cols; ++col)
         {
         val += X.at(row,col);
         }

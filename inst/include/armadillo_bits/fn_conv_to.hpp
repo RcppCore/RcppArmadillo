@@ -48,7 +48,7 @@ conv_to<out_eT>::from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_e
   
   arma_ignore(junk);
   
-  arma_type_check< is_supported_elem_type<out_eT>::value == false >::apply();
+  arma_type_check(( is_supported_elem_type<out_eT>::value == false ));
   
   const unwrap<T1>      tmp(in.get_ref());
   const Mat<in_eT>& X = tmp.M;
@@ -70,7 +70,7 @@ conv_to<out_eT>::from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_
   
   arma_ignore(junk);
   
-  arma_type_check< is_supported_elem_type<out_eT>::value == false >::apply();
+  arma_type_check(( is_supported_elem_type<out_eT>::value == false ));
   
   const unwrap<T1>      tmp(in.get_ref());
   const Mat<in_eT>& X = tmp.M;
@@ -96,7 +96,7 @@ conv_to<out_eT>::from(const BaseCube<in_eT, T1>& in, const typename arma_not_cx<
   
   arma_ignore(junk);
   
-  arma_type_check< is_supported_elem_type<out_eT>::value == false >::apply();
+  arma_type_check(( is_supported_elem_type<out_eT>::value == false ));
   
   const unwrap_cube<T1>  tmp(in.get_ref());
   const Cube<in_eT>& X = tmp.M;
@@ -118,7 +118,7 @@ conv_to<out_eT>::from(const BaseCube<in_eT, T1>& in, const typename arma_cx_only
   
   arma_ignore(junk);
   
-  arma_type_check< is_supported_elem_type<out_eT>::value == false >::apply();
+  arma_type_check(( is_supported_elem_type<out_eT>::value == false ));
   
   const unwrap_cube<T1>  tmp(in.get_ref());
   const Cube<in_eT>& X = tmp.M;
@@ -545,7 +545,7 @@ conv_to< Row<out_eT> >::from(const itpp::Mat<in_eT>& in, const typename arma_cx_
   
   arma_ignore(junk);
   
-  const bool is_vec = ( (in.rows() == 1) || (in.cols() == 1) );
+  //const bool is_vec = ( (in.rows() == 1) || (in.cols() == 1) );
   
   Row<out_eT> out(in.rows() * in.cols());
   
@@ -780,7 +780,7 @@ conv_to< Col<out_eT> >::from(const itpp::Mat<in_eT>& in, const typename arma_cx_
   
   arma_ignore(junk);
   
-  const bool is_vec = ( (in.rows() == 1) || (in.cols() == 1) );
+  //const bool is_vec = ( (in.rows() == 1) || (in.cols() == 1) );
   
   Col<out_eT> out(in.rows() * in.cols());
   

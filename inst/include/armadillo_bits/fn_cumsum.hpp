@@ -19,7 +19,7 @@
 template<typename T1>
 arma_inline
 const Op<T1, op_cumsum_mat>
-cumsum(const Base<typename T1::elem_type,T1>& X, const u32 dim = 0)
+cumsum(const Base<typename T1::elem_type,T1>& X, const uword dim = 0)
   {
   arma_extra_debug_sigprint();
 

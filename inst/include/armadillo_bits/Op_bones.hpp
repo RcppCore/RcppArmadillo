@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -33,18 +33,20 @@ class Op : public Base<typename T1::elem_type, Op<T1, op_type> >
   
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
-
+  
   inline explicit Op(const T1& in_m);
   inline          Op(const T1& in_m, const elem_type in_aux);
-  inline          Op(const T1& in_m, const u32 in_aux_u32_a, const u32 in_aux_u32_b);
-  inline          Op(const T1& in_m, const elem_type in_aux, const u32 in_aux_u32_a, const u32 in_aux_u32_b);
+  inline          Op(const T1& in_m, const elem_type in_aux,         const uword in_aux_uword_a, const uword in_aux_uword_b);
+  inline          Op(const T1& in_m, const uword     in_aux_uword_a, const uword in_aux_uword_b);
+  inline          Op(const T1& in_m, const uword     in_aux_uword_a, const uword in_aux_uword_b, const uword in_aux_uword_c, const char junk);
   inline         ~Op();
     
   
-  arma_aligned const T1&       m;          //!< storage of reference to the operand (e.g. a matrix)
-  arma_aligned const elem_type aux;        //!< storage of auxiliary data, user defined format
-  arma_aligned const u32       aux_u32_a;  //!< storage of auxiliary data, u32 format
-  arma_aligned const u32       aux_u32_b;  //!< storage of auxiliary data, u32 format
+  arma_aligned const T1&       m;            //!< storage of reference to the operand (eg. a matrix)
+  arma_aligned       elem_type aux;          //!< storage of auxiliary data, user defined format
+  arma_aligned       uword     aux_uword_a;  //!< storage of auxiliary data, uword format
+  arma_aligned       uword     aux_uword_b;  //!< storage of auxiliary data, uword format
+  arma_aligned       uword     aux_uword_c;  //!< storage of auxiliary data, uword format
   
   };
 

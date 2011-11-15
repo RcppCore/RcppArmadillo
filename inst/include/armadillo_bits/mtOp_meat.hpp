@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -20,14 +20,10 @@ template<typename out_eT, typename T1, typename op_type>
 inline
 mtOp<out_eT, T1, op_type>::mtOp(const T1& in_m)
   : m(in_m)
-  , aux(aux)
-  , aux_out_eT(aux_out_eT)
-  , aux_u32_a(aux_u32_a)
-  , aux_u32_b(aux_u32_b)
   {
   arma_extra_debug_sigprint();
   }
-  
+
 
 
 template<typename out_eT, typename T1, typename op_type>
@@ -35,9 +31,6 @@ inline
 mtOp<out_eT, T1, op_type>::mtOp(const T1& in_m, const typename T1::elem_type in_aux)
   : m(in_m)
   , aux(in_aux)
-  , aux_out_eT(aux_out_eT)
-  , aux_u32_a(aux_u32_a)
-  , aux_u32_b(aux_u32_b)
   {
   arma_extra_debug_sigprint();
   }
@@ -46,12 +39,10 @@ mtOp<out_eT, T1, op_type>::mtOp(const T1& in_m, const typename T1::elem_type in_
 
 template<typename out_eT, typename T1, typename op_type>
 inline
-mtOp<out_eT, T1, op_type>::mtOp(const T1& in_m, const u32 in_aux_u32_a, const u32 in_aux_u32_b)
+mtOp<out_eT, T1, op_type>::mtOp(const T1& in_m, const uword in_aux_uword_a, const uword in_aux_uword_b)
   : m(in_m)
-  , aux(aux)
-  , aux_out_eT(aux_out_eT)
-  , aux_u32_a(in_aux_u32_a)
-  , aux_u32_b(in_aux_u32_b)
+  , aux_uword_a(in_aux_uword_a)
+  , aux_uword_b(in_aux_uword_b)
   {
   arma_extra_debug_sigprint();
   }
@@ -60,12 +51,11 @@ mtOp<out_eT, T1, op_type>::mtOp(const T1& in_m, const u32 in_aux_u32_a, const u3
 
 template<typename out_eT, typename T1, typename op_type>
 inline
-mtOp<out_eT, T1, op_type>::mtOp(const T1& in_m, const typename T1::elem_type in_aux, const u32 in_aux_u32_a, const u32 in_aux_u32_b)
+mtOp<out_eT, T1, op_type>::mtOp(const T1& in_m, const typename T1::elem_type in_aux, const uword in_aux_uword_a, const uword in_aux_uword_b)
   : m(in_m)
   , aux(in_aux)
-  , aux_out_eT(aux_out_eT)
-  , aux_u32_a(in_aux_u32_a)
-  , aux_u32_b(in_aux_u32_b)
+  , aux_uword_a(in_aux_uword_a)
+  , aux_uword_b(in_aux_uword_b)
   {
   arma_extra_debug_sigprint();
   }
@@ -76,10 +66,7 @@ template<typename out_eT, typename T1, typename op_type>
 inline
 mtOp<out_eT, T1, op_type>::mtOp(const char junk, const T1& in_m, const out_eT in_aux)
   : m(in_m)
-  , aux(aux)
   , aux_out_eT(in_aux)
-  , aux_u32_a(aux_u32_a)
-  , aux_u32_b(aux_u32_b)
   {
   arma_ignore(junk);
   

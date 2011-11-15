@@ -25,7 +25,7 @@ class mat_injector_row
   
   inline void insert(const eT val) const;
   
-  mutable u32          n_cols;
+  mutable uword          n_cols;
   mutable podarray<eT> A;
   mutable podarray<eT> B;
   };
@@ -50,7 +50,7 @@ class mat_injector
   inline mat_injector(T1& in_X, const injector_end_of_row& x);
   
   T1&         X;
-  mutable u32 n_rows;
+  mutable uword n_rows;
   
   mutable podarray< mat_injector_row<elem_type>* >* AA;
   mutable podarray< mat_injector_row<elem_type>* >* BB;
@@ -76,7 +76,7 @@ class field_injector_row
   
   inline void insert(const oT& val) const;
   
-  mutable u32        n_cols;
+  mutable uword        n_cols;
   mutable field<oT>* AA;
   mutable field<oT>* BB;
   };
@@ -101,7 +101,7 @@ class field_injector
   inline field_injector(T1& in_X, const injector_end_of_row& x);
   
   T1&         X;
-  mutable u32 n_rows;
+  mutable uword n_rows;
   
   mutable podarray< field_injector_row<object_type>* >* AA;
   mutable podarray< field_injector_row<object_type>* >* BB;

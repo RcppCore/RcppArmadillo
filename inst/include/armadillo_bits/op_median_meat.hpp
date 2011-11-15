@@ -34,8 +34,8 @@ op_median::direct_median(std::vector<eT>& X)
   {
   arma_extra_debug_sigprint();
   
-  const u32 n_elem = X.size();
-  const u32 half   = n_elem/2;
+  const uword n_elem = X.size();
+  const uword half   = n_elem/2;
   
   std::sort(X.begin(), X.end());
   
@@ -54,7 +54,7 @@ op_median::direct_median(std::vector<eT>& X)
 template<typename eT>
 inline 
 eT
-op_median::direct_median(const eT* X, const u32 n_elem)
+op_median::direct_median(const eT* X, const uword n_elem)
   {
   arma_extra_debug_sigprint();
   
@@ -72,11 +72,11 @@ op_median::direct_median(const subview<eT>& X)
   {
   arma_extra_debug_sigprint();
   
-  const u32 X_n_elem = X.n_elem;
+  const uword X_n_elem = X.n_elem;
   
   std::vector<eT> tmp(X_n_elem);
   
-  for(u32 i=0; i<X_n_elem; ++i)
+  for(uword i=0; i<X_n_elem; ++i)
     {
     tmp[i] = X[i];
     }
@@ -93,11 +93,11 @@ op_median::direct_median(const diagview<eT>& X)
   {
   arma_extra_debug_sigprint();
   
-  const u32 X_n_elem = X.n_elem;
+  const uword X_n_elem = X.n_elem;
   
   std::vector<eT> tmp(X_n_elem);
   
-  for(u32 i=0; i<X_n_elem; ++i)
+  for(uword i=0; i<X_n_elem; ++i)
     {
     tmp[i] = X[i];
     }
@@ -123,10 +123,10 @@ op_median::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_median>& in)
   const unwrap_check<T1> tmp(in.m, out);
   const Mat<eT>&     X = tmp.M;
   
-  const u32 X_n_rows = X.n_rows;
-  const u32 X_n_cols = X.n_cols;
+  const uword X_n_rows = X.n_rows;
+  const uword X_n_cols = X.n_cols;
   
-  const u32 dim = in.aux_u32_a;
+  const uword dim = in.aux_uword_a;
   arma_debug_check( (dim > 1), "median(): incorrect usage. dim must be 0 or 1");
   
   if(dim == 0)  // in each column
@@ -139,11 +139,11 @@ op_median::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_median>& in)
     
     std::vector<eT> tmp_vec(X_n_rows);
       
-    for(u32 col=0; col<X_n_cols; ++col)
+    for(uword col=0; col<X_n_cols; ++col)
       {
       const eT* colmem = X.colptr(col);
       
-      for(u32 row=0; row<X_n_rows; ++row)
+      for(uword row=0; row<X_n_rows; ++row)
         {
         tmp_vec[row] = colmem[row];
         }
@@ -162,9 +162,9 @@ op_median::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_median>& in)
     
     std::vector<eT> tmp_vec(X_n_cols);
       
-    for(u32 row=0; row<X_n_rows; ++row)
+    for(uword row=0; row<X_n_rows; ++row)
       {
-      for(u32 col=0; col<X_n_cols; ++col)
+      for(uword col=0; col<X_n_cols; ++col)
         {
         tmp_vec[col] = X.at(row,col);
         }
@@ -191,15 +191,15 @@ inline
 void
 op_median::direct_cx_median_index
   (
-  u32& out_index1, 
-  u32& out_index2, 
+  uword& out_index1, 
+  uword& out_index2, 
   std::vector< arma_cx_median_packet<T> >& X
   )
   {
   arma_extra_debug_sigprint();
   
-  const u32 n_elem = X.size();
-  const u32 half   = n_elem/2;
+  const uword n_elem = X.size();
+  const uword half   = n_elem/2;
   
   std::sort(X.begin(), X.end());
   
@@ -222,17 +222,17 @@ inline
 void
 op_median::direct_cx_median_index
   (
-  u32& out_index1, 
-  u32& out_index2, 
+  uword& out_index1, 
+  uword& out_index2, 
   const std::complex<T>* X, 
-  const u32 n_elem
+  const uword n_elem
   )
   {
   arma_extra_debug_sigprint();
   
   std::vector< arma_cx_median_packet<T> > tmp(n_elem);
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     tmp[i].val   = std::abs(X[i]);
     tmp[i].index = i;
@@ -248,18 +248,18 @@ inline
 void
 op_median::direct_cx_median_index
   (
-  u32& out_index1, 
-  u32& out_index2, 
+  uword& out_index1, 
+  uword& out_index2, 
   const subview< std::complex<T> >&X
   )
   {
   arma_extra_debug_sigprint();
   
-  const u32 n_elem = X.n_elem;
+  const uword n_elem = X.n_elem;
   
   std::vector< arma_cx_median_packet<T> > tmp(n_elem);
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     tmp[i].val   = std::abs(X[i]);
     tmp[i].index = i;
@@ -275,18 +275,18 @@ inline
 void
 op_median::direct_cx_median_index
   (
-  u32& out_index1, 
-  u32& out_index2, 
+  uword& out_index1, 
+  uword& out_index2, 
   const diagview< std::complex<T> >&X
   )
   {
   arma_extra_debug_sigprint();
   
-  const u32 n_elem = X.n_elem;
+  const uword n_elem = X.n_elem;
   
   std::vector< arma_cx_median_packet<T> > tmp(n_elem);
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     tmp[i].val   = std::abs(X[i]);
     tmp[i].index = i;
@@ -307,15 +307,15 @@ op_median::apply(Mat< std::complex<T> >& out, const Op<T1,op_median>& in)
   
   typedef typename std::complex<T> eT;
   
-  arma_type_check< is_same_type<eT, typename T1::elem_type>::value == false>::apply();
+  arma_type_check(( is_same_type<eT, typename T1::elem_type>::value == false ));
   
   const unwrap_check<T1> tmp(in.m, out);
   const Mat<eT>&     X = tmp.M;
   
-  const u32 X_n_rows = X.n_rows;
-  const u32 X_n_cols = X.n_cols;
+  const uword X_n_rows = X.n_rows;
+  const uword X_n_cols = X.n_cols;
   
-  const u32 dim = in.aux_u32_a;
+  const uword dim = in.aux_uword_a;
   arma_debug_check( (dim > 1), "median(): incorrect usage. dim must be 0 or 1");
   
   if(dim == 0)  // in each column
@@ -328,18 +328,18 @@ op_median::apply(Mat< std::complex<T> >& out, const Op<T1,op_median>& in)
     
     std::vector< arma_cx_median_packet<T> > tmp_vec(X_n_rows);
     
-    for(u32 col=0; col<X_n_cols; ++col)
+    for(uword col=0; col<X_n_cols; ++col)
       {
       const eT* colmem = X.colptr(col);
       
-      for(u32 row=0; row<X_n_rows; ++row)
+      for(uword row=0; row<X_n_rows; ++row)
         {
         tmp_vec[row].val   = std::abs(colmem[row]);
         tmp_vec[row].index = row;
         }
       
-      u32 index1;
-      u32 index2;
+      uword index1;
+      uword index2;
       op_median::direct_cx_median_index(index1, index2, tmp_vec);
         
       out[col] = op_median::robust_mean(colmem[index1], colmem[index2]);
@@ -356,16 +356,16 @@ op_median::apply(Mat< std::complex<T> >& out, const Op<T1,op_median>& in)
     
     std::vector< arma_cx_median_packet<T> > tmp_vec(X_n_cols);
     
-    for(u32 row=0; row<X_n_rows; ++row)
+    for(uword row=0; row<X_n_rows; ++row)
       {
-      for(u32 col=0; col<X_n_cols; ++col)
+      for(uword col=0; col<X_n_cols; ++col)
         {
         tmp_vec[col].val   = std::abs(X.at(row,col));
         tmp_vec[row].index = col;
         }
       
-      u32 index1;
-      u32 index2;
+      uword index1;
+      uword index2;
       op_median::direct_cx_median_index(index1, index2, tmp_vec);
       
       out[row] = op_median::robust_mean( X.at(row,index1), X.at(row,index2) );

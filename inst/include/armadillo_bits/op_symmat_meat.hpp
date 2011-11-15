@@ -36,8 +36,8 @@ op_symmat::apply
   
   arma_debug_check( (A.is_square() == false), "symmatu()/symmatl(): given matrix must be square" );
   
-  const u32  N     = A.n_rows;
-  const bool upper = (in.aux_u32_a == 0);
+  const uword  N     = A.n_rows;
+  const bool upper = (in.aux_uword_a == 0);
   
   if(&out != &A)
     {
@@ -47,7 +47,7 @@ op_symmat::apply
       {
       // upper triangular: copy the diagonal and the elements above the diagonal
       
-      for(u32 i=0; i<N; ++i)
+      for(uword i=0; i<N; ++i)
         {
         const eT* A_data   = A.colptr(i);
               eT* out_data = out.colptr(i);
@@ -59,7 +59,7 @@ op_symmat::apply
       {
       // lower triangular: copy the diagonal and the elements below the diagonal
       
-      for(u32 i=0; i<N; ++i)
+      for(uword i=0; i<N; ++i)
         {
         const eT* A_data   = A.colptr(i);
               eT* out_data = out.colptr(i);
@@ -74,11 +74,11 @@ op_symmat::apply
     {
     // reflect elements across the diagonal from upper triangle to lower triangle
     
-    for(u32 col=1; col < N; ++col)
+    for(uword col=1; col < N; ++col)
       {
       const eT* coldata = out.colptr(col);
       
-      for(u32 row=0; row < col; ++row)
+      for(uword row=0; row < col; ++row)
         {
         out.at(col,row) = coldata[row];
         }
@@ -88,11 +88,11 @@ op_symmat::apply
     {
     // reflect elements across the diagonal from lower triangle to upper triangle
     
-    for(u32 col=0; col < N; ++col)
+    for(uword col=0; col < N; ++col)
       {
       const eT* coldata = out.colptr(col);
       
-      for(u32 row=(col+1); row < N; ++row)
+      for(uword row=(col+1); row < N; ++row)
         {
         out.at(col,row) = coldata[row];
         }
@@ -122,8 +122,8 @@ op_symmat::apply
   
   arma_debug_check( (A.is_square() == false), "symmatu()/symmatl(): given matrix must be square" );
   
-  const u32  N     = A.n_rows;
-  const bool upper = (in.aux_u32_a == 0);
+  const uword  N     = A.n_rows;
+  const bool upper = (in.aux_uword_a == 0);
   
   if(&out != &A)
     {
@@ -133,7 +133,7 @@ op_symmat::apply
       {
       // upper triangular: copy the diagonal and the elements above the diagonal
       
-      for(u32 i=0; i<N; ++i)
+      for(uword i=0; i<N; ++i)
         {
         const eT* A_data   = A.colptr(i);
               eT* out_data = out.colptr(i);
@@ -145,7 +145,7 @@ op_symmat::apply
       {
       // lower triangular: copy the diagonal and the elements below the diagonal
       
-      for(u32 i=0; i<N; ++i)
+      for(uword i=0; i<N; ++i)
         {
         const eT* A_data   = A.colptr(i);
               eT* out_data = out.colptr(i);
@@ -160,11 +160,11 @@ op_symmat::apply
     {
     // reflect elements across the diagonal from upper triangle to lower triangle
     
-    for(u32 col=1; col < N; ++col)
+    for(uword col=1; col < N; ++col)
       {
       const eT* coldata = out.colptr(col);
       
-      for(u32 row=0; row < col; ++row)
+      for(uword row=0; row < col; ++row)
         {
         out.at(col,row) = std::conj(coldata[row]);
         }
@@ -174,11 +174,11 @@ op_symmat::apply
     {
     // reflect elements across the diagonal from lower triangle to upper triangle
     
-    for(u32 col=0; col < N; ++col)
+    for(uword col=0; col < N; ++col)
       {
       const eT* coldata = out.colptr(col);
       
-      for(u32 row=(col+1); row < N; ++row)
+      for(uword row=(col+1); row < N; ++row)
         {
         out.at(col,row) = std::conj(coldata[row]);
         }

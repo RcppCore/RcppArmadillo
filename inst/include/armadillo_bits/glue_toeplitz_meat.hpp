@@ -37,25 +37,25 @@ glue_toeplitz::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue_t
     
     arma_debug_check( (A.is_vec() == false), "toeplitz(): input argument must be a vector" );
     
-    const u32 N     = A.n_elem;
+    const uword N     = A.n_elem;
     const eT* A_mem = A.memptr();
     
     out.set_size(N,N);
     
-    for(u32 col=0; col<N; ++col)
+    for(uword col=0; col<N; ++col)
       {
       eT* col_mem = out.colptr(col);
       
-      u32 i;
+      uword i;
       
       i = col;
-      for(u32 row=0; row<col; ++row, --i)
+      for(uword row=0; row<col; ++row, --i)
         {
         col_mem[row] = A_mem[i];
         }
       
       i = 0;
-      for(u32 row=col; row<N; ++row, ++i)
+      for(uword row=col; row<N; ++row, ++i)
         {
         col_mem[row] = A_mem[i];
         }      
@@ -73,8 +73,8 @@ glue_toeplitz::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue_t
     
     arma_debug_check( ( (A.is_vec() == false) || (B.is_vec() == false) ), "toeplitz(): input arguments must be vectors" );
     
-    const u32 A_N = A.n_elem;
-    const u32 B_N = B.n_elem;
+    const uword A_N = A.n_elem;
+    const uword B_N = B.n_elem;
     
     const eT* A_mem = A.memptr();
     const eT* B_mem = B.memptr();
@@ -86,21 +86,21 @@ glue_toeplitz::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue_t
       return;
       }
     
-    for(u32 col=0; col<B_N; ++col)
+    for(uword col=0; col<B_N; ++col)
       {
       eT* col_mem = out.colptr(col);
       
-      u32 i = 0;
-      for(u32 row=col; row<A_N; ++row, ++i)
+      uword i = 0;
+      for(uword row=col; row<A_N; ++row, ++i)
         {
         col_mem[row] = A_mem[i];
         }
       }
     
-    for(u32 row=0; row<A_N; ++row)
+    for(uword row=0; row<A_N; ++row)
       {
-      u32 i = 1;
-      for(u32 col=(row+1); col<B_N; ++col, ++i)
+      uword i = 1;
+      for(uword col=(row+1); col<B_N; ++col, ++i)
         {
         out.at(row,col) = B_mem[i];
         }
@@ -131,7 +131,7 @@ glue_toeplitz_circ::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, g
     
     arma_debug_check( (A.is_vec() == false), "toeplitz(): input argument must be a vector" );
     
-    const u32 N     = A.n_elem;
+    const uword N     = A.n_elem;
     const eT* A_mem = A.memptr();
     
     out.set_size(N,N);
@@ -141,14 +141,14 @@ glue_toeplitz_circ::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, g
       {
       // A is interpreted as colvec
       
-      for(u32 col=0; col<N; ++col)
+      for(uword col=0; col<N; ++col)
         {
         eT* col_mem = out.colptr(col);
         
         
-        u32 i = col;
+        uword i = col;
         
-        for(u32 row=0; row<col; ++row, --i)
+        for(uword row=0; row<col; ++row, --i)
           {
           col_mem[row] = A_mem[N-i];
           }
@@ -156,7 +156,7 @@ glue_toeplitz_circ::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, g
         
         i = 0;
         
-        for(u32 row=col; row<N; ++row, ++i)
+        for(uword row=col; row<N; ++row, ++i)
           {
           col_mem[row] = A_mem[i];
           }      
@@ -167,18 +167,18 @@ glue_toeplitz_circ::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, g
       {
       // A is interpreted as rowvec - probably not the computationally most efficient way to do this ;-)
       
-      for(u32 row=0; row<N; ++row)
+      for(uword row=0; row<N; ++row)
         {
-        u32 i = row;
+        uword i = row;
          
-        for(u32 col=0; col<row; ++col, --i)
+        for(uword col=0; col<row; ++col, --i)
           {
           out.at(row,col) = A_mem[N-i];
           }
          
         i = 0;
          
-        for(u32 col=row; col<N; ++col, ++i)
+        for(uword col=row; col<N; ++col, ++i)
           {
           out.at(row,col) = A_mem[i];
           }

@@ -32,14 +32,14 @@ op_stddev::apply(Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_ty
   const unwrap_check_mixed<T1> tmp(in.m, out);
   const Mat<in_eT>&        X = tmp.M;
   
-  const u32 norm_type = in.aux_u32_a;
-  const u32 dim       = in.aux_u32_b;
+  const uword norm_type = in.aux_uword_a;
+  const uword dim       = in.aux_uword_b;
   
   arma_debug_check( (norm_type > 1), "stddev(): incorrect usage. norm_type must be 0 or 1");
   arma_debug_check( (dim > 1),       "stddev(): incorrect usage. dim must be 0 or 1"      );
   
-  const u32 X_n_rows = X.n_rows;
-  const u32 X_n_cols = X.n_cols;
+  const uword X_n_rows = X.n_rows;
+  const uword X_n_cols = X.n_cols;
   
   if(dim == 0)
     {
@@ -51,7 +51,7 @@ op_stddev::apply(Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_ty
     
     out_eT* out_mem = out.memptr();
     
-    for(u32 col=0; col<X_n_cols; ++col)
+    for(uword col=0; col<X_n_cols; ++col)
       {
       out_mem[col] = std::sqrt( op_var::direct_var( X.colptr(col), X_n_rows, norm_type ) );
       }
@@ -70,7 +70,7 @@ op_stddev::apply(Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_ty
     in_eT*  tmp_mem = tmp.memptr();
     out_eT* out_mem = out.memptr();
     
-    for(u32 row=0; row<X_n_rows; ++row)
+    for(uword row=0; row<X_n_rows; ++row)
       {
       tmp.copy_row(X, row);
       

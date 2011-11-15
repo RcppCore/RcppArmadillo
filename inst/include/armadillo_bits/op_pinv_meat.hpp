@@ -26,16 +26,16 @@ op_pinv::direct_pinv(Mat<eT>& out, const Mat<eT>& A, eT tol)
   {
   arma_extra_debug_sigprint();
   
-  const u32 n_rows = A.n_rows;
-  const u32 n_cols = A.n_cols;
+  const uword n_rows = A.n_rows;
+  const uword n_cols = A.n_cols;
   
-  // SVD decomposition 
+  // economical SVD decomposition 
   Mat<eT> U;
   Col<eT> s;
   Mat<eT> V;
   
-  const bool status   = (n_cols > n_rows) ? auxlib::svd(U,s,V,trans(A)) : auxlib::svd(U,s,V,A);
-  const u32  s_n_elem = s.n_elem;
+  const bool  status   = (n_cols > n_rows) ? auxlib::svd_econ(U,s,V,trans(A),'b') : auxlib::svd_econ(U,s,V,A,'b');
+  const uword s_n_elem = s.n_elem;
   
   if(status == false)
     {
@@ -50,13 +50,16 @@ op_pinv::direct_pinv(Mat<eT>& out, const Mat<eT>& A, eT tol)
     tol = (std::max)(n_rows,n_cols) * eop_aux::direct_eps(max(s));
     }
   
+  
   // count non zero valued elements in s
   
-  u32 count = 0;
+  const eT* s_mem = s.memptr();
   
-  for(u32 i=0; i < s_n_elem; ++i)
+  uword count = 0;
+  
+  for(uword i=0; i < s_n_elem; ++i)
     {
-    if(s[i] > tol)
+    if(s_mem[i] > tol)
       {
       ++count;
       }
@@ -65,23 +68,31 @@ op_pinv::direct_pinv(Mat<eT>& out, const Mat<eT>& A, eT tol)
   
   if(count != 0)
     {
-    // reduce the length of s in order to contain only the values above tolerance
-    if(count < s_n_elem)
+    Col<eT> s2(count);
+    
+    eT* s2_mem = s2.memptr();
+    
+    uword count2 = 0;
+    
+    for(uword i=0; i < s_n_elem; ++i)
       {
-      //s = s.rows(0,count-1);
-      s.shed_rows(count, s_n_elem-1);
+      const eT val = s_mem[i];
+      
+      if(val > tol)
+        {
+        s2_mem[count2] = eT(1) / val;
+        ++count2;
+        }
       }
     
-    // set the elements of s equal to their reciprocals
-    s = eT(1) / s;
     
     if(A.n_cols <= A.n_rows)
       {
-      out = ( V.n_cols > count ? V.cols(0,count-1) : V ) * diagmat(s) * trans( U.n_cols > count ? U.cols(0,count-1) : U );
+      out = ( V.n_cols > count ? V.cols(0,count-1) : V ) * diagmat(s2) * trans( U.n_cols > count ? U.cols(0,count-1) : U );
       }
     else
       {
-      out = ( U.n_cols > count ? U.cols(0,count-1) : U ) * diagmat(s) * trans( V.n_cols > count ? V.cols(0,count-1) : V );
+      out = ( U.n_cols > count ? U.cols(0,count-1) : U ) * diagmat(s2) * trans( V.n_cols > count ? V.cols(0,count-1) : V );
       }
     }
   else
@@ -99,18 +110,18 @@ op_pinv::direct_pinv(Mat< std::complex<T> >& out, const Mat< std::complex<T> >& 
   {
   arma_extra_debug_sigprint();
   
-  const u32 n_rows = A.n_rows;
-  const u32 n_cols = A.n_cols;
+  const uword n_rows = A.n_rows;
+  const uword n_cols = A.n_cols;
   
   typedef typename std::complex<T> eT;
   
-  // SVD decomposition 
+  // economical SVD decomposition 
   Mat<eT> U;
   Col< T> s;
   Mat<eT> V;
   
-  const bool status  = (n_cols > n_rows) ? auxlib::svd(U,s,V,trans(A)) : auxlib::svd(U,s,V,A);
-  const u32 s_n_elem = s.n_elem;
+  const bool status  = (n_cols > n_rows) ? auxlib::svd_econ(U,s,V,trans(A),'b') : auxlib::svd_econ(U,s,V,A,'b');
+  const uword s_n_elem = s.n_elem;
   
   if(status == false)
     {
@@ -128,9 +139,9 @@ op_pinv::direct_pinv(Mat< std::complex<T> >& out, const Mat< std::complex<T> >& 
   
   // count non zero valued elements in s
   
-  u32 count = 0;
+  uword count = 0;
   
-  for(u32 i = 0; i < s_n_elem; ++i)
+  for(uword i = 0; i < s_n_elem; ++i)
     {
     if(s[i] > tol)
       {

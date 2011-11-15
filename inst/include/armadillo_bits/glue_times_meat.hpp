@@ -16,7 +16,7 @@
 
 
 
-template<u32 N>
+template<uword N>
 template<typename T1, typename T2>
 inline
 void
@@ -119,7 +119,7 @@ glue_times::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>
 
   typedef typename T1::elem_type eT;
 
-  const s32 N_mat = 1 + depth_lhs< glue_times, Glue<T1,T2,glue_times> >::num;
+  const sword N_mat = 1 + depth_lhs< glue_times, Glue<T1,T2,glue_times> >::num;
 
   arma_extra_debug_print(arma_boost::format("N_mat = %d") % N_mat);
 
@@ -142,8 +142,8 @@ glue_times::apply_inplace(Mat<typename T1::elem_type>& out, const T1& X)
   
   arma_debug_assert_mul_size(out, B, "matrix multiplication");
   
-  const u32 out_n_rows = out.n_rows;
-  const u32 out_n_cols = out.n_cols;
+  const uword out_n_rows = out.n_rows;
+  const uword out_n_cols = out.n_cols;
   
   if(out_n_cols == B.n_cols)
     {
@@ -153,11 +153,11 @@ glue_times::apply_inplace(Mat<typename T1::elem_type>& out, const T1& X)
     
     eT* tmp_rowdata = tmp.memptr();
     
-    for(u32 row=0; row < out_n_rows; ++row)
+    for(uword row=0; row < out_n_rows; ++row)
       {
       tmp.copy_row(out, row);
       
-      for(u32 col=0; col < out_n_cols; ++col)
+      for(uword col=0; col < out_n_cols; ++col)
         {
         out.at(row,col) = op_dot::direct_dot( out_n_cols, tmp_rowdata, B.colptr(col) );
         }
@@ -178,7 +178,7 @@ template<typename T1, typename T2>
 arma_hot
 inline
 void
-glue_times::apply_inplace_plus(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue_times>& X, const s32 sign)
+glue_times::apply_inplace_plus(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue_times>& X, const sword sign)
   {
   arma_extra_debug_sigprint();
   
@@ -189,16 +189,16 @@ glue_times::apply_inplace_plus(Mat<typename T1::elem_type>& out, const Glue<T1, 
   
   const Mat<eT>& A     = tmp1.M;
   const Mat<eT>& B     = tmp2.M;
-  const eT       alpha = tmp1.get_val() * tmp2.get_val() * ( (sign > s32(0)) ? eT(1) : eT(-1) );
+  const eT       alpha = tmp1.get_val() * tmp2.get_val() * ( (sign > sword(0)) ? eT(1) : eT(-1) );
   
   const bool do_trans_A = tmp1.do_trans;
   const bool do_trans_B = tmp2.do_trans;
-  const bool use_alpha  = tmp1.do_times || tmp2.do_times || (sign < s32(0));
+  const bool use_alpha  = tmp1.do_times || tmp2.do_times || (sign < sword(0));
   
   arma_debug_assert_mul_size(A, B, do_trans_A, do_trans_B, "matrix multiplication");
   
-  const u32 result_n_rows = (do_trans_A == false) ? A.n_rows : A.n_cols;
-  const u32 result_n_cols = (do_trans_B == false) ? B.n_cols : B.n_rows;
+  const uword result_n_rows = (do_trans_A == false) ? A.n_rows : A.n_cols;
+  const uword result_n_cols = (do_trans_B == false) ? B.n_cols : B.n_rows;
   
   arma_assert_same_size(out.n_rows, out.n_cols, result_n_rows, result_n_cols, "addition");
   
@@ -348,11 +348,11 @@ glue_times::apply_inplace_plus(Mat<typename T1::elem_type>& out, const Glue<T1, 
 
 template<typename eT>
 arma_inline
-u32
+uword
 glue_times::mul_storage_cost(const Mat<eT>& A, const Mat<eT>& B, const bool do_trans_A, const bool do_trans_B)
   {
-  const u32 final_A_n_rows = (do_trans_A == false) ? A.n_rows : A.n_cols;
-  const u32 final_B_n_cols = (do_trans_B == false) ? B.n_cols : B.n_rows;
+  const uword final_A_n_rows = (do_trans_A == false) ? A.n_rows : A.n_cols;
+  const uword final_B_n_cols = (do_trans_B == false) ? B.n_cols : B.n_rows;
   
   return final_A_n_rows * final_B_n_cols;
   }
@@ -378,8 +378,8 @@ glue_times::apply
   
   arma_debug_assert_mul_size(A, B, do_trans_A, do_trans_B, "matrix multiplication");
   
-  const u32 final_n_rows = (do_trans_A == false) ? A.n_rows : A.n_cols;
-  const u32 final_n_cols = (do_trans_B == false) ? B.n_cols : B.n_rows;
+  const uword final_n_rows = (do_trans_A == false) ? A.n_rows : A.n_cols;
+  const uword final_n_cols = (do_trans_B == false) ? B.n_cols : B.n_rows;
   
   out.set_size(final_n_rows, final_n_cols);
   
@@ -636,12 +636,12 @@ glue_times_diag::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue
     
     out.set_size(A.n_elem, B.n_cols);
     
-    for(u32 col=0; col<B.n_cols; ++col)
+    for(uword col=0; col<B.n_cols; ++col)
       {
             eT* out_coldata = out.colptr(col);
       const eT* B_coldata   = B.colptr(col);
       
-      for(u32 row=0; row<B.n_rows; ++row)
+      for(uword row=0; row<B.n_rows; ++row)
         {
         out_coldata[row] = A[row] * B_coldata[row];
         }
@@ -659,14 +659,14 @@ glue_times_diag::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue
     
     out.set_size(A.n_rows, B.n_elem);
     
-    for(u32 col=0; col<A.n_cols; ++col)
+    for(uword col=0; col<A.n_cols; ++col)
       {
       const eT  val = B[col];
       
             eT* out_coldata = out.colptr(col);
       const eT*   A_coldata =   A.colptr(col);
     
-      for(u32 row=0; row<A.n_rows; ++row)
+      for(uword row=0; row<A.n_rows; ++row)
         {
         out_coldata[row] = A_coldata[row] * val;
         }
@@ -682,7 +682,7 @@ glue_times_diag::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue
     
     out.zeros(A.n_elem, A.n_elem);
     
-    for(u32 i=0; i<A.n_elem; ++i)
+    for(uword i=0; i<A.n_elem; ++i)
       {
       out.at(i,i) = A[i] * B[i];
       }

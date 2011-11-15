@@ -39,8 +39,8 @@ op_princomp::direct_princomp
   {
   arma_extra_debug_sigprint();
 
-  const u32 n_rows = in.n_rows;
-  const u32 n_cols = in.n_cols;
+  const uword n_rows = in.n_rows;
+  const uword n_cols = in.n_cols;
   
   if(n_rows > 1) // more than one sample
     {
@@ -132,8 +132,8 @@ op_princomp::direct_princomp
   {
   arma_extra_debug_sigprint();
   
-  const u32 n_rows = in.n_rows;
-  const u32 n_cols = in.n_cols;
+  const uword n_rows = in.n_rows;
+  const uword n_cols = in.n_cols;
   
   if(n_rows > 1) // more than one sample
     {
@@ -206,8 +206,8 @@ op_princomp::direct_princomp
   {
   arma_extra_debug_sigprint();
   
-  const u32 n_rows = in.n_rows;
-  const u32 n_cols = in.n_cols;
+  const uword n_rows = in.n_rows;
+  const uword n_cols = in.n_cols;
   
   if(n_rows > 1) // more than one sample
     {
@@ -317,8 +317,8 @@ op_princomp::direct_princomp
   
   typedef std::complex<T> eT;
   
-  const u32 n_rows = in.n_rows;
-  const u32 n_cols = in.n_cols;
+  const uword n_rows = in.n_rows;
+  const uword n_cols = in.n_cols;
   
   if(n_rows > 1) // more than one sample
     {
@@ -409,8 +409,8 @@ op_princomp::direct_princomp
   
   typedef std::complex<T> eT;
   
-  const u32 n_rows = in.n_rows;
-  const u32 n_cols = in.n_cols;
+  const uword n_rows = in.n_rows;
+  const uword n_cols = in.n_cols;
   
   if(n_rows > 1) // more than one sample
     {
@@ -485,8 +485,8 @@ op_princomp::direct_princomp
   
   typedef std::complex<T> eT;
   
-  const u32 n_rows = in.n_rows;
-  const u32 n_cols = in.n_cols;
+  const uword n_rows = in.n_rows;
+  const uword n_cols = in.n_cols;
   
   if(n_rows > 1) // more than one sample
     {

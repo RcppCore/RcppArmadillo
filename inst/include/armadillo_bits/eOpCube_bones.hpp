@@ -25,30 +25,29 @@ class eOpCube : public BaseCube<typename T1::elem_type, eOpCube<T1, eop_type> >
   typedef typename get_pod_type<elem_type>::result pod_type;
   
   static const bool prefer_at_accessor = ProxyCube<T1>::prefer_at_accessor;
+  static const bool has_subview        = ProxyCube<T1>::has_subview;
   
   arma_aligned const ProxyCube<T1> P;
-  
-  arma_aligned const elem_type aux;        //!< storage of auxiliary data, user defined format
-  arma_aligned const u32       aux_u32_a;  //!< storage of auxiliary data, u32 format
-  arma_aligned const u32       aux_u32_b;  //!< storage of auxiliary data, u32 format
-  arma_aligned const u32       aux_u32_c;  //!< storage of auxiliary data, u32 format
+  arma_aligned       elem_type     aux;          //!< storage of auxiliary data, user defined format
+  arma_aligned       uword         aux_uword_a;  //!< storage of auxiliary data, uword format
+  arma_aligned       uword         aux_uword_b;  //!< storage of auxiliary data, uword format
+  arma_aligned       uword         aux_uword_c;  //!< storage of auxiliary data, uword format
   
   inline         ~eOpCube();
   inline explicit eOpCube(const BaseCube<typename T1::elem_type, T1>& in_m);
   inline          eOpCube(const BaseCube<typename T1::elem_type, T1>& in_m, const elem_type in_aux);
-  inline          eOpCube(const BaseCube<typename T1::elem_type, T1>& in_m, const u32 in_aux_u32_a, const u32 in_aux_u32_b);
-  inline          eOpCube(const BaseCube<typename T1::elem_type, T1>& in_m, const u32 in_aux_u32_a, const u32 in_aux_u32_b, const u32 in_aux_u32_c);
-  inline          eOpCube(const BaseCube<typename T1::elem_type, T1>& in_m, const elem_type in_aux, const u32 in_aux_u32_a, const u32 in_aux_u32_b, const u32 in_aux_u32_c);
-  inline          eOpCube(const u32 in_n_rows, const u32 in_n_cols, const u32 in_n_slices);
+  inline          eOpCube(const BaseCube<typename T1::elem_type, T1>& in_m, const uword in_aux_uword_a, const uword in_aux_uword_b);
+  inline          eOpCube(const BaseCube<typename T1::elem_type, T1>& in_m, const uword in_aux_uword_a, const uword in_aux_uword_b, const uword in_aux_uword_c);
+  inline          eOpCube(const BaseCube<typename T1::elem_type, T1>& in_m, const elem_type in_aux, const uword in_aux_uword_a, const uword in_aux_uword_b, const uword in_aux_uword_c);
   
-  arma_inline u32 get_n_rows()       const;
-  arma_inline u32 get_n_cols()       const;
-  arma_inline u32 get_n_elem_slice() const;
-  arma_inline u32 get_n_slices()     const;
-  arma_inline u32 get_n_elem()       const;
+  arma_inline uword get_n_rows()       const;
+  arma_inline uword get_n_cols()       const;
+  arma_inline uword get_n_elem_slice() const;
+  arma_inline uword get_n_slices()     const;
+  arma_inline uword get_n_elem()       const;
   
-  arma_inline elem_type operator[] (const u32 i)                                   const;
-  arma_inline elem_type at         (const u32 row, const u32 col, const u32 slice) const;
+  arma_inline elem_type operator[] (const uword i)                                       const;
+  arma_inline elem_type at         (const uword row, const uword col, const uword slice) const;
   };
 
 

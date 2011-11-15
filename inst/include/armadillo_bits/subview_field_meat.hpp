@@ -29,10 +29,10 @@ arma_inline
 subview_field<oT>::subview_field
   (
   const field<oT>& in_f,
-  const u32        in_row1,
-  const u32        in_col1,
-  const u32        in_n_rows,
-  const u32        in_n_cols
+  const uword        in_row1,
+  const uword        in_col1,
+  const uword        in_n_rows,
+  const uword        in_n_cols
   )
   : f(in_f)
   , f_ptr(0)
@@ -52,10 +52,10 @@ arma_inline
 subview_field<oT>::subview_field
   (
         field<oT>& in_f,
-  const u32        in_row1,
-  const u32        in_col1,
-  const u32        in_n_rows,
-  const u32        in_n_cols
+  const uword        in_row1,
+  const uword        in_col1,
+  const uword        in_n_rows,
+  const uword        in_n_cols
   )
   : f(in_f)
   , f_ptr(&in_f)
@@ -81,9 +81,9 @@ subview_field<oT>::operator= (const field<oT>& x)
   
   arma_debug_check( (t.n_rows != x.n_rows) || (t.n_cols != x.n_cols), "incompatible field dimensions");
   
-  for(u32 col=0; col<t.n_cols; ++col)
+  for(uword col=0; col<t.n_cols; ++col)
     {
-    for(u32 row=0; row<t.n_rows; ++row)
+    for(uword row=0; row<t.n_rows; ++row)
       {
       t.at(row,col) = x.at(row,col);
       }
@@ -110,9 +110,9 @@ subview_field<oT>::operator= (const subview_field<oT>& x_in)
   
   arma_debug_check( (t.n_rows != x.n_rows) || (t.n_cols != x.n_cols), "incompatible field dimensions");
   
-  for(u32 col=0; col<t.n_cols; ++col)
+  for(uword col=0; col<t.n_cols; ++col)
     {
-    for(u32 row=0; row<t.n_rows; ++row)
+    for(uword row=0; row<t.n_rows; ++row)
       {
       t.at(row,col) = x.at(row,col);
       }
@@ -130,14 +130,14 @@ subview_field<oT>::operator= (const subview_field<oT>& x_in)
 template<typename oT>
 arma_inline
 oT&
-subview_field<oT>::operator[](const u32 i)
+subview_field<oT>::operator[](const uword i)
   {
   arma_check( (f_ptr == 0), "subview_field::operator[]: field is read-only");
   
-  const u32 in_col = i / n_rows;
-  const u32 in_row = i % n_rows;
+  const uword in_col = i / n_rows;
+  const uword in_row = i % n_rows;
     
-  const u32 index = (in_col + aux_col1)*f.n_rows + aux_row1 + in_row;
+  const uword index = (in_col + aux_col1)*f.n_rows + aux_row1 + in_row;
   
   return *((*f_ptr).mem[index]);
   }
@@ -147,12 +147,12 @@ subview_field<oT>::operator[](const u32 i)
 template<typename oT>
 arma_inline
 const oT&
-subview_field<oT>::operator[](const u32 i) const
+subview_field<oT>::operator[](const uword i) const
   {
-  const u32 in_col = i / n_rows;
-  const u32 in_row = i % n_rows;
+  const uword in_col = i / n_rows;
+  const uword in_row = i % n_rows;
   
-  const u32 index = (in_col + aux_col1)*f.n_rows + aux_row1 + in_row;
+  const uword index = (in_col + aux_col1)*f.n_rows + aux_row1 + in_row;
   
   return *(f.mem[index]);
   }
@@ -162,15 +162,15 @@ subview_field<oT>::operator[](const u32 i) const
 template<typename oT>
 arma_inline
 oT&
-subview_field<oT>::operator()(const u32 i)
+subview_field<oT>::operator()(const uword i)
   {
   arma_check( (f_ptr == 0), "subview_field::operator(): field is read-only");
   arma_debug_check( (i >= n_elem), "subview_field::operator(): index out of bounds");
     
-  const u32 in_col = i / n_rows;
-  const u32 in_row = i % n_rows;
+  const uword in_col = i / n_rows;
+  const uword in_row = i % n_rows;
   
-  const u32 index = (in_col + aux_col1)*f.n_rows + aux_row1 + in_row;
+  const uword index = (in_col + aux_col1)*f.n_rows + aux_row1 + in_row;
   
   return *((*f_ptr).mem[index]);
   }
@@ -180,14 +180,14 @@ subview_field<oT>::operator()(const u32 i)
 template<typename oT>
 arma_inline
 const oT&
-subview_field<oT>::operator()(const u32 i) const
+subview_field<oT>::operator()(const uword i) const
   {
   arma_debug_check( (i >= n_elem), "subview_field::operator(): index out of bounds");
   
-  const u32 in_col = i / n_rows;
-  const u32 in_row = i % n_rows;
+  const uword in_col = i / n_rows;
+  const uword in_row = i % n_rows;
   
-  const u32 index = (in_col + aux_col1)*f.n_rows + aux_row1 + in_row;
+  const uword index = (in_col + aux_col1)*f.n_rows + aux_row1 + in_row;
   
   return *(f.mem[index]);
   }
@@ -197,12 +197,12 @@ subview_field<oT>::operator()(const u32 i) const
 template<typename oT>
 arma_inline
 oT&
-subview_field<oT>::operator()(const u32 in_row, const u32 in_col)
+subview_field<oT>::operator()(const uword in_row, const uword in_col)
   {
   arma_check( (f_ptr == 0), "subview_field::operator(): field is read-only");
   arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols)), "subview_field::operator(): index out of bounds");
   
-  const u32 index = (in_col + aux_col1)*f.n_rows + aux_row1 + in_row;
+  const uword index = (in_col + aux_col1)*f.n_rows + aux_row1 + in_row;
   
   return *((*f_ptr).mem[index]);
   }
@@ -212,11 +212,11 @@ subview_field<oT>::operator()(const u32 in_row, const u32 in_col)
 template<typename oT>
 arma_inline
 const oT&
-subview_field<oT>::operator()(const u32 in_row, const u32 in_col) const
+subview_field<oT>::operator()(const uword in_row, const uword in_col) const
   {
   arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols)), "subview_field::operator(): index out of bounds");
   
-  const u32 index = (in_col + aux_col1)*f.n_rows + aux_row1 + in_row;
+  const uword index = (in_col + aux_col1)*f.n_rows + aux_row1 + in_row;
   
   return *(f.mem[index]);
   }
@@ -226,13 +226,13 @@ subview_field<oT>::operator()(const u32 in_row, const u32 in_col) const
 template<typename oT>
 arma_inline
 oT&
-subview_field<oT>::at(const u32 in_row, const u32 in_col)
+subview_field<oT>::at(const uword in_row, const uword in_col)
   {
   //arma_extra_debug_sigprint();
   
   arma_check( (f_ptr == 0), "subview_field::at(): field is read-only");
   
-  const u32 index = (in_col + aux_col1)*f.n_rows + aux_row1 + in_row;
+  const uword index = (in_col + aux_col1)*f.n_rows + aux_row1 + in_row;
   
   return *((*f_ptr).mem[index]);
   }
@@ -242,11 +242,11 @@ subview_field<oT>::at(const u32 in_row, const u32 in_col)
 template<typename oT>
 arma_inline
 const oT&
-subview_field<oT>::at(const u32 in_row, const u32 in_col) const
+subview_field<oT>::at(const uword in_row, const uword in_col) const
   {
   //arma_extra_debug_sigprint();
   
-  const u32 index = (in_col + aux_col1)*f.n_rows + aux_row1 + in_row;
+  const uword index = (in_col + aux_col1)*f.n_rows + aux_row1 + in_row;
   
   return *(f.mem[index]);
   }
@@ -272,18 +272,18 @@ subview_field<oT>::check_overlap(const subview_field<oT>& x) const
       }
     else
       {
-      const u32 t_row_start  = t.aux_row1;
-      const u32 t_row_end_p1 = t_row_start + t.n_rows;
+      const uword t_row_start  = t.aux_row1;
+      const uword t_row_end_p1 = t_row_start + t.n_rows;
       
-      const u32 t_col_start  = t.aux_col1;
-      const u32 t_col_end_p1 = t_col_start + t.n_cols;
+      const uword t_col_start  = t.aux_col1;
+      const uword t_col_end_p1 = t_col_start + t.n_cols;
       
       
-      const u32 x_row_start  = x.aux_row1;
-      const u32 x_row_end_p1 = x_row_start + x.n_rows;
+      const uword x_row_start  = x.aux_row1;
+      const uword x_row_end_p1 = x_row_start + x.n_rows;
       
-      const u32 x_col_start  = x.aux_col1;
-      const u32 x_col_end_p1 = x_col_start + x.n_cols;
+      const uword x_col_start  = x.aux_col1;
+      const uword x_col_end_p1 = x_col_start + x.n_cols;
       
       
       const bool outside_rows = ( (x_row_start >= t_row_end_p1) || (t_row_start >= x_row_end_p1) );
@@ -312,16 +312,16 @@ subview_field<oT>::extract(field<oT>& actual_out, const subview_field<oT>& in)
   
   //
   
-  const u32 n_rows = in.n_rows;
-  const u32 n_cols = in.n_cols;
+  const uword n_rows = in.n_rows;
+  const uword n_cols = in.n_cols;
   
   out.set_size(n_rows, n_cols);
   
   arma_extra_debug_print(arma_boost::format("out.n_rows = %d   out.n_cols = %d    in.m.n_rows = %d  in.m.n_cols = %d") % out.n_rows % out.n_cols % in.f.n_rows % in.f.n_cols );
   
-  for(u32 col = 0; col<n_cols; ++col)
+  for(uword col = 0; col<n_cols; ++col)
     {
-    for(u32 row = 0; row<n_rows; ++row)
+    for(uword row = 0; row<n_rows; ++row)
       {
       out.at(row,col) = in.at(row,col);
       }

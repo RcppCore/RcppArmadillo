@@ -21,7 +21,7 @@
 template<typename eT>
 inline
 void
-op_cor::direct_cor(Mat<eT>& out, const Mat<eT>& A, const u32 norm_type)
+op_cor::direct_cor(Mat<eT>& out, const Mat<eT>& A, const uword norm_type)
   {
   arma_extra_debug_sigprint();
   
@@ -38,7 +38,7 @@ op_cor::direct_cor(Mat<eT>& out, const Mat<eT>& A, const u32 norm_type)
     }
   else
     {
-    const u32 N = A.n_rows;
+    const uword N = A.n_rows;
     const eT norm_val = (norm_type == 0) ? ( (N > 1) ? eT(N-1) : eT(1) ) : eT(N);
 
     const Row<eT> acc = sum(A);
@@ -56,7 +56,7 @@ op_cor::direct_cor(Mat<eT>& out, const Mat<eT>& A, const u32 norm_type)
 template<typename T>
 inline
 void
-op_cor::direct_cor(Mat< std::complex<T> >& out, const Mat< std::complex<T> >& A, const u32 norm_type)
+op_cor::direct_cor(Mat< std::complex<T> >& out, const Mat< std::complex<T> >& A, const uword norm_type)
   {
   arma_extra_debug_sigprint();
 
@@ -75,7 +75,7 @@ op_cor::direct_cor(Mat< std::complex<T> >& out, const Mat< std::complex<T> >& A,
     }
   else
     {
-    const u32 N = A.n_rows;
+    const uword N = A.n_rows;
     const eT norm_val = (norm_type == 0) ? ( (N > 1) ? eT(N-1) : eT(1) ) : eT(N);
 
     const Row<eT> acc = sum(A);
@@ -104,7 +104,7 @@ op_cor::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cor>& in)
   const unwrap_check<T1> tmp(in.m, out);
   const Mat<eT>& A     = tmp.M;
   
-  const u32 norm_type = in.aux_u32_a;
+  const uword norm_type = in.aux_uword_a;
   
   op_cor::direct_cor(out, A, norm_type);
   }

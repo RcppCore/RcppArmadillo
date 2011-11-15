@@ -41,9 +41,9 @@ class running_stat_vec
   
   inline const Mat<eT>&  mean() const;
   
-  inline const Mat< T>&  var   (const u32 norm_type = 0);
-  inline       Mat< T>   stddev(const u32 norm_type = 0) const;
-  inline const Mat<eT>&  cov   (const u32 norm_type = 0);
+  inline const Mat< T>&  var   (const uword norm_type = 0);
+  inline       Mat< T>   stddev(const uword norm_type = 0) const;
+  inline const Mat<eT>&  cov   (const uword norm_type = 0);
   
   inline const Mat<eT>& min() const;
   inline const Mat<eT>& max() const;
@@ -96,18 +96,18 @@ class running_stat_vec_aux
   //
   
   template<typename eT>
-  inline static Mat<eT> var(const running_stat_vec< eT >&              x, const u32 norm_type = 0);
+  inline static Mat<eT> var(const running_stat_vec< eT >&              x, const uword norm_type = 0);
   
   template<typename T>
-  inline static Mat< T> var(const running_stat_vec< std::complex<T> >& x, const u32 norm_type = 0);
+  inline static Mat< T> var(const running_stat_vec< std::complex<T> >& x, const uword norm_type = 0);
   
   //
   
   template<typename eT>
-  inline static Mat<              eT > cov(const running_stat_vec< eT >&              x, const u32 norm_type = 0);
+  inline static Mat<              eT > cov(const running_stat_vec< eT >&              x, const uword norm_type = 0);
   
   template<typename T>
-  inline static Mat< std::complex<T> > cov(const running_stat_vec< std::complex<T> >& x, const u32 norm_type = 0);
+  inline static Mat< std::complex<T> > cov(const running_stat_vec< std::complex<T> >& x, const uword norm_type = 0);
   };
 
 

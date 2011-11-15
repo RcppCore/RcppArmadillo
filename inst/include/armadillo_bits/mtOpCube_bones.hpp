@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -28,20 +28,20 @@ class mtOpCube : public BaseCube<out_eT, mtOpCube<out_eT, T1, op_type> >
 
   inline explicit mtOpCube(const T1& in_m);
   inline          mtOpCube(const T1& in_m, const in_eT in_aux);
-  inline          mtOpCube(const T1& in_m, const u32   in_aux_u32_a, const u32 in_aux_u32_b, const u32 in_aux_u32_c);
-  inline          mtOpCube(const T1& in_m, const in_eT in_aux,       const u32 in_aux_u32_a, const u32 in_aux_u32_b, const u32 in_aux_u32_c);
+  inline          mtOpCube(const T1& in_m, const uword in_aux_uword_a, const uword in_aux_uword_b, const uword in_aux_uword_c);
+  inline          mtOpCube(const T1& in_m, const in_eT in_aux,         const uword in_aux_uword_a, const uword in_aux_uword_b, const uword in_aux_uword_c);
   
   inline          mtOpCube(const char junk, const T1& in_m, const out_eT in_aux);
   
   inline         ~mtOpCube();
     
   
-  arma_aligned const T1&    m;           //!< storage of reference to the operand (e.g. a matrix)
-  arma_aligned const in_eT  aux;         //!< storage of auxiliary data, using the element type as used by T1
-  arma_aligned const out_eT aux_out_eT;  //!< storage of auxiliary data, using the element type as specified by the out_eT template parameter
-  arma_aligned const u32    aux_u32_a;   //!< storage of auxiliary data, u32 format
-  arma_aligned const u32    aux_u32_b;   //!< storage of auxiliary data, u32 format
-  arma_aligned const u32    aux_u32_c;   //!< storage of auxiliary data, u32 format
+  arma_aligned const T1&    m;            //!< storage of reference to the operand (eg. a matrix)
+  arma_aligned       in_eT  aux;          //!< storage of auxiliary data, using the element type as used by T1
+  arma_aligned       out_eT aux_out_eT;   //!< storage of auxiliary data, using the element type as specified by the out_eT template parameter
+  arma_aligned       uword  aux_uword_a;  //!< storage of auxiliary data, uword format
+  arma_aligned       uword  aux_uword_b;  //!< storage of auxiliary data, uword format
+  arma_aligned       uword  aux_uword_c;  //!< storage of auxiliary data, uword format
   
   };
 

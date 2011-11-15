@@ -22,23 +22,23 @@ class op_dot
   public:
   
   template<typename eT>
-  arma_hot arma_pure inline static eT direct_dot_arma(const u32 n_elem, const eT* const A, const eT* const B);
+  arma_hot arma_pure inline static eT direct_dot_arma(const uword n_elem, const eT* const A, const eT* const B);
   
   template<typename eT>
   arma_hot arma_pure inline static typename arma_float_only<eT>::result
-  direct_dot(const u32 n_elem, const eT* const A, const eT* const B);
+  direct_dot(const uword n_elem, const eT* const A, const eT* const B);
   
   template<typename eT>
   arma_hot arma_pure inline static typename arma_cx_only<eT>::result
-  direct_dot(const u32 n_elem, const eT* const A, const eT* const B);
+  direct_dot(const uword n_elem, const eT* const A, const eT* const B);
   
   template<typename eT>
   arma_hot arma_pure inline static typename arma_integral_only<eT>::result
-  direct_dot(const u32 n_elem, const eT* const A, const eT* const B);
+  direct_dot(const uword n_elem, const eT* const A, const eT* const B);
   
   
   template<typename eT>
-  arma_hot arma_pure inline static eT direct_dot(const u32 n_elem, const eT* const A, const eT* const B, const eT* C);
+  arma_hot arma_pure inline static eT direct_dot(const uword n_elem, const eT* const A, const eT* const B, const eT* C);
   
   template<typename T1, typename T2>
   arma_hot arma_inline static typename T1::elem_type apply(const Base<typename T1::elem_type,T1>& X, const Base<typename T1::elem_type,T2>& Y);

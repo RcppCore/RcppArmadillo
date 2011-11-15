@@ -27,13 +27,13 @@ class subview_elem1 : public Base<eT, subview_elem1<eT,T1> >
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  arma_aligned const Base<u32,T1>& a;
+  arma_aligned const Base<uword,T1>& a;
   
   
   protected:
   
-  arma_inline subview_elem1(const Mat<eT>& in_m, const Base<u32,T1>& in_a);
-  arma_inline subview_elem1(      Mat<eT>& in_m, const Base<u32,T1>& in_a);
+  arma_inline subview_elem1(const Mat<eT>& in_m, const Base<uword,T1>& in_a);
+  arma_inline subview_elem1(      Mat<eT>& in_m, const Base<uword,T1>& in_a);
   
   
   public:

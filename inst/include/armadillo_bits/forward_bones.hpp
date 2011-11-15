@@ -72,9 +72,18 @@ class op_rel_gteq_post;
 class op_rel_eq;
 class op_rel_noteq;
 
+class gen_ones_diag;
+class gen_ones_full;
+class gen_zeros;
+class gen_randu;
+class gen_randn;
+
+
 template<const bool, const bool, const bool, const bool> class gemm;
 template<const bool, const bool, const bool>             class gemv;
 
+
+template<                 typename eT, typename gen_type> class  Gen; 
 
 template<                 typename T1, typename  op_type> class   Op; 
 template<                 typename T1, typename eop_type> class  eOp;
@@ -84,6 +93,9 @@ template<                 typename T1, typename T2, typename  glue_type> class  
 template<                 typename T1, typename T2, typename eglue_type> class  eGlue;
 template<typename out_eT, typename T1, typename T2, typename  glue_type> class mtGlue;
 
+
+
+template<                 typename eT, typename gen_type> class  GenCube; 
 
 template<                 typename T1, typename  op_type> class   OpCube; 
 template<                 typename T1, typename eop_type> class  eOpCube; 

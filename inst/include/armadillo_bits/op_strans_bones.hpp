@@ -21,12 +21,12 @@ class op_strans
   {
   public:
   
-  template<const bool do_flip, const u32 row, const u32 col>
+  template<const bool do_flip, const uword row, const uword col>
   struct pos
     {
-    static const u32 n2 = (do_flip == false) ? (row + col*2) : (col + row*2);
-    static const u32 n3 = (do_flip == false) ? (row + col*3) : (col + row*3);
-    static const u32 n4 = (do_flip == false) ? (row + col*4) : (col + row*4);
+    static const uword n2 = (do_flip == false) ? (row + col*2) : (col + row*2);
+    static const uword n3 = (do_flip == false) ? (row + col*3) : (col + row*3);
+    static const uword n4 = (do_flip == false) ? (row + col*4) : (col + row*4);
     };
   
   template<typename eT>

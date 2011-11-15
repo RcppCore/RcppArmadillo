@@ -180,7 +180,7 @@ running_stat_vec<eT>::mean() const
 template<typename eT>
 inline
 const Mat<typename get_pod_type<eT>::result>&
-running_stat_vec<eT>::var(const u32 norm_type)
+running_stat_vec<eT>::var(const uword norm_type)
   {
   arma_extra_debug_sigprint();
   
@@ -216,7 +216,7 @@ running_stat_vec<eT>::var(const u32 norm_type)
 template<typename eT>
 inline
 Mat<typename get_pod_type<eT>::result>
-running_stat_vec<eT>::stddev(const u32 norm_type) const
+running_stat_vec<eT>::stddev(const uword norm_type) const
   {
   arma_extra_debug_sigprint();
   
@@ -247,7 +247,7 @@ running_stat_vec<eT>::stddev(const u32 norm_type) const
 template<typename eT>
 inline
 const Mat<eT>&
-running_stat_vec<eT>::cov(const u32 norm_type)
+running_stat_vec<eT>::cov(const uword norm_type)
   {
   arma_extra_debug_sigprint();
   
@@ -347,7 +347,7 @@ running_stat_vec_aux::update_stats(running_stat_vec<eT>& x, const Mat<eT>& sampl
     {
     arma_debug_assert_same_size(x.r_mean, sample, "running_stat_vec(): dimensionality mismatch");
     
-    const u32 n_elem      = sample.n_elem;
+    const uword n_elem      = sample.n_elem;
     const eT* sample_mem  = sample.memptr();
           eT* r_mean_mem  = x.r_mean.memptr();
            T* r_var_mem   = x.r_var.memptr();
@@ -378,7 +378,7 @@ running_stat_vec_aux::update_stats(running_stat_vec<eT>& x, const Mat<eT>& sampl
       }
     
     
-    for(u32 i=0; i<n_elem; ++i)
+    for(uword i=0; i<n_elem; ++i)
       {
       const eT val = sample_mem[i];
       
@@ -417,14 +417,14 @@ running_stat_vec_aux::update_stats(running_stat_vec<eT>& x, const Mat<eT>& sampl
     x.max_val.set_size(sample.n_rows, sample.n_cols);
     
     
-    const u32 n_elem      = sample.n_elem;
+    const uword n_elem      = sample.n_elem;
     const eT* sample_mem  = sample.memptr();
           eT* r_mean_mem  = x.r_mean.memptr();
           eT* min_val_mem = x.min_val.memptr();
           eT* max_val_mem = x.max_val.memptr();
           
     
-    for(u32 i=0; i<n_elem; ++i)
+    for(uword i=0; i<n_elem; ++i)
       {
       const eT val = sample_mem[i];
       
@@ -470,7 +470,7 @@ running_stat_vec_aux::update_stats(running_stat_vec< std::complex<T> >& x, const
     {
     arma_debug_assert_same_size(x.r_mean, sample, "running_stat_vec(): dimensionality mismatch");
     
-    const u32 n_elem           = sample.n_elem;
+    const uword n_elem           = sample.n_elem;
     const eT* sample_mem       = sample.memptr();
           eT* r_mean_mem       = x.r_mean.memptr();
            T* r_var_mem        = x.r_var.memptr();
@@ -491,7 +491,7 @@ running_stat_vec_aux::update_stats(running_stat_vec< std::complex<T> >& x, const
       
       if(sample.n_cols == 1)
         {
-        tmp2 = conj(tmp1)*strans(tmp1);
+        tmp2 = arma::conj(tmp1)*strans(tmp1);
         }
       else
         {
@@ -503,7 +503,7 @@ running_stat_vec_aux::update_stats(running_stat_vec< std::complex<T> >& x, const
       }
     
     
-    for(u32 i=0; i<n_elem; ++i)
+    for(uword i=0; i<n_elem; ++i)
       {
       const eT& val      = sample_mem[i];
       const  T  val_norm = std::norm(val);
@@ -548,7 +548,7 @@ running_stat_vec_aux::update_stats(running_stat_vec< std::complex<T> >& x, const
     x.max_val_norm.set_size(sample.n_rows, sample.n_cols);
     
     
-    const u32 n_elem           = sample.n_elem;
+    const uword n_elem           = sample.n_elem;
     const eT* sample_mem       = sample.memptr();
           eT* r_mean_mem       = x.r_mean.memptr();
           eT* min_val_mem      = x.min_val.memptr();
@@ -556,7 +556,7 @@ running_stat_vec_aux::update_stats(running_stat_vec< std::complex<T> >& x, const
            T* min_val_norm_mem = x.min_val_norm.memptr();
            T* max_val_norm_mem = x.max_val_norm.memptr();
     
-    for(u32 i=0; i<n_elem; ++i)
+    for(uword i=0; i<n_elem; ++i)
       {
       const eT& val      = sample_mem[i];
       const  T  val_norm = std::norm(val);

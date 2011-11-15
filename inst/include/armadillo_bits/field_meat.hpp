@@ -118,7 +118,7 @@ field<oT>::operator=(const subview_field<oT>& X)
 //! assuming a column-major layout
 template<typename oT>
 inline
-field<oT>::field(const u32 n_elem_in)
+field<oT>::field(const uword n_elem_in)
   : n_rows(0)
   , n_cols(0)
   , n_elem(0)
@@ -134,7 +134,7 @@ field<oT>::field(const u32 n_elem_in)
 //! construct the field with the specified dimensions
 template<typename oT>
 inline
-field<oT>::field(const u32 n_rows_in, const u32 n_cols_in)
+field<oT>::field(const uword n_rows_in, const uword n_cols_in)
   : n_rows(0)
   , n_cols(0)
   , n_elem(0)
@@ -152,7 +152,7 @@ field<oT>::field(const u32 n_rows_in, const u32 n_cols_in)
 template<typename oT>
 inline
 void
-field<oT>::set_size(const u32 n_elem_in)
+field<oT>::set_size(const uword n_elem_in)
   {
   arma_extra_debug_sigprint(arma_boost::format("n_elem_in = %d") % n_elem_in);
   
@@ -165,7 +165,7 @@ field<oT>::set_size(const u32 n_elem_in)
 template<typename oT>
 inline
 void
-field<oT>::set_size(const u32 n_rows_in, const u32 n_cols_in)
+field<oT>::set_size(const uword n_rows_in, const uword n_cols_in)
   {
   arma_extra_debug_sigprint(arma_boost::format("n_rows_in = %d, n_cols_in = %d") % n_rows_in % n_cols_in);
   
@@ -192,7 +192,7 @@ field<oT>::copy_size(const field<oT2>& x)
 template<typename oT>
 arma_inline
 oT&
-field<oT>::operator[] (const u32 i)
+field<oT>::operator[] (const uword i)
   {
   return (*mem[i]);
   }
@@ -203,7 +203,7 @@ field<oT>::operator[] (const u32 i)
 template<typename oT>
 arma_inline
 const oT&
-field<oT>::operator[] (const u32 i) const
+field<oT>::operator[] (const uword i) const
   {
   return (*mem[i]);
   }
@@ -214,7 +214,7 @@ field<oT>::operator[] (const u32 i) const
 template<typename oT>
 arma_inline
 oT&
-field<oT>::at(const u32 i)
+field<oT>::at(const uword i)
   {
   return (*mem[i]);
   }
@@ -225,7 +225,7 @@ field<oT>::at(const u32 i)
 template<typename oT>
 arma_inline
 const oT&
-field<oT>::at(const u32 i) const
+field<oT>::at(const uword i) const
   {
   return (*mem[i]);
   }
@@ -236,7 +236,7 @@ field<oT>::at(const u32 i) const
 template<typename oT>
 arma_inline
 oT&
-field<oT>::operator() (const u32 i)
+field<oT>::operator() (const uword i)
   {
   arma_debug_check( (i >= n_elem), "field::operator(): index out of bounds");
   return (*mem[i]);
@@ -248,7 +248,7 @@ field<oT>::operator() (const u32 i)
 template<typename oT>
 arma_inline
 const oT&
-field<oT>::operator() (const u32 i) const
+field<oT>::operator() (const uword i) const
   {
   arma_debug_check( (i >= n_elem), "field::operator(): index out of bounds");
   return (*mem[i]);
@@ -260,7 +260,7 @@ field<oT>::operator() (const u32 i) const
 template<typename oT>
 arma_inline
 oT&
-field<oT>::operator() (const u32 in_row, const u32 in_col)
+field<oT>::operator() (const uword in_row, const uword in_col)
   {
   arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols)), "field::operator(): index out of bounds");
   return (*mem[in_row + in_col*n_rows]);
@@ -272,7 +272,7 @@ field<oT>::operator() (const u32 in_row, const u32 in_col)
 template<typename oT>
 arma_inline
 const oT&
-field<oT>::operator() (const u32 in_row, const u32 in_col) const
+field<oT>::operator() (const uword in_row, const uword in_col) const
   {
   arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols)), "field::operator(): index out of bounds");
   return (*mem[in_row + in_col*n_rows]);
@@ -284,7 +284,7 @@ field<oT>::operator() (const u32 in_row, const u32 in_col) const
 template<typename oT>
 arma_inline
 oT&
-field<oT>::at(const u32 in_row, const u32 in_col)
+field<oT>::at(const uword in_row, const uword in_col)
   {
   return (*mem[in_row + in_col*n_rows]);
   }
@@ -295,7 +295,7 @@ field<oT>::at(const u32 in_row, const u32 in_col)
 template<typename oT>
 arma_inline
 const oT&
-field<oT>::at(const u32 in_row, const u32 in_col) const
+field<oT>::at(const uword in_row, const uword in_col) const
   {
   return (*mem[in_row + in_col*n_rows]);
   }
@@ -326,7 +326,7 @@ field<oT>::operator<<(const injector_end_of_row& x)
 template<typename oT>
 inline
 subview_field<oT>
-field<oT>::row(const u32 row_num)
+field<oT>::row(const uword row_num)
   {
   arma_extra_debug_sigprint();
   
@@ -341,7 +341,7 @@ field<oT>::row(const u32 row_num)
 template<typename oT>
 inline
 const subview_field<oT>
-field<oT>::row(const u32 row_num) const
+field<oT>::row(const uword row_num) const
   {
   arma_extra_debug_sigprint();
   
@@ -356,7 +356,7 @@ field<oT>::row(const u32 row_num) const
 template<typename oT>
 inline
 subview_field<oT>
-field<oT>::col(const u32 col_num)
+field<oT>::col(const uword col_num)
   {
   arma_extra_debug_sigprint();
   
@@ -371,7 +371,7 @@ field<oT>::col(const u32 col_num)
 template<typename oT>
 inline
 const subview_field<oT>
-field<oT>::col(const u32 col_num) const
+field<oT>::col(const uword col_num) const
   {
   arma_extra_debug_sigprint();
   
@@ -386,7 +386,7 @@ field<oT>::col(const u32 col_num) const
 template<typename oT>
 inline
 subview_field<oT>
-field<oT>::rows(const u32 in_row1, const u32 in_row2)
+field<oT>::rows(const uword in_row1, const uword in_row2)
   {
   arma_extra_debug_sigprint();
   
@@ -396,7 +396,7 @@ field<oT>::rows(const u32 in_row1, const u32 in_row2)
     "field::rows(): indicies out of bounds or incorrectly used"
     );
   
-  const u32 sub_n_rows = in_row2 - in_row1 + 1;
+  const uword sub_n_rows = in_row2 - in_row1 + 1;
   
   return subview_field<oT>(*this, in_row1, 0, sub_n_rows, n_cols);
   }
@@ -407,7 +407,7 @@ field<oT>::rows(const u32 in_row1, const u32 in_row2)
 template<typename oT>
 inline
 const subview_field<oT>
-field<oT>::rows(const u32 in_row1, const u32 in_row2) const
+field<oT>::rows(const uword in_row1, const uword in_row2) const
   {
   arma_extra_debug_sigprint();
   
@@ -417,7 +417,7 @@ field<oT>::rows(const u32 in_row1, const u32 in_row2) const
     "field::rows(): indicies out of bounds or incorrectly used"
     );
   
-  const u32 sub_n_rows = in_row2 - in_row1 + 1;
+  const uword sub_n_rows = in_row2 - in_row1 + 1;
   
   return subview_field<oT>(*this, in_row1, 0, sub_n_rows, n_cols);
   }
@@ -428,7 +428,7 @@ field<oT>::rows(const u32 in_row1, const u32 in_row2) const
 template<typename oT>
 inline
 subview_field<oT>
-field<oT>::cols(const u32 in_col1, const u32 in_col2)
+field<oT>::cols(const uword in_col1, const uword in_col2)
   {
   arma_extra_debug_sigprint();
   
@@ -438,7 +438,7 @@ field<oT>::cols(const u32 in_col1, const u32 in_col2)
     "field::cols(): indicies out of bounds or incorrectly used"
     );
   
-  const u32 sub_n_cols = in_col2 - in_col1 + 1;
+  const uword sub_n_cols = in_col2 - in_col1 + 1;
   
   return subview_field<oT>(*this, 0, in_col1, n_rows, sub_n_cols);
   }
@@ -449,7 +449,7 @@ field<oT>::cols(const u32 in_col1, const u32 in_col2)
 template<typename oT>
 inline
 const subview_field<oT>
-field<oT>::cols(const u32 in_col1, const u32 in_col2) const
+field<oT>::cols(const uword in_col1, const uword in_col2) const
   {
   arma_extra_debug_sigprint();
   
@@ -459,7 +459,7 @@ field<oT>::cols(const u32 in_col1, const u32 in_col2) const
     "field::cols(): indicies out of bounds or incorrectly used"
     );
   
-  const u32 sub_n_cols = in_col2 - in_col1 + 1;
+  const uword sub_n_cols = in_col2 - in_col1 + 1;
   
   return subview_field<oT>(*this, 0, in_col1, n_rows, sub_n_cols);
   }
@@ -470,7 +470,7 @@ field<oT>::cols(const u32 in_col1, const u32 in_col2) const
 template<typename oT>
 inline
 subview_field<oT>
-field<oT>::subfield(const u32 in_row1, const u32 in_col1, const u32 in_row2, const u32 in_col2)
+field<oT>::subfield(const uword in_row1, const uword in_col1, const uword in_row2, const uword in_col2)
   {
   arma_extra_debug_sigprint();
   
@@ -480,8 +480,8 @@ field<oT>::subfield(const u32 in_row1, const u32 in_col1, const u32 in_row2, con
     "field::subfield(): indices out of bounds or incorrectly used"
     );
   
-  const u32 sub_n_rows = in_row2 - in_row1 + 1;
-  const u32 sub_n_cols = in_col2 - in_col1 + 1;
+  const uword sub_n_rows = in_row2 - in_row1 + 1;
+  const uword sub_n_cols = in_col2 - in_col1 + 1;
   
   return subview_field<oT>(*this, in_row1, in_col1, sub_n_rows, sub_n_cols);
   }
@@ -492,7 +492,7 @@ field<oT>::subfield(const u32 in_row1, const u32 in_col1, const u32 in_row2, con
 template<typename oT>
 inline
 const subview_field<oT>
-field<oT>::subfield(const u32 in_row1, const u32 in_col1, const u32 in_row2, const u32 in_col2) const
+field<oT>::subfield(const uword in_row1, const uword in_col1, const uword in_row2, const uword in_col2) const
   {
   arma_extra_debug_sigprint();
   
@@ -502,8 +502,8 @@ field<oT>::subfield(const u32 in_row1, const u32 in_col1, const u32 in_row2, con
     "field::subfield(): indices out of bounds or incorrectly used"
     );
   
-  const u32 sub_n_rows = in_row2 - in_row1 + 1;
-  const u32 sub_n_cols = in_col2 - in_col1 + 1;
+  const uword sub_n_rows = in_row2 - in_row1 + 1;
+  const uword sub_n_cols = in_col2 - in_col1 + 1;
   
   return subview_field<oT>(*this, in_row1, in_col1, sub_n_rows, sub_n_cols);
   }
@@ -521,16 +521,16 @@ field<oT>::subfield(const span& row_span, const span& col_span)
   const bool row_all = row_span.whole;
   const bool col_all = col_span.whole;
   
-  const u32 local_n_rows = n_rows;
-  const u32 local_n_cols = n_cols;
+  const uword local_n_rows = n_rows;
+  const uword local_n_cols = n_cols;
   
-  const u32 in_row1    = row_all ? 0            : row_span.a;
-  const u32 in_row2    =                          row_span.b;
-  const u32 sub_n_rows = row_all ? local_n_rows : in_row2 - in_row1 + 1;
+  const uword in_row1    = row_all ? 0            : row_span.a;
+  const uword in_row2    =                          row_span.b;
+  const uword sub_n_rows = row_all ? local_n_rows : in_row2 - in_row1 + 1;
   
-  const u32 in_col1    = col_all ? 0            : col_span.a;
-  const u32 in_col2    =                          col_span.b;
-  const u32 sub_n_cols = col_all ? local_n_cols : in_col2 - in_col1 + 1;
+  const uword in_col1    = col_all ? 0            : col_span.a;
+  const uword in_col2    =                          col_span.b;
+  const uword sub_n_cols = col_all ? local_n_cols : in_col2 - in_col1 + 1;
   
   arma_debug_check
     (
@@ -557,16 +557,16 @@ field<oT>::subfield(const span& row_span, const span& col_span) const
   const bool row_all = row_span.whole;
   const bool col_all = col_span.whole;
   
-  const u32 local_n_rows = n_rows;
-  const u32 local_n_cols = n_cols;
+  const uword local_n_rows = n_rows;
+  const uword local_n_cols = n_cols;
   
-  const u32 in_row1    = row_all ? 0            : row_span.a;
-  const u32 in_row2    =                          row_span.b;
-  const u32 sub_n_rows = row_all ? local_n_rows : in_row2 - in_row1 + 1;
+  const uword in_row1    = row_all ? 0            : row_span.a;
+  const uword in_row2    =                          row_span.b;
+  const uword sub_n_rows = row_all ? local_n_rows : in_row2 - in_row1 + 1;
   
-  const u32 in_col1    = col_all ? 0            : col_span.a;
-  const u32 in_col2    =                          col_span.b;
-  const u32 sub_n_cols = col_all ? local_n_cols : in_col2 - in_col1 + 1;
+  const uword in_col1    = col_all ? 0            : col_span.a;
+  const uword in_col2    =                          col_span.b;
+  const uword sub_n_cols = col_all ? local_n_cols : in_col2 - in_col1 + 1;
   
   arma_debug_check
     (
@@ -676,7 +676,7 @@ field<oT>::fill(const oT& x)
   
   field<oT>& t = *this;
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     t[i] = x;
     }
@@ -726,7 +726,7 @@ template<typename oT>
 arma_inline
 arma_warn_unused
 bool
-field<oT>::in_range(const u32 i) const
+field<oT>::in_range(const uword i) const
   {
   return (i < n_elem);
   }
@@ -748,8 +748,8 @@ field<oT>::in_range(const span& x) const
     }
   else
     {
-    const u32 a = x.a;
-    const u32 b = x.b;
+    const uword a = x.a;
+    const uword b = x.b;
     
     return ( (a <= b) && (b < n_elem) );
     }
@@ -762,7 +762,7 @@ template<typename oT>
 arma_inline
 arma_warn_unused
 bool
-field<oT>::in_range(const u32 in_row, const u32 in_col) const
+field<oT>::in_range(const uword in_row, const uword in_col) const
   {
   return ( (in_row < n_rows) && (in_col < n_cols) );
   }
@@ -773,7 +773,7 @@ template<typename oT>
 arma_inline
 arma_warn_unused
 bool
-field<oT>::in_range(const span& row_span, const u32 in_col) const
+field<oT>::in_range(const span& row_span, const uword in_col) const
   {
   arma_extra_debug_sigprint();
   
@@ -783,8 +783,8 @@ field<oT>::in_range(const span& row_span, const u32 in_col) const
     }
   else
     {
-    const u32 in_row1 = row_span.a;
-    const u32 in_row2 = row_span.b;
+    const uword in_row1 = row_span.a;
+    const uword in_row2 = row_span.b;
     
     return ( (in_row1 <= in_row2) && (in_row2 < n_rows) && (in_col < n_cols) );
     }
@@ -796,7 +796,7 @@ template<typename oT>
 arma_inline
 arma_warn_unused
 bool
-field<oT>::in_range(const u32 in_row, const span& col_span) const
+field<oT>::in_range(const uword in_row, const span& col_span) const
   {
   arma_extra_debug_sigprint();
   
@@ -806,8 +806,8 @@ field<oT>::in_range(const u32 in_row, const span& col_span) const
     }
   else
     {
-    const u32 in_col1 = col_span.a;
-    const u32 in_col2 = col_span.b;
+    const uword in_col1 = col_span.a;
+    const uword in_col2 = col_span.b;
   
     return ( (in_row < n_rows) && (in_col1 <= in_col2) && (in_col2 < n_cols) );
     }
@@ -823,11 +823,11 @@ field<oT>::in_range(const span& row_span, const span& col_span) const
   {
   arma_extra_debug_sigprint();
   
-  const u32 in_row1 = row_span.a;
-  const u32 in_row2 = row_span.b;
+  const uword in_row1 = row_span.a;
+  const uword in_row2 = row_span.b;
   
-  const u32 in_col1 = col_span.a;
-  const u32 in_col2 = col_span.b;
+  const uword in_col1 = col_span.a;
+  const uword in_col2 = col_span.b;
   
   const bool rows_ok = row_span.whole ? true : ( (in_row1 <= in_row2) && (in_row2 < n_rows) );
   const bool cols_ok = col_span.whole ? true : ( (in_col1 <= in_col2) && (in_col2 < n_cols) );
@@ -1017,8 +1017,8 @@ field<oT>::init(const field<oT>& x)
     
     field& t = *this;
     
-    for(u32 col=0; col<x.n_cols; ++col)
-    for(u32 row=0; row<x.n_rows; ++row)
+    for(uword col=0; col<x.n_cols; ++col)
+    for(uword row=0; row<x.n_rows; ++row)
       {
       t.at(row,col) = x.at(row,col);
       }
@@ -1032,11 +1032,11 @@ field<oT>::init(const field<oT>& x)
 template<typename oT>
 inline
 void
-field<oT>::init(const u32 n_rows_in, const u32 n_cols_in)
+field<oT>::init(const uword n_rows_in, const uword n_cols_in)
   {
   arma_extra_debug_sigprint( arma_boost::format("n_rows_in = %d, n_cols_in = %d") % n_rows_in % n_cols_in );
   
-  const u32 n_elem_new = n_rows_in * n_cols_in;
+  const uword n_elem_new = n_rows_in * n_cols_in;
 
   if(n_elem == n_elem_new)
     {
@@ -1092,7 +1092,7 @@ field<oT>::delete_objects()
   {
   arma_extra_debug_sigprint( arma_boost::format("n_elem = %d") % n_elem );
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     if(mem[i] != 0)
       {
@@ -1112,7 +1112,7 @@ field<oT>::create_objects()
   {
   arma_extra_debug_sigprint( arma_boost::format("n_elem = %d") % n_elem );
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     mem[i] = new oT;
     }
@@ -1382,7 +1382,7 @@ field_aux::reset_objects(field< Mat<eT> >& x)
   {
   arma_extra_debug_sigprint();
   
-  for(u32 i=0; i<x.n_elem; ++i)
+  for(uword i=0; i<x.n_elem; ++i)
     {
     (*(x.mem[i])).reset();
     }
@@ -1397,7 +1397,7 @@ field_aux::reset_objects(field< Col<eT> >& x)
   {
   arma_extra_debug_sigprint();
   
-  for(u32 i=0; i<x.n_elem; ++i)
+  for(uword i=0; i<x.n_elem; ++i)
     {
     (*(x.mem[i])).reset();
     }
@@ -1412,7 +1412,7 @@ field_aux::reset_objects(field< Row<eT> >& x)
   {
   arma_extra_debug_sigprint();
   
-  for(u32 i=0; i<x.n_elem; ++i)
+  for(uword i=0; i<x.n_elem; ++i)
     {
     (*(x.mem[i])).reset();
     }
@@ -1427,7 +1427,7 @@ field_aux::reset_objects(field< Cube<eT> >& x)
   {
   arma_extra_debug_sigprint();
   
-  for(u32 i=0; i<x.n_elem; ++i)
+  for(uword i=0; i<x.n_elem; ++i)
     {
     (*(x.mem[i])).reset();
     }
@@ -1441,7 +1441,7 @@ field_aux::reset_objects(field< std::string >& x)
   {
   arma_extra_debug_sigprint();
   
-  for(u32 i=0; i<x.n_elem; ++i)
+  for(uword i=0; i<x.n_elem; ++i)
     {
     (*(x.mem[i])).clear();
     }

@@ -24,7 +24,7 @@
 template<typename T1>
 arma_inline
 const Op<T1, op_min>
-min(const Base<typename T1::elem_type,T1>& X, const u32 dim = 0)
+min(const Base<typename T1::elem_type,T1>& X, const uword dim = 0)
   {
   arma_extra_debug_sigprint();
   
@@ -41,7 +41,7 @@ min(const Row<eT>& A)
   {
   arma_extra_debug_sigprint();
   
-  const u32 A_n_elem = A.n_elem;
+  const uword A_n_elem = A.n_elem;
   
   arma_debug_check( (A_n_elem == 0), "min(): given object has no elements" );
   
@@ -59,7 +59,7 @@ min(const Col<eT>& A)
   {
   arma_extra_debug_sigprint();
   
-  const u32 A_n_elem = A.n_elem;
+  const uword A_n_elem = A.n_elem;
   
   arma_debug_check( (A_n_elem == 0), "min(): given object has no elements" );
   
@@ -85,7 +85,7 @@ min(const Op<T1, op_min>& in)
   const unwrap<T1> tmp1(in.m);
   const Mat<eT>& X = tmp1.M;
   
-  const u32 X_n_elem = X.n_elem;
+  const uword X_n_elem = X.n_elem;
   
   arma_debug_check( (X_n_elem == 0), "min(): given object has no elements" );
   
@@ -97,7 +97,7 @@ min(const Op<T1, op_min>& in)
 template<typename T1>
 inline
 const Op< Op<T1, op_min>, op_min>
-min(const Op<T1, op_min>& in, const u32 dim)
+min(const Op<T1, op_min>& in, const uword dim)
   {
   arma_extra_debug_sigprint();
   
@@ -179,7 +179,7 @@ min(const subview_elem1<eT,T1>& A)
   
   const Mat<eT> X(A);
   
-  const u32 X_n_elem = X.n_elem;
+  const uword X_n_elem = X.n_elem;
   
   arma_debug_check( (X_n_elem == 0), "min(): given object has no elements" );
   

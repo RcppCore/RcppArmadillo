@@ -21,8 +21,8 @@
 
 template<typename eT, typename T1>
 inline
-const mtOp<u32, T1, op_find>
-find(const Base<eT,T1>& X, const u32 k = 0, const char* direction = "first")
+const mtOp<uword, T1, op_find>
+find(const Base<eT,T1>& X, const uword k = 0, const char* direction = "first")
   {
   arma_extra_debug_sigprint();
   
@@ -34,9 +34,9 @@ find(const Base<eT,T1>& X, const u32 k = 0, const char* direction = "first")
     "find(): 3rd input argument must be \"first\" or \"last\""
     );
   
-  const u32 type = (sig == 'f' || sig == 'F') ? 0 : 1;
+  const uword type = (sig == 'f' || sig == 'F') ? 0 : 1;
   
-  return mtOp<u32, T1, op_find>(X.get_ref(), k, type);
+  return mtOp<uword, T1, op_find>(X.get_ref(), k, type);
   }
 
 
@@ -97,28 +97,28 @@ real(const BaseCube<std::complex<typename T1::pod_type>, T1>& X)
 
 template<typename T1>
 inline
-const eOp<Mat<typename T1::pod_type>, eop_zeros>
+const Gen<typename T1::pod_type, gen_zeros>
 imag(const Base<typename T1::pod_type,T1>& X)
   {
   arma_extra_debug_sigprint();
   
   const Proxy<T1> A(X.get_ref());
   
-  return eOp<Mat<typename T1::pod_type>, eop_zeros>(A.get_n_rows(), A.get_n_cols());
+  return Gen<typename T1::pod_type, gen_zeros>(A.get_n_rows(), A.get_n_cols());
   }
 
 
 
 template<typename T1>
 inline
-const eOpCube<Cube<typename T1::pod_type>, eop_zeros>
+const GenCube<typename T1::pod_type, gen_zeros>
 imag(const BaseCube<typename T1::pod_type,T1>& X)
   {
   arma_extra_debug_sigprint();
   
   const ProxyCube<T1> A(X.get_ref());
   
-  return eOpCube<Cube<typename T1::pod_type>, eop_zeros>(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
+  return GenCube<typename T1::pod_type, gen_zeros>(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
   }
 
 

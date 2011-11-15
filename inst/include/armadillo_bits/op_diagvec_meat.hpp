@@ -25,7 +25,7 @@ op_diagvec::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_diagvec>& X)
   
   typedef typename T1::elem_type eT;
   
-  const s32 id = (X.aux_u32_b > 0) ? -s32(X.aux_u32_a) : s32(X.aux_u32_a);
+  const sword id = (X.aux_uword_b > 0) ? -sword(X.aux_uword_a) : sword(X.aux_uword_a);
   
   const unwrap_check<T1> tmp(X.m, out);
   const Mat<eT>& A     = tmp.M;

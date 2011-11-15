@@ -86,9 +86,9 @@ glue_mixed_plus::apply(Mat<typename eT_promoter<T1,T2>::eT>& out, const mtGlue<t
   out.set_size(A.get_n_rows(), A.get_n_cols());
   
         out_eT* out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
+  const uword     n_elem  = out.n_elem;
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = upgrade_val<eT1,eT2>::apply(A[i]) + upgrade_val<eT1,eT2>::apply(B[i]);
     }
@@ -119,9 +119,9 @@ glue_mixed_minus::apply(Mat<typename eT_promoter<T1,T2>::eT>& out, const mtGlue<
   out.set_size(A.get_n_rows(), A.get_n_cols());
   
         out_eT* out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
+  const uword     n_elem  = out.n_elem;
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = upgrade_val<eT1,eT2>::apply(A[i]) - upgrade_val<eT1,eT2>::apply(B[i]);
     }
@@ -152,9 +152,9 @@ glue_mixed_div::apply(Mat<typename eT_promoter<T1,T2>::eT>& out, const mtGlue<ty
   out.set_size(A.get_n_rows(), A.get_n_cols());
   
         out_eT* out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
+  const uword     n_elem  = out.n_elem;
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = upgrade_val<eT1,eT2>::apply(A[i]) / upgrade_val<eT1,eT2>::apply(B[i]);
     }
@@ -185,9 +185,9 @@ glue_mixed_schur::apply(Mat<typename eT_promoter<T1,T2>::eT>& out, const mtGlue<
   out.set_size(A.get_n_rows(), A.get_n_cols());
   
         out_eT* out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
+  const uword     n_elem  = out.n_elem;
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = upgrade_val<eT1,eT2>::apply(A[i]) * upgrade_val<eT1,eT2>::apply(B[i]);
     }
@@ -224,9 +224,9 @@ glue_mixed_plus::apply(Cube<typename eT_promoter<T1,T2>::eT>& out, const mtGlueC
   out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
   
         out_eT* out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
+  const uword     n_elem  = out.n_elem;
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = upgrade_val<eT1,eT2>::apply(A[i]) + upgrade_val<eT1,eT2>::apply(B[i]);
     }
@@ -257,9 +257,9 @@ glue_mixed_minus::apply(Cube<typename eT_promoter<T1,T2>::eT>& out, const mtGlue
   out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
   
         out_eT* out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
+  const uword     n_elem  = out.n_elem;
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = upgrade_val<eT1,eT2>::apply(A[i]) - upgrade_val<eT1,eT2>::apply(B[i]);
     }
@@ -290,9 +290,9 @@ glue_mixed_div::apply(Cube<typename eT_promoter<T1,T2>::eT>& out, const mtGlueCu
   out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
   
         out_eT* out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
+  const uword     n_elem  = out.n_elem;
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = upgrade_val<eT1,eT2>::apply(A[i]) / upgrade_val<eT1,eT2>::apply(B[i]);
     }
@@ -323,9 +323,9 @@ glue_mixed_schur::apply(Cube<typename eT_promoter<T1,T2>::eT>& out, const mtGlue
   out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
   
         out_eT* out_mem = out.memptr();
-  const u32     n_elem  = out.n_elem;
+  const uword     n_elem  = out.n_elem;
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = upgrade_val<eT1,eT2>::apply(A[i]) * upgrade_val<eT1,eT2>::apply(B[i]);
     }

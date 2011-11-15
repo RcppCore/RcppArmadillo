@@ -22,20 +22,20 @@ class op_var
   public:
   
   template<typename eT>
-  inline static eT direct_var(const eT* const X, const u32 N, const u32 norm_type = 0);
+  inline static eT direct_var(const eT* const X, const uword N, const uword norm_type = 0);
   
   template<typename T>
-  inline static  T direct_var(const std::complex<T>* const X, const u32 N, const u32 norm_type = 0);
+  inline static  T direct_var(const std::complex<T>* const X, const uword N, const uword norm_type = 0);
   
   
   template<typename eT>
-  inline static typename get_pod_type<eT>::result direct_var(const subview_row<eT>& X, const u32 norm_type = 0);
+  inline static typename get_pod_type<eT>::result direct_var(const subview_row<eT>& X, const uword norm_type = 0);
   
   template<typename eT>
-  inline static typename get_pod_type<eT>::result direct_var(const subview_col<eT>& X, const u32 norm_type = 0);
+  inline static typename get_pod_type<eT>::result direct_var(const subview_col<eT>& X, const uword norm_type = 0);
   
   template<typename eT>
-  inline static typename get_pod_type<eT>::result direct_var(const diagview<eT>& X, const u32 norm_type = 0);
+  inline static typename get_pod_type<eT>::result direct_var(const diagview<eT>& X, const uword norm_type = 0);
   
   
   template<typename T1>
@@ -43,10 +43,10 @@ class op_var
   
   
   template<typename eT>
-  inline static eT direct_var_robust(const eT* const X, const u32 N, const u32 norm_type = 0);
+  inline static eT direct_var_robust(const eT* const X, const uword N, const uword norm_type = 0);
   
   template<typename T>
-  inline static  T direct_var_robust(const std::complex<T>* const X, const u32 N, const u32 norm_type = 0);
+  inline static  T direct_var_robust(const std::complex<T>* const X, const uword N, const uword norm_type = 0);
   };
 
 

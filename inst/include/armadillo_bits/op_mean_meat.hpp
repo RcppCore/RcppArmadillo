@@ -20,7 +20,7 @@ template<typename eT>
 arma_pure
 inline
 eT
-op_mean::direct_mean(const eT* const X, const u32 n_elem)
+op_mean::direct_mean(const eT* const X, const uword n_elem)
   {
   arma_extra_debug_sigprint();
   
@@ -36,17 +36,17 @@ op_mean::direct_mean(const eT* const X, const u32 n_elem)
 template<typename eT>
 inline
 eT
-op_mean::direct_mean(const Mat<eT>& X, const u32 row)
+op_mean::direct_mean(const Mat<eT>& X, const uword row)
   {
   arma_extra_debug_sigprint();
   
   typedef typename get_pod_type<eT>::result T;
   
-  const u32 X_n_cols = X.n_cols;
+  const uword X_n_cols = X.n_cols;
   
   eT val = eT(0);
   
-  for(u32 col=0; col<X_n_cols; ++col)
+  for(uword col=0; col<X_n_cols; ++col)
     {
     val += X.at(row,col);
     }
@@ -67,11 +67,11 @@ op_mean::direct_mean(const subview<eT>& X)
   
   typedef typename get_pod_type<eT>::result T;
   
-  const u32 X_n_elem = X.n_elem;
+  const uword X_n_elem = X.n_elem;
   
   eT val = eT(0);
   
-  for(u32 i=0; i<X_n_elem; ++i)
+  for(uword i=0; i<X_n_elem; ++i)
     {
     val += X[i];
     }
@@ -92,11 +92,11 @@ op_mean::direct_mean(const diagview<eT>& X)
   
   typedef typename get_pod_type<eT>::result T;
   
-  const u32 X_n_elem = X.n_elem;
+  const uword X_n_elem = X.n_elem;
   
   eT val = eT(0);
   
-  for(u32 i=0; i<X_n_elem; ++i)
+  for(uword i=0; i<X_n_elem; ++i)
     {
     val += X[i];
     }
@@ -125,11 +125,11 @@ op_mean::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_mean>& in)
   const unwrap_check<T1> tmp(in.m, out);
   const Mat<eT>& X = tmp.M;
   
-  const u32 dim = in.aux_u32_a;
+  const uword dim = in.aux_uword_a;
   arma_debug_check( (dim > 1), "mean(): incorrect usage. dim must be 0 or 1");
   
-  const u32 X_n_rows = X.n_rows;
-  const u32 X_n_cols = X.n_cols;
+  const uword X_n_rows = X.n_rows;
+  const uword X_n_cols = X.n_cols;
   
   if(dim == 0)
     {
@@ -141,7 +141,7 @@ op_mean::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_mean>& in)
       {
       eT* out_mem = out.memptr();
       
-      for(u32 col=0; col<X_n_cols; ++col)
+      for(uword col=0; col<X_n_cols; ++col)
         {
         out_mem[col] = op_mean::direct_mean( X.colptr(col), X_n_rows );
         }
@@ -158,7 +158,7 @@ op_mean::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_mean>& in)
       {
       eT* out_mem = out.memptr();
       
-      for(u32 row=0; row<X_n_rows; ++row)
+      for(uword row=0; row<X_n_rows; ++row)
         {
         out_mem[row] = op_mean::direct_mean( X, row );
         }
@@ -172,7 +172,7 @@ template<typename eT>
 arma_pure
 inline
 eT
-op_mean::direct_mean_robust(const eT* const X, const u32 n_elem)
+op_mean::direct_mean_robust(const eT* const X, const uword n_elem)
   {
   arma_extra_debug_sigprint();
   
@@ -180,7 +180,7 @@ op_mean::direct_mean_robust(const eT* const X, const u32 n_elem)
   
   typedef typename get_pod_type<eT>::result T;
   
-  u32 i,j;
+  uword i,j;
   
   eT r_mean = eT(0);
   
@@ -209,17 +209,17 @@ op_mean::direct_mean_robust(const eT* const X, const u32 n_elem)
 template<typename eT>
 inline
 eT
-op_mean::direct_mean_robust(const Mat<eT>& X, const u32 row)
+op_mean::direct_mean_robust(const Mat<eT>& X, const uword row)
   {
   arma_extra_debug_sigprint();
   
   typedef typename get_pod_type<eT>::result T;
   
-  const u32 X_n_cols = X.n_cols;
+  const uword X_n_cols = X.n_cols;
   
   eT r_mean = eT(0);
   
-  for(u32 col=0; col<X_n_cols; ++col)
+  for(uword col=0; col<X_n_cols; ++col)
     {
     r_mean = r_mean + (X.at(row,col) - r_mean)/T(col+1);
     }
@@ -238,11 +238,11 @@ op_mean::direct_mean_robust(const subview<eT>& X)
   
   typedef typename get_pod_type<eT>::result T;
   
-  const u32 X_n_elem = X.n_elem;
+  const uword X_n_elem = X.n_elem;
   
   eT r_mean = eT(0);
   
-  for(u32 i=0; i<X_n_elem; ++i)
+  for(uword i=0; i<X_n_elem; ++i)
     {
     r_mean = r_mean + (X[i] - r_mean)/T(i+1);
     }
@@ -261,11 +261,11 @@ op_mean::direct_mean_robust(const diagview<eT>& X)
   
   typedef typename get_pod_type<eT>::result T;
   
-  const u32 X_n_elem = X.n_elem;
+  const uword X_n_elem = X.n_elem;
   
   eT r_mean = eT(0);
   
-  for(u32 i=0; i<X_n_elem; ++i)
+  for(uword i=0; i<X_n_elem; ++i)
     {
     r_mean = r_mean + (X[i] - r_mean)/T(i+1);
     }

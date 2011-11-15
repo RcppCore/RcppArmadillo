@@ -16,7 +16,7 @@
 
 
 
-template<u32 N>
+template<uword N>
 struct as_scalar_redirect
   {
   template<typename T1>
@@ -42,7 +42,7 @@ struct as_scalar_redirect<3>
 
 
 
-template<u32 N>
+template<uword N>
 template<typename T1>
 inline
 typename T1::elem_type
@@ -80,11 +80,11 @@ as_scalar_redirect<2>::apply(const Glue<T1, T2, glue_times>& X)
   const Mat<eT>& A = tmp1.M;
   const Mat<eT>& B = tmp2.M;
   
-  const u32 A_n_rows = (tmp1.do_trans == false) ? A.n_rows : A.n_cols;
-  const u32 A_n_cols = (tmp1.do_trans == false) ? A.n_cols : A.n_rows;
+  const uword A_n_rows = (tmp1.do_trans == false) ? A.n_rows : A.n_cols;
+  const uword A_n_cols = (tmp1.do_trans == false) ? A.n_cols : A.n_rows;
   
-  const u32 B_n_rows = (tmp2.do_trans == false) ? B.n_rows : B.n_cols;
-  const u32 B_n_cols = (tmp2.do_trans == false) ? B.n_cols : B.n_rows;
+  const uword B_n_rows = (tmp2.do_trans == false) ? B.n_rows : B.n_cols;
+  const uword B_n_cols = (tmp2.do_trans == false) ? B.n_cols : B.n_rows;
   
   const eT val = tmp1.get_val() * tmp2.get_val();
   
@@ -134,16 +134,16 @@ as_scalar_redirect<3>::apply(const Glue< Glue<T1, T2, glue_times>, T3, glue_time
     const Mat<eT>& B = tmp2.M;
     const Mat<eT>& C = tmp3.M;
     
-    const u32 A_n_rows = (tmp1.do_trans == false) ? A.n_rows : A.n_cols;
-    const u32 A_n_cols = (tmp1.do_trans == false) ? A.n_cols : A.n_rows;
+    const uword A_n_rows = (tmp1.do_trans == false) ? A.n_rows : A.n_cols;
+    const uword A_n_cols = (tmp1.do_trans == false) ? A.n_cols : A.n_rows;
     
     const bool B_is_vec = B.is_vec();
     
-    const u32 B_n_rows = (B_is_vec == true) ? B.n_elem : ( (tmp2.do_trans == false) ? B.n_rows : B.n_cols );
-    const u32 B_n_cols = (B_is_vec == true) ? B.n_elem : ( (tmp2.do_trans == false) ? B.n_cols : B.n_rows );
+    const uword B_n_rows = (B_is_vec == true) ? B.n_elem : ( (tmp2.do_trans == false) ? B.n_rows : B.n_cols );
+    const uword B_n_cols = (B_is_vec == true) ? B.n_elem : ( (tmp2.do_trans == false) ? B.n_cols : B.n_rows );
     
-    const u32 C_n_rows = (tmp3.do_trans == false) ? C.n_rows : C.n_cols;
-    const u32 C_n_cols = (tmp3.do_trans == false) ? C.n_cols : C.n_rows;
+    const uword C_n_rows = (tmp3.do_trans == false) ? C.n_rows : C.n_cols;
+    const uword C_n_cols = (tmp3.do_trans == false) ? C.n_cols : C.n_rows;
     
     const eT val = tmp1.get_val() * tmp2.get_val() * tmp3.get_val();
     
@@ -229,16 +229,16 @@ as_scalar_diag(const Glue< Glue<T1, T2, glue_times_diag>, T3, glue_times >& X)
   const Mat<eT>& C = tmp3.M;
   
   
-  const u32 A_n_rows = (tmp1.do_trans == false) ? A.n_rows : A.n_cols;
-  const u32 A_n_cols = (tmp1.do_trans == false) ? A.n_cols : A.n_rows;
+  const uword A_n_rows = (tmp1.do_trans == false) ? A.n_rows : A.n_cols;
+  const uword A_n_cols = (tmp1.do_trans == false) ? A.n_cols : A.n_rows;
   
   const bool B_is_vec = B.is_vec();
   
-  const u32 B_n_rows = (B_is_vec == true) ? B.n_elem : ( (tmp2.do_trans == false) ? B.n_rows : B.n_cols );
-  const u32 B_n_cols = (B_is_vec == true) ? B.n_elem : ( (tmp2.do_trans == false) ? B.n_cols : B.n_rows );
+  const uword B_n_rows = (B_is_vec == true) ? B.n_elem : ( (tmp2.do_trans == false) ? B.n_rows : B.n_cols );
+  const uword B_n_cols = (B_is_vec == true) ? B.n_elem : ( (tmp2.do_trans == false) ? B.n_cols : B.n_rows );
   
-  const u32 C_n_rows = (tmp3.do_trans == false) ? C.n_rows : C.n_cols;
-  const u32 C_n_cols = (tmp3.do_trans == false) ? C.n_cols : C.n_rows;
+  const uword C_n_rows = (tmp3.do_trans == false) ? C.n_rows : C.n_cols;
+  const uword C_n_cols = (tmp3.do_trans == false) ? C.n_cols : C.n_rows;
   
   const eT val = tmp1.get_val() * tmp2.get_val() * tmp3.get_val();
   
@@ -276,7 +276,7 @@ as_scalar(const Glue<T1, T2, glue_times>& X, const typename arma_not_cx<typename
   
   if(is_glue_times_diag<T1>::value == false)
     {
-    const s32 N_mat = 1 + depth_lhs< glue_times, Glue<T1,T2,glue_times> >::num;
+    const sword N_mat = 1 + depth_lhs< glue_times, Glue<T1,T2,glue_times> >::num;
     
     arma_extra_debug_print(arma_boost::format("N_mat = %d") % N_mat);
     

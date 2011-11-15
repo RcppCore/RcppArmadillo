@@ -22,7 +22,7 @@
 template<typename T1>
 arma_inline
 const Op<T1, op_repmat>
-repmat(const Base<typename T1::elem_type,T1>& A, const u32 r, const u32 c)
+repmat(const Base<typename T1::elem_type,T1>& A, const uword r, const uword c)
   {
   arma_extra_debug_sigprint();
 

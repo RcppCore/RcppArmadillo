@@ -28,19 +28,19 @@ op_dotext::direct_rowvec_mat_colvec
   {
   arma_extra_debug_sigprint();
   
-  const u32 cost_AB = B.n_cols;
-  const u32 cost_BC = B.n_rows;
+  const uword cost_AB = B.n_cols;
+  const uword cost_BC = B.n_rows;
   
   if(cost_AB <= cost_BC)
     {
     podarray<eT> tmp(B.n_cols);
     
-    for(u32 col=0; col<B.n_cols; ++col)
+    for(uword col=0; col<B.n_cols; ++col)
       {
       const eT* B_coldata = B.colptr(col);
       
       eT val = eT(0);
-      for(u32 i=0; i<B.n_rows; ++i)
+      for(uword i=0; i<B.n_rows; ++i)
         {
         val += A_mem[i] * B_coldata[i];
         }
@@ -54,10 +54,10 @@ op_dotext::direct_rowvec_mat_colvec
     {
     podarray<eT> tmp(B.n_rows);
     
-    for(u32 row=0; row<B.n_rows; ++row)
+    for(uword row=0; row<B.n_rows; ++row)
       {
       eT val = eT(0);
-      for(u32 col=0; col<B.n_cols; ++col)
+      for(uword col=0; col<B.n_cols; ++col)
         {
         val += B.at(row,col) * C_mem[col];
         }
@@ -85,18 +85,18 @@ op_dotext::direct_rowvec_transmat_colvec
   {
   arma_extra_debug_sigprint();
   
-  const u32 cost_AB = B.n_rows;
-  const u32 cost_BC = B.n_cols;
+  const uword cost_AB = B.n_rows;
+  const uword cost_BC = B.n_cols;
   
   if(cost_AB <= cost_BC)
     {
     podarray<eT> tmp(B.n_rows);
     
-    for(u32 row=0; row<B.n_rows; ++row)
+    for(uword row=0; row<B.n_rows; ++row)
       {
       eT val = eT(0);
       
-      for(u32 i=0; i<B.n_cols; ++i)
+      for(uword i=0; i<B.n_cols; ++i)
         {
         val += A_mem[i] * B.at(row,i);
         }
@@ -110,13 +110,13 @@ op_dotext::direct_rowvec_transmat_colvec
     {
     podarray<eT> tmp(B.n_cols);
     
-    for(u32 col=0; col<B.n_cols; ++col)
+    for(uword col=0; col<B.n_cols; ++col)
       {
       const eT* B_coldata = B.colptr(col);
       
       eT val = eT(0);
       
-      for(u32 i=0; i<B.n_rows; ++i)
+      for(uword i=0; i<B.n_rows; ++i)
         {
         val += B_coldata[i] * C_mem[i];
         }
@@ -146,7 +146,7 @@ op_dotext::direct_rowvec_diagmat_colvec
   
   eT val = eT(0);
 
-  for(u32 i=0; i<B.n_rows; ++i)
+  for(uword i=0; i<B.n_rows; ++i)
     {
     val += A_mem[i] * B.at(i,i) * C_mem[i];
     }
@@ -170,7 +170,7 @@ op_dotext::direct_rowvec_invdiagmat_colvec
   
   eT val = eT(0);
 
-  for(u32 i=0; i<B.n_rows; ++i)
+  for(uword i=0; i<B.n_rows; ++i)
     {
     val += (A_mem[i] * C_mem[i]) / B.at(i,i);
     }
@@ -196,7 +196,7 @@ op_dotext::direct_rowvec_invdiagvec_colvec
   
   eT val = eT(0);
 
-  for(u32 i=0; i<B.n_elem; ++i)
+  for(uword i=0; i<B.n_elem; ++i)
     {
     val += (A_mem[i] * C_mem[i]) / B_mem[i];
     }

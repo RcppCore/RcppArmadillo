@@ -83,22 +83,22 @@ class gemm_emul_large
     {
     arma_extra_debug_sigprint();
 
-    const u32 A_n_rows = A.n_rows;
-    const u32 A_n_cols = A.n_cols;
+    const uword A_n_rows = A.n_rows;
+    const uword A_n_cols = A.n_cols;
     
-    const u32 B_n_rows = B.n_rows;
-    const u32 B_n_cols = B.n_cols;
+    const uword B_n_rows = B.n_rows;
+    const uword B_n_cols = B.n_cols;
     
     if( (do_trans_A == false) && (do_trans_B == false) )
       {
       arma_aligned podarray<eT> tmp(A_n_cols);
       eT* A_rowdata = tmp.memptr();
       
-      for(u32 row_A=0; row_A < A_n_rows; ++row_A)
+      for(uword row_A=0; row_A < A_n_rows; ++row_A)
         {
         tmp.copy_row(A, row_A);
         
-        for(u32 col_B=0; col_B < B_n_cols; ++col_B)
+        for(uword col_B=0; col_B < B_n_cols; ++col_B)
           {
           const eT acc = op_dot::direct_dot_arma(B_n_rows, A_rowdata, B.colptr(col_B));
           
@@ -128,13 +128,13 @@ class gemm_emul_large
     else
     if( (do_trans_A == true) && (do_trans_B == false) )
       {
-      for(u32 col_A=0; col_A < A_n_cols; ++col_A)
+      for(uword col_A=0; col_A < A_n_cols; ++col_A)
         {
         // col_A is interpreted as row_A when storing the results in matrix C
         
         const eT* A_coldata = A.colptr(col_A);
         
-        for(u32 col_B=0; col_B < B_n_cols; ++col_B)
+        for(uword col_B=0; col_B < B_n_cols; ++col_B)
           {
           const eT acc = op_dot::direct_dot_arma(B_n_rows, A_coldata, B.colptr(col_B));
           
@@ -182,11 +182,11 @@ class gemm_emul_large
       arma_aligned podarray<eT> tmp(B.n_cols);
       eT* B_rowdata = tmp.memptr();
       
-      for(u32 row_B=0; row_B < B_n_rows; ++row_B)
+      for(uword row_B=0; row_B < B_n_rows; ++row_B)
         {
         tmp.copy_row(B, row_B);
         
-        for(u32 col_A=0; col_A < A_n_cols; ++col_A)
+        for(uword col_A=0; col_A < A_n_cols; ++col_A)
           {
           const eT acc = op_dot::direct_dot_arma(A_n_rows, B_rowdata, A.colptr(col_A));
           
@@ -244,11 +244,11 @@ class gemm_emul
     arma_extra_debug_sigprint();
     arma_ignore(junk);
     
-    const u32 A_n_rows = A.n_rows;
-    const u32 A_n_cols = A.n_cols;
+    const uword A_n_rows = A.n_rows;
+    const uword A_n_cols = A.n_cols;
     
-    const u32 B_n_rows = B.n_rows;
-    const u32 B_n_cols = B.n_cols;
+    const uword B_n_rows = B.n_rows;
+    const uword B_n_cols = B.n_cols;
     
     if( (A_n_rows <= 4) && (A_n_rows == A_n_cols) && (A_n_rows == B_n_rows) && (B_n_rows == B_n_cols) )
       {
@@ -308,11 +308,11 @@ class gemm_emul
     const Mat<eT>& AA = (do_trans_A == false) ? A : tmp_A;
     const Mat<eT>& BB = (do_trans_B == false) ? B : tmp_B;
     
-    const u32 A_n_rows = AA.n_rows;
-    const u32 A_n_cols = AA.n_cols;
+    const uword A_n_rows = AA.n_rows;
+    const uword A_n_cols = AA.n_cols;
     
-    const u32 B_n_rows = BB.n_rows;
-    const u32 B_n_cols = BB.n_cols;
+    const uword B_n_rows = BB.n_rows;
+    const uword B_n_cols = BB.n_cols;
     
     if( (A_n_rows <= 4) && (A_n_rows == A_n_cols) && (A_n_rows == B_n_rows) && (B_n_rows == B_n_cols) )
       {

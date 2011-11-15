@@ -141,8 +141,8 @@ svd_econ
     );
   
   
-  // auxlib::svd_thin() makes an internal copy of X
-  const bool status = auxlib::svd_thin(U, S, V, X, mode);
+  // auxlib::svd_econ() makes an internal copy of X
+  const bool status = auxlib::svd_econ(U, S, V, X, mode);
   
   if(status == false)
     {
@@ -158,6 +158,7 @@ svd_econ
 
 
 template<typename T1>
+arma_deprecated
 inline
 bool
 svd_thin

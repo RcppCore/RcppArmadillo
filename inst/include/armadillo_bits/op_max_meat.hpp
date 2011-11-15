@@ -20,13 +20,13 @@ template<typename eT>
 arma_pure
 inline
 eT
-op_max::direct_max(const eT* const X, const u32 n_elem)
+op_max::direct_max(const eT* const X, const uword n_elem)
   {
   arma_extra_debug_sigprint();
   
   eT max_val = priv::most_neg<eT>();
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
@@ -63,15 +63,15 @@ op_max::direct_max(const eT* const X, const u32 n_elem)
 template<typename eT>
 inline
 eT
-op_max::direct_max(const eT* const X, const u32 n_elem, u32& index_of_max_val)
+op_max::direct_max(const eT* const X, const uword n_elem, uword& index_of_max_val)
   {
   arma_extra_debug_sigprint();
   
   eT max_val = priv::most_neg<eT>();
   
-  u32 best_index = 0;
+  uword best_index = 0;
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
@@ -113,15 +113,15 @@ op_max::direct_max(const eT* const X, const u32 n_elem, u32& index_of_max_val)
 template<typename eT>
 inline
 eT
-op_max::direct_max(const Mat<eT>& X, const u32 row)
+op_max::direct_max(const Mat<eT>& X, const uword row)
   {
   arma_extra_debug_sigprint();
   
-  const u32 X_n_cols = X.n_cols;
+  const uword X_n_cols = X.n_cols;
   
   eT max_val = priv::most_neg<eT>();
   
-  for(u32 col=0; col<X_n_cols; ++col)
+  for(uword col=0; col<X_n_cols; ++col)
     {
     const eT tmp_val = X.at(row,col);
     
@@ -143,11 +143,11 @@ op_max::direct_max(const subview<eT>& X)
   {
   arma_extra_debug_sigprint();
   
-  const u32 X_n_elem = X.n_elem;
+  const uword X_n_elem = X.n_elem;
   
   eT max_val = priv::most_neg<eT>();
   
-  for(u32 i=0; i<X_n_elem; ++i)
+  for(uword i=0; i<X_n_elem; ++i)
     {
     eT tmp_val = X[i];
     
@@ -169,11 +169,11 @@ op_max::direct_max(const diagview<eT>& X)
   {
   arma_extra_debug_sigprint();
   
-  const u32 X_n_elem = X.n_elem;
+  const uword X_n_elem = X.n_elem;
   
   eT max_val = priv::most_neg<eT>();
   
-  for(u32 i=0; i<X_n_elem; ++i)
+  for(uword i=0; i<X_n_elem; ++i)
     {
     eT tmp_val = X[i];
     
@@ -204,11 +204,11 @@ op_max::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_max>& in)
   const unwrap_check<T1> tmp(in.m, out);
   const Mat<eT>& X     = tmp.M;
   
-  const u32 dim = in.aux_u32_a;
+  const uword dim = in.aux_uword_a;
   arma_debug_check( (dim > 1), "max(): incorrect usage. dim must be 0 or 1");
   
-  const u32 X_n_rows = X.n_rows;
-  const u32 X_n_cols = X.n_cols;
+  const uword X_n_rows = X.n_rows;
+  const uword X_n_cols = X.n_cols;
   
   if(dim == 0)
     {
@@ -220,7 +220,7 @@ op_max::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_max>& in)
     
     eT* out_mem = out.memptr();
     
-    for(u32 col=0; col<X_n_cols; ++col)
+    for(uword col=0; col<X_n_cols; ++col)
       {
       out_mem[col] = op_max::direct_max( X.colptr(col), X_n_rows );
       }
@@ -236,7 +236,7 @@ op_max::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_max>& in)
     
     eT* out_mem = out.memptr();
     
-    for(u32 row=0; row<X_n_rows; ++row)
+    for(uword row=0; row<X_n_rows; ++row)
       {
       out_mem[row] = op_max::direct_max( X, row );
       }
@@ -248,14 +248,14 @@ op_max::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_max>& in)
 template<typename T>
 inline
 std::complex<T>
-op_max::direct_max(const std::complex<T>* const X, const u32 n_elem)
+op_max::direct_max(const std::complex<T>* const X, const uword n_elem)
   {
   arma_extra_debug_sigprint();
   
-  u32 index   = 0;
+  uword index   = 0;
   T   max_val = priv::most_neg<T>();
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     const T tmp_val = std::abs(X[i]);
     
@@ -274,14 +274,14 @@ op_max::direct_max(const std::complex<T>* const X, const u32 n_elem)
 template<typename T>
 inline
 std::complex<T>
-op_max::direct_max(const std::complex<T>* const X, const u32 n_elem, u32& index_of_max_val)
+op_max::direct_max(const std::complex<T>* const X, const uword n_elem, uword& index_of_max_val)
   {
   arma_extra_debug_sigprint();
   
-  u32 index   = 0;
+  uword index   = 0;
   T   max_val = priv::most_neg<T>();
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     const T tmp_val = std::abs(X[i]);
     
@@ -302,16 +302,16 @@ op_max::direct_max(const std::complex<T>* const X, const u32 n_elem, u32& index_
 template<typename T>
 inline 
 std::complex<T>
-op_max::direct_max(const Mat< std::complex<T> >& X, const u32 row)
+op_max::direct_max(const Mat< std::complex<T> >& X, const uword row)
   {
   arma_extra_debug_sigprint();
   
-  const u32 X_n_cols = X.n_cols;
+  const uword X_n_cols = X.n_cols;
   
-  u32 index   = 0;
+  uword index   = 0;
   T   max_val = priv::most_neg<T>();
   
-  for(u32 col=0; col<X_n_cols; ++col)
+  for(uword col=0; col<X_n_cols; ++col)
     {
     const T tmp_val = std::abs(X.at(row,col));
     
@@ -334,12 +334,12 @@ op_max::direct_max(const subview< std::complex<T> >& X)
   {
   arma_extra_debug_sigprint();
   
-  const u32 X_n_elem = X.n_elem;
+  const uword X_n_elem = X.n_elem;
   
-  u32 index   = 0;
+  uword index   = 0;
   T   max_val = priv::most_neg<T>();
   
-  for(u32 i=0; i<X_n_elem; ++i)
+  for(uword i=0; i<X_n_elem; ++i)
     {
     const T tmp_val = std::abs(X[i]);
     
@@ -362,12 +362,12 @@ op_max::direct_max(const diagview< std::complex<T> >& X)
   {
   arma_extra_debug_sigprint();
   
-  const u32 X_n_elem = X.n_elem;
+  const uword X_n_elem = X.n_elem;
   
-  u32 index   = 0;
+  uword index   = 0;
   T   max_val = priv::most_neg<T>();
   
-  for(u32 i=0; i<X_n_elem; ++i)
+  for(uword i=0; i<X_n_elem; ++i)
     {
     const T tmp_val = std::abs(X[i]);
     

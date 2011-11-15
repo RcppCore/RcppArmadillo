@@ -35,8 +35,8 @@ class arma_counter
   
   private:
   
-  arma_aligned eT  d_count;
-  arma_aligned u32 i_count;
+  arma_aligned eT    d_count;
+  arma_aligned uword i_count;
   };
 
 
@@ -63,8 +63,8 @@ class running_stat
   
   inline eT mean() const;
   
-  inline  T var   (const u32 norm_type = 0) const;
-  inline  T stddev(const u32 norm_type = 0) const;
+  inline  T var   (const uword norm_type = 0) const;
+  inline  T stddev(const uword norm_type = 0) const;
   
   inline eT min()  const;
   inline eT max()  const;

@@ -333,7 +333,7 @@ namespace lapack
   void
   getrf(blas_int* m, blas_int* n, eT* a, blas_int* lda, blas_int* ipiv, blas_int* info)
     {
-    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
     
     if(is_float<eT>::value == true)
       {
@@ -367,7 +367,7 @@ namespace lapack
   void
   getri(blas_int* n,  eT* a, blas_int* lda, blas_int* ipiv, eT* work, blas_int* lwork, blas_int* info)
     {
-    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
     
     if(is_float<eT>::value == true)
       {
@@ -401,7 +401,7 @@ namespace lapack
   void
   trtri(char* uplo, char* diag, blas_int* n, eT* a, blas_int* lda, blas_int* info)
     {
-    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
     
     if(is_float<eT>::value == true)
       {
@@ -435,7 +435,7 @@ namespace lapack
   void
   syev(char* jobz, char* uplo, blas_int* n, eT* a, blas_int* lda, eT* w,  eT* work, blas_int* lwork, blas_int* info)
     {
-    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
     
     if(is_float<eT>::value == true)
       {
@@ -463,7 +463,7 @@ namespace lapack
     blas_int* info
     )
     {
-    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
     
     if(is_supported_complex_float<eT>::value == true)
       {
@@ -493,7 +493,7 @@ namespace lapack
     blas_int* info
     )
     {
-    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
 
     if(is_float<eT>::value == true)
       {
@@ -522,7 +522,7 @@ namespace lapack
     blas_int* info
     )
     {
-    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
     
     if(is_supported_complex_float<eT>::value == true)
       {
@@ -547,7 +547,7 @@ namespace lapack
   void
   potrf(char* uplo, blas_int* n, eT* a, blas_int* lda, blas_int* info)
     {
-    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
     
     if(is_float<eT>::value == true)
       {
@@ -582,7 +582,7 @@ namespace lapack
   void
   potri(char* uplo, blas_int* n, eT* a, blas_int* lda, blas_int* info)
     {
-    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
     
     if(is_float<eT>::value == true)
       {
@@ -617,7 +617,7 @@ namespace lapack
   void
   geqrf(blas_int* m, blas_int* n, eT* a, blas_int* lda, eT* tau, eT* work, blas_int* lwork, blas_int* info)
     {
-    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
     
     if(is_float<eT>::value == true)
       {
@@ -652,7 +652,7 @@ namespace lapack
   void
   orgqr(blas_int* m, blas_int* n, blas_int* k, eT* a, blas_int* lda, eT* tau, eT* work, blas_int* lwork, blas_int* info)
     {
-    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
     
     if(is_float<eT>::value == true)
       {
@@ -674,7 +674,7 @@ namespace lapack
   void
   ungqr(blas_int* m, blas_int* n, blas_int* k, eT* a, blas_int* lda, eT* tau, eT* work, blas_int* lwork, blas_int* info)
     {
-    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
     
     if(is_supported_complex_float<eT>::value == true)
       {
@@ -700,7 +700,7 @@ namespace lapack
     eT* work, blas_int* lwork, blas_int* info
     )
     {
-    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
     
     if(is_float<eT>::value == true)
       {
@@ -727,8 +727,8 @@ namespace lapack
     std::complex<T>* work, blas_int* lwork, T* rwork, blas_int* info
     )
     {
-    arma_type_check<is_supported_blas_type<T>::value == false>::apply();
-    arma_type_check<is_supported_blas_type< std::complex<T> >::value == false>::apply();
+    arma_type_check(( is_supported_blas_type<T>::value == false ));
+    arma_type_check(( is_supported_blas_type< std::complex<T> >::value == false ));
     
     if(is_float<T>::value == true)
       {
@@ -760,7 +760,7 @@ namespace lapack
   void
   gesv(blas_int* n, blas_int* nrhs, eT* a, blas_int* lda, blas_int* ipiv, eT* b, blas_int* ldb, blas_int* info)
     {
-    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
     
     if(is_float<eT>::value == true)
       {
@@ -794,7 +794,7 @@ namespace lapack
   void
   gels(char* trans, blas_int* m, blas_int* n, blas_int* nrhs, eT* a, blas_int* lda, eT* b, blas_int* ldb, eT* work, blas_int* lwork, blas_int* info)
     {
-    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
     
     if(is_float<eT>::value == true)
       {
@@ -828,7 +828,7 @@ namespace lapack
   void
   trtrs(char* uplo, char* trans, char* diag, blas_int* n, blas_int* nrhs, const eT* a, blas_int* lda, eT* b, blas_int* ldb, blas_int* info)
     {
-    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
     
     if(is_float<eT>::value == true)
       {
@@ -862,7 +862,7 @@ namespace lapack
   void
   gees(char* jobvs, char* sort, blas_int* select, blas_int* n, eT* a, blas_int* lda, blas_int* sdim, eT* wr, eT* wi, eT* vs, blas_int* ldvs, eT* work, blas_int* lwork, blas_int* bwork, blas_int* info)
     {
-    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
     
     if(is_float<eT>::value == true)
       {
@@ -884,8 +884,8 @@ namespace lapack
   void
   cx_gees(char* jobvs, char* sort, blas_int* select, blas_int* n, std::complex<T>* a, blas_int* lda, blas_int* sdim, std::complex<T>* w, std::complex<T>* vs, blas_int* ldvs, std::complex<T>* work, blas_int* lwork, T* rwork, blas_int* bwork, blas_int* info)
     {
-    arma_type_check<is_supported_blas_type<T>::value == false>::apply();
-    arma_type_check<is_supported_blas_type< std::complex<T> >::value == false>::apply();
+    arma_type_check(( is_supported_blas_type<T>::value == false ));
+    arma_type_check(( is_supported_blas_type< std::complex<T> >::value == false ));
     
     if(is_float<T>::value == true)
       {
@@ -909,7 +909,7 @@ namespace lapack
   void
   trsyl(char* transa, char* transb, blas_int* isgn, blas_int* m, blas_int* n, const eT* a, blas_int* lda, const eT* b, blas_int* ldb, eT* c, blas_int* ldc, eT* scale, blas_int* info)
     {
-    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
     
     if(is_float<eT>::value == true)
       {
@@ -942,7 +942,7 @@ namespace lapack
   void
   sytrf(char* uplo, blas_int* n, eT* a, blas_int* lda, blas_int* ipiv, eT* work, blas_int* lwork, blas_int* info)
     {
-    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
     
     if(is_float<eT>::value == true)
       {
@@ -975,7 +975,7 @@ namespace lapack
   void
   sytri(char* uplo, blas_int* n, eT* a, blas_int* lda, blas_int* ipiv, eT* work, blas_int* info)
     {
-    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
     
     if(is_float<eT>::value == true)
       {

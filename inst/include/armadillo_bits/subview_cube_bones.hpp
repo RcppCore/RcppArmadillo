@@ -28,21 +28,21 @@ class subview_cube : public BaseCube<eT, subview_cube<eT> >
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  const u32 aux_row1;
-  const u32 aux_col1;
-  const u32 aux_slice1;
+  const uword aux_row1;
+  const uword aux_col1;
+  const uword aux_slice1;
   
-  const u32 n_rows;
-  const u32 n_cols;
-  const u32 n_elem_slice;
-  const u32 n_slices;
-  const u32 n_elem;
+  const uword n_rows;
+  const uword n_cols;
+  const uword n_elem_slice;
+  const uword n_slices;
+  const uword n_elem;
   
   
   protected:
   
-  arma_inline subview_cube(const Cube<eT>& in_m, const u32 in_row1, const u32 in_col1, const u32 in_slice1, const u32 in_n_rows, const u32 in_n_cols, const u32 in_n_slices);
-  arma_inline subview_cube(      Cube<eT>& in_m, const u32 in_row1, const u32 in_col1, const u32 in_slice1, const u32 in_n_rows, const u32 in_n_cols, const u32 in_n_slices);
+  arma_inline subview_cube(const Cube<eT>& in_m, const uword in_row1, const uword in_col1, const uword in_slice1, const uword in_n_rows, const uword in_n_cols, const uword in_n_slices);
+  arma_inline subview_cube(      Cube<eT>& in_m, const uword in_row1, const uword in_col1, const uword in_slice1, const uword in_n_rows, const uword in_n_cols, const uword in_n_slices);
   
   
   public:
@@ -89,20 +89,20 @@ class subview_cube : public BaseCube<eT, subview_cube<eT> >
   inline void zeros();
   inline void ones();
   
-  inline eT& operator[](const u32 i);
-  inline eT  operator[](const u32 i) const;
+  inline eT& operator[](const uword i);
+  inline eT  operator[](const uword i) const;
   
-  inline eT& operator()(const u32 i);
-  inline eT  operator()(const u32 i) const;
+  inline eT& operator()(const uword i);
+  inline eT  operator()(const uword i) const;
   
-  arma_inline eT& operator()(const u32 in_row, const u32 in_col, const u32 in_slice);
-  arma_inline eT  operator()(const u32 in_row, const u32 in_col, const u32 in_slice) const;
+  arma_inline eT& operator()(const uword in_row, const uword in_col, const uword in_slice);
+  arma_inline eT  operator()(const uword in_row, const uword in_col, const uword in_slice) const;
   
-  arma_inline eT&         at(const u32 in_row, const u32 in_col, const u32 in_slice);
-  arma_inline eT          at(const u32 in_row, const u32 in_col, const u32 in_slice) const;
+  arma_inline eT&         at(const uword in_row, const uword in_col, const uword in_slice);
+  arma_inline eT          at(const uword in_row, const uword in_col, const uword in_slice) const;
   
-  arma_inline       eT* slice_colptr(const u32 in_slice, const u32 in_col);
-  arma_inline const eT* slice_colptr(const u32 in_slice, const u32 in_col) const;
+  arma_inline       eT* slice_colptr(const uword in_slice, const uword in_col);
+  arma_inline const eT* slice_colptr(const uword in_slice, const uword in_col) const;
   
   inline bool check_overlap(const subview_cube& x) const;
   inline bool check_overlap(const Mat<eT>&      x) const;
