@@ -29,12 +29,12 @@ arma_inline
 subview_cube<eT>::subview_cube
   (
   const Cube<eT>& in_m,
-  const u32       in_row1,
-  const u32       in_col1,
-  const u32       in_slice1,
-  const u32       in_n_rows,
-  const u32       in_n_cols,
-  const u32       in_n_slices
+  const uword       in_row1,
+  const uword       in_col1,
+  const uword       in_slice1,
+  const uword       in_n_rows,
+  const uword       in_n_cols,
+  const uword       in_n_slices
   )
   : m           (in_m)
   , m_ptr       (0)
@@ -57,12 +57,12 @@ arma_inline
 subview_cube<eT>::subview_cube
   (
         Cube<eT>& in_m,
-  const u32       in_row1,
-  const u32       in_col1,
-  const u32       in_slice1,
-  const u32       in_n_rows,
-  const u32       in_n_cols,
-  const u32       in_n_slices
+  const uword       in_row1,
+  const uword       in_col1,
+  const uword       in_slice1,
+  const uword       in_n_rows,
+  const uword       in_n_cols,
+  const uword       in_n_slices
   )
   : m           (in_m)
   , m_ptr       (&in_m)
@@ -87,13 +87,13 @@ subview_cube<eT>::operator+= (const eT val)
   {
   arma_extra_debug_sigprint();
   
-  const u32 local_n_rows   = n_rows;
-  const u32 local_n_cols   = n_cols;
-  const u32 local_n_slices = n_slices;
+  const uword local_n_rows   = n_rows;
+  const uword local_n_cols   = n_cols;
+  const uword local_n_slices = n_slices;
   
-  for(u32 slice = 0; slice < local_n_slices; ++slice)
+  for(uword slice = 0; slice < local_n_slices; ++slice)
     {
-    for(u32 col = 0; col < local_n_cols; ++col)
+    for(uword col = 0; col < local_n_cols; ++col)
       {
       arrayops::inplace_plus( slice_colptr(slice,col), val, local_n_rows );
       }
@@ -109,13 +109,13 @@ subview_cube<eT>::operator-= (const eT val)
   {
   arma_extra_debug_sigprint();
   
-  const u32 local_n_rows   = n_rows;
-  const u32 local_n_cols   = n_cols;
-  const u32 local_n_slices = n_slices;
+  const uword local_n_rows   = n_rows;
+  const uword local_n_cols   = n_cols;
+  const uword local_n_slices = n_slices;
   
-  for(u32 slice = 0; slice < local_n_slices; ++slice)
+  for(uword slice = 0; slice < local_n_slices; ++slice)
     {
-    for(u32 col = 0; col < local_n_cols; ++col)
+    for(uword col = 0; col < local_n_cols; ++col)
       {
       arrayops::inplace_minus( slice_colptr(slice,col), val, local_n_rows );
       }
@@ -131,13 +131,13 @@ subview_cube<eT>::operator*= (const eT val)
   {
   arma_extra_debug_sigprint();
   
-  const u32 local_n_rows   = n_rows;
-  const u32 local_n_cols   = n_cols;
-  const u32 local_n_slices = n_slices;
+  const uword local_n_rows   = n_rows;
+  const uword local_n_cols   = n_cols;
+  const uword local_n_slices = n_slices;
   
-  for(u32 slice = 0; slice < local_n_slices; ++slice)
+  for(uword slice = 0; slice < local_n_slices; ++slice)
     {
-    for(u32 col = 0; col < local_n_cols; ++col)
+    for(uword col = 0; col < local_n_cols; ++col)
       {
       arrayops::inplace_mul( slice_colptr(slice,col), val, local_n_rows );
       }
@@ -153,13 +153,13 @@ subview_cube<eT>::operator/= (const eT val)
   {
   arma_extra_debug_sigprint();
   
-  const u32 local_n_rows   = n_rows;
-  const u32 local_n_cols   = n_cols;
-  const u32 local_n_slices = n_slices;
+  const uword local_n_rows   = n_rows;
+  const uword local_n_cols   = n_cols;
+  const uword local_n_slices = n_slices;
   
-  for(u32 slice = 0; slice < local_n_slices; ++slice)
+  for(uword slice = 0; slice < local_n_slices; ++slice)
     {
-    for(u32 col = 0; col < local_n_cols; ++col)
+    for(uword col = 0; col < local_n_cols; ++col)
       {
       arrayops::inplace_div( slice_colptr(slice,col), val, local_n_rows );
       }
@@ -183,13 +183,13 @@ subview_cube<eT>::operator= (const BaseCube<eT,T1>& in)
   
   arma_debug_assert_same_size(t, x, "copy into subcube");
   
-  const u32 t_n_rows   = t.n_rows;
-  const u32 t_n_cols   = t.n_cols;
-  const u32 t_n_slices = t.n_slices;
+  const uword t_n_rows   = t.n_rows;
+  const uword t_n_cols   = t.n_cols;
+  const uword t_n_slices = t.n_slices;
   
-  for(u32 slice = 0; slice < t_n_slices; ++slice)
+  for(uword slice = 0; slice < t_n_slices; ++slice)
     {
-    for(u32 col = 0; col < t_n_cols; ++col)
+    for(uword col = 0; col < t_n_cols; ++col)
       {
       arrayops::copy( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
       }
@@ -213,13 +213,13 @@ subview_cube<eT>::operator+= (const BaseCube<eT,T1>& in)
   
   arma_debug_assert_same_size(t, x, "addition");
   
-  const u32 t_n_rows   = t.n_rows;
-  const u32 t_n_cols   = t.n_cols;
-  const u32 t_n_slices = t.n_slices;
+  const uword t_n_rows   = t.n_rows;
+  const uword t_n_cols   = t.n_cols;
+  const uword t_n_slices = t.n_slices;
   
-  for(u32 slice = 0; slice < t_n_slices; ++slice)
+  for(uword slice = 0; slice < t_n_slices; ++slice)
     {
-    for(u32 col = 0; col < t_n_cols; ++col)
+    for(uword col = 0; col < t_n_cols; ++col)
       {
       arrayops::inplace_plus( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
       }
@@ -243,13 +243,13 @@ subview_cube<eT>::operator-= (const BaseCube<eT,T1>& in)
   
   arma_debug_assert_same_size(t, x, "subtraction");
   
-  const u32 t_n_rows   = t.n_rows;
-  const u32 t_n_cols   = t.n_cols;
-  const u32 t_n_slices = t.n_slices;
+  const uword t_n_rows   = t.n_rows;
+  const uword t_n_cols   = t.n_cols;
+  const uword t_n_slices = t.n_slices;
   
-  for(u32 slice = 0; slice < t_n_slices; ++slice)
+  for(uword slice = 0; slice < t_n_slices; ++slice)
     {
-    for(u32 col = 0; col < t_n_cols; ++col)
+    for(uword col = 0; col < t_n_cols; ++col)
       {
       arrayops::inplace_minus( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
       }
@@ -273,13 +273,13 @@ subview_cube<eT>::operator%= (const BaseCube<eT,T1>& in)
   
   arma_debug_assert_same_size(t, x, "element-wise multiplication");
   
-  const u32 t_n_rows   = t.n_rows;
-  const u32 t_n_cols   = t.n_cols;
-  const u32 t_n_slices = t.n_slices;
+  const uword t_n_rows   = t.n_rows;
+  const uword t_n_cols   = t.n_cols;
+  const uword t_n_slices = t.n_slices;
   
-  for(u32 slice = 0; slice < t_n_slices; ++slice)
+  for(uword slice = 0; slice < t_n_slices; ++slice)
     {
-    for(u32 col = 0; col < t_n_cols; ++col)
+    for(uword col = 0; col < t_n_cols; ++col)
       {
       arrayops::inplace_mul( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
       }
@@ -303,13 +303,13 @@ subview_cube<eT>::operator/= (const BaseCube<eT,T1>& in)
   
   arma_debug_assert_same_size(t, x, "element-wise division");
   
-  const u32 t_n_rows   = t.n_rows;
-  const u32 t_n_cols   = t.n_cols;
-  const u32 t_n_slices = t.n_slices;
+  const uword t_n_rows   = t.n_rows;
+  const uword t_n_cols   = t.n_cols;
+  const uword t_n_slices = t.n_slices;
   
-  for(u32 slice = 0; slice < t_n_slices; ++slice)
+  for(uword slice = 0; slice < t_n_slices; ++slice)
     {
-    for(u32 col = 0; col < t_n_cols; ++col)
+    for(uword col = 0; col < t_n_cols; ++col)
       {
       arrayops::inplace_div( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
       }
@@ -336,13 +336,13 @@ subview_cube<eT>::operator= (const subview_cube<eT>& x_in)
   
   arma_debug_assert_same_size(t, x, "copy into subcube");
   
-  const u32 t_n_rows   = t.n_rows;
-  const u32 t_n_cols   = t.n_cols;
-  const u32 t_n_slices = t.n_slices;
+  const uword t_n_rows   = t.n_rows;
+  const uword t_n_cols   = t.n_cols;
+  const uword t_n_slices = t.n_slices;
   
-  for(u32 slice = 0; slice < t_n_slices; ++slice)
+  for(uword slice = 0; slice < t_n_slices; ++slice)
     {
-    for(u32 col = 0; col < t_n_cols; ++col)
+    for(uword col = 0; col < t_n_cols; ++col)
       {
       arrayops::copy( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
       }
@@ -375,13 +375,13 @@ subview_cube<eT>::operator+= (const subview_cube<eT>& x_in)
   
   arma_debug_assert_same_size(t, x, "addition");
   
-  const u32 t_n_rows   = t.n_rows;
-  const u32 t_n_cols   = t.n_cols;
-  const u32 t_n_slices = t.n_slices;
+  const uword t_n_rows   = t.n_rows;
+  const uword t_n_cols   = t.n_cols;
+  const uword t_n_slices = t.n_slices;
   
-  for(u32 slice = 0; slice < t_n_slices; ++slice)
+  for(uword slice = 0; slice < t_n_slices; ++slice)
     {
-    for(u32 col = 0; col < t_n_cols; ++col)
+    for(uword col = 0; col < t_n_cols; ++col)
       {
       arrayops::inplace_plus( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
       }
@@ -414,13 +414,13 @@ subview_cube<eT>::operator-= (const subview_cube<eT>& x_in)
   
   arma_debug_assert_same_size(t, x, "subtraction");
   
-  const u32 t_n_rows   = t.n_rows;
-  const u32 t_n_cols   = t.n_cols;
-  const u32 t_n_slices = t.n_slices;
+  const uword t_n_rows   = t.n_rows;
+  const uword t_n_cols   = t.n_cols;
+  const uword t_n_slices = t.n_slices;
   
-  for(u32 slice = 0; slice < t_n_slices; ++slice)
+  for(uword slice = 0; slice < t_n_slices; ++slice)
     {
-    for(u32 col = 0; col < t_n_cols; ++col)
+    for(uword col = 0; col < t_n_cols; ++col)
       {
       arrayops::inplace_minus( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
       }
@@ -453,13 +453,13 @@ subview_cube<eT>::operator%= (const subview_cube<eT>& x_in)
   
   arma_debug_assert_same_size(t, x, "element-wise multiplication");
   
-  const u32 t_n_rows   = t.n_rows;
-  const u32 t_n_cols   = t.n_cols;
-  const u32 t_n_slices = t.n_slices;
+  const uword t_n_rows   = t.n_rows;
+  const uword t_n_cols   = t.n_cols;
+  const uword t_n_slices = t.n_slices;
   
-  for(u32 slice = 0; slice < t_n_slices; ++slice)
+  for(uword slice = 0; slice < t_n_slices; ++slice)
     {
-    for(u32 col = 0; col < t_n_cols; ++col)
+    for(uword col = 0; col < t_n_cols; ++col)
       {
       arrayops::inplace_mul( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
       }
@@ -492,13 +492,13 @@ subview_cube<eT>::operator/= (const subview_cube<eT>& x_in)
   
   arma_debug_assert_same_size(t, x, "element-wise division");
   
-  const u32 t_n_rows   = t.n_rows;
-  const u32 t_n_cols   = t.n_cols;
-  const u32 t_n_slices = t.n_slices;
+  const uword t_n_rows   = t.n_rows;
+  const uword t_n_cols   = t.n_cols;
+  const uword t_n_slices = t.n_slices;
   
-  for(u32 slice = 0; slice < t_n_slices; ++slice)
+  for(uword slice = 0; slice < t_n_slices; ++slice)
     {
-    for(u32 col = 0; col < t_n_cols; ++col)
+    for(uword col = 0; col < t_n_cols; ++col)
       {
       arrayops::inplace_div( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
       }
@@ -527,18 +527,18 @@ subview_cube<eT>::operator= (const Base<eT,T1>& in)
   const Mat<eT>&          x = tmp.M;
         subview_cube<eT>& t = *this;
   
-  const u32 t_n_rows   = t.n_rows;
-  const u32 t_n_cols   = t.n_cols;
-  const u32 t_n_slices = t.n_slices;
+  const uword t_n_rows   = t.n_rows;
+  const uword t_n_cols   = t.n_cols;
+  const uword t_n_slices = t.n_slices;
   
-  const u32 x_n_rows   = x.n_rows;
-  const u32 x_n_cols   = x.n_cols;
+  const uword x_n_rows   = x.n_rows;
+  const uword x_n_cols   = x.n_cols;
   
   if( (t_n_rows == x_n_rows) && (t_n_cols == x_n_cols) && (t_n_slices == 1) )
     {
     // interpret the matrix as a cube with one slice
     
-    for(u32 col = 0; col < t_n_cols; ++col)
+    for(uword col = 0; col < t_n_cols; ++col)
       {
       arrayops::copy( t.slice_colptr(0, col), x.colptr(col), t_n_rows );
       }
@@ -549,7 +549,7 @@ subview_cube<eT>::operator= (const Base<eT,T1>& in)
     // interpret the matrix as a cube with one column
     // and with the number of slices equal to the number of columns in the matrix
     
-    for(u32 i=0; i < t_n_slices; ++i)
+    for(uword i=0; i < t_n_slices; ++i)
       {
       arrayops::copy( t.slice_colptr(i, 0), x.colptr(i), t_n_rows );
       }
@@ -562,15 +562,15 @@ subview_cube<eT>::operator= (const Base<eT,T1>& in)
     
     Cube<eT>& Q = *(t.m_ptr);
     
-    const u32 t_aux_row1   = t.aux_row1;
-    const u32 t_aux_col1   = t.aux_col1;
-    const u32 t_aux_slice1 = t.aux_slice1;
+    const uword t_aux_row1   = t.aux_row1;
+    const uword t_aux_col1   = t.aux_col1;
+    const uword t_aux_slice1 = t.aux_slice1;
     
-    for(u32 col=0; col < t_n_cols; ++col)
+    for(uword col=0; col < t_n_cols; ++col)
       {
       const eT* x_colptr = x.colptr(col);
       
-      for(u32 i=0; i < t_n_slices; ++i)
+      for(uword i=0; i < t_n_slices; ++i)
         {
         Q.at(t_aux_row1, t_aux_col1 + col, t_aux_slice1 + i) = x_colptr[i];
         }
@@ -600,16 +600,16 @@ subview_cube<eT>::operator+= (const Base<eT,T1>& in)
   const Mat<eT>&          x = tmp.M;
         subview_cube<eT>& t = *this;
   
-  const u32 t_n_rows   = t.n_rows;
-  const u32 t_n_cols   = t.n_cols;
-  const u32 t_n_slices = t.n_slices;
+  const uword t_n_rows   = t.n_rows;
+  const uword t_n_cols   = t.n_cols;
+  const uword t_n_slices = t.n_slices;
   
-  const u32 x_n_rows   = x.n_rows;
-  const u32 x_n_cols   = x.n_cols;
+  const uword x_n_rows   = x.n_rows;
+  const uword x_n_cols   = x.n_cols;
   
   if( (t_n_rows == x_n_rows) && (t_n_cols == x_n_cols) && (t_n_slices == 1) )
     {
-    for(u32 col = 0; col < t_n_cols; ++col)
+    for(uword col = 0; col < t_n_cols; ++col)
       {
       arrayops::inplace_plus( t.slice_colptr(0, col), x.colptr(col), t_n_rows );
       }
@@ -617,7 +617,7 @@ subview_cube<eT>::operator+= (const Base<eT,T1>& in)
   else
   if( (t_n_rows == x_n_rows) && (t_n_cols == 1) && (t_n_slices == x_n_cols) )
     {
-    for(u32 i=0; i < t_n_slices; ++i)
+    for(uword i=0; i < t_n_slices; ++i)
       {
       arrayops::inplace_plus( t.slice_colptr(i, 0), x.colptr(i), t_n_rows );
       }
@@ -627,15 +627,15 @@ subview_cube<eT>::operator+= (const Base<eT,T1>& in)
     {
     Cube<eT>& Q = *(t.m_ptr);
     
-    const u32 t_aux_row1   = t.aux_row1;
-    const u32 t_aux_col1   = t.aux_col1;
-    const u32 t_aux_slice1 = t.aux_slice1;
+    const uword t_aux_row1   = t.aux_row1;
+    const uword t_aux_col1   = t.aux_col1;
+    const uword t_aux_slice1 = t.aux_slice1;
     
-    for(u32 col=0; col < t_n_cols; ++col)
+    for(uword col=0; col < t_n_cols; ++col)
       {
       const eT* x_colptr = x.colptr(col);
       
-      for(u32 i=0; i < t_n_slices; ++i)
+      for(uword i=0; i < t_n_slices; ++i)
         {
         Q.at(t_aux_row1, t_aux_col1 + col, t_aux_slice1 + i) += x_colptr[i];
         }
@@ -665,16 +665,16 @@ subview_cube<eT>::operator-= (const Base<eT,T1>& in)
   const Mat<eT>&          x = tmp.M;
         subview_cube<eT>& t = *this;
   
-  const u32 t_n_rows   = t.n_rows;
-  const u32 t_n_cols   = t.n_cols;
-  const u32 t_n_slices = t.n_slices;
+  const uword t_n_rows   = t.n_rows;
+  const uword t_n_cols   = t.n_cols;
+  const uword t_n_slices = t.n_slices;
   
-  const u32 x_n_rows   = x.n_rows;
-  const u32 x_n_cols   = x.n_cols;
+  const uword x_n_rows   = x.n_rows;
+  const uword x_n_cols   = x.n_cols;
   
   if( (t_n_rows == x_n_rows) && (t_n_cols == x_n_cols) && (t_n_slices == 1) )
     {
-    for(u32 col = 0; col < t_n_cols; ++col)
+    for(uword col = 0; col < t_n_cols; ++col)
       {
       arrayops::inplace_minus( t.slice_colptr(0, col), x.colptr(col), t_n_rows );
       }
@@ -682,7 +682,7 @@ subview_cube<eT>::operator-= (const Base<eT,T1>& in)
   else
   if( (t_n_rows == x_n_rows) && (t_n_cols == 1) && (t_n_slices == x_n_cols) )
     {
-    for(u32 i=0; i < t_n_slices; ++i)
+    for(uword i=0; i < t_n_slices; ++i)
       {
       arrayops::inplace_minus( t.slice_colptr(i, 0), x.colptr(i), t_n_rows );
       }
@@ -692,15 +692,15 @@ subview_cube<eT>::operator-= (const Base<eT,T1>& in)
     {
     Cube<eT>& Q = *(t.m_ptr);
     
-    const u32 t_aux_row1   = t.aux_row1;
-    const u32 t_aux_col1   = t.aux_col1;
-    const u32 t_aux_slice1 = t.aux_slice1;
+    const uword t_aux_row1   = t.aux_row1;
+    const uword t_aux_col1   = t.aux_col1;
+    const uword t_aux_slice1 = t.aux_slice1;
     
-    for(u32 col=0; col < t_n_cols; ++col)
+    for(uword col=0; col < t_n_cols; ++col)
       {
       const eT* x_colptr = x.colptr(col);
       
-      for(u32 i=0; i < t_n_slices; ++i)
+      for(uword i=0; i < t_n_slices; ++i)
         {
         Q.at(t_aux_row1, t_aux_col1 + col, t_aux_slice1 + i) -= x_colptr[i];
         }
@@ -730,16 +730,16 @@ subview_cube<eT>::operator%= (const Base<eT,T1>& in)
   const Mat<eT>&          x = tmp.M;
         subview_cube<eT>& t = *this;
   
-  const u32 t_n_rows   = t.n_rows;
-  const u32 t_n_cols   = t.n_cols;
-  const u32 t_n_slices = t.n_slices;
+  const uword t_n_rows   = t.n_rows;
+  const uword t_n_cols   = t.n_cols;
+  const uword t_n_slices = t.n_slices;
   
-  const u32 x_n_rows   = x.n_rows;
-  const u32 x_n_cols   = x.n_cols;
+  const uword x_n_rows   = x.n_rows;
+  const uword x_n_cols   = x.n_cols;
   
   if( (t_n_rows == x_n_rows) && (t_n_cols == x_n_cols) && (t_n_slices == 1) )
     {
-    for(u32 col = 0; col < t_n_cols; ++col)
+    for(uword col = 0; col < t_n_cols; ++col)
       {
       arrayops::inplace_mul( t.slice_colptr(0, col), x.colptr(col), t_n_rows );
       }
@@ -747,7 +747,7 @@ subview_cube<eT>::operator%= (const Base<eT,T1>& in)
   else
   if( (t_n_rows == x_n_rows) && (t_n_cols == 1) && (t_n_slices == x_n_cols) )
     {
-    for(u32 i=0; i < t_n_slices; ++i)
+    for(uword i=0; i < t_n_slices; ++i)
       {
       arrayops::inplace_mul( t.slice_colptr(i, 0), x.colptr(i), t_n_rows );
       }
@@ -757,15 +757,15 @@ subview_cube<eT>::operator%= (const Base<eT,T1>& in)
     {
     Cube<eT>& Q = *(t.m_ptr);
     
-    const u32 t_aux_row1   = t.aux_row1;
-    const u32 t_aux_col1   = t.aux_col1;
-    const u32 t_aux_slice1 = t.aux_slice1;
+    const uword t_aux_row1   = t.aux_row1;
+    const uword t_aux_col1   = t.aux_col1;
+    const uword t_aux_slice1 = t.aux_slice1;
     
-    for(u32 col=0; col < t_n_cols; ++col)
+    for(uword col=0; col < t_n_cols; ++col)
       {
       const eT* x_colptr = x.colptr(col);
       
-      for(u32 i=0; i < t_n_slices; ++i)
+      for(uword i=0; i < t_n_slices; ++i)
         {
         Q.at(t_aux_row1, t_aux_col1 + col, t_aux_slice1 + i) *= x_colptr[i];
         }
@@ -795,16 +795,16 @@ subview_cube<eT>::operator/= (const Base<eT,T1>& in)
   const Mat<eT>&          x = tmp.M;
         subview_cube<eT>& t = *this;
   
-  const u32 t_n_rows   = t.n_rows;
-  const u32 t_n_cols   = t.n_cols;
-  const u32 t_n_slices = t.n_slices;
+  const uword t_n_rows   = t.n_rows;
+  const uword t_n_cols   = t.n_cols;
+  const uword t_n_slices = t.n_slices;
   
-  const u32 x_n_rows   = x.n_rows;
-  const u32 x_n_cols   = x.n_cols;
+  const uword x_n_rows   = x.n_rows;
+  const uword x_n_cols   = x.n_cols;
   
   if( (t_n_rows == x_n_rows) && (t_n_cols == x_n_cols) && (t_n_slices == 1) )
     {
-    for(u32 col = 0; col < t_n_cols; ++col)
+    for(uword col = 0; col < t_n_cols; ++col)
       {
       arrayops::inplace_div( t.slice_colptr(0, col), x.colptr(col), t_n_rows );
       }
@@ -812,7 +812,7 @@ subview_cube<eT>::operator/= (const Base<eT,T1>& in)
   else
   if( (t_n_rows == x_n_rows) && (t_n_cols == 1) && (t_n_slices == x_n_cols) )
     {
-    for(u32 i=0; i < t_n_slices; ++i)
+    for(uword i=0; i < t_n_slices; ++i)
       {
       arrayops::inplace_div( t.slice_colptr(i, 0), x.colptr(i), t_n_rows );
       }
@@ -822,15 +822,15 @@ subview_cube<eT>::operator/= (const Base<eT,T1>& in)
     {
     Cube<eT>& Q = *(t.m_ptr);
     
-    const u32 t_aux_row1   = t.aux_row1;
-    const u32 t_aux_col1   = t.aux_col1;
-    const u32 t_aux_slice1 = t.aux_slice1;
+    const uword t_aux_row1   = t.aux_row1;
+    const uword t_aux_col1   = t.aux_col1;
+    const uword t_aux_slice1 = t.aux_slice1;
     
-    for(u32 col=0; col < t_n_cols; ++col)
+    for(uword col=0; col < t_n_cols; ++col)
       {
       const eT* x_colptr = x.colptr(col);
       
-      for(u32 i=0; i < t_n_slices; ++i)
+      for(uword i=0; i < t_n_slices; ++i)
         {
         Q.at(t_aux_row1, t_aux_col1 + col, t_aux_slice1 + i) /= x_colptr[i];
         }
@@ -854,13 +854,13 @@ subview_cube<eT>::fill(const eT val)
   {
   arma_extra_debug_sigprint();
 
-  const u32 local_n_rows   = n_rows;
-  const u32 local_n_cols   = n_cols;
-  const u32 local_n_slices = n_slices;
+  const uword local_n_rows   = n_rows;
+  const uword local_n_cols   = n_cols;
+  const uword local_n_slices = n_slices;
   
-  for(u32 slice = 0; slice < local_n_slices; ++slice)
+  for(uword slice = 0; slice < local_n_slices; ++slice)
     {
-    for(u32 col = 0; col < local_n_cols; ++col)
+    for(uword col = 0; col < local_n_cols; ++col)
       {
       arrayops::inplace_set( slice_colptr(slice,col), val, local_n_rows );
       }
@@ -897,16 +897,16 @@ subview_cube<eT>::ones()
 template<typename eT>
 inline
 eT&
-subview_cube<eT>::operator[](const u32 i)
+subview_cube<eT>::operator[](const uword i)
   {
-  const u32 in_slice = i / n_elem_slice;
-  const u32 offset   = in_slice * n_elem_slice;
-  const u32 j        = i - offset;
+  const uword in_slice = i / n_elem_slice;
+  const uword offset   = in_slice * n_elem_slice;
+  const uword j        = i - offset;
   
-  const u32 in_col   = j / n_rows;
-  const u32 in_row   = j % n_rows;
+  const uword in_col   = j / n_rows;
+  const uword in_row   = j % n_rows;
 
-  const u32 index = (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
+  const uword index = (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
   return access::rw( (*m_ptr).mem[index] );
   }
 
@@ -915,16 +915,16 @@ subview_cube<eT>::operator[](const u32 i)
 template<typename eT>
 inline
 eT
-subview_cube<eT>::operator[](const u32 i) const
+subview_cube<eT>::operator[](const uword i) const
   {
-  const u32 in_slice = i / n_elem_slice;
-  const u32 offset   = in_slice * n_elem_slice;
-  const u32 j        = i - offset;
+  const uword in_slice = i / n_elem_slice;
+  const uword offset   = in_slice * n_elem_slice;
+  const uword j        = i - offset;
   
-  const u32 in_col   = j / n_rows;
-  const u32 in_row   = j % n_rows;
+  const uword in_col   = j / n_rows;
+  const uword in_row   = j % n_rows;
 
-  const u32 index = (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
+  const uword index = (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
   return m.mem[index];
   }
 
@@ -933,18 +933,18 @@ subview_cube<eT>::operator[](const u32 i) const
 template<typename eT>
 inline
 eT&
-subview_cube<eT>::operator()(const u32 i)
+subview_cube<eT>::operator()(const uword i)
   {
   arma_debug_check( (i >= n_elem), "subview_cube::operator(): index out of bounds");
   
-  const u32 in_slice = i / n_elem_slice;
-  const u32 offset   = in_slice * n_elem_slice;
-  const u32 j        = i - offset;
+  const uword in_slice = i / n_elem_slice;
+  const uword offset   = in_slice * n_elem_slice;
+  const uword j        = i - offset;
   
-  const u32 in_col   = j / n_rows;
-  const u32 in_row   = j % n_rows;
+  const uword in_col   = j / n_rows;
+  const uword in_row   = j % n_rows;
 
-  const u32 index = (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
+  const uword index = (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
   return access::rw( (*m_ptr).mem[index] );
   }
 
@@ -953,18 +953,18 @@ subview_cube<eT>::operator()(const u32 i)
 template<typename eT>
 inline
 eT
-subview_cube<eT>::operator()(const u32 i) const
+subview_cube<eT>::operator()(const uword i) const
   {
   arma_debug_check( (i >= n_elem), "subview_cube::operator(): index out of bounds");
   
-  const u32 in_slice = i / n_elem_slice;
-  const u32 offset   = in_slice * n_elem_slice;
-  const u32 j        = i - offset;
+  const uword in_slice = i / n_elem_slice;
+  const uword offset   = in_slice * n_elem_slice;
+  const uword j        = i - offset;
   
-  const u32 in_col   = j / n_rows;
-  const u32 in_row   = j % n_rows;
+  const uword in_col   = j / n_rows;
+  const uword in_row   = j % n_rows;
 
-  const u32 index = (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
+  const uword index = (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
   return m.mem[index];
   }
 
@@ -973,11 +973,11 @@ subview_cube<eT>::operator()(const u32 i) const
 template<typename eT>
 arma_inline
 eT&
-subview_cube<eT>::operator()(const u32 in_row, const u32 in_col, const u32 in_slice)
+subview_cube<eT>::operator()(const uword in_row, const uword in_col, const uword in_slice)
   {
   arma_debug_check( ( (in_row >= n_rows) || (in_col >= n_cols) || (in_slice >= n_slices) ), "subview_cube::operator(): location out of bounds");
   
-  const u32 index = (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
+  const uword index = (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
   return access::rw( (*m_ptr).mem[index] );
   }
 
@@ -986,11 +986,11 @@ subview_cube<eT>::operator()(const u32 in_row, const u32 in_col, const u32 in_sl
 template<typename eT>
 arma_inline
 eT
-subview_cube<eT>::operator()(const u32 in_row, const u32 in_col, const u32 in_slice) const
+subview_cube<eT>::operator()(const uword in_row, const uword in_col, const uword in_slice) const
   {
   arma_debug_check( ( (in_row >= n_rows) || (in_col >= n_cols) || (in_slice >= n_slices) ), "subview_cube::operator(): location out of bounds");
   
-  const u32 index = (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
+  const uword index = (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
   return m.mem[index];
   }
 
@@ -999,9 +999,9 @@ subview_cube<eT>::operator()(const u32 in_row, const u32 in_col, const u32 in_sl
 template<typename eT>
 arma_inline
 eT&
-subview_cube<eT>::at(const u32 in_row, const u32 in_col, const u32 in_slice)
+subview_cube<eT>::at(const uword in_row, const uword in_col, const uword in_slice)
   {
-  const u32 index = (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
+  const uword index = (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
   return access::rw( (*m_ptr).mem[index] );
   }
 
@@ -1010,9 +1010,9 @@ subview_cube<eT>::at(const u32 in_row, const u32 in_col, const u32 in_slice)
 template<typename eT>
 arma_inline
 eT
-subview_cube<eT>::at(const u32 in_row, const u32 in_col, const u32 in_slice) const
+subview_cube<eT>::at(const uword in_row, const uword in_col, const uword in_slice) const
   {
-  const u32 index = (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
+  const uword index = (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
   return m.mem[index];
   }
 
@@ -1021,7 +1021,7 @@ subview_cube<eT>::at(const u32 in_row, const u32 in_col, const u32 in_slice) con
 template<typename eT>
 arma_inline
 eT*
-subview_cube<eT>::slice_colptr(const u32 in_slice, const u32 in_col)
+subview_cube<eT>::slice_colptr(const uword in_slice, const uword in_col)
   {
   return & access::rw((*m_ptr).mem[  (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1  ]);
   }
@@ -1031,7 +1031,7 @@ subview_cube<eT>::slice_colptr(const u32 in_slice, const u32 in_col)
 template<typename eT>
 arma_inline
 const eT*
-subview_cube<eT>::slice_colptr(const u32 in_slice, const u32 in_col) const
+subview_cube<eT>::slice_colptr(const uword in_slice, const uword in_col) const
   {
   return & m.mem[ (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1 ];
   }
@@ -1057,24 +1057,24 @@ subview_cube<eT>::check_overlap(const subview_cube<eT>& x) const
       }
     else
       {
-      const u32 t_row_start  = t.aux_row1;
-      const u32 t_row_end_p1 = t_row_start + t.n_rows;
+      const uword t_row_start  = t.aux_row1;
+      const uword t_row_end_p1 = t_row_start + t.n_rows;
       
-      const u32 t_col_start  = t.aux_col1;
-      const u32 t_col_end_p1 = t_col_start + t.n_cols;
+      const uword t_col_start  = t.aux_col1;
+      const uword t_col_end_p1 = t_col_start + t.n_cols;
       
-      const u32 t_slice_start  = t.aux_slice1;
-      const u32 t_slice_end_p1 = t_slice_start + t.n_slices;
+      const uword t_slice_start  = t.aux_slice1;
+      const uword t_slice_end_p1 = t_slice_start + t.n_slices;
       
       
-      const u32 x_row_start  = x.aux_row1;
-      const u32 x_row_end_p1 = x_row_start + x.n_rows;
+      const uword x_row_start  = x.aux_row1;
+      const uword x_row_end_p1 = x_row_start + x.n_rows;
       
-      const u32 x_col_start  = x.aux_col1;
-      const u32 x_col_end_p1 = x_col_start + x.n_cols;
+      const uword x_col_start  = x.aux_col1;
+      const uword x_col_end_p1 = x_col_start + x.n_cols;
       
-      const u32 x_slice_start  = x.aux_slice1;
-      const u32 x_slice_end_p1 = x_slice_start + x.n_slices;
+      const uword x_slice_start  = x.aux_slice1;
+      const uword x_slice_end_p1 = x_slice_start + x.n_slices;
       
       
       const bool outside_rows   = ( (x_row_start   >= t_row_end_p1  ) || (t_row_start   >= x_row_end_p1  ) );
@@ -1095,10 +1095,10 @@ subview_cube<eT>::check_overlap(const Mat<eT>& x) const
   {
   const subview_cube<eT>& t = *this;
   
-  const u32 t_aux_slice1        = t.aux_slice1;
-  const u32 t_aux_slice2_plus_1 = t_aux_slice1 + t.n_slices;
+  const uword t_aux_slice1        = t.aux_slice1;
+  const uword t_aux_slice2_plus_1 = t_aux_slice1 + t.n_slices;
   
-  for(u32 slice = t_aux_slice1; slice < t_aux_slice2_plus_1; ++slice)
+  for(uword slice = t_aux_slice1; slice < t_aux_slice2_plus_1; ++slice)
     {
     const Mat<eT>& y = *(t.m.mat_ptrs[slice]);
   
@@ -1117,42 +1117,27 @@ subview_cube<eT>::check_overlap(const Mat<eT>& x) const
 template<typename eT>
 inline
 void
-subview_cube<eT>::extract(Cube<eT>& actual_out, const subview_cube<eT>& in)
+subview_cube<eT>::extract(Cube<eT>& out, const subview_cube<eT>& in)
   {
   arma_extra_debug_sigprint();
+
+  // NOTE: we're assuming that the cube has already been set to the correct size and there is no aliasing;
+  // size setting and alias checking is done by either the Cube contructor or operator=()
   
-  //
-  const bool alias = (&actual_out == &in.m);
-  
-  Cube<eT>* tmp = (alias) ? new Cube<eT> : 0;
-  Cube<eT>& out = (alias) ? (*tmp)       : actual_out;
-  
-  //
-  
-  const u32 n_rows   = in.n_rows;
-  const u32 n_cols   = in.n_cols;
-  const u32 n_slices = in.n_slices;
-  
-  out.set_size(n_rows, n_cols, n_slices);
+  const uword n_rows   = in.n_rows;
+  const uword n_cols   = in.n_cols;
+  const uword n_slices = in.n_slices;
   
   arma_extra_debug_print(arma_boost::format("out.n_rows = %d   out.n_cols = %d    out.n_slices = %d    in.m.n_rows = %d   in.m.n_cols = %d   in.m.n_slices = %d") % out.n_rows % out.n_cols % out.n_slices % in.m.n_rows % in.m.n_cols % in.m.n_slices);
   
   
-  for(u32 slice = 0; slice < n_slices; ++slice)
+  for(uword slice = 0; slice < n_slices; ++slice)
     {
-    for(u32 col = 0; col < n_cols; ++col)
+    for(uword col = 0; col < n_cols; ++col)
       {
       arrayops::copy( out.slice_colptr(slice,col), in.slice_colptr(slice,col), n_rows );
       }
     }
-  
-  
-  if(alias)
-    {
-    actual_out = out;
-    delete tmp;
-    }
-  
   }
 
 
@@ -1167,13 +1152,13 @@ subview_cube<eT>::plus_inplace(Cube<eT>& out, const subview_cube<eT>& in)
   
   arma_debug_assert_same_size(out, in, "addition");
   
-  const u32 n_rows   = out.n_rows;
-  const u32 n_cols   = out.n_cols;
-  const u32 n_slices = out.n_slices;
+  const uword n_rows   = out.n_rows;
+  const uword n_cols   = out.n_cols;
+  const uword n_slices = out.n_slices;
   
-  for(u32 slice = 0; slice<n_slices; ++slice)
+  for(uword slice = 0; slice<n_slices; ++slice)
     {
-    for(u32 col = 0; col<n_cols; ++col)
+    for(uword col = 0; col<n_cols; ++col)
       {
       arrayops::inplace_plus( out.slice_colptr(slice,col), in.slice_colptr(slice,col), n_rows );
       }
@@ -1192,13 +1177,13 @@ subview_cube<eT>::minus_inplace(Cube<eT>& out, const subview_cube<eT>& in)
   
   arma_debug_assert_same_size(out, in, "subtraction");
   
-  const u32 n_rows   = out.n_rows;
-  const u32 n_cols   = out.n_cols;
-  const u32 n_slices = out.n_slices;
+  const uword n_rows   = out.n_rows;
+  const uword n_cols   = out.n_cols;
+  const uword n_slices = out.n_slices;
   
-  for(u32 slice = 0; slice<n_slices; ++slice)
+  for(uword slice = 0; slice<n_slices; ++slice)
     {
-    for(u32 col = 0; col<n_cols; ++col)
+    for(uword col = 0; col<n_cols; ++col)
       {
       arrayops::inplace_minus( out.slice_colptr(slice,col), in.slice_colptr(slice,col), n_rows );
       }
@@ -1217,13 +1202,13 @@ subview_cube<eT>::schur_inplace(Cube<eT>& out, const subview_cube<eT>& in)
   
   arma_debug_assert_same_size(out, in, "element-wise multiplication");
   
-  const u32 n_rows   = out.n_rows;
-  const u32 n_cols   = out.n_cols;
-  const u32 n_slices = out.n_slices;
+  const uword n_rows   = out.n_rows;
+  const uword n_cols   = out.n_cols;
+  const uword n_slices = out.n_slices;
   
-  for(u32 slice = 0; slice<n_slices; ++slice)
+  for(uword slice = 0; slice<n_slices; ++slice)
     {
-    for(u32 col = 0; col<n_cols; ++col)
+    for(uword col = 0; col<n_cols; ++col)
       {
       arrayops::inplace_mul( out.slice_colptr(slice,col), in.slice_colptr(slice,col), n_rows );
       }
@@ -1242,13 +1227,13 @@ subview_cube<eT>::div_inplace(Cube<eT>& out, const subview_cube<eT>& in)
   
   arma_debug_assert_same_size(out, in, "element-wise division");
   
-  const u32 n_rows   = out.n_rows;
-  const u32 n_cols   = out.n_cols;
-  const u32 n_slices = out.n_slices;
+  const uword n_rows   = out.n_rows;
+  const uword n_cols   = out.n_cols;
+  const uword n_slices = out.n_slices;
   
-  for(u32 slice = 0; slice<n_slices; ++slice)
+  for(uword slice = 0; slice<n_slices; ++slice)
     {
-    for(u32 col = 0; col<n_cols; ++col)
+    for(uword col = 0; col<n_cols; ++col)
       {
       arrayops::inplace_div( out.slice_colptr(slice,col), in.slice_colptr(slice,col), n_rows );
       }
@@ -1267,17 +1252,17 @@ subview_cube<eT>::extract(Mat<eT>& out, const subview_cube<eT>& in)
   
   arma_debug_assert_cube_as_mat(out, in, "copy into matrix", false);
   
-  const u32 in_n_rows   = in.n_rows;
-  const u32 in_n_cols   = in.n_cols;
-  const u32 in_n_slices = in.n_slices;
+  const uword in_n_rows   = in.n_rows;
+  const uword in_n_cols   = in.n_cols;
+  const uword in_n_slices = in.n_slices;
   
-  const u32 out_vec_state = out.vec_state;
+  const uword out_vec_state = out.vec_state;
   
   if(in_n_slices == 1)
     {
     out.set_size(in_n_rows, in_n_cols);
     
-    for(u32 col=0; col < in_n_cols; ++col)
+    for(uword col=0; col < in_n_cols; ++col)
       {
       arrayops::copy( out.colptr(col), in.slice_colptr(0, col), in_n_rows );
       }
@@ -1290,7 +1275,7 @@ subview_cube<eT>::extract(Mat<eT>& out, const subview_cube<eT>& in)
         {
         out.set_size(in_n_rows, in_n_slices);
         
-        for(u32 i=0; i < in_n_slices; ++i)
+        for(uword i=0; i < in_n_slices; ++i)
           {
           arrayops::copy( out.colptr(i), in.slice_colptr(i, 0), in_n_rows );
           }
@@ -1302,15 +1287,15 @@ subview_cube<eT>::extract(Mat<eT>& out, const subview_cube<eT>& in)
         
         const Cube<eT>& Q = in.m;
         
-        const u32 in_aux_row1   = in.aux_row1;
-        const u32 in_aux_col1   = in.aux_col1;
-        const u32 in_aux_slice1 = in.aux_slice1;
+        const uword in_aux_row1   = in.aux_row1;
+        const uword in_aux_col1   = in.aux_col1;
+        const uword in_aux_slice1 = in.aux_slice1;
         
-        for(u32 col=0; col < in_n_cols; ++col)
+        for(uword col=0; col < in_n_cols; ++col)
           {
           eT* out_colptr = out.colptr(col);
           
-          for(u32 i=0; i < in_n_slices; ++i)
+          for(uword i=0; i < in_n_slices; ++i)
             {
             out_colptr[i] = Q.at(in_aux_row1, in_aux_col1 + col, in_aux_slice1 + i);
             }
@@ -1325,11 +1310,11 @@ subview_cube<eT>::extract(Mat<eT>& out, const subview_cube<eT>& in)
       
       const Cube<eT>& Q = in.m;
       
-      const u32 in_aux_row1   = in.aux_row1;
-      const u32 in_aux_col1   = in.aux_col1;
-      const u32 in_aux_slice1 = in.aux_slice1;
+      const uword in_aux_row1   = in.aux_row1;
+      const uword in_aux_col1   = in.aux_col1;
+      const uword in_aux_slice1 = in.aux_slice1;
       
-      for(u32 i=0; i<in_n_slices; ++i)
+      for(uword i=0; i<in_n_slices; ++i)
         {
         out_mem[i] = Q.at(in_aux_row1, in_aux_col1, in_aux_slice1 + i);
         }
@@ -1349,17 +1334,17 @@ subview_cube<eT>::plus_inplace(Mat<eT>& out, const subview_cube<eT>& in)
   
   arma_debug_assert_cube_as_mat(out, in, "addition", true);
   
-  const u32 in_n_rows   = in.n_rows;
-  const u32 in_n_cols   = in.n_cols;
-  const u32 in_n_slices = in.n_slices;
+  const uword in_n_rows   = in.n_rows;
+  const uword in_n_cols   = in.n_cols;
+  const uword in_n_slices = in.n_slices;
   
-  const u32 out_n_rows    = out.n_rows;
-  const u32 out_n_cols    = out.n_cols;
-  const u32 out_vec_state = out.vec_state;
+  const uword out_n_rows    = out.n_rows;
+  const uword out_n_cols    = out.n_cols;
+  const uword out_vec_state = out.vec_state;
   
   if(in_n_slices == 1)
     {
-    for(u32 col=0; col < in_n_cols; ++col)
+    for(uword col=0; col < in_n_cols; ++col)
       {
       arrayops::inplace_plus( out.colptr(col), in.slice_colptr(0, col), in_n_rows );
       }
@@ -1370,7 +1355,7 @@ subview_cube<eT>::plus_inplace(Mat<eT>& out, const subview_cube<eT>& in)
       {
       if( (in_n_rows == out_n_rows) && (in_n_cols == 1) && (in_n_slices == out_n_cols) )
         {
-        for(u32 i=0; i < in_n_slices; ++i)
+        for(uword i=0; i < in_n_slices; ++i)
           {
           arrayops::inplace_plus( out.colptr(i), in.slice_colptr(i, 0), in_n_rows );
           }
@@ -1380,15 +1365,15 @@ subview_cube<eT>::plus_inplace(Mat<eT>& out, const subview_cube<eT>& in)
         {
         const Cube<eT>& Q = in.m;
         
-        const u32 in_aux_row1   = in.aux_row1;
-        const u32 in_aux_col1   = in.aux_col1;
-        const u32 in_aux_slice1 = in.aux_slice1;
+        const uword in_aux_row1   = in.aux_row1;
+        const uword in_aux_col1   = in.aux_col1;
+        const uword in_aux_slice1 = in.aux_slice1;
         
-        for(u32 col=0; col < in_n_cols; ++col)
+        for(uword col=0; col < in_n_cols; ++col)
           {
           eT* out_colptr = out.colptr(col);
           
-          for(u32 i=0; i < in_n_slices; ++i)
+          for(uword i=0; i < in_n_slices; ++i)
             {
             out_colptr[i] += Q.at(in_aux_row1, in_aux_col1 + col, in_aux_slice1 + i);
             }
@@ -1401,11 +1386,11 @@ subview_cube<eT>::plus_inplace(Mat<eT>& out, const subview_cube<eT>& in)
       
       const Cube<eT>& Q = in.m;
       
-      const u32 in_aux_row1   = in.aux_row1;
-      const u32 in_aux_col1   = in.aux_col1;
-      const u32 in_aux_slice1 = in.aux_slice1;
+      const uword in_aux_row1   = in.aux_row1;
+      const uword in_aux_col1   = in.aux_col1;
+      const uword in_aux_slice1 = in.aux_slice1;
       
-      for(u32 i=0; i<in_n_slices; ++i)
+      for(uword i=0; i<in_n_slices; ++i)
         {
         out_mem[i] += Q.at(in_aux_row1, in_aux_col1, in_aux_slice1 + i);
         }
@@ -1425,17 +1410,17 @@ subview_cube<eT>::minus_inplace(Mat<eT>& out, const subview_cube<eT>& in)
   
   arma_debug_assert_cube_as_mat(out, in, "subtraction", true);
   
-  const u32 in_n_rows   = in.n_rows;
-  const u32 in_n_cols   = in.n_cols;
-  const u32 in_n_slices = in.n_slices;
+  const uword in_n_rows   = in.n_rows;
+  const uword in_n_cols   = in.n_cols;
+  const uword in_n_slices = in.n_slices;
   
-  const u32 out_n_rows    = out.n_rows;
-  const u32 out_n_cols    = out.n_cols;
-  const u32 out_vec_state = out.vec_state;
+  const uword out_n_rows    = out.n_rows;
+  const uword out_n_cols    = out.n_cols;
+  const uword out_vec_state = out.vec_state;
   
   if(in_n_slices == 1)
     {
-    for(u32 col=0; col < in_n_cols; ++col)
+    for(uword col=0; col < in_n_cols; ++col)
       {
       arrayops::inplace_minus( out.colptr(col), in.slice_colptr(0, col), in_n_rows );
       }
@@ -1446,7 +1431,7 @@ subview_cube<eT>::minus_inplace(Mat<eT>& out, const subview_cube<eT>& in)
       {
       if( (in_n_rows == out_n_rows) && (in_n_cols == 1) && (in_n_slices == out_n_cols) )
         {
-        for(u32 i=0; i < in_n_slices; ++i)
+        for(uword i=0; i < in_n_slices; ++i)
           {
           arrayops::inplace_minus( out.colptr(i), in.slice_colptr(i, 0), in_n_rows );
           }
@@ -1456,15 +1441,15 @@ subview_cube<eT>::minus_inplace(Mat<eT>& out, const subview_cube<eT>& in)
         {
         const Cube<eT>& Q = in.m;
         
-        const u32 in_aux_row1   = in.aux_row1;
-        const u32 in_aux_col1   = in.aux_col1;
-        const u32 in_aux_slice1 = in.aux_slice1;
+        const uword in_aux_row1   = in.aux_row1;
+        const uword in_aux_col1   = in.aux_col1;
+        const uword in_aux_slice1 = in.aux_slice1;
         
-        for(u32 col=0; col < in_n_cols; ++col)
+        for(uword col=0; col < in_n_cols; ++col)
           {
           eT* out_colptr = out.colptr(col);
           
-          for(u32 i=0; i < in_n_slices; ++i)
+          for(uword i=0; i < in_n_slices; ++i)
             {
             out_colptr[i] -= Q.at(in_aux_row1, in_aux_col1 + col, in_aux_slice1 + i);
             }
@@ -1477,11 +1462,11 @@ subview_cube<eT>::minus_inplace(Mat<eT>& out, const subview_cube<eT>& in)
       
       const Cube<eT>& Q = in.m;
       
-      const u32 in_aux_row1   = in.aux_row1;
-      const u32 in_aux_col1   = in.aux_col1;
-      const u32 in_aux_slice1 = in.aux_slice1;
+      const uword in_aux_row1   = in.aux_row1;
+      const uword in_aux_col1   = in.aux_col1;
+      const uword in_aux_slice1 = in.aux_slice1;
       
-      for(u32 i=0; i<in_n_slices; ++i)
+      for(uword i=0; i<in_n_slices; ++i)
         {
         out_mem[i] -= Q.at(in_aux_row1, in_aux_col1, in_aux_slice1 + i);
         }
@@ -1501,17 +1486,17 @@ subview_cube<eT>::schur_inplace(Mat<eT>& out, const subview_cube<eT>& in)
   
   arma_debug_assert_cube_as_mat(out, in, "element-wise multiplication", true);
   
-  const u32 in_n_rows   = in.n_rows;
-  const u32 in_n_cols   = in.n_cols;
-  const u32 in_n_slices = in.n_slices;
+  const uword in_n_rows   = in.n_rows;
+  const uword in_n_cols   = in.n_cols;
+  const uword in_n_slices = in.n_slices;
   
-  const u32 out_n_rows    = out.n_rows;
-  const u32 out_n_cols    = out.n_cols;
-  const u32 out_vec_state = out.vec_state;
+  const uword out_n_rows    = out.n_rows;
+  const uword out_n_cols    = out.n_cols;
+  const uword out_vec_state = out.vec_state;
   
   if(in_n_slices == 1)
     {
-    for(u32 col=0; col < in_n_cols; ++col)
+    for(uword col=0; col < in_n_cols; ++col)
       {
       arrayops::inplace_mul( out.colptr(col), in.slice_colptr(0, col), in_n_rows );
       }
@@ -1522,7 +1507,7 @@ subview_cube<eT>::schur_inplace(Mat<eT>& out, const subview_cube<eT>& in)
       {
       if( (in_n_rows == out_n_rows) && (in_n_cols == 1) && (in_n_slices == out_n_cols) )
         {
-        for(u32 i=0; i < in_n_slices; ++i)
+        for(uword i=0; i < in_n_slices; ++i)
           {
           arrayops::inplace_mul( out.colptr(i), in.slice_colptr(i, 0), in_n_rows );
           }
@@ -1532,15 +1517,15 @@ subview_cube<eT>::schur_inplace(Mat<eT>& out, const subview_cube<eT>& in)
         {
         const Cube<eT>& Q = in.m;
         
-        const u32 in_aux_row1   = in.aux_row1;
-        const u32 in_aux_col1   = in.aux_col1;
-        const u32 in_aux_slice1 = in.aux_slice1;
+        const uword in_aux_row1   = in.aux_row1;
+        const uword in_aux_col1   = in.aux_col1;
+        const uword in_aux_slice1 = in.aux_slice1;
         
-        for(u32 col=0; col < in_n_cols; ++col)
+        for(uword col=0; col < in_n_cols; ++col)
           {
           eT* out_colptr = out.colptr(col);
           
-          for(u32 i=0; i < in_n_slices; ++i)
+          for(uword i=0; i < in_n_slices; ++i)
             {
             out_colptr[i] *= Q.at(in_aux_row1, in_aux_col1 + col, in_aux_slice1 + i);
             }
@@ -1553,11 +1538,11 @@ subview_cube<eT>::schur_inplace(Mat<eT>& out, const subview_cube<eT>& in)
       
       const Cube<eT>& Q = in.m;
       
-      const u32 in_aux_row1   = in.aux_row1;
-      const u32 in_aux_col1   = in.aux_col1;
-      const u32 in_aux_slice1 = in.aux_slice1;
+      const uword in_aux_row1   = in.aux_row1;
+      const uword in_aux_col1   = in.aux_col1;
+      const uword in_aux_slice1 = in.aux_slice1;
       
-      for(u32 i=0; i<in_n_slices; ++i)
+      for(uword i=0; i<in_n_slices; ++i)
         {
         out_mem[i] *= Q.at(in_aux_row1, in_aux_col1, in_aux_slice1 + i);
         }
@@ -1577,17 +1562,17 @@ subview_cube<eT>::div_inplace(Mat<eT>& out, const subview_cube<eT>& in)
   
   arma_debug_assert_cube_as_mat(out, in, "element-wise division", true);
   
-  const u32 in_n_rows   = in.n_rows;
-  const u32 in_n_cols   = in.n_cols;
-  const u32 in_n_slices = in.n_slices;
+  const uword in_n_rows   = in.n_rows;
+  const uword in_n_cols   = in.n_cols;
+  const uword in_n_slices = in.n_slices;
   
-  const u32 out_n_rows    = out.n_rows;
-  const u32 out_n_cols    = out.n_cols;
-  const u32 out_vec_state = out.vec_state;
+  const uword out_n_rows    = out.n_rows;
+  const uword out_n_cols    = out.n_cols;
+  const uword out_vec_state = out.vec_state;
   
   if(in_n_slices == 1)
     {
-    for(u32 col=0; col < in_n_cols; ++col)
+    for(uword col=0; col < in_n_cols; ++col)
       {
       arrayops::inplace_div( out.colptr(col), in.slice_colptr(0, col), in_n_rows );
       }
@@ -1598,7 +1583,7 @@ subview_cube<eT>::div_inplace(Mat<eT>& out, const subview_cube<eT>& in)
       {
       if( (in_n_rows == out_n_rows) && (in_n_cols == 1) && (in_n_slices == out_n_cols) )
         {
-        for(u32 i=0; i < in_n_slices; ++i)
+        for(uword i=0; i < in_n_slices; ++i)
           {
           arrayops::inplace_div( out.colptr(i), in.slice_colptr(i, 0), in_n_rows );
           }
@@ -1608,15 +1593,15 @@ subview_cube<eT>::div_inplace(Mat<eT>& out, const subview_cube<eT>& in)
         {
         const Cube<eT>& Q = in.m;
         
-        const u32 in_aux_row1   = in.aux_row1;
-        const u32 in_aux_col1   = in.aux_col1;
-        const u32 in_aux_slice1 = in.aux_slice1;
+        const uword in_aux_row1   = in.aux_row1;
+        const uword in_aux_col1   = in.aux_col1;
+        const uword in_aux_slice1 = in.aux_slice1;
         
-        for(u32 col=0; col < in_n_cols; ++col)
+        for(uword col=0; col < in_n_cols; ++col)
           {
           eT* out_colptr = out.colptr(col);
           
-          for(u32 i=0; i < in_n_slices; ++i)
+          for(uword i=0; i < in_n_slices; ++i)
             {
             out_colptr[i] /= Q.at(in_aux_row1, in_aux_col1 + col, in_aux_slice1 + i);
             }
@@ -1629,11 +1614,11 @@ subview_cube<eT>::div_inplace(Mat<eT>& out, const subview_cube<eT>& in)
       
       const Cube<eT>& Q = in.m;
       
-      const u32 in_aux_row1   = in.aux_row1;
-      const u32 in_aux_col1   = in.aux_col1;
-      const u32 in_aux_slice1 = in.aux_slice1;
+      const uword in_aux_row1   = in.aux_row1;
+      const uword in_aux_col1   = in.aux_col1;
+      const uword in_aux_slice1 = in.aux_slice1;
       
-      for(u32 i=0; i<in_n_slices; ++i)
+      for(uword i=0; i<in_n_slices; ++i)
         {
         out_mem[i] /= Q.at(in_aux_row1, in_aux_col1, in_aux_slice1 + i);
         }

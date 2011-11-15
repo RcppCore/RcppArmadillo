@@ -55,7 +55,7 @@ log_det
   
   const diagmat_proxy<T1> A(X.m);
   
-  const u32 N = A.n_elem;
+  const uword N = A.n_elem;
   
   if(N == 0)
     {
@@ -70,7 +70,7 @@ log_det
   T  sign = (is_complex<eT>::value == false) ? ( (access::tmp_real(x) < T(0)) ? -1 : +1 ) : +1;
   eT val  = (is_complex<eT>::value == false) ? std::log( (access::tmp_real(x) < T(0)) ? x*T(-1) : x ) : std::log(x);
   
-  for(u32 i=1; i<N; ++i)
+  for(uword i=1; i<N; ++i)
     {
     const eT x = A[i];
     

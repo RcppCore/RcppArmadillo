@@ -436,7 +436,7 @@ namespace arma_boost
     template<typename T1>
     struct format_metaprog
       {
-      static const u32 depth = 0;
+      static const uword depth = 0;
     
       inline
       static  
@@ -453,7 +453,7 @@ namespace arma_boost
     template<typename T1, typename T2>
     struct format_metaprog< basic_format<T1,T2> >
       {
-      static const u32 depth = 1 + format_metaprog<T1>::depth;
+      static const uword depth = 1 + format_metaprog<T1>::depth;
     
       inline
       static

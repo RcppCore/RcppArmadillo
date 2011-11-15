@@ -32,9 +32,9 @@ arma_vec_norm_1(const Proxy<T1>& A)
     {
     typename Proxy<T1>::ea_type P = A.get_ea();
     
-    const u32 N = A.get_n_elem();
+    const uword N = A.get_n_elem();
     
-    u32 i,j;
+    uword i,j;
     
     for(i=0, j=1; j<N; i+=2, j+=2)
       {
@@ -49,12 +49,12 @@ arma_vec_norm_1(const Proxy<T1>& A)
     }
   else
     {
-    const u32 n_rows = A.get_n_rows();
-    const u32 n_cols = A.get_n_cols();
+    const uword n_rows = A.get_n_rows();
+    const uword n_cols = A.get_n_cols();
     
-    for(u32 col=0; col<n_cols; ++col)
+    for(uword col=0; col<n_cols; ++col)
       {
-      u32 i,j;
+      uword i,j;
       
       for(i=0, j=1; j<n_rows; i+=2, j+=2)
         {
@@ -91,9 +91,9 @@ arma_vec_norm_2(const Proxy<T1>& A, const typename arma_not_cx<typename T1::elem
     {
     typename Proxy<T1>::ea_type P = A.get_ea();
     
-    const u32 N = A.get_n_elem();
+    const uword N = A.get_n_elem();
     
-    u32 i,j;
+    uword i,j;
     
     for(i=0, j=1; j<N; i+=2, j+=2)
       {
@@ -113,12 +113,12 @@ arma_vec_norm_2(const Proxy<T1>& A, const typename arma_not_cx<typename T1::elem
     }
   else
     {
-    const u32 n_rows = A.get_n_rows();
-    const u32 n_cols = A.get_n_cols();
+    const uword n_rows = A.get_n_rows();
+    const uword n_cols = A.get_n_cols();
     
-    for(u32 col=0; col<n_cols; ++col)
+    for(uword col=0; col<n_cols; ++col)
       {
-      u32 i,j;
+      uword i,j;
       
       for(i=0, j=1; j<n_rows; i+=2, j+=2)
         {
@@ -160,9 +160,9 @@ arma_vec_norm_2(const Proxy<T1>& A, const typename arma_cx_only<typename T1::ele
     {
     typename Proxy<T1>::ea_type P = A.get_ea();
     
-    const u32 N = A.get_n_elem();
+    const uword N = A.get_n_elem();
     
-    for(u32 i=0; i<N; ++i)
+    for(uword i=0; i<N; ++i)
       {
       const T tmp = std::abs(P[i]);
       acc += tmp*tmp;
@@ -170,11 +170,11 @@ arma_vec_norm_2(const Proxy<T1>& A, const typename arma_cx_only<typename T1::ele
     }
   else
     {
-    const u32 n_rows = A.get_n_rows();
-    const u32 n_cols = A.get_n_cols();
+    const uword n_rows = A.get_n_rows();
+    const uword n_cols = A.get_n_cols();
     
-    for(u32 col=0; col<n_cols; ++col)
-    for(u32 row=0; row<n_rows; ++row)
+    for(uword col=0; col<n_cols; ++col)
+    for(uword row=0; row<n_rows; ++row)
       {
       const T tmp = std::abs(A.at(row,col));
       acc += tmp*tmp;
@@ -202,9 +202,9 @@ arma_vec_norm_k(const Proxy<T1>& A, const int k)
     {
     typename Proxy<T1>::ea_type P = A.get_ea();
     
-    const u32 N = A.get_n_elem();
+    const uword N = A.get_n_elem();
     
-    u32 i,j;
+    uword i,j;
     
     for(i=0, j=1; j<N; i+=2, j+=2)
       {
@@ -219,11 +219,11 @@ arma_vec_norm_k(const Proxy<T1>& A, const int k)
     }
   else
     {
-    const u32 n_rows = A.get_n_rows();
-    const u32 n_cols = A.get_n_cols();
+    const uword n_rows = A.get_n_rows();
+    const uword n_cols = A.get_n_cols();
     
-    for(u32 col=0; col<n_cols; ++col)
-    for(u32 row=0; row<n_rows; ++row)
+    for(uword col=0; col<n_cols; ++col)
+    for(uword row=0; row<n_rows; ++row)
       {
       acc += std::pow(std::abs(A.at(row,col)), k);
       }
@@ -246,11 +246,11 @@ arma_vec_norm_max(const Proxy<T1>& A)
   typedef typename Proxy<T1>::ea_type ea_type;
   
         ea_type P = A.get_ea();
-  const u32     N = A.get_n_elem();
+  const uword     N = A.get_n_elem();
   
   T max_val = (N != 1) ? priv::most_neg<T>() : std::abs(P[0]);
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<N; i+=2, j+=2)
     {
@@ -285,11 +285,11 @@ arma_vec_norm_min(const Proxy<T1>& A)
   typedef typename Proxy<T1>::ea_type ea_type;
   
         ea_type P = A.get_ea();
-  const u32     N = A.get_n_elem();
+  const uword     N = A.get_n_elem();
   
   T min_val = (N != 1) ? priv::most_pos<T>() : std::abs(P[0]);
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<N; i+=2, j+=2)
     {
@@ -378,7 +378,7 @@ typename T1::pod_type
 norm
   (
   const Base<typename T1::elem_type,T1>& X,
-  const u32 k,
+  const uword k,
   const typename arma_float_or_cx_only<typename T1::elem_type>::result* junk = 0
   )
   {

@@ -20,13 +20,13 @@ template<typename eT>
 arma_pure
 inline 
 eT
-op_min::direct_min(const eT* const X, const u32 n_elem)
+op_min::direct_min(const eT* const X, const uword n_elem)
   {
   arma_extra_debug_sigprint();
   
   eT min_val = priv::most_pos<eT>();
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
@@ -63,15 +63,15 @@ op_min::direct_min(const eT* const X, const u32 n_elem)
 template<typename eT>
 inline 
 eT
-op_min::direct_min(const eT* const X, const u32 n_elem, u32& index_of_min_val)
+op_min::direct_min(const eT* const X, const uword n_elem, uword& index_of_min_val)
   {
   arma_extra_debug_sigprint();
   
   eT min_val = priv::most_pos<eT>();
   
-  u32 best_index = 0;
+  uword best_index = 0;
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
@@ -113,15 +113,15 @@ op_min::direct_min(const eT* const X, const u32 n_elem, u32& index_of_min_val)
 template<typename eT>
 inline 
 eT
-op_min::direct_min(const Mat<eT>& X, const u32 row)
+op_min::direct_min(const Mat<eT>& X, const uword row)
   {
   arma_extra_debug_sigprint();
   
-  const u32 X_n_cols = X.n_cols;
+  const uword X_n_cols = X.n_cols;
   
   eT min_val = priv::most_pos<eT>();
   
-  for(u32 col=0; col<X_n_cols; ++col)
+  for(uword col=0; col<X_n_cols; ++col)
     {
     const eT tmp_val = X.at(row,col);
     
@@ -143,11 +143,11 @@ op_min::direct_min(const subview<eT>& X)
   {
   arma_extra_debug_sigprint();
   
-  const u32 X_n_elem = X.n_elem;
+  const uword X_n_elem = X.n_elem;
   
   eT min_val = priv::most_pos<eT>();
   
-  for(u32 i=0; i<X_n_elem; ++i)
+  for(uword i=0; i<X_n_elem; ++i)
     {
     eT tmp_val = X[i];
     
@@ -169,11 +169,11 @@ op_min::direct_min(const diagview<eT>& X)
   {
   arma_extra_debug_sigprint();
   
-  const u32 X_n_elem = X.n_elem;
+  const uword X_n_elem = X.n_elem;
   
   eT min_val = priv::most_pos<eT>();;
   
-  for(u32 i=0; i<X_n_elem; ++i)
+  for(uword i=0; i<X_n_elem; ++i)
     {
     eT tmp_val = X[i];
     
@@ -202,11 +202,11 @@ inline void op_min::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_min>&
   const unwrap_check<T1> tmp(in.m, out);
   const Mat<eT>&     X = tmp.M;
   
-  const u32 dim = in.aux_u32_a;
+  const uword dim = in.aux_uword_a;
   arma_debug_check( (dim > 1), "min(): incorrect usage. dim must be 0 or 1");
   
-  const u32 X_n_rows = X.n_rows;
-  const u32 X_n_cols = X.n_cols;
+  const uword X_n_rows = X.n_rows;
+  const uword X_n_cols = X.n_cols;
   
   if(dim == 0)  // min in each column
     {
@@ -218,7 +218,7 @@ inline void op_min::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_min>&
     
     eT* out_mem = out.memptr();
     
-    for(u32 col=0; col<X_n_cols; ++col)
+    for(uword col=0; col<X_n_cols; ++col)
       {
       out_mem[col] = op_min::direct_min( X.colptr(col), X_n_rows );
       }
@@ -234,7 +234,7 @@ inline void op_min::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_min>&
     
     eT* out_mem = out.memptr();
     
-    for(u32 row=0; row<X_n_rows; ++row)
+    for(uword row=0; row<X_n_rows; ++row)
       {
       out_mem[row] = op_min::direct_min( X, row );
       }
@@ -246,14 +246,14 @@ inline void op_min::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_min>&
 template<typename T>
 inline 
 std::complex<T>
-op_min::direct_min(const std::complex<T>* const X, const u32 n_elem)
+op_min::direct_min(const std::complex<T>* const X, const uword n_elem)
   {
   arma_extra_debug_sigprint();
   
-  u32 index   = 0;
+  uword index   = 0;
   T   min_val = priv::most_pos<T>();
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     const T tmp_val = std::abs(X[i]);
     
@@ -272,14 +272,14 @@ op_min::direct_min(const std::complex<T>* const X, const u32 n_elem)
 template<typename T>
 inline 
 std::complex<T>
-op_min::direct_min(const std::complex<T>* const X, const u32 n_elem, u32& index_of_min_val)
+op_min::direct_min(const std::complex<T>* const X, const uword n_elem, uword& index_of_min_val)
   {
   arma_extra_debug_sigprint();
   
-  u32 index   = 0;
+  uword index   = 0;
   T   min_val = priv::most_pos<T>();
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     const T tmp_val = std::abs(X[i]);
     
@@ -300,16 +300,16 @@ op_min::direct_min(const std::complex<T>* const X, const u32 n_elem, u32& index_
 template<typename T>
 inline 
 std::complex<T>
-op_min::direct_min(const Mat< std::complex<T> >& X, const u32 row)
+op_min::direct_min(const Mat< std::complex<T> >& X, const uword row)
   {
   arma_extra_debug_sigprint();
   
-  const u32 X_n_cols = X.n_cols;
+  const uword X_n_cols = X.n_cols;
   
-  u32 index   = 0;
+  uword index   = 0;
   T   min_val = priv::most_pos<T>();
   
-  for(u32 col=0; col<X_n_cols; ++col)
+  for(uword col=0; col<X_n_cols; ++col)
     {
     const T tmp_val = std::abs(X.at(row,col));
     
@@ -332,11 +332,11 @@ op_min::direct_min(const subview< std::complex<T> >& X)
   {
   arma_extra_debug_sigprint();
   
-  const u32 X_n_elem = X.n_elem;
-        u32 index    = 0;
+  const uword X_n_elem = X.n_elem;
+        uword index    = 0;
         T   min_val  = priv::most_pos<T>();
   
-  for(u32 i=0; i<X_n_elem; ++i)
+  for(uword i=0; i<X_n_elem; ++i)
     {
     const T tmp_val = std::abs(X[i]);
     
@@ -359,11 +359,11 @@ op_min::direct_min(const diagview< std::complex<T> >& X)
   {
   arma_extra_debug_sigprint();
   
-  const u32 X_n_elem = X.n_elem;
-        u32 index    = 0;
+  const uword X_n_elem = X.n_elem;
+        uword index    = 0;
         T   min_val  = priv::most_pos<T>();
   
-  for(u32 i=0; i<X_n_elem; ++i)
+  for(uword i=0; i<X_n_elem; ++i)
     {
     const T tmp_val = std::abs(X[i]);
     

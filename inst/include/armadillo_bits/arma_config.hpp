@@ -19,9 +19,9 @@
 struct arma_config
   {
   #if defined(ARMA_MAT_PREALLOC)
-    static const u32 mat_prealloc = (s32(ARMA_MAT_PREALLOC) > 0) ? u32(ARMA_MAT_PREALLOC) : 1;
+    static const uword mat_prealloc = (sword(ARMA_MAT_PREALLOC) > 0) ? uword(ARMA_MAT_PREALLOC) : 1;
   #else
-    static const u32 mat_prealloc = 16;
+    static const uword mat_prealloc = 16;
   #endif
   
   #if defined(ARMA_USE_ATLAS)

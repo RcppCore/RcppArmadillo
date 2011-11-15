@@ -37,18 +37,18 @@ op_htrans::apply_noalias(Mat<eT>& out, const Mat<eT>& A, const typename arma_cx_
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  const u32 A_n_rows = A.n_rows;
-  const u32 A_n_cols = A.n_cols;
+  const uword A_n_rows = A.n_rows;
+  const uword A_n_cols = A.n_cols;
   
   out.set_size(A_n_cols, A_n_rows);
   
-  for(u32 in_row = 0; in_row < A_n_rows; ++in_row)
+  for(uword in_row = 0; in_row < A_n_rows; ++in_row)
     {
-    const u32 out_col = in_row;
+    const uword out_col = in_row;
   
-    for(u32 in_col = 0; in_col < A_n_cols; ++in_col)
+    for(uword in_col = 0; in_col < A_n_cols; ++in_col)
       {
-      const u32 out_row = in_col;
+      const uword out_row = in_col;
       out.at(out_row, out_col) = std::conj( A.at(in_row, in_col) );
       }
     }
@@ -88,16 +88,16 @@ op_htrans::apply(Mat<eT>& out, const Mat<eT>& A, const typename arma_cx_only<eT>
       {
       arma_extra_debug_print("doing in-place hermitian transpose of a square matrix");
       
-      const u32 n_rows = out.n_rows;
-      const u32 n_cols = out.n_cols;
+      const uword n_rows = out.n_rows;
+      const uword n_cols = out.n_cols;
       
-      for(u32 col=0; col<n_cols; ++col)
+      for(uword col=0; col<n_cols; ++col)
         {
         eT* coldata = out.colptr(col);
         
         out.at(col,col) = std::conj( out.at(col,col) );
         
-        for(u32 row=(col+1); row<n_rows; ++row)
+        for(uword row=(col+1); row<n_rows; ++row)
           {
           const eT val1 = std::conj(coldata[row]);
           const eT val2 = std::conj(out.at(col,row));
@@ -109,8 +109,10 @@ op_htrans::apply(Mat<eT>& out, const Mat<eT>& A, const typename arma_cx_only<eT>
       }
     else
       {
-      const Mat<eT> A_copy = A;
-      op_htrans::apply_noalias(out, A_copy);
+      Mat<eT> tmp;
+      op_strans::apply_noalias(tmp, A);
+      
+      out.steal_mem(tmp);
       }
     }
   
@@ -147,7 +149,7 @@ op_htrans::apply(Mat<typename T1::elem_type>& out, const Op< Op<T1, op_trimat>, 
   const unwrap<T1>   tmp(in.m.m);
   const Mat<eT>& A = tmp.M;
   
-  const bool upper = in.m.aux_u32_a;
+  const bool upper = in.m.aux_uword_a;
   
   op_trimat::apply_htrans(out, A, upper);
   }

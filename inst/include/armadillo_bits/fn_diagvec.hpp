@@ -19,7 +19,7 @@
 template<typename T1>
 arma_inline
 const Op<T1, op_diagvec>
-diagvec(const Base<typename T1::elem_type,T1>& X, const s32 diag_id = 0)
+diagvec(const Base<typename T1::elem_type,T1>& X, const sword diag_id = 0)
   {
   arma_extra_debug_sigprint();
   

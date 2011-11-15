@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -19,7 +19,7 @@
 template<typename T1>
 inline
 const Op<T1, op_reshape>
-reshape(const Base<typename T1::elem_type,T1>& X, const u32 in_n_rows, const u32 in_n_cols, const u32 dim = 0)
+reshape(const Base<typename T1::elem_type,T1>& X, const uword in_n_rows, const uword in_n_cols, const uword dim = 0)
   {
   arma_extra_debug_sigprint();
 
@@ -27,7 +27,7 @@ reshape(const Base<typename T1::elem_type,T1>& X, const u32 in_n_rows, const u32
 
   typedef typename T1::elem_type eT;
   
-  return Op<T1, op_reshape>(X.get_ref(), eT(dim), in_n_rows, in_n_cols);
+  return Op<T1, op_reshape>(X.get_ref(), in_n_rows, in_n_cols, dim, 'j');
   }
 
 
@@ -35,7 +35,7 @@ reshape(const Base<typename T1::elem_type,T1>& X, const u32 in_n_rows, const u32
 template<typename T1>
 inline
 const OpCube<T1, op_reshape>
-reshape(const BaseCube<typename T1::elem_type,T1>& X, const u32 in_n_rows, const u32 in_n_cols, const u32 in_n_slices, const u32 dim = 0)
+reshape(const BaseCube<typename T1::elem_type,T1>& X, const uword in_n_rows, const uword in_n_cols, const uword in_n_slices, const uword dim = 0)
   {
   arma_extra_debug_sigprint();
   
@@ -43,7 +43,7 @@ reshape(const BaseCube<typename T1::elem_type,T1>& X, const u32 in_n_rows, const
 
   typedef typename T1::elem_type eT;
   
-  return OpCube<T1, op_reshape>(X.get_ref(), eT(dim), in_n_rows, in_n_cols, in_n_slices);
+  return OpCube<T1, op_reshape>(X.get_ref(), in_n_rows, in_n_cols, in_n_slices, dim, 'j');
   }
 
 

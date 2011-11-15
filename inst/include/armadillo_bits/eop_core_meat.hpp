@@ -22,7 +22,7 @@
 
 #define arma_applier_1(operatorA) \
   {\
-  u32 i,j;\
+  uword i,j;\
   \
   for(i=0, j=1; j<n_elem; i+=2, j+=2)\
     {\
@@ -45,11 +45,11 @@
 
 #define arma_applier_2(operatorA) \
   {\
-  u32 count = 0;\
+  uword count = 0;\
   \
-  for(u32 col=0; col<n_cols; ++col)\
+  for(uword col=0; col<n_cols; ++col)\
     {\
-    u32 i,j;\
+    uword i,j;\
     \
     for(i=0, j=1; j<n_rows; i+=2, j+=2, count+=2)\
       {\
@@ -75,13 +75,13 @@
 
 #define arma_applier_3(operatorA) \
   {\
-  u32 count = 0;\
+  uword count = 0;\
   \
-  for(u32 slice=0; slice<n_slices; ++slice)\
+  for(uword slice=0; slice<n_slices; ++slice)\
     {\
-    for(u32 col=0; col<n_cols; ++col)\
+    for(uword col=0; col<n_cols; ++col)\
       {\
-      u32 i,j;\
+      uword i,j;\
       \
       for(i=0, j=1; j<n_rows; i+=2, j+=2, count+=2)\
         {\
@@ -122,37 +122,27 @@ eop_core<eop_type>::apply(Mat<typename T1::elem_type>& out, const eOp<T1, eop_ty
   
   typedef typename T1::elem_type eT;
   
-  const u32 n_rows = x.get_n_rows();
-  const u32 n_cols = x.get_n_cols();
-  const u32 n_elem = x.get_n_elem();
+  const uword n_rows = out.n_rows;
+  const uword n_cols = out.n_cols;
+  const uword n_elem = out.n_elem;
   
-  out.set_size(n_rows, n_cols);
+  // NOTE: we're assuming that the matrix has already been set to the correct size and there is no aliasing;
+  // size setting and alias checking is done by either the Mat contructor or operator=()
   
-  if(is_generator<eop_type>::value == true)
+  const eT  k       = x.aux;
+        eT* out_mem = out.memptr();
+  
+  if(Proxy<T1>::prefer_at_accessor == false)
     {
-         if(is_same_type<eop_type, eop_ones_diag>::value == true) { out.eye();   }
-    else if(is_same_type<eop_type, eop_ones_full>::value == true) { out.ones();  }
-    else if(is_same_type<eop_type, eop_zeros    >::value == true) { out.zeros(); }
-    else if(is_same_type<eop_type, eop_randu    >::value == true) { out.randu(); }
-    else if(is_same_type<eop_type, eop_randn    >::value == true) { out.randn(); }
+    typename Proxy<T1>::ea_type P = x.P.get_ea();
+    
+    arma_applier_1(=);
     }
   else
     {
-    const eT  k       = x.aux;
-          eT* out_mem = out.memptr();
+    const Proxy<T1>& P = x.P;
     
-    if(Proxy<T1>::prefer_at_accessor == false)
-      {
-      typename Proxy<T1>::ea_type P = x.P.get_ea();
-      
-      arma_applier_1(=);
-      }
-    else
-      {
-      const Proxy<T1>& P = x.P;
-      
-      arma_applier_2(=);
-      }
+    arma_applier_2(=);
     }
   }
 
@@ -169,49 +159,27 @@ eop_core<eop_type>::apply_inplace_plus(Mat<typename T1::elem_type>& out, const e
   
   typedef typename T1::elem_type eT;
   
-  const u32 n_rows = x.get_n_rows();
-  const u32 n_cols = x.get_n_cols();
+  const uword n_rows = x.get_n_rows();
+  const uword n_cols = x.get_n_cols();
   
   arma_debug_assert_same_size(out.n_rows, out.n_cols, n_rows, n_cols, "addition");
   
-        eT* out_mem = out.memptr();
-  const u32 n_elem  = out.n_elem;
+        eT*   out_mem = out.memptr();
+  const uword n_elem  = out.n_elem;
   
-  if(is_generator<eop_type>::value == true)
+  const eT k = x.aux;
+  
+  if(Proxy<T1>::prefer_at_accessor == false)
     {
-    if(is_same_type<eop_type, eop_ones_diag>::value == true)
-      {
-      const u32 N = (std::min)(n_rows, n_cols);
-      
-      for(u32 i=0; i<N; ++i)
-        {
-        out.at(i,i) += eT(1);
-        }
-      }
-    else
-      {
-      for(u32 i=0; i<n_elem; ++i)
-        {
-        out_mem[i] += eop_aux::generate<eT,eop_type>();
-        }
-      }
+    typename Proxy<T1>::ea_type P = x.P.get_ea();
+    
+    arma_applier_1(+=);
     }
   else
     {
-    const eT k = x.aux;
+    const Proxy<T1>& P = x.P;
     
-    if(Proxy<T1>::prefer_at_accessor == false)
-      {
-      typename Proxy<T1>::ea_type P = x.P.get_ea();
-      
-      arma_applier_1(+=);
-      }
-    else
-      {
-      const Proxy<T1>& P = x.P;
-      
-      arma_applier_2(+=);
-      }
+    arma_applier_2(+=);
     }
   }
 
@@ -228,49 +196,27 @@ eop_core<eop_type>::apply_inplace_minus(Mat<typename T1::elem_type>& out, const 
   
   typedef typename T1::elem_type eT;
   
-  const u32 n_rows = x.get_n_rows();
-  const u32 n_cols = x.get_n_cols();
+  const uword n_rows = x.get_n_rows();
+  const uword n_cols = x.get_n_cols();
   
   arma_debug_assert_same_size(out.n_rows, out.n_cols, n_rows, n_cols, "subtraction");
   
-        eT* out_mem = out.memptr();
-  const u32 n_elem  = out.n_elem;
+        eT*   out_mem = out.memptr();
+  const uword n_elem  = out.n_elem;
   
-  if(is_generator<eop_type>::value == true)
+  const eT k = x.aux;
+  
+  if(Proxy<T1>::prefer_at_accessor == false)
     {
-    if(is_same_type<eop_type, eop_ones_diag>::value == true)
-      {
-      const u32 N = (std::min)(n_rows, n_cols);
-      
-      for(u32 i=0; i<N; ++i)
-        {
-        out.at(i,i) -= eT(1);
-        }
-      }
-    else
-      {
-      for(u32 i=0; i<n_elem; ++i)
-        {
-        out_mem[i] -= eop_aux::generate<eT,eop_type>();
-        }
-      }
+    typename Proxy<T1>::ea_type P = x.P.get_ea();
+    
+    arma_applier_1(-=);
     }
   else
     {
-    const eT k = x.aux;
+    const Proxy<T1>& P = x.P;
     
-    if(Proxy<T1>::prefer_at_accessor == false)
-      {
-      typename Proxy<T1>::ea_type P = x.P.get_ea();
-      
-      arma_applier_1(-=);
-      }
-    else
-      {
-      const Proxy<T1>& P = x.P;
-      
-      arma_applier_2(-=);
-      }
+    arma_applier_2(-=);
     }
   }
 
@@ -287,50 +233,27 @@ eop_core<eop_type>::apply_inplace_schur(Mat<typename T1::elem_type>& out, const 
   
   typedef typename T1::elem_type eT;
   
-  const u32 n_rows = x.get_n_rows();
-  const u32 n_cols = x.get_n_cols();
+  const uword n_rows = x.get_n_rows();
+  const uword n_cols = x.get_n_cols();
   
   arma_debug_assert_same_size(out.n_rows, out.n_cols, n_rows, n_cols, "element-wise multiplication");
   
-        eT* out_mem = out.memptr();
-  const u32 n_elem  = out.n_elem;
+        eT*   out_mem = out.memptr();
+  const uword n_elem  = out.n_elem;
   
-  if(is_generator<eop_type>::value == true)
+  const eT k = x.aux;
+  
+  if(Proxy<T1>::prefer_at_accessor == false)
     {
-    if(is_same_type<eop_type, eop_ones_diag>::value == true)
-      {
-      const u32 N = (std::min)(n_rows, n_cols);
-      
-      for(u32 i=0; i<N; ++i)
-        {
-        for(u32 row=0;   row<i;      ++row) { out.at(row,i) = eT(0); }
-        for(u32 row=i+1; row<n_rows; ++row) { out.at(row,i) = eT(0); }
-        }
-      }
-    else
-      {
-      for(u32 i=0; i<n_elem; ++i)
-        {
-        out_mem[i] *= eop_aux::generate<eT,eop_type>();
-        }
-      }
+    typename Proxy<T1>::ea_type P = x.P.get_ea();
+    
+    arma_applier_1(*=);
     }
   else
     {
-    const eT k = x.aux;
+    const Proxy<T1>& P = x.P;
     
-    if(Proxy<T1>::prefer_at_accessor == false)
-      {
-      typename Proxy<T1>::ea_type P = x.P.get_ea();
-      
-      arma_applier_1(*=);
-      }
-    else
-      {
-      const Proxy<T1>& P = x.P;
-      
-      arma_applier_2(*=);
-      }
+    arma_applier_2(*=);
     }
   }
 
@@ -347,52 +270,27 @@ eop_core<eop_type>::apply_inplace_div(Mat<typename T1::elem_type>& out, const eO
   
   typedef typename T1::elem_type eT;
   
-  const u32 n_rows = x.get_n_rows();
-  const u32 n_cols = x.get_n_cols();
+  const uword n_rows = x.get_n_rows();
+  const uword n_cols = x.get_n_cols();
   
   arma_debug_assert_same_size(out.n_rows, out.n_cols, n_rows, n_cols, "element-wise division");
   
         eT* out_mem = out.memptr();
-  const u32 n_elem  = out.n_elem;
+  const uword n_elem  = out.n_elem;
   
-  if(is_generator<eop_type>::value == true)
+  const eT k = x.aux;
+  
+  if(Proxy<T1>::prefer_at_accessor == false)
     {
-    if(is_same_type<eop_type, eop_ones_diag>::value == true)
-      {
-      const u32 N = (std::min)(n_rows, n_cols);
-      
-      for(u32 i=0; i<N; ++i)
-        {
-        const eT zero = eT(0);
-        
-        for(u32 row=0;   row<i;      ++row) { out.at(row,i) /= zero; }
-        for(u32 row=i+1; row<n_rows; ++row) { out.at(row,i) /= zero; }
-        }
-      }
-    else
-      {
-      for(u32 i=0; i<n_elem; ++i)
-        {
-        out_mem[i] /= eop_aux::generate<eT,eop_type>();
-        }
-      }
+    typename Proxy<T1>::ea_type P = x.P.get_ea();
+    
+    arma_applier_1(/=);
     }
   else
     {
-    const eT k = x.aux;
+    const Proxy<T1>& P = x.P;
     
-    if(Proxy<T1>::prefer_at_accessor == false)
-      {
-      typename Proxy<T1>::ea_type P = x.P.get_ea();
-      
-      arma_applier_1(/=);
-      }
-    else
-      {
-      const Proxy<T1>& P = x.P;
-      
-      arma_applier_2(/=);
-      }
+    arma_applier_2(/=);
     }
   }
 
@@ -414,37 +312,28 @@ eop_core<eop_type>::apply(Cube<typename T1::elem_type>& out, const eOpCube<T1, e
   
   typedef typename T1::elem_type eT;
   
-  const u32 n_rows   = x.get_n_rows();
-  const u32 n_cols   = x.get_n_cols();
-  const u32 n_slices = x.get_n_slices();
-  const u32 n_elem   = x.get_n_elem();
+  const uword n_rows   = out.n_rows;
+  const uword n_cols   = out.n_cols;
+  const uword n_slices = out.n_slices;
+  const uword n_elem   = out.n_elem;
   
-  out.set_size(n_rows, n_cols, n_slices);
+  // NOTE: we're assuming that the matrix has already been set to the correct size and there is no aliasing;
+  // size setting and alias checking is done by either the Mat contructor or operator=()
   
-  if(is_generator<eop_type>::value == true)
+  const eT  k       = x.aux;
+        eT* out_mem = out.memptr();
+  
+  if(ProxyCube<T1>::prefer_at_accessor == false)
     {
-         if(is_same_type<eop_type, eop_ones_full>::value == true) { out.ones();  }
-    else if(is_same_type<eop_type, eop_zeros    >::value == true) { out.zeros(); }
-    else if(is_same_type<eop_type, eop_randu    >::value == true) { out.randu(); }
-    else if(is_same_type<eop_type, eop_randn    >::value == true) { out.randn(); }
+    typename ProxyCube<T1>::ea_type P = x.P.get_ea();
+    
+    arma_applier_1(=);
     }
   else
     {
-    const eT  k       = x.aux;
-          eT* out_mem = out.memptr();
+    const ProxyCube<T1>& P = x.P;
     
-    if(ProxyCube<T1>::prefer_at_accessor == false)
-      {
-      typename ProxyCube<T1>::ea_type P = x.P.get_ea();
-      
-      arma_applier_1(=);
-      }
-    else
-      {
-      const ProxyCube<T1>& P = x.P;
-      
-      arma_applier_3(=);
-      }
+    arma_applier_3(=);
     }
   }
 
@@ -461,38 +350,28 @@ eop_core<eop_type>::apply_inplace_plus(Cube<typename T1::elem_type>& out, const 
   
   typedef typename T1::elem_type eT;
   
-  const u32 n_rows   = x.get_n_rows();
-  const u32 n_cols   = x.get_n_cols();
-  const u32 n_slices = x.get_n_slices();
+  const uword n_rows   = x.get_n_rows();
+  const uword n_cols   = x.get_n_cols();
+  const uword n_slices = x.get_n_slices();
   
   arma_debug_assert_same_size(out.n_rows, out.n_cols, out.n_slices, n_rows, n_cols, n_slices, "addition");
   
-        eT* out_mem = out.memptr();
-  const u32 n_elem  = out.n_elem;
+        eT*   out_mem = out.memptr();
+  const uword n_elem  = out.n_elem;
   
-  if(is_generator<eop_type>::value == true)
+  const eT k = x.aux;
+  
+  if(ProxyCube<T1>::prefer_at_accessor == false)
     {
-    for(u32 i=0; i<n_elem; ++i)
-      {
-      out_mem[i] += eop_aux::generate<eT,eop_type>();
-      }
+    typename ProxyCube<T1>::ea_type P = x.P.get_ea();
+  
+    arma_applier_1(+=);
     }
   else
     {
-    const eT k = x.aux;
+    const ProxyCube<T1>& P = x.P;
     
-    if(ProxyCube<T1>::prefer_at_accessor == false)
-      {
-      typename ProxyCube<T1>::ea_type P = x.P.get_ea();
-    
-      arma_applier_1(+=);
-      }
-    else
-      {
-      const ProxyCube<T1>& P = x.P;
-      
-      arma_applier_3(+=);
-      }
+    arma_applier_3(+=);
     }
   }
 
@@ -509,38 +388,28 @@ eop_core<eop_type>::apply_inplace_minus(Cube<typename T1::elem_type>& out, const
   
   typedef typename T1::elem_type eT;
   
-  const u32 n_rows   = x.get_n_rows();
-  const u32 n_cols   = x.get_n_cols();
-  const u32 n_slices = x.get_n_slices();
+  const uword n_rows   = x.get_n_rows();
+  const uword n_cols   = x.get_n_cols();
+  const uword n_slices = x.get_n_slices();
   
   arma_debug_assert_same_size(out.n_rows, out.n_cols, out.n_slices, n_rows, n_cols, n_slices, "subtraction");
   
-        eT* out_mem = out.memptr();
-  const u32 n_elem  = out.n_elem;
+        eT*   out_mem = out.memptr();
+  const uword n_elem  = out.n_elem;
   
-  if(is_generator<eop_type>::value == true)
+  const eT k = x.aux;
+  
+  if(ProxyCube<T1>::prefer_at_accessor == false)
     {
-    for(u32 i=0; i<n_elem; ++i)
-      {
-      out_mem[i] -= eop_aux::generate<eT,eop_type>();
-      }
+    typename ProxyCube<T1>::ea_type P = x.P.get_ea();
+  
+    arma_applier_1(-=);
     }
   else
     {
-    const eT k = x.aux;
+    const ProxyCube<T1>& P = x.P;
     
-    if(ProxyCube<T1>::prefer_at_accessor == false)
-      {
-      typename ProxyCube<T1>::ea_type P = x.P.get_ea();
-    
-      arma_applier_1(-=);
-      }
-    else
-      {
-      const ProxyCube<T1>& P = x.P;
-      
-      arma_applier_3(-=);
-      }
+    arma_applier_3(-=);
     }
   }
 
@@ -557,38 +426,28 @@ eop_core<eop_type>::apply_inplace_schur(Cube<typename T1::elem_type>& out, const
   
   typedef typename T1::elem_type eT;
   
-  const u32 n_rows   = x.get_n_rows();
-  const u32 n_cols   = x.get_n_cols();
-  const u32 n_slices = x.get_n_slices();
+  const uword n_rows   = x.get_n_rows();
+  const uword n_cols   = x.get_n_cols();
+  const uword n_slices = x.get_n_slices();
   
   arma_debug_assert_same_size(out.n_rows, out.n_cols, out.n_slices, n_rows, n_cols, n_slices, "element-wise multiplication");
   
-        eT* out_mem = out.memptr();
-  const u32 n_elem  = out.n_elem;
+        eT*   out_mem = out.memptr();
+  const uword n_elem  = out.n_elem;
   
-  if(is_generator<eop_type>::value == true)
+  const eT k = x.aux;
+  
+  if(ProxyCube<T1>::prefer_at_accessor == false)
     {
-    for(u32 i=0; i<n_elem; ++i)
-      {
-      out_mem[i] *= eop_aux::generate<eT,eop_type>();
-      }
+    typename ProxyCube<T1>::ea_type P = x.P.get_ea();
+  
+    arma_applier_1(*=);
     }
   else
     {
-    const eT k = x.aux;
+    const ProxyCube<T1>& P = x.P;
     
-    if(ProxyCube<T1>::prefer_at_accessor == false)
-      {
-      typename ProxyCube<T1>::ea_type P = x.P.get_ea();
-    
-      arma_applier_1(*=);
-      }
-    else
-      {
-      const ProxyCube<T1>& P = x.P;
-      
-      arma_applier_3(*=);
-      }
+    arma_applier_3(*=);
     }
   }
 
@@ -605,38 +464,28 @@ eop_core<eop_type>::apply_inplace_div(Cube<typename T1::elem_type>& out, const e
   
   typedef typename T1::elem_type eT;
   
-  const u32 n_rows   = x.get_n_rows();
-  const u32 n_cols   = x.get_n_cols();
-  const u32 n_slices = x.get_n_slices();
+  const uword n_rows   = x.get_n_rows();
+  const uword n_cols   = x.get_n_cols();
+  const uword n_slices = x.get_n_slices();
   
   arma_debug_assert_same_size(out.n_rows, out.n_cols, out.n_slices, n_rows, n_cols, n_slices, "element-wise division");
   
         eT* out_mem = out.memptr();
-  const u32 n_elem  = out.n_elem;
+  const uword n_elem  = out.n_elem;
     
-  if(is_generator<eop_type>::value == true)
+  const eT k = x.aux;
+  
+  if(ProxyCube<T1>::prefer_at_accessor == false)
     {
-    for(u32 i=0; i<n_elem; ++i)
-      {
-      out_mem[i] /= eop_aux::generate<eT,eop_type>();
-      }
+    typename ProxyCube<T1>::ea_type P = x.P.get_ea();
+  
+    arma_applier_1(/=);
     }
   else
     {
-    const eT k = x.aux;
+    const ProxyCube<T1>& P = x.P;
     
-    if(ProxyCube<T1>::prefer_at_accessor == false)
-      {
-      typename ProxyCube<T1>::ea_type P = x.P.get_ea();
-    
-      arma_applier_1(/=);
-      }
-    else
-      {
-      const ProxyCube<T1>& P = x.P;
-      
-      arma_applier_3(/=);
-      }
+    arma_applier_3(/=);
     }
   }
 

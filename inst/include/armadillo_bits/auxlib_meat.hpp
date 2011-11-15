@@ -33,7 +33,7 @@ auxlib::inv(Mat<eT>& out, const Base<eT,T1>& X, const bool slow)
   
   bool status = false;
   
-  const u32 N = out.n_rows;
+  const uword N = out.n_rows;
   
   if( (N <= 4) && (slow == false) )
     {
@@ -61,7 +61,7 @@ auxlib::inv(Mat<eT>& out, const Mat<eT>& X, const bool slow)
   
   bool status = false;
   
-  const u32 N = X.n_rows;
+  const uword N = X.n_rows;
   
   if( (N <= 4) && (slow == false) )
     {
@@ -82,7 +82,7 @@ auxlib::inv(Mat<eT>& out, const Mat<eT>& X, const bool slow)
 template<typename eT>
 inline
 bool
-auxlib::inv_noalias_tinymat(Mat<eT>& out, const Mat<eT>& X, const u32 N)
+auxlib::inv_noalias_tinymat(Mat<eT>& out, const Mat<eT>& X, const uword N)
   {
   arma_extra_debug_sigprint();
   
@@ -216,7 +216,7 @@ auxlib::inv_noalias_tinymat(Mat<eT>& out, const Mat<eT>& X, const u32 N)
 template<typename eT>
 inline
 bool
-auxlib::inv_inplace_tinymat(Mat<eT>& X, const u32 N)
+auxlib::inv_inplace_tinymat(Mat<eT>& X, const uword N)
   {
   arma_extra_debug_sigprint();
   
@@ -387,7 +387,7 @@ auxlib::inv_inplace_lapack(Mat<eT>& out)
     // memory allocation is avoided, if possible
     
     blas_int work_len = (std::max)(blas_int(1), n_rows*84);
-    podarray<eT> work( static_cast<u32>(work_len) );
+    podarray<eT> work( static_cast<uword>(work_len) );
     
     lapack::getrf(&n_rows, &n_cols, out.memptr(), &n_rows, ipiv.memptr(), &info);
     
@@ -406,7 +406,7 @@ auxlib::inv_inplace_lapack(Mat<eT>& out)
         if(work_len < proposed_work_len)
           {
           work_len = proposed_work_len;
-          work.set_size( static_cast<u32>(work_len) );
+          work.set_size( static_cast<uword>(work_len) );
           }
         }
       
@@ -429,7 +429,7 @@ auxlib::inv_inplace_lapack(Mat<eT>& out)
 template<typename eT, typename T1>
 inline
 bool
-auxlib::inv_tr(Mat<eT>& out, const Base<eT,T1>& X, const u32 layout)
+auxlib::inv_tr(Mat<eT>& out, const Base<eT,T1>& X, const uword layout)
   {
   arma_extra_debug_sigprint();
   
@@ -486,7 +486,7 @@ auxlib::inv_tr(Mat<eT>& out, const Base<eT,T1>& X, const u32 layout)
 template<typename eT, typename T1>
 inline
 bool
-auxlib::inv_sym(Mat<eT>& out, const Base<eT,T1>& X, const u32 layout)
+auxlib::inv_sym(Mat<eT>& out, const Base<eT,T1>& X, const uword layout)
   {
   arma_extra_debug_sigprint();
   
@@ -512,7 +512,7 @@ auxlib::inv_sym(Mat<eT>& out, const Base<eT,T1>& X, const u32 layout)
     ipiv.set_size(out.n_rows);
     
     podarray<eT> work;
-    work.set_size( u32(lwork) );
+    work.set_size( uword(lwork) );
     
     lapack::sytrf(&uplo, &n, out.memptr(), &n, ipiv.memptr(), work.memptr(), &lwork, &info);
     
@@ -543,7 +543,7 @@ auxlib::inv_sym(Mat<eT>& out, const Base<eT,T1>& X, const u32 layout)
 template<typename eT, typename T1>
 inline
 bool
-auxlib::inv_sympd(Mat<eT>& out, const Base<eT,T1>& X, const u32 layout)
+auxlib::inv_sympd(Mat<eT>& out, const Base<eT,T1>& X, const uword layout)
   {
   arma_extra_debug_sigprint();
   
@@ -604,7 +604,7 @@ auxlib::det(const Base<eT,T1>& X, const bool slow)
   
   if(slow == false)
     {
-    const u32 N = A.n_rows;
+    const uword N = A.n_rows;
     
     switch(N)
       {
@@ -637,7 +637,7 @@ auxlib::det(const Base<eT,T1>& X, const bool slow)
 template<typename eT>
 inline
 eT
-auxlib::det_tinymat(const Mat<eT>& X, const u32 N)
+auxlib::det_tinymat(const Mat<eT>& X, const uword N)
   {
   arma_extra_debug_sigprint();
   
@@ -763,13 +763,13 @@ auxlib::det_lapack(const Mat<eT>& X, const bool make_copy)
     
     // on output tmp appears to be L+U_alt, where U_alt is U with the main diagonal set to zero
     eT val = tmp.at(0,0);
-    for(u32 i=1; i < tmp.n_rows; ++i)
+    for(uword i=1; i < tmp.n_rows; ++i)
       {
       val *= tmp.at(i,i);
       }
     
     int sign = +1;
-    for(u32 i=0; i < tmp.n_rows; ++i)
+    for(uword i=0; i < tmp.n_rows; ++i)
       {
       if( int(i) != ipiv.mem[i] )  // NOTE: no adjustment required, as the clapack version of getrf() assumes counting from 0
         {
@@ -791,13 +791,13 @@ auxlib::det_lapack(const Mat<eT>& X, const bool make_copy)
     
     // on output tmp appears to be L+U_alt, where U_alt is U with the main diagonal set to zero
     eT val = tmp.at(0,0);
-    for(u32 i=1; i < tmp.n_rows; ++i)
+    for(uword i=1; i < tmp.n_rows; ++i)
       {
       val *= tmp.at(i,i);
       }
     
     blas_int sign = +1;
-    for(u32 i=0; i < tmp.n_rows; ++i)
+    for(uword i=0; i < tmp.n_rows; ++i)
       {
       if( blas_int(i) != (ipiv.mem[i] - 1) )  // NOTE: adjustment of -1 is required as Fortran counts from 1
         {
@@ -848,10 +848,10 @@ auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const 
     
     // on output tmp appears to be L+U_alt, where U_alt is U with the main diagonal set to zero
     
-    s32 sign = (is_complex<eT>::value == false) ? ( (access::tmp_real( tmp.at(0,0) ) < T(0)) ? -1 : +1 ) : +1;
+    sword sign = (is_complex<eT>::value == false) ? ( (access::tmp_real( tmp.at(0,0) ) < T(0)) ? -1 : +1 ) : +1;
     eT   val = (is_complex<eT>::value == false) ? std::log( (access::tmp_real( tmp.at(0,0) ) < T(0)) ? tmp.at(0,0)*T(-1) : tmp.at(0,0) ) : std::log( tmp.at(0,0) );
     
-    for(u32 i=1; i < tmp.n_rows; ++i)
+    for(uword i=1; i < tmp.n_rows; ++i)
       {
       const eT x = tmp.at(i,i);
       
@@ -859,7 +859,7 @@ auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const 
       val  += (is_complex<eT>::value == false) ? std::log( (access::tmp_real(x) < T(0)) ? x*T(-1) : x ) : std::log(x);
       }
     
-    for(u32 i=0; i < tmp.n_rows; ++i)
+    for(uword i=0; i < tmp.n_rows; ++i)
       {
       if( int(i) != ipiv.mem[i] )  // NOTE: no adjustment required, as the clapack version of getrf() assumes counting from 0
         {
@@ -894,10 +894,10 @@ auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const 
     
     // on output tmp appears to be L+U_alt, where U_alt is U with the main diagonal set to zero
     
-    s32 sign = (is_complex<eT>::value == false) ? ( (access::tmp_real( tmp.at(0,0) ) < T(0)) ? -1 : +1 ) : +1;
+    sword sign = (is_complex<eT>::value == false) ? ( (access::tmp_real( tmp.at(0,0) ) < T(0)) ? -1 : +1 ) : +1;
     eT   val = (is_complex<eT>::value == false) ? std::log( (access::tmp_real( tmp.at(0,0) ) < T(0)) ? tmp.at(0,0)*T(-1) : tmp.at(0,0) ) : std::log( tmp.at(0,0) );
     
-    for(u32 i=1; i < tmp.n_rows; ++i)
+    for(uword i=1; i < tmp.n_rows; ++i)
       {
       const eT x = tmp.at(i,i);
       
@@ -905,7 +905,7 @@ auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const 
       val  += (is_complex<eT>::value == false) ? std::log( (access::tmp_real(x) < T(0)) ? x*T(-1) : x ) : std::log(x);
       }
     
-    for(u32 i=0; i < tmp.n_rows; ++i)
+    for(uword i=0; i < tmp.n_rows; ++i)
       {
       if( blas_int(i) != (ipiv.mem[i] - 1) )  // NOTE: adjustment of -1 is required as Fortran counts from 1
         {
@@ -942,8 +942,8 @@ auxlib::lu(Mat<eT>& L, Mat<eT>& U, podarray<blas_int>& ipiv, const Base<eT,T1>& 
   
   U = X.get_ref();
   
-  const u32 U_n_rows = U.n_rows;
-  const u32 U_n_cols = U.n_cols;
+  const uword U_n_rows = U.n_rows;
+  const uword U_n_cols = U.n_cols;
   
   if(U.is_empty())
     {
@@ -986,9 +986,9 @@ auxlib::lu(Mat<eT>& L, Mat<eT>& U, podarray<blas_int>& ipiv, const Base<eT,T1>& 
     
     L.copy_size(U);
     
-    for(u32 col=0; col < U_n_cols; ++col)
+    for(uword col=0; col < U_n_cols; ++col)
       {
-      for(u32 row=0; (row < col) && (row < U_n_rows); ++row)
+      for(uword row=0; (row < col) && (row < U_n_rows); ++row)
         {
         L.at(row,col) = eT(0);
         }
@@ -998,7 +998,7 @@ auxlib::lu(Mat<eT>& L, Mat<eT>& U, podarray<blas_int>& ipiv, const Base<eT,T1>& 
         L.at(col,col) = eT(1);
         }
       
-      for(u32 row = (col+1); row < U_n_rows; ++row)
+      for(uword row = (col+1); row < U_n_rows; ++row)
         {
         L.at(row,col) = U.at(row,col);
         U.at(row,col) = eT(0);
@@ -1037,22 +1037,22 @@ auxlib::lu(Mat<eT>& L, Mat<eT>& U, Mat<eT>& P, const Base<eT,T1>& X)
       return true;
       }
     
-    const u32 n      = ipiv1.n_elem;
-    const u32 P_rows = U.n_rows;
+    const uword n      = ipiv1.n_elem;
+    const uword P_rows = U.n_rows;
     
     podarray<blas_int> ipiv2(P_rows);
     
     const blas_int* ipiv1_mem = ipiv1.memptr();
           blas_int* ipiv2_mem = ipiv2.memptr();
     
-    for(u32 i=0; i<P_rows; ++i)
+    for(uword i=0; i<P_rows; ++i)
       {
       ipiv2_mem[i] = blas_int(i);
       }
     
-    for(u32 i=0; i<n; ++i)
+    for(uword i=0; i<n; ++i)
       {
-      const u32 k = static_cast<u32>(ipiv1_mem[i]);
+      const uword k = static_cast<uword>(ipiv1_mem[i]);
       
       if( ipiv2_mem[i] != ipiv2_mem[k] )
         {
@@ -1062,9 +1062,9 @@ auxlib::lu(Mat<eT>& L, Mat<eT>& U, Mat<eT>& P, const Base<eT,T1>& X)
     
     P.zeros(P_rows, P_rows);
     
-    for(u32 row=0; row<P_rows; ++row)
+    for(uword row=0; row<P_rows; ++row)
       {
-      P.at(row, static_cast<u32>(ipiv2_mem[row])) = eT(1);
+      P.at(row, static_cast<uword>(ipiv2_mem[row])) = eT(1);
       }
     
     if(L.n_cols > U.n_rows)
@@ -1101,27 +1101,27 @@ auxlib::lu(Mat<eT>& L, Mat<eT>& U, const Base<eT,T1>& X)
       return true;
       }
     
-    const u32 n      = ipiv1.n_elem;
-    const u32 P_rows = U.n_rows;
+    const uword n      = ipiv1.n_elem;
+    const uword P_rows = U.n_rows;
     
     podarray<blas_int> ipiv2(P_rows);
     
     const blas_int* ipiv1_mem = ipiv1.memptr();
           blas_int* ipiv2_mem = ipiv2.memptr();
     
-    for(u32 i=0; i<P_rows; ++i)
+    for(uword i=0; i<P_rows; ++i)
       {
       ipiv2_mem[i] = blas_int(i);
       }
     
-    for(u32 i=0; i<n; ++i)
+    for(uword i=0; i<n; ++i)
       {
-      const u32 k = static_cast<u32>(ipiv1_mem[i]);
+      const uword k = static_cast<uword>(ipiv1_mem[i]);
       
       if( ipiv2_mem[i] != ipiv2_mem[k] )
         {
         std::swap( ipiv2_mem[i], ipiv2_mem[k] );
-        L.swap_rows( static_cast<u32>(ipiv2_mem[i]), static_cast<u32>(ipiv2_mem[k]) );
+        L.swap_rows( static_cast<uword>(ipiv2_mem[i]), static_cast<uword>(ipiv2_mem[k]) );
         }
       }
     
@@ -1170,8 +1170,8 @@ auxlib::eig_sym(Col<eT>& eigval, const Base<eT,T1>& X)
     blas_int n_rows = A.n_rows;
     blas_int lwork  = (std::max)(blas_int(1), 3*n_rows-1);
     
-    eigval.set_size( static_cast<u32>(n_rows) );
-    podarray<eT> work( static_cast<u32>(lwork) );
+    eigval.set_size( static_cast<uword>(n_rows) );
+    podarray<eT> work( static_cast<uword>(lwork) );
     
     blas_int info;
     
@@ -1220,10 +1220,10 @@ auxlib::eig_sym(Col<T>& eigval, const Base<std::complex<T>,T1>& X)
     blas_int lda    = A.n_rows;
     blas_int lwork  = (std::max)(blas_int(1), 2*n_rows - 1);  // TODO: automatically find best size of lwork
     
-    eigval.set_size( static_cast<u32>(n_rows) );
+    eigval.set_size( static_cast<uword>(n_rows) );
     
-    podarray<eT> work( static_cast<u32>(lwork) );
-    podarray<T>  rwork( static_cast<u32>((std::max)(blas_int(1), 3*n_rows - 2)) );
+    podarray<eT> work( static_cast<uword>(lwork) );
+    podarray<T>  rwork( static_cast<uword>((std::max)(blas_int(1), 3*n_rows - 2)) );
     
     blas_int info;
     
@@ -1274,8 +1274,8 @@ auxlib::eig_sym(Col<eT>& eigval, Mat<eT>& eigvec, const Base<eT,T1>& X)
     blas_int n_rows = eigvec.n_rows;
     blas_int lwork  = (std::max)(blas_int(1), 3*n_rows-1);
     
-    eigval.set_size( static_cast<u32>(n_rows) );
-    podarray<eT> work( static_cast<u32>(lwork) );
+    eigval.set_size( static_cast<uword>(n_rows) );
+    podarray<eT> work( static_cast<uword>(lwork) );
     
     blas_int info;
     
@@ -1327,10 +1327,10 @@ auxlib::eig_sym(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Base<std::
     blas_int lda    = eigvec.n_rows;
     blas_int lwork  = (std::max)(blas_int(1), 2*n_rows - 1);  // TODO: automatically find best size of lwork
     
-    eigval.set_size( static_cast<u32>(n_rows) );
+    eigval.set_size( static_cast<uword>(n_rows) );
     
-    podarray<eT> work( static_cast<u32>(lwork) );
-    podarray<T>  rwork( static_cast<u32>((std::max)(blas_int(1), 3*n_rows - 2)) );
+    podarray<eT> work( static_cast<uword>(lwork) );
+    podarray<T>  rwork( static_cast<uword>((std::max)(blas_int(1), 3*n_rows - 2)) );
     
     blas_int info;
     
@@ -1412,7 +1412,7 @@ auxlib::eig_gen
       return true;
       }
     
-    u32 A_n_rows = A.n_rows;
+    uword A_n_rows = A.n_rows;
     
     blas_int n_rows = A_n_rows;
     blas_int lda    = A_n_rows;
@@ -1422,8 +1422,8 @@ auxlib::eig_gen
     l_eigvec.set_size(A_n_rows, A_n_rows);
     r_eigvec.set_size(A_n_rows, A_n_rows);
     
-    podarray<T> work( static_cast<u32>(lwork) );
-    podarray<T> rwork( static_cast<u32>((std::max)(blas_int(1), 3*n_rows)) );
+    podarray<T> work( static_cast<uword>(lwork) );
+    podarray<T> rwork( static_cast<uword>((std::max)(blas_int(1), 3*n_rows)) );
     
     podarray<T> wr(A_n_rows);
     podarray<T> wi(A_n_rows);
@@ -1436,7 +1436,7 @@ auxlib::eig_gen
     
     
     eigval.set_size(A_n_rows);
-    for(u32 i=0; i<A_n_rows; ++i)
+    for(uword i=0; i<A_n_rows; ++i)
       {
       eigval[i] = std::complex<T>(wr[i], wi[i]);
       }
@@ -1522,7 +1522,7 @@ auxlib::eig_gen
       return true;
       }
     
-    u32 A_n_rows = A.n_rows;
+    uword A_n_rows = A.n_rows;
        
     blas_int n_rows = A_n_rows;
     blas_int lda    = A_n_rows;
@@ -1532,8 +1532,8 @@ auxlib::eig_gen
     l_eigvec.set_size(A_n_rows, A_n_rows);
     r_eigvec.set_size(A_n_rows, A_n_rows);
     
-    podarray<eT> work( static_cast<u32>(lwork) );
-    podarray<T>  rwork( static_cast<u32>((std::max)(blas_int(1), 3*n_rows)) );  // was 2,3
+    podarray<eT> work( static_cast<uword>(lwork) );
+    podarray<T>  rwork( static_cast<uword>((std::max)(blas_int(1), 3*n_rows)) );  // was 2,3
     
     blas_int info;
     
@@ -1575,7 +1575,7 @@ auxlib::chol(Mat<eT>& out, const Base<eT,T1>& X)
       return true;
       }
     
-    const u32 out_n_rows = out.n_rows;
+    const uword out_n_rows = out.n_rows;
     
     char      uplo = 'U';
     blas_int  n    = out_n_rows;
@@ -1583,11 +1583,11 @@ auxlib::chol(Mat<eT>& out, const Base<eT,T1>& X)
     
     lapack::potrf(&uplo, &n, out.memptr(), &n, &info);
     
-    for(u32 col=0; col<out_n_rows; ++col)
+    for(uword col=0; col<out_n_rows; ++col)
       {
       eT* colptr = out.colptr(col);
       
-      for(u32 row=(col+1); row < out_n_rows; ++row)
+      for(uword row=(col+1); row < out_n_rows; ++row)
         {
         colptr[row] = eT(0);
         }
@@ -1617,8 +1617,8 @@ auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
     {
     R = X.get_ref();
     
-    const u32 R_n_rows = R.n_rows;
-    const u32 R_n_cols = R.n_cols;
+    const uword R_n_rows = R.n_rows;
+    const uword R_n_cols = R.n_cols;
     
     if(R.is_empty())
       {
@@ -1633,8 +1633,8 @@ auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
     blas_int k            = (std::min)(m,n);
     blas_int info;
     
-    podarray<eT> tau( static_cast<u32>(k) );
-    podarray<eT> work( static_cast<u32>(work_len) );
+    podarray<eT> tau( static_cast<uword>(k) );
+    podarray<eT> work( static_cast<uword>(work_len) );
     
     // query for the optimum value of work_len
     work_len_tmp = -1;
@@ -1643,7 +1643,7 @@ auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
     if(info == 0)
       {
       work_len = static_cast<blas_int>(access::tmp_real(work[0]));
-      work.set_size( static_cast<u32>(work_len) );
+      work.set_size( static_cast<uword>(work_len) );
       }
     
     lapack::geqrf(&m, &n, R.memptr(), &m, tau.memptr(), work.memptr(), &work_len, &info);
@@ -1655,9 +1655,9 @@ auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
     //
     // construct R
     
-    for(u32 col=0; col < R_n_cols; ++col)
+    for(uword col=0; col < R_n_cols; ++col)
       {
-      for(u32 row=(col+1); row < R_n_rows; ++row)
+      for(uword row=(col+1); row < R_n_rows; ++row)
         {
         R.at(row,col) = eT(0);
         }
@@ -1673,7 +1673,7 @@ auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
       if(info == 0)
         {
         work_len = static_cast<blas_int>(access::tmp_real(work[0]));
-        work.set_size( static_cast<u32>(work_len) );
+        work.set_size( static_cast<uword>(work_len) );
         }
       
       lapack::orgqr(&m, &m, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &work_len, &info);
@@ -1688,7 +1688,7 @@ auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
       if(info == 0)
         {
         work_len = static_cast<blas_int>(access::tmp_real(work[0]));
-        work.set_size( static_cast<u32>(work_len) );
+        work.set_size( static_cast<uword>(work_len) );
         }
       
       lapack::ungqr(&m, &m, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &work_len, &info);
@@ -1712,7 +1712,7 @@ auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
 template<typename eT, typename T1>
 inline
 bool
-auxlib::svd(Col<eT>& S, const Base<eT,T1>& X, u32& X_n_rows, u32& X_n_cols)
+auxlib::svd(Col<eT>& S, const Base<eT,T1>& X, uword& X_n_rows, uword& X_n_cols)
   {
   arma_extra_debug_sigprint();
   
@@ -1743,9 +1743,9 @@ auxlib::svd(Col<eT>& S, const Base<eT,T1>& X, u32& X_n_rows, u32& X_n_cols)
     blas_int  lwork = 2 * (std::max)(blas_int(1), (std::max)( (3*(std::min)(m,n) + (std::max)(m,n)), 5*(std::min)(m,n) ) );
     blas_int  info;
     
-    S.set_size( static_cast<u32>((std::min)(m, n)) );
+    S.set_size( static_cast<uword>((std::min)(m, n)) );
     
-    podarray<eT> work( static_cast<u32>(lwork) );
+    podarray<eT> work( static_cast<uword>(lwork) );
   
   
     // let gesvd_() calculate the optimum size of the workspace
@@ -1770,7 +1770,7 @@ auxlib::svd(Col<eT>& S, const Base<eT,T1>& X, u32& X_n_rows, u32& X_n_cols)
       if(proposed_lwork > lwork)
         {
         lwork = proposed_lwork;
-        work.set_size( static_cast<u32>(lwork) );
+        work.set_size( static_cast<uword>(lwork) );
         }
       
       lapack::gesvd<eT>
@@ -1805,7 +1805,7 @@ auxlib::svd(Col<eT>& S, const Base<eT,T1>& X, u32& X_n_rows, u32& X_n_cols)
 template<typename T, typename T1>
 inline
 bool
-auxlib::svd(Col<T>& S, const Base<std::complex<T>, T1>& X, u32& X_n_rows, u32& X_n_cols)
+auxlib::svd(Col<T>& S, const Base<std::complex<T>, T1>& X, uword& X_n_rows, uword& X_n_cols)
   {
   arma_extra_debug_sigprint();
   
@@ -1838,10 +1838,10 @@ auxlib::svd(Col<T>& S, const Base<std::complex<T>, T1>& X, u32& X_n_rows, u32& X
     blas_int  lwork = 2 * (std::max)(blas_int(1), 2*(std::min)(m,n)+(std::max)(m,n) );
     blas_int  info;
     
-    S.set_size( static_cast<u32>((std::min)(m,n)) );
+    S.set_size( static_cast<uword>((std::min)(m,n)) );
     
-    podarray<eT> work( static_cast<u32>(lwork) );
-    podarray<T>  rwork( static_cast<u32>(5*(std::min)(m,n)) );
+    podarray<eT> work( static_cast<uword>(lwork) );
+    podarray<T>  rwork( static_cast<uword>(5*(std::min)(m,n)) );
     
     // let gesvd_() calculate the optimum size of the workspace
     blas_int lwork_tmp = -1;
@@ -1865,7 +1865,7 @@ auxlib::svd(Col<T>& S, const Base<std::complex<T>, T1>& X, u32& X_n_rows, u32& X
       if(proposed_lwork > lwork)
         {
         lwork = proposed_lwork;
-        work.set_size( static_cast<u32>(lwork) );
+        work.set_size( static_cast<uword>(lwork) );
         }
       
       lapack::cx_gesvd<T>
@@ -1906,7 +1906,7 @@ auxlib::svd(Col<eT>& S, const Base<eT,T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  u32 junk;
+  uword junk;
   return auxlib::svd(S, X, junk, junk);
   }
 
@@ -1919,7 +1919,7 @@ auxlib::svd(Col<T>& S, const Base<std::complex<T>, T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  u32 junk;
+  uword junk;
   return auxlib::svd(S, X, junk, junk);
   }
 
@@ -1959,8 +1959,8 @@ auxlib::svd(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
     blas_int  info;
     
     
-    S.set_size( static_cast<u32>((std::min)(m,n)) );
-    podarray<eT> work( static_cast<u32>(lwork) );
+    S.set_size( static_cast<uword>((std::min)(m,n)) );
+    podarray<eT> work( static_cast<uword>(lwork) );
   
     // let gesvd_() calculate the optimum size of the workspace
     blas_int lwork_tmp = -1;
@@ -1983,7 +1983,7 @@ auxlib::svd(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
       if(proposed_lwork > lwork)
         {
         lwork = proposed_lwork;
-        work.set_size( static_cast<u32>(lwork) );
+        work.set_size( static_cast<uword>(lwork) );
         }
       
       lapack::gesvd<eT>
@@ -2052,10 +2052,10 @@ auxlib::svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, con
     blas_int  lwork = 2 * (std::max)(blas_int(1), 2*(std::min)(m,n)+(std::max)(m,n) );
     blas_int  info;
     
-    S.set_size( static_cast<u32>((std::min)(m,n)) );
+    S.set_size( static_cast<uword>((std::min)(m,n)) );
     
-    podarray<eT> work( static_cast<u32>(lwork) );
-    podarray<T>  rwork( static_cast<u32>(5*(std::min)(m,n)) );
+    podarray<eT> work( static_cast<uword>(lwork) );
+    podarray<T>  rwork( static_cast<uword>(5*(std::min)(m,n)) );
     
     // let gesvd_() calculate the optimum size of the workspace
     blas_int lwork_tmp = -1;
@@ -2078,7 +2078,7 @@ auxlib::svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, con
       if(proposed_lwork > lwork)
         {
         lwork = proposed_lwork;
-        work.set_size( static_cast<u32>(lwork) );
+        work.set_size( static_cast<uword>(lwork) );
         }
       
       lapack::cx_gesvd<T>
@@ -2117,7 +2117,7 @@ auxlib::svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, con
 template<typename eT, typename T1>
 inline
 bool
-auxlib::svd_thin(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X, const char mode)
+auxlib::svd_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X, const char mode)
   {
   arma_extra_debug_sigprint();
   
@@ -2129,7 +2129,7 @@ auxlib::svd_thin(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X, const
     blas_int n    = A.n_cols;
     blas_int lda  = A.n_rows;
     
-    S.set_size( static_cast<u32>((std::min)(m,n)) );
+    S.set_size( static_cast<uword>((std::min)(m,n)) );
     
     blas_int ldu  = 0;
     blas_int ldvt = 0;
@@ -2146,7 +2146,7 @@ auxlib::svd_thin(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X, const
         ldu  = m;
         ldvt = 1;
         
-        U.set_size( static_cast<u32>(ldu), static_cast<u32>((std::min)(m,n)) );
+        U.set_size( static_cast<uword>(ldu), static_cast<uword>((std::min)(m,n)) );
         V.reset();
         
         break;
@@ -2160,7 +2160,7 @@ auxlib::svd_thin(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X, const
         ldvt = (std::min)(m,n);
         
         U.reset();
-        V.set_size( static_cast<u32>(ldvt), static_cast<u32>(n) );
+        V.set_size( static_cast<uword>(ldvt), static_cast<uword>(n) );
         
         break;
       
@@ -2172,8 +2172,8 @@ auxlib::svd_thin(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X, const
         ldu  = m;
         ldvt = (std::min)(m,n);
         
-        U.set_size( static_cast<u32>(ldu),  static_cast<u32>((std::min)(m,n)) );
-        V.set_size( static_cast<u32>(ldvt), static_cast<u32>(n)               );
+        U.set_size( static_cast<uword>(ldu),  static_cast<uword>((std::min)(m,n)) );
+        V.set_size( static_cast<uword>(ldvt), static_cast<uword>(n)               );
         
         break;
       
@@ -2199,7 +2199,7 @@ auxlib::svd_thin(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X, const
     blas_int info  = 0;
     
     
-    podarray<eT> work( static_cast<u32>(lwork) );
+    podarray<eT> work( static_cast<uword>(lwork) );
     
     // let gesvd_() calculate the optimum size of the workspace
     blas_int lwork_tmp = -1;
@@ -2222,7 +2222,7 @@ auxlib::svd_thin(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X, const
       if(proposed_lwork > lwork)
         {
         lwork = proposed_lwork;
-        work.set_size( static_cast<u32>(lwork) );
+        work.set_size( static_cast<uword>(lwork) );
         }
       
       lapack::gesvd<eT>
@@ -2260,7 +2260,7 @@ auxlib::svd_thin(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X, const
 template<typename T, typename T1>
 inline
 bool
-auxlib::svd_thin(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, const Base< std::complex<T>, T1>& X, const char mode)
+auxlib::svd_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, const Base< std::complex<T>, T1>& X, const char mode)
   {
   arma_extra_debug_sigprint();
   
@@ -2274,7 +2274,7 @@ auxlib::svd_thin(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V
     blas_int n    = A.n_cols;
     blas_int lda  = A.n_rows;
     
-    S.set_size( static_cast<u32>((std::min)(m,n)) );
+    S.set_size( static_cast<uword>((std::min)(m,n)) );
     
     blas_int ldu  = 0;
     blas_int ldvt = 0;
@@ -2291,7 +2291,7 @@ auxlib::svd_thin(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V
         ldu  = m;
         ldvt = 1;
         
-        U.set_size( static_cast<u32>(ldu), static_cast<u32>((std::min)(m,n)) );
+        U.set_size( static_cast<uword>(ldu), static_cast<uword>((std::min)(m,n)) );
         V.reset();
         
         break;
@@ -2305,7 +2305,7 @@ auxlib::svd_thin(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V
         ldvt = (std::min)(m,n);
         
         U.reset();
-        V.set_size( static_cast<u32>(ldvt), static_cast<u32>(n) );
+        V.set_size( static_cast<uword>(ldvt), static_cast<uword>(n) );
         
         break;
       
@@ -2317,8 +2317,8 @@ auxlib::svd_thin(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V
         ldu  = m;
         ldvt = (std::min)(m,n);
         
-        U.set_size( static_cast<u32>(ldu),  static_cast<u32>((std::min)(m,n)) );
-        V.set_size( static_cast<u32>(ldvt), static_cast<u32>(n)               );
+        U.set_size( static_cast<uword>(ldu),  static_cast<uword>((std::min)(m,n)) );
+        V.set_size( static_cast<uword>(ldvt), static_cast<uword>(n)               );
         
         break;
       
@@ -2344,8 +2344,8 @@ auxlib::svd_thin(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V
     blas_int info  = 0;
     
     
-    podarray<eT>  work( static_cast<u32>(lwork) );
-    podarray<T>  rwork( static_cast<u32>(5*(std::min)(m,n)) );
+    podarray<eT>  work( static_cast<uword>(lwork) );
+    podarray<T>  rwork( static_cast<uword>(5*(std::min)(m,n)) );
     
     // let gesvd_() calculate the optimum size of the workspace
     blas_int lwork_tmp = -1;
@@ -2369,7 +2369,7 @@ auxlib::svd_thin(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V
       if(proposed_lwork > lwork)
         {
         lwork = proposed_lwork;
-        work.set_size( static_cast<u32>(lwork) );
+        work.set_size( static_cast<uword>(lwork) );
         }
       
       lapack::cx_gesvd<T>
@@ -2421,7 +2421,7 @@ auxlib::solve(Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B, const bool slow)
     }
   else
     {
-    const u32 A_n_rows = A.n_rows;
+    const uword A_n_rows = A.n_rows;
     
     bool status = false;
     
@@ -2502,7 +2502,7 @@ auxlib::solve_od(Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B)
     
     Mat<eT> tmp = B;
     
-    podarray<eT> work( static_cast<u32>(lwork) );
+    podarray<eT> work( static_cast<uword>(lwork) );
     
     arma_extra_debug_print("lapack::gels()");
     
@@ -2521,7 +2521,7 @@ auxlib::solve_od(Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B)
     
     out.set_size(A.n_cols, B.n_cols);
     
-    for(u32 col=0; col<B.n_cols; ++col)
+    for(uword col=0; col<B.n_cols; ++col)
       {
       arrayops::copy( out.colptr(col), tmp.colptr(col), A.n_cols );
       }
@@ -2572,19 +2572,19 @@ auxlib::solve_ud(Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B)
     Mat<eT> tmp;
     tmp.zeros(A.n_cols, B.n_cols);
     
-    for(u32 col=0; col<B.n_cols; ++col)
+    for(uword col=0; col<B.n_cols; ++col)
       {
       eT* tmp_colmem = tmp.colptr(col);
       
       arrayops::copy( tmp_colmem, B.colptr(col), B.n_rows );
       
-      for(u32 row=B.n_rows; row<A.n_cols; ++row)
+      for(uword row=B.n_rows; row<A.n_cols; ++row)
         {
         tmp_colmem[row] = eT(0);
         }
       }
     
-    podarray<eT> work( static_cast<u32>(lwork) );
+    podarray<eT> work( static_cast<uword>(lwork) );
     
     arma_extra_debug_print("lapack::gels()");
     
@@ -2603,7 +2603,7 @@ auxlib::solve_ud(Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B)
     
     out.set_size(A.n_cols, B.n_cols);
     
-    for(u32 col=0; col<B.n_cols; ++col)
+    for(uword col=0; col<B.n_cols; ++col)
       {
       arrayops::copy( out.colptr(col), tmp.colptr(col), A.n_cols );
       }
@@ -2629,7 +2629,7 @@ auxlib::solve_ud(Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B)
 template<typename eT>
 inline
 bool
-auxlib::solve_tr(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const u32 layout)
+auxlib::solve_tr(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const uword layout)
   {
   arma_extra_debug_sigprint();
   
@@ -2689,7 +2689,7 @@ auxlib::schur_dec(Mat<eT>& Z, Mat<eT>& T, const Mat<eT>& A)
       return true;
       }
     
-    const u32 A_n_rows = A.n_rows;
+    const uword A_n_rows = A.n_rows;
     
     char    jobvs    = 'V';                // get Schur vectors (Z)
     char     sort    = 'N';                // do not sort eigenvalues/vectors
@@ -2699,7 +2699,7 @@ auxlib::schur_dec(Mat<eT>& Z, Mat<eT>& T, const Mat<eT>& A)
     
     blas_int lwork = 3 * n;                // workspace must be at least 3 * n (if set to -1, optimal size is output in work(0) and nothing else is done
     
-    podarray<eT>       work( static_cast<u32>(lwork) );
+    podarray<eT>       work( static_cast<uword>(lwork) );
     podarray<blas_int> bwork(A_n_rows);
     
     blas_int info = 0;
@@ -2746,7 +2746,7 @@ auxlib::schur_dec(Mat<std::complex<cT> >& Z, Mat<std::complex<cT> >& T, const Ma
     
     typedef std::complex<cT> eT;
     
-    const u32 A_n_rows = A.n_rows;
+    const uword A_n_rows = A.n_rows;
     
     char        jobvs = 'V';                // get Schur vectors (Z)
     char         sort = 'N';                // do not sort eigenvalues/vectors
@@ -2756,7 +2756,7 @@ auxlib::schur_dec(Mat<std::complex<cT> >& Z, Mat<std::complex<cT> >& T, const Ma
     
     blas_int lwork = 3 * n;                 // workspace must be at least 3 * n (if set to -1, optimal size is output in work(0) and nothing else is done
     
-    podarray<eT>       work( static_cast<u32>(lwork) );
+    podarray<eT>       work( static_cast<uword>(lwork) );
     podarray<blas_int> bwork(A_n_rows);
     
     blas_int info = 0;

@@ -27,19 +27,19 @@ class diagview : public Base<eT, diagview<eT> >
   typedef eT                                elem_type;
   typedef typename get_pod_type<eT>::result pod_type;
   
-  const u32 row_offset;
-  const u32 col_offset;
+  const uword row_offset;
+  const uword col_offset;
   
-  const u32 n_rows;  // equal to n_elem
-  const u32 n_cols;  // always 1
-  const u32 n_elem;
+  const uword n_rows;  // equal to n_elem
+  const uword n_cols;  // always 1
+  const uword n_elem;
   
   
   
   protected:
   
-  arma_inline diagview(const Mat<eT>& in_m, const u32 in_row_offset, const u32 in_col_offset, const u32 len);
-  arma_inline diagview(      Mat<eT>& in_m, const u32 in_row_offset, const u32 in_col_offset, const u32 len);
+  arma_inline diagview(const Mat<eT>& in_m, const uword in_row_offset, const uword in_col_offset, const uword len);
+  arma_inline diagview(      Mat<eT>& in_m, const uword in_row_offset, const uword in_col_offset, const uword len);
   
   
   public:
@@ -60,20 +60,20 @@ class diagview : public Base<eT, diagview<eT> >
   template<typename T1> inline void operator/=(const Base<eT,T1>& x);
   
   
-  arma_inline eT& operator[](const u32 i);
-  arma_inline eT  operator[](const u32 i) const;
+  arma_inline eT& operator[](const uword i);
+  arma_inline eT  operator[](const uword i) const;
   
-  arma_inline eT&         at(const u32 i);
-  arma_inline eT          at(const u32 i) const;
+  arma_inline eT&         at(const uword i);
+  arma_inline eT          at(const uword i) const;
   
-  arma_inline eT& operator()(const u32 i);
-  arma_inline eT  operator()(const u32 i) const;
+  arma_inline eT& operator()(const uword i);
+  arma_inline eT  operator()(const uword i) const;
   
-  arma_inline eT&         at(const u32 in_n_row, const u32 in_n_col);
-  arma_inline eT          at(const u32 in_n_row, const u32 in_n_col) const;
+  arma_inline eT&         at(const uword in_n_row, const uword in_n_col);
+  arma_inline eT          at(const uword in_n_row, const uword in_n_col) const;
    
-  arma_inline eT& operator()(const u32 in_n_row, const u32 in_n_col);
-  arma_inline eT  operator()(const u32 in_n_row, const u32 in_n_col) const;
+  arma_inline eT& operator()(const uword in_n_row, const uword in_n_col);
+  arma_inline eT  operator()(const uword in_n_row, const uword in_n_col) const;
   
   
   inline void fill(const eT val);

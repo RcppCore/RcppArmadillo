@@ -18,7 +18,7 @@
 template<typename T1>
 arma_inline
 const Op<T1, op_median>
-median(const Base<typename T1::elem_type,T1>& X, const u32 dim = 0)
+median(const Base<typename T1::elem_type,T1>& X, const uword dim = 0)
   {
   arma_extra_debug_sigprint();
   
@@ -36,7 +36,7 @@ median(const Row<eT>& A)
   {
   arma_extra_debug_sigprint();
   
-  const u32 A_n_elem = A.n_elem;
+  const uword A_n_elem = A.n_elem;
   
   arma_debug_check( (A_n_elem == 0), "median(): given object has no elements" );
   
@@ -54,7 +54,7 @@ median(const Col<eT>& A)
   {
   arma_extra_debug_sigprint();
   
-  const u32 A_n_elem = A.n_elem;
+  const uword A_n_elem = A.n_elem;
   
   arma_debug_check( (A_n_elem == 0), "median(): given object has no elements" );
   
@@ -72,12 +72,12 @@ median(const Row< std::complex<T> >& A)
   {
   arma_extra_debug_sigprint();
   
-  const u32 A_n_elem = A.n_elem;
+  const uword A_n_elem = A.n_elem;
   
   arma_debug_check( (A_n_elem == 0), "median(): given object has no elements" );
   
-  u32 index1;
-  u32 index2;
+  uword index1;
+  uword index2;
   op_median::direct_cx_median_index(index1, index2, A.mem, A_n_elem);
   
   return (index1 == index2) ? A.mem[index1] : op_median::robust_mean( A.mem[index1], A.mem[index2] );
@@ -94,12 +94,12 @@ median(const Col< std::complex<T> >& A)
   {
   arma_extra_debug_sigprint();
   
-  const u32 A_n_elem = A.n_elem;
+  const uword A_n_elem = A.n_elem;
   
   arma_debug_check( (A_n_elem == 0), "median(): given object has no elements" );
   
-  u32 index1;
-  u32 index2;
+  uword index1;
+  uword index2;
   op_median::direct_cx_median_index(index1, index2, A.mem, A_n_elem);
   
   return (index1 == index2) ? A.mem[index1] : op_median::robust_mean( A.mem[index1], A.mem[index2] );
@@ -150,8 +150,8 @@ median(const subview_row< std::complex<T> >& A)
   
   arma_debug_check( (A.n_elem == 0), "median(): given object has no elements" );
   
-  u32 index1;
-  u32 index2;
+  uword index1;
+  uword index2;
   op_median::direct_cx_median_index(index1, index2, A);
   
   return (index1 == index2) ? A[index1] : op_median::robust_mean(A[index1], A[index2]);
@@ -170,8 +170,8 @@ median(const subview_col< std::complex<T> >& A)
   
   arma_debug_check( (A.n_elem == 0), "median(): given object has no elements" );
   
-  u32 index1;
-  u32 index2;
+  uword index1;
+  uword index2;
   op_median::direct_cx_median_index(index1, index2, A);
   
   return (index1 == index2) ? A[index1] : op_median::robust_mean(A[index1], A[index2]);
@@ -204,8 +204,8 @@ median(const diagview< std::complex<T> >& A)
   
   arma_debug_check( (A.n_elem == 0), "median(): given object has no elements" );
   
-  u32 index1;
-  u32 index2;
+  uword index1;
+  uword index2;
   op_median::direct_cx_median_index(index1, index2, A);
   
   return (index1 == index2) ? A[index1] : op_median::robust_mean(A[index1], A[index2]);

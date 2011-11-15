@@ -57,9 +57,9 @@ eps(const Base< std::complex<typename T1::pod_type>, T1>& X, const typename arma
   
          T* out_mem = out.memptr();
   const eT* A_mem   = A.memptr();
-  const u32 n_elem  = A.n_elem;
+  const uword n_elem  = A.n_elem;
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = eop_aux::direct_eps( A_mem[i] );
     }

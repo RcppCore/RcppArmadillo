@@ -18,8 +18,8 @@
 
 struct Cube_prealloc
   {
-  static const u32 mat_ptrs_size = 4;
-  static const u32 mem_n_elem    = 64;
+  static const uword mat_ptrs_size = 4;
+  static const uword mem_n_elem    = 64;
   };
 
 
@@ -34,12 +34,12 @@ class Cube : public BaseCube< eT, Cube<eT> >
   typedef eT                                elem_type; //!< the type of elements stored in the cube
   typedef typename get_pod_type<eT>::result pod_type;  //!< if eT is non-complex, pod_type is same as eT. otherwise, pod_type is the underlying type used by std::complex
   
-  const u32  n_rows;       //!< number of rows in each slice (read-only)
-  const u32  n_cols;       //!< number of columns in each slice (read-only)
-  const u32  n_elem_slice; //!< number of elements in each slice (read-only)
-  const u32  n_slices;     //!< number of slices in the cube (read-only)
-  const u32  n_elem;       //!< number of elements in the cube (read-only)
-  const u32  mem_state;
+  const uword  n_rows;       //!< number of rows in each slice (read-only)
+  const uword  n_cols;       //!< number of columns in each slice (read-only)
+  const uword  n_elem_slice; //!< DEPRECATED: do not use this member variable -- it will be _removed_ in version 3.0
+  const uword  n_slices;     //!< number of slices in the cube (read-only)
+  const uword  n_elem;       //!< number of elements in the cube (read-only)
+  const uword  mem_state;
   
   // mem_state = 0: normal cube that can be resized; 
   // mem_state = 1: use auxiliary memory until change in the number of elements is requested;  
@@ -60,10 +60,10 @@ class Cube : public BaseCube< eT, Cube<eT> >
   inline ~Cube();
   inline  Cube();
   
-  inline Cube(const u32 in_rows, const u32 in_cols, const u32 in_slices);
+  inline Cube(const uword in_rows, const uword in_cols, const uword in_slices);
   
-  inline Cube(      eT* aux_mem, const u32 aux_n_rows, const u32 aux_n_cols, const u32 aux_n_slices, const bool copy_aux_mem = true, const bool strict = true);
-  inline Cube(const eT* aux_mem, const u32 aux_n_rows, const u32 aux_n_cols, const u32 aux_n_slices);
+  inline Cube(      eT* aux_mem, const uword aux_n_rows, const uword aux_n_cols, const uword aux_n_slices, const bool copy_aux_mem = true, const bool strict = true);
+  inline Cube(const eT* aux_mem, const uword aux_n_rows, const uword aux_n_cols, const uword aux_n_slices);
   
   arma_inline const Cube&  operator=(const eT val);
   arma_inline const Cube& operator+=(const eT val);
@@ -88,14 +88,14 @@ class Cube : public BaseCube< eT, Cube<eT> >
   inline const Cube& operator%=(const subview_cube<eT>& X);
   inline const Cube& operator/=(const subview_cube<eT>& X);
   
-  arma_inline       Mat<eT>& slice(const u32 in_slice);
-  arma_inline const Mat<eT>& slice(const u32 in_slice) const;
+  arma_inline       Mat<eT>& slice(const uword in_slice);
+  arma_inline const Mat<eT>& slice(const uword in_slice) const;
   
-  arma_inline       subview_cube<eT> slices(const u32 in_slice1, const u32 in_slice2);
-  arma_inline const subview_cube<eT> slices(const u32 in_slice1, const u32 in_slice2) const;
+  arma_inline       subview_cube<eT> slices(const uword in_slice1, const uword in_slice2);
+  arma_inline const subview_cube<eT> slices(const uword in_slice1, const uword in_slice2) const;
   
-  arma_inline       subview_cube<eT> subcube(const u32 in_row1, const u32 in_col1, const u32 in_slice1, const u32 in_row2, const u32 in_col2, const u32 in_slice2);
-  arma_inline const subview_cube<eT> subcube(const u32 in_row1, const u32 in_col1, const u32 in_slice1, const u32 in_row2, const u32 in_col2, const u32 in_slice2) const;
+  arma_inline       subview_cube<eT> subcube(const uword in_row1, const uword in_col1, const uword in_slice1, const uword in_row2, const uword in_col2, const uword in_slice2);
+  arma_inline const subview_cube<eT> subcube(const uword in_row1, const uword in_col1, const uword in_slice1, const uword in_row2, const uword in_col2, const uword in_slice2) const;
   
   inline            subview_cube<eT> subcube(const span& row_span, const span& col_span, const span& slice_span);
   inline      const subview_cube<eT> subcube(const span& row_span, const span& col_span, const span& slice_span) const;
@@ -104,15 +104,22 @@ class Cube : public BaseCube< eT, Cube<eT> >
   inline      const subview_cube<eT> operator()(const span& row_span, const span& col_span, const span& slice_span) const;
   
   
-  inline void shed_slice(const u32 slice_num);
+  inline void shed_slice(const uword slice_num);
   
-  inline void shed_slices(const u32 in_slice1, const u32 in_slice2);
+  inline void shed_slices(const uword in_slice1, const uword in_slice2);
   
-  inline void insert_slices(const u32 slice_num, const u32 N, const bool set_to_zero = true);
+  inline void insert_slices(const uword slice_num, const uword N, const bool set_to_zero = true);
   
   template<typename T1>
-  inline void insert_slices(const u32 row_num, const BaseCube<eT,T1>& X);
+  inline void insert_slices(const uword row_num, const BaseCube<eT,T1>& X);
   
+  
+  template<typename gen_type> inline                   Cube(const GenCube<eT, gen_type>& X);
+  template<typename gen_type> inline const Cube&  operator=(const GenCube<eT, gen_type>& X);
+  template<typename gen_type> inline const Cube& operator+=(const GenCube<eT, gen_type>& X);
+  template<typename gen_type> inline const Cube& operator-=(const GenCube<eT, gen_type>& X);
+  template<typename gen_type> inline const Cube& operator%=(const GenCube<eT, gen_type>& X);
+  template<typename gen_type> inline const Cube& operator/=(const GenCube<eT, gen_type>& X);
   
   template<typename T1, typename op_type> inline                   Cube(const OpCube<T1, op_type>& X);
   template<typename T1, typename op_type> inline const Cube&  operator=(const OpCube<T1, op_type>& X);
@@ -157,20 +164,20 @@ class Cube : public BaseCube< eT, Cube<eT> >
   template<typename T1, typename T2, typename glue_type> inline const Cube& operator/=(const mtGlueCube<eT, T1, T2, glue_type>& X);
   
   
-  arma_inline arma_warn_unused eT& operator[] (const u32 i);
-  arma_inline arma_warn_unused eT  operator[] (const u32 i) const;
+  arma_inline arma_warn_unused eT& operator[] (const uword i);
+  arma_inline arma_warn_unused eT  operator[] (const uword i) const;
   
-  arma_inline arma_warn_unused eT& at(const u32 i);
-  arma_inline arma_warn_unused eT  at(const u32 i) const;
+  arma_inline arma_warn_unused eT& at(const uword i);
+  arma_inline arma_warn_unused eT  at(const uword i) const;
   
-  arma_inline arma_warn_unused eT& operator() (const u32 i);
-  arma_inline arma_warn_unused eT  operator() (const u32 i) const;
+  arma_inline arma_warn_unused eT& operator() (const uword i);
+  arma_inline arma_warn_unused eT  operator() (const uword i) const;
   
-  arma_inline arma_warn_unused eT& at         (const u32 in_row, const u32 in_col, const u32 in_slice);
-  arma_inline arma_warn_unused eT  at         (const u32 in_row, const u32 in_col, const u32 in_slice) const;
+  arma_inline arma_warn_unused eT& at         (const uword in_row, const uword in_col, const uword in_slice);
+  arma_inline arma_warn_unused eT  at         (const uword in_row, const uword in_col, const uword in_slice) const;
   
-  arma_inline arma_warn_unused eT& operator() (const u32 in_row, const u32 in_col, const u32 in_slice);
-  arma_inline arma_warn_unused eT  operator() (const u32 in_row, const u32 in_col, const u32 in_slice) const;
+  arma_inline arma_warn_unused eT& operator() (const uword in_row, const uword in_col, const uword in_slice);
+  arma_inline arma_warn_unused eT  operator() (const uword in_row, const uword in_col, const uword in_slice) const;
   
   arma_inline const Cube& operator++();
   arma_inline void        operator++(int);
@@ -181,45 +188,45 @@ class Cube : public BaseCube< eT, Cube<eT> >
   arma_inline arma_warn_unused bool is_finite() const;
   arma_inline arma_warn_unused bool is_empty()  const;
   
-  arma_inline arma_warn_unused bool in_range(const u32   i) const;
+  arma_inline arma_warn_unused bool in_range(const uword i) const;
   arma_inline arma_warn_unused bool in_range(const span& x) const;
   
-  arma_inline arma_warn_unused bool in_range(const u32   in_row,   const u32   in_col,   const u32   in_slice)   const;
+  arma_inline arma_warn_unused bool in_range(const uword   in_row, const uword   in_col, const uword   in_slice) const;
        inline arma_warn_unused bool in_range(const span& row_span, const span& col_span, const span& slice_span) const;
   
   arma_inline arma_warn_unused       eT* memptr();
   arma_inline arma_warn_unused const eT* memptr() const;
   
-  arma_inline arma_warn_unused       eT* slice_memptr(const u32 slice);
-  arma_inline arma_warn_unused const eT* slice_memptr(const u32 slice) const;
+  arma_inline arma_warn_unused       eT* slice_memptr(const uword slice);
+  arma_inline arma_warn_unused const eT* slice_memptr(const uword slice) const;
   
-  arma_inline arma_warn_unused       eT* slice_colptr(const u32 in_slice, const u32 in_col);
-  arma_inline arma_warn_unused const eT* slice_colptr(const u32 in_slice, const u32 in_col) const;
+  arma_inline arma_warn_unused       eT* slice_colptr(const uword in_slice, const uword in_col);
+  arma_inline arma_warn_unused const eT* slice_colptr(const uword in_slice, const uword in_col) const;
   
-  inline void print(const std::string extra_text = "") const;
-  inline void print(std::ostream& user_stream, const std::string extra_text = "") const;
+  inline void impl_print(const std::string& extra_text) const;
+  inline void impl_print(std::ostream& user_stream, const std::string& extra_text) const;
   
-  inline void raw_print(const std::string extra_text = "") const;
-  inline void raw_print(std::ostream& user_stream, const std::string extra_text = "") const;
+  inline void impl_raw_print(const std::string& extra_text) const;
+  inline void impl_raw_print(std::ostream& user_stream, const std::string& extra_text) const;
   
-  inline void  set_size(const u32 in_rows, const u32 in_cols, const u32 in_slices);
-  inline void   reshape(const u32 in_rows, const u32 in_cols, const u32 in_slices, const u32 dim = 0);
+  inline void  set_size(const uword in_rows, const uword in_cols, const uword in_slices);
+  inline void   reshape(const uword in_rows, const uword in_cols, const uword in_slices, const uword dim = 0);
   
   template<typename eT2> inline void copy_size(const Cube<eT2>& m);
   
   inline const Cube& fill(const eT val);
   
   inline const Cube& zeros();
-  inline const Cube& zeros(const u32 in_rows, const u32 in_cols, const u32 in_slices);
+  inline const Cube& zeros(const uword in_rows, const uword in_cols, const uword in_slices);
   
   inline const Cube& ones();
-  inline const Cube& ones(const u32 in_rows, const u32 in_cols, const u32 in_slices);
+  inline const Cube& ones(const uword in_rows, const uword in_cols, const uword in_slices);
   
   inline const Cube& randu();
-  inline const Cube& randu(const u32 in_rows, const u32 in_cols, const u32 in_slices);
+  inline const Cube& randu(const uword in_rows, const uword in_cols, const uword in_slices);
   
   inline const Cube& randn();
-  inline const Cube& randn(const u32 in_rows, const u32 in_cols, const u32 in_slices);
+  inline const Cube& randn(const uword in_rows, const uword in_cols, const uword in_slices);
   
   inline void reset();
   
@@ -231,11 +238,11 @@ class Cube : public BaseCube< eT, Cube<eT> >
   inline arma_warn_unused eT min() const;
   inline arma_warn_unused eT max() const;
   
-  inline eT min(u32& index_of_min_val) const;
-  inline eT max(u32& index_of_max_val) const;
+  inline eT min(uword& index_of_min_val) const;
+  inline eT max(uword& index_of_max_val) const;
   
-  inline eT min(u32& row_of_min_val, u32& col_of_min_val, u32& slice_of_min_val) const;
-  inline eT max(u32& row_of_max_val, u32& col_of_max_val, u32& slice_of_max_val) const;
+  inline eT min(uword& row_of_min_val, uword& col_of_min_val, uword& slice_of_min_val) const;
+  inline eT max(uword& row_of_max_val, uword& col_of_max_val, uword& slice_of_max_val) const;
   
   
   inline bool save(const std::string   name, const file_type type = arma_binary, const bool print_status = true) const;
@@ -265,19 +272,19 @@ class Cube : public BaseCube< eT, Cube<eT> >
   inline       iterator end();
   inline const_iterator end()   const;
   
-  inline       slice_iterator begin_slice(const u32 slice_num);
-  inline const_slice_iterator begin_slice(const u32 slice_num) const;
+  inline       slice_iterator begin_slice(const uword slice_num);
+  inline const_slice_iterator begin_slice(const uword slice_num) const;
   
-  inline       slice_iterator end_slice(const u32 slice_num);
-  inline const_slice_iterator end_slice(const u32 slice_num)   const;
+  inline       slice_iterator end_slice(const uword slice_num);
+  inline const_slice_iterator end_slice(const uword slice_num)   const;
 
 
-  template<u32 fixed_n_rows, u32 fixed_n_cols, u32 fixed_n_slices>
+  template<uword fixed_n_rows, uword fixed_n_cols, uword fixed_n_slices>
   class fixed : public Cube<eT>
     {
     private:
     
-    static const u32 fixed_n_elem = fixed_n_rows * fixed_n_cols * fixed_n_slices;
+    static const uword fixed_n_elem = fixed_n_rows * fixed_n_cols * fixed_n_slices;
     
     arma_aligned Mat<eT>* mat_ptrs_local_extra[ (fixed_n_slices > Cube_prealloc::mat_ptrs_size) ? fixed_n_slices : 1 ];
     arma_aligned eT       mem_local_extra     [ (fixed_n_elem   > Cube_prealloc::mem_n_elem)    ? fixed_n_elem   : 1 ];
@@ -304,8 +311,8 @@ class Cube : public BaseCube< eT, Cube<eT> >
   
   protected:
   
-  inline void init(const u32 in_rows, const u32 in_cols, const u32 in_slices);
-  inline void init(const Cube& x);
+  inline void init_cold();
+  inline void init_warm(const uword in_rows, const uword in_cols, const uword in_slices);
   
   template<typename T1, typename T2>
   inline void init(const BaseCube<pod_type,T1>& A, const BaseCube<pod_type,T2>& B);

@@ -17,20 +17,20 @@
 
 
 arma_inline
-const eOp<vec, eop_ones_full>
-ones(const u32 n_elem)
+const Gen<vec::elem_type, gen_ones_full>
+ones(const uword n_elem)
   {
   arma_extra_debug_sigprint();
   
-  return eOp<vec, eop_ones_full>(n_elem, 1);
+  return Gen<vec::elem_type, gen_ones_full>(n_elem, 1);
   }
 
 
 
 template<typename vec_type>
 arma_inline
-const eOp<vec_type, eop_ones_full>
-ones(const u32 n_elem, const arma_empty_class junk1 = arma_empty_class(), const typename arma_Mat_Col_Row_only<vec_type>::result* junk2 = 0)
+const Gen<typename vec_type::elem_type, gen_ones_full>
+ones(const uword n_elem, const arma_empty_class junk1 = arma_empty_class(), const typename arma_Mat_Col_Row_only<vec_type>::result* junk2 = 0)
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk1);
@@ -38,60 +38,60 @@ ones(const u32 n_elem, const arma_empty_class junk1 = arma_empty_class(), const 
   
   if(is_Row<vec_type>::value == true)
     {
-    return eOp<vec_type, eop_ones_full>(1, n_elem);
+    return Gen<typename vec_type::elem_type, gen_ones_full>(1, n_elem);
     }
   else
     {
-    return eOp<vec_type, eop_ones_full>(n_elem, 1);
+    return Gen<typename vec_type::elem_type, gen_ones_full>(n_elem, 1);
     }
   }
 
 
 
 arma_inline
-const eOp<mat, eop_ones_full>
-ones(const u32 n_rows, const u32 n_cols)
+const Gen<mat::elem_type, gen_ones_full>
+ones(const uword n_rows, const uword n_cols)
   {
   arma_extra_debug_sigprint();
   
-  return eOp<mat, eop_ones_full>(n_rows, n_cols);
+  return Gen<mat::elem_type, gen_ones_full>(n_rows, n_cols);
   }
 
 
 
 template<typename mat_type>
 arma_inline
-const eOp<mat_type, eop_ones_full>
-ones(const u32 n_rows, const u32 n_cols, const typename arma_Mat_Col_Row_only<mat_type>::result* junk = 0)
+const Gen<typename mat_type::elem_type, gen_ones_full>
+ones(const uword n_rows, const uword n_cols, const typename arma_Mat_Col_Row_only<mat_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  return eOp<mat_type, eop_ones_full>(n_rows, n_cols);
+  return Gen<typename mat_type::elem_type, gen_ones_full>(n_rows, n_cols);
   }
 
 
 
 arma_inline
-const eOpCube<cube, eop_ones_full>
-ones(const u32 n_rows, const u32 n_cols, const u32 n_slices)
+const GenCube<cube::elem_type, gen_ones_full>
+ones(const uword n_rows, const uword n_cols, const uword n_slices)
   {
   arma_extra_debug_sigprint();
   
-  return eOpCube<cube, eop_ones_full>(n_rows, n_cols, n_slices);
+  return GenCube<cube::elem_type, gen_ones_full>(n_rows, n_cols, n_slices);
   }
 
 
 
 template<typename cube_type>
 arma_inline
-const eOpCube<cube_type, eop_ones_full>
-ones(const u32 n_rows, const u32 n_cols, const u32 n_slices, const typename arma_Cube_only<cube_type>::result* junk = 0)
+const GenCube<typename cube_type::elem_type, gen_ones_full>
+ones(const uword n_rows, const uword n_cols, const uword n_slices, const typename arma_Cube_only<cube_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  return eOpCube<cube_type, eop_ones_full>(n_rows, n_cols, n_slices);
+  return GenCube<typename cube_type::elem_type, gen_ones_full>(n_rows, n_cols, n_slices);
   }
 
 

@@ -56,7 +56,7 @@ op_inv::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv>& X)
     }
   else
     {
-    const u32 mode = X.aux_u32_a;
+    const uword mode = X.aux_uword_a;
     
     const bool status = (mode == 0) ? auxlib::inv(out, X.m) : auxlib::inv(out, X.m, true);
     
@@ -81,17 +81,17 @@ op_inv::apply_diag(Mat<typename T1::elem_type>& out, const Base<typename T1::ele
   
   const diagmat_proxy_check<T1> A(X.get_ref(), out);
   
-  const u32 N = A.n_elem;
+  const uword N = A.n_elem;
   
   out.set_size(N,N);
   
-  for(u32 col=0; col<N; ++col)
+  for(uword col=0; col<N; ++col)
     {
-    for(u32 row=0; row<col; ++row)   { out.at(row,col) = eT(0); }
+    for(uword row=0; row<col; ++row)   { out.at(row,col) = eT(0); }
     
     out.at(col,col) = eT(1) / A[col];
     
-    for(u32 row=col+1; row<N; ++row) { out.at(row,col) = eT(0); }
+    for(uword row=col+1; row<N; ++row) { out.at(row,col) = eT(0); }
     }
   
   }
@@ -106,7 +106,7 @@ op_inv_tr::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv_tr>& X)
   {
   arma_extra_debug_sigprint();
   
-  const bool status = auxlib::inv_tr(out, X.m, X.aux_u32_a);
+  const bool status = auxlib::inv_tr(out, X.m, X.aux_uword_a);
   
   if(status == false)
     {
@@ -125,7 +125,7 @@ op_inv_sympd::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv_sympd>&
   {
   arma_extra_debug_sigprint();
   
-  const bool status = auxlib::inv_sympd(out, X.m, X.aux_u32_a);
+  const bool status = auxlib::inv_sympd(out, X.m, X.aux_uword_a);
   
   if(status == false)
     {

@@ -30,10 +30,10 @@ trace(const Base<typename T1::elem_type,T1>& X)
 
   arma_debug_check( (A.get_n_rows() != A.get_n_cols()), "trace(): matrix must be square sized" );
   
-  const u32 N   = A.get_n_rows();
+  const uword N   = A.get_n_rows();
         eT  val = eT(0);
   
-  for(u32 i=0; i<N; ++i)
+  for(uword i=0; i<N; ++i)
     {
     val += A.at(i,i);
     }
@@ -55,11 +55,11 @@ trace(const Op<T1, op_diagmat>& X)
   
   const diagmat_proxy<T1> A(X.m);
   
-  const u32 N = A.n_elem;
+  const uword N = A.n_elem;
   
   eT val = eT(0);
   
-  for(u32 i=0; i<N; ++i)
+  for(uword i=0; i<N; ++i)
     {
     val += A[i];
     }
@@ -89,16 +89,16 @@ trace(const Glue<T1, T2, glue_times>& X)
   
   arma_debug_check( (A.n_rows != B.n_cols), "trace(): matrix must be square sized" );
   
-  const u32 N1  = A.n_rows;
-  const u32 N2  = A.n_cols;
+  const uword N1  = A.n_rows;
+  const uword N2  = A.n_cols;
         eT  val = eT(0);
   
-  for(u32 i=0; i<N1; ++i)
+  for(uword i=0; i<N1; ++i)
     {
     const eT* B_colmem = B.colptr(i);
           eT  acc      = eT(0);
     
-    for(u32 j=0; j<N2; ++j)
+    for(uword j=0; j<N2; ++j)
       {
       acc += A.at(i,j) * B_colmem[j];
       }

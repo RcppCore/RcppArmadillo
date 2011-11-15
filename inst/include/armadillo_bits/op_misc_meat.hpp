@@ -29,10 +29,10 @@ op_real::apply( Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_typ
   
   out.set_size(A.get_n_rows(), A.get_n_cols());
   
-  const u32 n_elem  = out.n_elem;
+  const uword n_elem  = out.n_elem;
         T*  out_mem = out.memptr();
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = std::real(A[i]);
     }
@@ -53,10 +53,10 @@ op_real::apply( Cube<typename T1::pod_type>& out, const mtOpCube<typename T1::po
   
   out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
   
-  const u32 n_elem  = out.n_elem;
+  const uword n_elem  = out.n_elem;
         T*  out_mem = out.memptr();
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = std::real(A[i]);
     }
@@ -77,10 +77,10 @@ op_imag::apply( Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_typ
   
   out.set_size(A.get_n_rows(), A.get_n_cols());
   
-  const u32 n_elem  = out.n_elem;
+  const uword n_elem  = out.n_elem;
         T*  out_mem = out.memptr();
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = std::imag(A[i]);
     }
@@ -101,10 +101,10 @@ op_imag::apply( Cube<typename T1::pod_type>& out, const mtOpCube<typename T1::po
   
   out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
   
-  const u32 n_elem  = out.n_elem;
+  const uword n_elem  = out.n_elem;
         T*  out_mem = out.memptr();
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = std::imag(A[i]);
     }
@@ -125,10 +125,10 @@ op_abs::apply( Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_type
   
   out.set_size(A.get_n_rows(), A.get_n_cols());
   
-  const u32 n_elem  = out.n_elem;
+  const uword n_elem  = out.n_elem;
         T*  out_mem = out.memptr();
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = std::abs(A[i]);
     }
@@ -149,10 +149,10 @@ op_abs::apply( Cube<typename T1::pod_type>& out, const mtOpCube<typename T1::pod
   
   out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
   
-  const u32 n_elem  = out.n_elem;
+  const uword n_elem  = out.n_elem;
         T*  out_mem = out.memptr();
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = std::abs(A[i]);
     }

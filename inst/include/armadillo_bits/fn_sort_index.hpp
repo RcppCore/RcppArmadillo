@@ -62,9 +62,9 @@ sort_index_helper(umat_elem_type* out_mem, std::vector<packet_type>& packet_vec,
   {
   arma_extra_debug_sigprint();
   
-  const u32 n_elem = packet_vec.size();
+  const uword n_elem = packet_vec.size();
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     packet_vec[i].val   = in_mem[i];
     packet_vec[i].index = i;
@@ -72,7 +72,7 @@ sort_index_helper(umat_elem_type* out_mem, std::vector<packet_type>& packet_vec,
   
   std::sort( packet_vec.begin(), packet_vec.end() );
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = packet_vec[i].index;
     }
@@ -83,13 +83,13 @@ sort_index_helper(umat_elem_type* out_mem, std::vector<packet_type>& packet_vec,
 template<typename T1>
 inline
 umat
-sort_index(const Base<typename T1::elem_type,T1>& X, const u32 sort_type = 0)
+sort_index(const Base<typename T1::elem_type,T1>& X, const uword sort_type = 0)
   {
   arma_extra_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
-  arma_type_check< is_complex<eT>::value == true>::apply();
+  arma_type_check(( is_complex<eT>::value == true ));
   
   const unwrap<T1> tmp(X.get_ref());
   const Mat<eT>& A = tmp.M;

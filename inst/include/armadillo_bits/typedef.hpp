@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -49,21 +49,57 @@
 #endif
 
 
+#if defined(ARMA_64BIT_WORD)
+  #if    ULONG_MAX >= 0xffffffffffffffff
+    typedef unsigned long      u64;
+    typedef          long      s64;
+  #else
+    #if ULLONG_MAX >= 0xffffffffffffffff
+      typedef unsigned long long u64;
+      typedef          long long s64;
+    #else
+      #error "don't know how to typedef 'u64' on this system"
+    #endif
+  #endif
+#endif
 
-// //
-// // only supported by C++0x, via #include <cstdint>, or by C99, via #include <stdint.h>
+
+
+// // only supported by C++11, via #include <cstdint>, or by C99, via #include <stdint.h>
 // 
-// //! unsigned 8 bit type
-// typedef uint8_t u8;
+// typedef  uint8_t u8;
+// typedef   int8_t s8;
 // 
-// //! unsigned 16 bit type  
 // typedef uint16_t u16;
+// typedef  int16_t s16;
 // 
-// //! unsigned 32 bit type
 // typedef uint32_t u32;
-//
-// //! signed 32 bit type
-// typedef int32_t s32;
+// typedef  int32_t s32;
+// 
+// typedef uint64_t u64;
+// typedef  int64_t s64;
+
+
+
+#if !defined(ARMA_64BIT_WORD)
+  typedef u32 uword;
+  typedef s32 sword;
+
+  typedef u16 uhword;
+  typedef s16 shword;
+  
+  #define ARMA_MAX_UWORD  0xffffffff
+  #define ARMA_MAX_UHWORD 0xffff
+#else
+  typedef u64 uword;
+  typedef s64 sword;
+  
+  typedef u32 uhword;
+  typedef s32 shword;
+
+  #define ARMA_MAX_UWORD  0xffffffffffffffff
+  #define ARMA_MAX_UHWORD 0xffffffff
+#endif
 
 
 
@@ -80,46 +116,58 @@
 typedef std::complex<float>  cx_float;
 typedef std::complex<double> cx_double;
 
-typedef Mat<unsigned char>  uchar_mat;
-typedef Col<unsigned char>  uchar_vec;
-typedef Col<unsigned char>  uchar_colvec;
-typedef Row<unsigned char>  uchar_rowvec;
+typedef Mat <unsigned char> uchar_mat;
+typedef Col <unsigned char> uchar_vec;
+typedef Col <unsigned char> uchar_colvec;
+typedef Row <unsigned char> uchar_rowvec;
 typedef Cube<unsigned char> uchar_cube;
 
-typedef Mat<u32>  umat;
-typedef Col<u32>  uvec;
-typedef Col<u32>  ucolvec;
-typedef Row<u32>  urowvec;
-typedef Cube<u32> ucube;
+typedef Mat <u32> u32_mat;
+typedef Col <u32> u32_vec;
+typedef Col <u32> u32_colvec;
+typedef Row <u32> u32_rowvec;
+typedef Cube<u32> u32_cube;
 
-typedef Mat<s32>  imat;
-typedef Col<s32>  ivec;
-typedef Col<s32>  icolvec;
-typedef Row<s32>  irowvec;
-typedef Cube<s32> icube;
+typedef Mat <s32> s32_mat;
+typedef Col <s32> s32_vec;
+typedef Col <s32> s32_colvec;
+typedef Row <s32> s32_rowvec;
+typedef Cube<s32> s32_cube;
 
-typedef Mat<float>  fmat;
-typedef Col<float>  fvec;
-typedef Col<float>  fcolvec;
-typedef Row<float>  frowvec;
+typedef Mat <uword> umat;
+typedef Col <uword> uvec;
+typedef Col <uword> ucolvec;
+typedef Row <uword> urowvec;
+typedef Cube<uword> ucube;
+
+typedef Mat <sword> imat;
+typedef Col <sword> ivec;
+typedef Col <sword> icolvec;
+typedef Row <sword> irowvec;
+typedef Cube<sword> icube;
+
+typedef Mat <float> fmat;
+typedef Col <float> fvec;
+typedef Col <float> fcolvec;
+typedef Row <float> frowvec;
 typedef Cube<float> fcube;
 
-typedef Mat<double>  mat;
-typedef Col<double>  vec;
-typedef Col<double>  colvec;
-typedef Row<double>  rowvec;
+typedef Mat <double> mat;
+typedef Col <double> vec;
+typedef Col <double> colvec;
+typedef Row <double> rowvec;
 typedef Cube<double> cube;
 
-typedef Mat<cx_float>  cx_fmat;
-typedef Col<cx_float>  cx_fvec;
-typedef Col<cx_float>  cx_fcolvec;
-typedef Row<cx_float>  cx_frowvec;
+typedef Mat <cx_float> cx_fmat;
+typedef Col <cx_float> cx_fvec;
+typedef Col <cx_float> cx_fcolvec;
+typedef Row <cx_float> cx_frowvec;
 typedef Cube<cx_float> cx_fcube;
 
-typedef Mat<cx_double>  cx_mat;
-typedef Col<cx_double>  cx_vec;
-typedef Col<cx_double>  cx_colvec;
-typedef Row<cx_double>  cx_rowvec;
+typedef Mat <cx_double> cx_mat;
+typedef Col <cx_double> cx_vec;
+typedef Col <cx_double> cx_colvec;
+typedef Row <cx_double> cx_rowvec;
 typedef Cube<cx_double> cx_cube;
 
 
@@ -132,22 +180,27 @@ namespace junk
   {
   struct arma_elem_size_test
     {
-  
-    arma_static_assert<sizeof(u8) == 1> ERROR___TYPE_U8_HAS_UNSUPPORTED_SIZE;
-    arma_static_assert<sizeof(s8) == 1> ERROR___TYPE_S8_HAS_UNSUPPORTED_SIZE;
     
-    arma_static_assert<sizeof(u16) == 2> ERROR___TYPE_U16_HAS_UNSUPPORTED_SIZE;
-    arma_static_assert<sizeof(s16) == 2> ERROR___TYPE_S16_HAS_UNSUPPORTED_SIZE;
+    arma_static_check( (sizeof(u8) != 1), ERROR___TYPE_U8_HAS_UNSUPPORTED_SIZE );
+    arma_static_check( (sizeof(s8) != 1), ERROR___TYPE_S8_HAS_UNSUPPORTED_SIZE );
     
-    arma_static_assert<sizeof(u32) == 4> ERROR___TYPE_U32_HAS_UNSUPPORTED_SIZE;
-    arma_static_assert<sizeof(s32) == 4> ERROR___TYPE_S32_HAS_UNSUPPORTED_SIZE;
+    arma_static_check( (sizeof(u16) != 2), ERROR___TYPE_U16_HAS_UNSUPPORTED_SIZE );
+    arma_static_check( (sizeof(s16) != 2), ERROR___TYPE_S16_HAS_UNSUPPORTED_SIZE );
     
-    arma_static_assert<sizeof(float)  == 4> ERROR___TYPE_FLOAT_HAS_UNSUPPORTED_SIZE;
-    arma_static_assert<sizeof(double) == 8> ERROR___TYPE_DOUBLE_HAS_UNSUPPORTED_SIZE;
+    arma_static_check( (sizeof(u32) != 4), ERROR___TYPE_U32_HAS_UNSUPPORTED_SIZE );
+    arma_static_check( (sizeof(s32) != 4), ERROR___TYPE_S32_HAS_UNSUPPORTED_SIZE );
     
-    arma_static_assert<sizeof(std::complex<float>)  == 8>  ERROR___TYPE_COMPLEX_FLOAT_HAS_UNSUPPORTED_SIZE;
-    arma_static_assert<sizeof(std::complex<double>) == 16> ERROR___TYPE_COMPLEX_DOUBLE_HAS_UNSUPPORTED_SIZE;
-  
+    #if defined(ARMA_64BIT_WORD)
+    arma_static_check( (sizeof(u64) != 8), ERROR___TYPE_U64_HAS_UNSUPPORTED_SIZE );
+    arma_static_check( (sizeof(s64) != 8), ERROR___TYPE_S64_HAS_UNSUPPORTED_SIZE );
+    #endif
+    
+    arma_static_check( (sizeof(float)  != 4), ERROR___TYPE_FLOAT_HAS_UNSUPPORTED_SIZE );
+    arma_static_check( (sizeof(double) != 8), ERROR___TYPE_DOUBLE_HAS_UNSUPPORTED_SIZE );
+    
+    arma_static_check( (sizeof(std::complex<float>)  != 8),  ERROR___TYPE_COMPLEX_FLOAT_HAS_UNSUPPORTED_SIZE );
+    arma_static_check( (sizeof(std::complex<double>) != 16), ERROR___TYPE_COMPLEX_DOUBLE_HAS_UNSUPPORTED_SIZE );
+    
     };
   }
 

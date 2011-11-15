@@ -83,18 +83,6 @@ class eop_conj              : public eop_core<eop_conj>              {};
 class eop_pow               : public eop_core<eop_pow>               {};
 class eop_floor             : public eop_core<eop_floor>             {};
 class eop_ceil              : public eop_core<eop_ceil>              {};
-class eop_randu             : public eop_core<eop_randu>             {};
-class eop_randn             : public eop_core<eop_randn>             {};
-class eop_zeros             : public eop_core<eop_zeros>             {};
-class eop_ones_full         : public eop_core<eop_ones_full>         {};
-class eop_ones_diag         : public eop_core<eop_ones_diag>         {};
-
-template<typename T1> struct is_generator                { static const bool value = false; };
-template<>            struct is_generator<eop_randu>     { static const bool value = true;  };
-template<>            struct is_generator<eop_randn>     { static const bool value = true;  };
-template<>            struct is_generator<eop_zeros>     { static const bool value = true;  };
-template<>            struct is_generator<eop_ones_full> { static const bool value = true;  };
-template<>            struct is_generator<eop_ones_diag> { static const bool value = true;  };
 
 
 

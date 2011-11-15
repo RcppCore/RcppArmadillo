@@ -18,7 +18,7 @@
 template<typename T1>
 arma_inline
 const Op<T1, op_sort>
-sort(const Base<typename T1::elem_type,T1>& X, const u32 sort_type = 0, const u32 dim = 0)
+sort(const Base<typename T1::elem_type,T1>& X, const uword sort_type = 0, const uword dim = 0)
   {
   arma_extra_debug_sigprint();
   
@@ -30,11 +30,11 @@ sort(const Base<typename T1::elem_type,T1>& X, const u32 sort_type = 0, const u3
 template<typename eT>
 arma_inline
 const Op<Col<eT>, op_sort>
-sort(const Col<eT>& X, const u32 sort_type = 0)
+sort(const Col<eT>& X, const uword sort_type = 0)
   {
   arma_extra_debug_sigprint();
   
-  const u32 dim = 0;
+  const uword dim = 0;
   
   return Op<Col<eT>, op_sort>(X, sort_type, dim);
   }
@@ -44,11 +44,11 @@ sort(const Col<eT>& X, const u32 sort_type = 0)
 template<typename eT>
 arma_inline
 const Op<Row<eT>, op_sort>
-sort(const Row<eT>& X, const u32 sort_type = 0)
+sort(const Row<eT>& X, const uword sort_type = 0)
   {
   arma_extra_debug_sigprint();
   
-  const u32 dim = 1;
+  const uword dim = 1;
   
   return Op<Row<eT>, op_sort>(X, sort_type, dim);
   }

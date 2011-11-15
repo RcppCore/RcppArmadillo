@@ -22,3 +22,28 @@
   #endif
 #endif
 
+
+
+// 
+// whoever defined macros with the names "min" and "max" should be permanently removed from the gene pool
+
+#if defined(min)
+  #undef min
+  
+  #if defined(__GNUG__)
+    #warning         "detected 'min' macro and undefined it; you may wish to define NOMINMAX before including any windows header"
+  #elif defined(_MSC_VER)
+    #pragma message ("detected 'min' macro and undefined it; you may wish to define NOMINMAX before including any windows header")
+  #endif
+#endif
+
+#if defined(max)
+  #undef max
+  
+  #if defined(__GNUG__)
+    #warning         "detected 'max' macro and undefined it; you may wish to define NOMINMAX before including any windows header"
+  #elif defined(_MSC_VER)
+    #pragma message ("detected 'max' macro and undefined it; you may wish to define NOMINMAX before including any windows header")
+  #endif
+#endif
+

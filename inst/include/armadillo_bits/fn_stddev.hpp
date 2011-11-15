@@ -19,7 +19,7 @@
 template<typename T1>
 inline
 const mtOp<typename T1::pod_type, T1, op_stddev>
-stddev(const Base<typename T1::elem_type,T1>& X, const u32 norm_type = 0, const u32 dim = 0)
+stddev(const Base<typename T1::elem_type,T1>& X, const uword norm_type = 0, const uword dim = 0)
   {
   arma_extra_debug_sigprint();
   
@@ -33,11 +33,11 @@ template<typename eT>
 inline
 arma_warn_unused
 typename get_pod_type<eT>::result
-stddev(const Row<eT>& A, const u32 norm_type = 0)
+stddev(const Row<eT>& A, const uword norm_type = 0)
   {
   arma_extra_debug_sigprint();
   
-  const u32 A_n_elem = A.n_elem;
+  const uword A_n_elem = A.n_elem;
   
   arma_debug_check( (A_n_elem == 0), "stddev(): given object has no elements" );
   
@@ -51,11 +51,11 @@ template<typename eT>
 inline
 arma_warn_unused
 typename get_pod_type<eT>::result
-stddev(const Col<eT>& A, const u32 norm_type = 0)
+stddev(const Col<eT>& A, const uword norm_type = 0)
   {
   arma_extra_debug_sigprint();
   
-  const u32 A_n_elem = A.n_elem;
+  const uword A_n_elem = A.n_elem;
   
   arma_debug_check( (A_n_elem == 0), "stddev(): given object has no elements" );
   
@@ -69,7 +69,7 @@ template<typename eT>
 inline
 arma_warn_unused
 typename get_pod_type<eT>::result
-stddev(const subview_row<eT>& A, const u32 norm_type = 0)
+stddev(const subview_row<eT>& A, const uword norm_type = 0)
   {
   arma_extra_debug_sigprint();
   
@@ -85,7 +85,7 @@ template<typename eT>
 inline
 arma_warn_unused
 typename get_pod_type<eT>::result
-stddev(const subview_col<eT>& A, const u32 norm_type = 0)
+stddev(const subview_col<eT>& A, const uword norm_type = 0)
   {
   arma_extra_debug_sigprint();
   
@@ -101,7 +101,7 @@ template<typename eT>
 inline
 arma_warn_unused
 typename get_pod_type<eT>::result
-stddev(const diagview<eT>& A, const u32 norm_type = 0)
+stddev(const diagview<eT>& A, const uword norm_type = 0)
   {
   arma_extra_debug_sigprint();
   
@@ -116,7 +116,7 @@ template<typename eT, typename T1>
 inline
 arma_warn_unused
 typename get_pod_type<eT>::result
-stddev(const subview_elem1<eT,T1>& A, const u32 norm_type = 0)
+stddev(const subview_elem1<eT,T1>& A, const uword norm_type = 0)
   {
   arma_extra_debug_sigprint();
   

@@ -60,7 +60,7 @@ namespace atlas
   eT
   cblas_dot(const int N, const eT* X, const eT* Y)
     {
-    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    arma_type_check((is_supported_blas_type<eT>::value == false));
     
     if(is_float<eT>::value == true)
       {
@@ -86,7 +86,7 @@ namespace atlas
   eT
   cx_cblas_dot(const int N, const eT* X, const eT* Y)
     {
-    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    arma_type_check((is_supported_blas_type<eT>::value == false));
     
     if(is_supported_complex_float<eT>::value == true)
       {
@@ -129,7 +129,7 @@ namespace atlas
     eT *Y, const int incY
     )
     {
-    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    arma_type_check((is_supported_blas_type<eT>::value == false));
     
     if(is_float<eT>::value == true)
       {
@@ -170,7 +170,7 @@ namespace atlas
     const eT beta, eT *C, const int ldc
     )
     {
-    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    arma_type_check((is_supported_blas_type<eT>::value == false));
     
     if(is_float<eT>::value == true)
       {
@@ -208,7 +208,7 @@ namespace atlas
     eT *A, const int lda, int *ipiv
     )
     {
-    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    arma_type_check((is_supported_blas_type<eT>::value == false));
     
     if(is_float<eT>::value == true)
       {
@@ -250,7 +250,7 @@ namespace atlas
     const int lda, const int *ipiv
     )
     {
-    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    arma_type_check((is_supported_blas_type<eT>::value == false));
     
     if(is_float<eT>::value == true)
       {

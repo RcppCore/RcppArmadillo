@@ -35,10 +35,10 @@ op_cx_scalar_times::apply
   out.set_size(A.get_n_rows(), A.get_n_cols());
   
   const eT  k       = X.aux_out_eT;
-  const u32 n_elem  = out.n_elem;
+  const uword n_elem  = out.n_elem;
         eT* out_mem = out.memptr();
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = A[i] * k;
     }
@@ -65,10 +65,10 @@ op_cx_scalar_plus::apply
   out.set_size(A.get_n_rows(), A.get_n_cols());
   
   const eT  k       = X.aux_out_eT;
-  const u32 n_elem  = out.n_elem;
+  const uword n_elem  = out.n_elem;
         eT* out_mem = out.memptr();
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = A[i] + k;
     }
@@ -95,10 +95,10 @@ op_cx_scalar_minus_pre::apply
   out.set_size(A.get_n_rows(), A.get_n_cols());
   
   const eT  k       = X.aux_out_eT;
-  const u32 n_elem  = out.n_elem;
+  const uword n_elem  = out.n_elem;
         eT* out_mem = out.memptr();
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = k - A[i];
     }
@@ -125,10 +125,10 @@ op_cx_scalar_minus_post::apply
   out.set_size(A.get_n_rows(), A.get_n_cols());
   
   const eT  k       = X.aux_out_eT;
-  const u32 n_elem  = out.n_elem;
+  const uword n_elem  = out.n_elem;
         eT* out_mem = out.memptr();
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = A[i] - k;
     }
@@ -155,10 +155,10 @@ op_cx_scalar_div_pre::apply
   out.set_size(A.get_n_rows(), A.get_n_cols());
   
   const eT  k       = X.aux_out_eT;
-  const u32 n_elem  = out.n_elem;
+  const uword n_elem  = out.n_elem;
         eT* out_mem = out.memptr();
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = k / A[i];
     }
@@ -185,10 +185,10 @@ op_cx_scalar_div_post::apply
   out.set_size(A.get_n_rows(), A.get_n_cols());
   
   const eT  k       = X.aux_out_eT;
-  const u32 n_elem  = out.n_elem;
+  const uword n_elem  = out.n_elem;
         eT* out_mem = out.memptr();
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = A[i] / k;
     }
@@ -221,10 +221,10 @@ op_cx_scalar_times::apply
   out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
   
   const eT  k       = X.aux_out_eT;
-  const u32 n_elem  = out.n_elem;
+  const uword n_elem  = out.n_elem;
         eT* out_mem = out.memptr();
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = A[i] * k;
     }
@@ -251,10 +251,10 @@ op_cx_scalar_plus::apply
   out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
   
   const eT  k       = X.aux_out_eT;
-  const u32 n_elem  = out.n_elem;
+  const uword n_elem  = out.n_elem;
         eT* out_mem = out.memptr();
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = A[i] + k;
     }
@@ -281,10 +281,10 @@ op_cx_scalar_minus_pre::apply
   out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
   
   const eT  k       = X.aux_out_eT;
-  const u32 n_elem  = out.n_elem;
+  const uword n_elem  = out.n_elem;
         eT* out_mem = out.memptr();
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = k - A[i];
     }
@@ -311,10 +311,10 @@ op_cx_scalar_minus_post::apply
   out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
   
   const eT  k       = X.aux_out_eT;
-  const u32 n_elem  = out.n_elem;
+  const uword n_elem  = out.n_elem;
         eT* out_mem = out.memptr();
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = A[i] - k;
     }
@@ -341,10 +341,10 @@ op_cx_scalar_div_pre::apply
   out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
   
   const eT  k       = X.aux_out_eT;
-  const u32 n_elem  = out.n_elem;
+  const uword n_elem  = out.n_elem;
         eT* out_mem = out.memptr();
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = k / A[i];
     }
@@ -371,10 +371,10 @@ op_cx_scalar_div_post::apply
   out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
   
   const eT  k       = X.aux_out_eT;
-  const u32 n_elem  = out.n_elem;
+  const uword n_elem  = out.n_elem;
         eT* out_mem = out.memptr();
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = A[i] / k;
     }

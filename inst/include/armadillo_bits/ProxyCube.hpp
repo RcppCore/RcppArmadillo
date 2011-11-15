@@ -22,7 +22,7 @@ class ProxyCube
   public:
   inline ProxyCube(const T1& A)
     {
-    arma_type_check< is_arma_type<T1>::value == false >::apply();
+    arma_type_check(( is_arma_cube_type<T1>::value == false ));
     }
   };
 
@@ -42,6 +42,7 @@ class ProxyCube< Cube<eT> >
   typedef const eT*                                ea_type;
   
   static const bool prefer_at_accessor = false;
+  static const bool has_subview        = false;
   
   arma_aligned const Cube<eT>& Q;
   
@@ -51,16 +52,53 @@ class ProxyCube< Cube<eT> >
     arma_extra_debug_sigprint();
     }
   
-  arma_inline u32 get_n_rows()       const { return Q.n_rows;       }
-  arma_inline u32 get_n_cols()       const { return Q.n_cols;       }
-  arma_inline u32 get_n_elem_slice() const { return Q.n_elem_slice; }
-  arma_inline u32 get_n_slices()     const { return Q.n_slices;     }
-  arma_inline u32 get_n_elem()       const { return Q.n_elem;       }
+  arma_inline uword get_n_rows()       const { return Q.n_rows;       }
+  arma_inline uword get_n_cols()       const { return Q.n_cols;       }
+  arma_inline uword get_n_elem_slice() const { return Q.n_elem_slice; }
+  arma_inline uword get_n_slices()     const { return Q.n_slices;     }
+  arma_inline uword get_n_elem()       const { return Q.n_elem;       }
   
-  arma_inline elem_type operator[] (const u32 i)                                   const { return Q[i];                  }
-  arma_inline elem_type at         (const u32 row, const u32 col, const u32 slice) const { return Q.at(row, col, slice); }
+  arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
+  arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
   
-  arma_inline ea_type get_ea() const { return Q.memptr(); }
+  arma_inline ea_type get_ea()                           const { return Q.memptr(); }
+  arma_inline bool    is_alias(const Cube<elem_type>& X) const { return (&Q == &X); }
+  };
+
+
+
+template<typename eT, typename gen_type>
+class ProxyCube< GenCube<eT, gen_type > >
+  {
+  public:
+  
+  typedef          eT                              elem_type;
+  typedef typename get_pod_type<elem_type>::result pod_type;
+  typedef GenCube<eT, gen_type>                    stored_type;
+  typedef const GenCube<eT, gen_type>&             ea_type;
+  
+  static const bool prefer_at_accessor = false;
+  static const bool has_subview        = false;
+  
+  arma_aligned const GenCube<eT, gen_type>& Q;
+  
+  inline explicit ProxyCube(const GenCube<eT, gen_type>& A)
+    : Q(A)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  arma_inline uword get_n_rows()       const { return Q.n_rows;                     }
+  arma_inline uword get_n_cols()       const { return Q.n_cols;                     }
+  arma_inline uword get_n_elem_slice() const { return Q.n_rows*Q.n_cols;            }
+  arma_inline uword get_n_slices()     const { return Q.n_slices;                   }
+  arma_inline uword get_n_elem()       const { return Q.n_rows*Q.n_cols*Q.n_slices; }
+  
+  arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
+  arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
+  
+  arma_inline ea_type get_ea()                         const { return Q;     }
+  arma_inline bool    is_alias(const Cube<elem_type>&) const { return false; }
   };
 
 
@@ -76,6 +114,7 @@ class ProxyCube< OpCube<T1, op_type> >
   typedef const elem_type*                         ea_type;
   
   static const bool prefer_at_accessor = false;
+  static const bool has_subview        = false;
   
   arma_aligned const Cube<elem_type> Q;
   
@@ -85,16 +124,17 @@ class ProxyCube< OpCube<T1, op_type> >
     arma_extra_debug_sigprint();
     }
   
-  arma_inline u32 get_n_rows()       const { return Q.n_rows;       }
-  arma_inline u32 get_n_cols()       const { return Q.n_cols;       }
-  arma_inline u32 get_n_elem_slice() const { return Q.n_elem_slice; }
-  arma_inline u32 get_n_slices()     const { return Q.n_slices;     }
-  arma_inline u32 get_n_elem()       const { return Q.n_elem;       }
+  arma_inline uword get_n_rows()       const { return Q.n_rows;       }
+  arma_inline uword get_n_cols()       const { return Q.n_cols;       }
+  arma_inline uword get_n_elem_slice() const { return Q.n_elem_slice; }
+  arma_inline uword get_n_slices()     const { return Q.n_slices;     }
+  arma_inline uword get_n_elem()       const { return Q.n_elem;       }
   
-  arma_inline elem_type operator[] (const u32 i)                                   const { return Q[i];                  }
-  arma_inline elem_type at         (const u32 row, const u32 col, const u32 slice) const { return Q.at(row, col, slice); }
+  arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
+  arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
   
-  arma_inline ea_type get_ea() const { return Q.memptr(); }
+  arma_inline ea_type get_ea()                         const { return Q.memptr(); }
+  arma_inline bool    is_alias(const Cube<elem_type>&) const { return false;      }
   };
 
 
@@ -110,6 +150,7 @@ class ProxyCube< GlueCube<T1, T2, glue_type> >
   typedef const elem_type*                         ea_type;
   
   static const bool prefer_at_accessor = false;
+  static const bool has_subview        = false;
   
   arma_aligned const Cube<elem_type> Q;
   
@@ -119,16 +160,17 @@ class ProxyCube< GlueCube<T1, T2, glue_type> >
     arma_extra_debug_sigprint();
     }
 
-  arma_inline u32 get_n_rows()       const { return Q.n_rows;       }
-  arma_inline u32 get_n_cols()       const { return Q.n_cols;       }
-  arma_inline u32 get_n_elem_slice() const { return Q.n_elem_slice; }
-  arma_inline u32 get_n_slices()     const { return Q.n_slices;     }
-  arma_inline u32 get_n_elem()       const { return Q.n_elem;       }
+  arma_inline uword get_n_rows()       const { return Q.n_rows;       }
+  arma_inline uword get_n_cols()       const { return Q.n_cols;       }
+  arma_inline uword get_n_elem_slice() const { return Q.n_elem_slice; }
+  arma_inline uword get_n_slices()     const { return Q.n_slices;     }
+  arma_inline uword get_n_elem()       const { return Q.n_elem;       }
   
-  arma_inline elem_type operator[] (const u32 i)                                   const { return Q[i];                  }
-  arma_inline elem_type at         (const u32 row, const u32 col, const u32 slice) const { return Q.at(row, col, slice); }
+  arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
+  arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
   
-  arma_inline ea_type get_ea() const { return Q.memptr(); }
+  arma_inline ea_type get_ea()                         const { return Q.memptr(); }
+  arma_inline bool    is_alias(const Cube<elem_type>&) const { return false;      }
   };
 
 
@@ -144,6 +186,7 @@ class ProxyCube< subview_cube<eT> >
   typedef const subview_cube<eT>&                  ea_type;
   
   static const bool prefer_at_accessor = true;
+  static const bool has_subview        = true;
   
   arma_aligned const subview_cube<eT>& Q;
   
@@ -153,16 +196,17 @@ class ProxyCube< subview_cube<eT> >
     arma_extra_debug_sigprint();
     }
   
-  arma_inline u32 get_n_rows()       const { return Q.n_rows;       }
-  arma_inline u32 get_n_cols()       const { return Q.n_cols;       }
-  arma_inline u32 get_n_elem_slice() const { return Q.n_elem_slice; }
-  arma_inline u32 get_n_slices()     const { return Q.n_slices;     }
-  arma_inline u32 get_n_elem()       const { return Q.n_elem;       }
+  arma_inline uword get_n_rows()       const { return Q.n_rows;       }
+  arma_inline uword get_n_cols()       const { return Q.n_cols;       }
+  arma_inline uword get_n_elem_slice() const { return Q.n_elem_slice; }
+  arma_inline uword get_n_slices()     const { return Q.n_slices;     }
+  arma_inline uword get_n_elem()       const { return Q.n_elem;       }
   
-  arma_inline elem_type operator[] (const u32 i)                                   const { return Q[i];                  }
-  arma_inline elem_type at         (const u32 row, const u32 col, const u32 slice) const { return Q.at(row, col, slice); }
+  arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
+  arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
   
-  arma_inline ea_type get_ea() const { return Q; }
+  arma_inline ea_type get_ea()                           const { return Q;              }
+  arma_inline bool    is_alias(const Cube<elem_type>& X) const { return (&(Q.m) == &X); }
   };
 
 
@@ -178,6 +222,7 @@ class ProxyCube< eOpCube<T1, eop_type > >
   typedef const eOpCube<T1, eop_type>&             ea_type;
   
   static const bool prefer_at_accessor = eOpCube<T1, eop_type>::prefer_at_accessor;
+  static const bool has_subview        = eOpCube<T1, eop_type>::has_subview;
   
   arma_aligned const eOpCube<T1, eop_type>& Q;
   
@@ -187,16 +232,17 @@ class ProxyCube< eOpCube<T1, eop_type > >
     arma_extra_debug_sigprint();
     }
   
-  arma_inline u32 get_n_rows()       const { return Q.get_n_rows();       }
-  arma_inline u32 get_n_cols()       const { return Q.get_n_cols();       }
-  arma_inline u32 get_n_elem_slice() const { return Q.get_n_elem_slice(); }
-  arma_inline u32 get_n_slices()     const { return Q.get_n_slices();     }
-  arma_inline u32 get_n_elem()       const { return Q.get_n_elem();       }
+  arma_inline uword get_n_rows()       const { return Q.get_n_rows();       }
+  arma_inline uword get_n_cols()       const { return Q.get_n_cols();       }
+  arma_inline uword get_n_elem_slice() const { return Q.get_n_elem_slice(); }
+  arma_inline uword get_n_slices()     const { return Q.get_n_slices();     }
+  arma_inline uword get_n_elem()       const { return Q.get_n_elem();       }
   
-  arma_inline elem_type operator[] (const u32 i)                                   const { return Q[i];                  }
-  arma_inline elem_type at         (const u32 row, const u32 col, const u32 slice) const { return Q.at(row, col, slice); }
+  arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
+  arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
   
-  arma_inline ea_type get_ea() const { return Q; }
+  arma_inline ea_type get_ea()                           const { return Q;               }
+  arma_inline bool    is_alias(const Cube<elem_type>& X) const { return Q.P.is_alias(X); }
   };
 
 
@@ -212,6 +258,7 @@ class ProxyCube< eGlueCube<T1, T2, eglue_type > >
   typedef const eGlueCube<T1, T2, eglue_type>&     ea_type;
   
   static const bool prefer_at_accessor = eGlueCube<T1, T2, eglue_type>::prefer_at_accessor;
+  static const bool has_subview        = eGlueCube<T1, T2, eglue_type>::has_subview;
   
   arma_aligned const eGlueCube<T1, T2, eglue_type>& Q;
   
@@ -221,16 +268,17 @@ class ProxyCube< eGlueCube<T1, T2, eglue_type > >
     arma_extra_debug_sigprint();
     }
   
-  arma_inline u32 get_n_rows()       const { return Q.get_n_rows();       }
-  arma_inline u32 get_n_cols()       const { return Q.get_n_cols();       }
-  arma_inline u32 get_n_elem_slice() const { return Q.get_n_elem_slice(); }
-  arma_inline u32 get_n_slices()     const { return Q.get_n_slices();     }
-  arma_inline u32 get_n_elem()       const { return Q.get_n_elem();       }
+  arma_inline uword get_n_rows()       const { return Q.get_n_rows();       }
+  arma_inline uword get_n_cols()       const { return Q.get_n_cols();       }
+  arma_inline uword get_n_elem_slice() const { return Q.get_n_elem_slice(); }
+  arma_inline uword get_n_slices()     const { return Q.get_n_slices();     }
+  arma_inline uword get_n_elem()       const { return Q.get_n_elem();       }
   
-  arma_inline elem_type operator[] (const u32 i)                                   const { return Q[i];                  }
-  arma_inline elem_type at         (const u32 row, const u32 col, const u32 slice) const { return Q.at(row, col, slice); }
+  arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
+  arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
   
-  arma_inline ea_type get_ea() const { return Q; }
+  arma_inline ea_type get_ea()                           const { return Q;                                      }
+  arma_inline bool    is_alias(const Cube<elem_type>& X) const { return (Q.P1.is_alias(X) || Q.P2.is_alias(X)); }
   };
 
 
@@ -246,6 +294,7 @@ class ProxyCube< mtOpCube<out_eT, T1, op_type> >
   typedef          const elem_type*             ea_type;
   
   static const bool prefer_at_accessor = false;
+  static const bool has_subview        = false;
   
   arma_aligned const Cube<out_eT> Q;
   
@@ -255,16 +304,17 @@ class ProxyCube< mtOpCube<out_eT, T1, op_type> >
     arma_extra_debug_sigprint();
     }
   
-  arma_inline u32 get_n_rows()       const { return Q.n_rows;       }
-  arma_inline u32 get_n_cols()       const { return Q.n_cols;       }
-  arma_inline u32 get_n_elem_slice() const { return Q.n_elem_slice; }
-  arma_inline u32 get_n_slices()     const { return Q.n_slices;     }
-  arma_inline u32 get_n_elem()       const { return Q.n_elem;       }
+  arma_inline uword get_n_rows()       const { return Q.n_rows;       }
+  arma_inline uword get_n_cols()       const { return Q.n_cols;       }
+  arma_inline uword get_n_elem_slice() const { return Q.n_elem_slice; }
+  arma_inline uword get_n_slices()     const { return Q.n_slices;     }
+  arma_inline uword get_n_elem()       const { return Q.n_elem;       }
   
-  arma_inline elem_type operator[] (const u32 i)                                   const { return Q[i];                  }
-  arma_inline elem_type at         (const u32 row, const u32 col, const u32 slice) const { return Q.at(row, col, slice); }
+  arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
+  arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
   
-  arma_inline ea_type get_ea() const { return Q.memptr(); }
+  arma_inline ea_type get_ea()                      const { return Q.memptr(); }
+  arma_inline bool    is_alias(const Cube<out_eT>&) const { return false;      }
   };
 
 
@@ -280,6 +330,7 @@ class ProxyCube< mtGlueCube<out_eT, T1, T2, glue_type > >
   typedef          const elem_type*             ea_type;
   
   static const bool prefer_at_accessor = false;
+  static const bool has_subview        = false;
   
   arma_aligned const Cube<out_eT> Q;
   
@@ -289,16 +340,17 @@ class ProxyCube< mtGlueCube<out_eT, T1, T2, glue_type > >
     arma_extra_debug_sigprint();
     }
   
-  arma_inline u32 get_n_rows()       const { return Q.n_rows;       }
-  arma_inline u32 get_n_cols()       const { return Q.n_cols;       }
-  arma_inline u32 get_n_elem_slice() const { return Q.n_elem_slice; }
-  arma_inline u32 get_n_slices()     const { return Q.n_slices;     }
-  arma_inline u32 get_n_elem()       const { return Q.n_elem;       }
+  arma_inline uword get_n_rows()       const { return Q.n_rows;       }
+  arma_inline uword get_n_cols()       const { return Q.n_cols;       }
+  arma_inline uword get_n_elem_slice() const { return Q.n_elem_slice; }
+  arma_inline uword get_n_slices()     const { return Q.n_slices;     }
+  arma_inline uword get_n_elem()       const { return Q.n_elem;       }
   
-  arma_inline elem_type operator[] (const u32 i)                                   const { return Q[i];                  }
-  arma_inline elem_type at         (const u32 row, const u32 col, const u32 slice) const { return Q.at(row, col, slice); }
+  arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
+  arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
   
-  arma_inline ea_type get_ea() const { return Q.memptr(); }
+  arma_inline ea_type get_ea()                      const { return Q.memptr(); }
+  arma_inline bool    is_alias(const Cube<out_eT>&) const { return false;      }
   };
 
 

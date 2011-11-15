@@ -20,7 +20,7 @@
 template<typename T1>
 inline
 const Op<T1, op_cov>
-cov(const Base<typename T1::elem_type,T1>& X, const u32 norm_type = 0)
+cov(const Base<typename T1::elem_type,T1>& X, const uword norm_type = 0)
   {
   arma_extra_debug_sigprint();
   
@@ -34,7 +34,7 @@ cov(const Base<typename T1::elem_type,T1>& X, const u32 norm_type = 0)
 template<typename T1, typename T2>
 inline
 const Glue<T1,T2,glue_cov>
-cov(const Base<typename T1::elem_type,T1>& A, const Base<typename T1::elem_type,T2>& B, const u32 norm_type = 0)
+cov(const Base<typename T1::elem_type,T1>& A, const Base<typename T1::elem_type,T2>& B, const uword norm_type = 0)
   {
   arma_extra_debug_sigprint();
   

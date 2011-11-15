@@ -26,16 +26,16 @@ glue_kron::direct_kron(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
   {
   arma_extra_debug_sigprint();
   
-  const u32 A_rows = A.n_rows;
-  const u32 A_cols = A.n_cols;
-  const u32 B_rows = B.n_rows;
-  const u32 B_cols = B.n_cols;
+  const uword A_rows = A.n_rows;
+  const uword A_cols = A.n_cols;
+  const uword B_rows = B.n_rows;
+  const uword B_cols = B.n_cols;
   
   out.set_size(A_rows*B_rows, A_cols*B_cols);
   
-  for(u32 i = 0; i < A_rows; i++)
+  for(uword i = 0; i < A_rows; i++)
     {
-    for(u32 j = 0; j < A_cols; j++)
+    for(uword j = 0; j < A_cols; j++)
       {
       out.submat(i*B_rows, j*B_cols, (i+1)*B_rows-1, (j+1)*B_cols-1) = A(i,j) * B; 
       }
@@ -56,18 +56,18 @@ glue_kron::direct_kron(Mat< std::complex<T> >& out, const Mat< std::complex<T> >
   
   typedef typename std::complex<T> eT;
   
-  const u32 A_rows = A.n_rows;
-  const u32 A_cols = A.n_cols;
-  const u32 B_rows = B.n_rows;
-  const u32 B_cols = B.n_cols;
+  const uword A_rows = A.n_rows;
+  const uword A_cols = A.n_cols;
+  const uword B_rows = B.n_rows;
+  const uword B_cols = B.n_cols;
   
   out.set_size(A_rows*B_rows, A_cols*B_cols);
   
   Mat<eT> tmp_B = conv_to< Mat<eT> >::from(B);
   
-  for(u32 i = 0; i < A_rows; i++)
+  for(uword i = 0; i < A_rows; i++)
     {
-    for(u32 j = 0; j < A_cols; j++)
+    for(uword j = 0; j < A_cols; j++)
       {
       out.submat(i*B_rows, j*B_cols, (i+1)*B_rows-1, (j+1)*B_cols-1) = A(i,j) * tmp_B; 
       }
@@ -86,16 +86,16 @@ glue_kron::direct_kron(Mat< std::complex<T> >& out, const Mat<T>& A, const Mat< 
   {
   arma_extra_debug_sigprint();
   
-  const u32 A_rows = A.n_rows;
-  const u32 A_cols = A.n_cols;
-  const u32 B_rows = B.n_rows;
-  const u32 B_cols = B.n_cols;
+  const uword A_rows = A.n_rows;
+  const uword A_cols = A.n_cols;
+  const uword B_rows = B.n_rows;
+  const uword B_cols = B.n_cols;
   
   out.set_size(A_rows*B_rows, A_cols*B_cols);
   
-  for(u32 i = 0; i < A_rows; i++)
+  for(uword i = 0; i < A_rows; i++)
     {
-    for(u32 j = 0; j < A_cols; j++)
+    for(uword j = 0; j < A_cols; j++)
       {
       out.submat(i*B_rows, j*B_cols, (i+1)*B_rows-1, (j+1)*B_cols-1) = A(i,j) * B; 
       }

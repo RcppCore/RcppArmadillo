@@ -23,60 +23,70 @@
 
 template<typename T> struct arma_scalar_only { };
 
-template<> struct arma_scalar_only<char>   { typedef char   result; };
-template<> struct arma_scalar_only<short>  { typedef short  result; };
-template<> struct arma_scalar_only<int>    { typedef int    result; };
-template<> struct arma_scalar_only<long>   { typedef long   result; };
+template<> struct arma_scalar_only<u8>     { typedef u8     result; };
+template<> struct arma_scalar_only<s8>     { typedef s8     result; };
+template<> struct arma_scalar_only<u16>    { typedef u16    result; };
+template<> struct arma_scalar_only<s16>    { typedef s16    result; };
+template<> struct arma_scalar_only<u32>    { typedef u32    result; };
+template<> struct arma_scalar_only<s32>    { typedef s32    result; };
+#if defined(ARMA_64BIT_WORD)
+template<> struct arma_scalar_only<u64>    { typedef u64    result; };
+template<> struct arma_scalar_only<s64>    { typedef s64    result; };
+#endif
 template<> struct arma_scalar_only<float>  { typedef float  result; };
 template<> struct arma_scalar_only<double> { typedef double result; };
 
-template<> struct arma_scalar_only<unsigned char>  { typedef unsigned char  result; };
-template<> struct arma_scalar_only<unsigned short> { typedef unsigned short result; };
-template<> struct arma_scalar_only<unsigned int>   { typedef unsigned int   result; };
-template<> struct arma_scalar_only<unsigned long>  { typedef unsigned long  result; };
 
-template<typename T> struct arma_scalar_only< std::complex<T> > { typedef std::complex<T> result; };
+template<typename T>
+struct arma_scalar_only< std::complex<T> > { typedef std::complex<T> result; };
 
 
 
 template<typename T> struct arma_integral_only { };
 
-template<> struct arma_integral_only<char>   { typedef char   result; };
-template<> struct arma_integral_only<short>  { typedef short  result; };
-template<> struct arma_integral_only<int>    { typedef int    result; };
-template<> struct arma_integral_only<long>   { typedef long   result; };
-
-template<> struct arma_integral_only<unsigned char>  { typedef unsigned char  result; };
-template<> struct arma_integral_only<unsigned short> { typedef unsigned short result; };
-template<> struct arma_integral_only<unsigned int>   { typedef unsigned int   result; };
-template<> struct arma_integral_only<unsigned long>  { typedef unsigned long  result; };
+template<> struct arma_integral_only<u8>  { typedef u8  result; };
+template<> struct arma_integral_only<s8>  { typedef s8  result; };
+template<> struct arma_integral_only<u16> { typedef u16 result; };
+template<> struct arma_integral_only<s16> { typedef s16 result; };
+template<> struct arma_integral_only<u32> { typedef u32 result; };
+template<> struct arma_integral_only<s32> { typedef s32 result; };
+#if defined(ARMA_64BIT_WORD)
+template<> struct arma_integral_only<u64> { typedef u64 result; };
+template<> struct arma_integral_only<s64> { typedef s64 result; };
+#endif
 
 
 
 template<typename T> struct arma_unsigned_integral_only { };
 
-template<> struct arma_unsigned_integral_only<unsigned char>  { typedef unsigned char  result; };
-template<> struct arma_unsigned_integral_only<unsigned short> { typedef unsigned short result; };
-template<> struct arma_unsigned_integral_only<unsigned int>   { typedef unsigned int   result; };
-template<> struct arma_unsigned_integral_only<unsigned long>  { typedef unsigned long  result; };
+template<> struct arma_unsigned_integral_only<u8>  { typedef u8  result; };
+template<> struct arma_unsigned_integral_only<u16> { typedef u16 result; };
+template<> struct arma_unsigned_integral_only<u32> { typedef u32 result; };
+#if defined(ARMA_64BIT_WORD)
+template<> struct arma_unsigned_integral_only<u64> { typedef u64 result; };
+#endif
 
 
 
 template<typename T> struct arma_signed_integral_only { };
 
-template<> struct arma_signed_integral_only<char>   { typedef char   result; };
-template<> struct arma_signed_integral_only<short>  { typedef short  result; };
-template<> struct arma_signed_integral_only<int>    { typedef int    result; };
-template<> struct arma_signed_integral_only<long>   { typedef long   result; };
+template<> struct arma_signed_integral_only<s8>   { typedef s8  result; };
+template<> struct arma_signed_integral_only<s16>  { typedef s16 result; };
+template<> struct arma_signed_integral_only<s32>  { typedef s32 result; };
+#if defined(ARMA_64BIT_WORD)
+template<> struct arma_signed_integral_only<s64>  { typedef s64 result; };
+#endif
 
 
 
 template<typename T> struct arma_signed_only { };
 
-template<> struct arma_signed_only<char>   { typedef char   result; };
-template<> struct arma_signed_only<short>  { typedef short  result; };
-template<> struct arma_signed_only<int>    { typedef int    result; };
-template<> struct arma_signed_only<long>   { typedef long   result; };
+template<> struct arma_signed_only<s8>   { typedef s8   result; };
+template<> struct arma_signed_only<s16>  { typedef s16  result; };
+template<> struct arma_signed_only<s32>  { typedef s32  result; };
+#if defined(ARMA_64BIT_WORD)
+template<> struct arma_signed_only<s64>  { typedef s64  result; };
+#endif
 template<> struct arma_signed_only<float>  { typedef float  result; };
 template<> struct arma_signed_only<double> { typedef double result; };
 

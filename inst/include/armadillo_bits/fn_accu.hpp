@@ -33,12 +33,12 @@ accu(const Base<typename T1::elem_type,T1>& X)
   if(Proxy<T1>::prefer_at_accessor == false)
     {
           ea_type P      = A.get_ea();
-    const u32     n_elem = A.get_n_elem();
+    const uword     n_elem = A.get_n_elem();
     
     eT val1 = eT(0);
     eT val2 = eT(0);
     
-    u32 i,j;
+    uword i,j;
     
     for(i=0, j=1; j<n_elem; i+=2, j+=2)
       {
@@ -55,14 +55,14 @@ accu(const Base<typename T1::elem_type,T1>& X)
     }
   else
     {
-    const u32 n_rows = A.get_n_rows();
-    const u32 n_cols = A.get_n_cols();
+    const uword n_rows = A.get_n_rows();
+    const uword n_cols = A.get_n_cols();
     
     eT val = eT(0);
     
-    for(u32 col=0; col<n_cols; ++col)
+    for(uword col=0; col<n_cols; ++col)
       {
-      for(u32 row=0; row<n_rows; ++row)
+      for(uword row=0; row<n_rows; ++row)
         {
         val += A.at(row,col);
         }
@@ -78,8 +78,8 @@ accu(const Base<typename T1::elem_type,T1>& X)
 template<typename T1>
 arma_inline
 arma_warn_unused
-u32
-accu(const mtOp<u32,T1,op_rel_noteq>& X)
+uword
+accu(const mtOp<uword,T1,op_rel_noteq>& X)
   {
   arma_extra_debug_sigprint();
   
@@ -87,11 +87,11 @@ accu(const mtOp<u32,T1,op_rel_noteq>& X)
   
   const Proxy<T1> A(X.m);
   
-  const u32 n_elem = A.get_n_elem();
+  const uword n_elem = A.get_n_elem();
   const eT  val    = X.aux;
   
-  u32 n_nonzero = 0;
-  for(u32 i=0; i<n_elem; ++i)
+  uword n_nonzero = 0;
+  for(uword i=0; i<n_elem; ++i)
     {
     if(A[i] != val)
       {
@@ -123,12 +123,12 @@ accu(const BaseCube<typename T1::elem_type,T1>& X)
     {
     
           ea_type P      = A.get_ea();
-    const u32     n_elem = A.get_n_elem();
+    const uword     n_elem = A.get_n_elem();
     
     eT val1 = eT(0);
     eT val2 = eT(0);
     
-    u32 i,j;
+    uword i,j;
     
     for(i=0, j=1; j<n_elem; i+=2, j+=2)
       {
@@ -145,17 +145,17 @@ accu(const BaseCube<typename T1::elem_type,T1>& X)
     }
   else
     {
-    const u32 n_rows   = A.get_n_rows();
-    const u32 n_cols   = A.get_n_cols();
-    const u32 n_slices = A.get_n_slices();
+    const uword n_rows   = A.get_n_rows();
+    const uword n_cols   = A.get_n_cols();
+    const uword n_slices = A.get_n_slices();
     
     eT val = eT(0);
     
-    for(u32 slice=0; slice<n_slices; ++slice)
+    for(uword slice=0; slice<n_slices; ++slice)
       {
-      for(u32 col=0; col<n_cols; ++col)
+      for(uword col=0; col<n_cols; ++col)
         {
-        for(u32 row=0; row<n_rows; ++row)
+        for(uword row=0; row<n_rows; ++row)
           {
           val += A.at(row,col,slice);
           }
@@ -178,11 +178,11 @@ accu(const diagview<eT>& X)
   {
   arma_extra_debug_sigprint();  
   
-  const u32 n_elem = X.n_elem;
+  const uword n_elem = X.n_elem;
   
   eT val = eT(0);
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     val += X[i];
     }
@@ -202,15 +202,15 @@ accu(const subview<eT>& S)
   {
   arma_extra_debug_sigprint();  
   
-  const u32 S_n_rows = S.n_rows;
-  const u32 S_n_cols = S.n_cols;
-  const u32 S_n_elem = S.n_elem;
+  const uword S_n_rows = S.n_rows;
+  const uword S_n_cols = S.n_cols;
+  const uword S_n_elem = S.n_elem;
   
   eT val = eT(0);
   
   if(S_n_elem > 0)
     {
-    for(u32 col=0; col<S_n_cols; ++col)
+    for(uword col=0; col<S_n_cols; ++col)
       {
       val += arrayops::accumulate( S.colptr(col), S_n_rows );
       }
@@ -233,16 +233,16 @@ accu(const subview_row<eT>& S)
   
   const Mat<eT>& X = S.m;
   
-  const u32 n_elem     = S.n_elem;
-  const u32 row        = S.aux_row1;
-  const u32 start_col  = S.aux_col1;
-  const u32 end_col_p1 = start_col + S.n_cols;
+  const uword n_elem     = S.n_elem;
+  const uword row        = S.aux_row1;
+  const uword start_col  = S.aux_col1;
+  const uword end_col_p1 = start_col + S.n_cols;
   
   eT val = eT(0);
     
   if(n_elem > 0)
     {
-    u32 i,j;
+    uword i,j;
     
     for(i=start_col, j=start_col+1; j < end_col_p1; i+=2, j+=2)
       {

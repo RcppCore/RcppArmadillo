@@ -213,20 +213,20 @@ eig_gen
     }
   else
     {
-    const u32 n = eigval.n_elem;
+    const uword n = eigval.n_elem;
     
     if(n > 0)
       {
       eigvec.set_size(n,n);
       
-      for(u32 j=0; j<n; ++j)
+      for(uword j=0; j<n; ++j)
         {
         if( (j < n-1) && (eigval[j] == std::conj(eigval[j+1])) )
           {
           // eigvec.col(j)   = Mat< std::complex<eT> >( tmp_eigvec.col(j),  tmp_eigvec.col(j+1) );
           // eigvec.col(j+1) = Mat< std::complex<eT> >( tmp_eigvec.col(j), -tmp_eigvec.col(j+1) );
           
-          for(u32 i=0; i<n; ++i)
+          for(uword i=0; i<n; ++i)
             {
             eigvec.at(i,j)   = std::complex<eT>( tmp_eigvec.at(i,j),  tmp_eigvec.at(i,j+1) );
             eigvec.at(i,j+1) = std::complex<eT>( tmp_eigvec.at(i,j), -tmp_eigvec.at(i,j+1) );
@@ -238,7 +238,7 @@ eig_gen
           {
           // eigvec.col(i) = tmp_eigvec.col(i);
           
-          for(u32 i=0; i<n; ++i)
+          for(uword i=0; i<n; ++i)
             {
             eigvec.at(i,j) = std::complex<eT>(tmp_eigvec.at(i,j), eT(0));
             }

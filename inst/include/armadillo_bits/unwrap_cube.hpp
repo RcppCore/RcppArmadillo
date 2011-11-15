@@ -69,7 +69,7 @@ class unwrap_cube_check
     {
     arma_extra_debug_sigprint();
     
-    arma_type_check< is_arma_cube_type<T1>::value == false >::apply();
+    arma_type_check(( is_arma_cube_type<T1>::value == false ));
     }
   
   const Cube<eT> M;

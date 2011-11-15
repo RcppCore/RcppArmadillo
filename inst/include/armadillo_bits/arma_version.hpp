@@ -17,9 +17,9 @@
 
 
 #define ARMA_VERSION_MAJOR 2
-#define ARMA_VERSION_MINOR 2
-#define ARMA_VERSION_PATCH 3
-#define ARMA_VERSION_NAME  "Blue Skies Debauchery"
+#define ARMA_VERSION_MINOR 3
+#define ARMA_VERSION_PATCH 91
+#define ARMA_VERSION_NAME  "Loco Lounge Lizard (Beta 1)"
 
 
 

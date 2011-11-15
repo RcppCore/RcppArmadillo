@@ -80,7 +80,7 @@ podarray<eT>::operator=(const podarray& x)
 
 template<typename eT>
 arma_inline
-podarray<eT>::podarray(const u32 new_n_elem)
+podarray<eT>::podarray(const uword new_n_elem)
   : n_elem(0)
   , mem   (0)
   {
@@ -93,7 +93,7 @@ podarray<eT>::podarray(const u32 new_n_elem)
 
 template<typename eT>
 arma_inline
-podarray<eT>::podarray(const eT* X, const u32 new_n_elem)
+podarray<eT>::podarray(const eT* X, const uword new_n_elem)
   : n_elem(0)
   , mem   (0)
   {
@@ -109,7 +109,7 @@ podarray<eT>::podarray(const eT* X, const u32 new_n_elem)
 template<typename eT>
 arma_inline
 eT
-podarray<eT>::operator[] (const u32 i) const
+podarray<eT>::operator[] (const uword i) const
   {
   return mem[i];
   }
@@ -119,7 +119,7 @@ podarray<eT>::operator[] (const u32 i) const
 template<typename eT>
 arma_inline
 eT&
-podarray<eT>::operator[] (const u32 i)
+podarray<eT>::operator[] (const uword i)
   {
   return access::rw(mem[i]);
   }
@@ -129,7 +129,7 @@ podarray<eT>::operator[] (const u32 i)
 template<typename eT>
 arma_inline
 eT
-podarray<eT>::operator() (const u32 i) const
+podarray<eT>::operator() (const uword i) const
   {
   arma_debug_check( (i >= n_elem), "podarray::operator(): index out of bounds");
   return mem[i];
@@ -140,7 +140,7 @@ podarray<eT>::operator() (const u32 i) const
 template<typename eT>
 arma_inline
 eT&
-podarray<eT>::operator() (const u32 i)
+podarray<eT>::operator() (const uword i)
   {
   arma_debug_check( (i >= n_elem), "podarray::operator(): index out of bounds");
   return access::rw(mem[i]);
@@ -151,7 +151,7 @@ podarray<eT>::operator() (const u32 i)
 template<typename eT>
 inline
 void
-podarray<eT>::set_size(const u32 new_n_elem)
+podarray<eT>::set_size(const uword new_n_elem)
   {
   arma_extra_debug_sigprint();
   
@@ -199,7 +199,7 @@ podarray<eT>::zeros()
 template<typename eT>
 inline
 void
-podarray<eT>::zeros(const u32 new_n_elem)
+podarray<eT>::zeros(const uword new_n_elem)
   {
   arma_extra_debug_sigprint();
   
@@ -233,9 +233,9 @@ template<typename eT>
 arma_hot
 inline
 void
-podarray<eT>::copy_row(const Mat<eT>& A, const u32 row)
+podarray<eT>::copy_row(const Mat<eT>& A, const uword row)
   {
-  const u32 cols = A.n_cols;
+  const uword cols = A.n_cols;
   
   // note: this function assumes that the podarray has been set to the correct size beforehand
   eT* out = memptr();
@@ -244,7 +244,7 @@ podarray<eT>::copy_row(const Mat<eT>& A, const u32 row)
     {
     default:
       {
-      u32 i,j;
+      uword i,j;
       for(i=0, j=1; j < cols; i+=2, j+=2)
         {
         out[i] = A.at(row, i);
@@ -289,7 +289,7 @@ podarray<eT>::copy_row(const Mat<eT>& A, const u32 row)
 template<typename eT>
 inline
 void
-podarray<eT>::init(const u32 new_n_elem)
+podarray<eT>::init(const uword new_n_elem)
   {
   arma_extra_debug_sigprint();
   

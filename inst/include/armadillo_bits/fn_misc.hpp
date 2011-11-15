@@ -27,7 +27,7 @@ linspace
   (
   const typename vec_type::pod_type start,
   const typename vec_type::pod_type end,
-  const u32 num = 100u,
+  const uword num = 100u,
   const typename arma_Mat_Col_Row_only<vec_type>::result* junk = 0
   )
   {
@@ -45,13 +45,13 @@ linspace
     
     eT* x_mem = x.memptr();
     
-    const u32 num_m1 = num - 1;
+    const uword num_m1 = num - 1;
     
     if(is_non_integral<T>::value == true)
       {
       const T delta = (end-start)/T(num_m1);
       
-      for(u32 i=0; i<num_m1; ++i)
+      for(uword i=0; i<num_m1; ++i)
         {
         x_mem[i] = eT(start + i*delta);
         }
@@ -62,7 +62,7 @@ linspace
       {
       const double delta = (end >= start) ? double(end-start)/double(num_m1) : -double(start-end)/double(num_m1);
       
-      for(u32 i=0; i<num_m1; ++i)
+      for(uword i=0; i<num_m1; ++i)
         {
         x_mem[i] = eT(double(start) + i*delta);
         }
@@ -86,7 +86,7 @@ linspace
 
 inline
 mat
-linspace(const double start, const double end, const u32 num = 100u)
+linspace(const double start, const double end, const uword num = 100u)
   {
   arma_extra_debug_sigprint();
   return linspace<mat>(start, end, num);

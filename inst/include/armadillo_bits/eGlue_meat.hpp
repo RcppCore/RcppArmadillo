@@ -46,7 +46,7 @@ eGlue<T1,T2,eglue_type>::eGlue(const T1& in_A, const T2& in_B)
 
 template<typename T1, typename T2, typename eglue_type>
 arma_inline
-u32
+uword
 eGlue<T1,T2,eglue_type>::get_n_rows() const
   {
   return P1.get_n_rows();
@@ -56,7 +56,7 @@ eGlue<T1,T2,eglue_type>::get_n_rows() const
 
 template<typename T1, typename T2, typename eglue_type>
 arma_inline
-u32
+uword
 eGlue<T1,T2,eglue_type>::get_n_cols() const
   {
   return P1.get_n_cols();
@@ -66,7 +66,7 @@ eGlue<T1,T2,eglue_type>::get_n_cols() const
 
 template<typename T1, typename T2, typename eglue_type>
 arma_inline
-u32
+uword
 eGlue<T1,T2,eglue_type>::get_n_elem() const
   {
   return P1.get_n_elem();
@@ -77,7 +77,7 @@ eGlue<T1,T2,eglue_type>::get_n_elem() const
 template<typename T1, typename T2, typename eglue_type>
 arma_inline
 typename T1::elem_type
-eGlue<T1,T2,eglue_type>::operator[] (const u32 i) const
+eGlue<T1,T2,eglue_type>::operator[] (const uword i) const
   {
   typedef typename T1::elem_type eT;
   
@@ -93,7 +93,7 @@ eGlue<T1,T2,eglue_type>::operator[] (const u32 i) const
 template<typename T1, typename T2, typename eglue_type>
 arma_inline
 typename T1::elem_type
-eGlue<T1,T2,eglue_type>::at(const u32 row, const u32 col) const
+eGlue<T1,T2,eglue_type>::at(const uword row, const uword col) const
   {
   typedef typename T1::elem_type eT;
   

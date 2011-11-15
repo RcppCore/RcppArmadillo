@@ -31,13 +31,13 @@ glue_join::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_join>& 
   const Mat<eT>& A = A_tmp.M;
   const Mat<eT>& B = B_tmp.M;
   
-  const u32 A_n_rows = A.n_rows;
-  const u32 A_n_cols = A.n_cols;
+  const uword A_n_rows = A.n_rows;
+  const uword A_n_cols = A.n_cols;
   
-  const u32 B_n_rows = B.n_rows;
-  const u32 B_n_cols = B.n_cols;
+  const uword B_n_rows = B.n_rows;
+  const uword B_n_cols = B.n_cols;
   
-  const u32 join_type = X.aux_u32;
+  const uword join_type = X.aux_uword;
   
   if(join_type == 0)
     {

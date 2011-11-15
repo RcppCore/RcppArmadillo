@@ -18,7 +18,7 @@
 
 struct podarray_prealloc_n_elem
   {
-  static const u32 val = 16;
+  static const uword val = 16;
   };
 
 
@@ -30,7 +30,7 @@ class podarray
   {
   public:
   
-  arma_aligned const u32       n_elem; //!< number of elements held
+  arma_aligned const uword       n_elem; //!< number of elements held
   arma_aligned const eT* const mem;    //!< pointer to memory used by the object
   
   
@@ -47,32 +47,32 @@ class podarray
   inline                 podarray (const podarray& x);
   inline const podarray& operator=(const podarray& x);
   
-  arma_inline explicit podarray(const u32 new_N);
+  arma_inline explicit podarray(const uword new_N);
   
-  arma_inline explicit podarray(const eT* X, const u32 new_N);
+  arma_inline explicit podarray(const eT* X, const uword new_N);
   
-  arma_inline eT& operator[] (const u32 i);
-  arma_inline eT  operator[] (const u32 i) const;
+  arma_inline eT& operator[] (const uword i);
+  arma_inline eT  operator[] (const uword i) const;
   
-  arma_inline eT& operator() (const u32 i);
-  arma_inline eT  operator() (const u32 i) const;
+  arma_inline eT& operator() (const uword i);
+  arma_inline eT  operator() (const uword i) const;
   
-  inline void set_size(const u32 new_n_elem);
+  inline void set_size(const uword new_n_elem);
   inline void reset();
   
   inline void fill(const eT val);
   
   inline void zeros();
-  inline void zeros(const u32 new_n_elem);
+  inline void zeros(const uword new_n_elem);
   
   arma_inline       eT* memptr();
   arma_inline const eT* memptr() const;
   
-  arma_hot inline void copy_row(const Mat<eT>& A, const u32 row);
+  arma_hot inline void copy_row(const Mat<eT>& A, const uword row);
   
   protected:
   
-  inline void init(const u32 new_n_elem);
+  inline void init(const uword new_n_elem);
   
   };
 

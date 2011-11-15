@@ -32,16 +32,16 @@ op_flipud::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_flipud>& in)
     {
     out.copy_size(X);
     
-    for(u32 i=0; i<X.n_rows; ++i)
+    for(uword i=0; i<X.n_rows; ++i)
       {
       out.row(i) = X.row(X.n_rows-1 - i);
       }
     }
   else
     {
-    const u32 N = X.n_rows / 2;
+    const uword N = X.n_rows / 2;
     
-    for(u32 i=0; i<N; ++i)
+    for(uword i=0; i<N; ++i)
       {
       out.swap_rows(i, X.n_rows-1 - i);
       }
@@ -66,16 +66,16 @@ op_fliplr::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_fliplr>& in)
     {
     out.copy_size(X);
     
-    for(u32 i=0; i<X.n_cols; ++i)
+    for(uword i=0; i<X.n_cols; ++i)
       {
       out.col(i) = X.col(X.n_cols-1 - i);
       }
     }
   else
     {
-    const u32 N = X.n_cols / 2;
+    const uword N = X.n_cols / 2;
     
-    for(u32 i=0; i<N; ++i)
+    for(uword i=0; i<N; ++i)
       {
       out.swap_cols(i, X.n_cols-1 - i);
       }

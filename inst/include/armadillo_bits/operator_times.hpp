@@ -156,13 +156,13 @@ operator*
   
   arma_debug_assert_mul_size(A.n_elem, A.n_elem, B.n_elem, B.n_elem, "matrix multiply");
   
-  const u32 N = A.n_elem;
+  const uword N = A.n_elem;
   
   Mat<out_eT> out(N,N);
   
   out.zeros();
   
-  for(u32 i=0; i<N; ++i)
+  for(uword i=0; i<N; ++i)
     {
     out.at(i,i) = upgrade_val<eT1,eT2>::apply( A[i] ) * upgrade_val<eT1,eT2>::apply( B[i] );
     }

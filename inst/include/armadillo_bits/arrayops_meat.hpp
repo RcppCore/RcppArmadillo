@@ -20,7 +20,7 @@ template<typename eT>
 arma_hot
 arma_inline
 void
-arrayops::copy(eT* dest, const eT* src, const u32 n_elem)
+arrayops::copy(eT* dest, const eT* src, const uword n_elem)
   {
   switch(n_elem)
     {
@@ -51,7 +51,7 @@ arrayops::copy(eT* dest, const eT* src, const u32 n_elem)
 template<typename eT>
 inline
 void
-arrayops::copy_big(eT* dest, const eT* src, const u32 n_elem)
+arrayops::copy_big(eT* dest, const eT* src, const uword n_elem)
   {
   switch(n_elem)
     {
@@ -186,9 +186,9 @@ template<typename out_eT, typename in_eT>
 arma_hot
 inline
 void
-arrayops::convert(out_eT* dest, const in_eT* src, const u32 n_elem)
+arrayops::convert(out_eT* dest, const in_eT* src, const uword n_elem)
   {
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
@@ -208,9 +208,9 @@ template<typename out_eT, typename in_eT>
 arma_hot
 inline
 void
-arrayops::convert_cx(out_eT* dest, const in_eT* src, const u32 n_elem)
+arrayops::convert_cx(out_eT* dest, const in_eT* src, const uword n_elem)
   {
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
@@ -230,9 +230,9 @@ template<typename eT>
 arma_hot
 inline
 void
-arrayops::inplace_plus(eT* dest, const eT* src, const u32 n_elem)
+arrayops::inplace_plus(eT* dest, const eT* src, const uword n_elem)
   {
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
@@ -252,9 +252,9 @@ template<typename eT>
 arma_hot
 inline
 void
-arrayops::inplace_minus(eT* dest, const eT* src, const u32 n_elem)
+arrayops::inplace_minus(eT* dest, const eT* src, const uword n_elem)
   {
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
@@ -274,9 +274,9 @@ template<typename eT>
 arma_hot
 inline
 void
-arrayops::inplace_mul(eT* dest, const eT* src, const u32 n_elem)
+arrayops::inplace_mul(eT* dest, const eT* src, const uword n_elem)
   {
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
@@ -296,9 +296,9 @@ template<typename eT>
 arma_hot
 inline
 void
-arrayops::inplace_div(eT* dest, const eT* src, const u32 n_elem)
+arrayops::inplace_div(eT* dest, const eT* src, const uword n_elem)
   {
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
@@ -318,9 +318,9 @@ template<typename eT>
 arma_hot
 inline
 void
-arrayops::inplace_set(eT* dest, const eT val, const u32 n_elem)
+arrayops::inplace_set(eT* dest, const eT val, const uword n_elem)
   {
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
@@ -340,9 +340,9 @@ template<typename eT>
 arma_hot
 inline
 void
-arrayops::inplace_plus(eT* dest, const eT val, const u32 n_elem)
+arrayops::inplace_plus(eT* dest, const eT val, const uword n_elem)
   {
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
@@ -362,9 +362,9 @@ template<typename eT>
 arma_hot
 inline
 void
-arrayops::inplace_minus(eT* dest, const eT val, const u32 n_elem)
+arrayops::inplace_minus(eT* dest, const eT val, const uword n_elem)
   {
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
@@ -384,9 +384,9 @@ template<typename eT>
 arma_hot
 inline
 void
-arrayops::inplace_mul(eT* dest, const eT val, const u32 n_elem)
+arrayops::inplace_mul(eT* dest, const eT val, const uword n_elem)
   {
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
@@ -406,9 +406,9 @@ template<typename eT>
 arma_hot
 inline
 void
-arrayops::inplace_div(eT* dest, const eT val, const u32 n_elem)
+arrayops::inplace_div(eT* dest, const eT val, const uword n_elem)
   {
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
@@ -429,9 +429,9 @@ arma_hot
 arma_pure
 inline
 eT
-arrayops::accumulate(const eT* src, const u32 n_elem)
+arrayops::accumulate(const eT* src, const uword n_elem)
   {
-  u32 i,j;
+  uword i,j;
   
   eT acc1 = eT(0);
   eT acc2 = eT(0);
@@ -457,12 +457,12 @@ arma_hot
 arma_pure
 inline
 eT
-arrayops::product(const eT* src, const u32 n_elem)
+arrayops::product(const eT* src, const uword n_elem)
   {
   eT val1 = eT(1);
   eT val2 = eT(1);
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
@@ -485,9 +485,9 @@ arma_hot
 arma_pure
 inline
 bool
-arrayops::is_finite(const eT* src, const u32 n_elem)
+arrayops::is_finite(const eT* src, const uword n_elem)
   {
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
@@ -519,13 +519,13 @@ arma_hot
 arma_pure
 inline
 typename get_pod_type<eT>::result
-arrayops::norm_1(const eT* src, const u32 n_elem)
+arrayops::norm_1(const eT* src, const uword n_elem)
   {
   typedef typename get_pod_type<eT>::result T;
   
   T acc = T(0);
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
@@ -549,13 +549,13 @@ arma_hot
 arma_pure
 inline
 eT
-arrayops::norm_2(const eT* src, const u32 n_elem, const typename arma_not_cx<eT>::result* junk)
+arrayops::norm_2(const eT* src, const uword n_elem, const typename arma_not_cx<eT>::result* junk)
   {
   arma_ignore(junk);
   
   eT acc = eT(0);
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
@@ -584,11 +584,11 @@ arma_hot
 arma_pure
 inline
 T
-arrayops::norm_2(const std::complex<T>* src, const u32 n_elem)
+arrayops::norm_2(const std::complex<T>* src, const uword n_elem)
   {
   T acc = T(0);
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
@@ -617,13 +617,13 @@ arma_hot
 arma_pure
 inline
 typename get_pod_type<eT>::result
-arrayops::norm_k(const eT* src, const u32 n_elem, const int k)
+arrayops::norm_k(const eT* src, const uword n_elem, const int k)
   {
   typedef typename get_pod_type<eT>::result T;
   
   T acc = T(0);
   
-  u32 i,j;
+  uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
@@ -647,13 +647,13 @@ arma_hot
 arma_pure
 inline
 typename get_pod_type<eT>::result
-arrayops::norm_max(const eT* src, const u32 n_elem)
+arrayops::norm_max(const eT* src, const uword n_elem)
   {
   typedef typename get_pod_type<eT>::result T;
   
   T max_val = std::abs(src[0]);
   
-  u32 i,j;
+  uword i,j;
   
   for(i=1, j=2; j<n_elem; i+=2, j+=2)
     {
@@ -682,13 +682,13 @@ arma_hot
 arma_pure
 inline
 typename get_pod_type<eT>::result
-arrayops::norm_min(const eT* src, const u32 n_elem)
+arrayops::norm_min(const eT* src, const uword n_elem)
   {
   typedef typename get_pod_type<eT>::result T;
   
   T min_val = std::abs(src[0]);
   
-  u32 i,j;
+  uword i,j;
   
   for(i=1, j=2; j<n_elem; i+=2, j+=2)
     {

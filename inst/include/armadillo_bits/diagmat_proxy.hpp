@@ -41,7 +41,7 @@ class diagmat_proxy
   
   arma_inline
   elem_type
-  operator[](const u32 i) const
+  operator[](const uword i) const
     {
     if( (Proxy<T1>::prefer_at_accessor == true) || (P_is_vec == false) )
       {
@@ -56,7 +56,7 @@ class diagmat_proxy
   
   arma_inline
   elem_type
-  at(const u32 row, const u32 col) const
+  at(const uword row, const uword col) const
     {
     if(row == col)
       {
@@ -78,7 +78,7 @@ class diagmat_proxy
   
   const Proxy<T1> P;
   const bool      P_is_vec;
-  const u32       n_elem;
+  const uword     n_elem;
   };
 
 
@@ -107,12 +107,12 @@ class diagmat_proxy< Mat<eT> >
     }
   
   
-  arma_inline elem_type operator[] (const u32 i)                  const { return P_is_vec ? P[i] : P.at(i,i);                                         }
-  arma_inline elem_type at         (const u32 row, const u32 col) const { return (row == col) ? ( P_is_vec ? P[row] : P.at(row,row) ) : elem_type(0); }
+  arma_inline elem_type operator[] (const uword i)                    const { return P_is_vec ? P[i] : P.at(i,i);                                         }
+  arma_inline elem_type at         (const uword row, const uword col) const { return (row == col) ? ( P_is_vec ? P[row] : P.at(row,row) ) : elem_type(0); }
 
   const Mat<eT>& P;
   const bool     P_is_vec;
-  const u32      n_elem;
+  const uword    n_elem;
   };
 
 
@@ -135,13 +135,13 @@ class diagmat_proxy< Row<eT> >
     }
   
   
-  arma_inline elem_type operator[] (const u32 i)                  const { return P[i];                                                                }
-  arma_inline elem_type at         (const u32 row, const u32 col) const { return (row == col) ? P[row] : elem_type(0); }
+  arma_inline elem_type operator[] (const uword i)                    const { return P[i];                                                                }
+  arma_inline elem_type at         (const uword row, const uword col) const { return (row == col) ? P[row] : elem_type(0); }
 
 
   const Row<eT>& P;
   const bool     P_is_vec;
-  const u32      n_elem;
+  const uword    n_elem;
   };
 
 
@@ -164,13 +164,13 @@ class diagmat_proxy< Col<eT> >
     }
   
   
-  arma_inline elem_type operator[] (const u32 i)                  const { return P[i];                                 }
-  arma_inline elem_type at         (const u32 row, const u32 col) const { return (row == col) ? P[row] : elem_type(0); }
+  arma_inline elem_type operator[] (const uword i)                    const { return P[i];                                 }
+  arma_inline elem_type at         (const uword row, const uword col) const { return (row == col) ? P[row] : elem_type(0); }
   
 
   const Col<eT>& P;
   const bool     P_is_vec;
-  const u32      n_elem;
+  const uword    n_elem;
   };
 
 
@@ -199,13 +199,13 @@ class diagmat_proxy_check
     }
   
   
-  arma_inline elem_type operator[] (const u32 i)                  const { return P_is_vec ? P[i] : P.at(i,i);                                         }
-  arma_inline elem_type at         (const u32 row, const u32 col) const { return (row == col) ? ( P_is_vec ? P[row] : P.at(row,row) ) : elem_type(0); }
+  arma_inline elem_type operator[] (const uword i)                    const { return P_is_vec ? P[i] : P.at(i,i);                                         }
+  arma_inline elem_type at         (const uword row, const uword col) const { return (row == col) ? ( P_is_vec ? P[row] : P.at(row,row) ) : elem_type(0); }
   
 
   const Mat<elem_type> P;
   const bool           P_is_vec;
-  const u32            n_elem;
+  const uword          n_elem;
   };
 
 
@@ -243,14 +243,14 @@ class diagmat_proxy_check< Mat<eT> >
     }
   
   
-  arma_inline elem_type operator[] (const u32 i)                  const { return P_is_vec ? P[i] : P.at(i,i);                                         }
-  arma_inline elem_type at         (const u32 row, const u32 col) const { return (row == col) ? ( P_is_vec ? P[row] : P.at(row,row) ) : elem_type(0); }
+  arma_inline elem_type operator[] (const uword i)                    const { return P_is_vec ? P[i] : P.at(i,i);                                         }
+  arma_inline elem_type at         (const uword row, const uword col) const { return (row == col) ? ( P_is_vec ? P[row] : P.at(row,row) ) : elem_type(0); }
   
 
   const Mat<eT>* P_local;
   const Mat<eT>& P;
   const bool     P_is_vec;
-  const u32      n_elem;
+  const uword    n_elem;
   };
 
 
@@ -282,14 +282,14 @@ class diagmat_proxy_check< Row<eT> >
     }
   
   
-  arma_inline elem_type operator[] (const u32 i)                  const { return P[i];                                 }
-  arma_inline elem_type at         (const u32 row, const u32 col) const { return (row == col) ? P[row] : elem_type(0); }
+  arma_inline elem_type operator[] (const uword i)                    const { return P[i];                                 }
+  arma_inline elem_type at         (const uword row, const uword col) const { return (row == col) ? P[row] : elem_type(0); }
   
   
   const Row<eT>* P_local;
   const Row<eT>& P;
   const bool     P_is_vec;
-  const u32      n_elem;
+  const uword    n_elem;
   };
 
 
@@ -324,14 +324,14 @@ class diagmat_proxy_check< Col<eT> >
     }
   
   
-  arma_inline elem_type operator[] (const u32 i)                  const { return P[i];                                 }
-  arma_inline elem_type at         (const u32 row, const u32 col) const { return (row == col) ? P[row] : elem_type(0); }
+  arma_inline elem_type operator[] (const uword i)                    const { return P[i];                                 }
+  arma_inline elem_type at         (const uword row, const uword col) const { return (row == col) ? P[row] : elem_type(0); }
   
   
   const Col<eT>* P_local;
   const Col<eT>& P;
   const bool     P_is_vec;
-  const u32      n_elem;
+  const uword    n_elem;
   };
 
 

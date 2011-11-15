@@ -26,78 +26,78 @@
 
 template<typename T1, typename T2>
 inline
-const mtGlue<u32, T1, T2, glue_rel_lt>
+const mtGlue<uword, T1, T2, glue_rel_lt>
 operator<
 (const Base<typename arma_not_cx<typename T1::elem_type>::result,T1>& X, const Base<typename arma_not_cx<typename T1::elem_type>::result,T2>& Y)
   {
   arma_extra_debug_sigprint();
   
-  return mtGlue<u32, T1, T2, glue_rel_lt>( X.get_ref(), Y.get_ref() );
+  return mtGlue<uword, T1, T2, glue_rel_lt>( X.get_ref(), Y.get_ref() );
   }
 
 
 
 template<typename T1, typename T2>
 inline
-const mtGlue<u32, T1, T2, glue_rel_gt>
+const mtGlue<uword, T1, T2, glue_rel_gt>
 operator>
 (const Base<typename arma_not_cx<typename T1::elem_type>::result,T1>& X, const Base<typename arma_not_cx<typename T1::elem_type>::result,T2>& Y)
   {
   arma_extra_debug_sigprint();
   
-  return mtGlue<u32, T1, T2, glue_rel_gt>( X.get_ref(), Y.get_ref() );
+  return mtGlue<uword, T1, T2, glue_rel_gt>( X.get_ref(), Y.get_ref() );
   }
 
 
 
 template<typename T1, typename T2>
 inline
-const mtGlue<u32, T1, T2, glue_rel_lteq>
+const mtGlue<uword, T1, T2, glue_rel_lteq>
 operator<=
 (const Base<typename arma_not_cx<typename T1::elem_type>::result,T1>& X, const Base<typename arma_not_cx<typename T1::elem_type>::result,T2>& Y)
   {
   arma_extra_debug_sigprint();
   
-  return mtGlue<u32, T1, T2, glue_rel_lteq>( X.get_ref(), Y.get_ref() );
+  return mtGlue<uword, T1, T2, glue_rel_lteq>( X.get_ref(), Y.get_ref() );
   }
 
 
 
 template<typename T1, typename T2>
 inline
-const mtGlue<u32, T1, T2, glue_rel_gteq>
+const mtGlue<uword, T1, T2, glue_rel_gteq>
 operator>=
 (const Base<typename arma_not_cx<typename T1::elem_type>::result,T1>& X, const Base<typename arma_not_cx<typename T1::elem_type>::result,T2>& Y)
   {
   arma_extra_debug_sigprint();
   
-  return mtGlue<u32, T1, T2, glue_rel_gteq>( X.get_ref(), Y.get_ref() );
+  return mtGlue<uword, T1, T2, glue_rel_gteq>( X.get_ref(), Y.get_ref() );
   }
 
 
 
 template<typename T1, typename T2>
 inline
-const mtGlue<u32, T1, T2, glue_rel_eq>
+const mtGlue<uword, T1, T2, glue_rel_eq>
 operator==
 (const Base<typename T1::elem_type,T1>& X, const Base<typename T1::elem_type,T2>& Y)
   {
   arma_extra_debug_sigprint();
   
-  return mtGlue<u32, T1, T2, glue_rel_eq>( X.get_ref(), Y.get_ref() );
+  return mtGlue<uword, T1, T2, glue_rel_eq>( X.get_ref(), Y.get_ref() );
   }
 
 
 
 template<typename T1, typename T2>
 inline
-const mtGlue<u32, T1, T2, glue_rel_noteq>
+const mtGlue<uword, T1, T2, glue_rel_noteq>
 operator!=
 (const Base<typename T1::elem_type,T1>& X, const Base<typename T1::elem_type,T2>& Y)
   {
   arma_extra_debug_sigprint();
   
-  return mtGlue<u32, T1, T2, glue_rel_noteq>( X.get_ref(), Y.get_ref() );
+  return mtGlue<uword, T1, T2, glue_rel_noteq>( X.get_ref(), Y.get_ref() );
   }
 
 
@@ -110,156 +110,156 @@ operator!=
 
 template<typename T1>
 inline
-const mtOp<u32, T1, op_rel_lt_pre>
+const mtOp<uword, T1, op_rel_lt_pre>
 operator<
 (const typename arma_not_cx<typename T1::elem_type>::result val, const Base<typename arma_not_cx<typename T1::elem_type>::result,T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  return mtOp<u32, T1, op_rel_lt_pre>(X.get_ref(), val);
+  return mtOp<uword, T1, op_rel_lt_pre>(X.get_ref(), val);
   }
 
 
 
 template<typename T1>
 inline
-const mtOp<u32, T1, op_rel_lt_post>
+const mtOp<uword, T1, op_rel_lt_post>
 operator<
 (const Base<typename arma_not_cx<typename T1::elem_type>::result,T1>& X, const typename arma_not_cx<typename T1::elem_type>::result val)
   {
   arma_extra_debug_sigprint();
   
-  return mtOp<u32, T1, op_rel_lt_post>(X.get_ref(), val);
+  return mtOp<uword, T1, op_rel_lt_post>(X.get_ref(), val);
   }
 
 
 
 template<typename T1>
 inline
-const mtOp<u32, T1, op_rel_gt_pre>
+const mtOp<uword, T1, op_rel_gt_pre>
 operator>
 (const typename arma_not_cx<typename T1::elem_type>::result val, const Base<typename arma_not_cx<typename T1::elem_type>::result,T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  return mtOp<u32, T1, op_rel_gt_pre>(X.get_ref(), val);
+  return mtOp<uword, T1, op_rel_gt_pre>(X.get_ref(), val);
   }
 
 
 
 template<typename T1>
 inline
-const mtOp<u32, T1, op_rel_gt_post>
+const mtOp<uword, T1, op_rel_gt_post>
 operator>
 (const Base<typename arma_not_cx<typename T1::elem_type>::result,T1>& X, const typename arma_not_cx<typename T1::elem_type>::result val)
   {
   arma_extra_debug_sigprint();
   
-  return mtOp<u32, T1, op_rel_gt_post>(X.get_ref(), val);
+  return mtOp<uword, T1, op_rel_gt_post>(X.get_ref(), val);
   }
 
 
 
 template<typename T1>
 inline
-const mtOp<u32, T1, op_rel_lteq_pre>
+const mtOp<uword, T1, op_rel_lteq_pre>
 operator<=
 (const typename arma_not_cx<typename T1::elem_type>::result val, const Base<typename arma_not_cx<typename T1::elem_type>::result,T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  return mtOp<u32, T1, op_rel_lteq_pre>(X.get_ref(), val);
+  return mtOp<uword, T1, op_rel_lteq_pre>(X.get_ref(), val);
   }
 
 
 
 template<typename T1>
 inline
-const mtOp<u32, T1, op_rel_lteq_post>
+const mtOp<uword, T1, op_rel_lteq_post>
 operator<=
 (const Base<typename arma_not_cx<typename T1::elem_type>::result,T1>& X, const typename arma_not_cx<typename T1::elem_type>::result val)
   {
   arma_extra_debug_sigprint();
   
-  return mtOp<u32, T1, op_rel_lteq_post>(X.get_ref(), val);
+  return mtOp<uword, T1, op_rel_lteq_post>(X.get_ref(), val);
   }
 
 
 
 template<typename T1>
 inline
-const mtOp<u32, T1, op_rel_gteq_pre>
+const mtOp<uword, T1, op_rel_gteq_pre>
 operator>=
 (const typename arma_not_cx<typename T1::elem_type>::result val, const Base<typename arma_not_cx<typename T1::elem_type>::result,T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  return mtOp<u32, T1, op_rel_gteq_pre>(X.get_ref(), val);
+  return mtOp<uword, T1, op_rel_gteq_pre>(X.get_ref(), val);
   }
 
 
 
 template<typename T1>
 inline
-const mtOp<u32, T1, op_rel_gteq_post>
+const mtOp<uword, T1, op_rel_gteq_post>
 operator>=
 (const Base<typename arma_not_cx<typename T1::elem_type>::result,T1>& X, const typename arma_not_cx<typename T1::elem_type>::result val)
   {
   arma_extra_debug_sigprint();
   
-  return mtOp<u32, T1, op_rel_gteq_post>(X.get_ref(), val);
+  return mtOp<uword, T1, op_rel_gteq_post>(X.get_ref(), val);
   }
 
 
 
 template<typename T1>
 inline
-const mtOp<u32, T1, op_rel_eq>
+const mtOp<uword, T1, op_rel_eq>
 operator==
 (const typename T1::elem_type val, const Base<typename T1::elem_type,T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  return mtOp<u32, T1, op_rel_eq>(X.get_ref(), val);
+  return mtOp<uword, T1, op_rel_eq>(X.get_ref(), val);
   }
 
 
 
 template<typename T1>
 inline
-const mtOp<u32, T1, op_rel_eq>
+const mtOp<uword, T1, op_rel_eq>
 operator==
 (const Base<typename T1::elem_type,T1>& X, const typename T1::elem_type val)
   {
   arma_extra_debug_sigprint();
   
-  return mtOp<u32, T1, op_rel_eq>(X.get_ref(), val);
+  return mtOp<uword, T1, op_rel_eq>(X.get_ref(), val);
   }
 
 
 
 template<typename T1>
 inline
-const mtOp<u32, T1, op_rel_noteq>
+const mtOp<uword, T1, op_rel_noteq>
 operator!=
 (const typename T1::elem_type val, const Base<typename T1::elem_type,T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  return mtOp<u32, T1, op_rel_noteq>(X.get_ref(), val);
+  return mtOp<uword, T1, op_rel_noteq>(X.get_ref(), val);
   }
 
 
 
 template<typename T1>
 inline
-const mtOp<u32, T1, op_rel_noteq>
+const mtOp<uword, T1, op_rel_noteq>
 operator!=
 (const Base<typename T1::elem_type,T1>& X, const typename T1::elem_type val)
   {
   arma_extra_debug_sigprint();
   
-  return mtOp<u32, T1, op_rel_noteq>(X.get_ref(), val);
+  return mtOp<uword, T1, op_rel_noteq>(X.get_ref(), val);
   }
 
 

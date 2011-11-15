@@ -58,7 +58,7 @@ solve
   arma_ignore(slow);
   arma_ignore(junk);
   
-  return Glue<T1, T2, glue_solve_tr>(A.m, B.get_ref(), A.aux_u32_a);
+  return Glue<T1, T2, glue_solve_tr>(A.m, B.get_ref(), A.aux_uword_a);
   }
 
 

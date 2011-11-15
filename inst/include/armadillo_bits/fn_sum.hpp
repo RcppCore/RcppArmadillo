@@ -26,7 +26,7 @@
 template<typename T1>
 arma_inline
 const Op<T1, op_sum>
-sum(const Base<typename T1::elem_type,T1>& X, const u32 dim = 0)
+sum(const Base<typename T1::elem_type,T1>& X, const uword dim = 0)
   {
   arma_extra_debug_sigprint();
   
@@ -85,7 +85,7 @@ sum(const Op<T1, op_sum>& in)
 template<typename T1>
 arma_inline
 const Op<Op<T1, op_sum>, op_sum>
-sum(const Op<T1, op_sum>& in, const u32 dim)
+sum(const Op<T1, op_sum>& in, const uword dim)
   {
   arma_extra_debug_sigprint();
   

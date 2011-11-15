@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -21,7 +21,6 @@ inline
 mtGlue<out_eT,T1,T2,glue_type>::mtGlue(const T1& in_A, const T2& in_B)
   : A(in_A)
   , B(in_B)
-  , aux_u32(aux_u32)
   {
   arma_extra_debug_sigprint();
   }
@@ -30,10 +29,10 @@ mtGlue<out_eT,T1,T2,glue_type>::mtGlue(const T1& in_A, const T2& in_B)
 
 template<typename out_eT, typename T1, typename T2, typename glue_type>
 inline
-mtGlue<out_eT,T1,T2,glue_type>::mtGlue(const T1& in_A, const T2& in_B, const u32 in_aux_u32)
+mtGlue<out_eT,T1,T2,glue_type>::mtGlue(const T1& in_A, const T2& in_B, const uword in_aux_uword)
   : A(in_A)
   , B(in_B)
-  , aux_u32(in_aux_u32)
+  , aux_uword(in_aux_uword)
   {
   arma_extra_debug_sigprint();
   }

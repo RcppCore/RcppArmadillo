@@ -32,6 +32,12 @@
 
 #include "armadillo_bits/config.hpp"
 #include "armadillo_bits/compiler_setup.hpp"
+#include "armadillo_bits/undefine_conflicts.hpp"
+
+
+#if defined(ARMA_USE_CXX11)
+  #include <initializer_list>
+#endif
 
 
 #if defined(ARMA_HAVE_GETTIMEOFDAY)
@@ -46,6 +52,7 @@
 
 
 #if defined(ARMA_HAVE_STD_TR1)
+  // TODO: add handling of this functionality when use of C++11 is enabled
   #include <tr1/cmath>
   #include <tr1/complex>
 #elif defined(ARMA_USE_BOOST)
@@ -97,7 +104,6 @@
 
 
 #include "armadillo_bits/itpp_wrap.hpp"
-#include "armadillo_bits/undefine_conflicts.hpp"
 
 
 //! \namespace arma namespace for Armadillo classes and functions
@@ -107,9 +113,8 @@ namespace arma
   // preliminaries
   
   #include "armadillo_bits/forward_bones.hpp"
-  #include "armadillo_bits/arma_static_assert.hpp"
+  #include "armadillo_bits/arma_static_check.hpp"
   #include "armadillo_bits/typedef.hpp"
-  //#include "armadillo_bits/typedef_u64.hpp"
   #include "armadillo_bits/format_wrap.hpp"
   #include "armadillo_bits/arma_version.hpp"
   #include "armadillo_bits/arma_config.hpp"
@@ -125,8 +130,8 @@ namespace arma
   //
   // class prototypes
   
-  #include "armadillo_bits/Base.hpp"
-  #include "armadillo_bits/BaseCube.hpp"
+  #include "armadillo_bits/Base_bones.hpp"
+  #include "armadillo_bits/BaseCube_bones.hpp"
   
   #include "armadillo_bits/blas_bones.hpp"
   #include "armadillo_bits/lapack_bones.hpp"
@@ -177,6 +182,9 @@ namespace arma
   
   #include "armadillo_bits/eop_core_bones.hpp"
   #include "armadillo_bits/eglue_core_bones.hpp"
+  
+  #include "armadillo_bits/Gen_bones.hpp"
+  #include "armadillo_bits/GenCube_bones.hpp"
   
   #include "armadillo_bits/op_diagmat_bones.hpp"
   #include "armadillo_bits/op_diagvec_bones.hpp"
@@ -265,6 +273,12 @@ namespace arma
 
   #include "armadillo_bits/mtGlue_meat.hpp"
   #include "armadillo_bits/mtGlueCube_meat.hpp"
+  
+  #include "armadillo_bits/Base_meat.hpp"
+  #include "armadillo_bits/BaseCube_meat.hpp"
+  
+  #include "armadillo_bits/Gen_meat.hpp"
+  #include "armadillo_bits/GenCube_meat.hpp"
   
   
   //

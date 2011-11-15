@@ -25,7 +25,7 @@ subview_elem1<eT,T1>::~subview_elem1()
 
 template<typename eT, typename T1>
 arma_inline
-subview_elem1<eT,T1>::subview_elem1(const Mat<eT>& in_m, const Base<u32,T1>& in_a)
+subview_elem1<eT,T1>::subview_elem1(const Mat<eT>& in_m, const Base<uword,T1>& in_a)
   : m(in_m)
   , m_ptr(0)
   , a(in_a)
@@ -37,7 +37,7 @@ subview_elem1<eT,T1>::subview_elem1(const Mat<eT>& in_m, const Base<u32,T1>& in_
 
 template<typename eT, typename T1>
 arma_inline
-subview_elem1<eT,T1>::subview_elem1(Mat<eT>& in_m, const Base<u32,T1>& in_a)
+subview_elem1<eT,T1>::subview_elem1(Mat<eT>& in_m, const Base<uword,T1>& in_a)
   : m(in_m)
   , m_ptr(&in_m)
   , a(in_a)
@@ -55,8 +55,8 @@ subview_elem1<eT,T1>::inplace_op(const eT val)
   {
   Mat<eT>& m_local = *m_ptr;
   
-        eT* m_mem    = m_local.memptr();
-  const u32 m_n_elem = m_local.n_elem;
+        eT*   m_mem    = m_local.memptr();
+  const uword m_n_elem = m_local.n_elem;
   
   const unwrap_check_mixed<T1> tmp(a.get_ref(), m_local);
   const umat& aa = tmp.M;
@@ -67,14 +67,14 @@ subview_elem1<eT,T1>::inplace_op(const eT val)
     "Mat::elem(): given object is not a vector"
     );
   
-  const u32* aa_mem    = aa.memptr();
-  const u32  aa_n_elem = aa.n_elem;
+  const uword* aa_mem    = aa.memptr();
+  const uword  aa_n_elem = aa.n_elem;
   
-  u32 i,j;
+  uword i,j;
   for(i=0, j=1; j<aa_n_elem; i+=2, j+=2)
     {
-    const u32 ii = aa_mem[i];
-    const u32 jj = aa_mem[j];
+    const uword ii = aa_mem[i];
+    const uword jj = aa_mem[j];
     
     arma_debug_check( ( (ii >= m_n_elem) || (jj >= m_n_elem) ), "Mat::elem(): index out of bounds" );
     
@@ -87,7 +87,7 @@ subview_elem1<eT,T1>::inplace_op(const eT val)
   
   if(i < aa_n_elem)
     {
-    const u32 ii = aa_mem[i];
+    const uword ii = aa_mem[i];
     
     arma_debug_check( (ii >= m_n_elem) , "Mat::elem(): index out of bounds" ); 
     
@@ -138,28 +138,28 @@ subview_elem1<eT,T1>::inplace_op(const subview_elem1<eT,T2>& x)
       "Mat::elem(): given object is not a vector"
       );
     
-    const u32* t_aa_mem = t_aa.memptr();
-    const u32* x_aa_mem = x_aa.memptr();
+    const uword* t_aa_mem = t_aa.memptr();
+    const uword* x_aa_mem = x_aa.memptr();
     
-    const u32 t_aa_n_elem = t_aa.n_elem;
+    const uword t_aa_n_elem = t_aa.n_elem;
     
     arma_debug_check( (t_aa_n_elem != x_aa.n_elem), "Mat::elem(): size mismatch" );
     
     
-          eT* t_m_mem    = t_m_local.memptr();
-    const u32 t_m_n_elem = t_m_local.n_elem;
+          eT*   t_m_mem    = t_m_local.memptr();
+    const uword t_m_n_elem = t_m_local.n_elem;
     
-    const eT* x_m_mem    = x_m_local.memptr();
-    const u32 x_m_n_elem = x_m_local.n_elem;
+    const eT*   x_m_mem    = x_m_local.memptr();
+    const uword x_m_n_elem = x_m_local.n_elem;
     
-    u32 i,j;
+    uword i,j;
     for(i=0, j=1; j<t_aa_n_elem; i+=2, j+=2)
       {
-      const u32 t_ii = t_aa_mem[i];
-      const u32 t_jj = t_aa_mem[j];
+      const uword t_ii = t_aa_mem[i];
+      const uword t_jj = t_aa_mem[j];
       
-      const u32 x_ii = x_aa_mem[i];
-      const u32 x_jj = x_aa_mem[j];
+      const uword x_ii = x_aa_mem[i];
+      const uword x_jj = x_aa_mem[j];
       
       arma_debug_check
         (
@@ -176,8 +176,8 @@ subview_elem1<eT,T1>::inplace_op(const subview_elem1<eT,T2>& x)
     
     if(i < t_aa_n_elem)
       {
-      const u32 t_ii = t_aa_mem[i];
-      const u32 x_ii = x_aa_mem[i];
+      const uword t_ii = t_aa_mem[i];
+      const uword x_ii = x_aa_mem[i];
       
       arma_debug_check
         (
@@ -206,8 +206,8 @@ subview_elem1<eT,T1>::inplace_op(const Base<eT,T2>& x)
   
   Mat<eT>& m_local = *m_ptr;
   
-        eT* m_mem    = m_local.memptr();
-  const u32 m_n_elem = m_local.n_elem;
+        eT*   m_mem    = m_local.memptr();
+  const uword m_n_elem = m_local.n_elem;
   
   const unwrap_check_mixed<T1> tmp(a.get_ref(), m_local);
   const umat& aa = tmp.M;
@@ -218,8 +218,8 @@ subview_elem1<eT,T1>::inplace_op(const Base<eT,T2>& x)
     "Mat::elem(): given object is not a vector"
     );
   
-  const u32* aa_mem    = aa.memptr();
-  const u32  aa_n_elem = aa.n_elem;
+  const uword* aa_mem    = aa.memptr();
+  const uword  aa_n_elem = aa.n_elem;
   
   const Proxy<T2> P(x.get_ref());
   
@@ -229,11 +229,11 @@ subview_elem1<eT,T1>::inplace_op(const Base<eT,T2>& x)
     {
     typename Proxy<T2>::ea_type X = P.get_ea();
     
-    u32 i,j;
+    uword i,j;
     for(i=0, j=1; j<aa_n_elem; i+=2, j+=2)
       {
-      const u32 ii = aa_mem[i];
-      const u32 jj = aa_mem[j];
+      const uword ii = aa_mem[i];
+      const uword jj = aa_mem[j];
       
       arma_debug_check( ( (ii >= m_n_elem) || (jj >= m_n_elem) ), "Mat::elem(): index out of bounds" );
       
@@ -246,7 +246,7 @@ subview_elem1<eT,T1>::inplace_op(const Base<eT,T2>& x)
     
     if(i < aa_n_elem)
       {
-      const u32 ii = aa_mem[i];
+      const uword ii = aa_mem[i];
       
       arma_debug_check( (ii >= m_n_elem) , "Mat::elem(): index out of bounds" );
       
@@ -266,11 +266,11 @@ subview_elem1<eT,T1>::inplace_op(const Base<eT,T2>& x)
     
     const eT* X = M.memptr();
     
-    u32 i,j;
+    uword i,j;
     for(i=0, j=1; j<aa_n_elem; i+=2, j+=2)
       {
-      const u32 ii = aa_mem[i];
-      const u32 jj = aa_mem[j];
+      const uword ii = aa_mem[i];
+      const uword jj = aa_mem[j];
       
       arma_debug_check( ( (ii >= m_n_elem) || (jj >= m_n_elem) ), "Mat::elem(): index out of bounds" );
       
@@ -283,7 +283,7 @@ subview_elem1<eT,T1>::inplace_op(const Base<eT,T2>& x)
     
     if(i < aa_n_elem)
       {
-      const u32 ii = aa_mem[i];
+      const uword ii = aa_mem[i];
       
       arma_debug_check( (ii >= m_n_elem) , "Mat::elem(): index out of bounds" );
       
@@ -570,13 +570,13 @@ subview_elem1<eT,T1>::extract(Mat<eT>& actual_out, const subview_elem1<eT,T1>& i
     "Mat::elem(): given object is not a vector"
     );
   
-  const u32* aa_mem    = aa.memptr();
-  const u32  aa_n_elem = aa.n_elem;
+  const uword* aa_mem    = aa.memptr();
+  const uword  aa_n_elem = aa.n_elem;
   
   const Mat<eT>& m_local = in.m;
   
-  const eT* m_mem    = m_local.memptr();
-  const u32 m_n_elem = m_local.n_elem;
+  const eT*   m_mem    = m_local.memptr();
+  const uword m_n_elem = m_local.n_elem;
   
   const bool alias = (&actual_out == &m_local);
   
@@ -589,11 +589,11 @@ subview_elem1<eT,T1>::extract(Mat<eT>& actual_out, const subview_elem1<eT,T1>& i
   
   eT* out_mem = out.memptr();
   
-  u32 i,j;
+  uword i,j;
   for(i=0, j=1; j<aa_n_elem; i+=2, j+=2)
     {
-    const u32 ii = aa_mem[i];
-    const u32 jj = aa_mem[j];
+    const uword ii = aa_mem[i];
+    const uword jj = aa_mem[j];
     
     arma_debug_check( ( (ii >= m_n_elem) || (jj >= m_n_elem) ), "Mat::elem(): index out of bounds" );
     
@@ -603,7 +603,7 @@ subview_elem1<eT,T1>::extract(Mat<eT>& actual_out, const subview_elem1<eT,T1>& i
   
   if(i < aa_n_elem)
     {
-    const u32 ii = aa_mem[i];
+    const uword ii = aa_mem[i];
     
     arma_debug_check( (ii >= m_n_elem) , "Mat::elem(): index out of bounds" );
     
@@ -636,24 +636,24 @@ subview_elem1<eT,T1>::mat_inplace_op(Mat<eT>& out, const subview_elem1& in)
     "Mat::elem(): given object is not a vector"
     );
   
-  const u32* aa_mem    = aa.memptr();
-  const u32  aa_n_elem = aa.n_elem;
+  const uword* aa_mem    = aa.memptr();
+  const uword  aa_n_elem = aa.n_elem;
   
   const unwrap_check< Mat<eT> > tmp2(in.m, out);
   const Mat<eT>& m_local      = tmp2.M;
   
-  const eT* m_mem    = m_local.memptr();
-  const u32 m_n_elem = m_local.n_elem;
+  const eT*   m_mem    = m_local.memptr();
+  const uword m_n_elem = m_local.n_elem;
   
   arma_debug_check( (out.n_elem != aa_n_elem), "Mat::elem(): size mismatch" );
   
   eT* out_mem = out.memptr();
   
-  u32 i,j;
+  uword i,j;
   for(i=0, j=1; j<aa_n_elem; i+=2, j+=2)
     {
-    const u32 ii = aa_mem[i];
-    const u32 jj = aa_mem[j];
+    const uword ii = aa_mem[i];
+    const uword jj = aa_mem[j];
     
     arma_debug_check( ( (ii >= m_n_elem) || (jj >= m_n_elem) ), "Mat::elem(): index out of bounds" );
     
@@ -665,7 +665,7 @@ subview_elem1<eT,T1>::mat_inplace_op(Mat<eT>& out, const subview_elem1& in)
   
   if(i < aa_n_elem)
     {
-    const u32 ii = aa_mem[i];
+    const uword ii = aa_mem[i];
     
     arma_debug_check( (ii >= m_n_elem) , "Mat::elem(): index out of bounds" );
     

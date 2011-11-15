@@ -42,27 +42,27 @@ class gemm_mixed_large
     {
     arma_extra_debug_sigprint();
     
-    const u32 A_n_rows = A.n_rows;
-    const u32 A_n_cols = A.n_cols;
+    const uword A_n_rows = A.n_rows;
+    const uword A_n_cols = A.n_cols;
     
-    const u32 B_n_rows = B.n_rows;
-    const u32 B_n_cols = B.n_cols;
+    const uword B_n_rows = B.n_rows;
+    const uword B_n_cols = B.n_cols;
     
     if( (do_trans_A == false) && (do_trans_B == false) )
       {
       podarray<in_eT1> tmp(A_n_cols);
       in_eT1* A_rowdata = tmp.memptr();
       
-      for(u32 row_A=0; row_A < A_n_rows; ++row_A)
+      for(uword row_A=0; row_A < A_n_rows; ++row_A)
         {
         tmp.copy_row(A, row_A);
         
-        for(u32 col_B=0; col_B < B_n_cols; ++col_B)
+        for(uword col_B=0; col_B < B_n_cols; ++col_B)
           {
           const in_eT2* B_coldata = B.colptr(col_B);
           
           out_eT acc = out_eT(0);
-          for(u32 i=0; i < B_n_rows; ++i)
+          for(uword i=0; i < B_n_rows; ++i)
             {
             acc += upgrade_val<in_eT1,in_eT2>::apply(A_rowdata[i]) * upgrade_val<in_eT1,in_eT2>::apply(B_coldata[i]);
             }
@@ -93,18 +93,18 @@ class gemm_mixed_large
     else
     if( (do_trans_A == true) && (do_trans_B == false) )
       {
-      for(u32 col_A=0; col_A < A_n_cols; ++col_A)
+      for(uword col_A=0; col_A < A_n_cols; ++col_A)
         {
         // col_A is interpreted as row_A when storing the results in matrix C
         
         const in_eT1* A_coldata = A.colptr(col_A);
         
-        for(u32 col_B=0; col_B < B_n_cols; ++col_B)
+        for(uword col_B=0; col_B < B_n_cols; ++col_B)
           {
           const in_eT2* B_coldata = B.colptr(col_B);
           
           out_eT acc = out_eT(0);
-          for(u32 i=0; i < B_n_rows; ++i)
+          for(uword i=0; i < B_n_rows; ++i)
             {
             acc += upgrade_val<in_eT1,in_eT2>::apply(A_coldata[i]) * upgrade_val<in_eT1,in_eT2>::apply(B_coldata[i]);
             }
@@ -154,16 +154,16 @@ class gemm_mixed_large
       podarray<in_eT2> tmp(B_n_cols);
       in_eT2* B_rowdata = tmp.memptr();
       
-      for(u32 row_B=0; row_B < B_n_rows; ++row_B)
+      for(uword row_B=0; row_B < B_n_rows; ++row_B)
         {
         tmp.copy_row(B, row_B);
         
-        for(u32 col_A=0; col_A < A_n_cols; ++col_A)
+        for(uword col_A=0; col_A < A_n_cols; ++col_A)
           {
           const in_eT1* A_coldata = A.colptr(col_A);
           
           out_eT acc = out_eT(0);
-          for(u32 i=0; i < A_n_rows; ++i)
+          for(uword i=0; i < A_n_rows; ++i)
             {
             acc += upgrade_val<in_eT1,in_eT2>::apply(B_rowdata[i]) * upgrade_val<in_eT1,in_eT2>::apply(A_coldata[i]);
             }
@@ -222,22 +222,22 @@ class gemm_mixed_small
     {
     arma_extra_debug_sigprint();
     
-    const u32 A_n_rows = A.n_rows;
-    const u32 A_n_cols = A.n_cols;
+    const uword A_n_rows = A.n_rows;
+    const uword A_n_cols = A.n_cols;
     
-    const u32 B_n_rows = B.n_rows;
-    const u32 B_n_cols = B.n_cols;
+    const uword B_n_rows = B.n_rows;
+    const uword B_n_cols = B.n_cols;
     
     if( (do_trans_A == false) && (do_trans_B == false) )
       {
-      for(u32 row_A = 0; row_A < A_n_rows; ++row_A)
+      for(uword row_A = 0; row_A < A_n_rows; ++row_A)
         {
-        for(u32 col_B = 0; col_B < B_n_cols; ++col_B)
+        for(uword col_B = 0; col_B < B_n_cols; ++col_B)
           {
           const in_eT2* B_coldata = B.colptr(col_B);
           
           out_eT acc = out_eT(0);
-          for(u32 i = 0; i < B_n_rows; ++i)
+          for(uword i = 0; i < B_n_rows; ++i)
             {
             const out_eT val1 = upgrade_val<in_eT1,in_eT2>::apply(A.at(row_A,i));
             const out_eT val2 = upgrade_val<in_eT1,in_eT2>::apply(B_coldata[i]);
@@ -270,18 +270,18 @@ class gemm_mixed_small
     else
     if( (do_trans_A == true) && (do_trans_B == false) )
       {
-      for(u32 col_A=0; col_A < A_n_cols; ++col_A)
+      for(uword col_A=0; col_A < A_n_cols; ++col_A)
         {
         // col_A is interpreted as row_A when storing the results in matrix C
         
         const in_eT1* A_coldata = A.colptr(col_A);
         
-        for(u32 col_B=0; col_B < B_n_cols; ++col_B)
+        for(uword col_B=0; col_B < B_n_cols; ++col_B)
           {
           const in_eT2* B_coldata = B.colptr(col_B);
           
           out_eT acc = out_eT(0);
-          for(u32 i=0; i < B_n_rows; ++i)
+          for(uword i=0; i < B_n_rows; ++i)
             {
             acc += upgrade_val<in_eT1,in_eT2>::apply(A_coldata[i]) * upgrade_val<in_eT1,in_eT2>::apply(B_coldata[i]);
             }
@@ -312,12 +312,12 @@ class gemm_mixed_small
     else
     if( (do_trans_A == false) && (do_trans_B == true) )
       {
-      for(u32 row_A = 0; row_A < A_n_rows; ++row_A)
+      for(uword row_A = 0; row_A < A_n_rows; ++row_A)
         {
-        for(u32 row_B = 0; row_B < B_n_rows; ++row_B)
+        for(uword row_B = 0; row_B < B_n_rows; ++row_B)
           {
           out_eT acc = out_eT(0);
-          for(u32 i = 0; i < B_n_cols; ++i)
+          for(uword i = 0; i < B_n_cols; ++i)
             {
             acc += upgrade_val<in_eT1,in_eT2>::apply(A.at(row_A,i)) * upgrade_val<in_eT1,in_eT2>::apply(B.at(row_B,i));
             }
@@ -347,15 +347,15 @@ class gemm_mixed_small
     else
     if( (do_trans_A == true) && (do_trans_B == true) )
       {
-      for(u32 row_B=0; row_B < B_n_rows; ++row_B)
+      for(uword row_B=0; row_B < B_n_rows; ++row_B)
         {
         
-        for(u32 col_A=0; col_A < A_n_cols; ++col_A)
+        for(uword col_A=0; col_A < A_n_cols; ++col_A)
           {
           const in_eT1* A_coldata = A.colptr(col_A);
           
           out_eT acc = out_eT(0);
-          for(u32 i=0; i < A_n_rows; ++i)
+          for(uword i=0; i < A_n_rows; ++i)
             {
             acc += upgrade_val<in_eT1,in_eT2>::apply(B.at(row_B,i)) * upgrade_val<in_eT1,in_eT2>::apply(A_coldata[i]);
             }

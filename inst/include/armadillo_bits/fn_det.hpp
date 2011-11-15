@@ -55,11 +55,11 @@ det
   
   const diagmat_proxy<T1> A(X.m);
   
-  const u32 A_n_elem = A.n_elem;
+  const uword A_n_elem = A.n_elem;
   
   eT val = eT(1);
   
-  for(u32 i=0; i<A_n_elem; ++i)
+  for(uword i=0; i<A_n_elem; ++i)
     {
     val *= A[i];
     }

@@ -29,18 +29,18 @@ class subview : public Base<eT, subview<eT> >
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  const u32 aux_row1;
-  const u32 aux_col1;
+  const uword aux_row1;
+  const uword aux_col1;
   
-  const u32 n_rows;
-  const u32 n_cols;
-  const u32 n_elem;
+  const uword n_rows;
+  const uword n_cols;
+  const uword n_elem;
   
   
   protected:
   
-  arma_inline subview(const Mat<eT>& in_m, const u32 in_row1, const u32 in_col1, const u32 in_n_rows, const u32 in_n_cols);
-  arma_inline subview(      Mat<eT>& in_m, const u32 in_row1, const u32 in_col1, const u32 in_n_rows, const u32 in_n_cols);
+  arma_inline subview(const Mat<eT>& in_m, const uword in_row1, const uword in_col1, const uword in_n_rows, const uword in_n_cols);
+  arma_inline subview(      Mat<eT>& in_m, const uword in_row1, const uword in_col1, const uword in_n_rows, const uword in_n_cols);
   
   
   public:
@@ -77,48 +77,48 @@ class subview : public Base<eT, subview<eT> >
   inline void ones();
   inline void eye();
   
-  inline eT& operator[](const u32 i);
-  inline eT  operator[](const u32 i) const;
+  inline eT& operator[](const uword i);
+  inline eT  operator[](const uword i) const;
   
-  inline eT& operator()(const u32 i);
-  inline eT  operator()(const u32 i) const;
+  inline eT& operator()(const uword i);
+  inline eT  operator()(const uword i) const;
   
-  inline eT& operator()(const u32 in_row, const u32 in_col);
-  inline eT  operator()(const u32 in_row, const u32 in_col) const;
+  inline eT& operator()(const uword in_row, const uword in_col);
+  inline eT  operator()(const uword in_row, const uword in_col) const;
   
-  inline eT&         at(const u32 in_row, const u32 in_col);
-  inline eT          at(const u32 in_row, const u32 in_col) const;
+  inline eT&         at(const uword in_row, const uword in_col);
+  inline eT          at(const uword in_row, const uword in_col) const;
   
-  arma_inline       eT* colptr(const u32 in_col);
-  arma_inline const eT* colptr(const u32 in_col) const;
+  arma_inline       eT* colptr(const uword in_col);
+  arma_inline const eT* colptr(const uword in_col) const;
   
   inline bool check_overlap(const subview& x) const;
   
   inline bool is_vec() const;
   
-  inline       subview_row<eT> row(const u32 row_num);
-  inline const subview_row<eT> row(const u32 row_num) const;
+  inline       subview_row<eT> row(const uword row_num);
+  inline const subview_row<eT> row(const uword row_num) const;
   
-  inline            subview_row<eT> operator()(const u32 row_num, const span& col_span);
-  inline      const subview_row<eT> operator()(const u32 row_num, const span& col_span) const;
+  inline            subview_row<eT> operator()(const uword row_num, const span& col_span);
+  inline      const subview_row<eT> operator()(const uword row_num, const span& col_span) const;
   
-  inline       subview_col<eT> col(const u32 col_num);
-  inline const subview_col<eT> col(const u32 col_num) const;
+  inline       subview_col<eT> col(const uword col_num);
+  inline const subview_col<eT> col(const uword col_num) const;
   
-  inline            subview_col<eT> operator()(const span& row_span, const u32 col_num);
-  inline      const subview_col<eT> operator()(const span& row_span, const u32 col_num) const;
+  inline            subview_col<eT> operator()(const span& row_span, const uword col_num);
+  inline      const subview_col<eT> operator()(const span& row_span, const uword col_num) const;
   
-  inline            Col<eT>  unsafe_col(const u32 col_num);
-  inline      const Col<eT>  unsafe_col(const u32 col_num) const;
+  inline            Col<eT>  unsafe_col(const uword col_num);
+  inline      const Col<eT>  unsafe_col(const uword col_num) const;
   
-  inline       subview<eT> rows(const u32 in_row1, const u32 in_row2);
-  inline const subview<eT> rows(const u32 in_row1, const u32 in_row2) const;
+  inline       subview<eT> rows(const uword in_row1, const uword in_row2);
+  inline const subview<eT> rows(const uword in_row1, const uword in_row2) const;
   
-  inline       subview<eT> cols(const u32 in_col1, const u32 in_col2);
-  inline const subview<eT> cols(const u32 in_col1, const u32 in_col2) const;
+  inline       subview<eT> cols(const uword in_col1, const uword in_col2);
+  inline const subview<eT> cols(const uword in_col1, const uword in_col2) const;
   
-  inline       subview<eT> submat(const u32 in_row1, const u32 in_col1, const u32 in_row2, const u32 in_col2);
-  inline const subview<eT> submat(const u32 in_row1, const u32 in_col1, const u32 in_row2, const u32 in_col2) const;
+  inline       subview<eT> submat(const uword in_row1, const uword in_col1, const uword in_row2, const uword in_col2);
+  inline const subview<eT> submat(const uword in_row1, const uword in_col1, const uword in_row2, const uword in_col2) const;
   
   inline            subview<eT> submat    (const span& row_span, const span& col_span);
   inline      const subview<eT> submat    (const span& row_span, const span& col_span) const;
@@ -126,24 +126,11 @@ class subview : public Base<eT, subview<eT> >
   inline            subview<eT> operator()(const span& row_span, const span& col_span);
   inline      const subview<eT> operator()(const span& row_span, const span& col_span) const;
   
-  inline       diagview<eT> diag(const s32 in_id = 0);
-  inline const diagview<eT> diag(const s32 in_id = 0) const;
+  inline       diagview<eT> diag(const sword in_id = 0);
+  inline const diagview<eT> diag(const sword in_id = 0) const;
   
-  inline void swap_rows(const u32 in_row1, const u32 in_row2);
-  inline void swap_cols(const u32 in_col1, const u32 in_col2);
-  
-  
-  inline void print(const std::string extra_text = "") const;
-  inline void print(std::ostream& user_stream, const std::string extra_text = "") const;
-  
-  inline void print_trans(const std::string extra_text = "") const;
-  inline void print_trans(std::ostream& user_stream, const std::string extra_text = "") const;
-  
-  inline void raw_print(const std::string extra_text = "") const;
-  inline void raw_print(std::ostream& user_stream, const std::string extra_text = "") const;
-  
-  inline void raw_print_trans(const std::string extra_text = "") const;
-  inline void raw_print_trans(std::ostream& user_stream, const std::string extra_text = "") const;
+  inline void swap_rows(const uword in_row1, const uword in_row2);
+  inline void swap_cols(const uword in_col1, const uword in_col2);
   
   
   // // primitive forward iterator
@@ -163,14 +150,14 @@ class subview : public Base<eT, subview<eT> >
   //   
   //   arma_aligned const eT* mem;
   //   
-  //   arma_aligned u32 n_rows;
+  //   arma_aligned uword n_rows;
   //   
-  //   arma_aligned u32 row_start;
-  //   arma_aligned u32 row_end_p1;
+  //   arma_aligned uword row_start;
+  //   arma_aligned uword row_end_p1;
   //   
-  //   arma_aligned u32 row;
-  //   arma_aligned u32 col;
-  //   arma_aligned u32 i;
+  //   arma_aligned uword row;
+  //   arma_aligned uword col;
+  //   arma_aligned uword i;
   //   };
   
   
@@ -196,20 +183,20 @@ class subview_col : public subview<eT>
   template<typename T1>
   inline void operator= (const Base<eT,T1>& x);
   
-  inline       subview_col<eT> rows(const u32 in_row1, const u32 in_row2);
-  inline const subview_col<eT> rows(const u32 in_row1, const u32 in_row2) const;
+  inline       subview_col<eT> rows(const uword in_row1, const uword in_row2);
+  inline const subview_col<eT> rows(const uword in_row1, const uword in_row2) const;
   
-  inline       subview_col<eT> subvec(const u32 in_row1, const u32 in_row2);
-  inline const subview_col<eT> subvec(const u32 in_row1, const u32 in_row2) const;
+  inline       subview_col<eT> subvec(const uword in_row1, const uword in_row2);
+  inline const subview_col<eT> subvec(const uword in_row1, const uword in_row2) const;
   
   
   protected:
   
-  inline subview_col(const Mat<eT>& in_m, const u32 in_col);
-  inline subview_col(      Mat<eT>& in_m, const u32 in_col);
+  inline subview_col(const Mat<eT>& in_m, const uword in_col);
+  inline subview_col(      Mat<eT>& in_m, const uword in_col);
   
-  inline subview_col(const Mat<eT>& in_m, const u32 in_col, const u32 in_row1, const u32 in_n_rows);
-  inline subview_col(      Mat<eT>& in_m, const u32 in_col, const u32 in_row1, const u32 in_n_rows);
+  inline subview_col(const Mat<eT>& in_m, const uword in_col, const uword in_row1, const uword in_n_rows);
+  inline subview_col(      Mat<eT>& in_m, const uword in_col, const uword in_row1, const uword in_n_rows);
   
   
   private:
@@ -237,20 +224,20 @@ class subview_row : public subview<eT>
   template<typename T1>
   inline void operator= (const Base<eT,T1>& x);
   
-  inline       subview_row<eT> cols(const u32 in_col1, const u32 in_col2);
-  inline const subview_row<eT> cols(const u32 in_col1, const u32 in_col2) const;
+  inline       subview_row<eT> cols(const uword in_col1, const uword in_col2);
+  inline const subview_row<eT> cols(const uword in_col1, const uword in_col2) const;
   
-  inline       subview_row<eT> subvec(const u32 in_col1, const u32 in_col2);
-  inline const subview_row<eT> subvec(const u32 in_col1, const u32 in_col2) const;
+  inline       subview_row<eT> subvec(const uword in_col1, const uword in_col2);
+  inline const subview_row<eT> subvec(const uword in_col1, const uword in_col2) const;
   
   
   protected:
   
-  inline subview_row(const Mat<eT>& in_m, const u32 in_row);
-  inline subview_row(      Mat<eT>& in_m, const u32 in_row);
+  inline subview_row(const Mat<eT>& in_m, const uword in_row);
+  inline subview_row(      Mat<eT>& in_m, const uword in_row);
   
-  inline subview_row(const Mat<eT>& in_m, const u32 in_row, const u32 in_col1, const u32 in_n_cols);
-  inline subview_row(      Mat<eT>& in_m, const u32 in_row, const u32 in_col1, const u32 in_n_cols);
+  inline subview_row(const Mat<eT>& in_m, const uword in_row, const uword in_col1, const uword in_n_cols);
+  inline subview_row(      Mat<eT>& in_m, const uword in_row, const uword in_col1, const uword in_n_cols);
   
   
   private:

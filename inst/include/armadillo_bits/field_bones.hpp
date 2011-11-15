@@ -19,7 +19,7 @@
 
 struct field_prealloc_n_elem
   {
-  static const u32 val = 16;
+  static const uword val = 16;
   };
 
 
@@ -34,9 +34,9 @@ class field
   
   typedef oT object_type;
   
-  const u32 n_rows;     //!< number of rows in the field (read-only)
-  const u32 n_cols;     //!< number of columns in the field (read-only)
-  const u32 n_elem;     //!< number of elements in the field (read-only)
+  const uword n_rows;     //!< number of rows in the field (read-only)
+  const uword n_cols;     //!< number of columns in the field (read-only)
+  const uword n_elem;     //!< number of elements in the field (read-only)
   
   
   private:
@@ -57,48 +57,48 @@ class field
   inline                  field(const subview_field<oT>& x);
   inline const field& operator=(const subview_field<oT>& x);
   
-  inline explicit field(const u32 n_elem_in);
-  inline          field(const u32 n_rows_in, const u32 n_cols_in);
+  inline explicit field(const uword n_elem_in);
+  inline          field(const uword n_rows_in, const uword n_cols_in);
   
-  inline void  set_size(const u32 n_obj_in);
-  inline void  set_size(const u32 n_rows_in, const u32 n_cols_in);
+  inline void  set_size(const uword n_obj_in);
+  inline void  set_size(const uword n_rows_in, const uword n_cols_in);
   
   template<typename oT2>
   inline void copy_size(const field<oT2>& x);
   
-  arma_inline       oT& operator[](const u32 i);
-  arma_inline const oT& operator[](const u32 i) const;
+  arma_inline       oT& operator[](const uword i);
+  arma_inline const oT& operator[](const uword i) const;
   
-  arma_inline       oT&         at(const u32 i);
-  arma_inline const oT&         at(const u32 i) const;
+  arma_inline       oT&         at(const uword i);
+  arma_inline const oT&         at(const uword i) const;
   
-  arma_inline       oT& operator()(const u32 i);
-  arma_inline const oT& operator()(const u32 i) const;
+  arma_inline       oT& operator()(const uword i);
+  arma_inline const oT& operator()(const uword i) const;
   
-  arma_inline       oT&         at(const u32 row, const u32 col);
-  arma_inline const oT&         at(const u32 row, const u32 col) const;
+  arma_inline       oT&         at(const uword row, const uword col);
+  arma_inline const oT&         at(const uword row, const uword col) const;
   
-  arma_inline       oT& operator()(const u32 row, const u32 col);
-  arma_inline const oT& operator()(const u32 row, const u32 col) const;
+  arma_inline       oT& operator()(const uword row, const uword col);
+  arma_inline const oT& operator()(const uword row, const uword col) const;
   
   inline field_injector<field> operator<<(const oT& val);
   inline field_injector<field> operator<<(const injector_end_of_row& x);
   
   
-  inline       subview_field<oT> row(const u32 row_num);
-  inline const subview_field<oT> row(const u32 row_num) const;
+  inline       subview_field<oT> row(const uword row_num);
+  inline const subview_field<oT> row(const uword row_num) const;
   
-  inline       subview_field<oT> col(const u32 col_num);
-  inline const subview_field<oT> col(const u32 col_num) const;
+  inline       subview_field<oT> col(const uword col_num);
+  inline const subview_field<oT> col(const uword col_num) const;
   
-  inline       subview_field<oT> rows(const u32 in_row1, const u32 in_row2);
-  inline const subview_field<oT> rows(const u32 in_row1, const u32 in_row2) const;
+  inline       subview_field<oT> rows(const uword in_row1, const uword in_row2);
+  inline const subview_field<oT> rows(const uword in_row1, const uword in_row2) const;
   
-  inline       subview_field<oT> cols(const u32 in_col1, const u32 in_col2);
-  inline const subview_field<oT> cols(const u32 in_col1, const u32 in_col2) const;
+  inline       subview_field<oT> cols(const uword in_col1, const uword in_col2);
+  inline const subview_field<oT> cols(const uword in_col1, const uword in_col2) const;
   
-  inline       subview_field<oT> subfield(const u32 in_row1, const u32 in_col1, const u32 in_row2, const u32 in_col2);
-  inline const subview_field<oT> subfield(const u32 in_row1, const u32 in_col1, const u32 in_row2, const u32 in_col2) const;
+  inline       subview_field<oT> subfield(const uword in_row1, const uword in_col1, const uword in_row2, const uword in_col2);
+  inline const subview_field<oT> subfield(const uword in_row1, const uword in_col1, const uword in_row2, const uword in_col2) const;
   
   inline       subview_field<oT> subfield  (const span& row_span, const span& col_span);
   inline const subview_field<oT> subfield  (const span& row_span, const span& col_span) const;
@@ -117,12 +117,12 @@ class field
   
   arma_inline bool is_empty() const;
   
-  arma_inline arma_warn_unused bool in_range(const u32   i) const;
+  arma_inline arma_warn_unused bool in_range(const uword   i) const;
   arma_inline arma_warn_unused bool in_range(const span& x) const;
   
-  arma_inline arma_warn_unused bool in_range(const u32   in_row,   const u32   in_col  ) const;
-  arma_inline arma_warn_unused bool in_range(const span& row_span, const u32   in_col  ) const;
-  arma_inline arma_warn_unused bool in_range(const u32   in_row,   const span& col_span) const;
+  arma_inline arma_warn_unused bool in_range(const uword   in_row,   const uword   in_col  ) const;
+  arma_inline arma_warn_unused bool in_range(const span& row_span, const uword   in_col  ) const;
+  arma_inline arma_warn_unused bool in_range(const uword   in_row,   const span& col_span) const;
   arma_inline arma_warn_unused bool in_range(const span& row_span, const span& col_span) const;
   
   inline bool save(const std::string   name, const file_type type = arma_binary, const bool print_status = true) const;
@@ -159,7 +159,7 @@ class field
     inline bool operator==(const iterator& X) const;
     
     arma_aligned field<oT>& M;
-    arma_aligned u32        i;
+    arma_aligned uword        i;
     };
   
   
@@ -182,7 +182,7 @@ class field
     inline bool operator==(const const_iterator& X) const;
     
     arma_aligned const field<oT>& M;
-    arma_aligned       u32        i;
+    arma_aligned       uword        i;
     };
   
   inline       iterator begin();
@@ -195,7 +195,7 @@ class field
   private:
   
   inline void init(const field<oT>& x);
-  inline void init(const u32 n_rows_in, const u32 n_cols_in);
+  inline void init(const uword n_rows_in, const uword n_cols_in);
   
   inline void delete_objects();
   inline void create_objects();

@@ -27,26 +27,26 @@ op_cumsum_mat::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumsum_mat
   const unwrap<T1>   tmp(in.m);
   const Mat<eT>& X = tmp.M;
   
-  const u32 dim = in.aux_u32_a;
+  const uword dim = in.aux_uword_a;
   arma_debug_check( (dim > 1), "cumsum(): incorrect usage. dim must be 0 or 1");
   
   out.copy_size(X);
   
-  const u32 X_n_rows = X.n_rows;
-  const u32 X_n_cols = X.n_cols;
+  const uword X_n_rows = X.n_rows;
+  const uword X_n_cols = X.n_cols;
   
   if(dim == 0)
     {
     arma_extra_debug_print("op_cumsum::apply(), dim = 0");
     
-    for(u32 col=0; col<X_n_cols; ++col)
+    for(uword col=0; col<X_n_cols; ++col)
       {
             eT* out_colmem = out.colptr(col);
       const eT* X_colmem   = X.colptr(col);
       
       eT acc = eT(0);
       
-      for(u32 row=0; row<X_n_rows; ++row)
+      for(uword row=0; row<X_n_rows; ++row)
         {
         acc += X_colmem[row];
         
@@ -59,11 +59,11 @@ op_cumsum_mat::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumsum_mat
     {
     arma_extra_debug_print("op_cumsum::apply(), dim = 1");
     
-    for(u32 row=0; row<X_n_rows; ++row)
+    for(uword row=0; row<X_n_rows; ++row)
       {
       eT acc = eT(0);
       
-      for(u32 col=0; col<X_n_cols; ++col)
+      for(uword col=0; col<X_n_cols; ++col)
         {
         acc += X.at(row,col);
         
@@ -87,7 +87,7 @@ op_cumsum_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumsum_vec
   const unwrap<T1>   tmp(in.m);
   const Mat<eT>& X = tmp.M;
   
-  const u32 n_elem = X.n_elem;
+  const uword n_elem = X.n_elem;
   
   out.copy_size(X);
   
@@ -96,7 +96,7 @@ op_cumsum_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumsum_vec
   
   eT acc = eT(0);
   
-  for(u32 i=0; i<n_elem; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
     acc += X_mem[i];
     

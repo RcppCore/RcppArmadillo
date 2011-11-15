@@ -19,7 +19,7 @@ template<typename T>
 struct arma_cx_median_packet
   {
   T   val;
-  u32 index;
+  uword index;
   };
 
 
@@ -46,7 +46,7 @@ class op_median
   inline static eT direct_median(std::vector<eT>& X);
   
   template<typename eT>
-  inline static eT direct_median(const eT* X, const u32 n_elem);
+  inline static eT direct_median(const eT* X, const uword n_elem);
   
   template<typename eT>
   inline static eT direct_median(const subview<eT>& X);
@@ -65,16 +65,16 @@ class op_median
   arma_inline static std::complex<T> robust_mean(const std::complex<T>& A, const std::complex<T>& B);
   
   template<typename T>
-  inline static void direct_cx_median_index(u32& out_index1, u32& out_index2, std::vector< arma_cx_median_packet<T> >& X);
+  inline static void direct_cx_median_index(uword& out_index1, uword& out_index2, std::vector< arma_cx_median_packet<T> >& X);
   
   template<typename T>
-  inline static void direct_cx_median_index(u32& out_index1, u32& out_index2, const std::complex<T>* X, const u32 n_elem);
+  inline static void direct_cx_median_index(uword& out_index1, uword& out_index2, const std::complex<T>* X, const uword n_elem);
   
   template<typename T>
-  inline static void direct_cx_median_index(u32& out_index1, u32& out_index2, const subview< std::complex<T> >& X);
+  inline static void direct_cx_median_index(uword& out_index1, uword& out_index2, const subview< std::complex<T> >& X);
   
   template<typename T>
-  inline static void direct_cx_median_index(u32& out_index1, u32& out_index2, const diagview< std::complex<T> >& X);
+  inline static void direct_cx_median_index(uword& out_index1, uword& out_index2, const diagview< std::complex<T> >& X);
   
   template<typename T, typename T1>
   inline static void apply(Mat< std::complex<T> >& out, const Op<T1,op_median>& in);
