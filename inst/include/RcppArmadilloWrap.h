@@ -98,6 +98,11 @@ namespace Rcpp{
     	return wrap( arma::Cube<typename T1::elem_type>(X) ) ;
     }
     
+    template<typename eT, typename gen_type>
+    SEXP wrap(const GenCube<eT,gen_type>& X){
+        return wrap( Cube<eT>( X ) ) ;   
+    }
+    
     namespace RcppArmadillo{
     	
     	/* we can intercept and directly build the resulting matrix using 
