@@ -99,8 +99,8 @@ namespace Rcpp{
     }
     
     template<typename eT, typename gen_type>
-    SEXP wrap(const GenCube<eT,gen_type>& X){
-        return wrap( Cube<eT>( X ) ) ;   
+    SEXP wrap(const arma::GenCube<eT,gen_type>& X){
+        return wrap( arma::Cube<eT>( X ) ) ;   
     }
     
     namespace RcppArmadillo{
