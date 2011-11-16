@@ -204,6 +204,12 @@ namespace Rcpp{
     	return wrap( arma::Mat<out_eT>( X ) ) ;
     }
 
+    template <typename eT, typename gen_type>
+    SEXP wrap( const arma::Gen<eT,gen_type>& X){
+        return wrap( arma::Mat<eT>( X ) ) ;
+    }
+    
+    
     /* support for Rcpp::as */
 
     namespace traits {
