@@ -78,7 +78,7 @@ namespace Rcpp {
     SEXP wrap( const arma::Gen<eT,gen_type>& X) ;
     
     template<typename eT, typename gen_type>
-    SEXP wrap( const arma::GenCub<eT,gen_type>& X) ;
+    SEXP wrap( const arma::GenCube<eT,gen_type>& X) ;
     
     namespace traits {
 
