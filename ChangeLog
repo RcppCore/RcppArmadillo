@@ -1,3 +1,12 @@
+2011-11-16  Romain Francois <romain@r-enthusiasts.com>
+    
+    * inst/include/RcppArmadilloForward.h: support for the new arma classes
+    Gen and GenCube that arma uses internally
+    
+    * inst/include/RcppArmadilloWrap.h: idem
+    
+    * inst/include/RcppArmadillo/Mat_meat.h: adapted to the changed arma_type_check
+
 2011-11-14  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/*: Upgraded to new test release 2.3.91 of Armadillo
