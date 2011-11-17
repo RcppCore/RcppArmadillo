@@ -22,6 +22,47 @@
 #ifndef RCPPARMADILLO_MAT_MEAT_H
 #define RCPPARMADILLO_MAT_MEAT_H
 
+namespace RcppArmadillo{
+    
+    template <typename eT, typename rcpp_type>
+    inline void check(){
+#if !defined(ARMA_USE_CXX11)
+	arma_type_check_cxx1998< is_same_type< eT, rcpp_type >::value == false >::apply();
+#else
+    static_assert( is_same_type< eT, rcpp_type >::value , "error: incorrect or unsupported type" )
+#endif
+    }
+    
+    template <>
+    inline void check< std::complex<double>, Rcomplex >(){}
+    
+    
+    template <typename eT, int RTYPE, bool NA, typename VECTOR>
+    inline void fill_ptr__impl( eT* ptr, const Rcpp::VectorBase<RTYPE,NA,VECTOR>& X, int n_elem, ::Rcpp::traits::true_type ){
+        for( u32 i=0; i<n_elem; ++i){
+	    	ptr[i] = Rcpp::internal::caster< typename Rcpp::traits::storage_type<RTYPE>::type, eT>( X[i] ) ;
+	    }
+    }
+    
+    template <typename eT, int RTYPE, bool NA, typename VECTOR>
+    inline void fill_ptr__impl( eT* ptr, const Rcpp::VectorBase<RTYPE,NA,VECTOR>& X, int n_elem, ::Rcpp::traits::false_type ){
+        for( u32 i=0; i<n_elem; ++i){
+	    	ptr[i] = X[i] ;
+	    }
+    }
+    
+    
+    template <typename eT, int RTYPE, bool NA, typename VECTOR>
+    inline void fill_ptr( eT* ptr, const Rcpp::VectorBase<RTYPE,NA,VECTOR>& X, int n_elem ){
+        return fill_ptr__impl<eT, RTYPE, NA, VECTOR>( ptr, X, n_elem, 
+            typename ::Rcpp::traits::r_sexptype_needscast<eT>()
+            ) ;
+    }
+    
+    
+    
+}
+
 template <typename eT>
 template <int RTYPE, bool NA, typename VECTOR>
 inline Mat<eT>::Mat( const Rcpp::VectorBase<RTYPE,NA,VECTOR>& X ) 
@@ -35,19 +76,10 @@ inline Mat<eT>::Mat( const Rcpp::VectorBase<RTYPE,NA,VECTOR>& X )
 	
 	arma_extra_debug_sigprint_this(this);
 	
-	// TODO : deal with complex expressions because 
-	// std::complex<double> != Rcomplex
-#if !defined(ARMA_USE_CXX11)
-	arma_type_check_cxx1998< is_same_type< eT, typename Rcpp::traits::storage_type<RTYPE>::type >::value == false >::apply();
-#else
-    static_assert( is_same_type< eT, typename Rcpp::traits::storage_type<RTYPE>::type >::value , "error: incorrect or unsupported type" )
-#endif
-	set_size(X.size(), 1);
+	RcppArmadillo::check<eT, typename Rcpp::traits::storage_type<RTYPE>::type >() ;
 	
-	eT* ptr = memptr() ;
-	for( u32 i=0; i<n_elem; ++i){
-		ptr[i] = X[i] ;
-	}
+	set_size(X.size(), 1);
+	RcppArmadillo::fill_ptr<eT, RTYPE, NA, VECTOR>( memptr(), X, n_elem ) ; 
 }
 
 template <typename eT>
