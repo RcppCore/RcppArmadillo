@@ -61,6 +61,37 @@ namespace RcppArmadillo{
     
     
     
+    
+    
+    template <typename eT, int RTYPE, bool NA, typename MATRIX>
+    inline void fill_ptr_matrix__impl( eT* ptr, const Rcpp::MatrixBase<RTYPE,NA,MATRIX>& X, int nr, int nc, ::Rcpp::traits::true_type ){
+        int k, i_col, i_row ;
+        for( i_col=0, k=0 ; i_col < nc; ++i_col){
+	    	for( i_row = 0; i_row < nr ; ++i_row, ++k ){
+	    		ptr[k] = Rcpp::internal::caster< typename Rcpp::traits::storage_type<RTYPE>::type, eT>( X(i_row,i_col)) ;
+	    	}
+	    }
+	}
+    
+    template <typename eT, int RTYPE, bool NA, typename MATRIX>
+    inline void fill_ptr_matrix__impl( eT* ptr, const Rcpp::MatrixBase<RTYPE,NA,MATRIX>& X, int nr, int nc, ::Rcpp::traits::false_type ){
+        int k, i_col, i_row ;
+        for( i_col=0, k=0 ; i_col < nc; ++i_col){
+	    	for( i_row = 0; i_row < nr ; ++i_row, ++k ){
+	    		ptr[k] = X(i_row,i_col) ;
+	    	}
+	    }
+    }
+    
+    
+    
+    template <typename eT, int RTYPE, bool NA, typename MATRIX>
+    inline void fill_ptr_matrix( eT* ptr, const Rcpp::MatrixBase<RTYPE,NA,MATRIX>& X, int nr, int nc){
+        return fill_ptr_matrix__impl<eT, RTYPE, NA, MATRIX>( ptr, X, nr, nc, 
+            typename ::Rcpp::traits::r_sexptype_needscast<eT>()
+            ) ;
+    }
+   
 }
 
 template <typename eT>
@@ -95,24 +126,13 @@ inline Mat<eT>::Mat( const Rcpp::MatrixBase<RTYPE,NA,MATRIX>& X )
 	
 	arma_extra_debug_sigprint_this(this);
 	
-	// TODO : deal with complex expressions because 
-	// std::complex<double> != Rcomplex
-#if !defined(ARMA_USE_CXX11)
-	arma_type_check_cxx1998< is_same_type< eT, typename Rcpp::traits::storage_type<RTYPE>::type >::value == false >::apply();
-#else
-    static_assert( is_same_type< eT, typename Rcpp::traits::storage_type<RTYPE>::type >::value , "error: incorrect or unsupported type" )
-#endif
-
-  	
-	u32 nr = X.nrow(), nc = X.ncol(), i_col, i_row, k ;
+	RcppArmadillo::check<eT, typename Rcpp::traits::storage_type<RTYPE>::type >() ;
+	
+	u32 nr = X.nrow(), nc = X.ncol() ;
 	set_size( nr, nc ) ;
 		
-	eT* ptr = memptr() ;
-	for( i_col=0, k=0 ; i_col < nc; ++i_col){
-		for( i_row = 0; i_row < nr ; ++i_row, ++k ){
-			ptr[k] = X(i_row,i_col) ;
-		}
-	}
+	RcppArmadillo::fill_ptr_matrix( memptr(), nr, nc ); 
+	
 }
 
 #endif
