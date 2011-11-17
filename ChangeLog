@@ -1,3 +1,15 @@
+2011-11-17  Romain Francois <romain@r-enthusiasts.com>
+    
+    * inst/include/RcppArmadilloSugar.h: reworked forwarding sugar expressions
+    to arma expressions. No need for the "forward" function anymore. For now, 
+    we kept forward as a templated identity function for backwards compatibility
+    but it is not needed anymore
+    
+    * inst/include/RcppArmadillo/Mat_meat.h: reworked handling of complex values
+    
+    * inst/unitTests/runit.RcppArmadillo.R: removed uses of forward as we don't
+    need it anymore. 
+
 2011-11-16  Romain Francois <romain@r-enthusiasts.com>
     
     * inst/include/RcppArmadilloForward.h: support for the new arma classes
