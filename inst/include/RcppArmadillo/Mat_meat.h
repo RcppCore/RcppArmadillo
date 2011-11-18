@@ -38,14 +38,14 @@ namespace RcppArmadillo{
     
     
     template <typename eT, int RTYPE, bool NA, typename VECTOR>
-    inline void fill_ptr__impl( eT* ptr, const Rcpp::VectorBase<RTYPE,NA,VECTOR>& X, int n_elem, ::Rcpp::traits::true_type ){
+    inline void fill_ptr__impl( eT* ptr, const Rcpp::VectorBase<RTYPE,NA,VECTOR>& X, u32 n_elem, ::Rcpp::traits::true_type ){
         for( u32 i=0; i<n_elem; ++i){
 	    	ptr[i] = Rcpp::internal::caster< typename Rcpp::traits::storage_type<RTYPE>::type, eT>( X[i] ) ;
 	    }
     }
     
     template <typename eT, int RTYPE, bool NA, typename VECTOR>
-    inline void fill_ptr__impl( eT* ptr, const Rcpp::VectorBase<RTYPE,NA,VECTOR>& X, int n_elem, ::Rcpp::traits::false_type ){
+    inline void fill_ptr__impl( eT* ptr, const Rcpp::VectorBase<RTYPE,NA,VECTOR>& X, u32 n_elem, ::Rcpp::traits::false_type ){
         for( u32 i=0; i<n_elem; ++i){
 	    	ptr[i] = X[i] ;
 	    }
@@ -53,7 +53,7 @@ namespace RcppArmadillo{
     
     
     template <typename eT, int RTYPE, bool NA, typename VECTOR>
-    inline void fill_ptr( eT* ptr, const Rcpp::VectorBase<RTYPE,NA,VECTOR>& X, int n_elem ){
+    inline void fill_ptr( eT* ptr, const Rcpp::VectorBase<RTYPE,NA,VECTOR>& X, u32 n_elem ){
         return fill_ptr__impl<eT, RTYPE, NA, VECTOR>( ptr, X, n_elem, 
             typename ::Rcpp::traits::r_sexptype_needscast<eT>()
             ) ;
