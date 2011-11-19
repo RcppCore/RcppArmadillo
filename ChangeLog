@@ -1,6 +1,8 @@
-2011-11-17  Romain Francois <romain@r-enthusiasts.com>
+2011-11-19  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.2.30
+
+2011-11-17  Romain Francois <romain@r-enthusiasts.com>
 
 	* inst/include/RcppArmadilloSugar.h: reworked forwarding sugar
 	expressions to arma expressions. No need for the "forward" function
