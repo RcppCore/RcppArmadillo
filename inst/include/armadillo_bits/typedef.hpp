@@ -103,16 +103,6 @@
 
 
 
-#if   defined(ARMA_BLAS_LONG_LONG)
-  typedef long long blas_int;
-#elif defined(ARMA_BLAS_LONG)
-  typedef long      blas_int;
-#else
-  typedef int       blas_int;
-#endif
-
-
-
 typedef std::complex<float>  cx_float;
 typedef std::complex<double> cx_double;
 

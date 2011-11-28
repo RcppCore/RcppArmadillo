@@ -546,33 +546,39 @@ subview_cube<eT>::operator= (const Base<eT,T1>& in)
   else
   if( (t_n_rows == x_n_rows) && (t_n_cols == 1) && (t_n_slices == x_n_cols) )
     {
-    // interpret the matrix as a cube with one column
-    // and with the number of slices equal to the number of columns in the matrix
-    
     for(uword i=0; i < t_n_slices; ++i)
       {
       arrayops::copy( t.slice_colptr(i, 0), x.colptr(i), t_n_rows );
       }
     }
   else
-  if( (t_n_rows == 1) && (t_n_cols == x_n_cols) && (t_n_slices == x_n_rows) )
+  if( (t_n_rows == 1) && (t_n_cols == x_n_rows) && (t_n_slices == x_n_cols) )
     {
-    // interpret the matrix as a cube with one row
-    // and with the number of slices equal to the number of rows in the matrix
-    
     Cube<eT>& Q = *(t.m_ptr);
     
     const uword t_aux_row1   = t.aux_row1;
     const uword t_aux_col1   = t.aux_col1;
     const uword t_aux_slice1 = t.aux_slice1;
     
-    for(uword col=0; col < t_n_cols; ++col)
+    for(uword slice=0; slice < t_n_slices; ++slice)
       {
-      const eT* x_colptr = x.colptr(col);
+      const uword mod_slice = t_aux_slice1 + slice;
       
-      for(uword i=0; i < t_n_slices; ++i)
+      const eT* x_colptr = x.colptr(slice);
+      
+      uword i,j;
+      for(i=0, j=1; j < t_n_cols; i+=2, j+=2)
         {
-        Q.at(t_aux_row1, t_aux_col1 + col, t_aux_slice1 + i) = x_colptr[i];
+        const eT tmp_i = x_colptr[i];
+        const eT tmp_j = x_colptr[j];
+        
+        Q.at(t_aux_row1, t_aux_col1 + i, mod_slice) = tmp_i;
+        Q.at(t_aux_row1, t_aux_col1 + j, mod_slice) = tmp_j;
+        }
+      
+      if(i < t_n_cols)
+        {
+        Q.at(t_aux_row1, t_aux_col1 + i, mod_slice) = x_colptr[i];
         }
       }
     }
@@ -623,7 +629,7 @@ subview_cube<eT>::operator+= (const Base<eT,T1>& in)
       }
     }
   else
-  if( (t_n_rows == 1) && (t_n_cols == x_n_cols) && (t_n_slices == x_n_rows) )
+  if( (t_n_rows == 1) && (t_n_cols == x_n_rows) && (t_n_slices == x_n_cols) )
     {
     Cube<eT>& Q = *(t.m_ptr);
     
@@ -631,13 +637,25 @@ subview_cube<eT>::operator+= (const Base<eT,T1>& in)
     const uword t_aux_col1   = t.aux_col1;
     const uword t_aux_slice1 = t.aux_slice1;
     
-    for(uword col=0; col < t_n_cols; ++col)
+    for(uword slice=0; slice < t_n_slices; ++slice)
       {
-      const eT* x_colptr = x.colptr(col);
+      const uword mod_slice = t_aux_slice1 + slice;
       
-      for(uword i=0; i < t_n_slices; ++i)
+      const eT* x_colptr = x.colptr(slice);
+      
+      uword i,j;
+      for(i=0, j=1; j < t_n_cols; i+=2, j+=2)
         {
-        Q.at(t_aux_row1, t_aux_col1 + col, t_aux_slice1 + i) += x_colptr[i];
+        const eT tmp_i = x_colptr[i];
+        const eT tmp_j = x_colptr[j];
+        
+        Q.at(t_aux_row1, t_aux_col1 + i, mod_slice) += tmp_i;
+        Q.at(t_aux_row1, t_aux_col1 + j, mod_slice) += tmp_j;
+        }
+      
+      if(i < t_n_cols)
+        {
+        Q.at(t_aux_row1, t_aux_col1 + i, mod_slice) += x_colptr[i];
         }
       }
     }
@@ -688,7 +706,7 @@ subview_cube<eT>::operator-= (const Base<eT,T1>& in)
       }
     }
   else
-  if( (t_n_rows == 1) && (t_n_cols == x_n_cols) && (t_n_slices == x_n_rows) )
+  if( (t_n_rows == 1) && (t_n_cols == x_n_rows) && (t_n_slices == x_n_cols) )
     {
     Cube<eT>& Q = *(t.m_ptr);
     
@@ -696,13 +714,25 @@ subview_cube<eT>::operator-= (const Base<eT,T1>& in)
     const uword t_aux_col1   = t.aux_col1;
     const uword t_aux_slice1 = t.aux_slice1;
     
-    for(uword col=0; col < t_n_cols; ++col)
+    for(uword slice=0; slice < t_n_slices; ++slice)
       {
-      const eT* x_colptr = x.colptr(col);
+      const uword mod_slice = t_aux_slice1 + slice;
       
-      for(uword i=0; i < t_n_slices; ++i)
+      const eT* x_colptr = x.colptr(slice);
+      
+      uword i,j;
+      for(i=0, j=1; j < t_n_cols; i+=2, j+=2)
         {
-        Q.at(t_aux_row1, t_aux_col1 + col, t_aux_slice1 + i) -= x_colptr[i];
+        const eT tmp_i = x_colptr[i];
+        const eT tmp_j = x_colptr[j];
+        
+        Q.at(t_aux_row1, t_aux_col1 + i, mod_slice) -= tmp_i;
+        Q.at(t_aux_row1, t_aux_col1 + j, mod_slice) -= tmp_j;
+        }
+      
+      if(i < t_n_cols)
+        {
+        Q.at(t_aux_row1, t_aux_col1 + i, mod_slice) -= x_colptr[i];
         }
       }
     }
@@ -753,7 +783,7 @@ subview_cube<eT>::operator%= (const Base<eT,T1>& in)
       }
     }
   else
-  if( (t_n_rows == 1) && (t_n_cols == x_n_cols) && (t_n_slices == x_n_rows) )
+  if( (t_n_rows == 1) && (t_n_cols == x_n_rows) && (t_n_slices == x_n_cols) )
     {
     Cube<eT>& Q = *(t.m_ptr);
     
@@ -761,13 +791,25 @@ subview_cube<eT>::operator%= (const Base<eT,T1>& in)
     const uword t_aux_col1   = t.aux_col1;
     const uword t_aux_slice1 = t.aux_slice1;
     
-    for(uword col=0; col < t_n_cols; ++col)
+    for(uword slice=0; slice < t_n_slices; ++slice)
       {
-      const eT* x_colptr = x.colptr(col);
+      const uword mod_slice = t_aux_slice1 + slice;
       
-      for(uword i=0; i < t_n_slices; ++i)
+      const eT* x_colptr = x.colptr(slice);
+      
+      uword i,j;
+      for(i=0, j=1; j < t_n_cols; i+=2, j+=2)
         {
-        Q.at(t_aux_row1, t_aux_col1 + col, t_aux_slice1 + i) *= x_colptr[i];
+        const eT tmp_i = x_colptr[i];
+        const eT tmp_j = x_colptr[j];
+        
+        Q.at(t_aux_row1, t_aux_col1 + i, mod_slice) *= tmp_i;
+        Q.at(t_aux_row1, t_aux_col1 + j, mod_slice) *= tmp_j;
+        }
+      
+      if(i < t_n_cols)
+        {
+        Q.at(t_aux_row1, t_aux_col1 + i, mod_slice) *= x_colptr[i];
         }
       }
     }
@@ -818,7 +860,7 @@ subview_cube<eT>::operator/= (const Base<eT,T1>& in)
       }
     }
   else
-  if( (t_n_rows == 1) && (t_n_cols == x_n_cols) && (t_n_slices == x_n_rows) )
+  if( (t_n_rows == 1) && (t_n_cols == x_n_rows) && (t_n_slices == x_n_cols) )
     {
     Cube<eT>& Q = *(t.m_ptr);
     
@@ -826,13 +868,25 @@ subview_cube<eT>::operator/= (const Base<eT,T1>& in)
     const uword t_aux_col1   = t.aux_col1;
     const uword t_aux_slice1 = t.aux_slice1;
     
-    for(uword col=0; col < t_n_cols; ++col)
+    for(uword slice=0; slice < t_n_slices; ++slice)
       {
-      const eT* x_colptr = x.colptr(col);
+      const uword mod_slice = t_aux_slice1 + slice;
       
-      for(uword i=0; i < t_n_slices; ++i)
+      const eT* x_colptr = x.colptr(slice);
+      
+      uword i,j;
+      for(i=0, j=1; j < t_n_cols; i+=2, j+=2)
         {
-        Q.at(t_aux_row1, t_aux_col1 + col, t_aux_slice1 + i) /= x_colptr[i];
+        const eT tmp_i = x_colptr[i];
+        const eT tmp_j = x_colptr[j];
+        
+        Q.at(t_aux_row1, t_aux_col1 + i, mod_slice) /= tmp_i;
+        Q.at(t_aux_row1, t_aux_col1 + j, mod_slice) /= tmp_j;
+        }
+      
+      if(i < t_n_cols)
+        {
+        Q.at(t_aux_row1, t_aux_col1 + i, mod_slice) /= x_colptr[i];
         }
       }
     }
@@ -1283,21 +1337,33 @@ subview_cube<eT>::extract(Mat<eT>& out, const subview_cube<eT>& in)
       else
       if(in_n_rows == 1)
         {
-        out.set_size(in_n_slices, in_n_cols);
-        
         const Cube<eT>& Q = in.m;
         
         const uword in_aux_row1   = in.aux_row1;
         const uword in_aux_col1   = in.aux_col1;
         const uword in_aux_slice1 = in.aux_slice1;
         
-        for(uword col=0; col < in_n_cols; ++col)
+        out.set_size(in_n_cols, in_n_slices);
+        
+        for(uword slice=0; slice < in_n_slices; ++slice)
           {
-          eT* out_colptr = out.colptr(col);
+          const uword mod_slice = in_aux_slice1 + slice;
           
-          for(uword i=0; i < in_n_slices; ++i)
+          eT* out_colptr = out.colptr(slice);
+          
+          uword i,j;
+          for(i=0, j=1; j < in_n_cols; i+=2, j+=2)
             {
-            out_colptr[i] = Q.at(in_aux_row1, in_aux_col1 + col, in_aux_slice1 + i);
+            const eT tmp_i = Q.at(in_aux_row1, in_aux_col1 + i, mod_slice);
+            const eT tmp_j = Q.at(in_aux_row1, in_aux_col1 + j, mod_slice);
+            
+            out_colptr[i] = tmp_i;
+            out_colptr[j] = tmp_j;
+            }
+          
+          if(i < in_n_cols)
+            {
+            out_colptr[i] = Q.at(in_aux_row1, in_aux_col1 + i, mod_slice);
             }
           }
         }
@@ -1361,7 +1427,7 @@ subview_cube<eT>::plus_inplace(Mat<eT>& out, const subview_cube<eT>& in)
           }
         }
       else
-      if( (in_n_rows == 1) && (in_n_cols == out_n_cols) && (in_n_slices == out_n_rows) )
+      if( (in_n_rows == 1) && (in_n_cols == out_n_rows) && (in_n_slices == out_n_cols) )
         {
         const Cube<eT>& Q = in.m;
         
@@ -1369,13 +1435,25 @@ subview_cube<eT>::plus_inplace(Mat<eT>& out, const subview_cube<eT>& in)
         const uword in_aux_col1   = in.aux_col1;
         const uword in_aux_slice1 = in.aux_slice1;
         
-        for(uword col=0; col < in_n_cols; ++col)
+        for(uword slice=0; slice < in_n_slices; ++slice)
           {
-          eT* out_colptr = out.colptr(col);
+          const uword mod_slice = in_aux_slice1 + slice;
           
-          for(uword i=0; i < in_n_slices; ++i)
+          eT* out_colptr = out.colptr(slice);
+          
+          uword i,j;
+          for(i=0, j=1; j < in_n_cols; i+=2, j+=2)
             {
-            out_colptr[i] += Q.at(in_aux_row1, in_aux_col1 + col, in_aux_slice1 + i);
+            const eT tmp_i = Q.at(in_aux_row1, in_aux_col1 + i, mod_slice);
+            const eT tmp_j = Q.at(in_aux_row1, in_aux_col1 + j, mod_slice);
+            
+            out_colptr[i] += tmp_i;
+            out_colptr[j] += tmp_j;
+            }
+          
+          if(i < in_n_cols)
+            {
+            out_colptr[i] += Q.at(in_aux_row1, in_aux_col1 + i, mod_slice);
             }
           }
         }
@@ -1437,7 +1515,7 @@ subview_cube<eT>::minus_inplace(Mat<eT>& out, const subview_cube<eT>& in)
           }
         }
       else
-      if( (in_n_rows == 1) && (in_n_cols == out_n_cols) && (in_n_slices == out_n_rows) )
+      if( (in_n_rows == 1) && (in_n_cols == out_n_rows) && (in_n_slices == out_n_cols) )
         {
         const Cube<eT>& Q = in.m;
         
@@ -1445,13 +1523,25 @@ subview_cube<eT>::minus_inplace(Mat<eT>& out, const subview_cube<eT>& in)
         const uword in_aux_col1   = in.aux_col1;
         const uword in_aux_slice1 = in.aux_slice1;
         
-        for(uword col=0; col < in_n_cols; ++col)
+        for(uword slice=0; slice < in_n_slices; ++slice)
           {
-          eT* out_colptr = out.colptr(col);
+          const uword mod_slice = in_aux_slice1 + slice;
           
-          for(uword i=0; i < in_n_slices; ++i)
+          eT* out_colptr = out.colptr(slice);
+          
+          uword i,j;
+          for(i=0, j=1; j < in_n_cols; i+=2, j+=2)
             {
-            out_colptr[i] -= Q.at(in_aux_row1, in_aux_col1 + col, in_aux_slice1 + i);
+            const eT tmp_i = Q.at(in_aux_row1, in_aux_col1 + i, mod_slice);
+            const eT tmp_j = Q.at(in_aux_row1, in_aux_col1 + j, mod_slice);
+            
+            out_colptr[i] -= tmp_i;
+            out_colptr[j] -= tmp_j;
+            }
+          
+          if(i < in_n_cols)
+            {
+            out_colptr[i] -= Q.at(in_aux_row1, in_aux_col1 + i, mod_slice);
             }
           }
         }
@@ -1513,7 +1603,7 @@ subview_cube<eT>::schur_inplace(Mat<eT>& out, const subview_cube<eT>& in)
           }
         }
       else
-      if( (in_n_rows == 1) && (in_n_cols == out_n_cols) && (in_n_slices == out_n_rows) )
+      if( (in_n_rows == 1) && (in_n_cols == out_n_rows) && (in_n_slices == out_n_cols) )
         {
         const Cube<eT>& Q = in.m;
         
@@ -1521,13 +1611,25 @@ subview_cube<eT>::schur_inplace(Mat<eT>& out, const subview_cube<eT>& in)
         const uword in_aux_col1   = in.aux_col1;
         const uword in_aux_slice1 = in.aux_slice1;
         
-        for(uword col=0; col < in_n_cols; ++col)
+        for(uword slice=0; slice < in_n_slices; ++slice)
           {
-          eT* out_colptr = out.colptr(col);
+          const uword mod_slice = in_aux_slice1 + slice;
           
-          for(uword i=0; i < in_n_slices; ++i)
+          eT* out_colptr = out.colptr(slice);
+          
+          uword i,j;
+          for(i=0, j=1; j < in_n_cols; i+=2, j+=2)
             {
-            out_colptr[i] *= Q.at(in_aux_row1, in_aux_col1 + col, in_aux_slice1 + i);
+            const eT tmp_i = Q.at(in_aux_row1, in_aux_col1 + i, mod_slice);
+            const eT tmp_j = Q.at(in_aux_row1, in_aux_col1 + j, mod_slice);
+            
+            out_colptr[i] *= tmp_i;
+            out_colptr[j] *= tmp_j;
+            }
+          
+          if(i < in_n_cols)
+            {
+            out_colptr[i] *= Q.at(in_aux_row1, in_aux_col1 + i, mod_slice);
             }
           }
         }
@@ -1589,7 +1691,7 @@ subview_cube<eT>::div_inplace(Mat<eT>& out, const subview_cube<eT>& in)
           }
         }
       else
-      if( (in_n_rows == 1) && (in_n_cols == out_n_cols) && (in_n_slices == out_n_rows) )
+      if( (in_n_rows == 1) && (in_n_cols == out_n_rows) && (in_n_slices == out_n_cols) )
         {
         const Cube<eT>& Q = in.m;
         
@@ -1597,13 +1699,25 @@ subview_cube<eT>::div_inplace(Mat<eT>& out, const subview_cube<eT>& in)
         const uword in_aux_col1   = in.aux_col1;
         const uword in_aux_slice1 = in.aux_slice1;
         
-        for(uword col=0; col < in_n_cols; ++col)
+        for(uword slice=0; slice < in_n_slices; ++slice)
           {
-          eT* out_colptr = out.colptr(col);
+          const uword mod_slice = in_aux_slice1 + slice;
           
-          for(uword i=0; i < in_n_slices; ++i)
+          eT* out_colptr = out.colptr(slice);
+          
+          uword i,j;
+          for(i=0, j=1; j < in_n_cols; i+=2, j+=2)
             {
-            out_colptr[i] /= Q.at(in_aux_row1, in_aux_col1 + col, in_aux_slice1 + i);
+            const eT tmp_i = Q.at(in_aux_row1, in_aux_col1 + i, mod_slice);
+            const eT tmp_j = Q.at(in_aux_row1, in_aux_col1 + j, mod_slice);
+            
+            out_colptr[i] /= tmp_i;
+            out_colptr[j] /= tmp_j;
+            }
+          
+          if(i < in_n_cols)
+            {
+            out_colptr[i] /= Q.at(in_aux_row1, in_aux_col1 + i, mod_slice);
             }
           }
         }

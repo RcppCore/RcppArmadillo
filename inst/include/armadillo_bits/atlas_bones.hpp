@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -13,6 +13,7 @@
 
 #ifdef ARMA_USE_ATLAS
 
+
 //! \namespace atlas namespace for ATLAS functions (imported from the global namespace)
 namespace atlas
   {
@@ -20,269 +21,69 @@ namespace atlas
   using ::CblasColMajor;
   using ::CblasNoTrans;
   using ::CblasTrans;
+  using ::CblasConjTrans;
   
-  using ::cblas_sdot;
-  using ::cblas_ddot;
-  using ::cblas_cdotu_sub;
-  using ::cblas_zdotu_sub;
-  
-  using ::cblas_sgemv;
-  using ::cblas_dgemv;
-  using ::cblas_cgemv;
-  using ::cblas_zgemv;
-  
-  using ::cblas_sgemm;
-  using ::cblas_dgemm;
-  using ::cblas_cgemm;
-  using ::cblas_zgemm;
-  
-  using ::clapack_sgetrf;
-  using ::clapack_dgetrf;
-  using ::clapack_cgetrf;
-  using ::clapack_zgetrf;
-  
-  using ::clapack_sgetri;
-  using ::clapack_dgetri;
-  using ::clapack_cgetri;
-  using ::clapack_zgetri;
-  
-  
-  template<typename eT>
-  inline static const eT& tmp_real(const eT& X)              { return X; }
-  
-  template<typename T>
-  inline static const T&  tmp_real(const std::complex<T>& X) { return X.real(); }
-  
-  
-  
-  template<typename eT>
-  arma_inline
-  eT
-  cblas_dot(const int N, const eT* X, const eT* Y)
+  #if defined(ARMA_USE_WRAPPER)
+  extern "C"
     {
-    arma_type_check((is_supported_blas_type<eT>::value == false));
     
-    if(is_float<eT>::value == true)
-      {
-      typedef float T;
-      return eT( cblas_sdot(N, (const T*)X, 1, (const T*)Y, 1) );
-      }
-    else
-    if(is_double<eT>::value == true)
-      {
-      typedef double T;
-      return eT( cblas_ddot(N, (const T*)X, 1, (const T*)Y, 1) );
-      }
-    else
-      {
-      return eT(0);
-      }
-    }
-  
-  
-  
-  template<typename eT>
-  arma_inline
-  eT
-  cx_cblas_dot(const int N, const eT* X, const eT* Y)
-    {
-    arma_type_check((is_supported_blas_type<eT>::value == false));
+    float  wrapper_cblas_sdot(const int N, const float  *X, const int incX, const float  *Y, const int incY);
+    double wrapper_cblas_ddot(const int N, const double *X, const int incX, const double *Y, const int incY);
     
-    if(is_supported_complex_float<eT>::value == true)
-      {
-      typedef typename std::complex<float> T;
-      
-      T out;    
-      cblas_cdotu_sub(N, (const T*)X, 1, (const T*)Y, 1, &out);
-      
-      return eT(out);
-      }
-    else
-    if(is_supported_complex_double<eT>::value == true)
-      {
-      typedef typename std::complex<double> T;
-      
-      T out;
-      cblas_zdotu_sub(N, (const T*)X, 1, (const T*)Y, 1, &out);
-      
-      return eT(out);
-      }
-    else
-      {
-      return eT(0);
-      }
-    }
-  
-  
-  
-  template<typename eT>
-  inline
-  void
-  cblas_gemv
-    (
-    const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA,
-    const int M, const int N,
-    const eT alpha,
-    const eT *A, const int lda,
-    const eT *X, const int incX,
-    const eT beta,
-    eT *Y, const int incY
-    )
-    {
-    arma_type_check((is_supported_blas_type<eT>::value == false));
+    void wrapper_cblas_cdotu_sub(const int N, const void *X, const int incX, const void *Y, const int incY, void *dotu);
+    void wrapper_cblas_zdotu_sub(const int N, const void *X, const int incX, const void *Y, const int incY, void *dotu);
     
-    if(is_float<eT>::value == true)
-      {
-      typedef float T;
-      cblas_sgemv(Order, TransA, M, N, (const T)tmp_real(alpha), (const T*)A, lda, (const T*)X, incX, (const T)tmp_real(beta), (T*)Y, incY);
-      }
-    else
-    if(is_double<eT>::value == true)
-      {
-      typedef double T;
-      cblas_dgemv(Order, TransA, M, N, (const T)tmp_real(alpha), (const T*)A, lda, (const T*)X, incX, (const T)tmp_real(beta), (T*)Y, incY);
-      }
-    else
-    if(is_supported_complex_float<eT>::value == true)
-      {
-      typedef std::complex<float> T;
-      cblas_cgemv(Order, TransA, M, N, (const T*)&alpha, (const T*)A, lda, (const T*)X, incX, (const T*)&beta, (T*)Y, incY);
-      }
-    else
-    if(is_supported_complex_double<eT>::value == true)
-      {
-      typedef std::complex<double> T;
-      cblas_zgemv(Order, TransA, M, N, (const T*)&alpha, (const T*)A, lda, (const T*)X, incX, (const T*)&beta, (T*)Y, incY);
-      }
-    }
-  
-  
-  
-  template<typename eT>
-  inline
-  void
-  cblas_gemm
-    (
-    const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA,
-    const enum CBLAS_TRANSPOSE TransB, const int M, const int N,
-    const int K, const eT alpha, const eT *A,
-    const int lda, const eT *B, const int ldb,
-    const eT beta, eT *C, const int ldc
-    )
-    {
-    arma_type_check((is_supported_blas_type<eT>::value == false));
     
-    if(is_float<eT>::value == true)
-      {
-      typedef float T;
-      cblas_sgemm(Order, TransA, TransB, M, N, K, (const T)tmp_real(alpha), (const T*)A, lda, (const T*)B, ldb, (const T)tmp_real(beta), (T*)C, ldc);
-      }
-    else
-    if(is_double<eT>::value == true)
-      {
-      typedef double T;
-      cblas_dgemm(Order, TransA, TransB, M, N, K, (const T)tmp_real(alpha), (const T*)A, lda, (const T*)B, ldb, (const T)tmp_real(beta), (T*)C, ldc);
-      }
-    else
-    if(is_supported_complex_float<eT>::value == true)
-      {
-      typedef std::complex<float> T;
-      cblas_cgemm(Order, TransA, TransB, M, N, K, (const T*)&alpha, (const T*)A, lda, (const T*)B, ldb, (const T*)&beta, (T*)C, ldc);
-      }
-    else
-    if(is_supported_complex_double<eT>::value == true)
-      {
-      typedef std::complex<double> T;
-      cblas_zgemm(Order, TransA, TransB, M, N, K, (const T*)&alpha, (const T*)A, lda, (const T*)B, ldb, (const T*)&beta, (T*)C, ldc);
-      }
-    }
-  
-  
-  
-  template<typename eT>
-  inline
-  int
-  clapack_getrf
-    (
-    const enum CBLAS_ORDER Order, const int M, const int N,
-    eT *A, const int lda, int *ipiv
-    )
-    {
-    arma_type_check((is_supported_blas_type<eT>::value == false));
+    void wrapper_cblas_sgemv(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, const int M, const int N, const float alpha,
+                             const float *A, const int lda, const float *X, const int incX, const float beta, float *Y, const int incY);
     
-    if(is_float<eT>::value == true)
-      {
-      typedef float T;
-      return clapack_sgetrf(Order, M, N, (T*)A, lda, ipiv);
-      }
-    else
-    if(is_double<eT>::value == true)
-      {
-      typedef double T;
-      return clapack_dgetrf(Order, M, N, (T*)A, lda, ipiv);
-      }
-    else
-    if(is_supported_complex_float<eT>::value == true)
-      {
-      typedef std::complex<float> T;
-      return clapack_cgetrf(Order, M, N, (T*)A, lda, ipiv);
-      }
-    else
-    if(is_supported_complex_double<eT>::value == true)
-      {
-      typedef std::complex<double> T;
-      return clapack_zgetrf(Order, M, N, (T*)A, lda, ipiv);
-      }
-    else
-      {
-      return -1;
-      }
-    }
-  
-  
-  
-  template<typename eT>
-  inline
-  int
-  clapack_getri
-    (
-    const enum CBLAS_ORDER Order, const int N, eT *A,
-    const int lda, const int *ipiv
-    )
-    {
-    arma_type_check((is_supported_blas_type<eT>::value == false));
+    void wrapper_cblas_dgemv(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, const int M, const int N, const double alpha,
+                             const double *A, const int lda, const double *X, const int incX, const double beta, double *Y, const int incY);
     
-    if(is_float<eT>::value == true)
-      {
-      typedef float T;
-      return clapack_sgetri(Order, N, (T*)A, lda, ipiv);
-      }
-    else
-    if(is_double<eT>::value == true)
-      {
-      typedef double T;
-      return clapack_dgetri(Order, N, (T*)A, lda, ipiv);
-      }
-    else
-    if(is_supported_complex_float<eT>::value == true)
-      {
-      typedef std::complex<float> T;
-      return clapack_cgetri(Order, N, (T*)A, lda, ipiv);
-      }
-    else
-    if(is_supported_complex_double<eT>::value == true)
-      {
-      typedef std::complex<double> T;
-      return clapack_zgetri(Order, N, (T*)A, lda, ipiv);
-      }
-    else
-      {
-      return -1;
-      }
+    void wrapper_cblas_cgemv(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, const int M, const int N, const void *alpha,
+                             const void *A, const int lda, const void *X, const int incX, const void *beta, void *Y, const int incY);
+    
+    void wrapper_cblas_zgemv(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, const int M, const int N, const void *alpha,
+                             const void *A, const int lda, const void *X, const int incX, const void *beta, void *Y, const int incY);
+    
+    
+    
+    void wrapper_cblas_sgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_TRANSPOSE TransB,
+                             const int M, const int N, const int K, const float alpha,
+                             const float *A, const int lda, const float *B, const int ldb, const float beta, float *C, const int ldc);
+    
+    void wrapper_cblas_dgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_TRANSPOSE TransB,
+                             const int M, const int N, const int K, const double alpha,
+                             const double *A, const int lda, const double *B, const int ldb, const double beta, double *C, const int ldc);
+    
+    void wrapper_cblas_cgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_TRANSPOSE TransB,
+                             const int M, const int N, const int K, const void *alpha,
+                             const void *A, const int lda, const void *B, const int ldb, const void *beta, void *C, const int ldc);
+    
+    void wrapper_cblas_zgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_TRANSPOSE TransB,
+                             const int M, const int N, const int K, const void *alpha,
+                             const void *A, const int lda, const void *B, const int ldb, const void *beta, void *C, const int ldc);
+    
+    
+    int wrapper_clapack_sgetrf(const enum CBLAS_ORDER Order, const int M, const int N, float  *A, const int lda, int *ipiv);
+    int wrapper_clapack_dgetrf(const enum CBLAS_ORDER Order, const int M, const int N, double *A, const int lda, int *ipiv);
+    int wrapper_clapack_cgetrf(const enum CBLAS_ORDER Order, const int M, const int N, void   *A, const int lda, int *ipiv);
+    int wrapper_clapack_zgetrf(const enum CBLAS_ORDER Order, const int M, const int N, void   *A, const int lda, int *ipiv);
+    
+    int wrapper_clapack_sgetri(const enum CBLAS_ORDER Order, const int N, float  *A, const int lda, const int *ipiv);
+    int wrapper_clapack_dgetri(const enum CBLAS_ORDER Order, const int N, double *A, const int lda, const int *ipiv);
+    int wrapper_clapack_cgetri(const enum CBLAS_ORDER Order, const int N, void   *A, const int lda, const int *ipiv);
+    int wrapper_clapack_zgetri(const enum CBLAS_ORDER Order, const int N, void   *A, const int lda, const int *ipiv);
+
+    int wrapper_clapack_sgesv(const enum CBLAS_ORDER Order, const int N, const int NRHS, float  *A, const int lda, int *ipiv, float  *B, const int ldb);
+    int wrapper_clapack_dgesv(const enum CBLAS_ORDER Order, const int N, const int NRHS, double *A, const int lda, int *ipiv, double *B, const int ldb);
+    int wrapper_clapack_cgesv(const enum CBLAS_ORDER Order, const int N, const int NRHS, void   *A, const int lda, int *ipiv, void   *B, const int ldb);
+    int wrapper_clapack_zgesv(const enum CBLAS_ORDER Order, const int N, const int NRHS, void   *A, const int lda, int *ipiv, void   *B, const int ldb);
+    
     }
-  
-  
+  #endif
   
   }
+
 
 #endif

@@ -900,15 +900,25 @@ Mat<eT>::operator=(const BaseCube<eT,T1>& X)
       else
       if(in_n_rows == 1)
         {
-        out.set_size(in_n_slices, in_n_cols);
+        out.set_size(in_n_cols, in_n_slices);
         
-        for(uword col=0; col < in_n_cols; ++col)
+        for(uword slice=0; slice < in_n_slices; ++slice)
           {
-          eT* out_colptr = out.colptr(col);
+          eT* out_colptr = out.colptr(slice);
           
-          for(uword i=0; i < in_n_slices; ++i)
+          uword i,j;
+          for(i=0, j=1; j < in_n_cols; i+=2, j+=2)
             {
-            out_colptr[i] = in.at(0, col, i);
+            const eT tmp_i = in.at(0, i, slice);
+            const eT tmp_j = in.at(0, j, slice);
+            
+            out_colptr[i] = tmp_i;
+            out_colptr[j] = tmp_j;
+            }
+          
+          if(i < in_n_cols)
+            {
+            out_colptr[i] = in.at(0, i, slice);
             }
           }
         }
@@ -973,15 +983,25 @@ Mat<eT>::operator+=(const BaseCube<eT,T1>& X)
           }
         }
       else
-      if( (in_n_rows == 1) && (in_n_cols == out_n_cols) && (in_n_slices == out_n_rows) )
+      if( (in_n_rows == 1) && (in_n_cols == out_n_rows) && (in_n_slices == out_n_cols) )
         {
-        for(uword col=0; col < in_n_cols; ++col)
+        for(uword slice=0; slice < in_n_slices; ++slice)
           {
-          eT* out_colptr = out.colptr(col);
+          eT* out_colptr = out.colptr(slice);
           
-          for(uword i=0; i < in_n_slices; ++i)
+          uword i,j;
+          for(i=0, j=1; j < in_n_cols; i+=2, j+=2)
             {
-            out_colptr[i] += in.at(0, col, i);
+            const eT tmp_i = in.at(0, i, slice);
+            const eT tmp_j = in.at(0, j, slice);
+            
+            out_colptr[i] += tmp_i;
+            out_colptr[j] += tmp_j;
+            }
+          
+          if(i < in_n_cols)
+            {
+            out_colptr[i] += in.at(0, i, slice);
             }
           }
         }
@@ -1044,15 +1064,25 @@ Mat<eT>::operator-=(const BaseCube<eT,T1>& X)
           }
         }
       else
-      if( (in_n_rows == 1) && (in_n_cols == out_n_cols) && (in_n_slices == out_n_rows) )
+      if( (in_n_rows == 1) && (in_n_cols == out_n_rows) && (in_n_slices == out_n_cols) )
         {
-        for(uword col=0; col < in_n_cols; ++col)
+        for(uword slice=0; slice < in_n_slices; ++slice)
           {
-          eT* out_colptr = out.colptr(col);
+          eT* out_colptr = out.colptr(slice);
           
-          for(uword i=0; i < in_n_slices; ++i)
+          uword i,j;
+          for(i=0, j=1; j < in_n_cols; i+=2, j+=2)
             {
-            out_colptr[i] -= in.at(0, col, i);
+            const eT tmp_i = in.at(0, i, slice);
+            const eT tmp_j = in.at(0, j, slice);
+            
+            out_colptr[i] -= tmp_i;
+            out_colptr[j] -= tmp_j;
+            }
+          
+          if(i < in_n_cols)
+            {
+            out_colptr[i] -= in.at(0, i, slice);
             }
           }
         }
@@ -1132,15 +1162,25 @@ Mat<eT>::operator%=(const BaseCube<eT,T1>& X)
           }
         }
       else
-      if( (in_n_rows == 1) && (in_n_cols == out_n_cols) && (in_n_slices == out_n_rows) )
+      if( (in_n_rows == 1) && (in_n_cols == out_n_rows) && (in_n_slices == out_n_cols) )
         {
-        for(uword col=0; col < in_n_cols; ++col)
+        for(uword slice=0; slice < in_n_slices; ++slice)
           {
-          eT* out_colptr = out.colptr(col);
+          eT* out_colptr = out.colptr(slice);
           
-          for(uword i=0; i < in_n_slices; ++i)
+          uword i,j;
+          for(i=0, j=1; j < in_n_cols; i+=2, j+=2)
             {
-            out_colptr[i] *= in.at(0, col, i);
+            const eT tmp_i = in.at(0, i, slice);
+            const eT tmp_j = in.at(0, j, slice);
+            
+            out_colptr[i] *= tmp_i;
+            out_colptr[j] *= tmp_j;
+            }
+          
+          if(i < in_n_cols)
+            {
+            out_colptr[i] *= in.at(0, i, slice);
             }
           }
         }
@@ -1203,15 +1243,25 @@ Mat<eT>::operator/=(const BaseCube<eT,T1>& X)
           }
         }
       else
-      if( (in_n_rows == 1) && (in_n_cols == out_n_cols) && (in_n_slices == out_n_rows) )
+      if( (in_n_rows == 1) && (in_n_cols == out_n_rows) && (in_n_slices == out_n_cols) )
         {
-        for(uword col=0; col < in_n_cols; ++col)
+        for(uword slice=0; slice < in_n_slices; ++slice)
           {
-          eT* out_colptr = out.colptr(col);
+          eT* out_colptr = out.colptr(slice);
           
-          for(uword i=0; i < in_n_slices; ++i)
+          uword i,j;
+          for(i=0, j=1; j < in_n_cols; i+=2, j+=2)
             {
-            out_colptr[i] /= in.at(0, col, i);
+            const eT tmp_i = in.at(0, i, slice);
+            const eT tmp_j = in.at(0, j, slice);
+            
+            out_colptr[i] /= tmp_i;
+            out_colptr[j] /= tmp_j;
+            }
+          
+          if(i < in_n_cols)
+            {
+            out_colptr[i] /= in.at(0, i, slice);
             }
           }
         }

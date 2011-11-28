@@ -274,7 +274,7 @@ class Mat : public Base< eT, Mat<eT> >
   arma_inline arma_warn_unused bool is_square() const;
        inline arma_warn_unused bool is_finite() const;
   
-  arma_inline arma_warn_unused bool in_range(const uword   i) const;
+  arma_inline arma_warn_unused bool in_range(const uword i) const;
   arma_inline arma_warn_unused bool in_range(const span& x) const;
   
   arma_inline arma_warn_unused bool in_range(const uword   in_row, const uword   in_col) const;

@@ -1,3 +1,11 @@
+0.2.31  2011-11-28
+
+    o   Upgraded to Armadillo test release 2.3.92 "Loco Lounge Lizard (Beta 2)"
+
+          * fixes for linking on Ubuntu and Debian systems
+          * fixes for inconsistencies in interactions between matrices and
+            cubes
+
 0.2.30  2011-11-19
 
     o   Upgraded to Armadillo test release 2.3.91 "Loco Lounge Lizard (Beta 1)"

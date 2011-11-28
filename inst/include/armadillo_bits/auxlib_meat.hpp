@@ -2443,7 +2443,17 @@ auxlib::solve(Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B, const bool slow)
     
     if( (A_n_rows > 4) || (status == false) )
       {
-      #if defined(ARMA_USE_LAPACK)
+      #if defined(ARMA_USE_ATLAS)
+        {
+        podarray<int> ipiv(A_n_rows);
+        
+        out = B;
+        
+        int info = atlas::clapack_gesv<eT>(atlas::CblasColMajor, A_n_rows, B.n_cols, A.memptr(), A_n_rows, ipiv.memptr(), out.memptr(), A_n_rows);
+        
+        return (info == 0);
+        }
+      #elif defined(ARMA_USE_LAPACK)
         {
         blas_int n    = A_n_rows;
         blas_int lda  = A_n_rows;
@@ -2461,7 +2471,7 @@ auxlib::solve(Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B, const bool slow)
         }
       #else
         {
-        arma_stop("solve(): use of LAPACK needs to be enabled");
+        arma_stop("solve(): use of ATLAS or LAPACK needs to be enabled");
         return false;
         }
       #endif

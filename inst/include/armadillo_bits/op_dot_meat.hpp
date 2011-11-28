@@ -214,7 +214,7 @@ op_dot::apply_proxy(const Base<typename T1::elem_type,T1>& X, const Base<typenam
     {
     arma_debug_check( (A.get_n_elem() != B.get_n_elem()), "dot(): objects must have the same number of elements" );
   
-    const uword      N  = A.get_n_elem();
+    const uword    N  = A.get_n_elem();
           ea_type1 PA = A.get_ea();
           ea_type2 PB = B.get_ea();
     
@@ -270,7 +270,7 @@ op_norm_dot::apply(const Base<typename T1::elem_type,T1>& X, const Base<typename
     
     arma_debug_check( (A.get_n_elem() != B.get_n_elem()), "norm_dot(): objects must have the same number of elements" );
     
-    const uword      N  = A.get_n_elem();
+    const uword    N  = A.get_n_elem();
           ea_type1 PA = A.get_ea();
           ea_type2 PB = B.get_ea();
     
@@ -363,7 +363,7 @@ op_cdot::apply(const Base<typename T1::elem_type,T1>& X, const Base<typename T1:
   
   arma_debug_check( (A.get_n_elem() != B.get_n_elem()), "cdot(): objects must have the same number of elements" );
   
-  const uword      N  = A.get_n_elem();
+  const uword    N  = A.get_n_elem();
         ea_type1 PA = A.get_ea();
         ea_type2 PB = B.get_ea();
   

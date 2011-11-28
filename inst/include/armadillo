@@ -72,37 +72,7 @@
 #endif
 
 
-#define ARMA_INCFILE_WRAP(x) <x>
-
-
-#if defined(ARMA_USE_ATLAS)
-  #if !defined(ARMA_ATLAS_INCLUDE_DIR)
-    extern "C"
-      {
-      #include <cblas.h>
-      #include <clapack.h>
-      }
-  #else
-    #define ARMA_STR1(x) x
-    #define ARMA_STR2(x) ARMA_STR1(x)
-    
-    #define ARMA_CBLAS   ARMA_STR2(ARMA_ATLAS_INCLUDE_DIR)ARMA_STR2(cblas.h)
-    #define ARMA_CLAPACK ARMA_STR2(ARMA_ATLAS_INCLUDE_DIR)ARMA_STR2(clapack.h)
-    
-    extern "C"
-      {
-      #include ARMA_INCFILE_WRAP(ARMA_CBLAS)
-      #include ARMA_INCFILE_WRAP(ARMA_CLAPACK)
-      }
-    
-    #undef ARMA_STR1
-    #undef ARMA_STR2
-    #undef ARMA_CBLAS
-    #undef ARMA_CLAPACK
-  #endif
-#endif
-
-
+#include "armadillo_bits/include_atlas.hpp"
 #include "armadillo_bits/itpp_wrap.hpp"
 
 
@@ -115,6 +85,7 @@ namespace arma
   #include "armadillo_bits/forward_bones.hpp"
   #include "armadillo_bits/arma_static_check.hpp"
   #include "armadillo_bits/typedef.hpp"
+  #include "armadillo_bits/typedef_blas_int.hpp"
   #include "armadillo_bits/format_wrap.hpp"
   #include "armadillo_bits/arma_version.hpp"
   #include "armadillo_bits/arma_config.hpp"
@@ -136,6 +107,10 @@ namespace arma
   #include "armadillo_bits/blas_bones.hpp"
   #include "armadillo_bits/lapack_bones.hpp"
   #include "armadillo_bits/atlas_bones.hpp"
+  
+  #include "armadillo_bits/blas_wrapper.hpp"
+  #include "armadillo_bits/lapack_wrapper.hpp"
+  #include "armadillo_bits/atlas_wrapper.hpp"
   
   #include "armadillo_bits/arrayops_bones.hpp"
   #include "armadillo_bits/podarray_bones.hpp"
