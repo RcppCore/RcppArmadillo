@@ -439,7 +439,7 @@ arma_incompat_size_string(const subview_cube<eT>& Q, const Mat<eT>& A, const cha
       << " or "
       << A.n_rows << 'x' << 1        << 'x' << A.n_cols
       << " or "
-      << 1        << 'x' << A.n_cols << 'x' << A.n_rows
+      << 1        << 'x' << A.n_rows << 'x' << A.n_cols
       << " is incompatible with cube dimensions: "
       << Q.n_rows << 'x' << Q.n_cols << 'x' << Q.n_slices;
       
@@ -890,7 +890,7 @@ arma_assert_cube_as_mat(const Mat<eT>& M, const T1& Q, const char* x, const bool
           ||
           ( (Q_n_rows == M_n_rows) && (Q_n_slices == M_n_cols) )
           ||
-          ( (Q_n_cols == M_n_cols) && (Q_n_slices == M_n_rows) )
+          ( (Q_n_cols == M_n_rows) && (Q_n_slices == M_n_cols) )
           )
           == false
         )

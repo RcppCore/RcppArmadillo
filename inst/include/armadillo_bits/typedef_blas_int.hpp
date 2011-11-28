@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -11,25 +11,17 @@
 // (see http://www.opensource.org/licenses for more info)
 
 
-//! \addtogroup BaseCube
+//! \addtogroup typedef
 //! @{
 
 
-
-//! Analog of the Base class, intended for cubes
-template<typename elem_type, typename derived>
-struct BaseCube
-  {
-  
-  arma_inline
-  const derived&
-  get_ref() const
-    {
-    return static_cast<const derived&>(*this);
-    }
-
-  };
-
+#if   defined(ARMA_BLAS_LONG_LONG)
+  typedef long long blas_int;
+#elif defined(ARMA_BLAS_LONG)
+  typedef long      blas_int;
+#else
+  typedef int       blas_int;
+#endif
 
 
 //! @}

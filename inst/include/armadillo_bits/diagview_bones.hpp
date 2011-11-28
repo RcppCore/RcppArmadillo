@@ -30,10 +30,10 @@ class diagview : public Base<eT, diagview<eT> >
   const uword row_offset;
   const uword col_offset;
   
-  const uword n_rows;  // equal to n_elem
-  const uword n_cols;  // always 1
+  const uword n_rows;     // equal to n_elem
   const uword n_elem;
   
+  static const uword n_cols = 1;
   
   
   protected:

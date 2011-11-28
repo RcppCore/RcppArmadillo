@@ -18,8 +18,8 @@
 
 #define ARMA_VERSION_MAJOR 2
 #define ARMA_VERSION_MINOR 3
-#define ARMA_VERSION_PATCH 91
-#define ARMA_VERSION_NAME  "Loco Lounge Lizard (Beta 1)"
+#define ARMA_VERSION_PATCH 92
+#define ARMA_VERSION_NAME  "Loco Lounge Lizard (Beta 2)"
 
 
 

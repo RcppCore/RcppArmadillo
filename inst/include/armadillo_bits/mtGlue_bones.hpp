@@ -28,8 +28,8 @@ class mtGlue : public Base<out_eT, mtGlue<out_eT, T1, T2, glue_type> >
   arma_inline  mtGlue(const T1& in_A, const T2& in_B, const uword in_aux_uword);
   arma_inline ~mtGlue();
   
-  arma_aligned const T1& A;           //!< first operand
-  arma_aligned const T2& B;           //!< second operand
+  arma_aligned const T1&   A;         //!< first operand
+  arma_aligned const T2&   B;         //!< second operand
   arma_aligned       uword aux_uword; //!< storage of auxiliary data, uword format
   };
 

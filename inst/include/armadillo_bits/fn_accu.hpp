@@ -33,7 +33,7 @@ accu(const Base<typename T1::elem_type,T1>& X)
   if(Proxy<T1>::prefer_at_accessor == false)
     {
           ea_type P      = A.get_ea();
-    const uword     n_elem = A.get_n_elem();
+    const uword   n_elem = A.get_n_elem();
     
     eT val1 = eT(0);
     eT val2 = eT(0);
@@ -88,7 +88,7 @@ accu(const mtOp<uword,T1,op_rel_noteq>& X)
   const Proxy<T1> A(X.m);
   
   const uword n_elem = A.get_n_elem();
-  const eT  val    = X.aux;
+  const eT    val    = X.aux;
   
   uword n_nonzero = 0;
   for(uword i=0; i<n_elem; ++i)
@@ -123,7 +123,7 @@ accu(const BaseCube<typename T1::elem_type,T1>& X)
     {
     
           ea_type P      = A.get_ea();
-    const uword     n_elem = A.get_n_elem();
+    const uword   n_elem = A.get_n_elem();
     
     eT val1 = eT(0);
     eT val2 = eT(0);

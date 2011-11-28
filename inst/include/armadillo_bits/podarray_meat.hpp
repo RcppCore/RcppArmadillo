@@ -247,8 +247,11 @@ podarray<eT>::copy_row(const Mat<eT>& A, const uword row)
       uword i,j;
       for(i=0, j=1; j < cols; i+=2, j+=2)
         {
-        out[i] = A.at(row, i);
-        out[j] = A.at(row, j);
+        const eT tmp_i = A.at(row, i);
+        const eT tmp_j = A.at(row, j);
+        
+        out[i] = tmp_i;
+        out[j] = tmp_j;
         }
       
       if(i < cols)

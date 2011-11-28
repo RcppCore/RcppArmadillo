@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2011 Conrad Sanderson
 // Copyright (C) 2009-2010 Dimitrios Bouzas
 // 
 // This file is part of the Armadillo C++ library.
@@ -22,11 +22,9 @@ class op_pinv
   {
   public:
   
-  template<typename eT> inline static void direct_pinv(Mat<eT>&                 out, const Mat<eT>& X,                 eT tol);
-  template<typename eT> inline static void direct_pinv(Mat< std::complex<eT> >& out, const Mat< std::complex<eT> >& X, eT tol);
-
-  template<typename T1> inline static void apply(Mat<typename T1::pod_type>&                 out, const Op<T1,op_pinv>& in);
-  template<typename T1> inline static void apply(Mat< std::complex<typename T1::pod_type> >& out, const Op<T1,op_pinv>& in);
+  template<typename eT> inline static void direct_pinv(Mat<eT>& out, const Mat<eT>& A, const eT in_tol);
+  
+  template<typename T1> inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_pinv>& in);
   };
 
 
