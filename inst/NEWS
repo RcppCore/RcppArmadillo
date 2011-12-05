@@ -1,3 +1,25 @@
+0.2.32  2011-12-04
+
+    o   Upgraded to Armadillo test release 2.4.0 "Loco Lounge Lizard"
+
+    o   Minimal changes relative to 0.2.31 based on 2.3.92, next section is
+        relative to the previous stable release series 2.2.* of Armadillo
+
+          * added shorter forms of transposes: .t() and .st()
+          * added optional use of 64 bit indices, allowing matrices to have
+            more than 4 billion elements 
+          * added experimental support for C++11 initialiser lists
+          * faster pinv()
+          * faster inplace transpose
+          * faster handling of expressions with diagonal views
+          * fixes for handling expressions with aliasing and submatrices
+          * fixes for linking on Ubuntu and Debian systems
+          * fixes for inconsistencies in interactions between matrices and
+            cubes 
+          * refactored code to eliminate warnings when using the Clang C++
+            compiler 
+          * .print_trans() and .raw_print_trans() are deprecated
+
 0.2.31  2011-11-28
 
     o   Upgraded to Armadillo test release 2.3.92 "Loco Lounge Lizard (Beta 2)"
