@@ -68,16 +68,35 @@ diagview<eT>::operator= (const diagview<eT>& x)
         Mat<eT>& t_m = *(t.m_ptr);
   const Mat<eT>& x_m = x.m;
   
-  const uword t_n_elem     = t.n_elem;
-  const uword t_row_offset = t.row_offset;
-  const uword t_col_offset = t.col_offset;
-  
-  const uword x_row_offset = x.row_offset;
-  const uword x_col_offset = x.col_offset;
-  
-  for(uword i=0; i<t_n_elem; ++i)
+  if(&t_m != &x_m)
     {
-    t_m.at(i + t_row_offset, i + t_col_offset) = x_m.at(i + x_row_offset, i + x_col_offset);
+    const uword t_n_elem     = t.n_elem;
+    const uword t_row_offset = t.row_offset;
+    const uword t_col_offset = t.col_offset;
+    
+    const uword x_row_offset = x.row_offset;
+    const uword x_col_offset = x.col_offset;
+    
+    uword i,j;
+    for(i=0, j=1; j < t_n_elem; i+=2, j+=2)
+      {
+      const eT tmp_i = x_m.at(i + x_row_offset, i + x_col_offset);
+      const eT tmp_j = x_m.at(j + x_row_offset, j + x_col_offset);
+      
+      t_m.at(i + t_row_offset, i + t_col_offset) = tmp_i;
+      t_m.at(j + t_row_offset, j + t_col_offset) = tmp_j;
+      }
+    
+    if(i < t_n_elem)
+      {
+      t_m.at(i + t_row_offset, i + t_col_offset) = x_m.at(i + x_row_offset, i + x_col_offset);
+      }
+    }
+  else
+    {
+    const Mat<eT> tmp = x;
+    
+    (*this).operator=(tmp);
     }
   }
 
@@ -195,7 +214,17 @@ diagview<eT>::operator= (const Base<eT,T1>& o)
   
   const eT* x_mem = x.memptr();
   
-  for(uword i=0; i<t_n_elem; ++i)
+  uword i,j;
+  for(i=0, j=1; j < t_n_elem; i+=2, j+=2)
+    {
+    const eT tmp_i = x_mem[i];
+    const eT tmp_j = x_mem[j];
+    
+    t_m.at( i + t_row_offset,  i + t_col_offset) = tmp_i;
+    t_m.at( j + t_row_offset,  j + t_col_offset) = tmp_j;
+    }
+  
+  if(i < t_n_elem)
     {
     t_m.at( i + t_row_offset,  i + t_col_offset) = x_mem[i];
     }
@@ -230,7 +259,17 @@ diagview<eT>::operator+=(const Base<eT,T1>& o)
   
   const eT* x_mem = x.memptr();
   
-  for(uword i=0; i<t_n_elem; ++i)
+  uword i,j;
+  for(i=0, j=1; j < t_n_elem; i+=2, j+=2)
+    {
+    const eT tmp_i = x_mem[i];
+    const eT tmp_j = x_mem[j];
+    
+    t_m.at( i + t_row_offset,  i + t_col_offset) += tmp_i;
+    t_m.at( j + t_row_offset,  j + t_col_offset) += tmp_j;
+    }
+  
+  if(i < t_n_elem)
     {
     t_m.at( i + t_row_offset,  i + t_col_offset) += x_mem[i];
     }
@@ -265,7 +304,17 @@ diagview<eT>::operator-=(const Base<eT,T1>& o)
   
   const eT* x_mem = x.memptr();
   
-  for(uword i=0; i<t_n_elem; ++i)
+  uword i,j;
+  for(i=0, j=1; j < t_n_elem; i+=2, j+=2)
+    {
+    const eT tmp_i = x_mem[i];
+    const eT tmp_j = x_mem[j];
+    
+    t_m.at( i + t_row_offset,  i + t_col_offset) -= tmp_i;
+    t_m.at( j + t_row_offset,  j + t_col_offset) -= tmp_j;
+    }
+  
+  if(i < t_n_elem)
     {
     t_m.at( i + t_row_offset,  i + t_col_offset) -= x_mem[i];
     }
@@ -300,7 +349,17 @@ diagview<eT>::operator%=(const Base<eT,T1>& o)
   
   const eT* x_mem = x.memptr();
   
-  for(uword i=0; i<t_n_elem; ++i)
+  uword i,j;
+  for(i=0, j=1; j < t_n_elem; i+=2, j+=2)
+    {
+    const eT tmp_i = x_mem[i];
+    const eT tmp_j = x_mem[j];
+    
+    t_m.at( i + t_row_offset,  i + t_col_offset) *= tmp_i;
+    t_m.at( j + t_row_offset,  j + t_col_offset) *= tmp_j;
+    }
+  
+  if(i < t_n_elem)
     {
     t_m.at( i + t_row_offset,  i + t_col_offset) *= x_mem[i];
     }
@@ -335,7 +394,17 @@ diagview<eT>::operator/=(const Base<eT,T1>& o)
   
   const eT* x_mem = x.memptr();
   
-  for(uword i=0; i<t_n_elem; ++i)
+  uword i,j;
+  for(i=0, j=1; j < t_n_elem; i+=2, j+=2)
+    {
+    const eT tmp_i = x_mem[i];
+    const eT tmp_j = x_mem[j];
+    
+    t_m.at( i + t_row_offset,  i + t_col_offset) /= tmp_i;
+    t_m.at( j + t_row_offset,  j + t_col_offset) /= tmp_j;
+    }
+  
+  if(i < t_n_elem)
     {
     t_m.at( i + t_row_offset,  i + t_col_offset) /= x_mem[i];
     }
@@ -362,15 +431,25 @@ diagview<eT>::extract(Mat<eT>& out, const diagview<eT>& in)
   
   eT* out_mem = out.memptr();
   
-  for(uword i=0; i<in_n_elem; ++i)
+  uword i,j;
+  for(i=0, j=1; j < in_n_elem; i+=2, j+=2)
     {
-    out_mem[i] = in_m.at(i+in_row_offset, i+in_col_offset);
+    const eT tmp_i = in_m.at( i + in_row_offset, i + in_col_offset );
+    const eT tmp_j = in_m.at( j + in_row_offset, j + in_col_offset );
+    
+    out_mem[i] = tmp_i;
+    out_mem[j] = tmp_j;
+    }
+  
+  if(i < in_n_elem)
+    {
+    out_mem[i] = in_m.at( i + in_row_offset, i + in_col_offset );
     }
   }
 
 
 
-//! X += Y.diagview(...)
+//! X += Y.diag()
 template<typename eT>
 inline
 void
@@ -388,15 +467,25 @@ diagview<eT>::plus_inplace(Mat<eT>& out, const diagview<eT>& in)
   
   eT* out_mem = out.memptr();
   
-  for(uword i=0; i<in_n_elem; ++i)
+  uword i,j;
+  for(i=0, j=1; j < in_n_elem; i+=2, j+=2)
     {
-    out_mem[i] += in_m.at(i+in_row_offset, i+in_col_offset);
+    const eT tmp_i = in_m.at( i + in_row_offset, i + in_col_offset );
+    const eT tmp_j = in_m.at( j + in_row_offset, j + in_col_offset );
+    
+    out_mem[i] += tmp_i;
+    out_mem[j] += tmp_j;
+    }
+  
+  if(i < in_n_elem)
+    {
+    out_mem[i] += in_m.at( i + in_row_offset, i + in_col_offset );
     }
   }
 
 
 
-//! X -= Y.diagview(...)
+//! X -= Y.diag()
 template<typename eT>
 inline
 void
@@ -414,15 +503,25 @@ diagview<eT>::minus_inplace(Mat<eT>& out, const diagview<eT>& in)
   
   eT* out_mem = out.memptr();
   
-  for(uword i=0; i<in_n_elem; ++i)
+  uword i,j;
+  for(i=0, j=1; j < in_n_elem; i+=2, j+=2)
     {
-    out_mem[i] -= in_m.at(i+in_row_offset, i+in_col_offset);
+    const eT tmp_i = in_m.at( i + in_row_offset, i + in_col_offset );
+    const eT tmp_j = in_m.at( j + in_row_offset, j + in_col_offset );
+    
+    out_mem[i] -= tmp_i;
+    out_mem[j] -= tmp_j;
+    }
+  
+  if(i < in_n_elem)
+    {
+    out_mem[i] -= in_m.at( i + in_row_offset, i + in_col_offset );
     }
   }
 
 
 
-//! X %= Y.submat(...)
+//! X %= Y.diag()
 template<typename eT>
 inline
 void
@@ -440,15 +539,25 @@ diagview<eT>::schur_inplace(Mat<eT>& out, const diagview<eT>& in)
   
   eT* out_mem = out.memptr();
   
-  for(uword i=0; i<in_n_elem; ++i)
+  uword i,j;
+  for(i=0, j=1; j < in_n_elem; i+=2, j+=2)
     {
-    out_mem[i] *= in_m.at(i+in_row_offset, i+in_col_offset);
+    const eT tmp_i = in_m.at( i + in_row_offset, i + in_col_offset );
+    const eT tmp_j = in_m.at( j + in_row_offset, j + in_col_offset );
+    
+    out_mem[i] *= tmp_i;
+    out_mem[j] *= tmp_j;
+    }
+  
+  if(i < in_n_elem)
+    {
+    out_mem[i] *= in_m.at( i + in_row_offset, i + in_col_offset );
     }
   }
 
 
 
-//! X /= Y.diagview(...)
+//! X /= Y.diag()
 template<typename eT>
 inline
 void
@@ -466,9 +575,19 @@ diagview<eT>::div_inplace(Mat<eT>& out, const diagview<eT>& in)
   
   eT* out_mem = out.memptr();
   
-  for(uword i=0; i<in_n_elem; ++i)
+  uword i,j;
+  for(i=0, j=1; j < in_n_elem; i+=2, j+=2)
     {
-    out_mem[i] /= in_m.at(i+in_row_offset, i+in_col_offset);
+    const eT tmp_i = in_m.at( i + in_row_offset, i + in_col_offset );
+    const eT tmp_j = in_m.at( j + in_row_offset, j + in_col_offset );
+    
+    out_mem[i] /= tmp_i;
+    out_mem[j] /= tmp_j;
+    }
+  
+  if(i < in_n_elem)
+    {
+    out_mem[i] /= in_m.at( i + in_row_offset, i + in_col_offset );
     }
   }
 
