@@ -2433,6 +2433,19 @@ Cube<eT>::reshape(const uword in_rows, const uword in_cols, const uword in_slice
 
 
 
+//! change the cube to have user specified dimensions (data is preserved)
+template<typename eT>
+inline
+void
+Cube<eT>::resize(const uword in_rows, const uword in_cols, const uword in_slices)
+  {
+  arma_extra_debug_sigprint();
+  
+  *this = arma::resize(*this, in_rows, in_cols, in_slices);
+  }
+
+
+
 //! change the cube (without preserving data) to have the same dimensions as the given cube 
 template<typename eT>
 template<typename eT2>

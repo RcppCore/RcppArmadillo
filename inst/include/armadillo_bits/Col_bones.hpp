@@ -26,6 +26,7 @@ class Col : public Mat<eT>
   
   
   inline          Col();
+  inline          Col(const Col<eT>& X);
   inline explicit Col(const uword n_elem);
   inline          Col(const uword in_rows, const uword in_cols);
   

@@ -15,7 +15,7 @@
 //! @{
 
 
-
+//! construct an empty row vector
 template<typename eT>
 inline
 Row<eT>::Row()
@@ -28,6 +28,21 @@ Row<eT>::Row()
 
 
 
+template<typename eT>
+inline
+Row<eT>::Row(const Row<eT>& X)
+  : Mat<eT>(1, X.n_elem)
+  {
+  arma_extra_debug_sigprint();
+  
+  access::rw(Mat<eT>::vec_state) = 2;
+  
+  arrayops::copy((*this).memptr(), X.memptr(), X.n_elem);
+  }
+
+
+
+//! construct a row vector with the specified number of n_elem
 template<typename eT>
 inline
 Row<eT>::Row(const uword in_n_elem)

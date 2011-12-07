@@ -211,6 +211,7 @@ class Cube : public BaseCube< eT, Cube<eT> >
   
   inline void  set_size(const uword in_rows, const uword in_cols, const uword in_slices);
   inline void   reshape(const uword in_rows, const uword in_cols, const uword in_slices, const uword dim = 0);
+  inline void    resize(const uword in_rows, const uword in_cols, const uword in_slices);
   
   template<typename eT2> inline void copy_size(const Cube<eT2>& m);
   
@@ -322,8 +323,9 @@ class Cube : public BaseCube< eT, Cube<eT> >
   inline void delete_mat();
   inline void create_mat();
   
-  friend class op_reshape;
   friend class glue_join;
+  friend class op_reshape;
+  friend class op_resize;
   
   
   public:

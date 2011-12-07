@@ -28,6 +28,20 @@ Col<eT>::Col()
 
 
 
+template<typename eT>
+inline
+Col<eT>::Col(const Col<eT>& X)
+  : Mat<eT>(X.n_elem, 1)
+  {
+  arma_extra_debug_sigprint();
+  
+  access::rw(Mat<eT>::vec_state) = 1;
+  
+  arrayops::copy((*this).memptr(), X.memptr(), X.n_elem);
+  }
+
+
+
 //! construct a column vector with the specified number of n_elem
 template<typename eT>
 inline

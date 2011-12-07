@@ -1,3 +1,10 @@
+0.2.33	2011-12-07
+
+    o   Upgraded to Armadillo release 2.4.1
+
+          * added .resize()
+          * fix for vector initialisation
+
 0.2.32  2011-12-04
 
     o   Upgraded to Armadillo test release 2.4.0 "Loco Lounge Lizard"
