@@ -26,6 +26,7 @@ class Row : public Mat<eT>
   
   
   inline          Row();
+  inline          Row(const Row<eT>& X);
   inline explicit Row(const uword N);
   inline          Row(const uword in_rows, const uword in_cols);
   

@@ -305,9 +305,13 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename eT2>
   inline void copy_size(const Mat<eT2>& m);
   
-  inline void  set_size(const uword in_elem);
-  inline void  set_size(const uword in_rows, const uword in_cols);
-  inline void   reshape(const uword in_rows, const uword in_cols, const uword dim = 0);
+  inline void set_size(const uword in_elem);
+  inline void set_size(const uword in_rows, const uword in_cols);
+  
+  inline void   resize(const uword in_elem);
+  inline void   resize(const uword in_rows, const uword in_cols);
+  inline void  reshape(const uword in_rows, const uword in_cols, const uword dim = 0);
+  
   
   arma_hot inline const Mat& fill(const eT val);
   
@@ -531,6 +535,7 @@ class Mat : public Base< eT, Mat<eT> >
   friend class glue_join;
   friend class op_strans;
   friend class op_htrans;
+  friend class op_resize;
   
   
   public:

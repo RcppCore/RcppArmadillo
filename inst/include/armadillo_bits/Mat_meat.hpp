@@ -4247,6 +4247,45 @@ Mat<eT>::set_size(const uword in_rows, const uword in_cols)
 template<typename eT>
 inline
 void
+Mat<eT>::resize(const uword in_elem)
+  {
+  arma_extra_debug_sigprint();
+  
+  switch(vec_state)
+    {
+    case 0:
+    case 1:
+      (*this).resize(in_elem, 1);
+      break;
+    
+    case 2:
+      (*this).resize(1, in_elem);
+      break;
+      
+    default:
+      ;
+    }
+  }
+
+
+
+//! change the matrix to have user specified dimensions (data is preserved)
+template<typename eT>
+inline
+void
+Mat<eT>::resize(const uword in_rows, const uword in_cols)
+  {
+  arma_extra_debug_sigprint();
+  
+  *this = arma::resize(*this, in_rows, in_cols);
+  }
+
+
+
+//! change the matrix to have user specified dimensions (data is preserved)
+template<typename eT>
+inline
+void
 Mat<eT>::reshape(const uword in_rows, const uword in_cols, const uword dim)
   {
   arma_extra_debug_sigprint();
