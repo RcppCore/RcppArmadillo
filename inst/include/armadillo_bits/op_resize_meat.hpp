@@ -48,7 +48,7 @@ op_resize::apply(Mat<typename T1::elem_type>& actual_out, const Op<T1,op_resize>
     out.zeros();
     }
   
-  if(out.n_elem > 0)
+  if( (out.n_elem > 0) && (A.n_elem > 0) )
     {
     const uword end_row = (std::min)(out_n_rows, A_n_rows) - 1;
     const uword end_col = (std::min)(out_n_cols, A_n_cols) - 1;
@@ -98,7 +98,7 @@ op_resize::apply(Cube<typename T1::elem_type>& actual_out, const OpCube<T1,op_re
     out.zeros();
     }
   
-  if(out.n_elem > 0)
+  if( (out.n_elem > 0) && (A.n_elem > 0) )
     {
     const uword end_row   = (std::min)(out_n_rows,   A_n_rows)   - 1;
     const uword end_col   = (std::min)(out_n_cols,   A_n_cols)   - 1;

@@ -1,3 +1,10 @@
+0.2.33	2011-12-12
+
+    o   Upgraded to Armadillo release 2.4.2
+
+          * clarified documentation for .reshape()
+          * fix for handling of empty matrices by .resize()
+
 0.2.33	2011-12-07
 
     o   Upgraded to Armadillo release 2.4.1
