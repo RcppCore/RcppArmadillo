@@ -1,3 +1,13 @@
+2011-12-31  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/RcppArmadillo/Mat_meat.h: Add missing semicolon in
+	code ifdef'ed for C++0x mode, with thanks to Teo Guo Ci
+
+2011-12-29  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/RcppArmadillo.cpp: Force instantiation of arma version vars
+	which helps with older OS X compiler, as suggested by Gershon Bialer
+
 2011-12-23  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/unitTests/runTests.R: unit tests output 'fallback' directory
