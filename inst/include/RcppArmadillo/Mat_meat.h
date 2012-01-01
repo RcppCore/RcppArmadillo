@@ -29,7 +29,7 @@ namespace RcppArmadillo{
 #if !defined(ARMA_USE_CXX11)
 	arma_type_check_cxx1998< is_same_type< eT, rcpp_type >::value == false >::apply();
 #else
-    static_assert( is_same_type< eT, rcpp_type >::value , "error: incorrect or unsupported type" )
+	static_assert( is_same_type< eT, rcpp_type >::value , "error: incorrect or unsupported type" );
 #endif
     }
     

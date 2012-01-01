@@ -23,7 +23,11 @@
 
 using namespace Rcpp;
 
-extern "C" SEXP armadillo_version(SEXP single_){
+const unsigned int arma::arma_version::major;
+const unsigned int arma::arma_version::minor;
+const unsigned int arma::arma_version::patch;
+
+extern "C" SEXP armadillo_version(SEXP single_) {
 
     bool single = as<bool>( single_) ;
 
