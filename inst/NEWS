@@ -1,3 +1,18 @@
+0.2.35  2012-01-27
+
+    o  Minor bug fix release improving corner cases affecting builds:
+
+          * Missing semicolon added in Mat_meat (when in C++0x mode), with
+	    thanks to Teo Guo Ci 
+          * Armadillo version vars now instantiated in RcppArmadillo.cpp
+	    which helps older g++ versions, with thanks to Gershon Bialer
+          * Thanks also to Martin Renner for testing these changes
+
+          * Unit tests output fallback directory changed per Brian Ripley's
+            request to not ever use /tmp
+
+	  * Minor update to version numbers in RcppArmadillo-package.Rd
+
 0.2.34	2011-12-12
 
     o   Upgraded to Armadillo release 2.4.2
