@@ -1,3 +1,19 @@
+2012-02-01  Romain Francois <romain@r-enthusiasts.com>
+
+    * inst/include/armadillo_bits/Cube_meat.hpp : changes related to std::cout -> Rcpp::Rcout
+    
+    * inst/include/armadillo_bits/Mat_meat.hpp : idem
+    
+    * inst/include/armadillo_bits/config.hpp : idem
+                                                
+    * inst/include/armadillo_bits/debug.hpp : idem
+    
+    * inst/include/armadillo_bits/field_meat.hpp : idem
+    
+    * inst/include/armadillo_bits/forward_bones.hpp : idem
+    
+    * DESCRIPTION: depends on Rcpp 0.9.1.2
+
 2012-01-27  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.2.35
