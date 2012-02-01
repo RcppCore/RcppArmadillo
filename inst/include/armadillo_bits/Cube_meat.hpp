@@ -2337,10 +2337,10 @@ Cube<eT>::impl_print(const std::string& extra_text) const
   
   if(extra_text.length() != 0)
     {
-    cout << extra_text << '\n';
+    ARMA_DEFAULT_STREAM << extra_text << '\n';
     }
   
-  arma_ostream::print(cout, *this, true);
+  arma_ostream::print(ARMA_DEFAULT_STREAM, *this, true);
   }
 
 
@@ -2378,10 +2378,10 @@ Cube<eT>::impl_raw_print(const std::string& extra_text) const
   
   if(extra_text.length() != 0)
     {
-    cout << extra_text << '\n';
+    ARMA_DEFAULT_STREAM << extra_text << '\n';
     }
   
-  arma_ostream::print(cout, *this, false);
+  arma_ostream::print(ARMA_DEFAULT_STREAM, *this, false);
   }
 
 

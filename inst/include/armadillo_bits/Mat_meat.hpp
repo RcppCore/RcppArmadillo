@@ -4053,14 +4053,14 @@ Mat<eT>::impl_print(const std::string& extra_text) const
   
   if(extra_text.length() != 0)
     {
-    const std::streamsize orig_width = cout.width();
+    const std::streamsize orig_width = ARMA_DEFAULT_STREAM.width();
     
-    cout << extra_text << '\n';
+    ARMA_DEFAULT_STREAM << extra_text << '\n';
   
-    cout.width(orig_width);
+    ARMA_DEFAULT_STREAM.width(orig_width);
     }
   
-  arma_ostream::print(cout, *this, true);
+  arma_ostream::print(ARMA_DEFAULT_STREAM, *this, true);
   }
 
 
@@ -4135,14 +4135,14 @@ Mat<eT>::impl_raw_print(const std::string& extra_text) const
   
   if(extra_text.length() != 0)
     {
-    const std::streamsize orig_width = cout.width();
+    const std::streamsize orig_width = ARMA_DEFAULT_STREAM.width();
     
-    cout << extra_text << '\n';
+    ARMA_DEFAULT_STREAM << extra_text << '\n';
   
-    cout.width(orig_width);
+    ARMA_DEFAULT_STREAM.width(orig_width);
     }
   
-  arma_ostream::print(cout, *this, false);
+  arma_ostream::print(ARMA_DEFAULT_STREAM, *this, false);
   }
 
 
