@@ -11,8 +11,8 @@
 // (see http://www.opensource.org/licenses for more info)
 
 
-// using std::cout;
-// using std::cerr;
+using std::cout;
+using std::cerr;
 using std::endl;
 using std::ios;
 
