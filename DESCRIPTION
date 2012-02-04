@@ -32,7 +32,7 @@ Description: R and Armadillo integration using Rcpp
  the GNU GPL version 2 or later, as is the rest of Rcpp.
 License: GPL (>= 2)
 LazyLoad: yes
-Depends: R (>= 2.12.0), Rcpp (>= 0.9.1.2)
+Depends: R (>= 2.14.0), Rcpp (>= 0.9.9.2)
 LinkingTo: Rcpp
 Suggests: inline, RUnit
 URL: http://arma.sourceforge.net/, http://dirk.eddelbuettel.com/code/rcpp.armadillo.html, http://romainfrancois.blog.free.fr/index.php?category/R-package/RcppArmadillo
