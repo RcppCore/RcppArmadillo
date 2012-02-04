@@ -59,9 +59,8 @@
 #undef ARMA_USE_CXX11
 #endif
 
-#if defined(ARMA_STD_COUT)
-#undef ARMA_STD_COUT
-#endif
+// Rcpp has its own stream object which cooperates more nicely with R's i/o
+#define ARMA_DEFAULT_STREAM Rcpp::Rcout
 
 #endif
 
