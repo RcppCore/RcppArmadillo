@@ -59,5 +59,9 @@
 #undef ARMA_USE_CXX11
 #endif
 
+#if defined(ARMA_STD_COUT)
+#undef ARMA_STD_COUT
+#endif
+
 #endif
 
