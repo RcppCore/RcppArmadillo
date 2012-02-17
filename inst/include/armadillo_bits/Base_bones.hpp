@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -27,6 +27,7 @@ struct Base
   arma_inline const derived& get_ref() const;
   
   arma_inline const Op<derived,op_htrans>  t() const;
+  arma_inline const Op<derived,op_htrans> ht() const;
   arma_inline const Op<derived,op_strans> st() const;
   
   inline void print(const std::string extra_text = "") const;

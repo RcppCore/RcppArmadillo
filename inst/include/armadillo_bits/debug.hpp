@@ -22,7 +22,7 @@ inline
 std::ostream&
 arma_stream_err1(std::ostream* user_stream)
   {
-  static std::ostream* stream_err1 = &(ARMA_DEFAULT_STREAM);
+  static std::ostream* stream_err1 = &(ARMA_DEFAULT_OSTREAM);
   
   if(user_stream != NULL)
     {
@@ -39,7 +39,7 @@ inline
 std::ostream&
 arma_stream_err2(std::ostream* user_stream)
   {
-  static std::ostream* stream_err2 = &(ARMA_DEFAULT_STREAM);
+  static std::ostream* stream_err2 = &(ARMA_DEFAULT_OSTREAM);
   
   if(user_stream != NULL)
     {

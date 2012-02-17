@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -15,6 +15,222 @@
 //! @{
 
 
+#undef operator_rel
+
+#undef arma_applier_mat_pre
+#undef arma_applier_mat_post
+
+#undef arma_applier_cube_pre
+#undef arma_applier_cube_post
+
+
+#define arma_applier_mat_pre(operator_rel) \
+  {\
+  typedef typename T1::elem_type      eT;\
+  typedef typename Proxy<T1>::ea_type ea_type;\
+  \
+  const eT val = X.aux;\
+  \
+  const Proxy<T1> P(X.m);\
+  \
+  const uword n_rows = P.get_n_rows();\
+  const uword n_cols = P.get_n_cols();\
+  \
+  const bool bad_alias = ( Proxy<T1>::has_subview && P.is_alias(out) );\
+  \
+  if(bad_alias == false)\
+    {\
+    out.set_size(n_rows, n_cols);\
+    \
+    uword* out_mem = out.memptr();\
+    \
+    if(Proxy<T1>::prefer_at_accessor == false)\
+      {\
+            ea_type PA     = P.get_ea();\
+      const uword   n_elem = out.n_elem;\
+      \
+      for(uword i=0; i<n_elem; ++i)\
+        {\
+        out_mem[i] = (val operator_rel PA[i]) ? uword(1) : uword(0);\
+        }\
+      }\
+    else\
+      {\
+      uword count = 0;\
+      \
+      for(uword col=0; col < n_cols; ++col)\
+      for(uword row=0; row < n_rows; ++row, ++count)\
+        {\
+        out_mem[count] = (val operator_rel P.at(row,col)) ? uword(1) : uword(0);\
+        }\
+      }\
+    }\
+  else\
+    {\
+    const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);\
+    \
+    out = (val) operator_rel (tmp.M);\
+    }\
+  }
+
+
+
+#define arma_applier_mat_post(operator_rel) \
+  {\
+  typedef typename T1::elem_type      eT;\
+  typedef typename Proxy<T1>::ea_type ea_type;\
+  \
+  const eT val = X.aux;\
+  \
+  const Proxy<T1> P(X.m);\
+  \
+  const uword n_rows = P.get_n_rows();\
+  const uword n_cols = P.get_n_cols();\
+  \
+  const bool bad_alias = ( Proxy<T1>::has_subview && P.is_alias(out) );\
+  \
+  if(bad_alias == false)\
+    {\
+    out.set_size(n_rows, n_cols);\
+    \
+    uword* out_mem = out.memptr();\
+    \
+    if(Proxy<T1>::prefer_at_accessor == false)\
+      {\
+            ea_type PA     = P.get_ea();\
+      const uword   n_elem = out.n_elem;\
+      \
+      for(uword i=0; i<n_elem; ++i)\
+        {\
+        out_mem[i] = (PA[i] operator_rel val) ? uword(1) : uword(0);\
+        }\
+      }\
+    else\
+      {\
+      uword count = 0;\
+      \
+      for(uword col=0; col < n_cols; ++col)\
+      for(uword row=0; row < n_rows; ++row, ++count)\
+        {\
+        out_mem[count] = (P.at(row,col) operator_rel val) ? uword(1) : uword(0);\
+        }\
+      }\
+    }\
+  else\
+    {\
+    const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);\
+    \
+    out = (tmp.M) operator_rel (val);\
+    }\
+  }
+
+
+
+#define arma_applier_cube_pre(operator_rel) \
+  {\
+  typedef typename T1::elem_type          eT;\
+  typedef typename ProxyCube<T1>::ea_type ea_type;\
+  \
+  const eT val = X.aux;\
+  \
+  const ProxyCube<T1> P(X.m);\
+  \
+  const uword n_rows   = P.get_n_rows();\
+  const uword n_cols   = P.get_n_cols();\
+  const uword n_slices = P.get_n_slices();\
+  \
+  const bool bad_alias = ( ProxyCube<T1>::has_subview && P.is_alias(out) );\
+  \
+  if(bad_alias == false)\
+    {\
+    out.set_size(n_rows, n_cols, n_slices);\
+    \
+    uword* out_mem = out.memptr();\
+    \
+    if(ProxyCube<T1>::prefer_at_accessor == false)\
+      {\
+            ea_type PA     = P.get_ea();\
+      const uword   n_elem = out.n_elem;\
+      \
+      for(uword i=0; i<n_elem; ++i)\
+        {\
+        out_mem[i] = (val operator_rel PA[i]) ? uword(1) : uword(0);\
+        }\
+      }\
+    else\
+      {\
+      uword count = 0;\
+      \
+      for(uword slice=0; slice < n_slices; ++slice)\
+      for(uword col=0;   col   < n_cols;   ++col)\
+      for(uword row=0;   row   < n_rows;   ++row, ++count)\
+        {\
+        out_mem[count] = (val operator_rel P.at(row,col,slice)) ? uword(1) : uword(0);\
+        }\
+      }\
+    }\
+  else\
+    {\
+    const unwrap_cube<typename ProxyCube<T1>::stored_type> tmp(P.Q);\
+    \
+    out = (val) operator_rel (tmp.M);\
+    }\
+  }
+
+
+
+#define arma_applier_cube_post(operator_rel) \
+  {\
+  typedef typename T1::elem_type          eT;\
+  typedef typename ProxyCube<T1>::ea_type ea_type;\
+  \
+  const eT val = X.aux;\
+  \
+  const ProxyCube<T1> P(X.m);\
+  \
+  const uword n_rows   = P.get_n_rows();\
+  const uword n_cols   = P.get_n_cols();\
+  const uword n_slices = P.get_n_slices();\
+  \
+  const bool bad_alias = ( ProxyCube<T1>::has_subview && P.is_alias(out) );\
+  \
+  if(bad_alias == false)\
+    {\
+    out.set_size(n_rows, n_cols, n_slices);\
+    \
+    uword* out_mem = out.memptr();\
+    \
+    if(ProxyCube<T1>::prefer_at_accessor == false)\
+      {\
+            ea_type PA     = P.get_ea();\
+      const uword   n_elem = out.n_elem;\
+      \
+      for(uword i=0; i<n_elem; ++i)\
+        {\
+        out_mem[i] = (PA[i] operator_rel val) ? uword(1) : uword(0);\
+        }\
+      }\
+    else\
+      {\
+      uword count = 0;\
+      \
+      for(uword slice=0; slice < n_slices; ++slice)\
+      for(uword col=0;   col   < n_cols;   ++col)\
+      for(uword row=0;   row   < n_rows;   ++row, ++count)\
+        {\
+        out_mem[count] = (P.at(row,col,slice) operator_rel val) ? uword(1) : uword(0);\
+        }\
+      }\
+    }\
+  else\
+    {\
+    const unwrap_cube<typename ProxyCube<T1>::stored_type> tmp(P.Q);\
+    \
+    out = (tmp.M) operator_rel (val);\
+    }\
+  }
+
+
 
 template<typename T1>
 inline
@@ -23,65 +239,7 @@ op_rel_lt_pre::apply(Mat<uword>& out, const mtOp<uword, T1, op_rel_lt_pre>& X)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type      eT;
-  typedef typename Proxy<T1>::ea_type ea_type;
-  
-  const Proxy<T1> Y(X.m);
-  
-  out.set_size(Y.get_n_rows(), Y.get_n_cols());
-  
-  const eT      val     = X.aux;
-        ea_type A       = Y.get_ea();
-        uword*    out_mem = out.memptr();
-  const uword     n_elem  = out.n_elem;
-  
-  uword i,j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
-    {
-    out_mem[i] = (val < A[i]) ? uword(1) : uword(0);
-    out_mem[j] = (val < A[j]) ? uword(1) : uword(0);
-    }
-  
-  if(i < n_elem)
-    {
-    out_mem[i] = (val < A[i]) ? uword(1) : uword(0);
-    }
-  }
-
-
-
-template<typename T1>
-inline
-void
-op_rel_lt_post::apply(Mat<uword>& out, const mtOp<uword, T1, op_rel_lt_post>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type      eT;
-  typedef typename Proxy<T1>::ea_type ea_type;
-  
-  const Proxy<T1> Y(X.m);
-  
-  out.set_size(Y.get_n_rows(), Y.get_n_cols());
-  
-  const eT      val     = X.aux;
-        ea_type A       = Y.get_ea();
-        uword*    out_mem = out.memptr();
-  const uword     n_elem  = out.n_elem;
-  
-  uword i,j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
-    {
-    out_mem[i] = (A[i] < val) ? uword(1) : uword(0);
-    out_mem[j] = (A[j] < val) ? uword(1) : uword(0);
-    }
-  
-  if(i < n_elem)
-    {
-    out_mem[i] = (A[i] < val) ? uword(1) : uword(0);
-    }
+  arma_applier_mat_pre( < );
   }
 
 
@@ -93,65 +251,7 @@ op_rel_gt_pre::apply(Mat<uword>& out, const mtOp<uword, T1, op_rel_gt_pre>& X)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type      eT;
-  typedef typename Proxy<T1>::ea_type ea_type;
-  
-  const Proxy<T1> Y(X.m);
-  
-  out.set_size(Y.get_n_rows(), Y.get_n_cols());
-  
-  const eT      val     = X.aux;
-        ea_type A       = Y.get_ea();
-        uword*    out_mem = out.memptr();
-  const uword     n_elem  = out.n_elem;
-  
-  uword i,j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
-    {
-    out_mem[i] = (val > A[i]) ? uword(1) : uword(0);
-    out_mem[j] = (val > A[j]) ? uword(1) : uword(0);
-    }
-  
-  if(i < n_elem)
-    {
-    out_mem[i] = (val > A[i]) ? uword(1) : uword(0);
-    }
-  }
-
-
-
-template<typename T1>
-inline
-void
-op_rel_gt_post::apply(Mat<uword>& out, const mtOp<uword, T1, op_rel_gt_post>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type      eT;
-  typedef typename Proxy<T1>::ea_type ea_type;
-  
-  const Proxy<T1> Y(X.m);
-  
-  out.set_size(Y.get_n_rows(), Y.get_n_cols());
-  
-  const eT      val     = X.aux;
-        ea_type A       = Y.get_ea();
-        uword*    out_mem = out.memptr();
-  const uword     n_elem  = out.n_elem;
-  
-  uword i,j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
-    {
-    out_mem[i] = (A[i] > val) ? uword(1) : uword(0);
-    out_mem[j] = (A[j] > val) ? uword(1) : uword(0);
-    }
-  
-  if(i < n_elem)
-    {
-    out_mem[i] = (A[i] > val) ? uword(1) : uword(0);
-    }
+  arma_applier_mat_pre( > );
   }
 
 
@@ -163,65 +263,7 @@ op_rel_lteq_pre::apply(Mat<uword>& out, const mtOp<uword, T1, op_rel_lteq_pre>& 
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type      eT;
-  typedef typename Proxy<T1>::ea_type ea_type;
-  
-  const Proxy<T1> Y(X.m);
-  
-  out.set_size(Y.get_n_rows(), Y.get_n_cols());
-  
-  const eT      val     = X.aux;
-        ea_type A       = Y.get_ea();
-        uword*    out_mem = out.memptr();
-  const uword     n_elem  = out.n_elem;
-  
-  uword i,j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
-    {
-    out_mem[i] = (val <= A[i]) ? uword(1) : uword(0);
-    out_mem[j] = (val <= A[j]) ? uword(1) : uword(0);
-    }
-  
-  if(i < n_elem)
-    {
-    out_mem[i] = (val <= A[i]) ? uword(1) : uword(0);
-    }
-  }
-
-
-
-template<typename T1>
-inline
-void
-op_rel_lteq_post::apply(Mat<uword>& out, const mtOp<uword, T1, op_rel_lteq_post>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type      eT;
-  typedef typename Proxy<T1>::ea_type ea_type;
-  
-  const Proxy<T1> Y(X.m);
-  
-  out.set_size(Y.get_n_rows(), Y.get_n_cols());
-  
-  const eT      val     = X.aux;
-        ea_type A       = Y.get_ea();
-        uword*    out_mem = out.memptr();
-  const uword     n_elem  = out.n_elem;
-  
-  uword i,j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
-    {
-    out_mem[i] = (A[i] <= val) ? uword(1) : uword(0);
-    out_mem[j] = (A[j] <= val) ? uword(1) : uword(0);
-    }
-  
-  if(i < n_elem)
-    {
-    out_mem[i] = (A[i] <= val) ? uword(1) : uword(0);
-    }
+  arma_applier_mat_pre( <= );
   }
 
 
@@ -233,30 +275,43 @@ op_rel_gteq_pre::apply(Mat<uword>& out, const mtOp<uword, T1, op_rel_gteq_pre>& 
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type      eT;
-  typedef typename Proxy<T1>::ea_type ea_type;
+  arma_applier_mat_pre( >= );
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_rel_lt_post::apply(Mat<uword>& out, const mtOp<uword, T1, op_rel_lt_post>& X)
+  {
+  arma_extra_debug_sigprint();
   
-  const Proxy<T1> Y(X.m);
+  arma_applier_mat_post( < );
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_rel_gt_post::apply(Mat<uword>& out, const mtOp<uword, T1, op_rel_gt_post>& X)
+  {
+  arma_extra_debug_sigprint();
   
-  out.set_size(Y.get_n_rows(), Y.get_n_cols());
+  arma_applier_mat_post( > );
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_rel_lteq_post::apply(Mat<uword>& out, const mtOp<uword, T1, op_rel_lteq_post>& X)
+  {
+  arma_extra_debug_sigprint();
   
-  const eT      val     = X.aux;
-        ea_type A       = Y.get_ea();
-        uword*    out_mem = out.memptr();
-  const uword     n_elem  = out.n_elem;
-  
-  uword i,j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
-    {
-    out_mem[i] = (val >= A[i]) ? uword(1) : uword(0);
-    out_mem[j] = (val >= A[j]) ? uword(1) : uword(0);
-    }
-  
-  if(i < n_elem)
-    {
-    out_mem[i] = (val >= A[i]) ? uword(1) : uword(0);
-    }
+  arma_applier_mat_post( <= );
   }
 
 
@@ -268,30 +323,7 @@ op_rel_gteq_post::apply(Mat<uword>& out, const mtOp<uword, T1, op_rel_gteq_post>
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type      eT;
-  typedef typename Proxy<T1>::ea_type ea_type;
-  
-  const Proxy<T1> Y(X.m);
-  
-  out.set_size(Y.get_n_rows(), Y.get_n_cols());
-  
-  const eT      val     = X.aux;
-        ea_type A       = Y.get_ea();
-        uword*    out_mem = out.memptr();
-  const uword     n_elem  = out.n_elem;
-  
-  uword i,j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
-    {
-    out_mem[i] = (A[i] >= val) ? uword(1) : uword(0);
-    out_mem[j] = (A[j] >= val) ? uword(1) : uword(0);
-    }
-  
-  if(i < n_elem)
-    {
-    out_mem[i] = (A[i] >= val) ? uword(1) : uword(0);
-    }
+  arma_applier_mat_post( >= );
   }
 
 
@@ -303,30 +335,7 @@ op_rel_eq::apply(Mat<uword>& out, const mtOp<uword, T1, op_rel_eq>& X)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type      eT;
-  typedef typename Proxy<T1>::ea_type ea_type;
-  
-  const Proxy<T1> Y(X.m);
-  
-  out.set_size(Y.get_n_rows(), Y.get_n_cols());
-  
-  const eT      val     = X.aux;
-        ea_type A       = Y.get_ea();
-        uword*    out_mem = out.memptr();
-  const uword     n_elem  = out.n_elem;
-  
-  uword i,j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
-    {
-    out_mem[i] = (A[i] == val) ? uword(1) : uword(0);
-    out_mem[j] = (A[j] == val) ? uword(1) : uword(0);
-    }
-  
-  if(i < n_elem)
-    {
-    out_mem[i] = (A[i] == val) ? uword(1) : uword(0);
-    }
+  arma_applier_mat_post( == );
   }
 
 
@@ -338,30 +347,7 @@ op_rel_noteq::apply(Mat<uword>& out, const mtOp<uword, T1, op_rel_noteq>& X)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type      eT;
-  typedef typename Proxy<T1>::ea_type ea_type;
-  
-  const Proxy<T1> Y(X.m);
-  
-  out.set_size(Y.get_n_rows(), Y.get_n_cols());
-  
-  const eT      val     = X.aux;
-        ea_type A       = Y.get_ea();
-        uword*    out_mem = out.memptr();
-  const uword     n_elem  = out.n_elem;
-  
-  uword i,j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
-    {
-    out_mem[i] = (A[i] != val) ? uword(1) : uword(0);
-    out_mem[j] = (A[j] != val) ? uword(1) : uword(0);
-    }
-  
-  if(i < n_elem)
-    {
-    out_mem[i] = (A[i] != val) ? uword(1) : uword(0);
-    }
+  arma_applier_mat_post( != );
   }
 
 
@@ -379,65 +365,7 @@ op_rel_lt_pre::apply(Cube<uword>& out, const mtOpCube<uword, T1, op_rel_lt_pre>&
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type          eT;
-  typedef typename ProxyCube<T1>::ea_type ea_type;
-  
-  const ProxyCube<T1> Y(X.m);
-  
-  out.set_size(Y.get_n_rows(), Y.get_n_cols(), Y.get_n_slices());
-  
-  const eT      val     = X.aux;
-        ea_type A       = Y.get_ea();
-        uword*    out_mem = out.memptr();
-  const uword     n_elem  = out.n_elem;
-  
-  uword i,j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
-    {
-    out_mem[i] = (val < A[i]) ? uword(1) : uword(0);
-    out_mem[j] = (val < A[j]) ? uword(1) : uword(0);
-    }
-  
-  if(i < n_elem)
-    {
-    out_mem[i] = (val < A[i]) ? uword(1) : uword(0);
-    }
-  }
-
-
-
-template<typename T1>
-inline
-void
-op_rel_lt_post::apply(Cube<uword>& out, const mtOpCube<uword, T1, op_rel_lt_post>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type          eT;
-  typedef typename ProxyCube<T1>::ea_type ea_type;
-  
-  const ProxyCube<T1> Y(X.m);
-  
-  out.set_size(Y.get_n_rows(), Y.get_n_cols(), Y.get_n_slices());
-  
-  const eT      val     = X.aux;
-        ea_type A       = Y.get_ea();
-        uword*    out_mem = out.memptr();
-  const uword     n_elem  = out.n_elem;
-  
-  uword i,j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
-    {
-    out_mem[i] = (A[i] < val) ? uword(1) : uword(0);
-    out_mem[j] = (A[j] < val) ? uword(1) : uword(0);
-    }
-  
-  if(i < n_elem)
-    {
-    out_mem[i] = (A[i] < val) ? uword(1) : uword(0);
-    }
+  arma_applier_cube_pre( < );
   }
 
 
@@ -449,65 +377,7 @@ op_rel_gt_pre::apply(Cube<uword>& out, const mtOpCube<uword, T1, op_rel_gt_pre>&
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type          eT;
-  typedef typename ProxyCube<T1>::ea_type ea_type;
-  
-  const ProxyCube<T1> Y(X.m);
-  
-  out.set_size(Y.get_n_rows(), Y.get_n_cols(), Y.get_n_slices());
-  
-  const eT      val     = X.aux;
-        ea_type A       = Y.get_ea();
-        uword*    out_mem = out.memptr();
-  const uword     n_elem  = out.n_elem;
-  
-  uword i,j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
-    {
-    out_mem[i] = (val > A[i]) ? uword(1) : uword(0);
-    out_mem[j] = (val > A[j]) ? uword(1) : uword(0);
-    }
-  
-  if(i < n_elem)
-    {
-    out_mem[i] = (val > A[i]) ? uword(1) : uword(0);
-    }
-  }
-
-
-
-template<typename T1>
-inline
-void
-op_rel_gt_post::apply(Cube<uword>& out, const mtOpCube<uword, T1, op_rel_gt_post>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type          eT;
-  typedef typename ProxyCube<T1>::ea_type ea_type;
-  
-  const ProxyCube<T1> Y(X.m);
-  
-  out.set_size(Y.get_n_rows(), Y.get_n_cols(), Y.get_n_slices());
-  
-  const eT      val     = X.aux;
-        ea_type A       = Y.get_ea();
-        uword*    out_mem = out.memptr();
-  const uword     n_elem  = out.n_elem;
-  
-  uword i,j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
-    {
-    out_mem[i] = (A[i] > val) ? uword(1) : uword(0);
-    out_mem[j] = (A[j] > val) ? uword(1) : uword(0);
-    }
-  
-  if(i < n_elem)
-    {
-    out_mem[i] = (A[i] > val) ? uword(1) : uword(0);
-    }
+  arma_applier_cube_pre( > );
   }
 
 
@@ -519,65 +389,7 @@ op_rel_lteq_pre::apply(Cube<uword>& out, const mtOpCube<uword, T1, op_rel_lteq_p
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type          eT;
-  typedef typename ProxyCube<T1>::ea_type ea_type;
-  
-  const ProxyCube<T1> Y(X.m);
-  
-  out.set_size(Y.get_n_rows(), Y.get_n_cols(), Y.get_n_slices());
-  
-  const eT      val     = X.aux;
-        ea_type A       = Y.get_ea();
-        uword*    out_mem = out.memptr();
-  const uword     n_elem  = out.n_elem;
-  
-  uword i,j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
-    {
-    out_mem[i] = (val <= A[i]) ? uword(1) : uword(0);
-    out_mem[j] = (val <= A[j]) ? uword(1) : uword(0);
-    }
-  
-  if(i < n_elem)
-    {
-    out_mem[i] = (val <= A[i]) ? uword(1) : uword(0);
-    }
-  }
-
-
-
-template<typename T1>
-inline
-void
-op_rel_lteq_post::apply(Cube<uword>& out, const mtOpCube<uword, T1, op_rel_lteq_post>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type          eT;
-  typedef typename ProxyCube<T1>::ea_type ea_type;
-  
-  const ProxyCube<T1> Y(X.m);
-  
-  out.set_size(Y.get_n_rows(), Y.get_n_cols(), Y.get_n_slices());
-  
-  const eT      val     = X.aux;
-        ea_type A       = Y.get_ea();
-        uword*    out_mem = out.memptr();
-  const uword     n_elem  = out.n_elem;
-  
-  uword i,j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
-    {
-    out_mem[i] = (A[i] <= val) ? uword(1) : uword(0);
-    out_mem[j] = (A[j] <= val) ? uword(1) : uword(0);
-    }
-  
-  if(i < n_elem)
-    {
-    out_mem[i] = (A[i] <= val) ? uword(1) : uword(0);
-    }
+  arma_applier_cube_pre( <= );
   }
 
 
@@ -589,30 +401,43 @@ op_rel_gteq_pre::apply(Cube<uword>& out, const mtOpCube<uword, T1, op_rel_gteq_p
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type          eT;
-  typedef typename ProxyCube<T1>::ea_type ea_type;
+  arma_applier_cube_pre( >= );
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_rel_lt_post::apply(Cube<uword>& out, const mtOpCube<uword, T1, op_rel_lt_post>& X)
+  {
+  arma_extra_debug_sigprint();
   
-  const ProxyCube<T1> Y(X.m);
+  arma_applier_cube_post( < );
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_rel_gt_post::apply(Cube<uword>& out, const mtOpCube<uword, T1, op_rel_gt_post>& X)
+  {
+  arma_extra_debug_sigprint();
   
-  out.set_size(Y.get_n_rows(), Y.get_n_cols(), Y.get_n_slices());
+  arma_applier_cube_post( > );
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_rel_lteq_post::apply(Cube<uword>& out, const mtOpCube<uword, T1, op_rel_lteq_post>& X)
+  {
+  arma_extra_debug_sigprint();
   
-  const eT      val     = X.aux;
-        ea_type A       = Y.get_ea();
-        uword*    out_mem = out.memptr();
-  const uword     n_elem  = out.n_elem;
-  
-  uword i,j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
-    {
-    out_mem[i] = (val >= A[i]) ? uword(1) : uword(0);
-    out_mem[j] = (val >= A[j]) ? uword(1) : uword(0);
-    }
-  
-  if(i < n_elem)
-    {
-    out_mem[i] = (val >= A[i]) ? uword(1) : uword(0);
-    }
+  arma_applier_cube_post( <= );
   }
 
 
@@ -624,30 +449,7 @@ op_rel_gteq_post::apply(Cube<uword>& out, const mtOpCube<uword, T1, op_rel_gteq_
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type          eT;
-  typedef typename ProxyCube<T1>::ea_type ea_type;
-  
-  const ProxyCube<T1> Y(X.m);
-  
-  out.set_size(Y.get_n_rows(), Y.get_n_cols(), Y.get_n_slices());
-  
-  const eT      val     = X.aux;
-        ea_type A       = Y.get_ea();
-        uword*    out_mem = out.memptr();
-  const uword     n_elem  = out.n_elem;
-  
-  uword i,j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
-    {
-    out_mem[i] = (A[i] >= val) ? uword(1) : uword(0);
-    out_mem[j] = (A[j] >= val) ? uword(1) : uword(0);
-    }
-  
-  if(i < n_elem)
-    {
-    out_mem[i] = (A[i] >= val) ? uword(1) : uword(0);
-    }
+  arma_applier_cube_post( >= );
   }
 
 
@@ -659,30 +461,7 @@ op_rel_eq::apply(Cube<uword>& out, const mtOpCube<uword, T1, op_rel_eq>& X)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type          eT;
-  typedef typename ProxyCube<T1>::ea_type ea_type;
-  
-  const ProxyCube<T1> Y(X.m);
-  
-  out.set_size(Y.get_n_rows(), Y.get_n_cols(), Y.get_n_slices());
-  
-  const eT      val     = X.aux;
-        ea_type A       = Y.get_ea();
-        uword*    out_mem = out.memptr();
-  const uword     n_elem  = out.n_elem;
-  
-  uword i,j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
-    {
-    out_mem[i] = (A[i] == val) ? uword(1) : uword(0);
-    out_mem[j] = (A[j] == val) ? uword(1) : uword(0);
-    }
-  
-  if(i < n_elem)
-    {
-    out_mem[i] = (A[i] == val) ? uword(1) : uword(0);
-    }
+  arma_applier_cube_post( == );
   }
 
 
@@ -694,31 +473,16 @@ op_rel_noteq::apply(Cube<uword>& out, const mtOpCube<uword, T1, op_rel_noteq>& X
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type          eT;
-  typedef typename ProxyCube<T1>::ea_type ea_type;
-  
-  const ProxyCube<T1> Y(X.m);
-  
-  out.set_size(Y.get_n_rows(), Y.get_n_cols(), Y.get_n_slices());
-  
-  const eT      val     = X.aux;
-        ea_type A       = Y.get_ea();
-        uword*    out_mem = out.memptr();
-  const uword     n_elem  = out.n_elem;
-  
-  uword i,j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
-    {
-    out_mem[i] = (A[i] != val) ? uword(1) : uword(0);
-    out_mem[j] = (A[j] != val) ? uword(1) : uword(0);
-    }
-  
-  if(i < n_elem)
-    {
-    out_mem[i] = (A[i] != val) ? uword(1) : uword(0);
-    }
+  arma_applier_cube_post( != );
   }
+
+
+
+#undef arma_applier_mat_pre
+#undef arma_applier_mat_post
+
+#undef arma_applier_cube_pre
+#undef arma_applier_cube_post
 
 
 

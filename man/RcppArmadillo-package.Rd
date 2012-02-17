@@ -13,8 +13,8 @@
   \tabular{ll}{
     Package: \tab RcppArmadillo\cr
     Type: \tab Package\cr
-    Version: \tab 0.2.34\cr
-    Date: \tab 2011-12-12\cr
+    Version: \tab 0.2.35\cr
+    Date: \tab 2012-02-17\cr
     License: \tab GPL (>= 2)\cr
     LazyLoad: \tab yes\cr
   }

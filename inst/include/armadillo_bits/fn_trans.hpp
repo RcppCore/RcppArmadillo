@@ -43,7 +43,6 @@ trans(const Op<T1, op_htrans>& X)
 
 template<typename T1>
 arma_inline
-arma_deprecated
 const Op<T1, op_htrans>
 htrans(const Base<typename T1::elem_type,T1>& X)
   {

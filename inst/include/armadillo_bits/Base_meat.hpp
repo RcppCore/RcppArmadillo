@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -30,6 +30,16 @@ template<typename elem_type, typename derived>
 arma_inline
 const Op<derived,op_htrans>
 Base<elem_type,derived>::t() const
+  {
+  return Op<derived,op_htrans>( (*this).get_ref() );
+  }
+
+
+
+template<typename elem_type, typename derived>
+arma_inline
+const Op<derived,op_htrans>
+Base<elem_type,derived>::ht() const
   {
   return Op<derived,op_htrans>( (*this).get_ref() );
   }
