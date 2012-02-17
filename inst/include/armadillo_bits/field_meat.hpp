@@ -624,14 +624,14 @@ field<oT>::print(const std::string extra_text) const
   
   if(extra_text.length() != 0)
     {
-    const std::streamsize orig_width = ARMA_DEFAULT_STREAM.width();
+    const std::streamsize orig_width = ARMA_DEFAULT_OSTREAM.width();
     
-    ARMA_DEFAULT_STREAM << extra_text << '\n';
+    ARMA_DEFAULT_OSTREAM << extra_text << '\n';
   
-    ARMA_DEFAULT_STREAM.width(orig_width);
+    ARMA_DEFAULT_OSTREAM.width(orig_width);
     }
   
-  arma_ostream::print(ARMA_DEFAULT_STREAM, *this);
+  arma_ostream::print(ARMA_DEFAULT_OSTREAM, *this);
   }
 
 

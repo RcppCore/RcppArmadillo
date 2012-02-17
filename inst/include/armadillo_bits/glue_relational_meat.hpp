@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2011 Conrad Sanderson
+// Copyright (C) 2009-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -30,38 +30,49 @@
   \
   arma_debug_assert_same_size(P1, P2, operator_str);\
   \
-  const uword n_rows = P1.get_n_rows();\
-  const uword n_cols = P1.get_n_cols();\
+  const bool bad_alias = (Proxy<T1>::has_subview && P1.is_alias(out)) || (Proxy<T2>::has_subview && P2.is_alias(out));\
   \
-  out.set_size(n_rows, n_cols);\
-  \
-  uword* out_mem = out.memptr();\
-  \
-  const bool prefer_at_accessor = (Proxy<T1>::prefer_at_accessor || Proxy<T2>::prefer_at_accessor);\
-  \
-  if(prefer_at_accessor == false)\
+  if(bad_alias == false)\
     {\
-    typename Proxy<T1>::ea_type A = P1.get_ea();\
-    typename Proxy<T2>::ea_type B = P2.get_ea();\
     \
-    const uword n_elem = out.n_elem;\
+    const uword n_rows = P1.get_n_rows();\
+    const uword n_cols = P1.get_n_cols();\
     \
-    for(uword i=0; i<n_elem; ++i)\
+    out.set_size(n_rows, n_cols);\
+    \
+    uword* out_mem = out.memptr();\
+    \
+    const bool prefer_at_accessor = (Proxy<T1>::prefer_at_accessor || Proxy<T2>::prefer_at_accessor);\
+    \
+    if(prefer_at_accessor == false)\
       {\
-      out_mem[i] = (A[i] operator_rel B[i]) ? uword(1) : uword(0);\
+      typename Proxy<T1>::ea_type A = P1.get_ea();\
+      typename Proxy<T2>::ea_type B = P2.get_ea();\
+      \
+      const uword n_elem = out.n_elem;\
+      \
+      for(uword i=0; i<n_elem; ++i)\
+        {\
+        out_mem[i] = (A[i] operator_rel B[i]) ? uword(1) : uword(0);\
+        }\
       }\
-    }\
-  else\
-    {\
-    uword count = 0;\
-    \
-    for(uword col=0; col<n_cols; ++col)\
+    else\
       {\
+      uword count = 0;\
+      \
+      for(uword col=0; col<n_cols; ++col)\
       for(uword row=0; row<n_rows; ++row, ++count)\
         {\
         out_mem[count] = (P1.at(row,col) operator_rel P2.at(row,col)) ? uword(1) : uword(0);\
         }\
       }\
+    }\
+  else\
+    {\
+    const unwrap<typename Proxy<T1>::stored_type> tmp1(P1.Q);\
+    const unwrap<typename Proxy<T2>::stored_type> tmp2(P2.Q);\
+    \
+    out = (tmp1.M) operator_rel (tmp2.M);\
     }\
   }
 
@@ -75,38 +86,51 @@
   \
   arma_debug_assert_same_size(P1, P2, operator_str);\
   \
-  const uword n_rows   = P1.get_n_rows();\
-  const uword n_cols   = P1.get_n_cols();\
-  const uword n_slices = P1.get_n_slices();\
+  const bool bad_alias = (ProxyCube<T1>::has_subview && P1.is_alias(out)) || (ProxyCube<T2>::has_subview && P2.is_alias(out));\
   \
-  out.set_size(n_rows, n_cols, n_slices);\
-  \
-  uword* out_mem = out.memptr();\
-  \
-  const bool prefer_at_accessor = (ProxyCube<T1>::prefer_at_accessor || ProxyCube<T2>::prefer_at_accessor);\
-  \
-  if(prefer_at_accessor == false)\
+  if(bad_alias == false)\
     {\
-    typename ProxyCube<T1>::ea_type A = P1.get_ea();\
-    typename ProxyCube<T2>::ea_type B = P2.get_ea();\
     \
-    const uword n_elem = out.n_elem;\
+    const uword n_rows   = P1.get_n_rows();\
+    const uword n_cols   = P1.get_n_cols();\
+    const uword n_slices = P1.get_n_slices();\
     \
-    for(uword i=0; i<n_elem; ++i)\
+    out.set_size(n_rows, n_cols, n_slices);\
+    \
+    uword* out_mem = out.memptr();\
+    \
+    const bool prefer_at_accessor = (ProxyCube<T1>::prefer_at_accessor || ProxyCube<T2>::prefer_at_accessor);\
+    \
+    if(prefer_at_accessor == false)\
       {\
-      out_mem[i] = (A[i] operator_rel B[i]) ? uword(1) : uword(0);\
+      typename ProxyCube<T1>::ea_type A = P1.get_ea();\
+      typename ProxyCube<T2>::ea_type B = P2.get_ea();\
+      \
+      const uword n_elem = out.n_elem;\
+      \
+      for(uword i=0; i<n_elem; ++i)\
+        {\
+        out_mem[i] = (A[i] operator_rel B[i]) ? uword(1) : uword(0);\
+        }\
+      }\
+    else\
+      {\
+      uword count = 0;\
+      \
+      for(uword slice = 0; slice < n_slices; ++slice)\
+      for(uword col   = 0; col   < n_cols;   ++col)\
+      for(uword row   = 0; row   < n_rows;   ++row, ++count)\
+        {\
+        out_mem[count] = (P1.at(row,col,slice) operator_rel P2.at(row,col,slice)) ? uword(1) : uword(0);\
+        }\
       }\
     }\
   else\
     {\
-    uword count = 0;\
+    const unwrap_cube<typename ProxyCube<T1>::stored_type> tmp1(P1.Q);\
+    const unwrap_cube<typename ProxyCube<T2>::stored_type> tmp2(P2.Q);\
     \
-    for(uword slice = 0; slice < n_slices; ++slice)\
-    for(uword col   = 0; col   < n_cols;   ++col)\
-    for(uword row   = 0; row   < n_rows;   ++row, ++count)\
-      {\
-      out_mem[count] = (P1.at(row,col,slice) operator_rel P2.at(row,col,slice)) ? uword(1) : uword(0);\
-      }\
+    out = (tmp1.M) operator_rel (tmp2.M);\
     }\
   }
 

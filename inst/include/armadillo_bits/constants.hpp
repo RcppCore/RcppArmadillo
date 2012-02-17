@@ -175,7 +175,7 @@ class Phy
   static eT a_0()       { return eT(0.52917720859e-10); }
   
   //! Bohr magneton
-  static eT mu_B()      { return(927.400915e-26); }
+  static eT mu_B()      { return eT(927.400915e-26); }
   
   //! characteristic impedance of vacuum (in ohms)
   static eT Z_0()       { return eT(3.76730313461771e-2); }

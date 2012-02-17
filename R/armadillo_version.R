@@ -1,4 +1,4 @@
-## Copyright (C)       2010 Dirk Eddelbuettel, Romain Francois and Douglas Bates
+## Copyright (C) 2010 - 2012  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 ##
 ## This file is part of RcppArmadillo.
 ##
@@ -16,6 +16,6 @@
 ## along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
 armadillo_version <- function(single = FALSE){
-	.Call( "armadillo_version", isTRUE(single), PACKAGE = "RcppArmadillo" )
+    .Call( "armadillo_version", isTRUE(single), PACKAGE = "RcppArmadillo" )
 }
 

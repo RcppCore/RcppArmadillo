@@ -36,7 +36,7 @@ class Cube : public BaseCube< eT, Cube<eT> >
   
   const uword  n_rows;       //!< number of rows in each slice (read-only)
   const uword  n_cols;       //!< number of columns in each slice (read-only)
-  const uword  n_elem_slice; //!< DEPRECATED: do not use this member variable -- it will be _removed_ in version 3.0
+  const uword  n_elem_slice; //!< number of elements in each slice (read-only)
   const uword  n_slices;     //!< number of slices in the cube (read-only)
   const uword  n_elem;       //!< number of elements in the cube (read-only)
   const uword  mem_state;

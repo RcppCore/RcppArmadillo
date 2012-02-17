@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2010-2011 Conrad Sanderson
+// Copyright (C) 2010-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -61,8 +61,10 @@ class ProxyCube< Cube<eT> >
   arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
   arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
   
-  arma_inline ea_type get_ea()                           const { return Q.memptr(); }
-  arma_inline bool    is_alias(const Cube<elem_type>& X) const { return (&Q == &X); }
+  arma_inline ea_type get_ea() const { return Q.memptr(); }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Cube<eT2>& X) const { return (void_ptr(&Q) == void_ptr(&X)); }
   };
 
 
@@ -97,8 +99,10 @@ class ProxyCube< GenCube<eT, gen_type > >
   arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
   arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
   
-  arma_inline ea_type get_ea()                         const { return Q;     }
-  arma_inline bool    is_alias(const Cube<elem_type>&) const { return false; }
+  arma_inline ea_type get_ea() const { return Q; }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Cube<eT2>&) const { return false; }
   };
 
 
@@ -133,8 +137,10 @@ class ProxyCube< OpCube<T1, op_type> >
   arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
   arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
   
-  arma_inline ea_type get_ea()                         const { return Q.memptr(); }
-  arma_inline bool    is_alias(const Cube<elem_type>&) const { return false;      }
+  arma_inline ea_type get_ea() const { return Q.memptr(); }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Cube<eT2>&) const { return false; }
   };
 
 
@@ -169,8 +175,10 @@ class ProxyCube< GlueCube<T1, T2, glue_type> >
   arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
   arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
   
-  arma_inline ea_type get_ea()                         const { return Q.memptr(); }
-  arma_inline bool    is_alias(const Cube<elem_type>&) const { return false;      }
+  arma_inline ea_type get_ea() const { return Q.memptr(); }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Cube<eT2>&) const { return false; }
   };
 
 
@@ -205,8 +213,10 @@ class ProxyCube< subview_cube<eT> >
   arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
   arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
   
-  arma_inline ea_type get_ea()                           const { return Q;              }
-  arma_inline bool    is_alias(const Cube<elem_type>& X) const { return (&(Q.m) == &X); }
+  arma_inline ea_type get_ea() const { return Q; }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Cube<eT2>& X) const { return (void_ptr(&(Q.m)) == void_ptr(&X)); }
   };
 
 
@@ -241,8 +251,10 @@ class ProxyCube< eOpCube<T1, eop_type > >
   arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
   arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
   
-  arma_inline ea_type get_ea()                           const { return Q;               }
-  arma_inline bool    is_alias(const Cube<elem_type>& X) const { return Q.P.is_alias(X); }
+  arma_inline ea_type get_ea() const { return Q; }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Cube<eT2>& X) const { return Q.P.is_alias(X); }
   };
 
 
@@ -277,8 +289,10 @@ class ProxyCube< eGlueCube<T1, T2, eglue_type > >
   arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
   arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
   
-  arma_inline ea_type get_ea()                           const { return Q;                                      }
-  arma_inline bool    is_alias(const Cube<elem_type>& X) const { return (Q.P1.is_alias(X) || Q.P2.is_alias(X)); }
+  arma_inline ea_type get_ea() const { return Q; }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Cube<eT2>& X) const { return (Q.P1.is_alias(X) || Q.P2.is_alias(X)); }
   };
 
 
@@ -313,8 +327,10 @@ class ProxyCube< mtOpCube<out_eT, T1, op_type> >
   arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
   arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
   
-  arma_inline ea_type get_ea()                      const { return Q.memptr(); }
-  arma_inline bool    is_alias(const Cube<out_eT>&) const { return false;      }
+  arma_inline ea_type get_ea() const { return Q.memptr(); }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Cube<eT2>&) const { return false; }
   };
 
 
@@ -349,8 +365,10 @@ class ProxyCube< mtGlueCube<out_eT, T1, T2, glue_type > >
   arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
   arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
   
-  arma_inline ea_type get_ea()                      const { return Q.memptr(); }
-  arma_inline bool    is_alias(const Cube<out_eT>&) const { return false;      }
+  arma_inline ea_type get_ea() const { return Q.memptr(); }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Cube<eT2>&) const { return false; }
   };
 
 

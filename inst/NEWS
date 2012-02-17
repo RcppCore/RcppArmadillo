@@ -1,6 +1,10 @@
-0.2.35  2012-01-27
+0.2.35  2012-02-17
 
-    o  Minor bug fix release improving corner cases affecting builds:
+    o   Upgraded to Armadillo release 2.4.3
+
+          * Support for ARMA_DEFAULT_OSTREAM using Rcpp::Rcout added
+
+    o   Minor bug fix release improving corner cases affecting builds:
 
           * Missing semicolon added in Mat_meat (when in C++0x mode), with
 	    thanks to Teo Guo Ci 
