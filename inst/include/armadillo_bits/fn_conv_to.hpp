@@ -462,11 +462,11 @@ conv_to< Row<out_eT> >::from(const std::vector<in_eT>& in, const typename arma_n
   typename std::vector<in_eT>::const_iterator in_begin = in.begin();
   typename std::vector<in_eT>::const_iterator in_end   = in.end();
   
-  typename Col<out_eT>::iterator out_begin = out.begin();
-  typename Col<out_eT>::iterator out_end   = out.end();
+  typename Row<out_eT>::iterator out_begin = out.begin();
+  typename Row<out_eT>::iterator out_end   = out.end();
   
   typename std::vector<in_eT>::const_iterator in_it;
-  typename Col<out_eT>::iterator              out_it;
+  typename Row<out_eT>::iterator              out_it;
   
   for(in_it = in_begin, out_it = out_begin; (in_it != in_end) && (out_it != out_end); ++in_it, ++out_it)
     {
@@ -493,11 +493,11 @@ conv_to< Row<out_eT> >::from(const std::vector<in_eT>& in, const typename arma_c
   typename std::vector<in_eT>::const_iterator in_begin = in.begin();
   typename std::vector<in_eT>::const_iterator in_end   = in.end();
   
-  typename Col<out_eT>::iterator out_begin = out.begin();
-  typename Col<out_eT>::iterator out_end   = out.end();
+  typename Row<out_eT>::iterator out_begin = out.begin();
+  typename Row<out_eT>::iterator out_end   = out.end();
   
   typename std::vector<in_eT>::const_iterator in_it;
-  typename Col<out_eT>::iterator              out_it;
+  typename Row<out_eT>::iterator              out_it;
   
   for(in_it = in_begin, out_it = out_begin; (in_it != in_end) && (out_it != out_end); ++in_it, ++out_it)
     {

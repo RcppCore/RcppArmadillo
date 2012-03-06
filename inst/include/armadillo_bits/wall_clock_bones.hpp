@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -34,11 +34,11 @@ class wall_clock
   #if defined(ARMA_USE_BOOST_DATE)
     boost::posix_time::ptime         boost_time1;
     boost::posix_time::time_duration boost_duration;
+  #elif defined(ARMA_HAVE_GETTIMEOFDAY)
+    struct timeval posix_time1;
+    struct timeval posix_time2;
   #else
-    #if defined(ARMA_HAVE_GETTIMEOFDAY)
-      struct timeval posix_time1;
-      struct timeval posix_time2;
-    #endif
+    clock_t time1;
   #endif
   
   };

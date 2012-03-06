@@ -1,5 +1,5 @@
-// Copyright (C) 2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2011 Conrad Sanderson
+// Copyright (C) 2011-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2011-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -49,7 +49,7 @@ syl
     arma_bad("syl(): equation appears to be singular", false);
     }
   
-  return false;
+  return status;
   }
 
 
@@ -70,8 +70,17 @@ syl
   
   typedef typename T1::elem_type eT;
   
+  const unwrap<T1> tmp_A( in_A.get_ref() );
+  const unwrap<T2> tmp_B( in_B.get_ref() );
+  const unwrap<T3> tmp_C( in_C.get_ref() );
+  
+  const Mat<eT>& A = tmp_A.M;
+  const Mat<eT>& B = tmp_B.M;
+  const Mat<eT>& C = tmp_C.M;
+  
   Mat<eT> out;
-  const bool status = syl(out, in_A, in_B, in_C);
+  
+  const bool status = auxlib::syl(out, A, B, C);
   
   if(status == false)
     {

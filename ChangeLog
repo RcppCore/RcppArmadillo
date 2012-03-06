@@ -1,3 +1,9 @@
+2012-03-05  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.2.36 
+	
+	* inst/include/*: Upgraded to new release 2.4.4 of Armadillo
+
 2012-02-17  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.2.35 (depending on Rcpp 0.9.10)

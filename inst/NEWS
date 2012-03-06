@@ -1,3 +1,11 @@
+0.2.36  2012-03-05
+
+    o   Upgraded to Armadillo release 2.4.4
+
+          * fixes for qr() and syl()
+          * more portable wall_clock class
+          * faster relational operators on submatrices
+
 0.2.35  2012-02-17
 
     o   Upgraded to Armadillo release 2.4.3
