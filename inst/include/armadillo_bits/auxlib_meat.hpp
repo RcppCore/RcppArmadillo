@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // Copyright (C) 2009 Edmund Highcock
 // Copyright (C) 2011 James Sanders
 // Copyright (C) 2011 Stanislav Funiak
@@ -2690,7 +2690,7 @@ auxlib::schur_dec(Mat<eT>& Z, Mat<eT>& T, const Mat<eT>& A)
   
   #if defined(ARMA_USE_LAPACK)
     {
-    arma_debug_check( (A.is_square() == false), "schur_dec(): matrix A is not square" );
+    arma_debug_check( (A.is_square() == false), "schur_dec(): given matrix is not square" );
     
     if(A.is_empty())
       {
@@ -2803,10 +2803,17 @@ auxlib::syl(Mat<eT>& X, const Mat<eT>& A, const Mat<eT>& B, const Mat<eT>& C)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (A.is_square() == false), "syl(): matrix A is not square" );
-  arma_debug_check( (B.is_square() == false), "syl(): matrix B is not square" );
-  
-  arma_debug_check( (C.n_rows != A.n_rows) || (C.n_cols != B.n_cols), "syl(): matrices are not conformant" );
+  arma_debug_check
+    (
+    (A.is_square() == false) || (B.is_square() == false),
+    "syl(): given matrix is not square"
+    );
+    
+  arma_debug_check
+    (
+    (C.n_rows != A.n_rows) || (C.n_cols != B.n_cols),
+    "syl(): matrices are not conformant"
+    );
   
   if(A.is_empty() || B.is_empty() || C.is_empty())
     {
@@ -2814,20 +2821,14 @@ auxlib::syl(Mat<eT>& X, const Mat<eT>& A, const Mat<eT>& B, const Mat<eT>& C)
     return true;
     }
   
-  bool status;
-  
   #if defined(ARMA_USE_LAPACK)
     {
     Mat<eT> Z1, Z2, T1, T2;
     
-    status = auxlib::schur_dec(Z1, T1, A);
-    if(status == false)
-      {
-      return false;
-      }
+    const bool status_sd1 = auxlib::schur_dec(Z1, T1, A);
+    const bool status_sd2 = auxlib::schur_dec(Z2, T2, B);
     
-    status = auxlib::schur_dec(Z2, T2, B);
-    if(status == false)
+    if( (status_sd1 == false) || (status_sd2 == false) )
       {
       return false;
       }
@@ -2850,7 +2851,7 @@ auxlib::syl(Mat<eT>& X, const Mat<eT>& A, const Mat<eT>& B, const Mat<eT>& C)
     
     X = Z1 * Y * trans(Z2);
     
-    status = (info == 0);
+    return (info >= 0);
     }
   #else
     {
@@ -2858,9 +2859,6 @@ auxlib::syl(Mat<eT>& X, const Mat<eT>& A, const Mat<eT>& B, const Mat<eT>& C)
     return false;
     }
   #endif
-  
-  
-  return status;
   }
   
   

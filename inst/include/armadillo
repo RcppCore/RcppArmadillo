@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -39,6 +39,10 @@
   #include <initializer_list>
 #endif
 
+
+#if !defined(ARMA_HAVE_GETTIMEOFDAY) && !defined(ARMA_USE_BOOST_DATE)
+  #include <ctime>
+#endif
 
 #if defined(ARMA_HAVE_GETTIMEOFDAY)
   #include <sys/time.h>

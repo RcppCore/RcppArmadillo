@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -43,17 +43,16 @@ wall_clock::tic()
     boost_time1 = boost::posix_time::microsec_clock::local_time();
     valid = true;
     }
+  #elif defined(ARMA_HAVE_GETTIMEOFDAY)
+    {
+    gettimeofday(&posix_time1, 0);
+    valid = true;
+    }
   #else
-    #if defined(ARMA_HAVE_GETTIMEOFDAY)
-      {
-      gettimeofday(&posix_time1, 0);
-      valid = true;
-      }
-    #else
-      {
-      arma_stop("wall_clock::tic(): need Boost libraries or POSIX gettimeofday()");
-      }
-    #endif
+    {
+    time1 = clock();
+    valid = true;
+    }
   #endif
   }
 
@@ -72,22 +71,23 @@ wall_clock::toc()
       boost_duration = boost::posix_time::microsec_clock::local_time() - boost_time1;
       return boost_duration.total_microseconds() * 1e-6;
       }
+    #elif defined(ARMA_HAVE_GETTIMEOFDAY)
+      {
+      gettimeofday(&posix_time2, 0);
+      
+      const double tmp_time1 = posix_time1.tv_sec + posix_time1.tv_usec * 1.0e-6;
+      const double tmp_time2 = posix_time2.tv_sec + posix_time2.tv_usec * 1.0e-6;
+      
+      return tmp_time2 - tmp_time1;
+      }
     #else
-      #if defined(ARMA_HAVE_GETTIMEOFDAY)
-        {
-        gettimeofday(&posix_time2, 0);
-        
-        const double tmp_time1 = posix_time1.tv_sec + posix_time1.tv_usec * 1.0e-6;
-        const double tmp_time2 = posix_time2.tv_sec + posix_time2.tv_usec * 1.0e-6;
-        
-        return tmp_time2 - tmp_time1;
-        }
-      #else
-        {
-        arma_stop("wall_clock::toc(): need Boost libraries or POSIX gettimeofday()");
-        return 0.0;
-        }
-      #endif
+      {
+      clock_t time2 = clock();
+      
+      clock_t diff = time2 - time1;
+      
+      return double(diff) / double(CLOCKS_PER_SEC);
+      }
     #endif
     }
   else
@@ -95,6 +95,8 @@ wall_clock::toc()
     return 0.0;
     }
   }
+
+
 
 //! @}
 

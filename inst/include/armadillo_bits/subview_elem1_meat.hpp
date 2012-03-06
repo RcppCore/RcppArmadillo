@@ -225,7 +225,7 @@ subview_elem1<eT,T1>::inplace_op(const Base<eT,T2>& x)
   
   arma_debug_check( (aa_n_elem != P.get_n_elem()), "Mat::elem(): size mismatch" );
   
-  if(P.is_alias(m) == false)
+  if( (P.is_alias(m) == false) && (Proxy<T2>::prefer_at_accessor == false) )
     {
     typename Proxy<T2>::ea_type X = P.get_ea();
     
@@ -259,7 +259,7 @@ subview_elem1<eT,T1>::inplace_op(const Base<eT,T2>& x)
     }
   else
     {
-    arma_extra_debug_print("subview_elem1::inplace_op(): aliasing detected");
+    arma_extra_debug_print("subview_elem1::inplace_op(): aliasing or prefer_at_accessor detected");
     
     const unwrap_check<typename Proxy<T2>::stored_type> tmp(P.Q, m_local);
     const Mat<eT>& M = tmp.M;
