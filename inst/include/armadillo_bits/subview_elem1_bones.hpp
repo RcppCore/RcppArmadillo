@@ -1,5 +1,5 @@
-// Copyright (C) 2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2010 Conrad Sanderson
+// Copyright (C) 2010-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -19,21 +19,21 @@
 template<typename eT, typename T1>
 class subview_elem1 : public Base<eT, subview_elem1<eT,T1> >
   {
-  public:    arma_aligned const Mat<eT>& m;
-  protected: arma_aligned       Mat<eT>* m_ptr;
-  
-  public:
+  public:    
   
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
+  static const bool is_row = false;
+  static const bool is_col = true;
+  
+  arma_aligned const Mat<eT>&        m;
   arma_aligned const Base<uword,T1>& a;
   
   
   protected:
   
   arma_inline subview_elem1(const Mat<eT>& in_m, const Base<uword,T1>& in_a);
-  arma_inline subview_elem1(      Mat<eT>& in_m, const Base<uword,T1>& in_a);
   
   
   public:
@@ -43,6 +43,10 @@ class subview_elem1 : public Base<eT, subview_elem1<eT,T1> >
   template<typename op_type>              inline void inplace_op(const eT                    val);
   template<typename op_type, typename T2> inline void inplace_op(const subview_elem1<eT,T2>& x  );
   template<typename op_type, typename T2> inline void inplace_op(const Base<eT,T2>&          x  );
+  
+  arma_inline const Op<subview_elem1<eT,T1>,op_htrans>  t() const;
+  arma_inline const Op<subview_elem1<eT,T1>,op_htrans> ht() const;
+  arma_inline const Op<subview_elem1<eT,T1>,op_strans> st() const;
   
   inline void fill(const eT val);
   inline void zeros();
@@ -85,14 +89,6 @@ class subview_elem1 : public Base<eT, subview_elem1<eT,T1> >
   friend class Mat<eT>;
   subview_elem1();
   };
-
-
-
-class op_subview_elem_equ;
-class op_subview_elem_inplace_plus;
-class op_subview_elem_inplace_minus;
-class op_subview_elem_inplace_schur;
-class op_subview_elem_inplace_div;
 
 
 

@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -19,11 +19,9 @@
 template<typename eT>
 inline
 Col<eT>::Col()
-  : Mat<eT>(0, 1)
+  : Mat<eT>(arma_vec_indicator(), 1)
   {
   arma_extra_debug_sigprint();
-  
-  access::rw(Mat<eT>::vec_state) = 1;
   }
 
 
@@ -31,11 +29,9 @@ Col<eT>::Col()
 template<typename eT>
 inline
 Col<eT>::Col(const Col<eT>& X)
-  : Mat<eT>(X.n_elem, 1)
+  : Mat<eT>(arma_vec_indicator(), X.n_elem, 1, 1)
   {
   arma_extra_debug_sigprint();
-  
-  access::rw(Mat<eT>::vec_state) = 1;
   
   arrayops::copy((*this).memptr(), X.memptr(), X.n_elem);
   }
@@ -46,11 +42,9 @@ Col<eT>::Col(const Col<eT>& X)
 template<typename eT>
 inline
 Col<eT>::Col(const uword in_n_elem)
-  : Mat<eT>(in_n_elem, 1)
+  : Mat<eT>(arma_vec_indicator(), in_n_elem, 1, 1)
   {
   arma_extra_debug_sigprint();
-  
-  access::rw(Mat<eT>::vec_state) = 1;
   }
 
 
@@ -58,10 +52,9 @@ Col<eT>::Col(const uword in_n_elem)
 template<typename eT>
 inline
 Col<eT>::Col(const uword in_n_rows, const uword in_n_cols)
+  : Mat<eT>(arma_vec_indicator(), 0, 0, 1)
   {
   arma_extra_debug_sigprint();
-  
-  access::rw(Mat<eT>::vec_state) = 1;
   
   Mat<eT>::init_warm(in_n_rows, in_n_cols);
   }
@@ -205,10 +198,9 @@ template<typename eT>
 template<typename T1>
 inline
 Col<eT>::Col(const Base<eT,T1>& X)
+  : Mat<eT>(arma_vec_indicator(), 1)
   {
   arma_extra_debug_sigprint();
-  
-  access::rw(Mat<eT>::vec_state) = 1;
   
   Mat<eT>::operator=(X.get_ref());
   }
@@ -336,6 +328,36 @@ mat_injector< Col<eT> >
 Col<eT>::operator<<(const eT val)
   {
   return mat_injector< Col<eT> >(*this, val);
+  }
+
+
+
+template<typename eT>
+arma_inline
+const Op<Col<eT>,op_htrans>
+Col<eT>::t() const
+  {
+  return Op<Col<eT>,op_htrans>(*this);
+  }
+
+
+
+template<typename eT>
+arma_inline
+const Op<Col<eT>,op_htrans>
+Col<eT>::ht() const
+  {
+  return Op<Col<eT>,op_htrans>(*this);
+  }
+
+
+
+template<typename eT>
+arma_inline
+const Op<Col<eT>,op_strans>
+Col<eT>::st() const
+  {
+  return Op<Col<eT>,op_strans>(*this);
   }
 
 
@@ -771,35 +793,6 @@ Col<eT>::fixed<fixed_n_elem>::fixed(const Base<pod_type,T1>& A, const Base<pod_t
 template<typename eT>
 template<uword fixed_n_elem>
 inline
-Col<eT>::fixed<fixed_n_elem>::fixed(eT* aux_mem, const bool copy_aux_mem)
-  {
-  arma_extra_debug_sigprint_this(this);
-  
-  access::rw(Mat<eT>::n_rows)    = fixed_n_elem;
-  access::rw(Mat<eT>::n_cols)    = 1;
-  access::rw(Mat<eT>::n_elem)    = fixed_n_elem;
-  access::rw(Mat<eT>::vec_state) = 1;
-  access::rw(Mat<eT>::mem_state) = 3;
-  
-  if(copy_aux_mem == true)
-    {
-    eT* dest = (use_extra) ? mem_local_extra : Mat<eT>::mem_local;
-    
-    access::rw(Mat<eT>::mem) = dest;
-    
-    arrayops::copy( dest, aux_mem, fixed_n_elem );
-    }
-  else
-    {
-    access::rw(Mat<eT>::mem) = aux_mem;
-    }
-  }
-
-
-
-template<typename eT>
-template<uword fixed_n_elem>
-inline
 Col<eT>::fixed<fixed_n_elem>::fixed(const eT* aux_mem)
   {
   arma_extra_debug_sigprint_this(this);
@@ -1009,7 +1002,7 @@ arma_warn_unused
 eT&
 Col<eT>::fixed<fixed_n_elem>::operator[] (const uword i)
   {
-  return access::rw( Mat<eT>::mem[i] );
+  return (use_extra) ? mem_local_extra[i] : Mat<eT>::mem_local[i];
   }
 
 
@@ -1021,7 +1014,7 @@ arma_warn_unused
 eT
 Col<eT>::fixed<fixed_n_elem>::operator[] (const uword i) const
   {
-  return ( Mat<eT>::mem[i] );
+  return (use_extra) ? mem_local_extra[i] : Mat<eT>::mem_local[i];
   }
 
 
@@ -1033,7 +1026,7 @@ arma_warn_unused
 eT&
 Col<eT>::fixed<fixed_n_elem>::at(const uword i)
   {
-  return access::rw( Mat<eT>::mem[i] );
+  return (use_extra) ? mem_local_extra[i] : Mat<eT>::mem_local[i];
   }
 
 
@@ -1045,7 +1038,7 @@ arma_warn_unused
 eT
 Col<eT>::fixed<fixed_n_elem>::at(const uword i) const
   {
-  return ( Mat<eT>::mem[i] );
+  return (use_extra) ? mem_local_extra[i] : Mat<eT>::mem_local[i];
   }
 
 
@@ -1057,9 +1050,9 @@ arma_warn_unused
 eT&
 Col<eT>::fixed<fixed_n_elem>::operator() (const uword i)
   {
-  arma_debug_check( (i >= fixed_n_elem), "Col::fixed::operator(): out of bounds");
+  arma_debug_check( (i >= fixed_n_elem), "Col::operator(): out of bounds");
   
-  return access::rw( Mat<eT>::mem[i] );
+  return (use_extra) ? mem_local_extra[i] : Mat<eT>::mem_local[i];
   }
 
 
@@ -1071,9 +1064,9 @@ arma_warn_unused
 eT
 Col<eT>::fixed<fixed_n_elem>::operator() (const uword i) const
   {
-  arma_debug_check( (i >= fixed_n_elem), "Col::fixed::operator(): out of bounds");
+  arma_debug_check( (i >= fixed_n_elem), "Col::operator(): out of bounds");
   
-  return ( Mat<eT>::mem[i] );
+  return (use_extra) ? mem_local_extra[i] : Mat<eT>::mem_local[i];
   }
 
 
@@ -1085,7 +1078,7 @@ arma_warn_unused
 eT&
 Col<eT>::fixed<fixed_n_elem>::at(const uword in_row, const uword in_col)
   {
-  return access::rw( Mat<eT>::mem[in_row] );
+  return (use_extra) ? mem_local_extra[in_row] : Mat<eT>::mem_local[in_row];
   }
 
 
@@ -1097,7 +1090,7 @@ arma_warn_unused
 eT
 Col<eT>::fixed<fixed_n_elem>::at(const uword in_row, const uword in_col) const
   {
-  return ( Mat<eT>::mem[in_row] );
+  return (use_extra) ? mem_local_extra[in_row] : Mat<eT>::mem_local[in_row];
   }
 
 
@@ -1109,9 +1102,9 @@ arma_warn_unused
 eT&
 Col<eT>::fixed<fixed_n_elem>::operator() (const uword in_row, const uword in_col)
   {
-  arma_debug_check( ((in_row >= fixed_n_elem) || (in_col >= 1)), "Col::fixed::operator(): out of bounds" );
+  arma_debug_check( ((in_row >= fixed_n_elem) || (in_col > 0)), "Col::operator(): out of bounds" );
   
-  return access::rw( Mat<eT>::mem[in_row] );
+  return (use_extra) ? mem_local_extra[in_row] : Mat<eT>::mem_local[in_row];
   }
 
 
@@ -1123,9 +1116,9 @@ arma_warn_unused
 eT
 Col<eT>::fixed<fixed_n_elem>::operator() (const uword in_row, const uword in_col) const
   {
-  arma_debug_check( ((in_row >= fixed_n_elem) || (in_col >= 1)), "Col::fixed::operator(): out of bounds" );
+  arma_debug_check( ((in_row >= fixed_n_elem) || (in_col > 0)), "Col::operator(): out of bounds" );
   
-  return ( Mat<eT>::mem[in_row] );
+  return (use_extra) ? mem_local_extra[in_row] : Mat<eT>::mem_local[in_row];
   }
 
 
@@ -1139,7 +1132,9 @@ Col<eT>::fixed<fixed_n_elem>::fill(const eT val)
   {
   arma_extra_debug_sigprint();
   
-  arrayops::inplace_set( const_cast<eT*>(Mat<eT>::mem), val, fixed_n_elem );
+  eT* mem_use = (use_extra) ? &(mem_local_extra[0]) : &(Mat<eT>::mem_local[0]);
+  
+  arrayops::inplace_set_fixed<eT,fixed_n_elem>( mem_use, val );
   
   return *this;
   }
@@ -1155,7 +1150,9 @@ Col<eT>::fixed<fixed_n_elem>::zeros()
   {
   arma_extra_debug_sigprint();
   
-  arrayops::inplace_set( const_cast<eT*>(Mat<eT>::mem), eT(0), fixed_n_elem );
+  eT* mem_use = (use_extra) ? &(mem_local_extra[0]) : &(Mat<eT>::mem_local[0]);
+  
+  arrayops::inplace_set_fixed<eT,fixed_n_elem>( mem_use, eT(0) );
   
   return *this;
   }
@@ -1171,7 +1168,9 @@ Col<eT>::fixed<fixed_n_elem>::ones()
   {
   arma_extra_debug_sigprint();
   
-  arrayops::inplace_set( const_cast<eT*>(Mat<eT>::mem), eT(1), fixed_n_elem );
+  eT* mem_use = (use_extra) ? &(mem_local_extra[0]) : &(Mat<eT>::mem_local[0]);
+  
+  arrayops::inplace_set_fixed<eT,fixed_n_elem>( mem_use, eT(1) );
   
   return *this;
   }

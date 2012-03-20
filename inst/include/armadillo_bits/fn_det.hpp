@@ -121,4 +121,15 @@ det
 
 
 
+template<typename T>
+arma_inline
+arma_warn_unused
+const typename arma_scalar_only<T>::result &
+det(const T& x)
+  {
+  return x;
+  }
+
+
+
 //! @}

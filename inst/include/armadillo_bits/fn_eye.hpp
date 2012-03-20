@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -17,25 +17,35 @@
 
 
 arma_inline
-const Gen<mat::elem_type, gen_ones_diag>
+const Gen<mat, gen_ones_diag>
 eye(const uword n_rows, const uword n_cols)
   {
   arma_extra_debug_sigprint();
   
-  return Gen<mat::elem_type, gen_ones_diag>(n_rows, n_cols);
+  return Gen<mat, gen_ones_diag>(n_rows, n_cols);
   }
 
 
 
-template<typename mat_type>
+template<typename obj_type>
 arma_inline
-const Gen<typename mat_type::elem_type, gen_ones_diag>
-eye(const uword n_rows, const uword n_cols, const typename arma_Mat_Col_Row_only<mat_type>::result* junk = 0)
+const Gen<obj_type, gen_ones_diag>
+eye(const uword n_rows, const uword n_cols, const typename arma_Mat_Col_Row_only<obj_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  return Gen<typename mat_type::elem_type, gen_ones_diag>(n_rows, n_cols);
+  if(is_Col<obj_type>::value == true)
+    {
+    arma_debug_check( (n_cols != 1), "eye(): incompatible size" );
+    }
+  else
+  if(is_Row<obj_type>::value == true)
+    {
+    arma_debug_check( (n_rows != 1), "eye(): incompatible size" );
+    }
+  
+  return Gen<obj_type, gen_ones_diag>(n_rows, n_cols);
   }
 
 

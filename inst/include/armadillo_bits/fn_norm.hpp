@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -20,51 +20,65 @@ template<typename T1>
 arma_hot
 inline
 typename T1::pod_type
-arma_vec_norm_1(const Proxy<T1>& A)
+arma_vec_norm_1(const Proxy<T1>& P)
   {
   arma_extra_debug_sigprint();
   
   typedef typename T1::pod_type T;
-
+  
   T acc = T(0);
-    
+  
   if(Proxy<T1>::prefer_at_accessor == false)
     {
-    typename Proxy<T1>::ea_type P = A.get_ea();
+    typename Proxy<T1>::ea_type A = P.get_ea();
     
-    const uword N = A.get_n_elem();
+    const uword N = P.get_n_elem();
+    
+    T acc1 = T(0);
+    T acc2 = T(0);
     
     uword i,j;
-    
     for(i=0, j=1; j<N; i+=2, j+=2)
       {
-      acc += std::abs(P[i]);
-      acc += std::abs(P[j]);
+      acc1 += std::abs(A[i]);
+      acc2 += std::abs(A[j]);
       }
     
     if(i < N)
       {
-      acc += std::abs(P[i]);
+      acc1 += std::abs(A[i]);
       }
+    
+    acc = acc1 + acc2;
     }
   else
     {
-    const uword n_rows = A.get_n_rows();
-    const uword n_cols = A.get_n_cols();
+    const uword n_rows = P.get_n_rows();
+    const uword n_cols = P.get_n_cols();
     
-    for(uword col=0; col<n_cols; ++col)
+    if(n_rows == 1)
       {
-      uword i,j;
-      
-      for(i=0, j=1; j<n_rows; i+=2, j+=2)
+      for(uword col=0; col<n_cols; ++col)
         {
-        acc += std::abs(A.at(i,col));
-        acc += std::abs(A.at(j,col));
+        acc += std::abs(P.at(0,col));
         }
-      
-      if(i < n_rows)
+      }
+    else
+      {
+      for(uword col=0; col<n_cols; ++col)
         {
-        acc += std::abs(A.at(i,col));
+        uword i,j;
+        
+        for(i=0, j=1; j<n_rows; i+=2, j+=2)
+          {
+          acc += std::abs(P.at(i,col));
+          acc += std::abs(P.at(j,col));
+          }
+        
+        if(i < n_rows)
+          {
+          acc += std::abs(P.at(i,col));
+          }
         }
       }
     }
@@ -78,7 +92,11 @@ template<typename T1>
 arma_hot
 inline
 typename T1::pod_type
-arma_vec_norm_2(const Proxy<T1>& A, const typename arma_not_cx<typename T1::elem_type>::result* junk = 0)
+arma_vec_norm_2
+  (
+  const Proxy<T1>& P,
+  const typename arma_not_cx<typename T1::elem_type>::result* junk = 0
+  )
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk);
@@ -89,51 +107,67 @@ arma_vec_norm_2(const Proxy<T1>& A, const typename arma_not_cx<typename T1::elem
   
   if(Proxy<T1>::prefer_at_accessor == false)
     {
-    typename Proxy<T1>::ea_type P = A.get_ea();
+    typename Proxy<T1>::ea_type A = P.get_ea();
     
-    const uword N = A.get_n_elem();
+    const uword N = P.get_n_elem();
+    
+    T acc1 = T(0);
+    T acc2 = T(0);
     
     uword i,j;
     
     for(i=0, j=1; j<N; i+=2, j+=2)
       {
-      const T tmp_i = P[i];
-      const T tmp_j = P[j];
+      const T tmp_i = A[i];
+      const T tmp_j = A[j];
       
-      acc += tmp_i * tmp_i;
-      acc += tmp_j * tmp_j;
+      acc1 += tmp_i * tmp_i;
+      acc2 += tmp_j * tmp_j;
       }
     
     if(i < N)
       {
-      const T tmp_i = P[i];
+      const T tmp_i = A[i];
       
-      acc += tmp_i * tmp_i;
+      acc1 += tmp_i * tmp_i;
       }
+    
+    acc = acc1 + acc2;
     }
   else
     {
-    const uword n_rows = A.get_n_rows();
-    const uword n_cols = A.get_n_cols();
+    const uword n_rows = P.get_n_rows();
+    const uword n_cols = P.get_n_cols();
     
-    for(uword col=0; col<n_cols; ++col)
+    if(n_rows == 1)
       {
-      uword i,j;
-      
-      for(i=0, j=1; j<n_rows; i+=2, j+=2)
+      for(uword col=0; col<n_cols; ++col)
         {
-        const T tmp_i = A.at(i,col);
-        const T tmp_j = A.at(j,col);
+        const T tmp = P.at(0,col);
         
-        acc += tmp_i * tmp_i;
-        acc += tmp_j * tmp_j;
+        acc += tmp * tmp;
         }
-      
-      if(i < n_rows)
+      }
+    else
+      {
+      for(uword col=0; col<n_cols; ++col)
         {
-        const T tmp_i = A.at(i,col);
+        uword i,j;
+        for(i=0, j=1; j<n_rows; i+=2, j+=2)
+          {
+          const T tmp_i = P.at(i,col);
+          const T tmp_j = P.at(j,col);
+          
+          acc += tmp_i * tmp_i;
+          acc += tmp_j * tmp_j;
+          }
         
-        acc += tmp_i * tmp_i;
+        if(i < n_rows)
+          {
+          const T tmp_i = P.at(i,col);
+          
+          acc += tmp_i * tmp_i;
+          }
         }
       }
     }
@@ -147,7 +181,11 @@ template<typename T1>
 arma_hot
 inline
 typename T1::pod_type
-arma_vec_norm_2(const Proxy<T1>& A, const typename arma_cx_only<typename T1::elem_type>::result* junk = 0)
+arma_vec_norm_2
+  (
+  const Proxy<T1>& P,
+  const typename arma_cx_only<typename T1::elem_type>::result* junk = 0
+  )
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk);
@@ -158,26 +196,37 @@ arma_vec_norm_2(const Proxy<T1>& A, const typename arma_cx_only<typename T1::ele
   
   if(Proxy<T1>::prefer_at_accessor == false)
     {
-    typename Proxy<T1>::ea_type P = A.get_ea();
+    typename Proxy<T1>::ea_type A = P.get_ea();
     
-    const uword N = A.get_n_elem();
+    const uword N = P.get_n_elem();
     
     for(uword i=0; i<N; ++i)
       {
-      const T tmp = std::abs(P[i]);
+      const T tmp = std::abs(A[i]);
       acc += tmp*tmp;
       }
     }
   else
     {
-    const uword n_rows = A.get_n_rows();
-    const uword n_cols = A.get_n_cols();
+    const uword n_rows = P.get_n_rows();
+    const uword n_cols = P.get_n_cols();
     
-    for(uword col=0; col<n_cols; ++col)
-    for(uword row=0; row<n_rows; ++row)
+    if(n_rows == 1)
       {
-      const T tmp = std::abs(A.at(row,col));
-      acc += tmp*tmp;
+      for(uword col=0; col<n_cols; ++col)
+        {
+        const T tmp = std::abs(P.at(0,col));
+        acc += tmp*tmp;
+        }
+      }
+    else
+      {
+      for(uword col=0; col<n_cols; ++col)
+      for(uword row=0; row<n_rows; ++row)
+        {
+        const T tmp = std::abs(P.at(row,col));
+        acc += tmp*tmp;
+        }
       }
     }
   
@@ -190,7 +239,11 @@ template<typename T1>
 arma_hot
 inline
 typename T1::pod_type
-arma_vec_norm_k(const Proxy<T1>& A, const int k)
+arma_vec_norm_k
+  (
+  const Proxy<T1>& P,
+  const int k
+  )
   {
   arma_extra_debug_sigprint();
   
@@ -200,32 +253,42 @@ arma_vec_norm_k(const Proxy<T1>& A, const int k)
   
   if(Proxy<T1>::prefer_at_accessor == false)
     {
-    typename Proxy<T1>::ea_type P = A.get_ea();
+    typename Proxy<T1>::ea_type A = P.get_ea();
     
-    const uword N = A.get_n_elem();
+    const uword N = P.get_n_elem();
     
     uword i,j;
     
     for(i=0, j=1; j<N; i+=2, j+=2)
       {
-      acc += std::pow(std::abs(P[i]), k);
-      acc += std::pow(std::abs(P[j]), k);
+      acc += std::pow(std::abs(A[i]), k);
+      acc += std::pow(std::abs(A[j]), k);
       }
     
     if(i < N)
       {
-      acc += std::pow(std::abs(P[i]), k);
+      acc += std::pow(std::abs(A[i]), k);
       }
     }
   else
     {
-    const uword n_rows = A.get_n_rows();
-    const uword n_cols = A.get_n_cols();
+    const uword n_rows = P.get_n_rows();
+    const uword n_cols = P.get_n_cols();
     
-    for(uword col=0; col<n_cols; ++col)
-    for(uword row=0; row<n_rows; ++row)
+    if(n_rows != 1)
       {
-      acc += std::pow(std::abs(A.at(row,col)), k);
+      for(uword col=0; col < n_cols; ++col)
+      for(uword row=0; row < n_rows; ++row)
+        {
+        acc += std::pow(std::abs(P.at(row,col)), k);
+        }
+      }
+    else
+      {
+      for(uword col=0; col < n_cols; ++col)
+        {
+        acc += std::pow(std::abs(P.at(0,col)), k);
+        }
       }
     }
   
@@ -238,34 +301,61 @@ template<typename T1>
 arma_hot
 inline
 typename T1::pod_type
-arma_vec_norm_max(const Proxy<T1>& A)
+arma_vec_norm_max(const Proxy<T1>& P)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::pod_type       T;
-  typedef typename Proxy<T1>::ea_type ea_type;
+  typedef typename T1::pod_type T;
   
-        ea_type P = A.get_ea();
-  const uword     N = A.get_n_elem();
+  const uword N = P.get_n_elem();
   
   T max_val = (N != 1) ? priv::most_neg<T>() : std::abs(P[0]);
   
-  uword i,j;
-  
-  for(i=0, j=1; j<N; i+=2, j+=2)
+  if(Proxy<T1>::prefer_at_accessor == false)
     {
-    const T tmp_i = std::abs(P[i]);
-    const T tmp_j = std::abs(P[j]);
+    typename Proxy<T1>::ea_type A = P.get_ea();
     
-    if(max_val < tmp_i) { max_val = tmp_i; }
-    if(max_val < tmp_j) { max_val = tmp_j; }
+    uword i,j;
+    for(i=0, j=1; j<N; i+=2, j+=2)
+      {
+      const T tmp_i = std::abs(A[i]);
+      const T tmp_j = std::abs(A[j]);
+      
+      if(max_val < tmp_i) { max_val = tmp_i; }
+      if(max_val < tmp_j) { max_val = tmp_j; }
+      }
+    
+    if(i < N)
+      {
+      const T tmp_i = std::abs(A[i]);
+      
+      if(max_val < tmp_i) { max_val = tmp_i; }
+      }
     }
-  
-  if(i < N)
+  else
     {
-    const T tmp_i = std::abs(P[i]);
+    const uword n_rows = P.get_n_rows();
+    const uword n_cols = P.get_n_cols();
     
-    if(max_val < tmp_i) { max_val = tmp_i; }
+    if(n_rows != 1)
+      {
+      for(uword col=0; col < n_cols; ++col)
+      for(uword row=0; row < n_rows; ++row)
+        {
+        const T tmp = std::abs(P.at(row,col));
+        
+        if(max_val < tmp) { max_val = tmp; }
+        }
+      }
+    else
+      {
+      for(uword col=0; col < n_cols; ++col)
+        {
+        const T tmp = std::abs(P.at(0,col));
+        
+        if(max_val < tmp) { max_val = tmp; }
+        }
+      }
     }
   
   return max_val;
@@ -277,34 +367,61 @@ template<typename T1>
 arma_hot
 inline
 typename T1::pod_type
-arma_vec_norm_min(const Proxy<T1>& A)
+arma_vec_norm_min(const Proxy<T1>& P)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::pod_type       T;
-  typedef typename Proxy<T1>::ea_type ea_type;
+  typedef typename T1::pod_type T;
   
-        ea_type P = A.get_ea();
-  const uword     N = A.get_n_elem();
+  const uword N = P.get_n_elem();
   
   T min_val = (N != 1) ? priv::most_pos<T>() : std::abs(P[0]);
   
-  uword i,j;
-  
-  for(i=0, j=1; j<N; i+=2, j+=2)
+  if(Proxy<T1>::prefer_at_accessor == false)
     {
-    const T tmp_i = std::abs(P[i]);
-    const T tmp_j = std::abs(P[j]);
+    typename Proxy<T1>::ea_type A = P.get_ea();
     
-    if(min_val > tmp_i) { min_val = tmp_i; }
-    if(min_val > tmp_j) { min_val = tmp_j; }
+    uword i,j;
+    for(i=0, j=1; j<N; i+=2, j+=2)
+      {
+      const T tmp_i = std::abs(A[i]);
+      const T tmp_j = std::abs(A[j]);
+      
+      if(min_val > tmp_i) { min_val = tmp_i; }
+      if(min_val > tmp_j) { min_val = tmp_j; }
+      }
+    
+    if(i < N)
+      {
+      const T tmp_i = std::abs(A[i]);
+      
+      if(min_val > tmp_i) { min_val = tmp_i; }
+      }
     }
-  
-  if(i < N)
+  else
     {
-    const T tmp_i = std::abs(P[i]);
+    const uword n_rows = P.get_n_rows();
+    const uword n_cols = P.get_n_cols();
     
-    if(min_val > tmp_i) { min_val = tmp_i; }
+    if(n_rows != 1)
+      {
+      for(uword col=0; col < n_cols; ++col)
+      for(uword row=0; row < n_rows; ++row)
+        {
+        const T tmp = std::abs(P.at(row,col));
+        
+        if(min_val > tmp) { min_val = tmp; }
+        }
+      }
+    else
+      {
+      for(uword col=0; col < n_cols; ++col)
+        {
+        const T tmp = std::abs(P.at(0,col));
+        
+        if(min_val > tmp) { min_val = tmp; }
+        }
+      }
     }
   
   return min_val;
@@ -315,14 +432,14 @@ arma_vec_norm_min(const Proxy<T1>& A)
 template<typename T1>
 inline
 typename T1::pod_type
-arma_mat_norm_1(const Proxy<T1>& A)
+arma_mat_norm_1(const Proxy<T1>& P)
   {
   arma_extra_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
   
-  const unwrap<typename Proxy<T1>::stored_type> tmp(A.Q);
+  const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
   const Mat<eT>& X = tmp.M;
   
   // TODO: this can be sped up with a dedicated implementation
@@ -334,14 +451,14 @@ arma_mat_norm_1(const Proxy<T1>& A)
 template<typename T1>
 inline
 typename T1::pod_type
-arma_mat_norm_2(const Proxy<T1>& A)
+arma_mat_norm_2(const Proxy<T1>& P)
   {
   arma_extra_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
   
-  const unwrap<typename Proxy<T1>::stored_type> tmp(A.Q);
+  const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
   const Mat<eT>& X = tmp.M;
   
   Col<T> S;
@@ -355,14 +472,14 @@ arma_mat_norm_2(const Proxy<T1>& A)
 template<typename T1>
 inline
 typename T1::pod_type
-arma_mat_norm_inf(const Proxy<T1>& A)
+arma_mat_norm_inf(const Proxy<T1>& P)
   {
   arma_extra_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
   
-  const unwrap<typename Proxy<T1>::stored_type> tmp(A.Q);
+  const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
   const Mat<eT>& X = tmp.M;
   
   // TODO: this can be sped up with a dedicated implementation
@@ -388,31 +505,31 @@ norm
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
   
-  const Proxy<T1> A(X.get_ref());
+  const Proxy<T1> P(X.get_ref());
   
-  if(A.get_n_elem() == 0)
+  if(P.get_n_elem() == 0)
     {
     return T(0);
     }
   
-  const bool is_vec = (A.get_n_rows() == 1) || (A.get_n_cols() == 1);
+  const bool is_vec = (P.get_n_rows() == 1) || (P.get_n_cols() == 1);
   
   if(is_vec == true)
     {
     switch(k)
       {
       case 1:
-        return arma_vec_norm_1(A);
+        return arma_vec_norm_1(P);
         break;
       
       case 2:
-        return arma_vec_norm_2(A);
+        return arma_vec_norm_2(P);
         break;
       
       default:
         {
         arma_debug_check( (k == 0), "norm(): k must be greater than zero"   );
-        return arma_vec_norm_k(A, int(k));
+        return arma_vec_norm_k(P, int(k));
         }
       }
     }
@@ -421,11 +538,11 @@ norm
     switch(k)
       {
       case 1:
-        return arma_mat_norm_1(A);
+        return arma_mat_norm_1(P);
         break;
       
       case 2:
-        return arma_mat_norm_2(A);
+        return arma_mat_norm_2(P);
         break;
       
       default:
@@ -454,31 +571,31 @@ norm
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
   
-  const Proxy<T1> A(X.get_ref());
+  const Proxy<T1> P(X.get_ref());
   
-  if(A.get_n_elem() == 0)
+  if(P.get_n_elem() == 0)
     {
     return T(0);
     }
   
   const char sig    = method[0];
-  const bool is_vec = (A.get_n_rows() == 1) || (A.get_n_cols() == 1);
+  const bool is_vec = (P.get_n_rows() == 1) || (P.get_n_cols() == 1);
   
   if(is_vec == true)
     {
     if( (sig == 'i') || (sig == 'I') || (sig == '+') )   // max norm
       {
-      return arma_vec_norm_max(A);
+      return arma_vec_norm_max(P);
       }
     else
     if(sig == '-')   // min norm
       {
-      return arma_vec_norm_min(A);
+      return arma_vec_norm_min(P);
       }
     else
     if( (sig == 'f') || (sig == 'F') )
       {
-      return arma_vec_norm_2(A);
+      return arma_vec_norm_2(P);
       }
     else
       {
@@ -490,12 +607,12 @@ norm
     {
     if( (sig == 'i') || (sig == 'I') || (sig == '+') )   // inf norm
       {
-      return arma_mat_norm_inf(A);
+      return arma_mat_norm_inf(P);
       }
     else
     if( (sig == 'f') || (sig == 'F') )
       {
-      return arma_vec_norm_2(A);
+      return arma_vec_norm_2(P);
       }
     else
       {

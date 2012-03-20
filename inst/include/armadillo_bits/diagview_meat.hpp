@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -27,22 +27,6 @@ template<typename eT>
 arma_inline
 diagview<eT>::diagview(const Mat<eT>& in_m, const uword in_row_offset, const uword in_col_offset, const uword in_len)
   : m(in_m)
-  , m_ptr(0)
-  , row_offset(in_row_offset)
-  , col_offset(in_col_offset)
-  , n_rows(in_len)
-  , n_elem(in_len)
-  {
-  arma_extra_debug_sigprint();
-  }
-
-
-
-template<typename eT>
-arma_inline
-diagview<eT>::diagview(Mat<eT>& in_m, const uword in_row_offset, const uword in_col_offset, const uword in_len)
-  : m(in_m)
-  , m_ptr(&in_m)
   , row_offset(in_row_offset)
   , col_offset(in_col_offset)
   , n_rows(in_len)
@@ -65,7 +49,7 @@ diagview<eT>::operator= (const diagview<eT>& x)
   
   arma_debug_check( (t.n_elem != x.n_elem), "diagview: diagonals have incompatible lengths");
   
-        Mat<eT>& t_m = *(t.m_ptr);
+        Mat<eT>& t_m = const_cast< Mat<eT>& >(t.m);
   const Mat<eT>& x_m = x.m;
   
   if(&t_m != &x_m)
@@ -109,7 +93,7 @@ diagview<eT>::operator+=(const eT val)
   {
   arma_extra_debug_sigprint();
   
-  Mat<eT>& t_m = (*m_ptr);
+  Mat<eT>& t_m = const_cast< Mat<eT>& >(m);
   
   const uword t_n_elem     = n_elem;
   const uword t_row_offset = row_offset;
@@ -130,7 +114,7 @@ diagview<eT>::operator-=(const eT val)
   {
   arma_extra_debug_sigprint();
   
-  Mat<eT>& t_m = (*m_ptr);
+  Mat<eT>& t_m = const_cast< Mat<eT>& >(m);
   
   const uword t_n_elem     = n_elem;
   const uword t_row_offset = row_offset;
@@ -151,7 +135,7 @@ diagview<eT>::operator*=(const eT val)
   {
   arma_extra_debug_sigprint();
   
-  Mat<eT>& t_m = (*m_ptr);
+  Mat<eT>& t_m = const_cast< Mat<eT>& >(m);
   
   const uword t_n_elem     = n_elem;
   const uword t_row_offset = row_offset;
@@ -172,7 +156,7 @@ diagview<eT>::operator/=(const eT val)
   {
   arma_extra_debug_sigprint();
   
-  Mat<eT>& t_m = (*m_ptr);
+  Mat<eT>& t_m = const_cast< Mat<eT>& >(m);
   
   const uword t_n_elem     = n_elem;
   const uword t_row_offset = row_offset;
@@ -206,7 +190,7 @@ diagview<eT>::operator= (const Base<eT,T1>& o)
     "diagview: given object has incompatible size"
     );
   
-  Mat<eT>& t_m = *(t.m_ptr);
+  Mat<eT>& t_m = const_cast< Mat<eT>& >(t.m);
   
   const uword t_n_elem     = t.n_elem;
   const uword t_row_offset = t.row_offset;
@@ -251,7 +235,7 @@ diagview<eT>::operator+=(const Base<eT,T1>& o)
     "diagview: given object has incompatible size"
     );
   
-  Mat<eT>& t_m = *(t.m_ptr);
+  Mat<eT>& t_m = const_cast< Mat<eT>& >(t.m);
   
   const uword t_n_elem     = t.n_elem;
   const uword t_row_offset = t.row_offset;
@@ -296,7 +280,7 @@ diagview<eT>::operator-=(const Base<eT,T1>& o)
     "diagview: given object has incompatible size"
     );
   
-  Mat<eT>& t_m = *(t.m_ptr);
+  Mat<eT>& t_m = const_cast< Mat<eT>& >(t.m);
   
   const uword t_n_elem     = t.n_elem;
   const uword t_row_offset = t.row_offset;
@@ -341,7 +325,7 @@ diagview<eT>::operator%=(const Base<eT,T1>& o)
     "diagview: given object has incompatible size"
     );
   
-  Mat<eT>& t_m = *(t.m_ptr);
+  Mat<eT>& t_m = const_cast< Mat<eT>& >(t.m);
   
   const uword t_n_elem     = t.n_elem;
   const uword t_row_offset = t.row_offset;
@@ -386,7 +370,7 @@ diagview<eT>::operator/=(const Base<eT,T1>& o)
     "diagview: given object has incompatible size"
     );
   
-  Mat<eT>& t_m = *(t.m_ptr);
+  Mat<eT>& t_m = const_cast< Mat<eT>& >(t.m);
   
   const uword t_n_elem     = t.n_elem;
   const uword t_row_offset = t.row_offset;
@@ -598,7 +582,7 @@ arma_inline
 eT&
 diagview<eT>::operator[](const uword i)
   {
-  return (*m_ptr).at(i+row_offset, i+col_offset);
+  return (const_cast< Mat<eT>& >(m)).at(i+row_offset, i+col_offset);
   }
 
 
@@ -618,7 +602,7 @@ arma_inline
 eT&
 diagview<eT>::at(const uword i)
   {
-  return (*m_ptr).at(i+row_offset, i+col_offset);
+  return (const_cast< Mat<eT>& >(m)).at(i+row_offset, i+col_offset);
   }
 
 
@@ -640,7 +624,7 @@ diagview<eT>::operator()(const uword i)
   {
   arma_debug_check( (i >= n_elem), "diagview::operator(): out of bounds" );
   
-  return (*m_ptr).at(i+row_offset, i+col_offset);
+  return (const_cast< Mat<eT>& >(m)).at(i+row_offset, i+col_offset);
   }
 
 
@@ -660,9 +644,9 @@ diagview<eT>::operator()(const uword i) const
 template<typename eT>
 arma_inline
 eT&
-diagview<eT>::at(const uword row, const uword col)
+diagview<eT>::at(const uword row, const uword)
   {
-  return (*m_ptr).at(row+row_offset, row+col_offset);
+  return (const_cast< Mat<eT>& >(m)).at(row+row_offset, row+col_offset);
   }
 
 
@@ -670,7 +654,7 @@ diagview<eT>::at(const uword row, const uword col)
 template<typename eT>
 arma_inline
 eT
-diagview<eT>::at(const uword row, const uword col) const
+diagview<eT>::at(const uword row, const uword) const
   {
   return m.at(row+row_offset, row+col_offset);
   }
@@ -684,7 +668,7 @@ diagview<eT>::operator()(const uword row, const uword col)
   {
   arma_debug_check( ((row >= n_elem) || (col > 0)), "diagview::operator(): out of bounds" );
   
-  return (*m_ptr).at(row+row_offset, row+col_offset);
+  return (const_cast< Mat<eT>& >(m)).at(row+row_offset, row+col_offset);
   }
 
 
@@ -702,13 +686,43 @@ diagview<eT>::operator()(const uword row, const uword col) const
 
 
 template<typename eT>
+arma_inline
+const Op<diagview<eT>,op_htrans>
+diagview<eT>::t() const
+  {
+  return Op<diagview<eT>,op_htrans>(*this);
+  }
+
+
+
+template<typename eT>
+arma_inline
+const Op<diagview<eT>,op_htrans>
+diagview<eT>::ht() const
+  {
+  return Op<diagview<eT>,op_htrans>(*this);
+  }
+
+
+
+template<typename eT>
+arma_inline
+const Op<diagview<eT>,op_strans>
+diagview<eT>::st() const
+  {
+  return Op<diagview<eT>,op_strans>(*this);
+  }
+
+
+
+template<typename eT>
 inline
 void
 diagview<eT>::fill(const eT val)
   {
   arma_extra_debug_sigprint();
   
-  Mat<eT>& x = (*m_ptr);
+  Mat<eT>& x = const_cast< Mat<eT>& >(m);
   
   for(uword i=0; i<n_elem; ++i)
     {

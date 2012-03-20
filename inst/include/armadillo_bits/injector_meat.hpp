@@ -91,7 +91,7 @@ mat_injector<T1>::mat_injector(T1& in_X, const typename mat_injector<T1>::elem_t
 
 template<typename T1>
 inline
-mat_injector<T1>::mat_injector(T1& in_X, const injector_end_of_row& x)
+mat_injector<T1>::mat_injector(T1& in_X, const injector_end_of_row<>& x)
   : X(in_X)
   , n_rows(1)
   {
@@ -277,7 +277,7 @@ operator<<(const mat_injector<T1>& ref, const typename mat_injector<T1>::elem_ty
 template<typename T1>
 arma_inline
 const mat_injector<T1>&
-operator<<(const mat_injector<T1>& ref, const injector_end_of_row& x)
+operator<<(const mat_injector<T1>& ref, const injector_end_of_row<>& x)
   {
   arma_extra_debug_sigprint();
   arma_ignore(x);
@@ -311,7 +311,7 @@ operator<<(const mat_injector<T1>& ref, const injector_end_of_row& x)
 // template<typename T1>
 // arma_inline
 // const mat_injector<T1>&
-// operator,(const mat_injector<T1>& ref, const injector_end_of_row& x)
+// operator,(const mat_injector<T1>& ref, const injector_end_of_row<>& x)
 //   {
 //   arma_extra_debug_sigprint();
 //   arma_ignore(x);
@@ -426,7 +426,7 @@ field_injector<T1>::field_injector(T1& in_X, const typename field_injector<T1>::
 
 template<typename T1>
 inline
-field_injector<T1>::field_injector(T1& in_X, const injector_end_of_row& x)
+field_injector<T1>::field_injector(T1& in_X, const injector_end_of_row<>& x)
   : X(in_X)
   , n_rows(1)
   {
@@ -574,7 +574,7 @@ operator<<(const field_injector<T1>& ref, const typename field_injector<T1>::obj
 template<typename T1>
 arma_inline
 const field_injector<T1>&
-operator<<(const field_injector<T1>& ref, const injector_end_of_row& x)
+operator<<(const field_injector<T1>& ref, const injector_end_of_row<>& x)
   {
   arma_extra_debug_sigprint();
   arma_ignore(x);

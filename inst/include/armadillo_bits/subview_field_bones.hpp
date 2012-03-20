@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -20,12 +20,11 @@
 template<typename oT>
 class subview_field
   {
-  public:  const field<oT>& f;
-  protected:     field<oT>* f_ptr;
-  
-  public:
+  public:  
   
   typedef oT object_type;
+  
+  const field<oT>& f;
   
   const uword aux_row1;
   const uword aux_col1;
@@ -38,7 +37,6 @@ class subview_field
   protected:
   
   arma_inline subview_field(const field<oT>& in_f, const uword in_row1, const uword in_col1, const uword in_n_rows, const uword in_n_cols);
-  arma_inline subview_field(      field<oT>& in_f, const uword in_row1, const uword in_col1, const uword in_n_rows, const uword in_n_cols);
   
   
   public:

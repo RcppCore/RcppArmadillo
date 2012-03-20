@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -18,11 +18,69 @@
 template<typename T1>
 arma_inline
 const Op<T1, op_htrans>
-trans(const Base<typename T1::elem_type,T1>& X)
+trans
+  (
+  const Base<typename T1::elem_type,T1>& X,
+  const typename enable_if<is_basevec<T1>::value == false>::result* junk = 0
+  )
   {
   arma_extra_debug_sigprint();
+  arma_ignore(junk);
   
   return Op<T1, op_htrans>(X.get_ref());
+  }
+
+
+
+template<typename T1>
+arma_inline
+arma_warn_unused
+const Op<T1, op_htrans>
+trans
+  (
+  const T1& X,
+  const typename enable_if<is_basevec<T1>::value == true>::result* junk = 0
+  )
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  return Op<T1, op_htrans>(X);
+  }
+
+
+
+template<typename T1>
+arma_inline
+const Op<T1, op_htrans>
+htrans
+  (
+  const Base<typename T1::elem_type,T1>& X,
+  const typename enable_if<is_basevec<T1>::value == false>::result* junk = 0
+  )
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  return Op<T1, op_htrans>(X.get_ref());
+  }
+
+
+
+template<typename T1>
+arma_inline
+arma_warn_unused
+const Op<T1, op_htrans>
+htrans
+  (
+  const T1& X,
+  const typename enable_if<is_basevec<T1>::value == true>::result* junk = 0
+  )
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  return Op<T1, op_htrans>(X);
   }
 
 
@@ -41,19 +99,6 @@ trans(const Op<T1, op_htrans>& X)
 
 
 
-template<typename T1>
-arma_inline
-const Op<T1, op_htrans>
-htrans(const Base<typename T1::elem_type,T1>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  return Op<T1, op_htrans>(X.get_ref());
-  }
-
-
-
-//! two consecutive hermitian transpose operations cancel each other
 template<typename T1>
 arma_inline
 const T1&

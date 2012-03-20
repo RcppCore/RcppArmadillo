@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -20,13 +20,12 @@
 template<typename eT>
 class subview_cube : public BaseCube<eT, subview_cube<eT> >
   {
-  public:    arma_aligned const Cube<eT>& m;
-  protected: arma_aligned       Cube<eT>* m_ptr;
-  
-  public:
+  public:    
   
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
+  
+  arma_aligned const Cube<eT>& m;
   
   const uword aux_row1;
   const uword aux_col1;
@@ -42,7 +41,6 @@ class subview_cube : public BaseCube<eT, subview_cube<eT> >
   protected:
   
   arma_inline subview_cube(const Cube<eT>& in_m, const uword in_row1, const uword in_col1, const uword in_slice1, const uword in_n_rows, const uword in_n_cols, const uword in_n_slices);
-  arma_inline subview_cube(      Cube<eT>& in_m, const uword in_row1, const uword in_col1, const uword in_slice1, const uword in_n_rows, const uword in_n_cols, const uword in_n_slices);
   
   
   public:

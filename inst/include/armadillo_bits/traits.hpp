@@ -341,6 +341,42 @@ struct is_op_rel< mtOp<out_eT, T1, op_rel_noteq> >
 
 
 
+template<typename T>
+struct is_basevec
+  { static const bool value = false; };
+
+template<typename eT>
+struct is_basevec< Row<eT> >
+  { static const bool value = true; };
+
+template<typename eT>
+struct is_basevec< Col<eT> >
+  { static const bool value = true; };
+
+template<typename eT>
+struct is_basevec< subview_row<eT> >
+  { static const bool value = true; };
+
+template<typename eT>
+struct is_basevec< subview_col<eT> >
+  { static const bool value = true; };
+
+template<typename eT>
+struct is_basevec< diagview<eT> >
+  { static const bool value = true; };
+
+template<typename eT, typename T1>
+struct is_basevec< subview_elem1<eT,T1> >
+  { static const bool value = true; };
+
+
+
+//
+//
+//
+
+
+
 template<typename T1>
 struct is_arma_type
   {
@@ -668,5 +704,57 @@ struct force_different_type<T1,T1>
   };
   
   
+
+//
+
+
+
+template<typename T1>
+struct resolves_to_vector
+  { static const bool value = T1::is_col || T1::is_row; };
+
+
+
+template<typename glue_type> struct is_glue_mixed_times                   { static const bool value = false; };
+template<>                   struct is_glue_mixed_times<glue_mixed_times> { static const bool value = true;  };
+
+
+
+template<typename glue_type> struct is_glue_mixed_elem { static const bool value = false; };
+
+template<>                   struct is_glue_mixed_elem<glue_mixed_plus>  { static const bool value = true;  };
+template<>                   struct is_glue_mixed_elem<glue_mixed_minus> { static const bool value = true;  };
+template<>                   struct is_glue_mixed_elem<glue_mixed_div>   { static const bool value = true;  };
+template<>                   struct is_glue_mixed_elem<glue_mixed_schur> { static const bool value = true;  };
+
+template<>                   struct is_glue_mixed_elem<glue_rel_lt>    { static const bool value = true; };
+template<>                   struct is_glue_mixed_elem<glue_rel_gt>    { static const bool value = true; };
+template<>                   struct is_glue_mixed_elem<glue_rel_lteq>  { static const bool value = true; };
+template<>                   struct is_glue_mixed_elem<glue_rel_gteq>  { static const bool value = true; };
+template<>                   struct is_glue_mixed_elem<glue_rel_eq>    { static const bool value = true; };
+template<>                   struct is_glue_mixed_elem<glue_rel_noteq> { static const bool value = true; };
+
+
+
+template<typename op_type> struct is_op_mixed_elem { static const bool value = false; };
+
+template<>                 struct is_op_mixed_elem<op_cx_scalar_times>      { static const bool value = true; };
+template<>                 struct is_op_mixed_elem<op_cx_scalar_plus>       { static const bool value = true; };
+template<>                 struct is_op_mixed_elem<op_cx_scalar_minus_pre>  { static const bool value = true; };
+template<>                 struct is_op_mixed_elem<op_cx_scalar_minus_post> { static const bool value = true; };
+template<>                 struct is_op_mixed_elem<op_cx_scalar_div_pre>    { static const bool value = true; };
+template<>                 struct is_op_mixed_elem<op_cx_scalar_div_post>   { static const bool value = true; };
+
+template<>                 struct is_op_mixed_elem<op_rel_lt_pre>    { static const bool value = true; };
+template<>                 struct is_op_mixed_elem<op_rel_lt_post>   { static const bool value = true; };
+template<>                 struct is_op_mixed_elem<op_rel_gt_pre>    { static const bool value = true; };
+template<>                 struct is_op_mixed_elem<op_rel_gt_post>   { static const bool value = true; };
+template<>                 struct is_op_mixed_elem<op_rel_lteq_pre>  { static const bool value = true; };
+template<>                 struct is_op_mixed_elem<op_rel_lteq_post> { static const bool value = true; };
+template<>                 struct is_op_mixed_elem<op_rel_gteq_pre>  { static const bool value = true; };
+template<>                 struct is_op_mixed_elem<op_rel_gteq_post> { static const bool value = true; };
+template<>                 struct is_op_mixed_elem<op_rel_eq>        { static const bool value = true; };
+template<>                 struct is_op_mixed_elem<op_rel_noteq>     { static const bool value = true; };
+
 
 //! @}

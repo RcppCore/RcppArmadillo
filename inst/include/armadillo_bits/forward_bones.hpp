@@ -43,6 +43,7 @@ class op_max;
 
 class op_strans;
 class op_htrans;
+class op_htrans2;
 class op_inv;
 class op_sum;
 class op_abs;
@@ -78,6 +79,28 @@ class gen_zeros;
 class gen_randu;
 class gen_randn;
 
+class glue_mixed_plus;
+class glue_mixed_minus;
+class glue_mixed_div;
+class glue_mixed_schur;
+class glue_mixed_times;
+
+class op_cx_scalar_times;
+class op_cx_scalar_plus;
+class op_cx_scalar_minus_pre;
+class op_cx_scalar_minus_post;
+class op_cx_scalar_div_pre;
+class op_cx_scalar_div_post;
+
+
+
+class op_subview_elem_equ;
+class op_subview_elem_inplace_plus;
+class op_subview_elem_inplace_minus;
+class op_subview_elem_inplace_schur;
+class op_subview_elem_inplace_div;
+
+
 
 template<const bool, const bool, const bool, const bool> class gemm;
 template<const bool, const bool, const bool>             class gemv;
@@ -110,14 +133,16 @@ template<typename T1> class Proxy;
 template<typename T1> class ProxyCube;
 
 
+struct arma_vec_indicator {};
+
+
 
 //! \addtogroup injector
 //! @{
 
+template<typename Dummy = int> struct injector_end_of_row {};
 
-struct injector_end_of_row {};
-
-static const injector_end_of_row endr = injector_end_of_row();
+static const injector_end_of_row<> endr = injector_end_of_row<>();
 //!< endr indicates "end of row" when using the << operator;
 //!< similar conceptual meaning to std::endl
 

@@ -44,6 +44,9 @@ class Proxy< Mat<eT> >
   static const bool prefer_at_accessor = false;
   static const bool has_subview        = false;
   
+  static const bool is_row = false;
+  static const bool is_col = false;
+  
   arma_aligned const Mat<eT>& Q;
   
   inline explicit Proxy(const Mat<eT>& A)
@@ -80,6 +83,9 @@ class Proxy< Col<eT> >
   static const bool prefer_at_accessor = false;
   static const bool has_subview        = false;
   
+  static const bool is_row = false;
+  static const bool is_col = true;
+  
   arma_aligned const Col<eT>& Q;
   
   inline explicit Proxy(const Col<eT>& A)
@@ -92,8 +98,8 @@ class Proxy< Col<eT> >
   arma_inline uword get_n_cols() const { return 1;        }
   arma_inline uword get_n_elem() const { return Q.n_elem; }
   
-  arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
-  arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];   }
+  arma_inline elem_type at         (const uword row, const uword) const { return Q[row]; }
   
   arma_inline ea_type get_ea() const { return Q.memptr(); }
   
@@ -116,6 +122,9 @@ class Proxy< Row<eT> >
   static const bool prefer_at_accessor = false;
   static const bool has_subview        = false;
   
+  static const bool is_row = true;
+  static const bool is_col = false;
+  
   arma_aligned const Row<eT>& Q;
   
   inline explicit Proxy(const Row<eT>& A)
@@ -128,8 +137,8 @@ class Proxy< Row<eT> >
   arma_inline uword get_n_cols() const { return Q.n_cols; }
   arma_inline uword get_n_elem() const { return Q.n_elem; }
   
-  arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
-  arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];   }
+  arma_inline elem_type at         (const uword, const uword col) const { return Q[col]; }
   
   arma_inline ea_type get_ea() const { return Q.memptr(); }
   
@@ -139,30 +148,73 @@ class Proxy< Row<eT> >
 
 
 
-template<typename eT, typename gen_type>
-class Proxy< Gen<eT, gen_type > >
+// // TODO: how to allow general Mat<eT> instead of specific Mat<double> ?
+// template<uword fixed_n_rows, uword fixed_n_cols>
+// class Proxy< Mat<double>::fixed<fixed_n_rows,fixed_n_cols> >
+//   {
+//   public:
+//   
+//   typedef double eT;
+//   
+//   typedef eT                                        elem_type;
+//   typedef typename get_pod_type<elem_type>::result  pod_type;
+//   typedef Mat<eT>::fixed<fixed_n_rows,fixed_n_cols> stored_type;
+//   typedef const eT*                                 ea_type;
+//   
+//   static const bool prefer_at_accessor = false;
+//   static const bool has_subview        = false;
+//   
+//   static const bool is_row = false;
+//   static const bool is_col = false;
+//   
+//   arma_aligned const Mat<eT>::fixed<fixed_n_rows,fixed_n_cols>& Q;
+//   
+//   inline explicit Proxy(const Mat<eT>::fixed<fixed_n_rows,fixed_n_cols>& A)
+//     : Q(A)
+//     {
+//     arma_extra_debug_sigprint();
+//     }
+//   
+//   arma_inline uword get_n_rows() const { return fixed_n_rows;              }
+//   arma_inline uword get_n_cols() const { return fixed_n_cols;              }
+//   arma_inline uword get_n_elem() const { return fixed_n_rows*fixed_n_cols; }
+//   
+//   arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
+//   arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
+//   
+//   arma_inline ea_type get_ea()                   const { return Q.memptr(); }
+//   arma_inline bool    is_alias(const Mat<eT>& X) const { return (&Q == &X); }
+//   };
+
+
+
+template<typename T1, typename gen_type>
+class Proxy< Gen<T1, gen_type > >
   {
   public:
   
-  typedef          eT                              elem_type;
+  typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
-  typedef Gen<eT, gen_type>                        stored_type;
-  typedef const Gen<eT, gen_type>&                 ea_type;
+  typedef Gen<T1, gen_type>                        stored_type;
+  typedef const Gen<T1, gen_type>&                 ea_type;
   
-  static const bool prefer_at_accessor = Gen<eT, gen_type>::prefer_at_accessor;
+  static const bool prefer_at_accessor = Gen<T1, gen_type>::prefer_at_accessor;
   static const bool has_subview        = false;
   
-  arma_aligned const Gen<eT, gen_type>& Q;
+  static const bool is_row = Gen<T1, gen_type>::is_row;
+  static const bool is_col = Gen<T1, gen_type>::is_col;
   
-  inline explicit Proxy(const Gen<eT, gen_type>& A)
+  arma_aligned const Gen<T1, gen_type>& Q;
+  
+  inline explicit Proxy(const Gen<T1, gen_type>& A)
     : Q(A)
     {
     arma_extra_debug_sigprint();
     }
   
-  arma_inline uword get_n_rows() const { return Q.n_rows;          }
-  arma_inline uword get_n_cols() const { return Q.n_cols;          }
-  arma_inline uword get_n_elem() const { return Q.n_rows*Q.n_cols; }
+  arma_inline uword get_n_rows() const { return is_row ? 1 : Q.n_rows;  }
+  arma_inline uword get_n_cols() const { return is_col ? 1 : Q.n_cols;  }
+  arma_inline uword get_n_elem() const { return Q.n_rows*Q.n_cols;      }
   
   arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
   arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
@@ -188,6 +240,9 @@ class Proxy< Op<T1, op_type> >
   static const bool prefer_at_accessor = false;
   static const bool has_subview        = false;
   
+  static const bool is_row = Op<T1, op_type>::is_row;
+  static const bool is_col = Op<T1, op_type>::is_col;
+  
   arma_aligned const Mat<elem_type> Q;
   
   inline explicit Proxy(const Op<T1, op_type>& A)
@@ -196,9 +251,9 @@ class Proxy< Op<T1, op_type> >
     arma_extra_debug_sigprint();
     }
   
-  arma_inline uword get_n_rows() const { return Q.n_rows; }
-  arma_inline uword get_n_cols() const { return Q.n_cols; }
-  arma_inline uword get_n_elem() const { return Q.n_elem; }
+  arma_inline uword get_n_rows() const { return is_row ? 1 : Q.n_rows; }
+  arma_inline uword get_n_cols() const { return is_col ? 1 : Q.n_cols; }
+  arma_inline uword get_n_elem() const { return Q.n_elem;              }
   
   arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
   arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
@@ -224,6 +279,9 @@ class Proxy< Glue<T1, T2, glue_type> >
   static const bool prefer_at_accessor = false;
   static const bool has_subview        = false;
   
+  static const bool is_row = Glue<T1, T2, glue_type>::is_row;
+  static const bool is_col = Glue<T1, T2, glue_type>::is_col;
+  
   arma_aligned const Mat<elem_type> Q;
   
   inline explicit Proxy(const Glue<T1, T2, glue_type>& A)
@@ -232,9 +290,9 @@ class Proxy< Glue<T1, T2, glue_type> >
     arma_extra_debug_sigprint();
     }
 
-  arma_inline uword get_n_rows() const { return Q.n_rows; }
-  arma_inline uword get_n_cols() const { return Q.n_cols; }
-  arma_inline uword get_n_elem() const { return Q.n_elem; }
+  arma_inline uword get_n_rows() const { return is_row ? 1 : Q.n_rows; }
+  arma_inline uword get_n_cols() const { return is_col ? 1 : Q.n_cols; }
+  arma_inline uword get_n_elem() const { return Q.n_elem;              }
   
   arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
   arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
@@ -260,6 +318,9 @@ class Proxy< subview<eT> >
   static const bool prefer_at_accessor = true;
   static const bool has_subview        = true;
   
+  static const bool is_row = false;
+  static const bool is_col = false;
+  
   arma_aligned const subview<eT>& Q;
   
   inline explicit Proxy(const subview<eT>& A)
@@ -283,6 +344,84 @@ class Proxy< subview<eT> >
 
 
 
+template<typename eT>
+class Proxy< subview_col<eT> >
+  {
+  public:
+  
+  typedef eT                                       elem_type;
+  typedef typename get_pod_type<elem_type>::result pod_type;
+  typedef subview_col<eT>                          stored_type;
+  typedef const subview_col<eT>&                   ea_type;
+  
+  static const bool prefer_at_accessor = true;
+  static const bool has_subview        = true;
+  
+  static const bool is_row = false;
+  static const bool is_col = true;
+  
+  arma_aligned const subview_col<eT>& Q;
+  
+  inline explicit Proxy(const subview_col<eT>& A)
+    : Q(A)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  arma_inline uword get_n_rows() const { return Q.n_rows; }
+  arma_inline uword get_n_cols() const { return 1;        }
+  arma_inline uword get_n_elem() const { return Q.n_elem; }
+  
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];         }
+  arma_inline elem_type at         (const uword row, const uword) const { return Q.at(row, 0); }
+  
+  arma_inline ea_type get_ea() const { return Q; }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&(Q.m)) == void_ptr(&X)); }
+  };
+
+
+
+template<typename eT>
+class Proxy< subview_row<eT> >
+  {
+  public:
+  
+  typedef eT                                       elem_type;
+  typedef typename get_pod_type<elem_type>::result pod_type;
+  typedef subview_row<eT>                          stored_type;
+  typedef const subview_row<eT>&                   ea_type;
+  
+  static const bool prefer_at_accessor = true;
+  static const bool has_subview        = true;
+  
+  static const bool is_row = true;
+  static const bool is_col = false;
+  
+  arma_aligned const subview_row<eT>& Q;
+  
+  inline explicit Proxy(const subview_row<eT>& A)
+    : Q(A)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  arma_inline uword get_n_rows() const { return 1;        }
+  arma_inline uword get_n_cols() const { return Q.n_cols; }
+  arma_inline uword get_n_elem() const { return Q.n_elem; }
+  
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];         }
+  arma_inline elem_type at         (const uword, const uword col) const { return Q.at(0, col); }
+  
+  arma_inline ea_type get_ea() const { return Q; }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&(Q.m)) == void_ptr(&X)); }
+  };
+
+
+
 template<typename eT, typename T1>
 class Proxy< subview_elem1<eT,T1> >
   {
@@ -296,6 +435,9 @@ class Proxy< subview_elem1<eT,T1> >
   static const bool prefer_at_accessor = false;
   static const bool has_subview        = false;
   
+  static const bool is_row = false;
+  static const bool is_col = true;
+  
   arma_aligned const Mat<eT> Q;
   
   inline explicit Proxy(const subview_elem1<eT,T1>& A)
@@ -306,6 +448,45 @@ class Proxy< subview_elem1<eT,T1> >
   
   arma_inline uword get_n_rows() const { return Q.n_rows; }
   arma_inline uword get_n_cols() const { return 1;        }
+  arma_inline uword get_n_elem() const { return Q.n_elem; }
+  
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];   }
+  arma_inline elem_type at         (const uword row, const uword) const { return Q[row]; }
+  
+  arma_inline ea_type get_ea() const { return Q.memptr(); }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>&) const { return false; }
+  };
+
+
+
+template<typename eT, typename T1, typename T2>
+class Proxy< subview_elem2<eT,T1,T2> >
+  {
+  public:
+  
+  typedef eT                                       elem_type;
+  typedef typename get_pod_type<elem_type>::result pod_type;
+  typedef Mat<eT>                                  stored_type;
+  typedef const eT*                                ea_type;
+  
+  static const bool prefer_at_accessor = false;
+  static const bool has_subview        = false;
+  
+  static const bool is_row = false;
+  static const bool is_col = false;
+  
+  arma_aligned const Mat<eT> Q;
+  
+  inline explicit Proxy(const subview_elem2<eT,T1,T2>& A)
+    : Q(A)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  arma_inline uword get_n_rows() const { return Q.n_rows; }
+  arma_inline uword get_n_cols() const { return Q.n_cols; }
   arma_inline uword get_n_elem() const { return Q.n_elem; }
   
   arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
@@ -332,6 +513,9 @@ class Proxy< diagview<eT> >
   static const bool prefer_at_accessor = false;
   static const bool has_subview        = true;
   
+  static const bool is_row = false;
+  static const bool is_col = true;
+  
   arma_aligned const diagview<eT>& Q;
   
   inline explicit Proxy(const diagview<eT>& A)
@@ -344,8 +528,8 @@ class Proxy< diagview<eT> >
   arma_inline uword get_n_cols() const { return 1;        }
   arma_inline uword get_n_elem() const { return Q.n_elem; }
   
-  arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
-  arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];         }
+  arma_inline elem_type at         (const uword row, const uword) const { return Q.at(row, 0); }
   
   arma_inline ea_type get_ea() const { return Q; }
   
@@ -369,6 +553,9 @@ class Proxy< eOp<T1, eop_type > >
   static const bool prefer_at_accessor = eOp<T1, eop_type>::prefer_at_accessor;
   static const bool has_subview        = eOp<T1, eop_type>::has_subview;
   
+  static const bool is_row = eOp<T1, eop_type>::is_row;
+  static const bool is_col = eOp<T1, eop_type>::is_col;
+  
   arma_aligned const eOp<T1, eop_type>& Q;
   
   inline explicit Proxy(const eOp<T1, eop_type>& A)
@@ -377,9 +564,9 @@ class Proxy< eOp<T1, eop_type > >
     arma_extra_debug_sigprint();
     }
   
-  arma_inline uword get_n_rows() const { return Q.get_n_rows(); }
-  arma_inline uword get_n_cols() const { return Q.get_n_cols(); }
-  arma_inline uword get_n_elem() const { return Q.get_n_elem(); }
+  arma_inline uword get_n_rows() const { return is_row ? 1 : Q.get_n_rows(); }
+  arma_inline uword get_n_cols() const { return is_col ? 1 : Q.get_n_cols(); }
+  arma_inline uword get_n_elem() const { return Q.get_n_elem();              }
   
   arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
   arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
@@ -405,6 +592,9 @@ class Proxy< eGlue<T1, T2, eglue_type > >
   static const bool prefer_at_accessor = eGlue<T1, T2, eglue_type>::prefer_at_accessor;
   static const bool has_subview        = eGlue<T1, T2, eglue_type>::has_subview;
   
+  static const bool is_row = eGlue<T1, T2, eglue_type>::is_row;
+  static const bool is_col = eGlue<T1, T2, eglue_type>::is_col;
+  
   arma_aligned const eGlue<T1, T2, eglue_type>& Q;
   
   inline explicit Proxy(const eGlue<T1, T2, eglue_type>& A)
@@ -413,14 +603,14 @@ class Proxy< eGlue<T1, T2, eglue_type > >
     arma_extra_debug_sigprint();
     }
   
-  arma_inline uword get_n_rows() const { return Q.get_n_rows(); }
-  arma_inline uword get_n_cols() const { return Q.get_n_cols(); }
-  arma_inline uword get_n_elem() const { return Q.get_n_elem(); }
+  arma_inline uword get_n_rows() const { return is_row ? 1 : Q.get_n_rows(); }
+  arma_inline uword get_n_cols() const { return is_col ? 1 : Q.get_n_cols(); }
+  arma_inline uword get_n_elem() const { return Q.get_n_elem();              }
   
   arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
   arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
   
-  arma_inline ea_type get_ea() const { return Q; }
+  arma_inline ea_type get_ea()                          const { return Q; }
   
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return (Q.P1.is_alias(X) || Q.P2.is_alias(X)); }
@@ -441,6 +631,9 @@ class Proxy< mtOp<out_eT, T1, op_type> >
   static const bool prefer_at_accessor = false;
   static const bool has_subview        = false;
   
+  static const bool is_row = mtOp<out_eT, T1, op_type>::is_row;
+  static const bool is_col = mtOp<out_eT, T1, op_type>::is_col;
+  
   arma_aligned const Mat<out_eT> Q;
   
   inline explicit Proxy(const mtOp<out_eT, T1, op_type>& A)
@@ -449,9 +642,9 @@ class Proxy< mtOp<out_eT, T1, op_type> >
     arma_extra_debug_sigprint();
     }
   
-  arma_inline uword get_n_rows() const { return Q.n_rows; }
-  arma_inline uword get_n_cols() const { return Q.n_cols; }
-  arma_inline uword get_n_elem() const { return Q.n_elem; }
+  arma_inline uword get_n_rows() const { return is_row ? 1 : Q.n_rows; }
+  arma_inline uword get_n_cols() const { return is_col ? 1 : Q.n_cols; }
+  arma_inline uword get_n_elem() const { return Q.n_elem;              }
   
   arma_inline elem_type operator[] (const uword i)                    const { return Q[i];          }
   arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row,col); }
@@ -477,6 +670,9 @@ class Proxy< mtGlue<out_eT, T1, T2, glue_type > >
   static const bool prefer_at_accessor = false;
   static const bool has_subview        = false;
   
+  static const bool is_row = mtGlue<out_eT, T1, T2, glue_type>::is_row;
+  static const bool is_col = mtGlue<out_eT, T1, T2, glue_type>::is_col;
+  
   arma_aligned const Mat<out_eT> Q;
   
   inline explicit Proxy(const mtGlue<out_eT, T1, T2, glue_type>& A)
@@ -485,9 +681,9 @@ class Proxy< mtGlue<out_eT, T1, T2, glue_type > >
     arma_extra_debug_sigprint();
     }
   
-  arma_inline uword get_n_rows() const { return Q.n_rows; }
-  arma_inline uword get_n_cols() const { return Q.n_cols; }
-  arma_inline uword get_n_elem() const { return Q.n_elem; }
+  arma_inline uword get_n_rows() const { return is_row ? 1 : Q.n_rows; }
+  arma_inline uword get_n_cols() const { return is_col ? 1 : Q.n_cols; }
+  arma_inline uword get_n_elem() const { return Q.n_elem;              }
   
   arma_inline elem_type operator[] (const uword i)                    const { return Q[i];          }
   arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row,col); }

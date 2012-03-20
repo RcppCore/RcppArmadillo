@@ -1,3 +1,15 @@
+0.2.37  2012-03-19
+
+    o   Upgraded to Armadillo test release 2.99.1 "Antarctic Chilli Ranch (Beta 1)"
+
+    	  * added non-contiguous submatrix views
+	  * added hist() and histc()
+	  * faster handling of submatrix views
+	  * faster generation of random numbers
+	  * faster element access in fixed size matrices
+	  * better detection of vector expressions by sum(), cumsum(),
+	    prod(), min(), max(), mean(), median(), stddev(), var() 
+
 0.2.36  2012-03-05
 
     o   Upgraded to Armadillo release 2.4.4

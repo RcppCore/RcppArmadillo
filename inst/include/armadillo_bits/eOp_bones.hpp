@@ -28,16 +28,19 @@ class eOp : public Base<typename T1::elem_type, eOp<T1, eop_type> >
   static const bool prefer_at_accessor = Proxy<T1>::prefer_at_accessor;
   static const bool has_subview        = Proxy<T1>::has_subview;
   
+  static const bool is_row = Proxy<T1>::is_row;
+  static const bool is_col = Proxy<T1>::is_col;
+  
   arma_aligned const Proxy<T1> P;
   arma_aligned       elem_type aux;          //!< storage of auxiliary data, user defined format
   arma_aligned       uword     aux_uword_a;  //!< storage of auxiliary data, uword format
   arma_aligned       uword     aux_uword_b;  //!< storage of auxiliary data, uword format
   
   inline         ~eOp();
-  inline explicit eOp(const Base<typename T1::elem_type, T1>& in_m);
-  inline          eOp(const Base<typename T1::elem_type, T1>& in_m, const elem_type in_aux);
-  inline          eOp(const Base<typename T1::elem_type, T1>& in_m, const uword in_aux_uword_a, const uword in_aux_uword_b);
-  inline          eOp(const Base<typename T1::elem_type, T1>& in_m, const elem_type in_aux, const uword in_aux_uword_a, const uword in_aux_uword_b);
+  inline explicit eOp(const T1& in_m);
+  inline          eOp(const T1& in_m, const elem_type in_aux);
+  inline          eOp(const T1& in_m, const uword in_aux_uword_a, const uword in_aux_uword_b);
+  inline          eOp(const T1& in_m, const elem_type in_aux, const uword in_aux_uword_a, const uword in_aux_uword_b);
   
   arma_inline uword get_n_rows() const;
   arma_inline uword get_n_cols() const;

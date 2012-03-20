@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2010-2011 Conrad Sanderson
+// Copyright (C) 2010-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -182,6 +182,14 @@ template<typename eT> struct arma_Mat_Col_Row_only< Row<eT> > { typedef Row<eT> 
 
 template<typename  T> struct arma_Cube_only             { };
 template<typename eT> struct arma_Cube_only< Cube<eT> > { typedef Cube<eT> result; };
+
+
+template<bool> struct enable_if       {                     };
+template<>     struct enable_if<true> { typedef int result; };
+
+
+template<bool, typename result_type > struct enable_if2                    {                             };
+template<      typename result_type > struct enable_if2<true, result_type> { typedef result_type result; };
 
 
 

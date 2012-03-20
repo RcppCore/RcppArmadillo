@@ -41,9 +41,8 @@ class field
   
   private:
   
-  arma_aligned oT** mem;             //!< pointer to memory used by the object
-  arma_aligned oT*  mem_local[ field_prealloc_n_elem::val ];
-  //!< Internal memory, to avoid calling the 'new' operator for small amounts of memory
+  arma_aligned oT** mem;                                     //!< pointer to memory used by the object
+  arma_aligned oT*  mem_local[ field_prealloc_n_elem::val ]; //!< Internal memory, to avoid calling the 'new' operator for small amounts of memory
   
   
   public:
@@ -82,7 +81,7 @@ class field
   arma_inline const oT& operator()(const uword row, const uword col) const;
   
   inline field_injector<field> operator<<(const oT& val);
-  inline field_injector<field> operator<<(const injector_end_of_row& x);
+  inline field_injector<field> operator<<(const injector_end_of_row<>& x);
   
   
   inline       subview_field<oT> row(const uword row_num);

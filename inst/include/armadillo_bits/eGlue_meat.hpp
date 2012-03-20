@@ -49,7 +49,7 @@ arma_inline
 uword
 eGlue<T1,T2,eglue_type>::get_n_rows() const
   {
-  return P1.get_n_rows();
+  return is_row ? 1 : P1.get_n_rows();
   }
 
 
@@ -59,7 +59,7 @@ arma_inline
 uword
 eGlue<T1,T2,eglue_type>::get_n_cols() const
   {
-  return P1.get_n_cols();
+  return is_col ? 1 : P1.get_n_cols();
   }
 
 

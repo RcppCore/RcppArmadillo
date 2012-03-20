@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -18,6 +18,7 @@
 
 template<uword N>
 template<typename T1, typename T2>
+arma_hot
 inline
 void
 glue_times_redirect<N>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X)
@@ -32,18 +33,23 @@ glue_times_redirect<N>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2
   const Mat<eT>& A = tmp1.M;
   const Mat<eT>& B = tmp2.M;
   
-  const bool do_trans_A = tmp1.do_trans;
-  const bool do_trans_B = tmp2.do_trans;
-
-  const bool use_alpha = tmp1.do_times || tmp2.do_times;
+  const bool use_alpha = partial_unwrap_check<T1>::do_times || partial_unwrap_check<T2>::do_times;
   const eT       alpha = use_alpha ? (tmp1.get_val() * tmp2.get_val()) : eT(0);
   
-  glue_times::apply(out, A, B, alpha, do_trans_A, do_trans_B, use_alpha);
+  glue_times::apply
+    <
+    eT,
+    partial_unwrap_check<T1>::do_trans,
+    partial_unwrap_check<T2>::do_trans,
+    (partial_unwrap_check<T1>::do_times || partial_unwrap_check<T2>::do_times)
+    >
+    (out, A, B, alpha);
   }
 
 
 
 template<typename T1, typename T2, typename T3>
+arma_hot
 inline
 void
 glue_times_redirect<3>::apply(Mat<typename T1::elem_type>& out, const Glue< Glue<T1,T2,glue_times>, T3, glue_times>& X)
@@ -63,19 +69,24 @@ glue_times_redirect<3>::apply(Mat<typename T1::elem_type>& out, const Glue< Glue
   const Mat<eT>& B = tmp2.M;
   const Mat<eT>& C = tmp3.M;
   
-  const bool do_trans_A = tmp1.do_trans;
-  const bool do_trans_B = tmp2.do_trans;
-  const bool do_trans_C = tmp3.do_trans;
-  
-  const bool use_alpha = tmp1.do_times || tmp2.do_times || tmp3.do_times;
+  const bool use_alpha = partial_unwrap_check<T1>::do_times || partial_unwrap_check<T2>::do_times || partial_unwrap_check<T3>::do_times;
   const eT       alpha = use_alpha ? (tmp1.get_val() * tmp2.get_val() * tmp3.get_val()) : eT(0);
   
-  glue_times::apply(out, A, B, C, alpha, do_trans_A, do_trans_B, do_trans_C, use_alpha);
+  glue_times::apply
+    <
+    eT,
+    partial_unwrap_check<T1>::do_trans,
+    partial_unwrap_check<T2>::do_trans,
+    partial_unwrap_check<T3>::do_trans,
+    (partial_unwrap_check<T1>::do_times || partial_unwrap_check<T2>::do_times || partial_unwrap_check<T3>::do_times)
+    >
+    (out, A, B, C, alpha);
   }
 
 
 
 template<typename T1, typename T2, typename T3, typename T4>
+arma_hot
 inline
 void
 glue_times_redirect<4>::apply(Mat<typename T1::elem_type>& out, const Glue< Glue< Glue<T1,T2,glue_times>, T3, glue_times>, T4, glue_times>& X)
@@ -97,20 +108,25 @@ glue_times_redirect<4>::apply(Mat<typename T1::elem_type>& out, const Glue< Glue
   const Mat<eT>& C = tmp3.M;
   const Mat<eT>& D = tmp4.M;
   
-  const bool do_trans_A = tmp1.do_trans;
-  const bool do_trans_B = tmp2.do_trans;
-  const bool do_trans_C = tmp3.do_trans;
-  const bool do_trans_D = tmp4.do_trans;
-  
-  const bool use_alpha = tmp1.do_times || tmp2.do_times || tmp3.do_times || tmp4.do_times;
+  const bool use_alpha = partial_unwrap_check<T1>::do_times || partial_unwrap_check<T2>::do_times || partial_unwrap_check<T3>::do_times || partial_unwrap_check<T4>::do_times;
   const eT       alpha = use_alpha ? (tmp1.get_val() * tmp2.get_val() * tmp3.get_val() * tmp4.get_val()) : eT(0);
   
-  glue_times::apply(out, A, B, C, D, alpha, do_trans_A, do_trans_B, do_trans_C, do_trans_D, use_alpha);
+  glue_times::apply
+    <
+    eT,
+    partial_unwrap_check<T1>::do_trans,
+    partial_unwrap_check<T2>::do_trans,
+    partial_unwrap_check<T3>::do_trans,
+    partial_unwrap_check<T4>::do_trans,
+    (partial_unwrap_check<T1>::do_times || partial_unwrap_check<T2>::do_times || partial_unwrap_check<T3>::do_times || partial_unwrap_check<T4>::do_times)
+    >
+    (out, A, B, C, D, alpha);
   }
 
 
 
 template<typename T1, typename T2>
+arma_hot
 inline
 void
 glue_times::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X)
@@ -129,6 +145,7 @@ glue_times::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>
 
 
 template<typename T1>
+arma_hot
 inline
 void
 glue_times::apply_inplace(Mat<typename T1::elem_type>& out, const T1& X)
@@ -167,7 +184,8 @@ glue_times::apply_inplace(Mat<typename T1::elem_type>& out, const T1& X)
   else
     {
     const Mat<eT> tmp(out);
-    glue_times::apply(out, tmp, B, eT(1), false, false, false);
+    
+    glue_times::apply<eT, false, false, false>(out, tmp, B, eT(1));
     }
   
   }
@@ -189,11 +207,12 @@ glue_times::apply_inplace_plus(Mat<typename T1::elem_type>& out, const Glue<T1, 
   
   const Mat<eT>& A     = tmp1.M;
   const Mat<eT>& B     = tmp2.M;
-  const eT       alpha = tmp1.get_val() * tmp2.get_val() * ( (sign > sword(0)) ? eT(1) : eT(-1) );
   
-  const bool do_trans_A = tmp1.do_trans;
-  const bool do_trans_B = tmp2.do_trans;
-  const bool use_alpha  = tmp1.do_times || tmp2.do_times || (sign < sword(0));
+  const bool do_trans_A = partial_unwrap_check<T1>::do_trans;
+  const bool do_trans_B = partial_unwrap_check<T2>::do_trans;
+  
+  const bool use_alpha = partial_unwrap_check<T1>::do_times || partial_unwrap_check<T2>::do_times || (sign < sword(0));
+  const eT       alpha = use_alpha ? ( tmp1.get_val() * tmp2.get_val() * ( (sign > sword(0)) ? eT(1) : eT(-1) ) ) : eT(0);
   
   arma_debug_assert_mul_size(A, B, do_trans_A, do_trans_B, "matrix multiplication");
   
@@ -346,10 +365,10 @@ glue_times::apply_inplace_plus(Mat<typename T1::elem_type>& out, const Glue<T1, 
 
 
 
-template<typename eT>
+template<typename eT, const bool do_trans_A, const bool do_trans_B>
 arma_inline
 uword
-glue_times::mul_storage_cost(const Mat<eT>& A, const Mat<eT>& B, const bool do_trans_A, const bool do_trans_B)
+glue_times::mul_storage_cost(const Mat<eT>& A, const Mat<eT>& B)
   {
   const uword final_A_n_rows = (do_trans_A == false) ? A.n_rows : A.n_cols;
   const uword final_B_n_cols = (do_trans_B == false) ? B.n_cols : B.n_rows;
@@ -359,7 +378,13 @@ glue_times::mul_storage_cost(const Mat<eT>& A, const Mat<eT>& B, const bool do_t
 
 
 
-template<typename eT>
+template
+  <
+  typename   eT,
+  const bool do_trans_A,
+  const bool do_trans_B,
+  const bool use_alpha
+  >
 arma_hot
 inline
 void
@@ -368,10 +393,7 @@ glue_times::apply
         Mat<eT>& out,
   const Mat<eT>& A,
   const Mat<eT>& B,
-  const eT       alpha,
-  const bool     do_trans_A,
-  const bool     do_trans_B,
-  const bool     use_alpha
+  const eT       alpha
   )
   {
   arma_extra_debug_sigprint();
@@ -529,7 +551,15 @@ glue_times::apply
 
 
 
-template<typename eT>
+template
+  <
+  typename   eT,
+  const bool do_trans_A,
+  const bool do_trans_B,
+  const bool do_trans_C,
+  const bool use_alpha
+  >
+arma_hot
 inline
 void
 glue_times::apply
@@ -538,34 +568,41 @@ glue_times::apply
   const Mat<eT>& A,
   const Mat<eT>& B,
   const Mat<eT>& C,
-  const eT       alpha,
-  const bool     do_trans_A,
-  const bool     do_trans_B,
-  const bool     do_trans_C,
-  const bool     use_alpha
+  const eT       alpha
   )
   {
   arma_extra_debug_sigprint();
   
   Mat<eT> tmp;
   
-  if( glue_times::mul_storage_cost(A, B, do_trans_A, do_trans_B) <= glue_times::mul_storage_cost(B, C, do_trans_B, do_trans_C) )
+  if( glue_times::mul_storage_cost<eT, do_trans_A, do_trans_B>(A, B) <= glue_times::mul_storage_cost<eT, do_trans_B, do_trans_C>(B, C) )
     {
     // out = (A*B)*C
-    glue_times::apply(tmp, A,   B, alpha, do_trans_A, do_trans_B, use_alpha);
-    glue_times::apply(out, tmp, C, eT(0), false,      do_trans_C, false    );
+    
+    glue_times::apply<eT, do_trans_A, do_trans_B, use_alpha>(tmp, A,   B, alpha);
+    glue_times::apply<eT, false,      do_trans_C, false    >(out, tmp, C, eT(0));
     }
   else
     {
     // out = A*(B*C)
-    glue_times::apply(tmp, B, C,   alpha, do_trans_B, do_trans_C, use_alpha);
-    glue_times::apply(out, A, tmp, eT(0), do_trans_A, false,      false    );
+    
+    glue_times::apply<eT, do_trans_B, do_trans_C, use_alpha>(tmp, B, C,   alpha);
+    glue_times::apply<eT, do_trans_A, false,      false    >(out, A, tmp, eT(0));
     }
   }
 
 
 
-template<typename eT>
+template
+  <
+  typename   eT,
+  const bool do_trans_A,
+  const bool do_trans_B,
+  const bool do_trans_C,
+  const bool do_trans_D,
+  const bool use_alpha
+  >
+arma_hot
 inline
 void
 glue_times::apply
@@ -575,31 +612,28 @@ glue_times::apply
   const Mat<eT>& B,
   const Mat<eT>& C,
   const Mat<eT>& D,
-  const eT       alpha,
-  const bool     do_trans_A,
-  const bool     do_trans_B,
-  const bool     do_trans_C,
-  const bool     do_trans_D,
-  const bool     use_alpha
+  const eT       alpha
   )
   {
   arma_extra_debug_sigprint();
   
   Mat<eT> tmp;
   
-  if( glue_times::mul_storage_cost(A, C, do_trans_A, do_trans_C) <= glue_times::mul_storage_cost(B, D, do_trans_B, do_trans_D) )
+  if( glue_times::mul_storage_cost<eT, do_trans_A, do_trans_C>(A, C) <= glue_times::mul_storage_cost<eT, do_trans_B, do_trans_D>(B, D) )
     {
     // out = (A*B*C)*D
-    glue_times::apply(tmp, A, B, C, alpha, do_trans_A, do_trans_B, do_trans_C, use_alpha);
     
-    glue_times::apply(out, tmp, D, eT(0), false, do_trans_D, false);
+    glue_times::apply<eT, do_trans_A, do_trans_B, do_trans_C, use_alpha>(tmp, A, B, C, alpha);
+    
+    glue_times::apply<eT, false, do_trans_D, false>(out, tmp, D, eT(0));
     }
   else
     {
     // out = A*(B*C*D)
-    glue_times::apply(tmp, B, C, D, alpha, do_trans_B, do_trans_C, do_trans_D, use_alpha);
     
-    glue_times::apply(out, A, tmp, eT(0), do_trans_A, false, false);
+    glue_times::apply<eT, do_trans_B, do_trans_C, do_trans_D, use_alpha>(tmp, B, C, D, alpha);
+    
+    glue_times::apply<eT, do_trans_A, false, false>(out, A, tmp, eT(0));
     }
   }
 
@@ -625,64 +659,98 @@ glue_times_diag::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue
   typedef typename strip_diagmat<T1>::stored_type T1_stripped;
   typedef typename strip_diagmat<T2>::stored_type T2_stripped;
   
-  if( (S1.do_diagmat == true) && (S2.do_diagmat == false) )
+  if( (strip_diagmat<T1>::do_diagmat == true) && (strip_diagmat<T2>::do_diagmat == false) )
     {
     const diagmat_proxy_check<T1_stripped> A(S1.M, out);
     
     const unwrap_check<T2> tmp(X.B, out);
     const Mat<eT>& B     = tmp.M;
     
-    arma_debug_assert_mul_size(A.n_elem, A.n_elem, B.n_rows, B.n_cols, "matrix multiplication");
+    const uword A_n_elem = A.n_elem;
+    const uword B_n_rows = B.n_rows;
+    const uword B_n_cols = B.n_cols;
     
-    out.set_size(A.n_elem, B.n_cols);
+    arma_debug_assert_mul_size(A_n_elem, A_n_elem, B_n_rows, B_n_cols, "matrix multiplication");
     
-    for(uword col=0; col<B.n_cols; ++col)
+    out.set_size(A_n_elem, B_n_cols);
+    
+    for(uword col=0; col < B_n_cols; ++col)
       {
             eT* out_coldata = out.colptr(col);
       const eT* B_coldata   = B.colptr(col);
       
-      for(uword row=0; row<B.n_rows; ++row)
+      uword i,j;
+      for(i=0, j=1; j < B_n_rows; i+=2, j+=2)
         {
-        out_coldata[row] = A[row] * B_coldata[row];
+        eT tmp_i = A[i];
+        eT tmp_j = A[j];
+        
+        tmp_i *= B_coldata[i];
+        tmp_j *= B_coldata[j];
+        
+        out_coldata[i] = tmp_i;
+        out_coldata[j] = tmp_j;
+        }
+      
+      if(i < B_n_rows)
+        {
+        out_coldata[i] = A[i] * B_coldata[i];
         }
       }
     }
   else
-  if( (S1.do_diagmat == false) && (S2.do_diagmat == true) )
+  if( (strip_diagmat<T1>::do_diagmat == false) && (strip_diagmat<T2>::do_diagmat == true) )
     {
     const unwrap_check<T1> tmp(X.A, out);
     const Mat<eT>& A     = tmp.M;
     
     const diagmat_proxy_check<T2_stripped> B(S2.M, out);
     
-    arma_debug_assert_mul_size(A.n_rows, A.n_cols, B.n_elem, B.n_elem, "matrix multiplication");
+    const uword A_n_rows = A.n_rows;
+    const uword A_n_cols = A.n_cols;
+    const uword B_n_elem = B.n_elem;
     
-    out.set_size(A.n_rows, B.n_elem);
+    arma_debug_assert_mul_size(A_n_rows, A_n_cols, B_n_elem, B_n_elem, "matrix multiplication");
     
-    for(uword col=0; col<A.n_cols; ++col)
+    out.set_size(A_n_rows, B_n_elem);
+    
+    for(uword col=0; col < A_n_cols; ++col)
       {
       const eT  val = B[col];
       
             eT* out_coldata = out.colptr(col);
       const eT*   A_coldata =   A.colptr(col);
-    
-      for(uword row=0; row<A.n_rows; ++row)
+      
+      uword i,j;
+      for(i=0, j=1; j < A_n_rows; i+=2, j+=2)
         {
-        out_coldata[row] = A_coldata[row] * val;
+        const eT tmp_i = A_coldata[i] * val;
+        const eT tmp_j = A_coldata[j] * val;
+        
+        out_coldata[i] = tmp_i;
+        out_coldata[j] = tmp_j;
+        }
+      
+      if(i < A_n_rows)
+        {
+        out_coldata[i] = A_coldata[i] * val;
         }
       }
     }
   else
-  if( (S1.do_diagmat == true) && (S2.do_diagmat == true) )
+  if( (strip_diagmat<T1>::do_diagmat == true) && (strip_diagmat<T2>::do_diagmat == true) )
     {
     const diagmat_proxy_check<T1_stripped> A(S1.M, out);
     const diagmat_proxy_check<T2_stripped> B(S2.M, out);
     
-    arma_debug_assert_mul_size(A.n_elem, A.n_elem, B.n_elem, B.n_elem, "matrix multiplication");
+    const uword A_n_elem = A.n_elem;
+    const uword B_n_elem = B.n_elem;
     
-    out.zeros(A.n_elem, A.n_elem);
+    arma_debug_assert_mul_size(A_n_elem, A_n_elem, B_n_elem, B_n_elem, "matrix multiplication");
     
-    for(uword i=0; i<A.n_elem; ++i)
+    out.zeros(A_n_elem, A_n_elem);
+    
+    for(uword i=0; i < A_n_elem; ++i)
       {
       out.at(i,i) = A[i] * B[i];
       }

@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -208,6 +208,316 @@ operator*
   return mtGlue<out_eT, T1, T2, glue_mixed_times>( X.get_ref(), Y.get_ref() );
   }
 
+
+
+
+
+
+//
+//
+//
+
+#undef armaObj
+#undef armaObjA
+#undef armaObjB
+
+// TODO: add handling of scalar*trans(object)
+// TODO: add handling of trans(object)*scalar
+
+#undef arma_operator_obj_scalar
+#undef arma_operator_scalar_obj
+#undef arma_operator_obj_cx_scalar
+#undef arma_operator_cx_scalar_obj
+#undef arma_operator_obj_base
+#undef arma_operator_base_obj
+#undef arma_operator_obj_diagmat
+#undef arma_operator_diagmat_obj
+#undef arma_operator_obj1_obj2
+#undef arma_operator_obj1_obj2_mixed
+
+
+
+#define arma_operator_obj_scalar(armaObj) \
+template<typename eT> \
+arma_inline \
+const eOp<armaObj<eT>, eop_scalar_times> \
+operator* \
+(const armaObj<eT>& X, const typename armaObj<eT>::elem_type k) \
+  { \
+  arma_extra_debug_sigprint(); \
+  \
+  return eOp<armaObj<eT>, eop_scalar_times>(X, k); \
+  }
+
+
+
+#define arma_operator_scalar_obj(armaObj) \
+template<typename eT> \
+arma_inline \
+const eOp<armaObj<eT>, eop_scalar_times> \
+operator* \
+(const typename armaObj<eT>::elem_type k, const armaObj<eT>& X) \
+  { \
+  arma_extra_debug_sigprint(); \
+  \
+  return eOp<armaObj<eT>, eop_scalar_times>(X, k); \
+  }
+
+
+
+#define arma_operator_obj_cx_scalar(armaObj) \
+template<typename eT> \
+arma_inline \
+const mtOp<typename std::complex<typename armaObj<eT>::pod_type>, armaObj<eT>, op_cx_scalar_times> \
+operator* \
+  ( \
+  const armaObj<eT>&                                  X, \
+  const std::complex<typename armaObj<eT>::pod_type>& k  \
+  ) \
+  { \
+  arma_extra_debug_sigprint(); \
+  \
+  return mtOp<typename std::complex<typename armaObj<eT>::pod_type>, armaObj<eT>, op_cx_scalar_times>('j', X, k); \
+  }
+
+
+
+#define arma_operator_cx_scalar_obj(armaObj) \
+template<typename eT> \
+arma_inline \
+const mtOp<typename std::complex<typename armaObj<eT>::pod_type>, armaObj<eT>, op_cx_scalar_times> \
+operator* \
+  ( \
+  const std::complex<typename armaObj<eT>::pod_type>& k, \
+  const armaObj<eT>&                                  X \
+  ) \
+  { \
+  arma_extra_debug_sigprint(); \
+  \
+  return mtOp<typename std::complex<typename armaObj<eT>::pod_type>, armaObj<eT>, op_cx_scalar_times>('j', X, k); \
+  }
+
+
+
+#define arma_operator_obj_base(armaObj) \
+template<typename BT> \
+arma_inline \
+const Glue<armaObj<typename BT::elem_type>, BT, glue_times> \
+operator* \
+  ( \
+  const armaObj<typename BT::elem_type>&     X, \
+  const    Base<typename BT::elem_type, BT>& Y \
+  ) \
+  { \
+  arma_extra_debug_sigprint(); \
+  \
+  return Glue<armaObj<typename BT::elem_type>, BT, glue_times>(X, Y.get_ref()); \
+  }
+
+
+
+#define arma_operator_base_obj(armaObj) \
+template<typename BT> \
+arma_inline \
+const Glue<BT, armaObj<typename BT::elem_type>, glue_times> \
+operator* \
+  ( \
+  const    Base<typename BT::elem_type, BT>& X, \
+  const armaObj<typename BT::elem_type>    & Y  \
+  ) \
+  { \
+  arma_extra_debug_sigprint(); \
+  \
+  return Glue<BT, armaObj<typename BT::elem_type>, glue_times>(X.get_ref(), Y); \
+  }
+
+
+
+#define arma_operator_obj_diagmat(armaObj) \
+template<typename T1> \
+arma_inline \
+const Glue< armaObj<typename T1::elem_type>, Op<T1, op_diagmat>, glue_times_diag > \
+operator* \
+  ( \
+  const armaObj<typename T1::elem_type>& X, \
+  const Op<T1, op_diagmat>&              Y  \
+  ) \
+  { \
+  arma_extra_debug_sigprint(); \
+  \
+  return Glue< armaObj<typename T1::elem_type>, Op<T1, op_diagmat>, glue_times_diag >(X, Y); \
+  }
+
+
+
+#define arma_operator_diagmat_obj(armaObj) \
+template<typename T1> \
+arma_inline \
+const Glue< Op<T1, op_diagmat>, armaObj<typename T1::elem_type>, glue_times_diag > \
+operator* \
+  ( \
+  const Op<T1, op_diagmat>&              X, \
+  const armaObj<typename T1::elem_type>& Y  \
+  ) \
+  { \
+  arma_extra_debug_sigprint(); \
+  \
+  return Glue< Op<T1, op_diagmat>, armaObj<typename T1::elem_type>, glue_times_diag >(X, Y); \
+  }
+
+
+
+#define arma_operator_obj1_obj2(armaObjA, armaObjB) \
+template<typename eT> \
+arma_inline \
+const Glue<armaObjA<eT>, armaObjB<eT>, glue_times> \
+operator* \
+  ( \
+  const armaObjA<eT>& X, \
+  const armaObjB<eT>& Y \
+  ) \
+  { \
+  arma_extra_debug_sigprint(); \
+  \
+  return Glue<armaObjA<eT>, armaObjB<eT>, glue_times>(X, Y); \
+  }
+
+
+
+#define arma_operator_obj1_obj2_mixed(armaObjA, armaObjB) \
+template<typename eT1, typename eT2> \
+inline \
+const mtGlue<typename promote_type<eT1, eT2>::result, armaObjA<eT1>, armaObjB<eT2>, glue_mixed_times> \
+operator* \
+  ( \
+  const armaObjA<eT1>& X, \
+  const armaObjB<eT2>& Y  \
+  ) \
+  { \
+  arma_extra_debug_sigprint(); \
+  \
+  typedef typename promote_type<eT1,eT2>::result out_eT; \
+  \
+  promote_type<eT1,eT2>::check(); \
+  \
+  return mtGlue<out_eT, armaObjA<eT1>, armaObjB<eT2>, glue_mixed_times>( X, Y ); \
+  }
+
+
+
+arma_operator_obj_scalar(Col)
+arma_operator_obj_scalar(Row)
+arma_operator_obj_scalar(diagview)
+arma_operator_obj_scalar(subview_col)
+arma_operator_obj_scalar(subview_row)
+                         
+arma_operator_scalar_obj(Col)
+arma_operator_scalar_obj(Row)
+arma_operator_scalar_obj(diagview)
+arma_operator_scalar_obj(subview_col)
+arma_operator_scalar_obj(subview_row)
+
+arma_operator_obj_cx_scalar(Col)
+arma_operator_obj_cx_scalar(Row)
+arma_operator_obj_cx_scalar(diagview)
+arma_operator_obj_cx_scalar(subview_col)
+arma_operator_obj_cx_scalar(subview_row)
+                            
+arma_operator_cx_scalar_obj(Col)
+arma_operator_cx_scalar_obj(Row)
+arma_operator_cx_scalar_obj(diagview)
+arma_operator_cx_scalar_obj(subview_col)
+arma_operator_cx_scalar_obj(subview_row)
+
+arma_operator_obj_base(Col)
+arma_operator_obj_base(Row)
+arma_operator_obj_base(diagview)
+arma_operator_obj_base(subview_col)
+arma_operator_obj_base(subview_row)
+
+arma_operator_base_obj(Col)
+arma_operator_base_obj(Row)
+arma_operator_base_obj(diagview)
+arma_operator_base_obj(subview_col)
+arma_operator_base_obj(subview_row)
+
+arma_operator_obj_diagmat(Col)
+arma_operator_obj_diagmat(Row)
+arma_operator_obj_diagmat(diagview)
+arma_operator_obj_diagmat(subview_col)
+arma_operator_obj_diagmat(subview_row)
+
+arma_operator_diagmat_obj(Col)
+arma_operator_diagmat_obj(Row)
+arma_operator_diagmat_obj(diagview)
+arma_operator_diagmat_obj(subview_col)
+arma_operator_diagmat_obj(subview_row)
+
+
+arma_operator_obj1_obj2(Col,Col)
+arma_operator_obj1_obj2(Col,Row)
+arma_operator_obj1_obj2(Col,diagview)
+arma_operator_obj1_obj2(Col,subview_col)
+arma_operator_obj1_obj2(Col,subview_row)
+
+arma_operator_obj1_obj2(Row,Col)
+arma_operator_obj1_obj2(Row,Row)
+arma_operator_obj1_obj2(Row,diagview)
+arma_operator_obj1_obj2(Row,subview_col)
+arma_operator_obj1_obj2(Row,subview_row)
+
+arma_operator_obj1_obj2(diagview,Col)
+arma_operator_obj1_obj2(diagview,Row)
+arma_operator_obj1_obj2(diagview,diagview)
+arma_operator_obj1_obj2(diagview,subview_col)
+arma_operator_obj1_obj2(diagview,subview_row)
+
+arma_operator_obj1_obj2(subview_col,Col)
+arma_operator_obj1_obj2(subview_col,Row)
+arma_operator_obj1_obj2(subview_col,diagview)
+arma_operator_obj1_obj2(subview_col,subview_col)
+arma_operator_obj1_obj2(subview_col,subview_row)
+
+arma_operator_obj1_obj2(subview_row,Col)
+arma_operator_obj1_obj2(subview_row,Row)
+arma_operator_obj1_obj2(subview_row,diagview)
+arma_operator_obj1_obj2(subview_row,subview_col)
+arma_operator_obj1_obj2(subview_row,subview_row)
+
+
+
+arma_operator_obj1_obj2_mixed(Col,Col)
+arma_operator_obj1_obj2_mixed(Col,Row)
+arma_operator_obj1_obj2_mixed(Col,diagview)
+arma_operator_obj1_obj2_mixed(Col,subview_col)
+arma_operator_obj1_obj2_mixed(Col,subview_row)
+
+arma_operator_obj1_obj2_mixed(Row,Col)
+arma_operator_obj1_obj2_mixed(Row,Row)
+arma_operator_obj1_obj2_mixed(Row,diagview)
+arma_operator_obj1_obj2_mixed(Row,subview_col)
+arma_operator_obj1_obj2_mixed(Row,subview_row)
+
+arma_operator_obj1_obj2_mixed(diagview,Col)
+arma_operator_obj1_obj2_mixed(diagview,Row)
+arma_operator_obj1_obj2_mixed(diagview,diagview)
+arma_operator_obj1_obj2_mixed(diagview,subview_col)
+arma_operator_obj1_obj2_mixed(diagview,subview_row)
+
+arma_operator_obj1_obj2_mixed(subview_col,Col)
+arma_operator_obj1_obj2_mixed(subview_col,Row)
+arma_operator_obj1_obj2_mixed(subview_col,diagview)
+arma_operator_obj1_obj2_mixed(subview_col,subview_col)
+arma_operator_obj1_obj2_mixed(subview_col,subview_row)
+arma_operator_obj1_obj2_mixed(subview_row,Col)
+arma_operator_obj1_obj2_mixed(subview_row,Row)
+arma_operator_obj1_obj2_mixed(subview_row,diagview)
+arma_operator_obj1_obj2_mixed(subview_row,subview_col)
+arma_operator_obj1_obj2_mixed(subview_row,subview_row)
+
+
+
+// TODO: explicit handling of subview_elem1, perhaps via expanding the above macros to take another paramater (for template<T1>)
 
 
 //! @}

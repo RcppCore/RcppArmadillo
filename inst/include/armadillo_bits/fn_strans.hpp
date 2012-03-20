@@ -1,5 +1,5 @@
-// Copyright (C) 2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2011 Conrad Sanderson
+// Copyright (C) 2011-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2011-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -19,10 +19,16 @@
 template<typename T1>
 arma_inline
 const Op<T1, op_strans>
-strans(const Base<typename T1::elem_type,T1>& X, const typename arma_cx_only<typename T1::elem_type>::result* junk = 0)
+strans
+  (
+  const Base<typename T1::elem_type,T1>& X,
+  const typename enable_if<is_basevec<T1>::value == false>::result* junk1 = 0,
+  const typename arma_cx_only<typename T1::elem_type>::result* junk2 = 0
+  )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
+  arma_ignore(junk1);
+  arma_ignore(junk2);
   
   return Op<T1, op_strans>(X.get_ref());
   }
@@ -32,12 +38,56 @@ strans(const Base<typename T1::elem_type,T1>& X, const typename arma_cx_only<typ
 template<typename T1>
 arma_inline
 const Op<T1, op_htrans>
-strans(const Base<typename T1::elem_type,T1>& X, const typename arma_not_cx<typename T1::elem_type>::result* junk = 0)
+strans
+  (
+  const Base<typename T1::elem_type,T1>& X,
+  const typename enable_if<is_basevec<T1>::value == false>::result* junk1 = 0,
+  const typename arma_not_cx<typename T1::elem_type>::result* junk2 = 0
+  )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
+  arma_ignore(junk1);
+  arma_ignore(junk2);
   
   return Op<T1, op_htrans>(X.get_ref());
+  }
+
+
+
+template<typename T1>
+arma_inline
+const Op<T1, op_strans>
+strans
+  (
+  const T1& X,
+  const typename enable_if<is_basevec<T1>::value == true>::result* junk1 = 0,
+  const typename arma_cx_only<typename T1::elem_type>::result* junk2 = 0
+  )
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk1);
+  arma_ignore(junk2);
+  
+  return Op<T1, op_strans>(X);
+  }
+
+
+
+template<typename T1>
+arma_inline
+const Op<T1, op_htrans>
+strans
+  (
+  const T1& X,
+  const typename enable_if<is_basevec<T1>::value == true>::result* junk1 = 0,
+  const typename arma_not_cx<typename T1::elem_type>::result* junk2 = 0
+  )
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk1);
+  arma_ignore(junk2);
+  
+  return Op<T1, op_htrans>(X);
   }
 
 
