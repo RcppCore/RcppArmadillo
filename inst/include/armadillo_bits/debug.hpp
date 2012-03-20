@@ -1071,6 +1071,8 @@ arma_assert_mul_size(const subview<eT1>& A, const subview<eT2>& B, const char* x
   #define ARMA_FNSIG  __FUNCSIG__ 
 #elif defined (ARMA_USE_BOOST)
   #define ARMA_FNSIG  BOOST_CURRENT_FUNCTION  
+#elif defined (ARMA_USE_CXX11)
+  #define ARMA_FNSIG  __func__
 #else 
   #define ARMA_FNSIG  "(unknown)"
 #endif

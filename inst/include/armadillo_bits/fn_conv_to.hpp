@@ -134,8 +134,7 @@ conv_to<out_eT>::from(const BaseCube<in_eT, T1>& in, const typename arma_cx_only
 
 
 
-//! conversion to Armadillo matrices from Armadillo Base objects,
-//! as well as from std::vector, itpp::Mat and itpp::Vec
+//! conversion to Armadillo matrices from Armadillo Base objects, as well as from std::vector
 template<typename out_eT>
 class conv_to< Mat<out_eT> >
   {
@@ -154,22 +153,6 @@ class conv_to< Mat<out_eT> >
   
   template<typename in_eT>
   inline static Mat<out_eT> from(const std::vector<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
-  
-  
-  
-  template<typename in_eT>
-  inline static Mat<out_eT> from(const itpp::Mat<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
-  
-  template<typename in_eT>
-  inline static Mat<out_eT> from(const itpp::Mat<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
-  
-  
-  
-  template<typename in_eT>
-  inline static Mat<out_eT> from(const itpp::Vec<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
-  
-  template<typename in_eT>
-  inline static Mat<out_eT> from(const itpp::Vec<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
   };
 
 
@@ -283,84 +266,7 @@ conv_to< Mat<out_eT> >::from(const std::vector<in_eT>& in, const typename arma_c
 
 
 
-template<typename out_eT>
-template<typename in_eT>
-inline
-Mat<out_eT>
-conv_to< Mat<out_eT> >::from(const itpp::Mat<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk)
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_ignore(junk);
-  
-  Mat<out_eT> out(in.rows(), in.cols());
-  
-  arrayops::convert( out.memptr(), in._data(), out.n_elem );
-  
-  return out;
-  }
-
-
-
-template<typename out_eT>
-template<typename in_eT>
-inline
-Mat<out_eT>
-conv_to< Mat<out_eT> >::from(const itpp::Mat<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk)
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_ignore(junk);
-  
-  Mat<out_eT> out(in.rows(), in.cols());
-  
-  arrayops::convert_cx( out.memptr(), in._data(), out.n_elem );
-  
-  return out;
-  }
-
-
-
-template<typename out_eT>
-template<typename in_eT>
-inline
-Mat<out_eT>
-conv_to< Mat<out_eT> >::from(const itpp::Vec<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk)
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_ignore(junk);
-  
-  Mat<out_eT> out(in.length(), 1);
-  
-  arrayops::convert( out.memptr(), in._data(), out.n_elem );
-  
-  return out;
-  }
-
-
-
-template<typename out_eT>
-template<typename in_eT>
-inline
-Mat<out_eT>
-conv_to< Mat<out_eT> >::from(const itpp::Vec<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk)
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_ignore(junk);
-  
-  Mat<out_eT> out(in.length(), 1);
-  
-  arrayops::convert_cx( out.memptr(), in._data(), out.n_elem );
-  
-  return out;
-  }
-
-
-
-//! conversion to Armadillo row vectors from Armadillo Base objects,
-//! as well as from std::vector, itpp::Mat and itpp::Vec
+//! conversion to Armadillo row vectors from Armadillo Base objects, as well as from std::vector
 template<typename out_eT>
 class conv_to< Row<out_eT> >
   {
@@ -379,22 +285,6 @@ class conv_to< Row<out_eT> >
   
   template<typename in_eT>
   inline static Row<out_eT> from(const std::vector<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
-  
-  
-  
-  template<typename in_eT>
-  inline static Row<out_eT> from(const itpp::Mat<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
-  
-  template<typename in_eT>
-  inline static Row<out_eT> from(const itpp::Mat<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
-  
-  
-  
-  template<typename in_eT>
-  inline static Row<out_eT> from(const itpp::Vec<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
-  
-  template<typename in_eT>
-  inline static Row<out_eT> from(const itpp::Vec<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
   };
 
 
@@ -512,90 +402,7 @@ conv_to< Row<out_eT> >::from(const std::vector<in_eT>& in, const typename arma_c
 
 
 
-template<typename out_eT>
-template<typename in_eT>
-inline
-Row<out_eT>
-conv_to< Row<out_eT> >::from(const itpp::Mat<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk)
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_ignore(junk);
-  
-  const bool is_vec = ( (in.rows() == 1) || (in.cols() == 1) );
-  
-  arma_debug_check( (is_vec == false), "conv_to(): given object can't be interpreted as a vector" );
-  
-  Row<out_eT> out(in.rows() * in.cols());
-  
-  arrayops::convert( out.memptr(), in._data(), out.n_elem );
-  
-  return out;
-  }
-
-
-
-template<typename out_eT>
-template<typename in_eT>
-inline
-Row<out_eT>
-conv_to< Row<out_eT> >::from(const itpp::Mat<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk)
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_ignore(junk);
-  
-  //const bool is_vec = ( (in.rows() == 1) || (in.cols() == 1) );
-  
-  Row<out_eT> out(in.rows() * in.cols());
-  
-  arrayops::convert_cx( out.memptr(), in._data(), out.n_elem );
-  
-  return out;
-  }
-
-
-
-template<typename out_eT>
-template<typename in_eT>
-inline
-Row<out_eT>
-conv_to< Row<out_eT> >::from(const itpp::Vec<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk)
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_ignore(junk);
-  
-  Row<out_eT> out(in.length());
-  
-  arrayops::convert( out.memptr(), in._data(), out.n_elem );
-  
-  return out;
-  }
-
-
-
-template<typename out_eT>
-template<typename in_eT>
-inline
-Row<out_eT>
-conv_to< Row<out_eT> >::from(const itpp::Vec<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk)
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_ignore(junk);
-  
-  Row<out_eT> out(in.length());
-  
-  arrayops::convert_cx( out.memptr(), in._data(), out.n_elem );
-  
-  return out;
-  }
-
-
-
-//! conversion to Armadillo column vectors from Armadillo Base objects,
-//! as well as from std::vector, itpp::Mat and itpp::Vec
+//! conversion to Armadillo column vectors from Armadillo Base objects, as well as from std::vector
 template<typename out_eT>
 class conv_to< Col<out_eT> >
   {
@@ -614,22 +421,6 @@ class conv_to< Col<out_eT> >
   
   template<typename in_eT>
   inline static Col<out_eT> from(const std::vector<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
-  
-  
-  
-  template<typename in_eT>
-  inline static Col<out_eT> from(const itpp::Mat<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
-  
-  template<typename in_eT>
-  inline static Col<out_eT> from(const itpp::Mat<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
-  
-  
-  
-  template<typename in_eT>
-  inline static Col<out_eT> from(const itpp::Vec<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
-  
-  template<typename in_eT>
-  inline static Col<out_eT> from(const itpp::Vec<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
   };
 
 
@@ -741,88 +532,6 @@ conv_to< Col<out_eT> >::from(const std::vector<in_eT>& in, const typename arma_c
     
     arrayops::convert_cx_scalar(out_elem, in_elem);
     }
-  
-  return out;
-  }
-
-
-
-template<typename out_eT>
-template<typename in_eT>
-inline
-Col<out_eT>
-conv_to< Col<out_eT> >::from(const itpp::Mat<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk)
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_ignore(junk);
-  
-  const bool is_vec = ( (in.rows() == 1) || (in.cols() == 1) );
-  
-  arma_debug_check( (is_vec == false), "conv_to(): given object can't be interpreted as a vector" );
-  
-  Col<out_eT> out(in.rows() * in.cols());
-  
-  arrayops::convert( out.memptr(), in._data(), out.n_elem );
-  
-  return out;
-  }
-
-
-
-template<typename out_eT>
-template<typename in_eT>
-inline
-Col<out_eT>
-conv_to< Col<out_eT> >::from(const itpp::Mat<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk)
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_ignore(junk);
-  
-  //const bool is_vec = ( (in.rows() == 1) || (in.cols() == 1) );
-  
-  Col<out_eT> out(in.rows() * in.cols());
-  
-  arrayops::convert_cx( out.memptr(), in._data(), out.n_elem );
-  
-  return out;
-  }
-
-
-
-template<typename out_eT>
-template<typename in_eT>
-inline
-Col<out_eT>
-conv_to< Col<out_eT> >::from(const itpp::Vec<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk)
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_ignore(junk);
-  
-  Col<out_eT> out( in.length() );
-  
-  arrayops::convert( out.memptr(), in._data(), out.n_elem );
-  
-  return out;
-  }
-
-
-
-template<typename out_eT>
-template<typename in_eT>
-inline
-Col<out_eT>
-conv_to< Col<out_eT> >::from(const itpp::Vec<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk)
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_ignore(junk);
-  
-  Col<out_eT> out( in.length() );
-  
-  arrayops::convert_cx( out.memptr(), in._data(), out.n_elem );
   
   return out;
   }
@@ -972,127 +681,6 @@ conv_to< std::vector<out_eT> >::from(const Base<in_eT, T1>& in, const typename a
     
     arrayops::convert_cx_scalar(out_elem, X_elem);
     }
-  
-  return out;
-  }
-
-
-
-//! conversion to itpp::Mat from Armadillo Base objects
-template<typename out_eT>
-class conv_to< itpp::Mat<out_eT> >
-  {
-  public:
-  
-  template<typename in_eT, typename T1>
-  inline static itpp::Mat<out_eT> from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
-  
-  template<typename in_eT, typename T1>
-  inline static itpp::Mat<out_eT> from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
-  };
-
-
-
-template<typename out_eT>
-template<typename in_eT, typename T1>
-inline
-itpp::Mat<out_eT>
-conv_to< itpp::Mat<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk)
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_ignore(junk);
-  
-  const unwrap<T1>      tmp( in.get_ref() );
-  const Mat<in_eT>& X = tmp.M;
-  
-  itpp::Mat<out_eT> out(X.n_rows, X.n_cols);
-  
-  arrayops::convert( out._data(), X.memptr(), X.n_elem );
-  
-  return out;
-  }
-
-
-
-template<typename out_eT>
-template<typename in_eT, typename T1>
-inline
-itpp::Mat<out_eT>
-conv_to< itpp::Mat<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk)
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_ignore(junk);
-  
-  const unwrap<T1>      tmp( in.get_ref() );
-  const Mat<in_eT>& X = tmp.M;
-  
-  itpp::Mat<out_eT> out(X.n_rows, X.n_cols);
-  
-  arrayops::convert_cx( out._data(), X.memptr(), X.n_elem );
-  
-  return out;
-  }
-
-
-
-
-//! conversion to itpp::Vec from Armadillo Base objects
-template<typename out_eT>
-class conv_to< itpp::Vec<out_eT> >
-  {
-  public:
-  
-  template<typename in_eT, typename T1>
-  inline static itpp::Vec<out_eT> from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
-  
-  template<typename in_eT, typename T1>
-  inline static itpp::Vec<out_eT> from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
-  };
-
-
-
-template<typename out_eT>
-template<typename in_eT, typename T1>
-inline
-itpp::Vec<out_eT>
-conv_to< itpp::Vec<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk)
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_ignore(junk);
-  
-  const unwrap<T1>      tmp( in.get_ref() );
-  const Mat<in_eT>& X = tmp.M;
-  
-  arma_debug_check( (X.is_vec() == false), "conv_to(): given object can't be interpreted as a vector" );
-  
-  itpp::Vec<out_eT> out(X.n_elem);
-  
-  arrayops::convert( out._data(), X.memptr(), X.n_elem );
-  
-  return out;
-  }
-
-
-
-template<typename out_eT>
-template<typename in_eT, typename T1>
-inline
-itpp::Vec<out_eT>
-conv_to< itpp::Vec<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk)
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_ignore(junk);
-  
-  const unwrap<T1>      tmp( in.get_ref() );
-  const Mat<in_eT>& X = tmp.M;
-  
-  itpp::Vec<out_eT> out(X.n_elem);
-  
-  arrayops::convert_cx( out._data(), X.memptr(), X.n_elem );
   
   return out;
   }

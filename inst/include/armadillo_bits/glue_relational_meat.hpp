@@ -58,12 +58,22 @@
       }\
     else\
       {\
-      uword count = 0;\
-      \
-      for(uword col=0; col<n_cols; ++col)\
-      for(uword row=0; row<n_rows; ++row, ++count)\
+      if(n_rows == 1)\
         {\
-        out_mem[count] = (P1.at(row,col) operator_rel P2.at(row,col)) ? uword(1) : uword(0);\
+        for(uword count=0; count < n_cols; ++count)\
+          {\
+          out_mem[count] = (P1.at(0,count) operator_rel P2.at(0,count)) ? uword(1) : uword(0);\
+          }\
+        }\
+      else\
+        {\
+        uword count = 0;\
+        \
+        for(uword col=0; col<n_cols; ++col)\
+        for(uword row=0; row<n_rows; ++row, ++count)\
+          {\
+          out_mem[count] = (P1.at(row,col) operator_rel P2.at(row,col)) ? uword(1) : uword(0);\
+          }\
         }\
       }\
     }\

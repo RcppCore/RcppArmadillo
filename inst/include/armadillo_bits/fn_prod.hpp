@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2011 Conrad Sanderson
+// Copyright (C) 2009-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -26,41 +26,37 @@
 template<typename T1>
 arma_inline
 const Op<T1, op_prod>
-prod(const Base<typename T1::elem_type,T1>& X, const uword dim = 0)
+prod
+  (
+  const Base<typename T1::elem_type,T1>& X,
+  const uword dim = 0,
+  const typename enable_if<resolves_to_vector<T1>::value == false>::result* junk1 = 0,
+  const typename enable_if<is_basevec<T1>::value == false>::result* junk2 = 0
+  )
   {
   arma_extra_debug_sigprint();
+  arma_ignore(junk1);
+  arma_ignore(junk2);
   
   return Op<T1, op_prod>(X.get_ref(), dim, 0);
   }
 
 
 
-//! \brief
-//! Immediate 'product of all values' operation for a row vector
-template<typename eT>
-inline
-arma_warn_unused
-eT
-prod(const Row<eT>& X)
+template<typename T1>
+arma_inline
+const Op<T1, op_prod>
+prod
+  (
+  const Base<typename T1::elem_type,T1>& X,
+  const uword dim,
+  const typename enable_if<resolves_to_vector<T1>::value == true>::result* junk = 0
+  )
   {
   arma_extra_debug_sigprint();
+  arma_ignore(junk);
   
-  return arrayops::product(X.memptr(), X.n_elem);
-  }
-
-
-
-//! \brief
-//! Immediate 'product of all values' operation for a column vector
-template<typename eT>
-inline
-arma_warn_unused
-eT
-prod(const Col<eT>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  return arrayops::product(X.memptr(), X.n_elem);
+  return Op<T1, op_prod>(X.get_ref(), dim, 0);
   }
 
 
@@ -77,12 +73,7 @@ prod(const Op<T1, op_prod>& in)
   arma_extra_debug_sigprint();
   arma_extra_debug_print("prod(): two consecutive prod() calls detected");
   
-  typedef typename T1::elem_type eT;
-  
-  const unwrap<T1>   tmp(in.m);
-  const Mat<eT>& X = tmp.M;
-  
-  return arrayops::product( X.memptr(), X.n_elem );
+  return op_prod::prod( in.m );
   }
 
 
@@ -99,85 +90,53 @@ prod(const Op<T1, op_prod>& in, const uword dim)
 
 
 
-//! product of all values of a subview_row
-template<typename eT>
+template<typename T1>
 inline
 arma_warn_unused
-eT
-prod(const subview_row<eT>& S)
+typename T1::elem_type
+prod
+  (
+  const Base<typename T1::elem_type,T1>& X,
+  const arma_empty_class junk1 = arma_empty_class(),
+  const typename enable_if<resolves_to_vector<T1>::value == true>::result* junk2 = 0
+  )
   {
   arma_extra_debug_sigprint();
+  arma_ignore(junk1);
+  arma_ignore(junk2);
   
-  const Mat<eT>& X = S.m;
-  
-  const uword n_elem         = S.n_elem;
-  const uword row            = S.aux_row1;
-  const uword start_col      = S.aux_col1;
-  const uword end_col_plus_1 = start_col + S.n_cols;
-  
-  eT val = eT(1);
-  
-  if(n_elem > 0)
-    {
-    for(uword col=start_col; col<end_col_plus_1; ++col)
-      {
-      val *= X.at(row,col);
-      }
-    }
-  
-  return val;
+  return op_prod::prod( X.get_ref() );
   }
 
 
 
-//! product of all values of a subview_col
-template<typename eT>
+template<typename T1>
 inline
 arma_warn_unused
-eT
-prod(const subview_col<eT>& S)
+typename T1::elem_type
+prod
+  (
+  const T1& X,
+  const arma_empty_class junk1 = arma_empty_class(),
+  const typename enable_if<is_basevec<T1>::value == true>::result* junk2 = 0
+  )
   {
   arma_extra_debug_sigprint();
+  arma_ignore(junk1);
+  arma_ignore(junk2);
   
-  return (S.n_elem > 0) ? arrayops::product( S.colptr(0), S.n_rows ) : eT(1);
+  return op_prod::prod(X);
   }
 
 
 
-//! product of all values of a diagview
-template<typename eT>
+template<typename T>
+arma_inline
 arma_warn_unused
-inline
-eT
-prod(const diagview<eT>& X)
+const typename arma_scalar_only<T>::result &
+prod(const T& x)
   {
-  arma_extra_debug_sigprint();
-  
-  const uword X_n_elem = X.n_elem;
-  
-  eT val = eT(1);
-  
-  for(uword i=0; i<X_n_elem; ++i)
-    {
-    val *= X[i];
-    }
-  
-  return val;
-  }
-
-
-
-template<typename eT, typename T1>
-inline
-arma_warn_unused
-eT
-prod(const subview_elem1<eT,T1>& A)
-  {
-  arma_extra_debug_sigprint();
-  
-  const Col<eT> X(A);
-  
-  return prod(X);
+  return x;
   }
 
 

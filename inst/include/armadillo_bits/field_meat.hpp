@@ -315,7 +315,7 @@ field<oT>::operator<<(const oT& val)
 template<typename oT>
 inline
 field_injector< field<oT> >
-field<oT>::operator<<(const injector_end_of_row& x)
+field<oT>::operator<<(const injector_end_of_row<>& x)
   {
   return field_injector< field<oT> >(*this, x);
   }

@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2010-2011 Conrad Sanderson
+// Copyright (C) 2010-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -45,28 +45,38 @@
 
 #define arma_applier_2(operatorA) \
   {\
-  uword count = 0;\
-  \
-  for(uword col=0; col<n_cols; ++col)\
+  if(n_rows != 1)\
     {\
-    uword i,j;\
+    uword count = 0;\
     \
-    for(i=0, j=1; j<n_rows; i+=2, j+=2, count+=2)\
+    for(uword col=0; col<n_cols; ++col)\
       {\
-      eT tmp_i = P.at(i,col);\
-      eT tmp_j = P.at(j,col);\
+      uword i,j;\
       \
-      tmp_i = eop_core<eop_type>::process(tmp_i, k);\
-      tmp_j = eop_core<eop_type>::process(tmp_j, k);\
+      for(i=0, j=1; j<n_rows; i+=2, j+=2, count+=2)\
+        {\
+        eT tmp_i = P.at(i,col);\
+        eT tmp_j = P.at(j,col);\
+        \
+        tmp_i = eop_core<eop_type>::process(tmp_i, k);\
+        tmp_j = eop_core<eop_type>::process(tmp_j, k);\
+        \
+        out_mem[count  ] operatorA tmp_i;\
+        out_mem[count+1] operatorA tmp_j;\
+        }\
       \
-      out_mem[count  ] operatorA tmp_i;\
-      out_mem[count+1] operatorA tmp_j;\
+      if(i < n_rows)\
+        {\
+        out_mem[count] operatorA eop_core<eop_type>::process(P.at(i,col), k);\
+        ++count;\
+        }\
       }\
-    \
-    if(i < n_rows)\
+    }\
+  else\
+    {\
+    for(uword count=0; count < n_cols; ++count)\
       {\
-      out_mem[count] operatorA eop_core<eop_type>::process(P.at(i,col), k);\
-      ++count;\
+      out_mem[count] operatorA eop_core<eop_type>::process(P.at(0,count), k);\
       }\
     }\
   }
@@ -122,10 +132,6 @@ eop_core<eop_type>::apply(Mat<typename T1::elem_type>& out, const eOp<T1, eop_ty
   
   typedef typename T1::elem_type eT;
   
-  const uword n_rows = out.n_rows;
-  const uword n_cols = out.n_cols;
-  const uword n_elem = out.n_elem;
-  
   // NOTE: we're assuming that the matrix has already been set to the correct size and there is no aliasing;
   // size setting and alias checking is done by either the Mat contructor or operator=()
   
@@ -134,12 +140,17 @@ eop_core<eop_type>::apply(Mat<typename T1::elem_type>& out, const eOp<T1, eop_ty
   
   if(Proxy<T1>::prefer_at_accessor == false)
     {
+    const uword n_elem = out.n_elem;
+    
     typename Proxy<T1>::ea_type P = x.P.get_ea();
     
     arma_applier_1(=);
     }
   else
     {
+    const uword n_rows = x.get_n_rows();
+    const uword n_cols = x.get_n_cols();
+    
     const Proxy<T1>& P = x.P;
     
     arma_applier_2(=);

@@ -26,6 +26,9 @@ class mtOp : public Base<out_eT, mtOp<out_eT, T1, op_type> >
 
   typedef typename T1::elem_type                in_eT;
 
+  static const bool is_row = T1::is_row && is_op_mixed_elem<op_type>::value;
+  static const bool is_col = T1::is_col && is_op_mixed_elem<op_type>::value; 
+  
   inline explicit mtOp(const T1& in_m);
   inline          mtOp(const T1& in_m, const in_eT in_aux);
   inline          mtOp(const T1& in_m, const uword in_aux_uword_a, const uword in_aux_uword_b);

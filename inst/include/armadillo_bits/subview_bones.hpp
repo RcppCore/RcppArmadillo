@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // Copyright (C)      2011 James Sanders
 // 
 // This file is part of the Armadillo C++ library.
@@ -21,13 +21,15 @@
 template<typename eT>
 class subview : public Base<eT, subview<eT> >
   {
-  public:    arma_aligned const Mat<eT>& m;
-  protected: arma_aligned       Mat<eT>* m_ptr;
-  
   public:
   
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
+  
+  arma_aligned const Mat<eT>& m;
+  
+  static const bool is_row = false;
+  static const bool is_col = false;
   
   const uword aux_row1;
   const uword aux_col1;
@@ -40,7 +42,6 @@ class subview : public Base<eT, subview<eT> >
   protected:
   
   arma_inline subview(const Mat<eT>& in_m, const uword in_row1, const uword in_col1, const uword in_n_rows, const uword in_n_cols);
-  arma_inline subview(      Mat<eT>& in_m, const uword in_row1, const uword in_col1, const uword in_n_rows, const uword in_n_cols);
   
   
   public:
@@ -177,11 +178,18 @@ class subview_col : public subview<eT>
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
+  static const bool is_row = false;
+  static const bool is_col = true;
+  
   inline void operator= (const subview<eT>& x);
   inline void operator= (const subview_col& x);
   
   template<typename T1>
   inline void operator= (const Base<eT,T1>& x);
+  
+  arma_inline const Op<subview_col<eT>,op_htrans>  t() const;
+  arma_inline const Op<subview_col<eT>,op_htrans> ht() const;
+  arma_inline const Op<subview_col<eT>,op_strans> st() const;
   
   inline       subview_col<eT> rows(const uword in_row1, const uword in_row2);
   inline const subview_col<eT> rows(const uword in_row1, const uword in_row2) const;
@@ -193,10 +201,7 @@ class subview_col : public subview<eT>
   protected:
   
   inline subview_col(const Mat<eT>& in_m, const uword in_col);
-  inline subview_col(      Mat<eT>& in_m, const uword in_col);
-  
   inline subview_col(const Mat<eT>& in_m, const uword in_col, const uword in_row1, const uword in_n_rows);
-  inline subview_col(      Mat<eT>& in_m, const uword in_col, const uword in_row1, const uword in_n_rows);
   
   
   private:
@@ -218,11 +223,18 @@ class subview_row : public subview<eT>
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
+  static const bool is_row = true;
+  static const bool is_col = false;
+  
   inline void operator= (const subview<eT>& x);
   inline void operator= (const subview_row& x);
   
   template<typename T1>
   inline void operator= (const Base<eT,T1>& x);
+  
+  arma_inline const Op<subview_row<eT>,op_htrans>  t() const;
+  arma_inline const Op<subview_row<eT>,op_htrans> ht() const;
+  arma_inline const Op<subview_row<eT>,op_strans> st() const;
   
   inline       subview_row<eT> cols(const uword in_col1, const uword in_col2);
   inline const subview_row<eT> cols(const uword in_col1, const uword in_col2) const;
@@ -234,10 +246,7 @@ class subview_row : public subview<eT>
   protected:
   
   inline subview_row(const Mat<eT>& in_m, const uword in_row);
-  inline subview_row(      Mat<eT>& in_m, const uword in_row);
-  
   inline subview_row(const Mat<eT>& in_m, const uword in_row, const uword in_col1, const uword in_n_cols);
-  inline subview_row(      Mat<eT>& in_m, const uword in_row, const uword in_col1, const uword in_n_cols);
   
   
   private:

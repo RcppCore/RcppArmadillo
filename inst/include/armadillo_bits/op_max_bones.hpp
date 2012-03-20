@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -21,6 +21,13 @@ class op_max
   {
   public:
   
+  template<typename T1>
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_max>& in);
+  
+  
+  //
+  // for non-complex numbers
+  
   template<typename eT>
   inline static eT direct_max(const eT* const X, const uword N);
   
@@ -31,13 +38,10 @@ class op_max
   inline static eT direct_max(const Mat<eT>& X, const uword row);
   
   template<typename eT>
-  inline static eT direct_max(const subview<eT>& X);
-  
-  template<typename eT>
-  inline static eT direct_max(const diagview<eT>& X);
+  inline static eT max(const subview<eT>& X);
   
   template<typename T1>
-  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_max>& in);
+  inline static typename arma_not_cx<typename T1::elem_type>::result max(const Base<typename T1::elem_type, T1>& X);
   
   
   //
@@ -53,11 +57,10 @@ class op_max
   inline static std::complex<T> direct_max(const Mat< std::complex<T> >& X, const uword row);
   
   template<typename T>
-  inline static std::complex<T> direct_max(const subview< std::complex<T> >& X);
+  inline static std::complex<T> max(const subview< std::complex<T> >& X);
   
-  template<typename T>
-  inline static std::complex<T> direct_max(const diagview< std::complex<T> >& X);
-  
+  template<typename T1>
+  inline static typename arma_cx_only<typename T1::elem_type>::result max(const Base<typename T1::elem_type, T1>& X);
   };
 
 

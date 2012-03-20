@@ -21,8 +21,8 @@ struct strip_diagmat
   {
   typedef T1 stored_type;
   
-  inline strip_diagmat(const Base<typename T1::elem_type, T1>& X)
-    : M(X.get_ref())
+  inline strip_diagmat(const T1& X)
+    : M(X)
     {
     arma_extra_debug_sigprint();
     }

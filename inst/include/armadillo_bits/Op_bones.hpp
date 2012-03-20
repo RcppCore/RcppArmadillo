@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -33,6 +33,9 @@ class Op : public Base<typename T1::elem_type, Op<T1, op_type> >
   
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
+  
+  static const bool is_row = ( T1::is_col && (is_same_type<op_type, op_strans>::value || is_same_type<op_type, op_htrans>::value || is_same_type<op_type, op_htrans2>::value) );
+  static const bool is_col = ( T1::is_row && (is_same_type<op_type, op_strans>::value || is_same_type<op_type, op_htrans>::value || is_same_type<op_type, op_htrans2>::value) );
   
   inline explicit Op(const T1& in_m);
   inline          Op(const T1& in_m, const elem_type in_aux);

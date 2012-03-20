@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2010-2011 Conrad Sanderson
+// Copyright (C) 2010-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -22,7 +22,8 @@ struct eop_aux_randu
   arma_inline
   operator eT ()
     {
-    return eT(std::rand()) / eT(RAND_MAX);
+    //return eT(std::rand()) / eT(RAND_MAX);
+    return eT(std::rand()) * ( eT(1) / eT(RAND_MAX) );
     }
   };
 
@@ -79,8 +80,12 @@ struct eop_aux_randn
     
     do
       {
-      tmp1 = eTp(2) * eTp(std::rand()) / eTp(RAND_MAX) - eTp(1);
-      tmp2 = eTp(2) * eTp(std::rand()) / eTp(RAND_MAX) - eTp(1);
+      // tmp1 = eTp(2) * eTp(std::rand()) / eTp(RAND_MAX) - eTp(1);
+      // tmp2 = eTp(2) * eTp(std::rand()) / eTp(RAND_MAX) - eTp(1);
+      
+      tmp1 = eTp(2) * eTp(std::rand()) * (eTp(1) / eTp(RAND_MAX)) - eTp(1);
+      tmp2 = eTp(2) * eTp(std::rand()) * (eTp(1) / eTp(RAND_MAX)) - eTp(1);
+      
       w = tmp1*tmp1 + tmp2*tmp2;
       }
     while ( w >= eTp(1) );

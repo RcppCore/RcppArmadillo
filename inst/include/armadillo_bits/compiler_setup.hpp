@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -100,6 +100,7 @@
   
   #if defined(__clang__)
     #undef ARMA_HAVE_STD_TR1
+    #undef ARMA_GOOD_COMPILER
   #endif
   
   #if (ARMA_GCC_VERSION >= 40300)

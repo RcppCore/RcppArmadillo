@@ -626,10 +626,8 @@ auxlib::det(const Base<eT,T1>& X, const bool slow)
         return auxlib::det_lapack(A, make_copy);
       }
     }
-  else
-    {
-    return auxlib::det_lapack(A, make_copy);
-    }
+  
+  return auxlib::det_lapack(A, make_copy);
   }
 
 

@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -70,6 +70,40 @@ Mat<eT>::Mat(const uword in_n_rows, const uword in_n_cols)
   , n_cols(in_n_cols)
   , n_elem(in_n_rows*in_n_cols)
   , vec_state(0)
+  , mem_state(0)
+  , mem()
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  init_cold();
+  }
+
+
+
+//! constructor used by Row and Col classes
+template<typename eT>
+inline
+Mat<eT>::Mat(const arma_vec_indicator&, const uhword in_vec_state)
+  : n_rows( (in_vec_state == 2) ? 1 : 0 )
+  , n_cols( (in_vec_state == 1) ? 1 : 0 )
+  , n_elem(0)
+  , vec_state(in_vec_state)
+  , mem_state(0)
+  , mem()
+  {
+  arma_extra_debug_sigprint_this(this);
+  }
+
+
+
+//! constructor used by Row and Col classes
+template<typename eT>
+inline
+Mat<eT>::Mat(const arma_vec_indicator&, const uword in_n_rows, const uword in_n_cols, const uhword in_vec_state)
+  : n_rows(in_n_rows)
+  , n_cols(in_n_cols)
+  , n_elem(in_n_rows*in_n_cols)
+  , vec_state(in_vec_state)
   , mem_state(0)
   , mem()
   {
@@ -587,36 +621,57 @@ inline
 void
 Mat<eT>::init
   (
-  const Base<typename Mat<eT>::pod_type, T1>& A,
-  const Base<typename Mat<eT>::pod_type, T2>& B
+  const Base<typename Mat<eT>::pod_type, T1>& X,
+  const Base<typename Mat<eT>::pod_type, T2>& Y
   )
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type      T;
-  typedef typename Proxy<T1>::ea_type ea_type1;
-  typedef typename Proxy<T2>::ea_type ea_type2;
+  typedef typename T1::elem_type T;
   
   arma_type_check(( is_complex<eT>::value == false ));   //!< compile-time abort if eT isn't std::complex
   arma_type_check(( is_complex< T>::value == true  ));   //!< compile-time abort if T is std::complex
   
   arma_type_check(( is_same_type< std::complex<T>, eT >::value == false ));   //!< compile-time abort if types are not compatible
   
-  const Proxy<T1> X(A.get_ref());
-  const Proxy<T2> Y(B.get_ref());
+  const Proxy<T1> PX(X.get_ref());
+  const Proxy<T2> PY(Y.get_ref());
   
-  arma_assert_same_size(X, Y, "Mat()");
+  arma_assert_same_size(PX, PY, "Mat()");
   
-  init_warm(X.get_n_rows(), X.get_n_cols());
+  const uword local_n_rows = PX.get_n_rows();
+  const uword local_n_cols = PX.get_n_cols();
   
-  const uword    N       = n_elem;
-        eT*      out_mem = memptr();
-        ea_type1 PX      = X.get_ea();
-        ea_type2 PY      = Y.get_ea();
+  init_warm(local_n_rows, local_n_cols);
   
-  for(uword i=0; i<N; ++i)
+  eT* out_mem = (*this).memptr();
+  
+  const bool prefer_at_accessor = ( Proxy<T1>::prefer_at_accessor || Proxy<T2>::prefer_at_accessor );
+  
+  if(prefer_at_accessor == false)
     {
-    out_mem[i] = std::complex<T>(PX[i], PY[i]);
+    typedef typename Proxy<T1>::ea_type ea_type1;
+    typedef typename Proxy<T2>::ea_type ea_type2;
+  
+    const uword N = n_elem;
+    
+    ea_type1 A = PX.get_ea();
+    ea_type2 B = PY.get_ea();
+    
+    for(uword i=0; i<N; ++i)
+      {
+      out_mem[i] = std::complex<T>(A[i], B[i]);
+      }
+    }
+  else
+    {
+    uword i = 0;
+    
+    for(uword col=0; col < local_n_cols; ++col)
+    for(uword row=0; row < local_n_rows; ++row, ++i)
+      {
+      out_mem[i] = std::complex<T>(PX.at(row,col), PY.at(row,col));
+      }
     }
   }
 
@@ -1766,6 +1821,114 @@ Mat<eT>::operator/=(const subview_elem1<eT,T1>& X)
 
 
 template<typename eT>
+template<typename T1, typename T2>
+inline
+Mat<eT>::Mat(const subview_elem2<eT,T1,T2>& X)
+  : n_rows(0)
+  , n_cols(0)
+  , n_elem(0)
+  , vec_state(0)
+  , mem_state(0)
+  , mem()
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  this->operator=(X);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename T2>
+inline
+const Mat<eT>&
+Mat<eT>::operator=(const subview_elem2<eT,T1,T2>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview_elem2<eT,T1,T2>::extract(*this, X);
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename T2>
+inline
+const Mat<eT>&
+Mat<eT>::operator+=(const subview_elem2<eT,T1,T2>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview_elem2<eT,T1,T2>::plus_inplace(*this, X);
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename T2>
+inline
+const Mat<eT>&
+Mat<eT>::operator-=(const subview_elem2<eT,T1,T2>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview_elem2<eT,T1,T2>::minus_inplace(*this, X);
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename T2>
+inline
+const Mat<eT>&
+Mat<eT>::operator*=(const subview_elem2<eT,T1,T2>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  glue_times::apply_inplace(*this, X);
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename T2>
+inline
+const Mat<eT>&
+Mat<eT>::operator%=(const subview_elem2<eT,T1,T2>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview_elem2<eT,T1,T2>::schur_inplace(*this, X);
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename T2>
+inline
+const Mat<eT>&
+Mat<eT>::operator/=(const subview_elem2<eT,T1,T2>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview_elem2<eT,T1,T2>::div_inplace(*this, X);
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
 inline
 mat_injector< Mat<eT> >
 Mat<eT>::operator<<(const eT val)
@@ -1778,7 +1941,7 @@ Mat<eT>::operator<<(const eT val)
 template<typename eT>
 inline
 mat_injector< Mat<eT> >
-Mat<eT>::operator<<(const injector_end_of_row& x)
+Mat<eT>::operator<<(const injector_end_of_row<>& x)
   {
   return mat_injector< Mat<eT> >(*this, x);
   }
@@ -2251,29 +2414,133 @@ Mat<eT>::elem(const Base<uword,T1>& a) const
 
 
 
-// template<typename eT>
-// template<typename T1, typename T2>
-// arma_inline
-// subview_elem2<eT,T1,T2>
-// Mat<eT>::elem(const Base<uword,T1>& a, const Base<uword,T2>& b)
-//   {
-//   arma_extra_debug_sigprint();
-//   
-//   return subview_elem2<eT,T1,T2>(*this, a, b);
-//   }
-// 
-// 
-// 
-// template<typename eT>
-// template<typename T1, typename T2>
-// arma_inline
-// const subview_elem2<eT,T1,T2>
-// Mat<eT>::elem(const Base<uword,T1>& a, const Base<uword,T2>& b) const
-//   {
-//   arma_extra_debug_sigprint();
-//   
-//   return subview_elem2<eT,T1,T2>(*this, a, b);
-//   }
+template<typename eT>
+template<typename T1, typename T2>
+arma_inline
+subview_elem2<eT,T1,T2>
+Mat<eT>::elem(const Base<uword,T1>& ri, const Base<uword,T2>& ci)
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_elem2<eT,T1,T2>(*this, ri, ci, false, false);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename T2>
+arma_inline
+const subview_elem2<eT,T1,T2>
+Mat<eT>::elem(const Base<uword,T1>& ri, const Base<uword,T2>& ci) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_elem2<eT,T1,T2>(*this, ri, ci, false, false);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename T2>
+arma_inline
+subview_elem2<eT,T1,T2>
+Mat<eT>::submat(const Base<uword,T1>& ri, const Base<uword,T2>& ci)
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_elem2<eT,T1,T2>(*this, ri, ci, false, false);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename T2>
+arma_inline
+const subview_elem2<eT,T1,T2>
+Mat<eT>::submat(const Base<uword,T1>& ri, const Base<uword,T2>& ci) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_elem2<eT,T1,T2>(*this, ri, ci, false, false);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename T2>
+arma_inline
+subview_elem2<eT,T1,T2>
+Mat<eT>::operator()(const Base<uword,T1>& ri, const Base<uword,T2>& ci)
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_elem2<eT,T1,T2>(*this, ri, ci, false, false);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename T2>
+arma_inline
+const subview_elem2<eT,T1,T2>
+Mat<eT>::operator()(const Base<uword,T1>& ri, const Base<uword,T2>& ci) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_elem2<eT,T1,T2>(*this, ri, ci, false, false);
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+arma_inline
+subview_elem2<eT,T1,T1>
+Mat<eT>::rows(const Base<uword,T1>& ri)
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_elem2<eT,T1,T1>(*this, ri, ri, false, true);
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+arma_inline
+const subview_elem2<eT,T1,T1>
+Mat<eT>::rows(const Base<uword,T1>& ri) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_elem2<eT,T1,T1>(*this, ri, ri, false, true);
+  }
+
+
+
+template<typename eT>
+template<typename T2>
+arma_inline
+subview_elem2<eT,T2,T2>
+Mat<eT>::cols(const Base<uword,T2>& ci)
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_elem2<eT,T2,T2>(*this, ci, ci, true, false);
+  }
+
+
+
+template<typename eT>
+template<typename T2>
+arma_inline
+const subview_elem2<eT,T2,T2>
+Mat<eT>::cols(const Base<uword,T2>& ci) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_elem2<eT,T2,T2>(*this, ci, ci, true, false);
+  }
 
 
 
@@ -2713,9 +2980,9 @@ Mat<eT>::insert_cols(const uword col_num, const Base<eT,T1>& X)
 
 
 template<typename eT>
-template<typename gen_type>
+template<typename T1, typename gen_type>
 inline
-Mat<eT>::Mat(const Gen<eT, gen_type>& X)
+Mat<eT>::Mat(const Gen<T1, gen_type>& X)
   : n_rows(X.n_rows)
   , n_cols(X.n_cols)
   , n_elem(n_rows*n_cols)
@@ -2725,6 +2992,8 @@ Mat<eT>::Mat(const Gen<eT, gen_type>& X)
   {
   arma_extra_debug_sigprint_this(this);
   
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::value == false ));
+  
   init_cold();
   
   X.apply(*this);
@@ -2733,12 +3002,14 @@ Mat<eT>::Mat(const Gen<eT, gen_type>& X)
 
 
 template<typename eT>
-template<typename gen_type>
+template<typename T1, typename gen_type>
 inline
 const Mat<eT>&
-Mat<eT>::operator=(const Gen<eT, gen_type>& X)
+Mat<eT>::operator=(const Gen<T1, gen_type>& X)
   {
   arma_extra_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::value == false ));
   
   init_warm(X.n_rows, X.n_cols);
   
@@ -2750,12 +3021,14 @@ Mat<eT>::operator=(const Gen<eT, gen_type>& X)
 
 
 template<typename eT>
-template<typename gen_type>
+template<typename T1, typename gen_type>
 inline
 const Mat<eT>&
-Mat<eT>::operator+=(const Gen<eT, gen_type>& X)
+Mat<eT>::operator+=(const Gen<T1, gen_type>& X)
   {
   arma_extra_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::value == false ));
   
   X.apply_inplace_plus(*this);
   
@@ -2765,12 +3038,14 @@ Mat<eT>::operator+=(const Gen<eT, gen_type>& X)
 
 
 template<typename eT>
-template<typename gen_type>
+template<typename T1, typename gen_type>
 inline
 const Mat<eT>&
-Mat<eT>::operator-=(const Gen<eT, gen_type>& X)
+Mat<eT>::operator-=(const Gen<T1, gen_type>& X)
   {
   arma_extra_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::value == false ));
   
   X.apply_inplace_minus(*this);
   
@@ -2780,12 +3055,14 @@ Mat<eT>::operator-=(const Gen<eT, gen_type>& X)
 
 
 template<typename eT>
-template<typename gen_type>
+template<typename T1, typename gen_type>
 inline
 const Mat<eT>&
-Mat<eT>::operator*=(const Gen<eT, gen_type>& X)
+Mat<eT>::operator*=(const Gen<T1, gen_type>& X)
   {
   arma_extra_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::value == false ));
   
   const Mat<eT> tmp(X);
   
@@ -2795,12 +3072,14 @@ Mat<eT>::operator*=(const Gen<eT, gen_type>& X)
 
 
 template<typename eT>
-template<typename gen_type>
+template<typename T1, typename gen_type>
 inline
 const Mat<eT>&
-Mat<eT>::operator%=(const Gen<eT, gen_type>& X)
+Mat<eT>::operator%=(const Gen<T1, gen_type>& X)
   {
   arma_extra_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::value == false ));
   
   X.apply_inplace_schur(*this);
   
@@ -2810,12 +3089,14 @@ Mat<eT>::operator%=(const Gen<eT, gen_type>& X)
 
 
 template<typename eT>
-template<typename gen_type>
+template<typename T1, typename gen_type>
 inline
 const Mat<eT>&
-Mat<eT>::operator/=(const Gen<eT, gen_type>& X)
+Mat<eT>::operator/=(const Gen<T1, gen_type>& X)
   {
   arma_extra_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::value == false ));
   
   X.apply_inplace_div(*this);
   
@@ -2987,7 +3268,7 @@ Mat<eT>::operator=(const eOp<T1, eop_type>& X)
   
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::value == false ));
   
-  const bool bad_alias = (X.P.has_subview  &&  X.P.is_alias(*this));
+  const bool bad_alias = (eOp<T1, eop_type>::proxy_type::has_subview  &&  X.P.is_alias(*this));
   
   if(bad_alias == false)
     {
@@ -3409,7 +3690,12 @@ Mat<eT>::operator=(const eGlue<T1, T2, eglue_type>& X)
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::value == false ));
   arma_type_check(( is_same_type< eT, typename T2::elem_type >::value == false ));
   
-  const bool bad_alias = ( (X.P1.has_subview  &&  X.P1.is_alias(*this))  ||  ( X.P2.has_subview  &&  X.P2.is_alias(*this)) );
+  const bool bad_alias =
+    (
+    (eGlue<T1, T2, eglue_type>::proxy1_type::has_subview  &&  X.P1.is_alias(*this))
+    ||
+    (eGlue<T1, T2, eglue_type>::proxy2_type::has_subview  &&  X.P2.is_alias(*this))
+    );
   
   if(bad_alias == false)
     {
@@ -4295,16 +4581,21 @@ Mat<eT>::reshape(const uword in_rows, const uword in_cols, const uword dim)
 
 
 
-//! change the matrix (without preserving data) to have the same dimensions as the given matrix 
+//! change the matrix (without preserving data) to have the same dimensions as the given expression 
 template<typename eT>
-template<typename eT2>
+template<typename eT2, typename expr>
 inline
 void
-Mat<eT>::copy_size(const Mat<eT2>& m)
+Mat<eT>::copy_size(const Base<eT2, expr>& X)
   {
   arma_extra_debug_sigprint();
   
-  init_warm(m.n_rows, m.n_cols);
+  const Proxy<expr> P(X.get_ref());
+  
+  const uword X_n_rows = P.get_n_rows();
+  const uword X_n_cols = P.get_n_cols();
+  
+  init_warm(X_n_rows, X_n_cols);
   }
 
 
@@ -5473,35 +5764,6 @@ Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::fixed(const Base<pod_type,T1>& A, co
 template<typename eT>
 template<uword fixed_n_rows, uword fixed_n_cols>
 inline
-Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::fixed(eT* aux_mem, const bool copy_aux_mem)
-  {
-  arma_extra_debug_sigprint_this(this);
-  
-  access::rw(Mat<eT>::n_rows)    = fixed_n_rows;
-  access::rw(Mat<eT>::n_cols)    = fixed_n_cols;
-  access::rw(Mat<eT>::n_elem)    = fixed_n_elem;
-  access::rw(Mat<eT>::vec_state) = 0;
-  access::rw(Mat<eT>::mem_state) = 3;
-  
-  if(copy_aux_mem == true)
-    {
-    eT* dest = (use_extra) ? mem_local_extra : mem_local;
-    
-    access::rw(Mat<eT>::mem) = dest;
-    
-    arrayops::copy( dest, aux_mem, fixed_n_elem );
-    }
-  else
-    {
-    access::rw(Mat<eT>::mem) = aux_mem;
-    }
-  }
-
-
-
-template<typename eT>
-template<uword fixed_n_rows, uword fixed_n_cols>
-inline
 Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::fixed(const eT* aux_mem)
   {
   arma_extra_debug_sigprint_this(this);
@@ -5685,7 +5947,7 @@ arma_warn_unused
 eT&
 Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::operator[] (const uword i)
   {
-  return access::rw( Mat<eT>::mem[i] );
+  return (use_extra) ? mem_local_extra[i] : mem_local[i];
   }
 
 
@@ -5697,7 +5959,7 @@ arma_warn_unused
 eT
 Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::operator[] (const uword i) const
   {
-  return ( Mat<eT>::mem[i] );
+  return (use_extra) ? mem_local_extra[i] : mem_local[i];
   }
 
 
@@ -5709,7 +5971,7 @@ arma_warn_unused
 eT&
 Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::at(const uword i)
   {
-  return access::rw( Mat<eT>::mem[i] );
+  return (use_extra) ? mem_local_extra[i] : mem_local[i];
   }
 
 
@@ -5721,7 +5983,7 @@ arma_warn_unused
 eT
 Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::at(const uword i) const
   {
-  return ( Mat<eT>::mem[i] );
+  return (use_extra) ? mem_local_extra[i] : mem_local[i];
   }
 
 
@@ -5733,9 +5995,9 @@ arma_warn_unused
 eT&
 Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::operator() (const uword i)
   {
-  arma_debug_check( (i >= fixed_n_elem), "Mat::fixed::operator(): out of bounds");
+  arma_debug_check( (i >= fixed_n_elem), "Mat::operator(): out of bounds");
   
-  return access::rw( Mat<eT>::mem[i] );
+  return (use_extra) ? mem_local_extra[i] : mem_local[i];
   }
 
 
@@ -5747,9 +6009,9 @@ arma_warn_unused
 eT
 Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::operator() (const uword i) const
   {
-  arma_debug_check( (i >= fixed_n_elem), "Mat::fixed::operator(): out of bounds");
+  arma_debug_check( (i >= fixed_n_elem), "Mat::operator(): out of bounds");
   
-  return ( Mat<eT>::mem[i] );
+  return (use_extra) ? mem_local_extra[i] : mem_local[i];
   }
 
 
@@ -5763,7 +6025,7 @@ Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::at(const uword in_row, const uword i
   {
   const uword i = in_row + in_col*fixed_n_rows;
   
-  return access::rw( Mat<eT>::mem[i] );
+  return (use_extra) ? mem_local_extra[i] : mem_local[i];
   }
 
 
@@ -5777,7 +6039,7 @@ Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::at(const uword in_row, const uword i
   {
   const uword i = in_row + in_col*fixed_n_rows;
   
-  return ( Mat<eT>::mem[i] );
+  return (use_extra) ? mem_local_extra[i] : mem_local[i];
   }
 
 
@@ -5789,11 +6051,11 @@ arma_warn_unused
 eT&
 Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::operator() (const uword in_row, const uword in_col)
   {
-  arma_debug_check( ((in_row >= fixed_n_rows) || (in_col >= fixed_n_cols)), "Mat::fixed::operator(): out of bounds");
+  arma_debug_check( ((in_row >= fixed_n_rows) || (in_col >= fixed_n_cols)), "Mat::operator(): out of bounds");
   
   const uword i = in_row + in_col*fixed_n_rows;
   
-  return access::rw( Mat<eT>::mem[i] );
+  return (use_extra) ? mem_local_extra[i] : mem_local[i];
   }
 
 
@@ -5805,11 +6067,11 @@ arma_warn_unused
 eT
 Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::operator() (const uword in_row, const uword in_col) const
   {
-  arma_debug_check( ((in_row >= fixed_n_rows) || (in_col >= fixed_n_cols)), "Mat::fixed::operator(): out of bounds");
+  arma_debug_check( ((in_row >= fixed_n_rows) || (in_col >= fixed_n_cols)), "Mat::operator(): out of bounds");
   
   const uword i = in_row + in_col*fixed_n_rows;
   
-  return ( Mat<eT>::mem[i] );
+  return (use_extra) ? mem_local_extra[i] : mem_local[i];
   }
 
 
@@ -5823,7 +6085,9 @@ Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::fill(const eT val)
   {
   arma_extra_debug_sigprint();
   
-  arrayops::inplace_set( const_cast<eT*>(Mat<eT>::mem), val, fixed_n_elem );
+  eT* mem_use = (use_extra) ? &(mem_local_extra[0]) : &(mem_local[0]);
+  
+  arrayops::inplace_set_fixed<eT,fixed_n_elem>( mem_use, val );
   
   return *this;
   }
@@ -5839,7 +6103,9 @@ Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::zeros()
   {
   arma_extra_debug_sigprint();
   
-  arrayops::inplace_set( const_cast<eT*>(Mat<eT>::mem), eT(0), fixed_n_elem );
+  eT* mem_use = (use_extra) ? &(mem_local_extra[0]) : &(mem_local[0]);
+  
+  arrayops::inplace_set_fixed<eT,fixed_n_elem>( mem_use, eT(0) );
   
   return *this;
   }
@@ -5855,7 +6121,9 @@ Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::ones()
   {
   arma_extra_debug_sigprint();
   
-  arrayops::inplace_set( const_cast<eT*>(Mat<eT>::mem), eT(1), fixed_n_elem );
+  eT* mem_use = (use_extra) ? &(mem_local_extra[0]) : &(mem_local[0]);
+  
+  arrayops::inplace_set_fixed<eT,fixed_n_elem>( mem_use, eT(1) );
   
   return *this;
   }
@@ -6040,21 +6308,39 @@ Mat_aux::set_real(Mat< std::complex<T> >& out, const Base<T,T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename std::complex<T>    eT;
-  typedef typename Proxy<T1>::ea_type ea_type;
+  typedef typename std::complex<T> eT;
   
-  const Proxy<T1> A(X.get_ref());
+  const Proxy<T1> P(X.get_ref());
   
-  arma_debug_assert_same_size( out, A, "Mat::set_real()" );
+  const uword local_n_rows = P.get_n_rows();
+  const uword local_n_cols = P.get_n_cols();
   
-  const uword   n_elem  = out.n_elem;
-        eT*     out_mem = out.memptr();
-        ea_type PA      = A.get_ea();
+  arma_debug_assert_same_size( out.n_rows, out.n_cols, local_n_rows, local_n_cols, "Mat::set_real()" );
   
-  for(uword i=0; i<n_elem; ++i)
+  eT* out_mem = out.memptr();
+  
+  if(Proxy<T1>::prefer_at_accessor == false)
     {
-    //out_mem[i].real() = PA[i];
-    out_mem[i] = std::complex<T>( PA[i], out_mem[i].imag() );
+    typedef typename Proxy<T1>::ea_type ea_type;
+    
+    ea_type A = P.get_ea();
+    
+    const uword N = out.n_elem;
+    
+    for(uword i=0; i<N; ++i)
+      {
+      out_mem[i] = std::complex<T>( A[i], out_mem[i].imag() );
+      }
+    }
+  else
+    {
+    uword i = 0;
+    
+    for(uword col=0; col < local_n_cols; ++col)
+    for(uword row=0; row < local_n_rows; ++row, ++i)
+      {
+      out_mem[i] = std::complex<T>( P.at(row,col), out_mem[i].imag());
+      }
     }
   }
 
@@ -6067,21 +6353,39 @@ Mat_aux::set_imag(Mat< std::complex<T> >& out, const Base<T,T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename std::complex<T>    eT;
-  typedef typename Proxy<T1>::ea_type ea_type;
+  typedef typename std::complex<T> eT;
   
-  const Proxy<T1> A(X.get_ref());
+  const Proxy<T1> P(X.get_ref());
   
-  arma_debug_assert_same_size( out, A, "Mat::set_imag()" );
+  const uword local_n_rows = P.get_n_rows();
+  const uword local_n_cols = P.get_n_cols();
   
-  const uword   n_elem  = out.n_elem;
-        eT*     out_mem = out.memptr();
-        ea_type PA      = A.get_ea();
+  arma_debug_assert_same_size( out.n_rows, out.n_cols, local_n_rows, local_n_cols, "Mat::set_imag()" );
   
-  for(uword i=0; i<n_elem; ++i)
+  eT* out_mem = out.memptr();
+  
+  if(Proxy<T1>::prefer_at_accessor == false)
     {
-    //out_mem[i].imag() = PA[i];
-    out_mem[i] = std::complex<T>( out_mem[i].real(), PA[i] );
+    typedef typename Proxy<T1>::ea_type ea_type;
+    
+    ea_type A = P.get_ea();
+    
+    const uword N = out.n_elem;
+    
+    for(uword i=0; i<N; ++i)
+      {
+      out_mem[i] = std::complex<T>( out_mem[i].real(), A[i] );
+      }
+    }
+  else
+    {
+    uword i = 0;
+    
+    for(uword col=0; col < local_n_cols; ++col)
+    for(uword row=0; row < local_n_rows; ++row, ++i)
+      {
+      out_mem[i] = std::complex<T>( out_mem[i].real(), P.at(row,col) );
+      }
     }
   }
 

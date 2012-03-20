@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -26,40 +26,37 @@
 template<typename T1>
 arma_inline
 const Op<T1, op_sum>
-sum(const Base<typename T1::elem_type,T1>& X, const uword dim = 0)
+sum
+  (
+  const Base<typename T1::elem_type,T1>& X,
+  const uword dim = 0,
+  const typename enable_if<resolves_to_vector<T1>::value == false>::result* junk1 = 0,
+  const typename enable_if<is_basevec<T1>::value == false>::result* junk2 = 0
+  )
   {
   arma_extra_debug_sigprint();
+  arma_ignore(junk1);
+  arma_ignore(junk2);
   
   return Op<T1, op_sum>(X.get_ref(), dim, 0);
   }
 
 
-//! \brief
-//! Immediate 'sum all values' operation for a row vector
-template<typename eT>
-inline
-arma_warn_unused
-eT
-sum(const Row<eT>& X)
+
+template<typename T1>
+arma_inline
+const Op<T1, op_sum>
+sum
+  (
+  const Base<typename T1::elem_type,T1>& X,
+  const uword dim,
+  const typename enable_if<resolves_to_vector<T1>::value == true>::result* junk = 0
+  )
   {
   arma_extra_debug_sigprint();
+  arma_ignore(junk);
   
-  return accu(X);
-  }
-
-
-
-//! \brief
-//! Immediate 'sum all values' operation for a column vector
-template<typename eT>
-inline
-arma_warn_unused
-eT
-sum(const Col<eT>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  return accu(X);
+  return Op<T1, op_sum>(X.get_ref(), dim, 0);
   }
 
 
@@ -94,57 +91,55 @@ sum(const Op<T1, op_sum>& in, const uword dim)
 
 
 
-//! sum all values of a subview_row
-template<typename eT>
+//! \brief
+//! Immediate 'sum all values' operation for expressions which resolve to a vector 
+template<typename T1>
 inline
 arma_warn_unused
-eT
-sum(const subview_row<eT>& X)
+typename T1::elem_type
+sum
+  (
+  const Base<typename T1::elem_type,T1>& X,
+  const arma_empty_class junk1 = arma_empty_class(),
+  const typename enable_if<resolves_to_vector<T1>::value == true>::result* junk2 = 0
+  )
   {
   arma_extra_debug_sigprint();
+  arma_ignore(junk1);
+  arma_ignore(junk2);
+  
+  return accu(X.get_ref());
+  }
+
+
+
+template<typename T1>
+inline
+arma_warn_unused
+typename T1::elem_type
+sum
+  (
+  const T1& X,
+  const arma_empty_class junk1 = arma_empty_class(),
+  const typename enable_if<is_basevec<T1>::value == true>::result* junk2 = 0
+  )
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk1);
+  arma_ignore(junk2);
   
   return accu(X);
   }
 
 
 
-//! sum all values of a subview_col
-template<typename eT>
-inline
+template<typename T>
+arma_inline
 arma_warn_unused
-eT
-sum(const subview_col<eT>& X)
+const typename arma_scalar_only<T>::result &
+sum(const T& x)
   {
-  arma_extra_debug_sigprint();
-  
-  return accu(X);
-  }
-
-
-
-//! sum all values of a diagview
-template<typename eT>
-inline
-arma_warn_unused
-eT
-sum(const diagview<eT>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  return accu(X);
-  }
-
-
-
-template<typename eT, typename T1>
-inline
-arma_warn_unused
-eT
-sum(const subview_elem1<eT,T1>& A)
-  {
-  arma_extra_debug_sigprint();
-  
-  return accu(A);
+  return x;
   }
 
 

@@ -1,5 +1,5 @@
-// Copyright (C) 2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2011 Conrad Sanderson
+// Copyright (C) 2011-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2011-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -16,15 +16,19 @@
 
 
 //! support class for generator functions (eg. zeros, randu, randn, ...)
-template<typename eT, typename gen_type>
-class Gen : public Base<eT, Gen<eT, gen_type> >
+template<typename T1, typename gen_type>
+class Gen : public Base<typename T1::elem_type, Gen<T1, gen_type> >
   {
   public:
   
-  typedef          eT                              elem_type;
+  typedef typename T1::elem_type                   eT;
+  typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
   static const bool prefer_at_accessor = (is_same_type<gen_type, gen_ones_diag>::value) ? true : false;
+  
+  static const bool is_row = T1::is_row;
+  static const bool is_col = T1::is_col;
   
   arma_aligned const uword n_rows;
   arma_aligned const uword n_cols;

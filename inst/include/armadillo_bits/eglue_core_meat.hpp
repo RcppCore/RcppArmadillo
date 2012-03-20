@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2010-2011 Conrad Sanderson
+// Copyright (C) 2010-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -84,28 +84,51 @@ class eglue_schur : public eglue_core<eglue_schur>
 
 #define arma_applier_2(operatorA, operatorB) \
   {\
-  uword count = 0;\
-  \
-  for(uword col=0; col<n_cols; ++col)\
+  if(n_rows != 1)\
+    {\
+    uword count = 0;\
+    \
+    for(uword col=0; col<n_cols; ++col)\
+      {\
+      uword i,j;\
+      \
+      for(i=0, j=1; j<n_rows; i+=2, j+=2, count+=2)\
+        {\
+        eT tmp_i = P1.at(i,col);\
+        eT tmp_j = P1.at(j,col);\
+        \
+        tmp_i operatorB##= P2.at(i,col);\
+        tmp_j operatorB##= P2.at(j,col);\
+        \
+        out_mem[count  ] operatorA tmp_i;\
+        out_mem[count+1] operatorA tmp_j;\
+        }\
+      \
+      if(i < n_rows)\
+        {\
+        out_mem[count] operatorA P1.at(i,col) operatorB P2.at(i,col);\
+        ++count;\
+        }\
+      }\
+    }\
+  else\
     {\
     uword i,j;\
-    \
-    for(i=0, j=1; j<n_rows; i+=2, j+=2, count+=2)\
+    for(i=0, j=1; j < n_cols; i+=2, j+=2)\
       {\
-      eT tmp_i = P1.at(i,col);\
-      eT tmp_j = P1.at(j,col);\
+      eT tmp_i = P1.at(0,i);\
+      eT tmp_j = P1.at(0,j);\
       \
-      tmp_i operatorB##= P2.at(i,col);\
-      tmp_j operatorB##= P2.at(j,col);\
+      tmp_i operatorB##= P2.at(0,i);\
+      tmp_j operatorB##= P2.at(0,j);\
       \
-      out_mem[count  ] operatorA tmp_i;\
-      out_mem[count+1] operatorA tmp_j;\
+      out_mem[i] operatorA tmp_i;\
+      out_mem[j] operatorA tmp_j;\
       }\
     \
-    if(i < n_rows)\
+    if(i < n_cols)\
       {\
-      out_mem[count] operatorA P1.at(i,col) operatorB P2.at(i,col);\
-      ++count;\
+      out_mem[i] operatorA P1.at(0,i) operatorB P2.at(0,i);\
       }\
     }\
   }
@@ -174,7 +197,7 @@ eglue_core<eglue_type>::apply(Mat<typename T1::elem_type>& out, const eGlue<T1, 
     
     typename Proxy<T1>::ea_type P1 = x.P1.get_ea();
     typename Proxy<T2>::ea_type P2 = x.P2.get_ea();
-  
+    
          if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier_1(=, +); }
     else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier_1(=, -); }
     else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier_1(=, /); }
@@ -182,9 +205,9 @@ eglue_core<eglue_type>::apply(Mat<typename T1::elem_type>& out, const eGlue<T1, 
     }
   else
     {
-    const uword n_rows = out.n_rows;
-    const uword n_cols = out.n_cols;
-  
+    const uword n_rows = x.get_n_rows();
+    const uword n_cols = x.get_n_cols();
+    
     const Proxy<T1>& P1 = x.P1;
     const Proxy<T2>& P2 = x.P2;
     
@@ -206,7 +229,10 @@ eglue_core<eglue_type>::apply_inplace_plus(Mat<typename T1::elem_type>& out, con
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(out, x.P1, "addition");
+  const uword n_rows = x.get_n_rows();
+  const uword n_cols = x.get_n_cols();
+    
+  arma_debug_assert_same_size(out.n_rows, out.n_cols, n_rows, n_cols, "addition");
   
   typedef typename T1::elem_type eT;
   
@@ -228,9 +254,6 @@ eglue_core<eglue_type>::apply_inplace_plus(Mat<typename T1::elem_type>& out, con
     }
   else
     {
-    const uword n_rows = out.n_rows;
-    const uword n_cols = out.n_cols;
-    
     const Proxy<T1>& P1 = x.P1;
     const Proxy<T2>& P2 = x.P2;
     
@@ -252,7 +275,10 @@ eglue_core<eglue_type>::apply_inplace_minus(Mat<typename T1::elem_type>& out, co
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(out, x.P1, "subtraction");
+  const uword n_rows = x.get_n_rows();
+  const uword n_cols = x.get_n_cols();
+  
+  arma_debug_assert_same_size(out.n_rows, out.n_cols, n_rows, n_cols, "subtraction");
   
   typedef typename T1::elem_type eT;
   
@@ -274,9 +300,6 @@ eglue_core<eglue_type>::apply_inplace_minus(Mat<typename T1::elem_type>& out, co
     }
   else
     {
-    const uword n_rows = out.n_rows;
-    const uword n_cols = out.n_cols;
-    
     const Proxy<T1>& P1 = x.P1;
     const Proxy<T2>& P2 = x.P2;
     
@@ -298,7 +321,10 @@ eglue_core<eglue_type>::apply_inplace_schur(Mat<typename T1::elem_type>& out, co
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(out, x.P1, "element-wise multiplication");
+  const uword n_rows = x.get_n_rows();
+  const uword n_cols = x.get_n_cols();
+  
+  arma_debug_assert_same_size(out.n_rows, out.n_cols, n_rows, n_cols, "element-wise multiplication");
   
   typedef typename T1::elem_type eT;
   
@@ -320,9 +346,6 @@ eglue_core<eglue_type>::apply_inplace_schur(Mat<typename T1::elem_type>& out, co
     }
   else
     {
-    const uword n_rows = out.n_rows;
-    const uword n_cols = out.n_cols;
-    
     const Proxy<T1>& P1 = x.P1;
     const Proxy<T2>& P2 = x.P2;
     
@@ -344,7 +367,10 @@ eglue_core<eglue_type>::apply_inplace_div(Mat<typename T1::elem_type>& out, cons
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(out, x.P1, "element-wise division");
+  const uword n_rows = x.get_n_rows();
+  const uword n_cols = x.get_n_cols();
+  
+  arma_debug_assert_same_size(out.n_rows, out.n_cols, n_rows, n_cols, "element-wise division");
   
   typedef typename T1::elem_type eT;
   
@@ -366,9 +392,6 @@ eglue_core<eglue_type>::apply_inplace_div(Mat<typename T1::elem_type>& out, cons
     }
   else
     {
-    const uword n_rows = out.n_rows;
-    const uword n_cols = out.n_cols;
-    
     const Proxy<T1>& P1 = x.P1;
     const Proxy<T2>& P2 = x.P2;
     

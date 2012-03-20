@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2011 Conrad Sanderson
+// Copyright (C) 2009-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -17,9 +17,9 @@
 
 
 #define ARMA_VERSION_MAJOR 2
-#define ARMA_VERSION_MINOR 4
-#define ARMA_VERSION_PATCH 4
-#define ARMA_VERSION_NAME  "Loco Lounge Lizard"
+#define ARMA_VERSION_MINOR 99
+#define ARMA_VERSION_PATCH 1
+#define ARMA_VERSION_NAME  "Antarctic Chilli Ranch (Beta 1)"
 
 
 

@@ -22,9 +22,14 @@ class eGlue : public Base<typename T1::elem_type, eGlue<T1, T2, eglue_type> >
   
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
+  typedef          Proxy<T1>                       proxy1_type;
+  typedef          Proxy<T2>                       proxy2_type;
   
   static const bool prefer_at_accessor = (Proxy<T1>::prefer_at_accessor || Proxy<T2>::prefer_at_accessor);
   static const bool has_subview        = (Proxy<T1>::has_subview        || Proxy<T2>::has_subview       );
+
+  static const bool is_col = (Proxy<T1>::is_col || Proxy<T2>::is_col);
+  static const bool is_row = (Proxy<T1>::is_row || Proxy<T2>::is_row);
   
   arma_aligned const Proxy<T1> P1;
   arma_aligned const Proxy<T2> P2;
@@ -36,7 +41,7 @@ class eGlue : public Base<typename T1::elem_type, eGlue<T1, T2, eglue_type> >
   arma_inline uword get_n_cols() const;
   arma_inline uword get_n_elem() const;
   
-  arma_inline elem_type operator[] (const uword i)                  const;
+  arma_inline elem_type operator[] (const uword i)                    const;
   arma_inline elem_type at         (const uword row, const uword col) const;
   };
 

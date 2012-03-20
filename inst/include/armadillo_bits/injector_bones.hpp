@@ -47,7 +47,7 @@ class mat_injector
   private:
   
   inline mat_injector(T1& in_X, const elem_type val);
-  inline mat_injector(T1& in_X, const injector_end_of_row& x);
+  inline mat_injector(T1& in_X, const injector_end_of_row<>& x);
   
   T1&           X;
   mutable uword n_rows;
@@ -98,7 +98,7 @@ class field_injector
   private:
   
   inline field_injector(T1& in_X, const object_type& val);
-  inline field_injector(T1& in_X, const injector_end_of_row& x);
+  inline field_injector(T1& in_X, const injector_end_of_row<>& x);
   
   T1&           X;
   mutable uword n_rows;

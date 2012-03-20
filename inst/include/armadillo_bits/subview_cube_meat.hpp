@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -37,35 +37,6 @@ subview_cube<eT>::subview_cube
   const uword       in_n_slices
   )
   : m           (in_m)
-  , m_ptr       (0)
-  , aux_row1    (in_row1)
-  , aux_col1    (in_col1)
-  , aux_slice1  (in_slice1)
-  , n_rows      (in_n_rows)
-  , n_cols      (in_n_cols)
-  , n_elem_slice(in_n_rows * in_n_cols)
-  , n_slices    (in_n_slices)
-  , n_elem      (n_elem_slice * in_n_slices)
-  {
-  arma_extra_debug_sigprint();
-  }
-
-
-
-template<typename eT>
-arma_inline
-subview_cube<eT>::subview_cube
-  (
-        Cube<eT>& in_m,
-  const uword       in_row1,
-  const uword       in_col1,
-  const uword       in_slice1,
-  const uword       in_n_rows,
-  const uword       in_n_cols,
-  const uword       in_n_slices
-  )
-  : m           (in_m)
-  , m_ptr       (&in_m)
   , aux_row1    (in_row1)
   , aux_col1    (in_col1)
   , aux_slice1  (in_slice1)
@@ -554,7 +525,7 @@ subview_cube<eT>::operator= (const Base<eT,T1>& in)
   else
   if( (t_n_rows == 1) && (t_n_cols == x_n_rows) && (t_n_slices == x_n_cols) )
     {
-    Cube<eT>& Q = *(t.m_ptr);
+    Cube<eT>& Q = const_cast< Cube<eT>& >(t.m);
     
     const uword t_aux_row1   = t.aux_row1;
     const uword t_aux_col1   = t.aux_col1;
@@ -631,7 +602,7 @@ subview_cube<eT>::operator+= (const Base<eT,T1>& in)
   else
   if( (t_n_rows == 1) && (t_n_cols == x_n_rows) && (t_n_slices == x_n_cols) )
     {
-    Cube<eT>& Q = *(t.m_ptr);
+    Cube<eT>& Q = const_cast< Cube<eT>& >(t.m);
     
     const uword t_aux_row1   = t.aux_row1;
     const uword t_aux_col1   = t.aux_col1;
@@ -708,7 +679,7 @@ subview_cube<eT>::operator-= (const Base<eT,T1>& in)
   else
   if( (t_n_rows == 1) && (t_n_cols == x_n_rows) && (t_n_slices == x_n_cols) )
     {
-    Cube<eT>& Q = *(t.m_ptr);
+    Cube<eT>& Q = const_cast< Cube<eT>& >(t.m);
     
     const uword t_aux_row1   = t.aux_row1;
     const uword t_aux_col1   = t.aux_col1;
@@ -785,7 +756,7 @@ subview_cube<eT>::operator%= (const Base<eT,T1>& in)
   else
   if( (t_n_rows == 1) && (t_n_cols == x_n_rows) && (t_n_slices == x_n_cols) )
     {
-    Cube<eT>& Q = *(t.m_ptr);
+    Cube<eT>& Q = const_cast< Cube<eT>& >(t.m);
     
     const uword t_aux_row1   = t.aux_row1;
     const uword t_aux_col1   = t.aux_col1;
@@ -862,7 +833,7 @@ subview_cube<eT>::operator/= (const Base<eT,T1>& in)
   else
   if( (t_n_rows == 1) && (t_n_cols == x_n_rows) && (t_n_slices == x_n_cols) )
     {
-    Cube<eT>& Q = *(t.m_ptr);
+    Cube<eT>& Q = const_cast< Cube<eT>& >(t.m);
     
     const uword t_aux_row1   = t.aux_row1;
     const uword t_aux_col1   = t.aux_col1;
@@ -961,7 +932,8 @@ subview_cube<eT>::operator[](const uword i)
   const uword in_row   = j % n_rows;
 
   const uword index = (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
-  return access::rw( (*m_ptr).mem[index] );
+  
+  return access::rw( (const_cast< Cube<eT>& >(m)).mem[index] );
   }
 
 
@@ -979,6 +951,7 @@ subview_cube<eT>::operator[](const uword i) const
   const uword in_row   = j % n_rows;
 
   const uword index = (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
+  
   return m.mem[index];
   }
 
@@ -999,7 +972,8 @@ subview_cube<eT>::operator()(const uword i)
   const uword in_row   = j % n_rows;
 
   const uword index = (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
-  return access::rw( (*m_ptr).mem[index] );
+  
+  return access::rw( (const_cast< Cube<eT>& >(m)).mem[index] );
   }
 
 
@@ -1019,6 +993,7 @@ subview_cube<eT>::operator()(const uword i) const
   const uword in_row   = j % n_rows;
 
   const uword index = (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
+  
   return m.mem[index];
   }
 
@@ -1032,7 +1007,8 @@ subview_cube<eT>::operator()(const uword in_row, const uword in_col, const uword
   arma_debug_check( ( (in_row >= n_rows) || (in_col >= n_cols) || (in_slice >= n_slices) ), "subview_cube::operator(): location out of bounds");
   
   const uword index = (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
-  return access::rw( (*m_ptr).mem[index] );
+  
+  return access::rw( (const_cast< Cube<eT>& >(m)).mem[index] );
   }
 
 
@@ -1045,6 +1021,7 @@ subview_cube<eT>::operator()(const uword in_row, const uword in_col, const uword
   arma_debug_check( ( (in_row >= n_rows) || (in_col >= n_cols) || (in_slice >= n_slices) ), "subview_cube::operator(): location out of bounds");
   
   const uword index = (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
+  
   return m.mem[index];
   }
 
@@ -1056,7 +1033,8 @@ eT&
 subview_cube<eT>::at(const uword in_row, const uword in_col, const uword in_slice)
   {
   const uword index = (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
-  return access::rw( (*m_ptr).mem[index] );
+  
+  return access::rw( (const_cast< Cube<eT>& >(m)).mem[index] );
   }
 
 
@@ -1067,6 +1045,7 @@ eT
 subview_cube<eT>::at(const uword in_row, const uword in_col, const uword in_slice) const
   {
   const uword index = (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
+  
   return m.mem[index];
   }
 
@@ -1077,7 +1056,7 @@ arma_inline
 eT*
 subview_cube<eT>::slice_colptr(const uword in_slice, const uword in_col)
   {
-  return & access::rw((*m_ptr).mem[  (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1  ]);
+  return & access::rw((const_cast< Cube<eT>& >(m)).mem[  (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1  ]);
   }
 
 

@@ -1,5 +1,5 @@
-// Copyright (C) 2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2011 Conrad Sanderson
+// Copyright (C) 2011-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2011-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -84,6 +84,11 @@ class arrayops
   arma_hot inline static
   void
   inplace_set(eT* dest, const eT val, const uword n_elem);
+  
+  template<typename eT, const uword n_elem>
+  arma_hot inline static
+  void
+  inplace_set_fixed(eT* dest, const eT val);
   
   template<typename eT>
   arma_hot inline static

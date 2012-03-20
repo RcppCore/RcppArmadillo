@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -36,6 +36,9 @@ class Glue : public Base<typename T1::elem_type, Glue<T1, T2, glue_type> >
   
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
+  
+  static const bool is_row = (is_same_type<glue_type, glue_times>::value) ? T1::is_row : false;
+  static const bool is_col = (is_same_type<glue_type, glue_times>::value) ? T2::is_col : false;
   
   arma_inline  Glue(const T1& in_A, const T2& in_B);
   arma_inline  Glue(const T1& in_A, const T2& in_B, const uword in_aux_uword);

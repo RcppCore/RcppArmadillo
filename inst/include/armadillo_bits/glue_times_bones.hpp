@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -39,7 +39,7 @@ template<uword N>
 struct glue_times_redirect
   {
   template<typename T1, typename T2>
-  inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X);
+  arma_hot inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X);
   };
 
 
@@ -47,7 +47,7 @@ template<>
 struct glue_times_redirect<3>
   {
   template<typename T1, typename T2, typename T3>
-  inline static void apply(Mat<typename T1::elem_type>& out, const Glue< Glue<T1,T2,glue_times>,T3,glue_times>& X);
+  arma_hot inline static void apply(Mat<typename T1::elem_type>& out, const Glue< Glue<T1,T2,glue_times>,T3,glue_times>& X);
   };
 
 
@@ -55,7 +55,7 @@ template<>
 struct glue_times_redirect<4>
   {
   template<typename T1, typename T2, typename T3, typename T4>
-  inline static void apply(Mat<typename T1::elem_type>& out, const Glue< Glue< Glue<T1,T2,glue_times>, T3, glue_times>, T4, glue_times>& X);
+  arma_hot inline static void apply(Mat<typename T1::elem_type>& out, const Glue< Glue< Glue<T1,T2,glue_times>, T3, glue_times>, T4, glue_times>& X);
   };
 
 
@@ -67,11 +67,11 @@ class glue_times
   
   
   template<typename T1, typename T2>
-  inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X);
+  arma_hot inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X);
   
   
   template<typename T1>
-  inline static void apply_inplace(Mat<typename T1::elem_type>& out, const T1& X);
+  arma_hot inline static void apply_inplace(Mat<typename T1::elem_type>& out, const T1& X);
   
   template<typename T1, typename T2>
   arma_hot inline static void apply_inplace_plus(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue_times>& X, const sword sign);
@@ -80,18 +80,18 @@ class glue_times
   inline static void apply_mixed(Mat<typename promote_type<eT1,eT2>::result>& out, const Mat<eT1>& X, const Mat<eT2>& Y);
   
   
-  template<typename eT>
-  arma_inline static uword  mul_storage_cost(const Mat<eT>& A, const Mat<eT>& B, const bool do_trans_A, const bool do_trans_B);
+  template<typename eT, const bool do_trans_A, const bool do_trans_B>
+  arma_inline static uword  mul_storage_cost(const Mat<eT>& A, const Mat<eT>& B);
   
-  template<typename eT>
-  arma_hot inline static void apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const eT val, const bool do_trans_A, const bool do_trans_B, const bool do_scalar_times);
+  template<typename eT, const bool do_trans_A, const bool do_trans_B, const bool do_scalar_times>
+  arma_hot inline static void apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const eT val);
   
-  template<typename eT>
-  inline static void apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const Mat<eT>& C, const eT val, const bool do_trans_A, const bool do_trans_B, const bool do_trans_C, const bool do_scalar_times);
+  template<typename eT, const bool do_trans_A, const bool do_trans_B, const bool do_trans_C, const bool do_scalar_times>
+  arma_hot inline static void apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const Mat<eT>& C, const eT val);
   
-  template<typename eT>
-  inline static void apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const Mat<eT>& C, const Mat<eT>& D, const eT val, const bool do_trans_A, const bool do_trans_B, const bool do_trans_C, const bool do_trans_D, const bool do_scalar_times);
-
+  template<typename eT, const bool do_trans_A, const bool do_trans_B, const bool do_trans_C, const bool do_trans_D, const bool do_scalar_times>
+  arma_hot inline static void apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const Mat<eT>& C, const Mat<eT>& D, const eT val);
+  
   };
 
 

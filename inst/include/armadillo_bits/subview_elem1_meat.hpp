@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2010-2011 Conrad Sanderson
+// Copyright (C) 2010-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -27,19 +27,6 @@ template<typename eT, typename T1>
 arma_inline
 subview_elem1<eT,T1>::subview_elem1(const Mat<eT>& in_m, const Base<uword,T1>& in_a)
   : m(in_m)
-  , m_ptr(0)
-  , a(in_a)
-  {
-  arma_extra_debug_sigprint();
-  }
-
-
-
-template<typename eT, typename T1>
-arma_inline
-subview_elem1<eT,T1>::subview_elem1(Mat<eT>& in_m, const Base<uword,T1>& in_a)
-  : m(in_m)
-  , m_ptr(&in_m)
   , a(in_a)
   {
   arma_extra_debug_sigprint();
@@ -53,7 +40,9 @@ inline
 void
 subview_elem1<eT,T1>::inplace_op(const eT val)
   {
-  Mat<eT>& m_local = *m_ptr;
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>& m_local = const_cast< Mat<eT>& >(m);
   
         eT*   m_mem    = m_local.memptr();
   const uword m_n_elem = m_local.n_elem;
@@ -107,6 +96,8 @@ inline
 void
 subview_elem1<eT,T1>::inplace_op(const subview_elem1<eT,T2>& x)
   {
+  arma_extra_debug_sigprint();
+  
   subview_elem1<eT,T1>& t = *this;
   
   if(&(t.m) == &(x.m))
@@ -123,7 +114,7 @@ subview_elem1<eT,T1>::inplace_op(const subview_elem1<eT,T2>& x)
     }
   else
     {
-          Mat<eT>& t_m_local = *(t.m_ptr);
+          Mat<eT>& t_m_local = const_cast< Mat<eT>& >(t.m);
     const Mat<eT>& x_m_local = x.m;
     
     const unwrap_check_mixed<T1> t_tmp(t.a.get_ref(), t_m_local);
@@ -204,7 +195,7 @@ subview_elem1<eT,T1>::inplace_op(const Base<eT,T2>& x)
   {
   arma_extra_debug_sigprint();
   
-  Mat<eT>& m_local = *m_ptr;
+  Mat<eT>& m_local = const_cast< Mat<eT>& >(m);
   
         eT*   m_mem    = m_local.memptr();
   const uword m_n_elem = m_local.n_elem;
@@ -300,6 +291,36 @@ subview_elem1<eT,T1>::inplace_op(const Base<eT,T2>& x)
 
 //
 //
+
+
+
+template<typename eT, typename T1>
+arma_inline
+const Op<subview_elem1<eT,T1>,op_htrans>
+subview_elem1<eT,T1>::t() const
+  {
+  return Op<subview_elem1<eT,T1>,op_htrans>(*this);
+  }
+
+
+
+template<typename eT, typename T1>
+arma_inline
+const Op<subview_elem1<eT,T1>,op_htrans>
+subview_elem1<eT,T1>::ht() const
+  {
+  return Op<subview_elem1<eT,T1>,op_htrans>(*this);
+  }
+
+
+
+template<typename eT, typename T1>
+arma_inline
+const Op<subview_elem1<eT,T1>,op_strans>
+subview_elem1<eT,T1>::st() const
+  {
+  return Op<subview_elem1<eT,T1>,op_strans>(*this);
+  }
 
 
 
@@ -612,7 +633,7 @@ subview_elem1<eT,T1>::extract(Mat<eT>& actual_out, const subview_elem1<eT,T1>& i
   
   if(alias == true)
     {
-    actual_out = out;
+    actual_out.steal_mem(out);
     delete tmp_out;
     }
   }

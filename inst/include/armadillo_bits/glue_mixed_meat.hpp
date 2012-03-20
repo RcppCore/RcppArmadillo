@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2011 Conrad Sanderson
+// Copyright (C) 2009-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -83,14 +83,36 @@ glue_mixed_plus::apply(Mat<typename eT_promoter<T1,T2>::eT>& out, const mtGlue<t
   
   arma_debug_assert_same_size(A, B, "addition");
   
-  out.set_size(A.get_n_rows(), A.get_n_cols());
+  const uword n_rows = A.get_n_rows();
+  const uword n_cols = A.get_n_cols();
+  
+  out.set_size(n_rows, n_cols);
   
         out_eT* out_mem = out.memptr();
-  const uword     n_elem  = out.n_elem;
+  const uword   n_elem  = out.n_elem;
+    
+  const bool prefer_at_accessor = (Proxy<T1>::prefer_at_accessor || Proxy<T2>::prefer_at_accessor);
   
-  for(uword i=0; i<n_elem; ++i)
+  if(prefer_at_accessor == false)
     {
-    out_mem[i] = upgrade_val<eT1,eT2>::apply(A[i]) + upgrade_val<eT1,eT2>::apply(B[i]);
+    typename Proxy<T1>::ea_type AA = A.get_ea();
+    typename Proxy<T2>::ea_type BB = B.get_ea();
+    
+    for(uword i=0; i<n_elem; ++i)
+      {
+      out_mem[i] = upgrade_val<eT1,eT2>::apply(AA[i]) + upgrade_val<eT1,eT2>::apply(BB[i]);
+      }
+    }
+  else
+    {
+    uword i = 0;
+    
+    for(uword col=0; col < n_cols; ++col)
+    for(uword row=0; row < n_rows; ++row)
+      {
+      out_mem[i] = upgrade_val<eT1,eT2>::apply(A.at(row,col)) + upgrade_val<eT1,eT2>::apply(B.at(row,col));
+      ++i;
+      }
     }
   }
 
@@ -116,14 +138,36 @@ glue_mixed_minus::apply(Mat<typename eT_promoter<T1,T2>::eT>& out, const mtGlue<
   
   arma_debug_assert_same_size(A, B, "subtraction");
   
-  out.set_size(A.get_n_rows(), A.get_n_cols());
+  const uword n_rows = A.get_n_rows();
+  const uword n_cols = A.get_n_cols();
+  
+  out.set_size(n_rows, n_cols);
   
         out_eT* out_mem = out.memptr();
-  const uword     n_elem  = out.n_elem;
+  const uword   n_elem  = out.n_elem;
+    
+  const bool prefer_at_accessor = (Proxy<T1>::prefer_at_accessor || Proxy<T2>::prefer_at_accessor);
   
-  for(uword i=0; i<n_elem; ++i)
+  if(prefer_at_accessor == false)
     {
-    out_mem[i] = upgrade_val<eT1,eT2>::apply(A[i]) - upgrade_val<eT1,eT2>::apply(B[i]);
+    typename Proxy<T1>::ea_type AA = A.get_ea();
+    typename Proxy<T2>::ea_type BB = B.get_ea();
+    
+    for(uword i=0; i<n_elem; ++i)
+      {
+      out_mem[i] = upgrade_val<eT1,eT2>::apply(AA[i]) - upgrade_val<eT1,eT2>::apply(BB[i]);
+      }
+    }
+  else
+    {
+    uword i = 0;
+    
+    for(uword col=0; col < n_cols; ++col)
+    for(uword row=0; row < n_rows; ++row)
+      {
+      out_mem[i] = upgrade_val<eT1,eT2>::apply(A.at(row,col)) - upgrade_val<eT1,eT2>::apply(B.at(row,col));
+      ++i;
+      }
     }
   }
 
@@ -149,14 +193,36 @@ glue_mixed_div::apply(Mat<typename eT_promoter<T1,T2>::eT>& out, const mtGlue<ty
   
   arma_debug_assert_same_size(A, B, "element-wise division");
   
-  out.set_size(A.get_n_rows(), A.get_n_cols());
+  const uword n_rows = A.get_n_rows();
+  const uword n_cols = A.get_n_cols();
+  
+  out.set_size(n_rows, n_cols);
   
         out_eT* out_mem = out.memptr();
-  const uword     n_elem  = out.n_elem;
+  const uword   n_elem  = out.n_elem;
+    
+  const bool prefer_at_accessor = (Proxy<T1>::prefer_at_accessor || Proxy<T2>::prefer_at_accessor);
   
-  for(uword i=0; i<n_elem; ++i)
+  if(prefer_at_accessor == false)
     {
-    out_mem[i] = upgrade_val<eT1,eT2>::apply(A[i]) / upgrade_val<eT1,eT2>::apply(B[i]);
+    typename Proxy<T1>::ea_type AA = A.get_ea();
+    typename Proxy<T2>::ea_type BB = B.get_ea();
+    
+    for(uword i=0; i<n_elem; ++i)
+      {
+      out_mem[i] = upgrade_val<eT1,eT2>::apply(AA[i]) / upgrade_val<eT1,eT2>::apply(BB[i]);
+      }
+    }
+  else
+    {
+    uword i = 0;
+    
+    for(uword col=0; col < n_cols; ++col)
+    for(uword row=0; row < n_rows; ++row)
+      {
+      out_mem[i] = upgrade_val<eT1,eT2>::apply(A.at(row,col)) / upgrade_val<eT1,eT2>::apply(B.at(row,col));
+      ++i;
+      }
     }
   }
 
@@ -182,14 +248,36 @@ glue_mixed_schur::apply(Mat<typename eT_promoter<T1,T2>::eT>& out, const mtGlue<
   
   arma_debug_assert_same_size(A, B, "element-wise multiplication");
   
-  out.set_size(A.get_n_rows(), A.get_n_cols());
+  const uword n_rows = A.get_n_rows();
+  const uword n_cols = A.get_n_cols();
+  
+  out.set_size(n_rows, n_cols);
   
         out_eT* out_mem = out.memptr();
-  const uword     n_elem  = out.n_elem;
+  const uword   n_elem  = out.n_elem;
+    
+  const bool prefer_at_accessor = (Proxy<T1>::prefer_at_accessor || Proxy<T2>::prefer_at_accessor);
   
-  for(uword i=0; i<n_elem; ++i)
+  if(prefer_at_accessor == false)
     {
-    out_mem[i] = upgrade_val<eT1,eT2>::apply(A[i]) * upgrade_val<eT1,eT2>::apply(B[i]);
+    typename Proxy<T1>::ea_type AA = A.get_ea();
+    typename Proxy<T2>::ea_type BB = B.get_ea();
+    
+    for(uword i=0; i<n_elem; ++i)
+      {
+      out_mem[i] = upgrade_val<eT1,eT2>::apply(AA[i]) * upgrade_val<eT1,eT2>::apply(BB[i]);
+      }
+    }
+  else
+    {
+    uword i = 0;
+    
+    for(uword col=0; col < n_cols; ++col)
+    for(uword row=0; row < n_rows; ++row)
+      {
+      out_mem[i] = upgrade_val<eT1,eT2>::apply(A.at(row,col)) * upgrade_val<eT1,eT2>::apply(B.at(row,col));
+      ++i;
+      }
     }
   }
 
@@ -226,6 +314,8 @@ glue_mixed_plus::apply(Cube<typename eT_promoter<T1,T2>::eT>& out, const mtGlueC
         out_eT* out_mem = out.memptr();
   const uword     n_elem  = out.n_elem;
   
+  // TODO: add faster handling of subviews
+  
   for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = upgrade_val<eT1,eT2>::apply(A[i]) + upgrade_val<eT1,eT2>::apply(B[i]);
@@ -258,6 +348,8 @@ glue_mixed_minus::apply(Cube<typename eT_promoter<T1,T2>::eT>& out, const mtGlue
   
         out_eT* out_mem = out.memptr();
   const uword     n_elem  = out.n_elem;
+  
+  // TODO: add faster handling of subviews
   
   for(uword i=0; i<n_elem; ++i)
     {
@@ -292,6 +384,8 @@ glue_mixed_div::apply(Cube<typename eT_promoter<T1,T2>::eT>& out, const mtGlueCu
         out_eT* out_mem = out.memptr();
   const uword     n_elem  = out.n_elem;
   
+  // TODO: add faster handling of subviews
+  
   for(uword i=0; i<n_elem; ++i)
     {
     out_mem[i] = upgrade_val<eT1,eT2>::apply(A[i]) / upgrade_val<eT1,eT2>::apply(B[i]);
@@ -324,6 +418,8 @@ glue_mixed_schur::apply(Cube<typename eT_promoter<T1,T2>::eT>& out, const mtGlue
   
         out_eT* out_mem = out.memptr();
   const uword     n_elem  = out.n_elem;
+  
+  // TODO: add faster handling of subviews
   
   for(uword i=0; i<n_elem; ++i)
     {

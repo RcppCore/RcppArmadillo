@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -21,6 +21,12 @@ class op_prod
   
   template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1, op_prod>& in);
+  
+  template<typename eT>
+  inline static eT prod(const subview<eT>& S);
+  
+  template<typename T1>
+  inline static typename T1::elem_type prod(const Base<typename T1::elem_type,T1>& X);
   };
 
 
