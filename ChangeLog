@@ -1,6 +1,10 @@
-2012-03-23  Romain Francois <romain@r-enthusiasts.com>
+2012-03-24  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/RcppArmadilloWrap.h: adpat to Armadillo 2.99.1
+	* DESCRIPTION: Release 0.2.37
+
+2012-03-24  Romain Francois <romain@r-enthusiasts.com>
+
+	* inst/include/RcppArmadilloWrap.h: adapt to Armadillo 2.99.1
 
 2012-03-19  Dirk Eddelbuettel  <edd@debian.org>
 
