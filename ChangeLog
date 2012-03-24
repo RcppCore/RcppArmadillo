@@ -1,3 +1,7 @@
+2012-03-23  Romain Francois <romain@r-enthusiasts.com>
+
+	* inst/include/RcppArmadilloWrap.h: adpat to Armadillo 2.99.1
+
 2012-03-19  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/*: Upgraded to new test release 2.99.1 of Armadillo

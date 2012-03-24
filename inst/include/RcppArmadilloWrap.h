@@ -2,7 +2,7 @@
 //
 // RcppArmadilloWrap.h: Rcpp/Armadillo glue
 //
-// Copyright (C)  2010-2011 Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2010-2012 Dirk Eddelbuettel, Romain Francois and Douglas Bates
 //
 // This file is part of RcppArmadillo.
 //
@@ -211,7 +211,7 @@ namespace Rcpp{
 
     template <typename eT, typename gen_type>
     SEXP wrap( const arma::Gen<eT,gen_type>& X){
-        return wrap( arma::Mat<eT>( X ) ) ;
+        return wrap( eT(X) ) ;
     }
     
     
