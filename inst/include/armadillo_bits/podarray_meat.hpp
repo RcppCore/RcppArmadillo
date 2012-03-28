@@ -23,7 +23,7 @@ podarray<eT>::~podarray()
   
   if(n_elem > sizeof(mem_local)/sizeof(eT) )
     {
-    delete [] mem;
+    memory::release( access::rw(mem) );
     }
   
   if(arma_config::debug == true)
@@ -366,7 +366,7 @@ podarray<eT>::init(const uword new_n_elem)
     
   if(n_elem > sizeof(mem_local)/sizeof(eT) )
     {
-    delete [] mem;
+    memory::release( access::rw(mem) );
     }
   
   if(new_n_elem <= sizeof(mem_local)/sizeof(eT) )
@@ -375,7 +375,9 @@ podarray<eT>::init(const uword new_n_elem)
     }
   else
     {
-    access::rw(mem) = new eT[new_n_elem];
+    access::rw(mem) = memory::acquire<eT>(new_n_elem);
+    
+    arma_check_bad_alloc( (mem == 0), "podarray::init(): out of memory" );
     }
   
   access::rw(n_elem) = new_n_elem;

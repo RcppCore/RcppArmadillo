@@ -54,6 +54,11 @@
 #endif
 
 
+#if defined(ARMA_USE_MKL_ALLOC)
+  #include <mkl_service.h>
+#endif
+
+
 #if defined(ARMA_HAVE_STD_TR1)
   // TODO: add handling of this functionality when use of C++11 is enabled
   #include <tr1/cmath>
@@ -96,6 +101,7 @@ namespace arma
   #include "armadillo_bits/upgrade_val.hpp"
   #include "armadillo_bits/restrictors.hpp"
   #include "armadillo_bits/access.hpp"
+  #include "armadillo_bits/memory.hpp"
   #include "armadillo_bits/span.hpp"
   #include "armadillo_bits/constants.hpp"
   #include "armadillo_bits/constants_compat.hpp"
@@ -115,6 +121,7 @@ namespace arma
   #include "armadillo_bits/lapack_wrapper.hpp"
   #include "armadillo_bits/atlas_wrapper.hpp"
   
+  #include "armadillo_bits/cond_rel_bones.hpp"
   #include "armadillo_bits/arrayops_bones.hpp"
   #include "armadillo_bits/podarray_bones.hpp"
   #include "armadillo_bits/auxlib_bones.hpp"
@@ -369,6 +376,7 @@ namespace arma
   #include "armadillo_bits/eop_core_meat.hpp"
   #include "armadillo_bits/eglue_core_meat.hpp"
   
+  #include "armadillo_bits/cond_rel_meat.hpp"
   #include "armadillo_bits/arrayops_meat.hpp"
   #include "armadillo_bits/podarray_meat.hpp"
   #include "armadillo_bits/auxlib_meat.hpp"

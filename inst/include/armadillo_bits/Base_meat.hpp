@@ -56,6 +56,7 @@ Base<elem_type,derived>::st() const
 
 
 
+
 template<typename elem_type, typename derived>
 inline
 void
@@ -83,30 +84,6 @@ Base<elem_type,derived>::print(std::ostream& user_stream, const std::string extr
 template<typename elem_type, typename derived>
 inline
 void
-Base<elem_type,derived>::print_trans(const std::string extra_text) const
-  {
-  const unwrap<derived> tmp( (*this).get_ref() );
-  
-  tmp.M.impl_print_trans(extra_text);
-  }
-
-
-
-template<typename elem_type, typename derived>
-inline
-void
-Base<elem_type,derived>::print_trans(std::ostream& user_stream, const std::string extra_text) const
-  {
-  const unwrap<derived> tmp( (*this).get_ref() );
-  
-  tmp.M.impl_print_trans(user_stream, extra_text);
-  }
-  
-
-
-template<typename elem_type, typename derived>
-inline
-void
 Base<elem_type,derived>::raw_print(const std::string extra_text) const
   {
   const unwrap<derived> tmp( (*this).get_ref() );
@@ -125,29 +102,18 @@ Base<elem_type,derived>::raw_print(std::ostream& user_stream, const std::string 
   
   tmp.M.impl_raw_print(user_stream, extra_text);
   }
-  
 
 
-template<typename elem_type, typename derived>
-inline
-void
-Base<elem_type,derived>::raw_print_trans(const std::string extra_text) const
+
+//
+// extra functions defined in Base_blas_elem_type
+
+template<typename derived>
+arma_inline
+const Op<derived,op_inv>
+Base_blas_elem_type<derived>::i(const bool slow) const
   {
-  const unwrap<derived> tmp( (*this).get_ref() );
-  
-  tmp.M.impl_raw_print_trans(extra_text);
-  }
-
-
-
-template<typename elem_type, typename derived>
-inline
-void
-Base<elem_type,derived>::raw_print_trans(std::ostream& user_stream, const std::string extra_text) const
-  {
-  const unwrap<derived> tmp( (*this).get_ref() );
-  
-  tmp.M.impl_raw_print_trans(user_stream, extra_text);
+  return Op<derived,op_inv>( static_cast<const derived&>(*this), ((slow == false) ? 0 : 1), 0 );
   }
 
 

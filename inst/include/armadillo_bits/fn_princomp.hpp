@@ -37,6 +37,7 @@ princomp
   )
   {
   arma_extra_debug_sigprint();
+  arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
   
@@ -78,6 +79,7 @@ princomp
   )
   {
   arma_extra_debug_sigprint();
+  arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
   
@@ -116,6 +118,7 @@ princomp
   )
   {
   arma_extra_debug_sigprint();
+  arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
   
@@ -151,6 +154,7 @@ princomp
   )
   {
   arma_extra_debug_sigprint();
+  arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
   
@@ -181,7 +185,8 @@ princomp
   )
   {
   arma_extra_debug_sigprint();
-
+  arma_ignore(junk);
+  
   return Op<T1, op_princomp>(X.get_ref());
   }
 

@@ -631,6 +631,50 @@ Col<eT>::insert_rows(const uword row_num, const Base<eT,T1>& X)
 
 
 template<typename eT>
+arma_inline
+arma_warn_unused
+eT&
+Col<eT>::at(const uword i)
+  {
+  return access::rw(Mat<eT>::mem[i]);
+  }
+
+
+
+template<typename eT>
+arma_inline
+arma_warn_unused
+eT
+Col<eT>::at(const uword i) const
+  {
+  return Mat<eT>::mem[i];
+  }
+
+
+
+template<typename eT>
+arma_inline
+arma_warn_unused
+eT&
+Col<eT>::at(const uword in_row, const uword)
+  {
+  return access::rw( Mat<eT>::mem[in_row] );
+  }
+
+
+
+template<typename eT>
+arma_inline
+arma_warn_unused
+eT
+Col<eT>::at(const uword in_row, const uword) const
+  {
+  return Mat<eT>::mem[in_row];
+  }
+
+
+
+template<typename eT>
 inline
 typename Col<eT>::row_iterator
 Col<eT>::begin_row(const uword row_num)
@@ -1076,7 +1120,7 @@ template<uword fixed_n_elem>
 arma_inline
 arma_warn_unused
 eT&
-Col<eT>::fixed<fixed_n_elem>::at(const uword in_row, const uword in_col)
+Col<eT>::fixed<fixed_n_elem>::at(const uword in_row, const uword)
   {
   return (use_extra) ? mem_local_extra[in_row] : Mat<eT>::mem_local[in_row];
   }
@@ -1088,7 +1132,7 @@ template<uword fixed_n_elem>
 arma_inline
 arma_warn_unused
 eT
-Col<eT>::fixed<fixed_n_elem>::at(const uword in_row, const uword in_col) const
+Col<eT>::fixed<fixed_n_elem>::at(const uword in_row, const uword) const
   {
   return (use_extra) ? mem_local_extra[in_row] : Mat<eT>::mem_local[in_row];
   }

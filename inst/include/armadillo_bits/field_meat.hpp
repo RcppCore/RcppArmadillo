@@ -1458,7 +1458,7 @@ field_aux::reset_objects(field< std::string >& x)
 template<typename oT>
 inline
 bool
-field_aux::save(const field<oT>& x, const std::string& name, const file_type type, std::string& err_msg)
+field_aux::save(const field<oT>&, const std::string&, const file_type, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
   
@@ -1472,7 +1472,7 @@ field_aux::save(const field<oT>& x, const std::string& name, const file_type typ
 template<typename oT>
 inline
 bool
-field_aux::save(const field<oT>& x, std::ostream& os, const file_type type, std::string& err_msg)
+field_aux::save(const field<oT>&, std::ostream&, const file_type, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
   
@@ -1486,7 +1486,7 @@ field_aux::save(const field<oT>& x, std::ostream& os, const file_type type, std:
 template<typename oT>
 inline
 bool
-field_aux::load(field<oT>& x, const std::string& name, const file_type type, std::string& err_msg)
+field_aux::load(field<oT>&, const std::string&, const file_type, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
   
@@ -1500,7 +1500,7 @@ field_aux::load(field<oT>& x, const std::string& name, const file_type type, std
 template<typename oT>
 inline
 bool
-field_aux::load(field<oT>& x, std::istream& is, const file_type type, std::string& err_msg)
+field_aux::load(field<oT>&, std::istream&, const file_type, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
   

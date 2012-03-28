@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2010-2011 Conrad Sanderson
+// Copyright (C) 2010-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -63,9 +63,10 @@ struct strip_inv
     arma_extra_debug_sigprint();
     }
   
-  static const bool do_inv = false;
-  
   const T1& M;
+  
+  static const bool slow   = false;
+  static const bool do_inv = false;
   };
 
 
@@ -77,13 +78,15 @@ struct strip_inv< Op<T1, op_inv> >
   
   inline strip_inv(const Op<T1, op_inv>& X)
     : M(X.m)
+    , slow(X.aux_uword_a == 1)
     {
     arma_extra_debug_sigprint();
     }
   
-  static const bool do_inv = true;
+  const T1&  M;
+  const bool slow;
   
-  const T1& M;
+  static const bool do_inv = true;
   };
 
 

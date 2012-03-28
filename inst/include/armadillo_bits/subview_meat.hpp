@@ -257,7 +257,7 @@ subview<eT>::operator= (const Base<eT,T1>& in)
       }
     else
       {
-      for(uword col=0; col<t_n_cols; ++col)
+      for(uword col=0; col < t_n_cols; ++col)
         {
         arrayops::copy( t.colptr(col), x.colptr(col), t_n_rows );
         }
@@ -365,7 +365,7 @@ subview<eT>::operator+= (const Base<eT,T1>& in)
       }
     else
       {
-      for(uword col=0; col<t_n_cols; ++col)
+      for(uword col=0; col < t_n_cols; ++col)
         {
         arrayops::inplace_plus( t.colptr(col), x.colptr(col), t_n_rows );
         }
@@ -471,7 +471,7 @@ subview<eT>::operator-= (const Base<eT,T1>& in)
       }
     else
       {
-      for(uword col=0; col<t_n_cols; ++col)
+      for(uword col=0; col < t_n_cols; ++col)
         {
         arrayops::inplace_minus( t.colptr(col), x.colptr(col), t_n_rows );
         }
@@ -579,7 +579,7 @@ subview<eT>::operator%= (const Base<eT,T1>& in)
       }
     else
       {
-      for(uword col=0; col<t_n_cols; ++col)
+      for(uword col=0; col < t_n_cols; ++col)
         {
         arrayops::inplace_mul( t.colptr(col), x.colptr(col), t_n_rows );
         }
@@ -687,7 +687,7 @@ subview<eT>::operator/= (const Base<eT,T1>& in)
       }
     else
       {
-      for(uword col=0; col<t_n_cols; ++col)
+      for(uword col=0; col < t_n_cols; ++col)
         {
         arrayops::inplace_div( t.colptr(col), x.colptr(col), t_n_rows );
         }
@@ -1102,7 +1102,7 @@ subview<eT>::fill(const eT val)
     }
   else
     {
-    for(uword col=0; col<local_n_cols; ++col)
+    for(uword col=0; col < local_n_cols; ++col)
       {
       arrayops::inplace_set( colptr(col), val, local_n_rows );
       }
@@ -1161,7 +1161,7 @@ subview<eT>::operator[](const uword i)
   {
   const uword in_col = i / n_rows;
   const uword in_row = i % n_rows;
-    
+  
   const uword index = (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
   
   return access::rw( (const_cast< Mat<eT>& >(m)).mem[index] );
@@ -1212,6 +1212,7 @@ subview<eT>::operator()(const uword i) const
   const uword in_row = i % n_rows;
   
   const uword index = (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
+  
   return m.mem[index];
   }
 
@@ -1263,6 +1264,31 @@ eT
 subview<eT>::at(const uword in_row, const uword in_col) const
   {
   const uword index = (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
+  
+  return m.mem[index];
+  }
+
+
+
+template<typename eT>
+inline
+eT&
+subview<eT>::at_slow(const uword in_row, const uword in_col)
+  {
+  const uword index = (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
+  
+  return access::rw( (const_cast< Mat<eT>& >(m)).mem[index] );
+  }
+
+
+
+template<typename eT>
+inline
+eT
+subview<eT>::at_slow(const uword in_row, const uword in_col) const
+  {
+  const uword index = (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
+  
   return m.mem[index];
   }
 
@@ -1399,7 +1425,7 @@ subview<eT>::extract(Mat<eT>& out, const subview<eT>& in)
     {
     arma_extra_debug_print("subview::extract(): general submatrix");
     
-    for(uword col = 0; col<n_cols; ++col)   
+    for(uword col=0; col < n_cols; ++col)
       {
       arrayops::copy( out.colptr(col), in.colptr(col), n_rows );
       }
@@ -1447,7 +1473,7 @@ subview<eT>::plus_inplace(Mat<eT>& out, const subview<eT>& in)
     }
   else
     {
-    for(uword col=0; col<n_cols; ++col)
+    for(uword col=0; col < n_cols; ++col)
       {
       arrayops::inplace_plus(out.colptr(col), in.colptr(col), n_rows);
       }
@@ -1495,7 +1521,7 @@ subview<eT>::minus_inplace(Mat<eT>& out, const subview<eT>& in)
     }
   else
     {
-    for(uword col=0; col<n_cols; ++col)
+    for(uword col=0; col < n_cols; ++col)
       {
       arrayops::inplace_minus(out.colptr(col), in.colptr(col), n_rows);
       }
@@ -1543,7 +1569,7 @@ subview<eT>::schur_inplace(Mat<eT>& out, const subview<eT>& in)
     }
   else
     {
-    for(uword col=0; col<n_cols; ++col)
+    for(uword col=0; col < n_cols; ++col)
       {
       arrayops::inplace_mul(out.colptr(col), in.colptr(col), n_rows);
       }
@@ -1591,7 +1617,7 @@ subview<eT>::div_inplace(Mat<eT>& out, const subview<eT>& in)
     }
   else
     {
-    for(uword col=0; col<n_cols; ++col)
+    for(uword col=0; col < n_cols; ++col)
       {
       arrayops::inplace_div(out.colptr(col), in.colptr(col), n_rows);
       }
@@ -2254,6 +2280,7 @@ template<typename eT>
 inline
 subview_col<eT>::subview_col(const Mat<eT>& in_m, const uword in_col)
   : subview<eT>(in_m, 0, in_col, in_m.n_rows, 1)
+  , colmem(subview<eT>::colptr(0)) 
   {
   arma_extra_debug_sigprint();
   }
@@ -2264,6 +2291,7 @@ template<typename eT>
 inline
 subview_col<eT>::subview_col(const Mat<eT>& in_m, const uword in_col, const uword in_row1, const uword in_n_rows)
   : subview<eT>(in_m, in_row1, in_col, in_n_rows, 1)
+  , colmem(subview<eT>::colptr(0)) 
   {
   arma_extra_debug_sigprint();
   }
@@ -2278,6 +2306,9 @@ subview_col<eT>::operator=(const subview<eT>& X)
   arma_extra_debug_sigprint();
   
   subview<eT>::operator=(X);
+  
+  access::rw(colmem) = subview<eT>::colptr(0);
+  
   arma_debug_check( (subview<eT>::n_cols > 1), "subview_col(): incompatible dimensions" );
   }
 
@@ -2291,6 +2322,9 @@ subview_col<eT>::operator=(const subview_col<eT>& X)
   arma_extra_debug_sigprint();
   
   subview<eT>::operator=(X); // interprets 'subview_col' as 'subview'
+  
+  access::rw(colmem) = subview<eT>::colptr(0);
+  
   arma_debug_check( (subview<eT>::n_cols > 1), "subview_col(): incompatible dimensions" );
   }
 
@@ -2305,6 +2339,9 @@ subview_col<eT>::operator=(const Base<eT,T1>& X)
   arma_extra_debug_sigprint();
   
   subview<eT>::operator=(X);
+  
+  access::rw(colmem) = subview<eT>::colptr(0);
+
   arma_debug_check( (subview<eT>::n_cols > 1), "subview_col(): incompatible dimensions" );
   }
 
@@ -2338,6 +2375,112 @@ subview_col<eT>::st() const
   return Op<subview_col<eT>,op_strans>(*this);
   }
 
+
+
+template<typename eT>
+inline
+eT&
+subview_col<eT>::operator[](const uword i)
+  {
+  return access::rw( colmem[i] );
+  }
+
+
+
+template<typename eT>
+inline
+eT
+subview_col<eT>::operator[](const uword i) const
+  {
+  return colmem[i];
+  }
+
+
+
+template<typename eT>
+inline
+eT&
+subview_col<eT>::operator()(const uword i)
+  {
+  arma_debug_check( (i >= subview<eT>::n_elem), "subview::operator(): index out of bounds");
+    
+  return access::rw( colmem[i] );
+  }
+
+
+
+template<typename eT>
+inline
+eT
+subview_col<eT>::operator()(const uword i) const
+  {
+  arma_debug_check( (i >= subview<eT>::n_elem), "subview::operator(): index out of bounds");
+  
+  return colmem[i];
+  }
+
+
+
+template<typename eT>
+inline
+eT&
+subview_col<eT>::operator()(const uword in_row, const uword in_col)
+  {
+  arma_debug_check( ((in_row >= subview<eT>::n_rows) || (in_col > 0)), "subview::operator(): index out of bounds");
+  
+  return access::rw( colmem[in_row] );
+  }
+
+
+
+template<typename eT>
+inline
+eT
+subview_col<eT>::operator()(const uword in_row, const uword in_col) const
+  {
+  arma_debug_check( ((in_row >= subview<eT>::n_rows) || (in_col > 0)), "subview::operator(): index out of bounds");
+  
+  return colmem[in_row];
+  }
+
+
+
+template<typename eT>
+inline
+eT&
+subview_col<eT>::at(const uword in_row, const uword)
+  {
+  return access::rw( colmem[in_row] );
+  }
+
+
+
+template<typename eT>
+inline
+eT
+subview_col<eT>::at(const uword in_row, const uword) const
+  {
+  return colmem[in_row];
+  }
+
+
+
+template<typename eT>
+arma_inline
+eT*
+subview_col<eT>::colptr(const uword)
+  {
+  return const_cast<eT*>(colmem);
+  }
+  
+  
+template<typename eT>
+arma_inline
+const eT*
+subview_col<eT>::colptr(const uword) const
+  {
+  return colmem;
+  }
 
 
 template<typename eT>
@@ -2504,6 +2647,110 @@ const Op<subview_row<eT>,op_strans>
 subview_row<eT>::st() const
   {
   return Op<subview_row<eT>,op_strans>(*this);
+  }
+
+
+
+template<typename eT>
+inline
+eT&
+subview_row<eT>::operator[](const uword i)
+  {
+  const uword index = (i + (subview<eT>::aux_col1))*(subview<eT>::m).n_rows + (subview<eT>::aux_row1);
+  
+  return access::rw( (const_cast< Mat<eT>& >(subview<eT>::m)).mem[index] );
+  }
+
+
+
+template<typename eT>
+inline
+eT
+subview_row<eT>::operator[](const uword i) const
+  {
+  const uword index = (i + (subview<eT>::aux_col1))*(subview<eT>::m).n_rows + (subview<eT>::aux_row1);
+  
+  return subview<eT>::m.mem[index];
+  }
+
+
+
+template<typename eT>
+inline
+eT&
+subview_row<eT>::operator()(const uword i)
+  {
+  arma_debug_check( (i >= subview<eT>::n_elem), "subview::operator(): index out of bounds");
+    
+  const uword index = (i + (subview<eT>::aux_col1))*(subview<eT>::m).n_rows + (subview<eT>::aux_row1);
+  
+  return access::rw( (const_cast< Mat<eT>& >(subview<eT>::m)).mem[index] );
+  }
+
+
+
+template<typename eT>
+inline
+eT
+subview_row<eT>::operator()(const uword i) const
+  {
+  arma_debug_check( (i >= subview<eT>::n_elem), "subview::operator(): index out of bounds");
+  
+  const uword index = (i + (subview<eT>::aux_col1))*(subview<eT>::m).n_rows + (subview<eT>::aux_row1);
+  
+  return subview<eT>::m.mem[index];
+  }
+
+
+
+template<typename eT>
+inline
+eT&
+subview_row<eT>::operator()(const uword in_row, const uword in_col)
+  {
+  arma_debug_check( ((in_row > 0) || (in_col >= subview<eT>::n_cols)), "subview::operator(): index out of bounds");
+  
+  const uword index = (in_col + (subview<eT>::aux_col1))*(subview<eT>::m).n_rows + (subview<eT>::aux_row1);
+  
+  return access::rw( (const_cast< Mat<eT>& >(subview<eT>::m)).mem[index] );
+  }
+
+
+
+template<typename eT>
+inline
+eT
+subview_row<eT>::operator()(const uword in_row, const uword in_col) const
+  {
+  arma_debug_check( ((in_row > 0) || (in_col >= subview<eT>::n_cols)), "subview::operator(): index out of bounds");
+  
+  const uword index = (in_col + (subview<eT>::aux_col1))*(subview<eT>::m).n_rows + (subview<eT>::aux_row1);
+  
+  return subview<eT>::m.mem[index];
+  }
+
+
+
+template<typename eT>
+inline
+eT&
+subview_row<eT>::at(const uword, const uword in_col)
+  {
+  const uword index = (in_col + (subview<eT>::aux_col1))*(subview<eT>::m).n_rows + (subview<eT>::aux_row1);
+  
+  return access::rw( (const_cast< Mat<eT>& >(subview<eT>::m)).mem[index] );
+  }
+
+
+
+template<typename eT>
+inline
+eT
+subview_row<eT>::at(const uword, const uword in_col) const
+  {
+  const uword index = (in_col + (subview<eT>::aux_col1))*(subview<eT>::m).n_rows + (subview<eT>::aux_row1);
+  
+  return subview<eT>::m.mem[index];
   }
 
 

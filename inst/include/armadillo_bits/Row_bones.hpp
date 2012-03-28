@@ -90,6 +90,13 @@ class Row : public Mat<eT>
   template<typename T1> inline void insert_cols(const uword col_num, const Base<eT,T1>& X);
   
   
+  arma_inline arma_warn_unused eT& at(const uword i);
+  arma_inline arma_warn_unused eT  at(const uword i) const;
+  
+  arma_inline arma_warn_unused eT& at(const uword in_row, const uword in_col);
+  arma_inline arma_warn_unused eT  at(const uword in_row, const uword in_col) const;
+  
+  
   typedef       eT*       row_iterator;
   typedef const eT* const_row_iterator;
   

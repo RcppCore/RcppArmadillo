@@ -48,93 +48,37 @@ accu_proxy_linear(const Proxy<T1>& P)
 
 
 
-#if defined(ARMA_GOOD_COMPILER)
-  template<typename T1>
-  arma_hot
-  inline
-  typename T1::elem_type
-  accu_proxy_at(const Proxy<T1>& P)
+template<typename T1>
+arma_hot
+inline
+typename T1::elem_type
+accu_proxy_at(const Proxy<T1>& P)
+  {
+  typedef typename T1::elem_type eT;
+  
+  const uword n_rows = P.get_n_rows();
+  const uword n_cols = P.get_n_cols();
+  
+  eT val = eT(0);
+    
+  if(n_rows != 1)
     {
-    typedef typename T1::elem_type eT;
-    
-    const uword n_rows = P.get_n_rows();
-    const uword n_cols = P.get_n_cols();
-    
-    if(n_rows != 1)
+    for(uword col=0; col < n_cols; ++col)
+    for(uword row=0; row < n_rows; ++row)
       {
-      eT val1 = eT(0);
-      eT val2 = eT(0);
-      
-      for(uword col=0; col < n_cols; ++col)
-        {
-        uword i,j;
-        for(i=0, j=1; j < n_rows; i+=2, j+=2)
-          {
-          val1 += P.at(i,col);
-          val2 += P.at(j,col);
-          }
-        
-        if(i < n_rows)
-          {
-          val1 += P.at(i,col);
-          }
-        }
-      
-      return (val1 + val2);
-      }
-    else
-      {
-      eT val1 = eT(0);
-      eT val2 = eT(0);
-      
-      uword i,j;
-      for(i=0, j=1; j < n_cols; i+=2, j+=2)
-        {
-        val1 += P.at(0,i);
-        val2 += P.at(0,j);
-        }
-      
-      if(i < n_cols)
-        {
-        val1 += P.at(0,i);
-        }
-      
-      return (val1 + val2);
+      val += P.at(row,col);
       }
     }
-#else
-  template<typename T1>
-  arma_hot
-  inline
-  typename T1::elem_type
-  accu_proxy_at(const Proxy<T1>& P)
+  else
     {
-    typedef typename T1::elem_type eT;
-    
-    const uword n_rows = P.get_n_rows();
-    const uword n_cols = P.get_n_cols();
-    
-    eT val = eT(0);
-      
-    if(n_rows != 1)
+    for(uword col=0; col < n_cols; ++col)
       {
-      for(uword col=0; col < n_cols; ++col)
-      for(uword row=0; row < n_rows; ++row)
-        {
-        val += P.at(row,col);
-        }
+      val += P.at(0,col);
       }
-    else
-      {
-      for(uword col=0; col < n_cols; ++col)
-        {
-        val += P.at(0,col);
-        }
-      }
-    
-    return val;
     }
-#endif
+  
+  return val;
+  }
 
 
 

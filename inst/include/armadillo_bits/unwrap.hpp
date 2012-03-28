@@ -1200,7 +1200,7 @@ class partial_unwrap_check< Op<T1, op_htrans2> >
   typedef typename T1::elem_type eT;
   
   inline
-  partial_unwrap_check(const Op<T1,op_htrans2>& A, const Mat<eT>& B)
+  partial_unwrap_check(const Op<T1,op_htrans2>& A, const Mat<eT>&)
     : val(A.aux)
     , M  (A.m)
     {

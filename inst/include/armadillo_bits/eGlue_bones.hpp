@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2010-2011 Conrad Sanderson
+// Copyright (C) 2010-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -27,7 +27,7 @@ class eGlue : public Base<typename T1::elem_type, eGlue<T1, T2, eglue_type> >
   
   static const bool prefer_at_accessor = (Proxy<T1>::prefer_at_accessor || Proxy<T2>::prefer_at_accessor);
   static const bool has_subview        = (Proxy<T1>::has_subview        || Proxy<T2>::has_subview       );
-
+  
   static const bool is_col = (Proxy<T1>::is_col || Proxy<T2>::is_col);
   static const bool is_row = (Proxy<T1>::is_row || Proxy<T2>::is_row);
   

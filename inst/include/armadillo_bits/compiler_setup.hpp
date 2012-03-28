@@ -100,7 +100,7 @@
   
   #if defined(__clang__)
     #undef ARMA_HAVE_STD_TR1
-    #undef ARMA_GOOD_COMPILER
+    //#undef ARMA_GOOD_COMPILER
   #endif
   
   #if (ARMA_GCC_VERSION >= 40300)

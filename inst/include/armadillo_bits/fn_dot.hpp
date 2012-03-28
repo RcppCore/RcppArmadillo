@@ -44,6 +44,7 @@ norm_dot
   )
   {
   arma_extra_debug_sigprint();
+  arma_ignore(junk);
   
   return op_norm_dot::apply(A,B);
   }

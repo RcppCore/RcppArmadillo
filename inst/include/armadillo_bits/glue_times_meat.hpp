@@ -48,6 +48,90 @@ glue_times_redirect<N>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2
 
 
 
+template<typename T1, typename T2>
+arma_hot
+inline
+void
+glue_times_redirect<2>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X, const typename arma_blas_type_only<typename T1::elem_type>::result* junk)
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  typedef typename T1::elem_type eT;
+  
+  if(strip_inv<T1>::do_inv == false)
+    {
+    const partial_unwrap_check<T1> tmp1(X.A, out);
+    const partial_unwrap_check<T2> tmp2(X.B, out);
+    
+    const Mat<eT>& A = tmp1.M;
+    const Mat<eT>& B = tmp2.M;
+    
+    const bool use_alpha = partial_unwrap_check<T1>::do_times || partial_unwrap_check<T2>::do_times;
+    const eT       alpha = use_alpha ? (tmp1.get_val() * tmp2.get_val()) : eT(0);
+    
+    glue_times::apply
+      <
+      eT,
+      partial_unwrap_check<T1>::do_trans,
+      partial_unwrap_check<T2>::do_trans,
+      (partial_unwrap_check<T1>::do_times || partial_unwrap_check<T2>::do_times)
+      >
+      (out, A, B, alpha);
+    }
+  else
+    {
+    arma_extra_debug_print("glue_times_redirect<2>::apply(): detected inv(A)*B");
+    
+    typedef typename strip_inv<T1>::stored_type T1_stripped;
+    
+    const strip_inv<T1> A_strip(X.A);
+    
+    Mat<eT> A = A_strip.M;
+    
+    arma_debug_check( (A.is_square() == false), "inv(): given matrix is not square" );
+    
+    const unwrap_check<T2> B_tmp(X.B, out);
+    const Mat<eT>& B = B_tmp.M;
+    
+    glue_solve::solve_direct( out, A, B, A_strip.slow );
+    }
+  }
+
+
+
+template<typename T1, typename T2>
+arma_hot
+inline
+void
+glue_times_redirect<2>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X, const typename arma_not_blas_type<typename T1::elem_type>::result* junk)
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  typedef typename T1::elem_type eT;
+  
+  const partial_unwrap_check<T1> tmp1(X.A, out);
+  const partial_unwrap_check<T2> tmp2(X.B, out);
+  
+  const Mat<eT>& A = tmp1.M;
+  const Mat<eT>& B = tmp2.M;
+  
+  const bool use_alpha = partial_unwrap_check<T1>::do_times || partial_unwrap_check<T2>::do_times;
+  const eT       alpha = use_alpha ? (tmp1.get_val() * tmp2.get_val()) : eT(0);
+  
+  glue_times::apply
+    <
+    eT,
+    partial_unwrap_check<T1>::do_trans,
+    partial_unwrap_check<T2>::do_trans,
+    (partial_unwrap_check<T1>::do_times || partial_unwrap_check<T2>::do_times)
+    >
+    (out, A, B, alpha);
+  }
+
+
+
 template<typename T1, typename T2, typename T3>
 arma_hot
 inline

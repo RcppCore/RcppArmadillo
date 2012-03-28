@@ -195,13 +195,27 @@ arrayops::convert(out_eT* dest, const in_eT* src, const uword n_elem)
     const in_eT tmp_i = src[i];
     const in_eT tmp_j = src[j];
     
-    dest[i] = out_eT( tmp_i );
-    dest[j] = out_eT( tmp_j );
+    // dest[i] = out_eT( tmp_i );
+    // dest[j] = out_eT( tmp_j );
+    
+    dest[i] = (is_signed<out_eT>::value)
+              ? out_eT( tmp_i )
+              : ( cond_rel< is_signed<in_eT>::value >::lt(tmp_i, in_eT(0)) ? out_eT(0) : out_eT(tmp_i) );
+              
+    dest[j] = (is_signed<out_eT>::value)
+              ? out_eT( tmp_j )
+              : ( cond_rel< is_signed<in_eT>::value >::lt(tmp_j, in_eT(0)) ? out_eT(0) : out_eT(tmp_j) );
     }
   
   if(i < n_elem)
     {
-    dest[i] = out_eT( src[i] );
+    const in_eT tmp_i = src[i];
+    
+    // dest[i] = out_eT( tmp_i );
+    
+    dest[i] = (is_signed<out_eT>::value)
+              ? out_eT( tmp_i )
+              : ( cond_rel< is_signed<in_eT>::value >::lt(tmp_i, in_eT(0)) ? out_eT(0) : out_eT(tmp_i) );
     }
   }
 

@@ -1,6 +1,15 @@
+0.2.38  2012-03-28
+
+    o   Upgraded to Armadillo release 2.99.2 "Antarctic Chilli Ranch (Beta 2)"
+
+    	  * added .i()
+    	  * much faster handling of .col() and .row()
+    	  * expressions X=A.i()*B and X=inv(A)*B are automatically converted
+    	    to X=solve(A,B) 
+
 0.2.37  2012-03-19
 
-    o   Upgraded to Armadillo test release 2.99.1 "Antarctic Chilli Ranch (Beta 1)"
+    o   Upgraded to Armadillo release 2.99.1 "Antarctic Chilli Ranch (Beta 1)"
 
     	  * added non-contiguous submatrix views
 	  * added hist() and histc()

@@ -25,11 +25,7 @@ Mat<eT>::~Mat()
     {
     if(n_elem > arma_config::mat_prealloc)
       {
-      #if defined(ARMA_USE_TBB_ALLOC)
-        scalable_free((void *)(mem));
-      #else
-        delete [] mem;
-      #endif
+      memory::release( access::rw(mem) );
       }
     }
     
@@ -141,11 +137,7 @@ Mat<eT>::init_cold()
     {
     arma_extra_debug_print("Mat::init(): allocating memory");
     
-    #if defined(ARMA_USE_TBB_ALLOC)
-      access::rw(mem) = (eT *) scalable_malloc(sizeof(eT)*n_elem);
-    #else
-      access::rw(mem) = new(std::nothrow) eT[n_elem];
-    #endif
+    access::rw(mem) = memory::acquire<eT>(n_elem);
     
     arma_check_bad_alloc( (mem == 0), "Mat::init(): out of memory" );
     }
@@ -246,11 +238,7 @@ Mat<eT>::init_warm(uword in_n_rows, uword in_n_cols)
         {
         arma_extra_debug_print("Mat::init(): freeing memory");
         
-        #if defined(ARMA_USE_TBB_ALLOC)
-          scalable_free((void *)(mem));
-        #else
-          delete [] mem;
-        #endif
+        memory::release( access::rw(mem) );
         }
       }
     
@@ -263,11 +251,7 @@ Mat<eT>::init_warm(uword in_n_rows, uword in_n_cols)
       {
       arma_extra_debug_print("Mat::init(): allocating memory");
       
-      #if defined(ARMA_USE_TBB_ALLOC)
-        access::rw(mem) = (eT *) scalable_malloc(sizeof(eT)*new_n_elem);
-      #else
-        access::rw(mem) = new(std::nothrow) eT[new_n_elem];
-      #endif
+      access::rw(mem) = memory::acquire<eT>(new_n_elem);
       
       arma_check_bad_alloc( (mem == 0), "Mat::init(): out of memory" );
       }
@@ -6294,7 +6278,7 @@ Mat_aux::set_real(Mat<eT>& out, const Base<eT,T1>& X)
 template<typename eT, typename T1>
 inline
 void
-Mat_aux::set_imag(Mat<eT>& out, const Base<eT,T1>& X)
+Mat_aux::set_imag(Mat<eT>&, const Base<eT,T1>&)
   {
   arma_extra_debug_sigprint();
   }

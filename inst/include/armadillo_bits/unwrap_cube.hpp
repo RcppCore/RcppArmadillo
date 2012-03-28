@@ -64,7 +64,7 @@ class unwrap_cube_check
   typedef typename T1::elem_type eT;
   
   inline
-  unwrap_cube_check(const T1& A, const Cube<eT>& B)
+  unwrap_cube_check(const T1& A, const Cube<eT>&)
     : M(A)
     {
     arma_extra_debug_sigprint();

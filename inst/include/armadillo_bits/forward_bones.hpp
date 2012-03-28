@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -15,6 +15,9 @@ using std::cout;
 using std::cerr;
 using std::endl;
 using std::ios;
+
+template<typename elem_type, typename derived> struct Base;
+template<typename elem_type, typename derived> struct BaseCube;
 
 template<typename eT> class Mat;
 template<typename eT> class Col;
