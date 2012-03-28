@@ -168,7 +168,7 @@ inline
 typename T1::elem_type
 op_median::median_vec
   (
-  const Base<typename T1::elem_type, T1>& X,
+  const T1& X,
   const typename arma_not_cx<typename T1::elem_type>::result* junk
   )
   {
@@ -177,7 +177,7 @@ op_median::median_vec
   
   typedef typename T1::elem_type eT;
 
-  const Proxy<T1> P(X.get_ref());
+  const Proxy<T1> P(X);
   
   const uword n_elem = P.get_n_elem();
   
@@ -232,7 +232,7 @@ inline
 typename T1::elem_type
 op_median::median_vec
   (
-  const Base<typename T1::elem_type, T1>& X,
+  const T1& X,
   const typename arma_cx_only<typename T1::elem_type>::result* junk
   )
   {
@@ -242,7 +242,7 @@ op_median::median_vec
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
   
-  const Proxy<T1> P(X.get_ref());
+  const Proxy<T1> P(X);
   
   const uword n_elem = P.get_n_elem();
   

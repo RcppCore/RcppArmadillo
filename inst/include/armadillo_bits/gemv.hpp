@@ -298,6 +298,7 @@ class gemv_emul
   apply( eT* y, const Mat<eT>& A, const eT* x, const eT alpha = eT(1), const eT beta = eT(0), const typename arma_cx_only<eT>::result* junk = 0 )
     {
     arma_extra_debug_sigprint();
+    arma_ignore(junk);
     
     Mat<eT> tmp_A;
     

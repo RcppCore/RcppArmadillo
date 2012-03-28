@@ -20,7 +20,7 @@ template<typename T1>
 class ProxyCube
   {
   public:
-  inline ProxyCube(const T1& A)
+  inline ProxyCube(const T1&)
     {
     arma_type_check(( is_arma_cube_type<T1>::value == false ));
     }

@@ -20,7 +20,7 @@ template<typename T1>
 class Proxy
   {
   public:
-  inline Proxy(const T1& A)
+  inline Proxy(const T1&)
     {
     arma_type_check(( is_arma_type<T1>::value == false ));
     }
@@ -352,9 +352,9 @@ class Proxy< subview_col<eT> >
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef subview_col<eT>                          stored_type;
-  typedef const subview_col<eT>&                   ea_type;
+  typedef const eT*                                ea_type;
   
-  static const bool prefer_at_accessor = true;
+  static const bool prefer_at_accessor = false;
   static const bool has_subview        = true;
   
   static const bool is_row = false;
@@ -372,10 +372,10 @@ class Proxy< subview_col<eT> >
   arma_inline uword get_n_cols() const { return 1;        }
   arma_inline uword get_n_elem() const { return Q.n_elem; }
   
-  arma_inline elem_type operator[] (const uword i)                const { return Q[i];         }
-  arma_inline elem_type at         (const uword row, const uword) const { return Q.at(row, 0); }
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];   }
+  arma_inline elem_type at         (const uword row, const uword) const { return Q[row]; }
   
-  arma_inline ea_type get_ea() const { return Q; }
+  arma_inline ea_type get_ea() const { return Q.colptr(0); }
   
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&(Q.m)) == void_ptr(&X)); }
@@ -393,7 +393,7 @@ class Proxy< subview_row<eT> >
   typedef subview_row<eT>                          stored_type;
   typedef const subview_row<eT>&                   ea_type;
   
-  static const bool prefer_at_accessor = true;
+  static const bool prefer_at_accessor = false;
   static const bool has_subview        = true;
   
   static const bool is_row = true;
@@ -411,8 +411,8 @@ class Proxy< subview_row<eT> >
   arma_inline uword get_n_cols() const { return Q.n_cols; }
   arma_inline uword get_n_elem() const { return Q.n_elem; }
   
-  arma_inline elem_type operator[] (const uword i)                const { return Q[i];         }
-  arma_inline elem_type at         (const uword, const uword col) const { return Q.at(0, col); }
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];   }
+  arma_inline elem_type at         (const uword, const uword col) const { return Q[col]; }
   
   arma_inline ea_type get_ea() const { return Q; }
   

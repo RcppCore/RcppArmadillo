@@ -27,11 +27,7 @@ Cube<eT>::~Cube()
     {
     if(n_elem > Cube_prealloc::mem_n_elem)
       {
-      #if defined(ARMA_USE_TBB_ALLOC)
-        scalable_free((void *)(mem));
-      #else
-        delete [] mem;
-      #endif
+      memory::release( access::rw(mem) );
       }
     }
   
@@ -113,11 +109,7 @@ Cube<eT>::init_cold()
     {
     arma_extra_debug_print("Cube::init(): allocating memory");
     
-    #if defined(ARMA_USE_TBB_ALLOC)
-      access::rw(mem) = (eT *)scalable_malloc(sizeof(eT)*n_elem);
-    #else
-      access::rw(mem) = new(std::nothrow) eT[n_elem];
-    #endif
+    access::rw(mem) = memory::acquire<eT>(n_elem);
     
     arma_check_bad_alloc( (mem == 0), "Cube::init(): out of memory" );
     }
@@ -208,11 +200,7 @@ Cube<eT>::init_warm(const uword in_n_rows, const uword in_n_cols, const uword in
         {
         arma_extra_debug_print("Cube::init(): freeing memory");
         
-        #if defined(ARMA_USE_TBB_ALLOC)
-          scalable_free((void *)(mem));
-        #else
-          delete [] mem;
-        #endif
+        memory::release( access::rw(mem) );
         }
       }
     
@@ -226,11 +214,7 @@ Cube<eT>::init_warm(const uword in_n_rows, const uword in_n_cols, const uword in
       {
       arma_extra_debug_print("Cube::init(): allocating memory");
       
-      #if defined(ARMA_USE_TBB_ALLOC)
-        access::rw(mem) = (eT *)scalable_malloc(sizeof(eT)*new_n_elem);
-      #else
-        access::rw(mem) = new(std::nothrow) eT[new_n_elem];
-      #endif
+      access::rw(mem) = memory::acquire<eT>(new_n_elem);
       
       arma_check_bad_alloc( (mem == 0), "Cube::init(): out of memory" );
       }
@@ -3325,7 +3309,7 @@ Cube_aux::set_real(Cube<eT>& out, const BaseCube<eT,T1>& X)
 template<typename eT, typename T1>
 inline
 void
-Cube_aux::set_imag(Cube<eT>& out, const BaseCube<eT,T1>& X)
+Cube_aux::set_imag(Cube<eT>&, const BaseCube<eT,T1>&)
   {
   arma_extra_debug_sigprint();
   }

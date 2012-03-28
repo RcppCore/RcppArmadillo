@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2010-2011 Conrad Sanderson
+// Copyright (C) 2010-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -32,6 +32,7 @@ class eOp : public Base<typename T1::elem_type, eOp<T1, eop_type> >
   static const bool is_col = Proxy<T1>::is_col;
   
   arma_aligned const Proxy<T1> P;
+  
   arma_aligned       elem_type aux;          //!< storage of auxiliary data, user defined format
   arma_aligned       uword     aux_uword_a;  //!< storage of auxiliary data, uword format
   arma_aligned       uword     aux_uword_b;  //!< storage of auxiliary data, uword format

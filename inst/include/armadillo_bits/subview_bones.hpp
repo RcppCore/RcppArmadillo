@@ -38,7 +38,6 @@ class subview : public Base<eT, subview<eT> >
   const uword n_cols;
   const uword n_elem;
   
-  
   protected:
   
   arma_inline subview(const Mat<eT>& in_m, const uword in_row1, const uword in_col1, const uword in_n_rows, const uword in_n_cols);
@@ -89,6 +88,9 @@ class subview : public Base<eT, subview<eT> >
   
   inline eT&         at(const uword in_row, const uword in_col);
   inline eT          at(const uword in_row, const uword in_col) const;
+  
+  inline eT&    at_slow(const uword in_row, const uword in_col);
+  inline eT     at_slow(const uword in_row, const uword in_col) const;
   
   arma_inline       eT* colptr(const uword in_col);
   arma_inline const eT* colptr(const uword in_col) const;
@@ -181,6 +183,8 @@ class subview_col : public subview<eT>
   static const bool is_row = false;
   static const bool is_col = true;
   
+  const eT* colmem;
+  
   inline void operator= (const subview<eT>& x);
   inline void operator= (const subview_col& x);
   
@@ -190,6 +194,21 @@ class subview_col : public subview<eT>
   arma_inline const Op<subview_col<eT>,op_htrans>  t() const;
   arma_inline const Op<subview_col<eT>,op_htrans> ht() const;
   arma_inline const Op<subview_col<eT>,op_strans> st() const;
+  
+  inline eT& operator[](const uword i);
+  inline eT  operator[](const uword i) const;
+  
+  inline eT& operator()(const uword i);
+  inline eT  operator()(const uword i) const;
+  
+  inline eT& operator()(const uword in_row, const uword in_col);
+  inline eT  operator()(const uword in_row, const uword in_col) const;
+  
+  inline eT&         at(const uword in_row, const uword in_col);
+  inline eT          at(const uword in_row, const uword in_col) const;
+  
+  arma_inline       eT* colptr(const uword in_col);
+  arma_inline const eT* colptr(const uword in_col) const;
   
   inline       subview_col<eT> rows(const uword in_row1, const uword in_row2);
   inline const subview_col<eT> rows(const uword in_row1, const uword in_row2) const;
@@ -235,6 +254,18 @@ class subview_row : public subview<eT>
   arma_inline const Op<subview_row<eT>,op_htrans>  t() const;
   arma_inline const Op<subview_row<eT>,op_htrans> ht() const;
   arma_inline const Op<subview_row<eT>,op_strans> st() const;
+  
+  inline eT& operator[](const uword i);
+  inline eT  operator[](const uword i) const;
+  
+  inline eT& operator()(const uword i);
+  inline eT  operator()(const uword i) const;
+  
+  inline eT& operator()(const uword in_row, const uword in_col);
+  inline eT  operator()(const uword in_row, const uword in_col) const;
+  
+  inline eT&         at(const uword in_row, const uword in_col);
+  inline eT          at(const uword in_row, const uword in_col) const;
   
   inline       subview_row<eT> cols(const uword in_col1, const uword in_col2);
   inline const subview_row<eT> cols(const uword in_col1, const uword in_col2) const;

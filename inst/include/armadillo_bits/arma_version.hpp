@@ -18,8 +18,8 @@
 
 #define ARMA_VERSION_MAJOR 2
 #define ARMA_VERSION_MINOR 99
-#define ARMA_VERSION_PATCH 1
-#define ARMA_VERSION_NAME  "Antarctic Chilli Ranch (Beta 1)"
+#define ARMA_VERSION_PATCH 2
+#define ARMA_VERSION_NAME  "Antarctic Chilli Ranch (Beta 2)"
 
 
 

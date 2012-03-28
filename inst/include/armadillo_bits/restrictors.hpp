@@ -131,6 +131,15 @@ template<> struct arma_blas_type_only< std::complex<double> > { typedef std::com
 
 
 
+template<typename T> struct arma_not_blas_type { typedef T result; };
+
+template<> struct arma_not_blas_type< float                > {  };
+template<> struct arma_not_blas_type< double               > {  };
+template<> struct arma_not_blas_type< std::complex<float>  > {  };
+template<> struct arma_not_blas_type< std::complex<double> > {  };
+
+
+
 template<typename T> struct arma_op_rel_only { };
 
 template<> struct arma_op_rel_only< op_rel_lt_pre    > { typedef int result; };

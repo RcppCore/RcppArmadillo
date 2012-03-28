@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2011 Conrad Sanderson
+// Copyright (C) 2009-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -13,6 +13,45 @@
 
 //! \addtogroup glue_solve
 //! @{
+
+
+
+template<typename eT>
+inline
+void
+glue_solve::solve_direct(Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B, const bool slow)
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword A_n_rows = A.n_rows;
+  const uword A_n_cols = A.n_cols;
+  
+  arma_debug_check( (A_n_rows != B.n_rows), "solve(): number of rows in A and B must be the same" );
+  
+  bool status = false;
+  
+  if(A_n_rows == A_n_cols)
+    {
+    status = auxlib::solve(out, A, B, slow);
+    }
+  else
+  if(A_n_rows > A_n_cols)
+    {
+    arma_extra_debug_print("solve(): detected over-determined system");
+    status = auxlib::solve_od(out, A, B);
+    }
+  else
+    {
+    arma_extra_debug_print("solve(): detected under-determined system");
+    status = auxlib::solve_ud(out, A, B);
+    }
+  
+  if(status == false)
+    {
+    out.reset();
+    arma_bad("solve(): solution not found");
+    }
+  }
 
 
 
@@ -30,33 +69,7 @@ glue_solve::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_solve>
   const unwrap_check<T2> B_tmp(X.B, out);
   const Mat<eT>& B = B_tmp.M;
   
-  arma_debug_check( (A.n_rows != B.n_rows), "solve(): number of rows in A and B must be the same" );
-  
-  bool status;
-  
-  if(A.n_rows == A.n_cols)
-    {
-    const uword mode = X.aux_uword;
-    
-    status = (mode == 0) ? auxlib::solve(out, A, B) : auxlib::solve(out, A, B, true);
-    }
-  else
-  if(A.n_rows > A.n_cols)
-    {
-    arma_extra_debug_print("solve(): detected over-determined system");
-    status = auxlib::solve_od(out, A, B);
-    }
-  else
-    {
-    arma_extra_debug_print("solve(): detected under-determined system");
-    status = auxlib::solve_ud(out, A, B);
-    }
-  
-  if(status == false)
-    {
-    out.reset();
-    arma_bad("solve(): solution not found");
-    }
+  glue_solve::solve_direct( out, A, B, (X.aux_uword == 1) );
   }
 
 

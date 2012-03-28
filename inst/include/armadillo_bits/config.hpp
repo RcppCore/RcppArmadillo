@@ -59,6 +59,9 @@
 // #define ARMA_USE_TBB_ALLOC
 //// Uncomment the above line if you want to use Intel TBB scalable_malloc() and scalable_free() instead of standard new[] and delete[]
 
+// #define ARMA_USE_MKL_ALLOC
+//// Uncomment the above line if you want to use Intel MKL mkl_malloc() and mkl_free() instead of standard new[] and delete[]
+
 // #define ARMA_USE_ATLAS
 // #define ARMA_ATLAS_INCLUDE_DIR /usr/include/
 //// If you're using ATLAS and the compiler can't find cblas.h and/or clapack.h

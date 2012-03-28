@@ -49,10 +49,10 @@ class op_median
   //
   
   template<typename T1>
-  inline static typename T1::elem_type median_vec(const Base<typename T1::elem_type, T1>& X, const typename arma_not_cx<typename T1::elem_type>::result* junk = 0);
+  inline static typename T1::elem_type median_vec(const T1& X, const typename arma_not_cx<typename T1::elem_type>::result* junk = 0);
   
   template<typename T1>
-  inline static typename T1::elem_type median_vec(const Base<typename T1::elem_type, T1>& X, const typename arma_cx_only<typename T1::elem_type>::result* junk = 0);
+  inline static typename T1::elem_type median_vec(const T1& X, const typename arma_cx_only<typename T1::elem_type>::result* junk = 0);
   
   //
   //
