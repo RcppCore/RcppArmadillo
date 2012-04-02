@@ -89,9 +89,6 @@ class subview : public Base<eT, subview<eT> >
   inline eT&         at(const uword in_row, const uword in_col);
   inline eT          at(const uword in_row, const uword in_col) const;
   
-  inline eT&    at_slow(const uword in_row, const uword in_col);
-  inline eT     at_slow(const uword in_row, const uword in_col) const;
-  
   arma_inline       eT* colptr(const uword in_col);
   arma_inline const eT* colptr(const uword in_col) const;
   

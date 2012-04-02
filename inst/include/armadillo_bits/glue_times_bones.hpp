@@ -35,6 +35,23 @@ struct depth_lhs< glue_type, Glue<T1,T2,glue_type> >
 
 
 
+template<bool is_eT_blas_type>
+struct glue_times_redirect2_helper
+  {
+  template<typename T1, typename T2>
+  arma_hot inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X);
+  };
+
+
+template<>
+struct glue_times_redirect2_helper<true>
+  {
+  template<typename T1, typename T2>
+  arma_hot inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X);
+  };
+
+
+
 template<uword N>
 struct glue_times_redirect
   {
@@ -47,10 +64,7 @@ template<>
 struct glue_times_redirect<2>
   {
   template<typename T1, typename T2>
-  arma_hot inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X, const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0);
-  
-  template<typename T1, typename T2>
-  arma_hot inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X, const typename arma_not_blas_type<typename T1::elem_type>::result* junk = 0);
+  arma_hot inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X);
   };
 
 

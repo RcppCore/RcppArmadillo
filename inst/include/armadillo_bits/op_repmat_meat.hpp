@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2011 Conrad Sanderson
+// Copyright (C) 2009-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2012 Conrad Sanderson
 // Copyright (C) 2009-2010 Dimitrios Bouzas
 // 
 // This file is part of the Armadillo C++ library.
@@ -43,16 +43,54 @@ op_repmat::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_repmat>& in)
   const uword out_n_rows = out.n_rows;
   const uword out_n_cols = out.n_cols;
   
+  // if( (out_n_rows > 0) && (out_n_cols > 0) )
+  //   {
+  //   for(uword col = 0; col < out_n_cols; col += X_n_cols)
+  //   for(uword row = 0; row < out_n_rows; row += X_n_rows)
+  //     {
+  //     out.submat(row, col, row+X_n_rows-1, col+X_n_cols-1) = X;
+  //     }
+  //   }
+  
   if( (out_n_rows > 0) && (out_n_cols > 0) )
     {
-    for(uword col = 0; col < out_n_cols; col += X_n_cols)
+    if(copies_per_row != 1)
       {
-      for(uword row = 0; row < out_n_rows; row += X_n_rows)
+      for(uword col_copy=0; col_copy < copies_per_col; ++col_copy)
         {
-        out.submat(row, col, row+X_n_rows-1, col+X_n_cols-1) = X;
+        const uword out_col_offset = X_n_cols * col_copy;
+        
+        for(uword col=0; col < X_n_cols; ++col)
+          {
+                eT* out_colptr = out.colptr(col + out_col_offset);
+          const eT* X_colptr   = X.colptr(col);
+          
+          for(uword row_copy=0; row_copy < copies_per_row; ++row_copy)
+            {
+            const uword out_row_offset = X_n_rows * row_copy;
+            
+            arrayops::copy( &out_colptr[out_row_offset], X_colptr, X_n_rows );
+            }
+          }
+        }
+      }
+    else
+      {
+      for(uword col_copy=0; col_copy < copies_per_col; ++col_copy)
+        {
+        const uword out_col_offset = X_n_cols * col_copy;
+        
+        for(uword col=0; col < X_n_cols; ++col)
+          {
+                eT* out_colptr = out.colptr(col + out_col_offset);
+          const eT* X_colptr   = X.colptr(col);
+          
+          arrayops::copy( out_colptr, X_colptr, X_n_rows );
+          }
         }
       }
     }
+  
   }
 
 

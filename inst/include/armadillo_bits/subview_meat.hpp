@@ -1271,30 +1271,6 @@ subview<eT>::at(const uword in_row, const uword in_col) const
 
 
 template<typename eT>
-inline
-eT&
-subview<eT>::at_slow(const uword in_row, const uword in_col)
-  {
-  const uword index = (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
-  
-  return access::rw( (const_cast< Mat<eT>& >(m)).mem[index] );
-  }
-
-
-
-template<typename eT>
-inline
-eT
-subview<eT>::at_slow(const uword in_row, const uword in_col) const
-  {
-  const uword index = (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
-  
-  return m.mem[index];
-  }
-
-
-
-template<typename eT>
 arma_inline
 eT*
 subview<eT>::colptr(const uword in_col)

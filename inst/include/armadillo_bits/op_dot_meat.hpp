@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -21,7 +21,7 @@
 template<typename eT>
 arma_hot
 arma_pure
-inline
+arma_inline
 eT
 op_dot::direct_dot_arma(const uword n_elem, const eT* const A, const eT* const B)
   {
