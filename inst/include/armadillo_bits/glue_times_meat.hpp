@@ -16,12 +16,12 @@
 
 
 
-template<uword N>
+template<bool is_eT_blas_type>
 template<typename T1, typename T2>
 arma_hot
 inline
 void
-glue_times_redirect<N>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X)
+glue_times_redirect2_helper<is_eT_blas_type>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X)
   {
   arma_extra_debug_sigprint();
   
@@ -52,10 +52,9 @@ template<typename T1, typename T2>
 arma_hot
 inline
 void
-glue_times_redirect<2>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X, const typename arma_blas_type_only<typename T1::elem_type>::result* junk)
+glue_times_redirect2_helper<true>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X)
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
   
@@ -100,14 +99,14 @@ glue_times_redirect<2>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2
 
 
 
+template<uword N>
 template<typename T1, typename T2>
 arma_hot
 inline
 void
-glue_times_redirect<2>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X, const typename arma_not_blas_type<typename T1::elem_type>::result* junk)
+glue_times_redirect<N>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X)
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
   
@@ -128,6 +127,21 @@ glue_times_redirect<2>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2
     (partial_unwrap_check<T1>::do_times || partial_unwrap_check<T2>::do_times)
     >
     (out, A, B, alpha);
+  }
+
+
+
+template<typename T1, typename T2>
+arma_hot
+inline
+void
+glue_times_redirect<2>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  glue_times_redirect2_helper< is_supported_blas_type<eT>::value >::apply(out, X);
   }
 
 

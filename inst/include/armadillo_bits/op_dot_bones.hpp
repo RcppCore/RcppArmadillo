@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -22,7 +22,7 @@ class op_dot
   public:
   
   template<typename eT>
-  arma_hot arma_pure inline static eT direct_dot_arma(const uword n_elem, const eT* const A, const eT* const B);
+  arma_hot arma_pure arma_inline static eT direct_dot_arma(const uword n_elem, const eT* const A, const eT* const B);
   
   template<typename eT>
   arma_hot arma_pure inline static typename arma_float_only<eT>::result

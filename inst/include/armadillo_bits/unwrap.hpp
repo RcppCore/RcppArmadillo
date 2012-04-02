@@ -126,11 +126,10 @@ class unwrap_check
   typedef typename T1::elem_type eT;
   
   inline
-  unwrap_check(const T1& A, const Mat<eT>& B)
+  unwrap_check(const T1& A, const Mat<eT>&)
     : M(A)
     {
     arma_extra_debug_sigprint();
-    arma_ignore(B);
     }
   
   inline
@@ -259,11 +258,10 @@ class unwrap_check_mixed
   
   template<typename eT2>
   inline
-  unwrap_check_mixed(const T1& A, const Mat<eT2>& B)
+  unwrap_check_mixed(const T1& A, const Mat<eT2>&)
     : M(A)
     {
     arma_extra_debug_sigprint();
-    arma_ignore(B);
     }
   
   inline
@@ -902,11 +900,11 @@ class partial_unwrap_check
   
   typedef typename T1::elem_type eT;
   
-  inline partial_unwrap_check(const T1& A, const Mat<eT>& B)
+  arma_hot inline
+  partial_unwrap_check(const T1& A, const Mat<eT>&)
     : M(A)
     {
     arma_extra_debug_sigprint();
-    arma_ignore(B);
     }
   
   
@@ -917,7 +915,7 @@ class partial_unwrap_check
     }
   
   
-  inline eT get_val() const { return eT(1); }
+  arma_hot arma_inline eT get_val() const { return eT(1); }
   
   
   static const bool do_trans = false;
@@ -933,7 +931,7 @@ class partial_unwrap_check< Mat<eT> >
   {
   public:
   
-  inline
+  arma_hot inline
   partial_unwrap_check(const Mat<eT>& A, const Mat<eT>& B)
     : M_local ( (&A == &B) ? new Mat<eT>(A) : 0 )
     , M       ( (&A == &B) ? (*M_local)     : A )
@@ -954,7 +952,7 @@ class partial_unwrap_check< Mat<eT> >
     }
   
   
-  inline eT get_val() const { return eT(1); }
+  arma_hot arma_inline eT get_val() const { return eT(1); }
   
   
   static const bool do_trans = false;
@@ -972,7 +970,7 @@ class partial_unwrap_check< Row<eT> >
   {
   public:
   
-  inline
+  arma_hot inline
   partial_unwrap_check(const Row<eT>& A, const Mat<eT>& B)
     : M_local ( (&A == &B) ? new Mat<eT>(A) : 0 )
     , M       ( (&A == &B) ? (*M_local)     : A )
@@ -992,8 +990,7 @@ class partial_unwrap_check< Row<eT> >
       }
     }
   
-  
-  inline eT get_val() const { return eT(1); }
+  arma_hot arma_inline eT get_val() const { return eT(1); }
   
   
   static const bool do_trans = false;
@@ -1011,7 +1008,7 @@ class partial_unwrap_check< Col<eT> >
   {
   public:
   
-  inline
+  arma_hot inline
   partial_unwrap_check(const Col<eT>& A, const Mat<eT>& B)
     : M_local ( (&A == &B) ? new Mat<eT>(A) : 0 )
     , M       ( (&A == &B) ? (*M_local)     : A )
@@ -1032,7 +1029,7 @@ class partial_unwrap_check< Col<eT> >
     }
   
   
-  inline eT get_val() const { return eT(1); }
+  arma_hot arma_inline eT get_val() const { return eT(1); }
   
   
   static const bool do_trans = false;
@@ -1052,12 +1049,11 @@ class partial_unwrap_check< Op<T1, op_htrans> >
   
   typedef typename T1::elem_type eT;
   
-  inline
-  partial_unwrap_check(const Op<T1,op_htrans>& A, const Mat<eT>& B)
+  arma_hot inline
+  partial_unwrap_check(const Op<T1,op_htrans>& A, const Mat<eT>&)
     : M(A.m)
     {
     arma_extra_debug_sigprint();
-    arma_ignore(B);
     }
   
   inline
@@ -1067,7 +1063,7 @@ class partial_unwrap_check< Op<T1, op_htrans> >
     }
   
   
-  inline eT get_val() const { return eT(1); }
+  arma_hot arma_inline eT get_val() const { return eT(1); }
   
   
   static const bool do_trans = true;
@@ -1083,7 +1079,7 @@ class partial_unwrap_check< Op< Mat<eT>, op_htrans> >
   {
   public:
   
-  inline
+  arma_hot inline
   partial_unwrap_check(const Op< Mat<eT>, op_htrans>& A, const Mat<eT>& B)
     : M_local ( (&A.m == &B) ? new Mat<eT>(A.m) : 0   )
     , M       ( (&A.m == &B) ? (*M_local)       : A.m )
@@ -1103,7 +1099,7 @@ class partial_unwrap_check< Op< Mat<eT>, op_htrans> >
     }
   
   
-  inline eT get_val() const { return eT(1); }
+  arma_hot arma_inline eT get_val() const { return eT(1); }
   
   
   static const bool do_trans = true;
@@ -1121,7 +1117,7 @@ class partial_unwrap_check< Op< Row<eT>, op_htrans> >
   {
   public:
   
-  inline
+  arma_hot inline
   partial_unwrap_check(const Op< Row<eT>, op_htrans>& A, const Mat<eT>& B)
     : M_local ( (&A.m == &B) ? new Mat<eT>(A.m) : 0   )
     , M       ( (&A.m == &B) ? (*M_local)       : A.m )
@@ -1141,7 +1137,7 @@ class partial_unwrap_check< Op< Row<eT>, op_htrans> >
     }
   
   
-  inline eT get_val() const { return eT(1); }
+  arma_hot arma_inline eT get_val() const { return eT(1); }
   
   
   static const bool do_trans = true;
@@ -1159,7 +1155,7 @@ class partial_unwrap_check< Op< Col<eT>, op_htrans> >
   {
   public:
   
-  inline
+  arma_hot inline
   partial_unwrap_check(const Op< Col<eT>, op_htrans>& A, const Mat<eT>& B)
     : M_local ( (&A.m == &B) ? new Mat<eT>(A.m) : 0   )
     , M       ( (&A.m == &B) ? (*M_local)       : A.m )
@@ -1179,7 +1175,7 @@ class partial_unwrap_check< Op< Col<eT>, op_htrans> >
     }
   
   
-  inline eT get_val() const { return eT(1); }
+  arma_hot arma_inline eT get_val() const { return eT(1); }
   
   
   static const bool do_trans = true;
@@ -1199,7 +1195,7 @@ class partial_unwrap_check< Op<T1, op_htrans2> >
   
   typedef typename T1::elem_type eT;
   
-  inline
+  arma_hot inline
   partial_unwrap_check(const Op<T1,op_htrans2>& A, const Mat<eT>&)
     : val(A.aux)
     , M  (A.m)
@@ -1214,7 +1210,7 @@ class partial_unwrap_check< Op<T1, op_htrans2> >
     }
   
   
-  inline eT get_val() const { return val; }
+  arma_hot arma_inline eT get_val() const { return val; }
   
   
   static const bool do_trans = true;
@@ -1231,7 +1227,7 @@ class partial_unwrap_check< Op< Mat<eT>, op_htrans2> >
   {
   public:
   
-  inline
+  arma_hot inline
   partial_unwrap_check(const Op< Mat<eT>, op_htrans2>& A, const Mat<eT>& B)
     : val     (A.aux)
     , M_local ( (&A.m == &B) ? new Mat<eT>(A.m) : 0   )
@@ -1252,7 +1248,7 @@ class partial_unwrap_check< Op< Mat<eT>, op_htrans2> >
     }
   
   
-  inline eT get_val() const { return val; }
+  arma_hot arma_inline eT get_val() const { return val; }
   
   
   static const bool do_trans = true;
@@ -1271,7 +1267,7 @@ class partial_unwrap_check< Op< Row<eT>, op_htrans2> >
   {
   public:
   
-  inline
+  arma_hot inline
   partial_unwrap_check(const Op< Row<eT>, op_htrans2>& A, const Mat<eT>& B)
     : val     (A.aux)
     , M_local ( (&A.m == &B) ? new Mat<eT>(A.m) : 0   )
@@ -1292,7 +1288,7 @@ class partial_unwrap_check< Op< Row<eT>, op_htrans2> >
     }
   
   
-  inline eT get_val() const { return val; }
+  arma_hot arma_inline eT get_val() const { return val; }
   
   
   static const bool do_trans = true;
@@ -1311,7 +1307,7 @@ class partial_unwrap_check< Op< Col<eT>, op_htrans2> >
   {
   public:
   
-  inline
+  arma_hot inline
   partial_unwrap_check(const Op< Mat<eT>, op_htrans2>& A, const Mat<eT>& B)
     : val     (A.aux)
     , M_local ( (&A.m == &B) ? new Mat<eT>(A.m) : 0   )
@@ -1332,7 +1328,7 @@ class partial_unwrap_check< Op< Col<eT>, op_htrans2> >
     }
   
   
-  inline eT get_val() const { return val; }
+  arma_hot arma_inline eT get_val() const { return val; }
   
   
   static const bool do_trans = true;
@@ -1353,13 +1349,12 @@ class partial_unwrap_check< eOp<T1, eop_scalar_times> >
   
   typedef typename T1::elem_type eT;
   
-  inline
-  partial_unwrap_check(const eOp<T1,eop_scalar_times>& A, const Mat<eT>& B)
+  arma_hot inline
+  partial_unwrap_check(const eOp<T1,eop_scalar_times>& A, const Mat<eT>&)
     : val(A.aux)
     , M  (A.P.Q)
     {
     arma_extra_debug_sigprint();
-    arma_ignore(B);
     }
   
   inline
@@ -1369,7 +1364,7 @@ class partial_unwrap_check< eOp<T1, eop_scalar_times> >
     }
   
   
-  inline eT get_val() const { return val; }
+  arma_hot arma_inline eT get_val() const { return val; }
   
   
   static const bool do_trans = false;
@@ -1386,13 +1381,12 @@ class partial_unwrap_check< eOp<Mat<eT>, eop_scalar_times> >
   {
   public:
   
-  inline
-  partial_unwrap_check(const eOp<Mat<eT>,eop_scalar_times>& A, const Mat<eT>& B)
+  arma_hot inline
+  partial_unwrap_check(const eOp<Mat<eT>,eop_scalar_times>& A, const Mat<eT>&)
     : val(A.aux)
     , M  (A.P.Q)
     {
     arma_extra_debug_sigprint();
-    arma_ignore(B);
     }
   
   inline
@@ -1402,7 +1396,7 @@ class partial_unwrap_check< eOp<Mat<eT>, eop_scalar_times> >
     }
   
   
-  inline eT get_val() const { return val; }
+  arma_hot arma_inline eT get_val() const { return val; }
   
   
   static const bool do_trans = false;
@@ -1419,13 +1413,12 @@ class partial_unwrap_check< eOp<Row<eT>, eop_scalar_times> >
   {
   public:
   
-  inline
-  partial_unwrap_check(const eOp<Row<eT>,eop_scalar_times>& A, const Mat<eT>& B)
+  arma_hot inline
+  partial_unwrap_check(const eOp<Row<eT>,eop_scalar_times>& A, const Mat<eT>&)
     : val(A.aux)
     , M  (A.P.Q)
     {
     arma_extra_debug_sigprint();
-    arma_ignore(B);
     }
   
   inline
@@ -1435,7 +1428,7 @@ class partial_unwrap_check< eOp<Row<eT>, eop_scalar_times> >
     }
   
   
-  inline eT get_val() const { return val; }
+  arma_hot arma_inline eT get_val() const { return val; }
   
   
   static const bool do_trans = false;
@@ -1452,13 +1445,12 @@ class partial_unwrap_check< eOp<Col<eT>, eop_scalar_times> >
   {
   public:
   
-  inline
-  partial_unwrap_check(const eOp<Col<eT>,eop_scalar_times>& A, const Mat<eT>& B)
+  arma_hot inline
+  partial_unwrap_check(const eOp<Col<eT>,eop_scalar_times>& A, const Mat<eT>&)
     : val(A.aux)
     , M  (A.P.Q)
     {
     arma_extra_debug_sigprint();
-    arma_ignore(B);
     }
   
   inline
@@ -1468,7 +1460,7 @@ class partial_unwrap_check< eOp<Col<eT>, eop_scalar_times> >
     }
   
   
-  inline eT get_val() const { return val; }
+  arma_hot arma_inline eT get_val() const { return val; }
   
   
   static const bool do_trans = false;
