@@ -1107,6 +1107,30 @@ Row<eT>::fixed<fixed_n_elem>::operator() (const uword in_row, const uword in_col
 
 template<typename eT>
 template<uword fixed_n_elem>
+arma_inline
+arma_warn_unused
+eT*
+Row<eT>::fixed<fixed_n_elem>::memptr()
+  {
+  return (use_extra) ? mem_local_extra : Mat<eT>::mem_local;
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_elem>
+arma_inline
+arma_warn_unused
+const eT*
+Row<eT>::fixed<fixed_n_elem>::memptr() const
+  {
+  return (use_extra) ? mem_local_extra : Mat<eT>::mem_local;
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_elem>
 arma_hot
 inline
 const Row<eT>&

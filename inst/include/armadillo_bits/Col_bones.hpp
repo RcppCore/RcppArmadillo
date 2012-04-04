@@ -122,6 +122,14 @@ class Col : public Mat<eT>
     
     public:
     
+    typedef fixed<fixed_n_elem>               Col_fixed_type;
+    
+    typedef eT                                elem_type;
+    typedef typename get_pod_type<eT>::result pod_type;
+    
+    static const bool is_col = true;
+    static const bool is_row = false;
+  
     static const uword n_rows = fixed_n_elem;
     static const uword n_cols = 1;
     static const uword n_elem = fixed_n_elem;
@@ -165,6 +173,9 @@ class Col : public Mat<eT>
     arma_inline arma_warn_unused eT  at         (const uword in_row, const uword in_col) const;
     arma_inline arma_warn_unused eT& operator() (const uword in_row, const uword in_col);
     arma_inline arma_warn_unused eT  operator() (const uword in_row, const uword in_col) const;
+    
+    arma_inline arma_warn_unused       eT* memptr();
+    arma_inline arma_warn_unused const eT* memptr() const;
     
     arma_hot inline const Col<eT>& fill(const eT val);
     arma_hot inline const Col<eT>& zeros();
