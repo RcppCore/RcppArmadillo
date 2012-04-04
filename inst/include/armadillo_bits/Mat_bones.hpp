@@ -484,10 +484,17 @@ class Mat : public Base< eT, Mat<eT> >
     
     public:
     
+    typedef fixed<fixed_n_rows, fixed_n_cols> Mat_fixed_type;
+    
+    typedef eT                                elem_type;
+    typedef typename get_pod_type<eT>::result pod_type;
+    
+    static const bool is_col = (fixed_n_cols == 1) ? true : false;
+    static const bool is_row = (fixed_n_rows == 1) ? true : false;
+  
     static const uword n_rows = fixed_n_rows;
     static const uword n_cols = fixed_n_cols;
     static const uword n_elem = fixed_n_elem;
-    
     
     arma_inline fixed();
     arma_inline fixed(const fixed<fixed_n_rows, fixed_n_cols>& X);
@@ -531,7 +538,9 @@ class Mat : public Base< eT, Mat<eT> >
     arma_inline arma_warn_unused eT& operator() (const uword in_row, const uword in_col);
     arma_inline arma_warn_unused eT  operator() (const uword in_row, const uword in_col) const;
     
-    
+    arma_inline arma_warn_unused       eT* memptr();
+    arma_inline arma_warn_unused const eT* memptr() const;
+  
     arma_hot inline const Mat<eT>& fill(const eT val);
     arma_hot inline const Mat<eT>& zeros();
     arma_hot inline const Mat<eT>& ones();

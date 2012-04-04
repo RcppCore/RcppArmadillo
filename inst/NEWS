@@ -1,3 +1,9 @@
+0.2.40  2012-04-04
+
+    o   Upgraded to Armadillo release 2.99.4 "Antarctic Chilli Ranch (Beta 4)"
+
+    	  * fixes for handling expressions with fixed size matrices
+
 0.2.39  2012-04-02
 
     o   Upgraded to Armadillo release 2.99.3 "Antarctic Chilli Ranch (Beta 3)"

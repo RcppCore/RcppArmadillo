@@ -15,21 +15,79 @@
 //! @{
 
 
+// ea_type is the "element accessor" type,
+// which can provide access to elements via operator[]
+
+
 
 template<typename T1>
-class Proxy
+struct Proxy_Mat_fixed
   {
-  public:
-  inline Proxy(const T1&)
+  typedef typename T1::elem_type                   elem_type;
+  typedef typename get_pod_type<elem_type>::result pod_type;
+  typedef T1                                       stored_type;
+  typedef const elem_type*                         ea_type;
+  
+  static const bool prefer_at_accessor = false;
+  static const bool has_subview        = false;
+  
+  static const bool is_row = T1::is_row;
+  static const bool is_col = T1::is_col;
+  
+  arma_aligned const T1& Q;
+  
+  inline explicit Proxy_Mat_fixed(const T1& A)
+    : Q(A)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  arma_inline static uword get_n_rows() { return T1::n_rows; }
+  arma_inline static uword get_n_cols() { return T1::n_cols; }
+  arma_inline static uword get_n_elem() { return T1::n_elem; }
+  
+  arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
+  arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
+  
+  arma_inline ea_type get_ea() const { return Q.memptr(); }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&Q) == void_ptr(&X)); }
+  };
+
+
+
+template<typename T1>
+struct Proxy_extra_empty
+  {
+  inline Proxy_extra_empty(const T1&)
     {
     arma_type_check(( is_arma_type<T1>::value == false ));
     }
   };
 
 
+template<typename T1, bool condition>
+struct Proxy_extra {};
 
-// ea_type is the "element accessor" type,
-// which can provide access to elements via operator[]
+template<typename T1>
+struct Proxy_extra<T1, true>  { typedef Proxy_Mat_fixed<T1>   result; };
+
+template<typename T1>
+struct Proxy_extra<T1, false> { typedef Proxy_extra_empty<T1> result; };
+
+
+template<typename T1>
+class Proxy : public Proxy_extra<T1, is_Mat_fixed<T1>::value >::result
+  {
+  public:
+  inline Proxy(const T1& A)
+    : Proxy_extra<T1, is_Mat_fixed<T1>::value >::result(A)
+    {
+    }
+  };
+
+
 
 template<typename eT>
 class Proxy< Mat<eT> >
@@ -145,46 +203,6 @@ class Proxy< Row<eT> >
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&Q) == void_ptr(&X)); }
   };
-
-
-
-// // TODO: how to allow general Mat<eT> instead of specific Mat<double> ?
-// template<uword fixed_n_rows, uword fixed_n_cols>
-// class Proxy< Mat<double>::fixed<fixed_n_rows,fixed_n_cols> >
-//   {
-//   public:
-//   
-//   typedef double eT;
-//   
-//   typedef eT                                        elem_type;
-//   typedef typename get_pod_type<elem_type>::result  pod_type;
-//   typedef Mat<eT>::fixed<fixed_n_rows,fixed_n_cols> stored_type;
-//   typedef const eT*                                 ea_type;
-//   
-//   static const bool prefer_at_accessor = false;
-//   static const bool has_subview        = false;
-//   
-//   static const bool is_row = false;
-//   static const bool is_col = false;
-//   
-//   arma_aligned const Mat<eT>::fixed<fixed_n_rows,fixed_n_cols>& Q;
-//   
-//   inline explicit Proxy(const Mat<eT>::fixed<fixed_n_rows,fixed_n_cols>& A)
-//     : Q(A)
-//     {
-//     arma_extra_debug_sigprint();
-//     }
-//   
-//   arma_inline uword get_n_rows() const { return fixed_n_rows;              }
-//   arma_inline uword get_n_cols() const { return fixed_n_cols;              }
-//   arma_inline uword get_n_elem() const { return fixed_n_rows*fixed_n_cols; }
-//   
-//   arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
-//   arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
-//   
-//   arma_inline ea_type get_ea()                   const { return Q.memptr(); }
-//   arma_inline bool    is_alias(const Mat<eT>& X) const { return (&Q == &X); }
-//   };
 
 
 

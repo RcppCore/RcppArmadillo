@@ -26,8 +26,56 @@ struct get_pod_type< std::complex<T2> >
 
 
 template<typename T>
+struct is_Mat_fixed_only
+  {
+  typedef char yes[1];
+  typedef char no[2];
+  
+  template<typename X> static yes& check(typename X::Mat_fixed_type*);
+  template<typename>   static no&  check(...);
+  
+  static const bool value = ( sizeof(check<T>(0)) == sizeof(yes) );
+  };
+
+
+
+template<typename T>
+struct is_Row_fixed_only
+  {
+  typedef char yes[1];
+  typedef char no[2];
+  
+  template<typename X> static yes& check(typename X::Row_fixed_type*);
+  template<typename>   static no&  check(...);
+  
+  static const bool value = ( sizeof(check<T>(0)) == sizeof(yes) );
+  };
+
+
+
+template<typename T>
+struct is_Col_fixed_only
+  {
+  typedef char yes[1];
+  typedef char no[2];
+  
+  template<typename X> static yes& check(typename X::Col_fixed_type*);
+  template<typename>   static no&  check(...);
+  
+  static const bool value = ( sizeof(check<T>(0)) == sizeof(yes) );
+  };
+
+
+
+template<typename T>
+struct is_Mat_fixed
+  { static const bool value = ( is_Mat_fixed_only<T>::value || is_Row_fixed_only<T>::value || is_Col_fixed_only<T>::value ); };
+
+
+
+template<typename T>
 struct is_Mat_only
-  { static const bool value = false; };
+  { static const bool value = is_Mat_fixed_only<T>::value; };
 
 template<typename eT>
 struct is_Mat_only< Mat<eT> >
@@ -38,9 +86,10 @@ struct is_Mat_only< const Mat<eT> >
   { static const bool value = true; };
 
 
+
 template<typename T>
 struct is_Mat
-  { static const bool value = false; };
+  { static const bool value = ( is_Mat_fixed_only<T>::value || is_Row_fixed_only<T>::value || is_Col_fixed_only<T>::value ); };
 
 template<typename eT>
 struct is_Mat< Mat<eT> >
@@ -67,9 +116,10 @@ struct is_Mat< const Col<eT> >
   { static const bool value = true; };
 
 
+
 template<typename T>
 struct is_Row
-  { static const bool value = false; };
+  { static const bool value = is_Row_fixed_only<T>::value; };
 
 template<typename eT>
 struct is_Row< Row<eT> >
@@ -80,9 +130,10 @@ struct is_Row< const Row<eT> >
   { static const bool value = true; };
 
 
+
 template<typename T>
 struct is_Col
-  { static const bool value = false; };
+  { static const bool value = is_Col_fixed_only<T>::value; };
 
 template<typename eT>
 struct is_Col< Col<eT> >
@@ -462,7 +513,7 @@ struct is_op_rel< mtOp<out_eT, T1, op_rel_noteq> >
 
 template<typename T>
 struct is_basevec
-  { static const bool value = false; };
+  { static const bool value = ( is_Row_fixed_only<T>::value || is_Col_fixed_only<T>::value ); };
 
 template<typename eT>
 struct is_basevec< Row<eT> >
