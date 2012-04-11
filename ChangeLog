@@ -1,3 +1,8 @@
+2012-04-11  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/RcppArmadilloConfig.h: Protect define of
+	ARMA_DEFAULT_OSTREAM by a #ifndef test
+
 2012-04-10  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.3.0
