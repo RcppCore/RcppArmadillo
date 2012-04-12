@@ -54,6 +54,10 @@
 #endif
 
 
+#if defined(ARMA_USE_TBB_ALLOC)
+  #include <tbb/scalable_allocator.h>
+#endif
+
 #if defined(ARMA_USE_MKL_ALLOC)
   #include <mkl_service.h>
 #endif

@@ -1,3 +1,10 @@
+0.3.0.1 2012-04-12
+
+    o   Upgraded to Armadillo release 3.0.1
+
+    	  * fixes for compilation errors
+    	  * fixes for potential aliasing issues
+
 0.3.0   2012-04-10
 
     o   Upgraded to Armadillo release 3.0.0 "Antarctic Chilli Ranch"
