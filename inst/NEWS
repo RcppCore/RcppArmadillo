@@ -1,3 +1,9 @@
+0.3.0.2 2012-xx-yy
+
+    o   Undefine NDEBUG if it has been set (as R does) as this prevents a
+        number of useful debugging checks. Users can still define it or
+        define ARMA_NO_DEBUG if they want a 'non-development' build
+
 0.3.0.1 2012-04-12
 
     o   Upgraded to Armadillo release 3.0.1

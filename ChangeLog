@@ -1,3 +1,8 @@
+2012-04-17  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/RcppArmadilloConfig.h: Undefine NDEBUG to not suppress
+	Armadillo dedebug messages
+
 2012-04-12  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.3.0.1
