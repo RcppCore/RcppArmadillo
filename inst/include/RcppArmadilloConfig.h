@@ -65,5 +65,11 @@
 #define ARMA_DEFAULT_OSTREAM Rcpp::Rcout
 #endif
 
+// R now defines NDEBUG which suppresses a number of useful Armadillo tests
+// Users can still defined it later, and/or define ARMA_NO_DEBUG
+#if defined(NDEBUG)
+#undef NDEBUG
+#endif
+
 #endif
 
