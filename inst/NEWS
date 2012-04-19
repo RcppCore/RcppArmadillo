@@ -1,4 +1,8 @@
-0.3.0.2 2012-xx-yy
+0.3.0.2 2012-04-19
+
+    o   Upgraded to Armadillo release 3.0.2
+
+    	  * fixes for handling diagonal matrices
 
     o   Undefine NDEBUG if it has been set (as R does) as this prevents a
         number of useful debugging checks. Users can still define it or

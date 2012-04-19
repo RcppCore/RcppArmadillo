@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -24,9 +24,10 @@ class diagmat_proxy
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  inline diagmat_proxy(const Base<typename T1::elem_type,T1>& X)
-    : P       ( X.get_ref() )
+  inline diagmat_proxy(const T1& X)
+    : P       ( X )
     , P_is_vec( (P.get_n_rows() == 1) || (P.get_n_cols() == 1) )
+    , P_is_col( P.get_n_cols() == 1 )
     , n_elem  ( P_is_vec ? P.get_n_elem() : (std::min)(P.get_n_elem(), P.get_n_rows()) )
     {
     arma_extra_debug_sigprint();
@@ -43,13 +44,20 @@ class diagmat_proxy
   elem_type
   operator[](const uword i) const
     {
-    if( (Proxy<T1>::prefer_at_accessor == true) || (P_is_vec == false) )
+    if(Proxy<T1>::prefer_at_accessor == false)
       {
-      return P.at(i,i);
+      return P_is_vec ? P[i] : P.at(i,i);
       }
     else
       {
-      return P[i];
+      if(P_is_vec)
+        {
+        return (P_is_col) ? P.at(i,0) : P.at(0,i);
+        }
+      else
+        {
+        return P.at(i,i);
+        }
       }
     }
   
@@ -60,13 +68,20 @@ class diagmat_proxy
     {
     if(row == col)
       {
-      if( (Proxy<T1>::prefer_at_accessor == true) || (P_is_vec == false) )
+      if(Proxy<T1>::prefer_at_accessor == false)
         {
-        return P.at(row,row);
+        return (P_is_vec) ? P[row] : P.at(row,row);
         }
       else
         {
-        return P[row];
+        if(P_is_vec)
+          {
+          return (P_is_col) ? P.at(row,0) : P.at(0,row);
+          }
+        else
+          {
+          return P.at(row,row);
+          }
         }
       }
     else
@@ -78,6 +93,7 @@ class diagmat_proxy
   
   const Proxy<T1> P;
   const bool      P_is_vec;
+  const bool      P_is_col;
   const uword     n_elem;
   };
 
@@ -183,8 +199,8 @@ class diagmat_proxy_check
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  inline diagmat_proxy_check(const Base<typename T1::elem_type,T1>& X, const Mat<typename T1::elem_type>& out)
-    : P(X.get_ref())
+  inline diagmat_proxy_check(const T1& X, const Mat<typename T1::elem_type>& out)
+    : P(X)
     , P_is_vec( (P.n_rows == 1) || (P.n_cols == 1) )
     , n_elem( P_is_vec ? P.n_elem : (std::min)(P.n_elem, P.n_rows) )
     {

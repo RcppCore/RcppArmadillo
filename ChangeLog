@@ -1,3 +1,9 @@
+2012-04-19  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.3.0.2
+
+	* inst/include/*: Upgraded to new release 3.0.2 of Armadillo
+
 2012-04-17  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/RcppArmadilloConfig.h: Undefine NDEBUG to not suppress
