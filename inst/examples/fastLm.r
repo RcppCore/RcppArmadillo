@@ -2,7 +2,7 @@
 ##
 ## fastLm.r: Benchmarking lm() via RcppArmadillo and directly
 ##
-## Copyright (C)  2010 - 2011  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+## Copyright (C)  2010 - 2012  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 ##
 ## This file is part of RcppArmadillo.
 ##
@@ -62,8 +62,9 @@ res <- benchmark(fLm(X, y),             	# inline'd above
                  fastLmPure2(X, y),             # now with the 2 error checks
                  fastLm(frm, data=trees),       # using model matrix
                  lm.fit(X, y),                  # R's fast function, no stderr
+                 lm(frm, data=trees),           # R's standard function
                  columns = c("test", "replications", "elapsed", "relative"),
                  order="relative",
-                 replications=1000)
+                 replications=2500)
 
 print(res)
