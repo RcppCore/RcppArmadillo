@@ -65,7 +65,6 @@ res <- benchmark(fLm(X, y),             	# inline'd above
                  lm(frm, data=trees),           # R's standard function
                  columns = c("test", "replications", "relative",
                              "elapsed", "user.self", "sys.self"),
-
                  order="relative",
                  replications=2500)
 
