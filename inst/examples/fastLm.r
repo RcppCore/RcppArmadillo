@@ -63,7 +63,9 @@ res <- benchmark(fLm(X, y),             	# inline'd above
                  fastLm(frm, data=trees),       # using model matrix
                  lm.fit(X, y),                  # R's fast function, no stderr
                  lm(frm, data=trees),           # R's standard function
-                 columns = c("test", "replications", "elapsed", "relative"),
+                 columns = c("test", "replications", "relative",
+                             "elapsed", "user.self", "sys.self"),
+
                  order="relative",
                  replications=2500)
 
