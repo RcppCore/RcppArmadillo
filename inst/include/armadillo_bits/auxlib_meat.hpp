@@ -1433,11 +1433,10 @@ auxlib::eig_gen
     podarray<T> wr(A_n_rows);
     podarray<T> wi(A_n_rows);
     
-    Mat<T> A_copy = A;
     blas_int info = 0;
     
     arma_extra_debug_print("lapack::geev()");
-    lapack::geev(&jobvl, &jobvr, &n_rows, A_copy.memptr(), &lda, wr.memptr(), wi.memptr(), l_eigvec.memptr(), &n_rows, r_eigvec.memptr(), &n_rows, work.memptr(), &lwork, &info);
+    lapack::geev(&jobvl, &jobvr, &n_rows, A.memptr(), &lda, wr.memptr(), wi.memptr(), l_eigvec.memptr(), &n_rows, r_eigvec.memptr(), &n_rows, work.memptr(), &lwork, &info);
     
     
     eigval.set_size(A_n_rows);

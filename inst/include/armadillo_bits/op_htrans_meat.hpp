@@ -110,7 +110,7 @@ op_htrans::apply(Mat<eT>& out, const Mat<eT>& A, const typename arma_cx_only<eT>
     else
       {
       Mat<eT> tmp;
-      op_strans::apply_noalias(tmp, A);
+      op_htrans::apply_noalias(tmp, A);
       
       out.steal_mem(tmp);
       }

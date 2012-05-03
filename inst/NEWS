@@ -1,3 +1,13 @@
+0.3.0.3 2012-05-03
+
+    o   Upgraded to Armadillo release 3.0.3
+
+    	  * fixes for inplace transpose of complex number matrices
+	  * fixes for complex number version of svd_econ()
+	  * fixes for potential aliasing issues with submatrix views
+
+    o   New example script fastLm 
+
 0.3.0.2 2012-04-19
 
     o   Upgraded to Armadillo release 3.0.2
