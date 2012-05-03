@@ -119,22 +119,6 @@ class unwrap< Col<eT> >
 
 
 
-template<typename eT>
-class unwrap< subview_col<eT> >
-  {
-  public:
-  
-  inline unwrap(const subview_col<eT>& A)
-    : M( const_cast<eT*>( A.colptr(0) ), A.n_rows, 1, false, false )
-    {
-    arma_extra_debug_sigprint();
-    }
-
-  const Mat<eT> M;
-  };
-
-
-
 template<typename out_eT, typename T1, typename T2, typename glue_type>
 class unwrap< mtGlue<out_eT, T1, T2, glue_type> >
   {
@@ -277,23 +261,6 @@ class unwrap_check< Col<eT> >
   const Col<eT>* M_local;
   const Col<eT>& M;
   
-  };
-
-
-
-template<typename eT>
-class unwrap_check< subview_col<eT> >
-  {
-  public:
-  
-  inline
-  unwrap_check(const subview_col<eT>& A, const Mat<eT>& B)
-    : M( const_cast<eT*>( A.colptr(0) ), A.n_rows, 1, (&(A.m) == &B), false )
-    {
-    arma_extra_debug_sigprint();
-    }
-  
-  const Mat<eT> M;
   };
 
 

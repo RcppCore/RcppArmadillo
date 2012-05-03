@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -97,14 +97,14 @@ real(const BaseCube<std::complex<typename T1::pod_type>, T1>& X)
 
 template<typename T1>
 inline
-const Gen<typename T1::pod_type, gen_zeros>
+const Gen< Mat<typename T1::pod_type>, gen_zeros >
 imag(const Base<typename T1::pod_type,T1>& X)
   {
   arma_extra_debug_sigprint();
   
   const Proxy<T1> A(X.get_ref());
   
-  return Gen<typename T1::pod_type, gen_zeros>(A.get_n_rows(), A.get_n_cols());
+  return Gen< Mat<typename T1::pod_type>, gen_zeros>(A.get_n_rows(), A.get_n_cols());
   }
 
 
