@@ -87,6 +87,12 @@
 #include "armadillo_bits/include_atlas.hpp"
 
 
+#if defined(ARMA_USE_HDF5)
+  #include <hdf5.h>
+#endif
+
+
+
 //! \namespace arma namespace for Armadillo classes and functions
 namespace arma
   {
@@ -210,6 +216,7 @@ namespace arma
   #include "armadillo_bits/op_cumsum_bones.hpp"
   #include "armadillo_bits/op_symmat_bones.hpp"
   #include "armadillo_bits/op_hist_bones.hpp"
+  #include "armadillo_bits/op_unique_bones.hpp"
   
   #include "armadillo_bits/glue_times_bones.hpp"
   #include "armadillo_bits/glue_mixed_bones.hpp"
@@ -238,13 +245,13 @@ namespace arma
   //
   // classes that underlay metaprogramming 
   
+  #include "armadillo_bits/unwrap.hpp"
+  #include "armadillo_bits/unwrap_cube.hpp"
+  
   #include "armadillo_bits/Proxy.hpp"
   #include "armadillo_bits/ProxyCube.hpp"
   
   #include "armadillo_bits/diagmat_proxy.hpp"
-
-  #include "armadillo_bits/unwrap.hpp"
-  #include "armadillo_bits/unwrap_cube.hpp"
 
   #include "armadillo_bits/strip.hpp"
   
@@ -369,6 +376,7 @@ namespace arma
   #include "armadillo_bits/fn_syl_lyap.hpp"
   #include "armadillo_bits/fn_hist.hpp"
   #include "armadillo_bits/fn_histc.hpp"
+  #include "armadillo_bits/fn_unique.hpp"
   
   //
   // class meat
@@ -438,6 +446,7 @@ namespace arma
   #include "armadillo_bits/op_cumsum_meat.hpp"
   #include "armadillo_bits/op_symmat_meat.hpp"
   #include "armadillo_bits/op_hist_meat.hpp"
+  #include "armadillo_bits/op_unique_meat.hpp"
   
   #include "armadillo_bits/glue_times_meat.hpp"
   #include "armadillo_bits/glue_mixed_meat.hpp"

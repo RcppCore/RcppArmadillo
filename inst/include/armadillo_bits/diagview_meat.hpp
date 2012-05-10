@@ -45,35 +45,35 @@ diagview<eT>::operator= (const diagview<eT>& x)
   {
   arma_extra_debug_sigprint();
   
-  diagview<eT>& t = *this;
+  diagview<eT>& d = *this;
   
-  arma_debug_check( (t.n_elem != x.n_elem), "diagview: diagonals have incompatible lengths");
+  arma_debug_check( (d.n_elem != x.n_elem), "diagview: diagonals have incompatible lengths");
   
-        Mat<eT>& t_m = const_cast< Mat<eT>& >(t.m);
+        Mat<eT>& d_m = const_cast< Mat<eT>& >(d.m);
   const Mat<eT>& x_m = x.m;
   
-  if(&t_m != &x_m)
+  if(&d_m != &x_m)
     {
-    const uword t_n_elem     = t.n_elem;
-    const uword t_row_offset = t.row_offset;
-    const uword t_col_offset = t.col_offset;
+    const uword d_n_elem     = d.n_elem;
+    const uword d_row_offset = d.row_offset;
+    const uword d_col_offset = d.col_offset;
     
     const uword x_row_offset = x.row_offset;
     const uword x_col_offset = x.col_offset;
     
-    uword i,j;
-    for(i=0, j=1; j < t_n_elem; i+=2, j+=2)
+    uword ii,jj;
+    for(ii=0, jj=1; jj < d_n_elem; ii+=2, jj+=2)
       {
-      const eT tmp_i = x_m.at(i + x_row_offset, i + x_col_offset);
-      const eT tmp_j = x_m.at(j + x_row_offset, j + x_col_offset);
+      const eT tmp_i = x_m.at(ii + x_row_offset, ii + x_col_offset);
+      const eT tmp_j = x_m.at(jj + x_row_offset, jj + x_col_offset);
       
-      t_m.at(i + t_row_offset, i + t_col_offset) = tmp_i;
-      t_m.at(j + t_row_offset, j + t_col_offset) = tmp_j;
+      d_m.at(ii + d_row_offset, ii + d_col_offset) = tmp_i;
+      d_m.at(jj + d_row_offset, jj + d_col_offset) = tmp_j;
       }
     
-    if(i < t_n_elem)
+    if(ii < d_n_elem)
       {
-      t_m.at(i + t_row_offset, i + t_col_offset) = x_m.at(i + x_row_offset, i + x_col_offset);
+      d_m.at(ii + d_row_offset, ii + d_col_offset) = x_m.at(ii + x_row_offset, ii + x_col_offset);
       }
     }
   else
@@ -99,9 +99,9 @@ diagview<eT>::operator+=(const eT val)
   const uword t_row_offset = row_offset;
   const uword t_col_offset = col_offset;
   
-  for(uword i=0; i<t_n_elem; ++i)
+  for(uword ii=0; ii < t_n_elem; ++ii)
     {
-    t_m.at( i + t_row_offset,  i + t_col_offset) += val;
+    t_m.at( ii + t_row_offset,  ii + t_col_offset) += val;
     }
   }
 
@@ -120,9 +120,9 @@ diagview<eT>::operator-=(const eT val)
   const uword t_row_offset = row_offset;
   const uword t_col_offset = col_offset;
   
-  for(uword i=0; i<t_n_elem; ++i)
+  for(uword ii=0; ii < t_n_elem; ++ii)
     {
-    t_m.at( i + t_row_offset,  i + t_col_offset) -= val;
+    t_m.at( ii + t_row_offset,  ii + t_col_offset) -= val;
     }
   }
 
@@ -141,9 +141,9 @@ diagview<eT>::operator*=(const eT val)
   const uword t_row_offset = row_offset;
   const uword t_col_offset = col_offset;
   
-  for(uword i=0; i<t_n_elem; ++i)
+  for(uword ii=0; ii < t_n_elem; ++ii)
     {
-    t_m.at( i + t_row_offset,  i + t_col_offset) *= val;
+    t_m.at( ii + t_row_offset,  ii + t_col_offset) *= val;
     }
   }
 
@@ -162,9 +162,9 @@ diagview<eT>::operator/=(const eT val)
   const uword t_row_offset = row_offset;
   const uword t_col_offset = col_offset;
   
-  for(uword i=0; i<t_n_elem; ++i)
+  for(uword ii=0; ii < t_n_elem; ++ii)
     {
-    t_m.at( i + t_row_offset,  i + t_col_offset) /= val;
+    t_m.at( ii + t_row_offset,  ii + t_col_offset) /= val;
     }
   }
 
@@ -179,38 +179,66 @@ diagview<eT>::operator= (const Base<eT,T1>& o)
   {
   arma_extra_debug_sigprint();
   
-  const unwrap<T1> tmp(o.get_ref());
-  const Mat<eT>& x = tmp.M;
+  diagview<eT>& d = *this;
   
-  diagview<eT>& t = *this;
+  Mat<eT>& d_m = const_cast< Mat<eT>& >(d.m);
+  
+  const uword d_n_elem     = d.n_elem;
+  const uword d_row_offset = d.row_offset;
+  const uword d_col_offset = d.col_offset;
+    
+  const Proxy<T1> P( o.get_ref() );
   
   arma_debug_check
     (
-    ( (t.n_elem != x.n_elem) || (x.is_vec() == false) ),
+    ( (d.n_elem != P.get_n_elem()) || ((P.get_n_rows() != 1) && (P.get_n_cols() != 1)) ),
     "diagview: given object has incompatible size"
     );
   
-  Mat<eT>& t_m = const_cast< Mat<eT>& >(t.m);
+  const bool is_alias = P.is_alias(d_m);
   
-  const uword t_n_elem     = t.n_elem;
-  const uword t_row_offset = t.row_offset;
-  const uword t_col_offset = t.col_offset;
+  arma_extra_debug_warn(is_alias, "aliasing detected");
   
-  const eT* x_mem = x.memptr();
-  
-  uword i,j;
-  for(i=0, j=1; j < t_n_elem; i+=2, j+=2)
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value == true) || (Proxy<T1>::prefer_at_accessor == true) || (is_alias == true) )
     {
-    const eT tmp_i = x_mem[i];
-    const eT tmp_j = x_mem[j];
+    const unwrap_check<typename Proxy<T1>::stored_type> tmp(P.Q, is_alias);
+    const Mat<eT>& x = tmp.M;
     
-    t_m.at( i + t_row_offset,  i + t_col_offset) = tmp_i;
-    t_m.at( j + t_row_offset,  j + t_col_offset) = tmp_j;
+    const eT* x_mem = x.memptr();
+    
+    uword ii,jj;
+    for(ii=0, jj=1; jj < d_n_elem; ii+=2, jj+=2)
+      {
+      const eT tmp_i = x_mem[ii];
+      const eT tmp_j = x_mem[jj];
+      
+      d_m.at( ii + d_row_offset,  ii + d_col_offset) = tmp_i;
+      d_m.at( jj + d_row_offset,  jj + d_col_offset) = tmp_j;
+      }
+    
+    if(ii < d_n_elem)
+      {
+      d_m.at( ii + d_row_offset,  ii + d_col_offset) = x_mem[ii];
+      }
     }
-  
-  if(i < t_n_elem)
+  else
     {
-    t_m.at( i + t_row_offset,  i + t_col_offset) = x_mem[i];
+    typename Proxy<T1>::ea_type Pea = P.get_ea();
+      
+    uword ii,jj;
+    for(ii=0, jj=1; jj < d_n_elem; ii+=2, jj+=2)
+      {
+      const eT tmp_i = Pea[ii];
+      const eT tmp_j = Pea[jj];
+      
+      d_m.at( ii + d_row_offset,  ii + d_col_offset) = tmp_i;
+      d_m.at( jj + d_row_offset,  jj + d_col_offset) = tmp_j;
+      }
+    
+    if(ii < d_n_elem)
+      {
+      d_m.at( ii + d_row_offset,  ii + d_col_offset) = Pea[ii];
+      }
     }
   }
 
@@ -224,38 +252,66 @@ diagview<eT>::operator+=(const Base<eT,T1>& o)
   {
   arma_extra_debug_sigprint();
   
-  const unwrap<T1> tmp(o.get_ref());
-  const Mat<eT>& x = tmp.M;
+  diagview<eT>& d = *this;
   
-  diagview<eT>& t = *this;
+  Mat<eT>& d_m = const_cast< Mat<eT>& >(d.m);
+  
+  const uword d_n_elem     = d.n_elem;
+  const uword d_row_offset = d.row_offset;
+  const uword d_col_offset = d.col_offset;
+    
+  const Proxy<T1> P( o.get_ref() );
   
   arma_debug_check
     (
-    ( (t.n_elem != x.n_elem) || (x.is_vec() == false) ),
+    ( (d.n_elem != P.get_n_elem()) || ((P.get_n_rows() != 1) && (P.get_n_cols() != 1)) ),
     "diagview: given object has incompatible size"
     );
   
-  Mat<eT>& t_m = const_cast< Mat<eT>& >(t.m);
+  const bool is_alias = P.is_alias(d_m);
   
-  const uword t_n_elem     = t.n_elem;
-  const uword t_row_offset = t.row_offset;
-  const uword t_col_offset = t.col_offset;
+  arma_extra_debug_warn(is_alias, "aliasing detected");
   
-  const eT* x_mem = x.memptr();
-  
-  uword i,j;
-  for(i=0, j=1; j < t_n_elem; i+=2, j+=2)
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value == true) || (Proxy<T1>::prefer_at_accessor == true) || (is_alias == true) )
     {
-    const eT tmp_i = x_mem[i];
-    const eT tmp_j = x_mem[j];
+    const unwrap_check<typename Proxy<T1>::stored_type> tmp(P.Q, is_alias);
+    const Mat<eT>& x = tmp.M;
     
-    t_m.at( i + t_row_offset,  i + t_col_offset) += tmp_i;
-    t_m.at( j + t_row_offset,  j + t_col_offset) += tmp_j;
+    const eT* x_mem = x.memptr();
+    
+    uword ii,jj;
+    for(ii=0, jj=1; jj < d_n_elem; ii+=2, jj+=2)
+      {
+      const eT tmp_i = x_mem[ii];
+      const eT tmp_j = x_mem[jj];
+      
+      d_m.at( ii + d_row_offset,  ii + d_col_offset) += tmp_i;
+      d_m.at( jj + d_row_offset,  jj + d_col_offset) += tmp_j;
+      }
+    
+    if(ii < d_n_elem)
+      {
+      d_m.at( ii + d_row_offset,  ii + d_col_offset) += x_mem[ii];
+      }
     }
-  
-  if(i < t_n_elem)
+  else
     {
-    t_m.at( i + t_row_offset,  i + t_col_offset) += x_mem[i];
+    typename Proxy<T1>::ea_type Pea = P.get_ea();
+      
+    uword ii,jj;
+    for(ii=0, jj=1; jj < d_n_elem; ii+=2, jj+=2)
+      {
+      const eT tmp_i = Pea[ii];
+      const eT tmp_j = Pea[jj];
+      
+      d_m.at( ii + d_row_offset,  ii + d_col_offset) += tmp_i;
+      d_m.at( jj + d_row_offset,  jj + d_col_offset) += tmp_j;
+      }
+    
+    if(ii < d_n_elem)
+      {
+      d_m.at( ii + d_row_offset,  ii + d_col_offset) += Pea[ii];
+      }
     }
   }
 
@@ -269,38 +325,66 @@ diagview<eT>::operator-=(const Base<eT,T1>& o)
   {
   arma_extra_debug_sigprint();
   
-  const unwrap<T1> tmp(o.get_ref());
-  const Mat<eT>& x = tmp.M;
+  diagview<eT>& d = *this;
   
-  diagview<eT>& t = *this;
+  Mat<eT>& d_m = const_cast< Mat<eT>& >(d.m);
+  
+  const uword d_n_elem     = d.n_elem;
+  const uword d_row_offset = d.row_offset;
+  const uword d_col_offset = d.col_offset;
+    
+  const Proxy<T1> P( o.get_ref() );
   
   arma_debug_check
     (
-    ( (t.n_elem != x.n_elem) || (x.is_vec() == false) ),
+    ( (d.n_elem != P.get_n_elem()) || ((P.get_n_rows() != 1) && (P.get_n_cols() != 1)) ),
     "diagview: given object has incompatible size"
     );
   
-  Mat<eT>& t_m = const_cast< Mat<eT>& >(t.m);
+  const bool is_alias = P.is_alias(d_m);
   
-  const uword t_n_elem     = t.n_elem;
-  const uword t_row_offset = t.row_offset;
-  const uword t_col_offset = t.col_offset;
+  arma_extra_debug_warn(is_alias, "aliasing detected");
   
-  const eT* x_mem = x.memptr();
-  
-  uword i,j;
-  for(i=0, j=1; j < t_n_elem; i+=2, j+=2)
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value == true) || (Proxy<T1>::prefer_at_accessor == true) || (is_alias == true) )
     {
-    const eT tmp_i = x_mem[i];
-    const eT tmp_j = x_mem[j];
+    const unwrap_check<typename Proxy<T1>::stored_type> tmp(P.Q, is_alias);
+    const Mat<eT>& x = tmp.M;
     
-    t_m.at( i + t_row_offset,  i + t_col_offset) -= tmp_i;
-    t_m.at( j + t_row_offset,  j + t_col_offset) -= tmp_j;
+    const eT* x_mem = x.memptr();
+    
+    uword ii,jj;
+    for(ii=0, jj=1; jj < d_n_elem; ii+=2, jj+=2)
+      {
+      const eT tmp_i = x_mem[ii];
+      const eT tmp_j = x_mem[jj];
+      
+      d_m.at( ii + d_row_offset,  ii + d_col_offset) -= tmp_i;
+      d_m.at( jj + d_row_offset,  jj + d_col_offset) -= tmp_j;
+      }
+    
+    if(ii < d_n_elem)
+      {
+      d_m.at( ii + d_row_offset,  ii + d_col_offset) -= x_mem[ii];
+      }
     }
-  
-  if(i < t_n_elem)
+  else
     {
-    t_m.at( i + t_row_offset,  i + t_col_offset) -= x_mem[i];
+    typename Proxy<T1>::ea_type Pea = P.get_ea();
+      
+    uword ii,jj;
+    for(ii=0, jj=1; jj < d_n_elem; ii+=2, jj+=2)
+      {
+      const eT tmp_i = Pea[ii];
+      const eT tmp_j = Pea[jj];
+      
+      d_m.at( ii + d_row_offset,  ii + d_col_offset) -= tmp_i;
+      d_m.at( jj + d_row_offset,  jj + d_col_offset) -= tmp_j;
+      }
+    
+    if(ii < d_n_elem)
+      {
+      d_m.at( ii + d_row_offset,  ii + d_col_offset) -= Pea[ii];
+      }
     }
   }
 
@@ -314,38 +398,66 @@ diagview<eT>::operator%=(const Base<eT,T1>& o)
   {
   arma_extra_debug_sigprint();
   
-  const unwrap<T1> tmp(o.get_ref());
-  const Mat<eT>& x = tmp.M;
+  diagview<eT>& d = *this;
   
-  diagview<eT>& t = *this;
+  Mat<eT>& d_m = const_cast< Mat<eT>& >(d.m);
+  
+  const uword d_n_elem     = d.n_elem;
+  const uword d_row_offset = d.row_offset;
+  const uword d_col_offset = d.col_offset;
+    
+  const Proxy<T1> P( o.get_ref() );
   
   arma_debug_check
     (
-    ( (t.n_elem != x.n_elem) || (x.is_vec() == false) ),
+    ( (d.n_elem != P.get_n_elem()) || ((P.get_n_rows() != 1) && (P.get_n_cols() != 1)) ),
     "diagview: given object has incompatible size"
     );
   
-  Mat<eT>& t_m = const_cast< Mat<eT>& >(t.m);
+  const bool is_alias = P.is_alias(d_m);
   
-  const uword t_n_elem     = t.n_elem;
-  const uword t_row_offset = t.row_offset;
-  const uword t_col_offset = t.col_offset;
+  arma_extra_debug_warn(is_alias, "aliasing detected");
   
-  const eT* x_mem = x.memptr();
-  
-  uword i,j;
-  for(i=0, j=1; j < t_n_elem; i+=2, j+=2)
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value == true) || (Proxy<T1>::prefer_at_accessor == true) || (is_alias == true) )
     {
-    const eT tmp_i = x_mem[i];
-    const eT tmp_j = x_mem[j];
+    const unwrap_check<typename Proxy<T1>::stored_type> tmp(P.Q, is_alias);
+    const Mat<eT>& x = tmp.M;
     
-    t_m.at( i + t_row_offset,  i + t_col_offset) *= tmp_i;
-    t_m.at( j + t_row_offset,  j + t_col_offset) *= tmp_j;
+    const eT* x_mem = x.memptr();
+    
+    uword ii,jj;
+    for(ii=0, jj=1; jj < d_n_elem; ii+=2, jj+=2)
+      {
+      const eT tmp_i = x_mem[ii];
+      const eT tmp_j = x_mem[jj];
+      
+      d_m.at( ii + d_row_offset,  ii + d_col_offset) *= tmp_i;
+      d_m.at( jj + d_row_offset,  jj + d_col_offset) *= tmp_j;
+      }
+    
+    if(ii < d_n_elem)
+      {
+      d_m.at( ii + d_row_offset,  ii + d_col_offset) *= x_mem[ii];
+      }
     }
-  
-  if(i < t_n_elem)
+  else
     {
-    t_m.at( i + t_row_offset,  i + t_col_offset) *= x_mem[i];
+    typename Proxy<T1>::ea_type Pea = P.get_ea();
+      
+    uword ii,jj;
+    for(ii=0, jj=1; jj < d_n_elem; ii+=2, jj+=2)
+      {
+      const eT tmp_i = Pea[ii];
+      const eT tmp_j = Pea[jj];
+      
+      d_m.at( ii + d_row_offset,  ii + d_col_offset) *= tmp_i;
+      d_m.at( jj + d_row_offset,  jj + d_col_offset) *= tmp_j;
+      }
+    
+    if(ii < d_n_elem)
+      {
+      d_m.at( ii + d_row_offset,  ii + d_col_offset) *= Pea[ii];
+      }
     }
   }
 
@@ -359,38 +471,66 @@ diagview<eT>::operator/=(const Base<eT,T1>& o)
   {
   arma_extra_debug_sigprint();
   
-  const unwrap<T1> tmp(o.get_ref());
-  const Mat<eT>& x = tmp.M;
+  diagview<eT>& d = *this;
   
-  diagview<eT>& t = *this;
+  Mat<eT>& d_m = const_cast< Mat<eT>& >(d.m);
+  
+  const uword d_n_elem     = d.n_elem;
+  const uword d_row_offset = d.row_offset;
+  const uword d_col_offset = d.col_offset;
+    
+  const Proxy<T1> P( o.get_ref() );
   
   arma_debug_check
     (
-    ( (t.n_elem != x.n_elem) || (x.is_vec() == false) ),
+    ( (d.n_elem != P.get_n_elem()) || ((P.get_n_rows() != 1) && (P.get_n_cols() != 1)) ),
     "diagview: given object has incompatible size"
     );
   
-  Mat<eT>& t_m = const_cast< Mat<eT>& >(t.m);
+  const bool is_alias = P.is_alias(d_m);
   
-  const uword t_n_elem     = t.n_elem;
-  const uword t_row_offset = t.row_offset;
-  const uword t_col_offset = t.col_offset;
+  arma_extra_debug_warn(is_alias, "aliasing detected");
   
-  const eT* x_mem = x.memptr();
-  
-  uword i,j;
-  for(i=0, j=1; j < t_n_elem; i+=2, j+=2)
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value == true) || (Proxy<T1>::prefer_at_accessor == true) || (is_alias == true) )
     {
-    const eT tmp_i = x_mem[i];
-    const eT tmp_j = x_mem[j];
+    const unwrap_check<typename Proxy<T1>::stored_type> tmp(P.Q, is_alias);
+    const Mat<eT>& x = tmp.M;
     
-    t_m.at( i + t_row_offset,  i + t_col_offset) /= tmp_i;
-    t_m.at( j + t_row_offset,  j + t_col_offset) /= tmp_j;
+    const eT* x_mem = x.memptr();
+    
+    uword ii,jj;
+    for(ii=0, jj=1; jj < d_n_elem; ii+=2, jj+=2)
+      {
+      const eT tmp_i = x_mem[ii];
+      const eT tmp_j = x_mem[jj];
+      
+      d_m.at( ii + d_row_offset,  ii + d_col_offset) /= tmp_i;
+      d_m.at( jj + d_row_offset,  jj + d_col_offset) /= tmp_j;
+      }
+    
+    if(ii < d_n_elem)
+      {
+      d_m.at( ii + d_row_offset,  ii + d_col_offset) /= x_mem[ii];
+      }
     }
-  
-  if(i < t_n_elem)
+  else
     {
-    t_m.at( i + t_row_offset,  i + t_col_offset) /= x_mem[i];
+    typename Proxy<T1>::ea_type Pea = P.get_ea();
+      
+    uword ii,jj;
+    for(ii=0, jj=1; jj < d_n_elem; ii+=2, jj+=2)
+      {
+      const eT tmp_i = Pea[ii];
+      const eT tmp_j = Pea[jj];
+      
+      d_m.at( ii + d_row_offset,  ii + d_col_offset) /= tmp_i;
+      d_m.at( jj + d_row_offset,  jj + d_col_offset) /= tmp_j;
+      }
+    
+    if(ii < d_n_elem)
+      {
+      d_m.at( ii + d_row_offset,  ii + d_col_offset) /= Pea[ii];
+      }
     }
   }
 
@@ -580,9 +720,9 @@ diagview<eT>::div_inplace(Mat<eT>& out, const diagview<eT>& in)
 template<typename eT>
 arma_inline
 eT&
-diagview<eT>::operator[](const uword i)
+diagview<eT>::operator[](const uword ii)
   {
-  return (const_cast< Mat<eT>& >(m)).at(i+row_offset, i+col_offset);
+  return (const_cast< Mat<eT>& >(m)).at(ii+row_offset, ii+col_offset);
   }
 
 
@@ -590,9 +730,9 @@ diagview<eT>::operator[](const uword i)
 template<typename eT>
 arma_inline
 eT
-diagview<eT>::operator[](const uword i) const
+diagview<eT>::operator[](const uword ii) const
   {
-  return m.at(i+row_offset, i+col_offset);
+  return m.at(ii+row_offset, ii+col_offset);
   }
 
 
@@ -600,9 +740,9 @@ diagview<eT>::operator[](const uword i) const
 template<typename eT>
 arma_inline
 eT&
-diagview<eT>::at(const uword i)
+diagview<eT>::at(const uword ii)
   {
-  return (const_cast< Mat<eT>& >(m)).at(i+row_offset, i+col_offset);
+  return (const_cast< Mat<eT>& >(m)).at(ii+row_offset, ii+col_offset);
   }
 
 
@@ -610,9 +750,9 @@ diagview<eT>::at(const uword i)
 template<typename eT>
 arma_inline
 eT
-diagview<eT>::at(const uword i) const
+diagview<eT>::at(const uword ii) const
   {
-  return m.at(i+row_offset, i+col_offset);
+  return m.at(ii+row_offset, ii+col_offset);
   }
 
 
@@ -620,11 +760,11 @@ diagview<eT>::at(const uword i) const
 template<typename eT>
 arma_inline
 eT&
-diagview<eT>::operator()(const uword i)
+diagview<eT>::operator()(const uword ii)
   {
-  arma_debug_check( (i >= n_elem), "diagview::operator(): out of bounds" );
+  arma_debug_check( (ii >= n_elem), "diagview::operator(): out of bounds" );
   
-  return (const_cast< Mat<eT>& >(m)).at(i+row_offset, i+col_offset);
+  return (const_cast< Mat<eT>& >(m)).at(ii+row_offset, ii+col_offset);
   }
 
 
@@ -632,11 +772,11 @@ diagview<eT>::operator()(const uword i)
 template<typename eT>
 arma_inline
 eT
-diagview<eT>::operator()(const uword i) const
+diagview<eT>::operator()(const uword ii) const
   {
-  arma_debug_check( (i >= n_elem), "diagview::operator(): out of bounds" );
+  arma_debug_check( (ii >= n_elem), "diagview::operator(): out of bounds" );
   
-  return m.at(i+row_offset, i+col_offset);
+  return m.at(ii+row_offset, ii+col_offset);
   }
 
 
@@ -724,9 +864,9 @@ diagview<eT>::fill(const eT val)
   
   Mat<eT>& x = const_cast< Mat<eT>& >(m);
   
-  for(uword i=0; i<n_elem; ++i)
+  for(uword ii=0; ii < n_elem; ++ii)
     {
-    x.at(i+row_offset, i+col_offset) = val;
+    x.at(ii+row_offset, ii+col_offset) = val;
     }
   }
 

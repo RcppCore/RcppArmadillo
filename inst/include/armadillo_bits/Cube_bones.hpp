@@ -307,6 +307,10 @@ class Cube : public BaseCube< eT, Cube<eT> >
     
     template<typename T1, typename T2>
     inline explicit fixed(const BaseCube<pod_type,T1>& A, const BaseCube<pod_type,T2>& B) { mem_setup(); Cube<eT>::init(A,B); }
+    
+    
+    // using Cube<eT>::operator();
+    // TODO: overload operator(), operator[] and .at() to allow faster element access
     };
   
   

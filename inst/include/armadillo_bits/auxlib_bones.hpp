@@ -1,7 +1,8 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
-// Copyright (C)      2009 Edmund Highcock
-// Copyright (C)      2011 James Sanders
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2009 Edmund Highcock
+// Copyright (C) 2011 James Sanders
+// Copyright (C) 2012 Eric Jon Sundstrom
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -120,6 +121,12 @@ class auxlib
   template<typename T, typename T1>
   inline static bool eig_sym(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Base<std::complex<T>,T1>& X);
   
+  template<typename eT, typename T1>
+  inline static bool eig_sym_dc(Col<eT>& eigval, Mat<eT>& eigvec, const Base<eT,T1>& X);
+  
+  template<typename T, typename T1>
+  inline static bool eig_sym_dc(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Base<std::complex<T>,T1>& X);
+  
   template<typename T, typename T1>
   inline static bool eig_gen(Col< std::complex<T> >& eigval, Mat<T>& l_eigvec, Mat<T>& r_eigvec, const Base<T,T1>& X, const char side);
   
@@ -180,6 +187,19 @@ class auxlib
   
   template<typename eT>
   inline static bool solve_ud(Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B);
+
+
+  //
+  // solve_new
+  
+  template<typename eT, typename T1>
+  inline static bool solve_new   (Mat<eT>& out, Mat<eT>& A, const Base<eT,T1>& X, const bool slow = false);
+  
+  template<typename eT, typename T1>
+  inline static bool solve_new_od(Mat<eT>& out, Mat<eT>& A, const Base<eT,T1>& X);
+  
+  template<typename eT, typename T1>
+  inline static bool solve_new_ud(Mat<eT>& out, Mat<eT>& A, const Base<eT,T1>& X);
   
   
   //

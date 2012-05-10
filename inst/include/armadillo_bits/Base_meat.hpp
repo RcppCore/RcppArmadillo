@@ -62,7 +62,9 @@ inline
 void
 Base<elem_type,derived>::print(const std::string extra_text) const
   {
-  const unwrap<derived> tmp( (*this).get_ref() );
+  const Proxy<derived> P( (*this).get_ref() );
+  
+  const quasi_unwrap< typename Proxy<derived>::stored_type > tmp(P.Q);
   
   tmp.M.impl_print(extra_text);
   }
@@ -74,7 +76,9 @@ inline
 void
 Base<elem_type,derived>::print(std::ostream& user_stream, const std::string extra_text) const
   {
-  const unwrap<derived> tmp( (*this).get_ref() );
+  const Proxy<derived> P( (*this).get_ref() );
+  
+  const quasi_unwrap< typename Proxy<derived>::stored_type > tmp(P.Q);
   
   tmp.M.impl_print(user_stream, extra_text);
   }
@@ -86,7 +90,9 @@ inline
 void
 Base<elem_type,derived>::raw_print(const std::string extra_text) const
   {
-  const unwrap<derived> tmp( (*this).get_ref() );
+  const Proxy<derived> P( (*this).get_ref() );
+  
+  const quasi_unwrap< typename Proxy<derived>::stored_type > tmp(P.Q);
   
   tmp.M.impl_raw_print(extra_text);
   }
@@ -98,7 +104,9 @@ inline
 void
 Base<elem_type,derived>::raw_print(std::ostream& user_stream, const std::string extra_text) const
   {
-  const unwrap<derived> tmp( (*this).get_ref() );
+  const Proxy<derived> P( (*this).get_ref() );
+  
+  const quasi_unwrap< typename Proxy<derived>::stored_type > tmp(P.Q);
   
   tmp.M.impl_raw_print(user_stream, extra_text);
   }
@@ -114,6 +122,36 @@ const Op<derived,op_inv>
 Base_blas_elem_type<derived>::i(const bool slow) const
   {
   return Op<derived,op_inv>( static_cast<const derived&>(*this), ((slow == false) ? 0 : 1), 0 );
+  }
+
+
+
+//
+// extra functions defined in Base_eval_Mat
+
+template<typename elem_type, typename derived>
+arma_inline
+const derived&
+Base_eval_Mat<elem_type, derived>::eval() const
+  {
+  arma_extra_debug_sigprint();
+  
+  return static_cast<const derived&>(*this);
+  }
+
+
+
+//
+// extra functions defined in Base_eval_expr
+
+template<typename elem_type, typename derived>
+arma_inline
+Mat<elem_type>
+Base_eval_expr<elem_type, derived>::eval() const
+  {
+  arma_extra_debug_sigprint();
+  
+  return Mat<elem_type>( static_cast<const derived&>(*this) );
   }
 
 

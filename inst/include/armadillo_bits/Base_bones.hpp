@@ -40,13 +40,40 @@ struct Base_extra<derived, false> { typedef Base_other_elem_type<derived> result
 
 
 
+template<typename elem_type, typename derived>
+struct Base_eval_Mat
+  {
+  const derived& eval() const;
+  };
+
+
+template<typename elem_type, typename derived>
+struct Base_eval_expr
+  {
+  Mat<elem_type> eval() const;
+  };
+
+
+template<typename elem_type, typename derived, bool condition>
+struct Base_eval {};
+
+template<typename elem_type, typename derived>
+struct Base_eval<elem_type, derived, true>  { typedef Base_eval_Mat<elem_type, derived>  result; };
+
+template<typename elem_type, typename derived>
+struct Base_eval<elem_type, derived, false> { typedef Base_eval_expr<elem_type, derived> result; };
+
+
+
 //! Class for static polymorphism, modelled after the "Curiously Recurring Template Pattern" (CRTP).
 //! Used for type-safe downcasting in functions that restrict their input(s) to be classes that are
 //! derived from Base (e.g. Mat, Op, Glue, diagview, subview).
 //! A Base object can be converted to a Mat object by the unwrap class.
 
 template<typename elem_type, typename derived>
-struct Base : public Base_extra<derived, is_supported_blas_type<elem_type>::value>::result
+struct Base
+  : public Base_extra<derived, is_supported_blas_type<elem_type>::value>::result
+  , public Base_eval<elem_type, derived, is_Mat<derived>::value>::result
   {
   arma_inline const derived& get_ref() const;
   

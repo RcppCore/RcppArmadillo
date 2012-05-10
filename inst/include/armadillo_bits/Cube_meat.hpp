@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -34,10 +34,6 @@ Cube<eT>::~Cube()
   if(arma_config::debug == true)
     {
     // try to expose buggy user code that accesses deleted objects
-    access::rw(n_rows)   = 0;
-    access::rw(n_cols)   = 0;
-    access::rw(n_slices) = 0;
-    access::rw(n_elem)   = 0;
     access::rw(mat_ptrs) = 0;
     access::rw(mem)      = 0;
     }
@@ -278,6 +274,8 @@ Cube<eT>::init
         ea_type1 PX      = X.get_ea();
         ea_type2 PY      = Y.get_ea();
   
+  // TODO: add handling for prefer_at_accessor = true
+  
   for(uword i=0; i<N; ++i)
     {
     out_mem[i] = std::complex<T>(PX[i], PY[i]);
@@ -349,9 +347,9 @@ Cube<eT>::delete_mat()
   {
   arma_extra_debug_sigprint();
   
-  for(uword slice = 0; slice < n_slices; ++slice)
+  for(uword uslice = 0; uslice < n_slices; ++uslice)
     {
-    delete access::rw(mat_ptrs[slice]);
+    delete access::rw(mat_ptrs[uslice]);
     }
   
   if(mem_state <= 2)
@@ -386,9 +384,9 @@ Cube<eT>::create_mat()
       }
     }
   
-  for(uword slice = 0; slice < n_slices; ++slice)
+  for(uword uslice = 0; uslice < n_slices; ++uslice)
     {
-    mat_ptrs[slice] = new Mat<eT>('j', slice_memptr(slice), n_rows, n_cols);
+    mat_ptrs[uslice] = new Mat<eT>('j', slice_memptr(uslice), n_rows, n_cols);
     }
   }
 
@@ -2265,9 +2263,9 @@ template<typename eT>
 arma_inline
 arma_warn_unused
 eT*
-Cube<eT>::slice_memptr(const uword slice)
+Cube<eT>::slice_memptr(const uword uslice)
   {
-  return const_cast<eT*>( &mem[ slice*n_elem_slice ] );
+  return const_cast<eT*>( &mem[ uslice*n_elem_slice ] );
   }
 
 
@@ -2277,9 +2275,9 @@ template<typename eT>
 arma_inline
 arma_warn_unused
 const eT*
-Cube<eT>::slice_memptr(const uword slice) const
+Cube<eT>::slice_memptr(const uword uslice) const
   {
-  return &mem[ slice*n_elem_slice ];
+  return &mem[ uslice*n_elem_slice ];
   }
 
 
@@ -2289,9 +2287,9 @@ template<typename eT>
 arma_inline
 arma_warn_unused
 eT*
-Cube<eT>::slice_colptr(const uword slice, const uword col)
+Cube<eT>::slice_colptr(const uword uslice, const uword col)
   {
-  return const_cast<eT*>( &mem[ slice*n_elem_slice + col*n_rows] );
+  return const_cast<eT*>( &mem[ uslice*n_elem_slice + col*n_rows] );
   }
 
 
@@ -2301,9 +2299,9 @@ template<typename eT>
 arma_inline
 arma_warn_unused
 const eT*
-Cube<eT>::slice_colptr(const uword slice, const uword col) const
+Cube<eT>::slice_colptr(const uword uslice, const uword col) const
   {
-  return &mem[ slice*n_elem_slice + col*n_rows ];
+  return &mem[ uslice*n_elem_slice + col*n_rows ];
   }
 
 
@@ -3339,6 +3337,8 @@ Cube_aux::set_real(Cube< std::complex<T> >& out, const BaseCube<T,T1>& X)
         eT*     out_mem = out.memptr();
         ea_type PA      = A.get_ea();
   
+  // TODO: add handling for prefer_at_accessor = true
+  
   for(uword i=0; i<n_elem; ++i)
     {
     //out_mem[i].real() = PA[i];
@@ -3370,6 +3370,8 @@ Cube_aux::set_imag(Cube< std::complex<T> >& out, const BaseCube<T,T1>& X)
   const uword   n_elem  = out.n_elem;
         eT*     out_mem = out.memptr();
         ea_type PA      = A.get_ea();
+  
+  // TODO: add handling for prefer_at_accessor = true
   
   for(uword i=0; i<n_elem; ++i)
     {

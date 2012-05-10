@@ -79,8 +79,8 @@
     }\
   else\
     {\
-    const unwrap<typename Proxy<T1>::stored_type> tmp1(P1.Q);\
-    const unwrap<typename Proxy<T2>::stored_type> tmp2(P2.Q);\
+    const unwrap_check<typename Proxy<T1>::stored_type> tmp1(P1.Q, P1.is_alias(out));\
+    const unwrap_check<typename Proxy<T2>::stored_type> tmp2(P2.Q, P2.is_alias(out));\
     \
     out = (tmp1.M) operator_rel (tmp2.M);\
     }\

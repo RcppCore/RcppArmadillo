@@ -141,6 +141,7 @@ eop_core<eop_type>::apply(Mat<typename T1::elem_type>& out, const eOp<T1, eop_ty
   if(Proxy<T1>::prefer_at_accessor == false)
     {
     const uword n_elem = out.n_elem;
+    //const uword n_elem = x.get_n_elem(); // for fixed-sized matrices this causes a mis-optimisation (slowdown) of the loop under GCC 4.4
     
     typename Proxy<T1>::ea_type P = x.P.get_ea();
     
@@ -175,13 +176,14 @@ eop_core<eop_type>::apply_inplace_plus(Mat<typename T1::elem_type>& out, const e
   
   arma_debug_assert_same_size(out.n_rows, out.n_cols, n_rows, n_cols, "addition");
   
-        eT*   out_mem = out.memptr();
-  const uword n_elem  = out.n_elem;
-  
-  const eT k = x.aux;
+  const eT  k       = x.aux;
+        eT* out_mem = out.memptr();
   
   if(Proxy<T1>::prefer_at_accessor == false)
     {
+    const uword n_elem = out.n_elem;
+    //const uword n_elem = x.get_n_elem(); // for fixed-sized matrices this causes a mis-optimisation (slowdown) of the loop under GCC 4.4
+    
     typename Proxy<T1>::ea_type P = x.P.get_ea();
     
     arma_applier_1(+=);
@@ -212,13 +214,14 @@ eop_core<eop_type>::apply_inplace_minus(Mat<typename T1::elem_type>& out, const 
   
   arma_debug_assert_same_size(out.n_rows, out.n_cols, n_rows, n_cols, "subtraction");
   
-        eT*   out_mem = out.memptr();
-  const uword n_elem  = out.n_elem;
-  
-  const eT k = x.aux;
+  const eT  k       = x.aux;
+        eT* out_mem = out.memptr();
   
   if(Proxy<T1>::prefer_at_accessor == false)
     {
+    const uword n_elem = out.n_elem;
+    //const uword n_elem = x.get_n_elem(); // for fixed-sized matrices this causes a mis-optimisation (slowdown) of the loop under GCC 4.4
+    
     typename Proxy<T1>::ea_type P = x.P.get_ea();
     
     arma_applier_1(-=);
@@ -249,13 +252,14 @@ eop_core<eop_type>::apply_inplace_schur(Mat<typename T1::elem_type>& out, const 
   
   arma_debug_assert_same_size(out.n_rows, out.n_cols, n_rows, n_cols, "element-wise multiplication");
   
-        eT*   out_mem = out.memptr();
-  const uword n_elem  = out.n_elem;
-  
-  const eT k = x.aux;
+  const eT  k       = x.aux;
+        eT* out_mem = out.memptr();
   
   if(Proxy<T1>::prefer_at_accessor == false)
     {
+    const uword n_elem = out.n_elem;
+    //const uword n_elem = x.get_n_elem(); // for fixed-sized matrices this causes a mis-optimisation (slowdown) of the loop under GCC 4.4
+    
     typename Proxy<T1>::ea_type P = x.P.get_ea();
     
     arma_applier_1(*=);
@@ -286,13 +290,14 @@ eop_core<eop_type>::apply_inplace_div(Mat<typename T1::elem_type>& out, const eO
   
   arma_debug_assert_same_size(out.n_rows, out.n_cols, n_rows, n_cols, "element-wise division");
   
+  const eT  k       = x.aux;
         eT* out_mem = out.memptr();
-  const uword n_elem  = out.n_elem;
-  
-  const eT k = x.aux;
   
   if(Proxy<T1>::prefer_at_accessor == false)
     {
+    const uword n_elem = out.n_elem;
+    //const uword n_elem = x.get_n_elem(); // for fixed-sized matrices this causes a mis-optimisation (slowdown) of the loop under GCC 4.4
+    
     typename Proxy<T1>::ea_type P = x.P.get_ea();
     
     arma_applier_1(/=);
@@ -323,11 +328,6 @@ eop_core<eop_type>::apply(Cube<typename T1::elem_type>& out, const eOpCube<T1, e
   
   typedef typename T1::elem_type eT;
   
-  const uword n_rows   = out.n_rows;
-  const uword n_cols   = out.n_cols;
-  const uword n_slices = out.n_slices;
-  const uword n_elem   = out.n_elem;
-  
   // NOTE: we're assuming that the matrix has already been set to the correct size and there is no aliasing;
   // size setting and alias checking is done by either the Mat contructor or operator=()
   
@@ -336,12 +336,18 @@ eop_core<eop_type>::apply(Cube<typename T1::elem_type>& out, const eOpCube<T1, e
   
   if(ProxyCube<T1>::prefer_at_accessor == false)
     {
+    const uword n_elem = out.n_elem;
+    
     typename ProxyCube<T1>::ea_type P = x.P.get_ea();
     
     arma_applier_1(=);
     }
   else
     {
+    const uword n_rows   = x.get_n_rows();
+    const uword n_cols   = x.get_n_cols();
+    const uword n_slices = x.get_n_slices();
+    
     const ProxyCube<T1>& P = x.P;
     
     arma_applier_3(=);
@@ -367,15 +373,15 @@ eop_core<eop_type>::apply_inplace_plus(Cube<typename T1::elem_type>& out, const 
   
   arma_debug_assert_same_size(out.n_rows, out.n_cols, out.n_slices, n_rows, n_cols, n_slices, "addition");
   
-        eT*   out_mem = out.memptr();
-  const uword n_elem  = out.n_elem;
-  
-  const eT k = x.aux;
+  const eT  k       = x.aux;
+        eT* out_mem = out.memptr();
   
   if(ProxyCube<T1>::prefer_at_accessor == false)
     {
+    const uword n_elem = out.n_elem;
+    
     typename ProxyCube<T1>::ea_type P = x.P.get_ea();
-  
+    
     arma_applier_1(+=);
     }
   else
@@ -405,15 +411,15 @@ eop_core<eop_type>::apply_inplace_minus(Cube<typename T1::elem_type>& out, const
   
   arma_debug_assert_same_size(out.n_rows, out.n_cols, out.n_slices, n_rows, n_cols, n_slices, "subtraction");
   
-        eT*   out_mem = out.memptr();
-  const uword n_elem  = out.n_elem;
-  
-  const eT k = x.aux;
+  const eT  k       = x.aux;
+        eT* out_mem = out.memptr();
   
   if(ProxyCube<T1>::prefer_at_accessor == false)
     {
+    const uword n_elem = out.n_elem;
+    
     typename ProxyCube<T1>::ea_type P = x.P.get_ea();
-  
+    
     arma_applier_1(-=);
     }
   else
@@ -443,15 +449,15 @@ eop_core<eop_type>::apply_inplace_schur(Cube<typename T1::elem_type>& out, const
   
   arma_debug_assert_same_size(out.n_rows, out.n_cols, out.n_slices, n_rows, n_cols, n_slices, "element-wise multiplication");
   
-        eT*   out_mem = out.memptr();
-  const uword n_elem  = out.n_elem;
-  
-  const eT k = x.aux;
+  const eT  k       = x.aux;
+        eT* out_mem = out.memptr();
   
   if(ProxyCube<T1>::prefer_at_accessor == false)
     {
+    const uword n_elem = out.n_elem;
+    
     typename ProxyCube<T1>::ea_type P = x.P.get_ea();
-  
+    
     arma_applier_1(*=);
     }
   else
@@ -481,15 +487,15 @@ eop_core<eop_type>::apply_inplace_div(Cube<typename T1::elem_type>& out, const e
   
   arma_debug_assert_same_size(out.n_rows, out.n_cols, out.n_slices, n_rows, n_cols, n_slices, "element-wise division");
   
+  const eT  k       = x.aux;
         eT* out_mem = out.memptr();
-  const uword n_elem  = out.n_elem;
-    
-  const eT k = x.aux;
   
   if(ProxyCube<T1>::prefer_at_accessor == false)
     {
+    const uword n_elem = out.n_elem;
+    
     typename ProxyCube<T1>::ea_type P = x.P.get_ea();
-  
+    
     arma_applier_1(/=);
     }
   else
@@ -513,11 +519,8 @@ arma_hot
 arma_pure
 arma_inline
 eT
-eop_core<eop_type>::process(const eT val, const eT k)
+eop_core<eop_type>::process(const eT, const eT)
   {
-  arma_ignore(val);
-  arma_ignore(k);
-  
   arma_stop("eop_core::process(): unhandled eop_type");
   return eT(0);
   }

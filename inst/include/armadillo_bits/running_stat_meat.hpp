@@ -195,7 +195,7 @@ running_stat<eT>::reset()
   {
   arma_extra_debug_sigprint();
   
-  typedef typename running_stat<eT>::T T;
+  // typedef typename running_stat<eT>::T T;
   
   counter.reset();
   

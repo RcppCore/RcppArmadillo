@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2010 Conrad Sanderson
+// Copyright (C) 2009-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -83,15 +83,18 @@ sort_index_helper(umat_elem_type* out_mem, std::vector<packet_type>& packet_vec,
 template<typename T1>
 inline
 umat
-sort_index(const Base<typename T1::elem_type,T1>& X, const uword sort_type = 0)
+sort_index
+  (
+  const Base<typename T1::elem_type,T1>& X,
+  const uword sort_type = 0,
+  const typename arma_not_cx<typename T1::elem_type>::result* junk = 0
+  )
   {
   arma_extra_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
-  arma_type_check(( is_complex<eT>::value == true ));
-  
-  const unwrap<T1> tmp(X.get_ref());
+  const unwrap<T1>   tmp(X.get_ref());
   const Mat<eT>& A = tmp.M;
   
   if(A.is_empty() == true)

@@ -21,7 +21,7 @@ class glue_solve
   {
   public:
   
-  template<typename eT> inline static void solve_direct(Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B, const bool slow);
+  template<typename eT, typename T2> inline static void solve_direct(Mat<eT>& out, Mat<eT>& A, const Base<eT,T2>& X, const bool slow);
   
   template<typename T1, typename T2> inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_solve>& X);
   };

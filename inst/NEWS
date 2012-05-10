@@ -1,4 +1,13 @@
-0.3.0.3 2012-05-03
+0.3.1.92  2012-05-10
+
+    o   Upgraded to Armadillo release 3.0.2 "v3.2 beta 2"
+
+    	  * added unique(), for finding unique elements of a matrix
+    	  * faster eigen decomposition via optional use of "divide and
+    	    conquer" by eig_sym() 
+    	  * faster transpose of vectors and compound expressions
+
+0.3.0.3   2012-05-03
 
     o   Upgraded to Armadillo release 3.0.3
 
@@ -8,7 +17,7 @@
 
     o   New example script fastLm 
 
-0.3.0.2 2012-04-19
+0.3.0.2   2012-04-19
 
     o   Upgraded to Armadillo release 3.0.2
 
@@ -18,7 +27,7 @@
         number of useful debugging checks. Users can still define it or
         define ARMA_NO_DEBUG if they want a 'non-development' build
 
-0.3.0.1 2012-04-12
+0.3.0.1   2012-04-12
 
     o   Upgraded to Armadillo release 3.0.1
 

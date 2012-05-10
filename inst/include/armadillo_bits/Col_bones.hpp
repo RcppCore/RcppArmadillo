@@ -79,8 +79,10 @@ class Col : public Mat<eT>
   arma_inline       subview_col<eT> subvec(const span& row_span);
   arma_inline const subview_col<eT> subvec(const span& row_span) const;
   
-  //arma_inline       subview_col<eT> operator()(const span& row_span);
-  //arma_inline const subview_col<eT> operator()(const span& row_span) const;
+  using Mat<eT>::operator();
+  
+  arma_inline       subview_col<eT> operator()(const span& row_span);
+  arma_inline const subview_col<eT> operator()(const span& row_span) const;
   
   
   inline void shed_row (const uword row_num);
@@ -116,7 +118,6 @@ class Col : public Mat<eT>
     
     arma_aligned eT mem_local_extra[ (use_extra) ? fixed_n_elem : 1 ];
     
-    arma_inline void mem_setup();
     arma_inline void change_to_row();
     
     
@@ -129,7 +130,7 @@ class Col : public Mat<eT>
     
     static const bool is_col = true;
     static const bool is_row = false;
-  
+    
     static const uword n_rows = fixed_n_elem;
     static const uword n_cols = 1;
     static const uword n_elem = fixed_n_elem;
@@ -153,14 +154,12 @@ class Col : public Mat<eT>
     inline const Col& operator=(const std::string& text);
     inline const Col& operator=(const subview_cube<eT>& X);
     
-    inline       subview_row<eT> operator()(const uword   row_num,  const span& col_span);
-    inline const subview_row<eT> operator()(const uword   row_num,  const span& col_span) const;
+    using Col<eT>::operator();
     
-    inline       subview_col<eT> operator()(const span& row_span, const uword   col_num );
-    inline const subview_col<eT> operator()(const span& row_span, const uword   col_num ) const;
-    
-    inline       subview<eT>     operator()(const span& row_span, const span& col_span);
-    inline const subview<eT>     operator()(const span& row_span, const span& col_span) const;
+    #if defined(ARMA_USE_CXX11)
+    inline                fixed(const std::initializer_list<eT>& list);
+    inline const Col& operator=(const std::initializer_list<eT>& list);
+    #endif
     
     arma_inline arma_warn_unused eT& operator[] (const uword i);
     arma_inline arma_warn_unused eT  operator[] (const uword i) const;
@@ -183,10 +182,16 @@ class Col : public Mat<eT>
     };
   
   
+  protected:
+  
+  inline Col(const arma_fixed_indicator&, const uword in_n_elem, const eT* in_mem);
+  
+  
+  public:
+  
   #ifdef ARMA_EXTRA_COL_PROTO
     #include ARMA_INCFILE_WRAP(ARMA_EXTRA_COL_PROTO)
   #endif
-  
   };
 
 

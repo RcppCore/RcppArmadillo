@@ -1,5 +1,5 @@
-// Copyright (C) 2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2011 Conrad Sanderson
+// Copyright (C) 2011-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2011-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -31,13 +31,13 @@ op_symmat::apply
   
   typedef typename T1::elem_type eT;
   
-  const unwrap<T1> tmp(in.m);
+  const unwrap<T1>   tmp(in.m);
   const Mat<eT>& A = tmp.M;
   
   arma_debug_check( (A.is_square() == false), "symmatu()/symmatl(): given matrix must be square" );
   
-  const uword  N     = A.n_rows;
-  const bool upper = (in.aux_uword_a == 0);
+  const uword N     = A.n_rows;
+  const bool  upper = (in.aux_uword_a == 0);
   
   if(&out != &A)
     {
@@ -117,13 +117,13 @@ op_symmat::apply
   
   typedef typename T1::elem_type eT;
   
-  const unwrap<T1> tmp(in.m);
+  const unwrap<T1>   tmp(in.m);
   const Mat<eT>& A = tmp.M;
   
   arma_debug_check( (A.is_square() == false), "symmatu()/symmatl(): given matrix must be square" );
   
-  const uword  N     = A.n_rows;
-  const bool upper = (in.aux_uword_a == 0);
+  const uword N     = A.n_rows;
+  const bool  upper = (in.aux_uword_a == 0);
   
   if(&out != &A)
     {

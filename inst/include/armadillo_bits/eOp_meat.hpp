@@ -99,9 +99,9 @@ eOp<T1, eop_type>::get_n_elem() const
 template<typename T1, typename eop_type>
 arma_inline
 typename T1::elem_type
-eOp<T1, eop_type>::operator[] (const uword i) const
+eOp<T1, eop_type>::operator[] (const uword ii) const
   {
-  return eop_core<eop_type>::process(P[i], aux);
+  return eop_core<eop_type>::process(P[ii], aux);
   }
 
 
