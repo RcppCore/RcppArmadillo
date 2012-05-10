@@ -77,11 +77,11 @@ class subview : public Base<eT, subview<eT> >
   inline void ones();
   inline void eye();
   
-  inline eT& operator[](const uword i);
-  inline eT  operator[](const uword i) const;
+  inline eT& operator[](const uword ii);
+  inline eT  operator[](const uword ii) const;
   
-  inline eT& operator()(const uword i);
-  inline eT  operator()(const uword i) const;
+  inline eT& operator()(const uword ii);
+  inline eT  operator()(const uword ii) const;
   
   inline eT& operator()(const uword in_row, const uword in_col);
   inline eT  operator()(const uword in_row, const uword in_col) const;
@@ -213,6 +213,7 @@ class subview_col : public subview<eT>
   inline       subview_col<eT> subvec(const uword in_row1, const uword in_row2);
   inline const subview_col<eT> subvec(const uword in_row1, const uword in_row2) const;
   
+  // TODO: add operator()(span)
   
   protected:
   
@@ -270,6 +271,7 @@ class subview_row : public subview<eT>
   inline       subview_row<eT> subvec(const uword in_col1, const uword in_col2);
   inline const subview_row<eT> subvec(const uword in_col1, const uword in_col2) const;
   
+  // TODO: add operator()(span)
   
   protected:
   

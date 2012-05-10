@@ -1,6 +1,7 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // Copyright (C) 2009-2010 Ian Cullinan
+// Copyright (C) 2012 Matthew Amidon
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -1005,6 +1006,68 @@ diskio::save_pgm_binary(const Mat< std::complex<T> >& x, std::ostream& f)
 
 
 
+//! Save a matrix as part of a HDF5 file
+template<typename eT>
+inline 
+bool 
+diskio::save_hdf5_binary(const Mat<eT>& x, const std::string& final_name)
+  {
+  arma_extra_debug_sigprint();
+  
+  // TODO: we should save in the same format as used by Octave with the -hdf5 option, ie: save -hdf5 "/tmp/X.h5" X
+  
+  #if defined(ARMA_USE_HDF5)
+    {
+    bool save_okay = false;
+    
+    const std::string tmp_name = diskio::gen_tmp_name(final_name);
+    
+    // Set up the file according to HDF5's preferences  
+    hid_t file = H5Fcreate(tmp_name.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
+    
+    // We need to create a dataset, datatype, and dataspace
+    hsize_t dims[2];
+    dims[0] = x.n_rows;
+    dims[1] = x.n_cols;
+    
+    hid_t dataspace = H5Screate_simple(2, dims, NULL);   // treat the matrix as a 2d array dataspace; TODO: how to specify column-major ordering ?
+    hid_t datatype  = H5Tcreate(H5T_OPAQUE, sizeof(eT)); // currently specifying only the size of each element; TODO: specify type explicitly
+    
+    //// how to explicitly specify types ? uword (which could be 32 or 64 bit), float, double, std::complex<float>, std::complex<double>
+    // hid_t datatype = H5Tcopy(...)
+
+    // TODO: test by loading in Octave
+    // TODO: test by loading in Matlab with h5read()
+    
+    // TODO: what are the default dataset names used by Matlab and Octave ?
+    hid_t dataset = H5Dcreate(file, "dataset", datatype, dataspace, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+    
+    herr_t status = H5Dwrite(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, x.mem);
+    save_okay = (status >= 0);
+    
+    H5Dclose(dataset);
+    H5Tclose(datatype);
+    H5Sclose(dataspace);
+    H5Fclose(file);
+    
+    if(save_okay == true) { save_okay = diskio::safe_rename(tmp_name, final_name); }
+    
+    return save_okay;
+    }
+  #else
+    {
+    arma_ignore(x);
+    arma_ignore(final_name);
+    
+    arma_stop("Mat::save(): use of HDF5 needs to be enabled");
+    
+    return false;
+    }
+  #endif
+  }
+
+
+
 //! Load a matrix as raw text (no header, human readable).
 //! Can read matrices saved as text in Matlab and Octave.
 //! NOTE: this is much slower than reading a file with a header.
@@ -1623,6 +1686,91 @@ diskio::load_pgm_binary(Mat< std::complex<T> >& x, std::istream& is, std::string
 
 
 
+template<typename eT>
+inline
+bool
+diskio::load_hdf5_binary(Mat<eT>& x, const std::string& name, std::string& err_msg)
+  {
+  arma_extra_debug_sigprint();
+  
+  // TODO: we should save in a format that can be correctly read by Octave and Matlab
+  
+  #if defined(ARMA_USE_HDF5)
+    {
+    bool load_okay = false;
+    
+    hid_t fid = H5Fopen(name.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
+    
+    if(fid >= 0)
+      {
+      // TODO: do Matlab and Octave have default dataset names ?
+      hid_t dataset = H5Dopen(fid, "dataset", H5P_DEFAULT);
+      
+      if(dataset >= 0)
+        {
+        hid_t filespace = H5Dget_space(dataset);
+        
+        const int ndims = H5Sget_simple_extent_ndims(filespace);
+        
+        if(ndims == 2)
+          {
+          hsize_t dims[2]; 
+          
+          const herr_t query_status = H5Sget_simple_extent_dims(filespace, dims, NULL);
+          
+          if(query_status >= 0)
+            {
+            const uword n_rows = dims[0];
+            const uword n_cols = dims[1];
+            
+            hid_t datatype = H5Dget_type(dataset);
+            
+            const size_t element_size = H5Tget_size(datatype);
+            
+            // TODO: rather than checking the element_size, we should really figure out the exact type stored in the file (eg. float, double, ...)
+            
+            if( element_size == sizeof(eT) )
+              {
+              x.set_size(n_rows, n_cols);
+              
+              // TODO: should H5S_ALL be used ?
+              hid_t read_status = H5Dread( dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(x.memptr()) );
+              
+              load_okay = (read_status >= 0);
+              }
+            
+            H5Tclose(datatype);
+            }
+          
+          }
+        
+        H5Sclose(filespace);
+        }
+      
+      H5Dclose(dataset);
+      }
+    
+    H5Fclose(fid);
+    
+    if(load_okay == false) { err_msg = "unsupported or incorrect HDF5 data in "; }
+    
+    return load_okay;
+    }
+  #else
+    {
+    arma_ignore(x);
+    arma_ignore(name);
+    arma_ignore(err_msg);
+    
+    arma_stop("Mat::load(): use of HDF5 needs to be enabled");
+    
+    return false;
+    }
+  #endif
+  }
+
+
+
 //! Try to load a matrix by automatically determining its type
 template<typename eT>
 inline
@@ -1631,6 +1779,11 @@ diskio::load_auto_detect(Mat<eT>& x, const std::string& name, std::string& err_m
   {
   arma_extra_debug_sigprint();
   
+  #if defined(ARMA_USE_HDF5)
+    // We're currently using the C bindings for the HDF5 library, which don't support C++ streams
+    if( H5Fis_hdf5(name.c_str()) ) { return load_hdf5_binary(x, name, err_msg); }
+  #endif
+
   std::fstream f;
   f.open(name.c_str(), std::fstream::in | std::fstream::binary);
   

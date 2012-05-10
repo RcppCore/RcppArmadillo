@@ -157,7 +157,7 @@ operator*
 
 //! diagmat * diagmat
 template<typename T1, typename T2>
-arma_inline
+inline
 Mat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result >
 operator*
 (const Op<T1, op_diagmat>& X, const Op<T2, op_diagmat>& Y)

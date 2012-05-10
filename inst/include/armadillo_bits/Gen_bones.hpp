@@ -21,7 +21,6 @@ class Gen : public Base<typename T1::elem_type, Gen<T1, gen_type> >
   {
   public:
   
-  typedef typename T1::elem_type                   eT;
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
@@ -36,16 +35,16 @@ class Gen : public Base<typename T1::elem_type, Gen<T1, gen_type> >
   arma_inline  Gen(const uword in_n_rows, const uword in_n_cols);
   arma_inline ~Gen();
   
-  arma_inline static eT generate();
+  arma_inline static elem_type generate();
   
-  arma_inline eT operator[] (const uword i)                    const;
-  arma_inline eT at         (const uword row, const uword col) const;
+  arma_inline elem_type operator[] (const uword ii)                   const;
+  arma_inline elem_type at         (const uword row, const uword col) const;
   
-  inline void apply              (Mat<eT>& out) const;
-  inline void apply_inplace_plus (Mat<eT>& out) const;
-  inline void apply_inplace_minus(Mat<eT>& out) const;
-  inline void apply_inplace_schur(Mat<eT>& out) const;
-  inline void apply_inplace_div  (Mat<eT>& out) const;
+  inline void apply              (Mat<elem_type>& out) const;
+  inline void apply_inplace_plus (Mat<elem_type>& out) const;
+  inline void apply_inplace_minus(Mat<elem_type>& out) const;
+  inline void apply_inplace_schur(Mat<elem_type>& out) const;
+  inline void apply_inplace_div  (Mat<elem_type>& out) const;
   };
 
 

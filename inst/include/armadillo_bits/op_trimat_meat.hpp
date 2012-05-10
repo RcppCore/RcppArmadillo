@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2010-2011 Conrad Sanderson
+// Copyright (C) 2010-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2012 Conrad Sanderson
 // Copyright (C) 2011      Ryan Curtin
 // 
 // This file is part of the Armadillo C++ library.
@@ -61,13 +61,13 @@ op_trimat::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_trimat>& in)
   
   typedef typename T1::elem_type eT;
   
-  const unwrap<T1> tmp(in.m);
+  const unwrap<T1>   tmp(in.m);
   const Mat<eT>& A = tmp.M;
   
   arma_debug_check( (A.is_square() == false), "trimatu()/trimatl(): given matrix must be square" );
   
-  const uword  N     = A.n_rows;
-  const bool upper = (in.aux_uword_a == 0);
+  const uword N     = A.n_rows;
+  const bool  upper = (in.aux_uword_a == 0);
   
   if(&out != &A)
     {

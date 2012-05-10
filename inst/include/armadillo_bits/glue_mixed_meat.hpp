@@ -27,38 +27,17 @@ glue_mixed_times::apply(Mat<typename eT_promoter<T1,T2>::eT>& out, const mtGlue<
   typedef typename T1::elem_type eT1;
   typedef typename T2::elem_type eT2;
   
-  // TODO: extend the unwrap_check framework to handle mixed matrix types
-  
-  const unwrap<T1> tmp1(X.A);
-  const unwrap<T2> tmp2(X.B);
+  const unwrap_check_mixed<T1> tmp1(X.A, out);
+  const unwrap_check_mixed<T2> tmp2(X.B, out);
   
   const Mat<eT1>& A = tmp1.M;
   const Mat<eT2>& B = tmp2.M;
   
-  const bool A_is_alias = ( ((void *)&out) == ((void *)&A) );
-  const bool B_is_alias = ( ((void *)&out) == ((void *)&B) );
+  arma_debug_assert_mul_size(A, B, "multiplication");
   
-  const Mat<eT1>* AA_ptr = A_is_alias ? new Mat<eT1>(A) : 0;
-  const Mat<eT2>* BB_ptr = B_is_alias ? new Mat<eT2>(B) : 0;
+  out.set_size(A.n_rows, B.n_cols);
   
-  const Mat<eT1>& AA = A_is_alias ? *AA_ptr : A;
-  const Mat<eT2>& BB = B_is_alias ? *BB_ptr : B;
-  
-  arma_debug_assert_mul_size(AA, BB, "multiplication");
-  
-  out.set_size(AA.n_rows, BB.n_cols);
-  
-  gemm_mixed<>::apply(out, AA, BB);
-  
-  if(A_is_alias == true)
-    {
-    delete AA_ptr;
-    }
-  
-  if(B_is_alias == true)
-    {
-    delete BB_ptr;
-    }
+  gemm_mixed<>::apply(out, A, B);
   }
 
 
@@ -309,16 +288,38 @@ glue_mixed_plus::apply(Cube<typename eT_promoter<T1,T2>::eT>& out, const mtGlueC
   
   arma_debug_assert_same_size(A, B, "addition");
   
-  out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
+  const uword n_rows   = A.get_n_rows();
+  const uword n_cols   = A.get_n_cols();
+  const uword n_slices = A.get_n_slices();
+
+  out.set_size(n_rows, n_cols, n_slices);
   
         out_eT* out_mem = out.memptr();
-  const uword     n_elem  = out.n_elem;
+  const uword    n_elem = out.n_elem;
   
-  // TODO: add faster handling of subviews
+  const bool prefer_at_accessor = (ProxyCube<T1>::prefer_at_accessor || ProxyCube<T2>::prefer_at_accessor);
   
-  for(uword i=0; i<n_elem; ++i)
+  if(prefer_at_accessor == false)
     {
-    out_mem[i] = upgrade_val<eT1,eT2>::apply(A[i]) + upgrade_val<eT1,eT2>::apply(B[i]);
+    typename ProxyCube<T1>::ea_type AA = A.get_ea();
+    typename ProxyCube<T2>::ea_type BB = B.get_ea();
+    
+    for(uword i=0; i<n_elem; ++i)
+      {
+      out_mem[i] = upgrade_val<eT1,eT2>::apply(AA[i]) + upgrade_val<eT1,eT2>::apply(BB[i]);
+      }
+    }
+  else
+    {
+    uword i = 0;
+    
+    for(uword slice = 0; slice < n_slices; ++slice)
+    for(uword col   = 0; col   < n_cols;   ++col  )
+    for(uword row   = 0; row   < n_rows;   ++row  )
+      {
+      out_mem[i] = upgrade_val<eT1,eT2>::apply(A.at(row,col,slice)) + upgrade_val<eT1,eT2>::apply(B.at(row,col,slice));
+      ++i;
+      }
     }
   }
 
@@ -344,16 +345,38 @@ glue_mixed_minus::apply(Cube<typename eT_promoter<T1,T2>::eT>& out, const mtGlue
   
   arma_debug_assert_same_size(A, B, "subtraction");
   
-  out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
+  const uword n_rows   = A.get_n_rows();
+  const uword n_cols   = A.get_n_cols();
+  const uword n_slices = A.get_n_slices();
+
+  out.set_size(n_rows, n_cols, n_slices);
   
         out_eT* out_mem = out.memptr();
-  const uword     n_elem  = out.n_elem;
+  const uword    n_elem = out.n_elem;
   
-  // TODO: add faster handling of subviews
+  const bool prefer_at_accessor = (ProxyCube<T1>::prefer_at_accessor || ProxyCube<T2>::prefer_at_accessor);
   
-  for(uword i=0; i<n_elem; ++i)
+  if(prefer_at_accessor == false)
     {
-    out_mem[i] = upgrade_val<eT1,eT2>::apply(A[i]) - upgrade_val<eT1,eT2>::apply(B[i]);
+    typename ProxyCube<T1>::ea_type AA = A.get_ea();
+    typename ProxyCube<T2>::ea_type BB = B.get_ea();
+    
+    for(uword i=0; i<n_elem; ++i)
+      {
+      out_mem[i] = upgrade_val<eT1,eT2>::apply(AA[i]) - upgrade_val<eT1,eT2>::apply(BB[i]);
+      }
+    }
+  else
+    {
+    uword i = 0;
+    
+    for(uword slice = 0; slice < n_slices; ++slice)
+    for(uword col   = 0; col   < n_cols;   ++col  )
+    for(uword row   = 0; row   < n_rows;   ++row  )
+      {
+      out_mem[i] = upgrade_val<eT1,eT2>::apply(A.at(row,col,slice)) - upgrade_val<eT1,eT2>::apply(B.at(row,col,slice));
+      ++i;
+      }
     }
   }
 
@@ -379,16 +402,38 @@ glue_mixed_div::apply(Cube<typename eT_promoter<T1,T2>::eT>& out, const mtGlueCu
   
   arma_debug_assert_same_size(A, B, "element-wise division");
   
-  out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
+  const uword n_rows   = A.get_n_rows();
+  const uword n_cols   = A.get_n_cols();
+  const uword n_slices = A.get_n_slices();
+
+  out.set_size(n_rows, n_cols, n_slices);
   
         out_eT* out_mem = out.memptr();
-  const uword     n_elem  = out.n_elem;
+  const uword    n_elem = out.n_elem;
   
-  // TODO: add faster handling of subviews
+  const bool prefer_at_accessor = (ProxyCube<T1>::prefer_at_accessor || ProxyCube<T2>::prefer_at_accessor);
   
-  for(uword i=0; i<n_elem; ++i)
+  if(prefer_at_accessor == false)
     {
-    out_mem[i] = upgrade_val<eT1,eT2>::apply(A[i]) / upgrade_val<eT1,eT2>::apply(B[i]);
+    typename ProxyCube<T1>::ea_type AA = A.get_ea();
+    typename ProxyCube<T2>::ea_type BB = B.get_ea();
+    
+    for(uword i=0; i<n_elem; ++i)
+      {
+      out_mem[i] = upgrade_val<eT1,eT2>::apply(AA[i]) / upgrade_val<eT1,eT2>::apply(BB[i]);
+      }
+    }
+  else
+    {
+    uword i = 0;
+    
+    for(uword slice = 0; slice < n_slices; ++slice)
+    for(uword col   = 0; col   < n_cols;   ++col  )
+    for(uword row   = 0; row   < n_rows;   ++row  )
+      {
+      out_mem[i] = upgrade_val<eT1,eT2>::apply(A.at(row,col,slice)) / upgrade_val<eT1,eT2>::apply(B.at(row,col,slice));
+      ++i;
+      }
     }
   }
 
@@ -414,16 +459,38 @@ glue_mixed_schur::apply(Cube<typename eT_promoter<T1,T2>::eT>& out, const mtGlue
   
   arma_debug_assert_same_size(A, B, "element-wise multiplication");
   
-  out.set_size(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
+  const uword n_rows   = A.get_n_rows();
+  const uword n_cols   = A.get_n_cols();
+  const uword n_slices = A.get_n_slices();
+
+  out.set_size(n_rows, n_cols, n_slices);
   
         out_eT* out_mem = out.memptr();
-  const uword     n_elem  = out.n_elem;
+  const uword    n_elem = out.n_elem;
   
-  // TODO: add faster handling of subviews
+  const bool prefer_at_accessor = (ProxyCube<T1>::prefer_at_accessor || ProxyCube<T2>::prefer_at_accessor);
   
-  for(uword i=0; i<n_elem; ++i)
+  if(prefer_at_accessor == false)
     {
-    out_mem[i] = upgrade_val<eT1,eT2>::apply(A[i]) * upgrade_val<eT1,eT2>::apply(B[i]);
+    typename ProxyCube<T1>::ea_type AA = A.get_ea();
+    typename ProxyCube<T2>::ea_type BB = B.get_ea();
+    
+    for(uword i=0; i<n_elem; ++i)
+      {
+      out_mem[i] = upgrade_val<eT1,eT2>::apply(AA[i]) * upgrade_val<eT1,eT2>::apply(BB[i]);
+      }
+    }
+  else
+    {
+    uword i = 0;
+    
+    for(uword slice = 0; slice < n_slices; ++slice)
+    for(uword col   = 0; col   < n_cols;   ++col  )
+    for(uword row   = 0; row   < n_rows;   ++row  )
+      {
+      out_mem[i] = upgrade_val<eT1,eT2>::apply(A.at(row,col,slice)) * upgrade_val<eT1,eT2>::apply(B.at(row,col,slice));
+      ++i;
+      }
     }
   }
 

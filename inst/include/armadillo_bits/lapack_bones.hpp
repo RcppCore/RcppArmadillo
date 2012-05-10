@@ -1,7 +1,8 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
-// Copyright (C)      2009 Edmund Highcock
-// Copyright (C)      2011 James Sanders
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2009 Edmund Highcock
+// Copyright (C) 2011 James Sanders
+// Copyright (C) 2012 Eric Jon Sundstrom
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -36,9 +37,15 @@
   
   #define arma_ssyev  ssyev
   #define arma_dsyev  dsyev
-  
+
   #define arma_cheev  cheev
   #define arma_zheev  zheev
+  
+  #define arma_ssyevd ssyevd
+  #define arma_dsyevd dsyevd
+  
+  #define arma_cheevd cheevd
+  #define arma_zheevd zheevd
   
   #define arma_sgeev  sgeev
   #define arma_dgeev  dgeev
@@ -130,6 +137,12 @@
   
   #define arma_cheev  CHEEV
   #define arma_zheev  ZHEEV
+  
+  #define arma_ssyevd SSYEVD
+  #define arma_dsyevd DSYEVD
+  
+  #define arma_cheevd CHEEVD
+  #define arma_zheevd ZHEEVD
   
   #define arma_sgeev  SGEEV
   #define arma_dgeev  DGEEV
@@ -226,10 +239,18 @@ extern "C"
   // eigenvector decomposition of symmetric real matrices
   void arma_fortran(arma_ssyev)(char* jobz, char* uplo, blas_int* n,  float* a, blas_int* lda,  float* w,  float* work, blas_int* lwork, blas_int* info);
   void arma_fortran(arma_dsyev)(char* jobz, char* uplo, blas_int* n, double* a, blas_int* lda, double* w, double* work, blas_int* lwork, blas_int* info);
-  
+    
   // eigenvector decomposition of hermitian matrices (complex)
   void arma_fortran(arma_cheev)(char* jobz, char* uplo, blas_int* n,   void* a, blas_int* lda,  float* w,   void* work, blas_int* lwork,  float* rwork, blas_int* info);
   void arma_fortran(arma_zheev)(char* jobz, char* uplo, blas_int* n,   void* a, blas_int* lda, double* w,   void* work, blas_int* lwork, double* rwork, blas_int* info);
+  
+  // eigenvector decomposition of symmetric real matrices by divide and conquer
+  void arma_fortran(arma_ssyevd)(char* jobz, char* uplo, blas_int* n,  float* a, blas_int* lda,  float* w,  float* work, blas_int* lwork, blas_int* iwork, blas_int* liwork, blas_int* info);
+  void arma_fortran(arma_dsyevd)(char* jobz, char* uplo, blas_int* n, double* a, blas_int* lda, double* w, double* work, blas_int* lwork, blas_int* iwork, blas_int* liwork, blas_int* info);
+  
+  // eigenvector decomposition of hermitian matrices (complex) by divide and conquer
+  void arma_fortran(arma_cheevd)(char* jobz, char* uplo, blas_int* n,   void* a, blas_int* lda,  float* w,   void* work, blas_int* lwork,  float* rwork, blas_int* lrwork, blas_int* iwork, blas_int* liwork, blas_int* info);
+  void arma_fortran(arma_zheevd)(char* jobz, char* uplo, blas_int* n,   void* a, blas_int* lda, double* w,   void* work, blas_int* lwork, double* rwork, blas_int* lrwork, blas_int* iwork, blas_int* liwork, blas_int* info);
   
   // eigenvector decomposition of general real matrices
   void arma_fortran(arma_sgeev)(char* jobvl, char* jobvr, blas_int* n,  float* a, blas_int* lda,  float* wr,  float* wi,  float* vl, blas_int* ldvl,  float* vr, blas_int* ldvr,  float* work, blas_int* lwork, blas_int* info);

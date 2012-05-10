@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -29,7 +29,6 @@ det
   )
   {
   arma_extra_debug_sigprint();
-  
   arma_ignore(junk);
   
   return auxlib::det(X, slow);
@@ -111,12 +110,7 @@ det
   arma_ignore(junk1);
   arma_ignore(junk2);
   
-  typedef typename T1::elem_type eT;
-  
-  const unwrap<T1>   tmp(in.m);
-  const Mat<eT>& X = tmp.M;
-  
-  return det(X, slow);
+  return auxlib::det(in.m, slow);  // bypass op_htrans
   }
 
 

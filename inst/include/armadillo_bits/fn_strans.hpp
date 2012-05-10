@@ -35,6 +35,8 @@ strans
 
 
 
+// NOTE: deliberately returning op_htrans instead of op_strans,
+// NOTE: due to currently more optimisations available when using op_htrans, especially by glue_times
 template<typename T1>
 arma_inline
 const Op<T1, op_htrans>
@@ -73,6 +75,8 @@ strans
 
 
 
+// NOTE: deliberately returning op_htrans instead of op_strans,
+// NOTE: due to currently more optimisations available when using op_htrans, especially by glue_times
 template<typename T1>
 arma_inline
 const Op<T1, op_htrans>

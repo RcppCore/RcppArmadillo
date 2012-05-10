@@ -49,7 +49,7 @@ arma_inline
 uword
 eGlue<T1,T2,eglue_type>::get_n_rows() const
   {
-  return is_row ? 1 : P1.get_n_rows();
+  return is_row ? 1 : ( Proxy<T1>::is_fixed ? P1.get_n_rows() : P2.get_n_rows() );
   }
 
 
@@ -59,7 +59,7 @@ arma_inline
 uword
 eGlue<T1,T2,eglue_type>::get_n_cols() const
   {
-  return is_col ? 1 : P1.get_n_cols();
+  return is_col ? 1 : ( Proxy<T1>::is_fixed ? P1.get_n_cols() : P2.get_n_cols() );
   }
 
 
@@ -69,7 +69,7 @@ arma_inline
 uword
 eGlue<T1,T2,eglue_type>::get_n_elem() const
   {
-  return P1.get_n_elem();
+  return Proxy<T1>::is_fixed ? P1.get_n_elem() : P2.get_n_elem();
   }
 
 
@@ -77,16 +77,16 @@ eGlue<T1,T2,eglue_type>::get_n_elem() const
 template<typename T1, typename T2, typename eglue_type>
 arma_inline
 typename T1::elem_type
-eGlue<T1,T2,eglue_type>::operator[] (const uword i) const
+eGlue<T1,T2,eglue_type>::operator[] (const uword ii) const
   {
   typedef typename T1::elem_type eT;
   
   // the optimiser will keep only one return statement
   
-       if(is_same_type<eglue_type, eglue_plus >::value == true) { return P1[i] + P2[i]; }
-  else if(is_same_type<eglue_type, eglue_minus>::value == true) { return P1[i] - P2[i]; }
-  else if(is_same_type<eglue_type, eglue_div  >::value == true) { return P1[i] / P2[i]; }
-  else if(is_same_type<eglue_type, eglue_schur>::value == true) { return P1[i] * P2[i]; }
+       if(is_same_type<eglue_type, eglue_plus >::value == true) { return P1[ii] + P2[ii]; }
+  else if(is_same_type<eglue_type, eglue_minus>::value == true) { return P1[ii] - P2[ii]; }
+  else if(is_same_type<eglue_type, eglue_div  >::value == true) { return P1[ii] / P2[ii]; }
+  else if(is_same_type<eglue_type, eglue_schur>::value == true) { return P1[ii] * P2[ii]; }
   }
 
 

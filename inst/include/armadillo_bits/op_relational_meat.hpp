@@ -77,9 +77,9 @@
     }\
   else\
     {\
-    const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);\
+    const Mat<eT> tmp(P.Q);\
     \
-    out = (val) operator_rel (tmp.M);\
+    out = (val) operator_rel (tmp);\
     }\
   }
 
@@ -138,9 +138,9 @@
     }\
   else\
     {\
-    const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);\
+    const Mat<eT> tmp(P.Q);\
     \
-    out = (tmp.M) operator_rel (val);\
+    out = (tmp) operator_rel (val);\
     }\
   }
 

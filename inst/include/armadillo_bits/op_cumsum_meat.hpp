@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2010-2011 Conrad Sanderson
+// Copyright (C) 2010-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -24,8 +24,8 @@ op_cumsum_mat::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumsum_mat
   
   typedef typename T1::elem_type eT;
   
-  const unwrap<T1>   tmp(in.m);
-  const Mat<eT>& X = tmp.M;
+  const unwrap_check<T1>  tmp(in.m, out);
+  const Mat<eT>&      X = tmp.M;
   
   const uword dim = in.aux_uword_a;
   arma_debug_check( (dim > 1), "cumsum(): incorrect usage. dim must be 0 or 1");
@@ -84,8 +84,8 @@ op_cumsum_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumsum_vec
   
   typedef typename T1::elem_type eT;
   
-  const unwrap<T1>   tmp(in.m);
-  const Mat<eT>& X = tmp.M;
+  const unwrap_check<T1>   tmp(in.m, out);
+  const Mat<eT>&       X = tmp.M;
   
   const uword n_elem = X.n_elem;
   

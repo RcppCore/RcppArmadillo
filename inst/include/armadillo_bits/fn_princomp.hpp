@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2010-2011 Conrad Sanderson
+// Copyright (C) 2010-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2012 Conrad Sanderson
 // Copyright (C) 2010 Dimitrios Bouzas
 // 
 // This file is part of the Armadillo C++ library.
@@ -39,12 +39,7 @@ princomp
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  typedef typename T1::elem_type eT;
-  
-  const unwrap<T1>   tmp(X.get_ref());
-  const Mat<eT>& A = tmp.M;
-  
-  const bool status = op_princomp::direct_princomp(coeff_out, score_out, latent_out, tsquared_out, A);
+  const bool status = op_princomp::direct_princomp(coeff_out, score_out, latent_out, tsquared_out, X);
   
   if(status == false)
     {
@@ -81,12 +76,7 @@ princomp
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  typedef typename T1::elem_type eT;
-  
-  const unwrap<T1>   tmp(X.get_ref());
-  const Mat<eT>& A = tmp.M;
-  
-  const bool status = op_princomp::direct_princomp(coeff_out, score_out, latent_out, A); 
+  const bool status = op_princomp::direct_princomp(coeff_out, score_out, latent_out, X); 
   
   if(status == false)
     {
@@ -120,12 +110,7 @@ princomp
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  typedef typename T1::elem_type eT;
-  
-  const unwrap<T1>   tmp(X.get_ref());
-  const Mat<eT>& A = tmp.M;
-  
-  const bool status = op_princomp::direct_princomp(coeff_out, score_out, A); 
+  const bool status = op_princomp::direct_princomp(coeff_out, score_out, X); 
   
   if(status == false)
     {
@@ -156,12 +141,7 @@ princomp
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  typedef typename T1::elem_type eT;
-  
-  const unwrap<T1>   tmp(X.get_ref());
-  const Mat<eT>& A = tmp.M;
-  
-  const bool status = op_princomp::direct_princomp(coeff_out, A);
+  const bool status = op_princomp::direct_princomp(coeff_out, X);
   
   if(status == false)
     {

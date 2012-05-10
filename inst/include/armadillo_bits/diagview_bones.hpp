@@ -61,14 +61,14 @@ class diagview : public Base<eT, diagview<eT> >
   template<typename T1> inline void operator/=(const Base<eT,T1>& x);
   
   
-  arma_inline eT& operator[](const uword i);
-  arma_inline eT  operator[](const uword i) const;
+  arma_inline eT& operator[](const uword ii);
+  arma_inline eT  operator[](const uword ii) const;
   
-  arma_inline eT&         at(const uword i);
-  arma_inline eT          at(const uword i) const;
+  arma_inline eT&         at(const uword ii);
+  arma_inline eT          at(const uword ii) const;
   
-  arma_inline eT& operator()(const uword i);
-  arma_inline eT  operator()(const uword i) const;
+  arma_inline eT& operator()(const uword ii);
+  arma_inline eT  operator()(const uword ii) const;
   
   arma_inline eT&         at(const uword in_n_row, const uword);
   arma_inline eT          at(const uword in_n_row, const uword) const;

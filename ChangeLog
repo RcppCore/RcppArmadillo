@@ -1,6 +1,12 @@
+2012-05-10  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.3.1.92
+
+	* inst/include/*: Upgraded to new (beta) release 3.1.92 of Armadillo
+
 2012-05-03  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.0.2
+	* DESCRIPTION: Release 0.3.0.3
 
 	* inst/include/*: Upgraded to new release 3.0.3 of Armadillo
 

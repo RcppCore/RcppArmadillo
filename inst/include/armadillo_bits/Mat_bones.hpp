@@ -275,12 +275,12 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename T1, typename T2, typename glue_type> inline const Mat& operator/=(const mtGlue<eT, T1, T2, glue_type>& X);
   
   
-  arma_inline arma_warn_unused eT& operator[] (const uword i);
-  arma_inline arma_warn_unused eT  operator[] (const uword i) const;
-  arma_inline arma_warn_unused eT& at         (const uword i);
-  arma_inline arma_warn_unused eT  at         (const uword i) const;
-  arma_inline arma_warn_unused eT& operator() (const uword i);
-  arma_inline arma_warn_unused eT  operator() (const uword i) const;
+  arma_inline arma_warn_unused eT& operator[] (const uword ii);
+  arma_inline arma_warn_unused eT  operator[] (const uword ii) const;
+  arma_inline arma_warn_unused eT& at         (const uword ii);
+  arma_inline arma_warn_unused eT  at         (const uword ii) const;
+  arma_inline arma_warn_unused eT& operator() (const uword ii);
+  arma_inline arma_warn_unused eT  operator() (const uword ii) const;
   
   arma_inline arma_warn_unused eT& at         (const uword in_row, const uword in_col);
   arma_inline arma_warn_unused eT  at         (const uword in_row, const uword in_col) const;
@@ -300,8 +300,8 @@ class Mat : public Base< eT, Mat<eT> >
   arma_inline arma_warn_unused bool is_square() const;
        inline arma_warn_unused bool is_finite() const;
   
-  arma_inline arma_warn_unused bool in_range(const uword i) const;
-  arma_inline arma_warn_unused bool in_range(const span& x) const;
+  arma_inline arma_warn_unused bool in_range(const uword ii) const;
+  arma_inline arma_warn_unused bool in_range(const span& x ) const;
   
   arma_inline arma_warn_unused bool in_range(const uword   in_row, const uword   in_col) const;
   arma_inline arma_warn_unused bool in_range(const span& row_span, const uword   in_col) const;
@@ -318,14 +318,8 @@ class Mat : public Base< eT, Mat<eT> >
   inline void impl_print(const std::string& extra_text) const;
   inline void impl_print(std::ostream& user_stream, const std::string& extra_text) const;
   
-  inline void impl_print_trans(const std::string& extra_text) const;
-  inline void impl_print_trans(std::ostream& user_stream, const std::string& extra_text) const;
-  
   inline void impl_raw_print(const std::string& extra_text) const;
   inline void impl_raw_print(std::ostream& user_stream, const std::string& extra_text) const;
-  
-  inline void impl_raw_print_trans(const std::string& extra_text) const;
-  inline void impl_raw_print_trans(std::ostream& user_stream, const std::string& extra_text) const;
   
   
   template<typename eT2, typename expr>
@@ -479,8 +473,6 @@ class Mat : public Base< eT, Mat<eT> >
     
     arma_aligned eT mem_local_extra[ (use_extra) ? fixed_n_elem : 1 ];
     
-    arma_inline void mem_setup();
-    
     
     public:
     
@@ -507,23 +499,13 @@ class Mat : public Base< eT, Mat<eT> >
     inline fixed(const char*        text);
     inline fixed(const std::string& text);
     
-    // TODO: handling of initializer_list ?
+    using Mat<eT>::operator=;
+    using Mat<eT>::operator();
     
-    template<typename T1> inline const Mat& operator=(const Base<eT,T1>& A);
-    
-    inline const Mat& operator=(const eT val);
-    inline const Mat& operator=(const char*        text);
-    inline const Mat& operator=(const std::string& text);
-    
-    
-    inline       subview_row<eT> operator()(const uword  row_num, const span& col_span);
-    inline const subview_row<eT> operator()(const uword  row_num, const span& col_span) const;
-    
-    inline       subview_col<eT> operator()(const span& row_span, const uword col_num);
-    inline const subview_col<eT> operator()(const span& row_span, const uword col_num) const;
-    
-    inline       subview<eT>     operator()(const span& row_span, const span& col_span);
-    inline const subview<eT>     operator()(const span& row_span, const span& col_span) const;
+    #if defined(ARMA_USE_CXX11)
+    inline                fixed(const std::initializer_list<eT>& list);
+    inline const Mat& operator=(const std::initializer_list<eT>& list);
+    #endif
     
     
     arma_inline arma_warn_unused eT& operator[] (const uword i);
@@ -540,7 +522,7 @@ class Mat : public Base< eT, Mat<eT> >
     
     arma_inline arma_warn_unused       eT* memptr();
     arma_inline arma_warn_unused const eT* memptr() const;
-  
+    
     arma_hot inline const Mat<eT>& fill(const eT val);
     arma_hot inline const Mat<eT>& zeros();
     arma_hot inline const Mat<eT>& ones();
@@ -569,7 +551,10 @@ class Mat : public Base< eT, Mat<eT> >
   
   inline Mat(const arma_vec_indicator&, const uhword in_vec_state);
   inline Mat(const arma_vec_indicator&, const uword in_n_rows, const uword in_n_cols, const uhword in_vec_state);
-
+  
+  inline Mat(const arma_fixed_indicator&, const uword in_n_rows, const uword in_n_cols, const uhword in_vec_state, const eT* in_mem);
+  
+  
   friend class Cube<eT>;
   friend class glue_join;
   friend class op_strans;

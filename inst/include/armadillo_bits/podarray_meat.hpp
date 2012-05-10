@@ -28,8 +28,7 @@ podarray<eT>::~podarray()
   
   if(arma_config::debug == true)
     {
-    access::rw(n_elem) = 0;
-    access::rw(mem)    = 0;
+    access::rw(mem) = 0;
     }
   }
 

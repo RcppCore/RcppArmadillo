@@ -67,9 +67,9 @@ op_hist::apply(Mat<uword>& out, const mtOp<uword, T1, op_hist>& X)
     Col<eT> c(n_bins);
     eT* c_mem = c.memptr();
     
-    for(uword i=0; i < n_bins; ++i)
+    for(uword ii=0; ii < n_bins; ++ii)
       {
-      c_mem[i] = (0.5 + i) / double(n_bins);   // TODO: may need to be modified for integer matrices
+      c_mem[ii] = (0.5 + ii) / double(n_bins);   // TODO: may need to be modified for integer matrices
       }
     
     c = ((max_val - min_val) * c) + min_val;

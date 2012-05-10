@@ -1013,14 +1013,17 @@ field<oT>::init(const field<oT>& x)
   
   if(this != &x)
     {
-    init(x.n_rows, x.n_cols);
+    const uword x_n_rows = x.n_rows;
+    const uword x_n_cols = x.n_cols;
+    
+    init(x_n_rows, x_n_cols);
     
     field& t = *this;
     
-    for(uword col=0; col<x.n_cols; ++col)
-    for(uword row=0; row<x.n_rows; ++row)
+    for(uword ucol=0; ucol < x_n_cols; ++ucol)
+    for(uword urow=0; urow < x_n_rows; ++urow)
       {
-      t.at(row,col) = x.at(row,col);
+      t.at(urow,ucol) = x.at(urow,ucol);
       }
     }
   

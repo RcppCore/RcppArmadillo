@@ -156,6 +156,9 @@ glue_times_redirect<3>::apply(Mat<typename T1::elem_type>& out, const Glue< Glue
   
   typedef typename T1::elem_type eT;
   
+  // TODO: investigate detecting inv(A)*B*C and replacing with solve(A,B)*C
+  // TODO: investigate detecting A*inv(B)*C and replacing with A*solve(B,C)
+  
   // there is exactly 3 objects
   // hence we can safely expand X as X.A.A, X.A.B and X.B
   
@@ -252,8 +255,8 @@ glue_times::apply_inplace(Mat<typename T1::elem_type>& out, const T1& X)
   
   typedef typename T1::elem_type eT;
   
-  const unwrap_check<T1> tmp(X, out);
-  const Mat<eT>& B     = tmp.M;
+  const unwrap_check<T1> B_tmp(X, out);
+  const Mat<eT>& B     = B_tmp.M;
   
   arma_debug_assert_mul_size(out, B, "matrix multiplication");
   

@@ -65,14 +65,14 @@ log_det
     return;
     }
   
-  const eT x = A[0];
+  eT x = A[0];
   
   T  sign = (is_complex<eT>::value == false) ? ( (access::tmp_real(x) < T(0)) ? -1 : +1 ) : +1;
   eT val  = (is_complex<eT>::value == false) ? std::log( (access::tmp_real(x) < T(0)) ? x*T(-1) : x ) : std::log(x);
   
   for(uword i=1; i<N; ++i)
     {
-    const eT x = A[i];
+    x = A[i];
     
     sign *= (is_complex<eT>::value == false) ? ( (access::tmp_real(x) < T(0)) ? -1 : +1 ) : +1;
     val  += (is_complex<eT>::value == false) ? std::log( (access::tmp_real(x) < T(0)) ? x*T(-1) : x ) : std::log(x);

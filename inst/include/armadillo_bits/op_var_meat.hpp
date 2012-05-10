@@ -65,16 +65,16 @@ op_var::apply(Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_type,
     
     out.set_size(X_n_rows, 1);
     
-    podarray<in_eT> tmp(X_n_cols);
+    podarray<in_eT> dat(X_n_cols);
     
-    in_eT*  tmp_mem = tmp.memptr();
+    in_eT*  dat_mem = dat.memptr();
     out_eT* out_mem = out.memptr();
     
     for(uword row=0; row<X_n_rows; ++row)
       {
-      tmp.copy_row(X, row);
+      dat.copy_row(X, row);
       
-      out_mem[row] = op_var::direct_var( tmp_mem, X_n_cols, norm_type );
+      out_mem[row] = op_var::direct_var( dat_mem, X_n_cols, norm_type );
       }
     }
   }
