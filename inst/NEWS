@@ -1,6 +1,15 @@
+0.3.1.94  2012-05-15
+
+    o   Upgraded to Armadillo release 3.1.94 "v3.2 beta 2"
+
+    	  * added unique(), for finding unique elements of a matrix
+    	  * faster eigen decomposition via "divide and conquer" algorithm
+    	  * faster transpose of vectors and compound expressions
+    	  * faster handling of tiny fixed size vectors (≤ 4 elements)
+
 0.3.1.92  2012-05-10
 
-    o   Upgraded to Armadillo release 3.0.2 "v3.2 beta 2"
+    o   Upgraded to Armadillo release 3.1.92 "v3.2 beta 2"
 
     	  * added unique(), for finding unique elements of a matrix
     	  * faster eigen decomposition via optional use of "divide and

@@ -35,12 +35,12 @@ rank
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
   
-  uword    X_n_rows;
-  uword    X_n_cols;
+  uword  X_n_rows;
+  uword  X_n_cols;
   Col<T> s;
   
-  const bool status = auxlib::svd(s, X, X_n_rows, X_n_cols);
-  const uword  n_elem = s.n_elem;
+  const bool  status = auxlib::svd(s, X, X_n_rows, X_n_cols);
+  const uword n_elem = s.n_elem;
   
   if(status == true)
     {

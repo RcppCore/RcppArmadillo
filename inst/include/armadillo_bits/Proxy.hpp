@@ -870,7 +870,7 @@ class Proxy< eGlue<T1, T2, eglue_type > >
   arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
   arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
   
-  arma_inline ea_type get_ea()                          const { return Q; }
+  arma_inline ea_type get_ea() const { return Q; }
   
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return (Q.P1.is_alias(X) || Q.P2.is_alias(X)); }

@@ -179,27 +179,14 @@ class auxlib
   //
   // solve
   
-  template<typename eT>
-  inline static bool solve   (Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B, const bool slow = false);
-  
-  template<typename eT>
-  inline static bool solve_od(Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B);
-  
-  template<typename eT>
-  inline static bool solve_ud(Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B);
-
-
-  //
-  // solve_new
+  template<typename eT, typename T1>
+  inline static bool solve   (Mat<eT>& out, Mat<eT>& A, const Base<eT,T1>& X, const bool slow = false);
   
   template<typename eT, typename T1>
-  inline static bool solve_new   (Mat<eT>& out, Mat<eT>& A, const Base<eT,T1>& X, const bool slow = false);
+  inline static bool solve_od(Mat<eT>& out, Mat<eT>& A, const Base<eT,T1>& X);
   
   template<typename eT, typename T1>
-  inline static bool solve_new_od(Mat<eT>& out, Mat<eT>& A, const Base<eT,T1>& X);
-  
-  template<typename eT, typename T1>
-  inline static bool solve_new_ud(Mat<eT>& out, Mat<eT>& A, const Base<eT,T1>& X);
+  inline static bool solve_ud(Mat<eT>& out, Mat<eT>& A, const Base<eT,T1>& X);
   
   
   //

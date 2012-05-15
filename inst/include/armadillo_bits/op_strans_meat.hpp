@@ -209,13 +209,10 @@ op_strans::apply_proxy(Mat<typename T1::elem_type>& out, const T1& X)
   
   const Proxy<T1> P(X);
   
-  if(
-    (is_Mat<typename Proxy<T1>::stored_type>::value || is_Mat_fixed<typename Proxy<T1>::stored_type>::value)
-    &&
-    (Proxy<T1>::fake_mat == false)  // can't rely on simple alias checking for matrices constructed out of auxiliary memory
-    )
+  // allow detection of in-place transpose
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value == true) && (Proxy<T1>::fake_mat == false) )
     {
-    const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);  // need this unwrap to keep stupid compilers happy
+    const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
     
     op_strans::apply(out, tmp.M);
     }

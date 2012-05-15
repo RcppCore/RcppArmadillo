@@ -436,14 +436,8 @@ arma_mat_norm_1(const Proxy<T1>& P)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
-  typedef typename T1::pod_type   T;
-  
-  const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
-  const Mat<eT>& X = tmp.M;
-  
   // TODO: this can be sped up with a dedicated implementation
-  return as_scalar( max( sum(abs(X)), 1) );
+  return as_scalar( max( sum(abs(P.Q), 0), 1) );
   }
 
 
@@ -455,14 +449,12 @@ arma_mat_norm_2(const Proxy<T1>& P)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
   
-  const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
-  const Mat<eT>& X = tmp.M;
+  // TODO: is the SVD based approach only valid for square matrices?
   
   Col<T> S;
-  svd(S, X);
+  svd(S, P.Q);
   
   return (S.n_elem > 0) ? max(S) : T(0);
   }
@@ -476,14 +468,8 @@ arma_mat_norm_inf(const Proxy<T1>& P)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
-  typedef typename T1::pod_type   T;
-  
-  const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
-  const Mat<eT>& X = tmp.M;
-  
   // TODO: this can be sped up with a dedicated implementation
-  return as_scalar( max( sum(abs(X),1) ) );
+  return as_scalar( max( sum(abs(P.Q), 1), 0) );
   }
 
 
