@@ -50,7 +50,7 @@ struct Base_eval_Mat
 template<typename elem_type, typename derived>
 struct Base_eval_expr
   {
-  Mat<elem_type> eval() const;
+  Mat<elem_type> eval() const;   //!< force the immediate evaluation of a delayed expression
   };
 
 

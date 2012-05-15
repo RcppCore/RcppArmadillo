@@ -2504,235 +2504,10 @@ auxlib::svd_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V
 
 //! Solve a system of linear equations.
 //! Assumes that A.n_rows = A.n_cols and B.n_rows = A.n_rows
-template<typename eT>
-inline
-bool
-auxlib::solve(Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B, const bool slow)
-  {
-  arma_extra_debug_sigprint();
-  
-  const uword A_n_rows = A.n_rows;
-  const uword B_n_cols = B.n_cols;
-  
-  if(A.is_empty() || B.is_empty())
-    {
-    out.zeros(A.n_cols, B_n_cols);
-    return true;
-    }
-  else
-    {
-    bool status = false;
-    
-    if( (A_n_rows <= 4) && (slow == false) )
-      {
-      Mat<eT> A_inv;
-      
-      status = auxlib::inv_noalias_tinymat(A_inv, A, A_n_rows);
-      
-      if(status == true)
-        {
-        out.set_size(A_n_rows, B_n_cols);
-        
-        gemm_emul<false,false,false,false>::apply(out, A_inv, B);
-        
-        return true;
-        }
-      }
-    
-    if( (A_n_rows > 4) || (status == false) )
-      {
-      #if defined(ARMA_USE_ATLAS)
-        {
-        out = B;
-        
-        podarray<int> ipiv(A_n_rows + 2);  // +2 for paranoia: old versions of Atlas might be trashing memory
-        
-        int info = atlas::clapack_gesv<eT>(atlas::CblasColMajor, A_n_rows, B_n_cols, A.memptr(), A_n_rows, ipiv.memptr(), out.memptr(), A_n_rows);
-        
-        return (info == 0);
-        }
-      #elif defined(ARMA_USE_LAPACK)
-        {
-        out = B;
-        
-        blas_int n    = blas_int(A_n_rows);  // assuming A is square
-        blas_int lda  = blas_int(A_n_rows);
-        blas_int ldb  = blas_int(A_n_rows);
-        blas_int nrhs = blas_int(B_n_cols);
-        blas_int info = 0;
-        
-        podarray<blas_int> ipiv(A_n_rows + 2);  // +2 for paranoia: some versions of Lapack might be trashing memory
-        
-        arma_extra_debug_print("lapack::gesv()");
-        lapack::gesv<eT>(&n, &nrhs, A.memptr(), &lda, ipiv.memptr(), out.memptr(), &ldb, &info);
-        
-        arma_extra_debug_print("lapack::gesv() -- finished");
-        
-        return (info == 0);
-        }
-      #else
-        {
-        arma_stop("solve(): use of ATLAS or LAPACK needs to be enabled");
-        return false;
-        }
-      #endif
-      }
-    }
-  
-  return true;
-  }
-
-
-
-//! Solve an over-determined system.
-//! Assumes that A.n_rows > A.n_cols and B.n_rows = A.n_rows
-template<typename eT>
-inline
-bool
-auxlib::solve_od(Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B)
-  {
-  arma_extra_debug_sigprint();
-  
-  #if defined(ARMA_USE_LAPACK)
-    {
-    const uword A_n_rows = A.n_rows;
-    const uword A_n_cols = A.n_cols;
-    
-    const uword B_n_rows = B.n_rows;
-    const uword B_n_cols = B.n_cols;
-    
-    out.set_size(A_n_cols, B_n_cols);
-    
-    if(A.is_empty() || B.is_empty())
-      {
-      out.zeros();
-      return true;
-      }
-    
-    char trans = 'N';
-    
-    blas_int  m     = blas_int(A_n_rows);
-    blas_int  n     = blas_int(A_n_cols);
-    blas_int  lda   = blas_int(A_n_rows);
-    blas_int  ldb   = blas_int(A_n_rows);
-    blas_int  nrhs  = blas_int(B_n_cols);
-    blas_int  lwork = 2*((std::max)(blas_int(1), n + (std::max)(n, nrhs)));
-    blas_int  info  = 0;
-    
-    Mat<eT> tmp = B;
-    
-    podarray<eT> work( static_cast<uword>(lwork) );
-    
-    // NOTE: the dgels() function in the lapack library supplied by ATLAS 3.6 seems to have problems
-    arma_extra_debug_print("lapack::gels()");
-    lapack::gels<eT>( &trans, &m, &n, &nrhs, A.memptr(), &lda, tmp.memptr(), &ldb, work.memptr(), &lwork, &info );
-    
-    arma_extra_debug_print("lapack::gels() -- finished");
-    
-    for(uword col=0; col<B_n_cols; ++col)
-      {
-      arrayops::copy( out.colptr(col), tmp.colptr(col), A_n_cols );
-      }
-    
-    return (info == 0);
-    }
-  #else
-    {
-    arma_ignore(out);
-    arma_ignore(A);
-    arma_ignore(B);
-    arma_stop("solve(): use of LAPACK needs to be enabled");
-    return false;
-    }
-  #endif
-  }
-
-
-
-//! Solve an under-determined system.
-//! Assumes that A.n_rows < A.n_cols and B.n_rows = A.n_rows
-template<typename eT>
-inline
-bool
-auxlib::solve_ud(Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B)
-  {
-  arma_extra_debug_sigprint();
-  
-  #if defined(ARMA_USE_LAPACK)
-    {
-    const uword A_n_rows = A.n_rows;
-    const uword A_n_cols = A.n_cols;
-    
-    const uword B_n_rows = B.n_rows;
-    const uword B_n_cols = B.n_cols;
-    
-    out.set_size(A_n_cols, B_n_cols);
-    
-    if(A.is_empty() || B.is_empty())
-      {
-      out.zeros();
-      return true;
-      }
-    
-    char trans = 'N';
-    
-    blas_int  m     = blas_int(A_n_rows);
-    blas_int  n     = blas_int(A_n_cols);
-    blas_int  lda   = blas_int(A_n_rows);
-    blas_int  ldb   = blas_int(A_n_cols);
-    blas_int  nrhs  = blas_int(B_n_cols);
-    blas_int  lwork = 2*((std::max)(blas_int(1), m + (std::max)(m,nrhs)));
-    blas_int  info  = 0;
-    
-    Mat<eT> tmp(A_n_cols, B_n_cols);
-    tmp.zeros();
-    
-    for(uword col=0; col<B_n_cols; ++col)
-      {
-      eT* tmp_colmem = tmp.colptr(col);
-      
-      arrayops::copy( tmp_colmem, B.colptr(col), B_n_rows );
-      
-      for(uword row=B_n_rows; row<A_n_cols; ++row)
-        {
-        tmp_colmem[row] = eT(0);
-        }
-      }
-    
-    podarray<eT> work( static_cast<uword>(lwork) );
-    
-    // NOTE: the dgels() function in the lapack library supplied by ATLAS 3.6 seems to have problems
-    arma_extra_debug_print("lapack::gels()");
-    lapack::gels<eT>( &trans, &m, &n, &nrhs, A.memptr(), &lda, tmp.memptr(), &ldb, work.memptr(), &lwork, &info );
-    
-    arma_extra_debug_print("lapack::gels() -- finished");
-    
-    for(uword col=0; col<B_n_cols; ++col)
-      {
-      arrayops::copy( out.colptr(col), tmp.colptr(col), A_n_cols );
-      }
-    
-    return (info == 0);
-    }
-  #else
-    {
-    arma_ignore(out);
-    arma_ignore(A);
-    arma_ignore(B);
-    arma_stop("solve(): use of LAPACK needs to be enabled");
-    return false;
-    }
-  #endif
-  }
-
-
-
-//! Solve a system of linear equations.
-//! Assumes that A.n_rows = A.n_cols and B.n_rows = A.n_rows
 template<typename eT, typename T1>
 inline
 bool
-auxlib::solve_new(Mat<eT>& out, Mat<eT>& A, const Base<eT,T1>& X, const bool slow)
+auxlib::solve(Mat<eT>& out, Mat<eT>& A, const Base<eT,T1>& X, const bool slow)
   {
   arma_extra_debug_sigprint();
   
@@ -2828,7 +2603,7 @@ auxlib::solve_new(Mat<eT>& out, Mat<eT>& A, const Base<eT,T1>& X, const bool slo
 template<typename eT, typename T1>
 inline
 bool
-auxlib::solve_new_od(Mat<eT>& out, Mat<eT>& A, const Base<eT,T1>& X)
+auxlib::solve_od(Mat<eT>& out, Mat<eT>& A, const Base<eT,T1>& X)
   {
   arma_extra_debug_sigprint();
   
@@ -2895,9 +2670,13 @@ auxlib::solve_new_od(Mat<eT>& out, Mat<eT>& A, const Base<eT,T1>& X)
 template<typename eT, typename T1>
 inline
 bool
-auxlib::solve_new_ud(Mat<eT>& out, Mat<eT>& A, const Base<eT,T1>& X)
+auxlib::solve_ud(Mat<eT>& out, Mat<eT>& A, const Base<eT,T1>& X)
   {
   arma_extra_debug_sigprint();
+  
+  // TODO: this function provides the same results as Octave 3.4.2.
+  // TODO: however, these results are different than Matlab 7.12.0.635.
+  // TODO: figure out whether both Octave and Matlab are correct, or only one of them
   
   #if defined(ARMA_USE_LAPACK)
     {

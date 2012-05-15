@@ -30,18 +30,18 @@ glue_solve::solve_direct(Mat<eT>& out, Mat<eT>& A, const Base<eT,T2>& X, const b
   
   if(A_n_rows == A_n_cols)
     {
-    status = auxlib::solve_new(out, A, X, slow);
+    status = auxlib::solve(out, A, X, slow);
     }
   else
   if(A_n_rows > A_n_cols)
     {
     arma_extra_debug_print("solve(): detected over-determined system");
-    status = auxlib::solve_new_od(out, A, X);
+    status = auxlib::solve_od(out, A, X);
     }
   else
     {
     arma_extra_debug_print("solve(): detected under-determined system");
-    status = auxlib::solve_new_ud(out, A, X);
+    status = auxlib::solve_ud(out, A, X);
     }
   
   if(status == false)

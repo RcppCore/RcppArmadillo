@@ -27,11 +27,11 @@ trace(const Base<typename T1::elem_type,T1>& X)
   typedef typename T1::elem_type eT;
   
   const Proxy<T1> A(X.get_ref());
-
+  
   arma_debug_check( (A.get_n_rows() != A.get_n_cols()), "trace(): matrix must be square sized" );
   
   const uword N   = A.get_n_rows();
-        eT  val = eT(0);
+        eT    val = eT(0);
   
   for(uword i=0; i<N; ++i)
     {
