@@ -20,26 +20,8 @@ arma_inline
 const Op<T1, op_htrans>
 trans
   (
-  const Base<typename T1::elem_type,T1>& X,
-  const typename enable_if<is_basevec<T1>::value == false>::result* junk = 0
-  )
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk);
-  
-  return Op<T1, op_htrans>(X.get_ref());
-  }
-
-
-
-template<typename T1>
-arma_inline
-arma_warn_unused
-const Op<T1, op_htrans>
-trans
-  (
   const T1& X,
-  const typename enable_if<is_basevec<T1>::value == true>::result* junk = 0
+  const typename enable_if< is_arma_type<T1>::value == true >::result* junk = 0
   )
   {
   arma_extra_debug_sigprint();
@@ -55,26 +37,8 @@ arma_inline
 const Op<T1, op_htrans>
 htrans
   (
-  const Base<typename T1::elem_type,T1>& X,
-  const typename enable_if<is_basevec<T1>::value == false>::result* junk = 0
-  )
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk);
-  
-  return Op<T1, op_htrans>(X.get_ref());
-  }
-
-
-
-template<typename T1>
-arma_inline
-arma_warn_unused
-const Op<T1, op_htrans>
-htrans
-  (
   const T1& X,
-  const typename enable_if<is_basevec<T1>::value == true>::result* junk = 0
+  const typename enable_if< is_arma_type<T1>::value == true >::result* junk = 0
   )
   {
   arma_extra_debug_sigprint();

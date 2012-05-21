@@ -905,10 +905,25 @@ struct force_different_type<T1,T1>
 //
 
 
+template<typename T1>
+struct resolves_to_vector_default { static const bool value = false;                    };
 
 template<typename T1>
-struct resolves_to_vector
-  { static const bool value = T1::is_col || T1::is_row; };
+struct resolves_to_vector_test    { static const bool value = T1::is_col || T1::is_row; };
+
+
+template<typename T1, bool condition>
+struct resolves_to_vector_redirect {};
+
+template<typename T1>
+struct resolves_to_vector_redirect<T1, false> { typedef resolves_to_vector_default<T1> result; };
+
+template<typename T1>
+struct resolves_to_vector_redirect<T1, true>  { typedef resolves_to_vector_test<T1>    result; };
+
+
+template<typename T1>
+struct resolves_to_vector : public resolves_to_vector_redirect<T1, is_arma_type<T1>::value>::result {};
 
 
 

@@ -23,15 +23,14 @@ struct podarray_prealloc_n_elem
 
 
 
-//! A lightweight array for POD types. If the amount of memory requested is small, the stack is used.
-
+//! A lightweight array for POD types. For internal use only!
 template<typename eT>
 class podarray
   {
   public:
   
-  arma_aligned const uword     n_elem; //!< number of elements held
-  arma_aligned const eT* const mem;    //!< pointer to memory used by the object
+  arma_aligned const uword n_elem; //!< number of elements held
+  arma_aligned       eT*   mem;    //!< pointer to memory used by the object
   
   
   protected:
@@ -75,7 +74,8 @@ class podarray
   
   protected:
   
-  inline void init(const uword new_n_elem);
+  inline void init_cold(const uword new_n_elem);
+  inline void init_warm(const uword new_n_elem);
   
   };
 

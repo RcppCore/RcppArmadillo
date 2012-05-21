@@ -21,49 +21,9 @@ arma_inline
 const Op<T1, op_strans>
 strans
   (
-  const Base<typename T1::elem_type,T1>& X,
-  const typename enable_if<is_basevec<T1>::value == false>::result* junk1 = 0,
-  const typename arma_cx_only<typename T1::elem_type>::result* junk2 = 0
-  )
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk1);
-  arma_ignore(junk2);
-  
-  return Op<T1, op_strans>(X.get_ref());
-  }
-
-
-
-// NOTE: deliberately returning op_htrans instead of op_strans,
-// NOTE: due to currently more optimisations available when using op_htrans, especially by glue_times
-template<typename T1>
-arma_inline
-const Op<T1, op_htrans>
-strans
-  (
-  const Base<typename T1::elem_type,T1>& X,
-  const typename enable_if<is_basevec<T1>::value == false>::result* junk1 = 0,
-  const typename arma_not_cx<typename T1::elem_type>::result* junk2 = 0
-  )
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk1);
-  arma_ignore(junk2);
-  
-  return Op<T1, op_htrans>(X.get_ref());
-  }
-
-
-
-template<typename T1>
-arma_inline
-const Op<T1, op_strans>
-strans
-  (
   const T1& X,
-  const typename enable_if<is_basevec<T1>::value == true>::result* junk1 = 0,
-  const typename arma_cx_only<typename T1::elem_type>::result* junk2 = 0
+  const typename enable_if< is_arma_type<T1>::value == true >::result* junk1 = 0,
+  const typename arma_cx_only<typename T1::elem_type>::result*         junk2 = 0
   )
   {
   arma_extra_debug_sigprint();
@@ -75,7 +35,7 @@ strans
 
 
 
-// NOTE: deliberately returning op_htrans instead of op_strans,
+// NOTE: for non-complex objects, deliberately returning op_htrans instead of op_strans,
 // NOTE: due to currently more optimisations available when using op_htrans, especially by glue_times
 template<typename T1>
 arma_inline
@@ -83,8 +43,8 @@ const Op<T1, op_htrans>
 strans
   (
   const T1& X,
-  const typename enable_if<is_basevec<T1>::value == true>::result* junk1 = 0,
-  const typename arma_not_cx<typename T1::elem_type>::result* junk2 = 0
+  const typename enable_if< is_arma_type<T1>::value == true >::result* junk1 = 0,
+  const typename arma_not_cx<typename T1::elem_type>::result*          junk2 = 0
   )
   {
   arma_extra_debug_sigprint();
