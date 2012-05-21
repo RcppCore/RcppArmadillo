@@ -1,3 +1,13 @@
+0.3.2.0  2012-05-21
+
+    o   Upgraded to Armadillo release 3.2.0 "Creamfields"
+
+    	  * faster eigen decomposition via "divide and conquer" algorithm
+    	  * faster transpose of vectors and compound expressions
+    	  * faster handling of diagonal views
+    	  * faster handling of tiny fixed size vectors (≤ 4 elements)
+    	  * added unique(), for finding unique elements of a matrix
+
 0.3.1.94  2012-05-15
 
     o   Upgraded to Armadillo release 3.1.94 "v3.2 beta 2"

@@ -21,17 +21,17 @@ arma_inline
 const Op<T1, op_mean>
 mean
   (
-  const Base<typename T1::elem_type,T1>& X,
+  const T1& X,
   const uword dim = 0,
-  const typename enable_if<resolves_to_vector<T1>::value == false>::result* junk1 = 0,
-  const typename enable_if<is_basevec<T1>::value == false>::result* junk2 = 0
+  const typename enable_if< is_arma_type<T1>::value       == true  >::result* junk1 = 0,
+  const typename enable_if< resolves_to_vector<T1>::value == false >::result* junk2 = 0
   )
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk1);
   arma_ignore(junk2);
   
-  return Op<T1, op_mean>(X.get_ref(), dim, 0);
+  return Op<T1, op_mean>(X, dim, 0);
   }
 
 
@@ -41,7 +41,7 @@ arma_inline
 const Op<T1, op_mean>
 mean
   (
-  const Base<typename T1::elem_type,T1>& X,
+  const T1& X,
   const uword dim,
   const typename enable_if<resolves_to_vector<T1>::value == true>::result* junk = 0
   )
@@ -49,7 +49,27 @@ mean
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  return Op<T1, op_mean>(X.get_ref(), dim, 0);
+  return Op<T1, op_mean>(X, dim, 0);
+  }
+
+
+
+template<typename T1>
+inline
+arma_warn_unused
+typename T1::elem_type
+mean
+  (
+  const T1& X,
+  const arma_empty_class junk1 = arma_empty_class(),
+  const typename enable_if<resolves_to_vector<T1>::value == true>::result* junk2 = 0
+  )
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk1);
+  arma_ignore(junk2);
+  
+  return op_mean::mean_all(X);
   }
 
 
@@ -81,46 +101,6 @@ mean(const Op<T1, op_mean>& in, const uword dim)
   arma_extra_debug_sigprint();
   
   return Op< Op<T1, op_mean>, op_mean>(in, dim, 0);
-  }
-
-
-
-template<typename T1>
-inline
-arma_warn_unused
-typename T1::elem_type
-mean
-  (
-  const Base<typename T1::elem_type,T1>& X,
-  const arma_empty_class junk1 = arma_empty_class(),
-  const typename enable_if<resolves_to_vector<T1>::value == true>::result* junk2 = 0
-  )
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk1);
-  arma_ignore(junk2);
-  
-  return op_mean::mean_all(X);
-  }
-
-
-
-template<typename T1>
-inline
-arma_warn_unused
-typename T1::elem_type
-mean
-  (
-  const T1& X,
-  const arma_empty_class junk1 = arma_empty_class(),
-  const typename enable_if<is_basevec<T1>::value == true>::result* junk2 = 0
-  )
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk1);
-  arma_ignore(junk2);
-  
-  return op_mean::mean_all(X);
   }
 
 

@@ -19,6 +19,7 @@
 //! The result is stored in a dense matrix that has either one column or one row.
 //! See the sum() function for more details.
 template<typename T1>
+arma_hot
 inline
 void
 op_sum::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sum>& in)

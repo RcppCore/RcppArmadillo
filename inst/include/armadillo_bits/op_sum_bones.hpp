@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -20,7 +20,7 @@ class op_sum
   public:
   
   template<typename T1>
-  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1, op_sum>& in);
+  arma_hot inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1, op_sum>& in);
   };
 
 
