@@ -1,3 +1,8 @@
+2012-05-26  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/examples/fastLm.r: Also examine the 'two versus one' casts
+	impact when converting SEXP to Armadillo types
+
 2012-05-21  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.3.2.0
