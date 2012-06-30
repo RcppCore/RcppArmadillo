@@ -1,10 +1,10 @@
 Package: RcppArmadillo
 Type: Package
 Title: Rcpp integration for Armadillo templated linear algebra library
-Version: 0.3.2.0
+Version: 0.3.2.3
 Date: $Date$
 Author: Romain Francois, Dirk Eddelbuettel and Doug Bates
-Maintainer: Romain Francois, Dirk Eddelbuettel and Doug Bates <RcppArmadillo-authors@r-enthusiasts.com>
+Maintainer: Dirk Eddelbuettel <edd@debian.org>
 Description: R and Armadillo integration using Rcpp
  Armadillo is a templated C++ linear algebra library (by Conrad Sanderson)
  that aims towards a good balance between speed and ease of use. Integer,
@@ -21,7 +21,7 @@ Description: R and Armadillo integration using Rcpp
  (due to speed and/or integration capabilities), rather than another language.
  .
  The RcppArmadillo package includes the header files from the templated
- Armadillo library (currently version 3.2.0). Thus users do not need to
+ Armadillo library (currently version 3.2.3). Thus users do not need to
  install Armadillo itself in order to use RcppArmadillo.
  .
  This Armadillo integration provides a nice illustration of the 

@@ -109,77 +109,7 @@ class Col : public Mat<eT>
   inline const_row_iterator end_row  (const uword row_num) const;
   
   
-  template<uword fixed_n_elem>
-  class fixed : public Col<eT>
-    {
-    private:
-    
-    static const bool use_extra = (fixed_n_elem > arma_config::mat_prealloc);
-    
-    arma_aligned eT mem_local_extra[ (use_extra) ? fixed_n_elem : 1 ];
-    
-    arma_inline void change_to_row();
-    
-    
-    public:
-    
-    typedef fixed<fixed_n_elem>               Col_fixed_type;
-    
-    typedef eT                                elem_type;
-    typedef typename get_pod_type<eT>::result pod_type;
-    
-    static const bool is_col = true;
-    static const bool is_row = false;
-    
-    static const uword n_rows = fixed_n_elem;
-    static const uword n_cols = 1;
-    static const uword n_elem = fixed_n_elem;
-    
-    arma_inline fixed();
-    arma_inline fixed(const fixed<fixed_n_elem>& X);
-         inline fixed(const subview_cube<eT>& X);
-    
-    template<typename T1>              inline fixed(const Base<eT,T1>& A);
-    template<typename T1, typename T2> inline fixed(const Base<pod_type,T1>& A, const Base<pod_type,T2>& B);
-    
-    inline fixed(const eT* aux_mem);
-    
-    inline fixed(const char*        text);
-    inline fixed(const std::string& text);
-    
-    template<typename T1> inline const Col& operator=(const Base<eT,T1>& A);
-    
-    inline const Col& operator=(const eT val);
-    inline const Col& operator=(const char*        text);
-    inline const Col& operator=(const std::string& text);
-    inline const Col& operator=(const subview_cube<eT>& X);
-    
-    using Col<eT>::operator();
-    
-    #if defined(ARMA_USE_CXX11)
-    inline                fixed(const std::initializer_list<eT>& list);
-    inline const Col& operator=(const std::initializer_list<eT>& list);
-    #endif
-    
-    arma_inline arma_warn_unused eT& operator[] (const uword i);
-    arma_inline arma_warn_unused eT  operator[] (const uword i) const;
-    arma_inline arma_warn_unused eT& at         (const uword i);
-    arma_inline arma_warn_unused eT  at         (const uword i) const;
-    arma_inline arma_warn_unused eT& operator() (const uword i);
-    arma_inline arma_warn_unused eT  operator() (const uword i) const;
-    
-    arma_inline arma_warn_unused eT& at         (const uword in_row, const uword in_col);
-    arma_inline arma_warn_unused eT  at         (const uword in_row, const uword in_col) const;
-    arma_inline arma_warn_unused eT& operator() (const uword in_row, const uword in_col);
-    arma_inline arma_warn_unused eT  operator() (const uword in_row, const uword in_col) const;
-    
-    arma_inline arma_warn_unused       eT* memptr();
-    arma_inline arma_warn_unused const eT* memptr() const;
-    
-    arma_hot inline const Col<eT>& fill(const eT val);
-    arma_hot inline const Col<eT>& zeros();
-    arma_hot inline const Col<eT>& ones();
-    };
+  template<uword fixed_n_elem> class fixed;
   
   
   protected:
@@ -192,6 +122,81 @@ class Col : public Mat<eT>
   #ifdef ARMA_EXTRA_COL_PROTO
     #include ARMA_INCFILE_WRAP(ARMA_EXTRA_COL_PROTO)
   #endif
+  };
+
+
+
+template<typename eT>
+template<uword fixed_n_elem>
+class Col<eT>::fixed : public Col<eT>
+  {
+  private:
+  
+  static const bool use_extra = (fixed_n_elem > arma_config::mat_prealloc);
+  
+  arma_aligned eT mem_local_extra[ (use_extra) ? fixed_n_elem : 1 ];
+  
+  arma_inline void change_to_row();
+  
+  
+  public:
+  
+  typedef fixed<fixed_n_elem>               Col_fixed_type;
+  
+  typedef eT                                elem_type;
+  typedef typename get_pod_type<eT>::result pod_type;
+  
+  static const bool is_col = true;
+  static const bool is_row = false;
+  
+  static const uword n_rows = fixed_n_elem;
+  static const uword n_cols = 1;
+  static const uword n_elem = fixed_n_elem;
+  
+  arma_inline fixed();
+  arma_inline fixed(const fixed<fixed_n_elem>& X);
+       inline fixed(const subview_cube<eT>& X);
+  
+  template<typename T1>              inline fixed(const Base<eT,T1>& A);
+  template<typename T1, typename T2> inline fixed(const Base<pod_type,T1>& A, const Base<pod_type,T2>& B);
+  
+  inline fixed(const eT* aux_mem);
+  
+  inline fixed(const char*        text);
+  inline fixed(const std::string& text);
+  
+  template<typename T1> inline const Col& operator=(const Base<eT,T1>& A);
+  
+  inline const Col& operator=(const eT val);
+  inline const Col& operator=(const char*        text);
+  inline const Col& operator=(const std::string& text);
+  inline const Col& operator=(const subview_cube<eT>& X);
+  
+  using Col<eT>::operator();
+  
+  #if defined(ARMA_USE_CXX11)
+  inline                fixed(const std::initializer_list<eT>& list);
+  inline const Col& operator=(const std::initializer_list<eT>& list);
+  #endif
+  
+  arma_inline arma_warn_unused eT& operator[] (const uword i);
+  arma_inline arma_warn_unused eT  operator[] (const uword i) const;
+  arma_inline arma_warn_unused eT& at         (const uword i);
+  arma_inline arma_warn_unused eT  at         (const uword i) const;
+  arma_inline arma_warn_unused eT& operator() (const uword i);
+  arma_inline arma_warn_unused eT  operator() (const uword i) const;
+  
+  arma_inline arma_warn_unused eT& at         (const uword in_row, const uword in_col);
+  arma_inline arma_warn_unused eT  at         (const uword in_row, const uword in_col) const;
+  arma_inline arma_warn_unused eT& operator() (const uword in_row, const uword in_col);
+  arma_inline arma_warn_unused eT  operator() (const uword in_row, const uword in_col) const;
+  
+  arma_inline arma_warn_unused       eT* memptr();
+  arma_inline arma_warn_unused const eT* memptr() const;
+  
+  arma_hot inline const Col<eT>& fill(const eT val);
+  arma_hot inline const Col<eT>& zeros();
+  arma_hot inline const Col<eT>& ones();
   };
 
 

@@ -1099,7 +1099,7 @@ arma_assert_mul_size(const subview<eT1>& A, const subview<eT2>& B, const char* x
   #define arma_debug_set_error          true ? (void)0 : arma_set_error
   #define arma_debug_assert_same_size   true ? (void)0 : arma_assert_same_size
   #define arma_debug_assert_mul_size    true ? (void)0 : arma_assert_mul_size
-  #define arma_debug_assert_cube_as_mat true ? (void)0 : arma_debug_assert_cube_as_mat
+  #define arma_debug_assert_cube_as_mat true ? (void)0 : arma_assert_cube_as_mat
 
 #endif
 

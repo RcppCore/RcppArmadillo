@@ -1,3 +1,12 @@
+2012-06-29  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.3.2.3
+
+	* inst/include/*: Upgraded to new release 3.2.3 of Armadillo
+
+	* DESCRIPTION: Set Maintainer: to edd@debian.org as CRAN prefers to
+	provide upload email from the same address the Maintainer field
+
 2012-05-26  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/examples/fastLm.r: Also examine the 'two versus one' casts
