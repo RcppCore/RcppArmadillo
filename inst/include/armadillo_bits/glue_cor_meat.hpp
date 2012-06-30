@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2011 Conrad Sanderson
+// Copyright (C) 2009-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2012 Conrad Sanderson
 // Copyright (C) 2009-2010 Dimitrios Bouzas
 // 
 // This file is part of the Armadillo C++ library.
@@ -68,7 +68,7 @@ glue_cor::direct_cor(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const uwo
     }
   else
     {
-    arma_debug_assert_same_size(A, B, "cor()");
+    arma_debug_assert_mul_size(A, B, true, false, "cor()");
     
     const uword N = A.n_rows;
     const eT norm_val = (norm_type == 0) ? ( (N > 1) ? eT(N-1) : eT(1) ) : eT(N);
@@ -135,7 +135,7 @@ glue_cor::direct_cor(Mat< std::complex<T> >& out, const Mat< std::complex<T> >& 
     }
   else
     {
-    arma_debug_assert_same_size(A, B, "cor()");
+    arma_debug_assert_mul_size(A, B, true, false, "cor()");
     
     const uword N = A.n_rows;
     const eT norm_val = (norm_type == 0) ? ( (N > 1) ? eT(N-1) : eT(1) ) : eT(N);

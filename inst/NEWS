@@ -1,4 +1,17 @@
-0.3.x.y  2012-xx-yy
+0.3.2.3  2012-06-29
+
+    o   Upgraded to Armadillo release 3.2.3 
+
+          * minor correction for declaration of fixed size vectors and
+            matrices
+
+    o   Change from release 3.2.2 which we skipped as it did not really affect
+	builds under R:
+
+          * minor fix for compiling without debugging enabled (aka release
+            mode)
+          * better detection of ATLAS during installation on Fedora and Red
+            Hat systems
 
     o   Small enhancement to fastLm 
 

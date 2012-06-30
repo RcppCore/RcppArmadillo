@@ -463,74 +463,9 @@ class Mat : public Base< eT, Mat<eT> >
   inline bool  empty() const;
   inline uword size()  const;
   
-  template<uword fixed_n_rows, uword fixed_n_cols>
-  class fixed : public Mat<eT>
-    {
-    private:
-    
-    static const uword fixed_n_elem = fixed_n_rows * fixed_n_cols;
-    static const bool  use_extra    = (fixed_n_elem > arma_config::mat_prealloc);
-    
-    arma_aligned eT mem_local_extra[ (use_extra) ? fixed_n_elem : 1 ];
-    
-    
-    public:
-    
-    typedef fixed<fixed_n_rows, fixed_n_cols> Mat_fixed_type;
-    
-    typedef eT                                elem_type;
-    typedef typename get_pod_type<eT>::result pod_type;
-    
-    static const bool is_col = (fixed_n_cols == 1) ? true : false;
-    static const bool is_row = (fixed_n_rows == 1) ? true : false;
-  
-    static const uword n_rows = fixed_n_rows;
-    static const uword n_cols = fixed_n_cols;
-    static const uword n_elem = fixed_n_elem;
-    
-    arma_inline fixed();
-    arma_inline fixed(const fixed<fixed_n_rows, fixed_n_cols>& X);
-    
-    template<typename T1>              inline fixed(const Base<eT,T1>& A);
-    template<typename T1, typename T2> inline fixed(const Base<pod_type,T1>& A, const Base<pod_type,T2>& B);
-    
-    inline fixed(const eT* aux_mem);
-    
-    inline fixed(const char*        text);
-    inline fixed(const std::string& text);
-    
-    using Mat<eT>::operator=;
-    using Mat<eT>::operator();
-    
-    #if defined(ARMA_USE_CXX11)
-    inline                fixed(const std::initializer_list<eT>& list);
-    inline const Mat& operator=(const std::initializer_list<eT>& list);
-    #endif
-    
-    
-    arma_inline arma_warn_unused eT& operator[] (const uword i);
-    arma_inline arma_warn_unused eT  operator[] (const uword i) const;
-    arma_inline arma_warn_unused eT& at         (const uword i);
-    arma_inline arma_warn_unused eT  at         (const uword i) const;
-    arma_inline arma_warn_unused eT& operator() (const uword i);
-    arma_inline arma_warn_unused eT  operator() (const uword i) const;
-    
-    arma_inline arma_warn_unused eT& at         (const uword in_row, const uword in_col);
-    arma_inline arma_warn_unused eT  at         (const uword in_row, const uword in_col) const;
-    arma_inline arma_warn_unused eT& operator() (const uword in_row, const uword in_col);
-    arma_inline arma_warn_unused eT  operator() (const uword in_row, const uword in_col) const;
-    
-    arma_inline arma_warn_unused       eT* memptr();
-    arma_inline arma_warn_unused const eT* memptr() const;
-    
-    arma_hot inline const Mat<eT>& fill(const eT val);
-    arma_hot inline const Mat<eT>& zeros();
-    arma_hot inline const Mat<eT>& ones();
-    };
-  
-  
-  
   inline void steal_mem(Mat& X);  //!< don't use this unless you're writing code internal to Armadillo
+  
+  template<uword fixed_n_rows, uword fixed_n_cols> class fixed;
   
   
   protected:
@@ -566,6 +501,74 @@ class Mat : public Base< eT, Mat<eT> >
   #ifdef ARMA_EXTRA_MAT_PROTO
     #include ARMA_INCFILE_WRAP(ARMA_EXTRA_MAT_PROTO)
   #endif
+  };
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols> 
+class Mat<eT>::fixed : public Mat<eT>
+  {
+  private:
+  
+  static const uword fixed_n_elem = fixed_n_rows * fixed_n_cols;
+  static const bool  use_extra    = (fixed_n_elem > arma_config::mat_prealloc);
+  
+  arma_aligned eT mem_local_extra[ (use_extra) ? fixed_n_elem : 1 ];
+  
+  
+  public:
+  
+  typedef fixed<fixed_n_rows, fixed_n_cols> Mat_fixed_type;
+  
+  typedef eT                                elem_type;
+  typedef typename get_pod_type<eT>::result pod_type;
+  
+  static const bool is_col = (fixed_n_cols == 1) ? true : false;
+  static const bool is_row = (fixed_n_rows == 1) ? true : false;
+
+  static const uword n_rows = fixed_n_rows;
+  static const uword n_cols = fixed_n_cols;
+  static const uword n_elem = fixed_n_elem;
+  
+  arma_inline fixed();
+  arma_inline fixed(const fixed<fixed_n_rows, fixed_n_cols>& X);
+  
+  template<typename T1>              inline fixed(const Base<eT,T1>& A);
+  template<typename T1, typename T2> inline fixed(const Base<pod_type,T1>& A, const Base<pod_type,T2>& B);
+  
+  inline fixed(const eT* aux_mem);
+  
+  inline fixed(const char*        text);
+  inline fixed(const std::string& text);
+  
+  using Mat<eT>::operator=;
+  using Mat<eT>::operator();
+  
+  #if defined(ARMA_USE_CXX11)
+  inline                fixed(const std::initializer_list<eT>& list);
+  inline const Mat& operator=(const std::initializer_list<eT>& list);
+  #endif
+  
+  
+  arma_inline arma_warn_unused eT& operator[] (const uword i);
+  arma_inline arma_warn_unused eT  operator[] (const uword i) const;
+  arma_inline arma_warn_unused eT& at         (const uword i);
+  arma_inline arma_warn_unused eT  at         (const uword i) const;
+  arma_inline arma_warn_unused eT& operator() (const uword i);
+  arma_inline arma_warn_unused eT  operator() (const uword i) const;
+  
+  arma_inline arma_warn_unused eT& at         (const uword in_row, const uword in_col);
+  arma_inline arma_warn_unused eT  at         (const uword in_row, const uword in_col) const;
+  arma_inline arma_warn_unused eT& operator() (const uword in_row, const uword in_col);
+  arma_inline arma_warn_unused eT  operator() (const uword in_row, const uword in_col) const;
+  
+  arma_inline arma_warn_unused       eT* memptr();
+  arma_inline arma_warn_unused const eT* memptr() const;
+  
+  arma_hot inline const Mat<eT>& fill(const eT val);
+  arma_hot inline const Mat<eT>& zeros();
+  arma_hot inline const Mat<eT>& ones();
   };
 
 
