@@ -1,9 +1,15 @@
-0.3.2.3  2012-06-29
+0.3.2.3  2012-07-01
 
     o   Upgraded to Armadillo release 3.2.3 
 
           * minor correction for declaration of fixed size vectors and
             matrices
+
+    o   Reverted three header files {Mat,Row,Col}_bones.hpp back to previous
+        release due to compilation failures under g++-4.7
+
+    o   Added new vignette 'RcppArmadillo-intro' based on a just-submitted
+        introductory paper (by Eddelbuettel and Sanderson) about RcppArmadillo 
 
     o   Change from release 3.2.2 which we skipped as it did not really affect
 	builds under R:

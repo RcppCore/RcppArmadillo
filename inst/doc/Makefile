@@ -23,7 +23,7 @@ RcppArmadillo-unitTests.pdf:
 	rm -fr RcppArmadillo-unitTests.tex
 
 RcppArmadillo-intro.pdf:
-	R CMD Sweave RcppArmadillo-intro.Rnw
+	${RPROG} CMD Sweave RcppArmadillo-intro.Rnw
 	pdflatex RcppArmadillo-intro
 	bibtex RcppArmadillo-intro
 	pdflatex RcppArmadillo-intro
