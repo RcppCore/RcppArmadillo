@@ -1,8 +1,14 @@
-2012-06-29  Dirk Eddelbuettel  <edd@debian.org>
+2012-07-01  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.3.2.3
 
 	* inst/include/*: Upgraded to new release 3.2.3 of Armadillo
+
+	* inst/include/armadillo_bits/: Reverted files {Mat,Col,Row}_bones.hpp
+	to the previous versions due to compilation issues under g++ 4.7
+
+	* inst/doc/RcppArmadillo-intro.Rnw: New introductory vignette based
+	on just-submitted paper by Eddelbuettel and Sanderson
 
 	* DESCRIPTION: Set Maintainer: to edd@debian.org as CRAN prefers to
 	provide upload email from the same address the Maintainer field

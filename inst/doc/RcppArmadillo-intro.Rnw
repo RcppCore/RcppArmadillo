@@ -8,7 +8,8 @@
 %\setmargrb{0.75in}{0.75in}{0.75in}{0.75in}
 \setmargrb{1in}{1in}{1in}{1in}
 
-\usepackage{ae}
+\usepackage{ae} 		% 'almost european' computer modern font
+
 \usepackage[authoryear,round,longnamesfirst]{natbib}
 \usepackage{url}                % break URLs
 \usepackage{booktabs}           % fancier tables
