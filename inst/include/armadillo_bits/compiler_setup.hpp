@@ -111,6 +111,15 @@
     #define arma_cold __attribute__((cold))
   #endif
   
+  #if ( (ARMA_GCC_VERSION >= 40700) && (ARMA_GCC_VERSION <= 40701) )
+    #define ARMA_GCC47_BUG
+    
+    #warning "*** Detected GCC 4.7.0 / 4.7.1, which has a regression (bug)"
+    #warning "*** See http://gcc.gnu.org/bugzilla/show_bug.cgi?id=53549   "
+    #warning "*** A partial workaround for the bug has been activated,    " 
+    #warning "*** which reduces some functionality in fixed-size matrices "
+  #endif
+  
   #undef ARMA_GCC_VERSION
   
 #endif

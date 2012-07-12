@@ -469,9 +469,9 @@ Mat<eT>::operator=(const std::initializer_list<eT>& list)
   
   return *this;
   }
-  
+
 #endif
-  
+
 
 
 //! Set the matrix to be equal to the specified scalar.
@@ -5744,6 +5744,69 @@ Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::fixed(const std::string& text)
 
 
 
+#if defined(ARMA_GCC47_BUG)
+  
+  template<typename eT>
+  template<uword fixed_n_rows, uword fixed_n_cols>
+  template<typename T1>
+  inline
+  const Mat<eT>&
+  Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::operator=(const Base<eT,T1>& A)
+    {
+    Mat<eT>::operator=(A.get_ref());
+    
+    return *this;
+    }
+  
+  
+  
+  template<typename eT>
+  template<uword fixed_n_rows, uword fixed_n_cols>
+  inline
+  const Mat<eT>&
+  Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::operator=(const eT val)
+    {
+    arma_extra_debug_sigprint();
+    
+    Mat<eT>::operator=(val);
+    
+    return *this;
+    }
+  
+  
+  
+  template<typename eT>
+  template<uword fixed_n_rows, uword fixed_n_cols>
+  inline
+  const Mat<eT>&
+  Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::operator=(const char* text)
+    {
+    arma_extra_debug_sigprint();
+    
+    Mat<eT>::operator=(text);
+    
+    return *this;
+    }
+  
+  
+  
+  template<typename eT>
+  template<uword fixed_n_rows, uword fixed_n_cols>
+  inline
+  const Mat<eT>&
+  Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::operator=(const std::string& text)
+    {
+    arma_extra_debug_sigprint();
+    
+    Mat<eT>::operator=(text);
+    
+    return *this;
+    }
+  
+#endif
+
+
+
 #if defined(ARMA_USE_CXX11)
 
 template<typename eT>
@@ -5779,7 +5842,7 @@ Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::operator=(const std::initializer_lis
   
   return *this;
   }
-  
+
 #endif
   
 
