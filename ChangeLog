@@ -1,3 +1,11 @@
+2012-07-14  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/fastLm.R (fastLm.formula): Note whether intercept in formula or
+	not; also store the result of summary() on residuals
+	* R/fastLm.R (print.summary.fastLm): Display summary of residuals 
+	* R/fastLm.R (summary.fastLm): Distinguish between the intercept and
+	no-intercept cases when computing R^2
+
 2012-07-11  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.3.2.4

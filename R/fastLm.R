@@ -65,16 +65,18 @@ summary.fastLm <- function(object, ...) {
 
     # why do I need this here?
     rownames(TAB) <- names(object$coefficients)
-#    colnames(TAB) <- c("Estimate", "StdErr", "t.value", "p.value")
+    colnames(TAB) <- c("Estimate", "StdErr", "t.value", "p.value")
 
-    ## cf src/stats/R/lm.R and case with no weights and an intercept
+    ## cf src/library/stats/R/lm.R and case with no weights and an intercept
     f <- object$fitted.values
     r <- object$residuals
-    mss <- sum((f - mean(f))^2)
+    #mss <- sum((f - mean(f))^2)
+    mss <- if (object$intercept) sum((f - mean(f))^2) else sum(f^2)
     rss <- sum(r^2)
 
     r.squared <- mss/(mss + rss)
-    df.int <- 1 		# case of intercept
+    df.int <- if (object$intercept) 1L else 0L
+
     n <- length(f)
     rdf <- object$df
     adj.r.squared <- 1 - (1 - r.squared) * ((n - df.int)/rdf)
@@ -82,7 +84,8 @@ summary.fastLm <- function(object, ...) {
     res <- list(call=object$call,
                 coefficients=TAB,
                 r.squared=r.squared,
-                adj.r.squared=adj.r.squared)
+                adj.r.squared=adj.r.squared,
+                residSum=summary(object$residuals, digits=5)[-4])
 
     class(res) <- "summary.fastLm"
     res
@@ -91,6 +94,8 @@ summary.fastLm <- function(object, ...) {
 print.summary.fastLm <- function(x, ...) {
     cat("\nCall:\n")
     print(x$call)
+    cat("\nResiduals:\n")
+    print(x$residSum)
     cat("\n")
 
     printCoefmat(x$coefficients, P.values=TRUE, has.Pvalue=TRUE)
@@ -109,6 +114,7 @@ fastLm.formula <- function(formula, data=list(), ...) {
     res <- fastLm.default(x, y, ...)
     res$call <- match.call()
     res$formula <- formula
+    res$intercept <- attr(attr(mf, "terms"), "intercept")
     res
 }
 
