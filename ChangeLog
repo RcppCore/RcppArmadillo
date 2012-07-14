@@ -2,7 +2,8 @@
 
 	* R/fastLm.R (fastLm.formula): Note whether intercept in formula or
 	not; also store the result of summary() on residuals
-	* R/fastLm.R (print.summary.fastLm): Display summary of residuals 
+	* R/fastLm.R (fastLm.default): Autmagically detect intercept use
+	* R/fastLm.R (print.summary.fastLm): Display summary of residuals
 	* R/fastLm.R (summary.fastLm): Distinguish between the intercept and
 	no-intercept cases when computing R^2
 
