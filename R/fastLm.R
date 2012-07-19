@@ -42,7 +42,7 @@ fastLm.default <- function(X, y, ...) {
     res$fitted.values <- as.vector(X %*% res$coefficients)
     res$residuals <- y - res$fitted.values
     res$call <- match.call()
-    res$intercept <- any(apply(X, 2, function(x) all(x == 1)))
+    res$intercept <- any(apply(X, 2, function(x) all(x == x[1])))
 
     class(res) <- "fastLm"
     res
