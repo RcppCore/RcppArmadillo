@@ -1,3 +1,7 @@
+2012-07-18  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/fastLm.R (summary.fastLm): Also display residual standard error
+
 2012-07-14  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/fastLm.R (fastLm.formula): Note whether intercept in formula or
