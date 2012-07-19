@@ -86,6 +86,8 @@ summary.fastLm <- function(object, ...) {
                 coefficients=TAB,
                 r.squared=r.squared,
                 adj.r.squared=adj.r.squared,
+                sigma=sqrt(sum((object$residuals)^2)/rdf),
+                df=object$df,
                 residSum=summary(object$residuals, digits=5)[-4])
 
     class(res) <- "summary.fastLm"
@@ -101,6 +103,8 @@ print.summary.fastLm <- function(x, ...) {
 
     printCoefmat(x$coefficients, P.values=TRUE, has.Pvalue=TRUE)
     digits <- max(3, getOption("digits") - 3)
+    cat("\nResidual standard error: ", formatC(x$sigma, digits=digits), " on ",
+        formatC(x$df), " degrees of freedom\n", sep="")
     cat("Multiple R-squared: ", formatC(x$r.squared, digits=digits),
         ",\tAdjusted R-squared: ",formatC(x$adj.r.squared, digits=digits),
         "\n", sep="")
