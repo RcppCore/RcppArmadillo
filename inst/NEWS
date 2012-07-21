@@ -3,6 +3,8 @@
     o   Corrected summary method to deal with the no intercept case when
         using a formula; also display residual summary() statistics
 
+    o   Expanded unit tests for fastLm
+
 0.3.2.4  2012-07-11
 
     o   Upgraded to Armadillo release 3.2.4

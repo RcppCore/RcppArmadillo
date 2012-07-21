@@ -1,3 +1,7 @@
+2012-07-21  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/unitTests/runit.fastLm.R: expanded unit tests for fastLm
+
 2012-07-18  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/fastLm.R (summary.fastLm): Also display residual standard error
