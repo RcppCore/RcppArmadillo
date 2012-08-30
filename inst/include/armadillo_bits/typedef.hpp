@@ -162,6 +162,38 @@ typedef Cube<cx_double> cx_cube;
 
 
 
+typedef SpMat <uword> sp_umat;
+typedef SpCol <uword> sp_uvec;
+typedef SpCol <uword> sp_ucolvec;
+typedef SpRow <uword> sp_urowvec;
+
+typedef SpMat <sword> sp_imat;
+typedef SpCol <sword> sp_ivec;
+typedef SpCol <sword> sp_icolvec;
+typedef SpRow <sword> sp_irowvec;
+
+typedef SpMat <float> sp_fmat;
+typedef SpCol <float> sp_fvec;
+typedef SpCol <float> sp_fcolvec;
+typedef SpRow <float> sp_frowvec;
+
+typedef SpMat <double> sp_mat;
+typedef SpCol <double> sp_vec;
+typedef SpCol <double> sp_colvec;
+typedef SpRow <double> sp_rowvec;
+
+typedef SpMat <cx_float> sp_cx_fmat;
+typedef SpCol <cx_float> sp_cx_fvec;
+typedef SpCol <cx_float> sp_cx_fcolvec;
+typedef SpRow <cx_float> sp_cx_frowvec;
+
+typedef SpMat <cx_double> sp_cx_mat;
+typedef SpCol <cx_double> sp_cx_vec;
+typedef SpCol <cx_double> sp_cx_colvec;
+typedef SpRow <cx_double> sp_cx_rowvec;
+
+
+
 typedef void* void_ptr;
 
 

@@ -1,5 +1,6 @@
 // Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
 // Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2012 Ryan Curtin
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -107,6 +108,40 @@ trace(const Glue<T1, T2, glue_times>& X)
     }
   
   return val;
+  }
+
+
+
+//! trace of sparse object
+template<typename T1>
+inline
+arma_warn_unused
+typename enable_if2<is_arma_sparse_type<T1>::value, typename T1::elem_type>::result
+trace(const SpBase<typename T1::elem_type, T1>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  const SpProxy<T1> p(x.get_ref());
+  
+  arma_debug_check( (p.get_n_rows() != p.get_n_cols()), "trace(): matrix must be square sized" );
+  
+  typedef typename T1::elem_type eT;
+  
+  eT result = eT(0);
+  
+  typename SpProxy<T1>::const_iterator_type it = p.begin();
+  
+  while(it.pos() < p.get_n_nonzero())
+    {
+    if(it.row() == it.col())
+      {
+      result += (*it);
+      }
+    
+    ++it;
+    }
+  
+  return result;
   }
 
 

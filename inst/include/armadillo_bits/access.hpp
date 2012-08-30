@@ -20,7 +20,10 @@ class access
   public:
   
   //! internal function to allow modification of data declared as read-only
-  template<typename T1> arma_inline static T1& rw(const T1& x) { return const_cast<T1&>(x); }
+  template<typename T1> arma_inline static T1&  rw (const T1& x)        { return const_cast<T1& >(x); }
+  template<typename T1> arma_inline static T1*& rwp(const T1* const& x) { return const_cast<T1*&>(x); }
+
+  //! internal function to allow modification of 
 
   //! internal function to obtain the real part of either a plain number or a complex number
   template<typename eT> arma_inline static const eT& tmp_real(const eT&              X) { return X;        }

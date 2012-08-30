@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -24,6 +24,22 @@ operator<< (std::ostream& o, const Base<eT,T1>& X)
   arma_extra_debug_sigprint();
   
   const unwrap<T1> tmp(X.get_ref());
+  
+  arma_ostream::print(o, tmp.M, true);
+  
+  return o;
+  }
+
+
+
+template<typename eT, typename T1>
+inline
+std::ostream&
+operator<< (std::ostream& o, const SpBase<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  const unwrap_spmat<T1> tmp(X.get_ref());
   
   arma_ostream::print(o, tmp.M, true);
   

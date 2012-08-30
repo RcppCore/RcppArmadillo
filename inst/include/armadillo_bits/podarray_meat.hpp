@@ -212,6 +212,21 @@ podarray<eT>::operator() (const uword i)
 template<typename eT>
 inline
 void
+podarray<eT>::set_min_size(const uword min_n_elem)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(min_n_elem > n_elem)
+    {  
+    init_warm(min_n_elem);
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
 podarray<eT>::set_size(const uword new_n_elem)
   {
   arma_extra_debug_sigprint();
@@ -323,32 +338,17 @@ podarray<eT>::copy_row(const Mat<eT>& A, const uword row)
       }
       break;
     
-    case 8:
-      out[7] = A.at(row, 7);
-
-    case 7:
-      out[6] = A.at(row, 6);
-
-    case 6:
-      out[5] = A.at(row, 5);
-
-    case 5:
-      out[4] = A.at(row, 4);
-
-    case 4:
-      out[3] = A.at(row, 3);
-
-    case 3:
-      out[2] = A.at(row, 2);
-
-    case 2:
-      out[1] = A.at(row, 1);
-
-    case 1:
-      out[0] = A.at(row, 0);
+    case 8:  out[7] = A.at(row, 7);
+    case 7:  out[6] = A.at(row, 6);
+    case 6:  out[5] = A.at(row, 5);
+    case 5:  out[4] = A.at(row, 4);
+    case 4:  out[3] = A.at(row, 3);
+    case 3:  out[2] = A.at(row, 2);
+    case 2:  out[1] = A.at(row, 1);
+    case 1:  out[0] = A.at(row, 0);
+    case 0:  ;
     }
   }
-
 
 
 template<typename eT>

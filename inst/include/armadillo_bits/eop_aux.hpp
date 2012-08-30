@@ -22,8 +22,30 @@ struct eop_aux_randu
   arma_inline
   operator eT ()
     {
-    //return eT(std::rand()) / eT(RAND_MAX);
     return eT(std::rand()) * ( eT(1) / eT(RAND_MAX) );
+    }
+  
+  
+  inline
+  static
+  void
+  fill(eT* mem, const uword N)
+    {
+    uword i,j;
+    
+    for(i=0, j=1; j < N; i+=2, j+=2)
+      {
+      const eT tmp_i = eT(eop_aux_randu<eT>());
+      const eT tmp_j = eT(eop_aux_randu<eT>());
+      
+      mem[i] = tmp_i;
+      mem[j] = tmp_j;
+      }
+    
+    if(i < N)
+      {
+      mem[i] = eT(eop_aux_randu<eT>());
+      }
     }
   };
 
@@ -37,6 +59,18 @@ struct eop_aux_randu< std::complex<T> >
     {
     return std::complex<T>( T(eop_aux_randu<T>()), T(eop_aux_randu<T>()) );
     }
+  
+  
+  inline
+  static
+  void
+  fill(std::complex<T>* mem, const uword N)
+    {
+    for(uword i=0; i < N; ++i)
+      {
+      mem[i] = std::complex<T>( eop_aux_randu< std::complex<T> >() );
+      }
+    }
   };
 
 
@@ -44,30 +78,24 @@ struct eop_aux_randu< std::complex<T> >
 template<typename eT>
 struct eop_aux_randn
   {
-  // // rudimentary method, based on the central limit theorem
-  // // http://en.wikipedia.org/wiki/Central_limit_theorem
-  // inline
-  // operator eT () const
-  //   {
-  //   const uword N  = 12;  // N must be >= 12 and an even number
-  //   const uword N2 = N/2;
-  //   
-  //   eT acc = eT(0);
-  //   
-  //   for(uword i=0; i<N2; ++i)
-  //     {
-  //     const eT tmp1 = eT(std::rand()) / eT(RAND_MAX);
-  //     const eT tmp2 = eT(std::rand()) / eT(RAND_MAX);
-  //     acc += tmp1+tmp2;
-  //     }
-  //   
-  //   return acc - eT(N2);
-  //   }
+  // rudimentary method, based on the central limit theorem:
+  // http://en.wikipedia.org/wiki/Central_limit_theorem
   
-  
-  // polar form of the Box-Muller transformation
+  // polar form of the Box-Muller transformation:
   // http://en.wikipedia.org/wiki/Box-Muller_transformation
   // http://en.wikipedia.org/wiki/Marsaglia_polar_method
+  
+  // other methods:
+  // http://en.wikipedia.org/wiki/Ziggurat_algorithm
+  //
+  // Marsaglia and Tsang Ziggurat technique to transform from a uniform to a normal distribution.
+  // G. Marsaglia, W.W. Tsang.
+  // "Ziggurat method for generating random variables",
+  // J. Statistical Software, vol 5, 2000.
+  // http://www.jstatsoft.org/v05/i08/
+  
+  
+  // currently using polar form of the Box-Muller transformation
   inline
   operator eT () const
     {
@@ -80,9 +108,6 @@ struct eop_aux_randn
     
     do
       {
-      // tmp1 = eTp(2) * eTp(std::rand()) / eTp(RAND_MAX) - eTp(1);
-      // tmp2 = eTp(2) * eTp(std::rand()) / eTp(RAND_MAX) - eTp(1);
-      
       tmp1 = eTp(2) * eTp(std::rand()) * (eTp(1) / eTp(RAND_MAX)) - eTp(1);
       tmp2 = eTp(2) * eTp(std::rand()) * (eTp(1) / eTp(RAND_MAX)) - eTp(1);
       
@@ -94,14 +119,54 @@ struct eop_aux_randn
     }
   
   
-  // other methods:
-  // http://en.wikipedia.org/wiki/Ziggurat_algorithm
-  //
-  // Marsaglia and Tsang Ziggurat technique to transform from a uniform to a normal distribution.
-  // G. Marsaglia, W.W. Tsang.
-  // "Ziggurat method for generating random variables",
-  // J. Statistical Software, vol 5, 2000.
-  // http://www.jstatsoft.org/v05/i08/
+  
+  inline
+  static
+  void
+  generate(eT& out1, eT& out2)
+    {
+    // make sure we are internally using at least floats
+    typedef typename promote_type<eT,float>::result eTp;
+    
+    eTp tmp1;
+    eTp tmp2;
+    eTp w;
+    
+    do
+      {
+      tmp1 = eTp(2) * eTp(std::rand()) * (eTp(1) / eTp(RAND_MAX)) - eTp(1);
+      tmp2 = eTp(2) * eTp(std::rand()) * (eTp(1) / eTp(RAND_MAX)) - eTp(1);
+      
+      w = tmp1*tmp1 + tmp2*tmp2;
+      }
+    while ( w >= eTp(1) );
+    
+    const eTp k = std::sqrt( (eTp(-2) * std::log(w)) / w);
+    
+    out1 = tmp1*k;
+    out2 = tmp2*k;
+    }
+  
+  
+  
+  inline
+  static
+  void
+  fill(eT* mem, const uword N)
+    {
+    uword i, j;
+    
+    for(i=0, j=1; j < N; i+=2, j+=2)
+      {
+      eop_aux_randn<eT>::generate( mem[i], mem[j] );
+      }
+    
+    if(i < N)
+      {
+      mem[i] = eT(eop_aux_randn<eT>());
+      }
+    }
+  
   };
 
 
@@ -109,13 +174,30 @@ struct eop_aux_randn
 template<typename T>
 struct eop_aux_randn< std::complex<T> >
   {
-  arma_inline
+  inline
   operator std::complex<T> () const
     {
-    return std::complex<T>( T(eop_aux_randn<T>()), T(eop_aux_randn<T>()) );
+    T a, b;
+    
+    eop_aux_randn<T>::generate(a, b);
+    
+    return std::complex<T>(a, b);
     }
-
+  
+  
+  inline
+  static
+  void
+  fill(std::complex<T>* mem, const uword N)
+    {
+    for(uword i=0; i < N; ++i)
+      {
+      mem[i] = std::complex<T>( eop_aux_randn< std::complex<T> >() );
+      }
+    }
+  
   };
+
 
 
 //! use of the SFINAE approach to work around compiler limitations

@@ -31,10 +31,19 @@ template<typename eT> class subview_row;
 template<typename eT> class subview_cube;
 template<typename oT> class subview_field;
 
+template<typename eT> class SpValProxy;
+template<typename eT> class SpMat;
+template<typename eT> class SpCol;
+template<typename eT> class SpRow;
+template<typename eT> class SpSubview;
+
 template<typename eT> class diagview;
 
 template<typename eT, typename T1>              class subview_elem1;
 template<typename eT, typename T1, typename T2> class subview_elem2;
+
+template<typename parent, unsigned int mode>              class subview_each1;
+template<typename parent, unsigned int mode, typename TB> class subview_each2;
 
 
 class arma_empty_class {};
@@ -134,6 +143,28 @@ template<typename out_eT, typename T1, typename T2, typename  glue_type> class m
 
 template<typename T1> class Proxy;
 template<typename T1> class ProxyCube;
+
+
+
+class spop_strans;
+class spop_htrans;
+class spop_scalar_times;
+
+class spglue_plus;
+class spglue_plus2;
+
+class spglue_minus;
+class spglue_minus2;
+
+class spglue_times;
+class spglue_times2;
+
+
+template<typename T1,              typename spop_type  > class SpOp;
+template<typename T1, typename T2, typename spglue_type> class SpGlue;
+
+template<typename T1> class SpProxy;
+
 
 
 struct arma_vec_indicator   {};

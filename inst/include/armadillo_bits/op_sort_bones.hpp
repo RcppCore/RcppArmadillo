@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -28,6 +28,9 @@ class op_sort
   
   template<typename eT>
   inline static void direct_sort(eT* X, const uword N, const uword sort_type = 0);
+  
+  template<typename eT>
+  inline static void direct_sort_ascending(eT* X, const uword N);
   
   template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort>& in);

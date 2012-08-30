@@ -1,4 +1,15 @@
-0.3.x.y  2012-xx-yy
+0.3.3.91  2012-08-30
+
+    o   Upgraded to Armadillo release 3.3.91
+
+	  * faster singular value decomposition via "divide and conquer"
+            algorithm
+	  * added economical QR decomposition: qr_econ()
+	  * added .each_col() & .each_row() for vector operations repeated on
+	    each column or row
+	  * added preliminary support for sparse matrices, contributed by
+	    Ryan Curtin, James Cline and Matthew Amidon (Georgia Institute of
+	    Technology)
 
     o   Corrected summary method to deal with the no intercept case when
         using a formula; also display residual summary() statistics

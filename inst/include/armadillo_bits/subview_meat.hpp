@@ -2059,6 +2059,56 @@ subview<eT>::operator()(const span& row_span, const span& col_span) const
 
 
 
+template<typename eT>
+inline
+subview_each1< subview<eT>, 0 >
+subview<eT>::each_col()
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_each1< subview<eT>, 0 >(*this);
+  }
+
+
+
+template<typename eT>
+inline
+subview_each1< subview<eT>, 1 >
+subview<eT>::each_row()
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_each1< subview<eT>, 1 >(*this);
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+subview_each2< subview<eT>, 0, T1 >
+subview<eT>::each_col(const Base<uword,T1>& indices)
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_each2< subview<eT>, 0, T1 >(*this, indices);
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+subview_each2< subview<eT>, 1, T1 >
+subview<eT>::each_row(const Base<uword,T1>& indices)
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_each2< subview<eT>, 1, T1 >(*this, indices);
+  }
+
+
+
 //! creation of diagview (diagonal)
 template<typename eT>
 inline

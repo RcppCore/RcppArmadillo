@@ -127,6 +127,93 @@ arrayops::copy_big(eT* dest, const eT* src, const uword n_elem)
 
 
 
+template<typename eT>
+arma_hot
+inline
+void
+arrayops::copy_forwards(eT* dest, const eT* src, const uword n_elem)
+  {
+  // can't use std::memcpy(), as we don't know how it copies data
+  uword i,j;
+  
+  for(i=0, j=1; j < n_elem; i+=2, j+=2)
+    {
+    dest[i] = src[i];
+    dest[j] = src[j];
+    }
+  
+  if(i < n_elem)
+    {
+    dest[i] = src[i];
+    }
+  }
+
+
+
+// template<typename eT>
+// arma_hot
+// inline
+// void
+// arrayops::copy_backwards(eT* dest, const eT* src, const uword n_elem)
+//   {
+//   // can't use std::memcpy(), as we don't know how it copies data
+//   
+//   switch(n_elem)
+//     {
+//     default:
+//       for(uword i = (n_elem-1); i >= 1; --i) { dest[i] = src[i]; }
+//       // NOTE: the 'break' statement has been deliberately omitted
+//     case 1:
+//       dest[0] = src[0];
+//     case 0:
+//       ;
+//     }
+//   }
+
+
+
+template<typename eT>
+arma_hot
+inline
+void
+arrayops::copy_backwards(eT* dest, const eT* src, const uword n_elem)
+  {
+  // can't use std::memcpy(), as we don't know how it copies data
+  
+  switch(n_elem)
+    {
+    default:
+      {
+      uword i, j;
+      for(i = (n_elem-1), j = (n_elem-2); j >= 2; i-=2, j-=2)
+        {
+        const eT tmp_i = src[i];
+        const eT tmp_j = src[j];
+        
+        dest[i] = tmp_i;
+        dest[j] = tmp_j;
+        }
+      
+      // j is less than 2:  it can be 1 or 0
+      // i is j+1, ie. less than 3: it can be 2 or 1
+      
+      if(i == 2)
+        {
+        dest[2] = src[2];
+        }
+      }
+      // NOTE: the 'break' statement has been deliberately omitted
+    case 2:
+      dest[1] = src[1];
+    case 1:
+      dest[0] = src[0];
+    case 0:
+      ;
+    }
+  }
+
+
+
 template<typename out_eT, typename in_eT>
 arma_hot
 arma_inline

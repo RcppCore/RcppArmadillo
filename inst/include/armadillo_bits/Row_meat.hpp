@@ -116,32 +116,32 @@ Row<eT>::operator=(const std::string& text)
 
 
 #if defined(ARMA_USE_CXX11)
-
-template<typename eT>
-inline
-Row<eT>::Row(const std::initializer_list<eT>& list)
-  {
-  arma_extra_debug_sigprint();
   
-  access::rw(Mat<eT>::vec_state) = 2;
+  template<typename eT>
+  inline
+  Row<eT>::Row(const std::initializer_list<eT>& list)
+    {
+    arma_extra_debug_sigprint();
+    
+    access::rw(Mat<eT>::vec_state) = 2;
+    
+    Mat<eT>::operator=(list);
+    }
   
-  Mat<eT>::operator=(list);
-  }
-
-
-
-template<typename eT>
-inline
-const Row<eT>&
-Row<eT>::operator=(const std::initializer_list<eT>& list)
-  {
-  arma_extra_debug_sigprint();
   
-  Mat<eT>::operator=(list);
   
-  return *this;
-  }
-
+  template<typename eT>
+  inline
+  const Row<eT>&
+  Row<eT>::operator=(const std::initializer_list<eT>& list)
+    {
+    arma_extra_debug_sigprint();
+    
+    Mat<eT>::operator=(list);
+    
+    return *this;
+    }
+  
 #endif
 
 
@@ -876,41 +876,41 @@ Row<eT>::fixed<fixed_n_elem>::operator=(const subview_cube<eT>& X)
 
 
 #if defined(ARMA_USE_CXX11)
-
-template<typename eT>
-template<uword fixed_n_elem>
-inline
-Row<eT>::fixed<fixed_n_elem>::fixed(const std::initializer_list<eT>& list)
-  : Row<eT>( arma_fixed_indicator(), fixed_n_elem, ((use_extra) ? mem_local_extra : Mat<eT>::mem_local) )
-  {
-  arma_extra_debug_sigprint_this(this);
   
-  (*this).operator=(list);
-  }
-
-
-
-template<typename eT>
-template<uword fixed_n_elem>
-inline
-const Row<eT>&
-Row<eT>::fixed<fixed_n_elem>::operator=(const std::initializer_list<eT>& list)
-  {
-  arma_extra_debug_sigprint();
+  template<typename eT>
+  template<uword fixed_n_elem>
+  inline
+  Row<eT>::fixed<fixed_n_elem>::fixed(const std::initializer_list<eT>& list)
+    : Row<eT>( arma_fixed_indicator(), fixed_n_elem, ((use_extra) ? mem_local_extra : Mat<eT>::mem_local) )
+    {
+    arma_extra_debug_sigprint_this(this);
+    
+    (*this).operator=(list);
+    }
   
-  const uword N = list.size();
   
-  arma_debug_check( (N > fixed_n_elem), "Row::fixed: initialiser list is too long" );
   
-  eT* this_mem = (*this).memptr();
+  template<typename eT>
+  template<uword fixed_n_elem>
+  inline
+  const Row<eT>&
+  Row<eT>::fixed<fixed_n_elem>::operator=(const std::initializer_list<eT>& list)
+    {
+    arma_extra_debug_sigprint();
+    
+    const uword N = list.size();
+    
+    arma_debug_check( (N > fixed_n_elem), "Row::fixed: initialiser list is too long" );
+    
+    eT* this_mem = (*this).memptr();
+    
+    arrayops::copy( this_mem, list.begin(), N );
+    
+    for(uword iq=N; iq < fixed_n_elem; ++iq) { this_mem[iq] = eT(0); }
+    
+    return *this;
+    }
   
-  arrayops::copy( this_mem, list.begin(), N );
-  
-  for(uword iq=N; iq < fixed_n_elem; ++iq) { this_mem[iq] = eT(0); }
-  
-  return *this;
-  }
-
 #endif
 
 

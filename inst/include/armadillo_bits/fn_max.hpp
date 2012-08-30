@@ -120,4 +120,66 @@ max(const T& x)
 
 
 
+
+template<typename T1>
+inline
+arma_warn_unused
+typename
+enable_if2
+  <
+  (is_arma_sparse_type<T1>::value == true) && (resolves_to_sparse_vector<T1>::value == true),
+  typename T1::elem_type
+  >::result
+max(const T1& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  return spop_max::vector_max(x);
+  }
+
+
+
+template<typename T1>
+inline
+typename
+enable_if2
+  <
+  (is_arma_sparse_type<T1>::value == true) && (resolves_to_sparse_vector<T1>::value == false),
+  const SpOp<T1, spop_max>
+  >::result
+max(const T1& X, const uword dim = 0)
+  {
+  arma_extra_debug_sigprint();
+  
+  return SpOp<T1, spop_max>(X, dim, 0);
+  }
+
+
+
+template<typename T1>
+inline
+arma_warn_unused
+typename T1::elem_type
+max(const SpOp<T1, spop_max>& X)
+  {
+  arma_extra_debug_sigprint();
+  arma_extra_debug_print("max(): two consecutive max() calls detected");
+  
+  return spop_max::vector_max(X.m);
+  }
+
+
+
+template<typename T1>
+inline
+const SpOp< SpOp<T1, spop_max>, spop_max>
+max(const SpOp<T1, spop_max>& in, const uword dim)
+  {
+  arma_extra_debug_sigprint();
+  
+  return SpOp< SpOp<T1, spop_max>, spop_max>(in, dim, 0);
+  }
+
+
+
 //! @}

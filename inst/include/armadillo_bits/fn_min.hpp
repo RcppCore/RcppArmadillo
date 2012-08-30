@@ -118,4 +118,65 @@ min(const T& x)
 
 
 
+template<typename T1>
+inline
+arma_warn_unused
+typename
+enable_if2
+  <
+  (is_arma_sparse_type<T1>::value == true) && (resolves_to_sparse_vector<T1>::value == true),
+  typename T1::elem_type
+  >::result
+min(const T1& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  return spop_min::vector_min(x);
+  }
+
+
+
+template<typename T1>
+inline
+typename
+enable_if2
+  <
+  (is_arma_sparse_type<T1>::value == true) && (resolves_to_sparse_vector<T1>::value == false),
+  const SpOp<T1, spop_min>
+  >::result
+min(const T1& X, const uword dim = 0)
+  {
+  arma_extra_debug_sigprint();
+  
+  return SpOp<T1, spop_min>(X, dim, 0);
+  }
+
+
+
+template<typename T1>
+inline
+arma_warn_unused
+typename T1::elem_type
+min(const SpOp<T1, spop_min>& X)
+  {
+  arma_extra_debug_sigprint();
+  arma_extra_debug_print("min(): two consecutive min() calls detected");
+  
+  return spop_min::vector_min(X.m);
+  }
+
+
+
+template<typename T1>
+inline
+const SpOp< SpOp<T1, spop_min>, spop_min>
+min(const SpOp<T1, spop_min>& in, const uword dim)
+  {
+  arma_extra_debug_sigprint();
+  
+  return SpOp< SpOp<T1, spop_min>, spop_min>(in, dim, 0);
+  }
+
+
+
 //! @}

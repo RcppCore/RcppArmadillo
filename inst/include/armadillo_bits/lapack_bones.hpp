@@ -80,6 +80,11 @@
   #define arma_cgesvd cgesvd
   #define arma_zgesvd zgesvd
   
+  #define arma_sgesdd sgesdd
+  #define arma_dgesdd dgesdd
+  #define arma_cgesdd cgesdd
+  #define arma_zgesdd zgesdd
+  
   #define arma_sgesv  sgesv
   #define arma_dgesv  dgesv
   #define arma_cgesv  cgesv
@@ -176,6 +181,11 @@
   
   #define arma_cgesvd CGESVD
   #define arma_zgesvd ZGESVD
+  
+  #define arma_sgesdd SGESDD
+  #define arma_dgesdd DGESDD
+  #define arma_cgesdd CGESDD
+  #define arma_zgesdd ZGESDD
   
   #define arma_sgesv  SGESV
   #define arma_dgesv  DGESV
@@ -293,6 +303,14 @@ extern "C"
   // SVD (complex matrices)
   void arma_fortran(arma_cgesvd)(char* jobu, char* jobvt, blas_int* m, blas_int* n, void*   a, blas_int* lda, float*  s, void*   u, blas_int* ldu, void*   vt, blas_int* ldvt, void*   work, blas_int* lwork, float*  rwork, blas_int* info);
   void arma_fortran(arma_zgesvd)(char* jobu, char* jobvt, blas_int* m, blas_int* n, void*   a, blas_int* lda, double* s, void*   u, blas_int* ldu, void*   vt, blas_int* ldvt, void*   work, blas_int* lwork, double* rwork, blas_int* info);
+  
+  // SVD (real matrices) by divide and conquer
+  void arma_fortran(arma_sgesdd)(char* jobz, blas_int* m, blas_int* n, float*  a, blas_int* lda, float*  s, float*  u, blas_int* ldu, float*  vt, blas_int* ldvt, float*  work, blas_int* lwork, blas_int* iwork, blas_int* info);
+  void arma_fortran(arma_dgesdd)(char* jobz, blas_int* m, blas_int* n, double* a, blas_int* lda, double* s, double* u, blas_int* ldu, double* vt, blas_int* ldvt, double* work, blas_int* lwork, blas_int* iwork, blas_int* info);
+  
+  // SVD (complex matrices) by divide and conquer
+  void arma_fortran(arma_cgesdd)(char* jobz, blas_int* m, blas_int* n, void* a, blas_int* lda, float*  s, void* u, blas_int* ldu, void* vt, blas_int* ldvt, void* work, blas_int* lwork, float*  rwork, blas_int* iwork, blas_int* info);
+  void arma_fortran(arma_zgesdd)(char* jobz, blas_int* m, blas_int* n, void* a, blas_int* lda, double* s, void* u, blas_int* ldu, void* vt, blas_int* ldvt, void* work, blas_int* lwork, double* rwork, blas_int* iwork, blas_int* info);
   
   // solve system of linear equations, using LU decomposition
   void arma_fortran(arma_sgesv)(blas_int* n, blas_int* nrhs, float*  a, blas_int* lda, blas_int* ipiv, float*  b, blas_int* ldb, blas_int* info);

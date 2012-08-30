@@ -2516,21 +2516,7 @@ Cube<eT>::randu()
   {
   arma_extra_debug_sigprint();
   
-  const uword N   = n_elem;
-        eT*   ptr = memptr();
-  
-  uword i,j;
-  
-  for(i=0, j=1; j<N; i+=2, j+=2)
-    {
-    ptr[i] = eT(eop_aux_randu<eT>());
-    ptr[j] = eT(eop_aux_randu<eT>());
-    }
-  
-  if(i < N)
-    {
-    ptr[i] = eT(eop_aux_randu<eT>());
-    }
+  eop_aux_randu<eT>::fill( memptr(), n_elem );
   
   return *this;
   }
@@ -2558,13 +2544,7 @@ Cube<eT>::randn()
   {
   arma_extra_debug_sigprint();
   
-  const uword N   = n_elem;
-        eT*   ptr = memptr();
-  
-  for(uword i=0; i<N; ++i)
-    {
-    ptr[i] = eT(eop_aux_randn<eT>());
-    }
+  eop_aux_randn<eT>::fill( memptr(), n_elem );
   
   return *this;
   }
