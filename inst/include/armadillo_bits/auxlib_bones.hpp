@@ -147,6 +147,9 @@ class auxlib
   template<typename eT, typename T1>
   inline static bool qr(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X);
   
+  template<typename eT, typename T1>
+  inline static bool qr_econ(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X);
+  
   
   //
   // svd
@@ -174,6 +177,12 @@ class auxlib
   
   template<typename T, typename T1>
   inline static bool svd_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, const Base< std::complex<T>, T1>& X, const char mode);
+  
+  template<typename eT, typename T1>
+  inline static bool svd_dc(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X);
+  
+  template<typename T, typename T1>
+  inline static bool svd_dc(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, const Base< std::complex<T>, T1>& X);
   
   
   //

@@ -70,4 +70,20 @@ strans(const Op<T1, op_strans>& X)
 
 
 
+//
+// handling of sparse matrices
+
+
+template<typename T1>
+inline
+const SpOp<T1,spop_strans>
+strans(const SpBase<typename T1::elem_type, T1>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  return SpOp<T1,spop_strans>( x.get_ref() );
+  }
+
+
+
 //! @}

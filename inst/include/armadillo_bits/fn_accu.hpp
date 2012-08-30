@@ -1,5 +1,6 @@
 // Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
 // Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2012 Ryan Curtin
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -290,6 +291,43 @@ const typename arma_scalar_only<T>::result &
 accu(const T& x)
   {
   return x;
+  }
+
+
+
+//! accumulate values in a sparse object
+template<typename T1>
+arma_hot
+inline
+arma_warn_unused
+typename enable_if2<is_arma_sparse_type<T1>::value, typename T1::elem_type>::result
+accu(const T1& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const SpProxy<T1> p(x);
+  
+  if(SpProxy<T1>::must_use_iterator == false)
+    {
+    // direct counting
+    return arrayops::accumulate(p.get_values(), p.get_n_nonzero());
+    }
+  else
+    {
+    typename SpProxy<T1>::const_iterator_type it     = p.begin();
+    
+    eT result = eT(0);
+    
+    while(it.pos() < p.get_n_nonzero())
+      {
+      result += (*it);
+      ++it;
+      }
+     
+    return result;
+    }
   }
 
 

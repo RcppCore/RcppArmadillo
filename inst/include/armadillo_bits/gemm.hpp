@@ -92,13 +92,36 @@ class gemm_emul_large
     if( (do_trans_A == false) && (do_trans_B == false) )
       {
       arma_aligned podarray<eT> tmp(A_n_cols);
+      
       eT* A_rowdata = tmp.memptr();
       
       for(uword row_A=0; row_A < A_n_rows; ++row_A)
         {
-        tmp.copy_row(A, row_A);
+        //tmp.copy_row(A, row_A);
+        const eT acc0 = op_dot::dot_and_copy_row(A_rowdata, A, row_A, B.colptr(0), A_n_cols);
         
-        for(uword col_B=0; col_B < B_n_cols; ++col_B)
+        if( (use_alpha == false) && (use_beta == false) )
+          {
+          C.at(row_A,0) = acc0;
+          }
+        else
+        if( (use_alpha == true) && (use_beta == false) )
+          {
+          C.at(row_A,0) = alpha * acc0;
+          }
+        else
+        if( (use_alpha == false) && (use_beta == true) )
+          {
+          C.at(row_A,0) = acc0 + beta*C.at(row_A,0);
+          }
+        else
+        if( (use_alpha == true) && (use_beta == true) )
+          {
+          C.at(row_A,0) = alpha*acc0 + beta*C.at(row_A,0);
+          }
+
+        //for(uword col_B=0; col_B < B_n_cols; ++col_B)
+        for(uword col_B=1; col_B < B_n_cols; ++col_B)
           {
           const eT acc = op_dot::direct_dot_arma(B_n_rows, A_rowdata, B.colptr(col_B));
           

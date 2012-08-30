@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -23,6 +23,15 @@ struct arma_config
   #else
     static const uword mat_prealloc = 16;
   #endif
+  
+  
+  // TODO: place ARMA_SPMAT_CHUNKSIZE in confg.hpp and config.hpp.cmake
+  #if defined(ARMA_SPMAT_CHUNKSIZE)
+    static const uword spmat_chunksize = (sword(ARMA_SPMAT_CHUNKSIZE) > 0) ? uword(ARMA_SPMAT_CHUNKSIZE) : 256;
+  #else
+    static const uword spmat_chunksize = 256;
+  #endif
+  
   
   #if defined(ARMA_USE_ATLAS)
     static const bool atlas = true;

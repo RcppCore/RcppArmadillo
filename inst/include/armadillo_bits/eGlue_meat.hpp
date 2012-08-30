@@ -49,7 +49,7 @@ arma_inline
 uword
 eGlue<T1,T2,eglue_type>::get_n_rows() const
   {
-  return is_row ? 1 : ( Proxy<T1>::is_fixed ? P1.get_n_rows() : P2.get_n_rows() );
+  return is_row ? 1 : ( Proxy<T1>::is_fixed ? P1.get_n_rows() : ( Proxy<T2>::is_fixed ? P2.get_n_rows() : P1.get_n_rows() ) );
   }
 
 
@@ -59,7 +59,7 @@ arma_inline
 uword
 eGlue<T1,T2,eglue_type>::get_n_cols() const
   {
-  return is_col ? 1 : ( Proxy<T1>::is_fixed ? P1.get_n_cols() : P2.get_n_cols() );
+  return is_col ? 1 : ( Proxy<T1>::is_fixed ? P1.get_n_cols() : ( Proxy<T2>::is_fixed ? P2.get_n_cols() : P1.get_n_cols() ) );
   }
 
 
@@ -69,7 +69,7 @@ arma_inline
 uword
 eGlue<T1,T2,eglue_type>::get_n_elem() const
   {
-  return Proxy<T1>::is_fixed ? P1.get_n_elem() : P2.get_n_elem();
+  return Proxy<T1>::is_fixed ? P1.get_n_elem() : ( Proxy<T2>::is_fixed ? P2.get_n_elem() : P1.get_n_elem() ) ;
   }
 
 

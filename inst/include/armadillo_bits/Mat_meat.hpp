@@ -440,38 +440,38 @@ Mat<eT>::init(const std::string& text)
 
 
 #if defined(ARMA_USE_CXX11)
-
-template<typename eT>
-inline
-Mat<eT>::Mat(const std::initializer_list<eT>& list)
-  : n_rows(0)
-  , n_cols(0)
-  , n_elem(0)
-  , vec_state(0)
-  , mem_state(0)
-  , mem()
-  {
-  arma_extra_debug_sigprint_this(this);
   
-  init(list);
-  }
-
-
-
-template<typename eT>
-inline
-const Mat<eT>&
-Mat<eT>::operator=(const std::initializer_list<eT>& list)
-  {
-  arma_extra_debug_sigprint();
+  template<typename eT>
+  inline
+  Mat<eT>::Mat(const std::initializer_list<eT>& list)
+    : n_rows(0)
+    , n_cols(0)
+    , n_elem(0)
+    , vec_state(0)
+    , mem_state(0)
+    , mem()
+    {
+    arma_extra_debug_sigprint_this(this);
+    
+    init(list);
+    }
   
-  init(list);
   
-  return *this;
-  }
-
+  
+  template<typename eT>
+  inline
+  const Mat<eT>&
+  Mat<eT>::operator=(const std::initializer_list<eT>& list)
+    {
+    arma_extra_debug_sigprint();
+    
+    init(list);
+    
+    return *this;
+    }
+  
 #endif
-
+  
 
 
 //! Set the matrix to be equal to the specified scalar.
@@ -1925,6 +1925,186 @@ Mat<eT>::operator/=(const subview_elem2<eT,T1,T2>& X)
 
 
 template<typename eT>
+template<typename T1>
+inline
+Mat<eT>::Mat(const SpBase<eT, T1>& m)
+  : n_rows(0)
+  , n_cols(0)
+  , n_elem(0)
+  , vec_state(0)
+  , mem_state(0)
+  , mem()
+  {
+  arma_extra_debug_sigprint_this(this);
+
+  const SpProxy<T1> p(m.get_ref());
+
+  access::rw(n_rows) = p.get_n_rows();
+  access::rw(n_cols) = p.get_n_cols();
+  access::rw(n_elem) = p.get_n_elem();
+
+  init_cold();
+  fill(eT(0));
+
+  // Iterate over each nonzero element and set it.
+  for(typename SpProxy<T1>::const_iterator_type it = p.begin(); it.pos() < p.get_n_nonzero(); ++it)
+    {
+    at(it.row(), it.col()) = (*it);
+    }
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+const Mat<eT>&
+Mat<eT>::operator=(const SpBase<eT, T1>& m)
+  {
+  arma_extra_debug_sigprint();
+
+  const SpProxy<T1> p(m.get_ref());
+
+  init_warm(p.get_n_rows(), p.get_n_cols());
+
+  fill(eT(0));
+
+  for(typename SpProxy<T1>::const_iterator_type it = p.begin(); it.pos() < p.get_n_nonzero(); ++it)
+    {
+    at(it.row(), it.col()) = (*it);
+    }
+
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+const Mat<eT>&
+Mat<eT>::operator+=(const SpBase<eT, T1>& m)
+  {
+  arma_extra_debug_sigprint();
+
+  const SpProxy<T1> p(m.get_ref());
+
+  arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "addition");
+
+  for(typename SpProxy<T1>::const_iterator_type it = p.begin(); it.pos() < p.get_n_nonzero(); ++it)
+    {
+    at(it.row(), it.col()) += (*it);
+    }
+
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+const Mat<eT>&
+Mat<eT>::operator-=(const SpBase<eT, T1>& m)
+  {
+  arma_extra_debug_sigprint();
+
+  const SpProxy<T1> p(m.get_ref());
+
+  arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "subtraction");
+
+  for(typename SpProxy<T1>::const_iterator_type it = p.begin(); it.pos() < p.get_n_nonzero(); ++it)
+    {
+    at(it.row(), it.col()) -= (*it);
+    }
+
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+const Mat<eT>&
+Mat<eT>::operator*=(const SpBase<eT, T1>& m)
+  {
+  arma_extra_debug_sigprint();
+
+  Mat<eT> z;
+  z = (*this) * m.get_ref();
+  steal_mem(z);
+
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+const Mat<eT>&
+Mat<eT>::operator%=(const SpBase<eT, T1>& m)
+  {
+  arma_extra_debug_sigprint();
+
+  const SpProxy<T1> p(m.get_ref());
+
+  arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "element-wise multiplication");
+
+  typename SpProxy<T1>::const_iterator_type it = p.begin();
+
+  // We have to zero everything that isn't being used.
+  arrayops::inplace_set(memptr(), eT(0), (it.col() * n_rows) + it.row());
+
+  while(it.pos() < p.get_n_nonzero())
+    {
+    const uword cur_loc = (it.col() * n_rows) + it.row();
+
+    access::rw(mem[cur_loc]) *= (*it);
+
+    ++it;
+
+    const uword next_loc = (it.pos() == p.get_n_nonzero())
+      ? (p.get_n_cols() * n_rows)
+      : (it.col() * n_rows) + it.row();
+
+    arrayops::inplace_set(memptr() + cur_loc + 1, eT(0), (next_loc - cur_loc - 1));
+    }
+
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+const Mat<eT>&
+Mat<eT>::operator/=(const SpBase<eT, T1>& m)
+  {
+  arma_extra_debug_sigprint();
+
+  const SpProxy<T1> p(m.get_ref());
+
+  arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "element-wise division");
+
+  // If you use this method, you are probably stupid or misguided, but for completeness it is implemented.
+  // Unfortunately the best way to do this is loop over every element.
+  for(uword c = 0; c < n_cols; ++c)
+    {
+    for(uword r = 0; r < n_rows; ++r)
+      {
+      at(r, c) /= p.at(r, c);
+      }
+    }
+
+  return *this;
+  }
+
+
+
+template<typename eT>
 inline
 mat_injector< Mat<eT> >
 Mat<eT>::operator<<(const eT val)
@@ -2536,6 +2716,56 @@ Mat<eT>::cols(const Base<uword,T2>& ci) const
   arma_extra_debug_sigprint();
   
   return subview_elem2<eT,T2,T2>(*this, ci, ci, true, false);
+  }
+
+
+
+template<typename eT>
+arma_inline
+subview_each1< Mat<eT>, 0 >
+Mat<eT>::each_col()
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_each1< Mat<eT>, 0>(*this);
+  }
+
+
+
+template<typename eT>
+arma_inline
+subview_each1< Mat<eT>, 1 >
+Mat<eT>::each_row()
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_each1< Mat<eT>, 1>(*this);
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+subview_each2< Mat<eT>, 0, T1 >
+Mat<eT>::each_col(const Base<uword, T1>& indices)
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_each2< Mat<eT>, 0, T1 >(*this, indices);
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+subview_each2< Mat<eT>, 1, T1 >
+Mat<eT>::each_row(const Base<uword, T1>& indices)
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_each2< Mat<eT>, 1, T1 >(*this, indices);
   }
 
 
@@ -4659,24 +4889,7 @@ Mat<eT>::randu()
   {
   arma_extra_debug_sigprint();
   
-  const uword N   = n_elem;
-        eT*   ptr = memptr();
-  
-  uword ii,jj;
-  
-  for(ii=0, jj=1; jj < N; ii+=2, jj+=2)
-    {
-    const eT tmp_ii = eT(eop_aux_randu<eT>());
-    const eT tmp_jj = eT(eop_aux_randu<eT>());
-    
-    ptr[ii] = tmp_ii;
-    ptr[jj] = tmp_jj;
-    }
-  
-  if(ii < N)
-    {
-    ptr[ii] = eT(eop_aux_randu<eT>());
-    }
+  eop_aux_randu<eT>::fill( memptr(), n_elem );
   
   return *this;
   }
@@ -4718,13 +4931,7 @@ Mat<eT>::randn()
   {
   arma_extra_debug_sigprint();
   
-  const uword N   = n_elem;
-        eT*   ptr = memptr();
-  
-  for(uword ii=0; ii<N; ++ii)
-    {
-    ptr[ii] = eT(eop_aux_randn<eT>());
-    }
+  eop_aux_randn<eT>::fill( memptr(), n_elem );
   
   return *this;
   }
@@ -5808,41 +6015,41 @@ Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::fixed(const std::string& text)
 
 
 #if defined(ARMA_USE_CXX11)
+  
+  template<typename eT>
+  template<uword fixed_n_rows, uword fixed_n_cols>
+  inline
+  Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::fixed(const std::initializer_list<eT>& list)
+    : Mat<eT>( arma_fixed_indicator(), fixed_n_rows, fixed_n_cols, 0, ((use_extra) ? mem_local_extra : mem_local) )
+    {
+    arma_extra_debug_sigprint_this(this);
+    
+    (*this).operator=(list);
+    }
 
-template<typename eT>
-template<uword fixed_n_rows, uword fixed_n_cols>
-inline
-Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::fixed(const std::initializer_list<eT>& list)
-  : Mat<eT>( arma_fixed_indicator(), fixed_n_rows, fixed_n_cols, 0, ((use_extra) ? mem_local_extra : mem_local) )
-  {
-  arma_extra_debug_sigprint_this(this);
-  
-  (*this).operator=(list);
-  }
 
 
-
-template<typename eT>
-template<uword fixed_n_rows, uword fixed_n_cols>
-inline
-const Mat<eT>&
-Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::operator=(const std::initializer_list<eT>& list)
-  {
-  arma_extra_debug_sigprint();
+  template<typename eT>
+  template<uword fixed_n_rows, uword fixed_n_cols>
+  inline
+  const Mat<eT>&
+  Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::operator=(const std::initializer_list<eT>& list)
+    {
+    arma_extra_debug_sigprint();
+    
+    const uword N = list.size();
+    
+    arma_debug_check( (N > fixed_n_elem), "Mat::fixed: initialiser list is too long" );
+    
+    eT* this_mem = (*this).memptr();
+    
+    arrayops::copy( this_mem, list.begin(), N );
+    
+    for(uword iq=N; iq < fixed_n_elem; ++iq) { this_mem[iq] = eT(0); }
+    
+    return *this;
+    }
   
-  const uword N = list.size();
-  
-  arma_debug_check( (N > fixed_n_elem), "Mat::fixed: initialiser list is too long" );
-  
-  eT* this_mem = (*this).memptr();
-  
-  arrayops::copy( this_mem, list.begin(), N );
-  
-  for(uword iq=N; iq < fixed_n_elem; ++iq) { this_mem[iq] = eT(0); }
-  
-  return *this;
-  }
-
 #endif
   
 

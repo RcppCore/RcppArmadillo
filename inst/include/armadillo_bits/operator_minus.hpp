@@ -176,4 +176,93 @@ operator-
 
 
 
+//! subtraction of two sparse objects
+template<typename T1, typename T2>
+inline
+typename
+enable_if2
+  <
+  (is_arma_sparse_type<T1>::value && is_arma_sparse_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value),
+  const SpGlue<T1,T2,spglue_minus>
+  >::result
+operator-
+  (
+  const T1& X,
+  const T2& Y
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  return SpGlue<T1,T2,spglue_minus>(X,Y);
+  }
+
+
+
+//! subtraction of one sparse and one dense object
+template<typename T1, typename T2>
+inline
+typename
+enable_if2
+  <
+  (is_arma_sparse_type<T1>::value && is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value),
+  Mat<typename T1::elem_type>
+  >::result
+operator-
+  (
+  const SpBase<typename T1::elem_type, T1>& x,
+  const Base<typename T2::elem_type, T2>& y
+  )
+  {
+  arma_extra_debug_sigprint();
+
+  Mat<typename T1::elem_type> result(-y.get_ref());
+  const SpProxy<T1> pa(x.get_ref());
+
+  typename SpProxy<T1>::const_iterator_type it = pa.begin();
+
+  while(it.pos() != pa.get_n_nonzero())
+    {
+    const uword pos = it.col() * pa.get_n_cols() + it.row();
+    result[pos] += (*it);
+    ++it;
+    }
+
+  return result;
+  }
+
+
+
+//! subtraction of one dense and one sparse object
+template<typename T1, typename T2>
+inline
+typename
+enable_if2
+  <
+  (is_arma_type<T1>::value && is_arma_sparse_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value),
+  Mat<typename T1::elem_type>
+  >::result
+operator-
+  (
+  const Base<typename T1::elem_type, T1>& x,
+  const SpBase<typename T2::elem_type, T2>& y
+  )
+  {
+  arma_extra_debug_sigprint();
+
+  Mat<typename T1::elem_type> result(x.get_ref());
+  const SpProxy<T2> pb(y.get_ref());
+
+  typename SpProxy<T2>::const_iterator_type it = pb.begin();
+
+  while(it.pos() < pb.get_n_nonzero())
+    {
+    const uword pos = it.col() * pb.get_n_cols() + it.row();
+    result[pos] -= (*it);
+    ++it;
+    }
+
+  return result;
+  }
+
+
 //! @}

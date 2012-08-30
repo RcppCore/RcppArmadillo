@@ -47,4 +47,35 @@ qr
 
 
 
+//! economical QR decomposition
+template<typename T1>
+inline
+bool
+qr_econ
+  (
+         Mat<typename T1::elem_type>&    Q,
+         Mat<typename T1::elem_type>&    R,
+  const Base<typename T1::elem_type,T1>& X,
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  )
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  arma_debug_check( (&Q == &R), "qr_econ(): Q and R are the same object");
+  
+  const bool status = auxlib::qr_econ(Q, R, X);
+  
+  if(status == false)
+    {
+    Q.reset();
+    R.reset();
+    arma_bad("qr_econ(): failed to converge", false);
+    }
+  
+  return status;
+  }
+
+
+
 //! @}

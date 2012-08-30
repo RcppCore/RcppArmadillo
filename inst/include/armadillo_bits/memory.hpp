@@ -19,10 +19,28 @@ class memory
   {
   public:
   
-  template<typename eT> arma_inline static eT*  acquire(const uword n_elem);
+                        arma_inline static uword enlarge_to_mult_of_chunksize(const uword n_elem);
   
-  template<typename eT> arma_inline static void release(eT* mem);
+  template<typename eT> arma_inline static eT*   acquire(const uword n_elem);
+  
+  template<typename eT> arma_inline static eT*   acquire_chunked(const uword n_elem);
+  
+  template<typename eT> arma_inline static void  release(eT* mem);
   };
+
+
+
+arma_inline
+uword
+memory::enlarge_to_mult_of_chunksize(const uword n_elem)
+  {
+  const uword chunksize = arma_config::spmat_chunksize;
+  
+  // this relies on integer division
+  const uword n_elem_mod = ((n_elem % chunksize) != 0) ? ((n_elem / chunksize) + 1) * chunksize : n_elem;
+  
+  return n_elem_mod;
+  }
 
 
 
@@ -44,6 +62,19 @@ memory::acquire(const uword n_elem)
     return ( new(std::nothrow) eT[n_elem] );
     }
   #endif
+  }
+
+
+
+//! get memory in multiples of chunks, holding at least n_elem
+template<typename eT>
+arma_inline
+eT*
+memory::acquire_chunked(const uword n_elem)
+  {
+  const uword n_elem_mod = memory::enlarge_to_mult_of_chunksize(n_elem);
+  
+  return memory::acquire<eT>(n_elem_mod);
   }
 
 

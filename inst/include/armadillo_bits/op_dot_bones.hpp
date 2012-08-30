@@ -48,6 +48,9 @@ class op_dot
   
   template<typename T1, typename T2>
   arma_hot inline static typename T1::elem_type apply_proxy (const Base<typename T1::elem_type,T1>& X, const Base<typename T1::elem_type,T2>& Y);
+  
+  template<typename eT>
+  arma_hot inline static eT dot_and_copy_row(eT* out, const Mat<eT>& A, const uword row, const eT* B_mem, const uword N);
   };
 
 

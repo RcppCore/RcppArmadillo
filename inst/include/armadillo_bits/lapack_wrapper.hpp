@@ -507,6 +507,71 @@ namespace lapack
   template<typename eT>
   inline
   void
+  gesdd
+    (
+    char* jobz, blas_int* m, blas_int* n,
+    eT* a, blas_int* lda, eT* s, eT* u, blas_int* ldu, eT* vt, blas_int* ldvt,
+    eT* work, blas_int* lwork, blas_int* iwork, blas_int* info
+    )
+    {
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
+    
+    if(is_float<eT>::value == true)
+      {
+      typedef float T;
+      arma_fortran(arma_sgesdd)(jobz, m, n, (T*)a, lda, (T*)s, (T*)u, ldu, (T*)vt, ldvt, (T*)work, lwork, iwork, info);
+      }
+    else
+    if(is_double<eT>::value == true)
+      {
+      typedef double T;
+      arma_fortran(arma_dgesdd)(jobz, m, n, (T*)a, lda, (T*)s, (T*)u, ldu, (T*)vt, ldvt, (T*)work, lwork, iwork, info);
+      }
+    }
+  
+  
+  
+  template<typename T>
+  inline
+  void
+  cx_gesdd
+    (
+    char* jobz, blas_int* m, blas_int* n,
+    std::complex<T>* a, blas_int* lda, T* s, std::complex<T>* u, blas_int* ldu, std::complex<T>* vt, blas_int* ldvt,
+    std::complex<T>* work, blas_int* lwork, T* rwork, blas_int* iwork, blas_int* info
+    )
+    {
+    arma_type_check(( is_supported_blas_type<T>::value == false ));
+    arma_type_check(( is_supported_blas_type< std::complex<T> >::value == false ));
+    
+    if(is_float<T>::value == true)
+      {
+      typedef float bT;
+      arma_fortran(arma_cgesdd)
+        (
+        jobz, m, n,
+        (std::complex<bT>*)a, lda, (bT*)s, (std::complex<bT>*)u, ldu, (std::complex<bT>*)vt, ldvt,
+        (std::complex<bT>*)work, lwork, (bT*)rwork, iwork, info
+        );
+      }
+    else
+    if(is_double<T>::value == true)
+      {
+      typedef double bT;
+      arma_fortran(arma_zgesdd)
+        (
+        jobz, m, n,
+        (std::complex<bT>*)a, lda, (bT*)s, (std::complex<bT>*)u, ldu, (std::complex<bT>*)vt, ldvt,
+        (std::complex<bT>*)work, lwork, (bT*)rwork, iwork, info
+        );
+      }
+    }
+  
+  
+  
+  template<typename eT>
+  inline
+  void
   gesv(blas_int* n, blas_int* nrhs, eT* a, blas_int* lda, blas_int* ipiv, eT* b, blas_int* ldb, blas_int* info)
     {
     arma_type_check(( is_supported_blas_type<eT>::value == false ));

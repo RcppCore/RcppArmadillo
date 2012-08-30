@@ -145,8 +145,6 @@ struct is_Col< const Col<eT> >
 
 
 
-
-
 template<typename T>
 struct is_diagview
   { static const bool value = false; };
@@ -223,6 +221,7 @@ struct is_subview_elem2< subview_elem2<eT, T1, T2> >
 template<typename eT, typename T1, typename T2>
 struct is_subview_elem2< const subview_elem2<eT, T1, T2> >
   { static const bool value = true; };
+
 
 
 //
@@ -616,6 +615,92 @@ struct is_arma_cube_type
 //
 
 
+
+template<typename T>
+struct is_SpMat
+  { static const bool value = false; };
+
+template<typename eT>
+struct is_SpMat< SpMat<eT> >
+  { static const bool value = true; };
+
+template<typename eT>
+struct is_SpMat< SpCol<eT> >
+  { static const bool value = true; };
+
+template<typename eT>
+struct is_SpMat< SpRow<eT> >
+  { static const bool value = true; };
+
+
+
+template<typename T>
+struct is_SpRow
+  { static const bool value = false; };
+
+template<typename eT>
+struct is_SpRow< SpRow<eT> >
+  { static const bool value = true; };
+
+
+
+template<typename T>
+struct is_SpCol
+  { static const bool value = false; };
+
+template<typename eT>
+struct is_SpCol< SpCol<eT> >
+  { static const bool value = true; };
+
+
+
+template<typename T>
+struct is_SpSubview
+  { static const bool value = false; };
+
+template<typename eT>
+struct is_SpSubview< SpSubview<eT> >
+  { static const bool value = true; };
+
+
+template<typename T>
+struct is_SpOp
+  { static const bool value = false; };
+ 
+template<typename T1, typename op_type>
+struct is_SpOp< SpOp<T1,op_type> >
+  { static const bool value = true; };
+
+
+template<typename T>
+struct is_SpGlue
+  { static const bool value = false; };
+ 
+template<typename T1, typename T2, typename glue_type>
+struct is_SpOp< SpGlue<T1,T2,glue_type> >
+  { static const bool value = true; };
+ 
+
+
+
+template<typename T1>
+struct is_arma_sparse_type
+  {
+  static const bool value
+  =  is_SpMat<T1>::value
+  || is_SpSubview<T1>::value
+  || is_SpOp<T1>::value
+  || is_SpGlue<T1>::value
+  ;
+  };
+
+
+
+//
+//
+//
+
+
 template<typename T1, typename T2>
 struct is_same_type
   { static const bool value = false; };
@@ -924,6 +1009,9 @@ struct resolves_to_vector_redirect<T1, true>  { typedef resolves_to_vector_test<
 
 template<typename T1>
 struct resolves_to_vector : public resolves_to_vector_redirect<T1, is_arma_type<T1>::value>::result {};
+
+template<typename T1>
+struct resolves_to_sparse_vector : public resolves_to_vector_redirect<T1, is_arma_sparse_type<T1>::value>::result {};
 
 
 

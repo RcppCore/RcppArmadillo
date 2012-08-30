@@ -59,8 +59,11 @@ class podarray
   arma_inline eT& operator() (const uword i);
   arma_inline eT  operator() (const uword i) const;
   
+  inline void set_min_size(const uword min_n_elem);
+  
   inline void set_size(const uword new_n_elem);
   inline void reset();
+  
   
   inline void fill(const eT val);
   
@@ -72,11 +75,11 @@ class podarray
   
   arma_hot inline void copy_row(const Mat<eT>& A, const uword row);
   
+  
   protected:
   
   inline void init_cold(const uword new_n_elem);
   inline void init_warm(const uword new_n_elem);
-  
   };
 
 

@@ -244,6 +244,42 @@ op_dot::apply_proxy(const Base<typename T1::elem_type,T1>& X, const Base<typenam
 
 
 
+template<typename eT>
+arma_hot
+inline
+eT
+op_dot::dot_and_copy_row(eT* out, const Mat<eT>& A, const uword row, const eT* B_mem, const uword N)
+  {
+  eT acc1 = eT(0);
+  eT acc2 = eT(0);
+  
+  uword i,j;
+  for(i=0, j=1; j < N; i+=2, j+=2)
+    {
+    const eT val_i = A.at(row, i);
+    const eT val_j = A.at(row, j);
+    
+    out[i] = val_i;
+    out[j] = val_j;
+    
+    acc1 += val_i * B_mem[i];
+    acc2 += val_j * B_mem[j];
+    }
+  
+  if(i < N)
+    {
+    const eT val_i = A.at(row, i);
+    
+    out[i] = val_i;
+    
+    acc1 += val_i * B_mem[i];
+    }
+  
+  return acc1 + acc2;
+  }
+
+
+
 //
 // op_norm_dot
 

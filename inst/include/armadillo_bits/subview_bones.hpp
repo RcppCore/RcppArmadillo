@@ -126,6 +126,12 @@ class subview : public Base<eT, subview<eT> >
   inline            subview<eT> operator()(const span& row_span, const span& col_span);
   inline      const subview<eT> operator()(const span& row_span, const span& col_span) const;
   
+  inline subview_each1< subview<eT>, 0 > each_col();
+  inline subview_each1< subview<eT>, 1 > each_row();
+  
+  template<typename T1> inline subview_each2< subview<eT>, 0, T1 > each_col(const Base<uword, T1>& indices);
+  template<typename T1> inline subview_each2< subview<eT>, 1, T1 > each_row(const Base<uword, T1>& indices);
+  
   inline       diagview<eT> diag(const sword in_id = 0);
   inline const diagview<eT> diag(const sword in_id = 0) const;
   

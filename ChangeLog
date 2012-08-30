@@ -1,3 +1,9 @@
+2012-08-30  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.3.3.91
+
+	* inst/include/*: Upgraded to release 3.3.91 (v3.4 beta 1) of Armadillo
+
 2012-07-21  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/unitTests/runit.fastLm.R: expanded unit tests for fastLm

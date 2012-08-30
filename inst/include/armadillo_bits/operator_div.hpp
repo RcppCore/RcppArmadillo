@@ -147,4 +147,210 @@ operator/
 
 
 
+//! element-wise division of sparse matrix by scalar
+template<typename T1>
+inline
+typename
+enable_if2<is_arma_sparse_type<T1>::value, SpMat<typename T1::elem_type> >::result
+operator/
+  (
+  const SpBase<typename T1::elem_type, T1>& X,
+  const typename T1::elem_type y
+  )
+  {
+  arma_extra_debug_sigprint();
+
+  arma_debug_check(y == typename T1::elem_type(0), "element-wise division: division by zero");
+
+  SpMat<typename T1::elem_type> result(X.get_ref());
+
+  for(uword i = 0; i < result.n_nonzero; ++i)
+    {
+    access::rw(result.values[i]) /= y;
+    }
+
+  return result;
+  }
+
+
+
+// //! element-wise division of two sparse objects.  what a bad idea
+// template<typename T1, typename T2>
+// inline
+// typename
+// enable_if2
+//   <
+//   (is_arma_sparse_type<T1>::value && is_arma_sparse_type<T2>::value &&
+// is_same_type<typename T1::elem_type, typename T2::elem_type>::value),
+//   SpMat<typename T1::elem_type>
+//   >::result
+// operator/
+//   (
+//   const SpBase<typename T1::elem_type, T1>& x,
+//   const SpBase<typename T2::elem_type, T2>& y
+//   )
+//   {
+//   arma_extra_debug_sigprint();
+// 
+//   const SpProxy<T1> pa(x.get_ref());
+//   const SpProxy<T2> pb(y.get_ref());
+// 
+//   arma_debug_assert_same_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "element-wise division");
+// 
+//   SpMat<typename T1::elem_type> result(pa.get_n_rows(), pa.get_n_cols());
+// 
+//   // terrible
+//   for(uword i = 0; i < result.n_elem; ++i)
+//     {
+//     result[i] = (pa[i] / pb[i]);
+//     }
+// 
+//   return result;
+//   }
+
+
+
+//! element-wise division of one sparse and one dense object
+template<typename T1, typename T2>
+inline
+typename
+enable_if2
+  <
+  (is_arma_sparse_type<T1>::value && is_arma_type<T2>::value &&
+is_same_type<typename T1::elem_type, typename T2::elem_type>::value),
+  SpMat<typename T1::elem_type>
+  >::result
+operator/
+  (
+  const SpBase<typename T1::elem_type, T1>& x,
+  const Base<typename T2::elem_type, T2>& y
+  )
+  {
+  arma_extra_debug_sigprint();
+
+  const SpProxy<T1> pa(x.get_ref());
+  const Proxy<T2> pb(y.get_ref());
+
+  arma_debug_assert_same_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "element-wise division");
+
+  SpMat<typename T1::elem_type> result(pa.get_n_rows(), pa.get_n_cols());
+
+  // The compiler should be smart enough to optimize out the inner if/else statement entirely
+  typename SpProxy<T1>::const_iterator_type it = pa.begin();
+  uword new_n_nonzero;
+  while(it.pos() < pa.get_n_nonzero())
+    {
+    if(Proxy<T2>::prefer_at_accessor == false)
+      {
+      const typename T1::elem_type val = (*it) / pb[(it.col() * pb.get_n_rows()) + it.row()];
+      if(val != 0)
+        {
+        ++new_n_nonzero;
+        }
+      }
+    else
+      {
+      const typename T1::elem_type val = (*it) / pb.at(it.row(), it.col());
+      if(val != 0)
+        {
+        ++new_n_nonzero;
+        }
+      }
+
+    ++it;
+    }
+
+  result.mem_resize(new_n_nonzero);
+
+  typename SpProxy<T1>::const_iterator_type it2 = pa.begin();
+  uword cur_pos = 0;
+  while(it2.pos() < pa.get_n_nonzero())
+    {
+    if(Proxy<T2>::prefer_at_accessor == false)
+      {
+      const typename T1::elem_type val = (*it2) / pb[(it2.col() * pb.get_n_rows()) + it2.row()];
+      if(val != 0)
+        {
+        access::rw(result.values[cur_pos]) = val;
+        access::rw(result.row_indices[cur_pos]) = it2.row();
+        ++access::rw(result.col_ptrs[it2.col() + 1]);
+        ++cur_pos;
+        }
+      }
+    else
+      {
+      const typename T1::elem_type val = (*it2) / pb.at(it2.row(), it2.col());
+      if(val != 0)
+        {
+        access::rw(result.values[cur_pos]) = val;
+        access::rw(result.row_indices[cur_pos]) = it2.row();
+        ++access::rw(result.col_ptrs[it2.col() + 1]);
+        ++cur_pos;
+        }
+      }
+
+    ++it2;
+    }
+
+  // Fix column pointers
+  for(uword col = 1; col <= result.n_cols; ++col)
+    {
+    access::rw(result.col_ptrs[col]) += result.col_ptrs[col - 1];
+    }
+
+  return result;
+  }
+
+
+
+//! element-wise division of one dense and one sparse object
+template<typename T1, typename T2>
+inline
+typename
+enable_if2
+  <
+  (is_arma_type<T1>::value && is_arma_sparse_type<T2>::value &&
+is_same_type<typename T1::elem_type, typename T2::elem_type>::value),
+  Mat<typename T1::elem_type>
+  >::result
+operator/
+  (
+  const Base<typename T1::elem_type, T1>& x,
+  const SpBase<typename T2::elem_type, T2>& y
+  )
+  {
+  arma_extra_debug_sigprint();
+
+  const Proxy<T1> pa(x.get_ref());
+  const SpProxy<T2> pb(y.get_ref());
+
+  arma_debug_assert_same_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "element-wise division");
+
+  Mat<typename T1::elem_type> result(pa.get_n_rows(), pa.get_n_cols());
+
+  result.fill(Datum<typename T1::elem_type>::inf);
+
+  // Now divide each element
+  typename SpProxy<T2>::const_iterator_type it = pb.begin();
+
+  while(it.pos() < pb.get_n_nonzero())
+    {
+    if(Proxy<T1>::prefer_at_accessor == false)
+      {
+      const uword index = (it.col() * result.n_rows) + it.row();
+      result[index] = pa[index] / (*it);
+      }
+    else
+      {
+      result.at(it.row(), it.col()) = pa.at(it.row(), it.col()) / (*it);
+      }
+
+    ++it;
+    }
+
+  return result;
+  }
+
+
+
 //! @}

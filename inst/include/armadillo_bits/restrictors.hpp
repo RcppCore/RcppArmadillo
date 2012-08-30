@@ -193,6 +193,14 @@ template<typename  T> struct arma_Cube_only             { };
 template<typename eT> struct arma_Cube_only< Cube<eT> > { typedef Cube<eT> result; };
 
 
+template<typename T> struct arma_SpMat_SpCol_SpRow_only { };
+
+template<typename eT> struct arma_SpMat_SpCol_SpRow_only< SpMat<eT> > { typedef SpMat<eT> result; };
+template<typename eT> struct arma_SpMat_SpCol_SpRow_only< SpCol<eT> > { typedef SpCol<eT> result; };
+template<typename eT> struct arma_SpMat_SpCol_SpRow_only< SpRow<eT> > { typedef SpRow<eT> result; };
+
+
+
 template<bool> struct enable_if       {                     };
 template<>     struct enable_if<true> { typedef int result; };
 

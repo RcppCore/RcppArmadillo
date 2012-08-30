@@ -106,6 +106,20 @@ op_sort::direct_sort(eT* X, const uword n_elem, const uword sort_type)
 template<typename eT>
 inline 
 void
+op_sort::direct_sort_ascending(eT* X, const uword n_elem)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_ascend_sort_helper<eT> comparator;
+    
+  std::sort(&X[0], &X[n_elem], comparator);
+  }
+
+
+
+template<typename eT>
+inline 
+void
 op_sort::copy_row(eT* X, const Mat<eT>& A, const uword row)
   {
   const uword N = A.n_cols;

@@ -124,4 +124,66 @@ sum(const T& x)
 
 
 
+//! sum of sparse object
+template<typename T1>
+inline
+typename
+enable_if2
+  <
+  (is_arma_sparse_type<T1>::value == true) && (resolves_to_sparse_vector<T1>::value == true),
+  typename T1::elem_type
+  >::result
+sum(const T1& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  // sum elements
+  return accu(x);
+  }
+
+
+
+template<typename T1>
+inline
+typename
+enable_if2
+  <
+  (is_arma_sparse_type<T1>::value == true) && (resolves_to_sparse_vector<T1>::value == false),
+  const SpOp<T1,spop_sum>
+  >::result
+sum(const T1& x, const uword dim = 0)
+  {
+  arma_extra_debug_sigprint();
+  
+  return SpOp<T1,spop_sum>(x, dim, 0);
+  }
+
+
+
+template<typename T1>
+inline
+arma_warn_unused
+typename T1::elem_type
+sum(const SpOp<T1, spop_sum>& in)
+  {
+  arma_extra_debug_sigprint();
+  arma_extra_debug_print("sum(): two consecutive sum() calls detected");
+  
+  return accu(in.m);
+  }
+
+
+
+template<typename T1>
+arma_inline
+const SpOp<SpOp<T1, spop_sum>, spop_sum>
+sum(const SpOp<T1, spop_sum>& in, const uword dim)
+  {
+  arma_extra_debug_sigprint();
+  
+  return SpOp<SpOp<T1, spop_sum>, spop_sum>(in, dim, 0);
+  }
+
+
+
 //! @}

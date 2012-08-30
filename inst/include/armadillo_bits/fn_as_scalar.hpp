@@ -354,4 +354,22 @@ as_scalar(const T& x)
 
 
 
+template<typename T1>
+arma_inline
+arma_warn_unused
+typename T1::elem_type
+as_scalar(const SpBase<typename T1::elem_type, T1>& X)
+  {
+  typedef typename T1::elem_type eT;
+  
+  const unwrap_spmat<T1>  tmp(X.get_ref());
+  const SpMat<eT>& A    = tmp.M;
+  
+  arma_debug_check( (A.n_elem != 1), "as_scalar(): expression doesn't evaluate to exactly one element" );
+  
+  return A.at(0,0);
+  }
+
+
+
 //! @}

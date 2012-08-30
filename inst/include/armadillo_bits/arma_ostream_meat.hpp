@@ -1,5 +1,6 @@
 // Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
 // Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2012 Ryan Curtin
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -139,6 +140,107 @@ arma_ostream::modify_stream(std::ostream& o, const std::complex<T>* data, const 
   {
   arma_ignore(data);
   arma_ignore(n_elem);
+  
+  o.unsetf(ios::showbase);
+  o.unsetf(ios::uppercase);
+  o.fill(' ');
+  
+  o.setf(ios::scientific);
+  o.setf(ios::showpos);
+  o.setf(ios::right);
+  o.unsetf(ios::fixed);
+  
+  std::streamsize cell_width;
+  
+  o.precision(3);
+  cell_width = 2 + 2*(1 + 3 + o.precision() + 5) + 1;
+  
+  return cell_width;
+  }
+
+
+template<typename eT>
+inline
+std::streamsize
+arma_ostream::modify_stream(std::ostream& o, typename SpMat<eT>::const_iterator begin, const uword n_elem, const typename arma_not_cx<eT>::result* junk)
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+
+  o.unsetf(ios::showbase);
+  o.unsetf(ios::uppercase);
+  o.unsetf(ios::showpos);
+
+  o.fill(' ');
+
+  std::streamsize cell_width;
+
+  bool use_layout_B  = false;
+  bool use_layout_C  = false;
+
+  for(typename SpMat<eT>::const_iterator it = begin; it.pos() < n_elem; ++it)
+    {
+    const eT val = *it;
+
+    if(
+      val >= eT(+100) ||
+      ( (is_signed<eT>::value == true) && (val <= eT(-100)) ) ||
+      ( (is_non_integral<eT>::value == true) && (val > eT(0)) && (val <= eT(+1e-4)) ) ||
+      ( (is_non_integral<eT>::value == true) && (is_signed<eT>::value == true) && (val < eT(0)) && (val >= eT(-1e-4)) )
+      )
+      {
+      use_layout_C = true;
+      break;
+      }
+
+    if(
+      (val >= eT(+10)) || ( (is_signed<eT>::value == true) && (val <= eT(-10)) )
+      )
+      {
+      use_layout_B = true;
+      }
+    }
+
+  if(use_layout_C == true)
+    {
+    o.setf(ios::scientific);
+    o.setf(ios::right);
+    o.unsetf(ios::fixed);
+    o.precision(4);
+    cell_width = 13;
+    }
+  else
+  if(use_layout_B == true)
+    {
+    o.unsetf(ios::scientific);
+    o.setf(ios::right);
+    o.setf(ios::fixed);
+    o.precision(4);
+    cell_width = 10;
+    }
+  else
+    {
+    o.unsetf(ios::scientific);
+    o.setf(ios::right);
+    o.setf(ios::fixed);
+    o.precision(4);
+    cell_width = 9;
+    }
+  
+  return cell_width;
+  }
+
+
+
+//! "better than nothing" settings for complex numbers
+template<typename T>
+inline
+std::streamsize
+arma_ostream::modify_stream(std::ostream& o, typename SpMat<T>::const_iterator begin, const uword n_elem, const typename arma_cx_only<T>::result* junk)
+  {
+  arma_ignore(begin);
+  arma_ignore(n_elem);
+  arma_ignore(junk);
   
   o.unsetf(ios::showbase);
   o.unsetf(ios::uppercase);
@@ -387,5 +489,155 @@ arma_ostream::print(std::ostream& o, const subview_field<oT>& x)
 
 
 
-//! @}
+template<typename eT>
+inline
+void
+arma_ostream::print_dense(std::ostream& o, const SpMat<eT>& m, const bool modify)
+  {
+  arma_extra_debug_sigprint();
+  
+  const arma_ostream_state stream_state(o);
+  
+  const uword m_n_rows = m.n_rows;
+  const uword m_n_cols = m.n_cols;
+    
+  if(m.n_nonzero > 0)
+    {
+    const std::streamsize cell_width = modify ? modify_stream<eT>(o, m.begin(), m.n_nonzero) : o.width();
+    
+    typename SpMat<eT>::const_iterator begin = m.begin();
+    
+    if(m_n_cols > 0)
+      {
+      if(cell_width > 0)
+        {
+        // An efficient row_iterator would make this simpler and faster
+        for(uword row=0; row < m_n_rows; ++row)
+          {
+          for(uword col=0; col < m_n_cols; ++col)
+            {
+            // the cell width appears to be reset after each element is printed,
+            // hence we need to restore it
+            o.width(cell_width);
+            eT val = 0;
+            for(typename SpMat<eT>::const_iterator it = begin; it.pos() < m.n_nonzero; ++it)
+              {
+              if(it.row() == row && it.col() == col)
+                {
+                val = *it;
+                break;
+                }
+              }
+            arma_ostream::print_elem(o,eT(val));
+            }
 
+          o << '\n';
+          }
+        }
+      else
+        {
+        // An efficient row_iterator would make this simpler and faster
+        for(uword row=0; row < m_n_rows; ++row)
+          {
+          for(uword col=0; col < m_n_cols; ++col)
+            {
+            eT val = 0;
+            for(typename SpMat<eT>::const_iterator it = begin; it.pos() < m.n_nonzero; ++it)
+              {
+                if(it.row() == row && it.col() == col)
+                {
+                  val = *it;
+                  break;
+                }
+              }
+            arma_ostream::print_elem(o,eT(val));
+            o << ' ';
+            }
+
+          o << '\n';
+          }
+        }
+      }
+    }
+  else
+    {
+    o << "[matrix size: " << m_n_rows << 'x' << m_n_cols << "]\n";
+    }
+
+  o.flush();
+  stream_state.restore(o);
+  }
+
+
+
+template<typename eT>
+inline
+void
+arma_ostream::print(std::ostream& o, const SpMat<eT>& m, const bool modify)
+  {
+  arma_extra_debug_sigprint();
+  
+  const arma_ostream_state stream_state(o);
+  
+  o.unsetf(ios::showbase);
+  o.unsetf(ios::uppercase);
+  o.unsetf(ios::showpos);
+  o.unsetf(ios::scientific);
+  o.setf(ios::right);
+  o.setf(ios::fixed);
+  o.precision(2);
+  
+  const uword m_n_nonzero = m.n_nonzero;
+  
+  o << "[matrix size: " << m.n_rows << 'x' << m.n_cols << "; n_nonzero: " << m_n_nonzero
+    << "; density: " << ((m.n_elem > 0) ? (double(m_n_nonzero) / double(m.n_elem) * double(100)) : double(0))
+    << "%]\n\n";
+  
+  if(modify == false) { stream_state.restore(o); }
+  
+  if(m_n_nonzero > 0)
+    {
+    const std::streamsize cell_width = modify ? modify_stream<eT>(o, m.begin(), m_n_nonzero) : o.width();
+    
+    typename SpMat<eT>::const_iterator begin = m.begin();
+    
+    while(begin.pos() < m_n_nonzero)
+      {
+      const uword row = begin.row();
+      
+      // TODO: change the maximum number of spaces before and after each location to be dependent on n_rows and n_cols
+      
+           if(row < 10)      { o << "     "; }
+      else if(row < 100)     { o << "    ";  }
+      else if(row < 1000)    { o << "   ";   }
+      else if(row < 10000)   { o << "  ";    }
+      else if(row < 100000)  { o << ' ';     }
+      
+      const uword col = begin.col();
+      
+      o << '(' << row << ", " << col << ") ";
+      
+           if(col < 10)      { o << "     "; }
+      else if(col < 100)     { o << "    ";  }
+      else if(col < 1000)    { o << "   ";   }
+      else if(col < 10000)   { o << "  ";    }
+      else if(col < 100000)  { o << ' ';     }
+      
+      if(cell_width > 0) { o.width(cell_width); }
+        
+      arma_ostream::print_elem(o, eT(*begin));
+      o << '\n';
+      
+      ++begin;
+      }
+    
+    o << '\n';
+    }
+  
+  o.flush();
+  stream_state.restore(o);
+  }
+
+
+
+//! @}
