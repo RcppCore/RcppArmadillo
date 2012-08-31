@@ -1,3 +1,7 @@
+2012-08-31  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/NEWS.Rd: Converted to Rd format
+
 2012-08-30  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.3.3.91
