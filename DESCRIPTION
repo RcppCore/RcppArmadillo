@@ -21,14 +21,14 @@ Description: R and Armadillo integration using Rcpp
  (due to speed and/or integration capabilities), rather than another language.
  .
  The RcppArmadillo package includes the header files from the templated
- Armadillo library (currently version 3.2.4). Thus users do not need to
+ Armadillo library (currently version 3.3.19). Thus users do not need to
  install Armadillo itself in order to use RcppArmadillo.
  .
  This Armadillo integration provides a nice illustration of the 
  capabilities of the Rcpp package for seamless R and C++ integration.
  .
  Armadillo is licensed under the GNU LGPL version 3 or later, while
- RcppArmadillo (the Rcpp bindings/bridge to Armadillo) is licenses under 
+ RcppArmadillo (the Rcpp bindings/bridge to Armadillo) is licensed under 
  the GNU GPL version 2 or later, as is the rest of Rcpp.
 License: GPL (>= 2)
 LazyLoad: yes
