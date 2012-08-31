@@ -2,6 +2,11 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.3.x.yy (2012-09-zz)}{
+  \itemize{
+    \item NEWS file converted to Rd format
+  }
+}
 \section{Changes in RcppArmadillo version 0.3.3.91 (2012-08-30)}{
   \itemize{
     \item Upgraded to Armadillo release 3.3.91
@@ -28,14 +33,15 @@
     \item Upgraded to Armadillo release 3.2.3 
     \itemize{
       \item minor correction for declaration of fixed size vectors and matrices
-    \item Reverted three header files \{Mat,Row,Col\}_bones.hpp back to previous release due to compilation failures under g++-4.7
-    \item Added new vignette 'RcppArmadillo-intro' based on a just-submitted introductory paper (by Eddelbuettel and Sanderson) about RcppArmadillo 
-    \item Change from release 3.2.2 which we skipped as it did not really affect builds under R:
-    \itemize{
-      \item minor fix for compiling without debugging enabled (aka release mode)
-      \item better detection of ATLAS during installation on Fedora and Red Hat systems
+      \item Reverted three header files \{Mat,Row,Col\}_bones.hpp back to previous release due to compilation failures under g++-4.7
+      \item Added new vignette 'RcppArmadillo-intro' based on a just-submitted introductory paper (by Eddelbuettel and Sanderson) about RcppArmadillo 
+      \item Change from release 3.2.2 which we skipped as it did not really affect builds under R:
+      \itemize{
+	\item minor fix for compiling without debugging enabled (aka release mode)
+	\item better detection of ATLAS during installation on Fedora and Red Hat systems
+      }
+      \item Small enhancement to fastLm 
     }
-    \item Small enhancement to fastLm 
   }
 }
 \section{Changes in RcppArmadillo version 0.3.2.0 (2012-05-21)}{
@@ -171,13 +177,14 @@
     \item Upgraded to Armadillo release 2.4.3
     \itemize{
       \item Support for ARMA_DEFAULT_OSTREAM using Rcpp::Rcout added
-    \item Minor bug fix release improving corner cases affecting builds:
-    \itemize{
-      \item Missing semicolon added in Mat_meat (when in C++0x mode), with thanks to Teo Guo Ci 
-      \item Armadillo version vars now instantiated in RcppArmadillo.cpp which helps older g++ versions, with thanks to Gershon Bialer
-      \item Thanks also to Martin Renner for testing these changes
-      \item Unit tests output fallback directory changed per Brian Ripley's request to not ever use /tmp
-      \item Minor update to version numbers in RcppArmadillo-package.Rd
+      \item Minor bug fix release improving corner cases affecting builds:
+      \itemize{
+	\item Missing semicolon added in Mat_meat (when in C++0x mode), with thanks to Teo Guo Ci 
+	\item Armadillo version vars now instantiated in RcppArmadillo.cpp which helps older g++ versions, with thanks to Gershon Bialer
+	\item Thanks also to Martin Renner for testing these changes
+	\item Unit tests output fallback directory changed per Brian Ripley's request to not ever use /tmp
+	\item Minor update to version numbers in RcppArmadillo-package.Rd
+      }
     }
   }
 }
@@ -367,7 +374,6 @@
     }
     \item Added a new subdirectory examples/ seeded with a nice Vector Autoregression simulation simulation example by Lance Bachmeier
     \item Rewrote armadillo_version as to no longer require an instance of arma::arma_version, with tanks to Conrad for the suggestion
-    }
   }
 }
 \section{Changes in RcppArmadillo version 0.2.19 (2011-04-18)}{
