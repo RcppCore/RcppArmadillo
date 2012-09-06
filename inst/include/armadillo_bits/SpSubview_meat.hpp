@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2012 Ryan Curtin <ryan@igglybob.com>
+// Copyright (C) 2011-2012 Ryan Curtin
 // Copyright (C) 2011 Matthew Amidon
 // Copyright (C) 2012 Conrad Sanderson
 //
@@ -12,6 +12,8 @@
 // (see http://www.opensource.org/licenses for more info)
 
 
+//! \addtogroup SpSubview
+//! @{
 
 template<typename eT>
 arma_inline
@@ -167,12 +169,10 @@ SpSubview<eT>::operator*=(const eT val)
   if(val == eT(0))
     {
     // Turn it all into zeros.
-    for(typename SpMat<eT>::iterator it(access::rw(m), aux_row1, aux_col1); it.col() < (aux_col1 + n_cols); ++it)
+    for(iterator it(*this); it.pos() < n_nonzero; ++it)
       {
-      if((it.row() >= aux_row1) && (it.row() < (aux_row1 + n_cols)))
-        {
-        (*it) = eT(0); // zero out the value.
-        }
+      (*it) = eT(0); // zero out the value.
+      it.internal_pos--;
       }
 
     return *this;
@@ -265,7 +265,7 @@ SpSubview<eT>::operator+=(const Base<eT, T1>& x)
 
   const Proxy<T1> P(x.get_ref());
 
-  arma_debug_assert_same_size(n_rows, n_cols, P.get_n_rows(), P.get_n_cols(), "addition into sparse submatrix");
+  arma_debug_assert_same_size(n_rows, n_cols, P.get_n_rows(), P.get_n_cols(), "addition");
 
   const uword old_n_nonzero = m.n_nonzero;
 
@@ -296,7 +296,7 @@ SpSubview<eT>::operator-=(const Base<eT, T1>& x)
 
   const Proxy<T1> P(x.get_ref());
 
-  arma_debug_assert_same_size(n_rows, n_cols, P.get_n_rows(), P.get_n_cols(), "subtraction into sparse submatrix");
+  arma_debug_assert_same_size(n_rows, n_cols, P.get_n_rows(), P.get_n_cols(), "subtraction");
 
   const uword old_n_nonzero = m.n_nonzero;
 
@@ -328,7 +328,7 @@ SpSubview<eT>::operator*=(const Base<eT, T1>& x)
   const Proxy<T1> P(x.get_ref());
 
   // Must be exactly the same size for this (we can't modify our own size).
-  arma_debug_assert_same_size(n_rows, n_cols, P.get_n_rows(), P.get_n_cols(), "matrix multiplication into sparse submatrix");
+  arma_debug_assert_same_size(n_rows, n_cols, P.get_n_rows(), P.get_n_cols(), "matrix multiplication");
 
   SpMat<eT> tmp(*this);
   Mat<eT> other_tmp(x.get_ref());
@@ -350,15 +350,16 @@ SpSubview<eT>::operator%=(const Base<eT, T1>& x)
 
   const Proxy<T1> P(x.get_ref());
 
-  arma_debug_assert_same_size(n_rows, n_cols, P.get_n_rows(), P.get_n_cols(), "element-wise multiplication into sparse submatrix");
+  arma_debug_assert_same_size(n_rows, n_cols, P.get_n_rows(), P.get_n_cols(), "element-wise multiplication");
 
   const uword old_n_nonzero = m.n_nonzero;
 
-  for(typename SpMat<eT>::iterator it(access::rw(m), aux_row1, aux_col1); it.col() < (aux_col1 + n_cols); ++it)
+  for(iterator it(*this); it.pos() < n_nonzero; ++it)
     {
-    if((it.row() >= aux_row1) && (it.row() < (aux_row1 + n_rows)))
+    (*it) *= P.at(it.row(), it.col());
+    if(P.at(it.row(), it.col()) == 0)
       {
-      (*it) *= P.at(it.row() - aux_row1, it.col() - aux_col1);
+      it.internal_pos--;
       }
     }
 
@@ -381,7 +382,7 @@ SpSubview<eT>::operator/=(const Base<eT, T1>& x)
 
   const Proxy<T1> P(x.get_ref());
 
-  arma_debug_assert_same_size(n_rows, n_cols, P.get_n_rows(), P.get_n_cols(), "element-wise division into sparse submatrix");
+  arma_debug_assert_same_size(n_rows, n_cols, P.get_n_rows(), P.get_n_cols(), "element-wise division");
 
   const uword old_n_nonzero = m.n_nonzero;
 
@@ -408,41 +409,52 @@ const SpSubview<eT>&
 SpSubview<eT>::operator=(const SpSubview<eT>& x)
   {
   arma_extra_debug_sigprint();
-
+  
   arma_debug_assert_same_size(n_rows, n_cols, x.n_rows, x.n_cols, "insertion into sparse submatrix");
-
-  const_iterator cit = x.begin();
-  iterator it = begin();
-
-  while((cit.pos() < x.n_nonzero) || (it.pos() < n_nonzero))
+  
+  const bool alias = ( &m == &(x.m) );
+  
+  if(alias == false)
     {
-    if((cit.row() == it.row()) && (cit.col() == it.col()))
+    const_iterator cit = x.begin();
+    iterator        it = begin();
+    
+    while((cit.pos() < x.n_nonzero) || (it.pos() < n_nonzero))
       {
-      (*it) = (*cit);
-      ++it;
-      ++cit;
-      }
-    else
-      {
-      if((cit.col() > it.col()) || ((cit.col() == it.col()) && (cit.row() > it.row())))
+      if((cit.row() == it.row()) && (cit.col() == it.col()))
         {
-        // cit is "ahead"
-        (*it) = eT(0); // erase element
-        it.internal_pos--; // update iterator so it still works
+        (*it) = (*cit);
         ++it;
+        ++cit;
         }
       else
         {
-        // it is "ahead"
-        at(cit.row(), cit.col()) = (*cit);
-        it.internal_pos++; // update iterator so it still works
-        ++cit;
+        if((cit.col() > it.col()) || ((cit.col() == it.col()) && (cit.row() > it.row())))
+          {
+          // cit is "ahead"
+          (*it) = eT(0); // erase element
+          it.internal_pos--; // update iterator so it still works
+          ++it;
+          }
+        else
+          {
+          // it is "ahead"
+          at(cit.row(), cit.col()) = (*cit);
+          it.internal_pos++; // update iterator so it still works
+          ++cit;
+          }
         }
       }
+    
+    access::rw(n_nonzero) = x.n_nonzero;
     }
-
-  access::rw(n_nonzero) = x.n_nonzero;
-
+  else
+    {
+    const SpMat<eT> tmp(x);
+    
+    (*this).operator=(tmp);
+    }
+  
   return *this;
   }
 
@@ -455,43 +467,52 @@ const SpSubview<eT>&
 SpSubview<eT>::operator=(const SpBase<eT, T1>& x)
   {
   arma_extra_debug_sigprint();
-
+  
   const SpProxy<T1> p(x.get_ref());
-
+  
   arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "insertion into sparse submatrix");
-
-  typename SpProxy<T1>::const_iterator_type cit = p.begin();
-  iterator it(*this);
-
-  while((cit.pos() < p.get_n_nonzero()) || (it.pos() < n_nonzero))
+  
+  if(p.is_alias(m) == false)
     {
-    if(cit == it) // at the same location
+    typename SpProxy<T1>::const_iterator_type cit = p.begin();
+    iterator it(*this);
+    
+    while((cit.pos() < p.get_n_nonzero()) || (it.pos() < n_nonzero))
       {
-      (*it) = (*cit);
-      ++it;
-      ++cit;
-      }
-    else
-      {
-      if((cit.col() > it.col()) || ((cit.col() == it.col()) && (cit.row() > it.row())))
+      if(cit == it) // at the same location
         {
-        // cit is "ahead"
-        (*it) = eT(0); // erase element
-        it.internal_pos--; // update iterator so it still works
+        (*it) = (*cit);
         ++it;
+        ++cit;
         }
       else
         {
-        // it is "ahead"
-        at(cit.row(), cit.col()) = (*cit);
-        it.internal_pos++; // update iterator so it still works
-        ++cit;
+        if((cit.col() > it.col()) || ((cit.col() == it.col()) && (cit.row() > it.row())))
+          {
+          // cit is "ahead"
+          (*it) = eT(0); // erase element
+          it.internal_pos--; // update iterator so it still works
+          ++it;
+          }
+        else
+          {
+          // it is "ahead"
+          at(cit.row(), cit.col()) = (*cit);
+          it.internal_pos++; // update iterator so it still works
+          ++cit;
+          }
         }
       }
+    
+    access::rw(n_nonzero) = p.get_n_nonzero();
     }
-
-  access::rw(n_nonzero) = p.get_n_nonzero();
-
+  else
+    {
+    const SpMat<eT> tmp(p.Q);
+    
+    (*this).operator=(tmp);
+    }
+  
   return *this;
   }
 
@@ -504,50 +525,34 @@ const SpSubview<eT>&
 SpSubview<eT>::operator+=(const SpBase<eT, T1>& x)
   {
   arma_extra_debug_sigprint();
-
+  
   const SpProxy<T1> p(x.get_ref());
-
-  arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "addition into sparse submatrix");
-
-  typename SpProxy<T1>::const_iterator_type cit = p.begin();
-  iterator it(*this);
-
-  const uword old_n_nonzero = p.get_n_nonzero();
-
-  while(it.pos() < n_nonzero)
+  
+  arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "addition");
+  
+  if(p.is_alias(m) == false)
     {
-    if(it == cit)
+    typename SpProxy<T1>::const_iterator_type cit = p.begin();
+    const uword old_n_nonzero = m.n_nonzero;
+
+    while(cit.pos() < p.get_n_nonzero())
       {
-      const eT val = (*it) + (*cit);
-      (*it) = val;
-      if(val == 0)
-        {
-        it.internal_pos--; // to keep it valid
-        }
-      ++it;
+      at(cit.row(), cit.col()) += (*cit);
+
       ++cit;
       }
-    else
-      {
-      if((cit.col() > it.col()) || ((cit.col() == it.col()) && (cit.row() > it.row())))
-        {
-        // cit is "ahead"; we don't need to do anything
-        ++it;
-        }
-      else
-        {
-        // it is "ahead"; we need to insert a new value
-        at(cit.row(), cit.col()) = (*cit);
-        it.internal_pos++; // update iterator so it still works
-        ++cit;
-        }
-      }
+
+    const uword new_n_nonzero = m.n_nonzero;
+    
+    access::rw(n_nonzero) += (new_n_nonzero - old_n_nonzero);
     }
-
-  const uword new_n_nonzero = p.get_n_nonzero();
-
-  access::rw(n_nonzero) += (new_n_nonzero - old_n_nonzero);
-
+  else
+    {
+    const SpMat<eT> tmp(p.Q);
+    
+    (*this).operator+=(tmp);
+    }
+  
   return *this;
   }
 
@@ -560,50 +565,35 @@ const SpSubview<eT>&
 SpSubview<eT>::operator-=(const SpBase<eT, T1>& x)
   {
   arma_extra_debug_sigprint();
-
+  
   const SpProxy<T1> p(x.get_ref());
-
-  arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "subtraction into sparse submatrix");
-
-  typename SpProxy<T1>::const_iterator_type cit = p.begin();
-  iterator it(*this);
-
-  const uword old_n_nonzero = p.get_n_nonzero();
-
-  while(it.pos() < n_nonzero)
+  
+  arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "subtraction");
+  
+  if(p.is_alias(m) == false)
     {
-    if(cit == it)
+    typename SpProxy<T1>::const_iterator_type cit = p.begin();
+    
+    const uword old_n_nonzero = m.n_nonzero;
+
+    while(cit.pos() < p.get_n_nonzero())
       {
-      const eT val = (*it) - (*cit);
-      (*it) = val;
-      if(val == 0)
-        {
-        it.internal_pos--; // to keep it valid
-        }
-      ++it;
+      at(cit.row(), cit.col()) -= (*cit);
+
       ++cit;
       }
-    else
-      {
-      if((cit.col() > it.col()) || ((cit.col() == it.col()) && (cit.row() > it.row())))
-        {
-        // cit is "ahead"; we don't need to do anything
-        ++it;
-        }
-      else
-        {
-        // it is "ahead"; we need to insert a new value
-        at(cit.row(), cit.col()) = -(*cit);
-        it.internal_pos++; // update iterator so it still works
-        ++cit;
-        }
-      }
+
+    const uword new_n_nonzero = m.n_nonzero;
+    
+    access::rw(n_nonzero) += (new_n_nonzero - old_n_nonzero);
     }
-
-  const uword new_n_nonzero = p.get_n_nonzero();
-
-  access::rw(n_nonzero) += (new_n_nonzero - old_n_nonzero);
-
+  else
+    {
+    const SpMat<eT> tmp(p.Q);
+    
+    (*this).operator-=(tmp);
+    }
+  
   return *this;
   }
 
@@ -619,7 +609,7 @@ SpSubview<eT>::operator*=(const SpBase<eT, T1>& x)
 
   const SpProxy<T1> p(x.get_ref());
 
-  arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "matrix multiplication into sparse submatrix");
+  arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "matrix multiplication");
 
   // Because we have to use a temporary anyway, it doesn't make sense to
   // reimplement this here.
@@ -635,50 +625,60 @@ const SpSubview<eT>&
 SpSubview<eT>::operator%=(const SpBase<eT, T1>& x)
   {
   arma_extra_debug_sigprint();
-
+  
   const SpProxy<T1> p(x.get_ref());
-
-  arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "element-wise multiplication into sparse submatrix");
-
-  typename SpProxy<T1>::const_iterator_type cit = p.begin();
-  iterator it(*this);
-
-  const uword old_n_nonzero = p.get_n_nonzero();
-
-  while(it.pos() < n_nonzero)
+  
+  arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "element-wise multiplication");
+  
+  if(p.is_alias(m) == false)
     {
-    if(it == cit)
+    typename SpProxy<T1>::const_iterator_type cit = p.begin();
+    iterator it(*this);
+
+    const uword old_n_nonzero = m.n_nonzero;
+
+    while((it.pos() < n_nonzero) || (cit.pos() < p.get_n_nonzero()))
       {
-      (*it) *= (*cit);
-      ++it;
-      ++cit;
-      }
-    else
-      {
-      if((cit.col() > it.col()) || ((cit.col() == it.col()) && (cit.row() > it.row())))
+      if((cit.row() == it.row()) && (cit.col() == it.col()))
         {
-        // cit is "ahead"; this value becomes zero.
-        (*it) = eT(0);
-        it.internal_pos--; // keep it accurate
+        (*it) *= (*cit);
         ++it;
+        ++cit;
         }
       else
         {
-        // it is "ahead"; we just need to catch cit up
-        ++cit;
+        if((cit.col() > it.col()) || ((cit.col() == it.col()) && (cit.row() > it.row())))
+          {
+          // cit is "ahead"
+          (*it) = eT(0); // erase element -- x has a zero here
+          it.internal_pos--; // update iterator so it still works
+          ++it;
+          }
+        else
+          {
+          // it is "ahead"
+          ++cit;
+          }
         }
       }
+
+    const uword new_n_nonzero = m.n_nonzero;
+    
+    access::rw(n_nonzero) += (new_n_nonzero - old_n_nonzero);
     }
-
-  const uword new_n_nonzero = p.get_n_nonzero();
-
-  access::rw(n_nonzero) += (new_n_nonzero - old_n_nonzero);
-
+  else
+    {
+    const SpMat<eT> tmp(p.Q);
+    
+    (*this).operator%=(tmp);
+    }
+  
   return *this;
   }
 
 
 
+//! If you are using this function, you are probably misguided.
 template<typename eT>
 template<typename T1>
 inline
@@ -686,23 +686,32 @@ const SpSubview<eT>&
 SpSubview<eT>::operator/=(const SpBase<eT, T1>& x)
   {
   arma_extra_debug_sigprint();
-
+  
   SpProxy<T1> p(x.get_ref());
-
-  arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "element-wise division into sparse submatrix");
-
-  const uword old_n_nonzero = p.get_n_nonzero();
-
-  // If you are using this function, you are probably misguided.
-  for(uword i = 0; i < n_elem; ++i)
+  
+  arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "element-wise division");
+  
+  if(p.is_alias(m) == false)
     {
-    at(i) /= p[i];
+    const uword old_n_nonzero = p.get_n_nonzero();
+    
+    for(uword col = 0; col < n_cols; ++col)
+    for(uword row = 0; row < n_rows; ++row)
+      {
+      at(row,col) /= p.at(row,col);
+      }
+    
+    const uword new_n_nonzero = p.get_n_nonzero();
+    
+    access::rw(n_nonzero) += (new_n_nonzero - old_n_nonzero);
     }
-
-  const uword new_n_nonzero = p.get_n_nonzero();
-
-  access::rw(n_nonzero) += (new_n_nonzero - old_n_nonzero);
-
+  else
+    {
+    const SpMat<eT> tmp(p.Q);
+    
+    (*this).operator/=(tmp);
+    }
+  
   return *this;
   }
 
@@ -714,8 +723,29 @@ void
 SpSubview<eT>::fill(const eT val)
   {
   arma_extra_debug_sigprint();
-
-  (*this).operator=(val);
+  
+  if(val != eT(0))
+    {
+    // TODO: implement a faster version; the code below is slow
+    
+    const uword start_row = aux_row1;
+    const uword end_row   = aux_row1 + n_rows;
+    const uword start_col = aux_col1;
+    const uword end_col   = aux_col1 + n_cols;
+    
+    // iterate over our part of the sparse matrix
+    for(uword col = start_col; col < end_col; ++col)
+    for(uword row = start_row; row < end_row; ++row)
+      {
+      access::rw(m).at(row, col) = val;
+      }
+    
+    access::rw(n_nonzero) = n_elem;
+    }
+  else
+    {
+    (*this).zeros();
+    }
   }
 
 
@@ -726,17 +756,15 @@ void
 SpSubview<eT>::zeros()
   {
   arma_extra_debug_sigprint();
-
+  
   // we can be a little smarter here
-  for(typename SpMat<eT>::iterator it(access::rw(m), aux_row1, aux_col1);
-      (it.col < (aux_col1 + n_cols - 1)) || (it.col == (aux_col1 + n_cols - 1) && it.row < (aux_row1 + n_rows));
-      ++it)
+  iterator it(*this);
+
+  while(it.pos() < n_nonzero)
     {
-    // column will always be valid; no need to check that
-    if((it.row >= aux_row1) && (it.row < (aux_row1 + n_rows)))
-      {
-      (*it) = 0;
-      }
+    (*it) = 0;
+    it.internal_pos--; // hack to update iterator without requiring a new one
+    ++it;
     }
 
   access::rw(n_nonzero) = 0;
@@ -780,6 +808,7 @@ SpSubview<eT>::eye()
 
 
 template<typename eT>
+arma_hot
 inline
 SpValProxy<SpSubview<eT> >
 SpSubview<eT>::operator[](const uword i)
@@ -793,6 +822,7 @@ SpSubview<eT>::operator[](const uword i)
 
 
 template<typename eT>
+arma_hot
 inline
 eT
 SpSubview<eT>::operator[](const uword i) const
@@ -806,8 +836,9 @@ SpSubview<eT>::operator[](const uword i) const
 
 
 template<typename eT>
+arma_hot
 inline
-SpValProxy<SpSubview<eT> >
+SpValProxy< SpSubview<eT> >
 SpSubview<eT>::operator()(const uword i)
   {
   arma_debug_check( (i >= n_elem), "SpSubview::operator(): index out of bounds");
@@ -821,6 +852,7 @@ SpSubview<eT>::operator()(const uword i)
 
 
 template<typename eT>
+arma_hot
 inline
 eT
 SpSubview<eT>::operator()(const uword i) const
@@ -836,8 +868,9 @@ SpSubview<eT>::operator()(const uword i) const
 
 
 template<typename eT>
+arma_hot
 inline
-SpValProxy<SpSubview<eT> >
+SpValProxy< SpSubview<eT> >
 SpSubview<eT>::operator()(const uword in_row, const uword in_col)
   {
   arma_debug_check( (in_row >= n_rows) || (in_col >= n_cols), "SpSubview::operator(): index out of bounds");
@@ -848,6 +881,7 @@ SpSubview<eT>::operator()(const uword in_row, const uword in_col)
 
 
 template<typename eT>
+arma_hot
 inline
 eT
 SpSubview<eT>::operator()(const uword in_row, const uword in_col) const
@@ -860,8 +894,9 @@ SpSubview<eT>::operator()(const uword in_row, const uword in_col) const
 
 
 template<typename eT>
+arma_hot
 inline
-SpValProxy<SpSubview<eT> >
+SpValProxy< SpSubview<eT> >
 SpSubview<eT>::at(const uword i)
   {
   const uword row = i % n_rows;
@@ -873,6 +908,7 @@ SpSubview<eT>::at(const uword i)
 
 
 template<typename eT>
+arma_hot
 inline
 eT
 SpSubview<eT>::at(const uword i) const
@@ -886,8 +922,9 @@ SpSubview<eT>::at(const uword i) const
 
 
 template<typename eT>
+arma_hot
 inline
-SpValProxy<SpSubview<eT> >
+SpValProxy< SpSubview<eT> >
 SpSubview<eT>::at(const uword in_row, const uword in_col)
   {
   const uword colptr      = m.col_ptrs[in_col + aux_col1];
@@ -916,6 +953,7 @@ SpSubview<eT>::at(const uword in_row, const uword in_col)
 
 
 template<typename eT>
+arma_hot
 inline
 eT
 SpSubview<eT>::at(const uword in_row, const uword in_col) const
@@ -1217,3 +1255,6 @@ SpSubview_row<eT>::SpSubview_row(Mat<eT>& in_m, const uword in_row, const uword 
   arma_extra_debug_sigprint();
   }
 */
+
+
+//! @}

@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2012 Ryan Curtin <ryan@igglybob.com>
+// Copyright (C) 2011-2012 Ryan Curtin
 // Copyright (C) 2011 Matthew Amidon
 // Copyright (C) 2012 Conrad Sanderson
 //
@@ -81,20 +81,20 @@ class SpSubview : public SpBase<eT, SpSubview<eT> >
   inline void ones();
   inline void eye();
 
-  inline SpValProxy<SpSubview<eT> > operator[](const uword i);
-  inline eT                         operator[](const uword i) const;
+  arma_hot inline SpValProxy<SpSubview<eT> > operator[](const uword i);
+  arma_hot inline eT                         operator[](const uword i) const;
 
-  inline SpValProxy<SpSubview<eT> > operator()(const uword i);
-  inline eT                         operator()(const uword i) const;
+  arma_hot inline SpValProxy<SpSubview<eT> > operator()(const uword i);
+  arma_hot inline eT                         operator()(const uword i) const;
 
-  inline SpValProxy<SpSubview<eT> > operator()(const uword in_row, const uword in_col);
-  inline eT                         operator()(const uword in_row, const uword in_col) const;
+  arma_hot inline SpValProxy<SpSubview<eT> > operator()(const uword in_row, const uword in_col);
+  arma_hot inline eT                         operator()(const uword in_row, const uword in_col) const;
 
-  inline SpValProxy<SpSubview<eT> > at(const uword i);
-  inline eT                         at(const uword i) const;
+  arma_hot inline SpValProxy<SpSubview<eT> > at(const uword i);
+  arma_hot inline eT                         at(const uword i) const;
 
-  inline SpValProxy<SpSubview<eT> > at(const uword in_row, const uword in_col);
-  inline eT                         at(const uword in_row, const uword in_col) const;
+  arma_hot inline SpValProxy<SpSubview<eT> > at(const uword in_row, const uword in_col);
+  arma_hot inline eT                         at(const uword in_row, const uword in_col) const;
 
   inline bool check_overlap(const SpSubview& x) const;
 

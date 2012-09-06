@@ -1,5 +1,6 @@
 // Copyright (C) 2009-2012 NICTA (www.nicta.com.au)
 // Copyright (C) 2009-2012 Conrad Sanderson
+// Copyright (C) 2012 Ryan Curtin
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -216,20 +217,19 @@ inline
 typename
 enable_if2
   <
-  (is_arma_sparse_type<T1>::value && is_arma_type<T2>::value &&
-is_same_type<typename T1::elem_type, typename T2::elem_type>::value),
+  (is_arma_sparse_type<T1>::value && is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value),
   SpMat<typename T1::elem_type>
   >::result
 operator/
   (
   const SpBase<typename T1::elem_type, T1>& x,
-  const Base<typename T2::elem_type, T2>& y
+  const   Base<typename T2::elem_type, T2>& y
   )
   {
   arma_extra_debug_sigprint();
 
   const SpProxy<T1> pa(x.get_ref());
-  const Proxy<T2> pb(y.get_ref());
+  const   Proxy<T2> pb(y.get_ref());
 
   arma_debug_assert_same_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "element-wise division");
 
@@ -309,19 +309,18 @@ inline
 typename
 enable_if2
   <
-  (is_arma_type<T1>::value && is_arma_sparse_type<T2>::value &&
-is_same_type<typename T1::elem_type, typename T2::elem_type>::value),
+  (is_arma_type<T1>::value && is_arma_sparse_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value),
   Mat<typename T1::elem_type>
   >::result
 operator/
   (
-  const Base<typename T1::elem_type, T1>& x,
+  const   Base<typename T1::elem_type, T1>& x,
   const SpBase<typename T2::elem_type, T2>& y
   )
   {
   arma_extra_debug_sigprint();
 
-  const Proxy<T1> pa(x.get_ref());
+  const   Proxy<T1> pa(x.get_ref());
   const SpProxy<T2> pb(y.get_ref());
 
   arma_debug_assert_same_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "element-wise division");

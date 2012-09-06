@@ -38,6 +38,9 @@ class Col : public Mat<eT>
   inline                  Col(const std::string& text);
   inline const Col& operator=(const std::string& text);
   
+  inline                  Col(const std::vector<eT>& x);
+  inline const Col& operator=(const std::vector<eT>& x);
+  
   #if defined(ARMA_USE_CXX11)
   inline                  Col(const std::initializer_list<eT>& list);
   inline const Col& operator=(const std::initializer_list<eT>& list);

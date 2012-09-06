@@ -1,5 +1,6 @@
 // Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
 // Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2012 Ryan Curtin
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -189,7 +190,7 @@ enable_if2
 operator+
   (
   const SpBase<typename T1::elem_type, T1>& x,
-  const Base<typename T2::elem_type, T2>& y
+  const   Base<typename T2::elem_type, T2>& y
   )
   {
   // Just call the other order (these operations are commutative)
@@ -209,24 +210,27 @@ enable_if2
   >::result
 operator+
   (
-  const Base<typename T1::elem_type, T1>& x,
+  const   Base<typename T1::elem_type, T1>& x,
   const SpBase<typename T2::elem_type, T2>& y
   )
   {
   arma_extra_debug_sigprint();
-
+  
   Mat<typename T1::elem_type> result(x.get_ref());
+  
   const SpProxy<T2> pb(y.get_ref());
-
+  
+  arma_debug_assert_same_size( result.n_rows, result.n_cols, pb.get_n_rows(), pb.get_n_cols(), "addition" );
+  
   typename SpProxy<T2>::const_iterator_type it = pb.begin();
-
+  
   while(it.pos() < pb.get_n_nonzero())
     {
     const uword pos = it.col() * pb.get_n_cols() + it.row();
     result[pos] += (*it);
     ++it;
     }
-
+  
   return result;
   }
 

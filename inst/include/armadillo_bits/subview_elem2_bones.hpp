@@ -38,7 +38,7 @@ class subview_elem2 : public Base<eT, subview_elem2<eT,T1,T2> >
   
   protected:
   
-  arma_inline subview_elem2(const Mat<eT>& in_m, const Base<uword,T1>& in_ri, const Base<uword,T1>& in_ci, const bool in_all_rows, const bool in_all_cols);
+  arma_inline subview_elem2(const Mat<eT>& in_m, const Base<uword,T1>& in_ri, const Base<uword,T2>& in_ci, const bool in_all_rows, const bool in_all_cols);
   
   
   public:

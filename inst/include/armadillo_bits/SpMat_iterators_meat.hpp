@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2012 Ryan Curtin <ryan@igglybob.com>
+// Copyright (C) 2011-2012 Ryan Curtin
 // Copyright (C) 2011 Matthew Amidon
 // Copyright (C) 2012 Conrad Sanderson
 //

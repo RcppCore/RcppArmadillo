@@ -1,3 +1,9 @@
+2012-09-06  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.3.4.0
+
+	* inst/include/*: Upgraded to new release 3.4.0 of Armadillo
+
 2012-08-31  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/NEWS.Rd: Converted to Rd format

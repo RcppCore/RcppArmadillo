@@ -469,40 +469,43 @@ operator*
   )
   {
   arma_extra_debug_sigprint();
-
+  
   const SpProxy<T1> pa(x.get_ref());
-  const Proxy<T2> pb(y.get_ref());
-
+  const   Proxy<T2> pb(y.get_ref());
+  
   arma_debug_assert_mul_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "matrix multiplication");
-
+  
   Mat<typename T1::elem_type> result(pa.get_n_rows(), pb.get_n_cols());
   result.zeros();
-
-  if(Proxy<T2>::prefer_at_accessor == false)
+  
+  if( (pa.get_n_nonzero() > 0) && (pb.get_n_elem() > 0) )
     {
-    // use direct operator[] access
-    for(typename SpProxy<T1>::const_iterator_type x_it = pa.begin(); x_it.pos() < pa.get_n_nonzero(); x_it++)
+    if(Proxy<T2>::prefer_at_accessor == false)
       {
-      // We just want to use values where y.row = x_it.col.
-      for(uword col = 0; col < result.n_cols; col++)
+      // use direct operator[] access
+      for(typename SpProxy<T1>::const_iterator_type x_it = pa.begin(); x_it.pos() < pa.get_n_nonzero(); x_it++)
         {
-        const uword index = x_it.col() + (pb.get_n_rows() * col);
-        result(x_it.row(), col) += (*x_it) * pb[index];
+        // We just want to use values where y.row = x_it.col.
+        for(uword col = 0; col < result.n_cols; col++)
+          {
+          const uword index = x_it.col() + (pb.get_n_rows() * col);
+          result.at(x_it.row(), col) += (*x_it) * pb[index];
+          }
+        }
+      }
+    else
+      {
+      // use at() access
+      for(typename SpProxy<T1>::const_iterator_type x_it = pa.begin(); x_it.pos() < pa.get_n_nonzero(); x_it++)
+        {
+        for(uword col = 0; col < result.n_cols; col++)
+          {
+          result.at(x_it.row(), col) += (*x_it) * pb.at(x_it.col(), col);
+          }
         }
       }
     }
-  else
-    {
-    // use at() access
-    for(typename SpProxy<T1>::const_iterator_type x_it = pa.begin(); x_it.pos() < pa.get_n_nonzero(); x_it++)
-      {
-      for(uword col = 0; col < result.n_cols; col++)
-        {
-        result(x_it.row(), col) += (*x_it) * pb.at(x_it.col(), col);
-        }
-      }
-    }
-
+  
   return result;
   }
 
@@ -524,39 +527,42 @@ operator*
   )
   {
   arma_extra_debug_sigprint();
-
-  const Proxy<T1> pa(x.get_ref());
+  
+  const   Proxy<T1> pa(x.get_ref());
   const SpProxy<T2> pb(y.get_ref());
-
+  
   arma_debug_assert_mul_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "matrix multiplication");
-
+  
   Mat<typename T1::elem_type> result(pa.get_n_rows(), pb.get_n_cols());
   result.zeros();
-
-  if(Proxy<T1>::prefer_at_accessor == false)
+  
+  if( (pa.get_n_elem() > 0) && (pb.get_n_nonzero() > 0) )
     {
-    // use direct operator[] access
-    for(typename SpProxy<T2>::const_iterator_type y_col_it = pb.begin(); y_col_it.pos() < pb.get_n_nonzero(); ++y_col_it)
+    if(Proxy<T1>::prefer_at_accessor == false)
       {
-      for(uword row = 0; row < result.n_rows; ++row)
+      // use direct operator[] access
+      for(typename SpProxy<T2>::const_iterator_type y_col_it = pb.begin(); y_col_it.pos() < pb.get_n_nonzero(); ++y_col_it)
         {
-        const uword index = row + (y_col_it.row() * result.n_rows);
-        result(row, y_col_it.col()) += pa[index] * (*y_col_it);
+        for(uword row = 0; row < result.n_rows; ++row)
+          {
+          const uword index = row + (y_col_it.row() * result.n_rows);
+          result.at(row, y_col_it.col()) += pa[index] * (*y_col_it);
+          }
+        }
+      }
+    else
+      {
+      // use at() access
+      for(typename SpProxy<T2>::const_iterator_type y_col_it = pb.begin(); y_col_it.pos() < pb.get_n_nonzero(); ++y_col_it)
+        {
+        for(uword row = 0; row < result.n_rows; ++row)
+          {
+          result.at(row, y_col_it.col()) += pa.at(row, y_col_it.row()) * (*y_col_it);
+          }
         }
       }
     }
-  else
-    {
-    // use at() access
-    for(typename SpProxy<T2>::const_iterator_type y_col_it = pb.begin(); y_col_it.pos() < pb.get_n_nonzero(); ++y_col_it)
-      {
-      for(uword row = 0; row < result.n_rows; ++row)
-        {
-        result(row, y_col_it.col()) += pa.at(row, y_col_it.row()) * (*y_col_it);
-        }
-      }
-    }
-
+  
   return result;
   }
 

@@ -1,4 +1,5 @@
-// Copyright (C) 2011 Ryan Curtin <ryan@igglybob.com>
+// Copyright (C) 2011-2012 Ryan Curtin
+// Copyright (C) 2012 Conrad Sanderson
 //
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -9,7 +10,7 @@
 // of the License or (at your option) any later version.
 // (see http://www.opensource.org/licenses for more info)
 
-//! \addtogroup SpMat
+//! \addtogroup SpValProxy
 //! @{
 
 //! SpValProxy implementation.

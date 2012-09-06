@@ -394,6 +394,18 @@ square(const BaseCube<typename T1::elem_type,T1>& A)
 
 
 
+template<typename T1>
+arma_inline
+const SpOp<T1, spop_square>
+square(const SpBase<typename T1::elem_type,T1>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  return SpOp<T1, spop_square>(A.get_ref());
+  }
+
+
+
 //
 // sqrt
 

@@ -38,6 +38,9 @@ class Row : public Mat<eT>
   inline                  Row(const std::string& text);
   inline const Row& operator=(const std::string& text);
   
+  inline                  Row(const std::vector<eT>& x);
+  inline const Row& operator=(const std::vector<eT>& x);
+  
   #if defined(ARMA_USE_CXX11)
   inline                  Row(const std::initializer_list<eT>& list);
   inline const Row& operator=(const std::initializer_list<eT>& list);

@@ -2172,218 +2172,230 @@ diskio::save_raw_ascii(const SpMat<eT>& x, std::ostream& f)
 
 
 
-//! Save a matrix as raw binary (no header)
-template<typename eT>
-inline
-bool
-diskio::save_raw_binary(const SpMat<eT>& x, const std::string& final_name)
-  {
-  arma_extra_debug_sigprint();
-
-  const std::string tmp_name = diskio::gen_tmp_name(final_name);
-
-  std::ofstream f(tmp_name.c_str(), std::fstream::binary);
-
-  bool save_okay = f.is_open();
-
-  if(save_okay == true)
-    {
-    save_okay = diskio::save_raw_binary(x, f);
-
-    f.flush();
-    f.close();
-
-    if(save_okay == true)
-      {
-      save_okay = diskio::safe_rename(tmp_name, final_name);
-      }
-    }
-
-  return save_okay;
-  }
-
-
-
-template<typename eT>
-inline
-bool
-diskio::save_raw_binary(const SpMat<eT>& x, std::ostream& f)
-  {
-  arma_extra_debug_sigprint();
-
-  //Write the dims of the matrix first
-  f.write( reinterpret_cast<const char*>(&x.n_rows), std::streamsize(sizeof(uword)) );
-  f.write( reinterpret_cast<const char*>(&x.n_cols), std::streamsize(sizeof(uword)) );
-  f.write( reinterpret_cast<const char*>(&x.n_nonzero), std::streamsize(sizeof(uword)) );
-
-  //Now write the data for the three vectors
-  f.write( reinterpret_cast<const char*>(x.values), std::streamsize(x.n_nonzero*sizeof(eT)) );
-  f.write( reinterpret_cast<const char*>(x.row_indices), std::streamsize(x.n_nonzero*sizeof(uword)) );
-  f.write( reinterpret_cast<const char*>(x.col_ptrs), std::streamsize((x.n_cols+1)*sizeof(uword)) );
-
-  return f.good();
-  }
+//// TODO: this function doesn't make sense for sparse matrices, as there is no universal definition of a "raw" CSC file
+// //! Save a matrix as raw binary (no header)
+// template<typename eT>
+// inline
+// bool
+// diskio::save_raw_binary(const SpMat<eT>& x, const std::string& final_name)
+//   {
+//   arma_extra_debug_sigprint();
+//   
+// 
+//   const std::string tmp_name = diskio::gen_tmp_name(final_name);
+// 
+//   std::ofstream f(tmp_name.c_str(), std::fstream::binary);
+// 
+//   bool save_okay = f.is_open();
+// 
+//   if(save_okay == true)
+//     {
+//     save_okay = diskio::save_raw_binary(x, f);
+// 
+//     f.flush();
+//     f.close();
+// 
+//     if(save_okay == true)
+//       {
+//       save_okay = diskio::safe_rename(tmp_name, final_name);
+//       }
+//     }
+// 
+//   return save_okay;
+//   }
 
 
 
-//! Save a matrix in text format (human readable),
-//! with a header that indicates the matrix type as well as its dimensions
-template<typename eT>
-inline
-bool
-diskio::save_arma_ascii(const SpMat<eT>& x, const std::string& final_name)
-  {
-  arma_extra_debug_sigprint();
-
-  const std::string tmp_name = diskio::gen_tmp_name(final_name);
-
-  std::ofstream f(tmp_name.c_str());
-
-  bool save_okay = f.is_open();
-
-  if(save_okay == true)
-    {
-    save_okay = diskio::save_arma_ascii(x, f);
-
-    f.flush();
-    f.close();
-
-    if(save_okay == true)
-      {
-      save_okay = diskio::safe_rename(tmp_name, final_name);
-      }
-    }
-
-  return save_okay;
-  }
+//// TODO: this function doesn't make sense for sparse matrices, as there is no universal definition of a "raw" CSC file
+// template<typename eT>
+// inline
+// bool
+// diskio::save_raw_binary(const SpMat<eT>& x, std::ostream& f)
+//   {
+//   arma_extra_debug_sigprint();
+// 
+//   
+//   //Write the dims of the matrix first
+//   f.write( reinterpret_cast<const char*>(&x.n_rows), std::streamsize(sizeof(uword)) );
+//   f.write( reinterpret_cast<const char*>(&x.n_cols), std::streamsize(sizeof(uword)) );
+//   f.write( reinterpret_cast<const char*>(&x.n_nonzero), std::streamsize(sizeof(uword)) );
+// 
+//   //Now write the data for the three vectors
+//   f.write( reinterpret_cast<const char*>(x.values), std::streamsize(x.n_nonzero*sizeof(eT)) );
+//   f.write( reinterpret_cast<const char*>(x.row_indices), std::streamsize(x.n_nonzero*sizeof(uword)) );
+//   f.write( reinterpret_cast<const char*>(x.col_ptrs), std::streamsize((x.n_cols+1)*sizeof(uword)) );
+// 
+//   return f.good();
+//   }
 
 
 
-//! Save a matrix in text format (human readable),
-//! with a header that indicates the matrix type as well as its dimensions
-template<typename eT>
-inline
-bool
-diskio::save_arma_ascii(const SpMat<eT>& x, std::ostream& f)
-  {
-  arma_extra_debug_sigprint();
-
-  const ios::fmtflags orig_flags = f.flags();
-
-  f << diskio::gen_txt_header(x) << '\n';
-  f << x.n_rows << ' ' << x.n_cols << '\n';
-
-  uword cell_width;
-
-  // TODO: need sane values for complex numbers
-
-  if( (is_float<eT>::value == true) || (is_double<eT>::value == true) )
-    {
-    f.setf(ios::scientific);
-    f.precision(10);
-    cell_width = 18;
-    }
-
-  for(uword row=0; row < x.n_rows; ++row)
-    {
-    for(uword col=0; col < x.n_cols; ++col)
-      {
-      f.put(' ');
-
-      if( (is_float<eT>::value == true) || (is_double<eT>::value == true) )
-        {
-        f.width(cell_width);
-        }
-
-      f << x.at(row,col);
-      }
-
-    f.put('\n');
-    }
-
-  const bool save_okay = f.good();
-
-  f.flags(orig_flags);
-
-  return save_okay;
-  }
+//// TODO: this function needs to be reworked to save only non-zero elements; we can define our own format, or adapt an existing format
+// //! Save a matrix in text format (human readable),
+// //! with a header that indicates the matrix type as well as its dimensions
+// template<typename eT>
+// inline
+// bool
+// diskio::save_arma_ascii(const SpMat<eT>& x, const std::string& final_name)
+//   {
+//   arma_extra_debug_sigprint();
+//   
+//   
+//   const std::string tmp_name = diskio::gen_tmp_name(final_name);
+// 
+//   std::ofstream f(tmp_name.c_str());
+// 
+//   bool save_okay = f.is_open();
+// 
+//   if(save_okay == true)
+//     {
+//     save_okay = diskio::save_arma_ascii(x, f);
+// 
+//     f.flush();
+//     f.close();
+// 
+//     if(save_okay == true)
+//       {
+//       save_okay = diskio::safe_rename(tmp_name, final_name);
+//       }
+//     }
+// 
+//   return save_okay;
+//   }
 
 
 
-//! Save a matrix in CSV text format (human readable)
-template<typename eT>
-inline
-bool
-diskio::save_csv_ascii(const SpMat<eT>& x, const std::string& final_name)
-  {
-  arma_extra_debug_sigprint();
+//// TODO: this function needs to be reworked to save only non-zero elements; we can define our own format, or adapt an existing format
+// //! Save a matrix in text format (human readable),
+// //! with a header that indicates the matrix type as well as its dimensions
+// template<typename eT>
+// inline
+// bool
+// diskio::save_arma_ascii(const SpMat<eT>& x, std::ostream& f)
+//   {
+//   arma_extra_debug_sigprint();
+// 
+//   
+//   const ios::fmtflags orig_flags = f.flags();
+// 
+//   f << diskio::gen_txt_header(x) << '\n';
+//   f << x.n_rows << ' ' << x.n_cols << '\n';
+// 
+//   uword cell_width;
+// 
+//   // TODO: need sane values for complex numbers
+// 
+//   if( (is_float<eT>::value == true) || (is_double<eT>::value == true) )
+//     {
+//     f.setf(ios::scientific);
+//     f.precision(10);
+//     cell_width = 18;
+//     }
+// 
+//   for(uword row=0; row < x.n_rows; ++row)
+//     {
+//     for(uword col=0; col < x.n_cols; ++col)
+//       {
+//       f.put(' ');
+// 
+//       if( (is_float<eT>::value == true) || (is_double<eT>::value == true) )
+//         {
+//         f.width(cell_width);
+//         }
+// 
+//       f << x.at(row,col);
+//       }
+// 
+//     f.put('\n');
+//     }
+// 
+//   const bool save_okay = f.good();
+// 
+//   f.flags(orig_flags);
+// 
+//   return save_okay;
+//   }
 
-  const std::string tmp_name = diskio::gen_tmp_name(final_name);
-
-  std::ofstream f(tmp_name.c_str());
-
-  bool save_okay = f.is_open();
-
-  if(save_okay == true)
-    {
-    save_okay = diskio::save_csv_ascii(x, f);
-
-    f.flush();
-    f.close();
-
-    if(save_okay == true)
-      {
-      save_okay = diskio::safe_rename(tmp_name, final_name);
-      }
-    }
-
-  return save_okay;
-  }
 
 
+//// TODO: this function needs to be reworked to save only non-zero elements
+// //! Save a matrix in CSV text format (human readable)
+// template<typename eT>
+// inline
+// bool
+// diskio::save_csv_ascii(const SpMat<eT>& x, const std::string& final_name)
+//   {
+//   arma_extra_debug_sigprint();
+//   
+// 
+//   const std::string tmp_name = diskio::gen_tmp_name(final_name);
+// 
+//   std::ofstream f(tmp_name.c_str());
+// 
+//   bool save_okay = f.is_open();
+// 
+//   if(save_okay == true)
+//     {
+//     save_okay = diskio::save_csv_ascii(x, f);
+// 
+//     f.flush();
+//     f.close();
+// 
+//     if(save_okay == true)
+//       {
+//       save_okay = diskio::safe_rename(tmp_name, final_name);
+//       }
+//     }
+// 
+//   return save_okay;
+//   }
 
-//! Save a matrix in CSV text format (human readable)
-template<typename eT>
-inline
-bool
-diskio::save_csv_ascii(const SpMat<eT>& x, std::ostream& f)
-  {
-  arma_extra_debug_sigprint();
 
-  const ios::fmtflags orig_flags = f.flags();
 
-  // TODO: need sane values for complex numbers
-
-  if( (is_float<eT>::value == true) || (is_double<eT>::value == true) )
-    {
-    f.setf(ios::scientific);
-    f.precision(10);
-    }
-
-  uword x_n_rows = x.n_rows;
-  uword x_n_cols = x.n_cols;
-
-  for(uword row=0; row < x_n_rows; ++row)
-    {
-    for(uword col=0; col < x_n_cols; ++col)
-      {
-      f << x.at(row,col);
-
-      if( col < (x_n_cols-1) )
-        {
-        f.put(',');
-        }
-      }
-
-    f.put('\n');
-    }
-
-  const bool save_okay = f.good();
-
-  f.flags(orig_flags);
-
-  return save_okay;
-  }
+//// TODO: this function needs to be reworked to save only non-zero elements
+// //! Save a matrix in CSV text format (human readable)
+// template<typename eT>
+// inline
+// bool
+// diskio::save_csv_ascii(const SpMat<eT>& x, std::ostream& f)
+//   {
+//   arma_extra_debug_sigprint();
+//   
+//   
+//   const ios::fmtflags orig_flags = f.flags();
+// 
+//   // TODO: need sane values for complex numbers
+// 
+//   if( (is_float<eT>::value == true) || (is_double<eT>::value == true) )
+//     {
+//     f.setf(ios::scientific);
+//     f.precision(10);
+//     }
+// 
+//   uword x_n_rows = x.n_rows;
+//   uword x_n_cols = x.n_cols;
+// 
+//   for(uword row=0; row < x_n_rows; ++row)
+//     {
+//     for(uword col=0; col < x_n_cols; ++col)
+//       {
+//       f << x.at(row,col);
+// 
+//       if( col < (x_n_cols-1) )
+//         {
+//         f.put(',');
+//         }
+//       }
+// 
+//     f.put('\n');
+//     }
+// 
+//   const bool save_okay = f.good();
+// 
+//   f.flags(orig_flags);
+// 
+//   return save_okay;
+//   }
 
 
 
@@ -2443,103 +2455,102 @@ diskio::save_arma_binary(const SpMat<eT>& x, std::ostream& f)
 
 
 
-//! Save a matrix as a PGM greyscale image
-template<typename eT>
-inline
-bool
-diskio::save_pgm_binary(const SpMat<eT>& x, const std::string& final_name)
-  {
-  arma_extra_debug_sigprint();
-
-  const std::string tmp_name = diskio::gen_tmp_name(final_name);
-
-  std::fstream f(tmp_name.c_str(), std::fstream::out | std::fstream::binary);
-
-  bool save_okay = f.is_open();
-
-  if(save_okay == true)
-    {
-    save_okay = diskio::save_pgm_binary(x, f);
-
-    f.flush();
-    f.close();
-
-    if(save_okay == true)
-      {
-      save_okay = diskio::safe_rename(tmp_name, final_name);
-      }
-    }
-
-  return save_okay;
-  }
-
-
-
-//
-// TODO:
-// add functionality to save the image in a normalised format,
-// i.e. scaled so that every value falls in the [0,255] range.
-
-//! Save a matrix as a PGM greyscale image
-template<typename eT>
-inline
-bool
-diskio::save_pgm_binary(const SpMat<eT>& x, std::ostream& f)
-  {
-  arma_extra_debug_sigprint();
-
-  f << "P5" << '\n';
-  f << x.n_cols << ' ' << x.n_rows << ' ' << x.n_cols*x.n_rows << '\n';
-  f << 255 << '\n';
-
-  const uword n_elem = x.n_nonzero;
-  podarray<u8> tmp(n_elem);
-
-  uword i = 0;
-
-  for(uword row=0; row < x.n_rows; ++row)
-    {
-    for(uword col=0; col < x.n_cols; ++col)
-      {
-      tmp[i] = u8( x.at(row,col) );  // TODO: add round() ?
-      ++i;
-      }
-    }
-
-  f.write(reinterpret_cast<const char*>(tmp.mem), std::streamsize(x.n_rows*x.n_cols) );
-
-  return f.good();
-  }
+// //! Save a matrix as a PGM greyscale image
+// template<typename eT>
+// inline
+// bool
+// diskio::save_pgm_binary(const SpMat<eT>& x, const std::string& final_name)
+//   {
+//   arma_extra_debug_sigprint();
+//   
+// 
+//   const std::string tmp_name = diskio::gen_tmp_name(final_name);
+// 
+//   std::fstream f(tmp_name.c_str(), std::fstream::out | std::fstream::binary);
+// 
+//   bool save_okay = f.is_open();
+// 
+//   if(save_okay == true)
+//     {
+//     save_okay = diskio::save_pgm_binary(x, f);
+// 
+//     f.flush();
+//     f.close();
+// 
+//     if(save_okay == true)
+//       {
+//       save_okay = diskio::safe_rename(tmp_name, final_name);
+//       }
+//     }
+// 
+//   return save_okay;
+//   }
 
 
 
-//! Save a matrix as a PGM greyscale image
-template<typename T>
-inline
-bool
-diskio::save_pgm_binary(const SpMat< std::complex<T> >& x, const std::string& final_name)
-  {
-  arma_extra_debug_sigprint();
+// //! Save a matrix as a PGM greyscale image
+// template<typename eT>
+// inline
+// bool
+// diskio::save_pgm_binary(const SpMat<eT>& x, std::ostream& f)
+//   {
+//   arma_extra_debug_sigprint();
+// 
+//   
+//   f << "P5" << '\n';
+//   f << x.n_cols << ' ' << x.n_rows << ' ' << x.n_cols*x.n_rows << '\n';
+//   f << 255 << '\n';
+// 
+//   const uword n_elem = x.n_nonzero;
+//   podarray<u8> tmp(n_elem);
+// 
+//   uword i = 0;
+// 
+//   for(uword row=0; row < x.n_rows; ++row)
+//     {
+//     for(uword col=0; col < x.n_cols; ++col)
+//       {
+//       tmp[i] = u8( x.at(row,col) );  // TODO: add round() ?
+//       ++i;
+//       }
+//     }
+// 
+//   f.write(reinterpret_cast<const char*>(tmp.mem), std::streamsize(x.n_rows*x.n_cols) );
+// 
+//   return f.good();
+//   }
 
-  const uchar_mat tmp = conv_to<uchar_mat>::from(x);
-
-  return diskio::save_pgm_binary(tmp, final_name);
-  }
 
 
+// //! Save a matrix as a PGM greyscale image
+// template<typename T>
+// inline
+// bool
+// diskio::save_pgm_binary(const SpMat< std::complex<T> >& x, const std::string& final_name)
+//   {
+//   arma_extra_debug_sigprint();
+// 
+//   const uchar_mat tmp = conv_to<uchar_mat>::from(x);
+// 
+//   return diskio::save_pgm_binary(tmp, final_name);
+//   }
 
-//! Save a matrix as a PGM greyscale image
-template<typename T>
-inline
-bool
-diskio::save_pgm_binary(const SpMat< std::complex<T> >& x, std::ostream& f)
-  {
-  arma_extra_debug_sigprint();
 
-  const uchar_mat tmp = conv_to<uchar_mat>::from(x);
 
-  return diskio::save_pgm_binary(tmp, f);
-  }
+// //! Save a matrix as a PGM greyscale image
+// template<typename T>
+// inline
+// bool
+// diskio::save_pgm_binary(const SpMat< std::complex<T> >& x, std::ostream& f)
+//   {
+//   arma_extra_debug_sigprint();
+// 
+//   const uchar_mat tmp = conv_to<uchar_mat>::from(x);
+// 
+//   return diskio::save_pgm_binary(tmp, f);
+//   }
+
+
 
 //! Save a matrix in ASCII coord format
 template<typename eT>
@@ -2572,7 +2583,8 @@ diskio::save_coord_ascii(const SpMat<eT>& x, const std::string& final_name)
   }
 
 
-//! Save a matrix in CSV text format (human readable)
+
+//! Save a matrix in ASCII coord format
 template<typename eT>
 inline
 bool
@@ -2595,6 +2607,8 @@ diskio::save_coord_ascii(const SpMat<eT>& x, std::ostream& f)
 
   return save_okay;
   }
+
+
 
 //! Load a matrix as raw text (no header, human readable).
 //! Can read matrices saved as text in Matlab and Octave.
@@ -2724,259 +2738,268 @@ diskio::load_raw_ascii(SpMat<eT>& x, std::istream& f, std::string& err_msg)
 
 
 
-//! Load a matrix in binary format (no header);
-//! the matrix is assumed to have one column
-template<typename eT>
-inline
-bool
-diskio::load_raw_binary(SpMat<eT>& x, const std::string& name, std::string& err_msg)
-  {
-  arma_extra_debug_sigprint();
-
-  std::ifstream f;
-  f.open(name.c_str(), std::fstream::binary);
-
-  bool load_okay = f.is_open();
-
-  if(load_okay == true)
-    {
-    load_okay = diskio::load_raw_binary(x, f, err_msg);
-    f.close();
-    }
-
-  return load_okay;
-  }
-
-
-
-template<typename eT>
-inline
-bool
-diskio::load_raw_binary(SpMat<eT>& x, std::istream& f, std::string& err_msg)
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(err_msg);
-
-  //Make sure we are at top of file.
-  f.clear();
-
-  //Read the dimensions of the matrix
-  f.read( (char*) &access::rw(x.n_rows), std::streamsize(sizeof(uword)) );
-  f.read( (char*) &access::rw(x.n_cols), std::streamsize(sizeof(uword)) );
-  f.read( (char*) &access::rw(x.n_nonzero), std::streamsize(sizeof(uword)) );
-  access::rw(x.n_elem) = x.n_rows * x.n_cols;
-
-  //Allocate appropriate memory, then fill it.
-  eT* in_values = memory::acquire<eT>(x.n_nonzero);
-  uword* in_row_indices = memory::acquire<uword>(x.n_nonzero);
-  uword* in_col_ptrs = memory::acquire<uword>(x.n_cols + 1);
-
-  f.read( reinterpret_cast<char*>(in_values), std::streamsize(x.n_nonzero * sizeof(eT)) );
-  f.read( reinterpret_cast<char*>(in_row_indices), std::streamsize(x.n_nonzero * sizeof(uword)) );
-  f.read( reinterpret_cast<char*>(in_col_ptrs), std::streamsize((x.n_cols + 1) * sizeof(uword)) );
-
-  //Replace the current data in the sparse matrix
-  if(x.n_nonzero > 0)
-    {
-    memory::release(x.values);
-    memory::release(x.row_indices);
-    }
-
-  memory::release(x.col_ptrs);
-
-  access::rwp(x.values) = in_values;
-  access::rwp(x.row_indices) = in_row_indices;
-  access::rwp(x.col_ptrs) = in_col_ptrs;
-
-  return f.good();
-  }
-
-
-//! Load a matrix in text format (human readable),
-//! with a header that indicates the matrix type as well as its dimensions
-template<typename eT>
-inline
-bool
-diskio::load_arma_ascii(SpMat<eT>& x, const std::string& name, std::string& err_msg)
-  {
-  arma_extra_debug_sigprint();
-
-  std::ifstream f(name.c_str());
-
-  bool load_okay = f.is_open();
-
-  if(load_okay == true)
-    {
-    load_okay = diskio::load_arma_ascii(x, f, err_msg);
-    f.close();
-    }
-
-  return load_okay;
-  }
-
-
-
-//! Load a matrix in text format (human readable),
-//! with a header that indicates the matrix type as well as its dimensions
-template<typename eT>
-inline
-bool
-diskio::load_arma_ascii(SpMat<eT>& x, std::istream& f, std::string& err_msg)
-  {
-  arma_extra_debug_sigprint();
-
-  bool load_okay = true;
-
-  eT tmp;
-  std::string f_header;
-  uword f_n_rows;
-  uword f_n_cols;
-
-  f >> f_header;
-  f >> f_n_rows;
-  f >> f_n_cols;
-
-  if(f_header == diskio::gen_txt_header(x))
-    {
-    x.set_size(f_n_rows, f_n_cols);
-
-    for(uword row=0; row < x.n_rows; ++row)
-      {
-      for(uword col=0; col < x.n_cols; ++col)
-        {
-        f >> tmp;
-        x.at(row,col) = tmp;
-        }
-      }
-
-    load_okay = f.good();
-    }
-  else
-    {
-    load_okay = false;
-    err_msg = "incorrect header in ";
-    }
-
-  return load_okay;
-  }
-
-
-
-//! Load a matrix in CSV text format (human readable)
-template<typename eT>
-inline
-bool
-diskio::load_csv_ascii(SpMat<eT>& x, const std::string& name, std::string& err_msg)
-  {
-  arma_extra_debug_sigprint();
-
-  std::fstream f;
-  f.open(name.c_str(), std::fstream::in);
-
-  bool load_okay = f.is_open();
-
-  if(load_okay == true)
-    {
-    load_okay = diskio::load_csv_ascii(x, f, err_msg);
-    f.close();
-    }
-
-  return load_okay;
-  }
-
-
-
-//! Load a matrix in CSV text format (human readable)
-template<typename eT>
-inline
-bool
-diskio::load_csv_ascii(SpMat<eT>& x, std::istream& f, std::string& err_msg)
-  {
-  arma_extra_debug_sigprint();
-
-  bool load_okay = f.good();
-
-  f.clear();
-  const std::fstream::pos_type pos1 = f.tellg();
-
-  //
-  // work out the size
-
-  uword f_n_rows = 0;
-  uword f_n_cols = 0;
-
-  std::string line_string;
-  std::string token;
-
-  while( (f.good() == true) && (load_okay == true) )
-    {
-    std::getline(f, line_string);
-
-    if(line_string.size() == 0)
-      {
-      break;
-      }
-
-    std::stringstream line_stream(line_string);
-
-    uword line_n_cols = 0;
-
-    while(line_stream.good() == true)
-      {
-      getline(line_stream, token, ',');
-      ++line_n_cols;
-      }
-
-    if(f_n_cols < line_n_cols)
-      {
-      f_n_cols = line_n_cols;
-      }
-
-    ++f_n_rows;
-    }
-
-  f.clear();
-  f.seekg(pos1);
-  x.zeros(f_n_rows, f_n_cols);
-
-  uword row = 0;
-
-  while(f.good() == true)
-    {
-    std::getline(f, line_string);
-
-    if(line_string.size() == 0)
-      {
-      break;
-      }
-
-    std::stringstream line_stream(line_string);
-
-    uword col = 0;
-
-    while(line_stream.good() == true)
-      {
-      getline(line_stream, token, ',');
-
-      eT val;
-
-      std::stringstream ss(token);
-
-      ss >> val;
-
-      if(ss.fail() == false)
-        {
-        x.at(row,col) = val;
-        }
-
-      ++col;
-      }
-
-    ++row;
-    }
-
-  return load_okay;
-  }
+//TODO: this function doesn't make sense for sparse matrices, as there is no universal definition of a "raw" CSC file
+// //! Load a matrix in binary format (no header);
+// //! the matrix is assumed to have one column
+// template<typename eT>
+// inline
+// bool
+// diskio::load_raw_binary(SpMat<eT>& x, const std::string& name, std::string& err_msg)
+//   {
+//   arma_extra_debug_sigprint();
+//   
+// 
+//   std::ifstream f;
+//   f.open(name.c_str(), std::fstream::binary);
+// 
+//   bool load_okay = f.is_open();
+// 
+//   if(load_okay == true)
+//     {
+//     load_okay = diskio::load_raw_binary(x, f, err_msg);
+//     f.close();
+//     }
+// 
+//   return load_okay;
+//   }
+
+
+
+//// TODO: this function doesn't make sense for sparse matrices, as there is no universal definition of a "raw" CSC file
+// template<typename eT>
+// inline
+// bool
+// diskio::load_raw_binary(SpMat<eT>& x, std::istream& f, std::string& err_msg)
+//   {
+//   arma_extra_debug_sigprint();
+//   arma_ignore(err_msg);
+// 
+//   
+//   //Make sure we are at top of file.
+//   f.clear();
+// 
+//   //Read the dimensions of the matrix
+//   f.read( (char*) &access::rw(x.n_rows), std::streamsize(sizeof(uword)) );
+//   f.read( (char*) &access::rw(x.n_cols), std::streamsize(sizeof(uword)) );
+//   f.read( (char*) &access::rw(x.n_nonzero), std::streamsize(sizeof(uword)) );
+//   access::rw(x.n_elem) = x.n_rows * x.n_cols;
+// 
+//   //Allocate appropriate memory, then fill it.
+//   eT* in_values = memory::acquire<eT>(x.n_nonzero);  // TODO: BUG.  use acquire_chunked
+//   uword* in_row_indices = memory::acquire<uword>(x.n_nonzero); // TODO: BUG.  use acquire_chunked
+//   uword* in_col_ptrs = memory::acquire<uword>(x.n_cols + 1);
+// 
+//   f.read( reinterpret_cast<char*>(in_values), std::streamsize(x.n_nonzero * sizeof(eT)) );
+//   f.read( reinterpret_cast<char*>(in_row_indices), std::streamsize(x.n_nonzero * sizeof(uword)) );
+//   f.read( reinterpret_cast<char*>(in_col_ptrs), std::streamsize((x.n_cols + 1) * sizeof(uword)) );
+// 
+//   //Replace the current data in the sparse matrix
+//   if(x.n_nonzero > 0)
+//     {
+//     memory::release(x.values);
+//     memory::release(x.row_indices);
+//     }
+// 
+//   memory::release(x.col_ptrs);
+// 
+//   access::rwp(x.values) = in_values;
+//   access::rwp(x.row_indices) = in_row_indices;
+//   access::rwp(x.col_ptrs) = in_col_ptrs;
+// 
+//   return f.good();
+//   }
+
+
+
+//// TODO: this function needs to be reworked to save only non-zero elements; we can define our own format, or adapt an existing format
+// //! Load a matrix in text format (human readable),
+// //! with a header that indicates the matrix type as well as its dimensions
+// template<typename eT>
+// inline
+// bool
+// diskio::load_arma_ascii(SpMat<eT>& x, const std::string& name, std::string& err_msg)
+//   {
+//   arma_extra_debug_sigprint();
+// 
+//   
+//   std::ifstream f(name.c_str());
+// 
+//   bool load_okay = f.is_open();
+// 
+//   if(load_okay == true)
+//     {
+//     load_okay = diskio::load_arma_ascii(x, f, err_msg);
+//     f.close();
+//     }
+// 
+//   return load_okay;
+//   }
+
+
+
+//// TODO: this function needs to be reworked to save only non-zero elements; we can define our own format, or adapt an existing format
+// //! Load a matrix in text format (human readable),
+// //! with a header that indicates the matrix type as well as its dimensions
+// template<typename eT>
+// inline
+// bool
+// diskio::load_arma_ascii(SpMat<eT>& x, std::istream& f, std::string& err_msg)
+//   {
+//   arma_extra_debug_sigprint();
+// 
+//   
+//   bool load_okay = true;
+// 
+//   eT tmp;
+//   std::string f_header;
+//   uword f_n_rows;
+//   uword f_n_cols;
+// 
+//   f >> f_header;
+//   f >> f_n_rows;
+//   f >> f_n_cols;
+// 
+//   if(f_header == diskio::gen_txt_header(x))
+//     {
+//     x.set_size(f_n_rows, f_n_cols);
+// 
+//     for(uword row=0; row < x.n_rows; ++row)
+//       {
+//       for(uword col=0; col < x.n_cols; ++col)
+//         {
+//         f >> tmp;
+//         x.at(row,col) = tmp;
+//         }
+//       }
+// 
+//     load_okay = f.good();
+//     }
+//   else
+//     {
+//     load_okay = false;
+//     err_msg = "incorrect header in ";
+//     }
+// 
+//   return load_okay;
+//   }
+
+
+
+// //! Load a matrix in CSV text format (human readable)
+// template<typename eT>
+// inline
+// bool
+// diskio::load_csv_ascii(SpMat<eT>& x, const std::string& name, std::string& err_msg)
+//   {
+//   arma_extra_debug_sigprint();
+// 
+//   std::fstream f;
+//   f.open(name.c_str(), std::fstream::in);
+// 
+//   bool load_okay = f.is_open();
+// 
+//   if(load_okay == true)
+//     {
+//     load_okay = diskio::load_csv_ascii(x, f, err_msg);
+//     f.close();
+//     }
+// 
+//   return load_okay;
+//   }
+
+
+
+// //! Load a matrix in CSV text format (human readable)
+// template<typename eT>
+// inline
+// bool
+// diskio::load_csv_ascii(SpMat<eT>& x, std::istream& f, std::string& err_msg)
+//   {
+//   arma_extra_debug_sigprint();
+// 
+//   bool load_okay = f.good();
+// 
+//   f.clear();
+//   const std::fstream::pos_type pos1 = f.tellg();
+// 
+//   //
+//   // work out the size
+// 
+//   uword f_n_rows = 0;
+//   uword f_n_cols = 0;
+// 
+//   std::string line_string;
+//   std::string token;
+// 
+//   while( (f.good() == true) && (load_okay == true) )
+//     {
+//     std::getline(f, line_string);
+// 
+//     if(line_string.size() == 0)
+//       {
+//       break;
+//       }
+// 
+//     std::stringstream line_stream(line_string);
+// 
+//     uword line_n_cols = 0;
+// 
+//     while(line_stream.good() == true)
+//       {
+//       getline(line_stream, token, ',');
+//       ++line_n_cols;
+//       }
+// 
+//     if(f_n_cols < line_n_cols)
+//       {
+//       f_n_cols = line_n_cols;
+//       }
+// 
+//     ++f_n_rows;
+//     }
+// 
+//   f.clear();
+//   f.seekg(pos1);
+//   x.zeros(f_n_rows, f_n_cols);
+// 
+//   uword row = 0;
+// 
+//   while(f.good() == true)
+//     {
+//     std::getline(f, line_string);
+// 
+//     if(line_string.size() == 0)
+//       {
+//       break;
+//       }
+// 
+//     std::stringstream line_stream(line_string);
+// 
+//     uword col = 0;
+// 
+//     while(line_stream.good() == true)
+//       {
+//       getline(line_stream, token, ',');
+// 
+//       eT val;
+// 
+//       std::stringstream ss(token);
+// 
+//       ss >> val;
+// 
+//       if(ss.fail() == false)
+//         {
+//         x.at(row,col) = val;
+//         }
+// 
+//       ++col;
+//       }
+// 
+//     ++row;
+//     }
+// 
+//   return load_okay;
+//   }
 
 
 
@@ -3028,9 +3051,9 @@ diskio::load_arma_binary(SpMat<eT>& x, std::istream& f, std::string& err_msg)
     f.get();
 
     //Allocate memory for the incoming data
-    eT* in_values = memory::acquire<eT>(x.n_nonzero);
-    uword* in_row_indices = memory::acquire<uword>(x.n_nonzero);
-    uword* in_col_ptrs = memory::acquire<uword>(x.n_cols + 1);
+    eT*    in_values      = memory::acquire_chunked<eT>   (x.n_nonzero);
+    uword* in_row_indices = memory::acquire_chunked<uword>(x.n_nonzero);
+    uword* in_col_ptrs    = memory::acquire<uword>        (x.n_cols + 1);
 
     f.read((char*) in_values, std::streamsize(x.n_nonzero * sizeof(eT)) );
     f.read((char*) in_row_indices, std::streamsize(x.n_nonzero * sizeof(uword)) );
@@ -3045,9 +3068,9 @@ diskio::load_arma_binary(SpMat<eT>& x, std::istream& f, std::string& err_msg)
 
     memory::release(x.col_ptrs);
 
-    access::rw(x.values) = in_values;
+    access::rw(x.values)      = in_values;
     access::rw(x.row_indices) = in_row_indices;
-    access::rw(x.col_ptrs) = in_col_ptrs;
+    access::rw(x.col_ptrs)    = in_col_ptrs;
 
     load_okay = f.good();
     }
@@ -3062,253 +3085,257 @@ diskio::load_arma_binary(SpMat<eT>& x, std::istream& f, std::string& err_msg)
 
 
 
-//! Load a PGM greyscale image as a matrix
-template<typename eT>
-inline
-bool
-diskio::load_pgm_binary(SpMat<eT>& x, const std::string& name, std::string& err_msg)
-  {
-  arma_extra_debug_sigprint();
-
-  std::fstream f;
-  f.open(name.c_str(), std::fstream::in | std::fstream::binary);
-
-  bool load_okay = f.is_open();
-
-  if(load_okay == true)
-    {
-    load_okay = diskio::load_pgm_binary(x, f, err_msg);
-    f.close();
-    }
-
-  return load_okay;
-  }
-
-
-
-//! Load a PGM greyscale image as a matrix
-template<typename eT>
-inline
-bool
-diskio::load_pgm_binary(SpMat<eT>& x, std::istream& f, std::string& err_msg)
-  {
-  bool load_okay = true;
-
-  std::string f_header;
-  f >> f_header;
-
-  if(f_header == "P5")
-    {
-    uword f_n_rows = 0;
-    uword f_n_cols = 0;
-    int f_maxval = 0;
-
-    diskio::pnm_skip_comments(f);
-
-    f >> f_n_cols;
-    diskio::pnm_skip_comments(f);
-
-    f >> f_n_rows;
-    diskio::pnm_skip_comments(f);
-
-    f >> f_maxval; //grabing a redundant size value
-
-    f >> f_maxval;
-    f.get();
-
-    if( (f_maxval > 0) || (f_maxval <= 65535) )
-      {
-      x.set_size(f_n_rows,f_n_cols);
-
-      if(f_maxval <= 255)
-        {
-        const uword n_elem = f_n_cols*f_n_rows;
-        podarray<u8> tmp(n_elem);
-
-        f.read( reinterpret_cast<char*>(tmp.memptr()), std::streamsize(n_elem) );
-
-        uword i = 0;
-
-        //cout << "f_n_cols = " << f_n_cols << endl;
-        //cout << "f_n_rows = " << f_n_rows << endl;
-
-
-        for(uword row=0; row < f_n_rows; ++row)
-          {
-          for(uword col=0; col < f_n_cols; ++col)
-            {
-            x.at(row,col) = eT(tmp[i]);
-            ++i;
-            }
-          }
-
-        }
-      else
-        {
-        const uword n_elem = f_n_cols*f_n_rows;
-        podarray<u16> tmp(n_elem);
-
-        f.read( reinterpret_cast<char *>(tmp.memptr()), std::streamsize(n_elem*2) );
-
-        uword i = 0;
-
-        for(uword row=0; row < f_n_rows; ++row)
-          {
-          for(uword col=0; col < f_n_cols; ++col)
-            {
-            x.at(row,col) = eT(tmp[i]);
-            ++i;
-            }
-          }
-
-        }
-
-      }
-    else
-      {
-      load_okay = false;
-      err_msg = "currently no code available to handle loading ";
-      }
-
-    if(f.good() == false)
-      {
-      load_okay = false;
-      }
-    }
-  else
-    {
-    load_okay = false;
-    err_msg = "unsupported header in ";
-    }
-
-  return load_okay;
-  }
+// //! Load a PGM greyscale image as a matrix
+// template<typename eT>
+// inline
+// bool
+// diskio::load_pgm_binary(SpMat<eT>& x, const std::string& name, std::string& err_msg)
+//   {
+//   arma_extra_debug_sigprint();
+//   
+//   
+//   std::fstream f;
+//   f.open(name.c_str(), std::fstream::in | std::fstream::binary);
+// 
+//   bool load_okay = f.is_open();
+// 
+//   if(load_okay == true)
+//     {
+//     load_okay = diskio::load_pgm_binary(x, f, err_msg);
+//     f.close();
+//     }
+// 
+//   return load_okay;
+//   }
 
 
 
-//! Load a PGM greyscale image as a matrix
-template<typename T>
-inline
-bool
-diskio::load_pgm_binary(SpMat< std::complex<T> >& x, const std::string& name, std::string& err_msg)
-  {
-  arma_extra_debug_sigprint();
+////! Load a PGM greyscale image as a matrix
+// template<typename eT>
+// inline
+// bool
+// diskio::load_pgm_binary(SpMat<eT>& x, std::istream& f, std::string& err_msg)
+//   {
+//   bool load_okay = true;
+// 
+//   
+//   std::string f_header;
+//   f >> f_header;
+// 
+//   if(f_header == "P5")
+//     {
+//     uword f_n_rows = 0;
+//     uword f_n_cols = 0;
+//     int f_maxval = 0;
+// 
+//     diskio::pnm_skip_comments(f);
+// 
+//     f >> f_n_cols;
+//     diskio::pnm_skip_comments(f);
+// 
+//     f >> f_n_rows;
+//     diskio::pnm_skip_comments(f);
+// 
+//     f >> f_maxval; //grabing a redundant size value
+// 
+//     f >> f_maxval;
+//     f.get();
+// 
+//     if( (f_maxval > 0) || (f_maxval <= 65535) )
+//       {
+//       x.set_size(f_n_rows,f_n_cols);
+// 
+//       if(f_maxval <= 255)
+//         {
+//         const uword n_elem = f_n_cols*f_n_rows;
+//         podarray<u8> tmp(n_elem);
+// 
+//         f.read( reinterpret_cast<char*>(tmp.memptr()), std::streamsize(n_elem) );
+// 
+//         uword i = 0;
+// 
+//         //cout << "f_n_cols = " << f_n_cols << endl;
+//         //cout << "f_n_rows = " << f_n_rows << endl;
+// 
+// 
+//         for(uword row=0; row < f_n_rows; ++row)
+//           {
+//           for(uword col=0; col < f_n_cols; ++col)
+//             {
+//             x.at(row,col) = eT(tmp[i]);
+//             ++i;
+//             }
+//           }
+// 
+//         }
+//       else
+//         {
+//         const uword n_elem = f_n_cols*f_n_rows;
+//         podarray<u16> tmp(n_elem);
+// 
+//         f.read( reinterpret_cast<char *>(tmp.memptr()), std::streamsize(n_elem*2) );
+// 
+//         uword i = 0;
+// 
+//         for(uword row=0; row < f_n_rows; ++row)
+//           {
+//           for(uword col=0; col < f_n_cols; ++col)
+//             {
+//             x.at(row,col) = eT(tmp[i]);
+//             ++i;
+//             }
+//           }
+// 
+//         }
+// 
+//       }
+//     else
+//       {
+//       load_okay = false;
+//       err_msg = "currently no code available to handle loading ";
+//       }
+// 
+//     if(f.good() == false)
+//       {
+//       load_okay = false;
+//       }
+//     }
+//   else
+//     {
+//     load_okay = false;
+//     err_msg = "unsupported header in ";
+//     }
+// 
+//   return load_okay;
+//   }
 
-  uchar_mat tmp;
-  const bool load_okay = diskio::load_pgm_binary(tmp, name, err_msg);
-
-  x = conv_to< Mat< std::complex<T> > >::from(tmp);
-
-  return load_okay;
-  }
 
 
-
-//! Load a PGM greyscale image as a matrix
-template<typename T>
-inline
-bool
-diskio::load_pgm_binary(SpMat< std::complex<T> >& x, std::istream& is, std::string& err_msg)
-  {
-  arma_extra_debug_sigprint();
-
-  uchar_mat tmp;
-  const bool load_okay = diskio::load_pgm_binary(tmp, is, err_msg);
-
-  x = conv_to< Mat< std::complex<T> > >::from(tmp);
-
-  return load_okay;
-  }
+// //! Load a PGM greyscale image as a matrix
+// template<typename T>
+// inline
+// bool
+// diskio::load_pgm_binary(SpMat< std::complex<T> >& x, const std::string& name, std::string& err_msg)
+//   {
+//   arma_extra_debug_sigprint();
+// 
+//   uchar_mat tmp;
+//   const bool load_okay = diskio::load_pgm_binary(tmp, name, err_msg);
+// 
+//   x = conv_to< Mat< std::complex<T> > >::from(tmp); // TODO: BUG
+// 
+//   return load_okay;
+//   }
 
 
 
-//! Try to load a matrix by automatically determining its type
-template<typename eT>
-inline
-bool
-diskio::load_auto_detect(SpMat<eT>& x, const std::string& name, std::string& err_msg)
-  {
-  arma_extra_debug_sigprint();
-
-  std::fstream f;
-  f.open(name.c_str(), std::fstream::in | std::fstream::binary);
-
-  bool load_okay = f.is_open();
-
-  if(load_okay == true)
-    {
-    load_okay = diskio::load_auto_detect(x, f, err_msg);
-    f.close();
-    }
-
-  return load_okay;
-  }
+// //! Load a PGM greyscale image as a matrix
+// template<typename T>
+// inline
+// bool
+// diskio::load_pgm_binary(SpMat< std::complex<T> >& x, std::istream& is, std::string& err_msg)
+//   {
+//   arma_extra_debug_sigprint();
+// 
+//   uchar_mat tmp;
+//   const bool load_okay = diskio::load_pgm_binary(tmp, is, err_msg);
+// 
+//   x = conv_to< Mat< std::complex<T> > >::from(tmp); // TODO: BUG
+// 
+//   return load_okay;
+//   }
 
 
-//! Try to load a matrix by automatically determining its type
-template<typename eT>
-inline
-bool
-diskio::load_auto_detect(SpMat<eT>& x, std::istream& f, std::string& err_msg)
-  {
-  arma_extra_debug_sigprint();
 
-  static const std::string ARMA_SPM_TXT = "ARMA_SPM_TXT";
-  static const std::string ARMA_SPM_BIN = "ARMA_SPM_BIN";
-  static const std::string           P5 = "P5";
+// //! Try to load a matrix by automatically determining its type
+// template<typename eT>
+// inline
+// bool
+// diskio::load_auto_detect(SpMat<eT>& x, const std::string& name, std::string& err_msg)
+//   {
+//   arma_extra_debug_sigprint();
+// 
+//   std::fstream f;
+//   f.open(name.c_str(), std::fstream::in | std::fstream::binary);
+// 
+//   bool load_okay = f.is_open();
+// 
+//   if(load_okay == true)
+//     {
+//     load_okay = diskio::load_auto_detect(x, f, err_msg);
+//     f.close();
+//     }
+// 
+//   return load_okay;
+//   }
 
-  podarray<char> raw_header(ARMA_SPM_TXT.length() + 1);
 
-  std::streampos pos = f.tellg();
 
-  f.read( raw_header.memptr(), std::streamsize(ARMA_SPM_TXT.length()) );
-  raw_header[ARMA_SPM_TXT.length()] = '\0';
+// //! Try to load a matrix by automatically determining its type
+// template<typename eT>
+// inline
+// bool
+// diskio::load_auto_detect(SpMat<eT>& x, std::istream& f, std::string& err_msg)
+//   {
+//   arma_extra_debug_sigprint();
+// 
+//   static const std::string ARMA_SPM_TXT = "ARMA_SPM_TXT";
+//   static const std::string ARMA_SPM_BIN = "ARMA_SPM_BIN";
+//   static const std::string           P5 = "P5";
+// 
+//   podarray<char> raw_header(ARMA_SPM_TXT.length() + 1);
+// 
+//   std::streampos pos = f.tellg();
+// 
+//   f.read( raw_header.memptr(), std::streamsize(ARMA_SPM_TXT.length()) );
+//   raw_header[ARMA_SPM_TXT.length()] = '\0';
+// 
+//   f.clear();
+//   f.seekg(pos);
+// 
+//   const std::string header = raw_header.mem;
+// 
+//   if(ARMA_SPM_TXT == header.substr(0,ARMA_SPM_TXT.length()))
+//     {
+//     return load_arma_ascii(x, f, err_msg);
+//     }
+//   else
+//   if(ARMA_SPM_BIN == header.substr(0,ARMA_SPM_BIN.length()))
+//     {
+//     return load_arma_binary(x, f, err_msg);
+//     }
+//   else
+//   if(P5 == header.substr(0,P5.length()))
+//     {
+//     return load_pgm_binary(x, f, err_msg);
+//     }
+//   else
+//     {
+//     const file_type ft = guess_file_type(f);
+// 
+//     switch(ft)
+//       {
+//       case csv_ascii:
+//         return load_csv_ascii(x, f, err_msg);
+//         break;
+// 
+//       case raw_binary:
+//         return load_raw_binary(x, f, err_msg);
+//         break;
+// 
+//       case raw_ascii:
+//         return load_raw_ascii(x, f, err_msg);
+//         break;
+// 
+//       default:
+//         err_msg = "unknown data in ";
+//         return false;
+//       }
+//     }
+// 
+//   return false;
+//   }
 
-  f.clear();
-  f.seekg(pos);
-
-  const std::string header = raw_header.mem;
-
-  if(ARMA_SPM_TXT == header.substr(0,ARMA_SPM_TXT.length()))
-    {
-    return load_arma_ascii(x, f, err_msg);
-    }
-  else
-  if(ARMA_SPM_BIN == header.substr(0,ARMA_SPM_BIN.length()))
-    {
-    return load_arma_binary(x, f, err_msg);
-    }
-  else
-  if(P5 == header.substr(0,P5.length()))
-    {
-    return load_pgm_binary(x, f, err_msg);
-    }
-  else
-    {
-    const file_type ft = guess_file_type(f);
-
-    switch(ft)
-      {
-      case csv_ascii:
-        return load_csv_ascii(x, f, err_msg);
-        break;
-
-      case raw_binary:
-        return load_raw_binary(x, f, err_msg);
-        break;
-
-      case raw_ascii:
-        return load_raw_ascii(x, f, err_msg);
-        break;
-
-      default:
-        err_msg = "unknown data in ";
-        return false;
-      }
-    }
-
-  return false;
-  }
 
 
 template<typename eT>
@@ -3339,17 +3366,22 @@ inline
 bool
 diskio::load_coord_ascii(SpMat<eT>& x, std::istream& f, std::string& err_msg)
   {
-    uword r,c,nz;
-    f >> r; f >> c; f >> nz; //Grab the header
-    x.set_size(r,c);
-    for(size_t i = 0; i < nz; i++)
-      {
-      eT data;
-      uword row, col;
-      f >> row; f >> col; f >> data;
-      x.at(row,col) = data;
-      }
-    return f.good();
+  uword r,c,nz;
+  
+  f >> r; f >> c; f >> nz; //Grab the header
+  x.set_size(r,c);
+  
+  for(size_t i = 0; i < nz; i++)
+    {
+    eT data;
+    uword row, col;
+    
+    f >> row; f >> col; f >> data;
+    
+    x.at(row,col) = data;
+    }
+  
+  return f.good();
   }
 
 

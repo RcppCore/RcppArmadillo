@@ -91,44 +91,44 @@ class diskio
   // sparse saving
 
   template<typename eT> inline static bool save_raw_ascii  (const SpMat<eT>& x, const std::string& final_name);
-  template<typename eT> inline static bool save_raw_binary (const SpMat<eT>& x, const std::string& final_name);
-  template<typename eT> inline static bool save_arma_ascii (const SpMat<eT>& x, const std::string& final_name);
-  template<typename eT> inline static bool save_csv_ascii  (const SpMat<eT>& x, const std::string& final_name);
+  //template<typename eT> inline static bool save_raw_binary (const SpMat<eT>& x, const std::string& final_name);
+  //template<typename eT> inline static bool save_arma_ascii (const SpMat<eT>& x, const std::string& final_name);
+  //template<typename eT> inline static bool save_csv_ascii  (const SpMat<eT>& x, const std::string& final_name);
   template<typename eT> inline static bool save_arma_binary(const SpMat<eT>& x, const std::string& final_name);
-  template<typename eT> inline static bool save_pgm_binary (const SpMat<eT>& x, const std::string& final_name);
-  template<typename  T> inline static bool save_pgm_binary (const SpMat<std::complex<T> >& x, const std::string& final_name);
+  //template<typename eT> inline static bool save_pgm_binary (const SpMat<eT>& x, const std::string& final_name);
+  //template<typename  T> inline static bool save_pgm_binary (const SpMat<std::complex<T> >& x, const std::string& final_name);
   template<typename eT> inline static bool save_coord_ascii(const SpMat<eT>& x, const std::string& final_name);
 
   template<typename eT> inline static bool save_raw_ascii  (const SpMat<eT>& x, std::ostream& f);
-  template<typename eT> inline static bool save_raw_binary (const SpMat<eT>& x, std::ostream& f);
-  template<typename eT> inline static bool save_arma_ascii (const SpMat<eT>& x, std::ostream& f);
-  template<typename eT> inline static bool save_csv_ascii  (const SpMat<eT>& x, std::ostream& f);
+  //template<typename eT> inline static bool save_raw_binary (const SpMat<eT>& x, std::ostream& f);
+  //template<typename eT> inline static bool save_arma_ascii (const SpMat<eT>& x, std::ostream& f);
+  //template<typename eT> inline static bool save_csv_ascii  (const SpMat<eT>& x, std::ostream& f);
   template<typename eT> inline static bool save_arma_binary(const SpMat<eT>& x, std::ostream& f);
-  template<typename eT> inline static bool save_pgm_binary (const SpMat<eT>& x, std::ostream& f);
-  template<typename  T> inline static bool save_pgm_binary (const SpMat<std::complex<T> >& x, std::ostream& f);
+  //template<typename eT> inline static bool save_pgm_binary (const SpMat<eT>& x, std::ostream& f);
+  //template<typename  T> inline static bool save_pgm_binary (const SpMat<std::complex<T> >& x, std::ostream& f);
   template<typename eT> inline static bool save_coord_ascii(const SpMat<eT>& x, std::ostream& f);
 
   //
   // sparse loading
 
   template<typename eT> inline static bool load_raw_ascii  (SpMat<eT>& x, const std::string& name, std::string& err_msg);
-  template<typename eT> inline static bool load_raw_binary (SpMat<eT>& x, const std::string& name, std::string& err_msg);
-  template<typename eT> inline static bool load_arma_ascii (SpMat<eT>& x, const std::string& name, std::string& err_msg);
-  template<typename eT> inline static bool load_csv_ascii  (SpMat<eT>& x, const std::string& name, std::string& err_msg);
+  //template<typename eT> inline static bool load_raw_binary (SpMat<eT>& x, const std::string& name, std::string& err_msg);
+  //template<typename eT> inline static bool load_arma_ascii (SpMat<eT>& x, const std::string& name, std::string& err_msg);
+  //template<typename eT> inline static bool load_csv_ascii  (SpMat<eT>& x, const std::string& name, std::string& err_msg);
   template<typename eT> inline static bool load_arma_binary(SpMat<eT>& x, const std::string& name, std::string& err_msg);
-  template<typename eT> inline static bool load_pgm_binary (SpMat<eT>& x, const std::string& name, std::string& err_msg);
-  template<typename  T> inline static bool load_pgm_binary (SpMat<std::complex<T> >& x, const std::string& name, std::string& err_msg);
-  template<typename eT> inline static bool load_auto_detect(SpMat<eT>& x, const std::string& name, std::string& err_msg);
+  //template<typename eT> inline static bool load_pgm_binary (SpMat<eT>& x, const std::string& name, std::string& err_msg);
+  //template<typename  T> inline static bool load_pgm_binary (SpMat<std::complex<T> >& x, const std::string& name, std::string& err_msg);
+  //template<typename eT> inline static bool load_auto_detect(SpMat<eT>& x, const std::string& name, std::string& err_msg);
   template<typename eT> inline static bool load_coord_ascii(SpMat<eT>& x, const std::string& name, std::string& err_msg);
 
   template<typename eT> inline static bool load_raw_ascii  (SpMat<eT>& x, std::istream& f,  std::string& err_msg);
-  template<typename eT> inline static bool load_raw_binary (SpMat<eT>& x, std::istream& f,  std::string& err_msg);
-  template<typename eT> inline static bool load_arma_ascii (SpMat<eT>& x, std::istream& f,  std::string& err_msg);
-  template<typename eT> inline static bool load_csv_ascii  (SpMat<eT>& x, std::istream& f,  std::string& err_msg);
+  //template<typename eT> inline static bool load_raw_binary (SpMat<eT>& x, std::istream& f,  std::string& err_msg);
+  //template<typename eT> inline static bool load_arma_ascii (SpMat<eT>& x, std::istream& f,  std::string& err_msg);
+  //template<typename eT> inline static bool load_csv_ascii  (SpMat<eT>& x, std::istream& f,  std::string& err_msg);
   template<typename eT> inline static bool load_arma_binary(SpMat<eT>& x, std::istream& f,  std::string& err_msg);
-  template<typename eT> inline static bool load_pgm_binary (SpMat<eT>& x, std::istream& is, std::string& err_msg);
-  template<typename  T> inline static bool load_pgm_binary (SpMat<std::complex<T> >& x, std::istream& is, std::string& err_msg);
-  template<typename eT> inline static bool load_auto_detect(SpMat<eT>& x, std::istream& f,  std::string& err_msg);
+  //template<typename eT> inline static bool load_pgm_binary (SpMat<eT>& x, std::istream& is, std::string& err_msg);
+  //template<typename  T> inline static bool load_pgm_binary (SpMat<std::complex<T> >& x, std::istream& is, std::string& err_msg);
+  //template<typename eT> inline static bool load_auto_detect(SpMat<eT>& x, std::istream& f,  std::string& err_msg);
   template<typename eT> inline static bool load_coord_ascii(SpMat<eT>& x, std::istream& f,  std::string& err_msg);
 
   
