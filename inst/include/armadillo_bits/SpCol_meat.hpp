@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2012 Ryan Curtin <ryan@igglybob.com>
+// Copyright (C) 2011-2012 Ryan Curtin
 // Copyright (C) 2011 Matthew Amidon
 // 
 // This file is part of the Armadillo C++ library.
@@ -163,12 +163,43 @@ SpCol<eT>::operator=(const Base<eT,T1>& X)
 
 
 template<typename eT>
+template<typename T1>
+inline
+SpCol<eT>::SpCol(const SpBase<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+
+  access::rw(SpMat<eT>::vec_state) = 1;
+
+  SpMat<eT>::operator=(X.get_ref());
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+const SpCol<eT>&
+SpCol<eT>::operator=(const SpBase<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+
+  access::rw(SpMat<eT>::vec_state) = 1;
+
+  SpMat<eT>::operator=(X.get_ref());
+
+  return *this;
+  }
+
+
+
+template<typename eT>
 template<typename T1, typename T2>
 inline
 SpCol<eT>::SpCol
   (
-  const Base<typename SpCol<eT>::pod_type, T1>& A,
-  const Base<typename SpCol<eT>::pod_type, T2>& B
+  const SpBase<typename SpCol<eT>::pod_type, T1>& A,
+  const SpBase<typename SpCol<eT>::pod_type, T2>& B
   )
   {
   arma_extra_debug_sigprint();
@@ -181,8 +212,8 @@ SpCol<eT>::SpCol
 
 
 template<typename eT>
-arma_inline
-SpValProxy<SpMat<eT> >&
+inline
+SpValProxy< SpMat<eT> >
 SpCol<eT>::row(const uword row_num)
   {
   arma_debug_check( (row_num >= SpMat<eT>::n_rows), "SpCol::row(): out of bounds" );
@@ -193,7 +224,7 @@ SpCol<eT>::row(const uword row_num)
 
 
 template<typename eT>
-arma_inline
+inline
 eT
 SpCol<eT>::row(const uword row_num) const
   {
@@ -409,45 +440,45 @@ SpCol<eT>::shed_rows(const uword in_row1, const uword in_row2)
 
 
 
-//! insert N rows at the specified row position,
-//! optionally setting the elements of the inserted rows to zero
-template<typename eT>
-inline
-void
-SpCol<eT>::insert_rows(const uword row_num, const uword N, const bool set_to_zero)
-  {
-  arma_extra_debug_sigprint();
-
-  arma_debug_check(set_to_zero == false, "SpCol::insert_rows(): cannot set nonzero values");
-
-  arma_debug_check((row_num > SpMat<eT>::n_rows), "SpCol::insert_rows(): out of bounds");
-
-  for(uword row = 0; row < SpMat<eT>::n_rows; ++row)
-    {
-    if (SpMat<eT>::row_indices[row] >= row_num)
-      {
-      access::rw(SpMat<eT>::row_indices[row]) += N;
-      }
-    }
-
-  access::rw(SpMat<eT>::n_rows) += N;
-  access::rw(SpMat<eT>::n_elem) += N;
-  }
-
-
-
-//! insert the given object at the specified row position;
-//! the given object must have one column
-template<typename eT>
-template<typename T1>
-inline
-void
-SpCol<eT>::insert_rows(const uword row_num, const Base<eT,T1>& X)
-  {
-  arma_extra_debug_sigprint();
-
-  SpMat<eT>::insert_rows(row_num, X);
-  }
+// //! insert N rows at the specified row position,
+// //! optionally setting the elements of the inserted rows to zero
+// template<typename eT>
+// inline
+// void
+// SpCol<eT>::insert_rows(const uword row_num, const uword N, const bool set_to_zero)
+//   {
+//   arma_extra_debug_sigprint();
+// 
+//   arma_debug_check(set_to_zero == false, "SpCol::insert_rows(): cannot set nonzero values");
+// 
+//   arma_debug_check((row_num > SpMat<eT>::n_rows), "SpCol::insert_rows(): out of bounds");
+// 
+//   for(uword row = 0; row < SpMat<eT>::n_rows; ++row)
+//     {
+//     if (SpMat<eT>::row_indices[row] >= row_num)
+//       {
+//       access::rw(SpMat<eT>::row_indices[row]) += N;
+//       }
+//     }
+// 
+//   access::rw(SpMat<eT>::n_rows) += N;
+//   access::rw(SpMat<eT>::n_elem) += N;
+//   }
+// 
+// 
+// 
+// //! insert the given object at the specified row position;
+// //! the given object must have one column
+// template<typename eT>
+// template<typename T1>
+// inline
+// void
+// SpCol<eT>::insert_rows(const uword row_num, const Base<eT,T1>& X)
+//   {
+//   arma_extra_debug_sigprint();
+// 
+//   SpMat<eT>::insert_rows(row_num, X);
+//   }
 
 
 
@@ -506,8 +537,8 @@ SpCol<eT>::end_row(const uword row_num) const
   }
 
 
-#ifdef ARMA_EXTRA_COL_MEAT
-  #include ARMA_INCFILE_WRAP(ARMA_EXTRA_COL_MEAT)
+#ifdef ARMA_EXTRA_SPCOL_MEAT
+  #include ARMA_INCFILE_WRAP(ARMA_EXTRA_SPCOL_MEAT)
 #endif
 
 

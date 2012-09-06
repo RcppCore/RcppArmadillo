@@ -1,4 +1,4 @@
-// Copyright (C) 2012 Ryan Curtin <ryan@igglybob.com>
+// Copyright (C) 2012 Ryan Curtin
 // Copyright (C) 2012 Conrad Sanderson
 //
 // This file is part of the Armadillo C++ library.

@@ -68,6 +68,13 @@
 //// If you mainly use lots of very small vectors (eg. <= 4 elements),
 //// change the number to the size of your vectors.
 
+#if !defined(ARMA_SPMAT_CHUNKSIZE)
+  #define ARMA_SPMAT_CHUNKSIZE 256
+#endif
+//// This is the minimum increase in the amount of memory (in terms of elements) allocated by a sparse matrix;
+//// it must be an integer that is at least 1.
+//// The minimum recommended size is 16.
+
 // #define ARMA_NO_DEBUG
 //// Uncomment the above line if you want to disable all run-time checks.
 //// This will result in faster code, but you first need to make sure that your code runs correctly!

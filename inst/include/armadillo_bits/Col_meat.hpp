@@ -139,6 +139,42 @@ Col<eT>::operator=(const std::string& text)
 
 
 
+//! create a column vector from std::vector
+template<typename eT>
+inline
+Col<eT>::Col(const std::vector<eT>& x)
+  : Mat<eT>(arma_vec_indicator(), uword(x.size()), 1, 1)
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  if(x.size() > 0)
+    {
+    arrayops::copy( Mat<eT>::memptr(), &(x[0]), uword(x.size()) );
+    }
+  }
+  
+  
+  
+//! create a column vector from std::vector
+template<typename eT>
+inline
+const Col<eT>&
+Col<eT>::operator=(const std::vector<eT>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>::init_warm(uword(x.size()), 1);
+  
+  if(x.size() > 0)
+    {
+    arrayops::copy( Mat<eT>::memptr(), &(x[0]), uword(x.size()) );
+    }
+  
+  return *this;
+  }
+
+
+
 #if defined(ARMA_USE_CXX11)
   
   template<typename eT>

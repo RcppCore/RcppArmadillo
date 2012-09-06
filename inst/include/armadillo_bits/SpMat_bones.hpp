@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2012 Ryan Curtin <ryan@igglybob.com>
+// Copyright (C) 2011-2012 Ryan Curtin
 // Copyright (C) 2011 Matthew Amidon
 // Copyright (C) 2012 Conrad Sanderson
 //
@@ -14,7 +14,7 @@
 //! \addtogroup SpMat
 //! @{
 
-//! Sparse matrix class, which uses the compressed sparse column (CSC) format.  For external solvers we depend on GMM++.
+//! Sparse matrix class, with data stored in compressed sparse column (CSC) format
 
 template<typename eT>
 class SpMat : public SpBase< eT, SpMat<eT> >
@@ -504,6 +504,10 @@ class SpMat : public SpBase< eT, SpMat<eT> >
     #include ARMA_INCFILE_WRAP(ARMA_EXTRA_SPMAT_PROTO)
   #endif
   };
+
+
+
+#define ARMA_HAS_SPMAT
 
 
 

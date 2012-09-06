@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2012 Ryan Curtin <ryan@igglybob.com>
+// Copyright (C) 2011-2012 Ryan Curtin
 // Copyright (C) 2011 Matthew Amidon
 // 
 // This file is part of the Armadillo C++ library.
@@ -156,12 +156,41 @@ SpRow<eT>::operator=(const Base<eT,T1>& X)
 
 
 template<typename eT>
+template<typename T1>
+inline
+SpRow<eT>::SpRow(const SpBase<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+
+  access::rw(SpMat<eT>::vec_state) = 2;
+  
+  SpMat<eT>::operator=(X.get_ref());
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+const SpRow<eT>&
+SpRow<eT>::operator=(const SpBase<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  SpMat<eT>::operator=(X.get_ref());
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
 template<typename T1, typename T2>
 inline
 SpRow<eT>::SpRow
   (
-  const Base<typename SpRow<eT>::pod_type, T1>& A,
-  const Base<typename SpRow<eT>::pod_type, T2>& B
+  const SpBase<typename SpRow<eT>::pod_type, T1>& A,
+  const SpBase<typename SpRow<eT>::pod_type, T2>& B
   )
   {
   arma_extra_debug_sigprint();
@@ -174,8 +203,8 @@ SpRow<eT>::SpRow
 
 
 template<typename eT>
-arma_inline
-SpValProxy<SpMat<eT> >
+inline
+SpValProxy< SpMat<eT> >
 SpRow<eT>::col(const uword col_num)
   {
   arma_debug_check( (col_num >= SpMat<eT>::n_cols), "SpRow::col(): out of bounds" );
@@ -186,7 +215,7 @@ SpRow<eT>::col(const uword col_num)
 
 
 template<typename eT>
-arma_inline
+inline
 eT
 SpRow<eT>::col(const uword col_num) const
   {
@@ -421,49 +450,49 @@ SpRow<eT>::shed_cols(const uword in_col1, const uword in_col2)
 
 
 
-//! insert N cols at the specified col position,
-//! optionally setting the elements of the inserted cols to zero
-template<typename eT>
-inline
-void
-SpRow<eT>::insert_cols(const uword col_num, const uword N, const bool set_to_zero)
-  {
-  arma_extra_debug_sigprint();
-
-  // insertion at col_num == n_cols is in effect an append operation
-  arma_debug_check( (col_num > SpMat<eT>::n_cols), "SpRow::insert_cols(): out of bounds");
-
-  arma_debug_check( (set_to_zero == false), "SpRow::insert_cols(): cannot set elements to nonzero values");
-
-  uword newVal = (col_num == 0) ? 0 : SpMat<eT>::col_ptrs[col_num];
-  SpMat<eT>::col_ptrs.insert(col_num, N, newVal);
-  uword* new_col_ptrs = memory::acquire<uword>(SpMat<eT>::n_cols + N);
-
-  arrayops::copy(new_col_ptrs, SpMat<eT>::col_ptrs, col_num);
-
-  uword fill_value = (col_num == 0) ? 0 : SpMat<eT>::col_ptrs[col_num - 1];
-  arrayops::inplace_set(new_col_ptrs + col_num, fill_value, N);
-
-  arrayops::copy(new_col_ptrs + col_num + N, SpMat<eT>::col_ptrs + col_num, SpMat<eT>::n_cols - col_num);
-
-  access::rw(SpMat<eT>::n_cols) += N;
-  access::rw(SpMat<eT>::n_elem) += N;
-  }
-
-
-
-//! insert the given object at the specified col position; 
-//! the given object must have one row
-template<typename eT>
-template<typename T1>
-inline
-void
-SpRow<eT>::insert_cols(const uword col_num, const Base<eT,T1>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  SpMat<eT>::insert_cols(col_num, X);
-  }
+// //! insert N cols at the specified col position,
+// //! optionally setting the elements of the inserted cols to zero
+// template<typename eT>
+// inline
+// void
+// SpRow<eT>::insert_cols(const uword col_num, const uword N, const bool set_to_zero)
+//   {
+//   arma_extra_debug_sigprint();
+// 
+//   // insertion at col_num == n_cols is in effect an append operation
+//   arma_debug_check( (col_num > SpMat<eT>::n_cols), "SpRow::insert_cols(): out of bounds");
+// 
+//   arma_debug_check( (set_to_zero == false), "SpRow::insert_cols(): cannot set elements to nonzero values");
+// 
+//   uword newVal = (col_num == 0) ? 0 : SpMat<eT>::col_ptrs[col_num];
+//   SpMat<eT>::col_ptrs.insert(col_num, N, newVal);
+//   uword* new_col_ptrs = memory::acquire<uword>(SpMat<eT>::n_cols + N);
+// 
+//   arrayops::copy(new_col_ptrs, SpMat<eT>::col_ptrs, col_num);
+// 
+//   uword fill_value = (col_num == 0) ? 0 : SpMat<eT>::col_ptrs[col_num - 1];
+//   arrayops::inplace_set(new_col_ptrs + col_num, fill_value, N);
+// 
+//   arrayops::copy(new_col_ptrs + col_num + N, SpMat<eT>::col_ptrs + col_num, SpMat<eT>::n_cols - col_num);
+// 
+//   access::rw(SpMat<eT>::n_cols) += N;
+//   access::rw(SpMat<eT>::n_elem) += N;
+//   }
+// 
+// 
+// 
+// //! insert the given object at the specified col position; 
+// //! the given object must have one row
+// template<typename eT>
+// template<typename T1>
+// inline
+// void
+// SpRow<eT>::insert_cols(const uword col_num, const Base<eT,T1>& X)
+//   {
+//   arma_extra_debug_sigprint();
+//   
+//   SpMat<eT>::insert_cols(col_num, X);
+//   }
 
 
 

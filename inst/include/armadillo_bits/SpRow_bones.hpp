@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2012 Ryan Curtin <ryan@igglybob.com>
+// Copyright (C) 2011-2012 Ryan Curtin
 // Copyright (C) 2011 Matthew Amidon
 // 
 // This file is part of the Armadillo C++ library.
@@ -40,14 +40,17 @@ class SpRow : public SpMat<eT>
 
   inline const SpRow& operator=(const eT val);
 
-  template<typename T1> inline                   SpRow(const Base<eT,T1>& X);
-  template<typename T1> inline const SpRow&  operator=(const Base<eT,T1>& X);
+  template<typename T1> inline                  SpRow(const Base<eT,T1>& X);
+  template<typename T1> inline const SpRow& operator=(const Base<eT,T1>& X);
 
+  template<typename T1> inline                  SpRow(const SpBase<eT,T1>& X);
+  template<typename T1> inline const SpRow& operator=(const SpBase<eT,T1>& X);
+  
   template<typename T1, typename T2>
-  inline explicit SpRow(const Base<pod_type,T1>& A, const Base<pod_type,T2>& B);
+  inline explicit SpRow(const SpBase<pod_type,T1>& A, const SpBase<pod_type,T2>& B);
 
-  arma_inline SpValProxy<SpMat<eT> > col(const uword col_num);
-  arma_inline eT                     col(const uword col_num) const;
+  inline SpValProxy<SpMat<eT> > col(const uword col_num);
+  inline eT                     col(const uword col_num) const;
 
 //  arma_inline       subview_row<eT> cols(const uword in_col1, const uword in_col2);
 //  arma_inline const subview_row<eT> cols(const uword in_col1, const uword in_col2) const;
@@ -64,8 +67,8 @@ class SpRow : public SpMat<eT>
   inline void shed_col (const uword col_num);
   inline void shed_cols(const uword in_col1, const uword in_col2);
 
-                        inline void insert_cols(const uword col_num, const uword N, const bool set_to_zero = true);
-  template<typename T1> inline void insert_cols(const uword col_num, const Base<eT,T1>& X);
+//                         inline void insert_cols(const uword col_num, const uword N, const bool set_to_zero = true);
+//   template<typename T1> inline void insert_cols(const uword col_num, const Base<eT,T1>& X);
 
 
   typedef typename SpMat<eT>::iterator       row_iterator;
@@ -77,8 +80,8 @@ class SpRow : public SpMat<eT>
   inline       row_iterator end_row();
   inline const_row_iterator end_row() const;
   
-  #ifdef ARMA_EXTRA_ROW_PROTO
-    #include ARMA_INCFILE_WRAP(ARMA_EXTRA_ROW_PROTO)
+  #ifdef ARMA_EXTRA_SPROW_PROTO
+    #include ARMA_INCFILE_WRAP(ARMA_EXTRA_SPROW_PROTO)
   #endif
   };
 

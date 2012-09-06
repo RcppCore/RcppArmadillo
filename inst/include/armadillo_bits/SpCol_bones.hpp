@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2012 Ryan Curtin <ryan@igglybob.com>
+// Copyright (C) 2011-2012 Ryan Curtin
 // Copyright (C) 2011 Matthew Amidon
 //
 // This file is part of the Armadillo C++ library.
@@ -43,11 +43,14 @@ class SpCol : public SpMat<eT>
   template<typename T1> inline                  SpCol(const Base<eT,T1>& X);
   template<typename T1> inline const SpCol& operator=(const Base<eT,T1>& X);
 
-  template<typename T1, typename T2>
-  inline explicit SpCol(const Base<pod_type,T1>& A, const Base<pod_type,T2>& B);
+  template<typename T1> inline                  SpCol(const SpBase<eT,T1>& X);
+  template<typename T1> inline const SpCol& operator=(const SpBase<eT,T1>& X);
 
-  arma_inline SpValProxy<SpMat<eT> >& row(const uword row_num);
-  arma_inline eT                      row(const uword row_num) const;
+  template<typename T1, typename T2>
+  inline explicit SpCol(const SpBase<pod_type,T1>& A, const SpBase<pod_type,T2>& B);
+
+  inline SpValProxy<SpMat<eT> > row(const uword row_num);
+  inline eT                     row(const uword row_num) const;
 
 //  arma_inline       subview_col<eT> rows(const uword in_row1, const uword in_row2);
 //  arma_inline const subview_col<eT> rows(const uword in_row1, const uword in_row2) const;
@@ -61,8 +64,8 @@ class SpCol : public SpMat<eT>
   inline void shed_row (const uword row_num);
   inline void shed_rows(const uword in_row1, const uword in_row2);
 
-                        inline void insert_rows(const uword row_num, const uword N, const bool set_to_zero = true);
-  template<typename T1> inline void insert_rows(const uword row_num, const Base<eT,T1>& X);
+//                         inline void insert_rows(const uword row_num, const uword N, const bool set_to_zero = true);
+//   template<typename T1> inline void insert_rows(const uword row_num, const Base<eT,T1>& X);
 
 
   typedef typename SpMat<eT>::iterator       row_iterator;

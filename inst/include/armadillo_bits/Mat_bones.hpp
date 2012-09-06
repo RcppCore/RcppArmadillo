@@ -1,5 +1,6 @@
 // Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
 // Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2012 Ryan Curtin
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -59,6 +60,9 @@ class Mat : public Base< eT, Mat<eT> >
   
   inline                  Mat(const std::string& text);
   inline const Mat& operator=(const std::string& text);
+  
+  inline                  Mat(const std::vector<eT>& x);
+  inline const Mat& operator=(const std::vector<eT>& x);
   
   #if defined(ARMA_USE_CXX11)
   inline                  Mat(const std::initializer_list<eT>& list);

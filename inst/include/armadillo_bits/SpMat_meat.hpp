@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2012 Ryan Curtin <ryan@igglybob.com>
+// Copyright (C) 2011-2012 Ryan Curtin
 // Copyright (C) 2011 Matthew Amidon
 // Copyright (C) 2012 Conrad Sanderson
 //
@@ -302,11 +302,11 @@ SpMat<eT>::operator*=(const SpMat<eT>& y)
   arma_extra_debug_sigprint();
   
   arma_debug_assert_mul_size(n_rows, n_cols, y.n_rows, y.n_cols, "matrix multiplication");
-
-  SpMat z;
+  
+  SpMat<eT> z;
   z = (*this) * y;
   steal_mem(z);
-
+  
   return *this;
   }
 
@@ -339,7 +339,7 @@ SpMat<eT>::operator%=(const SpMat<eT>& x)
       x_it++;
       }
 
-    else if ((it.col() <= x_it.col()) && (it.row() < x_it.row()))
+    else if ((it.col() < x_it.col()) || ((it.col() == x_it.col()) && (it.row() < x_it.row())))
       {
       // This case is when our matrix has an element which the other matrix does not.
       // So we must delete this element.
@@ -520,33 +520,20 @@ SpMat<eT>::operator=(const Base<eT, T1>& x)
   {
   //No easy init function, will have to generate matrix manually.
   arma_extra_debug_sigprint();
-
+  
   const Proxy<T1> p(x.get_ref());
   
   const uword x_n_rows = p.get_n_rows();
   const uword x_n_cols = p.get_n_cols();
-  const uword x_n_elem = p.get_n_elem();
   
   init(x_n_rows, x_n_cols);
-
-  if(Proxy<T1>::prefer_at_accessor == true)
+  
+  for(uword j = 0; j < x_n_cols; ++j)
+  for(uword i = 0; i < x_n_rows; ++i)
     {
-    for(uword j = 0; j < x_n_cols; ++j)
-      {
-        for(uword i = 0; i < x_n_rows; ++i)
-        {
-        at(i) = p.at(i, j); // Let the proxy handle 0's.
-        }
-      }
+    at(i,j) = p.at(i,j); // let SpValProxy handle 0's.
     }
-  else
-    {
-    for(uword i = 0; i < x_n_elem; ++i)
-      {
-      at(i) = p[i];
-      }
-    }
-
+  
   return *this;
   }
 
@@ -591,7 +578,7 @@ SpMat<eT>::operator*=(const Base<eT, T1>& y)
     last_index = index[last_index];
     }
 
-  SpMat z(n_rows, p.get_n_cols());
+  SpMat<eT> z(n_rows, p.get_n_cols());
 
   z.mem_resize(nonzero_rows * p.get_n_cols()); // upper bound on size
 
@@ -622,7 +609,7 @@ SpMat<eT>::operator*=(const Base<eT, T1>& y)
         access::rw(z.values[cur_pos]) = partial_sums[i];
         access::rw(z.row_indices[cur_pos]) = i;
         ++access::rw(z.col_ptrs[col + 1]);
-        printf("colptr %d now %d\n", col + 1, z.col_ptrs[col + 1]);
+        //printf("colptr %d now %d\n", col + 1, z.col_ptrs[col + 1]);
         ++cur_pos;
         partial_sums[i] = 0; // Would it be faster to do this in batch later?
         }
@@ -662,22 +649,10 @@ SpMat<eT>::operator/=(const Base<eT, T1>& x)
    */
   arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "element-wise division");
   
-  if(Proxy<T1>::prefer_at_accessor == true)
+  for(uword j = 0; j < n_cols; j++)
+  for(uword i = 0; i < n_rows; i++)
     {
-    for(uword j = 0; j < n_cols; j++)
-      {
-      for(uword i = 0; i < n_rows; i++)
-        {
-        at(i, j) /= p.at(i, j);
-        }
-      }
-    }
-  else
-    {
-    for(uword i = 0; i < n_elem; ++i)
-      {
-      at(i) /= p[i];
-      }
+    at(i, j) /= p.at(i, j);
     }
   
   return *this;
@@ -874,7 +849,7 @@ SpMat<eT>::operator*=(const SpSubview<eT>& y)
   arma_debug_assert_mul_size(n_rows, n_cols, y.n_rows, y.n_cols, "matrix multiplication");
   
   // Cannot be done in-place (easily).
-  SpMat z = (*this) * y;
+  SpMat<eT> z = (*this) * y;
   steal_mem(z);
   
   return *this;
@@ -1043,7 +1018,7 @@ SpMat<eT>::operator*=(const subview<eT>& y)
 
   arma_debug_assert_mul_size(n_rows, n_cols, y.n_rows, y.n_cols, "matrix multiplication");
 
-  SpMat z(n_rows, y.n_cols);
+  SpMat<eT> z(n_rows, y.n_cols);
 
   // Performed in the same fashion as operator*=(SpMat).
   for (const_row_iterator x_row_it = begin_row(); x_row_it.pos() < n_nonzero; ++x_row_it)
@@ -1053,7 +1028,7 @@ SpMat<eT>::operator*=(const subview<eT>& y)
       // At this moment in the loop, we are calculating anything that is contributed to by *x_row_it and *y_col_it.
       // Given that our position is x_ab and y_bc, there will only be a contribution if x.col == y.row, and that
       // contribution will be in location z_ac.
-      z(x_row_it.row, col) += (*x_row_it) * y.at(x_row_it.col, col);
+      z.at(x_row_it.row, col) += (*x_row_it) * y.at(x_row_it.col, col);
       }
     }
 

@@ -17,9 +17,9 @@
 
 
 #define ARMA_VERSION_MAJOR 3
-#define ARMA_VERSION_MINOR 3
-#define ARMA_VERSION_PATCH 91
-#define ARMA_VERSION_NAME  "v3.4 beta 1; for testing use only"
+#define ARMA_VERSION_MINOR 4
+#define ARMA_VERSION_PATCH 0
+#define ARMA_VERSION_NAME  "Ku De Ta"
 
 
 

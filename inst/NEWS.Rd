@@ -2,8 +2,16 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
-\section{Changes in RcppArmadillo version 0.3.x.yy (2012-09-zz)}{
+\section{Changes in RcppArmadillo version 0.3.4.0 (2012-09-06)}{
   \itemize{
+    \item Upgraded to Armadillo release 3.4.0 (Ku De Ta)
+    \itemize{
+      \item added economical QR decomposition: qr_econ()
+      \item added .each_col() & .each_row() for vector operations repeated on each column or row
+      \item added preliminary support for sparse matrices, contributed by Ryan Curtin et al. (Georgia Institute of Technology)
+      \item faster singular value decomposition via divide-and-conquer algorithm
+      \item faster .randn()
+    }
     \item NEWS file converted to Rd format
   }
 }

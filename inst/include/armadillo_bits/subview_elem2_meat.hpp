@@ -29,7 +29,7 @@ subview_elem2<eT,T1,T2>::subview_elem2
   (
   const Mat<eT>&        in_m,
   const Base<uword,T1>& in_ri,
-  const Base<uword,T1>& in_ci,
+  const Base<uword,T2>& in_ci,
   const bool            in_all_rows,
   const bool            in_all_cols
   )

@@ -1,5 +1,6 @@
 // Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
 // Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2012 Ryan Curtin
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -435,6 +436,49 @@ Mat<eT>::init(const std::string& text)
     line_start = line_end+1;
     }
   
+  }
+
+
+
+//! create the matrix from std::vector
+template<typename eT>
+inline
+Mat<eT>::Mat(const std::vector<eT>& x)
+  : n_rows(uword(x.size()))
+  , n_cols(1)
+  , n_elem(uword(x.size()))
+  , vec_state(0)
+  , mem_state(0)
+  , mem()
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  init_cold();
+  
+  if(n_elem > 0)
+    {
+    arrayops::copy( memptr(), &(x[0]), n_elem );
+    }
+  }
+  
+  
+  
+//! create the matrix from std::vector
+template<typename eT>
+inline
+const Mat<eT>&
+Mat<eT>::operator=(const std::vector<eT>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  init_warm(uword(x.size()), 1);
+  
+  if(x.size() > 0)
+    {
+    arrayops::copy( memptr(), &(x[0]), uword(x.size()) );
+    }
+  
+  return *this;
   }
 
 

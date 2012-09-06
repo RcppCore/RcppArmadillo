@@ -30,5 +30,40 @@ spop_scalar_times::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_
 
 
 
+template<typename T1>
+arma_hot
+inline
+void
+spop_square::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_square>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  out = in.m;
+  
+  eT* values = access::rwp(out.values);
+  
+  const uword n_nz = out.n_nonzero;
+  
+  uword i,j;
+  for(i=0, j=1; j < n_nz; i+=2, j+=2)
+    {
+    const eT tmp_i = values[i];
+    const eT tmp_j = values[j];
+    
+    values[i] = tmp_i*tmp_i;
+    values[j] = tmp_j*tmp_j;
+    }
+  
+  if(i < n_nz)
+    {
+    const eT tmp_i = values[i];
+    
+    values[i] = tmp_i*tmp_i;
+    }
+  }
+
+
 
 //! @}

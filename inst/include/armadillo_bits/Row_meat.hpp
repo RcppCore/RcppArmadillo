@@ -115,6 +115,42 @@ Row<eT>::operator=(const std::string& text)
 
 
 
+//! create a row vector from std::vector
+template<typename eT>
+inline
+Row<eT>::Row(const std::vector<eT>& x)
+  : Mat<eT>(arma_vec_indicator(), 1, uword(x.size()), 2)
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  if(x.size() > 0)
+    {
+    arrayops::copy( Mat<eT>::memptr(), &(x[0]), uword(x.size()) );
+    }
+  }
+  
+  
+  
+//! create a row vector from std::vector
+template<typename eT>
+inline
+const Row<eT>&
+Row<eT>::operator=(const std::vector<eT>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>::init_warm(1, uword(x.size()));
+  
+  if(x.size() > 0)
+    {
+    arrayops::copy( Mat<eT>::memptr(), &(x[0]), uword(x.size()) );
+    }
+  
+  return *this;
+  }
+
+
+
 #if defined(ARMA_USE_CXX11)
   
   template<typename eT>
