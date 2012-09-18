@@ -27,6 +27,10 @@
 //// Without BLAS, matrix multiplication will still work, but might be slower.
 #endif
 
+// #define ARMA_USE_WRAPPER
+//// Comment out the above line if you prefer to directly link with LAPACK and/or BLAS (eg. -llapack -lblas)
+//// instead of linking indirectly with LAPACK and/or BLAS via Armadillo's run-time wrapper library.
+
 // #define ARMA_BLAS_CAPITALS
 //// Uncomment the above line if your BLAS and LAPACK libraries have capitalised function names (eg. ACML on 64-bit Windows)
 
@@ -56,9 +60,17 @@
 //// Uncomment the above line if you require matrices/vectors capable of holding more than 4 billion elements.
 //// Your machine and compiler must have support for 64 bit integers (eg. via "long" or "long long")
 
+#if !defined(ARMA_USE_CXX11)
 // #define ARMA_USE_CXX11
 //// Uncomment the above line if you have a C++ compiler that supports the C++11 standard
 //// This will enable additional features, such as use of initialiser lists
+#endif
+
+#if !defined(ARMA_USE_HDF5)
+// #define ARMA_USE_HDF5
+//// Uncomment the above line if you want the ability to save and load matrices stored in the HDF5 format;
+//// the hdf5.h header file must be available on your system and you will need to link with the hdf5 library (eg. -lhdf5)
+#endif
 
 #if !defined(ARMA_MAT_PREALLOC)
   #define ARMA_MAT_PREALLOC 16
@@ -86,10 +98,10 @@
 //// Uncomment the above line if you want to see the function traces of how Armadillo evaluates expressions.
 //// This is mainly useful for debugging of the library.
 
+
 // #define ARMA_USE_BOOST
 // #define ARMA_USE_BOOST_DATE
-// #define ARMA_USE_WRAPPER
-// #define ARMA_USE_HDF5
+
 
 #if !defined(ARMA_DEFAULT_OSTREAM)
   #define ARMA_DEFAULT_OSTREAM std::cout

@@ -93,50 +93,53 @@ operator%
   arma_debug_assert_same_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "element-wise multiplication");
 
   SpMat<typename T1::elem_type> result(pa.get_n_rows(), pa.get_n_cols());
-
-  // Resize memory to correct size.
-  result.mem_resize(n_unique(x, y, op_n_unique_mul()));
-
-  // Now iterate across both matrices.
-  typename SpProxy<T1>::const_iterator_type x_it = pa.begin();
-  typename SpProxy<T2>::const_iterator_type y_it = pb.begin();
-
-  uword cur_val = 0;
-  while((x_it.pos() < pa.get_n_nonzero()) || (y_it.pos() < pb.get_n_nonzero()))
+  
+  if( (pa.get_n_nonzero() != 0) && (pb.get_n_nonzero() != 0) )
     {
-    if(x_it == y_it)
+    // Resize memory to correct size.
+    result.mem_resize(n_unique(x, y, op_n_unique_mul()));
+    
+    // Now iterate across both matrices.
+    typename SpProxy<T1>::const_iterator_type x_it = pa.begin();
+    typename SpProxy<T2>::const_iterator_type y_it = pb.begin();
+    
+    uword cur_val = 0;
+    while((x_it.pos() < pa.get_n_nonzero()) || (y_it.pos() < pb.get_n_nonzero()))
       {
-      const typename T1::elem_type val = (*x_it) * (*y_it);
-     if (val != 0)
+      if(x_it == y_it)
         {
-        access::rw(result.values[cur_val]) = val;
-        access::rw(result.row_indices[cur_val]) = x_it.row();
-        ++access::rw(result.col_ptrs[x_it.col() + 1]);
-        ++cur_val;
-        }
-
-      ++x_it;
-      ++y_it;
-      }
-    else
-      {
-      if((x_it.col() < y_it.col()) || ((x_it.col() == y_it.col()) && (x_it.row() < y_it.row()))) // if y is closer to the end
-        {
+        const typename T1::elem_type val = (*x_it) * (*y_it);
+       if (val != 0)
+          {
+          access::rw(result.values[cur_val]) = val;
+          access::rw(result.row_indices[cur_val]) = x_it.row();
+          ++access::rw(result.col_ptrs[x_it.col() + 1]);
+          ++cur_val;
+          }
+        
         ++x_it;
+        ++y_it;
         }
       else
         {
-        ++y_it;
+        if((x_it.col() < y_it.col()) || ((x_it.col() == y_it.col()) && (x_it.row() < y_it.row()))) // if y is closer to the end
+          {
+          ++x_it;
+          }
+        else
+          {
+          ++y_it;
+          }
         }
       }
+    
+    // Fix column pointers to be cumulative.
+    for(uword c = 1; c <= result.n_cols; ++c)
+      {
+      access::rw(result.col_ptrs[c]) += result.col_ptrs[c - 1];
+      }
     }
-
-  // Fix column pointers to be cumulative.
-  for(uword c = 1; c <= result.n_cols; ++c)
-    {
-    access::rw(result.col_ptrs[c]) += result.col_ptrs[c - 1];
-    }
-
+  
   return result;
   }
 
@@ -154,7 +157,7 @@ enable_if2
 operator%
   (
   const SpBase<typename T1::elem_type, T1>& x,
-  const Base<typename T2::elem_type, T2>& y
+  const   Base<typename T2::elem_type, T2>& y
   )
   {
   // This operation is commutative.

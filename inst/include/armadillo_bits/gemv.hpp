@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -342,7 +342,9 @@ class gemv
     {
     arma_extra_debug_sigprint();
     
-    if(A.n_elem <= 64u)
+    const uword threshold = (is_complex<eT>::value == true) ? 16u : 64u;
+    
+    if(A.n_elem <= threshold)
       {
       gemv_emul<do_trans_A, use_alpha, use_beta>::apply(y,A,x,alpha,beta);
       }
