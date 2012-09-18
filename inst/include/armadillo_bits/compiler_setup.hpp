@@ -125,6 +125,11 @@
 #endif
 
 
+#if defined(__APPLE__)
+  #define ARMA_BLAS_SDOT_BUG
+#endif
+
+
 #if defined(_MSC_VER)
   
   #if (_MSC_VER < 1500)

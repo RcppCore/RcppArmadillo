@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -22,7 +22,7 @@ namespace atlas
   inline static const eT& tmp_real(const eT& X)              { return X; }
   
   template<typename T>
-  inline static const T&  tmp_real(const std::complex<T>& X) { return X.real(); }
+  inline static const  T  tmp_real(const std::complex<T>& X) { return X.real(); }
   
   
   

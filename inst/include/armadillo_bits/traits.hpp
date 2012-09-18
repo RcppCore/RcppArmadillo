@@ -839,6 +839,16 @@ struct is_double<double>
 
 
 template<typename T1>
+struct is_not_complex
+  { static const bool value = true; };
+
+template<typename eT>
+struct is_not_complex< std::complex<eT> >
+  { static const bool value = false; };
+
+
+
+template<typename T1>
 struct is_complex
   { static const bool value = false; };
 

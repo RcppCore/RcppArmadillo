@@ -1,5 +1,6 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2012 Ryan Curtin
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -18,11 +19,16 @@
 template<typename T1, typename T2>
 arma_inline
 arma_warn_unused
-typename T1::elem_type
+typename
+enable_if2
+  <
+  is_arma_type<T1>::value && is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value,
+  typename T1::elem_type
+  >::result
 dot
   (
-  const Base<typename T1::elem_type,T1>& A,
-  const Base<typename T1::elem_type,T2>& B
+  const T1& A,
+  const T2& B
   )
   {
   arma_extra_debug_sigprint();
@@ -35,16 +41,19 @@ dot
 template<typename T1, typename T2>
 arma_inline
 arma_warn_unused
-typename T1::elem_type
+typename
+enable_if2
+  <
+  is_arma_type<T1>::value && is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value,
+  typename T1::elem_type
+  >::result
 norm_dot
   (
-  const Base<typename T1::elem_type,T1>& A, 
-  const Base<typename T1::elem_type,T2>& B,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  const T1& A, 
+  const T2& B
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
   return op_norm_dot::apply(A,B);
   }
@@ -59,39 +68,45 @@ norm_dot
 template<typename T1, typename T2>
 arma_inline
 arma_warn_unused
-typename T1::elem_type
+typename
+enable_if2
+  <
+  is_arma_type<T1>::value && is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value && is_not_complex<typename T1::elem_type>::value,
+  typename T1::elem_type
+  >::result
 cdot
   (
-  const Base<typename T1::elem_type,T1>& A,
-  const Base<typename T1::elem_type,T2>& B,
-  const typename arma_cx_only<typename T1::elem_type>::result* junk = 0
+  const T1& A,
+  const T2& B
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
-  return op_cdot::apply(A,B);
+  return op_dot::apply(A,B);
   }
+
 
 
 
 template<typename T1, typename T2>
 arma_inline
 arma_warn_unused
-typename T1::elem_type
+typename
+enable_if2
+  <
+  is_arma_type<T1>::value && is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value && is_complex<typename T1::elem_type>::value,
+  typename T1::elem_type
+  >::result
 cdot
   (
-  const Base<typename T1::elem_type,T1>& A,
-  const Base<typename T1::elem_type,T2>& B,
-  const typename arma_not_cx<typename T1::elem_type>::result* junk = 0
+  const T1& A,
+  const T2& B
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
-  return op_dot::apply(A,B);
+  return op_cdot::apply(A,B);
   }
-
 
 
 
@@ -100,16 +115,19 @@ cdot
 template<typename T1, typename T2>
 arma_inline
 arma_warn_unused
-typename T1::elem_type
+typename
+enable_if2
+  <
+  is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value && is_complex<typename T1::elem_type>::value,
+  typename T1::elem_type
+  >::result
 dot
   (
   const Op<T1, op_htrans>& A,
-  const Base<typename T1::elem_type,T2>& B,
-  const typename arma_cx_only<typename T1::elem_type>::result* junk = 0
+  const T2&                B
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
   return cdot(A.m, B);
   }
@@ -192,7 +210,7 @@ enable_if2
 dot
   (
   const SpBase<typename T1::elem_type, T1>& x,
-  const Base<typename T2::elem_type, T2>& y
+  const   Base<typename T2::elem_type, T2>& y
   )
   {
   // this is commutative
@@ -212,7 +230,7 @@ enable_if2
   >::result
 dot
   (
-  const Base<typename T1::elem_type, T1>& x,
+  const   Base<typename T1::elem_type, T1>& x,
   const SpBase<typename T2::elem_type, T2>& y
   )
   {

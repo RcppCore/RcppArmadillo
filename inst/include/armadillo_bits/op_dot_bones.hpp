@@ -22,7 +22,14 @@ class op_dot
   public:
   
   template<typename eT>
-  arma_hot arma_pure arma_inline static eT direct_dot_arma(const uword n_elem, const eT* const A, const eT* const B);
+  arma_hot arma_pure arma_inline static
+  typename arma_not_cx<eT>::result
+  direct_dot_arma(const uword n_elem, const eT* const A, const eT* const B);
+  
+  template<typename eT>
+  arma_hot arma_pure inline static
+  typename arma_cx_only<eT>::result
+  direct_dot_arma(const uword n_elem, const eT* const A, const eT* const B);
   
   template<typename eT>
   arma_hot arma_pure inline static typename arma_float_only<eT>::result
@@ -41,13 +48,16 @@ class op_dot
   arma_hot arma_pure inline static eT direct_dot(const uword n_elem, const eT* const A, const eT* const B, const eT* C);
   
   template<typename T1, typename T2>
-  arma_hot arma_inline static typename T1::elem_type apply(const Base<typename T1::elem_type,T1>& X, const Base<typename T1::elem_type,T2>& Y);
+  arma_hot inline static typename T1::elem_type apply(const T1& X, const T2& Y);
   
   template<typename T1, typename T2>
-  arma_hot inline static typename T1::elem_type apply_unwrap(const Base<typename T1::elem_type,T1>& X, const Base<typename T1::elem_type,T2>& Y);
+  arma_hot inline static typename T1::elem_type apply_unwrap(const T1& X, const T2& Y);
   
   template<typename T1, typename T2>
-  arma_hot inline static typename T1::elem_type apply_proxy (const Base<typename T1::elem_type,T1>& X, const Base<typename T1::elem_type,T2>& Y);
+  arma_hot inline static typename arma_not_cx<typename T1::elem_type>::result  apply_proxy(const T1& X, const T2& Y);
+  
+  template<typename T1, typename T2>
+  arma_hot inline static typename arma_cx_only<typename T1::elem_type>::result apply_proxy(const T1& X, const T2& Y);
   
   template<typename eT>
   arma_hot inline static eT dot_and_copy_row(eT* out, const Mat<eT>& A, const uword row, const eT* B_mem, const uword N);
@@ -63,20 +73,35 @@ class op_norm_dot
   public:
   
   template<typename T1, typename T2>
-  arma_hot inline static typename T1::elem_type apply       (const Base<typename T1::elem_type,T1>& X, const Base<typename T1::elem_type,T2>& Y);
+  arma_hot inline static typename T1::elem_type apply       (const T1& X, const T2& Y);
   
   template<typename T1, typename T2>
-  arma_hot inline static typename T1::elem_type apply_unwrap(const Base<typename T1::elem_type,T1>& X, const Base<typename T1::elem_type,T2>& Y);
+  arma_hot inline static typename T1::elem_type apply_unwrap(const T1& X, const T2& Y);
   };
 
 
+
+//! \brief
+//! complex conjugate dot product operation
 
 class op_cdot
   {
   public:
   
+  template<typename eT>
+  arma_hot inline static eT direct_cdot_arma(const uword n_elem, const eT* const A, const eT* const B);
+  
+  template<typename eT>
+  arma_hot inline static eT direct_cdot(const uword n_elem, const eT* const A, const eT* const B);
+  
   template<typename T1, typename T2>
-  arma_hot arma_inline static typename T1::elem_type apply(const Base<typename T1::elem_type,T1>& X, const Base<typename T1::elem_type,T2>& Y);
+  arma_hot inline static typename T1::elem_type apply       (const T1& X, const T2& Y);
+  
+  template<typename T1, typename T2>
+  arma_hot inline static typename T1::elem_type apply_unwrap(const T1& X, const T2& Y);
+  
+  template<typename T1, typename T2>
+  arma_hot inline static typename T1::elem_type apply_proxy (const T1& X, const T2& Y);
   };
 
 

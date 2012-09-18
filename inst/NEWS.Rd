@@ -2,6 +2,18 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.3.4.1 (2012-09-18)}{
+  \itemize{
+    \item Upgraded to Armadillo release 3.4.1
+    \itemize{
+      \item workaround for a bug in the Mac OS X accelerate framework
+      \item fixes for handling empty sparse matrices
+      \item added documentation for saving & loading matrices in HDF5 format
+      \item faster dot() and cdot() for complex numbers
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.3.4.0 (2012-09-06)}{
   \itemize{
     \item Upgraded to Armadillo release 3.4.0 (Ku De Ta)

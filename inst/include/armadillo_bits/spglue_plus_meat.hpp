@@ -56,6 +56,19 @@ spglue_plus::apply_noalias(SpMat<eT>& out, const SpProxy<T1>& pa, const SpProxy<
   
   arma_debug_assert_same_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "addition");
   
+  if(pa.get_n_nonzero() == 0)
+    {
+    out = pb.Q;
+    return;
+    }
+  
+  if(pb.get_n_nonzero() == 0)
+    {
+    out = pa.Q;
+    return;
+    }
+  
+  
   out.set_size(pa.get_n_rows(), pa.get_n_cols());
   
   // Resize memory to correct size.

@@ -72,7 +72,8 @@ spglue_times::apply_noalias(SpMat<eT>& c, const SpProxy<T1>& pa, const SpProxy<T
   //SpMat<typename T1::elem_type> c(x_n_rows, y_n_cols); // Initializes col_ptrs to 0.
   c.zeros(x_n_rows, y_n_cols);
   
-  if( (pa.get_n_elem() == 0) || (pb.get_n_elem() == 0) )
+  //if( (pa.get_n_elem() == 0) || (pb.get_n_elem() == 0) )
+  if( (pa.get_n_nonzero() == 0) || (pb.get_n_nonzero() == 0) )
     {
     return;
     }
