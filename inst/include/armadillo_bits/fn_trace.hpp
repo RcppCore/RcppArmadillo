@@ -131,7 +131,7 @@ trace(const SpBase<typename T1::elem_type, T1>& x)
   
   typename SpProxy<T1>::const_iterator_type it = p.begin();
   
-  while(it.pos() < p.get_n_nonzero())
+  while(it != p.end())
     {
     if(it.row() == it.col())
       {

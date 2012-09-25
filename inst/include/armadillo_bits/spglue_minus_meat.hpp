@@ -55,72 +55,86 @@ spglue_minus::apply_noalias(SpMat<eT>& result, const SpProxy<T1>& pa, const SpPr
   
   arma_debug_assert_same_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "subtraction");
   
-  if(pa.get_n_nonzero() == 0)
+  if( (pa.get_n_nonzero() != 0) && (pb.get_n_nonzero() != 0) )
     {
-    result = pb.Q;
-    result *= eT(-1);
+    result.set_size(pa.get_n_rows(), pa.get_n_cols());
+
+    // Resize memory to correct size.
+    result.mem_resize(n_unique(pa, pb, op_n_unique_sub()));
+
+    // Now iterate across both matrices.
+    typename SpProxy<T1>::const_iterator_type x_it = pa.begin();
+    typename SpProxy<T2>::const_iterator_type y_it = pb.begin();
+
+    typename SpProxy<T1>::const_iterator_type x_end = pa.end();
+    typename SpProxy<T2>::const_iterator_type y_end = pb.end();
     
-    return;
-    }
-  
-  if(pb.get_n_nonzero() == 0)
-    {
-    result = pa.Q;
-    return;
-    }
-  
-  
-  result.set_size(pa.get_n_rows(), pa.get_n_cols());
-
-  // Resize memory to correct size.
-  result.mem_resize(n_unique(pa, pb, op_n_unique_sub()));
-
-  // Now iterate across both matrices.
-  typename SpProxy<T1>::const_iterator_type x_it = pa.begin();
-  typename SpProxy<T2>::const_iterator_type y_it = pb.begin();
-
-  uword cur_val = 0;
-  while((x_it.pos() < pa.get_n_nonzero()) || (y_it.pos() < pb.get_n_nonzero()))
-    {
-    if(x_it == y_it)
+    uword cur_val = 0;
+    while((x_it != x_end) || (y_it != y_end))
       {
-      const typename T1::elem_type val = (*x_it) - (*y_it);
-      if (val != 0)
+      if(x_it == y_it)
         {
-        access::rw(result.values[cur_val]) = val;
-        access::rw(result.row_indices[cur_val]) = x_it.row();
-        ++access::rw(result.col_ptrs[x_it.col() + 1]);
-        ++cur_val;
-        }
+        const eT val = (*x_it) - (*y_it);
+        
+        if (val != eT(0))
+          {
+          access::rw(result.values[cur_val]) = val;
+          access::rw(result.row_indices[cur_val]) = x_it.row();
+          ++access::rw(result.col_ptrs[x_it.col() + 1]);
+          ++cur_val;
+          }
 
-      ++x_it;
-      ++y_it;
-      }
-    else
-      {
-      if((x_it.col() < y_it.col()) || ((x_it.col() == y_it.col()) && (x_it.row() < y_it.row()))) // if y is closer to the end
-        {
-        access::rw(result.values[cur_val]) = (*x_it);
-        access::rw(result.row_indices[cur_val]) = x_it.row();
-        ++access::rw(result.col_ptrs[x_it.col() + 1]);
-        ++cur_val;
         ++x_it;
+        ++y_it;
         }
       else
         {
-        access::rw(result.values[cur_val]) = -(*y_it);
-        access::rw(result.row_indices[cur_val]) = y_it.row();
-        ++access::rw(result.col_ptrs[y_it.col() + 1]);
-        ++cur_val;
-        ++y_it;
+        const uword x_it_row = x_it.row();
+        const uword x_it_col = x_it.col();
+        
+        const uword y_it_row = y_it.row();
+        const uword y_it_col = y_it.col();
+        
+        if((x_it_col < y_it_col) || ((x_it_col == y_it_col) && (x_it_row < y_it_row))) // if y is closer to the end
+          {
+          access::rw(result.values[cur_val]) = (*x_it);
+          access::rw(result.row_indices[cur_val]) = x_it_row;
+          ++access::rw(result.col_ptrs[x_it_col + 1]);
+          ++cur_val;
+          ++x_it;
+          }
+        else
+          {
+          access::rw(result.values[cur_val]) = -(*y_it);
+          access::rw(result.row_indices[cur_val]) = y_it_row;
+          ++access::rw(result.col_ptrs[y_it_col + 1]);
+          ++cur_val;
+          ++y_it;
+          }
         }
       }
-    }
 
-  // Fix column pointers to be cumulative.
-  for(uword c = 1; c <= result.n_cols; ++c)
+    // Fix column pointers to be cumulative.
+    for(uword c = 1; c <= result.n_cols; ++c)
+      {
+      access::rw(result.col_ptrs[c]) += result.col_ptrs[c - 1];
+      }
+    }
+  else
     {
-    access::rw(result.col_ptrs[c]) += result.col_ptrs[c - 1];
+    if(pa.get_n_nonzero() == 0)
+      {
+      result = pb.Q;
+      result *= eT(-1);
+      
+      return;
+      }
+    
+    if(pb.get_n_nonzero() == 0)
+      {
+      result = pa.Q;
+      return;
+      }
     }
   }
 

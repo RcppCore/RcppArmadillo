@@ -102,6 +102,14 @@ inline
 SpSubview<eT>::const_iterator::const_iterator(const SpSubview<eT>& in_M, const uword initial_pos)
   : iterator_base(in_M, 0, initial_pos, 0)
   {
+  // Corner case for empty subviews.
+  if(in_M.n_nonzero == 0)
+    {
+    iterator_base::internal_col = in_M.n_cols;
+    iterator_base::skip_pos = in_M.m.n_nonzero;
+    return;
+    }
+
   // Figure out the row and column of the position.
   // skip_pos holds the number of values which aren't part of this subview.
   const uword aux_col = iterator_base::M.aux_col1;
@@ -241,6 +249,16 @@ SpSubview<eT>::const_iterator::const_iterator(const SpSubview<eT>& in_M, const u
 
 template<typename eT>
 inline
+SpSubview<eT>::const_iterator::const_iterator(const SpSubview<eT>& in_M, uword in_row, uword in_col, uword in_pos, uword skip_pos)
+  : iterator_base(in_M, in_col, in_pos, skip_pos)
+  {
+  // Nothing to do.
+  }
+
+
+
+template<typename eT>
+inline
 SpSubview<eT>::const_iterator::const_iterator(const const_iterator& other)
   : iterator_base(other.M, other.internal_col, other.internal_pos, other.skip_pos)
   {
@@ -279,7 +297,8 @@ SpSubview<eT>::const_iterator::operator++()
     if(cur_col >= n_cols)
       {
       cur_col = n_cols;
-      row_index = aux_row;
+      // Make sure we will be pointing at the last element in the parent matrix.
+      skip_pos = iterator_base::M.m.n_nonzero - iterator_base::M.n_nonzero;
       break;
       }
 
@@ -298,8 +317,8 @@ SpSubview<eT>::const_iterator::operator++()
     }
 
   iterator_base::internal_pos = cur_pos;
-  iterator_base::skip_pos = skip_pos;
   iterator_base::internal_col = cur_col;
+  iterator_base::skip_pos = skip_pos;
 
   return *this;
   }
@@ -328,6 +347,15 @@ SpSubview<eT>::const_iterator::operator--()
   uword cur_col = iterator_base::internal_col;
   uword cur_pos = iterator_base::internal_pos - 1;
   uword skip_pos = iterator_base::skip_pos;
+
+  // Special condition for end of iterator.
+  if((skip_pos + cur_pos + 1) == iterator_base::M.m.n_nonzero)
+    {
+    // We are at the last element.  So we need to set skip_pos back to what it
+    // would be if we didn't manually modify it back in operator++().
+    skip_pos = iterator_base::M.m.col_ptrs[cur_col + aux_col] - iterator_base::internal_pos;
+    }
+
   uword row_index;
 
   while(true)
@@ -445,6 +473,14 @@ SpSubview<eT>::const_row_iterator::const_row_iterator(const SpSubview<eT>& in_M,
   , internal_row(0)
   , actual_pos(0)
   {
+  // Corner case for empty subviews.
+  if(in_M.n_nonzero == 0)
+    {
+    iterator_base::internal_col = in_M.n_cols;
+    iterator_base::skip_pos = in_M.m.n_nonzero;
+    return;
+    }
+
   const uword aux_col = iterator_base::M.aux_col1;
   const uword aux_row = iterator_base::M.aux_row1;
   const uword n_cols  = iterator_base::M.n_cols;

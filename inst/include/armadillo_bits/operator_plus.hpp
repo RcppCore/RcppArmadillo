@@ -224,7 +224,7 @@ operator+
   
   typename SpProxy<T2>::const_iterator_type it = pb.begin();
   
-  while(it.pos() < pb.get_n_nonzero())
+  while(it != pb.end())
     {
     const uword pos = it.col() * pb.get_n_cols() + it.row();
     result[pos] += (*it);

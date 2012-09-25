@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2010-2011 Conrad Sanderson
+// Copyright (C) 2010-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2012 Conrad Sanderson
 // Copyright (C) 2011 Stanislav Funiak
 // 
 // This file is part of the Armadillo C++ library.
@@ -67,6 +67,12 @@ class span : public span_base<>
     , whole(false)
     {
     }
+  
+  
+  #if defined(ARMA_USE_CXX11)
+    span(const double in_a) = delete;
+  #endif
+  
   
   inline
   span(const uword in_a, const uword in_b)

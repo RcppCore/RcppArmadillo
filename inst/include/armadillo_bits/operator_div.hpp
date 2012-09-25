@@ -238,7 +238,7 @@ operator/
   // The compiler should be smart enough to optimize out the inner if/else statement entirely
   typename SpProxy<T1>::const_iterator_type it = pa.begin();
   uword new_n_nonzero;
-  while(it.pos() < pa.get_n_nonzero())
+  while(it != pa.end())
     {
     if(Proxy<T2>::prefer_at_accessor == false)
       {
@@ -264,7 +264,7 @@ operator/
 
   typename SpProxy<T1>::const_iterator_type it2 = pa.begin();
   uword cur_pos = 0;
-  while(it2.pos() < pa.get_n_nonzero())
+  while(it2 != pa.end())
     {
     if(Proxy<T2>::prefer_at_accessor == false)
       {
@@ -332,7 +332,7 @@ operator/
   // Now divide each element
   typename SpProxy<T2>::const_iterator_type it = pb.begin();
 
-  while(it.pos() < pb.get_n_nonzero())
+  while(it != pb.end())
     {
     if(Proxy<T1>::prefer_at_accessor == false)
       {

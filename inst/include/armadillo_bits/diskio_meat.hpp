@@ -2600,7 +2600,7 @@ diskio::save_coord_ascii(const SpMat<eT>& x, std::ostream& f)
   f << x_n_rows << " " << x_n_cols << " " << x_n_nonzero << endl;
 
   typename SpMat<eT>::const_iterator iter = x.begin();
-  for(; iter.pos() < x.n_nonzero; iter++)
+  for(; iter != x.end(); iter++)
     f << iter.row() << " " << iter.col() << " " << *iter << endl;
 
   const bool save_okay = f.good();

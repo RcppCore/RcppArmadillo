@@ -44,6 +44,7 @@ SpMat<eT>::iterator_base::iterator_base(const SpMat<eT>& in_M, const uword col, 
 
 template<typename eT>
 inline
+arma_hot
 eT
 SpMat<eT>::iterator_base::operator*() const
   {
@@ -54,6 +55,7 @@ SpMat<eT>::iterator_base::operator*() const
 
 template<typename eT>
 inline
+arma_hot
 bool
 SpMat<eT>::iterator_base::operator==(const iterator_base& rhs) const
   {
@@ -64,6 +66,7 @@ SpMat<eT>::iterator_base::operator==(const iterator_base& rhs) const
 
 template<typename eT>
 inline
+arma_hot
 bool
 SpMat<eT>::iterator_base::operator!=(const iterator_base& rhs) const
   {
@@ -74,6 +77,7 @@ SpMat<eT>::iterator_base::operator!=(const iterator_base& rhs) const
 
 template<typename eT>
 inline
+arma_hot
 bool
 SpMat<eT>::iterator_base::operator==(const typename SpSubview<eT>::iterator_base& rhs) const
   {
@@ -84,6 +88,7 @@ SpMat<eT>::iterator_base::operator==(const typename SpSubview<eT>::iterator_base
 
 template<typename eT>
 inline
+arma_hot
 bool
 SpMat<eT>::iterator_base::operator!=(const typename SpSubview<eT>::iterator_base& rhs) const
   {
@@ -101,6 +106,13 @@ inline
 SpMat<eT>::const_iterator::const_iterator(const SpMat<eT>& in_M, uword initial_pos)
   : iterator_base(in_M, 0, initial_pos)
   {
+  // Corner case for empty matrices.
+  if(in_M.n_nonzero == 0)
+    {
+    iterator_base::internal_col = in_M.n_cols;
+    return;
+    }
+
   // Determine which column we should be in.
   while(iterator_base::M.col_ptrs[iterator_base::internal_col + 1] <= iterator_base::internal_pos)
     {
@@ -135,6 +147,16 @@ SpMat<eT>::const_iterator::const_iterator(const SpMat<eT>& in_M, uword in_row, u
 
 template<typename eT>
 inline
+SpMat<eT>::const_iterator::const_iterator(const SpMat<eT>& in_M, const uword /* in_row */, const uword in_col, const uword in_pos)
+  : iterator_base(in_M, in_col, in_pos)
+  {
+  // Nothing to do.
+  }
+
+
+
+template<typename eT>
+inline
 SpMat<eT>::const_iterator::const_iterator(const typename SpMat<eT>::const_iterator& other)
   : iterator_base(other.M, other.internal_col, other.internal_pos)
   {
@@ -145,6 +167,7 @@ SpMat<eT>::const_iterator::const_iterator(const typename SpMat<eT>::const_iterat
 
 template<typename eT>
 inline
+arma_hot
 typename SpMat<eT>::const_iterator&
 SpMat<eT>::const_iterator::operator++()
   {
@@ -169,6 +192,7 @@ SpMat<eT>::const_iterator::operator++()
 
 template<typename eT>
 inline
+arma_hot
 void
 SpMat<eT>::const_iterator::operator++(int)
   {
@@ -179,10 +203,11 @@ SpMat<eT>::const_iterator::operator++(int)
 
 template<typename eT>
 inline
+arma_hot
 typename SpMat<eT>::const_iterator&
 SpMat<eT>::const_iterator::operator--()
   {
-  iterator_base::M.print("M");
+  //iterator_base::M.print("M");
   
   // printf("decrement from %d, %d, %d\n", iterator_base::internal_pos, iterator_base::internal_col, iterator_base::row());
   
@@ -206,6 +231,7 @@ SpMat<eT>::const_iterator::operator--()
 
 template<typename eT>
 inline
+arma_hot
 void
 SpMat<eT>::const_iterator::operator--(int)
   {
@@ -220,6 +246,7 @@ SpMat<eT>::const_iterator::operator--(int)
 
 template<typename eT>
 inline
+arma_hot
 SpValProxy<SpMat<eT> >
 SpMat<eT>::iterator::operator*()
   {
@@ -234,6 +261,7 @@ SpMat<eT>::iterator::operator*()
 
 template<typename eT>
 inline
+arma_hot
 typename SpMat<eT>::iterator&
 SpMat<eT>::iterator::operator++()
   {
@@ -245,6 +273,7 @@ SpMat<eT>::iterator::operator++()
 
 template<typename eT>
 inline
+arma_hot
 void
 SpMat<eT>::iterator::operator++(int)
   {
@@ -255,6 +284,7 @@ SpMat<eT>::iterator::operator++(int)
 
 template<typename eT>
 inline
+arma_hot
 typename SpMat<eT>::iterator&
 SpMat<eT>::iterator::operator--()
   {
@@ -266,6 +296,7 @@ SpMat<eT>::iterator::operator--()
 
 template<typename eT>
 inline
+arma_hot
 void
 SpMat<eT>::iterator::operator--(int)
   {
@@ -288,6 +319,13 @@ SpMat<eT>::const_row_iterator::const_row_iterator(const SpMat<eT>& in_M, uword i
   , internal_row(0)
   , actual_pos(0)
   {
+  // Corner case for empty matrix.
+  if(in_M.n_nonzero == 0)
+    {
+    iterator_base::internal_col = in_M.n_cols;
+    return;
+    }
+
   // We don't count zeroes in our position count, so we have to find the nonzero
   // value corresponding to the given initial position.  We assume initial_pos
   // is valid.
@@ -385,6 +423,7 @@ SpMat<eT>::const_row_iterator::const_row_iterator(const typename SpMat<eT>::cons
  */
 template<typename eT>
 inline
+arma_hot
 typename SpMat<eT>::const_row_iterator&
 SpMat<eT>::const_row_iterator::operator++()
   {
@@ -436,6 +475,7 @@ SpMat<eT>::const_row_iterator::operator++()
  */
 template<typename eT>
 inline
+arma_hot
 void
 SpMat<eT>::const_row_iterator::operator++(int)
   {
@@ -449,6 +489,7 @@ SpMat<eT>::const_row_iterator::operator++(int)
  */
 template<typename eT>
 inline
+arma_hot
 typename SpMat<eT>::const_row_iterator&
 SpMat<eT>::const_row_iterator::operator--()
   {
@@ -490,6 +531,7 @@ SpMat<eT>::const_row_iterator::operator--()
  */
 template<typename eT>
 inline
+arma_hot
 void
 SpMat<eT>::const_row_iterator::operator--(int)
   {
@@ -502,6 +544,7 @@ SpMat<eT>::const_row_iterator::operator--(int)
 
 template<typename eT>
 inline
+arma_hot
 SpValProxy<SpMat<eT> >
 SpMat<eT>::row_iterator::operator*()
   {
@@ -516,6 +559,7 @@ SpMat<eT>::row_iterator::operator*()
 
 template<typename eT>
 inline
+arma_hot
 typename SpMat<eT>::row_iterator&
 SpMat<eT>::row_iterator::operator++()
   {
@@ -527,6 +571,7 @@ SpMat<eT>::row_iterator::operator++()
 
 template<typename eT>
 inline
+arma_hot
 void
 SpMat<eT>::row_iterator::operator++(int)
   {
@@ -537,6 +582,7 @@ SpMat<eT>::row_iterator::operator++(int)
 
 template<typename eT>
 inline
+arma_hot
 typename SpMat<eT>::row_iterator&
 SpMat<eT>::row_iterator::operator--()
   {
@@ -548,6 +594,7 @@ SpMat<eT>::row_iterator::operator--()
 
 template<typename eT>
 inline
+arma_hot
 void
 SpMat<eT>::row_iterator::operator--(int)
   {

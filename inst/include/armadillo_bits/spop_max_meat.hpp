@@ -76,7 +76,7 @@ spop_max::apply_noalias
     eT cur_max = (*it);
     ++it;
 
-    while(it.pos() < p.get_n_nonzero())
+    while(it != p.end())
       {
       if(it.col() != cur_col)
         {
@@ -201,7 +201,7 @@ spop_max::apply_noalias
     
     ++it;
     
-    while(it.pos() < p.get_n_nonzero())
+    while(it != p.end())
       {
       if(it.col() != cur_col)
         {
@@ -359,7 +359,7 @@ spop_max::vector_max
     eT result = (*it);
     ++it;
 
-    while(it.pos() < p.get_n_nonzero())
+    while(it != p.end())
       {
       if((*it) > result)
         {
@@ -429,7 +429,7 @@ spop_max::vector_max
     
     ++it;
     
-    while(it.pos() < p.get_n_nonzero())
+    while(it != p.end())
       {
       eT val_orig = *it;
        T val_abs  = std::abs(val_orig);
