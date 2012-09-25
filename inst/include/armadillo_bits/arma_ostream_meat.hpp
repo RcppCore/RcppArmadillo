@@ -519,7 +519,7 @@ arma_ostream::print_dense(std::ostream& o, const SpMat<eT>& m, const bool modify
             // the cell width appears to be reset after each element is printed,
             // hence we need to restore it
             o.width(cell_width);
-            eT val = 0;
+            eT val = eT(0);
             for(typename SpMat<eT>::const_iterator it = begin; it.pos() < m.n_nonzero; ++it)
               {
               if(it.row() == row && it.col() == col)
@@ -541,13 +541,13 @@ arma_ostream::print_dense(std::ostream& o, const SpMat<eT>& m, const bool modify
           {
           for(uword col=0; col < m_n_cols; ++col)
             {
-            eT val = 0;
+            eT val = eT(0);
             for(typename SpMat<eT>::const_iterator it = begin; it.pos() < m.n_nonzero; ++it)
               {
-                if(it.row() == row && it.col() == col)
+              if(it.row() == row && it.col() == col)
                 {
-                  val = *it;
-                  break;
+                val = *it;
+                break;
                 }
               }
             arma_ostream::print_elem(o,eT(val));
@@ -561,9 +561,34 @@ arma_ostream::print_dense(std::ostream& o, const SpMat<eT>& m, const bool modify
     }
   else
     {
-    o << "[matrix size: " << m_n_rows << 'x' << m_n_cols << "]\n";
+    if(m.n_elem == 0)
+      {
+      o << "[matrix size: " << m_n_rows << 'x' << m_n_cols << "]\n";
+      }
+    else
+      {
+      eT tmp[1];
+      tmp[0] = eT(0);
+      
+      const std::streamsize cell_width = modify ? arma_ostream::modify_stream(o, &tmp[0], 1) : o.width();
+      
+      const uword m_n_rows = m.n_rows;
+      const uword m_n_cols = m.n_cols;
+      
+      for(uword row=0; row < m_n_rows; ++row)
+        {
+        for(uword col=0; col < m_n_cols; ++col)
+          {
+          o.width(cell_width);
+          arma_ostream::print_elem_zero<eT>(o);
+          o << ' ';
+          }
+        
+        o << '\n';
+        }
+      }
     }
-
+  
   o.flush();
   stream_state.restore(o);
   }
@@ -601,7 +626,7 @@ arma_ostream::print(std::ostream& o, const SpMat<eT>& m, const bool modify)
     
     typename SpMat<eT>::const_iterator begin = m.begin();
     
-    while(begin.pos() < m_n_nonzero)
+    while(begin != m.end())
       {
       const uword row = begin.row();
       

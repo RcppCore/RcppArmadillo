@@ -93,7 +93,7 @@ SpSubview<eT>::operator+=(const eT val)
   {
   arma_extra_debug_sigprint();
 
-  if(val == 0)
+  if(val == eT(0))
     {
     return *this;
     }
@@ -130,7 +130,7 @@ SpSubview<eT>::operator-=(const eT val)
   {
   arma_extra_debug_sigprint();
 
-  if(val == 0)
+  if(val == eT(0))
     {
     return *this;
     }
@@ -169,7 +169,7 @@ SpSubview<eT>::operator*=(const eT val)
   if(val == eT(0))
     {
     // Turn it all into zeros.
-    for(iterator it(*this); it.pos() < n_nonzero; ++it)
+    for(iterator it(*this); it != end(); ++it)
       {
       (*it) = eT(0); // zero out the value.
       it.internal_pos--;
@@ -211,6 +211,8 @@ SpSubview<eT>::operator/=(const eT val)
   const uword start_row = aux_row1;
   const uword end_row   = aux_row1 + n_rows;
 
+  const uword old_n_nonzero = m.n_nonzero;
+
   for(uword c = start_col; c < end_col; ++c)
     {
     for(uword r = start_row; r < end_row; ++r)
@@ -218,6 +220,10 @@ SpSubview<eT>::operator/=(const eT val)
       access::rw(m).at(r, c) /= val;
       }
     }
+
+  const uword new_n_nonzero = m.n_nonzero;
+
+  access::rw(n_nonzero) += (new_n_nonzero - old_n_nonzero);
 
   return *this;
   }
@@ -354,10 +360,10 @@ SpSubview<eT>::operator%=(const Base<eT, T1>& x)
 
   const uword old_n_nonzero = m.n_nonzero;
 
-  for(iterator it(*this); it.pos() < n_nonzero; ++it)
+  for(iterator it(*this); it != end(); ++it)
     {
     (*it) *= P.at(it.row(), it.col());
-    if(P.at(it.row(), it.col()) == 0)
+    if(P.at(it.row(), it.col()) == eT(0))
       {
       it.internal_pos--;
       }
@@ -419,7 +425,7 @@ SpSubview<eT>::operator=(const SpSubview<eT>& x)
     const_iterator cit = x.begin();
     iterator        it = begin();
     
-    while((cit.pos() < x.n_nonzero) || (it.pos() < n_nonzero))
+    while((cit != x.end()) || (it != end()))
       {
       if((cit.row() == it.row()) && (cit.col() == it.col()))
         {
@@ -476,8 +482,8 @@ SpSubview<eT>::operator=(const SpBase<eT, T1>& x)
     {
     typename SpProxy<T1>::const_iterator_type cit = p.begin();
     iterator it(*this);
-    
-    while((cit.pos() < p.get_n_nonzero()) || (it.pos() < n_nonzero))
+
+    while((cit != p.end()) || (it != end()))
       {
       if(cit == it) // at the same location
         {
@@ -503,8 +509,6 @@ SpSubview<eT>::operator=(const SpBase<eT, T1>& x)
           }
         }
       }
-    
-    access::rw(n_nonzero) = p.get_n_nonzero();
     }
   else
     {
@@ -533,18 +537,12 @@ SpSubview<eT>::operator+=(const SpBase<eT, T1>& x)
   if(p.is_alias(m) == false)
     {
     typename SpProxy<T1>::const_iterator_type cit = p.begin();
-    const uword old_n_nonzero = m.n_nonzero;
 
-    while(cit.pos() < p.get_n_nonzero())
+    while(cit != p.end())
       {
       at(cit.row(), cit.col()) += (*cit);
-
       ++cit;
       }
-
-    const uword new_n_nonzero = m.n_nonzero;
-    
-    access::rw(n_nonzero) += (new_n_nonzero - old_n_nonzero);
     }
   else
     {
@@ -574,18 +572,11 @@ SpSubview<eT>::operator-=(const SpBase<eT, T1>& x)
     {
     typename SpProxy<T1>::const_iterator_type cit = p.begin();
     
-    const uword old_n_nonzero = m.n_nonzero;
-
-    while(cit.pos() < p.get_n_nonzero())
+    while(cit != p.end())
       {
       at(cit.row(), cit.col()) -= (*cit);
-
       ++cit;
       }
-
-    const uword new_n_nonzero = m.n_nonzero;
-    
-    access::rw(n_nonzero) += (new_n_nonzero - old_n_nonzero);
     }
   else
     {
@@ -635,9 +626,7 @@ SpSubview<eT>::operator%=(const SpBase<eT, T1>& x)
     typename SpProxy<T1>::const_iterator_type cit = p.begin();
     iterator it(*this);
 
-    const uword old_n_nonzero = m.n_nonzero;
-
-    while((it.pos() < n_nonzero) || (cit.pos() < p.get_n_nonzero()))
+    while((it != end()) || (cit != p.end()))
       {
       if((cit.row() == it.row()) && (cit.col() == it.col()))
         {
@@ -661,10 +650,6 @@ SpSubview<eT>::operator%=(const SpBase<eT, T1>& x)
           }
         }
       }
-
-    const uword new_n_nonzero = m.n_nonzero;
-    
-    access::rw(n_nonzero) += (new_n_nonzero - old_n_nonzero);
     }
   else
     {
@@ -693,17 +678,11 @@ SpSubview<eT>::operator/=(const SpBase<eT, T1>& x)
   
   if(p.is_alias(m) == false)
     {
-    const uword old_n_nonzero = p.get_n_nonzero();
-    
     for(uword col = 0; col < n_cols; ++col)
     for(uword row = 0; row < n_rows; ++row)
       {
       at(row,col) /= p.at(row,col);
       }
-    
-    const uword new_n_nonzero = p.get_n_nonzero();
-    
-    access::rw(n_nonzero) += (new_n_nonzero - old_n_nonzero);
     }
   else
     {
@@ -739,8 +718,6 @@ SpSubview<eT>::fill(const eT val)
       {
       access::rw(m).at(row, col) = val;
       }
-    
-    access::rw(n_nonzero) = n_elem;
     }
   else
     {
@@ -760,14 +737,12 @@ SpSubview<eT>::zeros()
   // we can be a little smarter here
   iterator it(*this);
 
-  while(it.pos() < n_nonzero)
+  while(it != end())
     {
-    (*it) = 0;
+    (*it) = eT(0);
     it.internal_pos--; // hack to update iterator without requiring a new one
     ++it;
     }
-
-  access::rw(n_nonzero) = 0;
   }
 
 
@@ -801,8 +776,6 @@ SpSubview<eT>::eye()
     {
     m.at(ind + aux_row1, ind + aux_col1) = eT(1);
     }
-
-  access::rw(n_nonzero) = end_index;
   }
 
 
@@ -1122,7 +1095,7 @@ inline
 typename SpSubview<eT>::iterator
 SpSubview<eT>::end()
   {
-  return iterator(*this, n_nonzero);
+  return iterator(*this, 0, n_cols, n_nonzero, m.n_nonzero - n_nonzero);
   }
 
 
@@ -1132,7 +1105,7 @@ inline
 typename SpSubview<eT>::const_iterator
 SpSubview<eT>::end() const
   {
-  return const_iterator(*this, n_nonzero);
+  return const_iterator(*this, 0, n_cols, n_nonzero, m.n_nonzero - n_nonzero);
   }
 
 

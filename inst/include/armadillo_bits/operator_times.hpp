@@ -483,7 +483,7 @@ operator*
     if(Proxy<T2>::prefer_at_accessor == false)
       {
       // use direct operator[] access
-      for(typename SpProxy<T1>::const_iterator_type x_it = pa.begin(); x_it.pos() < pa.get_n_nonzero(); x_it++)
+      for(typename SpProxy<T1>::const_iterator_type x_it = pa.begin(); x_it != pa.end(); x_it++)
         {
         // We just want to use values where y.row = x_it.col.
         for(uword col = 0; col < result.n_cols; col++)
@@ -496,7 +496,7 @@ operator*
     else
       {
       // use at() access
-      for(typename SpProxy<T1>::const_iterator_type x_it = pa.begin(); x_it.pos() < pa.get_n_nonzero(); x_it++)
+      for(typename SpProxy<T1>::const_iterator_type x_it = pa.begin(); x_it != pa.end(); x_it++)
         {
         for(uword col = 0; col < result.n_cols; col++)
           {
@@ -541,7 +541,7 @@ operator*
     if(Proxy<T1>::prefer_at_accessor == false)
       {
       // use direct operator[] access
-      for(typename SpProxy<T2>::const_iterator_type y_col_it = pb.begin(); y_col_it.pos() < pb.get_n_nonzero(); ++y_col_it)
+      for(typename SpProxy<T2>::const_iterator_type y_col_it = pb.begin(); y_col_it != pb.end(); ++y_col_it)
         {
         for(uword row = 0; row < result.n_rows; ++row)
           {
@@ -553,7 +553,7 @@ operator*
     else
       {
       // use at() access
-      for(typename SpProxy<T2>::const_iterator_type y_col_it = pb.begin(); y_col_it.pos() < pb.get_n_nonzero(); ++y_col_it)
+      for(typename SpProxy<T2>::const_iterator_type y_col_it = pb.begin(); y_col_it != pb.end(); ++y_col_it)
         {
         for(uword row = 0; row < result.n_rows; ++row)
           {

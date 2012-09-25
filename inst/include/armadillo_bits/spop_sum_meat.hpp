@@ -38,7 +38,7 @@ spop_sum::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_sum>& in)
       
       typename SpProxy<T1>::const_iterator_type it     = p.begin();
       
-      while(it.pos() < p.get_n_nonzero())
+      while(it != p.end())
         {
         out.at(0, it.col()) += (*it);
         ++it;
@@ -50,7 +50,7 @@ spop_sum::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_sum>& in)
       
       typename SpProxy<T1>::const_iterator_type it     = p.begin();
       
-      while(it.pos() < p.get_n_nonzero())
+      while(it != p.end())
         {
         out.at(it.row(), 0) += (*it);
         ++it;
@@ -65,7 +65,7 @@ spop_sum::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_sum>& in)
       
       typename SpProxy<T1>::const_iterator_type it     = p.begin();
       
-      while(it.pos() < p.get_n_nonzero())
+      while(it != p.end())
         {
         result.at(0, it.col()) += (*it);
         ++it;
@@ -79,7 +79,7 @@ spop_sum::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_sum>& in)
       
       typename SpProxy<T1>::const_iterator_type it     = p.begin();
       
-      while(it.pos() < p.get_n_nonzero())
+      while(it != p.end())
         {
         result.at(it.row(), 0) += (*it);
         ++it;

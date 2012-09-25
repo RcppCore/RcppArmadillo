@@ -86,6 +86,8 @@ operator%
   )
   {
   arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
 
   const SpProxy<T1> pa(x.get_ref());
   const SpProxy<T2> pb(y.get_ref());
@@ -103,13 +105,17 @@ operator%
     typename SpProxy<T1>::const_iterator_type x_it = pa.begin();
     typename SpProxy<T2>::const_iterator_type y_it = pb.begin();
     
+    typename SpProxy<T1>::const_iterator_type x_end = pa.end();
+    typename SpProxy<T2>::const_iterator_type y_end = pb.end();
+    
     uword cur_val = 0;
-    while((x_it.pos() < pa.get_n_nonzero()) || (y_it.pos() < pb.get_n_nonzero()))
+    while((x_it != x_end) || (y_it != y_end))
       {
       if(x_it == y_it)
         {
-        const typename T1::elem_type val = (*x_it) * (*y_it);
-       if (val != 0)
+        const eT val = (*x_it) * (*y_it);
+        
+        if (val != eT(0))
           {
           access::rw(result.values[cur_val]) = val;
           access::rw(result.row_indices[cur_val]) = x_it.row();
@@ -122,7 +128,13 @@ operator%
         }
       else
         {
-        if((x_it.col() < y_it.col()) || ((x_it.col() == y_it.col()) && (x_it.row() < y_it.row()))) // if y is closer to the end
+        const uword x_it_row = x_it.row();
+        const uword x_it_col = x_it.col();
+        
+        const uword y_it_row = y_it.row();
+        const uword y_it_col = y_it.col();
+        
+        if((x_it_col < y_it_col) || ((x_it_col == y_it_col) && (x_it_row < y_it_row))) // if y is closer to the end
           {
           ++x_it;
           }
@@ -196,7 +208,7 @@ operator%
     // count new size
     uword new_n_nonzero = 0;
     typename SpProxy<T2>::const_iterator_type it = pb.begin();
-    while(it.pos() < pb.get_n_nonzero())
+    while(it != pb.end())
       {
       if(((*it) * pa[(it.col() * pa.get_n_rows()) + it.row()]) != 0)
         {
@@ -211,7 +223,7 @@ operator%
 
     uword cur_val = 0;
     typename SpProxy<T2>::const_iterator_type it2 = pb.begin();
-    while(it2.pos() < pb.get_n_nonzero())
+    while(it2 != pb.end())
       {
       const typename T1::elem_type val = (*it2) * pa[(it2.col() * pa.get_n_rows()) + it2.row()];
       if(val != 0)
@@ -231,7 +243,7 @@ operator%
     // count new size
     uword new_n_nonzero = 0;
     typename SpProxy<T2>::const_iterator_type it = pb.begin();
-    while(it.pos() < pb.get_n_nonzero())
+    while(it != pb.end())
       {
       if(((*it) * pa.at(it.row(), it.col())) != 0)
         {
@@ -246,7 +258,7 @@ operator%
 
     uword cur_val = 0;
     typename SpProxy<T2>::const_iterator_type it2 = pb.begin();
-    while(it2.pos() < pb.get_n_nonzero())
+    while(it2 != pb.end())
       {
       const typename T1::elem_type val = (*it2) * pa.at(it2.row(), it2.col());
       if(val != 0)

@@ -1991,7 +1991,7 @@ Mat<eT>::Mat(const SpBase<eT, T1>& m)
   fill(eT(0));
 
   // Iterate over each nonzero element and set it.
-  for(typename SpProxy<T1>::const_iterator_type it = p.begin(); it.pos() < p.get_n_nonzero(); ++it)
+  for(typename SpProxy<T1>::const_iterator_type it = p.begin(); it != p.end(); ++it)
     {
     at(it.row(), it.col()) = (*it);
     }
@@ -2013,7 +2013,7 @@ Mat<eT>::operator=(const SpBase<eT, T1>& m)
 
   fill(eT(0));
 
-  for(typename SpProxy<T1>::const_iterator_type it = p.begin(); it.pos() < p.get_n_nonzero(); ++it)
+  for(typename SpProxy<T1>::const_iterator_type it = p.begin(); it != p.end(); ++it)
     {
     at(it.row(), it.col()) = (*it);
     }
@@ -2035,7 +2035,7 @@ Mat<eT>::operator+=(const SpBase<eT, T1>& m)
 
   arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "addition");
 
-  for(typename SpProxy<T1>::const_iterator_type it = p.begin(); it.pos() < p.get_n_nonzero(); ++it)
+  for(typename SpProxy<T1>::const_iterator_type it = p.begin(); it != p.end(); ++it)
     {
     at(it.row(), it.col()) += (*it);
     }
@@ -2057,7 +2057,7 @@ Mat<eT>::operator-=(const SpBase<eT, T1>& m)
 
   arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "subtraction");
 
-  for(typename SpProxy<T1>::const_iterator_type it = p.begin(); it.pos() < p.get_n_nonzero(); ++it)
+  for(typename SpProxy<T1>::const_iterator_type it = p.begin(); it != p.end(); ++it)
     {
     at(it.row(), it.col()) -= (*it);
     }
@@ -2101,7 +2101,7 @@ Mat<eT>::operator%=(const SpBase<eT, T1>& m)
   // We have to zero everything that isn't being used.
   arrayops::inplace_set(memptr(), eT(0), (it.col() * n_rows) + it.row());
 
-  while(it.pos() < p.get_n_nonzero())
+  while(it != p.end())
     {
     const uword cur_loc = (it.col() * n_rows) + it.row();
 
@@ -2109,7 +2109,7 @@ Mat<eT>::operator%=(const SpBase<eT, T1>& m)
 
     ++it;
 
-    const uword next_loc = (it.pos() == p.get_n_nonzero())
+    const uword next_loc = (it == p.end())
       ? (p.get_n_cols() * n_rows)
       : (it.col() * n_rows) + it.row();
 

@@ -47,6 +47,8 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   
   /**
    * The row indices of each value.  row_indices[i] is the row of values[i].
+   * The length of this array is n_nonzero + 1; the final value ensures the
+   * integrity of iterators.
    */
   const uword* const row_indices;
   
@@ -305,13 +307,13 @@ class SpMat : public SpBase< eT, SpMat<eT> >
     inline iterator_base(const SpMat& in_M);
     inline iterator_base(const SpMat& in_M, const uword col, const uword pos);
 
-    inline eT operator*() const;
+    inline arma_hot eT operator*() const;
 
-    inline bool operator==(const iterator_base& rhs) const;
-    inline bool operator!=(const iterator_base& rhs) const;
+    inline arma_hot bool operator==(const iterator_base& rhs) const;
+    inline arma_hot bool operator!=(const iterator_base& rhs) const;
 
-    inline bool operator==(const typename SpSubview<eT>::iterator_base& rhs) const;
-    inline bool operator!=(const typename SpSubview<eT>::iterator_base& rhs) const;
+    inline arma_hot bool operator==(const typename SpSubview<eT>::iterator_base& rhs) const;
+    inline arma_hot bool operator!=(const typename SpSubview<eT>::iterator_base& rhs) const;
     
     // Don't hold location internally; call "dummy" methods to get that information.
     arma_inline uword row() const { return M.row_indices[internal_pos]; }
@@ -330,13 +332,15 @@ class SpMat : public SpBase< eT, SpMat<eT> >
     inline const_iterator(const SpMat& in_M, uword initial_pos = 0); // Assumes initial_pos is valid.
     //! Once initialized, will be at the first nonzero value after the given position (using forward columnwise traversal).
     inline const_iterator(const SpMat& in_M, uword in_row, uword in_col);
+    //! If you know the exact position of the iterator.  in_row is a dummy argument.
+    inline const_iterator(const SpMat& in_M, uword in_row, uword in_col, uword in_pos);
     inline const_iterator(const const_iterator& other);
 
-    inline const_iterator& operator++();
-    inline void            operator++(int);
+    inline arma_hot const_iterator& operator++();
+    inline arma_hot void            operator++(int);
     
-    inline const_iterator& operator--();
-    inline void            operator--(int);
+    inline arma_hot const_iterator& operator--();
+    inline arma_hot void            operator--(int);
     };
 
   /**
@@ -351,16 +355,17 @@ class SpMat : public SpBase< eT, SpMat<eT> >
 
     inline iterator(SpMat& in_M, uword initial_pos = 0) : const_iterator(in_M, initial_pos) { }
     inline iterator(SpMat& in_M, uword in_row, uword in_col) : const_iterator(in_M, in_row, in_col) { }
+    inline iterator(SpMat& in_M, uword in_row, uword in_col, uword in_pos) : const_iterator(in_M, in_row, in_col, in_pos) { }
     inline iterator(const const_iterator& other) : const_iterator(other) { }
 
-    inline SpValProxy<SpMat<eT> > operator*();
+    inline arma_hot SpValProxy<SpMat<eT> > operator*();
 
     // overloads needed for return type correctness
-    inline iterator& operator++();
-    inline void      operator++(int);
+    inline arma_hot iterator& operator++();
+    inline arma_hot void      operator++(int);
 
-    inline iterator& operator--();
-    inline void      operator--(int);
+    inline arma_hot iterator& operator--();
+    inline arma_hot void      operator--(int);
     };
 
   class const_row_iterator : public iterator_base
@@ -372,11 +377,11 @@ class SpMat : public SpBase< eT, SpMat<eT> >
     inline const_row_iterator(const SpMat& in_M, uword in_row, uword in_col);
     inline const_row_iterator(const const_row_iterator& other);
 
-    inline const_row_iterator& operator++();
-    inline void                operator++(int);
+    inline arma_hot const_row_iterator& operator++();
+    inline arma_hot void                operator++(int);
     
-    inline const_row_iterator& operator--();
-    inline void                operator--(int);
+    inline arma_hot const_row_iterator& operator--();
+    inline arma_hot void                operator--(int);
 
     uword internal_row; // Hold row internally because we use internal_pos differently.
     uword actual_pos; // Actual position in matrix.
@@ -395,21 +400,21 @@ class SpMat : public SpBase< eT, SpMat<eT> >
     inline row_iterator(SpMat& in_M, uword in_row, uword in_col) : const_row_iterator(in_M, in_row, in_col) { }
     inline row_iterator(const row_iterator& other) : const_row_iterator(other) { }
     
-    inline SpValProxy<SpMat<eT> > operator*();
+    inline arma_hot SpValProxy<SpMat<eT> > operator*();
 
     // overloads required for return type correctness
-    inline row_iterator& operator++();
-    inline void          operator++(int);
+    inline arma_hot row_iterator& operator++();
+    inline arma_hot void          operator++(int);
 
-    inline row_iterator& operator--();
-    inline void          operator--(int);
+    inline arma_hot row_iterator& operator--();
+    inline arma_hot void          operator--(int);
     };
   
   inline       iterator     begin();
   inline const_iterator     begin() const;
   
-  inline       iterator     end();
-  inline const_iterator     end() const;
+  inline       iterator end();
+  inline const_iterator end() const;
   
   inline       iterator     begin_col(const uword col_num);
   inline const_iterator     begin_col(const uword col_num) const;

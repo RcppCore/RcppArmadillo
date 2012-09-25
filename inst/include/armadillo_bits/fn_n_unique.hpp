@@ -60,7 +60,7 @@ n_unique
 
   uword total_n_nonzero = 0;
 
-  while((x_it.pos() < pa.get_n_nonzero()) || (y_it.pos() < pb.get_n_nonzero()))
+  while((x_it != pa.end()) || (y_it != pb.end()))
     {
     if(x_it == y_it)
       {

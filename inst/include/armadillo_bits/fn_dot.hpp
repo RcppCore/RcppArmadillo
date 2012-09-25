@@ -171,7 +171,7 @@ dot
     typename SpProxy<T1>::const_iterator_type a_it = pa.begin();
     typename SpProxy<T2>::const_iterator_type b_it = pb.begin();
 
-    while((a_it.pos() < pa.get_n_nonzero()) && (b_it.pos() < pb.get_n_nonzero()))
+    while((a_it != pa.end()) && (b_it != pb.end()))
       {
       if(a_it == b_it)
         {
@@ -248,7 +248,7 @@ dot
   typename SpProxy<T2>::const_iterator_type it = pb.begin();
 
   // prefer_at_accessor won't save us operations
-  while(it.pos() < pb.get_n_nonzero())
+  while(it != pb.end())
     {
     result += (*it) * pa.at(it.row(), it.col());
     ++it;
