@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -18,12 +18,17 @@
 //! interpret a matrix or a vector as a diagonal matrix (i.e. off-diagonal entries are zero)
 template<typename T1>
 arma_inline
-const Op<T1, op_diagmat>
-diagmat(const Base<typename T1::elem_type,T1>& X)
+typename
+enable_if2
+  <
+  is_arma_type<T1>::value,
+  const Op<T1, op_diagmat>
+  >::result
+diagmat(const T1& X)
   {
   arma_extra_debug_sigprint();
   
-  return Op<T1, op_diagmat>(X.get_ref());
+  return Op<T1, op_diagmat>(X);
   }
 
 

@@ -2,6 +2,16 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.3.4.3 (2012-10-04)}{
+  \itemize{
+    \item Upgraded to Armadillo release 3.4.3
+    \itemize{
+      \item fix for aliasing issue in \code{diagmat()}
+      \item fix for \code{speye()} signature
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.3.4.2 (2012-09-25)}{
   \itemize{
     \item Upgraded to Armadillo release 3.4.2
