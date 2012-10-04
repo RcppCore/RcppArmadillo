@@ -1,4 +1,5 @@
 // Copyright (C) 2012 Conrad Sanderson
+// Copyright (C) 2012 Ryan Curtin
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -16,14 +17,15 @@
 
 
 //! Generate a sparse matrix with the values along the main diagonal set to one
-template<typename eT>
+template<typename obj_type>
 inline
-SpMat<eT>
-speye(const uword n_rows, const uword n_cols)
+obj_type
+speye(const uword n_rows, const uword n_cols, const typename arma_SpMat_SpCol_SpRow_only<obj_type>::result* junk = NULL)
   {
   arma_extra_debug_sigprint();
+  arma_ignore(junk);
   
-  SpMat<eT> out;
+  obj_type out;
   
   out.eye(n_rows, n_cols);
   
@@ -32,6 +34,7 @@ speye(const uword n_rows, const uword n_cols)
 
 
 
+// Convenience shortcut method (no template parameter necessary)
 inline
 sp_mat
 speye(const uword n_rows, const uword n_cols)

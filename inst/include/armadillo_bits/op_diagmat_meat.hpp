@@ -101,23 +101,31 @@ op_diagmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_diagmat>& X)
       }
     else   // generate a diagonal matrix out of a matrix
       {
-      // NOTE: we're assuming that the output matrix is the same as the matrix provided by the Proxy,
-      // NOTE: and the alias is not due to a matrix using auxiliary memory;
-      // NOTE: this assumption is currently valid for matrices, but not for vectors;
-      // NOTE: as we've checked that at this point in code we're dealing with a matrix,
-      // NOTE: the assumption is thus currently valid
-      
       arma_debug_check( (n_rows != n_cols), "diagmat(): given matrix is not square" );
       
-      for(uword i=0; i < n_rows; ++i)
+      if( (Proxy<T1>::has_subview == false) && (Proxy<T1>::fake_mat == false) )
         {
-        eT* colptr = out.colptr(i);
+        // NOTE: we have aliasing and it's not due to a subview, hence we're assuming that the output matrix already has the correct size
         
-        // clear above the diagonal
-        arrayops::inplace_set(colptr, eT(0), i);
+        for(uword i=0; i < n_rows; ++i)
+          {
+          const eT val = P.at(i,i);
+          
+          arrayops::inplace_set(out.colptr(i), eT(0), n_rows);
+          
+          out.at(i,i) = val;
+          }
+        }
+      else
+        {
+        podarray<eT> tmp(n_rows);
+        eT* tmp_mem = tmp.memptr();
         
-        // clear below the diagonal
-        arrayops::inplace_set(colptr+(i+1), eT(0), n_rows-1-i);
+        for(uword i=0; i < n_rows; ++i)  { tmp_mem[i] = P.at(i,i); }
+        
+        out.zeros(n_rows, n_rows);
+        
+        for(uword i=0; i < n_rows; ++i)  { out.at(i,i) = tmp_mem[i]; }
         }
       }
     }
