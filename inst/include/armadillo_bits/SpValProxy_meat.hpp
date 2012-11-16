@@ -143,7 +143,7 @@ arma_inline
 SpValProxy<T1>&
 SpValProxy<T1>::operator*=(const eT rhs)
   {
-  if (rhs != 0)
+  if (rhs != eT(0))
     {
 
     if (val_ptr)
@@ -221,145 +221,17 @@ SpValProxy<T1>::operator/=(const eT rhs)
 template<typename T1>
 arma_inline
 SpValProxy<T1>&
-SpValProxy<T1>::operator%=(const eT rhs)
-  {
-  if (val_ptr)
-    {
-    *val_ptr %= rhs;
-    check_zero();
-    }
-
-  return *this;
-  }
-
-
-
-template<typename T1>
-arma_inline
-SpValProxy<T1>&
-SpValProxy<T1>::operator<<=(const eT rhs)
-  {
-  // Shifting 0 by any amount should do nothing.
-  if (val_ptr)
-    {
-    *val_ptr <<= rhs;
-    check_zero();
-    }
-
-  return *this;
-  }
-
-
-
-template<typename T1>
-arma_inline
-SpValProxy<T1>&
-SpValProxy<T1>::operator>>=(const eT rhs)
-  {
-  // Shifting 0 by any amount should do nothing.
-  if (val_ptr)
-    {
-    *val_ptr <<= rhs;
-    check_zero();
-    }
-
-  return *this;
-  }
-
-
-
-template<typename T1>
-arma_inline
-SpValProxy<T1>&
-SpValProxy<T1>::operator&=(const eT rhs)
-  {
-  // Anding with 0 should do nothing.
-  if (val_ptr)
-    {
-    *val_ptr &= rhs;
-    check_zero();
-    }
-
-  return *this;
-  }
-
-
-
-template<typename T1>
-arma_inline
-SpValProxy<T1>&
-SpValProxy<T1>::operator|=(const eT rhs)
-  {
-  // Oring with 0 means we assign rhs.
-  if (rhs != eT(0))
-    {
-
-    if (val_ptr)
-      {
-      *val_ptr |= rhs;
-      }
-    else
-      {
-      val_ptr = &parent.add_element(row, col, rhs);
-      }
-
-    }
-
-  return *this;
-  }
-
-
-
-template<typename T1>
-arma_inline
-SpValProxy<T1>&
-SpValProxy<T1>::operator^=(const eT rhs)
-  {
-  // Xoring 0 with 0 is still 0.
-  if (rhs != eT(0))
-    {
-
-    if (val_ptr)
-      {
-      *val_ptr ^= rhs;
-      check_zero();
-      }
-    else
-      {
-      val_ptr = &parent.add_element(row, col, rhs ^ 0);
-      }
-
-    }
-  else
-    {
-
-    if (val_ptr)
-      {
-      *val_ptr ^= rhs;
-      check_zero();
-      }
-
-    }
-
-  return *this;
-  }
-
-
-
-template<typename T1>
-arma_inline
-SpValProxy<T1>&
 SpValProxy<T1>::operator++()
   {
   if (val_ptr)
     {
-    ++(*val_ptr);
+    (*val_ptr) += eT(1);
     check_zero();
     }
 
   else
     {
-    val_ptr = &parent.add_element(row, col, 1);
+    val_ptr = &parent.add_element(row, col, eT(1));
     }
 
   return *this;
@@ -374,13 +246,13 @@ SpValProxy<T1>::operator--()
   {
   if (val_ptr)
     {
-    --(*val_ptr);
+    (*val_ptr) -= eT(1);
     check_zero();
     }
 
   else
     {
-    val_ptr = &parent.add_element(row, col, -1);
+    val_ptr = &parent.add_element(row, col, eT(-1));
     }
 
   return *this;
@@ -395,18 +267,18 @@ SpValProxy<T1>::operator++(const int unused)
   {
   if (val_ptr)
     {
-    ++(*val_ptr);
+    (*val_ptr) += eT(1);
     check_zero();
     }
 
   else
     {
-    val_ptr = &parent.add_element(row, col, 1);
+    val_ptr = &parent.add_element(row, col, eT(1));
     }
 
   if (val_ptr) // It may have changed to now be 0.
     {
-    return *(val_ptr - 1);
+    return *(val_ptr) - eT(1);
     }
   else
     {
@@ -423,7 +295,7 @@ SpValProxy<T1>::operator--(const int unused)
   {
   if (val_ptr)
     {
-    --(*val_ptr);
+    (*val_ptr) -= eT(1);
     check_zero();
     }
 
@@ -434,7 +306,7 @@ SpValProxy<T1>::operator--(const int unused)
 
   if (val_ptr) // It may have changed to now be 0.
     {
-    return *(val_ptr + 1);
+    return *(val_ptr) + eT(1);
     }
   else
     {
@@ -472,3 +344,7 @@ SpValProxy<T1>::check_zero()
     val_ptr = NULL;
     }
   }
+
+
+
+//! @}

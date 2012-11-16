@@ -1,3 +1,9 @@
+2012-11-15  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.3.4.4
+
+	* inst/include/*: Upgraded to new release 3.4.4 of Armadillo
+
 2012-10-04  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.3.4.3

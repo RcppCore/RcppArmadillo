@@ -47,12 +47,6 @@ class SpValProxy
   arma_inline SpValProxy& operator-=(const eT rhs);
   arma_inline SpValProxy& operator*=(const eT rhs);
   arma_inline SpValProxy& operator/=(const eT rhs);
-  arma_inline SpValProxy& operator%=(const eT rhs);
-  arma_inline SpValProxy& operator<<=(const eT rhs);
-  arma_inline SpValProxy& operator>>=(const eT rhs);
-  arma_inline SpValProxy& operator&=(const eT rhs);
-  arma_inline SpValProxy& operator|=(const eT rhs);
-  arma_inline SpValProxy& operator^=(const eT rhs);
   
   arma_inline SpValProxy& operator++();
   arma_inline SpValProxy& operator--();
@@ -75,6 +69,7 @@ class SpValProxy
   
   T1& parent; // We will call this object if we need to insert or delete an element.
   };
+
 
 
 //! @}

@@ -237,7 +237,7 @@ operator/
 
   // The compiler should be smart enough to optimize out the inner if/else statement entirely
   typename SpProxy<T1>::const_iterator_type it = pa.begin();
-  uword new_n_nonzero;
+  uword new_n_nonzero = 0;
   while(it != pa.end())
     {
     if(Proxy<T2>::prefer_at_accessor == false)
