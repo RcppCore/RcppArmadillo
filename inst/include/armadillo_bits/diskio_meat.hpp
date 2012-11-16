@@ -1559,7 +1559,7 @@ diskio::load_csv_ascii(Mat<eT>& x, std::istream& f, std::string&)
     
     while(line_stream.good() == true)
       {
-      getline(line_stream, token, ',');
+      std::getline(line_stream, token, ',');
       ++line_n_cols;
       }
     
@@ -1593,7 +1593,7 @@ diskio::load_csv_ascii(Mat<eT>& x, std::istream& f, std::string&)
     
     while(line_stream.good() == true)
       {
-      getline(line_stream, token, ',');
+      std::getline(line_stream, token, ',');
       
       eT val;
       
@@ -2946,7 +2946,7 @@ diskio::load_raw_ascii(SpMat<eT>& x, std::istream& f, std::string& err_msg)
 // 
 //     while(line_stream.good() == true)
 //       {
-//       getline(line_stream, token, ',');
+//       std::getline(line_stream, token, ',');
 //       ++line_n_cols;
 //       }
 // 
@@ -2979,7 +2979,7 @@ diskio::load_raw_ascii(SpMat<eT>& x, std::istream& f, std::string& err_msg)
 // 
 //     while(line_stream.good() == true)
 //       {
-//       getline(line_stream, token, ',');
+//       std::getline(line_stream, token, ',');
 // 
 //       eT val;
 // 

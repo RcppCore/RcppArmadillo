@@ -46,7 +46,7 @@ template<typename eT>
 inline
 SpMat<eT>::~SpMat()
   {
-  arma_extra_debug_sigprint();
+  arma_extra_debug_sigprint_this(this);
 
   // If necessary, release the memory.
   if (values)
@@ -1418,6 +1418,8 @@ SpMat<eT>::row(const uword row_num)
   {
   arma_extra_debug_sigprint();
 
+  arma_debug_check(row_num >= n_rows, "SpMat::row(): out of bounds");
+
   return SpSubview<eT>(*this, row_num, 0, 1, n_cols);
   }
 
@@ -1429,6 +1431,8 @@ const SpSubview<eT>
 SpMat<eT>::row(const uword row_num) const
   {
   arma_extra_debug_sigprint();
+
+  arma_debug_check(row_num >= n_rows, "SpMat::row(): out of bounds");
 
   return SpSubview<eT>(*this, row_num, 0, 1, n_cols);
   }
@@ -1500,6 +1504,8 @@ SpMat<eT>::col(const uword col_num)
   {
   arma_extra_debug_sigprint();
 
+  arma_debug_check(col_num >= n_cols, "SpMat::col(): out of bounds");
+
   return SpSubview<eT>(*this, 0, col_num, n_rows, 1);
   }
 
@@ -1511,6 +1517,8 @@ const SpSubview<eT>
 SpMat<eT>::col(const uword col_num) const
   {
   arma_extra_debug_sigprint();
+
+  arma_debug_check(col_num >= n_cols, "SpMat::col(): out of bounds");
 
   return SpSubview<eT>(*this, 0, col_num, n_rows, 1);
   }
@@ -3470,10 +3478,10 @@ SpMat<eT>::mem_resize(const uword new_n_nonzero)
           
           arrayops::copy(new_values,      values,      copy_size);
           arrayops::copy(new_row_indices, row_indices, copy_size);
-          
-          memory::release(values);
-          memory::release(row_indices);
           }
+          
+        memory::release(values);
+        memory::release(row_indices);
         
         access::rw(values)      = new_values;
         access::rw(row_indices) = new_row_indices;

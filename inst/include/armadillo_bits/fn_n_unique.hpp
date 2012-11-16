@@ -64,7 +64,7 @@ n_unique
     {
     if(x_it == y_it)
       {
-      if(op_n_unique_type::eval((*x_it), (*y_it)) != 0)
+      if(op_n_unique_type::eval((*x_it), (*y_it)) != typename T1::elem_type(0))
         {
         ++total_n_nonzero;
         }
@@ -76,7 +76,7 @@ n_unique
       {
       if((x_it.col() < y_it.col()) || ((x_it.col() == y_it.col()) && (x_it.row() < y_it.row()))) // if y is closer to the end
         {
-        if(op_n_unique_type::eval((*x_it), typename T1::elem_type(0)) != 0)
+        if(op_n_unique_type::eval((*x_it), typename T1::elem_type(0)) != typename T1::elem_type(0))
           {
           ++total_n_nonzero;
           }
@@ -85,7 +85,7 @@ n_unique
         }
       else // x is closer to the end
         {
-        if(op_n_unique_type::eval(typename T1::elem_type(0), (*y_it)) != 0)
+        if(op_n_unique_type::eval(typename T1::elem_type(0), (*y_it)) != typename T1::elem_type(0))
           {
           ++total_n_nonzero;
           }

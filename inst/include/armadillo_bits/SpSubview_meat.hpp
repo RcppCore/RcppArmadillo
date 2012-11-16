@@ -711,6 +711,8 @@ SpSubview<eT>::fill(const eT val)
     const uword end_row   = aux_row1 + n_rows;
     const uword start_col = aux_col1;
     const uword end_col   = aux_col1 + n_cols;
+
+    const uword orig_nonzero = m.n_nonzero;
     
     // iterate over our part of the sparse matrix
     for(uword col = start_col; col < end_col; ++col)
@@ -718,6 +720,9 @@ SpSubview<eT>::fill(const eT val)
       {
       access::rw(m).at(row, col) = val;
       }
+
+    access::rw(n_nonzero) += (m.n_nonzero - orig_nonzero);
+
     }
   else
     {
@@ -765,17 +770,21 @@ void
 SpSubview<eT>::eye()
   {
   arma_extra_debug_sigprint();
-
+  
   // clear other things
   (*this).zeros();
-
+  
+  const uword orig_nonzero = m.n_nonzero;
+  
   // now the diagonal ones
   const uword end_index = std::min(n_rows, n_cols);
-
+  
   for(uword ind = 0; ind < end_index; ++ind)
     {
-    m.at(ind + aux_row1, ind + aux_col1) = eT(1);
+    access::rw(m).at(ind + aux_row1, ind + aux_col1) = eT(1);
     }
+  
+  access::rw(n_nonzero) += (m.n_nonzero - orig_nonzero);
   }
 
 
@@ -817,7 +826,7 @@ SpSubview<eT>::operator()(const uword i)
   arma_debug_check( (i >= n_elem), "SpSubview::operator(): index out of bounds");
 
   const uword row = i % n_rows;
-  const uword col = i / n_cols;
+  const uword col = i / n_rows;
 
   return (*this).at(row, col);
   }
@@ -833,7 +842,7 @@ SpSubview<eT>::operator()(const uword i) const
   arma_debug_check( (i >= n_elem), "SpSubview::operator(): index out of bounds");
 
   const uword row = i % n_rows;
-  const uword col = i / n_cols;
+  const uword col = i / n_rows;
 
   return (*this).at(row, col);
   }
