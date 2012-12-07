@@ -218,6 +218,21 @@ Col<eT>::operator=(const std::vector<eT>& x)
 
 template<typename eT>
 inline
+Col<eT>::Col(const SpCol<eT>& X)
+  : Mat<eT>(arma_vec_indicator(), X.n_elem, 1, 1)
+  {
+  arma_extra_debug_sigprint_this(this);
+
+  arrayops::inplace_set(Mat<eT>::memptr(), eT(0), X.n_elem);
+
+  for(typename SpCol<eT>::const_iterator it = X.begin(); it != X.end(); ++it)
+    at(it.row()) = (*it);
+  }
+
+
+
+template<typename eT>
+inline
 const Col<eT>&
 Col<eT>::operator=(const eT val)
   {

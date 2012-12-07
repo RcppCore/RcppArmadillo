@@ -25,17 +25,20 @@ spop_min::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_min>& in)
   
   typedef typename T1::elem_type eT;
   
+  const uword dim = in.aux_uword_a;
+  arma_debug_check((dim > 1), "min(): incorrect usage. dim must be 0 or 1");
+  
   const SpProxy<T1> p(in.m);
   
   if(p.is_alias(out) == false)
     {
-    spop_min::apply_noalias(out, p, in.aux_uword_a);
+    spop_min::apply_noalias(out, p, dim);
     }
   else
     {
     SpMat<eT> tmp;
     
-    spop_min::apply_noalias(tmp, p, in.aux_uword_a);
+    spop_min::apply_noalias(tmp, p, dim);
     
     out.steal_mem(tmp);
     }
@@ -58,16 +61,16 @@ spop_min::apply_noalias
   arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
-  
-  if(p.get_n_nonzero() == 0)
-    {
-    return;
-    }
 
   if(dim == 0)
     {
     // minimum in each column
     result.set_size(1, p.get_n_cols());
+  
+    if(p.get_n_nonzero() == 0)
+      {
+      return;
+      }
     
     typename SpProxy<T1>::const_iterator_type it = p.begin();
 
@@ -116,6 +119,11 @@ spop_min::apply_noalias
     {
     // minimum in each row
     result.set_size(p.get_n_rows(), 1);
+  
+    if(p.get_n_nonzero() == 0)
+      {
+      return;
+      }
 
     typename SpProxy<T1>::const_row_iterator_type it = p.begin_row();
 
@@ -181,16 +189,16 @@ spop_min::apply_noalias
   typedef typename T1::elem_type            eT;
   typedef typename get_pod_type<eT>::result  T;
   
-  if(p.get_n_nonzero() == 0)
-    {
-    return;
-    }
-  
   if(dim == 0)
     {
     // minimum in each column
     result.set_size(1, p.get_n_cols());
     
+    if(p.get_n_nonzero() == 0)
+      {
+      return;
+      }
+
     typename SpProxy<T1>::const_iterator_type it = p.begin();
     
     uword cur_col = it.col();
@@ -255,6 +263,11 @@ spop_min::apply_noalias
     // minimum in each row
     result.set_size(p.get_n_rows(), 1);
     
+    if(p.get_n_nonzero() == 0)
+      {
+      return;
+      }
+
     typename SpProxy<T1>::const_row_iterator_type it = p.begin_row();
     
     uword cur_row = it.row();

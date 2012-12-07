@@ -67,12 +67,11 @@
         }\
       else\
         {\
-        uword count = 0;\
-        \
         for(uword col=0; col<n_cols; ++col)\
-        for(uword row=0; row<n_rows; ++row, ++count)\
+        for(uword row=0; row<n_rows; ++row)\
           {\
-          out_mem[count] = (P1.at(row,col) operator_rel P2.at(row,col)) ? uword(1) : uword(0);\
+          *out_mem = (P1.at(row,col) operator_rel P2.at(row,col)) ? uword(1) : uword(0);\
+          out_mem++;\
           }\
         }\
       }\
@@ -125,13 +124,12 @@
       }\
     else\
       {\
-      uword count = 0;\
-      \
       for(uword slice = 0; slice < n_slices; ++slice)\
-      for(uword col   = 0; col   < n_cols;   ++col)\
-      for(uword row   = 0; row   < n_rows;   ++row, ++count)\
+      for(uword col   = 0; col   < n_cols;   ++col  )\
+      for(uword row   = 0; row   < n_rows;   ++row  )\
         {\
-        out_mem[count] = (P1.at(row,col,slice) operator_rel P2.at(row,col,slice)) ? uword(1) : uword(0);\
+        *out_mem = (P1.at(row,col,slice) operator_rel P2.at(row,col,slice)) ? uword(1) : uword(0);\
+        out_mem++;\
         }\
       }\
     }\

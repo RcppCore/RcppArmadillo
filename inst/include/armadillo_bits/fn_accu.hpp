@@ -316,16 +316,17 @@ accu(const T1& x)
     }
   else
     {
-    typename SpProxy<T1>::const_iterator_type it = p.begin();
+    typename SpProxy<T1>::const_iterator_type it     = p.begin();
+    typename SpProxy<T1>::const_iterator_type it_end = p.end();
     
     eT result = eT(0);
     
-    while(it != p.end())
+    while(it != it_end)
       {
       result += (*it);
       ++it;
       }
-     
+    
     return result;
     }
   }

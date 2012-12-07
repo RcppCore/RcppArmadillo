@@ -247,38 +247,58 @@ inline
 void
 Cube<eT>::init
   (
-  const BaseCube<typename Cube<eT>::pod_type,T1>& A,
-  const BaseCube<typename Cube<eT>::pod_type,T2>& B
+  const BaseCube<typename Cube<eT>::pod_type,T1>& X,
+  const BaseCube<typename Cube<eT>::pod_type,T2>& Y
   )
   {
   arma_extra_debug_sigprint();
   
   typedef typename T1::elem_type          T;
-  typedef typename ProxyCube<T1>::ea_type ea_type1;
-  typedef typename ProxyCube<T2>::ea_type ea_type2;
   
   arma_type_check(( is_complex<eT>::value == false ));   //!< compile-time abort if eT isn't std::complex
   arma_type_check(( is_complex< T>::value == true  ));   //!< compile-time abort if T is std::complex
   
   arma_type_check(( is_same_type< std::complex<T>, eT >::value == false ));   //!< compile-time abort if types are not compatible
   
-  const ProxyCube<T1> X(A.get_ref());
-  const ProxyCube<T2> Y(B.get_ref());
+  const ProxyCube<T1> PX(X.get_ref());
+  const ProxyCube<T2> PY(Y.get_ref());
   
-  arma_assert_same_size(X, Y, "Cube()");
+  arma_assert_same_size(PX, PY, "Cube()");
   
-  init_warm(X.get_n_rows(), X.get_n_cols(), X.get_n_slices());
+  const uword local_n_rows   = PX.get_n_rows();
+  const uword local_n_cols   = PX.get_n_cols();
+  const uword local_n_slices = PX.get_n_slices();
   
-  const uword      N       = n_elem;
-        eT*      out_mem = memptr();
-        ea_type1 PX      = X.get_ea();
-        ea_type2 PY      = Y.get_ea();
+  init_warm(local_n_rows, local_n_cols, local_n_slices);
   
-  // TODO: add handling for prefer_at_accessor = true
+  eT* out_mem = (*this).memptr();
   
-  for(uword i=0; i<N; ++i)
+  const bool prefer_at_accessor = ( ProxyCube<T1>::prefer_at_accessor || ProxyCube<T2>::prefer_at_accessor );
+  
+  if(prefer_at_accessor == false)
     {
-    out_mem[i] = std::complex<T>(PX[i], PY[i]);
+    typedef typename ProxyCube<T1>::ea_type ea_type1;
+    typedef typename ProxyCube<T2>::ea_type ea_type2;
+    
+    const uword N = n_elem;
+    
+    ea_type1 A = PX.get_ea();
+    ea_type2 B = PY.get_ea();
+        
+    for(uword i=0; i<N; ++i)
+      {
+      out_mem[i] = std::complex<T>(A[i], B[i]);
+      }
+    }
+  else
+    {
+    for(uword uslice = 0; uslice < local_n_slices; ++uslice)
+    for(uword ucol   = 0;   ucol < local_n_cols;   ++ucol  )
+    for(uword urow   = 0;   urow < local_n_rows;   ++urow  )
+      {
+      *out_mem = std::complex<T>( PX.at(urow,ucol,uslice), PY.at(urow,ucol,uslice) );
+      out_mem++;
+      }
     }
   }
 
@@ -3301,28 +3321,46 @@ Cube_aux::set_real(Cube< std::complex<T> >& out, const BaseCube<T,T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename std::complex<T>        eT;
-  typedef typename ProxyCube<T1>::ea_type ea_type;
+  typedef typename std::complex<T> eT;
   
-  const ProxyCube<T1> A(X.get_ref());
+  const ProxyCube<T1> P(X.get_ref());
+  
+  const uword local_n_rows   = P.get_n_rows();
+  const uword local_n_cols   = P.get_n_cols();
+  const uword local_n_slices = P.get_n_slices();
   
   arma_debug_assert_same_size
     (
-    out.n_rows, out.n_cols, out.n_slices,
-    A.get_n_rows(), A.get_n_cols(), A.get_n_slices(),
+    out.n_rows,   out.n_cols,   out.n_slices,
+    local_n_rows, local_n_cols, local_n_slices,
     "Cube::set_real()"
     );
   
-  const uword   n_elem  = out.n_elem;
-        eT*     out_mem = out.memptr();
-        ea_type PA      = A.get_ea();
+  eT* out_mem = out.memptr();
   
-  // TODO: add handling for prefer_at_accessor = true
-  
-  for(uword i=0; i<n_elem; ++i)
+  if(ProxyCube<T1>::prefer_at_accessor == false)
     {
-    //out_mem[i].real() = PA[i];
-    out_mem[i] = std::complex<T>( PA[i], out_mem[i].imag() );
+    typedef typename ProxyCube<T1>::ea_type ea_type;
+    
+    ea_type A = P.get_ea();
+    
+    const uword N = out.n_elem;
+    
+    for(uword i=0; i<N; ++i)
+      {
+      //out_mem[i].real() = PA[i];
+      out_mem[i] = std::complex<T>( A[i], out_mem[i].imag() );
+      }
+    }
+  else
+    {
+    for(uword slice = 0; slice < local_n_slices; ++slice)
+    for(uword col   = 0; col   < local_n_cols;   ++col  )
+    for(uword row   = 0; row   < local_n_rows;   ++row  )
+      {
+      (*out_mem) = std::complex<T>( P.at(row,col,slice), (*out_mem).imag() );
+      out_mem++;
+      }
     }
   }
 
@@ -3335,28 +3373,46 @@ Cube_aux::set_imag(Cube< std::complex<T> >& out, const BaseCube<T,T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename std::complex<T>        eT;
-  typedef typename ProxyCube<T1>::ea_type ea_type;
+  typedef typename std::complex<T> eT;
   
-  const ProxyCube<T1> A(X.get_ref());
+  const ProxyCube<T1> P(X.get_ref());
+  
+  const uword local_n_rows   = P.get_n_rows();
+  const uword local_n_cols   = P.get_n_cols();
+  const uword local_n_slices = P.get_n_slices();
   
   arma_debug_assert_same_size
     (
-    out.n_rows, out.n_cols, out.n_slices,
-    A.get_n_rows(), A.get_n_cols(), A.get_n_slices(),
+    out.n_rows,   out.n_cols,   out.n_slices,
+    local_n_rows, local_n_cols, local_n_slices,
     "Cube::set_imag()"
     );
   
-  const uword   n_elem  = out.n_elem;
-        eT*     out_mem = out.memptr();
-        ea_type PA      = A.get_ea();
+  eT* out_mem = out.memptr();
   
-  // TODO: add handling for prefer_at_accessor = true
-  
-  for(uword i=0; i<n_elem; ++i)
+  if(ProxyCube<T1>::prefer_at_accessor == false)
     {
-    //out_mem[i].imag() = PA[i];
-    out_mem[i] = std::complex<T>( out_mem[i].real(), PA[i] );
+    typedef typename ProxyCube<T1>::ea_type ea_type;
+    
+    ea_type A = P.get_ea();
+    
+    const uword N = out.n_elem;
+    
+    for(uword i=0; i<N; ++i)
+      {
+      //out_mem[i].imag() = PA[i];
+      out_mem[i] = std::complex<T>( out_mem[i].real(), A[i] );
+      }
+    }
+  else
+    {
+    for(uword slice = 0; slice < local_n_slices; ++slice)
+    for(uword col   = 0; col   < local_n_cols;   ++col  )
+    for(uword row   = 0; row   < local_n_rows;   ++row  )
+      {
+      (*out_mem) = std::complex<T>( (*out_mem).real(), P.at(row,col,slice) );
+      out_mem++;
+      }
     }
   }
 

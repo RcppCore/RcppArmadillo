@@ -45,7 +45,8 @@ class Col : public Mat<eT>
   inline                  Col(const std::initializer_list<eT>& list);
   inline const Col& operator=(const std::initializer_list<eT>& list);
   #endif
-  
+
+  inline explicit Col(const SpCol<eT>& X);
   
   inline const Col& operator=(const eT val);
     

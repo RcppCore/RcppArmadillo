@@ -160,8 +160,11 @@ class spglue_times;
 class spglue_times2;
 
 
-template<typename T1,              typename spop_type  > class SpOp;
+template<                 typename T1, typename spop_type> class   SpOp;
+template<typename out_eT, typename T1, typename spop_type> class mtSpOp;
+
 template<typename T1, typename T2, typename spglue_type> class SpGlue;
+
 
 template<typename T1> class SpProxy;
 
@@ -191,7 +194,7 @@ static const injector_end_of_row<> endr = injector_end_of_row<>();
 enum file_type
   {
   file_type_unknown,
-  auto_detect,  //!< Automatically detect the file type (file must be one of the following types)
+  auto_detect,  //!< Automatically detect the file type
   raw_ascii,    //!< ASCII format (text), without any other information.
   arma_ascii,   //!< Armadillo ASCII format (text), with information about matrix type and size
   csv_ascii,    //!< comma separated values (CSV), without any other information
@@ -199,7 +202,8 @@ enum file_type
   arma_binary,  //!< Armadillo binary format, with information about matrix type and size
   pgm_binary,   //!< Portable Grey Map (greyscale image)
   ppm_binary,   //!< Portable Pixel Map (colour image), used by the field and cube classes
-  hdf5_binary   //!< Open binary format, not specific to Armadillo, which can store arbitrary data
+  hdf5_binary,  //!< Open binary format, not specific to Armadillo, which can store arbitrary data
+  coord_ascii   //!< simple co-ordinate format for sparse matrices
   };
 
 

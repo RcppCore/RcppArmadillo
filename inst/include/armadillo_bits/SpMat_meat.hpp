@@ -27,14 +27,15 @@ SpMat<eT>::SpMat()
   , vec_state(0)
   , values(memory::acquire_chunked<eT>(1))
   , row_indices(memory::acquire_chunked<uword>(1))
-  , col_ptrs(memory::acquire<uword>(1))
+  , col_ptrs(memory::acquire<uword>(2))
   {
   arma_extra_debug_sigprint_this(this);
-
+  
   access::rw(values[0]) = 0;
   access::rw(row_indices[0]) = 0;
-
+  
   access::rw(col_ptrs[0]) = 0; // No elements.
+  access::rw(col_ptrs[1]) = std::numeric_limits<uword>::max();
   }
 
 
@@ -1310,6 +1311,116 @@ SpMat<eT>::SpMat(const SpGlue<T1, T2, spglue_type>& X)
 
 
 template<typename eT>
+template<typename T1, typename spop_type>
+inline
+SpMat<eT>::SpMat(const mtSpOp<eT, T1, spop_type>& X)
+  : n_rows(0)
+  , n_cols(0)
+  , n_elem(0)
+  , n_nonzero(0)
+  , vec_state(0)
+  , values(NULL) // extra element set in application of sparse glue
+  , row_indices(NULL)
+  , col_ptrs(NULL)
+  {
+  arma_extra_debug_sigprint_this(this);
+
+  spop_type::apply(*this, X);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename spop_type>
+inline
+const SpMat<eT>&
+SpMat<eT>::operator=(const mtSpOp<eT, T1, spop_type>& X)
+  {
+  arma_extra_debug_sigprint();
+
+  spop_type::apply(*this, X);
+
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename spop_type>
+inline
+const SpMat<eT>&
+SpMat<eT>::operator+=(const mtSpOp<eT, T1, spop_type>& X)
+  {
+  arma_extra_debug_sigprint();
+
+  const SpMat<eT> m(X);
+
+  return (*this).operator+=(m);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename spop_type>
+inline
+const SpMat<eT>&
+SpMat<eT>::operator-=(const mtSpOp<eT, T1, spop_type>& X)
+  {
+  arma_extra_debug_sigprint();
+
+  const SpMat<eT> m(X);
+
+  return (*this).operator-=(m);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename spop_type>
+inline
+const SpMat<eT>&
+SpMat<eT>::operator*=(const mtSpOp<eT, T1, spop_type>& X)
+  {
+  arma_extra_debug_sigprint();
+
+  const SpMat<eT> m(X);
+
+  return (*this).operator*=(m);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename spop_type>
+inline
+const SpMat<eT>&
+SpMat<eT>::operator%=(const mtSpOp<eT, T1, spop_type>& X)
+  {
+  arma_extra_debug_sigprint();
+
+  const SpMat<eT> m(X);
+
+  return (*this).operator%=(m);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename spop_type>
+inline
+const SpMat<eT>&
+SpMat<eT>::operator/=(const mtSpOp<eT, T1, spop_type>& X)
+  {
+  arma_extra_debug_sigprint();
+
+  const SpMat<eT> m(X);
+
+  return (*this).operator/=(m);
+  }
+
+
+
+template<typename eT>
 template<typename T1, typename T2, typename spglue_type>
 inline
 const SpMat<eT>&
@@ -1864,7 +1975,8 @@ SpMat<eT>::shed_cols(const uword in_col1, const uword in_col2)
   // Update column pointers.
   const uword new_n_cols = n_cols - ((in_col2 - in_col1) + 1);
   
-  uword* new_col_ptrs = memory::acquire<uword>(new_n_cols + 1);
+  uword* new_col_ptrs = memory::acquire<uword>(new_n_cols + 2);
+  new_col_ptrs[new_n_cols + 1] = std::numeric_limits<uword>::max();
   
   // Copy first set of columns (no manipulation required).
   if (in_col1 != 0)
@@ -1997,7 +2109,16 @@ SpMat<eT>::submat(const uword in_row1, const uword in_col1, const uword in_row2,
   {
   arma_extra_debug_sigprint();
 
-  return submat(in_row1, in_col1, in_row2, in_col2);
+  arma_debug_check
+    (
+    (in_row1 > in_row2) || (in_col1 >  in_col2) || (in_row2 >= n_rows) || (in_col2 >= n_cols),
+    "SpMat::submat(): indices out of bounds or incorrectly used"
+    );
+
+  const uword subview_n_rows = in_row2 - in_row1 + 1;
+  const uword subview_n_cols = in_col2 - in_col1 + 1;
+
+  return SpSubview<eT>(*this, in_row1, in_col1, subview_n_rows, subview_n_cols);
   }
 
 
@@ -2044,8 +2165,30 @@ SpMat<eT>::submat    (const span& row_span, const span& col_span) const
   {
   arma_extra_debug_sigprint();
 
-  // Call the non-const version of this function, then cast back to const (avoids code duplication).
-  return const_cast<const SpSubview<eT> >(const_cast<SpMat<eT>* >(this)->submat(row_span, col_span));
+  const bool row_all = row_span.whole;
+  const bool col_all = col_span.whole;
+  
+  const uword local_n_rows = n_rows;
+  const uword local_n_cols = n_cols;
+  
+  const uword in_row1       = row_all ? 0            : row_span.a;
+  const uword in_row2       =                          row_span.b;
+  const uword submat_n_rows = row_all ? local_n_rows : in_row2 - in_row1 + 1; 
+  
+  const uword in_col1       = col_all ? 0            : col_span.a;
+  const uword in_col2       =                          col_span.b;
+  const uword submat_n_cols = col_all ? local_n_cols : in_col2 - in_col1 + 1; 
+  
+  arma_debug_check
+    (    
+    ( row_all ? false : ((in_row1 > in_row2) || (in_row2 >= local_n_rows)) )
+    ||   
+    ( col_all ? false : ((in_col1 > in_col2) || (in_col2 >= local_n_cols)) )
+    ,    
+    "SpMat::submat(): indices out of bounds or incorrectly used"
+    );   
+  
+  return SpSubview<eT>(*this, in_row1, in_col1, submat_n_rows, submat_n_cols);
   }
 
 
@@ -2650,7 +2793,8 @@ SpMat<eT>::reshape(const uword in_rows, const uword in_cols, const uword dim)
     // We have to modify all of the relevant row indices and the relevant column pointers.
     // Iterate over all the points to do this.  We won't be deleting any points, but we will be modifying
     // columns and rows. We'll have to store a new set of column vectors.
-    uword* new_col_ptrs    = memory::acquire<uword>(in_cols + 1);
+    uword* new_col_ptrs    = memory::acquire<uword>(in_cols + 2);
+    new_col_ptrs[in_cols + 1] = std::numeric_limits<uword>::max();
     
     uword* new_row_indices = memory::acquire_chunked<uword>(n_nonzero + 1);
     access::rw(new_row_indices[n_nonzero]) = 0;
@@ -3229,6 +3373,259 @@ SpMat<eT>::max(uword& row_of_max_val, uword& col_of_max_val) const
 
 
 
+//! save the matrix to a file
+template<typename eT>
+inline
+bool
+SpMat<eT>::save(const std::string name, const file_type type, const bool print_status) const
+  {
+  arma_extra_debug_sigprint();
+  
+  bool save_okay;
+  
+  switch(type)
+    {
+    // case raw_ascii:
+    //   save_okay = diskio::save_raw_ascii(*this, name);
+    //   break;
+    
+    // case csv_ascii:
+    //   save_okay = diskio::save_csv_ascii(*this, name);
+    //   break;
+    
+    case arma_binary:
+      save_okay = diskio::save_arma_binary(*this, name);
+      break;
+    
+    case coord_ascii:
+      save_okay = diskio::save_coord_ascii(*this, name);
+      break;
+    
+    default:
+      arma_warn(true, "SpMat::save(): unsupported file type");
+      save_okay = false;
+    }
+  
+  arma_warn( (save_okay == false), "SpMat::save(): couldn't write to ", name);
+  
+  return save_okay;
+  }
+
+
+
+//! save the matrix to a stream
+template<typename eT>
+inline
+bool
+SpMat<eT>::save(std::ostream& os, const file_type type, const bool print_status) const
+  {
+  arma_extra_debug_sigprint();
+  
+  bool save_okay;
+  
+  switch(type)
+    {
+    // case raw_ascii:
+    //   save_okay = diskio::save_raw_ascii(*this, os);
+    //   break;
+    
+    // case csv_ascii:
+    //   save_okay = diskio::save_csv_ascii(*this, os);
+    //   break;
+    
+    case arma_binary:
+      save_okay = diskio::save_arma_binary(*this, os);
+      break;
+    
+    case coord_ascii:
+      save_okay = diskio::save_coord_ascii(*this, os);
+      break;
+    
+    default:
+      arma_warn(true, "SpMat::save(): unsupported file type");
+      save_okay = false;
+    }
+  
+  arma_warn( (save_okay == false), "SpMat::save(): couldn't write to the given stream");
+  
+  return save_okay;
+  }
+
+
+
+//! load a matrix from a file
+template<typename eT>
+inline
+bool
+SpMat<eT>::load(const std::string name, const file_type type, const bool print_status)
+  {
+  arma_extra_debug_sigprint();
+  
+  bool load_okay;
+  std::string err_msg;
+  
+  switch(type)
+    {
+    // case auto_detect:
+    //   load_okay = diskio::load_auto_detect(*this, name, err_msg);
+    //   break;
+    
+    // case raw_ascii:
+    //   load_okay = diskio::load_raw_ascii(*this, name, err_msg);
+    //   break;
+    
+    // case csv_ascii:
+    //   load_okay = diskio::load_csv_ascii(*this, name, err_msg);
+    //   break;
+    
+    case arma_binary:
+      load_okay = diskio::load_arma_binary(*this, name, err_msg);
+      break;
+    
+    case coord_ascii:
+      load_okay = diskio::load_coord_ascii(*this, name, err_msg);
+      break;
+    
+    default:
+      arma_warn(true, "SpMat::load(): unsupported file type");
+      load_okay = false;
+    }
+  
+  if(load_okay == false)
+    {
+    if(err_msg.length() > 0)
+      {
+      arma_warn(true, "SpMat::load(): ", err_msg, name);
+      }
+    else
+      {
+      arma_warn(true, "SpMat::load(): couldn't read ", name);
+      }
+    }
+  
+  if(load_okay == false)
+    {
+    (*this).reset();
+    }
+    
+  return load_okay;
+  }
+
+
+
+//! load a matrix from a stream
+template<typename eT>
+inline
+bool
+SpMat<eT>::load(std::istream& is, const file_type type, const bool print_status)
+  {
+  arma_extra_debug_sigprint();
+  
+  bool load_okay;
+  std::string err_msg;
+  
+  switch(type)
+    {
+    // case auto_detect:
+    //   load_okay = diskio::load_auto_detect(*this, is, err_msg);
+    //   break;
+    
+    // case raw_ascii:
+    //   load_okay = diskio::load_raw_ascii(*this, is, err_msg);
+    //   break;
+    
+    // case csv_ascii:
+    //   load_okay = diskio::load_csv_ascii(*this, is, err_msg);
+    //   break;
+    
+    case arma_binary:
+      load_okay = diskio::load_arma_binary(*this, is, err_msg);
+      break;
+    
+    case coord_ascii:
+      load_okay = diskio::load_coord_ascii(*this, is, err_msg);
+      break;
+    
+    default:
+      arma_warn(true, "SpMat::load(): unsupported file type");
+      load_okay = false;
+    }
+  
+  
+  if(load_okay == false)
+    {
+    if(err_msg.length() > 0)
+      {
+      arma_warn(true, "SpMat::load(): ", err_msg, "the given stream");
+      }
+    else
+      {
+      arma_warn(true, "SpMat::load(): couldn't load from the given stream");
+      }
+    }
+  
+  if(load_okay == false)
+    {
+    (*this).reset();
+    }
+    
+  return load_okay;
+  }
+
+
+
+//! save the matrix to a file, without printing any error messages
+template<typename eT>
+inline
+bool
+SpMat<eT>::quiet_save(const std::string name, const file_type type) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).save(name, type, false);
+  }
+
+
+
+//! save the matrix to a stream, without printing any error messages
+template<typename eT>
+inline
+bool
+SpMat<eT>::quiet_save(std::ostream& os, const file_type type) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).save(os, type, false);
+  }
+
+
+
+//! load a matrix from a file, without printing any error messages
+template<typename eT>
+inline
+bool
+SpMat<eT>::quiet_load(const std::string name, const file_type type)
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).load(name, type, false);
+  }
+
+
+
+//! load a matrix from a stream, without printing any error messages
+template<typename eT>
+inline
+bool
+SpMat<eT>::quiet_load(std::istream& is, const file_type type)
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).load(is, type, false);
+  }
+
+
+
 /**
  * Initialize the matrix to the specified size.  Data is not preserved, so the matrix is assumed to be entirely sparse (empty).
  */
@@ -3282,7 +3679,7 @@ SpMat<eT>::init(uword in_rows, uword in_cols)
     memory::release(row_indices);
     }
 
-  access::rw(values) = memory::acquire_chunked<eT>(1);
+  access::rw(values)      = memory::acquire_chunked<eT>   (1);
   access::rw(row_indices) = memory::acquire_chunked<uword>(1);
 
   access::rw(values[0]) = 0;
@@ -3296,8 +3693,11 @@ SpMat<eT>::init(uword in_rows, uword in_cols)
   access::rw(n_elem)    = (in_rows * in_cols);
   access::rw(n_nonzero) = 0;
 
-  // Try to allocate the column pointers, filling them with 0.
-  access::rw(col_ptrs) = memory::acquire<uword>(in_cols + 1);
+  // Try to allocate the column pointers, filling them with 0, except for the
+  // last element which contains the maximum possible element (so iterators
+  // terminate correctly).
+  access::rw(col_ptrs) = memory::acquire<uword>(in_cols + 2);
+  access::rw(col_ptrs[in_cols + 1]) = std::numeric_limits<uword>::max();
   
   arrayops::inplace_set(access::rwp(col_ptrs), uword(0), in_cols + 1);
   }
@@ -3467,9 +3867,6 @@ SpMat<eT>::mem_resize(const uword new_n_nonzero)
         {
         eT*    new_values      = memory::acquire_chunked<eT>   (new_n_nonzero + 1);
         uword* new_row_indices = memory::acquire_chunked<uword>(new_n_nonzero + 1);
-
-        access::rw(new_values[new_n_nonzero]) = 0;
-        access::rw(new_row_indices[new_n_nonzero]) = 0;
         
         if(n_nonzero > 0)
           {
@@ -3486,6 +3883,11 @@ SpMat<eT>::mem_resize(const uword new_n_nonzero)
         access::rw(values)      = new_values;
         access::rw(row_indices) = new_row_indices;
         }
+        
+      // Set the "fake end" of the matrix by setting the last value and row
+      // index to 0.  This helps the iterators work correctly.
+      access::rw(values[new_n_nonzero]) = 0;
+      access::rw(row_indices[new_n_nonzero]) = 0;
       }
     
     access::rw(n_nonzero) = new_n_nonzero;
@@ -3504,9 +3906,9 @@ SpMat<eT>::steal_mem(SpMat<eT>& x)
 
   if(this != &x)
     {
-    reset(); // Clear all existing information about this matrix.
-
-    // Even the column pointers.
+    // Release all the memory.
+    memory::release(values);
+    memory::release(row_indices);
     memory::release(col_ptrs);
 
     // We'll have to copy everything about the other matrix.
@@ -3533,6 +3935,115 @@ SpMat<eT>::steal_mem(SpMat<eT>& x)
     access::rw(x.values)      = NULL;
     access::rw(x.row_indices) = NULL;
     access::rw(x.col_ptrs)    = NULL;
+    }
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename Functor>
+arma_hot
+inline
+void
+SpMat<eT>::init_xform(const SpBase<eT,T1>& A, const Functor& func)
+  {
+  arma_extra_debug_sigprint();
+  
+  // if possible, avoid doing a copy and instead apply func to the generated elements
+  if(SpProxy<T1>::Q_created_by_proxy == true)
+    {
+    (*this) = A.get_ref();
+    
+    const uword nnz = n_nonzero;
+    
+    eT* t_values = access::rwp(values);
+    
+    for(uword i=0; i < nnz; ++i)
+      {
+      t_values[i] = func(t_values[i]);
+      }
+    }
+  else
+    {
+    init_xform_mt(A.get_ref(), func);
+    }
+  }
+
+
+
+template<typename eT>
+template<typename eT2, typename T1, typename Functor>
+arma_hot
+inline
+void
+SpMat<eT>::init_xform_mt(const SpBase<eT2,T1>& A, const Functor& func)
+  {
+  arma_extra_debug_sigprint();
+  
+  const SpProxy<T1> P(A.get_ref());
+  
+  if( (P.is_alias(*this) == true) || (is_SpMat<typename SpProxy<T1>::stored_type>::value == true) )
+    {
+    // NOTE: unwrap_spmat will convert a submatrix to a matrix, which in effect takes care of aliasing with submatrices;
+    // NOTE: however, when more delayed ops are implemented, more elaborate handling of aliasing will be necessary
+    const unwrap_spmat<typename SpProxy<T1>::stored_type> tmp(P.Q);
+    
+    const SpMat<eT2>& x = tmp.M;
+    
+    if(void_ptr(this) != void_ptr(&x))
+      {
+      init(x.n_rows, x.n_cols);
+      
+      // values and row_indices may not be null.
+      if(values != NULL)
+        {
+        memory::release(values);
+        memory::release(row_indices);
+        }
+      
+      access::rw(values)      = memory::acquire_chunked<eT>   (x.n_nonzero + 1);
+      access::rw(row_indices) = memory::acquire_chunked<uword>(x.n_nonzero + 1);
+      
+      arrayops::copy(access::rwp(row_indices), x.row_indices, x.n_nonzero + 1);
+      arrayops::copy(access::rwp(col_ptrs),    x.col_ptrs,    x.n_cols    + 1);
+      
+      access::rw(n_nonzero) = x.n_nonzero;
+      }
+    
+    
+    // initialise the elements array with a transformed version of the elements from x
+    
+    const uword nnz = n_nonzero;
+    
+    const eT2* x_values = x.values;
+          eT*  t_values = access::rwp(values);
+    
+    for(uword i=0; i < nnz; ++i)
+      {
+      t_values[i] = func(x_values[i]);   // NOTE: func() must produce a value of type eT (ie. act as a convertor between eT2 and eT)
+      }
+    }
+  else
+    {
+    init(P.get_n_rows(), P.get_n_cols());
+    
+    mem_resize(P.get_n_nonzero());
+    
+    typename SpProxy<T1>::const_iterator_type it = P.begin();
+    
+    while(it != P.end())
+      {
+      access::rw(row_indices[it.pos()]) = it.row();
+      access::rw(values[it.pos()]) = func(*it);   // NOTE: func() must produce a value of type eT (ie. act as a convertor between eT2 and eT)
+      ++access::rw(col_ptrs[it.col() + 1]);
+      ++it;
+      }
+    
+    // Now sum column pointers.
+    for(uword c = 1; c <= n_cols; ++c)
+      {
+      access::rw(col_ptrs[c]) += col_ptrs[c - 1];
+      }
     }
   }
 
@@ -3697,7 +4208,8 @@ SpMat<eT>::clear()
   
   memory::release(col_ptrs);
   
-  access::rw(col_ptrs) = memory::acquire<uword>(n_cols + 1);
+  access::rw(col_ptrs) = memory::acquire<uword>(n_cols + 2);
+  access::rw(col_ptrs[n_cols + 1]) = std::numeric_limits<uword>::max();
   
   arrayops::inplace_set(col_ptrs, eT(0), n_cols + 1);
   

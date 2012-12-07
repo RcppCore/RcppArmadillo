@@ -18,7 +18,7 @@
 
 
 template<typename T1, typename T2>
-struct arma_sort_index_packet_ascend
+struct arma_sort_index_packet
   {
   T1 val;
   T2 index;
@@ -26,43 +26,44 @@ struct arma_sort_index_packet_ascend
 
 
 
-template<typename T1, typename T2>
-struct arma_sort_index_packet_descend
+class arma_sort_index_helper_ascend
   {
-  T1 val;
-  T2 index;
+  public:
+  
+  template<typename T1, typename T2>
+  arma_inline
+  bool
+  operator() (const arma_sort_index_packet<T1,T2>& A, const arma_sort_index_packet<T1,T2>& B) const
+    {
+    return (A.val < B.val);
+    }
   };
 
 
 
-template<typename T1, typename T2>
-inline
-bool
-operator< (const arma_sort_index_packet_ascend<T1,T2>& A, const arma_sort_index_packet_ascend<T1,T2>& B)
+class arma_sort_index_helper_descend
   {
-  return A.val < B.val;
-  }
+  public:
+  
+  template<typename T1, typename T2>
+  arma_inline
+  bool
+  operator() (const arma_sort_index_packet<T1,T2>& A, const arma_sort_index_packet<T1,T2>& B) const
+    {
+    return (A.val > B.val);
+    }
+  };
 
 
 
-template<typename T1, typename T2>
-inline
-bool
-operator< (const arma_sort_index_packet_descend<T1,T2>& A, const arma_sort_index_packet_descend<T1,T2>& B)
-  {
-  return A.val > B.val;
-  }
-
-
-
-template<typename umat_elem_type, typename packet_type, typename eT>
+template<typename umat_elem_type, typename eT, const uword sort_direction, const uword sort_type>
 void
 inline
-sort_index_helper(umat_elem_type* out_mem, std::vector<packet_type>& packet_vec, const eT* in_mem)
+sort_index_helper(umat_elem_type* out_mem, const eT* in_mem, const uword n_elem)
   {
   arma_extra_debug_sigprint();
   
-  const uword n_elem = packet_vec.size();
+  std::vector< arma_sort_index_packet<eT, umat_elem_type> > packet_vec(n_elem);
   
   for(uword i=0; i<n_elem; ++i)
     {
@@ -70,7 +71,38 @@ sort_index_helper(umat_elem_type* out_mem, std::vector<packet_type>& packet_vec,
     packet_vec[i].index = i;
     }
   
-  std::sort( packet_vec.begin(), packet_vec.end() );
+  
+  if(sort_direction == 0)
+    {
+    // ascend
+    
+    arma_sort_index_helper_ascend comparator;
+    
+    if(sort_type == 0)
+      {
+      std::sort( packet_vec.begin(), packet_vec.end(), comparator );
+      }
+    else
+      {
+      std::stable_sort( packet_vec.begin(), packet_vec.end(), comparator );
+      }
+    }
+  else
+    {
+    // descend
+    
+    arma_sort_index_helper_descend comparator;
+    
+    if(sort_type == 0)
+      {
+      std::sort( packet_vec.begin(), packet_vec.end(), comparator );
+      }
+    else
+      {
+      std::stable_sort( packet_vec.begin(), packet_vec.end(), comparator );
+      }
+    }
+  
   
   for(uword i=0; i<n_elem; ++i)
     {
@@ -86,11 +118,12 @@ umat
 sort_index
   (
   const Base<typename T1::elem_type,T1>& X,
-  const uword sort_type = 0,
+  const uword sort_direction = 0,
   const typename arma_not_cx<typename T1::elem_type>::result* junk = 0
   )
   {
   arma_extra_debug_sigprint();
+  arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
   
@@ -108,21 +141,61 @@ sort_index
   
   umat out(A.n_rows, A.n_cols);
   
-  if(sort_type == 0)
+  if(sort_direction == 0)
     {
-    std::vector< arma_sort_index_packet_ascend<eT,out_elem_type> > packet_vec(A.n_elem);
-    
-    sort_index_helper(out.memptr(), packet_vec, A.mem);
+    sort_index_helper<out_elem_type, eT, 0, 0>(out.memptr(), A.mem, A.n_elem);
     }
   else
     {
-    std::vector< arma_sort_index_packet_descend<eT,out_elem_type> > packet_vec(A.n_elem);
-    
-    sort_index_helper(out.memptr(), packet_vec, A.mem);
+    sort_index_helper<out_elem_type, eT, 1, 0>(out.memptr(), A.mem, A.n_elem);
     }
   
   return out;
   }
+
+
+
+template<typename T1>
+inline
+umat
+stable_sort_index
+  (
+  const Base<typename T1::elem_type,T1>& X,
+  const uword sort_direction = 0,
+  const typename arma_not_cx<typename T1::elem_type>::result* junk = 0
+  )
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  typedef typename T1::elem_type eT;
+  
+  const unwrap<T1>   tmp(X.get_ref());
+  const Mat<eT>& A = tmp.M;
+  
+  if(A.is_empty() == true)
+    {
+    return umat();
+    }
+  
+  arma_debug_check( (A.is_vec() == false), "stable_sort_index(): currently only handles vectors");
+  
+  typedef typename umat::elem_type out_elem_type;
+  
+  umat out(A.n_rows, A.n_cols);
+  
+  if(sort_direction == 0)
+    {
+    sort_index_helper<out_elem_type, eT, 0, 1>(out.memptr(), A.mem, A.n_elem);
+    }
+  else
+    {
+    sort_index_helper<out_elem_type, eT, 1, 1>(out.memptr(), A.mem, A.n_elem);
+    }
+  
+  return out;
+  }
+
 
 
 //! @}

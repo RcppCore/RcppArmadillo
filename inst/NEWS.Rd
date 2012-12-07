@@ -2,12 +2,20 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
-\section{Changes in RcppArmadillo version 0.3.4.4 (2012-11-15)}{
+
+\section{Changes in RcppArmadillo version 0.3.6.0 (2012-12-07)}{
   \itemize{
-    \item Upgraded to Armadillo release 3.4.4
+    \item Upgraded to Armadillo release Version 3.6.0 (Piazza del Duomo)
     \itemize{
-      \item fix for handling complex numbers by sparse matrices
-      \item fix for minor memory leak by sparse matrices
+      \item faster handling of compound expressions with submatrices and
+      subcubes 
+      \item added support for loading matrices as text files with
+      \code{NaN} and \code{Inf} elements 
+      \item added \code{stable_sort_index()}, which preserves the relative
+      order of elements with equivalent values
+      \item added handling of sparse matrices by \code{mean()},
+      \code{var()}, \code{norm()}, \code{abs()}, \code{square()}, \code{sqrt()}
+      \item added saving and loading of sparse matrices in arma_binary format
     }
   }
 }

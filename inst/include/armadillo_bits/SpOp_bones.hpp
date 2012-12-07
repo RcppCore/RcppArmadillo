@@ -23,11 +23,8 @@ class SpOp : public SpBase<typename T1::elem_type, SpOp<T1, op_type> >
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  // static const bool is_row = ( T1::is_col && (is_same_type<op_type, op_strans>::value || is_same_type<op_type, op_htrans>::value) );
-  // static const bool is_col = ( T1::is_row && (is_same_type<op_type, op_strans>::value || is_same_type<op_type, op_htrans>::value) );
-  
-  static const bool is_row = false;
-  static const bool is_col = false;
+  static const bool is_row = (T1::is_row && is_spop_elem<op_type>::value) || ( T1::is_col && (is_same_type<op_type, spop_strans>::value || is_same_type<op_type, spop_htrans>::value) );
+  static const bool is_col = (T1::is_col && is_spop_elem<op_type>::value) || ( T1::is_row && (is_same_type<op_type, spop_strans>::value || is_same_type<op_type, spop_htrans>::value) );
   
   inline explicit SpOp(const T1& in_m);
   inline          SpOp(const T1& in_m, const elem_type in_aux);

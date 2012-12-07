@@ -1,5 +1,5 @@
 // Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -17,40 +17,45 @@
 
 template<typename T1>
 arma_inline
-const Op<T1, op_sort>
-sort(const Base<typename T1::elem_type,T1>& X, const uword sort_type = 0, const uword dim = 0)
+typename
+enable_if2
+  <
+  ( (is_arma_type<T1>::value == true) && (resolves_to_vector<T1>::value == false) ),
+  const Op<T1, op_sort>
+  >::result
+sort
+  (
+  const T1&   X,
+  const uword sort_type = 0,
+  const uword dim       = 0
+  )
   {
   arma_extra_debug_sigprint();
   
-  return Op<T1, op_sort>(X.get_ref(), sort_type, dim);
+  return Op<T1, op_sort>(X, sort_type, dim);
   }
 
 
 
-template<typename eT>
+template<typename T1>
 arma_inline
-const Op<Col<eT>, op_sort>
-sort(const Col<eT>& X, const uword sort_type = 0)
+typename
+enable_if2
+  <
+  ( (is_arma_type<T1>::value == true) && (resolves_to_vector<T1>::value == true) ),
+  const Op<T1, op_sort>
+  >::result
+sort
+  (
+  const T1&   X,
+  const uword sort_type = 0
+  )
   {
   arma_extra_debug_sigprint();
   
-  const uword dim = 0;
+  const uword dim = (T1::is_col) ? 0 : 1;
   
-  return Op<Col<eT>, op_sort>(X, sort_type, dim);
-  }
-
-
-
-template<typename eT>
-arma_inline
-const Op<Row<eT>, op_sort>
-sort(const Row<eT>& X, const uword sort_type = 0)
-  {
-  arma_extra_debug_sigprint();
-  
-  const uword dim = 1;
-  
-  return Op<Row<eT>, op_sort>(X, sort_type, dim);
+  return Op<T1, op_sort>(X, sort_type, dim);
   }
 
 

@@ -92,9 +92,9 @@ get_stream_err2()
 
 //! print a message to get_stream_err1() and/or throw a logic_error exception
 template<typename T1>
-inline
-void
 arma_cold
+static
+void
 arma_stop(const T1& x)
   {
   #if defined(ARMA_PRINT_LOGIC_ERRORS)
@@ -120,9 +120,9 @@ arma_stop(const T1& x)
 
 
 template<typename T1>
-inline
-void
 arma_cold
+static
+void
 arma_stop_bad_alloc(const T1& x)
   {
   std::ostream& out = get_stream_err1();
@@ -144,9 +144,9 @@ arma_stop_bad_alloc(const T1& x)
 
 //! print a message to get_stream_err2() and/or throw a run-time error exception
 template<typename T1>
-inline
-void
 arma_cold
+static
+void
 arma_bad(const T1& x, const bool hurl = true)
   {
   #if defined(ARMA_PRINT_RUNTIME_ERRORS)
@@ -178,9 +178,9 @@ arma_bad(const T1& x, const bool hurl = true)
 // arma_print
 
 
+arma_cold
 inline
 void
-arma_cold
 arma_print()
   {
   get_stream_err1() << std::endl;
@@ -188,9 +188,9 @@ arma_print()
 
 
 template<typename T1>
-inline
-void
 arma_cold
+static
+void
 arma_print(const T1& x)
   {
   get_stream_err1() << x << std::endl;
@@ -199,9 +199,9 @@ arma_print(const T1& x)
 
 
 template<typename T1, typename T2>
-inline
-void
 arma_cold
+static
+void
 arma_print(const T1& x, const T2& y)
   {
   get_stream_err1() << x << y << std::endl;
@@ -210,9 +210,9 @@ arma_print(const T1& x, const T2& y)
 
 
 template<typename T1, typename T2, typename T3>
-inline
-void
 arma_cold
+static
+void
 arma_print(const T1& x, const T2& y, const T3& z)
   {
   get_stream_err1() << x << y << z << std::endl;
@@ -292,9 +292,9 @@ arma_thisprint(const void* this_ptr)
 
 //! print a message to the warn stream
 template<typename T1>
-inline
-void
 arma_cold
+static
+void
 arma_warn(const bool state, const T1& x)
   {
   if(state==true)
@@ -305,9 +305,9 @@ arma_warn(const bool state, const T1& x)
 
 
 template<typename T1, typename T2>
-inline
-void
 arma_cold
+static
+void
 arma_warn(const bool state, const T1& x, const T2& y)
   {
   if(state==true)
@@ -318,9 +318,9 @@ arma_warn(const bool state, const T1& x, const T2& y)
 
 
 template<typename T1, typename T2, typename T3>
-inline
-void
 arma_cold
+static
+void
 arma_warn(const bool state, const T1& x, const T2& y, const T3& z)
   {
   if(state==true)
@@ -336,9 +336,9 @@ arma_warn(const bool state, const T1& x, const T2& y, const T3& z)
 
 //! if state is true, abort program
 template<typename T1>
+arma_hot
 inline
 void
-arma_hot
 arma_check(const bool state, const T1& x)
   {
   if(state==true)
@@ -349,9 +349,9 @@ arma_check(const bool state, const T1& x)
 
 
 template<typename T1, typename T2>
+arma_hot
 inline
 void
-arma_hot
 arma_check(const bool state, const T1& x, const T2& y)
   {
   if(state==true)
@@ -362,9 +362,9 @@ arma_check(const bool state, const T1& x, const T2& y)
 
 
 template<typename T1>
+arma_hot
 inline
 void
-arma_hot
 arma_check_bad_alloc(const bool state, const T1& x)
   {
   if(state==true)
@@ -379,9 +379,9 @@ arma_check_bad_alloc(const bool state, const T1& x)
 // arma_set_error
 
 
+arma_hot
 arma_inline
 void
-arma_hot
 arma_set_error(bool& err_state, char*& err_msg, const bool expression, const char* message)
   {
   if(expression == true)
@@ -397,9 +397,9 @@ arma_set_error(bool& err_state, char*& err_msg, const bool expression, const cha
 //
 // functions for generating strings indicating size errors
 
-inline
-std::string
 arma_cold
+static
+std::string
 arma_incompat_size_string(const uword A_n_rows, const uword A_n_cols, const uword B_n_rows, const uword B_n_cols, const char* x)
   {
   std::stringstream tmp;
@@ -411,8 +411,8 @@ arma_incompat_size_string(const uword A_n_rows, const uword A_n_cols, const uwor
 
 
 
-inline
 arma_cold
+static
 std::string
 arma_incompat_size_string(const uword A_n_rows, const uword A_n_cols, const uword A_n_slices, const uword B_n_rows, const uword B_n_cols, const uword B_n_slices, const char* x)
   {
@@ -426,8 +426,8 @@ arma_incompat_size_string(const uword A_n_rows, const uword A_n_cols, const uwor
 
 
 template<typename eT>
-inline
 arma_cold
+static
 std::string
 arma_incompat_size_string(const subview_cube<eT>& Q, const Mat<eT>& A, const char* x)
   {
@@ -468,9 +468,9 @@ arma_assert_same_size(const uword A_n_rows, const uword A_n_cols, const uword B_
 
 //! stop if given matrices have different sizes
 template<typename eT1, typename eT2>
+arma_hot
 inline
 void
-arma_hot
 arma_assert_same_size(const Mat<eT1>& A, const Mat<eT2>& B, const char* x)
   {
   const uword A_n_rows = A.n_rows;
@@ -489,9 +489,9 @@ arma_assert_same_size(const Mat<eT1>& A, const Mat<eT2>& B, const char* x)
 
 //! stop if given proxies have different sizes
 template<typename eT1, typename eT2>
+arma_hot
 inline
 void
-arma_hot
 arma_assert_same_size(const Proxy<eT1>& A, const Proxy<eT2>& B, const char* x)
   {
   const uword A_n_rows = A.get_n_rows();
@@ -509,9 +509,9 @@ arma_assert_same_size(const Proxy<eT1>& A, const Proxy<eT2>& B, const char* x)
 
 
 template<typename eT1, typename eT2>
+arma_hot
 inline
 void
-arma_hot
 arma_assert_same_size(const subview<eT1>& A, const subview<eT2>& B, const char* x)
   {
   const uword A_n_rows = A.n_rows;
@@ -529,9 +529,9 @@ arma_assert_same_size(const subview<eT1>& A, const subview<eT2>& B, const char* 
 
 
 template<typename eT1, typename eT2>
+arma_hot
 inline
 void
-arma_hot
 arma_assert_same_size(const Mat<eT1>& A, const subview<eT2>& B, const char* x)
   {
   const uword A_n_rows = A.n_rows;
@@ -549,9 +549,9 @@ arma_assert_same_size(const Mat<eT1>& A, const subview<eT2>& B, const char* x)
 
 
 template<typename eT1, typename eT2>
+arma_hot
 inline
 void
-arma_hot
 arma_assert_same_size(const subview<eT1>& A, const Mat<eT2>& B, const char* x)
   {
   const uword A_n_rows = A.n_rows;
@@ -569,9 +569,9 @@ arma_assert_same_size(const subview<eT1>& A, const Mat<eT2>& B, const char* x)
 
 
 template<typename eT1, typename eT2>
+arma_hot
 inline
 void
-arma_hot
 arma_assert_same_size(const Mat<eT1>& A, const Proxy<eT2>& B, const char* x)
   {
   const uword A_n_rows = A.n_rows;
@@ -589,9 +589,9 @@ arma_assert_same_size(const Mat<eT1>& A, const Proxy<eT2>& B, const char* x)
 
 
 template<typename eT1, typename eT2>
+arma_hot
 inline
 void
-arma_hot
 arma_assert_same_size(const Proxy<eT1>& A, const Mat<eT2>& B, const char* x)
   {
   const uword A_n_rows = A.get_n_rows();
@@ -609,9 +609,9 @@ arma_assert_same_size(const Proxy<eT1>& A, const Mat<eT2>& B, const char* x)
 
 
 template<typename eT1, typename eT2>
+arma_hot
 inline
 void
-arma_hot
 arma_assert_same_size(const Proxy<eT1>& A, const subview<eT2>& B, const char* x)
   {
   const uword A_n_rows = A.get_n_rows();
@@ -629,9 +629,9 @@ arma_assert_same_size(const Proxy<eT1>& A, const subview<eT2>& B, const char* x)
 
 
 template<typename eT1, typename eT2>
+arma_hot
 inline
 void
-arma_hot
 arma_assert_same_size(const subview<eT1>& A, const Proxy<eT2>& B, const char* x)
   {
   const uword A_n_rows = A.n_rows;
@@ -653,9 +653,9 @@ arma_assert_same_size(const subview<eT1>& A, const Proxy<eT2>& B, const char* x)
 
 
 
+arma_hot
 inline
 void
-arma_hot
 arma_assert_same_size(const uword A_n_rows, const uword A_n_cols, const uword A_n_slices, const uword B_n_rows, const uword B_n_cols, const uword B_n_slices, const char* x)
   {
   if( (A_n_rows != B_n_rows) || (A_n_cols != B_n_cols) || (A_n_slices != B_n_slices) )
@@ -668,9 +668,9 @@ arma_assert_same_size(const uword A_n_rows, const uword A_n_cols, const uword A_
 
 //! stop if given cubes have different sizes
 template<typename eT1, typename eT2>
+arma_hot
 inline
 void
-arma_hot
 arma_assert_same_size(const Cube<eT1>& A, const Cube<eT2>& B, const char* x)
   {
   if( (A.n_rows != B.n_rows) || (A.n_cols != B.n_cols) || (A.n_slices != B.n_slices) )
@@ -682,9 +682,9 @@ arma_assert_same_size(const Cube<eT1>& A, const Cube<eT2>& B, const char* x)
 
 
 template<typename eT1, typename eT2>
+arma_hot
 inline
 void
-arma_hot
 arma_assert_same_size(const Cube<eT1>& A, const subview_cube<eT2>& B, const char* x)
   {
   if( (A.n_rows != B.n_rows) || (A.n_cols != B.n_cols) || (A.n_slices != B.n_slices) )
@@ -696,9 +696,9 @@ arma_assert_same_size(const Cube<eT1>& A, const subview_cube<eT2>& B, const char
 
 
 template<typename eT1, typename eT2>
+arma_hot
 inline
 void
-arma_hot
 arma_assert_same_size(const subview_cube<eT1>& A, const Cube<eT2>& B, const char* x)
   {
   if( (A.n_rows != B.n_rows) || (A.n_cols != B.n_cols) || (A.n_slices != B.n_slices) )
@@ -710,9 +710,9 @@ arma_assert_same_size(const subview_cube<eT1>& A, const Cube<eT2>& B, const char
 
 
 template<typename eT1, typename eT2>
+arma_hot
 inline
 void
-arma_hot
 arma_assert_same_size(const subview_cube<eT1>& A, const subview_cube<eT2>& B, const char* x)
   {
   if( (A.n_rows != B.n_rows) || (A.n_cols != B.n_cols) || (A.n_slices != B.n_slices))
@@ -725,9 +725,9 @@ arma_assert_same_size(const subview_cube<eT1>& A, const subview_cube<eT2>& B, co
 
 //! stop if given cube proxies have different sizes
 template<typename eT1, typename eT2>
+arma_hot
 inline
 void
-arma_hot
 arma_assert_same_size(const ProxyCube<eT1>& A, const ProxyCube<eT2>& B, const char* x)
   {
   const uword A_n_rows   = A.get_n_rows();
@@ -752,9 +752,9 @@ arma_assert_same_size(const ProxyCube<eT1>& A, const ProxyCube<eT2>& B, const ch
 
 
 template<typename eT1, typename eT2>
+arma_hot
 inline
 void
-arma_hot
 arma_assert_same_size(const Cube<eT1>& A, const Mat<eT2>& B, const char* x)
   {
   if( (A.n_rows != B.n_rows) || (A.n_cols != B.n_cols) || (A.n_slices != 1) )
@@ -766,9 +766,9 @@ arma_assert_same_size(const Cube<eT1>& A, const Mat<eT2>& B, const char* x)
 
 
 template<typename eT1, typename eT2>
+arma_hot
 inline
 void
-arma_hot
 arma_assert_same_size(const Mat<eT1>& A, const Cube<eT2>& B, const char* x)
   {
   if( (A.n_rows != B.n_rows) || (A.n_cols != B.n_cols) || (1 != B.n_slices) )
@@ -780,9 +780,9 @@ arma_assert_same_size(const Mat<eT1>& A, const Cube<eT2>& B, const char* x)
 
 
 template<typename eT1, typename eT2>
+arma_hot
 inline
 void
-arma_hot
 arma_assert_same_size(const subview_cube<eT1>& A, const Mat<eT2>& B, const char* x)
   {
   if( (A.n_rows != B.n_rows) || (A.n_cols != B.n_cols) || (A.n_slices != 1) )
@@ -794,9 +794,9 @@ arma_assert_same_size(const subview_cube<eT1>& A, const Mat<eT2>& B, const char*
 
 
 template<typename eT1, typename eT2>
+arma_hot
 inline
 void
-arma_hot
 arma_assert_same_size(const Mat<eT1>& A, const subview_cube<eT2>& B, const char* x)
   {
   if( (A.n_rows != B.n_rows) || (A.n_cols != B.n_cols) || (1 != B.n_slices) )
@@ -962,9 +962,9 @@ arma_assert_cube_as_mat(const Mat<eT>& M, const T1& Q, const char* x, const bool
 
 
 
+arma_hot
 inline
 void
-arma_hot
 arma_assert_mul_size(const uword A_n_rows, const uword A_n_cols, const uword B_n_rows, const uword B_n_cols, const char* x)
   {
   if(A_n_cols != B_n_rows)
@@ -977,9 +977,9 @@ arma_assert_mul_size(const uword A_n_rows, const uword A_n_cols, const uword B_n
 
 //! stop if given matrices are incompatible for multiplication
 template<typename eT1, typename eT2>
+arma_hot
 inline
 void
-arma_hot
 arma_assert_mul_size(const Mat<eT1>& A, const Mat<eT2>& B, const char* x)
   {
   const uword A_n_cols = A.n_cols;
@@ -995,9 +995,9 @@ arma_assert_mul_size(const Mat<eT1>& A, const Mat<eT2>& B, const char* x)
 
 //! stop if given matrices are incompatible for multiplication
 template<typename eT1, typename eT2>
+arma_hot
 inline
 void
-arma_hot
 arma_assert_mul_size(const Mat<eT1>& A, const Mat<eT2>& B, const bool do_trans_A, const bool do_trans_B, const char* x)
   {
   const uword final_A_n_cols = (do_trans_A == false) ? A.n_cols : A.n_rows;
@@ -1015,9 +1015,9 @@ arma_assert_mul_size(const Mat<eT1>& A, const Mat<eT2>& B, const bool do_trans_A
 
 
 template<typename eT1, typename eT2>
+arma_hot
 inline
 void
-arma_hot
 arma_assert_mul_size(const Mat<eT1>& A, const subview<eT2>& B, const char* x)
   {
   if(A.n_cols != B.n_rows)
@@ -1029,9 +1029,9 @@ arma_assert_mul_size(const Mat<eT1>& A, const subview<eT2>& B, const char* x)
 
 
 template<typename eT1, typename eT2>
+arma_hot
 inline
 void
-arma_hot
 arma_assert_mul_size(const subview<eT1>& A, const Mat<eT2>& B, const char* x)
   {
   if(A.n_cols != B.n_rows)
@@ -1043,9 +1043,9 @@ arma_assert_mul_size(const subview<eT1>& A, const Mat<eT2>& B, const char* x)
 
 
 template<typename eT1, typename eT2>
+arma_hot
 inline
 void
-arma_hot
 arma_assert_mul_size(const subview<eT1>& A, const subview<eT2>& B, const char* x)
   {
   if(A.n_cols != B.n_rows)
@@ -1135,7 +1135,6 @@ arma_assert_mul_size(const subview<eT1>& A, const subview<eT2>& B, const char* x
       public:
       
       inline
-      arma_cold
       arma_first_extra_debug_message()
         {
         union

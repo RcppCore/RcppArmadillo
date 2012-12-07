@@ -53,50 +53,6 @@ SpMat<eT>::iterator_base::operator*() const
 
 
 
-template<typename eT>
-inline
-arma_hot
-bool
-SpMat<eT>::iterator_base::operator==(const iterator_base& rhs) const
-  {
-  return (rhs.row() == row()) && (rhs.col() == internal_col);
-  }
-
-
-
-template<typename eT>
-inline
-arma_hot
-bool
-SpMat<eT>::iterator_base::operator!=(const iterator_base& rhs) const
-  {
-  return (rhs.row() != row()) || (rhs.col() != internal_col);
-  }
-
-
-
-template<typename eT>
-inline
-arma_hot
-bool
-SpMat<eT>::iterator_base::operator==(const typename SpSubview<eT>::iterator_base& rhs) const
-  {
-  return (rhs.row() == row()) && (rhs.col() == internal_col);
-  }
-
-
-
-template<typename eT>
-inline
-arma_hot
-bool
-SpMat<eT>::iterator_base::operator!=(const typename SpSubview<eT>::iterator_base& rhs) const
-  {
-  return (rhs.row() != row()) || (rhs.col() != internal_col);
-  }
-
-
-
 ///////////////////////////////////////////////////////////////////////////////
 // SpMat::const_iterator implementation                                      //
 ///////////////////////////////////////////////////////////////////////////////
@@ -193,10 +149,14 @@ SpMat<eT>::const_iterator::operator++()
 template<typename eT>
 inline
 arma_hot
-void
+typename SpMat<eT>::const_iterator
 SpMat<eT>::const_iterator::operator++(int)
   {
+  typename SpMat<eT>::const_iterator tmp(*this);
+
   ++(*this);
+
+  return tmp;
   }
 
 
@@ -232,10 +192,102 @@ SpMat<eT>::const_iterator::operator--()
 template<typename eT>
 inline
 arma_hot
-void
+typename SpMat<eT>::const_iterator
 SpMat<eT>::const_iterator::operator--(int)
   {
+  typename SpMat<eT>::const_iterator tmp(*this);
+
   --(*this);
+
+  return tmp;
+  }
+
+
+
+template<typename eT>
+inline
+arma_hot
+bool
+SpMat<eT>::const_iterator::operator==(const const_iterator& rhs) const
+  {
+  return (rhs.row() == (*this).row()) && (rhs.col() == iterator_base::internal_col);
+  }
+
+
+
+template<typename eT>
+inline
+arma_hot
+bool
+SpMat<eT>::const_iterator::operator!=(const const_iterator& rhs) const
+  {
+  return (rhs.row() != (*this).row()) || (rhs.col() != iterator_base::internal_col);
+  }
+
+
+
+template<typename eT>
+inline
+arma_hot
+bool
+SpMat<eT>::const_iterator::operator==(const typename SpSubview<eT>::const_iterator& rhs) const
+  {
+  return (rhs.row() == (*this).row()) && (rhs.col() == iterator_base::internal_col);
+  }
+
+
+
+template<typename eT>
+inline
+arma_hot
+bool
+SpMat<eT>::const_iterator::operator!=(const typename SpSubview<eT>::const_iterator& rhs) const
+  {
+  return (rhs.row() != (*this).row()) || (rhs.col() != iterator_base::internal_col);
+  }
+
+
+
+template<typename eT>
+inline
+arma_hot
+bool
+SpMat<eT>::const_iterator::operator==(const const_row_iterator& rhs) const
+  {
+  return (rhs.row() == (*this).row()) && (rhs.col() == iterator_base::internal_col);
+  }
+
+
+
+template<typename eT>
+inline
+arma_hot
+bool
+SpMat<eT>::const_iterator::operator!=(const const_row_iterator& rhs) const
+  {
+  return (rhs.row() != (*this).row()) || (rhs.col() != iterator_base::internal_col);
+  }
+
+
+
+template<typename eT>
+inline
+arma_hot
+bool
+SpMat<eT>::const_iterator::operator==(const typename SpSubview<eT>::const_row_iterator& rhs) const
+  {
+  return (rhs.row() == (*this).row()) && (rhs.col() == iterator_base::internal_col);
+  }
+
+
+
+template<typename eT>
+inline
+arma_hot
+bool
+SpMat<eT>::const_iterator::operator!=(const typename SpSubview<eT>::const_row_iterator& rhs) const
+  {
+  return (rhs.row() != (*this).row()) || (rhs.col() != iterator_base::internal_col);
   }
 
 
@@ -274,10 +326,14 @@ SpMat<eT>::iterator::operator++()
 template<typename eT>
 inline
 arma_hot
-void
+typename SpMat<eT>::iterator
 SpMat<eT>::iterator::operator++(int)
   {
+  typename SpMat<eT>::iterator tmp(*this);
+
   const_iterator::operator++();
+
+  return tmp;
   }
 
 
@@ -297,10 +353,14 @@ SpMat<eT>::iterator::operator--()
 template<typename eT>
 inline
 arma_hot
-void
+typename SpMat<eT>::iterator
 SpMat<eT>::iterator::operator--(int)
   {
+  typename SpMat<eT>::iterator tmp(*this);
+
   const_iterator::operator--();
+
+  return tmp;
   }
 
 
@@ -322,7 +382,8 @@ SpMat<eT>::const_row_iterator::const_row_iterator(const SpMat<eT>& in_M, uword i
   // Corner case for empty matrix.
   if(in_M.n_nonzero == 0)
     {
-    iterator_base::internal_col = in_M.n_cols;
+    iterator_base::internal_col = 0;
+    internal_row = in_M.n_rows;
     return;
     }
 
@@ -476,10 +537,14 @@ SpMat<eT>::const_row_iterator::operator++()
 template<typename eT>
 inline
 arma_hot
-void
+typename SpMat<eT>::const_row_iterator
 SpMat<eT>::const_row_iterator::operator++(int)
   {
+  typename SpMat<eT>::const_row_iterator tmp(*this);
+
   ++(*this);
+
+  return tmp;
   }
 
 
@@ -532,11 +597,105 @@ SpMat<eT>::const_row_iterator::operator--()
 template<typename eT>
 inline
 arma_hot
-void
+typename SpMat<eT>::const_row_iterator
 SpMat<eT>::const_row_iterator::operator--(int)
   {
+  typename SpMat<eT>::const_row_iterator tmp(*this);
+
   --(*this);
+
+  return tmp;
   }
+
+
+
+template<typename eT>
+inline
+arma_hot
+bool
+SpMat<eT>::const_row_iterator::operator==(const const_iterator& rhs) const
+  {
+  return (rhs.row() == row()) && (rhs.col() == iterator_base::internal_col);
+  }
+
+
+
+template<typename eT>
+inline
+arma_hot
+bool
+SpMat<eT>::const_row_iterator::operator!=(const const_iterator& rhs) const
+  {
+  return (rhs.row() != row()) || (rhs.col() != iterator_base::internal_col);
+  }
+
+
+
+template<typename eT>
+inline
+arma_hot
+bool
+SpMat<eT>::const_row_iterator::operator==(const typename SpSubview<eT>::const_iterator& rhs) const
+  {
+  return (rhs.row() == row()) && (rhs.col() == iterator_base::internal_col);
+  }
+
+
+
+template<typename eT>
+inline
+arma_hot
+bool
+SpMat<eT>::const_row_iterator::operator!=(const typename SpSubview<eT>::const_iterator& rhs) const
+  {
+  return (rhs.row() != row()) || (rhs.col() != iterator_base::internal_col);
+  }
+
+
+
+template<typename eT>
+inline
+arma_hot
+bool
+SpMat<eT>::const_row_iterator::operator==(const const_row_iterator& rhs) const
+  {
+  return (rhs.row() == row()) && (rhs.col() == iterator_base::internal_col);
+  }
+
+
+
+template<typename eT>
+inline
+arma_hot
+bool
+SpMat<eT>::const_row_iterator::operator!=(const const_row_iterator& rhs) const
+  {
+  return (rhs.row() != row()) || (rhs.col() != iterator_base::internal_col);
+  }
+
+
+
+template<typename eT>
+inline
+arma_hot
+bool
+SpMat<eT>::const_row_iterator::operator==(const typename SpSubview<eT>::const_row_iterator& rhs) const
+  {
+  return (rhs.row() == row()) && (rhs.col() == iterator_base::internal_col);
+  }
+
+
+
+template<typename eT>
+inline
+arma_hot
+bool
+SpMat<eT>::const_row_iterator::operator!=(const typename SpSubview<eT>::const_row_iterator& rhs) const
+  {
+  return (rhs.row() != row()) || (rhs.col() != iterator_base::internal_col);
+  }
+
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // SpMat::row_iterator implementation                                        //
@@ -572,10 +731,14 @@ SpMat<eT>::row_iterator::operator++()
 template<typename eT>
 inline
 arma_hot
-void
+typename SpMat<eT>::row_iterator
 SpMat<eT>::row_iterator::operator++(int)
   {
+  typename SpMat<eT>::row_iterator tmp(*this);
+
   const_row_iterator::operator++();
+
+  return tmp;
   }
 
 
@@ -595,10 +758,14 @@ SpMat<eT>::row_iterator::operator--()
 template<typename eT>
 inline
 arma_hot
-void
+typename SpMat<eT>::row_iterator
 SpMat<eT>::row_iterator::operator--(int)
   {
+  typename SpMat<eT>::row_iterator tmp(*this);
+
   const_row_iterator::operator--();
+
+  return tmp;
   }
 
 //! @}

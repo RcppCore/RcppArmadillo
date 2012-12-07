@@ -1,5 +1,5 @@
 // Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -47,16 +47,16 @@ trunc_exp(const eT x)
 
 
 template<typename T>
-arma_inline
+inline
 static
 std::complex<T>
 trunc_exp(const std::complex<T>& x)
   {
-  return std::exp(x);
+  return std::polar( trunc_exp( x.real() ), x.imag() );
   }
-  
-  
-  
+
+
+
 template<typename T1>
 arma_inline
 const eOp<T1, eop_trunc_exp>

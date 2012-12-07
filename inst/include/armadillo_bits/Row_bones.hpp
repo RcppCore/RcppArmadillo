@@ -46,6 +46,7 @@ class Row : public Mat<eT>
   inline const Row& operator=(const std::initializer_list<eT>& list);
   #endif
   
+  inline explicit Row(const SpRow<eT>& X);
   
   inline const Row& operator=(const eT val);
 

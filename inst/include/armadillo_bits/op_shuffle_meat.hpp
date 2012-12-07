@@ -35,9 +35,9 @@ op_shuffle::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_shuffle>& in)
   const uword dim = in.aux_uword_a;
   const uword N   = (dim == 0) ? X.n_rows : X.n_cols;
   
-  // see "fn_sort_index.hpp" for the definition of "arma_sort_index_packet_ascend"
-  // and the associated "operator<"
-  std::vector< arma_sort_index_packet_ascend<int,uword> > packet_vec(N);
+  // see "fn_sort_index.hpp" for the definition of "arma_sort_index_packet"
+  // and the associated comparison functor
+  std::vector< arma_sort_index_packet<int,uword> > packet_vec(N);
   
   for(uword i=0; i<N; ++i)
     {
@@ -45,7 +45,9 @@ op_shuffle::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_shuffle>& in)
     packet_vec[i].index = i;
     }
   
-  std::sort( packet_vec.begin(), packet_vec.end() );
+  arma_sort_index_helper_ascend comparator;
+
+  std::sort( packet_vec.begin(), packet_vec.end(), comparator );
   
   const bool is_alias = (&out == &X);
   

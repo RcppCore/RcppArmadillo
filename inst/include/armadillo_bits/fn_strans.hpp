@@ -76,12 +76,17 @@ strans(const Op<T1, op_strans>& X)
 
 template<typename T1>
 inline
-const SpOp<T1,spop_strans>
-strans(const SpBase<typename T1::elem_type, T1>& x)
+typename
+enable_if2
+  <
+  is_arma_sparse_type<T1>::value,
+  const SpOp<T1,spop_strans>
+  >::result
+strans(const T1& x)
   {
   arma_extra_debug_sigprint();
   
-  return SpOp<T1,spop_strans>( x.get_ref() );
+  return SpOp<T1,spop_strans>(x);
   }
 
 

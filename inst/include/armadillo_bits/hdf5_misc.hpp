@@ -333,7 +333,7 @@ hdf5_search_callback
       // on the exactness condition of the search.
       if (count <= name_count)
         {
-        uword start_pos = (count == 0) ? 0 : std::string::npos;
+        size_t start_pos = (count == 0) ? 0 : std::string::npos;
         while (count > 0)
           {
           // Move pointer to previous slash.
