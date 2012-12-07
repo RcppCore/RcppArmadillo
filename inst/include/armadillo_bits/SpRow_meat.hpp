@@ -499,9 +499,13 @@ SpRow<eT>::shed_cols(const uword in_col1, const uword in_col2)
 template<typename eT>
 inline
 typename SpRow<eT>::row_iterator
-SpRow<eT>::begin_row()
+SpRow<eT>::begin_row(const uword row_num)
   {
   arma_extra_debug_sigprint();
+
+  // Since this is a row, row_num can only be 0.  But the option is provided for
+  // compatibility.
+  arma_debug_check((row_num >= 1), "SpRow::row(): invalid row index");
   
   return SpMat<eT>::begin();
   }
@@ -511,9 +515,13 @@ SpRow<eT>::begin_row()
 template<typename eT>
 inline
 typename SpRow<eT>::const_row_iterator
-SpRow<eT>::begin_row() const
+SpRow<eT>::begin_row(const uword row_num) const
   {
   arma_extra_debug_sigprint();
+  
+  // Since this is a row, row_num can only be 0.  But the option is provided for
+  // compatibility.
+  arma_debug_check((row_num >= 1), "SpRow::row(): invalid row index");
   
   return SpMat<eT>::begin();
   }
@@ -523,9 +531,13 @@ SpRow<eT>::begin_row() const
 template<typename eT>
 inline
 typename SpRow<eT>::row_iterator
-SpRow<eT>::end_row()
+SpRow<eT>::end_row(const uword row_num)
   {
   arma_extra_debug_sigprint();
+  
+  // Since this is a row, row_num can only be 0.  But the option is provided for
+  // compatibility.
+  arma_debug_check((row_num >= 1), "SpRow::row(): invalid row index");
   
   return SpMat<eT>::end();
   }
@@ -535,9 +547,13 @@ SpRow<eT>::end_row()
 template<typename eT>
 inline
 typename SpRow<eT>::const_row_iterator
-SpRow<eT>::end_row() const
+SpRow<eT>::end_row(const uword row_num) const
   {
   arma_extra_debug_sigprint();
+  
+  // Since this is a row, row_num can only be 0.  But the option is provided for
+  // compatibility.
+  arma_debug_check((row_num >= 1), "SpRow::row(): invalid row index");
   
   return SpMat<eT>::end();
   }

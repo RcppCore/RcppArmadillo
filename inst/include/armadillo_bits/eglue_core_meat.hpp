@@ -50,13 +50,11 @@
   {\
   if(n_rows != 1)\
     {\
-    uword count = 0;\
-    \
     for(uword col=0; col<n_cols; ++col)\
       {\
       uword i,j;\
       \
-      for(i=0, j=1; j<n_rows; i+=2, j+=2, count+=2)\
+      for(i=0, j=1; j<n_rows; i+=2, j+=2)\
         {\
         eT tmp_i = P1.at(i,col);\
         eT tmp_j = P1.at(j,col);\
@@ -64,14 +62,13 @@
         tmp_i operatorB##= P2.at(i,col);\
         tmp_j operatorB##= P2.at(j,col);\
         \
-        out_mem[count  ] operatorA tmp_i;\
-        out_mem[count+1] operatorA tmp_j;\
+        *out_mem operatorA tmp_i; out_mem++; \
+        *out_mem operatorA tmp_j; out_mem++; \
         }\
       \
       if(i < n_rows)\
         {\
-        out_mem[count] operatorA P1.at(i,col) operatorB P2.at(i,col);\
-        ++count;\
+        *out_mem operatorA P1.at(i,col) operatorB P2.at(i,col); out_mem++; \
         }\
       }\
     }\
@@ -101,15 +98,13 @@
 
 #define arma_applier_3(operatorA, operatorB) \
   {\
-  uword count = 0;\
-  \
   for(uword slice=0; slice<n_slices; ++slice)\
     {\
     for(uword col=0; col<n_cols; ++col)\
       {\
       uword i,j;\
       \
-      for(i=0, j=1; j<n_rows; i+=2, j+=2, count+=2)\
+      for(i=0, j=1; j<n_rows; i+=2, j+=2)\
         {\
         eT tmp_i = P1.at(i,col,slice);\
         eT tmp_j = P1.at(j,col,slice);\
@@ -117,14 +112,13 @@
         tmp_i operatorB##= P2.at(i,col,slice);\
         tmp_j operatorB##= P2.at(j,col,slice);\
         \
-        out_mem[count  ] operatorA tmp_i;\
-        out_mem[count+1] operatorA tmp_j;\
+        *out_mem operatorA tmp_i; out_mem++; \
+        *out_mem operatorA tmp_j; out_mem++; \
         }\
       \
       if(i < n_rows)\
         {\
-        out_mem[count] operatorA P1.at(i,col,slice) operatorB P2.at(i,col,slice);\
-        ++count;\
+        *out_mem operatorA P1.at(i,col,slice) operatorB P2.at(i,col,slice); out_mem++; \
         }\
       }\
     }\

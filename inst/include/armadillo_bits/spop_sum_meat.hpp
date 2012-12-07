@@ -27,69 +27,61 @@ spop_sum::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_sum>& in)
   typedef typename T1::elem_type eT;
   
   const uword dim = in.aux_uword_a;
+  arma_debug_check((dim > 1), "sum(): incorrect usage. dim must be 0 or 1");
   
   const SpProxy<T1> p(in.m);
   
   if(p.is_alias(out) == false)
     {
-    if(dim == 0) // find the sum in each column
-      {
-      out.zeros(1, p.get_n_cols());
-      
-      typename SpProxy<T1>::const_iterator_type it     = p.begin();
-      
-      while(it != p.end())
-        {
-        out.at(0, it.col()) += (*it);
-        ++it;
-        }
-      }
-    else // find the sum in each row
-      {
-      out.zeros(p.get_n_rows(), 1);
-      
-      typename SpProxy<T1>::const_iterator_type it     = p.begin();
-      
-      while(it != p.end())
-        {
-        out.at(it.row(), 0) += (*it);
-        ++it;
-        }
-      }
+    spop_sum::apply_noalias(out, p, dim);
     }
   else
     {
-    if(dim == 0) // find the sum in each column
-      {
-      SpMat<eT> result(1, p.get_n_cols());
-      
-      typename SpProxy<T1>::const_iterator_type it     = p.begin();
-      
-      while(it != p.end())
-        {
-        result.at(0, it.col()) += (*it);
-        ++it;
-        }
-      
-      out.steal_mem(result);
-      }
-    else // find the sum in each row
-      {
-      SpMat<eT> result(p.get_n_rows(), 1);
-      
-      typename SpProxy<T1>::const_iterator_type it     = p.begin();
-      
-      while(it != p.end())
-        {
-        result.at(it.row(), 0) += (*it);
-        ++it;
-        }
-      
-      out.steal_mem(result);
-      }
+    SpMat<eT> tmp;
+    
+    spop_sum::apply_noalias(tmp, p, dim);
+    
+    out.steal_mem(tmp);
     }
   }
 
+
+
+template<typename T1>
+arma_hot
+inline
+void
+spop_sum::apply_noalias(SpMat<typename T1::elem_type>& out, const SpProxy<T1>& p, const uword dim)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(dim == 0) // find the sum in each column
+    {
+    out.zeros(1, p.get_n_cols());
+    
+    typename SpProxy<T1>::const_iterator_type it     = p.begin();
+    typename SpProxy<T1>::const_iterator_type it_end = p.end();
+    
+    while(it != it_end)
+      {
+      out.at(0, it.col()) += (*it);
+      ++it;
+      }
+    }
+  else // find the sum in each row
+    {
+    out.zeros(p.get_n_rows(), 1);
+    
+    typename SpProxy<T1>::const_iterator_type it     = p.begin();
+    typename SpProxy<T1>::const_iterator_type it_end = p.end();
+    
+    while(it != it_end)
+      {
+      out.at(it.row(), 0) += (*it);
+      ++it;
+      }
+    }
+  }
 
 
 

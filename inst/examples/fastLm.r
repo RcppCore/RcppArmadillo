@@ -73,7 +73,7 @@ fLmOneCast <- cxxfunction(signature(Xs="numeric", ys="numeric"),
 
 
 fastLmPureDotCall <- function(X, y) {
-    .Call("fastLm", X, y, package = "RcppArmadillo")
+    .Call("fastLm", X, y, PACKAGE = "RcppArmadillo")
 }
 
 

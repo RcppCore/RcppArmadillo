@@ -705,12 +705,11 @@ Mat<eT>::init
     }
   else
     {
-    uword ii = 0;
-    
     for(uword ucol=0; ucol < local_n_cols; ++ucol)
-    for(uword urow=0; urow < local_n_rows; ++urow, ++ii)
+    for(uword urow=0; urow < local_n_rows; ++urow)
       {
-      out_mem[ii] = std::complex<T>(PX.at(urow,ucol), PY.at(urow,ucol));
+      *out_mem = std::complex<T>(PX.at(urow,ucol), PY.at(urow,ucol));
+      out_mem++;
       }
     }
   }
@@ -6516,12 +6515,11 @@ Mat_aux::set_real(Mat< std::complex<T> >& out, const Base<T,T1>& X)
     }
   else
     {
-    uword i = 0;
-    
     for(uword col=0; col < local_n_cols; ++col)
-    for(uword row=0; row < local_n_rows; ++row, ++i)
+    for(uword row=0; row < local_n_rows; ++row)
       {
-      out_mem[i] = std::complex<T>( P.at(row,col), out_mem[i].imag());
+      (*out_mem) = std::complex<T>( P.at(row,col), (*out_mem).imag() );
+      out_mem++;
       }
     }
   }
@@ -6561,12 +6559,11 @@ Mat_aux::set_imag(Mat< std::complex<T> >& out, const Base<T,T1>& X)
     }
   else
     {
-    uword i = 0;
-    
     for(uword col=0; col < local_n_cols; ++col)
-    for(uword row=0; row < local_n_rows; ++row, ++i)
+    for(uword row=0; row < local_n_rows; ++row)
       {
-      out_mem[i] = std::complex<T>( out_mem[i].real(), P.at(row,col) );
+      (*out_mem) = std::complex<T>( (*out_mem).real(), P.at(row,col) );
+      out_mem++;
       }
     }
   }

@@ -264,15 +264,22 @@ arma_ostream::modify_stream(std::ostream& o, typename SpMat<T>::const_iterator b
 template<typename eT>
 inline
 void
-arma_ostream::print_elem_zero(std::ostream& o)
+arma_ostream::print_elem_zero(std::ostream& o, const bool modify)
   {
-  const std::streamsize orig_precision = o.precision();
-  
-  o.precision(0);
-  
-  o << eT(0);
-  
-  o.precision(orig_precision);
+  if(modify == true)
+    {
+    const std::streamsize orig_precision = o.precision();
+    
+    o.precision(0);
+    
+    o << eT(0);
+    
+    o.precision(orig_precision);
+    }
+  else
+    {
+    o << eT(0);
+    }
   }
 
 
@@ -281,7 +288,7 @@ arma_ostream::print_elem_zero(std::ostream& o)
 template<typename eT>
 arma_inline
 void
-arma_ostream::print_elem(std::ostream& o, const eT& x)
+arma_ostream::print_elem(std::ostream& o, const eT& x, const bool modify)
   {
   if(x != eT(0))
     {
@@ -289,7 +296,7 @@ arma_ostream::print_elem(std::ostream& o, const eT& x)
     }
   else
     {
-    arma_ostream::print_elem_zero<eT>(o);
+    arma_ostream::print_elem_zero<eT>(o, modify);
     }
   }
 
@@ -299,9 +306,9 @@ arma_ostream::print_elem(std::ostream& o, const eT& x)
 template<typename T>
 inline
 void
-arma_ostream::print_elem(std::ostream& o, const std::complex<T>& x)
+arma_ostream::print_elem(std::ostream& o, const std::complex<T>& x, const bool modify)
   {
-  if( (x.real() != T(0)) || (x.imag() != T(0)) )
+  if( (x.real() != T(0)) || (x.imag() != T(0)) || (modify == false) )
     {
     std::ostringstream ss;
     ss.flags(o.flags());
@@ -347,7 +354,7 @@ arma_ostream::print(std::ostream& o, const Mat<eT>& m, const bool modify)
             // the cell width appears to be reset after each element is printed,
             // hence we need to restore it
             o.width(cell_width);
-            arma_ostream::print_elem(o, m.at(row,col));
+            arma_ostream::print_elem(o, m.at(row,col), modify);
             }
         
           o << '\n';
@@ -359,11 +366,11 @@ arma_ostream::print(std::ostream& o, const Mat<eT>& m, const bool modify)
           {
           for(uword col=0; col < m_n_cols-1; ++col)
             {
-            arma_ostream::print_elem(o, m.at(row,col));
+            arma_ostream::print_elem(o, m.at(row,col), modify);
             o << ' ';
             }
         
-          arma_ostream::print_elem(o, m.at(row, m_n_cols-1));
+          arma_ostream::print_elem(o, m.at(row, m_n_cols-1), modify);
           o << '\n';
           }
         }
@@ -528,7 +535,7 @@ arma_ostream::print_dense(std::ostream& o, const SpMat<eT>& m, const bool modify
                 break;
                 }
               }
-            arma_ostream::print_elem(o,eT(val));
+            arma_ostream::print_elem(o,eT(val), modify);
             }
 
           o << '\n';
@@ -550,7 +557,7 @@ arma_ostream::print_dense(std::ostream& o, const SpMat<eT>& m, const bool modify
                 break;
                 }
               }
-            arma_ostream::print_elem(o,eT(val));
+            arma_ostream::print_elem(o,eT(val), modify);
             o << ' ';
             }
 
@@ -580,7 +587,9 @@ arma_ostream::print_dense(std::ostream& o, const SpMat<eT>& m, const bool modify
         for(uword col=0; col < m_n_cols; ++col)
           {
           o.width(cell_width);
-          arma_ostream::print_elem_zero<eT>(o);
+          
+          arma_ostream::print_elem_zero<eT>(o, modify);
+          
           o << ' ';
           }
         
@@ -650,7 +659,7 @@ arma_ostream::print(std::ostream& o, const SpMat<eT>& m, const bool modify)
       
       if(cell_width > 0) { o.width(cell_width); }
         
-      arma_ostream::print_elem(o, eT(*begin));
+      arma_ostream::print_elem(o, eT(*begin), modify);
       o << '\n';
       
       ++begin;

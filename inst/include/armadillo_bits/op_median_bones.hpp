@@ -18,7 +18,7 @@
 template<typename T>
 struct arma_cx_median_packet
   {
-  T   val;
+  T     val;
   uword index;
   };
 

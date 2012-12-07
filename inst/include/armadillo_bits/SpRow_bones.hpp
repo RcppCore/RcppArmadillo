@@ -74,11 +74,11 @@ class SpRow : public SpMat<eT>
   typedef typename SpMat<eT>::iterator       row_iterator;
   typedef typename SpMat<eT>::const_iterator const_row_iterator;
 
-  inline       row_iterator begin_row();
-  inline const_row_iterator begin_row() const;
+  inline       row_iterator begin_row(const uword row_num = 0);
+  inline const_row_iterator begin_row(const uword row_num = 0) const;
 
-  inline       row_iterator end_row();
-  inline const_row_iterator end_row() const;
+  inline       row_iterator end_row(const uword row_num = 0);
+  inline const_row_iterator end_row(const uword row_num = 0) const;
   
   #ifdef ARMA_EXTRA_SPROW_PROTO
     #include ARMA_INCFILE_WRAP(ARMA_EXTRA_SPROW_PROTO)

@@ -16,10 +16,11 @@
 #define arma_cold
 #define arma_pure
 #define arma_const
-#define arma_inline  inline
 #define arma_aligned
 #define arma_warn_unused
 #define arma_deprecated
+#define arma_malloc
+#define arma_inline            inline
 #define arma_ignore(variable)  ((void)(variable))
 
 
@@ -70,19 +71,31 @@
   #define ARMA_GOOD_COMPILER
   #undef  ARMA_HAVE_STD_TR1
   
+  #undef  arma_cold
   #undef  arma_pure
   #undef  arma_const
-  #undef  arma_inline
   #undef  arma_aligned
   #undef  arma_warn_unused
   #undef  arma_deprecated
+  #undef  arma_malloc
+  #undef  arma_inline
   
-  #define arma_pure               __attribute__((pure))
-  #define arma_const              __attribute__((const))
-  #define arma_inline      inline __attribute__((always_inline))
-  #define arma_aligned            __attribute__((aligned))
-  #define arma_warn_unused        __attribute__((warn_unused_result))
-  #define arma_deprecated         __attribute__((deprecated))
+  #define arma_cold               __attribute__((__noinline__))
+  #define arma_pure               __attribute__((__pure__))
+  #define arma_const              __attribute__((__const__))
+  #define arma_aligned            __attribute__((__aligned__))
+  #define arma_warn_unused        __attribute__((__warn_unused_result__))
+  #define arma_deprecated         __attribute__((__deprecated__))
+  #define arma_malloc             __attribute__((__malloc__))
+  #define arma_inline      inline __attribute__((__always_inline__))
+  
+  #if (ARMA_GCC_VERSION >= 40300)
+    #undef  arma_hot
+    #undef  arma_cold
+    
+    #define arma_hot  __attribute__((__hot__))
+    #define arma_cold __attribute__((__cold__,__noinline__))
+  #endif
   
   #if (ARMA_GCC_VERSION >= 40200)
     #if defined(_GLIBCXX_USE_C99_MATH_TR1) && defined(_GLIBCXX_USE_C99_COMPLEX_TR1)
@@ -101,14 +114,6 @@
   #if defined(__clang__)
     #undef ARMA_HAVE_STD_TR1
     //#undef ARMA_GOOD_COMPILER
-  #endif
-  
-  #if (ARMA_GCC_VERSION >= 40300)
-    #undef  arma_hot
-    #undef  arma_cold
-    
-    #define arma_hot  __attribute__((hot))
-    #define arma_cold __attribute__((cold))
   #endif
   
   #if ( (ARMA_GCC_VERSION >= 40700) && (ARMA_GCC_VERSION <= 40701) )

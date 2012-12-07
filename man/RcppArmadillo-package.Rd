@@ -7,36 +7,26 @@
   Rcpp/Armadillo bridge
 }
 \description{
-  The package eases the integration of Armadillo types with Rcpp
-}
-\details{
-  \tabular{ll}{
-    Package: \tab RcppArmadillo\cr
-    Type: \tab Package\cr
-    Version: \tab 0.3.4.4\cr
-    Date: \tab 2012-10-04\cr
-    License: \tab GPL (>= 2)\cr
-    LazyLoad: \tab yes\cr
-  }
+  The package eases the integration of Armadillo types with Rcpp.
 }
 \section{Armadillo}{
-\code{Armadillo} is a C++ linear algebra library (matrix maths) aiming towards a good
-balance between speed and ease of use. Integer, floating point and complex numbers
-are supported, as well as a subset of trigonometric and statistics functions. 
-Various matrix decompositions are provided through optional integration with 
-LAPACK and ATLAS libraries.
+  \code{Armadillo} is a C++ linear algebra library (matrix maths) aiming towards a good
+  balance between speed and ease of use. Integer, floating point and complex numbers
+  are supported, as well as a subset of trigonometric and statistics functions. 
+  Various matrix decompositions are provided through optional integration with 
+  LAPACK and ATLAS libraries.
 
-A delayed evaluation approach is employed (during compile time) to combine several 
-operations into one and reduce (or eliminate) the need for temporaries. 
-This is accomplished through recursive templates and template meta-programming.
+  A delayed evaluation approach is employed (during compile time) to combine several 
+  operations into one and reduce (or eliminate) the need for temporaries. 
+  This is accomplished through recursive templates and template meta-programming.
 
-This library is useful if C++ has been decided as the language of choice 
-(due to speed and/or integration capabilities), rather than another language 
-like Matlab or Octave. It is distributed under a license that is useful in 
-both open-source and commercial contexts.
+  This library is useful if C++ has been decided as the language of choice 
+  (due to speed and/or integration capabilities), rather than another language 
+  like Matlab or Octave. It is distributed under a license that is useful in 
+  both open-source and commercial contexts.
 
-Armadillo is primarily developed at NICTA (Australia), 
-with contributions from around the world.	
+  Armadillo is primarily developed at NICTA (Australia), 
+  with contributions from around the world.	
 }
 
 \section{RcppArmadillo}{

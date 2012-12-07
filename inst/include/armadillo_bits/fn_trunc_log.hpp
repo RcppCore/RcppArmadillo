@@ -1,5 +1,5 @@
 // Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -17,7 +17,7 @@
 
 
 template<typename eT>
-inline 
+inline
 static
 typename arma_float_only<eT>::result
 trunc_log(const eT x)
@@ -42,7 +42,7 @@ trunc_log(const eT x)
 
 
 template<typename eT>
-inline 
+inline
 static
 typename arma_integral_only<eT>::result
 trunc_log(const eT x)
@@ -53,12 +53,12 @@ trunc_log(const eT x)
 
 
 template<typename T>
-inline 
+inline
 static
 std::complex<T>
 trunc_log(const std::complex<T>& x)
   {
-  return std::log(x);
+  return std::complex<T>( trunc_log( std::abs(x) ), std::arg(x) );
   }
 
 

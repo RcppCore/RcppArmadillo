@@ -112,4 +112,19 @@ struct unwrap_spmat< SpGlue<T1, T2, spglue_type> >
 
 
 
+template<typename out_eT, typename T1, typename spop_type>
+struct unwrap_spmat< mtSpOp<out_eT, T1, spop_type> >
+  {
+  inline
+  unwrap_spmat(const mtSpOp<out_eT, T1, spop_type>& A)
+    : M(A)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const SpMat<out_eT> M;
+  };
+
+
+
 //! @}
