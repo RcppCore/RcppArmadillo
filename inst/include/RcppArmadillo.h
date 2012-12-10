@@ -22,6 +22,10 @@
 #ifndef RcppArmadillo__RcppArmadillo__h
 #define RcppArmadillo__RcppArmadillo__h
 
+#ifdef Rcpp_hpp
+    #error "'Rcpp.h' has been included before 'RcppArmadillo.h'. This is wrong. "
+#endif
+
 #include <RcppArmadilloForward.h>
 #include <Rcpp.h>
 #include <RcppArmadilloWrap.h>
