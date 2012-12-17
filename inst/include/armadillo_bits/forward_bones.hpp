@@ -61,6 +61,7 @@ class op_sum;
 class op_abs;
 class op_diagmat;
 class op_trimat;
+class op_diagvec;
 
 class eop_conj;
 

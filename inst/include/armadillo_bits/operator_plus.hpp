@@ -177,28 +177,6 @@ operator+
 
 
 
-
-//! addition of sparse and non-sparse object
-template<typename T1, typename T2>
-arma_inline
-typename
-enable_if2
-  <
-  (is_arma_sparse_type<T1>::value && is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value),
-  Mat<typename T1::elem_type>
-  >::result
-operator+
-  (
-  const SpBase<typename T1::elem_type, T1>& x,
-  const   Base<typename T2::elem_type, T2>& y
-  )
-  {
-  // Just call the other order (these operations are commutative)
-  return (y + x);
-  }
-
-
-
 //! addition of sparse and non-sparse object
 template<typename T1, typename T2>
 inline
@@ -210,30 +188,52 @@ enable_if2
   >::result
 operator+
   (
-  const   Base<typename T1::elem_type, T1>& x,
-  const SpBase<typename T2::elem_type, T2>& y
+  const T1& x,
+  const T2& y
   )
   {
   arma_extra_debug_sigprint();
   
-  Mat<typename T1::elem_type> result(x.get_ref());
+  Mat<typename T1::elem_type> result(x);
   
-  const SpProxy<T2> pb(y.get_ref());
+  const SpProxy<T2> pb(y);
   
   arma_debug_assert_same_size( result.n_rows, result.n_cols, pb.get_n_rows(), pb.get_n_cols(), "addition" );
   
-  typename SpProxy<T2>::const_iterator_type it = pb.begin();
+  typename SpProxy<T2>::const_iterator_type it     = pb.begin();
+  typename SpProxy<T2>::const_iterator_type it_end = pb.end();
   
-  while(it != pb.end())
+  while(it != it_end)
     {
-    const uword pos = it.col() * pb.get_n_cols() + it.row();
-    result[pos] += (*it);
+    result.at(it.row(), it.col()) += (*it);
     ++it;
     }
   
   return result;
   }
 
+
+
+//! addition of sparse and non-sparse object
+template<typename T1, typename T2>
+inline
+typename
+enable_if2
+  <
+  (is_arma_sparse_type<T1>::value && is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value),
+  Mat<typename T1::elem_type>
+  >::result
+operator+
+  (
+  const T1& x,
+  const T2& y
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  // Just call the other order (these operations are commutative)
+  return (y + x);
+  }
 
 
 

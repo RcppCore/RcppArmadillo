@@ -93,6 +93,7 @@ get_stream_err2()
 //! print a message to get_stream_err1() and/or throw a logic_error exception
 template<typename T1>
 arma_cold
+arma_noinline
 static
 void
 arma_stop(const T1& x)
@@ -121,6 +122,7 @@ arma_stop(const T1& x)
 
 template<typename T1>
 arma_cold
+arma_noinline
 static
 void
 arma_stop_bad_alloc(const T1& x)
@@ -145,6 +147,7 @@ arma_stop_bad_alloc(const T1& x)
 //! print a message to get_stream_err2() and/or throw a run-time error exception
 template<typename T1>
 arma_cold
+arma_noinline
 static
 void
 arma_bad(const T1& x, const bool hurl = true)
@@ -189,6 +192,7 @@ arma_print()
 
 template<typename T1>
 arma_cold
+arma_noinline
 static
 void
 arma_print(const T1& x)
@@ -200,6 +204,7 @@ arma_print(const T1& x)
 
 template<typename T1, typename T2>
 arma_cold
+arma_noinline
 static
 void
 arma_print(const T1& x, const T2& y)
@@ -211,6 +216,7 @@ arma_print(const T1& x, const T2& y)
 
 template<typename T1, typename T2, typename T3>
 arma_cold
+arma_noinline
 static
 void
 arma_print(const T1& x, const T2& y, const T3& z)
@@ -293,6 +299,7 @@ arma_thisprint(const void* this_ptr)
 //! print a message to the warn stream
 template<typename T1>
 arma_cold
+arma_noinline
 static
 void
 arma_warn(const bool state, const T1& x)
@@ -306,6 +313,7 @@ arma_warn(const bool state, const T1& x)
 
 template<typename T1, typename T2>
 arma_cold
+arma_noinline
 static
 void
 arma_warn(const bool state, const T1& x, const T2& y)
@@ -319,6 +327,7 @@ arma_warn(const bool state, const T1& x, const T2& y)
 
 template<typename T1, typename T2, typename T3>
 arma_cold
+arma_noinline
 static
 void
 arma_warn(const bool state, const T1& x, const T2& y, const T3& z)
@@ -398,6 +407,7 @@ arma_set_error(bool& err_state, char*& err_msg, const bool expression, const cha
 // functions for generating strings indicating size errors
 
 arma_cold
+arma_noinline
 static
 std::string
 arma_incompat_size_string(const uword A_n_rows, const uword A_n_cols, const uword B_n_rows, const uword B_n_cols, const char* x)
@@ -412,6 +422,7 @@ arma_incompat_size_string(const uword A_n_rows, const uword A_n_cols, const uwor
 
 
 arma_cold
+arma_noinline
 static
 std::string
 arma_incompat_size_string(const uword A_n_rows, const uword A_n_cols, const uword A_n_slices, const uword B_n_rows, const uword B_n_cols, const uword B_n_slices, const char* x)
@@ -427,6 +438,7 @@ arma_incompat_size_string(const uword A_n_rows, const uword A_n_cols, const uwor
 
 template<typename eT>
 arma_cold
+arma_noinline
 static
 std::string
 arma_incompat_size_string(const subview_cube<eT>& Q, const Mat<eT>& A, const char* x)

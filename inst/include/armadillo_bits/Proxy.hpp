@@ -299,6 +299,133 @@ class Proxy< Op<T1, op_type> >
 
 
 template<typename T1>
+class Proxy_diagvec_mat
+  {
+  inline Proxy_diagvec_mat(const T1&) {}
+  };
+
+
+
+template<typename T1>
+class Proxy_diagvec_mat< Op<T1, op_diagvec> >
+  {
+  public:
+  
+  typedef typename T1::elem_type                   elem_type;
+  typedef typename get_pod_type<elem_type>::result pod_type;
+  typedef diagview<elem_type>                      stored_type;
+  typedef const diagview<elem_type>&               ea_type;
+  
+  static const bool prefer_at_accessor = false;
+  static const bool has_subview        = true;
+  static const bool is_fixed           = false;
+  static const bool fake_mat           = false;
+  
+  static const bool is_row = false;
+  static const bool is_col = true;
+  
+  arma_aligned const Mat<elem_type>&     R;
+  arma_aligned const diagview<elem_type> Q;
+  
+  inline explicit Proxy_diagvec_mat(const Op<T1, op_diagvec>& A)
+    : R(A.m), Q( R.diag( (A.aux_uword_b > 0) ? -sword(A.aux_uword_a) : sword(A.aux_uword_a) ) )
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  arma_inline uword get_n_rows() const { return Q.n_rows; }
+  arma_inline uword get_n_cols() const { return 1;        }
+  arma_inline uword get_n_elem() const { return Q.n_elem; }
+  
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];         }
+  arma_inline elem_type at         (const uword row, const uword) const { return Q.at(row, 0); }
+  
+  arma_inline ea_type get_ea() const { return Q; }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&R) == void_ptr(&X)); }
+  };
+
+
+
+template<typename T1>
+class Proxy_diagvec_expr
+  {
+  inline Proxy_diagvec_expr(const T1&) {}
+  };
+
+
+
+template<typename T1>
+class Proxy_diagvec_expr< Op<T1, op_diagvec> >
+  {
+  public:
+  
+  typedef typename T1::elem_type                   elem_type;
+  typedef typename get_pod_type<elem_type>::result pod_type;
+  typedef Mat<elem_type>                           stored_type;
+  typedef const elem_type*                         ea_type;
+  
+  static const bool prefer_at_accessor = false;
+  static const bool has_subview        = false;
+  static const bool is_fixed           = false;
+  static const bool fake_mat           = false;
+  
+  static const bool is_row = false;
+  static const bool is_col = true;
+  
+  arma_aligned const Mat<elem_type> Q;
+  
+  inline explicit Proxy_diagvec_expr(const Op<T1, op_diagvec>& A)
+    : Q(A)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  arma_inline uword get_n_rows() const { return Q.n_rows; }
+  arma_inline uword get_n_cols() const { return 1;        }
+  arma_inline uword get_n_elem() const { return Q.n_elem; }
+  
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];         }
+  arma_inline elem_type at         (const uword row, const uword) const { return Q.at(row, 0); }
+  
+  arma_inline ea_type get_ea() const { return Q.memptr(); }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>&) const { return false; }
+  };
+
+
+
+template<typename T1, bool condition>
+struct Proxy_diagvec_redirect {};
+
+template<typename T1>
+struct Proxy_diagvec_redirect< Op<T1, op_diagvec>, true > { typedef Proxy_diagvec_mat < Op<T1, op_diagvec> > result; };
+
+template<typename T1>
+struct Proxy_diagvec_redirect< Op<T1, op_diagvec>, false> { typedef Proxy_diagvec_expr< Op<T1, op_diagvec> > result; };
+
+
+
+template<typename T1>
+class Proxy< Op<T1, op_diagvec> >
+  : public Proxy_diagvec_redirect< Op<T1, op_diagvec>, is_Mat<T1>::value >::result
+  {
+  public:
+  
+  typedef typename Proxy_diagvec_redirect< Op<T1, op_diagvec>, is_Mat<T1>::value >::result Proxy_diagvec;
+  
+  inline explicit Proxy(const Op<T1, op_diagvec>& A)
+    : Proxy_diagvec(A)
+    {
+    arma_extra_debug_sigprint();
+    }
+  };
+
+
+
+template<typename T1>
 struct Proxy_xtrans_default
   {
   typedef typename T1::elem_type eT;

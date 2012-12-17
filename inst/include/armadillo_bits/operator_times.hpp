@@ -470,8 +470,8 @@ operator*
   {
   arma_extra_debug_sigprint();
   
-  const SpProxy<T1> pa(x.get_ref());
-  const   Proxy<T2> pb(y.get_ref());
+  const SpProxy<T1> pa(x);
+  const   Proxy<T2> pb(y);
   
   arma_debug_assert_mul_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "matrix multiplication");
   
@@ -480,29 +480,19 @@ operator*
   
   if( (pa.get_n_nonzero() > 0) && (pb.get_n_elem() > 0) )
     {
-    if(Proxy<T2>::prefer_at_accessor == false)
+    typename SpProxy<T1>::const_iterator_type x_it     = pa.begin();
+    typename SpProxy<T1>::const_iterator_type x_it_end = pa.end();
+    
+    const uword result_n_cols = result.n_cols;
+      
+    while(x_it != x_it_end)
       {
-      // use direct operator[] access
-      for(typename SpProxy<T1>::const_iterator_type x_it = pa.begin(); x_it != pa.end(); x_it++)
+      for(uword col = 0; col < result_n_cols; ++col)
         {
-        // We just want to use values where y.row = x_it.col.
-        for(uword col = 0; col < result.n_cols; col++)
-          {
-          const uword index = x_it.col() + (pb.get_n_rows() * col);
-          result.at(x_it.row(), col) += (*x_it) * pb[index];
-          }
+        result.at(x_it.row(), col) += (*x_it) * pb.at(x_it.col(), col);
         }
-      }
-    else
-      {
-      // use at() access
-      for(typename SpProxy<T1>::const_iterator_type x_it = pa.begin(); x_it != pa.end(); x_it++)
-        {
-        for(uword col = 0; col < result.n_cols; col++)
-          {
-          result.at(x_it.row(), col) += (*x_it) * pb.at(x_it.col(), col);
-          }
-        }
+      
+      ++x_it;
       }
     }
   
@@ -528,8 +518,8 @@ operator*
   {
   arma_extra_debug_sigprint();
   
-  const   Proxy<T1> pa(x.get_ref());
-  const SpProxy<T2> pb(y.get_ref());
+  const   Proxy<T1> pa(x);
+  const SpProxy<T2> pb(y);
   
   arma_debug_assert_mul_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "matrix multiplication");
   
@@ -538,28 +528,19 @@ operator*
   
   if( (pa.get_n_elem() > 0) && (pb.get_n_nonzero() > 0) )
     {
-    if(Proxy<T1>::prefer_at_accessor == false)
+    typename SpProxy<T2>::const_iterator_type y_col_it     = pb.begin();
+    typename SpProxy<T2>::const_iterator_type y_col_it_end = pb.end();
+    
+    const uword result_n_rows = result.n_rows;
+    
+    while(y_col_it != y_col_it_end)
       {
-      // use direct operator[] access
-      for(typename SpProxy<T2>::const_iterator_type y_col_it = pb.begin(); y_col_it != pb.end(); ++y_col_it)
+      for(uword row = 0; row < result_n_rows; ++row)
         {
-        for(uword row = 0; row < result.n_rows; ++row)
-          {
-          const uword index = row + (y_col_it.row() * result.n_rows);
-          result.at(row, y_col_it.col()) += pa[index] * (*y_col_it);
-          }
+        result.at(row, y_col_it.col()) += pa.at(row, y_col_it.row()) * (*y_col_it);
         }
-      }
-    else
-      {
-      // use at() access
-      for(typename SpProxy<T2>::const_iterator_type y_col_it = pb.begin(); y_col_it != pb.end(); ++y_col_it)
-        {
-        for(uword row = 0; row < result.n_rows; ++row)
-          {
-          result.at(row, y_col_it.col()) += pa.at(row, y_col_it.row()) * (*y_col_it);
-          }
-        }
+      
+      ++y_col_it;
       }
     }
   

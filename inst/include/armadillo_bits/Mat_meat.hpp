@@ -1979,20 +1979,23 @@ Mat<eT>::Mat(const SpBase<eT, T1>& m)
   , mem()
   {
   arma_extra_debug_sigprint_this(this);
-
+  
   const SpProxy<T1> p(m.get_ref());
-
+  
   access::rw(n_rows) = p.get_n_rows();
   access::rw(n_cols) = p.get_n_cols();
   access::rw(n_elem) = p.get_n_elem();
-
+  
   init_cold();
   fill(eT(0));
-
-  // Iterate over each nonzero element and set it.
-  for(typename SpProxy<T1>::const_iterator_type it = p.begin(); it != p.end(); ++it)
+  
+  typename SpProxy<T1>::const_iterator_type it     = p.begin();
+  typename SpProxy<T1>::const_iterator_type it_end = p.end();
+  
+  while(it != it_end)
     {
     at(it.row(), it.col()) = (*it);
+    ++it;
     }
   }
 
@@ -2005,18 +2008,22 @@ const Mat<eT>&
 Mat<eT>::operator=(const SpBase<eT, T1>& m)
   {
   arma_extra_debug_sigprint();
-
+  
   const SpProxy<T1> p(m.get_ref());
-
+  
   init_warm(p.get_n_rows(), p.get_n_cols());
-
+  
   fill(eT(0));
-
-  for(typename SpProxy<T1>::const_iterator_type it = p.begin(); it != p.end(); ++it)
+  
+  typename SpProxy<T1>::const_iterator_type it     = p.begin();
+  typename SpProxy<T1>::const_iterator_type it_end = p.end();
+  
+  while(it != it_end)
     {
     at(it.row(), it.col()) = (*it);
+    ++it;
     }
-
+  
   return *this;
   }
 
@@ -2029,16 +2036,20 @@ const Mat<eT>&
 Mat<eT>::operator+=(const SpBase<eT, T1>& m)
   {
   arma_extra_debug_sigprint();
-
+  
   const SpProxy<T1> p(m.get_ref());
-
+  
   arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "addition");
-
-  for(typename SpProxy<T1>::const_iterator_type it = p.begin(); it != p.end(); ++it)
+  
+  typename SpProxy<T1>::const_iterator_type it     = p.begin();
+  typename SpProxy<T1>::const_iterator_type it_end = p.end();
+  
+  while(it != it_end)
     {
     at(it.row(), it.col()) += (*it);
+    ++it;
     }
-
+  
   return *this;
   }
 
@@ -2051,16 +2062,20 @@ const Mat<eT>&
 Mat<eT>::operator-=(const SpBase<eT, T1>& m)
   {
   arma_extra_debug_sigprint();
-
+  
   const SpProxy<T1> p(m.get_ref());
-
+  
   arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "subtraction");
-
-  for(typename SpProxy<T1>::const_iterator_type it = p.begin(); it != p.end(); ++it)
+  
+  typename SpProxy<T1>::const_iterator_type it     = p.begin();
+  typename SpProxy<T1>::const_iterator_type it_end = p.end();
+  
+  while(it != it_end)
     {
     at(it.row(), it.col()) -= (*it);
+    ++it;
     }
-
+  
   return *this;
   }
 
@@ -2073,11 +2088,11 @@ const Mat<eT>&
 Mat<eT>::operator*=(const SpBase<eT, T1>& m)
   {
   arma_extra_debug_sigprint();
-
+  
   Mat<eT> z;
   z = (*this) * m.get_ref();
   steal_mem(z);
-
+  
   return *this;
   }
 
@@ -2090,31 +2105,32 @@ const Mat<eT>&
 Mat<eT>::operator%=(const SpBase<eT, T1>& m)
   {
   arma_extra_debug_sigprint();
-
+  
   const SpProxy<T1> p(m.get_ref());
-
+  
   arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "element-wise multiplication");
-
-  typename SpProxy<T1>::const_iterator_type it = p.begin();
-
+  
+  typename SpProxy<T1>::const_iterator_type it     = p.begin();
+  typename SpProxy<T1>::const_iterator_type it_end = p.end();
+  
   // We have to zero everything that isn't being used.
   arrayops::inplace_set(memptr(), eT(0), (it.col() * n_rows) + it.row());
-
-  while(it != p.end())
+  
+  while(it != it_end)
     {
     const uword cur_loc = (it.col() * n_rows) + it.row();
-
+    
     access::rw(mem[cur_loc]) *= (*it);
-
+    
     ++it;
-
-    const uword next_loc = (it == p.end())
+    
+    const uword next_loc = (it == it_end)
       ? (p.get_n_cols() * n_rows)
       : (it.col() * n_rows) + it.row();
-
+    
     arrayops::inplace_set(memptr() + cur_loc + 1, eT(0), (next_loc - cur_loc - 1));
     }
-
+  
   return *this;
   }
 
@@ -2127,21 +2143,19 @@ const Mat<eT>&
 Mat<eT>::operator/=(const SpBase<eT, T1>& m)
   {
   arma_extra_debug_sigprint();
-
+  
   const SpProxy<T1> p(m.get_ref());
-
+  
   arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "element-wise division");
-
+  
   // If you use this method, you are probably stupid or misguided, but for completeness it is implemented.
   // Unfortunately the best way to do this is loop over every element.
   for(uword c = 0; c < n_cols; ++c)
+  for(uword r = 0; r < n_rows; ++r)
     {
-    for(uword r = 0; r < n_rows; ++r)
-      {
-      at(r, c) /= p.at(r, c);
-      }
+    at(r, c) /= p.at(r, c);
     }
-
+  
   return *this;
   }
 

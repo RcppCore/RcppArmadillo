@@ -210,27 +210,27 @@ enable_if2
   >::result
 operator-
   (
-  const SpBase<typename T1::elem_type, T1>& x,
-  const   Base<typename T2::elem_type, T2>& y
+  const T1& x,
+  const T2& y
   )
   {
   arma_extra_debug_sigprint();
-
-  Mat<typename T1::elem_type> result(-y.get_ref());
   
-  const SpProxy<T1> pa(x.get_ref());
-
+  const SpProxy<T1> pa(x);
+  
+  Mat<typename T1::elem_type> result(-y);
+  
   arma_debug_assert_same_size( pa.get_n_rows(), pa.get_n_cols(), result.n_rows, result.n_cols, "subtraction" );
   
-  typename SpProxy<T1>::const_iterator_type it = pa.begin();
-
-  while(it != pa.end())
+  typename SpProxy<T1>::const_iterator_type it     = pa.begin();
+  typename SpProxy<T1>::const_iterator_type it_end = pa.end();
+  
+  while(it != it_end)
     {
-    const uword pos = it.col() * pa.get_n_cols() + it.row();
-    result[pos] += (*it);
+    result.at(it.row(), it.col()) += (*it);
     ++it;
     }
-
+  
   return result;
   }
 
@@ -247,29 +247,30 @@ enable_if2
   >::result
 operator-
   (
-  const   Base<typename T1::elem_type, T1>& x,
-  const SpBase<typename T2::elem_type, T2>& y
+  const T1& x,
+  const T2& y
   )
   {
   arma_extra_debug_sigprint();
   
-  Mat<typename T1::elem_type> result(x.get_ref());
+  Mat<typename T1::elem_type> result(x);
   
   const SpProxy<T2> pb(y.get_ref());
   
   arma_debug_assert_same_size( result.n_rows, result.n_cols, pb.get_n_rows(), pb.get_n_cols(), "subtraction" );
+  
+  typename SpProxy<T2>::const_iterator_type it     = pb.begin();
+  typename SpProxy<T2>::const_iterator_type it_end = pb.end();
 
-  typename SpProxy<T2>::const_iterator_type it = pb.begin();
-
-  while(it != pb.end())
+  while(it != it_end)
     {
-    const uword pos = it.col() * pb.get_n_cols() + it.row();
-    result[pos] -= (*it);
+    result.at(it.row(), it.col()) -= (*it);
     ++it;
     }
-
+  
   return result;
   }
+
 
 
 //! @}
