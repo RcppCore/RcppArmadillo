@@ -157,27 +157,6 @@ operator%
 
 
 
-//! element-wise multiplication of one sparse and one dense object
-template<typename T1, typename T2>
-inline
-typename
-enable_if2
-  <
-  (is_arma_sparse_type<T1>::value && is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value),
-  SpMat<typename T1::elem_type>
-  >::result
-operator%
-  (
-  const SpBase<typename T1::elem_type, T1>& x,
-  const   Base<typename T2::elem_type, T2>& y
-  )
-  {
-  // This operation is commutative.
-  return (y % x);
-  }
-
-
-
 //! element-wise multiplication of one dense and one sparse object
 template<typename T1, typename T2>
 inline
@@ -189,98 +168,94 @@ enable_if2
   >::result
 operator%
   (
-  const   Base<typename T1::elem_type, T1>& x,
-  const SpBase<typename T2::elem_type, T2>& y
+  const T1& x,
+  const T2& y
   )
   {
   arma_extra_debug_sigprint();
-
-  const   Proxy<T1> pa(x.get_ref());
-  const SpProxy<T2> pb(y.get_ref());
-
+  
+  typedef typename T1::elem_type eT;
+  
+  const   Proxy<T1> pa(x);
+  const SpProxy<T2> pb(y);
+  
   arma_debug_assert_same_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "element-wise multiplication");
-
-  SpMat<typename T1::elem_type> result(pa.get_n_rows(), pa.get_n_cols());
-
-  if(Proxy<T1>::prefer_at_accessor == false)
+  
+  SpMat<eT> result(pa.get_n_rows(), pa.get_n_cols());
+  
+  // count new size
+  uword new_n_nonzero = 0;
+  
+  typename SpProxy<T2>::const_iterator_type it     = pb.begin();
+  typename SpProxy<T2>::const_iterator_type it_end = pb.end();
+  
+  while(it != it_end)
     {
-    // use direct operator[] access
-    // count new size
-    uword new_n_nonzero = 0;
-    typename SpProxy<T2>::const_iterator_type it = pb.begin();
-    while(it != pb.end())
+    if( ((*it) * pa.at(it.row(), it.col())) != eT(0) )
       {
-      if(((*it) * pa[(it.col() * pa.get_n_rows()) + it.row()]) != 0)
-        {
-        ++new_n_nonzero;
-        }
-
-      ++it;
+      ++new_n_nonzero;
       }
-
-    // Resize memory accordingly.
-    result.mem_resize(new_n_nonzero);
-
-    uword cur_val = 0;
-    typename SpProxy<T2>::const_iterator_type it2 = pb.begin();
-    while(it2 != pb.end())
-      {
-      const typename T1::elem_type val = (*it2) * pa[(it2.col() * pa.get_n_rows()) + it2.row()];
-      if(val != 0)
-        {
-        access::rw(result.values[cur_val]) = val;
-        access::rw(result.row_indices[cur_val]) = it2.row();
-        ++access::rw(result.col_ptrs[it2.col() + 1]);
-        ++cur_val;
-        }
-
-      ++it2;
-      }
+    
+    ++it;
     }
-  else
+  
+  // Resize memory accordingly.
+  result.mem_resize(new_n_nonzero);
+  
+  uword cur_val = 0;
+  
+  typename SpProxy<T2>::const_iterator_type it2 = pb.begin();
+  
+  while(it2 != it_end)
     {
-    // use at() access
-    // count new size
-    uword new_n_nonzero = 0;
-    typename SpProxy<T2>::const_iterator_type it = pb.begin();
-    while(it != pb.end())
+    const uword it2_row = it2.row();
+    const uword it2_col = it2.col();
+    
+    const eT val = (*it2) * pa.at(it2_row, it2_col);
+    
+    if(val != eT(0))
       {
-      if(((*it) * pa.at(it.row(), it.col())) != 0)
-        {
-        ++new_n_nonzero;
-        }
-
-      ++it;
+      access::rw(result.values[cur_val]) = val;
+      access::rw(result.row_indices[cur_val]) = it2_row;
+      ++access::rw(result.col_ptrs[it2_col + 1]);
+      ++cur_val;
       }
-
-    // Resize memory accordingly.
-    result.mem_resize(new_n_nonzero);
-
-    uword cur_val = 0;
-    typename SpProxy<T2>::const_iterator_type it2 = pb.begin();
-    while(it2 != pb.end())
-      {
-      const typename T1::elem_type val = (*it2) * pa.at(it2.row(), it2.col());
-      if(val != 0)
-        {
-        access::rw(result.values[cur_val]) = val;
-        access::rw(result.row_indices[cur_val]) = it2.row();
-        ++access::rw(result.col_ptrs[it2.col() + 1]);
-        ++cur_val;
-        }
-
-      ++it2;
-      }
+    
+    ++it2;
     }
-
+  
   // Fix column pointers.
   for(uword c = 1; c <= result.n_cols; ++c)
     {
     access::rw(result.col_ptrs[c]) += result.col_ptrs[c - 1];
     }
-
+  
   return result;
   }
+
+
+
+//! element-wise multiplication of one sparse and one dense object
+template<typename T1, typename T2>
+inline
+typename
+enable_if2
+  <
+  (is_arma_sparse_type<T1>::value && is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value),
+  SpMat<typename T1::elem_type>
+  >::result
+operator%
+  (
+  const T1& x,
+  const T2& y
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  // This operation is commutative.
+  return (y % x);
+  }
+
 
 
 //! @}

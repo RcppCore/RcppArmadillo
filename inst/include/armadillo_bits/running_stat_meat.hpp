@@ -28,7 +28,7 @@ arma_counter<eT>::~arma_counter()
 template<typename eT>
 inline
 arma_counter<eT>::arma_counter()
-  : d_count( eT(0))
+  : d_count(   eT(0))
   , i_count(uword(0))
   {
   arma_extra_debug_sigprint_this(this);
@@ -48,7 +48,7 @@ arma_counter<eT>::operator++()
   else
     {
     d_count += eT(ARMA_MAX_UWORD);
-    i_count  = 0;
+    i_count  = 1;
     }
   
   return *this;
@@ -71,7 +71,7 @@ inline
 void
 arma_counter<eT>::reset()
   {
-  d_count =  eT(0);
+  d_count =    eT(0);
   i_count = uword(0);
   }
 

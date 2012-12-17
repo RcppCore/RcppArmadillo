@@ -21,6 +21,7 @@
 #define arma_deprecated
 #define arma_malloc
 #define arma_inline            inline
+#define arma_noinline
 #define arma_ignore(variable)  ((void)(variable))
 
 
@@ -28,8 +29,8 @@
   #define arma_fortran2_noprefix(function) function##_
   #define arma_fortran2_prefix(function)   wrapper_##function##_
 #else
-  #define arma_fortran2_prefix(function)   wrapper_##function
   #define arma_fortran2_noprefix(function) function
+  #define arma_fortran2_prefix(function)   wrapper_##function
 #endif
 
 #if defined(ARMA_USE_WRAPPER)
@@ -71,7 +72,6 @@
   #define ARMA_GOOD_COMPILER
   #undef  ARMA_HAVE_STD_TR1
   
-  #undef  arma_cold
   #undef  arma_pure
   #undef  arma_const
   #undef  arma_aligned
@@ -79,8 +79,8 @@
   #undef  arma_deprecated
   #undef  arma_malloc
   #undef  arma_inline
+  #undef  arma_noinline
   
-  #define arma_cold               __attribute__((__noinline__))
   #define arma_pure               __attribute__((__pure__))
   #define arma_const              __attribute__((__const__))
   #define arma_aligned            __attribute__((__aligned__))
@@ -88,13 +88,14 @@
   #define arma_deprecated         __attribute__((__deprecated__))
   #define arma_malloc             __attribute__((__malloc__))
   #define arma_inline      inline __attribute__((__always_inline__))
+  #define arma_noinline           __attribute__((__noinline__))
   
   #if (ARMA_GCC_VERSION >= 40300)
     #undef  arma_hot
     #undef  arma_cold
     
     #define arma_hot  __attribute__((__hot__))
-    #define arma_cold __attribute__((__cold__,__noinline__))
+    #define arma_cold __attribute__((__cold__))
   #endif
   
   #if (ARMA_GCC_VERSION >= 40200)

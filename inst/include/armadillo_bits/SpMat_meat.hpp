@@ -191,7 +191,6 @@ SpMat<eT>::operator=(const eT val)
   access::rw(col_ptrs[1]) = 1;
 
   return *this;
-
   }
 
 
@@ -202,20 +201,13 @@ const SpMat<eT>&
 SpMat<eT>::operator*=(const eT val)
   {
   arma_extra_debug_sigprint();
-
+  
   if(val == eT(0))
     {
     // Everything will be zero.
     init(n_rows, n_cols);
     return *this;
     }
-
-  // Iterate over nonzero values, which is a lot faster.
-  
-  // for(uword i = 0; i < n_nonzero; ++i)
-  //   {
-  //   access::rw(values[i]) *= val;
-  //   }
   
   arrayops::inplace_mul( access::rwp(values), val, n_nonzero );
   
@@ -233,12 +225,8 @@ SpMat<eT>::operator/=(const eT val)
   
   arma_debug_check( (val == eT(0)), "element-wise division: division by zero" );
   
-  // We only have to loop over nonzero values.
-  for (uword i = 0; i < n_nonzero; ++i)
-    {
-    access::rw(values[i]) /= val;
-    }
-
+  arrayops::inplace_div( access::rwp(values), val, n_nonzero );
+  
   return *this;
   }
 
@@ -537,22 +525,16 @@ SpMat<eT>::operator=(const Base<eT, T1>& x)
   if(Proxy<T1>::prefer_at_accessor == true)
     {
     for(uword j = 0; j < x_n_cols; ++j)
+    for(uword i = 0; i < x_n_rows; ++i)
       {
-      for(uword i = 0; i < x_n_rows; ++i)
-        {
-        if(p.at(i, j) != eT(0))
-          ++n;
-        }
+      if(p.at(i, j) != eT(0)) { ++n; }
       }
     }
   else
     {
     for(uword i = 0; i < x_n_elem; ++i)
       {
-      if(p[i] != eT(0))
-        {
-        ++n;
-        }
+      if(p[i] != eT(0)) { ++n; }
       }
     }
 
@@ -561,16 +543,16 @@ SpMat<eT>::operator=(const Base<eT, T1>& x)
   // Now the memory is resized correctly; add nonzero elements.
   n = 0;
   for(uword j = 0; j < x_n_cols; ++j)
+  for(uword i = 0; i < x_n_rows; ++i)
     {
-    for(uword i = 0; i < x_n_rows; ++i)
+    const eT val = p.at(i, j);
+    
+    if(val != eT(0))
       {
-      if(p.at(i, j) != eT(0))
-        {
-        access::rw(values[n]) = p.at(i, j);
-        access::rw(row_indices[n]) = i;
-        access::rw(col_ptrs[j + 1])++;
-        ++n;
-        }
+      access::rw(values[n])      = val;
+      access::rw(row_indices[n]) = i;
+      access::rw(col_ptrs[j + 1])++;
+      ++n;
       }
     }
 
@@ -679,6 +661,10 @@ SpMat<eT>::operator*=(const Base<eT, T1>& y)
 
 
 
+/**
+ * Don't use this function.  It's not mathematically well-defined and wastes
+ * cycles to trash all your data.  This is dumb.
+ */
 template<typename eT>
 template<typename T1>
 inline
@@ -687,19 +673,9 @@ SpMat<eT>::operator/=(const Base<eT, T1>& x)
   {
   arma_extra_debug_sigprint();
 
-  const Proxy<T1> p(x.get_ref());
+  SpMat<eT> tmp = (*this) / x.get_ref();
   
-  /**
-   * Don't use this function.  It's not mathematically well-defined and wastes
-   * cycles to trash all your data.  This is dumb.
-   */
-  arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "element-wise division");
-  
-  for(uword j = 0; j < n_cols; j++)
-  for(uword i = 0; i < n_rows; i++)
-    {
-    at(i, j) /= p.at(i, j);
-    }
+  steal_mem(tmp);
   
   return *this;
   }

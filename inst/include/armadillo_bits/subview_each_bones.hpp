@@ -104,6 +104,8 @@ class subview_each2 : public subview_each_common<parent, mode>
   template<typename T1> inline void operator%= (const Base<eT,T1>& x);
   template<typename T1> inline void operator/= (const Base<eT,T1>& x);
   
+  // TODO: add handling of scalars
+  
   
   private:
   

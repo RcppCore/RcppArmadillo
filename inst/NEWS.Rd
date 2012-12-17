@@ -2,21 +2,17 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
-
-\section{Changes in RcppArmadillo version 0.3.6.0 (2012-12-07)}{
+\section{Changes in RcppArmadillo version 0.3.6.1 (2012-12-17)}{
   \itemize{
-    \item Upgraded to Armadillo release Version 3.6.0 (Piazza del Duomo)
+    \item Upgraded to Armadillo release Version 3.6.1
     \itemize{
-      \item faster handling of compound expressions with submatrices and
-      subcubes 
-      \item added support for loading matrices as text files with
-      \code{NaN} and \code{Inf} elements 
-      \item added \code{stable_sort_index()}, which preserves the relative
-      order of elements with equivalent values
-      \item added handling of sparse matrices by \code{mean()},
-      \code{var()}, \code{norm()}, \code{abs()}, \code{square()}, \code{sqrt()}
-      \item added saving and loading of sparse matrices in arma_binary format
+      \item faster \code{trace()}
+      \item fix for handling sparse matrices by \code{dot()}
+      \item fixes for interactions between sparse and dense matrices
     }
+    \item Now throws compiler error if \code{Rcpp.h} is included before
+    \code{RcppArmadillo.h} (as the former is included automatically by the
+    latter anyway, but template logic prefers this ordering).
   }
 }
 
