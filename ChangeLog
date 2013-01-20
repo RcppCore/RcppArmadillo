@@ -8,7 +8,6 @@
 
 	* inst/include/*: Upgraded to new release 3.6.1 of Armadillo
 
-
 2012-12-10  Romain Francois <romain@r-enthusiasts.com>
 
 	* include/RcppArmadillo.h: compiler error if Rcpp.h is included
