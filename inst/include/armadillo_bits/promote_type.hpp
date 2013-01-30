@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2011 Conrad Sanderson
+// Copyright (C) 2009-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2013 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -36,48 +36,61 @@ template<> struct is_promotable<std::complex<double>, std::complex<float> > : pu
 template<> struct is_promotable<std::complex<double>, float>                : public is_promotable_ok { typedef std::complex<double> result; };
 template<> struct is_promotable<std::complex<float>,  double>               : public is_promotable_ok { typedef std::complex<double> result; };
 
-#if defined(ARMA_64BIT_WORD)
-template<typename t> struct is_promotable<std::complex<t>, u64> : public is_promotable_ok { typedef std::complex<t> result; };
-template<typename t> struct is_promotable<std::complex<t>, s64> : public is_promotable_ok { typedef std::complex<t> result; };
+
+#if defined(ARMA_USE_U64S64)
+template<typename t> struct is_promotable<std::complex<t>, u64>    : public is_promotable_ok { typedef std::complex<t> result; };
+template<typename t> struct is_promotable<std::complex<t>, s64>    : public is_promotable_ok { typedef std::complex<t> result; };
 #endif
-template<typename T> struct is_promotable<std::complex<T>, s32> : public is_promotable_ok { typedef std::complex<T> result; };
-template<typename T> struct is_promotable<std::complex<T>, u32> : public is_promotable_ok { typedef std::complex<T> result; };
-template<typename T> struct is_promotable<std::complex<T>, s16> : public is_promotable_ok { typedef std::complex<T> result; };
-template<typename T> struct is_promotable<std::complex<T>, u16> : public is_promotable_ok { typedef std::complex<T> result; };
-template<typename T> struct is_promotable<std::complex<T>, s8>  : public is_promotable_ok { typedef std::complex<T> result; };
-template<typename T> struct is_promotable<std::complex<T>, u8>  : public is_promotable_ok { typedef std::complex<T> result; };
-
-
-template<> struct is_promotable<double, float> : public is_promotable_ok { typedef double result; };
-#if defined(ARMA_64BIT_WORD)
-template<> struct is_promotable<double, s64  > : public is_promotable_ok { typedef double result; };
-template<> struct is_promotable<double, u64  > : public is_promotable_ok { typedef double result; };
+#if defined(ARMA_ALLOW_LONG)
+template<typename t> struct is_promotable<std::complex<t>, ulng_t> : public is_promotable_ok { typedef std::complex<t> result; };
+template<typename t> struct is_promotable<std::complex<t>, slng_t> : public is_promotable_ok { typedef std::complex<t> result; };
 #endif
-template<> struct is_promotable<double, s32  > : public is_promotable_ok { typedef double result; };
-template<> struct is_promotable<double, u32  > : public is_promotable_ok { typedef double result; };
-template<> struct is_promotable<double, s16  > : public is_promotable_ok { typedef double result; };
-template<> struct is_promotable<double, u16  > : public is_promotable_ok { typedef double result; };
-template<> struct is_promotable<double, s8   > : public is_promotable_ok { typedef double result; };
-template<> struct is_promotable<double, u8   > : public is_promotable_ok { typedef double result; };
+template<typename T> struct is_promotable<std::complex<T>, s32>    : public is_promotable_ok { typedef std::complex<T> result; };
+template<typename T> struct is_promotable<std::complex<T>, u32>    : public is_promotable_ok { typedef std::complex<T> result; };
+template<typename T> struct is_promotable<std::complex<T>, s16>    : public is_promotable_ok { typedef std::complex<T> result; };
+template<typename T> struct is_promotable<std::complex<T>, u16>    : public is_promotable_ok { typedef std::complex<T> result; };
+template<typename T> struct is_promotable<std::complex<T>, s8>     : public is_promotable_ok { typedef std::complex<T> result; };
+template<typename T> struct is_promotable<std::complex<T>, u8>     : public is_promotable_ok { typedef std::complex<T> result; };
 
-#if defined(ARMA_64BIT_WORD)
-template<> struct is_promotable<float, s64> : public is_promotable_ok { typedef float result; };
-template<> struct is_promotable<float, u64> : public is_promotable_ok { typedef float result; };
+
+template<> struct is_promotable<double, float > : public is_promotable_ok { typedef double result; };
+#if defined(ARMA_USE_U64S64)
+template<> struct is_promotable<double, s64   > : public is_promotable_ok { typedef double result; };
+template<> struct is_promotable<double, u64   > : public is_promotable_ok { typedef double result; };
 #endif
-template<> struct is_promotable<float, s32> : public is_promotable_ok { typedef float result; };
-template<> struct is_promotable<float, u32> : public is_promotable_ok { typedef float result; };
-template<> struct is_promotable<float, s16> : public is_promotable_ok { typedef float result; };
-template<> struct is_promotable<float, u16> : public is_promotable_ok { typedef float result; };
-template<> struct is_promotable<float, s8 > : public is_promotable_ok { typedef float result; };
-template<> struct is_promotable<float, u8 > : public is_promotable_ok { typedef float result; };
+#if defined(ARMA_ALLOW_LONG)
+template<> struct is_promotable<double, slng_t> : public is_promotable_ok { typedef double result; };
+template<> struct is_promotable<double, ulng_t> : public is_promotable_ok { typedef double result; };
+#endif
+template<> struct is_promotable<double, s32   > : public is_promotable_ok { typedef double result; };
+template<> struct is_promotable<double, u32   > : public is_promotable_ok { typedef double result; };
+template<> struct is_promotable<double, s16   > : public is_promotable_ok { typedef double result; };
+template<> struct is_promotable<double, u16   > : public is_promotable_ok { typedef double result; };
+template<> struct is_promotable<double, s8    > : public is_promotable_ok { typedef double result; };
+template<> struct is_promotable<double, u8    > : public is_promotable_ok { typedef double result; };
 
-#if defined(ARMA_64BIT_WORD)
+#if defined(ARMA_USE_U64S64)
+template<> struct is_promotable<float, s64   > : public is_promotable_ok { typedef float result; };
+template<> struct is_promotable<float, u64   > : public is_promotable_ok { typedef float result; };
+#endif
+#if defined(ARMA_ALLOW_LONG)
+template<> struct is_promotable<float, slng_t> : public is_promotable_ok { typedef float result; };
+template<> struct is_promotable<float, ulng_t> : public is_promotable_ok { typedef float result; };
+#endif
+template<> struct is_promotable<float, s32   > : public is_promotable_ok { typedef float result; };
+template<> struct is_promotable<float, u32   > : public is_promotable_ok { typedef float result; };
+template<> struct is_promotable<float, s16   > : public is_promotable_ok { typedef float result; };
+template<> struct is_promotable<float, u16   > : public is_promotable_ok { typedef float result; };
+template<> struct is_promotable<float, s8    > : public is_promotable_ok { typedef float result; };
+template<> struct is_promotable<float, u8    > : public is_promotable_ok { typedef float result; };
+
+#if defined(ARMA_USE_U64S64)
 template<> struct is_promotable<u64, u32> : public is_promotable_ok { typedef u64 result; };
 template<> struct is_promotable<u64, u16> : public is_promotable_ok { typedef u64 result; };
 template<> struct is_promotable<u64, u8 > : public is_promotable_ok { typedef u64 result; };
 #endif
 
-#if defined(ARMA_64BIT_WORD)
+#if defined(ARMA_USE_U64S64)
 template<> struct is_promotable<s64, u64> : public is_promotable_ok { typedef s64 result; };  // float ?  
 template<> struct is_promotable<s64, u32> : public is_promotable_ok { typedef s64 result; };
 template<> struct is_promotable<s64, s32> : public is_promotable_ok { typedef s64 result; };
@@ -119,48 +132,60 @@ template<> struct is_promotable<std::complex<float>, std::complex<double> > : pu
 template<> struct is_promotable<float,               std::complex<double> > : public is_promotable_ok { typedef std::complex<double> result; };
 template<> struct is_promotable<double,              std::complex<float>  > : public is_promotable_ok { typedef std::complex<double> result; };
 
-#if defined(ARMA_64BIT_WORD)
-template<typename T> struct is_promotable<s64, std::complex<T> > : public is_promotable_ok { typedef std::complex<T> result; };
-template<typename T> struct is_promotable<u64, std::complex<T> > : public is_promotable_ok { typedef std::complex<T> result; };
+#if defined(ARMA_USE_U64S64)
+template<typename T> struct is_promotable<s64,    std::complex<T> > : public is_promotable_ok { typedef std::complex<T> result; };
+template<typename T> struct is_promotable<u64,    std::complex<T> > : public is_promotable_ok { typedef std::complex<T> result; };
 #endif
-template<typename T> struct is_promotable<s32, std::complex<T> > : public is_promotable_ok { typedef std::complex<T> result; };
-template<typename T> struct is_promotable<u32, std::complex<T> > : public is_promotable_ok { typedef std::complex<T> result; };
-template<typename T> struct is_promotable<s16, std::complex<T> > : public is_promotable_ok { typedef std::complex<T> result; };
-template<typename T> struct is_promotable<u16, std::complex<T> > : public is_promotable_ok { typedef std::complex<T> result; };
-template<typename T> struct is_promotable<s8,  std::complex<T> > : public is_promotable_ok { typedef std::complex<T> result; };
-template<typename T> struct is_promotable<u8,  std::complex<T> > : public is_promotable_ok { typedef std::complex<T> result; };
-
-
-template<> struct is_promotable<float, double> : public is_promotable_ok { typedef double result; };
-#if defined(ARMA_64BIT_WORD)
-template<> struct is_promotable<s64  , double> : public is_promotable_ok { typedef double result; };
-template<> struct is_promotable<u64  , double> : public is_promotable_ok { typedef double result; };
+#if defined(ARMA_ALLOW_LONG)
+template<typename T> struct is_promotable<slng_t, std::complex<T> > : public is_promotable_ok { typedef std::complex<T> result; };
+template<typename T> struct is_promotable<ulng_t, std::complex<T> > : public is_promotable_ok { typedef std::complex<T> result; };
 #endif
-template<> struct is_promotable<s32  , double> : public is_promotable_ok { typedef double result; };
-template<> struct is_promotable<u32  , double> : public is_promotable_ok { typedef double result; };
-template<> struct is_promotable<s16  , double> : public is_promotable_ok { typedef double result; };
-template<> struct is_promotable<u16  , double> : public is_promotable_ok { typedef double result; };
-template<> struct is_promotable<s8   , double> : public is_promotable_ok { typedef double result; };
-template<> struct is_promotable<u8   , double> : public is_promotable_ok { typedef double result; };
+template<typename T> struct is_promotable<s32,    std::complex<T> > : public is_promotable_ok { typedef std::complex<T> result; };
+template<typename T> struct is_promotable<u32,    std::complex<T> > : public is_promotable_ok { typedef std::complex<T> result; };
+template<typename T> struct is_promotable<s16,    std::complex<T> > : public is_promotable_ok { typedef std::complex<T> result; };
+template<typename T> struct is_promotable<u16,    std::complex<T> > : public is_promotable_ok { typedef std::complex<T> result; };
+template<typename T> struct is_promotable<s8,     std::complex<T> > : public is_promotable_ok { typedef std::complex<T> result; };
+template<typename T> struct is_promotable<u8,     std::complex<T> > : public is_promotable_ok { typedef std::complex<T> result; };
 
-#if defined(ARMA_64BIT_WORD)
-template<> struct is_promotable<s64, float> : public is_promotable_ok { typedef float result; };
-template<> struct is_promotable<u64, float> : public is_promotable_ok { typedef float result; };
+
+template<> struct is_promotable<float,  double> : public is_promotable_ok { typedef double result; };
+#if defined(ARMA_USE_U64S64)
+template<> struct is_promotable<s64,    double> : public is_promotable_ok { typedef double result; };
+template<> struct is_promotable<u64,    double> : public is_promotable_ok { typedef double result; };
 #endif
-template<> struct is_promotable<s32, float> : public is_promotable_ok { typedef float result; };
-template<> struct is_promotable<u32, float> : public is_promotable_ok { typedef float result; };
-template<> struct is_promotable<s16, float> : public is_promotable_ok { typedef float result; };
-template<> struct is_promotable<u16, float> : public is_promotable_ok { typedef float result; };
-template<> struct is_promotable<s8 , float> : public is_promotable_ok { typedef float result; };
-template<> struct is_promotable<u8 , float> : public is_promotable_ok { typedef float result; };
+#if defined(ARMA_ALLOW_LONG)
+template<> struct is_promotable<slng_t, double> : public is_promotable_ok { typedef double result; };
+template<> struct is_promotable<ulng_t, double> : public is_promotable_ok { typedef double result; };
+#endif
+template<> struct is_promotable<s32,    double> : public is_promotable_ok { typedef double result; };
+template<> struct is_promotable<u32,    double> : public is_promotable_ok { typedef double result; };
+template<> struct is_promotable<s16,    double> : public is_promotable_ok { typedef double result; };
+template<> struct is_promotable<u16,    double> : public is_promotable_ok { typedef double result; };
+template<> struct is_promotable<s8,     double> : public is_promotable_ok { typedef double result; };
+template<> struct is_promotable<u8,     double> : public is_promotable_ok { typedef double result; };
 
-#if defined(ARMA_64BIT_WORD)
+#if defined(ARMA_USE_U64S64)
+template<> struct is_promotable<s64,    float> : public is_promotable_ok { typedef float result; };
+template<> struct is_promotable<u64,    float> : public is_promotable_ok { typedef float result; };
+#endif
+#if defined(ARMA_ALLOW_LONG)
+template<> struct is_promotable<slng_t, float> : public is_promotable_ok { typedef float result; };
+template<> struct is_promotable<ulng_t, float> : public is_promotable_ok { typedef float result; };
+#endif
+template<> struct is_promotable<s32,    float> : public is_promotable_ok { typedef float result; };
+template<> struct is_promotable<u32,    float> : public is_promotable_ok { typedef float result; };
+template<> struct is_promotable<s16,    float> : public is_promotable_ok { typedef float result; };
+template<> struct is_promotable<u16,    float> : public is_promotable_ok { typedef float result; };
+template<> struct is_promotable<s8,     float> : public is_promotable_ok { typedef float result; };
+template<> struct is_promotable<u8,     float> : public is_promotable_ok { typedef float result; };
+
+#if defined(ARMA_USE_U64S64)
 template<> struct is_promotable<u32, u64> : public is_promotable_ok { typedef u64 result; };
 template<> struct is_promotable<u16, u64> : public is_promotable_ok { typedef u64 result; };
 template<> struct is_promotable<u8,  u64> : public is_promotable_ok { typedef u64 result; };
 #endif
 
-#if defined(ARMA_64BIT_WORD)
+#if defined(ARMA_USE_U64S64)
 template<> struct is_promotable<u64, s64> : public is_promotable_ok { typedef s64 result; };  // float ?  
 template<> struct is_promotable<u32, s64> : public is_promotable_ok { typedef s64 result; };
 template<> struct is_promotable<s16, s64> : public is_promotable_ok { typedef s64 result; };

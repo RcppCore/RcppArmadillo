@@ -786,7 +786,7 @@ struct is_s32<s32>
 
 
 
-#if defined(ARMA_64BIT_WORD)
+#if defined(ARMA_USE_U64S64)
   template<typename T1>
   struct is_u64
     { static const bool value = false; };
@@ -804,6 +804,66 @@ struct is_s32<s32>
   struct is_s64<s64>
     { static const bool value = true; };
 #endif
+
+
+
+template<typename T1>
+struct is_ulng_t
+  { static const bool value = false; };
+
+template<>
+struct is_ulng_t<ulng_t>
+  { static const bool value = true; };
+
+
+
+template<typename T1>
+struct is_slng_t
+  { static const bool value = false; };
+
+template<>
+struct is_slng_t<slng_t>
+  { static const bool value = true; };
+
+
+
+template<typename T1>
+struct is_ulng_t_32
+  { static const bool value = false; };
+
+template<>
+struct is_ulng_t_32<ulng_t>
+  { static const bool value = (sizeof(ulng_t) == 4); };
+
+
+
+template<typename T1>
+struct is_slng_t_32
+  { static const bool value = false; };
+
+template<>
+struct is_slng_t_32<slng_t>
+  { static const bool value = (sizeof(slng_t) == 4); };
+
+
+
+template<typename T1>
+struct is_ulng_t_64
+  { static const bool value = false; };
+
+template<>
+struct is_ulng_t_64<ulng_t>
+  { static const bool value = (sizeof(ulng_t) == 8); };
+
+
+
+template<typename T1>
+struct is_slng_t_64
+  { static const bool value = false; };
+
+template<>
+struct is_slng_t_64<slng_t>
+  { static const bool value = (sizeof(slng_t) == 8); };
 
 
 
@@ -931,9 +991,13 @@ struct is_supported_elem_type
     is_s16<T1>::value ||
     is_u32<T1>::value ||
     is_s32<T1>::value ||
-#if defined(ARMA_64BIT_WORD)
+#if defined(ARMA_USE_U64S64)
     is_u64<T1>::value ||
     is_s64<T1>::value ||
+#endif
+#if defined(ARMA_ALLOW_LONG)
+    is_ulng_t<T1>::value ||
+    is_slng_t<T1>::value ||
 #endif
     is_float<T1>::value ||
     is_double<T1>::value ||
@@ -962,11 +1026,14 @@ struct is_signed
   };
 
 
-template<> struct is_signed<u8>  { static const bool value = false; };
-template<> struct is_signed<u16> { static const bool value = false; };
-template<> struct is_signed<u32> { static const bool value = false; };
-#if defined(ARMA_64BIT_WORD)
-template<> struct is_signed<u64> { static const bool value = false; };
+template<> struct is_signed<u8>     { static const bool value = false; };
+template<> struct is_signed<u16>    { static const bool value = false; };
+template<> struct is_signed<u32>    { static const bool value = false; };
+#if defined(ARMA_USE_U64S64)
+template<> struct is_signed<u64>    { static const bool value = false; };
+#endif
+#if defined(ARMA_ALLOW_LONG)
+template<> struct is_signed<ulng_t> { static const bool value = false; };
 #endif
 
 

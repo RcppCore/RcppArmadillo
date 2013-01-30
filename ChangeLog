@@ -1,3 +1,9 @@
+2013-01-29  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.3.6.2
+
+	* inst/include/*: Upgraded to new release 3.6.2 of Armadillo
+
 2013-01-19  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/examples/kalman/: New example used in the vignette

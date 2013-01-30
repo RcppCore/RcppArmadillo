@@ -37,6 +37,7 @@
 
 #if defined(ARMA_USE_CXX11)
   #include <initializer_list>
+  #include <cstdint>
 #endif
 
 

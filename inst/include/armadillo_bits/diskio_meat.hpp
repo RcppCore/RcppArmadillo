@@ -60,7 +60,7 @@ diskio::gen_txt_header(const Mat<eT>& x)
     {
     return std::string("ARMA_MAT_TXT_IS004");
     }
-#if defined(ARMA_64BIT_WORD)
+#if defined(ARMA_USE_U64S64)
   else
   if(is_u64<eT>::value == true)
     {
@@ -68,6 +68,28 @@ diskio::gen_txt_header(const Mat<eT>& x)
     }
   else
   if(is_s64<eT>::value == true)
+    {
+    return std::string("ARMA_MAT_TXT_IS008");
+    }
+#endif
+#if defined(ARMA_ALLOW_LONG)
+  else
+  if(is_ulng_t_32<eT>::value == true)
+    {
+    return std::string("ARMA_MAT_TXT_IU004");
+    }
+  else
+  if(is_slng_t_32<eT>::value == true)
+    {
+    return std::string("ARMA_MAT_TXT_IS004");
+    }
+  else
+  if(is_ulng_t_64<eT>::value == true)
+    {
+    return std::string("ARMA_MAT_TXT_IU008");
+    }
+  else
+  if(is_slng_t_64<eT>::value == true)
     {
     return std::string("ARMA_MAT_TXT_IS008");
     }
@@ -144,7 +166,7 @@ diskio::gen_bin_header(const Mat<eT>& x)
     {
     return std::string("ARMA_MAT_BIN_IS004");
     }
-#if defined(ARMA_64BIT_WORD)
+#if defined(ARMA_USE_U64S64)
   else
   if(is_u64<eT>::value == true)
     {
@@ -152,6 +174,28 @@ diskio::gen_bin_header(const Mat<eT>& x)
     }
   else
   if(is_s64<eT>::value == true)
+    {
+    return std::string("ARMA_MAT_BIN_IS008");
+    }
+#endif
+#if defined(ARMA_ALLOW_LONG)
+  else
+  if(is_ulng_t_32<eT>::value == true)
+    {
+    return std::string("ARMA_MAT_BIN_IU004");
+    }
+  else
+  if(is_slng_t_32<eT>::value == true)
+    {
+    return std::string("ARMA_MAT_BIN_IS004");
+    }
+  else
+  if(is_ulng_t_64<eT>::value == true)
+    {
+    return std::string("ARMA_MAT_BIN_IU008");
+    }
+  else
+  if(is_slng_t_64<eT>::value == true)
     {
     return std::string("ARMA_MAT_BIN_IS008");
     }
@@ -228,7 +272,7 @@ diskio::gen_bin_header(const SpMat<eT>& x)
     {
     return std::string("ARMA_SPM_BIN_IS004");
     }
-#if defined(ARMA_64BIT_WORD)
+#if defined(ARMA_USE_U64S64)
   else
   if(is_u64<eT>::value == true)
     {
@@ -236,6 +280,28 @@ diskio::gen_bin_header(const SpMat<eT>& x)
     }
   else
   if(is_s64<eT>::value == true)
+    {
+    return std::string("ARMA_SPM_BIN_IS008");
+    }
+#endif
+#if defined(ARMA_ALLOW_LONG)
+  else
+  if(is_ulng_t_32<eT>::value == true)
+    {
+    return std::string("ARMA_SPM_BIN_IU004");
+    }
+  else
+  if(is_slng_t_32<eT>::value == true)
+    {
+    return std::string("ARMA_SPM_BIN_IS004");
+    }
+  else
+  if(is_ulng_t_64<eT>::value == true)
+    {
+    return std::string("ARMA_SPM_BIN_IU008");
+    }
+  else
+  if(is_slng_t_64<eT>::value == true)
     {
     return std::string("ARMA_SPM_BIN_IS008");
     }
@@ -311,7 +377,7 @@ diskio::gen_txt_header(const Cube<eT>& x)
     {
     return std::string("ARMA_CUB_TXT_IS004");
     }
-#if defined(ARMA_64BIT_WORD)
+#if defined(ARMA_USE_U64S64)
   else
   if(is_u64<eT>::value == true)
     {
@@ -319,6 +385,28 @@ diskio::gen_txt_header(const Cube<eT>& x)
     }
   else
   if(is_s64<eT>::value == true)
+    {
+    return std::string("ARMA_CUB_TXT_IS008");
+    }
+#endif
+#if defined(ARMA_ALLOW_LONG)
+  else
+  if(is_ulng_t_32<eT>::value == true)
+    {
+    return std::string("ARMA_CUB_TXT_IU004");
+    }
+  else
+  if(is_slng_t_32<eT>::value == true)
+    {
+    return std::string("ARMA_CUB_TXT_IS004");
+    }
+  else
+  if(is_ulng_t_64<eT>::value == true)
+    {
+    return std::string("ARMA_CUB_TXT_IU008");
+    }
+  else
+  if(is_slng_t_64<eT>::value == true)
     {
     return std::string("ARMA_CUB_TXT_IS008");
     }
@@ -395,7 +483,7 @@ diskio::gen_bin_header(const Cube<eT>& x)
     {
     return std::string("ARMA_CUB_BIN_IS004");
     }
-#if defined(ARMA_64BIT_WORD)
+#if defined(ARMA_USE_U64S64)
   else
   if(is_u64<eT>::value == true)
     {
@@ -403,6 +491,28 @@ diskio::gen_bin_header(const Cube<eT>& x)
     }
   else
   if(is_s64<eT>::value == true)
+    {
+    return std::string("ARMA_CUB_BIN_IS008");
+    }
+#endif
+#if defined(ARMA_ALLOW_LONG)
+  else
+  if(is_ulng_t_32<eT>::value == true)
+    {
+    return std::string("ARMA_CUB_BIN_IU004");
+    }
+  else
+  if(is_slng_t_32<eT>::value == true)
+    {
+    return std::string("ARMA_CUB_BIN_IS004");
+    }
+  else
+  if(is_ulng_t_64<eT>::value == true)
+    {
+    return std::string("ARMA_CUB_BIN_IU008");
+    }
+  else
+  if(is_slng_t_64<eT>::value == true)
     {
     return std::string("ARMA_CUB_BIN_IS008");
     }

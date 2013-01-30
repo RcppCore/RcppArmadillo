@@ -2,6 +2,18 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.3.6.2 (2013-01-29)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 3.6.2
+    \itemize{
+      \item faster determinant for matrices marked as diagonal or triangular
+      \item more fine-grained handling of 64 bit integers
+    }
+    \item Added a new example of a Kalman filter implementation in R, and C++
+    using Armadillo via RcppArmadillo, complete with timing comparison
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.3.6.1 (2012-12-17)}{
   \itemize{
     \item Upgraded to Armadillo release Version 3.6.1
