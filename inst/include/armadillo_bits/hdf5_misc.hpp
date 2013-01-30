@@ -100,22 +100,22 @@ get_hdf5_type< unsigned long >()
   }
 
 
-#if defined(ARMA_64BIT_WORD)
-template<>
-inline
-hid_t
-get_hdf5_type< long long >()
-  {
-  return H5Tcopy(H5T_NATIVE_LLONG);
-  }
+#if defined(ARMA_USE_U64S64) && defined(ULLONG_MAX)
+  template<>
+  inline
+  hid_t
+  get_hdf5_type< long long >()
+    {
+    return H5Tcopy(H5T_NATIVE_LLONG);
+    }
 
-template<>
-inline
-hid_t
-get_hdf5_type< unsigned long long >()
-  {
-  return H5Tcopy(H5T_NATIVE_ULLONG);
-  }
+  template<>
+  inline
+  hid_t
+  get_hdf5_type< unsigned long long >()
+    {
+    return H5Tcopy(H5T_NATIVE_ULLONG);
+    }
 #endif
 
 
@@ -210,7 +210,7 @@ is_supported_arma_hdf5_type(hid_t datatype)
   if (is_equal) { return true; }
   
   
-  // remaining supported types: u8, s8, u16, s16, u32, s32, u64, s64
+  // remaining supported types: u8, s8, u16, s16, u32, s32, u64, s64, ulng_t, slng_t
   
   search_type = get_hdf5_type<u8>();
   is_equal = ( H5Tequal(datatype, search_type) > 0 );
@@ -242,7 +242,7 @@ is_supported_arma_hdf5_type(hid_t datatype)
   H5Tclose(search_type);
   if (is_equal) { return true; }
   
-  #if defined(ARMA_64BIT_WORD)
+  #if defined(ARMA_USE_U64S64)
     {
     search_type = get_hdf5_type<u64>();
     is_equal = ( H5Tequal(datatype, search_type) > 0 );
@@ -250,6 +250,20 @@ is_supported_arma_hdf5_type(hid_t datatype)
     if (is_equal) { return true; }
     
     search_type = get_hdf5_type<s64>();
+    is_equal = ( H5Tequal(datatype, search_type) > 0 );
+    H5Tclose(search_type);
+    if (is_equal) { return true; }
+    }
+  #endif
+  
+  #if defined(ARMA_ALLOW_LONG)
+    {
+    search_type = get_hdf5_type<ulng_t>();
+    is_equal = ( H5Tequal(datatype, search_type) > 0 );
+    H5Tclose(search_type);
+    if (is_equal) { return true; }
+    
+    search_type = get_hdf5_type<slng_t>();
     is_equal = ( H5Tequal(datatype, search_type) > 0 );
     H5Tclose(search_type);
     if (is_equal) { return true; }
@@ -557,7 +571,7 @@ load_and_convert_hdf5
     }
   
   
-  #if defined(ARMA_64BIT_WORD)
+  #if defined(ARMA_USE_U64S64)
     {
     // u64
     search_type = get_hdf5_type<u64>();
@@ -585,6 +599,40 @@ load_and_convert_hdf5
       hid_t status = H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(m.memptr()));
       dest = conv_to< Mat<eT> >::from(m); // Convert.
 
+      return status;
+      }
+    }
+  #endif
+  
+  
+  #if defined(ARMA_ALLOW_LONG)
+    {
+    // ulng_t
+    search_type = get_hdf5_type<ulng_t>();
+    is_equal = (H5Tequal(datatype, search_type) > 0);
+    H5Tclose(search_type);
+    
+    if(is_equal)
+      {
+      Mat<ulng_t> m(n_rows, n_cols);
+      hid_t status = H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(m.memptr()));
+      dest = conv_to< Mat<eT> >::from(m); // Convert.
+      
+      return status;
+      }
+    
+    
+    // slng_t
+    search_type = get_hdf5_type<slng_t>();
+    is_equal = (H5Tequal(datatype, search_type) > 0);
+    H5Tclose(search_type);
+    
+    if(is_equal)
+      {
+      Mat<slng_t> m(n_rows, n_cols);
+      hid_t status = H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(m.memptr()));
+      dest = conv_to< Mat<eT> >::from(m); // Convert.
+      
       return status;
       }
     }

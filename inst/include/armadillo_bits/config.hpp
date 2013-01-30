@@ -56,14 +56,23 @@
 //// uncomment the above define and specify the appropriate include directory.
 //// Make sure the directory has a trailing /
 
+#if !defined(ARMA_64BIT_WORD)
 // #define ARMA_64BIT_WORD
 //// Uncomment the above line if you require matrices/vectors capable of holding more than 4 billion elements.
 //// Your machine and compiler must have support for 64 bit integers (eg. via "long" or "long long")
+#endif
 
 #if !defined(ARMA_USE_CXX11)
 // #define ARMA_USE_CXX11
 //// Uncomment the above line if you have a C++ compiler that supports the C++11 standard
 //// This will enable additional features, such as use of initialiser lists
+#endif
+
+#if !defined(ARMA_USE_U64S64)
+// #define ARMA_USE_U64S64
+//// Uncomment the above line if you require u64 and s64 integer types.
+//// Your machine and compiler must have support for 64 bit integers (eg. via "long" or "long long").
+//// Note that ARMA_USE_U64S64 is automatically enabled when ARMA_64BIT_WORD or ARMA_USE_CXX11 are enabled
 #endif
 
 #if !defined(ARMA_USE_HDF5)

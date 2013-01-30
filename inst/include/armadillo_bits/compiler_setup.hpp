@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2013 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -46,6 +46,27 @@
 
 
 #define ARMA_INCFILE_WRAP(x) <x>
+
+
+#if (__cplusplus >= 201103L)
+  #if !defined(ARMA_USE_CXX11)
+    #define ARMA_USE_CXX11
+  #endif
+#endif
+
+
+#if defined(ARMA_USE_CXX11)
+  #if !defined(ARMA_USE_U64S64)
+    #define ARMA_USE_U64S64
+  #endif
+#endif
+
+
+#if defined(ARMA_64BIT_WORD)
+  #if !defined(ARMA_USE_U64S64)
+    #define ARMA_USE_U64S64
+  #endif
+#endif
 
 
 #if defined(__INTEL_COMPILER)
