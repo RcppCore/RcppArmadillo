@@ -32,10 +32,10 @@ SpMat<eT>::iterator_base::iterator_base(const SpMat<eT>& in_M)
 
 template<typename eT>
 inline
-SpMat<eT>::iterator_base::iterator_base(const SpMat<eT>& in_M, const uword col, const uword pos)
+SpMat<eT>::iterator_base::iterator_base(const SpMat<eT>& in_M, const uword in_col, const uword in_pos)
   : M(in_M)
-  , internal_col(col)
-  , internal_pos(pos)
+  , internal_col(in_col)
+  , internal_pos(in_pos)
   {
   // Nothing to do.
   }

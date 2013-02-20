@@ -46,8 +46,6 @@ op_inv::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv>& X)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
-  
   const strip_diagmat<T1> strip(X.m);
   
   if(strip.do_diagmat == true)

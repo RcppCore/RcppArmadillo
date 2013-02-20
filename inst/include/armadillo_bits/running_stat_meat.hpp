@@ -379,8 +379,6 @@ running_stat_aux::update_stats(running_stat< std::complex<T> >& x, const std::co
   {
   arma_extra_debug_sigprint();
   
-  typedef typename std::complex<T> eT;
-  
   const T sample_norm = std::norm(sample);
   const T N           = x.counter.value();
   

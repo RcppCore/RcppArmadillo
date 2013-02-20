@@ -82,8 +82,6 @@ glue_times_redirect2_helper<true>::apply(Mat<typename T1::elem_type>& out, const
     {
     arma_extra_debug_print("glue_times_redirect<2>::apply(): detected inv(A)*B");
     
-    typedef typename strip_inv<T1>::stored_type T1_stripped;
-    
     const strip_inv<T1> A_strip(X.A);
     
     Mat<eT> A = A_strip.M;
@@ -233,13 +231,11 @@ void
 glue_times::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X)
   {
   arma_extra_debug_sigprint();
-
-  typedef typename T1::elem_type eT;
-
+  
   const sword N_mat = 1 + depth_lhs< glue_times, Glue<T1,T2,glue_times> >::num;
-
+  
   arma_extra_debug_print(arma_boost::format("N_mat = %d") % N_mat);
-
+  
   glue_times_redirect<N_mat>::apply(out, X);
   }
 

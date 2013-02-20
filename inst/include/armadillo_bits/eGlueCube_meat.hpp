@@ -98,8 +98,6 @@ arma_inline
 typename T1::elem_type
 eGlueCube<T1,T2,eglue_type>::operator[] (const uword i) const
   {
-  typedef typename T1::elem_type eT;
-  
   // the optimiser will keep only one return statement
   
        if(is_same_type<eglue_type, eglue_plus >::value == true) { return P1[i] + P2[i]; }
@@ -114,8 +112,6 @@ arma_inline
 typename T1::elem_type
 eGlueCube<T1,T2,eglue_type>::at(const uword row, const uword col, const uword slice) const
   {
-  typedef typename T1::elem_type eT;
-  
   // the optimiser will keep only one return statement
   
        if(is_same_type<eglue_type, eglue_plus >::value == true) { return P1.at(row,col,slice) + P2.at(row,col,slice); }

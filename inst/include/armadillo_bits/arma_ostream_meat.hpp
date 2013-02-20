@@ -579,9 +579,6 @@ arma_ostream::print_dense(std::ostream& o, const SpMat<eT>& m, const bool modify
       
       const std::streamsize cell_width = modify ? arma_ostream::modify_stream(o, &tmp[0], 1) : o.width();
       
-      const uword m_n_rows = m.n_rows;
-      const uword m_n_cols = m.n_cols;
-      
       for(uword row=0; row < m_n_rows; ++row)
         {
         for(uword col=0; col < m_n_cols; ++col)

@@ -1,5 +1,5 @@
-// Copyright (C) 2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2012 Conrad Sanderson
+// Copyright (C) 2012-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2012-2013 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -67,7 +67,7 @@ subview_elem2<eT,T1,T2>::inplace_op(const eT val)
     
     arma_debug_check
       (
-      ( ri.is_vec() == false ) || ( ci.is_vec() == false ),
+      ( ((ri.is_vec() == false) && (ri.is_empty() == false)) || ((ci.is_vec() == false) && (ci.is_empty() == false)) ),
       "Mat::elem(): given object is not a vector"
       );
     
@@ -106,7 +106,7 @@ subview_elem2<eT,T1,T2>::inplace_op(const eT val)
     
     arma_debug_check
       (
-      ( ci.is_vec() == false ),
+      ( (ci.is_vec() == false) && (ci.is_empty() == false) ),
       "Mat::elem(): given object is not a vector"
       );
     
@@ -137,7 +137,7 @@ subview_elem2<eT,T1,T2>::inplace_op(const eT val)
     
     arma_debug_check
       (
-      ( ri.is_vec() == false ),
+      ( (ri.is_vec() == false) && (ri.is_empty() == false) ),
       "Mat::elem(): given object is not a vector"
       );
     
@@ -190,7 +190,7 @@ subview_elem2<eT,T1,T2>::inplace_op(const Base<eT,expr>& x)
     
     arma_debug_check
       (
-      ( ri.is_vec() == false ) || ( ci.is_vec() == false ),
+      ( ((ri.is_vec() == false) && (ri.is_empty() == false)) || ((ci.is_vec() == false) && (ci.is_empty() == false)) ),
       "Mat::elem(): given object is not a vector"
       );
     
@@ -231,7 +231,7 @@ subview_elem2<eT,T1,T2>::inplace_op(const Base<eT,expr>& x)
     
     arma_debug_check
       (
-      ( ci.is_vec() == false ),
+      ( (ci.is_vec() == false) && (ci.is_empty() == false) ),
       "Mat::elem(): given object is not a vector"
       );
     
@@ -265,7 +265,7 @@ subview_elem2<eT,T1,T2>::inplace_op(const Base<eT,expr>& x)
     
     arma_debug_check
       (
-      ( ri.is_vec() == false ),
+      ( (ri.is_vec() == false) && (ri.is_empty() == false) ),
       "Mat::elem(): given object is not a vector"
       );
     
@@ -579,7 +579,7 @@ subview_elem2<eT,T1,T2>::extract(Mat<eT>& actual_out, const subview_elem2<eT,T1,
     
     arma_debug_check
       (
-      ( ri.is_vec() == false ) || ( ci.is_vec() == false ),
+      ( ((ri.is_vec() == false) && (ri.is_empty() == false)) || ((ci.is_vec() == false) && (ci.is_empty() == false)) ),
       "Mat::elem(): given object is not a vector"
       );
     
@@ -620,7 +620,7 @@ subview_elem2<eT,T1,T2>::extract(Mat<eT>& actual_out, const subview_elem2<eT,T1,
     
     arma_debug_check
       (
-      ( ci.is_vec() == false ),
+      ( (ci.is_vec() == false) && (ci.is_empty() == false) ),
       "Mat::elem(): given object is not a vector"
       );
     
@@ -647,7 +647,7 @@ subview_elem2<eT,T1,T2>::extract(Mat<eT>& actual_out, const subview_elem2<eT,T1,
     
     arma_debug_check
       (
-      ( ri.is_vec() == false ),
+      ( (ri.is_vec() == false) && (ri.is_empty() == false) ),
       "Mat::elem(): given object is not a vector"
       );
     

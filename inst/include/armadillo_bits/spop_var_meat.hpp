@@ -23,7 +23,7 @@ spop_var::apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1::pod
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type  in_eT;
+  //typedef typename T1::elem_type  in_eT;
   typedef typename T1::pod_type  out_eT;
   
   const uword norm_type = in.aux_uword_a;
@@ -64,7 +64,7 @@ spop_var::apply_noalias
   arma_extra_debug_sigprint();
 
   typedef typename T1::elem_type  in_eT;
-  typedef typename T1::pod_type  out_eT;
+  //typedef typename T1::pod_type  out_eT;
 
   const uword p_n_rows = p.get_n_rows();
   const uword p_n_cols = p.get_n_cols();

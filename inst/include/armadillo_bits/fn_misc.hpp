@@ -186,4 +186,38 @@ sympd(const Base<typename T1::elem_type,T1>& X)
 
 
 
+// template<typename eT>
+// inline
+// void
+// swap(Mat<eT>& A, Mat<eT>& B)
+//   {
+//   arma_extra_debug_sigprint();
+//   
+//   const uword A_mem_state = A.mem_state;
+//   
+//   if( (A.vec_state == B.vec_state) && (A_mem_state == B.mem_state) && ((A_mem_state == 0) || (A_mem_state == 3)) )
+//     {
+//     A.swap(B);
+//     }
+//   else
+//     {
+//     if(A.n_elem <= B.n_elem)
+//       {
+//       Mat<eT> C = A;
+//       
+//       A.steal_mem(B);
+//       B.steal_mem(C);
+//       }
+//     else
+//       {
+//       Mat<eT> C = B;
+//       
+//       B.steal_mem(A);
+//       A.steal_mem(C);
+//       }
+//     }
+//   }
+
+
+
 //! @}

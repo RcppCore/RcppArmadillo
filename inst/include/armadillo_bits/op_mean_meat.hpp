@@ -27,8 +27,7 @@ op_mean::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_mean>& in)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type            eT;
-  typedef typename get_pod_type<eT>::result  T;
+  typedef typename T1::elem_type eT;
   
   const unwrap_check<T1> tmp(in.m, out);
   const Mat<eT>& X = tmp.M;
