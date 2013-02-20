@@ -87,8 +87,6 @@ svd
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  typedef typename T1::elem_type eT;
-  
   arma_debug_check
     (
     ( ((void*)(&U) == (void*)(&S)) || (&U == &V) || ((void*)(&S) == (void*)(&V)) ),
@@ -147,8 +145,6 @@ svd_econ
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk);
-  
-  typedef typename T1::elem_type eT;
   
   arma_debug_check
     (

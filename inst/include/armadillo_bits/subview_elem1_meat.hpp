@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2010-2012 Conrad Sanderson
+// Copyright (C) 2010-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2013 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -52,7 +52,7 @@ subview_elem1<eT,T1>::inplace_op(const eT val)
   
   arma_debug_check
     (
-    ( aa.is_vec() == false ),
+    ( (aa.is_vec() == false) && (aa.is_empty() == false) ),
     "Mat::elem(): given object is not a vector"
     );
   
@@ -125,7 +125,7 @@ subview_elem1<eT,T1>::inplace_op(const subview_elem1<eT,T2>& x)
     
     arma_debug_check
       (
-      ( (s_aa.is_vec() == false) || (x_aa.is_vec() == false) ),
+      ( ((s_aa.is_vec() == false) && (s_aa.is_empty() == false)) || ((x_aa.is_vec() == false) && (x_aa.is_empty() == false)) ),
       "Mat::elem(): given object is not a vector"
       );
     
@@ -205,7 +205,7 @@ subview_elem1<eT,T1>::inplace_op(const Base<eT,T2>& x)
   
   arma_debug_check
     (
-    ( aa.is_vec() == false ),
+    ( (aa.is_vec() == false) && (aa.is_empty() == false) ),
     "Mat::elem(): given object is not a vector"
     );
   
@@ -589,7 +589,7 @@ subview_elem1<eT,T1>::extract(Mat<eT>& actual_out, const subview_elem1<eT,T1>& i
   
   arma_debug_check
     (
-    ( aa.is_vec() == false ),
+    ( (aa.is_vec() == false) && (aa.is_empty() == false) ),
     "Mat::elem(): given object is not a vector"
     );
   
@@ -655,7 +655,7 @@ subview_elem1<eT,T1>::mat_inplace_op(Mat<eT>& out, const subview_elem1& in)
   
   arma_debug_check
     (
-    ( aa.is_vec() == false ),
+    ( (aa.is_vec() == false) && (aa.is_empty() == false) ),
     "Mat::elem(): given object is not a vector"
     );
   

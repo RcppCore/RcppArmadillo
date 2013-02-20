@@ -86,8 +86,6 @@ mean(const Op<T1, op_mean>& in)
   arma_extra_debug_sigprint();
   arma_extra_debug_print("mean(): two consecutive mean() calls detected");
   
-  typedef typename T1::elem_type eT;
-  
   return op_mean::mean_all(in.m);
   }
 

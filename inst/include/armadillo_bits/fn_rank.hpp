@@ -32,8 +32,7 @@ rank
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  typedef typename T1::elem_type eT;
-  typedef typename T1::pod_type   T;
+  typedef typename T1::pod_type T;
   
   uword  X_n_rows;
   uword  X_n_cols;

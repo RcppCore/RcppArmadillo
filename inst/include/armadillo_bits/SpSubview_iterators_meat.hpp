@@ -32,11 +32,11 @@ SpSubview<eT>::iterator_base::iterator_base(const SpSubview<eT>& in_M)
 
 template<typename eT>
 inline
-SpSubview<eT>::iterator_base::iterator_base(const SpSubview<eT>& in_M, const uword col, const uword pos, const uword skip_pos)
+SpSubview<eT>::iterator_base::iterator_base(const SpSubview<eT>& in_M, const uword in_col, const uword in_pos, const uword in_skip_pos)
   : M(in_M)
-  , internal_col(col)
-  , internal_pos(pos)
-  , skip_pos(skip_pos)
+  , internal_col(in_col)
+  , internal_pos(in_pos)
+  , skip_pos    (in_skip_pos)
   {
   // Nothing to do.
   }
@@ -66,36 +66,36 @@ SpSubview<eT>::const_iterator::const_iterator(const SpSubview<eT>& in_M, const u
   if(in_M.n_nonzero == 0)
     {
     iterator_base::internal_col = in_M.n_cols;
-    iterator_base::skip_pos = in_M.m.n_nonzero;
+    iterator_base::skip_pos     = in_M.m.n_nonzero;
     return;
     }
 
   // Figure out the row and column of the position.
-  // skip_pos holds the number of values which aren't part of this subview.
+  // lskip_pos holds the number of values which aren't part of this subview.
   const uword aux_col = iterator_base::M.aux_col1;
   const uword aux_row = iterator_base::M.aux_row1;
-  const uword n_rows  = iterator_base::M.n_rows;
-  const uword n_cols  = iterator_base::M.n_cols;
+  const uword ln_rows = iterator_base::M.n_rows;
+  const uword ln_cols = iterator_base::M.n_cols;
 
-  uword cur_pos = 0; // off by one because we might be searching for pos 0
-  uword skip_pos = iterator_base::M.m.col_ptrs[aux_col];
-  uword cur_col = 0;
+  uword cur_pos   = 0; // off by one because we might be searching for pos 0
+  uword lskip_pos = iterator_base::M.m.col_ptrs[aux_col];
+  uword cur_col   = 0;
 
   while(cur_pos < (iterator_base::internal_pos + 1))
     {
     // Have we stepped forward a column (or multiple columns)?
-    while(((skip_pos + cur_pos) >= iterator_base::M.m.col_ptrs[cur_col + aux_col + 1]) && (cur_col < n_cols))
+    while(((lskip_pos + cur_pos) >= iterator_base::M.m.col_ptrs[cur_col + aux_col + 1]) && (cur_col < ln_cols))
       {
       ++cur_col;
       }
 
     // See if the current position is in the subview.
-    const uword row_index = iterator_base::M.m.row_indices[cur_pos + skip_pos];
+    const uword row_index = iterator_base::M.m.row_indices[cur_pos + lskip_pos];
     if(row_index < aux_row)
       {
-      ++skip_pos; // not valid
+      ++lskip_pos; // not valid
       }
-    else if(row_index < (aux_row + n_rows))
+    else if(row_index < (aux_row + ln_rows))
       {
       ++cur_pos; // valid, in the subview
       }
@@ -103,12 +103,12 @@ SpSubview<eT>::const_iterator::const_iterator(const SpSubview<eT>& in_M, const u
       {
       // skip to end of column
       const uword next_colptr = iterator_base::M.m.col_ptrs[cur_col + aux_col + 1];
-      skip_pos += (next_colptr - (cur_pos + skip_pos));
+      lskip_pos += (next_colptr - (cur_pos + lskip_pos));
       }
     }
 
   iterator_base::internal_col = cur_col;
-  iterator_base::skip_pos = skip_pos;
+  iterator_base::skip_pos     = lskip_pos;
   }
 
 
@@ -131,8 +131,8 @@ SpSubview<eT>::const_iterator::const_iterator(const SpSubview<eT>& in_M, const u
   // Because we have to count the points in this subview and not in this subview, this becomes a little difficult and slow.
   const uword aux_col = iterator_base::M.aux_col1;
   const uword aux_row = iterator_base::M.aux_row1;
-  const uword n_rows  = iterator_base::M.n_rows;
-  const uword n_cols  = iterator_base::M.n_cols;
+  const uword ln_rows = iterator_base::M.n_rows;
+  const uword ln_cols = iterator_base::M.n_cols;
 
   uword cur_pos = 0;
   uword skip_pos = iterator_base::M.m.col_ptrs[aux_col];
@@ -146,7 +146,7 @@ SpSubview<eT>::const_iterator::const_iterator(const SpSubview<eT>& in_M, const u
       {
       ++skip_pos;
       }
-    else if(row_index < (aux_row + n_rows))
+    else if(row_index < (aux_row + ln_rows))
       {
       ++cur_pos;
       }
@@ -158,7 +158,7 @@ SpSubview<eT>::const_iterator::const_iterator(const SpSubview<eT>& in_M, const u
       }
 
     // Have we stepped forward a column (or multiple columns)?
-    while(((skip_pos + cur_pos) >= iterator_base::M.m.col_ptrs[cur_col + aux_col + 1]) && (cur_col < n_cols))
+    while(((skip_pos + cur_pos) >= iterator_base::M.m.col_ptrs[cur_col + aux_col + 1]) && (cur_col < ln_cols))
       {
       ++cur_col;
       }
@@ -181,7 +181,7 @@ SpSubview<eT>::const_iterator::const_iterator(const SpSubview<eT>& in_M, const u
         }
 
       // Ensure we didn't step forward a column; if we did, we need to stop.
-      while(((skip_pos + cur_pos) >= iterator_base::M.m.col_ptrs[cur_col + aux_col + 1]) && (cur_col < n_cols))
+      while(((skip_pos + cur_pos) >= iterator_base::M.m.col_ptrs[cur_col + aux_col + 1]) && (cur_col < ln_cols))
         {
         ++cur_col;
         }
@@ -203,9 +203,9 @@ SpSubview<eT>::const_iterator::const_iterator(const SpSubview<eT>& in_M, const u
     row_index = iterator_base::M.m.row_indices[cur_pos + skip_pos];
 
     // Are we at the last position?
-    if(cur_col >= n_cols)
+    if(cur_col >= ln_cols)
       {
-      cur_col = n_cols;
+      cur_col = ln_cols;
       // Make sure we will be pointing at the last element in the parent matrix.
       skip_pos = iterator_base::M.m.n_nonzero - iterator_base::M.n_nonzero;
       break;
@@ -215,7 +215,7 @@ SpSubview<eT>::const_iterator::const_iterator(const SpSubview<eT>& in_M, const u
       {
       ++skip_pos;
       }
-    else if(row_index < (aux_row + n_rows))
+    else if(row_index < (aux_row + ln_rows))
       {
       break; // found
       }
@@ -225,20 +225,20 @@ SpSubview<eT>::const_iterator::const_iterator(const SpSubview<eT>& in_M, const u
       }
 
     // Did we move any columns?
-    while(((skip_pos + cur_pos) >= iterator_base::M.m.col_ptrs[cur_col + aux_col + 1]) && (cur_col < n_cols))
+    while(((skip_pos + cur_pos) >= iterator_base::M.m.col_ptrs[cur_col + aux_col + 1]) && (cur_col < ln_cols))
       {
       ++cur_col;
       }
     }
 
   // It is possible we have moved another column.
-  while(((skip_pos + cur_pos) >= iterator_base::M.m.col_ptrs[cur_col + aux_col + 1]) && (cur_col < n_cols))
+  while(((skip_pos + cur_pos) >= iterator_base::M.m.col_ptrs[cur_col + aux_col + 1]) && (cur_col < ln_cols))
     {
     ++cur_col;
     }
 
   iterator_base::internal_pos = cur_pos;
-  iterator_base::skip_pos = skip_pos;
+  iterator_base::skip_pos     = skip_pos;
   iterator_base::internal_col = cur_col;
   }
 
@@ -246,8 +246,8 @@ SpSubview<eT>::const_iterator::const_iterator(const SpSubview<eT>& in_M, const u
 
 template<typename eT>
 inline
-SpSubview<eT>::const_iterator::const_iterator(const SpSubview<eT>& in_M, uword in_row, uword in_col, uword in_pos, uword skip_pos)
-  : iterator_base(in_M, in_col, in_pos, skip_pos)
+SpSubview<eT>::const_iterator::const_iterator(const SpSubview<eT>& in_M, uword in_row, uword in_col, uword in_pos, uword in_skip_pos)
+  : iterator_base(in_M, in_col, in_pos, in_skip_pos)
   {
   // Nothing to do.
   }
@@ -271,51 +271,51 @@ SpSubview<eT>::const_iterator::operator++()
   {
   const uword aux_col = iterator_base::M.aux_col1;
   const uword aux_row = iterator_base::M.aux_row1;
-  const uword n_rows  = iterator_base::M.n_rows;
-  const uword n_cols  = iterator_base::M.n_cols;
+  const uword ln_rows = iterator_base::M.n_rows;
+  const uword ln_cols = iterator_base::M.n_cols;
 
-  uword cur_col = iterator_base::internal_col;
-  uword cur_pos = iterator_base::internal_pos + 1;
-  uword skip_pos = iterator_base::skip_pos;
+  uword cur_col   = iterator_base::internal_col;
+  uword cur_pos   = iterator_base::internal_pos + 1;
+  uword lskip_pos = iterator_base::skip_pos;
   uword row_index;
 
   while(true)
     {
     const uword next_colptr = iterator_base::M.m.col_ptrs[cur_col + aux_col + 1];
-    row_index = iterator_base::M.m.row_indices[cur_pos + skip_pos];
+    row_index = iterator_base::M.m.row_indices[cur_pos + lskip_pos];
 
     // Did we move any columns?
-    while((cur_col < n_cols) && ((skip_pos + cur_pos) >= iterator_base::M.m.col_ptrs[cur_col + aux_col + 1]))
+    while((cur_col < ln_cols) && ((lskip_pos + cur_pos) >= iterator_base::M.m.col_ptrs[cur_col + aux_col + 1]))
       {
       ++cur_col;
       }
 
     // Are we at the last position?
-    if(cur_col >= n_cols)
+    if(cur_col >= ln_cols)
       {
-      cur_col = n_cols;
+      cur_col = ln_cols;
       // Make sure we will be pointing at the last element in the parent matrix.
-      skip_pos = iterator_base::M.m.n_nonzero - iterator_base::M.n_nonzero;
+      lskip_pos = iterator_base::M.m.n_nonzero - iterator_base::M.n_nonzero;
       break;
       }
 
     if(row_index < aux_row)
       {
-      ++skip_pos;
+      ++lskip_pos;
       }
-    else if(row_index < (aux_row + n_rows))
+    else if(row_index < (aux_row + ln_rows))
       {
       break; // found
       }
     else
       {
-      skip_pos += (next_colptr - (cur_pos + skip_pos));
+      lskip_pos += (next_colptr - (cur_pos + lskip_pos));
       }
     }
 
   iterator_base::internal_pos = cur_pos;
   iterator_base::internal_col = cur_col;
-  iterator_base::skip_pos = skip_pos;
+  iterator_base::skip_pos     = lskip_pos;
 
   return *this;
   }
@@ -343,10 +343,10 @@ SpSubview<eT>::const_iterator::operator--()
   {
   const uword aux_col = iterator_base::M.aux_col1;
   const uword aux_row = iterator_base::M.aux_row1;
-  const uword n_rows  = iterator_base::M.n_rows;
+  const uword ln_rows = iterator_base::M.n_rows;
 
-  uword cur_col = iterator_base::internal_col;
-  uword cur_pos = iterator_base::internal_pos - 1;
+  uword cur_col  = iterator_base::internal_col;
+  uword cur_pos  = iterator_base::internal_pos - 1;
   uword skip_pos = iterator_base::skip_pos;
 
   // Special condition for end of iterator.
@@ -374,7 +374,7 @@ SpSubview<eT>::const_iterator::operator--()
       {
       skip_pos -= (colptr - (cur_pos + skip_pos) + 1);
       }
-    else if(row_index < (aux_row + n_rows))
+    else if(row_index < (aux_row + ln_rows))
       {
       break; // found
       }
@@ -385,7 +385,7 @@ SpSubview<eT>::const_iterator::operator--()
     }
 
   iterator_base::internal_pos = cur_pos;
-  iterator_base::skip_pos = skip_pos;
+  iterator_base::skip_pos     = skip_pos;
   iterator_base::internal_col = cur_col;
 
   return *this;
@@ -577,7 +577,7 @@ SpSubview<eT>::const_row_iterator::const_row_iterator(const SpSubview<eT>& in_M,
 
   const uword aux_col = iterator_base::M.aux_col1;
   const uword aux_row = iterator_base::M.aux_row1;
-  const uword n_cols  = iterator_base::M.n_cols;
+  const uword ln_cols = iterator_base::M.n_cols;
 
   // We don't know where the elements are in each row.  What we will do is
   // loop across all valid columns looking for elements in row 0 (and add to
@@ -619,7 +619,7 @@ SpSubview<eT>::const_row_iterator::const_row_iterator(const SpSubview<eT>& in_M,
       }
 
     cur_col++; // Done with the column.  Move on.
-    if(cur_col == n_cols)
+    if(cur_col == ln_cols)
       {
       // Out of columns.  Loop back to the beginning and look on the next row.
       cur_col = 0;
@@ -692,12 +692,12 @@ SpSubview<eT>::const_row_iterator::operator++()
 
   const uword aux_col = iterator_base::M.aux_col1;
   const uword aux_row = iterator_base::M.aux_row1;
-  const uword n_cols  = iterator_base::M.n_cols;
+  const uword ln_cols = iterator_base::M.n_cols;
 
   while(true)
     {
     // Increment the current column and see if we are on a new row.
-    if(++cur_col == n_cols)
+    if(++cur_col == ln_cols)
       {
       cur_col = 0;
       ++cur_row;
@@ -771,14 +771,14 @@ SpSubview<eT>::const_row_iterator::operator--()
 
   const uword aux_col = iterator_base::M.aux_col1;
   const uword aux_row = iterator_base::M.aux_row1;
-  const uword n_cols  = iterator_base::M.n_cols;
+  const uword ln_cols = iterator_base::M.n_cols;
 
   while(true)
     {
     // Decrement the current column and see if we are on a new row.
-    if(--cur_col > n_cols)
+    if(--cur_col > ln_cols)
       {
-      cur_col = n_cols - 1;
+      cur_col = ln_cols - 1;
       cur_row--;
       }
 

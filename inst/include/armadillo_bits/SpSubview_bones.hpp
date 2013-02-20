@@ -234,7 +234,7 @@ class SpSubview : public SpBase<eT, SpSubview<eT> >
 
     inline iterator(SpSubview& in_M, const uword initial_pos = 0) : const_iterator(in_M, initial_pos) { }
     inline iterator(SpSubview& in_M, const uword in_row, const uword in_col) : const_iterator(in_M, in_row, in_col) { }
-    inline iterator(SpSubview& in_M, const uword in_row, const uword in_col, const uword in_pos, const uword skip_pos) : const_iterator(in_M, in_row, in_col, in_pos, skip_pos) { }
+    inline iterator(SpSubview& in_M, const uword in_row, const uword in_col, const uword in_pos, const uword in_skip_pos) : const_iterator(in_M, in_row, in_col, in_pos, in_skip_pos) { }
     inline iterator(const iterator& other) : const_iterator(other) { }
 
     inline SpValProxy<SpSubview<eT> > operator*();

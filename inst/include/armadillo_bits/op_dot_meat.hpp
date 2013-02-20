@@ -320,14 +320,14 @@ op_dot::apply_proxy(const T1& X, const T2& Y)
     
     for(uword i=0; i<N; ++i)
       {
-      const std::complex<T> X = A[i];
-      const std::complex<T> Y = B[i];
+      const std::complex<T> xx = A[i];
+      const std::complex<T> yy = B[i];
       
-      const T a = X.real();
-      const T b = X.imag();
+      const T a = xx.real();
+      const T b = xx.imag();
       
-      const T c = Y.real();
-      const T d = Y.imag();
+      const T c = yy.real();
+      const T d = yy.imag();
       
       val_real += (a*c) - (b*d);
       val_imag += (a*d) + (b*c);

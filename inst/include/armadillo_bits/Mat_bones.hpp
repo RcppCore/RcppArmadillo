@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2013 Conrad Sanderson
 // Copyright (C) 2012 Ryan Curtin
 // 
 // This file is part of the Armadillo C++ library.
@@ -479,6 +479,8 @@ class Mat : public Base< eT, Mat<eT> >
   inline void  clear();
   inline bool  empty() const;
   inline uword size()  const;
+  
+  inline void swap(Mat& B);
   
   inline void steal_mem(Mat& X);  //!< don't use this unless you're writing code internal to Armadillo
   

@@ -108,10 +108,8 @@ op_var::var_vec(const subview_col<eT>& X, const uword norm_type)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename get_pod_type<eT>::result T;
-  
   arma_debug_check( (norm_type > 1), "var(): incorrect usage. norm_type must be 0 or 1");
-
+  
   return op_var::direct_var(X.colptr(0), X.n_rows, norm_type);
   }
 
@@ -124,8 +122,6 @@ typename get_pod_type<eT>::result
 op_var::var_vec(const subview_row<eT>& X, const uword norm_type)
   {
   arma_extra_debug_sigprint();
-  
-  typedef typename get_pod_type<eT>::result T;
   
   arma_debug_check( (norm_type > 1), "var(): incorrect usage. norm_type must be 0 or 1");
   

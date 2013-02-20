@@ -144,8 +144,6 @@ arma_inline
 typename T1::elem_type
 eOpCube<T1, eop_type>::at(const uword row, const uword col, const uword slice) const
   {
-  typedef typename T1::elem_type eT;
-  
   return eop_core<eop_type>::process(P.at(row, col, slice), aux);
   }
 

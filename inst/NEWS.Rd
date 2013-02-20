@@ -2,6 +2,17 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.3.6.3 (2013-02-20)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 3.6.3
+    \itemize{
+      \item faster \code{find()}
+      \item minor fix for non-contiguous submatrix views to handle empty vectors of indices
+      \item reduction of pedantic compiler warnings
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.3.6.2 (2013-01-29)}{
   \itemize{
     \item Upgraded to Armadillo release Version 3.6.2

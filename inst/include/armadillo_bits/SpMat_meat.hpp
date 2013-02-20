@@ -616,7 +616,7 @@ SpMat<eT>::operator*=(const Base<eT, T1>& y)
   podarray<eT> partial_sums(n_rows);
   partial_sums.zeros();
 
-  for(uword col = 0; col < n_cols; ++col)
+  for(uword lcol = 0; lcol < n_cols; ++lcol)
     {
     const_iterator it = begin();
 
@@ -624,7 +624,7 @@ SpMat<eT>::operator*=(const Base<eT, T1>& y)
       {
       const eT value = (*it);
 
-      partial_sums[it.row()] += (value * p.at(it.col(), col));
+      partial_sums[it.row()] += (value * p.at(it.col(), lcol));
 
       ++it;
       }
@@ -636,8 +636,8 @@ SpMat<eT>::operator*=(const Base<eT, T1>& y)
         {
         access::rw(z.values[cur_pos]) = partial_sums[i];
         access::rw(z.row_indices[cur_pos]) = i;
-        ++access::rw(z.col_ptrs[col + 1]);
-        //printf("colptr %d now %d\n", col + 1, z.col_ptrs[col + 1]);
+        ++access::rw(z.col_ptrs[lcol + 1]);
+        //printf("colptr %d now %d\n", lcol + 1, z.col_ptrs[lcol + 1]);
         ++cur_pos;
         partial_sums[i] = 0; // Would it be faster to do this in batch later?
         }
@@ -1028,12 +1028,10 @@ SpMat<eT>::operator+=(const subview<eT>& x)
   // efficient way, by calculating the number of nonzero elements the output
   // matrix will have, allocating the memory correctly, and then filling the
   // matrix correctly.  However... for now, this works okay.
-  for(uword col = 0; col < n_cols; ++col)
+  for(uword lcol = 0; lcol < n_cols; ++lcol)
+  for(uword lrow = 0; lrow < n_rows; ++lrow)
     {
-    for(uword row = 0; row < n_rows; ++row)
-      {
-      at(row, col) += x.at(row, col);
-      }
+    at(lrow, lcol) += x.at(lrow, lcol);
     }
   
   return *this;
@@ -1051,12 +1049,10 @@ SpMat<eT>::operator-=(const subview<eT>& x)
   arma_debug_assert_same_size(n_rows, n_cols, x.n_rows, x.n_cols, "subtraction");
   
   // Loop over every element.
-  for(uword col = 0; col < n_cols; ++col)
+  for(uword lcol = 0; lcol < n_cols; ++lcol)
+  for(uword lrow = 0; lrow < n_rows; ++lrow)
     {
-    for(uword row = 0; row < n_rows; ++row)
-      {
-      at(row, col) -= x.at(row, col);
-      }
+    at(lrow, lcol) -= x.at(lrow, lcol);
     }
   
   return *this;
@@ -1078,12 +1074,12 @@ SpMat<eT>::operator*=(const subview<eT>& y)
   // Performed in the same fashion as operator*=(SpMat).
   for (const_row_iterator x_row_it = begin_row(); x_row_it.pos() < n_nonzero; ++x_row_it)
     {
-    for (uword col = 0; col < y.n_cols; ++col)
+    for (uword lcol = 0; lcol < y.n_cols; ++lcol)
       {
       // At this moment in the loop, we are calculating anything that is contributed to by *x_row_it and *y_col_it.
       // Given that our position is x_ab and y_bc, there will only be a contribution if x.col == y.row, and that
       // contribution will be in location z_ac.
-      z.at(x_row_it.row, col) += (*x_row_it) * y.at(x_row_it.col, col);
+      z.at(x_row_it.row, lcol) += (*x_row_it) * y.at(x_row_it.col, lcol);
       }
     }
 
@@ -1104,12 +1100,10 @@ SpMat<eT>::operator%=(const subview<eT>& x)
   arma_debug_assert_same_size(n_rows, n_cols, x.n_rows, x.n_cols, "element-wise multiplication");
   
   // Loop over every element.
-  for(uword col = 0; col < n_cols; ++col)
+  for(uword lcol = 0; lcol < n_cols; ++lcol)
+  for(uword lrow = 0; lrow < n_rows; ++lrow)
     {
-    for(uword row = 0; row < n_rows; ++row)
-      {
-      at(row, col) *= x.at(row, col);
-      }
+    at(lrow, lcol) *= x.at(lrow, lcol);
     }
 
   return *this;
@@ -1127,12 +1121,10 @@ SpMat<eT>::operator/=(const subview<eT>& x)
   arma_debug_assert_same_size(n_rows, n_cols, x.n_rows, x.n_cols, "element-wise division");
   
   // Loop over every element.
-  for(uword col = 0; col < n_cols; ++col)
+  for(uword lcol = 0; lcol < n_cols; ++lcol)
+  for(uword lrow = 0; lrow < n_rows; ++lrow)
     {
-    for(uword row = 0; row < n_rows; ++row)
-      {
-      at(row, col) /= x.at(row, col);
-      }
+    at(lrow, lcol) /= x.at(lrow, lcol);
     }
 
   return *this;
@@ -1698,10 +1690,10 @@ SpMat<eT>::swap_rows(const uword in_row1, const uword in_row2)
   uword col1 = (in_row1 < in_row2) ? in_row1 : in_row2;
   uword col2 = (in_row1 < in_row2) ? in_row2 : in_row1;
 
-  for (uword col = 0; col < n_cols; col++)
+  for (uword lcol = 0; lcol < n_cols; lcol++)
     {
     // If there is nothing in this column we can ignore it.
-    if (col_ptrs[col] == col_ptrs[col + 1])
+    if (col_ptrs[lcol] == col_ptrs[lcol + 1])
       {
       continue;
       }
@@ -1710,7 +1702,7 @@ SpMat<eT>::swap_rows(const uword in_row1, const uword in_row2)
     uword loc1 = n_nonzero + 1;
     uword loc2 = n_nonzero + 1;
 
-    for (uword search_pos = col_ptrs[col]; search_pos < col_ptrs[col + 1]; search_pos++)
+    for (uword search_pos = col_ptrs[lcol]; search_pos < col_ptrs[lcol + 1]; search_pos++)
       {
       if (row_indices[search_pos] == col1)
         {
@@ -1737,7 +1729,7 @@ SpMat<eT>::swap_rows(const uword in_row1, const uword in_row2)
       {
       // We need to find the correct place to move our value to.  It will be forward (not backwards) because in_row2 > in_row1.
       // Each iteration of the loop swaps the current value (loc1) with (loc1 + 1); in this manner we move our value down to where it should be.
-      while (((loc1 + 1) < col_ptrs[col + 1]) && (row_indices[loc1 + 1] < in_row2))
+      while (((loc1 + 1) < col_ptrs[lcol + 1]) && (row_indices[loc1 + 1] < in_row2))
         {
         // Swap both the values and the indices.  The column should not change.
         eT tmp = values[loc1];
@@ -1759,7 +1751,7 @@ SpMat<eT>::swap_rows(const uword in_row1, const uword in_row2)
       {
       // We need to find the correct place to move our value to.  It will be backwards (not forwards) because in_row1 < in_row2.
       // Each iteration of the loop swaps the current value (loc2) with (loc2 - 1); in this manner we move our value up to where it should be.
-      while (((loc2 - 1) >= col_ptrs[col]) && (row_indices[loc2 - 1] > in_row1))
+      while (((loc2 - 1) >= col_ptrs[lcol]) && (row_indices[loc2 - 1] > in_row1))
         {
         // Swap both the values and the indices.  The column should not change.
         eT tmp = values[loc2];
@@ -1792,11 +1784,11 @@ SpMat<eT>::swap_cols(const uword in_col1, const uword in_col2)
   arma_extra_debug_sigprint();
 
   // slow but works
-  for(uword row = 0; row < n_rows; ++row)
+  for(uword lrow = 0; lrow < n_rows; ++lrow)
     {
-    eT tmp = at(row, in_col1);
-    at(row, in_col1) = at(row, in_col2);
-    at(row, in_col2) = tmp;
+    eT tmp = at(lrow, in_col1);
+    at(lrow, in_col1) = at(lrow, in_col2);
+    at(lrow, in_col2) = tmp;
     }
   }
 
@@ -1854,9 +1846,9 @@ SpMat<eT>::shed_rows(const uword in_row1, const uword in_row2)
   for (i = 0, j = 0; i < vlength; ++i)
     {
     // Store the row of the ith element.
-    const uword row = row_indices[i];
+    const uword lrow = row_indices[i];
     // Is the ith element in the range of rows we want to remove?
-    if (row >= in_row1 && row <= in_row2)
+    if (lrow >= in_row1 && lrow <= in_row2)
       {
       // Increment our "removed elements" counter.
       ++j;
@@ -1880,7 +1872,7 @@ SpMat<eT>::shed_rows(const uword in_row1, const uword in_row2)
       // j = 0 until we remove the first element.
       if (j != 0)
         {
-        access::rw(row_indices[i - j]) = (row > in_row2) ? (row - (in_row2 - in_row1 + 1)) : row;
+        access::rw(row_indices[i - j]) = (lrow > in_row2) ? (lrow - (in_row2 - in_row1 + 1)) : lrow;
         access::rw(values[i - j]) = values[i];
         }
       }
@@ -2990,13 +2982,13 @@ SpMat<eT>::sprandu(const uword in_rows, const uword in_cols, const double densit
   uword cur_index = 0;
   uword count     = 0;  
   
-  for(uword col = 0; col < in_cols; ++col)
-  for(uword row = 0; row < in_rows; ++row)
+  for(uword lcol = 0; lcol < in_cols; ++lcol)
+  for(uword lrow = 0; lrow < in_rows; ++lrow)
     {
     if(count == indices[cur_index])
       {
-      access::rw(row_indices[cur_index]) = row;
-      access::rw(col_ptrs[col + 1])++;
+      access::rw(row_indices[cur_index]) = lrow;
+      access::rw(col_ptrs[lcol + 1])++;
       ++cur_index;
       }
     
@@ -3010,9 +3002,9 @@ SpMat<eT>::sprandu(const uword in_rows, const uword in_cols, const double densit
     }
   
   // Sum column pointers.
-  for(uword col = 1; col <= in_cols; ++col)
+  for(uword lcol = 1; lcol <= in_cols; ++lcol)
     {
-    access::rw(col_ptrs[col]) += col_ptrs[col - 1];
+    access::rw(col_ptrs[lcol]) += col_ptrs[lcol - 1];
     }
   
   return *this;
@@ -3067,13 +3059,13 @@ SpMat<eT>::sprandn(const uword in_rows, const uword in_cols, const double densit
   uword cur_index = 0;
   uword count     = 0;  
   
-  for(uword col = 0; col < in_cols; ++col)
-  for(uword row = 0; row < in_rows; ++row)
+  for(uword lcol = 0; lcol < in_cols; ++lcol)
+  for(uword lrow = 0; lrow < in_rows; ++lrow)
     {
     if(count == indices[cur_index])
       {
-      access::rw(row_indices[cur_index]) = row;
-      access::rw(col_ptrs[col + 1])++;
+      access::rw(row_indices[cur_index]) = lrow;
+      access::rw(col_ptrs[lcol + 1])++;
       ++cur_index;
       }
     
@@ -3087,9 +3079,9 @@ SpMat<eT>::sprandn(const uword in_rows, const uword in_cols, const double densit
     }
   
   // Sum column pointers.
-  for(uword col = 1; col <= in_cols; ++col)
+  for(uword lcol = 1; lcol <= in_cols; ++lcol)
     {
-    access::rw(col_ptrs[col]) += col_ptrs[col - 1];
+    access::rw(col_ptrs[lcol]) += col_ptrs[lcol - 1];
     }
   
   return *this;
@@ -3743,7 +3735,7 @@ SpMat<eT>::init(const std::string& text)
   line_start = 0;
   line_end = 0;
 
-  uword row = 0;
+  uword lrow = 0;
 
   while (line_start < text.length())
     {
@@ -3756,7 +3748,7 @@ SpMat<eT>::init(const std::string& text)
     std::string::size_type line_len = line_end - line_start + 1;
     std::stringstream line_stream(text.substr(line_start, line_len));
 
-    uword col = 0;
+    uword lcol = 0;
     eT val;
 
     while (line_stream >> val)
@@ -3764,13 +3756,13 @@ SpMat<eT>::init(const std::string& text)
       // Only add nonzero elements.
       if (val != eT(0))
         {
-        get_value(row, col) = val;
+        get_value(lrow, lcol) = val;
         }
 
-      ++col;
+      ++lcol;
       }
 
-    ++row;
+    ++lrow;
     line_start = line_end + 1;
 
     }
@@ -3847,12 +3839,12 @@ SpMat<eT>::mem_resize(const uword new_n_nonzero)
         if(n_nonzero > 0)
           {
           // Copy old elements.
-          uword copy_size = std::min(n_nonzero, new_n_nonzero);
+          uword copy_len = std::min(n_nonzero, new_n_nonzero);
           
-          arrayops::copy(new_values,      values,      copy_size);
-          arrayops::copy(new_row_indices, row_indices, copy_size);
+          arrayops::copy(new_values,      values,      copy_len);
+          arrayops::copy(new_row_indices, row_indices, copy_len);
           }
-          
+        
         memory::release(values);
         memory::release(row_indices);
         
@@ -4222,10 +4214,10 @@ SpValProxy<SpMat<eT> >
 SpMat<eT>::get_value(const uword i)
   {
   // First convert to the actual location.
-  uword col = i / n_rows; // Integer division.
-  uword row = i % n_rows;
+  uword lcol = i / n_rows; // Integer division.
+  uword lrow = i % n_rows;
 
-  return get_value(row, col);
+  return get_value(lrow, lcol);
   }
 
 
@@ -4238,10 +4230,10 @@ eT
 SpMat<eT>::get_value(const uword i) const
   {
   // First convert to the actual location.
-  uword col = i / n_rows; // Integer division.
-  uword row = i % n_rows;
+  uword lcol = i / n_rows; // Integer division.
+  uword lrow = i % n_rows;
 
-  return get_value(row, col);
+  return get_value(lrow, lcol);
   }
 
 
@@ -4326,12 +4318,12 @@ arma_warn_unused
 uword
 SpMat<eT>::get_position(const uword i) const
   {
-  uword row, col;
+  uword lrow, lcol;
   
-  get_position(i, row, col);
+  get_position(i, lrow, lcol);
   
   // Assemble the row/col into the element's location in the matrix.
-  return (row + n_rows * col);
+  return (lrow + n_rows * lcol);
   }
 
 
