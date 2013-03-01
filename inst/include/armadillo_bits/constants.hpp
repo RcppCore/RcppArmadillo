@@ -1,14 +1,9 @@
 // Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
 // Copyright (C) 2008-2012 Conrad Sanderson
 // 
-// This file is part of the Armadillo C++ library.
-// It is provided without any warranty of fitness
-// for any purpose. You can redistribute this file
-// and/or modify it under the terms of the GNU
-// Lesser General Public License (LGPL) as published
-// by the Free Software Foundation, either version 3
-// of the License or (at your option) any later version.
-// (see http://www.opensource.org/licenses for more info)
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
 //! \addtogroup constants
@@ -23,8 +18,8 @@ namespace priv
     
     template<typename eT>
     static
-    typename arma_float_only<eT>::result
-    nan(typename arma_float_only<eT>::result* junk = 0)
+    typename arma_real_only<eT>::result
+    nan(typename arma_real_only<eT>::result* junk = 0)
       {
       arma_ignore(junk);
       
@@ -65,8 +60,8 @@ namespace priv
     
     template<typename eT>
     static
-    typename arma_float_only<eT>::result
-    inf(typename arma_float_only<eT>::result* junk = 0)
+    typename arma_real_only<eT>::result
+    inf(typename arma_real_only<eT>::result* junk = 0)
       {
       arma_ignore(junk);
       
@@ -225,8 +220,8 @@ namespace priv
   static
   arma_inline
   arma_hot
-  typename arma_float_only<eT>::result
-  most_neg(typename arma_float_only<eT>::result* junk = 0)
+  typename arma_real_only<eT>::result
+  most_neg(typename arma_real_only<eT>::result* junk = 0)
     {
     arma_ignore(junk);
     
@@ -258,8 +253,8 @@ namespace priv
   static
   arma_inline
   arma_hot
-  typename arma_float_only<eT>::result
-  most_pos(typename arma_float_only<eT>::result* junk = 0)
+  typename arma_real_only<eT>::result
+  most_pos(typename arma_real_only<eT>::result* junk = 0)
     {
     arma_ignore(junk);
     

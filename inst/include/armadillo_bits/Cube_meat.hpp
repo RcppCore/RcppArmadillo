@@ -1,14 +1,9 @@
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2013 Conrad Sanderson
 // 
-// This file is part of the Armadillo C++ library.
-// It is provided without any warranty of fitness
-// for any purpose. You can redistribute this file
-// and/or modify it under the terms of the GNU
-// Lesser General Public License (LGPL) as published
-// by the Free Software Foundation, either version 3
-// of the License or (at your option) any later version.
-// (see http://www.opensource.org/licenses for more info)
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
 //! \addtogroup Cube
@@ -298,62 +293,6 @@ Cube<eT>::init
       {
       *out_mem = std::complex<T>( PX.at(urow,ucol,uslice), PY.at(urow,ucol,uslice) );
       out_mem++;
-      }
-    }
-  }
-
-
-
-//! try to steal the memory from a given cube; 
-//! if memory can't be stolen, copy the given cube
-template<typename eT>
-inline
-void
-Cube<eT>::steal_mem(Cube<eT>& x)
-  {
-  arma_extra_debug_sigprint();
-  
-  if(this != &x)
-    {
-    if( (x.mem_state == 0) && (x.n_elem > Cube_prealloc::mem_n_elem) )
-      {
-      reset();
-      
-      const uword x_n_slices = x.n_slices;
-      
-      access::rw(n_rows)       = x.n_rows;
-      access::rw(n_cols)       = x.n_cols;
-      access::rw(n_elem_slice) = x.n_elem_slice;
-      access::rw(n_slices)     = x_n_slices;
-      access::rw(n_elem)       = x.n_elem;
-      access::rw(mem)          = x.mem;
-      
-      if(x_n_slices > Cube_prealloc::mat_ptrs_size)
-        {
-        access::rw(  mat_ptrs) = x.mat_ptrs;
-        access::rw(x.mat_ptrs) = 0;
-        }
-      else
-        {
-        access::rw(mat_ptrs) = const_cast< const Mat<eT>** >(mat_ptrs_local);
-        
-        for(uword i=0; i < x_n_slices; ++i)
-          {
-            mat_ptrs[i] = x.mat_ptrs[i];
-          x.mat_ptrs[i] = 0;
-          }
-        }
-      
-      access::rw(x.n_rows)       = 0;
-      access::rw(x.n_cols)       = 0;
-      access::rw(x.n_elem_slice) = 0;
-      access::rw(x.n_slices)     = 0;
-      access::rw(x.n_elem)       = 0;
-      access::rw(x.mem)          = 0;
-      }
-    else
-      {
-      (*this).operator=(x);
       }
     }
   }
@@ -2462,6 +2401,77 @@ Cube<eT>::copy_size(const Cube<eT2>& m)
 
 
 
+//! transform each element in the cube using a functor
+template<typename eT>
+template<typename functor>
+inline
+const Cube<eT>&
+Cube<eT>::transform(functor F)
+  {
+  arma_extra_debug_sigprint();
+  
+  eT* out_mem = memptr();
+  
+  const uword N = n_elem;
+  
+  uword ii, jj;
+  
+  for(ii=0, jj=1; jj < N; ii+=2, jj+=2)
+    {
+    eT tmp_ii = out_mem[ii];
+    eT tmp_jj = out_mem[jj];
+    
+    tmp_ii = eT( F(tmp_ii) );
+    tmp_jj = eT( F(tmp_jj) );
+    
+    out_mem[ii] = tmp_ii;
+    out_mem[jj] = tmp_jj;
+    }
+  
+  if(ii < N)
+    {
+    out_mem[ii] = eT( F(out_mem[ii]) );
+    }
+  
+  return *this;
+  }
+
+
+
+//! imbue (fill) the cube with values provided by a functor
+template<typename eT>
+template<typename functor>
+inline
+const Cube<eT>&
+Cube<eT>::imbue(functor F)
+  {
+  arma_extra_debug_sigprint();
+  
+  eT* out_mem = memptr();
+  
+  const uword N = n_elem;
+  
+  uword ii, jj;
+  
+  for(ii=0, jj=1; jj < N; ii+=2, jj+=2)
+    {
+    const eT tmp_ii = eT( F() );
+    const eT tmp_jj = eT( F() );
+    
+    out_mem[ii] = tmp_ii;
+    out_mem[jj] = tmp_jj;
+    }
+  
+  if(ii < N)
+    {
+    out_mem[ii] = eT( F() );
+    }
+  
+  return *this;
+  }
+
+
+
 //! fill the cube with the specified value
 template<typename eT>
 inline
@@ -3138,6 +3148,105 @@ Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::mem_setup()
     access::rw(Cube<eT>::mem_state)    = 3;
     access::rw(Cube<eT>::mat_ptrs)     = 0;
     access::rw(Cube<eT>::mem)          = 0;
+    }
+  }
+
+
+
+//! resets this cube to an empty matrix
+template<typename eT>
+inline
+void
+Cube<eT>::clear()
+  {
+  reset();
+  }
+
+
+
+//! returns true if the cube has no elements
+template<typename eT>
+inline
+bool
+Cube<eT>::empty() const
+  {
+  return (n_elem == 0);
+  }
+
+
+
+//! returns the number of elements in this cube
+template<typename eT>
+inline
+uword
+Cube<eT>::size() const
+  {
+  return n_elem;
+  }
+
+
+
+// template<typename eT>
+// inline
+// void
+// Cube<eT>::swap(Cube<eT>& B)
+//   {
+//   // TODO
+//   }
+
+
+
+//! try to steal the memory from a given cube; 
+//! if memory can't be stolen, copy the given cube
+template<typename eT>
+inline
+void
+Cube<eT>::steal_mem(Cube<eT>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(this != &x)
+    {
+    if( (x.mem_state == 0) && (x.n_elem > Cube_prealloc::mem_n_elem) )
+      {
+      reset();
+      
+      const uword x_n_slices = x.n_slices;
+      
+      access::rw(n_rows)       = x.n_rows;
+      access::rw(n_cols)       = x.n_cols;
+      access::rw(n_elem_slice) = x.n_elem_slice;
+      access::rw(n_slices)     = x_n_slices;
+      access::rw(n_elem)       = x.n_elem;
+      access::rw(mem)          = x.mem;
+      
+      if(x_n_slices > Cube_prealloc::mat_ptrs_size)
+        {
+        access::rw(  mat_ptrs) = x.mat_ptrs;
+        access::rw(x.mat_ptrs) = 0;
+        }
+      else
+        {
+        access::rw(mat_ptrs) = const_cast< const Mat<eT>** >(mat_ptrs_local);
+        
+        for(uword i=0; i < x_n_slices; ++i)
+          {
+            mat_ptrs[i] = x.mat_ptrs[i];
+          x.mat_ptrs[i] = 0;
+          }
+        }
+      
+      access::rw(x.n_rows)       = 0;
+      access::rw(x.n_cols)       = 0;
+      access::rw(x.n_elem_slice) = 0;
+      access::rw(x.n_slices)     = 0;
+      access::rw(x.n_elem)       = 0;
+      access::rw(x.mem)          = 0;
+      }
+    else
+      {
+      (*this).operator=(x);
+      }
     }
   }
 

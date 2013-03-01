@@ -1,19 +1,14 @@
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2013 Conrad Sanderson
 // Copyright (C) 2009 Edmund Highcock
 // Copyright (C) 2011 James Sanders
 // Copyright (C) 2011 Stanislav Funiak
 // Copyright (C) 2012 Eric Jon Sundstrom
 // Copyright (C) 2012 Michael McNeil Forbes
 // 
-// This file is part of the Armadillo C++ library.
-// It is provided without any warranty of fitness
-// for any purpose. You can redistribute this file
-// and/or modify it under the terms of the GNU
-// Lesser General Public License (LGPL) as published
-// by the Free Software Foundation, either version 3
-// of the License or (at your option) any later version.
-// (see http://www.opensource.org/licenses for more info)
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
 //! \addtogroup auxlib
@@ -376,50 +371,43 @@ auxlib::inv_inplace_lapack(Mat<eT>& out)
     }
   #elif defined(ARMA_USE_LAPACK)
     {
-    blas_int n_rows = out.n_rows;
-    blas_int n_cols = out.n_cols;
-    blas_int info   = 0;
+    blas_int n_rows    = out.n_rows;
+    blas_int n_cols    = out.n_cols;
+    blas_int lwork     = 0;
+    blas_int lwork_min = (std::max)(blas_int(1), n_rows);
+    blas_int info      = 0;
     
     podarray<blas_int> ipiv(out.n_rows);
     
-    // 84 was empirically found -- it is the maximum value suggested by LAPACK (as provided by ATLAS v3.6)
-    // based on tests with various matrix types on 32-bit and 64-bit machines
-    //
-    // the "work" array is deliberately long so that a secondary (time-consuming)
-    // memory allocation is avoided, if possible
+    eT        work_query[2];
+    blas_int lwork_query = -1;
     
-    blas_int work_len = (std::max)(blas_int(1), n_rows*84);
-    podarray<eT> work( static_cast<uword>(work_len) );
+    lapack::getri(&n_rows, out.memptr(), &n_rows, ipiv.memptr(), &work_query[0], &lwork_query, &info);
+    
+    if(info == 0)
+      {
+      const blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+      
+      lwork = (lwork_proposed > lwork_min) ? lwork_proposed : lwork_min;
+      }
+    else
+      {
+      return false;
+      }
+    
+    podarray<eT> work( static_cast<uword>(lwork) );
     
     lapack::getrf(&n_rows, &n_cols, out.memptr(), &n_rows, ipiv.memptr(), &info);
     
     if(info == 0)
       {
-      // query for optimum size of work_len
-      
-      blas_int work_len_tmp = -1;
-      lapack::getri(&n_rows, out.memptr(), &n_rows, ipiv.memptr(), work.memptr(), &work_len_tmp, &info);
-      
-      if(info == 0)
-        {
-        blas_int proposed_work_len = static_cast<blas_int>(access::tmp_real(work[0]));
-        
-        // if necessary, allocate more memory
-        if(work_len < proposed_work_len)
-          {
-          work_len = proposed_work_len;
-          work.set_size( static_cast<uword>(work_len) );
-          }
-        }
-      
-      lapack::getri(&n_rows, out.memptr(), &n_rows, ipiv.memptr(), work.memptr(), &work_len, &info);
+      lapack::getri(&n_rows, out.memptr(), &n_rows, ipiv.memptr(), work.memptr(), &lwork, &info);
       }
     
     return (info == 0);
     }
   #else
     {
-    arma_ignore(out);
     arma_stop("inv(): use of ATLAS or LAPACK needs to be enabled");
     return false;
     }
@@ -1174,7 +1162,6 @@ auxlib::eig_sym(Col<eT>& eigval, const Base<eT,T1>& X)
     
     podarray<eT> work( static_cast<uword>(lwork) );
     
-    arma_extra_debug_print("lapack::syev()");
     lapack::syev(&jobz, &uplo, &N, A.memptr(), &N, eigval.memptr(), work.memptr(), &lwork, &info);
     
     return (info == 0);
@@ -1199,10 +1186,10 @@ auxlib::eig_sym(Col<T>& eigval, const Base<std::complex<T>,T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename std::complex<T> eT;
-  
   #if defined(ARMA_USE_LAPACK)
     {
+    typedef typename std::complex<T> eT;
+    
     Mat<eT> A(X.get_ref());
     
     arma_debug_check( (A.is_square() == false), "eig_sym(): given matrix is not square");
@@ -1274,7 +1261,6 @@ auxlib::eig_sym(Col<eT>& eigval, Mat<eT>& eigvec, const Base<eT,T1>& X)
     
     podarray<eT> work( static_cast<uword>(lwork) );
     
-    arma_extra_debug_print("lapack::syev()");
     lapack::syev(&jobz, &uplo, &N, eigvec.memptr(), &N, eigval.memptr(), work.memptr(), &lwork, &info);
     
     return (info == 0);
@@ -1300,10 +1286,10 @@ auxlib::eig_sym(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Base<std::
   {
   arma_extra_debug_sigprint();
   
-  typedef typename std::complex<T> eT;
-  
   #if defined(ARMA_USE_LAPACK)
     {
+    typedef typename std::complex<T> eT;
+    
     eigvec = X.get_ref();
     
     arma_debug_check( (eigvec.is_square() == false), "eig_sym(): given matrix is not square" );
@@ -1405,10 +1391,10 @@ auxlib::eig_sym_dc(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Base<st
   {
   arma_extra_debug_sigprint();
   
-  typedef typename std::complex<T> eT;
-  
   #if defined(ARMA_USE_LAPACK)
     {
+    typedef typename std::complex<T> eT;
+    
     eigvec = X.get_ref();
     
     arma_debug_check( (eigvec.is_square() == false), "eig_sym(): given matrix is not square" );
@@ -1574,10 +1560,10 @@ auxlib::eig_gen
   {
   arma_extra_debug_sigprint();
   
-  typedef typename std::complex<T> eT;
-  
   #if defined(ARMA_USE_LAPACK)
     {
+    typedef typename std::complex<T> eT;
+    
     char jobvl;
     char jobvr;
     
@@ -1706,7 +1692,7 @@ auxlib::chol(Mat<eT>& out, const Base<eT,T1>& X)
 
 template<typename eT, typename T1>
 inline
-bool 
+bool
 auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
   {
   arma_extra_debug_sigprint();
@@ -1724,33 +1710,34 @@ auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
       return true;
       }
     
-    blas_int m            = static_cast<blas_int>(R_n_rows);
-    blas_int n            = static_cast<blas_int>(R_n_cols);
-    blas_int work_len     = 3*((std::max)(blas_int(1),n));
-    blas_int work_len_tmp;
-    blas_int k            = (std::min)(m,n);
-    blas_int info         = 0;
+    blas_int m         = static_cast<blas_int>(R_n_rows);
+    blas_int n         = static_cast<blas_int>(R_n_cols);
+    blas_int lwork     = 0;
+    blas_int lwork_min = (std::max)(blas_int(1), (std::max)(m,n));  // take into account requirements of geqrf() _and_ orgqr()/ungqr()
+    blas_int k         = (std::min)(m,n);
+    blas_int info      = 0;
     
-    podarray<eT> tau ( static_cast<uword>(k)        );
-    podarray<eT> work( static_cast<uword>(work_len) );
+    podarray<eT> tau( static_cast<uword>(k) );
     
-    // query for the optimum value of work_len
-    work_len_tmp = -1;
-    lapack::geqrf(&m, &n, R.memptr(), &m, tau.memptr(), work.memptr(), &work_len_tmp, &info);
+    eT        work_query[2];
+    blas_int lwork_query = -1;
+    
+    lapack::geqrf(&m, &n, R.memptr(), &m, tau.memptr(), &work_query[0], &lwork_query, &info);
     
     if(info == 0)
       {
-      work_len_tmp = static_cast<blas_int>(access::tmp_real(work[0]));
+      const blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
       
-      if(work_len < work_len_tmp)
-        {
-        work_len = work_len_tmp;
-        
-        work.set_size( static_cast<uword>(work_len) );
-        }
+      lwork = (lwork_proposed > lwork_min) ? lwork_proposed : lwork_min;
+      }
+    else
+      {
+      return false;
       }
     
-    lapack::geqrf(&m, &n, R.memptr(), &m, tau.memptr(), work.memptr(), &work_len, &info);
+    podarray<eT> work( static_cast<uword>(lwork) );
+    
+    lapack::geqrf(&m, &n, R.memptr(), &m, tau.memptr(), work.memptr(), &lwork, &info);
     
     Q.set_size(R_n_rows, R_n_rows);
     
@@ -1770,12 +1757,12 @@ auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
     
     if( (is_float<eT>::value == true) || (is_double<eT>::value == true) )
       {
-      lapack::orgqr(&m, &m, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &work_len, &info);
+      lapack::orgqr(&m, &m, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &lwork, &info);
       }
     else
     if( (is_supported_complex_float<eT>::value == true) || (is_supported_complex_double<eT>::value == true) )
       {
-      lapack::ungqr(&m, &m, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &work_len, &info);
+      lapack::ungqr(&m, &m, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &lwork, &info);
       }
     
     return (info == 0);
@@ -1842,33 +1829,34 @@ auxlib::qr_econ(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
       return true;
       }
     
-    blas_int m            = static_cast<blas_int>(Q_n_rows);
-    blas_int n            = static_cast<blas_int>(Q_n_cols);
-    blas_int work_len     = 3*((std::max)(blas_int(1),n));
-    blas_int work_len_tmp;
-    blas_int k            = (std::min)(m,n);
-    blas_int info         = 0;
+    blas_int m         = static_cast<blas_int>(Q_n_rows);
+    blas_int n         = static_cast<blas_int>(Q_n_cols);
+    blas_int lwork     = 0;
+    blas_int lwork_min = (std::max)(blas_int(1), (std::max)(m,n));  // take into account requirements of geqrf() _and_ orgqr()/ungqr()
+    blas_int k         = (std::min)(m,n);
+    blas_int info      = 0;
     
-    podarray<eT> tau ( static_cast<uword>(k)        );
-    podarray<eT> work( static_cast<uword>(work_len) );
+    podarray<eT> tau( static_cast<uword>(k) );
     
-    // query for the optimum value of work_len
-    work_len_tmp = -1;
-    lapack::geqrf(&m, &n, Q.memptr(), &m, tau.memptr(), work.memptr(), &work_len_tmp, &info);
+    eT        work_query[2];
+    blas_int lwork_query = -1;
+    
+    lapack::geqrf(&m, &n, Q.memptr(), &m, tau.memptr(), &work_query[0], &lwork_query, &info);
     
     if(info == 0)
       {
-      work_len_tmp = static_cast<blas_int>(access::tmp_real(work[0]));
+      const blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
       
-      if(work_len < work_len_tmp)
-        {
-        work_len = work_len_tmp;
-        
-        work.set_size( static_cast<uword>(work_len) );
-        }
+      lwork = (lwork_proposed > lwork_min) ? lwork_proposed : lwork_min;
+      }
+    else
+      {
+      return false;
       }
     
-    lapack::geqrf(&m, &n, Q.memptr(), &m, tau.memptr(), work.memptr(), &work_len, &info);
+    podarray<eT> work( static_cast<uword>(lwork) );
+    
+    lapack::geqrf(&m, &n, Q.memptr(), &m, tau.memptr(), work.memptr(), &lwork, &info);
     
     // Q now has the elements on and above the diagonal of the array
     // contain the min(M,N)-by-N upper trapezoidal matrix Q
@@ -1896,12 +1884,12 @@ auxlib::qr_econ(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
     
     if( (is_float<eT>::value == true) || (is_double<eT>::value == true) )
       {
-      lapack::orgqr(&m, &n, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &work_len, &info);
+      lapack::orgqr(&m, &n, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &lwork, &info);
       }
     else
     if( (is_supported_complex_float<eT>::value == true) || (is_supported_complex_double<eT>::value == true) )
       {
-      lapack::ungqr(&m, &n, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &work_len, &info);
+      lapack::ungqr(&m, &n, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &lwork, &info);
       }
     
     return (info == 0);
@@ -1945,55 +1933,37 @@ auxlib::svd(Col<eT>& S, const Base<eT,T1>& X, uword& X_n_rows, uword& X_n_cols)
     char jobu  = 'N';
     char jobvt = 'N';
     
-    blas_int  m      = A.n_rows;
-    blas_int  n      = A.n_cols;
-    blas_int  min_mn = (std::min)(m,n);
-    blas_int  lda    = A.n_rows;
-    blas_int  ldu    = U.n_rows;
-    blas_int  ldvt   = V.n_rows;
-    blas_int  lwork  = 3 * ( (std::max)(blas_int(1), (std::max)( (3*min_mn + (std::max)(m,n)), 5*min_mn ) ) );
-    blas_int  info   = 0;
+    blas_int m          = A.n_rows;
+    blas_int n          = A.n_cols;
+    blas_int min_mn     = (std::min)(m,n);
+    blas_int lda        = A.n_rows;
+    blas_int ldu        = U.n_rows;
+    blas_int ldvt       = V.n_rows;
+    blas_int lwork      = 0;
+    blas_int lwork_min  = (std::max)( blas_int(1), (std::max)( (3*min_mn + (std::max)(m,n)), 5*min_mn ) );
+    blas_int info   = 0;
     
     S.set_size( static_cast<uword>(min_mn) );
     
-    podarray<eT> work( static_cast<uword>(lwork) );
-    
-    
-    // let gesvd_() calculate the optimum size of the workspace
-    blas_int lwork_tmp = -1;
+    eT        work_query[2];
+    blas_int lwork_query = -1;
     
     lapack::gesvd<eT>
       (
-      &jobu, &jobvt,
-      &m,&n,
-      A.memptr(), &lda,
-      S.memptr(),
-      U.memptr(), &ldu,
-      V.memptr(), &ldvt,
-      work.memptr(), &lwork_tmp,
-      &info
+      &jobu, &jobvt, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, &work_query[0], &lwork_query, &info
       );
     
     if(info == 0)
       {
-      blas_int proposed_lwork = static_cast<blas_int>(work[0]);
+      const blas_int lwork_proposed = static_cast<blas_int>( work_query[0] );
       
-      if(proposed_lwork > lwork)
-        {
-        lwork = proposed_lwork;
-        work.set_size( static_cast<uword>(lwork) );
-        }
+      lwork = (lwork_proposed > lwork_min) ? lwork_proposed : lwork_min;
+      
+      podarray<eT> work( static_cast<uword>(lwork) );
       
       lapack::gesvd<eT>
         (
-        &jobu, &jobvt,
-        &m, &n,
-        A.memptr(), &lda,
-        S.memptr(),
-        U.memptr(), &ldu,
-        V.memptr(), &ldvt,
-        work.memptr(), &lwork,
-        &info
+        &jobu, &jobvt, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork, &info
         );
       }
     
@@ -2020,10 +1990,10 @@ auxlib::svd(Col<T>& S, const Base<std::complex<T>, T1>& X, uword& X_n_rows, uwor
   {
   arma_extra_debug_sigprint();
   
-  typedef std::complex<T> eT;
-  
   #if defined(ARMA_USE_LAPACK)
     {
+    typedef std::complex<T> eT;
+    
     Mat<eT> A(X.get_ref());
     
     X_n_rows = A.n_rows;
@@ -2162,55 +2132,38 @@ auxlib::svd(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
     char jobu  = 'A';
     char jobvt = 'A';
     
-    blas_int  m      = blas_int(A.n_rows);
-    blas_int  n      = blas_int(A.n_cols);
-    blas_int  min_mn = (std::min)(m,n);
-    blas_int  lda    = blas_int(A.n_rows);
-    blas_int  ldu    = blas_int(U.n_rows);
-    blas_int  ldvt   = blas_int(V.n_rows);
-    blas_int  lwork  = 3 * ( (std::max)(blas_int(1), (std::max)( (3*min_mn + (std::max)(m,n)), 5*min_mn ) ) );
-    blas_int  info   = 0;
-    
+    blas_int  m          = blas_int(A.n_rows);
+    blas_int  n          = blas_int(A.n_cols);
+    blas_int  min_mn     = (std::min)(m,n);
+    blas_int  lda        = blas_int(A.n_rows);
+    blas_int  ldu        = blas_int(U.n_rows);
+    blas_int  ldvt       = blas_int(V.n_rows);
+    blas_int  lwork_min  = (std::max)( blas_int(1), (std::max)( (3*min_mn + (std::max)(m,n)), 5*min_mn ) );
+    blas_int  lwork      = 0;
+    blas_int  info       = 0;
     
     S.set_size( static_cast<uword>(min_mn) );
     
-    podarray<eT> work( static_cast<uword>(lwork) );
-  
     // let gesvd_() calculate the optimum size of the workspace
-    blas_int lwork_tmp = -1;
+    eT        work_query[2];
+    blas_int lwork_query = -1;
     
     lapack::gesvd<eT>
       (
-      &jobu, &jobvt,
-      &m, &n,
-      A.memptr(), &lda,
-      S.memptr(),
-      U.memptr(), &ldu,
-      V.memptr(), &ldvt,
-      work.memptr(), &lwork_tmp,
-      &info
+      &jobu, &jobvt, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, &work_query[0], &lwork_query, &info
       );
     
     if(info == 0)
       {
-      blas_int proposed_lwork = static_cast<blas_int>(work[0]);
+      const blas_int lwork_proposed = static_cast<blas_int>( work_query[0] );
       
-      if(proposed_lwork > lwork)
-        {
-        lwork = proposed_lwork;
-        work.set_size( static_cast<uword>(lwork) );
-        }
+      lwork = (lwork_proposed > lwork_min) ? lwork_proposed : lwork_min;
+      
+      podarray<eT> work( static_cast<uword>(lwork) );
       
       lapack::gesvd<eT>
         (
-        &jobu, &jobvt,
-        &m, &n,
-        A.memptr(), &lda,
-        S.memptr(),
-        U.memptr(), &ldu,
-        V.memptr(), &ldvt,
-        work.memptr(), &lwork,
-        &info
+        &jobu, &jobvt, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork, &info
         );
       
       op_strans::apply(V,V);  // op_strans will work out that an in-place transpose can be done
@@ -2239,10 +2192,10 @@ auxlib::svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, con
   {
   arma_extra_debug_sigprint();
   
-  typedef std::complex<T> eT;
-  
   #if defined(ARMA_USE_LAPACK)
     {
+    typedef std::complex<T> eT;
+    
     Mat<eT> A(X.get_ref());
     
     if(A.is_empty())
@@ -2481,10 +2434,10 @@ auxlib::svd_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V
   {
   arma_extra_debug_sigprint();
   
-  typedef std::complex<T> eT;
-  
   #if defined(ARMA_USE_LAPACK)
     {
+    typedef std::complex<T> eT;
+    
     Mat<eT> A(X.get_ref());
     
     blas_int m      = blas_int(A.n_rows);
@@ -2693,10 +2646,10 @@ auxlib::svd_dc(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, 
   {
   arma_extra_debug_sigprint();
   
-  typedef std::complex<T> eT;
-  
   #if defined(ARMA_USE_LAPACK)
     {
+    typedef std::complex<T> eT;
+    
     Mat<eT> A(X.get_ref());
     
     if(A.is_empty())
