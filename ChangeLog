@@ -1,3 +1,18 @@
+2013-03-01  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.3.800.0
+	* DESCRIPTION: Updated Description to reflect change of Armadillo
+	license to MPL 2.0 (which is fully compatible with GPL so no change
+	or net effect to RcppArmadillo)
+
+	* inst/include/*: Upgraded to new release 3.800.0 of Armadillo
+
+	* inst/doc/RcppArmadillo-intro.Rnw: Updated vignette to preprint of
+	the Computational Statistics & Data Analysis paper in press
+	* inst/doc/*: Added or updated relevant support files
+
+	* inst/CITATION: Added with reference to CSDA paper
+
 2013-02-20  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.3.6.3

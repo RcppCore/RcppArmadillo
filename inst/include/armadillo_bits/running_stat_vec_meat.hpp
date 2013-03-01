@@ -1,14 +1,9 @@
 // Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
 // Copyright (C) 2009-2011 Conrad Sanderson
 // 
-// This file is part of the Armadillo C++ library.
-// It is provided without any warranty of fitness
-// for any purpose. You can redistribute this file
-// and/or modify it under the terms of the GNU
-// Lesser General Public License (LGPL) as published
-// by the Free Software Foundation, either version 3
-// of the License or (at your option) any later version.
-// (see http://www.opensource.org/licenses for more info)
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
 //! \addtogroup running_stat_vec
@@ -348,11 +343,11 @@ running_stat_vec_aux::update_stats(running_stat_vec<eT>& x, const Mat<eT>& sampl
     arma_debug_assert_same_size(x.r_mean, sample, "running_stat_vec(): dimensionality mismatch");
     
     const uword n_elem      = sample.n_elem;
-    const eT* sample_mem  = sample.memptr();
-          eT* r_mean_mem  = x.r_mean.memptr();
-           T* r_var_mem   = x.r_var.memptr();
-          eT* min_val_mem = x.min_val.memptr();
-          eT* max_val_mem = x.max_val.memptr();
+    const eT*   sample_mem  = sample.memptr();
+          eT*   r_mean_mem  = x.r_mean.memptr();
+           T*   r_var_mem   = x.r_var.memptr();
+          eT*   min_val_mem = x.min_val.memptr();
+          eT*   max_val_mem = x.max_val.memptr();
     
     const T  N_plus_1   = x.counter.value_plus_1();
     const T  N_minus_1  = x.counter.value_minus_1();
@@ -418,10 +413,10 @@ running_stat_vec_aux::update_stats(running_stat_vec<eT>& x, const Mat<eT>& sampl
     
     
     const uword n_elem      = sample.n_elem;
-    const eT* sample_mem  = sample.memptr();
-          eT* r_mean_mem  = x.r_mean.memptr();
-          eT* min_val_mem = x.min_val.memptr();
-          eT* max_val_mem = x.max_val.memptr();
+    const eT*   sample_mem  = sample.memptr();
+          eT*   r_mean_mem  = x.r_mean.memptr();
+          eT*   min_val_mem = x.min_val.memptr();
+          eT*   max_val_mem = x.max_val.memptr();
           
     
     for(uword i=0; i<n_elem; ++i)
@@ -471,13 +466,13 @@ running_stat_vec_aux::update_stats(running_stat_vec< std::complex<T> >& x, const
     arma_debug_assert_same_size(x.r_mean, sample, "running_stat_vec(): dimensionality mismatch");
     
     const uword n_elem           = sample.n_elem;
-    const eT* sample_mem       = sample.memptr();
-          eT* r_mean_mem       = x.r_mean.memptr();
-           T* r_var_mem        = x.r_var.memptr();
-          eT* min_val_mem      = x.min_val.memptr();
-          eT* max_val_mem      = x.max_val.memptr();
-           T* min_val_norm_mem = x.min_val_norm.memptr();
-           T* max_val_norm_mem = x.max_val_norm.memptr();
+    const eT*   sample_mem       = sample.memptr();
+          eT*   r_mean_mem       = x.r_mean.memptr();
+           T*   r_var_mem        = x.r_var.memptr();
+          eT*   min_val_mem      = x.min_val.memptr();
+          eT*   max_val_mem      = x.max_val.memptr();
+           T*   min_val_norm_mem = x.min_val_norm.memptr();
+           T*   max_val_norm_mem = x.max_val_norm.memptr();
     
     const T  N_plus_1   = x.counter.value_plus_1();
     const T  N_minus_1  = x.counter.value_minus_1();
@@ -549,12 +544,12 @@ running_stat_vec_aux::update_stats(running_stat_vec< std::complex<T> >& x, const
     
     
     const uword n_elem           = sample.n_elem;
-    const eT* sample_mem       = sample.memptr();
-          eT* r_mean_mem       = x.r_mean.memptr();
-          eT* min_val_mem      = x.min_val.memptr();
-          eT* max_val_mem      = x.max_val.memptr();
-           T* min_val_norm_mem = x.min_val_norm.memptr();
-           T* max_val_norm_mem = x.max_val_norm.memptr();
+    const eT*   sample_mem       = sample.memptr();
+          eT*   r_mean_mem       = x.r_mean.memptr();
+          eT*   min_val_mem      = x.min_val.memptr();
+          eT*   max_val_mem      = x.max_val.memptr();
+           T*   min_val_norm_mem = x.min_val_norm.memptr();
+           T*   max_val_norm_mem = x.max_val_norm.memptr();
     
     for(uword i=0; i<n_elem; ++i)
       {

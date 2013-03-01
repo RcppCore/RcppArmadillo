@@ -2,14 +2,9 @@
 // Copyright (C) 2008-2013 Conrad Sanderson
 // Copyright (C) 2012 Ryan Curtin
 // 
-// This file is part of the Armadillo C++ library.
-// It is provided without any warranty of fitness
-// for any purpose. You can redistribute this file
-// and/or modify it under the terms of the GNU
-// Lesser General Public License (LGPL) as published
-// by the Free Software Foundation, either version 3
-// of the License or (at your option) any later version.
-// (see http://www.opensource.org/licenses for more info)
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
 //! \addtogroup Mat
@@ -4923,6 +4918,77 @@ Mat<eT>::copy_size(const Base<eT2, expr>& X)
   const uword X_n_cols = P.get_n_cols();
   
   init_warm(X_n_rows, X_n_cols);
+  }
+
+
+
+//! transform each element in the matrix using a functor
+template<typename eT>
+template<typename functor>
+inline
+const Mat<eT>&
+Mat<eT>::transform(functor F)
+  {
+  arma_extra_debug_sigprint();
+  
+  eT* out_mem = memptr();
+  
+  const uword N = n_elem;
+  
+  uword ii, jj;
+  
+  for(ii=0, jj=1; jj < N; ii+=2, jj+=2)
+    {
+    eT tmp_ii = out_mem[ii];
+    eT tmp_jj = out_mem[jj];
+    
+    tmp_ii = eT( F(tmp_ii) );
+    tmp_jj = eT( F(tmp_jj) );
+    
+    out_mem[ii] = tmp_ii;
+    out_mem[jj] = tmp_jj;
+    }
+  
+  if(ii < N)
+    {
+    out_mem[ii] = eT( F(out_mem[ii]) );
+    }
+  
+  return *this;
+  }
+
+
+
+//! imbue (fill) the matrix with values provided by a functor
+template<typename eT>
+template<typename functor>
+inline
+const Mat<eT>&
+Mat<eT>::imbue(functor F)
+  {
+  arma_extra_debug_sigprint();
+  
+  eT* out_mem = memptr();
+  
+  const uword N = n_elem;
+  
+  uword ii, jj;
+  
+  for(ii=0, jj=1; jj < N; ii+=2, jj+=2)
+    {
+    const eT tmp_ii = eT( F() );
+    const eT tmp_jj = eT( F() );
+    
+    out_mem[ii] = tmp_ii;
+    out_mem[jj] = tmp_jj;
+    }
+  
+  if(ii < N)
+    {
+    out_mem[ii] = eT( F() );
+    }
+  
+  return *this;
   }
 
 

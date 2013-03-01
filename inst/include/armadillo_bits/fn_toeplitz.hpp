@@ -1,16 +1,9 @@
-// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2010-2011 Conrad Sanderson
-// Copyright (C) 2011 Alcatel Lucent
-// Copyright (C) 2011 Gerhard Schreiber
+// Copyright (C) 2010-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2013 Conrad Sanderson
 // 
-// This file is part of the Armadillo C++ library.
-// It is provided without any warranty of fitness
-// for any purpose. You can redistribute this file
-// and/or modify it under the terms of the GNU
-// Lesser General Public License (LGPL) as published
-// by the Free Software Foundation, either version 3
-// of the License or (at your option) any later version.
-// (see http://www.opensource.org/licenses for more info)
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
 //! \addtogroup fn_toeplitz
@@ -20,12 +13,24 @@
 
 template<typename T1>
 inline
-Glue<T1, T1, glue_toeplitz>
+Op<T1, op_toeplitz>
 toeplitz(const Base<typename T1::elem_type,T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  return Glue<T1, T1, glue_toeplitz>( X.get_ref(), X.get_ref() );
+  return Op<T1, op_toeplitz>( X.get_ref() );
+  }
+
+
+
+template<typename T1>
+inline
+Op<T1, op_toeplitz_c>
+circ_toeplitz(const Base<typename T1::elem_type,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  return Op<T1, op_toeplitz_c>( X.get_ref() );
   }
 
 
@@ -38,18 +43,6 @@ toeplitz(const Base<typename T1::elem_type,T1>& X, const Base<typename T1::elem_
   arma_extra_debug_sigprint();
   
   return Glue<T1, T2, glue_toeplitz>( X.get_ref(), Y.get_ref() );
-  }
-
-
-
-template<typename T1>
-inline
-Glue<T1, T1, glue_toeplitz_circ>
-circ_toeplitz(const Base<typename T1::elem_type,T1>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  return Glue<T1, T1, glue_toeplitz_circ>( X.get_ref(), X.get_ref() );
   }
 
 

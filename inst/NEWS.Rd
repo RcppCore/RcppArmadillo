@@ -2,6 +2,25 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.3.800.0 (2013-03-01)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 3.800.0 (Miami Beach)
+    \itemize{
+      \item Armadillo is now licensed using the Mozilla Public License 2.0
+      \item added \code{.imbue()} for filling a matrix/cube with values provided by a functor or lambda expression
+      \item added \code{.swap()} for swapping contents with another matrix
+      \item added \code{.transform()} for transforming a matrix/cube using a functor or lambda expression
+      \item added \code{round()} for rounding matrix elements towards nearest integer
+      \item faster \code{find()}
+      \item fixes for handling non-square matrices by \code{qr()} and \code{qr_econ()}
+      \item minor fixes for handling empty matrices
+      \item reduction of pedantic compiler warnings
+    }
+    \item Updated vignette to paper now in press at CSDA
+    \item Added CITATION file with reference to CSDA paper
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.3.6.3 (2013-02-20)}{
   \itemize{
     \item Upgraded to Armadillo release Version 3.6.3
@@ -27,7 +46,7 @@
 
 \section{Changes in RcppArmadillo version 0.3.6.1 (2012-12-17)}{
   \itemize{
-    \item Upgraded to Armadillo release Version 3.6.1
+    \item Upgraded to Armadillo release Version 3.6.1 (Piazza del Duomo)
     \itemize{
       \item faster \code{trace()}
       \item fix for handling sparse matrices by \code{dot()}

@@ -1,1 +1,3 @@
 inst/doc/Makefile
+inst/doc/elsarticle-harv.bst
+inst/doc/elsarticle.cls

@@ -1,14 +1,9 @@
 // Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
 // Copyright (C) 2008-2012 Conrad Sanderson
 // 
-// This file is part of the Armadillo C++ library.
-// It is provided without any warranty of fitness
-// for any purpose. You can redistribute this file
-// and/or modify it under the terms of the GNU
-// Lesser General Public License (LGPL) as published
-// by the Free Software Foundation, either version 3
-// of the License or (at your option) any later version.
-// (see http://www.opensource.org/licenses for more info)
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
 //! \addtogroup fn_norm
@@ -482,7 +477,7 @@ norm
   (
   const T1& X,
   const uword k,
-  const typename arma_float_or_cx_only<typename T1::elem_type>::result* junk = 0
+  const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk = 0
   )
   {
   arma_extra_debug_sigprint();
@@ -547,7 +542,7 @@ norm
   (
   const T1& X,
   const char* method,
-  const typename arma_float_or_cx_only<typename T1::elem_type>::result* junk = 0
+  const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk = 0
   )
   {
   arma_extra_debug_sigprint();
@@ -661,7 +656,7 @@ norm
   (
   const T1& X,
   const uword k,
-  const typename arma_float_or_cx_only<typename T1::elem_type>::result* junk = 0
+  const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk = 0
   )
   {
   arma_extra_debug_sigprint();
@@ -735,7 +730,7 @@ norm
   (
   const T1& X,
   const char* method,
-  const typename arma_float_or_cx_only<typename T1::elem_type>::result* junk = 0
+  const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk = 0
   )
   {
   arma_extra_debug_sigprint();

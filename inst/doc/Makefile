@@ -24,8 +24,8 @@ RcppArmadillo-unitTests.pdf:
 
 RcppArmadillo-intro.pdf:
 	${RPROG} CMD Sweave RcppArmadillo-intro.Rnw
-	pdflatex RcppArmadillo-intro
+	pdflatex -shell-escape RcppArmadillo-intro
 	bibtex RcppArmadillo-intro
-	pdflatex RcppArmadillo-intro
-	pdflatex RcppArmadillo-intro
-	rm RcppArmadillo-intro.aux RcppArmadillo-intro.log RcppArmadillo-intro.bbl RcppArmadillo-intro.blg RcppArmadillo-intro.tex
+	pdflatex -shell-escape RcppArmadillo-intro
+	pdflatex -shell-escape RcppArmadillo-intro
+	rm RcppArmadillo-intro.aux RcppArmadillo-intro.log RcppArmadillo-intro.bbl RcppArmadillo-intro.blg RcppArmadillo-intro.tex RcppArmadillo-intro.spl

@@ -1,0 +1,19 @@
+citHeader("To cite RcppArmadillo in publications use:")
+
+citEntry(entry = "Article",
+  title        = "RcppArmadillo: Accelerating R with high-performance C++ linear algebra",
+  author       = personList(as.person("Dirk Eddelbuettel"),
+                   as.person("Conrad Sanderson")),
+  journal      = "Computational	Statistics and Data Analysis",
+  year         = "2013",
+  volume       = "in press",
+  number       = "",
+  pages        = "",
+  url          = "http://dx.doi.org/10.1016/j.csda.2013.02.005",
+
+  textVersion  =
+  paste("Dirk Eddelbuettel, Conrad Sanderson (2013).",
+        "RcppArmadillo: Accelerating R with high-performance C++ linear algebra.",
+        "Computational Statistics and Data Analysis, in press.",
+        "URL http://dx.doi.org/10.1016/j.csda.2013.02.005")
+)
