@@ -13,13 +13,14 @@
 ## ----> put the bulk of the code e.g. in  ../inst/unitTests/runTests.R :
 
 if(require("RUnit", quietly = TRUE)) {
+
     pkg <- "RcppArmadillo"
-
     require( pkg, character.only=TRUE)
-
     path <- system.file("unitTests", package = pkg)
-
     stopifnot(file.exists(path), file.info(path.expand(path))$isdir)
+    pathRcppArmadilloTests <<- system.file("unitTests", package = pkg)
+    stopifnot(file.exists(pathRcppArmadilloTests),
+              file.info(path.expand(pathRcppArmadilloTests))$isdir)
 
     ## without this, we get unit test failures
     Sys.setenv( R_TESTS = "" )
