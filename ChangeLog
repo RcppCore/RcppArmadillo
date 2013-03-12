@@ -1,3 +1,13 @@
+2013-03-12  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.3.800.1
+
+	* inst/include/*: Upgraded to new release 3.800.1 of Armadillo
+
+	* inst/unitTests/cpp/armadillo.cpp: Factored out of
+	runit.RcppArmadillo.R to accelerate unit test run 
+	* inst/unitTests/runit.RcppArmadillo.R: Deploy refactored cpp code 
+
 2013-03-11  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/unitTests/cpp/sample.cpp: Regrouping C++ tests for sample()

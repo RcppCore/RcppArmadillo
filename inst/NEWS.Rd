@@ -2,10 +2,15 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
-\section{Changes in RcppArmadillo version 0.3.800.0.1 (2013-03-31)}{
+\section{Changes in RcppArmadillo version 0.3.800.1 (2013-03-12)}{
   \itemize{
-    \item UNRELEASED -- version and date subject to change
-    \item Added new sample() function contributed by Christian Gunning
+    \item Upgraded to Armadillo release Version 3.800.1 (Miami Beach)
+    \itemize{
+      \item workaround for a bug in ATLAS 3.8 on 64 bit systems
+      \item faster matrix-vector multiply for small matrices
+    }
+    \item Added new sample() function and tests contributed by Christian Gunning
+    \item Refactored unit testing code for faster unit test performance
   }
 }
 
