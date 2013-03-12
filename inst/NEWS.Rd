@@ -2,6 +2,13 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.3.800.0.1 (2013-03-31)}{
+  \itemize{
+    \item UNRELEASED -- version and date subject to change
+    \item Added new sample() function contributed by Christian Gunning
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.3.800.0 (2013-03-01)}{
   \itemize{
     \item Upgraded to Armadillo release Version 3.800.0 (Miami Beach)

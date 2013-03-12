@@ -1,3 +1,15 @@
+2013-03-11  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/unitTests/cpp/sample.cpp: Regrouping C++ tests for sample()
+	* inst/unitTests/runit.sample.R: Rewritten for sole external cpp file
+
+2013-03-10  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/add-ons/sample.h: Added sample() function contributed
+	by Christian Gunning
+	* inst/unitTests/runit.sample.R: Added unit test for sample()
+	contributed by Christian Gunning
+
 2013-03-01  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.3.800.0
