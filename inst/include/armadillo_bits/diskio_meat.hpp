@@ -897,8 +897,8 @@ diskio::save_raw_ascii(const Mat<eT>& x, std::ostream& f)
   if( (is_float<eT>::value == true) || (is_double<eT>::value == true) )
     {
     f.setf(ios::scientific);
-    f.precision(10);
-    cell_width = 18;
+    f.precision(12);
+    cell_width = 20;
     }
   
   for(uword row=0; row < x.n_rows; ++row)
@@ -1023,8 +1023,8 @@ diskio::save_arma_ascii(const Mat<eT>& x, std::ostream& f)
   if( (is_float<eT>::value == true) || (is_double<eT>::value == true) )
     {
     f.setf(ios::scientific);
-    f.precision(10);
-    cell_width = 18;
+    f.precision(12);
+    cell_width = 20;
     }
     
   for(uword row=0; row < x.n_rows; ++row)
@@ -1100,7 +1100,7 @@ diskio::save_csv_ascii(const Mat<eT>& x, std::ostream& f)
   if( (is_float<eT>::value == true) || (is_double<eT>::value == true) )
     {
     f.setf(ios::scientific);
-    f.precision(10);
+    f.precision(12);
     }
   
   uword x_n_rows = x.n_rows;
@@ -2303,7 +2303,7 @@ diskio::save_coord_ascii(const SpMat<eT>& x, std::ostream& f)
     if( (is_float<eT>::value == true) || (is_double<eT>::value == true) )
       {
       f.setf(ios::scientific);
-      f.precision(10);
+      f.precision(12);
       }
     
     f << (*iter) << '\n';
@@ -2357,7 +2357,7 @@ diskio::save_coord_ascii(const SpMat< std::complex<T> >& x, std::ostream& f)
     if( (is_float<T>::value == true) || (is_double<T>::value == true) )
       {
       f.setf(ios::scientific);
-      f.precision(10);
+      f.precision(12);
       }
     
     const eT val = (*iter);
@@ -3097,8 +3097,8 @@ diskio::save_raw_ascii(const Cube<eT>& x, std::ostream& f)
   if( (is_float<eT>::value == true) || (is_double<eT>::value == true) )
     {
     f.setf(ios::scientific);
-    f.precision(10);
-    cell_width = 18;
+    f.precision(12);
+    cell_width = 20;
     }
   
   for(uword slice=0; slice < x.n_slices; ++slice)
@@ -3226,8 +3226,8 @@ diskio::save_arma_ascii(const Cube<eT>& x, std::ostream& f)
   if( (is_float<eT>::value == true) || (is_double<eT>::value == true) )
     {
     f.setf(ios::scientific);
-    f.precision(10);
-    cell_width = 18;
+    f.precision(12);
+    cell_width = 20;
     }
     
   for(uword slice=0; slice < x.n_slices; ++slice)
