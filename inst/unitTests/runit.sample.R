@@ -23,16 +23,6 @@
 }
 
 test.sample <- function() {
-    ## Seed needs to be reset to compare R to C++
-    seed <- 441
-
-    ## Input vectors to sample
-    N <- 100
-
-    ## Number of samples
-    ## works for size == N?!
-    size <- N%/%2
-
     ## set up S3 dispatching,
     ## simplifies lapply(tests, ...) below
     csample <- function(x, ...) UseMethod("csample")
@@ -41,6 +31,14 @@ test.sample <- function() {
     csample.complex <- csample_complex
     csample.character <- csample_character
     csample.logical <- csample_logical
+
+    ## Seed needs to be reset to compare R to C++
+    seed <- 441
+    ## Input vectors to sample
+    N <- 100
+    ## Number of samples
+    ## works for size == N?!
+    size <- N%/%2
 
     ## all atomic vector classes except raw
     ## for each list element, check that sampling works
@@ -70,18 +68,18 @@ test.sample <- function() {
         set.seed(seed)
         r.yes.no <- sample(dat, size, replace=T)
         set.seed(seed)
-        r.no.yes <- sample(dat, size, replace=F, prob=1:N)
+        r.no.yes <- sample(dat, size, replace=F, prob=probs)
         set.seed(seed)
-        r.yes.yes <- sample(dat, size, replace=T, prob=1:N)
+        r.yes.yes <- sample(dat, size, replace=T, prob=probs)
         ## C
         set.seed(seed)
         c.no.no <- csample(dat, size, replace=F)
         set.seed(seed)
         c.yes.no <- csample(dat, size, replace=T)
         set.seed(seed)
-        c.no.yes <- csample(dat, size, replace=F, prob=1:N)
+        c.no.yes <- csample(dat, size, replace=F, prob=probs)
         set.seed(seed)
-        c.yes.yes <- csample(dat, size, replace=T, prob=1:N)
+        c.yes.yes <- csample(dat, size, replace=T, prob=probs)
         ## comparisons
         checkEquals(r.no.no, c.no.no, msg=sprintf("sample.%s.no_replace.no_prob",.class))
         checkEquals(r.yes.no, c.yes.no, msg=sprintf("sample.%s.replace.no_prob",.class))
@@ -89,4 +87,21 @@ test.sample <- function() {
         checkEquals(r.no.yes, c.no.yes, msg=sprintf("sample.%s.no_replace.prob",.class))
         checkEquals(r.yes.yes, c.yes.yes, msg=sprintf("sample.%s.replace.prob",.class))
     })
+    ## Walker Alias method test
+    ## With replacement, >200 "nonzero" probabilities
+    ## Not implemented, see below
+    walker.N <- 1e3
+    walker.sample <- (1:walker.N)/10
+    walker.probs <- rep(0.1, walker.N)
+    ## uncomment following 5 lines if/when walker alias method is implemented
+    #set.seed(seed)
+    #r.walker <- sample( walker.sample, walker.N, replace=T, prob=walker.probs)
+    #set.seed(seed)
+    #c.walker <- csample( walker.sample, walker.N, replace=T, prob=walker.probs)
+    #checkEquals(r.walker, c.walker, msg=sprintf("Walker Alias method test"))
+    ## Walker Alias method is not implemented.
+    ## For this problem (replace, >200 non-zero probs) R is much faster
+    ## So throw an error and refuse to proceed
+    walker.error <- try( csample( walker.sample, walker.N, replace=T, prob=walker.probs), TRUE)
+    checkEquals(inherits(walker.error, "try-error"), TRUE, msg=sprintf("Walker Alias method test"))
 }

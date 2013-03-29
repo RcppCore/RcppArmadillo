@@ -63,8 +63,14 @@ namespace Rcpp{
                 // Copy the given probabilities into an arma vector
                 arma::vec prob(fixprob.begin(), fixprob.size());
                 if (replace) {
-                    // check for walker alias conditions here??
-                    ProbSampleReplace(index, nOrig, size, prob);
+                    // check for walker alias conditions 
+                    int walker_test = sum( (probsize * prob) > 0.1);
+                    if (walker_test < 200) { 
+                        ProbSampleReplace(index, nOrig, size, prob);
+                    } else {
+                        throw std::range_error( "Walker Alias method not implemented. R-core sample() is likely faster for this problem.");
+                        // WalkerProbSampleReplace(index, nOrig, size, prob);
+                    }
                 } else {
                     ProbSampleNoReplace(index, nOrig, size, prob);
                 }
