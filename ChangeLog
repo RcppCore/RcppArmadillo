@@ -1,3 +1,7 @@
+2013-04-05  Dirk Eddelbuettel  <edd@debian.org>
+
+	* debian/: Package will be added to Debian as well
+
 2013-03-29  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/RcppArmadilloExtensions/sample.h: Applied another

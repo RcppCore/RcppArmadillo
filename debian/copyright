@@ -1,0 +1,79 @@
+This is the Debian GNU/Linux r-cran-rcpparmadillo package of
+RcppArmadillo, an package connect the Armadillo C++ library to R
+(using the Rcpp package). RcppArmadillo was written by Romain
+Francois, Dirk Eddelbuettel and Doug Bates; Armadillo was written by
+Conrad Sanderson.
+
+This package was created by Dirk Eddelbuettel <edd@debian.org>.
+The sources were downloaded from the main CRAN site
+	http://cran.r-project.org/src/contrib/
+and are also available from all CRAN mirrors as e.g.
+	http://cran.us.r-project.org/src/contrib/
+as well the R-Forge SVN host at 
+	http://r-forge.r-project.org/projects/rcpp/
+via
+   	svn://svn.r-forge.r-project.org/svnroot/rcpp
+
+
+The package was renamed from its upstream name 'RcppArmadillo' to
+'r-cran-rcpparmadillo' to fit the pattern of CRAN (and non-CRAN) packages for
+R.
+
+For RcppArmadillo:
+
+Copyright (C) 2010 - 2013  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+
+License: GPL-2
+
+For Armadillo:
+
+Copyright (C) 2008 - 2013  Conrad Sanderson
+Copyright (C) 2008 - 2013  NICTA (www.nicta.com.au)
+
+License: MPL
+
+
+On a Debian GNU/Linux system, the GPL license (version 2) is included
+in the file /usr/share/common-licenses/GPL-2.
+The MPL license (version 2) is available at http://www.mozilla.org/MPL/2.0/
+
+For reference, the upstream DESCRIPTION file is included below:
+
+   Package: RcppArmadillo
+   Type: Package
+   Title: Rcpp integration for Armadillo templated linear algebra library
+   Version: 0.3.800.1
+   Date: $Date: 2013-03-13 09:27:01 -0500 (Wed, 13 Mar 2013) $
+   Author: Romain Francois, Dirk Eddelbuettel and Doug Bates
+   Maintainer: Dirk Eddelbuettel <edd@debian.org>
+   Description: R and Armadillo integration using Rcpp
+    Armadillo is a templated C++ linear algebra library (by Conrad Sanderson)
+    that aims towards a good balance between speed and ease of use. Integer,
+    floating point and complex numbers are supported, as well as a subset of
+    trigonometric and statistics functions. Various matrix decompositions are
+    provided through optional integration with LAPACK and ATLAS libraries.
+    .
+    A delayed evaluation approach is employed (during compile time) to combine 
+    several operations into one, and to reduce (or eliminate) the need for 
+    temporaries. This is accomplished through recursive templates and template 
+    meta-programming.   
+    .
+    This library is useful if C++ has been decided as the language of choice 
+    (due to speed and/or integration capabilities), rather than another language.
+    .
+    The RcppArmadillo package includes the header files from the templated
+    Armadillo library (currently version 3.800.1). Thus users do not need to
+    install Armadillo itself in order to use RcppArmadillo.
+    .
+    This Armadillo integration provides a nice illustration of the 
+    capabilities of the Rcpp package for seamless R and C++ integration.
+    .
+    Armadillo is licensed under the MPL 2.0, while RcppArmadillo (the Rcpp 
+    bindings/bridge to Armadillo) is licensed under the GNU GPL version 2 
+    or later, as is the rest of Rcpp.
+   License: GPL (>= 2)
+   LazyLoad: yes
+   Depends: R (>= 2.14.0), Rcpp (>= 0.10.2)
+   LinkingTo: Rcpp
+   Suggests: inline, RUnit
+   URL: http://arma.sourceforge.net/, http://dirk.eddelbuettel.com/code/rcpp.armadillo.html, http://romainfrancois.blog.free.fr/index.php?category/R-package/RcppArmadillo
