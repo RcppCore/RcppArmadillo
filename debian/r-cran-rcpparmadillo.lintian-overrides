@@ -77,3 +77,4 @@ r-cran-rcpparmadillo: script-not-executable usr/lib/R/site-library/RcppArmadillo
 r-cran-rcpparmadillo: script-not-executable usr/lib/R/site-library/RcppArmadillo/unitTests/runit.RcppArmadillo.R
 r-cran-rcpparmadillo: script-not-executable usr/lib/R/site-library/RcppArmadillo/unitTests/runit.fastLm.R
 r-cran-rcpparmadillo: script-not-executable usr/lib/R/site-library/RcppArmadillo/unitTests/runit.sample.R
+r-cran-rcpparmadillo: binary-or-shlib-defines-rpath usr/lib/R/site-library/RcppArmadillo/libs/RcppArmadillo.so /usr/lib/R/site-library/Rcpp/lib
