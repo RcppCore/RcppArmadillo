@@ -1,0 +1,7 @@
+r-cran-rcpparmadillo (0.3.800.1-1) unstable; urgency=low
+
+  * Initial Debian release 				(Closes: #704746)
+  
+ -- Dirk Eddelbuettel <edd@debian.org>  Fri, 05 Apr 2013 19:47:00 -0500
+
+
