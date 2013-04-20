@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2013 Conrad Sanderson
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -77,7 +77,10 @@ class subview_cube : public BaseCube<eT, subview_cube<eT> >
   inline static void minus_inplace(Mat<eT>& out, const subview_cube& in);
   inline static void schur_inplace(Mat<eT>& out, const subview_cube& in);
   inline static void   div_inplace(Mat<eT>& out, const subview_cube& in);
-
+  
+  template<typename functor> inline void transform(functor F);
+  template<typename functor> inline void     imbue(functor F);
+  
   inline void fill(const eT val);
   inline void zeros();
   inline void ones();

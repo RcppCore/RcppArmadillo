@@ -225,6 +225,7 @@ namespace arma
   #include "armadillo_bits/op_hist_bones.hpp"
   #include "armadillo_bits/op_unique_bones.hpp"
   #include "armadillo_bits/op_toeplitz_bones.hpp"
+  #include "armadillo_bits/op_fft_bones.hpp"
   
   #include "armadillo_bits/glue_times_bones.hpp"
   #include "armadillo_bits/glue_mixed_bones.hpp"
@@ -408,6 +409,7 @@ namespace arma
   #include "armadillo_bits/fn_hist.hpp"
   #include "armadillo_bits/fn_histc.hpp"
   #include "armadillo_bits/fn_unique.hpp"
+  #include "armadillo_bits/fn_fft.hpp"
   
   #include "armadillo_bits/fn_speye.hpp"
   #include "armadillo_bits/fn_spones.hpp"
@@ -418,8 +420,9 @@ namespace arma
   // misc stuff
   
   #include "armadillo_bits/hdf5_misc.hpp"
-
-
+  #include "armadillo_bits/fft_engine.hpp"
+  
+  
   //
   // class meat
   
@@ -499,6 +502,7 @@ namespace arma
   #include "armadillo_bits/op_hist_meat.hpp"
   #include "armadillo_bits/op_unique_meat.hpp"
   #include "armadillo_bits/op_toeplitz_meat.hpp"
+  #include "armadillo_bits/op_fft_meat.hpp"
   
   #include "armadillo_bits/glue_times_meat.hpp"
   #include "armadillo_bits/glue_mixed_meat.hpp"

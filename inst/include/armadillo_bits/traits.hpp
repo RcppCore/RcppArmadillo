@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2013 Conrad Sanderson
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -903,6 +903,21 @@ struct is_double<double>
 
 
 template<typename T1>
+struct is_real
+  { static const bool value = false; };
+
+template<>
+struct is_real<float>
+  { static const bool value = true; };
+  
+template<>
+struct is_real<double>
+  { static const bool value = true; };
+
+
+
+
+template<typename T1>
 struct is_not_complex
   { static const bool value = true; };
 
@@ -941,6 +956,19 @@ template<>
 struct is_complex_double< std::complex<double> >
   { static const bool value = true; };
 
+
+
+template<typename T1>
+struct is_complex_strict
+  { static const bool value = false; };
+
+template<>
+struct is_complex_strict< std::complex<float> >
+  { static const bool value = true; };
+
+template<>
+struct is_complex_strict< std::complex<double> >
+  { static const bool value = true; };
 
 
 

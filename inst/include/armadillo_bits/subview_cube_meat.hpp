@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2013 Conrad Sanderson
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -862,6 +862,64 @@ subview_cube<eT>::operator/= (const Base<eT,T1>& in)
       {
       arma_stop( arma_incompat_size_string(t, x, "element-wise division") );
       }
+    }
+  }
+
+
+
+//! transform each element in the subview using a functor
+template<typename eT>
+template<typename functor>
+inline
+void
+subview_cube<eT>::transform(functor F)
+  {
+  arma_extra_debug_sigprint();
+  
+  Cube<eT>& Q = const_cast< Cube<eT>& >(m);
+  
+  const uword start_col   = aux_col1;
+  const uword start_row   = aux_row1;
+  const uword start_slice = aux_slice1;
+  
+  const uword end_col_plus1   = start_col   + n_cols;
+  const uword end_row_plus1   = start_row   + n_rows;
+  const uword end_slice_plus1 = start_slice + n_slices;
+  
+  for(uword uslice = start_slice; uslice < end_slice_plus1; ++uslice)
+  for(uword ucol   = start_col;     ucol < end_col_plus1;   ++ucol  )
+  for(uword urow   = start_row;     urow < end_row_plus1;   ++urow  )
+    {
+    Q.at(urow, ucol, uslice) = eT( F( Q.at(urow, ucol, uslice) ) );
+    }
+  }
+
+
+
+//! imbue (fill) the subview with values provided by a functor
+template<typename eT>
+template<typename functor>
+inline
+void
+subview_cube<eT>::imbue(functor F)
+  {
+  arma_extra_debug_sigprint();
+  
+  Cube<eT>& Q = const_cast< Cube<eT>& >(m);
+  
+  const uword start_col   = aux_col1;
+  const uword start_row   = aux_row1;
+  const uword start_slice = aux_slice1;
+  
+  const uword end_col_plus1   = start_col   + n_cols;
+  const uword end_row_plus1   = start_row   + n_rows;
+  const uword end_slice_plus1 = start_slice + n_slices;
+  
+  for(uword uslice = start_slice; uslice < end_slice_plus1; ++uslice)
+  for(uword ucol   = start_col;     ucol < end_col_plus1;   ++ucol  )
+  for(uword urow   = start_row;     urow < end_row_plus1;   ++urow  )
+    {
+    Q.at(urow, ucol, uslice) = eT( F() );
     }
   }
 

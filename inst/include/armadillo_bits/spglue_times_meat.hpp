@@ -212,7 +212,7 @@ spglue_times::apply_noalias(SpMat<eT>& c, const SpProxy<T1>& pa, const SpProxy<T
       const uword tmp = last_ind;
 
       // Check that it wasn't a "fake" nonzero element.
-      if(sums[tmp] != 0)
+      if(sums[tmp] != eT(0))
         {
         // Assign to next open position.
         sorted_indices[cur_index] = tmp;

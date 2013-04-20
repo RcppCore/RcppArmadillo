@@ -64,7 +64,20 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   inline                  SpMat(const std::string& text);
   inline const SpMat& operator=(const std::string& text);
   inline                  SpMat(const SpMat<eT>&   x);
-  
+
+  /**
+   * Construct a sparse matrix and insert a large number of points at once.
+   * locations.row[0] should be row indices, locations.row[1] should be column
+   * indices, and values should be the corresponding values.  If sorted is true,
+   * then it is assumed that the locations and values are already sorted in
+   * column-major ordering.
+   *
+   * The size is automatically determined to be the minimum size to fit all
+   * points in the locations list.
+   */
+  template<typename T1, typename T2> inline SpMat(const Base<uword,T1>& locations, const Base<eT,T2>& values, const bool sort_locations = true);
+  //! Same as the other batch insertion constructor, but with manual size specification.
+  template<typename T1, typename T2> inline SpMat(const Base<uword,T1>& locations, const Base<eT,T2>& values, const uword n_rows, const uword n_cols, const bool sort_locations = true);
   
   inline const SpMat&  operator=(const eT val); //! Sets size to 1x1.
   inline const SpMat& operator*=(const eT val);

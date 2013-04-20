@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2013 Conrad Sanderson
 // Copyright (C)      2011 James Sanders
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -66,6 +66,9 @@ class subview : public Base<eT, subview<eT> >
   inline static void minus_inplace(Mat<eT>& out, const subview& in);
   inline static void schur_inplace(Mat<eT>& out, const subview& in);
   inline static void   div_inplace(Mat<eT>& out, const subview& in);
+  
+  template<typename functor> inline void transform(functor F);
+  template<typename functor> inline void     imbue(functor F);
   
   inline void fill(const eT val);
   inline void zeros();
