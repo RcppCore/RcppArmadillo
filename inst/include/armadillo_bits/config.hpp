@@ -17,7 +17,7 @@
 #if !defined(ARMA_USE_BLAS)
 // #define ARMA_USE_BLAS
 //// Uncomment the above line if you have BLAS or a high-speed replacement for BLAS,
-//// such as GotoBLAS, Intel's MKL, AMD's ACML, or the Accelerate framework.
+//// such as OpenBLAS, GotoBLAS, Intel's MKL, AMD's ACML, or the Accelerate framework.
 //// BLAS is used for matrix multiplication.
 //// Without BLAS, matrix multiplication will still work, but might be slower.
 #endif

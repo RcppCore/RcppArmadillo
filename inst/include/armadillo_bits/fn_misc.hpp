@@ -90,12 +90,12 @@ linspace(const double start, const double end, const uword num = 100u)
 
 
 //
-// log_add
+// log_exp_add
 
 template<typename eT>
 inline
 typename arma_real_only<eT>::result
-log_add(eT log_a, eT log_b)
+log_add_exp(eT log_a, eT log_b)
   {
   if(log_a < log_b)
     {
@@ -118,6 +118,17 @@ log_add(eT log_a, eT log_b)
     }
   }
 
+
+
+// for compatibility with earlier versions
+template<typename eT>
+inline
+typename arma_real_only<eT>::result
+log_add(eT log_a, eT log_b)
+  {
+  return log_add_exp(log_a, log_b);
+  }
+  
 
 
 template<typename eT>

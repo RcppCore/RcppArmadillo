@@ -2,6 +2,21 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.3.810.0 (2013-04-19)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 3.810.0 (Newell Highway)
+    \itemize{
+      \item added fast Fourier transform: \code{fft()}
+      \item added handling of \code{.imbue()} and \code{.transform()} by
+      submatrices and subcubes 
+      \item added batch insertion constructors for sparse matrices
+      \item minor fix for multiplication of complex sparse matrices
+    }
+    \item Updated sample() function and test again contributed by
+    Christian Gunning 
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.3.800.1 (2013-03-12)}{
   \itemize{
     \item Upgraded to Armadillo release Version 3.800.1 (Miami Beach)

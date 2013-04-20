@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2013 Conrad Sanderson
 // Copyright (C)      2011 James Sanders
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -1044,6 +1044,92 @@ subview<eT>::operator/= (const subview& x_in)
     delete tmp_mat;
     }
   
+  }
+
+
+
+//! transform each element in the subview using a functor
+template<typename eT>
+template<typename functor>
+inline
+void
+subview<eT>::transform(functor F)
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword local_n_cols = n_cols;
+  const uword local_n_rows = n_rows;
+  
+  Mat<eT>& X = const_cast< Mat<eT>& >(m);
+  
+  if(local_n_rows == 1)
+    {
+    const uword urow          = aux_row1;
+    const uword start_col     = aux_col1;
+    const uword end_col_plus1 = start_col + local_n_cols;
+    
+    for(uword ucol = start_col; ucol < end_col_plus1; ++ucol)
+      {
+      X.at(urow, ucol) = eT( F( X.at(urow, ucol) ) );
+      }
+    }
+  else
+    {
+    const uword start_col = aux_col1;
+    const uword start_row = aux_row1;
+    
+    const uword end_col_plus1 = start_col + local_n_cols;
+    const uword end_row_plus1 = start_row + local_n_rows;
+    
+    for(uword ucol = start_col; ucol < end_col_plus1; ++ucol)
+    for(uword urow = start_row; urow < end_row_plus1; ++urow)
+      {
+      X.at(urow, ucol) = eT( F( X.at(urow, ucol) ) );
+      }
+    }
+  }
+
+
+
+//! imbue (fill) the subview with values provided by a functor
+template<typename eT>
+template<typename functor>
+inline
+void
+subview<eT>::imbue(functor F)
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword local_n_cols = n_cols;
+  const uword local_n_rows = n_rows;
+  
+  Mat<eT>& X = const_cast< Mat<eT>& >(m);
+  
+  if(local_n_rows == 1)
+    {
+    const uword urow          = aux_row1;
+    const uword start_col     = aux_col1;
+    const uword end_col_plus1 = start_col + local_n_cols;
+    
+    for(uword ucol = start_col; ucol < end_col_plus1; ++ucol)
+      {
+      X.at(urow, ucol) = eT( F() );
+      }
+    }
+  else
+    {
+    const uword start_col = aux_col1;
+    const uword start_row = aux_row1;
+    
+    const uword end_col_plus1 = start_col + local_n_cols;
+    const uword end_row_plus1 = start_row + local_n_rows;
+    
+    for(uword ucol = start_col; ucol < end_col_plus1; ++ucol)
+    for(uword urow = start_row; urow < end_row_plus1; ++urow)
+      {
+      X.at(urow, ucol) = eT( F() );
+      }
+    }
   }
 
 

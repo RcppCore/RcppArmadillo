@@ -184,6 +184,9 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename T1> arma_inline       subview_elem1<eT,T1> elem(const Base<uword,T1>& a);
   template<typename T1> arma_inline const subview_elem1<eT,T1> elem(const Base<uword,T1>& a) const;
   
+  template<typename T1> arma_inline       subview_elem1<eT,T1> operator()(const Base<uword,T1>& a);
+  template<typename T1> arma_inline const subview_elem1<eT,T1> operator()(const Base<uword,T1>& a) const;
+  
   
   template<typename T1, typename T2> arma_inline       subview_elem2<eT,T1,T2> elem(const Base<uword,T1>& ri, const Base<uword,T2>& ci);
   template<typename T1, typename T2> arma_inline const subview_elem2<eT,T1,T2> elem(const Base<uword,T1>& ri, const Base<uword,T2>& ci) const;
@@ -193,6 +196,7 @@ class Mat : public Base< eT, Mat<eT> >
   
   template<typename T1, typename T2> arma_inline       subview_elem2<eT,T1,T2> operator()(const Base<uword,T1>& ri, const Base<uword,T2>& ci);
   template<typename T1, typename T2> arma_inline const subview_elem2<eT,T1,T2> operator()(const Base<uword,T1>& ri, const Base<uword,T2>& ci) const;
+  
   
   template<typename T1> arma_inline       subview_elem2<eT,T1,T1> rows(const Base<uword,T1>& ri);
   template<typename T1> arma_inline const subview_elem2<eT,T1,T1> rows(const Base<uword,T1>& ri) const;

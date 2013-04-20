@@ -2727,6 +2727,32 @@ Mat<eT>::elem(const Base<uword,T1>& a) const
 
 
 template<typename eT>
+template<typename T1>
+arma_inline
+subview_elem1<eT,T1>
+Mat<eT>::operator()(const Base<uword,T1>& a)
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_elem1<eT,T1>(*this, a);
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+arma_inline
+const subview_elem1<eT,T1>
+Mat<eT>::operator()(const Base<uword,T1>& a) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_elem1<eT,T1>(*this, a);
+  }
+
+
+
+template<typename eT>
 template<typename T1, typename T2>
 arma_inline
 subview_elem2<eT,T1,T2>
