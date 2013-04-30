@@ -2,6 +2,15 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.3.810.2 (2013-04-30)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 3.810.2
+    \itemize{
+      \item minor fix for initialisation of sparse matrices
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.3.810.0 (2013-04-19)}{
   \itemize{
     \item Upgraded to Armadillo release Version 3.810.0 (Newell Highway)
