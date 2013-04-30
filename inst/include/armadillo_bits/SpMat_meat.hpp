@@ -1,7 +1,7 @@
-// Copyright (C) 2011-2012 Ryan Curtin
+// Copyright (C) 2011-2013 Ryan Curtin
+// Copyright (C) 2012-2013 Conrad Sanderson
 // Copyright (C) 2011 Matthew Amidon
-// Copyright (C) 2012 Conrad Sanderson
-//
+// 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -3873,7 +3873,7 @@ SpMat<eT>::init(uword in_rows, uword in_cols)
     (
       (
       ( (in_rows > ARMA_MAX_UHWORD) || (in_cols > ARMA_MAX_UHWORD) )
-        ? ( (float(in_rows) * float(in_cols)) > float(ARMA_MAX_UHWORD) )
+        ? ( (float(in_rows) * float(in_cols)) > float(ARMA_MAX_UWORD) )
         : false
       ),
       "SpMat::init(): requested size is too large"
