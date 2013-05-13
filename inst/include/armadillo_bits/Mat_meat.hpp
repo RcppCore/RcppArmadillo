@@ -672,7 +672,7 @@ Mat<eT>::init
   const Proxy<T1> PX(X.get_ref());
   const Proxy<T2> PY(Y.get_ref());
   
-  arma_assert_same_size(PX, PY, "Mat()");
+  arma_debug_assert_same_size(PX, PY, "Mat()");
   
   const uword local_n_rows = PX.get_n_rows();
   const uword local_n_cols = PX.get_n_cols();
@@ -5922,6 +5922,18 @@ Mat<eT>::begin() const
 
 template<typename eT>
 inline
+typename Mat<eT>::const_iterator
+Mat<eT>::cbegin() const
+  {
+  arma_extra_debug_sigprint();
+  
+  return memptr();
+  }
+
+
+
+template<typename eT>
+inline
 typename Mat<eT>::iterator
 Mat<eT>::end()
   {
@@ -5941,7 +5953,19 @@ Mat<eT>::end() const
   
   return memptr() + n_elem;
   }
+
+
+
+template<typename eT>
+inline
+typename Mat<eT>::const_iterator
+Mat<eT>::cend() const
+  {
+  arma_extra_debug_sigprint();
   
+  return memptr() + n_elem;
+  }
+
 
 
 template<typename eT>
@@ -6184,69 +6208,6 @@ Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::fixed(const std::string& text)
 
 
 
-#if defined(ARMA_GCC47_BUG)
-  
-  template<typename eT>
-  template<uword fixed_n_rows, uword fixed_n_cols>
-  template<typename T1>
-  inline
-  const Mat<eT>&
-  Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::operator=(const Base<eT,T1>& A)
-    {
-    Mat<eT>::operator=(A.get_ref());
-    
-    return *this;
-    }
-  
-  
-  
-  template<typename eT>
-  template<uword fixed_n_rows, uword fixed_n_cols>
-  inline
-  const Mat<eT>&
-  Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::operator=(const eT val)
-    {
-    arma_extra_debug_sigprint();
-    
-    Mat<eT>::operator=(val);
-    
-    return *this;
-    }
-  
-  
-  
-  template<typename eT>
-  template<uword fixed_n_rows, uword fixed_n_cols>
-  inline
-  const Mat<eT>&
-  Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::operator=(const char* text)
-    {
-    arma_extra_debug_sigprint();
-    
-    Mat<eT>::operator=(text);
-    
-    return *this;
-    }
-  
-  
-  
-  template<typename eT>
-  template<uword fixed_n_rows, uword fixed_n_cols>
-  inline
-  const Mat<eT>&
-  Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::operator=(const std::string& text)
-    {
-    arma_extra_debug_sigprint();
-    
-    Mat<eT>::operator=(text);
-    
-    return *this;
-    }
-  
-#endif
-
-
-
 #if defined(ARMA_USE_CXX11)
   
   template<typename eT>
@@ -6284,7 +6245,40 @@ Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::fixed(const std::string& text)
     }
   
 #endif
-  
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols>
+arma_inline
+const Op< typename Mat<eT>::template fixed<fixed_n_rows, fixed_n_cols>::Mat_fixed_type, op_htrans >
+Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::t() const
+  {
+  return Op< typename Mat<eT>::template fixed<fixed_n_rows, fixed_n_cols>::Mat_fixed_type, op_htrans >(*this);
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols>
+arma_inline
+const Op< typename Mat<eT>::template fixed<fixed_n_rows, fixed_n_cols>::Mat_fixed_type, op_htrans >
+Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::ht() const
+  {
+  return Op< typename Mat<eT>::template fixed<fixed_n_rows, fixed_n_cols>::Mat_fixed_type, op_htrans >(*this);
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols>
+arma_inline
+const Op< typename Mat<eT>::template fixed<fixed_n_rows, fixed_n_cols>::Mat_fixed_type, op_strans >
+Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::st() const
+  {
+  return Op< typename Mat<eT>::template fixed<fixed_n_rows, fixed_n_cols>::Mat_fixed_type, op_strans >(*this);
+  }
+
 
 
 template<typename eT>
@@ -6428,6 +6422,34 @@ template<uword fixed_n_rows, uword fixed_n_cols>
 arma_inline
 arma_warn_unused
 eT*
+Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::colptr(const uword in_col)
+  {
+  eT* mem_actual = (use_extra) ? mem_local_extra : mem_local;
+  
+  return & access::rw(mem_actual[in_col*fixed_n_rows]);
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols>
+arma_inline
+arma_warn_unused
+const eT*
+Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::colptr(const uword in_col) const
+  {
+  const eT* mem_actual = (use_extra) ? mem_local_extra : mem_local;
+  
+  return & mem_actual[in_col*fixed_n_rows];
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols>
+arma_inline
+arma_warn_unused
+eT*
 Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::memptr()
   {
   return (use_extra) ? mem_local_extra : mem_local;
@@ -6443,6 +6465,18 @@ const eT*
 Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::memptr() const
   {
   return (use_extra) ? mem_local_extra : mem_local;
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols>
+arma_inline
+arma_warn_unused
+bool
+Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::is_vec() const
+  {
+  return ( (fixed_n_rows == 1) || (fixed_n_cols == 1) );
   }
 
 

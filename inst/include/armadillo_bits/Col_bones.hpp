@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2013 Conrad Sanderson
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -171,17 +171,16 @@ class Col<eT>::fixed : public Col<eT>
   inline const Col& operator=(const std::string& text);
   inline const Col& operator=(const subview_cube<eT>& X);
   
-  
-  #if !defined(ARMA_GCC47_BUG)
-    using Col<eT>::operator();
-  #endif
-  
+  using Col<eT>::operator();
   
   #if defined(ARMA_USE_CXX11)
     inline                fixed(const std::initializer_list<eT>& list);
     inline const Col& operator=(const std::initializer_list<eT>& list);
   #endif
   
+  arma_inline const Op< Col_fixed_type, op_htrans >  t() const;
+  arma_inline const Op< Col_fixed_type, op_htrans > ht() const;
+  arma_inline const Op< Col_fixed_type, op_strans > st() const;
   
   arma_inline arma_warn_unused eT& operator[] (const uword i);
   arma_inline arma_warn_unused eT  operator[] (const uword i) const;

@@ -92,7 +92,7 @@ trace_mul_unwrap(const T1& XA, const T2& XB)
   
   const Mat<eT>& B = tmpB.M;
   
-  arma_debug_assert_mul_size(PA.get_n_rows(), PA.get_n_cols(), B.n_rows, B.n_cols, "matrix multiply");
+  arma_debug_assert_mul_size(PA.get_n_rows(), PA.get_n_cols(), B.n_rows, B.n_cols, "matrix multiplication");
   
   arma_debug_check( (PA.get_n_rows() != B.n_cols), "trace(): matrix must be square sized" );
   
@@ -150,7 +150,7 @@ trace_mul_proxy(const T1& XA, const T2& XB)
     return trace_mul_unwrap(PA.Q, PB.Q);
     }
   
-  arma_debug_assert_mul_size(PA.get_n_rows(), PA.get_n_cols(), PB.get_n_rows(), PB.get_n_cols(), "matrix multiply");
+  arma_debug_assert_mul_size(PA.get_n_rows(), PA.get_n_cols(), PB.get_n_rows(), PB.get_n_cols(), "matrix multiplication");
   
   arma_debug_check( (PA.get_n_rows() != PB.get_n_cols()), "trace(): matrix must be square sized" );
   

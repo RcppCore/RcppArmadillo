@@ -381,6 +381,19 @@ struct is_op_diagmat< const Op<T1,op_diagmat> >
   { static const bool value = true; };
 
 
+template<typename T>
+struct is_op_htrans2
+  { static const bool value = false; };
+ 
+template<typename T1>
+struct is_op_htrans2< Op<T1,op_htrans2> >
+  { static const bool value = true; };
+
+template<typename T1>
+struct is_op_htrans2< const Op<T1,op_htrans2> >
+  { static const bool value = true; };
+
+
 //
 //
 

@@ -626,43 +626,48 @@ SpMat<eT>::SpMat
   , col_ptrs(NULL)
   {
   arma_extra_debug_sigprint();
-
+  
   typedef typename T1::elem_type T;
-
+  
   // Make sure eT is complex and T is not (compile-time check).
   arma_type_check(( is_complex<eT>::value == false ));
   arma_type_check(( is_complex< T>::value == true  ));
-
+  
   // Compile-time abort if types are not compatible.
   arma_type_check(( is_same_type< std::complex<T>, eT >::value == false ));
-
-  // Hack until Proxy supports sparse matrices: assume get_ref() is SpMat<> (at
-  // the moment it must be).
-  const SpMat<T>& X = A.get_ref();
-  const SpMat<T>& Y = B.get_ref();
-
-  arma_assert_same_size(X.n_rows, X.n_cols, Y.n_rows, Y.n_cols, "SpMat()");
-
+  
+  const unwrap_spmat<T1> tmp1(A.get_ref());
+  const unwrap_spmat<T2> tmp2(B.get_ref());
+  
+  const SpMat<T>& X = tmp1.M;
+  const SpMat<T>& Y = tmp2.M;
+  
+  arma_debug_assert_same_size(X.n_rows, X.n_cols, Y.n_rows, Y.n_cols, "SpMat()");
+  
   const uword l_n_rows = X.n_rows;
   const uword l_n_cols = X.n_cols;
-
+  
   // Set size of matrix correctly.
   init(l_n_rows, l_n_cols);
   mem_resize(n_unique(X, Y, op_n_unique_count()));
-
+  
   // Now on a second iteration, fill it.
-  typename SpMat<T>::const_iterator x_it = X.begin();
-  typename SpMat<T>::const_iterator y_it = Y.begin();
+  typename SpMat<T>::const_iterator x_it  = X.begin();
+  typename SpMat<T>::const_iterator x_end = X.end();
+  
+  typename SpMat<T>::const_iterator y_it  = Y.begin();
+  typename SpMat<T>::const_iterator y_end = Y.end();
+  
   uword cur_pos = 0;
-
-  while ((x_it != X.end()) || (y_it != Y.end()))
+  
+  while ((x_it != x_end) || (y_it != y_end))
     {
     if(x_it == y_it) // if we are at the same place
       {
       access::rw(values[cur_pos]) = std::complex<T>((T) *x_it, (T) *y_it);
       access::rw(row_indices[cur_pos]) = x_it.row();
       ++access::rw(col_ptrs[x_it.col() + 1]);
-
+      
       ++x_it;
       ++y_it;
       }
@@ -673,7 +678,7 @@ SpMat<eT>::SpMat
         access::rw(values[cur_pos]) = std::complex<T>((T) *x_it, T(0));
         access::rw(row_indices[cur_pos]) = x_it.row();
         ++access::rw(col_ptrs[x_it.col() + 1]);
-
+        
         ++x_it;
         }
       else // x is closer to the end
@@ -681,20 +686,20 @@ SpMat<eT>::SpMat
         access::rw(values[cur_pos]) = std::complex<T>(T(0), (T) *y_it);
         access::rw(row_indices[cur_pos]) = y_it.row();
         ++access::rw(col_ptrs[y_it.col() + 1]);
-
+        
         ++y_it;
         }
       }
-
+    
     ++cur_pos;
     }
-
+  
   // Now fix the column pointers; they are supposed to be a sum.
   for (uword c = 1; c <= n_cols; ++c)
     {
     access::rw(col_ptrs[c]) += col_ptrs[c - 1];
     }
-
+  
   }
 
 

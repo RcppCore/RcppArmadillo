@@ -2,6 +2,18 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.3.820 (2013-05-12)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 3.820 (Mt Cootha)
+    \itemize{
+      \item faster \code{as_scalar()} for compound expressions
+      \item faster transpose of small vectors
+      \item faster matrix-vector product for small vectors
+      \item faster multiplication of small fixed size matrices
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.3.810.2 (2013-04-30)}{
   \itemize{
     \item Upgraded to Armadillo release Version 3.810.2

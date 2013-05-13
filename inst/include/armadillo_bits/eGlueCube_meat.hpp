@@ -28,7 +28,7 @@ eGlueCube<T1,T2,eglue_type>::eGlueCube(const T1& in_A, const T2& in_B)
   {
   arma_extra_debug_sigprint();
   
-  arma_assert_same_size
+  arma_debug_assert_same_size
     (
     P1.get_n_rows(), P1.get_n_cols(), P1.get_n_slices(),
     P2.get_n_rows(), P2.get_n_cols(), P2.get_n_slices(), 

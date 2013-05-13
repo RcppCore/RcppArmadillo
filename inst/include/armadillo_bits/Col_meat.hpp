@@ -1026,6 +1026,39 @@ Col<eT>::fixed<fixed_n_elem>::operator=(const subview_cube<eT>& X)
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
+const Op< typename Col<eT>::template fixed<fixed_n_elem>::Col_fixed_type, op_htrans >
+Col<eT>::fixed<fixed_n_elem>::t() const
+  {
+  return Op< typename Col<eT>::template fixed<fixed_n_elem>::Col_fixed_type, op_htrans >(*this);
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_elem>
+arma_inline
+const Op< typename Col<eT>::template fixed<fixed_n_elem>::Col_fixed_type, op_htrans >
+Col<eT>::fixed<fixed_n_elem>::ht() const
+  {
+  return Op< typename Col<eT>::template fixed<fixed_n_elem>::Col_fixed_type, op_htrans >(*this);
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_elem>
+arma_inline
+const Op< typename Col<eT>::template fixed<fixed_n_elem>::Col_fixed_type, op_strans >
+Col<eT>::fixed<fixed_n_elem>::st() const
+  {
+  return Op< typename Col<eT>::template fixed<fixed_n_elem>::Col_fixed_type, op_strans >(*this);
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_elem>
+arma_inline
 arma_warn_unused
 eT&
 Col<eT>::fixed<fixed_n_elem>::operator[] (const uword ii)

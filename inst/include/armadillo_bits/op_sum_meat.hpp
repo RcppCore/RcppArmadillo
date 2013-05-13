@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2013 Conrad Sanderson
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,13 +28,15 @@ op_sum::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sum>& in)
   
   const Proxy<T1> P(in.m);
   
+  typedef typename Proxy<T1>::stored_type P_stored_type;
+  
   const bool is_alias = P.is_alias(out);
   
-  if( (is_Mat< typename Proxy<T1>::stored_type>::value == true) || is_alias )
+  if( (is_Mat<P_stored_type>::value == true) || is_alias )
     {
-    const unwrap_check< typename Proxy<T1>::stored_type > tmp(P.Q, is_alias);
+    const unwrap_check<P_stored_type> tmp(P.Q, is_alias);
     
-    const Mat<eT>& X = tmp.M;
+    const typename unwrap_check<P_stored_type>::stored_type& X = tmp.M;
     
     const uword X_n_rows = X.n_rows;
     const uword X_n_cols = X.n_cols;

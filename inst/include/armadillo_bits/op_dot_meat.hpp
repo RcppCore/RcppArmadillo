@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2013 Conrad Sanderson
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -195,37 +195,35 @@ op_dot::apply(const T1& X, const T2& Y)
   {
   arma_extra_debug_sigprint();
   
-  if( (is_Mat<T1>::value == true) && (is_Mat<T2>::value == true) )
+  const bool prefer_at_accessor = (Proxy<T1>::prefer_at_accessor) || (Proxy<T2>::prefer_at_accessor);
+  
+  const bool do_unwrap = ((is_Mat<T1>::value == true) && (is_Mat<T2>::value == true)) || prefer_at_accessor;
+  
+  if(do_unwrap == true)
     {
-    return op_dot::apply_unwrap(X,Y);
+    const unwrap<T1> tmp1(X);
+    const unwrap<T2> tmp2(Y);
+    
+    const typename unwrap<T1>::stored_type& A = tmp1.M;
+    const typename unwrap<T2>::stored_type& B = tmp2.M;
+    
+    arma_debug_check
+      (
+      (A.n_elem != B.n_elem),
+      "dot(): objects must have the same number of elements"
+      );
+    
+    return op_dot::direct_dot(A.n_elem, A.memptr(), B.memptr());
     }
   else
     {
-    return op_dot::apply_proxy(X,Y);
+    const Proxy<T1> PA(X);
+    const Proxy<T2> PB(Y);
+    
+    arma_debug_check( (PA.get_n_elem() != PB.get_n_elem()), "dot(): objects must have the same number of elements" );
+    
+    return op_dot::apply_proxy(PA,PB);
     }
-  }
-
-
-
-template<typename T1, typename T2>
-arma_hot
-inline
-typename T1::elem_type
-op_dot::apply_unwrap(const T1& X, const T2& Y)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  const unwrap<T1> tmp1(X);
-  const unwrap<T2> tmp2(Y);
-  
-  const Mat<eT>& A = tmp1.M;
-  const Mat<eT>& B = tmp2.M;
-  
-  arma_debug_check( (A.n_elem != B.n_elem), "dot(): objects must have the same number of elements" );
-  
-  return op_dot::direct_dot(A.n_elem, A.mem, B.mem);
   }
 
 
@@ -234,7 +232,7 @@ template<typename T1, typename T2>
 arma_hot
 inline
 typename arma_not_cx<typename T1::elem_type>::result
-op_dot::apply_proxy(const T1& X, const T2& Y)
+op_dot::apply_proxy(const Proxy<T1>& PA, const Proxy<T2>& PB)
   {
   arma_extra_debug_sigprint();
   
@@ -242,42 +240,28 @@ op_dot::apply_proxy(const T1& X, const T2& Y)
   typedef typename Proxy<T1>::ea_type ea_type1;
   typedef typename Proxy<T2>::ea_type ea_type2;
   
-  const bool prefer_at_accessor = (Proxy<T1>::prefer_at_accessor) && (Proxy<T2>::prefer_at_accessor);
+  const uword N = PA.get_n_elem();
   
-  if(prefer_at_accessor == false)
+  ea_type1 A = PA.get_ea();
+  ea_type2 B = PB.get_ea();
+  
+  eT val1 = eT(0);
+  eT val2 = eT(0);
+  
+  uword i,j;
+  
+  for(i=0, j=1; j<N; i+=2, j+=2)
     {
-    const Proxy<T1> PA(X);
-    const Proxy<T2> PB(Y);
-    
-    const uword N = PA.get_n_elem();
-    
-    arma_debug_check( (N != PB.get_n_elem()), "dot(): objects must have the same number of elements" );
-    
-    ea_type1 A = PA.get_ea();
-    ea_type2 B = PB.get_ea();
-    
-    eT val1 = eT(0);
-    eT val2 = eT(0);
-    
-    uword i,j;
-    
-    for(i=0, j=1; j<N; i+=2, j+=2)
-      {
-      val1 += A[i] * B[i];
-      val2 += A[j] * B[j];
-      }
-    
-    if(i < N)
-      {
-      val1 += A[i] * B[i];
-      }
-    
-    return val1 + val2;
+    val1 += A[i] * B[i];
+    val2 += A[j] * B[j];
     }
-  else
+  
+  if(i < N)
     {
-    return op_dot::apply_unwrap(X,Y);
+    val1 += A[i] * B[i];
     }
+  
+  return val1 + val2;
   }
 
 
@@ -286,7 +270,7 @@ template<typename T1, typename T2>
 arma_hot
 inline
 typename arma_cx_only<typename T1::elem_type>::result
-op_dot::apply_proxy(const T1& X, const T2& Y)
+op_dot::apply_proxy(const Proxy<T1>& PA, const Proxy<T2>& PB)
   {
   arma_extra_debug_sigprint();
   
@@ -296,53 +280,39 @@ op_dot::apply_proxy(const T1& X, const T2& Y)
   typedef typename Proxy<T1>::ea_type ea_type1;
   typedef typename Proxy<T2>::ea_type ea_type2;
   
-  const bool prefer_at_accessor = (Proxy<T1>::prefer_at_accessor) && (Proxy<T2>::prefer_at_accessor);
+  const uword N = PA.get_n_elem();
   
-  if(prefer_at_accessor == false)
+  ea_type1 A = PA.get_ea();
+  ea_type2 B = PB.get_ea();
+  
+  T val_real = T(0);
+  T val_imag = T(0);
+  
+  for(uword i=0; i<N; ++i)
     {
-    const Proxy<T1> PA(X);
-    const Proxy<T2> PB(Y);
+    const std::complex<T> xx = A[i];
+    const std::complex<T> yy = B[i];
     
-    const uword N = PA.get_n_elem();
+    const T a = xx.real();
+    const T b = xx.imag();
     
-    arma_debug_check( (N != PB.get_n_elem()), "dot(): objects must have the same number of elements" );
+    const T c = yy.real();
+    const T d = yy.imag();
     
-    ea_type1 A = PA.get_ea();
-    ea_type2 B = PB.get_ea();
-    
-    T val_real = T(0);
-    T val_imag = T(0);
-    
-    for(uword i=0; i<N; ++i)
-      {
-      const std::complex<T> xx = A[i];
-      const std::complex<T> yy = B[i];
-      
-      const T a = xx.real();
-      const T b = xx.imag();
-      
-      const T c = yy.real();
-      const T d = yy.imag();
-      
-      val_real += (a*c) - (b*d);
-      val_imag += (a*d) + (b*c);
-      }
-    
-    return std::complex<T>(val_real, val_imag);
+    val_real += (a*c) - (b*d);
+    val_imag += (a*d) + (b*c);
     }
-  else
-    {
-    return op_dot::apply_unwrap(X,Y);
-    }
+  
+  return std::complex<T>(val_real, val_imag);
   }
 
 
 
-template<typename eT>
+template<typename eT, typename TA>
 arma_hot
 inline
 eT
-op_dot::dot_and_copy_row(eT* out, const Mat<eT>& A, const uword row, const eT* B_mem, const uword N)
+op_dot::dot_and_copy_row(eT* out, const TA& A, const uword row, const eT* B_mem, const uword N)
   {
   eT acc1 = eT(0);
   eT acc2 = eT(0);

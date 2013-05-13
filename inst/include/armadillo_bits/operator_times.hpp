@@ -170,7 +170,7 @@ operator*
   const diagmat_proxy<T1> A(X.m);
   const diagmat_proxy<T2> B(Y.m);
   
-  arma_debug_assert_mul_size(A.n_elem, A.n_elem, B.n_elem, B.n_elem, "matrix multiply");
+  arma_debug_assert_mul_size(A.n_elem, A.n_elem, B.n_elem, B.n_elem, "matrix multiplication");
   
   const uword N = A.n_elem;
   
