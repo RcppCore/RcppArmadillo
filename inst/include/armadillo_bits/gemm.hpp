@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2013 Conrad Sanderson
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,7 +18,7 @@ class gemm_emul_tinysq
   public:
   
   
-  template<typename eT>
+  template<typename eT, typename TA, typename TB>
   arma_hot
   inline
   static
@@ -26,8 +26,8 @@ class gemm_emul_tinysq
   apply
     (
           Mat<eT>& C,
-    const Mat<eT>& A,
-    const Mat<eT>& B,
+    const TA&      A,
+    const TB&      B,
     const eT alpha = eT(1),
     const eT beta  = eT(0)
     )
@@ -62,7 +62,7 @@ class gemm_emul_large
   {
   public:
   
-  template<typename eT>
+  template<typename eT, typename TA, typename TB>
   arma_hot
   inline
   static
@@ -70,8 +70,8 @@ class gemm_emul_large
   apply
     (
           Mat<eT>& C,
-    const Mat<eT>& A,
-    const Mat<eT>& B,
+    const TA&      A,
+    const TB&      B,
     const eT alpha = eT(1),
     const eT beta  = eT(0)
     )
@@ -235,16 +235,16 @@ class gemm_emul_large
     }
   
   };
-    
   
-  
+
+
 template<const bool do_trans_A=false, const bool do_trans_B=false, const bool use_alpha=false, const bool use_beta=false>
 class gemm_emul
   {
   public:
   
   
-  template<typename eT>
+  template<typename eT, typename TA, typename TB>
   arma_hot
   inline
   static
@@ -252,8 +252,8 @@ class gemm_emul
   apply
     (
           Mat<eT>& C,
-    const Mat<eT>& A,
-    const Mat<eT>& B,
+    const TA&      A,
+    const TB&      B,
     const eT alpha = eT(1),
     const eT beta  = eT(0),
     const typename arma_not_cx<eT>::result* junk = 0
@@ -288,8 +288,8 @@ class gemm_emul
       }
     }
   
-
-
+  
+  
   template<typename eT>
   arma_hot
   inline
@@ -355,15 +355,17 @@ class gemm
   {
   public:
   
-  template<typename eT>
+  template<typename eT, typename TA, typename TB>
   inline
   static
   void
-  apply_blas_type( Mat<eT>& C, const Mat<eT>& A, const Mat<eT>& B, const eT alpha = eT(1), const eT beta = eT(0) )
+  apply_blas_type( Mat<eT>& C, const TA& A, const TB& B, const eT alpha = eT(1), const eT beta = eT(0) )
     {
     arma_extra_debug_sigprint();
     
-    const uword threshold = (is_complex<eT>::value == true) ? 16u : 48u;
+    const uword threshold = (is_Mat_fixed<TA>::value && is_Mat_fixed<TB>::value)
+                            ? (is_complex<eT>::value ? 16u : 64u)
+                            : (is_complex<eT>::value ? 16u : 48u);
     
     if( (A.n_elem <= threshold) && (B.n_elem <= threshold) )
       {
@@ -442,25 +444,26 @@ class gemm
   
   
   //! immediate multiplication of matrices A and B, storing the result in C
-  template<typename eT>
+  template<typename eT, typename TA, typename TB>
   inline
   static
   void
-  apply( Mat<eT>& C, const Mat<eT>& A, const Mat<eT>& B, const eT alpha = eT(1), const eT beta = eT(0) )
+  apply( Mat<eT>& C, const TA& A, const TB& B, const eT alpha = eT(1), const eT beta = eT(0) )
     {
     gemm_emul<do_trans_A, do_trans_B, use_alpha, use_beta>::apply(C,A,B,alpha,beta);
     }
   
   
   
+  template<typename TA, typename TB>
   arma_inline
   static
   void
   apply
     (
           Mat<float>& C,
-    const Mat<float>& A,
-    const Mat<float>& B,
+    const TA&         A,
+    const TB&         B,
     const float alpha = float(1),
     const float beta  = float(0)
     )
@@ -470,14 +473,15 @@ class gemm
   
   
   
+  template<typename TA, typename TB>
   arma_inline
   static
   void
   apply
     (
           Mat<double>& C,
-    const Mat<double>& A,
-    const Mat<double>& B,
+    const TA&          A,
+    const TB&          B,
     const double alpha = double(1),
     const double beta  = double(0)
     )
@@ -487,14 +491,15 @@ class gemm
   
   
   
+  template<typename TA, typename TB>
   arma_inline
   static
   void
   apply
     (
           Mat< std::complex<float> >& C,
-    const Mat< std::complex<float> >& A,
-    const Mat< std::complex<float> >& B,
+    const TA&                         A,
+    const TB&                         B,
     const std::complex<float> alpha = std::complex<float>(1),
     const std::complex<float> beta  = std::complex<float>(0)
     )
@@ -504,14 +509,15 @@ class gemm
   
   
   
+  template<typename TA, typename TB>
   arma_inline
   static
   void
   apply
     (
           Mat< std::complex<double> >& C,
-    const Mat< std::complex<double> >& A,
-    const Mat< std::complex<double> >& B,
+    const TA&                          A,
+    const TB&                          B,
     const std::complex<double> alpha = std::complex<double>(1),
     const std::complex<double> beta  = std::complex<double>(0)
     )

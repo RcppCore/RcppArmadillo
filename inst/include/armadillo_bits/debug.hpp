@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2013 Conrad Sanderson
 // Copyright (C) 2011 Stanislav Funiak
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -1021,6 +1021,26 @@ arma_assert_mul_size(const Mat<eT1>& A, const Mat<eT2>& B, const bool do_trans_A
 
 
 
+template<const bool do_trans_A, const bool do_trans_B>
+arma_hot
+inline
+void
+arma_assert_trans_mul_size(const uword A_n_rows, const uword A_n_cols, const uword B_n_rows, const uword B_n_cols, const char* x)
+  {
+  const uword final_A_n_cols = (do_trans_A == false) ? A_n_cols : A_n_rows;
+  const uword final_B_n_rows = (do_trans_B == false) ? B_n_rows : B_n_cols;
+    
+  if(final_A_n_cols != final_B_n_rows)
+    {
+    const uword final_A_n_rows = (do_trans_A == false) ? A_n_rows : A_n_cols;
+    const uword final_B_n_cols = (do_trans_B == false) ? B_n_cols : B_n_rows;
+    
+    arma_stop( arma_incompat_size_string(final_A_n_rows, final_A_n_cols, final_B_n_rows, final_B_n_cols, x) );
+    }
+  }
+
+
+
 template<typename eT1, typename eT2>
 arma_hot
 inline
@@ -1088,25 +1108,27 @@ arma_assert_mul_size(const subview<eT1>& A, const subview<eT2>& B, const char* x
 
 #if !defined(ARMA_NO_DEBUG) && !defined(NDEBUG)
   
-  #define arma_debug_print              arma_print
-  #define arma_debug_warn               arma_warn
-  #define arma_debug_check              arma_check
-  #define arma_debug_set_error          arma_set_error
-  #define arma_debug_assert_same_size   arma_assert_same_size
-  #define arma_debug_assert_mul_size    arma_assert_mul_size
-  #define arma_debug_assert_cube_as_mat arma_assert_cube_as_mat
+  #define arma_debug_print                 arma_print
+  #define arma_debug_warn                  arma_warn
+  #define arma_debug_check                 arma_check
+  #define arma_debug_set_error             arma_set_error
+  #define arma_debug_assert_same_size      arma_assert_same_size
+  #define arma_debug_assert_mul_size       arma_assert_mul_size
+  #define arma_debug_assert_trans_mul_size arma_assert_trans_mul_size
+  #define arma_debug_assert_cube_as_mat    arma_assert_cube_as_mat
   
 #else
   
   #undef ARMA_EXTRA_DEBUG
   
-  #define arma_debug_print              true ? (void)0 : arma_print
-  #define arma_debug_warn               true ? (void)0 : arma_warn
-  #define arma_debug_check              true ? (void)0 : arma_check
-  #define arma_debug_set_error          true ? (void)0 : arma_set_error
-  #define arma_debug_assert_same_size   true ? (void)0 : arma_assert_same_size
-  #define arma_debug_assert_mul_size    true ? (void)0 : arma_assert_mul_size
-  #define arma_debug_assert_cube_as_mat true ? (void)0 : arma_assert_cube_as_mat
+  #define arma_debug_print                 true ? (void)0 : arma_print
+  #define arma_debug_warn                  true ? (void)0 : arma_warn
+  #define arma_debug_check                 true ? (void)0 : arma_check
+  #define arma_debug_set_error             true ? (void)0 : arma_set_error
+  #define arma_debug_assert_same_size      true ? (void)0 : arma_assert_same_size
+  #define arma_debug_assert_mul_size       true ? (void)0 : arma_assert_mul_size
+  #define arma_debug_assert_trans_mul_size true ? (void)0 : arma_assert_trans_mul_size
+  #define arma_debug_assert_cube_as_mat    true ? (void)0 : arma_assert_cube_as_mat
 
 #endif
 

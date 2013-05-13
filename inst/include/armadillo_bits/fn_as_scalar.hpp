@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2010-2011 Conrad Sanderson
+// Copyright (C) 2010-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2013 Conrad Sanderson
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -47,12 +47,11 @@ as_scalar_redirect<N>::apply(const T1& X)
   
   typedef typename T1::elem_type eT;
   
-  const unwrap<T1>   tmp(X);
-  const Mat<eT>& A = tmp.M;
+  const Proxy<T1> P(X);
   
-  arma_debug_check( (A.n_elem != 1), "as_scalar(): expression doesn't evaluate to exactly one element" );
+  arma_debug_check( (P.get_n_elem() != 1), "as_scalar(): expression doesn't evaluate to exactly one element" );
   
-  return A.mem[0];
+  return (Proxy<T1>::prefer_at_accessor == true) ? P.at(0,0) : P[0];
   }
 
 
@@ -69,23 +68,48 @@ as_scalar_redirect<2>::apply(const Glue<T1, T2, glue_times>& X)
   // T1 must result in a matrix with one row
   // T2 must result in a matrix with one column
   
-  const partial_unwrap<T1> tmp1(X.A);
-  const partial_unwrap<T2> tmp2(X.B);
+  const bool has_all_mat        = is_Mat<T1>::value             && is_Mat<T2>::value; 
+  const bool has_op_htrans2     = is_op_htrans2<T1>::value      || is_op_htrans2<T2>::value;
+  const bool prefer_at_accessor = Proxy<T1>::prefer_at_accessor || Proxy<T2>::prefer_at_accessor;
   
-  const Mat<eT>& A = tmp1.M;
-  const Mat<eT>& B = tmp2.M;
+  const bool do_partial_unwrap = has_all_mat || has_op_htrans2 || prefer_at_accessor;
   
-  const uword A_n_rows = (tmp1.do_trans == false) ? A.n_rows : A.n_cols;
-  const uword A_n_cols = (tmp1.do_trans == false) ? A.n_cols : A.n_rows;
-  
-  const uword B_n_rows = (tmp2.do_trans == false) ? B.n_rows : B.n_cols;
-  const uword B_n_cols = (tmp2.do_trans == false) ? B.n_cols : B.n_rows;
-  
-  const eT val = tmp1.get_val() * tmp2.get_val();
-  
-  arma_debug_check( (A_n_rows != 1) || (B_n_cols != 1) || (A_n_cols != B_n_rows), "as_scalar(): incompatible dimensions" );
-  
-  return val * op_dot::direct_dot(A.n_elem, A.mem, B.mem);
+  if(do_partial_unwrap == true)
+    {
+    const partial_unwrap<T1> tmp1(X.A);
+    const partial_unwrap<T2> tmp2(X.B);
+    
+    typedef typename partial_unwrap<T1>::stored_type TA;
+    typedef typename partial_unwrap<T2>::stored_type TB;
+    
+    const TA& A = tmp1.M;
+    const TB& B = tmp2.M;
+    
+    const uword A_n_rows = (tmp1.do_trans == false) ? (TA::is_row ? 1 : A.n_rows) : (TA::is_col ? 1 : A.n_cols);
+    const uword A_n_cols = (tmp1.do_trans == false) ? (TA::is_col ? 1 : A.n_cols) : (TA::is_row ? 1 : A.n_rows);
+    
+    const uword B_n_rows = (tmp2.do_trans == false) ? (TB::is_row ? 1 : B.n_rows) : (TB::is_col ? 1 : B.n_cols);
+    const uword B_n_cols = (tmp2.do_trans == false) ? (TB::is_col ? 1 : B.n_cols) : (TB::is_row ? 1 : B.n_rows);
+    
+    arma_debug_check( (A_n_rows != 1) || (B_n_cols != 1) || (A_n_cols != B_n_rows), "as_scalar(): incompatible dimensions" );
+    
+    const eT val = op_dot::direct_dot(A.n_elem, A.memptr(), B.memptr());
+    
+    return (tmp1.do_times || tmp2.do_times) ? (val * tmp1.get_val() * tmp2.get_val()) : val;
+    }
+  else
+    {
+    const Proxy<T1> PA(X.A);
+    const Proxy<T2> PB(X.B);
+    
+    arma_debug_check
+      (
+      (PA.get_n_rows() != 1) || (PB.get_n_cols() != 1) || (PA.get_n_cols() != PB.get_n_rows()),
+      "as_scalar(): incompatible dimensions"
+      );
+    
+    return op_dot::apply_proxy(PA,PB);
+    }
   }
 
 
@@ -295,25 +319,56 @@ as_scalar(const Base<typename T1::elem_type,T1>& X)
   
   typedef typename T1::elem_type eT;
   
-  const unwrap<T1>   tmp(X.get_ref());
-  const Mat<eT>& A = tmp.M;
+  const Proxy<T1> P(X.get_ref());
   
-  arma_debug_check( (A.n_elem != 1), "as_scalar(): expression doesn't evaluate to exactly one element" );
+  arma_debug_check( (P.get_n_elem() != 1), "as_scalar(): expression doesn't evaluate to exactly one element" );
   
-  return A.mem[0];
+  return (Proxy<T1>::prefer_at_accessor == true) ? P.at(0,0) : P[0];
+  }
+
+
+// ensure the following two functions are aware of each other
+template<typename T1,              typename   eop_type> inline arma_warn_unused typename T1::elem_type as_scalar(const   eOp<T1,       eop_type>& X);
+template<typename T1, typename T2, typename eglue_type> inline arma_warn_unused typename T1::elem_type as_scalar(const eGlue<T1, T2, eglue_type>& X);
+
+
+
+template<typename T1, typename eop_type>
+inline
+arma_warn_unused
+typename T1::elem_type
+as_scalar(const eOp<T1, eop_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const eT val = as_scalar(X.P.Q);
+  
+  return eop_core<eop_type>::process(val, X.aux);
   }
 
 
 
-template<typename T1>
-arma_inline
+template<typename T1, typename T2, typename eglue_type>
+inline
 arma_warn_unused
 typename T1::elem_type
-as_scalar(const eOp<T1, eop_neg>& X)
+as_scalar(const eGlue<T1, T2, eglue_type>& X)
   {
   arma_extra_debug_sigprint();
   
-  return -(as_scalar(X.P.Q));
+  typedef typename T1::elem_type eT;
+  
+  const eT a = as_scalar(X.P1.Q);
+  const eT b = as_scalar(X.P2.Q);
+  
+  // the optimiser will keep only one return statement
+  
+       if(is_same_type<eglue_type, eglue_plus >::value == true) { return a + b; }
+  else if(is_same_type<eglue_type, eglue_minus>::value == true) { return a - b; }
+  else if(is_same_type<eglue_type, eglue_div  >::value == true) { return a / b; }
+  else if(is_same_type<eglue_type, eglue_schur>::value == true) { return a * b; }
   }
 
 
@@ -328,12 +383,11 @@ as_scalar(const BaseCube<typename T1::elem_type,T1>& X)
   
   typedef typename T1::elem_type eT;
   
-  const unwrap_cube<T1> tmp(X.get_ref());
-  const Cube<eT>& A   = tmp.M;
+  const ProxyCube<T1> P(X.get_ref());
   
-  arma_debug_check( (A.n_elem != 1), "as_scalar(): expression doesn't evaluate to exactly one element" );
+  arma_debug_check( (P.get_n_elem() != 1), "as_scalar(): expression doesn't evaluate to exactly one element" );
   
-  return A.mem[0];
+  return (ProxyCube<T1>::prefer_at_accessor == true) ? P.at(0,0,0) : P[0];
   }
 
 

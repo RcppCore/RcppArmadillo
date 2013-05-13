@@ -248,7 +248,7 @@ Cube<eT>::init
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type          T;
+  typedef typename T1::elem_type T;
   
   arma_type_check(( is_complex<eT>::value == false ));   //!< compile-time abort if eT isn't std::complex
   arma_type_check(( is_complex< T>::value == true  ));   //!< compile-time abort if T is std::complex
@@ -258,7 +258,7 @@ Cube<eT>::init
   const ProxyCube<T1> PX(X.get_ref());
   const ProxyCube<T2> PY(Y.get_ref());
   
-  arma_assert_same_size(PX, PY, "Cube()");
+  arma_debug_assert_same_size(PX, PY, "Cube()");
   
   const uword local_n_rows   = PX.get_n_rows();
   const uword local_n_cols   = PX.get_n_cols();
@@ -535,7 +535,7 @@ Cube<eT>::operator+=(const Cube<eT>& m)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(*this, m, "cube addition");
+  arma_debug_assert_same_size(*this, m, "addition");
   
   arrayops::inplace_plus( memptr(), m.memptr(), n_elem );
   
@@ -552,7 +552,7 @@ Cube<eT>::operator-=(const Cube<eT>& m)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(*this, m, "cube subtraction");
+  arma_debug_assert_same_size(*this, m, "subtraction");
   
   arrayops::inplace_minus( memptr(), m.memptr(), n_elem );
   
@@ -569,7 +569,7 @@ Cube<eT>::operator%=(const Cube<eT>& m)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(*this, m, "element-wise cube multiplication");
+  arma_debug_assert_same_size(*this, m, "element-wise multiplication");
   
   arrayops::inplace_mul( memptr(), m.memptr(), n_elem );
   
@@ -586,7 +586,7 @@ Cube<eT>::operator/=(const Cube<eT>& m)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(*this, m, "element-wise cube division");
+  arma_debug_assert_same_size(*this, m, "element-wise division");
   
   arrayops::inplace_div( memptr(), m.memptr(), n_elem );
   
@@ -3038,6 +3038,18 @@ Cube<eT>::begin() const
 
 template<typename eT>
 inline
+typename Cube<eT>::const_iterator
+Cube<eT>::cbegin() const
+  {
+  arma_extra_debug_sigprint();
+  
+  return memptr();
+  }
+
+
+
+template<typename eT>
+inline
 typename Cube<eT>::iterator
 Cube<eT>::end()
   {
@@ -3057,7 +3069,19 @@ Cube<eT>::end() const
   
   return memptr() + n_elem;
   }
+
+
+
+template<typename eT>
+inline
+typename Cube<eT>::const_iterator
+Cube<eT>::cend() const
+  {
+  arma_extra_debug_sigprint();
   
+  return memptr() + n_elem;
+  }
+
 
 
 template<typename eT>
@@ -3112,43 +3136,6 @@ Cube<eT>::end_slice(const uword slice_num) const
   arma_debug_check( (slice_num >= n_slices), "end_slice(): index out of bounds");
   
   return slice_memptr(slice_num) + n_elem_slice;
-  }
-
-
-
-template<typename eT>
-template<uword fixed_n_rows, uword fixed_n_cols, uword fixed_n_slices>
-arma_inline
-void
-Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::mem_setup()
-  {
-  arma_extra_debug_sigprint_this(this);
-  
-  if(fixed_n_elem > 0)
-    {
-    access::rw(Cube<eT>::n_rows)       = fixed_n_rows;
-    access::rw(Cube<eT>::n_cols)       = fixed_n_cols;
-    access::rw(Cube<eT>::n_elem_slice) = fixed_n_rows * fixed_n_cols;
-    access::rw(Cube<eT>::n_slices)     = fixed_n_slices;
-    access::rw(Cube<eT>::n_elem)       = fixed_n_elem;
-    access::rw(Cube<eT>::mem_state)    = 3;
-    access::rw(Cube<eT>::mat_ptrs)     = const_cast< const Mat<eT>** >( \
-                                         (fixed_n_slices > Cube_prealloc::mat_ptrs_size) ? mat_ptrs_local_extra : mat_ptrs_local );
-    access::rw(Cube<eT>::mem)          = (fixed_n_elem   > Cube_prealloc::mem_n_elem)    ? mem_local_extra      : mem_local;
-    
-    create_mat();
-    }
-  else
-    {
-    access::rw(Cube<eT>::n_rows)       = 0;
-    access::rw(Cube<eT>::n_cols)       = 0;
-    access::rw(Cube<eT>::n_elem_slice) = 0;
-    access::rw(Cube<eT>::n_slices)     = 0;
-    access::rw(Cube<eT>::n_elem)       = 0;
-    access::rw(Cube<eT>::mem_state)    = 3;
-    access::rw(Cube<eT>::mat_ptrs)     = 0;
-    access::rw(Cube<eT>::mem)          = 0;
-    }
   }
 
 
@@ -3248,6 +3235,193 @@ Cube<eT>::steal_mem(Cube<eT>& x)
       (*this).operator=(x);
       }
     }
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols, uword fixed_n_slices>
+arma_inline
+void
+Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::mem_setup()
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  if(fixed_n_elem > 0)
+    {
+    access::rw(Cube<eT>::n_rows)       = fixed_n_rows;
+    access::rw(Cube<eT>::n_cols)       = fixed_n_cols;
+    access::rw(Cube<eT>::n_elem_slice) = fixed_n_rows * fixed_n_cols;
+    access::rw(Cube<eT>::n_slices)     = fixed_n_slices;
+    access::rw(Cube<eT>::n_elem)       = fixed_n_elem;
+    access::rw(Cube<eT>::mem_state)    = 3;
+    access::rw(Cube<eT>::mat_ptrs)     = const_cast< const Mat<eT>** >( \
+                                         (fixed_n_slices > Cube_prealloc::mat_ptrs_size) ? mat_ptrs_local_extra : mat_ptrs_local );
+    access::rw(Cube<eT>::mem)          = (fixed_n_elem   > Cube_prealloc::mem_n_elem)    ? mem_local_extra      : mem_local;
+    
+    create_mat();
+    }
+  else
+    {
+    access::rw(Cube<eT>::n_rows)       = 0;
+    access::rw(Cube<eT>::n_cols)       = 0;
+    access::rw(Cube<eT>::n_elem_slice) = 0;
+    access::rw(Cube<eT>::n_slices)     = 0;
+    access::rw(Cube<eT>::n_elem)       = 0;
+    access::rw(Cube<eT>::mem_state)    = 3;
+    access::rw(Cube<eT>::mat_ptrs)     = 0;
+    access::rw(Cube<eT>::mem)          = 0;
+    }
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols, uword fixed_n_slices>
+arma_inline
+arma_warn_unused
+eT&
+Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::operator[] (const uword i)
+  {
+  return (use_extra) ? mem_local_extra[i] : mem_local[i];
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols, uword fixed_n_slices>
+arma_inline
+arma_warn_unused
+eT
+Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::operator[] (const uword i) const
+  {
+  return (use_extra) ? mem_local_extra[i] : mem_local[i];
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols, uword fixed_n_slices>
+arma_inline
+arma_warn_unused
+eT&
+Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::at(const uword i)
+  {
+  return (use_extra) ? mem_local_extra[i] : mem_local[i];
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols, uword fixed_n_slices>
+arma_inline
+arma_warn_unused
+eT
+Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::at(const uword i) const
+  {
+  return (use_extra) ? mem_local_extra[i] : mem_local[i];
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols, uword fixed_n_slices>
+arma_inline
+arma_warn_unused
+eT&
+Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::operator() (const uword i)
+  {
+  arma_debug_check( (i >= fixed_n_elem), "Cube::operator(): out of bounds");
+  
+  return (use_extra) ? mem_local_extra[i] : mem_local[i];
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols, uword fixed_n_slices>
+arma_inline
+arma_warn_unused
+eT
+Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::operator() (const uword i) const
+  {
+  arma_debug_check( (i >= fixed_n_elem), "Cube::operator(): out of bounds");
+  
+  return (use_extra) ? mem_local_extra[i] : mem_local[i];
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols, uword fixed_n_slices>
+arma_inline
+arma_warn_unused
+eT&
+Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::at(const uword in_row, const uword in_col, const uword in_slice)
+  {
+  const uword i = in_slice*fixed_n_elem_slice + in_col*fixed_n_rows + in_row;
+  
+  return (use_extra) ? mem_local_extra[i] : mem_local[i];
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols, uword fixed_n_slices>
+arma_inline
+arma_warn_unused
+eT
+Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::at(const uword in_row, const uword in_col, const uword in_slice) const
+  {
+  const uword i = in_slice*fixed_n_elem_slice + in_col*fixed_n_rows + in_row;
+  
+  return (use_extra) ? mem_local_extra[i] : mem_local[i];
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols, uword fixed_n_slices>
+arma_inline
+arma_warn_unused
+eT&
+Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::operator() (const uword in_row, const uword in_col, const uword in_slice)
+  {
+  arma_debug_check
+    (
+    (in_row   >= fixed_n_rows  ) ||
+    (in_col   >= fixed_n_cols  ) ||
+    (in_slice >= fixed_n_slices)
+    ,
+    "Cube::operator(): index out of bounds"
+    );
+  
+  const uword i = in_slice*fixed_n_elem_slice + in_col*fixed_n_rows + in_row;
+  
+  return (use_extra) ? mem_local_extra[i] : mem_local[i];
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols, uword fixed_n_slices>
+arma_inline
+arma_warn_unused
+eT
+Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::operator() (const uword in_row, const uword in_col, const uword in_slice) const
+  {
+  arma_debug_check
+    (
+    (in_row   >= fixed_n_rows  ) ||
+    (in_col   >= fixed_n_cols  ) ||
+    (in_slice >= fixed_n_slices)
+    ,
+    "Cube::operator(): index out of bounds"
+    );
+  
+  const uword i = in_slice*fixed_n_elem_slice + in_col*fixed_n_rows + in_row;
+  
+  return (use_extra) ? mem_local_extra[i] : mem_local[i];
   }
 
 

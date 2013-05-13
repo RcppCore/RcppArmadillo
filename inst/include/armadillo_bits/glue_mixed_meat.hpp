@@ -28,7 +28,7 @@ glue_mixed_times::apply(Mat<typename eT_promoter<T1,T2>::eT>& out, const mtGlue<
   const Mat<eT1>& A = tmp1.M;
   const Mat<eT2>& B = tmp2.M;
   
-  arma_debug_assert_mul_size(A, B, "multiplication");
+  arma_debug_assert_mul_size(A, B, "matrix multiplication");
   
   out.set_size(A.n_rows, B.n_cols);
   

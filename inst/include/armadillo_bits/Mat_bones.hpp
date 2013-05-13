@@ -464,11 +464,13 @@ class Mat : public Base< eT, Mat<eT> >
     arma_aligned       uword    col;
     };
   
-  inline       iterator begin();
-  inline const_iterator begin() const;
+  inline       iterator  begin();
+  inline const_iterator  begin() const;
+  inline const_iterator cbegin() const;
   
-  inline       iterator end();
-  inline const_iterator end()   const;
+  inline       iterator  end();
+  inline const_iterator  end() const;
+  inline const_iterator cend() const;
   
   inline       col_iterator begin_col(const uword col_num);
   inline const_col_iterator begin_col(const uword col_num) const;
@@ -567,25 +569,17 @@ class Mat<eT>::fixed : public Mat<eT>
   inline fixed(const char*        text);
   inline fixed(const std::string& text);
   
-  
-  #if !defined(ARMA_GCC47_BUG)
-    using Mat<eT>::operator=;
-    using Mat<eT>::operator();
-  #else
-    template<typename T1> inline const Mat& operator=(const Base<eT,T1>& A);
-    
-    inline const Mat& operator=(const eT val);
-    
-    inline const Mat& operator=(const char*        text);
-    inline const Mat& operator=(const std::string& text);
-  #endif
-  
+  using Mat<eT>::operator=;
+  using Mat<eT>::operator();
   
   #if defined(ARMA_USE_CXX11)
     inline                fixed(const std::initializer_list<eT>& list);
     inline const Mat& operator=(const std::initializer_list<eT>& list);
   #endif
   
+  arma_inline const Op< Mat_fixed_type, op_htrans >  t() const;
+  arma_inline const Op< Mat_fixed_type, op_htrans > ht() const;
+  arma_inline const Op< Mat_fixed_type, op_strans > st() const;
   
   arma_inline arma_warn_unused eT& operator[] (const uword i);
   arma_inline arma_warn_unused eT  operator[] (const uword i) const;
@@ -599,8 +593,13 @@ class Mat<eT>::fixed : public Mat<eT>
   arma_inline arma_warn_unused eT& operator() (const uword in_row, const uword in_col);
   arma_inline arma_warn_unused eT  operator() (const uword in_row, const uword in_col) const;
   
+  arma_inline arma_warn_unused       eT* colptr(const uword in_col);
+  arma_inline arma_warn_unused const eT* colptr(const uword in_col) const;
+  
   arma_inline arma_warn_unused       eT* memptr();
   arma_inline arma_warn_unused const eT* memptr() const;
+  
+  arma_inline arma_warn_unused bool is_vec() const;
   
   arma_hot inline const Mat<eT>& fill(const eT val);
   arma_hot inline const Mat<eT>& zeros();

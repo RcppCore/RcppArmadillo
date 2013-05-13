@@ -12,9 +12,9 @@
 
 
 #define ARMA_VERSION_MAJOR 3
-#define ARMA_VERSION_MINOR 810
-#define ARMA_VERSION_PATCH 2
-#define ARMA_VERSION_NAME  "Newell Highway"
+#define ARMA_VERSION_MINOR 820
+#define ARMA_VERSION_PATCH 0
+#define ARMA_VERSION_NAME  "Mt Cootha"
 
 
 

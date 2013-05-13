@@ -129,8 +129,7 @@ eop_core<eop_type>::apply(Mat<typename T1::elem_type>& out, const eOp<T1, eop_ty
   
   if(Proxy<T1>::prefer_at_accessor == false)
     {
-    // for fixed-sized vectors with n_elem >= 6, using x.get_n_elem() directly can cause a mis-optimisation (slowdown) of the loop under GCC 4.4
-    const uword n_elem = (Proxy<T1>::is_fixed) ? ( (x.get_n_elem() <= 4) ? x.get_n_elem() : out.n_elem ) : out.n_elem;
+    const uword n_elem = (Proxy<T1>::is_fixed) ? x.get_n_elem() : out.n_elem;
     
     typename Proxy<T1>::ea_type P = x.P.get_ea();
     
@@ -170,8 +169,7 @@ eop_core<eop_type>::apply_inplace_plus(Mat<typename T1::elem_type>& out, const e
   
   if(Proxy<T1>::prefer_at_accessor == false)
     {
-    // for fixed-sized vectors with n_elem >= 6, using x.get_n_elem() directly can cause a mis-optimisation (slowdown) of the loop under GCC 4.4
-    const uword n_elem = (Proxy<T1>::is_fixed) ? ( (x.get_n_elem() <= 4) ? x.get_n_elem() : out.n_elem ) : out.n_elem;
+    const uword n_elem = (Proxy<T1>::is_fixed) ? x.get_n_elem() : out.n_elem;
     
     typename Proxy<T1>::ea_type P = x.P.get_ea();
     
@@ -208,8 +206,7 @@ eop_core<eop_type>::apply_inplace_minus(Mat<typename T1::elem_type>& out, const 
   
   if(Proxy<T1>::prefer_at_accessor == false)
     {
-    // for fixed-sized vectors with n_elem >= 6, using x.get_n_elem() directly can cause a mis-optimisation (slowdown) of the loop under GCC 4.4
-    const uword n_elem = (Proxy<T1>::is_fixed) ? ( (x.get_n_elem() <= 4) ? x.get_n_elem() : out.n_elem ) : out.n_elem;
+    const uword n_elem = (Proxy<T1>::is_fixed) ? x.get_n_elem() : out.n_elem;
     
     typename Proxy<T1>::ea_type P = x.P.get_ea();
     
@@ -246,8 +243,7 @@ eop_core<eop_type>::apply_inplace_schur(Mat<typename T1::elem_type>& out, const 
   
   if(Proxy<T1>::prefer_at_accessor == false)
     {
-    // for fixed-sized vectors with n_elem >= 6, using x.get_n_elem() directly can cause a mis-optimisation (slowdown) of the loop under GCC 4.4
-    const uword n_elem = (Proxy<T1>::is_fixed) ? ( (x.get_n_elem() <= 4) ? x.get_n_elem() : out.n_elem ) : out.n_elem;
+    const uword n_elem = (Proxy<T1>::is_fixed) ? x.get_n_elem() : out.n_elem;
     
     typename Proxy<T1>::ea_type P = x.P.get_ea();
     
@@ -284,8 +280,7 @@ eop_core<eop_type>::apply_inplace_div(Mat<typename T1::elem_type>& out, const eO
   
   if(Proxy<T1>::prefer_at_accessor == false)
     {
-    // for fixed-sized vectors with n_elem >= 6, using x.get_n_elem() directly can cause a mis-optimisation (slowdown) of the loop under GCC 4.4
-    const uword n_elem = (Proxy<T1>::is_fixed) ? ( (x.get_n_elem() <= 4) ? x.get_n_elem() : out.n_elem ) : out.n_elem;
+    const uword n_elem = (Proxy<T1>::is_fixed) ? x.get_n_elem() : out.n_elem;
     
     typename Proxy<T1>::ea_type P = x.P.get_ea();
     

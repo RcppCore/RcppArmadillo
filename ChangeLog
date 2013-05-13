@@ -1,3 +1,10 @@
+2013-05-13  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.3.820
+	* inst/NEWS: Release 0.3.820
+	* inst/include/*: Upgraded to new release 3.820 of Armadillo
+        * debian/*: Similarly updated for new release to Debian
+
 2013-04-30  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.3.810.2

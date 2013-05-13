@@ -1,5 +1,5 @@
 // Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2013 Conrad Sanderson
 // Copyright (C) 2009-2010 Ian Cullinan
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -1034,8 +1034,18 @@ field<oT>::init(const uword n_rows_in, const uword n_cols_in)
   {
   arma_extra_debug_sigprint( arma_boost::format("n_rows_in = %d, n_cols_in = %d") % n_rows_in % n_cols_in );
   
+  arma_debug_check
+    (
+      (
+      ( (n_rows_in > ARMA_MAX_UHWORD) || (n_cols_in > ARMA_MAX_UHWORD) )
+        ? ( (float(n_rows_in) * float(n_cols_in)) > float(ARMA_MAX_UWORD) )
+        : false
+      ),
+    "field::init(): requested size is too large"
+    );
+  
   const uword n_elem_new = n_rows_in * n_cols_in;
-
+  
   if(n_elem == n_elem_new)
     {
     // delete_objects();
@@ -1332,6 +1342,18 @@ field<oT>::begin() const
 
 template<typename oT>
 inline
+typename field<oT>::const_iterator
+field<oT>::cbegin() const
+  {
+  arma_extra_debug_sigprint();
+  
+  return field<oT>::const_iterator(*this);
+  }
+
+
+
+template<typename oT>
+inline
 typename field<oT>::iterator
 field<oT>::end()
   {
@@ -1352,6 +1374,48 @@ field<oT>::end() const
   return field<oT>::const_iterator(*this, true);
   }
   
+
+
+template<typename oT>
+inline
+typename field<oT>::const_iterator
+field<oT>::cend() const
+  {
+  arma_extra_debug_sigprint();
+  
+  return field<oT>::const_iterator(*this, true);
+  }
+
+
+
+template<typename oT>
+inline
+void
+field<oT>::clear()
+  {
+  reset();
+  }
+
+
+
+template<typename oT>
+inline
+bool
+field<oT>::empty() const
+  {
+  return (n_elem == 0);
+  }
+
+
+
+template<typename oT>
+inline
+uword
+field<oT>::size() const
+  {
+  return n_elem;
+  }
+
 
 
 //

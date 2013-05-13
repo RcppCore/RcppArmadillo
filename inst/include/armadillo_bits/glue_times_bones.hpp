@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2013 Conrad Sanderson
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -99,19 +99,19 @@ class glue_times
   template<typename eT1, typename eT2>
   inline static void apply_mixed(Mat<typename promote_type<eT1,eT2>::result>& out, const Mat<eT1>& X, const Mat<eT2>& Y);
   
+  //
   
-  template<typename eT, const bool do_trans_A, const bool do_trans_B>
-  arma_inline static uword  mul_storage_cost(const Mat<eT>& A, const Mat<eT>& B);
+  template<typename eT, const bool do_trans_A, const bool do_trans_B, typename TA, typename TB>
+  arma_inline static uword mul_storage_cost(const TA& A, const TB& B);
   
-  template<typename eT, const bool do_trans_A, const bool do_trans_B, const bool do_scalar_times>
-  arma_hot inline static void apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const eT val);
+  template<typename eT, const bool do_trans_A, const bool do_trans_B, const bool do_scalar_times, typename TA, typename TB>
+  arma_hot inline static void apply(Mat<eT>& out, const TA& A, const TB& B, const eT val);
   
-  template<typename eT, const bool do_trans_A, const bool do_trans_B, const bool do_trans_C, const bool do_scalar_times>
-  arma_hot inline static void apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const Mat<eT>& C, const eT val);
+  template<typename eT, const bool do_trans_A, const bool do_trans_B, const bool do_trans_C, const bool do_scalar_times, typename TA, typename TB, typename TC>
+  arma_hot inline static void apply(Mat<eT>& out, const TA& A, const TB& B, const TC& C, const eT val);
   
-  template<typename eT, const bool do_trans_A, const bool do_trans_B, const bool do_trans_C, const bool do_trans_D, const bool do_scalar_times>
-  arma_hot inline static void apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const Mat<eT>& C, const Mat<eT>& D, const eT val);
-  
+  template<typename eT, const bool do_trans_A, const bool do_trans_B, const bool do_trans_C, const bool do_trans_D, const bool do_scalar_times, typename TA, typename TB, typename TC, typename TD>
+  arma_hot inline static void apply(Mat<eT>& out, const TA& A, const TB& B, const TC& C, const TD& D, const eT val);
   };
 
 

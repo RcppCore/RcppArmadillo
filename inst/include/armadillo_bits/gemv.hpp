@@ -49,12 +49,12 @@ class gemv_emul_tinysq
   
   
 
-  template<typename eT>
+  template<typename eT, typename TA>
   arma_hot
   inline
   static
   void
-  apply( eT* y, const Mat<eT>& A, const eT* x, const eT alpha = eT(1), const eT beta = eT(0) )
+  apply( eT* y, const TA& A, const eT* x, const eT alpha = eT(1), const eT beta = eT(0) )
     {
     arma_extra_debug_sigprint();
     
@@ -135,12 +135,12 @@ class gemv_emul_large_helper
   {
   public:
   
-  template<typename eT>
+  template<typename eT, typename TA>
   arma_hot
   inline
   static
   typename arma_not_cx<eT>::result
-  dot_row_col( const Mat<eT>& A, const eT* x, const uword row, const uword N)
+  dot_row_col( const TA& A, const eT* x, const uword row, const uword N )
     {
     eT acc1 = eT(0);
     eT acc2 = eT(0);
@@ -165,12 +165,12 @@ class gemv_emul_large_helper
   
   
   
-  template<typename eT>
+  template<typename eT, typename TA>
   arma_hot
   inline
   static
   typename arma_cx_only<eT>::result
-  dot_row_col( const Mat<eT>& A, const eT* x, const uword row, const uword N)
+  dot_row_col( const TA& A, const eT* x, const uword row, const uword N )
     {
     typedef typename get_pod_type<eT>::result T;
     
@@ -208,12 +208,12 @@ class gemv_emul_large
   {
   public:
   
-  template<typename eT>
+  template<typename eT, typename TA>
   arma_hot
   inline
   static
   void
-  apply( eT* y, const Mat<eT>& A, const eT* x, const eT alpha = eT(1), const eT beta = eT(0) )
+  apply( eT* y, const TA& A, const eT* x, const eT alpha = eT(1), const eT beta = eT(0) )
     {
     arma_extra_debug_sigprint();
     
@@ -224,7 +224,7 @@ class gemv_emul_large
       {
       if(A_n_rows == 1)
         {
-        const eT acc = op_dot::direct_dot_arma(A_n_cols, A.mem, x);
+        const eT acc = op_dot::direct_dot_arma(A_n_cols, A.memptr(), x);
         
         if( (use_alpha == false) && (use_beta == false) )
           {
@@ -323,12 +323,12 @@ class gemv_emul
   {
   public:
   
-  template<typename eT>
+  template<typename eT, typename TA>
   arma_hot
   inline
   static
   void
-  apply( eT* y, const Mat<eT>& A, const eT* x, const eT alpha = eT(1), const eT beta = eT(0), const typename arma_not_cx<eT>::result* junk = 0 )
+  apply( eT* y, const TA& A, const eT* x, const eT alpha = eT(1), const eT beta = eT(0), const typename arma_not_cx<eT>::result* junk = 0 )
     {
     arma_extra_debug_sigprint();
     arma_ignore(junk);
@@ -392,11 +392,11 @@ class gemv
   {
   public:
   
-  template<typename eT>
+  template<typename eT, typename TA>
   inline
   static
   void
-  apply_blas_type( eT* y, const Mat<eT>& A, const eT* x, const eT alpha = eT(1), const eT beta = eT(0) )
+  apply_blas_type( eT* y, const TA& A, const eT* x, const eT alpha = eT(1), const eT beta = eT(0) )
     {
     arma_extra_debug_sigprint();
     
@@ -496,27 +496,64 @@ class gemv
   
   
   
-  template<typename eT>
+  template<typename eT, typename TA>
   arma_inline
   static
   void
-  apply( eT* y, const Mat<eT>& A, const eT* x, const eT alpha = eT(1), const eT beta = eT(0) )
+  apply( eT* y, const TA& A, const eT* x, const eT alpha = eT(1), const eT beta = eT(0) )
     {
     gemv_emul<do_trans_A, use_alpha, use_beta>::apply(y,A,x,alpha,beta);
     }
   
   
   
+  template<typename TA>
   arma_inline
   static
   void
   apply
     (
-          float*      y,
-    const Mat<float>& A,
-    const float*      x,
-    const float       alpha = float(1),
-    const float       beta  = float(0)
+          float* y,
+    const TA&    A,
+    const float* x,
+    const float  alpha = float(1),
+    const float  beta  = float(0)
+    )
+    {
+    gemv<do_trans_A, use_alpha, use_beta>::apply_blas_type(y,A,x,alpha,beta);
+    }
+  
+  
+  
+  template<typename TA>
+  arma_inline
+  static
+  void
+  apply
+    (
+          double* y,
+    const TA&     A,
+    const double* x,
+    const double  alpha = double(1),
+    const double  beta  = double(0)
+    )
+    {
+    gemv<do_trans_A, use_alpha, use_beta>::apply_blas_type(y,A,x,alpha,beta);
+    }
+  
+  
+  
+  template<typename TA>
+  arma_inline
+  static
+  void
+  apply
+    (
+          std::complex<float>* y,
+    const TA&                  A,
+    const std::complex<float>* x,
+    const std::complex<float>  alpha = std::complex<float>(1),
+    const std::complex<float>  beta  = std::complex<float>(0)
     )
     {
     gemv<do_trans_A, use_alpha, use_beta>::apply_blas_type(y,A,x,alpha,beta);
@@ -524,50 +561,17 @@ class gemv
 
 
   
+  template<typename TA>
   arma_inline
   static
   void
   apply
     (
-          double*      y,
-    const Mat<double>& A,
-    const double*      x,
-    const double       alpha = double(1),
-    const double       beta  = double(0)
-    )
-    {
-    gemv<do_trans_A, use_alpha, use_beta>::apply_blas_type(y,A,x,alpha,beta);
-    }
-
-
-  
-  arma_inline
-  static
-  void
-  apply
-    (
-          std::complex<float>*         y,
-    const Mat< std::complex<float > >& A,
-    const std::complex<float>*         x,
-    const std::complex<float>          alpha = std::complex<float>(1),
-    const std::complex<float>          beta  = std::complex<float>(0)
-    )
-    {
-    gemv<do_trans_A, use_alpha, use_beta>::apply_blas_type(y,A,x,alpha,beta);
-    }
-
-
-  
-  arma_inline
-  static
-  void
-  apply
-    (
-          std::complex<double>*        y,
-    const Mat< std::complex<double> >& A,
-    const std::complex<double>*        x,
-    const std::complex<double>         alpha = std::complex<double>(1),
-    const std::complex<double>         beta  = std::complex<double>(0)
+          std::complex<double>* y,
+    const TA&                   A,
+    const std::complex<double>* x,
+    const std::complex<double>  alpha = std::complex<double>(1),
+    const std::complex<double>  beta  = std::complex<double>(0)
     )
     {
     gemv<do_trans_A, use_alpha, use_beta>::apply_blas_type(y,A,x,alpha,beta);
