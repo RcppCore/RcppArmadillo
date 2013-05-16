@@ -1,3 +1,8 @@
+
+// [[Rcpp::depends(RcppArmadillo)]]
+
+#include <RcppArmadillo.h>
+
 using namespace arma;
 
 class Kalman {
@@ -44,3 +49,11 @@ public:
        return Y;
     }
 };
+
+
+// [[Rcpp::export]]
+mat KalmanCpp(mat Z) {
+  Kalman K;
+  mat Y = K.estimate(Z);
+  return Y;
+}
