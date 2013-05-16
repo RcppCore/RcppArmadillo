@@ -1,13 +1,12 @@
 
 suppressMessages(library(Rcpp))
-suppressMessages(library(inline))
 suppressMessages(library(rbenchmark))
 suppressMessages(library(compiler))
 
 source("FirstKalmanR.R")
 source("KalmanR.R")
 source("KalmanRimp.R")
-source("KalmanCpp.R")
+sourceCpp("Kalman.cpp")
 
 FirstKalmanRC <- cmpfun(FirstKalmanR)
 KalmanRC <- cmpfun(KalmanR)

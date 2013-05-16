@@ -1,3 +1,9 @@
+2013-05-16  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/examples/kalman/benchmark.R: Switch from inline to sourceCpp
+	* inst/examples/kalman/Kalman.cpp: Added Rcpp attributes function
+	* inst/examples/kalman/KalmanCpp.R: Retired, no longer used
+
 2013-05-13  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.3.820
