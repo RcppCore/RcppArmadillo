@@ -12,9 +12,9 @@
 
 
 #define ARMA_VERSION_MAJOR 3
-#define ARMA_VERSION_MINOR 820
+#define ARMA_VERSION_MINOR 900
 #define ARMA_VERSION_PATCH 0
-#define ARMA_VERSION_NAME  "Mt Cootha"
+#define ARMA_VERSION_NAME  "Bavarian Sunflower"
 
 
 

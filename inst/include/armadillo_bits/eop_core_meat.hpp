@@ -10,12 +10,13 @@
 //! @{
 
 
-#undef arma_applier_1
+#undef arma_applier_1u
+#undef arma_applier_1a
 #undef arma_applier_2
 #undef arma_applier_3
 #undef operatorA
 
-#define arma_applier_1(operatorA) \
+#define arma_applier_1u(operatorA) \
   {\
   uword i,j;\
   \
@@ -34,6 +35,29 @@
   if(i < n_elem)\
     {\
     out_mem[i] operatorA eop_core<eop_type>::process(P[i], k);\
+    }\
+  }
+
+
+#define arma_applier_1a(operatorA) \
+  {\
+  uword i,j;\
+  \
+  for(i=0, j=1; j<n_elem; i+=2, j+=2)\
+    {\
+    eT tmp_i = P.at_alt(i);\
+    eT tmp_j = P.at_alt(j);\
+    \
+    tmp_i = eop_core<eop_type>::process(tmp_i, k);\
+    tmp_j = eop_core<eop_type>::process(tmp_j, k);\
+    \
+    out_mem[i] operatorA tmp_i;\
+    out_mem[j] operatorA tmp_j;\
+    }\
+  \
+  if(i < n_elem)\
+    {\
+    out_mem[i] operatorA eop_core<eop_type>::process(P.at_alt(i), k);\
     }\
   }
 
@@ -131,9 +155,29 @@ eop_core<eop_type>::apply(Mat<typename T1::elem_type>& out, const eOp<T1, eop_ty
     {
     const uword n_elem = (Proxy<T1>::is_fixed) ? x.get_n_elem() : out.n_elem;
     
-    typename Proxy<T1>::ea_type P = x.P.get_ea();
-    
-    arma_applier_1(=);
+    if(memory::is_aligned(out_mem))
+      {
+      memory::mark_as_aligned(out_mem);
+      
+      if(x.P.is_aligned())
+        {
+        typename Proxy<T1>::aligned_ea_type P = x.P.get_aligned_ea();
+        
+        arma_applier_1a(=);
+        }
+      else
+        {
+        typename Proxy<T1>::ea_type P = x.P.get_ea();
+        
+        arma_applier_1u(=);
+        }
+      }
+    else
+      {
+      typename Proxy<T1>::ea_type P = x.P.get_ea();
+      
+      arma_applier_1u(=);
+      }
     }
   else
     {
@@ -171,9 +215,29 @@ eop_core<eop_type>::apply_inplace_plus(Mat<typename T1::elem_type>& out, const e
     {
     const uword n_elem = (Proxy<T1>::is_fixed) ? x.get_n_elem() : out.n_elem;
     
-    typename Proxy<T1>::ea_type P = x.P.get_ea();
-    
-    arma_applier_1(+=);
+    if(memory::is_aligned(out_mem))
+      {
+      memory::mark_as_aligned(out_mem);
+      
+      if(x.P.is_aligned())
+        {
+        typename Proxy<T1>::aligned_ea_type P = x.P.get_aligned_ea();
+        
+        arma_applier_1a(+=);
+        }
+      else
+        {
+        typename Proxy<T1>::ea_type P = x.P.get_ea();
+        
+        arma_applier_1u(+=);
+        }
+      }
+    else
+      {
+      typename Proxy<T1>::ea_type P = x.P.get_ea();
+      
+      arma_applier_1u(+=);
+      }
     }
   else
     {
@@ -208,9 +272,29 @@ eop_core<eop_type>::apply_inplace_minus(Mat<typename T1::elem_type>& out, const 
     {
     const uword n_elem = (Proxy<T1>::is_fixed) ? x.get_n_elem() : out.n_elem;
     
-    typename Proxy<T1>::ea_type P = x.P.get_ea();
-    
-    arma_applier_1(-=);
+    if(memory::is_aligned(out_mem))
+      {
+      memory::mark_as_aligned(out_mem);
+      
+      if(x.P.is_aligned())
+        {
+        typename Proxy<T1>::aligned_ea_type P = x.P.get_aligned_ea();
+        
+        arma_applier_1a(-=);
+        }
+      else
+        {
+        typename Proxy<T1>::ea_type P = x.P.get_ea();
+        
+        arma_applier_1u(-=);
+        }
+      }
+    else
+      {
+      typename Proxy<T1>::ea_type P = x.P.get_ea();
+      
+      arma_applier_1u(-=);
+      }
     }
   else
     {
@@ -245,9 +329,29 @@ eop_core<eop_type>::apply_inplace_schur(Mat<typename T1::elem_type>& out, const 
     {
     const uword n_elem = (Proxy<T1>::is_fixed) ? x.get_n_elem() : out.n_elem;
     
-    typename Proxy<T1>::ea_type P = x.P.get_ea();
-    
-    arma_applier_1(*=);
+    if(memory::is_aligned(out_mem))
+      {
+      memory::mark_as_aligned(out_mem);
+      
+      if(x.P.is_aligned())
+        {
+        typename Proxy<T1>::aligned_ea_type P = x.P.get_aligned_ea();
+        
+        arma_applier_1a(*=);
+        }
+      else
+        {
+        typename Proxy<T1>::ea_type P = x.P.get_ea();
+        
+        arma_applier_1u(*=);
+        }
+      }
+    else
+      {
+      typename Proxy<T1>::ea_type P = x.P.get_ea();
+      
+      arma_applier_1u(*=);
+      }
     }
   else
     {
@@ -282,9 +386,29 @@ eop_core<eop_type>::apply_inplace_div(Mat<typename T1::elem_type>& out, const eO
     {
     const uword n_elem = (Proxy<T1>::is_fixed) ? x.get_n_elem() : out.n_elem;
     
-    typename Proxy<T1>::ea_type P = x.P.get_ea();
-    
-    arma_applier_1(/=);
+    if(memory::is_aligned(out_mem))
+      {
+      memory::mark_as_aligned(out_mem);
+      
+      if(x.P.is_aligned())
+        {
+        typename Proxy<T1>::aligned_ea_type P = x.P.get_aligned_ea();
+        
+        arma_applier_1a(/=);
+        }
+      else
+        {
+        typename Proxy<T1>::ea_type P = x.P.get_ea();
+        
+        arma_applier_1u(/=);
+        }
+      }
+    else
+      {
+      typename Proxy<T1>::ea_type P = x.P.get_ea();
+      
+      arma_applier_1u(/=);
+      }
     }
   else
     {
@@ -322,9 +446,29 @@ eop_core<eop_type>::apply(Cube<typename T1::elem_type>& out, const eOpCube<T1, e
     {
     const uword n_elem = out.n_elem;
     
-    typename ProxyCube<T1>::ea_type P = x.P.get_ea();
-    
-    arma_applier_1(=);
+    if(memory::is_aligned(out_mem))
+      {
+      memory::mark_as_aligned(out_mem);
+      
+      if(x.P.is_aligned())
+        {
+        typename ProxyCube<T1>::aligned_ea_type P = x.P.get_aligned_ea();
+        
+        arma_applier_1a(=);
+        }
+      else
+        {
+        typename ProxyCube<T1>::ea_type P = x.P.get_ea();
+        
+        arma_applier_1u(=);
+        }
+      }
+    else
+      {
+      typename ProxyCube<T1>::ea_type P = x.P.get_ea();
+      
+      arma_applier_1u(=);
+      }
     }
   else
     {
@@ -364,9 +508,29 @@ eop_core<eop_type>::apply_inplace_plus(Cube<typename T1::elem_type>& out, const 
     {
     const uword n_elem = out.n_elem;
     
-    typename ProxyCube<T1>::ea_type P = x.P.get_ea();
-    
-    arma_applier_1(+=);
+    if(memory::is_aligned(out_mem))
+      {
+      memory::mark_as_aligned(out_mem);
+      
+      if(x.P.is_aligned())
+        {
+        typename ProxyCube<T1>::aligned_ea_type P = x.P.get_aligned_ea();
+        
+        arma_applier_1a(+=);
+        }
+      else
+        {
+        typename ProxyCube<T1>::ea_type P = x.P.get_ea();
+        
+        arma_applier_1u(+=);
+        }
+      }
+    else
+      {
+      typename ProxyCube<T1>::ea_type P = x.P.get_ea();
+      
+      arma_applier_1u(+=);
+      }
     }
   else
     {
@@ -402,9 +566,29 @@ eop_core<eop_type>::apply_inplace_minus(Cube<typename T1::elem_type>& out, const
     {
     const uword n_elem = out.n_elem;
     
-    typename ProxyCube<T1>::ea_type P = x.P.get_ea();
-    
-    arma_applier_1(-=);
+    if(memory::is_aligned(out_mem))
+      {
+      memory::mark_as_aligned(out_mem);
+      
+      if(x.P.is_aligned())
+        {
+        typename ProxyCube<T1>::aligned_ea_type P = x.P.get_aligned_ea();
+        
+        arma_applier_1a(-=);
+        }
+      else
+        {
+        typename ProxyCube<T1>::ea_type P = x.P.get_ea();
+        
+        arma_applier_1u(-=);
+        }
+      }
+    else
+      {
+      typename ProxyCube<T1>::ea_type P = x.P.get_ea();
+      
+      arma_applier_1u(-=);
+      }
     }
   else
     {
@@ -440,9 +624,29 @@ eop_core<eop_type>::apply_inplace_schur(Cube<typename T1::elem_type>& out, const
     {
     const uword n_elem = out.n_elem;
     
-    typename ProxyCube<T1>::ea_type P = x.P.get_ea();
-    
-    arma_applier_1(*=);
+    if(memory::is_aligned(out_mem))
+      {
+      memory::mark_as_aligned(out_mem);
+      
+      if(x.P.is_aligned())
+        {
+        typename ProxyCube<T1>::aligned_ea_type P = x.P.get_aligned_ea();
+        
+        arma_applier_1a(*=);
+        }
+      else
+        {
+        typename ProxyCube<T1>::ea_type P = x.P.get_ea();
+        
+        arma_applier_1u(*=);
+        }
+      }
+    else
+      {
+      typename ProxyCube<T1>::ea_type P = x.P.get_ea();
+      
+      arma_applier_1u(*=);
+      }
     }
   else
     {
@@ -478,9 +682,29 @@ eop_core<eop_type>::apply_inplace_div(Cube<typename T1::elem_type>& out, const e
     {
     const uword n_elem = out.n_elem;
     
-    typename ProxyCube<T1>::ea_type P = x.P.get_ea();
-    
-    arma_applier_1(/=);
+    if(memory::is_aligned(out_mem))
+      {
+      memory::mark_as_aligned(out_mem);
+      
+      if(x.P.is_aligned())
+        {
+        typename ProxyCube<T1>::aligned_ea_type P = x.P.get_aligned_ea();
+        
+        arma_applier_1a(/=);
+        }
+      else
+        {
+        typename ProxyCube<T1>::ea_type P = x.P.get_ea();
+        
+        arma_applier_1u(/=);
+        }
+      }
+    else
+      {
+      typename ProxyCube<T1>::ea_type P = x.P.get_ea();
+      
+      arma_applier_1u(/=);
+      }
     }
   else
     {
@@ -620,7 +844,8 @@ template<> template<typename eT> arma_hot arma_pure arma_inline eT
 eop_core<eop_round            >::process(const eT val, const eT  ) { return eop_aux::round(val);      }
 
 
-#undef arma_applier_1
+#undef arma_applier_1u
+#undef arma_applier_1a
 #undef arma_applier_2
 #undef arma_applier_3
 

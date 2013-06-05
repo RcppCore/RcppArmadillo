@@ -1220,6 +1220,16 @@ subview<eT>::eye()
 
 template<typename eT>
 inline
+eT
+subview<eT>::at_alt(const uword ii) const
+  {
+  return operator[](ii);
+  }
+
+
+
+template<typename eT>
+inline
 eT&
 subview<eT>::operator[](const uword ii)
   {
@@ -2469,7 +2479,20 @@ subview_col<eT>::st() const
 
 
 template<typename eT>
-inline
+arma_inline
+eT
+subview_col<eT>::at_alt(const uword ii) const
+  {
+  const eT* colmem_aligned = colmem;
+  memory::mark_as_aligned(colmem_aligned);
+  
+  return colmem_aligned[ii];
+  }
+
+
+
+template<typename eT>
+arma_inline
 eT&
 subview_col<eT>::operator[](const uword ii)
   {
@@ -2479,7 +2502,7 @@ subview_col<eT>::operator[](const uword ii)
 
 
 template<typename eT>
-inline
+arma_inline
 eT
 subview_col<eT>::operator[](const uword ii) const
   {
@@ -2744,6 +2767,18 @@ subview_row<eT>::st() const
 
 template<typename eT>
 inline
+eT
+subview_row<eT>::at_alt(const uword ii) const
+  {
+  const uword index = (ii + (subview<eT>::aux_col1))*(subview<eT>::m).n_rows + (subview<eT>::aux_row1);
+  
+  return subview<eT>::m.mem[index];
+  }
+
+
+
+template<typename eT>
+inline
 eT&
 subview_row<eT>::operator[](const uword ii)
   {
@@ -2914,6 +2949,203 @@ subview_row<eT>::subvec(const uword in_col1, const uword in_col2) const
   const uword base_col1 = this->aux_col1 + in_col1;
   
   return subview_row<eT>(this->m, this->aux_row1, base_col1, subview_n_cols);
+  }
+
+
+
+//
+//
+//
+
+
+
+template<typename eT>
+inline
+subview_row_strans<eT>::subview_row_strans(const subview_row<eT>& in_sv_row)
+  : sv_row(in_sv_row       )
+  , n_rows(in_sv_row.n_cols)
+  , n_elem(in_sv_row.n_elem)
+  {
+  arma_extra_debug_sigprint();
+  }
+
+
+
+template<typename eT>
+inline
+void
+subview_row_strans<eT>::extract(Mat<eT>& out) const
+  {
+  arma_extra_debug_sigprint();
+  
+  // NOTE: this function assumes that matrix 'out' has already been set to the correct size
+  
+  const Mat<eT>& X = sv_row.m;
+  
+  eT* out_mem = out.memptr();
+  
+  const uword row           = sv_row.aux_row1;
+  const uword start_col     = sv_row.aux_col1;
+  const uword sv_row_n_cols = sv_row.n_cols;
+  
+  uword ii,jj;
+  
+  for(ii=0, jj=1; jj < sv_row_n_cols; ii+=2, jj+=2)
+    {
+    const eT tmp1 = X.at(row, start_col+ii);
+    const eT tmp2 = X.at(row, start_col+jj);
+    
+    out_mem[ii] = tmp1;
+    out_mem[jj] = tmp2;
+    }
+  
+  if(ii < sv_row_n_cols)
+    {
+    out_mem[ii] = X.at(row, start_col+ii);
+    }
+  }
+
+
+
+template<typename eT>
+inline
+eT
+subview_row_strans<eT>::at_alt(const uword ii) const
+  {
+  return sv_row[ii];
+  }
+
+
+
+template<typename eT>
+inline
+eT
+subview_row_strans<eT>::operator[](const uword ii) const
+  {
+  return sv_row[ii];
+  }
+
+
+
+template<typename eT>
+inline
+eT
+subview_row_strans<eT>::operator()(const uword ii) const
+  {
+  return sv_row(ii);
+  }
+
+
+
+template<typename eT>
+inline
+eT
+subview_row_strans<eT>::operator()(const uword in_row, const uword in_col) const
+  {
+  return sv_row(in_col, in_row);  // deliberately swapped
+  }
+
+
+
+template<typename eT>
+inline
+eT
+subview_row_strans<eT>::at(const uword in_row, const uword) const
+  {
+  return sv_row.at(0, in_row);  // deliberately swapped
+  }
+
+
+
+//
+//
+//
+
+
+
+template<typename eT>
+inline
+subview_row_htrans<eT>::subview_row_htrans(const subview_row<eT>& in_sv_row)
+  : sv_row(in_sv_row       )
+  , n_rows(in_sv_row.n_cols)
+  , n_elem(in_sv_row.n_elem)
+  {
+  arma_extra_debug_sigprint();
+  }
+
+
+
+template<typename eT>
+inline
+void
+subview_row_htrans<eT>::extract(Mat<eT>& out) const
+  {
+  arma_extra_debug_sigprint();
+  
+  // NOTE: this function assumes that matrix 'out' has already been set to the correct size
+  
+  const Mat<eT>& X = sv_row.m;
+  
+  eT* out_mem = out.memptr();
+  
+  const uword row           = sv_row.aux_row1;
+  const uword start_col     = sv_row.aux_col1;
+  const uword sv_row_n_cols = sv_row.n_cols;
+  
+  for(uword ii=0; ii < sv_row_n_cols; ++ii)
+    {
+    out_mem[ii] = access::alt_conj( X.at(row, start_col+ii) );
+    }
+  }
+
+
+
+template<typename eT>
+inline
+eT
+subview_row_htrans<eT>::at_alt(const uword ii) const
+  {
+  return access::alt_conj( sv_row[ii] );
+  }
+
+
+
+template<typename eT>
+inline
+eT
+subview_row_htrans<eT>::operator[](const uword ii) const
+  {
+  return access::alt_conj( sv_row[ii] );
+  }
+
+
+
+template<typename eT>
+inline
+eT
+subview_row_htrans<eT>::operator()(const uword ii) const
+  {
+  return access::alt_conj( sv_row(ii) );
+  }
+
+
+
+template<typename eT>
+inline
+eT
+subview_row_htrans<eT>::operator()(const uword in_row, const uword in_col) const
+  {
+  return access::alt_conj( sv_row(in_col, in_row) );  // deliberately swapped
+  }
+
+
+
+template<typename eT>
+inline
+eT
+subview_row_htrans<eT>::at(const uword in_row, const uword) const
+  {
+  return access::alt_conj( sv_row.at(0, in_row) );  // deliberately swapped
   }
 
 

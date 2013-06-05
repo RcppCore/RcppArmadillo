@@ -1,5 +1,5 @@
-// Copyright (C) 2011-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2011-2012 Conrad Sanderson
+// Copyright (C) 2011-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2011-2013 Conrad Sanderson
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -331,6 +331,158 @@ inline
 void
 arrayops::inplace_plus(eT* dest, const eT* src, const uword n_elem)
   {
+  if(memory::is_aligned(dest))
+    {
+    memory::mark_as_aligned(dest);
+    
+    if(memory::is_aligned(src))
+      {
+      memory::mark_as_aligned(src);
+      
+      arrayops::inplace_plus_base(dest, src, n_elem);
+      }
+    else
+      {
+      arrayops::inplace_plus_base(dest, src, n_elem);
+      }
+    }
+  else
+    {
+    if(memory::is_aligned(src))
+      {
+      memory::mark_as_aligned(src);
+      
+      arrayops::inplace_plus_base(dest, src, n_elem);
+      }
+    else
+      {
+      arrayops::inplace_plus_base(dest, src, n_elem);
+      }
+    }
+  }
+
+
+
+template<typename eT>
+arma_hot
+inline
+void
+arrayops::inplace_minus(eT* dest, const eT* src, const uword n_elem)
+  {
+  if(memory::is_aligned(dest))
+    {
+    memory::mark_as_aligned(dest);
+    
+    if(memory::is_aligned(src))
+      {
+      memory::mark_as_aligned(src);
+      
+      arrayops::inplace_minus_base(dest, src, n_elem);
+      }
+    else
+      {
+      arrayops::inplace_minus_base(dest, src, n_elem);
+      }
+    }
+  else
+    {
+    if(memory::is_aligned(src))
+      {
+      memory::mark_as_aligned(src);
+      
+      arrayops::inplace_minus_base(dest, src, n_elem);
+      }
+    else
+      {
+      arrayops::inplace_minus_base(dest, src, n_elem);
+      }
+    }
+  }
+
+
+
+template<typename eT>
+arma_hot
+inline
+void
+arrayops::inplace_mul(eT* dest, const eT* src, const uword n_elem)
+  {
+  if(memory::is_aligned(dest))
+    {
+    memory::mark_as_aligned(dest);
+    
+    if(memory::is_aligned(src))
+      {
+      memory::mark_as_aligned(src);
+      
+      arrayops::inplace_mul_base(dest, src, n_elem);
+      }
+    else
+      {
+      arrayops::inplace_mul_base(dest, src, n_elem);
+      }
+    }
+  else
+    {
+    if(memory::is_aligned(src))
+      {
+      memory::mark_as_aligned(src);
+      
+      arrayops::inplace_mul_base(dest, src, n_elem);
+      }
+    else
+      {
+      arrayops::inplace_mul_base(dest, src, n_elem);
+      }
+    }
+  }
+
+
+
+template<typename eT>
+arma_hot
+inline
+void
+arrayops::inplace_div(eT* dest, const eT* src, const uword n_elem)
+  {
+  if(memory::is_aligned(dest))
+    {
+    memory::mark_as_aligned(dest);
+    
+    if(memory::is_aligned(src))
+      {
+      memory::mark_as_aligned(src);
+      
+      arrayops::inplace_div_base(dest, src, n_elem);
+      }
+    else
+      {
+      arrayops::inplace_div_base(dest, src, n_elem);
+      }
+    }
+  else
+    {
+    if(memory::is_aligned(src))
+      {
+      memory::mark_as_aligned(src);
+      
+      arrayops::inplace_div_base(dest, src, n_elem);
+      }
+    else
+      {
+      arrayops::inplace_div_base(dest, src, n_elem);
+      }
+    }
+  }
+
+
+
+template<typename eT>
+arma_hot
+inline
+void
+arrayops::inplace_plus_base(eT* dest, const eT* src, const uword n_elem)
+  {
   uword i,j;
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
@@ -354,7 +506,7 @@ template<typename eT>
 arma_hot
 inline
 void
-arrayops::inplace_minus(eT* dest, const eT* src, const uword n_elem)
+arrayops::inplace_minus_base(eT* dest, const eT* src, const uword n_elem)
   {
   uword i,j;
   
@@ -379,7 +531,7 @@ template<typename eT>
 arma_hot
 inline
 void
-arrayops::inplace_mul(eT* dest, const eT* src, const uword n_elem)
+arrayops::inplace_mul_base(eT* dest, const eT* src, const uword n_elem)
   {
   uword i,j;
   
@@ -404,7 +556,7 @@ template<typename eT>
 arma_hot
 inline
 void
-arrayops::inplace_div(eT* dest, const eT* src, const uword n_elem)
+arrayops::inplace_div_base(eT* dest, const eT* src, const uword n_elem)
   {
   uword i,j;
   
@@ -431,18 +583,38 @@ inline
 void
 arrayops::inplace_set(eT* dest, const eT val, const uword n_elem)
   {
-  uword i,j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
+  if(memory::is_aligned(dest))
     {
-    dest[i] = val;
-    dest[j] = val;
+    memory::mark_as_aligned(dest);
+    
+    uword i,j;
+    
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+      {
+      dest[i] = val;
+      dest[j] = val;
+      }
+    
+    if(i < n_elem)
+      {
+      dest[i] = val;
+      }
     }
-  
-  if(i < n_elem)
+  else
     {
-    dest[i] = val;
-    }
+    uword i,j;
+    
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+      {
+      dest[i] = val;
+      dest[j] = val;
+      }
+    
+    if(i < n_elem)
+      {
+      dest[i] = val;
+      }
+    } 
   }
 
 
@@ -467,17 +639,37 @@ inline
 void
 arrayops::inplace_plus(eT* dest, const eT val, const uword n_elem)
   {
-  uword i,j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
+  if(memory::is_aligned(dest))
     {
-    dest[i] += val;
-    dest[j] += val;
+    memory::mark_as_aligned(dest);
+    
+    uword i,j;
+    
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+      {
+      dest[i] += val;
+      dest[j] += val;
+      }
+    
+    if(i < n_elem)
+      {
+      dest[i] += val;
+      }
     }
-  
-  if(i < n_elem)
+  else
     {
-    dest[i] += val;
+    uword i,j;
+    
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+      {
+      dest[i] += val;
+      dest[j] += val;
+      }
+    
+    if(i < n_elem)
+      {
+      dest[i] += val;
+      }
     }
   }
 
@@ -489,17 +681,37 @@ inline
 void
 arrayops::inplace_minus(eT* dest, const eT val, const uword n_elem)
   {
-  uword i,j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
+  if(memory::is_aligned(dest))
     {
-    dest[i] -= val;
-    dest[j] -= val;
+    memory::mark_as_aligned(dest);
+    
+    uword i,j;
+    
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+      {
+      dest[i] -= val;
+      dest[j] -= val;
+      }
+    
+    if(i < n_elem)
+      {
+      dest[i] -= val;
+      }
     }
-  
-  if(i < n_elem)
+  else
     {
-    dest[i] -= val;
+    uword i,j;
+    
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+      {
+      dest[i] -= val;
+      dest[j] -= val;
+      }
+    
+    if(i < n_elem)
+      {
+      dest[i] -= val;
+      }
     }
   }
 
@@ -511,17 +723,37 @@ inline
 void
 arrayops::inplace_mul(eT* dest, const eT val, const uword n_elem)
   {
-  uword i,j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
+  if(memory::is_aligned(dest))
     {
-    dest[i] *= val;
-    dest[j] *= val;
+    memory::mark_as_aligned(dest);
+    
+    uword i,j;
+    
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+      {
+      dest[i] *= val;
+      dest[j] *= val;
+      }
+    
+    if(i < n_elem)
+      {
+      dest[i] *= val;
+      }
     }
-  
-  if(i < n_elem)
+  else
     {
-    dest[i] *= val;
+    uword i,j;
+    
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+      {
+      dest[i] *= val;
+      dest[j] *= val;
+      }
+    
+    if(i < n_elem)
+      {
+      dest[i] *= val;
+      }
     }
   }
 
@@ -533,17 +765,37 @@ inline
 void
 arrayops::inplace_div(eT* dest, const eT val, const uword n_elem)
   {
-  uword i,j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
+  if(memory::is_aligned(dest))
     {
-    dest[i] /= val;
-    dest[j] /= val;
+    memory::mark_as_aligned(dest);
+    
+    uword i,j;
+    
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+      {
+      dest[i] /= val;
+      dest[j] /= val;
+      }
+    
+    if(i < n_elem)
+      {
+      dest[i] /= val;
+      }
     }
-  
-  if(i < n_elem)
+  else
     {
-    dest[i] /= val;
+    uword i,j;
+    
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+      {
+      dest[i] /= val;
+      dest[j] /= val;
+      }
+    
+    if(i < n_elem)
+      {
+      dest[i] /= val;
+      }
     }
   }
 

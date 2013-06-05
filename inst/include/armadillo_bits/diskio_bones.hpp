@@ -1,6 +1,8 @@
 // Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
 // Copyright (C) 2008-2012 Conrad Sanderson
 // Copyright (C) 2009-2010 Ian Cullinan
+// Copyright (C) 2012 Ryan Curtin
+// Copyright (C) 2013 Szabolcs Horvat
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -112,6 +114,7 @@ class diskio
   template<typename eT> inline static bool save_raw_binary (const Cube<eT>& x, const std::string& name);
   template<typename eT> inline static bool save_arma_ascii (const Cube<eT>& x, const std::string& name);
   template<typename eT> inline static bool save_arma_binary(const Cube<eT>& x, const std::string& name);
+  template<typename eT> inline static bool save_hdf5_binary(const Cube<eT>& x, const std::string& name);
   
   template<typename eT> inline static bool save_raw_ascii  (const Cube<eT>& x, std::ostream& f);
   template<typename eT> inline static bool save_raw_binary (const Cube<eT>& x, std::ostream& f);
@@ -126,6 +129,7 @@ class diskio
   template<typename eT> inline static bool load_raw_binary (Cube<eT>& x, const std::string& name, std::string& err_msg);
   template<typename eT> inline static bool load_arma_ascii (Cube<eT>& x, const std::string& name, std::string& err_msg);
   template<typename eT> inline static bool load_arma_binary(Cube<eT>& x, const std::string& name, std::string& err_msg);
+  template<typename eT> inline static bool load_hdf5_binary(Cube<eT>& x, const std::string& name, std::string& err_msg);
   template<typename eT> inline static bool load_auto_detect(Cube<eT>& x, const std::string& name, std::string& err_msg);
   
   template<typename eT> inline static bool load_raw_ascii  (Cube<eT>& x, std::istream& f, std::string& err_msg);

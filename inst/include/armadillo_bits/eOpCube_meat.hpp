@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2010-2011 Conrad Sanderson
+// Copyright (C) 2010-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2013 Conrad Sanderson
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -140,6 +140,16 @@ typename T1::elem_type
 eOpCube<T1, eop_type>::at(const uword row, const uword col, const uword slice) const
   {
   return eop_core<eop_type>::process(P.at(row, col, slice), aux);
+  }
+
+
+
+template<typename T1, typename eop_type>
+arma_inline
+typename T1::elem_type
+eOpCube<T1, eop_type>::at_alt(const uword i) const
+  {
+  return eop_core<eop_type>::process(P.at_alt(i), aux);
   }
 
 

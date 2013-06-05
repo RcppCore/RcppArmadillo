@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2013 Conrad Sanderson
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -44,7 +44,7 @@ class Row : public Mat<eT>
   inline explicit Row(const SpRow<eT>& X);
   
   inline const Row& operator=(const eT val);
-
+  
   template<typename T1> inline                   Row(const Base<eT,T1>& X);
   template<typename T1> inline const Row&  operator=(const Base<eT,T1>& X);
   
@@ -91,11 +91,11 @@ class Row : public Mat<eT>
   template<typename T1> inline void insert_cols(const uword col_num, const Base<eT,T1>& X);
   
   
-  arma_inline arma_warn_unused eT& at(const uword i);
-  arma_inline arma_warn_unused eT  at(const uword i) const;
+  arma_inline arma_warn_unused       eT& at(const uword i);
+  arma_inline arma_warn_unused const eT& at(const uword i) const;
   
-  arma_inline arma_warn_unused eT& at(const uword in_row, const uword in_col);
-  arma_inline arma_warn_unused eT  at(const uword in_row, const uword in_col) const;
+  arma_inline arma_warn_unused       eT& at(const uword in_row, const uword in_col);
+  arma_inline arma_warn_unused const eT& at(const uword in_row, const uword in_col) const;
   
   
   typedef       eT*       row_iterator;
@@ -133,7 +133,7 @@ class Row<eT>::fixed : public Row<eT>
   
   static const bool use_extra = (fixed_n_elem > arma_config::mat_prealloc);
   
-  arma_aligned eT mem_local_extra[ (use_extra) ? fixed_n_elem : 1 ];
+  arma_align_mem eT mem_local_extra[ (use_extra) ? fixed_n_elem : 1 ];
   
   
   public:
@@ -180,17 +180,19 @@ class Row<eT>::fixed : public Row<eT>
   arma_inline const Op< Row_fixed_type, op_htrans > ht() const;
   arma_inline const Op< Row_fixed_type, op_strans > st() const;
   
-  arma_inline arma_warn_unused eT& operator[] (const uword i);
-  arma_inline arma_warn_unused eT  operator[] (const uword i) const;
-  arma_inline arma_warn_unused eT& at         (const uword i);
-  arma_inline arma_warn_unused eT  at         (const uword i) const;
-  arma_inline arma_warn_unused eT& operator() (const uword i);
-  arma_inline arma_warn_unused eT  operator() (const uword i) const;
+  arma_inline arma_warn_unused const eT& at_alt     (const uword i) const;
   
-  arma_inline arma_warn_unused eT& at         (const uword in_row, const uword in_col);
-  arma_inline arma_warn_unused eT  at         (const uword in_row, const uword in_col) const;
-  arma_inline arma_warn_unused eT& operator() (const uword in_row, const uword in_col);
-  arma_inline arma_warn_unused eT  operator() (const uword in_row, const uword in_col) const;
+  arma_inline arma_warn_unused       eT& operator[] (const uword i);
+  arma_inline arma_warn_unused const eT& operator[] (const uword i) const;
+  arma_inline arma_warn_unused       eT& at         (const uword i);
+  arma_inline arma_warn_unused const eT& at         (const uword i) const;
+  arma_inline arma_warn_unused       eT& operator() (const uword i);
+  arma_inline arma_warn_unused const eT& operator() (const uword i) const;
+  
+  arma_inline arma_warn_unused       eT& at         (const uword in_row, const uword in_col);
+  arma_inline arma_warn_unused const eT& at         (const uword in_row, const uword in_col) const;
+  arma_inline arma_warn_unused       eT& operator() (const uword in_row, const uword in_col);
+  arma_inline arma_warn_unused const eT& operator() (const uword in_row, const uword in_col) const;
   
   arma_inline arma_warn_unused       eT* memptr();
   arma_inline arma_warn_unused const eT* memptr() const;

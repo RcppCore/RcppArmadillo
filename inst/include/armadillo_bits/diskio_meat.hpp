@@ -2,6 +2,7 @@
 // Copyright (C) 2008-2012 Conrad Sanderson
 // Copyright (C) 2009-2010 Ian Cullinan
 // Copyright (C) 2012 Ryan Curtin
+// Copyright (C) 2013 Szabolcs Horvat
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -2011,6 +2012,7 @@ diskio::load_pgm_binary(Mat< std::complex<T> >& x, std::istream& is, std::string
 
 
 
+//! Load a HDF5 file as a matrix
 template<typename eT>
 inline
 bool
@@ -2097,8 +2099,8 @@ diskio::load_hdf5_binary(Mat<eT>& x, const std::string& name, std::string& err_m
           }
         else
           {
-          // Load as another matrix and convert accordingly.
-          hid_t read_status = hdf5_misc::load_and_convert_hdf5(x, dataset, datatype, dims);
+          // Load into another array and convert its type accordingly.
+          hid_t read_status = hdf5_misc::load_and_convert_hdf5(x.memptr(), dataset, datatype, x.n_elem);
           
           if(read_status >= 0) { load_okay = true; }
           }
@@ -3311,6 +3313,73 @@ diskio::save_arma_binary(const Cube<eT>& x, std::ostream& f)
 
 
 
+//! Save a cube as part of a HDF5 file
+template<typename eT>
+inline
+bool
+diskio::save_hdf5_binary(const Cube<eT>& x, const std::string& final_name)
+  {
+  arma_extra_debug_sigprint();
+
+  #if defined(ARMA_USE_HDF5)
+    {
+    #if !defined(ARMA_PRINT_HDF5_ERRORS)
+      {
+      // Disable annoying HDF5 error messages.
+      H5Eset_auto(H5E_DEFAULT, NULL, NULL);
+      }
+    #endif
+
+    bool save_okay = false;
+
+    const std::string tmp_name = diskio::gen_tmp_name(final_name);
+
+    // Set up the file according to HDF5's preferences
+    hid_t file = H5Fcreate(tmp_name.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
+
+    // We need to create a dataset, datatype, and dataspace
+    hsize_t dims[3];
+    dims[2] = x.n_rows;
+    dims[1] = x.n_cols;
+    dims[0] = x.n_slices;
+
+    hid_t dataspace = H5Screate_simple(3, dims, NULL);   // treat the cube as a 3d array dataspace
+    hid_t datatype  = hdf5_misc::get_hdf5_type<eT>();
+
+    // If this returned something invalid, well, it's time to crash.
+    arma_check(datatype == -1, "Cube::save(): unknown datatype for HDF5");
+
+    // MATLAB forces the users to specify a name at save time for HDF5; Octave
+    // will use the default of 'dataset' unless otherwise specified, so we will
+    // use that.
+    hid_t dataset = H5Dcreate(file, "dataset", datatype, dataspace, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+
+    herr_t status = H5Dwrite(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, x.mem);
+    save_okay = (status >= 0);
+
+    H5Dclose(dataset);
+    H5Tclose(datatype);
+    H5Sclose(dataspace);
+    H5Fclose(file);
+
+    if(save_okay == true) { save_okay = diskio::safe_rename(tmp_name, final_name); }
+
+    return save_okay;
+    }
+  #else
+    {
+    arma_ignore(x);
+    arma_ignore(final_name);
+
+    arma_stop("Cube::save(): use of HDF5 needs to be enabled");
+
+    return false;
+    }
+  #endif
+  }
+
+
+
 //! Load a cube as raw text (no header, human readable).
 //! NOTE: this is much slower than reading a file with a header.
 template<typename eT>
@@ -3569,6 +3638,144 @@ diskio::load_arma_binary(Cube<eT>& x, std::istream& f, std::string& err_msg)
 
 
 
+//! Load a HDF5 file as a cube
+template<typename eT>
+inline
+bool
+diskio::load_hdf5_binary(Cube<eT>& x, const std::string& name, std::string& err_msg)
+  {
+  arma_extra_debug_sigprint();
+
+  #if defined(ARMA_USE_HDF5)
+    {
+
+    // These may be necessary to store the error handler (if we need to).
+    herr_t (*old_func)(hid_t, void*);
+    void *old_client_data;
+
+    #if !defined(ARMA_PRINT_HDF5_ERRORS)
+      {
+      // Save old error handler.
+      H5Eget_auto(H5E_DEFAULT, &old_func, &old_client_data);
+
+      // Disable annoying HDF5 error messages.
+      H5Eset_auto(H5E_DEFAULT, NULL, NULL);
+      }
+    #endif
+
+    bool load_okay = false;
+
+    hid_t fid = H5Fopen(name.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
+
+    if(fid >= 0)
+      {
+      // MATLAB HDF5 dataset names are user-specified;
+      // Octave tends to store the datasets in a group, with the actual dataset being referred to as "value".
+      // So we will search for "dataset" and "value", and if those are not found we will take the first dataset we do find.
+      std::vector<std::string> searchNames;
+      searchNames.push_back("dataset");
+      searchNames.push_back("value");
+
+      hid_t dataset = hdf5_misc::search_hdf5_file(searchNames, fid, 3, false);
+
+      if(dataset >= 0)
+        {
+        hid_t filespace = H5Dget_space(dataset);
+
+        // This must be <= 3 due to our search rules.
+        const int ndims = H5Sget_simple_extent_ndims(filespace);
+
+        hsize_t dims[3];
+        const herr_t query_status = H5Sget_simple_extent_dims(filespace, dims, NULL);
+
+        // arma_check(query_status < 0, "Cube::load(): cannot get size of HDF5 dataset");
+        if(query_status < 0)
+          {
+          err_msg = "cannot get size of HDF5 dataset in ";
+
+          H5Sclose(filespace);
+          H5Dclose(dataset);
+          H5Fclose(fid);
+
+          #if !defined(ARMA_PRINT_HDF5_ERRORS)
+            {
+            // Restore HDF5 error handler.
+            H5Eset_auto(H5E_DEFAULT, old_func, old_client_data);
+            }
+          #endif
+
+          return false;
+          }
+
+        if (ndims == 1) { dims[1] = 1; dims[2] = 1; }  // Vector case; one row/colum, several slices
+        if (ndims == 2) { dims[2] = 1; } // Matrix case; one column, several rows/slices
+
+        x.set_size(dims[2], dims[1], dims[0]);
+
+        // Now we have to see what type is stored to figure out how to load it.
+        hid_t datatype = H5Dget_type(dataset);
+        hid_t mat_type = hdf5_misc::get_hdf5_type<eT>();
+
+        // If these are the same type, it is simple.
+        if(H5Tequal(datatype, mat_type) > 0)
+          {
+          // Load directly; H5S_ALL used so that we load the entire dataset.
+          hid_t read_status = H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(x.memptr()));
+
+          if(read_status >= 0) { load_okay = true; }
+          }
+        else
+          {
+          // Load into another array and convert its type accordingly.
+          hid_t read_status = hdf5_misc::load_and_convert_hdf5(x.memptr(), dataset, datatype, x.n_elem);
+
+          if(read_status >= 0) { load_okay = true; }
+          }
+
+        // Now clean up.
+        H5Tclose(datatype);
+        H5Tclose(mat_type);
+        H5Sclose(filespace);
+        }
+
+      H5Dclose(dataset);
+
+      H5Fclose(fid);
+
+      if(load_okay == false)
+        {
+        err_msg = "unsupported or incorrect HDF5 data in ";
+        }
+      }
+    else
+      {
+      err_msg = "cannot open file ";
+      }
+
+    #if !defined(ARMA_PRINT_HDF5_ERRORS)
+      {
+      // Restore HDF5 error handler.
+      H5Eset_auto(H5E_DEFAULT, old_func, old_client_data);
+      }
+    #endif
+
+    return load_okay;
+    }
+  #else
+    {
+    arma_ignore(x);
+    arma_ignore(name);
+    arma_ignore(err_msg);
+
+    arma_stop("Cube::load(): use of HDF5 needs to be enabled");
+
+    return false;
+    }
+  #endif
+  }
+
+
+
 //! Try to load a cube by automatically determining its type
 template<typename eT>
 inline
@@ -3577,6 +3784,11 @@ diskio::load_auto_detect(Cube<eT>& x, const std::string& name, std::string& err_
   {
   arma_extra_debug_sigprint();
   
+  #if defined(ARMA_USE_HDF5)
+    // We're currently using the C bindings for the HDF5 library, which don't support C++ streams
+    if( H5Fis_hdf5(name.c_str()) ) { return load_hdf5_binary(x, name, err_msg); }
+  #endif
+
   std::fstream f;
   f.open(name.c_str(), std::fstream::in | std::fstream::binary);
   

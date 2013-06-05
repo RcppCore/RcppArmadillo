@@ -1,5 +1,5 @@
-// Copyright (C) 2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2011 Conrad Sanderson
+// Copyright (C) 2011-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2011-2013 Conrad Sanderson
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -32,6 +32,7 @@ class GenCube : public BaseCube<eT, GenCube<eT, gen_type> >
   
   arma_inline eT operator[] (const uword i)                                       const;
   arma_inline eT at         (const uword row, const uword col, const uword slice) const;
+  arma_inline eT at_alt     (const uword i)                                       const;
   
   inline void apply              (Cube<eT>& out) const;
   inline void apply_inplace_plus (Cube<eT>& out) const;

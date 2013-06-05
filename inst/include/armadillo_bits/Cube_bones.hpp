@@ -46,8 +46,8 @@ class Cube : public BaseCube< eT, Cube<eT> >
   arma_aligned const eT*       const mem;      //!< pointer to the memory used by the cube (memory is read-only)
   
   protected:
-  arma_aligned Mat<eT>* mat_ptrs_local[ Cube_prealloc::mat_ptrs_size ];
-  arma_aligned eT            mem_local[ Cube_prealloc::mem_n_elem    ];
+  arma_aligned   Mat<eT>* mat_ptrs_local[ Cube_prealloc::mat_ptrs_size ];
+  arma_align_mem eT            mem_local[ Cube_prealloc::mem_n_elem    ];
   
   
   public:
@@ -159,20 +159,22 @@ class Cube : public BaseCube< eT, Cube<eT> >
   template<typename T1, typename T2, typename glue_type> inline const Cube& operator/=(const mtGlueCube<eT, T1, T2, glue_type>& X);
   
   
-  arma_inline arma_warn_unused eT& operator[] (const uword i);
-  arma_inline arma_warn_unused eT  operator[] (const uword i) const;
+  arma_inline arma_warn_unused const eT& at_alt     (const uword i) const;
   
-  arma_inline arma_warn_unused eT& at(const uword i);
-  arma_inline arma_warn_unused eT  at(const uword i) const;
+  arma_inline arma_warn_unused       eT& operator[] (const uword i);
+  arma_inline arma_warn_unused const eT& operator[] (const uword i) const;
   
-  arma_inline arma_warn_unused eT& operator() (const uword i);
-  arma_inline arma_warn_unused eT  operator() (const uword i) const;
+  arma_inline arma_warn_unused       eT& at(const uword i);
+  arma_inline arma_warn_unused const eT& at(const uword i) const;
   
-  arma_inline arma_warn_unused eT& at         (const uword in_row, const uword in_col, const uword in_slice);
-  arma_inline arma_warn_unused eT  at         (const uword in_row, const uword in_col, const uword in_slice) const;
+  arma_inline arma_warn_unused       eT& operator() (const uword i);
+  arma_inline arma_warn_unused const eT& operator() (const uword i) const;
   
-  arma_inline arma_warn_unused eT& operator() (const uword in_row, const uword in_col, const uword in_slice);
-  arma_inline arma_warn_unused eT  operator() (const uword in_row, const uword in_col, const uword in_slice) const;
+  arma_inline arma_warn_unused       eT& at         (const uword in_row, const uword in_col, const uword in_slice);
+  arma_inline arma_warn_unused const eT& at         (const uword in_row, const uword in_col, const uword in_slice) const;
+  
+  arma_inline arma_warn_unused       eT& operator() (const uword in_row, const uword in_col, const uword in_slice);
+  arma_inline arma_warn_unused const eT& operator() (const uword in_row, const uword in_col, const uword in_slice) const;
   
   arma_inline const Cube& operator++();
   arma_inline void        operator++(int);
@@ -331,8 +333,8 @@ class Cube<eT>::fixed : public Cube<eT>
   
   static const bool use_extra = (fixed_n_elem > Cube_prealloc::mem_n_elem);
   
-  arma_aligned Mat<eT>* mat_ptrs_local_extra[ (fixed_n_slices > Cube_prealloc::mat_ptrs_size) ? fixed_n_slices : 1 ];
-  arma_aligned eT       mem_local_extra     [ use_extra                                       ? fixed_n_elem   : 1 ];
+  arma_aligned   Mat<eT>* mat_ptrs_local_extra[ (fixed_n_slices > Cube_prealloc::mat_ptrs_size) ? fixed_n_slices : 1 ];
+  arma_align_mem eT       mem_local_extra     [ use_extra                                       ? fixed_n_elem   : 1 ];
   
   arma_inline void mem_setup();
   
@@ -356,20 +358,20 @@ class Cube<eT>::fixed : public Cube<eT>
   using Cube<eT>::operator();
   
   
-  arma_inline arma_warn_unused eT& operator[] (const uword i);
-  arma_inline arma_warn_unused eT  operator[] (const uword i) const;
+  arma_inline arma_warn_unused       eT& operator[] (const uword i);
+  arma_inline arma_warn_unused const eT& operator[] (const uword i) const;
   
-  arma_inline arma_warn_unused eT& at         (const uword i);
-  arma_inline arma_warn_unused eT  at         (const uword i) const;
+  arma_inline arma_warn_unused       eT& at         (const uword i);
+  arma_inline arma_warn_unused const eT& at         (const uword i) const;
   
-  arma_inline arma_warn_unused eT& operator() (const uword i);
-  arma_inline arma_warn_unused eT  operator() (const uword i) const;
+  arma_inline arma_warn_unused       eT& operator() (const uword i);
+  arma_inline arma_warn_unused const eT& operator() (const uword i) const;
   
-  arma_inline arma_warn_unused eT& at         (const uword in_row, const uword in_col, const uword in_slice);
-  arma_inline arma_warn_unused eT  at         (const uword in_row, const uword in_col, const uword in_slice) const;
+  arma_inline arma_warn_unused       eT& at         (const uword in_row, const uword in_col, const uword in_slice);
+  arma_inline arma_warn_unused const eT& at         (const uword in_row, const uword in_col, const uword in_slice) const;
   
-  arma_inline arma_warn_unused eT& operator() (const uword in_row, const uword in_col, const uword in_slice);
-  arma_inline arma_warn_unused eT  operator() (const uword in_row, const uword in_col, const uword in_slice) const;
+  arma_inline arma_warn_unused       eT& operator() (const uword in_row, const uword in_col, const uword in_slice);
+  arma_inline arma_warn_unused const eT& operator() (const uword in_row, const uword in_col, const uword in_slice) const;
   };
 
 

@@ -2,13 +2,13 @@ Source: r-cran-rcpparmadillo
 Section: gnu-r
 Priority: optional
 Maintainer: Dirk Eddelbuettel <edd@debian.org>
-Build-Depends: debhelper (>= 7.0.0), r-base-dev (>= 3.0.0), r-cran-rcpp, cdbs
+Build-Depends: debhelper (>= 7.0.0), r-base-dev (>= 3.0.1), r-cran-rcpp, cdbs
 Standards-Version: 3.9.4
 Homepage: http://dirk.eddelbuettel.com/code/rcpp.armadillo.html
 
 Package: r-cran-rcpparmadillo
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${R:Depends}, littler
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${R:Depends}, littler, r-cran-rcpp
 Description: GNU R package for Armadillo C++ linear algebra library
  Armadillo is a templated C++ linear algebra library (by Conrad Sanderson)
  that aims towards a good balance between speed and ease of use. Integer,

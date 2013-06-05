@@ -139,6 +139,7 @@ namespace arma
   #include "armadillo_bits/Col_bones.hpp"
   #include "armadillo_bits/Row_bones.hpp"
   #include "armadillo_bits/Cube_bones.hpp"
+  #include "armadillo_bits/xvec_htrans_bones.hpp"
   
   #include "armadillo_bits/SpValProxy_bones.hpp"
   #include "armadillo_bits/SpMat_bones.hpp"
@@ -444,6 +445,8 @@ namespace arma
   #include "armadillo_bits/Col_meat.hpp"
   #include "armadillo_bits/Row_meat.hpp"
   #include "armadillo_bits/Cube_meat.hpp"
+  #include "armadillo_bits/xvec_htrans_meat.hpp"
+  
   #include "armadillo_bits/field_meat.hpp"
   #include "armadillo_bits/subview_meat.hpp"
   #include "armadillo_bits/subview_elem1_meat.hpp"

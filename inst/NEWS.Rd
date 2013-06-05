@@ -2,6 +2,24 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.3.900 (2013-06-04)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 3.900.0 (Bavarian
+    Sunflower)
+    \itemize{
+      \item added automatic SSE2 vectorisation of elementary expressions
+      (eg. matrix addition) when using GCC 4.7+ with -O3 optimisation
+      \item added support for saving & loading of cubes in HDF5 format,
+      contributed by Szabolcs Horvat
+      \item faster \code{median()}, contributed by Ruslan Shestopalyuk
+      \item faster handling of compound expressions with transposes of
+      submatrix rows
+      \item faster handling of compound expressions with transposes of
+      complex vectors
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.3.820 (2013-05-12)}{
   \itemize{
     \item Upgraded to Armadillo release Version 3.820 (Mt Cootha)
