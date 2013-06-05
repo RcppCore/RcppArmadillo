@@ -1,5 +1,5 @@
 // Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2008-2013 Conrad Sanderson
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,11 +18,14 @@ template<typename eT> class Mat;
 template<typename eT> class Col;
 template<typename eT> class Row;
 template<typename eT> class Cube;
+template<typename eT> class xvec_htrans;
 template<typename oT> class field;
 
 template<typename eT> class subview;
 template<typename eT> class subview_col;
 template<typename eT> class subview_row;
+template<typename eT> class subview_row_strans;
+template<typename eT> class subview_row_htrans;
 template<typename eT> class subview_cube;
 template<typename oT> class subview_field;
 

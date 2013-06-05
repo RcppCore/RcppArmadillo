@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2013 Conrad Sanderson
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -55,6 +55,8 @@ class diagview : public Base<eT, diagview<eT> >
   template<typename T1> inline void operator%=(const Base<eT,T1>& x);
   template<typename T1> inline void operator/=(const Base<eT,T1>& x);
   
+  
+  arma_inline eT  at_alt    (const uword ii) const;
   
   arma_inline eT& operator[](const uword ii);
   arma_inline eT  operator[](const uword ii) const;

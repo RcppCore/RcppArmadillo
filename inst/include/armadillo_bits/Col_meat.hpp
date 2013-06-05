@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2013 Conrad Sanderson
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -413,7 +413,7 @@ arma_inline
 eT&
 Col<eT>::row(const uword row_num)
   {
-  arma_debug_check( (row_num >= Mat<eT>::n_rows), "Col::row(): out of bounds" );
+  arma_debug_check( (row_num >= Mat<eT>::n_rows), "Col::row(): index out of bounds" );
   
   return access::rw(Mat<eT>::mem[row_num]);
   }
@@ -425,7 +425,7 @@ arma_inline
 eT
 Col<eT>::row(const uword row_num) const
   {
-  arma_debug_check( (row_num >= Mat<eT>::n_rows), "Col::row(): out of bounds" );
+  arma_debug_check( (row_num >= Mat<eT>::n_rows), "Col::row(): index out of bounds" );
   
   return Mat<eT>::mem[row_num];
   }
@@ -572,7 +572,7 @@ Col<eT>::shed_row(const uword row_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( row_num >= Mat<eT>::n_rows, "Col::shed_row(): out of bounds");
+  arma_debug_check( row_num >= Mat<eT>::n_rows, "Col::shed_row(): index out of bounds");
   
   shed_rows(row_num, row_num);
   }
@@ -631,7 +631,7 @@ Col<eT>::insert_rows(const uword row_num, const uword N, const bool set_to_zero)
   const uword B_n_rows = t_n_rows - row_num;
   
   // insertion at row_num == n_rows is in effect an append operation
-  arma_debug_check( (row_num > t_n_rows), "Col::insert_rows(): out of bounds");
+  arma_debug_check( (row_num > t_n_rows), "Col::insert_rows(): index out of bounds");
   
   if(N > 0)
     {
@@ -690,7 +690,7 @@ Col<eT>::at(const uword i)
 template<typename eT>
 arma_inline
 arma_warn_unused
-eT
+const eT&
 Col<eT>::at(const uword i) const
   {
   return Mat<eT>::mem[i];
@@ -712,7 +712,7 @@ Col<eT>::at(const uword in_row, const uword)
 template<typename eT>
 arma_inline
 arma_warn_unused
-eT
+const eT&
 Col<eT>::at(const uword in_row, const uword) const
   {
   return Mat<eT>::mem[in_row];
@@ -1060,6 +1060,28 @@ template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
 arma_warn_unused
+const eT&
+Col<eT>::fixed<fixed_n_elem>::at_alt(const uword ii) const
+  {
+  #if defined(ARMA_HAVE_ALIGNED_ATTRIBUTE)
+  
+    return (use_extra) ? mem_local_extra[ii] : Mat<eT>::mem_local[ii];
+    
+  #else
+    const eT* mem_aligned = (use_extra) ? mem_local_extra : Mat<eT>::mem_local;
+    
+    memory::mark_as_aligned(mem_aligned);
+    
+    return mem_aligned[ii];
+  #endif
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_elem>
+arma_inline
+arma_warn_unused
 eT&
 Col<eT>::fixed<fixed_n_elem>::operator[] (const uword ii)
   {
@@ -1072,7 +1094,7 @@ template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
 arma_warn_unused
-eT
+const eT&
 Col<eT>::fixed<fixed_n_elem>::operator[] (const uword ii) const
   {
   return (use_extra) ? mem_local_extra[ii] : Mat<eT>::mem_local[ii];
@@ -1096,7 +1118,7 @@ template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
 arma_warn_unused
-eT
+const eT&
 Col<eT>::fixed<fixed_n_elem>::at(const uword ii) const
   {
   return (use_extra) ? mem_local_extra[ii] : Mat<eT>::mem_local[ii];
@@ -1111,7 +1133,7 @@ arma_warn_unused
 eT&
 Col<eT>::fixed<fixed_n_elem>::operator() (const uword ii)
   {
-  arma_debug_check( (ii >= fixed_n_elem), "Col::operator(): out of bounds");
+  arma_debug_check( (ii >= fixed_n_elem), "Col::operator(): index out of bounds");
   
   return (use_extra) ? mem_local_extra[ii] : Mat<eT>::mem_local[ii];
   }
@@ -1122,10 +1144,10 @@ template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
 arma_warn_unused
-eT
+const eT&
 Col<eT>::fixed<fixed_n_elem>::operator() (const uword ii) const
   {
-  arma_debug_check( (ii >= fixed_n_elem), "Col::operator(): out of bounds");
+  arma_debug_check( (ii >= fixed_n_elem), "Col::operator(): index out of bounds");
   
   return (use_extra) ? mem_local_extra[ii] : Mat<eT>::mem_local[ii];
   }
@@ -1148,7 +1170,7 @@ template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
 arma_warn_unused
-eT
+const eT&
 Col<eT>::fixed<fixed_n_elem>::at(const uword in_row, const uword) const
   {
   return (use_extra) ? mem_local_extra[in_row] : Mat<eT>::mem_local[in_row];
@@ -1163,7 +1185,7 @@ arma_warn_unused
 eT&
 Col<eT>::fixed<fixed_n_elem>::operator() (const uword in_row, const uword in_col)
   {
-  arma_debug_check( ((in_row >= fixed_n_elem) || (in_col > 0)), "Col::operator(): out of bounds" );
+  arma_debug_check( ((in_row >= fixed_n_elem) || (in_col > 0)), "Col::operator(): index out of bounds" );
   
   return (use_extra) ? mem_local_extra[in_row] : Mat<eT>::mem_local[in_row];
   }
@@ -1174,10 +1196,10 @@ template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
 arma_warn_unused
-eT
+const eT&
 Col<eT>::fixed<fixed_n_elem>::operator() (const uword in_row, const uword in_col) const
   {
-  arma_debug_check( ((in_row >= fixed_n_elem) || (in_col > 0)), "Col::operator(): out of bounds" );
+  arma_debug_check( ((in_row >= fixed_n_elem) || (in_col > 0)), "Col::operator(): index out of bounds" );
   
   return (use_extra) ? mem_local_extra[in_row] : Mat<eT>::mem_local[in_row];
   }

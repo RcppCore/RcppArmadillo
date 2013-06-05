@@ -1,3 +1,15 @@
+r-cran-rcpparmadillo (0.3.900.0-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Dirk Eddelbuettel <edd@debian.org>  Tue, 04 Jun 2013 19:01:58 -0500
+
+r-cran-rcpparmadillo (0.3.820-2) unstable; urgency=low
+
+  * debian/control: Add a Depends: on r-cran-rcpp	(Closes: #710127)
+
+ -- Dirk Eddelbuettel <edd@debian.org>  Tue, 28 May 2013 09:31:14 -0500
+
 r-cran-rcpparmadillo (0.3.820-1) unstable; urgency=low
 
   * New upstream release

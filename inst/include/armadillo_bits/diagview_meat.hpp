@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2013 Conrad Sanderson
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -708,6 +708,16 @@ diagview<eT>::div_inplace(Mat<eT>& out, const diagview<eT>& in)
     {
     out_mem[i] /= in_m.at( i + in_row_offset, i + in_col_offset );
     }
+  }
+
+
+
+template<typename eT>
+arma_inline
+eT
+diagview<eT>::at_alt(const uword ii) const
+  {
+  return m.at(ii+row_offset, ii+col_offset);
   }
 
 

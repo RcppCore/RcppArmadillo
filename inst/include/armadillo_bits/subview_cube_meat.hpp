@@ -974,6 +974,16 @@ subview_cube<eT>::ones()
 
 template<typename eT>
 inline
+eT
+subview_cube<eT>::at_alt(const uword i) const
+  {
+  return operator[](i);
+  }
+
+
+
+template<typename eT>
+inline
 eT&
 subview_cube<eT>::operator[](const uword i)
   {

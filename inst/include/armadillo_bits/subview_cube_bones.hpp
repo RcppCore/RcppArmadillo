@@ -85,6 +85,8 @@ class subview_cube : public BaseCube<eT, subview_cube<eT> >
   inline void zeros();
   inline void ones();
   
+  inline eT  at_alt    (const uword i) const;
+  
   inline eT& operator[](const uword i);
   inline eT  operator[](const uword i) const;
   

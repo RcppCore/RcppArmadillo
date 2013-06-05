@@ -29,8 +29,8 @@ class podarray
   
   
   protected:
-  //! Internal memory, to avoid calling the 'new' operator for small amounts of memory.
-  arma_aligned eT mem_local[ podarray_prealloc_n_elem::val ];
+  //! internal memory, to avoid calling the 'new' operator for small amounts of memory.
+  arma_align_mem eT mem_local[ podarray_prealloc_n_elem::val ];
   
   
   public:

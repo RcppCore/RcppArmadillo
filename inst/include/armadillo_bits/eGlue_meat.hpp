@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2010-2012 Conrad Sanderson
+// Copyright (C) 2010-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2013 Conrad Sanderson
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -94,6 +94,21 @@ eGlue<T1,T2,eglue_type>::at(const uword row, const uword col) const
   else if(is_same_type<eglue_type, eglue_minus>::value == true) { return P1.at(row,col) - P2.at(row,col); }
   else if(is_same_type<eglue_type, eglue_div  >::value == true) { return P1.at(row,col) / P2.at(row,col); }
   else if(is_same_type<eglue_type, eglue_schur>::value == true) { return P1.at(row,col) * P2.at(row,col); }
+  }
+
+
+
+template<typename T1, typename T2, typename eglue_type>
+arma_inline
+typename T1::elem_type
+eGlue<T1,T2,eglue_type>::at_alt(const uword ii) const
+  {
+  // the optimiser will keep only one return statement
+  
+       if(is_same_type<eglue_type, eglue_plus >::value == true) { return P1.at_alt(ii) + P2.at_alt(ii); }
+  else if(is_same_type<eglue_type, eglue_minus>::value == true) { return P1.at_alt(ii) - P2.at_alt(ii); }
+  else if(is_same_type<eglue_type, eglue_div  >::value == true) { return P1.at_alt(ii) / P2.at_alt(ii); }
+  else if(is_same_type<eglue_type, eglue_schur>::value == true) { return P1.at_alt(ii) * P2.at_alt(ii); }
   }
 
 

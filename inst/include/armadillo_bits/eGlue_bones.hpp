@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2010-2012 Conrad Sanderson
+// Copyright (C) 2010-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2013 Conrad Sanderson
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -40,6 +40,7 @@ class eGlue : public Base<typename T1::elem_type, eGlue<T1, T2, eglue_type> >
   
   arma_inline elem_type operator[] (const uword ii)                   const;
   arma_inline elem_type at         (const uword row, const uword col) const;
+  arma_inline elem_type at_alt     (const uword ii)                   const;
   };
 
 
