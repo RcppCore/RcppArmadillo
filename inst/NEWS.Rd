@@ -17,6 +17,8 @@
       \item faster handling of compound expressions with transposes of
       complex vectors
     }
+    \item Kalman filter example switched from inline to \code{sourceCpp},
+    which simplifies / streamlines the C++ side a little
   }
 }
 
