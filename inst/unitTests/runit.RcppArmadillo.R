@@ -1,6 +1,6 @@
 #!/usr/bin/r -t
 #
-# Copyright (C) 2010	Dirk Eddelbuettel, Romain Francois and Douglas Bates
+# Copyright (C) 2010 - 2013  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 #
 # This file is part of RcppArmadillo.
 #
@@ -18,7 +18,7 @@
 # along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
 .setUp <- function(){
-    suppressMessages(require(inline))
+    suppressMessages(require(RcppArmadillo))
     sourceCpp(file.path(pathRcppArmadilloTests, "cpp/armadillo.cpp"))
 }
 

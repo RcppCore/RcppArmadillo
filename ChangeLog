@@ -1,3 +1,14 @@
+2013-07-12  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/unitTests/runTests.R: No longer need to test minimal versions
+	of package 'inline' as unit tests now use Rcpp attributes
+	* inst/unitTests/runit.RcppArmadillo.R: Don't load package 'library'
+
+	* inst/examples/fastLm.r: Also rewritten to use Rcpp attributes
+	* inst/examples/varSimulation.r: Idem
+
+	* DESCRIPTION: Removed Suggests: on inline
+
 2013-06-04  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.3.900.0
