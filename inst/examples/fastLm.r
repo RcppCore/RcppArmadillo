@@ -2,7 +2,7 @@
 ##
 ## fastLm.r: Benchmarking lm() via RcppArmadillo and directly
 ##
-## Copyright (C)  2010 - 2012  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+## Copyright (C)  2010 - 2013  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 ##
 ## This file is part of RcppArmadillo.
 ##
@@ -19,12 +19,11 @@
 ## You should have received a copy of the GNU General Public License
 ## along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
-library(inline)
+library(RcppArmadillo)
 library(rbenchmark)
 
 src <- '
-    Rcpp::NumericMatrix Xr(Xs);
-    Rcpp::NumericVector yr(ys);
+Rcpp::List fLmTwoCasts(Rcpp::NumericMatrix Xr, Rcpp::NumericVector yr) {
     int n = Xr.nrow(), k = Xr.ncol();
     arma::mat X(Xr.begin(), n, k, false);
     arma::colvec y(yr.begin(), yr.size(), false);
@@ -43,14 +42,12 @@ src <- '
     return Rcpp::List::create(Rcpp::Named("coefficients")=coef,
                               Rcpp::Named("stderr")      =sderr,
                               Rcpp::Named("df")          =df);
+}
 '
-
-fLmTwoCasts <- cxxfunction(signature(Xs="numeric", ys="numeric"),
-                           src, plugin="RcppArmadillo")
+cppFunction(code=src, depends="RcppArmadillo")
 
 src <- '
-    arma::mat X = Rcpp::as<arma::mat>(Xs);
-    arma::colvec y = Rcpp::as<arma::colvec>(ys);
+Rcpp::List fLmOneCast(arma::mat X, arma::colvec y) {
     int df = X.n_rows - X.n_cols;
 
     // fit model y ~ X, extract residuals
@@ -66,10 +63,9 @@ src <- '
     return Rcpp::List::create(Rcpp::Named("coefficients")=coef,
                               Rcpp::Named("stderr")      =sderr,
                               Rcpp::Named("df")          =df);
+}
 '
-
-fLmOneCast <- cxxfunction(signature(Xs="numeric", ys="numeric"),
-                          src, plugin="RcppArmadillo")
+cppFunction(code=src, depends="RcppArmadillo")
 
 
 fastLmPureDotCall <- function(X, y) {

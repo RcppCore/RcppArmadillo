@@ -2,6 +2,12 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.3.abc (2013-xx-yy)}{
+  \itemize{
+    \item The \pkg{inline} package is no longer used in the examples and
+    unit tests which have all been converted to Rcpp attributes use
+}
+
 \section{Changes in RcppArmadillo version 0.3.900 (2013-06-04)}{
   \itemize{
     \item Upgraded to Armadillo release Version 3.900.0 (Bavarian

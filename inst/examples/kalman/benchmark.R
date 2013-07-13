@@ -1,5 +1,6 @@
 
-suppressMessages(library(Rcpp))
+suppressMessages(library(utils))
+suppressMessages(library(RcppArmadillo))
 suppressMessages(library(rbenchmark))
 suppressMessages(library(compiler))
 
