@@ -279,7 +279,7 @@ class Proxy< Gen<T1, gen_type > >
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>&) const { return false; }
   
-  arma_inline bool is_aligned() const { return false; }
+  arma_inline bool is_aligned() const { return Gen<T1, gen_type>::is_simple; }
   };
 
 
@@ -1455,6 +1455,52 @@ class Proxy< subview_row_htrans<eT> >
   arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&(Q.sv_row.m)) == void_ptr(&X)); }
   
   arma_inline bool is_aligned() const { return false; }
+  };
+
+
+
+template<typename eT>
+class Proxy< xvec_htrans<eT> >
+  {
+  public:
+  
+  typedef eT                                       elem_type;
+  typedef typename get_pod_type<elem_type>::result pod_type;
+  typedef Mat<eT>                                  stored_type;
+  typedef const eT*                                ea_type;
+  typedef const Mat<eT>&                           aligned_ea_type;
+  
+  static const bool prefer_at_accessor = false;
+  static const bool has_subview        = false;
+  static const bool is_fixed           = false;
+  static const bool fake_mat           = false;
+  
+  static const bool is_row = false;
+  static const bool is_col = false;
+  
+  arma_aligned const Mat<eT> Q;
+  
+  inline explicit Proxy(const xvec_htrans<eT>& A)
+    : Q(A)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  arma_inline uword get_n_rows() const { return Q.n_rows; }
+  arma_inline uword get_n_cols() const { return Q.n_cols; }
+  arma_inline uword get_n_elem() const { return Q.n_elem; }
+  
+  arma_inline elem_type operator[] (const uword i)                    const { return Q[i];          }
+  arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row,col); }
+  arma_inline elem_type at_alt     (const uword i)                    const { return Q.at_alt(i);   }
+  
+  arma_inline         ea_type         get_ea() const { return Q.memptr(); }
+  arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return false; }
+  
+  arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
   };
 
 

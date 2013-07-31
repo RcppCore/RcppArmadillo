@@ -33,6 +33,8 @@ class xvec_htrans : public Base<eT, xvec_htrans<eT> >
   
   inline eT operator[](const uword ii) const;
   inline eT at_alt    (const uword ii) const;
+  
+  inline eT at        (const uword in_row, const uword in_col) const;
   };
 
 

@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2009-2012 Conrad Sanderson
+// Copyright (C) 2009-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2013 Conrad Sanderson
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -72,9 +72,21 @@ glue_mixed_plus::apply(Mat<typename eT_promoter<T1,T2>::eT>& out, const mtGlue<t
     typename Proxy<T1>::ea_type AA = A.get_ea();
     typename Proxy<T2>::ea_type BB = B.get_ea();
     
-    for(uword i=0; i<n_elem; ++i)
+    if(memory::is_aligned(out_mem))
       {
-      out_mem[i] = upgrade_val<eT1,eT2>::apply(AA[i]) + upgrade_val<eT1,eT2>::apply(BB[i]);
+      memory::mark_as_aligned(out_mem);
+      
+      for(uword i=0; i<n_elem; ++i)
+        {
+        out_mem[i] = upgrade_val<eT1,eT2>::apply(AA[i]) + upgrade_val<eT1,eT2>::apply(BB[i]);
+        }
+      }
+    else
+      {
+      for(uword i=0; i<n_elem; ++i)
+        {
+        out_mem[i] = upgrade_val<eT1,eT2>::apply(AA[i]) + upgrade_val<eT1,eT2>::apply(BB[i]);
+        }
       }
     }
   else
@@ -127,9 +139,21 @@ glue_mixed_minus::apply(Mat<typename eT_promoter<T1,T2>::eT>& out, const mtGlue<
     typename Proxy<T1>::ea_type AA = A.get_ea();
     typename Proxy<T2>::ea_type BB = B.get_ea();
     
-    for(uword i=0; i<n_elem; ++i)
+    if(memory::is_aligned(out_mem))
       {
-      out_mem[i] = upgrade_val<eT1,eT2>::apply(AA[i]) - upgrade_val<eT1,eT2>::apply(BB[i]);
+      memory::mark_as_aligned(out_mem);
+      
+      for(uword i=0; i<n_elem; ++i)
+        {
+        out_mem[i] = upgrade_val<eT1,eT2>::apply(AA[i]) - upgrade_val<eT1,eT2>::apply(BB[i]);
+        }
+      }
+    else
+      {
+      for(uword i=0; i<n_elem; ++i)
+        {
+        out_mem[i] = upgrade_val<eT1,eT2>::apply(AA[i]) - upgrade_val<eT1,eT2>::apply(BB[i]);
+        }
       }
     }
   else
@@ -182,9 +206,21 @@ glue_mixed_div::apply(Mat<typename eT_promoter<T1,T2>::eT>& out, const mtGlue<ty
     typename Proxy<T1>::ea_type AA = A.get_ea();
     typename Proxy<T2>::ea_type BB = B.get_ea();
     
-    for(uword i=0; i<n_elem; ++i)
+    if(memory::is_aligned(out_mem))
       {
-      out_mem[i] = upgrade_val<eT1,eT2>::apply(AA[i]) / upgrade_val<eT1,eT2>::apply(BB[i]);
+      memory::mark_as_aligned(out_mem);
+      
+      for(uword i=0; i<n_elem; ++i)
+        {
+        out_mem[i] = upgrade_val<eT1,eT2>::apply(AA[i]) / upgrade_val<eT1,eT2>::apply(BB[i]);
+        }
+      }
+    else
+      {
+      for(uword i=0; i<n_elem; ++i)
+        {
+        out_mem[i] = upgrade_val<eT1,eT2>::apply(AA[i]) / upgrade_val<eT1,eT2>::apply(BB[i]);
+        }
       }
     }
   else
@@ -237,9 +273,21 @@ glue_mixed_schur::apply(Mat<typename eT_promoter<T1,T2>::eT>& out, const mtGlue<
     typename Proxy<T1>::ea_type AA = A.get_ea();
     typename Proxy<T2>::ea_type BB = B.get_ea();
     
-    for(uword i=0; i<n_elem; ++i)
+    if(memory::is_aligned(out_mem))
       {
-      out_mem[i] = upgrade_val<eT1,eT2>::apply(AA[i]) * upgrade_val<eT1,eT2>::apply(BB[i]);
+      memory::mark_as_aligned(out_mem);
+      
+      for(uword i=0; i<n_elem; ++i)
+        {
+        out_mem[i] = upgrade_val<eT1,eT2>::apply(AA[i]) * upgrade_val<eT1,eT2>::apply(BB[i]);
+        }
+      }
+    else
+      {
+      for(uword i=0; i<n_elem; ++i)
+        {
+        out_mem[i] = upgrade_val<eT1,eT2>::apply(AA[i]) * upgrade_val<eT1,eT2>::apply(BB[i]);
+        }
       }
     }
   else

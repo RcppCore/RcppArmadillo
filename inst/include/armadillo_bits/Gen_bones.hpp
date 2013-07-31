@@ -20,6 +20,7 @@ class Gen : public Base<typename T1::elem_type, Gen<T1, gen_type> >
   typedef typename get_pod_type<elem_type>::result pod_type;
   
   static const bool prefer_at_accessor = (is_same_type<gen_type, gen_ones_diag>::value) ? true : false;
+  static const bool is_simple          = (is_same_type<gen_type, gen_ones_full>::value) || (is_same_type<gen_type, gen_zeros>::value); 
   
   static const bool is_row = T1::is_row;
   static const bool is_col = T1::is_col;

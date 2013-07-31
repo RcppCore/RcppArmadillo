@@ -17,106 +17,43 @@ arma_inline
 void
 arrayops::copy(eT* dest, const eT* src, const uword n_elem)
   {
-  switch(n_elem)
+  if(n_elem <= 16)
     {
-    default:
-      arrayops::copy_big(dest, src, n_elem);
-      break;
-    case 8:
-      dest[7] = src[7];
-    case 7:
-      dest[6] = src[6];
-    case 6:
-      dest[5] = src[5];
-    case 5:
-      dest[4] = src[4];
-    case 4:
-      dest[3] = src[3];
-    case 3:
-      dest[2] = src[2];
-    case 2:
-      dest[1] = src[1];
-    case 1:
-      dest[0] = src[0];
+    arrayops::copy_small(dest, src, n_elem);
+    }
+  else
+    {
+    std::memcpy(dest, src, n_elem*sizeof(eT));
     }
   }
 
 
 
 template<typename eT>
+arma_hot
 inline
 void
-arrayops::copy_big(eT* dest, const eT* src, const uword n_elem)
+arrayops::copy_small(eT* dest, const eT* src, const uword n_elem)
   {
   switch(n_elem)
     {
-    default:
-      std::memcpy(dest, src, n_elem*sizeof(eT));
-      break;
-    case 32:
-      dest[31] = src[31];
-    case 31:
-      dest[30] = src[30];
-    case 30:
-      dest[29] = src[29];
-    case 29:
-      dest[28] = src[28];
-    case 28:
-      dest[27] = src[27];
-    case 27:
-      dest[26] = src[26];
-    case 26:
-      dest[25] = src[25];
-    case 25:
-      dest[24] = src[24];
-    case 24:
-      dest[23] = src[23];
-    case 23:
-      dest[22] = src[22];
-    case 22:
-      dest[21] = src[21];
-    case 21:
-      dest[20] = src[20];
-    case 20:
-      dest[19] = src[19];
-    case 19:
-      dest[18] = src[18];
-    case 18:
-      dest[17] = src[17];
-    case 17:
-      dest[16] = src[16];
-    case 16:
-      dest[15] = src[15];
-    case 15:
-      dest[14] = src[14];
-    case 14:
-      dest[13] = src[13];
-    case 13:
-      dest[12] = src[12];
-    case 12:
-      dest[11] = src[11];
-    case 11:
-      dest[10] = src[10];
-    case 10:
-      dest[9] = src[9];
-    case 9:
-      dest[8] = src[8];
-    case 8:
-      dest[7] = src[7];
-    case 7:
-      dest[6] = src[6];
-    case 6:
-      dest[5] = src[5];
-    case 5:
-      dest[4] = src[4];
-    case 4:
-      dest[3] = src[3];
-    case 3:
-      dest[2] = src[2];
-    case 2:
-      dest[1] = src[1];
-    case 1:
-      dest[0] = src[0];
+    case 16:  dest[15] = src[15];
+    case 15:  dest[14] = src[14];
+    case 14:  dest[13] = src[13];
+    case 13:  dest[12] = src[12];
+    case 12:  dest[11] = src[11];
+    case 11:  dest[10] = src[10];
+    case 10:  dest[ 9] = src[ 9];
+    case  9:  dest[ 8] = src[ 8];
+    case  8:  dest[ 7] = src[ 7];
+    case  7:  dest[ 6] = src[ 6];
+    case  6:  dest[ 5] = src[ 5];
+    case  5:  dest[ 4] = src[ 4];
+    case  4:  dest[ 3] = src[ 3];
+    case  3:  dest[ 2] = src[ 2];
+    case  2:  dest[ 1] = src[ 1];
+    case  1:  dest[ 0] = src[ 0];
+    default:  ;
     }
   }
 

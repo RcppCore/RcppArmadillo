@@ -45,8 +45,8 @@ class SpValProxy
   
   arma_inline SpValProxy& operator++();
   arma_inline SpValProxy& operator--();
-  arma_inline eT operator++(const int unused);
-  arma_inline eT operator--(const int unused);
+  arma_inline eT operator++(const int);
+  arma_inline eT operator--(const int);
   
   //! This will work for any other operations that do not modify a value.
   arma_inline operator eT() const;

@@ -99,7 +99,7 @@ class ProxyCube< GenCube<eT, gen_type > >
   
   arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
   arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
-  arma_inline elem_type at_alt     (const uword i)                                       const { return Q.at_alt(i);           }
+  arma_inline elem_type at_alt     (const uword i)                                       const { return Q[i];                  }
   
   arma_inline         ea_type         get_ea() const { return Q; }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q; }
@@ -107,7 +107,7 @@ class ProxyCube< GenCube<eT, gen_type > >
   template<typename eT2>
   arma_inline bool is_alias(const Cube<eT2>&) const { return false; }
   
-  arma_inline bool is_aligned() const { return false; }
+  arma_inline bool is_aligned() const { return GenCube<eT, gen_type>::is_simple; }
   };
 
 

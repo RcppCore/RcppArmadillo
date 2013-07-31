@@ -258,7 +258,7 @@ SpValProxy<T1>::operator--()
 template<typename T1>
 arma_inline
 typename T1::elem_type
-SpValProxy<T1>::operator++(const int unused)
+SpValProxy<T1>::operator++(const int)
   {
   if (val_ptr)
     {
@@ -286,7 +286,7 @@ SpValProxy<T1>::operator++(const int unused)
 template<typename T1>
 arma_inline
 typename T1::elem_type
-SpValProxy<T1>::operator--(const int unused)
+SpValProxy<T1>::operator--(const int)
   {
   if (val_ptr)
     {

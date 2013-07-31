@@ -174,7 +174,8 @@ eglue_core<eglue_type>::apply(Mat<typename T1::elem_type>& out, const eGlue<T1, 
     {
     const uword n_elem = (Proxy<T1>::is_fixed || Proxy<T2>::is_fixed) ? x.get_n_elem() : out.n_elem;
     
-    if(memory::is_aligned(out_mem))
+    //if( memory::is_aligned(out_mem) )
+    if( memory::is_aligned(out_mem) && ((Proxy<T1>::is_fixed && Proxy<T2>::is_fixed) ? (x.get_n_elem() >= 32) : true) )
       {
       memory::mark_as_aligned(out_mem);
       
@@ -192,7 +193,7 @@ eglue_core<eglue_type>::apply(Mat<typename T1::elem_type>& out, const eGlue<T1, 
         {
         typename Proxy<T1>::ea_type P1 = x.P1.get_ea();
         typename Proxy<T2>::ea_type P2 = x.P2.get_ea();
-    
+        
              if(is_same_type<eglue_type, eglue_plus >::value == true) { arma_applier_1u(=, +); }
         else if(is_same_type<eglue_type, eglue_minus>::value == true) { arma_applier_1u(=, -); }
         else if(is_same_type<eglue_type, eglue_div  >::value == true) { arma_applier_1u(=, /); }

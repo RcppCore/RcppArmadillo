@@ -142,6 +142,8 @@ memory::is_aligned(const eT* mem)
     }
   #else
     {
+    arma_ignore(mem);
+    
     return false;
     }
   #endif

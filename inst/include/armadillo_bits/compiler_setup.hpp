@@ -49,6 +49,11 @@
 #endif
 
 
+#if defined(__APPLE__)
+  #define ARMA_BLAS_SDOT_BUG
+#endif
+
+
 #if (__cplusplus >= 201103L)
   #if !defined(ARMA_USE_CXX11)
     #define ARMA_USE_CXX11
@@ -76,21 +81,47 @@
     #error "*** Need a newer compiler ***"
   #endif
   
-  #define ARMA_GOOD_COMPILER
-  #undef  ARMA_HAVE_STD_TR1
-  
   #if (__INTEL_COMPILER <= 1110)
     #undef ARMA_HAVE_STD_ISFINITE
   #endif
   
-  #undef  arma_aligned
-  #undef  arma_align_mem
+  #undef  ARMA_HAVE_STD_TR1
   
-  #define arma_aligned   __attribute__((aligned(16)));
-  #define arma_align_mem __attribute__((aligned(16)));
-  
-  #define ARMA_HAVE_ALIGNED_ATTRIBUTE
+  #define ARMA_GOOD_COMPILER
   #define ARMA_HAVE_ICC_ASSUME_ALIGNED
+  
+  #if defined(__GNUG__)
+    
+    // #undef  arma_aligned
+    // #define arma_aligned __attribute__((aligned))
+    
+    #undef  arma_align_mem
+    #define arma_align_mem __attribute__((aligned(16)))
+    
+    #define ARMA_HAVE_ALIGNED_ATTRIBUTE
+    
+  #elif defined(_MSC_VER)
+    
+    // #if (_MANAGED == 1) || (_M_CEE == 1)
+    //   
+    //   // don't do any alignment when compiling in "managed code" mode 
+    //   
+    //   #undef  arma_aligned
+    //   #define arma_aligned
+    //   
+    //   #undef  arma_align_mem
+    //   #define arma_align_mem
+    //   
+    // #elif (_MSC_VER >= 1700)
+    //   
+    //   #undef  arma_align_mem
+    //   #define arma_align_mem __declspec(align(16))
+    //   
+    //   #define ARMA_HAVE_ALIGNED_ATTRIBUTE
+    //   
+    // #endif
+    
+  #endif
   
 #elif defined(__GNUG__)
   
@@ -167,11 +198,6 @@
 #endif
 
 
-#if defined(__APPLE__)
-  #define ARMA_BLAS_SDOT_BUG
-#endif
-
-
 #if defined(_MSC_VER)
   
   #if (_MSC_VER < 1500)
@@ -186,16 +212,47 @@
   #undef ARMA_HAVE_STD_ISNAN
   #undef ARMA_HAVE_STD_TR1
   
-  #undef  arma_inline
-  #define arma_inline inline __forceinline
+  // #undef  arma_inline
+  // #define arma_inline inline __forceinline
   
-  #undef  arma_aligned
-  #undef  arma_align_mem
+  #pragma warning(push)
   
-  #define arma_aligned   __declspec(align(16))
-  #define arma_align_mem __declspec(align(16))
+  #pragma warning(disable: 4127)  // conditional expression is constant
+  #pragma warning(disable: 4510)  // default constructor could not be generated
+  #pragma warning(disable: 4511)  // copy constructor can't be generated
+  #pragma warning(disable: 4512)  // assignment operator can't be generated
+  #pragma warning(disable: 4513)  // destructor can't be generated
+  #pragma warning(disable: 4514)  // unreferenced inline function has been removed
+  #pragma warning(disable: 4522)  // multiple assignment operators specified
+  #pragma warning(disable: 4623)  // default constructor can't be generated
+  #pragma warning(disable: 4624)  // destructor can't be generated
+  #pragma warning(disable: 4625)  // copy constructor can't be generated
+  #pragma warning(disable: 4626)  // assignment operator can't be generated
+  #pragma warning(disable: 4710)  // function not inlined
+  #pragma warning(disable: 4711)  // call was inlined
+  #pragma warning(disable: 4714)  // __forceinline can't be inlined
   
-  #define ARMA_HAVE_ALIGNED_ATTRIBUTE
+  // #if (_MANAGED == 1) || (_M_CEE == 1)
+  //   
+  //   // don't do any alignment when compiling in "managed code" mode 
+  //   
+  //   #undef  arma_aligned
+  //   #define arma_aligned
+  //   
+  //   #undef  arma_align_mem
+  //   #define arma_align_mem
+  //  
+  // #elif (_MSC_VER >= 1700)
+  //   
+  //   #undef  arma_align_mem
+  //   #define arma_align_mem __declspec(align(16))
+  //   
+  //   #define ARMA_HAVE_ALIGNED_ATTRIBUTE
+  //   
+  //   // disable warnings: "structure was padded due to __declspec(align(16))"
+  //   #pragma warning(disable: 4324)
+  //   
+  // #endif
   
 #endif
 

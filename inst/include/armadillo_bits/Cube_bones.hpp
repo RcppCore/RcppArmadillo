@@ -46,7 +46,7 @@ class Cube : public BaseCube< eT, Cube<eT> >
   arma_aligned const eT*       const mem;      //!< pointer to the memory used by the cube (memory is read-only)
   
   protected:
-  arma_aligned   Mat<eT>* mat_ptrs_local[ Cube_prealloc::mat_ptrs_size ];
+  arma_align_mem Mat<eT>* mat_ptrs_local[ Cube_prealloc::mat_ptrs_size ];
   arma_align_mem eT            mem_local[ Cube_prealloc::mem_n_elem    ];
   
   
