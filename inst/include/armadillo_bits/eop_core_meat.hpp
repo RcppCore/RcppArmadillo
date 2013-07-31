@@ -155,7 +155,8 @@ eop_core<eop_type>::apply(Mat<typename T1::elem_type>& out, const eOp<T1, eop_ty
     {
     const uword n_elem = (Proxy<T1>::is_fixed) ? x.get_n_elem() : out.n_elem;
     
-    if(memory::is_aligned(out_mem))
+    //if(memory::is_aligned(out_mem))
+    if( memory::is_aligned(out_mem) && ((Proxy<T1>::is_fixed) ? (x.get_n_elem() >= 32) : true) )
       {
       memory::mark_as_aligned(out_mem);
       

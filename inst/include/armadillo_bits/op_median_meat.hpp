@@ -362,7 +362,7 @@ op_median::direct_median(std::vector<eT>& X)
   {
   arma_extra_debug_sigprint();
   
-  const uword n_elem = X.size();
+  const uword n_elem = uword(X.size());
   const uword half   = n_elem/2;
   
   std::nth_element(X.begin(), X.begin() + half, X.end());
@@ -391,7 +391,7 @@ op_median::direct_cx_median_index
   {
   arma_extra_debug_sigprint();
   
-  const uword n_elem = X.size();
+  const uword n_elem = uword(X.size());
   const uword half   = n_elem/2;
   
   std::nth_element(X.begin(), X.begin() + half, X.end());

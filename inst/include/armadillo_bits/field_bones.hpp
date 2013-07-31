@@ -19,7 +19,7 @@ struct field_prealloc_n_elem
 
 
 
-//! A lightweight 2D container for abitrary objects
+//! A lightweight 2D container for arbitrary objects
 //! (the objects must have a copy constructor)
 
 template<typename oT>

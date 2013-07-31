@@ -2,10 +2,17 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
-\section{Changes in RcppArmadillo version 0.3.abc (2013-xx-yy)}{
+\section{Changes in RcppArmadillo version 0.3.900.7 (2013-07-31)}{
   \itemize{
+    \item Upgraded to Armadillo release Version 3.900.7 (Bavarian
+    Sunflower)
+    \itemize{
+      \item minor fix for inplace \code{reshape()}
+      \item minor corrections for compilation issues under GCC 4.8+ and MSVC
+    }
     \item The \pkg{inline} package is no longer used in the examples and
-    unit tests which have all been converted to Rcpp attributes use
+    unit tests which have all been converted to using Rcpp attributes 
+  }
 }
 
 \section{Changes in RcppArmadillo version 0.3.900 (2013-06-04)}{

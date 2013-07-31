@@ -95,10 +95,13 @@ eGlueCube<T1,T2,eglue_type>::operator[] (const uword i) const
   {
   // the optimiser will keep only one return statement
   
+  typedef typename T1::elem_type eT;
+  
        if(is_same_type<eglue_type, eglue_plus >::value == true) { return P1[i] + P2[i]; }
   else if(is_same_type<eglue_type, eglue_minus>::value == true) { return P1[i] - P2[i]; }
   else if(is_same_type<eglue_type, eglue_div  >::value == true) { return P1[i] / P2[i]; }
   else if(is_same_type<eglue_type, eglue_schur>::value == true) { return P1[i] * P2[i]; }
+  else return eT(0);
   }
 
 
@@ -109,10 +112,13 @@ eGlueCube<T1,T2,eglue_type>::at(const uword row, const uword col, const uword sl
   {
   // the optimiser will keep only one return statement
   
+  typedef typename T1::elem_type eT;
+  
        if(is_same_type<eglue_type, eglue_plus >::value == true) { return P1.at(row,col,slice) + P2.at(row,col,slice); }
   else if(is_same_type<eglue_type, eglue_minus>::value == true) { return P1.at(row,col,slice) - P2.at(row,col,slice); }
   else if(is_same_type<eglue_type, eglue_div  >::value == true) { return P1.at(row,col,slice) / P2.at(row,col,slice); }
   else if(is_same_type<eglue_type, eglue_schur>::value == true) { return P1.at(row,col,slice) * P2.at(row,col,slice); }
+  else return eT(0);
   }
 
 
@@ -124,10 +130,13 @@ eGlueCube<T1,T2,eglue_type>::at_alt(const uword i) const
   {
   // the optimiser will keep only one return statement
   
+  typedef typename T1::elem_type eT;
+  
        if(is_same_type<eglue_type, eglue_plus >::value == true) { return P1.at_alt(i) + P2.at_alt(i); }
   else if(is_same_type<eglue_type, eglue_minus>::value == true) { return P1.at_alt(i) - P2.at_alt(i); }
   else if(is_same_type<eglue_type, eglue_div  >::value == true) { return P1.at_alt(i) / P2.at_alt(i); }
   else if(is_same_type<eglue_type, eglue_schur>::value == true) { return P1.at_alt(i) * P2.at_alt(i); }
+  else return eT(0);
   }
 
 

@@ -22,10 +22,6 @@ class Mat : public Base< eT, Mat<eT> >
   typedef eT                                elem_type;  //!< the type of elements stored in the matrix
   typedef typename get_pod_type<eT>::result pod_type;   //!< if eT is non-complex, pod_type is same as eT. otherwise, pod_type is the underlying type used by std::complex
   
-  static const bool is_col = false;
-  static const bool is_row = false;
-  
-  
   const uword  n_rows;    //!< number of rows in the matrix (read-only)
   const uword  n_cols;    //!< number of columns in the matrix (read-only)
   const uword  n_elem;    //!< number of elements in the matrix (read-only)
@@ -44,6 +40,9 @@ class Mat : public Base< eT, Mat<eT> >
   
   
   public:
+  
+  static const bool is_col = false;
+  static const bool is_row = false;
   
   inline ~Mat();
   inline  Mat();

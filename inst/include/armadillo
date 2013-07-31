@@ -534,6 +534,9 @@ namespace arma
   #include "armadillo_bits/spglue_minus_meat.hpp"
   #include "armadillo_bits/spglue_times_meat.hpp"
   }
-  
-#endif
 
+
+
+#include "armadillo_bits/compiler_setup_post.hpp"
+
+#endif

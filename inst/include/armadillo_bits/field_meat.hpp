@@ -27,9 +27,6 @@ field<oT>::~field()
   if(arma_config::debug == true)
     {
     // try to expose buggy user code that accesses deleted objects
-    access::rw(n_rows) = 0;
-    access::rw(n_cols) = 0;
-    access::rw(n_elem) = 0;
     mem = 0;
     }
   }

@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2010-2011 Conrad Sanderson
+// Copyright (C) 2010-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2013 Conrad Sanderson
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,32 +19,54 @@ glue_cross::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue_cros
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type      eT;
-  typedef typename Proxy<T1>::ea_type ea_type1;
-  typedef typename Proxy<T2>::ea_type ea_type2;
+  typedef typename T1::elem_type eT;
   
-  const Proxy<T1> A(X.A);
-  const Proxy<T2> B(X.B);
+  const Proxy<T1> PA(X.A);
+  const Proxy<T2> PB(X.B);
   
-  arma_debug_check( ((A.get_n_elem() != 3) || (B.get_n_elem() != 3)), "cross(): input vectors must have 3 elements" );
+  arma_debug_check( ((PA.get_n_elem() != 3) || (PB.get_n_elem() != 3)), "cross(): input vectors must have 3 elements" );
   
-  out.set_size(A.get_n_rows(), A.get_n_cols());
+  const uword PA_n_rows = Proxy<T1>::is_row ? 1 : PA.get_n_rows();
+  const uword PA_n_cols = Proxy<T1>::is_col ? 1 : PA.get_n_cols();
   
-  eT*      out_mem = out.memptr();
-  ea_type1 PA      = A.get_ea();
-  ea_type2 PB      = B.get_ea();
+  out.set_size(PA_n_rows, PA_n_cols);
   
-  const eT ax = PA[0];
-  const eT ay = PA[1];
-  const eT az = PA[2];
+  eT* out_mem = out.memptr();
   
-  const eT bx = PB[0];
-  const eT by = PB[1];
-  const eT bz = PB[2];
-  
-  out_mem[0] = ay*bz - az*by;
-  out_mem[1] = az*bx - ax*bz;
-  out_mem[2] = ax*by - ay*bx;
+  if( (Proxy<T1>::prefer_at_accessor == false) && (Proxy<T2>::prefer_at_accessor == false) )
+    {
+    typename Proxy<T1>::ea_type A = PA.get_ea();
+    typename Proxy<T2>::ea_type B = PB.get_ea();
+    
+    const eT ax = A[0];
+    const eT ay = A[1];
+    const eT az = A[2];
+    
+    const eT bx = B[0];
+    const eT by = B[1];
+    const eT bz = B[2];
+    
+    out_mem[0] = ay*bz - az*by;
+    out_mem[1] = az*bx - ax*bz;
+    out_mem[2] = ax*by - ay*bx;
+    }
+  else
+    {
+    const bool PA_is_col = Proxy<T1>::is_col ? true : (PA_n_cols       == 1);
+    const bool PB_is_col = Proxy<T2>::is_col ? true : (PB.get_n_cols() == 1);
+    
+    const eT ax = PA.at(0,0);
+    const eT ay = PA_is_col ? PA.at(1,0) : PA.at(0,1);
+    const eT az = PA_is_col ? PA.at(2,0) : PA.at(0,2);
+    
+    const eT bx = PB.at(0,0);
+    const eT by = PB_is_col ? PB.at(1,0) : PB.at(0,1);
+    const eT bz = PB_is_col ? PB.at(2,0) : PB.at(0,2);
+    
+    out_mem[0] = ay*bz - az*by;
+    out_mem[1] = az*bx - ax*bz;
+    out_mem[2] = ax*by - ay*bx;
+    }
   }
 
 

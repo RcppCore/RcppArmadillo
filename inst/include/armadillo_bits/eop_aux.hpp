@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2010-2012 Conrad Sanderson
+// Copyright (C) 2010-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2013 Conrad Sanderson
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,7 +17,10 @@ struct eop_aux_randu
   arma_inline
   operator eT ()
     {
-    return eT(std::rand()) * ( eT(1) / eT(RAND_MAX) );
+    // make sure we are internally using at least floats
+    typedef typename promote_type<eT,float>::result eTp;
+    
+    return eT( eTp(std::rand()) * ( eTp(1) / eTp(RAND_MAX) ) );
     }
   
   
@@ -138,8 +141,8 @@ struct eop_aux_randn
     
     const eTp k = std::sqrt( (eTp(-2) * std::log(w)) / w);
     
-    out1 = tmp1*k;
-    out2 = tmp2*k;
+    out1 = eT(tmp1*k);
+    out2 = eT(tmp2*k);
     }
   
   

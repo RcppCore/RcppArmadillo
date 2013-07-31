@@ -1,3 +1,10 @@
+2013-07-31  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.3.900.7
+	* inst/NEWS: Release 0.3.900.7
+	* inst/include/*: Upgraded to new release 3.900.7 of Armadillo
+        * debian/*: Similarly updated for new release to Debian
+
 2013-07-12  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/unitTests/runTests.R: No longer need to test minimal versions

@@ -3199,7 +3199,7 @@ SpMat<eT>::sprandu(const uword in_rows, const uword in_cols, const double densit
   
   eop_aux_randu<eT>::fill( access::rwp(values), n_nonzero );
   
-  uvec indices = linspace<uvec>( 0, in_rows*in_cols-1, n_nonzero );
+  uvec indices = linspace<uvec>( 0u, in_rows*in_cols-1, n_nonzero );
   
   // perturb the indices
   for(uword i=1; i < n_nonzero-1; ++i)
@@ -3276,7 +3276,7 @@ SpMat<eT>::sprandn(const uword in_rows, const uword in_cols, const double densit
   
   eop_aux_randn<eT>::fill( access::rwp(values), n_nonzero );
   
-  uvec indices = linspace<uvec>( 0, in_rows*in_cols-1, n_nonzero );
+  uvec indices = linspace<uvec>( 0u, in_rows*in_cols-1, n_nonzero );
   
   // perturb the indices
   for(uword i=1; i < n_nonzero-1; ++i)
