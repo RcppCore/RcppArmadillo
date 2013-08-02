@@ -2,7 +2,7 @@
 //
 // Col_meat.h: Rcpp/Armadillo glue
 //
-// Copyright (C)  2011 Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2011 - 2013 Dirk Eddelbuettel, Romain Francois and Douglas Bates
 //
 // This file is part of RcppArmadillo.
 //
@@ -28,6 +28,7 @@ inline Col<eT>::Col( const Rcpp::VectorBase<RTYPE,NA,VECTOR>& X )
     : Mat<eT>( X ) 
 {	
     arma_extra_debug_sigprint(this);
+    access::rw(Mat<eT>::vec_state) = 1;
 }
 
 template <typename eT>
