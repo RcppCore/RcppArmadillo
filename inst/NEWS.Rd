@@ -2,7 +2,7 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
-\section{Changes in RcppArmadillo version 0.3.900.7 (2013-07-31)}{
+\section{Changes in RcppArmadillo version 0.3.900.7 (2013-08-02)}{
   \itemize{
     \item Upgraded to Armadillo release Version 3.900.7 (Bavarian
     Sunflower)
@@ -10,6 +10,8 @@
       \item minor fix for inplace \code{reshape()}
       \item minor corrections for compilation issues under GCC 4.8+ and MSVC
     }
+    \item Corrected setting of \code{vec_stats} in intialization of row,
+    vector and matrix objects
     \item The \pkg{inline} package is no longer used in the examples and
     unit tests which have all been converted to using Rcpp attributes 
   }
