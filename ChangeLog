@@ -1,15 +1,15 @@
-2013-08-02 Romain Francois <romain@r-enthusiasts.com>
-
-        * include/RcppArmadillo/Row_meat.h : set vec_state correctly
-        * include/RcppArmadillo/Col_meat.h : set vec_state correctly
-        * include/RcppArmadillo/Mat_meat.h : set vec_state correctly
-        
-2013-07-31  Dirk Eddelbuettel  <edd@debian.org>
+2013-08-02  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.3.900.7
 	* inst/NEWS: Release 0.3.900.7
 	* inst/include/*: Upgraded to new release 3.900.7 of Armadillo
         * debian/*: Similarly updated for new release to Debian
+
+2013-08-02 Romain Francois <romain@r-enthusiasts.com>
+
+        * include/RcppArmadillo/Row_meat.h: set vec_state correctly
+        * include/RcppArmadillo/Col_meat.h: set vec_state correctly
+        * include/RcppArmadillo/Mat_meat.h: set vec_state correctly
 
 2013-07-12  Dirk Eddelbuettel  <edd@debian.org>
 
