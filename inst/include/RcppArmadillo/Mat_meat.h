@@ -100,7 +100,7 @@ inline Mat<eT>::Mat( const Rcpp::VectorBase<RTYPE,NA,VECTOR>& X )
 	: n_rows(0)
 	, n_cols(0)
 	, n_elem(0)
-	, vec_state(1)
+	, vec_state(0)
 	, mem_state(0)
 	, mem(0)
 {
