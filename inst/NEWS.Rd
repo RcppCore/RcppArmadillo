@@ -2,6 +2,18 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.x.yyy.z (2013-aa-bb)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version ...
+    \itemize{
+      \item 
+      \item 
+    }
+    \item Added conversion support for sparse matrices (of type double)
+    created by the \cpkg{Matrix} package as class \code{dgCMatrix}
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.3.900.7 (2013-08-02)}{
   \itemize{
     \item Upgraded to Armadillo release Version 3.900.7 (Bavarian
