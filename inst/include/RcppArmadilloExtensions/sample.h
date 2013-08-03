@@ -1,11 +1,12 @@
-// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
+// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
+/* :tabSize=4:indentSize=4:noTabs=false:folding=explicit:collapseFolds=1: */
 //
 // sample.cpp: Rcpp/Armadillo equivalent to R's sample().  
 // This is to be used in C++ functions, and should *not* be called from R.
 // It should yield identical results to R in most cases
 // (note that Walker's alias method is not implemented).
 //
-// Copyright (C)  2012 -2013  Christian Gunning
+// Copyright (C)  2012 - 2013  Christian Gunning
 //
 // This file is part of RcppArmadillo.
 //
