@@ -1,3 +1,8 @@
+2013-08-03  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/unitTests/runit.RcppArmadillo.R: Improved test setup a little
+	* inst/unitTests/runit.sample.R: Ditto
+
 2013-08-02  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.3.900.7
