@@ -19,7 +19,13 @@
 
 .setUp <- function(){
     suppressMessages(require(RcppArmadillo))
-    sourceCpp(file.path(pathRcppArmadilloTests, "cpp/armadillo.cpp"))
+    if (exists("pathRcppArmadilloTests")) {
+        sourceCpp(file.path(pathRcppArmadilloTests, "cpp", "armadillo.cpp"))
+    } else if (file.exists("cpp/armadillo.cpp")) {
+        sourceCpp("cpp/armadillo.cpp")
+    } else {
+        sourceCpp(system.file("unitTests", "cpp", "armadillo.cpp", package="RcppArmadillo"))
+    }
 }
 
 test.wrap.R <- function(){
