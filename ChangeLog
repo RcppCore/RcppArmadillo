@@ -1,5 +1,9 @@
 2013-08-03  Dirk Eddelbuettel  <edd@debian.org>
 
+	* inst/include/RcppArmadilloExtensions/spmat.h: Added basic as<> and
+	wrap support for sparse matrices (of class dgCMatrix from the Matrix
+	package); currently only type double is supported
+
 	* inst/unitTests/runit.RcppArmadillo.R: Improved test setup a little
 	* inst/unitTests/runit.sample.R: Ditto
 
