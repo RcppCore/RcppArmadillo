@@ -1,8 +1,9 @@
-// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
+// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
+/* :tabSize=4:indentSize=4:noTabs=false:folding=explicit:collapseFolds=1: */
 //
 // RcppArmadilloForward.h: Rcpp/Armadillo glue
 //
-// Copyright (C)  2010 Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2010 - 2013  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 //
 // This file is part of RcppArmadillo.
 //
@@ -86,8 +87,8 @@ namespace Rcpp {
 	template <typename T> class Exporter< arma::Mat<T> > ;
 	template <typename T> class Exporter< arma::Row<T> > ;
 	template <typename T> class Exporter< arma::Col<T> > ;
-// template <typename T> class Exporter< arma::field<T> > ;
-// template <typename T> class Exporter< arma::Cube<T> > ;
+        // template <typename T> class Exporter< arma::field<T> > ;
+        // template <typename T> class Exporter< arma::Cube<T> > ;
 
     } // namespace traits 
 
