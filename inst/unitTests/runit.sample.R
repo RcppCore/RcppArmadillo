@@ -20,7 +20,7 @@
 .setUp <- function(){
     suppressMessages(require(RcppArmadillo))
     if (exists("pathRcppArmadilloTests")) {
-        sourceCpp(file.path(pathRcppArmadilloTests, "cpp", "armadillo.cpp"))
+        sourceCpp(file.path(pathRcppArmadilloTests, "cpp", "sample.cpp"))
     } else if (file.exists("cpp/sample.cpp")) {
         sourceCpp("cpp/sample.cpp")
     } else {
