@@ -1,8 +1,9 @@
-// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 4 -*-
+// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
+/* :tabSize=4:indentSize=4:noTabs=false:folding=explicit:collapseFolds=1: */
 //
 // RcppArmadilloWrap.h: Rcpp/Armadillo glue
 //
-// Copyright (C)  2010-2012 Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2010 - 2013  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 //
 // This file is part of RcppArmadillo.
 //
@@ -31,6 +32,15 @@ namespace Rcpp{
 	    ::Rcpp::RObject x = ::Rcpp::wrap( object.memptr() , object.memptr() + object.n_elem ) ;
 	    x.attr( "dim" ) = dim ;
 	    return x; 
+	}
+
+	// DE 03-Aug-2013
+	// here is an alternate form which would not set dimension which we could do
+	// for row and column vectors -- but the current form of return row and col
+    // as matrix types with one col (or row, respectively) is now entrenched
+	template <typename T>
+	SEXP arma_wrap(const T& object) {
+	    return ::Rcpp::wrap(object.memptr() , object.memptr() + object.n_elem);
 	}
 
     } /* namespace RcppArmadillo */
