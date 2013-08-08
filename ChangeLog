@@ -1,3 +1,7 @@
+2013-08-08  Dirk Eddelbuettel  <edd@debian.org>
+
+	* Empty commit at Stefan's request to tickle a built
+
 2013-08-03  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/RcppArmadilloExtensions/spmat.h: Added basic as<> and
