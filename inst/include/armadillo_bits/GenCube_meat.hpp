@@ -1,5 +1,5 @@
-// Copyright (C) 2011-2013 NICTA (www.nicta.com.au)
 // Copyright (C) 2011-2013 Conrad Sanderson
+// Copyright (C) 2011-2013 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,11 +37,11 @@ arma_inline
 eT
 GenCube<eT, gen_type>::generate()
   {
-       if(is_same_type<gen_type, gen_ones_full>::value == true) { return eT(1);                   }
-  else if(is_same_type<gen_type, gen_zeros    >::value == true) { return eT(0);                   }
-  else if(is_same_type<gen_type, gen_randu    >::value == true) { return eT(eop_aux_randu<eT>()); }
-  else if(is_same_type<gen_type, gen_randn    >::value == true) { return eT(eop_aux_randn<eT>()); }
-  else                                                          { return eT();                    }
+       if(is_same_type<gen_type, gen_ones_full>::yes) { return eT(1);                   }
+  else if(is_same_type<gen_type, gen_zeros    >::yes) { return eT(0);                   }
+  else if(is_same_type<gen_type, gen_randu    >::yes) { return eT(eop_aux_randu<eT>()); }
+  else if(is_same_type<gen_type, gen_randn    >::yes) { return eT(eop_aux_randn<eT>()); }
+  else                                                { return eT();                    }
   }
 
 
@@ -86,10 +86,10 @@ GenCube<eT, gen_type>::apply(Cube<eT>& out) const
   // NOTE: we're assuming that the cube has already been set to the correct size;
   // this is done by either the Cube contructor or operator=()
   
-       if(is_same_type<gen_type, gen_ones_full>::value == true) { out.ones();  }
-  else if(is_same_type<gen_type, gen_zeros    >::value == true) { out.zeros(); }
-  else if(is_same_type<gen_type, gen_randu    >::value == true) { out.randu(); }
-  else if(is_same_type<gen_type, gen_randn    >::value == true) { out.randn(); }
+       if(is_same_type<gen_type, gen_ones_full>::yes) { out.ones();  }
+  else if(is_same_type<gen_type, gen_zeros    >::yes) { out.zeros(); }
+  else if(is_same_type<gen_type, gen_randu    >::yes) { out.randu(); }
+  else if(is_same_type<gen_type, gen_randn    >::yes) { out.randn(); }
   }
 
 

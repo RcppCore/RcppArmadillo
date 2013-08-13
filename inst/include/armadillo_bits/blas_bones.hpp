@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2013 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,6 +25,12 @@
   #define arma_cgemm cgemm
   #define arma_zgemm zgemm
   
+  #define arma_ssyrk ssyrk
+  #define arma_dsyrk dsyrk
+  
+  #define arma_cherk cherk
+  #define arma_zherk zherk
+  
 #else
   
   #define arma_sdot  SDOT
@@ -39,6 +45,12 @@
   #define arma_dgemm DGEMM
   #define arma_cgemm CGEMM
   #define arma_zgemm ZGEMM
+  
+  #define arma_ssyrk SSYRK
+  #define arma_dsyrk DSYRK
+  
+  #define arma_cherk CHERK
+  #define arma_zherk ZHERK
   
 #endif
 
@@ -58,6 +70,12 @@ extern "C"
   void arma_fortran(arma_dgemm)(const char* transA, const char* transB, const blas_int* m, const blas_int* n, const blas_int* k, const double* alpha, const double* A, const blas_int* ldA, const double* B, const blas_int* ldB, const double* beta, double* C, const blas_int* ldC);
   void arma_fortran(arma_cgemm)(const char* transA, const char* transB, const blas_int* m, const blas_int* n, const blas_int* k, const void*   alpha, const void*   A, const blas_int* ldA, const void*   B, const blas_int* ldB, const void*   beta, void*   C, const blas_int* ldC);
   void arma_fortran(arma_zgemm)(const char* transA, const char* transB, const blas_int* m, const blas_int* n, const blas_int* k, const void*   alpha, const void*   A, const blas_int* ldA, const void*   B, const blas_int* ldB, const void*   beta, void*   C, const blas_int* ldC);
+  
+  void arma_fortran(arma_ssyrk)(const char* uplo, const char* transA, const blas_int* n, const blas_int* k, const  float* alpha, const  float* A, const blas_int* ldA, const  float* beta,  float* C, const blas_int* ldC);
+  void arma_fortran(arma_dsyrk)(const char* uplo, const char* transA, const blas_int* n, const blas_int* k, const double* alpha, const double* A, const blas_int* ldA, const double* beta, double* C, const blas_int* ldC);
+  
+  void arma_fortran(arma_cherk)(const char* uplo, const char* transA, const blas_int* n, const blas_int* k, const  float* alpha, const   void* A, const blas_int* ldA, const  float* beta,   void* C, const blas_int* ldC);
+  void arma_fortran(arma_zherk)(const char* uplo, const char* transA, const blas_int* n, const blas_int* k, const double* alpha, const   void* A, const blas_int* ldA, const double* beta,   void* C, const blas_int* ldC);
   
   // void   arma_fortran(arma_dswap)(const blas_int* n, double* x, const blas_int* incx, double* y, const blas_int* incy);
   // void   arma_fortran(arma_dscal)(const blas_int* n, const double* alpha, double* x, const blas_int* incx);

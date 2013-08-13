@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2013 NICTA (www.nicta.com.au)
 // Copyright (C) 2010-2013 Conrad Sanderson
+// Copyright (C) 2010-2013 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -78,10 +78,10 @@ eGlue<T1,T2,eglue_type>::operator[] (const uword ii) const
   
   typedef typename T1::elem_type eT;
   
-       if(is_same_type<eglue_type, eglue_plus >::value == true) { return P1[ii] + P2[ii]; }
-  else if(is_same_type<eglue_type, eglue_minus>::value == true) { return P1[ii] - P2[ii]; }
-  else if(is_same_type<eglue_type, eglue_div  >::value == true) { return P1[ii] / P2[ii]; }
-  else if(is_same_type<eglue_type, eglue_schur>::value == true) { return P1[ii] * P2[ii]; }
+       if(is_same_type<eglue_type, eglue_plus >::yes) { return P1[ii] + P2[ii]; }
+  else if(is_same_type<eglue_type, eglue_minus>::yes) { return P1[ii] - P2[ii]; }
+  else if(is_same_type<eglue_type, eglue_div  >::yes) { return P1[ii] / P2[ii]; }
+  else if(is_same_type<eglue_type, eglue_schur>::yes) { return P1[ii] * P2[ii]; }
   else return eT(0);
   }
 
@@ -96,10 +96,10 @@ eGlue<T1,T2,eglue_type>::at(const uword row, const uword col) const
   
   typedef typename T1::elem_type eT;
   
-       if(is_same_type<eglue_type, eglue_plus >::value == true) { return P1.at(row,col) + P2.at(row,col); }
-  else if(is_same_type<eglue_type, eglue_minus>::value == true) { return P1.at(row,col) - P2.at(row,col); }
-  else if(is_same_type<eglue_type, eglue_div  >::value == true) { return P1.at(row,col) / P2.at(row,col); }
-  else if(is_same_type<eglue_type, eglue_schur>::value == true) { return P1.at(row,col) * P2.at(row,col); }
+       if(is_same_type<eglue_type, eglue_plus >::yes) { return P1.at(row,col) + P2.at(row,col); }
+  else if(is_same_type<eglue_type, eglue_minus>::yes) { return P1.at(row,col) - P2.at(row,col); }
+  else if(is_same_type<eglue_type, eglue_div  >::yes) { return P1.at(row,col) / P2.at(row,col); }
+  else if(is_same_type<eglue_type, eglue_schur>::yes) { return P1.at(row,col) * P2.at(row,col); }
   else return eT(0);
   }
 
@@ -114,10 +114,10 @@ eGlue<T1,T2,eglue_type>::at_alt(const uword ii) const
   
   typedef typename T1::elem_type eT;
   
-       if(is_same_type<eglue_type, eglue_plus >::value == true) { return P1.at_alt(ii) + P2.at_alt(ii); }
-  else if(is_same_type<eglue_type, eglue_minus>::value == true) { return P1.at_alt(ii) - P2.at_alt(ii); }
-  else if(is_same_type<eglue_type, eglue_div  >::value == true) { return P1.at_alt(ii) / P2.at_alt(ii); }
-  else if(is_same_type<eglue_type, eglue_schur>::value == true) { return P1.at_alt(ii) * P2.at_alt(ii); }
+       if(is_same_type<eglue_type, eglue_plus >::yes) { return P1.at_alt(ii) + P2.at_alt(ii); }
+  else if(is_same_type<eglue_type, eglue_minus>::yes) { return P1.at_alt(ii) - P2.at_alt(ii); }
+  else if(is_same_type<eglue_type, eglue_div  >::yes) { return P1.at_alt(ii) / P2.at_alt(ii); }
+  else if(is_same_type<eglue_type, eglue_schur>::yes) { return P1.at_alt(ii) * P2.at_alt(ii); }
   else return eT(0);
   }
 

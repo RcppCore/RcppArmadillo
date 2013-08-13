@@ -33,12 +33,14 @@
 #if defined(ARMA_USE_CXX11)
   #include <initializer_list>
   #include <cstdint>
+  // TODO: extend wall_clock class to use C++11 chrono library
 #endif
 
 
 #if !defined(ARMA_HAVE_GETTIMEOFDAY) && !defined(ARMA_USE_BOOST_DATE)
   #include <ctime>
 #endif
+
 
 #if defined(ARMA_HAVE_GETTIMEOFDAY)
   #include <sys/time.h>
@@ -59,23 +61,28 @@
 #endif
 
 
-#if defined(ARMA_HAVE_STD_TR1)
-  // TODO: add handling of this functionality when use of C++11 is enabled
-  #include <tr1/cmath>
-  #include <tr1/complex>
-#elif defined(ARMA_USE_BOOST)
-  #include <boost/math/complex.hpp>
-  #include <boost/math/special_functions/acosh.hpp>
-  #include <boost/math/special_functions/asinh.hpp>
-  #include <boost/math/special_functions/atanh.hpp>
+#if !defined(ARMA_USE_CXX11)
+  #if defined(ARMA_HAVE_STD_TR1)
+    #include <tr1/cmath>
+    #include <tr1/complex>
+  #elif defined(ARMA_USE_BOOST)
+    #include <boost/math/complex.hpp>
+    #include <boost/math/special_functions/acosh.hpp>
+    #include <boost/math/special_functions/asinh.hpp>
+    #include <boost/math/special_functions/atanh.hpp>
+  #endif
 #endif
 
 
-#if defined(ARMA_USE_BOOST)
-  #if defined(ARMA_EXTRA_DEBUG)
-    #include <boost/format.hpp>
-    #include <boost/current_function.hpp>
-    #define ARMA_USE_BOOST_FORMAT
+#if defined(ARMA_EXTRA_DEBUG)
+  #if !defined(ARMA_HAVE_STD_SNPRINTF)
+    #if defined(ARMA_USE_CXX11)
+      #include <cstdio>
+      #define ARMA_HAVE_STD_SNPRINTF
+    #elif defined(ARMA_USE_BOOST)
+      #include <boost/format.hpp>
+      #define ARMA_USE_BOOST_FORMAT
+    #endif
   #endif
 #endif
 
@@ -206,6 +213,7 @@ namespace arma
   #include "armadillo_bits/op_var_bones.hpp"
   #include "armadillo_bits/op_repmat_bones.hpp"
   #include "armadillo_bits/op_reshape_bones.hpp"
+  #include "armadillo_bits/op_vectorise_bones.hpp"
   #include "armadillo_bits/op_resize_bones.hpp"
   #include "armadillo_bits/op_cov_bones.hpp"
   #include "armadillo_bits/op_cor_bones.hpp"
@@ -227,6 +235,8 @@ namespace arma
   #include "armadillo_bits/op_unique_bones.hpp"
   #include "armadillo_bits/op_toeplitz_bones.hpp"
   #include "armadillo_bits/op_fft_bones.hpp"
+  #include "armadillo_bits/op_any_bones.hpp"
+  #include "armadillo_bits/op_all_bones.hpp"
   
   #include "armadillo_bits/glue_times_bones.hpp"
   #include "armadillo_bits/glue_mixed_bones.hpp"
@@ -385,6 +395,7 @@ namespace arma
   #include "armadillo_bits/fn_solve.hpp"
   #include "armadillo_bits/fn_repmat.hpp"
   #include "armadillo_bits/fn_reshape.hpp"
+  #include "armadillo_bits/fn_vectorise.hpp"
   #include "armadillo_bits/fn_resize.hpp"
   #include "armadillo_bits/fn_cov.hpp"
   #include "armadillo_bits/fn_cor.hpp"
@@ -411,6 +422,8 @@ namespace arma
   #include "armadillo_bits/fn_histc.hpp"
   #include "armadillo_bits/fn_unique.hpp"
   #include "armadillo_bits/fn_fft.hpp"
+  #include "armadillo_bits/fn_any.hpp"
+  #include "armadillo_bits/fn_all.hpp"
   
   #include "armadillo_bits/fn_speye.hpp"
   #include "armadillo_bits/fn_spones.hpp"
@@ -425,11 +438,17 @@ namespace arma
   
   
   //
-  // class meat
+  // classes implementing various forms of dense matrix multiplication
   
-  #include "armadillo_bits/gemv.hpp"
-  #include "armadillo_bits/gemm.hpp"
-  #include "armadillo_bits/gemm_mixed.hpp"
+  #include "armadillo_bits/mul_gemv.hpp"
+  #include "armadillo_bits/mul_gemm.hpp"
+  #include "armadillo_bits/mul_gemm_mixed.hpp"
+  #include "armadillo_bits/mul_syrk.hpp"
+  #include "armadillo_bits/mul_herk.hpp"
+  
+  
+  //
+  // class meat
   
   #include "armadillo_bits/eop_core_meat.hpp"
   #include "armadillo_bits/eglue_core_meat.hpp"
@@ -485,6 +504,7 @@ namespace arma
   #include "armadillo_bits/op_var_meat.hpp"
   #include "armadillo_bits/op_repmat_meat.hpp"
   #include "armadillo_bits/op_reshape_meat.hpp"
+  #include "armadillo_bits/op_vectorise_meat.hpp"
   #include "armadillo_bits/op_resize_meat.hpp"
   #include "armadillo_bits/op_cov_meat.hpp"
   #include "armadillo_bits/op_cor_meat.hpp"
@@ -506,6 +526,8 @@ namespace arma
   #include "armadillo_bits/op_unique_meat.hpp"
   #include "armadillo_bits/op_toeplitz_meat.hpp"
   #include "armadillo_bits/op_fft_meat.hpp"
+  #include "armadillo_bits/op_any_meat.hpp"
+  #include "armadillo_bits/op_all_meat.hpp"
   
   #include "armadillo_bits/glue_times_meat.hpp"
   #include "armadillo_bits/glue_mixed_meat.hpp"

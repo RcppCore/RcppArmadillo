@@ -634,7 +634,7 @@ SpMat<eT>::SpMat
   arma_type_check(( is_complex< T>::value == true  ));
   
   // Compile-time abort if types are not compatible.
-  arma_type_check(( is_same_type< std::complex<T>, eT >::value == false ));
+  arma_type_check(( is_same_type< std::complex<T>, eT >::no ));
   
   const unwrap_spmat<T1> tmp1(A.get_ref());
   const unwrap_spmat<T2> tmp2(B.get_ref());
@@ -1391,7 +1391,7 @@ SpMat<eT>::SpMat(const SpOp<T1, spop_type>& X)
   {
   arma_extra_debug_sigprint_this(this);
 
-  arma_type_check(( is_same_type< eT, typename T1::elem_type >::value == false ));
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   spop_type::apply(*this, X);
   }
@@ -1406,7 +1406,7 @@ SpMat<eT>::operator=(const SpOp<T1, spop_type>& X)
   {
   arma_extra_debug_sigprint();
 
-  arma_type_check(( is_same_type< eT, typename T1::elem_type >::value == false ));
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   spop_type::apply(*this, X);
   
@@ -1423,7 +1423,7 @@ SpMat<eT>::operator+=(const SpOp<T1, spop_type>& X)
   {
   arma_extra_debug_sigprint();
   
-  arma_type_check(( is_same_type< eT, typename T1::elem_type >::value == false ));
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   const SpMat<eT> m(X);
   
@@ -1440,7 +1440,7 @@ SpMat<eT>::operator-=(const SpOp<T1, spop_type>& X)
   {
   arma_extra_debug_sigprint();
   
-  arma_type_check(( is_same_type< eT, typename T1::elem_type >::value == false ));
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   const SpMat<eT> m(X);
   
@@ -1457,7 +1457,7 @@ SpMat<eT>::operator*=(const SpOp<T1, spop_type>& X)
   {
   arma_extra_debug_sigprint();
   
-  arma_type_check(( is_same_type< eT, typename T1::elem_type >::value == false ));
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   const SpMat<eT> m(X);
   
@@ -1474,7 +1474,7 @@ SpMat<eT>::operator%=(const SpOp<T1, spop_type>& X)
   {
   arma_extra_debug_sigprint();
   
-  arma_type_check(( is_same_type< eT, typename T1::elem_type >::value == false ));
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   const SpMat<eT> m(X);
   
@@ -1491,7 +1491,7 @@ SpMat<eT>::operator/=(const SpOp<T1, spop_type>& X)
   {
   arma_extra_debug_sigprint();
   
-  arma_type_check(( is_same_type< eT, typename T1::elem_type >::value == false ));
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   const SpMat<eT> m(X);
   
@@ -1515,7 +1515,7 @@ SpMat<eT>::SpMat(const SpGlue<T1, T2, spglue_type>& X)
   {
   arma_extra_debug_sigprint_this(this);
 
-  arma_type_check(( is_same_type< eT, typename T1::elem_type >::value == false ));
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   spglue_type::apply(*this, X);
   }
@@ -1640,7 +1640,7 @@ SpMat<eT>::operator=(const SpGlue<T1, T2, spglue_type>& X)
   {
   arma_extra_debug_sigprint();
 
-  arma_type_check(( is_same_type< eT, typename T1::elem_type >::value == false ));
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   spglue_type::apply(*this, X);
   
@@ -1657,7 +1657,7 @@ SpMat<eT>::operator+=(const SpGlue<T1, T2, spglue_type>& X)
   {
   arma_extra_debug_sigprint();
   
-  arma_type_check(( is_same_type< eT, typename T1::elem_type >::value == false ));
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   const SpMat<eT> m(X);
   
@@ -1674,7 +1674,7 @@ SpMat<eT>::operator-=(const SpGlue<T1, T2, spglue_type>& X)
   {
   arma_extra_debug_sigprint();
   
-  arma_type_check(( is_same_type< eT, typename T1::elem_type >::value == false ));
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   const SpMat<eT> m(X);
   
@@ -1691,7 +1691,7 @@ SpMat<eT>::operator*=(const SpGlue<T1, T2, spglue_type>& X)
   {
   arma_extra_debug_sigprint();
   
-  arma_type_check(( is_same_type< eT, typename T1::elem_type >::value == false ));
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   const SpMat<eT> m(X);
   
@@ -1708,7 +1708,7 @@ SpMat<eT>::operator%=(const SpGlue<T1, T2, spglue_type>& X)
   {
   arma_extra_debug_sigprint();
   
-  arma_type_check(( is_same_type< eT, typename T1::elem_type >::value == false ));
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   const SpMat<eT> m(X);
   
@@ -1725,7 +1725,7 @@ SpMat<eT>::operator/=(const SpGlue<T1, T2, spglue_type>& X)
   {
   arma_extra_debug_sigprint();
   
-  arma_type_check(( is_same_type< eT, typename T1::elem_type >::value == false ));
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   const SpMat<eT> m(X);
   

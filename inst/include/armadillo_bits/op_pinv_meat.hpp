@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
 // Copyright (C) 2009-2011 Conrad Sanderson
+// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
 // Copyright (C) 2009-2010 Dimitrios Bouzas
 // Copyright (C) 2011 Stanislav Funiak
 // 

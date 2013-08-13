@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2008-2013 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -160,6 +160,64 @@ namespace atlas
       {
       typedef std::complex<double> T;
       arma_atlas(cblas_zgemm)(Order, TransA, TransB, M, N, K, (const T*)&alpha, (const T*)A, lda, (const T*)B, ldb, (const T*)&beta, (T*)C, ldc);
+      }
+    }
+  
+  
+  
+  template<typename eT>
+  inline
+  void
+  cblas_syrk
+    (
+    const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo, const enum CBLAS_TRANSPOSE Trans,
+    const int N, const int K, const double alpha,
+    const double* A, const int lda, const double beta, double* C, const int ldc
+    )
+    {
+    arma_type_check((is_supported_blas_type<eT>::value == false));
+    
+    if(is_float<eT>::value == true)
+      {
+      typedef float T;
+      arma_atlas(cblas_ssyrk)(Order, Uplo, Trans, N, K, (const T)alpha, (const T*)A, lda, (const T)beta, (T*)C, ldc);
+      }
+    else
+    if(is_double<eT>::value == true)
+      {
+      typedef double T;
+      arma_atlas(cblas_dsyrk)(Order, Uplo, Trans, N, K, (const T)alpha, (const T*)A, lda, (const T)beta, (T*)C, ldc);
+      }
+    }
+  
+  
+  
+  template<typename T>
+  inline
+  void
+  cblas_herk
+    (
+    const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo, const enum CBLAS_TRANSPOSE Trans,
+    const int N, const int K, const T alpha,
+    const std::complex<T>* A, const int lda, const T beta, std::complex<T>* C, const int ldc
+    )
+    {
+    arma_type_check((is_supported_blas_type<T>::value == false));
+    
+    if(is_float<T>::value == true)
+      {
+      typedef float                  TT;
+      typedef std::complex<float> cx_TT;
+      
+      arma_atlas(cblas_cherk)(Order, Uplo, Trans, N, K, (const TT)alpha, (const cx_TT*)A, lda, (const TT)beta, (cx_TT*)C, ldc);
+      }
+    else
+    if(is_double<T>::value == true)
+      {
+      typedef double                  TT;
+      typedef std::complex<double> cx_TT;
+      
+      arma_atlas(cblas_zherk)(Order, Uplo, Trans, N, K, (const TT)alpha, (const cx_TT*)A, lda, (const TT)beta, (cx_TT*)C, ldc);
       }
     }
   

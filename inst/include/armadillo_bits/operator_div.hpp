@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2012 NICTA (www.nicta.com.au)
 // Copyright (C) 2009-2012 Conrad Sanderson
+// Copyright (C) 2009-2012 NICTA (www.nicta.com.au)
 // Copyright (C) 2012 Ryan Curtin
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -54,7 +54,7 @@ arma_inline
 typename
 enable_if2
   <
-  (is_arma_type<T1>::value && is_complex<typename T1::elem_type>::value == false),
+  (is_arma_type<T1>::value && is_cx<typename T1::elem_type>::no),
   const mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_div_pre>
   >::result
 operator/
@@ -76,7 +76,7 @@ arma_inline
 typename
 enable_if2
   <
-  (is_arma_type<T1>::value && is_complex<typename T1::elem_type>::value == false),
+  (is_arma_type<T1>::value && is_cx<typename T1::elem_type>::no),
   const mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_div_post>
   >::result
 operator/
@@ -120,7 +120,7 @@ inline
 typename
 enable_if2
   <
-  (is_arma_type<T1>::value && is_arma_type<T2>::value && (is_same_type<typename T1::elem_type, typename T2::elem_type>::value == false)),
+  (is_arma_type<T1>::value && is_arma_type<T2>::value && (is_same_type<typename T1::elem_type, typename T2::elem_type>::no)),
   const mtGlue<typename promote_type<typename T1::elem_type, typename T2::elem_type>::result, T1, T2, glue_mixed_div>
   >::result
 operator/

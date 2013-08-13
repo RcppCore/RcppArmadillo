@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
 // Copyright (C) 2009-2011 Conrad Sanderson
+// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -169,7 +169,7 @@ running_stat<eT>::operator() (const std::complex< typename running_stat<eT>::T >
   {
   arma_extra_debug_sigprint();
   
-  arma_type_check(( is_same_type<eT, std::complex< typename running_stat<eT>::T > >::value == false ));
+  arma_type_check(( is_same_type<eT, std::complex< typename running_stat<eT>::T > >::no ));
   
   if( arma_isfinite(sample) == false )
     {
