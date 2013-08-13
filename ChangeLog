@@ -1,6 +1,11 @@
-2013-08-08  Dirk Eddelbuettel  <edd@debian.org>
+2013-08-12  Dirk Eddelbuettel  <edd@debian.org>
 
-	* Empty commit at Stefan's request to tickle a built
+	* DESCRIPTION: Release 0.3.910.0
+	* inst/NEWS: Release 0.3.910.0
+	* inst/include/*: Upgraded to new release 3.910.0 of Armadillo
+        * debian/*: Similarly updated for new release to Debian
+
+	* vignettes/*: Moved files from inst/doc per new CRAN standards
 
 2013-08-03  Dirk Eddelbuettel  <edd@debian.org>
 
