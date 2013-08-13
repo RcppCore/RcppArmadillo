@@ -1,9 +1,9 @@
 pkg <- "RcppArmadillo"
 
-# load this package
+## load this package
 require(pkg, character.only = TRUE)
 
-#load RUnit
+## load RUnit
 runit <- "RUnit"
 require(runit, character.only = TRUE)
 if (file.exists("unitTests-results")) { unlink("unitTests-results", recursive = TRUE ) }

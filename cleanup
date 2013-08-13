@@ -2,9 +2,18 @@
 
 rm -f  config.log config.status confdefs.h \
        src/*.o src/*.so \
-       inst/doc/RcppArmadillo-unitTests.out \
-       inst/doc/RcppArmadillo-unitTests.aux \
-       inst/doc/RcppArmadillo-unitTests.log \
-       inst/doc/RcppArmadillo-intro.out \
+       vignettes/RcppArmadillo-unitTests.out \
+       vignettes/RcppArmadillo-unitTests.aux \
+       vignettes/RcppArmadillo-unitTests.log \
+       vignettes/RcppArmadillo-intro.out \
+       vignettes/RcppArmadillo*.log \
+       vignettes/RcppArmadillo*.aux \
+       vignettes/RcppArmadillo*.out \
+       vignettes/RcppArmadillo*.tex \
+       vignettes/*.blg \
+       vignettes/*.bbl \
+       vignettes/*~ \
        */*~ *~
-rm -rf autom4te.cache
+
+rm -rf autom4te.cache/ \
+       vignettes/auto/

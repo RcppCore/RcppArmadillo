@@ -1,10 +1,6 @@
 
 all: 	RcppArmadillo-unitTests.pdf RcppArmadillo-intro.pdf
 
-clean:	
-	rm -f RcppArmadillo*.log RcppArmadillo*.aux RcppArmadillo*.out RcppArmadillo*.tex *.blg *.bbl *~
-	rm -rf auto/
-
 pdfclean:
 	rm -f RcppArmadillo-unitTests.pdf RcppArmadillo-intro.pdf
 
