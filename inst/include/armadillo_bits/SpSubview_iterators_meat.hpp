@@ -244,6 +244,8 @@ inline
 SpSubview<eT>::const_iterator::const_iterator(const SpSubview<eT>& in_M, uword in_row, uword in_col, uword in_pos, uword in_skip_pos)
   : iterator_base(in_M, in_col, in_pos, in_skip_pos)
   {
+  arma_ignore(in_row);
+  
   // Nothing to do.
   }
 

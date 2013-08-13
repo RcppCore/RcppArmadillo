@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2013 NICTA (www.nicta.com.au)
 // Copyright (C) 2010-2013 Conrad Sanderson
+// Copyright (C) 2010-2013 NICTA (www.nicta.com.au)
 // Copyright (C) 2010 Dimitrios Bouzas
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -106,28 +106,28 @@ op_find::helper
       bool not_zero_i;
       bool not_zero_j;
       
-           if(is_same_type<op_type, op_rel_lt_pre   >::value == true)  { not_zero_i = (val <  tpi); }
-      else if(is_same_type<op_type, op_rel_lt_post  >::value == true)  { not_zero_i = (tpi <  val); }
-      else if(is_same_type<op_type, op_rel_gt_pre   >::value == true)  { not_zero_i = (val >  tpi); }
-      else if(is_same_type<op_type, op_rel_gt_post  >::value == true)  { not_zero_i = (tpi >  val); }
-      else if(is_same_type<op_type, op_rel_lteq_pre >::value == true)  { not_zero_i = (val <= tpi); }
-      else if(is_same_type<op_type, op_rel_lteq_post>::value == true)  { not_zero_i = (tpi <= val); }
-      else if(is_same_type<op_type, op_rel_gteq_pre >::value == true)  { not_zero_i = (val >= tpi); }
-      else if(is_same_type<op_type, op_rel_gteq_post>::value == true)  { not_zero_i = (tpi >= val); }
-      else if(is_same_type<op_type, op_rel_eq       >::value == true)  { not_zero_i = (tpi == val); }
-      else if(is_same_type<op_type, op_rel_noteq    >::value == true)  { not_zero_i = (tpi != val); }
+           if(is_same_type<op_type, op_rel_lt_pre   >::yes)  { not_zero_i = (val <  tpi); }
+      else if(is_same_type<op_type, op_rel_lt_post  >::yes)  { not_zero_i = (tpi <  val); }
+      else if(is_same_type<op_type, op_rel_gt_pre   >::yes)  { not_zero_i = (val >  tpi); }
+      else if(is_same_type<op_type, op_rel_gt_post  >::yes)  { not_zero_i = (tpi >  val); }
+      else if(is_same_type<op_type, op_rel_lteq_pre >::yes)  { not_zero_i = (val <= tpi); }
+      else if(is_same_type<op_type, op_rel_lteq_post>::yes)  { not_zero_i = (tpi <= val); }
+      else if(is_same_type<op_type, op_rel_gteq_pre >::yes)  { not_zero_i = (val >= tpi); }
+      else if(is_same_type<op_type, op_rel_gteq_post>::yes)  { not_zero_i = (tpi >= val); }
+      else if(is_same_type<op_type, op_rel_eq       >::yes)  { not_zero_i = (tpi == val); }
+      else if(is_same_type<op_type, op_rel_noteq    >::yes)  { not_zero_i = (tpi != val); }
       else not_zero_i = false;
       
-           if(is_same_type<op_type, op_rel_lt_pre   >::value == true)  { not_zero_j = (val <  tpj); }
-      else if(is_same_type<op_type, op_rel_lt_post  >::value == true)  { not_zero_j = (tpj <  val); }
-      else if(is_same_type<op_type, op_rel_gt_pre   >::value == true)  { not_zero_j = (val >  tpj); }
-      else if(is_same_type<op_type, op_rel_gt_post  >::value == true)  { not_zero_j = (tpj >  val); }
-      else if(is_same_type<op_type, op_rel_lteq_pre >::value == true)  { not_zero_j = (val <= tpj); }
-      else if(is_same_type<op_type, op_rel_lteq_post>::value == true)  { not_zero_j = (tpj <= val); }
-      else if(is_same_type<op_type, op_rel_gteq_pre >::value == true)  { not_zero_j = (val >= tpj); }
-      else if(is_same_type<op_type, op_rel_gteq_post>::value == true)  { not_zero_j = (tpj >= val); }
-      else if(is_same_type<op_type, op_rel_eq       >::value == true)  { not_zero_j = (tpj == val); }
-      else if(is_same_type<op_type, op_rel_noteq    >::value == true)  { not_zero_j = (tpj != val); }
+           if(is_same_type<op_type, op_rel_lt_pre   >::yes)  { not_zero_j = (val <  tpj); }
+      else if(is_same_type<op_type, op_rel_lt_post  >::yes)  { not_zero_j = (tpj <  val); }
+      else if(is_same_type<op_type, op_rel_gt_pre   >::yes)  { not_zero_j = (val >  tpj); }
+      else if(is_same_type<op_type, op_rel_gt_post  >::yes)  { not_zero_j = (tpj >  val); }
+      else if(is_same_type<op_type, op_rel_lteq_pre >::yes)  { not_zero_j = (val <= tpj); }
+      else if(is_same_type<op_type, op_rel_lteq_post>::yes)  { not_zero_j = (tpj <= val); }
+      else if(is_same_type<op_type, op_rel_gteq_pre >::yes)  { not_zero_j = (val >= tpj); }
+      else if(is_same_type<op_type, op_rel_gteq_post>::yes)  { not_zero_j = (tpj >= val); }
+      else if(is_same_type<op_type, op_rel_eq       >::yes)  { not_zero_j = (tpj == val); }
+      else if(is_same_type<op_type, op_rel_noteq    >::yes)  { not_zero_j = (tpj != val); }
       else not_zero_j = false;
       
       if(not_zero_i == true)  { indices_mem[n_nz] = i;  ++n_nz; }
@@ -140,16 +140,16 @@ op_find::helper
       
       const eT tmp = PA[i];
       
-           if(is_same_type<op_type, op_rel_lt_pre   >::value == true)  { not_zero = (val <  tmp); }
-      else if(is_same_type<op_type, op_rel_lt_post  >::value == true)  { not_zero = (tmp <  val); }
-      else if(is_same_type<op_type, op_rel_gt_pre   >::value == true)  { not_zero = (val >  tmp); }
-      else if(is_same_type<op_type, op_rel_gt_post  >::value == true)  { not_zero = (tmp >  val); }
-      else if(is_same_type<op_type, op_rel_lteq_pre >::value == true)  { not_zero = (val <= tmp); }
-      else if(is_same_type<op_type, op_rel_lteq_post>::value == true)  { not_zero = (tmp <= val); }
-      else if(is_same_type<op_type, op_rel_gteq_pre >::value == true)  { not_zero = (val >= tmp); }
-      else if(is_same_type<op_type, op_rel_gteq_post>::value == true)  { not_zero = (tmp >= val); }
-      else if(is_same_type<op_type, op_rel_eq       >::value == true)  { not_zero = (tmp == val); }
-      else if(is_same_type<op_type, op_rel_noteq    >::value == true)  { not_zero = (tmp != val); }
+           if(is_same_type<op_type, op_rel_lt_pre   >::yes)  { not_zero = (val <  tmp); }
+      else if(is_same_type<op_type, op_rel_lt_post  >::yes)  { not_zero = (tmp <  val); }
+      else if(is_same_type<op_type, op_rel_gt_pre   >::yes)  { not_zero = (val >  tmp); }
+      else if(is_same_type<op_type, op_rel_gt_post  >::yes)  { not_zero = (tmp >  val); }
+      else if(is_same_type<op_type, op_rel_lteq_pre >::yes)  { not_zero = (val <= tmp); }
+      else if(is_same_type<op_type, op_rel_lteq_post>::yes)  { not_zero = (tmp <= val); }
+      else if(is_same_type<op_type, op_rel_gteq_pre >::yes)  { not_zero = (val >= tmp); }
+      else if(is_same_type<op_type, op_rel_gteq_post>::yes)  { not_zero = (tmp >= val); }
+      else if(is_same_type<op_type, op_rel_eq       >::yes)  { not_zero = (tmp == val); }
+      else if(is_same_type<op_type, op_rel_noteq    >::yes)  { not_zero = (tmp != val); }
       else not_zero = false;
       
       if(not_zero == true)  { indices_mem[n_nz] = i;  ++n_nz; }
@@ -169,16 +169,16 @@ op_find::helper
       
       bool not_zero;
       
-           if(is_same_type<op_type, op_rel_lt_pre   >::value == true)  { not_zero = (val <  tmp); }
-      else if(is_same_type<op_type, op_rel_lt_post  >::value == true)  { not_zero = (tmp <  val); }
-      else if(is_same_type<op_type, op_rel_gt_pre   >::value == true)  { not_zero = (val >  tmp); }
-      else if(is_same_type<op_type, op_rel_gt_post  >::value == true)  { not_zero = (tmp >  val); }
-      else if(is_same_type<op_type, op_rel_lteq_pre >::value == true)  { not_zero = (val <= tmp); }
-      else if(is_same_type<op_type, op_rel_lteq_post>::value == true)  { not_zero = (tmp <= val); }
-      else if(is_same_type<op_type, op_rel_gteq_pre >::value == true)  { not_zero = (val >= tmp); }
-      else if(is_same_type<op_type, op_rel_gteq_post>::value == true)  { not_zero = (tmp >= val); }
-      else if(is_same_type<op_type, op_rel_eq       >::value == true)  { not_zero = (tmp == val); }
-      else if(is_same_type<op_type, op_rel_noteq    >::value == true)  { not_zero = (tmp != val); }
+           if(is_same_type<op_type, op_rel_lt_pre   >::yes)  { not_zero = (val <  tmp); }
+      else if(is_same_type<op_type, op_rel_lt_post  >::yes)  { not_zero = (tmp <  val); }
+      else if(is_same_type<op_type, op_rel_gt_pre   >::yes)  { not_zero = (val >  tmp); }
+      else if(is_same_type<op_type, op_rel_gt_post  >::yes)  { not_zero = (tmp >  val); }
+      else if(is_same_type<op_type, op_rel_lteq_pre >::yes)  { not_zero = (val <= tmp); }
+      else if(is_same_type<op_type, op_rel_lteq_post>::yes)  { not_zero = (tmp <= val); }
+      else if(is_same_type<op_type, op_rel_gteq_pre >::yes)  { not_zero = (val >= tmp); }
+      else if(is_same_type<op_type, op_rel_gteq_post>::yes)  { not_zero = (tmp >= val); }
+      else if(is_same_type<op_type, op_rel_eq       >::yes)  { not_zero = (tmp == val); }
+      else if(is_same_type<op_type, op_rel_noteq    >::yes)  { not_zero = (tmp != val); }
       else not_zero = false;
       
       if(not_zero == true)  { indices_mem[n_nz] = i;  ++n_nz; }
@@ -228,8 +228,8 @@ op_find::helper
     
     bool not_zero;
     
-         if(is_same_type<op_type, op_rel_eq   >::value == true)  { not_zero = (tmp == val); }
-    else if(is_same_type<op_type, op_rel_noteq>::value == true)  { not_zero = (tmp != val); }
+         if(is_same_type<op_type, op_rel_eq   >::yes)  { not_zero = (tmp == val); }
+    else if(is_same_type<op_type, op_rel_noteq>::yes)  { not_zero = (tmp != val); }
     else not_zero = false;
     
     if(not_zero == true) { indices_mem[n_nz] = i;  ++n_nz; }
@@ -285,12 +285,12 @@ op_find::helper
     
     bool not_zero;
     
-         if(is_same_type<glue_type, glue_rel_lt    >::value == true)  { not_zero = (tmp1 <  tmp2); }
-    else if(is_same_type<glue_type, glue_rel_gt    >::value == true)  { not_zero = (tmp1 >  tmp2); }
-    else if(is_same_type<glue_type, glue_rel_lteq  >::value == true)  { not_zero = (tmp1 <= tmp2); }
-    else if(is_same_type<glue_type, glue_rel_gteq  >::value == true)  { not_zero = (tmp1 >= tmp2); }
-    else if(is_same_type<glue_type, glue_rel_eq    >::value == true)  { not_zero = (tmp1 == tmp2); }
-    else if(is_same_type<glue_type, glue_rel_noteq >::value == true)  { not_zero = (tmp1 != tmp2); }
+         if(is_same_type<glue_type, glue_rel_lt    >::yes)  { not_zero = (tmp1 <  tmp2); }
+    else if(is_same_type<glue_type, glue_rel_gt    >::yes)  { not_zero = (tmp1 >  tmp2); }
+    else if(is_same_type<glue_type, glue_rel_lteq  >::yes)  { not_zero = (tmp1 <= tmp2); }
+    else if(is_same_type<glue_type, glue_rel_gteq  >::yes)  { not_zero = (tmp1 >= tmp2); }
+    else if(is_same_type<glue_type, glue_rel_eq    >::yes)  { not_zero = (tmp1 == tmp2); }
+    else if(is_same_type<glue_type, glue_rel_noteq >::yes)  { not_zero = (tmp1 != tmp2); }
     else not_zero = false;
     
     if(not_zero == true)  { indices_mem[n_nz] = i;  ++n_nz; }
@@ -340,8 +340,8 @@ op_find::helper
     {
     bool not_zero;
     
-         if(is_same_type<glue_type, glue_rel_eq    >::value == true)  { not_zero = (PA[i] == PB[i]); }
-    else if(is_same_type<glue_type, glue_rel_noteq >::value == true)  { not_zero = (PA[i] != PB[i]); }
+         if(is_same_type<glue_type, glue_rel_eq    >::yes)  { not_zero = (PA[i] == PB[i]); }
+    else if(is_same_type<glue_type, glue_rel_noteq >::yes)  { not_zero = (PA[i] != PB[i]); }
     else not_zero = false;
     
     if(not_zero == true)  { indices_mem[n_nz] = i;  ++n_nz; }

@@ -60,10 +60,21 @@ op_reshape::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reshape>& in)
       const uword B_n_cols = B.n_cols;
       
       for(uword row=0; row<B_n_rows; ++row)
-      for(uword col=0; col<B_n_cols; ++col)
         {
-        *out_mem = B.at(row,col);
-        out_mem++;
+        uword i,j;
+        for(i=0, j=1; j < B_n_cols; i+=2, j+=2)
+          {
+          const eT tmp_i = B.at(row,i);
+          const eT tmp_j = B.at(row,j);
+          
+          *out_mem = tmp_i;  out_mem++;
+          *out_mem = tmp_j;  out_mem++;
+          }
+        
+        if(i < B_n_cols)
+          {
+          *out_mem = B.at(row,i);  out_mem++;
+          }
         }
       }
     }

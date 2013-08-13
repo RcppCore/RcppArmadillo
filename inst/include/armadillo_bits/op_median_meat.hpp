@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2013 NICTA (www.nicta.com.au)
 // Copyright (C) 2009-2013 Conrad Sanderson
+// Copyright (C) 2009-2013 NICTA (www.nicta.com.au)
 // Copyright (C) 2013 Ruslan Shestopalyuk
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -132,7 +132,7 @@ op_median::apply(Mat< std::complex<T> >& out, const Op<T1,op_median>& in)
   
   typedef typename std::complex<T> eT;
   
-  arma_type_check(( is_same_type<eT, typename T1::elem_type>::value == false ));
+  arma_type_check(( is_same_type<eT, typename T1::elem_type>::no ));
   
   const unwrap_check<T1> tmp(in.m, out);
   const Mat<eT>&     X = tmp.M;

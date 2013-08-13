@@ -1,5 +1,5 @@
-// Copyright (C) 2012 NICTA (www.nicta.com.au)
 // Copyright (C) 2012 Conrad Sanderson
+// Copyright (C) 2012 NICTA (www.nicta.com.au)
 // Copyright (C) 2012 Boris Sabanin
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public

@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
 // Copyright (C) 2008-2013 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -72,6 +72,19 @@
   #if !defined(ARMA_USE_U64S64)
     #define ARMA_USE_U64S64
   #endif
+#endif
+
+
+#if defined (__GNUG__)
+  #define ARMA_FNSIG  __PRETTY_FUNCTION__
+#elif defined (_MSC_VER)
+  #define ARMA_FNSIG  __FUNCSIG__ 
+#elif defined(__INTEL_COMPILER)
+  #define ARMA_FNSIG  __FUNCTION__
+#elif defined(ARMA_USE_CXX11)
+  #define ARMA_FNSIG  __func__
+#else 
+  #define ARMA_FNSIG  "(unknown)"
 #endif
 
 

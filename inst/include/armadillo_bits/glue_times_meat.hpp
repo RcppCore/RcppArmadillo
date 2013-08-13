@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
 // Copyright (C) 2008-2013 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -292,7 +292,8 @@ glue_times::apply_inplace_plus(Mat<typename T1::elem_type>& out, const Glue<T1, 
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
+  typedef typename T1::elem_type            eT;
+  typedef typename get_pod_type<eT>::result  T;
   
   const partial_unwrap_check<T1> tmp1(X.A, out);
   const partial_unwrap_check<T2> tmp2(X.B, out);
@@ -307,6 +308,7 @@ glue_times::apply_inplace_plus(Mat<typename T1::elem_type>& out, const Glue<T1, 
   const bool do_trans_B = partial_unwrap_check<T2>::do_trans;
   
   const bool use_alpha = partial_unwrap_check<T1>::do_times || partial_unwrap_check<T2>::do_times || (sign < sword(0));
+  
   const eT       alpha = use_alpha ? ( tmp1.get_val() * tmp2.get_val() * ( (sign > sword(0)) ? eT(1) : eT(-1) ) ) : eT(0);
   
   arma_debug_assert_mul_size(A, B, do_trans_A, do_trans_B, "matrix multiplication");
@@ -316,146 +318,73 @@ glue_times::apply_inplace_plus(Mat<typename T1::elem_type>& out, const Glue<T1, 
   
   arma_debug_assert_same_size(out.n_rows, out.n_cols, result_n_rows, result_n_cols, "addition");
   
-  if(out.n_elem > 0)
+  if(out.n_elem == 0)
     {
-    if( (do_trans_A == false) && (do_trans_B == false) && (use_alpha == false) )
-      {
-      if( ((A.n_rows == 1) || (TA::is_row)) && (is_complex<eT>::value == false) )
-        {
-        gemv<true,         false, true>::apply(out.memptr(), B, A.memptr(), alpha, eT(1));
-        }
-      else
-      if( (B.n_cols == 1) || (TB::is_col) )
-        {
-        gemv<false,        false, true>::apply(out.memptr(), A, B.memptr(), alpha, eT(1));
-        }
-      else
-        {
-        gemm<false, false, false, true>::apply(out, A, B, alpha, eT(1));
-        }
-      }
-    else
-    if( (do_trans_A == false) && (do_trans_B == false) && (use_alpha == true) )
-      {
-      if( ((A.n_rows == 1) || (TA::is_row)) && (is_complex<eT>::value == false) )
-        {
-        gemv<true,         true, true>::apply(out.memptr(), B, A.memptr(), alpha, eT(1));
-        }
-      else
-      if( (B.n_cols == 1) || (TB::is_col) )
-        {
-        gemv<false,        true, true>::apply(out.memptr(), A, B.memptr(), alpha, eT(1));
-        }
-      else
-        {
-        gemm<false, false, true, true>::apply(out, A, B, alpha, eT(1));
-        }
-      }
-    else
-    if( (do_trans_A == true) && (do_trans_B == false) && (use_alpha == false) )
-      {
-      if( ((A.n_cols == 1) || (TA::is_col)) && (is_complex<eT>::value == false) )
-        {
-        gemv<true,        false, true>::apply(out.memptr(), B, A.memptr(), alpha, eT(1));
-        }
-      else
-      if( (B.n_cols == 1) || (TB::is_col) )
-        {
-        gemv<true,        false, true>::apply(out.memptr(), A, B.memptr(), alpha, eT(1));
-        }
-      else
-        {
-        gemm<true, false, false, true>::apply(out, A, B, alpha, eT(1));
-        }
-      }
-    else
-    if( (do_trans_A == true) && (do_trans_B == false) && (use_alpha == true) )
-      {
-      if( ((A.n_cols == 1) || (TA::is_col)) && (is_complex<eT>::value == false) )
-        {
-        gemv<true,        true, true>::apply(out.memptr(), B, A.memptr(), alpha, eT(1));
-        }
-      else
-      if( (B.n_cols == 1) || (TB::is_col) )
-        {
-        gemv<true,        true, true>::apply(out.memptr(), A, B.memptr(), alpha, eT(1));
-        }
-      else
-        {
-        gemm<true, false, true, true>::apply(out, A, B, alpha, eT(1));
-        }
-      }
-    else
-    if( (do_trans_A == false) && (do_trans_B == true) && (use_alpha == false) )
-      {
-      if( ((A.n_rows == 1) || (TA::is_row)) && (is_complex<eT>::value == false) )
-        {
-        gemv<false,       false, true>::apply(out.memptr(), B, A.memptr(), alpha, eT(1));
-        }
-      else
-      if( ((B.n_rows == 1) || (TB::is_row)) && (is_complex<eT>::value == false) )
-        {
-        gemv<false,       false, true>::apply(out.memptr(), A, B.memptr(), alpha, eT(1));
-        }
-      else
-        {
-        gemm<false, true, false, true>::apply(out, A, B, alpha, eT(1));
-        }
-      }
-    else
-    if( (do_trans_A == false) && (do_trans_B == true) && (use_alpha == true) )
-      {
-      if( ((A.n_rows == 1) || (TA::is_row)) && (is_complex<eT>::value == false) )
-        {
-        gemv<false,       true, true>::apply(out.memptr(), B, A.memptr(), alpha, eT(1));
-        }
-      else
-      if( ((B.n_rows == 1) || (TB::is_row)) && (is_complex<eT>::value == false) )
-        {
-        gemv<false,       true, true>::apply(out.memptr(), A, B.memptr(), alpha, eT(1));
-        }
-      else
-        {
-        gemm<false, true, true, true>::apply(out, A, B, alpha, eT(1));
-        }
-      }
-    else
-    if( (do_trans_A == true) && (do_trans_B == true) && (use_alpha == false) )
-      {
-      if( ((A.n_cols == 1) || (TA::is_col)) && (is_complex<eT>::value == false) )
-        {
-        gemv<false,      false, true>::apply(out.memptr(), B, A.memptr(), alpha, eT(1));
-        }
-      else
-      if( ((B.n_rows == 1) || (TB::is_row)) && (is_complex<eT>::value == false) )
-        {
-        gemv<true,       false, true>::apply(out.memptr(), A, B.memptr(), alpha, eT(1));
-        }
-      else
-        {
-        gemm<true, true, false, true>::apply(out, A, B, alpha, eT(1));
-        }
-      }
-    else
-    if( (do_trans_A == true) && (do_trans_B == true) && (use_alpha == true) )
-      {
-      if( ((A.n_cols == 1) || (TA::is_col)) && (is_complex<eT>::value == false) )
-        {
-        gemv<false,      true, true>::apply(out.memptr(), B, A.memptr(), alpha, eT(1));
-        }
-      else
-      if( ((B.n_rows == 1) || (TB::is_row)) && (is_complex<eT>::value == false) )
-        {
-        gemv<true,       true, true>::apply(out.memptr(), A, B.memptr(), alpha, eT(1));
-        }
-      else
-        {
-        gemm<true, true, true, true>::apply(out, A, B, alpha, eT(1));
-        }
-      }
+    return;
     }
   
   
+  if( (do_trans_A == false) && (do_trans_B == false) && (use_alpha == false) )
+    {
+         if( ((A.n_rows == 1) || (TA::is_row)) && (is_cx<eT>::no) )  { gemv<true,         false, true>::apply(out.memptr(), B, A.memptr(), alpha, eT(1)); }
+    else if(  (B.n_cols == 1) || (TB::is_col)                     )  { gemv<false,        false, true>::apply(out.memptr(), A, B.memptr(), alpha, eT(1)); }
+    else                                                             { gemm<false, false, false, true>::apply(out,          A, B,          alpha, eT(1)); }
+    }
+  else
+  if( (do_trans_A == false) && (do_trans_B == false) && (use_alpha == true) )
+    {
+         if( ((A.n_rows == 1) || (TA::is_row)) && (is_cx<eT>::no) )  { gemv<true,         true, true>::apply(out.memptr(), B, A.memptr(), alpha, eT(1)); }
+    else if(  (B.n_cols == 1) || (TB::is_col)                     )  { gemv<false,        true, true>::apply(out.memptr(), A, B.memptr(), alpha, eT(1)); }
+    else                                                             { gemm<false, false, true, true>::apply(out,          A, B,          alpha, eT(1)); }
+    }
+  else
+  if( (do_trans_A == true) && (do_trans_B == false) && (use_alpha == false) )
+    {
+         if( ((A.n_cols == 1) || (TA::is_col)) && (is_cx<eT>::no)  )  { gemv<true,        false, true>::apply(out.memptr(), B, A.memptr(), alpha, eT(1)); }
+    else if(  (B.n_cols == 1) || (TB::is_col)                      )  { gemv<true,        false, true>::apply(out.memptr(), A, B.memptr(), alpha, eT(1)); }
+    else if( (void_ptr(&A) == void_ptr(&B))    && (is_cx<eT>::no)  )  { syrk<true,        false, true>::apply(out,          A,             alpha, eT(1)); }
+    else if( (void_ptr(&A) == void_ptr(&B))    && (is_cx<eT>::yes) )  { herk<true,        false, true>::apply(out,          A,              T(0),  T(1)); }
+    else                                                              { gemm<true, false, false, true>::apply(out,          A, B,          alpha, eT(1)); }
+    }
+  else
+  if( (do_trans_A == true) && (do_trans_B == false) && (use_alpha == true) )
+    {
+         if( ((A.n_cols == 1) || (TA::is_col)) && (is_cx<eT>::no) )  { gemv<true,        true, true>::apply(out.memptr(), B, A.memptr(), alpha, eT(1)); }
+    else if(  (B.n_cols == 1) || (TB::is_col)                     )  { gemv<true,        true, true>::apply(out.memptr(), A, B.memptr(), alpha, eT(1)); }
+    else if( (void_ptr(&A) == void_ptr(&B))    && (is_cx<eT>::no) )  { syrk<true,        true, true>::apply(out,          A,             alpha, eT(1)); }
+    else                                                             { gemm<true, false, true, true>::apply(out,          A, B,          alpha, eT(1)); }
+    }
+  else
+  if( (do_trans_A == false) && (do_trans_B == true) && (use_alpha == false) )
+    {
+         if( ((A.n_rows == 1) || (TA::is_row)) && (is_cx<eT>::no)  )  { gemv<false,       false, true>::apply(out.memptr(), B, A.memptr(), alpha, eT(1)); }
+    else if( ((B.n_rows == 1) || (TB::is_row)) && (is_cx<eT>::no)  )  { gemv<false,       false, true>::apply(out.memptr(), A, B.memptr(), alpha, eT(1)); }
+    else if( (void_ptr(&A) == void_ptr(&B))    && (is_cx<eT>::no)  )  { syrk<false,       false, true>::apply(out,          A,             alpha, eT(1)); }
+    else if( (void_ptr(&A) == void_ptr(&B))    && (is_cx<eT>::yes) )  { herk<false,       false, true>::apply(out,          A,              T(0),  T(1)); }
+    else                                                              { gemm<false, true, false, true>::apply(out,          A, B,          alpha, eT(1)); }
+    }
+  else
+  if( (do_trans_A == false) && (do_trans_B == true) && (use_alpha == true) )
+    {
+         if( ((A.n_rows == 1) || (TA::is_row)) && (is_cx<eT>::no) )  { gemv<false,       true, true>::apply(out.memptr(), B, A.memptr(), alpha, eT(1)); }
+    else if( ((B.n_rows == 1) || (TB::is_row)) && (is_cx<eT>::no) )  { gemv<false,       true, true>::apply(out.memptr(), A, B.memptr(), alpha, eT(1)); }
+    else if( (void_ptr(&A) == void_ptr(&B))    && (is_cx<eT>::no) )  { syrk<false,       true, true>::apply(out,          A,             alpha, eT(1)); }
+    else                                                             { gemm<false, true, true, true>::apply(out,          A, B,          alpha, eT(1)); }
+    }
+  else
+  if( (do_trans_A == true) && (do_trans_B == true) && (use_alpha == false) )
+    {
+         if( ((A.n_cols == 1) || (TA::is_col)) && (is_cx<eT>::no) )  { gemv<false,      false, true>::apply(out.memptr(), B, A.memptr(), alpha, eT(1)); }
+    else if( ((B.n_rows == 1) || (TB::is_row)) && (is_cx<eT>::no) )  { gemv<true,       false, true>::apply(out.memptr(), A, B.memptr(), alpha, eT(1)); }
+    else                                                             { gemm<true, true, false, true>::apply(out,          A, B,          alpha, eT(1)); }
+    }
+  else
+  if( (do_trans_A == true) && (do_trans_B == true) && (use_alpha == true) )
+    {
+         if( ((A.n_cols == 1) || (TA::is_col)) && (is_cx<eT>::no) )  { gemv<false,      true, true>::apply(out.memptr(), B, A.memptr(), alpha, eT(1)); }
+    else if( ((B.n_rows == 1) || (TB::is_row)) && (is_cx<eT>::no) )  { gemv<true,       true, true>::apply(out.memptr(), A, B.memptr(), alpha, eT(1)); }
+    else                                                             { gemm<true, true, true, true>::apply(out,          A, B,          alpha, eT(1)); }
+    }
   }
 
 
@@ -503,147 +432,73 @@ glue_times::apply
   
   out.set_size(final_n_rows, final_n_cols);
   
-  if( (A.n_elem > 0) && (B.n_elem > 0) )
-    {
-    if( (do_trans_A == false) && (do_trans_B == false) && (use_alpha == false) )
-      {
-      if( ((A.n_rows == 1) || (TA::is_row)) && (is_complex<eT>::value == false) )
-        {
-        gemv<true,         false, false>::apply(out.memptr(), B, A.memptr());
-        }
-      else
-      if( (B.n_cols == 1) || (TB::is_col) )
-        {
-        gemv<false,        false, false>::apply(out.memptr(), A, B.memptr());
-        }
-      else
-        {
-        gemm<false, false, false, false>::apply(out, A, B);
-        }
-      }
-    else
-    if( (do_trans_A == false) && (do_trans_B == false) && (use_alpha == true) )
-      {
-      if( ((A.n_rows == 1) || (TA::is_row)) && (is_complex<eT>::value == false) )
-        {
-        gemv<true,         true, false>::apply(out.memptr(), B, A.memptr(), alpha);
-        }
-      else
-      if( (B.n_cols == 1) || (TB::is_col) )
-        {
-        gemv<false,        true, false>::apply(out.memptr(), A, B.memptr(), alpha);
-        }
-      else
-        {
-        gemm<false, false, true, false>::apply(out, A, B, alpha);
-        }
-      }
-    else
-    if( (do_trans_A == true) && (do_trans_B == false) && (use_alpha == false) )
-      {
-      if( ((A.n_cols == 1) || (TA::is_col)) && (is_complex<eT>::value == false) )
-        {
-        gemv<true,        false, false>::apply(out.memptr(), B, A.memptr());
-        }
-      else
-      if( (B.n_cols == 1) || (TB::is_col) )
-        {
-        gemv<true,        false, false>::apply(out.memptr(), A, B.memptr());
-        }
-      else
-        {
-        gemm<true, false, false, false>::apply(out, A, B);
-        }
-      }
-    else
-    if( (do_trans_A == true) && (do_trans_B == false) && (use_alpha == true) )
-      {
-      if( ((A.n_cols == 1) || (TA::is_col)) && (is_complex<eT>::value == false) )
-        {
-        gemv<true,        true, false>::apply(out.memptr(), B, A.memptr(), alpha);
-        }
-      else
-      if( (B.n_cols == 1) || (TB::is_col) )
-        {
-        gemv<true,        true, false>::apply(out.memptr(), A, B.memptr(), alpha);
-        }
-      else
-        {
-        gemm<true, false, true, false>::apply(out, A, B, alpha);
-        }
-      }
-    else
-    if( (do_trans_A == false) && (do_trans_B == true) && (use_alpha == false) )
-      {
-      if( ((A.n_rows == 1) || (TA::is_row)) && (is_complex<eT>::value == false) )
-        {
-        gemv<false,       false, false>::apply(out.memptr(), B, A.memptr());
-        }
-      else
-      if( ((B.n_rows == 1) || (TB::is_row)) && (is_complex<eT>::value == false) )
-        {
-        gemv<false,       false, false>::apply(out.memptr(), A, B.memptr());
-        }
-      else
-        {
-        gemm<false, true, false, false>::apply(out, A, B);
-        }
-      }
-    else
-    if( (do_trans_A == false) && (do_trans_B == true) && (use_alpha == true) )
-      {
-      if( ((A.n_rows == 1) || (TA::is_row)) && (is_complex<eT>::value == false) )
-        {
-        gemv<false,       true, false>::apply(out.memptr(), B, A.memptr(), alpha);
-        }
-      else
-      if( ((B.n_rows == 1) || (TB::is_row)) && (is_complex<eT>::value == false) )
-        {
-        gemv<false,       true, false>::apply(out.memptr(), A, B.memptr(), alpha);
-        }
-      else
-        {
-        gemm<false, true, true, false>::apply(out, A, B, alpha);
-        }
-      }
-    else
-    if( (do_trans_A == true) && (do_trans_B == true) && (use_alpha == false) )
-      {
-      if( ((A.n_cols == 1) || (TA::is_col)) && (is_complex<eT>::value == false) )
-        {
-        gemv<false,      false, false>::apply(out.memptr(), B, A.memptr());
-        }
-      else
-      if( ((B.n_rows == 1) || (TB::is_row)) && (is_complex<eT>::value == false) )
-        {
-        gemv<true,       false, false>::apply(out.memptr(), A, B.memptr());
-        }
-      else
-        {
-        gemm<true, true, false, false>::apply(out, A, B);
-        }
-      }
-    else
-    if( (do_trans_A == true) && (do_trans_B == true) && (use_alpha == true) )
-      {
-      if( ((A.n_cols == 1) || (TA::is_col)) && (is_complex<eT>::value == false) )
-        {
-        gemv<false,      true, false>::apply(out.memptr(), B, A.memptr(), alpha);
-        }
-      else
-      if( ((B.n_rows == 1) || (TB::is_row)) && (is_complex<eT>::value == false) )
-        {
-        gemv<true,       true, false>::apply(out.memptr(), A, B.memptr(), alpha);
-        }
-      else
-        {
-        gemm<true, true, true, false>::apply(out, A, B, alpha);
-        }
-      }
-    }
-  else
+  if( (A.n_elem == 0) || (B.n_elem == 0) )
     {
     out.zeros();
+    return;
+    }
+  
+  
+  if( (do_trans_A == false) && (do_trans_B == false) && (use_alpha == false) )
+    {
+         if( ((A.n_rows == 1) || (TA::is_row)) && (is_cx<eT>::no) )  { gemv<true,         false, false>::apply(out.memptr(), B, A.memptr()); }
+    else if(  (B.n_cols == 1) || (TB::is_col)                     )  { gemv<false,        false, false>::apply(out.memptr(), A, B.memptr()); }
+    else                                                             { gemm<false, false, false, false>::apply(out,          A, B         ); }
+    }
+  else
+  if( (do_trans_A == false) && (do_trans_B == false) && (use_alpha == true) )
+    {
+         if( ((A.n_rows == 1) || (TA::is_row)) && (is_cx<eT>::no) )  { gemv<true,         true, false>::apply(out.memptr(), B, A.memptr(), alpha); }
+    else if(  (B.n_cols == 1) || (TB::is_col)                     )  { gemv<false,        true, false>::apply(out.memptr(), A, B.memptr(), alpha); }
+    else                                                             { gemm<false, false, true, false>::apply(out,          A, B,          alpha); }
+    }
+  else
+  if( (do_trans_A == true) && (do_trans_B == false) && (use_alpha == false) )
+    {
+         if( ((A.n_cols == 1) || (TA::is_col)) && (is_cx<eT>::no)  )  { gemv<true,        false, false>::apply(out.memptr(), B, A.memptr()); }
+    else if(  (B.n_cols == 1) || (TB::is_col)                      )  { gemv<true,        false, false>::apply(out.memptr(), A, B.memptr()); }
+    else if( (void_ptr(&A) == void_ptr(&B))    && (is_cx<eT>::no)  )  { syrk<true,        false, false>::apply(out,          A            ); }
+    else if( (void_ptr(&A) == void_ptr(&B))    && (is_cx<eT>::yes) )  { herk<true,        false, false>::apply(out,          A            ); }
+    else                                                              { gemm<true, false, false, false>::apply(out,          A, B         ); }
+    }
+  else
+  if( (do_trans_A == true) && (do_trans_B == false) && (use_alpha == true) )
+    {
+         if( ((A.n_cols == 1) || (TA::is_col)) && (is_cx<eT>::no) )  { gemv<true,        true, false>::apply(out.memptr(), B, A.memptr(), alpha); }
+    else if(  (B.n_cols == 1) || (TB::is_col)                     )  { gemv<true,        true, false>::apply(out.memptr(), A, B.memptr(), alpha); }
+    else if( (void_ptr(&A) == void_ptr(&B))    && (is_cx<eT>::no) )  { syrk<true,        true, false>::apply(out,          A,             alpha); }
+    else                                                             { gemm<true, false, true, false>::apply(out,          A, B,          alpha); }
+    }
+  else
+  if( (do_trans_A == false) && (do_trans_B == true) && (use_alpha == false) )
+    {
+         if( ((A.n_rows == 1) || (TA::is_row)) && (is_cx<eT>::no)  )  { gemv<false,       false, false>::apply(out.memptr(), B, A.memptr()); }
+    else if( ((B.n_rows == 1) || (TB::is_row)) && (is_cx<eT>::no)  )  { gemv<false,       false, false>::apply(out.memptr(), A, B.memptr()); }
+    else if( (void_ptr(&A) == void_ptr(&B))    && (is_cx<eT>::no)  )  { syrk<false,       false, false>::apply(out,          A            ); }
+    else if( (void_ptr(&A) == void_ptr(&B))    && (is_cx<eT>::yes) )  { herk<false,       false, false>::apply(out,          A            ); }
+    else                                                              { gemm<false, true, false, false>::apply(out,          A, B         ); }
+    }
+  else
+  if( (do_trans_A == false) && (do_trans_B == true) && (use_alpha == true) )
+    {
+         if( ((A.n_rows == 1) || (TA::is_row)) && (is_cx<eT>::no) ) { gemv<false,       true, false>::apply(out.memptr(), B, A.memptr(), alpha); }
+    else if( ((B.n_rows == 1) || (TB::is_row)) && (is_cx<eT>::no) ) { gemv<false,       true, false>::apply(out.memptr(), A, B.memptr(), alpha); }
+    else if( (void_ptr(&A) == void_ptr(&B))    && (is_cx<eT>::no) ) { syrk<false,       true, false>::apply(out,          A,             alpha); }
+    else                                                            { gemm<false, true, true, false>::apply(out,          A, B,          alpha); }
+    }
+  else
+  if( (do_trans_A == true) && (do_trans_B == true) && (use_alpha == false) )
+    {
+         if( ((A.n_cols == 1) || (TA::is_col)) && (is_cx<eT>::no) )  { gemv<false,      false, false>::apply(out.memptr(), B, A.memptr()); }
+    else if( ((B.n_rows == 1) || (TB::is_row)) && (is_cx<eT>::no) )  { gemv<true,       false, false>::apply(out.memptr(), A, B.memptr()); }
+    else                                                             { gemm<true, true, false, false>::apply(out,          A, B         ); }
+    }
+  else
+  if( (do_trans_A == true) && (do_trans_B == true) && (use_alpha == true) )
+    {
+         if( ((A.n_cols == 1) || (TA::is_col)) && (is_cx<eT>::no) )  { gemv<false,      true, false>::apply(out.memptr(), B, A.memptr(), alpha); }
+    else if( ((B.n_rows == 1) || (TB::is_row)) && (is_cx<eT>::no) )  { gemv<true,       true, false>::apply(out.memptr(), A, B.memptr(), alpha); }
+    else                                                             { gemm<true, true, true, false>::apply(out,          A, B,          alpha); }
     }
   }
 

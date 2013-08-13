@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2013 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -35,7 +35,7 @@ arma_inline
 bool
 arma_isfinite(float x)
   {
-  #if defined(ARMA_HAVE_STD_ISFINITE)
+  #if defined(ARMA_HAVE_STD_ISFINITE) || defined(ARMA_USE_CXX11)
     {
     return (std::isfinite(x) != 0);
     }
@@ -56,7 +56,7 @@ arma_inline
 bool
 arma_isfinite(double x)
   {
-  #if defined(ARMA_HAVE_STD_ISFINITE)
+  #if defined(ARMA_HAVE_STD_ISFINITE) || defined(ARMA_USE_CXX11)
     {
     return (std::isfinite(x) != 0);
     }
@@ -95,7 +95,7 @@ arma_isfinite(const std::complex<T>& x)
 
 
 
-// Wherever possible, try to use TR1 versions of the functions below,
+// Wherever possible, try to use TR1 or C++11 versions of the functions below,
 // otherwise fall back to Boost Math.
 //
 // complex acos
@@ -123,7 +123,7 @@ arma_isfinite(const std::complex<T>& x)
 #if defined(ARMA_USE_BOOST)
   #define arma_boost_wrap(trig_fn, val) ( (boost::math::trig_fn)(val) )
 #else
-  #define arma_boost_wrap(trig_fn, val) ( arma_stop( #trig_fn "(): need Boost libraries" ), val )
+  #define arma_boost_wrap(trig_fn, val) ( arma_stop( #trig_fn "(): need C++11 or Boost libraries" ), val )
 #endif
 
 
@@ -135,6 +135,10 @@ arma_acos(const std::complex<T>& x)
   #if defined(ARMA_HAVE_STD_TR1)
     {
     return std::tr1::acos(x);
+    }
+  #elif defined(ARMA_USE_CXX11)
+    {
+    return std::acos(x);
     }
   #else
     {
@@ -154,6 +158,10 @@ arma_asin(const std::complex<T>& x)
     {
     return std::tr1::asin(x);
     }
+  #elif defined(ARMA_USE_CXX11)
+    {
+    return std::asin(x);
+    }
   #else
     {
     return arma_boost_wrap(asin, x);
@@ -172,6 +180,10 @@ arma_atan(const std::complex<T>& x)
     {
     return std::tr1::atan(x);
     }
+  #elif defined(ARMA_USE_CXX11)
+    {
+    return std::atan(x);
+    }
   #else
     {
     return arma_boost_wrap(atan, x);
@@ -189,6 +201,10 @@ arma_acosh(const eT x)
   #if defined(ARMA_HAVE_STD_TR1)
     {
     return std::tr1::acosh(x);
+    }
+  #elif defined(ARMA_USE_CXX11)
+    {
+    return std::acosh(x);
     }
   #elif defined(ARMA_USE_BOOST)
     {
@@ -227,6 +243,10 @@ arma_asinh(const eT x)
     {
     return std::tr1::asinh(x);
     }
+  #elif defined(ARMA_USE_CXX11)
+    {
+    return std::asinh(x);
+    }
   #elif defined(ARMA_USE_BOOST)
     {
     return boost::math::asinh(x);
@@ -249,6 +269,10 @@ arma_atanh(const eT x)
   #if defined(ARMA_HAVE_STD_TR1)
     {
     return std::tr1::atanh(x);
+    }
+  #elif defined(ARMA_USE_CXX11)
+    {
+    return std::atanh(x);
     }
   #elif defined(ARMA_USE_BOOST)
     {
@@ -287,6 +311,10 @@ arma_acosh(const std::complex<T>& x)
     {
     return std::tr1::acosh(x);
     }
+  #elif defined(ARMA_USE_CXX11)
+    {
+    return std::acosh(x);
+    }
   #else
     {
     return arma_boost_wrap(acosh, x);
@@ -305,6 +333,10 @@ arma_asinh(const std::complex<T>& x)
     {
     return std::tr1::asinh(x);
     }
+  #elif defined(ARMA_USE_CXX11)
+    {
+    return std::asinh(x);
+    }
   #else
     {
     return arma_boost_wrap(asinh, x);
@@ -322,6 +354,10 @@ arma_atanh(const std::complex<T>& x)
   #if defined(ARMA_HAVE_STD_TR1)
     {
     return std::tr1::atanh(x);
+    }
+  #elif defined(ARMA_USE_CXX11)
+    {
+    return std::atanh(x);
     }
   #else
     {

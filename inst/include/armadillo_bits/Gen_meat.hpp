@@ -1,5 +1,5 @@
-// Copyright (C) 2011-2013 NICTA (www.nicta.com.au)
 // Copyright (C) 2011-2013 Conrad Sanderson
+// Copyright (C) 2011-2013 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -38,11 +38,11 @@ Gen<T1, gen_type>::generate()
   {
   typedef typename T1::elem_type eT;
   
-       if(is_same_type<gen_type, gen_ones_full>::value == true) { return eT(1);                   }
-  else if(is_same_type<gen_type, gen_zeros    >::value == true) { return eT(0);                   }
-  else if(is_same_type<gen_type, gen_randu    >::value == true) { return eT(eop_aux_randu<eT>()); }
-  else if(is_same_type<gen_type, gen_randn    >::value == true) { return eT(eop_aux_randn<eT>()); }
-  else                                                          { return eT();                    }
+       if(is_same_type<gen_type, gen_ones_full>::yes) { return eT(1);                   }
+  else if(is_same_type<gen_type, gen_zeros    >::yes) { return eT(0);                   }
+  else if(is_same_type<gen_type, gen_randu    >::yes) { return eT(eop_aux_randu<eT>()); }
+  else if(is_same_type<gen_type, gen_randn    >::yes) { return eT(eop_aux_randn<eT>()); }
+  else                                                { return eT();                    }
   }
 
 
@@ -54,7 +54,7 @@ Gen<T1, gen_type>::operator[](const uword ii) const
   {
   typedef typename T1::elem_type eT;
   
-  if(is_same_type<gen_type, gen_ones_diag>::value == true)
+  if(is_same_type<gen_type, gen_ones_diag>::yes)
     {
     return ((ii % n_rows) == (ii / n_rows)) ? eT(1) : eT(0);
     }
@@ -73,7 +73,7 @@ Gen<T1, gen_type>::at(const uword row, const uword col) const
   {
   typedef typename T1::elem_type eT;
   
-  if(is_same_type<gen_type, gen_ones_diag>::value == true)
+  if(is_same_type<gen_type, gen_ones_diag>::yes)
     {
     return (row == col) ? eT(1) : eT(0);
     }
@@ -105,11 +105,11 @@ Gen<T1, gen_type>::apply(Mat<typename T1::elem_type>& out) const
   // NOTE: we're assuming that the matrix has already been set to the correct size;
   // this is done by either the Mat contructor or operator=()
   
-       if(is_same_type<gen_type, gen_ones_diag>::value == true) { out.eye();   }
-  else if(is_same_type<gen_type, gen_ones_full>::value == true) { out.ones();  }
-  else if(is_same_type<gen_type, gen_zeros    >::value == true) { out.zeros(); }
-  else if(is_same_type<gen_type, gen_randu    >::value == true) { out.randu(); }
-  else if(is_same_type<gen_type, gen_randn    >::value == true) { out.randn(); }
+       if(is_same_type<gen_type, gen_ones_diag>::yes) { out.eye();   }
+  else if(is_same_type<gen_type, gen_ones_full>::yes) { out.ones();  }
+  else if(is_same_type<gen_type, gen_zeros    >::yes) { out.zeros(); }
+  else if(is_same_type<gen_type, gen_randu    >::yes) { out.randu(); }
+  else if(is_same_type<gen_type, gen_randn    >::yes) { out.randn(); }
   }
 
 
@@ -126,7 +126,7 @@ Gen<T1, gen_type>::apply_inplace_plus(Mat<typename T1::elem_type>& out) const
   typedef typename T1::elem_type eT;
   
   
-  if(is_same_type<gen_type, gen_ones_diag>::value == true)
+  if(is_same_type<gen_type, gen_ones_diag>::yes)
     {
     const uword N = (std::min)(n_rows, n_cols);
     
@@ -173,7 +173,7 @@ Gen<T1, gen_type>::apply_inplace_minus(Mat<typename T1::elem_type>& out) const
   typedef typename T1::elem_type eT;
   
   
-  if(is_same_type<gen_type, gen_ones_diag>::value == true)
+  if(is_same_type<gen_type, gen_ones_diag>::yes)
     {
     const uword N = (std::min)(n_rows, n_cols);
     
@@ -220,7 +220,7 @@ Gen<T1, gen_type>::apply_inplace_schur(Mat<typename T1::elem_type>& out) const
   typedef typename T1::elem_type eT;
   
   
-  if(is_same_type<gen_type, gen_ones_diag>::value == true)
+  if(is_same_type<gen_type, gen_ones_diag>::yes)
     {
     const uword N = (std::min)(n_rows, n_cols);
     
@@ -268,7 +268,7 @@ Gen<T1, gen_type>::apply_inplace_div(Mat<typename T1::elem_type>& out) const
   typedef typename T1::elem_type eT;
   
   
-  if(is_same_type<gen_type, gen_ones_diag>::value == true)
+  if(is_same_type<gen_type, gen_ones_diag>::yes)
     {
     const uword N = (std::min)(n_rows, n_cols);
     

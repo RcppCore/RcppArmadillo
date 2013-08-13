@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
 // Copyright (C) 2008-2013 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
 // Copyright (C) 2011 Stanislav Funiak
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -1087,23 +1087,9 @@ arma_assert_mul_size(const subview<eT1>& A, const subview<eT2>& B, const char* x
 // macros
 
 
-#define ARMA_STRING1(x) #x
-#define ARMA_STRING2(x) ARMA_STRING1(x)
-#define ARMA_FILELINE  __FILE__ ": " ARMA_STRING2(__LINE__)
-
-
-#if defined (__GNUG__)
-  #define ARMA_FNSIG  __PRETTY_FUNCTION__
-#elif defined (_MSC_VER)
-  #define ARMA_FNSIG  __FUNCSIG__ 
-#elif defined (ARMA_USE_BOOST)
-  #define ARMA_FNSIG  BOOST_CURRENT_FUNCTION  
-#elif defined (ARMA_USE_CXX11)
-  #define ARMA_FNSIG  __func__
-#else 
-  #define ARMA_FNSIG  "(unknown)"
-#endif
-
+// #define ARMA_STRING1(x) #x
+// #define ARMA_STRING2(x) ARMA_STRING1(x)
+// #define ARMA_FILELINE  __FILE__ ": " ARMA_STRING2(__LINE__)
 
 
 #if !defined(ARMA_NO_DEBUG) && !defined(NDEBUG)

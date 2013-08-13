@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
 // Copyright (C) 2008-2013 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -226,50 +226,20 @@ class gemv_emul_large
         {
         const eT acc = op_dot::direct_dot_arma(A_n_cols, A.memptr(), x);
         
-        if( (use_alpha == false) && (use_beta == false) )
-          {
-          y[0] = acc;
-          }
-        else
-        if( (use_alpha == true) && (use_beta == false) )
-          {
-          y[0] = alpha * acc;
-          }
-        else
-        if( (use_alpha == false) && (use_beta == true) )
-          {
-          y[0] = acc + beta*y[0];
-          }
-        else
-        if( (use_alpha == true) && (use_beta == true) )
-          {
-          y[0] = alpha*acc + beta*y[0];
-          }
+             if( (use_alpha == false) && (use_beta == false) )  { y[0] =       acc;             }
+        else if( (use_alpha == true ) && (use_beta == false) )  { y[0] = alpha*acc;             }
+        else if( (use_alpha == false) && (use_beta == true ) )  { y[0] =       acc + beta*y[0]; }
+        else if( (use_alpha == true ) && (use_beta == true ) )  { y[0] = alpha*acc + beta*y[0]; }
         }
       else
       for(uword row=0; row < A_n_rows; ++row)
         {
         const eT acc = gemv_emul_large_helper::dot_row_col(A, x, row, A_n_cols);
         
-        if( (use_alpha == false) && (use_beta == false) )
-          {
-          y[row] = acc;
-          }
-        else
-        if( (use_alpha == true) && (use_beta == false) )
-          {
-          y[row] = alpha * acc;
-          }
-        else
-        if( (use_alpha == false) && (use_beta == true) )
-          {
-          y[row] = acc + beta*y[row];
-          }
-        else
-        if( (use_alpha == true) && (use_beta == true) )
-          {
-          y[row] = alpha*acc + beta*y[row];
-          }
+             if( (use_alpha == false) && (use_beta == false) )  { y[row] =       acc;               }
+        else if( (use_alpha == true ) && (use_beta == false) )  { y[row] = alpha*acc;               }
+        else if( (use_alpha == false) && (use_beta == true ) )  { y[row] =       acc + beta*y[row]; }
+        else if( (use_alpha == true ) && (use_beta == true ) )  { y[row] = alpha*acc + beta*y[row]; }
         }
       }
     else
@@ -290,25 +260,10 @@ class gemv_emul_large
         
         const eT acc = op_dot::direct_dot_arma(A_n_rows, A.colptr(col), x);
         
-        if( (use_alpha == false) && (use_beta == false) )
-          {
-          y[col] = acc;
-          }
-        else
-        if( (use_alpha == true) && (use_beta == false) )
-          {
-          y[col] = alpha * acc;
-          }
-        else
-        if( (use_alpha == false) && (use_beta == true) )
-          {
-          y[col] = acc + beta*y[col];
-          }
-        else
-        if( (use_alpha == true) && (use_beta == true) )
-          {
-          y[col] = alpha*acc + beta*y[col];
-          }
+             if( (use_alpha == false) && (use_beta == false) )  { y[col] =       acc;               }
+        else if( (use_alpha == true ) && (use_beta == false) )  { y[col] = alpha*acc;               }
+        else if( (use_alpha == false) && (use_beta == true ) )  { y[col] =       acc + beta*y[col]; }
+        else if( (use_alpha == true ) && (use_beta == true ) )  { y[col] = alpha*acc + beta*y[col]; }
         
         }
       }
@@ -400,8 +355,8 @@ class gemv
     {
     arma_extra_debug_sigprint();
     
-    //const uword threshold = (is_complex<eT>::value == true) ? 16u : 64u;
-    const uword threshold = (is_complex<eT>::value == true) ? 64u : 100u;
+    //const uword threshold = (is_cx<eT>::yes) ? 16u : 64u;
+    const uword threshold = (is_cx<eT>::yes) ? 64u : 100u;
     
     if(A.n_elem <= threshold)
       {
@@ -411,7 +366,7 @@ class gemv
       {
       #if defined(ARMA_USE_ATLAS)
         {
-        if(is_complex<eT>::value == false)
+        if(is_cx<eT>::no)
           {
           // use gemm() instead of gemv() to work around a speed issue in Atlas 3.8.4
           
@@ -420,7 +375,7 @@ class gemv
           atlas::cblas_gemm<eT>
             (
             atlas::CblasColMajor,
-            (do_trans_A) ? ( is_complex<eT>::value ? CblasConjTrans : atlas::CblasTrans ) : atlas::CblasNoTrans,
+            (do_trans_A) ? ( is_cx<eT>::yes ? CblasConjTrans : atlas::CblasTrans ) : atlas::CblasNoTrans,
             atlas::CblasNoTrans,
             (do_trans_A) ? A.n_cols : A.n_rows,
             1,
@@ -442,7 +397,7 @@ class gemv
           atlas::cblas_gemv<eT>
             (
             atlas::CblasColMajor,
-            (do_trans_A) ? ( is_complex<eT>::value ? CblasConjTrans : atlas::CblasTrans ) : atlas::CblasNoTrans,
+            (do_trans_A) ? ( is_cx<eT>::yes ? CblasConjTrans : atlas::CblasTrans ) : atlas::CblasNoTrans,
             A.n_rows,
             A.n_cols,
             (use_alpha) ? alpha : eT(1),
@@ -460,7 +415,7 @@ class gemv
         {
         arma_extra_debug_print("blas::gemv()");
         
-        const char      trans_A     = (do_trans_A) ? ( is_complex<eT>::value ? 'C' : 'T' ) : 'N';
+        const char      trans_A     = (do_trans_A) ? ( is_cx<eT>::yes ? 'C' : 'T' ) : 'N';
         const blas_int  m           = A.n_rows;
         const blas_int  n           = A.n_cols;
         const eT        local_alpha = (use_alpha) ? alpha : eT(1);

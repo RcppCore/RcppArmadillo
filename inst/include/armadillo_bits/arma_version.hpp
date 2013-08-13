@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2013 NICTA (www.nicta.com.au)
 // Copyright (C) 2009-2013 Conrad Sanderson
+// Copyright (C) 2009-2013 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,9 +12,9 @@
 
 
 #define ARMA_VERSION_MAJOR 3
-#define ARMA_VERSION_MINOR 900
-#define ARMA_VERSION_PATCH 7
-#define ARMA_VERSION_NAME  "Bavarian Sunflower"
+#define ARMA_VERSION_MINOR 910
+#define ARMA_VERSION_PATCH 0
+#define ARMA_VERSION_NAME  "Pyrenees"
 
 
 
