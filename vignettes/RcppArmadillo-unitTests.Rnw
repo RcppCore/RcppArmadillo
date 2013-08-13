@@ -1,20 +1,65 @@
 \documentclass[10pt]{article}
 %\VignetteIndexEntry{RcppArmadillo-unitTests}
+%\VignetteKeywords{R,Armadillo,Rcpp,unit tests}
+%\VignettePackage{RcppArmadillo}
+
 \usepackage{vmargin}
 \setmargrb{0.75in}{0.75in}{0.75in}{0.75in}
+
+\RequirePackage{ae,mathpple}    % ae as a default font pkg works with Sweave
+\RequirePackage[T1]{fontenc}
+
+<<echo=FALSE,print=FALSE>>=
+require(RcppArmadillo)
+prettyVersion <- packageDescription("RcppArmadillo")$Version
+prettyDate <- format(Sys.Date(), "%B %e, %Y")
+library(RUnit)
+@
 
 \usepackage[colorlinks]{hyperref}
 \author{Dirk Eddelbuettel, Romain Fran\c{c}ois and Douglas Bates}
 \title{RcppArmadillo : Unit testing results}
+\date{\texttt{RcppArmadillo} version \Sexpr{prettyVersion} as of \Sexpr{prettyDate}}
+
 \begin{document}
 \maketitle
 
-\begin{verbatim}
-<<echo=F,results=tex>>=
-if( file.exists( "unitTests-results/RcppArmadillo-unitTests.txt" ) ){
-	writeLines( readLines( "unitTests-results/RcppArmadillo-unitTests.txt" ) )
+\section*{Test Execution}
+
+<<unitTesting,echo=FALSE,print=FALSE>>=
+pkg <- "RcppArmadillo"
+if (file.exists("unitTests-results")) unlink("unitTests-results", recursive = TRUE)
+dir.create("unitTests-results")
+pathRcppArmadilloTests <<- system.file("unitTests", package = pkg)
+path <- system.file("unitTests", package=pkg)
+testSuite <- defineTestSuite(name=paste(pkg, "unit testing"), dirs=path)
+tests <- runTestSuite(testSuite)
+err <- getErrors(tests)
+if (err$nFail > 0) stop(sprintf("unit test problems: %d failures", err$nFail))
+if (err$nErr > 0) stop( sprintf("unit test problems: %d errors", err$nErr))
+printHTMLProtocol(tests, fileName=sprintf("unitTests-results/%s-unitTests.html", pkg))
+printTextProtocol(tests, fileName=sprintf("unitTests-results/%s-unitTests.txt" , pkg))
+
+if (file.exists("/tmp")) {
+    invisible(sapply(c("txt", "html"), function(ext) {
+        fname <- sprintf("unitTests-results/%s-unitTests.%s", pkg, ext)
+        file.copy(fname, "/tmp", overwrite=TRUE)
+    }))
 }
 @
+
+\section*{Test Results}
+
+\begin{verbatim}
+<<importResults,echo=FALSE,results=tex>>=
+results <- "unitTests-results/RcppArmadillo-unitTests.txt"
+if (file.exists(results)) {
+    writeLines(readLines(results))
+} else{
+    writeLines( "unit test results not available" )
+}
+@
+
 \end{verbatim}
 
 \end{document}
