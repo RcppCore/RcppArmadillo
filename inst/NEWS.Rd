@@ -2,15 +2,19 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
-\section{Changes in RcppArmadillo version 0.x.yyy.z (2013-aa-bb)}{
+\section{Changes in RcppArmadillo version 0.3.910.0 (2013-08-12)}{
   \itemize{
-    \item Upgraded to Armadillo release Version ...
+    \item Upgraded to Armadillo release Version 3.910.0 (Pyrenees)
     \itemize{
-      \item 
-      \item 
+      \item faster multiplication of a matrix with a transpose of
+      itself, ie. \code{X*X.t()} and \code{X.t()*X} 
+      \item added \code{vectorise()} for reshaping matrices into vectors
+      \item added \code{all()} and \code{any()} for indicating presence
+      of elements satisfying a relational condition 
     }
     \item Added conversion support for sparse matrices (of type double)
     created by the \cpkg{Matrix} package as class \code{dgCMatrix}
+    \item Moved vignette sources from \code{inst/doc} to \code{vignettes}
   }
 }
 
