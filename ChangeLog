@@ -6,6 +6,9 @@
         * debian/*: Similarly updated for new release to Debian
 
 	* vignettes/*: Moved files from inst/doc per new CRAN standards
+	* DESCRIPTION: Set 'BuildVignettes: FALSE' as LaTeX minted mode
+	creates issues for the CRAN builders
+	* inst/doc/*: Include pre-built vignettes
 
 2013-08-03  Dirk Eddelbuettel  <edd@debian.org>
 
