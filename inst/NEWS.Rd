@@ -14,7 +14,9 @@
     }
     \item Added conversion support for sparse matrices (of type double)
     created by the \cpkg{Matrix} package as class \code{dgCMatrix}
-    \item Moved vignette sources from \code{inst/doc} to \code{vignettes}
+    \item Moved vignette sources from \code{inst/doc} to \code{vignettes};
+    set \code{BuildVignettes: FALSE} as the \code{minted} mode for
+    \code{LaTeX} upsets the CRAN builders.
   }
 }
 
