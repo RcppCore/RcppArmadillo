@@ -2,6 +2,14 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.3.910.0.1 (2013-08-17)}{
+  \itemize{
+    \item Converted main vignette from \code{LaTeX} style \code{minted}
+    to \code{lstlisting} which permits builds on CRAN; removed
+    set \code{BuildVignettes: FALSE}.
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.3.910.0 (2013-08-12)}{
   \itemize{
     \item Upgraded to Armadillo release Version 3.910.0 (Pyrenees)

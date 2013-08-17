@@ -1,3 +1,10 @@
+2013-08-17  Dirk Eddelbuettel  <edd@debian.org>
+
+	* vignettes/RcppArmadillo-intro.Rnw: Converted from LaTeX minted
+	(which farms out to Python's pygmentize) to LaTeX listings (which is
+	plainer, but works on CRAN)
+	* DESCRIPTION: Remove 'BuildVignettes: FALSE'
+
 2013-08-12  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.3.910.0
