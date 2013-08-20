@@ -44,6 +44,7 @@ namespace Rcpp {
     template <typename T> SEXP wrap ( const arma::Col<T>& ) ;
     template <typename T> SEXP wrap ( const arma::field<T>& ) ;
     template <typename T> SEXP wrap ( const arma::Cube<T>& ) ;
+    template <typename T> SEXP wrap ( const arma::subview<T>& ) ;
     
     template <typename T1, typename T2, typename glue_type> 
     SEXP wrap(const arma::Glue<T1, T2, glue_type>& X ) ;

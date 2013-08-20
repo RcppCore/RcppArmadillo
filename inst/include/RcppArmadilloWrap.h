@@ -43,6 +43,16 @@ namespace Rcpp{
 	    return ::Rcpp::wrap(object.memptr() , object.memptr() + object.n_elem);
 	}
 
+		template <typename T>
+		SEXP arma_subview_wrap( const arma::subview<T>& data, int nrows, int ncols ){
+			const int RTYPE = Rcpp::traits::r_sexptype_traits<T>::rtype ;
+			Rcpp::Matrix<RTYPE> mat( nrows, ncols ) ;
+			for( int j=0, k=0; j<ncols; j++)
+				for( int i=0; i<nrows; i++, k++) 
+					mat[k] = data(i,j) ;
+			return mat ;
+		}
+	
     } /* namespace RcppArmadillo */
 	
     /* wrap */
@@ -62,6 +72,12 @@ namespace Rcpp{
     template <typename T> SEXP wrap( const arma::Cube<T>& data ){
 	return RcppArmadillo::arma_wrap(data, Dimension(  data.n_rows, data.n_cols, data.n_slices ) ) ;
     }
+    
+    template <typename T> SEXP wrap( const arma::subview<T>& data ){
+    		return RcppArmadillo::arma_subview_wrap<T>( data, data.n_rows, data.n_cols ) ;
+    }
+    
+    
     
     namespace RcppArmadillo {
 	
