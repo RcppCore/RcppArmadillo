@@ -1,6 +1,8 @@
 2013-08-20 Romain Francois <romain@r-enthusiasts.com>
 
         * include/RcppArmadilloWrap.h: Handle wrap<subview>
+        * include/RcppArmadilloWrap.h: cleaner implementation for wrap< SpMat<T> >
+        * include/RcppArmadilloAs.h: cleaner implementation for as< SpMat<T> >
         
 2013-08-17  Dirk Eddelbuettel  <edd@debian.org>
 
