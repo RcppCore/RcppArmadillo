@@ -45,6 +45,7 @@ namespace Rcpp {
     template <typename T> SEXP wrap ( const arma::field<T>& ) ;
     template <typename T> SEXP wrap ( const arma::Cube<T>& ) ;
     template <typename T> SEXP wrap ( const arma::subview<T>& ) ;
+    template <typename T> SEXP wrap ( const arma::SpMat<T>& ) ;
     
     template <typename T1, typename T2, typename glue_type> 
     SEXP wrap(const arma::Glue<T1, T2, glue_type>& X ) ;
@@ -88,6 +89,7 @@ namespace Rcpp {
 	template <typename T> class Exporter< arma::Mat<T> > ;
 	template <typename T> class Exporter< arma::Row<T> > ;
 	template <typename T> class Exporter< arma::Col<T> > ;
+	template <typename T> class Exporter< arma::SpMat<T> > ;
         // template <typename T> class Exporter< arma::field<T> > ;
         // template <typename T> class Exporter< arma::Cube<T> > ;
 

@@ -30,6 +30,7 @@
 #include <RcppArmadilloForward.h>
 #include <Rcpp.h>
 #include <RcppArmadilloWrap.h>
+#include <RcppArmadilloAs.h>
 #include <RcppArmadilloSugar.h>
 
 #endif

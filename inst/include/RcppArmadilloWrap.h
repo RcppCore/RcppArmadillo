@@ -43,41 +43,66 @@ namespace Rcpp{
 	    return ::Rcpp::wrap(object.memptr() , object.memptr() + object.n_elem);
 	}
 
-		template <typename T>
-		SEXP arma_subview_wrap( const arma::subview<T>& data, int nrows, int ncols ){
-			const int RTYPE = Rcpp::traits::r_sexptype_traits<T>::rtype ;
-			Rcpp::Matrix<RTYPE> mat( nrows, ncols ) ;
-			for( int j=0, k=0; j<ncols; j++)
-				for( int i=0; i<nrows; i++, k++) 
-					mat[k] = data(i,j) ;
-			return mat ;
-		}
+	template <typename T>
+	SEXP arma_subview_wrap( const arma::subview<T>& data, int nrows, int ncols ){
+		const int RTYPE = Rcpp::traits::r_sexptype_traits<T>::rtype ;
+		Rcpp::Matrix<RTYPE> mat( nrows, ncols ) ;
+		for( int j=0, k=0; j<ncols; j++)
+			for( int i=0; i<nrows; i++, k++) 
+				mat[k] = data(i,j) ;
+		return mat ;
+	}
 	
     } /* namespace RcppArmadillo */
 	
     /* wrap */
 
     template <typename T> SEXP wrap ( const arma::Mat<T>& data ){
-	return RcppArmadillo::arma_wrap( data, Dimension( data.n_rows, data.n_cols ) ) ;
+    		return RcppArmadillo::arma_wrap( data, Dimension( data.n_rows, data.n_cols ) ) ;
     }
 
     template <typename T> SEXP wrap( const arma::Col<T>& data ){
-	return RcppArmadillo::arma_wrap( data, Dimension( data.n_elem, 1) ) ;
+    		return RcppArmadillo::arma_wrap( data, Dimension( data.n_elem, 1) ) ;
     }
 
     template <typename T> SEXP wrap( const arma::Row<T>& data ){
-	return RcppArmadillo::arma_wrap(data, Dimension( 1, data.n_elem ) ) ;
+    		return RcppArmadillo::arma_wrap(data, Dimension( 1, data.n_elem ) ) ;
     }
 
     template <typename T> SEXP wrap( const arma::Cube<T>& data ){
-	return RcppArmadillo::arma_wrap(data, Dimension(  data.n_rows, data.n_cols, data.n_slices ) ) ;
+    		return RcppArmadillo::arma_wrap(data, Dimension(  data.n_rows, data.n_cols, data.n_slices ) ) ;
     }
     
     template <typename T> SEXP wrap( const arma::subview<T>& data ){
     		return RcppArmadillo::arma_subview_wrap<T>( data, data.n_rows, data.n_cols ) ;
     }
     
-    
+    template <typename T> SEXP wrap ( const arma::SpMat<T>& sm ){
+		IntegerVector dim(2);
+		dim[0] = sm.n_rows; 
+		dim[1] = sm.n_cols;
+
+		arma::Col<T>  x(sm.n_nonzero);        // create space for values, and copy
+		arma::arrayops::copy(x.begin(), sm.values, sm.n_nonzero);
+		std::vector<T> vx = arma::conv_to< typename std::vector<T> >::from(x);
+		
+		arma::urowvec i(sm.n_nonzero);	// create space for row_indices, and copy & cast
+		arma::arrayops::copy(i.begin(), sm.row_indices, sm.n_nonzero);
+		std::vector<int> vi = arma::conv_to< std::vector< int > >::from(i);
+		
+		arma::urowvec p(sm.n_cols+1);	// create space for col_ptrs, and copy 
+		arma::arrayops::copy(p.begin(), sm.col_ptrs, sm.n_cols+1);
+		// do not copy sentinel for returning R
+		std::vector<int> vp = arma::conv_to< std::vector< int > >::from(p);
+		
+		S4 s("dgCMatrix");
+		s.slot("i")   = vi;
+		s.slot("p")   = vp;
+		s.slot("x")   = vx;
+		s.slot("Dim") = dim;
+		return s;
+    }
+
     
     namespace RcppArmadillo {
 	
@@ -97,9 +122,9 @@ namespace Rcpp{
 
     template <typename T> 
     SEXP wrap( const arma::field<T>& data){
-	RObject x = wrap( RcppArmadillo::FieldImporter<T>( data ) ) ;
-	x.attr("dim" ) = Dimension( data.n_rows, data.n_cols ) ;
-	return x ;
+		RObject x = wrap( RcppArmadillo::FieldImporter<T>( data ) ) ;
+		x.attr("dim" ) = Dimension( data.n_rows, data.n_cols ) ;
+		return x ;
     }
     
     /* TODO: maybe we could use the advanced constructor to avoid creating the 
@@ -240,31 +265,6 @@ namespace Rcpp{
         return wrap( eT(X) ) ;
     }
     
-    
-    /* support for Rcpp::as */
-
-    namespace traits {
-	
-	template <typename T> 
-	class Exporter< arma::Col<T> > : public IndexingExporter< arma::Col<T>, T > {
-	public: 
-	    Exporter(SEXP x) : IndexingExporter< arma::Col<T>, T >(x){}
-	}; 
-
-	template <typename T> 
-	class Exporter< arma::Row<T> > : public IndexingExporter< arma::Row<T>, T > {
-	public:
-	    Exporter(SEXP x) : IndexingExporter< arma::Row<T>, T >(x){}
-	}; 
-
-	template <typename T> 
-	class Exporter< arma::Mat<T> > : public MatrixExporter< arma::Mat<T>, T > {
-	public:
-	    Exporter(SEXP x) : MatrixExporter< arma::Mat<T>, T >(x){}
-	}; 
-	
-    } // namespace traits
-
 }
 
 #endif
