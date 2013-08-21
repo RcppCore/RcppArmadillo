@@ -3,7 +3,7 @@
 //
 // RcppArmadilloAs.h: Rcpp/Armadillo glue, support for as
 //
-// Copyright (C)  2013  Dirk Eddelbuettel, Romain Francois
+// Copyright (C)  2013  Dirk Eddelbuettel and Romain Francois
 //
 // This file is part of RcppArmadillo.
 //
@@ -51,26 +51,26 @@ namespace traits {
 		Exporter( SEXP x ) : mat(x){}
 		
 		arma::SpMat<T> get(){
+			const int  RTYPE = Rcpp::traits::r_sexptype_traits<T>::rtype;
+        
 			IntegerVector dims = mat.slot("Dim");
-			arma::urowvec i = Rcpp::as<arma::urowvec>(mat.slot("i"));
-			arma::urowvec p = Rcpp::as<arma::urowvec>(mat.slot("p"));     
-			arma::Col<T> x     = Rcpp::as< arma::Col<T> >(mat.slot("x"));
+			IntegerVector i = mat.slot("i") ;
+			IntegerVector p = mat.slot("p") ;     
+			Vector<RTYPE> x = mat.slot("x") ;
 			
-			int nrow = dims[0], ncol = dims[1];
-			arma::SpMat<T> res(nrow, ncol);
+			arma::SpMat<T> res(dims[0], dims[1]);
 			
 			// create space for values, and copy
 			arma::access::rw(res.values) = arma::memory::acquire_chunked<T>(x.size() + 1);
 			arma::arrayops::copy(arma::access::rwp(res.values), x.begin(), x.size() + 1);
 			
 			// create space for row_indices, and copy 
-			arma::access::rw(res.row_indices) = 
-			    arma::memory::acquire_chunked<arma::uword>(i.size() + 1);
-			arma::arrayops::copy(arma::access::rwp(res.row_indices), i.begin(), i.size() + 1);
+			arma::access::rw(res.row_indices) = arma::memory::acquire_chunked<arma::uword>(i.size() + 1);
+			std::copy( i.begin(), i.end(), arma::access::rwp(res.row_indices) ) ;
 			
 			// create space for col_ptrs, and copy 
 			arma::access::rw(res.col_ptrs) = arma::memory::acquire<arma::uword>(p.size() + 2);
-			arma::arrayops::copy(arma::access::rwp(res.col_ptrs), p.begin(), p.size() + 1);
+			std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs) );
 			
 			// important: set the sentinel as well
 			arma::access::rwp(res.col_ptrs)[p.size()+1] = std::numeric_limits<arma::uword>::max();
