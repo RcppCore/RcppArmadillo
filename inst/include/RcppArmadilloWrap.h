@@ -78,27 +78,27 @@ namespace Rcpp{
     }
     
     template <typename T> SEXP wrap ( const arma::SpMat<T>& sm ){
-		IntegerVector dim(2);
-		dim[0] = sm.n_rows; 
-		dim[1] = sm.n_cols;
+		const int  RTYPE = Rcpp::traits::r_sexptype_traits<T>::rtype;
+            
+    		IntegerVector dim = IntegerVector::create( sm.n_rows, sm.n_cols );
+		
+		// copy the data into R objects
+		Vector<RTYPE> x(sm.values, sm.values + sm.n_nonzero ) ;
+		IntegerVector i(sm.row_indices, sm.row_indices + sm.n_nonzero);
+		IntegerVector p(sm.col_ptrs, sm.col_ptrs + sm.n_cols+1 ) ;
 
-		arma::Col<T>  x(sm.n_nonzero);        // create space for values, and copy
-		arma::arrayops::copy(x.begin(), sm.values, sm.n_nonzero);
-		std::vector<T> vx = arma::conv_to< typename std::vector<T> >::from(x);
-		
-		arma::urowvec i(sm.n_nonzero);	// create space for row_indices, and copy & cast
-		arma::arrayops::copy(i.begin(), sm.row_indices, sm.n_nonzero);
-		std::vector<int> vi = arma::conv_to< std::vector< int > >::from(i);
-		
-		arma::urowvec p(sm.n_cols+1);	// create space for col_ptrs, and copy 
-		arma::arrayops::copy(p.begin(), sm.col_ptrs, sm.n_cols+1);
-		// do not copy sentinel for returning R
-		std::vector<int> vp = arma::conv_to< std::vector< int > >::from(p);
-		
-		S4 s("dgCMatrix");
-		s.slot("i")   = vi;
-		s.slot("p")   = vp;
-		s.slot("x")   = vx;
+		std::string klass ;
+		switch( RTYPE ){
+			case REALSXP: klass = "dgCMatrix" ; break ;
+			// case INTSXP : klass = "igCMatrix" ; break ; class not exported
+			case LGLSXP : klass = "lgCMatrix" ; break ;
+			default:
+				throw std::invalid_argument( "RTYPE not matched in conversion to sparse matrix" ) ;
+		}
+		S4 s(klass);
+		s.slot("i")   = i;
+		s.slot("p")   = p;
+		s.slot("x")   = x;
 		s.slot("Dim") = dim;
 		return s;
     }
