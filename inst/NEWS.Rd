@@ -4,15 +4,13 @@
 
 \section{Changes in RcppArmadillo version (future)}{
     \itemize{
-        \item Initial Implementation of wrap<subview>    
+      \item Initial implementation of \code{wrap<subview>}
+      \item Improved implementation of \code{as<>()} and \code{wrap()}
+      for sparse matrices
+      \item Converted main vignette from \code{LaTeX} style \code{minted}
+      to \code{lstlisting} which permits builds on CRAN; removed
+      set \code{BuildVignettes: FALSE}.
     }
-}
-    
-\section{Changes in RcppArmadillo version 0.3.910.0.1 (2013-08-17)}{
-  \itemize{
-    \item Converted main vignette from \code{LaTeX} style \code{minted}
-    to \code{lstlisting} which permits builds on CRAN; removed
-    set \code{BuildVignettes: FALSE}.
   }
 }
 
