@@ -11,7 +11,6 @@
       to \code{lstlisting} which permits builds on CRAN; removed
       set \code{BuildVignettes: FALSE}.
     }
-  }
 }
 
 \section{Changes in RcppArmadillo version 0.3.910.0 (2013-08-12)}{
