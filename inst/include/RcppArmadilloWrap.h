@@ -37,7 +37,7 @@ namespace Rcpp{
 	// DE 03-Aug-2013
 	// here is an alternate form which would not set dimension which we could do
 	// for row and column vectors -- but the current form of return row and col
-    // as matrix types with one col (or row, respectively) is now entrenched
+        // as matrix types with one col (or row, respectively) is now entrenched
 	template <typename T>
 	SEXP arma_wrap(const T& object) {
 	    return ::Rcpp::wrap(object.memptr() , object.memptr() + object.n_elem);
@@ -45,12 +45,12 @@ namespace Rcpp{
 
 	template <typename T>
 	SEXP arma_subview_wrap( const arma::subview<T>& data, int nrows, int ncols ){
-		const int RTYPE = Rcpp::traits::r_sexptype_traits<T>::rtype ;
-		Rcpp::Matrix<RTYPE> mat( nrows, ncols ) ;
-		for( int j=0, k=0; j<ncols; j++)
-			for( int i=0; i<nrows; i++, k++) 
-				mat[k] = data(i,j) ;
-		return mat ;
+            const int RTYPE = Rcpp::traits::r_sexptype_traits<T>::rtype ;
+            Rcpp::Matrix<RTYPE> mat( nrows, ncols ) ;
+            for( int j=0, k=0; j<ncols; j++)
+                for( int i=0; i<nrows; i++, k++) 
+                    mat[k] = data(i,j) ;
+            return mat ;
 	}
 	
     } /* namespace RcppArmadillo */
@@ -58,49 +58,49 @@ namespace Rcpp{
     /* wrap */
 
     template <typename T> SEXP wrap ( const arma::Mat<T>& data ){
-    		return RcppArmadillo::arma_wrap( data, Dimension( data.n_rows, data.n_cols ) ) ;
+        return RcppArmadillo::arma_wrap( data, Dimension( data.n_rows, data.n_cols ) ) ;
     }
 
     template <typename T> SEXP wrap( const arma::Col<T>& data ){
-    		return RcppArmadillo::arma_wrap( data, Dimension( data.n_elem, 1) ) ;
+        return RcppArmadillo::arma_wrap( data, Dimension( data.n_elem, 1) ) ;
     }
 
     template <typename T> SEXP wrap( const arma::Row<T>& data ){
-    		return RcppArmadillo::arma_wrap(data, Dimension( 1, data.n_elem ) ) ;
+        return RcppArmadillo::arma_wrap(data, Dimension( 1, data.n_elem ) ) ;
     }
 
     template <typename T> SEXP wrap( const arma::Cube<T>& data ){
-    		return RcppArmadillo::arma_wrap(data, Dimension(  data.n_rows, data.n_cols, data.n_slices ) ) ;
+        return RcppArmadillo::arma_wrap(data, Dimension(  data.n_rows, data.n_cols, data.n_slices ) ) ;
     }
     
     template <typename T> SEXP wrap( const arma::subview<T>& data ){
-    		return RcppArmadillo::arma_subview_wrap<T>( data, data.n_rows, data.n_cols ) ;
+        return RcppArmadillo::arma_subview_wrap<T>( data, data.n_rows, data.n_cols ) ;
     }
     
     template <typename T> SEXP wrap ( const arma::SpMat<T>& sm ){
-		const int  RTYPE = Rcpp::traits::r_sexptype_traits<T>::rtype;
+        const int  RTYPE = Rcpp::traits::r_sexptype_traits<T>::rtype;
             
-    		IntegerVector dim = IntegerVector::create( sm.n_rows, sm.n_cols );
+        IntegerVector dim = IntegerVector::create( sm.n_rows, sm.n_cols );
 		
-		// copy the data into R objects
-		Vector<RTYPE> x(sm.values, sm.values + sm.n_nonzero ) ;
-		IntegerVector i(sm.row_indices, sm.row_indices + sm.n_nonzero);
-		IntegerVector p(sm.col_ptrs, sm.col_ptrs + sm.n_cols+1 ) ;
+        // copy the data into R objects
+        Vector<RTYPE> x(sm.values, sm.values + sm.n_nonzero ) ;
+        IntegerVector i(sm.row_indices, sm.row_indices + sm.n_nonzero);
+        IntegerVector p(sm.col_ptrs, sm.col_ptrs + sm.n_cols+1 ) ;
 
-		std::string klass ;
-		switch( RTYPE ){
-			case REALSXP: klass = "dgCMatrix" ; break ;
-			// case INTSXP : klass = "igCMatrix" ; break ; class not exported
-			case LGLSXP : klass = "lgCMatrix" ; break ;
-			default:
-				throw std::invalid_argument( "RTYPE not matched in conversion to sparse matrix" ) ;
-		}
-		S4 s(klass);
-		s.slot("i")   = i;
-		s.slot("p")   = p;
-		s.slot("x")   = x;
-		s.slot("Dim") = dim;
-		return s;
+        std::string klass ;
+        switch( RTYPE ){
+            case REALSXP: klass = "dgCMatrix" ; break ;
+            // case INTSXP : klass = "igCMatrix" ; break ; class not exported
+            case LGLSXP : klass = "lgCMatrix" ; break ;
+            default:
+                throw std::invalid_argument( "RTYPE not matched in conversion to sparse matrix" ) ;
+        }
+        S4 s(klass);
+        s.slot("i")   = i;
+        s.slot("p")   = p;
+        s.slot("x")   = x;
+        s.slot("Dim") = dim;
+        return s;
     }
 
     
@@ -122,21 +122,21 @@ namespace Rcpp{
 
     template <typename T> 
     SEXP wrap( const arma::field<T>& data){
-		RObject x = wrap( RcppArmadillo::FieldImporter<T>( data ) ) ;
-		x.attr("dim" ) = Dimension( data.n_rows, data.n_cols ) ;
-		return x ;
+        RObject x = wrap( RcppArmadillo::FieldImporter<T>( data ) ) ;
+        x.attr("dim" ) = Dimension( data.n_rows, data.n_cols ) ;
+        return x ;
     }
     
     /* TODO: maybe we could use the advanced constructor to avoid creating the 
-             temporary Mat */
+       temporary Mat */
     template <typename T1, typename T2, typename glue_type>
     SEXP wrap(const arma::Glue<T1, T2, glue_type>& X ){
-    	    return wrap( arma::Mat<typename T1::elem_type>(X) ) ;
+        return wrap( arma::Mat<typename T1::elem_type>(X) ) ;
     }
 
     template <typename T1, typename op_type>
     SEXP wrap(const arma::Op<T1, op_type>& X ){
-    	    return wrap( arma::Mat<typename T1::elem_type>(X) ) ;
+        return wrap( arma::Mat<typename T1::elem_type>(X) ) ;
     }
     
     template <typename T1, typename op_type>
@@ -171,7 +171,7 @@ namespace Rcpp{
     	
     	template <typename T1, typename T2, typename eglue_type>
     	SEXP wrap_eglue( const arma::eGlue<T1, T2, eglue_type>& X, ::Rcpp::traits::true_type ){
-    		return ::Rcpp::wrap( arma::Mat<typename T1::elem_type>(X) ) ;
+            return ::Rcpp::wrap( arma::Mat<typename T1::elem_type>(X) ) ;
     	}
     	
     	template <typename T1, typename eop_type>
@@ -235,7 +235,7 @@ namespace Rcpp{
 
     template <typename T1, typename op_type>
     SEXP wrap(const arma::eOp<T1, op_type>& X ){
-    	    return RcppArmadillo::wrap_eop( X, typename traits::r_sexptype_needscast<typename T1::elem_type>::type() ) ;
+        return RcppArmadillo::wrap_eop( X, typename traits::r_sexptype_needscast<typename T1::elem_type>::type() ) ;
     }
     
     template <typename T1, typename op_type>
