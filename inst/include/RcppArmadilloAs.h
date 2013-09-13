@@ -132,6 +132,32 @@ namespace traits {
     			arma::Mat<T> mat ;
     } ;
     
+    template <typename T, typename VEC, typename REF>
+    class ArmaVec_InputParameter {
+    		public:
+    			ArmaVec_InputParameter( SEXP x_ ) : v(x_), vec( v.begin(), v.size(), false ){}
+    			
+    			inline operator REF(){
+    				return vec ; 	
+    			}
+    			
+    		private:
+    			Rcpp::Vector< Rcpp::traits::r_sexptype_traits<T>::rtype > v ;
+    			VEC vec ;
+    } ;
+    
+    #define MAKE_INPUT_PARAMETER(TYPE,REF)                                         \
+	template <typename T>                                                          \
+	class InputParameter<REF> : public ArmaVec_InputParameter<T, TYPE, REF >{      \
+	public:                                                                        \
+			InputParameter( SEXP x) : ArmaVec_InputParameter<T, TYPE, REF >(x){}   \
+	} ;                                                                                                                  
+    
+	MAKE_INPUT_PARAMETER(arma::Col<T>, const arma::Col<T>& )
+	MAKE_INPUT_PARAMETER(arma::Col<T>, arma::Col<T>& )
+	MAKE_INPUT_PARAMETER(arma::Row<T>, const arma::Row<T>& )
+	MAKE_INPUT_PARAMETER(arma::Row<T>, arma::Row<T>& )
+	#undef MAKE_INPUT_PARAMETER
 }
 
 #endif
