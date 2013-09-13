@@ -1,3 +1,10 @@
+2013-09-13 Romain Francois <romain@r-enthusiasts.com>
+
+        * DESCRIPTION : require Rcpp 0.10.4.4
+        * include/RcppArmadilloForward.h : declaration of specializations of InputParameter
+        for references and const reference to arma::Mat
+        * include/RcppArmadilloAs.h : definitions of the above 
+        
 2013-08-24 Romain Francois <romain@r-enthusiasts.com>
 
         * include/RcppArmadilloExtensions/sample.h: added include guard, made 

@@ -43,7 +43,21 @@ namespace traits {
 	public:
 	    Exporter(SEXP x) : MatrixExporter< arma::Mat<T>, T >(x){}
 	}; 
+	                  
+	template <typename T> 
+	class Exporter< const arma::Mat<T>& > {
+	public:  
+		typedef typename Rcpp::Matrix< Rcpp::traits::r_sexptype_traits<T>::rtype > MATRIX ;
 		
+		Exporter(SEXP x) : mat(x) {}
+		
+		inline arma::Mat<T>* get(){
+			return new arma::Mat<T>( mat.begin(), mat.nrow(), mat.ncol(), false ) ;
+		}
+		
+	private:
+		MATRIX mat ;
+	};
 	 
 	template <typename T>
 	class Exporter< arma::SpMat<T> > {
@@ -85,6 +99,49 @@ namespace traits {
 		S4 mat ;
 	} ;
 }	
+	
+	template <typename T>
+    class InputParameter< const arma::Mat<T>& > {
+    		public:
+    			typedef const typename arma::Mat<T>& const_reference ;
+    			
+    			InputParameter( SEXP x_ ) : mat(x_) {
+    				ptr = new arma::Mat<T>( mat.begin(), mat.nrow(), mat.ncol(), false ) ;	
+    			}
+    			inline operator const_reference(){
+    				return const_cast<const_reference>( *ptr ) ; 	
+    			}
+    			
+    			~InputParameter(){
+    				delete ptr ;
+    			}
+    			
+    		private:
+    			Rcpp::Matrix< Rcpp::traits::r_sexptype_traits<T>::rtype > mat ;
+    			arma::Mat<T>* ptr ;
+    } ;
+    
+    template <typename T>
+    class InputParameter< arma::Mat<T>& > {
+    		public:
+    			typedef typename arma::Mat<T>& reference ;
+    			
+    			InputParameter( SEXP x_ ) : mat(x_) {
+    				ptr = new arma::Mat<T>( mat.begin(), mat.nrow(), mat.ncol(), false ) ;	
+    			}
+    			inline operator reference(){
+    				return *ptr ; 	
+    			}
+    			
+    			~InputParameter(){
+    				delete ptr ;
+    			}
+    			
+    		private:
+    			Rcpp::Matrix< Rcpp::traits::r_sexptype_traits<T>::rtype > mat ;
+    			arma::Mat<T>* ptr ;
+    } ;
+    
 }
 
 #endif
