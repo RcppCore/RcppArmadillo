@@ -105,20 +105,15 @@ namespace traits {
     		public:
     			typedef const typename arma::Mat<T>& const_reference ;
     			
-    			InputParameter( SEXP x_ ) : mat(x_) {
-    				ptr = new arma::Mat<T>( mat.begin(), mat.nrow(), mat.ncol(), false ) ;	
-    			}
-    			inline operator const_reference(){
-    				return const_cast<const_reference>( *ptr ) ; 	
-    			}
+    			InputParameter( SEXP x_ ) : m(x_), mat( m.begin(), m.nrow(), m.ncol(), false ){}
     			
-    			~InputParameter(){
-    				delete ptr ;
+    			inline operator const_reference(){
+    				return mat ; 	
     			}
     			
     		private:
-    			Rcpp::Matrix< Rcpp::traits::r_sexptype_traits<T>::rtype > mat ;
-    			arma::Mat<T>* ptr ;
+    			Rcpp::Matrix< Rcpp::traits::r_sexptype_traits<T>::rtype > m ;
+    			arma::Mat<T> mat ;
     } ;
     
     template <typename T>
@@ -126,20 +121,15 @@ namespace traits {
     		public:
     			typedef typename arma::Mat<T>& reference ;
     			
-    			InputParameter( SEXP x_ ) : mat(x_) {
-    				ptr = new arma::Mat<T>( mat.begin(), mat.nrow(), mat.ncol(), false ) ;	
-    			}
-    			inline operator reference(){
-    				return *ptr ; 	
-    			}
+    			InputParameter( SEXP x_ ) : m(x_), mat( m.begin(), m.nrow(), m.ncol(), false ){}
     			
-    			~InputParameter(){
-    				delete ptr ;
+    			inline operator reference(){
+    				return mat ; 	
     			}
     			
     		private:
-    			Rcpp::Matrix< Rcpp::traits::r_sexptype_traits<T>::rtype > mat ;
-    			arma::Mat<T>* ptr ;
+    			Rcpp::Matrix< Rcpp::traits::r_sexptype_traits<T>::rtype > m ;
+    			arma::Mat<T> mat ;
     } ;
     
 }
