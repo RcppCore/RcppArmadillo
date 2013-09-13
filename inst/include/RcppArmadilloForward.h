@@ -90,11 +90,18 @@ namespace Rcpp {
 	template <typename T> class Exporter< arma::Row<T> > ;
 	template <typename T> class Exporter< arma::Col<T> > ;
 	template <typename T> class Exporter< arma::SpMat<T> > ;
-        // template <typename T> class Exporter< arma::field<T> > ;
+    
+	// template <typename T> class Exporter< arma::field<T> > ;
         // template <typename T> class Exporter< arma::Cube<T> > ;
 
     } // namespace traits 
 
+    template <typename T>
+    class InputParameter< const arma::Mat<T>& > ;
+    
+    template <typename T>
+    class InputParameter< arma::Mat<T>& > ;
+    
 }
 
 #endif
