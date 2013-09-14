@@ -26,138 +26,138 @@
 namespace Rcpp{
 namespace traits {
 
-	template <typename T> 
-	class Exporter< arma::Col<T> > : public IndexingExporter< arma::Col<T>, T > {
-	public: 
-	    Exporter(SEXP x) : IndexingExporter< arma::Col<T>, T >(x){}
-	}; 
+    template <typename T> 
+    class Exporter< arma::Col<T> > : public IndexingExporter< arma::Col<T>, T > {
+    public: 
+        Exporter(SEXP x) : IndexingExporter< arma::Col<T>, T >(x){}
+    }; 
 
-	template <typename T> 
-	class Exporter< arma::Row<T> > : public IndexingExporter< arma::Row<T>, T > {
-	public:
-	    Exporter(SEXP x) : IndexingExporter< arma::Row<T>, T >(x){}
-	}; 
+    template <typename T> 
+    class Exporter< arma::Row<T> > : public IndexingExporter< arma::Row<T>, T > {
+    public:
+        Exporter(SEXP x) : IndexingExporter< arma::Row<T>, T >(x){}
+    }; 
 
-	template <typename T> 
-	class Exporter< arma::Mat<T> > : public MatrixExporter< arma::Mat<T>, T > {
-	public:
-	    Exporter(SEXP x) : MatrixExporter< arma::Mat<T>, T >(x){}
-	}; 
-	                  
-	template <typename T> 
-	class Exporter< const arma::Mat<T>& > {
-	public:  
-		typedef typename Rcpp::Matrix< Rcpp::traits::r_sexptype_traits<T>::rtype > MATRIX ;
-		
-		Exporter(SEXP x) : mat(x) {}
-		
-		inline arma::Mat<T>* get(){
-			return new arma::Mat<T>( mat.begin(), mat.nrow(), mat.ncol(), false ) ;
-		}
-		
-	private:
-		MATRIX mat ;
-	};
-	 
-	template <typename T>
-	class Exporter< arma::SpMat<T> > {
-	public:
-		Exporter( SEXP x ) : mat(x){}
-		
-		arma::SpMat<T> get(){
-			const int  RTYPE = Rcpp::traits::r_sexptype_traits<T>::rtype;
+    template <typename T> 
+    class Exporter< arma::Mat<T> > : public MatrixExporter< arma::Mat<T>, T > {
+    public:
+        Exporter(SEXP x) : MatrixExporter< arma::Mat<T>, T >(x){}
+    }; 
+                          
+    template <typename T> 
+    class Exporter< const arma::Mat<T>& > {
+    public:  
+        typedef typename Rcpp::Matrix< Rcpp::traits::r_sexptype_traits<T>::rtype > MATRIX ;
+                
+        Exporter(SEXP x) : mat(x) {}
+                
+        inline arma::Mat<T>* get(){
+            return new arma::Mat<T>( mat.begin(), mat.nrow(), mat.ncol(), false ) ;
+        }
+                
+    private:
+        MATRIX mat ;
+    };
+         
+    template <typename T>
+    class Exporter< arma::SpMat<T> > {
+    public:
+        Exporter( SEXP x ) : mat(x){}
+                
+        arma::SpMat<T> get(){
+            const int  RTYPE = Rcpp::traits::r_sexptype_traits<T>::rtype;
         
-			IntegerVector dims = mat.slot("Dim");
-			IntegerVector i = mat.slot("i") ;
-			IntegerVector p = mat.slot("p") ;     
-			Vector<RTYPE> x = mat.slot("x") ;
-			
-			arma::SpMat<T> res(dims[0], dims[1]);
-			
-			// create space for values, and copy
-			arma::access::rw(res.values) = arma::memory::acquire_chunked<T>(x.size() + 1);
-			arma::arrayops::copy(arma::access::rwp(res.values), x.begin(), x.size() + 1);
-			
-			// create space for row_indices, and copy 
-			arma::access::rw(res.row_indices) = arma::memory::acquire_chunked<arma::uword>(i.size() + 1);
-			std::copy( i.begin(), i.end(), arma::access::rwp(res.row_indices) ) ;
-			
-			// create space for col_ptrs, and copy 
-			arma::access::rw(res.col_ptrs) = arma::memory::acquire<arma::uword>(p.size() + 2);
-			std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs) );
-			
-			// important: set the sentinel as well
-			arma::access::rwp(res.col_ptrs)[p.size()+1] = std::numeric_limits<arma::uword>::max();
-			
-			// set the number of non-zero elements
-			arma::access::rw(res.n_nonzero) = x.size();
-			
-			return res;
-		}
-		
-	private:
-		S4 mat ;
-	} ;
-}	
-	
-	template <typename T>
+            IntegerVector dims = mat.slot("Dim");
+            IntegerVector i = mat.slot("i") ;
+            IntegerVector p = mat.slot("p") ;     
+            Vector<RTYPE> x = mat.slot("x") ;
+                        
+            arma::SpMat<T> res(dims[0], dims[1]);
+                        
+            // create space for values, and copy
+            arma::access::rw(res.values) = arma::memory::acquire_chunked<T>(x.size() + 1);
+            arma::arrayops::copy(arma::access::rwp(res.values), x.begin(), x.size() + 1);
+                        
+            // create space for row_indices, and copy 
+            arma::access::rw(res.row_indices) = arma::memory::acquire_chunked<arma::uword>(i.size() + 1);
+            std::copy( i.begin(), i.end(), arma::access::rwp(res.row_indices) ) ;
+                        
+            // create space for col_ptrs, and copy 
+            arma::access::rw(res.col_ptrs) = arma::memory::acquire<arma::uword>(p.size() + 2);
+            std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs) );
+                        
+            // important: set the sentinel as well
+            arma::access::rwp(res.col_ptrs)[p.size()+1] = std::numeric_limits<arma::uword>::max();
+                        
+            // set the number of non-zero elements
+            arma::access::rw(res.n_nonzero) = x.size();
+                        
+            return res;
+        }
+                
+    private:
+        S4 mat ;
+    } ;
+}       
+        
+    template <typename T>
     class InputParameter< const arma::Mat<T>& > {
-    		public:
-    			typedef const typename arma::Mat<T>& const_reference ;
-    			
-    			InputParameter( SEXP x_ ) : m(x_), mat( m.begin(), m.nrow(), m.ncol(), false ){}
-    			
-    			inline operator const_reference(){
-    				return mat ; 	
-    			}
-    			
-    		private:
-    			Rcpp::Matrix< Rcpp::traits::r_sexptype_traits<T>::rtype > m ;
-    			arma::Mat<T> mat ;
+    public:
+        typedef const typename arma::Mat<T>& const_reference ;
+                        
+        InputParameter( SEXP x_ ) : m(x_), mat( m.begin(), m.nrow(), m.ncol(), false ){}
+                        
+        inline operator const_reference(){
+            return mat ;        
+        }
+                        
+    private:
+        Rcpp::Matrix< Rcpp::traits::r_sexptype_traits<T>::rtype > m ;
+        arma::Mat<T> mat ;
     } ;
     
     template <typename T>
     class InputParameter< arma::Mat<T>& > {
-    		public:
-    			typedef typename arma::Mat<T>& reference ;
-    			
-    			InputParameter( SEXP x_ ) : m(x_), mat( m.begin(), m.nrow(), m.ncol(), false ){}
-    			
-    			inline operator reference(){
-    				return mat ; 	
-    			}
-    			
-    		private:
-    			Rcpp::Matrix< Rcpp::traits::r_sexptype_traits<T>::rtype > m ;
-    			arma::Mat<T> mat ;
+    public:
+        typedef typename arma::Mat<T>& reference ;
+                        
+        InputParameter( SEXP x_ ) : m(x_), mat( m.begin(), m.nrow(), m.ncol(), false ){}
+                        
+        inline operator reference(){
+            return mat ;        
+        }
+                        
+    private:
+        Rcpp::Matrix< Rcpp::traits::r_sexptype_traits<T>::rtype > m ;
+        arma::Mat<T> mat ;
     } ;
     
     template <typename T, typename VEC, typename REF>
     class ArmaVec_InputParameter {
-    		public:
-    			ArmaVec_InputParameter( SEXP x_ ) : v(x_), vec( v.begin(), v.size(), false ){}
-    			
-    			inline operator REF(){
-    				return vec ; 	
-    			}
-    			
-    		private:
-    			Rcpp::Vector< Rcpp::traits::r_sexptype_traits<T>::rtype > v ;
-    			VEC vec ;
+    public:
+        ArmaVec_InputParameter( SEXP x_ ) : v(x_), vec( v.begin(), v.size(), false ){}
+                        
+        inline operator REF(){
+            return vec ;        
+        }
+                        
+    private:
+        Rcpp::Vector< Rcpp::traits::r_sexptype_traits<T>::rtype > v ;
+        VEC vec ;
     } ;
     
-    #define MAKE_INPUT_PARAMETER(TYPE,REF)                                         \
-	template <typename T>                                                          \
-	class InputParameter<REF> : public ArmaVec_InputParameter<T, TYPE, REF >{      \
-	public:                                                                        \
-			InputParameter( SEXP x) : ArmaVec_InputParameter<T, TYPE, REF >(x){}   \
-	} ;                                                                                                                  
+#define MAKE_INPUT_PARAMETER(TYPE,REF)                                  \
+    template <typename T>                                               \
+    class InputParameter<REF> : public ArmaVec_InputParameter<T, TYPE, REF >{ \
+    public:                                                             \
+    InputParameter( SEXP x) : ArmaVec_InputParameter<T, TYPE, REF >(x){} \
+    } ;                                                                                                                  
     
-	MAKE_INPUT_PARAMETER(arma::Col<T>, const arma::Col<T>& )
-	MAKE_INPUT_PARAMETER(arma::Col<T>, arma::Col<T>& )
-	MAKE_INPUT_PARAMETER(arma::Row<T>, const arma::Row<T>& )
-	MAKE_INPUT_PARAMETER(arma::Row<T>, arma::Row<T>& )
-	#undef MAKE_INPUT_PARAMETER
+    MAKE_INPUT_PARAMETER(arma::Col<T>, const arma::Col<T>& )
+    MAKE_INPUT_PARAMETER(arma::Col<T>, arma::Col<T>& )
+    MAKE_INPUT_PARAMETER(arma::Row<T>, const arma::Row<T>& )
+    MAKE_INPUT_PARAMETER(arma::Row<T>, arma::Row<T>& )
+#undef MAKE_INPUT_PARAMETER
 }
 
 #endif
