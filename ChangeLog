@@ -1,27 +1,27 @@
-2013-09-13 Romain Francois <romain@r-enthusiasts.com>
+2013-09-13  Romain Francois <romain@r-enthusiasts.com>
 
         * DESCRIPTION : require Rcpp 0.10.4.4
-        * include/RcppArmadilloForward.h : declaration of specializations of InputParameter
-        for references and const reference to arma::Mat
-        * include/RcppArmadilloAs.h : definitions of the above 
-        
-2013-08-24 Romain Francois <romain@r-enthusiasts.com>
+        * include/RcppArmadilloForward.h : declaration of specializations of
+	InputParameter for references and const reference to arma::Mat
+        * include/RcppArmadilloAs.h : definitions of the above
 
-        * include/RcppArmadilloExtensions/sample.h: added include guard, made 
-        functions SampleReplace, etc ... templates to avoid the multiple definitions
-        problem
+2013-08-24  Romain Francois <romain@r-enthusiasts.com>
 
-2013-08-21 Romain Francois <romain@r-enthusiasts.com>
+        * include/RcppArmadilloExtensions/sample.h: added include guard, made
+	functions SampleReplace, etc ... templates to avoid the multiple
+	definitions problem
+
+2013-08-21  Romain Francois <romain@r-enthusiasts.com>
 
         * include/RcppArmadilloWrap.h: Less data copies for wrap< SpMat<T> >
         * include/RcppArmadilloAs.h:   Less data copies for as< SpMat<T> >
 
-2013-08-20 Romain Francois <romain@r-enthusiasts.com>
+2013-08-20  Romain Francois <romain@r-enthusiasts.com>
 
         * include/RcppArmadilloWrap.h: Handle wrap<subview>
         * include/RcppArmadilloWrap.h: cleaner implementation for wrap< SpMat<T> >
         * include/RcppArmadilloAs.h: cleaner implementation for as< SpMat<T> >
-        
+
 2013-08-17  Dirk Eddelbuettel  <edd@debian.org>
 
 	* vignettes/RcppArmadillo-intro.Rnw: Converted from LaTeX minted
