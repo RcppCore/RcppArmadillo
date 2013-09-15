@@ -96,14 +96,14 @@ namespace Rcpp {
 
     } // namespace traits 
 
-    template <typename T> class InputParameter< const arma::Mat<T>& > ;
-    template <typename T> class InputParameter< arma::Mat<T>& > ;
+    template <typename T> class ConstReferenceInputParameter< arma::Mat<T> > ;
+    template <typename T> class ReferenceInputParameter< arma::Mat<T> > ;
     
-    template <typename T> class InputParameter< const arma::Col<T>& > ;
-    template <typename T> class InputParameter< arma::Col<T>& > ;
+    template <typename T> class ConstReferenceInputParameter< arma::Col<T> > ;
+    template <typename T> class ReferenceInputParameter< arma::Col<T> > ;
     
-    template <typename T> class InputParameter< const arma::Row<T>& > ;
-    template <typename T> class InputParameter< arma::Row<T>& > ;
+    template <typename T> class ConstReferenceInputParameter< arma::Row<T> > ;
+    template <typename T> class ReferenceInputParameter< arma::Row<T> > ;
     
 }
 

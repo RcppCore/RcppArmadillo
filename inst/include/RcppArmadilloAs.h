@@ -101,14 +101,14 @@ namespace traits {
 }       
         
     template <typename T>
-    class InputParameter< const arma::Mat<T>& > {
+    class ConstReferenceInputParameter< arma::Mat<T> > {
     public:
         typedef const typename arma::Mat<T>& const_reference ;
                         
-        InputParameter( SEXP x_ ) : m(x_), mat( m.begin(), m.nrow(), m.ncol(), false ){}
+        ConstReferenceInputParameter( SEXP x_ ) : m(x_), mat( m.begin(), m.nrow(), m.ncol(), false ){}
                         
         inline operator const_reference(){
-            return mat ;        
+        		return mat ;        
         }
                         
     private:
@@ -117,11 +117,11 @@ namespace traits {
     } ;
     
     template <typename T>
-    class InputParameter< arma::Mat<T>& > {
+    class ReferenceInputParameter< arma::Mat<T> > {
     public:
         typedef typename arma::Mat<T>& reference ;
                         
-        InputParameter( SEXP x_ ) : m(x_), mat( m.begin(), m.nrow(), m.ncol(), false ){}
+        ReferenceInputParameter( SEXP x_ ) : m(x_), mat( m.begin(), m.nrow(), m.ncol(), false ){}
                         
         inline operator reference(){
             return mat ;        
@@ -146,17 +146,17 @@ namespace traits {
         VEC vec ;
     } ;
     
-#define MAKE_INPUT_PARAMETER(TYPE,REF)                                  \
+#define MAKE_INPUT_PARAMETER(INPUT_TYPE,TYPE,REF)                       \
     template <typename T>                                               \
-    class InputParameter<REF> : public ArmaVec_InputParameter<T, TYPE, REF >{ \
+    class INPUT_TYPE<TYPE> : public ArmaVec_InputParameter<T, TYPE, REF >{ \
     public:                                                             \
-    InputParameter( SEXP x) : ArmaVec_InputParameter<T, TYPE, REF >(x){} \
+    INPUT_TYPE( SEXP x) : ArmaVec_InputParameter<T, TYPE, REF >(x){} \
     } ;                                                                                                                  
     
-    MAKE_INPUT_PARAMETER(arma::Col<T>, const arma::Col<T>& )
-    MAKE_INPUT_PARAMETER(arma::Col<T>, arma::Col<T>& )
-    MAKE_INPUT_PARAMETER(arma::Row<T>, const arma::Row<T>& )
-    MAKE_INPUT_PARAMETER(arma::Row<T>, arma::Row<T>& )
+    MAKE_INPUT_PARAMETER(ConstReferenceInputParameter, arma::Col<T>, const arma::Col<T>& )
+    MAKE_INPUT_PARAMETER(ReferenceInputParameter     , arma::Col<T>, arma::Col<T>&       )
+    MAKE_INPUT_PARAMETER(ConstReferenceInputParameter, arma::Row<T>, const arma::Row<T>& )
+    MAKE_INPUT_PARAMETER(ReferenceInputParameter     , arma::Row<T>, arma::Row<T>&       )
 #undef MAKE_INPUT_PARAMETER
 }
 
