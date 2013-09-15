@@ -210,3 +210,45 @@ List sugarMatrixCtor_(NumericVector xx) {
 //     checkException(fun(), msg="RTTI check on matrix constructor exception")
 
 // }
+
+
+// [[Rcpp::export]]
+int mat_plain(arma::mat x) { 
+    return x.n_elem;
+}
+
+// [[Rcpp::export]]
+int mat_const(const arma::mat x) { 
+    return x.n_elem;
+}
+
+// [[Rcpp::export]]
+int mat_ref(arma::mat & x) { 
+    return x.n_elem;
+}
+
+// [[Rcpp::export]]
+int mat_const_ref(const arma::mat & x) { 
+    return x.n_elem;
+}
+
+// [[Rcpp::export]]
+int vec_plain(arma::vec x) { 
+    return x.n_elem;
+}
+
+// [[Rcpp::export]]
+int vec_const(const arma::vec x) { 
+    return x.n_elem;
+}
+
+// [[Rcpp::export]]
+int vec_ref(arma::vec & x) { 
+    return x.n_elem;
+}
+
+// [[Rcpp::export]]
+int vec_const_ref(const arma::vec & x) { 
+    return x.n_elem;
+}
+

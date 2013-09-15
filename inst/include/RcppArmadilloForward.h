@@ -98,12 +98,15 @@ namespace Rcpp {
 
     template <typename T> class ConstReferenceInputParameter< arma::Mat<T> > ;
     template <typename T> class ReferenceInputParameter< arma::Mat<T> > ;
+    template <typename T> class ConstInputParameter< arma::Mat<T> > ;
     
     template <typename T> class ConstReferenceInputParameter< arma::Col<T> > ;
     template <typename T> class ReferenceInputParameter< arma::Col<T> > ;
+    template <typename T> class ConstInputParameter< arma::Col<T> > ;
     
     template <typename T> class ConstReferenceInputParameter< arma::Row<T> > ;
     template <typename T> class ReferenceInputParameter< arma::Row<T> > ;
+    template <typename T> class ConstInputParameter< arma::Row<T> > ;
     
 }
 

@@ -160,3 +160,52 @@ test.armadillo.sugar.matrix.ctor <- function(){
 ##     checkException(fun(), msg="RTTI check on matrix constructor exception")
 
 ## }
+
+test.armadillo.mat.plain <- function() {
+    fx <- mat_plain
+    m <- matrix(1:9, 3, 3)
+    checkEquals(fx(m), 9, msg = "Plain Matrix function signature" )
+}
+
+test.armadillo.mat.const <- function() {
+    fx <- mat_const
+    m <- matrix(1:9, 3, 3)
+    checkEquals(fx(m), 9, msg = "Const Matrix function signature" )
+}
+
+test.armadillo.mat.ref <- function() {
+    fx <- mat_ref
+    m <- matrix(1:9, 3, 3)
+    checkEquals(fx(m), 9, msg = "Reference Matrix function signature" )
+}
+
+test.armadillo.mat.const.ref <- function() {
+    fx <- mat_const_ref
+    m <- matrix(1:9, 3, 3)
+    checkEquals(fx(m), 9, msg = "Const Reference Matrix function signature" )
+}
+
+test.armadillo.vec.plain <- function() {
+    fx <- vec_plain
+    m <- 1:9
+    checkEquals(fx(m), 9, msg = "Plain Vector function signature" )
+}
+
+test.armadillo.vec.const <- function() {
+    fx <- vec_const
+    m <- 1:9
+    checkEquals(fx(m), 9, msg = "Const Vector function signature" )
+}
+
+test.armadillo.vec.ref <- function() {
+    fx <- vec_ref
+    m <- 1:9
+    checkEquals(fx(m), 9, msg = "Reference Vector function signature" )
+}
+
+test.armadillo.vec.const.ref <- function() {
+    fx <- vec_const_ref
+    m <- 1:9
+    checkEquals(fx(m), 9, msg = "Const Reference Vector function signature" )
+}
+

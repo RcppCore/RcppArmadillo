@@ -18,8 +18,8 @@ library(RUnit)
 
 \usepackage[colorlinks]{hyperref}
 \author{Dirk Eddelbuettel, Romain Fran\c{c}ois and Douglas Bates}
-\title{RcppArmadillo : Unit testing results}
-\date{\texttt{RcppArmadillo} version \Sexpr{prettyVersion} as of \Sexpr{prettyDate}}
+\title{\textbf{RcppArmadillo}: Unit testing results}
+\date{\textbf{RcppArmadillo} version \Sexpr{prettyVersion} as of \Sexpr{prettyDate}}
 
 \begin{document}
 \maketitle
