@@ -1,5 +1,12 @@
-2013-09-15 Romain Francois <romain@r-enthusiasts.com>
-        
+2013-09-15  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/RcppArmadilloAs.h: Also define ConstInputParameter
+	* inst/include/RcppArmadilloForward.h: Ditto for declaration
+	* inst/unitTests/runit.RcppArmadillo.R: New unit tests for these
+	* inst/unitTests/cpp/armadillo.cpp: C++ code for new unit tests
+
+2013-09-15  Romain Francois <romain@r-enthusiasts.com>
+
         * include/RcppArmadilloForward.h : declaration of specializations of
 	ConstReferenceInputParameter and ReferenceInputParameter
         * include/RcppArmadilloAs.h : definitions of the above

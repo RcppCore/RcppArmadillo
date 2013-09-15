@@ -131,6 +131,18 @@ namespace traits {
         Rcpp::Matrix< Rcpp::traits::r_sexptype_traits<T>::rtype > m ;
         arma::Mat<T> mat ;
     } ;
+
+    template <typename T>
+    class ConstInputParameter< arma::Mat<T> > {
+    public:
+        typedef const typename arma::Mat<T> const_nonref;
+        ConstInputParameter(SEXP x_) : m(x_), mat(m.begin(), m.nrow(), m.ncol(), false){}
+        inline operator const_nonref() { return mat ; }
+    private:
+        Rcpp::Matrix< Rcpp::traits::r_sexptype_traits<T>::rtype > m ;
+        arma::Mat<T> mat ;
+    };
+
     
     template <typename T, typename VEC, typename REF>
     class ArmaVec_InputParameter {
@@ -155,8 +167,10 @@ namespace traits {
     
     MAKE_INPUT_PARAMETER(ConstReferenceInputParameter, arma::Col<T>, const arma::Col<T>& )
     MAKE_INPUT_PARAMETER(ReferenceInputParameter     , arma::Col<T>, arma::Col<T>&       )
+    MAKE_INPUT_PARAMETER(ConstInputParameter         , arma::Col<T>, const arma::Col<T>  )
     MAKE_INPUT_PARAMETER(ConstReferenceInputParameter, arma::Row<T>, const arma::Row<T>& )
     MAKE_INPUT_PARAMETER(ReferenceInputParameter     , arma::Row<T>, arma::Row<T>&       )
+    MAKE_INPUT_PARAMETER(ConstInputParameter         , arma::Row<T>, const arma::Row<T>  )
 #undef MAKE_INPUT_PARAMETER
 }
 
