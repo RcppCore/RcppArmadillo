@@ -1,3 +1,9 @@
+2013-09-15 Romain Francois <romain@r-enthusiasts.com>
+        
+        * include/RcppArmadilloForward.h : declaration of specializations of
+	ConstReferenceInputParameter and ReferenceInputParameter
+        * include/RcppArmadilloAs.h : definitions of the above
+
 2013-09-13  Romain Francois <romain@r-enthusiasts.com>
 
         * DESCRIPTION : require Rcpp 0.10.4.4
