@@ -79,6 +79,7 @@ class eop_pow               : public eop_core<eop_pow>               {};
 class eop_floor             : public eop_core<eop_floor>             {};
 class eop_ceil              : public eop_core<eop_ceil>              {};
 class eop_round             : public eop_core<eop_round>             {};
+class eop_sign              : public eop_core<eop_sign>              {};
 
 
 

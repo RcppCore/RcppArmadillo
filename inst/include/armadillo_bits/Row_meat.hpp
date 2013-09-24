@@ -57,6 +57,34 @@ Row<eT>::Row(const uword in_n_rows, const uword in_n_cols)
 
 
 template<typename eT>
+template<typename fill_type>
+inline
+Row<eT>::Row(const uword in_n_elem, const arma::fill::fill_class<fill_type>& f)
+  : Mat<eT>(arma_vec_indicator(), 1, in_n_elem, 2)
+  {
+  arma_extra_debug_sigprint();
+  
+  (*this).fill(f);
+  }
+
+
+
+template<typename eT>
+template<typename fill_type>
+inline
+Row<eT>::Row(const uword in_n_rows, const uword in_n_cols, const arma::fill::fill_class<fill_type>& f)
+  : Mat<eT>(arma_vec_indicator(), 2)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>::init_warm(in_n_rows, in_n_cols);
+  
+  (*this).fill(f);
+  }
+
+
+
+template<typename eT>
 inline
 Row<eT>::Row(const char* text)
   {
@@ -173,6 +201,32 @@ Row<eT>::operator=(const std::vector<eT>& x)
     return *this;
     }
   
+  
+  
+  template<typename eT>
+  inline
+  Row<eT>::Row(Row<eT>&& X)
+    : Mat<eT>(arma_vec_indicator(), 2)
+    {
+    arma_extra_debug_sigprint();
+    
+    (*this).steal_mem(X);
+    }
+  
+  
+  
+  template<typename eT>
+  inline
+  const Row<eT>&
+  Row<eT>::operator=(Row<eT>&& X)
+    {
+    arma_extra_debug_sigprint();
+    
+    (*this).steal_mem(X);
+    
+    return *this;
+    }
+  
 #endif
 
 
@@ -200,6 +254,20 @@ Row<eT>::operator=(const eT val)
   arma_extra_debug_sigprint();
   
   Mat<eT>::operator=(val);
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+inline
+const Row<eT>&
+Row<eT>::operator=(const Row<eT>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>::operator=(X);
   
   return *this;
   }
@@ -761,9 +829,10 @@ Row<eT>::fixed<fixed_n_elem>::fixed(const fixed<fixed_n_elem>& X)
   {
   arma_extra_debug_sigprint_this(this);
   
-  eT* dest = (use_extra) ? mem_local_extra : Mat<eT>::mem_local;
+        eT* dest = (use_extra) ?   mem_local_extra : Mat<eT>::mem_local;
+  const eT* src  = (use_extra) ? X.mem_local_extra :        X.mem_local;
   
-  arrayops::copy( dest, X.mem, fixed_n_elem );
+  arrayops::copy( dest, src, fixed_n_elem );
   }
 
 
@@ -958,6 +1027,24 @@ Row<eT>::fixed<fixed_n_elem>::operator=(const subview_cube<eT>& X)
     }
   
 #endif
+
+
+
+template<typename eT>
+template<uword fixed_n_elem>
+arma_inline
+const Row<eT>&
+Row<eT>::fixed<fixed_n_elem>::operator=(const fixed<fixed_n_elem>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+        eT* dest = (use_extra) ?   mem_local_extra : Mat<eT>::mem_local;
+  const eT* src  = (use_extra) ? X.mem_local_extra :        X.mem_local;
+  
+  arrayops::copy( dest, src, fixed_n_elem );
+  
+  return *this;
+  }
 
 
 

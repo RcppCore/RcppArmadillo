@@ -69,6 +69,27 @@ Mat<eT>::Mat(const uword in_n_rows, const uword in_n_cols)
 
 
 
+//! construct the matrix to have user specified dimensions and fill with specified pattern
+template<typename eT>
+template<typename fill_type>
+inline
+Mat<eT>::Mat(const uword in_n_rows, const uword in_n_cols, const arma::fill::fill_class<fill_type>& f)
+  : n_rows(in_n_rows)
+  , n_cols(in_n_cols)
+  , n_elem(in_n_rows*in_n_cols)
+  , vec_state(0)
+  , mem_state(0)
+  , mem()
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  init_cold();
+  
+  (*this).fill(f);
+  }
+
+
+
 //! constructor used by Row and Col classes
 template<typename eT>
 inline
@@ -505,6 +526,38 @@ Mat<eT>::operator=(const std::vector<eT>& x)
     arma_extra_debug_sigprint();
     
     init(list);
+    
+    return *this;
+    }
+  
+  
+  
+  template<typename eT>
+  inline
+  Mat<eT>::Mat(Mat<eT>&& in_mat)
+    : n_rows(0)
+    , n_cols(0)
+    , n_elem(0)
+    , vec_state(0)
+    , mem_state(0)
+    , mem()
+    {
+    arma_extra_debug_sigprint_this(this);
+    arma_extra_debug_sigprint(arma_boost::format("this = %x   in_mat = %x") % this % &in_mat);
+    
+    (*this).steal_mem(in_mat);
+    }
+  
+  
+  
+  template<typename eT>
+  inline
+  const Mat<eT>&
+  Mat<eT>::operator=(Mat<eT>&& in_mat)
+    {
+    arma_extra_debug_sigprint(arma_boost::format("this = %x   in_mat = %x") % this % &in_mat);
+    
+    (*this).steal_mem(in_mat);
     
     return *this;
     }
@@ -5107,6 +5160,27 @@ Mat<eT>::fill(const eT val)
 
 
 
+//! fill the matrix with the specified value
+template<typename eT>
+template<typename fill_type>
+arma_hot
+inline
+const Mat<eT>&
+Mat<eT>::fill(const arma::fill::fill_class<fill_type>&)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(is_same_type<fill_type, arma::fill::fill_zeros>::yes)  (*this).zeros();
+  if(is_same_type<fill_type, arma::fill::fill_ones >::yes)  (*this).ones();
+  if(is_same_type<fill_type, arma::fill::fill_eye  >::yes)  (*this).eye();
+  if(is_same_type<fill_type, arma::fill::fill_randu>::yes)  (*this).randu();
+  if(is_same_type<fill_type, arma::fill::fill_randn>::yes)  (*this).randn();
+  
+  return *this;
+  }
+
+
+
 template<typename eT>
 inline
 const Mat<eT>&
@@ -5114,7 +5188,9 @@ Mat<eT>::zeros()
   {
   arma_extra_debug_sigprint();
   
-  return fill(eT(0));
+  arrayops::fill_zeros(memptr(), n_elem);
+  
+  return *this;
   }
 
 
@@ -5128,7 +5204,7 @@ Mat<eT>::zeros(const uword in_elem)
   
   set_size(in_elem);
   
-  return fill(eT(0));
+  return (*this).zeros();
   }
 
 
@@ -5136,13 +5212,13 @@ Mat<eT>::zeros(const uword in_elem)
 template<typename eT>
 inline
 const Mat<eT>&
-Mat<eT>::zeros(const uword in_rows, const uword in_cols)
+Mat<eT>::zeros(const uword in_n_rows, const uword in_n_cols)
   {
   arma_extra_debug_sigprint();
-
-  set_size(in_rows, in_cols);
   
-  return fill(eT(0));
+  set_size(in_n_rows, in_n_cols);
+  
+  return (*this).zeros();
   }
 
 
@@ -5278,7 +5354,7 @@ Mat<eT>::eye()
   {
   arma_extra_debug_sigprint();
   
-  fill(eT(0));
+  (*this).zeros();
   
   const uword N = (std::min)(n_rows, n_cols);
   
@@ -6204,9 +6280,24 @@ Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::fixed(const fixed<fixed_n_rows, fixe
   {
   arma_extra_debug_sigprint_this(this);
   
-  eT* dest = (use_extra) ? mem_local_extra : mem_local;
+        eT* dest = (use_extra) ?   mem_local_extra :   mem_local;
+  const eT* src  = (use_extra) ? X.mem_local_extra : X.mem_local;
   
-  arrayops::copy( dest, X.mem, fixed_n_elem );
+  arrayops::copy( dest, src, fixed_n_elem );
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols>
+template<typename fill_type>
+inline
+Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::fixed(const arma::fill::fill_class<fill_type>& f)
+  : Mat<eT>( arma_fixed_indicator(), fixed_n_rows, fixed_n_cols, 0, ((use_extra) ? mem_local_extra : mem_local) )
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  (*this).fill(f);
   }
 
 
@@ -6317,6 +6408,24 @@ Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::fixed(const std::string& text)
     }
   
 #endif
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols>
+arma_inline
+const Mat<eT>&
+Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::operator=(const fixed<fixed_n_rows, fixed_n_cols>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+        eT* dest = (use_extra) ?   mem_local_extra :   mem_local;
+  const eT* src  = (use_extra) ? X.mem_local_extra : X.mem_local;
+  
+  arrayops::copy( dest, src, fixed_n_elem );
+  
+  return *this;
+  }
 
 
 
@@ -6571,6 +6680,27 @@ bool
 Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::is_vec() const
   {
   return ( (fixed_n_rows == 1) || (fixed_n_cols == 1) );
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols>
+template<typename fill_type>
+arma_hot
+inline
+const Mat<eT>&
+Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::fill(const arma::fill::fill_class<fill_type>&)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(is_same_type<fill_type, arma::fill::fill_zeros>::yes)  (*this).zeros();
+  if(is_same_type<fill_type, arma::fill::fill_ones >::yes)  (*this).ones();
+  if(is_same_type<fill_type, arma::fill::fill_eye  >::yes)  (*this).eye();
+  if(is_same_type<fill_type, arma::fill::fill_randu>::yes)  (*this).randu();
+  if(is_same_type<fill_type, arma::fill::fill_randn>::yes)  (*this).randn();
+  
+  return *this;
   }
 
 

@@ -429,12 +429,13 @@ class herk
   inline
   static
   void
-  apply( Mat<eT>& C, const TA& A, const eT alpha = eT(1), const eT beta = eT(0) )
+  apply( Mat<eT>& C, const TA& A, const eT alpha = eT(1), const eT beta = eT(0), const typename arma_not_cx<eT>::result* junk = 0 )
     {
     arma_ignore(C);
     arma_ignore(A);
     arma_ignore(alpha);
     arma_ignore(beta);
+    arma_ignore(junk);
     
     // herk() cannot be used by non-complex matrices
     

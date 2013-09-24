@@ -422,6 +422,7 @@ namespace arma
   #include "armadillo_bits/fn_histc.hpp"
   #include "armadillo_bits/fn_unique.hpp"
   #include "armadillo_bits/fn_fft.hpp"
+  #include "armadillo_bits/fn_fft2.hpp"
   #include "armadillo_bits/fn_any.hpp"
   #include "armadillo_bits/fn_all.hpp"
   

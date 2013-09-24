@@ -11,9 +11,8 @@
 
 
 
-// TODO:  fft(real)     -> complex [to be tested thoroughly]
-// TODO:  fft(complex)  -> complex [to be tested thoroughly]
-// TODO: ifft(complex)  -> complex [to be tested thoroughly]
+// 1D FFT & 1D IFFT
+
 
 
 template<typename T1>

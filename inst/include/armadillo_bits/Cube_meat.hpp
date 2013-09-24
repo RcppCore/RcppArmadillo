@@ -75,6 +75,67 @@ Cube<eT>::Cube(const uword in_n_rows, const uword in_n_cols, const uword in_n_sl
 
 
 
+//! construct the cube to have user specified dimensions and fill with specified pattern
+template<typename eT>
+template<typename fill_type>
+inline
+Cube<eT>::Cube(const uword in_n_rows, const uword in_n_cols, const uword in_n_slices, const arma::fill::fill_class<fill_type>& f)
+  : n_rows(in_n_rows)
+  , n_cols(in_n_cols)
+  , n_elem_slice(in_n_rows*in_n_cols)
+  , n_slices(in_n_slices)
+  , n_elem(in_n_rows*in_n_cols*in_n_slices)
+  , mem_state(0)
+  , mat_ptrs()
+  , mem()
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  init_cold();
+  
+  (*this).fill(f);
+  }
+
+
+
+#if defined(ARMA_USE_CXX11)
+  
+  template<typename eT>
+  inline
+  Cube<eT>::Cube(Cube<eT>&& in_cube)
+    : n_rows(0)
+    , n_cols(0)
+    , n_elem_slice(0)
+    , n_slices(0)
+    , n_elem(0)
+    , mem_state(0)
+    , mat_ptrs()
+    , mem()
+    {
+    arma_extra_debug_sigprint_this(this);
+    arma_extra_debug_sigprint(arma_boost::format("this = %x   in_cube = %x") % this % &in_cube);
+    
+    (*this).steal_mem(in_cube);
+    }
+    
+  
+  
+  template<typename eT>
+  inline
+  const Cube<eT>&
+  Cube<eT>::operator=(Cube<eT>&& in_cube)
+    {
+    arma_extra_debug_sigprint(arma_boost::format("this = %x   in_cube = %x") % this % &in_cube);
+    
+    (*this).steal_mem(in_cube);
+    
+    return *this;
+    }
+  
+#endif
+
+
+
 template<typename eT>
 inline
 void
@@ -966,6 +1027,156 @@ Cube<eT>::operator()(const span& row_span, const span& col_span, const span& sli
   arma_extra_debug_sigprint();
   
   return (*this).subcube(row_span, col_span, slice_span);
+  }
+
+
+
+template<typename eT>
+arma_inline
+subview_cube<eT>
+Cube<eT>::tube(const uword in_row1, const uword in_col1)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check
+    (
+    ((in_row1 >= n_rows) || (in_col1 >= n_cols)),
+    "Cube::tube(): indices out of bounds"
+    );
+  
+  return subview_cube<eT>(*this, in_row1, in_col1, 0, 1, 1, n_slices);
+  }
+
+
+
+template<typename eT>
+arma_inline
+const subview_cube<eT>
+Cube<eT>::tube(const uword in_row1, const uword in_col1) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check
+    (
+    ((in_row1 >= n_rows) || (in_col1 >= n_cols)),
+    "Cube::tube(): indices out of bounds"
+    );
+  
+  return subview_cube<eT>(*this, in_row1, in_col1, 0, 1, 1, n_slices);
+  }
+
+
+
+template<typename eT>
+arma_inline
+subview_cube<eT>
+Cube<eT>::tube(const uword in_row1, const uword in_col1, const uword in_row2, const uword in_col2)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check
+    (
+    (in_row1 >  in_row2) || (in_col1 >  in_col2) ||
+    (in_row2 >= n_rows)  || (in_col2 >= n_cols),
+    "Cube::tube(): indices out of bounds or incorrectly used"
+    );
+  
+  const uword subcube_n_rows = in_row2 - in_row1 + 1;
+  const uword subcube_n_cols = in_col2 - in_col1 + 1;
+  
+  return subview_cube<eT>(*this, in_row1, in_col1, 0, subcube_n_rows, subcube_n_cols, n_slices);
+  }
+
+
+
+template<typename eT>
+arma_inline
+const subview_cube<eT>
+Cube<eT>::tube(const uword in_row1, const uword in_col1, const uword in_row2, const uword in_col2) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check
+    (
+    (in_row1 >  in_row2) || (in_col1 >  in_col2) ||
+    (in_row2 >= n_rows)  || (in_col2 >= n_cols),
+    "Cube::tube(): indices out of bounds or incorrectly used"
+    );
+  
+  const uword subcube_n_rows = in_row2 - in_row1 + 1;
+  const uword subcube_n_cols = in_col2 - in_col1 + 1;
+  
+  return subview_cube<eT>(*this, in_row1, in_col1, 0, subcube_n_rows, subcube_n_cols, n_slices);
+  }
+
+
+
+template<typename eT>
+inline
+subview_cube<eT>
+Cube<eT>::tube(const span& row_span, const span& col_span)
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool row_all = row_span.whole;
+  const bool col_all = col_span.whole;
+  
+  const uword local_n_rows   = n_rows;
+  const uword local_n_cols   = n_cols;
+  
+  const uword in_row1        = row_all   ? 0            : row_span.a;
+  const uword in_row2        =                            row_span.b;
+  const uword subcube_n_rows = row_all   ? local_n_rows : in_row2 - in_row1 + 1;
+  
+  const uword in_col1        = col_all   ? 0            : col_span.a;
+  const uword in_col2        =                            col_span.b;
+  const uword subcube_n_cols = col_all   ? local_n_cols : in_col2 - in_col1 + 1;
+  
+  arma_debug_check
+    (
+    ( row_all ? false : ((in_row1 > in_row2) || (in_row2 >= local_n_rows)) )
+    ||
+    ( col_all ? false : ((in_col1 > in_col2) || (in_col2 >= local_n_cols)) )
+    ,
+    "Cube::tube(): indices out of bounds or incorrectly used"
+    );
+  
+  return subview_cube<eT>(*this, in_row1, in_col1, 0, subcube_n_rows, subcube_n_cols, n_slices);
+  }
+
+
+
+template<typename eT>
+inline
+const subview_cube<eT>
+Cube<eT>::tube(const span& row_span, const span& col_span) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool row_all = row_span.whole;
+  const bool col_all = col_span.whole;
+  
+  const uword local_n_rows   = n_rows;
+  const uword local_n_cols   = n_cols;
+  
+  const uword in_row1        = row_all   ? 0            : row_span.a;
+  const uword in_row2        =                            row_span.b;
+  const uword subcube_n_rows = row_all   ? local_n_rows : in_row2 - in_row1 + 1;
+  
+  const uword in_col1        = col_all   ? 0            : col_span.a;
+  const uword in_col2        =                            col_span.b;
+  const uword subcube_n_cols = col_all   ? local_n_cols : in_col2 - in_col1 + 1;
+  
+  arma_debug_check
+    (
+    ( row_all ? false : ((in_row1 > in_row2) || (in_row2 >= local_n_rows)) )
+    ||
+    ( col_all ? false : ((in_col1 > in_col2) || (in_col2 >= local_n_cols)) )
+    ,
+    "Cube::tube(): indices out of bounds or incorrectly used"
+    );
+  
+  return subview_cube<eT>(*this, in_row1, in_col1, 0, subcube_n_rows, subcube_n_cols, n_slices);
   }
 
 
@@ -2503,13 +2714,36 @@ Cube<eT>::fill(const eT val)
 
 
 template<typename eT>
+template<typename fill_type>
+arma_hot
+inline
+const Cube<eT>&
+Cube<eT>::fill(const arma::fill::fill_class<fill_type>&)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(is_same_type<fill_type, arma::fill::fill_zeros>::yes)  (*this).zeros();
+  if(is_same_type<fill_type, arma::fill::fill_ones >::yes)  (*this).ones();
+  if(is_same_type<fill_type, arma::fill::fill_randu>::yes)  (*this).randu();
+  if(is_same_type<fill_type, arma::fill::fill_randn>::yes)  (*this).randn();
+  
+  if(is_same_type<fill_type, arma::fill::fill_eye  >::yes)  { arma_debug_check(true, "Cube::fill(): unsupported fill type"); }
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
 inline
 const Cube<eT>&
 Cube<eT>::zeros()
   {
   arma_extra_debug_sigprint();
   
-  return (*this).fill(eT(0));
+  arrayops::fill_zeros(memptr(), n_elem);
+  
+  return *this;
   }
 
 
@@ -2523,7 +2757,7 @@ Cube<eT>::zeros(const uword in_rows, const uword in_cols, const uword in_slices)
   
   set_size(in_rows, in_cols, in_slices);
   
-  return (*this).fill(eT(0));
+  return (*this).zeros();
   }
 
 

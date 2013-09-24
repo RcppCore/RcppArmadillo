@@ -16,7 +16,7 @@
 //! Generate the first line of the header used for saving matrices in text format.
 //! Format: "ARMA_MAT_TXT_ABXYZ".
 //! A is one of: I (for integral types) or F (for floating point types).
-//! B is one of: U (for unsigned types), S (for signed types), N (for not appliable) or C (for complex types).
+//! B is one of: U (for unsigned types), S (for signed types), N (for not applicable) or C (for complex types).
 //! XYZ specifies the width of each element in terms of bytes, e.g. "008" indicates eight bytes.
 template<typename eT>
 inline
@@ -122,7 +122,7 @@ diskio::gen_txt_header(const Mat<eT>& x)
 //! Generate the first line of the header used for saving matrices in binary format.
 //! Format: "ARMA_MAT_BIN_ABXYZ".
 //! A is one of: I (for integral types) or F (for floating point types).
-//! B is one of: U (for unsigned types), S (for signed types), N (for not appliable) or C (for complex types).
+//! B is one of: U (for unsigned types), S (for signed types), N (for not applicable) or C (for complex types).
 //! XYZ specifies the width of each element in terms of bytes, e.g. "008" indicates eight bytes.
 template<typename eT>
 inline
@@ -228,7 +228,7 @@ diskio::gen_bin_header(const Mat<eT>& x)
 //! Generate the first line of the header used for saving matrices in binary format.
 //! Format: "ARMA_SPM_BIN_ABXYZ".
 //! A is one of: I (for integral types) or F (for floating point types).
-//! B is one of: U (for unsigned types), S (for signed types), N (for not appliable) or C (for complex types).
+//! B is one of: U (for unsigned types), S (for signed types), N (for not applicable) or C (for complex types).
 //! XYZ specifies the width of each element in terms of bytes, e.g. "008" indicates eight bytes.
 template<typename eT>
 inline
@@ -333,7 +333,7 @@ diskio::gen_bin_header(const SpMat<eT>& x)
 //! Generate the first line of the header used for saving cubes in text format.
 //! Format: "ARMA_CUB_TXT_ABXYZ".
 //! A is one of: I (for integral types) or F (for floating point types).
-//! B is one of: U (for unsigned types), S (for signed types), N (for not appliable) or C (for complex types).
+//! B is one of: U (for unsigned types), S (for signed types), N (for not applicable) or C (for complex types).
 //! XYZ specifies the width of each element in terms of bytes, e.g. "008" indicates eight bytes.
 template<typename eT>
 inline
@@ -439,7 +439,7 @@ diskio::gen_txt_header(const Cube<eT>& x)
 //! Generate the first line of the header used for saving cubes in binary format.
 //! Format: "ARMA_CUB_BIN_ABXYZ".
 //! A is one of: I (for integral types) or F (for floating point types).
-//! B is one of: U (for unsigned types), S (for signed types), N (for not appliable) or C (for complex types).
+//! B is one of: U (for unsigned types), S (for signed types), N (for not applicable) or C (for complex types).
 //! XYZ specifies the width of each element in terms of bytes, e.g. "008" indicates eight bytes.
 template<typename eT>
 inline

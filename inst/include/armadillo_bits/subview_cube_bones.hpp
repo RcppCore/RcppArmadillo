@@ -42,6 +42,7 @@ class subview_cube : public BaseCube<eT, subview_cube<eT> >
   
   inline ~subview_cube();
   
+  inline void operator=  (const eT val);
   inline void operator+= (const eT val);
   inline void operator-= (const eT val);
   inline void operator*= (const eT val);

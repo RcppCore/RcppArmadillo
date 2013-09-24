@@ -64,11 +64,6 @@ class span : public span_base<>
     }
   
   
-  #if defined(ARMA_USE_CXX11)
-    span(const double in_a) = delete;
-  #endif
-  
-  
   inline
   span(const uword in_a, const uword in_b)
     : a(in_a)

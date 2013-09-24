@@ -844,6 +844,9 @@ eop_core<eop_ceil             >::process(const eT val, const eT  ) { return eop_
 template<> template<typename eT> arma_hot arma_pure arma_inline eT
 eop_core<eop_round            >::process(const eT val, const eT  ) { return eop_aux::round(val);      }
 
+template<> template<typename eT> arma_hot arma_pure arma_inline eT
+eop_core<eop_sign             >::process(const eT val, const eT  ) { return eop_aux::sign(val);       }
+
 
 #undef arma_applier_1u
 #undef arma_applier_1a

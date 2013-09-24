@@ -210,3 +210,28 @@ enum file_type
 //! @}
 
 
+
+//! \addtogroup fill
+//! @{
+
+namespace fill
+  {
+  struct fill_none  {};
+  struct fill_zeros {};
+  struct fill_ones  {};
+  struct fill_eye   {};
+  struct fill_randu {};
+  struct fill_randn {};
+  
+  template<typename fill_type> 
+  struct fill_class { inline fill_class() {} };
+  
+  static const fill_class<fill_none > none;
+  static const fill_class<fill_zeros> zeros;
+  static const fill_class<fill_ones > ones;
+  static const fill_class<fill_eye  > eye;
+  static const fill_class<fill_randu> randu;
+  static const fill_class<fill_randn> randn;
+  }
+
+//! @}

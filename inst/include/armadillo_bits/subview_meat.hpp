@@ -37,6 +37,25 @@ subview<eT>::subview(const Mat<eT>& in_m, const uword in_row1, const uword in_co
 template<typename eT>
 inline
 void
+subview<eT>::operator= (const eT val)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(n_elem != 1)
+    {
+    arma_debug_assert_same_size(n_rows, n_cols, 1, 1, "copy into submatrix");
+    }
+  
+  Mat<eT>& X = const_cast< Mat<eT>& >(m);
+  
+  X.at(aux_row1, aux_col1) = val;
+  }
+
+
+
+template<typename eT>
+inline
+void
 subview<eT>::operator+= (const eT val)
   {
   arma_extra_debug_sigprint();
@@ -1182,7 +1201,20 @@ subview<eT>::zeros()
   {
   arma_extra_debug_sigprint();
   
-  (*this).fill(eT(0));
+  const uword local_n_cols = n_cols;
+  const uword local_n_rows = n_rows;
+  
+  if(local_n_rows == 1)
+    {
+    (*this).fill(eT(0));
+    }
+  else
+    {
+    for(uword ucol=0; ucol < local_n_cols; ++ucol)
+      {
+      arrayops::fill_zeros( colptr(ucol), local_n_rows );
+      }
+    }
   }
 
 
@@ -1206,7 +1238,7 @@ subview<eT>::eye()
   {
   arma_extra_debug_sigprint();
   
-  fill(eT(0));
+  (*this).zeros();
   
   const uword N = (std::min)(n_rows, n_cols);
   
@@ -2407,10 +2439,6 @@ subview_col<eT>::operator=(const subview<eT>& X)
   arma_extra_debug_sigprint();
   
   subview<eT>::operator=(X);
-  
-  access::rw(colmem) = subview<eT>::colptr(0);
-  
-  arma_debug_check( (subview<eT>::n_cols > 1), "subview_col(): incompatible dimensions" );
   }
 
 
@@ -2423,10 +2451,23 @@ subview_col<eT>::operator=(const subview_col<eT>& X)
   arma_extra_debug_sigprint();
   
   subview<eT>::operator=(X); // interprets 'subview_col' as 'subview'
+  }
+
+
+
+template<typename eT>
+inline
+void
+subview_col<eT>::operator=(const eT val)
+  {
+  arma_extra_debug_sigprint();
   
-  access::rw(colmem) = subview<eT>::colptr(0);
+  if(subview<eT>::n_elem != 1)
+    {
+    arma_debug_assert_same_size(subview<eT>::n_rows, subview<eT>::n_cols, 1, 1, "copy into submatrix");
+    }
   
-  arma_debug_check( (subview<eT>::n_cols > 1), "subview_col(): incompatible dimensions" );
+  access::rw( colmem[0] ) = val;
   }
 
 
@@ -2440,10 +2481,6 @@ subview_col<eT>::operator=(const Base<eT,T1>& X)
   arma_extra_debug_sigprint();
   
   subview<eT>::operator=(X);
-  
-  access::rw(colmem) = subview<eT>::colptr(0);
-
-  arma_debug_check( (subview<eT>::n_cols > 1), "subview_col(): incompatible dimensions" );
   }
 
 
@@ -2474,6 +2511,42 @@ const Op<subview_col<eT>,op_strans>
 subview_col<eT>::st() const
   {
   return Op<subview_col<eT>,op_strans>(*this);
+  }
+
+
+
+template<typename eT>
+inline
+void
+subview_col<eT>::fill(const eT val)
+  {
+  arma_extra_debug_sigprint();
+  
+  arrayops::inplace_set( access::rwp(colmem), val, subview<eT>::n_rows );
+  }
+
+
+
+template<typename eT>
+inline
+void
+subview_col<eT>::zeros()
+  {
+  arma_extra_debug_sigprint();
+  
+  arrayops::fill_zeros( access::rwp(colmem), subview<eT>::n_rows );
+  }
+
+
+
+template<typename eT>
+inline
+void
+subview_col<eT>::ones()
+  {
+  arma_extra_debug_sigprint();
+  
+  arrayops::inplace_set( access::rwp(colmem), eT(1), subview<eT>::n_rows );
   }
 
 
@@ -2703,7 +2776,6 @@ subview_row<eT>::operator=(const subview<eT>& X)
   arma_extra_debug_sigprint();
   
   subview<eT>::operator=(X);
-  arma_debug_check( (subview<eT>::n_rows > 1), "subview_row(): incompatible dimensions" );
   }
 
 
@@ -2716,7 +2788,18 @@ subview_row<eT>::operator=(const subview_row<eT>& X)
   arma_extra_debug_sigprint();
   
   subview<eT>::operator=(X); // interprets 'subview_row' as 'subview'
-  arma_debug_check( (subview<eT>::n_rows > 1), "subview_row(): incompatible dimensions" );
+  }
+
+
+
+template<typename eT>
+inline
+void
+subview_row<eT>::operator=(const eT val)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview<eT>::operator=(val); // interprets 'subview_row' as 'subview'
   }
 
 
@@ -2730,7 +2813,6 @@ subview_row<eT>::operator=(const Base<eT,T1>& X)
   arma_extra_debug_sigprint();
   
   subview<eT>::operator=(X);
-  arma_debug_check( (subview<eT>::n_rows > 1), "subview_row(): incompatible dimensions" );
   }
 
 

@@ -1,3 +1,8 @@
+2013-09-23  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/*: Upgraded to Armadillo pre-release of 3.920.0
+	* DESCRIPTION: Mark as test release version 0.3.910.0.2
+
 2013-09-15  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/RcppArmadilloAs.h: Also define ConstInputParameter

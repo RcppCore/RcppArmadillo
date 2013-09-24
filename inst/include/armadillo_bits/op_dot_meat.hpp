@@ -21,23 +21,38 @@ op_dot::direct_dot_arma(const uword n_elem, const eT* const A, const eT* const B
   {
   arma_extra_debug_sigprint();
   
-  eT val1 = eT(0);
-  eT val2 = eT(0);
-  
-  uword i, j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
+  #if (__FINITE_MATH_ONLY__ > 0)
     {
-    val1 += A[i] * B[i];
-    val2 += A[j] * B[j];
+    eT val = eT(0);
+    
+    for(uword i=0; i<n_elem; ++i)
+      {
+      val += A[i] * B[i];
+      }
+    
+    return val;
     }
-  
-  if(i < n_elem)
+  #else
     {
-    val1 += A[i] * B[i];
+    eT val1 = eT(0);
+    eT val2 = eT(0);
+    
+    uword i, j;
+    
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+      {
+      val1 += A[i] * B[i];
+      val2 += A[j] * B[j];
+      }
+    
+    if(i < n_elem)
+      {
+      val1 += A[i] * B[i];
+      }
+    
+    return val1 + val2;
     }
-  
-  return val1 + val2;
+  #endif
   }
 
 

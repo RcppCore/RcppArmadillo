@@ -146,6 +146,26 @@ arrayops::copy_backwards(eT* dest, const eT* src, const uword n_elem)
 
 
 
+template<typename eT>
+arma_hot
+inline
+void
+arrayops::fill_zeros(eT* dest, const uword n_elem)
+  {
+  typedef typename get_pod_type<eT>::result pod_type;
+  
+  if( (n_elem >= 8) && (std::numeric_limits<eT>::is_integer || (std::numeric_limits<pod_type>::is_iec559 && is_real<pod_type>::value)) )
+    {
+    std::memset(dest, 0, sizeof(eT)*n_elem);
+    }
+  else
+    {
+    arrayops::inplace_set(dest, eT(0), n_elem);
+    }
+  }
+
+
+
 template<typename out_eT, typename in_eT>
 arma_hot
 arma_inline

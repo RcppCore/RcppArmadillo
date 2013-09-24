@@ -27,6 +27,9 @@ class Row : public Mat<eT>
   inline explicit Row(const uword N);
   inline          Row(const uword in_rows, const uword in_cols);
   
+  template<typename fill_type> inline Row(const uword n_elem,                       const arma::fill::fill_class<fill_type>& f);
+  template<typename fill_type> inline Row(const uword in_rows, const uword in_cols, const arma::fill::fill_class<fill_type>& f);
+  
   inline                  Row(const char*        text);
   inline const Row& operator=(const char*        text);
   
@@ -39,11 +42,15 @@ class Row : public Mat<eT>
   #if defined(ARMA_USE_CXX11)
   inline                  Row(const std::initializer_list<eT>& list);
   inline const Row& operator=(const std::initializer_list<eT>& list);
+  
+  inline                  Row(Row&& m);
+  inline const Row& operator=(Row&& m);
   #endif
   
   inline explicit Row(const SpRow<eT>& X);
   
   inline const Row& operator=(const eT val);
+  inline const Row& operator=(const Row& X);
   
   template<typename T1> inline                   Row(const Base<eT,T1>& X);
   template<typename T1> inline const Row&  operator=(const Base<eT,T1>& X);
@@ -66,8 +73,10 @@ class Row : public Mat<eT>
   arma_inline const Op<Row<eT>,op_htrans> ht() const;
   arma_inline const Op<Row<eT>,op_strans> st() const;
   
-  arma_inline eT& col(const uword col_num);
+  arma_inline eT& col(const uword col_num);         // TODO: inconsistent; should return a subview_col; change API for 4.0 ?
   arma_inline eT  col(const uword col_num) const;
+  
+  using Mat<eT>::cols;
   
   arma_inline       subview_row<eT> cols(const uword in_col1, const uword in_col2);
   arma_inline const subview_row<eT> cols(const uword in_col1, const uword in_col2) const;
@@ -153,6 +162,7 @@ class Row<eT>::fixed : public Row<eT>
   arma_inline fixed();
   arma_inline fixed(const fixed<fixed_n_elem>& X);
        inline fixed(const subview_cube<eT>& X);
+  // TODO: constructor with fill
   
   template<typename T1>              inline fixed(const Base<eT,T1>& A);
   template<typename T1, typename T2> inline fixed(const Base<pod_type,T1>& A, const Base<pod_type,T2>& B);
@@ -176,6 +186,8 @@ class Row<eT>::fixed : public Row<eT>
     inline const Row& operator=(const std::initializer_list<eT>& list);
   #endif
   
+  arma_inline const Row& operator=(const fixed<fixed_n_elem>& X);
+    
   arma_inline const Op< Row_fixed_type, op_htrans >  t() const;
   arma_inline const Op< Row_fixed_type, op_htrans > ht() const;
   arma_inline const Op< Row_fixed_type, op_strans > st() const;

@@ -34,6 +34,11 @@ class arrayops
   copy_backwards(eT* dest, const eT* src, const uword n_elem);
   
   
+  template<typename eT>
+  arma_hot inline static void
+  fill_zeros(eT* dest, const uword n_elem);
+  
+  
   // 
   // array = convert(array)
   
