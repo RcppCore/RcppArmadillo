@@ -1,5 +1,5 @@
-// Copyright (C) 2011 Conrad Sanderson
-// Copyright (C) 2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2011-2013 Conrad Sanderson
+// Copyright (C) 2011-2013 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,10 +30,14 @@ op_resize::apply(Mat<typename T1::elem_type>& actual_out, const Op<T1,op_resize>
   const uword A_n_rows = A.n_rows;
   const uword A_n_cols = A.n_cols;
   
-  Mat<eT> B;
-  
   const bool alias = (&actual_out == &A);
   
+  if( alias && (A_n_rows == out_n_rows) && (A_n_cols == out_n_cols) )
+    {
+    return;
+    }
+  
+  Mat<eT>  B;
   Mat<eT>& out = alias ? B : actual_out;
   
   out.set_size(out_n_rows, out_n_cols);
@@ -55,7 +59,6 @@ op_resize::apply(Mat<typename T1::elem_type>& actual_out, const Op<T1,op_resize>
     {
     actual_out.steal_mem(B);
     }
-  
   }
 
 
@@ -80,10 +83,14 @@ op_resize::apply(Cube<typename T1::elem_type>& actual_out, const OpCube<T1,op_re
   const uword A_n_cols   = A.n_cols;
   const uword A_n_slices = A.n_slices;
   
-  Cube<eT> B;
-  
   const bool alias = (&actual_out == &A);
   
+  if( alias && (A_n_rows == out_n_rows) && (A_n_cols == out_n_cols) && (A_n_slices == out_n_slices) )
+    {
+    return;
+    }
+  
+  Cube<eT>  B;
   Cube<eT>& out = alias ? B : actual_out;
   
   out.set_size(out_n_rows, out_n_cols, out_n_slices);
@@ -106,7 +113,6 @@ op_resize::apply(Cube<typename T1::elem_type>& actual_out, const OpCube<T1,op_re
     {
     actual_out.steal_mem(B);
     }
-  
   }
 
 

@@ -313,17 +313,15 @@ SpMat<eT>::SpMat(const Base<uword,T1>& locations_expr, const Base<eT,T2>& vals_e
   
   init(in_n_rows, in_n_cols);
   
-  const unwrap<T1>         locs_tmp( locations_expr.get_ref() );
-  const Mat<uword>& locs = locs_tmp.M;
-  
+  const unwrap<T1> locs_tmp( locations_expr.get_ref() );
   const unwrap<T2> vals_tmp( vals_expr.get_ref() );
-  const Mat<eT>& vals = vals_tmp.M;
   
-  arma_debug_check( (vals.is_vec() == false), "SpMat::SpMat(): given 'values' object is not a vector" );
+  const Mat<uword>& locs = locs_tmp.M;
+  const Mat<eT>&    vals = vals_tmp.M;
   
-  arma_debug_check((locs.n_rows != 2), "SpMat::SpMat(): locations matrix must have two rows");
-  
-  arma_debug_check((locs.n_cols != vals.n_elem), "SpMat::SpMat(): number of locations is different than number of values");
+  arma_debug_check( (vals.is_vec() == false),     "SpMat::SpMat(): given 'values' object is not a vector" );
+  arma_debug_check( (locs.n_rows != 2),           "SpMat::SpMat(): locations matrix must have two rows" );
+  arma_debug_check( (locs.n_cols != vals.n_elem), "SpMat::SpMat(): number of locations is different than number of values" );
   
   // Resize to correct number of elements.
   mem_resize(vals.n_elem);
@@ -331,7 +329,9 @@ SpMat<eT>::SpMat(const Base<uword,T1>& locations_expr, const Base<eT,T2>& vals_e
   // Reset column pointers to zero.
   arrayops::inplace_set(access::rwp(col_ptrs), uword(0), n_cols + 1);
   
+  
   bool actually_sorted = true;
+  
   if(sort_locations == true)
     {
     // sort_index() uses std::sort() which may use quicksort... so we better
@@ -391,6 +391,8 @@ SpMat<eT>::SpMat(const Base<uword,T1>& locations_expr, const Base<eT,T2>& vals_e
           );
         arma_debug_check((locs.at(1, i) == locs.at(1, i - 1) && locs.at(0, i) == locs.at(0, i - 1)), "SpMat::SpMat(): two identical point locations in list");
         }
+//! If sort_locations is false, then it is assumed that the locations and values
+//! are already sorted in column-major ordering.
 
       access::rw(values[i])      = vals[i];
       access::rw(row_indices[i]) = locs.at(0, i);
@@ -404,6 +406,66 @@ SpMat<eT>::SpMat(const Base<uword,T1>& locations_expr, const Base<eT,T2>& vals_e
     {
     access::rw(col_ptrs[i + 1]) += col_ptrs[i];
     }
+  }
+
+
+
+//! Insert a large number of values at once.
+//! Per CSC format, rowind_expr should be row indices, 
+//! colptr_expr should column ptr indices locations,
+//! and values should be the corresponding values.
+//! In this constructor the size is explicitly given.
+//! Values are assumed to be sorted, and the size 
+//! information is trusted
+template<typename eT>
+template<typename T1, typename T2, typename T3>
+inline
+SpMat<eT>::SpMat
+  (
+  const Base<uword,T1>& rowind_expr, 
+  const Base<uword,T2>& colptr_expr, 
+  const Base<eT,   T3>& values_expr, 
+  const uword           in_n_rows, 
+  const uword           in_n_cols
+  )
+  : n_rows(0)
+  , n_cols(0)
+  , n_elem(0)
+  , n_nonzero(0)
+  , vec_state(0)
+  , values(NULL)
+  , row_indices(NULL)
+  , col_ptrs(NULL)
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  init(in_n_rows, in_n_cols);
+  
+  const unwrap<T1> rowind_tmp( rowind_expr.get_ref() );
+  const unwrap<T2> colptr_tmp( colptr_expr.get_ref() );
+  const unwrap<T3>   vals_tmp( values_expr.get_ref() );
+  
+  const Mat<uword>& rowind = rowind_tmp.M;
+  const Mat<uword>& colptr = colptr_tmp.M;
+  const Mat<eT>&      vals = vals_tmp.M;
+  
+  arma_debug_check( (rowind.is_vec() == false), "SpMat::SpMat(): given 'rowind' object is not a vector" );
+  arma_debug_check( (colptr.is_vec() == false), "SpMat::SpMat(): given 'colptr' object is not a vector" );
+  arma_debug_check( (vals.is_vec()   == false), "SpMat::SpMat(): given 'values' object is not a vector" );
+  
+  arma_debug_check( (rowind.n_elem != vals.n_elem), "SpMat::SpMat(): number of row indices is not equal to number of values" );
+  arma_debug_check( (colptr.n_elem != (n_cols+1) ), "SpMat::SpMat(): number of column pointers is not equal to n_cols+1" );
+  
+  // Resize to correct number of elements (this also sets n_nonzero)
+  mem_resize(vals.n_elem);
+  
+  // copy supplied values into sparse matrix -- not checked for consistency
+  arrayops::copy(access::rwp(row_indices), rowind.memptr(), rowind.n_elem );
+  arrayops::copy(access::rwp(col_ptrs),    colptr.memptr(), colptr.n_elem );
+  arrayops::copy(access::rwp(values),      vals.memptr(),   vals.n_elem   );
+  
+  // important: set the sentinel as well
+  access::rw(col_ptrs[n_cols + 1]) = std::numeric_limits<uword>::max();
   }
 
 
@@ -3340,7 +3402,20 @@ SpMat<eT>::reset()
   {
   arma_extra_debug_sigprint();
 
-  set_size(0, 0);
+  switch(vec_state)
+    {
+    default:
+      init(0, 0);
+      break;
+      
+    case 1:
+      init(0, 1);
+      break;
+    
+    case 2:
+      init(1, 0);
+      break;
+    }
   }
 
 
@@ -3905,13 +3980,14 @@ SpMat<eT>::init(uword in_rows, uword in_cols)
   access::rw(n_elem)    = (in_rows * in_cols);
   access::rw(n_nonzero) = 0;
 
-  // Try to allocate the column pointers, filling them with 0, except for the
-  // last element which contains the maximum possible element (so iterators
-  // terminate correctly).
+  // Try to allocate the column pointers, filling them with 0,
+  // except for the last element which contains the maximum possible element
+  // (so iterators terminate correctly).
   access::rw(col_ptrs) = memory::acquire<uword>(in_cols + 2);
-  access::rw(col_ptrs[in_cols + 1]) = std::numeric_limits<uword>::max();
   
   arrayops::inplace_set(access::rwp(col_ptrs), uword(0), in_cols + 1);
+  
+  access::rw(col_ptrs[in_cols + 1]) = std::numeric_limits<uword>::max();
   }
 
 
@@ -4066,7 +4142,7 @@ SpMat<eT>::mem_resize(const uword new_n_nonzero)
       access::rw(values)      = memory::acquire_chunked<eT>   (1);
       access::rw(row_indices) = memory::acquire_chunked<uword>(1);
 
-      access::rw(values[0]) = 0;
+      access::rw(     values[0]) = 0;
       access::rw(row_indices[0]) = 0;
       }
     else
@@ -4098,7 +4174,7 @@ SpMat<eT>::mem_resize(const uword new_n_nonzero)
         
       // Set the "fake end" of the matrix by setting the last value and row
       // index to 0.  This helps the iterators work correctly.
-      access::rw(values[new_n_nonzero]) = 0;
+      access::rw(     values[new_n_nonzero]) = 0;
       access::rw(row_indices[new_n_nonzero]) = 0;
       }
     
@@ -4406,26 +4482,7 @@ inline
 void
 SpMat<eT>::clear()
   {
-  if (values)
-    {
-    memory::release(values);
-    memory::release(row_indices);
-    
-    access::rw(values)      = memory::acquire_chunked<eT>   (1);
-    access::rw(row_indices) = memory::acquire_chunked<uword>(1);
-
-    access::rw(values[0]) = 0;
-    access::rw(row_indices[0]) = 0;
-    }
-  
-  memory::release(col_ptrs);
-  
-  access::rw(col_ptrs) = memory::acquire<uword>(n_cols + 2);
-  access::rw(col_ptrs[n_cols + 1]) = std::numeric_limits<uword>::max();
-  
-  arrayops::inplace_set(col_ptrs, eT(0), n_cols + 1);
-  
-  access::rw(n_nonzero) = 0;
+  (*this).reset();
   }
 
 

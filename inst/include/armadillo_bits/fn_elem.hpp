@@ -694,4 +694,31 @@ round(const BaseCube<typename T1::elem_type,T1>& A)
 
 
 
+//
+// sign
+
+template<typename T1>
+arma_inline
+typename enable_if2< is_arma_type<T1>::value, const eOp<T1, eop_sign> >::result
+sign(const T1& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  return eOp<T1, eop_sign>(A);
+  }
+
+
+
+template<typename T1>
+arma_inline
+const eOpCube<T1, eop_sign>
+sign(const BaseCube<typename T1::elem_type,T1>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  return eOpCube<T1, eop_sign>(A.get_ref());
+  }
+
+
+
 //! @}

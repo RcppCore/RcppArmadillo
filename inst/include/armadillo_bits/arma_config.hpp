@@ -97,6 +97,13 @@ struct arma_config
   #else
     static const bool extra_code = false;
   #endif
+  
+  
+  #if defined(ARMA_USE_CXX11)
+    static const bool use_cxx11 = true;
+  #else
+    static const bool use_cxx11 = false;
+  #endif
   };
 
 

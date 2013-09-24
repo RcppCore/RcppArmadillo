@@ -57,6 +57,14 @@ class Cube : public BaseCube< eT, Cube<eT> >
   
   inline Cube(const uword in_rows, const uword in_cols, const uword in_slices);
   
+  template<typename fill_type>
+  inline Cube(const uword in_rows, const uword in_cols, const uword in_slices, const arma::fill::fill_class<fill_type>& f);
+  
+  #if defined(ARMA_USE_CXX11)
+  inline                  Cube(Cube&& m);
+  inline const Cube& operator=(Cube&& m);
+  #endif
+  
   inline Cube(      eT* aux_mem, const uword aux_n_rows, const uword aux_n_cols, const uword aux_n_slices, const bool copy_aux_mem = true, const bool strict = true);
   inline Cube(const eT* aux_mem, const uword aux_n_rows, const uword aux_n_cols, const uword aux_n_slices);
   
@@ -97,6 +105,15 @@ class Cube : public BaseCube< eT, Cube<eT> >
   
   inline            subview_cube<eT> operator()(const span& row_span, const span& col_span, const span& slice_span);
   inline      const subview_cube<eT> operator()(const span& row_span, const span& col_span, const span& slice_span) const;
+  
+  arma_inline       subview_cube<eT> tube(const uword in_row1, const uword in_col1);
+  arma_inline const subview_cube<eT> tube(const uword in_row1, const uword in_col1) const;
+  
+  arma_inline       subview_cube<eT> tube(const uword in_row1, const uword in_col1, const uword in_row2, const uword in_col2);
+  arma_inline const subview_cube<eT> tube(const uword in_row1, const uword in_col1, const uword in_row2, const uword in_col2) const;
+  
+  inline            subview_cube<eT> tube(const span& row_span, const span& col_span);
+  inline      const subview_cube<eT> tube(const span& row_span, const span& col_span) const;
   
   
   inline void shed_slice(const uword slice_num);
@@ -221,6 +238,9 @@ class Cube : public BaseCube< eT, Cube<eT> >
   
   
   inline const Cube& fill(const eT val);
+  
+  template<typename fill_type>
+  arma_hot inline const Cube& fill(const arma::fill::fill_class<fill_type>& f);
   
   inline const Cube& zeros();
   inline const Cube& zeros(const uword in_rows, const uword in_cols, const uword in_slices);

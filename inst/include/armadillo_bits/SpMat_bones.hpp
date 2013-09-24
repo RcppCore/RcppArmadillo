@@ -36,21 +36,27 @@ class SpMat : public SpBase< eT, SpMat<eT> >
    * The memory used to store the values of the matrix.
    * In accordance with the CSC format, this stores only the actual values.
    * The correct locations of the values are assembled from the row indices
-   * and the column pointers.
+   * and the column pointers.  The length of this array is n_nonzero + 1; the
+   * final value ensures the integrity of iterators.  If you are planning on
+   * resizing this vector, it's probably best to use mem_resize() instead.
    */
   const eT* const values;
   
   /**
    * The row indices of each value.  row_indices[i] is the row of values[i].
    * The length of this array is n_nonzero + 1; the final value ensures the
-   * integrity of iterators.
+   * integrity of iterators.  If you are planning on resizing this vector, it's
+   * probably best to use mem_resize() instead.
    */
   const uword* const row_indices;
   
   /**
    * The column pointers.  This stores the index of the first item in column i.
    * That is, values[col_ptrs[i]] is the first value in column i, and it is in
-   * row row_indices[col_ptrs[i]].
+   * row row_indices[col_ptrs[i]].  This array is of length (n_cols + 2); the
+   * element col_ptrs[n_cols] should be equal to n_nonzero, and the element
+   * col_ptrs[n_cols + 1] is an invalid very large value that ensures the
+   * integrity of iterators.
    */
   const uword* const col_ptrs;
   
@@ -67,6 +73,8 @@ class SpMat : public SpBase< eT, SpMat<eT> >
 
   template<typename T1, typename T2> inline SpMat(const Base<uword,T1>& locations, const Base<eT,T2>& values, const bool sort_locations = true);
   template<typename T1, typename T2> inline SpMat(const Base<uword,T1>& locations, const Base<eT,T2>& values, const uword n_rows, const uword n_cols, const bool sort_locations = true);
+  
+  template<typename T1, typename T2, typename T3> inline SpMat(const Base<uword,T1>& rowind, const Base<uword,T2>& colptr, const Base<eT,T3>& values, const uword n_rows, const uword n_cols);
   
   inline const SpMat&  operator=(const eT val); //! Sets size to 1x1.
   inline const SpMat& operator*=(const eT val);

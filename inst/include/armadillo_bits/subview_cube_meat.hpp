@@ -49,6 +49,25 @@ subview_cube<eT>::subview_cube
 template<typename eT>
 inline
 void
+subview_cube<eT>::operator= (const eT val)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(n_elem != 1)
+    {
+    arma_debug_assert_same_size(n_rows, n_cols, n_slices, 1, 1, 1, "copy into subcube");
+    }
+  
+  Cube<eT>& Q = const_cast< Cube<eT>& >(m);
+  
+  Q.at(aux_row1, aux_col1, aux_slice1) = val;
+  }
+
+
+
+template<typename eT>
+inline
+void
 subview_cube<eT>::operator+= (const eT val)
   {
   arma_extra_debug_sigprint();
@@ -943,7 +962,6 @@ subview_cube<eT>::fill(const eT val)
       arrayops::inplace_set( slice_colptr(slice,col), val, local_n_rows );
       }
     }
-  
   }
 
 
@@ -955,7 +973,17 @@ subview_cube<eT>::zeros()
   {
   arma_extra_debug_sigprint();
   
-  fill(eT(0));
+  const uword local_n_rows   = n_rows;
+  const uword local_n_cols   = n_cols;
+  const uword local_n_slices = n_slices;
+  
+  for(uword slice = 0; slice < local_n_slices; ++slice)
+    {
+    for(uword col = 0; col < local_n_cols; ++col)
+      {
+      arrayops::fill_zeros( slice_colptr(slice,col), local_n_rows );
+      }
+    }
   }
 
 
