@@ -1,3 +1,10 @@
+2013-09-27 Romain Francois <romain@r-enthusiasts.com>
+
+        * include/RcppArmadilloAs.h : handle cx_mat, using that Rcomplex is
+        layout compatible with std::complex<double>
+        * unitTests/cpp/armadillo.cpp : more testing
+        * unitTests/runit.RcppArmadillo.R : more testing
+        
 2013-09-23  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/*: Upgraded to Armadillo pre-release of 3.920.0

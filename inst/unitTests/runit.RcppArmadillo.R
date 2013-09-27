@@ -209,3 +209,26 @@ test.armadillo.vec.const.ref <- function() {
     checkEquals(fx(m), 9, msg = "Const Reference Vector function signature" )
 }
 
+test.armadillo.mat.plain <- function() {
+    fx <- cx_mat_plain
+    m <- matrix(1:9, 3, 3)
+    checkEquals(fx(m), 9, msg = "Plain Matrix function signature" )
+}
+
+test.armadillo.mat.const <- function() {
+    fx <- cx_mat_const
+    m <- matrix(1:9, 3, 3)
+    checkEquals(fx(m), 9, msg = "Const Matrix function signature" )
+}
+
+test.armadillo.mat.ref <- function() {
+    fx <- cx_mat_ref
+    m <- matrix(1:9, 3, 3)
+    checkEquals(fx(m), 9, msg = "Reference Matrix function signature" )
+}
+
+test.armadillo.mat.const.ref <- function() {
+    fx <- cx_mat_const_ref
+    m <- matrix(1:9, 3, 3)
+    checkEquals(fx(m), 9, msg = "Const Reference Matrix function signature" )
+}
