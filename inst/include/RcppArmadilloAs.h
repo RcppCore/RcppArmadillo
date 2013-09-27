@@ -105,7 +105,7 @@ namespace traits {
     public:
         typedef const typename arma::Mat<T>& const_reference ;
                         
-        ConstReferenceInputParameter( SEXP x_ ) : m(x_), mat( m.begin(), m.nrow(), m.ncol(), false ){}
+        ConstReferenceInputParameter( SEXP x_ ) : m(x_), mat( reinterpret_cast<T*>( m.begin() ), m.nrow(), m.ncol(), false ){}
                         
         inline operator const_reference(){
         		return mat ;        
@@ -121,7 +121,7 @@ namespace traits {
     public:
         typedef typename arma::Mat<T>& reference ;
                         
-        ReferenceInputParameter( SEXP x_ ) : m(x_), mat( m.begin(), m.nrow(), m.ncol(), false ){}
+        ReferenceInputParameter( SEXP x_ ) : m(x_), mat( reinterpret_cast<T*>( m.begin() ), m.nrow(), m.ncol(), false ){}
                         
         inline operator reference(){
             return mat ;        
@@ -136,7 +136,7 @@ namespace traits {
     class ConstInputParameter< arma::Mat<T> > {
     public:
         typedef const typename arma::Mat<T> const_nonref;
-        ConstInputParameter(SEXP x_) : m(x_), mat(m.begin(), m.nrow(), m.ncol(), false){}
+        ConstInputParameter(SEXP x_) : m(x_), mat( reinterpret_cast<T*>( m.begin() ), m.nrow(), m.ncol(), false){}
         inline operator const_nonref() { return mat ; }
     private:
         Rcpp::Matrix< Rcpp::traits::r_sexptype_traits<T>::rtype > m ;
@@ -147,7 +147,7 @@ namespace traits {
     template <typename T, typename VEC, typename REF>
     class ArmaVec_InputParameter {
     public:
-        ArmaVec_InputParameter( SEXP x_ ) : v(x_), vec( v.begin(), v.size(), false ){}
+        ArmaVec_InputParameter( SEXP x_ ) : v(x_), vec( reinterpret_cast<T*>( v.begin() ), v.size(), false ){}
                         
         inline operator REF(){
             return vec ;        

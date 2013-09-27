@@ -252,3 +252,23 @@ int vec_const_ref(const arma::vec & x) {
     return x.n_elem;
 }
 
+// [[Rcpp::export]]
+int cx_mat_plain(arma::cx_mat x) { 
+    return x.n_elem;
+}
+
+// [[Rcpp::export]]
+int cx_mat_const(const arma::cx_mat x) { 
+    return x.n_elem;
+}
+
+// [[Rcpp::export]]
+int cx_mat_ref(arma::cx_mat & x) { 
+    return x.n_elem;
+}
+
+// [[Rcpp::export]]
+int cx_mat_const_ref(const arma::cx_mat & x) { 
+    return x.n_elem;
+}
+
