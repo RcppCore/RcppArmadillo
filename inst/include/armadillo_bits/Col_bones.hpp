@@ -27,8 +27,8 @@ class Col : public Mat<eT>
   inline explicit Col(const uword n_elem);
   inline          Col(const uword in_rows, const uword in_cols);
   
-  template<typename fill_type> inline Col(const uword n_elem,                       const arma::fill::fill_class<fill_type>& f);
-  template<typename fill_type> inline Col(const uword in_rows, const uword in_cols, const arma::fill::fill_class<fill_type>& f);
+  template<typename fill_type> inline Col(const uword n_elem,                       const fill::fill_class<fill_type>& f);
+  template<typename fill_type> inline Col(const uword in_rows, const uword in_cols, const fill::fill_class<fill_type>& f);
   
   inline                  Col(const char*        text);
   inline const Col& operator=(const char*        text);
@@ -77,6 +77,7 @@ class Col : public Mat<eT>
   arma_inline eT  row(const uword row_num) const;
   
   using Mat<eT>::rows;
+  using Mat<eT>::operator();
   
   arma_inline       subview_col<eT> rows(const uword in_row1, const uword in_row2);
   arma_inline const subview_col<eT> rows(const uword in_row1, const uword in_row2) const;
@@ -84,10 +85,11 @@ class Col : public Mat<eT>
   arma_inline       subview_col<eT> subvec(const uword in_row1, const uword in_row2);
   arma_inline const subview_col<eT> subvec(const uword in_row1, const uword in_row2) const;
   
+  arma_inline       subview_col<eT> rows(const span& row_span);
+  arma_inline const subview_col<eT> rows(const span& row_span) const;
+  
   arma_inline       subview_col<eT> subvec(const span& row_span);
   arma_inline const subview_col<eT> subvec(const span& row_span) const;
-  
-  using Mat<eT>::operator();
   
   arma_inline       subview_col<eT> operator()(const span& row_span);
   arma_inline const subview_col<eT> operator()(const span& row_span) const;
@@ -165,8 +167,7 @@ class Col<eT>::fixed : public Col<eT>
   arma_inline fixed(const fixed<fixed_n_elem>& X);
        inline fixed(const subview_cube<eT>& X);
   
-  // TODO: constructor with fill_type
-  
+  template<typename fill_type>       inline fixed(const fill::fill_class<fill_type>& f);
   template<typename T1>              inline fixed(const Base<eT,T1>& A);
   template<typename T1, typename T2> inline fixed(const Base<pod_type,T1>& A, const Base<pod_type,T2>& B);
   

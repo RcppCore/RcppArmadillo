@@ -98,4 +98,16 @@ class op_cdot
 
 
 
+class op_dot_mixed
+  {
+  public:
+  
+  template<typename T1, typename T2>
+  arma_hot inline static
+  typename promote_type<typename T1::elem_type, typename T2::elem_type>::result
+  apply(const T1& A, const T2& B);
+  };
+
+
+
 //! @}

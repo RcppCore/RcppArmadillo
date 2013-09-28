@@ -554,13 +554,9 @@ SpMat<eT>::operator+=(const SpMat<eT>& x)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(n_rows, n_cols, x.n_rows, x.n_cols, "addition");
-  
-  // Iterate over nonzero values of other matrix.
-  for (const_iterator it = x.begin(); it != x.end(); it++)
-    {
-    get_value(it.row(), it.col()) += *it;
-    }
+  SpMat<eT> out;
+  out = (*this) + x;
+  steal_mem(out);
   
   return *this;
   }
@@ -574,13 +570,9 @@ SpMat<eT>::operator-=(const SpMat<eT>& x)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(n_rows, n_cols, x.n_rows, x.n_cols, "subtraction");
-  
-  // Iterate over nonzero values of other matrix.
-  for (const_iterator it = x.begin(); it != x.end(); it++)
-    {
-    get_value(it.row(), it.col()) -= *it;
-    }
+  SpMat<eT> out;
+  out = (*this) - x;
+  steal_mem(out);
   
   return *this;
   }
@@ -593,8 +585,6 @@ const SpMat<eT>&
 SpMat<eT>::operator*=(const SpMat<eT>& y)
   {
   arma_extra_debug_sigprint();
-  
-  arma_debug_assert_mul_size(n_rows, n_cols, y.n_rows, y.n_cols, "matrix multiplication");
   
   SpMat<eT> z;
   z = (*this) * y;

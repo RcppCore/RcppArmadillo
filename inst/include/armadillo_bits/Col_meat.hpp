@@ -59,7 +59,7 @@ Col<eT>::Col(const uword in_n_rows, const uword in_n_cols)
 template<typename eT>
 template<typename fill_type>
 inline
-Col<eT>::Col(const uword in_n_elem, const arma::fill::fill_class<fill_type>& f)
+Col<eT>::Col(const uword in_n_elem, const fill::fill_class<fill_type>& f)
   : Mat<eT>(arma_vec_indicator(), in_n_elem, 1, 1)
   {
   arma_extra_debug_sigprint();
@@ -72,7 +72,7 @@ Col<eT>::Col(const uword in_n_elem, const arma::fill::fill_class<fill_type>& f)
 template<typename eT>
 template<typename fill_type>
 inline
-Col<eT>::Col(const uword in_n_rows, const uword in_n_cols, const arma::fill::fill_class<fill_type>& f)
+Col<eT>::Col(const uword in_n_rows, const uword in_n_cols, const fill::fill_class<fill_type>& f)
   : Mat<eT>(arma_vec_indicator(), 0, 0, 1)
   {
   arma_extra_debug_sigprint();
@@ -569,6 +569,30 @@ Col<eT>::subvec(const uword in_row1, const uword in_row2) const
 template<typename eT>
 arma_inline
 subview_col<eT>
+Col<eT>::rows(const span& row_span)
+  {
+  arma_extra_debug_sigprint();
+  
+  return subvec(row_span);
+  }
+
+
+
+template<typename eT>
+arma_inline
+const subview_col<eT>
+Col<eT>::rows(const span& row_span) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return subvec(row_span);
+  }
+
+
+
+template<typename eT>
+arma_inline
+subview_col<eT>
 Col<eT>::subvec(const span& row_span)
   {
   arma_extra_debug_sigprint();
@@ -896,6 +920,24 @@ Col<eT>::fixed<fixed_n_elem>::fixed(const subview_cube<eT>& X)
   arma_extra_debug_sigprint_this(this);
   
   Col<eT>::operator=(X);
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_elem>
+template<typename fill_type>
+inline
+Col<eT>::fixed<fixed_n_elem>::fixed(const fill::fill_class<fill_type>&)
+  : Col<eT>( arma_fixed_indicator(), fixed_n_elem, ((use_extra) ? mem_local_extra : Mat<eT>::mem_local) )
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  if(is_same_type<fill_type, fill::fill_zeros>::yes)  (*this).zeros();
+  if(is_same_type<fill_type, fill::fill_ones >::yes)  (*this).ones();
+  if(is_same_type<fill_type, fill::fill_eye  >::yes)  (*this).eye();
+  if(is_same_type<fill_type, fill::fill_randu>::yes)  (*this).randu();
+  if(is_same_type<fill_type, fill::fill_randn>::yes)  (*this).randn();
   }
 
 

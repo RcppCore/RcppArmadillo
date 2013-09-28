@@ -17,7 +17,7 @@ arma_warn_unused
 typename
 enable_if2
   <
-  is_arma_type<T1>::value && is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value,
+  is_arma_type<T1>::value && is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::yes,
   typename T1::elem_type
   >::result
 dot
@@ -29,6 +29,28 @@ dot
   arma_extra_debug_sigprint();
   
   return op_dot::apply(A,B);
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+arma_warn_unused
+typename
+enable_if2
+  <
+  is_arma_type<T1>::value && is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::no,
+  typename promote_type<typename T1::elem_type, typename T2::elem_type>::result
+  >::result
+dot
+  (
+  const T1& A,
+  const T2& B
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  return op_dot_mixed::apply(A,B);
   }
 
 
