@@ -10,6 +10,7 @@ rm -f  config.log config.status confdefs.h \
        vignettes/RcppArmadillo*.aux \
        vignettes/RcppArmadillo*.out \
        vignettes/RcppArmadillo*.tex \
+       vignettes/RcppArmadillo-*.pdf \
        vignettes/*.blg \
        vignettes/*.bbl \
        vignettes/*~ \
