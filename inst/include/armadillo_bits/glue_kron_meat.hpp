@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 Conrad Sanderson
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2013 Conrad Sanderson
+// Copyright (C) 2009-2013 NICTA (www.nicta.com.au)
 // Copyright (C) 2009-2010 Dimitrios Bouzas
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -28,13 +28,13 @@ glue_kron::direct_kron(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
   
   out.set_size(A_rows*B_rows, A_cols*B_cols);
   
-  for(uword i = 0; i < A_rows; i++)
+  for(uword j = 0; j < A_cols; j++)
     {
-    for(uword j = 0; j < A_cols; j++)
+    for(uword i = 0; i < A_rows; i++)
       {
-      out.submat(i*B_rows, j*B_cols, (i+1)*B_rows-1, (j+1)*B_cols-1) = A(i,j) * B; 
+      out.submat(i*B_rows, j*B_cols, (i+1)*B_rows-1, (j+1)*B_cols-1) = A.at(i,j) * B; 
       }
-    }  
+    }
   }
 
 
@@ -60,11 +60,11 @@ glue_kron::direct_kron(Mat< std::complex<T> >& out, const Mat< std::complex<T> >
   
   Mat<eT> tmp_B = conv_to< Mat<eT> >::from(B);
   
-  for(uword i = 0; i < A_rows; i++)
+  for(uword j = 0; j < A_cols; j++)
     {
-    for(uword j = 0; j < A_cols; j++)
+    for(uword i = 0; i < A_rows; i++)
       {
-      out.submat(i*B_rows, j*B_cols, (i+1)*B_rows-1, (j+1)*B_cols-1) = A(i,j) * tmp_B; 
+      out.submat(i*B_rows, j*B_cols, (i+1)*B_rows-1, (j+1)*B_cols-1) = A.at(i,j) * tmp_B; 
       }
     }  
   }
@@ -88,11 +88,11 @@ glue_kron::direct_kron(Mat< std::complex<T> >& out, const Mat<T>& A, const Mat< 
   
   out.set_size(A_rows*B_rows, A_cols*B_cols);
   
-  for(uword i = 0; i < A_rows; i++)
+  for(uword j = 0; j < A_cols; j++)
     {
-    for(uword j = 0; j < A_cols; j++)
+    for(uword i = 0; i < A_rows; i++)
       {
-      out.submat(i*B_rows, j*B_cols, (i+1)*B_rows-1, (j+1)*B_cols-1) = A(i,j) * B; 
+      out.submat(i*B_rows, j*B_cols, (i+1)*B_rows-1, (j+1)*B_cols-1) = A.at(i,j) * B; 
       }
     }  
   }
@@ -110,13 +110,24 @@ glue_kron::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_kron>& 
   
   typedef typename T1::elem_type eT;
   
-  const unwrap_check<T1> A_tmp(X.A, out);
-  const unwrap_check<T2> B_tmp(X.B, out);
+  const unwrap<T1> A_tmp(X.A);
+  const unwrap<T2> B_tmp(X.B);
   
   const Mat<eT>& A = A_tmp.M;
   const Mat<eT>& B = B_tmp.M;
   
-  glue_kron::direct_kron(out, A, B); 
+  if( (&out != &A) && (&out != &B) )
+    {
+    glue_kron::direct_kron(out, A, B); 
+    }
+  else
+    {
+    Mat<eT> tmp;
+    
+    glue_kron::direct_kron(tmp, A, B);
+    
+    out.steal_mem(tmp);
+    }
   }
 
 

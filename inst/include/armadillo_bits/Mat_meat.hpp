@@ -73,7 +73,7 @@ Mat<eT>::Mat(const uword in_n_rows, const uword in_n_cols)
 template<typename eT>
 template<typename fill_type>
 inline
-Mat<eT>::Mat(const uword in_n_rows, const uword in_n_cols, const arma::fill::fill_class<fill_type>& f)
+Mat<eT>::Mat(const uword in_n_rows, const uword in_n_cols, const fill::fill_class<fill_type>& f)
   : n_rows(in_n_rows)
   , n_cols(in_n_cols)
   , n_elem(in_n_rows*in_n_cols)
@@ -866,6 +866,7 @@ Mat<eT>::steal_mem(Mat<eT>& x)
     const uword x_mem_state = x.mem_state;
     
     const uword t_vec_state = vec_state;
+    const uword t_mem_state = mem_state;
     
     bool layout_ok = false;
     
@@ -887,7 +888,7 @@ Mat<eT>::steal_mem(Mat<eT>& x)
       }
     
     
-    if( (x_mem_state == 0) && (x_n_elem > arma_config::mat_prealloc) && (layout_ok == true) )
+    if( (t_mem_state <= 1) && (x_mem_state <= 1) && (x_n_elem > arma_config::mat_prealloc) && (layout_ok == true) )
       {
       reset();
       // note: calling reset() also prevents fixed size matrices from changing size or using non-local memory
@@ -897,10 +898,11 @@ Mat<eT>::steal_mem(Mat<eT>& x)
       access::rw(n_elem) = x_n_elem;
       access::rw(mem)    = x.mem;
       
-      access::rw(x.n_rows) = 0;
-      access::rw(x.n_cols) = 0;
-      access::rw(x.n_elem) = 0;
-      access::rw(x.mem)    = 0;
+      access::rw(x.n_rows)    = 0;
+      access::rw(x.n_cols)    = 0;
+      access::rw(x.n_elem)    = 0;
+      access::rw(x.mem_state) = 0;
+      access::rw(x.mem)       = 0;
       }
     else
       {
@@ -2666,6 +2668,118 @@ Mat<eT>::cols(const uword in_col1, const uword in_col2) const
   const uword subview_n_cols = in_col2 - in_col1 + 1;
   
   return subview<eT>(*this, 0, in_col1, n_rows, subview_n_cols);
+  }
+
+
+
+//! creation of subview (submatrix comprised of specified row vectors)
+template<typename eT>
+inline
+subview<eT>
+Mat<eT>::rows(const span& row_span)
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool row_all = row_span.whole;
+  
+  const uword local_n_rows = n_rows;
+  
+  const uword in_row1       = row_all ? 0            : row_span.a;
+  const uword in_row2       =                          row_span.b;
+  const uword submat_n_rows = row_all ? local_n_rows : in_row2 - in_row1 + 1;
+  
+  arma_debug_check
+    (
+    ( row_all ? false : ((in_row1 > in_row2) || (in_row2 >= local_n_rows)) )
+    ,
+    "Mat::rows(): indices out of bounds or incorrectly used"
+    );
+  
+  return subview<eT>(*this, in_row1, 0, submat_n_rows, n_cols);
+  }
+
+
+
+//! creation of subview (submatrix comprised of specified row vectors)
+template<typename eT>
+inline
+const subview<eT>
+Mat<eT>::rows(const span& row_span) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool row_all = row_span.whole;
+  
+  const uword local_n_rows = n_rows;
+  
+  const uword in_row1       = row_all ? 0            : row_span.a;
+  const uword in_row2       =                          row_span.b;
+  const uword submat_n_rows = row_all ? local_n_rows : in_row2 - in_row1 + 1;
+  
+  arma_debug_check
+    (
+    ( row_all ? false : ((in_row1 > in_row2) || (in_row2 >= local_n_rows)) )
+    ,
+    "Mat::rows(): indices out of bounds or incorrectly used"
+    );
+  
+  return subview<eT>(*this, in_row1, 0, submat_n_rows, n_cols);
+  }
+
+
+
+//! creation of subview (submatrix comprised of specified column vectors)
+template<typename eT>
+arma_inline
+subview<eT>
+Mat<eT>::cols(const span& col_span)
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool col_all = col_span.whole;
+  
+  const uword local_n_cols = n_cols;
+  
+  const uword in_col1       = col_all ? 0            : col_span.a;
+  const uword in_col2       =                          col_span.b;
+  const uword submat_n_cols = col_all ? local_n_cols : in_col2 - in_col1 + 1;
+  
+  arma_debug_check
+    (
+    ( col_all ? false : ((in_col1 > in_col2) || (in_col2 >= local_n_cols)) )
+    ,
+    "Mat::cols(): indices out of bounds or incorrectly used"
+    );
+  
+  return subview<eT>(*this, 0, in_col1, n_rows, submat_n_cols);
+  }
+
+
+
+//! creation of subview (submatrix comprised of specified column vectors)
+template<typename eT>
+arma_inline
+const subview<eT>
+Mat<eT>::cols(const span& col_span) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool col_all = col_span.whole;
+  
+  const uword local_n_cols = n_cols;
+  
+  const uword in_col1       = col_all ? 0            : col_span.a;
+  const uword in_col2       =                          col_span.b;
+  const uword submat_n_cols = col_all ? local_n_cols : in_col2 - in_col1 + 1;
+  
+  arma_debug_check
+    (
+    ( col_all ? false : ((in_col1 > in_col2) || (in_col2 >= local_n_cols)) )
+    ,
+    "Mat::cols(): indices out of bounds or incorrectly used"
+    );
+  
+  return subview<eT>(*this, 0, in_col1, n_rows, submat_n_cols);
   }
 
 
@@ -5166,15 +5280,15 @@ template<typename fill_type>
 arma_hot
 inline
 const Mat<eT>&
-Mat<eT>::fill(const arma::fill::fill_class<fill_type>&)
+Mat<eT>::fill(const fill::fill_class<fill_type>&)
   {
   arma_extra_debug_sigprint();
   
-  if(is_same_type<fill_type, arma::fill::fill_zeros>::yes)  (*this).zeros();
-  if(is_same_type<fill_type, arma::fill::fill_ones >::yes)  (*this).ones();
-  if(is_same_type<fill_type, arma::fill::fill_eye  >::yes)  (*this).eye();
-  if(is_same_type<fill_type, arma::fill::fill_randu>::yes)  (*this).randu();
-  if(is_same_type<fill_type, arma::fill::fill_randn>::yes)  (*this).randn();
+  if(is_same_type<fill_type, fill::fill_zeros>::yes)  (*this).zeros();
+  if(is_same_type<fill_type, fill::fill_ones >::yes)  (*this).ones();
+  if(is_same_type<fill_type, fill::fill_eye  >::yes)  (*this).eye();
+  if(is_same_type<fill_type, fill::fill_randu>::yes)  (*this).randu();
+  if(is_same_type<fill_type, fill::fill_randn>::yes)  (*this).randn();
   
   return *this;
   }
@@ -6292,12 +6406,16 @@ template<typename eT>
 template<uword fixed_n_rows, uword fixed_n_cols>
 template<typename fill_type>
 inline
-Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::fixed(const arma::fill::fill_class<fill_type>& f)
+Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::fixed(const fill::fill_class<fill_type>&)
   : Mat<eT>( arma_fixed_indicator(), fixed_n_rows, fixed_n_cols, 0, ((use_extra) ? mem_local_extra : mem_local) )
   {
   arma_extra_debug_sigprint_this(this);
   
-  (*this).fill(f);
+  if(is_same_type<fill_type, fill::fill_zeros>::yes)  (*this).zeros();
+  if(is_same_type<fill_type, fill::fill_ones >::yes)  (*this).ones();
+  if(is_same_type<fill_type, fill::fill_eye  >::yes)  (*this).eye();
+  if(is_same_type<fill_type, fill::fill_randu>::yes)  (*this).randu();
+  if(is_same_type<fill_type, fill::fill_randn>::yes)  (*this).randn();
   }
 
 
@@ -6680,27 +6798,6 @@ bool
 Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::is_vec() const
   {
   return ( (fixed_n_rows == 1) || (fixed_n_cols == 1) );
-  }
-
-
-
-template<typename eT>
-template<uword fixed_n_rows, uword fixed_n_cols>
-template<typename fill_type>
-arma_hot
-inline
-const Mat<eT>&
-Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::fill(const arma::fill::fill_class<fill_type>&)
-  {
-  arma_extra_debug_sigprint();
-  
-  if(is_same_type<fill_type, arma::fill::fill_zeros>::yes)  (*this).zeros();
-  if(is_same_type<fill_type, arma::fill::fill_ones >::yes)  (*this).ones();
-  if(is_same_type<fill_type, arma::fill::fill_eye  >::yes)  (*this).eye();
-  if(is_same_type<fill_type, arma::fill::fill_randu>::yes)  (*this).randu();
-  if(is_same_type<fill_type, arma::fill::fill_randn>::yes)  (*this).randn();
-  
-  return *this;
   }
 
 

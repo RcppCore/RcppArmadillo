@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 Conrad Sanderson
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2013 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
 // Copyright (C) 2009 Edmund Highcock
 // Copyright (C) 2011 Stanislav Funiak
 // 
@@ -191,7 +191,7 @@ eig_gen
         Col< std::complex<eT> >& eigval, 
         Mat< std::complex<eT> >& eigvec,
   const Base<eT, T1>&            X, 
-  const char                     side = 'r',
+  const char                     side,
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
   )
   {
@@ -281,7 +281,7 @@ eig_gen
          Col<std::complex<T> >&    eigval, 
          Mat<std::complex<T> >&    eigvec,
   const Base<std::complex<T>, T1>& X, 
-  const char                       side = 'r',
+  const char                       side,
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
   )
   {
@@ -323,5 +323,44 @@ eig_gen
 
 
 
-//! @}
+template<typename eT, typename T1>
+inline
+bool
+eig_gen
+  (
+        Col< std::complex<eT> >& eigval, 
+        Mat< std::complex<eT> >& eigvec,
+  const Base<eT, T1>&            X, 
+  const char*                    side = "right",
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  )
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  return eig_gen(eigval, eigvec, X, side[0]);
+  }
 
+
+
+template<typename T, typename T1>
+inline
+bool
+eig_gen
+  (
+         Col<std::complex<T> >&    eigval, 
+         Mat<std::complex<T> >&    eigvec,
+  const Base<std::complex<T>, T1>& X, 
+  const char*                      side = "right",
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  )
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  return eig_gen(eigval, eigvec, X, side[0]);
+  }
+
+
+
+//! @}

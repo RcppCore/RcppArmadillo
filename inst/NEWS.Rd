@@ -2,15 +2,28 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
-\section{Changes in RcppArmadillo version (future)}{
+\section{Changes in RcppArmadillo version 0.3.920.1 (2013-09-27)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 3.920.1 (Agencia
+    Nacional Stasi)
     \itemize{
-      \item Initial implementation of \code{wrap<subview>}
-      \item Improved implementation of \code{as<>()} and \code{wrap()}
-      for sparse matrices
-      \item Converted main vignette from \code{LaTeX} style \code{minted}
-      to \code{lstlisting} which permits builds on CRAN; removed
-      set \code{BuildVignettes: FALSE}.
+      \item faster \code{.zeros()}
+      \item faster \code{round()}, \code{exp2()} and \code{log2()} when using C++11
+      \item added signum function: \code{sign()}
+      \item added move constructors when using C++11
+      \item added 2D fast Fourier transform: \code{fft2()}
+      \item added \code{.tube()} for easier extraction of vectors and subcubes from
+      cubes
+      \item added specification of a fill type during construction of Mat, Col,
+      Row and Cube classes, eg. \code{mat X(4, 5, fill::zeros)}
     }
+    \item Initial implementation of \code{wrap<subview>}
+    \item Improved implementation of \code{as<>()} and \code{wrap()}
+    for sparse matrices
+    \item Converted main vignette from \code{LaTeX} style \code{minted}
+    to \code{lstlisting} which permits builds on CRAN; removed
+    set \code{BuildVignettes: FALSE}.
+  }
 }
 
 \section{Changes in RcppArmadillo version 0.3.910.0 (2013-08-12)}{

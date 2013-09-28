@@ -50,7 +50,7 @@ class Mat : public Base< eT, Mat<eT> >
   inline Mat(const uword in_rows, const uword in_cols);
   
   template<typename fill_type>
-  inline Mat(const uword in_rows, const uword in_cols, const arma::fill::fill_class<fill_type>& f);
+  inline Mat(const uword in_rows, const uword in_cols, const fill::fill_class<fill_type>& f);
   
   inline                  Mat(const char*        text);
   inline const Mat& operator=(const char*        text);
@@ -172,9 +172,6 @@ class Mat : public Base< eT, Mat<eT> >
   inline            Col<eT>  unsafe_col(const uword col_num);
   inline      const Col<eT>  unsafe_col(const uword col_num) const;
   
-  // TODO: rows( span )
-  // TODO: cols( span )
-  // TODO: also need to add the overloads in Col and Row classes
   
   arma_inline       subview<eT> rows(const uword in_row1, const uword in_row2);
   arma_inline const subview<eT> rows(const uword in_row1, const uword in_row2) const;
@@ -182,9 +179,15 @@ class Mat : public Base< eT, Mat<eT> >
   arma_inline       subview<eT> cols(const uword in_col1, const uword in_col2);
   arma_inline const subview<eT> cols(const uword in_col1, const uword in_col2) const;
   
+  inline            subview<eT> rows(const span& row_span);
+  inline      const subview<eT> rows(const span& row_span) const;
+  
+  arma_inline       subview<eT> cols(const span& col_span);
+  arma_inline const subview<eT> cols(const span& col_span) const;
+  
+  
   arma_inline       subview<eT> submat(const uword in_row1, const uword in_col1, const uword in_row2, const uword in_col2);
   arma_inline const subview<eT> submat(const uword in_row1, const uword in_col1, const uword in_row2, const uword in_col2) const;
-  
   
   inline            subview<eT> submat    (const span& row_span, const span& col_span);
   inline      const subview<eT> submat    (const span& row_span, const span& col_span) const;
@@ -373,7 +376,7 @@ class Mat : public Base< eT, Mat<eT> >
   arma_hot inline const Mat& fill(const eT val);
   
   template<typename fill_type>
-  arma_hot inline const Mat& fill(const arma::fill::fill_class<fill_type>& f);
+  arma_hot inline const Mat& fill(const fill::fill_class<fill_type>& f);
   
   inline const Mat& zeros();
   inline const Mat& zeros(const uword in_elem);
@@ -578,7 +581,7 @@ class Mat<eT>::fixed : public Mat<eT>
   arma_inline fixed();
   arma_inline fixed(const fixed<fixed_n_rows, fixed_n_cols>& X);
   
-  template<typename fill_type>       inline fixed(const arma::fill::fill_class<fill_type>& f);
+  template<typename fill_type>       inline fixed(const fill::fill_class<fill_type>& f);
   template<typename T1>              inline fixed(const Base<eT,T1>& A);
   template<typename T1, typename T2> inline fixed(const Base<pod_type,T1>& A, const Base<pod_type,T2>& B);
   
@@ -622,9 +625,6 @@ class Mat<eT>::fixed : public Mat<eT>
   arma_inline arma_warn_unused const eT* memptr() const;
   
   arma_inline arma_warn_unused bool is_vec() const;
-  
-  template<typename fill_type>
-  arma_hot inline const Mat<eT>& fill(const arma::fill::fill_class<fill_type>& f);
   
   arma_hot inline const Mat<eT>& fill(const eT val);
   arma_hot inline const Mat<eT>& zeros();

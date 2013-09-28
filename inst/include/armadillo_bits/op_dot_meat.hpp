@@ -649,4 +649,36 @@ op_cdot::apply_proxy(const T1& X, const T2& Y)
 
 
 
+template<typename T1, typename T2>
+arma_hot
+inline
+typename promote_type<typename T1::elem_type, typename T2::elem_type>::result
+op_dot_mixed::apply(const T1& A, const T2& B)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type in_eT1;
+  typedef typename T2::elem_type in_eT2;
+  
+  typedef typename promote_type<in_eT1, in_eT2>::result out_eT;
+  
+  const Proxy<T1> PA(A);
+  const Proxy<T2> PB(B);
+  
+  const uword N = PA.get_n_elem();
+  
+  arma_debug_check( (N != PB.get_n_elem()), "dot(): objects must have the same number of elements" );
+  
+  out_eT acc = out_eT(0);
+  
+  for(uword i=0; i < N; ++i)
+    {
+    acc += upgrade_val<in_eT1,in_eT2>::apply(PA[i]) * upgrade_val<in_eT1,in_eT2>::apply(PB[i]);
+    }
+  
+  return acc;
+  }
+
+
+
 //! @}

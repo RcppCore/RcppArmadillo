@@ -58,7 +58,7 @@ class Cube : public BaseCube< eT, Cube<eT> >
   inline Cube(const uword in_rows, const uword in_cols, const uword in_slices);
   
   template<typename fill_type>
-  inline Cube(const uword in_rows, const uword in_cols, const uword in_slices, const arma::fill::fill_class<fill_type>& f);
+  inline Cube(const uword in_rows, const uword in_cols, const uword in_slices, const fill::fill_class<fill_type>& f);
   
   #if defined(ARMA_USE_CXX11)
   inline                  Cube(Cube&& m);
@@ -239,9 +239,6 @@ class Cube : public BaseCube< eT, Cube<eT> >
   
   inline const Cube& fill(const eT val);
   
-  template<typename fill_type>
-  arma_hot inline const Cube& fill(const arma::fill::fill_class<fill_type>& f);
-  
   inline const Cube& zeros();
   inline const Cube& zeros(const uword in_rows, const uword in_cols, const uword in_slices);
   
@@ -361,21 +358,17 @@ class Cube<eT>::fixed : public Cube<eT>
   
   public:
   
-  inline fixed() { mem_setup(); }
+  inline fixed();
+  inline fixed(const fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>& X);
   
-  inline const Cube& operator=(const eT val) { mem_setup(); Cube<eT>::operator=(val); return *this; }
+  template<typename fill_type>       inline fixed(const fill::fill_class<fill_type>& f);
+  template<typename T1>              inline fixed(const BaseCube<eT,T1>& A);
+  template<typename T1, typename T2> inline fixed(const BaseCube<pod_type,T1>& A, const BaseCube<pod_type,T2>& B);
   
-  template<typename T1>
-  inline fixed(const BaseCube<eT,T1>& A) { mem_setup(); Cube<eT>::operator=(A.get_ref()); }
-  
-  template<typename T1>
-  inline const Cube& operator=(const BaseCube<eT,T1>& A) { Cube<eT>::operator=(A.get_ref()); return *this; }
-  
-  template<typename T1, typename T2>
-  inline explicit fixed(const BaseCube<pod_type,T1>& A, const BaseCube<pod_type,T2>& B) { mem_setup(); Cube<eT>::init(A,B); }
-  
-  
+  using Cube<eT>::operator=;
   using Cube<eT>::operator();
+  
+  inline const Cube& operator=(const fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>& X);
   
   
   arma_inline arma_warn_unused       eT& operator[] (const uword i);

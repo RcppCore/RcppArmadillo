@@ -1,10 +1,17 @@
-2013-09-27 Romain Francois <romain@r-enthusiasts.com>
+2013-09-27  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.3.920.1
+	* inst/NEWS: Release 0.3.920.1
+	* inst/include/*: Upgraded to new release 3.920.1 of Armadillo
+        * debian/*: Similarly updated for new release to Debian
+
+2013-09-27  Romain Francois <romain@r-enthusiasts.com>
 
         * include/RcppArmadilloAs.h : handle cx_mat, using that Rcomplex is
-        layout compatible with std::complex<double>
+	layout compatible with std::complex<double>
         * unitTests/cpp/armadillo.cpp : more testing
         * unitTests/runit.RcppArmadillo.R : more testing
-        
+
 2013-09-23  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/*: Upgraded to Armadillo pre-release of 3.920.0

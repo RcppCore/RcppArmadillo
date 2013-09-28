@@ -96,9 +96,6 @@ class glue_times
   template<typename T1, typename T2>
   arma_hot inline static void apply_inplace_plus(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue_times>& X, const sword sign);
   
-  template<typename eT1, typename eT2>
-  inline static void apply_mixed(Mat<typename promote_type<eT1,eT2>::result>& out, const Mat<eT1>& X, const Mat<eT2>& Y);
-  
   //
   
   template<typename eT, const bool do_trans_A, const bool do_trans_B, typename TA, typename TB>

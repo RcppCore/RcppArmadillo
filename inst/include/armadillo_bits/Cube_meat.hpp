@@ -79,7 +79,7 @@ Cube<eT>::Cube(const uword in_n_rows, const uword in_n_cols, const uword in_n_sl
 template<typename eT>
 template<typename fill_type>
 inline
-Cube<eT>::Cube(const uword in_n_rows, const uword in_n_cols, const uword in_n_slices, const arma::fill::fill_class<fill_type>& f)
+Cube<eT>::Cube(const uword in_n_rows, const uword in_n_cols, const uword in_n_slices, const fill::fill_class<fill_type>&)
   : n_rows(in_n_rows)
   , n_cols(in_n_cols)
   , n_elem_slice(in_n_rows*in_n_cols)
@@ -93,7 +93,12 @@ Cube<eT>::Cube(const uword in_n_rows, const uword in_n_cols, const uword in_n_sl
   
   init_cold();
   
-  (*this).fill(f);
+  if(is_same_type<fill_type, fill::fill_zeros>::yes)  (*this).zeros();
+  if(is_same_type<fill_type, fill::fill_ones >::yes)  (*this).ones();
+  if(is_same_type<fill_type, fill::fill_randu>::yes)  (*this).randu();
+  if(is_same_type<fill_type, fill::fill_randn>::yes)  (*this).randn();
+  
+  if(is_same_type<fill_type, fill::fill_eye  >::yes)  { arma_debug_check(true, "Cube::Cube(): unsupported fill type"); }
   }
 
 
@@ -2714,27 +2719,6 @@ Cube<eT>::fill(const eT val)
 
 
 template<typename eT>
-template<typename fill_type>
-arma_hot
-inline
-const Cube<eT>&
-Cube<eT>::fill(const arma::fill::fill_class<fill_type>&)
-  {
-  arma_extra_debug_sigprint();
-  
-  if(is_same_type<fill_type, arma::fill::fill_zeros>::yes)  (*this).zeros();
-  if(is_same_type<fill_type, arma::fill::fill_ones >::yes)  (*this).ones();
-  if(is_same_type<fill_type, arma::fill::fill_randu>::yes)  (*this).randu();
-  if(is_same_type<fill_type, arma::fill::fill_randn>::yes)  (*this).randn();
-  
-  if(is_same_type<fill_type, arma::fill::fill_eye  >::yes)  { arma_debug_check(true, "Cube::fill(): unsupported fill type"); }
-  
-  return *this;
-  }
-
-
-
-template<typename eT>
 inline
 const Cube<eT>&
 Cube<eT>::zeros()
@@ -3451,7 +3435,7 @@ Cube<eT>::steal_mem(Cube<eT>& x)
   
   if(this != &x)
     {
-    if( (x.mem_state == 0) && (x.n_elem > Cube_prealloc::mem_n_elem) )
+    if( (mem_state <= 1) && (x.mem_state <= 1) && (x.n_elem > Cube_prealloc::mem_n_elem) )
       {
       reset();
       
@@ -3485,6 +3469,7 @@ Cube<eT>::steal_mem(Cube<eT>& x)
       access::rw(x.n_elem_slice) = 0;
       access::rw(x.n_slices)     = 0;
       access::rw(x.n_elem)       = 0;
+      access::rw(x.mem_state)    = 0;
       access::rw(x.mem)          = 0;
       }
     else
@@ -3496,13 +3481,18 @@ Cube<eT>::steal_mem(Cube<eT>& x)
 
 
 
+//
+//  Cube::fixed
+
+
+
 template<typename eT>
 template<uword fixed_n_rows, uword fixed_n_cols, uword fixed_n_slices>
 arma_inline
 void
 Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::mem_setup()
   {
-  arma_extra_debug_sigprint_this(this);
+  arma_extra_debug_sigprint();
   
   if(fixed_n_elem > 0)
     {
@@ -3529,6 +3519,103 @@ Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::mem_setup()
     access::rw(Cube<eT>::mat_ptrs)     = 0;
     access::rw(Cube<eT>::mem)          = 0;
     }
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols, uword fixed_n_slices>
+inline
+Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::fixed()
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  mem_setup();
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols, uword fixed_n_slices>
+inline
+Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::fixed(const fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>& X)
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  mem_setup();
+  
+        eT* dest = (use_extra) ?   mem_local_extra :   mem_local;
+  const eT* src  = (use_extra) ? X.mem_local_extra : X.mem_local;
+  
+  arrayops::copy( dest, src, fixed_n_elem );
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols, uword fixed_n_slices>
+template<typename fill_type>
+inline
+Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::fixed(const fill::fill_class<fill_type>&)
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  mem_setup();
+  
+  if(is_same_type<fill_type, fill::fill_zeros>::yes)  (*this).zeros();
+  if(is_same_type<fill_type, fill::fill_ones >::yes)  (*this).ones();
+  if(is_same_type<fill_type, fill::fill_randu>::yes)  (*this).randu();
+  if(is_same_type<fill_type, fill::fill_randn>::yes)  (*this).randn();
+  
+  if(is_same_type<fill_type, fill::fill_eye  >::yes)  { arma_debug_check(true, "Cube::fixed::fixed(): unsupported fill type"); }
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols, uword fixed_n_slices>
+template<typename T1>
+inline
+Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::fixed(const BaseCube<eT,T1>& A)
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  mem_setup();
+  
+  Cube<eT>::operator=(A.get_ref()); 
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols, uword fixed_n_slices>
+template<typename T1, typename T2>
+inline
+Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::fixed(const BaseCube<pod_type,T1>& A, const BaseCube<pod_type,T2>& B)
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  mem_setup();
+  
+  Cube<eT>::init(A,B);
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols, uword fixed_n_slices>
+inline
+const Cube<eT>&
+Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::operator=(const fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+        eT* dest = (use_extra) ?   mem_local_extra :   mem_local;
+  const eT* src  = (use_extra) ? X.mem_local_extra : X.mem_local;
+  
+  arrayops::copy( dest, src, fixed_n_elem );
+  
+  return *this;
   }
 
 
@@ -3680,6 +3767,11 @@ Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::operator() (const u
   
   return (use_extra) ? mem_local_extra[i] : mem_local[i];
   }
+
+
+
+//
+// Cube_aux
 
 
 
