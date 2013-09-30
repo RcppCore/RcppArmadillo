@@ -1,8 +1,10 @@
-r-cran-rcpparmadillo (0.3.920.0-1) unstable; urgency=low
+r-cran-rcpparmadillo (0.3.920.1-1) unstable; urgency=low
 
   * New upstream release
+  
+  * debian/control: Tightened Build-Depends on r-cran-rcpp to (>= 0.10.5)
 
- -- Dirk Eddelbuettel <edd@debian.org>  Thu, 26 Sep 2013 14:27:51 -0500
+ -- Dirk Eddelbuettel <edd@debian.org>  Sun, 29 Sep 2013 16:03:43 -0500
 
 r-cran-rcpparmadillo (0.3.910.0-1) unstable; urgency=low
 
