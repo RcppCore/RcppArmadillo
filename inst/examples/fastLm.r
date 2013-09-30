@@ -67,6 +67,27 @@ Rcpp::List fLmOneCast(arma::mat X, arma::colvec y) {
 '
 cppFunction(code=src, depends="RcppArmadillo")
 
+src <- '
+Rcpp::List fLmConstRef(const arma::mat & X, const arma::colvec & y) {
+    int df = X.n_rows - X.n_cols;
+
+    // fit model y ~ X, extract residuals
+    arma::colvec coef = arma::solve(X, y);
+    arma::colvec res  = y - X*coef;
+
+    double s2 = std::inner_product(res.begin(), res.end(),
+                                   res.begin(), 0.0)/df;
+    // std.errors of coefficients
+    arma::colvec sderr = arma::sqrt(s2 *
+       arma::diagvec(arma::pinv(arma::trans(X)*X)));
+
+    return Rcpp::List::create(Rcpp::Named("coefficients")=coef,
+                              Rcpp::Named("stderr")      =sderr,
+                              Rcpp::Named("df")          =df);
+}
+'
+cppFunction(code=src, depends="RcppArmadillo")
+
 
 fastLmPureDotCall <- function(X, y) {
     .Call("fastLm", X, y, PACKAGE = "RcppArmadillo")
@@ -79,6 +100,7 @@ frm <- formula(log(Volume) ~ log(Girth))
 
 res <- benchmark(fLmOneCast(X, y),             	# inline'd above
                  fLmTwoCasts(X, y),            	# inline'd above
+                 fLmConstRef(X, y),            	# inline'd above
                  fastLmPure(X, y),              # similar, but with 2 error checks
                  fastLmPureDotCall(X, y),       # now without the 2 error checks
                  fastLm(frm, data=trees),       # using model matrix
@@ -89,4 +111,4 @@ res <- benchmark(fLmOneCast(X, y),             	# inline'd above
                  order="relative",
                  replications=5000)
 
-print(res)
+print(res[,1:4])

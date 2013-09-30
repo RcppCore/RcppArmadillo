@@ -52,13 +52,13 @@ stopifnot(all.equal(rData, compRData))  # checking results
 
 ## C++ variant: code passed as a text variable ...
 code <- '
-arma::mat rcppSim(arma::mat coeff, arma::mat errors) {
+arma::mat rcppSim(const arma::mat& coeff, const arma::mat& errors) {
     int m = errors.n_rows;
     int n = errors.n_cols;
     arma::mat simdata(m,n);
     simdata.row(0) = arma::zeros<arma::mat>(1,n);
     for (int row=1; row<m; row++) {
-        simdata.row(row) = simdata.row(row-1)*trans(coeff)+errors.row(row);
+        simdata.row(row) = simdata.row(row-1) * coeff + errors.row(row);
     }
     return simdata;
 }

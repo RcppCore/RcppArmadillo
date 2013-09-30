@@ -1,3 +1,9 @@
+2013-09-29  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/examples/fastLm.r: Added a 'const ref' example
+	* inst/examples/varSimulation.r: Use 'const ref', skip one
+	superfluous transpose
+
 2013-09-28  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.3.920.1
