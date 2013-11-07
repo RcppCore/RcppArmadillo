@@ -37,3 +37,11 @@ The package is under active development with releases to
 The package contains a pdf vignette which is a pre-print of the [paper by
 Eddelbuettel and Sanderson](http://dx.doi.org/10.1016/j.csda.2013.02.005) 
 in CSDA (2013, in print).
+
+# Authors
+
+Romain Francois, Dirk Eddelbuettel and Doug Bates
+
+# License
+
+GPL (>= 2)
