@@ -3,7 +3,7 @@
 
 [![Build Status](https://travis-ci.org/RcppCore/RcppArmadillo.png)](https://travis-ci.org/RcppCore/RcppArmadillo)
 
-# Overview
+## Overview
 
 [Armadillo](http://arma.sf.net) is a templated C++ linear algebra library
 written by Conrad Sanderson that aims towards a good balance between speed and ease of use. Integer,
@@ -27,21 +27,21 @@ This Armadillo integration provides a nice illustration of the
 capabilities of the [Rcpp](http://www.rcpp.org) package for seamless R and
 C++ integration. 
 
-# Status
+## Status
 
 The package is under active development with releases to
 [CRAN](http://cran.r-project.org) about once a month.
 
-# Documentation
+## Documentation
 
 The package contains a pdf vignette which is a pre-print of the [paper by
 Eddelbuettel and Sanderson](http://dx.doi.org/10.1016/j.csda.2013.02.005) 
 in CSDA (2013, in print).
 
-# Authors
+## Authors
 
 Romain Francois, Dirk Eddelbuettel and Doug Bates
 
-# License
+## License
 
 GPL (>= 2)
