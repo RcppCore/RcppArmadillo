@@ -42,6 +42,6 @@ in CSDA (2013, in print).
 
 Romain Francois, Dirk Eddelbuettel and Doug Bates
 
-## License
+### License
 
 GPL (>= 2)
