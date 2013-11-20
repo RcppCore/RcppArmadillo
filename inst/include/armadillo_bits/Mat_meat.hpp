@@ -794,12 +794,15 @@ Mat<eT>::swap(Mat<eT>& B)
     else
     if( (A_use_local_mem == true) && (B_use_local_mem == true) )
       {
+      eT* A_mem_local = &(A.mem_local[0]);
+      eT* B_mem_local = &(B.mem_local[0]);
+      
+      access::rw(A.mem) = A_mem_local;
+      access::rw(B.mem) = B_mem_local;
+      
       const uword N = (std::max)(A_n_elem, B_n_elem);
       
-      eT* A_mem = A.memptr();
-      eT* B_mem = B.memptr();
-      
-      for(uword ii=0; ii < N; ++ii)  { std::swap( A_mem[ii], B_mem[ii] ); }
+      for(uword ii=0; ii < N; ++ii)  { std::swap( A_mem_local[ii], B_mem_local[ii] ); }
       }
     else
     if( (A_use_local_mem == true) && (B_use_local_mem == false) )

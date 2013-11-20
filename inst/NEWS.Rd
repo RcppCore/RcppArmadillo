@@ -2,6 +2,15 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.3.920.3 (2013-11-20)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 3.920.3
+    \itemize{
+      \item fix for handling of tiny matrices by \code{.swap()}
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.3.920.1 (2013-09-27)}{
   \itemize{
     \item Upgraded to Armadillo release Version 3.920.1 (Agencia
