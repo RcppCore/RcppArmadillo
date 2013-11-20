@@ -1,3 +1,10 @@
+2013-11-19  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.3.920.3
+	* inst/NEWS: Release 0.3.920.3
+	* inst/include/*: Upgraded to new release 3.920.3 of Armadillo
+        * debian/*: Similarly updated for new release to Debian
+
 2013-09-29  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/examples/fastLm.r: Added a 'const ref' example
