@@ -24,10 +24,11 @@
 
 test.fastLm <- function() {
     data(trees, package="datasets")
-    flm <- .Call("fastLm",
+    flm <- .Call( "RcppArmadillo_fastLm", 
                  cbind(1, log(trees$Girth)),
-                 log(trees$Volume),
-                 package="RcppArmadillo")
+                 log(trees$Volume), 
+                 PACKAGE = "RcppArmadillo"
+           )
     fit <- lm(log(Volume) ~ log(Girth), data=trees)
 
     checkEquals(as.numeric(flm$coefficients), as.numeric(coef(fit)),
