@@ -14,7 +14,7 @@
   %basicstyle=\small,             % the size of the fonts that are used for the code
   numbers=left,                   % where to put the line-numbers
   numberstyle=\tiny,              % the size of the fonts that are used for the line-numbers
-  stepnumber=2,                   % the step between two line-numbers. If it's 1, each line 
+  stepnumber=2,                   % the step between two line-numbers. If it's 1, each line
                                   % will be numbered
   numbersep=5pt,                  % how far the line-numbers are from the code
   backgroundcolor=\color{darkgray}, % choose the background color. Must add \usepackage{color}
@@ -79,7 +79,7 @@ prettyDate <- format(Sys.Date(), "%B %e, %Y")
       \href{http://dx.doi.org/10.1016/j.csda.2013.02.005}{paper published} in
       \href{http://www.journals.elsevier.com/computational-statistics-and-data-analysis/}{Computational Statistics and Data Analysis}.
       Currently still identical to the paper, this vignette version may over time receive minor updates.
-      For citations, please use \citet{Eddelbuettel+Sanderson:2013:RcppArmadillo} as provided by \code{citation("RcppArmadillo")}.
+      For citations, please use \citet{Eddelbuettel+Sanderson:2014:RcppArmadillo} as provided by \code{citation("RcppArmadillo")}.
       %
       This version corresponds to \pkg{RcppArmadillo} version \Sexpr{prettyVersion} and was
       typeset on \Sexpr{prettyDate}.
