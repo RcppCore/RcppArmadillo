@@ -31,9 +31,9 @@ const unsigned int arma::arma_version::patch;
 IntegerVector armadillo_version(bool single) {
 
     if( single ){
-	return wrap( 10000*arma::arma_version::major +
-		     100*arma::arma_version::minor + 
-		     arma::arma_version::patch ) ;
+        return wrap( 10000*arma::arma_version::major +
+            100*arma::arma_version::minor + 
+            arma::arma_version::patch ) ;
     }
 
     IntegerVector version = IntegerVector::create(_["major"] = arma::arma_version::major,

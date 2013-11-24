@@ -1,3 +1,4 @@
+require(Rcpp)
 pkg <- "RcppArmadillo"
 
 if (require("RUnit", quietly = TRUE)) {
