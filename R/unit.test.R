@@ -16,15 +16,15 @@
 # along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
 test <- function( output = if( file.exists( "/tmp" ) ) "/tmp" else getwd() ){
-	if( !file.exists( output ) ){ stop( "output directory does not exist" ) }
-	
-	Rscript <- file.path( R.home( component = "bin" ), "Rscript" )
-	if( .Platform$OS.type == "windows" ){
-		Rscript <- sprintf( "%s.exe", Rscript )
-	}
-	test.script <- system.file( "unitTests", "runTests.R", package = "RcppArmadillo" )
-	cmd <- sprintf( '"%s" "%s" --output=%s', Rscript, test.script, output )
-	system( cmd )
+    if( !file.exists( output ) ){ stop( "output directory does not exist" ) }
+
+    Rscript <- file.path( R.home( component = "bin" ), "Rscript" )
+    if( .Platform$OS.type == "windows" ){
+        Rscript <- sprintf( "%s.exe", Rscript )
+    }
+    test.script <- system.file( "unitTests", "runTests.R", package = "RcppArmadillo" )
+    cmd <- sprintf( '"%s" "%s" --output=%s', Rscript, test.script, output )
+    system( cmd )
 }
 
 unit_test_setup <- function(file = NULL, packages = NULL) {
@@ -36,7 +36,7 @@ unit_test_setup <- function(file = NULL, packages = NULL) {
         }
         if( !is.null(file) ){
             if (exists("pathRcppArmadilloTests")) {
-                sourceCpp(file.path(pathRcppArmadilloTests, "cpp", file ))
+                sourceCpp(file.path(get("pathRcppArmadilloTests"), "cpp", file ))
             } else if (file.exists( file.path("cpp", file ) )) {
                 sourceCpp( file.path( "cpp", file ) )
             } else {
