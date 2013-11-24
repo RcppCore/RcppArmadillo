@@ -23,7 +23,7 @@
 #ifndef RcppArmadillo__RcppArmadillo__h
 #define RcppArmadillo__RcppArmadillo__h
 
-#ifdef Rcpp_hpp
+#if defined(Rcpp_hpp) && !defined(COMPILING_RCPPARMADILLO)
     #error "The file 'Rcpp.h' should not be included. Please correct to include only 'RcppArmadillo.h'."
 #endif
 
