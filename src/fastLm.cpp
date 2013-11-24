@@ -2,7 +2,7 @@
 //
 // fastLm.cpp: Rcpp/Armadillo glue example of a simple lm() alternative
 //
-// Copyright (C)  2010 Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2010 - 2013 Dirk Eddelbuettel, Romain Francois and Douglas Bates
 //
 // This file is part of RcppArmadillo.
 //
@@ -20,38 +20,24 @@
 // along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <RcppArmadillo.h>
+using namespace Rcpp ;
 
-extern "C" SEXP fastLm(SEXP Xs, SEXP ys) {
+// [[Rcpp::export]]
+List fastLm(const arma::mat& X, const arma::colvec& y ){
+    int n = X.n_rows, k = X.n_cols;
+	
+    arma::colvec coef = arma::solve(X, y);    // fit model y ~ X
+    arma::colvec res  = y - X*coef;			// residuals
 
-    try {
-	Rcpp::NumericVector yr(ys);                     // creates Rcpp vector from SEXP
-	Rcpp::NumericMatrix Xr(Xs);                     // creates Rcpp matrix from SEXP
-	int n = Xr.nrow(), k = Xr.ncol();
-	arma::mat X(Xr.begin(), n, k, false);           // reuses memory and avoids extra copy
-	arma::colvec y(yr.begin(), yr.size(), false);
-
-
-	arma::colvec coef = arma::solve(X, y);      	// fit model y ~ X
-	arma::colvec res  = y - X*coef;			// residuals
-
+    // std.errors of coefficients
 	double s2 = std::inner_product(res.begin(), res.end(), res.begin(), 0.0)/(n - k);
-							// std.errors of coefficients
+							
 	arma::colvec std_err = arma::sqrt(s2 * arma::diagvec( arma::pinv(arma::trans(X)*X) ));	
 
-	return Rcpp::List::create(Rcpp::Named("coefficients") = coef,
-				  Rcpp::Named("stderr")       = std_err,
-				  Rcpp::Named("df.residual")  = n - k
-				  );
-
-    } catch( std::exception &ex ) {
-	forward_exception_to_r( ex );
-    } catch(...) { 
-	::Rf_error( "c++ exception (unknown reason)" ); 
-    }
-    return R_NilValue; // -Wall
+	return List::create(
+        _["coefficients"] = coef,
+        _["stderr"]       = std_err,
+        _["df.residual"]  = n - k
+        );
 }
-
-
-
-
 
