@@ -17,10 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
-.setUp <- function(){
-    suppressMessages(require(datasets))
-    suppressMessages(require(RcppArmadillo))
-}
+.setUp <- RcppArmadillo:::unit_test_setup( packages = c("RcppArmadillo", "datasets" ) )
 
 test.fastLm <- function() {
     data(trees, package="datasets")

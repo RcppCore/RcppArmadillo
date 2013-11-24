@@ -1,4 +1,4 @@
-# Copyright (C)        2010 Dirk Eddelbuettel, Romain Francois and Douglas Bates
+# Copyright (C)        2010 - 2013 Dirk Eddelbuettel, Romain Francois and Douglas Bates
 #
 # This file is part of RcppArmadillo.
 #
@@ -25,5 +25,24 @@ test <- function( output = if( file.exists( "/tmp" ) ) "/tmp" else getwd() ){
 	test.script <- system.file( "unitTests", "runTests.R", package = "RcppArmadillo" )
 	cmd <- sprintf( '"%s" "%s" --output=%s', Rscript, test.script, output )
 	system( cmd )
+}
+
+unit_test_setup <- function(file = NULL, packages = NULL) {
+    function(){
+        if( !is.null(packages) ){
+            for( p in packages ){
+                suppressMessages( require( p, character.only = TRUE ) )
+            }
+        }
+        if( !is.null(file) ){
+            if (exists("pathRcppArmadilloTests")) {
+                sourceCpp(file.path(pathRcppArmadilloTests, "cpp", file ))
+            } else if (file.exists( file.path("cpp", file ) )) {
+                sourceCpp( file.path( "cpp", file )
+            } else {
+                sourceCpp(system.file("unitTests", "cpp", file, package="RcppArmadillo"))
+            }
+        }
+    }
 }
 

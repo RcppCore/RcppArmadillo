@@ -1,6 +1,7 @@
 #!/usr/bin/r -t
 #
 # Copyright (C) 2012 - 2013  Christian Gunning
+# Copyright (C) 2013  Romain Francois
 #
 # This file is part of RcppArmadillo.
 #
@@ -17,16 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
-.setUp <- function(){
-    suppressMessages(require(RcppArmadillo))
-    if (exists("pathRcppArmadilloTests")) {
-        Rcpp::sourceCpp(file.path(pathRcppArmadilloTests, "cpp", "sample.cpp"))
-    } else if (file.exists("cpp/sample.cpp")) {
-        Rcpp::sourceCpp("cpp/sample.cpp")
-    } else {
-        Rcpp::sourceCpp(system.file("unitTests", "cpp", "sample.cpp", package="RcppArmadillo"))
-    }
-}
+.setUp <- RcppArmadillo:::unit_test_setup( "sample.cpp" ) 
 
 test.sample <- function() {
     ## set up S3 dispatching,
