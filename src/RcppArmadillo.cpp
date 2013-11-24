@@ -2,7 +2,7 @@
 //
 // RcppArmadillo.cpp: Rcpp/Armadillo glue
 //
-// Copyright (C)  2010 - 2011  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2010 - 2013  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 //
 // This file is part of RcppArmadillo.
 //
@@ -27,9 +27,8 @@ const unsigned int arma::arma_version::major;
 const unsigned int arma::arma_version::minor;
 const unsigned int arma::arma_version::patch;
 
-extern "C" SEXP armadillo_version(SEXP single_) {
-
-    bool single = as<bool>( single_) ;
+// [[Rcpp::export]]
+IntegerVector armadillo_version(bool single) {
 
     if( single ){
 	return wrap( 10000*arma::arma_version::major +
@@ -37,12 +36,10 @@ extern "C" SEXP armadillo_version(SEXP single_) {
 		     arma::arma_version::patch ) ;
     }
 
-    IntegerVector version = 
-	IntegerVector::create(_["major"] = arma::arma_version::major,
-			      _["minor"] = arma::arma_version::minor,
-			      _["patch"] = arma::arma_version::patch);
-
+    IntegerVector version = IntegerVector::create(_["major"] = arma::arma_version::major,
+                                                  _["minor"] = arma::arma_version::minor,
+                                                  _["patch"] = arma::arma_version::patch);
+    
    return version ;
-
 }
 

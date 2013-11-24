@@ -5,3 +5,7 @@ fastLm <- function(X, y) {
     .Call('RcppArmadillo_fastLm', PACKAGE = 'RcppArmadillo', X, y)
 }
 
+armadillo_version <- function(single) {
+    .Call('RcppArmadillo_armadillo_version', PACKAGE = 'RcppArmadillo', single)
+}
+
