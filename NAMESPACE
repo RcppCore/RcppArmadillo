@@ -1,5 +1,4 @@
 useDynLib(RcppArmadillo)
-import(Rcpp)
 
 export(fastLmPure,
        fastLm)
