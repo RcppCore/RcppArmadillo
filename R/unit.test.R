@@ -38,7 +38,7 @@ unit_test_setup <- function(file = NULL, packages = NULL) {
             if (exists("pathRcppArmadilloTests")) {
                 sourceCpp(file.path(pathRcppArmadilloTests, "cpp", file ))
             } else if (file.exists( file.path("cpp", file ) )) {
-                sourceCpp( file.path( "cpp", file )
+                sourceCpp( file.path( "cpp", file ) )
             } else {
                 sourceCpp(system.file("unitTests", "cpp", file, package="RcppArmadillo"))
             }
