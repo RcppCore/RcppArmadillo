@@ -1,6 +1,6 @@
 useDynLib(RcppArmadillo)
 
-import(Rcpp)
+importFrom(Rcpp, sourceCpp, Rcpp.plugin.maker)
 export(fastLmPure,
        fastLm)
 export(RcppArmadillo.package.skeleton)
