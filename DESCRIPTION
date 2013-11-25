@@ -33,6 +33,6 @@ License: GPL (>= 2)
 LazyLoad: yes
 Depends: R (>= 2.14.0)
 LinkingTo: Rcpp
-Imports: Rcpp
+Imports: Rcpp (>= 0.10.6.1)
 Suggests: RUnit
 URL: https://github.com/RcppCore/RcppArmadillo, http://arma.sourceforge.net/, http://dirk.eddelbuettel.com/code/rcpp.armadillo.html
