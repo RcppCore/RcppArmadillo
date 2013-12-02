@@ -14,6 +14,7 @@
 #include <cstring>
 #include <climits>
 #include <cmath>
+#include <ctime>
 
 #include <iostream>
 #include <fstream>
@@ -33,12 +34,10 @@
 #if defined(ARMA_USE_CXX11)
   #include <initializer_list>
   #include <cstdint>
-  // TODO: extend wall_clock class to use C++11 chrono library
-#endif
-
-
-#if !defined(ARMA_HAVE_GETTIMEOFDAY) && !defined(ARMA_USE_BOOST_DATE)
-  #include <ctime>
+  #include <chrono>
+  #include <random>
+  
+  #undef ARMA_USE_BOOST_DATE
 #endif
 
 
@@ -104,8 +103,9 @@ namespace arma
   
   #include "armadillo_bits/forward_bones.hpp"
   #include "armadillo_bits/arma_static_check.hpp"
-  #include "armadillo_bits/typedef.hpp"
-  #include "armadillo_bits/typedef_blas_int.hpp"
+  #include "armadillo_bits/typedef_elem.hpp"
+  #include "armadillo_bits/typedef_elem_check.hpp"
+  #include "armadillo_bits/typedef_mat.hpp"
   #include "armadillo_bits/format_wrap.hpp"
   #include "armadillo_bits/arma_version.hpp"
   #include "armadillo_bits/arma_config.hpp"
@@ -114,10 +114,18 @@ namespace arma
   #include "armadillo_bits/upgrade_val.hpp"
   #include "armadillo_bits/restrictors.hpp"
   #include "armadillo_bits/access.hpp"
-  #include "armadillo_bits/memory.hpp"
   #include "armadillo_bits/span.hpp"
+  #include "armadillo_bits/distr_param.hpp"
   #include "armadillo_bits/constants.hpp"
   #include "armadillo_bits/constants_compat.hpp"
+  
+  #if defined(ARMA_USE_CXX11_RNG)
+    #include "armadillo_bits/arma_rng_cxx11.hpp"
+    #include "armadillo_bits/arma_rng.hpp"
+  #else  
+    #include "armadillo_bits/arma_rng_cxx98.hpp"
+    #include "armadillo_bits/arma_rng.hpp"
+  #endif
   
   
   //
@@ -147,14 +155,16 @@ namespace arma
   #include "armadillo_bits/Row_bones.hpp"
   #include "armadillo_bits/Cube_bones.hpp"
   #include "armadillo_bits/xvec_htrans_bones.hpp"
-  
+  #include "armadillo_bits/SizeMat_bones.hpp"
+  #include "armadillo_bits/SizeCube_bones.hpp"
+    
   #include "armadillo_bits/SpValProxy_bones.hpp"
   #include "armadillo_bits/SpMat_bones.hpp"
   #include "armadillo_bits/SpCol_bones.hpp"
   #include "armadillo_bits/SpRow_bones.hpp"
   #include "armadillo_bits/SpSubview_bones.hpp"
   
-  #include "armadillo_bits/typedef_fixed.hpp"
+  #include "armadillo_bits/typedef_mat_fixed.hpp"
   
   #include "armadillo_bits/field_bones.hpp"
   #include "armadillo_bits/subview_bones.hpp"
@@ -251,6 +261,8 @@ namespace arma
   #include "armadillo_bits/glue_toeplitz_bones.hpp"
   #include "armadillo_bits/glue_hist_bones.hpp"
   #include "armadillo_bits/glue_histc_bones.hpp"
+  #include "armadillo_bits/glue_max_bones.hpp"
+  #include "armadillo_bits/glue_min_bones.hpp"
   
   #include "armadillo_bits/spop_max_bones.hpp"
   #include "armadillo_bits/spop_min_bones.hpp"
@@ -266,9 +278,10 @@ namespace arma
   #include "armadillo_bits/spglue_times_bones.hpp"
   
   //
-  // debugging functions
+  // low-level debugging and memory handling functions
   
   #include "armadillo_bits/debug.hpp"
+  #include "armadillo_bits/memory.hpp"
   
   //
   //
@@ -425,7 +438,12 @@ namespace arma
   #include "armadillo_bits/fn_fft2.hpp"
   #include "armadillo_bits/fn_any.hpp"
   #include "armadillo_bits/fn_all.hpp"
-  
+  #include "armadillo_bits/fn_size.hpp"
+  #include "armadillo_bits/fn_numel.hpp"
+  #include "armadillo_bits/fn_inplace_strans.hpp"
+  #include "armadillo_bits/fn_inplace_trans.hpp"
+  #include "armadillo_bits/fn_randi.hpp"
+    
   #include "armadillo_bits/fn_speye.hpp"
   #include "armadillo_bits/fn_spones.hpp"
   #include "armadillo_bits/fn_sprandn.hpp"
@@ -466,6 +484,8 @@ namespace arma
   #include "armadillo_bits/Row_meat.hpp"
   #include "armadillo_bits/Cube_meat.hpp"
   #include "armadillo_bits/xvec_htrans_meat.hpp"
+  #include "armadillo_bits/SizeMat_meat.hpp"
+  #include "armadillo_bits/SizeCube_meat.hpp"
   
   #include "armadillo_bits/field_meat.hpp"
   #include "armadillo_bits/subview_meat.hpp"
@@ -543,6 +563,8 @@ namespace arma
   #include "armadillo_bits/glue_toeplitz_meat.hpp"
   #include "armadillo_bits/glue_hist_meat.hpp"
   #include "armadillo_bits/glue_histc_meat.hpp"
+  #include "armadillo_bits/glue_max_meat.hpp"
+  #include "armadillo_bits/glue_min_meat.hpp"
   
   #include "armadillo_bits/spop_max_meat.hpp"
   #include "armadillo_bits/spop_min_meat.hpp"

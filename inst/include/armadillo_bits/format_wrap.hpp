@@ -14,24 +14,25 @@
 namespace arma_boost
   {
   
+  // TODO: in version 4.0, remove use of boost::format
   #if defined(ARMA_USE_BOOST_FORMAT)
-
+    
     using boost::format;
     using boost::basic_format;
     using boost::str;
-
+    
   #else
-  
+    
     #if defined(ARMA_HAVE_STD_SNPRINTF)
-
+      
       #define arma_snprintf std::snprintf
-
+      
     #else
-
+      
       // better-than-nothing emulation of C99 snprintf(),
       // with correct return value and null-terminated output string.
       // note that _snprintf() provided by MS is not a good substitute for snprintf()
-
+      
       inline
       int
       arma_snprintf(char* out, size_t size, const char* fmt, ...)
@@ -50,26 +51,26 @@ namespace arma_boost
         
         return int(i);
         }
-
+      
     #endif
     
     class format
       {
       public:
-    
+      
       format(const char* in_fmt)
         : A(in_fmt)
         {
         }
-    
+      
       format(const std::string& in_fmt)
         : A(in_fmt)
         {
         }
-    
-    
+      
+      
       const std::string A;
-    
+      
       private:
       format();
       };
@@ -80,16 +81,16 @@ namespace arma_boost
     class basic_format
       {
       public:
-    
+      
       basic_format(const T1& in_A, const T2& in_B)
         : A(in_A)
         , B(in_B)
         {
         }
-    
+      
       const T1& A;
       const T2& B;
-    
+      
       private:
       basic_format();
       };
@@ -126,7 +127,7 @@ namespace arma_boost
       
       int buffer_size   = 1024;
       int required_size = buffer_size;
-   
+      
       bool using_local_buffer = true;
       
       std::string out;
@@ -162,7 +163,7 @@ namespace arma_boost
           }
         
         } while( (required_size >= buffer_size) );
-
+      
       return out;
       }
     
@@ -178,7 +179,7 @@ namespace arma_boost
       
       int buffer_size   = 1024;
       int required_size = buffer_size;
-   
+      
       bool using_local_buffer = true;
       
       std::string out;
@@ -214,7 +215,7 @@ namespace arma_boost
           }
         
         } while( (required_size >= buffer_size) );
-
+      
       return out;
       }
     
@@ -230,7 +231,7 @@ namespace arma_boost
       
       int buffer_size   = 1024;
       int required_size = buffer_size;
-   
+      
       bool using_local_buffer = true;
       
       std::string out;
@@ -266,7 +267,7 @@ namespace arma_boost
           }
         
         } while( (required_size >= buffer_size) );
-
+      
       return out;
       }
     
@@ -282,7 +283,7 @@ namespace arma_boost
       
       int buffer_size   = 1024;
       int required_size = buffer_size;
-   
+      
       bool using_local_buffer = true;
       
       std::string out;
@@ -318,7 +319,7 @@ namespace arma_boost
           }
         
         } while( (required_size >= buffer_size) );
-
+      
       return out;
       }
     
@@ -334,7 +335,7 @@ namespace arma_boost
       
       int buffer_size   = 1024;
       int required_size = buffer_size;
-   
+      
       bool using_local_buffer = true;
       
       std::string out;
@@ -370,7 +371,7 @@ namespace arma_boost
           }
         
         } while( (required_size >= buffer_size) );
-
+      
       return out;
       }
     
@@ -386,7 +387,7 @@ namespace arma_boost
       
       int buffer_size   = 1024;
       int required_size = buffer_size;
-   
+      
       bool using_local_buffer = true;
       
       std::string out;
@@ -422,7 +423,7 @@ namespace arma_boost
           }
         
         } while( (required_size >= buffer_size) );
-
+      
       return out;
       }
     
@@ -432,7 +433,7 @@ namespace arma_boost
     struct format_metaprog
       {
       static const uword depth = 0;
-    
+      
       inline
       static  
       const std::string&
@@ -449,7 +450,7 @@ namespace arma_boost
     struct format_metaprog< basic_format<T1,T2> >
       {
       static const uword depth = 1 + format_metaprog<T1>::depth;
-    
+      
       inline
       static
       const std::string&
@@ -457,7 +458,7 @@ namespace arma_boost
         {
         return format_metaprog<T1>::get_fmt(X.A);
         }
-    
+      
       };
     
     
@@ -480,8 +481,8 @@ namespace arma_boost
       o << str(X);
       return o;
       }
-        
-        
+     
+    
   #endif
   
   
@@ -490,7 +491,7 @@ namespace arma_boost
   
   template<typename T> struct char_only                { };
   template<>           struct char_only<char         > { typedef char        result; };
-
+  
   template<typename T>
   struct basic_format_only { };
   
@@ -501,9 +502,9 @@ namespace arma_boost
     template<typename T1, typename T2>
     struct basic_format_only< basic_format<T1, T2> > { typedef basic_format<T1,T2> result; };
   #endif
-
-
-
+  
+  
+  
   template<typename T1>
   inline
   static
