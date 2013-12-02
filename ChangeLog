@@ -1,11 +1,3 @@
-2013-12-02  Dirk Eddelbuettel  <edd@debian.org>
-
-	* inst/include/*: Upgraded to first beta release of 3.930
-
-2013-11-24  Dirk Eddelbuettel  <edd@debian.org>
-
-	* VARIOUS to be filled-in before next release
-
 2013-11-19  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.3.920.3

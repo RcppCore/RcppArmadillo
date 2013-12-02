@@ -104,13 +104,6 @@ struct arma_config
   #else
     static const bool use_cxx11 = false;
   #endif
-  
-  
-  #if defined(ARMA_USE_WRAPPER)
-    static const bool use_wrapper = true;
-  #else
-    static const bool use_wrapper = false;
-  #endif
   };
 
 

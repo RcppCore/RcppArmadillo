@@ -14,6 +14,7 @@
 // for new code, use the Datum class instead
 // eg. instead of math::pi(), use datum::pi
 
+
 template<typename eT>
 class Math
   {

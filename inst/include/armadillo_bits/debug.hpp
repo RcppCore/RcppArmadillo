@@ -110,7 +110,7 @@ arma_stop(const T1& x)
     }
   #endif
   
-  throw std::logic_error( std::string(x) );
+  throw std::logic_error("");
   }
 
 
@@ -166,7 +166,7 @@ arma_bad(const T1& x, const bool hurl = true)
   
   if(hurl == true)
     {
-    throw std::runtime_error( std::string(x) );
+    throw std::runtime_error("");
     }
   }
 
@@ -1179,7 +1179,6 @@ arma_assert_mul_size(const subview<eT1>& A, const subview<eT2>& B, const char* x
         out << "@ arma_config::good_comp      = " << arma_config::good_comp      << '\n';
         out << "@ arma_config::extra_code     = " << arma_config::extra_code     << '\n';
         out << "@ arma_config::use_cxx11      = " << arma_config::use_cxx11      << '\n';
-        out << "@ arma_config::use_wrapper    = " << arma_config::use_wrapper    << '\n';
         out << "@ sizeof(void*)    = " << sizeof(void*)    << '\n';
         out << "@ sizeof(uword)    = " << sizeof(uword)    << '\n';
         out << "@ sizeof(int)      = " << sizeof(int)      << '\n';
