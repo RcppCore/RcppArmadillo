@@ -55,7 +55,7 @@ class Cube : public BaseCube< eT, Cube<eT> >
   inline ~Cube();
   inline  Cube();
   
-  inline Cube(const uword in_rows, const uword in_cols, const uword in_slices);
+  inline          Cube(const uword in_rows, const uword in_cols, const uword in_slices);
   
   template<typename fill_type>
   inline Cube(const uword in_rows, const uword in_cols, const uword in_slices, const fill::fill_class<fill_type>& f);
@@ -100,11 +100,17 @@ class Cube : public BaseCube< eT, Cube<eT> >
   arma_inline       subview_cube<eT> subcube(const uword in_row1, const uword in_col1, const uword in_slice1, const uword in_row2, const uword in_col2, const uword in_slice2);
   arma_inline const subview_cube<eT> subcube(const uword in_row1, const uword in_col1, const uword in_slice1, const uword in_row2, const uword in_col2, const uword in_slice2) const;
   
+  inline            subview_cube<eT> subcube(const uword in_row1, const uword in_col1, const uword in_slice1, const SizeCube& s);
+  inline      const subview_cube<eT> subcube(const uword in_row1, const uword in_col1, const uword in_slice1, const SizeCube& s) const;
+  
   inline            subview_cube<eT> subcube(const span& row_span, const span& col_span, const span& slice_span);
   inline      const subview_cube<eT> subcube(const span& row_span, const span& col_span, const span& slice_span) const;
   
   inline            subview_cube<eT> operator()(const span& row_span, const span& col_span, const span& slice_span);
   inline      const subview_cube<eT> operator()(const span& row_span, const span& col_span, const span& slice_span) const;
+  
+  inline            subview_cube<eT> operator()(const uword in_row1, const uword in_col1, const uword in_slice1, const SizeCube& s);
+  inline      const subview_cube<eT> operator()(const uword in_row1, const uword in_col1, const uword in_slice1, const SizeCube& s) const;
   
   arma_inline       subview_cube<eT> tube(const uword in_row1, const uword in_col1);
   arma_inline const subview_cube<eT> tube(const uword in_row1, const uword in_col1) const;
@@ -207,6 +213,8 @@ class Cube : public BaseCube< eT, Cube<eT> >
   
   arma_inline arma_warn_unused bool in_range(const uword   in_row, const uword   in_col, const uword   in_slice) const;
        inline arma_warn_unused bool in_range(const span& row_span, const span& col_span, const span& slice_span) const;
+  
+       inline arma_warn_unused bool in_range(const uword   in_row, const uword   in_col, const uword   in_slice, const SizeCube& s) const;
   
   arma_inline arma_warn_unused       eT* memptr();
   arma_inline arma_warn_unused const eT* memptr() const;

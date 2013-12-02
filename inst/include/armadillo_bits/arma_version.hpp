@@ -12,9 +12,9 @@
 
 
 #define ARMA_VERSION_MAJOR 3
-#define ARMA_VERSION_MINOR 920
-#define ARMA_VERSION_PATCH 3
-#define ARMA_VERSION_NAME  "Agencia Nacional Stasi"
+#define ARMA_VERSION_MINOR 929
+#define ARMA_VERSION_PATCH 1
+#define ARMA_VERSION_NAME  "beta test release"
 
 
 

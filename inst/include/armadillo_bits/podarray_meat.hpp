@@ -361,8 +361,6 @@ podarray<eT>::init_cold(const uword new_n_elem)
   else
     {
     mem = memory::acquire<eT>(new_n_elem);
-    
-    arma_check_bad_alloc( (mem == 0), "arma::podarray: out of memory" );
     }
   }
 
@@ -392,8 +390,6 @@ podarray<eT>::init_warm(const uword new_n_elem)
   else
     {
     mem = memory::acquire<eT>(new_n_elem);
-    
-    arma_check_bad_alloc( (mem == 0), "arma::podarray: out of memory" );
     }
   
   access::rw(n_elem) = new_n_elem;

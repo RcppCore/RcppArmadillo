@@ -43,17 +43,10 @@ inline
 SpMat<eT>::~SpMat()
   {
   arma_extra_debug_sigprint_this(this);
-
-  // If necessary, release the memory.
-  if (values)
-    {
-    // values being non-NULL implies row_indices is non-NULL.
-    memory::release(access::rw(values));
-    memory::release(access::rw(row_indices));
-    }
-
-  // Column pointers always must be deleted.
-  memory::release(access::rw(col_ptrs));
+  
+  if(values     )  { memory::release(access::rw(values));      }
+  if(row_indices)  { memory::release(access::rw(row_indices)); }
+  if(col_ptrs   )  { memory::release(access::rw(col_ptrs));    }
   }
 
 
@@ -161,6 +154,44 @@ SpMat<eT>::SpMat(const SpMat<eT>& x)
 
   init(x);
   }
+
+
+
+#if defined(ARMA_USE_CXX11)
+  
+  template<typename eT>
+  inline
+  SpMat<eT>::SpMat(SpMat<eT>&& in_mat)
+    : n_rows(0)
+    , n_cols(0)
+    , n_elem(0)
+    , n_nonzero(0)
+    , vec_state(0)
+    , values(NULL)
+    , row_indices(NULL)
+    , col_ptrs(NULL)
+    {
+    arma_extra_debug_sigprint_this(this);
+    arma_extra_debug_sigprint(arma_boost::format("this = %x   in_mat = %x") % this % &in_mat);
+    
+    (*this).steal_mem(in_mat);
+    }
+  
+  
+  
+  template<typename eT>
+  inline
+  const SpMat<eT>&
+  SpMat<eT>::operator=(SpMat<eT>&& in_mat)
+    {
+    arma_extra_debug_sigprint(arma_boost::format("this = %x   in_mat = %x") % this % &in_mat);
+    
+    (*this).steal_mem(in_mat);
+    
+    return *this;
+    }
+  
+#endif
 
 
 
@@ -2388,9 +2419,57 @@ SpMat<eT>::submat(const uword in_row1, const uword in_col1, const uword in_row2,
 
 
 template<typename eT>
+arma_inline
+SpSubview<eT>
+SpMat<eT>::submat(const uword in_row1, const uword in_col1, const SizeMat& s)
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword l_n_rows = n_rows;
+  const uword l_n_cols = n_cols;
+  
+  const uword s_n_rows = s.n_rows;
+  const uword s_n_cols = s.n_cols;
+  
+  arma_debug_check
+    (
+    ((in_row1 >= l_n_rows) || (in_col1 >= l_n_cols) || ((in_row1 + s_n_rows) > l_n_rows) || ((in_col1 + s_n_cols) > l_n_cols)),
+    "SpMat::submat(): indices or size out of bounds"
+    );
+  
+  return SpSubview<eT>(*this, in_row1, in_col1, s_n_rows, s_n_cols);
+  }
+
+
+
+template<typename eT>
+arma_inline
+const SpSubview<eT>
+SpMat<eT>::submat(const uword in_row1, const uword in_col1, const SizeMat& s) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword l_n_rows = n_rows;
+  const uword l_n_cols = n_cols;
+  
+  const uword s_n_rows = s.n_rows;
+  const uword s_n_cols = s.n_cols;
+  
+  arma_debug_check
+    (
+    ((in_row1 >= l_n_rows) || (in_col1 >= l_n_cols) || ((in_row1 + s_n_rows) > l_n_rows) || ((in_col1 + s_n_cols) > l_n_cols)),
+    "SpMat::submat(): indices or size out of bounds"
+    );
+  
+  return SpSubview<eT>(*this, in_row1, in_col1, s_n_rows, s_n_cols);
+  }
+
+
+
+template<typename eT>
 inline
 SpSubview<eT>
-SpMat<eT>::submat    (const span& row_span, const span& col_span)
+SpMat<eT>::submat(const span& row_span, const span& col_span)
   {
   arma_extra_debug_sigprint();
 
@@ -2425,7 +2504,7 @@ SpMat<eT>::submat    (const span& row_span, const span& col_span)
 template<typename eT>
 inline
 const SpSubview<eT>
-SpMat<eT>::submat    (const span& row_span, const span& col_span) const
+SpMat<eT>::submat(const span& row_span, const span& col_span) const
   {
   arma_extra_debug_sigprint();
 
@@ -2477,6 +2556,30 @@ SpMat<eT>::operator()(const span& row_span, const span& col_span) const
   arma_extra_debug_sigprint();
 
   return submat(row_span, col_span);
+  }
+
+
+
+template<typename eT>
+arma_inline
+SpSubview<eT>
+SpMat<eT>::operator()(const uword in_row1, const uword in_col1, const SizeMat& s)
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).submat(in_row1, in_col1, s);
+  }
+
+
+
+template<typename eT>
+arma_inline
+const SpSubview<eT>
+SpMat<eT>::operator()(const uword in_row1, const uword in_col1, const SizeMat& s) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).submat(in_row1, in_col1, s);
   }
 
 
@@ -2800,6 +2903,27 @@ SpMat<eT>::in_range(const span& row_span, const span& col_span) const
   const bool cols_ok = col_span.whole ? true : ( (in_col1 <= in_col2) && (in_col2 < n_cols) );
 
   return ( (rows_ok == true) && (cols_ok == true) );
+  }
+
+
+
+template<typename eT>
+arma_inline
+arma_warn_unused
+bool
+SpMat<eT>::in_range(const uword in_row, const uword in_col, const SizeMat& s) const
+  {
+  const uword l_n_rows = n_rows;
+  const uword l_n_cols = n_cols;
+  
+  if( (in_row >= l_n_rows) || (in_col >= l_n_cols) || ((in_row + s.n_rows) > l_n_rows) || ((in_col + s.n_cols) > l_n_cols) )
+    {
+    return false;
+    }
+  else
+    {
+    return true;
+    }
   }
 
 
@@ -3249,7 +3373,7 @@ SpMat<eT>::sprandu(const uword in_rows, const uword in_cols, const double densit
     return *this;
     }
   
-  eop_aux_randu<eT>::fill( access::rwp(values), n_nonzero );
+  arma_rng::randu<eT>::fill( access::rwp(values), n_nonzero );
   
   uvec indices = linspace<uvec>( 0u, in_rows*in_cols-1, n_nonzero );
   
@@ -3326,7 +3450,7 @@ SpMat<eT>::sprandn(const uword in_rows, const uword in_cols, const double densit
     return *this;
     }
   
-  eop_aux_randn<eT>::fill( access::rwp(values), n_nonzero );
+  arma_rng::randn<eT>::fill( access::rwp(values), n_nonzero );
   
   uvec indices = linspace<uvec>( 0u, in_rows*in_cols-1, n_nonzero );
   
@@ -4181,35 +4305,28 @@ void
 SpMat<eT>::steal_mem(SpMat<eT>& x)
   {
   arma_extra_debug_sigprint();
-
+  
   if(this != &x)
     {
-    // Release all the memory.
-    memory::release(values);
-    memory::release(row_indices);
-    memory::release(col_ptrs);
-
-    // We'll have to copy everything about the other matrix.
-    const uword x_n_rows    = x.n_rows;
-    const uword x_n_cols    = x.n_cols;
-    const uword x_n_elem    = x.n_elem;
-    const uword x_n_nonzero = x.n_nonzero;
-
-    access::rw(n_rows)    = x_n_rows;
-    access::rw(n_cols)    = x_n_cols;
-    access::rw(n_elem)    = x_n_elem;
-    access::rw(n_nonzero) = x_n_nonzero;
-
+    if(values     )  { memory::release(access::rw(values));      }
+    if(row_indices)  { memory::release(access::rw(row_indices)); }
+    if(col_ptrs   )  { memory::release(access::rw(col_ptrs));    }
+    
+    access::rw(n_rows)    = x.n_rows;
+    access::rw(n_cols)    = x.n_cols;
+    access::rw(n_elem)    = x.n_elem;
+    access::rw(n_nonzero) = x.n_nonzero;
+    
     access::rw(values)      = x.values;
     access::rw(row_indices) = x.row_indices;
     access::rw(col_ptrs)    = x.col_ptrs;
-
+    
     // Set other matrix to empty.
     access::rw(x.n_rows)    = 0;
     access::rw(x.n_cols)    = 0;
     access::rw(x.n_elem)    = 0;
     access::rw(x.n_nonzero) = 0;
-
+    
     access::rw(x.values)      = NULL;
     access::rw(x.row_indices) = NULL;
     access::rw(x.col_ptrs)    = NULL;

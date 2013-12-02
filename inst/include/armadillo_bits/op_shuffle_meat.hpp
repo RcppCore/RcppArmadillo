@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2012 Conrad Sanderson
-// Copyright (C) 2009-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2013 Conrad Sanderson
+// Copyright (C) 2009-2013 NICTA (www.nicta.com.au)
 // Copyright (C) 2009-2010 Dimitrios Bouzas
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -28,7 +28,11 @@ op_shuffle::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_shuffle>& in)
   if(X.is_empty()) { out.copy_size(X); return; }
   
   const uword dim = in.aux_uword_a;
-  const uword N   = (dim == 0) ? X.n_rows : X.n_cols;
+  
+  arma_debug_check( (dim > 1), "shuffle(): dim must be 0 or 1" );
+  
+  const uword N = (dim == 0) ? X.n_rows : X.n_cols;
+  
   
   // see "fn_sort_index.hpp" for the definition of "arma_sort_index_packet"
   // and the associated comparison functor
@@ -36,12 +40,12 @@ op_shuffle::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_shuffle>& in)
   
   for(uword i=0; i<N; ++i)
     {
-    packet_vec[i].val   = std::rand();
+    packet_vec[i].val   = int(arma_rng::randi<int>());
     packet_vec[i].index = i;
     }
   
   arma_sort_index_helper_ascend comparator;
-
+  
   std::sort( packet_vec.begin(), packet_vec.end(), comparator );
   
   const bool is_alias = (&out == &X);

@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 Conrad Sanderson
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2013 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -117,6 +117,20 @@ const Op<derived,op_inv>
 Base_blas_elem_type<derived>::i(const bool slow) const
   {
   return Op<derived,op_inv>( static_cast<const derived&>(*this), ((slow == false) ? 0 : 1), 0 );
+  }
+
+
+
+template<typename derived>
+arma_inline
+const Op<derived,op_inv>
+Base_blas_elem_type<derived>::i(const char* method) const
+  {
+  const char sig = method[0];
+  
+  arma_debug_check( ((sig != 's') && (sig != 'f')), "Base::i(): unknown method specified" );
+  
+  return Op<derived,op_inv>( static_cast<const derived&>(*this), ((sig == 'f') ? 0 : 1), 0 );
   }
 
 

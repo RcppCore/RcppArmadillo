@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2012 Conrad Sanderson
-// Copyright (C) 2010-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2013 Conrad Sanderson
+// Copyright (C) 2010-2013 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -46,6 +46,8 @@ class subview_elem1 : public Base<eT, subview_elem1<eT,T1> >
   inline void fill(const eT val);
   inline void zeros();
   inline void ones();
+  inline void randu();
+  inline void randn();
   
   inline void operator+= (const eT val);
   inline void operator-= (const eT val);
