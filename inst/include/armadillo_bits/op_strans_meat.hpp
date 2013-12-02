@@ -17,7 +17,7 @@ template<typename eT, typename TA>
 arma_hot
 inline
 void
-op_strans::apply_noalias_tinysq(Mat<eT>& out, const TA& A)
+op_strans::apply_mat_noalias_tinysq(Mat<eT>& out, const TA& A)
   {
   const eT*   Am =   A.memptr();
         eT* outm = out.memptr();
@@ -93,7 +93,7 @@ template<typename eT, typename TA>
 arma_hot
 inline
 void
-op_strans::apply_noalias(Mat<eT>& out, const TA& A)
+op_strans::apply_mat_noalias(Mat<eT>& out, const TA& A)
   {
   arma_extra_debug_sigprint();
   
@@ -110,7 +110,7 @@ op_strans::apply_noalias(Mat<eT>& out, const TA& A)
     {
     if( (A_n_rows <= 4) && (A_n_rows == A_n_cols) )
       {
-      op_strans::apply_noalias_tinysq(out, A);
+      op_strans::apply_mat_noalias_tinysq(out, A);
       }
     else
       {
@@ -140,54 +140,68 @@ op_strans::apply_noalias(Mat<eT>& out, const TA& A)
 
 
 
+template<typename eT>
+arma_hot
+inline
+void
+op_strans::apply_mat_inplace(Mat<eT>& out)
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword n_rows = out.n_rows;
+  const uword n_cols = out.n_cols;
+  
+  if(n_rows == n_cols)
+    {
+    arma_extra_debug_print("op_strans::apply(): doing in-place transpose of a square matrix");
+    
+    const uword N = n_rows;
+    
+    for(uword k=0; k < N; ++k)
+      {
+      eT* colptr = out.colptr(k);
+      
+      uword i,j;
+      
+      for(i=(k+1), j=(k+2); j < N; i+=2, j+=2)
+        {
+        std::swap(out.at(k,i), colptr[i]);
+        std::swap(out.at(k,j), colptr[j]);
+        }
+      
+      if(i < N)
+        {
+        std::swap(out.at(k,i), colptr[i]);
+        }
+      }
+    }
+  else
+    {
+    Mat<eT> tmp;
+    
+    op_strans::apply_mat_noalias(tmp, out);
+    
+    out.steal_mem(tmp);
+    }
+  }
+
+
+
 template<typename eT, typename TA>
 arma_hot
 inline
 void
-op_strans::apply(Mat<eT>& out, const TA& A)
+op_strans::apply_mat(Mat<eT>& out, const TA& A)
   {
   arma_extra_debug_sigprint();
   
   if(&out != &A)
     {
-    op_strans::apply_noalias(out, A);
+    op_strans::apply_mat_noalias(out, A);
     }
   else
     {
-    const uword n_rows = A.n_rows;
-    const uword n_cols = A.n_cols;
-    
-    if(n_rows == n_cols)
-      {
-      arma_extra_debug_print("op_strans::apply(): doing in-place transpose of a square matrix");
-      
-      const uword N = n_rows;
-      
-      for(uword k=0; k < N; ++k)
-        {
-        eT* colptr = out.colptr(k);
-        
-        uword i,j;
-        
-        for(i=(k+1), j=(k+2); j < N; i+=2, j+=2)
-          {
-          std::swap(out.at(k,i), colptr[i]);
-          std::swap(out.at(k,j), colptr[j]);
-          }
-        
-        if(i < N)
-          {
-          std::swap(out.at(k,i), colptr[i]);
-          }
-        }
-      }
-    else
-      {
-      Mat<eT> tmp;
-      op_strans::apply_noalias(tmp, A);
-      
-      out.steal_mem(tmp);
-      }
+    op_strans::apply_mat_inplace(out);
     }
   }
 
@@ -210,7 +224,7 @@ op_strans::apply_proxy(Mat<typename T1::elem_type>& out, const T1& X)
     {
     const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
     
-    op_strans::apply(out, tmp.M);
+    op_strans::apply_mat(out, tmp.M);
     }
   else
     {

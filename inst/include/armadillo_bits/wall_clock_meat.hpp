@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 Conrad Sanderson
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2013 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,7 +33,12 @@ wall_clock::tic()
   {
   arma_extra_debug_sigprint();
   
-  #if defined(ARMA_USE_BOOST_DATE)
+  #if defined(ARMA_USE_CXX11)
+    {
+    chrono_time1 = std::chrono::steady_clock::now();
+    valid = true;
+    }
+  #elif defined(ARMA_USE_BOOST_DATE)
     {
     boost_time1 = boost::posix_time::microsec_clock::local_time();
     valid = true;
@@ -61,7 +66,17 @@ wall_clock::toc()
   
   if(valid)
     {
-    #if defined(ARMA_USE_BOOST_DATE)
+    #if defined(ARMA_USE_CXX11)
+      {
+      const std::chrono::steady_clock::time_point chrono_time2 = std::chrono::steady_clock::now();
+      
+      typedef std::chrono::duration<double> duration_type;
+      
+      const duration_type chrono_span = std::chrono::duration_cast< duration_type >(chrono_time2 - chrono_time1);
+      
+      return chrono_span.count();
+      }
+    #elif defined(ARMA_USE_BOOST_DATE)
       {
       boost_duration = boost::posix_time::microsec_clock::local_time() - boost_time1;
       return boost_duration.total_microseconds() * 1e-6;

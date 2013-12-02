@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 Conrad Sanderson
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2013 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,7 +26,9 @@ class wall_clock
   
   bool valid;
   
-  #if defined(ARMA_USE_BOOST_DATE)
+  #if defined(ARMA_USE_CXX11)
+    std::chrono::steady_clock::time_point chrono_time1;
+  #elif defined(ARMA_USE_BOOST_DATE)
     boost::posix_time::ptime         boost_time1;
     boost::posix_time::time_duration boost_duration;
   #elif defined(ARMA_HAVE_GETTIMEOFDAY)
@@ -35,7 +37,6 @@ class wall_clock
   #else
     clock_t time1;
   #endif
-  
   };
 
 

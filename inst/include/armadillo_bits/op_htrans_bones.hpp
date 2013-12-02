@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 Conrad Sanderson
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2013 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,18 +17,26 @@ class op_htrans
   public:
   
   template<typename eT>
-  arma_hot arma_inline static void apply_noalias(Mat<eT>& out, const Mat<eT>& A, const typename arma_not_cx<eT>::result* junk = 0);
+  arma_hot arma_inline static void apply_mat_noalias(Mat<eT>& out, const Mat<eT>& A, const typename arma_not_cx<eT>::result* junk = 0);
   
   template<typename eT>
-  arma_hot inline static void apply_noalias(Mat<eT>& out, const Mat<eT>& A, const typename arma_cx_only<eT>::result* junk = 0);
+  arma_hot      inline static void apply_mat_noalias(Mat<eT>& out, const Mat<eT>& A, const typename arma_cx_only<eT>::result* junk = 0);
   
   //
   
   template<typename eT>
-  arma_hot arma_inline static void apply(Mat<eT>& out, const Mat<eT>& A, const typename arma_not_cx<eT>::result* junk = 0);
+  arma_hot arma_inline static void apply_mat_inplace(Mat<eT>& out, const typename arma_not_cx<eT>::result* junk = 0);
   
   template<typename eT>
-  arma_hot inline static void apply(Mat<eT>& out, const Mat<eT>& A, const typename arma_cx_only<eT>::result* junk = 0);
+  arma_hot      inline static void apply_mat_inplace(Mat<eT>& out, const typename arma_cx_only<eT>::result* junk = 0);
+  
+  //
+  
+  template<typename eT>
+  arma_hot arma_inline static void apply_mat(Mat<eT>& out, const Mat<eT>& A, const typename arma_not_cx<eT>::result* junk = 0);
+  
+  template<typename eT>
+  arma_hot      inline static void apply_mat(Mat<eT>& out, const Mat<eT>& A, const typename arma_cx_only<eT>::result* junk = 0);
   
   //
   

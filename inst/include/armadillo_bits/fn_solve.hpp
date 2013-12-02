@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2011 Conrad Sanderson
-// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2013 Conrad Sanderson
+// Copyright (C) 2009-2013 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -40,6 +40,29 @@ solve
 
 template<typename T1, typename T2>
 inline
+const Glue<T1, T2, glue_solve>
+solve
+  (
+  const Base<typename T1::elem_type,T1>& A,
+  const Base<typename T1::elem_type,T2>& B,
+  const char* method,
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  )
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  const char sig = method[0];
+  
+  arma_debug_check( ((sig != 's') && (sig != 'f')), "solve(): unknown method specified" );
+  
+  return Glue<T1, T2, glue_solve>( A.get_ref(), B.get_ref(), ((sig == 'f') ? 0 : 1) );
+  }
+
+
+
+template<typename T1, typename T2>
+inline
 const Glue<T1, T2, glue_solve_tr>
 solve
   (
@@ -52,6 +75,29 @@ solve
   arma_extra_debug_sigprint();
   arma_ignore(slow);
   arma_ignore(junk);
+  
+  return Glue<T1, T2, glue_solve_tr>(A.m, B.get_ref(), A.aux_uword_a);
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+const Glue<T1, T2, glue_solve_tr>
+solve
+  (
+  const Op<T1, op_trimat>& A,
+  const Base<typename T1::elem_type,T2>& B,
+  const char* method,
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  )
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  const char sig = method[0];
+  
+  arma_debug_check( ((sig != 's') && (sig != 'f')), "solve(): unknown method specified" );
   
   return Glue<T1, T2, glue_solve_tr>(A.m, B.get_ref(), A.aux_uword_a);
   }
@@ -76,6 +122,35 @@ solve
   try
     {
     out = solve( A.get_ref(), B.get_ref(), slow );
+    }
+  catch(std::runtime_error&)
+    {
+    return false;
+    }
+  
+  return true;
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+bool
+solve
+  (
+         Mat<typename T1::elem_type>&    out,
+  const Base<typename T1::elem_type,T1>& A,
+  const Base<typename T1::elem_type,T2>& B,
+  const char* method,
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  )
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  try
+    {
+    out = solve( A.get_ref(), B.get_ref(), method );
     }
   catch(std::runtime_error&)
     {

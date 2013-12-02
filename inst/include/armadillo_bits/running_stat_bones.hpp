@@ -58,8 +58,8 @@ class running_stat
   
   inline eT mean() const;
   
-  inline  T var   (const uword norm_type = 0) const;
-  inline  T stddev(const uword norm_type = 0) const;
+  inline  T var   (const uword norm_type = 0) const;  // TODO: investigate use of "unbiased" and "biased", ie. char* overload
+  inline  T stddev(const uword norm_type = 0) const;  // TODO: investigate use of "unbiased" and "biased", ie. char* overload
   
   inline eT min()  const;
   inline eT max()  const;

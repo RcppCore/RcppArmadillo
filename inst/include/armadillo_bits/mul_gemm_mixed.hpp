@@ -100,7 +100,7 @@ class gemm_mixed_large
       {
       Mat<in_eT2> B_tmp;
       
-      op_strans::apply_noalias(B_tmp, B);
+      op_strans::apply_mat_noalias(B_tmp, B);
       
       gemm_mixed_large<false, false, use_alpha, use_beta>::apply(C, A, B_tmp, alpha, beta);
       }
@@ -309,12 +309,12 @@ class gemm_mixed
     
     if(do_trans_A)
       {
-      op_htrans::apply_noalias(tmp_A, A);
+      op_htrans::apply_mat_noalias(tmp_A, A);
       }
     
     if(do_trans_B)
       {
-      op_htrans::apply_noalias(tmp_B, B);
+      op_htrans::apply_mat_noalias(tmp_B, B);
       }
      
     const Mat<in_eT1>& AA = (predo_trans_A == false) ? A : tmp_A;

@@ -73,7 +73,7 @@ sprandn(const SpBase<typename T1::elem_type, T1>& X)
   
   SpMat<eT> out( X.get_ref() );
   
-  eop_aux_randn<eT>::fill( access::rwp(out.values), out.n_nonzero );
+  arma_rng::randn<eT>::fill( access::rwp(out.values), out.n_nonzero );
   
   return out;
   }

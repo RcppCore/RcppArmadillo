@@ -1,5 +1,5 @@
 // Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
 // Copyright (C) 2009-2010 Ian Cullinan
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -94,11 +94,17 @@ class field
   inline       subview_field<oT> subfield(const uword in_row1, const uword in_col1, const uword in_row2, const uword in_col2);
   inline const subview_field<oT> subfield(const uword in_row1, const uword in_col1, const uword in_row2, const uword in_col2) const;
   
+  inline       subview_field<oT> subfield(const uword in_row1, const uword in_col1, const SizeMat& s);
+  inline const subview_field<oT> subfield(const uword in_row1, const uword in_col1, const SizeMat& s) const;
+  
   inline       subview_field<oT> subfield  (const span& row_span, const span& col_span);
   inline const subview_field<oT> subfield  (const span& row_span, const span& col_span) const;
   
   inline       subview_field<oT> operator()(const span& row_span, const span& col_span);
   inline const subview_field<oT> operator()(const span& row_span, const span& col_span) const;
+  
+  inline       subview_field<oT> operator()(const uword in_row1, const uword in_col1, const SizeMat& s);
+  inline const subview_field<oT> operator()(const uword in_row1, const uword in_col1, const SizeMat& s) const;
   
   
   inline void print(const std::string extra_text = "") const;
@@ -118,6 +124,8 @@ class field
   arma_inline arma_warn_unused bool in_range(const span& row_span, const uword   in_col) const;
   arma_inline arma_warn_unused bool in_range(const uword   in_row, const span& col_span) const;
   arma_inline arma_warn_unused bool in_range(const span& row_span, const span& col_span) const;
+  
+  arma_inline arma_warn_unused bool in_range(const uword in_row, const uword in_col, const SizeMat& s) const;
   
   inline bool save(const std::string   name, const file_type type = arma_binary, const bool print_status = true) const;
   inline bool save(      std::ostream& os,   const file_type type = arma_binary, const bool print_status = true) const;

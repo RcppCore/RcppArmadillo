@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2011 Conrad Sanderson
-// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2013 Conrad Sanderson
+// Copyright (C) 2009-2013 NICTA (www.nicta.com.au)
 // Copyright (C) 2009-2010 Dimitrios Bouzas
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -18,14 +18,19 @@ const Op<T1, op_pinv>
 pinv
   (
   const Base<typename T1::elem_type,T1>& X,
-  const typename T1::elem_type tol = 0.0,
+  const typename T1::elem_type           tol    = 0.0,
+  const char*                            method = "standard",
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
   )
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  return Op<T1, op_pinv>(X.get_ref(), tol);
+  const char sig = method[0];
+  
+  arma_debug_check( ((sig != 's') && (sig != 'd')), "pinv(): unknown method specified" );
+  
+  return (sig == 'd') ? Op<T1, op_pinv>(X.get_ref(), tol, 1, 0) : Op<T1, op_pinv>(X.get_ref(), tol, 0, 0);
   }
 
 
@@ -37,7 +42,8 @@ pinv
   (
          Mat<typename T1::elem_type>&    out,
   const Base<typename T1::elem_type,T1>& X,
-  const typename T1::elem_type tol = 0.0,
+  const typename T1::elem_type           tol    = 0.0,
+  const char*                            method = "standard",
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
   )
   {
@@ -46,7 +52,7 @@ pinv
   
   try
     {
-    out = pinv(X,tol);
+    out = pinv(X, tol, method);
     }
   catch(std::runtime_error&)
     {

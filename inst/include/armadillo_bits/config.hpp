@@ -145,6 +145,7 @@
 
 #if defined(ARMA_DONT_USE_CXX11)
   #undef ARMA_USE_CXX11
+  #undef ARMA_USE_CXX11_RNG
 #endif
 
 #if defined(ARMA_DONT_USE_HDF5)
@@ -154,6 +155,7 @@
 #if defined(ARMA_DONT_USE_BOOST)
   #undef ARMA_USE_BOOST
   #undef ARMA_USE_BOOST_DATE
+  #undef ARMA_USE_BOOST_FORMAT
 #endif
 
 #if defined(ARMA_DONT_PRINT_LOGIC_ERRORS)

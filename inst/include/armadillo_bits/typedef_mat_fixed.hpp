@@ -6,7 +6,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-//! \addtogroup typedef_fixed
+//! \addtogroup typedef_mat_fixed
 //! @{
 
 

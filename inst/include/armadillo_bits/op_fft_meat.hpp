@@ -62,7 +62,7 @@ op_fft_real::apply( Mat< std::complex<typename T1::pod_type> >& out, const mtOp<
     
     out_eT* data_mem = data.memptr();
     
-    if(N_user > N_orig)  { arrayops::inplace_set( &data_mem[N_orig], out_eT(0), (N_user - N_orig) ); }
+    if(N_user > N_orig)  { arrayops::fill_zeros( &data_mem[N_orig], (N_user - N_orig) ); }
     
     const uword N = (std::min)(N_user, N_orig);
     
@@ -109,7 +109,7 @@ op_fft_real::apply( Mat< std::complex<typename T1::pod_type> >& out, const mtOp<
     
     out_eT* data_mem = data.memptr();
     
-    if(N_user > N_orig)  { arrayops::inplace_set( &data_mem[N_orig], out_eT(0), (N_user - N_orig) ); }
+    if(N_user > N_orig)  { arrayops::fill_zeros( &data_mem[N_orig], (N_user - N_orig) ); }
     
     const uword N = (std::min)(N_user, N_orig);
     
@@ -197,7 +197,7 @@ op_fft_cx::apply_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, c
       
       eT* data_mem = data.memptr();
       
-      if(N_user > N_orig)  { arrayops::inplace_set( &data_mem[N_orig], eT(0), (N_user - N_orig) ); }
+      if(N_user > N_orig)  { arrayops::fill_zeros( &data_mem[N_orig], (N_user - N_orig) ); }
       
       op_fft_cx::copy_vec( data_mem, P, (std::min)(N_user, N_orig) );
       
@@ -235,7 +235,7 @@ op_fft_cx::apply_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, c
       
       eT* data_mem = data.memptr();
       
-      if(N_user > N_orig)  { arrayops::inplace_set( &data_mem[N_orig], eT(0), (N_user - N_orig) ); }
+      if(N_user > N_orig)  { arrayops::fill_zeros( &data_mem[N_orig], (N_user - N_orig) ); }
       
       const uword N = (std::min)(N_user, N_orig);
       
