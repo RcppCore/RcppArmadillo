@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 Conrad Sanderson
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2013 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
 // Copyright (C) 2012 Ryan Curtin
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -16,12 +16,12 @@ template<typename eT>
 arma_hot
 arma_inline
 void
-op_htrans::apply_noalias(Mat<eT>& out, const Mat<eT>& A, const typename arma_not_cx<eT>::result* junk)
+op_htrans::apply_mat_noalias(Mat<eT>& out, const Mat<eT>& A, const typename arma_not_cx<eT>::result* junk)
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  op_strans::apply_noalias(out, A);
+  op_strans::apply_mat_noalias(out, A);
   }
 
 
@@ -30,7 +30,7 @@ template<typename eT>
 arma_hot
 inline
 void
-op_htrans::apply_noalias(Mat<eT>& out, const Mat<eT>& A, const typename arma_cx_only<eT>::result* junk)
+op_htrans::apply_mat_noalias(Mat<eT>& out, const Mat<eT>& A, const typename arma_cx_only<eT>::result* junk)
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk);
@@ -73,12 +73,12 @@ template<typename eT>
 arma_hot
 arma_inline
 void
-op_htrans::apply(Mat<eT>& out, const Mat<eT>& A, const typename arma_not_cx<eT>::result* junk)
+op_htrans::apply_mat_inplace(Mat<eT>& out, const typename arma_not_cx<eT>::result* junk)
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  op_strans::apply(out, A);
+  op_strans::apply_mat_inplace(out);
   }
 
 
@@ -87,49 +87,77 @@ template<typename eT>
 arma_hot
 inline
 void
-op_htrans::apply(Mat<eT>& out, const Mat<eT>& A, const typename arma_cx_only<eT>::result* junk)
+op_htrans::apply_mat_inplace(Mat<eT>& out, const typename arma_cx_only<eT>::result* junk)
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  const uword n_rows = out.n_rows;
+  const uword n_cols = out.n_cols;
+    
+  if(n_rows == n_cols)
+    {
+    arma_extra_debug_print("doing in-place hermitian transpose of a square matrix");
+    
+    for(uword col=0; col < n_cols; ++col)
+      {
+      eT* coldata = out.colptr(col);
+      
+      out.at(col,col) = std::conj( out.at(col,col) );
+      
+      for(uword row=(col+1); row < n_rows; ++row)
+        {
+        const eT val1 = std::conj(coldata[row]);
+        const eT val2 = std::conj(out.at(col,row));
+        
+        out.at(col,row) = val1;
+        coldata[row]    = val2;
+        }
+      }
+    }
+  else
+    {
+    Mat<eT> tmp;
+    
+    op_htrans::apply_mat_noalias(tmp, out);
+    
+    out.steal_mem(tmp);
+    }
+  }
+
+
+
+template<typename eT>
+arma_hot
+arma_inline
+void
+op_htrans::apply_mat(Mat<eT>& out, const Mat<eT>& A, const typename arma_not_cx<eT>::result* junk)
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  op_strans::apply_mat(out, A);
+  }
+
+
+
+template<typename eT>
+arma_hot
+inline
+void
+op_htrans::apply_mat(Mat<eT>& out, const Mat<eT>& A, const typename arma_cx_only<eT>::result* junk)
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
   if(&out != &A)
     {
-    op_htrans::apply_noalias(out, A);
+    op_htrans::apply_mat_noalias(out, A);
     }
   else
     {
-    const uword n_rows = out.n_rows;
-    const uword n_cols = out.n_cols;
-      
-    if(n_rows == n_cols)
-      {
-      arma_extra_debug_print("doing in-place hermitian transpose of a square matrix");
-      
-      for(uword col=0; col < n_cols; ++col)
-        {
-        eT* coldata = out.colptr(col);
-        
-        out.at(col,col) = std::conj( out.at(col,col) );
-        
-        for(uword row=(col+1); row < n_rows; ++row)
-          {
-          const eT val1 = std::conj(coldata[row]);
-          const eT val2 = std::conj(out.at(col,row));
-          
-          out.at(col,row) = val1;
-          coldata[row]    = val2;
-          }
-        }
-      }
-    else
-      {
-      Mat<eT> tmp;
-      op_htrans::apply_noalias(tmp, A);
-      
-      out.steal_mem(tmp);
-      }
+    op_htrans::apply_mat_inplace(out);
     }
-  
   }
 
 
@@ -151,7 +179,7 @@ op_htrans::apply_proxy(Mat<typename T1::elem_type>& out, const T1& X)
     {
     const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
     
-    op_htrans::apply(out, tmp.M);
+    op_htrans::apply_mat(out, tmp.M);
     }
   else
     {

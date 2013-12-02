@@ -113,6 +113,28 @@ min(const T& x)
 
 
 
+//! element-wise minimum
+template<typename T1, typename T2>
+arma_inline
+typename
+enable_if2
+  <
+  ( is_arma_type<T1>::value && is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value ),
+  const Glue<T1, T2, glue_min>
+  >::result
+min
+  (
+  const T1& X,
+  const T2& Y
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  return Glue<T1, T2, glue_min>(X, Y);
+  }
+
+
+
 template<typename T1>
 inline
 arma_warn_unused

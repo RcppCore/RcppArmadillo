@@ -506,6 +506,56 @@ field<oT>::subfield(const uword in_row1, const uword in_col1, const uword in_row
 template<typename oT>
 inline
 subview_field<oT>
+field<oT>::subfield(const uword in_row1, const uword in_col1, const SizeMat& s)
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword l_n_rows = n_rows;
+  const uword l_n_cols = n_cols;
+  
+  const uword s_n_rows = s.n_rows;
+  const uword s_n_cols = s.n_cols;
+  
+  arma_debug_check
+    (
+    ((in_row1 >= l_n_rows) || (in_col1 >= l_n_cols) || ((in_row1 + s_n_rows) > l_n_rows) || ((in_col1 + s_n_cols) > l_n_cols)),
+    "field::subfield(): indices or size out of bounds"
+    );
+  
+  return subview_field<oT>(*this, in_row1, in_col1, s_n_rows, s_n_cols);
+  }
+
+
+
+//! creation of subview_field (subfield with arbitrary dimensions)
+template<typename oT>
+inline
+const subview_field<oT>
+field<oT>::subfield(const uword in_row1, const uword in_col1, const SizeMat& s) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword l_n_rows = n_rows;
+  const uword l_n_cols = n_cols;
+  
+  const uword s_n_rows = s.n_rows;
+  const uword s_n_cols = s.n_cols;
+  
+  arma_debug_check
+    (
+    ((in_row1 >= l_n_rows) || (in_col1 >= l_n_cols) || ((in_row1 + s_n_rows) > l_n_rows) || ((in_col1 + s_n_cols) > l_n_cols)),
+    "field::subfield(): indices or size out of bounds"
+    );
+  
+  return subview_field<oT>(*this, in_row1, in_col1, s_n_rows, s_n_cols);
+  }
+
+
+
+//! creation of subview_field (subfield with arbitrary dimensions)
+template<typename oT>
+inline
+subview_field<oT>
 field<oT>::subfield(const span& row_span, const span& col_span)
   {
   arma_extra_debug_sigprint();
@@ -825,6 +875,27 @@ field<oT>::in_range(const span& row_span, const span& col_span) const
   const bool cols_ok = col_span.whole ? true : ( (in_col1 <= in_col2) && (in_col2 < n_cols) );
   
   return ( (rows_ok == true) && (cols_ok == true) );
+  }
+
+
+
+template<typename oT>
+arma_inline
+arma_warn_unused
+bool
+field<oT>::in_range(const uword in_row, const uword in_col, const SizeMat& s) const
+  {
+  const uword l_n_rows = n_rows;
+  const uword l_n_cols = n_cols;
+  
+  if( (in_row >= l_n_rows) || (in_col >= l_n_cols) || ((in_row + s.n_rows) > l_n_rows) || ((in_col + s.n_cols) > l_n_cols) )
+    {
+    return false;
+    }
+  else
+    {
+    return true;
+    }
   }
 
 

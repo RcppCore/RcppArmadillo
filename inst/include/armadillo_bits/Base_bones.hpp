@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 Conrad Sanderson
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2013 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,8 @@
 template<typename derived>
 struct Base_blas_elem_type
   {
-  arma_inline const Op<derived,op_inv> i(const bool slow = false) const;   //!< matrix inverse
+  arma_inline const Op<derived,op_inv> i(const bool  slow   = false) const;   //!< matrix inverse
+  arma_inline const Op<derived,op_inv> i(const char* method        ) const;   //!< matrix inverse
   };
 
 

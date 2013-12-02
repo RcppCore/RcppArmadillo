@@ -16,9 +16,9 @@ class memory
   
                         arma_inline             static uword enlarge_to_mult_of_chunksize(const uword n_elem);
   
-  template<typename eT> arma_inline arma_malloc static eT*   acquire(const uword n_elem);
+  template<typename eT>      inline arma_malloc static eT*   acquire(const uword n_elem);
   
-  template<typename eT> arma_inline arma_malloc static eT*   acquire_chunked(const uword n_elem);
+  template<typename eT>      inline arma_malloc static eT*   acquire_chunked(const uword n_elem);
   
   template<typename eT> arma_inline             static void  release(eT* mem);
   
@@ -45,18 +45,20 @@ memory::enlarge_to_mult_of_chunksize(const uword n_elem)
 
 
 template<typename eT>
-arma_inline
+inline
 arma_malloc
 eT*
 memory::acquire(const uword n_elem)
   {
+  eT* out_memptr;
+  
   #if   defined(ARMA_USE_TBB_ALLOC)
     {
-    return ( (eT *) scalable_malloc(sizeof(eT)*n_elem) );
+    out_memptr = (eT *) scalable_malloc(sizeof(eT)*n_elem);
     }
   #elif defined(ARMA_USE_MKL_ALLOC)
     {
-    return ( (eT *) mkl_malloc( sizeof(eT)*n_elem, 128 ) );
+    out_memptr = (eT *) mkl_malloc( sizeof(eT)*n_elem, 128 );
     }
   #elif defined(ARMA_HAVE_POSIX_MEMALIGN)
     {
@@ -66,27 +68,34 @@ memory::acquire(const uword n_elem)
     
     int status = posix_memalign((void **)&memptr, ( (alignment >= sizeof(void*)) ? alignment : sizeof(void*) ), sizeof(eT)*n_elem);
     
-    return (status == 0) ? memptr : NULL;
+    out_memptr = (status == 0) ? memptr : NULL;
     }
   #elif defined(_MSC_VER)
     {
-    return ( (eT *) _aligned_malloc( sizeof(eT)*n_elem, 16 ) );  // lives in malloc.h
+    out_memptr = (eT *) _aligned_malloc( sizeof(eT)*n_elem, 16 );  // lives in malloc.h
     }
   #else
     {
     //return ( new(std::nothrow) eT[n_elem] );
-    return ( (eT *) malloc(sizeof(eT)*n_elem) );
+    out_memptr = (eT *) malloc(sizeof(eT)*n_elem);
     }
   #endif
   
   // TODO: for mingw, use __mingw_aligned_malloc
+  
+  if(n_elem > 0)
+    {
+    arma_check_bad_alloc( (out_memptr == NULL), "arma::memory::acquire(): out of memory" );
+    }
+  
+  return out_memptr;
   }
 
 
 
 //! get memory in multiples of chunks, holding at least n_elem
 template<typename eT>
-arma_inline
+inline
 arma_malloc
 eT*
 memory::acquire_chunked(const uword n_elem)
