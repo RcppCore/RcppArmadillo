@@ -14,7 +14,7 @@ inline
 double
 randn()
   {
-  return double(arma_rng::randn<double>());
+  return double(eop_aux_randn<double>());
   }
 
 
@@ -23,7 +23,7 @@ inline
 typename arma_scalar_only<eT>::result
 randn()
   {
-  return eT(arma_rng::randn<eT>());
+  return eT(eop_aux_randn<eT>());
   }
 
 

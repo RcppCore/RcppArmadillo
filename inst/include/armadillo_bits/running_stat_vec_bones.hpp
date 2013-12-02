@@ -23,7 +23,7 @@ class running_stat_vec
   typedef typename get_pod_type<eT>::result T;
   
   inline ~running_stat_vec();
-  inline  running_stat_vec(const bool in_calc_cov = false);  // TODO: investigate char* overload, eg. "calc_cov", "no_calc_cov"
+  inline  running_stat_vec(const bool in_calc_cov = false);
   
   inline running_stat_vec(const running_stat_vec& in_rsv);
   

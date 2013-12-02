@@ -160,8 +160,6 @@ Mat<eT>::init_cold()
   
   if(n_elem <= arma_config::mat_prealloc)
     {
-    arma_extra_debug_print("Mat::init(): using local memory");
-    
     access::rw(mem) = mem_local;
     }
   else
@@ -169,6 +167,8 @@ Mat<eT>::init_cold()
     arma_extra_debug_print("Mat::init(): allocating memory");
     
     access::rw(mem) = memory::acquire<eT>(n_elem);
+    
+    arma_check_bad_alloc( (mem == 0), "Mat::init(): out of memory" );
     }
   }
 
@@ -274,8 +274,6 @@ Mat<eT>::init_warm(uword in_n_rows, uword in_n_cols)
     
     if(new_n_elem <= arma_config::mat_prealloc)
       {
-      arma_extra_debug_print("Mat::init(): using local memory");
-      
       access::rw(mem) = mem_local;
       }
     else
@@ -283,6 +281,8 @@ Mat<eT>::init_warm(uword in_n_rows, uword in_n_cols)
       arma_extra_debug_print("Mat::init(): allocating memory");
       
       access::rw(mem) = memory::acquire<eT>(new_n_elem);
+      
+      arma_check_bad_alloc( (mem == 0), "Mat::init(): out of memory" );
       }
     
     access::rw(n_rows)    = in_n_rows;
@@ -362,15 +362,9 @@ Mat<eT>::operator=(const std::string& text)
 template<typename eT>
 inline 
 void
-Mat<eT>::init(const std::string& text_orig)
+Mat<eT>::init(const std::string& text)
   {
   arma_extra_debug_sigprint();
-  
-  const bool has_commas = ( text_orig.find(',') != std::string::npos );
-  
-  std::string* text_mod = (has_commas) ? new std::string(text_orig) : NULL;
-  
-  const std::string& text = (has_commas) ? ( std::replace((*text_mod).begin(), (*text_mod).end(), ',', ' '), (*text_mod) ) : text_orig;
   
   //
   // work out the size
@@ -385,21 +379,17 @@ Mat<eT>::init(const std::string& text_orig)
   std::string::size_type line_start = 0;
   std::string::size_type   line_end = 0;
   
-  std::stringstream line_stream;
-  
   while( line_start < text.length() )
     {
+    
     line_end = text.find(';', line_start);
     
     if(line_end == std::string::npos)
-      {
       line_end = text.length()-1;
-      }
     
     std::string::size_type line_len = line_end - line_start + 1;
+    std::stringstream line_stream( text.substr(line_start,line_len) );
     
-    line_stream.clear();
-    line_stream.str( text.substr(line_start,line_len) );
     
     uword line_n_cols = 0;
     while(line_stream >> token)
@@ -407,46 +397,41 @@ Mat<eT>::init(const std::string& text_orig)
       ++line_n_cols;
       }
     
+    
     if(line_n_cols > 0)
       {
       if(t_n_cols_found == false)
         {
-        t_n_cols       = line_n_cols;
+        t_n_cols = line_n_cols;
         t_n_cols_found = true;
         }
       else
-        {
         arma_check( (line_n_cols != t_n_cols), "Mat::init(): inconsistent number of columns in given string");
-        }
       
       ++t_n_rows;
       }
-      
     line_start = line_end+1;
+    
     }
-  
-  
+    
   Mat<eT>& x = *this;
   x.set_size(t_n_rows, t_n_cols);
   
   line_start = 0;
-  line_end   = 0;
+  line_end = 0;
   
   uword urow = 0;
   
   while( line_start < text.length() )
     {
+    
     line_end = text.find(';', line_start);
     
     if(line_end == std::string::npos)
-      {
       line_end = text.length()-1;
-      }
     
     std::string::size_type line_len = line_end - line_start + 1;
-    
-    line_stream.clear();
-    line_stream.str( text.substr(line_start,line_len) );
+    std::stringstream line_stream( text.substr(line_start,line_len) );
     
 //     uword ucol = 0;
 //     while(line_stream >> token)
@@ -466,11 +451,7 @@ Mat<eT>::init(const std::string& text_orig)
     ++urow;
     line_start = line_end+1;
     }
-    
-  if(has_commas)
-    {
-    delete text_mod;
-    }
+  
   }
 
 
@@ -2200,8 +2181,7 @@ Mat<eT>::Mat(const SpBase<eT, T1>& m)
   access::rw(n_elem) = p.get_n_elem();
   
   init_cold();
-  
-  zeros();
+  fill(eT(0));
   
   typename SpProxy<T1>::const_iterator_type it     = p.begin();
   typename SpProxy<T1>::const_iterator_type it_end = p.end();
@@ -2227,7 +2207,7 @@ Mat<eT>::operator=(const SpBase<eT, T1>& m)
   
   init_warm(p.get_n_rows(), p.get_n_cols());
   
-  zeros();
+  fill(eT(0));
   
   typename SpProxy<T1>::const_iterator_type it     = p.begin();
   typename SpProxy<T1>::const_iterator_type it_end = p.end();
@@ -2853,56 +2833,6 @@ Mat<eT>::submat(const uword in_row1, const uword in_col1, const uword in_row2, c
 
 //! creation of subview (submatrix)
 template<typename eT>
-arma_inline
-subview<eT>
-Mat<eT>::submat(const uword in_row1, const uword in_col1, const SizeMat& s)
-  {
-  arma_extra_debug_sigprint();
-  
-  const uword l_n_rows = n_rows;
-  const uword l_n_cols = n_cols;
-  
-  const uword s_n_rows = s.n_rows;
-  const uword s_n_cols = s.n_cols;
-  
-  arma_debug_check
-    (
-    ((in_row1 >= l_n_rows) || (in_col1 >= l_n_cols) || ((in_row1 + s_n_rows) > l_n_rows) || ((in_col1 + s_n_cols) > l_n_cols)),
-    "Mat::submat(): indices or size out of bounds"
-    );
-  
-  return subview<eT>(*this, in_row1, in_col1, s_n_rows, s_n_cols);
-  }
-
-
-
-//! creation of subview (submatrix)
-template<typename eT>
-arma_inline
-const subview<eT>
-Mat<eT>::submat(const uword in_row1, const uword in_col1, const SizeMat& s) const
-  {
-  arma_extra_debug_sigprint();
-  
-  const uword l_n_rows = n_rows;
-  const uword l_n_cols = n_cols;
-  
-  const uword s_n_rows = s.n_rows;
-  const uword s_n_cols = s.n_cols;
-  
-  arma_debug_check
-    (
-    ((in_row1 >= l_n_rows) || (in_col1 >= l_n_cols) || ((in_row1 + s_n_rows) > l_n_rows) || ((in_col1 + s_n_cols) > l_n_cols)),
-    "Mat::submat(): indices or size out of bounds"
-    );
-  
-  return subview<eT>(*this, in_row1, in_col1, s_n_rows, s_n_cols);
-  }
-
-
-
-//! creation of subview (submatrix)
-template<typename eT>
 inline
 subview<eT>
 Mat<eT>::submat(const span& row_span, const span& col_span)
@@ -2993,30 +2923,6 @@ Mat<eT>::operator()(const span& row_span, const span& col_span) const
   arma_extra_debug_sigprint();
   
   return (*this).submat(row_span, col_span);
-  }
-
-
-
-template<typename eT>
-inline
-subview<eT>
-Mat<eT>::operator()(const uword in_row1, const uword in_col1, const SizeMat& s)
-  {
-  arma_extra_debug_sigprint();
-  
-  return (*this).submat(in_row1, in_col1, s);
-  }
-
-
-
-template<typename eT>
-inline
-const subview<eT>
-Mat<eT>::operator()(const uword in_row1, const uword in_col1, const SizeMat& s) const
-  {
-  arma_extra_debug_sigprint();
-  
-  return (*this).submat(in_row1, in_col1, s);
   }
 
 
@@ -5026,27 +4932,6 @@ Mat<eT>::in_range(const span& row_span, const span& col_span) const
 
 
 
-template<typename eT>
-arma_inline
-arma_warn_unused
-bool
-Mat<eT>::in_range(const uword in_row, const uword in_col, const SizeMat& s) const
-  {
-  const uword l_n_rows = n_rows;
-  const uword l_n_cols = n_cols;
-  
-  if( (in_row >= l_n_rows) || (in_col >= l_n_cols) || ((in_row + s.n_rows) > l_n_rows) || ((in_col + s.n_cols) > l_n_cols) )
-    {
-    return false;
-    }
-  else
-    {
-    return true;
-    }
-  }
-
-
-
 //! returns a pointer to array of eTs for a specified column; no bounds check
 template<typename eT>
 arma_inline
@@ -5502,7 +5387,7 @@ Mat<eT>::randu()
   {
   arma_extra_debug_sigprint();
   
-  arma_rng::randu<eT>::fill( memptr(), n_elem );
+  eop_aux_randu<eT>::fill( memptr(), n_elem );
   
   return *this;
   }
@@ -5544,7 +5429,7 @@ Mat<eT>::randn()
   {
   arma_extra_debug_sigprint();
   
-  arma_rng::randn<eT>::fill( memptr(), n_elem );
+  eop_aux_randn<eT>::fill( memptr(), n_elem );
   
   return *this;
   }
