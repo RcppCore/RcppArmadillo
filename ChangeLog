@@ -1,6 +1,10 @@
+2013-12-04  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/*: Upgraded to 2nd beta release of Armadillo 3.930
+
 2013-12-02  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/*: Upgraded to beta release of Armadillo 3.930
+	* inst/include/*: Upgraded to 1st beta release of Armadillo 3.930
 
 2013-11-19  Dirk Eddelbuettel  <edd@debian.org>
 

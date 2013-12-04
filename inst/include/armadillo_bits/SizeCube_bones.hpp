@@ -21,7 +21,7 @@ class SizeCube
   
   inline SizeCube(const uword in_n_rows = 0, const uword in_n_cols = 0, const uword in_n_slices = 0);
   
-  inline operator SizeMat () const;
+  // inline operator SizeMat () const;
   
   inline bool operator==(const SizeCube& s) const;
   inline bool operator!=(const SizeCube& s) const;

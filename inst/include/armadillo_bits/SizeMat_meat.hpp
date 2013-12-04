@@ -21,11 +21,11 @@ SizeMat::SizeMat(const uword in_n_rows, const uword in_n_cols)
 
 
 
-inline
-SizeMat::operator SizeCube () const 
-  {
-  return SizeCube(n_rows, n_cols, 1);
-  }
+// inline
+// SizeMat::operator SizeCube () const 
+//   {
+//   return SizeCube(n_rows, n_cols, 1);
+//   }
 
 
 

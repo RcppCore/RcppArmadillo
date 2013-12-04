@@ -1197,6 +1197,54 @@ Cube<eT>::tube(const uword in_row1, const uword in_col1, const uword in_row2, co
 
 
 template<typename eT>
+arma_inline
+subview_cube<eT>
+Cube<eT>::tube(const uword in_row1, const uword in_col1, const SizeMat& s)
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword l_n_rows = n_rows;
+  const uword l_n_cols = n_cols;
+  
+  const uword s_n_rows = s.n_rows;
+  const uword s_n_cols = s.n_cols;
+  
+  arma_debug_check
+    (
+    ((in_row1 >= l_n_rows) || (in_col1 >= l_n_cols) || ((in_row1 + s_n_rows) > l_n_rows) || ((in_col1 + s_n_cols) > l_n_cols)),
+    "Cube::tube(): indices or size out of bounds"
+    );
+  
+  return subview_cube<eT>(*this, in_row1, in_col1, 0, s_n_rows, s_n_cols, n_slices);
+  }
+
+
+
+template<typename eT>
+arma_inline
+const subview_cube<eT>
+Cube<eT>::tube(const uword in_row1, const uword in_col1, const SizeMat& s) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword l_n_rows = n_rows;
+  const uword l_n_cols = n_cols;
+  
+  const uword s_n_rows = s.n_rows;
+  const uword s_n_cols = s.n_cols;
+  
+  arma_debug_check
+    (
+    ((in_row1 >= l_n_rows) || (in_col1 >= l_n_cols) || ((in_row1 + s_n_rows) > l_n_rows) || ((in_col1 + s_n_cols) > l_n_cols)),
+    "Cube::tube(): indices or size out of bounds"
+    );
+  
+  return subview_cube<eT>(*this, in_row1, in_col1, 0, s_n_rows, s_n_cols, n_slices);
+  }
+
+
+
+template<typename eT>
 inline
 subview_cube<eT>
 Cube<eT>::tube(const span& row_span, const span& col_span)
@@ -3519,13 +3567,72 @@ Cube<eT>::size() const
 
 
 
-// template<typename eT>
-// inline
-// void
-// Cube<eT>::swap(Cube<eT>& B)
-//   {
-//   // TODO
-//   }
+template<typename eT>
+inline
+void
+Cube<eT>::swap(Cube<eT>& B)
+  {
+  Cube<eT>& A = (*this);
+  
+  arma_extra_debug_sigprint(arma_boost::format("A = %x   B = %x") % &A % &B);
+  
+  if( (A.mem_state == 0) && (B.mem_state == 0) && (A.n_elem > Cube_prealloc::mem_n_elem) && (B.n_elem > Cube_prealloc::mem_n_elem) )
+    {
+    A.delete_mat();
+    B.delete_mat();
+    
+    std::swap( access::rw(A.n_rows),       access::rw(B.n_rows)       );
+    std::swap( access::rw(A.n_cols),       access::rw(B.n_cols)       );
+    std::swap( access::rw(A.n_elem_slice), access::rw(B.n_elem_slice) );
+    std::swap( access::rw(A.n_slices),     access::rw(B.n_slices)     );
+    std::swap( access::rw(A.n_elem),       access::rw(B.n_elem)       );
+    std::swap( access::rw(A.mem),          access::rw(B.mem)          );
+    
+    A.create_mat();
+    B.create_mat();
+    }
+  else
+  if( (A.mem_state == 0) && (B.mem_state == 0) && (A.n_elem <= Cube_prealloc::mem_n_elem) && (B.n_elem <= Cube_prealloc::mem_n_elem) )
+    {
+    A.delete_mat();
+    B.delete_mat();
+    
+    std::swap( access::rw(A.n_rows),       access::rw(B.n_rows)       );
+    std::swap( access::rw(A.n_cols),       access::rw(B.n_cols)       );
+    std::swap( access::rw(A.n_elem_slice), access::rw(B.n_elem_slice) );
+    std::swap( access::rw(A.n_slices),     access::rw(B.n_slices)     );
+    std::swap( access::rw(A.n_elem),       access::rw(B.n_elem)       );
+    
+    const uword N = (std::max)(A.n_elem, B.n_elem);
+    
+    eT* A_mem = A.memptr();
+    eT* B_mem = B.memptr();
+    
+    for(uword i=0; i<N; ++i)  { std::swap( A_mem[i], B_mem[i] ); }
+    
+    A.create_mat();
+    B.create_mat();
+    }
+  else
+    {
+    // generic swap
+    
+    if(A.n_elem <= B.n_elem)
+      {
+      Cube<eT> C = A;
+      
+      A.steal_mem(B);
+      B.steal_mem(C);
+      }
+    else
+      {
+      Cube<eT> C = B;
+      
+      B.steal_mem(A);
+      A.steal_mem(C);
+      }
+    }
+  }
 
 
 
@@ -3540,7 +3647,7 @@ Cube<eT>::steal_mem(Cube<eT>& x)
   
   if(this != &x)
     {
-    if( (mem_state <= 1) && (x.mem_state <= 1) && (x.n_elem > Cube_prealloc::mem_n_elem) )
+    if( (mem_state <= 1) && ( ((x.mem_state == 0) && (x.n_elem > Cube_prealloc::mem_n_elem)) || (x.mem_state == 1) ) )
       {
       reset();
       
@@ -3551,6 +3658,7 @@ Cube<eT>::steal_mem(Cube<eT>& x)
       access::rw(n_elem_slice) = x.n_elem_slice;
       access::rw(n_slices)     = x_n_slices;
       access::rw(n_elem)       = x.n_elem;
+      access::rw(mem_state)    = x.mem_state;
       access::rw(mem)          = x.mem;
       
       if(x_n_slices > Cube_prealloc::mat_ptrs_size)

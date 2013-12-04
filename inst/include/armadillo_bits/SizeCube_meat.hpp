@@ -22,13 +22,13 @@ SizeCube::SizeCube(const uword in_n_rows, const uword in_n_cols, const uword in_
 
 
 
-inline
-SizeCube::operator SizeMat () const 
-  {
-  arma_debug_check( (n_slices != 1), "SizeCube: n_slices != 1, hence cube size cannot be interpreted as matrix size" );
-  
-  return SizeMat(n_rows, n_cols);
-  }
+// inline
+// SizeCube::operator SizeMat () const 
+//   {
+//   arma_debug_check( (n_slices != 1), "SizeCube: n_slices != 1, hence cube size cannot be interpreted as matrix size" );
+//   
+//   return SizeMat(n_rows, n_cols);
+//   }
 
 
 
