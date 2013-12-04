@@ -202,29 +202,19 @@ swap(Mat<eT>& A, Mat<eT>& B)
   {
   arma_extra_debug_sigprint();
   
-  const uword A_mem_state = A.mem_state;
+  A.swap(B);
+  }
+
+
+
+template<typename eT>
+inline
+void
+swap(Cube<eT>& A, Cube<eT>& B)
+  {
+  arma_extra_debug_sigprint();
   
-  if( (A.vec_state == B.vec_state) && (A_mem_state == B.mem_state) && ((A_mem_state == 0) || (A_mem_state == 3)) )
-    {
-    A.swap(B);
-    }
-  else
-    {
-    if(A.n_elem <= B.n_elem)
-      {
-      Mat<eT> C = A;
-      
-      A.steal_mem(B);
-      B.steal_mem(C);
-      }
-    else
-      {
-      Mat<eT> C = B;
-      
-      B.steal_mem(A);
-      A.steal_mem(C);
-      }
-    }
+  A.swap(B);
   }
 
 

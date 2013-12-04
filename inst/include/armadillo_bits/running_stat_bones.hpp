@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2011 Conrad Sanderson
-// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2013 Conrad Sanderson
+// Copyright (C) 2009-2013 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -58,8 +58,8 @@ class running_stat
   
   inline eT mean() const;
   
-  inline  T var   (const uword norm_type = 0) const;  // TODO: investigate use of "unbiased" and "biased", ie. char* overload
-  inline  T stddev(const uword norm_type = 0) const;  // TODO: investigate use of "unbiased" and "biased", ie. char* overload
+  inline  T var   (const uword norm_type = 0) const;
+  inline  T stddev(const uword norm_type = 0) const;
   
   inline eT min()  const;
   inline eT max()  const;
@@ -93,14 +93,16 @@ class running_stat_aux
   public:
   
   template<typename eT>
-  inline static void update_stats(running_stat<eT>&               x,  const eT               sample);
+  inline static void update_stats(running_stat<eT>& x, const eT sample, const typename arma_not_cx<eT>::result* junk = 0);
   
-  template<typename T>
-  inline static void update_stats(running_stat< std::complex<T> >& x, const T                sample);
+  template<typename eT>
+  inline static void update_stats(running_stat<eT>& x, const std::complex<eT>& sample, const typename arma_not_cx<eT>::result* junk = 0);
   
-  template<typename T>
-  inline static void update_stats(running_stat< std::complex<T> >& x, const std::complex<T>& sample);
+  template<typename eT>
+  inline static void update_stats(running_stat<eT>& x, const typename eT::value_type sample, const typename arma_cx_only<eT>::result* junk = 0);
   
+  template<typename eT>
+  inline static void update_stats(running_stat<eT>& x, const eT& sample, const typename arma_cx_only<eT>::result* junk = 0);
   };
 
 

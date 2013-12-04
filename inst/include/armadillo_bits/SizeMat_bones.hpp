@@ -20,7 +20,7 @@ class SizeMat
   
   inline SizeMat(const uword in_n_rows = 0, const uword in_n_cols = 0);
   
-  inline operator SizeCube () const;
+  // inline operator SizeCube () const;
   
   inline bool operator==(const SizeMat& s) const;
   inline bool operator!=(const SizeMat& s) const;

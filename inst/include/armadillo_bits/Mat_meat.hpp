@@ -217,13 +217,27 @@ Mat<eT>::init_warm(uword in_n_rows, uword in_n_cols)
       }
     else
       {
-      arma_debug_set_error
-        (
-        err_state,
-        err_msg,
-        ( ((t_vec_state == 1) && (in_n_cols != 1)) || ((t_vec_state == 2) && (in_n_rows != 1)) ),
-        "Mat::init(): object is a row or column vector; requested size is not compatible"
-        );
+      if(t_vec_state == 1)
+        {
+        arma_debug_set_error
+          (
+          err_state,
+          err_msg,
+          (in_n_cols != 1),
+          "Mat::init(): requested size is not compatible with column vector layout"
+          );
+        }
+      else
+      if(t_vec_state == 2)
+        {
+        arma_debug_set_error
+          (
+          err_state,
+          err_msg,
+          (in_n_rows != 1),
+          "Mat::init(): requested size is not compatible with row vector layout"
+          );
+        }
       }
     }
   
@@ -366,11 +380,11 @@ Mat<eT>::init(const std::string& text_orig)
   {
   arma_extra_debug_sigprint();
   
-  const bool has_commas = ( text_orig.find(',') != std::string::npos );
+  const bool replace_commas = (is_cx<eT>::yes) ? false : ( text_orig.find(',') != std::string::npos );
   
-  std::string* text_mod = (has_commas) ? new std::string(text_orig) : NULL;
+  std::string* text_mod = (replace_commas) ? new std::string(text_orig) : NULL;
   
-  const std::string& text = (has_commas) ? ( std::replace((*text_mod).begin(), (*text_mod).end(), ',', ' '), (*text_mod) ) : text_orig;
+  const std::string& text = (replace_commas) ? ( std::replace((*text_mod).begin(), (*text_mod).end(), ',', ' '), (*text_mod) ) : text_orig;
   
   //
   // work out the size
@@ -467,7 +481,7 @@ Mat<eT>::init(const std::string& text_orig)
     line_start = line_end+1;
     }
     
-  if(has_commas)
+  if(replace_commas)
     {
     delete text_mod;
     }
@@ -553,18 +567,33 @@ Mat<eT>::operator=(const std::vector<eT>& x)
   
   template<typename eT>
   inline
-  Mat<eT>::Mat(Mat<eT>&& in_mat)
-    : n_rows(0)
-    , n_cols(0)
-    , n_elem(0)
-    , vec_state(0)
-    , mem_state(0)
-    , mem()
+  Mat<eT>::Mat(Mat<eT>&& X)
+    : n_rows   (X.n_rows)
+    , n_cols   (X.n_cols)
+    , n_elem   (X.n_elem)
+    , vec_state(0       )
+    , mem_state(0       )
+    , mem      (        )
     {
-    arma_extra_debug_sigprint_this(this);
-    arma_extra_debug_sigprint(arma_boost::format("this = %x   in_mat = %x") % this % &in_mat);
+    arma_extra_debug_sigprint(arma_boost::format("this = %x   X = %x") % this % &X);
     
-    (*this).steal_mem(in_mat);
+    if( ((X.mem_state == 0) && (X.n_elem > arma_config::mat_prealloc)) || (X.mem_state == 1) || (X.mem_state == 2) )
+      {
+      access::rw(mem_state) = X.mem_state;
+      access::rw(mem)       = X.mem;
+      
+      access::rw(X.n_rows)    = 0;
+      access::rw(X.n_cols)    = 0;
+      access::rw(X.n_elem)    = 0;
+      access::rw(X.mem_state) = 0;
+      access::rw(X.mem)       = 0;
+      }
+    else
+      {
+      init_cold();
+      
+      arrayops::copy( memptr(), X.mem, X.n_elem );
+      }
     }
   
   
@@ -572,11 +601,11 @@ Mat<eT>::operator=(const std::vector<eT>& x)
   template<typename eT>
   inline
   const Mat<eT>&
-  Mat<eT>::operator=(Mat<eT>&& in_mat)
+  Mat<eT>::operator=(Mat<eT>&& X)
     {
-    arma_extra_debug_sigprint(arma_boost::format("this = %x   in_mat = %x") % this % &in_mat);
+    arma_extra_debug_sigprint(arma_boost::format("this = %x   X = %x") % this % &X);
     
-    (*this).steal_mem(in_mat);
+    (*this).steal_mem(X);
     
     return *this;
     }
@@ -783,7 +812,7 @@ Mat<eT>::init
 
 
 
-//! EXPERIMENTAL: swap the contents of this matrix, denoted as matrix A, with given matrix B
+//! swap the contents of this matrix, denoted as matrix A, with given matrix B
 template<typename eT>
 inline
 void
@@ -792,13 +821,28 @@ Mat<eT>::swap(Mat<eT>& B)
   Mat<eT>& A = (*this);
   
   arma_extra_debug_sigprint(arma_boost::format("A = %x   B = %x") % &A % &B);
+
+  bool layout_ok = false;
   
-  arma_debug_check( (A.vec_state != B.vec_state), "Mat::swap(): incompatible object types" );
+  if(A.vec_state == B.vec_state)
+    {
+    layout_ok = true;
+    }
+  else
+    {
+    const uhword A_vec_state = A.vec_state;
+    const uhword B_vec_state = B.vec_state;
+    
+    const bool A_absorbs_B = (A_vec_state == 0) || ( (A_vec_state == 1) && (B.n_cols == 1) ) || ( (A_vec_state == 2) && (B.n_rows == 1) );
+    const bool B_absorbs_A = (B_vec_state == 0) || ( (B_vec_state == 1) && (A.n_cols == 1) ) || ( (B_vec_state == 2) && (A.n_rows == 1) );
+    
+    layout_ok = A_absorbs_B && B_absorbs_A;
+    }
   
   const uhword A_mem_state = A.mem_state;
   const uhword B_mem_state = B.mem_state;
   
-  if( (A_mem_state == 0) && (B_mem_state == 0) )
+  if( (A_mem_state == 0) && (B_mem_state == 0) && layout_ok )
     {
     const uword A_n_elem = A.n_elem;
     const uword B_n_elem = B.n_elem;
@@ -851,9 +895,10 @@ Mat<eT>::swap(Mat<eT>& B)
     std::swap( access::rw(A.n_elem), access::rw(B.n_elem) );
     }
   else
-  if( (A_mem_state == 3) && (B_mem_state == 3) )
+  if( (A_mem_state <= 2) && (B_mem_state <= 2) && (A.n_elem == B.n_elem) && layout_ok )
     {
-    arma_debug_check( ((A.n_rows != B.n_rows) || (A.n_cols != B.n_cols)), "Mat::swap(): incompatible object types" );
+    std::swap( access::rw(A.n_rows), access::rw(B.n_rows) );
+    std::swap( access::rw(A.n_cols), access::rw(B.n_cols) );
     
     const uword N = A.n_elem;
     
@@ -863,8 +908,33 @@ Mat<eT>::swap(Mat<eT>& B)
     for(uword ii=0; ii < N; ++ii)  { std::swap(A_mem[ii], B_mem[ii]); }
     }
   else
+  if( (A.n_rows == B.n_rows) && (A.n_cols == B.n_cols) )
     {
-    arma_bad("Mat::swap(): incompatible object types");
+    const uword N = A.n_elem;
+    
+    eT* A_mem = A.memptr();
+    eT* B_mem = B.memptr();
+    
+    for(uword ii=0; ii < N; ++ii)  { std::swap(A_mem[ii], B_mem[ii]); }
+    }
+  else
+    {
+    // generic swap to handle remaining cases
+    
+    if(A.n_elem <= B.n_elem)
+      {
+      Mat<eT> C = A;
+      
+      A.steal_mem(B);
+      B.steal_mem(C);
+      }
+    else
+      {
+      Mat<eT> C = B;
+      
+      B.steal_mem(A);
+      A.steal_mem(C);
+      }
     }
   }
 
@@ -898,27 +968,20 @@ Mat<eT>::steal_mem(Mat<eT>& x)
       }
     else
       {
-      if( (t_vec_state == 1) && ( x_n_cols == 1) )
-        {
-        layout_ok = true;
-        }
-      
-      if( (t_vec_state == 2) && ( x_n_rows == 1) )
-        {
-        layout_ok = true;
-        }
+      if( (t_vec_state == 1) && (x_n_cols == 1) )  { layout_ok = true; }
+      if( (t_vec_state == 2) && (x_n_rows == 1) )  { layout_ok = true; }
       }
     
     
-    if( (t_mem_state <= 1) && (x_mem_state <= 1) && (x_n_elem > arma_config::mat_prealloc) && (layout_ok == true) )
+    if( (t_mem_state <= 1) && ( ((x_mem_state == 0) && (x_n_elem > arma_config::mat_prealloc)) || (x_mem_state == 1) ) && layout_ok )
       {
       reset();
-      // note: calling reset() also prevents fixed size matrices from changing size or using non-local memory
       
-      access::rw(n_rows) = x_n_rows;
-      access::rw(n_cols) = x_n_cols;
-      access::rw(n_elem) = x_n_elem;
-      access::rw(mem)    = x.mem;
+      access::rw(n_rows)    = x_n_rows;
+      access::rw(n_cols)    = x_n_cols;
+      access::rw(n_elem)    = x_n_elem;
+      access::rw(mem_state) = x_mem_state;
+      access::rw(mem)       = x.mem;
       
       access::rw(x.n_rows)    = 0;
       access::rw(x.n_cols)    = 0;

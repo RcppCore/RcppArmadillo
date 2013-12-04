@@ -118,6 +118,9 @@ class Cube : public BaseCube< eT, Cube<eT> >
   arma_inline       subview_cube<eT> tube(const uword in_row1, const uword in_col1, const uword in_row2, const uword in_col2);
   arma_inline const subview_cube<eT> tube(const uword in_row1, const uword in_col1, const uword in_row2, const uword in_col2) const;
   
+  arma_inline       subview_cube<eT> tube(const uword in_row1, const uword in_col1, const SizeMat& s);
+  arma_inline const subview_cube<eT> tube(const uword in_row1, const uword in_col1, const SizeMat& s) const;
+  
   inline            subview_cube<eT> tube(const span& row_span, const span& col_span);
   inline      const subview_cube<eT> tube(const span& row_span, const span& col_span) const;
   
@@ -315,7 +318,7 @@ class Cube : public BaseCube< eT, Cube<eT> >
   inline bool  empty() const;
   inline uword size()  const;
   
-  // inline void swap(Cube& B); // TODO
+  inline void swap(Cube& B);
   
   inline void steal_mem(Cube& X);  //!< don't use this unless you're writing code internal to Armadillo
   
