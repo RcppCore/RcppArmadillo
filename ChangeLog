@@ -1,3 +1,9 @@
+2013-12-05  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/unitTests/runit.complex.R: Added unit tests for complex
+	matrices and vector contributed by Baptiste Auguie
+	* inst/unitTests/cpp/complex.cpp: C++ side of new tests
+
 2013-11-19  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.3.920.3
