@@ -1,3 +1,7 @@
+2013-12-06  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/*: Upgraded to Armadillo 3.930 ("Dragon's Back")
+
 2013-12-04  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/*: Upgraded to 2nd beta release of Armadillo 3.930

@@ -541,22 +541,6 @@ conj(const eOpCube<T1, eop_conj>& A)
 
 
 
-// TODO: this needs a more elaborate template restriction mechanism to work properly,
-//       i.e. an overloaded version of thus function should do nothing if the input type is non-complex
-// 
-// //! the conjugate of the transpose of a complex matrix is the same as the hermitian transpose
-// template<typename T1>
-// arma_inline
-// const Op<T1, op_htrans>
-// conj(const Op<T1, op_strans>& A)
-//   {
-//   arma_extra_debug_sigprint();
-//   
-//   return Op<T1, op_htrans>(A.m);
-//   }
-
-
-
 // pow
 
 template<typename T1>

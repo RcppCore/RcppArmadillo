@@ -16,37 +16,39 @@ class distr_param
   {
   public:
   
-  int a_int;
-  int b_int;
+  uword state;
   
-  double a_double;
-  double b_double;
+  union
+    {
+    int    a_int;
+    double a_double;
+    };
   
-  const bool init_int;
-  const bool init_double;
+  union
+    {
+    int    b_int;
+    double b_double;
+    };
   
   
   inline distr_param()
-    : init_int   (false)
-    , init_double(false)
+    : state(0)
     {
     }
   
   
   inline explicit distr_param(const int a, const int b)
-    : a_int(a)
+    : state(1)
+    , a_int(a)
     , b_int(b)
-    , init_int   (true )
-    , init_double(false)
     {
     }
   
   
   inline explicit distr_param(const double a, const double b)
-    : a_double(a)
+    : state(2)
+    , a_double(a)
     , b_double(b)
-    , init_int   (false)
-    , init_double(true )
     {
     }
   };

@@ -12,9 +12,9 @@
 
 
 #define ARMA_VERSION_MAJOR 3
-#define ARMA_VERSION_MINOR 929
-#define ARMA_VERSION_PATCH 2
-#define ARMA_VERSION_NAME  "beta test release"
+#define ARMA_VERSION_MINOR 930
+#define ARMA_VERSION_PATCH 0
+#define ARMA_VERSION_NAME  "Dragon's Back"
 
 
 

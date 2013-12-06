@@ -558,7 +558,6 @@ running_stat_vec_aux::update_stats
       
       r_mean_mem[i] = r_mean_val + (val - r_mean_val)/N_plus_1;
       }
-    
     }
   else
     {
