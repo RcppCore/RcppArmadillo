@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 Conrad Sanderson
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2013 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,17 +17,20 @@
 
 template<typename vec_type>
 inline
-vec_type
+typename
+enable_if2
+  <
+  is_Mat<vec_type>::value,
+  vec_type
+  >::result
 linspace
   (
   const typename vec_type::pod_type start,
   const typename vec_type::pod_type end,
-  const uword num = 100u,
-  const typename arma_Mat_Col_Row_only<vec_type>::result* junk = 0
+  const uword num = 100u
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
   typedef typename vec_type::elem_type eT;
   typedef typename vec_type::pod_type   T;
@@ -199,29 +202,19 @@ swap(Mat<eT>& A, Mat<eT>& B)
   {
   arma_extra_debug_sigprint();
   
-  const uword A_mem_state = A.mem_state;
+  A.swap(B);
+  }
+
+
+
+template<typename eT>
+inline
+void
+swap(Cube<eT>& A, Cube<eT>& B)
+  {
+  arma_extra_debug_sigprint();
   
-  if( (A.vec_state == B.vec_state) && (A_mem_state == B.mem_state) && ((A_mem_state == 0) || (A_mem_state == 3)) )
-    {
-    A.swap(B);
-    }
-  else
-    {
-    if(A.n_elem <= B.n_elem)
-      {
-      Mat<eT> C = A;
-      
-      A.steal_mem(B);
-      B.steal_mem(C);
-      }
-    else
-      {
-      Mat<eT> C = B;
-      
-      B.steal_mem(A);
-      A.steal_mem(C);
-      }
-    }
+  A.swap(B);
   }
 
 

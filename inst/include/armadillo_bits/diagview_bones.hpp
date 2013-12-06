@@ -81,7 +81,9 @@ class diagview : public Base<eT, diagview<eT> >
   inline void fill(const eT val);
   inline void zeros();
   inline void ones();
-  
+  inline void randu();
+  inline void randn();
+    
   inline static void extract(Mat<eT>& out, const diagview& in);
   
   inline static void  plus_inplace(Mat<eT>& out, const diagview& in);

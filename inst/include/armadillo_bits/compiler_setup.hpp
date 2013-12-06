@@ -62,6 +62,14 @@
 
 
 #if defined(ARMA_USE_CXX11)
+  
+  // TODO: enable in version 4.0
+  // #if defined(ARMA_USE_WRAPPER)
+  //   #if !defined(ARMA_USE_CXX11_RNG)
+  //     #define ARMA_USE_CXX11_RNG
+  //   #endif
+  // #endif
+  
   #if !defined(ARMA_USE_U64S64)
     #define ARMA_USE_U64S64
   #endif

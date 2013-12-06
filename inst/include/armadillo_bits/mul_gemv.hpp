@@ -317,7 +317,7 @@ class gemv_emul
     
     if(do_trans_A)
       {
-      op_htrans::apply_noalias(tmp_A, A);
+      op_htrans::apply_mat_noalias(tmp_A, A);
       }
     
     const Mat<eT>& AA = (do_trans_A == false) ? A : tmp_A;

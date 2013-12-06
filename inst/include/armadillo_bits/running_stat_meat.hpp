@@ -169,8 +169,6 @@ running_stat<eT>::operator() (const std::complex< typename running_stat<eT>::T >
   {
   arma_extra_debug_sigprint();
   
-  arma_type_check(( is_same_type<eT, std::complex< typename running_stat<eT>::T > >::no ));
-  
   if( arma_isfinite(sample) == false )
     {
     arma_warn(true, "running_stat: sample ignored as it is non-finite" );
@@ -301,13 +299,14 @@ running_stat<eT>::count() const
 
 
 
-//! update statistics to reflect new sample
+//! update statistics to reflect new sample (version for non-complex numbers, non-complex sample)
 template<typename eT>
 inline
 void
-running_stat_aux::update_stats(running_stat<eT>& x, const eT sample)
+running_stat_aux::update_stats(running_stat<eT>& x, const eT sample, const typename arma_not_cx<eT>::result* junk)
   {
   arma_extra_debug_sigprint();
+  arma_ignore(junk);
   
   typedef typename running_stat<eT>::T T;
   
@@ -353,26 +352,46 @@ running_stat_aux::update_stats(running_stat<eT>& x, const eT sample)
 
 
 
-//! update statistics to reflect new sample (version for complex numbers)
-template<typename T>
+//! update statistics to reflect new sample (version for non-complex numbers, complex sample)
+template<typename eT>
 inline
 void
-running_stat_aux::update_stats(running_stat< std::complex<T> >& x, const T sample)
+running_stat_aux::update_stats(running_stat<eT>& x, const std::complex<eT>& sample, const typename arma_not_cx<eT>::result* junk)
   {
   arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  running_stat_aux::update_stats(x, std::real(sample));
+  }
 
+
+
+//! update statistics to reflect new sample (version for complex numbers, non-complex sample)
+template<typename eT>
+inline
+void
+running_stat_aux::update_stats(running_stat<eT>& x, const typename eT::value_type sample, const typename arma_cx_only<eT>::result* junk)
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  typedef typename eT::value_type T;
+  
   running_stat_aux::update_stats(x, std::complex<T>(sample));
   }
 
 
 
-//! alter statistics to reflect new sample (version for complex numbers)
-template<typename T>
+//! alter statistics to reflect new sample (version for complex numbers, complex sample)
+template<typename eT>
 inline
 void
-running_stat_aux::update_stats(running_stat< std::complex<T> >& x, const std::complex<T>& sample)
+running_stat_aux::update_stats(running_stat<eT>& x, const eT& sample, const typename arma_cx_only<eT>::result* junk)
   {
   arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  typedef typename eT::value_type T;
   
   const T sample_norm = std::norm(sample);
   const T N           = x.counter.value();

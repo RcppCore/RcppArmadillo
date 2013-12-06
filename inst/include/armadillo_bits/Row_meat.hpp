@@ -208,9 +208,29 @@ Row<eT>::operator=(const std::vector<eT>& x)
   Row<eT>::Row(Row<eT>&& X)
     : Mat<eT>(arma_vec_indicator(), 2)
     {
-    arma_extra_debug_sigprint();
+    arma_extra_debug_sigprint(arma_boost::format("this = %x   X = %x") % this % &X);
     
-    (*this).steal_mem(X);
+    access::rw(Mat<eT>::n_rows) = 1;
+    access::rw(Mat<eT>::n_cols) = X.n_cols;
+    access::rw(Mat<eT>::n_elem) = X.n_elem;
+    
+    if( ((X.mem_state == 0) && (X.n_elem > arma_config::mat_prealloc)) || (X.mem_state == 1) || (X.mem_state == 2) )
+      {
+      access::rw(Mat<eT>::mem_state) = X.mem_state;
+      access::rw(Mat<eT>::mem)       = X.mem;
+      
+      access::rw(X.n_rows)    = 0;
+      access::rw(X.n_cols)    = 0;
+      access::rw(X.n_elem)    = 0;
+      access::rw(X.mem_state) = 0;
+      access::rw(X.mem)       = 0;
+      }
+    else
+      {
+      (*this).init_cold();
+      
+      arrayops::copy( (*this).memptr(), X.mem, X.n_elem );
+      }
     }
   
   

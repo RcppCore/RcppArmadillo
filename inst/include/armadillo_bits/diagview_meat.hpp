@@ -869,7 +869,9 @@ diagview<eT>::fill(const eT val)
   
   Mat<eT>& x = const_cast< Mat<eT>& >(m);
   
-  for(uword ii=0; ii < n_elem; ++ii)
+  const uword local_n_elem = n_elem;
+  
+  for(uword ii=0; ii < local_n_elem; ++ii)
     {
     x.at(ii+row_offset, ii+col_offset) = val;
     }
@@ -897,6 +899,44 @@ diagview<eT>::ones()
   arma_extra_debug_sigprint();
   
   (*this).fill(eT(1));
+  }
+
+
+
+template<typename eT>
+inline
+void
+diagview<eT>::randu()
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>& x = const_cast< Mat<eT>& >(m);
+  
+  const uword local_n_elem = n_elem;
+  
+  for(uword ii=0; ii < local_n_elem; ++ii)
+    {
+    x.at(ii+row_offset, ii+col_offset) = eT(arma_rng::randu<eT>());
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
+diagview<eT>::randn()
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>& x = const_cast< Mat<eT>& >(m);
+  
+  const uword local_n_elem = n_elem;
+  
+  for(uword ii=0; ii < local_n_elem; ++ii)
+    {
+    x.at(ii+row_offset, ii+col_offset) = eT(arma_rng::randn<eT>());
+    }
   }
 
 

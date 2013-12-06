@@ -244,7 +244,7 @@ class herk_emul
       {
       Mat<eT> AA;
       
-      op_htrans::apply_noalias(AA, A);
+      op_htrans::apply_mat_noalias(AA, A);
       
       herk_emul<true, use_alpha, use_beta>::apply(C, AA, alpha, beta);
       }

@@ -128,7 +128,7 @@ class gemm_emul_large
     if( (do_trans_A == false) && (do_trans_B == true) )
       {
       Mat<eT> BB;
-      op_strans::apply_noalias(BB, B);
+      op_strans::apply_mat_noalias(BB, B);
       
       gemm_emul_large<false, false, use_alpha, use_beta>::apply(C, A, BB, alpha, beta);
       }
@@ -205,7 +205,7 @@ class gemm_emul
       else
         {
         Mat<eT> BB(A_n_rows, A_n_rows);
-        op_strans::apply_noalias_tinysq(BB, B);
+        op_strans::apply_mat_noalias_tinysq(BB, B);
         
         gemm_emul_tinysq<do_trans_A, use_alpha, use_beta>::apply(C, A, BB, alpha, beta);
         }
@@ -241,8 +241,8 @@ class gemm_emul
     Mat<eT> tmp_A;
     Mat<eT> tmp_B;
     
-    if(do_trans_A)  { op_htrans::apply_noalias(tmp_A, A); }
-    if(do_trans_B)  { op_htrans::apply_noalias(tmp_B, B); }
+    if(do_trans_A)  { op_htrans::apply_mat_noalias(tmp_A, A); }
+    if(do_trans_B)  { op_htrans::apply_mat_noalias(tmp_B, B); }
     
     const Mat<eT>& AA = (do_trans_A == false) ? A : tmp_A;
     const Mat<eT>& BB = (do_trans_B == false) ? B : tmp_B;
