@@ -25,13 +25,16 @@ class op_strans
     };
   
   template<typename eT, typename TA>
-  arma_hot inline static void apply_noalias_tinysq(Mat<eT>& out, const TA& A);
+  arma_hot inline static void apply_mat_noalias_tinysq(Mat<eT>& out, const TA& A);
   
   template<typename eT, typename TA>
-  arma_hot inline static void apply_noalias(Mat<eT>& out, const TA& A);
+  arma_hot inline static void apply_mat_noalias(Mat<eT>& out, const TA& A);
+  
+  template<typename eT>
+  arma_hot inline static void apply_mat_inplace(Mat<eT>& out);
   
   template<typename eT, typename TA>
-  arma_hot inline static void apply(Mat<eT>& out, const TA& A);
+  arma_hot inline static void apply_mat(Mat<eT>& out, const TA& A);
   
   template<typename T1>
   arma_hot inline static void apply_proxy(Mat<typename T1::elem_type>& out, const T1& X);

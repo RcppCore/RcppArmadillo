@@ -2166,7 +2166,7 @@ auxlib::svd(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
         &jobu, &jobvt, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork, &info
         );
       
-      op_strans::apply(V,V);  // op_strans will work out that an in-place transpose can be done
+      op_strans::apply_mat_inplace(V);
       }
     
     return (info == 0);
@@ -2264,7 +2264,7 @@ auxlib::svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, con
         &info
         );
       
-      op_htrans::apply(V,V);  // op_htrans will work out that an in-place transpose can be done
+      op_htrans::apply_mat_inplace(V);
       }
     
     return (info == 0);
@@ -2407,7 +2407,7 @@ auxlib::svd_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X, const
         &info
         );
       
-      op_strans::apply(V,V);  // op_strans will work out that an in-place transpose can be done
+      op_strans::apply_mat_inplace(V);
       }
     
     return (info == 0);
@@ -2556,7 +2556,7 @@ auxlib::svd_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V
         &info
         );
       
-      op_htrans::apply(V,V);  // op_strans will work out that an in-place transpose can be done
+      op_htrans::apply_mat_inplace(V);
       }
     
     return (info == 0);
@@ -2621,7 +2621,7 @@ auxlib::svd_dc(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
       work.memptr(), &lwork, iwork.memptr(), &info
       );
     
-    op_strans::apply(V,V);  // op_strans will work out that an in-place transpose can be done
+    op_strans::apply_mat_inplace(V);
     
     return (info == 0);
     }
@@ -2671,7 +2671,7 @@ auxlib::svd_dc(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, 
     blas_int  lda    = blas_int(A.n_rows);
     blas_int  ldu    = blas_int(U.n_rows);
     blas_int  ldvt   = blas_int(V.n_rows);
-    blas_int  lwork  = 3 * (min_mn*min_mn + 2*min_mn + (std::max)(m,n));
+    blas_int  lwork  = 3 * (min_mn*min_mn + 2*min_mn + (std::max)(m,n));  
     blas_int  info   = 0;
     
     S.set_size( static_cast<uword>(min_mn) );
@@ -2687,7 +2687,140 @@ auxlib::svd_dc(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, 
       work.memptr(), &lwork, rwork.memptr(), iwork.memptr(), &info
       );
     
-    op_htrans::apply(V,V);  // op_htrans will work out that an in-place transpose can be done
+    op_htrans::apply_mat_inplace(V);
+    
+    return (info == 0);
+    }
+  #else
+    {
+    arma_ignore(U);
+    arma_ignore(S);
+    arma_ignore(V);
+    arma_ignore(X);
+    arma_stop("svd(): use of LAPACK needs to be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
+template<typename eT, typename T1>
+inline
+bool
+auxlib::svd_dc_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  #if defined(ARMA_USE_LAPACK)
+    {
+    Mat<eT> A(X.get_ref());
+    
+    char jobz = 'S';
+    
+    blas_int m      = blas_int(A.n_rows);
+    blas_int n      = blas_int(A.n_cols);
+    blas_int min_mn = (std::min)(m,n);
+    blas_int lda    = blas_int(A.n_rows);
+    blas_int ldu    = m;
+    blas_int ldvt   = min_mn;
+    blas_int lwork  = 3 * ( 3*min_mn + 4*min_mn*min_mn + 3*min_mn + std::max(m,n) );   // based on lapack 3.4 docs, which have a slightly different formula to lapack 3.1 docs
+    blas_int info   = 0;
+    
+    if(A.is_empty())
+      {
+      U.eye();
+      S.reset();
+      V.eye( static_cast<uword>(n), static_cast<uword>(min_mn) );
+      return true;
+      }
+    
+    S.set_size( static_cast<uword>(min_mn) );
+    
+    U.set_size( static_cast<uword>(m), static_cast<uword>(min_mn) );
+    
+    V.set_size( static_cast<uword>(min_mn), static_cast<uword>(n) );
+    
+    podarray<eT>        work( static_cast<uword>(lwork   ) );
+    podarray<blas_int> iwork( static_cast<uword>(8*min_mn) );
+    
+    lapack::gesdd<eT>
+      (
+      &jobz, &m, &n,
+      A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt,
+      work.memptr(), &lwork, iwork.memptr(), &info
+      );
+    
+    op_strans::apply_mat_inplace(V);
+    
+    return (info == 0);
+    }
+  #else
+    {
+    arma_ignore(U);
+    arma_ignore(S);
+    arma_ignore(V);
+    arma_ignore(X);
+    arma_stop("svd(): use of LAPACK needs to be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
+template<typename T, typename T1>
+inline
+bool
+auxlib::svd_dc_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, const Base< std::complex<T>, T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  #if defined(ARMA_USE_LAPACK)
+    {
+    typedef std::complex<T> eT;
+    
+    Mat<eT> A(X.get_ref());
+    
+    char jobz = 'S';
+    
+    blas_int m      = blas_int(A.n_rows);
+    blas_int n      = blas_int(A.n_cols);
+    blas_int min_mn = (std::min)(m,n);
+    blas_int max_mn = (std::max)(m,n);
+    blas_int lda    = blas_int(A.n_rows);
+    blas_int ldu    = m;
+    blas_int ldvt   = min_mn;
+    blas_int lwork  = 3 * (min_mn*min_mn + 2*min_mn + max_mn);
+    blas_int lrwork = min_mn * (std::max)( 5*min_mn+7, 2*max_mn + 2*min_mn+1 );  // based on lapack 3.4 docs, which have a different formula to lapack 3.1 docs
+    blas_int info   = 0;
+    
+    if(A.is_empty())
+      {
+      U.eye();
+      S.reset();
+      V.eye( static_cast<uword>(n), static_cast<uword>(min_mn) );
+      return true;
+      }
+    
+    S.set_size( static_cast<uword>(min_mn) );
+    
+    U.set_size( static_cast<uword>(m), static_cast<uword>(min_mn) );
+    
+    V.set_size( static_cast<uword>(min_mn), static_cast<uword>(n) );
+    
+    podarray<eT>        work( static_cast<uword>(lwork   ) );
+    podarray<T>        rwork( static_cast<uword>(lrwork  ) );
+    podarray<blas_int> iwork( static_cast<uword>(8*min_mn) );
+    
+    lapack::cx_gesdd<T>
+      (
+      &jobz, &m, &n,
+      A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt,
+      work.memptr(), &lwork, rwork.memptr(), iwork.memptr(), &info
+      );
+    
+    op_htrans::apply_mat_inplace(V);
     
     return (info == 0);
     }
@@ -3201,7 +3334,7 @@ auxlib::lyap(Mat<eT>& X, const Mat<eT>& A, const Mat<eT>& Q)
   arma_debug_check( (A.n_rows != Q.n_rows),   "lyap(): matrices A and Q have different dimensions");
   
   Mat<eT> htransA;
-  op_htrans::apply_noalias(htransA, A);
+  op_htrans::apply_mat_noalias(htransA, A);
   
   const Mat<eT> mQ = -Q;
   

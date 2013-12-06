@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2011 Conrad Sanderson
-// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2013 Conrad Sanderson
+// Copyright (C) 2009-2013 NICTA (www.nicta.com.au)
 // Copyright (C) 2009-2010 Dimitrios Bouzas
 // Copyright (C) 2011 Stanislav Funiak
 // 
@@ -14,28 +14,49 @@
 
 
 
-template<typename eT>
+template<typename T1>
 inline
 void
-op_pinv::direct_pinv(Mat<eT>& out, const Mat<eT>& A, const eT in_tol)
+op_pinv::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_pinv>& in)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename get_pod_type<eT>::result T;
+  typedef typename T1::elem_type            eT;
+  typedef typename get_pod_type<eT>::result  T;
   
-  T tol = access::tmp_real(in_tol);
+  const bool use_divide_and_conquer = (in.aux_uword_a == 1);
+  
+  T tol = access::tmp_real(in.aux);
   
   arma_debug_check((tol < T(0)), "pinv(): tolerance must be >= 0");
   
-  const uword n_rows = A.n_rows;
-  const uword n_cols = A.n_cols;
+  const Proxy<T1> P(in.m);
+  
+  const uword n_rows = P.get_n_rows();
+  const uword n_cols = P.get_n_cols();
+  
+  if( (n_rows*n_cols) == 0 )
+    {
+    out.set_size(n_cols,n_rows);
+    return;
+    }
+  
   
   // economical SVD decomposition 
   Mat<eT> U;
   Col< T> s;
   Mat<eT> V;
   
-  const bool status = (n_cols > n_rows) ? auxlib::svd_econ(U,s,V,trans(A),'b') : auxlib::svd_econ(U,s,V,A,'b');
+  bool status = false;
+  
+  if(use_divide_and_conquer)
+    {
+    status = (n_cols > n_rows) ? auxlib::svd_dc_econ(U, s, V, trans(P.Q)) : auxlib::svd_dc_econ(U, s, V, P.Q);
+    }
+  else
+    {
+    status = (n_cols > n_rows) ? auxlib::svd_econ(U, s, V, trans(P.Q), 'b') : auxlib::svd_econ(U, s, V, P.Q, 'b');
+    }
   
   if(status == false)
     {
@@ -60,13 +81,11 @@ op_pinv::direct_pinv(Mat<eT>& out, const Mat<eT>& A, const eT in_tol)
   
   for(uword i = 0; i < s_n_elem; ++i)
     {
-    if(s_mem[i] > tol)
-      {
-      ++count;
-      }
+    if(s_mem[i] > tol)  { ++count; }
     }
   
-  if(count != 0)
+  
+  if(count > 0)
     {
     Col<T> s2(count);
     
@@ -78,44 +97,23 @@ op_pinv::direct_pinv(Mat<eT>& out, const Mat<eT>& A, const eT in_tol)
       {
       const T val = s_mem[i];
       
-      if(val > tol)
-        {
-        s2_mem[count2] = T(1) / val;
-        ++count2;
-        }
+      if(val > tol)  {  s2_mem[count2] = T(1) / val;  ++count2; }
       }
     
     
     if(n_rows >= n_cols)
       {
-      out = ( V.n_cols > count ? V.cols(0,count-1) : V ) * diagmat(s2) * trans( U.n_cols > count ? U.cols(0,count-1) : U );
+      out = ( (V.n_cols > count) ? V.cols(0,count-1) : V ) * diagmat(s2) * trans( (U.n_cols > count) ? U.cols(0,count-1) : U );
       }
     else
       {
-      out = ( U.n_cols > count ? U.cols(0,count-1) : U ) * diagmat(s2) * trans( V.n_cols > count ? V.cols(0,count-1) : V );
+      out = ( (U.n_cols > count) ? U.cols(0,count-1) : U ) * diagmat(s2) * trans( (V.n_cols > count) ? V.cols(0,count-1) : V );
       }
     }
   else
     {
     out.zeros(n_cols, n_rows);
     }
-  }
-
-
-
-template<typename T1>
-inline
-void
-op_pinv::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_pinv>& in)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  const unwrap<T1>   tmp(in.m);
-  const Mat<eT>& A = tmp.M;
-  
-  op_pinv::direct_pinv(out, A, in.aux);
   }
 
 

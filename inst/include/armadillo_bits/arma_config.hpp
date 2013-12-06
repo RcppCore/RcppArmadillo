@@ -46,26 +46,33 @@ struct arma_config
   #else
     static const bool blas = false;
   #endif
-
-
+  
+  
+  #if defined(ARMA_USE_HDF5)
+    static const bool hdf5 = true;
+  #else
+    static const bool hdf5 = false;
+  #endif
+  
+  
   #if defined(ARMA_USE_BOOST)
     static const bool boost = true;
   #else
     static const bool boost = false;
   #endif
   
-
+  
   #if defined(ARMA_USE_BOOST_DATE)
     static const bool boost_date = true;
   #else
     static const bool boost_date = false;
   #endif
-
-
-  #if !defined(ARMA_NO_DEBUG) && !defined(NDEBUG)
-    static const bool debug = true;
-  #else
+  
+  
+  #if defined(ARMA_NO_DEBUG)
     static const bool debug = false;
+  #else
+    static const bool debug = true;
   #endif
   
   
@@ -103,6 +110,13 @@ struct arma_config
     static const bool use_cxx11 = true;
   #else
     static const bool use_cxx11 = false;
+  #endif
+  
+  
+  #if defined(ARMA_USE_WRAPPER)
+    static const bool use_wrapper = true;
+  #else
+    static const bool use_wrapper = false;
   #endif
   };
 

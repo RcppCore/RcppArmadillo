@@ -55,6 +55,12 @@ class subview : public Base<eT, subview<eT> >
   template<typename T1> inline void operator%= (const Base<eT,T1>& x);
   template<typename T1> inline void operator/= (const Base<eT,T1>& x);
   
+  template<typename T1> inline void operator= (const SpBase<eT, T1>& x);
+  template<typename T1> inline void operator+=(const SpBase<eT, T1>& x);
+  template<typename T1> inline void operator-=(const SpBase<eT, T1>& x);
+  template<typename T1> inline void operator%=(const SpBase<eT, T1>& x);
+  template<typename T1> inline void operator/=(const SpBase<eT, T1>& x);
+
   inline void operator=  (const subview& x);
   inline void operator+= (const subview& x);
   inline void operator-= (const subview& x);
@@ -75,6 +81,8 @@ class subview : public Base<eT, subview<eT> >
   inline void zeros();
   inline void ones();
   inline void eye();
+  inline void randu();
+  inline void randn();
   
   inline eT  at_alt    (const uword ii) const;
   

@@ -38,11 +38,11 @@ Gen<T1, gen_type>::generate()
   {
   typedef typename T1::elem_type eT;
   
-       if(is_same_type<gen_type, gen_ones_full>::yes) { return eT(1);                   }
-  else if(is_same_type<gen_type, gen_zeros    >::yes) { return eT(0);                   }
-  else if(is_same_type<gen_type, gen_randu    >::yes) { return eT(eop_aux_randu<eT>()); }
-  else if(is_same_type<gen_type, gen_randn    >::yes) { return eT(eop_aux_randn<eT>()); }
-  else                                                { return eT();                    }
+       if(is_same_type<gen_type, gen_ones_full>::yes) { return eT(1);                     }
+  else if(is_same_type<gen_type, gen_zeros    >::yes) { return eT(0);                     }
+  else if(is_same_type<gen_type, gen_randu    >::yes) { return eT(arma_rng::randu<eT>()); }
+  else if(is_same_type<gen_type, gen_randn    >::yes) { return eT(arma_rng::randn<eT>()); }
+  else                                                { return eT();                      }
   }
 
 

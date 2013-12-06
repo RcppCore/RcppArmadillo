@@ -43,6 +43,8 @@ template<typename eT, typename T1, typename T2> class subview_elem2;
 template<typename parent, unsigned int mode>              class subview_each1;
 template<typename parent, unsigned int mode, typename TB> class subview_each2;
 
+class SizeMat;
+class SizeCube;
 
 class arma_empty_class {};
 

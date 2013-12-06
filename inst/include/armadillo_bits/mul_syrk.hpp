@@ -205,7 +205,7 @@ class syrk_emul
       {
       Mat<eT> AA;
       
-      op_strans::apply_noalias(AA, A);
+      op_strans::apply_mat_noalias(AA, A);
       
       syrk_emul<true, use_alpha, use_beta>::apply(C, AA, alpha, beta);
       }

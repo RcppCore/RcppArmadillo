@@ -106,7 +106,7 @@ op_diagmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_diagmat>& X)
           {
           const eT val = P.at(i,i);
           
-          arrayops::inplace_set(out.colptr(i), eT(0), n_rows);
+          arrayops::fill_zeros(out.colptr(i), n_rows);
           
           out.at(i,i) = val;
           }
