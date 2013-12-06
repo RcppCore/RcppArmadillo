@@ -36,13 +36,13 @@ randi(const uword n_rows, const uword n_cols, const distr_param& param = distr_p
   int a;
   int b;
   
-  if( (param.init_int == false) && (param.init_double == false) )
+  if(param.state == 0)
     {
     a = 0;
     b = arma_rng::randi<eT>::max_val();
     }
   else
-  if(param.init_int == true)
+  if(param.state == 1)
     {
     a = param.a_int;
     b = param.b_int;
@@ -120,13 +120,13 @@ randi(const uword n_rows, const uword n_cols, const uword n_slices, const distr_
   int a;
   int b;
   
-  if( (param.init_int == false) && (param.init_double == false) )
+  if(param.state == 0)
     {
     a = 0;
     b = arma_rng::randi<eT>::max_val();
     }
   else
-  if(param.init_int == true)
+  if(param.state == 1)
     {
     a = param.a_int;
     b = param.b_int;

@@ -121,13 +121,23 @@ inline
 void
 arma_rng_cxx98::randi_fill(eT* mem, const uword N, const int a, const int b)
   {
-  const uword length = b - a + 1;
-  
-  const double scale = double(length) / double(RAND_MAX);
-  
-  for(uword i=0; i<N; ++i)
+  if( (a == 0) && (b == RAND_MAX) )
     {
-    mem[i] = int( double(std::rand()) * scale ) + a;
+    for(uword i=0; i<N; ++i)
+      {
+      mem[i] = std::rand();
+      }
+    }
+  else
+    {
+    const uword length = b - a + 1;
+    
+    const double scale = double(length) / double(RAND_MAX);
+    
+    for(uword i=0; i<N; ++i)
+      {
+      mem[i] = int( double(std::rand()) * scale ) + a;
+      }
     }
   }
 
