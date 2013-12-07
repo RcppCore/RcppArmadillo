@@ -44,7 +44,7 @@
 #define ARMA_INCFILE_WRAP(x) <x>
 
 
-#if ( ((_POSIX_C_SOURCE >= 200112L) || (_XOPEN_SOURCE >= 600)) && !defined(__MINGW32__) && !defined(__APPLE__) )
+#if ( ((_POSIX_C_SOURCE >= 200112L) || (_XOPEN_SOURCE >= 600)) && !defined(__MINGW32__) && !defined(__APPLE__) ) && !defined(__sun)
   #define ARMA_HAVE_POSIX_MEMALIGN
 #endif
 
