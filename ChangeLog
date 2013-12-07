@@ -1,6 +1,14 @@
 2013-12-06  Dirk Eddelbuettel  <edd@debian.org>
 
+	* DESCRIPTION: Release 0.3.930.0
+	* inst/NEWS: Release 0.3.930.0
+	* inst/include/*: Upgraded to new release 3.920.3 of Armadillo
+        * debian/*: Similarly updated for new release to Debian
+
 	* inst/include/*: Upgraded to Armadillo 3.930 ("Dragon's Back")
+
+	* inst/include/armadillo_bits/compiler_setup.hpp: Exclude POSIX
+	memalign also if on Sun OS as per Brian Ripley's suggestion
 
 2013-12-05  Dirk Eddelbuettel  <edd@debian.org>
 
