@@ -525,7 +525,6 @@ namespace lapack
     }
   
   
-  
   template<typename T>
   inline
   void
@@ -539,6 +538,7 @@ namespace lapack
     arma_type_check(( is_supported_blas_type<T>::value == false ));
     arma_type_check(( is_supported_blas_type< std::complex<T> >::value == false ));
     
+#if ARMA_CAN_USE_ZGESDD  
     if(is_float<T>::value == true)
       {
       typedef float bT;
@@ -560,8 +560,8 @@ namespace lapack
         (std::complex<bT>*)work, lwork, (bT*)rwork, iwork, info
         );
       }
+#endif  
     }
-  
   
   
   template<typename eT>
