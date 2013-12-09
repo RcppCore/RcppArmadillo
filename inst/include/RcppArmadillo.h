@@ -27,7 +27,6 @@
     #error "The file 'Rcpp.h' should not be included. Please correct to include only 'RcppArmadillo.h'."
 #endif
 
-#include <RcppArmadilloLapack.h>
 #include <RcppArmadilloForward.h>
 #include <Rcpp.h>
 #include <RcppArmadilloWrap.h>
