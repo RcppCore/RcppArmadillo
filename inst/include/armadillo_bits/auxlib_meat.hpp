@@ -2650,8 +2650,6 @@ auxlib::svd_dc(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, 
     {
     arma_extra_debug_print("auxlib::svd_dc(): redirecting to auxlib::svd(), as use of lapack::cx_gesdd() is disabled");
     
-    #pragma message("svd(): this platform has incomplete LAPACK; use of divide-and-conquer algorithm will be redirected to standard algorithm")
-    
     return auxlib::svd(U, S, V, X);
     }
   #elif defined(ARMA_USE_LAPACK)
@@ -2787,8 +2785,6 @@ auxlib::svd_dc_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >
   #if (defined(ARMA_USE_LAPACK) && defined(ARMA_DONT_USE_CX_GESDD))
     {
     arma_extra_debug_print("auxlib::svd_dc_econ(): redirecting to auxlib::svd_econ(), as use of lapack::cx_gesdd() is disabled");
-    
-    #pragma message("svd_econ(): this platform has incomplete LAPACK; use of divide-and-conquer algorithm will be redirected to standard algorithm")
     
     return auxlib::svd_econ(U, S, V, X, 'b');
     }
