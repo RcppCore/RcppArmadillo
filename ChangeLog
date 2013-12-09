@@ -1,3 +1,16 @@
+2013-12-08  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: (Test) Release 0.3.930.0.1
+
+	* configure: Test which LAPACK_LIBS are used and set
+	ARMA_CAN_USE_SGESDD accordingly
+
+	* inst/include/RcppArmadilloLapack.h.in: Header file to be processed
+	by configure
+
+	* inst/include/armadillo_bits/fn_svd.hpp: Use fallback when
+	'divide and conquer' SVD (in zgesdd) is not available
+
 2013-12-06  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.3.930.0
