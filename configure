@@ -9,11 +9,11 @@ echo -n "* seeing LAPACK_LIBS=${lapack}"
 
 hasRlapack=$(echo ${lapack} | grep lRlapack)
 if [ "${hasRlapack}" == "" ]; then
-   ## We are using a full Lapack and can use zgesdd
+   ## We are using a full Lapack and can use zgesdd -- so set ARMA_DONT_USE_CX_GESDD to 0
    echo " so can use zgesdd"
-   sed -e 's/@FilledInByConfigure@/1/' inst/include/RcppArmadilloLapack.h.in > inst/include/RcppArmadilloLapack.h
+   sed -e 's/@FilledInByConfigure@/0/' inst/include/RcppArmadilloLapack.h.in > inst/include/RcppArmadilloLapack.h
 else
-   ## We are using a R's subset of Lapack and CANNOT use zgesdd
+   ## We are using a R's subset of Lapack and CANNOT use zgesdd -- so mark ARMA_DONT_USE_CX_GESDD as 1
    echo " so CANNOT use zgesdd"
-   sed -e 's/@FilledInByConfigure@/0/' inst/include/RcppArmadilloLapack.h.in > inst/include/RcppArmadilloLapack.h 
+   sed -e 's/@FilledInByConfigure@/1/' inst/include/RcppArmadilloLapack.h.in > inst/include/RcppArmadilloLapack.h 
 fi
