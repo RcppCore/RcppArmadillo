@@ -93,12 +93,8 @@ svd
   arma_debug_check( ((sig != 's') && (sig != 'd')), "svd(): unknown method specified" );
   
   // auxlib::svd() makes an internal copy of X
-#if ARMA_CAN_USE_ZGESDD  
   const bool status = (sig == 'd') ? auxlib::svd_dc(U, S, V, X) : auxlib::svd(U, S, V, X);
-#else
-  const bool status = auxlib::svd(U, S, V, X);
-#endif
-
+  
   if(status == false)
     {
     U.reset();
@@ -144,13 +140,9 @@ svd_econ
   const char sig = method[0];
   
   arma_debug_check( ((sig != 's') && (sig != 'd')), "svd_econ(): unknown method specified" );
-
-#if ARMA_CAN_USE_ZGESDD  
+  
   const bool status = ((mode == 'b') && (sig == 'd')) ? auxlib::svd_dc_econ(U, S, V, X) : auxlib::svd_econ(U, S, V, X, mode);
-#else
-  const bool status = auxlib::svd_econ(U, S, V, X, mode);
-#endif
-
+  
   if(status == false)
     {
     U.reset();
