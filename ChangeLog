@@ -1,102 +1,102 @@
 2013-12-09  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.930.1
-	* inst/NEWS: Release 0.3.930.1
-	* inst/include/*: Upgraded to new release 3.930.1 of Armadillo
-	  which falls back to standard complex SVD if no zgesdd
+        * DESCRIPTION: Release 0.3.930.1
+        * inst/NEWS: Release 0.3.930.1
+        * inst/include/*: Upgraded to new release 3.930.1 of Armadillo
+        which falls back to standard complex SVD if no zgesdd
         * debian/*: Similarly updated for new release to Debian
 
-	* configure: Test value of LAPACK_LIBS and define
-	ARMA_DONT_USE_CX_GESDD if R's private Lapack is used
+        * configure: Test value of LAPACK_LIBS and if the Lapack version
+	supplied by R used then define ARMA_DONT_USE_CX_GESDD
 
-	* inst/include/RcppArmadilloLapack.h.in: Added header file to be
-	processed by configure
+        * inst/include/RcppArmadilloLapack.h.in: Added header file to be
+        processed by configure
 
 2013-12-06  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.930.0
-	* inst/NEWS: Release 0.3.930.0
-	* inst/include/*: Upgraded to new release 3.930 of Armadillo
+        * DESCRIPTION: Release 0.3.930.0
+        * inst/NEWS: Release 0.3.930.0
+        * inst/include/*: Upgraded to new release 3.930 of Armadillo
         * debian/*: Similarly updated for new release to Debian
 
-	* inst/include/*: Upgraded to Armadillo 3.930 ("Dragon's Back")
+        * inst/include/*: Upgraded to Armadillo 3.930 ("Dragon's Back")
 
-	* inst/include/armadillo_bits/compiler_setup.hpp: Exclude POSIX
-	memalign also if on Sun OS as per Brian Ripley's suggestion
+        * inst/include/armadillo_bits/compiler_setup.hpp: Exclude POSIX
+        memalign also if on Sun OS as per Brian Ripley's suggestion
 
 2013-12-05  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/unitTests/runit.complex.R: Added unit tests for complex
-	matrices and vector contributed by Baptiste Auguie
-	* inst/unitTests/cpp/complex.cpp: C++ side of new tests
+        * inst/unitTests/runit.complex.R: Added unit tests for complex
+        matrices and vector contributed by Baptiste Auguie
+        * inst/unitTests/cpp/complex.cpp: C++ side of new tests
 
 2013-12-04  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/*: Upgraded to 2nd beta release of Armadillo 3.930
+        * inst/include/*: Upgraded to 2nd beta release of Armadillo 3.930
 
 2013-12-02  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/*: Upgraded to 1st beta release of Armadillo 3.930
+        * inst/include/*: Upgraded to 1st beta release of Armadillo 3.930
 
 2013-11-19  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.920.3
-	* inst/NEWS: Release 0.3.920.3
-	* inst/include/*: Upgraded to new release 3.920.3 of Armadillo
+        * DESCRIPTION: Release 0.3.920.3
+        * inst/NEWS: Release 0.3.920.3
+        * inst/include/*: Upgraded to new release 3.920.3 of Armadillo
         * debian/*: Similarly updated for new release to Debian
 
 2013-09-29  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/examples/fastLm.r: Added a 'const ref' example
-	* inst/examples/varSimulation.r: Use 'const ref', skip one
-	superfluous transpose
+        * inst/examples/fastLm.r: Added a 'const ref' example
+        * inst/examples/varSimulation.r: Use 'const ref', skip one
+        superfluous transpose
 
 2013-09-28  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.920.1
-	* inst/NEWS: Release 0.3.920.1
-	* inst/include/*: Upgraded to new release 3.920.1 of Armadillo
+        * DESCRIPTION: Release 0.3.920.1
+        * inst/NEWS: Release 0.3.920.1
+        * inst/include/*: Upgraded to new release 3.920.1 of Armadillo
         * debian/*: Similarly updated for new release to Debian
 
-	* DESCRIPTION: Depends on Rcpp (>= 0.10.5) which shipped to CRAN
+        * DESCRIPTION: Depends on Rcpp (>= 0.10.5) which shipped to CRAN
 
 2013-09-27  Romain Francois <romain@r-enthusiasts.com>
 
         * include/RcppArmadilloAs.h : handle cx_mat, using that Rcomplex is
-	layout compatible with std::complex<double>
+        layout compatible with std::complex<double>
         * unitTests/cpp/armadillo.cpp : more testing
         * unitTests/runit.RcppArmadillo.R : more testing
 
 2013-09-23  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/*: Upgraded to Armadillo pre-release of 3.920.0
-	* DESCRIPTION: Mark as test release version 0.3.910.0.2
+        * inst/include/*: Upgraded to Armadillo pre-release of 3.920.0
+        * DESCRIPTION: Mark as test release version 0.3.910.0.2
 
 2013-09-15  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/RcppArmadilloAs.h: Also define ConstInputParameter
-	* inst/include/RcppArmadilloForward.h: Ditto for declaration
-	* inst/unitTests/runit.RcppArmadillo.R: New unit tests for these
-	* inst/unitTests/cpp/armadillo.cpp: C++ code for new unit tests
+        * inst/include/RcppArmadilloAs.h: Also define ConstInputParameter
+        * inst/include/RcppArmadilloForward.h: Ditto for declaration
+        * inst/unitTests/runit.RcppArmadillo.R: New unit tests for these
+        * inst/unitTests/cpp/armadillo.cpp: C++ code for new unit tests
 
 2013-09-15  Romain Francois <romain@r-enthusiasts.com>
 
         * include/RcppArmadilloForward.h : declaration of specializations of
-	ConstReferenceInputParameter and ReferenceInputParameter
+        ConstReferenceInputParameter and ReferenceInputParameter
         * include/RcppArmadilloAs.h : definitions of the above
 
 2013-09-13  Romain Francois <romain@r-enthusiasts.com>
 
         * DESCRIPTION : require Rcpp 0.10.4.4
         * include/RcppArmadilloForward.h : declaration of specializations of
-	InputParameter for references and const reference to arma::Mat
+        InputParameter for references and const reference to arma::Mat
         * include/RcppArmadilloAs.h : definitions of the above
 
 2013-08-24  Romain Francois <romain@r-enthusiasts.com>
 
         * include/RcppArmadilloExtensions/sample.h: added include guard, made
-	functions SampleReplace, etc ... templates to avoid the multiple
-	definitions problem
+        functions SampleReplace, etc ... templates to avoid the multiple
+        definitions problem
 
 2013-08-21  Romain Francois <romain@r-enthusiasts.com>
 
@@ -111,37 +111,37 @@
 
 2013-08-17  Dirk Eddelbuettel  <edd@debian.org>
 
-	* vignettes/RcppArmadillo-intro.Rnw: Converted from LaTeX minted
-	(which farms out to Python's pygmentize) to LaTeX listings (which is
-	plainer, but works on CRAN)
-	* DESCRIPTION: Remove 'BuildVignettes: FALSE'
+        * vignettes/RcppArmadillo-intro.Rnw: Converted from LaTeX minted
+        (which farms out to Python's pygmentize) to LaTeX listings (which is
+        plainer, but works on CRAN)
+        * DESCRIPTION: Remove 'BuildVignettes: FALSE'
 
 2013-08-12  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.910.0
-	* inst/NEWS: Release 0.3.910.0
-	* inst/include/*: Upgraded to new release 3.910.0 of Armadillo
+        * DESCRIPTION: Release 0.3.910.0
+        * inst/NEWS: Release 0.3.910.0
+        * inst/include/*: Upgraded to new release 3.910.0 of Armadillo
         * debian/*: Similarly updated for new release to Debian
 
-	* vignettes/*: Moved files from inst/doc per new CRAN standards
-	* DESCRIPTION: Set 'BuildVignettes: FALSE' as LaTeX minted mode
-	creates issues for the CRAN builders
-	* inst/doc/*: Include pre-built vignettes
+        * vignettes/*: Moved files from inst/doc per new CRAN standards
+        * DESCRIPTION: Set 'BuildVignettes: FALSE' as LaTeX minted mode
+        creates issues for the CRAN builders
+        * inst/doc/*: Include pre-built vignettes
 
 2013-08-03  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/RcppArmadilloExtensions/spmat.h: Added basic as<> and
-	wrap support for sparse matrices (of class dgCMatrix from the Matrix
-	package); currently only type double is supported
+        * inst/include/RcppArmadilloExtensions/spmat.h: Added basic as<> and
+        wrap support for sparse matrices (of class dgCMatrix from the Matrix
+        package); currently only type double is supported
 
-	* inst/unitTests/runit.RcppArmadillo.R: Improved test setup a little
-	* inst/unitTests/runit.sample.R: Ditto
+        * inst/unitTests/runit.RcppArmadillo.R: Improved test setup a little
+        * inst/unitTests/runit.sample.R: Ditto
 
 2013-08-02  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.900.7
-	* inst/NEWS: Release 0.3.900.7
-	* inst/include/*: Upgraded to new release 3.900.7 of Armadillo
+        * DESCRIPTION: Release 0.3.900.7
+        * inst/NEWS: Release 0.3.900.7
+        * inst/include/*: Upgraded to new release 3.900.7 of Armadillo
         * debian/*: Similarly updated for new release to Debian
 
 2013-08-02 Romain Francois <romain@r-enthusiasts.com>
@@ -152,860 +152,860 @@
 
 2013-07-12  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/unitTests/runTests.R: No longer need to test minimal versions
-	of package 'inline' as unit tests now use Rcpp attributes
-	* inst/unitTests/runit.RcppArmadillo.R: Don't load package 'library'
+        * inst/unitTests/runTests.R: No longer need to test minimal versions
+        of package 'inline' as unit tests now use Rcpp attributes
+        * inst/unitTests/runit.RcppArmadillo.R: Don't load package 'library'
 
-	* inst/examples/fastLm.r: Also rewritten to use Rcpp attributes
-	* inst/examples/varSimulation.r: Idem
+        * inst/examples/fastLm.r: Also rewritten to use Rcpp attributes
+        * inst/examples/varSimulation.r: Idem
 
-	* DESCRIPTION: Removed Suggests: on inline
+        * DESCRIPTION: Removed Suggests: on inline
 
 2013-06-04  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.900.0
-	* inst/NEWS: Release 0.3.900.0
-	* inst/include/*: Upgraded to new release 3.900.0 of Armadillo
+        * DESCRIPTION: Release 0.3.900.0
+        * inst/NEWS: Release 0.3.900.0
+        * inst/include/*: Upgraded to new release 3.900.0 of Armadillo
         * debian/*: Similarly updated for new release to Debian
 
 2013-05-16  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/examples/kalman/benchmark.R: Switch from inline to sourceCpp
-	* inst/examples/kalman/Kalman.cpp: Added Rcpp attributes function
-	* inst/examples/kalman/KalmanCpp.R: Retired, no longer used
+        * inst/examples/kalman/benchmark.R: Switch from inline to sourceCpp
+        * inst/examples/kalman/Kalman.cpp: Added Rcpp attributes function
+        * inst/examples/kalman/KalmanCpp.R: Retired, no longer used
 
 2013-05-13  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.820
-	* inst/NEWS: Release 0.3.820
-	* inst/include/*: Upgraded to new release 3.820 of Armadillo
+        * DESCRIPTION: Release 0.3.820
+        * inst/NEWS: Release 0.3.820
+        * inst/include/*: Upgraded to new release 3.820 of Armadillo
         * debian/*: Similarly updated for new release to Debian
 
 2013-04-30  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.810.2
-	* inst/NEWS: Release 0.3.810.2
-	* inst/include/*: Upgraded to new release 3.810.2 of Armadillo
+        * DESCRIPTION: Release 0.3.810.2
+        * inst/NEWS: Release 0.3.810.2
+        * inst/include/*: Upgraded to new release 3.810.2 of Armadillo
         * debian/*: Similarly updated for new release to Debian
 
 2013-04-19  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.810.0
-	* inst/NEWS: Release 0.3.810.0
-	* inst/include/*: Upgraded to new release 3.810.0 of Armadillo
+        * DESCRIPTION: Release 0.3.810.0
+        * inst/NEWS: Release 0.3.810.0
+        * inst/include/*: Upgraded to new release 3.810.0 of Armadillo
         * debian/*: Similarly updated for new release to Debian
 
 2013-04-05  Dirk Eddelbuettel  <edd@debian.org>
 
-	* debian/: Package will be added to Debian as well
+        * debian/: Package will be added to Debian as well
 
 2013-03-29  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/RcppArmadilloExtensions/sample.h: Applied another
-	patch by Christian Gunning
-	* inst/unitTests/runit.sample.R (test.sample): Idem
+        * inst/include/RcppArmadilloExtensions/sample.h: Applied another
+        patch by Christian Gunning
+        * inst/unitTests/runit.sample.R (test.sample): Idem
 
 2013-03-12  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.800.1
+        * DESCRIPTION: Release 0.3.800.1
 
-	* inst/include/*: Upgraded to new release 3.800.1 of Armadillo
+        * inst/include/*: Upgraded to new release 3.800.1 of Armadillo
 
-	* inst/unitTests/cpp/armadillo.cpp: Factored out of
-	runit.RcppArmadillo.R to accelerate unit test run
-	* inst/unitTests/runit.RcppArmadillo.R: Deploy refactored cpp code
+        * inst/unitTests/cpp/armadillo.cpp: Factored out of
+        runit.RcppArmadillo.R to accelerate unit test run
+        * inst/unitTests/runit.RcppArmadillo.R: Deploy refactored cpp code
 
 2013-03-11  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/unitTests/cpp/sample.cpp: Regrouping C++ tests for sample()
-	* inst/unitTests/runit.sample.R: Rewritten for sole external cpp file
+        * inst/unitTests/cpp/sample.cpp: Regrouping C++ tests for sample()
+        * inst/unitTests/runit.sample.R: Rewritten for sole external cpp file
 
 2013-03-10  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/add-ons/sample.h: Added sample() function contributed
-	by Christian Gunning
-	* inst/unitTests/runit.sample.R: Added unit test for sample()
-	contributed by Christian Gunning
+        * inst/include/add-ons/sample.h: Added sample() function contributed
+        by Christian Gunning
+        * inst/unitTests/runit.sample.R: Added unit test for sample()
+        contributed by Christian Gunning
 
 2013-03-01  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.800.0
-	* DESCRIPTION: Updated Description to reflect change of Armadillo
-	license to MPL 2.0 (which is fully compatible with GPL so no change
-	or net effect to RcppArmadillo)
+        * DESCRIPTION: Release 0.3.800.0
+        * DESCRIPTION: Updated Description to reflect change of Armadillo
+        license to MPL 2.0 (which is fully compatible with GPL so no change
+        or net effect to RcppArmadillo)
 
-	* inst/include/*: Upgraded to new release 3.800.0 of Armadillo
+        * inst/include/*: Upgraded to new release 3.800.0 of Armadillo
 
-	* inst/doc/RcppArmadillo-intro.Rnw: Updated vignette to preprint of
-	the Computational Statistics & Data Analysis paper in press
-	* inst/doc/*: Added or updated relevant support files
+        * inst/doc/RcppArmadillo-intro.Rnw: Updated vignette to preprint of
+        the Computational Statistics & Data Analysis paper in press
+        * inst/doc/*: Added or updated relevant support files
 
-	* inst/CITATION: Added with reference to CSDA paper
+        * inst/CITATION: Added with reference to CSDA paper
 
 2013-02-20  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.6.3
+        * DESCRIPTION: Release 0.3.6.3
 
-	* inst/include/*: Upgraded to new release 3.6.3 of Armadillo
+        * inst/include/*: Upgraded to new release 3.6.3 of Armadillo
 
 2013-01-29  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.6.2
+        * DESCRIPTION: Release 0.3.6.2
 
-	* inst/include/*: Upgraded to new release 3.6.2 of Armadillo
+        * inst/include/*: Upgraded to new release 3.6.2 of Armadillo
 
 2013-01-19  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/examples/kalman/: New example used in the vignette
+        * inst/examples/kalman/: New example used in the vignette
 
 2012-12-17  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.6.1
+        * DESCRIPTION: Release 0.3.6.1
 
-	* inst/include/*: Upgraded to new release 3.6.1 of Armadillo
+        * inst/include/*: Upgraded to new release 3.6.1 of Armadillo
 
 2012-12-10  Romain Francois <romain@r-enthusiasts.com>
 
-	* include/RcppArmadillo.h: compiler error if Rcpp.h is included
-	before RcppArmadillo.h
+        * include/RcppArmadillo.h: compiler error if Rcpp.h is included
+        before RcppArmadillo.h
 
 2012-12-07  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.6.0
+        * DESCRIPTION: Release 0.3.6.0
 
-	* inst/include/*: Upgraded to new release 3.6.0 of Armadillo
+        * inst/include/*: Upgraded to new release 3.6.0 of Armadillo
 
 2012-11-15  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.4.4
+        * DESCRIPTION: Release 0.3.4.4
 
-	* inst/include/*: Upgraded to new release 3.4.4 of Armadillo
+        * inst/include/*: Upgraded to new release 3.4.4 of Armadillo
 
 2012-10-04  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.4.3
+        * DESCRIPTION: Release 0.3.4.3
 
-	* inst/include/*: Upgraded to new release 3.4.3 of Armadillo
+        * inst/include/*: Upgraded to new release 3.4.3 of Armadillo
 
 2012-09-25  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.4.2
+        * DESCRIPTION: Release 0.3.4.2
 
-	* inst/include/*: Upgraded to new release 3.4.2 of Armadillo
+        * inst/include/*: Upgraded to new release 3.4.2 of Armadillo
 
 2012-09-18  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.4.1
+        * DESCRIPTION: Release 0.3.4.1
 
-	* inst/include/*: Upgraded to new release 3.4.1 of Armadillo
+        * inst/include/*: Upgraded to new release 3.4.1 of Armadillo
 
 2012-09-06  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.4.0
+        * DESCRIPTION: Release 0.3.4.0
 
-	* inst/include/*: Upgraded to new release 3.4.0 of Armadillo
+        * inst/include/*: Upgraded to new release 3.4.0 of Armadillo
 
 2012-08-31  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/NEWS.Rd: Converted to Rd format
+        * inst/NEWS.Rd: Converted to Rd format
 
 2012-08-30  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.3.91
+        * DESCRIPTION: Release 0.3.3.91
 
-	* inst/include/*: Upgraded to release 3.3.91 (v3.4 beta 1) of Armadillo
+        * inst/include/*: Upgraded to release 3.3.91 (v3.4 beta 1) of Armadillo
 
 2012-07-21  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/unitTests/runit.fastLm.R: expanded unit tests for fastLm
+        * inst/unitTests/runit.fastLm.R: expanded unit tests for fastLm
 
 2012-07-18  Dirk Eddelbuettel  <edd@debian.org>
 
-	* R/fastLm.R (summary.fastLm): Also display residual standard error
+        * R/fastLm.R (summary.fastLm): Also display residual standard error
 
 2012-07-14  Dirk Eddelbuettel  <edd@debian.org>
 
-	* R/fastLm.R (fastLm.formula): Note whether intercept in formula or
-	not; also store the result of summary() on residuals
-	* R/fastLm.R (fastLm.default): Autmagically detect intercept use
-	* R/fastLm.R (print.summary.fastLm): Display summary of residuals
-	* R/fastLm.R (summary.fastLm): Distinguish between the intercept and
-	no-intercept cases when computing R^2
+        * R/fastLm.R (fastLm.formula): Note whether intercept in formula or
+        not; also store the result of summary() on residuals
+        * R/fastLm.R (fastLm.default): Autmagically detect intercept use
+        * R/fastLm.R (print.summary.fastLm): Display summary of residuals
+        * R/fastLm.R (summary.fastLm): Distinguish between the intercept and
+        no-intercept cases when computing R^2
 
 2012-07-11  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.2.4
+        * DESCRIPTION: Release 0.3.2.4
 
-	* inst/include/*: Upgraded to new release 3.2.4 of Armadillo
+        * inst/include/*: Upgraded to new release 3.2.4 of Armadillo
 
 2012-07-01  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.2.3
+        * DESCRIPTION: Release 0.3.2.3
 
-	* inst/include/*: Upgraded to new release 3.2.3 of Armadillo
+        * inst/include/*: Upgraded to new release 3.2.3 of Armadillo
 
-	* inst/include/armadillo_bits/: Reverted files {Mat,Col,Row}_bones.hpp
-	to the previous versions due to compilation issues under g++ 4.7
+        * inst/include/armadillo_bits/: Reverted files {Mat,Col,Row}_bones.hpp
+        to the previous versions due to compilation issues under g++ 4.7
 
-	* inst/doc/RcppArmadillo-intro.Rnw: New introductory vignette based
-	on just-submitted paper by Eddelbuettel and Sanderson
+        * inst/doc/RcppArmadillo-intro.Rnw: New introductory vignette based
+        on just-submitted paper by Eddelbuettel and Sanderson
 
-	* DESCRIPTION: Set Maintainer: to edd@debian.org as CRAN prefers to
-	provide upload email from the same address the Maintainer field
+        * DESCRIPTION: Set Maintainer: to edd@debian.org as CRAN prefers to
+        provide upload email from the same address the Maintainer field
 
 2012-05-26  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/examples/fastLm.r: Also examine the 'two versus one' casts
-	impact when converting SEXP to Armadillo types
+        * inst/examples/fastLm.r: Also examine the 'two versus one' casts
+        impact when converting SEXP to Armadillo types
 
 2012-05-21  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.2.0
+        * DESCRIPTION: Release 0.3.2.0
 
-	* inst/include/*: Upgraded to new release 3.2.0 of Armadillo
+        * inst/include/*: Upgraded to new release 3.2.0 of Armadillo
 
 2012-05-15  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.1.94
+        * DESCRIPTION: Release 0.3.1.94
 
-	* inst/include/*: Upgraded to new (beta) release 3.1.94 of Armadillo
+        * inst/include/*: Upgraded to new (beta) release 3.1.94 of Armadillo
 
 2012-05-10  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.1.92
+        * DESCRIPTION: Release 0.3.1.92
 
-	* inst/include/*: Upgraded to new (beta) release 3.1.92 of Armadillo
+        * inst/include/*: Upgraded to new (beta) release 3.1.92 of Armadillo
 
 2012-05-03  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.0.3
+        * DESCRIPTION: Release 0.3.0.3
 
-	* inst/include/*: Upgraded to new release 3.0.3 of Armadillo
+        * inst/include/*: Upgraded to new release 3.0.3 of Armadillo
 
 2012-04-29  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/examples/fastLm.r: New example fastLm
+        * inst/examples/fastLm.r: New example fastLm
 
 2012-04-19  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.0.2
+        * DESCRIPTION: Release 0.3.0.2
 
-	* inst/include/*: Upgraded to new release 3.0.2 of Armadillo
+        * inst/include/*: Upgraded to new release 3.0.2 of Armadillo
 
 2012-04-17  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/RcppArmadilloConfig.h: Undefine NDEBUG to not suppress
-	Armadillo debug messages
+        * inst/include/RcppArmadilloConfig.h: Undefine NDEBUG to not suppress
+        Armadillo debug messages
 
 2012-04-12  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.0.1
+        * DESCRIPTION: Release 0.3.0.1
 
-	* inst/include/*: Upgraded to new release 3.0.1 of Armadillo
+        * inst/include/*: Upgraded to new release 3.0.1 of Armadillo
 
 2012-04-11  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/RcppArmadilloConfig.h: Protect define of
-	ARMA_DEFAULT_OSTREAM by a #ifndef test
+        * inst/include/RcppArmadilloConfig.h: Protect define of
+        ARMA_DEFAULT_OSTREAM by a #ifndef test
 
 2012-04-10  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.3.0
+        * DESCRIPTION: Release 0.3.0
 
-	* inst/include/*: Upgraded to new release 3.0.0 of Armadillo
+        * inst/include/*: Upgraded to new release 3.0.0 of Armadillo
 
 2012-04-04  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.40
+        * DESCRIPTION: Release 0.2.40
 
-	* inst/include/*: Upgraded to new test release 2.99.4 of Armadillo
+        * inst/include/*: Upgraded to new test release 2.99.4 of Armadillo
 
 2012-04-02  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.39
+        * DESCRIPTION: Release 0.2.39
 
-	* inst/include/*: Upgraded to new test release 2.99.3 of Armadillo
+        * inst/include/*: Upgraded to new test release 2.99.3 of Armadillo
 
 2012-03-28  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.38
+        * DESCRIPTION: Release 0.2.38
 
-	* inst/include/*: Upgraded to new test release 2.99.2 of Armadillo
+        * inst/include/*: Upgraded to new test release 2.99.2 of Armadillo
 
 2012-03-24  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.37
+        * DESCRIPTION: Release 0.2.37
 
 2012-03-24  Romain Francois <romain@r-enthusiasts.com>
 
-	* inst/include/RcppArmadilloWrap.h: adapt to Armadillo 2.99.1
+        * inst/include/RcppArmadilloWrap.h: adapt to Armadillo 2.99.1
 
 2012-03-19  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/*: Upgraded to new test release 2.99.1 of Armadillo
+        * inst/include/*: Upgraded to new test release 2.99.1 of Armadillo
 
 2012-03-05  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.36
+        * DESCRIPTION: Release 0.2.36
 
-	* inst/include/*: Upgraded to new release 2.4.4 of Armadillo
+        * inst/include/*: Upgraded to new release 2.4.4 of Armadillo
 
 2012-02-17  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.35 (depending on Rcpp 0.9.10)
+        * DESCRIPTION: Release 0.2.35 (depending on Rcpp 0.9.10)
 
-	* inst/include/*: Upgraded to new release 2.4.3 of Armadillo
+        * inst/include/*: Upgraded to new release 2.4.3 of Armadillo
 
 2012-02-01  Romain Francois <romain@r-enthusiasts.com>
 
-	* inst/include/armadillo_bits/Cube_meat.hpp : changes related to
-	std::cout -> Rcpp::Rcout
+        * inst/include/armadillo_bits/Cube_meat.hpp : changes related to
+        std::cout -> Rcpp::Rcout
 
-	* inst/include/armadillo_bits/Mat_meat.hpp : idem
+        * inst/include/armadillo_bits/Mat_meat.hpp : idem
 
-	* inst/include/armadillo_bits/config.hpp : idem
+        * inst/include/armadillo_bits/config.hpp : idem
 
-	* inst/include/armadillo_bits/debug.hpp : idem
+        * inst/include/armadillo_bits/debug.hpp : idem
 
-	* inst/include/armadillo_bits/field_meat.hpp : idem
+        * inst/include/armadillo_bits/field_meat.hpp : idem
 
-	* inst/include/armadillo_bits/forward_bones.hpp : idem
+        * inst/include/armadillo_bits/forward_bones.hpp : idem
 
-	* DESCRIPTION: depends on Rcpp 0.9.10
+        * DESCRIPTION: depends on Rcpp 0.9.10
 
 2011-12-31  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/RcppArmadillo/Mat_meat.h: Add missing semicolon in
-	code ifdef'ed for C++0x mode, with thanks to Teo Guo Ci
+        * inst/include/RcppArmadillo/Mat_meat.h: Add missing semicolon in
+        code ifdef'ed for C++0x mode, with thanks to Teo Guo Ci
 
 2011-12-29  Dirk Eddelbuettel  <edd@debian.org>
 
-	* src/RcppArmadillo.cpp: Force instantiation of arma version vars
-	which helps with older OS X compiler, as suggested by Gershon Bialer
+        * src/RcppArmadillo.cpp: Force instantiation of arma version vars
+        which helps with older OS X compiler, as suggested by Gershon Bialer
 
 2011-12-23  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/unitTests/runTests.R: unit tests output 'fallback' directory
-	changed to '..' and files are now in top-level of $pkg.Rcheck/
+        * inst/unitTests/runTests.R: unit tests output 'fallback' directory
+        changed to '..' and files are now in top-level of $pkg.Rcheck/
 
 2011-12-13  Dirk Eddelbuettel  <edd@debian.org>
 
-	* man/RcppArmadillo-package.Rd: Updated to current version number,
-	added Conrad's Technical Report as a reference
+        * man/RcppArmadillo-package.Rd: Updated to current version number,
+        added Conrad's Technical Report as a reference
 
 2011-12-12  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.34
+        * DESCRIPTION: Release 0.2.34
 
-	* inst/include/*: Upgraded to new release 2.4.2 of Armadillo
+        * inst/include/*: Upgraded to new release 2.4.2 of Armadillo
 
 2011-12-07  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.33
+        * DESCRIPTION: Release 0.2.33
 
-	* inst/include/*: Upgraded to new release 2.4.1 of Armadillo
+        * inst/include/*: Upgraded to new release 2.4.1 of Armadillo
 
 2011-12-04  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.32
+        * DESCRIPTION: Release 0.2.32
 
-	* inst/include/*: Upgraded to new release 2.4.0 of Armadillo
+        * inst/include/*: Upgraded to new release 2.4.0 of Armadillo
 
 2011-11-28  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.31
+        * DESCRIPTION: Release 0.2.31
 
-	* inst/include/*: Upgraded to new test release 2.3.92 of Armadillo
+        * inst/include/*: Upgraded to new test release 2.3.92 of Armadillo
 
 2011-11-19  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.30
+        * DESCRIPTION: Release 0.2.30
 
 2011-11-17  Romain Francois <romain@r-enthusiasts.com>
 
-	* inst/include/RcppArmadilloSugar.h: reworked forwarding sugar
-	expressions to arma expressions. No need for the "forward" function
-	anymore. For now, we kept forward as a templated identity function
-	for backwards compatibility but it is not needed anymore
+        * inst/include/RcppArmadilloSugar.h: reworked forwarding sugar
+        expressions to arma expressions. No need for the "forward" function
+        anymore. For now, we kept forward as a templated identity function
+        for backwards compatibility but it is not needed anymore
 
-	* inst/include/RcppArmadillo/Mat_meat.h: reworked handling of complex
-	values
+        * inst/include/RcppArmadillo/Mat_meat.h: reworked handling of complex
+        values
 
-	* inst/unitTests/runit.RcppArmadillo.R: removed uses of forward as we
-	don't need it anymore.
+        * inst/unitTests/runit.RcppArmadillo.R: removed uses of forward as we
+        don't need it anymore.
 
 2011-11-16  Romain Francois <romain@r-enthusiasts.com>
 
-	* inst/include/RcppArmadilloForward.h: support for the new arma
-	classes Gen and GenCube that arma uses internally
+        * inst/include/RcppArmadilloForward.h: support for the new arma
+        classes Gen and GenCube that arma uses internally
 
-	* inst/include/RcppArmadilloWrap.h: idem
+        * inst/include/RcppArmadilloWrap.h: idem
 
-	* inst/include/RcppArmadillo/Mat_meat.h: adapted to the changed
-	arma_type_check
+        * inst/include/RcppArmadillo/Mat_meat.h: adapted to the changed
+        arma_type_check
 
 2011-11-14  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/*: Upgraded to new test release 2.3.91 of Armadillo
+        * inst/include/*: Upgraded to new test release 2.3.91 of Armadillo
 
 2011-09-01  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.29
+        * DESCRIPTION: Release 0.2.29
 
-	* inst/include/*: Updated to bug-fix release 2.2.3 of Armadillo
+        * inst/include/*: Updated to bug-fix release 2.2.3 of Armadillo
 
 2011-08-02  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.28
+        * DESCRIPTION: Release 0.2.28
 
-	* inst/include/*: Updated to release 2.2.1 of Armadillo
+        * inst/include/*: Updated to release 2.2.1 of Armadillo
 
 2011-07-22  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.27
+        * DESCRIPTION: Release 0.2.27
 
-	* inst/include/*: Updated to release 2.1.91 of Armadillo
+        * inst/include/*: Updated to release 2.1.91 of Armadillo
 
 2011-07-17  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.26
+        * DESCRIPTION: Release 0.2.26
 
-	* inst/include/*: Updated to release 2.0.2 of Armadillo
+        * inst/include/*: Updated to release 2.0.2 of Armadillo
 
 2011-06-30  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.25
+        * DESCRIPTION: Release 0.2.25
 
-	* inst/include/*: Updated to release 2.0.1 of Armadillo
+        * inst/include/*: Updated to release 2.0.1 of Armadillo
 
 2011-06-29  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.24
+        * DESCRIPTION: Release 0.2.24
 
-	* inst/include/*: Updated to release 2.0.0 of Armadillo
+        * inst/include/*: Updated to release 2.0.0 of Armadillo
 
 2011-06-23  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.23
+        * DESCRIPTION: Release 0.2.23
 
-	* inst/include/*: Updated to release 1.99.5 of Armadillo
+        * inst/include/*: Updated to release 1.99.5 of Armadillo
 
 2011-06-14  Douglas Bates <bates@stat.wisc.edu>
 
-	* R/fastLm.R, inst/unitTests/runit.fastLm.R, man/fastLm.Rd,
-	  src/fastLm.cpp: Change order of arguments in fastLm.cpp and fastLm.R
-	  and documentation.
+        * R/fastLm.R, inst/unitTests/runit.fastLm.R, man/fastLm.Rd,
+          src/fastLm.cpp: Change order of arguments in fastLm.cpp and fastLm.R
+          and documentation.
 
 2011-06-14  Dirk Eddelbuettel  <edd@debian.org>
 
-	* ChangeLog, inst/NEWS: ChangeLog and NEWS entry for Doug's S3 fixes
+        * ChangeLog, inst/NEWS: ChangeLog and NEWS entry for Doug's S3 fixes
 
 2011-06-13  Douglas Bates <bates@stat.wisc.edu>
 
-	* NAMESPACE: Properly export S3methods as such
-	* man/fastLm.Rd: Similar updates to help page
+        * NAMESPACE: Properly export S3methods as such
+        * man/fastLm.Rd: Similar updates to help page
 
 2011-06-06  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.22
+        * DESCRIPTION: Release 0.2.22
 
-	* inst/include/*: Updated to release 1.99.4 of Armadillo
+        * inst/include/*: Updated to release 1.99.4 of Armadillo
 
 2011-05-30  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/RcppArmadilloConfig.h: Enable sprintf on FreeBSD by
-	undefining ARMA_HAVE_STD_SNPRINTF thanks to patch by Rainer Hurling
+        * inst/include/RcppArmadilloConfig.h: Enable sprintf on FreeBSD by
+        undefining ARMA_HAVE_STD_SNPRINTF thanks to patch by Rainer Hurling
 
 2011-05-27  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.21
+        * DESCRIPTION: Release 0.2.21
 
-	* inst/include/*: Updated to release 1.99.3 of Armadillo
+        * inst/include/*: Updated to release 1.99.3 of Armadillo
 
 2011-05-25  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.20
+        * DESCRIPTION: Release 0.2.20
 
-	* inst/include/*: Updated to release 1.99.2 of Armadillo
+        * inst/include/*: Updated to release 1.99.2 of Armadillo
 
 2011-05-16  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/*: Updated to test release 1.99.1 of Armadillo
+        * inst/include/*: Updated to test release 1.99.1 of Armadillo
 
 2011-04-25  Dirk Eddelbuettel  <edd@debian.org>
 
-	* src/RcppArmadillo.cpp: Rewritten armadillo_version as to no longer
-	require an instance of arma::arma_version, with Thanks! to Conrad
+        * src/RcppArmadillo.cpp: Rewritten armadillo_version as to no longer
+        require an instance of arma::arma_version, with Thanks! to Conrad
 
 2011-04-22  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/examples/varSimulation.r: New example simulating of first-order
-	vector autoregression data set via R, compiled R and RcppArmadillo
+        * inst/examples/varSimulation.r: New example simulating of first-order
+        vector autoregression data set via R, compiled R and RcppArmadillo
 
 2011-04-18  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.19
+        * DESCRIPTION: Release 0.2.19
 
-	* inst/include/*: Updated to Armadillo 1.2.0 "Unscrupulous Carbon Emitter"
+        * inst/include/*: Updated to Armadillo 1.2.0 "Unscrupulous Carbon Emitter"
 
 2011-04-08  Dirk Eddelbuettel  <edd@debian.org>
 
-	* R/fastLm.R: In print.summary.fastLm(), use 'P.values' not 'P.value'
+        * R/fastLm.R: In print.summary.fastLm(), use 'P.values' not 'P.value'
 
 2011-04-03  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.18
+        * DESCRIPTION: Release 0.2.18
 
-	* inst/include/*: Updated to Armadillo 1.1.92 "Jurassic Barbecue"
+        * inst/include/*: Updated to Armadillo 1.1.92 "Jurassic Barbecue"
 
-	* inst/doc/Makefile: Do not 'clean' in 'all' target
+        * inst/doc/Makefile: Do not 'clean' in 'all' target
 
 2011-03-22  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.17
+        * DESCRIPTION: Release 0.2.17
 
-	* inst/include/*: Updated to Armadillo 1.1.90 "Inside Job"
+        * inst/include/*: Updated to Armadillo 1.1.90 "Inside Job"
 
 2011-03-10  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.16
+        * DESCRIPTION: Release 0.2.16
 
-	* inst/include/*: Updated to Armadillo 1.1.8 "Kangaroo Steak"
+        * inst/include/*: Updated to Armadillo 1.1.8 "Kangaroo Steak"
 
 2011-03-04  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.15
+        * DESCRIPTION: Release 0.2.15
 
-	* inst/include/*: Updated to Armadillo 1.1.6 “Baby Carpet Shark”
+        * inst/include/*: Updated to Armadillo 1.1.6 “Baby Carpet Shark”
 
 2011-03-02  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.14
+        * DESCRIPTION: Release 0.2.14
 
-	* inst/include/RcppArmadillo/Row_meat.h: Support RTTI via vec_state
-	* inst/include/RcppArmadillo/Col_meat.h: Support RTTI via vec_state
+        * inst/include/RcppArmadillo/Row_meat.h: Support RTTI via vec_state
+        * inst/include/RcppArmadillo/Col_meat.h: Support RTTI via vec_state
 
-	* inst/unitTests/runit.RcppArmadillo.R: Added unit test for above
+        * inst/unitTests/runit.RcppArmadillo.R: Added unit test for above
 
 2011-02-28  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/doc/Makefile: Call R and Rscript relative to R_HOME/bin
+        * inst/doc/Makefile: Call R and Rscript relative to R_HOME/bin
 
 2011-02-20  Dirk Eddelbuettel  <edd@debian.org>
 
-	* src/fastLm.cpp (fastLm): Further simplified and shortened by using
-	Rcpp::as<arma::mat>() on the input data
+        * src/fastLm.cpp (fastLm): Further simplified and shortened by using
+        Rcpp::as<arma::mat>() on the input data
 
 2011-02-18  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.13
+        * DESCRIPTION: Release 0.2.13
 
-	* inst/include/*: Updated to Armadillo 1.1.4 "Manta Lodge"
+        * inst/include/*: Updated to Armadillo 1.1.4 "Manta Lodge"
 
 2011-02-15  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.12
+        * DESCRIPTION: Release 0.2.12
 
-	* inst/include/*: Updated to Armadillo 1.1.2 "Flood Kayak"
+        * inst/include/*: Updated to Armadillo 1.1.2 "Flood Kayak"
 
 2011-01-06  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.11
+        * DESCRIPTION: Release 0.2.11
 
-	* inst/include/*: Updated to Armadillo 1.1.0 "Climate Vandal"
+        * inst/include/*: Updated to Armadillo 1.1.0 "Climate Vandal"
 
 2010-12-12  Romain Francois <romain@r-enthusiasts.com>
 
-	* R/SHLIB.R: new unexported R function SHLIB, small wrapper around R
-	CMD SHLIB
+        * R/SHLIB.R: new unexported R function SHLIB, small wrapper around R
+        CMD SHLIB
 
 2010-11-25  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.10
+        * DESCRIPTION: Release 0.2.10
 
-	* inst/include/*: Updated to Armadillo 1.0.0 "Antipodean Antileech”
+        * inst/include/*: Updated to Armadillo 1.0.0 "Antipodean Antileech”
 
 2010-11-19  Dirk Eddelbuettel  <edd@debian.org>
 
-	* R/fastLm.R: Also provide two R-squared measures in summary method
+        * R/fastLm.R: Also provide two R-squared measures in summary method
 
 2010-11-19  Romain Francois <romain@r-enthusiasts.com>
 
-	* DESCRIPTION: remove dependency on GNU make
+        * DESCRIPTION: remove dependency on GNU make
 
-	* R/RcppArmadillo.package.skeleton.R: updated skeleton generator so
-	that the dependency on GNU make is removed
+        * R/RcppArmadillo.package.skeleton.R: updated skeleton generator so
+        that the dependency on GNU make is removed
 
 2010-11-11  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.9
+        * DESCRIPTION: Release 0.2.9
 
-	* inst/include/*: Updated to Armadillo 0.9.92 "Wall Street Gangster"
+        * inst/include/*: Updated to Armadillo 0.9.92 "Wall Street Gangster"
 
 2010-10-16  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.8
+        * DESCRIPTION: Release 0.2.8
 
-	* inst/include/*: Updated to Armadillo 0.9.90 "Water Dragon"
+        * inst/include/*: Updated to Armadillo 0.9.90 "Water Dragon"
 
-	* NEWS: moved to inst/NEWS so that it gets installed with the package
-	* inst/ChangeLog: moved to top-level enabling 'C-x 4 a' lookups
+        * NEWS: moved to inst/NEWS so that it gets installed with the package
+        * inst/ChangeLog: moved to top-level enabling 'C-x 4 a' lookups
 
 2010-09-25  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.7
+        * DESCRIPTION: Release 0.2.7
 
 2010-09-25  Romain Francois <romain@r-enthusiasts.com>
 
-	* inst/include/RcppArmadilloWrap.h: Updated for Armadillo 0.9.80
+        * inst/include/RcppArmadilloWrap.h: Updated for Armadillo 0.9.80
 
 2010-09-21  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/*: Update to Armadillo 0.9.80 "Chihuahua Muncher"
+        * inst/include/*: Update to Armadillo 0.9.80 "Chihuahua Muncher"
 
 2010-09-12  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.6
+        * DESCRIPTION: Release 0.2.6
 
 2010-09-10  Romain Francois <romain@r-enthusiasts.com>
 
-	* inst/include/* : Update to Armadillo 0.9.70 "Subtropical Winter Safari"
+        * inst/include/* : Update to Armadillo 0.9.70 "Subtropical Winter Safari"
 
 2010-08-18  Romain Francois <romain@r-enthusiasts.com>
 
-	* inst/include/armadillo_bits/Mat_meat.hpp : not so intrusive patch that allows
-	RcppArmadillo to add its own Mat constructors
-	* inst/include/armadillo_bits/Mat_proto.hpp : same
+        * inst/include/armadillo_bits/Mat_meat.hpp : not so intrusive patch that allows
+        RcppArmadillo to add its own Mat constructors
+        * inst/include/armadillo_bits/Mat_proto.hpp : same
 
-	* inst/include/RcppArmadillo/Mat_proto.h : Mat constructor that takes a sugar
-	expression
-	* inst/include/RcppArmadillo/Mat_meat.h : implementation
+        * inst/include/RcppArmadillo/Mat_proto.h : Mat constructor that takes a sugar
+        expression
+        * inst/include/RcppArmadillo/Mat_meat.h : implementation
 
 2010-08-17  Romain Francois <romain@r-enthusiasts.com>
 
-	* inst/include/RcppArmadilloWrap.h : extracted from RcppArmadillo.h
+        * inst/include/RcppArmadilloWrap.h : extracted from RcppArmadillo.h
 
-	* inst/include/RcppArmadilloSugar.h : preliminary code to more interoperability
-	between Rcpp sugar and armadillo. Defines the Rcpp::forward that allows
-	forwarding the result of a sugar expression so that it is used in a Mat
-	constructor. (needs more testing)
+        * inst/include/RcppArmadilloSugar.h : preliminary code to more interoperability
+        between Rcpp sugar and armadillo. Defines the Rcpp::forward that allows
+        forwarding the result of a sugar expression so that it is used in a Mat
+        constructor. (needs more testing)
 
-	* inst/unitTests/runit.RcppArmadillo.R : initial test for sugar/armadillo
+        * inst/unitTests/runit.RcppArmadillo.R : initial test for sugar/armadillo
 
 2010-08-04  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.5
+        * DESCRIPTION: Release 0.2.5
 
-	* Upgraded to Armadillo 0.9.60 "Killer Bush Turkey" with changes:
-	  - More flexible reshape(), allowing significantly different
-	    matrix sizes
-	  - Added matrix initialisation via the << operator
-	  - Fixes for compilation issues under Mac OS X with GCC 4.2/4.0
-	    hybrid
+        * Upgraded to Armadillo 0.9.60 "Killer Bush Turkey" with changes:
+          - More flexible reshape(), allowing significantly different
+            matrix sizes
+          - Added matrix initialisation via the << operator
+          - Fixes for compilation issues under Mac OS X with GCC 4.2/4.0
+            hybrid
 
 2010-08-03  Romain Francois <romain@r-enthusiasts.com>
 
-	* Upgraded to Armadillo 0.9.58 beta for testing purposes
+        * Upgraded to Armadillo 0.9.58 beta for testing purposes
 
         * inst/include/armadillo: Reworked so that armadillo_bits/
-	  directory can be included as is without minor tweaks to
-	  armadillo_bits/config.hpp
+          directory can be included as is without minor tweaks to
+          armadillo_bits/config.hpp
 
 2010-07-28  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.4
+        * DESCRIPTION: Release 0.2.4
 
-	* inst/include/armadillo_bits: Added small patch to not use asinh,
-	acosh and atanh on win32 as the (older) MinGW compiler cannot cope.
-	This problem will go away once R 2.12 is released as it requires
-	gcc / g++ 4.5.
+        * inst/include/armadillo_bits: Added small patch to not use asinh,
+        acosh and atanh on win32 as the (older) MinGW compiler cannot cope.
+        This problem will go away once R 2.12 is released as it requires
+        gcc / g++ 4.5.
 
 2010-07-25  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/* : upgrade to armadillo 0.9.52 "Monkey Wrench"
+        * inst/include/* : upgrade to armadillo 0.9.52 "Monkey Wrench"
 
-	* src/fastLm.cpp: Switch from inv() (which now throws a warning on
-	(near) singular matrices and returns an empty matrix) to the
-	Moore-Penrose pseudo-inverse pinv() which allows us to continue
-	the example from the manual page. Of course, for standard use inv() is
-	doing the right thing by issueing the warning.
+        * src/fastLm.cpp: Switch from inv() (which now throws a warning on
+        (near) singular matrices and returns an empty matrix) to the
+        Moore-Penrose pseudo-inverse pinv() which allows us to continue
+        the example from the manual page. Of course, for standard use inv() is
+        doing the right thing by issueing the warning.
 
 2010-06-14  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.3
+        * DESCRIPTION: Release 0.2.3
 
 2010-06-14  Romain Francois <romain@r-enthusiasts.com>
 
-	* inst/include/RcppArmadilloConfig.h: Addition cconfig helping suncc
+        * inst/include/RcppArmadilloConfig.h: Addition cconfig helping suncc
 
 2010-06-09  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.2
+        * DESCRIPTION: Release 0.2.2
 
 2010-06-02  Romain Francois <romain@r-enthusiasts.com>
 
-	* inst/include/* : upgrade to armadillo 0.9.10
+        * inst/include/* : upgrade to armadillo 0.9.10
 
-	* inst/include/* : support for new mtOp and mtGlue, introduced in
-	armadillo 0.9.10
+        * inst/include/* : support for new mtOp and mtGlue, introduced in
+        armadillo 0.9.10
 
 2010-05-27  Romain Francois <romain@r-enthusiasts.com>
 
-	* R/flags.R: added RcppArmadillo:::CxxFlags()
+        * R/flags.R: added RcppArmadillo:::CxxFlags()
 
 2010-05-19  Romain Francois <romain@r-enthusiasts.com>
 
-	* DESCRIPTION: Release 0.2.1
+        * DESCRIPTION: Release 0.2.1
 
-	* src/fastLm.cpp: Rename stderr to std_err
+        * src/fastLm.cpp: Rename stderr to std_err
 
 2010-05-18  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.2.0
+        * DESCRIPTION: Release 0.2.0
 
 2010-05-18  Douglas Bates  <bates@stat.wisc.edu>
 
-	* man/fastLm/Rd: Added rank-deficient example to illustrate possible
-	problems with fastLmPure() and fastLm()
+        * man/fastLm/Rd: Added rank-deficient example to illustrate possible
+        problems with fastLmPure() and fastLm()
 
-	* src/fastLm/cpp: Compute sig2 via std::inner_product
+        * src/fastLm/cpp: Compute sig2 via std::inner_product
 
 2010-05-17  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/*: updated to Armadillo 0.9.8
+        * inst/include/*: updated to Armadillo 0.9.8
 
 2010-05-17  Romain Francois <romain@r-enthusiasts.com>
 
-	* inst/include/RcppArmadillo.h: workaround for win64
+        * inst/include/RcppArmadillo.h: workaround for win64
 
 2010-05-13  Dirk Eddelbuettel  <edd@debian.org>
 
-	* R/fastLm.R: fastLm() is now generic and has a formula interface as
-	well as methods for print, summary, predict to behave like a standard
-	model fitting function
+        * R/fastLm.R: fastLm() is now generic and has a formula interface as
+        well as methods for print, summary, predict to behave like a standard
+        model fitting function
 
-	* R/fastLm.Rd: Added documentation for new methods
+        * R/fastLm.Rd: Added documentation for new methods
 
-	* src/fastLm.cpp: Small additions to returned parameters to support
-	new functionality
+        * src/fastLm.cpp: Small additions to returned parameters to support
+        new functionality
 
 2010-05-04  Romain Francois <romain@r-enthusiasts.com>
 
-	* R/RcppArmadillo.package.skeleton.R: new package skeleton function
-	similar to Rcpp::Rcpp.package.skeleton but targetting use of
-	RcppArmadillo
+        * R/RcppArmadillo.package.skeleton.R: new package skeleton function
+        similar to Rcpp::Rcpp.package.skeleton but targetting use of
+        RcppArmadillo
 
-	* README: removed and promoted to additional documentation in
-	?RcppArmadillo
+        * README: removed and promoted to additional documentation in
+        ?RcppArmadillo
 
 2010-05-03  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/* : updated to armadillo 0.9.6
+        * inst/include/* : updated to armadillo 0.9.6
 
 2010-04-03  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Remove OS_type restriction now that RcppArmadillo
-	  includes Armadillo headers, add Doug to Authors and Maintainers
+        * DESCRIPTION: Remove OS_type restriction now that RcppArmadillo
+          includes Armadillo headers, add Doug to Authors and Maintainers
 
 2010-04-03  Douglas Bates  <bates@stat.wisc.edu>
 
-	* inst/include/armadillo: Added the armadillo headers and the
-	armadillo_bits directory.  This is from the armadillo sources with
-	only the armadillo_bits/config.hpp file modified.
+        * inst/include/armadillo: Added the armadillo headers and the
+        armadillo_bits directory.  This is from the armadillo sources with
+        only the armadillo_bits/config.hpp file modified.
 
-	* configure: and many other configuration files.  Removed the
-	foo.in files, modified cleanup not to remove the target files.
+        * configure: and many other configuration files.  Removed the
+        foo.in files, modified cleanup not to remove the target files.
 
 2010-03-20  Dirk Eddelbuettel  <edd@debian.org>
 
-	* src/fastLm.cpp: Small fix for Armadillo 0.8.2
+        * src/fastLm.cpp: Small fix for Armadillo 0.8.2
 
 2010-03-17  Romain Francois <romain@r-enthusiasts.com>
 
-	* src/fastLm.cpp: added some arma:: prefix
+        * src/fastLm.cpp: added some arma:: prefix
 
-	* src/RcppArmadillo.cpp: update examples to use make_list and showcase
-	various ways to use them : Named(.)=., _[.] = , Named( ., . )
+        * src/RcppArmadillo.cpp: update examples to use make_list and showcase
+        various ways to use them : Named(.)=., _[.] = , Named( ., . )
 
 2010-03-11  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.1.0 and initial CRAN upload
+        * DESCRIPTION: Release 0.1.0 and initial CRAN upload
 
 2010-03-03  Dirk Eddelbuettel  <edd@debian.org>
 
-	* src/fastLm.cpp: Moved into its own file, some more polish
+        * src/fastLm.cpp: Moved into its own file, some more polish
 
 2010-03-03  Romain Francois <romain@r-enthusiasts.com>
 
-	* inst/include/RcppArmadillo.h: avoid an extra memory copy when
-	possible (i.e. in wrap( eGlue) and wrap( eOp ) when the elem_type
-	is int or double).
+        * inst/include/RcppArmadillo.h: avoid an extra memory copy when
+        possible (i.e. in wrap( eGlue) and wrap( eOp ) when the elem_type
+        is int or double).
 
-	* inst/include/RcppArmadilloDefines.in.h added the SCALAR macro
-	to take care of the 0.9.0 api change
+        * inst/include/RcppArmadilloDefines.in.h added the SCALAR macro
+        to take care of the 0.9.0 api change
 
-	* src/RcppArmadillo.cpp : fix a runtime error uisng the SCALAR macro
+        * src/RcppArmadillo.cpp : fix a runtime error uisng the SCALAR macro
 
 2010-03-02  Dirk Eddelbuettel  <edd@debian.org>
 
-	* src/RcppArmadillo.cpp: Added bare-bones 'fastLm' function
-	* R/fastLm.R: Added fastLm R wrapper for C++ fastLm
-	* man/fastLm.Rd: Added manual page
-	* inst/unitTests/runit.RcppArmadillo.R: Added unit test
-	* NAMESPACE: Made fastLm visible
+        * src/RcppArmadillo.cpp: Added bare-bones 'fastLm' function
+        * R/fastLm.R: Added fastLm R wrapper for C++ fastLm
+        * man/fastLm.Rd: Added manual page
+        * inst/unitTests/runit.RcppArmadillo.R: Added unit test
+        * NAMESPACE: Made fastLm visible
 
 2010-03-02  Romain Francois <romain@r-enthusiasts.com>
 
-	* inst/include/RcppArmadillo.h: support for Armadillo 0.9.*
+        * inst/include/RcppArmadillo.h: support for Armadillo 0.9.*
 
 2010-03-01  Dirk Eddelbuettel  <edd@debian.org>
 
-	* configure.in: Add configure support to test for version 0.9.0
+        * configure.in: Add configure support to test for version 0.9.0
 
 2010-02-23  Romain Francois <romain@r-enthusiasts.com>
 
-	* inst/include/RcppArmadillo.h: support for wrap( arma::Glue )
-	and wrap( arma::Op ) enabling wrap()'ing arbitrary expressions
-	involving arma::Mat objects, for example wrap( m1 + m2 ), or
-	wrap( -m1 )
+        * inst/include/RcppArmadillo.h: support for wrap( arma::Glue )
+        and wrap( arma::Op ) enabling wrap()'ing arbitrary expressions
+        involving arma::Mat objects, for example wrap( m1 + m2 ), or
+        wrap( -m1 )
 
-	* inst/unitTests/runit.RcppArmadillo.R: new unit test for
-	wrap( Glue ) and wrap( Op )
+        * inst/unitTests/runit.RcppArmadillo.R: new unit test for
+        wrap( Glue ) and wrap( Op )
 
 2010-02-20  Dirk Eddelbuettel  <edd@debian.org>
 
-	* configure.in: Add configure support to test for presence of
-	  'armadillo' header and working 'libarmadillo' library; and
-	  a test for version 0.7.0 or higher (for Cube() type)
-	* src/Makevars.in: Setup to be filled-in from configure
-	* src/RcppArmadilloDefines.h.in: Idem
-	* cleanup: Added to remove configure-generated files
+        * configure.in: Add configure support to test for presence of
+          'armadillo' header and working 'libarmadillo' library; and
+          a test for version 0.7.0 or higher (for Cube() type)
+        * src/Makevars.in: Setup to be filled-in from configure
+        * src/RcppArmadilloDefines.h.in: Idem
+        * cleanup: Added to remove configure-generated files
 
-	* R/flags.R: Small cleanups
+        * R/flags.R: Small cleanups
 
-	* src/RcppArmadillo.h: Use the #define ARMA_HAS_CUBE from the
-	  autogenerated header, reindent using Emacs' defaults
+        * src/RcppArmadillo.h: Use the #define ARMA_HAS_CUBE from the
+          autogenerated header, reindent using Emacs' defaults
 
 2010-02-19  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Restrict to 'OS_type: unix' for now,
-	  set Date: as an SVN property
+        * DESCRIPTION: Restrict to 'OS_type: unix' for now,
+          set Date: as an SVN property
 
 2010-02-19  Romain Francois <romain@r-enthusiasts.com>
 
-	* added support for field<T> where T is wrappable
+        * added support for field<T> where T is wrappable
 
 2010-02-17  Romain Francois <romain@r-enthusiasts.com>
 
-	* added support for as<Mat<T>> as<Row<T>> and as<Col<T>>
-	with T in : int, double, float, unsigned int
+        * added support for as<Mat<T>> as<Row<T>> and as<Col<T>>
+        with T in : int, double, float, unsigned int
 
-	* added untested support for wrap( Cube<T> )
+        * added untested support for wrap( Cube<T> )
 
 2010-02-16  Dirk Eddelbuettel  <edd@debian.org>
 
-	* Initial package structure based on first proof-of-concept
+        * Initial package structure based on first proof-of-concept
 
 2010-02-16  Romain Francois <romain@r-enthusiasts.com>
 
-	* initial version, covering wrap(Mat), wrap(Col), wrap(Row)
+        * initial version, covering wrap(Mat), wrap(Col), wrap(Row)
