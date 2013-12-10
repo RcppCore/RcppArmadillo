@@ -15,6 +15,30 @@
   }
 }
 
+\section{Changes in RcppArmadillo version 0.3.930.0 (2013-12-06)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 3.930 ("Dragon's Back")
+    \itemize{
+      \item added divide-and-conquer variant of \code{svd_econ()}, for
+      faster SVD 
+      \item added divide-and-conquer variant of \code{pinv()}, for
+      faster pseudo-inverse 
+      \item added element-wise variants of \code{min()} and \code{max()} 
+      \item added \code{size()} based specifications of submatrix view
+      sizes 
+      \item added \code{randi()} for generating matrices with random
+      integer values 
+      \item added more intuitive specification of sort direction in
+      \code{sort()} and \code{sort_index()} 
+      \item added more intuitive specification of method in
+      \code{det()}, \code{.i()}, \code{inv()} and \code{solve()} 
+      \item added more precise timer for the \code{wall_clock} class
+      when using C++11 
+    }
+    \item New unit tests for complex matrices and vectors
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.3.920.3 (2013-11-20)}{
   \itemize{
     \item Upgraded to Armadillo release Version 3.920.3
