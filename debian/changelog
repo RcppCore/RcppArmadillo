@@ -1,9 +1,15 @@
+r-cran-rcpparmadillo (0.3.930.1-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Dirk Eddelbuettel <edd@debian.org>  Mon, 09 Dec 2013 18:13:21 -0600
+
 r-cran-rcpparmadillo (0.3.930.0-1) unstable; urgency=low
 
   * New upstream release
-  
+
   * debian/control: Set Build-Depends: to current R version
-  * debian/control: Set Standards-Version: to current version 
+  * debian/control: Set Standards-Version: to current version
 
  -- Dirk Eddelbuettel <edd@debian.org>  Fri, 06 Dec 2013 21:43:39 -0600
 
@@ -16,7 +22,7 @@ r-cran-rcpparmadillo (0.3.920.3-1) unstable; urgency=low
 r-cran-rcpparmadillo (0.3.920.1-1) unstable; urgency=low
 
   * New upstream release
-  
+
   * debian/control: Tightened Build-Depends on r-cran-rcpp to (>= 0.10.5)
 
  -- Dirk Eddelbuettel <edd@debian.org>  Sun, 29 Sep 2013 16:03:43 -0500

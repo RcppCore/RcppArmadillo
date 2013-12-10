@@ -2,27 +2,16 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
-\section{Changes in RcppArmadillo version 0.3.930.0 (2013-12-06)}{
+\section{Changes in RcppArmadillo version 0.3.930.1 (2013-12-09)}{
   \itemize{
-    \item Upgraded to Armadillo release Version 3.930 ("Dragon's Back")
+    \item Upgraded to Armadillo release Version 3.930.1
     \itemize{
-      \item added divide-and-conquer variant of \code{svd_econ()}, for
-      faster SVD 
-      \item added divide-and-conquer variant of \code{pinv()}, for
-      faster pseudo-inverse 
-      \item added element-wise variants of \code{min()} and \code{max()} 
-      \item added \code{size()} based specifications of submatrix view
-      sizes 
-      \item added \code{randi()} for generating matrices with random
-      integer values 
-      \item added more intuitive specification of sort direction in
-      \code{sort()} and \code{sort_index()} 
-      \item added more intuitive specification of method in
-      \code{det()}, \code{.i()}, \code{inv()} and \code{solve()} 
-      \item added more precise timer for the \code{wall_clock} class
-      when using C++11 
+      \item Armadillo falls back to standard complex svd if the more
+      performant divide-and-conquer variant is unavailable
     }
-    \item New unit tests for complex matrices and vectors
+    \item Added detection for Lapack library and distinguish between R's
+    own version (withhout zgesdd) and system Lapack; a preprocessor define is
+    set accordingly
   }
 }
 
