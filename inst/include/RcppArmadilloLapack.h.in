@@ -22,14 +22,7 @@
 #ifndef RcppArmadillo__RcppArmadilloLapack__h
 #define RcppArmadillo__RcppArmadilloLapack__h
 
-// value on next line will be set by the configure script, filling in 0 or 1
-#define ARMA_DONT_USE_CX_GESDD @FilledInByConfigure@
-
-// but the variable is used in a #if defined() context so undef if zero
-#if ARMA_DONT_USE_CX_GESDD 
-  // do nothing here, symbol is defined
-#else 
-  #undef ARMA_DONT_USE_CX_GESDD 
-#endif
+// value on next line may be changed to #define by the configure script
+// #undef ARMA_DONT_USE_CX_GESDD
 
 #endif
