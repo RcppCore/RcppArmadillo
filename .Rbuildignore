@@ -1,4 +1,4 @@
 debian
 .travis.yml
 .git
-src/lapack/
+src/lapack
