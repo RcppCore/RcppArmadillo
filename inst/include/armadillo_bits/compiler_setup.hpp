@@ -44,13 +44,23 @@
 #define ARMA_INCFILE_WRAP(x) <x>
 
 
-#if ( ((_POSIX_C_SOURCE >= 200112L) || (_XOPEN_SOURCE >= 600)) && !defined(__MINGW32__) && !defined(__APPLE__) ) && !defined(__sun)
+// posix_memalign() is part of IEEE standard 1003.1
+// http://pubs.opengroup.org/onlinepubs/009696899/functions/posix_memalign.html
+// http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/unistd.h.html
+// http://sourceforge.net/p/predef/wiki/Standards/
+#if ( defined(_POSIX_ADVISORY_INFO) && (_POSIX_ADVISORY_INFO >= 200112L) )
   #define ARMA_HAVE_POSIX_MEMALIGN
 #endif
 
 
 #if defined(__APPLE__)
   #define ARMA_BLAS_SDOT_BUG
+  #undef  ARMA_HAVE_POSIX_MEMALIGN
+#endif
+
+
+#if defined(__MINGW32__)
+  #undef ARMA_HAVE_POSIX_MEMALIGN
 #endif
 
 

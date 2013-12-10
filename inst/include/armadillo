@@ -25,6 +25,9 @@
 #include <complex>
 #include <vector>
 
+#if ( defined(__unix__) || defined(__unix) || defined(_POSIX_C_SOURCE) ) && !defined(_WIN32)
+  #include <unistd.h>
+#endif
 
 #include "armadillo_bits/config.hpp"
 #include "armadillo_bits/compiler_setup.hpp"

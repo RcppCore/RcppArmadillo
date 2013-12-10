@@ -72,5 +72,16 @@
 #undef NDEBUG
 #endif
 
+// R can be built with its own Rlapack library, or use an external
+// one. Only the latter has zgesdd, a complex-valued SVD using divide-and-conquer 
+#ifdef WIN32
+  // on Windows we do not assume ZGESDD
+  #define ARMA_DONT_USE_CX_GESDD 1
+#else
+  // on the other OSs we test via LAPACK_LIBS (in configure) which
+  // updates this include file
+  #include <RcppArmadilloLapack.h>
+#endif
+
 #endif
 

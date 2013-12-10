@@ -33,5 +33,19 @@
 #include <RcppArmadilloAs.h>
 #include <RcppArmadilloSugar.h>
 
+/* ZGESDD - compute the singular value decomposition (SVD); of a   */
+/* complex M-by-N matrix A, optionally computing the left and/or	   */
+/* right singular vectors.  If singular vectors are desired, it uses a */
+/* divide-and-conquer algorithm.				   */
+// namespace {
+//     extern "C" void F77_NAME(zgesdd)(const char *jobz, const int *m, const int *n,
+//                                      Rcomplex *a, const int *lda, double *s,
+//                                      Rcomplex *u, const int *ldu,
+//                                      Rcomplex *vt, const int *ldvt,
+//                                      Rcomplex *work, const int *lwork, 
+//                                      double *rwork,
+//                                      int *iwork, int *info);
+// }
+
 #endif
 

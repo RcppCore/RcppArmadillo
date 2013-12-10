@@ -1,8 +1,22 @@
+2013-12-09  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.3.930.1
+	* inst/NEWS: Release 0.3.930.1
+	* inst/include/*: Upgraded to new release 3.930.1 of Armadillo
+	  which falls back to standard complex SVD if no zgesdd
+        * debian/*: Similarly updated for new release to Debian
+
+	* configure: Test value of LAPACK_LIBS and define
+	ARMA_DONT_USE_CX_GESDD if R's private Lapack is used
+
+	* inst/include/RcppArmadilloLapack.h.in: Added header file to be
+	processed by configure
+
 2013-12-06  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.3.930.0
 	* inst/NEWS: Release 0.3.930.0
-	* inst/include/*: Upgraded to new release 3.920.3 of Armadillo
+	* inst/include/*: Upgraded to new release 3.930 of Armadillo
         * debian/*: Similarly updated for new release to Debian
 
 	* inst/include/*: Upgraded to Armadillo 3.930 ("Dragon's Back")
