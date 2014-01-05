@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2014 Conrad Sanderson
+// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -44,6 +44,38 @@
 #define ARMA_INCFILE_WRAP(x) <x>
 
 
+#if (__cplusplus >= 201103L)
+  #if !defined(ARMA_USE_CXX11)
+    #define ARMA_USE_CXX11
+  #endif
+#endif
+
+
+#if defined(ARMA_USE_CXX11)
+  #if !defined(ARMA_USE_U64S64)
+    #define ARMA_USE_U64S64
+  #endif
+#endif
+
+
+#if defined(ARMA_64BIT_WORD)
+  #if !defined(ARMA_USE_U64S64)
+    #define ARMA_USE_U64S64
+  #endif
+#endif
+
+
+#if (defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE >= 200112L))
+  #define ARMA_HAVE_GETTIMEOFDAY
+  
+  #if defined(__GNUG__)
+    #define ARMA_HAVE_SNPRINTF
+    #define ARMA_HAVE_ISFINITE
+    #define ARMA_HAVE_LOG1P
+  #endif
+#endif
+
+
 // posix_memalign() is part of IEEE standard 1003.1
 // http://pubs.opengroup.org/onlinepubs/009696899/functions/posix_memalign.html
 // http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/unistd.h.html
@@ -64,35 +96,6 @@
 #endif
 
 
-#if (__cplusplus >= 201103L)
-  #if !defined(ARMA_USE_CXX11)
-    #define ARMA_USE_CXX11
-  #endif
-#endif
-
-
-#if defined(ARMA_USE_CXX11)
-  
-  // TODO: enable in version 4.0
-  // #if defined(ARMA_USE_WRAPPER)
-  //   #if !defined(ARMA_USE_CXX11_RNG)
-  //     #define ARMA_USE_CXX11_RNG
-  //   #endif
-  // #endif
-  
-  #if !defined(ARMA_USE_U64S64)
-    #define ARMA_USE_U64S64
-  #endif
-#endif
-
-
-#if defined(ARMA_64BIT_WORD)
-  #if !defined(ARMA_USE_U64S64)
-    #define ARMA_USE_U64S64
-  #endif
-#endif
-
-
 #if defined (__GNUG__)
   #define ARMA_FNSIG  __PRETTY_FUNCTION__
 #elif defined (_MSC_VER)
@@ -108,62 +111,30 @@
 
 #if defined(__INTEL_COMPILER)
   
-  #if (__INTEL_COMPILER < 1000)
+  #if (__INTEL_COMPILER_BUILD_DATE < 20090623)
     #error "*** Need a newer compiler ***"
   #endif
   
-  #if (__INTEL_COMPILER <= 1110)
-    #undef ARMA_HAVE_STD_ISFINITE
-  #endif
-  
-  #undef  ARMA_HAVE_STD_TR1
-  
-  #define ARMA_GOOD_COMPILER
   #define ARMA_HAVE_ICC_ASSUME_ALIGNED
   
-  #if defined(__GNUG__)
-    
-    // #undef  arma_aligned
-    // #define arma_aligned __attribute__((aligned))
-    
-    #undef  arma_align_mem
-    #define arma_align_mem __attribute__((aligned(16)))
-    
-    #define ARMA_HAVE_ALIGNED_ATTRIBUTE
-    
-  #elif defined(_MSC_VER)
-    
-    // #if (_MANAGED == 1) || (_M_CEE == 1)
-    //   
-    //   // don't do any alignment when compiling in "managed code" mode 
-    //   
-    //   #undef  arma_aligned
-    //   #define arma_aligned
-    //   
-    //   #undef  arma_align_mem
-    //   #define arma_align_mem
-    //   
-    // #elif (_MSC_VER >= 1700)
-    //   
-    //   #undef  arma_align_mem
-    //   #define arma_align_mem __declspec(align(16))
-    //   
-    //   #define ARMA_HAVE_ALIGNED_ATTRIBUTE
-    //   
-    // #endif
-    
-  #endif
-  
-#elif defined(__GNUG__)
-  
-  #if (__GNUC__ < 4)
-    #error "*** Need a newer compiler ***"
-  #endif
+#endif
+
+
+#if defined(__GNUG__)
   
   #define ARMA_GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
   
+  #if (ARMA_GCC_VERSION < 40200)
+    #error "*** Need a newer compiler ***"
+  #endif
+  
+  #if ( (ARMA_GCC_VERSION >= 40700) && (ARMA_GCC_VERSION <= 40701) )
+    #error "gcc versions 4.7.0 and 4.7.1 are unsupported; use 4.7.2 or later"
+    // due to http://gcc.gnu.org/bugzilla/show_bug.cgi?id=53549
+  #endif
+  
   #define ARMA_GOOD_COMPILER
-  #undef  ARMA_HAVE_STD_TR1
+  #undef  ARMA_HAVE_TR1
   
   #undef  arma_pure
   #undef  arma_const
@@ -187,6 +158,24 @@
   
   #define ARMA_HAVE_ALIGNED_ATTRIBUTE
   
+  #if defined(__GXX_EXPERIMENTAL_CXX0X__)
+    #if !defined(ARMA_USE_CXX11)
+      #define ARMA_USE_CXX11
+    #endif
+  #endif
+  
+  #if defined(ARMA_USE_CXX11)
+    #if (ARMA_GCC_VERSION < 40700) && !defined(__clang__)
+      #pragma message ("Your C++ compiler is in C++11 mode, but it has incomplete support for C++11 features")
+    #endif
+  #endif
+  
+  #if !defined(ARMA_USE_CXX11)
+    #if defined(_GLIBCXX_USE_C99_MATH_TR1) && defined(_GLIBCXX_USE_C99_COMPLEX_TR1)
+      #define ARMA_HAVE_TR1
+    #endif
+  #endif
+  
   #if (ARMA_GCC_VERSION >= 40300)
     #undef  arma_hot
     #undef  arma_cold
@@ -195,33 +184,19 @@
     #define arma_cold __attribute__((__cold__))
   #endif
   
-  #if (ARMA_GCC_VERSION >= 40200)
-    #if defined(_GLIBCXX_USE_C99_MATH_TR1) && defined(_GLIBCXX_USE_C99_COMPLEX_TR1)
-      #define ARMA_HAVE_STD_TR1
-    #endif
-  #endif
-  
-  #if defined(__GXX_EXPERIMENTAL_CXX0X__)
-    #undef ARMA_HAVE_STD_TR1
-    
-    #if !defined(ARMA_USE_CXX11)
-      #define ARMA_USE_CXX11
-    #endif
+  #if (ARMA_GCC_VERSION >= 40700)
+    #define ARMA_HAVE_GCC_ASSUME_ALIGNED
   #endif
   
   #if defined(__clang__)
-    #undef ARMA_HAVE_STD_TR1
-    //#undef ARMA_GOOD_COMPILER
-  #endif
-  
-  #if ( (ARMA_GCC_VERSION >= 40700) && (ARMA_GCC_VERSION <= 40701) )
-    #error "gcc versions 4.7.0 and 4.7.1 are unsupported; use 4.7.2 or later"
-    // due to http://gcc.gnu.org/bugzilla/show_bug.cgi?id=53549
-  #endif
-  
-  #if (ARMA_GCC_VERSION >= 40700)
-    #define ARMA_HAVE_GCC_ASSUME_ALIGNED
+    #undef ARMA_HAVE_TR1
+    #undef ARMA_HAVE_GCC_ASSUME_ALIGNED
     // TODO: future versions of clang may also have __builtin_assume_aligned
+  #endif
+  
+  #if defined(__INTEL_COMPILER)
+    #undef ARMA_HAVE_TR1
+    #undef ARMA_HAVE_GCC_ASSUME_ALIGNED
   #endif
   
   #undef ARMA_GCC_VERSION
@@ -231,17 +206,15 @@
 
 #if defined(_MSC_VER)
   
-  #if (_MSC_VER < 1500)
+  #if (_MSC_VER < 1700)
     #error "*** Need a newer compiler ***"
   #endif
   
   #undef ARMA_GOOD_COMPILER
-  #undef ARMA_HAVE_STD_ISFINITE
-  #undef ARMA_HAVE_STD_SNPRINTF
+  #undef ARMA_HAVE_SNPRINTF
+  #undef ARMA_HAVE_ISFINITE
   #undef ARMA_HAVE_LOG1P
-  #undef ARMA_HAVE_STD_ISINF
-  #undef ARMA_HAVE_STD_ISNAN
-  #undef ARMA_HAVE_STD_TR1
+  #undef ARMA_HAVE_TR1
   
   // #undef  arma_inline
   // #define arma_inline inline __forceinline
@@ -288,21 +261,45 @@
 #endif
 
 
-#if defined(__CUDACC__)
-  #undef ARMA_HAVE_STD_ISFINITE
-  #undef ARMA_HAVE_STD_SNPRINTF
+#if defined(__SUNPRO_CC)
+  
+  // http://www.oracle.com/technetwork/server-storage/solarisstudio/training/index-jsp-141991.html
+  // http://www.oracle.com/technetwork/server-storage/solarisstudio/documentation/cplusplus-faq-355066.html
+  
+  #if (__SUNPRO_CC < 0x5100)
+    #error "*** Need a newer compiler ***"
+  #endif
+  
+  #undef ARMA_HAVE_SNPRINTF
+  #undef ARMA_HAVE_ISFINITE
   #undef ARMA_HAVE_LOG1P
-  #undef ARMA_HAVE_STD_ISINF
-  #undef ARMA_HAVE_STD_ISNAN
-  #undef ARMA_HAVE_STD_TR1
+  #undef ARMA_HAVE_TR1
+  
 #endif
 
 
-#if defined(__SUNPRO_CC)
-  #undef ARMA_HAVE_STD_ISFINITE
-  #undef ARMA_HAVE_STD_SNPRINTF
+#if defined(__CUDACC__)
+  
+  #undef ARMA_HAVE_SNPRINTF
+  #undef ARMA_HAVE_ISFINITE
   #undef ARMA_HAVE_LOG1P
-  #undef ARMA_HAVE_STD_ISINF
-  #undef ARMA_HAVE_STD_ISNAN
-  #undef ARMA_HAVE_STD_TR1
+  #undef ARMA_HAVE_TR1
+  
+#endif
+
+
+#if defined(log2)
+  #undef log2
+  #pragma message ("detected 'log2' macro and undefined it")
+#endif
+
+
+
+// 
+// whoever defined macros with the names "min" and "max" should be permanently removed from the gene pool
+
+#if defined(min) || defined(max)
+  #undef min
+  #undef max
+  #pragma message ("detected 'min' and/or 'max' macros and undefined them; you may wish to define NOMINMAX before including any windows header")
 #endif

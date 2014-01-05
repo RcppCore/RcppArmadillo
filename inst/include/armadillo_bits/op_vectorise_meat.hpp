@@ -19,7 +19,9 @@ op_vectorise_col::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_vectori
   {
   arma_extra_debug_sigprint();
   
-  op_vectorise_col::apply_expr(out, in.m);
+  const Proxy<T1> P(in.m);
+  
+  op_vectorise_col::apply_proxy(out, P);
   }
 
 
@@ -27,13 +29,11 @@ op_vectorise_col::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_vectori
 template<typename T1>
 inline
 void
-op_vectorise_col::apply_expr(Mat<typename T1::elem_type>& out, const T1& expr)
+op_vectorise_col::apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P)
   {
   arma_extra_debug_sigprint();
   
   typedef typename T1::elem_type eT;
-  
-  const Proxy<T1> P(expr);
   
   if(P.is_alias(out) == false)
     {
@@ -107,10 +107,77 @@ op_vectorise_col::apply_expr(Mat<typename T1::elem_type>& out, const T1& expr)
       }
     else
       {
-      const Mat<eT> tmp(P.Q);
+      Mat<eT> tmp;
       
-      out = vectorise(tmp);
+      op_vectorise_col::apply_proxy(tmp, P);
+      
+      out.steal_mem(tmp);
       }
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_vectorise_row::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_vectorise_row>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  const Proxy<T1> P(in.m);
+  
+  op_vectorise_row::apply_proxy(out, P);
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_vectorise_row::apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  if(P.is_alias(out) == false)
+    {
+    out.set_size( 1, P.get_n_elem() );
+    
+    eT* outmem = out.memptr();
+    
+    const uword n_rows = P.get_n_rows();
+    const uword n_cols = P.get_n_cols();
+    
+    for(uword row=0; row < n_rows; ++row)
+      {
+      uword i,j;
+      
+      for(i=0, j=1; j < n_cols; i+=2, j+=2)
+        {
+        const eT tmp_i = P.at(row,i);
+        const eT tmp_j = P.at(row,j);
+        
+        *outmem = tmp_i; outmem++;
+        *outmem = tmp_j; outmem++;
+        }
+      
+      if(i < n_cols)
+        {
+        *outmem = P.at(row,i); outmem++;
+        }
+      }
+    }
+  else  // we have aliasing
+    {
+    arma_extra_debug_print("op_vectorise_row::apply(): aliasing detected");
+    
+    Mat<eT> tmp;
+    
+    op_vectorise_row::apply_proxy(tmp, P);
+    
+    out.steal_mem(tmp);
     }
   }
 
@@ -123,20 +190,17 @@ op_vectorise_all::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_vectori
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
+  const Proxy<T1> P(in.m);
   
   const uword dim = in.aux_uword_a;
   
   if(dim == 0)
     {
-    op_vectorise_col::apply_expr(out, in.m);
+    op_vectorise_col::apply_proxy(out, P);
     }
   else
     {
-    const unwrap<T1>   tmp(in.m);
-    const Mat<eT>& A = tmp.M;
-    
-    out = reshape(A, 1, A.n_elem, 1);
+    op_vectorise_row::apply_proxy(out, P);
     }
   }
 

@@ -92,6 +92,121 @@ glue_times_redirect2_helper<true>::apply(Mat<typename T1::elem_type>& out, const
 
 
 
+template<bool is_eT_blas_type>
+template<typename T1, typename T2, typename T3>
+arma_hot
+inline
+void
+glue_times_redirect3_helper<is_eT_blas_type>::apply(Mat<typename T1::elem_type>& out, const Glue< Glue<T1,T2,glue_times>, T3, glue_times>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  // we have exactly 3 objects
+  // hence we can safely expand X as X.A.A, X.A.B and X.B
+  
+  const partial_unwrap_check<T1> tmp1(X.A.A, out);
+  const partial_unwrap_check<T2> tmp2(X.A.B, out);
+  const partial_unwrap_check<T3> tmp3(X.B,   out);
+  
+  const typename partial_unwrap_check<T1>::stored_type& A = tmp1.M;
+  const typename partial_unwrap_check<T2>::stored_type& B = tmp2.M;
+  const typename partial_unwrap_check<T3>::stored_type& C = tmp3.M;
+  
+  const bool use_alpha = partial_unwrap_check<T1>::do_times || partial_unwrap_check<T2>::do_times || partial_unwrap_check<T3>::do_times;
+  const eT       alpha = use_alpha ? (tmp1.get_val() * tmp2.get_val() * tmp3.get_val()) : eT(0);
+  
+  glue_times::apply
+    <
+    eT,
+    partial_unwrap_check<T1>::do_trans,
+    partial_unwrap_check<T2>::do_trans,
+    partial_unwrap_check<T3>::do_trans,
+    (partial_unwrap_check<T1>::do_times || partial_unwrap_check<T2>::do_times || partial_unwrap_check<T3>::do_times)
+    >
+    (out, A, B, C, alpha);
+  }
+
+
+
+template<typename T1, typename T2, typename T3>
+arma_hot
+inline
+void
+glue_times_redirect3_helper<true>::apply(Mat<typename T1::elem_type>& out, const Glue< Glue<T1,T2,glue_times>, T3, glue_times>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  // TODO: investigate detecting inv(A)*B*C and replacing with solve(A,B)*C
+  
+  typedef typename T1::elem_type eT;
+  
+  if(strip_inv<T2>::do_inv == false)
+    {
+    // we have exactly 3 objects
+    // hence we can safely expand X as X.A.A, X.A.B and X.B
+    
+    const partial_unwrap_check<T1> tmp1(X.A.A, out);
+    const partial_unwrap_check<T2> tmp2(X.A.B, out);
+    const partial_unwrap_check<T3> tmp3(X.B,   out);
+    
+    const typename partial_unwrap_check<T1>::stored_type& A = tmp1.M;
+    const typename partial_unwrap_check<T2>::stored_type& B = tmp2.M;
+    const typename partial_unwrap_check<T3>::stored_type& C = tmp3.M;
+    
+    const bool use_alpha = partial_unwrap_check<T1>::do_times || partial_unwrap_check<T2>::do_times || partial_unwrap_check<T3>::do_times;
+    const eT       alpha = use_alpha ? (tmp1.get_val() * tmp2.get_val() * tmp3.get_val()) : eT(0);
+    
+    glue_times::apply
+      <
+      eT,
+      partial_unwrap_check<T1>::do_trans,
+      partial_unwrap_check<T2>::do_trans,
+      partial_unwrap_check<T3>::do_trans,
+      (partial_unwrap_check<T1>::do_times || partial_unwrap_check<T2>::do_times || partial_unwrap_check<T3>::do_times)
+      >
+      (out, A, B, C, alpha);
+    }
+  else
+    {
+    // replace A*inv(B)*C with A*solve(B,C)
+    
+    arma_extra_debug_print("glue_times_redirect<3>::apply(): detected A*inv(B)*C");
+    
+    const strip_inv<T2> B_strip(X.A.B);
+    
+    Mat<eT> B = B_strip.M;
+    
+    arma_debug_check( (B.is_square() == false), "inv(): given matrix is not square" );
+    
+    const unwrap<T3> C_tmp(X.B);
+    const Mat<eT>& C = C_tmp.M;
+    
+    Mat<eT> solve_result;
+    
+    glue_solve::solve_direct( solve_result, B, C, B_strip.slow );
+    
+    const partial_unwrap_check<T1> tmp1(X.A.A, out);
+    
+    const typename partial_unwrap_check<T1>::stored_type& A = tmp1.M;
+    
+    const bool use_alpha = partial_unwrap_check<T1>::do_times;
+    const eT       alpha = use_alpha ? tmp1.get_val() : eT(0);
+    
+    glue_times::apply
+      <
+      eT,
+      partial_unwrap_check<T1>::do_trans,
+      false,
+      partial_unwrap_check<T1>::do_times
+      >
+      (out, A, solve_result, alpha);
+    }
+  }
+
+
+
 template<uword N>
 template<typename T1, typename T2>
 arma_hot
@@ -149,32 +264,7 @@ glue_times_redirect<3>::apply(Mat<typename T1::elem_type>& out, const Glue< Glue
   
   typedef typename T1::elem_type eT;
   
-  // TODO: investigate detecting inv(A)*B*C and replacing with solve(A,B)*C
-  // TODO: investigate detecting A*inv(B)*C and replacing with A*solve(B,C)
-  
-  // there is exactly 3 objects
-  // hence we can safely expand X as X.A.A, X.A.B and X.B
-  
-  const partial_unwrap_check<T1> tmp1(X.A.A, out);
-  const partial_unwrap_check<T2> tmp2(X.A.B, out);
-  const partial_unwrap_check<T3> tmp3(X.B,   out);
-  
-  const typename partial_unwrap_check<T1>::stored_type& A = tmp1.M;
-  const typename partial_unwrap_check<T2>::stored_type& B = tmp2.M;
-  const typename partial_unwrap_check<T3>::stored_type& C = tmp3.M;
-  
-  const bool use_alpha = partial_unwrap_check<T1>::do_times || partial_unwrap_check<T2>::do_times || partial_unwrap_check<T3>::do_times;
-  const eT       alpha = use_alpha ? (tmp1.get_val() * tmp2.get_val() * tmp3.get_val()) : eT(0);
-  
-  glue_times::apply
-    <
-    eT,
-    partial_unwrap_check<T1>::do_trans,
-    partial_unwrap_check<T2>::do_trans,
-    partial_unwrap_check<T3>::do_trans,
-    (partial_unwrap_check<T1>::do_times || partial_unwrap_check<T2>::do_times || partial_unwrap_check<T3>::do_times)
-    >
-    (out, A, B, C, alpha);
+  glue_times_redirect3_helper< is_supported_blas_type<eT>::value >::apply(out, X);
   }
 
 

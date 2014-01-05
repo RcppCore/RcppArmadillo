@@ -47,6 +47,23 @@ struct glue_times_redirect2_helper<true>
 
 
 
+template<bool is_eT_blas_type>
+struct glue_times_redirect3_helper
+  {
+  template<typename T1, typename T2, typename T3>
+  arma_hot inline static void apply(Mat<typename T1::elem_type>& out, const Glue< Glue<T1,T2,glue_times>,T3,glue_times>& X);
+  };
+
+
+template<>
+struct glue_times_redirect3_helper<true>
+  {
+  template<typename T1, typename T2, typename T3>
+  arma_hot inline static void apply(Mat<typename T1::elem_type>& out, const Glue< Glue<T1,T2,glue_times>,T3,glue_times>& X);
+  };
+
+
+
 template<uword N>
 struct glue_times_redirect
   {

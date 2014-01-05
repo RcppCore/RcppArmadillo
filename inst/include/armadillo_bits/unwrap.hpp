@@ -577,7 +577,7 @@ struct unwrap_check_mixed
     arma_extra_debug_sigprint();
     }
   
-  template<typename eT2>
+  //template<typename eT2>
   inline
   unwrap_check_mixed(const T1& A, const bool)
     : M(A)
@@ -602,7 +602,7 @@ struct unwrap_check_mixed< Mat<eT1> >
     arma_extra_debug_sigprint();
     }
   
-  template<typename eT2>
+  //template<typename eT2>
   inline
   unwrap_check_mixed(const Mat<eT1>& A, const bool is_alias)
     : M_local( is_alias ? new Mat<eT1>(A) : 0 )
@@ -640,7 +640,7 @@ struct unwrap_check_mixed< Row<eT1> >
     }
   
   
-  template<typename eT2>
+  //template<typename eT2>
   inline
   unwrap_check_mixed(const Row<eT1>& A, const bool is_alias)
     : M_local( is_alias ? new Row<eT1>(A) : 0 )
@@ -677,7 +677,7 @@ struct unwrap_check_mixed< Col<eT1> >
     arma_extra_debug_sigprint();
     }
   
-  template<typename eT2>
+  //template<typename eT2>
   inline
   unwrap_check_mixed(const Col<eT1>& A, const bool is_alias)
     : M_local( is_alias ? new Col<eT1>(A) : 0 )

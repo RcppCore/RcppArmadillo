@@ -1,4 +1,4 @@
-// Copyright (C) 2012 Conrad Sanderson
+// Copyright (C) 2012-2013 Conrad Sanderson
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,14 +23,7 @@ spones(const SpBase<typename T1::elem_type, T1>& X)
   
   SpMat<eT> out( X.get_ref() );
   
-  const uword nnz = out.n_nonzero;
-  
-  eT* values = access::rwp(out.values);
-  
-  for(uword i=0; i < nnz; ++i)
-    {
-    values[i] = eT(1);
-    }
+  arrayops::inplace_set( access::rwp(out.values), eT(1), out.n_nonzero );
   
   return out;
   }

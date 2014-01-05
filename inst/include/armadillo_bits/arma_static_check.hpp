@@ -39,17 +39,17 @@ struct arma_type_check_cxx1998<false>
 
 
 
-#if !defined(ARMA_USE_CXX11)
+#if defined(ARMA_USE_CXX11)
+  
+  #define arma_static_check(condition, message)  static_assert( !(condition), #message )
+  
+  #define arma_type_check(condition)  static_assert( !(condition), "error: incorrect or unsupported type" )
+  
+#else
 
   #define arma_static_check(condition, message)  static const char message[ (condition) ? -1 : +1 ]
   
   #define arma_type_check(condition)  arma_type_check_cxx1998<condition>::apply()
-
-#else
-
-  #define arma_static_check(condition, message)  static_assert( !(condition), #message )
-  
-  #define arma_type_check(condition)  static_assert( !(condition), "error: incorrect or unsupported type" )
 
 #endif
 

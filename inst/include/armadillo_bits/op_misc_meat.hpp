@@ -275,16 +275,4 @@ op_abs::apply( Cube<typename T1::pod_type>& out, const mtOpCube<typename T1::pod
 
 
 
-template<typename T1>
-inline
-void
-op_sympd::apply( Mat<typename T1::elem_type>& out, const Op<T1, op_sympd>& X )
-  {
-  arma_extra_debug_sigprint();
-  
-  out = X.m;
-  }
-
-
-
 //! @}

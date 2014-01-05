@@ -32,9 +32,18 @@ op_resize::apply(Mat<typename T1::elem_type>& actual_out, const Op<T1,op_resize>
   
   const bool alias = (&actual_out == &A);
   
-  if( alias && (A_n_rows == out_n_rows) && (A_n_cols == out_n_cols) )
+  if(alias)
     {
-    return;
+    if( (A_n_rows == out_n_rows) && (A_n_cols == out_n_cols) )
+      {
+      return;
+      }
+    
+    if(actual_out.is_empty())
+      {
+      actual_out.zeros(out_n_rows, out_n_cols);
+      return;
+      }
     }
   
   Mat<eT>  B;
@@ -85,9 +94,18 @@ op_resize::apply(Cube<typename T1::elem_type>& actual_out, const OpCube<T1,op_re
   
   const bool alias = (&actual_out == &A);
   
-  if( alias && (A_n_rows == out_n_rows) && (A_n_cols == out_n_cols) && (A_n_slices == out_n_slices) )
+  if(alias)
     {
-    return;
+    if( (A_n_rows == out_n_rows) && (A_n_cols == out_n_cols) && (A_n_slices == out_n_slices) )
+      {
+      return;
+      }
+    
+    if(actual_out.is_empty())
+      {
+      actual_out.zeros(out_n_rows, out_n_cols, out_n_slices);
+      return;
+      }
     }
   
   Cube<eT>  B;

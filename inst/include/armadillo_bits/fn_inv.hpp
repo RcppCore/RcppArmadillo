@@ -94,48 +94,6 @@ inv
 
 
 
-//! delayed matrix inverse (symmetric positive definite matrices)
-template<typename T1>
-arma_inline
-const Op<T1, op_inv_sympd>
-inv
-  (
-  const Op<T1, op_sympd>& X,
-  const bool slow = false,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
-  )
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(slow);
-  arma_ignore(junk);
-  
-  return Op<T1, op_inv_sympd>(X.m, 0, 0);
-  }
-
-
-
-template<typename T1>
-arma_inline
-const Op<T1, op_inv_sympd>
-inv
-  (
-  const Op<T1, op_sympd>& X,
-  const char* method,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
-  )
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk);
-  
-  const char sig = method[0];
-  
-  arma_debug_check( ((sig != 's') && (sig != 'f')), "inv(): unknown method specified" );
-  
-  return Op<T1, op_inv_sympd>(X.m, 0, 0);
-  }
-
-
-
 template<typename T1>
 inline
 bool
@@ -181,6 +139,57 @@ inv
   try
     {
     out = inv(X,method);
+    }
+  catch(std::runtime_error&)
+    {
+    return false;
+    }
+  
+  return true;
+  }
+
+
+
+//! inverse of symmetric positive definite matrices
+template<typename T1>
+arma_inline
+const Op<T1, op_inv_sympd>
+inv_sympd
+  (
+  const Base<typename T1::elem_type, T1>& X,
+  const char* method = "std",
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  )
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  const char sig = method[0];
+  
+  arma_debug_check( ((sig != 's') && (sig != 'f')), "inv_sympd(): unknown method specified" );
+  
+  return Op<T1, op_inv_sympd>(X.get_ref(), 0, 0);
+  }
+
+
+
+template<typename T1>
+inline
+bool
+inv_sympd
+  (
+         Mat<typename T1::elem_type>&    out,
+  const Base<typename T1::elem_type,T1>& X,
+  const char* method = "std",
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  )
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  try
+    {
+    out = inv_sympd(X,method);
     }
   catch(std::runtime_error&)
     {

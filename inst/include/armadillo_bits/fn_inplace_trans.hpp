@@ -22,7 +22,7 @@ enable_if2
 inplace_htrans
   (
         Mat<eT>& X,
-  const char*    method = "standard"
+  const char*    method = "std"
   )
   {
   arma_extra_debug_sigprint();
@@ -43,7 +43,7 @@ enable_if2
 inplace_htrans
   (
         Mat<eT>& X,
-  const char*    method = "standard"
+  const char*    method = "std"
   )
   {
   arma_extra_debug_sigprint();
@@ -79,7 +79,7 @@ enable_if2
 inplace_trans
   (
         Mat<eT>& X,
-  const char*    method = "standard"
+  const char*    method = "std"
   )
   {
   arma_extra_debug_sigprint();
@@ -104,7 +104,7 @@ enable_if2
 inplace_trans
   (
         Mat<eT>& X,
-  const char*    method = "standard"
+  const char*    method = "std"
   )
   {
   arma_extra_debug_sigprint();

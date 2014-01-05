@@ -19,7 +19,7 @@ pinv
   (
   const Base<typename T1::elem_type,T1>& X,
   const typename T1::elem_type           tol    = 0.0,
-  const char*                            method = "standard",
+  const char*                            method = "dc",
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
   )
   {
@@ -43,7 +43,7 @@ pinv
          Mat<typename T1::elem_type>&    out,
   const Base<typename T1::elem_type,T1>& X,
   const typename T1::elem_type           tol    = 0.0,
-  const char*                            method = "standard",
+  const char*                            method = "dc",
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
   )
   {

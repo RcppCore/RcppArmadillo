@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2014 Conrad Sanderson
+// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
 // Copyright (C) 2009 Edmund Highcock
 // Copyright (C) 2011 James Sanders
 // Copyright (C) 2011 Stanislav Funiak
@@ -34,9 +34,16 @@ auxlib::inv(Mat<eT>& out, const Base<eT,T1>& X, const bool slow)
   
   if( (N <= 4) && (slow == false) )
     {
-    status = auxlib::inv_inplace_tinymat(out, N);
-    }
+    Mat<eT> tmp(N,N);
     
+    status = auxlib::inv_noalias_tinymat(tmp, out, N);
+    
+    if(status == true)
+      {
+      arrayops::copy( out.memptr(), tmp.memptr(), tmp.n_elem );
+      }
+    }
+  
   if( (N > 4) || (status == false) )
     {
     status = auxlib::inv_inplace_lapack(out);
@@ -62,7 +69,23 @@ auxlib::inv(Mat<eT>& out, const Mat<eT>& X, const bool slow)
   
   if( (N <= 4) && (slow == false) )
     {
-    status = (&out != &X) ? auxlib::inv_noalias_tinymat(out, X, N) : auxlib::inv_inplace_tinymat(out, N);
+    if(&out != &X)
+      {
+      out.set_size(N,N);
+      
+      status = auxlib::inv_noalias_tinymat(out, X, N);
+      }
+    else
+      {
+      Mat<eT> tmp(N,N);
+      
+      status = auxlib::inv_noalias_tinymat(tmp, X, N);
+      
+      if(status == true)
+        {
+        arrayops::copy( out.memptr(), tmp.memptr(), tmp.n_elem );
+        }
+      }
     }
   
   if( (N > 4) || (status == false) )
@@ -83,120 +106,118 @@ auxlib::inv_noalias_tinymat(Mat<eT>& out, const Mat<eT>& X, const uword N)
   {
   arma_extra_debug_sigprint();
   
-  bool det_ok = true;
+  typedef typename get_pod_type<eT>::result T;
   
-  out.set_size(N,N);
+  const T det_min = (is_float<T>::value) ? T(1e-19) : T(1e-154);
   
+  bool calc_ok = true;
+  
+  const eT* Xm   =   X.memptr();
+        eT* outm = out.memptr();  // NOTE: the output matrix is assumed to have the correct size
+        
   switch(N)
     {
     case 1:
       {
-      out[0] = eT(1) / X[0];
+      outm[0] = eT(1) / Xm[0];
       };
       break;
       
     case 2:
       {
-      const eT* Xm = X.memptr();
-      
       const eT a = Xm[pos<0,0>::n2];
       const eT b = Xm[pos<0,1>::n2];
       const eT c = Xm[pos<1,0>::n2];
       const eT d = Xm[pos<1,1>::n2];
       
-      const eT tmp_det = (a*d - b*c);
+      const eT det_val = (a*d - b*c);
       
-      if(tmp_det != eT(0))
+      if(std::abs(det_val) >= det_min)
         {
-        eT* outm = out.memptr();
-        
-        outm[pos<0,0>::n2] =  d / tmp_det;
-        outm[pos<0,1>::n2] = -b / tmp_det;
-        outm[pos<1,0>::n2] = -c / tmp_det;
-        outm[pos<1,1>::n2] =  a / tmp_det;
+        outm[pos<0,0>::n2] =  d / det_val;
+        outm[pos<0,1>::n2] = -b / det_val;
+        outm[pos<1,0>::n2] = -c / det_val;
+        outm[pos<1,1>::n2] =  a / det_val;
         }
       else
         {
-        det_ok = false;
+        calc_ok = false;
         }
       };
       break;
     
     case 3:
       {
-      const eT* X_col0 = X.colptr(0);
-      const eT a11 = X_col0[0];
-      const eT a21 = X_col0[1];
-      const eT a31 = X_col0[2];
+      const eT det_val = auxlib::det_tinymat(X,3);
       
-      const eT* X_col1 = X.colptr(1);
-      const eT a12 = X_col1[0];
-      const eT a22 = X_col1[1];
-      const eT a32 = X_col1[2];
-      
-      const eT* X_col2 = X.colptr(2);
-      const eT a13 = X_col2[0];
-      const eT a23 = X_col2[1];
-      const eT a33 = X_col2[2];
-      
-      const eT tmp_det = a11*(a33*a22 - a32*a23) - a21*(a33*a12-a32*a13) + a31*(a23*a12 - a22*a13);
-      
-      if(tmp_det != eT(0))
+      if(std::abs(det_val) >= det_min)
         {
-        eT* out_col0 = out.colptr(0);
-        out_col0[0] =  (a33*a22 - a32*a23) / tmp_det;
-        out_col0[1] = -(a33*a21 - a31*a23) / tmp_det;
-        out_col0[2] =  (a32*a21 - a31*a22) / tmp_det;
+        outm[pos<0,0>::n3] =  (Xm[pos<2,2>::n3]*Xm[pos<1,1>::n3] - Xm[pos<2,1>::n3]*Xm[pos<1,2>::n3]) / det_val;
+        outm[pos<1,0>::n3] = -(Xm[pos<2,2>::n3]*Xm[pos<1,0>::n3] - Xm[pos<2,0>::n3]*Xm[pos<1,2>::n3]) / det_val;
+        outm[pos<2,0>::n3] =  (Xm[pos<2,1>::n3]*Xm[pos<1,0>::n3] - Xm[pos<2,0>::n3]*Xm[pos<1,1>::n3]) / det_val;
         
-        eT* out_col1 = out.colptr(1);
-        out_col1[0] = -(a33*a12 - a32*a13) / tmp_det;
-        out_col1[1] =  (a33*a11 - a31*a13) / tmp_det;
-        out_col1[2] = -(a32*a11 - a31*a12) / tmp_det;
+        outm[pos<0,1>::n3] = -(Xm[pos<2,2>::n3]*Xm[pos<0,1>::n3] - Xm[pos<2,1>::n3]*Xm[pos<0,2>::n3]) / det_val;
+        outm[pos<1,1>::n3] =  (Xm[pos<2,2>::n3]*Xm[pos<0,0>::n3] - Xm[pos<2,0>::n3]*Xm[pos<0,2>::n3]) / det_val;
+        outm[pos<2,1>::n3] = -(Xm[pos<2,1>::n3]*Xm[pos<0,0>::n3] - Xm[pos<2,0>::n3]*Xm[pos<0,1>::n3]) / det_val;
         
-        eT* out_col2 = out.colptr(2);
-        out_col2[0] =  (a23*a12 - a22*a13) / tmp_det;
-        out_col2[1] = -(a23*a11 - a21*a13) / tmp_det;
-        out_col2[2] =  (a22*a11 - a21*a12) / tmp_det;
+        outm[pos<0,2>::n3] =  (Xm[pos<1,2>::n3]*Xm[pos<0,1>::n3] - Xm[pos<1,1>::n3]*Xm[pos<0,2>::n3]) / det_val;
+        outm[pos<1,2>::n3] = -(Xm[pos<1,2>::n3]*Xm[pos<0,0>::n3] - Xm[pos<1,0>::n3]*Xm[pos<0,2>::n3]) / det_val;
+        outm[pos<2,2>::n3] =  (Xm[pos<1,1>::n3]*Xm[pos<0,0>::n3] - Xm[pos<1,0>::n3]*Xm[pos<0,1>::n3]) / det_val;
+        
+        const eT check_val = Xm[pos<0,0>::n3]*outm[pos<0,0>::n3] + Xm[pos<0,1>::n3]*outm[pos<1,0>::n3] + Xm[pos<0,2>::n3]*outm[pos<2,0>::n3];
+        
+        const  T max_diff  = (is_float<T>::value) ? T(1e-4) : T(1e-10);
+        
+        if(std::abs(T(1) - check_val) > max_diff)
+          {
+          calc_ok = false;
+          }
         }
       else
         {
-        det_ok = false;
+        calc_ok = false;
         }
       };
       break;
-      
+    
     case 4:
       {
-      const eT tmp_det = det(X);
+      const eT det_val = auxlib::det_tinymat(X,4);
       
-      if(tmp_det != eT(0))
+      if(std::abs(det_val) >= det_min)
         {
-        const eT* Xm   = X.memptr();
-              eT* outm = out.memptr();
+        outm[pos<0,0>::n4] = ( Xm[pos<1,2>::n4]*Xm[pos<2,3>::n4]*Xm[pos<3,1>::n4] - Xm[pos<1,3>::n4]*Xm[pos<2,2>::n4]*Xm[pos<3,1>::n4] + Xm[pos<1,3>::n4]*Xm[pos<2,1>::n4]*Xm[pos<3,2>::n4] - Xm[pos<1,1>::n4]*Xm[pos<2,3>::n4]*Xm[pos<3,2>::n4] - Xm[pos<1,2>::n4]*Xm[pos<2,1>::n4]*Xm[pos<3,3>::n4] + Xm[pos<1,1>::n4]*Xm[pos<2,2>::n4]*Xm[pos<3,3>::n4] ) / det_val;
+        outm[pos<1,0>::n4] = ( Xm[pos<1,3>::n4]*Xm[pos<2,2>::n4]*Xm[pos<3,0>::n4] - Xm[pos<1,2>::n4]*Xm[pos<2,3>::n4]*Xm[pos<3,0>::n4] - Xm[pos<1,3>::n4]*Xm[pos<2,0>::n4]*Xm[pos<3,2>::n4] + Xm[pos<1,0>::n4]*Xm[pos<2,3>::n4]*Xm[pos<3,2>::n4] + Xm[pos<1,2>::n4]*Xm[pos<2,0>::n4]*Xm[pos<3,3>::n4] - Xm[pos<1,0>::n4]*Xm[pos<2,2>::n4]*Xm[pos<3,3>::n4] ) / det_val;
+        outm[pos<2,0>::n4] = ( Xm[pos<1,1>::n4]*Xm[pos<2,3>::n4]*Xm[pos<3,0>::n4] - Xm[pos<1,3>::n4]*Xm[pos<2,1>::n4]*Xm[pos<3,0>::n4] + Xm[pos<1,3>::n4]*Xm[pos<2,0>::n4]*Xm[pos<3,1>::n4] - Xm[pos<1,0>::n4]*Xm[pos<2,3>::n4]*Xm[pos<3,1>::n4] - Xm[pos<1,1>::n4]*Xm[pos<2,0>::n4]*Xm[pos<3,3>::n4] + Xm[pos<1,0>::n4]*Xm[pos<2,1>::n4]*Xm[pos<3,3>::n4] ) / det_val;
+        outm[pos<3,0>::n4] = ( Xm[pos<1,2>::n4]*Xm[pos<2,1>::n4]*Xm[pos<3,0>::n4] - Xm[pos<1,1>::n4]*Xm[pos<2,2>::n4]*Xm[pos<3,0>::n4] - Xm[pos<1,2>::n4]*Xm[pos<2,0>::n4]*Xm[pos<3,1>::n4] + Xm[pos<1,0>::n4]*Xm[pos<2,2>::n4]*Xm[pos<3,1>::n4] + Xm[pos<1,1>::n4]*Xm[pos<2,0>::n4]*Xm[pos<3,2>::n4] - Xm[pos<1,0>::n4]*Xm[pos<2,1>::n4]*Xm[pos<3,2>::n4] ) / det_val;
         
-        outm[pos<0,0>::n4] = ( Xm[pos<1,2>::n4]*Xm[pos<2,3>::n4]*Xm[pos<3,1>::n4] - Xm[pos<1,3>::n4]*Xm[pos<2,2>::n4]*Xm[pos<3,1>::n4] + Xm[pos<1,3>::n4]*Xm[pos<2,1>::n4]*Xm[pos<3,2>::n4] - Xm[pos<1,1>::n4]*Xm[pos<2,3>::n4]*Xm[pos<3,2>::n4] - Xm[pos<1,2>::n4]*Xm[pos<2,1>::n4]*Xm[pos<3,3>::n4] + Xm[pos<1,1>::n4]*Xm[pos<2,2>::n4]*Xm[pos<3,3>::n4] ) / tmp_det;
-        outm[pos<1,0>::n4] = ( Xm[pos<1,3>::n4]*Xm[pos<2,2>::n4]*Xm[pos<3,0>::n4] - Xm[pos<1,2>::n4]*Xm[pos<2,3>::n4]*Xm[pos<3,0>::n4] - Xm[pos<1,3>::n4]*Xm[pos<2,0>::n4]*Xm[pos<3,2>::n4] + Xm[pos<1,0>::n4]*Xm[pos<2,3>::n4]*Xm[pos<3,2>::n4] + Xm[pos<1,2>::n4]*Xm[pos<2,0>::n4]*Xm[pos<3,3>::n4] - Xm[pos<1,0>::n4]*Xm[pos<2,2>::n4]*Xm[pos<3,3>::n4] ) / tmp_det;
-        outm[pos<2,0>::n4] = ( Xm[pos<1,1>::n4]*Xm[pos<2,3>::n4]*Xm[pos<3,0>::n4] - Xm[pos<1,3>::n4]*Xm[pos<2,1>::n4]*Xm[pos<3,0>::n4] + Xm[pos<1,3>::n4]*Xm[pos<2,0>::n4]*Xm[pos<3,1>::n4] - Xm[pos<1,0>::n4]*Xm[pos<2,3>::n4]*Xm[pos<3,1>::n4] - Xm[pos<1,1>::n4]*Xm[pos<2,0>::n4]*Xm[pos<3,3>::n4] + Xm[pos<1,0>::n4]*Xm[pos<2,1>::n4]*Xm[pos<3,3>::n4] ) / tmp_det;
-        outm[pos<3,0>::n4] = ( Xm[pos<1,2>::n4]*Xm[pos<2,1>::n4]*Xm[pos<3,0>::n4] - Xm[pos<1,1>::n4]*Xm[pos<2,2>::n4]*Xm[pos<3,0>::n4] - Xm[pos<1,2>::n4]*Xm[pos<2,0>::n4]*Xm[pos<3,1>::n4] + Xm[pos<1,0>::n4]*Xm[pos<2,2>::n4]*Xm[pos<3,1>::n4] + Xm[pos<1,1>::n4]*Xm[pos<2,0>::n4]*Xm[pos<3,2>::n4] - Xm[pos<1,0>::n4]*Xm[pos<2,1>::n4]*Xm[pos<3,2>::n4] ) / tmp_det;
+        outm[pos<0,1>::n4] = ( Xm[pos<0,3>::n4]*Xm[pos<2,2>::n4]*Xm[pos<3,1>::n4] - Xm[pos<0,2>::n4]*Xm[pos<2,3>::n4]*Xm[pos<3,1>::n4] - Xm[pos<0,3>::n4]*Xm[pos<2,1>::n4]*Xm[pos<3,2>::n4] + Xm[pos<0,1>::n4]*Xm[pos<2,3>::n4]*Xm[pos<3,2>::n4] + Xm[pos<0,2>::n4]*Xm[pos<2,1>::n4]*Xm[pos<3,3>::n4] - Xm[pos<0,1>::n4]*Xm[pos<2,2>::n4]*Xm[pos<3,3>::n4] ) / det_val;
+        outm[pos<1,1>::n4] = ( Xm[pos<0,2>::n4]*Xm[pos<2,3>::n4]*Xm[pos<3,0>::n4] - Xm[pos<0,3>::n4]*Xm[pos<2,2>::n4]*Xm[pos<3,0>::n4] + Xm[pos<0,3>::n4]*Xm[pos<2,0>::n4]*Xm[pos<3,2>::n4] - Xm[pos<0,0>::n4]*Xm[pos<2,3>::n4]*Xm[pos<3,2>::n4] - Xm[pos<0,2>::n4]*Xm[pos<2,0>::n4]*Xm[pos<3,3>::n4] + Xm[pos<0,0>::n4]*Xm[pos<2,2>::n4]*Xm[pos<3,3>::n4] ) / det_val;
+        outm[pos<2,1>::n4] = ( Xm[pos<0,3>::n4]*Xm[pos<2,1>::n4]*Xm[pos<3,0>::n4] - Xm[pos<0,1>::n4]*Xm[pos<2,3>::n4]*Xm[pos<3,0>::n4] - Xm[pos<0,3>::n4]*Xm[pos<2,0>::n4]*Xm[pos<3,1>::n4] + Xm[pos<0,0>::n4]*Xm[pos<2,3>::n4]*Xm[pos<3,1>::n4] + Xm[pos<0,1>::n4]*Xm[pos<2,0>::n4]*Xm[pos<3,3>::n4] - Xm[pos<0,0>::n4]*Xm[pos<2,1>::n4]*Xm[pos<3,3>::n4] ) / det_val;
+        outm[pos<3,1>::n4] = ( Xm[pos<0,1>::n4]*Xm[pos<2,2>::n4]*Xm[pos<3,0>::n4] - Xm[pos<0,2>::n4]*Xm[pos<2,1>::n4]*Xm[pos<3,0>::n4] + Xm[pos<0,2>::n4]*Xm[pos<2,0>::n4]*Xm[pos<3,1>::n4] - Xm[pos<0,0>::n4]*Xm[pos<2,2>::n4]*Xm[pos<3,1>::n4] - Xm[pos<0,1>::n4]*Xm[pos<2,0>::n4]*Xm[pos<3,2>::n4] + Xm[pos<0,0>::n4]*Xm[pos<2,1>::n4]*Xm[pos<3,2>::n4] ) / det_val;
         
-        outm[pos<0,1>::n4] = ( Xm[pos<0,3>::n4]*Xm[pos<2,2>::n4]*Xm[pos<3,1>::n4] - Xm[pos<0,2>::n4]*Xm[pos<2,3>::n4]*Xm[pos<3,1>::n4] - Xm[pos<0,3>::n4]*Xm[pos<2,1>::n4]*Xm[pos<3,2>::n4] + Xm[pos<0,1>::n4]*Xm[pos<2,3>::n4]*Xm[pos<3,2>::n4] + Xm[pos<0,2>::n4]*Xm[pos<2,1>::n4]*Xm[pos<3,3>::n4] - Xm[pos<0,1>::n4]*Xm[pos<2,2>::n4]*Xm[pos<3,3>::n4] ) / tmp_det;
-        outm[pos<1,1>::n4] = ( Xm[pos<0,2>::n4]*Xm[pos<2,3>::n4]*Xm[pos<3,0>::n4] - Xm[pos<0,3>::n4]*Xm[pos<2,2>::n4]*Xm[pos<3,0>::n4] + Xm[pos<0,3>::n4]*Xm[pos<2,0>::n4]*Xm[pos<3,2>::n4] - Xm[pos<0,0>::n4]*Xm[pos<2,3>::n4]*Xm[pos<3,2>::n4] - Xm[pos<0,2>::n4]*Xm[pos<2,0>::n4]*Xm[pos<3,3>::n4] + Xm[pos<0,0>::n4]*Xm[pos<2,2>::n4]*Xm[pos<3,3>::n4] ) / tmp_det;
-        outm[pos<2,1>::n4] = ( Xm[pos<0,3>::n4]*Xm[pos<2,1>::n4]*Xm[pos<3,0>::n4] - Xm[pos<0,1>::n4]*Xm[pos<2,3>::n4]*Xm[pos<3,0>::n4] - Xm[pos<0,3>::n4]*Xm[pos<2,0>::n4]*Xm[pos<3,1>::n4] + Xm[pos<0,0>::n4]*Xm[pos<2,3>::n4]*Xm[pos<3,1>::n4] + Xm[pos<0,1>::n4]*Xm[pos<2,0>::n4]*Xm[pos<3,3>::n4] - Xm[pos<0,0>::n4]*Xm[pos<2,1>::n4]*Xm[pos<3,3>::n4] ) / tmp_det;
-        outm[pos<3,1>::n4] = ( Xm[pos<0,1>::n4]*Xm[pos<2,2>::n4]*Xm[pos<3,0>::n4] - Xm[pos<0,2>::n4]*Xm[pos<2,1>::n4]*Xm[pos<3,0>::n4] + Xm[pos<0,2>::n4]*Xm[pos<2,0>::n4]*Xm[pos<3,1>::n4] - Xm[pos<0,0>::n4]*Xm[pos<2,2>::n4]*Xm[pos<3,1>::n4] - Xm[pos<0,1>::n4]*Xm[pos<2,0>::n4]*Xm[pos<3,2>::n4] + Xm[pos<0,0>::n4]*Xm[pos<2,1>::n4]*Xm[pos<3,2>::n4] ) / tmp_det;
+        outm[pos<0,2>::n4] = ( Xm[pos<0,2>::n4]*Xm[pos<1,3>::n4]*Xm[pos<3,1>::n4] - Xm[pos<0,3>::n4]*Xm[pos<1,2>::n4]*Xm[pos<3,1>::n4] + Xm[pos<0,3>::n4]*Xm[pos<1,1>::n4]*Xm[pos<3,2>::n4] - Xm[pos<0,1>::n4]*Xm[pos<1,3>::n4]*Xm[pos<3,2>::n4] - Xm[pos<0,2>::n4]*Xm[pos<1,1>::n4]*Xm[pos<3,3>::n4] + Xm[pos<0,1>::n4]*Xm[pos<1,2>::n4]*Xm[pos<3,3>::n4] ) / det_val;
+        outm[pos<1,2>::n4] = ( Xm[pos<0,3>::n4]*Xm[pos<1,2>::n4]*Xm[pos<3,0>::n4] - Xm[pos<0,2>::n4]*Xm[pos<1,3>::n4]*Xm[pos<3,0>::n4] - Xm[pos<0,3>::n4]*Xm[pos<1,0>::n4]*Xm[pos<3,2>::n4] + Xm[pos<0,0>::n4]*Xm[pos<1,3>::n4]*Xm[pos<3,2>::n4] + Xm[pos<0,2>::n4]*Xm[pos<1,0>::n4]*Xm[pos<3,3>::n4] - Xm[pos<0,0>::n4]*Xm[pos<1,2>::n4]*Xm[pos<3,3>::n4] ) / det_val;
+        outm[pos<2,2>::n4] = ( Xm[pos<0,1>::n4]*Xm[pos<1,3>::n4]*Xm[pos<3,0>::n4] - Xm[pos<0,3>::n4]*Xm[pos<1,1>::n4]*Xm[pos<3,0>::n4] + Xm[pos<0,3>::n4]*Xm[pos<1,0>::n4]*Xm[pos<3,1>::n4] - Xm[pos<0,0>::n4]*Xm[pos<1,3>::n4]*Xm[pos<3,1>::n4] - Xm[pos<0,1>::n4]*Xm[pos<1,0>::n4]*Xm[pos<3,3>::n4] + Xm[pos<0,0>::n4]*Xm[pos<1,1>::n4]*Xm[pos<3,3>::n4] ) / det_val;
+        outm[pos<3,2>::n4] = ( Xm[pos<0,2>::n4]*Xm[pos<1,1>::n4]*Xm[pos<3,0>::n4] - Xm[pos<0,1>::n4]*Xm[pos<1,2>::n4]*Xm[pos<3,0>::n4] - Xm[pos<0,2>::n4]*Xm[pos<1,0>::n4]*Xm[pos<3,1>::n4] + Xm[pos<0,0>::n4]*Xm[pos<1,2>::n4]*Xm[pos<3,1>::n4] + Xm[pos<0,1>::n4]*Xm[pos<1,0>::n4]*Xm[pos<3,2>::n4] - Xm[pos<0,0>::n4]*Xm[pos<1,1>::n4]*Xm[pos<3,2>::n4] ) / det_val;
         
-        outm[pos<0,2>::n4] = ( Xm[pos<0,2>::n4]*Xm[pos<1,3>::n4]*Xm[pos<3,1>::n4] - Xm[pos<0,3>::n4]*Xm[pos<1,2>::n4]*Xm[pos<3,1>::n4] + Xm[pos<0,3>::n4]*Xm[pos<1,1>::n4]*Xm[pos<3,2>::n4] - Xm[pos<0,1>::n4]*Xm[pos<1,3>::n4]*Xm[pos<3,2>::n4] - Xm[pos<0,2>::n4]*Xm[pos<1,1>::n4]*Xm[pos<3,3>::n4] + Xm[pos<0,1>::n4]*Xm[pos<1,2>::n4]*Xm[pos<3,3>::n4] ) / tmp_det;
-        outm[pos<1,2>::n4] = ( Xm[pos<0,3>::n4]*Xm[pos<1,2>::n4]*Xm[pos<3,0>::n4] - Xm[pos<0,2>::n4]*Xm[pos<1,3>::n4]*Xm[pos<3,0>::n4] - Xm[pos<0,3>::n4]*Xm[pos<1,0>::n4]*Xm[pos<3,2>::n4] + Xm[pos<0,0>::n4]*Xm[pos<1,3>::n4]*Xm[pos<3,2>::n4] + Xm[pos<0,2>::n4]*Xm[pos<1,0>::n4]*Xm[pos<3,3>::n4] - Xm[pos<0,0>::n4]*Xm[pos<1,2>::n4]*Xm[pos<3,3>::n4] ) / tmp_det;
-        outm[pos<2,2>::n4] = ( Xm[pos<0,1>::n4]*Xm[pos<1,3>::n4]*Xm[pos<3,0>::n4] - Xm[pos<0,3>::n4]*Xm[pos<1,1>::n4]*Xm[pos<3,0>::n4] + Xm[pos<0,3>::n4]*Xm[pos<1,0>::n4]*Xm[pos<3,1>::n4] - Xm[pos<0,0>::n4]*Xm[pos<1,3>::n4]*Xm[pos<3,1>::n4] - Xm[pos<0,1>::n4]*Xm[pos<1,0>::n4]*Xm[pos<3,3>::n4] + Xm[pos<0,0>::n4]*Xm[pos<1,1>::n4]*Xm[pos<3,3>::n4] ) / tmp_det;
-        outm[pos<3,2>::n4] = ( Xm[pos<0,2>::n4]*Xm[pos<1,1>::n4]*Xm[pos<3,0>::n4] - Xm[pos<0,1>::n4]*Xm[pos<1,2>::n4]*Xm[pos<3,0>::n4] - Xm[pos<0,2>::n4]*Xm[pos<1,0>::n4]*Xm[pos<3,1>::n4] + Xm[pos<0,0>::n4]*Xm[pos<1,2>::n4]*Xm[pos<3,1>::n4] + Xm[pos<0,1>::n4]*Xm[pos<1,0>::n4]*Xm[pos<3,2>::n4] - Xm[pos<0,0>::n4]*Xm[pos<1,1>::n4]*Xm[pos<3,2>::n4] ) / tmp_det;
+        outm[pos<0,3>::n4] = ( Xm[pos<0,3>::n4]*Xm[pos<1,2>::n4]*Xm[pos<2,1>::n4] - Xm[pos<0,2>::n4]*Xm[pos<1,3>::n4]*Xm[pos<2,1>::n4] - Xm[pos<0,3>::n4]*Xm[pos<1,1>::n4]*Xm[pos<2,2>::n4] + Xm[pos<0,1>::n4]*Xm[pos<1,3>::n4]*Xm[pos<2,2>::n4] + Xm[pos<0,2>::n4]*Xm[pos<1,1>::n4]*Xm[pos<2,3>::n4] - Xm[pos<0,1>::n4]*Xm[pos<1,2>::n4]*Xm[pos<2,3>::n4] ) / det_val;
+        outm[pos<1,3>::n4] = ( Xm[pos<0,2>::n4]*Xm[pos<1,3>::n4]*Xm[pos<2,0>::n4] - Xm[pos<0,3>::n4]*Xm[pos<1,2>::n4]*Xm[pos<2,0>::n4] + Xm[pos<0,3>::n4]*Xm[pos<1,0>::n4]*Xm[pos<2,2>::n4] - Xm[pos<0,0>::n4]*Xm[pos<1,3>::n4]*Xm[pos<2,2>::n4] - Xm[pos<0,2>::n4]*Xm[pos<1,0>::n4]*Xm[pos<2,3>::n4] + Xm[pos<0,0>::n4]*Xm[pos<1,2>::n4]*Xm[pos<2,3>::n4] ) / det_val;
+        outm[pos<2,3>::n4] = ( Xm[pos<0,3>::n4]*Xm[pos<1,1>::n4]*Xm[pos<2,0>::n4] - Xm[pos<0,1>::n4]*Xm[pos<1,3>::n4]*Xm[pos<2,0>::n4] - Xm[pos<0,3>::n4]*Xm[pos<1,0>::n4]*Xm[pos<2,1>::n4] + Xm[pos<0,0>::n4]*Xm[pos<1,3>::n4]*Xm[pos<2,1>::n4] + Xm[pos<0,1>::n4]*Xm[pos<1,0>::n4]*Xm[pos<2,3>::n4] - Xm[pos<0,0>::n4]*Xm[pos<1,1>::n4]*Xm[pos<2,3>::n4] ) / det_val;
+        outm[pos<3,3>::n4] = ( Xm[pos<0,1>::n4]*Xm[pos<1,2>::n4]*Xm[pos<2,0>::n4] - Xm[pos<0,2>::n4]*Xm[pos<1,1>::n4]*Xm[pos<2,0>::n4] + Xm[pos<0,2>::n4]*Xm[pos<1,0>::n4]*Xm[pos<2,1>::n4] - Xm[pos<0,0>::n4]*Xm[pos<1,2>::n4]*Xm[pos<2,1>::n4] - Xm[pos<0,1>::n4]*Xm[pos<1,0>::n4]*Xm[pos<2,2>::n4] + Xm[pos<0,0>::n4]*Xm[pos<1,1>::n4]*Xm[pos<2,2>::n4] ) / det_val;
         
-        outm[pos<0,3>::n4] = ( Xm[pos<0,3>::n4]*Xm[pos<1,2>::n4]*Xm[pos<2,1>::n4] - Xm[pos<0,2>::n4]*Xm[pos<1,3>::n4]*Xm[pos<2,1>::n4] - Xm[pos<0,3>::n4]*Xm[pos<1,1>::n4]*Xm[pos<2,2>::n4] + Xm[pos<0,1>::n4]*Xm[pos<1,3>::n4]*Xm[pos<2,2>::n4] + Xm[pos<0,2>::n4]*Xm[pos<1,1>::n4]*Xm[pos<2,3>::n4] - Xm[pos<0,1>::n4]*Xm[pos<1,2>::n4]*Xm[pos<2,3>::n4] ) / tmp_det;
-        outm[pos<1,3>::n4] = ( Xm[pos<0,2>::n4]*Xm[pos<1,3>::n4]*Xm[pos<2,0>::n4] - Xm[pos<0,3>::n4]*Xm[pos<1,2>::n4]*Xm[pos<2,0>::n4] + Xm[pos<0,3>::n4]*Xm[pos<1,0>::n4]*Xm[pos<2,2>::n4] - Xm[pos<0,0>::n4]*Xm[pos<1,3>::n4]*Xm[pos<2,2>::n4] - Xm[pos<0,2>::n4]*Xm[pos<1,0>::n4]*Xm[pos<2,3>::n4] + Xm[pos<0,0>::n4]*Xm[pos<1,2>::n4]*Xm[pos<2,3>::n4] ) / tmp_det;
-        outm[pos<2,3>::n4] = ( Xm[pos<0,3>::n4]*Xm[pos<1,1>::n4]*Xm[pos<2,0>::n4] - Xm[pos<0,1>::n4]*Xm[pos<1,3>::n4]*Xm[pos<2,0>::n4] - Xm[pos<0,3>::n4]*Xm[pos<1,0>::n4]*Xm[pos<2,1>::n4] + Xm[pos<0,0>::n4]*Xm[pos<1,3>::n4]*Xm[pos<2,1>::n4] + Xm[pos<0,1>::n4]*Xm[pos<1,0>::n4]*Xm[pos<2,3>::n4] - Xm[pos<0,0>::n4]*Xm[pos<1,1>::n4]*Xm[pos<2,3>::n4] ) / tmp_det;
-        outm[pos<3,3>::n4] = ( Xm[pos<0,1>::n4]*Xm[pos<1,2>::n4]*Xm[pos<2,0>::n4] - Xm[pos<0,2>::n4]*Xm[pos<1,1>::n4]*Xm[pos<2,0>::n4] + Xm[pos<0,2>::n4]*Xm[pos<1,0>::n4]*Xm[pos<2,1>::n4] - Xm[pos<0,0>::n4]*Xm[pos<1,2>::n4]*Xm[pos<2,1>::n4] - Xm[pos<0,1>::n4]*Xm[pos<1,0>::n4]*Xm[pos<2,2>::n4] + Xm[pos<0,0>::n4]*Xm[pos<1,1>::n4]*Xm[pos<2,2>::n4] ) / tmp_det;
+        const eT check_val = Xm[pos<0,0>::n4]*outm[pos<0,0>::n4] + Xm[pos<0,1>::n4]*outm[pos<1,0>::n4] + Xm[pos<0,2>::n4]*outm[pos<2,0>::n4] + Xm[pos<0,3>::n4]*outm[pos<3,0>::n4];
+        
+        const  T max_diff  = (is_float<T>::value) ? T(1e-4) : T(1e-10);
+        
+        if(std::abs(T(1) - check_val) > max_diff)
+          {
+          calc_ok = false;
+          }
         }
       else
         {
-        det_ok = false;
+        calc_ok = false;
         }
       };
       break;
@@ -205,141 +226,7 @@ auxlib::inv_noalias_tinymat(Mat<eT>& out, const Mat<eT>& X, const uword N)
       ;
     }
   
-  return det_ok;
-  }
-
-
-
-template<typename eT>
-inline
-bool
-auxlib::inv_inplace_tinymat(Mat<eT>& X, const uword N)
-  {
-  arma_extra_debug_sigprint();
-  
-  bool det_ok = true;
-  
-  // for more info, see:
-  // http://www.dr-lex.34sp.com/random/matrix_inv.html
-  // http://www.cvl.iis.u-tokyo.ac.jp/~miyazaki/tech/teche23.html
-  // http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
-  // http://www.geometrictools.com//LibFoundation/Mathematics/Wm4Matrix4.inl
-  
-  switch(N)
-    {
-    case 1:
-      {
-      X[0] = eT(1) / X[0];
-      };
-      break;
-      
-    case 2:
-      {
-      const eT a = X[pos<0,0>::n2];
-      const eT b = X[pos<0,1>::n2];
-      const eT c = X[pos<1,0>::n2];
-      const eT d = X[pos<1,1>::n2];
-      
-      const eT tmp_det = (a*d - b*c);
-      
-      if(tmp_det != eT(0))
-        {
-        X[pos<0,0>::n2] =  d / tmp_det;
-        X[pos<0,1>::n2] = -b / tmp_det;
-        X[pos<1,0>::n2] = -c / tmp_det;
-        X[pos<1,1>::n2] =  a / tmp_det;
-        }
-      else
-        {
-        det_ok = false;
-        }
-      };
-      break;
-    
-    case 3:
-      {
-      eT* X_col0 = X.colptr(0);
-      eT* X_col1 = X.colptr(1);
-      eT* X_col2 = X.colptr(2);
-      
-      const eT a11 = X_col0[0];
-      const eT a21 = X_col0[1];
-      const eT a31 = X_col0[2];
-      
-      const eT a12 = X_col1[0];
-      const eT a22 = X_col1[1];
-      const eT a32 = X_col1[2];
-      
-      const eT a13 = X_col2[0];
-      const eT a23 = X_col2[1];
-      const eT a33 = X_col2[2];
-      
-      const eT tmp_det = a11*(a33*a22 - a32*a23) - a21*(a33*a12-a32*a13) + a31*(a23*a12 - a22*a13);
-      
-      if(tmp_det != eT(0))
-        {
-        X_col0[0] =  (a33*a22 - a32*a23) / tmp_det;
-        X_col0[1] = -(a33*a21 - a31*a23) / tmp_det;
-        X_col0[2] =  (a32*a21 - a31*a22) / tmp_det;
-        
-        X_col1[0] = -(a33*a12 - a32*a13) / tmp_det;
-        X_col1[1] =  (a33*a11 - a31*a13) / tmp_det;
-        X_col1[2] = -(a32*a11 - a31*a12) / tmp_det;
-        
-        X_col2[0] =  (a23*a12 - a22*a13) / tmp_det;
-        X_col2[1] = -(a23*a11 - a21*a13) / tmp_det;
-        X_col2[2] =  (a22*a11 - a21*a12) / tmp_det;
-        }
-      else
-        {
-        det_ok = false;
-        }
-      };
-      break;
-      
-    case 4:
-      {
-      const eT tmp_det = det(X);
-      
-      if(tmp_det != eT(0))
-        {
-        const Mat<eT> A(X);
-        
-        const eT* Am = A.memptr();
-              eT* Xm = X.memptr();
-        
-        Xm[pos<0,0>::n4] = ( Am[pos<1,2>::n4]*Am[pos<2,3>::n4]*Am[pos<3,1>::n4] - Am[pos<1,3>::n4]*Am[pos<2,2>::n4]*Am[pos<3,1>::n4] + Am[pos<1,3>::n4]*Am[pos<2,1>::n4]*Am[pos<3,2>::n4] - Am[pos<1,1>::n4]*Am[pos<2,3>::n4]*Am[pos<3,2>::n4] - Am[pos<1,2>::n4]*Am[pos<2,1>::n4]*Am[pos<3,3>::n4] + Am[pos<1,1>::n4]*Am[pos<2,2>::n4]*Am[pos<3,3>::n4] ) / tmp_det;
-        Xm[pos<1,0>::n4] = ( Am[pos<1,3>::n4]*Am[pos<2,2>::n4]*Am[pos<3,0>::n4] - Am[pos<1,2>::n4]*Am[pos<2,3>::n4]*Am[pos<3,0>::n4] - Am[pos<1,3>::n4]*Am[pos<2,0>::n4]*Am[pos<3,2>::n4] + Am[pos<1,0>::n4]*Am[pos<2,3>::n4]*Am[pos<3,2>::n4] + Am[pos<1,2>::n4]*Am[pos<2,0>::n4]*Am[pos<3,3>::n4] - Am[pos<1,0>::n4]*Am[pos<2,2>::n4]*Am[pos<3,3>::n4] ) / tmp_det;
-        Xm[pos<2,0>::n4] = ( Am[pos<1,1>::n4]*Am[pos<2,3>::n4]*Am[pos<3,0>::n4] - Am[pos<1,3>::n4]*Am[pos<2,1>::n4]*Am[pos<3,0>::n4] + Am[pos<1,3>::n4]*Am[pos<2,0>::n4]*Am[pos<3,1>::n4] - Am[pos<1,0>::n4]*Am[pos<2,3>::n4]*Am[pos<3,1>::n4] - Am[pos<1,1>::n4]*Am[pos<2,0>::n4]*Am[pos<3,3>::n4] + Am[pos<1,0>::n4]*Am[pos<2,1>::n4]*Am[pos<3,3>::n4] ) / tmp_det;
-        Xm[pos<3,0>::n4] = ( Am[pos<1,2>::n4]*Am[pos<2,1>::n4]*Am[pos<3,0>::n4] - Am[pos<1,1>::n4]*Am[pos<2,2>::n4]*Am[pos<3,0>::n4] - Am[pos<1,2>::n4]*Am[pos<2,0>::n4]*Am[pos<3,1>::n4] + Am[pos<1,0>::n4]*Am[pos<2,2>::n4]*Am[pos<3,1>::n4] + Am[pos<1,1>::n4]*Am[pos<2,0>::n4]*Am[pos<3,2>::n4] - Am[pos<1,0>::n4]*Am[pos<2,1>::n4]*Am[pos<3,2>::n4] ) / tmp_det;
-        
-        Xm[pos<0,1>::n4] = ( Am[pos<0,3>::n4]*Am[pos<2,2>::n4]*Am[pos<3,1>::n4] - Am[pos<0,2>::n4]*Am[pos<2,3>::n4]*Am[pos<3,1>::n4] - Am[pos<0,3>::n4]*Am[pos<2,1>::n4]*Am[pos<3,2>::n4] + Am[pos<0,1>::n4]*Am[pos<2,3>::n4]*Am[pos<3,2>::n4] + Am[pos<0,2>::n4]*Am[pos<2,1>::n4]*Am[pos<3,3>::n4] - Am[pos<0,1>::n4]*Am[pos<2,2>::n4]*Am[pos<3,3>::n4] ) / tmp_det;
-        Xm[pos<1,1>::n4] = ( Am[pos<0,2>::n4]*Am[pos<2,3>::n4]*Am[pos<3,0>::n4] - Am[pos<0,3>::n4]*Am[pos<2,2>::n4]*Am[pos<3,0>::n4] + Am[pos<0,3>::n4]*Am[pos<2,0>::n4]*Am[pos<3,2>::n4] - Am[pos<0,0>::n4]*Am[pos<2,3>::n4]*Am[pos<3,2>::n4] - Am[pos<0,2>::n4]*Am[pos<2,0>::n4]*Am[pos<3,3>::n4] + Am[pos<0,0>::n4]*Am[pos<2,2>::n4]*Am[pos<3,3>::n4] ) / tmp_det;
-        Xm[pos<2,1>::n4] = ( Am[pos<0,3>::n4]*Am[pos<2,1>::n4]*Am[pos<3,0>::n4] - Am[pos<0,1>::n4]*Am[pos<2,3>::n4]*Am[pos<3,0>::n4] - Am[pos<0,3>::n4]*Am[pos<2,0>::n4]*Am[pos<3,1>::n4] + Am[pos<0,0>::n4]*Am[pos<2,3>::n4]*Am[pos<3,1>::n4] + Am[pos<0,1>::n4]*Am[pos<2,0>::n4]*Am[pos<3,3>::n4] - Am[pos<0,0>::n4]*Am[pos<2,1>::n4]*Am[pos<3,3>::n4] ) / tmp_det;
-        Xm[pos<3,1>::n4] = ( Am[pos<0,1>::n4]*Am[pos<2,2>::n4]*Am[pos<3,0>::n4] - Am[pos<0,2>::n4]*Am[pos<2,1>::n4]*Am[pos<3,0>::n4] + Am[pos<0,2>::n4]*Am[pos<2,0>::n4]*Am[pos<3,1>::n4] - Am[pos<0,0>::n4]*Am[pos<2,2>::n4]*Am[pos<3,1>::n4] - Am[pos<0,1>::n4]*Am[pos<2,0>::n4]*Am[pos<3,2>::n4] + Am[pos<0,0>::n4]*Am[pos<2,1>::n4]*Am[pos<3,2>::n4] ) / tmp_det;
-        
-        Xm[pos<0,2>::n4] = ( Am[pos<0,2>::n4]*Am[pos<1,3>::n4]*Am[pos<3,1>::n4] - Am[pos<0,3>::n4]*Am[pos<1,2>::n4]*Am[pos<3,1>::n4] + Am[pos<0,3>::n4]*Am[pos<1,1>::n4]*Am[pos<3,2>::n4] - Am[pos<0,1>::n4]*Am[pos<1,3>::n4]*Am[pos<3,2>::n4] - Am[pos<0,2>::n4]*Am[pos<1,1>::n4]*Am[pos<3,3>::n4] + Am[pos<0,1>::n4]*Am[pos<1,2>::n4]*Am[pos<3,3>::n4] ) / tmp_det;
-        Xm[pos<1,2>::n4] = ( Am[pos<0,3>::n4]*Am[pos<1,2>::n4]*Am[pos<3,0>::n4] - Am[pos<0,2>::n4]*Am[pos<1,3>::n4]*Am[pos<3,0>::n4] - Am[pos<0,3>::n4]*Am[pos<1,0>::n4]*Am[pos<3,2>::n4] + Am[pos<0,0>::n4]*Am[pos<1,3>::n4]*Am[pos<3,2>::n4] + Am[pos<0,2>::n4]*Am[pos<1,0>::n4]*Am[pos<3,3>::n4] - Am[pos<0,0>::n4]*Am[pos<1,2>::n4]*Am[pos<3,3>::n4] ) / tmp_det;
-        Xm[pos<2,2>::n4] = ( Am[pos<0,1>::n4]*Am[pos<1,3>::n4]*Am[pos<3,0>::n4] - Am[pos<0,3>::n4]*Am[pos<1,1>::n4]*Am[pos<3,0>::n4] + Am[pos<0,3>::n4]*Am[pos<1,0>::n4]*Am[pos<3,1>::n4] - Am[pos<0,0>::n4]*Am[pos<1,3>::n4]*Am[pos<3,1>::n4] - Am[pos<0,1>::n4]*Am[pos<1,0>::n4]*Am[pos<3,3>::n4] + Am[pos<0,0>::n4]*Am[pos<1,1>::n4]*Am[pos<3,3>::n4] ) / tmp_det;
-        Xm[pos<3,2>::n4] = ( Am[pos<0,2>::n4]*Am[pos<1,1>::n4]*Am[pos<3,0>::n4] - Am[pos<0,1>::n4]*Am[pos<1,2>::n4]*Am[pos<3,0>::n4] - Am[pos<0,2>::n4]*Am[pos<1,0>::n4]*Am[pos<3,1>::n4] + Am[pos<0,0>::n4]*Am[pos<1,2>::n4]*Am[pos<3,1>::n4] + Am[pos<0,1>::n4]*Am[pos<1,0>::n4]*Am[pos<3,2>::n4] - Am[pos<0,0>::n4]*Am[pos<1,1>::n4]*Am[pos<3,2>::n4] ) / tmp_det;
-        
-        Xm[pos<0,3>::n4] = ( Am[pos<0,3>::n4]*Am[pos<1,2>::n4]*Am[pos<2,1>::n4] - Am[pos<0,2>::n4]*Am[pos<1,3>::n4]*Am[pos<2,1>::n4] - Am[pos<0,3>::n4]*Am[pos<1,1>::n4]*Am[pos<2,2>::n4] + Am[pos<0,1>::n4]*Am[pos<1,3>::n4]*Am[pos<2,2>::n4] + Am[pos<0,2>::n4]*Am[pos<1,1>::n4]*Am[pos<2,3>::n4] - Am[pos<0,1>::n4]*Am[pos<1,2>::n4]*Am[pos<2,3>::n4] ) / tmp_det;
-        Xm[pos<1,3>::n4] = ( Am[pos<0,2>::n4]*Am[pos<1,3>::n4]*Am[pos<2,0>::n4] - Am[pos<0,3>::n4]*Am[pos<1,2>::n4]*Am[pos<2,0>::n4] + Am[pos<0,3>::n4]*Am[pos<1,0>::n4]*Am[pos<2,2>::n4] - Am[pos<0,0>::n4]*Am[pos<1,3>::n4]*Am[pos<2,2>::n4] - Am[pos<0,2>::n4]*Am[pos<1,0>::n4]*Am[pos<2,3>::n4] + Am[pos<0,0>::n4]*Am[pos<1,2>::n4]*Am[pos<2,3>::n4] ) / tmp_det;
-        Xm[pos<2,3>::n4] = ( Am[pos<0,3>::n4]*Am[pos<1,1>::n4]*Am[pos<2,0>::n4] - Am[pos<0,1>::n4]*Am[pos<1,3>::n4]*Am[pos<2,0>::n4] - Am[pos<0,3>::n4]*Am[pos<1,0>::n4]*Am[pos<2,1>::n4] + Am[pos<0,0>::n4]*Am[pos<1,3>::n4]*Am[pos<2,1>::n4] + Am[pos<0,1>::n4]*Am[pos<1,0>::n4]*Am[pos<2,3>::n4] - Am[pos<0,0>::n4]*Am[pos<1,1>::n4]*Am[pos<2,3>::n4] ) / tmp_det;
-        Xm[pos<3,3>::n4] = ( Am[pos<0,1>::n4]*Am[pos<1,2>::n4]*Am[pos<2,0>::n4] - Am[pos<0,2>::n4]*Am[pos<1,1>::n4]*Am[pos<2,0>::n4] + Am[pos<0,2>::n4]*Am[pos<1,0>::n4]*Am[pos<2,1>::n4] - Am[pos<0,0>::n4]*Am[pos<1,2>::n4]*Am[pos<2,1>::n4] - Am[pos<0,1>::n4]*Am[pos<1,0>::n4]*Am[pos<2,2>::n4] + Am[pos<0,0>::n4]*Am[pos<1,1>::n4]*Am[pos<2,2>::n4] ) / tmp_det;
-        }
-      else
-        {
-        det_ok = false;
-        }
-      };
-      break;
-      
-    default:
-      ;
-    }
-  
-  return det_ok;
+  return calc_ok;
   }
 
 
@@ -350,7 +237,7 @@ bool
 auxlib::inv_inplace_lapack(Mat<eT>& out)
   {
   arma_extra_debug_sigprint();
-
+  
   if(out.is_empty())
     {
     return true;
@@ -371,33 +258,37 @@ auxlib::inv_inplace_lapack(Mat<eT>& out)
     }
   #elif defined(ARMA_USE_LAPACK)
     {
-    blas_int n_rows    = out.n_rows;
-    blas_int n_cols    = out.n_cols;
-    blas_int lwork     = 0;
-    blas_int lwork_min = (std::max)(blas_int(1), n_rows);
-    blas_int info      = 0;
+    blas_int n_rows = out.n_rows;
+    blas_int lwork  = (std::max)(blas_int(podarray_prealloc_n_elem::val), n_rows);
+    blas_int info   = 0;
     
     podarray<blas_int> ipiv(out.n_rows);
     
-    eT        work_query[2];
-    blas_int lwork_query = -1;
-    
-    lapack::getri(&n_rows, out.memptr(), &n_rows, ipiv.memptr(), &work_query[0], &lwork_query, &info);
-    
-    if(info == 0)
+    if(n_rows > 16)
       {
-      const blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+      eT        work_query[2];
+      blas_int lwork_query = -1;
       
-      lwork = (lwork_proposed > lwork_min) ? lwork_proposed : lwork_min;
-      }
-    else
-      {
-      return false;
+      lapack::getri(&n_rows, out.memptr(), &n_rows, ipiv.memptr(), &work_query[0], &lwork_query, &info);
+      
+      if(info == 0)
+        {
+        const blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+        
+        if(lwork_proposed > lwork)
+          {
+          lwork = lwork_proposed;
+          }
+        }
+      else
+        {
+        return false;
+        }
       }
     
     podarray<eT> work( static_cast<uword>(lwork) );
     
-    lapack::getrf(&n_rows, &n_cols, out.memptr(), &n_rows, ipiv.memptr(), &info);
+    lapack::getrf(&n_rows, &n_rows, out.memptr(), &n_rows, ipiv.memptr(), &info);
     
     if(info == 0)
       {
@@ -495,7 +386,7 @@ auxlib::inv_sym(Mat<eT>& out, const Base<eT,T1>& X, const uword layout)
     {
     char     uplo  = (layout == 0) ? 'U' : 'L';
     blas_int n     = blas_int(out.n_rows);
-    blas_int lwork = 3 * (n*n); // TODO: use lwork = -1 to determine optimal size
+    blas_int lwork = (std::max)(blas_int(podarray_prealloc_n_elem::val), 2*n);
     blas_int info  = 0;
     
     podarray<blas_int> ipiv;
@@ -539,7 +430,7 @@ auxlib::inv_sympd(Mat<eT>& out, const Base<eT,T1>& X, const uword layout)
   
   out = X.get_ref();
   
-  arma_debug_check( (out.is_square() == false), "inv(): given matrix is not square" );
+  arma_debug_check( (out.is_square() == false), "inv_sympd(): given matrix is not square" );
   
   if(out.is_empty())
     {
@@ -570,7 +461,7 @@ auxlib::inv_sympd(Mat<eT>& out, const Base<eT,T1>& X, const uword layout)
   #else
     {
     arma_ignore(layout);
-    arma_stop("inv(): use of LAPACK needs to be enabled");
+    arma_stop("inv_sympd(): use of LAPACK needs to be enabled");
     status = false;
     }
   #endif
@@ -585,39 +476,30 @@ inline
 eT
 auxlib::det(const Base<eT,T1>& X, const bool slow)
   {
+  arma_extra_debug_sigprint();
+  
+  typedef typename get_pod_type<eT>::result T;
+  
+  const bool make_copy = (is_Mat<T1>::value == true) ? true : false;
+  
   const unwrap<T1>   tmp(X.get_ref());
   const Mat<eT>& A = tmp.M;
   
   arma_debug_check( (A.is_square() == false), "det(): matrix is not square" );
   
-  const bool make_copy = (is_Mat<T1>::value == true) ? true : false;
+  const uword N = A.n_rows;
   
-  if(slow == false)
+  if( (N <= 4) && (slow == false) )
     {
-    const uword N = A.n_rows;
+    const  T det_min = (is_float<T>::value) ? T(1e-19) : T(1e-154);
+    const eT det_val = auxlib::det_tinymat(A, N);
     
-    switch(N)
-      {
-      case 0:
-      case 1:
-      case 2:
-        return auxlib::det_tinymat(A, N);
-        break;
-      
-      case 3:
-      case 4:
-        {
-        const eT tmp_det = auxlib::det_tinymat(A, N);
-        return (tmp_det != eT(0)) ? tmp_det : auxlib::det_lapack(A, make_copy);
-        }
-        break;
-      
-      default:
-        return auxlib::det_lapack(A, make_copy);
-      }
+    return (std::abs(det_val) >= det_min) ? det_val : auxlib::det_lapack(A, make_copy);
     }
-  
-  return auxlib::det_lapack(A, make_copy);
+  else
+    {
+    return auxlib::det_lapack(A, make_copy);
+    }
   }
 
 
@@ -657,25 +539,16 @@ auxlib::det_tinymat(const Mat<eT>& X, const uword N)
       // const double tmp6 = X.at(2,2) * X.at(1,0) * X.at(0,1);
       // return (tmp1+tmp2+tmp3) - (tmp4+tmp5+tmp6);
       
-      const eT* a_col0 = X.colptr(0);
-      const eT  a11    = a_col0[0];
-      const eT  a21    = a_col0[1];
-      const eT  a31    = a_col0[2];
+      const eT* Xm = X.memptr();
       
-      const eT* a_col1 = X.colptr(1);
-      const eT  a12    = a_col1[0];
-      const eT  a22    = a_col1[1];
-      const eT  a32    = a_col1[2];
+      const eT val1 = Xm[pos<0,0>::n3]*(Xm[pos<2,2>::n3]*Xm[pos<1,1>::n3] - Xm[pos<2,1>::n3]*Xm[pos<1,2>::n3]);
+      const eT val2 = Xm[pos<1,0>::n3]*(Xm[pos<2,2>::n3]*Xm[pos<0,1>::n3] - Xm[pos<2,1>::n3]*Xm[pos<0,2>::n3]);
+      const eT val3 = Xm[pos<2,0>::n3]*(Xm[pos<1,2>::n3]*Xm[pos<0,1>::n3] - Xm[pos<1,1>::n3]*Xm[pos<0,2>::n3]);
       
-      const eT* a_col2 = X.colptr(2);
-      const eT  a13    = a_col2[0];
-      const eT  a23    = a_col2[1];
-      const eT  a33    = a_col2[2];
-      
-      return ( a11*(a33*a22 - a32*a23) - a21*(a33*a12-a32*a13) + a31*(a23*a12 - a22*a13) );
+      return ( val1 - val2 + val3 );
       }
       break;
-      
+    
     case 4:
       {
       const eT* Xm = X.memptr();
@@ -1358,8 +1231,8 @@ auxlib::eig_sym_dc(Col<eT>& eigval, Mat<eT>& eigvec, const Base<eT,T1>& X)
     char uplo = 'U';
     
     blas_int N      = blas_int(eigvec.n_rows);
-    blas_int lwork  = 3 * (1 + 6*N + 2*(N*N));
-    blas_int liwork = 3 * (3 + 5*N + 2);
+    blas_int lwork  = 2 * (1 + 6*N + 2*(N*N));
+    blas_int liwork = 3 * (3 + 5*N);
     blas_int info   = 0;
     
     podarray<eT>        work( static_cast<uword>( lwork) );
@@ -1412,8 +1285,8 @@ auxlib::eig_sym_dc(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Base<st
     char uplo  = 'U';
     
     blas_int N      = blas_int(eigvec.n_rows);
-    blas_int lwork  = 3 * (2*N + N*N);
-    blas_int lrwork = 3 * (1 + 5*N + 2*(N*N));
+    blas_int lwork  = 2 * (2*N + N*N);
+    blas_int lrwork = 2 * (1 + 5*N + 2*(N*N));
     blas_int liwork = 3 * (3 + 5*N);
     blas_int info   = 0;
     
@@ -1503,10 +1376,12 @@ auxlib::eig_gen
     
     eigval.set_size(A_n_rows);
     
-    l_eigvec.set_size(A_n_rows, A_n_rows);
-    r_eigvec.set_size(A_n_rows, A_n_rows);
+    l_eigvec.set_size( ((jobvl == 'V') ? A_n_rows : 1), A_n_rows );
+    r_eigvec.set_size( ((jobvr == 'V') ? A_n_rows : 1), A_n_rows );
     
     blas_int N     = blas_int(A_n_rows);
+    blas_int ldvl  = blas_int(l_eigvec.n_rows);
+    blas_int ldvr  = blas_int(r_eigvec.n_rows);
     blas_int lwork = 3 * ( (std::max)(blas_int(1), 4*N) );
     blas_int info  = 0;
     
@@ -1516,7 +1391,7 @@ auxlib::eig_gen
     podarray<T> wi(A_n_rows);
     
     arma_extra_debug_print("lapack::geev()");
-    lapack::geev(&jobvl, &jobvr, &N, A.memptr(), &N, wr.memptr(), wi.memptr(), l_eigvec.memptr(), &N, r_eigvec.memptr(), &N, work.memptr(), &lwork, &info);
+    lapack::geev(&jobvl, &jobvr, &N, A.memptr(), &N, wr.memptr(), wi.memptr(), l_eigvec.memptr(), &ldvl, r_eigvec.memptr(), &ldvr, work.memptr(), &lwork, &info);
     
     eigval.set_size(A_n_rows);
     for(uword i=0; i<A_n_rows; ++i)
@@ -1609,10 +1484,12 @@ auxlib::eig_gen
     
     eigval.set_size(A_n_rows);
     
-    l_eigvec.set_size(A_n_rows, A_n_rows);
-    r_eigvec.set_size(A_n_rows, A_n_rows);
+    l_eigvec.set_size( ((jobvl == 'V') ? A_n_rows : 1), A_n_rows );
+    r_eigvec.set_size( ((jobvr == 'V') ? A_n_rows : 1), A_n_rows );
     
     blas_int N     = blas_int(A_n_rows);
+    blas_int ldvl  = blas_int(l_eigvec.n_rows);
+    blas_int ldvr  = blas_int(r_eigvec.n_rows);
     blas_int lwork = 3 * ( (std::max)(blas_int(1), 2*N) );
     blas_int info  = 0;
     
@@ -1620,7 +1497,7 @@ auxlib::eig_gen
     podarray<T>  rwork( static_cast<uword>(2*N)   );
     
     arma_extra_debug_print("lapack::cx_geev()");
-    lapack::cx_geev(&jobvl, &jobvr, &N, A.memptr(), &N, eigval.memptr(), l_eigvec.memptr(), &N, r_eigvec.memptr(), &N, work.memptr(), &lwork, rwork.memptr(), &info);
+    lapack::cx_geev(&jobvl, &jobvr, &N, A.memptr(), &N, eigval.memptr(), l_eigvec.memptr(), &ldvl, r_eigvec.memptr(), &ldvr, work.memptr(), &lwork, rwork.memptr(), &info);
     
     return (info == 0);
     }
@@ -1632,6 +1509,306 @@ auxlib::eig_gen
     arma_ignore(X);
     arma_ignore(side);
     arma_stop("eig_gen(): use of LAPACK needs to be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
+//! Eigenvalues and eigenvectors of general square real matrix pair.
+//! The argument 'side' specifies which eigenvectors should be calculated.
+template<typename T, typename T1, typename T2>
+inline
+bool
+auxlib::eig_pair
+  (
+  Col< std::complex<T> >&   eigval,
+  Mat<T>&                 l_eigvec,
+  Mat<T>&                 r_eigvec,
+  const Base<T,T1>&       X,
+  const Base<T,T2>&       Y,
+  const char              side
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  #if defined(ARMA_USE_LAPACK)
+    {
+    char jobvl;
+    char jobvr;
+    
+    switch(side)
+      {
+      case 'l':  // left
+        jobvl = 'V';
+        jobvr = 'N';
+        break;
+        
+      case 'r':  // right
+        jobvl = 'N';
+        jobvr = 'V';
+        break;
+        
+      case 'b':  // both
+        jobvl = 'V';
+        jobvr = 'V';
+        break;
+        
+      case 'n':  // neither
+        jobvl = 'N';
+        jobvr = 'N';
+        break;
+      
+      default:
+        arma_stop("eig_pair(): parameter 'side' is invalid");
+        return false;
+      }
+    
+    Mat<T> A(X.get_ref());
+    Mat<T> B(Y.get_ref());
+    
+    arma_debug_check( ((A.is_square() == false) || (B.is_square() == false)), "eig_pair(): given matrix is not square" );
+    
+    arma_debug_check( (A.n_rows != B.n_rows), "eig_pair(): given matrices must have the same size" );
+    
+    if(A.is_empty())
+      {
+      eigval.reset();
+      l_eigvec.reset();
+      r_eigvec.reset();
+      return true;
+      }
+    
+    const uword A_n_rows = A.n_rows;
+    
+    eigval.set_size(A_n_rows);
+    
+    l_eigvec.set_size( ((jobvl == 'V') ? A_n_rows : 1), A_n_rows );
+    r_eigvec.set_size( ((jobvr == 'V') ? A_n_rows : 1), A_n_rows );
+    
+    blas_int N     = blas_int(A_n_rows);
+    blas_int ldvl  = blas_int(l_eigvec.n_rows);
+    blas_int ldvr  = blas_int(r_eigvec.n_rows);
+    blas_int lwork = 3 * ( (std::max)(blas_int(1), 8*N) );
+    blas_int info  = 0;
+    
+    podarray<T> work( static_cast<uword>(lwork) );
+    
+    podarray<T> alphar(A_n_rows);
+    podarray<T> alphai(A_n_rows);
+    podarray<T>   beta(A_n_rows);
+    
+    arma_extra_debug_print("lapack::ggev()");
+    lapack::ggev
+      (
+      &jobvl, &jobvr, &N,
+      A.memptr(), &N,  B.memptr(), &N,
+      alphar.memptr(), alphai.memptr(), beta.memptr(),
+      l_eigvec.memptr(), &ldvl, r_eigvec.memptr(), &ldvr,
+      work.memptr(), &lwork,
+      &info
+      );
+    
+    if(info == 0)
+      {
+      // from LAPACK docs:
+      // If ALPHAI(j) is zero, then the j-th eigenvalue is real;
+      // if positive, then the j-th and (j+1)-st eigenvalues are a complex conjugate pair,
+      // with ALPHAI(j+1) negative.
+      
+      eigval.set_size(A_n_rows);
+      
+      const T* alphar_mem = alphar.memptr();
+      const T* alphai_mem = alphai.memptr();
+      const T*   beta_mem =   beta.memptr();
+      
+      bool beta_has_zero = false;
+      
+      for(uword j=0; j<A_n_rows; ++j)
+        {
+        const T alphai_val = alphai_mem[j];
+        const T   beta_val =   beta_mem[j];
+        
+        if(beta_val == T(0))  { beta_has_zero = true; }
+        
+        const T re = alphar_mem[j] / beta_val;
+        const T im = alphai_val    / beta_val;
+        
+        eigval[j] = std::complex<T>(re, im);
+        
+        if( (alphai_val > T(0)) && (j < (A_n_rows-1)) )
+          {
+          // ensure we have exact conjugate
+          ++j;
+          eigval[j] = std::complex<T>(re,-im);
+          }
+        }
+      
+      arma_debug_warn(beta_has_zero, "eig_pair(): warning: given matrix appears ill-conditioned");
+      
+      return true;
+      }
+    else
+      {
+      return false;
+      }
+    }
+  #else
+    {
+    arma_ignore(eigval);
+    arma_ignore(l_eigvec);
+    arma_ignore(r_eigvec);
+    arma_ignore(X);
+    arma_ignore(Y);
+    arma_ignore(side);
+    arma_stop("eig_pair(): use of LAPACK needs to be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
+
+
+//! Eigenvalues and eigenvectors of general square complex matrix pair.
+//! The argument 'side' specifies which eigenvectors should be calculated
+template<typename T, typename T1, typename T2>
+inline
+bool
+auxlib::eig_pair
+  (
+  Col< std::complex<T> >&              eigval,
+  Mat< std::complex<T> >&            l_eigvec, 
+  Mat< std::complex<T> >&            r_eigvec, 
+  const Base< std::complex<T>, T1 >& X, 
+  const Base< std::complex<T>, T2 >& Y, 
+  const char                         side
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  #if defined(ARMA_USE_LAPACK)
+    {
+    typedef typename std::complex<T> eT;
+    
+    char jobvl;
+    char jobvr;
+    
+    switch(side)
+      {
+      case 'l':  // left
+        jobvl = 'V';
+        jobvr = 'N';
+        break;
+        
+      case 'r':  // right
+        jobvl = 'N';
+        jobvr = 'V';
+        break;
+        
+      case 'b':  // both
+        jobvl = 'V';
+        jobvr = 'V';
+        break;
+        
+      case 'n':  // neither
+        jobvl = 'N';
+        jobvr = 'N';
+        break;
+      
+      default:
+        arma_stop("eig_pair(): parameter 'side' is invalid");
+        return false;
+      }
+    
+    Mat<eT> A(X.get_ref());
+    Mat<eT> B(Y.get_ref());
+    
+    arma_debug_check( ((A.is_square() == false) || (B.is_square() == false)), "eig_pair(): given matrix is not square" );
+    
+    arma_debug_check( (A.n_rows != B.n_rows), "eig_pair(): given matrices must have the same size" );
+    
+    if(A.is_empty())
+      {
+      eigval.reset();
+      l_eigvec.reset();
+      r_eigvec.reset();
+      return true;
+      }
+    
+    const uword A_n_rows = A.n_rows;
+    
+    podarray<eT> alpha(A_n_rows);
+    podarray<eT>  beta(A_n_rows);
+    
+    l_eigvec.set_size( ((jobvl == 'V') ? A_n_rows : 1), A_n_rows );
+    r_eigvec.set_size( ((jobvr == 'V') ? A_n_rows : 1), A_n_rows );
+    
+    blas_int N     = blas_int(A_n_rows);
+    blas_int ldvl  = blas_int(l_eigvec.n_rows);
+    blas_int ldvr  = blas_int(r_eigvec.n_rows);
+    blas_int lwork = 3 * ((std::max)(1,2*N));
+    blas_int info  = 0;
+    
+    podarray<eT>  work( static_cast<uword>(lwork) );
+    podarray<T>  rwork( static_cast<uword>(8*N)   );
+    
+    arma_extra_debug_print("lapack::cx_ggev()");
+    lapack::cx_ggev
+      (
+      &jobvl, &jobvr, &N,
+      A.memptr(), &N, B.memptr(), &N,
+      alpha.memptr(), beta.memptr(),
+      l_eigvec.memptr(), &ldvl, r_eigvec.memptr(), &ldvr,
+      work.memptr(), &lwork, rwork.memptr(),
+      &info
+      );
+    
+    if(info == 0)
+      {
+      // TODO: figure out a more robust way to create the eigen values;
+      // TODO: from LAPACK docs: the quotients ALPHA(j)/BETA(j) may easily over- or underflow, and BETA(j) may even be zero
+      
+      eigval.set_size(A_n_rows);
+      
+            eT* eigval_mem = eigval.memptr();
+      const eT*  alpha_mem = alpha.memptr();
+      const eT*   beta_mem =  beta.memptr();
+      
+      const std::complex<T> cx_zero( T(0), T(0) );
+      
+      bool beta_has_zero = false;
+      
+      for(uword i=0; i<A_n_rows; ++i)
+        {
+        eigval_mem[i] = alpha_mem[i] / beta_mem[i];
+        
+        if(beta_mem[i] == cx_zero)  { beta_has_zero = true; }
+        
+        // // TODO: not sure if this is the right approach
+        // eigval_mem[i] = (beta_mem[i] != cx_zero) ? (alpha_mem[i] / beta_mem[i]) : cx_zero;
+        }
+      
+      arma_debug_warn(beta_has_zero, "eig_pair(): warning: given matrix appears ill-conditioned");
+      
+      return true;
+      }
+    else
+      {
+      return false;
+      }
+    }
+  #else
+    {
+    arma_ignore(eigval);
+    arma_ignore(l_eigvec);
+    arma_ignore(r_eigvec);
+    arma_ignore(X);
+    arma_ignore(Y);
+    arma_ignore(side);
+    arma_stop("eig_pair(): use of LAPACK needs to be enabled");
     return false;
     }
   #endif
@@ -2576,6 +2753,169 @@ auxlib::svd_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V
 
 
 
+// EXPERIMENTAL
+template<typename eT, typename T1>
+inline
+bool
+auxlib::svd_dc(Col<eT>& S, const Base<eT,T1>& X, uword& X_n_rows, uword& X_n_cols)
+  {
+  arma_extra_debug_sigprint();
+  
+  #if defined(ARMA_USE_LAPACK)
+    {
+    Mat<eT> A(X.get_ref());
+    
+    X_n_rows = A.n_rows;
+    X_n_cols = A.n_cols;
+    
+    if(A.is_empty())
+      {
+      S.reset();
+      return true;
+      }
+    
+    Mat<eT> U(1, 1);
+    Mat<eT> V(1, 1);
+    
+    char jobz = 'N';
+    
+    blas_int  m      = blas_int(A.n_rows);
+    blas_int  n      = blas_int(A.n_cols);
+    blas_int  min_mn = (std::min)(m,n);
+    blas_int  lda    = blas_int(A.n_rows);
+    blas_int  ldu    = blas_int(U.n_rows);
+    blas_int  ldvt   = blas_int(V.n_rows);
+    blas_int  lwork  = 3 * ( 3*min_mn + std::max( std::max(m,n), 7*min_mn ) );
+    blas_int  info   = 0;
+    
+    S.set_size( static_cast<uword>(min_mn) );
+    
+    podarray<eT>        work( static_cast<uword>(lwork   ) );
+    podarray<blas_int> iwork( static_cast<uword>(8*min_mn) );
+    
+    lapack::gesdd<eT>
+      (
+      &jobz, &m, &n,
+      A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt,
+      work.memptr(), &lwork, iwork.memptr(), &info
+      );
+    
+    return (info == 0);
+    }
+  #else
+    {
+    arma_ignore(S);
+    arma_ignore(X);
+    arma_ignore(X_n_rows);
+    arma_ignore(X_n_cols);
+    arma_stop("svd(): use of LAPACK needs to be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
+// EXPERIMENTAL
+template<typename T, typename T1>
+inline
+bool
+auxlib::svd_dc(Col<T>& S, const Base<std::complex<T>, T1>& X, uword& X_n_rows, uword& X_n_cols)
+  {
+  arma_extra_debug_sigprint();
+  
+  #if (defined(ARMA_USE_LAPACK) && defined(ARMA_DONT_USE_CX_GESDD))
+    {
+    arma_extra_debug_print("auxlib::svd_dc(): redirecting to auxlib::svd(), as use of lapack::cx_gesdd() is disabled");
+    
+    return auxlib::svd(S, X, X_n_rows, X_n_cols);
+    }
+  #elif defined(ARMA_USE_LAPACK)
+    {
+    typedef std::complex<T> eT;
+    
+    Mat<eT> A(X.get_ref());
+    
+    X_n_rows = A.n_rows;
+    X_n_cols = A.n_cols;
+    
+    if(A.is_empty())
+      {
+      S.reset();
+      return true;
+      }
+    
+    Mat<eT> U(1, 1);
+    Mat<eT> V(1, 1);
+    
+    char jobz = 'N';
+    
+    blas_int  m      = blas_int(A.n_rows);
+    blas_int  n      = blas_int(A.n_cols);
+    blas_int  min_mn = (std::min)(m,n);
+    blas_int  lda    = blas_int(A.n_rows);
+    blas_int  ldu    = blas_int(U.n_rows);
+    blas_int  ldvt   = blas_int(V.n_rows);
+    blas_int  lwork  = 3 * (2*min_mn + std::max(m,n));  
+    blas_int  info   = 0;
+    
+    S.set_size( static_cast<uword>(min_mn) );
+    
+    podarray<eT>        work( static_cast<uword>(lwork   ) );
+    podarray<T>        rwork( static_cast<uword>(5*min_mn) );
+    podarray<blas_int> iwork( static_cast<uword>(8*min_mn) );
+    
+    lapack::cx_gesdd<T>
+      (
+      &jobz, &m, &n,
+      A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt,
+      work.memptr(), &lwork, rwork.memptr(), iwork.memptr(), &info
+      );
+    
+    return (info == 0);
+    }
+  #else
+    {
+    arma_ignore(S);
+    arma_ignore(X);
+    arma_ignore(X_n_rows);
+    arma_ignore(X_n_cols);
+    arma_stop("svd(): use of LAPACK needs to be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
+// EXPERIMENTAL
+template<typename eT, typename T1>
+inline
+bool
+auxlib::svd_dc(Col<eT>& S, const Base<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  uword junk;
+  return auxlib::svd_dc(S, X, junk, junk);
+  }
+
+
+
+// EXPERIMENTAL
+template<typename T, typename T1>
+inline
+bool
+auxlib::svd_dc(Col<T>& S, const Base<std::complex<T>, T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  uword junk;
+  return auxlib::svd_dc(S, X, junk, junk);
+  }
+
+
+
 template<typename eT, typename T1>
 inline
 bool
@@ -2603,10 +2943,13 @@ auxlib::svd_dc(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
     blas_int  m      = blas_int(A.n_rows);
     blas_int  n      = blas_int(A.n_cols);
     blas_int  min_mn = (std::min)(m,n);
+    blas_int  max_mn = (std::max)(m,n);
     blas_int  lda    = blas_int(A.n_rows);
     blas_int  ldu    = blas_int(U.n_rows);
     blas_int  ldvt   = blas_int(V.n_rows);
-    blas_int  lwork  = 3 * ( 3*min_mn*min_mn + (std::max)( (std::max)(m,n), 4*min_mn*min_mn + 4*min_mn ) );
+    blas_int  lwork1 = 3*min_mn*min_mn + (std::max)( max_mn, 4*min_mn*min_mn + 4*min_mn          );
+    blas_int  lwork2 = 3*min_mn        + (std::max)( max_mn, 4*min_mn*min_mn + 3*min_mn + max_mn );
+    blas_int  lwork  = 2 * ((std::max)(lwork1, lwork2));  // due to differences between lapack 3.1 and 3.4
     blas_int  info   = 0;
     
     S.set_size( static_cast<uword>(min_mn) );
@@ -2671,20 +3014,24 @@ auxlib::svd_dc(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, 
     
     char jobz = 'A';
     
-    blas_int  m      = blas_int(A.n_rows);
-    blas_int  n      = blas_int(A.n_cols);
-    blas_int  min_mn = (std::min)(m,n);
-    blas_int  lda    = blas_int(A.n_rows);
-    blas_int  ldu    = blas_int(U.n_rows);
-    blas_int  ldvt   = blas_int(V.n_rows);
-    blas_int  lwork  = 3 * (min_mn*min_mn + 2*min_mn + (std::max)(m,n));  
-    blas_int  info   = 0;
+    blas_int m       = blas_int(A.n_rows);
+    blas_int n       = blas_int(A.n_cols);
+    blas_int min_mn  = (std::min)(m,n);
+    blas_int max_mn  = (std::max)(m,n);
+    blas_int lda     = blas_int(A.n_rows);
+    blas_int ldu     = blas_int(U.n_rows);
+    blas_int ldvt    = blas_int(V.n_rows);
+    blas_int lwork   = 2 * (min_mn*min_mn + 2*min_mn + max_mn);
+    blas_int lrwork1 = 5*min_mn*min_mn + 7*min_mn;
+    blas_int lrwork2 = min_mn * ((std::max)(5*min_mn+7, 2*max_mn + 2*min_mn+1));
+    blas_int lrwork  = (std::max)(lrwork1, lrwork2);  // due to differences between lapack 3.1 and 3.4
+    blas_int info    = 0;
     
     S.set_size( static_cast<uword>(min_mn) );
     
-    podarray<eT>        work( static_cast<uword>(lwork                     ) );
-    podarray<T>        rwork( static_cast<uword>(5*min_mn*min_mn + 7*min_mn) );
-    podarray<blas_int> iwork( static_cast<uword>(8*min_mn                  ) );
+    podarray<eT>        work( static_cast<uword>(lwork   ) );
+    podarray<T>        rwork( static_cast<uword>(lrwork  ) );
+    podarray<blas_int> iwork( static_cast<uword>(8*min_mn) );
     
     lapack::cx_gesdd<T>
       (
@@ -2727,10 +3074,13 @@ auxlib::svd_dc_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
     blas_int m      = blas_int(A.n_rows);
     blas_int n      = blas_int(A.n_cols);
     blas_int min_mn = (std::min)(m,n);
+    blas_int max_mn = (std::max)(m,n);
     blas_int lda    = blas_int(A.n_rows);
     blas_int ldu    = m;
     blas_int ldvt   = min_mn;
-    blas_int lwork  = 3 * ( 3*min_mn + 4*min_mn*min_mn + 3*min_mn + std::max(m,n) );   // based on lapack 3.4 docs, which have a slightly different formula to lapack 3.1 docs
+    blas_int lwork1 = 3*min_mn*min_mn + (std::max)( max_mn, 4*min_mn*min_mn + 4*min_mn          );
+    blas_int lwork2 = 3*min_mn        + (std::max)( max_mn, 4*min_mn*min_mn + 3*min_mn + max_mn );
+    blas_int lwork  = 2 * ((std::max)(lwork1, lwork2));  // due to differences between lapack 3.1 and 3.4
     blas_int info   = 0;
     
     if(A.is_empty())
@@ -2796,16 +3146,18 @@ auxlib::svd_dc_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >
     
     char jobz = 'S';
     
-    blas_int m      = blas_int(A.n_rows);
-    blas_int n      = blas_int(A.n_cols);
-    blas_int min_mn = (std::min)(m,n);
-    blas_int max_mn = (std::max)(m,n);
-    blas_int lda    = blas_int(A.n_rows);
-    blas_int ldu    = m;
-    blas_int ldvt   = min_mn;
-    blas_int lwork  = 3 * (min_mn*min_mn + 2*min_mn + max_mn);
-    blas_int lrwork = min_mn * (std::max)( 5*min_mn+7, 2*max_mn + 2*min_mn+1 );  // based on lapack 3.4 docs, which have a different formula to lapack 3.1 docs
-    blas_int info   = 0;
+    blas_int m       = blas_int(A.n_rows);
+    blas_int n       = blas_int(A.n_cols);
+    blas_int min_mn  = (std::min)(m,n);
+    blas_int max_mn  = (std::max)(m,n);
+    blas_int lda     = blas_int(A.n_rows);
+    blas_int ldu     = m;
+    blas_int ldvt    = min_mn;
+    blas_int lwork   = 2 * (min_mn*min_mn + 2*min_mn + max_mn);
+    blas_int lrwork1 = 5*min_mn*min_mn + 7*min_mn;
+    blas_int lrwork2 = min_mn * ((std::max)(5*min_mn+7, 2*max_mn + 2*min_mn+1));
+    blas_int lrwork  = (std::max)(lrwork1, lrwork2);  // due to differences between lapack 3.1 and 3.4
+    blas_int info    = 0;
     
     if(A.is_empty())
       {
@@ -2865,7 +3217,7 @@ auxlib::solve(Mat<eT>& out, Mat<eT>& A, const Base<eT,T1>& X, const bool slow)
   
   if( (A_n_rows <= 4) && (slow == false) )
     {
-    Mat<eT> A_inv;
+    Mat<eT> A_inv(A_n_rows, A_n_rows);
     
     status = auxlib::inv_noalias_tinymat(A_inv, A, A_n_rows);
     

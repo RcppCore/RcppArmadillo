@@ -262,7 +262,7 @@ podarray<eT>::zeros()
   {
   arma_extra_debug_sigprint();
   
-  fill(eT(0));
+  arrayops::fill_zeros(memptr(), n_elem);
   }
 
 
@@ -276,7 +276,7 @@ podarray<eT>::zeros(const uword new_n_elem)
   
   init_warm(new_n_elem);
   
-  fill(eT(0));
+  arrayops::fill_zeros(memptr(), n_elem);
   }
 
 

@@ -1314,6 +1314,58 @@ Cube<eT>::tube(const span& row_span, const span& col_span) const
 
 
 
+template<typename eT>
+template<typename T1>
+arma_inline
+subview_elem1<eT,T1>
+Cube<eT>::elem(const Base<uword,T1>& a)
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_elem1<eT,T1>(*this, a);
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+arma_inline
+const subview_elem1<eT,T1>
+Cube<eT>::elem(const Base<uword,T1>& a) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_elem1<eT,T1>(*this, a);
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+arma_inline
+subview_elem1<eT,T1>
+Cube<eT>::operator()(const Base<uword,T1>& a)
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_elem1<eT,T1>(*this, a);
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+arma_inline
+const subview_elem1<eT,T1>
+Cube<eT>::operator()(const Base<uword,T1>& a) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_elem1<eT,T1>(*this, a);
+  }
+
+
+
 //! remove specified slice
 template<typename eT>
 inline

@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2014 Conrad Sanderson
+// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,23 +15,31 @@
 #include <climits>
 #include <cmath>
 #include <ctime>
+#include <cstdio>
 
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+#include <new>
 #include <limits>
 #include <algorithm>
 #include <complex>
 #include <vector>
 
-#if ( defined(__unix__) || defined(__unix) || defined(_POSIX_C_SOURCE) ) && !defined(_WIN32)
+
+#if ( defined(__unix__) || defined(__unix) || defined(_POSIX_C_SOURCE) || (defined(__APPLE__) && defined(__MACH__)) ) && !defined(_WIN32)
   #include <unistd.h>
 #endif
 
+
+#if (defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE >= 200112L))
+  #include <sys/time.h>
+#endif
+
+
 #include "armadillo_bits/config.hpp"
 #include "armadillo_bits/compiler_setup.hpp"
-#include "armadillo_bits/undefine_conflicts.hpp"
 
 
 #if defined(ARMA_USE_CXX11)
@@ -39,18 +47,6 @@
   #include <cstdint>
   #include <chrono>
   #include <random>
-  
-  #undef ARMA_USE_BOOST_DATE
-#endif
-
-
-#if defined(ARMA_HAVE_GETTIMEOFDAY)
-  #include <sys/time.h>
-  #undef ARMA_USE_BOOST_DATE
-#endif
-
-#if defined(ARMA_USE_BOOST_DATE)
-  #include <boost/date_time/posix_time/posix_time.hpp>
 #endif
 
 
@@ -58,33 +54,16 @@
   #include <tbb/scalable_allocator.h>
 #endif
 
+
 #if defined(ARMA_USE_MKL_ALLOC)
   #include <mkl_service.h>
 #endif
 
 
 #if !defined(ARMA_USE_CXX11)
-  #if defined(ARMA_HAVE_STD_TR1)
+  #if defined(ARMA_HAVE_TR1)
     #include <tr1/cmath>
     #include <tr1/complex>
-  #elif defined(ARMA_USE_BOOST)
-    #include <boost/math/complex.hpp>
-    #include <boost/math/special_functions/acosh.hpp>
-    #include <boost/math/special_functions/asinh.hpp>
-    #include <boost/math/special_functions/atanh.hpp>
-  #endif
-#endif
-
-
-#if defined(ARMA_EXTRA_DEBUG)
-  #if !defined(ARMA_HAVE_STD_SNPRINTF)
-    #if defined(ARMA_USE_CXX11)
-      #include <cstdio>
-      #define ARMA_HAVE_STD_SNPRINTF
-    #elif defined(ARMA_USE_BOOST)
-      #include <boost/format.hpp>
-      #define ARMA_USE_BOOST_FORMAT
-    #endif
   #endif
 #endif
 
@@ -109,7 +88,7 @@ namespace arma
   #include "armadillo_bits/typedef_elem.hpp"
   #include "armadillo_bits/typedef_elem_check.hpp"
   #include "armadillo_bits/typedef_mat.hpp"
-  #include "armadillo_bits/format_wrap.hpp"
+  #include "armadillo_bits/arma_boost.hpp"
   #include "armadillo_bits/arma_version.hpp"
   #include "armadillo_bits/arma_config.hpp"
   #include "armadillo_bits/traits.hpp"
@@ -141,15 +120,18 @@ namespace arma
   #include "armadillo_bits/blas_bones.hpp"
   #include "armadillo_bits/lapack_bones.hpp"
   #include "armadillo_bits/atlas_bones.hpp"
+  #include "armadillo_bits/arpack_bones.hpp"
   
   #include "armadillo_bits/blas_wrapper.hpp"
   #include "armadillo_bits/lapack_wrapper.hpp"
   #include "armadillo_bits/atlas_wrapper.hpp"
+  #include "armadillo_bits/arpack_wrapper.hpp"
   
   #include "armadillo_bits/cond_rel_bones.hpp"
   #include "armadillo_bits/arrayops_bones.hpp"
   #include "armadillo_bits/podarray_bones.hpp"
   #include "armadillo_bits/auxlib_bones.hpp"
+  #include "armadillo_bits/sp_auxlib_bones.hpp"
   
   #include "armadillo_bits/injector_bones.hpp"
   
@@ -289,7 +271,7 @@ namespace arma
   //
   //
   
-  #include "armadillo_bits/cmath_wrap.hpp"
+  #include "armadillo_bits/arma_cmath.hpp"
   
   //
   // classes that underlay metaprogramming 
@@ -386,12 +368,15 @@ namespace arma
   #include "armadillo_bits/fn_trans.hpp"
   #include "armadillo_bits/fn_det.hpp"
   #include "armadillo_bits/fn_log_det.hpp"
-  #include "armadillo_bits/fn_eig.hpp"
+  #include "armadillo_bits/fn_eig_sym.hpp"
+  #include "armadillo_bits/fn_eig_gen.hpp"
+  #include "armadillo_bits/fn_eig_pair.hpp"
   #include "armadillo_bits/fn_lu.hpp"
   #include "armadillo_bits/fn_zeros.hpp"
   #include "armadillo_bits/fn_ones.hpp"
   #include "armadillo_bits/fn_eye.hpp"
   #include "armadillo_bits/fn_misc.hpp"
+  #include "armadillo_bits/fn_find.hpp"
   #include "armadillo_bits/fn_elem.hpp"
   #include "armadillo_bits/fn_norm.hpp"
   #include "armadillo_bits/fn_dot.hpp"
@@ -446,12 +431,14 @@ namespace arma
   #include "armadillo_bits/fn_inplace_strans.hpp"
   #include "armadillo_bits/fn_inplace_trans.hpp"
   #include "armadillo_bits/fn_randi.hpp"
-    
+  #include "armadillo_bits/fn_cond.hpp"
+  
   #include "armadillo_bits/fn_speye.hpp"
   #include "armadillo_bits/fn_spones.hpp"
   #include "armadillo_bits/fn_sprandn.hpp"
   #include "armadillo_bits/fn_sprandu.hpp"
-  
+  #include "armadillo_bits/fn_eigs_sym.hpp"
+  #include "armadillo_bits/fn_eigs_gen.hpp"
   
   // misc stuff
   
@@ -479,6 +466,7 @@ namespace arma
   #include "armadillo_bits/arrayops_meat.hpp"
   #include "armadillo_bits/podarray_meat.hpp"
   #include "armadillo_bits/auxlib_meat.hpp"
+  #include "armadillo_bits/sp_auxlib_meat.hpp"
   
   #include "armadillo_bits/injector_meat.hpp"
   

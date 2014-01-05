@@ -18,7 +18,18 @@ class op_vectorise_col
   
   template<typename T1> inline static void apply( Mat<typename T1::elem_type>& out, const Op<T1,op_vectorise_col>& in);
   
-  template<typename T1> inline static void apply_expr( Mat<typename T1::elem_type>& out, const T1& expr);
+  template<typename T1> inline static void apply_proxy( Mat<typename T1::elem_type>& out, const Proxy<T1>& P);
+  };
+
+
+
+class op_vectorise_row
+  {
+  public:
+  
+  template<typename T1> inline static void apply( Mat<typename T1::elem_type>& out, const Op<T1,op_vectorise_row>& in);
+  
+  template<typename T1> inline static void apply_proxy( Mat<typename T1::elem_type>& out, const Proxy<T1>& P);
   };
 
 

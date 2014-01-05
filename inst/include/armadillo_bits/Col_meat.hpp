@@ -247,14 +247,14 @@ Col<eT>::operator=(const std::vector<eT>& x)
     access::rw(Mat<eT>::n_rows) = X.n_rows;
     access::rw(Mat<eT>::n_cols) = 1;
     access::rw(Mat<eT>::n_elem) = X.n_elem;
-      
+    
     if( ((X.mem_state == 0) && (X.n_elem > arma_config::mat_prealloc)) || (X.mem_state == 1) || (X.mem_state == 2) )
       {
       access::rw(Mat<eT>::mem_state) = X.mem_state;
       access::rw(Mat<eT>::mem)       = X.mem;
       
       access::rw(X.n_rows)    = 0;
-      access::rw(X.n_cols)    = 0;
+      access::rw(X.n_cols)    = 1;
       access::rw(X.n_elem)    = 0;
       access::rw(X.mem_state) = 0;
       access::rw(X.mem)       = 0;
@@ -264,6 +264,14 @@ Col<eT>::operator=(const std::vector<eT>& x)
       (*this).init_cold();
       
       arrayops::copy( (*this).memptr(), X.mem, X.n_elem );
+      
+      if( (X.mem_state == 0) && (X.n_elem <= arma_config::mat_prealloc) )
+        {
+        access::rw(X.n_rows) = 0;
+        access::rw(X.n_cols) = 1;
+        access::rw(X.n_elem) = 0;
+        access::rw(X.mem)    = 0;
+        }
       }
     }
   
@@ -277,6 +285,14 @@ Col<eT>::operator=(const std::vector<eT>& x)
     arma_extra_debug_sigprint();
     
     (*this).steal_mem(X);
+    
+    if( (X.mem_state == 0) && (X.n_elem <= arma_config::mat_prealloc) )
+      {
+      access::rw(X.n_rows) = 0;
+      access::rw(X.n_cols) = 1;
+      access::rw(X.n_elem) = 0;
+      access::rw(X.mem)    = 0;
+      }
     
     return *this;
     }
@@ -500,24 +516,28 @@ Col<eT>::st() const
 
 template<typename eT>
 arma_inline
-eT&
-Col<eT>::row(const uword row_num)
+subview_col<eT>
+Col<eT>::row(const uword in_row1)
   {
-  arma_debug_check( (row_num >= Mat<eT>::n_rows), "Col::row(): index out of bounds" );
+  arma_extra_debug_sigprint();
   
-  return access::rw(Mat<eT>::mem[row_num]);
+  arma_debug_check( (in_row1 >= Mat<eT>::n_rows), "Col::row(): indices out of bounds or incorrectly used");
+  
+  return subview_col<eT>(*this, 0, in_row1, 1);
   }
 
 
 
 template<typename eT>
 arma_inline
-eT
-Col<eT>::row(const uword row_num) const
+const subview_col<eT>
+Col<eT>::row(const uword in_row1) const
   {
-  arma_debug_check( (row_num >= Mat<eT>::n_rows), "Col::row(): index out of bounds" );
+  arma_extra_debug_sigprint();
   
-  return Mat<eT>::mem[row_num];
+  arma_debug_check( (in_row1 >= Mat<eT>::n_rows), "Col::row(): indices out of bounds or incorrectly used");
+  
+  return subview_col<eT>(*this, 0, in_row1, 1);
   }
 
 

@@ -183,14 +183,16 @@ is_finite(const BaseCube<typename T1::elem_type,T1>& X)
 
 
 
+//! DO NOT USE IN NEW CODE; change instances of inv(sympd(X)) to inv_sympd(X)
 template<typename T1>
-arma_inline
-Op<T1, op_sympd>
+arma_deprecated
+inline
+const T1&
 sympd(const Base<typename T1::elem_type,T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  return Op<T1, op_sympd>(X.get_ref());
+  return X.get_ref();
   }
 
 

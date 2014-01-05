@@ -274,17 +274,17 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   
   //! Copy the size of another matrix.
   template<typename eT2> inline void copy_size(const SpMat<eT2>& m);
-  template<typename eT2> inline void copy_size(const Mat<eT2>& m);
+  template<typename eT2> inline void copy_size(const   Mat<eT2>& m);
 
   /**
-   * Resize the matrix to a given size.  The matrix will be resized to be a column vector (i.e. in_elem columns, 1 row).
+   * Set the size of the matrix; the matrix will be sized as a column vector
    *
    * @param in_elem Number of elements to allow.
    */
   inline void set_size(const uword in_elem);
 
   /**
-   * Resize the matrix to a given size.
+   * Set the size of the matrix
    *
    * @param in_rows Number of rows to allow.
    * @param in_cols Number of columns to allow.
