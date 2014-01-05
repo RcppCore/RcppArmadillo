@@ -56,6 +56,8 @@ class unwrap_cube< Cube<eT> >
 template<typename T1>
 class unwrap_cube_check
   {
+  public:
+  
   typedef typename T1::elem_type eT;
   
   inline

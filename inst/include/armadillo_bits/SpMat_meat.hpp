@@ -3127,7 +3127,7 @@ SpMat<eT>::copy_size(const Mat<eT2>& m)
 
 
 /**
- * Resize the matrix to a given size.  The matrix will be resized to be a column vector (i.e. in_elem columns, 1 row).
+ * Set the size of the matrix; the matrix will be sized as a column vector
  *
  * @param in_elem Number of elements to allow.
  */
@@ -3152,7 +3152,7 @@ SpMat<eT>::set_size(const uword in_elem)
 
 
 /**
- * Resize the matrix to a given size.
+ * Set the size of the matrix
  *
  * @param in_rows Number of rows to allow.
  * @param in_cols Number of columns to allow.

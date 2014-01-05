@@ -48,6 +48,12 @@
   #define arma_cgeev  cgeev
   #define arma_zgeev  zgeev
   
+  #define arma_sggev  sggev
+  #define arma_dggev  dggev
+  
+  #define arma_cggev  cggev
+  #define arma_zggev  zggev
+  
   #define arma_spotrf spotrf
   #define arma_dpotrf dpotrf
   #define arma_cpotrf cpotrf
@@ -149,6 +155,12 @@
   
   #define arma_cgeev  CGEEV
   #define arma_zgeev  ZGEEV
+  
+  #define arma_sggev  SGGEV
+  #define arma_dggev  DGGEV
+  
+  #define arma_cggev  CGGEV
+  #define arma_zggev  ZGGEV
   
   #define arma_spotrf SPOTRF
   #define arma_dpotrf DPOTRF
@@ -264,6 +276,14 @@ extern "C"
   // eigenvector decomposition of general complex matrices
   void arma_fortran(arma_cgeev)(char* jobvl, char* jobvr, blas_int* n, void* a, blas_int* lda, void* w, void* vl, blas_int* ldvl, void* vr, blas_int* ldvr, void* work, blas_int* lwork,  float* rwork, blas_int* info);
   void arma_fortran(arma_zgeev)(char* jobvl, char* jobvr, blas_int* n, void* a, blas_int* lda, void* w, void* vl, blas_int* ldvl, void* vr, blas_int* ldvr, void* work, blas_int* lwork, double* rwork, blas_int* info);
+  
+  // eigenvector decomposition of general real matrix pair
+  void arma_fortran(arma_sggev)(char* jobvl, char* jobvr, blas_int* n,  float* a, blas_int* lda,  float* b, blas_int* ldb,  float* alphar,  float* alphai,  float* beta,  float* vl, blas_int* ldvl,  float* vr, blas_int* ldvr,  float* work, blas_int* lwork, blas_int* info);
+  void arma_fortran(arma_dggev)(char* jobvl, char* jobvr, blas_int* n, double* a, blas_int* lda, double* b, blas_int* ldb, double* alphar, double* alphai, double* beta, double* vl, blas_int* ldvl, double* vr, blas_int* ldvr, double* work, blas_int* lwork, blas_int* info);
+  
+  // eigenvector decomposition of general complex matrix pair
+  void arma_fortran(arma_cggev)(char* jobvl, char* jobvr, blas_int* n, void* a, blas_int* lda, void* b, blas_int* ldb, void* alpha, void* beta, void* vl, blas_int* ldvl, void* vr, blas_int* ldvr, void* work, blas_int* lwork,  float* rwork, blas_int* info);
+  void arma_fortran(arma_zggev)(char* jobvl, char* jobvr, blas_int* n, void* a, blas_int* lda, void* b, blas_int* ldb, void* alpha, void* beta, void* vl, blas_int* ldvl, void* vr, blas_int* ldvr, void* work, blas_int* lwork, double* rwork, blas_int* info);
   
   // Cholesky decomposition
   void arma_fortran(arma_spotrf)(char* uplo, blas_int* n,  float* a, blas_int* lda, blas_int* info);

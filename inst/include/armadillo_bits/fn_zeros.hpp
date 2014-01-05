@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 Conrad Sanderson
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2013 Conrad Sanderson
+// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -98,6 +98,29 @@ zeros(const uword n_rows, const uword n_cols, const uword n_slices, const typena
   arma_ignore(junk);
   
   return GenCube<typename cube_type::elem_type, gen_zeros>(n_rows, n_cols, n_slices);
+  }
+
+
+
+template<typename sp_obj_type>
+inline
+sp_obj_type
+zeros(const uword n_rows, const uword n_cols, const typename arma_SpMat_SpCol_SpRow_only<sp_obj_type>::result* junk = 0)
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  if(is_SpCol<sp_obj_type>::value == true)
+    {
+    arma_debug_check( (n_cols != 1), "zeros(): incompatible size" );
+    }
+  else
+  if(is_SpRow<sp_obj_type>::value == true)
+    {
+    arma_debug_check( (n_rows != 1), "zeros(): incompatible size" );
+    }
+  
+  return sp_obj_type(n_rows, n_cols);
   }
 
 

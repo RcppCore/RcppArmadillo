@@ -38,11 +38,6 @@ wall_clock::tic()
     chrono_time1 = std::chrono::steady_clock::now();
     valid = true;
     }
-  #elif defined(ARMA_USE_BOOST_DATE)
-    {
-    boost_time1 = boost::posix_time::microsec_clock::local_time();
-    valid = true;
-    }
   #elif defined(ARMA_HAVE_GETTIMEOFDAY)
     {
     gettimeofday(&posix_time1, 0);
@@ -75,11 +70,6 @@ wall_clock::toc()
       const duration_type chrono_span = std::chrono::duration_cast< duration_type >(chrono_time2 - chrono_time1);
       
       return chrono_span.count();
-      }
-    #elif defined(ARMA_USE_BOOST_DATE)
-      {
-      boost_duration = boost::posix_time::microsec_clock::local_time() - boost_time1;
-      return boost_duration.total_microseconds() * 1e-6;
       }
     #elif defined(ARMA_HAVE_GETTIMEOFDAY)
       {

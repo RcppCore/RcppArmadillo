@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2011 Conrad Sanderson
-// Copyright (C) 2009-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2013 Conrad Sanderson
+// Copyright (C) 2009-2013 NICTA (www.nicta.com.au)
 // Copyright (C) 2009-2010 Dimitrios Bouzas
 // Copyright (C) 2011 Stanislav Funiak
 // 
@@ -33,7 +33,7 @@ rank
   uword  X_n_cols;
   Col<T> s;
   
-  const bool  status = auxlib::svd(s, X, X_n_rows, X_n_cols);
+  const bool  status = auxlib::svd_dc(s, X, X_n_rows, X_n_cols);
   const uword n_elem = s.n_elem;
   
   if(status == true)
@@ -45,15 +45,13 @@ rank
     
     // count non zero valued elements in s
     
-    const T*  s_mem  = s.memptr();
-          uword count  = 0;
+    const T* s_mem = s.memptr();
+    
+    uword count = 0;
     
     for(uword i=0; i<n_elem; ++i)
       {
-      if(s_mem[i] > tol)
-        {
-        ++count;
-        }
+      if(s_mem[i] > tol) { ++count; }
       }
     
     return count;

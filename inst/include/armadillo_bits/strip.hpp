@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2012 Conrad Sanderson
-// Copyright (C) 2010-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2013 Conrad Sanderson
+// Copyright (C) 2010-2013 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -76,6 +76,27 @@ struct strip_inv< Op<T1, op_inv> >
   
   arma_hot inline
   strip_inv(const Op<T1, op_inv>& X)
+    : M(X.m)
+    , slow(X.aux_uword_a == 1)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const T1&  M;
+  const bool slow;
+  
+  static const bool do_inv = true;
+  };
+
+
+
+template<typename T1>
+struct strip_inv< Op<T1, op_inv_sympd> >
+  {
+  typedef T1 stored_type;
+  
+  arma_hot inline
+  strip_inv(const Op<T1, op_inv_sympd>& X)
     : M(X.m)
     , slow(X.aux_uword_a == 1)
     {

@@ -10,6 +10,7 @@
 //! @{
 
 
+//! kept for compatibility with old code
 template<typename T1>
 arma_inline
 typename
@@ -60,6 +61,7 @@ sort
 
 
 
+//! kept for compatibility with old code
 template<typename T1>
 arma_inline
 typename

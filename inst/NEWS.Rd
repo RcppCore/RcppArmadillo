@@ -2,6 +2,31 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.4.000 (2014-01-05)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 4.000 (Feral Steamroller)
+    \itemize{
+      \item added eigen decompositions of sparse matrices:
+      \code{eigs_sym()} and \code{eigs_gen()} 
+      \item added eigen decomposition for pair of matrices: \code{eig_pair()}
+      \item added simpler forms of \code{eig_gen()}
+      \item added condition number of matrices: \code{cond()}
+      \item expanded \code{find()} to handle cubes
+      \item expanded subcube views to access elements specified in a vector
+      \item template argument for \code{running_stat_vec} expanded to
+      accept vector types 
+      \item more robust fast inverse of 4x4 matrices
+      \item faster divide-and-conquer decompositions are now used by
+      default for \code{eig_sym()}, \code{pinv()}, \code{princomp()},
+      \code{rank()}, \code{svd()}, \code{svd_econ()} 
+      \item the form \code{inv(sympd(X))} no longer assumes that X is
+      positive definite; use \code{inv_sympd()} instead 
+      \item added MEX connector for interfacing Octave/Matlab with
+      Armadillo matrices (contributed by George Yammine) 
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.3.930.1 (2013-12-09)}{
   \itemize{
     \item Upgraded to Armadillo release Version 3.930.1

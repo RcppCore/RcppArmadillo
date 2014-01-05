@@ -14,7 +14,7 @@
 template<typename eT, typename T1>
 class subview_elem1 : public Base<eT, subview_elem1<eT,T1> >
   {
-  public:    
+  public:
   
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
@@ -22,13 +22,15 @@ class subview_elem1 : public Base<eT, subview_elem1<eT,T1> >
   static const bool is_row = false;
   static const bool is_col = true;
   
+  arma_aligned const Mat<eT>         fake_m;
   arma_aligned const Mat<eT>&        m;
   arma_aligned const Base<uword,T1>& a;
   
   
   protected:
   
-  arma_inline subview_elem1(const Mat<eT>& in_m, const Base<uword,T1>& in_a);
+  arma_inline subview_elem1(const  Mat<eT>& in_m, const Base<uword,T1>& in_a);
+  arma_inline subview_elem1(const Cube<eT>& in_q, const Base<uword,T1>& in_a);
   
   
   public:
@@ -83,7 +85,9 @@ class subview_elem1 : public Base<eT, subview_elem1<eT,T1> >
   
   private:
   
-  friend class Mat<eT>;
+  friend class  Mat<eT>;
+  friend class Cube<eT>;
+  
   subview_elem1();
   };
 

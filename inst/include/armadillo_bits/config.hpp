@@ -1,5 +1,6 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2014 Conrad Sanderson
+// Copyright (C) 2013 Ryan Curtin
+// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,9 +23,15 @@
 //// Without BLAS, matrix multiplication will still work, but might be slower.
 #endif
 
+#if !defined(ARMA_USE_ARPACK)
+// #define ARMA_USE_ARPACK
+//// Uncomment the above line if you have ARPACK or a high-speed replacement for ARPACK.
+//// ARPACK is required for eigendecompositions of sparse matrices, eg. eigs_sym() 
+#endif
+
 // #define ARMA_USE_WRAPPER
 //// Comment out the above line if you're getting linking errors when compiling your programs,
-//// or if you prefer to directly link with LAPACK and/or BLAS.
+//// or if you prefer to directly link with LAPACK, BLAS or ARPACK.
 //// You will then need to link your programs directly with -llapack -lblas instead of -larmadillo
 
 // #define ARMA_BLAS_CAPITALS
@@ -104,27 +111,18 @@
 //// This is mainly useful for debugging of the library.
 
 
-// #define ARMA_USE_BOOST
-// #define ARMA_USE_BOOST_DATE
-
-
 #if !defined(ARMA_DEFAULT_OSTREAM)
   #define ARMA_DEFAULT_OSTREAM std::cout
 #endif
 
-#define ARMA_PRINT_LOGIC_ERRORS
-#define ARMA_PRINT_RUNTIME_ERRORS
+#define ARMA_PRINT_ERRORS
 //#define ARMA_PRINT_HDF5_ERRORS
 
-// #define ARMA_HAVE_STD_ISFINITE
-// #define ARMA_HAVE_STD_ISINF
-// #define ARMA_HAVE_STD_ISNAN
-// #define ARMA_HAVE_STD_SNPRINTF
 
-// #define ARMA_HAVE_LOG1P
-// #define ARMA_HAVE_GETTIMEOFDAY
-
-
+#if defined(ARMA_DONT_PRINT_ERRORS)
+  #undef ARMA_PRINT_ERRORS
+  #undef ARMA_PRINT_HDF5_ERRORS
+#endif
 
 #if defined(ARMA_DONT_USE_LAPACK)
   #undef ARMA_USE_LAPACK
@@ -134,8 +132,8 @@
   #undef ARMA_USE_BLAS
 #endif
 
-#if defined(ARMA_DONT_USE_WRAPPER)
-  #undef ARMA_USE_WRAPPER
+#if defined(ARMA_DONT_USE_ARPACK)
+  #undef ARMA_USE_ARPACK
 #endif
 
 #if defined(ARMA_DONT_USE_ATLAS)
@@ -143,25 +141,23 @@
   #undef ARMA_ATLAS_INCLUDE_DIR
 #endif
 
+#if defined(ARMA_DONT_USE_WRAPPER)
+  #undef ARMA_USE_WRAPPER
+#endif
+
 #if defined(ARMA_DONT_USE_CXX11)
   #undef ARMA_USE_CXX11
   #undef ARMA_USE_CXX11_RNG
 #endif
 
+#if defined(ARMA_USE_WRAPPER)
+  #if defined(ARMA_USE_CXX11)
+    #if !defined(ARMA_USE_CXX11_RNG)
+      // #define ARMA_USE_CXX11_RNG
+    #endif
+  #endif
+#endif
+
 #if defined(ARMA_DONT_USE_HDF5)
   #undef ARMA_USE_HDF5
-#endif
-
-#if defined(ARMA_DONT_USE_BOOST)
-  #undef ARMA_USE_BOOST
-  #undef ARMA_USE_BOOST_DATE
-  #undef ARMA_USE_BOOST_FORMAT
-#endif
-
-#if defined(ARMA_DONT_PRINT_LOGIC_ERRORS)
-  #undef ARMA_PRINT_LOGIC_ERRORS
-#endif
-
-#if defined(ARMA_DONT_PRINT_RUNTIME_ERRORS)
-  #undef ARMA_PRINT_RUNTIME_ERRORS
 #endif

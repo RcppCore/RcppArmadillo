@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 Conrad Sanderson
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2014 Conrad Sanderson
+// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
 // Copyright (C) 2009 Edmund Highcock
 // Copyright (C) 2011 James Sanders
 // Copyright (C) 2012 Eric Jon Sundstrom
@@ -39,9 +39,6 @@ class auxlib
   
   template<typename eT>
   inline static bool inv_noalias_tinymat(Mat<eT>& out, const Mat<eT>& X, const uword N);
-  
-  template<typename eT>
-  inline static bool inv_inplace_tinymat(Mat<eT>& out, const uword N);
   
   template<typename eT>
   inline static bool inv_inplace_lapack(Mat<eT>& out);
@@ -102,7 +99,7 @@ class auxlib
   
   
   //
-  // eig
+  // eig_sym
   
   template<typename eT, typename T1> 
   inline static bool eig_sym(Col<eT>& eigval, const Base<eT,T1>& X);
@@ -122,11 +119,25 @@ class auxlib
   template<typename T, typename T1>
   inline static bool eig_sym_dc(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Base<std::complex<T>,T1>& X);
   
+  
+  //
+  // eig_gen
+  
   template<typename T, typename T1>
   inline static bool eig_gen(Col< std::complex<T> >& eigval, Mat<T>& l_eigvec, Mat<T>& r_eigvec, const Base<T,T1>& X, const char side);
   
   template<typename T, typename T1>
   inline static bool eig_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& l_eigvec, Mat< std::complex<T> >& r_eigvec, const Base< std::complex<T>, T1 >& X, const char side);
+  
+  
+  //
+  // eig_pair
+  
+  template<typename T, typename T1, typename T2>
+  inline static bool eig_pair(Col< std::complex<T> >& eigval, Mat<T>& l_eigvec, Mat<T>& r_eigvec, const Base<T,T1>& X, const Base<T,T2>& Y, const char side);
+  
+  template<typename T, typename T1, typename T2>
+  inline static bool eig_pair(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& l_eigvec, Mat< std::complex<T> >& r_eigvec, const Base< std::complex<T>, T1 >& X, const Base< std::complex<T>, T2 >& Y, const char side);
   
   
   //
@@ -172,6 +183,24 @@ class auxlib
   
   template<typename T, typename T1>
   inline static bool svd_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, const Base< std::complex<T>, T1>& X, const char mode);
+  
+  
+  // EXPERIMENTAL
+  template<typename eT, typename T1>
+  inline static bool svd_dc(Col<eT>& S, const Base<eT,T1>& X, uword& n_rows, uword& n_cols);
+  
+  // EXPERIMENTAL
+  template<typename T, typename T1>
+  inline static bool svd_dc(Col<T>& S, const Base<std::complex<T>, T1>& X, uword& n_rows, uword& n_cols);
+  
+  // EXPERIMENTAL
+  template<typename eT, typename T1>
+  inline static bool svd_dc(Col<eT>& S, const Base<eT,T1>& X);
+  
+  // EXPERIMENTAL
+  template<typename T, typename T1>
+  inline static bool svd_dc(Col<T>& S, const Base<std::complex<T>, T1>& X);
+  
   
   template<typename eT, typename T1>
   inline static bool svd_dc(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X);

@@ -107,6 +107,7 @@ sort_index_helper(umat_elem_type* out_mem, const eT* in_mem, const uword n_elem)
 
 
 
+//! kept for compatibility with old code
 template<typename T1>
 inline
 umat
@@ -150,6 +151,7 @@ sort_index
 
 
 
+//! kept for compatibility with old code
 template<typename T1>
 inline
 umat

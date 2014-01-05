@@ -593,6 +593,14 @@ Mat<eT>::operator=(const std::vector<eT>& x)
       init_cold();
       
       arrayops::copy( memptr(), X.mem, X.n_elem );
+      
+      if( (X.mem_state == 0) && (X.n_elem <= arma_config::mat_prealloc) )
+        {
+        access::rw(X.n_rows) = 0;
+        access::rw(X.n_cols) = 0;
+        access::rw(X.n_elem) = 0;
+        access::rw(X.mem)    = 0;
+        }
       }
     }
   
@@ -606,6 +614,14 @@ Mat<eT>::operator=(const std::vector<eT>& x)
     arma_extra_debug_sigprint(arma_boost::format("this = %x   X = %x") % this % &X);
     
     (*this).steal_mem(X);
+    
+    if( (X.mem_state == 0) && (X.n_elem <= arma_config::mat_prealloc) )
+      {
+      access::rw(X.n_rows) = 0;
+      access::rw(X.n_cols) = 0;
+      access::rw(X.n_elem) = 0;
+      access::rw(X.mem)    = 0;
+      }
     
     return *this;
     }

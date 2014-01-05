@@ -48,24 +48,17 @@ struct arma_config
   #endif
   
   
+  #if defined(ARMA_USE_ARPACK)
+    static const bool arpack = true;
+  #else
+    static const bool arpack = false;
+  #endif
+  
+  
   #if defined(ARMA_USE_HDF5)
     static const bool hdf5 = true;
   #else
     static const bool hdf5 = false;
-  #endif
-  
-  
-  #if defined(ARMA_USE_BOOST)
-    static const bool boost = true;
-  #else
-    static const bool boost = false;
-  #endif
-  
-  
-  #if defined(ARMA_USE_BOOST_DATE)
-    static const bool boost_date = true;
-  #else
-    static const bool boost_date = false;
   #endif
   
   

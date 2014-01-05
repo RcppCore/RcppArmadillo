@@ -154,7 +154,7 @@ arrayops::fill_zeros(eT* dest, const uword n_elem)
   {
   typedef typename get_pod_type<eT>::result pod_type;
   
-  if( (n_elem >= 8) && (std::numeric_limits<eT>::is_integer || (std::numeric_limits<pod_type>::is_iec559 && is_real<pod_type>::value)) )
+  if( (n_elem >= 16) && (std::numeric_limits<eT>::is_integer || (std::numeric_limits<pod_type>::is_iec559 && is_real<pod_type>::value)) )
     {
     std::memset(dest, 0, sizeof(eT)*n_elem);
     }
@@ -540,38 +540,75 @@ inline
 void
 arrayops::inplace_set(eT* dest, const eT val, const uword n_elem)
   {
-  if(memory::is_aligned(dest))
+  if(n_elem <= 16)
     {
-    memory::mark_as_aligned(dest);
-    
-    uword i,j;
-    
-    for(i=0, j=1; j<n_elem; i+=2, j+=2)
-      {
-      dest[i] = val;
-      dest[j] = val;
-      }
-    
-    if(i < n_elem)
-      {
-      dest[i] = val;
-      }
+    arrayops::inplace_set_small(dest, val, n_elem);
     }
   else
     {
-    uword i,j;
-    
-    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+    if(memory::is_aligned(dest))
       {
-      dest[i] = val;
-      dest[j] = val;
+      memory::mark_as_aligned(dest);
+      
+      uword i,j;
+      
+      for(i=0, j=1; j<n_elem; i+=2, j+=2)
+        {
+        dest[i] = val;
+        dest[j] = val;
+        }
+      
+      if(i < n_elem)
+        {
+        dest[i] = val;
+        }
       }
-    
-    if(i < n_elem)
+    else
       {
-      dest[i] = val;
+      uword i,j;
+      
+      for(i=0, j=1; j<n_elem; i+=2, j+=2)
+        {
+        dest[i] = val;
+        dest[j] = val;
+        }
+      
+      if(i < n_elem)
+        {
+        dest[i] = val;
+        }
       }
-    } 
+    }
+  }
+
+
+
+template<typename eT>
+arma_hot
+inline
+void
+arrayops::inplace_set_small(eT* dest, const eT val, const uword n_elem)
+  {
+  switch(n_elem)
+    {
+    case 16: dest[15] = val;
+    case 15: dest[14] = val;
+    case 14: dest[13] = val;
+    case 13: dest[12] = val;
+    case 12: dest[11] = val;
+    case 11: dest[10] = val;
+    case 10: dest[ 9] = val;
+    case  9: dest[ 8] = val;
+    case  8: dest[ 7] = val;
+    case  7: dest[ 6] = val;
+    case  6: dest[ 5] = val;
+    case  5: dest[ 4] = val;
+    case  4: dest[ 3] = val;
+    case  3: dest[ 2] = val;
+    case  2: dest[ 1] = val;
+    case  1: dest[ 0] = val;
+    default:;
+    }
   }
 
 

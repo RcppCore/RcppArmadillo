@@ -18,7 +18,7 @@ void
 inplace_strans
   (
         Mat<eT>& X,
-  const char*    method = "standard"
+  const char*    method = "std"
   )
   {
   arma_extra_debug_sigprint();

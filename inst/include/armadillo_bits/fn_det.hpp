@@ -200,7 +200,7 @@ det
   
   const eT tmp = det(X.m, slow);
   
-  arma_warn( (tmp == eT(0)), "det(): warning: denominator is zero" );
+  arma_debug_warn( (tmp == eT(0)), "det(): warning: denominator is zero" );
   
   return eT(1) / tmp;
   }

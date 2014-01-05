@@ -93,7 +93,7 @@ static
 void
 arma_stop(const T1& x)
   {
-  #if defined(ARMA_PRINT_LOGIC_ERRORS)
+  #if defined(ARMA_PRINT_ERRORS)
     {
     std::ostream& out = get_stream_err1();
     
@@ -122,14 +122,22 @@ static
 void
 arma_stop_bad_alloc(const T1& x)
   {
-  std::ostream& out = get_stream_err1();
-  
-  out.flush();
-  
-  out << '\n';
-  out << "error: " << x << '\n';
-  out << '\n';
-  out.flush();
+  #if defined(ARMA_PRINT_ERRORS)
+    {
+    std::ostream& out = get_stream_err2();
+    
+    out.flush();
+    
+    out << '\n';
+    out << "error: " << x << '\n';
+    out << '\n';
+    out.flush();
+    }
+  #else
+    {
+    arma_ignore(x);
+    }
+  #endif
   
   throw std::bad_alloc();
   }
@@ -147,7 +155,7 @@ static
 void
 arma_bad(const T1& x, const bool hurl = true)
   {
-  #if defined(ARMA_PRINT_RUNTIME_ERRORS)
+  #if defined(ARMA_PRINT_ERRORS)
     {
     std::ostream& out = get_stream_err2();
     
@@ -1174,10 +1182,9 @@ arma_assert_mul_size(const subview<eT1>& A, const subview<eT2>& B, const char* x
         out << "@ arma_config::use_cxx11    = " << arma_config::use_cxx11    << '\n';
         out << "@ arma_config::lapack       = " << arma_config::lapack       << '\n';
         out << "@ arma_config::blas         = " << arma_config::blas         << '\n';
+        out << "@ arma_config::arpack       = " << arma_config::arpack       << '\n';
         out << "@ arma_config::atlas        = " << arma_config::atlas        << '\n';
         out << "@ arma_config::hdf5         = " << arma_config::hdf5         << '\n';
-        out << "@ arma_config::boost        = " << arma_config::boost        << '\n';
-        out << "@ arma_config::boost_date   = " << arma_config::boost_date   << '\n';
         out << "@ arma_config::good_comp    = " << arma_config::good_comp    << '\n';
         out << "@ arma_config::extra_code   = " << arma_config::extra_code   << '\n';
         out << "@ arma_config::mat_prealloc = " << arma_config::mat_prealloc << '\n';

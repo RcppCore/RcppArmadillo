@@ -30,6 +30,18 @@ subview_elem1<eT,T1>::subview_elem1(const Mat<eT>& in_m, const Base<uword,T1>& i
 
 
 template<typename eT, typename T1>
+arma_inline
+subview_elem1<eT,T1>::subview_elem1(const Cube<eT>& in_q, const Base<uword,T1>& in_a)
+  : fake_m( const_cast< eT* >(in_q.memptr()), in_q.n_elem, 1, false )
+  ,      m( fake_m )
+  ,      a( in_a   )
+  {
+  arma_extra_debug_sigprint();
+  }
+
+
+
+template<typename eT, typename T1>
 template<typename op_type>
 inline
 void

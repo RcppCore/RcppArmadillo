@@ -283,8 +283,68 @@ namespace lapack
       }
     }
   
-
-
+  
+  template<typename eT>
+  inline
+  void
+  ggev
+    (
+    char* jobvl, char* jobvr, blas_int* n,
+    eT* a, blas_int* lda, eT* b, blas_int* ldb,
+    eT* alphar, eT* alphai, eT* beta,
+    eT* vl, blas_int* ldvl, eT* vr, blas_int* ldvr,
+    eT* work, blas_int* lwork,
+    blas_int* info
+    )
+    {
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
+    
+    if(is_float<eT>::value == true)
+      {
+      typedef float T;
+      arma_fortran(arma_sggev)(jobvl, jobvr, n, (T*)a, lda, (T*)b, ldb, (T*)alphar, (T*)alphai, (T*)beta, (T*)vl, ldvl, (T*)vr, ldvr, (T*)work, lwork, info);
+      }
+    else
+    if(is_double<eT>::value == true)
+      {
+      typedef double T;
+      arma_fortran(arma_dggev)(jobvl, jobvr, n, (T*)a, lda, (T*)b, ldb, (T*)alphar, (T*)alphai, (T*)beta, (T*)vl, ldvl, (T*)vr, ldvr, (T*)work, lwork, info);
+      }
+    }
+  
+  
+  
+  template<typename eT>
+  inline
+  void
+  cx_ggev
+    (
+    char* jobvl, char* jobvr, blas_int* n,
+    eT* a, blas_int* lda, eT* b, blas_int* ldb,
+    eT* alpha, eT* beta,
+    eT* vl, blas_int* ldvl, eT* vr, blas_int* ldvr,
+    eT* work, blas_int* lwork, typename eT::value_type* rwork,
+    blas_int* info
+    )
+    {
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
+    
+    if(is_supported_complex_float<eT>::value == true)
+      {
+      typedef float T;
+      typedef typename std::complex<T> cx_T;
+      arma_fortran(arma_cggev)(jobvl, jobvr, n, (cx_T*)a, lda, (cx_T*)b, ldb, (cx_T*)alpha, (cx_T*)beta, (cx_T*)vl, ldvl, (cx_T*)vr, ldvr, (cx_T*)work, lwork, (T*)rwork, info);
+      }
+    else
+    if(is_supported_complex_double<eT>::value == true)
+      {
+      typedef double T;
+      typedef typename std::complex<T> cx_T;
+      arma_fortran(arma_zggev)(jobvl, jobvr, n, (cx_T*)a, lda, (cx_T*)b, ldb, (cx_T*)alpha, (cx_T*)beta, (cx_T*)vl, ldvl, (cx_T*)vr, ldvr, (cx_T*)work, lwork, (T*)rwork, info);
+      }
+    }
+  
+  
   
   template<typename eT>
   inline

@@ -73,8 +73,8 @@ class Row : public Mat<eT>
   arma_inline const Op<Row<eT>,op_htrans> ht() const;
   arma_inline const Op<Row<eT>,op_strans> st() const;
   
-  arma_inline eT& col(const uword col_num);         // TODO: inconsistent; should return a subview_col; change API for 4.0 ?
-  arma_inline eT  col(const uword col_num) const;
+  arma_inline       subview_row<eT> col(const uword col_num);
+  arma_inline const subview_row<eT> col(const uword col_num) const;
   
   using Mat<eT>::cols;
   using Mat<eT>::operator();

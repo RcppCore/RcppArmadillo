@@ -124,6 +124,12 @@ class Cube : public BaseCube< eT, Cube<eT> >
   inline            subview_cube<eT> tube(const span& row_span, const span& col_span);
   inline      const subview_cube<eT> tube(const span& row_span, const span& col_span) const;
   
+  template<typename T1> arma_inline       subview_elem1<eT,T1> elem(const Base<uword,T1>& a);
+  template<typename T1> arma_inline const subview_elem1<eT,T1> elem(const Base<uword,T1>& a) const;
+  
+  template<typename T1> arma_inline       subview_elem1<eT,T1> operator()(const Base<uword,T1>& a);
+  template<typename T1> arma_inline const subview_elem1<eT,T1> operator()(const Base<uword,T1>& a) const;
+  
   
   inline void shed_slice(const uword slice_num);
   

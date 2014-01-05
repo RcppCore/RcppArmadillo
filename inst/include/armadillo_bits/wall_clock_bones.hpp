@@ -28,9 +28,6 @@ class wall_clock
   
   #if defined(ARMA_USE_CXX11)
     std::chrono::steady_clock::time_point chrono_time1;
-  #elif defined(ARMA_USE_BOOST_DATE)
-    boost::posix_time::ptime         boost_time1;
-    boost::posix_time::time_duration boost_duration;
   #elif defined(ARMA_HAVE_GETTIMEOFDAY)
     struct timeval posix_time1;
     struct timeval posix_time2;

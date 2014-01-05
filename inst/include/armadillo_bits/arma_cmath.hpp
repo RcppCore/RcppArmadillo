@@ -7,15 +7,13 @@
 
 
 
-//! \addtogroup cmath_wrap
+//! \addtogroup arma_cmath
 //! @{
 
 
 
 //
 // wrappers for isfinite
-//
-
 
 
 template<typename eT>
@@ -35,7 +33,15 @@ arma_inline
 bool
 arma_isfinite(float x)
   {
-  #if defined(ARMA_HAVE_STD_ISFINITE) || defined(ARMA_USE_CXX11)
+  #if defined(ARMA_USE_CXX11)
+    {
+    return std::isfinite(x);
+    }
+  #elif defined(ARMA_HAVE_TR1)
+    {
+    return std::tr1::isfinite(x);
+    }
+  #elif defined(ARMA_HAVE_ISFINITE)
     {
     return (std::isfinite(x) != 0);
     }
@@ -43,7 +49,7 @@ arma_isfinite(float x)
     {
     const bool x_is_inf = ( (x == x) && ((x - x) != float(0)) );
     const bool x_is_nan = (x != x);
-
+    
     return ( (x_is_inf == false) && (x_is_nan == false) );
     }
   #endif
@@ -56,7 +62,15 @@ arma_inline
 bool
 arma_isfinite(double x)
   {
-  #if defined(ARMA_HAVE_STD_ISFINITE) || defined(ARMA_USE_CXX11)
+  #if defined(ARMA_USE_CXX11)
+    {
+    return std::isfinite(x);
+    }
+  #elif defined(ARMA_HAVE_TR1)
+    {
+    return std::tr1::isfinite(x);
+    }
+  #elif defined(ARMA_HAVE_ISFINITE)
     {
     return (std::isfinite(x) != 0);
     }
@@ -64,7 +78,7 @@ arma_isfinite(double x)
     {
     const bool x_is_inf = ( (x == x) && ((x - x) != double(0)) );
     const bool x_is_nan = (x != x);
-
+    
     return ( (x_is_inf == false) && (x_is_nan == false) );
     }
   #endif
@@ -91,13 +105,9 @@ arma_isfinite(const std::complex<T>& x)
 
 //
 // wrappers for trigonometric functions
-//
-
-
-
-// Wherever possible, try to use TR1 or C++11 versions of the functions below,
-// otherwise fall back to Boost Math.
-//
+// 
+// wherever possible, try to use C++11 or TR1 versions of the following functions:
+// 
 // complex acos
 // complex asin
 // complex atan
@@ -111,8 +121,7 @@ arma_isfinite(const std::complex<T>& x)
 // complex atanh
 // 
 // 
-// If TR1 not present and Boost math not present,
-// we have our own rudimentary versions of:
+// if C++11 or TR1 are not available, we have rudimentary versions of:
 // 
 // real    acosh
 // real    asinh
@@ -120,29 +129,24 @@ arma_isfinite(const std::complex<T>& x)
 
 
 
-#if defined(ARMA_USE_BOOST)
-  #define arma_boost_wrap(trig_fn, val) ( (boost::math::trig_fn)(val) )
-#else
-  #define arma_boost_wrap(trig_fn, val) ( arma_stop( #trig_fn "(): need C++11 or Boost libraries" ), val )
-#endif
-
-
 template<typename T>
 arma_inline
 std::complex<T>
 arma_acos(const std::complex<T>& x)
   {
-  #if defined(ARMA_HAVE_STD_TR1)
-    {
-    return std::tr1::acos(x);
-    }
-  #elif defined(ARMA_USE_CXX11)
+  #if defined(ARMA_USE_CXX11)
     {
     return std::acos(x);
     }
+  #elif defined(ARMA_HAVE_TR1)
+    {
+    return std::tr1::acos(x);
+    }
   #else
     {
-    return arma_boost_wrap(acos, x);
+    arma_stop("acos(): need C++11 compiler");
+    
+    return std::complex<T>(0);
     }
   #endif
   }
@@ -154,17 +158,19 @@ arma_inline
 std::complex<T>
 arma_asin(const std::complex<T>& x)
   {
-  #if defined(ARMA_HAVE_STD_TR1)
-    {
-    return std::tr1::asin(x);
-    }
-  #elif defined(ARMA_USE_CXX11)
+  #if defined(ARMA_USE_CXX11)
     {
     return std::asin(x);
     }
+  #elif defined(ARMA_HAVE_TR1)
+    {
+    return std::tr1::asin(x);
+    }
   #else
     {
-    return arma_boost_wrap(asin, x);
+    arma_stop("asin(): need C++11 compiler");
+    
+    return std::complex<T>(0);
     }
   #endif
   }
@@ -176,17 +182,19 @@ arma_inline
 std::complex<T>
 arma_atan(const std::complex<T>& x)
   {
-  #if defined(ARMA_HAVE_STD_TR1)
-    {
-    return std::tr1::atan(x);
-    }
-  #elif defined(ARMA_USE_CXX11)
+  #if defined(ARMA_USE_CXX11)
     {
     return std::atan(x);
     }
+  #elif defined(ARMA_HAVE_TR1)
+    {
+    return std::tr1::atan(x);
+    }
   #else
     {
-    return arma_boost_wrap(atan, x);
+    arma_stop("atan(): need C++11 compiler");
+    
+    return std::complex<T>(0);
     }
   #endif
   }
@@ -198,17 +206,13 @@ arma_inline
 eT
 arma_acosh(const eT x)
   {
-  #if defined(ARMA_HAVE_STD_TR1)
-    {
-    return std::tr1::acosh(x);
-    }
-  #elif defined(ARMA_USE_CXX11)
+  #if defined(ARMA_USE_CXX11)
     {
     return std::acosh(x);
     }
-  #elif defined(ARMA_USE_BOOST)
+  #elif defined(ARMA_HAVE_TR1)
     {
-    return boost::math::acosh(x);
+    return std::tr1::acosh(x);
     }
   #else
     {
@@ -239,17 +243,13 @@ arma_inline
 eT
 arma_asinh(const eT x)
   {
-  #if defined(ARMA_HAVE_STD_TR1)
-    {
-    return std::tr1::asinh(x);
-    }
-  #elif defined(ARMA_USE_CXX11)
+  #if defined(ARMA_USE_CXX11)
     {
     return std::asinh(x);
     }
-  #elif defined(ARMA_USE_BOOST)
+  #elif defined(ARMA_HAVE_TR1)
     {
-    return boost::math::asinh(x);
+    return std::tr1::asinh(x);
     }
   #else
     {
@@ -266,17 +266,13 @@ arma_inline
 eT
 arma_atanh(const eT x)
   {
-  #if defined(ARMA_HAVE_STD_TR1)
-    {
-    return std::tr1::atanh(x);
-    }
-  #elif defined(ARMA_USE_CXX11)
+  #if defined(ARMA_USE_CXX11)
     {
     return std::atanh(x);
     }
-  #elif defined(ARMA_USE_BOOST)
+  #elif defined(ARMA_HAVE_TR1)
     {
-    return boost::math::atanh(x);
+    return std::tr1::atanh(x);
     }
   #else
     {
@@ -307,17 +303,19 @@ arma_inline
 std::complex<T>
 arma_acosh(const std::complex<T>& x)
   {
-  #if defined(ARMA_HAVE_STD_TR1)
-    {
-    return std::tr1::acosh(x);
-    }
-  #elif defined(ARMA_USE_CXX11)
+  #if defined(ARMA_USE_CXX11)
     {
     return std::acosh(x);
     }
+  #elif defined(ARMA_HAVE_TR1)
+    {
+    return std::tr1::acosh(x);
+    }
   #else
     {
-    return arma_boost_wrap(acosh, x);
+    arma_stop("acosh(): need C++11 compiler");
+    
+    return std::complex<T>(0);
     }
   #endif
   }
@@ -329,17 +327,19 @@ arma_inline
 std::complex<T>
 arma_asinh(const std::complex<T>& x)
   {
-  #if defined(ARMA_HAVE_STD_TR1)
-    {
-    return std::tr1::asinh(x);
-    }
-  #elif defined(ARMA_USE_CXX11)
+  #if defined(ARMA_USE_CXX11)
     {
     return std::asinh(x);
     }
+  #elif defined(ARMA_HAVE_TR1)
+    {
+    return std::tr1::asinh(x);
+    }
   #else
     {
-    return arma_boost_wrap(asinh, x);
+    arma_stop("asinh(): need C++11 compiler");
+    
+    return std::complex<T>(0);
     }
   #endif
   }
@@ -351,24 +351,22 @@ arma_inline
 std::complex<T>
 arma_atanh(const std::complex<T>& x)
   {
-  #if defined(ARMA_HAVE_STD_TR1)
-    {
-    return std::tr1::atanh(x);
-    }
-  #elif defined(ARMA_USE_CXX11)
+  #if defined(ARMA_USE_CXX11)
     {
     return std::atanh(x);
     }
+  #elif defined(ARMA_HAVE_TR1)
+    {
+    return std::tr1::atanh(x);
+    }
   #else
     {
-    return arma_boost_wrap(atanh, x);
+    arma_stop("atanh(): need C++11 compiler");
+    
+    return std::complex<T>(0);
     }
   #endif
   }
-
-
-
-#undef arma_boost_wrap
 
 
 
