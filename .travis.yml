@@ -2,6 +2,7 @@
 #
 # See the r-travis repo and its wiki 
 #   https://github.com/craigcitro/r-travis/wiki
+#   https://github.com/eddelbuettel/r-travis/
 
 language: c
 
@@ -21,7 +22,7 @@ install:
 script: 
   - ./travis-tool.sh run_tests
 
-after_script:
+after_failure:
   - ./travis-tool.sh dump_logs
 
 notifications:
