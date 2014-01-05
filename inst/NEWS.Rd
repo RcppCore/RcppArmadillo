@@ -7,7 +7,10 @@
     \item Upgraded to Armadillo release Version 4.000 (Feral Steamroller)
     \itemize{
       \item added eigen decompositions of sparse matrices:
-      \code{eigs_sym()} and \code{eigs_gen()} 
+      \code{eigs_sym()} and \code{eigs_gen()} [ but this requires
+      linking against ARPACK which \cpkg{RcppArmadillo} as a
+      pure-template package does not do, and R is not linked against
+      ARPACK either. ]
       \item added eigen decomposition for pair of matrices: \code{eig_pair()}
       \item added simpler forms of \code{eig_gen()}
       \item added condition number of matrices: \code{cond()}
