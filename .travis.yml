@@ -17,7 +17,8 @@ before_install:
   - ./travis-tool.sh bootstrap
 
 install:
-  - ./travis-tool.sh install_r RUnit Rcpp
+  - ./travis-tool.sh install_aptget r-cran-runit
+  - ./travis-tool.sh install_r Rcpp
 
 script: 
   - ./travis-tool.sh run_tests
