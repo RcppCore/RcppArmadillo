@@ -24,9 +24,9 @@ Description: GNU R package for Armadillo C++ linear algebra library
  This library is useful if C++ has been decided as the language of choice 
  (due to speed and/or integration capabilities), rather than another language.
  .
- The RcppArmadillo package includes the header files from the templated
- Armadillo library (currently version 3.900.0). Thus users do not need to
- install Armadillo itself in order to use RcppArmadillo.
+ The RcppArmadillo package includes the header files from the
+ templated Armadillo library. Thus users do not need to install
+ Armadillo itself in order to use RcppArmadillo.
  .
  This Armadillo integration provides a nice illustration of the 
  capabilities of the Rcpp package for seamless R and C++ integration.
