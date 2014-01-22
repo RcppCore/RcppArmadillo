@@ -248,11 +248,11 @@ Row<eT>::operator=(const std::vector<eT>& x)
   const Row<eT>&
   Row<eT>::operator=(Row<eT>&& X)
     {
-    arma_extra_debug_sigprint();
+    arma_extra_debug_sigprint(arma_boost::format("this = %x   X = %x") % this % &X);
     
     (*this).steal_mem(X);
     
-    if( (X.mem_state == 0) && (X.n_elem <= arma_config::mat_prealloc) )
+    if( (X.mem_state == 0) && (X.n_elem <= arma_config::mat_prealloc) && (this != &X) )
       {
       access::rw(X.n_rows) = 1;
       access::rw(X.n_cols) = 0;

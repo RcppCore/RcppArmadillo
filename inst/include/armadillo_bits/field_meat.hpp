@@ -1109,7 +1109,7 @@ field<oT>::init(const uword n_rows_in, const uword n_cols_in)
         ? ( (float(n_rows_in) * float(n_cols_in)) > float(ARMA_MAX_UWORD) )
         : false
       ),
-    "field::init(): requested size is too large"
+    "field::init(): requested size is too large; suggest to enable ARMA_64BIT_WORD"
     );
   
   const uword n_elem_new = n_rows_in * n_cols_in;

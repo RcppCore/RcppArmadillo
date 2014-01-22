@@ -1,9 +1,8 @@
 useDynLib(RcppArmadillo)
 
 import(Rcpp)
-export(fastLmPure,
-       fastLm)
-export(RcppArmadillo.package.skeleton)
+
+export(fastLmPure, fastLm, RcppArmadillo.package.skeleton)
 S3method(fastLm, default)
 S3method(fastLm, formula)
 S3method(predict, fastLm)

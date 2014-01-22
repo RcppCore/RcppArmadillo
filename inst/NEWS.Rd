@@ -2,6 +2,16 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.4.000.2 (2014-01-21)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 4.000.2
+    \itemize{
+      \item fix for \code{randi()} generating out-of-interval values
+      \item workaround for a bug in the Intel compiler
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.4.000 (2014-01-05)}{
   \itemize{
     \item Upgraded to Armadillo release Version 4.000 (Feral Steamroller)

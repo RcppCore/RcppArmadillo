@@ -4070,7 +4070,7 @@ SpMat<eT>::init(uword in_rows, uword in_cols)
         ? ( (float(in_rows) * float(in_cols)) > float(ARMA_MAX_UWORD) )
         : false
       ),
-      "SpMat::init(): requested size is too large"
+      "SpMat::init(): requested size is too large; suggest to enable ARMA_64BIT_WORD"
     );
 
   // Clean out the existing memory.

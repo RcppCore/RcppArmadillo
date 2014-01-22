@@ -155,7 +155,7 @@ Cube<eT>::init_cold()
         ? ( (float(n_rows) * float(n_cols) * float(n_slices)) > float(ARMA_MAX_UWORD) )
         : false
       ),
-    "Cube::init(): requested size is too large"
+    "Cube::init(): requested size is too large; suggest to enable ARMA_64BIT_WORD"
     );
   
   if(n_elem <= Cube_prealloc::mem_n_elem)

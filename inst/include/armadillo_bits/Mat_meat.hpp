@@ -155,7 +155,7 @@ Mat<eT>::init_cold()
         ? ( (float(n_rows) * float(n_cols)) > float(ARMA_MAX_UWORD) )
         : false
       ),
-    "Mat::init(): requested size is too large"
+    "Mat::init(): requested size is too large; suggest to enable ARMA_64BIT_WORD"
     );
   
   if(n_elem <= arma_config::mat_prealloc)
@@ -615,7 +615,7 @@ Mat<eT>::operator=(const std::vector<eT>& x)
     
     (*this).steal_mem(X);
     
-    if( (X.mem_state == 0) && (X.n_elem <= arma_config::mat_prealloc) )
+    if( (X.mem_state == 0) && (X.n_elem <= arma_config::mat_prealloc) && (this != &X) )
       {
       access::rw(X.n_rows) = 0;
       access::rw(X.n_cols) = 0;
