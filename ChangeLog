@@ -1,3 +1,19 @@
+2014-02-02  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Versioned Imports: on Rcpp (>= 0.11.0)
+
+	* src/Makevars (PKG_LIBS): Simplified with Rcpp (>= 0.11.0)
+	* src/Makevars.win (PKG_LIBS): Ditto
+	* inst/skeleton/Makevars (PKG_LIBS): Ditto
+
+	* R/RcppArmadillo.package.skeleton.R: Updated:
+	  - no longer set namespace argument (as NAMESPACEs req'ed)
+	  - corresponding code updates
+	  - reflect Rcpp 0.11.0
+
+	* inst/skeleton/rcpparma_hello_world.cpp: Rewritten to use Rcpp
+	Attributes and expanded to included more examples
+
 2014-01-21  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.4.000.2

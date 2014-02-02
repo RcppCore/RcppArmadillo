@@ -12,7 +12,7 @@ Create a skeleton for a new package that intends to use RcppArmadillo
 }
 \usage{
 RcppArmadillo.package.skeleton(name = "anRpackage", list = character(), 
-	environment = .GlobalEnv, path = ".", force = FALSE, namespace = TRUE, 
+	environment = .GlobalEnv, path = ".", force = FALSE, 
 	code_files = character(), example_code = TRUE)
 }
 \arguments{
@@ -21,7 +21,6 @@ RcppArmadillo.package.skeleton(name = "anRpackage", list = character(),
 	\item{environment}{See \link[utils]{package.skeleton}}
 	\item{path}{See \link[utils]{package.skeleton}}
 	\item{force}{See \link[utils]{package.skeleton}}
-	\item{namespace}{See \link[utils]{package.skeleton}}
 	\item{code_files}{See \link[utils]{package.skeleton}}
 	\item{example_code}{If TRUE, example c++ code using RcppArmadillo is added to the package}
 }

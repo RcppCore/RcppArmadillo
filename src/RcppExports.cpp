@@ -6,6 +6,21 @@
 
 using namespace Rcpp;
 
+// armadillo_version
+IntegerVector armadillo_version(bool single);
+RcppExport SEXP RcppArmadillo_armadillo_version(SEXP singleSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< bool >::type single(singleSEXP );
+        IntegerVector __result = armadillo_version(single);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
 // fastLm
 List fastLm(const arma::mat& X, const arma::colvec& y);
 RcppExport SEXP RcppArmadillo_fastLm(SEXP XSEXP, SEXP ySEXP) {
@@ -16,21 +31,6 @@ BEGIN_RCPP
         Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP );
         Rcpp::traits::input_parameter< const arma::colvec& >::type y(ySEXP );
         List __result = fastLm(X, y);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
-END_RCPP
-}
-// armadillo_version
-IntegerVector armadillo_version(bool single);
-RcppExport SEXP RcppArmadillo_armadillo_version(SEXP singleSEXP) {
-BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< bool >::type single(singleSEXP );
-        IntegerVector __result = armadillo_version(single);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);

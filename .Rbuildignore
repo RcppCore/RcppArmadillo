@@ -2,3 +2,5 @@ debian
 .travis.yml
 .git
 src/lapack
+^.*\.Rproj$
+^\.Rproj\.user$
