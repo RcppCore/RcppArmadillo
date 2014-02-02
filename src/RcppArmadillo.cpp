@@ -2,7 +2,7 @@
 //
 // RcppArmadillo.cpp: Rcpp/Armadillo glue
 //
-// Copyright (C)  2010 - 2013  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2010 - 2014  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 //
 // This file is part of RcppArmadillo.
 //
@@ -43,3 +43,15 @@ IntegerVector armadillo_version(bool single) {
    return version ;
 }
 
+// This was a trial related to https://github.com/RcppCore/RcppArmadillo/issues/11
+//
+// // [[Rcpp::export]]
+// void armadillo_set_seed_random() {
+//     arma::arma_rng::set_seed_random();  			// set the seed to a random value
+// } 
+
+// // [[Rcpp::export]]
+// void armadillo_set_seed(unsigned int val) {
+//     //Rcpp::Rcout << "Setting value " << val << std::endl;
+//     arma::arma_rng::set_seed(val);  			    // set the seed to given value
+// } 
