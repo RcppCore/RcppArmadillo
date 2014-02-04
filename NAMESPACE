@@ -10,3 +10,5 @@ S3method(print, fastLm)
 S3method(summary, fastLm)
 S3method(print, summary.fastLm)
 
+export(armadillo_version,armadillo_set_seed,armadillo_set_seed_random)
+

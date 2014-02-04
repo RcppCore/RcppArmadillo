@@ -1,3 +1,10 @@
+2014-02-04  Dirk Eddelbuettel  <edd@debian.org>
+
+	* man/*: Add help pages for \code{armadillo_version},
+	\code{armadillo_set_seed} and \code{armadillo_set_seed_random}
+
+	* NAMESPACE: Export three helper functions
+
 2014-02-02  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Versioned Imports: on Rcpp (>= 0.11.0)

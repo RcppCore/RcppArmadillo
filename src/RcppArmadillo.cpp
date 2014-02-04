@@ -27,29 +27,56 @@ const unsigned int arma::arma_version::major;
 const unsigned int arma::arma_version::minor;
 const unsigned int arma::arma_version::patch;
 
+//' Report the version of Armadillo 
+//' 
+//' @details The version is defined by Armadillo in the header \code{arma_version.hpp}.
+//' @param single A logical vector indicating whether a single return values is requested,
+//' or a named vector with three elements \code{major}, \code{minor} and \code{patch}.
+//' @return Depending on the value of \code{single}, either a single number describing the Armadillo version
+//' or a named vector with three elements \code{major}, \code{minor} and \code{patch}.
+//' @seealso Armadillo header file \code{arma_version.hpp}.
 // [[Rcpp::export]]
 IntegerVector armadillo_version(bool single) {
 
-    if( single ){
-        return wrap( 10000*arma::arma_version::major +
-            100*arma::arma_version::minor + 
-            arma::arma_version::patch ) ;
+    if (single) {
+        return wrap(10000*arma::arma_version::major +
+                    100*arma::arma_version::minor + 
+                    arma::arma_version::patch) ;
     }
 
     IntegerVector version = IntegerVector::create(_["major"] = arma::arma_version::major,
                                                   _["minor"] = arma::arma_version::minor,
                                                   _["patch"] = arma::arma_version::patch);
     
-   return version ;
+    return version ;
 }
 
 // Per request of Gábor Csárdi in https://github.com/RcppCore/RcppArmadillo/issues/11
 //
+//' Set the Armadillo Random Number Generator to a random value
+//' 
+//' @details Depending on whether RcppArmadillo was compiled for the C++98 standard 
+//' (currently the default) or for C++11 (optional), two different RNGs may be used. 
+//' This function resets either. For C++98, the system library RNG is used. It may
+//' have poor performance, particularly on older versions of Windows. For C++11, the
+//' RNG included in its library is used.
+//' @return The function is invoked for its side effect and has no return value.
+//' @seealso The R documentation on its RNGs all of which are accessible via \pkg{Rcpp}.  
 // [[Rcpp::export]]
 void armadillo_set_seed_random() {
     arma::arma_rng::set_seed_random();  			// set the seed to a random value
 } 
 
+//' Set the Armadillo Random Number Generator to the given value
+//' 
+//' @param val The seed used to initialize Armadillo's random number generator.
+//' @details Depending on whether RcppArmadillo was compiled for the C++98 standard 
+//' (currently the default) or for C++11 (optional), two different RNGs may be used. 
+//' This function resets either. For C++98, the system library RNG is used. It may
+//' have poor performance, particularly on older versions of Windows. For C++11, the
+//' RNG included in its library is used.
+//' @return The function is invoked for its side effect and has no return value. 
+//' @seealso The R documentation on its RNGs all of which are accessible via \pkg{Rcpp}.  
 // [[Rcpp::export]]
 void armadillo_set_seed(unsigned int val) {
     //Rcpp::Rcout << "Setting value " << val << std::endl;
