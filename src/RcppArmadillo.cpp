@@ -43,15 +43,15 @@ IntegerVector armadillo_version(bool single) {
    return version ;
 }
 
-// This was a trial related to https://github.com/RcppCore/RcppArmadillo/issues/11
+// Per request of Gábor Csárdi in https://github.com/RcppCore/RcppArmadillo/issues/11
 //
-// // [[Rcpp::export]]
-// void armadillo_set_seed_random() {
-//     arma::arma_rng::set_seed_random();  			// set the seed to a random value
-// } 
+// [[Rcpp::export]]
+void armadillo_set_seed_random() {
+    arma::arma_rng::set_seed_random();  			// set the seed to a random value
+} 
 
-// // [[Rcpp::export]]
-// void armadillo_set_seed(unsigned int val) {
-//     //Rcpp::Rcout << "Setting value " << val << std::endl;
-//     arma::arma_rng::set_seed(val);  			    // set the seed to given value
-// } 
+// [[Rcpp::export]]
+void armadillo_set_seed(unsigned int val) {
+    //Rcpp::Rcout << "Setting value " << val << std::endl;
+    arma::arma_rng::set_seed(val);  			    // set the seed to given value
+} 

@@ -2,6 +2,25 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in [UNRELEASED] RcppArmadillo version 0.4.xyz (2014-03-01)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 4.xyz
+    \itemize{
+      \item TBD
+      \item TBD
+    }
+    \item Updated for \cpkg{Rcpp} (>= 0.11.0) by removing linking step
+    from build process, added appropriate dependency on \cpkg{Rcpp}
+    \item Updated \code{RcppArmadillo.package.skeleton} function
+    accordingly to use proper \code{NAMESPACE} import
+    \item Rewritten \code{rcpparma_hello_world} (which is used by the
+    \code{RcppArmadillo.package.skeleton} function) to use Rcpp
+    Attributes, and added more examples
+    \code Added two functions to set Armadillo's RNGs from a given value
+    and to randomize it, as suggested by Gábor Csárdi
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.4.000.2 (2014-01-21)}{
   \itemize{
     \item Upgraded to Armadillo release Version 4.000.2

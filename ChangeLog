@@ -14,6 +14,9 @@
 	* inst/skeleton/rcpparma_hello_world.cpp: Rewritten to use Rcpp
 	Attributes and expanded to included more examples
 
+	* src/RcppArmadillo.cpp: Add accessor functions to set Armadillo's
+	RNG from a given and a random value as suggested by Gábor Csárdi
+
 2014-01-21  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.4.000.2

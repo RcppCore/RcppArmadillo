@@ -5,6 +5,14 @@ armadillo_version <- function(single) {
     .Call('RcppArmadillo_armadillo_version', PACKAGE = 'RcppArmadillo', single)
 }
 
+armadillo_set_seed_random <- function() {
+    invisible(.Call('RcppArmadillo_armadillo_set_seed_random', PACKAGE = 'RcppArmadillo'))
+}
+
+armadillo_set_seed <- function(val) {
+    invisible(.Call('RcppArmadillo_armadillo_set_seed', PACKAGE = 'RcppArmadillo', val))
+}
+
 fastLm <- function(X, y) {
     .Call('RcppArmadillo_fastLm', PACKAGE = 'RcppArmadillo', X, y)
 }
