@@ -61,6 +61,10 @@ IntegerVector armadillo_version(bool single) {
 //' have poor performance, particularly on older versions of Windows. For C++11, the
 //' RNG included in its library is used.
 //' @return The function is invoked for its side effect and has no return value.
+//' @note This has been found to not work as espected in \pkg{RStudio}
+//' as its code also uses the system RNG library. You may have to either
+//' not run within \pkg{RStudio} or change your code to use a different RNG such 
+//' as the one from R.
 //' @seealso The R documentation on its RNGs all of which are accessible via \pkg{Rcpp}.  
 // [[Rcpp::export]]
 void armadillo_set_seed_random() {
@@ -76,6 +80,10 @@ void armadillo_set_seed_random() {
 //' have poor performance, particularly on older versions of Windows. For C++11, the
 //' RNG included in its library is used.
 //' @return The function is invoked for its side effect and has no return value. 
+//' @note This has been found to not work as espected in \pkg{RStudio}
+//' as its code also uses the system RNG library. You may have to either
+//' not run within \pkg{RStudio} or change your code to use a different RNG such 
+//' as the one from R.
 //' @seealso The R documentation on its RNGs all of which are accessible via \pkg{Rcpp}.  
 // [[Rcpp::export]]
 void armadillo_set_seed(unsigned int val) {

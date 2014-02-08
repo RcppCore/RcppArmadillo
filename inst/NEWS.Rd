@@ -17,7 +17,8 @@
     \code{RcppArmadillo.package.skeleton} function) to use Rcpp
     Attributes, and added more examples
     \code Added two functions to set Armadillo's RNGs from a given value
-    and to randomize it, as suggested by Gábor Csárdi
+    and to randomize it, as suggested by Gábor Csárdi. Note that these
+    do not work within RStudio.
   }
 }
 

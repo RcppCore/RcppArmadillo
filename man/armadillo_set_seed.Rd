@@ -25,6 +25,13 @@ It may have poor performance, particularly on older
 versions of Windows. For C++11, the RNG included in its
 library is used.
 }
+\note{
+This has been found to not work as espected in
+\pkg{RStudio} as its code also uses the system RNG library.
+You may have to either not run within \pkg{RStudio} or
+change your code to use a different RNG such as the one
+from R.
+}
 \seealso{
 The R documentation on its RNGs all of which are accessible
 via \pkg{Rcpp}.
