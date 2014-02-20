@@ -45,7 +45,7 @@ det
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  const char sig = method[0];
+  const char sig = (method != NULL) ? method[0] : char(0);
   
   arma_debug_check( ((sig != 's') && (sig != 'f')), "det(): unknown method specified" );
   
@@ -109,7 +109,7 @@ det
   {
   arma_extra_debug_sigprint();
   
-  const char sig = method[0];
+  const char sig = (method != NULL) ? method[0] : char(0);
   
   arma_debug_check( ((sig != 's') && (sig != 'f')), "det(): unknown method specified" );
   
@@ -172,7 +172,7 @@ det
   {
   arma_extra_debug_sigprint();
   
-  const char sig = method[0];
+  const char sig = (method != NULL) ? method[0] : char(0);
   
   arma_debug_check( ((sig != 's') && (sig != 'f')), "det(): unknown method specified" );
   
@@ -221,7 +221,7 @@ det
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  const char sig = method[0];
+  const char sig = (method != NULL) ? method[0] : char(0);
   
   arma_debug_check( ((sig != 's') && (sig != 'f')), "det(): unknown method specified" );
   
@@ -270,7 +270,7 @@ det
   arma_ignore(junk1);
   arma_ignore(junk2);
   
-  const char sig = method[0];
+  const char sig = (method != NULL) ? method[0] : char(0);
   
   arma_debug_check( ((sig != 's') && (sig != 'f')), "det(): unknown method specified" );
   

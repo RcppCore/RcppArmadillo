@@ -1,3 +1,10 @@
+2014-02-19  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.4.000.4
+        * inst/NEWS: Release 0.4.000.4
+        * inst/include/*: Upgraded to new release 4.000.4 of Armadillo
+        * debian/*: Similarly updated for new release to Debian
+
 2014-02-08  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/RcppArmadillo.cpp: Clarify in help page that Armadillo seed

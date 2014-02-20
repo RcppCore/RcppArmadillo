@@ -126,7 +126,7 @@ arma_inline
 const Op<derived,op_inv>
 Base_blas_elem_type<derived>::i(const char* method) const
   {
-  const char sig = method[0];
+  const char sig = (method != NULL) ? method[0] : char(0);
   
   arma_debug_check( ((sig != 's') && (sig != 'f')), "Base::i(): unknown method specified" );
   

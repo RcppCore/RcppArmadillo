@@ -26,7 +26,7 @@ pinv
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  const char sig = method[0];
+  const char sig = (method != NULL) ? method[0] : char(0);
   
   arma_debug_check( ((sig != 's') && (sig != 'd')), "pinv(): unknown method specified" );
   

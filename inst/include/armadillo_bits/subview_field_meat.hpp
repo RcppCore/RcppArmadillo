@@ -259,6 +259,48 @@ subview_field<oT>::check_overlap(const subview_field<oT>& x) const
 
 
 
+template<typename oT>
+inline
+void
+subview_field<oT>::print(const std::string extra_text) const
+  {
+  arma_extra_debug_sigprint();
+  
+  if(extra_text.length() != 0)
+    {
+    const std::streamsize orig_width = ARMA_DEFAULT_OSTREAM.width();
+    
+    ARMA_DEFAULT_OSTREAM << extra_text << '\n';
+  
+    ARMA_DEFAULT_OSTREAM.width(orig_width);
+    }
+  
+  arma_ostream::print(ARMA_DEFAULT_OSTREAM, *this);
+  }
+
+
+
+template<typename oT>
+inline
+void
+subview_field<oT>::print(std::ostream& user_stream, const std::string extra_text) const
+  {
+  arma_extra_debug_sigprint();
+  
+  if(extra_text.length() != 0)
+    {
+    const std::streamsize orig_width = user_stream.width();
+    
+    user_stream << extra_text << '\n';
+  
+    user_stream.width(orig_width);
+    }
+  
+  arma_ostream::print(user_stream, *this);
+  }
+
+
+
 //! X = Y.subfield(...)
 template<typename oT>
 inline

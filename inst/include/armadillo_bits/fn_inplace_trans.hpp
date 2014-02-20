@@ -48,7 +48,7 @@ inplace_htrans
   {
   arma_extra_debug_sigprint();
   
-  const char sig = method[0];
+  const char sig = (method != NULL) ? method[0] : char(0);
   
   arma_debug_check( ((sig != 's') && (sig != 'l')), "inplace_htrans(): unknown method specified" );
   
@@ -84,7 +84,7 @@ inplace_trans
   {
   arma_extra_debug_sigprint();
   
-  const char sig = method[0];
+  const char sig = (method != NULL) ? method[0] : char(0);
   
   arma_debug_check( ((sig != 's') && (sig != 'l')), "inplace_trans(): unknown method specified" );
   
@@ -109,7 +109,7 @@ inplace_trans
   {
   arma_extra_debug_sigprint();
   
-  const char sig = method[0];
+  const char sig = (method != NULL) ? method[0] : char(0);
   
   arma_debug_check( ((sig != 's') && (sig != 'l')), "inplace_trans(): unknown method specified" );
   

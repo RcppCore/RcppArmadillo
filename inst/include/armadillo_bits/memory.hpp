@@ -1,5 +1,5 @@
-// Copyright (C) 2012-2013 Conrad Sanderson
-// Copyright (C) 2012-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2012-2014 Conrad Sanderson
+// Copyright (C) 2012-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -50,6 +50,12 @@ arma_malloc
 eT*
 memory::acquire(const uword n_elem)
   {
+  arma_debug_check
+    (
+    ( n_elem > (std::numeric_limits<size_t>::max() / sizeof(eT)) ),
+    "arma::memory::acquire(): requested size is too large"
+    );
+  
   eT* out_memptr;
   
   #if   defined(ARMA_USE_TBB_ALLOC)

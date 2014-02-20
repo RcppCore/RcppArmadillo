@@ -51,8 +51,7 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
       return false;
       }
     
-    // The process has converged, and now we need to recover the actual
-    // eigenvectors using seupd().
+    // The process has converged, and now we need to recover the actual eigenvectors using seupd().
     blas_int rvec = 1; // .TRUE
     blas_int nev = n_eigvals;
     char howmny = 'A';
@@ -70,10 +69,10 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
     // Check for errors.
     if(info != 0)
       {
+      std::stringstream tmp;
+      tmp << "eigs_sym(): ARPACK error " << info << " in seupd()";
+      arma_debug_warn(true, tmp.str());
       return false;
-//      std::stringstream tmp;
-//      tmp << "eigs_sym(): ARPACK error " << info << " in seupd()";
-//      arma_stop(tmp.str());
       }
     
     return (info == 0);
@@ -133,8 +132,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
       return false;
       }
 
-    // The process has converged, and now we need to recover the actual
-    // eigenvectors using neupd().
+    // The process has converged, and now we need to recover the actual eigenvectors using neupd().
     blas_int rvec = 1; // .TRUE
     blas_int nev = n_eigvals;
     char howmny = 'A';
@@ -152,10 +150,10 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     // Check for errors.
     if(info != 0)
       {
+      std::stringstream tmp;
+      tmp << "eigs_gen(): ARPACK error " << info << " in neupd()";
+      arma_debug_warn(true, tmp.str());
       return false;
-      // std::stringstream tmp;
-      // tmp << "eigs_gen(): ARPACK error " << info << " in neupd()";
-      // arma_stop(tmp.str());
       }
 
     // Put it into the outputs.
@@ -259,8 +257,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
       return false;
       }
 
-    // The process has converged, and now we need to recover the actual
-    // eigenvectors using neupd().
+    // The process has converged, and now we need to recover the actual eigenvectors using neupd().
     blas_int rvec = 1; // .TRUE
     blas_int nev = n_eigvals;
     char howmny = 'A';
@@ -283,10 +280,10 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     // Check for errors.
     if(info != 0)
       {
+      std::stringstream tmp;
+      tmp << "eigs_gen(): ARPACK error " << info << " in neupd()";
+      arma_debug_warn(true, tmp.str());
       return false;
-//      std::stringstream tmp;
-//      tmp << "eigs_gen(): ARPACK error " << info << " in neupd()";
-//      arma_stop(tmp.str());
       }
 
     return (info == 0);
@@ -346,8 +343,7 @@ sp_auxlib::run_aupd
     // IPARAM: integer array of length 11.
     iparam.zeros(11);
     iparam(0) = 1; // Exact shifts (not provided by us).
-    iparam(2) = 1000; // Maximum iterations; all the examples use 300, but they
-                        // were written in the ancient times.
+    iparam(2) = 1000; // Maximum iterations; all the examples use 300, but they were written in the ancient times.
     iparam(6) = 1; // Mode 1: A * x = lambda * x.
 
     // IPNTR: integer array of length 14 (output).
@@ -418,8 +414,22 @@ sp_auxlib::run_aupd
       }
 
     // The process has ended; check the return code.
-    if (info != 0 && info != 1)
+    if( (info != 0) && (info != 1) )
       {
+      // Print warnings if there was a failure.
+      std::stringstream tmp;
+      
+      if(sym)
+        {
+        tmp << "eigs_sym(): ARPACK error " << info << " in saupd()";
+        }
+      else
+        {
+        tmp << "eigs_gen(): ARPACK error " << info << " in naupd()";
+        }
+      
+      arma_debug_warn(true, tmp.str());
+      
       return; // Parent frame can look at the value of info.
       }
     }

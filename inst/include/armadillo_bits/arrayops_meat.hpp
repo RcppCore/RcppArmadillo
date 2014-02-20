@@ -1,5 +1,5 @@
-// Copyright (C) 2011-2013 Conrad Sanderson
-// Copyright (C) 2011-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2011-2014 Conrad Sanderson
+// Copyright (C) 2011-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,7 +17,7 @@ arma_inline
 void
 arrayops::copy(eT* dest, const eT* src, const uword n_elem)
   {
-  if(n_elem <= 16)
+  if( (n_elem <= 16) && (is_cx<eT>::no) )
     {
     arrayops::copy_small(dest, src, n_elem);
     }
@@ -540,7 +540,7 @@ inline
 void
 arrayops::inplace_set(eT* dest, const eT val, const uword n_elem)
   {
-  if(n_elem <= 16)
+  if( (n_elem <= 16) && (is_cx<eT>::no) )
     {
     arrayops::inplace_set_small(dest, val, n_elem);
     }

@@ -39,14 +39,14 @@ struct Base_extra<derived, false> { typedef Base_other_elem_type<derived> result
 template<typename elem_type, typename derived>
 struct Base_eval_Mat
   {
-  const derived& eval() const;
+  arma_inline const derived& eval() const;
   };
 
 
 template<typename elem_type, typename derived>
 struct Base_eval_expr
   {
-  Mat<elem_type> eval() const;   //!< force the immediate evaluation of a delayed expression
+  arma_inline Mat<elem_type> eval() const;   //!< force the immediate evaluation of a delayed expression
   };
 
 

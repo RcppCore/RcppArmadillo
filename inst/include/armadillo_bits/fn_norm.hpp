@@ -557,7 +557,7 @@ norm
     return T(0);
     }
   
-  const char sig    = method[0];
+  const char sig    = (method != NULL) ? method[0] : char(0);
   const bool is_vec = (P.get_n_rows() == 1) || (P.get_n_cols() == 1);
   
   if(is_vec == true)
@@ -756,7 +756,7 @@ norm
   const Proxy< Col<eT> > P_fake_vector(fake_vector);
   
   
-  const char sig    = method[0];
+  const char sig    = (method != NULL) ? method[0] : char(0);
   const bool is_vec = (P.get_n_rows() == 1) || (P.get_n_cols() == 1);
   
   if(is_vec == true)

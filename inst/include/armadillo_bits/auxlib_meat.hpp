@@ -1749,7 +1749,7 @@ auxlib::eig_pair
     blas_int N     = blas_int(A_n_rows);
     blas_int ldvl  = blas_int(l_eigvec.n_rows);
     blas_int ldvr  = blas_int(r_eigvec.n_rows);
-    blas_int lwork = 3 * ((std::max)(1,2*N));
+    blas_int lwork = 3 * ((std::max)(blas_int(1),2*N));
     blas_int info  = 0;
     
     podarray<eT>  work( static_cast<uword>(lwork) );

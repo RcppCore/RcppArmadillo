@@ -55,6 +55,10 @@ class subview_field
   
   inline bool check_overlap(const subview_field& x) const;
   
+  inline void print(const std::string extra_text = "") const;
+  inline void print(std::ostream& user_stream, const std::string extra_text = "") const;
+  
+  
   inline static void extract(field<oT>& out, const subview_field& in);
   
   

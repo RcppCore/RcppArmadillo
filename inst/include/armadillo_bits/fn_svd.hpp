@@ -88,7 +88,7 @@ svd
     "svd(): two or more output objects are the same object"
     );
   
-  const char sig = method[0];
+  const char sig = (method != NULL) ? method[0] : char(0);
   
   arma_debug_check( ((sig != 's') && (sig != 'd')), "svd(): unknown method specified" );
   
@@ -137,7 +137,7 @@ svd_econ
     "svd_econ(): parameter 'mode' or 'side' is incorrect"
     );
   
-  const char sig = method[0];
+  const char sig = (method != NULL) ? method[0] : char(0);
   
   arma_debug_check( ((sig != 's') && (sig != 'd')), "svd_econ(): unknown method specified" );
   
@@ -173,7 +173,7 @@ svd_econ
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  return svd_econ(U,S,V,X,side[0],method);
+  return svd_econ(U, S, V, X, ((side != NULL) ? side[0] : char(0)), method);
   }
 
 

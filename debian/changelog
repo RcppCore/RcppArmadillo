@@ -1,3 +1,16 @@
+r-cran-rcpparmadillo (0.4.000.4-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Dirk Eddelbuettel <edd@debian.org>  Wed, 19 Feb 2014 20:24:08 -0600
+
+r-cran-rcpparmadillo (0.4.000.2-2) unstable; urgency=low
+
+  * Rebuilt as required for Rcpp 0.11.0
+  * debian/control: Added (Build-)Depends: on r-cran-rcpp (>= 0.11.0-1)
+
+ -- Dirk Eddelbuettel <edd@debian.org>  Mon, 03 Feb 2014 20:32:53 -0600
+  
 r-cran-rcpparmadillo (0.4.000.2-1) unstable; urgency=low
 
   * New upstream release

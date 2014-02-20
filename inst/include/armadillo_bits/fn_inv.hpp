@@ -43,7 +43,7 @@ inv
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  const char sig = method[0];
+  const char sig = (method != NULL) ? method[0] : char(0);
   
   arma_debug_check( ((sig != 's') && (sig != 'f')), "inv(): unknown method specified" );
   
@@ -85,7 +85,7 @@ inv
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  const char sig = method[0];
+  const char sig = (method != NULL) ? method[0] : char(0);
   
   arma_debug_check( ((sig != 's') && (sig != 'f')), "inv(): unknown method specified" );
   
@@ -164,7 +164,7 @@ inv_sympd
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  const char sig = method[0];
+  const char sig = (method != NULL) ? method[0] : char(0);
   
   arma_debug_check( ((sig != 's') && (sig != 'f')), "inv_sympd(): unknown method specified" );
   
