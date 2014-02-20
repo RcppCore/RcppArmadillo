@@ -1,3 +1,7 @@
+2014-02-20  Dirk Eddelbuettel  <edd@debian.org>
+
+	* debian/control: Remove Depends: on littler
+
 2014-02-19  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.4.000.4
