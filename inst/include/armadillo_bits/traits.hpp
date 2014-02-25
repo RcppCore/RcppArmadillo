@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2014 Conrad Sanderson
+// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -1178,6 +1178,50 @@ struct resolves_to_vector : public resolves_to_vector_redirect<T1, is_arma_type<
 
 template<typename T1>
 struct resolves_to_sparse_vector : public resolves_to_vector_redirect<T1, is_arma_sparse_type<T1>::value>::result {};
+
+//
+
+template<typename T1>
+struct resolves_to_rowvector_default { static const bool value = false;      };
+
+template<typename T1>
+struct resolves_to_rowvector_test    { static const bool value = T1::is_row; };
+
+
+template<typename T1, bool condition>
+struct resolves_to_rowvector_redirect {};
+
+template<typename T1>
+struct resolves_to_rowvector_redirect<T1, false> { typedef resolves_to_rowvector_default<T1> result; };
+
+template<typename T1>
+struct resolves_to_rowvector_redirect<T1, true>  { typedef resolves_to_rowvector_test<T1>    result; };
+
+
+template<typename T1>
+struct resolves_to_rowvector : public resolves_to_rowvector_redirect<T1, is_arma_type<T1>::value>::result {};
+
+//
+
+template<typename T1>
+struct resolves_to_colvector_default { static const bool value = false;      };
+
+template<typename T1>
+struct resolves_to_colvector_test    { static const bool value = T1::is_col; };
+
+
+template<typename T1, bool condition>
+struct resolves_to_colvector_redirect {};
+
+template<typename T1>
+struct resolves_to_colvector_redirect<T1, false> { typedef resolves_to_colvector_default<T1> result; };
+
+template<typename T1>
+struct resolves_to_colvector_redirect<T1, true>  { typedef resolves_to_colvector_test<T1>    result; };
+
+
+template<typename T1>
+struct resolves_to_colvector : public resolves_to_colvector_redirect<T1, is_arma_type<T1>::value>::result {};
 
 
 

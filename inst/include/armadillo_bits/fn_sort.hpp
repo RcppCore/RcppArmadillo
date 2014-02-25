@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2014 Conrad Sanderson
+// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -50,7 +50,7 @@ sort
   {
   arma_extra_debug_sigprint();
   
-  const char sig = sort_direction[0];
+  const char sig = (sort_direction != NULL) ? sort_direction[0] : char(0);
   
   arma_debug_check( (sig != 'a') && (sig != 'd'), "sort(): unknown sort direction");
   
@@ -101,7 +101,7 @@ sort
   {
   arma_extra_debug_sigprint();
   
-  const char sig = sort_direction[0];
+  const char sig = (sort_direction != NULL) ? sort_direction[0] : char(0);
   
   arma_debug_check( (sig != 'a') && (sig != 'd'), "sort(): unknown sort direction");
   

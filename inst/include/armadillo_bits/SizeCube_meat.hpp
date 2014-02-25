@@ -1,5 +1,5 @@
-// Copyright (C) 2013 Conrad Sanderson
-// Copyright (C) 2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2013-2014 Conrad Sanderson
+// Copyright (C) 2013-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -88,6 +88,46 @@ SizeCube::operator!=(const SizeMat& s) const
   if(n_slices != uword(1))  { return true; }
   
   return false;
+  }
+
+
+
+inline
+void
+SizeCube::print(const std::string extra_text) const
+  {
+  arma_extra_debug_sigprint();
+  
+  if(extra_text.length() != 0)
+    {
+    const std::streamsize orig_width = ARMA_DEFAULT_OSTREAM.width();
+    
+    ARMA_DEFAULT_OSTREAM << extra_text << ' ';
+  
+    ARMA_DEFAULT_OSTREAM.width(orig_width);
+    }
+  
+  arma_ostream::print(ARMA_DEFAULT_OSTREAM, *this);
+  }
+
+
+
+inline
+void
+SizeCube::print(std::ostream& user_stream, const std::string extra_text) const
+  {
+  arma_extra_debug_sigprint();
+  
+  if(extra_text.length() != 0)
+    {
+    const std::streamsize orig_width = user_stream.width();
+    
+    user_stream << extra_text << ' ';
+    
+    user_stream.width(orig_width);
+    }
+  
+  arma_ostream::print(user_stream, *this);
   }
 
 

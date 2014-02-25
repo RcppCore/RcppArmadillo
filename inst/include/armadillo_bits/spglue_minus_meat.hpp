@@ -1,5 +1,5 @@
-// Copyright (C) 2012 Ryan Curtin
-// Copyright (C) 2012 Conrad Sanderson
+// Copyright (C) 2012-2014 Ryan Curtin
+// Copyright (C) 2012-2014 Conrad Sanderson
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,6 +12,7 @@
 
 
 template<typename T1, typename T2>
+arma_hot
 inline
 void
 spglue_minus::apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglue_minus>& X)
@@ -53,14 +54,14 @@ spglue_minus::apply_noalias(SpMat<eT>& result, const SpProxy<T1>& pa, const SpPr
   if( (pa.get_n_nonzero() != 0) && (pb.get_n_nonzero() != 0) )
     {
     result.set_size(pa.get_n_rows(), pa.get_n_cols());
-
+    
     // Resize memory to correct size.
     result.mem_resize(n_unique(pa, pb, op_n_unique_sub()));
-
+    
     // Now iterate across both matrices.
     typename SpProxy<T1>::const_iterator_type x_it = pa.begin();
     typename SpProxy<T2>::const_iterator_type y_it = pb.begin();
-
+    
     typename SpProxy<T1>::const_iterator_type x_end = pa.end();
     typename SpProxy<T2>::const_iterator_type y_end = pb.end();
     
@@ -71,14 +72,14 @@ spglue_minus::apply_noalias(SpMat<eT>& result, const SpProxy<T1>& pa, const SpPr
         {
         const eT val = (*x_it) - (*y_it);
         
-        if (val != eT(0))
+        if(val != eT(0))
           {
           access::rw(result.values[cur_val]) = val;
           access::rw(result.row_indices[cur_val]) = x_it.row();
           ++access::rw(result.col_ptrs[x_it.col() + 1]);
           ++cur_val;
           }
-
+        
         ++x_it;
         ++y_it;
         }
@@ -92,23 +93,35 @@ spglue_minus::apply_noalias(SpMat<eT>& result, const SpProxy<T1>& pa, const SpPr
         
         if((x_it_col < y_it_col) || ((x_it_col == y_it_col) && (x_it_row < y_it_row))) // if y is closer to the end
           {
-          access::rw(result.values[cur_val]) = (*x_it);
-          access::rw(result.row_indices[cur_val]) = x_it_row;
-          ++access::rw(result.col_ptrs[x_it_col + 1]);
-          ++cur_val;
+          const eT val = (*x_it);
+          
+          if(val != eT(0))
+            {
+            access::rw(result.values[cur_val]) = val;
+            access::rw(result.row_indices[cur_val]) = x_it_row;
+            ++access::rw(result.col_ptrs[x_it_col + 1]);
+            ++cur_val;
+            }
+            
           ++x_it;
           }
         else
           {
-          access::rw(result.values[cur_val]) = -(*y_it);
-          access::rw(result.row_indices[cur_val]) = y_it_row;
-          ++access::rw(result.col_ptrs[y_it_col + 1]);
-          ++cur_val;
+          const eT val = (*y_it);
+          
+          if(val != eT(0))
+            {
+            access::rw(result.values[cur_val]) = -(val);  // take the negative
+            access::rw(result.row_indices[cur_val]) = y_it_row;
+            ++access::rw(result.col_ptrs[y_it_col + 1]);
+            ++cur_val;
+            }
+          
           ++y_it;
           }
         }
       }
-
+    
     // Fix column pointers to be cumulative.
     for(uword c = 1; c <= result.n_cols; ++c)
       {
@@ -142,6 +155,7 @@ spglue_minus::apply_noalias(SpMat<eT>& result, const SpProxy<T1>& pa, const SpPr
 
 
 template<typename T1, typename T2>
+arma_hot
 inline
 void
 spglue_minus2::apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglue_minus2>& X)

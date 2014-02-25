@@ -1,6 +1,6 @@
 // Copyright (C) 2011-2012 Ryan Curtin
+// Copyright (C) 2012-2014 Conrad Sanderson
 // Copyright (C) 2011 Matthew Amidon
-// Copyright (C) 2012 Conrad Sanderson
 //
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -158,36 +158,31 @@ const SpSubview<eT>&
 SpSubview<eT>::operator*=(const eT val)
   {
   arma_extra_debug_sigprint();
-
-  if(val == eT(0))
-    {
-    // Turn it all into zeros.
-    for(iterator it(*this); it != end(); ++it)
-      {
-      (*it) = eT(0); // zero out the value.
-      it.internal_pos--;
-      }
-
-    return *this;
-    }
-
-  const uword lstart_row = aux_row1;
-  const uword lend_row   = aux_row1 + n_rows;
   
-  const uword lstart_col = aux_col1;
-  const uword lend_col   = aux_col1 + n_cols;
-
-  for(uword c = lstart_col; c < lend_col; ++c)
+  if(val != eT(0))
     {
-    for(uword r = m.col_ptrs[c]; r < m.col_ptrs[c + 1]; ++r)
+    const uword lstart_row = aux_row1;
+    const uword lend_row   = aux_row1 + n_rows;
+    
+    const uword lstart_col = aux_col1;
+    const uword lend_col   = aux_col1 + n_cols;
+    
+    for(uword c = lstart_col; c < lend_col; ++c)
       {
-      if(m.row_indices[r] >= lstart_row && m.row_indices[r] < lend_row)
+      for(uword r = m.col_ptrs[c]; r < m.col_ptrs[c + 1]; ++r)
         {
-        access::rw(m.values[r]) *= val;
+        if(m.row_indices[r] >= lstart_row && m.row_indices[r] < lend_row)
+          {
+          access::rw(m.values[r]) *= val;
+          }
         }
       }
     }
-
+  else
+    {
+    (*this).zeros();
+    }
+  
   return *this;
   }
 
@@ -200,23 +195,24 @@ SpSubview<eT>::operator/=(const eT val)
   {
   arma_extra_debug_sigprint();
 
-  const uword lstart_col = aux_col1;
-  const uword lend_col   = aux_col1 + n_cols;
+  arma_debug_check( (val == eT(0)), "element-wise division: division by zero" );
   
   const uword lstart_row = aux_row1;
   const uword lend_row   = aux_row1 + n_rows;
-
-  const uword old_n_nonzero = m.n_nonzero;
-
+  
+  const uword lstart_col = aux_col1;
+  const uword lend_col   = aux_col1 + n_cols;
+  
   for(uword c = lstart_col; c < lend_col; ++c)
-  for(uword r = lstart_row; r < lend_row; ++r)
     {
-    access::rw(m).at(r, c) /= val;
+    for(uword r = m.col_ptrs[c]; r < m.col_ptrs[c + 1]; ++r)
+      {
+      if(m.row_indices[r] >= lstart_row && m.row_indices[r] < lend_row)
+        {
+        access::rw(m.values[r]) /= val;
+        }
+      }
     }
-
-  const uword new_n_nonzero = m.n_nonzero;
-
-  access::rw(n_nonzero) += (new_n_nonzero - old_n_nonzero);
 
   return *this;
   }
@@ -227,28 +223,198 @@ template<typename eT>
 template<typename T1>
 inline
 const SpSubview<eT>&
-SpSubview<eT>::operator=(const Base<eT, T1>& x)
+SpSubview<eT>::operator=(const Base<eT, T1>& in)
   {
   arma_extra_debug_sigprint();
 
-  const Proxy<T1> P(x.get_ref());
-
-  arma_debug_assert_same_size(n_rows, n_cols, P.get_n_rows(), P.get_n_cols(), "insert into sparse submatrix");
-
-  const uword old_n_nonzero = m.n_nonzero;
-
-  for(uword c = 0; c < n_cols; ++c)
+  // this is a modified version of SpSubview::operator_equ_common(const SpBase)
+  
+  const SpProxy< SpMat<eT> > pa((*this).m);
+  
+  const unwrap<T1>     b_tmp(in.get_ref());
+  const Mat<eT>&   b = b_tmp.M;
+  
+  arma_debug_assert_same_size(n_rows, n_cols, b.n_rows, b.n_cols, "insertion into sparse submatrix");
+  
+  const uword pa_start_row = (*this).aux_row1;
+  const uword pa_start_col = (*this).aux_col1;
+  
+  const uword pa_end_row = pa_start_row + (*this).n_rows - 1;
+  const uword pa_end_col = pa_start_col + (*this).n_cols - 1;
+  
+  const uword pa_n_rows = pa.get_n_rows();
+  
+  const uword b_n_elem = b.n_elem;
+  const eT*   b_mem    = b.memptr();
+  
+  uword box_count = 0;
+  
+  for(uword i=0; i<b_n_elem; ++i)
     {
-    for(uword r = 0; r < n_rows; ++r)
+    if(b_mem[i] != eT(0))  { ++box_count; }
+    }
+  
+  SpMat<eT> out(pa.get_n_rows(), pa.get_n_cols());
+  
+  const uword alt_count = pa.get_n_nonzero() - (*this).n_nonzero + box_count;
+  
+  // Resize memory to correct size.
+  out.mem_resize(alt_count);
+  
+  typename SpProxy< SpMat<eT> >::const_iterator_type x_it  = pa.begin();
+  typename SpProxy< SpMat<eT> >::const_iterator_type x_end = pa.end();
+  
+  uword b_row = 0;
+  uword b_col = 0;
+    
+  bool x_it_ok = (x_it != x_end);
+  bool y_it_ok = ( (b_row < b.n_rows) && (b_col < b.n_cols) );
+  
+  uword x_it_row = (x_it_ok) ? x_it.row() : 0;
+  uword x_it_col = (x_it_ok) ? x_it.col() : 0;
+  
+  uword y_it_row = (y_it_ok) ? b_row + pa_start_row : 0;
+  uword y_it_col = (y_it_ok) ? b_col + pa_start_col : 0;
+    
+  uword cur_val = 0;
+  while(x_it_ok || y_it_ok)
+    {
+    const bool x_inside_box = (x_it_row >= pa_start_row) && (x_it_row <= pa_end_row) && (x_it_col >= pa_start_col) && (x_it_col <= pa_end_col);
+    const bool y_inside_box = (y_it_row >= pa_start_row) && (y_it_row <= pa_end_row) && (y_it_col >= pa_start_col) && (y_it_col <= pa_end_col);
+    
+    const eT x_val = x_inside_box ? eT(0) : ( x_it_ok ? (*x_it) : eT(0) );
+    
+    const eT y_val = y_inside_box ? ( y_it_ok ? b.at(b_row,b_col) : eT(0) ) : eT(0);
+    
+    if( (x_it_row == y_it_row) && (x_it_col == y_it_col) )
       {
-      at(r, c) = P.at(r, c);
+      if( (x_val != eT(0)) || (y_val != eT(0)) )  
+        {
+        access::rw(out.values[cur_val]) = (x_val != eT(0)) ? x_val : y_val;
+        access::rw(out.row_indices[cur_val]) = x_it_row;
+        ++access::rw(out.col_ptrs[x_it_col + 1]);
+        ++cur_val;
+        }
+      
+      if(x_it_ok)
+        {
+        ++x_it;
+        
+        if(x_it == x_end)  { x_it_ok = false; }
+        }
+      
+      if(x_it_ok)
+        {
+        x_it_row = x_it.row();
+        x_it_col = x_it.col();
+        }
+      else
+        {
+        x_it_row++;
+        
+        if(x_it_row >= pa_n_rows)  { x_it_row = 0; x_it_col++; }
+        }
+      
+      if(y_it_ok)
+        {
+        b_row++;
+        
+        if(b_row >= b.n_rows)  { b_row = 0; b_col++; }
+        
+        if( (b_row > b.n_rows) || (b_col > b.n_cols) )  { y_it_ok = false; }
+        }
+      
+      if(y_it_ok)
+        {
+        y_it_row = b_row + pa_start_row;
+        y_it_col = b_col + pa_start_col;
+        }
+      else
+        {
+        y_it_row++;
+        
+        if(y_it_row >= pa_n_rows)  { y_it_row = 0; y_it_col++; }
+        }
+      }
+    else
+      {
+      if((x_it_col < y_it_col) || ((x_it_col == y_it_col) && (x_it_row < y_it_row))) // if y is closer to the end
+        {
+        if(x_val != eT(0))
+          {
+          access::rw(out.values[cur_val]) = x_val;
+          access::rw(out.row_indices[cur_val]) = x_it_row;
+          ++access::rw(out.col_ptrs[x_it_col + 1]);
+          ++cur_val;
+          }
+        
+        if(x_it_ok)
+          {
+          ++x_it;
+          
+          if(x_it == x_end)  { x_it_ok = false; }
+          }
+        
+        if(x_it_ok)
+          {
+          x_it_row = x_it.row();
+          x_it_col = x_it.col();
+          }
+        else
+          {
+          x_it_row++;
+          
+          if(x_it_row >= pa_n_rows)  { x_it_row = 0; x_it_col++; }
+          }
+        }
+      else
+        {
+        if(y_val != eT(0))
+          {
+          access::rw(out.values[cur_val]) = y_val;
+          access::rw(out.row_indices[cur_val]) = y_it_row;
+          ++access::rw(out.col_ptrs[y_it_col + 1]);
+          ++cur_val;
+          }
+        
+        if(y_it_ok)
+          {
+          b_row++;
+          
+          if(b_row >= b.n_rows)  { b_row = 0; b_col++; }
+          
+          if( (b_row > b.n_rows) || (b_col > b.n_cols) )  { y_it_ok = false; }
+          }
+        
+        if(y_it_ok)
+          {
+          y_it_row = b_row + pa_start_row;
+          y_it_col = b_col + pa_start_col;
+          }
+        else
+          {
+          y_it_row++;
+          
+          if(y_it_row >= pa_n_rows)  { y_it_row = 0; y_it_col++; }
+          }
+        }
       }
     }
-
-  const uword new_n_nonzero = m.n_nonzero;
-
-  access::rw(n_nonzero) += (new_n_nonzero - old_n_nonzero);
-
+  
+  const uword out_n_cols = out.n_cols;
+  
+  uword* col_ptrs = access::rwp(out.col_ptrs);
+  
+  // Fix column pointers to be cumulative.
+  for(uword c = 1; c <= out_n_cols; ++c)
+    {
+    col_ptrs[c] += col_ptrs[c - 1];
+    }
+  
+  access::rw((*this).m).steal_mem(out);
+  
+  access::rw(n_nonzero) = box_count;
+  
   return *this;
   }
 
@@ -261,26 +427,8 @@ const SpSubview<eT>&
 SpSubview<eT>::operator+=(const Base<eT, T1>& x)
   {
   arma_extra_debug_sigprint();
-
-  const Proxy<T1> P(x.get_ref());
-
-  arma_debug_assert_same_size(n_rows, n_cols, P.get_n_rows(), P.get_n_cols(), "addition");
-
-  const uword old_n_nonzero = m.n_nonzero;
-
-  for(uword c = 0; c < n_cols; ++c)
-    {
-    for(uword r = 0; r < n_rows; ++r)
-      {
-      at(r, c) += P.at(r, c);
-      }
-    }
-
-  const uword new_n_nonzero = m.n_nonzero;
-
-  access::rw(n_nonzero) += (new_n_nonzero - old_n_nonzero);
-
-  return *this;
+  
+  return (*this).operator=( (*this) + x.get_ref() );
   }
 
 
@@ -293,25 +441,7 @@ SpSubview<eT>::operator-=(const Base<eT, T1>& x)
   {
   arma_extra_debug_sigprint();
 
-  const Proxy<T1> P(x.get_ref());
-
-  arma_debug_assert_same_size(n_rows, n_cols, P.get_n_rows(), P.get_n_cols(), "subtraction");
-
-  const uword old_n_nonzero = m.n_nonzero;
-
-  for(uword c = 0; c < n_cols; ++c)
-    {
-    for(uword r = 0; r < n_rows; ++r)
-      {
-      at(r, c) -= P.at(r, c);
-      }
-    }
-
-  const uword new_n_nonzero = m.n_nonzero;
-
-  access::rw(n_nonzero) += (new_n_nonzero - old_n_nonzero);
-
-  return *this;
+  return (*this).operator=( (*this) - x.get_ref() );
   }
 
 
@@ -323,18 +453,12 @@ const SpSubview<eT>&
 SpSubview<eT>::operator*=(const Base<eT, T1>& x)
   {
   arma_extra_debug_sigprint();
-
-  const Proxy<T1> P(x.get_ref());
-
-  // Must be exactly the same size for this (we can't modify our own size).
-  arma_debug_assert_same_size(n_rows, n_cols, P.get_n_rows(), P.get_n_cols(), "matrix multiplication");
-
+  
   SpMat<eT> tmp(*this);
-  Mat<eT> other_tmp(x.get_ref());
-  tmp *= other_tmp;
-  operator=(tmp);
-
-  return *this;
+  
+  tmp *= x.get_ref();
+  
+  return (*this).operator=(tmp);
   }
 
 
@@ -347,26 +471,7 @@ SpSubview<eT>::operator%=(const Base<eT, T1>& x)
   {
   arma_extra_debug_sigprint();
 
-  const Proxy<T1> P(x.get_ref());
-
-  arma_debug_assert_same_size(n_rows, n_cols, P.get_n_rows(), P.get_n_cols(), "element-wise multiplication");
-
-  const uword old_n_nonzero = m.n_nonzero;
-
-  for(iterator it(*this); it != end(); ++it)
-    {
-    (*it) *= P.at(it.row(), it.col());
-    if(P.at(it.row(), it.col()) == eT(0))
-      {
-      it.internal_pos--;
-      }
-    }
-
-  const uword new_n_nonzero = m.n_nonzero;
-
-  access::rw(n_nonzero) += (new_n_nonzero - old_n_nonzero);
-
-  return *this;
+  return (*this).operator=( (*this) % x.get_ref() );
   }
 
 
@@ -379,25 +484,7 @@ SpSubview<eT>::operator/=(const Base<eT, T1>& x)
   {
   arma_extra_debug_sigprint();
 
-  const Proxy<T1> P(x.get_ref());
-
-  arma_debug_assert_same_size(n_rows, n_cols, P.get_n_rows(), P.get_n_cols(), "element-wise division");
-
-  const uword old_n_nonzero = m.n_nonzero;
-
-  for(uword c = 0; c < n_cols; ++c)
-    {
-    for(uword r = 0; r < n_rows; ++r)
-      {
-      at(r, c) /= P.at(r, c);
-      }
-    }
-
-  const uword new_n_nonzero = m.n_nonzero;
-
-  access::rw(n_nonzero) += (new_n_nonzero - old_n_nonzero);
-
-  return *this;
+  return (*this).operator=( (*this) / x.get_ref() );
   }
 
 
@@ -409,52 +496,7 @@ SpSubview<eT>::operator=(const SpSubview<eT>& x)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(n_rows, n_cols, x.n_rows, x.n_cols, "insertion into sparse submatrix");
-  
-  const bool alias = ( &m == &(x.m) );
-  
-  if(alias == false)
-    {
-    const_iterator cit = x.begin();
-    iterator        it = begin();
-    
-    while((cit != x.end()) || (it != end()))
-      {
-      if((cit.row() == it.row()) && (cit.col() == it.col()))
-        {
-        (*it) = (*cit);
-        ++it;
-        ++cit;
-        }
-      else
-        {
-        if((cit.col() > it.col()) || ((cit.col() == it.col()) && (cit.row() > it.row())))
-          {
-          // cit is "ahead"
-          (*it) = eT(0); // erase element
-          it.internal_pos--; // update iterator so it still works
-          ++it;
-          }
-        else
-          {
-          // it is "ahead"
-          at(cit.row(), cit.col()) = (*cit);
-          it.internal_pos++; // update iterator so it still works
-          ++cit;
-          }
-        }
-      }
-    
-    access::rw(n_nonzero) = x.n_nonzero;
-    }
-  else
-    {
-    const SpMat<eT> tmp(x);
-    
-    (*this).operator=(tmp);
-    }
-  
-  return *this;
+  return (*this).operator_equ_common(x);
   }
 
 
@@ -467,48 +509,201 @@ SpSubview<eT>::operator=(const SpBase<eT, T1>& x)
   {
   arma_extra_debug_sigprint();
   
-  const SpProxy<T1> p(x.get_ref());
-  
-  arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "insertion into sparse submatrix");
-  
-  if(p.is_alias(m) == false)
-    {
-    typename SpProxy<T1>::const_iterator_type cit = p.begin();
-    iterator it(*this);
+  return (*this).operator_equ_common( x.get_ref() );
+  }
 
-    while((cit != p.end()) || (it != end()))
+
+
+template<typename eT>
+template<typename T1>
+inline
+const SpSubview<eT>&
+SpSubview<eT>::operator_equ_common(const SpBase<eT, T1>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  // algorithm:
+  // instead of directly inserting values into the matrix underlying the subview,
+  // create a new matrix by merging the underlying matrix with the input object,
+  // and then replacing the underlying matrix with the created matrix.
+  // 
+  // the merging process requires pretending that the input object
+  // has the same size as the underlying matrix.
+  // while iterating through the elements of the input object,
+  // this requires adjusting the row and column locations of each element,
+  // as well as providing fake zero elements.
+  // in effect there is a proxy for a proxy.
+  
+  
+  const SpProxy< SpMat<eT> > pa((*this).m   );
+  const SpProxy< T1        > pb(in.get_ref());
+  
+  arma_debug_assert_same_size(n_rows, n_cols, pb.get_n_rows(), pb.get_n_cols(), "insertion into sparse submatrix");
+  
+  const uword pa_start_row = (*this).aux_row1;
+  const uword pa_start_col = (*this).aux_col1;
+  
+  const uword pa_end_row = pa_start_row + (*this).n_rows - 1;
+  const uword pa_end_col = pa_start_col + (*this).n_cols - 1;
+  
+  const uword pa_n_rows = pa.get_n_rows();
+  
+  SpMat<eT> out(pa.get_n_rows(), pa.get_n_cols());
+  
+  const uword alt_count = pa.get_n_nonzero() - (*this).n_nonzero + pb.get_n_nonzero();
+  
+  // Resize memory to correct size.
+  out.mem_resize(alt_count);
+  
+  typename SpProxy< SpMat<eT> >::const_iterator_type x_it  = pa.begin();
+  typename SpProxy< SpMat<eT> >::const_iterator_type x_end = pa.end();
+  
+  typename SpProxy<T1>::const_iterator_type y_it  = pb.begin();
+  typename SpProxy<T1>::const_iterator_type y_end = pb.end();
+  
+  bool x_it_ok = (x_it != x_end);
+  bool y_it_ok = (y_it != y_end);
+  
+  uword x_it_row = (x_it_ok) ? x_it.row() : 0;
+  uword x_it_col = (x_it_ok) ? x_it.col() : 0;
+  
+  uword y_it_row = (y_it_ok) ? y_it.row() + pa_start_row : 0;
+  uword y_it_col = (y_it_ok) ? y_it.col() + pa_start_col : 0;
+    
+  uword cur_val = 0;
+  while(x_it_ok || y_it_ok)
+    {
+    const bool x_inside_box = (x_it_row >= pa_start_row) && (x_it_row <= pa_end_row) && (x_it_col >= pa_start_col) && (x_it_col <= pa_end_col);
+    const bool y_inside_box = (y_it_row >= pa_start_row) && (y_it_row <= pa_end_row) && (y_it_col >= pa_start_col) && (y_it_col <= pa_end_col);
+    
+    const eT x_val = x_inside_box ? eT(0) : ( x_it_ok ? (*x_it) : eT(0) );
+    
+    const eT y_val = y_inside_box ? ( y_it_ok ? (*y_it) : eT(0) ) : eT(0);
+    
+    if( (x_it_row == y_it_row) && (x_it_col == y_it_col) )
       {
-      if(cit == it) // at the same location
+      if( (x_val != eT(0)) || (y_val != eT(0)) )  
         {
-        (*it) = (*cit);
-        ++it;
-        ++cit;
+        access::rw(out.values[cur_val]) = (x_val != eT(0)) ? x_val : y_val;
+        access::rw(out.row_indices[cur_val]) = x_it_row;
+        ++access::rw(out.col_ptrs[x_it_col + 1]);
+        ++cur_val;
+        }
+      
+      if(x_it_ok)
+        {
+        ++x_it;
+        
+        if(x_it == x_end)  { x_it_ok = false; }
+        }
+      
+      if(x_it_ok)
+        {
+        x_it_row = x_it.row();
+        x_it_col = x_it.col();
         }
       else
         {
-        if((cit.col() > it.col()) || ((cit.col() == it.col()) && (cit.row() > it.row())))
+        x_it_row++;
+        
+        if(x_it_row >= pa_n_rows)  { x_it_row = 0; x_it_col++; }
+        }
+      
+      if(y_it_ok)
+        {
+        ++y_it;
+        
+        if(y_it == y_end)  { y_it_ok = false; }
+        }
+      
+      if(y_it_ok)
+        {
+        y_it_row = y_it.row() + pa_start_row;
+        y_it_col = y_it.col() + pa_start_col;
+        }
+      else
+        {
+        y_it_row++;
+        
+        if(y_it_row >= pa_n_rows)  { y_it_row = 0; y_it_col++; }
+        }
+      }
+    else
+      {
+      if((x_it_col < y_it_col) || ((x_it_col == y_it_col) && (x_it_row < y_it_row))) // if y is closer to the end
+        {
+        if(x_val != eT(0))
           {
-          // cit is "ahead"
-          (*it) = eT(0); // erase element
-          it.internal_pos--; // update iterator so it still works
-          ++it;
+          access::rw(out.values[cur_val]) = x_val;
+          access::rw(out.row_indices[cur_val]) = x_it_row;
+          ++access::rw(out.col_ptrs[x_it_col + 1]);
+          ++cur_val;
+          }
+        
+        if(x_it_ok)
+          {
+          ++x_it;
+          
+          if(x_it == x_end)  { x_it_ok = false; }
+          }
+        
+        if(x_it_ok)
+          {
+          x_it_row = x_it.row();
+          x_it_col = x_it.col();
           }
         else
           {
-          // it is "ahead"
-          at(cit.row(), cit.col()) = (*cit);
-          it.internal_pos++; // update iterator so it still works
-          ++cit;
+          x_it_row++;
+          
+          if(x_it_row >= pa_n_rows)  { x_it_row = 0; x_it_col++; }
+          }
+        }
+      else
+        {
+        if(y_val != eT(0))
+          {
+          access::rw(out.values[cur_val]) = y_val;
+          access::rw(out.row_indices[cur_val]) = y_it_row;
+          ++access::rw(out.col_ptrs[y_it_col + 1]);
+          ++cur_val;
+          }
+        
+        if(y_it_ok)
+          {
+          ++y_it;
+          
+          if(y_it == y_end)  { y_it_ok = false; }
+          }
+        
+        if(y_it_ok)
+          {
+          y_it_row = y_it.row() + pa_start_row;
+          y_it_col = y_it.col() + pa_start_col;
+          }
+        else
+          {
+          y_it_row++;
+          
+          if(y_it_row >= pa_n_rows)  { y_it_row = 0; y_it_col++; }
           }
         }
       }
     }
-  else
+  
+  const uword out_n_cols = out.n_cols;
+  
+  uword* col_ptrs = access::rwp(out.col_ptrs);
+  
+  // Fix column pointers to be cumulative.
+  for(uword c = 1; c <= out_n_cols; ++c)
     {
-    const SpMat<eT> tmp(p.Q);
-    
-    (*this).operator=(tmp);
+    col_ptrs[c] += col_ptrs[c - 1];
     }
+  
+  access::rw((*this).m).steal_mem(out);
+  
+  access::rw(n_nonzero) = pb.get_n_nonzero();
   
   return *this;
   }
@@ -523,28 +718,8 @@ SpSubview<eT>::operator+=(const SpBase<eT, T1>& x)
   {
   arma_extra_debug_sigprint();
   
-  const SpProxy<T1> p(x.get_ref());
-  
-  arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "addition");
-  
-  if(p.is_alias(m) == false)
-    {
-    typename SpProxy<T1>::const_iterator_type cit = p.begin();
-
-    while(cit != p.end())
-      {
-      at(cit.row(), cit.col()) += (*cit);
-      ++cit;
-      }
-    }
-  else
-    {
-    const SpMat<eT> tmp(p.Q);
-    
-    (*this).operator+=(tmp);
-    }
-  
-  return *this;
+  // TODO: implement dedicated machinery
+  return (*this).operator=( (*this) + x.get_ref() );
   }
 
 
@@ -557,28 +732,8 @@ SpSubview<eT>::operator-=(const SpBase<eT, T1>& x)
   {
   arma_extra_debug_sigprint();
   
-  const SpProxy<T1> p(x.get_ref());
-  
-  arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "subtraction");
-  
-  if(p.is_alias(m) == false)
-    {
-    typename SpProxy<T1>::const_iterator_type cit = p.begin();
-    
-    while(cit != p.end())
-      {
-      at(cit.row(), cit.col()) -= (*cit);
-      ++cit;
-      }
-    }
-  else
-    {
-    const SpMat<eT> tmp(p.Q);
-    
-    (*this).operator-=(tmp);
-    }
-  
-  return *this;
+  // TODO: implement dedicated machinery
+  return (*this).operator=( (*this) - x.get_ref() );
   }
 
 
@@ -591,13 +746,7 @@ SpSubview<eT>::operator*=(const SpBase<eT, T1>& x)
   {
   arma_extra_debug_sigprint();
 
-  const SpProxy<T1> p(x.get_ref());
-
-  arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "matrix multiplication");
-
-  // Because we have to use a temporary anyway, it doesn't make sense to
-  // reimplement this here.
-  return operator=((*this) * x.get_ref());
+  return (*this).operator=( (*this) * x.get_ref() );
   }
 
 
@@ -610,48 +759,8 @@ SpSubview<eT>::operator%=(const SpBase<eT, T1>& x)
   {
   arma_extra_debug_sigprint();
   
-  const SpProxy<T1> p(x.get_ref());
-  
-  arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "element-wise multiplication");
-  
-  if(p.is_alias(m) == false)
-    {
-    typename SpProxy<T1>::const_iterator_type cit = p.begin();
-    iterator it(*this);
-
-    while((it != end()) || (cit != p.end()))
-      {
-      if((cit.row() == it.row()) && (cit.col() == it.col()))
-        {
-        (*it) *= (*cit);
-        ++it;
-        ++cit;
-        }
-      else
-        {
-        if((cit.col() > it.col()) || ((cit.col() == it.col()) && (cit.row() > it.row())))
-          {
-          // cit is "ahead"
-          (*it) = eT(0); // erase element -- x has a zero here
-          it.internal_pos--; // update iterator so it still works
-          ++it;
-          }
-        else
-          {
-          // it is "ahead"
-          ++cit;
-          }
-        }
-      }
-    }
-  else
-    {
-    const SpMat<eT> tmp(p.Q);
-    
-    (*this).operator%=(tmp);
-    }
-  
-  return *this;
+  // TODO: implement dedicated machinery
+  return (*this).operator=( (*this) % x.get_ref() );
   }
 
 
@@ -698,25 +807,11 @@ SpSubview<eT>::fill(const eT val)
   
   if(val != eT(0))
     {
-    // TODO: implement a faster version; the code below is slow
+    Mat<eT> tmp( (*this).n_rows, (*this).n_cols );
     
-    const uword lstart_row = aux_row1;
-    const uword lend_row   = aux_row1 + n_rows;
+    tmp.fill(val);
     
-    const uword lstart_col = aux_col1;
-    const uword lend_col   = aux_col1 + n_cols;
-
-    const uword orig_nonzero = m.n_nonzero;
-    
-    // iterate over our part of the sparse matrix
-    for(uword lcol = lstart_col; lcol < lend_col; ++lcol)
-    for(uword lrow = lstart_row; lrow < lend_row; ++lrow)
-      {
-      access::rw(m).at(lrow, lcol) = val;
-      }
-
-    access::rw(n_nonzero) += (m.n_nonzero - orig_nonzero);
-
+    (*this).operator=(tmp);
     }
   else
     {
@@ -733,15 +828,9 @@ SpSubview<eT>::zeros()
   {
   arma_extra_debug_sigprint();
   
-  // we can be a little smarter here
-  iterator it(*this);
-
-  while(it != end())
-    {
-    (*it) = eT(0);
-    it.internal_pos--; // hack to update iterator without requiring a new one
-    ++it;
-    }
+  const SpMat<eT> tmp( (*this).n_rows, (*this).n_cols );
+  
+  (*this).operator=(tmp);
   }
 
 
@@ -765,20 +854,11 @@ SpSubview<eT>::eye()
   {
   arma_extra_debug_sigprint();
   
-  // clear other things
-  (*this).zeros();
+  SpMat<eT> tmp;
   
-  const uword orig_nonzero = m.n_nonzero;
+  tmp.eye( (*this).n_rows, (*this).n_cols );
   
-  // now the diagonal ones
-  const uword end_index = std::min(n_rows, n_cols);
-  
-  for(uword ind = 0; ind < end_index; ++ind)
-    {
-    access::rw(m).at(ind + aux_row1, ind + aux_col1) = eT(1);
-    }
-  
-  access::rw(n_nonzero) += (m.n_nonzero - orig_nonzero);
+  (*this).operator=(tmp);
   }
 
 

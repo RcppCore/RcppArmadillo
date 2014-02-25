@@ -1,5 +1,5 @@
-// Copyright (C) 2013 Conrad Sanderson
-// Copyright (C) 2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2013-2014 Conrad Sanderson
+// Copyright (C) 2013-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,6 +27,9 @@ class SizeMat
   
   inline bool operator==(const SizeCube& s) const;
   inline bool operator!=(const SizeCube& s) const;
+  
+  inline void print(const std::string extra_text = "") const;
+  inline void print(std::ostream& user_stream, const std::string extra_text = "") const;
   };
 
 

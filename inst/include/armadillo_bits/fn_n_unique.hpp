@@ -49,13 +49,15 @@ n_unique
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  // Use iterators.
-  typename SpProxy<T1>::const_iterator_type x_it = pa.begin();
-  typename SpProxy<T2>::const_iterator_type y_it = pb.begin();
+  typename SpProxy<T1>::const_iterator_type x_it     = pa.begin();
+  typename SpProxy<T1>::const_iterator_type x_it_end = pa.end();
+  
+  typename SpProxy<T2>::const_iterator_type y_it     = pb.begin();
+  typename SpProxy<T2>::const_iterator_type y_it_end = pb.end();
 
   uword total_n_nonzero = 0;
 
-  while((x_it != pa.end()) || (y_it != pb.end()))
+  while( (x_it != x_it_end) || (y_it != y_it_end) )
     {
     if(x_it == y_it)
       {

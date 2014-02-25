@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 Conrad Sanderson
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2014 Conrad Sanderson
+// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -53,6 +53,9 @@ class arma_ostream
 
   template<typename eT> inline static void print_dense(std::ostream& o, const SpMat<eT>& m, const bool modify);
   template<typename eT> inline static void       print(std::ostream& o, const SpMat<eT>& m, const bool modify);
+  
+  inline static void print(std::ostream& o, const SizeMat&  S);
+  inline static void print(std::ostream& o, const SizeCube& S);
   };
 
 

@@ -45,23 +45,20 @@
 
 
 #if (__cplusplus >= 201103L)
-  #if !defined(ARMA_USE_CXX11)
-    #define ARMA_USE_CXX11
-  #endif
+  #undef  ARMA_USE_CXX11
+  #define ARMA_USE_CXX11
 #endif
 
 
 #if defined(ARMA_USE_CXX11)
-  #if !defined(ARMA_USE_U64S64)
-    #define ARMA_USE_U64S64
-  #endif
+  #undef  ARMA_USE_U64S64
+  #define ARMA_USE_U64S64
 #endif
 
 
 #if defined(ARMA_64BIT_WORD)
-  #if !defined(ARMA_USE_U64S64)
-    #define ARMA_USE_U64S64
-  #endif
+  #undef  ARMA_USE_U64S64
+  #define ARMA_USE_U64S64
 #endif
 
 
@@ -159,9 +156,8 @@
   #define ARMA_HAVE_ALIGNED_ATTRIBUTE
   
   #if defined(__GXX_EXPERIMENTAL_CXX0X__)
-    #if !defined(ARMA_USE_CXX11)
-      #define ARMA_USE_CXX11
-    #endif
+    #undef  ARMA_USE_CXX11
+    #define ARMA_USE_CXX11
   #endif
   
   #if defined(ARMA_USE_CXX11)
@@ -188,10 +184,20 @@
     #define ARMA_HAVE_GCC_ASSUME_ALIGNED
   #endif
   
+  #if defined(__OPTIMIZE_SIZE__)
+    #undef  ARMA_SIMPLE_LOOPS
+    #define ARMA_SIMPLE_LOOPS
+  #endif
+  
   #if defined(__clang__)
-    #undef ARMA_HAVE_TR1
-    #undef ARMA_HAVE_GCC_ASSUME_ALIGNED
     // TODO: future versions of clang may also have __builtin_assume_aligned
+    #undef ARMA_HAVE_GCC_ASSUME_ALIGNED
+    #undef ARMA_HAVE_TR1
+    
+    // clang's vectoriser has trouble dealing with slightly more elaborate loops
+    // http://llvm.org/bugs/show_bug.cgi?id=16358
+    #undef  ARMA_SIMPLE_LOOPS
+    #define ARMA_SIMPLE_LOOPS
   #endif
   
   #if defined(__INTEL_COMPILER)
@@ -209,6 +215,9 @@
   #if (_MSC_VER < 1600)
     #error "*** Need a newer compiler ***"
   #endif
+  
+  #undef  ARMA_SIMPLE_LOOPS
+  #define ARMA_SIMPLE_LOOPS
   
   #undef ARMA_GOOD_COMPILER
   #undef ARMA_HAVE_SNPRINTF

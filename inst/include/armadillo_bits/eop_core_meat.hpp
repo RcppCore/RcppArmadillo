@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2013 Conrad Sanderson
-// Copyright (C) 2010-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2014 Conrad Sanderson
+// Copyright (C) 2010-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,50 +16,71 @@
 #undef arma_applier_3
 #undef operatorA
 
-#define arma_applier_1u(operatorA) \
-  {\
-  uword i,j;\
-  \
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)\
+
+#if defined(ARMA_SIMPLE_LOOPS)
+  #define arma_applier_1u(operatorA) \
     {\
-    eT tmp_i = P[i];\
-    eT tmp_j = P[j];\
-    \
-    tmp_i = eop_core<eop_type>::process(tmp_i, k);\
-    tmp_j = eop_core<eop_type>::process(tmp_j, k);\
-    \
-    out_mem[i] operatorA tmp_i;\
-    out_mem[j] operatorA tmp_j;\
-    }\
-  \
-  if(i < n_elem)\
+    for(uword i=0; i<n_elem; ++i)\
+      {\
+      out_mem[i] operatorA eop_core<eop_type>::process(P[i], k);\
+      }\
+    }
+#else
+  #define arma_applier_1u(operatorA) \
     {\
-    out_mem[i] operatorA eop_core<eop_type>::process(P[i], k);\
-    }\
-  }
+    uword i,j;\
+    \
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)\
+      {\
+      eT tmp_i = P[i];\
+      eT tmp_j = P[j];\
+      \
+      tmp_i = eop_core<eop_type>::process(tmp_i, k);\
+      tmp_j = eop_core<eop_type>::process(tmp_j, k);\
+      \
+      out_mem[i] operatorA tmp_i;\
+      out_mem[j] operatorA tmp_j;\
+      }\
+    \
+    if(i < n_elem)\
+      {\
+      out_mem[i] operatorA eop_core<eop_type>::process(P[i], k);\
+      }\
+    }
+#endif
 
 
-#define arma_applier_1a(operatorA) \
-  {\
-  uword i,j;\
-  \
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)\
+#if defined(ARMA_SIMPLE_LOOPS)
+  #define arma_applier_1a(operatorA) \
     {\
-    eT tmp_i = P.at_alt(i);\
-    eT tmp_j = P.at_alt(j);\
-    \
-    tmp_i = eop_core<eop_type>::process(tmp_i, k);\
-    tmp_j = eop_core<eop_type>::process(tmp_j, k);\
-    \
-    out_mem[i] operatorA tmp_i;\
-    out_mem[j] operatorA tmp_j;\
-    }\
-  \
-  if(i < n_elem)\
+    for(uword i=0; i<n_elem; ++i)\
+      {\
+      out_mem[i] operatorA eop_core<eop_type>::process(P.at_alt(i), k);\
+      }\
+    }
+#else
+  #define arma_applier_1a(operatorA) \
     {\
-    out_mem[i] operatorA eop_core<eop_type>::process(P.at_alt(i), k);\
-    }\
-  }
+    uword i,j;\
+    \
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)\
+      {\
+      eT tmp_i = P.at_alt(i);\
+      eT tmp_j = P.at_alt(j);\
+      \
+      tmp_i = eop_core<eop_type>::process(tmp_i, k);\
+      tmp_j = eop_core<eop_type>::process(tmp_j, k);\
+      \
+      out_mem[i] operatorA tmp_i;\
+      out_mem[j] operatorA tmp_j;\
+      }\
+    \
+    if(i < n_elem)\
+      {\
+      out_mem[i] operatorA eop_core<eop_type>::process(P.at_alt(i), k);\
+      }\
+    }
+#endif
 
 
 #define arma_applier_2(operatorA) \
