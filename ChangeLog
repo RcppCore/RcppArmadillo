@@ -1,3 +1,7 @@
+2014-02-25  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/*: Add current Armadillo 4.100 snapshot
+
 2014-02-20  Dirk Eddelbuettel  <edd@debian.org>
 
 	* debian/control: Remove Depends: on littler
