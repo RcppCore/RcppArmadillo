@@ -1,5 +1,6 @@
-// Copyright (C) 2013 Ryan Curtin
-// Copyright (C) 2013 Conrad Sanderson
+// Copyright (C) 2013-2014 Ryan Curtin
+// Copyright (C) 2013-2014 Conrad Sanderson
+// Copyright (C) 2013-2014 NICTA
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,6 +19,7 @@ eigs_gen
   (
   const SpBase<typename T1::elem_type, T1>& X,
   const uword                               n_eigvals,
+  const char*                               form = "lm",
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
   )
   {
@@ -29,7 +31,7 @@ eigs_gen
   Mat< std::complex<T> > eigvec;
   Col< std::complex<T> > eigval;
   
-  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals);
+  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form);
   
   if(status == false)
     {
@@ -51,6 +53,7 @@ eigs_gen
            Col< std::complex<typename T1::pod_type> >& eigval,
   const SpBase<typename T1::elem_type, T1>&            X,
   const uword                                          n_eigvals,
+  const char*                                          form = "lm",
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
   )
   {
@@ -61,7 +64,7 @@ eigs_gen
   
   Mat< std::complex<T> > eigvec;
   
-  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals);
+  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form);
   
   if(status == false)
     {
@@ -84,6 +87,7 @@ eigs_gen
          Mat< std::complex<typename T1::pod_type> >& eigvec,
   const SpBase<typename T1::elem_type, T1>&          X,
   const uword                                        n_eigvals,
+  const char*                                        form = "lm",
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
   )
   {
@@ -92,7 +96,7 @@ eigs_gen
   
   arma_debug_check( void_ptr(&eigval) == void_ptr(&eigvec), "eigs_gen(): eigval is an alias of eigvec" );
   
-  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals);
+  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form);
   
   if(status == false)
     {

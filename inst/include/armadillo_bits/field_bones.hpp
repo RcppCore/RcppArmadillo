@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2014 Conrad Sanderson
+// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
 // Copyright (C) 2009-2010 Ian Cullinan
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -31,6 +31,7 @@ class field
   
   const uword n_rows;     //!< number of rows in the field (read-only)
   const uword n_cols;     //!< number of columns in the field (read-only)
+  const uword n_slices;   //!< number of slices in the field (read-only)
   const uword n_elem;     //!< number of elements in the field (read-only)
   
   
@@ -53,9 +54,11 @@ class field
   
   inline explicit field(const uword n_elem_in);
   inline          field(const uword n_rows_in, const uword n_cols_in);
+  inline          field(const uword n_rows_in, const uword n_cols_in, const uword n_slices_in);
   
   inline void  set_size(const uword n_obj_in);
   inline void  set_size(const uword n_rows_in, const uword n_cols_in);
+  inline void  set_size(const uword n_rows_in, const uword n_cols_in, const uword n_slices_in);
   
   template<typename oT2>
   inline void copy_size(const field<oT2>& x);
@@ -71,9 +74,15 @@ class field
   
   arma_inline       oT&         at(const uword row, const uword col);
   arma_inline const oT&         at(const uword row, const uword col) const;
+
+  arma_inline       oT&         at(const uword row, const uword col, const uword slice);
+  arma_inline const oT&         at(const uword row, const uword col, const uword slice) const;
   
   arma_inline       oT& operator()(const uword row, const uword col);
   arma_inline const oT& operator()(const uword row, const uword col) const;
+
+  arma_inline       oT& operator()(const uword row, const uword col, const uword slice);
+  arma_inline const oT& operator()(const uword row, const uword col, const uword slice) const;
   
   inline field_injector<field> operator<<(const oT& val);
   inline field_injector<field> operator<<(const injector_end_of_row<>& x);
@@ -84,6 +93,9 @@ class field
   
   inline       subview_field<oT> col(const uword col_num);
   inline const subview_field<oT> col(const uword col_num) const;
+
+  inline       subview_field<oT> slice(const uword slice_num);
+  inline const subview_field<oT> slice(const uword slice_num) const;
   
   inline       subview_field<oT> rows(const uword in_row1, const uword in_row2);
   inline const subview_field<oT> rows(const uword in_row1, const uword in_row2) const;
@@ -91,20 +103,38 @@ class field
   inline       subview_field<oT> cols(const uword in_col1, const uword in_col2);
   inline const subview_field<oT> cols(const uword in_col1, const uword in_col2) const;
   
+  inline       subview_field<oT> slices(const uword in_slice1, const uword in_slice2);
+  inline const subview_field<oT> slices(const uword in_slice1, const uword in_slice2) const;
+  
   inline       subview_field<oT> subfield(const uword in_row1, const uword in_col1, const uword in_row2, const uword in_col2);
   inline const subview_field<oT> subfield(const uword in_row1, const uword in_col1, const uword in_row2, const uword in_col2) const;
+  
+  inline       subview_field<oT> subfield(const uword in_row1, const uword in_col1, const uword in_slice1, const uword in_row2, const uword in_col2, const uword in_slice2);
+  inline const subview_field<oT> subfield(const uword in_row1, const uword in_col1, const uword in_slice1, const uword in_row2, const uword in_col2, const uword in_slice2) const;
   
   inline       subview_field<oT> subfield(const uword in_row1, const uword in_col1, const SizeMat& s);
   inline const subview_field<oT> subfield(const uword in_row1, const uword in_col1, const SizeMat& s) const;
   
-  inline       subview_field<oT> subfield  (const span& row_span, const span& col_span);
-  inline const subview_field<oT> subfield  (const span& row_span, const span& col_span) const;
+  inline       subview_field<oT> subfield(const uword in_row1, const uword in_col1, const uword in_slice1, const SizeCube& s);
+  inline const subview_field<oT> subfield(const uword in_row1, const uword in_col1, const uword in_slice1, const SizeCube& s) const;
+  
+  inline       subview_field<oT> subfield(const span& row_span, const span& col_span);
+  inline const subview_field<oT> subfield(const span& row_span, const span& col_span) const;
+  
+  inline       subview_field<oT> subfield(const span& row_span, const span& col_span, const span& slice_span);
+  inline const subview_field<oT> subfield(const span& row_span, const span& col_span, const span& slice_span) const;
   
   inline       subview_field<oT> operator()(const span& row_span, const span& col_span);
   inline const subview_field<oT> operator()(const span& row_span, const span& col_span) const;
   
+  inline       subview_field<oT> operator()(const span& row_span, const span& col_span, const span& slice_span);
+  inline const subview_field<oT> operator()(const span& row_span, const span& col_span, const span& slice_span) const;
+  
   inline       subview_field<oT> operator()(const uword in_row1, const uword in_col1, const SizeMat& s);
   inline const subview_field<oT> operator()(const uword in_row1, const uword in_col1, const SizeMat& s) const;
+  
+  inline       subview_field<oT> operator()(const uword in_row1, const uword in_col1, const uword in_slice1, const SizeCube& s);
+  inline const subview_field<oT> operator()(const uword in_row1, const uword in_col1, const uword in_slice1, const SizeCube& s) const;
   
   
   inline void print(const std::string extra_text = "") const;
@@ -117,6 +147,7 @@ class field
   
   arma_inline bool is_empty() const;
   
+  
   arma_inline arma_warn_unused bool in_range(const uword i) const;
   arma_inline arma_warn_unused bool in_range(const span& x) const;
   
@@ -125,7 +156,13 @@ class field
   arma_inline arma_warn_unused bool in_range(const uword   in_row, const span& col_span) const;
   arma_inline arma_warn_unused bool in_range(const span& row_span, const span& col_span) const;
   
-  arma_inline arma_warn_unused bool in_range(const uword in_row, const uword in_col, const SizeMat& s) const;
+  arma_inline arma_warn_unused bool in_range(const uword   in_row, const uword   in_col, const SizeMat& s) const;
+  
+  arma_inline arma_warn_unused bool in_range(const uword   in_row, const uword   in_col, const uword   in_slice) const;
+  arma_inline arma_warn_unused bool in_range(const span& row_span, const span& col_span, const span& slice_span) const;
+  
+  arma_inline arma_warn_unused bool in_range(const uword   in_row, const uword in_col, const uword in_slice, const SizeCube& s) const;
+  
   
   inline bool save(const std::string   name, const file_type type = arma_binary, const bool print_status = true) const;
   inline bool save(      std::ostream& os,   const file_type type = arma_binary, const bool print_status = true) const;
@@ -208,6 +245,7 @@ class field
   
   inline void init(const field<oT>& x);
   inline void init(const uword n_rows_in, const uword n_cols_in);
+  inline void init(const uword n_rows_in, const uword n_cols_in, const uword n_slices_in);
   
   inline void delete_objects();
   inline void create_objects();

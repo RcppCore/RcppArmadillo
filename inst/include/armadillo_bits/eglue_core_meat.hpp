@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2013 Conrad Sanderson
-// Copyright (C) 2010-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2014 Conrad Sanderson
+// Copyright (C) 2010-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,52 +18,71 @@
 #undef operatorA
 #undef operatorB
 
-#define arma_applier_1u(operatorA, operatorB) \
-  {\
-  uword i,j;\
-  \
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)\
+
+#if defined(ARMA_SIMPLE_LOOPS)
+  #define arma_applier_1u(operatorA, operatorB) \
     {\
-    eT tmp_i = P1[i];\
-    eT tmp_j = P1[j];\
-    \
-    tmp_i operatorB##= P2[i];\
-    tmp_j operatorB##= P2[j];\
-    \
-    out_mem[i] operatorA tmp_i;\
-    out_mem[j] operatorA tmp_j;\
-    }\
-  \
-  if(i < n_elem)\
+    for(uword i=0; i<n_elem; ++i)\
+      {\
+      out_mem[i] operatorA P1[i] operatorB P2[i];\
+      }\
+    }
+#else
+  #define arma_applier_1u(operatorA, operatorB) \
     {\
-    out_mem[i] operatorA P1[i] operatorB P2[i];\
-    }\
-  }
-  
+    uword i,j;\
+    \
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)\
+      {\
+      eT tmp_i = P1[i];\
+      eT tmp_j = P1[j];\
+      \
+      tmp_i operatorB##= P2[i];\
+      tmp_j operatorB##= P2[j];\
+      \
+      out_mem[i] operatorA tmp_i;\
+      out_mem[j] operatorA tmp_j;\
+      }\
+    \
+    if(i < n_elem)\
+      {\
+      out_mem[i] operatorA P1[i] operatorB P2[i];\
+      }\
+    }
+#endif
 
 
-#define arma_applier_1a(operatorA, operatorB) \
-  {\
-  uword i,j;\
-  \
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)\
+#if defined(ARMA_SIMPLE_LOOPS)
+  #define arma_applier_1a(operatorA, operatorB) \
     {\
-    eT tmp_i = P1.at_alt(i);\
-    eT tmp_j = P1.at_alt(j);\
-    \
-    tmp_i operatorB##= P2.at_alt(i);\
-    tmp_j operatorB##= P2.at_alt(j);\
-    \
-    out_mem[i] operatorA tmp_i;\
-    out_mem[j] operatorA tmp_j;\
-    }\
-  \
-  if(i < n_elem)\
+    for(uword i=0; i<n_elem; ++i)\
+      {\
+      out_mem[i] operatorA P1.at_alt(i) operatorB P2.at_alt(i);\
+      }\
+    }
+#else
+  #define arma_applier_1a(operatorA, operatorB) \
     {\
-    out_mem[i] operatorA P1.at_alt(i) operatorB P2.at_alt(i);\
-    }\
-  }
-  
+    uword i,j;\
+    \
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)\
+      {\
+      eT tmp_i = P1.at_alt(i);\
+      eT tmp_j = P1.at_alt(j);\
+      \
+      tmp_i operatorB##= P2.at_alt(i);\
+      tmp_j operatorB##= P2.at_alt(j);\
+      \
+      out_mem[i] operatorA tmp_i;\
+      out_mem[j] operatorA tmp_j;\
+      }\
+    \
+    if(i < n_elem)\
+      {\
+      out_mem[i] operatorA P1.at_alt(i) operatorB P2.at_alt(i);\
+      }\
+    }
+#endif
 
 
 #define arma_applier_2(operatorA, operatorB) \

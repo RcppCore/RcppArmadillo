@@ -12,9 +12,9 @@
 
 
 #define ARMA_VERSION_MAJOR 4
-#define ARMA_VERSION_MINOR 000
-#define ARMA_VERSION_PATCH 4
-#define ARMA_VERSION_NAME  "Feral Steamroller"
+#define ARMA_VERSION_MINOR 001
+#define ARMA_VERSION_PATCH 3
+#define ARMA_VERSION_NAME  "unstable development version -- not for production use"
 
 
 

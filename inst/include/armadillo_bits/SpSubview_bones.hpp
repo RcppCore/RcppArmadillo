@@ -55,6 +55,8 @@ class SpSubview : public SpBase<eT, SpSubview<eT> >
   template<typename T1> inline const SpSubview& operator%=(const Base<eT, T1>& x);
   template<typename T1> inline const SpSubview& operator/=(const Base<eT, T1>& x);
 
+  template<typename T1> inline const SpSubview& operator_equ_common(const SpBase<eT, T1>& x);
+  
   template<typename T1> inline const SpSubview& operator= (const SpBase<eT, T1>& x);
   template<typename T1> inline const SpSubview& operator+=(const SpBase<eT, T1>& x);
   template<typename T1> inline const SpSubview& operator-=(const SpBase<eT, T1>& x);

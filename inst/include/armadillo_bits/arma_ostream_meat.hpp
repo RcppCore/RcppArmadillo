@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 Conrad Sanderson
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2014 Conrad Sanderson
+// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
 // Copyright (C) 2012 Ryan Curtin
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -428,27 +428,53 @@ arma_ostream::print(std::ostream& o, const field<oT>& x)
   
   const std::streamsize cell_width = o.width();
   
-  const uword x_n_rows = x.n_rows;
-  const uword x_n_cols = x.n_cols;
+  const uword x_n_rows   = x.n_rows;
+  const uword x_n_cols   = x.n_cols;
+  const uword x_n_slices = x.n_slices;
   
   if(x.is_empty() == false)
     {
-    for(uword col=0; col<x_n_cols; ++col)
+    if(x_n_slices == 1)
       {
-      o << "[field column " << col << ']' << '\n'; 
-      
-      for(uword row=0; row<x_n_rows; ++row)
+      for(uword col=0; col<x_n_cols; ++col)
         {
-        o.width(cell_width);
-        o << x.at(row,col) << '\n';
+        o << "[field column " << col << ']' << '\n'; 
+        
+        for(uword row=0; row<x_n_rows; ++row)
+          {
+          o.width(cell_width);
+          o << x.at(row,col) << '\n';
+          }
+        
+        o << '\n';
         }
-      
-      o << '\n';
+      }
+    else
+      {
+      for(uword slice=0; slice<x_n_slices; ++slice)
+        {
+        o << "[field slice " << slice << ']' << '\n';
+        
+        for(uword col=0; col<x_n_cols; ++col)
+          {
+          o << "[field column " << col << ']' << '\n';
+          
+          for(uword row=0; row<x_n_rows; ++row)
+            {
+            o.width(cell_width);
+            o << x.at(row,col,slice) << '\n';
+            }
+          
+          o << '\n';
+          }
+        
+        o << '\n';
+        }
       }
     }
   else
     {
-    o << "[field size: " << x_n_rows << 'x' << x_n_cols <<  "]\n";
+    o << "[field size: " << x_n_rows << 'x' << x_n_cols << 'x' << x_n_slices << "]\n";
     }
   
   o.flush();
@@ -470,19 +496,45 @@ arma_ostream::print(std::ostream& o, const subview_field<oT>& x)
   
   const std::streamsize cell_width = o.width();
   
-  const uword x_n_rows = x.n_rows;
-  const uword x_n_cols = x.n_cols;
+  const uword x_n_rows   = x.n_rows;
+  const uword x_n_cols   = x.n_cols;
+  const uword x_n_slices = x.n_slices;
   
-  for(uword col=0; col<x_n_cols; ++col)
+  if(x_n_slices == 1)
     {
-    o << "[field column " << col << ']' << '\n'; 
-    for(uword row=0; row<x_n_rows; ++row)
+    for(uword col=0; col<x_n_cols; ++col)
       {
-      o.width(cell_width);
-      o << x.at(row,col) << '\n';
+      o << "[field column " << col << ']' << '\n'; 
+      for(uword row=0; row<x_n_rows; ++row)
+        {
+        o.width(cell_width);
+        o << x.at(row,col) << '\n';
+        }
+      
+      o << '\n';
       }
-    
-    o << '\n';
+    }
+  else
+    {
+    for(uword slice=0; slice<x_n_slices; ++slice)
+      {
+      o << "[field slice " << slice << ']' << '\n';
+      
+      for(uword col=0; col<x_n_cols; ++col)
+        {
+        o << "[field column " << col << ']' << '\n';
+        
+        for(uword row=0; row<x_n_rows; ++row)
+          {
+          o.width(cell_width);
+          o << x.at(row,col,slice) << '\n';
+          }
+        
+        o << '\n';
+        }
+      
+      o << '\n';
+      }
     }
   
   o.flush();
@@ -661,6 +713,48 @@ arma_ostream::print(std::ostream& o, const SpMat<eT>& m, const bool modify)
     }
   
   o.flush();
+  stream_state.restore(o);
+  }
+
+
+
+inline
+void
+arma_ostream::print(std::ostream& o, const SizeMat& S)
+  {
+  arma_extra_debug_sigprint();
+  
+  const arma_ostream_state stream_state(o);
+  
+  o.unsetf(ios::showbase);
+  o.unsetf(ios::uppercase);
+  o.unsetf(ios::showpos);
+  
+  o.setf(ios::fixed);
+  
+  o << S.n_rows << 'x' << S.n_cols << '\n';
+  
+  stream_state.restore(o);
+  }
+
+
+
+inline
+void
+arma_ostream::print(std::ostream& o, const SizeCube& S)
+  {
+  arma_extra_debug_sigprint();
+  
+  const arma_ostream_state stream_state(o);
+  
+  o.unsetf(ios::showbase);
+  o.unsetf(ios::uppercase);
+  o.unsetf(ios::showpos);
+  
+  o.setf(ios::fixed);
+    
+  o << S.n_rows << 'x' << S.n_cols << 'x' << S.n_slices << '\n';
+  
   stream_state.restore(o);
   }
 

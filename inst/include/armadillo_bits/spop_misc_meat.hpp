@@ -34,7 +34,18 @@ spop_scalar_times::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_
   
   typedef typename T1::elem_type eT;
   
-  out.init_xform(in.m, priv::functor_scalar_times<eT>(in.aux));
+  if(in.aux != eT(0))
+    {
+    out.init_xform(in.m, priv::functor_scalar_times<eT>(in.aux));
+    }
+  else
+    {
+    out.reset();
+    
+    const SpProxy<T1> P(in.m);
+    
+    out.set_size( P.get_n_rows(), P.get_n_cols() );
+    }
   }
 
 

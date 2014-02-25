@@ -64,6 +64,8 @@ class op_diagmat;
 class op_trimat;
 class op_diagvec;
 class op_vectorise_col;
+class op_normalise_colvec;
+class op_normalise_rowvec;
 
 class eop_conj;
 

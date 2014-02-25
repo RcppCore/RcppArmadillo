@@ -1,5 +1,5 @@
-// Copyright (C) 2012 Ryan Curtin
-// Copyright (C) 2012 Conrad Sanderson
+// Copyright (C) 2012-2014 Ryan Curtin
+// Copyright (C) 2012-2014 Conrad Sanderson
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -50,7 +50,7 @@ spglue_plus::apply_noalias(SpMat<eT>& out, const SpProxy<T1>& pa, const SpProxy<
   arma_extra_debug_sigprint();
   
   arma_debug_assert_same_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "addition");
-
+  
   if( (pa.get_n_nonzero() != 0) && (pb.get_n_nonzero() != 0) )
     {
     out.set_size(pa.get_n_rows(), pa.get_n_cols());
@@ -72,14 +72,14 @@ spglue_plus::apply_noalias(SpMat<eT>& out, const SpProxy<T1>& pa, const SpProxy<
         {
         const eT val = (*x_it) + (*y_it);
         
-        if (val != eT(0))
+        if(val != eT(0))
           {
           access::rw(out.values[cur_val]) = val;
           access::rw(out.row_indices[cur_val]) = x_it.row();
           ++access::rw(out.col_ptrs[x_it.col() + 1]);
           ++cur_val;
           }
-
+        
         ++x_it;
         ++y_it;
         }
@@ -93,18 +93,30 @@ spglue_plus::apply_noalias(SpMat<eT>& out, const SpProxy<T1>& pa, const SpProxy<
         
         if((x_it_col < y_it_col) || ((x_it_col == y_it_col) && (x_it_row < y_it_row))) // if y is closer to the end
           {
-          access::rw(out.values[cur_val]) = (*x_it);
-          access::rw(out.row_indices[cur_val]) = x_it_row;
-          ++access::rw(out.col_ptrs[x_it_col + 1]);
-          ++cur_val;
+          const eT val = (*x_it);
+          
+          if(val != eT(0))
+            {
+            access::rw(out.values[cur_val]) = val;
+            access::rw(out.row_indices[cur_val]) = x_it_row;
+            ++access::rw(out.col_ptrs[x_it_col + 1]);
+            ++cur_val;
+            }
+          
           ++x_it;
           }
         else
           {
-          access::rw(out.values[cur_val]) = (*y_it);
-          access::rw(out.row_indices[cur_val]) = y_it_row;
-          ++access::rw(out.col_ptrs[y_it_col + 1]);
-          ++cur_val;
+          const eT val = (*y_it);
+          
+          if(val != eT(0))
+            {
+            access::rw(out.values[cur_val]) = val;
+            access::rw(out.row_indices[cur_val]) = y_it_row;
+            ++access::rw(out.col_ptrs[y_it_col + 1]);
+            ++cur_val;
+            }
+          
           ++y_it;
           }
         }

@@ -2382,8 +2382,8 @@ Mat<eT>::operator*=(const SpBase<eT, T1>& m)
   {
   arma_extra_debug_sigprint();
   
-  Mat<eT> z;
-  z = (*this) * m.get_ref();
+  Mat<eT> z = (*this) * m.get_ref();
+  
   steal_mem(z);
   
   return *this;

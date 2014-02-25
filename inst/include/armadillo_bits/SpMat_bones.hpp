@@ -1,5 +1,5 @@
 // Copyright (C) 2011-2013 Ryan Curtin
-// Copyright (C) 2012-2013 Conrad Sanderson
+// Copyright (C) 2012-2014 Conrad Sanderson
 // Copyright (C) 2011 Matthew Amidon
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -76,7 +76,6 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   inline                  SpMat(SpMat&& m);
   inline const SpMat& operator=(SpMat&& m);
   #endif
-  
   
   template<typename T1, typename T2> inline SpMat(const Base<uword,T1>& locations, const Base<eT,T2>& values, const bool sort_locations = true);
   template<typename T1, typename T2> inline SpMat(const Base<uword,T1>& locations, const Base<eT,T2>& values, const uword n_rows, const uword n_cols, const bool sort_locations = true);
@@ -519,6 +518,8 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   inline bool  empty() const;
   inline uword size()  const;
   
+  inline void remove_zeros();
+  
   /**
    * Resize memory.  You are responsible for updating the column pointers and
    * filling the new memory (if the new size is larger).  If the new size is
@@ -552,6 +553,10 @@ class SpMat : public SpBase< eT, SpMat<eT> >
    * Initialize from another matrix (copy).
    */
   inline void init(const SpMat& x);
+  
+  
+  inline void init_batch(const Mat<uword>& locations, const Mat<eT>& values, const bool sort_locations);
+  
   
   
   private:

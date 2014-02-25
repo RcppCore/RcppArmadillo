@@ -1,5 +1,5 @@
-// Copyright (C) 2013 Conrad Sanderson
-// Copyright (C) 2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2013-2014 Conrad Sanderson
+// Copyright (C) 2013-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -126,24 +126,24 @@ size(const T1& X, const uword dim)
 
 template<typename oT>
 inline
-const SizeMat
+const SizeCube
 size(const field<oT>& X)
   {
   arma_extra_debug_sigprint();
   
-  return SizeMat( X.n_rows, X.n_cols );
+  return SizeCube( X.n_rows, X.n_cols, X.n_slices );
   }
 
 
 
 template<typename oT>
 inline
-const SizeMat
+const SizeCube
 size(const subview_field<oT>& X)
   {
   arma_extra_debug_sigprint();
   
-  return SizeMat( X.n_rows, X.n_cols );
+  return SizeCube( X.n_rows, X.n_cols, X.n_slices );
   }
 
 
