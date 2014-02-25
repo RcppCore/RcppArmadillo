@@ -6,7 +6,12 @@
   \itemize{
     \item Upgraded to Armadillo (draft) release Version 4.100.0
     \itemize{
-      \item ....
+      \item extended the \code{field} class to handle 3D layout
+      \item extended \code{eigs_sym()} and \code{eigs_gen()} to obtain
+      eigenvalues of various forms (eg. largest or smallest magnitude) 
+      \item added \code{normalise()} for normalising vectors to unit p-norm
+      \item automatic SIMD vectorisation of elementary expressions (eg. matrix addition) when using Clang 3.4+ with -O3 optimisation
+      \item faster handling of sparse submatrix views
     }
 }
 
