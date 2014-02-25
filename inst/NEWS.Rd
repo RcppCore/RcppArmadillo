@@ -13,6 +13,7 @@
       \item automatic SIMD vectorisation of elementary expressions (eg. matrix addition) when using Clang 3.4+ with -O3 optimisation
       \item faster handling of sparse submatrix views
     }
+  }
 }
 
 \section{Changes in RcppArmadillo version 0.4.000.4 (2014-02-19)}{
