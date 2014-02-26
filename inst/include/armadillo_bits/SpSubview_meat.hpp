@@ -87,32 +87,17 @@ const SpSubview<eT>&
 SpSubview<eT>::operator+=(const eT val)
   {
   arma_extra_debug_sigprint();
-
+  
   if(val == eT(0))
     {
     return *this;
     }
-
-  const uword lstart_row = aux_row1;
-  const uword lend_row   = aux_row1 + n_rows;
   
-  const uword lstart_col = aux_col1;
-  const uword lend_col   = aux_col1 + n_cols;
-
-  const uword old_n_nonzero = m.n_nonzero;
-
-  // iterate over our part of the sparse matrix
-  for(uword lcol = lstart_col; lcol < lend_col; ++lcol)
-  for(uword lrow = lstart_row; lrow < lend_row; ++lrow)
-    {
-    access::rw(m).at(lrow, lcol) += val;
-    }
-
-  const uword new_n_nonzero = m.n_nonzero;
-
-  access::rw(n_nonzero) += (new_n_nonzero - old_n_nonzero);
-
-  return *this;
+  Mat<eT> tmp( (*this).n_rows, (*this).n_cols );
+  
+  tmp.fill(val);
+  
+  return (*this).operator=( (*this) + tmp );
   }
 
 
@@ -129,25 +114,11 @@ SpSubview<eT>::operator-=(const eT val)
     return *this;
     }
 
-  const uword lstart_row = aux_row1;
-  const uword lend_row   = aux_row1 + n_rows;
+  Mat<eT> tmp( (*this).n_rows, (*this).n_cols );
   
-  const uword lstart_col = aux_col1;
-  const uword lend_col   = aux_col1 + n_cols;
-
-  const uword old_n_nonzero = m.n_nonzero;
-
-  for(uword lcol = lstart_col; lcol < lend_col; ++lcol)
-  for(uword lrow = lstart_row; lrow < lend_row; ++lrow)
-    {
-    access::rw(m).at(lrow, lcol) -= val;
-    }
-
-  const uword new_n_nonzero = m.n_nonzero;
-
-  access::rw(n_nonzero) += (new_n_nonzero - old_n_nonzero);
-
-  return *this;
+  tmp.fill(val);
+  
+  return (*this).operator=( (*this) - tmp );
   }
 
 

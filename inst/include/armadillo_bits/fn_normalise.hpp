@@ -22,7 +22,7 @@ enable_if2
 normalise
   (
   const T1&   X,
-  const uword p,
+  const uword p = uword(2),
   const arma_empty_class junk1 = arma_empty_class(),
   const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk2 = 0
   )
@@ -47,7 +47,7 @@ enable_if2
 normalise
   (
   const T1&   X,
-  const uword p,
+  const uword p = uword(2),
   const arma_empty_class junk1 = arma_empty_class(),
   const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk2 = 0
   )
@@ -72,7 +72,7 @@ enable_if2
 normalise
   (
   const T1&   X,
-  const uword p,
+  const uword p = uword(2),
   const uword dim = 0,
   const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk = 0
   )

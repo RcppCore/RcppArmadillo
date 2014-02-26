@@ -2862,7 +2862,7 @@ auxlib::svd_dc(Col<T>& S, const Base<std::complex<T>, T1>& X, uword& X_n_rows, u
     S.set_size( static_cast<uword>(min_mn) );
     
     podarray<eT>        work( static_cast<uword>(lwork   ) );
-    podarray<T>        rwork( static_cast<uword>(5*min_mn) );
+    podarray<T>        rwork( static_cast<uword>(7*min_mn) );  // LAPACK 3.4.2 docs state 5*min(m,n), while zgesdd() seems to write past the end 
     podarray<blas_int> iwork( static_cast<uword>(8*min_mn) );
     
     lapack::cx_gesdd<T>

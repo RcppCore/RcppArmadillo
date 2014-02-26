@@ -458,6 +458,34 @@ op_norm_dot::apply_unwrap(const T1& X, const T2& Y)
 
 
 //
+// op_norm_dot_slow
+
+
+
+template<typename T1, typename T2>
+arma_hot
+inline
+typename T1::elem_type
+op_norm_dot_slow::apply(const T1& X, const T2& Y)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const unwrap<T1> tmp1(X);
+  const unwrap<T2> tmp2(Y);
+  
+  const Col<eT> A( const_cast<eT*>(tmp1.M.memptr()), tmp1.M.n_elem, false );
+  const Col<eT> B( const_cast<eT*>(tmp2.M.memptr()), tmp2.M.n_elem, false );
+  
+  arma_debug_check( (A.n_elem != B.n_elem), "norm_dot(): objects must have the same number of elements" );
+  
+  return ( op_dot::apply(A,B) / (norm(A,2) * norm(B,2)) );
+  }
+
+
+
+//
 // op_cdot
 
 

@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2014 Conrad Sanderson
+// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -69,6 +69,16 @@ class op_norm_dot
   
   template<typename T1, typename T2>
   arma_hot inline static typename T1::elem_type apply_unwrap(const T1& X, const T2& Y);
+  };
+
+
+
+class op_norm_dot_slow
+  {
+  public:
+  
+  template<typename T1, typename T2>
+  arma_hot inline static typename T1::elem_type apply(const T1& X, const T2& Y);
   };
 
 
