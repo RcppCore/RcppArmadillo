@@ -1,3 +1,4 @@
+// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
 
 // we only include RcppArmadillo.h which pulls Rcpp.h in for us
 #include "RcppArmadillo.h"
@@ -44,8 +45,8 @@ double rcpparma_innerproduct(const arma::colvec & x) {
 //
 // [[Rcpp::export]]
 Rcpp::List rcpparma_bothproducts(const arma::colvec & x) {
-     arma::mat op = x * x.t();
-     double    ip = arma::as_scalar(x.t() * x);
-     return Rcpp::List::create(Rcpp::Named("outer")=op,
-                               Rcpp::Named("inner")=ip);
+    arma::mat op = x * x.t();
+    double    ip = arma::as_scalar(x.t() * x);
+    return Rcpp::List::create(Rcpp::Named("outer")=op,
+                              Rcpp::Named("inner")=ip);
 }
