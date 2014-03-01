@@ -441,7 +441,9 @@ namespace arma
   #include "armadillo_bits/fn_sprandu.hpp"
   #include "armadillo_bits/fn_eigs_sym.hpp"
   #include "armadillo_bits/fn_eigs_gen.hpp"
+  #include "armadillo_bits/fn_norm_sparse.hpp"
   
+  //
   // misc stuff
   
   #include "armadillo_bits/hdf5_misc.hpp"

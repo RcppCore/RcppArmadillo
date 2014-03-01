@@ -1,3 +1,10 @@
+2014-02-28  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.4.100.0
+        * inst/NEWS: Release 0.4.100.0
+        * inst/include/*: Upgraded to new release 4.100.4 of Armadillo
+        * debian/*: Similarly updated for new release to Debian
+
 2014-02-26  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/*: Updated current Armadillo 4.100 snapshot

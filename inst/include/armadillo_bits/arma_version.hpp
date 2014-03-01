@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2013 Conrad Sanderson
-// Copyright (C) 2009-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2014 Conrad Sanderson
+// Copyright (C) 2009-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,9 +12,9 @@
 
 
 #define ARMA_VERSION_MAJOR 4
-#define ARMA_VERSION_MINOR 001
-#define ARMA_VERSION_PATCH 3
-#define ARMA_VERSION_NAME  "unstable development version -- not for production use"
+#define ARMA_VERSION_MINOR 100
+#define ARMA_VERSION_PATCH 0
+#define ARMA_VERSION_NAME  "Dirt Cruiser"
 
 
 

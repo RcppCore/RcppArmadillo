@@ -2,16 +2,18 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
-\section{Changes in RcppArmadillo version 0.4.100.0 (2014-03-02)}{
+\section{Changes in RcppArmadillo version 0.4.100.0 (2014-02-28)}{
   \itemize{
-    \item Upgraded to Armadillo (draft) release Version 4.100.0
+    \item Upgraded to Armadillo release Version 4.100.0 (Dirt Cruiser)
     \itemize{
+      \item added \code{normalise()} for normalising vectors to unit p-norm
       \item extended the \code{field} class to handle 3D layout
       \item extended \code{eigs_sym()} and \code{eigs_gen()} to obtain
       eigenvalues of various forms (eg. largest or smallest magnitude) 
-      \item added \code{normalise()} for normalising vectors to unit p-norm
-      \item automatic SIMD vectorisation of elementary expressions (eg. matrix addition) when using Clang 3.4+ with -O3 optimisation
+      \item automatic SIMD vectorisation of elementary expressions
+      (eg. matrix addition) when using Clang 3.4+ with -O3 optimisation 
       \item faster handling of sparse submatrix views
+      \item workaround for a bug in LAPACK 3.4
     }
   }
 }
