@@ -1,3 +1,13 @@
+## -*- mode: makefile; -*-
 
 PKG_CPPFLAGS = -I../inst/include -I.
 PKG_LIBS = $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
+
+## With R 3.1.0 or later, you can uncomment the following line to tell R to 
+## enable compilation with C++11 (where available)
+#USE_CXX1X = 
+
+## Armadillo itself use the following define which we also set
+## automatically if we see USE_CXX1X defined; outside of a package it
+## may be needed explicitly
+#ARMA_USE_CXX11 = 

@@ -56,8 +56,13 @@
 #endif
 
 // Let's be careful for now and undef this as not all compilers support this
-#if defined(ARMA_USE_CXX11)
-#undef ARMA_USE_CXX11
+//#if defined(ARMA_USE_CXX11)
+//#undef ARMA_USE_CXX11
+//#endif
+
+// If C++11 has been selected at the R package level, use it for Armadillo too
+#if defined(USE_CXX1X)
+#define ARMA_USE_CXX11
 #endif
 
 // Rcpp has its own stream object which cooperates more nicely with R's i/o
