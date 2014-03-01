@@ -1,3 +1,8 @@
+2014-03-01  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/skeleton/rcpparma_hello_world.cpp: Correct use of depends for
+	Attributes (for illustration only as skeleton use package build)
+
 2014-02-28  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.4.100.0

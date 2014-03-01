@@ -5,7 +5,7 @@
 // via the depends attribute we tell Rcpp to create hooks for
 // RcppArmadillo so that the build process will know what to do
 //
-// Rcpp::depends(RcppArmadillo)
+// [[Rcpp::depends(RcppArmadillo)]]
 
 // simple example of creating two matrices and
 // returning the result of an operatioon on them
