@@ -3,6 +3,12 @@
 	* inst/skeleton/rcpparma_hello_world.cpp: Correct use of depends for
 	Attributes (for illustration only as skeleton use package build)
 
+	* src/Makevars: Simple setup for C++11 use (for R-devel aka R 3.1.0)
+	by defining USE_CXX1X (commented out by default)
+
+	* inst/include/RcppArmadilloConfig.h: If USE_CXX1X is defined, also
+	define ARMA_USE_CXX11 to permit use C++11 by Armadillo
+
 2014-02-28  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.4.100.0
