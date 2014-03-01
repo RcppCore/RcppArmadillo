@@ -97,21 +97,11 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
     }
 		
     if (example_code) {
-        #header <- readLines(file.path(skeleton, "rcpparma_hello_world.h"))
-        #header <- gsub( "@PKG@", name, header, fixed=TRUE)
-        #writeLines(header , file.path(src, "rcpparma_hello_world.h"))
-        #message( " >> added example header file using Rcpp/RcppArmadillo")
-		
         file.copy(file.path(skeleton, "rcpparma_hello_world.cpp"), src)
         message(" >> added example src file using armadillo classes")
 
 	Rcpp::compileAttributes(root)
         message(" >> invoked Rcpp::compileAttributes to create wrappers")
-
-        #rcode <- readLines(file.path( skeleton, "rcpparma_hello_world.R"))
-        #rcode <- gsub("@PKG@", name, rcode, fixed = TRUE)
-        #writeLines(rcode , file.path(root, "R", "rcpparma_hello_world.R"))
-        #message( " >> added example R file calling the C++ example")
     }
     
     if (fake) {
