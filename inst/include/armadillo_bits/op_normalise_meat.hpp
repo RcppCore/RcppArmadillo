@@ -19,13 +19,18 @@ op_normalise_colvec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_norm
   {
   arma_extra_debug_sigprint();
   
+  typedef typename T1::pod_type T;
+  
   const uword p = in.aux_uword_a;
   
   arma_debug_check( (p == 0), "normalise(): p must be greater than zero" );
   
   const quasi_unwrap<T1> tmp(in.m);
   
-  out = tmp.M / norm(tmp.M, p);
+  const T norm_val_a = norm(tmp.M, p);
+  const T norm_val_b = (norm_val_a != T(0)) ? norm_val_a : T(1);
+  
+  out = tmp.M / norm_val_b;
   }
 
 
@@ -37,13 +42,18 @@ op_normalise_rowvec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_norm
   {
   arma_extra_debug_sigprint();
   
+  typedef typename T1::pod_type T;
+  
   const uword p = in.aux_uword_a;
   
   arma_debug_check( (p == 0), "normalise(): p must be greater than zero" );
   
   const unwrap<T1> tmp(in.m);
   
-  out = tmp.M / norm(tmp.M, p);
+  const T norm_val_a = norm(tmp.M, p);
+  const T norm_val_b = (norm_val_a != T(0)) ? norm_val_a : T(1);
+  
+  out = tmp.M / norm_val_b;
   }
 
 
@@ -91,6 +101,8 @@ op_normalise_mat::apply(Mat<eT>& out, const Mat<eT>& A, const uword p, const uwo
   {
   arma_extra_debug_sigprint();
   
+  typedef typename get_pod_type<eT>::result T;
+  
   out.copy_size(A);
   
   if(A.n_elem == 0)  { return; }
@@ -101,7 +113,10 @@ op_normalise_mat::apply(Mat<eT>& out, const Mat<eT>& A, const uword p, const uwo
     
     for(uword i=0; i<n_cols; ++i)
       {
-      out.col(i) = A.col(i) / norm(A.col(i), p);
+      const T norm_val_a = norm(A.col(i), p);
+      const T norm_val_b = (norm_val_a != T(0)) ? norm_val_a : T(1);
+      
+      out.col(i) = A.col(i) / norm_val_b;
       }
     }
   else
@@ -112,7 +127,10 @@ op_normalise_mat::apply(Mat<eT>& out, const Mat<eT>& A, const uword p, const uwo
     
     for(uword i=0; i<n_rows; ++i)
       {
-      out.row(i) = A.row(i) / norm(A.row(i), p);
+      const T norm_val_a = norm(A.row(i), p);
+      const T norm_val_b = (norm_val_a != T(0)) ? norm_val_a : T(1);
+      
+      out.row(i) = A.row(i) / norm_val_b;
       }
     }
   }
