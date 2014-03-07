@@ -37,7 +37,7 @@ memory::enlarge_to_mult_of_chunksize(const uword n_elem)
   const uword chunksize = arma_config::spmat_chunksize;
   
   // this relies on integer division
-  const uword n_elem_mod = (n_elem > 0) ? (((n_elem-1) / chunksize) + 1) * chunksize : chunksize;
+  const uword n_elem_mod = (n_elem > 0) ? (((n_elem-1) / chunksize) + 1) * chunksize : uword(0);
   
   return n_elem_mod;
   }
