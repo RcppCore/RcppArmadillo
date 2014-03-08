@@ -2,6 +2,21 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.4.100.2 (2014-03-07)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 4.100.2 
+    \itemize{
+      \item fix for handling null vectors by \code{normalise()}
+      \item fix for memory handling by sparse matrices
+    }
+    \item Correct use of \code{[[ depends()]]} in skeleton example file
+    \item Prepare \code{src/Makevars} for C++11 support from R 3.1.0 by
+    defining \code{USE_CXX11} which is currently commented out
+    \item In the Armadillo configuration, turn on C++11 support if
+    \code{USE_CXX11} is defined
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.4.100.0 (2014-02-28)}{
   \itemize{
     \item Upgraded to Armadillo release Version 4.100.0 (Dirt Cruiser)

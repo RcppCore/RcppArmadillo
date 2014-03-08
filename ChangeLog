@@ -1,6 +1,9 @@
 2014-03-07  Dirk Eddelbuettel  <edd@debian.org>
 
+        * DESCRIPTION: Release 0.4.100.0
+        * inst/NEWS: Release 0.4.100.0
 	* inst/include/*: Upgraded to version 4.100.2 of Armadillo
+        * debian/*: Similarly updated for new release to Debian
 
 2014-03-04  Dirk Eddelbuettel  <edd@debian.org>
 
@@ -9,7 +12,7 @@
 2014-03-01  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/skeleton/rcpparma_hello_world.cpp: Correct use of depends for
-	Attributes (for illustration only as skeleton use package build)
+	Attributes (for illustration only as skeleton uses package build)
 
 	* src/Makevars: Simple setup for C++11 use (for R-devel aka R 3.1.0)
 	by defining USE_CXX1X (commented out by default)
