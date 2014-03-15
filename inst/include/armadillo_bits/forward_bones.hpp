@@ -78,6 +78,8 @@ class glue_rel_lteq;
 class glue_rel_gteq;
 class glue_rel_eq;
 class glue_rel_noteq;
+class glue_rel_and;
+class glue_rel_or;
 
 class op_rel_lt_pre;
 class op_rel_lt_post;

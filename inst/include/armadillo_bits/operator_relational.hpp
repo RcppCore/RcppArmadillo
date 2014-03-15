@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2012 Conrad Sanderson
-// Copyright (C) 2009-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2014 Conrad Sanderson
+// Copyright (C) 2009-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,8 @@
 // >= : gteq
 // == : eq
 // != : noteq
-
+// && : and
+// || : or
 
 
 template<typename T1, typename T2>
@@ -123,6 +124,42 @@ operator!=
   arma_extra_debug_sigprint();
   
   return mtGlue<uword, T1, T2, glue_rel_noteq>( X, Y );
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+typename
+enable_if2
+  <
+  (is_arma_type<T1>::value && is_arma_type<T2>::value),
+  const mtGlue<uword, T1, T2, glue_rel_and>
+  >::result
+operator&&
+(const T1& X, const T2& Y)
+  {
+  arma_extra_debug_sigprint();
+  
+  return mtGlue<uword, T1, T2, glue_rel_and>( X, Y );
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+typename
+enable_if2
+  <
+  (is_arma_type<T1>::value && is_arma_type<T2>::value),
+  const mtGlue<uword, T1, T2, glue_rel_or>
+  >::result
+operator||
+(const T1& X, const T2& Y)
+  {
+  arma_extra_debug_sigprint();
+  
+  return mtGlue<uword, T1, T2, glue_rel_or>( X, Y );
   }
 
 

@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2014 Conrad Sanderson
+// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,37 +18,6 @@ Base<elem_type,derived>::get_ref() const
   {
   return static_cast<const derived&>(*this);
   }
-
-
-
-template<typename elem_type, typename derived>
-arma_inline
-const Op<derived,op_htrans>
-Base<elem_type,derived>::t() const
-  {
-  return Op<derived,op_htrans>( (*this).get_ref() );
-  }
-
-
-
-template<typename elem_type, typename derived>
-arma_inline
-const Op<derived,op_htrans>
-Base<elem_type,derived>::ht() const
-  {
-  return Op<derived,op_htrans>( (*this).get_ref() );
-  }
-
-
-
-template<typename elem_type, typename derived>
-arma_inline
-const Op<derived,op_strans>
-Base<elem_type,derived>::st() const
-  {
-  return Op<derived,op_strans>( (*this).get_ref() );
-  }
-
 
 
 
@@ -109,12 +78,12 @@ Base<elem_type,derived>::raw_print(std::ostream& user_stream, const std::string 
 
 
 //
-// extra functions defined in Base_blas_elem_type
+// extra functions defined in Base_inv_yes
 
 template<typename derived>
 arma_inline
 const Op<derived,op_inv>
-Base_blas_elem_type<derived>::i(const bool slow) const
+Base_inv_yes<derived>::i(const bool slow) const
   {
   return Op<derived,op_inv>( static_cast<const derived&>(*this), ((slow == false) ? 0 : 1), 0 );
   }
@@ -124,7 +93,7 @@ Base_blas_elem_type<derived>::i(const bool slow) const
 template<typename derived>
 arma_inline
 const Op<derived,op_inv>
-Base_blas_elem_type<derived>::i(const char* method) const
+Base_inv_yes<derived>::i(const char* method) const
   {
   const char sig = (method != NULL) ? method[0] : char(0);
   
@@ -161,6 +130,72 @@ Base_eval_expr<elem_type, derived>::eval() const
   arma_extra_debug_sigprint();
   
   return Mat<elem_type>( static_cast<const derived&>(*this) );
+  }
+
+
+
+//
+// extra functions defined in Base_trans_cx
+
+template<typename derived>
+arma_inline
+const Op<derived,op_htrans>
+Base_trans_cx<derived>::t() const
+  {
+  return Op<derived,op_htrans>( static_cast<const derived&>(*this) );
+  }
+
+
+
+template<typename derived>
+arma_inline
+const Op<derived,op_htrans>
+Base_trans_cx<derived>::ht() const
+  {
+  return Op<derived,op_htrans>( static_cast<const derived&>(*this) );
+  }
+
+
+
+template<typename derived>
+arma_inline
+const Op<derived,op_strans>
+Base_trans_cx<derived>::st() const
+  {
+  return Op<derived,op_strans>( static_cast<const derived&>(*this) );
+  }
+
+
+
+//
+// extra functions defined in Base_trans_default
+
+template<typename derived>
+arma_inline
+const Op<derived,op_htrans>
+Base_trans_default<derived>::t() const
+  {
+  return Op<derived,op_htrans>( static_cast<const derived&>(*this) );
+  }
+
+
+
+template<typename derived>
+arma_inline
+const Op<derived,op_htrans>
+Base_trans_default<derived>::ht() const
+  {
+  return Op<derived,op_htrans>( static_cast<const derived&>(*this) );
+  }
+
+
+
+template<typename derived>
+arma_inline
+const Op<derived,op_htrans>
+Base_trans_default<derived>::st() const
+  {
+  return Op<derived,op_htrans>( static_cast<const derived&>(*this) );
   }
 
 

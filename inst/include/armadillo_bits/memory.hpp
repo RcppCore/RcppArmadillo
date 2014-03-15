@@ -52,7 +52,7 @@ memory::acquire(const uword n_elem)
   {
   arma_debug_check
     (
-    ( n_elem > (std::numeric_limits<size_t>::max() / sizeof(eT)) ),
+    ( size_t(n_elem) > (std::numeric_limits<size_t>::max() / sizeof(eT)) ),
     "arma::memory::acquire(): requested size is too large"
     );
   
@@ -153,7 +153,7 @@ memory::is_aligned(const eT* mem)
   {
   #if (defined(ARMA_HAVE_ICC_ASSUME_ALIGNED) || defined(ARMA_HAVE_GCC_ASSUME_ALIGNED)) && !defined(ARMA_DONT_CHECK_ALIGNMENT)
     {
-    return ((std::ptrdiff_t(mem) & 0x0F) == 0);
+    return (sizeof(std::size_t) >= sizeof(eT*)) ? ((std::size_t(mem) & 0x0F) == 0) : false;
     }
   #else
     {

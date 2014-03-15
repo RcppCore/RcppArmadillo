@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2014 Conrad Sanderson
+// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -190,6 +190,57 @@ inv_sympd
   try
     {
     out = inv_sympd(X,method);
+    }
+  catch(std::runtime_error&)
+    {
+    return false;
+    }
+  
+  return true;
+  }
+
+
+
+//! inverse of diagonal matrices
+template<typename T1>
+arma_inline
+const Op<T1, op_inv_diag>
+inv_diag
+  (
+  const Base<typename T1::elem_type, T1>& X,
+  const char* method = "std",
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  )
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  const char sig = (method != NULL) ? method[0] : char(0);
+  
+  arma_debug_check( ((sig != 's') && (sig != 'f')), "inv_diag(): unknown method specified" );
+  
+  return Op<T1, op_inv_diag>(X.get_ref(), 0, 0);
+  }
+
+
+
+template<typename T1>
+inline
+bool
+inv_diag
+  (
+         Mat<typename T1::elem_type>&    out,
+  const Base<typename T1::elem_type,T1>& X,
+  const char* method = "std",
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  )
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  try
+    {
+    out = inv_diag(X,method);
     }
   catch(std::runtime_error&)
     {

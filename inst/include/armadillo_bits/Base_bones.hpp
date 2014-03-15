@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2014 Conrad Sanderson
+// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,7 @@
 
 
 template<typename derived>
-struct Base_blas_elem_type
+struct Base_inv_yes
   {
   arma_inline const Op<derived,op_inv> i(const bool  slow   = false) const;   //!< matrix inverse
   arma_inline const Op<derived,op_inv> i(const char* method        ) const;   //!< matrix inverse
@@ -20,19 +20,19 @@ struct Base_blas_elem_type
 
 
 template<typename derived>
-struct Base_other_elem_type
+struct Base_inv_no
   {
   };
 
 
 template<typename derived, bool condition>
-struct Base_extra {};
+struct Base_inv {};
 
 template<typename derived>
-struct Base_extra<derived, true>  { typedef Base_blas_elem_type<derived>  result; };
+struct Base_inv<derived, true>  { typedef Base_inv_yes<derived> result; };
 
 template<typename derived>
-struct Base_extra<derived, false> { typedef Base_other_elem_type<derived> result; };
+struct Base_inv<derived, false> { typedef Base_inv_no<derived>  result; };
 
 
 
@@ -61,6 +61,35 @@ struct Base_eval<elem_type, derived, false> { typedef Base_eval_expr<elem_type, 
 
 
 
+template<typename derived>
+struct Base_trans_cx
+  {
+  arma_inline const Op<derived,op_htrans>  t() const;
+  arma_inline const Op<derived,op_htrans> ht() const;
+  arma_inline const Op<derived,op_strans> st() const;  // simple transpose: no complex conjugates
+  };
+
+
+template<typename derived>
+struct Base_trans_default
+  {
+  arma_inline const Op<derived,op_htrans>  t() const;
+  arma_inline const Op<derived,op_htrans> ht() const;
+  arma_inline const Op<derived,op_htrans> st() const;  // return op_htrans instead of op_strans, as it's handled better by matrix multiplication code
+  };
+
+
+template<typename derived, bool condition>
+struct Base_trans {};
+
+template<typename derived>
+struct Base_trans<derived, true>  { typedef Base_trans_cx<derived>      result; };
+
+template<typename derived>
+struct Base_trans<derived, false> { typedef Base_trans_default<derived> result; };
+
+
+
 //! Class for static polymorphism, modelled after the "Curiously Recurring Template Pattern" (CRTP).
 //! Used for type-safe downcasting in functions that restrict their input(s) to be classes that are
 //! derived from Base (e.g. Mat, Op, Glue, diagview, subview).
@@ -68,14 +97,11 @@ struct Base_eval<elem_type, derived, false> { typedef Base_eval_expr<elem_type, 
 
 template<typename elem_type, typename derived>
 struct Base
-  : public Base_extra<derived, is_supported_blas_type<elem_type>::value>::result
+  : public Base_inv<derived, is_supported_blas_type<elem_type>::value>::result
   , public Base_eval<elem_type, derived, is_Mat<derived>::value>::result
+  , public Base_trans<derived, is_cx<elem_type>::value>::result
   {
   arma_inline const derived& get_ref() const;
-  
-  arma_inline const Op<derived,op_htrans>  t() const;  //!< Hermitian transpose
-  arma_inline const Op<derived,op_htrans> ht() const;  //!< Hermitian transpose
-  arma_inline const Op<derived,op_strans> st() const;  //!< simple transpose
   
   inline void print(const std::string extra_text = "") const;
   inline void print(std::ostream& user_stream, const std::string extra_text = "") const;

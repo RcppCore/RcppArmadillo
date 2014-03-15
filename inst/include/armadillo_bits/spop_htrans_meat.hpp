@@ -1,5 +1,5 @@
-// Copyright (C) 2012 Ryan Curtin
-// Copyright (C) 2012 Conrad Sanderson
+// Copyright (C) 2012-2014 Ryan Curtin
+// Copyright (C) 2012-2014 Conrad Sanderson
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,7 +20,7 @@ spop_htrans::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_htrans
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  spop_strans::apply_proxy(out, in.m);
+  spop_strans::apply(out, in);
   }
 
 
@@ -34,60 +34,42 @@ spop_htrans::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_htrans
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
+  typedef typename   T1::elem_type  eT;
+  typedef typename umat::elem_type ueT;
+  
   const SpProxy<T1> p(in.m);
   
-  if(p.is_alias(out) == false)
+  const uword N = p.get_n_nonzero();
+  
+  if(N == uword(0))
     {
-    out.set_size( p.get_n_cols(), p.get_n_rows() );
-    
-    out.mem_resize(p.get_n_nonzero());
-    
-    typename SpProxy<T1>::const_row_iterator_type it = p.begin_row();
-    
-    while(it.pos() < p.get_n_nonzero())
-      {
-      access::rw(out.values[it.pos()]) = std::conj(*it);
-      access::rw(out.row_indices[it.pos()]) = it.col(); // transpose
-      ++access::rw(out.col_ptrs[it.row() + 1]);
-      
-      ++it;
-      }
-    
-    // Fix column pointers.
-    const uword out_n_cols = out.n_cols;
-    
-    for(uword c = 1; c <= out_n_cols; ++c)
-      {
-      access::rw(out.col_ptrs[c]) += out.col_ptrs[c - 1];
-      }
+    out.set_size(p.get_n_cols(), p.get_n_rows());
+    return;
     }
-  else
+  
+  umat locs(2, N);
+  
+  Col<eT> vals(N);
+  
+  eT* vals_ptr = vals.memptr();
+  
+  typename SpProxy<T1>::const_iterator_type it = p.begin();
+  
+  for(uword count = 0; count < N; ++count)
     {
-    SpMat<typename T1::elem_type> result( p.get_n_cols(), p.get_n_rows() );
+    ueT* locs_ptr = locs.colptr(count);
     
-    result.mem_resize(p.get_n_nonzero());
+    locs_ptr[0] = it.col();
+    locs_ptr[1] = it.row();
     
-    typename SpProxy<T1>::const_row_iterator_type it = p.begin_row();
+    vals_ptr[count] = std::conj(*it);
     
-    while(it.pos() < p.get_n_nonzero())
-      {
-      access::rw(result.values[it.pos()]) = std::conj(*it);
-      access::rw(result.row_indices[it.pos()]) = it.col(); // transpose
-      ++access::rw(result.col_ptrs[it.row() + 1]);
-      
-      ++it;
-      }
-    
-    // Fix column pointers.
-    const uword result_n_cols = result.n_cols;
-    
-    for(uword c = 1; c <= result_n_cols; ++c)
-      {
-      access::rw(result.col_ptrs[c]) += result.col_ptrs[c - 1];
-      }
-    
-    out.steal_mem(result);
+    ++it;
     }
+  
+  SpMat<eT> tmp(locs, vals, p.get_n_cols(), p.get_n_rows());
+  
+  out.steal_mem(tmp);
   }
 
 

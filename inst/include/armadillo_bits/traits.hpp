@@ -1243,6 +1243,8 @@ template<>                   struct is_glue_mixed_elem<glue_rel_lteq>  { static 
 template<>                   struct is_glue_mixed_elem<glue_rel_gteq>  { static const bool value = true; };
 template<>                   struct is_glue_mixed_elem<glue_rel_eq>    { static const bool value = true; };
 template<>                   struct is_glue_mixed_elem<glue_rel_noteq> { static const bool value = true; };
+template<>                   struct is_glue_mixed_elem<glue_rel_and>   { static const bool value = true; };
+template<>                   struct is_glue_mixed_elem<glue_rel_or>    { static const bool value = true; };
 
 
 

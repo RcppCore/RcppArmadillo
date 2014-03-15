@@ -9,13 +9,11 @@
 //! @{
 
 
-//! 'hermitian transpose' operation
+//! hermitian transpose operation for sparse matrices
 
 class spop_htrans
   {
   public:
-  
-  // handling of sparse matrices
   
   template<typename T1>
   arma_hot inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_htrans>& in, const typename arma_not_cx<typename T1::elem_type>::result* junk = 0);
