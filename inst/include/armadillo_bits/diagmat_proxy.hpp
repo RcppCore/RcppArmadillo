@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2014 Conrad Sanderson
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -87,6 +87,8 @@ class diagmat_proxy_default
     }
   
   
+  arma_inline bool is_alias(const Mat<elem_type>&) const { return false; }
+  
   const Proxy<T1> P;
   const bool      P_is_vec;
   const bool      P_is_col;
@@ -138,6 +140,8 @@ class diagmat_proxy_fixed
       return elem_type(0);
       }
     }
+  
+  arma_inline bool is_alias(const Mat<elem_type>& X) const { return (void_ptr(&X) == void_ptr(&P)); }
   
   const T1& P;
   
@@ -195,6 +199,8 @@ class diagmat_proxy< Mat<eT> >
   arma_inline elem_type operator[] (const uword i)                    const { return P_is_vec ? P[i] : P.at(i,i);                                         }
   arma_inline elem_type at         (const uword row, const uword col) const { return (row == col) ? ( P_is_vec ? P[row] : P.at(row,row) ) : elem_type(0); }
   
+  arma_inline bool is_alias(const Mat<eT>& X) const { return (void_ptr(&X) == void_ptr(&P)); }
+  
   const Mat<eT>& P;
   const bool     P_is_vec;
   const uword    n_elem;
@@ -219,8 +225,10 @@ class diagmat_proxy< Row<eT> >
     arma_extra_debug_sigprint();
     }
   
-  arma_inline elem_type operator[] (const uword i)                    const { return P[i];                                                                }
+  arma_inline elem_type operator[] (const uword i)                    const { return P[i];                                 }
   arma_inline elem_type at         (const uword row, const uword col) const { return (row == col) ? P[row] : elem_type(0); }
+  
+  arma_inline bool is_alias(const Mat<eT>& X) const { return (void_ptr(&X) == void_ptr(&P)); }
   
   static const bool P_is_vec = true;
   
@@ -250,6 +258,8 @@ class diagmat_proxy< Col<eT> >
   arma_inline elem_type operator[] (const uword i)                    const { return P[i];                                 }
   arma_inline elem_type at         (const uword row, const uword col) const { return (row == col) ? P[row] : elem_type(0); }
   
+  arma_inline bool is_alias(const Mat<eT>& X) const { return (void_ptr(&X) == void_ptr(&P)); }
+  
   static const bool P_is_vec = true;
   
   const Col<eT>& P;
@@ -278,6 +288,8 @@ class diagmat_proxy< subview_row<eT> >
   arma_inline elem_type operator[] (const uword i)                    const { return P[i];                                 }
   arma_inline elem_type at         (const uword row, const uword col) const { return (row == col) ? P[row] : elem_type(0); }
   
+  arma_inline bool is_alias(const Mat<eT>& X) const { return (void_ptr(&X) == void_ptr(&(P.m))); }
+  
   static const bool P_is_vec = true;
   
   const subview_row<eT>& P;
@@ -305,6 +317,8 @@ class diagmat_proxy< subview_col<eT> >
   
   arma_inline elem_type operator[] (const uword i)                    const { return P[i];                                 }
   arma_inline elem_type at         (const uword row, const uword col) const { return (row == col) ? P[row] : elem_type(0); }
+  
+  arma_inline bool is_alias(const Mat<eT>& X) const { return (void_ptr(&X) == void_ptr(&(P.m))); }
   
   static const bool P_is_vec = true;
   
@@ -557,7 +571,6 @@ class diagmat_proxy_check< subview_col<eT> >
   diagmat_proxy_check(const subview_col<eT>& X, const Mat<eT>& out)
     : P     ( const_cast<eT*>(X.colptr(0)), X.n_rows, (&(X.m) == &out), false )
     , n_elem( X.n_elem )
-    //, X_ref ( X )
     {
     arma_extra_debug_sigprint();
     }
@@ -569,8 +582,6 @@ class diagmat_proxy_check< subview_col<eT> >
   
   const Col<eT> P;
   const uword   n_elem;
-  
-  //const subview_col<eT>& X_ref;   // prevents the compiler from potentially deleting X before we're done with it
   };
 
 

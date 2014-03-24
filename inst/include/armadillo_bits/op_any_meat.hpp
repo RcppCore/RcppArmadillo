@@ -169,6 +169,8 @@ op_any::any_vec_helper
       else if(is_same_type<glue_type, glue_rel_gteq  >::yes)  { if(tmp1 >= tmp2) { return true; } }
       else if(is_same_type<glue_type, glue_rel_eq    >::yes)  { if(tmp1 == tmp2) { return true; } }
       else if(is_same_type<glue_type, glue_rel_noteq >::yes)  { if(tmp1 != tmp2) { return true; } }
+      else if(is_same_type<glue_type, glue_rel_and   >::yes)  { if(tmp1 && tmp2) { return true; } }
+      else if(is_same_type<glue_type, glue_rel_or    >::yes)  { if(tmp1 || tmp2) { return true; } }
       }
     }
   else
@@ -188,6 +190,8 @@ op_any::any_vec_helper
       else if(is_same_type<glue_type, glue_rel_gteq  >::yes)  { if(tmp1 >= tmp2) { return true; } }
       else if(is_same_type<glue_type, glue_rel_eq    >::yes)  { if(tmp1 == tmp2) { return true; } }
       else if(is_same_type<glue_type, glue_rel_noteq >::yes)  { if(tmp1 != tmp2) { return true; } }
+      else if(is_same_type<glue_type, glue_rel_and   >::yes)  { if(tmp1 && tmp2) { return true; } }
+      else if(is_same_type<glue_type, glue_rel_or    >::yes)  { if(tmp1 || tmp2) { return true; } }
       }
     }
   

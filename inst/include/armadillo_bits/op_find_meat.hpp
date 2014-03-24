@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2013 Conrad Sanderson
-// Copyright (C) 2010-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2014 Conrad Sanderson
+// Copyright (C) 2010-2014 NICTA (www.nicta.com.au)
 // Copyright (C) 2010 Dimitrios Bouzas
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -291,6 +291,8 @@ op_find::helper
     else if(is_same_type<glue_type, glue_rel_gteq  >::yes)  { not_zero = (tmp1 >= tmp2); }
     else if(is_same_type<glue_type, glue_rel_eq    >::yes)  { not_zero = (tmp1 == tmp2); }
     else if(is_same_type<glue_type, glue_rel_noteq >::yes)  { not_zero = (tmp1 != tmp2); }
+    else if(is_same_type<glue_type, glue_rel_and   >::yes)  { not_zero = (tmp1 && tmp2); }
+    else if(is_same_type<glue_type, glue_rel_or    >::yes)  { not_zero = (tmp1 || tmp2); }
     else not_zero = false;
     
     if(not_zero == true)  { indices_mem[n_nz] = i;  ++n_nz; }

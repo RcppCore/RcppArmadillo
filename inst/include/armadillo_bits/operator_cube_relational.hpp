@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 Conrad Sanderson
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2014 Conrad Sanderson
+// Copyright (C) 2009-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,6 +17,8 @@
 // >= : gteq
 // == : eq
 // != : noteq
+// && : and
+// || : or
 
 
 
@@ -94,6 +96,32 @@ operator!=
   arma_extra_debug_sigprint();
   
   return mtGlueCube<uword, T1, T2, glue_rel_noteq>( X.get_ref(), Y.get_ref() );
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+const mtGlueCube<uword, T1, T2, glue_rel_and>
+operator&&
+(const BaseCube<typename arma_not_cx<typename T1::elem_type>::result,T1>& X, const BaseCube<typename arma_not_cx<typename T1::elem_type>::result,T2>& Y)
+  {
+  arma_extra_debug_sigprint();
+  
+  return mtGlueCube<uword, T1, T2, glue_rel_and>( X.get_ref(), Y.get_ref() );
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+const mtGlueCube<uword, T1, T2, glue_rel_or>
+operator||
+(const BaseCube<typename arma_not_cx<typename T1::elem_type>::result,T1>& X, const BaseCube<typename arma_not_cx<typename T1::elem_type>::result,T2>& Y)
+  {
+  arma_extra_debug_sigprint();
+  
+  return mtGlueCube<uword, T1, T2, glue_rel_or>( X.get_ref(), Y.get_ref() );
   }
 
 

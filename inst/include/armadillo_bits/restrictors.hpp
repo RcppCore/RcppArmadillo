@@ -188,6 +188,8 @@ template<> struct arma_glue_rel_only< glue_rel_lteq  > { typedef int result; };
 template<> struct arma_glue_rel_only< glue_rel_gteq  > { typedef int result; };
 template<> struct arma_glue_rel_only< glue_rel_eq    > { typedef int result; };
 template<> struct arma_glue_rel_only< glue_rel_noteq > { typedef int result; };
+template<> struct arma_glue_rel_only< glue_rel_and   > { typedef int result; };
+template<> struct arma_glue_rel_only< glue_rel_or    > { typedef int result; };
 
 
 

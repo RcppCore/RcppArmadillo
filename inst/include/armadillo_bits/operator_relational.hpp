@@ -133,7 +133,7 @@ inline
 typename
 enable_if2
   <
-  (is_arma_type<T1>::value && is_arma_type<T2>::value),
+  (is_arma_type<T1>::value && is_arma_type<T2>::value && (is_cx<typename T1::elem_type>::no) && (is_cx<typename T2::elem_type>::no)),
   const mtGlue<uword, T1, T2, glue_rel_and>
   >::result
 operator&&
@@ -151,7 +151,7 @@ inline
 typename
 enable_if2
   <
-  (is_arma_type<T1>::value && is_arma_type<T2>::value),
+  (is_arma_type<T1>::value && is_arma_type<T2>::value && (is_cx<typename T1::elem_type>::no) && (is_cx<typename T2::elem_type>::no)),
   const mtGlue<uword, T1, T2, glue_rel_or>
   >::result
 operator||

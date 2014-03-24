@@ -74,21 +74,39 @@ op_inv::apply_diagmat(Mat<typename T1::elem_type>& out, const T1& X)
   
   typedef typename T1::elem_type eT;
   
-  const diagmat_proxy_check<T1> A(X, out);
+  const diagmat_proxy<T1> A(X);
   
   const uword N = A.n_elem;
   
-  out.zeros(N,N);
-  
   bool status = true;
   
-  for(uword i=0; i<N; ++i)
+  if(A.is_alias(out) == false)
     {
-    const eT val = A[i];
+    out.zeros(N,N);
     
-    out.at(i,i) = eT(1) / val;
+    for(uword i=0; i<N; ++i)
+      {
+      const eT val = A[i];
+      
+      out.at(i,i) = eT(1) / val;
+      
+      if(val == eT(0))  { status = false; }
+      }
+    }
+  else
+    {
+    Mat<eT> tmp(N, N, fill::zeros);
     
-    if(val == eT(0))  { status = false; }
+    for(uword i=0; i<N; ++i)
+      {
+      const eT val = A[i];
+      
+      tmp.at(i,i) = eT(1) / val;
+      
+      if(val == eT(0))  { status = false; }
+      }
+    
+    out.steal_mem(tmp);
     }
   
   return status;
@@ -129,72 +147,6 @@ op_inv_sympd::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv_sympd>&
     {
     out.reset();
     arma_bad("inv_sympd(): matrix appears to be singular");
-    }
-  }
-
-
-
-//! inverse of T1 (diagonal matrices)
-template<typename T1>
-inline
-void
-op_inv_diag::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv_diag>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  bool status = true;
-  
-  const strip_diagmat<T1> strip(X.m);
-  
-  if(strip.do_diagmat == true)
-    {
-    status = op_inv::apply_diagmat(out, strip.M);
-    }
-  else
-    {
-    const Proxy<T1> P(X.m);
-    
-    const uword n_rows = P.get_n_rows();
-    
-    arma_debug_check( (n_rows != P.get_n_cols()), "inv_diag(): given matrix is not square" );
-    
-    if(P.is_alias(out) == false)
-      {
-      out.zeros(n_rows, n_rows);
-      
-      for(uword i=0; i<n_rows; ++i)
-        {
-        const eT val = P.at(i,i);
-        
-        out.at(i,i) = eT(1) / val;
-        
-        if(val == eT(0))  { status = false; }
-        }
-      }
-    else
-      {
-      Mat<eT> tmp(n_rows, n_rows, fill::zeros);
-      
-      for(uword i=0; i<n_rows; ++i)
-        {
-        const eT val = P.at(i,i);
-        
-        tmp.at(i,i) = eT(1) / val;
-        
-        if(val == eT(0))  { status = false; }
-        }
-      
-      out.steal_mem(tmp);
-      }
-    }
-  
-  
-  if(status == false)
-    {
-    out.reset();
-    arma_bad("inv_diag(): matrix appears to be singular");
     }
   }
 

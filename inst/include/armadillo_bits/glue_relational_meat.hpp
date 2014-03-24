@@ -369,6 +369,38 @@ glue_rel_noteq::apply
 
 
 
+template<typename T1, typename T2>
+inline
+void
+glue_rel_and::apply
+  (
+        Cube      <uword>& out,
+  const mtGlueCube<uword, T1, T2, glue_rel_and>& X
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_applier_cube(&&, "operator&&");
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+void
+glue_rel_or::apply
+  (
+        Cube      <uword>& out,
+  const mtGlueCube<uword, T1, T2, glue_rel_or>& X
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_applier_cube(||, "operator||");
+  }
+
+
+
 #undef arma_applier_mat
 #undef arma_applier_cube
 

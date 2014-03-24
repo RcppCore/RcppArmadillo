@@ -95,6 +95,9 @@ class glue_rel_and
   
   template<typename T1, typename T2>
   inline static void apply(Mat <uword>& out, const mtGlue<uword, T1, T2, glue_rel_and>& X);
+  
+  template<typename T1, typename T2>
+  inline static void apply(Cube <uword>& out, const mtGlueCube<uword, T1, T2, glue_rel_and>& X);
   };
 
 
@@ -105,6 +108,9 @@ class glue_rel_or
   
   template<typename T1, typename T2>
   inline static void apply(Mat <uword>& out, const mtGlue<uword, T1, T2, glue_rel_or>& X);
+  
+  template<typename T1, typename T2>
+  inline static void apply(Cube <uword>& out, const mtGlueCube<uword, T1, T2, glue_rel_or>& X);
   };
 
 
