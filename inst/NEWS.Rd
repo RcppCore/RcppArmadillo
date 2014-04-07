@@ -2,6 +2,17 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.4.200.0 (2014-04-07)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 4.200 (Flintlock Swoop)
+    \itemize{
+      \item faster transpose of sparse matrices
+      \item more efficient handling of aliasing during matrix multiplication
+      \item faster inverse of matrices marked as diagonal
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.4.100.2 (2014-03-07)}{
   \itemize{
     \item Upgraded to Armadillo release Version 4.100.2 

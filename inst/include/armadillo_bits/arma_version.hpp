@@ -12,9 +12,9 @@
 
 
 #define ARMA_VERSION_MAJOR 4
-#define ARMA_VERSION_MINOR 149
-#define ARMA_VERSION_PATCH 1
-#define ARMA_VERSION_NAME  "preview version -- not for production use"
+#define ARMA_VERSION_MINOR 200
+#define ARMA_VERSION_PATCH 0
+#define ARMA_VERSION_NAME  "Flintlock Swoop"
 
 
 

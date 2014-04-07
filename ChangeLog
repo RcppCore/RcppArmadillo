@@ -1,7 +1,14 @@
+2014-04-07  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.4.200.0
+        * inst/NEWS: Release 0.4.200.0
+	* inst/include/*: Upgraded to version 4.200 of Armadillo
+        * debian/*: Similarly updated for new release to Debian
+
 2014-03-07  Dirk Eddelbuettel  <edd@debian.org>
 
-        * DESCRIPTION: Release 0.4.100.0
-        * inst/NEWS: Release 0.4.100.0
+        * DESCRIPTION: Release 0.4.100.2
+        * inst/NEWS: Release 0.4.100.2
 	* inst/include/*: Upgraded to version 4.100.2 of Armadillo
         * debian/*: Similarly updated for new release to Debian
 
