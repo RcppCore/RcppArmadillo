@@ -226,10 +226,10 @@ test.armadillo.mat.const.ref <- function() {
 
 test.armadillo.unsigned.as <- function() {
     vec <- as.matrix(1:3)
-    checkEquals(vmat, uvec_test(vec))
-    checkEquals(vmat, c_uvec_test(vec))
-    checkEquals(vmat, r_uvec_test(vec))
-    checkEquals(vmat, cr_uvec_test(vec))
+    checkEquals(vec, uvec_test(vec))
+    checkEquals(vec, c_uvec_test(vec))
+    checkEquals(vec, r_uvec_test(vec))
+    checkEquals(vec, cr_uvec_test(vec))
 
     mat <- matrix(1:4, nrow=2)
     checkEquals(mat, umat_test(mat))
