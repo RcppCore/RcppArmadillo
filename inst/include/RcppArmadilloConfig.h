@@ -61,9 +61,11 @@
 //#endif
 
 // If C++11 has been selected at the R package level, use it for Armadillo too
-#if defined(USE_CXX1X)
-#define ARMA_USE_CXX11
-#endif
+// This is actually not needed, if the proper switch is set via -std=... then
+// Armadillo will know (cf compilation with -DARMA_EXTRA_DEBUG set)
+// #if defined(USE_CXX1X)
+// #define ARMA_USE_CXX11
+// #endif
 
 // Rcpp has its own stream object which cooperates more nicely with R's i/o
 // And as of Armadillo 2.4.3, we can use this stream object as well 

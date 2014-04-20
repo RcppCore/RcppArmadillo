@@ -1,12 +1,15 @@
 2014-04-20  Kevin Ushey  <kevinushey@gmail.com>
 
+        * inst/include/RcppArmadilloAs.h: Force vector coercion if the type
+        does not fit within an R vector through as
+
 	* inst/unitTests/cpp/armadillo.cpp: Add unit tests
 	* inst/unitTests/runit.RcppArmadillo.R: Add unit tests
 
-2014-04-20  Kevin Ushey  <kevinushey@gmail.com>
+2014-04-20  Dirk Eddelbuettel  <edd@debian.org>
 
-        * inst/include/RcppArmadilloAs.h: Force vector coercion if the type
-        does not fit within an R vector through as
+	* inst/include/RcppArmadilloConfig.h: Comment-out setting of C++11
+	define which (Rcpp)Armadillo gets correctly by itself
 
 2014-04-07  Dirk Eddelbuettel  <edd@debian.org>
 

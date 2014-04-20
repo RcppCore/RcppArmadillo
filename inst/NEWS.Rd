@@ -2,6 +2,12 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version UNRELEASED (2014-xx-yy)}{
+  \itemize{
+    \item Corrected conversion to \code{unsigned int} vectors and matrices
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.4.200.0 (2014-04-07)}{
   \itemize{
     \item Upgraded to Armadillo release Version 4.200 (Flintlock Swoop)
