@@ -144,10 +144,29 @@ namespace traits {
     };
 
     
+    template <typename T, typename VEC, typename REF, 
+      typename NEEDS_CAST = typename Rcpp::traits::r_sexptype_needscast<T>::type 
+    >
+    class ArmaVec_InputParameter;
+    
     template <typename T, typename VEC, typename REF>
-    class ArmaVec_InputParameter {
+    class ArmaVec_InputParameter<T, VEC, REF, Rcpp::traits::false_type> {
     public:
         ArmaVec_InputParameter( SEXP x_ ) : v(x_), vec( reinterpret_cast<T*>( v.begin() ), v.size(), false ){}
+                        
+        inline operator REF(){
+            return vec ;        
+        }
+                        
+    private:
+        Rcpp::Vector< Rcpp::traits::r_sexptype_traits<T>::rtype > v ;
+        VEC vec ;
+    } ;
+    
+    template <typename T, typename VEC, typename REF>
+    class ArmaVec_InputParameter<T, VEC, REF, Rcpp::traits::true_type> {
+    public:
+        ArmaVec_InputParameter( SEXP x_ ): v(x_), vec( as<VEC>(v) ) {}
                         
         inline operator REF(){
             return vec ;        
