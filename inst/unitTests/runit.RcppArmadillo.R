@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
-.setUp <- RcppArmadillo:::unit_test_setup( "armadillo.cpp", "RcppArmadillo" ) 
+.setUp <- RcppArmadillo:::unit_test_setup( "armadillo.cpp", "RcppArmadillo" )
 
 test.wrap.R <- function(){
     fx <- wrap_
@@ -222,4 +222,18 @@ test.armadillo.mat.const.ref <- function() {
     fx <- cx_mat_const_ref
     m <- matrix(1:9, 3, 3)
     checkEquals(fx(m), 9, msg = "Const Reference Matrix function signature" )
+}
+
+test.armadillo.unsigned.as <- function() {
+    vec <- as.matrix(1:3)
+    checkEquals(vmat, uvec_test(vec))
+    checkEquals(vmat, c_uvec_test(vec))
+    checkEquals(vmat, r_uvec_test(vec))
+    checkEquals(vmat, cr_uvec_test(vec))
+
+    mat <- matrix(1:4, nrow=2)
+    checkEquals(mat, umat_test(mat))
+    checkEquals(mat, c_umat_test(mat))
+    checkEquals(mat, r_umat_test(mat))
+    checkEquals(mat, cr_umat_test(mat))
 }

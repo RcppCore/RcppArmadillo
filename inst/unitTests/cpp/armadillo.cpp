@@ -272,3 +272,26 @@ int cx_mat_const_ref(const arma::cx_mat & x) {
     return x.n_elem;
 }
 
+// [[Rcpp::export]]
+arma::uvec uvec_test(arma::uvec v) { return(v); }
+
+// [[Rcpp::export]]
+arma::uvec c_uvec_test(const arma::uvec v) { return(v); }
+
+// [[Rcpp::export]]
+arma::uvec r_uvec_test(arma::uvec& v) { return(v); }
+
+// [[Rcpp::export]]
+arma::uvec cr_uvec_test(const arma::uvec& v) { return(v); }
+
+// [[Rcpp::export]]
+arma::umat umat_test(arma::umat v) { return(v); }
+
+// [[Rcpp::export]]
+arma::umat c_umat_test(const arma::umat v) { return(v); }
+
+// [[Rcpp::export]]
+arma::umat r_umat_test(arma::umat& v) { return(v); }
+
+// [[Rcpp::export]]
+arma::umat cr_umat_test(const arma::umat& v) { return(v); }

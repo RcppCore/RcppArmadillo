@@ -1,5 +1,10 @@
 2014-04-20  Kevin Ushey  <kevinushey@gmail.com>
 
+	* inst/unitTests/cpp/armadillo.cpp: Add unit tests
+	* inst/unitTests/runit.RcppArmadillo.R: Add unit tests
+
+2014-04-20  Kevin Ushey  <kevinushey@gmail.com>
+
         * inst/include/RcppArmadilloAs.h: Force vector coercion if the type
         does not fit within an R vector through as
 
