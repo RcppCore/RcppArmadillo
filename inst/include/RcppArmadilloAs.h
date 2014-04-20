@@ -100,49 +100,45 @@ namespace traits {
     } ;
 }       
         
-    template <typename T>
-    class ConstReferenceInputParameter< arma::Mat<T> > {
-    public:
-        typedef const typename arma::Mat<T>& const_reference ;
-                        
-        ConstReferenceInputParameter( SEXP x_ ) : m(x_), mat( reinterpret_cast<T*>( m.begin() ), m.nrow(), m.ncol(), false ){}
-                        
-        inline operator const_reference(){
-        		return mat ;        
-        }
-                        
-    private:
-        Rcpp::Matrix< Rcpp::traits::r_sexptype_traits<T>::rtype > m ;
-        arma::Mat<T> mat ;
-    } ;
+    /* Begin Armadillo vector as support classes */
     
-    template <typename T>
-    class ReferenceInputParameter< arma::Mat<T> > {
+    template <typename T, typename MAT, typename REF, 
+      typename NEEDS_CAST = typename Rcpp::traits::r_sexptype_needscast<T>::type 
+    >
+    class ArmaMat_InputParameter;
+    
+    template <typename T, typename MAT, typename REF>
+    class ArmaMat_InputParameter<T, MAT, REF, Rcpp::traits::false_type> {
     public:
-        typedef typename arma::Mat<T>& reference ;
+        ArmaMat_InputParameter( SEXP x_ ) : m(x_), mat( reinterpret_cast<T*>( m.begin() ), m.nrow(), m.ncol(), false) {} 
                         
-        ReferenceInputParameter( SEXP x_ ) : m(x_), mat( reinterpret_cast<T*>( m.begin() ), m.nrow(), m.ncol(), false ){}
-                        
-        inline operator reference(){
+        inline operator REF(){
             return mat ;        
         }
                         
     private:
         Rcpp::Matrix< Rcpp::traits::r_sexptype_traits<T>::rtype > m ;
-        arma::Mat<T> mat ;
+        MAT mat ;
     } ;
-
-    template <typename T>
-    class ConstInputParameter< arma::Mat<T> > {
+    
+    template <typename T, typename MAT, typename REF>
+    class ArmaMat_InputParameter<T, MAT, REF, Rcpp::traits::true_type> {
     public:
-        typedef const typename arma::Mat<T> const_nonref;
-        ConstInputParameter(SEXP x_) : m(x_), mat( reinterpret_cast<T*>( m.begin() ), m.nrow(), m.ncol(), false){}
-        inline operator const_nonref() { return mat ; }
+        ArmaMat_InputParameter( SEXP x_ ): m(x_), mat( as<MAT>(m) ) {}
+                        
+        inline operator REF(){
+            return mat ;        
+        }
+                        
     private:
         Rcpp::Matrix< Rcpp::traits::r_sexptype_traits<T>::rtype > m ;
-        arma::Mat<T> mat ;
-    };
+        MAT mat ;
+    } ;
 
+    /* End Armadillo vector as support classes */
+
+
+    /* Begin Armadillo vector as support classes */
     
     template <typename T, typename VEC, typename REF, 
       typename NEEDS_CAST = typename Rcpp::traits::r_sexptype_needscast<T>::type 
@@ -176,6 +172,8 @@ namespace traits {
         Rcpp::Vector< Rcpp::traits::r_sexptype_traits<T>::rtype > v ;
         VEC vec ;
     } ;
+
+    /* End Armadillo vector as support classes */
     
 #define MAKE_INPUT_PARAMETER(INPUT_TYPE,TYPE,REF)                       \
     template <typename T>                                               \
@@ -187,10 +185,27 @@ namespace traits {
     MAKE_INPUT_PARAMETER(ConstReferenceInputParameter, arma::Col<T>, const arma::Col<T>& )
     MAKE_INPUT_PARAMETER(ReferenceInputParameter     , arma::Col<T>, arma::Col<T>&       )
     MAKE_INPUT_PARAMETER(ConstInputParameter         , arma::Col<T>, const arma::Col<T>  )
+    
     MAKE_INPUT_PARAMETER(ConstReferenceInputParameter, arma::Row<T>, const arma::Row<T>& )
     MAKE_INPUT_PARAMETER(ReferenceInputParameter     , arma::Row<T>, arma::Row<T>&       )
     MAKE_INPUT_PARAMETER(ConstInputParameter         , arma::Row<T>, const arma::Row<T>  )
+    
 #undef MAKE_INPUT_PARAMETER
+
+    
+#define MAKE_INPUT_PARAMETER(INPUT_TYPE,TYPE,REF)                       \
+    template <typename T>                                               \
+    class INPUT_TYPE<TYPE> : public ArmaMat_InputParameter<T, TYPE, REF >{ \
+    public:                                                             \
+    INPUT_TYPE( SEXP x) : ArmaMat_InputParameter<T, TYPE, REF >(x){} \
+    } ;
+ 
+    MAKE_INPUT_PARAMETER(ConstReferenceInputParameter, arma::Mat<T>, const arma::Mat<T>& )
+    MAKE_INPUT_PARAMETER(ReferenceInputParameter     , arma::Mat<T>, arma::Mat<T>&       )
+    MAKE_INPUT_PARAMETER(ConstInputParameter         , arma::Mat<T>, const arma::Mat<T>  )
+
+#undef MAKE_INPUT_PARAMETER
+    
 }
 
 #endif
