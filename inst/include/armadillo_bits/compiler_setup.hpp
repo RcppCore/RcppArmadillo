@@ -44,12 +44,6 @@
 #define ARMA_INCFILE_WRAP(x) <x>
 
 
-#if (__cplusplus >= 201103L)
-  #undef  ARMA_USE_CXX11
-  #define ARMA_USE_CXX11
-#endif
-
-
 #if defined(ARMA_USE_CXX11)
   #undef  ARMA_USE_U64S64
   #define ARMA_USE_U64S64
@@ -121,7 +115,7 @@
   
   #define ARMA_GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
   
-  #if (ARMA_GCC_VERSION < 40200)
+  #if (ARMA_GCC_VERSION < 40200) && !defined(__INTEL_COMPILER)
     #error "*** Need a newer compiler ***"
   #endif
   

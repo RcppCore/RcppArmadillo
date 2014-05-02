@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2014 Conrad Sanderson
+// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -150,17 +150,54 @@ is_finite(const eT x, const typename arma_scalar_only<eT>::result* junk = 0)
 template<typename T1>
 inline
 arma_warn_unused
-bool
-is_finite(const Base<typename T1::elem_type,T1>& X)
+typename
+enable_if2
+  <
+  is_arma_type<T1>::value,
+  bool
+  >::result
+is_finite(const T1& X)
   {
   arma_extra_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
-  const unwrap<T1>   tmp(X.get_ref());
-  const Mat<eT>& A = tmp.M;
+  const Proxy<T1> P(X);
   
-  return A.is_finite();
+  if(Proxy<T1>::prefer_at_accessor == false)
+    {
+    const typename Proxy<T1>::ea_type Pea = P.get_ea();
+    
+    const uword n_elem = P.get_n_elem();
+    
+    uword i,j;
+    
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+      {
+      const eT val_i = Pea[i];
+      const eT val_j = Pea[j];
+      
+      if( (arma_isfinite(val_i) == false) || (arma_isfinite(val_j) == false) )  { return false; }
+      }
+    
+    if(i < n_elem)
+      {
+      if(arma_isfinite(Pea[i]) == false)  { return false; }
+      }
+    }
+  else
+    {
+    const uword n_rows = P.get_n_rows();
+    const uword n_cols = P.get_n_cols();
+    
+    for(uword col=0; col<n_cols; ++col)
+    for(uword row=0; row<n_rows; ++row)
+      {
+      if(arma_isfinite(P.at(row,col)) == false)  { return false; }
+      }
+    }
+  
+  return true;
   }
 
 

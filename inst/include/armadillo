@@ -38,6 +38,12 @@
 #endif
 
 
+#if (__cplusplus >= 201103L)
+  #undef  ARMA_USE_CXX11
+  #define ARMA_USE_CXX11
+#endif
+
+
 #include "armadillo_bits/config.hpp"
 #include "armadillo_bits/compiler_setup.hpp"
 
@@ -121,6 +127,7 @@ namespace arma
   #include "armadillo_bits/lapack_bones.hpp"
   #include "armadillo_bits/atlas_bones.hpp"
   #include "armadillo_bits/arpack_bones.hpp"
+  #include "armadillo_bits/hdf5_bones.hpp"
   
   #include "armadillo_bits/blas_wrapper.hpp"
   #include "armadillo_bits/lapack_wrapper.hpp"
