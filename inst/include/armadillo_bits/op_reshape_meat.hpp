@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
+// Copyright (C) 2008-2014 Conrad Sanderson
 // Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -12,23 +12,14 @@
 
 
 
-template<typename T1>
+template<typename eT>
 inline
 void
-op_reshape::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reshape>& in)
+op_reshape::apply_unwrap(Mat<eT>& out, const Mat<eT>& A, const uword in_n_rows, const uword in_n_cols, const uword in_dim)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
-  
-  const unwrap<T1>   A_tmp(in.m);
-  const Mat<eT>& A = A_tmp.M;
-  
   const bool is_alias = (&out == &A);
-  
-  const uword in_n_rows = in.aux_uword_a;
-  const uword in_n_cols = in.aux_uword_b;
-  const uword in_dim    = in.aux_uword_c;
   
   const uword in_n_elem = in_n_rows * in_n_cols;
   
@@ -127,7 +118,159 @@ op_reshape::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reshape>& in)
 template<typename T1>
 inline
 void
-op_reshape::apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_reshape>& in)
+op_reshape::apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const uword in_n_rows, const uword in_n_cols)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  out.set_size(in_n_rows, in_n_cols);
+  
+  eT* out_mem = out.memptr();
+  
+  const uword in_n_elem = in_n_rows * in_n_cols;
+  
+  if(P.get_n_elem() == in_n_elem)
+    {
+    if(Proxy<T1>::prefer_at_accessor == false)
+      {
+      typename Proxy<T1>::ea_type Pea = P.get_ea();
+      
+      for(uword i=0; i<in_n_elem; ++i)
+        {
+        out_mem[i] = Pea[i];
+        }
+      }
+    else
+      {
+      const uword P_n_rows = P.get_n_rows();
+      const uword P_n_cols = P.get_n_cols();
+      
+      for(uword col=0; col < P_n_cols; ++col)
+        {
+        uword i,j;
+        
+        for(i=0, j=1; j < P_n_rows; i+=2, j+=2)
+          {
+          const eT tmp_i = P.at(i,col);
+          const eT tmp_j = P.at(j,col);
+          
+          *out_mem = tmp_i;  out_mem++;
+          *out_mem = tmp_j;  out_mem++;
+          }
+        
+        if(i < P_n_rows)
+          {
+          *out_mem = P.at(i,col);  out_mem++;
+          }
+        }
+      }
+    }
+  else
+    {
+    const uword n_elem_to_copy = (std::min)(P.get_n_elem(), in_n_elem);
+    
+    if(Proxy<T1>::prefer_at_accessor == false)
+      {
+      typename Proxy<T1>::ea_type Pea = P.get_ea();
+      
+      for(uword i=0; i<n_elem_to_copy; ++i)
+        {
+        out_mem[i] = Pea[i];
+        }
+      }
+    else
+      {
+      uword i = 0;
+      
+      const uword P_n_rows = P.get_n_rows();
+      const uword P_n_cols = P.get_n_cols();
+      
+      for(uword col=0; col < P_n_cols; ++col)
+      for(uword row=0; row < P_n_rows; ++row)
+        {
+        if(i >= n_elem_to_copy)  { goto nested_loop_end; }
+        
+        out_mem[i] = P.at(row,col);
+        
+        ++i;
+        }
+      
+      nested_loop_end: ;
+      }
+    
+    for(uword i=n_elem_to_copy; i<in_n_elem; ++i)
+      {
+      out_mem[i] = eT(0);
+      }
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_reshape::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reshape>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const Proxy<T1> P(in.m);
+  
+  const uword in_n_rows = in.aux_uword_a;
+  const uword in_n_cols = in.aux_uword_b;
+  
+  if(is_Mat<typename Proxy<T1>::stored_type>::value == true)
+    {
+    // not checking for aliasing here, as this might be an inplace reshape
+    
+    const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
+    
+    op_reshape::apply_unwrap(out, tmp.M, in_n_rows, in_n_cols, uword(0));
+    }
+  else
+    {
+    if(P.is_alias(out))
+      {
+      Mat<eT> tmp;
+      
+      op_reshape::apply_proxy(tmp, P, in_n_rows, in_n_cols);
+      
+      out.steal_mem(tmp);
+      }
+    else
+      {
+      op_reshape::apply_proxy(out, P, in_n_rows, in_n_cols);
+      }
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_reshape_ext::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reshape_ext>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  const unwrap<T1> tmp(in.m);
+  
+  const uword in_n_rows = in.aux_uword_a;
+  const uword in_n_cols = in.aux_uword_b;
+  const uword in_dim    = in.aux_uword_c;
+  
+  op_reshape::apply_unwrap(out, tmp.M, in_n_rows, in_n_cols, in_dim);
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_reshape_ext::apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_reshape_ext>& in)
   {
   arma_extra_debug_sigprint();
   

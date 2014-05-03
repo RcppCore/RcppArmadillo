@@ -30,7 +30,7 @@ struct depth_lhs< glue_type, Glue<T1,T2,glue_type> >
 
 
 
-template<bool is_eT_blas_type>
+template<bool do_inv_detect>
 struct glue_times_redirect2_helper
   {
   template<typename T1, typename T2>
@@ -47,7 +47,7 @@ struct glue_times_redirect2_helper<true>
 
 
 
-template<bool is_eT_blas_type>
+template<bool do_inv_detect>
 struct glue_times_redirect3_helper
   {
   template<typename T1, typename T2, typename T3>

@@ -1,5 +1,5 @@
-// Copyright (C) 2010 Conrad Sanderson
-// Copyright (C) 2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2014 Conrad Sanderson
+// Copyright (C) 2010-2014 NICTA (www.nicta.com.au)
 // Copyright (C) 2010 Dimitrios Bouzas
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -69,6 +69,36 @@ class op_find
   
   template<typename T1>
   inline static void apply(Mat<uword>& out, const mtOp<uword, T1, op_find>& X);
+  };
+
+
+
+class op_find_simple
+  {
+  public:
+  
+  template<typename T1>
+  inline static void apply(Mat<uword>& out, const mtOp<uword, T1, op_find_simple>& X);
+  };
+
+
+
+class op_find_finite
+  {
+  public:
+  
+  template<typename T1>
+  inline static void apply(Mat<uword>& out, const mtOp<uword, T1, op_find_finite>& X);
+  };
+
+
+
+class op_find_nonfinite
+  {
+  public:
+  
+  template<typename T1>
+  inline static void apply(Mat<uword>& out, const mtOp<uword, T1, op_find_nonfinite>& X);
   };
 
 
