@@ -2,12 +2,20 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
-\section{Changes in RcppArmadillo version UNRELEASED (2014-xx-yy)}{
+\section{Changes in RcppArmadillo version 0.4.300.0 (2014-05-03)}{
   \itemize{
-    \item Corrected conversion to \code{unsigned int} vectors and matrices
+    \item Upgraded to Armadillo release Version 4.300 (Medieval Cornea Scraper)
+    \itemize{
+      \item faster \code{find()}
+      \item added \code{find_finite()} and \code{find_nonfinite()} for finding indices of finite and non-finite elements
+      \item expressions \code{X=inv(A)*B*C} and \code{X=A.i()*B*C} are automatically converted to X=solve(A,B*C)
+    }
+    \itemize{
+      \item Corrected conversion to \code{unsigned int} vectors and matrices
+    }
   }
 }
-
+  
 \section{Changes in RcppArmadillo version 0.4.200.0 (2014-04-07)}{
   \itemize{
     \item Upgraded to Armadillo release Version 4.200 (Flintlock Swoop)
