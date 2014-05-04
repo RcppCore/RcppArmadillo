@@ -2,16 +2,21 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
-\section{Changes in RcppArmadillo version 0.4.300.0 (2014-05-03)}{
+\section{Changes in RcppArmadillo version 0.4.300.0 (2014-05-04)}{
   \itemize{
     \item Upgraded to Armadillo release Version 4.300 (Medieval Cornea Scraper)
     \itemize{
       \item faster \code{find()}
-      \item added \code{find_finite()} and \code{find_nonfinite()} for finding indices of finite and non-finite elements
-      \item expressions \code{X=inv(A)*B*C} and \code{X=A.i()*B*C} are automatically converted to X=solve(A,B*C)
+      \item added \code{find_finite()} and \code{find_nonfinite()} for
+      finding indices of finite and non-finite elements 
+      \item expressions \code{X=inv(A)*B*C} and \code{X=A.i()*B*C} are
+      automatically converted to X=solve(A,B*C) 
     }
     \itemize{
-      \item Corrected conversion to \code{unsigned int} vectors and matrices
+      \item Corrected conversion to \code{unsigned int} vectors and
+      matrices
+      \item Configure script now checks for R version 3.0.3 or newer to
+      enable complex divide-and-conquer SVD in case of R-supplied LAPACK
     }
   }
 }

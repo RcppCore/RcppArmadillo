@@ -4,21 +4,29 @@ if [ "${R_HOME}" == "" ]; then
    R_HOME=$(R RHOME)
 fi
 
-lapack=$(${R_HOME}/bin/R CMD config LAPACK_LIBS)
-echo -n "* checking LAPACK_LIBS"
+echo -n "* checking LAPACK_LIBS: "
 
+## external LAPACK has the required function
+lapack=$(${R_HOME}/bin/R CMD config LAPACK_LIBS)
 hasRlapack=$(echo ${lapack} | grep lRlapack)
 
+## internal Rlapack has the required function if "new enoug:
+newR=$(${R_HOME}/bin/R --slave -q -e 'cat(ifelse(getRversion() >= "3.0.3","yes","no"))')
+
 if [ "${hasRlapack}" == "" ]; then
-   ## We are using a full Lapack and can use zgesdd -- so #undef remains
-   echo " divide-and-conquer complex SVD available via system LAPACK"
-   cp inst/include/RcppArmadilloLapack.h.in inst/include/RcppArmadilloLapack.h 
+    ## We are using a full Lapack and can use zgesdd -- so #undef remains
+    echo "divide-and-conquer complex SVD available via system LAPACK"
+    cp inst/include/RcppArmadilloLapack.h.in inst/include/RcppArmadilloLapack.h 
+elif [ "${newR}" == "yes" ]; then
+    ## The R version is recent enough and has an augmented internal Rlapack
+    echo "divide-and-conquer complex SVD available via R-supplied LAPACK"
+    cp inst/include/RcppArmadilloLapack.h.in inst/include/RcppArmadilloLapack.h 
 else
-   ## We are using a R's subset of Lapack and CANNOT use zgesdd -- so mark ARMA_DONT_USE_CX_GESDD as 1
-   echo " divide-and-conquer complex SVD unavailable via R-supplied LAPACK"
-   echo "* divide-and-conquer algorithm for complex SVD will be redirected to default"
-   sed -e 's/\/\/ \#undef ARMA_DONT_USE_CX_GESDD/\#define ARMA_DONT_USE_CX_GESDD/' \
-       inst/include/RcppArmadilloLapack.h.in > inst/include/RcppArmadilloLapack.h 
+    ## We are using a R's subset of Lapack and CANNOT use zgesdd -- so mark ARMA_DONT_USE_CX_GESDD as 1
+    echo " divide-and-conquer complex SVD unavailable via R-supplied LAPACK"
+    echo "* divide-and-conquer algorithm for complex SVD will be redirected to default"
+    sed -e 's/\/\/ \#undef ARMA_DONT_USE_CX_GESDD/\#define ARMA_DONT_USE_CX_GESDD/' \
+        inst/include/RcppArmadilloLapack.h.in > inst/include/RcppArmadilloLapack.h 
 fi
 
 

@@ -1,8 +1,10 @@
-2014-05-03  Dirk Eddelbuettel  <edd@debian.org>
+2014-05-04  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.4.300.0
         * inst/NEWS: Release 0.4.300.0
         * debian/*: Similarly updated for new release to Debian
+
+	* configure: If R version 3.0.3 or newer, use comples GESDD
 
 2014-05-02  Dirk Eddelbuettel  <edd@debian.org>
 
