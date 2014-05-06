@@ -1,6 +1,7 @@
 #!/bin/bash
 
-if [ "${R_HOME}" == "" ]; then
+if [ "$R_HOME" = "" ]
+then
    R_HOME=$(R RHOME)
 fi
 
@@ -13,11 +14,13 @@ hasRlapack=$(echo ${lapack} | grep lRlapack)
 ## internal Rlapack has the required function if "new enoug:
 newR=$(${R_HOME}/bin/R --slave -q -e 'cat(ifelse(getRversion() >= "3.0.3","yes","no"))')
 
-if [ "${hasRlapack}" == "" ]; then
+if [ "$hasRlapack" = "" ] 
+then
     ## We are using a full Lapack and can use zgesdd -- so #undef remains
     echo "divide-and-conquer complex SVD available via system LAPACK"
     cp inst/include/RcppArmadilloLapack.h.in inst/include/RcppArmadilloLapack.h 
-elif [ "${newR}" == "yes" ]; then
+elif [ "$newR" = "yes" ] 
+then
     ## The R version is recent enough and has an augmented internal Rlapack
     echo "divide-and-conquer complex SVD available via R-supplied LAPACK"
     cp inst/include/RcppArmadilloLapack.h.in inst/include/RcppArmadilloLapack.h 

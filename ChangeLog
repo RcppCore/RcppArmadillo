@@ -1,3 +1,7 @@
+2014-05-05  Dirk Eddelbuettel  <edd@debian.org>
+
+	* configure: Rewritten for non-bash versions of /bin/sh
+
 2014-05-04  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.4.300.0
