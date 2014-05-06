@@ -12,12 +12,10 @@
       \item expressions \code{X=inv(A)*B*C} and \code{X=A.i()*B*C} are
       automatically converted to X=solve(A,B*C) 
     }
-    \itemize{
-      \item Corrected conversion to \code{unsigned int} vectors and
-      matrices
-      \item Configure script now checks for R version 3.0.3 or newer to
-      enable complex divide-and-conquer SVD in case of R-supplied LAPACK
-    }
+    \item Corrected conversion to \code{unsigned int} vectors and
+    matrices
+    \item Configure script now checks for R version 3.0.3 or newer to
+    enable complex divide-and-conquer SVD in case of R-supplied LAPACK
   }
 }
   
