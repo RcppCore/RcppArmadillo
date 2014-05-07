@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 if [ "${R_HOME}" == "" ]; then
    R_HOME=$(R RHOME)
