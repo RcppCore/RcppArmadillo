@@ -452,22 +452,7 @@ op_find_simple::apply(Mat<uword>& out, const mtOp<uword, T1, op_find_simple>& X)
   Mat<uword> indices;
   const uword n_nz = op_find::helper(indices, X.m);
   
-  if(n_nz > 0)
-    {
-    if(n_nz == indices.n_elem)
-      {
-      out.steal_mem(indices);
-      }
-    else
-      {
-      out.set_size(n_nz, 1);
-      arrayops::copy( out.memptr(), indices.memptr(), n_nz );
-      }
-    }
-  else
-    {
-    out.set_size(0,1);
-    }
+  out.steal_mem_col(indices, n_nz);
   }
 
 
@@ -517,23 +502,7 @@ op_find_finite::apply(Mat<uword>& out, const mtOp<uword, T1, op_find_finite>& X)
       }
     }
   
-  
-  if(count > 0)
-    {
-    if(count == n_elem)
-      {
-      out.steal_mem(indices);
-      }
-    else
-      {
-      out.set_size(count,1);
-      arrayops::copy( out.memptr(), indices.memptr(), count );
-      }
-    }
-  else
-    {
-    out.set_size(0,1);
-    }
+  out.steal_mem_col(indices, count);
   }
 
 
@@ -579,23 +548,7 @@ op_find_nonfinite::apply(Mat<uword>& out, const mtOp<uword, T1, op_find_nonfinit
       }
     }
   
-  
-  if(count > 0)
-    {
-    if(count == n_elem)
-      {
-      out.steal_mem(indices);
-      }
-    else
-      {
-      out.set_size(count,1);
-      arrayops::copy( out.memptr(), indices.memptr(), count );
-      }
-    }
-  else
-    {
-    out.set_size(0,1);
-    }
+  out.steal_mem_col(indices, count);
   }
 
 

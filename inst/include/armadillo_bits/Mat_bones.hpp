@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2014 Conrad Sanderson
+// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
 // Copyright (C) 2012 Ryan Curtin
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -519,6 +519,9 @@ class Mat : public Base< eT, Mat<eT> >
   inline void swap(Mat& B);
   
   inline void steal_mem(Mat& X);  //!< don't use this unless you're writing code internal to Armadillo
+  
+  inline void steal_mem_col(Mat& X, const uword max_n_rows);
+  
   
   template<uword fixed_n_rows, uword fixed_n_cols> class fixed;
   

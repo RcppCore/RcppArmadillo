@@ -2,6 +2,15 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.4.300.2.0 (2014-05-13)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 4.300.2 (Medieval Cornea Scraper)
+    \itemize{
+      \item faster \code{find()}
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.4.300.0 (2014-05-04)}{
   \itemize{
     \item Upgraded to Armadillo release Version 4.300 (Medieval Cornea Scraper)

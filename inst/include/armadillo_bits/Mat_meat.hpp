@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2014 Conrad Sanderson
+// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
 // Copyright (C) 2012 Ryan Curtin
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -1009,6 +1009,65 @@ Mat<eT>::steal_mem(Mat<eT>& x)
       {
       (*this).operator=(x);
       }
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
+Mat<eT>::steal_mem_col(Mat<eT>& x, const uword max_n_rows)
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword x_n_elem    = x.n_elem;
+  const uword x_mem_state = x.mem_state;
+  
+  const uword t_vec_state = vec_state;
+  const uword t_mem_state = mem_state;
+  
+  const uword alt_n_rows = (std::min)(x.n_rows, max_n_rows);
+  
+  if((x_n_elem == 0) || (alt_n_rows == 0))
+    {
+    (*this).set_size(0,1);
+    
+    return;
+    }
+  
+  if( (this != &x) && (t_vec_state <= 1) && (t_mem_state <= 1) && (x_mem_state <= 1) )
+    {
+    if( (x_mem_state == 0) && ((x_n_elem <= arma_config::mat_prealloc) || (alt_n_rows <= arma_config::mat_prealloc)) )
+      {
+      (*this).set_size(alt_n_rows, uword(1));
+      
+      arrayops::copy( (*this).memptr(), x.memptr(), alt_n_rows );
+      }
+    else
+      {
+      reset();
+      
+      access::rw(n_rows)    = alt_n_rows;
+      access::rw(n_cols)    = 1;
+      access::rw(n_elem)    = alt_n_rows;
+      access::rw(mem_state) = x_mem_state;
+      access::rw(mem)       = x.mem;
+      
+      access::rw(x.n_rows)    = 0;
+      access::rw(x.n_cols)    = 0;
+      access::rw(x.n_elem)    = 0;
+      access::rw(x.mem_state) = 0;
+      access::rw(x.mem)       = 0;
+      }
+    }
+  else
+    {
+    Mat<eT> tmp(alt_n_rows, 1);
+    
+    arrayops::copy( tmp.memptr(), x.memptr(), alt_n_rows );
+    
+    steal_mem(tmp);
     }
   }
 

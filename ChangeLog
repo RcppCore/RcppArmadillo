@@ -1,3 +1,10 @@
+2014-05-13  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.4.300.2.0 [GitHub only]
+        * inst/NEWS: Release 0.4.300.2.0 [GitHub only]
+
+	* inst/include/*: Upgraded to version 4.300.2 of Armadillo
+
 2014-05-05  Dirk Eddelbuettel  <edd@debian.org>
 
 	* configure: Rewritten for non-bash versions of /bin/sh
