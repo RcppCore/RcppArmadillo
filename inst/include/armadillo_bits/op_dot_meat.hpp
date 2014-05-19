@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2014 Conrad Sanderson
+// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -372,115 +372,20 @@ op_norm_dot::apply(const T1& X, const T2& Y)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type      eT;
-  typedef typename Proxy<T1>::ea_type ea_type1;
-  typedef typename Proxy<T2>::ea_type ea_type2;
-  
-  const bool prefer_at_accessor = (Proxy<T1>::prefer_at_accessor) && (Proxy<T2>::prefer_at_accessor);
-  
-  if(prefer_at_accessor == false)
-    {
-    const Proxy<T1> PA(X);
-    const Proxy<T2> PB(Y);
-    
-    const uword N  = PA.get_n_elem();
-    
-    arma_debug_check( (N != PB.get_n_elem()), "norm_dot(): objects must have the same number of elements" );
-    
-    ea_type1 A = PA.get_ea();
-    ea_type2 B = PB.get_ea();
-    
-    eT acc1 = eT(0);
-    eT acc2 = eT(0);
-    eT acc3 = eT(0);
-    
-    for(uword i=0; i<N; ++i)
-      {
-      const eT tmpA = A[i];
-      const eT tmpB = B[i];
-      
-      acc1 += tmpA * tmpA;
-      acc2 += tmpB * tmpB;
-      acc3 += tmpA * tmpB;
-      }
-    
-    return acc3 / ( std::sqrt(acc1 * acc2) );
-    }
-  else
-    {
-    return op_norm_dot::apply_unwrap(X, Y);
-    }
-  }
-
-
-
-template<typename T1, typename T2>
-arma_hot
-inline
-typename T1::elem_type
-op_norm_dot::apply_unwrap(const T1& X, const T2& Y)
-  {
-  arma_extra_debug_sigprint();
-  
   typedef typename T1::elem_type eT;
+  typedef typename T1::pod_type   T;
   
-  const unwrap<T1> tmp1(X);
-  const unwrap<T2> tmp2(Y);
-  
-  const Mat<eT>& A = tmp1.M;
-  const Mat<eT>& B = tmp2.M;
-  
-  
-  arma_debug_check( (A.n_elem != B.n_elem), "norm_dot(): objects must have the same number of elements" );
-  
-  const uword N = A.n_elem;
-  
-  const eT* A_mem = A.memptr();
-  const eT* B_mem = B.memptr();
-  
-  eT acc1 = eT(0);
-  eT acc2 = eT(0);
-  eT acc3 = eT(0);
-  
-  for(uword i=0; i<N; ++i)
-    {
-    const eT tmpA = A_mem[i];
-    const eT tmpB = B_mem[i];
-    
-    acc1 += tmpA * tmpA;
-    acc2 += tmpB * tmpB;
-    acc3 += tmpA * tmpB;
-    }
-    
-  return acc3 / ( std::sqrt(acc1 * acc2) );
-  }
-
-
-
-//
-// op_norm_dot_slow
-
-
-
-template<typename T1, typename T2>
-arma_hot
-inline
-typename T1::elem_type
-op_norm_dot_slow::apply(const T1& X, const T2& Y)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  const unwrap<T1> tmp1(X);
-  const unwrap<T2> tmp2(Y);
+  const quasi_unwrap<T1> tmp1(X);
+  const quasi_unwrap<T2> tmp2(Y);
   
   const Col<eT> A( const_cast<eT*>(tmp1.M.memptr()), tmp1.M.n_elem, false );
   const Col<eT> B( const_cast<eT*>(tmp2.M.memptr()), tmp2.M.n_elem, false );
   
   arma_debug_check( (A.n_elem != B.n_elem), "norm_dot(): objects must have the same number of elements" );
   
-  return ( op_dot::apply(A,B) / (norm(A,2) * norm(B,2)) );
+  const T denom = norm(A,2) * norm(B,2);
+  
+  return (denom != T(0)) ? ( op_dot::apply(A,B) / denom ) : eT(0);
   }
 
 

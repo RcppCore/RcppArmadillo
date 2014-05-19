@@ -2,6 +2,17 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.4.300.5.0 (2014-05-19)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 4.300.5 (Medieval Cornea Scraper)
+    \itemize{
+      \item Handle possible underflows and overflows in \code{norm()},
+      \code{normalise()}, \code{norm_dot()}
+      \item Fix for handling of null vectors by \code{norm_dot()}
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.4.300.2.0 (2014-05-13)}{
   \itemize{
     \item Upgraded to Armadillo release Version 4.300.2 (Medieval Cornea Scraper)

@@ -56,12 +56,12 @@ dot
 
 
 template<typename T1, typename T2>
-arma_inline
+inline
 arma_warn_unused
 typename
 enable_if2
   <
-  is_arma_type<T1>::value && is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value && is_cx<typename T1::elem_type>::no,
+  is_arma_type<T1>::value && is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value,
   typename T1::elem_type
   >::result
 norm_dot
@@ -73,28 +73,6 @@ norm_dot
   arma_extra_debug_sigprint();
   
   return op_norm_dot::apply(A,B);
-  }
-
-
-
-template<typename T1, typename T2>
-arma_inline
-arma_warn_unused
-typename
-enable_if2
-  <
-  is_arma_type<T1>::value && is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value && is_complex_strict<typename T1::elem_type>::value,
-  typename T1::elem_type
-  >::result
-norm_dot
-  (
-  const T1& A, 
-  const T2& B
-  )
-  {
-  arma_extra_debug_sigprint();
-  
-  return op_norm_dot_slow::apply(A,B);
   }
 
 

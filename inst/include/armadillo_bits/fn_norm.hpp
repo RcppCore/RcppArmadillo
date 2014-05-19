@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 Conrad Sanderson
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2014 Conrad Sanderson
+// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -96,7 +96,8 @@ arma_vec_norm_2
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  typedef typename T1::pod_type T;
+  typedef typename T1::elem_type eT;
+  typedef typename T1::pod_type   T;
   
   T acc = T(0);
   
@@ -167,7 +168,71 @@ arma_vec_norm_2
       }
     }
   
-  return std::sqrt(acc);
+  
+  const T sqrt_acc = std::sqrt(acc);
+  
+  if( (sqrt_acc != T(0)) && arma_isfinite(sqrt_acc) )
+    {
+    return sqrt_acc;
+    }
+  else
+    {
+    arma_extra_debug_print("arma_vec_norm_2(): detected possible underflow or overflow");
+  
+    const quasi_unwrap<typename Proxy<T1>::stored_type> R(P.Q);
+    
+    const uword N     = R.M.n_elem;
+    const eT*   R_mem = R.M.memptr();
+    
+    eT max_val = priv::most_neg<eT>();
+    
+    uword i,j;
+    
+    for(i=0, j=1; j<N; i+=2, j+=2)
+      {
+      eT val_i = R_mem[i];
+      eT val_j = R_mem[j];
+      
+      val_i = std::abs(val_i);
+      val_j = std::abs(val_j);
+      
+      if(val_i > max_val)  { max_val = val_i; }
+      if(val_j > max_val)  { max_val = val_j; }
+      }
+    
+    if(i < N)
+      {
+      const eT val_i = std::abs(R_mem[i]);
+      
+      if(val_i > max_val)  { max_val = val_i; }
+      }
+    
+    if(max_val == eT(0))  { return eT(0); }
+    
+    eT alt_acc1 = eT(0);
+    eT alt_acc2 = eT(0);
+    
+    for(i=0, j=1; j<N; i+=2, j+=2)
+      {
+      eT val_i = R_mem[i];
+      eT val_j = R_mem[j];
+      
+      val_i /= max_val;
+      val_j /= max_val;
+      
+      alt_acc1 += val_i * val_i;
+      alt_acc2 += val_j * val_j;
+      }
+    
+    if(i < N)
+      {
+      const eT val_i = R_mem[i] / max_val;
+      
+      alt_acc1 += val_i*val_i;
+      }
+    
+    return ( std::sqrt(alt_acc1 + alt_acc2) * max_val ); 
+    }
   }
 
 
@@ -185,7 +250,8 @@ arma_vec_norm_2
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  typedef typename T1::pod_type T;
+  typedef typename T1::elem_type eT;
+  typedef typename T1::pod_type   T;
   
   T acc = T(0);
   
@@ -225,7 +291,43 @@ arma_vec_norm_2
       }
     }
   
-  return std::sqrt(acc);
+  const T sqrt_acc = std::sqrt(acc);
+  
+  if( (sqrt_acc != T(0)) && arma_isfinite(sqrt_acc) )
+    {
+    return sqrt_acc;
+    }
+  else
+    {
+    arma_extra_debug_print("arma_vec_norm_2(): detected possible underflow or overflow");
+    
+    const quasi_unwrap<typename Proxy<T1>::stored_type> R(P.Q);
+    
+    const uword N     = R.M.n_elem;
+    const eT*   R_mem = R.M.memptr();
+    
+    T max_val = priv::most_neg<T>();
+    
+    for(uword i=0; i<N; ++i)
+      {
+      const T val_i = std::abs(R_mem[i]);
+      
+      if(val_i > max_val)  { max_val = val_i; }
+      }
+    
+    if(max_val == T(0))  { return T(0); }
+    
+    T alt_acc = T(0);
+    
+    for(uword i=0; i<N; ++i)
+      {
+      const T val_i = std::abs(R_mem[i]) / max_val;
+      
+      alt_acc += val_i * val_i;
+      }
+    
+    return ( std::sqrt(alt_acc) * max_val ); 
+    }
   }
 
 

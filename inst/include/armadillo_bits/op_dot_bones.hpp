@@ -65,19 +65,6 @@ class op_norm_dot
   public:
   
   template<typename T1, typename T2>
-  arma_hot inline static typename T1::elem_type apply       (const T1& X, const T2& Y);
-  
-  template<typename T1, typename T2>
-  arma_hot inline static typename T1::elem_type apply_unwrap(const T1& X, const T2& Y);
-  };
-
-
-
-class op_norm_dot_slow
-  {
-  public:
-  
-  template<typename T1, typename T2>
   arma_hot inline static typename T1::elem_type apply(const T1& X, const T2& Y);
   };
 
