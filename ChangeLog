@@ -1,3 +1,8 @@
+2014-05-28  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/Makevars: Updated (commented-out) C++11 settings variable
+	* src/Makevars.win: Idem
+
 2014-05-19  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.4.300.5.0 [GitHub only]
