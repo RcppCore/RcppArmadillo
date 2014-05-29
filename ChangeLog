@@ -1,25 +1,30 @@
+2014-05-29  Dirk Eddelbuettel  <edd@debian.org>
+
+        * inst/include/RcppArmadilloConfig.h: Robustify behaviour on Windows
+        under MinGW when C++11 is used
+
 2014-05-28  Dirk Eddelbuettel  <edd@debian.org>
 
-	* src/Makevars: Updated (commented-out) C++11 settings variable
-	* src/Makevars.win: Idem
+        * src/Makevars: Updated (commented-out) C++11 settings variable
+        * src/Makevars.win: Idem
 
 2014-05-19  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.4.300.5.0 [GitHub only]
         * inst/NEWS: Release 0.4.300.5.0 [GitHub only]
 
-	* inst/include/*: Upgraded to version 4.300.5 of Armadillo
+        * inst/include/*: Upgraded to version 4.300.5 of Armadillo
 
 2014-05-13  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.4.300.2.0 [GitHub only]
         * inst/NEWS: Release 0.4.300.2.0 [GitHub only]
 
-	* inst/include/*: Upgraded to version 4.300.2 of Armadillo
+        * inst/include/*: Upgraded to version 4.300.2 of Armadillo
 
 2014-05-05  Dirk Eddelbuettel  <edd@debian.org>
 
-	* configure: Rewritten for non-bash versions of /bin/sh
+        * configure: Rewritten for non-bash versions of /bin/sh
 
 2014-05-04  Dirk Eddelbuettel  <edd@debian.org>
 
@@ -27,53 +32,53 @@
         * inst/NEWS: Release 0.4.300.0
         * debian/*: Similarly updated for new release to Debian
 
-	* configure: If R version 3.0.3 or newer, use comples GESDD
+        * configure: If R version 3.0.3 or newer, use comples GESDD
 
 2014-05-02  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/*: Upgraded to version 4.300 of Armadillo
+        * inst/include/*: Upgraded to version 4.300 of Armadillo
 
 2014-04-20  Kevin Ushey  <kevinushey@gmail.com>
 
         * inst/include/RcppArmadilloAs.h: Force vector coercion if the type
         does not fit within an R vector through as
 
-	* inst/unitTests/cpp/armadillo.cpp: Add unit tests
-	* inst/unitTests/runit.RcppArmadillo.R: Add unit tests
+        * inst/unitTests/cpp/armadillo.cpp: Add unit tests
+        * inst/unitTests/runit.RcppArmadillo.R: Add unit tests
 
 2014-04-20  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/RcppArmadilloConfig.h: Comment-out setting of C++11
-	define which (Rcpp)Armadillo gets correctly by itself
+        * inst/include/RcppArmadilloConfig.h: Comment-out setting of C++11
+        define which (Rcpp)Armadillo gets correctly by itself
 
 2014-04-07  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.4.200.0
         * inst/NEWS: Release 0.4.200.0
-	* inst/include/*: Upgraded to version 4.200 of Armadillo
+        * inst/include/*: Upgraded to version 4.200 of Armadillo
         * debian/*: Similarly updated for new release to Debian
 
 2014-03-07  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.4.100.2
         * inst/NEWS: Release 0.4.100.2
-	* inst/include/*: Upgraded to version 4.100.2 of Armadillo
+        * inst/include/*: Upgraded to version 4.100.2 of Armadillo
         * debian/*: Similarly updated for new release to Debian
 
 2014-03-04  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/*: Upgraded to (unreleased) version 4.100.1 of Armadillo
+        * inst/include/*: Upgraded to (unreleased) version 4.100.1 of Armadillo
 
 2014-03-01  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/skeleton/rcpparma_hello_world.cpp: Correct use of depends for
-	Attributes (for illustration only as skeleton uses package build)
+        * inst/skeleton/rcpparma_hello_world.cpp: Correct use of depends for
+        Attributes (for illustration only as skeleton uses package build)
 
-	* src/Makevars: Simple setup for C++11 use (for R-devel aka R 3.1.0)
-	by defining USE_CXX1X (commented out by default)
+        * src/Makevars: Simple setup for C++11 use (for R-devel aka R 3.1.0)
+        by defining USE_CXX1X (commented out by default)
 
-	* inst/include/RcppArmadilloConfig.h: If USE_CXX1X is defined, also
-	define ARMA_USE_CXX11 to permit use C++11 by Armadillo
+        * inst/include/RcppArmadilloConfig.h: If USE_CXX1X is defined, also
+        define ARMA_USE_CXX11 to permit use C++11 by Armadillo
 
 2014-02-28  Dirk Eddelbuettel  <edd@debian.org>
 
@@ -84,15 +89,15 @@
 
 2014-02-26  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/*: Updated current Armadillo 4.100 snapshot
+        * inst/include/*: Updated current Armadillo 4.100 snapshot
 
 2014-02-25  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/*: Add current Armadillo 4.100 snapshot
+        * inst/include/*: Add current Armadillo 4.100 snapshot
 
 2014-02-20  Dirk Eddelbuettel  <edd@debian.org>
 
-	* debian/control: Remove Depends: on littler
+        * debian/control: Remove Depends: on littler
 
 2014-02-19  Dirk Eddelbuettel  <edd@debian.org>
 
@@ -103,34 +108,34 @@
 
 2014-02-08  Dirk Eddelbuettel  <edd@debian.org>
 
-	* src/RcppArmadillo.cpp: Clarify in help page that Armadillo seed
-	setter will not work under RStudio
+        * src/RcppArmadillo.cpp: Clarify in help page that Armadillo seed
+        setter will not work under RStudio
 
 2014-02-04  Dirk Eddelbuettel  <edd@debian.org>
 
-	* man/*: Add help pages for \code{armadillo_version},
-	\code{armadillo_set_seed} and \code{armadillo_set_seed_random}
+        * man/*: Add help pages for \code{armadillo_version},
+        \code{armadillo_set_seed} and \code{armadillo_set_seed_random}
 
-	* NAMESPACE: Export three helper functions
+        * NAMESPACE: Export three helper functions
 
 2014-02-02  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Versioned Imports: on Rcpp (>= 0.11.0)
+        * DESCRIPTION: Versioned Imports: on Rcpp (>= 0.11.0)
 
-	* src/Makevars (PKG_LIBS): Simplified with Rcpp (>= 0.11.0)
-	* src/Makevars.win (PKG_LIBS): Ditto
-	* inst/skeleton/Makevars (PKG_LIBS): Ditto
+        * src/Makevars (PKG_LIBS): Simplified with Rcpp (>= 0.11.0)
+        * src/Makevars.win (PKG_LIBS): Ditto
+        * inst/skeleton/Makevars (PKG_LIBS): Ditto
 
-	* R/RcppArmadillo.package.skeleton.R: Updated:
-	  - no longer set namespace argument (as NAMESPACEs req'ed)
-	  - corresponding code updates
-	  - reflect Rcpp 0.11.0
+        * R/RcppArmadillo.package.skeleton.R: Updated:
+          - no longer set namespace argument (as NAMESPACEs req'ed)
+          - corresponding code updates
+          - reflect Rcpp 0.11.0
 
-	* inst/skeleton/rcpparma_hello_world.cpp: Rewritten to use Rcpp
-	Attributes and expanded to included more examples
+        * inst/skeleton/rcpparma_hello_world.cpp: Rewritten to use Rcpp
+        Attributes and expanded to included more examples
 
-	* src/RcppArmadillo.cpp: Add accessor functions to set Armadillo's
-	RNG from a given and a random value as suggested by Gábor Csárdi
+        * src/RcppArmadillo.cpp: Add accessor functions to set Armadillo's
+        RNG from a given and a random value as suggested by Gábor Csárdi
 
 2014-01-21  Dirk Eddelbuettel  <edd@debian.org>
 
@@ -141,9 +146,9 @@
 
 2014-01-07  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/armadillo_bits/compiler_setup.hpp: Applied one-line
-	patch by Jan Marvin Garbuszu to permit build under recent icc;
-	patch also passed on upstream to Conrad
+        * inst/include/armadillo_bits/compiler_setup.hpp: Applied one-line
+        patch by Jan Marvin Garbuszu to permit build under recent icc;
+        patch also passed on upstream to Conrad
 
 2014-01-05  Dirk Eddelbuettel  <edd@debian.org>
 
@@ -161,7 +166,7 @@
         * debian/*: Similarly updated for new release to Debian
 
         * configure: Test value of LAPACK_LIBS and if the Lapack version
-	supplied by R used then define ARMA_DONT_USE_CX_GESDD
+        supplied by R used then define ARMA_DONT_USE_CX_GESDD
 
         * inst/include/RcppArmadilloLapack.h.in: Added header file to be
         processed by configure

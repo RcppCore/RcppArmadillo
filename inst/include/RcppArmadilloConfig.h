@@ -79,6 +79,12 @@
 #undef NDEBUG
 #endif
 
+// If C++11 is used under MinGW, the WIN32 macro gets undefined which creates
+// an issue with the next -- so re-setting it, with thanks to John Buonagurio
+#ifdef _WIN32
+  #define WIN32
+#endif
+
 // R can be built with its own Rlapack library, or use an external
 // one. Only the latter has zgesdd, a complex-valued SVD using divide-and-conquer 
 #ifdef WIN32
