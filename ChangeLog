@@ -2,6 +2,7 @@
 
         * DESCRIPTION: Release 0.4.300.7.0
         * inst/NEWS: Release 0.4.300.7.0
+        * debian/*: Similarly updated for new release to Debian
 
 	* inst/include/*: Upgraded to version 4.300.7 of Armadillo
 
