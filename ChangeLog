@@ -1,3 +1,13 @@
+2014-05-31  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.4.300.7.0
+        * inst/NEWS: Release 0.4.300.7.0
+
+	* inst/include/*: Upgraded to version 4.300.7 of Armadillo
+
+	* src/Makevars.win: Detail possible use of ARMA_DONT_USE_CXX11 define
+	* src/Makevars: Edited as well
+
 2014-05-29  Dirk Eddelbuettel  <edd@debian.org>
 
         * inst/include/RcppArmadilloConfig.h: Robustify behaviour on Windows

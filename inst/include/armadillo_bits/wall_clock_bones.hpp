@@ -26,7 +26,7 @@ class wall_clock
   
   bool valid;
   
-  #if defined(ARMA_USE_CXX11)
+  #if defined(ARMA_USE_CXX11) && !defined(ARMA_DONT_USE_CXX11_CHRONO)
     std::chrono::steady_clock::time_point chrono_time1;
   #elif defined(ARMA_HAVE_GETTIMEOFDAY)
     struct timeval posix_time1;

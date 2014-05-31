@@ -149,14 +149,11 @@
   
   #define ARMA_HAVE_ALIGNED_ATTRIBUTE
   
-  #if defined(__GXX_EXPERIMENTAL_CXX0X__)
-    #undef  ARMA_USE_CXX11
-    #define ARMA_USE_CXX11
-  #endif
-  
   #if defined(ARMA_USE_CXX11)
-    #if (ARMA_GCC_VERSION < 40700) && !defined(__clang__)
-      #pragma message ("Your C++ compiler is in C++11 mode, but it has incomplete support for C++11 features")
+    #if (ARMA_GCC_VERSION < 40800) && !defined(__clang__)
+      #pragma message ("WARNING: your C++ compiler is in C++11 mode, but it has incomplete support for C++11 features; if something breaks, you get to keep all the pieces")
+      #pragma message ("WARNING: to forcefully prevent Armadillo from using C++11 features, #define ARMA_DONT_USE_CXX11 before #include <armadillo>")
+      #define ARMA_DONT_USE_CXX11_CHRONO
     #endif
   #endif
   

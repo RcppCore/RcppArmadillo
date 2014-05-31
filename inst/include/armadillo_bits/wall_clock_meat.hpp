@@ -33,7 +33,7 @@ wall_clock::tic()
   {
   arma_extra_debug_sigprint();
   
-  #if defined(ARMA_USE_CXX11)
+  #if defined(ARMA_USE_CXX11) && !defined(ARMA_DONT_USE_CXX11_CHRONO)
     {
     chrono_time1 = std::chrono::steady_clock::now();
     valid = true;
@@ -61,7 +61,7 @@ wall_clock::toc()
   
   if(valid)
     {
-    #if defined(ARMA_USE_CXX11)
+    #if defined(ARMA_USE_CXX11) && !defined(ARMA_DONT_USE_CXX11_CHRONO)
       {
       const std::chrono::steady_clock::time_point chrono_time2 = std::chrono::steady_clock::now();
       

@@ -38,7 +38,7 @@
 #endif
 
 
-#if (__cplusplus >= 201103L)
+#if (__cplusplus >= 201103L) || defined(__GXX_EXPERIMENTAL_CXX0X__)
   #undef  ARMA_USE_CXX11
   #define ARMA_USE_CXX11
 #endif
@@ -51,8 +51,10 @@
 #if defined(ARMA_USE_CXX11)
   #include <initializer_list>
   #include <cstdint>
-  #include <chrono>
   #include <random>
+  #if !defined(ARMA_DONT_USE_CXX11_CHRONO)
+    #include <chrono>
+  #endif
 #endif
 
 

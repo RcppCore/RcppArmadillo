@@ -2,6 +2,20 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.4.300.7.0 (2014-05-31)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 4.300.7 (Medieval Cornea Scraper)
+    \itemize{
+      \item Adds \code{#define ARMA_DONT_USE_CXX11} to provide an option
+      to turn C++11 off for Armadillo (but client packages may still use it)
+    }
+    \itemize More robust Windows detection by using \code{_WIN32} as
+    well as \code{WIN32} as the latter gets diabled by MinGW with C++11
+    \itemize On Windows, C++11 is turned off as the Armadillo code base uses
+    more features of C++11 than g++ 4.6.2 version in Rtools implements
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.4.300.5.0 (2014-05-19)}{
   \itemize{
     \item Upgraded to Armadillo release Version 4.300.5 (Medieval Cornea Scraper)

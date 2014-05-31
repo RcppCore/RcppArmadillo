@@ -449,7 +449,7 @@ arma_incompat_size_string(const subview_cube<eT>& Q, const Mat<eT>& A, const cha
   std::stringstream tmp;
   
   tmp << x
-      << ": interpreting matrix as cube with dimenensions: "
+      << ": interpreting matrix as cube with dimensions: "
       << A.n_rows << 'x' << A.n_cols << 'x' << 1
       << " or "
       << A.n_rows << 'x' << 1        << 'x' << A.n_cols
@@ -913,7 +913,7 @@ arma_assert_cube_as_mat(const Mat<eT>& M, const T1& Q, const char* x, const bool
         std::stringstream tmp;
         
         tmp << x
-            << ": can't interpret cube with dimenensions "
+            << ": can't interpret cube with dimensions "
             << Q_n_rows << 'x' << Q_n_cols << 'x' << Q_n_slices
             << " as a matrix with dimensions "
             << M_n_rows << 'x' << M_n_cols;
