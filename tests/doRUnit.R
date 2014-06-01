@@ -1,34 +1,59 @@
-#### doRUnit.R --- Run RUnit tests
-####------------------------------------------------------------------------
+# Copyright (C) 2010 - 2013 Dirk Eddelbuettel, Romain Francois and Douglas Bates
+# Copyright (C) 2014        Dirk Eddelbuettel
+# Earlier copyrights Gregor Gorjanc, Martin Maechler and Murray Stokely as detailed below
+#
+# This file is part of RcppArmadillo.
+#
+# RcppArmadillo is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation, either version 2 of the
+# License, or (at your option) any later version.
+#
+# RcppArmadillo is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
-### borrowed from package fUtilities in RMetrics
-### http://r-forge.r-project.org/plugins/scmsvn/viewcvs.php/pkg/fUtilities/tests/doRUnit.R?rev=1958&root=rmetrics&view=markup
+## doRUnit.R --- Run RUnit tests
+##
+## with credits to package fUtilities in RMetrics
+## which credits Gregor Gojanc's example in CRAN package  'gdata'
+## as per the R Wiki http://wiki.r-project.org/rwiki/doku.php?id=developers:runit
+## and changed further by Martin Maechler
+## and more changes by Murray Stokely in HistogramTools
+## and then used adapted in RProtoBuf
+## and now used in Rcpp and here 
+##
+## Dirk Eddelbuettel, Feb - June 2014
 
-### Originally follows Gregor Gojanc's example in CRAN package  'gdata'
-### and the corresponding section in the R Wiki:
-###  http://wiki.r-project.org/rwiki/doku.php?id=developers:runit
+stopifnot(require(RUnit, quietly=TRUE))
+stopifnot(require(RcppArmadillo, quietly=TRUE))
 
-### MM: Vastly changed:  This should also be "runnable" for *installed*
-##              package which has no ./tests/
-## ----> put the bulk of the code e.g. in  ../inst/unitTests/runTests.R :
+## Define tests
+testSuite <- defineTestSuite(name="RcppArmadillo Unit Tests",
+                             dirs=system.file("unitTests", package = "RcppArmadillo"),
+                             testFuncRegexp = "^[Tt]est.+")
 
-if(require("RUnit", quietly = TRUE)) {
+## without this, we get (or used to get) unit test failures
+Sys.setenv("R_TESTS"="")
 
-    pkg <- "RcppArmadillo"
-    require( pkg, character.only=TRUE)
-    path <- system.file("unitTests", package = pkg)
-    stopifnot(file.exists(path), file.info(path.expand(path))$isdir)
-    pathRcppArmadilloTests <<- system.file("unitTests", package = pkg)
-    stopifnot(file.exists(pathRcppArmadilloTests),
-              file.info(path.expand(pathRcppArmadilloTests))$isdir)
+## Run tests
+tests <- runTestSuite(testSuite)
 
-    ## without this, we get unit test failures
-    Sys.setenv( R_TESTS = "" )
+## Print results
+printTextProtocol(tests)
 
-    RcppArmadillo.unit.test.output.dir <- getwd()
-
-    source(file.path(path, "runTests.R"), echo = TRUE)
-
-} else {
-    print( "package RUnit not available, cannot run unit tests" )
+## Return success or failure to R CMD CHECK
+if (getErrors(tests)$nFail > 0) {
+    stop("TEST FAILED!")
 }
+if (getErrors(tests)$nErr > 0) {
+    stop("TEST HAD ERRORS!")
+}
+if (getErrors(tests)$nTestFunc < 1) {
+    stop("NO TEST FUNCTIONS RUN!")
+}
+
