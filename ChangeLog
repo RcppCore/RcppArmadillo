@@ -1,3 +1,11 @@
+2014-06-02  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.4.300.8.0
+        * inst/NEWS: Release 0.4.300.8.0
+        * debian/*: Similarly updated for new release to Debian
+
+	* inst/include/*: Upgraded to version 4.300.8 of Armadillo
+
 2014-06-01  Dirk Eddelbuettel  <edd@debian.org>
 
 	* configure: Change back to #!/bin/bash
@@ -6,11 +14,11 @@
 
 	* tests/doRUnit.R: Simplified, following use in RProtoBuf
 	* inst/unitTests/runTests.R: Refreshed, following use in RProtoBuf
-	
+
 2014-05-31  Dirk Eddelbuettel  <edd@debian.org>
 
-        * DESCRIPTION: Release 0.4.300.7.0
-        * inst/NEWS: Release 0.4.300.7.0
+        * DESCRIPTION: Release 0.4.300.7.0 [pending/unreleased]
+        * inst/NEWS: Release 0.4.300.7.00 [pending/unreleased]
         * debian/*: Similarly updated for new release to Debian
 
 	* inst/include/*: Upgraded to version 4.300.7 of Armadillo
