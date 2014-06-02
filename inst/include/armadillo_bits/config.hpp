@@ -71,6 +71,11 @@
 //// This will enable additional features, such as use of initialiser lists
 #endif
 
+#if (__cplusplus >= 201103L) || defined(__GXX_EXPERIMENTAL_CXX0X__)
+  #undef  ARMA_USE_CXX11
+  #define ARMA_USE_CXX11
+#endif
+
 #if !defined(ARMA_USE_U64S64)
 // #define ARMA_USE_U64S64
 //// Uncomment the above line if you require u64 and s64 integer types.
