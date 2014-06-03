@@ -16,7 +16,6 @@
     well as \code{WIN32} as the latter gets diabled by MinGW with C++11
     \item On Windows, C++11 is turned off as the Armadillo code base uses
     more features of C++11 than g++ 4.6.2 version in Rtools implements
-    }
   }
 }
 
