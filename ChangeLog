@@ -1,3 +1,8 @@
+2014-06-03  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/unitTests/cpp/complex.cpp: Rename a variable as the term CS
+	clashes with a macro on the Solaris OS
+
 2014-06-02  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.4.300.8.0
@@ -9,8 +14,7 @@
 2014-06-01  Dirk Eddelbuettel  <edd@debian.org>
 
 	* configure: Change back to #!/bin/bash
-	* configure: Added some comments about what to do in case no suitable
-	shell is available
+	* configure: Added tips do in case no suitable shell is available
 
 	* tests/doRUnit.R: Simplified, following use in RProtoBuf
 	* inst/unitTests/runTests.R: Refreshed, following use in RProtoBuf

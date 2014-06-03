@@ -2,7 +2,7 @@
 //
 // complex.cpp: RcppArmadillo unit tests for complex vectors and matrices
 //
-// Copyright (C) 2013  Baptiste Auguie and Dirk Eddelbuettel 
+// Copyright (C) 2013 - 2014  Baptiste Auguie and Dirk Eddelbuettel 
 //
 // This file is part of RcppArmadillo.
 //
@@ -37,8 +37,8 @@ List complexCppTests(const arma::mat& A,
     arma::cx_mat conjC = conj(C); 			// conjugate
     arma::mat absC = abs(C); 				// modulus
 
-    arma::cx_colvec CV = C * V; 			// multiply matrix-vector
-    arma::cx_mat CS = C * S; 				// multiply matrix-matrix
+    arma::cx_colvec CtV = C * V; 			// multiply matrix-vector
+    arma::cx_mat CtS = C * S; 				// multiply matrix-matrix
     arma::cx_mat CC = C % C; 				// element-wise multiplication
     arma::cx_mat CdC = C / C; 				// division
     arma::cx_mat CpC = C + C; 				// addition
@@ -49,8 +49,8 @@ List complexCppTests(const arma::mat& A,
                         _["Ct"]  = Ct, 
                         _["conjC"]  = conjC, 
                         _["absC"]  = absC, 
-                        _["CV"]  = CV,
-                        _["CS"]  = CS,
+                        _["CV"]  = CtV,
+                        _["CS"]  = CtS,
                         _["CC"]  = CC,
                         _["CdC"]  = CdC,
                         _["CpC"]  = CpC,
