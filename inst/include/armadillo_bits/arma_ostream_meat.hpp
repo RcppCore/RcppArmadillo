@@ -732,7 +732,7 @@ arma_ostream::print(std::ostream& o, const SizeMat& S)
   
   o.setf(ios::fixed);
   
-  o << S.n_rows << 'x' << S.n_cols << '\n';
+  o << S.n_rows << 'x' << S.n_cols;
   
   stream_state.restore(o);
   }
@@ -753,7 +753,7 @@ arma_ostream::print(std::ostream& o, const SizeCube& S)
   
   o.setf(ios::fixed);
     
-  o << S.n_rows << 'x' << S.n_cols << 'x' << S.n_slices << '\n';
+  o << S.n_rows << 'x' << S.n_cols << 'x' << S.n_slices;
   
   stream_state.restore(o);
   }

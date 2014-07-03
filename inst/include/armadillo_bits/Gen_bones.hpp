@@ -1,5 +1,5 @@
-// Copyright (C) 2011-2013 Conrad Sanderson
-// Copyright (C) 2011-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2011-2014 Conrad Sanderson
+// Copyright (C) 2011-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -42,6 +42,8 @@ class Gen : public Base<typename T1::elem_type, Gen<T1, gen_type> >
   inline void apply_inplace_minus(Mat<elem_type>& out) const;
   inline void apply_inplace_schur(Mat<elem_type>& out) const;
   inline void apply_inplace_div  (Mat<elem_type>& out) const;
+  
+  inline void apply(subview<elem_type>& out) const;
   };
 
 

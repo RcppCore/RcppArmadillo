@@ -20,6 +20,7 @@ eigs_sym
   const SpBase<typename T1::elem_type,T1>& X,
   const uword                              n_eigvals,
   const char*                              form = "lm",
+  const typename T1::elem_type             tol  = 0.0,
   const typename arma_real_only<typename T1::elem_type>::result* junk = 0
   )
   {
@@ -29,7 +30,7 @@ eigs_sym
   Mat<typename T1::elem_type> eigvec;
   Col<typename T1::pod_type > eigval;
   
-  const bool status = sp_auxlib::eigs_sym(eigval, eigvec, X, n_eigvals, form);
+  const bool status = sp_auxlib::eigs_sym(eigval, eigvec, X, n_eigvals, form, tol);
   
   if(status == false)
     {
@@ -52,6 +53,7 @@ eigs_sym
   const SpBase<typename T1::elem_type,T1>& X,
   const uword                              n_eigvals,
   const char*                              form = "lm",
+  const typename T1::elem_type             tol  = 0.0,
   const typename arma_real_only<typename T1::elem_type>::result* junk = 0
   )
   {
@@ -60,7 +62,7 @@ eigs_sym
   
   Mat<typename T1::elem_type> eigvec;
   
-  const bool status = sp_auxlib::eigs_sym(eigval, eigvec, X, n_eigvals, form);
+  const bool status = sp_auxlib::eigs_sym(eigval, eigvec, X, n_eigvals, form, tol);
   
   if(status == false)
     {
@@ -84,6 +86,7 @@ eigs_sym
   const SpBase<typename T1::elem_type,T1>& X,
   const uword                              n_eigvals,
   const char*                              form = "lm",
+  const typename T1::elem_type             tol  = 0.0,
   const typename arma_real_only<typename T1::elem_type>::result* junk = 0
   )
   {
@@ -92,7 +95,7 @@ eigs_sym
   
   arma_debug_check( void_ptr(&eigval) == void_ptr(&eigvec), "eigs_sym(): eigval is an alias of eigvec" );
   
-  const bool status = sp_auxlib::eigs_sym(eigval, eigvec, X, n_eigvals, form);
+  const bool status = sp_auxlib::eigs_sym(eigval, eigvec, X, n_eigvals, form, tol);
   
   if(status == false)
     {

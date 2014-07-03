@@ -3680,7 +3680,7 @@ diskio::load_hdf5_binary(Cube<eT>& x, const std::string& name, std::string& err_
 
       if(dataset >= 0)
         {
-        hid_t filespace = H5Dget_space(dataset);
+        hid_t filespace = arma_H5Dget_space(dataset);
 
         // This must be <= 3 due to our search rules.
         const int ndims = arma_H5Sget_simple_extent_ndims(filespace);

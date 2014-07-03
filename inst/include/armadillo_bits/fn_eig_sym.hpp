@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2014 Conrad Sanderson
+// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
 // Copyright (C) 2011 Stanislav Funiak
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -84,19 +84,35 @@ eig_sym
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  arma_debug_check( void_ptr(&eigval) == void_ptr(&eigvec), "eig_sym(): eigval is an alias of eigvec" );
+  typedef typename T1::elem_type eT;
   
   const char sig = (method != NULL) ? method[0] : char(0);
   
-  arma_debug_check( ((sig != 's') && (sig != 'd')), "eig_sym(): unknown method specified" );
+  arma_debug_check( ((sig != 's') && (sig != 'd')),         "eig_sym(): unknown method specified"     );
+  arma_debug_check( void_ptr(&eigval) == void_ptr(&eigvec), "eig_sym(): eigval is an alias of eigvec" );
   
-  const bool status = (sig == 'd') ? auxlib::eig_sym_dc(eigval, eigvec, X) : auxlib::eig_sym(eigval, eigvec, X);
+  const Proxy<T1> P(X.get_ref());
+  
+  const bool is_alias = P.is_alias(eigvec);
+  
+  Mat<eT>  eigvec_tmp;
+  Mat<eT>& eigvec_out = (is_alias == false) ? eigvec : eigvec_tmp;
+  
+  bool status = false;
+  
+  if(sig == 'd')       { status = auxlib::eig_sym_dc(eigval, eigvec_out, P.Q); }
+  
+  if(status == false)  { status = auxlib::eig_sym(eigval, eigvec_out, P.Q);    }
   
   if(status == false)
     {
     eigval.reset();
     eigvec.reset();
     arma_bad("eig_sym(): failed to converge", false);
+    }
+  else
+    {
+    if(is_alias)  { eigvec.steal_mem(eigvec_tmp); }
     }
   
   return status;

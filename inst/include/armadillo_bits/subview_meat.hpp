@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2014 Conrad Sanderson
+// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
 // Copyright (C) 2011 James Sanders
 // Copyright (C) 2013 Ryan Curtin
 // 
@@ -1193,6 +1193,21 @@ subview<eT>::operator/= (const subview& x_in)
     delete tmp_mat;
     }
   
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename gen_type>
+inline
+typename enable_if2< is_same_type<typename T1::elem_type, eT>::value, void>::result
+subview<eT>::operator= (const Gen<T1,gen_type>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_assert_same_size(n_rows, n_cols, in.n_rows, in.n_cols, "copy into submatrix");
+  
+  in.apply(*this);
   }
 
 
@@ -2672,6 +2687,21 @@ subview_col<eT>::operator=(const Base<eT,T1>& X)
 
 
 template<typename eT>
+template<typename T1, typename gen_type>
+inline
+typename enable_if2< is_same_type<typename T1::elem_type, eT>::value, void>::result
+subview_col<eT>::operator= (const Gen<T1,gen_type>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_assert_same_size(subview<eT>::n_rows, uword(1), in.n_rows, (in.is_col ? uword(1) : in.n_cols), "copy into submatrix");
+  
+  in.apply(*this);
+  }
+
+
+
+template<typename eT>
 arma_inline
 const Op<subview_col<eT>,op_htrans>
 subview_col<eT>::t() const
@@ -2999,6 +3029,21 @@ subview_row<eT>::operator=(const Base<eT,T1>& X)
   arma_extra_debug_sigprint();
   
   subview<eT>::operator=(X);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename gen_type>
+inline
+typename enable_if2< is_same_type<typename T1::elem_type, eT>::value, void>::result
+subview_row<eT>::operator= (const Gen<T1,gen_type>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_assert_same_size(uword(1), subview<eT>::n_cols, (in.is_row ? uword(1) : in.n_rows), in.n_cols, "copy into submatrix");
+  
+  in.apply(*this);
   }
 
 

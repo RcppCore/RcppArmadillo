@@ -382,7 +382,7 @@ SpMat<eT>::const_row_iterator::const_row_iterator(const SpMat<eT>& in_M, uword i
     return;
     }
 
-  // We don't count zeroes in our position count, so we have to find the nonzero
+  // We don't count zeros in our position count, so we have to find the nonzero
   // value corresponding to the given initial position.  We assume initial_pos
   // is valid.
 

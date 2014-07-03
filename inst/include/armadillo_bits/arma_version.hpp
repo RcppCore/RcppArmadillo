@@ -12,9 +12,9 @@
 
 
 #define ARMA_VERSION_MAJOR 4
-#define ARMA_VERSION_MINOR 300
-#define ARMA_VERSION_PATCH 8
-#define ARMA_VERSION_NAME  "Medieval Cornea Scraper"
+#define ARMA_VERSION_MINOR 320
+#define ARMA_VERSION_PATCH 0
+#define ARMA_VERSION_NAME  "Daintree Tea Raider"
 
 
 

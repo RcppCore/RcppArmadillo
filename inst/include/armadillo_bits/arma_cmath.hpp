@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2014 Conrad Sanderson
+// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -47,10 +47,9 @@ arma_isfinite(float x)
     }
   #else
     {
-    const bool x_is_inf = ( (x == x) && ((x - x) != float(0)) );
-    const bool x_is_nan = (x != x);
+    const float y = (std::numeric_limits<float>::max)();
     
-    return ( (x_is_inf == false) && (x_is_nan == false) );
+    return (x == x) && (x >= -y) && (x <= y);
     }
   #endif
   }
@@ -76,10 +75,9 @@ arma_isfinite(double x)
     }
   #else
     {
-    const bool x_is_inf = ( (x == x) && ((x - x) != double(0)) );
-    const bool x_is_nan = (x != x);
+    const double y = (std::numeric_limits<double>::max)();
     
-    return ( (x_is_inf == false) && (x_is_nan == false) );
+    return (x == x) && (x >= -y) && (x <= y);
     }
   #endif
   }
@@ -100,6 +98,72 @@ arma_isfinite(const std::complex<T>& x)
     return true;
     }
   }
+
+
+
+// rudimentary wrappers for log1p()
+
+arma_inline
+float
+arma_log1p(const float x)
+  {
+  #if defined(ARMA_USE_CXX11)
+    {
+    return std::log1p(x);
+    }
+  #else
+    {
+    if((x >= float(0)) && (x < std::numeric_limits<float>::epsilon()))
+      {
+      return x;
+      }
+    else
+    if((x < float(0)) && (-x < std::numeric_limits<float>::epsilon()))
+      {
+      return x;
+      }
+    else
+      {
+      return std::log(float(1) + x);
+      }
+    }
+  #endif
+  }
+
+
+
+arma_inline
+double
+arma_log1p(const double x)
+  {
+  #if defined(ARMA_USE_CXX11)
+    {
+    return std::log1p(x);
+    }
+  #elif defined(ARMA_HAVE_LOG1P)
+    {
+    return log1p(x);
+    }
+  #else
+    {
+    if((x >= double(0)) && (x < std::numeric_limits<double>::epsilon()))
+      {
+      return x;
+      }
+    else
+    if((x < double(0)) && (-x < std::numeric_limits<double>::epsilon()))
+      {
+      return x;
+      }
+    else
+      {
+      return std::log(double(1) + x);
+      }
+    }
+  #endif
+  }
+
+
 
 
 

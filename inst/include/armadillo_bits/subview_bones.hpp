@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2014 Conrad Sanderson
+// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
 // Copyright (C)      2011 James Sanders
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -66,6 +66,10 @@ class subview : public Base<eT, subview<eT> >
   inline void operator-= (const subview& x);
   inline void operator%= (const subview& x);
   inline void operator/= (const subview& x);
+  
+  template<typename T1, typename gen_type>
+  inline typename enable_if2< is_same_type<typename T1::elem_type, eT>::value, void>::result operator=(const Gen<T1,gen_type>& x);
+  
   
   inline static void extract(Mat<eT>& out, const subview& in);
   
@@ -204,6 +208,9 @@ class subview_col : public subview<eT>
   template<typename T1>
   inline void operator= (const Base<eT,T1>& x);
   
+  template<typename T1, typename gen_type>
+  inline typename enable_if2< is_same_type<typename T1::elem_type, eT>::value, void>::result operator=(const Gen<T1,gen_type>& x);
+  
   arma_inline const Op<subview_col<eT>,op_htrans>  t() const;
   arma_inline const Op<subview_col<eT>,op_htrans> ht() const;
   arma_inline const Op<subview_col<eT>,op_strans> st() const;
@@ -271,6 +278,9 @@ class subview_row : public subview<eT>
   
   template<typename T1>
   inline void operator= (const Base<eT,T1>& x);
+  
+  template<typename T1, typename gen_type>
+  inline typename enable_if2< is_same_type<typename T1::elem_type, eT>::value, void>::result operator=(const Gen<T1,gen_type>& x);
   
   arma_inline const Op<subview_row<eT>,op_htrans>  t() const;
   arma_inline const Op<subview_row<eT>,op_htrans> ht() const;

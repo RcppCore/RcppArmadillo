@@ -48,7 +48,7 @@ sp_auxlib::interpret_form_str(const char* form_str)
 template<typename eT, typename T1>
 inline
 bool
-sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, const uword n_eigvals, const char* form_str)
+sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, const uword n_eigvals, const char* form_str, const eT default_tol)
   {
   arma_extra_debug_sigprint();
   
@@ -69,7 +69,7 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
     arma_debug_check( (p.get_n_rows() != p.get_n_cols()), "eigs_sym(): given sparse matrix is not square");
     
     // Make sure we aren't asking for every eigenvalue.
-    arma_debug_check( (n_eigvals >= p.get_n_rows()), "eigs_sym(): n_eigvals must be less than the number of rows in the matrix");
+    arma_debug_check( (n_eigvals + 1 >= p.get_n_rows()), "eigs_sym(): n_eigvals + 1 must be less than the number of rows in the matrix");
     
     // If the matrix is empty, the case is trivial.
     if(p.get_n_cols() == 0) // We already know n_cols == n_rows.
@@ -81,7 +81,7 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
     
     // Set up variables that get used for neupd().
     blas_int n, ncv, ldv, lworkl, info;
-    eT tol;
+    eT tol = default_tol;
     podarray<eT> resid, v, workd, workl;
     podarray<blas_int> iparam, ipntr;
     podarray<eT> rwork; // Not used in this case.
@@ -138,7 +138,7 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
 template<typename T, typename T1>
 inline
 bool
-sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase<T, T1>& X, const uword n_eigvals, const char* form_str)
+sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase<T, T1>& X, const uword n_eigvals, const char* form_str, const T default_tol)
   {
   arma_extra_debug_sigprint();
   
@@ -177,7 +177,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     arma_debug_check( (p.get_n_rows() != p.get_n_cols()), "eigs_gen(): given sparse matrix is not square");
     
     // Make sure we aren't asking for every eigenvalue.
-    arma_debug_check( (n_eigvals >= p.get_n_rows()), "eigs_gen(): n_eigvals must be less than the number of rows in the matrix");
+    arma_debug_check( (n_eigvals + 1 >= p.get_n_rows()), "eigs_gen(): n_eigvals + 1 must be less than the number of rows in the matrix");
     
     // If the matrix is empty, the case is trivial.
     if(p.get_n_cols() == 0) // We already know n_cols == n_rows.
@@ -189,7 +189,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     
     // Set up variables that get used for neupd().
     blas_int n, ncv, ldv, lworkl, info;
-    T tol;
+    T tol = default_tol;
     podarray<T> resid, v, workd, workl;
     podarray<blas_int> iparam, ipntr;
     podarray<T> rwork; // Not used in the real case.
@@ -289,7 +289,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
 template<typename T, typename T1>
 inline
 bool
-sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase< std::complex<T>, T1>& X, const uword n_eigvals, const char* form_str)
+sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase< std::complex<T>, T1>& X, const uword n_eigvals, const char* form_str, const T default_tol)
   {
   arma_extra_debug_sigprint();
   
@@ -328,7 +328,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     arma_debug_check( (p.get_n_rows() != p.get_n_cols()), "eigs_gen(): given sparse matrix is not square");
     
     // Make sure we aren't asking for every eigenvalue.
-    arma_debug_check( (n_eigvals >= p.get_n_rows()), "eigs_gen(): n_eigvals must be less than the number of rows in the matrix");
+    arma_debug_check( (n_eigvals + 1 >= p.get_n_rows()), "eigs_gen(): n_eigvals + 1 must be less than the number of rows in the matrix");
     
     // If the matrix is empty, the case is trivial.
     if(p.get_n_cols() == 0) // We already know n_cols == n_rows.
@@ -340,7 +340,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     
     // Set up variables that get used for neupd().
     blas_int n, ncv, ldv, lworkl, info;
-    T tol;
+    T tol = default_tol;
     podarray< std::complex<T> > resid, v, workd, workl;
     podarray<blas_int> iparam, ipntr;
     podarray<T> rwork;
@@ -424,12 +424,13 @@ sp_auxlib::run_aupd
     n = p.get_n_rows(); // The size of the matrix.
     blas_int nev = n_eigvals;
     
-    tol = std::numeric_limits<eT>::epsilon(); // Machine epsilon as tolerance.
     resid.set_size(n);
     
     // "NCV must satisfy the two inequalities 2 <= NCV-NEV and NCV <= N".
     // "It is recommended that NCV >= 2 * NEV".
-    ncv = (2 * nev < n) ? 2 * nev : ((nev + 2 < n) ? nev + 2 : n);
+    ncv = 2 + nev;
+    if (ncv < 2 * nev) { ncv = 2 * nev; }
+    if (ncv > n)       { ncv = n; }
     v.set_size(n * ncv); // Array N by NCV (output).
     rwork.set_size(ncv); // Work array of size NCV for complex calls.
     ldv = n; // "Leading dimension of V exactly as declared in the calling program."

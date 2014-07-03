@@ -113,11 +113,7 @@ log_add_exp(eT log_a, eT log_b)
     }
   else
     {
-    #if defined(ARMA_HAVE_LOG1P)
-      return (log_a + log1p(std::exp(negdelta)));
-    #else
-      return (log_a + std::log(1.0 + std::exp(negdelta)));
-    #endif
+    return (log_a + arma_log1p(std::exp(negdelta)));
     }
   }
 
