@@ -1,3 +1,11 @@
+2014-07-03  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.4.320.0
+        * inst/NEWS: Release 0.4.320.0
+        * debian/*: Similarly updated for new release to Debian
+
+	* inst/include/*: Upgraded to version 4.320 of Armadillo
+
 2014-06-03  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/unitTests/cpp/complex.cpp: Rename a variable as the term CS

@@ -2,6 +2,20 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.4.320.0 (2014-07-03)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 4.320 (Daintree Tea Raider)
+    \itemize{
+      \item expanded \code{eigs_sym()} and \code{eigs_gen()} to use an
+      optional tolerance parameter
+      \item expanded \code{eig_sym()} to automatically fall back to standard
+      decomposition method if divide-and-conquer fails
+      \item automatic installer enables use of C++11 random number generator
+      when using gcc 4.8.3+ in C++11 mode
+    }
+  }
+}
+      
 \section{Changes in RcppArmadillo version 0.4.300.8.0 (2014-05-31)}{
   \itemize{
     \item Upgraded to Armadillo release Version 4.300.8 (Medieval Cornea Scraper)
