@@ -1,3 +1,8 @@
+2014-07-04  Dirk Eddelbuettel  <edd@debian.org>
+
+	* vignettes/RcppArmadillo-unitTests.Rnw: Commented-out copy of unit
+	test result file to /tmp per request of Kurt
+
 2014-07-03  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.4.320.0
