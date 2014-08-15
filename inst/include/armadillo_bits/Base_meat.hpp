@@ -77,6 +77,48 @@ Base<elem_type,derived>::raw_print(std::ostream& user_stream, const std::string 
 
 
 
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+elem_type
+Base<elem_type,derived>::min() const
+  {
+  return op_min::min( (*this).get_ref() );
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+elem_type
+Base<elem_type,derived>::max() const
+  {
+  return op_max::max( (*this).get_ref() );
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+elem_type
+Base<elem_type,derived>::min(uword& index_of_min_val) const
+  {
+  return op_min::min_with_index( (*this).get_ref(), index_of_min_val );
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+elem_type
+Base<elem_type,derived>::max(uword& index_of_max_val) const
+  {
+  return op_max::max_with_index( (*this).get_ref(), index_of_max_val );
+  }
+
+
+
 //
 // extra functions defined in Base_inv_yes
 

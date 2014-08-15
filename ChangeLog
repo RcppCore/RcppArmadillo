@@ -1,3 +1,7 @@
+2014-08-15  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/*: Upgraded to pre-release 4.399.2 of Armadillo
+
 2014-07-04  Dirk Eddelbuettel  <edd@debian.org>
 
 	* vignettes/RcppArmadillo-unitTests.Rnw: Commented-out copy of unit

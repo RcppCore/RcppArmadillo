@@ -121,6 +121,7 @@ arma_counter<eT>::value_minus_1() const
 
 
 template<typename eT>
+inline
 running_stat<eT>::~running_stat()
   {
   arma_extra_debug_sigprint_this(this);
@@ -129,6 +130,7 @@ running_stat<eT>::~running_stat()
 
 
 template<typename eT>
+inline
 running_stat<eT>::running_stat()
   : r_mean      (                          eT(0))
   , r_var       (typename running_stat<eT>::T(0))

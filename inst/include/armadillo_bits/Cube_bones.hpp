@@ -55,7 +55,7 @@ class Cube : public BaseCube< eT, Cube<eT> >
   inline ~Cube();
   inline  Cube();
   
-  inline          Cube(const uword in_rows, const uword in_cols, const uword in_slices);
+  inline Cube(const uword in_rows, const uword in_cols, const uword in_slices);
   
   template<typename fill_type>
   inline Cube(const uword in_rows, const uword in_cols, const uword in_slices, const fill::fill_class<fill_type>& f);

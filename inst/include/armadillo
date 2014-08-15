@@ -78,6 +78,11 @@
 #endif
 
 
+#if defined(_OPENMP)
+  #include <omp.h>
+#endif
+
+
 
 //! \namespace arma namespace for Armadillo classes and functions
 namespace arma
@@ -236,6 +241,7 @@ namespace arma
   #include "armadillo_bits/op_any_bones.hpp"
   #include "armadillo_bits/op_all_bones.hpp"
   #include "armadillo_bits/op_normalise_bones.hpp"
+  #include "armadillo_bits/op_clamp_bones.hpp"
   
   #include "armadillo_bits/glue_times_bones.hpp"
   #include "armadillo_bits/glue_mixed_bones.hpp"
@@ -322,7 +328,6 @@ namespace arma
   #include "armadillo_bits/Gen_meat.hpp"
   #include "armadillo_bits/GenCube_meat.hpp"
   
-  
   //
   // ostream
   
@@ -352,7 +357,6 @@ namespace arma
   #include "armadillo_bits/operator_cube_relational.hpp"
   
   #include "armadillo_bits/operator_ostream.hpp"
-  
   
   //
   // user accessible functions
@@ -437,6 +441,7 @@ namespace arma
   #include "armadillo_bits/fn_randi.hpp"
   #include "armadillo_bits/fn_cond.hpp"
   #include "armadillo_bits/fn_normalise.hpp"
+  #include "armadillo_bits/fn_clamp.hpp"
   
   #include "armadillo_bits/fn_speye.hpp"
   #include "armadillo_bits/fn_spones.hpp"
@@ -451,7 +456,10 @@ namespace arma
   
   #include "armadillo_bits/hdf5_misc.hpp"
   #include "armadillo_bits/fft_engine.hpp"
-  
+  #include "armadillo_bits/gmm_misc_bones.hpp"
+  #include "armadillo_bits/gmm_misc_meat.hpp"
+  #include "armadillo_bits/gmm_diag_bones.hpp"
+  #include "armadillo_bits/gmm_diag_meat.hpp"
   
   //
   // classes implementing various forms of dense matrix multiplication
@@ -461,7 +469,6 @@ namespace arma
   #include "armadillo_bits/mul_gemm_mixed.hpp"
   #include "armadillo_bits/mul_syrk.hpp"
   #include "armadillo_bits/mul_herk.hpp"
-  
   
   //
   // class meat
@@ -548,6 +555,7 @@ namespace arma
   #include "armadillo_bits/op_any_meat.hpp"
   #include "armadillo_bits/op_all_meat.hpp"
   #include "armadillo_bits/op_normalise_meat.hpp"
+  #include "armadillo_bits/op_clamp_meat.hpp"
   
   #include "armadillo_bits/glue_times_meat.hpp"
   #include "armadillo_bits/glue_mixed_meat.hpp"

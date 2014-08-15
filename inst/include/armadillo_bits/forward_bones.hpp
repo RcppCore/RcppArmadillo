@@ -66,6 +66,7 @@ class op_diagvec;
 class op_vectorise_col;
 class op_normalise_colvec;
 class op_normalise_rowvec;
+class op_clamp;
 
 class eop_conj;
 

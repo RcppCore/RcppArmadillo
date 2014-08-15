@@ -1,6 +1,6 @@
 // Copyright (C) 2008-2014 Conrad Sanderson
 // Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
-// Copyright (C) 2012 Ryan Curtin
+// Copyright (C) 2012-2014 Ryan Curtin
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -492,6 +492,86 @@ class Mat : public Base< eT, Mat<eT> >
     arma_aligned       uword    col;
     };
   
+  
+  class const_row_col_iterator;
+
+  class row_col_iterator
+    {
+    public:
+    
+    inline row_col_iterator();
+    inline row_col_iterator(const row_col_iterator& in_it);
+    inline row_col_iterator(Mat<eT>& in_M, const uword row = 0, const uword col = 0);
+    
+    inline arma_hot eT& operator*();
+    
+    inline arma_hot row_col_iterator& operator++();
+    inline arma_hot row_col_iterator  operator++(int);
+    inline arma_hot row_col_iterator& operator--();
+    inline arma_hot row_col_iterator  operator--(int);
+    
+    inline uword row() const;
+    inline uword col() const;
+    
+    inline arma_hot bool operator==(const       row_col_iterator& rhs) const;
+    inline arma_hot bool operator!=(const       row_col_iterator& rhs) const;
+    inline arma_hot bool operator==(const const_row_col_iterator& rhs) const;
+    inline arma_hot bool operator!=(const const_row_col_iterator& rhs) const;
+    
+    // So that we satisfy the STL iterator types.
+    typedef std::bidirectional_iterator_tag iterator_category;
+    typedef eT                              value_type;
+    typedef uword                           difference_type; // not certain on this one
+    typedef const eT*                       pointer;
+    typedef const eT&                       reference;
+    
+    arma_aligned Mat<eT>* M;
+    
+    arma_aligned eT*    current_pos;
+    arma_aligned uword  internal_col;
+    arma_aligned uword  internal_row;
+    };
+  
+  
+  class const_row_col_iterator
+    {
+    public:
+    
+    inline const_row_col_iterator();
+    inline const_row_col_iterator(const       row_col_iterator& in_it);
+    inline const_row_col_iterator(const const_row_col_iterator& in_it);
+    inline const_row_col_iterator(const Mat<eT>& in_M, const uword row = 0, const uword col = 0);
+    
+    inline arma_hot const eT& operator*() const;
+    
+    inline arma_hot const_row_col_iterator& operator++();
+    inline arma_hot const_row_col_iterator  operator++(int);
+    inline arma_hot const_row_col_iterator& operator--();
+    inline arma_hot const_row_col_iterator  operator--(int);
+    
+    inline uword row() const;
+    inline uword col() const;
+    
+    inline arma_hot bool operator==(const const_row_col_iterator& rhs) const;
+    inline arma_hot bool operator!=(const const_row_col_iterator& rhs) const;
+    inline arma_hot bool operator==(const       row_col_iterator& rhs) const;
+    inline arma_hot bool operator!=(const       row_col_iterator& rhs) const;
+    
+    // So that we satisfy the STL iterator types.
+    typedef std::bidirectional_iterator_tag iterator_category;
+    typedef eT                              value_type;
+    typedef uword                           difference_type; // not certain on this one
+    typedef const eT*                       pointer;
+    typedef const eT&                       reference;
+    
+    arma_aligned const Mat<eT>* M;
+    
+    arma_aligned const eT*    current_pos;
+    arma_aligned       uword  internal_col;
+    arma_aligned       uword  internal_row;
+    };
+  
+  
   inline       iterator  begin();
   inline const_iterator  begin() const;
   inline const_iterator cbegin() const;
@@ -511,6 +591,13 @@ class Mat : public Base< eT, Mat<eT> >
   
   inline       row_iterator end_row  (const uword row_num);
   inline const_row_iterator end_row  (const uword row_num) const;
+  
+  inline       row_col_iterator begin_row_col();
+  inline const_row_col_iterator begin_row_col() const;
+  
+  inline       row_col_iterator end_row_col();
+  inline const_row_col_iterator end_row_col() const;
+  
   
   inline void  clear();
   inline bool  empty() const;
