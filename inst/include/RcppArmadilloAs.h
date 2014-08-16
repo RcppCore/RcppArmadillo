@@ -75,16 +75,16 @@ namespace traits {
             arma::SpMat<T> res(dims[0], dims[1]);
                         
             // create space for values, and copy
-            arma::access::rw(res.values) = arma::memory::acquire_chunked<T>(x.size() + 1);
-            arma::arrayops::copy(arma::access::rwp(res.values), x.begin(), x.size() + 1);
+            arma::access::rw(res.values) = arma::memory::acquire_chunked<T>(x.size());
+            arma::arrayops::copy(arma::access::rwp(res.values), x.begin(), x.size());
                         
             // create space for row_indices, and copy 
-            arma::access::rw(res.row_indices) = arma::memory::acquire_chunked<arma::uword>(i.size() + 1);
-            std::copy( i.begin(), i.end(), arma::access::rwp(res.row_indices) ) ;
+            arma::access::rw(res.row_indices) = arma::memory::acquire_chunked<arma::uword>(i.size());
+            std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices)) ;
                         
             // create space for col_ptrs, and copy 
             arma::access::rw(res.col_ptrs) = arma::memory::acquire<arma::uword>(p.size() + 2);
-            std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs) );
+            std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
                         
             // important: set the sentinel as well
             arma::access::rwp(res.col_ptrs)[p.size()+1] = std::numeric_limits<arma::uword>::max();
