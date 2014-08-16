@@ -403,7 +403,7 @@ as_scalar(const T& x)
 
 
 template<typename T1>
-arma_inline
+inline
 arma_warn_unused
 typename T1::elem_type
 as_scalar(const SpBase<typename T1::elem_type, T1>& X)

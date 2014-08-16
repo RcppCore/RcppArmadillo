@@ -12,9 +12,9 @@
 
 
 #define ARMA_VERSION_MAJOR 4
-#define ARMA_VERSION_MINOR 320
-#define ARMA_VERSION_PATCH 0
-#define ARMA_VERSION_NAME  "Daintree Tea Raider"
+#define ARMA_VERSION_MINOR 399
+#define ARMA_VERSION_PATCH 2
+#define ARMA_VERSION_NAME  "unstable development version -- not for production use"
 
 
 

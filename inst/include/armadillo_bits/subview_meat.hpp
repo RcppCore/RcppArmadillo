@@ -881,15 +881,18 @@ subview<eT>::operator/=(const SpBase<eT, T1>& x)
 template<typename eT>
 inline
 void
-subview<eT>::operator= (const subview<eT>& x_in)
+subview<eT>::operator= (const subview<eT>& x)
   {
   arma_extra_debug_sigprint();
   
-  const bool overlap = check_overlap(x_in);
-  
-        Mat<eT>*     tmp_mat     = overlap ? new Mat<eT>(x_in.m) : 0;
-  const subview<eT>* tmp_subview = overlap ? new subview<eT>(*tmp_mat, x_in.aux_row1, x_in.aux_col1, x_in.n_rows, x_in.n_cols) : 0;
-  const subview<eT>&           x = overlap ? (*tmp_subview) : x_in;
+  if(check_overlap(x))
+    {
+    const Mat<eT> tmp(x);
+    
+    (*this).operator=(tmp);
+    
+    return;
+    }
   
   subview<eT>& s = *this;
   
@@ -931,12 +934,6 @@ subview<eT>::operator= (const subview<eT>& x_in)
       arrayops::copy( s.colptr(ucol), x.colptr(ucol), s_n_rows );
       }
     }
-  
-  if(overlap)
-    {
-    delete tmp_subview;
-    delete tmp_mat;
-    }
   }
 
 
@@ -944,15 +941,18 @@ subview<eT>::operator= (const subview<eT>& x_in)
 template<typename eT>
 inline
 void
-subview<eT>::operator+= (const subview<eT>& x_in)
+subview<eT>::operator+= (const subview<eT>& x)
   {
   arma_extra_debug_sigprint();
   
-  const bool overlap = check_overlap(x_in);
-  
-        Mat<eT>*     tmp_mat     = overlap ? new Mat<eT>(x_in.m) : 0;
-  const subview<eT>* tmp_subview = overlap ? new subview(*tmp_mat, x_in.aux_row1, x_in.aux_col1, x_in.n_rows, x_in.n_cols) : 0;
-  const subview<eT>&           x = overlap ? (*tmp_subview) : x_in;
+  if(check_overlap(x))
+    {
+    const Mat<eT> tmp(x);
+    
+    (*this).operator+=(tmp);
+    
+    return;
+    }
   
   subview<eT>& s = *this;
   
@@ -995,12 +995,6 @@ subview<eT>::operator+= (const subview<eT>& x_in)
       arrayops::inplace_plus( s.colptr(ucol), x.colptr(ucol), s_n_rows );
       }
     }
-  
-  if(overlap)
-    {
-    delete tmp_subview;
-    delete tmp_mat;
-    }
   }
 
 
@@ -1008,15 +1002,18 @@ subview<eT>::operator+= (const subview<eT>& x_in)
 template<typename eT>
 inline
 void
-subview<eT>::operator-= (const subview<eT>& x_in)
+subview<eT>::operator-= (const subview<eT>& x)
   {
   arma_extra_debug_sigprint();
   
-  const bool overlap = check_overlap(x_in);
-  
-        Mat<eT>*     tmp_mat     = overlap ? new Mat<eT>(x_in.m) : 0;
-  const subview<eT>* tmp_subview = overlap ? new subview(*tmp_mat, x_in.aux_row1, x_in.aux_col1, x_in.n_rows, x_in.n_cols) : 0;
-  const subview<eT>&           x = overlap ? (*tmp_subview) : x_in;
+  if(check_overlap(x))
+    {
+    const Mat<eT> tmp(x);
+    
+    (*this).operator-=(tmp);
+    
+    return;
+    }
   
   subview<eT>& s = *this;
   
@@ -1058,13 +1055,6 @@ subview<eT>::operator-= (const subview<eT>& x_in)
       arrayops::inplace_minus( s.colptr(ucol), x.colptr(ucol), s_n_rows );
       }
     }
-    
-  if(overlap)
-    {
-    delete tmp_subview;
-    delete tmp_mat;
-    }
-  
   }
 
 
@@ -1072,15 +1062,18 @@ subview<eT>::operator-= (const subview<eT>& x_in)
 template<typename eT>
 inline
 void
-subview<eT>::operator%= (const subview& x_in)
+subview<eT>::operator%= (const subview& x)
   {
   arma_extra_debug_sigprint();
   
-  const bool overlap = check_overlap(x_in);
-  
-        Mat<eT>*     tmp_mat     = overlap ? new Mat<eT>(x_in.m) : 0;
-  const subview<eT>* tmp_subview = overlap ? new subview(*tmp_mat, x_in.aux_row1, x_in.aux_col1, x_in.n_rows, x_in.n_cols) : 0;
-  const subview<eT>&           x = overlap ? (*tmp_subview) : x_in;
+  if(check_overlap(x))
+    {
+    const Mat<eT> tmp(x);
+    
+    (*this).operator%=(tmp);
+    
+    return;
+    }
   
   subview<eT>& s = *this;
   
@@ -1122,13 +1115,6 @@ subview<eT>::operator%= (const subview& x_in)
       arrayops::inplace_mul( s.colptr(ucol), x.colptr(ucol), s_n_rows );
       }
     }
-  
-  if(overlap)
-    {
-    delete tmp_subview;
-    delete tmp_mat;
-    }
-  
   }
 
 
@@ -1136,15 +1122,18 @@ subview<eT>::operator%= (const subview& x_in)
 template<typename eT>
 inline
 void
-subview<eT>::operator/= (const subview& x_in)
+subview<eT>::operator/= (const subview& x)
   {
   arma_extra_debug_sigprint();
   
-  const bool overlap = check_overlap(x_in);
-  
-        Mat<eT>*     tmp_mat     = overlap ? new Mat<eT>(x_in.m) : 0;
-  const subview<eT>* tmp_subview = overlap ? new subview(*tmp_mat, x_in.aux_row1, x_in.aux_col1, x_in.n_rows, x_in.n_cols) : 0;
-  const subview<eT>&           x = overlap ? (*tmp_subview) : x_in;
+  if(check_overlap(x))
+    {
+    const Mat<eT> tmp(x);
+    
+    (*this).operator/=(tmp);
+    
+    return;
+    }
   
   subview<eT>& s = *this;
   
@@ -1186,13 +1175,6 @@ subview<eT>::operator/= (const subview& x_in)
       arrayops::inplace_div( s.colptr(ucol), x.colptr(ucol), s_n_rows );
       }
     }
-    
-  if(overlap)
-    {
-    delete tmp_subview;
-    delete tmp_mat;
-    }
-  
   }
 
 

@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 Conrad Sanderson
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2014 Conrad Sanderson
+// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -328,6 +328,84 @@ op_min::min(const Base<typename T1::elem_type,T1>& X)
 
 
 
+template<typename T1>
+inline
+typename arma_not_cx<typename T1::elem_type>::result
+op_min::min_with_index(const Base<typename T1::elem_type,T1>& X, uword& index_of_min_val)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const Proxy<T1> P(X.get_ref());
+  
+  const uword n_elem = P.get_n_elem();
+  
+  arma_debug_check( (n_elem == 0), "min(): given object has no elements" );
+  
+  eT    best_val   = priv::most_pos<eT>();
+  uword best_index = 0;
+  
+  if(Proxy<T1>::prefer_at_accessor == false)
+    {
+    typedef typename Proxy<T1>::ea_type ea_type;
+    
+    ea_type A = P.get_ea();
+    
+    for(uword i=0; i<n_elem; ++i)
+      {
+      const eT tmp = A[i];
+      
+      if(tmp < best_val)  { best_val = tmp;  best_index = i; }
+      }
+    }
+  else
+    {
+    const uword n_rows = P.get_n_rows();
+    const uword n_cols = P.get_n_cols();
+    
+    if(n_rows == 1)
+      {
+      for(uword i=0; i < n_cols; ++i)
+        {
+        const eT tmp = P.at(0,i);
+        
+        if(tmp < best_val)  { best_val = tmp;  best_index = i; }
+        }
+      }
+    else
+    if(n_cols == 1)
+      {
+      for(uword i=0; i < n_rows; ++i)
+        {
+        const eT tmp = P.at(i,0);
+        
+        if(tmp < best_val)  { best_val = tmp;  best_index = i; }
+        }
+      }
+    else
+      {
+      uword count = 0;
+      
+      for(uword col=0; col < n_cols; ++col)
+      for(uword row=0; row < n_rows; ++row)
+        {
+        const eT tmp = P.at(row,col);
+        
+        if(tmp < best_val)  { best_val = tmp;  best_index = count; }
+        
+        ++count;
+        }
+      }
+    }
+  
+  index_of_min_val = best_index;
+  
+  return best_val;
+  }
+
+
+
 template<typename T>
 inline 
 std::complex<T>
@@ -549,6 +627,106 @@ op_min::min(const Base<typename T1::elem_type,T1>& X)
           }
         }
       }
+    
+    return P.at(best_row, best_col);
+    }
+  }
+
+
+
+template<typename T1>
+inline
+typename arma_cx_only<typename T1::elem_type>::result
+op_min::min_with_index(const Base<typename T1::elem_type,T1>& X, uword& index_of_min_val)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type            eT;
+  typedef typename get_pod_type<eT>::result T;
+  
+  const Proxy<T1> P(X.get_ref());
+  
+  const uword n_elem = P.get_n_elem();
+  
+  arma_debug_check( (n_elem == 0), "min(): given object has no elements" );
+  
+  T best_val = priv::most_pos<T>();
+  
+  if(Proxy<T1>::prefer_at_accessor == false)
+    {
+    typedef typename Proxy<T1>::ea_type ea_type;
+    
+    ea_type A = P.get_ea();
+    
+    uword best_index = 0;
+    
+    for(uword i=0; i<n_elem; ++i)
+      {
+      const T tmp = std::abs(A[i]);
+      
+      if(tmp < best_val)  { best_val = tmp;  best_index = i; }
+      }
+    
+    index_of_min_val = best_index;
+    
+    return( A[best_index] );
+    }
+  else
+    {
+    const uword n_rows = P.get_n_rows();
+    const uword n_cols = P.get_n_cols();
+    
+    uword best_row   = 0;
+    uword best_col   = 0;
+    uword best_index = 0;
+    
+    if(n_rows == 1)
+      {
+      for(uword col=0; col < n_cols; ++col)
+        {
+        const T tmp = std::abs(P.at(0,col));
+        
+        if(tmp < best_val)  { best_val = tmp;  best_col = col; }
+        }
+      
+      best_index = best_col;
+      }
+    else
+    if(n_cols == 1)
+      {
+      for(uword row=0; row < n_rows; ++row)
+        {
+        const T tmp = std::abs(P.at(row,0));
+        
+        if(tmp < best_val)  { best_val = tmp;  best_row = row; }
+        }
+      
+      best_index = best_row;
+      }
+    else
+      {
+      uword count = 0;
+      
+      for(uword col=0; col < n_cols; ++col)
+      for(uword row=0; row < n_rows; ++row)
+        {
+        const T tmp = std::abs(P.at(row,col));
+        
+        if(tmp < best_val)
+          {
+          best_val = tmp;
+          
+          best_row = row;
+          best_col = col;
+          
+          best_index = count;
+          }
+        
+        ++count;
+        }
+      }
+    
+    index_of_min_val = best_index;
     
     return P.at(best_row, best_col);
     }

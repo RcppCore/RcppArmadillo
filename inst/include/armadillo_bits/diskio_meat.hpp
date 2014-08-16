@@ -704,7 +704,7 @@ diskio::gen_tmp_name(const std::string& x)
   
   for(uword i=0; i<x_size; ++i)
     {
-    sum += u8(x[i]);
+    sum = (sum + u8(x[i])) & 0xff;
     }
   
   conv_to_hex(&tmp[char_count], sum);

@@ -105,15 +105,18 @@ subview_field<oT>::operator= (const field<oT>& x)
 template<typename oT>
 inline
 void
-subview_field<oT>::operator= (const subview_field<oT>& x_in)
+subview_field<oT>::operator= (const subview_field<oT>& x)
   {
   arma_extra_debug_sigprint();
   
-  const bool overlap = check_overlap(x_in);
-        
-        field<oT>*         tmp_field   = overlap ? new field<oT>(x_in.f) : 0;
-  const subview_field<oT>* tmp_subview = overlap ? new subview_field<oT>(*tmp_field, x_in.aux_row1, x_in.aux_col1, x_in.aux_slice1, x_in.n_rows, x_in.n_cols, x_in.n_slices) : 0;
-  const subview_field<oT>& x           = overlap ? (*tmp_subview) : x_in;
+  if(check_overlap(x))
+    {
+    const field<oT> tmp(x);
+    
+    (*this).operator=(tmp);
+    
+    return;
+    }
   
   subview_field<oT>& t = *this;
   
@@ -135,12 +138,6 @@ subview_field<oT>::operator= (const subview_field<oT>& x_in)
       {
       t.at(row,col,slice) = x.at(row,col,slice);
       }
-    }
-  
-  if(overlap)
-    {
-    delete tmp_subview;
-    delete tmp_field;
     }
   }
 

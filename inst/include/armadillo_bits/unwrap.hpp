@@ -463,6 +463,7 @@ struct unwrap_check< Mat<eT> >
     arma_extra_debug_sigprint();
     }
   
+  inline
   unwrap_check(const Mat<eT>& A, const bool is_alias)
     : M_local( is_alias ? new Mat<eT>(A) : 0 )
     , M      ( is_alias ? (*M_local)     : A )
@@ -499,6 +500,7 @@ struct unwrap_check< Row<eT> >
     arma_extra_debug_sigprint();
     }
   
+  inline
   unwrap_check(const Row<eT>& A, const bool is_alias)
     : M_local( is_alias ? new Row<eT>(A) : 0 )
     , M      ( is_alias ? (*M_local)     : A )
@@ -535,6 +537,7 @@ struct unwrap_check< Col<eT> >
     arma_extra_debug_sigprint();
     }
   
+  inline
   unwrap_check(const Col<eT>& A, const bool is_alias)
     : M_local( is_alias ? new Col<eT>(A) : 0 )
     , M      ( is_alias ? (*M_local)     : A )

@@ -285,13 +285,31 @@ arma_inline
 void
 arma_ostream::print_elem(std::ostream& o, const eT& x, const bool modify)
   {
-  if(x != eT(0))
+  if(is_signed<eT>::value)
     {
-    o << x;
+    typedef typename promote_type<eT, s16>::result promoted_eT;
+    
+    if(x != eT(0))
+      {
+      o << promoted_eT(x);
+      }
+    else
+      {
+      arma_ostream::print_elem_zero<promoted_eT>(o, modify);
+      }
     }
   else
     {
-    arma_ostream::print_elem_zero<eT>(o, modify);
+    typedef typename promote_type<eT, u16>::result promoted_eT;
+    
+    if(x != eT(0))
+      {
+      o << promoted_eT(x);
+      }
+    else
+      {
+      arma_ostream::print_elem_zero<promoted_eT>(o, modify);
+      }
     }
   }
 

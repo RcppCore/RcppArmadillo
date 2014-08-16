@@ -2,6 +2,12 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.4.399.2 (2014-08-15)}{
+  \itemize{
+    \item Upgraded to Armadillo pre-release Version 4.399.2 (Daintree Tea Raider)
+  }
+}
+    
 \section{Changes in RcppArmadillo version 0.4.320.0 (2014-07-03)}{
   \itemize{
     \item Upgraded to Armadillo release Version 4.320 (Daintree Tea Raider)

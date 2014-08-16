@@ -212,26 +212,37 @@ op_dot::apply(const T1& X, const T2& Y)
   
   const bool prefer_at_accessor = (Proxy<T1>::prefer_at_accessor) || (Proxy<T2>::prefer_at_accessor);
   
-  const bool do_unwrap = ((is_Mat<T1>::value == true) && (is_Mat<T2>::value == true)) || prefer_at_accessor;
+  const bool have_direct_mem = ((is_Mat<T1>::value || is_subview_col<T1>::value) && (is_Mat<T2>::value || is_subview_col<T2>::value));
   
-  if(do_unwrap == true)
+  if(prefer_at_accessor || have_direct_mem)
     {
-    const unwrap<T1> tmp1(X);
-    const unwrap<T2> tmp2(Y);
+    const quasi_unwrap<T1> A(X);
+    const quasi_unwrap<T2> B(Y);
     
-    const typename unwrap<T1>::stored_type& A = tmp1.M;
-    const typename unwrap<T2>::stored_type& B = tmp2.M;
+    arma_debug_check( (A.M.n_elem != B.M.n_elem), "dot(): objects must have the same number of elements" );
     
-    arma_debug_check
-      (
-      (A.n_elem != B.n_elem),
-      "dot(): objects must have the same number of elements"
-      );
-    
-    return op_dot::direct_dot(A.n_elem, A.memptr(), B.memptr());
+    return op_dot::direct_dot(A.M.n_elem, A.M.memptr(), B.M.memptr());
     }
   else
     {
+    if(is_subview_row<T1>::value && is_subview_row<T2>::value)
+      {
+      typedef typename T1::elem_type eT;
+      
+      const subview_row<eT>& A = reinterpret_cast< const subview_row<eT>& >(X);
+      const subview_row<eT>& B = reinterpret_cast< const subview_row<eT>& >(Y);
+      
+      if( (A.m.n_rows == 1) && (B.m.n_rows == 1) )
+        {
+        arma_debug_check( (A.n_elem != B.n_elem), "dot(): objects must have the same number of elements" );
+        
+        const eT* A_mem = A.m.memptr();
+        const eT* B_mem = B.m.memptr();
+        
+        return op_dot::direct_dot(A.n_elem, &A_mem[A.aux_col1], &B_mem[B.aux_col1]);
+        }
+      }
+    
     const Proxy<T1> PA(X);
     const Proxy<T2> PB(Y);
     

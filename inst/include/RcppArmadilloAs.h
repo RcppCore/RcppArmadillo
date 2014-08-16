@@ -3,7 +3,7 @@
 //
 // RcppArmadilloAs.h: Rcpp/Armadillo glue, support for as
 //
-// Copyright (C)  2013  Dirk Eddelbuettel and Romain Francois
+// Copyright (C)  2013 - 2014  Dirk Eddelbuettel and Romain Francois
 //
 // This file is part of RcppArmadillo.
 //
@@ -74,20 +74,20 @@ namespace traits {
                         
             arma::SpMat<T> res(dims[0], dims[1]);
                         
-            // create space for values, and copy
+            // create space for values, copy and set sentinel
             arma::access::rw(res.values) = arma::memory::acquire_chunked<T>(x.size() + 1);
-            arma::arrayops::copy(arma::access::rwp(res.values), x.begin(), x.size() + 1);
-                        
-            // create space for row_indices, and copy 
+            arma::arrayops::copy(arma::access::rwp(res.values), x.begin(), x.size());
+            arma::access::rw(res.values[x.size()]) = T(0.0); 			// sets sentinel
+
+            // create space for row_indices, copy and set sentinel
             arma::access::rw(res.row_indices) = arma::memory::acquire_chunked<arma::uword>(i.size() + 1);
-            std::copy( i.begin(), i.end(), arma::access::rwp(res.row_indices) ) ;
-                        
-            // create space for col_ptrs, and copy 
-            arma::access::rw(res.col_ptrs) = arma::memory::acquire<arma::uword>(p.size() + 2);
-            std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs) );
-                        
-            // important: set the sentinel as well
-            arma::access::rwp(res.col_ptrs)[p.size()+1] = std::numeric_limits<arma::uword>::max();
+            std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices)); 
+            arma::access::rw(res.values[i.size()]) = arma::uword(0); 		// sets sentinel
+
+            // the space for col_ptrs is already initialized when we call the
+            // constructor a few lines above so we only need to fill the appropriate
+            // values, and the sentinel is already set to uword_max as well.
+            std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
                         
             // set the number of non-zero elements
             arma::access::rw(res.n_nonzero) = x.size();
@@ -110,7 +110,7 @@ namespace traits {
     template <typename T, typename MAT, typename REF>
     class ArmaMat_InputParameter<T, MAT, REF, Rcpp::traits::false_type> {
     public:
-        ArmaMat_InputParameter( SEXP x_ ) : m(x_), mat( reinterpret_cast<T*>( m.begin() ), m.nrow(), m.ncol(), false) {} 
+        ArmaMat_InputParameter(SEXP x_) : m(x_), mat(reinterpret_cast<T*>(m.begin()), m.nrow(), m.ncol(), false) {} 
                         
         inline operator REF(){
             return mat ;        
