@@ -6,6 +6,10 @@
   \itemize{
     \item Upgraded to Armadillo pre-release Version 4.399.2 (Daintree Tea Raider)
   }
+  \item Corrected a bug (found by the g++ Address Sanitizer) in sparse
+  matrix initialization where space for a sentinel was allocated, but
+  the sentinel was not set; with extra thanks to Ryan Curtin for help
+  \item Added a few unit tests for sparse matrices
 }
     
 \section{Changes in RcppArmadillo version 0.4.320.0 (2014-07-03)}{
