@@ -48,3 +48,13 @@ arma::sp_mat fromTriplet(arma::urowvec ri, arma::urowvec ci, arma::colvec values
 arma::sp_mat sparseTranspose(arma::sp_mat SM) {
     return SM.t();
 }
+
+// [[Rcpp::export]]
+arma::sp_mat sparseSqrt(arma::sp_mat SM) {
+    return arma::sqrt(SM);
+}
+
+// [[Rcpp::export]]
+arma::sp_mat sparseSquare(arma::sp_mat SM) {
+    return arma::square(SM);
+}

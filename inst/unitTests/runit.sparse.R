@@ -57,7 +57,9 @@ if (.runThisTest) {
         dimnames(M) <- NULL
         SM <- Matrix(M, sparse=TRUE)
 
-        spM <- fromTriplet(0:2, 2:0, 1:3)
+        spM <- fromTriplet(0:2,         # rows
+                           2:0,         # cols
+                           1:3)         # values
         checkEquals(SM, spM, msg="fromTriplet")
     }
 
@@ -65,4 +67,12 @@ if (.runThisTest) {
         checkEquals(t(SM), sparseTranspose(SM), msg="transposeSparse")
     }
 
+    test.sparse.sqrt <- function() {
+        checkEquals(sqrt(SM), sparseSqrt(SM), msg="sqrtSparse")
+    }
+    
+    test.sparse.square <- function() {
+        checkEquals(SM^2, sparseSquare(SM), msg="squareSparse")
+    }
+   
 }
