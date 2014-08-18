@@ -39,7 +39,7 @@ class op_max
   inline static typename arma_not_cx<typename T1::elem_type>::result max(const Base<typename T1::elem_type, T1>& X);
   
   template<typename T1>
-  inline static typename arma_not_cx<typename T1::elem_type>::result max_with_index(const Base<typename T1::elem_type, T1>& X, uword& index_of_max_val);
+  inline static typename arma_not_cx<typename T1::elem_type>::result max_with_index(const Proxy<T1>& P, uword& index_of_max_val);
   
 
   //
@@ -61,7 +61,7 @@ class op_max
   inline static typename arma_cx_only<typename T1::elem_type>::result max(const Base<typename T1::elem_type, T1>& X);
   
   template<typename T1>
-  inline static typename arma_cx_only<typename T1::elem_type>::result max_with_index(const Base<typename T1::elem_type, T1>& X, uword& index_of_max_val);
+  inline static typename arma_cx_only<typename T1::elem_type>::result max_with_index(const Proxy<T1>& P, uword& index_of_max_val);
   };
 
 

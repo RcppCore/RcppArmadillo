@@ -337,13 +337,11 @@ op_max::max(const Base<typename T1::elem_type,T1>& X)
 template<typename T1>
 inline
 typename arma_not_cx<typename T1::elem_type>::result
-op_max::max_with_index(const Base<typename T1::elem_type,T1>& X, uword& index_of_max_val)
+op_max::max_with_index(const Proxy<T1>& P, uword& index_of_max_val)
   {
   arma_extra_debug_sigprint();
   
   typedef typename T1::elem_type eT;
-  
-  const Proxy<T1> P(X.get_ref());
   
   const uword n_elem = P.get_n_elem();
   
@@ -643,14 +641,12 @@ op_max::max(const Base<typename T1::elem_type,T1>& X)
 template<typename T1>
 inline
 typename arma_cx_only<typename T1::elem_type>::result
-op_max::max_with_index(const Base<typename T1::elem_type,T1>& X, uword& index_of_max_val)
+op_max::max_with_index(const Proxy<T1>& P, uword& index_of_max_val)
   {
   arma_extra_debug_sigprint();
   
   typedef typename T1::elem_type            eT;
   typedef typename get_pod_type<eT>::result T;
-  
-  const Proxy<T1> P(X.get_ref());
   
   const uword n_elem = P.get_n_elem();
   

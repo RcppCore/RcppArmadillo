@@ -1,6 +1,6 @@
 // Copyright (C) 2011-2014 Ryan Curtin
-// Copyright (C) 2011 Matthew Amidon
 // Copyright (C) 2012-2014 Conrad Sanderson
+// Copyright (C) 2011 Matthew Amidon
 //
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -395,7 +395,9 @@ SpMat<eT>::const_row_iterator::const_row_iterator()
   , internal_row(0)
   , actual_pos(0)
   {
-    } 
+  }
+
+
 
 template<typename eT>
 inline

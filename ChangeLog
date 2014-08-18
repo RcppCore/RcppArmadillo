@@ -1,3 +1,7 @@
+2014-08-18  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/*: Upgraded to pre-release 4.399.3 of Armadillo
+
 2014-08-17  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/unitTests/runit.sparse.R: New unit tests for sparse matrices

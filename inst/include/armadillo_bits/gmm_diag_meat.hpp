@@ -564,8 +564,8 @@ gmm_diag<eT>::learn
   arma_debug_check( (seed_mode_ok == false), "gmm_diag::learn(): unknown seed_mode"                        );
   arma_debug_check( (var_floor < eT(0)    ), "gmm_diag::learn(): variance floor is negative"               );
   
-  if(X.is_empty()          )  { arma_warn(print_mode, "gmm_diag::learn(): given matrix is empty"             ); reset(); return false; }
-  if(X.is_finite() == false)  { arma_warn(print_mode, "gmm_diag::learn(): given matrix has non-finite values"); reset(); return false; }
+  if(X.is_empty()          )  { arma_warn(true, "gmm_diag::learn(): given matrix is empty"             ); reset(); return false; }
+  if(X.is_finite() == false)  { arma_warn(true, "gmm_diag::learn(): given matrix has non-finite values"); reset(); return false; }
   
   if(n_gaus == 0)  { reset(); return true; }
   
@@ -591,14 +591,14 @@ gmm_diag<eT>::learn
   
   if(seed_mode == keep_existing)
     {
-    if(means.is_empty()        )  { arma_warn(print_mode, "gmm_diag::learn(): no existing means"      ); reset(); return false; }
-    if(X.n_rows != means.n_rows)  { arma_warn(print_mode, "gmm_diag::learn(): dimensionality mismatch"); reset(); return false; }
+    if(means.is_empty()        )  { arma_warn(true, "gmm_diag::learn(): no existing means"      ); reset(); return false; }
+    if(X.n_rows != means.n_rows)  { arma_warn(true, "gmm_diag::learn(): dimensionality mismatch"); reset(); return false; }
     
     // TODO: also check for number of vectors?
     }
   else
     {
-    if(X.n_cols < n_gaus)  { arma_warn(print_mode, "gmm_diag::learn(): number of vectors is less than number of gaussians"); reset(); return false; }
+    if(X.n_cols < n_gaus)  { arma_warn(true, "gmm_diag::learn(): number of vectors is less than number of gaussians"); reset(); return false; }
     
     reset(X.n_rows, n_gaus);
     
@@ -622,7 +622,7 @@ gmm_diag<eT>::learn
     
     stream_state.restore(get_stream_err2());
     
-    if(status == false)  { arma_warn(print_mode, "gmm_diag::learn(): k-means algorithm failed"); reset(); return false; }
+    if(status == false)  { arma_warn(true, "gmm_diag::learn(): k-means algorithm failed"); reset(); return false; }
     }
   
   
@@ -649,7 +649,7 @@ gmm_diag<eT>::learn
     
     stream_state.restore(get_stream_err2());
     
-    if(status == false)  { arma_warn(print_mode, "gmm_diag::learn(): EM algorithm failed"); reset(); return false; }
+    if(status == false)  { arma_warn(true, "gmm_diag::learn(): EM algorithm failed"); reset(); return false; }
     }
   
   mah_aux.reset();
@@ -1393,9 +1393,9 @@ gmm_diag<eT>::km_iterate(const Mat<eT>& X, const uword max_iter, const bool verb
     
     for(uword g=0; g < n_gaus; ++g)
       {
-      if(running_means(g).count() > 0)
+      if(running_means[g].count() > 0)
         {
-        new_means.col(g) = running_means(g).mean();
+        new_means.col(g) = running_means[g].mean();
         }
       else
         {
@@ -1405,7 +1405,7 @@ gmm_diag<eT>::km_iterate(const Mat<eT>& X, const uword max_iter, const bool verb
     
     if(n_dead_means > 0)
       {
-      arma_warn(verbose, "gmm_diag::learn(): k-means: recovering from dead means");
+      if(verbose)  { get_stream_err2() << "gmm_diag::learn(): k-means: recovering from dead means\n"; }
       
       if(n_dead_means == 1)
         {

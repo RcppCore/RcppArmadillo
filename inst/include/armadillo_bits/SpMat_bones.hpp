@@ -315,17 +315,6 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   
   inline void reset();
   
-  /**
-   * Get the minimum or maximum of the matrix.
-   */
-  inline arma_warn_unused eT min() const;
-  inline                  eT min(uword& index_of_min_val) const;
-  inline                  eT min(uword& row_of_min_val, uword& col_of_min_val) const;
-
-  inline arma_warn_unused eT max() const;
-  inline                  eT max(uword& index_of_max_val) const;
-  inline                  eT max(uword& row_of_min_val, uword& col_of_min_val) const;
-  
   
   // saving and loading
   

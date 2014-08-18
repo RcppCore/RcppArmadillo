@@ -114,6 +114,9 @@ struct Base
   
   inline elem_type min(uword& index_of_min_val) const;
   inline elem_type max(uword& index_of_max_val) const;
+  
+  inline elem_type min(uword& row_of_min_val, uword& col_of_min_val) const;
+  inline elem_type max(uword& row_of_max_val, uword& col_of_max_val) const;
   };
 
 
