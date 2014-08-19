@@ -36,27 +36,38 @@ class SpMat : public SpBase< eT, SpMat<eT> >
    * The memory used to store the values of the matrix.
    * In accordance with the CSC format, this stores only the actual values.
    * The correct locations of the values are assembled from the row indices
-   * and the column pointers.  The length of this array is n_nonzero + 1; the
-   * final value ensures the integrity of iterators.  If you are planning on
-   * resizing this vector, it's probably best to use mem_resize() instead.
+   * and the column pointers.
+   * 
+   * The length of this array is (n_nonzero + 1); the final value ensures
+   * the integrity of iterators.  If you are planning on resizing this vector,
+   * it's probably best to use mem_resize() instead, which automatically sets
+   * the length to (n_nonzero + 1).  If you need to allocate the memory yourself
+   * for some reason, be sure to set values[n_nonzero] to 0.
    */
   const eT* const values;
   
   /**
    * The row indices of each value.  row_indices[i] is the row of values[i].
-   * The length of this array is n_nonzero + 1; the final value ensures the
-   * integrity of iterators.  If you are planning on resizing this vector, it's
-   * probably best to use mem_resize() instead.
+   * 
+   * The length of this array is (n_nonzero + 1); the final value ensures
+   * the integrity of iterators.  If you are planning on resizing this vector,
+   * it's probably best to use mem_resize() instead.  If you need to allocate
+   * the memory yourself for some reason, be sure to set row_indices[n_nonzero] to 0.
    */
   const uword* const row_indices;
   
   /**
    * The column pointers.  This stores the index of the first item in column i.
    * That is, values[col_ptrs[i]] is the first value in column i, and it is in
-   * row row_indices[col_ptrs[i]].  This array is of length (n_cols + 2); the
-   * element col_ptrs[n_cols] should be equal to n_nonzero, and the element
-   * col_ptrs[n_cols + 1] is an invalid very large value that ensures the
-   * integrity of iterators.
+   * the row indicated by row_indices[col_ptrs[i]].
+   * 
+   * This array is of length (n_cols + 2); the element col_ptrs[n_cols] should
+   * be equal to n_nonzero, and the element col_ptrs[n_cols + 1] is an invalid
+   * very large value that ensures the integrity of iterators.
+   * 
+   * The col_ptrs array is set by the init() function (which is called by the
+   * constructors and set_size() and other functions that set the size of the
+   * matrix), so allocating col_ptrs by hand should not be necessary.
    */
   const uword* const col_ptrs;
   
