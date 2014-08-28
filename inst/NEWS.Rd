@@ -2,6 +2,16 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.4.xxx (2014-xx-yy)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version .... (....) 
+    \itemize{
+      \item TBD
+    }
+    \item A small update was made to the package manual page.
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.4.400.0 (2014-08-19)}{
   \itemize{
     \item Upgraded to Armadillo release Version 4.400 (Winter Shark Alley) 

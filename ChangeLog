@@ -1,3 +1,7 @@
+2014-08-27  Dirk Eddelbuettel  <edd@debian.org>
+
+	* man/RcppArmadillo-package.Rd: Updated manual page
+
 2014-08-19  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.4.400.0
