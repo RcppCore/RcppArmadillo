@@ -1,3 +1,13 @@
+2014-08-30  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/skeleton/rcpparma_hello_world.Rd: New manual page for skeleton
+	functions 
+
+2014-08-28  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/RcppArmadillo.package.skeleton.R: In DESCRIPTION and NAMESPACE,
+	only Imports: Rcpp and not RcppArmadillo (to appease R CMD check)
+
 2014-08-27  Dirk Eddelbuettel  <edd@debian.org>
 
 	* man/RcppArmadillo-package.Rd: Updated manual page

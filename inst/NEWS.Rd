@@ -8,6 +8,11 @@
     \itemize{
       \item TBD
     }
+    \item The \code{RcppArmadillo.package.skeleton()} function was
+    updated to only Imports: Rcpp, but not RcppArmadillo which (as 
+    a template library) needs only LinkingTo:
+    \item A manual page was added to provide documentation for the
+    functions provided by the skeleton package.
     \item A small update was made to the package manual page.
   }
 }

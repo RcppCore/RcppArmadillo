@@ -27,7 +27,7 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
 	
     if (! length(list)) {
         fake <- TRUE
-        assign( "Rcpp.fake.fun", function(){}, envir = env )
+        assign("Rcpp.fake.fun", function(){}, envir = env)
     } else {
         fake <- FALSE
     }
@@ -56,13 +56,12 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
     ## Add Rcpp to the DESCRIPTION
     DESCRIPTION <- file.path(root, "DESCRIPTION")
     if (file.exists(DESCRIPTION)) {
-        x <- cbind(read.dcf( DESCRIPTION), 
-                   "Imports" = sprintf("Rcpp (>= %s), RcppArmadillo (>= %s)", 
-                   packageDescription("Rcpp")[["Version"]], 
-                   packageDescription("RcppArmadillo")[["Version"]]), 
+        x <- cbind(read.dcf(DESCRIPTION), 
+                   "Imports" = sprintf("Rcpp (>= %s)",
+                                       packageDescription("Rcpp")[["Version"]]), 
                    "LinkingTo" = "Rcpp, RcppArmadillo")
         write.dcf(x, file=DESCRIPTION)
-        message(" >> added Imports: Rcpp, RcppArmadillo")
+        message(" >> added Imports: Rcpp")
         message(" >> added LinkingTo: Rcpp, RcppArmadillo")
     }
 	
@@ -71,7 +70,6 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
     lines <- readLines( NAMESPACE )
     if (! grepl("useDynLib", lines)) {
         lines <- c(sprintf("useDynLib(%s)", name),
-                   "import(RcppArmadillo)",
                    "importFrom(Rcpp, evalCpp)",        ## ensures Rcpp instantiation
                    lines)
         writeLines(lines, con = NAMESPACE)

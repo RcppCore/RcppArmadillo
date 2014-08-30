@@ -1,4 +1,4 @@
-## Copyright (C)       2010 - 2013 Dirk Eddelbuettel, Romain Francois and Douglas Bates
+## Copyright (C)       2010 - 2014  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 ##
 ## This file is part of RcppArmadillo.
 ##
