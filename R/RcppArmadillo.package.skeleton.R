@@ -31,21 +31,26 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
     } else {
         fake <- FALSE
     }
-	
-    ## first let the traditional version do its business
+
+    haveKitten <- require("pkgKitten", quietly=TRUE, character.only=TRUE)
+    skelFunUsed <- ifelse(haveKitten, "kitten", "package.skeleton")
+    message("\nCalling ", skelFunUsed, " to create basic package.")
+
+    ## first let the traditional version (or the kitten alternate) do its business
     call <- match.call()
-    call[[1]] <- as.name("package.skeleton")
-    if ("example_code" %in% names(call)){
-        ## remove the example_code argument
-        call[["example_code"]] <- NULL
+    call[[1]] <- if (haveKitten) as.name("kitten") else as.name("package.skeleton")
+    if (! haveKitten) {                 # in the package.skeleton() case
+        if ("example_code" %in% names(call)){
+            call[["example_code"]] <- NULL	# remove the example_code argument
+        }
+        if (fake) {
+            call[["list"]] <- "Rcpp.fake.fun"
+        }
     }
-    if (fake) {
-        call[["list"]] <- "Rcpp.fake.fun"
-    }
-	
+
     tryCatch(eval(call, envir=env),
              error = function(e) {
-                 stop("error while calling `package.skeleton`")
+                 stop(paste("error while calling `", skelFunUsed, "`", sep=""))
              })
 	
     message("\nAdding RcppArmadillo settings")
@@ -57,8 +62,7 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
     DESCRIPTION <- file.path(root, "DESCRIPTION")
     if (file.exists(DESCRIPTION)) {
         x <- cbind(read.dcf(DESCRIPTION), 
-                   "Imports" = sprintf("Rcpp (>= %s)",
-                                       packageDescription("Rcpp")[["Version"]]), 
+                   "Imports" = sprintf("Rcpp (>= %s)", packageDescription("Rcpp")[["Version"]]), 
                    "LinkingTo" = "Rcpp, RcppArmadillo")
         write.dcf(x, file=DESCRIPTION)
         message(" >> added Imports: Rcpp")
