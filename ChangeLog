@@ -6,6 +6,8 @@
 	* R/RcppArmadillo.package.skeleton.R: Use pkgKitten::kitten() when
 	available
 
+	* .travis.yml: Also install pkgKitten as Suggests: now required
+
 2014-08-30  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/skeleton/rcpparma_hello_world.Rd: New manual page for skeleton
