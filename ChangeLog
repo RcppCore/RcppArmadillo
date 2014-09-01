@@ -3,6 +3,9 @@
 	* R/RcppArmadillo.package.skeleton.R: Copy new manual page when
 	copying the example code documented in it
 
+	* R/RcppArmadillo.package.skeleton.R: Use pkgKitten::kitten() when
+	available
+
 2014-08-30  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/skeleton/rcpparma_hello_world.Rd: New manual page for skeleton
