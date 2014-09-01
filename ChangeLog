@@ -1,7 +1,12 @@
+2014-09-01  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/RcppArmadillo.package.skeleton.R: Copy new manual page when
+	copying the example code documented in it
+
 2014-08-30  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/skeleton/rcpparma_hello_world.Rd: New manual page for skeleton
-	functions 
+	functions
 
 2014-08-28  Dirk Eddelbuettel  <edd@debian.org>
 

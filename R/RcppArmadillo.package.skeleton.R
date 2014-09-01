@@ -81,6 +81,10 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
     if (!file.exists(src)) {
         dir.create(src)
     }
+    man <- file.path(root, "man")
+    if (!file.exists(man)) {
+        dir.create(man)
+    }
     skeleton <- system.file("skeleton", package="RcppArmadillo")
     Makevars <- file.path(src, "Makevars")
     if (!file.exists(Makevars)) {
@@ -97,6 +101,8 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
     if (example_code) {
         file.copy(file.path(skeleton, "rcpparma_hello_world.cpp"), src)
         message(" >> added example src file using armadillo classes")
+        file.copy(file.path(skeleton, "rcpparma_hello_world.Rd"), man)
+        message(" >> added example Rd file for using armadillo classes")
 
 	Rcpp::compileAttributes(root)
         message(" >> invoked Rcpp::compileAttributes to create wrappers")
