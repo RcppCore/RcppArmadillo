@@ -1871,6 +1871,26 @@ Mat<eT>::Mat(const xvec_htrans<eT>& X)
 
 
 
+template<typename eT>
+template<bool do_conj>
+inline
+Mat<eT>::Mat(const xtrans_mat<eT,do_conj>& X)
+  : n_rows(X.n_rows)
+  , n_cols(X.n_cols)
+  , n_elem(X.n_elem)
+  , vec_state(0)
+  , mem_state(0)
+  , mem()
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  init_cold();
+  
+  X.extract(*this);
+  }
+
+
+
 //! construct a matrix from a subview_cube instance
 template<typename eT>
 inline

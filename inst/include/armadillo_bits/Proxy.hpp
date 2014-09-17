@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2013 Conrad Sanderson
-// Copyright (C) 2010-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2014 Conrad Sanderson
+// Copyright (C) 2010-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -470,24 +470,87 @@ class Proxy< Op<T1, op_diagvec> >
 template<typename T1>
 struct Proxy_xtrans_default
   {
-  typedef typename T1::elem_type eT;
+  inline Proxy_xtrans_default(const T1&) {}
+  };
+
+
+
+template<typename T1>
+struct Proxy_xtrans_default< Op<T1, op_htrans> >
+  {
+  public:
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = false;
+  typedef typename T1::elem_type                   elem_type;
+  typedef typename get_pod_type<elem_type>::result pod_type;
+  typedef xtrans_mat<elem_type,true>               stored_type;
+  typedef const xtrans_mat<elem_type,true>&        ea_type;
+  typedef const xtrans_mat<elem_type,true>&        aligned_ea_type;
+  
+  static const bool prefer_at_accessor = true;
+  static const bool has_subview        = true;
   static const bool is_fixed           = false;
   static const bool fake_mat           = false;
   
-  arma_aligned const Mat<eT> Q;
+  static const bool is_row = false;
+  static const bool is_col = false;
   
-  arma_hot
-  inline Proxy_xtrans_default(const T1& A)
-    : Q(A)
+  const unwrap<T1>                 U;
+  const xtrans_mat<elem_type,true> Q;
+  
+  inline explicit Proxy_xtrans_default(const Op<T1, op_htrans>& A)
+    : U(A.m)
+    , Q(U.M)
     {
     arma_extra_debug_sigprint();
     }
   
+  arma_inline         ea_type         get_ea() const { return Q; }
+  arma_inline aligned_ea_type get_aligned_ea() const { return Q; }
+  
   template<typename eT2>
-  arma_inline bool is_alias(const Mat<eT2>&) const { return false; }
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return void_ptr(&(U.M)) == void_ptr(&X); }
+  
+  arma_inline bool is_aligned() const { return false; }
+  };
+
+
+
+template<typename T1>
+struct Proxy_xtrans_default< Op<T1, op_strans> >
+  {
+  public:
+  
+  typedef typename T1::elem_type                   elem_type;
+  typedef typename get_pod_type<elem_type>::result pod_type;
+  typedef xtrans_mat<elem_type,false>              stored_type;
+  typedef const xtrans_mat<elem_type,false>&       ea_type;
+  typedef const xtrans_mat<elem_type,false>&       aligned_ea_type;
+  
+  static const bool prefer_at_accessor = true;
+  static const bool has_subview        = true;
+  static const bool is_fixed           = false;
+  static const bool fake_mat           = false;
+  
+  static const bool is_row = false;
+  static const bool is_col = false;
+  
+  const unwrap<T1>                  U;
+  const xtrans_mat<elem_type,false> Q;
+  
+  inline explicit Proxy_xtrans_default(const Op<T1, op_strans>& A)
+    : U(A.m)
+    , Q(U.M)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  arma_inline         ea_type         get_ea() const { return Q; }
+  arma_inline aligned_ea_type get_aligned_ea() const { return Q; }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return void_ptr(&(U.M)) == void_ptr(&X); }
+  
+  arma_inline bool is_aligned() const { return false; }
   };
 
 
@@ -503,25 +566,38 @@ struct Proxy_xtrans_vector
 template<typename T1>
 struct Proxy_xtrans_vector< Op<T1, op_htrans> >
   {
-  typedef typename T1::elem_type eT;
+  typedef typename T1::elem_type                   elem_type;
+  typedef typename get_pod_type<elem_type>::result pod_type;
+  typedef Mat<elem_type>                           stored_type;
+  typedef const elem_type*                         ea_type;
+  typedef const Mat<elem_type>&                    aligned_ea_type;
   
   static const bool prefer_at_accessor = false;
   static const bool has_subview        = quasi_unwrap<T1>::has_subview;
   static const bool is_fixed           = false;
   static const bool fake_mat           = true;
   
+  // NOTE: the Op class takes care of swapping row and col for op_htrans
+  static const bool is_row = Op<T1, op_htrans>::is_row;
+  static const bool is_col = Op<T1, op_htrans>::is_col;
+  
   arma_aligned const quasi_unwrap<T1> U; // avoid copy if T1 is a Row, Col or subview_col
-  arma_aligned const Mat<eT>          Q;
+  arma_aligned const Mat<elem_type>   Q;
   
   inline Proxy_xtrans_vector(const Op<T1, op_htrans>& A)
     : U(A.m)
-    , Q(const_cast<eT*>(U.M.memptr()), U.M.n_cols, U.M.n_rows, false, false)
+    , Q(const_cast<elem_type*>(U.M.memptr()), U.M.n_cols, U.M.n_rows, false, false)
     {
     arma_extra_debug_sigprint();
     }
   
+  arma_inline         ea_type         get_ea() const { return Q.memptr(); }
+  arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
+  
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return U.is_alias(X); }
+  
+  arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
   };
 
 
@@ -529,25 +605,38 @@ struct Proxy_xtrans_vector< Op<T1, op_htrans> >
 template<typename T1>
 struct Proxy_xtrans_vector< Op<T1, op_strans> >
   {
-  typedef typename T1::elem_type eT;
+  typedef typename T1::elem_type                   elem_type;
+  typedef typename get_pod_type<elem_type>::result pod_type;
+  typedef Mat<elem_type>                           stored_type;
+  typedef const elem_type*                         ea_type;
+  typedef const Mat<elem_type>&                    aligned_ea_type;
   
   static const bool prefer_at_accessor = false;
   static const bool has_subview        = quasi_unwrap<T1>::has_subview;
   static const bool is_fixed           = false;
   static const bool fake_mat           = true;
   
+  // NOTE: the Op class takes care of swapping row and col for op_htrans
+  static const bool is_row = Op<T1, op_htrans>::is_row;
+  static const bool is_col = Op<T1, op_htrans>::is_col;
+  
   arma_aligned const quasi_unwrap<T1> U; // avoid copy if T1 is a Row, Col or subview_col
-  arma_aligned const Mat<eT>          Q;
+  arma_aligned const Mat<elem_type>   Q;
   
   inline Proxy_xtrans_vector(const Op<T1, op_strans>& A)
     : U(A.m)
-    , Q(const_cast<eT*>(U.M.memptr()), U.M.n_cols, U.M.n_rows, false, false)
+    , Q(const_cast<elem_type*>(U.M.memptr()), U.M.n_cols, U.M.n_rows, false, false)
     {
     arma_extra_debug_sigprint();
     }
   
+  arma_inline         ea_type         get_ea() const { return Q.memptr(); }
+  arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
+  
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return U.is_alias(X); }
+  
+  arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
   };
 
 
@@ -583,20 +672,19 @@ class Proxy< Op<T1, op_htrans> >
     >::result
   Proxy_xtrans;
   
-  typedef typename T1::elem_type                   elem_type;
-  typedef typename get_pod_type<elem_type>::result pod_type;
-  typedef Mat<elem_type>                           stored_type;
-  typedef const elem_type*                         ea_type;
-  typedef const Mat<elem_type>&                    aligned_ea_type;
+  typedef typename Proxy_xtrans::elem_type       elem_type;
+  typedef typename Proxy_xtrans::pod_type        pod_type;
+  typedef typename Proxy_xtrans::stored_type     stored_type;
+  typedef typename Proxy_xtrans::ea_type         ea_type;
+  typedef typename Proxy_xtrans::aligned_ea_type aligned_ea_type;
   
   static const bool prefer_at_accessor = Proxy_xtrans::prefer_at_accessor;
   static const bool has_subview        = Proxy_xtrans::has_subview;
   static const bool is_fixed           = Proxy_xtrans::is_fixed;
   static const bool fake_mat           = Proxy_xtrans::fake_mat;
   
-  // NOTE: the Op class takes care of swapping row and col for op_htrans
-  static const bool is_row = Op<T1, op_htrans>::is_row;
-  static const bool is_col = Op<T1, op_htrans>::is_col;
+  static const bool is_row = Proxy_xtrans::is_row;
+  static const bool is_col = Proxy_xtrans::is_col;
   
   using Proxy_xtrans::Q;
   
@@ -614,13 +702,13 @@ class Proxy< Op<T1, op_htrans> >
   arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
   arma_inline elem_type at_alt     (const uword i)                    const { return Q.at_alt(i);    }
   
-  arma_inline         ea_type         get_ea() const { return Q.memptr(); }
-  arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
+  arma_inline         ea_type         get_ea() const { return Proxy_xtrans::get_ea();         }
+  arma_inline aligned_ea_type get_aligned_ea() const { return Proxy_xtrans::get_aligned_ea(); }
   
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return Proxy_xtrans::is_alias(X); }
   
-  arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
+  arma_inline bool is_aligned() const { return Proxy_xtrans::is_aligned(); }
   };
 
 
@@ -645,20 +733,19 @@ class Proxy< Op<T1, op_strans> >
     >::result
   Proxy_xtrans;
   
-  typedef typename T1::elem_type                   elem_type;
-  typedef typename get_pod_type<elem_type>::result pod_type;
-  typedef Mat<elem_type>                           stored_type;
-  typedef const elem_type*                         ea_type;
-  typedef const Mat<elem_type>&                    aligned_ea_type;
+  typedef typename Proxy_xtrans::elem_type       elem_type;
+  typedef typename Proxy_xtrans::pod_type        pod_type;
+  typedef typename Proxy_xtrans::stored_type     stored_type;
+  typedef typename Proxy_xtrans::ea_type         ea_type;
+  typedef typename Proxy_xtrans::aligned_ea_type aligned_ea_type;
   
   static const bool prefer_at_accessor = Proxy_xtrans::prefer_at_accessor;
   static const bool has_subview        = Proxy_xtrans::has_subview;
   static const bool is_fixed           = Proxy_xtrans::is_fixed;
   static const bool fake_mat           = Proxy_xtrans::fake_mat;
   
-  // NOTE: the Op class takes care of swapping row and col for op_strans
-  static const bool is_row = Op<T1, op_strans>::is_row;
-  static const bool is_col = Op<T1, op_strans>::is_col;
+  static const bool is_row = Proxy_xtrans::is_row;
+  static const bool is_col = Proxy_xtrans::is_col;
   
   using Proxy_xtrans::Q;
   
@@ -676,13 +763,13 @@ class Proxy< Op<T1, op_strans> >
   arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
   arma_inline elem_type at_alt     (const uword i)                    const { return Q.at_alt(i);    }
   
-  arma_inline         ea_type         get_ea() const { return Q.memptr(); }
-  arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
+  arma_inline         ea_type         get_ea() const { return Proxy_xtrans::get_ea();         }
+  arma_inline aligned_ea_type get_aligned_ea() const { return Proxy_xtrans::get_aligned_ea(); }
   
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return Proxy_xtrans::is_alias(X); }
   
-  arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
+  arma_inline bool is_aligned() const { return Proxy_xtrans::is_aligned(); }
   };
 
 
@@ -866,14 +953,14 @@ class Proxy< Op<subview_row<eT>, op_strans> >
   };
 
 
-  
+
 template<typename T>
 class Proxy< Op< Row< std::complex<T> >, op_htrans> >
   {
   public:
   
   typedef typename std::complex<T>  eT;
-
+  
   typedef typename std::complex<T>  elem_type;
   typedef T                         pod_type;
   typedef xvec_htrans<eT>           stored_type;
@@ -1503,6 +1590,52 @@ class Proxy< subview_row_htrans<eT> >
   arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&(Q.sv_row.m)) == void_ptr(&X)); }
   
   arma_inline bool is_aligned() const { return false; }
+  };
+
+
+
+template<typename eT, bool do_conj>
+class Proxy< xtrans_mat<eT, do_conj> >
+  {
+  public:
+  
+  typedef eT                                       elem_type;
+  typedef typename get_pod_type<elem_type>::result pod_type;
+  typedef Mat<eT>                                  stored_type;
+  typedef const eT*                                ea_type;
+  typedef const Mat<eT>&                           aligned_ea_type;
+  
+  static const bool prefer_at_accessor = false;
+  static const bool has_subview        = false;
+  static const bool is_fixed           = false;
+  static const bool fake_mat           = false;
+  
+  static const bool is_row = false;
+  static const bool is_col = false;
+  
+  arma_aligned const Mat<eT> Q;
+  
+  inline explicit Proxy(const xtrans_mat<eT, do_conj>& A)
+    : Q(A)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  arma_inline uword get_n_rows() const { return Q.n_rows; }
+  arma_inline uword get_n_cols() const { return Q.n_cols; }
+  arma_inline uword get_n_elem() const { return Q.n_elem; }
+  
+  arma_inline elem_type operator[] (const uword i)                    const { return Q[i];          }
+  arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row,col); }
+  arma_inline elem_type at_alt     (const uword i)                    const { return Q.at_alt(i);   }
+  
+  arma_inline         ea_type         get_ea() const { return Q.memptr(); }
+  arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return false; }
+  
+  arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
   };
 
 

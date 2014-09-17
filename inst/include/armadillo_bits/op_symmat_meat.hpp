@@ -1,5 +1,5 @@
-// Copyright (C) 2011-2012 Conrad Sanderson
-// Copyright (C) 2011-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2011-2014 Conrad Sanderson
+// Copyright (C) 2011-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,15 +14,9 @@
 template<typename T1>
 inline
 void
-op_symmat::apply
-  (
-        Mat<typename T1::elem_type>& out,
-  const Op<T1,op_symmat>&            in,
-  const typename arma_not_cx<typename T1::elem_type>::result* junk
-  )
+op_symmat::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_symmat>& in)
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
   
@@ -100,15 +94,9 @@ op_symmat::apply
 template<typename T1>
 inline
 void
-op_symmat::apply
-  (
-        Mat<typename T1::elem_type>& out,
-  const Op<T1,op_symmat>&            in,
-  const typename arma_cx_only<typename T1::elem_type>::result* junk
-  )
+op_symmat_cx::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_symmat_cx>& in)
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
   
@@ -117,8 +105,10 @@ op_symmat::apply
   
   arma_debug_check( (A.is_square() == false), "symmatu()/symmatl(): given matrix must be square" );
   
-  const uword N     = A.n_rows;
-  const bool  upper = (in.aux_uword_a == 0);
+  const uword N  = A.n_rows;
+  
+  const bool upper   = (in.aux_uword_a == 0);
+  const bool do_conj = (in.aux_uword_b == 1);
   
   if(&out != &A)
     {
@@ -151,31 +141,65 @@ op_symmat::apply
     }
   
   
-  if(upper)
+  if(do_conj)
     {
-    // reflect elements across the diagonal from upper triangle to lower triangle
-    
-    for(uword col=1; col < N; ++col)
+    if(upper)
       {
-      const eT* coldata = out.colptr(col);
+      // reflect elements across the diagonal from upper triangle to lower triangle
       
-      for(uword row=0; row < col; ++row)
+      for(uword col=1; col < N; ++col)
         {
-        out.at(col,row) = std::conj(coldata[row]);
+        const eT* coldata = out.colptr(col);
+        
+        for(uword row=0; row < col; ++row)
+          {
+          out.at(col,row) = std::conj(coldata[row]);
+          }
+        }
+      }
+    else
+      {
+      // reflect elements across the diagonal from lower triangle to upper triangle
+      
+      for(uword col=0; col < N; ++col)
+        {
+        const eT* coldata = out.colptr(col);
+        
+        for(uword row=(col+1); row < N; ++row)
+          {
+          out.at(col,row) = std::conj(coldata[row]);
+          }
         }
       }
     }
-  else
+  else  // don't do complex conjugation
     {
-    // reflect elements across the diagonal from lower triangle to upper triangle
-    
-    for(uword col=0; col < N; ++col)
+    if(upper)
       {
-      const eT* coldata = out.colptr(col);
+      // reflect elements across the diagonal from upper triangle to lower triangle
       
-      for(uword row=(col+1); row < N; ++row)
+      for(uword col=1; col < N; ++col)
         {
-        out.at(col,row) = std::conj(coldata[row]);
+        const eT* coldata = out.colptr(col);
+        
+        for(uword row=0; row < col; ++row)
+          {
+          out.at(col,row) = coldata[row];
+          }
+        }
+      }
+    else
+      {
+      // reflect elements across the diagonal from lower triangle to upper triangle
+      
+      for(uword col=0; col < N; ++col)
+        {
+        const eT* coldata = out.colptr(col);
+        
+        for(uword row=(col+1); row < N; ++row)
+          {
+          out.at(col,row) = coldata[row];
+          }
         }
       }
     }

@@ -203,7 +203,7 @@
 
 #if defined(_MSC_VER)
   
-  #if (_MSC_VER < 1600)
+  #if (_MSC_VER < 1700)
     #error "*** Need a newer compiler ***"
   #endif
   

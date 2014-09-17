@@ -2,9 +2,10 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
-\section{Changes in RcppArmadillo version 0.4.xxx (2014-xx-yy)}{
+\section{Changes in RcppArmadillo version 0.4.420.0 (2014-09-16)}{
   \itemize{
-    \item Upgraded to Armadillo release Version .... (....) 
+    \item Upgraded to Armadillo [test] release Version 4.419.3 in
+    preparation of 4.420
     \itemize{
       \item TBD
     }
@@ -14,7 +15,7 @@
     \item The \code{RcppArmadillo.package.skeleton()} function will now
     prefer \code{pkgKitten::kitten()} over \code{package.skeleton()} in
     order to create a working package which passes \code{R CMD check}.
-    \item The \cpkg{pkgKitten} is now a \code{Suggests:} of RcppArmadillo
+    \item The \cpkg{pkgKitten} package is now a \code{Suggests:} 
     \item A manual page was added to provide documentation for the
     functions provided by the skeleton package.
     \item A small update was made to the package manual page.

@@ -12,9 +12,9 @@
 
 
 #define ARMA_VERSION_MAJOR 4
-#define ARMA_VERSION_MINOR 400
-#define ARMA_VERSION_PATCH 0
-#define ARMA_VERSION_NAME  "Winter Shark Alley"
+#define ARMA_VERSION_MINOR 419
+#define ARMA_VERSION_PATCH 3
+#define ARMA_VERSION_NAME  "unstable development version -- not for production use"
 
 
 

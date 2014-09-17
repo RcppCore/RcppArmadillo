@@ -42,6 +42,9 @@ static const gmm_seed_random_spread random_spread;
 namespace gmm_priv
 {
 
+struct gmm_empty_arg {};
+
+
 #if defined(_OPENMP)
   struct arma_omp_state
     {
@@ -89,36 +92,30 @@ class gmm_diag
   inline bool load(const std::string name);
   inline bool save(const std::string name) const;
   
+  inline Col<eT> generate()              const;
+  inline Mat<eT> generate(const uword N) const;
   
-  template<typename T1> inline typename enable_if2<resolves_to_colvector<T1>::value, eT>::result log_p(const T1& expr                     ) const;
-  template<typename T1> inline typename enable_if2<resolves_to_colvector<T1>::value, eT>::result log_p(const T1& expr, const uword gaus_id) const;
+  template<typename T1> inline eT      log_p(const T1& expr, const gmm_empty_arg& junk1 = gmm_empty_arg(), typename enable_if<((is_arma_type<T1>::value) && (resolves_to_colvector<T1>::value == true ))>::result* junk2 = 0) const;
+  template<typename T1> inline eT      log_p(const T1& expr, const uword gaus_id,                          typename enable_if<((is_arma_type<T1>::value) && (resolves_to_colvector<T1>::value == true ))>::result* junk2 = 0) const;
   
-  template<typename T1> inline typename enable_if2< is_arma_type<T1>::value && (resolves_to_colvector<T1>::value == false), Row<eT> >::result
-  log_p(const T1& expr                     ) const;
+  template<typename T1> inline Row<eT> log_p(const T1& expr, const gmm_empty_arg& junk1 = gmm_empty_arg(), typename enable_if<((is_arma_type<T1>::value) && (resolves_to_colvector<T1>::value == false))>::result* junk2 = 0) const;
+  template<typename T1> inline Row<eT> log_p(const T1& expr, const uword gaus_id,                          typename enable_if<((is_arma_type<T1>::value) && (resolves_to_colvector<T1>::value == false))>::result* junk2 = 0) const;
   
-  template<typename T1> inline typename enable_if2< is_arma_type<T1>::value && (resolves_to_colvector<T1>::value == false), Row<eT> >::result
-  log_p(const T1& expr, const uword gaus_id) const;
+  template<typename T1> inline eT  avg_log_p(const Base<eT,T1>& expr)                      const;
+  template<typename T1> inline eT  avg_log_p(const Base<eT,T1>& expr, const uword gaus_id) const;
   
-  
-  template<typename T1> inline eT avg_log_p(const Base<eT,T1>& expr)                      const;
-  template<typename T1> inline eT avg_log_p(const Base<eT,T1>& expr, const uword gaus_id) const;
-  
-  
-  template<typename T1> inline typename enable_if2<resolves_to_colvector<T1>::value, uword>::result
-  assign(const T1& expr, const gmm_dist_mode& dist) const;
-  
-  template<typename T1> inline typename enable_if2<is_arma_type<T1>::value && (resolves_to_colvector<T1>::value == false), urowvec>::result
-  assign(const T1& expr, const gmm_dist_mode& dist) const;
-  
+  template<typename T1> inline uword   assign(const T1& expr, const gmm_dist_mode& dist, typename enable_if<((is_arma_type<T1>::value) && (resolves_to_colvector<T1>::value == true ))>::result* junk = 0) const;
+  template<typename T1> inline urowvec assign(const T1& expr, const gmm_dist_mode& dist, typename enable_if<((is_arma_type<T1>::value) && (resolves_to_colvector<T1>::value == false))>::result* junk = 0) const;
   
   template<typename T1> inline urowvec  raw_hist(const Base<eT,T1>& expr, const gmm_dist_mode& dist_mode) const;
   template<typename T1> inline Row<eT> norm_hist(const Base<eT,T1>& expr, const gmm_dist_mode& dist_mode) const;
   
-  
-  inline bool
+  template<typename T1>
+  inline
+  bool
   learn
     (
-    const Mat<eT>&        X,
+    const Base<eT,T1>&    data,
     const uword           n_gaus,
     const gmm_dist_mode&  dist_mode,
     const gmm_seed_mode&  seed_mode,

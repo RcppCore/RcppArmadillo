@@ -493,24 +493,24 @@ conj(const BaseCube<std::complex<typename T1::pod_type>,T1>& A)
 
 template<typename T1>
 arma_inline
-const T1&
+const typename Proxy<T1>::stored_type&
 conj(const eOp<T1, eop_conj>& A)
   {
   arma_extra_debug_sigprint();
   
-  return A.m;
+  return A.P.Q;
   }
 
 
 
 template<typename T1>
 arma_inline
-const T1&
+const typename ProxyCube<T1>::stored_type&
 conj(const eOpCube<T1, eop_conj>& A)
   {
   arma_extra_debug_sigprint();
   
-  return A.m;
+  return A.P.Q;
   }
 
 

@@ -1,3 +1,10 @@
+2014-09-16  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.4.419.3.0 [GitHub only]
+        * inst/NEWS.Rd: Release 0.4.419.3.0 [GitHub only]
+
+        * inst/include/*: Upgraded to version 4.419.3 of Armadillo
+
 2014-09-01  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/RcppArmadillo.package.skeleton.R: Copy new manual page when

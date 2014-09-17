@@ -152,6 +152,7 @@ namespace arma
   #include "armadillo_bits/Row_bones.hpp"
   #include "armadillo_bits/Cube_bones.hpp"
   #include "armadillo_bits/xvec_htrans_bones.hpp"
+  #include "armadillo_bits/xtrans_mat_bones.hpp"
   #include "armadillo_bits/SizeMat_bones.hpp"
   #include "armadillo_bits/SizeCube_bones.hpp"
     
@@ -283,7 +284,7 @@ namespace arma
   #include "armadillo_bits/memory.hpp"
   
   //
-  //
+  // wrappers for various cmath functions
   
   #include "armadillo_bits/arma_cmath.hpp"
   
@@ -493,6 +494,7 @@ namespace arma
   #include "armadillo_bits/Row_meat.hpp"
   #include "armadillo_bits/Cube_meat.hpp"
   #include "armadillo_bits/xvec_htrans_meat.hpp"
+  #include "armadillo_bits/xtrans_mat_meat.hpp"
   #include "armadillo_bits/SizeMat_meat.hpp"
   #include "armadillo_bits/SizeCube_meat.hpp"
   

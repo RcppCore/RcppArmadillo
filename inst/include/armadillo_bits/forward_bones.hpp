@@ -22,6 +22,9 @@ template<typename eT> class Cube;
 template<typename eT> class xvec_htrans;
 template<typename oT> class field;
 
+template<typename eT, bool do_conj> class xtrans_mat;
+
+
 template<typename eT> class subview;
 template<typename eT> class subview_col;
 template<typename eT> class subview_row;
