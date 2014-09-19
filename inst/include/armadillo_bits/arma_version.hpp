@@ -12,9 +12,9 @@
 
 
 #define ARMA_VERSION_MAJOR 4
-#define ARMA_VERSION_MINOR 419
-#define ARMA_VERSION_PATCH 3
-#define ARMA_VERSION_NAME  "unstable development version -- not for production use"
+#define ARMA_VERSION_MINOR 450
+#define ARMA_VERSION_PATCH 0
+#define ARMA_VERSION_NAME  "Spring Hill Fort"
 
 
 

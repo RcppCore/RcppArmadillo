@@ -2,16 +2,20 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
-\section{Changes in RcppArmadillo version 0.4.420.0 (2014-09-16)}{
+\section{Changes in RcppArmadillo version 0.4.450.0 (2014-09-19)}{
   \itemize{
-    \item Upgraded to Armadillo [test] release Version 4.419.3 in
-    preparation of 4.420
+    \item Upgraded to Armadillo release Version 4.450 (Spring Hill Fort)
     \itemize{
-      \item TBD
+      \item faster handling of matrix transposes within compound
+      expressions
+      \item expanded \code{symmatu()}/\code{symmatl()} to optionally
+      disable taking the complex conjugate of elements 
+      \item expanded \code{sort_index()} to handle complex vectors
+      \item expanded the \code{gmm_diag} class with functions to generate random samples
     }
     \item The \code{RcppArmadillo.package.skeleton()} function was
-    updated to only Imports: Rcpp, but not RcppArmadillo which (as 
-    a template library) needs only LinkingTo:
+    updated to only set an "Imports:" for Rcpp, but not RcppArmadillo 
+    which (as a template library) needs only LinkingTo:
     \item The \code{RcppArmadillo.package.skeleton()} function will now
     prefer \code{pkgKitten::kitten()} over \code{package.skeleton()} in
     order to create a working package which passes \code{R CMD check}.
