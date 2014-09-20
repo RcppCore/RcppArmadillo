@@ -13,6 +13,9 @@
       \item expanded \code{sort_index()} to handle complex vectors
       \item expanded the \code{gmm_diag} class with functions to generate random samples
     }
+    \item A new random-number implementation for Armadillo uses the RNG
+    from R as a fallback (when C++11 is not selected so the C++11-based
+    RNG is unavailable) which avoids using the older C++98-based \code{std::rand}
     \item The \code{RcppArmadillo.package.skeleton()} function was
     updated to only set an "Imports:" for Rcpp, but not RcppArmadillo 
     which (as a template library) needs only LinkingTo:
