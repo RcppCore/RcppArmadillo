@@ -3,7 +3,7 @@
 //
 // RcppArmadilloConfig.h: Rcpp/Armadillo glue
 //
-// Copyright (C)  2010 - 2013  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2010 - 2014  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 //
 // This file is part of RcppArmadillo.
 //
@@ -66,6 +66,12 @@
 // #if defined(USE_CXX1X)
 // #define ARMA_USE_CXX11
 // #endif
+
+// Use R for RNG generation as fallback when C++11 is not used
+// If this is commented out, we fall back to C++98 RNGs which R CMD check complains about
+#if !defined(ARMA_USE_R_RNG)
+#define ARMA_USE_R_RNG
+#endif
 
 // Rcpp has its own stream object which cooperates more nicely with R's i/o
 // And as of Armadillo 2.4.3, we can use this stream object as well 

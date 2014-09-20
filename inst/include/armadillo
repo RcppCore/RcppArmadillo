@@ -115,6 +115,9 @@ namespace arma
   #if defined(ARMA_USE_CXX11_RNG)
     #include "armadillo_bits/arma_rng_cxx11.hpp"
     #include "armadillo_bits/arma_rng.hpp"
+  #elif defined(ARMA_USE_R_RNG)
+    #include "armadillo_bits/arma_rng_r.hpp"
+    #include "armadillo_bits/arma_rng.hpp"
   #else  
     #include "armadillo_bits/arma_rng_cxx98.hpp"
     #include "armadillo_bits/arma_rng.hpp"

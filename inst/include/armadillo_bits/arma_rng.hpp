@@ -23,12 +23,16 @@ class arma_rng
   
   #if defined(ARMA_USE_CXX11_RNG)
     typedef arma_rng_cxx11::seed_type seed_type;
+  #elif defined(ARMA_USE_R_RNG)
+    typedef arma_rng_r::seed_type seed_type;
   #else
     typedef arma_rng_cxx98::seed_type seed_type;
   #endif
   
   #if defined(ARMA_USE_CXX11_RNG)
     static const int rng_method = 1;
+  #elif defined(ARMA_USE_R_RNG)
+    static const int rng_method = 2;
   #else
     static const int rng_method = 0;
   #endif
@@ -50,6 +54,10 @@ arma_rng::set_seed(const arma_rng::seed_type val)
   #if defined(ARMA_USE_CXX11_RNG)
     {
     arma_rng_cxx11_instance.set_seed(val);
+    }
+  #elif defined(ARMA_USE_R_RNG)
+    {
+    arma_rng_r::set_seed(val); // null-op, maybe warn here ?
     }
   #else
     {
@@ -142,6 +150,10 @@ struct arma_rng::randi
       {
       return eT( arma_rng_cxx11_instance.randi_val() );
       }
+    #elif defined(ARMA_USE_R_RNG)
+      {
+      return eT( arma_rng_r::randi_val() );
+      }
     #else
       {
       return eT( arma_rng_cxx98::randi_val() );
@@ -159,6 +171,10 @@ struct arma_rng::randi
       {
       return arma_rng_cxx11::randi_max_val();
       }
+    #elif defined(ARMA_USE_R_RNG)
+      {
+      return arma_rng_r::randi_max_val();
+      }
     #else
       {
       return arma_rng_cxx98::randi_max_val();
@@ -175,6 +191,10 @@ struct arma_rng::randi
     #if defined(ARMA_USE_CXX11_RNG)
       {
       return arma_rng_cxx11_instance.randi_fill(mem, N, a, b);
+      }
+    #elif defined(ARMA_USE_R_RNG)
+      {
+        return arma_rng_r::randi_fill(mem, N, a, b);
       }
     #else
       {
@@ -195,6 +215,10 @@ struct arma_rng::randu
     #if defined(ARMA_USE_CXX11_RNG)
       {
       return eT( arma_rng_cxx11_instance.randu_val() );
+      }
+    #elif defined(ARMA_USE_R_RNG)
+      {
+      return eT( arma_rng_r::randu_val() );
       }
     #else
       {
@@ -263,6 +287,10 @@ struct arma_rng::randn
       {
       return eT( arma_rng_cxx11_instance.randn_val() );
       }
+    #elif defined(ARMA_USE_R_RNG)
+      {
+      return eT( arma_rng_r::randn_val() );
+      }
     #else
       {
       return eT( arma_rng_cxx98::randn_val() );
@@ -279,6 +307,10 @@ struct arma_rng::randn
     #if defined(ARMA_USE_CXX11_RNG)
       {
       arma_rng_cxx11_instance.randn_dual_val(out1, out2);
+      }
+    #elif defined(ARMA_USE_R_RNG)
+      {
+      arma_rng_r::randn_dual_val(out1, out2);
       }
     #else
       {
