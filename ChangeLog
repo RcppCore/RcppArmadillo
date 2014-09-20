@@ -7,6 +7,9 @@
 	implementation based on runif() from R
 	* inst/include/armadillo_bits/arma_rng.hpp: Deploy new R RNG
 
+	* inst/unitTests/runit.rng.R: New unit tests for RNG fallback code
+	* inst/unitTests/cpp/rng.cpp: C++ side of new unit tests
+
 2014-09-19  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.4.450.0
