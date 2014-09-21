@@ -67,11 +67,11 @@
 // #define ARMA_USE_CXX11
 // #endif
 
-// Use R for RNG generation as fallback when C++11 is not used
-// If this is commented out, we fall back to C++98 RNGs which R CMD check complains about
-#if !defined(ARMA_USE_R_RNG)
-#define ARMA_USE_R_RNG
-#endif
+// We can use R as the RNG provider, see RcppArmadilloForward.h which
+// enables inclusion of the appropriate headers. Alternatively, the
+// C++11 RNG can be used by commenting out the current default and
+// selecting the C++11 RNG instead. Lastly, one could (but should not)
+// fall back to the C++98 RNG (often from the C library) by defining neither.
 
 // Rcpp has its own stream object which cooperates more nicely with R's i/o
 // And as of Armadillo 2.4.3, we can use this stream object as well 
