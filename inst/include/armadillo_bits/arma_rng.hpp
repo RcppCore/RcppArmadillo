@@ -1,5 +1,5 @@
-// Copyright (C) 2013 Conrad Sanderson
-// Copyright (C) 2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2013-2014 Conrad Sanderson
+// Copyright (C) 2013-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,6 +9,10 @@
 //! \addtogroup arma_rng
 //! @{
 
+
+#if defined(ARMA_RNG_ALT)
+  #undef ARMA_USE_CXX11_RNG
+#endif
 
 
 #if defined(ARMA_USE_CXX11_RNG)
@@ -21,18 +25,18 @@ class arma_rng
   {
   public:
   
-  #if defined(ARMA_USE_CXX11_RNG)
+  #if   defined(ARMA_RNG_ALT)
+    typedef arma_rng_alt::seed_type   seed_type;
+  #elif defined(ARMA_USE_CXX11_RNG)
     typedef arma_rng_cxx11::seed_type seed_type;
-  #elif defined(ARMA_USE_R_RNG)
-    typedef arma_rng_r::seed_type seed_type;
   #else
     typedef arma_rng_cxx98::seed_type seed_type;
   #endif
   
-  #if defined(ARMA_USE_CXX11_RNG)
-    static const int rng_method = 1;
-  #elif defined(ARMA_USE_R_RNG)
+  #if   defined(ARMA_RNG_ALT)
     static const int rng_method = 2;
+  #elif defined(ARMA_USE_CXX11_RNG)
+    static const int rng_method = 1;
   #else
     static const int rng_method = 0;
   #endif
@@ -51,13 +55,13 @@ inline
 void
 arma_rng::set_seed(const arma_rng::seed_type val)
   {
-  #if defined(ARMA_USE_CXX11_RNG)
+  #if   defined(ARMA_RNG_ALT)
+    {
+    arma_rng_alt::set_seed(val);
+    }
+  #elif defined(ARMA_USE_CXX11_RNG)
     {
     arma_rng_cxx11_instance.set_seed(val);
-    }
-  #elif defined(ARMA_USE_R_RNG)
-    {
-    arma_rng_r::set_seed(val); // null-op, maybe warn here ?
     }
   #else
     {
@@ -146,13 +150,13 @@ struct arma_rng::randi
   arma_inline
   operator eT ()
     {
-    #if defined(ARMA_USE_CXX11_RNG)
+    #if   defined(ARMA_RNG_ALT)
+      {
+      return eT( arma_rng_alt::randi_val() );
+      }
+    #elif defined(ARMA_USE_CXX11_RNG)
       {
       return eT( arma_rng_cxx11_instance.randi_val() );
-      }
-    #elif defined(ARMA_USE_R_RNG)
-      {
-      return eT( arma_rng_r::randi_val() );
       }
     #else
       {
@@ -167,13 +171,13 @@ struct arma_rng::randi
   int
   max_val()
     {
-    #if defined(ARMA_USE_CXX11_RNG)
+    #if   defined(ARMA_RNG_ALT)
+      {
+      return arma_rng_alt::randi_max_val();
+      }
+    #elif defined(ARMA_USE_CXX11_RNG)
       {
       return arma_rng_cxx11::randi_max_val();
-      }
-    #elif defined(ARMA_USE_R_RNG)
-      {
-      return arma_rng_r::randi_max_val();
       }
     #else
       {
@@ -188,13 +192,13 @@ struct arma_rng::randi
   void
   fill(eT* mem, const uword N, const int a, const int b)
     {
-    #if defined(ARMA_USE_CXX11_RNG)
+    #if   defined(ARMA_RNG_ALT)
+      {
+      return arma_rng_alt::randi_fill(mem, N, a, b);
+      }
+    #elif defined(ARMA_USE_CXX11_RNG)
       {
       return arma_rng_cxx11_instance.randi_fill(mem, N, a, b);
-      }
-    #elif defined(ARMA_USE_R_RNG)
-      {
-        return arma_rng_r::randi_fill(mem, N, a, b);
       }
     #else
       {
@@ -212,13 +216,13 @@ struct arma_rng::randu
   arma_inline
   operator eT ()
     {
-    #if defined(ARMA_USE_CXX11_RNG)
+    #if   defined(ARMA_RNG_ALT)
+      {
+      return eT( arma_rng_alt::randu_val() );
+      }
+    #elif defined(ARMA_USE_CXX11_RNG)
       {
       return eT( arma_rng_cxx11_instance.randu_val() );
-      }
-    #elif defined(ARMA_USE_R_RNG)
-      {
-      return eT( arma_rng_r::randu_val() );
       }
     #else
       {
@@ -283,13 +287,13 @@ struct arma_rng::randn
   inline
   operator eT () const
     {
-    #if defined(ARMA_USE_CXX11_RNG)
+    #if   defined(ARMA_RNG_ALT)
+      {
+      return eT( arma_rng_alt::randn_val() );
+      }
+    #elif defined(ARMA_USE_CXX11_RNG)
       {
       return eT( arma_rng_cxx11_instance.randn_val() );
-      }
-    #elif defined(ARMA_USE_R_RNG)
-      {
-      return eT( arma_rng_r::randn_val() );
       }
     #else
       {
@@ -304,13 +308,13 @@ struct arma_rng::randn
   void
   dual_val(eT& out1, eT& out2)
     {
-    #if defined(ARMA_USE_CXX11_RNG)
+    #if   defined(ARMA_RNG_ALT)
+      {
+      arma_rng_alt::randn_dual_val(out1, out2);
+      }
+    #elif defined(ARMA_USE_CXX11_RNG)
       {
       arma_rng_cxx11_instance.randn_dual_val(out1, out2);
-      }
-    #elif defined(ARMA_USE_R_RNG)
-      {
-      arma_rng_r::randn_dual_val(out1, out2);
       }
     #else
       {
