@@ -2,9 +2,9 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
-\section{Changes in RcppArmadillo version 0.4.450.0 (2014-09-19)}{
+\section{Changes in RcppArmadillo version 0.4.450.1.0 (2014-09-21)}{
   \itemize{
-    \item Upgraded to Armadillo release Version 4.450 (Spring Hill Fort)
+    \item Upgraded to Armadillo release Version 4.450.1 (Spring Hill Fort)
     \itemize{
       \item faster handling of matrix transposes within compound
       expressions

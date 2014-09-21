@@ -3,7 +3,7 @@
 //
 // RcppArmadilloForward.h: Rcpp/Armadillo glue
 //
-// Copyright (C)  2010 - 2013  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2010 - 2014  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 //
 // This file is part of RcppArmadillo.
 //
@@ -33,6 +33,15 @@
 #define ARMA_EXTRA_COL_MEAT  RcppArmadillo/Col_meat.h
 #define ARMA_EXTRA_ROW_PROTO RcppArmadillo/Row_proto.h
 #define ARMA_EXTRA_ROW_MEAT  RcppArmadillo/Row_meat.h
+
+// using this define makes the R RNG have precedent over both the
+// C++11-based RNG provided by Armadillo, as well as the C++98-based
+// fallback.
+//
+// One can use the C++11-based on by commenting out the following
+// #define and also selecting C++11 (eg via src/Makevars* or the
+// DESCRIPTION file) and/or defining #define-ing ARMA_USE_CXX11_RNG
+#define ARMA_RNG_ALT         RcppArmadillo/Alt_R_RNG.h
 
 #include <armadillo>
 
