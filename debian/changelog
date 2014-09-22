@@ -1,3 +1,13 @@
+r-cran-rcpparmadillo (0.4.450.1.0-1) unstable; urgency=low
+
+  * New upstream release
+  
+  * debian/control: New (Build-)Depends: on r-cran-pkgkitten
+
+  * debian/control: Set Standards-Version: to current version
+
+ -- Dirk Eddelbuettel <edd@debian.org>  Mon, 22 Sep 2014 06:15:06 -0500
+
 r-cran-rcpparmadillo (0.4.400.0-1) unstable; urgency=low
 
   * New upstream release

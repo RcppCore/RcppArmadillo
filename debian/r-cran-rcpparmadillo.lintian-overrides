@@ -6,3 +6,4 @@ r-cran-rcpparmadillo: script-not-executable usr/lib/R/site-library/RcppArmadillo
 r-cran-rcpparmadillo: binary-or-shlib-defines-rpath usr/lib/R/site-library/RcppArmadillo/libs/RcppArmadillo.so /usr/lib/R/site-library/Rcpp/lib
 r-cran-rcpparmadillo: script-not-executable usr/lib/R/site-library/RcppArmadillo/unitTests/runit.complex.R
 r-cran-rcpparmadillo: script-not-executable usr/lib/R/site-library/RcppArmadillo/unitTests/runit.sparse.R
+r-cran-rcpparmadillo: script-not-executable usr/lib/R/site-library/RcppArmadillo/unitTests/runit.rng.R
