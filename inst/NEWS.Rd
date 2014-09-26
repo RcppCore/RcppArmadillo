@@ -2,6 +2,18 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.4.450.xxx (2014-xx-yy)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 4.450.xxx (yyy)
+    \itemize{
+      \item TBA
+    }
+    \item The \code{sample} functionality has been extended to provide
+    the Walker Alias method (including new unit tests) via a pull request
+    by Christian Gunning 
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.4.450.1.0 (2014-09-21)}{
   \itemize{
     \item Upgraded to Armadillo release Version 4.450.1 (Spring Hill Fort)

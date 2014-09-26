@@ -1,3 +1,15 @@
+2014-09-26  Christian Gunning  <xian@unm.edu>
+
+	* inst/include/RcppArmadilloExtensions/sample.h: Extended with
+	Walker's method
+	* inst/include/RcppArmadilloExtensions/rmultinom.h: Added
+	* inst/include/RcppArmadilloExtensions/fixprob.h: Split off from
+	sample.h
+
+	* inst/unitTests/runit.sample.R: Updated for new functionality
+	* inst/unitTests/runit.rmultinom.R: New unit test
+	* inst/unitTests/cpp/rmultinom.cpp: New unit test file in C++
+
 2014-09-20  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/RcppArmadilloConfig.h: Add a new #define variable
