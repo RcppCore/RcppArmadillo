@@ -54,7 +54,6 @@ test.sample <- function() {
     probs <- seq(from=0, to=1, length.out=N)
     #probs <- probs/sum(probs)
 
-
     ## Run the S3 generic function csample
     ## and associated R function on each data type
     ## ReplaceYN.ProbsYN
@@ -92,14 +91,14 @@ test.sample <- function() {
     walker.sample <- (1:walker.N)/10
     walker.probs <- rep(0.1, walker.N)
     ## uncomment following 5 lines if/when walker alias method is implemented
-    #set.seed(seed)
-    #r.walker <- sample( walker.sample, walker.N, replace=T, prob=walker.probs)
-    #set.seed(seed)
-    #c.walker <- csample( walker.sample, walker.N, replace=T, prob=walker.probs)
-    #checkEquals(r.walker, c.walker, msg=sprintf("Walker Alias method test"))
+    set.seed(seed)
+    r.walker <- sample( walker.sample, walker.N, replace=T, prob=walker.probs)
+    set.seed(seed)
+    c.walker <- csample( walker.sample, walker.N, replace=T, prob=walker.probs)
+    checkEquals(r.walker, c.walker, msg=sprintf("Walker Alias method test"))
     ## Walker Alias method is not implemented.
     ## For this problem (replace, >200 non-zero probs) R is much faster
     ## So throw an error and refuse to proceed
-    walker.error <- try( csample( walker.sample, walker.N, replace=T, prob=walker.probs), TRUE)
-    checkEquals(inherits(walker.error, "try-error"), TRUE, msg=sprintf("Walker Alias method test"))
+    #walker.error <- try( csample( walker.sample, walker.N, replace=T, prob=walker.probs), TRUE)
+    #checkEquals(inherits(walker.error, "try-error"), TRUE, msg=sprintf("Walker Alias method test"))
 }

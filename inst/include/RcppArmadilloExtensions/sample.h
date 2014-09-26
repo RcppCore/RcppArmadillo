@@ -1,12 +1,12 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
 /* :tabSize=4:indentSize=4:noTabs=false:folding=explicit:collapseFolds=1: */
 //
-// sample.cpp: Rcpp/Armadillo equivalent to R's sample().  
-// This is to be used in C++ functions, and should *not* be called from R.
-// It should yield identical results to R in most cases
-// (note that Walker's alias method is not implemented).
+// sample.h: Rcpp/Armadillo equivalent to R's sample().  
+// This is intended for use in C++ functions, and should *not* be called from R.
+// It should yield identical results to R in most cases, 
+// and stop with errors when results are expected to differ.
 //
-// Copyright (C)  2012 - 2013  Christian Gunning
+// Copyright (C)  2012 - 2014  Christian Gunning
 // Copyright (C)  2013  Romain Francois
 //
 // This file is part of RcppArmadillo.
@@ -27,27 +27,16 @@
 #ifndef RCPPARMADILLO__EXTENSIONS__SAMPLE_H
 #define RCPPARMADILLO__EXTENSIONS__SAMPLE_H
 
-#include <RcppArmadillo.h>
+#include <RcppArmadilloExtensions/fixprob.h>
 
 namespace Rcpp{
-
     namespace RcppArmadillo{
 
-        //Declarations
-        template <typename INDEX>
-        void SampleReplace( INDEX &index, int nOrig, int size);
-        
-        template <typename INDEX>
-        void SampleNoReplace( INDEX &index, int nOrig, int size);
-        
-        template <typename INDEX>
-        void ProbSampleReplace(INDEX &index, int nOrig, int size, arma::vec &prob);
-        
-        template <typename INDEX>
-        void ProbSampleNoReplace(INDEX &index, int nOrig, int size, arma::vec &prob);
-        
-        template <typename PROB>
-        void FixProb(PROB &prob, int size, bool replace);
+        void SampleNoReplace( IntegerVector &index, int nOrig, int size);
+        void SampleReplace( IntegerVector &index, int nOrig, int size);
+        void ProbSampleNoReplace(IntegerVector &index, int nOrig, int size, arma::vec &prob);
+        void ProbSampleReplace(IntegerVector &index, int nOrig, int size, arma::vec &prob);
+        void WalkerProbSampleReplace(IntegerVector &index, int nOrig, int size, arma::vec &prob);
 
         template <class T> 
         T sample(const T &x, const int size, const bool replace, NumericVector prob_ = NumericVector(0) ) {
@@ -55,37 +44,41 @@ namespace Rcpp{
             int ii, jj;
             int nOrig = x.size();
             int probsize = prob_.size();
-            // Create return object
+            // Create return object 
             T ret(size);
             if ( size > nOrig && !replace) throw std::range_error( "Tried to sample more elements than in x without replacement" ) ;
+            if ( !replace && (probsize==0) && nOrig > 1e+07 && size <= nOrig/2) {
+                throw std::range_error( "R uses .Internal(sample2(n, size) for this case, which is not implemented." ) ;
+            }
             // Store the sample ids here, modify in-place
             IntegerVector index(size);
             if (probsize == 0) { // No probabilities given
                 if (replace) {
-                    SampleReplace<IntegerVector>(index, nOrig, size);
+                    SampleReplace(index, nOrig, size);
                 } else {
-                    SampleNoReplace<IntegerVector>(index, nOrig, size);
+                    SampleNoReplace(index, nOrig, size);
                 }
             } else { 
                 if (probsize != nOrig) throw std::range_error( "Number of probabilities must equal input vector length" ) ;
+                // copy probs once, pass-by-ref hereafter
+                NumericVector fixprob = clone(prob_);
                 // normalize, error-check probability vector
                 // fixprob will be modified in-place
-                NumericVector fixprob = clone(prob_);
-                FixProb<NumericVector>(fixprob, size, replace);
+                FixProb(fixprob, size, replace);
+                // don't reallocate the (cloned, fixed) prob vec
+                arma::vec prob(fixprob.begin(), fixprob.size(), false);
+                
                 // 
-                // Copy the given probabilities into an arma vector
-                arma::vec prob(fixprob.begin(), fixprob.size());
                 if (replace) {
                     // check for walker alias conditions 
-                    int walker_test = sum( (probsize * prob) > 0.1);
-                    if (walker_test < 200) { 
-                        ProbSampleReplace<IntegerVector>(index, nOrig, size, prob);
+                    int walker_test = sum( (prob * nOrig) > 0.1);
+                    if (walker_test > 200) {
+                        WalkerProbSampleReplace(index, nOrig, size, prob);
                     } else {
-                        throw std::range_error( "Walker Alias method not implemented. R-core sample() is likely faster for this problem.");
-                        // WalkerProbSampleReplace(index, nOrig, size, prob);
+                        ProbSampleReplace(index, nOrig, size, prob);
                     }
                 } else {
-                    ProbSampleNoReplace<IntegerVector>(index, nOrig, size, prob);
+                    ProbSampleNoReplace(index, nOrig, size, prob);
                 }
             }
             // copy the results into the return vector
@@ -96,16 +89,15 @@ namespace Rcpp{
             return(ret);
         }
 
-        template <typename INDEX>
-        void SampleReplace( INDEX &index, int nOrig, int size) {
+        // worker functions
+        void SampleReplace( IntegerVector &index, int nOrig, int size) {
             int ii;
             for (ii = 0; ii < size; ii++) {
                 index[ii] = nOrig * unif_rand();
             }
         }
 
-        template <typename INDEX>
-        void SampleNoReplace( INDEX &index, int nOrig, int size) {
+        void SampleNoReplace( IntegerVector &index, int nOrig, int size) {
             int ii, jj;
             IntegerVector sub(nOrig);
             for (ii = 0; ii < nOrig; ii++) {
@@ -119,32 +111,9 @@ namespace Rcpp{
             }
         }
 
-        template <typename PROB>
-        void FixProb(PROB &prob, const int size, const bool replace) {
-            // prob is modified in-place.  
-            // Is this better than cloning it?
-            double sum = 0.0;
-            int ii, nPos = 0;
-            int nn = prob.size();
-            for (ii = 0; ii < nn; ii++) {
-                if (!R_FINITE(prob[ii])) //does this work??
-                    throw std::range_error( "NAs not allowed in probability" ) ;
-                if (prob[ii] < 0.0)
-                    throw std::range_error( "Negative probabilities not allowed" ) ;
-                if (prob[ii] > 0.0) {
-                    nPos++;
-                    sum += prob[ii];
-                }
-            }
-            if (nPos == 0 || (!replace && size > nPos)) {
-                throw std::range_error("Not enough positive probabilities");
-            }
-            prob = prob / sum;  //sugar
-        }
 
         // Unequal probability sampling with replacement 
-        template <typename INDEX>
-        void ProbSampleReplace(INDEX &index, int nOrig, int size, arma::vec &prob){
+        void ProbSampleReplace(IntegerVector &index, int nOrig, int size, arma::vec &prob){
             double rU;
             int ii, jj;
             int nOrig_1 = nOrig - 1;
@@ -163,9 +132,50 @@ namespace Rcpp{
             }
         }
 
+        // Unequal probability sampling with replacement, prob.size() large and sum(prob) >0.1
+        void WalkerProbSampleReplace(IntegerVector &index, int nOrig, int size, arma::vec &prob){
+            double rU;
+            int ii, jj, kk; // indices, ii for loops
+            // index tables, fill with zeros
+            IntegerVector HL_dat(nOrig);
+            IntegerVector alias_tab(nOrig); 
+            IntegerVector::iterator H, L, H0, L0;
+            //HL0 = HL_dat.begin();
+            H0 = H = HL_dat.begin();
+            L0 = L = HL_dat.end();
+            //prob *= nOrig; // scale probability table
+            // fill HL_dat from beginning (small prob) and end (large prob) with indices
+            for (ii = 0; ii < nOrig; ii++) {
+                prob[ii] *= nOrig;
+                if( prob[ii] < 1.0) {
+                    *(H++) = ii;
+                } else {
+                    *(--L) = ii;
+                }
+            }
+            
+            // some of both large and small
+            if ( (H > H0) && (L < L0) ) {
+                for (kk = 0; kk < nOrig; kk++) {
+                    ii = HL_dat[kk];
+                    jj = *L;
+                    alias_tab[ii] = jj;
+                    prob[jj] += (prob[ii] - 1);
+                    if (prob[jj] < 1.) L++;
+                    if(L == L0) break; // now all prob >= 1
+                }
+            }
+            for (ii = 0; ii < nOrig; ii++)  prob[ii] += ii;
+            /* generate sample */
+            for (ii = 0; ii < size; ii++) {
+                rU = unif_rand() * nOrig;
+                kk = (int) rU;
+                index[ii] = (rU < prob[kk]) ? kk : alias_tab[kk];
+            }
+        }
+
         // Unequal probability sampling without replacement 
-        template <typename INDEX>
-        void ProbSampleNoReplace(INDEX &index, int nOrig, int size, arma::vec &prob){
+        void ProbSampleNoReplace(IntegerVector &index, int nOrig, int size, arma::vec &prob){
             int ii, jj, kk;
             int nOrig_1 = nOrig - 1;
             double rT, mass, totalmass = 1.0;
