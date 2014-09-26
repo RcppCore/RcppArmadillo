@@ -38,12 +38,14 @@ namespace Rcpp{
             // Return object
             IntegerVector draws(probsize);
             if ( size < 0 || size == NA_INTEGER)  throw std::range_error( "Invalid size" );
-            long double p_tot = 0;
-            for (ii = 0; ii < probsize; ii++) {
-                 p_tot += prob[ii];
+            long double p_tot = 0.;
+             p_tot = std::accumulate(prob.begin(), prob.end(), p_tot);
+            if(fabs((double)(p_tot - 1.)) > 1e-7){
+                throw std::range_error( "Probabilities don't sum to 1, please use FixProb" );
             }
+            
             // do as rbinom
-            if (size == 0 || (probsize == 1 && p_tot == 0.)) {
+            if (size == 0 ) {
                  return draws;
             }
             //rmultinom(size, REAL(prob), k, &INTEGER(ans)[ik]);

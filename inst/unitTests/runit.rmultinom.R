@@ -27,6 +27,7 @@ test.rmultinom <- function() {
     ## should be indentical between R and C++
     tests <- list(
         vanilla=list( n=5, size=100, prob=rep(1/10,10)),
+        big=list( n=5, size=1e6, prob=rep(1/1e3,1e3)),
         fixup.prob=list( n=10, size=1e5, prob=1:10),
         n0=list( n=0, size=5, prob=1:10),
         size0=list( n=10, size=0, prob=1:10)
