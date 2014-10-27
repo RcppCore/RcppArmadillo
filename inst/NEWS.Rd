@@ -2,9 +2,9 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
-\section{Changes in RcppArmadillo version 0.4.450.xxx (2014-xx-yy)}{
+\section{Changes in RcppArmadillo version 0.4.449.1 (2014-10-24)}{
   \itemize{
-    \item Upgraded to Armadillo release Version 4.450.xxx (yyy)
+    \item Upgraded to Armadillo release Version 4.449.1 ("alpha")
     \itemize{
       \item TBA
     }
