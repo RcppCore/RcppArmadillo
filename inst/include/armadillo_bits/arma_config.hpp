@@ -111,6 +111,13 @@ struct arma_config
   #else
     static const bool use_wrapper = false;
   #endif
+  
+  
+  #if defined(_OPENMP)
+    static const bool openmp = true;
+  #else
+    static const bool openmp = false;
+  #endif
   };
 
 

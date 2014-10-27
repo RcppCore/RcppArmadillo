@@ -1819,7 +1819,7 @@ auxlib::eig_pair
 template<typename eT, typename T1>
 inline
 bool
-auxlib::chol(Mat<eT>& out, const Base<eT,T1>& X)
+auxlib::chol(Mat<eT>& out, const Base<eT,T1>& X, const uword layout)
   {
   arma_extra_debug_sigprint();
   
@@ -1829,26 +1829,32 @@ auxlib::chol(Mat<eT>& out, const Base<eT,T1>& X)
     
     arma_debug_check( (out.is_square() == false), "chol(): given matrix is not square" );
     
-    if(out.is_empty())
-      {
-      return true;
-      }
+    if(out.is_empty())  { return true; }
     
     const uword out_n_rows = out.n_rows;
     
-    char      uplo = 'U';
+    char      uplo = (layout == 0) ? 'U' : 'L';
     blas_int  n    = out_n_rows;
     blas_int  info = 0;
     
     lapack::potrf(&uplo, &n, out.memptr(), &n, &info);
     
-    for(uword col=0; col<out_n_rows; ++col)
+    if(layout == 0)
       {
-      eT* colptr = out.colptr(col);
-      
-      for(uword row=(col+1); row < out_n_rows; ++row)
+      for(uword col=0; col < out_n_rows; ++col)
         {
-        colptr[row] = eT(0);
+        eT* colptr = out.colptr(col);
+        
+        for(uword row=(col+1); row < out_n_rows; ++row)  { colptr[row] = eT(0); }
+        }
+      }
+    else
+      {
+      for(uword col=1; col < out_n_rows; ++col)
+        {
+        eT* colptr = out.colptr(col);
+        
+        for(uword row=0; row < col; ++row)  { colptr[row] = eT(0); }
         }
       }
     
@@ -1858,6 +1864,7 @@ auxlib::chol(Mat<eT>& out, const Base<eT,T1>& X)
     {
     arma_ignore(out);
     arma_ignore(X);
+    arma_ignore(layout);
     
     arma_stop("chol(): use of LAPACK needs to be enabled");
     return false;

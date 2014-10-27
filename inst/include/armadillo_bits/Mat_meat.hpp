@@ -6463,11 +6463,11 @@ Mat<eT>::row_col_iterator::row_col_iterator(const row_col_iterator& in_it)
 
 template<typename eT>
 inline
-Mat<eT>::row_col_iterator::row_col_iterator(Mat<eT>& in_M, const uword row, const uword col)
-  : M           (&in_M            )
-  , current_pos (&in_M.at(row,col))
-  , internal_col(col              )
-  , internal_row(row              )
+Mat<eT>::row_col_iterator::row_col_iterator(Mat<eT>& in_M, const uword in_row, const uword in_col)
+  : M           (&in_M                  )
+  , current_pos (&in_M.at(in_row,in_col))
+  , internal_col(in_col                 )
+  , internal_row(in_row                 )
   {
   arma_extra_debug_sigprint();
   }
@@ -6656,11 +6656,11 @@ Mat<eT>::const_row_col_iterator::const_row_col_iterator(const const_row_col_iter
 
 template<typename eT>
 inline
-Mat<eT>::const_row_col_iterator::const_row_col_iterator(const Mat<eT>& in_M, const uword row, const uword col)
-  : M           (&in_M            )
-  , current_pos (&in_M.at(row,col))
-  , internal_col(col              )
-  , internal_row(row              )
+Mat<eT>::const_row_col_iterator::const_row_col_iterator(const Mat<eT>& in_M, const uword in_row, const uword in_col)
+  : M           (&in_M                  )
+  , current_pos (&in_M.at(in_row,in_col))
+  , internal_col(in_col                 )
+  , internal_row(in_row                 )
   {
   arma_extra_debug_sigprint();
   }

@@ -15,9 +15,14 @@ template<typename T1>
 arma_hot
 inline
 typename T1::pod_type
-arma_vec_norm_1(const Proxy<T1>& P)
+arma_vec_norm_1
+  (
+  const Proxy<T1>& P,
+  const typename arma_not_cx<typename T1::elem_type>::result* junk = 0
+  )
   {
   arma_extra_debug_sigprint();
+  arma_ignore(junk);
   
   typedef typename T1::pod_type T;
   
@@ -60,25 +65,142 @@ arma_vec_norm_1(const Proxy<T1>& P)
       }
     else
       {
+      T acc1 = T(0);
+      T acc2 = T(0);
+      
       for(uword col=0; col<n_cols; ++col)
         {
         uword i,j;
         
         for(i=0, j=1; j<n_rows; i+=2, j+=2)
           {
-          acc += std::abs(P.at(i,col));
-          acc += std::abs(P.at(j,col));
+          acc1 += std::abs(P.at(i,col));
+          acc2 += std::abs(P.at(j,col));
           }
         
         if(i < n_rows)
           {
-          acc += std::abs(P.at(i,col));
+          acc1 += std::abs(P.at(i,col));
           }
+        }
+      
+      acc = acc1 + acc2;
+      }
+    }
+  
+  return acc;
+  }
+
+
+
+template<typename T1>
+arma_hot
+inline
+typename T1::pod_type
+arma_vec_norm_1
+  (
+  const Proxy<T1>& P,
+  const typename arma_cx_only<typename T1::elem_type>::result* junk = 0
+  )
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  typedef typename T1::elem_type eT;
+  typedef typename T1::pod_type   T;
+  
+  T acc = T(0);
+  
+  if(Proxy<T1>::prefer_at_accessor == false)
+    {
+    typename Proxy<T1>::ea_type A = P.get_ea();
+    
+    const uword N = P.get_n_elem();
+    
+    for(uword i=0; i<N; ++i)
+      {
+      const std::complex<T>& X = A[i];
+      
+      const T a = X.real();
+      const T b = X.imag();
+      
+      acc += std::sqrt( (a*a) + (b*b) );
+      }
+    }
+  else
+    {
+    const uword n_rows = P.get_n_rows();
+    const uword n_cols = P.get_n_cols();
+    
+    if(n_rows == 1)
+      {
+      for(uword col=0; col<n_cols; ++col)
+        {
+        const std::complex<T>& X = P.at(0,col);
+        
+        const T a = X.real();
+        const T b = X.imag();
+        
+        acc += std::sqrt( (a*a) + (b*b) );
+        }
+      }
+    else
+      {
+      for(uword col=0; col<n_cols; ++col)
+      for(uword row=0; row<n_rows; ++row)
+        {
+        const std::complex<T>& X = P.at(row,col);
+        
+        const T a = X.real();
+        const T b = X.imag();
+        
+        acc += std::sqrt( (a*a) + (b*b) );
         }
       }
     }
+  
+  if( (acc != T(0)) && arma_isfinite(acc) )
+    {
+    return acc;
+    }
+  else
+    {
+    arma_extra_debug_print("arma_vec_norm_1(): detected possible underflow or overflow");
     
-  return acc;
+    const quasi_unwrap<typename Proxy<T1>::stored_type> R(P.Q);
+    
+    const uword N     = R.M.n_elem;
+    const eT*   R_mem = R.M.memptr();
+    
+    T max_val = priv::most_neg<T>();
+    
+    for(uword i=0; i<N; ++i)
+      {
+      const std::complex<T>& X = R_mem[i];
+      
+      const T a = std::abs(X.real());
+      const T b = std::abs(X.imag());
+      
+      if(a > max_val)  { max_val = a; }
+      if(b > max_val)  { max_val = b; }
+      }
+    
+    if(max_val == T(0))  { return T(0); }
+    
+    T alt_acc = T(0);
+    
+    for(uword i=0; i<N; ++i)
+      {
+      const std::complex<T>& X = R_mem[i];
+      
+      const T a = X.real() / max_val;
+      const T b = X.imag() / max_val;
+      
+      alt_acc += std::sqrt( (a*a) + (b*b) );
+      }
+    
+    return ( alt_acc * max_val );
+    }
   }
 
 
@@ -263,8 +385,12 @@ arma_vec_norm_2
     
     for(uword i=0; i<N; ++i)
       {
-      const T tmp = std::abs(A[i]);
-      acc += tmp*tmp;
+      const std::complex<T>& X = A[i];
+      
+      const T a = X.real();
+      const T b = X.imag();
+      
+      acc += (a*a) + (b*b);
       }
     }
   else
@@ -276,8 +402,12 @@ arma_vec_norm_2
       {
       for(uword col=0; col<n_cols; ++col)
         {
-        const T tmp = std::abs(P.at(0,col));
-        acc += tmp*tmp;
+        const std::complex<T>& X = P.at(0,col);
+        
+        const T a = X.real();
+        const T b = X.imag();
+        
+        acc += (a*a) + (b*b);
         }
       }
     else
@@ -285,8 +415,12 @@ arma_vec_norm_2
       for(uword col=0; col<n_cols; ++col)
       for(uword row=0; row<n_rows; ++row)
         {
-        const T tmp = std::abs(P.at(row,col));
-        acc += tmp*tmp;
+        const std::complex<T>& X = P.at(row,col);
+        
+        const T a = X.real();
+        const T b = X.imag();
+        
+        acc += (a*a) + (b*b);
         }
       }
     }

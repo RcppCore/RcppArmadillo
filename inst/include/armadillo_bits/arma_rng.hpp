@@ -263,7 +263,10 @@ struct arma_rng::randu< std::complex<T> >
   arma_inline
   operator std::complex<T> ()
     {
-    return std::complex<T>( T( arma_rng::randu<T>() ), T( arma_rng::randu<T>() ) );
+    const T a = T( arma_rng::randu<T>() );
+    const T b = T( arma_rng::randu<T>() );
+    
+    return std::complex<T>(a, b);
     }
   
   
@@ -274,7 +277,10 @@ struct arma_rng::randu< std::complex<T> >
     {
     for(uword i=0; i < N; ++i)
       {
-      mem[i] = std::complex<T>( T( arma_rng::randu<T>() ), T( arma_rng::randu<T>() ) );
+      const T a = T( arma_rng::randu<T>() );
+      const T b = T( arma_rng::randu<T>() );
+      
+      mem[i] = std::complex<T>(a, b);
       }
     }
   };

@@ -1,19 +1,16 @@
 // Copyright (C) 2014 Ryan Curtin
-//
+// 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-// This defines all the names of the HDF5 functions Armadillo will use.
 
 #if defined(ARMA_USE_HDF5)
 
-// These macros only need to be defined if the wrapper is not being used.
-// Otherwise, the function names and type names as they appear in hdf5_misc.hpp
-// will work just fine, but we need to define prototypes for the wrapper
-// functions that will appear in wrapper.cpp.
-#if !defined(ARMA_USE_WRAPPER)
-
+#if !defined(ARMA_USE_HDF5_ALT)
+  
+  // macros needed if the wrapper run-time library is not being used
+  
   #define arma_H5Tcopy      H5Tcopy
   #define arma_H5Tcreate    H5Tcreate
   #define arma_H5Tinsert    H5Tinsert
@@ -57,6 +54,8 @@
   #define arma_H5T_NATIVE_DOUBLE  H5T_NATIVE_DOUBLE
 
 #else
+
+// prototypes for the wrapper functions defined in the wrapper run-time library (src/wrapper.cpp)
 
 extern "C"
   {
