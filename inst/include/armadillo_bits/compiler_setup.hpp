@@ -63,6 +63,8 @@
     #define ARMA_HAVE_SNPRINTF
     #define ARMA_HAVE_ISFINITE
     #define ARMA_HAVE_LOG1P
+    #define ARMA_HAVE_ISINF
+    #define ARMA_HAVE_ISNAN
   #endif
 #endif
 

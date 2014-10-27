@@ -913,7 +913,7 @@ diskio::save_raw_ascii(const Mat<eT>& x, std::ostream& f)
         f.width(cell_width);
         }
       
-      f << x.at(row,col);
+      arma_ostream::print_elem(f, x.at(row,col), false);
       }
       
     f.put('\n');
@@ -1039,7 +1039,7 @@ diskio::save_arma_ascii(const Mat<eT>& x, std::ostream& f)
         f.width(cell_width);
         }
       
-      f << x.at(row,col);
+      arma_ostream::print_elem(f, x.at(row,col), false);
       }
     
     f.put('\n');

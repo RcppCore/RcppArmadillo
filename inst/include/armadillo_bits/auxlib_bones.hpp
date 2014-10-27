@@ -144,7 +144,7 @@ class auxlib
   // chol
   
   template<typename eT, typename T1>
-  inline static bool chol(Mat<eT>& out, const Base<eT,T1>& X);
+  inline static bool chol(Mat<eT>& out, const Base<eT,T1>& X, const uword layout);
   
   
   //

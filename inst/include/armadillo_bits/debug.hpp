@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2014 Conrad Sanderson
+// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
 // Copyright (C) 2011 Stanislav Funiak
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -97,8 +97,6 @@ arma_stop(const T1& x)
     {
     std::ostream& out = get_stream_err1();
     
-    out.flush();
-    
     out << '\n';
     out << "error: " << x << '\n';
     out << '\n';
@@ -125,8 +123,6 @@ arma_stop_bad_alloc(const T1& x)
   #if defined(ARMA_PRINT_ERRORS)
     {
     std::ostream& out = get_stream_err2();
-    
-    out.flush();
     
     out << '\n';
     out << "error: " << x << '\n';
@@ -158,8 +154,6 @@ arma_bad(const T1& x, const bool hurl = true)
   #if defined(ARMA_PRINT_ERRORS)
     {
     std::ostream& out = get_stream_err2();
-    
-    out.flush();
     
     out << '\n';
     out << "error: " << x << '\n';
@@ -1180,6 +1174,7 @@ arma_assert_mul_size(const subview<eT1>& A, const subview<eT2>& B, const char* x
         
         out << "@ arma_config::use_wrapper  = " << arma_config::use_wrapper  << '\n';
         out << "@ arma_config::use_cxx11    = " << arma_config::use_cxx11    << '\n';
+        out << "@ arma_config::openmp       = " << arma_config::openmp       << '\n';
         out << "@ arma_config::lapack       = " << arma_config::lapack       << '\n';
         out << "@ arma_config::blas         = " << arma_config::blas         << '\n';
         out << "@ arma_config::arpack       = " << arma_config::arpack       << '\n';

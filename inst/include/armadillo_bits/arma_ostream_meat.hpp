@@ -291,7 +291,14 @@ arma_ostream::print_elem(std::ostream& o, const eT& x, const bool modify)
     
     if(x != eT(0))
       {
-      o << promoted_eT(x);
+      if(arma_isfinite(x))
+        {
+        o << promoted_eT(x);
+        }
+      else
+        {
+        o << ( arma_isinf(x) ? ((x <= eT(0)) ? "-inf" : "inf") : "nan" );
+        }
       }
     else
       {
@@ -327,8 +334,35 @@ arma_ostream::print_elem(std::ostream& o, const std::complex<T>& x, const bool m
     ss.flags(o.flags());
     //ss.imbue(o.getloc());
     ss.precision(o.precision());
-  
-    ss << '(' << x.real() << ',' << x.imag() << ')';
+    
+    ss << '(';
+    
+    const T a = x.real();
+    
+    if(arma_isfinite(a))
+      {
+      ss << a;
+      }
+    else
+      {
+      ss << ( arma_isinf(a) ? ((a <= T(0)) ? "-inf" : "+inf") : "nan" );
+      }
+    
+    ss << ',';
+    
+    const T b = x.imag();
+    
+    if(arma_isfinite(b))
+      {
+      ss << b;
+      }
+    else
+      {
+      ss << ( arma_isinf(b) ? ((b <= T(0)) ? "-inf" : "+inf") : "nan" );
+      }
+    
+    ss << ')';
+    
     o << ss.str();
     }
   else

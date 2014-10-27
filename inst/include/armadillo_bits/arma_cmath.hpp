@@ -49,7 +49,9 @@ arma_isfinite(float x)
     {
     const float y = (std::numeric_limits<float>::max)();
     
-    return (x == x) && (x >= -y) && (x <= y);
+    const volatile float xx = x;
+    
+    return (xx == xx) && (x >= -y) && (x <= y);
     }
   #endif
   }
@@ -77,7 +79,9 @@ arma_isfinite(double x)
     {
     const double y = (std::numeric_limits<double>::max)();
     
-    return (x == x) && (x >= -y) && (x <= y);
+    const volatile double xx = x;
+    
+    return (xx == xx) && (x >= -y) && (x <= y);
     }
   #endif
   }
@@ -97,6 +101,158 @@ arma_isfinite(const std::complex<T>& x)
     {
     return true;
     }
+  }
+
+
+
+//
+// wrappers for isinf
+
+
+template<typename eT>
+arma_inline
+bool
+arma_isinf(eT val)
+  {
+  arma_ignore(val);
+    
+  return false;
+  }
+
+
+
+template<>
+arma_inline
+bool
+arma_isinf(float x)
+  {
+  #if defined(ARMA_USE_CXX11)
+    {
+    return std::isinf(x);
+    }
+  #elif defined(ARMA_HAVE_ISINF)
+    {
+    return (std::isinf(x) != 0);
+    }
+  #else
+    {
+    const float y = (std::numeric_limits<float>::max)();
+    
+    const volatile float xx = x;
+    
+    return (xx == xx) && ((x < -y) || (x > y));
+    }
+  #endif
+  }
+
+
+
+template<>
+arma_inline
+bool
+arma_isinf(double x)
+  {
+  #if defined(ARMA_USE_CXX11)
+    {
+    return std::isinf(x);
+    }
+  #elif defined(ARMA_HAVE_ISINF)
+    {
+    return (std::isinf(x) != 0);
+    }
+  #else
+    {
+    const double y = (std::numeric_limits<double>::max)();
+    
+    const volatile double xx = x;
+    
+    return (xx == xx) && ((x < -y) || (x > y));
+    }
+  #endif
+  }
+
+
+
+template<typename T>
+arma_inline
+bool
+arma_isinf(const std::complex<T>& x)
+  {
+  return ( arma_isinf(x.real()) || arma_isinf(x.imag()) );
+  }
+
+
+
+//
+// wrappers for isnan
+
+
+template<typename eT>
+arma_inline
+bool
+arma_isnan(eT val)
+  {
+  arma_ignore(val);
+    
+  return false;
+  }
+
+
+
+template<>
+arma_inline
+bool
+arma_isnan(float x)
+  {
+  #if defined(ARMA_USE_CXX11)
+    {
+    return std::isnan(x);
+    }
+  #elif defined(ARMA_HAVE_ISNAN)
+    {
+    return (std::isnan(x) != 0);
+    }
+  #else
+    {
+    const volatile float xx = x;
+    
+    return (xx != xx);
+    }
+  #endif
+  }
+
+
+
+template<>
+arma_inline
+bool
+arma_isnan(double x)
+  {
+  #if defined(ARMA_USE_CXX11)
+    {
+    return std::isnan(x);
+    }
+  #elif defined(ARMA_HAVE_ISNAN)
+    {
+    return (std::isnan(x) != 0);
+    }
+  #else
+    {
+    const volatile double xx = x;
+    
+    return (xx != xx);
+    }
+  #endif
+  }
+
+
+
+template<typename T>
+arma_inline
+bool
+arma_isnan(const std::complex<T>& x)
+  {
+  return ( arma_isnan(x.real()) || arma_isnan(x.imag()) );
   }
 
 
