@@ -1111,7 +1111,7 @@ diskio::save_csv_ascii(const Mat<eT>& x, std::ostream& f)
     {
     for(uword col=0; col < x_n_cols; ++col)
       {
-      f << x.at(row,col);
+      arma_ostream::print_elem(f, x.at(row,col), false);
       
       if( col < (x_n_cols-1) )
         {
@@ -3116,7 +3116,7 @@ diskio::save_raw_ascii(const Cube<eT>& x, std::ostream& f)
           f.width(cell_width);
           }
         
-        f << x.at(row,col,slice);
+        arma_ostream::print_elem(f, x.at(row,col,slice), false);
         }
         
       f.put('\n');
@@ -3245,7 +3245,7 @@ diskio::save_arma_ascii(const Cube<eT>& x, std::ostream& f)
           f.width(cell_width);
           }
         
-        f << x.at(row,col,slice);
+        arma_ostream::print_elem(f, x.at(row,col,slice), false);
         }
       
       f.put('\n');
