@@ -1,3 +1,11 @@
+2014-10-30  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.4.500.0
+        * inst/NEWS: Release 0.4.500.0
+        * debian/*: Similarly updated for new release to Debian
+
+	* inst/include/*: Upgraded to release 4.500 of Armadillo
+
 2014-10-26  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.4.449.1.0 [GitHub only]
