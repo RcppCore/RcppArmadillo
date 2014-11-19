@@ -26,6 +26,24 @@
 namespace Rcpp{
 namespace traits {
 
+	template <typename T> 
+    class Exporter< arma::field<T> > {
+    public: 
+        Exporter(SEXP x) : data(x){}
+        
+        inline arma::field<T> get() {
+        	size_t n = data.size() ;
+        	arma::field<T> out( n ) ;
+        	for(size_t i=0; i<n; i++){
+        		out[i] = as<T>(data[i]) ;	
+        	}
+        	return out ;
+        }
+        
+    private:
+    	List data ;
+    }; 
+
     template <typename T> 
     class Exporter< arma::Col<T> > : public IndexingExporter< arma::Col<T>, T > {
     public: 
