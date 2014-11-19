@@ -2,12 +2,23 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.4.5.. (2014-11-xx)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 4.5... ("....")
+    \itemize{
+      \item TBD
+    }
+    \item The Armadillo Field type is now converted in \code{as<>} conversion
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.4.500.0 (2014-10-30)}{
   \itemize{
     \item Upgraded to Armadillo release Version 4.500 ("Singapore Sling")
     \itemize{
       \item faster handling of complex vectors by \code{norm()}
-      \item expanded \code{chol()} to optionally specify output matrix as upper or lower triangular
+      \item expanded \code{chol()} to optionally specify output matrix
+      as upper or lower triangular 
       \item better handling of non-finite values when saving matrices as text files
     }
     \item The \code{sample} functionality has been extended to provide
