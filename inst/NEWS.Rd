@@ -2,9 +2,9 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
-\section{Changes in RcppArmadillo version 0.4.549.1.0 (2014-11-xx)}{
+\section{Changes in RcppArmadillo version 0.4.549.2.0 (2014-11-xx)}{
   \itemize{
-    \item Upgraded to Armadillo release Version 4.549.1 ("....")
+    \item Upgraded to Armadillo release Version 4.549.2 ("....")
     \itemize{
       \item added matrix exponential function \code{expmat()}
       \item faster \code{.log_p()} and \code{.avg_log_p()} functions in

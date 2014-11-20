@@ -1,7 +1,7 @@
 2014-11-19  Dirk Eddelbuettel  <edd@debian.org>
 
-        * DESCRIPTION: Release 0.4.549.1.0 [GitHub only]
-        * inst/NEWS.Rd: Release 0.4.549.1.0 [GitHub only]
+        * DESCRIPTION: Release 0.4.549.2.0 [GitHub only]
+        * inst/NEWS.Rd: Release 0.4.549.2.0 [GitHub only]
 
         * inst/include/*: Upgraded to "alpha" version 4.549.1 of Armadillo
 
