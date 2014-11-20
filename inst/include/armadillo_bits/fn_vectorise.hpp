@@ -1,5 +1,5 @@
-// Copyright (C) 2013 Conrad Sanderson
-// Copyright (C) 2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2013-2014 Conrad Sanderson
+// Copyright (C) 2013-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -43,6 +43,19 @@ vectorise(const T1& X, const uword dim)
   arma_debug_check( (dim > 1), "vectorise(): dim must be 0 or 1");
   
   return Op<T1, op_vectorise_all>(X, dim, 0);
+  }
+
+
+
+//! experimental: vectorisation of cubes
+template<typename T1>
+inline
+const Op<T1, op_vectorise_cube_col>
+vectorise(const BaseCube<typename T1::elem_type, T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  return Op<T1, op_vectorise_cube_col>(X.get_ref());
   }
 
 

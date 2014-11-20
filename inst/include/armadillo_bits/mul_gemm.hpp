@@ -241,19 +241,37 @@ class gemm
     {
     arma_extra_debug_sigprint();
     
-    if( (A.n_rows <= 4) && (A.n_rows == A.n_cols) && (A.n_rows == B.n_rows) && (B.n_rows == B.n_cols) && (is_cx<eT>::no) ) 
+    const uword A_n_rows = A.n_rows;
+    
+    if( (A_n_rows <= 4) && (A_n_rows == A.n_cols) && (A_n_rows == B.n_rows) && (B.n_rows == B.n_cols) ) 
       {
-      if(do_trans_B == false)
+      if(is_cx<eT>::no)
         {
-        gemm_emul_tinysq<do_trans_A, use_alpha, use_beta>::apply(C, A, B, alpha, beta);
+        if(do_trans_B == false)
+          {
+          gemm_emul_tinysq<do_trans_A, use_alpha, use_beta>::apply(C, A, B, alpha, beta);
+          }
+        else
+          {
+          Mat<eT> BB(B.n_rows, B.n_rows);
+          
+          op_strans::apply_mat_noalias_tinysq(BB, B);
+          
+          gemm_emul_tinysq<do_trans_A, use_alpha, use_beta>::apply(C, A, BB, alpha, beta);
+          }
         }
       else
         {
-        Mat<eT> BB(B.n_rows, B.n_rows);
+        Mat<eT> tmp_A;
+        Mat<eT> tmp_B;
         
-        op_strans::apply_mat_noalias_tinysq(BB, B);
+        if(do_trans_A)  { op_htrans::apply_mat_noalias(tmp_A, A); }
+        if(do_trans_B)  { op_htrans::apply_mat_noalias(tmp_B, B); }
         
-        gemm_emul_tinysq<do_trans_A, use_alpha, use_beta>::apply(C, A, BB, alpha, beta);
+        const Mat<eT>& AA = (do_trans_A == false) ? A : tmp_A;
+        const Mat<eT>& BB = (do_trans_B == false) ? B : tmp_B;
+        
+        gemm_emul_tinysq<false, use_alpha, use_beta>::apply(C, AA, BB, alpha, beta);
         }
       }
     else

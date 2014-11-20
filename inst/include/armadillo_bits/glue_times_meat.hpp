@@ -473,6 +473,17 @@ glue_times::apply_inplace_plus(Mat<typename T1::elem_type>& out, const Glue<T1, 
   typedef typename T1::elem_type            eT;
   typedef typename get_pod_type<eT>::result  T;
   
+  if( (is_outer_product<T1>::value) || (has_op_inv<T1>::value) || (has_op_inv<T2>::value) )
+    {
+    // partial workaround for corner cases
+    
+    const Mat<eT> tmp(X);
+    
+    if(sign > sword(0))  { out += tmp; }  else  { out -= tmp; }
+    
+    return;
+    }
+  
   const partial_unwrap_check<T1> tmp1(X.A, out);
   const partial_unwrap_check<T2> tmp2(X.B, out);
   

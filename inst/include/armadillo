@@ -242,6 +242,7 @@ namespace arma
   #include "armadillo_bits/op_all_bones.hpp"
   #include "armadillo_bits/op_normalise_bones.hpp"
   #include "armadillo_bits/op_clamp_bones.hpp"
+  #include "armadillo_bits/op_expmat_bones.hpp"
   
   #include "armadillo_bits/glue_times_bones.hpp"
   #include "armadillo_bits/glue_mixed_bones.hpp"
@@ -442,6 +443,7 @@ namespace arma
   #include "armadillo_bits/fn_cond.hpp"
   #include "armadillo_bits/fn_normalise.hpp"
   #include "armadillo_bits/fn_clamp.hpp"
+  #include "armadillo_bits/fn_expmat.hpp"
   
   #include "armadillo_bits/fn_speye.hpp"
   #include "armadillo_bits/fn_spones.hpp"
@@ -557,6 +559,7 @@ namespace arma
   #include "armadillo_bits/op_all_meat.hpp"
   #include "armadillo_bits/op_normalise_meat.hpp"
   #include "armadillo_bits/op_clamp_meat.hpp"
+  #include "armadillo_bits/op_expmat_meat.hpp"
   
   #include "armadillo_bits/glue_times_meat.hpp"
   #include "armadillo_bits/glue_mixed_meat.hpp"

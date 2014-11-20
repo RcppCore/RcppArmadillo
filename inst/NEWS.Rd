@@ -2,11 +2,15 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
-\section{Changes in RcppArmadillo version 0.4.5.. (2014-11-xx)}{
+\section{Changes in RcppArmadillo version 0.4.549.1.0 (2014-11-xx)}{
   \itemize{
-    \item Upgraded to Armadillo release Version 4.5... ("....")
+    \item Upgraded to Armadillo release Version 4.549.1 ("....")
     \itemize{
-      \item TBD
+      \item added matrix exponential function \code{expmat()}
+      \item faster \code{.log_p()} and \code{.avg_log_p()} functions in
+      the \code{gmm_diag} class when compiling with OpenMP enabled
+      \item faster handling of in-place addition/subtraction of expressions with
+      an outer product
     }
     \item The Armadillo Field type is now converted in \code{as<>} conversion
   }

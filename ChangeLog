@@ -1,3 +1,13 @@
+2014-11-19  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.4.549.1.0 [GitHub only]
+        * inst/NEWS.Rd: Release 0.4.549.1.0 [GitHub only]
+
+        * inst/include/*: Upgraded to "alpha" version 4.549.1 of Armadillo
+
+        * .travis.yml: Temporary stop-gap measure of setting CRAN to something
+        other than the RStudio CDN which currently has DNS issue
+
 2014-11-19  Romain Francois <romain@r-enthusiasts.com>
 
 	* inst/include/RcppArmadilloAs.h: Support Fields type
