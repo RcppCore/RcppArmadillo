@@ -48,13 +48,15 @@ struct gmm_empty_arg {};
 #if defined(_OPENMP)
   struct arma_omp_state
     {
-    const int dynamic_state;
+    const int orig_dynamic_state;
     
-    inline  arma_omp_state() : dynamic_state(omp_get_dynamic()) {}
-    inline ~arma_omp_state() { omp_set_dynamic(dynamic_state); }
+    inline  arma_omp_state() : orig_dynamic_state(omp_get_dynamic()) { omp_set_dynamic(0); }
+    inline ~arma_omp_state() { omp_set_dynamic(orig_dynamic_state); }
     };
-
+#else
+  struct arma_omp_state {};
 #endif
+
 
 
 template<typename eT>
@@ -142,7 +144,9 @@ class gmm_diag
   inline void init(const uword in_n_dim, const uword in_n_gaus);
   
   inline void init_constants();
-  
+
+  inline void internal_gen_boundaries(field<uvec>& out, const uword N) const;
+
   inline eT internal_scalar_log_p(const eT* x                     ) const;
   inline eT internal_scalar_log_p(const eT* x, const uword gaus_id) const;
   

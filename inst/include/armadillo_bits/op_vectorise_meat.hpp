@@ -206,4 +206,73 @@ op_vectorise_all::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_vectori
 
 
 
+//
+
+
+
+//! experimental: vectorisation of cubes
+template<typename T1>
+inline
+void
+op_vectorise_cube_col::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_vectorise_cube_col>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  ProxyCube<T1> P(in.m);
+  
+  const uword N = P.get_n_elem();
+  
+  out.set_size(N, 1);
+  
+  if(is_Cube<typename ProxyCube<T1>::stored_type>::value == true)
+    {
+    const unwrap_cube<typename ProxyCube<T1>::stored_type> tmp(P.Q);
+    
+    arrayops::copy(out.memptr(), tmp.M.memptr(), N);
+    }
+  else
+    {
+    eT* outmem = out.memptr();
+    
+    if(ProxyCube<T1>::prefer_at_accessor == false)
+      {
+      typename ProxyCube<T1>::ea_type A = P.get_ea();
+      
+      uword i,j;
+      
+      for(i=0, j=1; j < N; i+=2, j+=2)
+        {
+        const eT tmp_i = A[i];
+        const eT tmp_j = A[j];
+        
+        outmem[i] = tmp_i;
+        outmem[j] = tmp_j;
+        }
+      
+      if(i < N)
+        {
+        outmem[i] = A[i];
+        }
+      }
+    else
+      {
+      const uword n_rows   = P.get_n_rows();
+      const uword n_cols   = P.get_n_cols();
+      const uword n_slices = P.get_n_slices();
+      
+      for(uword slice=0; slice < n_slices; ++slice)
+      for(uword   col=0;   col < n_cols;   ++col  )
+      for(uword   row=0;   row < n_rows;   ++row  )
+        {
+        *outmem = P.at(row,col,slice);
+        outmem++;
+        }
+      }
+    }
+  }
+
+
+
 //! @}

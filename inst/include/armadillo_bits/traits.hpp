@@ -1290,4 +1290,32 @@ template<>                     struct is_spglue_times<spglue_times2> { static co
 
 
 
+template<typename T1>
+struct is_outer_product
+  { static const bool value = false; };
+
+template<typename T1, typename T2>
+struct is_outer_product< Glue<T1,T2,glue_times> >
+  { static const bool value = (resolves_to_colvector<T1>::value && resolves_to_rowvector<T2>::value); };
+
+
+
+template<typename T1>
+struct has_op_inv
+  { static const bool value = false; };
+
+template<typename T1>
+struct has_op_inv< Op<T1,op_inv> >
+  { static const bool value = true;  };
+
+template<typename T1, typename T2>
+struct has_op_inv< Glue<Op<T1,op_inv>, T2, glue_times> >
+  { static const bool value = true;  };
+
+template<typename T1, typename T2>
+struct has_op_inv< Glue<T1, Op<T2,op_inv>, glue_times> >
+  { static const bool value = true;  };
+
+
+
 //! @}
