@@ -208,14 +208,14 @@ class gemm_emul
     
     // "better than nothing" handling of hermitian transposes for complex number matrices
     
-    Mat<eT> A_t;
-    Mat<eT> B_t;
+    Mat<eT> tmp_A;
+    Mat<eT> tmp_B;
     
-    if(do_trans_A)  { op_htrans::apply_mat_noalias(A_t, A); }
-    if(do_trans_B)  { op_htrans::apply_mat_noalias(B_t, B); }
+    if(do_trans_A)  { op_htrans::apply_mat_noalias(tmp_A, A); }
+    if(do_trans_B)  { op_htrans::apply_mat_noalias(tmp_B, B); }
     
-    const Mat<eT>& AA = (do_trans_A == false) ? A : A_t;
-    const Mat<eT>& BB = (do_trans_B == false) ? B : B_t;
+    const Mat<eT>& AA = (do_trans_A == false) ? A : tmp_A;
+    const Mat<eT>& BB = (do_trans_B == false) ? B : tmp_B;
     
     gemm_emul_large<false, false, use_alpha, use_beta>::apply(C, AA, BB, alpha, beta);
     }
@@ -241,40 +241,19 @@ class gemm
     {
     arma_extra_debug_sigprint();
     
-    const uword A_n_rows = A.n_rows;
-    
-    if( (A_n_rows <= 4) && (A_n_rows == A.n_cols) && (A_n_rows == B.n_rows) && (B.n_rows == B.n_cols) ) 
+    if( (A.n_rows <= 4) && (A.n_rows == A.n_cols) && (A.n_rows == B.n_rows) && (B.n_rows == B.n_cols) && (is_cx<eT>::no) ) 
       {
-      if(is_cx<eT>::no)
+      if(do_trans_B == false)
         {
-        if(do_trans_B == false)
-          {
-          gemm_emul_tinysq<do_trans_A, use_alpha, use_beta>::apply(C, A, B, alpha, beta);
-          }
-        else
-          {
-          Mat<eT> BB(B.n_rows, B.n_rows);
-          
-          op_strans::apply_mat_noalias_tinysq(BB, B);
-          
-          gemm_emul_tinysq<do_trans_A, use_alpha, use_beta>::apply(C, A, BB, alpha, beta);
-          }
+        gemm_emul_tinysq<do_trans_A, use_alpha, use_beta>::apply(C, A, B, alpha, beta);
         }
       else
         {
-        const Mat<eT>& A_orig = A;
-        const Mat<eT>& B_orig = B;
+        Mat<eT> BB(B.n_rows, B.n_rows);
         
-        Mat<eT> A_t;
-        Mat<eT> B_t;
+        op_strans::apply_mat_noalias_tinysq(BB, B);
         
-        if(do_trans_A)  { op_htrans::apply_mat_noalias(A_t, A_orig); }
-        if(do_trans_B)  { op_htrans::apply_mat_noalias(B_t, B_orig); }
-        
-        const Mat<eT>& AA = (do_trans_A == false) ? A_orig : A_t;
-        const Mat<eT>& BB = (do_trans_B == false) ? B_orig : B_t;
-        
-        gemm_emul_tinysq<false, use_alpha, use_beta>::apply(C, AA, BB, alpha, beta);
+        gemm_emul_tinysq<do_trans_A, use_alpha, use_beta>::apply(C, A, BB, alpha, beta);
         }
       }
     else
