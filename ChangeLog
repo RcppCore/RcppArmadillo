@@ -1,10 +1,14 @@
 2014-11-22  Dirk Eddelbuettel  <edd@debian.org>
 
+	* .travis.yml (env): 
+
         * DESCRIPTION: Release 0.4.550.0
         * inst/NEWS: Release 0.4.550.0
         * debian/*: Similarly updated for new release to Debian
 
 	* inst/include/*: Upgraded to release 4.550 of Armadillo
+
+        * .travis.yml: Undo temporary stop-gap measure of setting CRAN
 
 2014-11-19  Dirk Eddelbuettel  <edd@debian.org>
 
