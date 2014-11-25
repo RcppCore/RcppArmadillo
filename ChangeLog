@@ -1,6 +1,8 @@
-2014-11-22  Dirk Eddelbuettel  <edd@debian.org>
+2014-11-25  Dirk Eddelbuettel  <edd@debian.org>
 
-	* .travis.yml (env): 
+	* inst/unitTests/runit.rmultinom.R: Run only on i686 or x86_64
+
+2014-11-22  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.4.550.0
         * inst/NEWS: Release 0.4.550.0
