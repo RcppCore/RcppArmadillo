@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
-.runThisTest <- Sys.info()["machine"] %in% c("i686", "x86_64")
+.runThisTest <- isTRUE(capabilities("long.double"))
 
 if (.runThisTest) {
 

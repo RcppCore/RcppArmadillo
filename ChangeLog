@@ -1,3 +1,7 @@
+2014-11-26  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/unitTests/runit.rmultinom.R: Run only if 'long double' exists
+
 2014-11-25  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/unitTests/runit.rmultinom.R: Run only on i686 or x86_64
