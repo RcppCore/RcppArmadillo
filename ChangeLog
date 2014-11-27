@@ -1,5 +1,11 @@
 2014-11-26  Dirk Eddelbuettel  <edd@debian.org>
 
+        * DESCRIPTION: Release 0.4.550.1.0
+        * inst/NEWS: Release 0.4.550.1.0
+        * debian/*: Similarly updated for new release to Debian
+
+	* inst/include/*: Upgraded to release 4.550.1 of Armadillo
+
 	* inst/unitTests/runit.rmultinom.R: Run only if 'long double' exists
 
 2014-11-25  Dirk Eddelbuettel  <edd@debian.org>
