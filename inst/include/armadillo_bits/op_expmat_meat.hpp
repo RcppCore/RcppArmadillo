@@ -17,6 +17,7 @@
 //! SIAM Review, Vol. 45, No. 1, 2003, pp. 3-49.
 //! http://dx.doi.org/10.1137/S00361445024180
 
+
 template<typename T1>
 inline
 void
@@ -46,11 +47,13 @@ op_expmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_expmat>& expr
     
     arma_debug_check( (A.is_square() == false), "expmat(): given matrix is not square sized" );
     
-    const uword s = (std::max)(uword(0), uword(eop_aux::log2(norm(A, "inf"))) + uword(1) + uword(1));
+    const T norm_val = arma::norm(A, "inf");
     
-    const double denom = (std::pow)(double(2), double(s));  // workaround for bugs in GCC 4.4
+    const T log2_val = eop_aux::log2(norm_val);
     
-    const Mat<eT> AA = A / eT(denom);
+    const uword s = (std::max)(uword(0), uword(log2_val) + uword(1) + uword(1));
+    
+    const Mat<eT> AA = A / eT(eop_aux::pow(double(2), double(s)));
     
     T c = T(0.5);
     
