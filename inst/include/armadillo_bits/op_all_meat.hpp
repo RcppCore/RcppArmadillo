@@ -33,7 +33,7 @@ op_all::all_vec_helper(const Base<typename T1::elem_type, T1>& X)
     
     for(uword i=0; i<n_elem; ++i)
       {
-      if(Pea[i] != eT(0))  { ++count; }
+      count += (Pea[i] != eT(0)) ? uword(1) : uword(0);
       }
     }
   else
@@ -86,16 +86,16 @@ op_all::all_vec_helper
       {
       const eT tmp = Pea[i];
       
-           if(is_same_type<op_type, op_rel_lt_pre   >::yes)  { if(val <  tmp) { ++count; } }
-      else if(is_same_type<op_type, op_rel_lt_post  >::yes)  { if(tmp <  val) { ++count; } }
-      else if(is_same_type<op_type, op_rel_gt_pre   >::yes)  { if(val >  tmp) { ++count; } }
-      else if(is_same_type<op_type, op_rel_gt_post  >::yes)  { if(tmp >  val) { ++count; } }
-      else if(is_same_type<op_type, op_rel_lteq_pre >::yes)  { if(val <= tmp) { ++count; } }
-      else if(is_same_type<op_type, op_rel_lteq_post>::yes)  { if(tmp <= val) { ++count; } }
-      else if(is_same_type<op_type, op_rel_gteq_pre >::yes)  { if(val >= tmp) { ++count; } }
-      else if(is_same_type<op_type, op_rel_gteq_post>::yes)  { if(tmp >= val) { ++count; } }
-      else if(is_same_type<op_type, op_rel_eq       >::yes)  { if(tmp == val) { ++count; } }
-      else if(is_same_type<op_type, op_rel_noteq    >::yes)  { if(tmp != val) { ++count; } }
+           if(is_same_type<op_type, op_rel_lt_pre   >::yes)  { count += (val <  tmp) ? uword(1) : uword(0); }
+      else if(is_same_type<op_type, op_rel_lt_post  >::yes)  { count += (tmp <  val) ? uword(1) : uword(0); }
+      else if(is_same_type<op_type, op_rel_gt_pre   >::yes)  { count += (val >  tmp) ? uword(1) : uword(0); }
+      else if(is_same_type<op_type, op_rel_gt_post  >::yes)  { count += (tmp >  val) ? uword(1) : uword(0); }
+      else if(is_same_type<op_type, op_rel_lteq_pre >::yes)  { count += (val <= tmp) ? uword(1) : uword(0); }
+      else if(is_same_type<op_type, op_rel_lteq_post>::yes)  { count += (tmp <= val) ? uword(1) : uword(0); }
+      else if(is_same_type<op_type, op_rel_gteq_pre >::yes)  { count += (val >= tmp) ? uword(1) : uword(0); }
+      else if(is_same_type<op_type, op_rel_gteq_post>::yes)  { count += (tmp >= val) ? uword(1) : uword(0); }
+      else if(is_same_type<op_type, op_rel_eq       >::yes)  { count += (tmp == val) ? uword(1) : uword(0); }
+      else if(is_same_type<op_type, op_rel_noteq    >::yes)  { count += (tmp != val) ? uword(1) : uword(0); }
       }
     }
   else
@@ -169,14 +169,14 @@ op_all::all_vec_helper
       const eT1 tmp1 = PA[i];
       const eT2 tmp2 = PB[i];
       
-           if(is_same_type<glue_type, glue_rel_lt    >::yes)  { if(tmp1 <  tmp2) { ++count; } }
-      else if(is_same_type<glue_type, glue_rel_gt    >::yes)  { if(tmp1 >  tmp2) { ++count; } }
-      else if(is_same_type<glue_type, glue_rel_lteq  >::yes)  { if(tmp1 <= tmp2) { ++count; } }
-      else if(is_same_type<glue_type, glue_rel_gteq  >::yes)  { if(tmp1 >= tmp2) { ++count; } }
-      else if(is_same_type<glue_type, glue_rel_eq    >::yes)  { if(tmp1 == tmp2) { ++count; } }
-      else if(is_same_type<glue_type, glue_rel_noteq >::yes)  { if(tmp1 != tmp2) { ++count; } }
-      else if(is_same_type<glue_type, glue_rel_and   >::yes)  { if(tmp1 && tmp2) { ++count; } }
-      else if(is_same_type<glue_type, glue_rel_or    >::yes)  { if(tmp1 || tmp2) { ++count; } }
+           if(is_same_type<glue_type, glue_rel_lt    >::yes)  { count += (tmp1 <  tmp2) ? uword(1) : uword(0); }
+      else if(is_same_type<glue_type, glue_rel_gt    >::yes)  { count += (tmp1 >  tmp2) ? uword(1) : uword(0); }
+      else if(is_same_type<glue_type, glue_rel_lteq  >::yes)  { count += (tmp1 <= tmp2) ? uword(1) : uword(0); }
+      else if(is_same_type<glue_type, glue_rel_gteq  >::yes)  { count += (tmp1 >= tmp2) ? uword(1) : uword(0); }
+      else if(is_same_type<glue_type, glue_rel_eq    >::yes)  { count += (tmp1 == tmp2) ? uword(1) : uword(0); }
+      else if(is_same_type<glue_type, glue_rel_noteq >::yes)  { count += (tmp1 != tmp2) ? uword(1) : uword(0); }
+      else if(is_same_type<glue_type, glue_rel_and   >::yes)  { count += (tmp1 && tmp2) ? uword(1) : uword(0); }
+      else if(is_same_type<glue_type, glue_rel_or    >::yes)  { count += (tmp1 || tmp2) ? uword(1) : uword(0); }
       }
     }
   else
@@ -250,7 +250,7 @@ op_all::apply_helper(Mat<uword>& out, const Proxy<T1>& P, const uword dim)
         
         for(uword row=0; row < n_rows; ++row)
           {
-          if(colmem[row] != eT(0))  { ++count; }
+          count += (colmem[row] != eT(0)) ? uword(1) : uword(0);
           }
         
         out_mem[col] = (n_rows == count) ? uword(1) : uword(0); 
@@ -289,7 +289,7 @@ op_all::apply_helper(Mat<uword>& out, const Proxy<T1>& P, const uword dim)
         
         for(uword row=0; row < n_rows; ++row)
           {
-          if(colmem[row] != eT(0))  { ++out_mem[row]; }
+          out_mem[row] += (colmem[row] != eT(0)) ? uword(1) : uword(0);
           }
         }
       }

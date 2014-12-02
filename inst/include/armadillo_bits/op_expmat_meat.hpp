@@ -48,7 +48,9 @@ op_expmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_expmat>& expr
     
     const uword s = (std::max)(uword(0), uword(eop_aux::log2(norm(A, "inf"))) + uword(1) + uword(1));
     
-    const Mat<eT> AA = A / std::pow(double(2), s);
+    const double denom = (std::pow)(double(2), double(s));  // workaround for bugs in GCC 4.4
+    
+    const Mat<eT> AA = A / eT(denom);
     
     T c = T(0.5);
     

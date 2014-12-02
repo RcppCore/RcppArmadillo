@@ -2,6 +2,15 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.4.550.2.0 (2014-12-01)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 4.550.2 ("Singapore Sling Deluxe")
+    \itemize{
+      \item Bug fixes for implicit template initiation for \code{std::pow()} seen with the old g++ 4.4* series
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.4.550.1.0 (2014-11-26)}{
   \itemize{
     \item Upgraded to Armadillo release Version 4.550.1 ("Singapore Sling Deluxe")
