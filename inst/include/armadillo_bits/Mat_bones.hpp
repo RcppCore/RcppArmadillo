@@ -372,7 +372,8 @@ class Mat : public Base< eT, Mat<eT> >
   inline void   resize(const uword in_elem);
   inline void   resize(const uword in_rows, const uword in_cols);
   
-  inline void  reshape(const uword in_rows, const uword in_cols, const uword dim = 0);
+  inline void  reshape(const uword in_rows, const uword in_cols);
+  inline void  reshape(const uword in_rows, const uword in_cols, const uword dim);
   
   
   template<typename functor>

@@ -94,6 +94,12 @@ class Col : public Mat<eT>
   arma_inline       subview_col<eT> operator()(const span& row_span);
   arma_inline const subview_col<eT> operator()(const span& row_span) const;
   
+  arma_inline       subview_col<eT> head(const uword N);
+  arma_inline const subview_col<eT> head(const uword N) const;
+  
+  arma_inline       subview_col<eT> tail(const uword N);
+  arma_inline const subview_col<eT> tail(const uword N) const;
+  
   
   inline void shed_row (const uword row_num);
   inline void shed_rows(const uword in_row1, const uword in_row2);

@@ -222,7 +222,7 @@ op_reshape::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reshape>& in)
   const uword in_n_rows = in.aux_uword_a;
   const uword in_n_cols = in.aux_uword_b;
   
-  if(is_Mat<typename Proxy<T1>::stored_type>::value == true)
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value == true) && (Proxy<T1>::fake_mat == false) )
     {
     // not checking for aliasing here, as this might be an inplace reshape
     

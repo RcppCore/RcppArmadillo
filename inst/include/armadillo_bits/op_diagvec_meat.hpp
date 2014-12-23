@@ -39,7 +39,7 @@ op_diagvec::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_diagvec>& X)
   
   const uword len = (std::min)(n_rows - row_offset, n_cols - col_offset);
   
-  if(is_Mat<typename Proxy<T1>::stored_type>::value)
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value) && (Proxy<T1>::fake_mat == false) )
     {
     op_diagvec::apply_unwrap(out, P.Q, row_offset, col_offset, len);
     }

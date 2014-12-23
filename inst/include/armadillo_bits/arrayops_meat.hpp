@@ -901,23 +901,43 @@ inline
 eT
 arrayops::accumulate(const eT* src, const uword n_elem)
   {
-  uword i,j;
-  
-  eT acc1 = eT(0);
-  eT acc2 = eT(0);
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
+  #if (__FINITE_MATH_ONLY__ > 0)
     {
-    acc1 += src[i];
-    acc2 += src[j];
+    eT acc = eT(0);
+    
+    if(memory::is_aligned(src))
+      {
+      memory::mark_as_aligned(src);
+      for(uword i=0; i<n_elem; ++i)  { acc += src[i]; }
+      }
+    else
+      {
+      for(uword i=0; i<n_elem; ++i)  { acc += src[i]; }
+      }
+    
+    return acc;
     }
-  
-  if(i < n_elem)
+  #else
     {
-    acc1 += src[i];
+    uword i,j;
+    
+    eT acc1 = eT(0);
+    eT acc2 = eT(0);
+    
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+      {
+      acc1 += src[i];
+      acc2 += src[j];
+      }
+    
+    if(i < n_elem)
+      {
+      acc1 += src[i];
+      }
+    
+    return acc1 + acc2;
     }
-  
-  return acc1 + acc2;
+  #endif
   }
 
 
