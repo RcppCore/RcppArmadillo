@@ -7,6 +7,19 @@
 
 
 
+#undef arma_hot
+#undef arma_cold
+#undef arma_pure
+#undef arma_const
+#undef arma_aligned
+#undef arma_align_mem
+#undef arma_warn_unused
+#undef arma_deprecated
+#undef arma_malloc
+#undef arma_inline
+#undef arma_noinline
+#undef arma_ignore
+
 #define arma_hot
 #define arma_cold
 #define arma_pure
@@ -21,6 +34,12 @@
 #define arma_ignore(variable)  ((void)(variable))
 
 
+#undef arma_fortran_noprefix
+#undef arma_fortran_prefix
+
+#undef arma_fortran2_noprefix
+#undef arma_fortran2_prefix
+ 
 #if defined(ARMA_BLAS_UNDERSCORE)
   #define arma_fortran2_noprefix(function) function##_
   #define arma_fortran2_prefix(function)   wrapper_##function##_
@@ -40,7 +59,7 @@
 #define arma_fortran_prefix(function)   arma_fortran2_prefix(function)
 #define arma_fortran_noprefix(function) arma_fortran2_noprefix(function)
 
-
+#undef  ARMA_INCFILE_WRAP
 #define ARMA_INCFILE_WRAP(x) <x>
 
 
@@ -55,6 +74,13 @@
   #define ARMA_USE_U64S64
 #endif
 
+
+#undef ARMA_HAVE_GETTIMEOFDAY
+#undef ARMA_HAVE_SNPRINTF
+#undef ARMA_HAVE_ISFINITE
+#undef ARMA_HAVE_LOG1P
+#undef ARMA_HAVE_ISINF
+#undef ARMA_HAVE_ISNAN
 
 #if (defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE >= 200112L))
   #define ARMA_HAVE_GETTIMEOFDAY
@@ -74,11 +100,13 @@
 // http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/unistd.h.html
 // http://sourceforge.net/p/predef/wiki/Standards/
 #if ( defined(_POSIX_ADVISORY_INFO) && (_POSIX_ADVISORY_INFO >= 200112L) )
+  #undef  ARMA_HAVE_POSIX_MEMALIGN
   #define ARMA_HAVE_POSIX_MEMALIGN
 #endif
 
 
 #if defined(__APPLE__)
+  #undef  ARMA_BLAS_SDOT_BUG
   #define ARMA_BLAS_SDOT_BUG
   #undef  ARMA_HAVE_POSIX_MEMALIGN
 #endif
@@ -88,6 +116,8 @@
   #undef ARMA_HAVE_POSIX_MEMALIGN
 #endif
 
+
+#undef ARMA_FNSIG
 
 #if defined (__GNUG__)
   #define ARMA_FNSIG  __PRETTY_FUNCTION__
@@ -102,32 +132,22 @@
 #endif
 
 
-#if defined(__INTEL_COMPILER)
+#if defined(__GNUG__) && !defined(__clang__) && !defined(__INTEL_COMPILER) && !defined(__NVCC__)
   
-  #if (__INTEL_COMPILER_BUILD_DATE < 20090623)
-    #error "*** Need a newer compiler ***"
-  #endif
-  
-  #define ARMA_HAVE_ICC_ASSUME_ALIGNED
-  
-#endif
-
-
-#if defined(__GNUG__)
-  
+  #undef  ARMA_GCC_VERSION
   #define ARMA_GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
   
-  #if (ARMA_GCC_VERSION < 40200) && !defined(__INTEL_COMPILER)
+  #if (ARMA_GCC_VERSION < 40200)
     #error "*** Need a newer compiler ***"
   #endif
   
-  #if ( (ARMA_GCC_VERSION >= 40700) && (ARMA_GCC_VERSION <= 40701) ) && !defined(__INTEL_COMPILER)
+  #if ( (ARMA_GCC_VERSION >= 40700) && (ARMA_GCC_VERSION <= 40701) )
     #error "gcc versions 4.7.0 and 4.7.1 are unsupported; use 4.7.2 or later"
     // due to http://gcc.gnu.org/bugzilla/show_bug.cgi?id=53549
   #endif
   
+  #undef  ARMA_GOOD_COMPILER
   #define ARMA_GOOD_COMPILER
-  #undef  ARMA_HAVE_TR1
   
   #undef  arma_pure
   #undef  arma_const
@@ -149,15 +169,18 @@
   #define arma_inline      inline __attribute__((__always_inline__))
   #define arma_noinline           __attribute__((__noinline__))
   
+  #undef  ARMA_HAVE_ALIGNED_ATTRIBUTE
   #define ARMA_HAVE_ALIGNED_ATTRIBUTE
   
   #if defined(ARMA_USE_CXX11)
-    #if (ARMA_GCC_VERSION < 40800) && !defined(__clang__)
+    #if (ARMA_GCC_VERSION < 40800)
       #pragma message ("WARNING: your C++ compiler is in C++11 mode, but it has incomplete support for C++11 features; if something breaks, you get to keep all the pieces")
       #pragma message ("WARNING: to forcefully prevent Armadillo from using C++11 features, #define ARMA_DONT_USE_CXX11 before #include <armadillo>")
       #define ARMA_DONT_USE_CXX11_CHRONO
     #endif
   #endif
+  
+  #undef ARMA_HAVE_TR1
   
   #if !defined(ARMA_USE_CXX11)
     #if defined(_GLIBCXX_USE_C99_MATH_TR1) && defined(_GLIBCXX_USE_C99_COMPLEX_TR1)
@@ -182,31 +205,123 @@
     #define ARMA_SIMPLE_LOOPS
   #endif
   
-  #if defined(__clang__)
-    // TODO: future versions of clang may also have __builtin_assume_aligned
-    #undef ARMA_HAVE_GCC_ASSUME_ALIGNED
-    #undef ARMA_HAVE_TR1
-    
-    // clang's vectoriser has trouble dealing with slightly more elaborate loops
-    // http://llvm.org/bugs/show_bug.cgi?id=16358
-    #undef  ARMA_SIMPLE_LOOPS
-    #define ARMA_SIMPLE_LOOPS
-  #endif
-  
-  #if defined(__INTEL_COMPILER)
-    #undef ARMA_HAVE_TR1
-    #undef ARMA_HAVE_GCC_ASSUME_ALIGNED
-  #endif
-  
   #undef ARMA_GCC_VERSION
+  
+#endif
+
+
+#if defined(__clang__) && !defined(__INTEL_COMPILER)
+  #undef ARMA_HAVE_TR1
+  
+  #undef  ARMA_GOOD_COMPILER
+  #define ARMA_GOOD_COMPILER
+  
+  // clang's vectoriser has trouble dealing with slightly more elaborate loops
+  // http://llvm.org/bugs/show_bug.cgi?id=16358
+  #undef  ARMA_SIMPLE_LOOPS
+  #define ARMA_SIMPLE_LOOPS
+  
+  #if !defined(__has_attribute)
+    #define __has_attribute(x) 0
+  #endif
+  
+  #if __has_attribute(__pure__)
+    #undef  arma_pure
+    #define arma_pure __attribute__((__pure__))
+  #endif
+  
+  #if __has_attribute(__const__)
+    #undef  arma_const
+    #define arma_const __attribute__((__const__))
+  #endif
+  
+  #if __has_attribute(__aligned__)
+    #undef  arma_aligned
+    #undef  arma_align_mem
+    
+    #define arma_aligned   __attribute__((__aligned__))
+    #define arma_align_mem __attribute__((__aligned__(16)))
+    
+    #undef  ARMA_HAVE_ALIGNED_ATTRIBUTE
+    #define ARMA_HAVE_ALIGNED_ATTRIBUTE
+  #endif
+  
+  #if __has_attribute(__warn_unused_result__)
+    #undef  arma_warn_unused
+    #define arma_warn_unused __attribute__((__warn_unused_result__))
+  #endif
+  
+  #if __has_attribute(__deprecated__)
+    #undef  arma_deprecated
+    #define arma_deprecated __attribute__((__deprecated__))
+  #endif
+  
+  #if __has_attribute(__malloc__)
+    #undef  arma_malloc
+    #define arma_malloc __attribute__((__malloc__))
+  #endif
+  
+  #if __has_attribute(__always_inline__)
+    #undef  arma_inline
+    #define arma_inline inline __attribute__((__always_inline__))
+  #endif
+  
+  #if __has_attribute(__noinline__)
+    #undef  arma_noinline
+    #define arma_noinline __attribute__((__noinline__))
+  #endif
+  
+  #if __has_attribute(__hot__)
+    #undef  arma_hot
+    #define arma_hot __attribute__((__hot__))
+  #endif
+  
+  #if __has_attribute(__cold__)
+    #undef  arma_cold
+    #define arma_cold __attribute__((__cold__))
+  #endif
+  
+  #if defined(__has_builtin) && __has_builtin(__builtin_assume_aligned)
+    #undef  ARMA_HAVE_GCC_ASSUME_ALIGNED
+    #define ARMA_HAVE_GCC_ASSUME_ALIGNED
+  #endif
+  
+#endif
+  
+
+#if defined(__INTEL_COMPILER)
+  
+  #if (__INTEL_COMPILER_BUILD_DATE < 20090623)
+    #error "*** Need a newer compiler ***"
+  #endif
+  
+  #undef ARMA_GOOD_COMPILER
+  #undef ARMA_HAVE_TR1
+  
+  #undef  ARMA_HAVE_GCC_ASSUME_ALIGNED
+  #undef  ARMA_HAVE_ICC_ASSUME_ALIGNED
+  #define ARMA_HAVE_ICC_ASSUME_ALIGNED
+  
+  #undef  ARMA_SIMPLE_LOOPS
+  #define ARMA_SIMPLE_LOOPS
   
 #endif
 
 
 #if defined(_MSC_VER)
   
-  #if (_MSC_VER < 1700)
+  #if (_MSC_VER < 1600)
     #error "*** Need a newer compiler ***"
+  #endif
+  
+  #if (_MSC_VER < 1700)
+    #pragma message ("WARNING: your C++ compiler is outdated and has incomplete support for the C++ standard; if something breaks, you get to keep all the pieces")
+  #endif
+  
+  #if defined(ARMA_USE_CXX11)
+    #if (_MSC_VER < 1800)
+      #pragma message ("WARNING: your C++ compiler is in C++11 mode, but it has incomplete support for C++11 features; if something breaks, you get to keep all the pieces")
+    #endif
   #endif
   
   #undef  ARMA_SIMPLE_LOOPS
@@ -216,6 +331,8 @@
   #undef ARMA_HAVE_SNPRINTF
   #undef ARMA_HAVE_ISFINITE
   #undef ARMA_HAVE_LOG1P
+  #undef ARMA_HAVE_ISINF
+  #undef ARMA_HAVE_ISNAN
   #undef ARMA_HAVE_TR1
   
   // #undef  arma_inline
@@ -275,20 +392,20 @@
   #undef ARMA_HAVE_SNPRINTF
   #undef ARMA_HAVE_ISFINITE
   #undef ARMA_HAVE_LOG1P
+  #undef ARMA_HAVE_ISINF
+  #undef ARMA_HAVE_ISNAN
   #undef ARMA_HAVE_TR1
   
 #endif
 
 
 #if defined(__NVCC__)
-  
   #undef ARMA_HAVE_SNPRINTF
   #undef ARMA_HAVE_ISFINITE
   #undef ARMA_HAVE_LOG1P
+  #undef ARMA_HAVE_ISINF
+  #undef ARMA_HAVE_ISNAN
   #undef ARMA_HAVE_TR1
-  
-  #undef  arma_noinline
-  #define arma_noinline
 #endif
 
 

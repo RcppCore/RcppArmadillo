@@ -698,6 +698,66 @@ Col<eT>::operator()(const span& row_span) const
 
 
 
+template<typename eT>
+arma_inline
+subview_col<eT>
+Col<eT>::head(const uword N)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (N > Mat<eT>::n_rows), "Col::head(): size out of bounds");
+  
+  return subview_col<eT>(*this, 0, 0, N);
+  }
+
+
+
+template<typename eT>
+arma_inline
+const subview_col<eT>
+Col<eT>::head(const uword N) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (N > Mat<eT>::n_rows), "Col::head(): size out of bounds");
+  
+  return subview_col<eT>(*this, 0, 0, N);
+  }
+
+
+
+template<typename eT>
+arma_inline
+subview_col<eT>
+Col<eT>::tail(const uword N)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (N > Mat<eT>::n_rows), "Col::tail(): size out of bounds");
+  
+  const uword start_row = Mat<eT>::n_rows - N;
+  
+  return subview_col<eT>(*this, 0, start_row, N);
+  }
+
+
+
+template<typename eT>
+arma_inline
+const subview_col<eT>
+Col<eT>::tail(const uword N) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (N > Mat<eT>::n_rows), "Col::tail(): size out of bounds");
+  
+  const uword start_row = Mat<eT>::n_rows - N;
+  
+  return subview_col<eT>(*this, 0, start_row, N);
+  }
+
+
+
 //! remove specified row
 template<typename eT>
 inline

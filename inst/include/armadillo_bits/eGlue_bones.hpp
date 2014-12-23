@@ -22,7 +22,6 @@ class eGlue : public Base<typename T1::elem_type, eGlue<T1, T2, eglue_type> >
   
   static const bool prefer_at_accessor = (Proxy<T1>::prefer_at_accessor || Proxy<T2>::prefer_at_accessor);
   static const bool has_subview        = (Proxy<T1>::has_subview        || Proxy<T2>::has_subview       );
-  static const bool is_fixed           = (Proxy<T1>::is_fixed           || Proxy<T2>::is_fixed          );
   static const bool fake_mat           = (Proxy<T1>::fake_mat           || Proxy<T2>::fake_mat          );
   
   static const bool is_col = (Proxy<T1>::is_col || Proxy<T2>::is_col);

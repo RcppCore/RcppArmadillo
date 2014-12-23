@@ -174,10 +174,9 @@ eop_core<eop_type>::apply(Mat<typename T1::elem_type>& out, const eOp<T1, eop_ty
   
   if(Proxy<T1>::prefer_at_accessor == false)
     {
-    const uword n_elem = (Proxy<T1>::is_fixed) ? x.get_n_elem() : out.n_elem;
+    const uword n_elem = x.get_n_elem();
     
-    //if(memory::is_aligned(out_mem))
-    if( memory::is_aligned(out_mem) && ((Proxy<T1>::is_fixed) ? (x.get_n_elem() >= 32) : true) )
+    if(memory::is_aligned(out_mem))
       {
       memory::mark_as_aligned(out_mem);
       
@@ -235,7 +234,7 @@ eop_core<eop_type>::apply_inplace_plus(Mat<typename T1::elem_type>& out, const e
   
   if(Proxy<T1>::prefer_at_accessor == false)
     {
-    const uword n_elem = (Proxy<T1>::is_fixed) ? x.get_n_elem() : out.n_elem;
+    const uword n_elem = x.get_n_elem();
     
     if(memory::is_aligned(out_mem))
       {
@@ -292,7 +291,7 @@ eop_core<eop_type>::apply_inplace_minus(Mat<typename T1::elem_type>& out, const 
   
   if(Proxy<T1>::prefer_at_accessor == false)
     {
-    const uword n_elem = (Proxy<T1>::is_fixed) ? x.get_n_elem() : out.n_elem;
+    const uword n_elem = x.get_n_elem();
     
     if(memory::is_aligned(out_mem))
       {
@@ -349,7 +348,7 @@ eop_core<eop_type>::apply_inplace_schur(Mat<typename T1::elem_type>& out, const 
   
   if(Proxy<T1>::prefer_at_accessor == false)
     {
-    const uword n_elem = (Proxy<T1>::is_fixed) ? x.get_n_elem() : out.n_elem;
+    const uword n_elem = x.get_n_elem();
     
     if(memory::is_aligned(out_mem))
       {
@@ -406,7 +405,7 @@ eop_core<eop_type>::apply_inplace_div(Mat<typename T1::elem_type>& out, const eO
   
   if(Proxy<T1>::prefer_at_accessor == false)
     {
-    const uword n_elem = (Proxy<T1>::is_fixed) ? x.get_n_elem() : out.n_elem;
+    const uword n_elem = x.get_n_elem();
     
     if(memory::is_aligned(out_mem))
       {

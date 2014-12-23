@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2014 Conrad Sanderson
+// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
 // Copyright (C) 2012 Ryan Curtin
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -54,14 +54,20 @@ op_htrans::apply_mat_noalias(Mat<eT>& out, const Mat<eT>& A, const typename arma
     }
   else
     {
-    for(uword in_row = 0; in_row < A_n_rows; ++in_row)
+    const uword out_n_rows = out.n_rows;
+    
+    const eT* colptr = A.memptr();
+    
+    for(uword k=0; k < A_n_cols; ++k)
       {
-      const uword out_col = in_row;
+      eT* outptr = &(out.at(k,0));
       
-      for(uword in_col = 0; in_col < A_n_cols; ++in_col)
+      for(uword j=0; j < A_n_rows; ++j)
         {
-        const uword out_row = in_col;
-        out.at(out_row, out_col) = std::conj( A.at(in_row, in_col) );
+        (*outptr) = std::conj(*colptr);
+        
+        colptr++;
+        outptr += out_n_rows;
         }
       }
     }
@@ -229,20 +235,36 @@ op_htrans::apply_proxy(Mat<typename T1::elem_type>& out, const T1& X)
         {
         out.set_size(n_cols, n_rows);
         
+        const uword out_n_rows = out.n_rows;
+    
         for(uword k=0; k < n_cols; ++k)
-        for(uword i=0; i < n_rows; ++i)
           {
-          out.at(k,i) = std::conj(P.at(i,k));
+          eT* outptr = &(out.at(k,0));
+          
+          for(uword i=0; i < n_rows; ++i)
+            {
+            (*outptr) = std::conj(P.at(i,k));
+            
+            outptr += out_n_rows;
+            }
           }
         }
       else // aliasing
         {
         Mat<eT> out2(n_cols, n_rows);
         
+        const uword out2_n_rows = out2.n_rows;
+        
         for(uword k=0; k < n_cols; ++k)
-        for(uword i=0; i < n_rows; ++i)
           {
-          out2.at(k,i) = std::conj(P.at(i,k));
+          eT* out2ptr = &(out2.at(k,0));
+          
+          for(uword i=0; i < n_rows; ++i)
+            {
+            (*out2ptr) = std::conj(P.at(i,k));
+            
+            out2ptr += out2_n_rows;
+            }
           }
         
         out.steal_mem(out2);
@@ -333,14 +355,20 @@ op_htrans2::apply_noalias(Mat<eT>& out, const Mat<eT>& A, const eT val)
     }
   else
     {
-    for(uword in_row = 0; in_row < A_n_rows; ++in_row)
+    const uword out_n_rows = out.n_rows;
+    
+    const eT* colptr = A.memptr();
+    
+    for(uword k=0; k < A_n_cols; ++k)
       {
-      const uword out_col = in_row;
+      eT* outptr = &(out.at(k,0));
       
-      for(uword in_col = 0; in_col < A_n_cols; ++in_col)
+      for(uword j=0; j < A_n_rows; ++j)
         {
-        const uword out_row = in_col;
-        out.at(out_row, out_col) = val * std::conj( A.at(in_row, in_col) );
+        (*outptr) = val * std::conj(*colptr);
+        
+        colptr++;
+        outptr += out_n_rows;
         }
       }
     }
@@ -468,20 +496,36 @@ op_htrans2::apply_proxy(Mat<typename T1::elem_type>& out, const T1& X, const typ
         {
         out.set_size(n_cols, n_rows);
         
+        const uword out_n_rows = out.n_rows;
+    
         for(uword k=0; k < n_cols; ++k)
-        for(uword i=0; i < n_rows; ++i)
           {
-          out.at(k,i) = val * std::conj(P.at(i,k));
+          eT* outptr = &(out.at(k,0));
+          
+          for(uword i=0; i < n_rows; ++i)
+            {
+            (*outptr) = val * std::conj(P.at(i,k));
+            
+            outptr += out_n_rows;
+            }
           }
         }
       else // aliasing
         {
         Mat<eT> out2(n_cols, n_rows);
         
+        const uword out2_n_rows = out2.n_rows;
+        
         for(uword k=0; k < n_cols; ++k)
-        for(uword i=0; i < n_rows; ++i)
           {
-          out2.at(k,i) = val * std::conj(P.at(i,k));
+          eT* out2ptr = &(out2.at(k,0));
+          
+          for(uword i=0; i < n_rows; ++i)
+            {
+            (*out2ptr) = val * std::conj(P.at(i,k));
+            
+            out2ptr += out2_n_rows;
+            }
           }
         
         out.steal_mem(out2);

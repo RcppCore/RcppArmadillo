@@ -1193,8 +1193,6 @@ gmm_diag<eT>::internal_avg_log_p(const T1& X, const uword gaus_id) const
     {
     running_mean_scalar<eT> running_mean;
     
-    const uword N = X.n_cols;
-    
     for(uword i=0; i<N; ++i)
       {
       running_mean( internal_scalar_log_p( X.colptr(i), gaus_id ) );

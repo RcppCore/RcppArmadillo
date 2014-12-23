@@ -5435,6 +5435,19 @@ Mat<eT>::resize(const uword in_rows, const uword in_cols)
 template<typename eT>
 inline
 void
+Mat<eT>::reshape(const uword in_rows, const uword in_cols)
+  {
+  arma_extra_debug_sigprint();
+  
+  *this = arma::reshape(*this, in_rows, in_cols);
+  }
+
+
+
+//!< don't use this in new code; kept only for compatibility with old code
+template<typename eT>
+inline
+void
 Mat<eT>::reshape(const uword in_rows, const uword in_cols, const uword dim)
   {
   arma_extra_debug_sigprint();

@@ -22,7 +22,6 @@ class eOp : public Base<typename T1::elem_type, eOp<T1, eop_type> >
   
   static const bool prefer_at_accessor = Proxy<T1>::prefer_at_accessor;
   static const bool has_subview        = Proxy<T1>::has_subview;
-  static const bool is_fixed           = Proxy<T1>::is_fixed;
   static const bool fake_mat           = Proxy<T1>::fake_mat;
   
   static const bool is_row = Proxy<T1>::is_row;
