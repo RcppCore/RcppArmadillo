@@ -1,9 +1,16 @@
+2014-12-25  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.4.599.2.0 [GitHub only]
+        * inst/NEWS.Rd: Release 0.4.599.2.0 [GitHub only]
+
+	* inst/include/*: Upgraded to release 4.599.alpha.2 of Armadillo
+
 2014-12-23  Dirk Eddelbuettel  <edd@debian.org>
 
-        * DESCRIPTION: Release 0.4.599.alpha.0 [GitHub only]
-        * inst/NEWS.Rd: Release 0.4.599.alpha.0 [GitHub only]
+        * DESCRIPTION: Release 0.4.599.1.0 [GitHub only]
+        * inst/NEWS.Rd: Release 0.4.599.1.0 [GitHub only]
 
-	* inst/include/*: Upgraded to release 4.599.alpha.0`0 of Armadillo
+	* inst/include/*: Upgraded to release 4.599.alpha.1 of Armadillo
 
 2014-12-02  Dirk Eddelbuettel  <edd@debian.org>
 

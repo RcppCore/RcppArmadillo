@@ -49,9 +49,11 @@ op_expmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_expmat>& expr
     
     const T norm_val = arma::norm(A, "inf");
     
-    const T log2_val = eop_aux::log2(norm_val);
+    const double log2_val = (norm_val > T(0)) ? double(eop_aux::log2(norm_val)) : double(0);
     
-    const uword s = (std::max)(uword(0), uword(log2_val) + uword(1) + uword(1));
+    int exponent = int(0);  std::frexp(log2_val, &exponent);
+    
+    const uword s = uword( (std::max)(int(0), exponent + int(1)) );
     
     const Mat<eT> AA = A / eT(eop_aux::pow(double(2), double(s)));
     
