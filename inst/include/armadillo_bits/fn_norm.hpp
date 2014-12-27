@@ -205,6 +205,150 @@ arma_vec_norm_1
 
 
 
+template<typename eT>
+arma_hot
+inline
+eT
+arma_vec_norm_2_direct_mem_robust
+  (
+  const Mat<eT>& X
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword N = X.n_elem;
+  const eT*   A = X.memptr();
+  
+  eT max_val = priv::most_neg<eT>();
+  
+  uword j;
+  
+  for(j=1; j<N; j+=2)
+    {
+    eT val_i = (*A);  A++;
+    eT val_j = (*A);  A++;
+    
+    val_i = std::abs(val_i);
+    val_j = std::abs(val_j);
+    
+    if(val_i > max_val)  { max_val = val_i; }
+    if(val_j > max_val)  { max_val = val_j; }
+    }
+  
+  if((j-1) < N)
+    {
+    const eT val_i = std::abs(*A);
+    
+    if(val_i > max_val)  { max_val = val_i; }
+    }
+  
+  if(max_val == eT(0))  { return eT(0); }
+  
+  const eT* B = X.memptr();
+  
+  eT acc1 = eT(0);
+  eT acc2 = eT(0);
+  
+  for(j=1; j<N; j+=2)
+    {
+    eT val_i = (*B);  B++;
+    eT val_j = (*B);  B++;
+    
+    val_i /= max_val;
+    val_j /= max_val;
+    
+    acc1 += val_i * val_i;
+    acc2 += val_j * val_j;
+    }
+  
+  if((j-1) < N)
+    {
+    const eT val_i = (*B) / max_val;
+    
+    acc1 += val_i * val_i;
+    }
+  
+  return ( std::sqrt(acc1 + acc2) * max_val ); 
+  }
+
+
+
+template<typename eT>
+arma_hot
+inline
+eT
+arma_vec_norm_2_direct_mem_fast
+  (
+  const Mat<eT>& X
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword N = X.n_elem;
+  const eT*   A = X.memptr();
+  
+  eT acc;
+  
+  #if defined(__FINITE_MATH_ONLY__) && (__FINITE_MATH_ONLY__ > 0)
+    {
+    eT acc1 = eT(0);
+    
+    if(memory::is_aligned(A))
+      {
+      memory::mark_as_aligned(A);
+      
+      for(uword i=0; i<N; ++i)  { const eT tmp_i = A[i];  acc1 += tmp_i * tmp_i; }
+      }
+    else
+      {
+      for(uword i=0; i<N; ++i)  { const eT tmp_i = A[i];  acc1 += tmp_i * tmp_i; }
+      }
+    
+    acc = acc1;
+    }
+  #else
+    {
+    eT acc1 = eT(0);
+    eT acc2 = eT(0);
+    
+    uword j;
+    
+    for(j=1; j<N; j+=2)
+      {
+      const eT tmp_i = (*A);  A++;
+      const eT tmp_j = (*A);  A++;
+      
+      acc1 += tmp_i * tmp_i;
+      acc2 += tmp_j * tmp_j;
+      }
+    
+    if((j-1) < N)
+      {
+      const eT tmp_i = (*A);
+      
+      acc1 += tmp_i * tmp_i;
+      }
+    
+    acc = acc1 + acc2;
+    }
+  #endif
+  
+  const eT sqrt_acc = std::sqrt(acc);
+  
+  if( (sqrt_acc != eT(0)) && arma_isfinite(sqrt_acc) )
+    {
+    return sqrt_acc;
+    }
+  else
+    {
+    arma_extra_debug_print("arma_vec_norm_2_direct_mem_fast(): detected possible underflow or overflow");
+    
+    return arma_vec_norm_2_direct_mem_robust(X);
+    }
+  }
+
+
+
 template<typename T1>
 arma_hot
 inline
@@ -218,8 +362,16 @@ arma_vec_norm_2
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  typedef typename T1::elem_type eT;
-  typedef typename T1::pod_type   T;
+  const bool have_direct_mem = (is_Mat<typename Proxy<T1>::stored_type>::value) || (is_subview_col<typename Proxy<T1>::stored_type>::value);
+  
+  if(have_direct_mem)
+    {
+    const quasi_unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
+    
+    return arma_vec_norm_2_direct_mem_fast(tmp.M);
+    }
+  
+  typedef typename T1::pod_type T;
   
   T acc = T(0);
   
@@ -301,59 +453,9 @@ arma_vec_norm_2
     {
     arma_extra_debug_print("arma_vec_norm_2(): detected possible underflow or overflow");
   
-    const quasi_unwrap<typename Proxy<T1>::stored_type> R(P.Q);
+    const quasi_unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
     
-    const uword N     = R.M.n_elem;
-    const eT*   R_mem = R.M.memptr();
-    
-    eT max_val = priv::most_neg<eT>();
-    
-    uword i,j;
-    
-    for(i=0, j=1; j<N; i+=2, j+=2)
-      {
-      eT val_i = R_mem[i];
-      eT val_j = R_mem[j];
-      
-      val_i = std::abs(val_i);
-      val_j = std::abs(val_j);
-      
-      if(val_i > max_val)  { max_val = val_i; }
-      if(val_j > max_val)  { max_val = val_j; }
-      }
-    
-    if(i < N)
-      {
-      const eT val_i = std::abs(R_mem[i]);
-      
-      if(val_i > max_val)  { max_val = val_i; }
-      }
-    
-    if(max_val == eT(0))  { return eT(0); }
-    
-    eT alt_acc1 = eT(0);
-    eT alt_acc2 = eT(0);
-    
-    for(i=0, j=1; j<N; i+=2, j+=2)
-      {
-      eT val_i = R_mem[i];
-      eT val_j = R_mem[j];
-      
-      val_i /= max_val;
-      val_j /= max_val;
-      
-      alt_acc1 += val_i * val_i;
-      alt_acc2 += val_j * val_j;
-      }
-    
-    if(i < N)
-      {
-      const eT val_i = R_mem[i] / max_val;
-      
-      alt_acc1 += val_i*val_i;
-      }
-    
-    return ( std::sqrt(alt_acc1 + alt_acc2) * max_val ); 
+    return arma_vec_norm_2_direct_mem_robust(tmp.M);
     }
   }
 

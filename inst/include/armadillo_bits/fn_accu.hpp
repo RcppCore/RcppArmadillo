@@ -22,7 +22,7 @@ accu_proxy_linear(const Proxy<T1>& P)
   
   const uword n_elem = P.get_n_elem();
   
-  #if (__FINITE_MATH_ONLY__ > 0)
+  #if defined(__FINITE_MATH_ONLY__) && (__FINITE_MATH_ONLY__ > 0)
     {
     eT val = eT(0);
     
