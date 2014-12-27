@@ -901,7 +901,7 @@ inline
 eT
 arrayops::accumulate(const eT* src, const uword n_elem)
   {
-  #if (__FINITE_MATH_ONLY__ > 0)
+  #if defined(__FINITE_MATH_ONLY__) && (__FINITE_MATH_ONLY__ > 0)
     {
     eT acc = eT(0);
     
@@ -919,20 +919,20 @@ arrayops::accumulate(const eT* src, const uword n_elem)
     }
   #else
     {
-    uword i,j;
-    
     eT acc1 = eT(0);
     eT acc2 = eT(0);
     
-    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+    uword j;
+    
+    for(j=1; j<n_elem; j+=2)
       {
-      acc1 += src[i];
-      acc2 += src[j];
+      acc1 += (*src);  src++;
+      acc2 += (*src);  src++;
       }
     
-    if(i < n_elem)
+    if((j-1) < n_elem)
       {
-      acc1 += src[i];
+      acc1 += (*src);
       }
     
     return acc1 + acc2;

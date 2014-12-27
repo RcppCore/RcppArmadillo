@@ -21,7 +21,7 @@ op_dot::direct_dot_arma(const uword n_elem, const eT* const A, const eT* const B
   {
   arma_extra_debug_sigprint();
   
-  #if (__FINITE_MATH_ONLY__ > 0)
+  #if defined(__FINITE_MATH_ONLY__) && (__FINITE_MATH_ONLY__ > 0)
     {
     eT val = eT(0);
     
