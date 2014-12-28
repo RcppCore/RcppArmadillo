@@ -4,7 +4,7 @@
 
 \section{Changes in RcppArmadillo version 0.4.600.0 (2014-12-27)}{
   \itemize{
-    \item Upgraded to Armadillo release Version 4.600 ("Singapore Sling Deluxe")
+    \item Upgraded to Armadillo release Version 4.600 ("Off The Reservation")
     \itemize{
       \item added \code{.head()} and \code{.tail()} to submatrix views
       \item faster matrix transposes within compound expressions
