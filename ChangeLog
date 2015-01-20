@@ -1,7 +1,7 @@
 2015-01-20  Dirk Eddelbuettel  <edd@debian.org>
 
-        * DESCRIPTION: Release 0.4.600.3.0 [GitHub only]
-        * inst/NEWS.Rd: Release 0.4.600.3.0 [GitHub only]
+        * DESCRIPTION: Release 0.4.600.3.0
+        * inst/NEWS.Rd: Release 0.4.600.3.0
 
 	* inst/include/*: Upgraded to release 4.600.3 of Armadillo
 
