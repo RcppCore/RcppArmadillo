@@ -248,6 +248,14 @@ op_dot::apply(const T1& X, const T2& Y)
     
     arma_debug_check( (PA.get_n_elem() != PB.get_n_elem()), "dot(): objects must have the same number of elements" );
     
+    if(is_Mat<typename Proxy<T1>::stored_type>::value && is_Mat<typename Proxy<T2>::stored_type>::value)
+      {
+      const quasi_unwrap<typename Proxy<T1>::stored_type> A(PA.Q);
+      const quasi_unwrap<typename Proxy<T2>::stored_type> B(PB.Q);
+      
+      return op_dot::direct_dot(A.M.n_elem, A.M.memptr(), B.M.memptr());
+      }
+    
     return op_dot::apply_proxy(PA,PB);
     }
   }

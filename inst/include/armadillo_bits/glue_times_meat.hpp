@@ -422,42 +422,7 @@ glue_times::apply_inplace(Mat<typename T1::elem_type>& out, const T1& X)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
-  
-  const unwrap_check<T1> B_tmp(X, out);
-  const Mat<eT>& B     = B_tmp.M;
-  
-  arma_debug_assert_mul_size(out, B, "matrix multiplication");
-  
-  const uword out_n_rows = out.n_rows;
-  const uword out_n_cols = out.n_cols;
-  
-  if(out_n_cols == B.n_cols)
-    {
-    // size of resulting matrix is the same as 'out'
-    
-    podarray<eT> tmp(out_n_cols);
-    
-    eT* tmp_rowdata = tmp.memptr();
-    
-    for(uword row=0; row < out_n_rows; ++row)
-      {
-      tmp.copy_row(out, row);
-      
-      for(uword col=0; col < out_n_cols; ++col)
-        {
-        out.at(row,col) = op_dot::direct_dot( out_n_cols, tmp_rowdata, B.colptr(col) );
-        }
-      }
-    
-    }
-  else
-    {
-    const Mat<eT> tmp(out);
-    
-    glue_times::apply<eT, false, false, false>(out, tmp, B, eT(1));
-    }
-  
+  out = out * X;
   }
 
 

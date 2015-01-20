@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -60,21 +60,24 @@ op_sum::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sum>& in)
         
       for(uword row=0; row < X_n_rows; ++row)
         {
-        eT val = eT(0);
+        eT val1 = eT(0);
+        eT val2 = eT(0);
         
-        uword i,j;
-        for(i=0, j=1; j < X_n_cols; i+=2, j+=2)
+        const eT* rowptr = &(X.at(row,0));
+        
+        uword j;
+        for(j=1; j < X_n_cols; j+=2)
           {
-          val += X.at(row,i);
-          val += X.at(row,j);
+          val1 += (*rowptr);  rowptr += X_n_rows;
+          val2 += (*rowptr);  rowptr += X_n_rows;
           }
         
-        if(i < X_n_cols)
+        if((j-1) < X_n_cols)
           {
-          val += X.at(row,i);
+          val1 += (*rowptr);
           }
         
-        out_mem[row] = val;
+        out_mem[row] = (val1 + val2);
         }
       }
     }
@@ -91,21 +94,22 @@ op_sum::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sum>& in)
       
       for(uword col=0; col < P_n_cols; ++col)
         {
-        eT val = eT(0);
+        eT val1 = eT(0);
+        eT val2 = eT(0);
         
         uword i,j;
         for(i=0, j=1; j < P_n_rows; i+=2, j+=2)
           {
-          val += P.at(i,col);
-          val += P.at(j,col);
+          val1 += P.at(i,col);
+          val2 += P.at(j,col);
           }
         
         if(i < P_n_rows)
           {
-          val += P.at(i,col);
+          val1 += P.at(i,col);
           }
         
-        out_mem[col] = val;
+        out_mem[col] = (val1 + val2);
         }
       }
     else  // traverse across columns (i.e. find the sum in each row)
@@ -116,21 +120,22 @@ op_sum::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sum>& in)
       
       for(uword row=0; row < P_n_rows; ++row)
         {
-        eT val = eT(0);
+        eT val1 = eT(0);
+        eT val2 = eT(0);
         
         uword i,j;
         for(i=0, j=1; j < P_n_cols; i+=2, j+=2)
           {
-          val += P.at(row,i);
-          val += P.at(row,j);
+          val1 += P.at(row,i);
+          val2 += P.at(row,j);
           }
         
         if(i < P_n_cols)
           {
-          val += P.at(row,i);
+          val1 += P.at(row,i);
           }
         
-        out_mem[row] = val;
+        out_mem[row] = (val1 + val2);
         }
       }
     }
