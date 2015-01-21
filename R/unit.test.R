@@ -1,4 +1,4 @@
-# Copyright (C)        2010 - 2013 Dirk Eddelbuettel, Romain Francois and Douglas Bates
+# Copyright (C) 2010 - 2015  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 #
 # This file is part of RcppArmadillo.
 #
@@ -31,7 +31,7 @@ unit_test_setup <- function(file = NULL, packages = NULL) {
     function(){
         if (!is.null(packages)) {
             for (p in packages) {
-                suppressMessages(require(p, character.only = TRUE))
+                suppressMessages(requireNamespace(p))
             }
         }
         if (!is.null(file)) {

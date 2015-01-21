@@ -32,7 +32,7 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
         fake <- FALSE
     }
 
-    haveKitten <- require("pkgKitten", quietly=TRUE, character.only=TRUE)
+    haveKitten <- requireNamespace("pkgKitten", quietly=TRUE, character.only=TRUE)
     skelFunUsed <- ifelse(haveKitten, "kitten", "package.skeleton")
     message("\nCalling ", skelFunUsed, " to create basic package.")
 

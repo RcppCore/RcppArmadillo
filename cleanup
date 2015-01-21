@@ -1,7 +1,7 @@
 #!/bin/sh
 
 rm -f  config.log config.status confdefs.h \
-       src/*.o src/*.so \
+       src/*.o src/*.so src/symbols.rds \
        vignettes/RcppArmadillo-unitTests.out \
        vignettes/RcppArmadillo-unitTests.aux \
        vignettes/RcppArmadillo-unitTests.log \

@@ -5,6 +5,9 @@
 
 	* inst/include/*: Upgraded to release 4.600.4 of Armadillo
 
+	* R/unit.test.R (unit_test_setup): Use requireNamespace()
+	* R/RcppArmadillo.package.skeleton.R: Ditto
+
 2015-01-20  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.4.600.3.0 [GitHub only]
