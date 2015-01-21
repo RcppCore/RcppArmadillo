@@ -3,9 +3,11 @@
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
 \section{Changes in RcppArmadillo version 0.4.600.4 (2015-01-21)}{
-  \item Upgraded to Armadillo release Version 4.600.4 (still "Off The Reservation")
   \itemize{
-    \item Speedups in the transpose operation
+    \item Upgraded to Armadillo release Version 4.600.4 (still "Off The Reservation")
+    \itemize{
+      \item Speedups in the transpose operation
+    }
   }
 }
 
