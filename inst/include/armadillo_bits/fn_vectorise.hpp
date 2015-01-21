@@ -47,15 +47,18 @@ vectorise(const T1& X, const uword dim)
 
 
 
-//! experimental: vectorisation of cubes
 template<typename T1>
 inline
-const Op<T1, op_vectorise_cube_col>
+Col<typename T1::elem_type>
 vectorise(const BaseCube<typename T1::elem_type, T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  return Op<T1, op_vectorise_cube_col>(X.get_ref());
+  Col<typename T1::elem_type> out;
+  
+  op_vectorise_cube_col::apply(out, X);
+  
+  return out;
   }
 
 

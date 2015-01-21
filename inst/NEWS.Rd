@@ -2,10 +2,10 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
-\section{Changes in RcppArmadillo version 0.4.600.3 (2015-01-20)}{
-  \item Upgraded to Armadillo release Version 4.600.3  (still "Off The Reservation")
+\section{Changes in RcppArmadillo version 0.4.600.4 (2015-01-21)}{
+  \item Upgraded to Armadillo release Version 4.600.4 (still "Off The Reservation")
   \itemize{
-    \item faster sum and transpose operations
+    \item Speedups in the transpose operation
   }
 }
 

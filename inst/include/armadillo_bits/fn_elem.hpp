@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,12 +15,12 @@
 
 template<typename T1>
 arma_inline
-const T1&
-real(const Base<typename T1::pod_type, T1>& X)
+typename enable_if2< (is_arma_type<T1>::value && is_cx<typename T1::elem_type>::no), const T1& >::result
+real(const T1& X)
   {
   arma_extra_debug_sigprint();
   
-  return X.get_ref();
+  return X;
   }
 
 
@@ -39,12 +39,12 @@ real(const BaseCube<typename T1::pod_type, T1>& X)
 
 template<typename T1>
 inline
-const mtOp<typename T1::pod_type, T1, op_real>
-real(const Base<std::complex<typename T1::pod_type>, T1>& X)
+typename enable_if2< (is_arma_type<T1>::value && is_cx<typename T1::elem_type>::yes), const mtOp<typename T1::pod_type, T1, op_real> >::result
+real(const T1& X)
   {
   arma_extra_debug_sigprint();
   
-  return mtOp<typename T1::pod_type, T1, op_real>( X.get_ref() );
+  return mtOp<typename T1::pod_type, T1, op_real>( X );
   }
 
 
@@ -94,12 +94,12 @@ imag(const BaseCube<typename T1::pod_type,T1>& X)
 
 template<typename T1>
 inline
-const mtOp<typename T1::pod_type, T1, op_imag>
-imag(const Base<std::complex<typename T1::pod_type>, T1>& X)
+typename enable_if2< (is_arma_type<T1>::value && is_cx<typename T1::elem_type>::yes), const mtOp<typename T1::pod_type, T1, op_imag> >::result
+imag(const T1& X)
   {
   arma_extra_debug_sigprint();
   
-  return mtOp<typename T1::pod_type, T1, op_imag>( X.get_ref() );
+  return mtOp<typename T1::pod_type, T1, op_imag>( X );
   }
 
 

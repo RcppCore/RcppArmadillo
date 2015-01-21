@@ -1,5 +1,5 @@
-// Copyright (C) 2013 Conrad Sanderson
-// Copyright (C) 2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2013-2015 Conrad Sanderson
+// Copyright (C) 2013-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -210,17 +210,16 @@ op_vectorise_all::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_vectori
 
 
 
-//! experimental: vectorisation of cubes
 template<typename T1>
 inline
 void
-op_vectorise_cube_col::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_vectorise_cube_col>& in)
+op_vectorise_cube_col::apply(Mat<typename T1::elem_type>& out, const BaseCube<typename T1::elem_type, T1>& in)
   {
   arma_extra_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
-  ProxyCube<T1> P(in.m);
+  ProxyCube<T1> P(in.get_ref());
   
   const uword N = P.get_n_elem();
   

@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 Conrad Sanderson
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,8 +29,8 @@ class Op : public Base<typename T1::elem_type, Op<T1, op_type> >
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  static const bool is_row = ( T1::is_col && (is_same_type<op_type, op_strans>::value || is_same_type<op_type, op_htrans>::value || is_same_type<op_type, op_htrans2>::value) ) || (is_same_type<op_type, op_normalise_rowvec>::value);
-  static const bool is_col = ( T1::is_row && (is_same_type<op_type, op_strans>::value || is_same_type<op_type, op_htrans>::value || is_same_type<op_type, op_htrans2>::value) ) || (is_same_type<op_type, op_normalise_colvec>::value) || (is_same_type<op_type, op_diagvec>::value) || (is_same_type<op_type, op_vectorise_col>::value);
+  static const bool is_row = op_resolves_to_row<T1,op_type>::value;
+  static const bool is_col = op_resolves_to_col<T1,op_type>::value;
   
   inline explicit Op(const T1& in_m);
   inline          Op(const T1& in_m, const elem_type in_aux);

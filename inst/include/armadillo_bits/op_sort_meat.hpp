@@ -158,24 +158,12 @@ op_sort::copy_row(Mat<eT>& A, const eT* X, const uword row)
 
 
 
-template<typename T1>
+template<typename eT>
 inline
 void
-op_sort::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort>& in)
+op_sort::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword sort_type, const uword dim)
   {
   arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  const unwrap_check<T1>   tmp(in.m, out);
-  const Mat<eT>&       X = tmp.M;
-  
-  const uword sort_type = in.aux_uword_a;
-  const uword dim       = in.aux_uword_b;
-  
-  arma_debug_check( (sort_type > 1),          "sort(): incorrect usage. sort_type must be 0 or 1");
-  arma_debug_check( (dim > 1),                "sort(): incorrect usage. dim must be 0 or 1"      );
-  arma_debug_check( (X.is_finite() == false), "sort(): given object has non-finite elements"     );
   
   if( (X.n_rows * X.n_cols) <= 1 )
     {
@@ -229,8 +217,44 @@ op_sort::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort>& in)
         }
       }
     }
-  
   }
+
+
+
+template<typename T1>
+inline
+void
+op_sort::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const quasi_unwrap<T1> U(in.m);
+  
+  const Mat<eT>& X = U.M;
+  
+  const uword sort_type = in.aux_uword_a;
+  const uword dim       = in.aux_uword_b;
+  
+  arma_debug_check( (sort_type > 1),          "sort(): incorrect usage. sort_type must be 0 or 1");
+  arma_debug_check( (dim > 1),                "sort(): incorrect usage. dim must be 0 or 1"      );
+  arma_debug_check( (X.is_finite() == false), "sort(): given object has non-finite elements"     );
+  
+  if(U.is_alias(out))
+    {
+    Mat<eT> out2;
+    
+    op_sort::apply_noalias(out2, X, sort_type, dim);
+    
+    out.steal_mem(out2);
+    }
+  else
+    {
+    apply_noalias(out, X, sort_type, dim);
+    }
+  }
+
 
 
 //! @}

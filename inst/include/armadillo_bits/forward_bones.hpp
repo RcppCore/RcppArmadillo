@@ -70,6 +70,15 @@ class op_vectorise_col;
 class op_normalise_colvec;
 class op_normalise_rowvec;
 class op_clamp;
+class op_cumsum_vec;
+class op_shuffle;
+class op_sort;
+class op_find;
+class op_find_simple;
+class op_flipud;
+class op_fliplr;
+class op_real;
+class op_imag;
 
 class eop_conj;
 

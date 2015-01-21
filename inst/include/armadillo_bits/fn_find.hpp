@@ -56,7 +56,7 @@ find(const Base<typename T1::elem_type,T1>& X, const uword k, const char* direct
 
 template<typename T1>
 inline
-umat
+uvec
 find(const BaseCube<typename T1::elem_type,T1>& X)
   {
   arma_extra_debug_sigprint();
@@ -74,7 +74,7 @@ find(const BaseCube<typename T1::elem_type,T1>& X)
 
 template<typename T1>
 inline
-umat
+uvec
 find(const BaseCube<typename T1::elem_type,T1>& X, const uword k, const char* direction = "first")
   {
   arma_extra_debug_sigprint();
@@ -92,7 +92,7 @@ find(const BaseCube<typename T1::elem_type,T1>& X, const uword k, const char* di
 
 template<typename T1, typename op_rel_type>
 inline
-umat
+uvec
 find(const mtOpCube<uword, T1, op_rel_type>& X, const uword k = 0, const char* direction = "first")
   {
   arma_extra_debug_sigprint();
@@ -110,7 +110,7 @@ find(const mtOpCube<uword, T1, op_rel_type>& X, const uword k = 0, const char* d
 
 template<typename T1, typename T2, typename glue_rel_type>
 inline
-umat
+uvec
 find(const mtGlueCube<uword, T1, T2, glue_rel_type>& X, const uword k = 0, const char* direction = "first")
   {
   arma_extra_debug_sigprint();
@@ -175,7 +175,7 @@ find_nonfinite(const T1& X)
 
 template<typename T1>
 inline
-umat
+uvec
 find_finite(const BaseCube<typename T1::elem_type,T1>& X)
   {
   arma_extra_debug_sigprint();
@@ -193,7 +193,7 @@ find_finite(const BaseCube<typename T1::elem_type,T1>& X)
 
 template<typename T1>
 inline
-umat
+uvec
 find_nonfinite(const BaseCube<typename T1::elem_type,T1>& X)
   {
   arma_extra_debug_sigprint();
