@@ -2,11 +2,25 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
-\section{Changes in RcppArmadillo version 0.4.600.4 (2015-01-21)}{
+\section{Changes in RcppArmadillo version 0.4.600.4.0 (2015-01-23)}{
   \itemize{
     \item Upgraded to Armadillo release Version 4.600.4 (still "Off The Reservation")
     \itemize{
       \item Speedups in the transpose operation
+      \item Small bug fixes
+    }
+  }
+}
+
+\section{Changes in RcppArmadillo version 0.4.600.0 (2014-12-27)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 4.600 ("Singapore Sling Deluxe")
+    \itemize{
+      \item added \code{.head()} and \code{.tail()} to submatrix views
+      \item faster matrix transposes within compound expressions
+      \item faster \code{accu()} and \code{norm()} when compiling with
+      -O3 -ffast-math -march=native (gcc and clang) 
+      \item workaround for a bug in GCC 4.4
     }
   }
 }

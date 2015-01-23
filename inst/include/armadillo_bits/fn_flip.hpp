@@ -1,5 +1,5 @@
-// Copyright (C) 2010 Conrad Sanderson
-// Copyright (C) 2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2015 Conrad Sanderson
+// Copyright (C) 2010-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,24 +13,24 @@
 
 template<typename T1>
 arma_inline
-const Op<T1, op_flipud>
-flipud(const Base<typename T1::elem_type,T1>& X)
+typename enable_if2< is_arma_type<T1>::value, const Op<T1, op_flipud> >::result
+flipud(const T1& X)
   {
   arma_extra_debug_sigprint();
   
-  return Op<T1, op_flipud>(X.get_ref());
+  return Op<T1, op_flipud>(X);
   }
 
 
 
 template<typename T1>
 arma_inline
-const Op<T1, op_fliplr>
-fliplr(const Base<typename T1::elem_type,T1>& X)
+typename enable_if2< is_arma_type<T1>::value, const Op<T1, op_fliplr> >::result
+fliplr(const T1& X)
   {
   arma_extra_debug_sigprint();
   
-  return Op<T1, op_fliplr>(X.get_ref());
+  return Op<T1, op_fliplr>(X);
   }
 
 

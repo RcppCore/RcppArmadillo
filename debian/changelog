@@ -1,3 +1,17 @@
+r-cran-rcpparmadillo (0.4.600.4.0-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Dirk Eddelbuettel <edd@debian.org>  Fri, 23 Jan 2015 05:16:33 -0600
+  
+r-cran-rcpparmadillo (0.4.600.0-1) unstable; urgency=low
+
+  * New upstream release
+
+  * debian/control: Set Standards-Version: to current version
+
+ -- Dirk Eddelbuettel <edd@debian.org>  Sun, 28 Dec 2014 15:38:59 -0600
+
 r-cran-rcpparmadillo (0.4.550.1.0-1) unstable; urgency=low
 
   * New upstream release

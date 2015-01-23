@@ -23,8 +23,14 @@ class mtOp : public Base<out_eT, mtOp<out_eT, T1, op_type> >
 
   typedef typename T1::elem_type                in_eT;
 
-  static const bool is_row = mtop_resolves_to_row<T1,op_type>::value;
-  static const bool is_col = mtop_resolves_to_col<T1,op_type>::value;
+  static const bool is_row = \
+     (T1::is_row && (is_op_mixed_elem<op_type>::value || is_same_type<op_type, op_clamp>::value || is_same_type<op_type, op_real>::value || is_same_type<op_type, op_imag>::value));
+  
+  static const bool is_col = \
+     (T1::is_col && (is_op_mixed_elem<op_type>::value || is_same_type<op_type, op_clamp>::value || is_same_type<op_type, op_real>::value || is_same_type<op_type, op_imag>::value))
+  || (is_same_type<op_type, op_find_simple>::value)
+  || (is_same_type<op_type, op_find>::value);
+  
   
   inline explicit mtOp(const T1& in_m);
   inline          mtOp(const T1& in_m, const in_eT in_aux);

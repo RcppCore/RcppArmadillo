@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2015 Conrad Sanderson
-// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2014 Conrad Sanderson
+// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -1316,52 +1316,6 @@ template<typename T1, typename T2>
 struct has_op_inv< Glue<T1, Op<T2,op_inv>, glue_times> >
   { static const bool value = true;  };
 
-
-
-template<typename T1, typename op_type>
-struct op_resolves_to_row
-  {
-  static const bool value = \
-     (T1::is_col && (is_same_type<op_type, op_strans>::yes || is_same_type<op_type, op_htrans>::yes || is_same_type<op_type, op_htrans2>::yes))
-  || (T1::is_row && (is_same_type<op_type, op_sort>::yes || is_same_type<op_type, op_shuffle>::yes || is_same_type<op_type, op_cumsum_vec>::yes))
-  || (is_same_type<op_type, op_normalise_rowvec>::yes)
-  || (is_same_type<op_type, op_flipud>::yes)
-  || (is_same_type<op_type, op_fliplr>::yes);
-  };
-
-
-
-template<typename T1, typename op_type>
-struct op_resolves_to_col
-  {
-  static const bool value = \
-     (T1::is_row && (is_same_type<op_type, op_strans>::yes || is_same_type<op_type, op_htrans>::yes || is_same_type<op_type, op_htrans2>::yes))
-  || (T1::is_col && (is_same_type<op_type, op_sort>::yes || is_same_type<op_type, op_shuffle>::yes || is_same_type<op_type, op_cumsum_vec>::yes))
-  || (is_same_type<op_type, op_normalise_colvec>::yes)
-  || (is_same_type<op_type, op_diagvec>::yes)
-  || (is_same_type<op_type, op_vectorise_col>::yes)
-  || (is_same_type<op_type, op_flipud>::yes)
-  || (is_same_type<op_type, op_fliplr>::yes);
-  };
-
-
-
-template<typename T1, typename op_type>
-struct mtop_resolves_to_row
-  {
-  static const bool value = (T1::is_row && (is_op_mixed_elem<op_type>::value || is_same_type<op_type, op_clamp>::value || is_same_type<op_type, op_real>::value || is_same_type<op_type, op_imag>::value));
-  };
-
-
-
-template<typename T1, typename op_type>
-struct mtop_resolves_to_col
-  {
-  static const bool value = \
-     (T1::is_col && (is_op_mixed_elem<op_type>::value || is_same_type<op_type, op_clamp>::value || is_same_type<op_type, op_real>::value || is_same_type<op_type, op_imag>::value))
-  || (is_same_type<op_type, op_find_simple>::value)
-  || (is_same_type<op_type, op_find>::value);
-  };
 
 
 //! @}

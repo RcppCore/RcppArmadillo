@@ -29,8 +29,17 @@ class Op : public Base<typename T1::elem_type, Op<T1, op_type> >
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  static const bool is_row = op_resolves_to_row<T1,op_type>::value;
-  static const bool is_col = op_resolves_to_col<T1,op_type>::value;
+  static const bool is_row = \
+     (T1::is_col && (is_same_type<op_type, op_strans>::yes || is_same_type<op_type, op_htrans>::yes || is_same_type<op_type, op_htrans2>::yes))
+  || (T1::is_row && (is_same_type<op_type, op_sort>::yes || is_same_type<op_type, op_shuffle>::yes || is_same_type<op_type, op_cumsum_vec>::yes || is_same_type<op_type, op_flipud>::yes || is_same_type<op_type, op_fliplr>::yes))
+  || (is_same_type<op_type, op_normalise_rowvec>::yes);
+  
+  static const bool is_col = \
+     (T1::is_row && (is_same_type<op_type, op_strans>::yes || is_same_type<op_type, op_htrans>::yes || is_same_type<op_type, op_htrans2>::yes))
+  || (T1::is_col && (is_same_type<op_type, op_sort>::yes || is_same_type<op_type, op_shuffle>::yes || is_same_type<op_type, op_cumsum_vec>::yes || is_same_type<op_type, op_flipud>::yes || is_same_type<op_type, op_fliplr>::yes))
+  || (is_same_type<op_type, op_normalise_colvec>::yes)
+  || (is_same_type<op_type, op_diagvec>::yes)
+  || (is_same_type<op_type, op_vectorise_col>::yes);
   
   inline explicit Op(const T1& in_m);
   inline          Op(const T1& in_m, const elem_type in_aux);
