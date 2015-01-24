@@ -2,7 +2,7 @@
 ##
 ## fastLm.r: Benchmarking lm() via RcppArmadillo and directly
 ##
-## Copyright (C)  2010 - 2013  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+## Copyright (C)  2010 - 2015  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 ##
 ## This file is part of RcppArmadillo.
 ##
@@ -19,6 +19,7 @@
 ## You should have received a copy of the GNU General Public License
 ## along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
+library(Rcpp)
 library(RcppArmadillo)
 library(rbenchmark)
 

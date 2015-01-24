@@ -5,6 +5,8 @@
 
 	* inst/include/*: Upgraded to release 4.600.4 of Armadillo
 
+	* inst/examples/fastLm.r: Load Rcpp library
+
 2015-01-21  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/unit.test.R (unit_test_setup): Use requireNamespace()
