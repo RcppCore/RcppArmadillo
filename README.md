@@ -1,7 +1,7 @@
 
-## RcppArmadillo: R and Armadillo via Rcpp
+## RcppArmadillo [![Build Status](https://travis-ci.org/RcppCore/RcppArmadillo.png)](https://travis-ci.org/RcppCore/RcppArmadillo) [![License](http://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg?style=flat)](http://www.gnu.org/licenses/gpl-2.0.html)
 
-[![Build Status](https://travis-ci.org/RcppCore/RcppArmadillo.png)](https://travis-ci.org/RcppCore/RcppArmadillo)
+R and Armadillo via Rcpp
 
 ### Overview
 
@@ -36,7 +36,7 @@ The package is under active development with releases to
 
 The package contains a pdf vignette which is a pre-print of the [paper by
 Eddelbuettel and Sanderson](http://dx.doi.org/10.1016/j.csda.2013.02.005) 
-in CSDA (2013, in print).
+in CSDA (2014).
 
 ### Authors
 
