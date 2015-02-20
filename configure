@@ -1,16 +1,9 @@
-#!/bin/bash
+#!/bin/sh
 #
 # Copyright 2013 - 2014  Dirk Eddelbuettel
 #
 # Licensed under GPL 2 or later
 
-# This file uses bash.
-#
-# If this file is not suitable for your system for lack of bash or
-# another suitable /bin/sh implementation, I recommend deletion of the file
-# along with *manual* adjustment to RcppArmadilloLapack.h as per the
-# test below. 
-#
 # In most case you can just copy RcppArmadilloLapack.h.in over to
 # RcppArmadilloLapack.h -- and in aggregate it is not worth rewriting this.
 # At some point in the future we will be able to just rely on recent enough R
