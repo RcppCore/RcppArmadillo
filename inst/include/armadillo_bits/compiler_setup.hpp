@@ -174,8 +174,10 @@
   
   #if defined(ARMA_USE_CXX11)
     #if (ARMA_GCC_VERSION < 40800)
-      #pragma message ("WARNING: your C++ compiler is in C++11 mode, but it has incomplete support for C++11 features; if something breaks, you get to keep all the pieces")
-      #pragma message ("WARNING: to forcefully prevent Armadillo from using C++11 features, #define ARMA_DONT_USE_CXX11 before #include <armadillo>")
+      #pragma message ("WARNING: compiler is in C++11 mode, but it has incomplete support for C++11 features;")
+      #pragma message ("WARNING: if something breaks, you get to keep all the pieces")
+      #pragma message ("WARNING: To forcefully prevent Armadillo from using C++11 features,")
+      #pragma message ("WARNING: #define ARMA_DONT_USE_CXX11 before #include <armadillo>")
       #define ARMA_DONT_USE_CXX11_CHRONO
     #endif
   #endif
@@ -315,12 +317,14 @@
   #endif
   
   #if (_MSC_VER < 1700)
-    #pragma message ("WARNING: your C++ compiler is outdated and has incomplete support for the C++ standard; if something breaks, you get to keep all the pieces")
+    #pragma message ("WARNING: this compiler is outdated and has incomplete support for the C++ standard;")
+    #pragma message ("WARNING: if something breaks, you get to keep all the pieces")
   #endif
   
   #if defined(ARMA_USE_CXX11)
     #if (_MSC_VER < 1800)
-      #pragma message ("WARNING: your C++ compiler is in C++11 mode, but it has incomplete support for C++11 features; if something breaks, you get to keep all the pieces")
+      #pragma message ("WARNING: compiler is in C++11 mode, but it has incomplete support for C++11 features;")
+      #pragma message ("WARNING: if something breaks, you get to keep all the pieces")
     #endif
   #endif
   
@@ -411,7 +415,7 @@
 
 #if defined(log2)
   #undef log2
-  #pragma message ("detected 'log2' macro and undefined it")
+  #pragma message ("WARNING: detected 'log2' macro and undefined it")
 #endif
 
 
@@ -422,5 +426,6 @@
 #if defined(min) || defined(max)
   #undef min
   #undef max
-  #pragma message ("detected 'min' and/or 'max' macros and undefined them; you may wish to define NOMINMAX before including any windows header")
+  #pragma message ("WARNING: detected 'min' and/or 'max' macros and undefined them;")
+  #pragma message ("WARNING: you may wish to define NOMINMAX before including any windows header")
 #endif

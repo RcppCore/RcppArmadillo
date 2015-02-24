@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2014 Conrad Sanderson
-// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // Copyright (C) 2011 James Sanders
 // Copyright (C) 2013 Ryan Curtin
 // 
@@ -1624,10 +1624,32 @@ subview<eT>::check_overlap(const subview<eT>& x) const
 
 template<typename eT>
 inline
+arma_warn_unused
 bool
 subview<eT>::is_vec() const
   {
   return ( (n_rows == 1) || (n_cols == 1) );
+  }
+
+
+
+template<typename eT>
+inline
+arma_warn_unused
+bool
+subview<eT>::is_finite() const
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword local_n_rows = n_rows;
+  const uword local_n_cols = n_cols;
+  
+  for(uword ii=0; ii<local_n_cols; ++ii)
+    {
+    if(arrayops::is_finite(colptr(ii), local_n_rows) == false)  { return false; }
+    }
+  
+  return true;
   }
 
 

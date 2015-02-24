@@ -162,7 +162,7 @@ accu(const mtOp<uword,T1,op_rel_noteq>& X)
   const Proxy<T1> P(X.m);
   
   uword n_nonzero = 0;
-    
+  
   if(Proxy<T1>::prefer_at_accessor == false)
     {
     typedef typename Proxy<T1>::ea_type ea_type;
@@ -172,7 +172,7 @@ accu(const mtOp<uword,T1,op_rel_noteq>& X)
     
     for(uword i=0; i<n_elem; ++i)
       {
-      if(A[i] != val) { ++n_nonzero; }
+      n_nonzero += (A[i] != val) ? uword(1) : uword(0);
       }
     }
   else
@@ -184,7 +184,7 @@ accu(const mtOp<uword,T1,op_rel_noteq>& X)
       {
       for(uword col=0; col < P_n_cols; ++col)
         {
-        if(P.at(0,col) != val) { ++n_nonzero; }
+        n_nonzero += (P.at(0,col) != val) ? uword(1) : uword(0);
         }
       }
     else
@@ -192,7 +192,7 @@ accu(const mtOp<uword,T1,op_rel_noteq>& X)
       for(uword col=0; col < P_n_cols; ++col)
       for(uword row=0; row < P_n_rows; ++row)
         {
-        if(P.at(row,col) != val) { ++n_nonzero; }
+        n_nonzero += (P.at(row,col) != val) ? uword(1) : uword(0);
         }
       }
     }

@@ -1,6 +1,6 @@
-// Copyright (C) 2008-2014 Conrad Sanderson
+// Copyright (C) 2008-2015 Conrad Sanderson
 // Copyright (C) 2013 Ryan Curtin
-// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -162,19 +162,19 @@
 
 #if defined(ARMA_DONT_USE_CXX11)
   #undef ARMA_USE_CXX11
-  #undef ARMA_USE_CXX11_RNG
+  #undef ARMA_USE_EXTERN_CXX11_RNG
 #endif
 
 #if defined(ARMA_USE_WRAPPER)
   #if defined(ARMA_USE_CXX11)
-    #if !defined(ARMA_USE_CXX11_RNG)
-      // #define ARMA_USE_CXX11_RNG
+    #if !defined(ARMA_USE_EXTERN_CXX11_RNG)
+      // #define ARMA_USE_EXTERN_CXX11_RNG
     #endif
   #endif
 #endif
 
-#if defined(ARMA_DONT_USE_CXX11_RNG)
-  #undef ARMA_USE_CXX11_RNG
+#if defined(ARMA_DONT_USE_EXTERN_CXX11_RNG)
+  #undef ARMA_USE_EXTERN_CXX11_RNG
 #endif
 
 #if defined(ARMA_DONT_USE_HDF5)

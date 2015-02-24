@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2013 Conrad Sanderson
-// Copyright (C) 2009-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2015 Conrad Sanderson
+// Copyright (C) 2009-2015 NICTA (www.nicta.com.au)
 // Copyright (C) 2009-2010 Dimitrios Bouzas
 // Copyright (C) 2011 Stanislav Funiak
 // 
@@ -68,20 +68,18 @@ op_pinv::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_pinv>& in)
   const uword s_n_elem = s.n_elem;
   const T*    s_mem    = s.memptr();
   
-  // set tolerance to default if it hasn't been specified as an argument 
+  // set tolerance to default if it hasn't been specified
   if( (tol == T(0)) && (s_n_elem > 0) )
     {
-    tol = (std::max)(n_rows, n_cols) * eop_aux::direct_eps( op_max::direct_max(s_mem, s_n_elem) );
+    tol = (std::max)(n_rows, n_cols) * s_mem[0] * std::numeric_limits<T>::epsilon();
     }
   
-  
-  // count non zero valued elements in s
   
   uword count = 0;
   
   for(uword i = 0; i < s_n_elem; ++i)
     {
-    if(s_mem[i] > tol)  { ++count; }
+    count += (s_mem[i] >= tol) ? uword(1) : uword(0);
     }
   
   
@@ -97,7 +95,7 @@ op_pinv::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_pinv>& in)
       {
       const T val = s_mem[i];
       
-      if(val > tol)  {  s2_mem[count2] = T(1) / val;  ++count2; }
+      if(val >= tol)  {  s2_mem[count2] = T(1) / val;  ++count2; }
       }
     
     

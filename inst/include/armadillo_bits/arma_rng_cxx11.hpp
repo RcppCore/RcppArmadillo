@@ -1,5 +1,5 @@
-// Copyright (C) 2013 Conrad Sanderson
-// Copyright (C) 2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2013-2015 Conrad Sanderson
+// Copyright (C) 2013-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,12 +10,14 @@
 //! @{
 
 
+#if defined(ARMA_USE_CXX11)
+
 
 class arma_rng_cxx11
   {
   public:
   
-  typedef typename std::mt19937_64::result_type seed_type;
+  typedef std::mt19937_64::result_type seed_type;
   
   inline void set_seed(const seed_type val);
   
@@ -30,6 +32,9 @@ class arma_rng_cxx11
   inline void randi_fill(eT* mem, const uword N, const int a, const int b);
   
   inline static int randi_max_val();
+  
+  template<typename eT>
+  inline void randg_fill(eT* mem, const uword N, const double a, const double b);
   
   
   private:
@@ -101,7 +106,7 @@ arma_rng_cxx11::randi_fill(eT* mem, const uword N, const int a, const int b)
   
   for(uword i=0; i<N; ++i)
     {
-    mem[i] = i_distr(engine);
+    mem[i] = eT(i_distr(engine));
     }
   }
 
@@ -114,6 +119,23 @@ arma_rng_cxx11::randi_max_val()
   return std::numeric_limits<int>::max();
   }
 
+
+
+template<typename eT>
+inline
+void
+arma_rng_cxx11::randg_fill(eT* mem, const uword N, const double a, const double b)
+  {
+  std::gamma_distribution<double> g_distr(a,b);
+  
+  for(uword i=0; i<N; ++i)
+    {
+    mem[i] = eT(g_distr(engine));
+    }
+  }
+
+
+#endif
 
 
 //! @}

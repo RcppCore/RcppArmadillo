@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2014 Conrad Sanderson
-// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -88,6 +88,8 @@ class subview_cube : public BaseCube<eT, subview_cube<eT> >
   inline void randu();
   inline void randn();
   
+  inline arma_warn_unused bool is_finite() const;
+
   inline arma_warn_unused eT min() const;
   inline arma_warn_unused eT max() const;
   

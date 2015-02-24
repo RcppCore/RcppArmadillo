@@ -1,5 +1,5 @@
-// Copyright (C) 2011-2014 Conrad Sanderson
-// Copyright (C) 2011-2014 NICTA (www.nicta.com.au)
+// Copyright (C) 2011-2015 Conrad Sanderson
+// Copyright (C) 2011-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -66,41 +66,22 @@ void
 arrayops::copy_forwards(eT* dest, const eT* src, const uword n_elem)
   {
   // can't use std::memcpy(), as we don't know how it copies data
-  uword i,j;
+  uword j;
   
-  for(i=0, j=1; j < n_elem; i+=2, j+=2)
+  for(j=1; j < n_elem; j+=2)
     {
-    dest[i] = src[i];
-    dest[j] = src[j];
+    const eT tmp_i = (*src);  src++;
+    const eT tmp_j = (*src);  src++;
+    
+    (*dest) = tmp_i;  dest++;
+    (*dest) = tmp_j;  dest++;
     }
   
-  if(i < n_elem)
+  if((j-1) < n_elem)
     {
-    dest[i] = src[i];
+    (*dest) = (*src);
     }
   }
-
-
-
-// template<typename eT>
-// arma_hot
-// inline
-// void
-// arrayops::copy_backwards(eT* dest, const eT* src, const uword n_elem)
-//   {
-//   // can't use std::memcpy(), as we don't know how it copies data
-//   
-//   switch(n_elem)
-//     {
-//     default:
-//       for(uword i = (n_elem-1); i >= 1; --i) { dest[i] = src[i]; }
-//       // NOTE: the 'break' statement has been deliberately omitted
-//     case 1:
-//       dest[0] = src[0];
-//     case 0:
-//       ;
-//     }
-//   }
 
 
 
@@ -112,35 +93,32 @@ arrayops::copy_backwards(eT* dest, const eT* src, const uword n_elem)
   {
   // can't use std::memcpy(), as we don't know how it copies data
   
-  switch(n_elem)
+  // for(uword i=0; i < n_elem; ++i) 
+  //   {
+  //   const uword j = n_elem-i-1;
+  //   
+  //   dest[j] = src[j];
+  //   }
+  
+  if(n_elem > 0)
     {
-    default:
+          eT* dest_it = &(dest[n_elem-1]);
+    const eT*  src_it = &( src[n_elem-1]);
+    
+    uword j;
+    for(j=1; j < n_elem; j+=2) 
       {
-      uword i, j;
-      for(i = (n_elem-1), j = (n_elem-2); j >= 2; i-=2, j-=2)
-        {
-        const eT tmp_i = src[i];
-        const eT tmp_j = src[j];
-        
-        dest[i] = tmp_i;
-        dest[j] = tmp_j;
-        }
+      const eT tmp_i = (*src_it);  src_it--;
+      const eT tmp_j = (*src_it);  src_it--;
       
-      // j is less than 2:  it can be 1 or 0
-      // i is j+1, ie. less than 3: it can be 2 or 1
-      
-      if(i == 2)
-        {
-        dest[2] = src[2];
-        }
+      (*dest_it) = tmp_i;  dest_it--;
+      (*dest_it) = tmp_j;  dest_it--;
       }
-      // NOTE: the 'break' statement has been deliberately omitted
-    case 2:
-      dest[1] = src[1];
-    case 1:
-      dest[0] = src[0];
-    case 0:
-      ;
+    
+    if((j-1) < n_elem)
+      {
+      (*dest_it) = (*src_it);
+      }
     }
   }
 
@@ -218,32 +196,45 @@ inline
 void
 arrayops::convert(out_eT* dest, const in_eT* src, const uword n_elem)
   {
-  uword i,j;
-  
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
+  if(is_same_type<out_eT,in_eT>::value)
     {
-    const in_eT tmp_i = src[i];
-    const in_eT tmp_j = src[j];
+    const out_eT* src2 = (const out_eT*)src;
+    
+    if(dest != src2)  { arrayops::copy(dest, src2, n_elem); }
+    
+    return;
+    }
+  
+  
+  uword j;
+  
+  for(j=1; j<n_elem; j+=2)
+    {
+    const in_eT tmp_i = (*src);  src++;
+    const in_eT tmp_j = (*src);  src++;
     
     // dest[i] = out_eT( tmp_i );
     // dest[j] = out_eT( tmp_j );
     
-    dest[i] = (is_signed<out_eT>::value)
+    (*dest) = (is_signed<out_eT>::value)
               ? out_eT( tmp_i )
               : ( cond_rel< is_signed<in_eT>::value >::lt(tmp_i, in_eT(0)) ? out_eT(0) : out_eT(tmp_i) );
-              
-    dest[j] = (is_signed<out_eT>::value)
+    
+    dest++;
+    
+    (*dest) = (is_signed<out_eT>::value)
               ? out_eT( tmp_j )
               : ( cond_rel< is_signed<in_eT>::value >::lt(tmp_j, in_eT(0)) ? out_eT(0) : out_eT(tmp_j) );
+    dest++;
     }
   
-  if(i < n_elem)
+  if((j-1) < n_elem)
     {
-    const in_eT tmp_i = src[i];
+    const in_eT tmp_i = (*src);
     
     // dest[i] = out_eT( tmp_i );
     
-    dest[i] = (is_signed<out_eT>::value)
+    (*dest) = (is_signed<out_eT>::value)
               ? out_eT( tmp_i )
               : ( cond_rel< is_signed<in_eT>::value >::lt(tmp_i, in_eT(0)) ? out_eT(0) : out_eT(tmp_i) );
     }
@@ -257,17 +248,17 @@ inline
 void
 arrayops::convert_cx(out_eT* dest, const in_eT* src, const uword n_elem)
   {
-  uword i,j;
+  uword j;
   
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
+  for(j=1; j<n_elem; j+=2)
     {
-    arrayops::convert_cx_scalar( dest[i], src[i] );
-    arrayops::convert_cx_scalar( dest[j], src[j] );
+    arrayops::convert_cx_scalar( (*dest), (*src) );  dest++; src++;
+    arrayops::convert_cx_scalar( (*dest), (*src) );  dest++; src++;
     }
   
-  if(i < n_elem)
+  if((j-1) < n_elem)
     {
-    arrayops::convert_cx_scalar( dest[i], src[i] );
+    arrayops::convert_cx_scalar( (*dest), (*src) );
     }
   }
 
@@ -977,12 +968,12 @@ inline
 bool
 arrayops::is_finite(const eT* src, const uword n_elem)
   {
-  uword i,j;
+  uword j;
   
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
+  for(j=1; j<n_elem; j+=2)
     {
-    const eT val_i = src[i];
-    const eT val_j = src[j];
+    const eT val_i = (*src);  src++;
+    const eT val_j = (*src);  src++;
     
     if( (arma_isfinite(val_i) == false) || (arma_isfinite(val_j) == false) )
       {
@@ -990,9 +981,9 @@ arrayops::is_finite(const eT* src, const uword n_elem)
       }
     }
   
-  if(i < n_elem)
+  if((j-1) < n_elem)
     {
-    if(arma_isfinite(src[i]) == false)
+    if(arma_isfinite(*src) == false)
       {
       return false;
       }

@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2014 Conrad Sanderson
-// Copyright (C) 2010-2014 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2015 Conrad Sanderson
+// Copyright (C) 2010-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -156,11 +156,11 @@
 
 
 template<typename eop_type>
-template<typename T1>
+template<typename outT, typename T1>
 arma_hot
 inline
 void
-eop_core<eop_type>::apply(Mat<typename T1::elem_type>& out, const eOp<T1, eop_type>& x)
+eop_core<eop_type>::apply(outT& out, const eOp<T1, eop_type>& x)
   {
   arma_extra_debug_sigprint();
   

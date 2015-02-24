@@ -1,5 +1,5 @@
 // Copyright (C) 2011-2014 Ryan Curtin
-// Copyright (C) 2012-2014 Conrad Sanderson
+// Copyright (C) 2012-2015 Conrad Sanderson
 // Copyright (C) 2011 Matthew Amidon
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -74,7 +74,7 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   inline  SpMat();  //! Size will be 0x0 (empty).
   inline ~SpMat();
   
-  inline          SpMat(const uword in_rows, const uword in_cols);
+  inline  SpMat(const uword in_rows, const uword in_cols);
   
   inline                  SpMat(const char*        text);
   inline const SpMat& operator=(const char*        text);
@@ -120,6 +120,8 @@ class SpMat : public SpBase< eT, SpMat<eT> >
    */
   template<typename T1> inline explicit          SpMat(const Base<eT, T1>& m);
   template<typename T1> inline const SpMat&  operator=(const Base<eT, T1>& m);
+  template<typename T1> inline const SpMat& operator+=(const Base<eT, T1>& m);
+  template<typename T1> inline const SpMat& operator-=(const Base<eT, T1>& m);
   template<typename T1> inline const SpMat& operator*=(const Base<eT, T1>& m);
   template<typename T1> inline const SpMat& operator/=(const Base<eT, T1>& m);
   template<typename T1> inline const SpMat& operator%=(const Base<eT, T1>& m);
@@ -140,18 +142,6 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   inline const SpMat& operator%=(const SpSubview<eT>& X);
   inline const SpMat& operator/=(const SpSubview<eT>& X);
   
-  /**
-   * Operations on regular subviews.
-   */
-  inline                   SpMat(const subview<eT>& x);
-  inline const SpMat&  operator=(const subview<eT>& x);
-  inline const SpMat& operator+=(const subview<eT>& x);
-  inline const SpMat& operator-=(const subview<eT>& x);
-  inline const SpMat& operator*=(const subview<eT>& x);
-  inline const SpMat& operator%=(const subview<eT>& x);
-  inline const SpMat& operator/=(const subview<eT>& x);
-
-
   // delayed unary ops
   template<typename T1, typename spop_type> inline                   SpMat(const SpOp<T1, spop_type>& X);
   template<typename T1, typename spop_type> inline const SpMat&  operator=(const SpOp<T1, spop_type>& X);
@@ -188,24 +178,11 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   inline            SpSubview<eT> operator()(const uword row_num, const span& col_span);
   inline      const SpSubview<eT> operator()(const uword row_num, const span& col_span) const;
   
-  
   arma_inline       SpSubview<eT> col(const uword col_num);
   arma_inline const SpSubview<eT> col(const uword col_num) const;
   
   inline            SpSubview<eT> operator()(const span& row_span, const uword col_num);
   inline      const SpSubview<eT> operator()(const span& row_span, const uword col_num) const;
-  
-  /**
-   * Row- and column-related functions.
-   */
-  inline void swap_rows(const uword in_row1, const uword in_row2);
-  inline void swap_cols(const uword in_col1, const uword in_col2);
-  
-  inline void shed_row(const uword row_num);
-  inline void shed_col(const uword col_num);
-  
-  inline void shed_rows(const uword in_row1, const uword in_row2);
-  inline void shed_cols(const uword in_col1, const uword in_col2);
   
   arma_inline       SpSubview<eT> rows(const uword in_row1, const uword in_row2);
   arma_inline const SpSubview<eT> rows(const uword in_row1, const uword in_row2) const;
@@ -227,6 +204,29 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   
   arma_inline       SpSubview<eT> operator()(const uword in_row1, const uword in_col1, const SizeMat& s);
   arma_inline const SpSubview<eT> operator()(const uword in_row1, const uword in_col1, const SizeMat& s) const;
+  
+  
+  inline       SpSubview<eT> head_rows(const uword N);
+  inline const SpSubview<eT> head_rows(const uword N) const;
+  
+  inline       SpSubview<eT> tail_rows(const uword N);
+  inline const SpSubview<eT> tail_rows(const uword N) const;
+  
+  inline       SpSubview<eT> head_cols(const uword N);
+  inline const SpSubview<eT> head_cols(const uword N) const;
+  
+  inline       SpSubview<eT> tail_cols(const uword N);
+  inline const SpSubview<eT> tail_cols(const uword N) const;
+  
+  
+  inline void swap_rows(const uword in_row1, const uword in_row2);
+  inline void swap_cols(const uword in_col1, const uword in_col2);
+  
+  inline void shed_row(const uword row_num);
+  inline void shed_col(const uword col_num);
+  
+  inline void shed_rows(const uword in_row1, const uword in_row2);
+  inline void shed_cols(const uword in_col1, const uword in_col2);
   
   
   /**
@@ -549,6 +549,9 @@ class SpMat : public SpBase< eT, SpMat<eT> >
    * updated.
    */
   inline void mem_resize(const uword new_n_nonzero);
+  
+  //! don't use this unless you're writing internal Armadillo code
+  inline void remove_zeros();
   
   //! don't use this unless you're writing internal Armadillo code
   inline void steal_mem(SpMat& X);

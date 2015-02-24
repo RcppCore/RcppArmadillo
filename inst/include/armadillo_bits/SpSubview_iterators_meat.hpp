@@ -580,7 +580,7 @@ SpSubview<eT>::const_row_iterator::const_row_iterator(const SpSubview<eT>& in_M,
   // loop across all valid columns looking for elements in row 0 (and add to
   // our sum), then in row 1, and so forth, until we get to the desired
   // position.
-  uword cur_pos = -1;
+  uword cur_pos = -1;  // TODO: HACK: -1 is not a valid unsigned integer; using -1 is relying on wraparound/overflow, which is not portable
   uword cur_row = 0;
   uword cur_col = 0;
 
@@ -597,7 +597,7 @@ SpSubview<eT>::const_row_iterator::const_row_iterator(const SpSubview<eT>& in_M,
       if(row_index == (cur_row + aux_row))
         {
         // Yes, it is in the right row.
-        if(++cur_pos == iterator_base::internal_pos)
+        if(++cur_pos == iterator_base::internal_pos)   // TODO: HACK: if cur_pos is std::numeric_limits<uword>::max(), ++cur_pos relies on a wraparound/overflow, which is not portable
           {
           iterator_base::internal_col = cur_col;
           internal_row = cur_row;

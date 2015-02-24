@@ -355,6 +355,30 @@ struct quasi_unwrap< mtOp<out_eT, T1, op_type> >
 
 
 
+template<typename T1>
+struct quasi_unwrap< Op<T1, op_vectorise_col> >
+  {
+  static const bool has_subview = true;
+  
+  typedef typename T1::elem_type eT;
+  
+  inline
+  quasi_unwrap(const Op<T1, op_vectorise_col>& A)
+    : U( A.m )
+    , M( const_cast<eT*>(U.M.memptr()), U.M.n_elem, 1, false, false )
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const unwrap<T1> U;
+  const Mat<eT>    M;
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&(U.M)) == void_ptr(&X)); }
+  };
+
+
+
 //
 //
 //

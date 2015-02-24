@@ -81,7 +81,7 @@ running_stat_vec<obj_type>::operator() (const Base<typename running_stat_vec<obj
   {
   arma_extra_debug_sigprint();
   
-  const unwrap<T1>       tmp(X.get_ref());
+  const quasi_unwrap<T1> tmp(X.get_ref());
   const Mat<T>& sample = tmp.M;
   
   if( sample.is_empty() )
@@ -109,7 +109,7 @@ running_stat_vec<obj_type>::operator() (const Base< std::complex<typename runnin
   {
   arma_extra_debug_sigprint();
   
-  const unwrap<T1> tmp(X.get_ref());
+  const quasi_unwrap<T1> tmp(X.get_ref());
   
   const Mat< std::complex<T> >& sample = tmp.M;
   

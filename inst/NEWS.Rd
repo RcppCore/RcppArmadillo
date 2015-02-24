@@ -2,6 +2,20 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.4.650.1.0 (2015-02-24)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 4.650.1 ("Intravenous Caffeine Injectosr")
+    \itemize{
+      \item added \code{randg()} for generating random values from gamma distributions (C++11 only)
+      \item added \code{.head_rows()} and \code{.tail_rows()} to submatrix views
+      \item added \code{.head_cols()} and \code{.tail_cols()} to submatrix views
+      \item expanded \code{eigs_sym()} to optionally calculate
+      eigenvalues with smallest/largest algebraic values 
+      fixes for handling of sparse matrices
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.4.600.4.0 (2015-01-23)}{
   \itemize{
     \item Upgraded to Armadillo release Version 4.600.4 (still "Off The Reservation")
