@@ -436,7 +436,7 @@ SpMat<eT>::const_row_iterator::const_row_iterator(const SpMat<eT>& in_M, uword i
       if (row_index == cur_row)
         {
         // Yes, it is what we are looking for.  Increment our current position.
-        if (++cur_pos == iterator_base::internal_pos)
+        if (++cur_pos == iterator_base::internal_pos)   // TODO: HACK: if cur_pos is std::numeric_limits<uword>::max(), ++cur_pos relies on a wraparound/overflow, which is not portable
           {
           actual_pos = iterator_base::M->col_ptrs[cur_col] + ind;
           internal_row = cur_row;

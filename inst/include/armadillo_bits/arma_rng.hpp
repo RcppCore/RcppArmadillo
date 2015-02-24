@@ -1,5 +1,5 @@
-// Copyright (C) 2013-2014 Conrad Sanderson
-// Copyright (C) 2013-2014 NICTA (www.nicta.com.au)
+// Copyright (C) 2013-2015 Conrad Sanderson
+// Copyright (C) 2013-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,13 +11,18 @@
 
 
 #if defined(ARMA_RNG_ALT)
-  #undef ARMA_USE_CXX11_RNG
+  #undef ARMA_USE_EXTERN_CXX11_RNG
 #endif
 
 
-#if defined(ARMA_USE_CXX11_RNG)
+#if !defined(ARMA_USE_CXX11)
+  #undef ARMA_USE_EXTERN_CXX11_RNG
+#endif
+
+
+#if defined(ARMA_USE_EXTERN_CXX11_RNG)
   extern thread_local arma_rng_cxx11 arma_rng_cxx11_instance;
-  // thread_local arma_rng_cxx11 arma_rng_cxx11_instance;
+  // namespace { thread_local arma_rng_cxx11 arma_rng_cxx11_instance; }
 #endif
 
 
@@ -27,7 +32,7 @@ class arma_rng
   
   #if   defined(ARMA_RNG_ALT)
     typedef arma_rng_alt::seed_type   seed_type;
-  #elif defined(ARMA_USE_CXX11_RNG)
+  #elif defined(ARMA_USE_EXTERN_CXX11_RNG)
     typedef arma_rng_cxx11::seed_type seed_type;
   #else
     typedef arma_rng_cxx98::seed_type seed_type;
@@ -35,7 +40,7 @@ class arma_rng
   
   #if   defined(ARMA_RNG_ALT)
     static const int rng_method = 2;
-  #elif defined(ARMA_USE_CXX11_RNG)
+  #elif defined(ARMA_USE_EXTERN_CXX11_RNG)
     static const int rng_method = 1;
   #else
     static const int rng_method = 0;
@@ -59,7 +64,7 @@ arma_rng::set_seed(const arma_rng::seed_type val)
     {
     arma_rng_alt::set_seed(val);
     }
-  #elif defined(ARMA_USE_CXX11_RNG)
+  #elif defined(ARMA_USE_EXTERN_CXX11_RNG)
     {
     arma_rng_cxx11_instance.set_seed(val);
     }
@@ -154,7 +159,7 @@ struct arma_rng::randi
       {
       return eT( arma_rng_alt::randi_val() );
       }
-    #elif defined(ARMA_USE_CXX11_RNG)
+    #elif defined(ARMA_USE_EXTERN_CXX11_RNG)
       {
       return eT( arma_rng_cxx11_instance.randi_val() );
       }
@@ -175,7 +180,7 @@ struct arma_rng::randi
       {
       return arma_rng_alt::randi_max_val();
       }
-    #elif defined(ARMA_USE_CXX11_RNG)
+    #elif defined(ARMA_USE_EXTERN_CXX11_RNG)
       {
       return arma_rng_cxx11::randi_max_val();
       }
@@ -196,7 +201,7 @@ struct arma_rng::randi
       {
       return arma_rng_alt::randi_fill(mem, N, a, b);
       }
-    #elif defined(ARMA_USE_CXX11_RNG)
+    #elif defined(ARMA_USE_EXTERN_CXX11_RNG)
       {
       return arma_rng_cxx11_instance.randi_fill(mem, N, a, b);
       }
@@ -220,7 +225,7 @@ struct arma_rng::randu
       {
       return eT( arma_rng_alt::randu_val() );
       }
-    #elif defined(ARMA_USE_CXX11_RNG)
+    #elif defined(ARMA_USE_EXTERN_CXX11_RNG)
       {
       return eT( arma_rng_cxx11_instance.randu_val() );
       }
@@ -297,7 +302,7 @@ struct arma_rng::randn
       {
       return eT( arma_rng_alt::randn_val() );
       }
-    #elif defined(ARMA_USE_CXX11_RNG)
+    #elif defined(ARMA_USE_EXTERN_CXX11_RNG)
       {
       return eT( arma_rng_cxx11_instance.randn_val() );
       }
@@ -318,7 +323,7 @@ struct arma_rng::randn
       {
       arma_rng_alt::randn_dual_val(out1, out2);
       }
-    #elif defined(ARMA_USE_CXX11_RNG)
+    #elif defined(ARMA_USE_EXTERN_CXX11_RNG)
       {
       arma_rng_cxx11_instance.randn_dual_val(out1, out2);
       }

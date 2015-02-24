@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2013 Conrad Sanderson
-// Copyright (C) 2010-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2015 Conrad Sanderson
+// Copyright (C) 2010-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,7 +18,7 @@ class eop_core
   
   // matrices
   
-  template<typename T1> arma_hot inline static void apply(Mat<typename T1::elem_type>& out, const eOp<T1, eop_type>& x);
+  template<typename outT, typename T1> arma_hot inline static void apply(outT& out, const eOp<T1, eop_type>& x);
   
   template<typename T1> arma_hot inline static void apply_inplace_plus (Mat<typename T1::elem_type>& out, const eOp<T1, eop_type>& x);
   template<typename T1> arma_hot inline static void apply_inplace_minus(Mat<typename T1::elem_type>& out, const eOp<T1, eop_type>& x);

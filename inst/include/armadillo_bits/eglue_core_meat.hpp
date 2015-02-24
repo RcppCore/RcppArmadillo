@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2014 Conrad Sanderson
-// Copyright (C) 2010-2014 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2015 Conrad Sanderson
+// Copyright (C) 2010-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -171,11 +171,11 @@
 
 
 template<typename eglue_type>
-template<typename T1, typename T2>
+template<typename outT, typename T1, typename T2>
 arma_hot
 inline
 void
-eglue_core<eglue_type>::apply(Mat<typename T1::elem_type>& out, const eGlue<T1, T2, eglue_type>& x)
+eglue_core<eglue_type>::apply(outT& out, const eGlue<T1, T2, eglue_type>& x)
   {
   arma_extra_debug_sigprint();
   

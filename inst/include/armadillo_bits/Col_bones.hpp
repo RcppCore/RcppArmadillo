@@ -198,6 +198,10 @@ class Col<eT>::fixed : public Col<eT>
   
   arma_inline const Col& operator=(const fixed<fixed_n_elem>& X);
   
+  template<typename T1, typename eop_type> inline const Col& operator=(const eOp<T1, eop_type>& X);
+  
+  template<typename T1, typename T2, typename eglue_type> inline const Col& operator=(const eGlue<T1, T2, eglue_type>& X);
+  
   arma_inline const Op< Col_fixed_type, op_htrans >  t() const;
   arma_inline const Op< Col_fixed_type, op_htrans > ht() const;
   arma_inline const Op< Col_fixed_type, op_strans > st() const;

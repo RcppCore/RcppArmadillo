@@ -1,5 +1,5 @@
-// Copyright (C) 2011-2012 Ryan Curtin
-// Copyright (C) 2012-2014 Conrad Sanderson
+// Copyright (C) 2011-2015 Ryan Curtin
+// Copyright (C) 2012-2015 Conrad Sanderson
 // Copyright (C) 2011 Matthew Amidon
 //
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -22,20 +22,21 @@ SpSubview<eT>::SpSubview(const SpMat<eT>& in_m, const uword in_row1, const uword
   , n_nonzero(0)
   {
   arma_extra_debug_sigprint();
-
+  
   // There must be a O(1) way to do this
   uword lend     = m.col_ptrs[in_col1 + in_n_cols];
   uword lend_row = in_row1 + in_n_rows;
   uword count   = 0;
-
+  
   for(uword i = m.col_ptrs[in_col1]; i < lend; ++i)
     {
-    if(m.row_indices[i] >= in_row1 && m.row_indices[i] < lend_row)
-      {
-      ++count;
-      }
+    const uword m_row_indices_i = m.row_indices[i];
+    
+    const bool condition = (m_row_indices_i >= in_row1) && (m_row_indices_i < lend_row);
+    
+    count += condition ? uword(1) : uword(0);
     }
-
+  
   access::rw(n_nonzero) = count;
   }
 
@@ -53,20 +54,21 @@ SpSubview<eT>::SpSubview(SpMat<eT>& in_m, const uword in_row1, const uword in_co
   , n_nonzero(0)
   {
   arma_extra_debug_sigprint();
-
+  
   // There must be a O(1) way to do this
   uword lend     = m.col_ptrs[in_col1 + in_n_cols];
   uword lend_row = in_row1 + in_n_rows;
   uword count    = 0;
-
+  
   for(uword i = m.col_ptrs[in_col1]; i < lend; ++i)
     {
-    if(m.row_indices[i] >= in_row1 && m.row_indices[i] < lend_row)
-      {
-      ++count;
-      }
+    const uword m_row_indices_i = m.row_indices[i];
+    
+    const bool condition = (m_row_indices_i >= in_row1) && (m_row_indices_i < lend_row);
+    
+    count += condition ? uword(1) : uword(0);
     }
-
+  
   access::rw(n_nonzero) = count;
   }
 
@@ -130,28 +132,38 @@ SpSubview<eT>::operator*=(const eT val)
   {
   arma_extra_debug_sigprint();
   
-  if(val != eT(0))
+  const uword lstart_row = aux_row1;
+  const uword lend_row   = aux_row1 + n_rows;
+  
+  const uword lstart_col = aux_col1;
+  const uword lend_col   = aux_col1 + n_cols;
+  
+  const uword* m_row_indices = m.row_indices;
+        eT*    m_values      = access::rwp(m.values);
+  
+  for(uword c = lstart_col; c < lend_col; ++c)
     {
-    const uword lstart_row = aux_row1;
-    const uword lend_row   = aux_row1 + n_rows;
+    const uword r_start = m.col_ptrs[c    ];
+    const uword r_end   = m.col_ptrs[c + 1];
     
-    const uword lstart_col = aux_col1;
-    const uword lend_col   = aux_col1 + n_cols;
-    
-    for(uword c = lstart_col; c < lend_col; ++c)
+    for(uword r = r_start; r < r_end; ++r)
       {
-      for(uword r = m.col_ptrs[c]; r < m.col_ptrs[c + 1]; ++r)
+      const uword m_row_indices_r = m_row_indices[r];
+      
+      if( (m_row_indices_r >= lstart_row) && (m_row_indices_r < lend_row) )
         {
-        if(m.row_indices[r] >= lstart_row && m.row_indices[r] < lend_row)
-          {
-          access::rw(m.values[r]) *= val;
-          }
+        m_values[r] *= val;
         }
       }
     }
-  else
+  
+  const uword old_m_n_nonzero = m.n_nonzero;
+  
+  access::rw(m).remove_zeros();
+  
+  if(m.n_nonzero != old_m_n_nonzero)
     {
-    (*this).zeros();
+    access::rw(n_nonzero) = n_nonzero - (old_m_n_nonzero - m.n_nonzero); 
     }
   
   return *this;
@@ -165,7 +177,7 @@ const SpSubview<eT>&
 SpSubview<eT>::operator/=(const eT val)
   {
   arma_extra_debug_sigprint();
-
+  
   arma_debug_check( (val == eT(0)), "element-wise division: division by zero" );
   
   const uword lstart_row = aux_row1;
@@ -174,17 +186,34 @@ SpSubview<eT>::operator/=(const eT val)
   const uword lstart_col = aux_col1;
   const uword lend_col   = aux_col1 + n_cols;
   
+  const uword* m_row_indices = m.row_indices;
+        eT*    m_values      = access::rwp(m.values);
+  
   for(uword c = lstart_col; c < lend_col; ++c)
     {
-    for(uword r = m.col_ptrs[c]; r < m.col_ptrs[c + 1]; ++r)
+    const uword r_start = m.col_ptrs[c    ];
+    const uword r_end   = m.col_ptrs[c + 1];
+    
+    for(uword r = r_start; r < r_end; ++r)
       {
-      if(m.row_indices[r] >= lstart_row && m.row_indices[r] < lend_row)
+      const uword m_row_indices_r = m_row_indices[r];
+      
+      if( (m_row_indices_r >= lstart_row) && (m_row_indices_r < lend_row) )
         {
-        access::rw(m.values[r]) /= val;
+        m_values[r] /= val;
         }
       }
     }
-
+  
+  const uword old_m_n_nonzero = m.n_nonzero;
+  
+  access::rw(m).remove_zeros();
+  
+  if(m.n_nonzero != old_m_n_nonzero)
+    {
+    access::rw(n_nonzero) = n_nonzero - (old_m_n_nonzero - m.n_nonzero); 
+    }
+  
   return *this;
   }
 
@@ -197,7 +226,7 @@ const SpSubview<eT>&
 SpSubview<eT>::operator=(const Base<eT, T1>& in)
   {
   arma_extra_debug_sigprint();
-
+  
   // this is a modified version of SpSubview::operator_equ_common(const SpBase)
   
   const SpProxy< SpMat<eT> > pa((*this).m);
@@ -222,7 +251,7 @@ SpSubview<eT>::operator=(const Base<eT, T1>& in)
   
   for(uword i=0; i<b_n_elem; ++i)
     {
-    if(b_mem[i] != eT(0))  { ++box_count; }
+    box_count += (b_mem[i] != eT(0)) ? uword(1) : uword(0);
     }
   
   SpMat<eT> out(pa.get_n_rows(), pa.get_n_cols());
@@ -799,9 +828,7 @@ SpSubview<eT>::zeros()
   {
   arma_extra_debug_sigprint();
   
-  const SpMat<eT> tmp( (*this).n_rows, (*this).n_cols );
-  
-  (*this).operator=(tmp);
+  (*this).operator*=(eT(0));
   }
 
 

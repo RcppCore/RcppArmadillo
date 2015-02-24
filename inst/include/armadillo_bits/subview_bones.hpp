@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2014 Conrad Sanderson
-// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // Copyright (C)      2011 James Sanders
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -107,7 +107,8 @@ class subview : public Base<eT, subview<eT> >
   
   inline bool check_overlap(const subview& x) const;
   
-  inline bool is_vec() const;
+  inline arma_warn_unused bool is_vec()    const;
+  inline arma_warn_unused bool is_finite() const;
   
   inline       subview_row<eT> row(const uword row_num);
   inline const subview_row<eT> row(const uword row_num) const;

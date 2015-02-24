@@ -1157,6 +1157,31 @@ subview_cube<eT>::randn()
 template<typename eT>
 inline
 arma_warn_unused
+bool
+subview_cube<eT>::is_finite() const
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword local_n_rows   = n_rows;
+  const uword local_n_cols   = n_cols;
+  const uword local_n_slices = n_slices;
+  
+  for(uword slice = 0; slice < local_n_slices; ++slice)
+    {
+    for(uword col = 0; col < local_n_cols; ++col)
+      {
+      if(arrayops::is_finite(slice_colptr(slice,col), local_n_rows) == false)  { return false; }
+      }
+    }
+  
+  return true;
+  }
+
+
+
+template<typename eT>
+inline
+arma_warn_unused
 eT
 subview_cube<eT>::min() const
   {

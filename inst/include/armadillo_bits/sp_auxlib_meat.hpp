@@ -30,6 +30,7 @@ sp_auxlib::interpret_form_str(const char* form_str)
     if(c2 == 'm')  { return form_lm; }
     if(c2 == 'r')  { return form_lr; }
     if(c2 == 'i')  { return form_li; }
+    if(c2 == 'a')  { return form_la; }
     }
   else
   if(c1 == 's')
@@ -37,6 +38,7 @@ sp_auxlib::interpret_form_str(const char* form_str)
     if(c2 == 'm')  { return form_sm; }
     if(c2 == 'r')  { return form_sr; }
     if(c2 == 'i')  { return form_si; }
+    if(c2 == 'a')  { return form_sa; }
     }
   
   return form_none;
@@ -56,11 +58,22 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
     {
     const form_type form_val = sp_auxlib::interpret_form_str(form_str);
     
-    arma_debug_check( (form_val != form_lm) && (form_val != form_sm), "eigs_sym(): unknown form specified" );
+    arma_debug_check( (form_val != form_lm) && (form_val != form_sm) && (form_val != form_la) && (form_val != form_sa), "eigs_sym(): unknown form specified" );
     
     char  which_sm[3] = "SM";
     char  which_lm[3] = "LM";
-    char* which      = (form_val == form_sm) ? which_sm : which_lm;  // select which eigenvalues we want: smallest magnitude or largest magnitude
+    char  which_sa[3] = "SA";
+    char  which_la[3] = "LA";
+    char* which;
+    switch (form_val)
+      {
+      case form_sm:  which = which_sm;  break;
+      case form_lm:  which = which_lm;  break;
+      case form_sa:  which = which_sa;  break;
+      case form_la:  which = which_la;  break;
+
+      default:       which = which_lm;  break;
+      }
     
     // Make a sparse proxy object.
     SpProxy<T1> p(X.get_ref());

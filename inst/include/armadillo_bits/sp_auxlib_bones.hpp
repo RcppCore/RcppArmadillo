@@ -18,7 +18,7 @@ class sp_auxlib
   
   enum form_type
     {
-    form_none, form_lm, form_sm, form_lr, form_sr, form_li, form_si
+    form_none, form_lm, form_sm, form_lr, form_la, form_sr, form_li, form_si, form_sa
     };
   
   inline static form_type interpret_form_str(const char* form_str);
