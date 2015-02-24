@@ -5,6 +5,8 @@
 
 	* inst/include/*: Upgraded to release 4.650.1 of Armadillo
 
+	* .travis.yml: Switch to ppa:edd/misc for binaries
+
 2015-01-23  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.4.600.4.0
