@@ -13,6 +13,8 @@
       eigenvalues with smallest/largest algebraic values 
       fixes for handling of sparse matrices
     }
+    \item Applied small correction to main header file to set up C++11
+    RNG whether or not the alternate RNG (based on R, our default) is used
   }
 }
 
