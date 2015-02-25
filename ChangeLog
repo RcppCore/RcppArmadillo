@@ -1,7 +1,7 @@
 2015-02-25  Dirk Eddelbuettel  <edd@debian.org>
 
-        * DESCRIPTION: Release 0.4.650.1.0
-        * inst/NEWS.Rd: Release 0.4.650.1.0
+        * DESCRIPTION: Release 0.4.650.1.1
+        * inst/NEWS.Rd: Release 0.4.650.1.1
 
 	* inst/include/armadillo: Fix for C++11 RNG include
 
