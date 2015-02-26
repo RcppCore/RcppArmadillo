@@ -13,7 +13,7 @@
 
 #define ARMA_VERSION_MAJOR 4
 #define ARMA_VERSION_MINOR 650
-#define ARMA_VERSION_PATCH 1
+#define ARMA_VERSION_PATCH 2
 #define ARMA_VERSION_NAME  "Intravenous Caffeine Injector"
 
 

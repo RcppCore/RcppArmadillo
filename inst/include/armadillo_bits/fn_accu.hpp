@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2014 Conrad Sanderson
-// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // Copyright (C) 2012 Ryan Curtin
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -202,6 +202,61 @@ accu(const mtOp<uword,T1,op_rel_noteq>& X)
 
 
 
+template<typename T1>
+inline
+arma_warn_unused
+uword
+accu(const mtOp<uword,T1,op_rel_eq>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const eT val = X.aux;
+  
+  const Proxy<T1> P(X.m);
+  
+  uword n_nonzero = 0;
+  
+  if(Proxy<T1>::prefer_at_accessor == false)
+    {
+    typedef typename Proxy<T1>::ea_type ea_type;
+    
+          ea_type A      = P.get_ea();
+    const uword   n_elem = P.get_n_elem();
+    
+    for(uword i=0; i<n_elem; ++i)
+      {
+      n_nonzero += (A[i] == val) ? uword(1) : uword(0);
+      }
+    }
+  else
+    {
+    const uword P_n_cols = P.get_n_cols();
+    const uword P_n_rows = P.get_n_rows();
+    
+    if(P_n_rows == 1)
+      {
+      for(uword col=0; col < P_n_cols; ++col)
+        {
+        n_nonzero += (P.at(0,col) == val) ? uword(1) : uword(0);
+        }
+      }
+    else
+      {
+      for(uword col=0; col < P_n_cols; ++col)
+      for(uword row=0; row < P_n_rows; ++row)
+        {
+        n_nonzero += (P.at(row,col) == val) ? uword(1) : uword(0);
+        }
+      }
+    }
+  
+  return n_nonzero;
+  }
+
+
+
 //! accumulate the elements of a subview (submatrix)
 template<typename eT>
 arma_hot
@@ -220,24 +275,13 @@ accu(const subview<eT>& X)
   
   if(X_n_rows == 1)
     {
-    const Mat<eT>& A = X.m;
+    typedef subview_row<eT> sv_type;
     
-    const uword start_row = X.aux_row1;
-    const uword start_col = X.aux_col1;
+    const sv_type& sv = reinterpret_cast<const sv_type&>(X);  // subview_row<eT> is a child class of subview<eT> and has no extra data
     
-    const uword end_col_p1 = start_col + X_n_cols;
+    const Proxy<sv_type> P(sv);
     
-    uword i,j;
-    for(i=start_col, j=start_col+1; j < end_col_p1; i+=2, j+=2)
-      {
-      val += A.at(start_row, i);
-      val += A.at(start_row, j);
-      }
-    
-    if(i < end_col_p1)
-      {
-      val += A.at(start_row, i);
-      }
+    val = accu_proxy_linear(P);
     }
   else
   if(X_n_cols == 1)

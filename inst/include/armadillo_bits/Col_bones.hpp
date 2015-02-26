@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -99,6 +99,12 @@ class Col : public Mat<eT>
   
   arma_inline       subview_col<eT> tail(const uword N);
   arma_inline const subview_col<eT> tail(const uword N) const;
+  
+  arma_inline       subview_col<eT> head_rows(const uword N);
+  arma_inline const subview_col<eT> head_rows(const uword N) const;
+  
+  arma_inline       subview_col<eT> tail_rows(const uword N);
+  arma_inline const subview_col<eT> tail_rows(const uword N) const;
   
   
   inline void shed_row (const uword row_num);
