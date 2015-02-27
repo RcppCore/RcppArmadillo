@@ -2999,7 +2999,7 @@ subview_col<eT>::tail(const uword N)
   
   arma_debug_check( (N > subview<eT>::n_rows), "subview_col::tail(): size out of bounds");
   
-  const uword start_row = subview<eT>::n_rows - N;
+  const uword start_row = subview<eT>::aux_row1 + subview<eT>::n_rows - N;
   
   return subview_col<eT>(this->m, this->aux_col1, start_row, N);
   }
@@ -3015,7 +3015,7 @@ subview_col<eT>::tail(const uword N) const
   
   arma_debug_check( (N > subview<eT>::n_rows), "subview_col::tail(): size out of bounds");
   
-  const uword start_row = subview<eT>::n_rows - N;
+  const uword start_row = subview<eT>::aux_row1 + subview<eT>::n_rows - N;
   
   return subview_col<eT>(this->m, this->aux_col1, start_row, N);
   }
@@ -3367,7 +3367,7 @@ subview_row<eT>::tail(const uword N)
   
   arma_debug_check( (N > subview<eT>::n_cols), "subview_row::tail(): size out of bounds");
   
-  const uword start_col = subview<eT>::n_cols - N;
+  const uword start_col = subview<eT>::aux_col1 + subview<eT>::n_cols - N;
   
   return subview_row<eT>(this->m, this->aux_row1, start_col, N);
   }
@@ -3383,7 +3383,7 @@ subview_row<eT>::tail(const uword N) const
   
   arma_debug_check( (N > subview<eT>::n_cols), "subview_row::tail(): size out of bounds");
   
-  const uword start_col = subview<eT>::n_cols - N;
+  const uword start_col = subview<eT>::aux_col1 + subview<eT>::n_cols - N;
   
   return subview_row<eT>(this->m, this->aux_row1, start_col, N);
   }

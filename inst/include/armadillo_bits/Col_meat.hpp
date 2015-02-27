@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -754,6 +754,54 @@ Col<eT>::tail(const uword N) const
   const uword start_row = Mat<eT>::n_rows - N;
   
   return subview_col<eT>(*this, 0, start_row, N);
+  }
+
+
+
+template<typename eT>
+arma_inline
+subview_col<eT>
+Col<eT>::head_rows(const uword N)
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).head(N);
+  }
+
+
+
+template<typename eT>
+arma_inline
+const subview_col<eT>
+Col<eT>::head_rows(const uword N) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).head(N);
+  }
+
+
+
+template<typename eT>
+arma_inline
+subview_col<eT>
+Col<eT>::tail_rows(const uword N)
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).tail(N);
+  }
+
+
+
+template<typename eT>
+arma_inline
+const subview_col<eT>
+Col<eT>::tail_rows(const uword N) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).tail(N);
   }
 
 
