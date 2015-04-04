@@ -2,10 +2,9 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
-\section{Changes in RcppArmadillo version 0.4.650.2.0 (2015-02-26)}{
+\section{Changes in RcppArmadillo version 0.4.999.1.0 (2015-04-04)}{
   \itemize{
-    \item Upgraded to Armadillo release Version 4.650.2 ("Intravenous Caffeine Injector") 
-    \item Upstream bug-fix release
+    \item Upgraded to Armadillo release preview 4.999.1 ("Intravenous Caffeine Injector") 
   }
 }
     
