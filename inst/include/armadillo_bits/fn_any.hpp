@@ -1,5 +1,5 @@
-// Copyright (C) 2013 Conrad Sanderson
-// Copyright (C) 2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2013-2015 Conrad Sanderson
+// Copyright (C) 2013-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -32,9 +32,8 @@ any
 
 
 template<typename T1>
-inline
-arma_warn_unused
-bool
+arma_inline
+const mtOp<uword, T1, op_any>
 any
   (
   const T1&   X,
@@ -45,7 +44,7 @@ any
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  return op_any::any_vec(X);
+  return mtOp<uword, T1, op_any>(X, dim, 0);
   }
 
 

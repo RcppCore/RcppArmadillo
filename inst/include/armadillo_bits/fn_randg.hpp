@@ -75,6 +75,10 @@ randg(const uword n_rows, const uword n_cols, const distr_param& param = distr_p
     }
   #else
     {
+    arma_ignore(n_rows);
+    arma_ignore(n_cols);
+    arma_ignore(param);
+    
     arma_stop("randg(): C++11 compiler required");
     
     return obj_type();
@@ -181,6 +185,11 @@ randg(const uword n_rows, const uword n_cols, const uword n_slices, const distr_
     }
   #else
     {
+    arma_ignore(n_rows);
+    arma_ignore(n_cols);
+    arma_ignore(n_slices);
+    arma_ignore(param);
+    
     arma_stop("randg(): C++11 compiler required");
     
     return cube_type();

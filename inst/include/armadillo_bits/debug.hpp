@@ -1178,6 +1178,7 @@ arma_assert_mul_size(const subview<eT1>& A, const subview<eT2>& B, const char* x
         out << "@ arma_config::lapack       = " << arma_config::lapack       << '\n';
         out << "@ arma_config::blas         = " << arma_config::blas         << '\n';
         out << "@ arma_config::arpack       = " << arma_config::arpack       << '\n';
+        out << "@ arma_config::superlu      = " << arma_config::superlu      << '\n';
         out << "@ arma_config::atlas        = " << arma_config::atlas        << '\n';
         out << "@ arma_config::hdf5         = " << arma_config::hdf5         << '\n';
         out << "@ arma_config::good_comp    = " << arma_config::good_comp    << '\n';

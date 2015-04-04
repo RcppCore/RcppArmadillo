@@ -186,7 +186,7 @@ diagview<eT>::operator= (const Base<eT,T1>& o)
   
   arma_debug_check
     (
-    ( (d.n_elem != P.get_n_elem()) || ((P.get_n_rows() != 1) && (P.get_n_cols() != 1)) ),
+    ( (d_n_elem != P.get_n_elem()) || ((P.get_n_rows() != 1) && (P.get_n_cols() != 1)) ),
     "diagview: given object has incompatible size"
     );
   
@@ -259,7 +259,7 @@ diagview<eT>::operator+=(const Base<eT,T1>& o)
   
   arma_debug_check
     (
-    ( (d.n_elem != P.get_n_elem()) || ((P.get_n_rows() != 1) && (P.get_n_cols() != 1)) ),
+    ( (d_n_elem != P.get_n_elem()) || ((P.get_n_rows() != 1) && (P.get_n_cols() != 1)) ),
     "diagview: given object has incompatible size"
     );
   
@@ -332,7 +332,7 @@ diagview<eT>::operator-=(const Base<eT,T1>& o)
   
   arma_debug_check
     (
-    ( (d.n_elem != P.get_n_elem()) || ((P.get_n_rows() != 1) && (P.get_n_cols() != 1)) ),
+    ( (d_n_elem != P.get_n_elem()) || ((P.get_n_rows() != 1) && (P.get_n_cols() != 1)) ),
     "diagview: given object has incompatible size"
     );
   
@@ -405,7 +405,7 @@ diagview<eT>::operator%=(const Base<eT,T1>& o)
   
   arma_debug_check
     (
-    ( (d.n_elem != P.get_n_elem()) || ((P.get_n_rows() != 1) && (P.get_n_cols() != 1)) ),
+    ( (d_n_elem != P.get_n_elem()) || ((P.get_n_rows() != 1) && (P.get_n_cols() != 1)) ),
     "diagview: given object has incompatible size"
     );
   
@@ -478,7 +478,7 @@ diagview<eT>::operator/=(const Base<eT,T1>& o)
   
   arma_debug_check
     (
-    ( (d.n_elem != P.get_n_elem()) || ((P.get_n_rows() != 1) && (P.get_n_cols() != 1)) ),
+    ( (d_n_elem != P.get_n_elem()) || ((P.get_n_rows() != 1) && (P.get_n_cols() != 1)) ),
     "diagview: given object has incompatible size"
     );
   

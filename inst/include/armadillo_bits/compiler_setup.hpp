@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2014 Conrad Sanderson
-// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -50,10 +50,10 @@
 
 #if defined(ARMA_USE_WRAPPER)
   #define arma_fortran(function) arma_fortran2_prefix(function)
-  #define arma_atlas(function)   wrapper_##function
+  #define arma_wrapper(function) wrapper_##function
 #else
   #define arma_fortran(function) arma_fortran2_noprefix(function)
-  #define arma_atlas(function)   function
+  #define arma_wrapper(function) function
 #endif
 
 #define arma_fortran_prefix(function)   arma_fortran2_prefix(function)
@@ -114,6 +114,15 @@
 
 #if defined(__MINGW32__)
   #undef ARMA_HAVE_POSIX_MEMALIGN
+#endif
+
+
+#if defined(__CYGWIN__)
+  #if defined(ARMA_USE_CXX11)
+    #undef ARMA_USE_CXX11
+    #undef ARMA_USE_EXTERN_CXX11_RNG
+    #pragma message ("WARNING: disabled use of C++11 features in Armadillo, due to incomplete support for C++11 by Cygwin")
+  #endif
 #endif
 
 
@@ -288,6 +297,11 @@
     #define ARMA_HAVE_GCC_ASSUME_ALIGNED
   #endif
   
+  #if defined(__apple_build_version__)
+    #undef ARMA_USE_EXTERN_CXX11_RNG
+    // because Apple engineers are too lazy to implement thread_local
+  #endif
+  
 #endif
   
 
@@ -319,6 +333,7 @@
   #if (_MSC_VER < 1700)
     #pragma message ("WARNING: this compiler is outdated and has incomplete support for the C++ standard;")
     #pragma message ("WARNING: if something breaks, you get to keep all the pieces")
+    #define ARMA_BAD_COMPILER
   #endif
   
   #if defined(ARMA_USE_CXX11)

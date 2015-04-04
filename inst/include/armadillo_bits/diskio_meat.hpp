@@ -2472,6 +2472,9 @@ inline
 bool
 diskio::load_coord_ascii(SpMat<eT>& x, std::istream& f, std::string& err_msg)
   {
+  arma_extra_debug_sigprint();
+  arma_ignore(err_msg);
+  
   bool load_okay = f.good();
   
   f.clear();
@@ -2694,6 +2697,9 @@ inline
 bool
 diskio::load_coord_ascii(SpMat< std::complex<T> >& x, std::istream& f, std::string& err_msg)
   {
+  arma_extra_debug_sigprint();
+  arma_ignore(err_msg);
+  
   bool load_okay = f.good();
   
   f.clear();

@@ -114,7 +114,7 @@ struct op_n_unique_mul
 
 struct op_n_unique_count
   {
-  template<typename eT> inline static eT eval(const eT& l, const eT& r) { return 1; }
+  template<typename eT> inline static eT eval(const eT&, const eT&) { return eT(1); }
   };
 
 

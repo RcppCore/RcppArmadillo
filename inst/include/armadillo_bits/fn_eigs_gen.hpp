@@ -20,7 +20,7 @@ eigs_gen
   const SpBase<typename T1::elem_type, T1>& X,
   const uword                               n_eigvals,
   const char*                               form = "lm",
-  const typename T1::elem_type              tol  = 0.0,
+  const typename T1::pod_type               tol  = 0.0,
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
   )
   {

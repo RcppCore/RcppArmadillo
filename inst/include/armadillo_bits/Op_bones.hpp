@@ -39,7 +39,8 @@ class Op : public Base<typename T1::elem_type, Op<T1, op_type> >
   || (T1::is_col && (is_same_type<op_type, op_sort>::yes || is_same_type<op_type, op_shuffle>::yes || is_same_type<op_type, op_cumsum_vec>::yes || is_same_type<op_type, op_flipud>::yes || is_same_type<op_type, op_fliplr>::yes))
   || (is_same_type<op_type, op_normalise_colvec>::yes)
   || (is_same_type<op_type, op_diagvec>::yes)
-  || (is_same_type<op_type, op_vectorise_col>::yes);
+  || (is_same_type<op_type, op_vectorise_col>::yes)
+  || (is_same_type<op_type, op_nonzeros>::yes);
   
   inline explicit Op(const T1& in_m);
   inline          Op(const T1& in_m, const elem_type in_aux);

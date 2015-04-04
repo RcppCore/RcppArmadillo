@@ -12,9 +12,9 @@
 
 
 #define ARMA_VERSION_MAJOR 4
-#define ARMA_VERSION_MINOR 650
-#define ARMA_VERSION_PATCH 2
-#define ARMA_VERSION_NAME  "Intravenous Caffeine Injector"
+#define ARMA_VERSION_MINOR 999
+#define ARMA_VERSION_PATCH 1
+#define ARMA_VERSION_NAME  "development version -- not for production use"
 
 
 

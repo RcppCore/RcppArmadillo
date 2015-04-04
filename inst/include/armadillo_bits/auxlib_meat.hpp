@@ -1372,6 +1372,8 @@ auxlib::eig_gen
       return true;
       }
     
+    if(A.is_finite() == false)  { return false; }  // workaround for a bug in LAPACK 3.5
+    
     const uword A_n_rows = A.n_rows;
     
     eigval.set_size(A_n_rows);
@@ -1479,6 +1481,8 @@ auxlib::eig_gen
       r_eigvec.reset();
       return true;
       }
+    
+    if(A.is_finite() == false)  { return false; }  // workaround for a bug in LAPACK 3.5
     
     const uword A_n_rows = A.n_rows;
     
