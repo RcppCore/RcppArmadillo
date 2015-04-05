@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 Conrad Sanderson
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -52,6 +52,13 @@ struct arma_config
     static const bool arpack = true;
   #else
     static const bool arpack = false;
+  #endif
+  
+  
+  #if defined(ARMA_USE_SUPERLU)
+    static const bool superlu = true;
+  #else
+    static const bool superlu = false;
   #endif
   
   

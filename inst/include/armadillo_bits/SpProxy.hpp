@@ -101,7 +101,7 @@ class SpProxy< SpCol<eT> >
   arma_inline const uword* get_col_ptrs()    const { return Q.col_ptrs;    }
   
   arma_inline const_iterator_type     begin()                            const { return Q.begin();            }
-  arma_inline const_iterator_type     begin_col(const uword col_num)     const { return Q.begin();            }
+  arma_inline const_iterator_type     begin_col(const uword)             const { return Q.begin();            }
   arma_inline const_row_iterator_type begin_row(const uword row_num = 0) const { return Q.begin_row(row_num); }
   
   arma_inline const_iterator_type     end()                        const { return Q.end();            }

@@ -128,6 +128,14 @@ class Mat : public Base< eT, Mat<eT> >
   inline const Mat& operator%=(const diagview<eT>& X);
   inline const Mat& operator/=(const diagview<eT>& X);
   
+  inline                   Mat(const spdiagview<eT>& X);
+  inline const Mat&  operator=(const spdiagview<eT>& X);
+  inline const Mat& operator+=(const spdiagview<eT>& X);
+  inline const Mat& operator-=(const spdiagview<eT>& X);
+  inline const Mat& operator*=(const spdiagview<eT>& X);
+  inline const Mat& operator%=(const spdiagview<eT>& X);
+  inline const Mat& operator/=(const spdiagview<eT>& X);
+  
   template<typename T1> inline                   Mat(const subview_elem1<eT,T1>& X);
   template<typename T1> inline const Mat& operator= (const subview_elem1<eT,T1>& X);
   template<typename T1> inline const Mat& operator+=(const subview_elem1<eT,T1>& X);

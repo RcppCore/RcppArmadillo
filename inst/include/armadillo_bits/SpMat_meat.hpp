@@ -2124,6 +2124,54 @@ SpMat<eT>::tail_cols(const uword N) const
 
 
 
+//! creation of spdiagview (diagonal)
+template<typename eT>
+inline
+spdiagview<eT>
+SpMat<eT>::diag(const sword in_id)
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword row_offset = (in_id < 0) ? uword(-in_id) : 0;
+  const uword col_offset = (in_id > 0) ? uword( in_id) : 0;
+  
+  arma_debug_check
+    (
+    ((row_offset > 0) && (row_offset >= n_rows)) || ((col_offset > 0) && (col_offset >= n_cols)),
+    "SpMat::diag(): requested diagonal out of bounds"
+    );
+  
+  const uword len = (std::min)(n_rows - row_offset, n_cols - col_offset);
+  
+  return spdiagview<eT>(*this, row_offset, col_offset, len);
+  }
+
+
+
+//! creation of spdiagview (diagonal)
+template<typename eT>
+inline
+const spdiagview<eT>
+SpMat<eT>::diag(const sword in_id) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword row_offset = (in_id < 0) ? -in_id : 0;
+  const uword col_offset = (in_id > 0) ?  in_id : 0;
+  
+  arma_debug_check
+    (
+    ((row_offset > 0) && (row_offset >= n_rows)) || ((col_offset > 0) && (col_offset >= n_cols)),
+    "SpMat::diag(): requested diagonal out of bounds"
+    );
+  
+  const uword len = (std::min)(n_rows - row_offset, n_cols - col_offset);
+  
+  return spdiagview<eT>(*this, row_offset, col_offset, len);
+  }
+
+
+
 template<typename eT>
 inline
 void
@@ -3394,11 +3442,11 @@ SpMat<eT>::save(const std::string name, const file_type type, const bool print_s
       break;
     
     default:
-      arma_warn(true, "SpMat::save(): unsupported file type");
+      arma_warn(print_status, "SpMat::save(): unsupported file type");
       save_okay = false;
     }
   
-  arma_warn( (save_okay == false), "SpMat::save(): couldn't write to ", name);
+  arma_warn( print_status && (save_okay == false), "SpMat::save(): couldn't write to ", name);
   
   return save_okay;
   }
@@ -3434,11 +3482,11 @@ SpMat<eT>::save(std::ostream& os, const file_type type, const bool print_status)
       break;
     
     default:
-      arma_warn(true, "SpMat::save(): unsupported file type");
+      arma_warn(print_status, "SpMat::save(): unsupported file type");
       save_okay = false;
     }
   
-  arma_warn( (save_okay == false), "SpMat::save(): couldn't write to the given stream");
+  arma_warn( print_status && (save_okay == false), "SpMat::save(): couldn't write to the given stream");
   
   return save_okay;
   }
@@ -3479,7 +3527,7 @@ SpMat<eT>::load(const std::string name, const file_type type, const bool print_s
       break;
     
     default:
-      arma_warn(true, "SpMat::load(): unsupported file type");
+      arma_warn(print_status, "SpMat::load(): unsupported file type");
       load_okay = false;
     }
   
@@ -3487,11 +3535,11 @@ SpMat<eT>::load(const std::string name, const file_type type, const bool print_s
     {
     if(err_msg.length() > 0)
       {
-      arma_warn(true, "SpMat::load(): ", err_msg, name);
+      arma_warn(print_status, "SpMat::load(): ", err_msg, name);
       }
     else
       {
-      arma_warn(true, "SpMat::load(): couldn't read ", name);
+      arma_warn(print_status, "SpMat::load(): couldn't read ", name);
       }
     }
   
@@ -3539,7 +3587,7 @@ SpMat<eT>::load(std::istream& is, const file_type type, const bool print_status)
       break;
     
     default:
-      arma_warn(true, "SpMat::load(): unsupported file type");
+      arma_warn(print_status, "SpMat::load(): unsupported file type");
       load_okay = false;
     }
   
@@ -3548,11 +3596,11 @@ SpMat<eT>::load(std::istream& is, const file_type type, const bool print_status)
     {
     if(err_msg.length() > 0)
       {
-      arma_warn(true, "SpMat::load(): ", err_msg, "the given stream");
+      arma_warn(print_status, "SpMat::load(): ", err_msg, "the given stream");
       }
     else
       {
-      arma_warn(true, "SpMat::load(): couldn't load from the given stream");
+      arma_warn(print_status, "SpMat::load(): couldn't load from the given stream");
       }
     }
   

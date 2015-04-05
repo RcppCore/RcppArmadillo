@@ -1,5 +1,5 @@
 // Copyright (C) 2008-2015 Conrad Sanderson
-// Copyright (C) 2013 Ryan Curtin
+// Copyright (C) 2013-2015 Ryan Curtin
 // Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -26,7 +26,21 @@
 #if !defined(ARMA_USE_ARPACK)
 // #define ARMA_USE_ARPACK
 //// Uncomment the above line if you have ARPACK or a high-speed replacement for ARPACK.
-//// ARPACK is required for eigendecompositions of sparse matrices, eg. eigs_sym() 
+//// ARPACK is required for eigendecompositions of sparse matrices, eg. eigs_sym(), svds() 
+#endif
+
+#if !defined(ARMA_USE_SUPERLU)
+// #define ARMA_USE_SUPERLU
+//// Uncomment the above line if you have SuperLU.
+//// SuperLU is used for solving sparse linear systems via spsolve()
+//// Caveat: only SuperLU version 4.3 can be used!
+#endif
+
+#if !defined(ARMA_SUPERLU_INCLUDE_DIR)
+// #define ARMA_SUPERLU_INCLUDE_DIR /usr/include/
+//// If you're using SuperLU and want to explicitly include the SuperLU headers,
+//// uncomment the above define and specify the appropriate include directory.
+//// Make sure the directory has a trailing /
 #endif
 
 // #define ARMA_USE_WRAPPER
@@ -148,6 +162,11 @@
 
 #if defined(ARMA_DONT_USE_ARPACK)
   #undef ARMA_USE_ARPACK
+#endif
+
+#if defined(ARMA_DONT_USE_SUPERLU)
+  #undef ARMA_USE_SUPERLU
+  #undef ARMA_SUPERLU_INCLUDE_DIR
 #endif
 
 #if defined(ARMA_DONT_USE_ATLAS)

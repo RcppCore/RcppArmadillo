@@ -66,6 +66,7 @@ arma_mat_norm_2(const SpProxy<T1>& P, const typename arma_cx_only<typename T1::e
   //typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
   
+  arma_ignore(P);
   arma_stop("norm(): unimplemented norm type for complex sparse matrices");
   
   return T(0);

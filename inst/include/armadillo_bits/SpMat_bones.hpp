@@ -217,6 +217,10 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   
   inline       SpSubview<eT> tail_cols(const uword N);
   inline const SpSubview<eT> tail_cols(const uword N) const;
+
+
+  inline       spdiagview<eT> diag(const sword in_id = 0);
+  inline const spdiagview<eT> diag(const sword in_id = 0) const;
   
   
   inline void swap_rows(const uword in_row1, const uword in_row2);

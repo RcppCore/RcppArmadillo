@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2014 Conrad Sanderson
-// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -40,6 +40,7 @@ template<typename eT> class SpRow;
 template<typename eT> class SpSubview;
 
 template<typename eT> class diagview;
+template<typename eT> class spdiagview;
 
 template<typename eT, typename T1>              class subview_elem1;
 template<typename eT, typename T1, typename T2> class subview_elem2;
@@ -79,6 +80,9 @@ class op_flipud;
 class op_fliplr;
 class op_real;
 class op_imag;
+class op_nonzeros;
+class op_sort_index;
+class op_stable_sort_index;
 
 class eop_conj;
 
@@ -253,5 +257,51 @@ namespace fill
   static const fill_class<fill_randu> randu;
   static const fill_class<fill_randn> randn;
   }
+
+//! @}
+
+
+
+//! \addtogroup fn_spsolve
+//! @{
+
+
+struct spsolve_opts_base
+  {
+  const unsigned int id;
+  
+  inline spsolve_opts_base(const unsigned int in_id) : id(in_id) {}
+  };
+
+
+struct spsolve_opts_none : public spsolve_opts_base
+  {
+  inline spsolve_opts_none() : spsolve_opts_base(0) {}
+  };
+
+
+struct superlu_opts : public spsolve_opts_base
+  {
+  typedef enum {NATURAL, MMD_ATA, MMD_AT_PLUS_A, COLAMD} permutation_type;
+  
+  typedef enum {REF_NONE, REF_SINGLE, REF_DOUBLE, REF_EXTRA} refine_type;
+  
+  bool             equilibrate;
+  bool             symmetric;
+  double           pivot_thresh;
+  permutation_type permutation;
+  refine_type      refine;
+  
+  inline superlu_opts()
+    : spsolve_opts_base(1)
+    {
+    equilibrate  = true;
+    symmetric    = false;
+    pivot_thresh = 1.0;
+    permutation  = COLAMD;
+    refine       = REF_NONE;
+    }
+  };
+
 
 //! @}

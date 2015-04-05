@@ -34,7 +34,7 @@ op_shuffle::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_shuffle>& in)
   const uword N = (dim == 0) ? X.n_rows : X.n_cols;
   
   
-  // see "fn_sort_index.hpp" for the definition of "arma_sort_index_packet"
+  // see op_sort_index_bones.hpp for the definition of arma_sort_index_packet
   // and the associated comparison functor
   std::vector< arma_sort_index_packet<int,uword> > packet_vec(N);
   

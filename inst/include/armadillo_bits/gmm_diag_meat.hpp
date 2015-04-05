@@ -269,11 +269,14 @@ gmm_diag<eT>::save(const std::string name) const
   
   Cube<eT> Q(means.n_rows + 1, means.n_cols, 2);
   
-  Q.slice(0).row(0) = hefts;
-  Q.slice(1).row(0).zeros();  // reserved for future use
-  
-  Q.slice(0).submat(1, 0, size(means)) = means;
-  Q.slice(1).submat(1, 0, size(dcovs)) = dcovs;
+  if(Q.n_elem > 0)
+    {
+    Q.slice(0).row(0) = hefts;
+    Q.slice(1).row(0).zeros();  // reserved for future use
+    
+    Q.slice(0).submat(1, 0, size(means)) = means;
+    Q.slice(1).submat(1, 0, size(dcovs)) = dcovs;
+    }
   
   const bool status = Q.save(name, arma_binary);
   
@@ -1431,8 +1434,8 @@ gmm_diag<eT>::generate_initial_means(const Mat<eT>& X, const gmm_seed_mode& seed
     {
     uvec initial_indices;
     
-         if(seed_mode == static_subset)  { initial_indices = linspace<uvec>(0, X.n_cols-1, N_gaus);             }
-    else if(seed_mode == random_subset)  { initial_indices = sort_index(randu<vec>(X.n_cols)).rows(0,N_gaus-1); }
+         if(seed_mode == static_subset)  { initial_indices = linspace<uvec>(0, X.n_cols-1, N_gaus);                   }
+    else if(seed_mode == random_subset)  { initial_indices = uvec(sort_index(randu<vec>(X.n_cols))).rows(0,N_gaus-1); }
     
     // not using randi() here as on some primitive systems it produces vectors with non-unique values
     

@@ -1,6 +1,6 @@
-// Copyright (C) 2013-2014 Ryan Curtin
-// Copyright (C) 2013-2014 Conrad Sanderson
-// Copyright (C) 2013-2014 NICTA
+// Copyright (C) 2013-2015 Ryan Curtin
+// Copyright (C) 2013-2015 Conrad Sanderson
+// Copyright (C) 2013-2015 NICTA
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -139,6 +139,9 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
     arma_ignore(eigvec);
     arma_ignore(X);
     arma_ignore(n_eigvals);
+    arma_ignore(form_str);
+    arma_ignore(default_tol);
+    
     arma_stop("eigs_sym(): use of ARPACK needs to be enabled");
     return false;
     }
@@ -289,6 +292,9 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     arma_ignore(eigvec);
     arma_ignore(X);
     arma_ignore(n_eigvals);
+    arma_ignore(form_str);
+    arma_ignore(default_tol);
+    
     arma_stop("eigs_gen(): use of ARPACK needs to be enabled");
     return false;
     }
@@ -403,11 +409,339 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     arma_ignore(eigvec);
     arma_ignore(X);
     arma_ignore(n_eigvals);
+    arma_ignore(form_str);
+    arma_ignore(default_tol);
+    
     arma_stop("eigs_gen(): use of ARPACK needs to be enabled");
     return false;
     }
   #endif
   }
+
+
+
+template<typename T1, typename T2>
+inline
+bool
+sp_auxlib::spsolve(Mat<typename T1::elem_type>& X, const SpBase<typename T1::elem_type, T1>& A_expr, const Base<typename T1::elem_type, T2>& B_expr, const superlu_opts& user_opts)
+  {
+  arma_extra_debug_sigprint();
+  
+  #if defined(ARMA_USE_SUPERLU)
+    {
+    // The goal is to solve the system A*X = B for the matrix X.
+    
+    // The first thing we need to do is create SuperMatrix structures to call
+    // the SuperLU functions with.  SuperLU will overwrite the B matrix with
+    // the output matrix, so we'll unwrap B into X temporarily.
+    
+    typedef typename T1::elem_type eT;
+    
+    const unwrap_spmat<T1> tmp1(A_expr.get_ref());
+    const SpMat<eT>& A =   tmp1.M;
+    
+    X = B_expr.get_ref();
+    
+    if(A.n_rows > A.n_cols)
+      {
+      arma_stop("spsolve(): solving over-determined systems currently not supported");
+      X.reset();
+      return false;
+      }
+    else if(A.n_rows < A.n_cols)
+      {
+      arma_stop("spsolve(): solving under-determined systems currently not supported");
+      X.reset();
+      return false;
+      }
+    
+    arma_debug_check( (A.n_rows != X.n_rows), "spsolve(): number of rows in the given objects must be the same" );
+    
+    if(A.is_empty() || X.is_empty())
+      {
+      X.zeros(A.n_cols, X.n_cols);
+      return true;
+      }
+    
+    superlu::SuperMatrix x;  arrayops::inplace_set(reinterpret_cast<char*>(&x), char(0), sizeof(superlu::SuperMatrix));
+    superlu::SuperMatrix a;  arrayops::inplace_set(reinterpret_cast<char*>(&a), char(0), sizeof(superlu::SuperMatrix));
+    
+    const bool status_x = convert_to_supermatrix(x, X);
+    const bool status_a = convert_to_supermatrix(a, A);
+    
+    if( (status_x == false) || (status_a == false) )
+      {
+      destroy_supermatrix(a);
+      destroy_supermatrix(x);
+      X.reset();
+      return false;
+      }
+    
+    superlu::SuperMatrix l;  arrayops::inplace_set(reinterpret_cast<char*>(&l), char(0), sizeof(superlu::SuperMatrix));
+    superlu::SuperMatrix u;  arrayops::inplace_set(reinterpret_cast<char*>(&u), char(0), sizeof(superlu::SuperMatrix));
+    
+    // Use default options.
+    superlu::superlu_options_t options;
+    superlu::set_default_opts(&options);
+    
+    
+    // process user_opts
+    
+    if(user_opts.equilibrate == true)   { options.Equil = superlu::YES; }
+    if(user_opts.equilibrate == false)  { options.Equil = superlu::NO;  }
+    
+    if(user_opts.symmetric == true)   { options.SymmetricMode = superlu::YES; }
+    if(user_opts.symmetric == false)  { options.SymmetricMode = superlu::NO;  }
+    
+    options.DiagPivotThresh = user_opts.pivot_thresh;
+    
+    if(user_opts.permutation == superlu_opts::NATURAL)        { options.ColPerm = superlu::NATURAL;       }
+    if(user_opts.permutation == superlu_opts::MMD_ATA)        { options.ColPerm = superlu::MMD_ATA;       }
+    if(user_opts.permutation == superlu_opts::MMD_AT_PLUS_A)  { options.ColPerm = superlu::MMD_AT_PLUS_A; }
+    if(user_opts.permutation == superlu_opts::COLAMD)         { options.ColPerm = superlu::COLAMD;        }
+    
+    if(user_opts.refine == superlu_opts::REF_NONE)    { options.IterRefine = superlu::NOREFINE;   }
+    if(user_opts.refine == superlu_opts::REF_SINGLE)  { options.IterRefine = superlu::SLU_SINGLE; }
+    if(user_opts.refine == superlu_opts::REF_DOUBLE)  { options.IterRefine = superlu::SLU_DOUBLE; }
+    if(user_opts.refine == superlu_opts::REF_EXTRA)   { options.IterRefine = superlu::SLU_EXTRA;  }
+    
+    
+    // paranoia: use SuperLU's memory allocation, in case it reallocs
+    
+    int* perm_c = (int*) superlu::malloc( (A.n_cols+1) * sizeof(int));  // extra paranoia: increase array length by 1
+    int* perm_r = (int*) superlu::malloc( (A.n_rows+1) * sizeof(int));
+    
+    arrayops::inplace_set(perm_c, 0, A.n_cols+1);
+    arrayops::inplace_set(perm_r, 0, A.n_rows+1);
+    
+    superlu::SuperLUStat_t stat;
+    superlu::init_stat(&stat);
+    
+    int info = 0; // Return code.
+    
+    superlu::gssv<eT>(&options, &a, perm_c, perm_r, &l, &u, &x, &stat, &info);
+    
+    
+    // Process the return code.
+    if( (info > 0) && (info <= int(A.n_cols)) )
+      {
+      std::stringstream tmp;
+      tmp << "spsolve(): could not solve system; LU factorisation completed, but detected zero in U(" << (info-1) << ',' << (info-1) << ')';
+      arma_debug_warn(true, tmp.str());
+      }
+    else
+    if(info > int(A.n_cols))
+      {
+      std::stringstream tmp;
+      tmp << "spsolve(): memory allocation failure: could not allocate " << (info - int(A.n_cols)) << " bytes";
+      arma_debug_warn(true, tmp.str());
+      }
+    else
+    if(info < 0)
+      {
+      std::stringstream tmp;
+      tmp << "spsolve(): unknown SuperLU error code from gssv(): " << info;
+      arma_debug_warn(true, tmp.str());
+      }
+    
+    
+    superlu::free_stat(&stat);
+    
+    superlu::free(perm_c);
+    superlu::free(perm_r);
+    
+    // No need to extract the matrix, since it's still using the same memory.
+    destroy_supermatrix(u);
+    destroy_supermatrix(l);
+    destroy_supermatrix(a);
+    destroy_supermatrix(x);
+    
+    return (info == 0);
+    }
+  #else
+    {
+    arma_ignore(X);
+    arma_ignore(A_expr);
+    arma_ignore(B_expr);
+    arma_stop("spsolve(): use of SuperLU needs to be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
+#if defined(ARMA_USE_SUPERLU)
+  
+  template<typename eT>
+  inline
+  bool
+  sp_auxlib::convert_to_supermatrix(superlu::SuperMatrix& out, const SpMat<eT>& A)
+    {
+    arma_extra_debug_sigprint();
+    
+    // We store in column-major CSC.
+    out.Stype = superlu::SLU_NC;
+    
+    if(is_float<eT>::value)
+      {
+      out.Dtype = superlu::SLU_S;
+      }
+    else
+    if(is_double<eT>::value)
+      {
+      out.Dtype = superlu::SLU_D;
+      }
+    else
+    if(is_supported_complex_float<eT>::value)
+      {
+      out.Dtype = superlu::SLU_C;
+      }
+    else
+    if(is_supported_complex_double<eT>::value)
+      {
+      out.Dtype = superlu::SLU_Z;
+      }
+    
+    out.Mtype = superlu::SLU_GE; // Just a general matrix.  We don't know more now.
+    
+    // We have to actually create the object which stores the data.
+    // This gets cleaned by destroy_supermatrix().
+    // We have to use SuperLU's stupid memory allocation routines since they are
+    // not guaranteed to be new and delete.  See the comments in superlu_bones.hpp
+    superlu::NCformat* nc = (superlu::NCformat*)superlu::malloc(sizeof(superlu::NCformat));
+    
+    if(nc == NULL)  { return false; }
+    
+    nc->nnz    = A.n_nonzero;
+    nc->nzval  = (void*)          superlu::malloc(sizeof(eT)             * A.n_nonzero   );
+    nc->colptr = (superlu::int_t*)superlu::malloc(sizeof(superlu::int_t) * (A.n_cols + 1));
+    nc->rowind = (superlu::int_t*)superlu::malloc(sizeof(superlu::int_t) * A.n_nonzero   );
+    
+    if( (nc->nzval == NULL) || (nc->colptr == NULL) || (nc->rowind == NULL) )  { return false; }
+    
+    // Fill the matrix.
+    arrayops::copy((eT*) nc->nzval, A.values, A.n_nonzero);
+    
+    // // These have to be copied by hand, because the types may differ.
+    // for (uword i = 0; i <= A.n_cols; ++i)  { nc->colptr[i] = (int_t) A.col_ptrs[i]; }
+    // for (uword i = 0; i < A.n_nonzero; ++i) { nc->rowind[i] = (int_t) A.row_indices[i]; }
+    
+    arrayops::convert(nc->colptr, A.col_ptrs,    A.n_cols+1 );
+    arrayops::convert(nc->rowind, A.row_indices, A.n_nonzero);
+    
+    out.nrow  = A.n_rows;
+    out.ncol  = A.n_cols;
+    out.Store = (void*) nc;
+    
+    return true;
+    }
+  
+  
+  
+  template<typename eT>
+  inline
+  bool
+  sp_auxlib::convert_to_supermatrix(superlu::SuperMatrix& out, const Mat<eT>& A)
+    {
+    arma_extra_debug_sigprint();
+    
+    // This is being stored as a dense matrix.
+    out.Stype = superlu::SLU_DN;
+    
+    if(is_float<eT>::value)
+      {
+      out.Dtype = superlu::SLU_S;
+      }
+    else
+    if(is_double<eT>::value)
+      {
+      out.Dtype = superlu::SLU_D;
+      }
+    else
+    if(is_supported_complex_float<eT>::value)
+      {
+      out.Dtype = superlu::SLU_C;
+      }
+    else
+    if(is_supported_complex_double<eT>::value)
+      {
+      out.Dtype = superlu::SLU_Z;
+      }
+    
+    out.Mtype = superlu::SLU_GE;
+    
+    // We have to create the object that stores the data.
+    superlu::DNformat* dn = (superlu::DNformat*)superlu::malloc(sizeof(superlu::DNformat));
+    
+    if(dn == NULL)  { return false; }
+    
+    dn->lda   = A.n_rows;
+    dn->nzval = (void*) A.memptr();  // re-use memory instead of copying
+    
+    out.nrow  = A.n_rows;
+    out.ncol  = A.n_cols;
+    out.Store = (void*) dn;
+    
+    return true;
+    }
+  
+  
+  
+  inline
+  void
+  sp_auxlib::destroy_supermatrix(superlu::SuperMatrix& out)
+    {
+    arma_extra_debug_sigprint();
+    
+    // Clean up.
+    if(out.Stype == superlu::SLU_NC)
+      {
+      superlu::destroy_compcol_mat(&out);
+      }
+    else
+    if(out.Stype == superlu::SLU_DN)
+      {
+      // superlu::destroy_dense_mat(&out);
+      
+      // since dn->nzval is set to re-use memory from a Mat object (which manages its own memory),
+      // we cannot simply call superlu::destroy_dense_mat().
+      // Only the out.Store structure can be freed.
+      
+      superlu::DNformat* dn = (superlu::DNformat*) out.Store;
+      
+      if(dn != NULL)  { superlu::free(dn); }
+      }
+    else
+    if(out.Stype == superlu::SLU_SC)
+      {
+      superlu::destroy_supernode_mat(&out);
+      }
+    else
+      {
+      // Uh, crap.
+      
+      std::stringstream tmp;
+      
+      tmp << "sp_auxlib::destroy_supermatrix(): unhandled Stype" << std::endl;
+      tmp << "Stype  val: " << out.Stype << std::endl;
+      tmp << "Stype name: ";
+      
+      if(out.Stype == superlu::SLU_NC)      { tmp << "SLU_NC";     }
+      if(out.Stype == superlu::SLU_NCP)     { tmp << "SLU_NCP";    }
+      if(out.Stype == superlu::SLU_NR)      { tmp << "SLU_NR";     }
+      if(out.Stype == superlu::SLU_SC)      { tmp << "SLU_SC";     }
+      if(out.Stype == superlu::SLU_SCP)     { tmp << "SLU_SCP";    }
+      if(out.Stype == superlu::SLU_SR)      { tmp << "SLU_SR";     }
+      if(out.Stype == superlu::SLU_DN)      { tmp << "SLU_DN";     }
+      if(out.Stype == superlu::SLU_NR_loc)  { tmp << "SLU_NR_loc"; }
+      
+      arma_debug_warn(true, tmp.str());
+      arma_bad("sp_auxlib::destroy_supermatrix(): internal error");
+      }
+    }
+  
+#endif
 
 
 
@@ -540,5 +874,23 @@ sp_auxlib::run_aupd
       return; // Parent frame can look at the value of info.
       }
     }
+  #else
+    arma_ignore(n_eigvals);
+    arma_ignore(which);
+    arma_ignore(p);
+    arma_ignore(sym);
+    arma_ignore(n);
+    arma_ignore(tol);
+    arma_ignore(resid);
+    arma_ignore(ncv);
+    arma_ignore(v);
+    arma_ignore(ldv);
+    arma_ignore(iparam);
+    arma_ignore(ipntr);
+    arma_ignore(workd);
+    arma_ignore(workl);
+    arma_ignore(lworkl);
+    arma_ignore(rwork);
+    arma_ignore(info);
   #endif
   }
