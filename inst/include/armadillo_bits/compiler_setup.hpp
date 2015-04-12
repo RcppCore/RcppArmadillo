@@ -63,9 +63,23 @@
 #define ARMA_INCFILE_WRAP(x) <x>
 
 
+#if defined(__CYGWIN__)
+  #if defined(ARMA_USE_CXX11)
+    #undef ARMA_USE_CXX11
+    #undef ARMA_USE_EXTERN_CXX11_RNG
+    #pragma message ("WARNING: disabled use of C++11 features in Armadillo, due to incomplete support for C++11 by Cygwin")
+  #endif
+#endif
+
+
 #if defined(ARMA_USE_CXX11)
   #undef  ARMA_USE_U64S64
   #define ARMA_USE_U64S64
+  
+  #if !defined(ARMA_32BIT_WORD)
+    #undef  ARMA_64BIT_WORD
+    #define ARMA_64BIT_WORD
+  #endif
 #endif
 
 
@@ -114,15 +128,6 @@
 
 #if defined(__MINGW32__)
   #undef ARMA_HAVE_POSIX_MEMALIGN
-#endif
-
-
-#if defined(__CYGWIN__)
-  #if defined(ARMA_USE_CXX11)
-    #undef ARMA_USE_CXX11
-    #undef ARMA_USE_EXTERN_CXX11_RNG
-    #pragma message ("WARNING: disabled use of C++11 features in Armadillo, due to incomplete support for C++11 by Cygwin")
-  #endif
 #endif
 
 

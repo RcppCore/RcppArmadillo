@@ -284,6 +284,8 @@ class gemm
         {
         arma_extra_debug_print("blas::gemm()");
         
+        arma_debug_assert_blas_size(A,B);
+        
         const char trans_A = (do_trans_A) ? ( is_cx<eT>::yes ? 'C' : 'T' ) : 'N';
         const char trans_B = (do_trans_B) ? ( is_cx<eT>::yes ? 'C' : 'T' ) : 'N';
         

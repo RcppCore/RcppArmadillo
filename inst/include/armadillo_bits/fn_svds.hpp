@@ -124,7 +124,7 @@ svds_helper
       }
     }
   
-  arma_debug_warn( (S.n_elem < k), "svds(): warning: found less singular values than specified" );
+  arma_debug_warn( (S.n_elem < k), "svds(): warning: found fewer singular values than specified" );
   
   return true;
   }
@@ -248,7 +248,7 @@ svds_helper
       }
     }
   
-  arma_debug_warn( (S.n_elem < k), "svds(): warning: found less singular values than specified" );
+  arma_debug_warn( (S.n_elem < k), "svds(): warning: found fewer singular values than specified" );
   
   return true;
   }

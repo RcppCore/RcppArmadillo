@@ -148,14 +148,20 @@ Mat<eT>::init_cold()
   
   // ensure that n_elem can hold the result of (n_rows * n_cols)
   
+  #if (defined(ARMA_USE_CXX11) || defined(ARMA_64BIT_WORD))
+    const char* error_message = "Mat::init(): requested size is too large";
+  #else
+    const char* error_message = "Mat::init(): requested size is too large; suggest to compile in C++11 mode or enable ARMA_64BIT_WORD";
+  #endif
+  
   arma_debug_check
     (
       (
       ( (n_rows > ARMA_MAX_UHWORD) || (n_cols > ARMA_MAX_UHWORD) )
-        ? ( (float(n_rows) * float(n_cols)) > float(ARMA_MAX_UWORD) )
+        ? ( (double(n_rows) * double(n_cols)) > double(ARMA_MAX_UWORD) )
         : false
       ),
-    "Mat::init(): requested size is too large; suggest to enable ARMA_64BIT_WORD"
+    error_message
     );
   
   if(n_elem <= arma_config::mat_prealloc)
@@ -243,16 +249,22 @@ Mat<eT>::init_warm(uword in_n_rows, uword in_n_cols)
   
   // ensure that n_elem can hold the result of (n_rows * n_cols)
   
+  #if (defined(ARMA_USE_CXX11) || defined(ARMA_64BIT_WORD))
+    const char* error_message = "Mat::init(): requested size is too large";
+  #else
+    const char* error_message = "Mat::init(): requested size is too large; suggest to compile in C++11 mode or enable ARMA_64BIT_WORD";
+  #endif
+  
   arma_debug_set_error
     (
     err_state,
     err_msg,
       (
       ( (in_n_rows > ARMA_MAX_UHWORD) || (in_n_cols > ARMA_MAX_UHWORD) )
-        ? ( (float(in_n_rows) * float(in_n_cols)) > float(ARMA_MAX_UWORD) )
+        ? ( (double(in_n_rows) * double(in_n_cols)) > double(ARMA_MAX_UWORD) )
         : false
       ),
-    "Mat::init(): requested size is too large"
+    error_message
     );
   
   arma_debug_check(err_state, err_msg);
@@ -7136,7 +7148,7 @@ Mat<eT>::begin_col(const uword col_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (col_num >= n_cols), "begin_col(): index out of bounds");
+  arma_debug_check( (col_num >= n_cols), "Mat::begin_col(): index out of bounds");
   
   return colptr(col_num);
   }
@@ -7150,7 +7162,7 @@ Mat<eT>::begin_col(const uword col_num) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (col_num >= n_cols), "begin_col(): index out of bounds");
+  arma_debug_check( (col_num >= n_cols), "Mat::begin_col(): index out of bounds");
   
   return colptr(col_num);
   }
@@ -7164,7 +7176,7 @@ Mat<eT>::end_col(const uword col_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (col_num >= n_cols), "end_col(): index out of bounds");
+  arma_debug_check( (col_num >= n_cols), "Mat::end_col(): index out of bounds");
   
   return colptr(col_num) + n_rows;
   }
@@ -7178,7 +7190,7 @@ Mat<eT>::end_col(const uword col_num) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (col_num >= n_cols), "end_col(): index out of bounds");
+  arma_debug_check( (col_num >= n_cols), "Mat::end_col(): index out of bounds");
   
   return colptr(col_num) + n_rows;
   }

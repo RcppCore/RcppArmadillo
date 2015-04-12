@@ -1624,14 +1624,20 @@ field<oT>::init(const uword n_rows_in, const uword n_cols_in, const uword n_slic
   {
   arma_extra_debug_sigprint( arma_boost::format("n_rows_in = %d, n_cols_in = %d, n_slices_in = %d") % n_rows_in % n_cols_in % n_slices_in );
   
+  #if (defined(ARMA_USE_CXX11) || defined(ARMA_64BIT_WORD))
+    const char* error_message = "field::init(): requested size is too large";
+  #else
+    const char* error_message = "field::init(): requested size is too large; suggest to compile in C++11 mode or enable ARMA_64BIT_WORD";
+  #endif
+  
   arma_debug_check
     (
       (
       ( (n_rows_in > 0x0FFF) || (n_cols_in > 0x0FFF) || (n_slices_in > 0xFF) )
-        ? ( (float(n_rows_in) * float(n_cols_in) * float(n_slices_in)) > float(ARMA_MAX_UWORD) )
+        ? ( (double(n_rows_in) * double(n_cols_in) * double(n_slices_in)) > double(ARMA_MAX_UWORD) )
         : false
       ),
-    "field::init(): requested size is too large; suggest to enable ARMA_64BIT_WORD"
+    error_message
     );
   
   const uword n_elem_new = n_rows_in * n_cols_in * n_slices_in;

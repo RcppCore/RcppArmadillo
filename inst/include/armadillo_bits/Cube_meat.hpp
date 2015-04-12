@@ -148,14 +148,20 @@ Cube<eT>::init_cold()
   {
   arma_extra_debug_sigprint( arma_boost::format("n_rows = %d, n_cols = %d, n_slices = %d") % n_rows % n_cols % n_slices );
   
+  #if (defined(ARMA_USE_CXX11) || defined(ARMA_64BIT_WORD))
+    const char* error_message = "Cube::init(): requested size is too large";
+  #else
+    const char* error_message = "Cube::init(): requested size is too large; suggest to compile in C++11 mode or enable ARMA_64BIT_WORD";
+  #endif
+  
   arma_debug_check
     (
       (
       ( (n_rows > 0x0FFF) || (n_cols > 0x0FFF) || (n_slices > 0xFF) )
-        ? ( (float(n_rows) * float(n_cols) * float(n_slices)) > float(ARMA_MAX_UWORD) )
+        ? ( (double(n_rows) * double(n_cols) * double(n_slices)) > double(ARMA_MAX_UWORD) )
         : false
       ),
-    "Cube::init(): requested size is too large; suggest to enable ARMA_64BIT_WORD"
+    error_message
     );
   
   if(n_elem <= Cube_prealloc::mem_n_elem)
@@ -214,16 +220,22 @@ Cube<eT>::init_warm(const uword in_n_rows, const uword in_n_cols, const uword in
     "Cube::init(): size is fixed and hence cannot be changed"
     );
   
+  #if (defined(ARMA_USE_CXX11) || defined(ARMA_64BIT_WORD))
+    const char* error_message = "Cube::init(): requested size is too large";
+  #else
+    const char* error_message = "Cube::init(): requested size is too large; suggest to compile in C++11 mode or enable ARMA_64BIT_WORD";
+  #endif
+  
   arma_debug_set_error
     (
     err_state,
     err_msg,
       (
       ( (in_n_rows > 0x0FFF) || (in_n_cols > 0x0FFF) || (in_n_slices > 0xFF) )
-        ? ( (float(in_n_rows) * float(in_n_cols) * float(in_n_slices)) > float(ARMA_MAX_UWORD) )
+        ? ( (double(in_n_rows) * double(in_n_cols) * double(in_n_slices)) > double(ARMA_MAX_UWORD) )
         : false
       ),
-    "Cube::init(): requested size is too large"
+    error_message
     );
   
   arma_debug_check(err_state, err_msg);

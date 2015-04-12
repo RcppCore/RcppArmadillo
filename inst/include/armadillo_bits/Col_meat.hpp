@@ -969,7 +969,7 @@ Col<eT>::begin_row(const uword row_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (row_num >= Mat<eT>::n_rows), "begin_row(): index out of bounds");
+  arma_debug_check( (row_num >= Mat<eT>::n_rows), "Col::begin_row(): index out of bounds");
   
   return Mat<eT>::memptr() + row_num;
   }
@@ -983,7 +983,7 @@ Col<eT>::begin_row(const uword row_num) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (row_num >= Mat<eT>::n_rows), "begin_row(): index out of bounds");
+  arma_debug_check( (row_num >= Mat<eT>::n_rows), "Col::begin_row(): index out of bounds");
   
   return Mat<eT>::memptr() + row_num;
   }
@@ -997,7 +997,7 @@ Col<eT>::end_row(const uword row_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (row_num >= Mat<eT>::n_rows), "end_row(): index out of bounds");
+  arma_debug_check( (row_num >= Mat<eT>::n_rows), "Col::end_row(): index out of bounds");
   
   return Mat<eT>::memptr() + row_num + 1;
   }
@@ -1011,7 +1011,7 @@ Col<eT>::end_row(const uword row_num) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (row_num >= Mat<eT>::n_rows), "end_row(): index out of bounds");
+  arma_debug_check( (row_num >= Mat<eT>::n_rows), "Col::end_row(): index out of bounds");
   
   return Mat<eT>::memptr() + row_num + 1;
   }

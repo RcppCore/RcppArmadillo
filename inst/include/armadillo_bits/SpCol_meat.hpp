@@ -1,4 +1,5 @@
 // Copyright (C) 2011-2012 Ryan Curtin
+// Copyright (C) 2015 Conrad Sanderson
 // Copyright (C) 2011 Matthew Amidon
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -206,138 +207,6 @@ SpCol<eT>::SpCol
 
 
 
-template<typename eT>
-inline
-SpValProxy< SpMat<eT> >
-SpCol<eT>::row(const uword row_num)
-  {
-  arma_debug_check( (row_num >= SpMat<eT>::n_rows), "SpCol::row(): out of bounds" );
-
-  return SpMat<eT>::at(row_num, 0);
-  }
-
-
-
-template<typename eT>
-inline
-eT
-SpCol<eT>::row(const uword row_num) const
-  {
-  arma_debug_check( (row_num >= SpMat<eT>::n_rows), "SpCol::row(): out of bounds" );
-  
-  return SpMat<eT>::at(row_num, 0);
-  }
-
-
-/*
-template<typename eT>
-arma_inline
-subview_col<eT>
-SpCol<eT>::rows(const uword in_row1, const uword in_row2)
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_debug_check( ( (in_row1 > in_row2) || (in_row2 >= SpMat<eT>::n_rows) ), "Col::rows(): indices out of bounds or incorrectly used");
-  
-  const uword subview_n_rows = in_row2 - in_row1 + 1;
-  
-  return subview_col<eT>(*this, 0, in_row1, subview_n_rows);
-  }
-
-
-
-template<typename eT>
-arma_inline
-const subview_col<eT>
-SpCol<eT>::rows(const uword in_row1, const uword in_row2) const
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_debug_check( ( (in_row1 > in_row2) || (in_row2 >= SpMat<eT>::n_rows) ), "Col::rows(): indices out of bounds or incorrectly used");
-  
-  const uword subview_n_rows = in_row2 - in_row1 + 1;
-  
-  return subview_col<eT>(*this, 0, in_row1, subview_n_rows);
-  }
-
-
-
-template<typename eT>
-arma_inline
-subview_col<eT>
-SpCol<eT>::subvec(const uword in_row1, const uword in_row2)
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_debug_check( ( (in_row1 > in_row2) || (in_row2 >= SpMat<eT>::n_rows) ), "Col::subvec(): indices out of bounds or incorrectly used");
-  
-  const uword subview_n_rows = in_row2 - in_row1 + 1;
-  
-  return subview_col<eT>(*this, 0, in_row1, subview_n_rows);
-  }
-
-
-
-template<typename eT>
-arma_inline
-const subview_col<eT>
-SpCol<eT>::subvec(const uword in_row1, const uword in_row2) const
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_debug_check( ( (in_row1 > in_row2) || (in_row2 >= SpMat<eT>::n_rows) ), "Col::subvec(): indices out of bounds or incorrectly used");
-  
-  const uword subview_n_rows = in_row2 - in_row1 + 1;
-  
-  return subview_col<eT>(*this, 0, in_row1, subview_n_rows);
-  }
-
-
-
-template<typename eT>
-arma_inline
-subview_col<eT>
-SpCol<eT>::subvec(const span& row_span)
-  {
-  arma_extra_debug_sigprint();
-  
-  const bool row_all = row_span.whole;
-
-  const uword local_n_rows = SpMat<eT>::n_rows;
-  
-  const uword in_row1       = row_all ? 0            : row_span.a;
-  const uword in_row2       =                          row_span.b;
-  const uword subvec_n_rows = row_all ? local_n_rows : in_row2 - in_row1 + 1;
-
-  arma_debug_check( ( row_all ? false : ((in_row1 > in_row2) || (in_row2 >= local_n_rows)) ), "Col::subvec(): indices out of bounds or incorrectly used");
-  
-  return subview_col<eT>(*this, 0, in_row1, subvec_n_rows);
-  }
-
-
-
-template<typename eT>
-arma_inline
-const subview_col<eT>
-SpCol<eT>::subvec(const span& row_span) const
-  {
-  arma_extra_debug_sigprint();
-  
-  const bool row_all = row_span.whole;
-
-  const uword local_n_rows = SpMat<eT>::n_rows;
-  
-  const uword in_row1       = row_all ? 0            : row_span.a;
-  const uword in_row2       =                          row_span.b;
-  const uword subvec_n_rows = row_all ? local_n_rows : in_row2 - in_row1 + 1;
-
-  arma_debug_check( ( row_all ? false : ((in_row1 > in_row2) || (in_row2 >= local_n_rows)) ), "Col::subvec(): indices out of bounds or incorrectly used");
-  
-  return subview_col<eT>(*this, 0, in_row1, subvec_n_rows);
-  }
-*/
-
-
 //! remove specified row
 template<typename eT>
 inline
@@ -430,7 +299,6 @@ SpCol<eT>::shed_rows(const uword in_row1, const uword in_row2)
 
   access::rw(SpMat<eT>::n_rows) -= diff;
   access::rw(SpMat<eT>::n_elem) -= diff;
-
   }
 
 
@@ -459,21 +327,6 @@ SpCol<eT>::shed_rows(const uword in_row1, const uword in_row2)
 //   access::rw(SpMat<eT>::n_rows) += N;
 //   access::rw(SpMat<eT>::n_elem) += N;
 //   }
-// 
-// 
-// 
-// //! insert the given object at the specified row position;
-// //! the given object must have one column
-// template<typename eT>
-// template<typename T1>
-// inline
-// void
-// SpCol<eT>::insert_rows(const uword row_num, const Base<eT,T1>& X)
-//   {
-//   arma_extra_debug_sigprint();
-// 
-//   SpMat<eT>::insert_rows(row_num, X);
-//   }
 
 
 
@@ -484,7 +337,7 @@ SpCol<eT>::begin_row(const uword row_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (row_num >= SpMat<eT>::n_rows), "begin_row(): index out of bounds");
+  arma_debug_check( (row_num >= SpMat<eT>::n_rows), "SpCol::begin_row(): index out of bounds");
   
   return row_iterator(*this, row_num, 0);
   }
@@ -498,7 +351,7 @@ SpCol<eT>::begin_row(const uword row_num) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (row_num >= SpMat<eT>::n_rows), "begin_row(): index out of bounds");
+  arma_debug_check( (row_num >= SpMat<eT>::n_rows), "SpCol::begin_row(): index out of bounds");
   
   return const_row_iterator(*this, row_num, 0);
   }
@@ -512,7 +365,7 @@ SpCol<eT>::end_row(const uword row_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (row_num >= SpMat<eT>::n_rows), "end_row(): index out of bounds");
+  arma_debug_check( (row_num >= SpMat<eT>::n_rows), "SpCol::end_row(): index out of bounds");
   
   return row_iterator(*this, row_num + 1, 0);
   }
@@ -526,7 +379,7 @@ SpCol<eT>::end_row(const uword row_num) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (row_num >= SpMat<eT>::n_rows), "end_row(): index out of bounds");
+  arma_debug_check( (row_num >= SpMat<eT>::n_rows), "SpCol::end_row(): index out of bounds");
   
   return const_row_iterator(*this, row_num + 1, 0);
   }
