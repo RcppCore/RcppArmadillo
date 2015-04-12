@@ -24,8 +24,8 @@
 \section{Changes in RcppArmadillo version 0.4.999.1.0 (2015-04-04)}{
   \itemize{
     \item Upgraded to Armadillo release preview 4.999.1 
+    \item Non-CRAN test release
   }
-  \item Non-CRAN test release
 }
     
 \section{Changes in RcppArmadillo version 0.4.650.1.1 (2015-02-25)}{
