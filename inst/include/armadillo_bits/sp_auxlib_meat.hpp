@@ -463,6 +463,22 @@ sp_auxlib::spsolve(Mat<typename T1::elem_type>& X, const SpBase<typename T1::ele
       return true;
       }
     
+    if(arma_config::debug)
+      {
+      bool overflow;
+      
+      overflow = (A.n_nonzero > INT_MAX);
+      overflow = (A.n_rows > INT_MAX) || overflow;
+      overflow = (A.n_cols > INT_MAX) || overflow;
+      overflow = (X.n_rows > INT_MAX) || overflow;
+      overflow = (X.n_cols > INT_MAX) || overflow;
+      
+      if(overflow)
+        {
+        arma_bad("spsolve(): integer overflow: matrix dimensions are too large for integer type used by SuperLU");
+        }
+      }
+    
     superlu::SuperMatrix x;  arrayops::inplace_set(reinterpret_cast<char*>(&x), char(0), sizeof(superlu::SuperMatrix));
     superlu::SuperMatrix a;  arrayops::inplace_set(reinterpret_cast<char*>(&a), char(0), sizeof(superlu::SuperMatrix));
     

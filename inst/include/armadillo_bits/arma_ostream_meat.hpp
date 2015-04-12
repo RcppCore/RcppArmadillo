@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2014 Conrad Sanderson
-// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // Copyright (C) 2012 Ryan Curtin
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -55,10 +55,21 @@ arma_ostream::modify_stream(std::ostream& o, const eT* data, const uword n_elem)
   
   bool use_layout_B = false;
   bool use_layout_C = false;
+  bool use_layout_D = false;
   
   for(uword i=0; i<n_elem; ++i)
     {
     const eT val = data[i];
+    
+    if(
+      ( cond_rel< (sizeof(eT) > 4) && (is_same_type<uword,eT>::yes || is_same_type<sword,eT>::yes) >::geq(val, eT(+10000000000)) )
+      ||
+      ( cond_rel< (sizeof(eT) > 4) &&  is_same_type<sword,eT>::yes                                 >::leq(val, eT(-10000000000)) )
+      )
+      {
+      use_layout_D = true;
+      break;
+      }
     
     if(
       ( val >= eT(+100) )
@@ -96,6 +107,15 @@ arma_ostream::modify_stream(std::ostream& o, const eT* data, const uword n_elem)
       }
     }
   
+  if(use_layout_D == true)
+    {
+    o.setf(ios::scientific);
+    o.setf(ios::right);
+    o.unsetf(ios::fixed);
+    o.precision(4);
+    cell_width = 21;
+    }
+  else
   if(use_layout_C == true)
     {
     o.setf(ios::scientific);

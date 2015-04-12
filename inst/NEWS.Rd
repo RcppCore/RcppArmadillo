@@ -2,9 +2,29 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.5.000.0 (2015-04-12)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 5.000 ("Ankle Biter")
+    \itemize{
+      \item added \code{spsolve()} for solving sparse systems of linear equations
+      \item added \code{svds()} for singular value decomposition of sparse matrices
+      \item added \code{nonzeros()} for extracting non-zero values from matrices
+      \item added handling of diagonal views by sparse matrices
+      \item expanded \code{repmat()} to handle sparse matrices
+      \item expanded \code{join_rows()} and \code{join_cols()} to handle sparse matrices
+      \item \code{sort_index()} and \code{stable_sort_index()} have been
+      placed in the delayed operations framework for increased efficiency 
+      \item use of 64 bit integers is automatically enabled when using a C++11 compiler
+      \item workaround for a bug in recent releases of Apple Xcode
+      \item workaround for a bug in LAPACK 3.5
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.4.999.1.0 (2015-04-04)}{
   \itemize{
-    \item Upgraded to Armadillo release preview 4.999.1 ("Intravenous Caffeine Injector") 
+    \item Upgraded to Armadillo release preview 4.999.1 
+    \item Non-CRAN test release
   }
 }
     

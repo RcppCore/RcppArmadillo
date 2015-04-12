@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -60,7 +60,7 @@
     typedef          uint64_t  u64;
     typedef           int64_t  s64;
   #else
-      #error "don't know how to typedef 'u64' on this system; please disable ARMA_64BIT_WORD and/or ARMA_USE_U64S64"
+      #error "don't know how to typedef 'u64' on this system; please disable ARMA_64BIT_WORD"
   #endif
 #endif
 
@@ -74,16 +74,7 @@ typedef unsigned long ulng_t;
 typedef          long slng_t;
 
 
-#if !defined(ARMA_64BIT_WORD)
-  typedef u32 uword;
-  typedef s32 sword;
-
-  typedef u16 uhword;
-  typedef s16 shword;
-  
-  #define ARMA_MAX_UWORD  0xffffffff
-  #define ARMA_MAX_UHWORD 0xffff
-#else
+#if defined(ARMA_64BIT_WORD)
   typedef u64 uword;
   typedef s64 sword;
   
@@ -92,22 +83,32 @@ typedef          long slng_t;
 
   #define ARMA_MAX_UWORD  0xffffffffffffffff
   #define ARMA_MAX_UHWORD 0xffffffff
+#else
+  typedef u32 uword;
+  typedef s32 sword;
+
+  typedef u16 uhword;
+  typedef s16 shword;
+  
+  #define ARMA_MAX_UWORD  0xffffffff
+  #define ARMA_MAX_UHWORD 0xffff
 #endif
-
-
-
-typedef std::complex<float>  cx_float;
-typedef std::complex<double> cx_double;
 
 
 #if   defined(ARMA_BLAS_LONG_LONG)
   typedef long long blas_int;
+  #define ARMA_MAX_BLAS_INT 0x7fffffffffffffffULL
 #elif defined(ARMA_BLAS_LONG)
   typedef long      blas_int;
+  #define ARMA_MAX_BLAS_INT 0x7fffffffffffffffUL
 #else
   typedef int       blas_int;
+  #define ARMA_MAX_BLAS_INT 0x7fffffffU
 #endif
 
+
+typedef std::complex<float>  cx_float;
+typedef std::complex<double> cx_double;
 
 typedef void* void_ptr;
 

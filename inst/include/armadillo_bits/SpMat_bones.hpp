@@ -44,7 +44,7 @@ class SpMat : public SpBase< eT, SpMat<eT> >
    * the length to (n_nonzero + 1).  If you need to allocate the memory yourself
    * for some reason, be sure to set values[n_nonzero] to 0.
    */
-  const eT* const values;
+  arma_aligned const eT* const values;
   
   /**
    * The row indices of each value.  row_indices[i] is the row of values[i].
@@ -54,7 +54,7 @@ class SpMat : public SpBase< eT, SpMat<eT> >
    * it's probably best to use mem_resize() instead.  If you need to allocate
    * the memory yourself for some reason, be sure to set row_indices[n_nonzero] to 0.
    */
-  const uword* const row_indices;
+  arma_aligned const uword* const row_indices;
   
   /**
    * The column pointers.  This stores the index of the first item in column i.
@@ -69,7 +69,7 @@ class SpMat : public SpBase< eT, SpMat<eT> >
    * constructors and set_size() and other functions that set the size of the
    * matrix), so allocating col_ptrs by hand should not be necessary.
    */
-  const uword* const col_ptrs;
+  arma_aligned const uword* const col_ptrs;
   
   inline  SpMat();  //! Size will be 0x0 (empty).
   inline ~SpMat();

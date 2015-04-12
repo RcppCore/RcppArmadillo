@@ -3701,15 +3701,21 @@ SpMat<eT>::init(uword in_rows, uword in_cols)
       }
     }
   
+  #if (defined(ARMA_USE_CXX11) || defined(ARMA_64BIT_WORD))
+    const char* error_message = "SpMat::init(): requested size is too large";
+  #else
+    const char* error_message = "SpMat::init(): requested size is too large; suggest to compile in C++11 mode or enable ARMA_64BIT_WORD";
+  #endif
+  
   // Ensure that n_elem can hold the result of (n_rows * n_cols)
   arma_debug_check
     (
       (
       ( (in_rows > ARMA_MAX_UHWORD) || (in_cols > ARMA_MAX_UHWORD) )
-        ? ( (float(in_rows) * float(in_cols)) > float(ARMA_MAX_UWORD) )
+        ? ( (double(in_rows) * double(in_cols)) > double(ARMA_MAX_UWORD) )
         : false
       ),
-      "SpMat::init(): requested size is too large; suggest to enable ARMA_64BIT_WORD"
+      error_message
     );
   
   // Clean out the existing memory.

@@ -38,6 +38,12 @@
 #endif
 
 
+#if (__cplusplus >= 201103L) || defined(__GXX_EXPERIMENTAL_CXX0X__)
+  #undef  ARMA_USE_CXX11
+  #define ARMA_USE_CXX11
+#endif
+
+
 #include "armadillo_bits/config.hpp"
 #include "armadillo_bits/compiler_setup.hpp"
 
@@ -276,6 +282,7 @@ namespace arma
   #include "armadillo_bits/spglue_plus_bones.hpp"
   #include "armadillo_bits/spglue_minus_bones.hpp"
   #include "armadillo_bits/spglue_times_bones.hpp"
+  #include "armadillo_bits/spglue_join_bones.hpp"
   
   //
   // low-level debugging and memory handling functions
@@ -603,6 +610,7 @@ namespace arma
   #include "armadillo_bits/spglue_plus_meat.hpp"
   #include "armadillo_bits/spglue_minus_meat.hpp"
   #include "armadillo_bits/spglue_times_meat.hpp"
+  #include "armadillo_bits/spglue_join_meat.hpp"
   }
 
 

@@ -357,6 +357,8 @@ class gemv
         {
         arma_extra_debug_print("blas::gemv()");
         
+        arma_debug_assert_blas_size(A);
+        
         const char      trans_A     = (do_trans_A) ? ( is_cx<eT>::yes ? 'C' : 'T' ) : 'N';
         const blas_int  m           = A.n_rows;
         const blas_int  n           = A.n_cols;
