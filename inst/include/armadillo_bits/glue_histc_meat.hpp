@@ -1,5 +1,5 @@
-// Copyright (C) 2012-2013 Conrad Sanderson
-// Copyright (C) 2012-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2012-2015 Conrad Sanderson
+// Copyright (C) 2012-2015 NICTA (www.nicta.com.au)
 // Copyright (C) 2012 Boris Sabanin
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -55,8 +55,34 @@ glue_histc::apply(Mat<uword>& out, const mtGlue<uword,T1,T2,glue_histc>& in)
   uword out_n_rows = 0;
   uword out_n_cols = 0;
   
-  if(X.is_vec())
+  if( (X.vec_state == 0) && (X.n_elem == 1u) )
     {
+    if(out.vec_state == 1u)
+      {
+      out_n_rows = E_n_elem;
+      out_n_cols = 1;
+      }
+    else
+      {
+      out_n_rows = 1;
+      out_n_cols = E_n_elem;
+      }
+    }
+  else
+  if( (X.vec_state > 0) || X.is_vec() )
+    {
+    if(X.vec_state == 2u)
+      {
+      out_n_rows = 1;
+      out_n_cols = E_n_elem;
+      }
+    else
+    if(X.vec_state == 1u)
+      {
+      out_n_rows = E_n_elem;
+      out_n_cols = 1;
+      }
+    else
     if(X.is_rowvec())
       {
       out_n_rows = 1;
@@ -88,7 +114,7 @@ glue_histc::apply(Mat<uword>& out, const mtGlue<uword,T1,T2,glue_histc>& in)
   
   const eT* E_mem = E.memptr();
 
-  if(X.is_vec() == true)
+  if( (X.vec_state > 0) || X.is_vec() )
     {
           uword* out_mem = out.memptr();
     const eT*    X_mem   = X.memptr();

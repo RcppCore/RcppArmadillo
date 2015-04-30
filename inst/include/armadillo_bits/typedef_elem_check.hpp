@@ -15,7 +15,7 @@ namespace junk
   struct arma_elem_size_test
     {
     
-    arma_static_check( (sizeof(size_t) < sizeof(uword)),  ERROR___TYPE_SIZE_T_IS_SMALLER_THAN_UWORD );
+    // arma_static_check( (sizeof(size_t) < sizeof(uword)),  ERROR___TYPE_SIZE_T_IS_SMALLER_THAN_UWORD );
     
     arma_static_check( (sizeof(u8) != 1), ERROR___TYPE_U8_HAS_UNSUPPORTED_SIZE );
     arma_static_check( (sizeof(s8) != 1), ERROR___TYPE_S8_HAS_UNSUPPORTED_SIZE );

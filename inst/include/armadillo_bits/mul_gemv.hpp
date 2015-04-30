@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2014 Conrad Sanderson
-// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -308,6 +308,8 @@ class gemv
       {
       #if defined(ARMA_USE_ATLAS)
         {
+        arma_debug_assert_atlas_size(A);
+        
         if(is_cx<eT>::no)
           {
           // use gemm() instead of gemv() to work around a speed issue in Atlas 3.8.4

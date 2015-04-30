@@ -359,6 +359,9 @@ class Mat : public Base< eT, Mat<eT> >
   arma_inline arma_warn_unused bool is_square() const;
        inline arma_warn_unused bool is_finite() const;
   
+  inline arma_warn_unused bool is_sorted(const char* direction = "ascend")       const;
+  inline arma_warn_unused bool is_sorted(const char* direction, const uword dim) const;
+  
   arma_inline arma_warn_unused bool in_range(const uword ii) const;
   arma_inline arma_warn_unused bool in_range(const span& x ) const;
   

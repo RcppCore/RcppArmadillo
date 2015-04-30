@@ -394,9 +394,11 @@ Mat<eT>::init(const std::string& text_orig)
   
   const bool replace_commas = (is_cx<eT>::yes) ? false : ( text_orig.find(',') != std::string::npos );
   
-  std::string* text_mod = (replace_commas) ? new std::string(text_orig) : NULL;
+  std::string text_mod;
   
-  const std::string& text = (replace_commas) ? ( std::replace((*text_mod).begin(), (*text_mod).end(), ',', ' '), (*text_mod) ) : text_orig;
+  if(replace_commas)  { text_mod = text_orig;  std::replace(text_mod.begin(), text_mod.end(), ',', ' '); }
+  
+  const std::string& text = (replace_commas) ? text_mod : text_orig;
   
   //
   // work out the size
@@ -485,17 +487,12 @@ Mat<eT>::init(const std::string& text_orig)
     eT val;
     while(line_stream >> val)
       {
-      x.at(urow,ucol) = val;
+      x(urow,ucol) = val;
       ++ucol;
       }
     
     ++urow;
     line_start = line_end+1;
-    }
-    
-  if(replace_commas)
-    {
-    delete text_mod;
     }
   }
 
@@ -5312,6 +5309,159 @@ bool
 Mat<eT>::is_finite() const
   {
   return arrayops::is_finite( memptr(), n_elem );
+  }
+
+
+
+template<typename eT>
+inline
+arma_warn_unused
+bool
+Mat<eT>::is_sorted(const char* direction) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).is_sorted(direction, (((vec_state == 2) || (n_rows == 1)) ? uword(1) : uword(0)));
+  }
+
+
+
+template<typename eT>
+inline
+arma_warn_unused
+bool
+Mat<eT>::is_sorted(const char* direction, const uword dim) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const char sig = (direction != NULL) ? direction[0] : char(0);
+  
+  arma_debug_check( ((sig != 'a') && (sig != 'd')), "Mat::is_sorted(): unknown sort direction" );
+  
+  arma_debug_check( (dim > 1), "Mat::is_sorted(): dim must be 0 or 1" );
+  
+  if(n_elem <= 1)  { return true; }
+  
+  const uword local_n_cols = n_cols;
+  const uword local_n_rows = n_rows;
+  
+  if(sig == 'a')
+    {
+    // deliberately using the opposite direction comparator,
+    // as we need to handle the case of two elements being equal
+    
+    arma_descend_sort_helper<eT> comparator;
+    
+    if(dim == 0)
+      {
+      if(local_n_rows <= 1u)  { return true; }
+      
+      const uword local_n_rows_m1 = local_n_rows - 1;
+      
+      for(uword col=0; col < local_n_cols; ++col)
+        {
+        const eT* coldata = colptr(col);
+        
+        for(uword row=0; row < local_n_rows_m1; ++row)
+          {
+          const eT val1 = (*coldata); coldata++;
+          const eT val2 = (*coldata);
+          
+          if(comparator(val1,val2))  { return false; }
+          }
+        }
+      }
+    else  // dim == 1
+      {
+      if(local_n_cols <= 1u)  { return true; }
+      
+      const uword local_n_cols_m1 = local_n_cols - 1;
+      
+      if(local_n_rows == 1)
+        {
+        const eT* rowdata = memptr();
+        
+        for(uword col=0; col < local_n_cols_m1; ++col)
+          {
+          const eT val1 = (*rowdata);  rowdata++;
+          const eT val2 = (*rowdata);
+          
+          if(comparator(val1,val2))  { return false; }
+          }
+        }
+      else
+        {
+        for(uword row=0; row < local_n_rows;    ++row)
+        for(uword col=0; col < local_n_cols_m1; ++col)
+          {
+          const eT val1 = at(row,col  );
+          const eT val2 = at(row,col+1);
+          
+          if(comparator(val1,val2))  { return false; }
+          }
+        }
+      }
+    }
+  else
+  if(sig == 'd')
+    {
+    // deliberately using the opposite direction comparator,
+    // as we need to handle the case of two elements being equal
+    
+    arma_ascend_sort_helper<eT> comparator;
+    
+    if(dim == 0)
+      {
+      if(local_n_rows <= 1u)  { return true; }
+      
+      const uword local_n_rows_m1 = local_n_rows - 1;
+      
+      for(uword col=0; col < local_n_cols; ++col)
+        {
+        const eT* coldata = colptr(col);
+        
+        for(uword row=0; row < local_n_rows_m1; ++row)
+          {
+          const eT val1 = (*coldata); coldata++;
+          const eT val2 = (*coldata);
+          
+          if(comparator(val1,val2))  { return false; }
+          }
+        }
+      }
+    else  // dim == 1
+      {
+      if(local_n_cols <= 1u)  { return true; }
+      
+      const uword local_n_cols_m1 = local_n_cols - 1;
+      
+      if(local_n_rows == 1)
+        {
+        const eT* rowdata = memptr();
+        
+        for(uword col=0; col < local_n_cols_m1; ++col)
+          {
+          const eT val1 = (*rowdata);  rowdata++;
+          const eT val2 = (*rowdata);
+          
+          if(comparator(val1,val2))  { return false; }
+          }
+        }
+      else
+        {
+        for(uword row=0; row < local_n_rows;    ++row)
+        for(uword col=0; col < local_n_cols_m1; ++col)
+          {
+          const eT val1 = at(row,col  );
+          const eT val2 = at(row,col+1);
+          
+          if(comparator(val1,val2))  { return false; }
+          }
+        }
+      }
+    }
+  
+  return true;
   }
 
 
