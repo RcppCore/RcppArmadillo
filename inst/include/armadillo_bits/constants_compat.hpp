@@ -55,7 +55,7 @@ class Math
 
 
 
-//! Physical constants taken from NIST and WolframAlpha on 2009-06-23
+//! Physical constants taken from NIST 2010 CODATA values, and some from WolframAlpha (values provided as of 2009-06-23)
 //! http://physics.nist.gov/cuu/Constants
 //! http://www.wolframalpha.com
 //! See also http://en.wikipedia.org/wiki/Physical_constant
@@ -65,28 +65,28 @@ class Phy
   public:
   
   //! atomic mass constant (in kg)
-  static eT m_u()       {  return eT(1.660538782e-27); }
+  static eT m_u()       {  return eT(1.660538921e-27); }
   
   //! Avogadro constant
-  static eT N_A()       {  return eT(6.02214179e23); }
+  static eT N_A()       {  return eT(6.02214129e23); }
   
   //! Boltzmann constant (in joules per kelvin)
-  static eT k()         {  return eT(1.3806504e-23); }
+  static eT k()         {  return eT(1.3806488e-23); }
   
   //! Boltzmann constant (in eV/K)
-  static eT k_evk()     {  return eT(8.617343e-5); }
+  static eT k_evk()     {  return eT(8.6173324e-5); }
   
   //! Bohr radius (in meters)
-  static eT a_0()       { return eT(0.52917720859e-10); }
+  static eT a_0()       { return eT(0.52917721092e-10); }
   
   //! Bohr magneton
-  static eT mu_B()      { return eT(927.400915e-26); }
+  static eT mu_B()      { return eT(927.400968e-26); }
   
   //! characteristic impedance of vacuum (in ohms)
   static eT Z_0()       { return eT(3.76730313461771e-2); }
   
   //! conductance quantum (in siemens)
-  static eT G_0()       { return eT(7.7480917004e-5); }
+  static eT G_0()       { return eT(7.7480917346e-5); }
   
   //! Coulomb's constant (in meters per farad)
   static eT k_e()       { return eT(8.9875517873681764e9); }
@@ -95,25 +95,25 @@ class Phy
   static eT eps_0()     { return eT(8.85418781762039e-12); }
   
   //! electron mass (in kg)
-  static eT m_e()       { return eT(9.10938215e-31); }
+  static eT m_e()       { return eT(9.10938291e-31); }
   
   //! electron volt (in joules)
-  static eT eV()        { return eT(1.602176487e-19); }
+  static eT eV()        { return eT(1.602176565e-19); }
   
   //! elementary charge (in coulombs)
-  static eT e()         { return eT(1.602176487e-19); }
+  static eT e()         { return eT(1.602176565e-19); }
   
   //! Faraday constant (in coulombs)
-  static eT F()         { return eT(96485.3399); }
+  static eT F()         { return eT(96485.3365); }
   
   //! fine-structure constant
-  static eT alpha()     { return eT(7.2973525376e-3); }
+  static eT alpha()     { return eT(7.2973525698e-3); }
   
   //! inverse fine-structure constant
-  static eT alpha_inv() { return eT(137.035999679); }
+  static eT alpha_inv() { return eT(137.035999074); }
   
   //! Josephson constant
-  static eT K_J()       { return eT(483597.891e9); }
+  static eT K_J()       { return eT(483597.870e9); }
   
   //! magnetic constant (in henries per meter)
   static eT mu_0()      { return eT(1.25663706143592e-06); }
@@ -122,34 +122,34 @@ class Phy
   static eT phi_0()     { return eT(2.067833667e-15); }
   
   //! molar gas constant (in joules per mole kelvin)
-  static eT R()         { return eT(8.314472); }
+  static eT R()         { return eT(8.3144621); }
   
   //! Newtonian constant of gravitation (in newton square meters per kilogram squared)
-  static eT G()         { return eT(6.67428e-11); }
+  static eT G()         { return eT(6.67384e-11); }
   
   //! Planck constant (in joule seconds)
-  static eT h()         { return eT(6.62606896e-34); }
+  static eT h()         { return eT(6.62606957e-34); }
   
   //! Planck constant over 2 pi, aka reduced Planck constant (in joule seconds)
-  static eT h_bar()     { return eT(1.054571628e-34); }
+  static eT h_bar()     { return eT(1.054571726e-34); }
   
   //! proton mass (in kg)
-  static eT m_p()       { return eT(1.672621637e-27); }
+  static eT m_p()       { return eT(1.672621777e-27); }
   
   //! Rydberg constant (in reciprocal meters)
-  static eT R_inf()     { return eT(10973731.568527); }
+  static eT R_inf()     { return eT(10973731.568539); }
   
   //! speed of light in vacuum (in meters per second)
   static eT c_0()       { return eT(299792458.0); }
   
   //! Stefan-Boltzmann constant
-  static eT sigma()     { return eT(5.670400e-8); }
+  static eT sigma()     { return eT(5.670373e-8); }
   
   //! von Klitzing constant (in ohms)
-  static eT R_k()       { return eT(25812.807557); }
+  static eT R_k()       { return eT(25812.8074434); }
   
   //! Wien wavelength displacement law constant
-  static eT b()         { return eT(2.8977685e-3); }
+  static eT b()         { return eT(2.8977721e-3); }
   };
 
 

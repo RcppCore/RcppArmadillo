@@ -73,6 +73,7 @@
 
 
 #if defined(ARMA_USE_CXX11)
+  
   #undef  ARMA_USE_U64S64
   #define ARMA_USE_U64S64
   
@@ -80,6 +81,14 @@
     #undef  ARMA_64BIT_WORD
     #define ARMA_64BIT_WORD
   #endif
+  
+  #if defined(ARMA_64BIT_WORD) && defined(SIZE_MAX)
+    #if (SIZE_MAX < 0xFFFFFFFFFFFFFFFFull)
+      #pragma message ("WARNING: disabled use of 64 bit integers, as std::size_t is smaller than 64 bits")
+      #undef ARMA_64BIT_WORD
+    #endif
+  #endif
+  
 #endif
 
 
@@ -89,6 +98,14 @@
 #endif
 
 
+// most compilers can't vectorise slightly elaborate loops;
+// for example clang: http://llvm.org/bugs/show_bug.cgi?id=16358
+#undef  ARMA_SIMPLE_LOOPS
+#define ARMA_SIMPLE_LOOPS
+
+#undef ARMA_GOOD_COMPILER
+
+#undef ARMA_HAVE_TR1
 #undef ARMA_HAVE_GETTIMEOFDAY
 #undef ARMA_HAVE_SNPRINTF
 #undef ARMA_HAVE_ISFINITE
@@ -96,16 +113,9 @@
 #undef ARMA_HAVE_ISINF
 #undef ARMA_HAVE_ISNAN
 
+
 #if (defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE >= 200112L))
   #define ARMA_HAVE_GETTIMEOFDAY
-  
-  #if defined(__GNUG__)
-    #define ARMA_HAVE_SNPRINTF
-    #define ARMA_HAVE_ISFINITE
-    #define ARMA_HAVE_LOG1P
-    #define ARMA_HAVE_ISINF
-    #define ARMA_HAVE_ISNAN
-  #endif
 #endif
 
 
@@ -146,7 +156,13 @@
 #endif
 
 
-#if defined(__GNUG__) && !defined(__clang__) && !defined(__INTEL_COMPILER) && !defined(__NVCC__)
+#if (defined(__GNUG__) || defined(__GNUC__)) && (defined(__clang__) || defined(__INTEL_COMPILER) || defined(__NVCC__) || defined(__CUDACC__) || defined(__PGI) || defined(__PATHSCALE__))
+  #undef  ARMA_FAKE_GCC
+  #define ARMA_FAKE_GCC
+#endif
+
+
+#if defined(__GNUG__) && !defined(ARMA_FAKE_GCC)
   
   #undef  ARMA_GCC_VERSION
   #define ARMA_GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
@@ -160,7 +176,6 @@
     // due to http://gcc.gnu.org/bugzilla/show_bug.cgi?id=53549
   #endif
   
-  #undef  ARMA_GOOD_COMPILER
   #define ARMA_GOOD_COMPILER
   
   #undef  arma_pure
@@ -196,8 +211,6 @@
     #endif
   #endif
   
-  #undef ARMA_HAVE_TR1
-  
   #if !defined(ARMA_USE_CXX11)
     #if defined(_GLIBCXX_USE_C99_MATH_TR1) && defined(_GLIBCXX_USE_C99_COMPLEX_TR1)
       #define ARMA_HAVE_TR1
@@ -216,9 +229,19 @@
     #define ARMA_HAVE_GCC_ASSUME_ALIGNED
   #endif
   
+  // gcc's vectoriser can handle elaborate loops
+  #undef ARMA_SIMPLE_LOOPS
+  
   #if defined(__OPTIMIZE_SIZE__)
-    #undef  ARMA_SIMPLE_LOOPS
     #define ARMA_SIMPLE_LOOPS
+  #endif
+  
+  #if (defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE >= 200112L))
+    #define ARMA_HAVE_SNPRINTF
+    #define ARMA_HAVE_ISFINITE
+    #define ARMA_HAVE_LOG1P
+    #define ARMA_HAVE_ISINF
+    #define ARMA_HAVE_ISNAN
   #endif
   
   #undef ARMA_GCC_VERSION
@@ -226,16 +249,15 @@
 #endif
 
 
-#if defined(__clang__) && !defined(__INTEL_COMPILER)
-  #undef ARMA_HAVE_TR1
+#if defined(__clang__) && (defined(__INTEL_COMPILER) || defined(__NVCC__) || defined(__CUDACC__) || defined(__PGI) || defined(__PATHSCALE__))
+  #undef  ARMA_FAKE_CLANG
+  #define ARMA_FAKE_CLANG
+#endif
+
+
+#if defined(__clang__) && !defined(ARMA_FAKE_CLANG)
   
-  #undef  ARMA_GOOD_COMPILER
   #define ARMA_GOOD_COMPILER
-  
-  // clang's vectoriser has trouble dealing with slightly more elaborate loops
-  // http://llvm.org/bugs/show_bug.cgi?id=16358
-  #undef  ARMA_SIMPLE_LOOPS
-  #define ARMA_SIMPLE_LOOPS
   
   #if !defined(__has_attribute)
     #define __has_attribute(x) 0
@@ -307,8 +329,16 @@
     // because Apple engineers are too lazy to implement thread_local
   #endif
   
-#endif
+  #if (defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE >= 200112L))
+    #define ARMA_HAVE_SNPRINTF
+    #define ARMA_HAVE_ISFINITE
+    #define ARMA_HAVE_LOG1P
+    #define ARMA_HAVE_ISINF
+    #define ARMA_HAVE_ISNAN
+  #endif
   
+#endif
+
 
 #if defined(__INTEL_COMPILER)
   
@@ -316,15 +346,9 @@
     #error "*** Need a newer compiler ***"
   #endif
   
-  #undef ARMA_GOOD_COMPILER
-  #undef ARMA_HAVE_TR1
-  
   #undef  ARMA_HAVE_GCC_ASSUME_ALIGNED
   #undef  ARMA_HAVE_ICC_ASSUME_ALIGNED
   #define ARMA_HAVE_ICC_ASSUME_ALIGNED
-  
-  #undef  ARMA_SIMPLE_LOOPS
-  #define ARMA_SIMPLE_LOOPS
   
 #endif
 
@@ -347,17 +371,6 @@
       #pragma message ("WARNING: if something breaks, you get to keep all the pieces")
     #endif
   #endif
-  
-  #undef  ARMA_SIMPLE_LOOPS
-  #define ARMA_SIMPLE_LOOPS
-  
-  #undef ARMA_GOOD_COMPILER
-  #undef ARMA_HAVE_SNPRINTF
-  #undef ARMA_HAVE_ISFINITE
-  #undef ARMA_HAVE_LOG1P
-  #undef ARMA_HAVE_ISINF
-  #undef ARMA_HAVE_ISNAN
-  #undef ARMA_HAVE_TR1
   
   // #undef  arma_inline
   // #define arma_inline inline __forceinline
@@ -412,24 +425,7 @@
   #if (__SUNPRO_CC < 0x5100)
     #error "*** Need a newer compiler ***"
   #endif
-  
-  #undef ARMA_HAVE_SNPRINTF
-  #undef ARMA_HAVE_ISFINITE
-  #undef ARMA_HAVE_LOG1P
-  #undef ARMA_HAVE_ISINF
-  #undef ARMA_HAVE_ISNAN
-  #undef ARMA_HAVE_TR1
-  
-#endif
-
-
-#if defined(__NVCC__)
-  #undef ARMA_HAVE_SNPRINTF
-  #undef ARMA_HAVE_ISFINITE
-  #undef ARMA_HAVE_LOG1P
-  #undef ARMA_HAVE_ISINF
-  #undef ARMA_HAVE_ISNAN
-  #undef ARMA_HAVE_TR1
+    
 #endif
 
 

@@ -36,4 +36,40 @@ class op_sort
 
 
 
+template<typename eT>
+struct arma_ascend_sort_helper
+  {
+  arma_inline bool operator() (const eT a, const eT b) const { return (a < b); }
+  };
+  
+
+
+template<typename eT>
+struct arma_descend_sort_helper
+  {
+  arma_inline bool operator() (const eT a, const eT b) const { return (a > b); }
+  };
+  
+
+
+template<typename T>
+struct arma_ascend_sort_helper< std::complex<T> >
+  {
+  typedef typename std::complex<T> eT;
+  
+  inline bool operator() (const eT& a, const eT& b) const { return (std::abs(a) < std::abs(b)); }
+  };
+
+
+
+template<typename T>
+struct arma_descend_sort_helper< std::complex<T> >
+  {
+  typedef typename std::complex<T> eT;
+  
+  inline bool operator() (const eT& a, const eT& b) const { return (std::abs(a) > std::abs(b)); }
+  };
+
+
+
 //! @}
