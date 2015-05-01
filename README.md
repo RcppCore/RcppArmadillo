@@ -1,5 +1,5 @@
 
-## RcppArmadillo [![Build Status](https://travis-ci.org/RcppCore/RcppArmadillo.png)](https://travis-ci.org/RcppCore/RcppArmadillo) [![License](http://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg?style=flat)](http://www.gnu.org/licenses/gpl-2.0.html)
+## RcppArmadillo [![Build Status](https://travis-ci.org/RcppCore/RcppArmadillo.png)](https://travis-ci.org/RcppCore/RcppArmadillo) [![License](http://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg?style=flat)](http://www.gnu.org/licenses/gpl-2.0.html) [![Downloads](http://cranlogs.r-pkg.org/badges/RcppArmadillo?color=brightgreen)](http://cran.rstudio.com/package=RcppArmadillo)
 
 R and Armadillo via Rcpp
 
