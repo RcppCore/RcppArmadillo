@@ -14,7 +14,7 @@
 #define ARMA_VERSION_MAJOR 5
 #define ARMA_VERSION_MINOR 100
 #define ARMA_VERSION_PATCH 1
-#define ARMA_VERSION_NAME  "unstable development version"
+#define ARMA_VERSION_NAME  "Ankle Biter Deluxe"
 
 
 
