@@ -3,7 +3,7 @@
 //
 // RcppArmadilloAs.h: Rcpp/Armadillo glue, support for as
 //
-// Copyright (C)  2013 - 2014  Dirk Eddelbuettel and Romain Francois
+// Copyright (C)  2013 - 2015  Dirk Eddelbuettel and Romain Francois
 //
 // This file is part of RcppArmadillo.
 //
@@ -24,26 +24,27 @@
 #define RcppArmadillo__RcppArmadilloAs__h
 
 namespace Rcpp{
+
 namespace traits {
 
-	template <typename T> 
+    template <typename T> 
     class Exporter< arma::field<T> > {
     public: 
         Exporter(SEXP x) : data(x){}
         
         inline arma::field<T> get() {
-        	size_t n = data.size() ;
-        	arma::field<T> out( n ) ;
-        	for(size_t i=0; i<n; i++){
-        		out[i] = as<T>(data[i]) ;	
-        	}
-        	return out ;
+            size_t n = data.size() ;
+            arma::field<T> out( n ) ;
+            for(size_t i=0; i<n; i++){
+                out[i] = as<T>(data[i]) ;       
+            }
+            return out ;
         }
         
     private:
-    	List data ;
+        List data ;
     }; 
-
+        
     template <typename T> 
     class Exporter< arma::Col<T> > : public IndexingExporter< arma::Col<T>, T > {
     public: 
@@ -95,12 +96,12 @@ namespace traits {
             // create space for values, copy and set sentinel
             arma::access::rw(res.values) = arma::memory::acquire_chunked<T>(x.size() + 1);
             arma::arrayops::copy(arma::access::rwp(res.values), x.begin(), x.size());
-            arma::access::rw(res.values[x.size()]) = T(0.0); 			// sets sentinel
+            arma::access::rw(res.values[x.size()]) = T(0.0);                    // sets sentinel
 
             // create space for row_indices, copy and set sentinel
             arma::access::rw(res.row_indices) = arma::memory::acquire_chunked<arma::uword>(i.size() + 1);
             std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices)); 
-            arma::access::rw(res.values[i.size()]) = arma::uword(0); 		// sets sentinel
+            arma::access::rw(res.values[i.size()]) = arma::uword(0);            // sets sentinel
 
             // the space for col_ptrs is already initialized when we call the
             // constructor a few lines above so we only need to fill the appropriate
@@ -116,13 +117,13 @@ namespace traits {
     private:
         S4 mat ;
     } ;
-}       
+
+} // end traits
         
     /* Begin Armadillo vector as support classes */
     
     template <typename T, typename MAT, typename REF, 
-      typename NEEDS_CAST = typename Rcpp::traits::r_sexptype_needscast<T>::type 
-    >
+              typename NEEDS_CAST = typename Rcpp::traits::r_sexptype_needscast<T>::type>
     class ArmaMat_InputParameter;
     
     template <typename T, typename MAT, typename REF>
@@ -159,8 +160,7 @@ namespace traits {
     /* Begin Armadillo vector as support classes */
     
     template <typename T, typename VEC, typename REF, 
-      typename NEEDS_CAST = typename Rcpp::traits::r_sexptype_needscast<T>::type 
-    >
+              typename NEEDS_CAST = typename Rcpp::traits::r_sexptype_needscast<T>::type>
     class ArmaVec_InputParameter;
     
     template <typename T, typename VEC, typename REF>
@@ -190,14 +190,14 @@ namespace traits {
         Rcpp::Vector< Rcpp::traits::r_sexptype_traits<T>::rtype > v ;
         VEC vec ;
     } ;
-
+    
     /* End Armadillo vector as support classes */
     
 #define MAKE_INPUT_PARAMETER(INPUT_TYPE,TYPE,REF)                       \
     template <typename T>                                               \
     class INPUT_TYPE<TYPE> : public ArmaVec_InputParameter<T, TYPE, REF >{ \
     public:                                                             \
-    INPUT_TYPE( SEXP x) : ArmaVec_InputParameter<T, TYPE, REF >(x){} \
+    INPUT_TYPE( SEXP x) : ArmaVec_InputParameter<T, TYPE, REF >(x){}    \
     } ;                                                                                                                  
     
     MAKE_INPUT_PARAMETER(ConstReferenceInputParameter, arma::Col<T>, const arma::Col<T>& )
