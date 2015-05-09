@@ -65,6 +65,9 @@ class Mat : public Base< eT, Mat<eT> >
   inline                  Mat(const std::initializer_list<eT>& list);
   inline const Mat& operator=(const std::initializer_list<eT>& list);
   
+  inline                  Mat(const std::initializer_list< std::initializer_list<eT> >& list);
+  inline const Mat& operator=(const std::initializer_list< std::initializer_list<eT> >& list);
+  
   inline                  Mat(Mat&& m);
   inline const Mat& operator=(Mat&& m);
   #endif
@@ -646,7 +649,8 @@ class Mat : public Base< eT, Mat<eT> >
   inline void init(const std::string& text);
   
   #if defined(ARMA_USE_CXX11)
-  inline void init(const std::initializer_list<eT>& list);
+    inline void init(const std::initializer_list<eT>& list);
+    inline void init(const std::initializer_list< std::initializer_list<eT> >& list);
   #endif
   
   template<typename T1, typename T2>
@@ -719,13 +723,17 @@ class Mat<eT>::fixed : public Mat<eT>
   #if defined(ARMA_USE_CXX11)
     inline                fixed(const std::initializer_list<eT>& list);
     inline const Mat& operator=(const std::initializer_list<eT>& list);
+    
+    inline                fixed(const std::initializer_list< std::initializer_list<eT> >& list);
+    inline const Mat& operator=(const std::initializer_list< std::initializer_list<eT> >& list);
   #endif
   
   arma_inline const Mat& operator=(const fixed<fixed_n_rows, fixed_n_cols>& X);
   
-  template<typename T1, typename eop_type> inline const Mat& operator=(const eOp<T1, eop_type>& X);
-  
-  template<typename T1, typename T2, typename eglue_type> inline const Mat& operator=(const eGlue<T1, T2, eglue_type>& X);
+  #if defined(ARMA_GOOD_COMPILER)
+    template<typename T1,              typename   eop_type> inline const Mat& operator=(const   eOp<T1,       eop_type>& X);
+    template<typename T1, typename T2, typename eglue_type> inline const Mat& operator=(const eGlue<T1, T2, eglue_type>& X);
+  #endif
   
   arma_inline const Op< Mat_fixed_type, op_htrans >  t() const;
   arma_inline const Op< Mat_fixed_type, op_htrans > ht() const;

@@ -1305,75 +1305,79 @@ Col<eT>::fixed<fixed_n_elem>::operator=(const fixed<fixed_n_elem>& X)
 
 
 
-template<typename eT>
-template<uword fixed_n_elem>
-template<typename T1, typename eop_type>
-inline
-const Col<eT>&
-Col<eT>::fixed<fixed_n_elem>::operator=(const eOp<T1, eop_type>& X)
-  {
-  arma_extra_debug_sigprint();
+#if defined(ARMA_GOOD_COMPILER)
   
-  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
-  
-  const bool bad_alias = (eOp<T1, eop_type>::proxy_type::has_subview  &&  X.P.is_alias(*this));
-  
-  if(bad_alias == false)
+  template<typename eT>
+  template<uword fixed_n_elem>
+  template<typename T1, typename eop_type>
+  inline
+  const Col<eT>&
+  Col<eT>::fixed<fixed_n_elem>::operator=(const eOp<T1, eop_type>& X)
     {
-    arma_debug_assert_same_size(fixed_n_elem, uword(1), X.get_n_rows(), X.get_n_cols(), "Col::fixed::operator=");
+    arma_extra_debug_sigprint();
     
-    eop_type::apply(*this, X);
-    }
-  else
-    {
-    arma_extra_debug_print("bad_alias = true");
+    arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
     
-    Col<eT> tmp(X);
+    const bool bad_alias = (eOp<T1, eop_type>::proxy_type::has_subview  &&  X.P.is_alias(*this));
     
-    (*this) = tmp;
-    }
-  
-  return *this;
-  }
-
-
-
-template<typename eT>
-template<uword fixed_n_elem>
-template<typename T1, typename T2, typename eglue_type>
-inline
-const Col<eT>&
-Col<eT>::fixed<fixed_n_elem>::operator=(const eGlue<T1, T2, eglue_type>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
-  arma_type_check(( is_same_type< eT, typename T2::elem_type >::no ));
-  
-  const bool bad_alias =
-    (
-    (eGlue<T1, T2, eglue_type>::proxy1_type::has_subview  &&  X.P1.is_alias(*this))
-    ||
-    (eGlue<T1, T2, eglue_type>::proxy2_type::has_subview  &&  X.P2.is_alias(*this))
-    );
-  
-  if(bad_alias == false)
-    {
-    arma_debug_assert_same_size(fixed_n_elem, uword(1), X.get_n_rows(), X.get_n_cols(), "Col::fixed::operator=");
+    if(bad_alias == false)
+      {
+      arma_debug_assert_same_size(fixed_n_elem, uword(1), X.get_n_rows(), X.get_n_cols(), "Col::fixed::operator=");
+      
+      eop_type::apply(*this, X);
+      }
+    else
+      {
+      arma_extra_debug_print("bad_alias = true");
+      
+      Col<eT> tmp(X);
+      
+      (*this) = tmp;
+      }
     
-    eglue_type::apply(*this, X);
-    }
-  else
-    {
-    arma_extra_debug_print("bad_alias = true");
-    
-    Col<eT> tmp(X);
-    
-    (*this) = tmp;
+    return *this;
     }
   
-  return *this;
-  }
+  
+  
+  template<typename eT>
+  template<uword fixed_n_elem>
+  template<typename T1, typename T2, typename eglue_type>
+  inline
+  const Col<eT>&
+  Col<eT>::fixed<fixed_n_elem>::operator=(const eGlue<T1, T2, eglue_type>& X)
+    {
+    arma_extra_debug_sigprint();
+    
+    arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+    arma_type_check(( is_same_type< eT, typename T2::elem_type >::no ));
+    
+    const bool bad_alias =
+      (
+      (eGlue<T1, T2, eglue_type>::proxy1_type::has_subview  &&  X.P1.is_alias(*this))
+      ||
+      (eGlue<T1, T2, eglue_type>::proxy2_type::has_subview  &&  X.P2.is_alias(*this))
+      );
+    
+    if(bad_alias == false)
+      {
+      arma_debug_assert_same_size(fixed_n_elem, uword(1), X.get_n_rows(), X.get_n_cols(), "Col::fixed::operator=");
+      
+      eglue_type::apply(*this, X);
+      }
+    else
+      {
+      arma_extra_debug_print("bad_alias = true");
+      
+      Col<eT> tmp(X);
+      
+      (*this) = tmp;
+      }
+    
+    return *this;
+    }
+  
+#endif
 
 
 

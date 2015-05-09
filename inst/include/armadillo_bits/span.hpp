@@ -64,7 +64,10 @@ class span : public span_base<>
     }
   
   
+  // the "explicit" keyword is required here to prevent a C++11 compiler
+  // automatically converting {a,b} into an instance of span() when submatrices are specified
   inline
+  explicit
   span(const uword in_a, const uword in_b)
     : a(in_a)
     , b(in_b)

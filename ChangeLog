@@ -1,3 +1,10 @@
+2015-05-09  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.5.100.1.1 [GitHub only]
+        * inst/NEWS.Rd: Release 0.5.100.1.1 [GitHub only]
+
+	* inst/include/*: Upgraded to [test] release 5.100.2 of Armadillo
+
 2015-05-01  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.5.100.1.0

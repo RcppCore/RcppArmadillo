@@ -2,6 +2,13 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.5.100.2.0 (2015-05-09)}{
+  \itemize{
+    \item Upgraded to Armadillo test / bug-fix release 5.100.2
+    \item Non-CRAN test release
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.5.100.1.0 (2015-05-01)}{
   \itemize{
     \item Upgraded to Armadillo release 5.100.1  ("Ankle Biter Deluxe")
