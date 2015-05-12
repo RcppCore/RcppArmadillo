@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2014 Conrad Sanderson
-// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // Copyright (C) 2012-2014 Ryan Curtin
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -795,7 +795,7 @@ Mat<eT>::operator=(const Mat<eT>& in_mat)
     {
     arma_extra_debug_sigprint();
     
-    const uword N = list.size();
+    const uword N = uword(list.size());
     
     set_size(1, N);
     
@@ -811,7 +811,7 @@ Mat<eT>::operator=(const Mat<eT>& in_mat)
     {
     arma_extra_debug_sigprint();
     
-    uword x_n_rows = list.size();
+    uword x_n_rows = uword(list.size());
     uword x_n_cols = 0;
     
     bool x_n_cols_found = false;
@@ -7705,7 +7705,7 @@ Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::fixed(const std::string& text)
     {
     arma_extra_debug_sigprint();
     
-    const uword N = list.size();
+    const uword N = uword(list.size());
     
     arma_debug_check( (N > fixed_n_elem), "Mat::fixed: initialiser list is too long" );
     

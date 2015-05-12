@@ -1267,7 +1267,7 @@ Col<eT>::fixed<fixed_n_elem>::operator=(const subview_cube<eT>& X)
     {
     arma_extra_debug_sigprint();
     
-    const uword N = list.size();
+    const uword N = uword(list.size());
     
     arma_debug_check( (N > fixed_n_elem), "Col::fixed: initialiser list is too long" );
     
