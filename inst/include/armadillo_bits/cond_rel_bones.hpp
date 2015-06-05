@@ -23,6 +23,8 @@ class cond_rel
 
   template<typename eT> arma_inline static bool leq(const eT A, const eT B);
   template<typename eT> arma_inline static bool geq(const eT A, const eT B);
+  
+  template<typename eT> arma_inline static eT make_neg(const eT val);
   };
 
 

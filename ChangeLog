@@ -1,3 +1,10 @@
+2015-06-04  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.5.200.1.0
+        * inst/NEWS.Rd: Release 0.5.200.1.0
+
+	* inst/include/*: Upgraded to release 5.200.1 of Armadillo
+
 2015-05-19  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/examples/fastLm.r: Added another example starting directly
