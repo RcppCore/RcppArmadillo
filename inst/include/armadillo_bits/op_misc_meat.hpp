@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 Conrad Sanderson
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -270,6 +270,59 @@ op_abs::apply( Cube<typename T1::pod_type>& out, const mtOpCube<typename T1::pod
       *out_mem = std::abs( P.at(row,col,slice) );
       out_mem++;
       }
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_orth::apply( Mat<typename T1::elem_type>& out, const Op<T1, op_orth>& expr )
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  typedef typename T1::pod_type   T;
+  
+  T tol = access::tmp_real(expr.aux);
+  
+  arma_debug_check((tol < T(0)), "orth(): tolerance must be >= 0");
+  
+  const unwrap<T1>   tmp(expr.m);
+  const Mat<eT>& X = tmp.M;
+  
+  Mat<eT> U;
+  Col< T> s;
+  Mat<eT> V;
+  
+  //const bool status = auxlib::svd_econ(U, s, V, X, 'l');
+  //const bool status = auxlib::svd_dc(U, s, V, X);
+  const bool status = auxlib::svd_dc_econ(U, s, V, X);
+  
+  V.reset();
+  
+  if(status == false)  { out.reset(); arma_bad("orth(): svd failed"); return; }
+  
+  if(s.is_empty())  { out.reset(); return; }
+  
+  const uword s_n_elem = s.n_elem;
+  const T*    s_mem    = s.memptr();
+  
+  // set tolerance to default if it hasn't been specified
+  if(tol == T(0))  { tol = (std::max)(X.n_rows, X.n_cols) * s_mem[0] * std::numeric_limits<T>::epsilon(); }
+  
+  uword count = 0;
+  
+  for(uword i=0; i < s_n_elem; ++i)  { count += (s_mem[i] > tol) ? uword(1) : uword(0); }
+  
+  if(count > 0)
+    {
+    out = U.head_cols(count);  // out *= eT(-1);
+    }
+  else
+    {
+    out.set_size(X.n_rows, 0);
     }
   }
 

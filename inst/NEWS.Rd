@@ -2,6 +2,18 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.5.200.1.0 (2015-06-04)}{
+  \itemize{
+    \item Upgraded to Armadillo release 5.200.1 ("Boston Tea Smuggler")
+    \itemize{
+      \item added \code{orth()} for finding the orthonormal basis of the range space of a matrix
+      \item expanded element initialisation to handle nested initialiser lists (C++11)
+      \item workarounds for bugs in GCC, Intel and MSVC C++ compilers
+    }
+    \item Added another example to \code{inst/examples/fastLm.r} 
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.5.100.2.0 (2015-05-12)}{
   \itemize{
     \item Upgraded to Armadillo test / bug-fix release 5.100.2

@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2013 Conrad Sanderson
-// Copyright (C) 2009-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2015 Conrad Sanderson
+// Copyright (C) 2009-2015 NICTA (www.nicta.com.au)
 // Copyright (C) 2009-2010 Dimitrios Bouzas
 // Copyright (C) 2011 Stanislav Funiak
 // 
@@ -33,35 +33,29 @@ rank
   uword  X_n_cols;
   Col<T> s;
   
-  const bool  status = auxlib::svd_dc(s, X, X_n_rows, X_n_cols);
-  const uword n_elem = s.n_elem;
+  const bool status = auxlib::svd_dc(s, X, X_n_rows, X_n_cols);
   
-  if(status == true)
-    {
-    if( (tol == T(0)) && (n_elem > 0) )
-      {
-      tol = (std::max)(X_n_rows, X_n_cols) * eop_aux::direct_eps(max(s));
-      }
-    
-    // count non zero valued elements in s
-    
-    const T* s_mem = s.memptr();
-    
-    uword count = 0;
-    
-    for(uword i=0; i<n_elem; ++i)
-      {
-      if(s_mem[i] > tol) { ++count; }
-      }
-    
-    return count;
-    }
-  else
+  if(status == false)
     {
     arma_bad("rank(): failed to converge");
     
     return uword(0);
     }
+  
+  const uword s_n_elem = s.n_elem;
+  const T*    s_mem    = s.memptr();
+  
+  // set tolerance to default if it hasn't been specified
+  if( (tol == T(0)) && (s_n_elem > 0) )
+    {
+    tol = (std::max)(X_n_rows, X_n_cols) * s_mem[0] * std::numeric_limits<T>::epsilon();
+    }
+  
+  uword count = 0;
+  
+  for(uword i=0; i < s_n_elem; ++i)  { count += (s_mem[i] > tol) ? uword(1) : uword(0); }
+  
+  return count;
   }
 
 

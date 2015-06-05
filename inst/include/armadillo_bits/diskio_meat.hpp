@@ -784,14 +784,14 @@ diskio::convert_naninf(eT& val, const std::string& token)
     
     if( (token2 == "inf") || (token2 == "Inf") || (token2 == "INF") )
       {
-      val = neg ? -(Datum<eT>::inf) : Datum<eT>::inf;
+      val = neg ? cond_rel< is_signed<eT>::value >::make_neg(Datum<eT>::inf) : Datum<eT>::inf;
       
       return true;
       }
     else
     if( (token2 == "nan") || (token2 == "Nan") || (token2 == "NaN") || (token2 == "NAN") )
       {
-      val = neg ? -(Datum<eT>::nan) : Datum<eT>::nan;
+      val = Datum<eT>::nan;
       
       return true;
       }
@@ -1458,24 +1458,31 @@ diskio::load_raw_ascii(Mat<eT>& x, std::istream& f, std::string& err_msg)
         {
         f >> token;
         
-        ss.clear();
-        ss.str(token);
-        
-        eT val = eT(0);
-        ss >> val;
-        
-        if(ss.fail() == false)
+        if( (is_signed<eT>::value == false) && (token.length() > 0) && (token[0] == '-') )
           {
-          x.at(row,col) = val;
+          x.at(row,col) = eT(0);
           }
         else
           {
-          const bool success = diskio::convert_naninf( x.at(row,col), token );
+          ss.clear();
+          ss.str(token);
           
-          if(success == false)
+          eT val = eT(0);
+          ss >> val;
+          
+          if(ss.fail() == false)
             {
-            load_okay = false;
-            err_msg = "couldn't interpret data in ";
+            x.at(row,col) = val;
+            }
+          else
+            {
+            const bool success = diskio::convert_naninf( x.at(row,col), token );
+            
+            if(success == false)
+              {
+              load_okay = false;
+              err_msg = "couldn't interpret data in ";
+              }
             }
           }
         }
@@ -1776,19 +1783,26 @@ diskio::load_csv_ascii(Mat<eT>& x, std::istream& f, std::string&)
       {
       std::getline(line_stream, token, ',');
       
-      ss.clear();
-      ss.str(token);
-      
-      eT val = eT(0);
-      ss >> val;
-      
-      if(ss.fail() == false)
+      if( (is_signed<eT>::value == false) && (token.length() > 0) && (token[0] == '-') )
         {
-        x.at(row,col) = val;
+        x.at(row,col) = eT(0);
         }
       else
         {
-        diskio::convert_naninf( x.at(row,col), token );
+        ss.clear();
+        ss.str(token);
+        
+        eT val = eT(0);
+        ss >> val;
+        
+        if(ss.fail() == false)
+          {
+          x.at(row,col) = val;
+          }
+        else
+          {
+          diskio::convert_naninf( x.at(row,col), token );
+          }
         }
       
       ++col;

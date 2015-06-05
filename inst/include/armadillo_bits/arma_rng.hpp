@@ -87,7 +87,7 @@ arma_rng::set_seed_random()
   seed_type seed4 = seed_type(0);
   seed_type seed5 = seed_type(0);
   
-  bool rd_ok = false;
+  bool have_seed = false;
   
   #if defined(ARMA_USE_CXX11)
     {
@@ -95,28 +95,44 @@ arma_rng::set_seed_random()
       {
       std::random_device rd;
       
-      seed1 = static_cast<seed_type>( rd() );
+      if(rd.entropy() > double(0))  { seed1 = static_cast<seed_type>( rd() ); }
       
-      rd_ok = true;
+      if(seed1 != seed_type(0))  { have_seed = true; }
       }
     catch(...) {}
     }
   #endif
   
-  if(rd_ok == false)
+  
+  if(have_seed == false)
     {
     try
       {
-      unsigned char buffer = 0;
+      union
+        {
+        seed_type     a;
+        unsigned char b[sizeof(seed_type)];
+        } tmp;
+      
+      tmp.a = seed_type(0);
       
       std::ifstream f("/dev/urandom", std::ifstream::binary);
       
-      f.read((char*)(&buffer), 1);
+      if(f.good())  { f.read((char*)(&(tmp.b[0])), sizeof(seed_type)); }
       
-      seed2 = static_cast<seed_type>(buffer);
+      if(f.good())
+        {
+        seed2 = tmp.a;
+        
+        if(seed2 != seed_type(0))  { have_seed = true; }
+        }
       }
     catch(...) {}
-    
+    }
+  
+  
+  if(have_seed == false)
+    {
     // get better-than-nothing seeds in case reading /dev/urandom failed 
     
     #if defined(ARMA_HAVE_GETTIMEOFDAY)
@@ -135,13 +151,16 @@ arma_rng::set_seed_random()
       {
       uword*        a;
       unsigned char b[sizeof(uword*)];
-      } address;
+      } tmp;
     
-    uword junk = 0;
+    tmp.a = (uword*)malloc(sizeof(uword));
     
-    address.a = &junk;
-    
-    seed5 = seed_type(address.b[0]) + seed_type(address.b[sizeof(uword*)-1]);
+    if(tmp.a != NULL)
+      {
+      for(size_t i=0; i<sizeof(uword*); ++i)  { seed5 += seed_type(tmp.b[i]); }
+      
+      free(tmp.a);
+      }
     }
   
   arma_rng::set_seed( seed1 + seed2 + seed3 + seed4 + seed5 );
