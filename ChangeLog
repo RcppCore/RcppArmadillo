@@ -1,3 +1,7 @@
+2015-06-06  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/RcppArmadillo.package.skeleton.R: Correct use of requireNamespace()
+
 2015-06-04  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.5.200.1.0
