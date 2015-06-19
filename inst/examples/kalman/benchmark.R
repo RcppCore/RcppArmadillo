@@ -7,7 +7,7 @@ suppressMessages(library(compiler))
 source("FirstKalmanR.R")
 source("KalmanR.R")
 source("KalmanRimp.R")
-sourceCpp("Kalman.cpp")
+Rcpp::sourceCpp("Kalman.cpp")
 
 FirstKalmanRC <- cmpfun(FirstKalmanR)
 KalmanRC <- cmpfun(KalmanR)
