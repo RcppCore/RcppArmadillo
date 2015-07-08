@@ -92,15 +92,15 @@ interp1_helper_linear(const Mat<eT>& XG, const Mat<eT>& YG, const Mat<eT>& XI, M
   
   for(uword i=0; i<NI; ++i)
     {
-    eT a_best_err = Datum<eT>::inf;
-    eT b_best_err = Datum<eT>::inf;
-    
     const eT XI_val = XI_mem[i];
     
     arma_debug_check( ((XI_val < XG_min) || (XI_val > XG_max)), "interp1(): extrapolation not supported" );
     
     // XG and XI are guaranteed to be sorted in ascending manner,
     // so start searching XG from last known optimum position 
+    
+    eT a_best_err = Datum<eT>::inf;
+    eT b_best_err = Datum<eT>::inf;
     
     for(uword j=a_best_j; j<NG; ++j)
       {
@@ -109,23 +109,29 @@ interp1_helper_linear(const Mat<eT>& XG, const Mat<eT>& YG, const Mat<eT>& XI, M
       
       if(err >= a_best_err)
         {
-        if(err < b_best_err)
-          {
-          b_best_err = err;
-          b_best_j   = j;
-          }
-        
         break;
         }
       else
         {
-        b_best_err = a_best_err;
-        b_best_j   = a_best_j;
-        
         a_best_err = err;
         a_best_j   = j;
         }
       }
+    
+    if( (XG_mem[a_best_j] - XI_val) <= eT(0) )
+      {
+      // a_best_j is to the left of the interpolated position
+      
+      b_best_j = ( (a_best_j+1) < NG) ? (a_best_j+1) : a_best_j; 
+      }
+    else
+      {
+      // a_best_j is to the right of the interpolated position
+      
+      b_best_j = (a_best_j >= 1) ? (a_best_j-1) : a_best_j; 
+      }
+    
+    b_best_err = std::abs( XG_mem[b_best_j] - XI_val );
     
     if(a_best_j > b_best_j)
       {
@@ -133,7 +139,7 @@ interp1_helper_linear(const Mat<eT>& XG, const Mat<eT>& YG, const Mat<eT>& XI, M
       std::swap(a_best_err, b_best_err);
       }
     
-    const eT weight = a_best_err / (a_best_err + b_best_err);
+    const eT weight = (a_best_err > eT(0)) ? (a_best_err / (a_best_err + b_best_err)) : eT(0);
     
     YI_mem[i] = (eT(1) - weight)*YG_mem[a_best_j] + (weight)*YG_mem[b_best_j];
     }

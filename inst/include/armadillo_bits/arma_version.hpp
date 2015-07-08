@@ -12,9 +12,9 @@
 
 
 #define ARMA_VERSION_MAJOR 5
-#define ARMA_VERSION_MINOR 200
-#define ARMA_VERSION_PATCH 1
-#define ARMA_VERSION_NAME  "Boston Tea Smuggler"
+#define ARMA_VERSION_MINOR 300
+#define ARMA_VERSION_PATCH 0
+#define ARMA_VERSION_NAME  "preview version -- for testing purposes only"
 
 
 
