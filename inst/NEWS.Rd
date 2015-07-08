@@ -2,6 +2,13 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.5.299.0 (2015-07-08)}{
+  \itemize{
+    \item Upgraded to preview of upcoming Armadillo 5.300 release 
+    \item Non-CRAN test release
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.5.200.1.0 (2015-06-04)}{
   \itemize{
     \item Upgraded to Armadillo release 5.200.1 ("Boston Tea Smuggler")

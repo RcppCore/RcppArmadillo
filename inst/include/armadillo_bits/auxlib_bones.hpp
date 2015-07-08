@@ -264,6 +264,18 @@ class auxlib
   
   template<typename eT>
   inline static bool dlyap(Mat<eT>& X, const Mat<eT>& A, const Mat<eT>& Q);
+  
+  
+  //
+  // QZ decomposition
+  
+  template<typename T, typename T1, typename T2>
+  inline static bool qz(Mat<T>& A, Mat<T>& B, Mat<T>& vsl, Mat<T>& vsr, const Base<T,T1>& X, const Base<T,T2>& Y, const char side);
+  
+  template<typename T, typename T1, typename T2>
+  inline static bool qz(Mat< std::complex<T> >& A, Mat< std::complex<T> >& B, Mat< std::complex<T> >& vsl, Mat< std::complex<T> >& vsr, const Base< std::complex<T>, T1 >& X, const Base< std::complex<T>, T2 >& Y, const char side);
+  
+  
   };
 
 

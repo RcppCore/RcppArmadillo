@@ -458,6 +458,7 @@ namespace arma
   #include "armadillo_bits/fn_expmat.hpp"
   #include "armadillo_bits/fn_nonzeros.hpp"
   #include "armadillo_bits/fn_interp1.hpp"
+  #include "armadillo_bits/fn_qz.hpp"
   
   #include "armadillo_bits/fn_speye.hpp"
   #include "armadillo_bits/fn_spones.hpp"
