@@ -735,7 +735,7 @@ From both these elements and the function signature argument,
 Given a vector of observations $Z$, it estimates a vector of position
 estimates $Y$.
 
-\begin{figure}[H]%[!tb]
+\begin{figure}[!tb]
   \centerline{\includegraphics[width=0.75\columnwidth]{kalmanExample.pdf}}
   % for eps:  \centerline{\includegraphics[width=0.85\columnwidth]{kalmanExample}}
   \caption{An example of object trajectory and the corresponding Kalman
