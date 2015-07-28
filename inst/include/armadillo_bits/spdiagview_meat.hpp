@@ -180,7 +180,7 @@ spdiagview<eT>::operator= (const Base<eT,T1>& o)
     "spdiagview: given object has incompatible size"
     );
   
-  if( (is_Mat<typename Proxy<T1>::stored_type>::value == true) || (Proxy<T1>::prefer_at_accessor == true) )
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::prefer_at_accessor) )
     {
     const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
     const Mat<eT>& x = tmp.M;
@@ -229,7 +229,7 @@ spdiagview<eT>::operator+=(const Base<eT,T1>& o)
     "spdiagview: given object has incompatible size"
     );
   
-  if( (is_Mat<typename Proxy<T1>::stored_type>::value == true) || (Proxy<T1>::prefer_at_accessor == true) )
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::prefer_at_accessor) )
     {
     const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
     const Mat<eT>& x = tmp.M;
@@ -278,7 +278,7 @@ spdiagview<eT>::operator-=(const Base<eT,T1>& o)
     "spdiagview: given object has incompatible size"
     );
   
-  if( (is_Mat<typename Proxy<T1>::stored_type>::value == true) || (Proxy<T1>::prefer_at_accessor == true) )
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::prefer_at_accessor) )
     {
     const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
     const Mat<eT>& x = tmp.M;
@@ -327,7 +327,7 @@ spdiagview<eT>::operator%=(const Base<eT,T1>& o)
     "spdiagview: given object has incompatible size"
     );
   
-  if( (is_Mat<typename Proxy<T1>::stored_type>::value == true) || (Proxy<T1>::prefer_at_accessor == true) )
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::prefer_at_accessor) )
     {
     const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
     const Mat<eT>& x = tmp.M;
@@ -376,7 +376,7 @@ spdiagview<eT>::operator/=(const Base<eT,T1>& o)
     "spdiagview: given object has incompatible size"
     );
   
-  if( (is_Mat<typename Proxy<T1>::stored_type>::value == true) || (Proxy<T1>::prefer_at_accessor == true) )
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::prefer_at_accessor) )
     {
     const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
     const Mat<eT>& x = tmp.M;

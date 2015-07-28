@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2014 Conrad Sanderson
-// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,12 +24,12 @@ arma_inline
 subview_cube<eT>::subview_cube
   (
   const Cube<eT>& in_m,
-  const uword       in_row1,
-  const uword       in_col1,
-  const uword       in_slice1,
-  const uword       in_n_rows,
-  const uword       in_n_cols,
-  const uword       in_n_slices
+  const uword     in_row1,
+  const uword     in_col1,
+  const uword     in_slice1,
+  const uword     in_n_rows,
+  const uword     in_n_cols,
+  const uword     in_n_slices
   )
   : m           (in_m)
   , aux_row1    (in_row1)
@@ -1182,12 +1182,67 @@ subview_cube<eT>::is_finite() const
 template<typename eT>
 inline
 arma_warn_unused
+bool
+subview_cube<eT>::has_inf() const
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword local_n_rows   = n_rows;
+  const uword local_n_cols   = n_cols;
+  const uword local_n_slices = n_slices;
+  
+  for(uword slice = 0; slice < local_n_slices; ++slice)
+    {
+    for(uword col = 0; col < local_n_cols; ++col)
+      {
+      if(arrayops::has_inf(slice_colptr(slice,col), local_n_rows))  { return true; }
+      }
+    }
+  
+  return false;
+  }
+
+
+
+template<typename eT>
+inline
+arma_warn_unused
+bool
+subview_cube<eT>::has_nan() const
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword local_n_rows   = n_rows;
+  const uword local_n_cols   = n_cols;
+  const uword local_n_slices = n_slices;
+  
+  for(uword slice = 0; slice < local_n_slices; ++slice)
+    {
+    for(uword col = 0; col < local_n_cols; ++col)
+      {
+      if(arrayops::has_nan(slice_colptr(slice,col), local_n_rows))  { return true; }
+      }
+    }
+  
+  return false;
+  }
+
+
+
+template<typename eT>
+inline
+arma_warn_unused
 eT
 subview_cube<eT>::min() const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (n_elem == 0), "subview_cube::min(): object has no elements" );
+  if(n_elem == 0)
+    {
+    arma_debug_check(true, "subview_cube::min(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
   
   const uword local_n_rows   = n_rows;
   const uword local_n_cols   = n_cols;
@@ -1214,7 +1269,12 @@ subview_cube<eT>::max() const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (n_elem == 0), "subview_cube::max(): object has no elements" );
+  if(n_elem == 0)
+    {
+    arma_debug_check(true, "subview_cube::max(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
   
   const uword local_n_rows   = n_rows;
   const uword local_n_cols   = n_cols;
@@ -1457,11 +1517,11 @@ subview_cube<eT>::check_overlap(const Mat<eT>& x) const
   
   for(uword slice = t_aux_slice1; slice < t_aux_slice2_plus_1; ++slice)
     {
-    const Mat<eT>& y = *(t.m.mat_ptrs[slice]);
-  
-    if( x.memptr() == y.memptr() )
+    if(t.m.mat_ptrs[slice] != NULL)
       {
-      return true;
+      const Mat<eT>& y = *(t.m.mat_ptrs[slice]);
+      
+      if( x.memptr() == y.memptr() )  { return true; }
       }
     }
   

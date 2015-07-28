@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2012 Conrad Sanderson
-// Copyright (C) 2009-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2015 Conrad Sanderson
+// Copyright (C) 2009-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,16 +28,16 @@ op_mean::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_mean>& in)
   const Mat<eT>& X = tmp.M;
   
   const uword dim = in.aux_uword_a;
-  arma_debug_check( (dim > 1), "mean(): incorrect usage. dim must be 0 or 1");
+  arma_debug_check( (dim > 1), "mean(): parameter 'dim' must be 0 or 1" );
   
   const uword X_n_rows = X.n_rows;
   const uword X_n_cols = X.n_cols;
   
   if(dim == 0)
     {
-    arma_extra_debug_print("op_mean::apply(), dim = 0");
+    arma_extra_debug_print("op_mean::apply(): dim = 0");
     
-    out.set_size( (X_n_rows > 0) ? 1 : 0, X_n_cols );
+    out.set_size((X_n_rows > 0) ? 1 : 0, X_n_cols);
     
     if(X_n_rows > 0)
       {
@@ -52,7 +52,7 @@ op_mean::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_mean>& in)
   else
   if(dim == 1)
     {
-    arma_extra_debug_print("op_mean::apply(), dim = 1");
+    arma_extra_debug_print("op_mean::apply(): dim = 1");
     
     out.set_size(X_n_rows, (X_n_cols > 0) ? 1 : 0);
     
@@ -193,7 +193,12 @@ op_mean::mean_all(const subview<eT>& X)
   const uword X_n_cols = X.n_cols;
   const uword X_n_elem = X.n_elem;
   
-  arma_debug_check( (X_n_elem == 0), "mean(): given object has no elements" );
+  if(X_n_elem == 0)
+    {
+    arma_debug_check(true, "mean(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
   
   eT val = eT(0);
   
@@ -292,7 +297,12 @@ op_mean::mean_all(const diagview<eT>& X)
   
   const uword X_n_elem = X.n_elem;
   
-  arma_debug_check( (X_n_elem == 0), "mean(): given object has no elements" );
+  if(X_n_elem == 0)
+    {
+    arma_debug_check(true, "mean(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
   
   eT val = eT(0);
   
@@ -345,7 +355,12 @@ op_mean::mean_all(const Base<typename T1::elem_type, T1>& X)
   
   const uword A_n_elem = A.n_elem;
   
-  arma_debug_check( (A_n_elem == 0), "mean(): given object has no elements" );
+  if(A_n_elem == 0)
+    {
+    arma_debug_check(true, "mean(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
   
   return op_mean::direct_mean(A.memptr(), A_n_elem);
   }

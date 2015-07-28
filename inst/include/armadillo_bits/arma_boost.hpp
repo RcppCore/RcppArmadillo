@@ -143,7 +143,7 @@ namespace arma_boost
         buffer_size *= 2;
         }
       
-      if(using_local_buffer == true)
+      if(using_local_buffer)
         {
         using_local_buffer = false;
         }
@@ -195,7 +195,7 @@ namespace arma_boost
         buffer_size *= 2;
         }
       
-      if(using_local_buffer == true)
+      if(using_local_buffer)
         {
         using_local_buffer = false;
         }
@@ -247,7 +247,7 @@ namespace arma_boost
         buffer_size *= 2;
         }
       
-      if(using_local_buffer == true)
+      if(using_local_buffer)
         {
         using_local_buffer = false;
         }
@@ -299,7 +299,7 @@ namespace arma_boost
         buffer_size *= 2;
         }
       
-      if(using_local_buffer == true)
+      if(using_local_buffer)
         {
         using_local_buffer = false;
         }
@@ -351,7 +351,7 @@ namespace arma_boost
         buffer_size *= 2;
         }
       
-      if(using_local_buffer == true)
+      if(using_local_buffer)
         {
         using_local_buffer = false;
         }
@@ -403,7 +403,7 @@ namespace arma_boost
         buffer_size *= 2;
         }
       
-      if(using_local_buffer == true)
+      if(using_local_buffer)
         {
         using_local_buffer = false;
         }

@@ -30,7 +30,7 @@ reshape(const Base<typename T1::elem_type,T1>& X, const uword in_n_rows, const u
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (dim > 1), "reshape(): dim must be 0 or 1");
+  arma_debug_check( (dim > 1), "reshape(): parameter 'dim' must be 0 or 1" );
   
   return Op<T1, op_reshape_ext>(X.get_ref(), in_n_rows, in_n_cols, dim, 'j');
   }
@@ -44,7 +44,7 @@ reshape(const BaseCube<typename T1::elem_type,T1>& X, const uword in_n_rows, con
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (dim > 1), "reshape(): dim must be 0 or 1");
+  arma_debug_check( (dim > 1), "reshape(): parameter 'dim' must be 0 or 1" );
   
   return OpCube<T1, op_reshape_ext>(X.get_ref(), in_n_rows, in_n_cols, in_n_slices, dim, 'j');
   }

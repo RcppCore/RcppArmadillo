@@ -1,5 +1,5 @@
-// Copyright (C) 2011-2014 Conrad Sanderson
-// Copyright (C) 2011-2014 NICTA (www.nicta.com.au)
+// Copyright (C) 2011-2015 Conrad Sanderson
+// Copyright (C) 2011-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -188,6 +188,16 @@ class arrayops
   arma_hot arma_pure inline static
   bool
   is_finite(const eT* src, const uword n_elem);
+  
+  template<typename eT>
+  arma_hot arma_pure inline static
+  bool
+  has_inf(const eT* src, const uword n_elem);
+  
+  template<typename eT>
+  arma_hot arma_pure inline static
+  bool
+  has_nan(const eT* src, const uword n_elem);
   
   template<typename eT>
   arma_hot arma_pure inline static

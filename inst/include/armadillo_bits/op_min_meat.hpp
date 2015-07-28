@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2014 Conrad Sanderson
-// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,9 @@
 //! The result is stored in a dense matrix that has either one column or one row.
 //! The dimension, for which the minima are found, is set via the min() function.
 template<typename T1>
-inline void op_min::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_min>& in)
+inline
+void
+op_min::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_min>& in)
   {
   arma_extra_debug_sigprint();
   
@@ -26,40 +28,42 @@ inline void op_min::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_min>&
   const Mat<eT>&     X = tmp.M;
   
   const uword dim = in.aux_uword_a;
-  arma_debug_check( (dim > 1), "min(): incorrect usage. dim must be 0 or 1");
+  arma_debug_check( (dim > 1), "min(): parameter 'dim' must be 0 or 1");
   
   const uword X_n_rows = X.n_rows;
   const uword X_n_cols = X.n_cols;
   
   if(dim == 0)  // min in each column
     {
-    arma_extra_debug_print("op_min::apply(), dim = 0");
+    arma_extra_debug_print("op_min::apply(): dim = 0");
     
-    arma_debug_check( (X_n_rows == 0), "min(): given object has zero rows" );
-
-    out.set_size(1, X_n_cols);
+    out.set_size((X_n_rows > 0) ? 1 : 0, X_n_cols);
     
-    eT* out_mem = out.memptr();
-    
-    for(uword col=0; col<X_n_cols; ++col)
+    if(X_n_rows > 0)
       {
-      out_mem[col] = op_min::direct_min( X.colptr(col), X_n_rows );
+      eT* out_mem = out.memptr();
+      
+      for(uword col=0; col<X_n_cols; ++col)
+        {
+        out_mem[col] = op_min::direct_min( X.colptr(col), X_n_rows );
+        }
       }
     }
   else
   if(dim == 1)  // min in each row
     {
-    arma_extra_debug_print("op_min::apply(), dim = 1");
+    arma_extra_debug_print("op_min::apply(): dim = 1");
     
-    arma_debug_check( (X_n_cols == 0), "min(): given object has zero columns" );
-
-    out.set_size(X_n_rows, 1);
+    out.set_size(X_n_rows, (X_n_cols > 0) ? 1 : 0);
     
-    eT* out_mem = out.memptr();
-    
-    for(uword row=0; row<X_n_rows; ++row)
+    if(X_n_cols > 0)
       {
-      out_mem[row] = op_min::direct_min( X, row );
+      eT* out_mem = out.memptr();
+      
+      for(uword row=0; row<X_n_rows; ++row)
+        {
+        out_mem[row] = op_min::direct_min( X, row );
+        }
       }
     }
   }
@@ -67,30 +71,30 @@ inline void op_min::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_min>&
 
 
 template<typename eT>
-arma_pure
 inline 
 eT
-op_min::direct_min(const eT* const X, const uword n_elem)
+op_min::direct_min(const eT* X, const uword n_elem)
   {
   arma_extra_debug_sigprint();
   
   eT min_val = priv::most_pos<eT>();
   
-  uword i,j;
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
+  uword j;
+  
+  for(j=1; j<n_elem; j+=2)
     {
-    const eT X_i = X[i];
-    const eT X_j = X[j];
+    const eT X_i = (*X);  X++;
+    const eT X_j = (*X);  X++;
     
-    if(X_i < min_val) { min_val = X_i; }
-    if(X_j < min_val) { min_val = X_j; }
+    if(X_i < min_val)  { min_val = X_i; }
+    if(X_j < min_val)  { min_val = X_j; }
     }
   
-  if(i < n_elem)
+  if((j-1) < n_elem)
     {
-    const eT X_i = X[i];
+    const eT X_i = (*X);
     
-    if(X_i < min_val) { min_val = X_i; }
+    if(X_i < min_val)  { min_val = X_i; }
     }
   
   return min_val;
@@ -101,7 +105,7 @@ op_min::direct_min(const eT* const X, const uword n_elem)
 template<typename eT>
 inline 
 eT
-op_min::direct_min(const eT* const X, const uword n_elem, uword& index_of_min_val)
+op_min::direct_min(const eT* X, const uword n_elem, uword& index_of_min_val)
   {
   arma_extra_debug_sigprint();
   
@@ -109,34 +113,24 @@ op_min::direct_min(const eT* const X, const uword n_elem, uword& index_of_min_va
   
   uword best_index = 0;
   
-  uword i,j;
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
+  uword i=0;
+  
+  for(uword j=1; j<n_elem; j+=2)
     {
-    const eT X_i = X[i];
-    const eT X_j = X[j];
+    const eT X_i = (*X);  X++;
+    const eT X_j = (*X);  X++;
     
-    if(X_i < min_val)
-      {
-      min_val    = X_i;
-      best_index = i;
-      }
+    i = (j-1);
     
-    if(X_j < min_val)
-      {
-      min_val    = X_j;
-      best_index = j;
-      }
+    if(X_i < min_val)  { min_val = X_i; best_index = i; }
+    if(X_j < min_val)  { min_val = X_j; best_index = j; }
     }
   
   if(i < n_elem)
     {
-    const eT X_i = X[i];
+    const eT X_i = (*X);
     
-    if(X_i < min_val)
-      {
-      min_val    = X_i;
-      best_index = i;
-      }
+    if(X_i < min_val)  { min_val = X_i; best_index = i; }
     }
   
   index_of_min_val = best_index;
@@ -186,8 +180,13 @@ op_min::min(const subview<eT>& X)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (X.n_elem == 0), "min(): given object has no elements" );
-  
+  if(X.n_elem == 0)
+    {
+    arma_debug_check(true, "min(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
+    
   const uword X_n_rows = X.n_rows;
   const uword X_n_cols = X.n_cols;
   
@@ -223,9 +222,7 @@ op_min::min(const subview<eT>& X)
     {
     for(uword col=0; col < X_n_cols; ++col)
       {
-      eT tmp_val = op_min::direct_min(X.colptr(col), X_n_rows);
-      
-      if(tmp_val < min_val) { min_val = tmp_val; }
+      min_val = (std::min)(min_val, op_min::direct_min(X.colptr(col), X_n_rows));
       }
     }
   
@@ -247,7 +244,12 @@ op_min::min(const Base<typename T1::elem_type,T1>& X)
   
   const uword n_elem = P.get_n_elem();
   
-  arma_debug_check( (n_elem == 0), "min(): given object has no elements" );
+  if(n_elem == 0)
+    {
+    arma_debug_check(true, "min(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
   
   eT min_val = priv::most_pos<eT>();
   
@@ -339,7 +341,12 @@ op_min::min_with_index(const Proxy<T1>& P, uword& index_of_min_val)
   
   const uword n_elem = P.get_n_elem();
   
-  arma_debug_check( (n_elem == 0), "min(): given object has no elements" );
+  if(n_elem == 0)
+    {
+    arma_debug_check(true, "min(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
   
   eT    best_val   = priv::most_pos<eT>();
   uword best_index = 0;
@@ -407,7 +414,7 @@ op_min::min_with_index(const Proxy<T1>& P, uword& index_of_min_val)
 template<typename T>
 inline 
 std::complex<T>
-op_min::direct_min(const std::complex<T>* const X, const uword n_elem)
+op_min::direct_min(const std::complex<T>* X, const uword n_elem)
   {
   arma_extra_debug_sigprint();
   
@@ -433,7 +440,7 @@ op_min::direct_min(const std::complex<T>* const X, const uword n_elem)
 template<typename T>
 inline 
 std::complex<T>
-op_min::direct_min(const std::complex<T>* const X, const uword n_elem, uword& index_of_min_val)
+op_min::direct_min(const std::complex<T>* X, const uword n_elem, uword& index_of_min_val)
   {
   arma_extra_debug_sigprint();
   
@@ -493,9 +500,16 @@ op_min::min(const subview< std::complex<T> >& X)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (X.n_elem == 0), "min(): given object has no elements" );
+  typedef typename std::complex<T> eT;
   
-  const Mat< std::complex<T> >& A = X.m;
+  if(X.n_elem == 0)
+    {
+    arma_debug_check(true, "min(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
+  
+  const Mat<eT>& A = X.m;
   
   const uword X_n_rows = X.n_rows;
   const uword X_n_cols = X.n_cols;
@@ -563,7 +577,12 @@ op_min::min(const Base<typename T1::elem_type,T1>& X)
   
   const uword n_elem = P.get_n_elem();
   
-  arma_debug_check( (n_elem == 0), "min(): given object has no elements" );
+  if(n_elem == 0)
+    {
+    arma_debug_check(true, "min(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
   
   T min_val = priv::most_pos<T>();
   
@@ -644,7 +663,12 @@ op_min::min_with_index(const Proxy<T1>& P, uword& index_of_min_val)
   
   const uword n_elem = P.get_n_elem();
   
-  arma_debug_check( (n_elem == 0), "min(): given object has no elements" );
+  if(n_elem == 0)
+    {
+    arma_debug_check(true, "min(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
   
   T best_val = priv::most_pos<T>();
   

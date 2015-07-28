@@ -1,3 +1,15 @@
+2015-07-28  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: (Test) Release 0.5.300.1.0
+        * inst/NEWS.Rd: (Test) Release 0.5.300.1.0
+
+	* inst/include/*: Upgraded to (test) release 5.300.1 of Armadillo
+
+2015-07-11  Dirk Eddelbuettel  <edd@debian.org>
+
+	* vignettes/RcppArmadillo-intro.Rnw: No longer use H as a float
+	placement as it upsets Texlive 2015 (per request of Kurt Hornik / CRAN)
+
 2015-06-06  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/RcppArmadillo.package.skeleton.R: Correct use of requireNamespace()

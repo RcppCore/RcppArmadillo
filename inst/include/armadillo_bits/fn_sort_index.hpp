@@ -24,7 +24,7 @@ sort_index
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (sort_type > 1), "sort_index(): sort_type must be 0 or 1");
+  arma_debug_check( (sort_type > 1), "sort_index(): parameter 'sort_type' must be 0 or 1" );
   
   return mtOp<uword,T1,op_sort_index>(X.get_ref(), sort_type, uword(0));
   }
@@ -43,7 +43,7 @@ stable_sort_index
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (sort_type > 1), "stable_sort_index(): sort_type must be 0 or 1");
+  arma_debug_check( (sort_type > 1), "stable_sort_index(): parameter 'sort_type' must be 0 or 1" );
   
   return mtOp<uword,T1,op_stable_sort_index>(X.get_ref(), sort_type, uword(0));
   }

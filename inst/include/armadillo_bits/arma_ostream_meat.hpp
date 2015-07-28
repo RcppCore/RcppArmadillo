@@ -107,7 +107,7 @@ arma_ostream::modify_stream(std::ostream& o, const eT* data, const uword n_elem)
       }
     }
   
-  if(use_layout_D == true)
+  if(use_layout_D)
     {
     o.setf(ios::scientific);
     o.setf(ios::right);
@@ -116,7 +116,7 @@ arma_ostream::modify_stream(std::ostream& o, const eT* data, const uword n_elem)
     cell_width = 21;
     }
   else
-  if(use_layout_C == true)
+  if(use_layout_C)
     {
     o.setf(ios::scientific);
     o.setf(ios::right);
@@ -125,7 +125,7 @@ arma_ostream::modify_stream(std::ostream& o, const eT* data, const uword n_elem)
     cell_width = 13;
     }
   else
-  if(use_layout_B == true)
+  if(use_layout_B)
     {
     o.unsetf(ios::scientific);
     o.setf(ios::right);
@@ -216,7 +216,7 @@ arma_ostream::modify_stream(std::ostream& o, typename SpMat<eT>::const_iterator 
       }
     }
 
-  if(use_layout_C == true)
+  if(use_layout_C)
     {
     o.setf(ios::scientific);
     o.setf(ios::right);
@@ -225,7 +225,7 @@ arma_ostream::modify_stream(std::ostream& o, typename SpMat<eT>::const_iterator 
     cell_width = 13;
     }
   else
-  if(use_layout_B == true)
+  if(use_layout_B)
     {
     o.unsetf(ios::scientific);
     o.setf(ios::right);
@@ -750,8 +750,9 @@ arma_ostream::print(std::ostream& o, const SpMat<eT>& m, const bool modify)
     const std::streamsize cell_width = modify ? modify_stream<eT>(o, m.begin(), m_n_nonzero) : o.width();
     
     typename SpMat<eT>::const_iterator begin = m.begin();
+    typename SpMat<eT>::const_iterator m_end = m.end();
     
-    while(begin != m.end())
+    while(begin != m_end)
       {
       const uword row = begin.row();
       

@@ -23,10 +23,10 @@ class op_min
   // for non-complex numbers
   
   template<typename eT>
-  inline static eT direct_min(const eT* const X, const uword N);
+  inline static eT direct_min(const eT* X, const uword N);
   
   template<typename eT>
-  inline static eT direct_min(const eT* const X, const uword N, uword& index_of_min_val);
+  inline static eT direct_min(const eT* X, const uword N, uword& index_of_min_val);
   
   template<typename eT>
   inline static eT direct_min(const Mat<eT>& X, const uword row);
@@ -45,10 +45,10 @@ class op_min
   // for complex numbers
   
   template<typename T>
-  inline static std::complex<T> direct_min(const std::complex<T>* const X, const uword n_elem);
+  inline static std::complex<T> direct_min(const std::complex<T>* X, const uword n_elem);
   
   template<typename T>
-  inline static std::complex<T> direct_min(const std::complex<T>* const X, const uword n_elem, uword& index_of_min_val);
+  inline static std::complex<T> direct_min(const std::complex<T>* X, const uword n_elem, uword& index_of_min_val);
   
   template<typename T>
   inline static std::complex<T> direct_min(const Mat< std::complex<T> >& X, const uword row);
