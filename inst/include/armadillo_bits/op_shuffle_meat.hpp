@@ -29,7 +29,7 @@ op_shuffle::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_shuffle>& in)
   
   const uword dim = in.aux_uword_a;
   
-  arma_debug_check( (dim > 1), "shuffle(): dim must be 0 or 1" );
+  arma_debug_check( (dim > 1), "shuffle(): parameter 'dim' must be 0 or 1" );
   
   const uword N = (dim == 0) ? X.n_rows : X.n_cols;
   

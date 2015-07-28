@@ -194,7 +194,7 @@ diagview<eT>::operator= (const Base<eT,T1>& o)
   
   arma_extra_debug_warn(is_alias, "aliasing detected");
   
-  if( (is_Mat<typename Proxy<T1>::stored_type>::value == true) || (Proxy<T1>::prefer_at_accessor == true) || (is_alias == true) )
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::prefer_at_accessor) || (is_alias) )
     {
     const unwrap_check<typename Proxy<T1>::stored_type> tmp(P.Q, is_alias);
     const Mat<eT>& x = tmp.M;
@@ -267,7 +267,7 @@ diagview<eT>::operator+=(const Base<eT,T1>& o)
   
   arma_extra_debug_warn(is_alias, "aliasing detected");
   
-  if( (is_Mat<typename Proxy<T1>::stored_type>::value == true) || (Proxy<T1>::prefer_at_accessor == true) || (is_alias == true) )
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::prefer_at_accessor) || (is_alias) )
     {
     const unwrap_check<typename Proxy<T1>::stored_type> tmp(P.Q, is_alias);
     const Mat<eT>& x = tmp.M;
@@ -340,7 +340,7 @@ diagview<eT>::operator-=(const Base<eT,T1>& o)
   
   arma_extra_debug_warn(is_alias, "aliasing detected");
   
-  if( (is_Mat<typename Proxy<T1>::stored_type>::value == true) || (Proxy<T1>::prefer_at_accessor == true) || (is_alias == true) )
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::prefer_at_accessor) || (is_alias) )
     {
     const unwrap_check<typename Proxy<T1>::stored_type> tmp(P.Q, is_alias);
     const Mat<eT>& x = tmp.M;
@@ -413,7 +413,7 @@ diagview<eT>::operator%=(const Base<eT,T1>& o)
   
   arma_extra_debug_warn(is_alias, "aliasing detected");
   
-  if( (is_Mat<typename Proxy<T1>::stored_type>::value == true) || (Proxy<T1>::prefer_at_accessor == true) || (is_alias == true) )
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::prefer_at_accessor) || (is_alias) )
     {
     const unwrap_check<typename Proxy<T1>::stored_type> tmp(P.Q, is_alias);
     const Mat<eT>& x = tmp.M;
@@ -486,7 +486,7 @@ diagview<eT>::operator/=(const Base<eT,T1>& o)
   
   arma_extra_debug_warn(is_alias, "aliasing detected");
   
-  if( (is_Mat<typename Proxy<T1>::stored_type>::value == true) || (Proxy<T1>::prefer_at_accessor == true) || (is_alias == true) )
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::prefer_at_accessor) || (is_alias) )
     {
     const unwrap_check<typename Proxy<T1>::stored_type> tmp(P.Q, is_alias);
     const Mat<eT>& x = tmp.M;

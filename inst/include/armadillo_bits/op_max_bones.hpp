@@ -24,10 +24,10 @@ class op_max
   // for non-complex numbers
   
   template<typename eT>
-  inline static eT direct_max(const eT* const X, const uword N);
+  inline static eT direct_max(const eT* X, const uword N);
   
   template<typename eT>
-  inline static eT direct_max(const eT* const X, const uword N, uword& index_of_max_val);
+  inline static eT direct_max(const eT* X, const uword N, uword& index_of_max_val);
   
   template<typename eT>
   inline static eT direct_max(const Mat<eT>& X, const uword row);
@@ -46,10 +46,10 @@ class op_max
   // for complex numbers
   
   template<typename T>
-  inline static std::complex<T> direct_max(const std::complex<T>* const X, const uword n_elem);
+  inline static std::complex<T> direct_max(const std::complex<T>* X, const uword n_elem);
   
   template<typename T>
-  inline static std::complex<T> direct_max(const std::complex<T>* const X, const uword n_elem, uword& index_of_max_val);
+  inline static std::complex<T> direct_max(const std::complex<T>* X, const uword n_elem, uword& index_of_max_val);
   
   template<typename T>
   inline static std::complex<T> direct_max(const Mat< std::complex<T> >& X, const uword row);

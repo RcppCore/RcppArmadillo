@@ -33,7 +33,7 @@ arma_sort_index_helper(Mat<uword>& out, const Proxy<T1>& P, const uword sort_typ
       {
       const eT val = P[i];
       
-      if(is_finite(val) == false)  { out.reset(); return false; }
+      if(arma_isnan(val))  { out.reset(); return false; }
       
       packet_vec[i].val   = val;
       packet_vec[i].index = i;
@@ -51,7 +51,7 @@ arma_sort_index_helper(Mat<uword>& out, const Proxy<T1>& P, const uword sort_typ
       {
       const eT val = P.at(row,col);
       
-      if(is_finite(val) == false)  { out.reset(); return false; }
+      if(arma_isnan(val))  { out.reset(); return false; }
       
       packet_vec[i].val   = val;
       packet_vec[i].index = i;
@@ -127,7 +127,7 @@ arma_sort_index_helper(Mat<uword>& out, const Proxy<T1>& P, const uword sort_typ
       {
       const T val = std::abs(P[i]);
       
-      if(is_finite(val) == false)  { out.reset(); return false; }
+      if(arma_isnan(val))  { out.reset(); return false; }
       
       packet_vec[i].val   = val;
       packet_vec[i].index = i;
@@ -145,7 +145,7 @@ arma_sort_index_helper(Mat<uword>& out, const Proxy<T1>& P, const uword sort_typ
       {
       const T val = std::abs(P.at(row,col));
       
-      if(is_finite(val) == false)  { out.reset(); return false; }
+      if(arma_isnan(val))  { out.reset(); return false; }
       
       packet_vec[i].val   = val;
       packet_vec[i].index = i;
@@ -223,22 +223,22 @@ op_sort_index::apply(Mat<uword>& out, const mtOp<uword,T1,op_sort_index>& in)
   
   const uword sort_type = in.aux_uword_a;
   
-  bool all_finite = false;
+  bool all_non_nan = false;
   
   if(P.is_alias(out))
     {
     Mat<uword> out2;
     
-    all_finite = op_sort_index::apply_noalias(out2, P, sort_type);
+    all_non_nan = op_sort_index::apply_noalias(out2, P, sort_type);
     
     out.steal_mem(out2);
     }
   else
     {
-    all_finite = op_sort_index::apply_noalias(out, P, sort_type);
+    all_non_nan = op_sort_index::apply_noalias(out, P, sort_type);
     }
   
-  arma_debug_check( (all_finite == false), "sort_index(): detected non-finite values" );
+  arma_debug_check( (all_non_nan == false), "sort_index(): detected NaN" );
   }
 
 
@@ -268,22 +268,22 @@ op_stable_sort_index::apply(Mat<uword>& out, const mtOp<uword,T1,op_stable_sort_
   
   const uword sort_type = in.aux_uword_a;
   
-  bool all_finite = false;
+  bool all_non_nan = false;
   
   if(P.is_alias(out))
     {
     Mat<uword> out2;
     
-    all_finite = op_stable_sort_index::apply_noalias(out2, P, sort_type);
+    all_non_nan = op_stable_sort_index::apply_noalias(out2, P, sort_type);
     
     out.steal_mem(out2);
     }
   else
     {
-    all_finite = op_stable_sort_index::apply_noalias(out, P, sort_type);
+    all_non_nan = op_stable_sort_index::apply_noalias(out, P, sort_type);
     }
   
-  arma_debug_check( (all_finite == false), "stable_sort_index(): detected non-finite values" );
+  arma_debug_check( (all_non_nan == false), "stable_sort_index(): detected NaN" );
   }
 
 

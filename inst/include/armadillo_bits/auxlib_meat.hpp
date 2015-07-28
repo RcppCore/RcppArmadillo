@@ -491,7 +491,7 @@ auxlib::det(const Base<eT,T1>& X, const bool slow)
   
   typedef typename get_pod_type<eT>::result T;
   
-  const bool make_copy = (is_Mat<T1>::value == true) ? true : false;
+  const bool make_copy = (is_Mat<T1>::value) ? true : false;
   
   const unwrap<T1>   tmp(X.get_ref());
   const Mat<eT>& A = tmp.M;
@@ -1990,12 +1990,12 @@ auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
       }
     
     
-    if( (is_float<eT>::value == true) || (is_double<eT>::value == true) )
+    if( (is_float<eT>::value) || (is_double<eT>::value) )
       {
       lapack::orgqr(&m, &m, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &lwork, &info);
       }
     else
-    if( (is_supported_complex_float<eT>::value == true) || (is_supported_complex_double<eT>::value == true) )
+    if( (is_supported_complex_float<eT>::value) || (is_supported_complex_double<eT>::value) )
       {
       lapack::ungqr(&m, &m, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &lwork, &info);
       }
@@ -2036,7 +2036,7 @@ auxlib::qr_econ(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
   
   #if defined(ARMA_USE_LAPACK)
     {
-    if(is_Mat<T1>::value == true)
+    if(is_Mat<T1>::value)
       {
       const unwrap<T1>   tmp(X.get_ref());
       const Mat<eT>& M = tmp.M;
@@ -2119,12 +2119,12 @@ auxlib::qr_econ(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
         }
       }
     
-    if( (is_float<eT>::value == true) || (is_double<eT>::value == true) )
+    if( (is_float<eT>::value) || (is_double<eT>::value) )
       {
       lapack::orgqr(&m, &n, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &lwork, &info);
       }
     else
-    if( (is_supported_complex_float<eT>::value == true) || (is_supported_complex_double<eT>::value == true) )
+    if( (is_supported_complex_float<eT>::value) || (is_supported_complex_double<eT>::value) )
       {
       lapack::ungqr(&m, &n, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &lwork, &info);
       }

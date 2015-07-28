@@ -24,7 +24,7 @@ op_sum::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sum>& in)
   typedef typename T1::elem_type eT;
   
   const uword dim = in.aux_uword_a;
-  arma_debug_check( (dim > 1), "sum(): incorrect usage. dim must be 0 or 1");
+  arma_debug_check( (dim > 1), "sum(): parameter 'dim' must be 0 or 1" );
   
   const Proxy<T1> P(in.m);
   

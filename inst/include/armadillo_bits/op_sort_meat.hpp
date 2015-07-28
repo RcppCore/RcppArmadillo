@@ -110,7 +110,7 @@ op_sort::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword sort_type, co
   
   if(dim == 0)  // sort the contents of each column
     {
-    arma_extra_debug_print("op_sort::apply(), dim = 0");
+    arma_extra_debug_print("op_sort::apply(): dim = 0");
     
     out = X;
     
@@ -127,14 +127,14 @@ op_sort::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword sort_type, co
     {
     if(X.n_rows == 1)  // a row vector
       {
-      arma_extra_debug_print("op_sort::apply(), dim = 1, vector specific");
+      arma_extra_debug_print("op_sort::apply(): dim = 1, vector specific");
       
       out = X;
       op_sort::direct_sort(out.memptr(), out.n_elem, sort_type);
       }
     else  // not a row vector
       {
-      arma_extra_debug_print("op_sort::apply(), dim = 1, generic");
+      arma_extra_debug_print("op_sort::apply(): dim = 1, generic");
       
       out.copy_size(X);
       
@@ -173,9 +173,9 @@ op_sort::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort>& in)
   const uword sort_type = in.aux_uword_a;
   const uword dim       = in.aux_uword_b;
   
-  arma_debug_check( (sort_type > 1),          "sort(): incorrect usage. sort_type must be 0 or 1");
-  arma_debug_check( (dim > 1),                "sort(): incorrect usage. dim must be 0 or 1"      );
-  arma_debug_check( (X.is_finite() == false), "sort(): given object has non-finite elements"     );
+  arma_debug_check( (sort_type > 1), "sort(): parameter 'sort_type' must be 0 or 1" );
+  arma_debug_check( (dim > 1),       "sort(): parameter 'dim' must be 0 or 1"       );
+  arma_debug_check( (X.has_nan()),   "sort(): detected NaN"                         );
   
   if(U.is_alias(out))
     {

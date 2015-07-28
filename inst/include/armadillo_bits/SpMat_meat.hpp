@@ -1073,9 +1073,10 @@ SpMat<eT>::operator=(const SpSubview<eT>& X)
 
     mem_resize(x_n_nonzero);
 
-    typename SpSubview<eT>::const_iterator it = X.begin();
+    typename SpSubview<eT>::const_iterator it     = X.begin();
+    typename SpSubview<eT>::const_iterator it_end = X.end();
 
-    while(it != X.end())
+    while(it != it_end)
       {
       access::rw(row_indices[it.pos()]) = it.row();
       access::rw(values[it.pos()]) = (*it);
@@ -2332,63 +2333,80 @@ void
 SpMat<eT>::shed_rows(const uword in_row1, const uword in_row2)
   {
   arma_extra_debug_sigprint();
-
+  
   arma_debug_check
     (
     (in_row1 > in_row2) || (in_row2 >= n_rows),
     "SpMat::shed_rows(): indices out of bounds or incorectly used"
     );
-
-  uword i, j;
-  // Store the length of values
-  uword vlength = n_nonzero;
-  // Store the length of col_ptrs
-  uword clength = n_cols + 1;
-
-  // This is O(n * n_cols) and inplace, there may be a faster way, though.
-  for (i = 0, j = 0; i < vlength; ++i)
+  
+  SpMat<eT> newmat(n_rows - (in_row2 - in_row1 + 1), n_cols);
+  
+  // First, count the number of elements we will be removing.
+  uword removing = 0;
+  for (uword i = 0; i < n_nonzero; ++i)
     {
-    // Store the row of the ith element.
     const uword lrow = row_indices[i];
-    // Is the ith element in the range of rows we want to remove?
     if (lrow >= in_row1 && lrow <= in_row2)
       {
-      // Increment our "removed elements" counter.
-      ++j;
-
-      // Adjust the values of col_ptrs each time we remove an element.
-      // Basically, the length of one column reduces by one, and everything to
-      // its right gets reduced by one to represent all the elements being
-      // shifted to the left by one.
-      for(uword k = 0; k < clength; ++k)
-        {
-        if (col_ptrs[k] > (i - j + 1))
-          {
-          --access::rw(col_ptrs[k]);
-          }
-        }
+      ++removing;
+      }
+    }
+  
+  // Obtain counts of the number of points in each column and store them as the
+  // (invalid) column pointers of the new matrix.
+  for (uword i = 1; i < n_cols + 1; ++i)
+    {
+    access::rw(newmat.col_ptrs[i]) = col_ptrs[i] - col_ptrs[i - 1];
+    }
+  
+  // Now initialize memory for the new matrix.
+  newmat.mem_resize(n_nonzero - removing);
+  
+  // Now, copy over the elements.
+  // i is the index in the old matrix; j is the index in the new matrix.
+  const_iterator it     = begin();
+  const_iterator it_end = end();
+  
+  uword j = 0; // The index in the new matrix.
+  while (it != it_end)
+    {
+    const uword lrow = it.row();
+    const uword lcol = it.col();
+    
+    if (lrow >= in_row1 && lrow <= in_row2)
+      {
+      // This element is being removed.  Subtract it from the column counts.
+      --access::rw(newmat.col_ptrs[lcol + 1]);
       }
     else
       {
-      // We shift the element we checked to the left by how many elements
-      // we have removed.
-      // j = 0 until we remove the first element.
-      if (j != 0)
+      // This element is being kept.  We may need to map the row index,
+      // if it is past the section of rows we are removing.
+      if (lrow > in_row2)
         {
-        access::rw(row_indices[i - j]) = (lrow > in_row2) ? (lrow - (in_row2 - in_row1 + 1)) : lrow;
-        access::rw(values[i - j]) = values[i];
+        access::rw(newmat.row_indices[j]) = lrow - (in_row2 - in_row1 + 1);
         }
+      else
+        {
+        access::rw(newmat.row_indices[j]) = lrow;
+        }
+
+      access::rw(newmat.values[j]) = (*it);
+      ++j; // Increment index in new matrix.
       }
+    
+    ++it;
     }
-
-  // j is the number of elements removed.
-
-  // Shrink the vectors.  This will copy the memory.
-  mem_resize(n_nonzero - j);
-
-  // Adjust row and element counts.
-  access::rw(n_rows)    = n_rows - (in_row2 - in_row1) - 1;
-  access::rw(n_elem)    = n_rows * n_cols;
+  
+  // Finally, sum the column counts so they are correct column pointers.
+  for (uword i = 1; i < n_cols + 1; ++i)
+    {
+    access::rw(newmat.col_ptrs[i]) += newmat.col_ptrs[i - 1];
+    }
+  
+  // Now steal the memory of the new matrix.
+  steal_mem(newmat);
   }
 
 
@@ -2666,7 +2684,35 @@ arma_warn_unused
 bool
 SpMat<eT>::is_finite() const
   {
+  arma_extra_debug_sigprint();
+  
   return arrayops::is_finite(values, n_nonzero);
+  }
+
+
+
+template<typename eT>
+inline
+arma_warn_unused
+bool
+SpMat<eT>::has_inf() const
+  {
+  arma_extra_debug_sigprint();
+  
+  return arrayops::has_inf(values, n_nonzero);
+  }
+
+
+
+template<typename eT>
+inline
+arma_warn_unused
+bool
+SpMat<eT>::has_nan() const
+  {
+  arma_extra_debug_sigprint();
+  
+  return arrayops::has_nan(values, n_nonzero);
   }
 
 
@@ -3409,6 +3455,32 @@ SpMat<eT>::reset()
       init(1, 0);
       break;
     }
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+void
+SpMat<eT>::set_real(const SpBase<typename SpMat<eT>::pod_type,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  SpMat_aux::set_real(*this, X);
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+void
+SpMat<eT>::set_imag(const SpBase<typename SpMat<eT>::pod_type,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  SpMat_aux::set_imag(*this, X);
   }
 
 
@@ -4323,7 +4395,7 @@ SpMat<eT>::init_xform(const SpBase<eT,T1>& A, const Functor& func)
   arma_extra_debug_sigprint();
   
   // if possible, avoid doing a copy and instead apply func to the generated elements
-  if(SpProxy<T1>::Q_created_by_proxy == true)
+  if(SpProxy<T1>::Q_created_by_proxy)
     {
     (*this) = A.get_ref();
     
@@ -4973,6 +5045,75 @@ SpMat<eT>::delete_element(const uword in_row, const uword in_col)
     }
   
   return; // The element does not exist, so there's nothing for us to do.
+  }
+
+
+
+template<typename eT, typename T1>
+inline
+void
+SpMat_aux::set_real(SpMat<eT>& out, const SpBase<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  const unwrap_spmat<T1> tmp(X.get_ref());
+  const SpMat<eT>&   A = tmp.M;
+  
+  arma_debug_assert_same_size( out, A, "SpMat::set_real()" );
+  
+  out = A;
+  }
+
+
+
+template<typename eT, typename T1>
+inline
+void
+SpMat_aux::set_imag(SpMat<eT>&, const SpBase<eT,T1>&)
+  {
+  arma_extra_debug_sigprint();
+  }
+
+
+
+template<typename T, typename T1>
+inline
+void
+SpMat_aux::set_real(SpMat< std::complex<T> >& out, const SpBase<T,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename std::complex<T> eT;
+  
+  const unwrap_spmat<T1> U(X.get_ref());
+  const SpMat<T>&    Y = U.M;
+  
+  arma_debug_assert_same_size(out, Y, "SpMat::set_real()");
+  
+  SpMat<eT> tmp(Y,arma::imag(out));  // arma:: prefix required due to bugs in GCC 4.4 - 4.6
+  
+  out.steal_mem(tmp);
+  }
+
+
+
+template<typename T, typename T1>
+inline
+void
+SpMat_aux::set_imag(SpMat< std::complex<T> >& out, const SpBase<T,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename std::complex<T> eT;
+  
+  const unwrap_spmat<T1> U(X.get_ref());
+  const SpMat<T>&    Y = U.M;
+  
+  arma_debug_assert_same_size(out, Y, "SpMat::set_imag()");
+  
+  SpMat<eT> tmp(arma::real(out),Y);  // arma:: prefix required due to bugs in GCC 4.4 - 4.6
+  
+  out.steal_mem(tmp);
   }
 
 

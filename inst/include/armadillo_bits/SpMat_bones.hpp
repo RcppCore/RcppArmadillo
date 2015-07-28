@@ -266,6 +266,9 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   arma_inline arma_warn_unused bool is_square() const;
        inline arma_warn_unused bool is_finite() const;
   
+  inline arma_warn_unused bool has_inf() const;
+  inline arma_warn_unused bool has_nan() const;
+  
   arma_inline arma_warn_unused bool in_range(const uword i) const;
   arma_inline arma_warn_unused bool in_range(const span& x) const;
   
@@ -329,6 +332,10 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   inline const SpMat& sprandn(const uword in_rows, const uword in_cols, const double density);
   
   inline void reset();
+  
+  
+  template<typename T1> inline void set_real(const SpBase<pod_type,T1>& X);
+  template<typename T1> inline void set_imag(const SpBase<pod_type,T1>& X);
   
   
   // saving and loading
@@ -632,6 +639,19 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   #ifdef ARMA_EXTRA_SPMAT_PROTO
     #include ARMA_INCFILE_WRAP(ARMA_EXTRA_SPMAT_PROTO)
   #endif
+  };
+
+
+
+class SpMat_aux
+  {
+  public:
+  
+  template<typename eT, typename T1> inline static void set_real(SpMat<eT>&                out, const SpBase<eT,T1>& X);
+  template<typename T,  typename T1> inline static void set_real(SpMat< std::complex<T> >& out, const SpBase< T,T1>& X);
+  
+  template<typename eT, typename T1> inline static void set_imag(SpMat<eT>&                out, const SpBase<eT,T1>& X);
+  template<typename T,  typename T1> inline static void set_imag(SpMat< std::complex<T> >& out, const SpBase< T,T1>& X);
   };
 
 

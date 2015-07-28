@@ -994,6 +994,60 @@ arrayops::is_finite(const eT* src, const uword n_elem)
 
 
 
+template<typename eT>
+arma_hot
+arma_pure
+inline
+bool
+arrayops::has_inf(const eT* src, const uword n_elem)
+  {
+  uword j;
+  
+  for(j=1; j<n_elem; j+=2)
+    {
+    const eT val_i = (*src);  src++;
+    const eT val_j = (*src);  src++;
+    
+    if( arma_isinf(val_i) || arma_isinf(val_j) )  { return true; }
+    }
+  
+  if((j-1) < n_elem)
+    {
+    if(arma_isinf(*src))  { return true; }
+    }
+  
+  return false;
+  }
+
+
+
+template<typename eT>
+arma_hot
+arma_pure
+inline
+bool
+arrayops::has_nan(const eT* src, const uword n_elem)
+  {
+  uword j;
+  
+  for(j=1; j<n_elem; j+=2)
+    {
+    const eT val_i = (*src);  src++;
+    const eT val_j = (*src);  src++;
+    
+    if( arma_isnan(val_i) || arma_isnan(val_j) )  { return true; }
+    }
+  
+  if((j-1) < n_elem)
+    {
+    if(arma_isnan(*src))  { return true; }
+    }
+  
+  return false;
+  }
+
+
+
 // TODO: this function is currently not used
 template<typename eT>
 arma_hot

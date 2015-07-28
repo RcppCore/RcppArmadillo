@@ -110,6 +110,9 @@ class subview : public Base<eT, subview<eT> >
   inline arma_warn_unused bool is_vec()    const;
   inline arma_warn_unused bool is_finite() const;
   
+  inline arma_warn_unused bool has_inf() const;
+  inline arma_warn_unused bool has_nan() const;
+  
   inline       subview_row<eT> row(const uword row_num);
   inline const subview_row<eT> row(const uword row_num) const;
   

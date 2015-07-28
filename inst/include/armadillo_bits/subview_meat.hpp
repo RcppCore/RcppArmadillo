@@ -239,7 +239,7 @@ subview<eT>::operator= (const Base<eT,T1>& in)
   
   arma_extra_debug_warn(is_alias, "aliasing detected");
   
-  if( (is_Mat<typename Proxy<T1>::stored_type>::value == true) || (is_alias == true) )
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (is_alias) )
     {
     const unwrap_check<typename Proxy<T1>::stored_type> tmp(P.Q, is_alias);
     const Mat<eT>& x = tmp.M;
@@ -345,7 +345,7 @@ subview<eT>::operator+= (const Base<eT,T1>& in)
   
   arma_extra_debug_warn(is_alias, "aliasing detected");
   
-  if( (is_Mat<typename Proxy<T1>::stored_type>::value == true) || (is_alias == true) )
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (is_alias) )
     {
     const unwrap_check<typename Proxy<T1>::stored_type> tmp(P.Q, is_alias);
     const Mat<eT>& x = tmp.M;
@@ -451,7 +451,7 @@ subview<eT>::operator-= (const Base<eT,T1>& in)
   
   arma_extra_debug_warn(is_alias, "aliasing detected");
   
-  if( (is_Mat<typename Proxy<T1>::stored_type>::value == true) || (is_alias == true) )
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (is_alias) )
     {
     const unwrap_check<typename Proxy<T1>::stored_type> tmp(P.Q, is_alias);
     const Mat<eT>& x = tmp.M;
@@ -557,7 +557,7 @@ subview<eT>::operator%= (const Base<eT,T1>& in)
   
   arma_extra_debug_warn(is_alias, "aliasing detected");
   
-  if( (is_Mat<typename Proxy<T1>::stored_type>::value == true) || (is_alias == true) )
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (is_alias) )
     {
     const unwrap_check<typename Proxy<T1>::stored_type> tmp(P.Q, is_alias);
     const Mat<eT>& x = tmp.M;
@@ -663,7 +663,7 @@ subview<eT>::operator/= (const Base<eT,T1>& in)
   
   arma_extra_debug_warn(is_alias, "aliasing detected");
   
-  if( (is_Mat<typename Proxy<T1>::stored_type>::value == true) || (is_alias == true) )
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (is_alias) )
     {
     const unwrap_check<typename Proxy<T1>::stored_type> tmp(P.Q, is_alias);
     const Mat<eT>& x = tmp.M;
@@ -1650,6 +1650,48 @@ subview<eT>::is_finite() const
     }
   
   return true;
+  }
+
+
+
+template<typename eT>
+inline
+arma_warn_unused
+bool
+subview<eT>::has_inf() const
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword local_n_rows = n_rows;
+  const uword local_n_cols = n_cols;
+  
+  for(uword ii=0; ii<local_n_cols; ++ii)
+    {
+    if(arrayops::has_inf(colptr(ii), local_n_rows))  { return true; }
+    }
+  
+  return false;
+  }
+
+
+
+template<typename eT>
+inline
+arma_warn_unused
+bool
+subview<eT>::has_nan() const
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword local_n_rows = n_rows;
+  const uword local_n_cols = n_cols;
+  
+  for(uword ii=0; ii<local_n_cols; ++ii)
+    {
+    if(arrayops::has_nan(colptr(ii), local_n_rows))  { return true; }
+    }
+  
+  return false;
   }
 
 

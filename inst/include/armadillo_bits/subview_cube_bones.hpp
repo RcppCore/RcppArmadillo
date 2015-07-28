@@ -89,7 +89,10 @@ class subview_cube : public BaseCube<eT, subview_cube<eT> >
   inline void randn();
   
   inline arma_warn_unused bool is_finite() const;
-
+  
+  inline arma_warn_unused bool has_inf() const;
+  inline arma_warn_unused bool has_nan() const;
+  
   inline arma_warn_unused eT min() const;
   inline arma_warn_unused eT max() const;
   
