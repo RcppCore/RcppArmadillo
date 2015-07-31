@@ -40,7 +40,7 @@ vectorise(const T1& X, const uword dim)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (dim > 1), "vectorise(): dim must be 0 or 1");
+  arma_debug_check( (dim > 1), "vectorise(): parameter 'dim' must be 0 or 1" );
   
   return Op<T1, op_vectorise_all>(X, dim, 0);
   }

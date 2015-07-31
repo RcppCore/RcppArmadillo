@@ -142,6 +142,75 @@ spop_cx_abs::apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1::
 
 
 
+namespace priv
+  {
+  struct functor_real
+    {
+    template<typename T>
+    arma_inline T operator()(const std::complex<T>& val) const { return val.real(); }
+    };
+  }
+
+
+
+template<typename T1>
+inline
+void
+spop_real::apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1::pod_type, T1, spop_real>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  out.init_xform_mt(in.m, priv::functor_real());
+  }
+
+
+
+namespace priv
+  {
+  struct functor_imag
+    {
+    template<typename T>
+    arma_inline T operator()(const std::complex<T>& val) const { return val.imag(); }
+    };
+  }
+
+
+
+template<typename T1>
+inline
+void
+spop_imag::apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1::pod_type, T1, spop_imag>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  out.init_xform_mt(in.m, priv::functor_imag());
+  }
+
+
+
+namespace priv
+  {
+  struct functor_conj
+    {
+    template<typename eT>
+    arma_inline eT operator()(const eT val) const { return eop_aux::conj(val); }
+    };
+  }
+
+
+
+template<typename T1>
+inline
+void
+spop_conj::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_conj>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  out.init_xform(in.m, priv::functor_conj());
+  }
+
+
+
 template<typename T1>
 inline
 void
@@ -151,71 +220,81 @@ spop_repmat::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_repma
   
   typedef typename T1::elem_type eT;
   
-  const unwrap_spmat<T1> tmp(in.m);
-  const SpMat<eT>& X =   tmp.M;
+  const unwrap_spmat<T1> U(in.m);
+  const SpMat<eT>& X =   U.M;
+  
+  const uword X_n_rows = X.n_rows;
+  const uword X_n_cols = X.n_cols;
   
   const uword copies_per_row = in.aux_uword_a;
   const uword copies_per_col = in.aux_uword_b;
   
-  if(&out != &X)
-    {
-    spop_repmat::apply_noalias(out, X, copies_per_row, copies_per_col);
-    }
-  else
-    {
-    SpMat<eT> out2;
-    
-    spop_repmat::apply_noalias(out2, X, copies_per_row, copies_per_col);
-    
-    out.steal_mem(out2);
-    }
-  }
-
-
-
-template<typename eT>
-inline
-void
-spop_repmat::apply_noalias(SpMat<eT>& out, const SpMat<eT>& X, const uword copies_per_row, const uword copies_per_col)
-  {
-  arma_extra_debug_sigprint();
-  
-  // out.set_size(X.n_rows * copies_per_row, X.n_cols * copies_per_col);
+  // out.set_size(X_n_rows * copies_per_row, X_n_cols * copies_per_col);
   // 
   // const uword out_n_rows = out.n_rows;
   // const uword out_n_cols = out.n_cols;
   // 
   // if( (out_n_rows > 0) && (out_n_cols > 0) )
   //   {
-  //   for(uword col = 0; col < out_n_cols; col += X.n_cols)
-  //   for(uword row = 0; row < out_n_rows; row += X.n_rows)
+  //   for(uword col = 0; col < out_n_cols; col += X_n_cols)
+  //   for(uword row = 0; row < out_n_rows; row += X_n_rows)
   //     {
-  //     out.submat(row, col, row+X.n_rows-1, col+X.n_cols-1) = X;
+  //     out.submat(row, col, row+X_n_rows-1, col+X_n_cols-1) = X;
   //     }
   //   }
   
-  SpMat<eT> tmp(X.n_rows * copies_per_row, X.n_cols);
+  SpMat<eT> tmp(X_n_rows * copies_per_row, X_n_cols);
   
   if(tmp.n_elem > 0)
     {
-    for(uword row = 0; row < tmp.n_rows; row += X.n_rows)
+    for(uword row = 0; row < tmp.n_rows; row += X_n_rows)
       {
-      tmp.submat(row, 0, row+X.n_rows-1, X.n_cols-1) = X;
+      tmp.submat(row, 0, row+X_n_rows-1, X_n_cols-1) = X;
       }
     }
   
-  out.set_size(X.n_rows * copies_per_row, X.n_cols * copies_per_col);
+  // tmp contains copies of the input matrix, so no need to check for aliasing
+  
+  out.set_size(X_n_rows * copies_per_row, X_n_cols * copies_per_col);
   
   const uword out_n_rows = out.n_rows;
   const uword out_n_cols = out.n_cols;
   
   if( (out_n_rows > 0) && (out_n_cols > 0) )
     {
-    for(uword col = 0; col < out_n_cols; col += X.n_cols)
+    for(uword col = 0; col < out_n_cols; col += X_n_cols)
       {
-      out.submat(0, col, out_n_rows-1, col+X.n_cols-1) = tmp;
+      out.submat(0, col, out_n_rows-1, col+X_n_cols-1) = tmp;
       }
     }
+  }
+
+
+
+template<typename T1>
+inline
+void
+spop_reshape::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_reshape>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  out = in.m;
+  
+  out.reshape(in.aux_uword_a, in.aux_uword_b);
+  }
+
+
+
+template<typename T1>
+inline
+void
+spop_resize::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_resize>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  out = in.m;
+  
+  out.resize(in.aux_uword_a, in.aux_uword_b);
   }
 
 

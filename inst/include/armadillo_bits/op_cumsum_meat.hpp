@@ -24,7 +24,7 @@ op_cumsum_mat::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim)
   
   if(dim == 0)
     {
-    arma_extra_debug_print("op_cumsum_mat::apply(), dim = 0");
+    arma_extra_debug_print("op_cumsum_mat::apply(): dim = 0");
     
     for(uword col=0; col<X_n_cols; ++col)
       {
@@ -44,7 +44,7 @@ op_cumsum_mat::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim)
   else
   if(dim == 1)
     {
-    arma_extra_debug_print("op_cumsum_mat::apply(), dim = 1");
+    arma_extra_debug_print("op_cumsum_mat::apply(): dim = 1");
     
     for(uword row=0; row<X_n_rows; ++row)
       {
@@ -75,7 +75,7 @@ op_cumsum_mat::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumsum_mat
   const Mat<eT>& X = tmp.M;
   
   const uword dim = in.aux_uword_a;
-  arma_debug_check( (dim > 1), "cumsum(): incorrect usage. dim must be 0 or 1");
+  arma_debug_check( (dim > 1), "cumsum(): parameter 'dim' must be 0 or 1" );
   
   if(&out == &X)
     {

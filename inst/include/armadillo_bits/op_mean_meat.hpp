@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2012 Conrad Sanderson
-// Copyright (C) 2009-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2015 Conrad Sanderson
+// Copyright (C) 2009-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,10 +11,6 @@
 
 
 
-//! \brief
-//! For each row or for each column, find the mean value.
-//! The result is stored in a dense matrix that has either one column or one row.
-//! The dimension, for which the means are found, is set via the mean() function.
 template<typename T1>
 inline
 void
@@ -24,47 +20,175 @@ op_mean::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_mean>& in)
   
   typedef typename T1::elem_type eT;
   
-  const unwrap_check<T1> tmp(in.m, out);
-  const Mat<eT>& X = tmp.M;
-  
   const uword dim = in.aux_uword_a;
-  arma_debug_check( (dim > 1), "mean(): incorrect usage. dim must be 0 or 1");
+  arma_debug_check( (dim > 1), "mean(): parameter 'dim' must be 0 or 1" );
+  
+  const Proxy<T1> P(in.m);
+  
+  if(P.is_alias(out) == false)
+    {
+    op_mean::apply_noalias(out, P, dim);
+    }
+  else
+    {
+    Mat<eT> tmp;
+    
+    op_mean::apply_noalias(tmp, P, dim);
+    
+    out.steal_mem(tmp);
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_mean::apply_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const uword dim)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(is_Mat<typename Proxy<T1>::stored_type>::value)
+    {
+    op_mean::apply_noalias_unwrap(out, P, dim);
+    }
+  else
+    {
+    op_mean::apply_noalias_proxy(out, P, dim);
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_mean::apply_noalias_unwrap(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const uword dim)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type            eT;
+  typedef typename get_pod_type<eT>::result  T;
+  
+  typedef typename Proxy<T1>::stored_type P_stored_type;
+  
+  const unwrap<P_stored_type> tmp(P.Q);
+  
+  const typename unwrap<P_stored_type>::stored_type& X = tmp.M;
   
   const uword X_n_rows = X.n_rows;
   const uword X_n_cols = X.n_cols;
   
   if(dim == 0)
     {
-    arma_extra_debug_print("op_mean::apply(), dim = 0");
+    out.set_size((X_n_rows > 0) ? 1 : 0, X_n_cols);
     
-    out.set_size( (X_n_rows > 0) ? 1 : 0, X_n_cols );
+    if(X_n_rows == 0)  { return; }
     
-    if(X_n_rows > 0)
+    eT* out_mem = out.memptr();
+    
+    for(uword col=0; col < X_n_cols; ++col)
       {
-      eT* out_mem = out.memptr();
-      
-      for(uword col=0; col < X_n_cols; ++col)
-        {
-        out_mem[col] = op_mean::direct_mean( X.colptr(col), X_n_rows );
-        }
+      out_mem[col] = op_mean::direct_mean( X.colptr(col), X_n_rows );
       }
     }
   else
   if(dim == 1)
     {
-    arma_extra_debug_print("op_mean::apply(), dim = 1");
+    out.zeros(X_n_rows, (X_n_cols > 0) ? 1 : 0);
     
-    out.set_size(X_n_rows, (X_n_cols > 0) ? 1 : 0);
+    if(X_n_cols == 0)  { return; }
     
-    if(X_n_cols > 0)
+    eT* out_mem = out.memptr();
+    
+    for(uword col=0; col < X_n_cols; ++col)
       {
-      eT* out_mem = out.memptr();
+      const eT* col_mem = X.colptr(col);
       
       for(uword row=0; row < X_n_rows; ++row)
         {
-        out_mem[row] = op_mean::direct_mean( X, row );
+        out_mem[row] += col_mem[row];
         }
       }
+    
+    out /= T(X_n_cols);
+    
+    for(uword row=0; row < X_n_rows; ++row)
+      {
+      if(arma_isfinite(out_mem[row]) == false)
+        {
+        out_mem[row] = op_mean::direct_mean_robust( X, row );
+        }
+      }
+    }
+  }
+
+
+
+template<typename T1>
+arma_hot
+inline
+void
+op_mean::apply_noalias_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const uword dim)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type            eT;
+  typedef typename get_pod_type<eT>::result  T;
+  
+  const uword P_n_rows = P.get_n_rows();
+  const uword P_n_cols = P.get_n_cols();
+  
+  if(dim == 0)
+    {
+    out.set_size((P_n_rows > 0) ? 1 : 0, P_n_cols);
+    
+    if(P_n_rows == 0)  { return; }
+    
+    eT* out_mem = out.memptr();
+    
+    for(uword col=0; col < P_n_cols; ++col)
+      {
+      eT val1 = eT(0);
+      eT val2 = eT(0);
+      
+      uword i,j;
+      for(i=0, j=1; j < P_n_rows; i+=2, j+=2)
+        {
+        val1 += P.at(i,col);
+        val2 += P.at(j,col);
+        }
+      
+      if(i < P_n_rows)
+        {
+        val1 += P.at(i,col);
+        }
+      
+      out_mem[col] = (val1 + val2) / T(P_n_rows);
+      }
+    }
+  else
+  if(dim == 1)
+    {
+    out.zeros(P_n_rows, (P_n_cols > 0) ? 1 : 0);
+    
+    if(P_n_cols == 0)  { return; }
+    
+    eT* out_mem = out.memptr();
+    
+    for(uword col=0; col < P_n_cols; ++col)
+    for(uword row=0; row < P_n_rows; ++row)
+      {
+      out_mem[row] += P.at(row,col);
+      }
+    
+    out /= T(P_n_cols);
+    }
+  
+  if(out.is_finite() == false)
+    {
+    // TODO: replace with dedicated handling to avoid unwrapping
+    op_mean::apply_noalias_unwrap(out, P, dim);
     }
   }
 
@@ -193,7 +317,12 @@ op_mean::mean_all(const subview<eT>& X)
   const uword X_n_cols = X.n_cols;
   const uword X_n_elem = X.n_elem;
   
-  arma_debug_check( (X_n_elem == 0), "mean(): given object has no elements" );
+  if(X_n_elem == 0)
+    {
+    arma_debug_check(true, "mean(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
   
   eT val = eT(0);
   
@@ -292,7 +421,12 @@ op_mean::mean_all(const diagview<eT>& X)
   
   const uword X_n_elem = X.n_elem;
   
-  arma_debug_check( (X_n_elem == 0), "mean(): given object has no elements" );
+  if(X_n_elem == 0)
+    {
+    arma_debug_check(true, "mean(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
   
   eT val = eT(0);
   
@@ -345,7 +479,12 @@ op_mean::mean_all(const Base<typename T1::elem_type, T1>& X)
   
   const uword A_n_elem = A.n_elem;
   
-  arma_debug_check( (A_n_elem == 0), "mean(): given object has no elements" );
+  if(A_n_elem == 0)
+    {
+    arma_debug_check(true, "mean(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
   
   return op_mean::direct_mean(A.memptr(), A_n_elem);
   }

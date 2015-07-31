@@ -1,5 +1,5 @@
 // Copyright (C) 2012 Ryan Curtin
-// Copyright (C) 2012 Conrad Sanderson
+// Copyright (C) 2012-2015 Conrad Sanderson
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,8 +20,13 @@ spglue_times::apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglu
   
   typedef typename T1::elem_type eT;
   
-  const SpProxy<T1> pa(X.A);
-  const SpProxy<T2> pb(X.B);
+  // unconditionally unwrapping, as the column iterator in SpSubview is slow and buggy
+  
+  const unwrap_spmat<T1> tmp1(X.A);
+  const unwrap_spmat<T2> tmp2(X.B);
+  
+  const SpProxy<typename unwrap_spmat<T1>::stored_type> pa(tmp1.M);
+  const SpProxy<typename unwrap_spmat<T2>::stored_type> pb(tmp2.M);
   
   const bool is_alias = pa.is_alias(out) || pb.is_alias(out);
   

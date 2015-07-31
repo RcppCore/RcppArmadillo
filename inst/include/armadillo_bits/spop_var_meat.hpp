@@ -1,5 +1,5 @@
 // Copyright (C) 2012 Ryan Curtin
-// Copyright (C) 2012 Conrad Sanderson
+// Copyright (C) 2012-2015 Conrad Sanderson
 //
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,10 +24,14 @@ spop_var::apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1::pod
   const uword norm_type = in.aux_uword_a;
   const uword dim       = in.aux_uword_b;
   
-  arma_debug_check((norm_type > 1), "var(): incorrect usage. norm_type must be 0 or 1");
-  arma_debug_check((dim > 1),       "var(): incorrect usage. dim must be 0 or 1");
+  arma_debug_check( (norm_type > 1), "var(): parameter 'norm_type' must be 0 or 1" );
+  arma_debug_check( (dim > 1),       "var(): parameter 'dim' must be 0 or 1"       );
   
-  SpProxy<T1> p(in.m);
+  // unconditionally unwrapping, as the column iterator in SpSubview is slow and buggy
+  
+  const unwrap_spmat<T1> tmp1(in.m);
+  
+  const SpProxy<typename unwrap_spmat<T1>::stored_type> p(tmp1.M);
   
   if(p.is_alias(out) == false)
     {
@@ -50,61 +54,62 @@ inline
 void
 spop_var::apply_noalias
   (
-        SpMat<typename T1::pod_type>& out_ref,
+        SpMat<typename T1::pod_type>& out,
   const SpProxy<T1>&                  p,
   const uword                         norm_type,
   const uword                         dim
   )
   {
   arma_extra_debug_sigprint();
-
+  
   typedef typename T1::elem_type  in_eT;
   //typedef typename T1::pod_type  out_eT;
-
+  
   const uword p_n_rows = p.get_n_rows();
   const uword p_n_cols = p.get_n_cols();
-
-  if(dim == 0)
+  
+  if(dim == 0)  // find variance in each column
     {
-    arma_extra_debug_print("spop_var::apply(), dim = 0");
-
-    arma_debug_check((p_n_rows == 0), "var(): given object has zero rows");
-
-    out_ref.set_size(1, p_n_cols);
-
+    arma_extra_debug_print("spop_var::apply_noalias(): dim = 0");
+    
+    out.set_size((p_n_rows > 0) ? 1 : 0, p_n_cols);
+    
+    if( (p_n_rows == 0) || (p.get_n_nonzero() == 0) )  { return; }
+    
     for(uword col = 0; col < p_n_cols; ++col)
       {
-      if(SpProxy<T1>::must_use_iterator == true)
+      if(SpProxy<T1>::must_use_iterator)
         {
         // We must use an iterator; we can't access memory directly.
         typename SpProxy<T1>::const_iterator_type it  = p.begin_col(col);
         typename SpProxy<T1>::const_iterator_type end = p.begin_col(col + 1);
         
-        const uword n_zero = p.get_n_rows() - (end.pos() - it.pos());
+        const uword n_zero = p_n_rows - (end.pos() - it.pos());
         
         // in_eT is used just to get the specialization right (complex / noncomplex)
-        out_ref.at(col) = spop_var::iterator_var(it, end, n_zero, norm_type, in_eT(0));
+        out.at(0, col) = spop_var::iterator_var(it, end, n_zero, norm_type, in_eT(0));
         }
       else
         {
         // We can use direct memory access to calculate the variance.
-        out_ref.at(col) = spop_var::direct_var
+        out.at(0, col) = spop_var::direct_var
           (
           &p.get_values()[p.get_col_ptrs()[col]],
           p.get_col_ptrs()[col + 1] - p.get_col_ptrs()[col],
-          p.get_n_rows(),
+          p_n_rows,
           norm_type
           );
         }
       }
     }
-  else if(dim == 1)
+  else
+  if(dim == 1)  // find variance in each row
     {
-    arma_extra_debug_print("spop_var::apply_noalias(), dim = 1");
+    arma_extra_debug_print("spop_var::apply_noalias(): dim = 1");
     
-    arma_debug_check((p_n_cols == 0), "var(): given object has zero columns");
+    out.set_size(p_n_rows, (p_n_cols > 0) ? 1 : 0);
     
-    out_ref.set_size(p_n_rows, 1);
+    if( (p_n_cols == 0) || (p.get_n_nonzero() == 0) )  { return; }
     
     for(uword row = 0; row < p_n_rows; ++row)
       {
@@ -113,9 +118,9 @@ spop_var::apply_noalias
       typename SpProxy<T1>::const_row_iterator_type it  = p.begin_row(row);
       typename SpProxy<T1>::const_row_iterator_type end = p.end_row(row);
       
-      const uword n_zero = p.get_n_cols() - (end.pos() - it.pos());
+      const uword n_zero = p_n_cols - (end.pos() - it.pos());
       
-      out_ref.at(row) = spop_var::iterator_var(it, end, n_zero, norm_type, in_eT(0));
+      out.at(row, 0) = spop_var::iterator_var(it, end, n_zero, norm_type, in_eT(0));
       }
     }
   }
@@ -133,7 +138,7 @@ spop_var::var_vec
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check((norm_type > 1), "var(): incorrect usage. norm_type must be 0 or 1.");
+  arma_debug_check( (norm_type > 1), "var(): parameter 'norm_type' must be 0 or 1" );
   
   // conditionally unwrap it into a temporary and then directly operate.
   

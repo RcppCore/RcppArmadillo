@@ -1,5 +1,5 @@
 // Copyright (C) 2012-2014 Ryan Curtin
-// Copyright (C) 2012-2014 Conrad Sanderson
+// Copyright (C) 2012-2015 Conrad Sanderson
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,25 +18,23 @@ spop_max::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_max>& in)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
-  
   const uword dim = in.aux_uword_a;
-  arma_debug_check((dim > 1), "max(): incorrect usage. dim must be 0 or 1");
+  arma_debug_check( (dim > 1), "max(): parameter 'dim' must be 0 or 1" );
   
   const SpProxy<T1> p(in.m);
   
-  if(p.is_alias(out) == false)
+  const uword p_n_rows = p.get_n_rows();
+  const uword p_n_cols = p.get_n_cols();
+  
+  if( (p_n_rows == 0) || (p_n_cols == 0) || (p.get_n_nonzero() == 0) )
     {
-    spop_max::apply_noalias(out, p, dim);
-    }
-  else
-    {
-    SpMat<eT> tmp;
+    if(dim == 0)  { out.zeros((p_n_rows > 0) ? 1 : 0, p_n_cols); }
+    if(dim == 1)  { out.zeros(p_n_rows, (p_n_cols > 0) ? 1 : 0); }
     
-    spop_max::apply_noalias(tmp, p, dim);
-    
-    out.steal_mem(tmp);
+    return;
     }
+  
+  spop_max::apply_proxy(out, p, dim);
   }
 
 
@@ -44,9 +42,9 @@ spop_max::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_max>& in)
 template<typename T1>
 inline
 void
-spop_max::apply_noalias
+spop_max::apply_proxy
   (
-        SpMat<typename T1::elem_type>& result,
+        SpMat<typename T1::elem_type>& out,
   const SpProxy<T1>&                   p,
   const uword                          dim,
   const typename arma_not_cx<typename T1::elem_type>::result* junk
@@ -56,111 +54,55 @@ spop_max::apply_noalias
   arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
-
-  if(dim == 0)
+  
+  typename SpProxy<T1>::const_iterator_type it     = p.begin();
+  typename SpProxy<T1>::const_iterator_type it_end = p.end();
+  
+  const uword p_n_cols = p.get_n_cols();
+  const uword p_n_rows = p.get_n_rows();
+  
+  if(dim == 0) // find the maximum in each column
     {
-    // maximum in each column
-    result.set_size(1, p.get_n_cols());
-    
-    if(p.get_n_nonzero() == 0)  { return; }
-    
-    typename SpProxy<T1>::const_iterator_type it     = p.begin();
-    typename SpProxy<T1>::const_iterator_type it_end = p.end();
-    
-    uword cur_col     = it.col();
-    uword elem_in_col = 1;
-    
-    eT cur_max = (*it);
-    ++it;
+    Row<eT> value(p_n_cols, fill::zeros);
+    urowvec count(p_n_cols, fill::zeros);
     
     while(it != it_end)
       {
-      if(it.col() != cur_col)
-        {
-        // was the column full?
-        if(elem_in_col == p.get_n_rows())
-          {
-          result.at(0, cur_col) = cur_max;
-          }
-        else
-          {
-          result.at(0, cur_col) = std::max(eT(0), cur_max);
-          }
-
-        cur_col     = it.col();
-        elem_in_col = 0;
-        
-        cur_max = (*it);
-        }
-      else
-        {
-        cur_max = std::max(cur_max, *it);
-        }
-
-      ++elem_in_col;
+      const uword col = it.col();
+      
+      value[col] = (count[col] == 0) ? (*it) : (std::max)(value[col], (*it));
+      count[col]++;
       ++it;
       }
-
-    if(elem_in_col == p.get_n_rows())
+    
+    for(uword col=0; col<p_n_cols; ++col)
       {
-      result.at(0, cur_col) = cur_max;
+      if(count[col] < p_n_rows)  { value[col] = (std::max)(value[col], eT(0)); }
       }
-    else
-      {
-      result.at(0, cur_col) = std::max(eT(0), cur_max);
-      }
+    
+    out = value;
     }
   else
+  if(dim == 1)  // find the maximum in each row
     {
-    // maximum in each row
-    result.set_size(p.get_n_rows(), 1);
+    Col<eT> value(p_n_rows, fill::zeros);
+    ucolvec count(p_n_rows, fill::zeros);
     
-    if(p.get_n_nonzero() == 0)  { return; }
-    
-    typename SpProxy<T1>::const_row_iterator_type it = p.begin_row();
-    
-    uword cur_row     = it.row();
-    uword elem_in_row = 1;
-    
-    eT cur_max = (*it);
-    ++it;
-    
-    while(it.pos() < p.get_n_nonzero())
+    while(it != it_end)
       {
-      if(it.row() != cur_row)
-        {
-        // was the row full?
-        if(elem_in_row == p.get_n_cols())
-          {
-          result.at(cur_row, 0) = cur_max;
-          }
-        else
-          {
-          result.at(cur_row, 0) = std::max(eT(0), cur_max);
-          }
-
-        cur_row     = it.row();
-        elem_in_row = 0;
-        
-        cur_max = (*it);
-        }
-      else
-        {
-        cur_max = std::max(cur_max, *it);
-        }
-
-      ++elem_in_row;
+      const uword row = it.row();
+      
+      value[row] = (count[row] == 0) ? (*it) : (std::max)(value[row], (*it));
+      count[row]++;
       ++it;
       }
-
-    if(elem_in_row == p.get_n_cols())
+    
+    for(uword row=0; row<p_n_rows; ++row)
       {
-      result.at(cur_row, 0) = cur_max;
+      if(count[row] < p_n_cols)  { value[row] = (std::max)(value[row], eT(0)); }
       }
-    else
-      {
-      result.at(cur_row, 0) = std::max(eT(0), cur_max);
-      }
+    
+    out = value;
     }
   }
 
@@ -181,6 +123,13 @@ spop_max::vector_max
   typedef typename T1::elem_type eT;
   
   const SpProxy<T1> p(x);
+  
+  if(p.get_n_elem() == 0)
+    {
+    arma_debug_check(true, "max(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
   
   if(p.get_n_nonzero() == 0)  { return eT(0); }
   
@@ -231,26 +180,31 @@ typename arma_not_cx<typename T1::elem_type>::result
 spop_max::max(const SpBase<typename T1::elem_type, T1>& X)
   {
   arma_extra_debug_sigprint();
-
+  
   typedef typename T1::elem_type eT;
-
+  
   const SpProxy<T1> P(X.get_ref());
-
+  
   const uword n_elem    = P.get_n_elem();
   const uword n_nonzero = P.get_n_nonzero();
-
-  arma_debug_check( (n_elem == 0), "max(): given object has no elements");
-
+  
+  if(n_elem == 0)
+    {
+    arma_debug_check(true, "max(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
+  
   eT max_val = priv::most_neg<eT>();
-
-  if(SpProxy<T1>::must_use_iterator == true)
+  
+  if(SpProxy<T1>::must_use_iterator)
     {
     // We have to iterate over the elements.
     typedef typename SpProxy<T1>::const_iterator_type it_type;
-
+    
     it_type it     = P.begin();
     it_type it_end = P.end();
-
+    
     while (it != it_end)
       {
       if ((*it) > max_val)  { max_val = *it; }
@@ -265,7 +219,7 @@ spop_max::max(const SpBase<typename T1::elem_type, T1>& X)
     // other functions...
     max_val = op_max::direct_max(P.get_values(), n_nonzero);
     }
-
+  
   if(n_elem == n_nonzero)
     {
     return max_val;
@@ -291,11 +245,16 @@ spop_max::max_with_index(const SpProxy<T1>& P, uword& index_of_max_val)
   const uword n_nonzero = P.get_n_nonzero();
   const uword n_rows    = P.get_n_rows();
   
-  arma_debug_check( (n_elem == 0), "max(): given object has no elements");
+  if(n_elem == 0)
+    {
+    arma_debug_check(true, "max(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
   
   eT max_val = priv::most_neg<eT>();
   
-  if(SpProxy<T1>::must_use_iterator == true)
+  if(SpProxy<T1>::must_use_iterator)
     {
     // We have to iterate over the elements.
     typedef typename SpProxy<T1>::const_iterator_type it_type;
@@ -382,9 +341,9 @@ spop_max::max_with_index(const SpProxy<T1>& P, uword& index_of_max_val)
 template<typename T1>
 inline
 void
-spop_max::apply_noalias
+spop_max::apply_proxy
   (
-        SpMat<typename T1::elem_type>& result,
+        SpMat<typename T1::elem_type>& out,
   const SpProxy<T1>&                   p,
   const uword                          dim,
   const typename arma_cx_only<typename T1::elem_type>::result* junk
@@ -396,138 +355,58 @@ spop_max::apply_noalias
   typedef typename T1::elem_type            eT;
   typedef typename get_pod_type<eT>::result  T;
   
-  if(dim == 0)
+  typename SpProxy<T1>::const_iterator_type it     = p.begin();
+  typename SpProxy<T1>::const_iterator_type it_end = p.end();
+  
+  const uword p_n_cols = p.get_n_cols();
+  const uword p_n_rows = p.get_n_rows();
+  
+  if(dim == 0) // find the maximum in each column
     {
-    // maximum in each column
-    result.set_size(1, p.get_n_cols());
-    
-    if(p.get_n_nonzero() == 0)  { return; }
-    
-    typename SpProxy<T1>::const_iterator_type it     = p.begin();
-    typename SpProxy<T1>::const_iterator_type it_end = p.end();
-    
-    uword cur_col     = it.col();
-    uword elem_in_col = 1;
-    
-    eT cur_max_orig = *it;
-     T cur_max_abs  = std::abs(cur_max_orig);
-    
-    ++it;
+    Row<eT> rawval(p_n_cols, fill::zeros);
+    Row< T> absval(p_n_cols, fill::zeros);
     
     while(it != it_end)
       {
-      if(it.col() != cur_col)
+      const uword col = it.col();
+      
+      const eT& v = (*it);
+      const  T  a = std::abs(v);
+      
+      if(a > absval[col])
         {
-        // was the column full?
-        if(elem_in_col == p.get_n_rows())
-          {
-          result.at(0, cur_col) = cur_max_orig;
-          }
-        else
-          {
-          eT val1 = eT(0);
-          
-          result.at(0, cur_col) = ( std::abs(val1) >= cur_max_abs ) ? val1 : cur_max_orig;
-          }
-        
-        cur_col     = it.col();
-        elem_in_col = 0;
-        
-        cur_max_orig = *it;
-        cur_max_abs  = std::abs(cur_max_orig);
+        absval[col] = a;
+        rawval[col] = v;
         }
-      else
-        {
-        eT val1_orig = *it;
-         T val1_abs  = std::abs(val1_orig);
-        
-        if( val1_abs >= cur_max_abs )
-          {
-          cur_max_abs  = val1_abs;
-          cur_max_orig = val1_orig;
-          }
-        }
-
-      ++elem_in_col;
+      
       ++it;
       }
-
-    if(elem_in_col == p.get_n_rows())
-      {
-      result.at(0, cur_col) = cur_max_orig;
-      }
-    else
-      {
-      eT val1 = eT(0);
-      
-      result.at(0, cur_col) = ( std::abs(val1) >= cur_max_abs ) ? val1 : cur_max_orig;
-      }
+    
+    out = rawval;
     }
   else
+  if(dim == 1)  // find the maximum in each row
     {
-    // maximum in each row
-    result.set_size(p.get_n_rows(), 1);
+    Col<eT> rawval(p_n_rows, fill::zeros);
+    Col< T> absval(p_n_rows, fill::zeros);
     
-    if(p.get_n_nonzero() == 0)  { return; }
-    
-    typename SpProxy<T1>::const_row_iterator_type it = p.begin_row();
-    
-    uword cur_row     = it.row();
-    uword elem_in_row = 1;
-    
-    eT cur_max_orig = *it;
-     T cur_max_abs  = std::abs(cur_max_orig);
-    
-    ++it;
-    
-    while(it.pos() < p.get_n_nonzero())
+    while(it != it_end)
       {
-      if(it.row() != cur_row)
+      const uword row = it.row();
+      
+      const eT& v = (*it);
+      const  T  a = std::abs(v);
+      
+      if(a > absval[row])
         {
-        // was the row full?
-        if(elem_in_row == p.get_n_cols())
-          {
-          result.at(cur_row, 0) = cur_max_orig;
-          }
-        else
-          {
-          eT val1 = eT(0);
-          
-          result.at(cur_row, 0) = ( std::abs(val1) >= cur_max_abs ) ? val1 : cur_max_orig;
-          }
-
-        cur_row = it.row();
-        elem_in_row = 0;
-        
-        cur_max_orig = *it;
-        cur_max_abs  = std::abs(cur_max_orig);
+        absval[row] = a;
+        rawval[row] = v;
         }
-      else
-        {
-        eT val1_orig = *it;
-         T val1_abs  = std::abs(val1_orig);
-        
-        if( val1_abs >= cur_max_abs )
-          {
-          cur_max_abs  = val1_abs;
-          cur_max_orig = val1_orig;
-          }
-        }
-
-      ++elem_in_row;
+      
       ++it;
       }
-
-    if(elem_in_row == p.get_n_cols())
-      {
-      result.at(cur_row, 0) = cur_max_orig;
-      }
-    else
-      {
-      eT val1 = eT(0);
-      
-      result.at(cur_row, 0) = ( std::abs(val1) >= cur_max_abs ) ? val1 : cur_max_orig;
-      }
+    
+    out = rawval;
     }
   }
 
@@ -547,9 +426,16 @@ spop_max::vector_max
   
   typedef typename T1::elem_type            eT;
   typedef typename get_pod_type<eT>::result  T;
-
+  
   const SpProxy<T1> p(x);
-
+  
+  if(p.get_n_elem() == 0)
+    {
+    arma_debug_check(true, "max(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
+  
   if(p.get_n_nonzero() == 0)  { return eT(0); }
   
   if(SpProxy<T1>::must_use_iterator == false)
@@ -622,12 +508,17 @@ spop_max::max(const SpBase<typename T1::elem_type, T1>& X)
   const uword n_elem    = P.get_n_elem();
   const uword n_nonzero = P.get_n_nonzero();
 
-  arma_debug_check( (n_elem == 0), "max(): given object has no elements");
-
+  if(n_elem == 0)
+    {
+    arma_debug_check(true, "max(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
+  
    T max_val = priv::most_neg<T>();
   eT ret_val;
-
-  if(SpProxy<T1>::must_use_iterator == true)
+  
+  if(SpProxy<T1>::must_use_iterator)
     {
     // We have to iterate over the elements.
     typedef typename SpProxy<T1>::const_iterator_type it_type;
@@ -656,7 +547,7 @@ spop_max::max(const SpBase<typename T1::elem_type, T1>& X)
     ret_val = op_max::direct_max(P.get_values(), n_nonzero);
     max_val = std::abs(ret_val);
     }
-
+  
   if(n_elem == n_nonzero)
     {
     return max_val;
@@ -686,11 +577,16 @@ spop_max::max_with_index(const SpProxy<T1>& P, uword& index_of_max_val)
   const uword n_nonzero = P.get_n_nonzero();
   const uword n_rows    = P.get_n_rows();
   
-  arma_debug_check( (n_elem == 0), "max(): given object has no elements");
+  if(n_elem == 0)
+    {
+    arma_debug_check(true, "max(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
   
   T max_val = priv::most_neg<T>();
   
-  if(SpProxy<T1>::must_use_iterator == true)
+  if(SpProxy<T1>::must_use_iterator)
     {
     // We have to iterate over the elements.
     typedef typename SpProxy<T1>::const_iterator_type it_type;

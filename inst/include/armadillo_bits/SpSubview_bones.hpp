@@ -123,42 +123,8 @@ class SpSubview : public SpBase<eT, SpSubview<eT> >
 
   inline       SpSubview operator()(const span& row_span, const span& col_span);
   inline const SpSubview operator()(const span& row_span, const span& col_span) const;
-
-/* not yet
-  inline       SpSubview_row<eT> row(const uword row_num);
-  inline const SpSubview_row<eT> row(const uword row_num) const;
-
-  inline            SpSubview_row<eT> operator()(const uword row_num, const span& col_span);
-  inline      const SpSubview_row<eT> operator()(const uword row_num, const span& col_span) const;
-
-  inline       SpSubview_col<eT> col(const uword col_num);
-  inline const SpSubview_col<eT> col(const uword col_num) const;
-
-  inline            SpSubview_col<eT> operator()(const span& row_span, const uword col_num);
-  inline      const SpSubview_col<eT> operator()(const span& row_span, const uword col_num) const;
-
-  inline            Col<eT>  unsafe_col(const uword col_num);
-  inline      const Col<eT>  unsafe_col(const uword col_num) const;
-
-  inline       SpSubview<eT> rows(const uword in_row1, const uword in_row2);
-  inline const SpSubview<eT> rows(const uword in_row1, const uword in_row2) const;
-
-  inline       SpSubview<eT> cols(const uword in_col1, const uword in_col2);
-  inline const SpSubview<eT> cols(const uword in_col1, const uword in_col2) const;
-
-  inline       SpSubview<eT> submat(const uword in_row1, const uword in_col1, const uword in_row2, const uword in_col2);
-  inline const SpSubview<eT> submat(const uword in_row1, const uword in_col1, const uword in_row2, const uword in_col2) const;
-
-  inline            SpSubview<eT> submat    (const span& row_span, const span& col_span);
-  inline      const SpSubview<eT> submat    (const span& row_span, const span& col_span) const;
-
-  inline            SpSubview<eT> operator()(const span& row_span, const span& col_span);
-  inline      const SpSubview<eT> operator()(const span& row_span, const span& col_span) const;
-
-  inline       diagview<eT> diag(const s32 in_id = 0);
-  inline const diagview<eT> diag(const s32 in_id = 0) const;
-*/
-
+  
+  
   inline void swap_rows(const uword in_row1, const uword in_row2);
   inline void swap_cols(const uword in_col1, const uword in_col2);
 

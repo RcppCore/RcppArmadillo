@@ -23,7 +23,7 @@ op_prod::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_prod>& in)
   typedef typename T1::elem_type eT;
   
   const uword dim = in.aux_uword_a;
-  arma_debug_check( (dim > 1), "prod(): incorrect usage. dim must be 0 or 1");
+  arma_debug_check( (dim > 1), "prod(): parameter 'dim' must be 0 or 1" );
   
   const unwrap_check<T1> tmp(in.m, out);
   const Mat<eT>& X     = tmp.M;

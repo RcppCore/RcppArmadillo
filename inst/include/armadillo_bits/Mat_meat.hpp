@@ -5411,6 +5411,32 @@ template<typename eT>
 inline
 arma_warn_unused
 bool
+Mat<eT>::has_inf() const
+  {
+  arma_extra_debug_sigprint();
+  
+  return arrayops::has_inf(memptr(), n_elem);
+  }
+
+
+
+template<typename eT>
+inline
+arma_warn_unused
+bool
+Mat<eT>::has_nan() const
+  {
+  arma_extra_debug_sigprint();
+  
+  return arrayops::has_nan(memptr(), n_elem);
+  }
+
+
+
+template<typename eT>
+inline
+arma_warn_unused
+bool
 Mat<eT>::is_sorted(const char* direction) const
   {
   arma_extra_debug_sigprint();
@@ -5432,7 +5458,7 @@ Mat<eT>::is_sorted(const char* direction, const uword dim) const
   
   arma_debug_check( ((sig != 'a') && (sig != 'd')), "Mat::is_sorted(): unknown sort direction" );
   
-  arma_debug_check( (dim > 1), "Mat::is_sorted(): dim must be 0 or 1" );
+  arma_debug_check( (dim > 1), "Mat::is_sorted(): parameter 'dim' must be 0 or 1" );
   
   if(n_elem <= 1)  { return true; }
   
@@ -5452,11 +5478,11 @@ Mat<eT>::is_sorted(const char* direction, const uword dim) const
       
       const uword local_n_rows_m1 = local_n_rows - 1;
       
-      for(uword col=0; col < local_n_cols; ++col)
+      for(uword c=0; c < local_n_cols; ++c)
         {
-        const eT* coldata = colptr(col);
+        const eT* coldata = colptr(c);
         
-        for(uword row=0; row < local_n_rows_m1; ++row)
+        for(uword r=0; r < local_n_rows_m1; ++r)
           {
           const eT val1 = (*coldata); coldata++;
           const eT val2 = (*coldata);
@@ -5475,7 +5501,7 @@ Mat<eT>::is_sorted(const char* direction, const uword dim) const
         {
         const eT* rowdata = memptr();
         
-        for(uword col=0; col < local_n_cols_m1; ++col)
+        for(uword c=0; c < local_n_cols_m1; ++c)
           {
           const eT val1 = (*rowdata);  rowdata++;
           const eT val2 = (*rowdata);
@@ -5485,11 +5511,11 @@ Mat<eT>::is_sorted(const char* direction, const uword dim) const
         }
       else
         {
-        for(uword row=0; row < local_n_rows;    ++row)
-        for(uword col=0; col < local_n_cols_m1; ++col)
+        for(uword r=0; r < local_n_rows;    ++r)
+        for(uword c=0; c < local_n_cols_m1; ++c)
           {
-          const eT val1 = at(row,col  );
-          const eT val2 = at(row,col+1);
+          const eT val1 = at(r,c  );
+          const eT val2 = at(r,c+1);
           
           if(comparator(val1,val2))  { return false; }
           }
@@ -5510,11 +5536,11 @@ Mat<eT>::is_sorted(const char* direction, const uword dim) const
       
       const uword local_n_rows_m1 = local_n_rows - 1;
       
-      for(uword col=0; col < local_n_cols; ++col)
+      for(uword c=0; c < local_n_cols; ++c)
         {
-        const eT* coldata = colptr(col);
+        const eT* coldata = colptr(c);
         
-        for(uword row=0; row < local_n_rows_m1; ++row)
+        for(uword r=0; r < local_n_rows_m1; ++r)
           {
           const eT val1 = (*coldata); coldata++;
           const eT val2 = (*coldata);
@@ -5533,7 +5559,7 @@ Mat<eT>::is_sorted(const char* direction, const uword dim) const
         {
         const eT* rowdata = memptr();
         
-        for(uword col=0; col < local_n_cols_m1; ++col)
+        for(uword c=0; c < local_n_cols_m1; ++c)
           {
           const eT val1 = (*rowdata);  rowdata++;
           const eT val2 = (*rowdata);
@@ -5543,11 +5569,11 @@ Mat<eT>::is_sorted(const char* direction, const uword dim) const
         }
       else
         {
-        for(uword row=0; row < local_n_rows;    ++row)
-        for(uword col=0; col < local_n_cols_m1; ++col)
+        for(uword r=0; r < local_n_rows;    ++r)
+        for(uword c=0; c < local_n_cols_m1; ++c)
           {
-          const eT val1 = at(row,col  );
-          const eT val2 = at(row,col+1);
+          const eT val1 = at(r,c  );
+          const eT val2 = at(r,c+1);
           
           if(comparator(val1,val2))  { return false; }
           }
@@ -6336,7 +6362,12 @@ Mat<eT>::min() const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (n_elem == 0), "Mat::min(): object has no elements" );
+  if(n_elem == 0)
+    {
+    arma_debug_check(true, "Mat::min(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
   
   return op_min::direct_min(memptr(), n_elem);
   }
@@ -6351,7 +6382,12 @@ Mat<eT>::max() const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (n_elem == 0), "Mat::max(): object has no elements" );
+  if(n_elem == 0)
+    {
+    arma_debug_check(true, "Mat::max(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
   
   return op_max::direct_max(memptr(), n_elem);
   }
@@ -6365,7 +6401,12 @@ Mat<eT>::min(uword& index_of_min_val) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (n_elem == 0), "Mat::min(): object has no elements" );
+  if(n_elem == 0)
+    {
+    arma_debug_check(true, "Mat::min(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
   
   return op_min::direct_min(memptr(), n_elem, index_of_min_val);
   }
@@ -6379,7 +6420,12 @@ Mat<eT>::max(uword& index_of_max_val) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (n_elem == 0), "Mat::max(): object has no elements" );
+  if(n_elem == 0)
+    {
+    arma_debug_check(true, "Mat::max(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
   
   return op_max::direct_max(memptr(), n_elem, index_of_max_val);
   }
@@ -6393,7 +6439,12 @@ Mat<eT>::min(uword& row_of_min_val, uword& col_of_min_val) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (n_elem == 0), "Mat::min(): object has no elements" );
+  if(n_elem == 0)
+    {
+    arma_debug_check(true, "Mat::min(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
   
   uword iq;
   
@@ -6414,7 +6465,12 @@ Mat<eT>::max(uword& row_of_max_val, uword& col_of_max_val) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (n_elem == 0), "Mat::max(): object has no elements" );
+  if(n_elem == 0)
+    {
+    arma_debug_check(true, "Mat::max(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
   
   uword iq;
   

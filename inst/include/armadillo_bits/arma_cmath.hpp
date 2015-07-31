@@ -446,7 +446,7 @@ arma_acosh(const eT x)
       }
     else
       {
-      if(std::numeric_limits<eT>::has_quiet_NaN == true)
+      if(std::numeric_limits<eT>::has_quiet_NaN)
         {
         return -(std::numeric_limits<eT>::quiet_NaN());
         }
@@ -506,7 +506,7 @@ arma_atanh(const eT x)
       }
     else
       {
-      if(std::numeric_limits<eT>::has_quiet_NaN == true)
+      if(std::numeric_limits<eT>::has_quiet_NaN)
         {
         return -(std::numeric_limits<eT>::quiet_NaN());
         }

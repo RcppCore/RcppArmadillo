@@ -23,7 +23,7 @@ op_normalise_colvec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_norm
   
   const uword p = in.aux_uword_a;
   
-  arma_debug_check( (p == 0), "normalise(): p must be greater than zero" );
+  arma_debug_check( (p == 0), "normalise(): parameter 'p' must be greater than zero" );
   
   const quasi_unwrap<T1> tmp(in.m);
   
@@ -46,7 +46,7 @@ op_normalise_rowvec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_norm
   
   const uword p = in.aux_uword_a;
   
-  arma_debug_check( (p == 0), "normalise(): p must be greater than zero" );
+  arma_debug_check( (p == 0), "normalise(): parameter 'p' must be greater than zero" );
   
   const unwrap<T1> tmp(in.m);
   
@@ -70,8 +70,8 @@ op_normalise_mat::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_normali
   const uword p   = in.aux_uword_a;
   const uword dim = in.aux_uword_b;
   
-  arma_debug_check( (p   == 0), "normalise(): p must be greater than zero" );
-  arma_debug_check( (dim >  1), "normalise(): dim must be 0 or 1"          );
+  arma_debug_check( (p   == 0), "normalise(): parameter 'p' must be greater than zero" );
+  arma_debug_check( (dim >  1), "normalise(): parameter 'dim' must be 0 or 1"          );
   
   const unwrap<T1>   tmp(in.m);
   const Mat<eT>& A = tmp.M;

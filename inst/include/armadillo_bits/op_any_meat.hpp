@@ -230,7 +230,7 @@ op_any::apply_helper(Mat<uword>& out, const Proxy<T1>& P, const uword dim)
     
     uword* out_mem = out.memptr();
     
-    if(is_Mat<typename Proxy<T1>::stored_type>::value == true)
+    if(is_Mat<typename Proxy<T1>::stored_type>::value)
       {
       const unwrap<typename Proxy<T1>::stored_type> U(P.Q);
       
@@ -261,7 +261,7 @@ op_any::apply_helper(Mat<uword>& out, const Proxy<T1>& P, const uword dim)
     
     uword* out_mem = out.memptr();
     
-    if(is_Mat<typename Proxy<T1>::stored_type>::value == true)
+    if(is_Mat<typename Proxy<T1>::stored_type>::value)
       {
       const unwrap<typename Proxy<T1>::stored_type> U(P.Q);
       
