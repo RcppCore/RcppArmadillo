@@ -236,8 +236,6 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   /**
    * Element access; access the i'th element (works identically to the Mat accessors).
    * If there is nothing at element i, 0 is returned.
-   *
-   * @param i Element to access.
    */
   arma_inline arma_warn_unused SpValProxy<SpMat<eT> > operator[] (const uword i);
   arma_inline arma_warn_unused eT                     operator[] (const uword i) const;
@@ -279,11 +277,6 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   
   arma_inline arma_warn_unused bool in_range(const uword in_row, const uword in_col, const SizeMat& s) const;
   
-  /**
-   * Printing the matrix.
-   *
-   * @param extra_text Text to prepend to output.
-   */
   inline void impl_print(const std::string& extra_text) const;
   inline void impl_print(std::ostream& user_stream, const std::string& extra_text) const;
 
@@ -299,23 +292,13 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   //! Copy the size of another matrix.
   template<typename eT2> inline void copy_size(const SpMat<eT2>& m);
   template<typename eT2> inline void copy_size(const   Mat<eT2>& m);
-
-  /**
-   * Set the size of the matrix; the matrix will be sized as a column vector
-   *
-   * @param in_elem Number of elements to allow.
-   */
+  
   inline void set_size(const uword in_elem);
-
-  /**
-   * Set the size of the matrix
-   *
-   * @param in_rows Number of rows to allow.
-   * @param in_cols Number of columns to allow.
-   */
   inline void set_size(const uword in_rows, const uword in_cols);
   
-  inline void  reshape(const uword in_rows, const uword in_cols, const uword dim = 0);
+  inline void   resize(const uword in_rows, const uword in_cols);
+  inline void  reshape(const uword in_rows, const uword in_cols);
+  inline void  reshape(const uword in_rows, const uword in_cols, const uword dim);  // this form is deprecated: don't use it
   
   inline const SpMat& zeros();
   inline const SpMat& zeros(const uword in_elem);

@@ -1,5 +1,5 @@
-// Copyright (C) 2011 Conrad Sanderson
-// Copyright (C) 2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2011-2015 Conrad Sanderson
+// Copyright (C) 2011-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,6 +31,18 @@ resize(const BaseCube<typename T1::elem_type,T1>& X, const uword in_n_rows, cons
   arma_extra_debug_sigprint();
   
   return OpCube<T1, op_resize>(X.get_ref(), in_n_rows, in_n_cols, in_n_slices);
+  }
+
+
+
+template<typename T1>
+inline
+const SpOp<T1, spop_resize>
+resize(const SpBase<typename T1::elem_type, T1>& X, const uword in_n_rows, const uword in_n_cols)
+  {
+  arma_extra_debug_sigprint();
+  
+  return SpOp<T1, spop_resize>(X.get_ref(), in_n_rows, in_n_cols);
   }
 
 

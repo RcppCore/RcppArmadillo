@@ -1,5 +1,5 @@
 // Copyright (C) 2012 Ryan Curtin
-// Copyright (C) 2012 Conrad Sanderson
+// Copyright (C) 2012-2015 Conrad Sanderson
 //
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,7 +20,10 @@ class spop_mean
   inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_mean>& in);
 
   template<typename T1>
-  inline static void apply_noalias(SpMat<typename T1::elem_type>& out, const SpProxy<T1>& p, const uword dim);
+  inline static void apply_noalias_fast(SpMat<typename T1::elem_type>& out, const SpProxy<T1>& p, const uword dim);
+  
+  template<typename T1>
+  inline static void apply_noalias_slow(SpMat<typename T1::elem_type>& out, const SpProxy<T1>& p, const uword dim);
   
   // Take direct mean of a set of values.  Length of array and number of values can be different.
   template<typename eT>

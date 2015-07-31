@@ -26,7 +26,7 @@ spglue_times::apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglu
   const unwrap_spmat<T2> tmp2(X.B);
   
   const SpProxy<typename unwrap_spmat<T1>::stored_type> pa(tmp1.M);
-  const SpProxy<typename unwrap_spmat<T1>::stored_type> pb(tmp2.M);
+  const SpProxy<typename unwrap_spmat<T2>::stored_type> pb(tmp2.M);
   
   const bool is_alias = pa.is_alias(out) || pb.is_alias(out);
   
