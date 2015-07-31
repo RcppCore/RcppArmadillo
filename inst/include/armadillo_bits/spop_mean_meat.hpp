@@ -31,13 +31,23 @@ spop_mean::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_mean>& 
   
   if(p.is_alias(out) == false)
     {
-    spop_mean::apply_noalias(out, p, dim);
+    spop_mean::apply_noalias_fast(out, p, dim);
+    
+    if(out.is_finite() == false)
+      {
+      spop_mean::apply_noalias_slow(out, p, dim);
+      }
     }
   else
     {
     SpMat<eT> tmp;
     
-    spop_mean::apply_noalias(tmp, p, dim);
+    spop_mean::apply_noalias_fast(tmp, p, dim);
+    
+    if(tmp.is_finite() == false)
+      {
+      spop_mean::apply_noalias_slow(tmp, p, dim);
+      }
     
     out.steal_mem(tmp);
     }
@@ -48,7 +58,78 @@ spop_mean::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_mean>& 
 template<typename T1>
 inline
 void
-spop_mean::apply_noalias
+spop_mean::apply_noalias_fast
+  (
+        SpMat<typename T1::elem_type>& out,
+  const SpProxy<T1>&                   p,
+  const uword                          dim
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  typedef typename T1::pod_type   T;
+  
+  const uword p_n_rows = p.get_n_rows();
+  const uword p_n_cols = p.get_n_cols();
+  
+  if( (p_n_rows == 0) || (p_n_cols == 0) || (p.get_n_nonzero() == 0) )
+    {
+    if(dim == 0)  { out.zeros((p_n_rows > 0) ? 1 : 0, p_n_cols); }
+    if(dim == 1)  { out.zeros(p_n_rows, (p_n_cols > 0) ? 1 : 0); }
+    
+    return;
+    }
+  
+  if(dim == 0) // find the mean in each column
+    {
+    Row<eT> acc(p_n_cols, fill::zeros);
+    
+    if(SpProxy<T1>::must_use_iterator)
+      {
+      typename SpProxy<T1>::const_iterator_type it     = p.begin();
+      typename SpProxy<T1>::const_iterator_type it_end = p.end();
+      
+      while(it != it_end)  { acc[it.col()] += (*it);  ++it; }
+      
+      acc /= T(p_n_rows);
+      }
+    else
+      {
+      for(uword col = 0; col < p_n_cols; ++col)
+        {
+        acc[col] = arrayops::accumulate
+          (
+          &p.get_values()[p.get_col_ptrs()[col]],
+          p.get_col_ptrs()[col + 1] - p.get_col_ptrs()[col]
+          ) / T(p_n_rows);
+        }
+      }
+    
+    out = acc;
+    }
+  else
+  if(dim == 1)  // find the mean in each row
+    {
+    Col<eT> acc(p_n_rows, fill::zeros);
+    
+    typename SpProxy<T1>::const_iterator_type it     = p.begin();
+    typename SpProxy<T1>::const_iterator_type it_end = p.end();
+    
+    while(it != it_end)  { acc[it.row()] += (*it);  ++it; }
+    
+    acc /= T(p_n_cols);
+    
+    out = acc;
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+spop_mean::apply_noalias_slow
   (
         SpMat<typename T1::elem_type>& out,
   const SpProxy<T1>&                   p,

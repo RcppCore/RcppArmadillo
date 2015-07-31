@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2014 Conrad Sanderson
-// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,6 @@
 //! @{
 
 
-//! Class for finding minimum values in a matrix
 class op_min
   {
   public:
@@ -18,15 +17,21 @@ class op_min
   template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_min>& in);
   
+  template<typename eT>
+  inline static void apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim, const typename arma_not_cx<eT>::result* junk = 0);
+  
+  template<typename eT>
+  inline static void apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim, const typename arma_cx_only<eT>::result* junk = 0);
+  
   
   //
   // for non-complex numbers
   
   template<typename eT>
-  inline static eT direct_min(const eT* X, const uword N);
+  inline static eT direct_min(const eT* const X, const uword N);
   
   template<typename eT>
-  inline static eT direct_min(const eT* X, const uword N, uword& index_of_min_val);
+  inline static eT direct_min(const eT* const X, const uword N, uword& index_of_min_val);
   
   template<typename eT>
   inline static eT direct_min(const Mat<eT>& X, const uword row);
@@ -45,10 +50,10 @@ class op_min
   // for complex numbers
   
   template<typename T>
-  inline static std::complex<T> direct_min(const std::complex<T>* X, const uword n_elem);
+  inline static std::complex<T> direct_min(const std::complex<T>* const X, const uword n_elem);
   
   template<typename T>
-  inline static std::complex<T> direct_min(const std::complex<T>* X, const uword n_elem, uword& index_of_min_val);
+  inline static std::complex<T> direct_min(const std::complex<T>* const X, const uword n_elem, uword& index_of_min_val);
   
   template<typename T>
   inline static std::complex<T> direct_min(const Mat< std::complex<T> >& X, const uword row);

@@ -11,10 +11,6 @@
 
 
 
-//! \brief
-//! For each row or for each column, find the minimum value.
-//! The result is stored in a dense matrix that has either one column or one row.
-//! The dimension, for which the minima are found, is set via the min() function.
 template<typename T1>
 inline
 void
@@ -24,45 +20,76 @@ op_min::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_min>& in)
   
   typedef typename T1::elem_type eT;
   
-  const unwrap_check<T1> tmp(in.m, out);
-  const Mat<eT>&     X = tmp.M;
-  
   const uword dim = in.aux_uword_a;
   arma_debug_check( (dim > 1), "min(): parameter 'dim' must be 0 or 1");
+  
+  const unwrap<T1>   U(in.m);
+  const Mat<eT>& X = U.M;
+  
+  if(&out != &X)
+    {
+    op_min::apply_noalias(out, X, dim);
+    }
+  else
+    {
+    Mat<eT> tmp;
+    
+    op_min::apply_noalias(tmp, X, dim);
+    
+    out.steal_mem(tmp);
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
+op_min::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim, const typename arma_not_cx<eT>::result* junk)
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
   
   const uword X_n_rows = X.n_rows;
   const uword X_n_cols = X.n_cols;
   
-  if(dim == 0)  // min in each column
+  if(dim == 0)
     {
     arma_extra_debug_print("op_min::apply(): dim = 0");
     
     out.set_size((X_n_rows > 0) ? 1 : 0, X_n_cols);
     
-    if(X_n_rows > 0)
+    if(X_n_rows == 0)  { return; }
+    
+    eT* out_mem = out.memptr();
+    
+    for(uword col=0; col<X_n_cols; ++col)
       {
-      eT* out_mem = out.memptr();
-      
-      for(uword col=0; col<X_n_cols; ++col)
-        {
-        out_mem[col] = op_min::direct_min( X.colptr(col), X_n_rows );
-        }
+      out_mem[col] = op_min::direct_min( X.colptr(col), X_n_rows );
       }
     }
   else
-  if(dim == 1)  // min in each row
+  if(dim == 1)
     {
     arma_extra_debug_print("op_min::apply(): dim = 1");
     
     out.set_size(X_n_rows, (X_n_cols > 0) ? 1 : 0);
     
-    if(X_n_cols > 0)
+    if(X_n_cols == 0)  { return; }
+    
+    eT* out_mem = out.memptr();
+    
+    arrayops::copy(out_mem, X.colptr(0), X_n_rows);
+    
+    for(uword col=1; col<X_n_cols; ++col)
       {
-      eT* out_mem = out.memptr();
+      const eT* col_mem = X.colptr(col);
       
       for(uword row=0; row<X_n_rows; ++row)
         {
-        out_mem[row] = op_min::direct_min( X, row );
+        const eT col_val = col_mem[row];
+        
+        if(col_val < out_mem[row])  { out_mem[row] = col_val; }
         }
       }
     }
@@ -71,30 +98,76 @@ op_min::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_min>& in)
 
 
 template<typename eT>
+inline
+void
+op_min::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim, const typename arma_cx_only<eT>::result* junk)
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  const uword X_n_rows = X.n_rows;
+  const uword X_n_cols = X.n_cols;
+  
+  if(dim == 0)
+    {
+    arma_extra_debug_print("op_min::apply(): dim = 0");
+    
+    out.set_size((X_n_rows > 0) ? 1 : 0, X_n_cols);
+    
+    if(X_n_rows == 0)  { return; }
+    
+    eT* out_mem = out.memptr();
+    
+    for(uword col=0; col<X_n_cols; ++col)
+      {
+      out_mem[col] = op_min::direct_min( X.colptr(col), X_n_rows );
+      }
+    }
+  else
+  if(dim == 1)
+    {
+    arma_extra_debug_print("op_min::apply(): dim = 1");
+    
+    out.set_size(X_n_rows, (X_n_cols > 0) ? 1 : 0);
+    
+    if(X_n_cols == 0)  { return; }
+    
+    eT* out_mem = out.memptr();
+    
+    for(uword row=0; row<X_n_rows; ++row)
+      {
+      out_mem[row] = op_min::direct_min( X, row );
+      }
+    }
+  }
+
+
+
+template<typename eT>
+arma_pure
 inline 
 eT
-op_min::direct_min(const eT* X, const uword n_elem)
+op_min::direct_min(const eT* const X, const uword n_elem)
   {
   arma_extra_debug_sigprint();
   
   eT min_val = priv::most_pos<eT>();
   
-  uword j;
-  
-  for(j=1; j<n_elem; j+=2)
+  uword i,j;
+  for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    const eT X_i = (*X);  X++;
-    const eT X_j = (*X);  X++;
+    const eT X_i = X[i];
+    const eT X_j = X[j];
     
-    if(X_i < min_val)  { min_val = X_i; }
-    if(X_j < min_val)  { min_val = X_j; }
+    if(X_i < min_val) { min_val = X_i; }
+    if(X_j < min_val) { min_val = X_j; }
     }
   
-  if((j-1) < n_elem)
+  if(i < n_elem)
     {
-    const eT X_i = (*X);
+    const eT X_i = X[i];
     
-    if(X_i < min_val)  { min_val = X_i; }
+    if(X_i < min_val) { min_val = X_i; }
     }
   
   return min_val;
@@ -105,7 +178,7 @@ op_min::direct_min(const eT* X, const uword n_elem)
 template<typename eT>
 inline 
 eT
-op_min::direct_min(const eT* X, const uword n_elem, uword& index_of_min_val)
+op_min::direct_min(const eT* const X, const uword n_elem, uword& index_of_min_val)
   {
   arma_extra_debug_sigprint();
   
@@ -113,24 +186,34 @@ op_min::direct_min(const eT* X, const uword n_elem, uword& index_of_min_val)
   
   uword best_index = 0;
   
-  uword i=0;
-  
-  for(uword j=1; j<n_elem; j+=2)
+  uword i,j;
+  for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    const eT X_i = (*X);  X++;
-    const eT X_j = (*X);  X++;
+    const eT X_i = X[i];
+    const eT X_j = X[j];
     
-    i = (j-1);
+    if(X_i < min_val)
+      {
+      min_val    = X_i;
+      best_index = i;
+      }
     
-    if(X_i < min_val)  { min_val = X_i; best_index = i; }
-    if(X_j < min_val)  { min_val = X_j; best_index = j; }
+    if(X_j < min_val)
+      {
+      min_val    = X_j;
+      best_index = j;
+      }
     }
   
   if(i < n_elem)
     {
-    const eT X_i = (*X);
+    const eT X_i = X[i];
     
-    if(X_i < min_val)  { min_val = X_i; best_index = i; }
+    if(X_i < min_val)
+      {
+      min_val    = X_i;
+      best_index = i;
+      }
     }
   
   index_of_min_val = best_index;
@@ -414,7 +497,7 @@ op_min::min_with_index(const Proxy<T1>& P, uword& index_of_min_val)
 template<typename T>
 inline 
 std::complex<T>
-op_min::direct_min(const std::complex<T>* X, const uword n_elem)
+op_min::direct_min(const std::complex<T>* const X, const uword n_elem)
   {
   arma_extra_debug_sigprint();
   
@@ -440,7 +523,7 @@ op_min::direct_min(const std::complex<T>* X, const uword n_elem)
 template<typename T>
 inline 
 std::complex<T>
-op_min::direct_min(const std::complex<T>* X, const uword n_elem, uword& index_of_min_val)
+op_min::direct_min(const std::complex<T>* const X, const uword n_elem, uword& index_of_min_val)
   {
   arma_extra_debug_sigprint();
   

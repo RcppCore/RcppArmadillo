@@ -14,7 +14,7 @@
 template<typename eT>
 inline
 void
-interp1_helper_nearest(const Mat<eT>& XG, const Mat<eT>& YG, const Mat<eT>& XI, Mat<eT>& YI)
+interp1_helper_nearest(const Mat<eT>& XG, const Mat<eT>& YG, const Mat<eT>& XI, Mat<eT>& YI, const eT extrap_val)
   {
   arma_extra_debug_sigprint();
   
@@ -39,29 +39,34 @@ interp1_helper_nearest(const Mat<eT>& XG, const Mat<eT>& YG, const Mat<eT>& XI, 
     
     const eT XI_val = XI_mem[i];
     
-    arma_debug_check( ((XI_val < XG_min) || (XI_val > XG_max)), "interp1(): extrapolation not supported" );
-    
-    // XG and XI are guaranteed to be sorted in ascending manner,
-    // so start searching XG from last known optimum position 
-    
-    for(uword j=best_j; j<NG; ++j)
+    if((XI_val < XG_min) || (XI_val > XG_max))
       {
-      const eT tmp = XG_mem[j] - XI_val;
-      const eT err = (tmp >= eT(0)) ? tmp : -tmp;
-      
-      if(err >= best_err)
-        {
-        // error is going up, so we have found the optimum position
-        break;
-        }
-      else
-        {
-        best_err = err;
-        best_j   = j;   // remember the optimum position
-        }
+      YI_mem[i] = extrap_val;
       }
-    
-    YI_mem[i] = YG_mem[best_j];
+    else
+      {
+      // XG and XI are guaranteed to be sorted in ascending manner,
+      // so start searching XG from last known optimum position 
+      
+      for(uword j=best_j; j<NG; ++j)
+        {
+        const eT tmp = XG_mem[j] - XI_val;
+        const eT err = (tmp >= eT(0)) ? tmp : -tmp;
+        
+        if(err >= best_err)
+          {
+          // error is going up, so we have found the optimum position
+          break;
+          }
+        else
+          {
+          best_err = err;
+          best_j   = j;   // remember the optimum position
+          }
+        }
+      
+      YI_mem[i] = YG_mem[best_j];
+      }
     }
   }
 
@@ -70,7 +75,7 @@ interp1_helper_nearest(const Mat<eT>& XG, const Mat<eT>& YG, const Mat<eT>& XI, 
 template<typename eT>
 inline
 void
-interp1_helper_linear(const Mat<eT>& XG, const Mat<eT>& YG, const Mat<eT>& XI, Mat<eT>& YI)
+interp1_helper_linear(const Mat<eT>& XG, const Mat<eT>& YG, const Mat<eT>& XI, Mat<eT>& YI, const eT extrap_val)
   {
   arma_extra_debug_sigprint();
   
@@ -94,54 +99,59 @@ interp1_helper_linear(const Mat<eT>& XG, const Mat<eT>& YG, const Mat<eT>& XI, M
     {
     const eT XI_val = XI_mem[i];
     
-    arma_debug_check( ((XI_val < XG_min) || (XI_val > XG_max)), "interp1(): extrapolation not supported" );
-    
-    // XG and XI are guaranteed to be sorted in ascending manner,
-    // so start searching XG from last known optimum position 
-    
-    eT a_best_err = Datum<eT>::inf;
-    eT b_best_err = Datum<eT>::inf;
-    
-    for(uword j=a_best_j; j<NG; ++j)
+    if((XI_val < XG_min) || (XI_val > XG_max))
       {
-      const eT tmp = XG_mem[j] - XI_val;
-      const eT err = (tmp >= eT(0)) ? tmp : -tmp;
-      
-      if(err >= a_best_err)
-        {
-        break;
-        }
-      else
-        {
-        a_best_err = err;
-        a_best_j   = j;
-        }
-      }
-    
-    if( (XG_mem[a_best_j] - XI_val) <= eT(0) )
-      {
-      // a_best_j is to the left of the interpolated position
-      
-      b_best_j = ( (a_best_j+1) < NG) ? (a_best_j+1) : a_best_j; 
+      YI_mem[i] = extrap_val;
       }
     else
       {
-      // a_best_j is to the right of the interpolated position
+      // XG and XI are guaranteed to be sorted in ascending manner,
+      // so start searching XG from last known optimum position 
       
-      b_best_j = (a_best_j >= 1) ? (a_best_j-1) : a_best_j; 
+      eT a_best_err = Datum<eT>::inf;
+      eT b_best_err = Datum<eT>::inf;
+      
+      for(uword j=a_best_j; j<NG; ++j)
+        {
+        const eT tmp = XG_mem[j] - XI_val;
+        const eT err = (tmp >= eT(0)) ? tmp : -tmp;
+        
+        if(err >= a_best_err)
+          {
+          break;
+          }
+        else
+          {
+          a_best_err = err;
+          a_best_j   = j;
+          }
+        }
+      
+      if( (XG_mem[a_best_j] - XI_val) <= eT(0) )
+        {
+        // a_best_j is to the left of the interpolated position
+        
+        b_best_j = ( (a_best_j+1) < NG) ? (a_best_j+1) : a_best_j; 
+        }
+      else
+        {
+        // a_best_j is to the right of the interpolated position
+        
+        b_best_j = (a_best_j >= 1) ? (a_best_j-1) : a_best_j; 
+        }
+      
+      b_best_err = std::abs( XG_mem[b_best_j] - XI_val );
+      
+      if(a_best_j > b_best_j)
+        {
+        std::swap(a_best_j,   b_best_j  );
+        std::swap(a_best_err, b_best_err);
+        }
+      
+      const eT weight = (a_best_err > eT(0)) ? (a_best_err / (a_best_err + b_best_err)) : eT(0);
+      
+      YI_mem[i] = (eT(1) - weight)*YG_mem[a_best_j] + (weight)*YG_mem[b_best_j];
       }
-    
-    b_best_err = std::abs( XG_mem[b_best_j] - XI_val );
-    
-    if(a_best_j > b_best_j)
-      {
-      std::swap(a_best_j,   b_best_j  );
-      std::swap(a_best_err, b_best_err);
-      }
-    
-    const eT weight = (a_best_err > eT(0)) ? (a_best_err / (a_best_err + b_best_err)) : eT(0);
-    
-    YI_mem[i] = (eT(1) - weight)*YG_mem[a_best_j] + (weight)*YG_mem[b_best_j];
     }
   }
 
@@ -150,7 +160,7 @@ interp1_helper_linear(const Mat<eT>& XG, const Mat<eT>& YG, const Mat<eT>& XI, M
 template<typename eT>
 inline
 void
-interp1_helper(const Mat<eT>& X, const Mat<eT>& Y, const Mat<eT>& XI, Mat<eT>& YI, const uword sig)
+interp1_helper(const Mat<eT>& X, const Mat<eT>& Y, const Mat<eT>& XI, Mat<eT>& YI, const uword sig, const eT extrap_val)
   {
   arma_extra_debug_sigprint();
   
@@ -166,8 +176,8 @@ interp1_helper(const Mat<eT>& X, const Mat<eT>& Y, const Mat<eT>& XI, Mat<eT>& Y
   // sig = 20: linear
   // sig = 21: linear, assume monotonic increase in X and XI
   
-  if(sig == 11)  { interp1_helper_nearest(X, Y, XI, YI); return; }
-  if(sig == 21)  { interp1_helper_linear (X, Y, XI, YI); return; }
+  if(sig == 11)  { interp1_helper_nearest(X, Y, XI, YI, extrap_val); return; }
+  if(sig == 21)  { interp1_helper_linear (X, Y, XI, YI, extrap_val); return; }
   
   
   Mat<eT> X_tmp;
@@ -231,8 +241,8 @@ interp1_helper(const Mat<eT>& X, const Mat<eT>& Y, const Mat<eT>& XI, Mat<eT>& Y
   const Mat<eT>& XI_sorted = (XI_is_sorted) ? XI : XI_tmp;
   
   
-       if(sig == 10)  { interp1_helper_nearest(X_sorted, Y_sorted, XI_sorted, YI); }
-  else if(sig == 20)  { interp1_helper_linear (X_sorted, Y_sorted, XI_sorted, YI); }
+       if(sig == 10)  { interp1_helper_nearest(X_sorted, Y_sorted, XI_sorted, YI, extrap_val); }
+  else if(sig == 20)  { interp1_helper_linear (X_sorted, Y_sorted, XI_sorted, YI, extrap_val); }
   
   
   if( (XI_is_sorted == false) && (YI.n_elem > 0) )
@@ -268,11 +278,12 @@ enable_if2
   >::result
 interp1
   (
-  const Base<typename T1::elem_type, T1>&  X,
-  const Base<typename T1::elem_type, T2>&  Y,
+  const Base<typename T1::elem_type, T1>& X,
+  const Base<typename T1::elem_type, T2>& Y,
   const Base<typename T1::elem_type, T3>& XI,
          Mat<typename T1::elem_type>&     YI,
-  const char* method = "linear"
+  const char*                             method     = "linear",
+  const typename T1::elem_type            extrap_val = Datum<typename T1::elem_type>::nan
   )
   {
   arma_extra_debug_sigprint();
@@ -307,13 +318,13 @@ interp1
     {
     Mat<eT> tmp;
     
-    interp1_helper(X_tmp.M, Y_tmp.M, XI_tmp.M, tmp, sig);
+    interp1_helper(X_tmp.M, Y_tmp.M, XI_tmp.M, tmp, sig, extrap_val);
     
     YI.steal_mem(tmp);
     }
   else
     {
-    interp1_helper(X_tmp.M, Y_tmp.M, XI_tmp.M, YI, sig);
+    interp1_helper(X_tmp.M, Y_tmp.M, XI_tmp.M, YI, sig, extrap_val);
     }
   }
 

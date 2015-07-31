@@ -2492,8 +2492,6 @@ SpMat<eT>::shed_cols(const uword in_col1, const uword in_col2)
 /**
  * Element access; acces the i'th element (works identically to the Mat accessors).
  * If there is nothing at element i, 0 is returned.
- *
- * @param i Element to access.
  */
 
 template<typename eT>
@@ -3051,18 +3049,13 @@ SpMat<eT>::copy_size(const Mat<eT2>& m)
 
 
 
-/**
- * Set the size of the matrix; the matrix will be sized as a column vector
- *
- * @param in_elem Number of elements to allow.
- */
 template<typename eT>
 inline
 void
 SpMat<eT>::set_size(const uword in_elem)
   {
   arma_extra_debug_sigprint();
-
+  
   // If this is a row vector, we resize to a row vector.
   if(vec_state == 2)
     {
@@ -3076,19 +3069,13 @@ SpMat<eT>::set_size(const uword in_elem)
 
 
 
-/**
- * Set the size of the matrix
- *
- * @param in_rows Number of rows to allow.
- * @param in_cols Number of columns to allow.
- */
 template<typename eT>
 inline
 void
 SpMat<eT>::set_size(const uword in_rows, const uword in_cols)
   {
   arma_extra_debug_sigprint();
-
+  
   init(in_rows, in_cols);
   }
 
@@ -3097,60 +3084,115 @@ SpMat<eT>::set_size(const uword in_rows, const uword in_cols)
 template<typename eT>
 inline
 void
+SpMat<eT>::resize(const uword in_rows, const uword in_cols)
+  {
+  arma_extra_debug_sigprint();
+  
+  if( (n_rows == in_rows) || (n_cols == in_cols) )
+    {
+    return;
+    }
+  
+  if( (n_elem == 0) || (n_nonzero == 0) )
+    {
+    set_size(in_rows, in_cols);
+    return;
+    }
+  
+  SpMat<eT> tmp(in_rows, in_cols);
+  
+  if(tmp.n_elem > 0)
+    {
+    const uword end_row = (std::min)(in_rows, n_rows) - 1;
+    const uword end_col = (std::min)(in_cols, n_cols) - 1;
+    
+    tmp.submat(0, 0, end_row, end_col) = (*this).submat(0, 0, end_row, end_col);
+    }
+  
+  steal_mem(tmp);
+  }
+
+
+
+template<typename eT>
+inline
+void
+SpMat<eT>::reshape(const uword in_rows, const uword in_cols)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_check( ((in_rows*in_cols) != n_elem), "SpMat::reshape(): changing the number of elements in a sparse matrix is currently not supported" );
+  
+  if( (n_rows == in_rows) && (n_cols == in_cols) )  { return; }
+  
+  // We have to modify all of the relevant row indices and the relevant column pointers.
+  // Iterate over all the points to do this.  We won't be deleting any points, but we will be modifying
+  // columns and rows. We'll have to store a new set of column vectors.
+  uword* new_col_ptrs    = memory::acquire<uword>(in_cols + 2);
+  new_col_ptrs[in_cols + 1] = std::numeric_limits<uword>::max();
+  
+  uword* new_row_indices = memory::acquire_chunked<uword>(n_nonzero + 1);
+  access::rw(new_row_indices[n_nonzero]) = 0;
+  
+  arrayops::inplace_set(new_col_ptrs, uword(0), in_cols + 1);
+  
+  for(const_iterator it = begin(); it != end(); it++)
+    {
+    uword vector_position = (it.col() * n_rows) + it.row();
+    new_row_indices[it.pos()] = vector_position % in_rows;
+    ++new_col_ptrs[vector_position / in_rows + 1];
+    }
+  
+  // Now sum the column counts to get the new column pointers.
+  for(uword i = 1; i <= in_cols; i++)
+    {
+    access::rw(new_col_ptrs[i]) += new_col_ptrs[i - 1];
+    }
+  
+  // Copy the new row indices.
+  memory::release(row_indices);
+  access::rw(row_indices) = new_row_indices;
+  
+  memory::release(col_ptrs);
+  access::rw(col_ptrs) = new_col_ptrs;
+  
+  // Now set the size.
+  access::rw(n_rows) = in_rows;
+  access::rw(n_cols) = in_cols;
+  }
+
+
+
+// this form is deprecated: don't use it
+template<typename eT>
+inline
+void
 SpMat<eT>::reshape(const uword in_rows, const uword in_cols, const uword dim)
   {
   arma_extra_debug_sigprint();
-
-  if (dim == 0)
+  
+  arma_debug_check( (dim > 1), "SpMat::reshape(): paramter 'dim' must be 0 or 1" );
+  
+  if(dim == 0)
     {
-    // We have to modify all of the relevant row indices and the relevant column pointers.
-    // Iterate over all the points to do this.  We won't be deleting any points, but we will be modifying
-    // columns and rows. We'll have to store a new set of column vectors.
-    uword* new_col_ptrs    = memory::acquire<uword>(in_cols + 2);
-    new_col_ptrs[in_cols + 1] = std::numeric_limits<uword>::max();
-    
-    uword* new_row_indices = memory::acquire_chunked<uword>(n_nonzero + 1);
-    access::rw(new_row_indices[n_nonzero]) = 0;
-
-    arrayops::inplace_set(new_col_ptrs, uword(0), in_cols + 1);
-
-    for(const_iterator it = begin(); it != end(); it++)
-      {
-      uword vector_position = (it.col() * n_rows) + it.row();
-      new_row_indices[it.pos()] = vector_position % in_rows;
-      ++new_col_ptrs[vector_position / in_rows + 1];
-      }
-
-    // Now sum the column counts to get the new column pointers.
-    for(uword i = 1; i <= in_cols; i++)
-      {
-      access::rw(new_col_ptrs[i]) += new_col_ptrs[i - 1];
-      }
-
-    // Copy the new row indices.
-    memory::release(row_indices);
-    access::rw(row_indices) = new_row_indices;
-
-    memory::release(col_ptrs);
-    access::rw(col_ptrs) = new_col_ptrs;
-
-    // Now set the size.
-    access::rw(n_rows) = in_rows;
-    access::rw(n_cols) = in_cols;
+    (*this).reshape(in_rows, in_cols);
     }
   else
+  if(dim == 1)
     {
+    arma_check( ((in_rows*in_cols) != n_elem), "SpMat::reshape(): changing the number of elements in a sparse matrix is currently not supported" );
+    
     // Row-wise reshaping.  This is more tedious and we will use a separate sparse matrix to do it.
     SpMat<eT> tmp(in_rows, in_cols);
-
+    
     for(const_row_iterator it = begin_row(); it.pos() < n_nonzero; it++)
       {
       uword vector_position = (it.row() * n_cols) + it.col();
-
+      
       tmp((vector_position / in_cols), (vector_position % in_cols)) = (*it);
       }
-
-    (*this).operator=(tmp);
+    
+    steal_mem(tmp);
     }
   }
 

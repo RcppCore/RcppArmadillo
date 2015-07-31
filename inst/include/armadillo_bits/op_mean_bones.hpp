@@ -18,7 +18,15 @@ class op_mean
   template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_mean>& in);
   
-
+  template<typename T1>
+  inline static void apply_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const uword dim);
+  
+  template<typename T1>
+  inline static void apply_noalias_unwrap(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const uword dim);
+  
+  template<typename T1>
+  inline static void apply_noalias_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const uword dim);
+  
   //
   
   template<typename eT>

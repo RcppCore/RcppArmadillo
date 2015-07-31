@@ -26,77 +26,53 @@ spop_sum::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_sum>& in)
   
   const SpProxy<T1> p(in.m);
   
-  if(p.is_alias(out) == false)
-    {
-    spop_sum::apply_noalias(out, p, dim);
-    }
-  else
-    {
-    SpMat<eT> tmp;
-    
-    spop_sum::apply_noalias(tmp, p, dim);
-    
-    out.steal_mem(tmp);
-    }
-  }
-
-
-
-template<typename T1>
-arma_hot
-inline
-void
-spop_sum::apply_noalias(SpMat<typename T1::elem_type>& out, const SpProxy<T1>& p, const uword dim)
-  {
-  arma_extra_debug_sigprint();
-  
   const uword p_n_rows = p.get_n_rows();
   const uword p_n_cols = p.get_n_cols();
   
+  if(p.get_n_nonzero() == 0)
+    {
+    if(dim == 0)  { out.zeros(1,p_n_cols); }
+    if(dim == 1)  { out.zeros(p_n_rows,1); }
+    
+    return;
+    }
+  
   if(dim == 0) // find the sum in each column
     {
-    out.zeros(1, p_n_cols);
-    
-    if(p.get_n_nonzero() == 0)  { return; }
+    Row<eT> acc(p_n_cols, fill::zeros);
     
     if(SpProxy<T1>::must_use_iterator)
       {
       typename SpProxy<T1>::const_iterator_type it     = p.begin();
       typename SpProxy<T1>::const_iterator_type it_end = p.end();
       
-      while(it != it_end)
-        {
-        out.at(0, it.col()) += (*it);
-        ++it;
-        }
+      while(it != it_end)  { acc[it.col()] += (*it);  ++it; }
       }
     else
       {
       for(uword col = 0; col < p_n_cols; ++col)
         {
-        out.at(0,col) = arrayops::accumulate
+        acc[col] = arrayops::accumulate
           (
           &p.get_values()[p.get_col_ptrs()[col]],
           p.get_col_ptrs()[col + 1] - p.get_col_ptrs()[col]
           );
         }
       }
+    
+    out = acc;
     }
   else
   if(dim == 1)  // find the sum in each row
     {
-    out.zeros(p_n_rows, 1);
-    
-    if(p.get_n_nonzero() == 0)  { return; }
+    Col<eT> acc(p_n_rows, fill::zeros);
     
     typename SpProxy<T1>::const_iterator_type it     = p.begin();
     typename SpProxy<T1>::const_iterator_type it_end = p.end();
     
-    while(it != it_end)
-      {
-      out.at(it.row(), 0) += (*it);
-      ++it;
-      }
+    while(it != it_end)  { acc[it.row()] += (*it);  ++it; }
+    
+    out = acc;
     }
   }
 
