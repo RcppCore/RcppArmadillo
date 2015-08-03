@@ -16,7 +16,7 @@
       \item faster row-wise \code{sum()}, \code{mean()}, \code{min()}, \code{max()}
       \item updated physical constants to NIST 2014 CODATA values
       \item fixes for handling sparse submatrix views
-      \code Armadillo can make use of GPUs by linking with NVIDIA NVBLAS
+      \item Armadillo can make use of GPUs by linking with NVIDIA NVBLAS
       (a GPU-accelerated implementation of BLAS), or by linking with AMD
       ACML (which can use GPUs via OpenCL)
     }
