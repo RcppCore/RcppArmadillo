@@ -18,7 +18,7 @@ Description: 'Armadillo' is a templated C++ linear algebra library (by Conrad
 License: GPL (>= 2)
 LazyLoad: yes
 LinkingTo: Rcpp
-Imports: Rcpp (>= 0.11.0)
+Imports: Rcpp (>= 0.11.0), stats, utils
 Suggests: RUnit, Matrix, pkgKitten
 URL: https://github.com/RcppCore/RcppArmadillo, http://arma.sourceforge.net/, http://dirk.eddelbuettel.com/code/rcpp.armadillo.html
 BugReports: https://github.com/RcppCore/RcppArmadillo/issues

@@ -7,6 +7,9 @@
 
         * debian/*: Changes for Debian release of 0.5.300.4.0
 
+	* NAMESPACE: Additional importFrom() statements for R CMD check
+	* DESCRIPTION: Also import utils and stats for R CMD check
+
 2015-07-31  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: (Test) Release 0.5.300.3.0

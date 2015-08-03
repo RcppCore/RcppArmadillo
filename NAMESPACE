@@ -1,6 +1,8 @@
 useDynLib(RcppArmadillo)
 
 import(Rcpp)
+importFrom(stats, "coef", "fitted", "model.frame", "model.matrix", "model.response", "printCoefmat", "pt")
+importFrom(utils, "packageDescription")
 
 export(fastLmPure, fastLm, RcppArmadillo.package.skeleton)
 S3method(fastLm, default)
