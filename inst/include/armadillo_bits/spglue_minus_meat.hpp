@@ -53,7 +53,7 @@ spglue_minus::apply_noalias(SpMat<eT>& result, const SpProxy<T1>& pa, const SpPr
   
   if( (pa.get_n_nonzero() != 0) && (pb.get_n_nonzero() != 0) )
     {
-    result.set_size(pa.get_n_rows(), pa.get_n_cols());
+    result.zeros(pa.get_n_rows(), pa.get_n_cols());
     
     // Resize memory to correct size.
     result.mem_resize(n_unique(pa, pb, op_n_unique_sub()));

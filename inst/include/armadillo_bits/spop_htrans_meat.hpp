@@ -43,7 +43,7 @@ spop_htrans::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_htrans
   
   if(N == uword(0))
     {
-    out.set_size(p.get_n_cols(), p.get_n_rows());
+    out.zeros(p.get_n_cols(), p.get_n_rows());
     return;
     }
   

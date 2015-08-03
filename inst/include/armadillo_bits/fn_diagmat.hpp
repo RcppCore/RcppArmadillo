@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 Conrad Sanderson
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,9 +28,15 @@ diagmat(const T1& X)
 
 
 
-// TODO:
-// create "op_diagmat2", to allow placement of vector onto a sub- or super- diagonal.
-// op_diagmat2 is required, as other code assumes that op_diagmat indicates only the main diagonal)
+template<typename T1>
+inline
+const SpOp<T1, spop_diagmat>
+diagmat(const SpBase<typename T1::elem_type,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  return SpOp<T1, spop_diagmat>(X.get_ref());
+  }
 
 
 

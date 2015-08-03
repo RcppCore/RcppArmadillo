@@ -119,4 +119,17 @@ class spop_resize
 
 
 
+class spop_diagmat
+  {
+  public:
+  
+  template<typename T1>
+  inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_diagmat>& in);
+  
+  template<typename T1>
+  inline static void apply_noalias(SpMat<typename T1::elem_type>& out, const SpProxy<T1>& p);
+  };
+
+
+
 //! @}

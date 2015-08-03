@@ -20,7 +20,7 @@ spglue_times::apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglu
   
   typedef typename T1::elem_type eT;
   
-  // unconditionally unwrapping, as the column iterator in SpSubview is slow and buggy
+  // unconditionally unwrapping, as the column iterator in SpSubview is slow
   
   const unwrap_spmat<T1> tmp1(X.A);
   const unwrap_spmat<T2> tmp2(X.B);

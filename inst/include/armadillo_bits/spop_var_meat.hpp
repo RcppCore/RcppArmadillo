@@ -27,11 +27,7 @@ spop_var::apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1::pod
   arma_debug_check( (norm_type > 1), "var(): parameter 'norm_type' must be 0 or 1" );
   arma_debug_check( (dim > 1),       "var(): parameter 'dim' must be 0 or 1"       );
   
-  // unconditionally unwrapping, as the column iterator in SpSubview is slow and buggy
-  
-  const unwrap_spmat<T1> tmp1(in.m);
-  
-  const SpProxy<typename unwrap_spmat<T1>::stored_type> p(tmp1.M);
+  const SpProxy<T1> p(in.m);
   
   if(p.is_alias(out) == false)
     {
@@ -67,6 +63,8 @@ spop_var::apply_noalias
   
   const uword p_n_rows = p.get_n_rows();
   const uword p_n_cols = p.get_n_cols();
+  
+  // TODO: this is slow; rewrite based on the approach used by sparse mean()
   
   if(dim == 0)  // find variance in each column
     {
