@@ -2,10 +2,24 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
-\section{Changes in RcppArmadillo version 0.5.299.0 (2015-07-08)}{
+\section{Changes in RcppArmadillo version 0.5.300.4 (2015-08-03)}{
   \itemize{
-    \item Upgraded to preview of upcoming Armadillo 5.300 release 
-    \item Non-CRAN test release
+    \item Upgraded to Armadillo 5.300.4 ("Plutocrazy Incorporated") 
+    \itemize{
+      \item added generalised Schur decomposition: \code{qz()}
+      \item added \code{.has_inf()} and \code{.has_nan()}
+      \item expanded \code{interp1()} to handle out-of-domain locations
+      \item expanded sparse matrix class with \code{.set_imag()} and \code{.set_real()}
+      \item expanded \code{imag()}, \code{real()} and \code{conj()} to handle sparse matrices
+      \item expanded \code{diagmat()}, \code{reshape()} and \code{resize()} to handle sparse matrices
+      \item faster sparse \code{sum()}
+      \item faster row-wise \code{sum()}, \code{mean()}, \code{min()}, \code{max()}
+      \item updated physical constants to NIST 2014 CODATA values
+      \item fixes for handling sparse submatrix views
+      \code Armadillo can make use of GPUs by linking with NVIDIA NVBLAS
+      (a GPU-accelerated implementation of BLAS), or by linking with AMD
+      ACML (which can use GPUs via OpenCL)
+    }
   }
 }
 

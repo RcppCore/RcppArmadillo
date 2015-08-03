@@ -133,6 +133,12 @@ SpSubview<eT>::const_iterator::const_iterator(const SpSubview<eT>& in_M, const u
   uword skip_pos = iterator_base::M.m.col_ptrs[aux_col];
   uword cur_col = 0;
 
+  // Skip any empty columns.
+  while(((skip_pos + cur_pos) >= iterator_base::M.m.col_ptrs[cur_col + aux_col + 1]) && (cur_col < ln_cols))
+    {
+    ++cur_col;
+    }
+
   while(cur_col < in_col)
     {
     // See if the current position is in the subview.

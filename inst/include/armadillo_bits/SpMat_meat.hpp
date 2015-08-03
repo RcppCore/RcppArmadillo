@@ -3031,7 +3031,7 @@ SpMat<eT>::copy_size(const SpMat<eT2>& m)
   {
   arma_extra_debug_sigprint();
 
-  init(m.n_rows, m.n_cols);
+  set_size(m.n_rows, m.n_cols);
   }
 
 
@@ -3044,7 +3044,7 @@ SpMat<eT>::copy_size(const Mat<eT2>& m)
   {
   arma_extra_debug_sigprint();
 
-  init(m.n_rows, m.n_cols);
+  set_size(m.n_rows, m.n_cols);
   }
 
 
@@ -3059,11 +3059,11 @@ SpMat<eT>::set_size(const uword in_elem)
   // If this is a row vector, we resize to a row vector.
   if(vec_state == 2)
     {
-    init(1, in_elem);
+    set_size(1, in_elem);
     }
   else
     {
-    init(in_elem, 1);
+    set_size(in_elem, 1);
     }
   }
 
@@ -3076,7 +3076,14 @@ SpMat<eT>::set_size(const uword in_rows, const uword in_cols)
   {
   arma_extra_debug_sigprint();
   
-  init(in_rows, in_cols);
+  if( (n_rows == in_rows) && (n_cols == in_cols) )
+    {
+    return;
+    }
+  else
+    {
+    init(in_rows, in_cols);
+    }
   }
 
 
@@ -3204,22 +3211,12 @@ const SpMat<eT>&
 SpMat<eT>::zeros()
   {
   arma_extra_debug_sigprint();
-
-  if (n_nonzero > 0)
+  
+  if(n_nonzero != 0)
     {
-    memory::release(values);
-    memory::release(row_indices);
-
-    access::rw(values)      = memory::acquire_chunked<eT>(1);
-    access::rw(row_indices) = memory::acquire_chunked<uword>(1);
-
-    access::rw(values[0]) = 0;
-    access::rw(row_indices[0]) = 0;
+    init(n_rows, n_cols);
     }
-
-  access::rw(n_nonzero) = 0;
-  arrayops::inplace_set(access::rwp(col_ptrs), uword(0), n_cols + 1);
-
+  
   return *this;
   }
 
@@ -3234,11 +3231,11 @@ SpMat<eT>::zeros(const uword in_elem)
 
   if(vec_state == 2)
     {
-    init(1, in_elem); // Row vector
+    zeros(1, in_elem); // Row vector
     }
   else
     {
-    init(in_elem, 1);
+    zeros(in_elem, 1);
     }
 
   return *this;
@@ -3252,9 +3249,14 @@ const SpMat<eT>&
 SpMat<eT>::zeros(const uword in_rows, const uword in_cols)
   {
   arma_extra_debug_sigprint();
-
-  init(in_rows, in_cols);
-
+  
+  const bool already_done = ( (n_nonzero == 0) && (n_rows == in_rows) && (n_cols == in_cols) );
+  
+  if(already_done == false)
+    {
+    init(in_rows, in_cols);
+    }
+  
   return *this;
   }
 
@@ -3281,7 +3283,7 @@ SpMat<eT>::eye(const uword in_rows, const uword in_cols)
   
   const uword N = (std::min)(in_rows, in_cols);
   
-  init(in_rows, in_cols);
+  zeros(in_rows, in_cols);
   
   mem_resize(N);
   
@@ -3922,7 +3924,7 @@ SpMat<eT>::init(const std::string& text)
 
     }
 
-  set_size(t_n_rows, t_n_cols);
+  zeros(t_n_rows, t_n_cols);
 
   // Second time through will pick up all the values.
   line_start = 0;
