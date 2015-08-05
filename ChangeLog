@@ -1,3 +1,7 @@
+2015-08-05  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/examples/varSimulation.r: Minor touch-up
+
 2015-08-04  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/RcppArmadillo.package.skeleton.R: Correct kitten() use based on patch

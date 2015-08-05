@@ -2,8 +2,7 @@
 ##
 ## varSimulation.r: Simulation of first-order vector autoregression data
 ##
-## Copyright (C)  2011  Lance Bachmeier and Dirk Eddelbuettel
-## Copyright (C)  2013  Dirk Eddelbuettel
+## Copyright (C)  2011 - 2015  Lance Bachmeier and Dirk Eddelbuettel
 ##
 ## This file is part of RcppArmadillo.
 ##
