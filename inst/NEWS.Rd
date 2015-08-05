@@ -2,6 +2,16 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.5.x.y (2015-xx-yy)}{
+  \itemize{
+    \item Upgraded to Armadillo 5.x.y ("... ...") 
+    \itemize{
+      \item TBD
+    }
+    \item corrected use of \code{kitten()} thanks to Grant Brown
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.5.300.4 (2015-08-03)}{
   \itemize{
     \item Upgraded to Armadillo 5.300.4 ("Plutocrazy Incorporated") 

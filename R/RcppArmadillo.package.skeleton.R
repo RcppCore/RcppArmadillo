@@ -1,6 +1,6 @@
 ## RcppArmadillo.package.skeleton.R: makes a skeleton for a package that wants to use RcppArmadillo
 ##
-## Copyright (C)  2010 - 2014  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+## Copyright (C)  2010 - 2015  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 ##
 ## This file is part of RcppArmadillo.
 ##
@@ -33,12 +33,13 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
     }
 
     haveKitten <- requireNamespace("pkgKitten", quietly=TRUE)
-    skelFunUsed <- ifelse(haveKitten, "kitten", "package.skeleton")
-    message("\nCalling ", skelFunUsed, " to create basic package.")
+    skelFunUsed <- ifelse(haveKitten, pkgKitten::kitten, package.skeleton)
+    skelFunName <- ifelse(haveKitten, "kitten", "package.skeleton")
+    message("\nCalling ", skelFunName, " to create basic package.")
 
     ## first let the traditional version (or the kitten alternate) do its business
     call <- match.call()
-    call[[1]] <- if (haveKitten) as.name("kitten") else as.name("package.skeleton")
+    call[[1]] <- skelFunUsed
     if (! haveKitten) {                 # in the package.skeleton() case
         if ("example_code" %in% names(call)){
             call[["example_code"]] <- NULL	# remove the example_code argument
@@ -50,7 +51,8 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
 
     tryCatch(eval(call, envir=env),
              error = function(e) {
-                 stop(paste("error while calling `", skelFunUsed, "`", sep=""))
+                 cat(paste(e, "\n")) # print error
+                 stop(paste("error while calling `", skelFunName, "`", sep=""))
              })
 	
     message("\nAdding RcppArmadillo settings")

@@ -1,3 +1,8 @@
+2015-08-04  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/RcppArmadillo.package.skeleton.R: Correct kitten() use based on patch
+	by Grant Brown for RcppEigen (cf GitHub issue #21 @ RcppEigen)
+
 2015-08-03  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.5.300.4.0
