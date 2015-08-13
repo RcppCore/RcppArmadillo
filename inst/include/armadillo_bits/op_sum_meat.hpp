@@ -100,12 +100,7 @@ op_sum::apply_noalias_unwrap(Mat<typename T1::elem_type>& out, const Proxy<T1>& 
     
     for(uword col=0; col < X_n_cols; ++col)
       {
-      const eT* col_mem = X.colptr(col);
-      
-      for(uword row=0; row < X_n_rows; ++row)
-        {
-        out_mem[row] += col_mem[row];
-        }
+      arrayops::inplace_plus( out_mem, X.colptr(col), X_n_rows );
       }
     }
   }

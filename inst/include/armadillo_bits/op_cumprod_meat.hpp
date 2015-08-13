@@ -1,12 +1,12 @@
-// Copyright (C) 2010-2015 Conrad Sanderson
-// Copyright (C) 2010-2015 NICTA (www.nicta.com.au)
+// Copyright (C) 2015 Conrad Sanderson
+// Copyright (C) 2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-//! \addtogroup op_cumsum
+//! \addtogroup op_cumprod
 //! @{
 
 
@@ -14,7 +14,7 @@
 template<typename eT>
 inline
 void
-op_cumsum::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim)
+op_cumprod::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim)
   {
   arma_extra_debug_sigprint();
   
@@ -30,11 +30,11 @@ op_cumsum::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim)
       const eT*   X_mem =   X.memptr();
             eT* out_mem = out.memptr();
       
-      eT acc = eT(0);
+      eT acc = eT(1);
       
       for(uword row=0; row < n_rows; ++row)
         {
-        acc += X_mem[row];
+        acc *= X_mem[row];
         
         out_mem[row] = acc;
         }
@@ -46,11 +46,11 @@ op_cumsum::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim)
         const eT*   X_colmem =   X.colptr(col);
               eT* out_colmem = out.colptr(col);
         
-        eT acc = eT(0);
+        eT acc = eT(1);
         
         for(uword row=0; row < n_rows; ++row)
           {
-          acc += X_colmem[row];
+          acc *= X_colmem[row];
           
           out_colmem[row] = acc;
           }
@@ -65,11 +65,11 @@ op_cumsum::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim)
       const eT*   X_mem =   X.memptr();
             eT* out_mem = out.memptr();
       
-      eT acc = eT(0);
+      eT acc = eT(1);
       
       for(uword col=0; col < n_cols; ++col)
         {
-        acc += X_mem[col];
+        acc *= X_mem[col];
         
         out_mem[col] = acc;
         }
@@ -88,7 +88,7 @@ op_cumsum::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim)
           
           for(uword row=0; row < n_rows; ++row)
             {
-            out_colmem[row] = out_colmem_prev[row] + X_colmem[row];
+            out_colmem[row] = out_colmem_prev[row] * X_colmem[row];
             }
           }
         }
@@ -101,7 +101,7 @@ op_cumsum::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim)
 template<typename T1>
 inline
 void
-op_cumsum::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumsum>& in)
+op_cumprod::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumprod>& in)
   {
   arma_extra_debug_sigprint();
   
@@ -109,7 +109,7 @@ op_cumsum::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumsum>& in)
   
   const uword dim = in.aux_uword_a;
   
-  arma_debug_check( (dim > 1), "cumsum(): parameter 'dim' must be 0 or 1" );
+  arma_debug_check( (dim > 1), "cumprod(): parameter 'dim' must be 0 or 1" );
   
   const quasi_unwrap<T1> U(in.m);
   
@@ -117,13 +117,13 @@ op_cumsum::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumsum>& in)
     {
     Mat<eT> tmp;
     
-    op_cumsum::apply_noalias(tmp, U.M, dim);
+    op_cumprod::apply_noalias(tmp, U.M, dim);
     
     out.steal_mem(tmp);
     }
   else
     {
-    op_cumsum::apply_noalias(out, U.M, dim);
+    op_cumprod::apply_noalias(out, U.M, dim);
     }
   }
 
@@ -132,13 +132,13 @@ op_cumsum::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumsum>& in)
 template<typename T1>
 inline
 void
-op_cumsum_simple::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumsum_simple>& in)
+op_cumprod_simple::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumprod_simple>& in)
   {
   arma_extra_debug_sigprint();
   
-  const Op<T1,op_cumsum> tmp(in.m, in.aux_uword_a, 0);
+  const Op<T1,op_cumprod> tmp(in.m, in.aux_uword_a, 0);
   
-  op_cumsum::apply(out, tmp);
+  op_cumprod::apply(out, tmp);
   }
 
 

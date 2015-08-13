@@ -29,26 +29,12 @@ class Op : public Base<typename T1::elem_type, Op<T1, op_type> >
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  static const bool is_row = \
-     (T1::is_col && (is_same_type<op_type, op_strans>::yes || is_same_type<op_type, op_htrans>::yes || is_same_type<op_type, op_htrans2>::yes))
-  || (T1::is_row && (is_same_type<op_type, op_sort>::yes || is_same_type<op_type, op_shuffle>::yes || is_same_type<op_type, op_cumsum_vec>::yes || is_same_type<op_type, op_flipud>::yes || is_same_type<op_type, op_fliplr>::yes))
-  || (is_same_type<op_type, op_normalise_rowvec>::yes);
-  
-  static const bool is_col = \
-     (T1::is_row && (is_same_type<op_type, op_strans>::yes || is_same_type<op_type, op_htrans>::yes || is_same_type<op_type, op_htrans2>::yes))
-  || (T1::is_col && (is_same_type<op_type, op_sort>::yes || is_same_type<op_type, op_shuffle>::yes || is_same_type<op_type, op_cumsum_vec>::yes || is_same_type<op_type, op_flipud>::yes || is_same_type<op_type, op_fliplr>::yes))
-  || (is_same_type<op_type, op_normalise_colvec>::yes)
-  || (is_same_type<op_type, op_diagvec>::yes)
-  || (is_same_type<op_type, op_vectorise_col>::yes)
-  || (is_same_type<op_type, op_nonzeros>::yes);
-  
   inline explicit Op(const T1& in_m);
   inline          Op(const T1& in_m, const elem_type in_aux);
   inline          Op(const T1& in_m, const elem_type in_aux,         const uword in_aux_uword_a, const uword in_aux_uword_b);
   inline          Op(const T1& in_m, const uword     in_aux_uword_a, const uword in_aux_uword_b);
   inline          Op(const T1& in_m, const uword     in_aux_uword_a, const uword in_aux_uword_b, const uword in_aux_uword_c, const char junk);
   inline         ~Op();
-    
   
   arma_aligned const T1&       m;            //!< storage of reference to the operand (eg. a matrix)
   arma_aligned       elem_type aux;          //!< storage of auxiliary data, user defined format
@@ -56,6 +42,72 @@ class Op : public Base<typename T1::elem_type, Op<T1, op_type> >
   arma_aligned       uword     aux_uword_b;  //!< storage of auxiliary data, uword format
   arma_aligned       uword     aux_uword_c;  //!< storage of auxiliary data, uword format
   
+  static const bool is_row = \
+    (
+    // operations which always result in a row vector
+    is_same_type<op_type, op_normalise_rowvec>::yes
+    )
+    ||
+    (
+    // operations which result in a row vector if the input is a row vector
+    T1::is_row &&
+      (
+         is_same_type<op_type, op_sort>::yes
+      || is_same_type<op_type, op_shuffle>::yes
+      || is_same_type<op_type, op_cumsum_simple>::yes
+      || is_same_type<op_type, op_cumprod_simple>::yes
+      || is_same_type<op_type, op_flipud>::yes
+      || is_same_type<op_type, op_fliplr>::yes
+      || is_same_type<op_type, op_unique>::yes
+      || is_same_type<op_type, op_diff_simple>::yes
+      )
+    )
+    ||
+    (
+    // operations which result in a row vector if the input is a column vector
+    T1::is_col &&
+      (
+         is_same_type<op_type, op_strans>::yes
+      || is_same_type<op_type, op_htrans>::yes
+      || is_same_type<op_type, op_htrans2>::yes
+      )
+    )
+    ;
+  
+  static const bool is_col = \
+    (
+    // operations which always result in a row vector
+       is_same_type<op_type, op_normalise_colvec>::yes
+    || is_same_type<op_type, op_diagvec>::yes
+    || is_same_type<op_type, op_vectorise_col>::yes
+    || is_same_type<op_type, op_nonzeros>::yes
+    )
+    ||
+    (
+    // operations which result in a column vector if the input is a column vector
+    T1::is_col &&
+      (
+         is_same_type<op_type, op_sort>::yes
+      || is_same_type<op_type, op_shuffle>::yes
+      || is_same_type<op_type, op_cumsum_simple>::yes
+      || is_same_type<op_type, op_cumprod_simple>::yes
+      || is_same_type<op_type, op_flipud>::yes
+      || is_same_type<op_type, op_fliplr>::yes
+      || is_same_type<op_type, op_unique>::yes
+      || is_same_type<op_type, op_diff_simple>::yes
+      )
+    )
+    ||
+    (
+    // operations which result in a column vector if the input is a row vector
+    T1::is_row && 
+      (
+         is_same_type<op_type, op_strans>::yes
+      || is_same_type<op_type, op_htrans>::yes
+      || is_same_type<op_type, op_htrans2>::yes
+      )
+    )
+    ;
   };
 
 
