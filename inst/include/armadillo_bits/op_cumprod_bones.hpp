@@ -1,17 +1,17 @@
-// Copyright (C) 2010-2015 Conrad Sanderson
-// Copyright (C) 2010-2015 NICTA (www.nicta.com.au)
+// Copyright (C) 2015 Conrad Sanderson
+// Copyright (C) 2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-//! \addtogroup op_cumsum
+//! \addtogroup op_cumprod
 //! @{
 
 
 
-class op_cumsum
+class op_cumprod
   {
   public:
   
@@ -19,17 +19,17 @@ class op_cumsum
   inline static void apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim);
   
   template<typename T1>
-  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumsum>& in);
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumprod>& in);
   };
 
 
 
-class op_cumsum_simple
+class op_cumprod_simple
   {
   public:
   
   template<typename T1>
-  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumsum_simple>& in);
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumprod_simple>& in);
   };
 
 

@@ -28,8 +28,9 @@ class mtOp : public Base<out_eT, mtOp<out_eT, T1, op_type> >
   
   static const bool is_col = \
      (T1::is_col && (is_op_mixed_elem<op_type>::value || is_same_type<op_type, op_clamp>::value || is_same_type<op_type, op_real>::value || is_same_type<op_type, op_imag>::value || is_same_type<op_type, op_abs>::value))
-  || (is_same_type<op_type, op_find_simple>::value)
   || (is_same_type<op_type, op_find>::value)
+  || (is_same_type<op_type, op_find_simple>::value)
+  || (is_same_type<op_type, op_find_unique>::value)
   || (is_same_type<op_type, op_sort_index>::value)
   || (is_same_type<op_type, op_stable_sort_index>::value);
   

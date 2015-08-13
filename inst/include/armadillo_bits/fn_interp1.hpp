@@ -168,7 +168,7 @@ interp1_helper(const Mat<eT>& X, const Mat<eT>& Y, const Mat<eT>& XI, Mat<eT>& Y
   
   arma_debug_check( (X.n_elem != Y.n_elem), "interp1(): X and Y must have the same number of elements" );
   
-  arma_debug_check( (X.n_elem < 2), "interp1(): X must have at least two elements" );
+  arma_debug_check( (X.n_elem < 2), "interp1(): X must have at least two unique elements" );
   
   // sig = 10: nearest neighbour
   // sig = 11: nearest neighbour, assume monotonic increase in X and XI
@@ -179,40 +179,36 @@ interp1_helper(const Mat<eT>& X, const Mat<eT>& Y, const Mat<eT>& XI, Mat<eT>& Y
   if(sig == 11)  { interp1_helper_nearest(X, Y, XI, YI, extrap_val); return; }
   if(sig == 21)  { interp1_helper_linear (X, Y, XI, YI, extrap_val); return; }
   
+  uvec X_indices;
   
-  Mat<eT> X_tmp;
-  Mat<eT> Y_tmp;
+  try { X_indices = find_unique(X,false); } catch(...) { }
   
-  const bool X_is_sorted = X.is_sorted();
+  // NOTE: find_unique(X,false) provides indices of elements sorted in ascending order
+  // NOTE: find_unique(X,false) will reset X_indices if X has NaN
   
-  if(X_is_sorted == false)
+  const uword N_subset = X_indices.n_elem;
+  
+  arma_debug_check( (N_subset < 2), "interp1(): X must have at least two unique elements" );
+  
+  Mat<eT> X_sanitised(N_subset,1);
+  Mat<eT> Y_sanitised(N_subset,1);
+  
+  eT* X_sanitised_mem = X_sanitised.memptr();
+  eT* Y_sanitised_mem = Y_sanitised.memptr();
+  
+  const eT* X_mem = X.memptr();
+  const eT* Y_mem = Y.memptr();
+  
+  const uword* X_indices_mem = X_indices.memptr();
+  
+  for(uword i=0; i<N_subset; ++i)
     {
-    const uvec X_indices = stable_sort_index(X);
+    const uword j = X_indices_mem[i];
     
-    const uword N = X.n_elem;
-    
-    X_tmp.set_size(N);
-    Y_tmp.set_size(N);
-    
-    const uword* X_indices_mem = X_indices.memptr();
-    
-    const eT* X_mem = X.memptr();
-    const eT* Y_mem = Y.memptr();
-    
-    eT* X_tmp_mem = X_tmp.memptr();
-    eT* Y_tmp_mem = Y_tmp.memptr();
-    
-    for(uword i=0; i<N; ++i)
-      {
-      const uword j = X_indices_mem[i];
-      
-      X_tmp_mem[i] = X_mem[j];
-      Y_tmp_mem[i] = Y_mem[j];
-      }
+    X_sanitised_mem[i] = X_mem[j];
+    Y_sanitised_mem[i] = Y_mem[j];
     }
   
-  const Mat<eT>& X_sorted = (X_is_sorted) ? X : X_tmp;
-  const Mat<eT>& Y_sorted = (X_is_sorted) ? Y : Y_tmp;
   
   Mat<eT> XI_tmp;
   uvec    XI_indices;
@@ -221,7 +217,7 @@ interp1_helper(const Mat<eT>& X, const Mat<eT>& Y, const Mat<eT>& XI, Mat<eT>& Y
   
   if(XI_is_sorted == false)
     {
-    XI_indices = stable_sort_index(XI);
+    XI_indices = sort_index(XI);
     
     const uword N = XI.n_elem;
     
@@ -241,8 +237,8 @@ interp1_helper(const Mat<eT>& X, const Mat<eT>& Y, const Mat<eT>& XI, Mat<eT>& Y
   const Mat<eT>& XI_sorted = (XI_is_sorted) ? XI : XI_tmp;
   
   
-       if(sig == 10)  { interp1_helper_nearest(X_sorted, Y_sorted, XI_sorted, YI, extrap_val); }
-  else if(sig == 20)  { interp1_helper_linear (X_sorted, Y_sorted, XI_sorted, YI, extrap_val); }
+       if(sig == 10)  { interp1_helper_nearest(X_sanitised, Y_sanitised, XI_sorted, YI, extrap_val); }
+  else if(sig == 20)  { interp1_helper_linear (X_sanitised, Y_sanitised, XI_sorted, YI, extrap_val); }
   
   
   if( (XI_is_sorted == false) && (YI.n_elem > 0) )

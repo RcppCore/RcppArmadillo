@@ -71,11 +71,13 @@ class op_vectorise_col;
 class op_normalise_colvec;
 class op_normalise_rowvec;
 class op_clamp;
-class op_cumsum_vec;
+class op_cumsum_simple;
+class op_cumprod_simple;
 class op_shuffle;
 class op_sort;
 class op_find;
 class op_find_simple;
+class op_find_unique;
 class op_flipud;
 class op_fliplr;
 class op_real;
@@ -83,6 +85,9 @@ class op_imag;
 class op_nonzeros;
 class op_sort_index;
 class op_stable_sort_index;
+class op_unique;
+class op_unique_index;
+class op_diff_simple;
 
 class eop_conj;
 
