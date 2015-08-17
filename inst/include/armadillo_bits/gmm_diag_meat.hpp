@@ -719,7 +719,7 @@ gmm_diag<eT>::learn
     
     stream_state.restore(get_stream_err2());
     
-    if(status == false)  { arma_warn(true, "gmm_diag::learn(): k-means algorithm failed"); init(orig); return false; }
+    if(status == false)  { arma_warn(true, "gmm_diag::learn(): k-means algorithm failed; not enough data, or too many gaussians requested"); init(orig); return false; }
     }
   
   
@@ -1677,6 +1677,8 @@ gmm_diag<eT>::km_iterate(const Mat<eT>& X, const uword max_iter, const bool verb
         }
       }
     
+    // heuristics to resurrect dead means
+    
     if(n_dead_means > 0)
       {
       if(verbose)  { get_stream_err2() << "gmm_diag::learn(): k-means: recovering from dead means\n"; }
@@ -1706,6 +1708,8 @@ gmm_diag<eT>::km_iterate(const Mat<eT>& X, const uword max_iter, const bool verb
         }
       else
         {
+        uword n_resurrected_means = 0;
+        
         uword dead_g = 0;
         
         for(uword live_g = 0; live_g < N_gaus; ++live_g)
@@ -1717,10 +1721,18 @@ gmm_diag<eT>::km_iterate(const Mat<eT>& X, const uword max_iter, const bool verb
               if(running_means(dead_g).count() == 0)  { break; }
               }
             
+            if(dead_g == N_gaus)  { break; }
+            
             new_means.col(dead_g) = X.unsafe_col( running_means(live_g).last_index() );
             
             dead_g++;
+            n_resurrected_means++;
             }
+          }
+        
+        if(n_resurrected_means != n_dead_means)
+          {
+          if(verbose)  { get_stream_err2() << "gmm_diag::learn(): k-means: WARNING: did not resurrect all dead means\n"; }
           }
         }
       }
