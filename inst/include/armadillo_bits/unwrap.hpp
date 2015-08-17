@@ -294,23 +294,43 @@ struct quasi_unwrap< Col<eT> >
 
 
 template<typename eT>
+struct quasi_unwrap< subview_row<eT> >
+  {
+  static const bool has_subview = false;
+  
+  inline
+  quasi_unwrap(const subview_row<eT>& A)
+    : M(A)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const Row<eT> M;
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&M) == void_ptr(&X)); }
+  };
+
+
+
+template<typename eT>
 struct quasi_unwrap< subview_col<eT> >
   {
   static const bool has_subview = true;
   
   inline
   quasi_unwrap(const subview_col<eT>& A)
-    : M  ( const_cast<eT*>( A.colptr(0) ), A.n_rows, 1, false, false )
-    , src( A.m )
+    : orig( A.m )
+    , M  ( const_cast<eT*>( A.colptr(0) ), A.n_rows, false, false )
     {
     arma_extra_debug_sigprint();
     }
   
-  const Mat<eT>  M;
-  const Mat<eT>& src;
+  const Mat<eT>& orig;
+  const Col<eT>  M;
   
   template<typename eT2>
-  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&src) == void_ptr(&X)); }
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&orig) == void_ptr(&X)); }
   };
 
 

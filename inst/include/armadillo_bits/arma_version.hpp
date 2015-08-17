@@ -13,8 +13,8 @@
 
 #define ARMA_VERSION_MAJOR 5
 #define ARMA_VERSION_MINOR 400
-#define ARMA_VERSION_PATCH 1
-#define ARMA_VERSION_NAME  "development version -- for testing purposes only"
+#define ARMA_VERSION_PATCH 2
+#define ARMA_VERSION_NAME  "Plutocracy Incorporated Deluxe"
 
 
 

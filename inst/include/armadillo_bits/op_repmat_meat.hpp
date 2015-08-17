@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2012 Conrad Sanderson
-// Copyright (C) 2009-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2015 Conrad Sanderson
+// Copyright (C) 2009-2015 NICTA (www.nicta.com.au)
 // Copyright (C) 2009-2010 Dimitrios Bouzas
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -13,25 +13,17 @@
 
 
 
-//! \brief
-//! implementation of the 'repeat matrix' operation, used for constructing matrices
-template<typename T1>
+template<typename obj>
 inline
 void
-op_repmat::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_repmat>& in)
+op_repmat::apply_noalias(Mat<typename obj::elem_type>& out, const obj& X, const uword copies_per_row, const uword copies_per_col)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
+  typedef typename obj::elem_type eT;
   
-  const unwrap_check<T1> tmp(in.m, out);
-  const Mat<eT>& X     = tmp.M;
-  
-  const uword copies_per_row = in.aux_uword_a;
-  const uword copies_per_col = in.aux_uword_b;
-  
-  const uword X_n_rows = X.n_rows;
-  const uword X_n_cols = X.n_cols;
+  const uword X_n_rows = obj::is_row ? uword(1) : X.n_rows;
+  const uword X_n_cols = obj::is_col ? uword(1) : X.n_cols;
   
   out.set_size(X_n_rows * copies_per_row, X_n_cols * copies_per_col);
   
@@ -86,6 +78,36 @@ op_repmat::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_repmat>& in)
       }
     }
   
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_repmat::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_repmat>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const uword copies_per_row = in.aux_uword_a;
+  const uword copies_per_col = in.aux_uword_b;
+  
+  const quasi_unwrap<T1> U(in.m);
+  
+  if(U.is_alias(out))
+    {
+    Mat<eT> tmp;
+    
+    op_repmat::apply_noalias(tmp, U.M, copies_per_row, copies_per_col);
+    
+    out.steal_mem(tmp);
+    }
+  else
+    {
+    op_repmat::apply_noalias(out, U.M, copies_per_row, copies_per_col);
+    }
   }
 
 

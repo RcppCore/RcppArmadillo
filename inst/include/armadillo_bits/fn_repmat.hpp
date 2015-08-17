@@ -14,12 +14,17 @@
 
 template<typename T1>
 arma_inline
-const Op<T1, op_repmat>
-repmat(const Base<typename T1::elem_type,T1>& A, const uword r, const uword c)
+typename
+enable_if2
+  <
+  is_arma_type<T1>::value,
+  const Op<T1, op_repmat>
+  >::result
+repmat(const T1& A, const uword r, const uword c)
   {
   arma_extra_debug_sigprint();
 
-  return Op<T1, op_repmat>(A.get_ref(), r, c);
+  return Op<T1, op_repmat>(A, r, c);
   }
 
 
