@@ -57,6 +57,18 @@ Row<eT>::Row(const uword in_n_rows, const uword in_n_cols)
 
 
 template<typename eT>
+inline
+Row<eT>::Row(const SizeMat& s)
+  : Mat<eT>(arma_vec_indicator(), 2)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>::init_warm(s.n_rows, s.n_cols);
+  }
+
+
+
+template<typename eT>
 template<typename fill_type>
 inline
 Row<eT>::Row(const uword in_n_elem, const fill::fill_class<fill_type>& f)
@@ -78,6 +90,21 @@ Row<eT>::Row(const uword in_n_rows, const uword in_n_cols, const fill::fill_clas
   arma_extra_debug_sigprint();
   
   Mat<eT>::init_warm(in_n_rows, in_n_cols);
+  
+  (*this).fill(f);
+  }
+
+
+
+template<typename eT>
+template<typename fill_type>
+inline
+Row<eT>::Row(const SizeMat& s, const fill::fill_class<fill_type>& f)
+  : Mat<eT>(arma_vec_indicator(), 2)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>::init_warm(s.n_rows, s.n_cols);
   
   (*this).fill(f);
   }

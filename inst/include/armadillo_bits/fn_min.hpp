@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 Conrad Sanderson
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -192,6 +192,24 @@ min(const SpOp<T1, spop_min>& in, const uword dim)
   arma_extra_debug_sigprint();
   
   return SpOp< SpOp<T1, spop_min>, spop_min>(in, dim, 0);
+  }
+
+
+
+inline
+uword
+min(const SizeMat& s)
+  {
+  return (std::min)(s.n_rows, s.n_cols);
+  }
+
+
+
+inline
+uword
+min(const SizeCube& s)
+  {
+  return (std::min)( (std::min)(s.n_rows, s.n_cols), s.n_slices );
   }
 
 

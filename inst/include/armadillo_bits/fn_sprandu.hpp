@@ -45,6 +45,19 @@ sprandu
 
 
 
+template<typename obj_type>
+inline
+obj_type
+sprandu(const SizeMat& s, const double density, const typename arma_SpMat_SpCol_SpRow_only<obj_type>::result* junk = 0)
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  return sprandu<obj_type>(s.n_rows, s.n_cols, density);
+  }
+
+
+
 inline
 sp_mat
 sprandu(const uword n_rows, const uword n_cols, const double density)
@@ -54,6 +67,21 @@ sprandu(const uword n_rows, const uword n_cols, const double density)
   sp_mat out;
   
   out.sprandu(n_rows, n_cols, density);
+  
+  return out;
+  }
+
+
+
+inline
+sp_mat
+sprandu(const SizeMat& s, const double density)
+  {
+  arma_extra_debug_sigprint();
+  
+  sp_mat out;
+  
+  out.sprandu(s.n_rows, s.n_cols, density);
   
   return out;
   }

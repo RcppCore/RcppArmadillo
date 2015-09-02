@@ -91,6 +91,19 @@ randg(const uword n_rows, const uword n_cols, const distr_param& param = distr_p
 template<typename obj_type>
 inline
 obj_type
+randg(const SizeMat& s, const distr_param& param = distr_param(), const typename arma_Mat_Col_Row_only<obj_type>::result* junk = 0)
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  return randg<obj_type>(s.n_rows, s.n_cols, param);
+  }
+
+
+
+template<typename obj_type>
+inline
+obj_type
 randg(const uword n_elem, const distr_param& param = distr_param(), const arma_empty_class junk1 = arma_empty_class(), const typename arma_Mat_Col_Row_only<obj_type>::result* junk2 = 0)
   {
   arma_extra_debug_sigprint();
@@ -116,6 +129,17 @@ randg(const uword n_rows, const uword n_cols, const distr_param& param = distr_p
   arma_extra_debug_sigprint();
   
   return randg<mat>(n_rows, n_cols, param);
+  }
+
+
+
+inline
+mat
+randg(const SizeMat& s, const distr_param& param = distr_param())
+  {
+  arma_extra_debug_sigprint();
+  
+  return randg<mat>(s.n_rows, s.n_cols, param);
   }
 
 
@@ -199,6 +223,19 @@ randg(const uword n_rows, const uword n_cols, const uword n_slices, const distr_
 
 
 
+template<typename cube_type>
+inline
+cube_type
+randg(const SizeCube& s, const distr_param& param = distr_param(), const typename arma_Cube_only<cube_type>::result* junk = 0)
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  return randg<cube_type>(s.n_rows, s.n_cols, s.n_slices, param);
+  }
+
+
+
 inline
 cube
 randg(const uword n_rows, const uword n_cols, const uword n_slices, const distr_param& param = distr_param())
@@ -206,6 +243,17 @@ randg(const uword n_rows, const uword n_cols, const uword n_slices, const distr_
   arma_extra_debug_sigprint();
   
   return randg<cube>(n_rows, n_cols, n_slices, param);
+  }
+
+
+
+inline
+cube
+randg(const SizeCube& s, const distr_param& param = distr_param())
+  {
+  arma_extra_debug_sigprint();
+  
+  return randg<cube>(s.n_rows, s.n_cols, s.n_slices, param);
   }
 
 

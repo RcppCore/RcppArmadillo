@@ -74,7 +74,8 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   inline  SpMat();  //! Size will be 0x0 (empty).
   inline ~SpMat();
   
-  inline  SpMat(const uword in_rows, const uword in_cols);
+  inline explicit SpMat(const uword in_rows, const uword in_cols);
+  inline explicit SpMat(const SizeMat& s);
   
   inline                  SpMat(const char*        text);
   inline const SpMat& operator=(const char*        text);
@@ -295,24 +296,33 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   
   inline void set_size(const uword in_elem);
   inline void set_size(const uword in_rows, const uword in_cols);
+  inline void set_size(const SizeMat& s);
   
   inline void   resize(const uword in_rows, const uword in_cols);
+  inline void   resize(const SizeMat& s);
+  
   inline void  reshape(const uword in_rows, const uword in_cols);
+  inline void  reshape(const SizeMat& s);
   inline void  reshape(const uword in_rows, const uword in_cols, const uword dim);  // this form is deprecated: don't use it
   
   inline const SpMat& zeros();
   inline const SpMat& zeros(const uword in_elem);
   inline const SpMat& zeros(const uword in_rows, const uword in_cols);
+  inline const SpMat& zeros(const SizeMat& s);
   
   inline const SpMat& eye();
   inline const SpMat& eye(const uword in_rows, const uword in_cols);
+  inline const SpMat& eye(const SizeMat& s);
   
   inline const SpMat& speye();
   inline const SpMat& speye(const uword in_rows, const uword in_cols);
+  inline const SpMat& speye(const SizeMat& s);
   
   inline const SpMat& sprandu(const uword in_rows, const uword in_cols, const double density);
+  inline const SpMat& sprandu(const SizeMat& s,                         const double density);
   
   inline const SpMat& sprandn(const uword in_rows, const uword in_cols, const double density);
+  inline const SpMat& sprandn(const SizeMat& s,                         const double density);
   
   inline void reset();
   

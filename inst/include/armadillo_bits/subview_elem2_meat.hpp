@@ -1,5 +1,5 @@
-// Copyright (C) 2012-2013 Conrad Sanderson
-// Copyright (C) 2012-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2012-2015 Conrad Sanderson
+// Copyright (C) 2012-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -84,11 +84,11 @@ subview_elem2<eT,T1,T2>::inplace_op(const eT val)
         
         arma_debug_check( (row > m_n_rows), "Mat::elem(): index out of bounds" );
         
-             if(is_same_type<op_type, op_subview_elem_equ          >::yes) { m_local.at(row,col)  = val; }
-        else if(is_same_type<op_type, op_subview_elem_inplace_plus >::yes) { m_local.at(row,col) += val; }
-        else if(is_same_type<op_type, op_subview_elem_inplace_minus>::yes) { m_local.at(row,col) -= val; }
-        else if(is_same_type<op_type, op_subview_elem_inplace_schur>::yes) { m_local.at(row,col) *= val; }
-        else if(is_same_type<op_type, op_subview_elem_inplace_div  >::yes) { m_local.at(row,col) /= val; }
+        if(is_same_type<op_type, op_internal_equ  >::yes) { m_local.at(row,col)  = val; }
+        if(is_same_type<op_type, op_internal_plus >::yes) { m_local.at(row,col) += val; }
+        if(is_same_type<op_type, op_internal_minus>::yes) { m_local.at(row,col) -= val; }
+        if(is_same_type<op_type, op_internal_schur>::yes) { m_local.at(row,col) *= val; }
+        if(is_same_type<op_type, op_internal_div  >::yes) { m_local.at(row,col) /= val; }
         }
       }
     }
@@ -116,11 +116,11 @@ subview_elem2<eT,T1,T2>::inplace_op(const eT val)
       
       eT* colptr = m_local.colptr(col);
       
-           if(is_same_type<op_type, op_subview_elem_equ          >::yes) { arrayops::inplace_set  (colptr, val, m_n_rows); }
-      else if(is_same_type<op_type, op_subview_elem_inplace_plus >::yes) { arrayops::inplace_plus (colptr, val, m_n_rows); }
-      else if(is_same_type<op_type, op_subview_elem_inplace_minus>::yes) { arrayops::inplace_minus(colptr, val, m_n_rows); }
-      else if(is_same_type<op_type, op_subview_elem_inplace_schur>::yes) { arrayops::inplace_mul  (colptr, val, m_n_rows); }
-      else if(is_same_type<op_type, op_subview_elem_inplace_div  >::yes) { arrayops::inplace_div  (colptr, val, m_n_rows); }
+      if(is_same_type<op_type, op_internal_equ  >::yes) { arrayops::inplace_set  (colptr, val, m_n_rows); }
+      if(is_same_type<op_type, op_internal_plus >::yes) { arrayops::inplace_plus (colptr, val, m_n_rows); }
+      if(is_same_type<op_type, op_internal_minus>::yes) { arrayops::inplace_minus(colptr, val, m_n_rows); }
+      if(is_same_type<op_type, op_internal_schur>::yes) { arrayops::inplace_mul  (colptr, val, m_n_rows); }
+      if(is_same_type<op_type, op_internal_div  >::yes) { arrayops::inplace_div  (colptr, val, m_n_rows); }
       }
     }
   else
@@ -147,11 +147,11 @@ subview_elem2<eT,T1,T2>::inplace_op(const eT val)
         
         arma_debug_check( (row > m_n_rows), "Mat::elem(): index out of bounds" );
       
-             if(is_same_type<op_type, op_subview_elem_equ          >::yes) { m_local.at(row,col)  = val; }
-        else if(is_same_type<op_type, op_subview_elem_inplace_plus >::yes) { m_local.at(row,col) += val; }
-        else if(is_same_type<op_type, op_subview_elem_inplace_minus>::yes) { m_local.at(row,col) -= val; }
-        else if(is_same_type<op_type, op_subview_elem_inplace_schur>::yes) { m_local.at(row,col) *= val; }
-        else if(is_same_type<op_type, op_subview_elem_inplace_div  >::yes) { m_local.at(row,col) /= val; }
+        if(is_same_type<op_type, op_internal_equ  >::yes) { m_local.at(row,col)  = val; }
+        if(is_same_type<op_type, op_internal_plus >::yes) { m_local.at(row,col) += val; }
+        if(is_same_type<op_type, op_internal_minus>::yes) { m_local.at(row,col) -= val; }
+        if(is_same_type<op_type, op_internal_schur>::yes) { m_local.at(row,col) *= val; }
+        if(is_same_type<op_type, op_internal_div  >::yes) { m_local.at(row,col) /= val; }
         }
       }
     }
@@ -209,11 +209,11 @@ subview_elem2<eT,T1,T2>::inplace_op(const Base<eT,expr>& x)
         
         arma_debug_check( (row > m_n_rows), "Mat::elem(): index out of bounds" );
         
-             if(is_same_type<op_type, op_subview_elem_equ          >::yes) { m_local.at(row,col)  = X.at(ri_count, ci_count); }
-        else if(is_same_type<op_type, op_subview_elem_inplace_plus >::yes) { m_local.at(row,col) += X.at(ri_count, ci_count); }
-        else if(is_same_type<op_type, op_subview_elem_inplace_minus>::yes) { m_local.at(row,col) -= X.at(ri_count, ci_count); }
-        else if(is_same_type<op_type, op_subview_elem_inplace_schur>::yes) { m_local.at(row,col) *= X.at(ri_count, ci_count); }
-        else if(is_same_type<op_type, op_subview_elem_inplace_div  >::yes) { m_local.at(row,col) /= X.at(ri_count, ci_count); }
+        if(is_same_type<op_type, op_internal_equ  >::yes) { m_local.at(row,col)  = X.at(ri_count, ci_count); }
+        if(is_same_type<op_type, op_internal_plus >::yes) { m_local.at(row,col) += X.at(ri_count, ci_count); }
+        if(is_same_type<op_type, op_internal_minus>::yes) { m_local.at(row,col) -= X.at(ri_count, ci_count); }
+        if(is_same_type<op_type, op_internal_schur>::yes) { m_local.at(row,col) *= X.at(ri_count, ci_count); }
+        if(is_same_type<op_type, op_internal_div  >::yes) { m_local.at(row,col) /= X.at(ri_count, ci_count); }
         }
       }
     }
@@ -244,11 +244,11 @@ subview_elem2<eT,T1,T2>::inplace_op(const Base<eT,expr>& x)
             eT* m_colptr = m_local.colptr(col);
       const eT* X_colptr = X.colptr(ci_count);
       
-           if(is_same_type<op_type, op_subview_elem_equ          >::yes) { arrayops::copy         (m_colptr, X_colptr, m_n_rows); }
-      else if(is_same_type<op_type, op_subview_elem_inplace_plus >::yes) { arrayops::inplace_plus (m_colptr, X_colptr, m_n_rows); }
-      else if(is_same_type<op_type, op_subview_elem_inplace_minus>::yes) { arrayops::inplace_minus(m_colptr, X_colptr, m_n_rows); }
-      else if(is_same_type<op_type, op_subview_elem_inplace_schur>::yes) { arrayops::inplace_mul  (m_colptr, X_colptr, m_n_rows); }
-      else if(is_same_type<op_type, op_subview_elem_inplace_div  >::yes) { arrayops::inplace_div  (m_colptr, X_colptr, m_n_rows); }
+      if(is_same_type<op_type, op_internal_equ  >::yes) { arrayops::copy         (m_colptr, X_colptr, m_n_rows); }
+      if(is_same_type<op_type, op_internal_plus >::yes) { arrayops::inplace_plus (m_colptr, X_colptr, m_n_rows); }
+      if(is_same_type<op_type, op_internal_minus>::yes) { arrayops::inplace_minus(m_colptr, X_colptr, m_n_rows); }
+      if(is_same_type<op_type, op_internal_schur>::yes) { arrayops::inplace_mul  (m_colptr, X_colptr, m_n_rows); }
+      if(is_same_type<op_type, op_internal_div  >::yes) { arrayops::inplace_div  (m_colptr, X_colptr, m_n_rows); }
       }
     }
   else
@@ -277,11 +277,11 @@ subview_elem2<eT,T1,T2>::inplace_op(const Base<eT,expr>& x)
         
         arma_debug_check( (row > m_n_rows), "Mat::elem(): index out of bounds" );
       
-             if(is_same_type<op_type, op_subview_elem_equ          >::yes) { m_local.at(row,col)  = X.at(ri_count, col); }
-        else if(is_same_type<op_type, op_subview_elem_inplace_plus >::yes) { m_local.at(row,col) += X.at(ri_count, col); }
-        else if(is_same_type<op_type, op_subview_elem_inplace_minus>::yes) { m_local.at(row,col) -= X.at(ri_count, col); }
-        else if(is_same_type<op_type, op_subview_elem_inplace_schur>::yes) { m_local.at(row,col) *= X.at(ri_count, col); }
-        else if(is_same_type<op_type, op_subview_elem_inplace_div  >::yes) { m_local.at(row,col) /= X.at(ri_count, col); }
+        if(is_same_type<op_type, op_internal_equ  >::yes) { m_local.at(row,col)  = X.at(ri_count, col); }
+        if(is_same_type<op_type, op_internal_plus >::yes) { m_local.at(row,col) += X.at(ri_count, col); }
+        if(is_same_type<op_type, op_internal_minus>::yes) { m_local.at(row,col) -= X.at(ri_count, col); }
+        if(is_same_type<op_type, op_internal_schur>::yes) { m_local.at(row,col) *= X.at(ri_count, col); }
+        if(is_same_type<op_type, op_internal_div  >::yes) { m_local.at(row,col) /= X.at(ri_count, col); }
         }
       }
     }
@@ -301,7 +301,7 @@ subview_elem2<eT,T1,T2>::fill(const eT val)
   {
   arma_extra_debug_sigprint();
   
-  inplace_op<op_subview_elem_equ>(val);
+  inplace_op<op_internal_equ>(val);
   }
 
 
@@ -313,7 +313,7 @@ subview_elem2<eT,T1,T2>::zeros()
   {
   arma_extra_debug_sigprint();
   
-  inplace_op<op_subview_elem_equ>(eT(0));
+  inplace_op<op_internal_equ>(eT(0));
   }
 
 
@@ -325,7 +325,7 @@ subview_elem2<eT,T1,T2>::ones()
   {
   arma_extra_debug_sigprint();
   
-  inplace_op<op_subview_elem_equ>(eT(1));
+  inplace_op<op_internal_equ>(eT(1));
   }
 
 
@@ -337,7 +337,7 @@ subview_elem2<eT,T1,T2>::operator+= (const eT val)
   {
   arma_extra_debug_sigprint();
   
-  inplace_op<op_subview_elem_inplace_plus>(val);
+  inplace_op<op_internal_plus>(val);
   }
 
 
@@ -349,7 +349,7 @@ subview_elem2<eT,T1,T2>::operator-= (const eT val)
   {
   arma_extra_debug_sigprint();
   
-  inplace_op<op_subview_elem_inplace_minus>(val);
+  inplace_op<op_internal_minus>(val);
   }
 
 
@@ -361,7 +361,7 @@ subview_elem2<eT,T1,T2>::operator*= (const eT val)
   {
   arma_extra_debug_sigprint();
   
-  inplace_op<op_subview_elem_inplace_schur>(val);
+  inplace_op<op_internal_schur>(val);
   }
 
 
@@ -373,7 +373,7 @@ subview_elem2<eT,T1,T2>::operator/= (const eT val)
   {
   arma_extra_debug_sigprint();
   
-  inplace_op<op_subview_elem_inplace_div>(val);
+  inplace_op<op_internal_div>(val);
   }
 
 
@@ -391,7 +391,7 @@ subview_elem2<eT,T1,T2>::operator_equ(const subview_elem2<eT,T3,T4>& x)
   {
   arma_extra_debug_sigprint();
   
-  inplace_op<op_subview_elem_equ>(x);
+  inplace_op<op_internal_equ>(x);
   }
 
 
@@ -431,7 +431,7 @@ subview_elem2<eT,T1,T2>::operator+= (const subview_elem2<eT,T3,T4>& x)
   {
   arma_extra_debug_sigprint();
   
-  inplace_op<op_subview_elem_inplace_plus>(x);
+  inplace_op<op_internal_plus>(x);
   }
 
 
@@ -444,7 +444,7 @@ subview_elem2<eT,T1,T2>::operator-= (const subview_elem2<eT,T3,T4>& x)
   {
   arma_extra_debug_sigprint();
   
-  inplace_op<op_subview_elem_inplace_minus>(x);
+  inplace_op<op_internal_minus>(x);
   }
 
 
@@ -457,7 +457,7 @@ subview_elem2<eT,T1,T2>::operator%= (const subview_elem2<eT,T3,T4>& x)
   {
   arma_extra_debug_sigprint();
   
-  inplace_op<op_subview_elem_inplace_schur>(x);
+  inplace_op<op_internal_schur>(x);
   }
 
 
@@ -470,7 +470,7 @@ subview_elem2<eT,T1,T2>::operator/= (const subview_elem2<eT,T3,T4>& x)
   {
   arma_extra_debug_sigprint();
   
-  inplace_op<op_subview_elem_inplace_div>(x);
+  inplace_op<op_internal_div>(x);
   }
 
 
@@ -483,7 +483,7 @@ subview_elem2<eT,T1,T2>::operator= (const Base<eT,expr>& x)
   {
   arma_extra_debug_sigprint();
   
-  inplace_op<op_subview_elem_equ>(x);
+  inplace_op<op_internal_equ>(x);
   }
 
 
@@ -496,7 +496,7 @@ subview_elem2<eT,T1,T2>::operator+= (const Base<eT,expr>& x)
   {
   arma_extra_debug_sigprint();
   
-  inplace_op<op_subview_elem_inplace_plus>(x);
+  inplace_op<op_internal_plus>(x);
   }
 
 
@@ -509,7 +509,7 @@ subview_elem2<eT,T1,T2>::operator-= (const Base<eT,expr>& x)
   {
   arma_extra_debug_sigprint();
   
-  inplace_op<op_subview_elem_inplace_minus>(x);
+  inplace_op<op_internal_minus>(x);
   }
 
 
@@ -522,7 +522,7 @@ subview_elem2<eT,T1,T2>::operator%= (const Base<eT,expr>& x)
   {
   arma_extra_debug_sigprint();
   
-  inplace_op<op_subview_elem_inplace_schur>(x);
+  inplace_op<op_internal_schur>(x);
   }
 
 
@@ -535,7 +535,7 @@ subview_elem2<eT,T1,T2>::operator/= (const Base<eT,expr>& x)
   {
   arma_extra_debug_sigprint();
   
-  inplace_op<op_subview_elem_inplace_div>(x);
+  inplace_op<op_internal_div>(x);
   }
 
 

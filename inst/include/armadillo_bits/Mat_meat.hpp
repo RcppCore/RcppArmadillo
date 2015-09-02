@@ -69,6 +69,23 @@ Mat<eT>::Mat(const uword in_n_rows, const uword in_n_cols)
 
 
 
+template<typename eT>
+inline
+Mat<eT>::Mat(const SizeMat& s)
+  : n_rows(s.n_rows)
+  , n_cols(s.n_cols)
+  , n_elem(s.n_rows*s.n_cols)
+  , vec_state(0)
+  , mem_state(0)
+  , mem()
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  init_cold();
+  }
+
+
+
 //! construct the matrix to have user specified dimensions and fill with specified pattern
 template<typename eT>
 template<typename fill_type>
@@ -77,6 +94,26 @@ Mat<eT>::Mat(const uword in_n_rows, const uword in_n_cols, const fill::fill_clas
   : n_rows(in_n_rows)
   , n_cols(in_n_cols)
   , n_elem(in_n_rows*in_n_cols)
+  , vec_state(0)
+  , mem_state(0)
+  , mem()
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  init_cold();
+  
+  (*this).fill(f);
+  }
+
+
+
+template<typename eT>
+template<typename fill_type>
+inline
+Mat<eT>::Mat(const SizeMat& s, const fill::fill_class<fill_type>& f)
+  : n_rows(s.n_rows)
+  , n_cols(s.n_cols)
+  , n_elem(s.n_rows*s.n_cols)
   , vec_state(0)
   , mem_state(0)
   , mem()
@@ -5910,6 +5947,18 @@ Mat<eT>::set_size(const uword in_rows, const uword in_cols)
 
 
 
+template<typename eT>
+inline
+void
+Mat<eT>::set_size(const SizeMat& s)
+  {
+  arma_extra_debug_sigprint();
+  
+  init_warm(s.n_rows, s.n_cols);
+  }
+
+
+
 //! change the matrix to have user specified dimensions (data is preserved)
 template<typename eT>
 inline
@@ -5949,6 +5998,18 @@ Mat<eT>::resize(const uword in_rows, const uword in_cols)
 
 
 
+template<typename eT>
+inline
+void
+Mat<eT>::resize(const SizeMat& s)
+  {
+  arma_extra_debug_sigprint();
+  
+  *this = arma::resize(*this, s.n_rows, s.n_cols);
+  }
+
+
+
 //! change the matrix to have user specified dimensions (data is preserved)
 template<typename eT>
 inline
@@ -5958,6 +6019,18 @@ Mat<eT>::reshape(const uword in_rows, const uword in_cols)
   arma_extra_debug_sigprint();
   
   *this = arma::reshape(*this, in_rows, in_cols);
+  }
+
+
+
+template<typename eT>
+inline
+void
+Mat<eT>::reshape(const SizeMat& s)
+  {
+  arma_extra_debug_sigprint();
+  
+  *this = arma::reshape(*this, s.n_rows, s.n_cols);
   }
 
 
@@ -6147,6 +6220,18 @@ Mat<eT>::zeros(const uword in_n_rows, const uword in_n_cols)
 template<typename eT>
 inline
 const Mat<eT>&
+Mat<eT>::zeros(const SizeMat& s)
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).zeros(s.n_rows, s.n_cols);
+  }
+
+
+
+template<typename eT>
+inline
+const Mat<eT>&
 Mat<eT>::ones()
   {
   arma_extra_debug_sigprint();
@@ -6176,10 +6261,22 @@ const Mat<eT>&
 Mat<eT>::ones(const uword in_rows, const uword in_cols)
   {
   arma_extra_debug_sigprint();
-
+  
   set_size(in_rows, in_cols);
   
   return fill(eT(1));
+  }
+
+
+
+template<typename eT>
+inline
+const Mat<eT>&
+Mat<eT>::ones(const SizeMat& s)
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).ones(s.n_rows, s.n_cols);
   }
 
 
@@ -6229,6 +6326,18 @@ Mat<eT>::randu(const uword in_rows, const uword in_cols)
 template<typename eT>
 inline
 const Mat<eT>&
+Mat<eT>::randu(const SizeMat& s)
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).randu(s.n_rows, s.n_cols);
+  }
+
+
+
+template<typename eT>
+inline
+const Mat<eT>&
 Mat<eT>::randn()
   {
   arma_extra_debug_sigprint();
@@ -6271,6 +6380,18 @@ Mat<eT>::randn(const uword in_rows, const uword in_cols)
 template<typename eT>
 inline
 const Mat<eT>&
+Mat<eT>::randn(const SizeMat& s)
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).randn(s.n_rows, s.n_cols);
+  }
+
+
+
+template<typename eT>
+inline
+const Mat<eT>&
 Mat<eT>::eye()
   {
   arma_extra_debug_sigprint();
@@ -6299,6 +6420,18 @@ Mat<eT>::eye(const uword in_rows, const uword in_cols)
   set_size(in_rows, in_cols);
   
   return (*this).eye();
+  }
+
+
+
+template<typename eT>
+inline
+const Mat<eT>&
+Mat<eT>::eye(const SizeMat& s)
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).eye(s.n_rows, s.n_cols);
   }
 
 

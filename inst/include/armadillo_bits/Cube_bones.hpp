@@ -55,10 +55,11 @@ class Cube : public BaseCube< eT, Cube<eT> >
   inline ~Cube();
   inline  Cube();
   
-  inline Cube(const uword in_rows, const uword in_cols, const uword in_slices);
+  inline explicit Cube(const uword in_rows, const uword in_cols, const uword in_slices);
+  inline explicit Cube(const SizeCube& s);
   
-  template<typename fill_type>
-  inline Cube(const uword in_rows, const uword in_cols, const uword in_slices, const fill::fill_class<fill_type>& f);
+  template<typename fill_type> inline Cube(const uword in_rows, const uword in_cols, const uword in_slices, const fill::fill_class<fill_type>& f);
+  template<typename fill_type> inline Cube(const SizeCube& s,                                               const fill::fill_class<fill_type>& f);
   
   #if defined(ARMA_USE_CXX11)
   inline                  Cube(Cube&& m);
@@ -247,6 +248,10 @@ class Cube : public BaseCube< eT, Cube<eT> >
   inline void   reshape(const uword in_rows, const uword in_cols, const uword in_slices, const uword dim = 0);
   inline void    resize(const uword in_rows, const uword in_cols, const uword in_slices);
   
+  inline void  set_size(const SizeCube& s);
+  inline void   reshape(const SizeCube& s);
+  inline void    resize(const SizeCube& s);
+  
   template<typename eT2> inline void copy_size(const Cube<eT2>& m);
   
   
@@ -261,15 +266,19 @@ class Cube : public BaseCube< eT, Cube<eT> >
   
   inline const Cube& zeros();
   inline const Cube& zeros(const uword in_rows, const uword in_cols, const uword in_slices);
+  inline const Cube& zeros(const SizeCube& s);
   
   inline const Cube& ones();
   inline const Cube& ones(const uword in_rows, const uword in_cols, const uword in_slices);
+  inline const Cube& ones(const SizeCube& s);
   
   inline const Cube& randu();
   inline const Cube& randu(const uword in_rows, const uword in_cols, const uword in_slices);
+  inline const Cube& randu(const SizeCube& s);
   
   inline const Cube& randn();
   inline const Cube& randn(const uword in_rows, const uword in_cols, const uword in_slices);
+  inline const Cube& randn(const SizeCube& s);
   
   inline void reset();
   

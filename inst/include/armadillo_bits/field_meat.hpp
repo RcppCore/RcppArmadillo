@@ -161,6 +161,38 @@ field<oT>::field(const uword n_rows_in, const uword n_cols_in, const uword n_sli
 
 
 
+template<typename oT>
+inline
+field<oT>::field(const SizeMat& s)
+  : n_rows(0)
+  , n_cols(0)
+  , n_slices(0)
+  , n_elem(0)
+  , mem(0)
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  init(s.n_rows, s.n_cols);
+  }
+
+
+
+template<typename oT>
+inline
+field<oT>::field(const SizeCube& s)
+  : n_rows(0)
+  , n_cols(0)
+  , n_slices(0)
+  , n_elem(0)
+  , mem(0)
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  init(s.n_rows, s.n_cols, s.n_slices);
+  }
+
+
+
 //! change the field to have the specified number of elements,
 //! assuming a column-major layout (data is not preserved)
 template<typename oT>
@@ -197,6 +229,26 @@ field<oT>::set_size(const uword n_rows_in, const uword n_cols_in, const uword n_
   arma_extra_debug_sigprint(arma_boost::format("n_rows_in = %d, n_cols_in = %d, n_slices_in = %d") % n_rows_in % n_cols_in % n_slices_in);
   
   init(n_rows_in, n_cols_in, n_slices_in);
+  }
+
+
+
+template<typename oT>
+inline
+void
+field<oT>::set_size(const SizeMat& s)
+  {
+  init(s.n_rows, s.n_cols);
+  }
+
+
+
+template<typename oT>
+inline
+void
+field<oT>::set_size(const SizeCube& s)
+  {
+  init(s.n_rows, s.n_cols, s.n_slices);
   }
 
 
