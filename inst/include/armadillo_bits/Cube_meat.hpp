@@ -75,6 +75,25 @@ Cube<eT>::Cube(const uword in_n_rows, const uword in_n_cols, const uword in_n_sl
 
 
 
+template<typename eT>
+inline
+Cube<eT>::Cube(const SizeCube& s)
+  : n_rows(s.n_rows)
+  , n_cols(s.n_cols)
+  , n_elem_slice(s.n_rows*s.n_cols)
+  , n_slices(s.n_slices)
+  , n_elem(s.n_rows*s.n_cols*s.n_slices)
+  , mem_state(0)
+  , mat_ptrs(0)
+  , mem()
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  init_cold();
+  }
+
+
+
 //! construct the cube to have user specified dimensions and fill with specified pattern
 template<typename eT>
 template<typename fill_type>
@@ -85,6 +104,33 @@ Cube<eT>::Cube(const uword in_n_rows, const uword in_n_cols, const uword in_n_sl
   , n_elem_slice(in_n_rows*in_n_cols)
   , n_slices(in_n_slices)
   , n_elem(in_n_rows*in_n_cols*in_n_slices)
+  , mem_state(0)
+  , mat_ptrs(0)
+  , mem()
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  init_cold();
+  
+  if(is_same_type<fill_type, fill::fill_zeros>::yes)  (*this).zeros();
+  if(is_same_type<fill_type, fill::fill_ones >::yes)  (*this).ones();
+  if(is_same_type<fill_type, fill::fill_randu>::yes)  (*this).randu();
+  if(is_same_type<fill_type, fill::fill_randn>::yes)  (*this).randn();
+  
+  if(is_same_type<fill_type, fill::fill_eye  >::yes)  { arma_debug_check(true, "Cube::Cube(): unsupported fill type"); }
+  }
+
+
+
+template<typename eT>
+template<typename fill_type>
+inline
+Cube<eT>::Cube(const SizeCube& s, const fill::fill_class<fill_type>&)
+  : n_rows(s.n_rows)
+  , n_cols(s.n_cols)
+  , n_elem_slice(s.n_rows*s.n_cols)
+  , n_slices(s.n_slices)
+  , n_elem(s.n_rows*s.n_cols*s.n_slices)
   , mem_state(0)
   , mat_ptrs(0)
   , mem()
@@ -2866,6 +2912,42 @@ Cube<eT>::resize(const uword in_rows, const uword in_cols, const uword in_slices
 
 
 
+template<typename eT>
+inline
+void
+Cube<eT>::set_size(const SizeCube& s)
+  {
+  arma_extra_debug_sigprint();
+  
+  init_warm(s.n_rows, s.n_cols, s.n_slices);
+  }
+
+
+
+template<typename eT>
+inline
+void
+Cube<eT>::reshape(const SizeCube& s)
+  {
+  arma_extra_debug_sigprint();
+  
+  *this = arma::reshape(*this, s.n_rows, s.n_cols, s.n_slices, 0);
+  }
+
+
+
+template<typename eT>
+inline
+void
+Cube<eT>::resize(const SizeCube& s)
+  {
+  arma_extra_debug_sigprint();
+  
+  *this = arma::resize(*this, s.n_rows, s.n_cols, s.n_slices);
+  }
+
+
+
 //! change the cube (without preserving data) to have the same dimensions as the given cube 
 template<typename eT>
 template<typename eT2>
@@ -2997,6 +3079,18 @@ Cube<eT>::zeros(const uword in_rows, const uword in_cols, const uword in_slices)
 template<typename eT>
 inline
 const Cube<eT>&
+Cube<eT>::zeros(const SizeCube& s)
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).zeros(s.n_rows, s.n_cols, s.n_slices);
+  }
+
+
+
+template<typename eT>
+inline
+const Cube<eT>&
 Cube<eT>::ones()
   {
   arma_extra_debug_sigprint();
@@ -3016,6 +3110,18 @@ Cube<eT>::ones(const uword in_rows, const uword in_cols, const uword in_slices)
   set_size(in_rows, in_cols, in_slices);
   
   return (*this).fill(eT(1));
+  }
+
+
+
+template<typename eT>
+inline
+const Cube<eT>&
+Cube<eT>::ones(const SizeCube& s)
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).ones(s.n_rows, s.n_cols, s.n_slices);
   }
 
 
@@ -3051,6 +3157,18 @@ Cube<eT>::randu(const uword in_rows, const uword in_cols, const uword in_slices)
 template<typename eT>
 inline
 const Cube<eT>&
+Cube<eT>::randu(const SizeCube& s)
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).randu(s.n_rows, s.n_cols, s.n_slices);
+  }
+
+
+
+template<typename eT>
+inline
+const Cube<eT>&
 Cube<eT>::randn()
   {
   arma_extra_debug_sigprint();
@@ -3072,6 +3190,18 @@ Cube<eT>::randn(const uword in_rows, const uword in_cols, const uword in_slices)
   set_size(in_rows, in_cols, in_slices);
   
   return (*this).randn();
+  }
+
+
+
+template<typename eT>
+inline
+const Cube<eT>&
+Cube<eT>::randn(const SizeCube& s)
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).randn(s.n_rows, s.n_cols, s.n_slices);
   }
 
 

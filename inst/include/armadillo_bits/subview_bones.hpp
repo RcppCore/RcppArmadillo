@@ -42,31 +42,36 @@ class subview : public Base<eT, subview<eT> >
   
   inline ~subview();
   
+  template<typename op_type             > inline void inplace_op(const eT           val                        );
+  template<typename op_type, typename T1> inline void inplace_op(const Base<eT,T1>& x,   const char* identifier);
+  template<typename op_type             > inline void inplace_op(const subview<eT>& x,   const char* identifier);
+  
+  // deliberately returning void
+  
   inline void operator=  (const eT val);
   inline void operator+= (const eT val);
   inline void operator-= (const eT val);
   inline void operator*= (const eT val);
   inline void operator/= (const eT val);
   
-  // deliberately returning void
-  template<typename T1> inline void operator=  (const Base<eT,T1>& x);
-  template<typename T1> inline void operator+= (const Base<eT,T1>& x);
-  template<typename T1> inline void operator-= (const Base<eT,T1>& x);
-  template<typename T1> inline void operator%= (const Base<eT,T1>& x);
-  template<typename T1> inline void operator/= (const Base<eT,T1>& x);
-  
-  template<typename T1> inline void operator= (const SpBase<eT, T1>& x);
-  template<typename T1> inline void operator+=(const SpBase<eT, T1>& x);
-  template<typename T1> inline void operator-=(const SpBase<eT, T1>& x);
-  template<typename T1> inline void operator%=(const SpBase<eT, T1>& x);
-  template<typename T1> inline void operator/=(const SpBase<eT, T1>& x);
-
   inline void operator=  (const subview& x);
   inline void operator+= (const subview& x);
   inline void operator-= (const subview& x);
   inline void operator%= (const subview& x);
   inline void operator/= (const subview& x);
   
+  template<typename T1> inline void operator=  (const Base<eT,T1>& x);
+  template<typename T1> inline void operator+= (const Base<eT,T1>& x);
+  template<typename T1> inline void operator-= (const Base<eT,T1>& x);
+  template<typename T1> inline void operator%= (const Base<eT,T1>& x);
+  template<typename T1> inline void operator/= (const Base<eT,T1>& x);
+  
+  template<typename T1> inline void operator=  (const SpBase<eT,T1>& x);
+  template<typename T1> inline void operator+= (const SpBase<eT,T1>& x);
+  template<typename T1> inline void operator-= (const SpBase<eT,T1>& x);
+  template<typename T1> inline void operator%= (const SpBase<eT,T1>& x);
+  template<typename T1> inline void operator/= (const SpBase<eT,T1>& x);
+
   template<typename T1, typename gen_type>
   inline typename enable_if2< is_same_type<typename T1::elem_type, eT>::value, void>::result operator=(const Gen<T1,gen_type>& x);
   

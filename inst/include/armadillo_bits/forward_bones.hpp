@@ -113,8 +113,8 @@ class op_rel_gteq_post;
 class op_rel_eq;
 class op_rel_noteq;
 
-class gen_ones_diag;
-class gen_ones_full;
+class gen_eye;
+class gen_ones;
 class gen_zeros;
 class gen_randu;
 class gen_randn;
@@ -134,11 +134,11 @@ class op_cx_scalar_div_post;
 
 
 
-class op_subview_elem_equ;
-class op_subview_elem_inplace_plus;
-class op_subview_elem_inplace_minus;
-class op_subview_elem_inplace_schur;
-class op_subview_elem_inplace_div;
+class op_internal_equ;
+class op_internal_plus;
+class op_internal_minus;
+class op_internal_schur;
+class op_internal_div;
 
 
 

@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 Conrad Sanderson
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -73,6 +73,17 @@ randn(const uword n_rows, const uword n_cols)
 
 
 
+arma_inline
+const Gen<mat, gen_randn>
+randn(const SizeMat& s)
+  {
+  arma_extra_debug_sigprint();
+  
+  return Gen<mat, gen_randn>(s.n_rows, s.n_cols);
+  }
+
+
+
 template<typename obj_type>
 arma_inline
 const Gen<obj_type, gen_randn>
@@ -96,6 +107,19 @@ randn(const uword n_rows, const uword n_cols, const typename arma_Mat_Col_Row_on
 
 
 
+template<typename obj_type>
+arma_inline
+const Gen<obj_type, gen_randn>
+randn(const SizeMat& s, const typename arma_Mat_Col_Row_only<obj_type>::result* junk = 0)
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  return randn<obj_type>(s.n_rows, s.n_cols);
+  }
+
+
+
 arma_inline
 const GenCube<cube::elem_type, gen_randn>
 randn(const uword n_rows, const uword n_cols, const uword n_slices)
@@ -103,6 +127,17 @@ randn(const uword n_rows, const uword n_cols, const uword n_slices)
   arma_extra_debug_sigprint();
   
   return GenCube<cube::elem_type, gen_randn>(n_rows, n_cols, n_slices);
+  }
+
+
+
+arma_inline
+const GenCube<cube::elem_type, gen_randn>
+randn(const SizeCube& s)
+  {
+  arma_extra_debug_sigprint();
+  
+  return GenCube<cube::elem_type, gen_randn>(s.n_rows, s.n_cols, s.n_slices);
   }
 
 
@@ -116,6 +151,19 @@ randn(const uword n_rows, const uword n_cols, const uword n_slices, const typena
   arma_ignore(junk);
   
   return GenCube<typename cube_type::elem_type, gen_randn>(n_rows, n_cols, n_slices);
+  }
+
+
+
+template<typename cube_type>
+arma_inline
+const GenCube<typename cube_type::elem_type, gen_randn>
+randn(const SizeCube& s, const typename arma_Cube_only<cube_type>::result* junk = 0)
+  {
+  arma_extra_debug_sigprint();  
+  arma_ignore(junk);
+  
+  return GenCube<typename cube_type::elem_type, gen_randn>(s.n_rows, s.n_cols, s.n_slices);
   }
 
 

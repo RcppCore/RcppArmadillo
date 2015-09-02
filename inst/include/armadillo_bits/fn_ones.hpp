@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 Conrad Sanderson
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,91 +12,139 @@
 
 
 arma_inline
-const Gen<vec, gen_ones_full>
+const Gen<vec, gen_ones>
 ones(const uword n_elem)
   {
   arma_extra_debug_sigprint();
   
-  return Gen<vec, gen_ones_full>(n_elem, 1);
+  return Gen<vec, gen_ones>(n_elem, 1);
   }
 
 
 
 template<typename obj_type>
 arma_inline
-const Gen<obj_type, gen_ones_full>
+const Gen<obj_type, gen_ones>
 ones(const uword n_elem, const arma_empty_class junk1 = arma_empty_class(), const typename arma_Mat_Col_Row_only<obj_type>::result* junk2 = 0)
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk1);
   arma_ignore(junk2);
   
-  if(is_Row<obj_type>::value == true)
+  if(is_Row<obj_type>::value)
     {
-    return Gen<obj_type, gen_ones_full>(1, n_elem);
+    return Gen<obj_type, gen_ones>(1, n_elem);
     }
   else
     {
-    return Gen<obj_type, gen_ones_full>(n_elem, 1);
+    return Gen<obj_type, gen_ones>(n_elem, 1);
     }
   }
 
 
 
 arma_inline
-const Gen<mat, gen_ones_full>
+const Gen<mat, gen_ones>
 ones(const uword n_rows, const uword n_cols)
   {
   arma_extra_debug_sigprint();
   
-  return Gen<mat, gen_ones_full>(n_rows, n_cols);
+  return Gen<mat, gen_ones>(n_rows, n_cols);
+  }
+
+
+
+arma_inline
+const Gen<mat, gen_ones>
+ones(const SizeMat& s)
+  {
+  arma_extra_debug_sigprint();
+  
+  return Gen<mat, gen_ones>(s.n_rows, s.n_cols);
   }
 
 
 
 template<typename obj_type>
 inline
-const Gen<obj_type, gen_ones_full>
+const Gen<obj_type, gen_ones>
 ones(const uword n_rows, const uword n_cols, const typename arma_Mat_Col_Row_only<obj_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  if(is_Col<obj_type>::value == true)
+  if(is_Col<obj_type>::value)
     {
     arma_debug_check( (n_cols != 1), "ones(): incompatible size" );
     }
   else
-  if(is_Row<obj_type>::value == true)
+  if(is_Row<obj_type>::value)
     {
     arma_debug_check( (n_rows != 1), "ones(): incompatible size" );
     }
   
-  return Gen<obj_type, gen_ones_full>(n_rows, n_cols);
+  return Gen<obj_type, gen_ones>(n_rows, n_cols);
+  }
+
+
+
+template<typename obj_type>
+inline
+const Gen<obj_type, gen_ones>
+ones(const SizeMat& s, const typename arma_Mat_Col_Row_only<obj_type>::result* junk = 0)
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  return ones<obj_type>(s.n_rows, s.n_cols);
   }
 
 
 
 arma_inline
-const GenCube<cube::elem_type, gen_ones_full>
+const GenCube<cube::elem_type, gen_ones>
 ones(const uword n_rows, const uword n_cols, const uword n_slices)
   {
   arma_extra_debug_sigprint();
   
-  return GenCube<cube::elem_type, gen_ones_full>(n_rows, n_cols, n_slices);
+  return GenCube<cube::elem_type, gen_ones>(n_rows, n_cols, n_slices);
+  }
+
+
+
+arma_inline
+const GenCube<cube::elem_type, gen_ones>
+ones(const SizeCube& s)
+  {
+  arma_extra_debug_sigprint();
+  
+  return GenCube<cube::elem_type, gen_ones>(s.n_rows, s.n_cols, s.n_slices);
   }
 
 
 
 template<typename cube_type>
 arma_inline
-const GenCube<typename cube_type::elem_type, gen_ones_full>
+const GenCube<typename cube_type::elem_type, gen_ones>
 ones(const uword n_rows, const uword n_cols, const uword n_slices, const typename arma_Cube_only<cube_type>::result* junk = 0)
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  return GenCube<typename cube_type::elem_type, gen_ones_full>(n_rows, n_cols, n_slices);
+  return GenCube<typename cube_type::elem_type, gen_ones>(n_rows, n_cols, n_slices);
+  }
+
+
+
+template<typename cube_type>
+arma_inline
+const GenCube<typename cube_type::elem_type, gen_ones>
+ones(const SizeCube& s, const typename arma_Cube_only<cube_type>::result* junk = 0)
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  return GenCube<typename cube_type::elem_type, gen_ones>(s.n_rows, s.n_cols, s.n_slices);
   }
 
 

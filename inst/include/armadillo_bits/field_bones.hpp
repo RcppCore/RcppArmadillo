@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2014 Conrad Sanderson
-// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // Copyright (C) 2009-2010 Ian Cullinan
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -53,12 +53,16 @@ class field
   inline const field& operator=(const subview_field<oT>& x);
   
   inline explicit field(const uword n_elem_in);
-  inline          field(const uword n_rows_in, const uword n_cols_in);
-  inline          field(const uword n_rows_in, const uword n_cols_in, const uword n_slices_in);
+  inline explicit field(const uword n_rows_in, const uword n_cols_in);
+  inline explicit field(const uword n_rows_in, const uword n_cols_in, const uword n_slices_in);
+  inline explicit field(const SizeMat&  s);
+  inline explicit field(const SizeCube& s);
   
   inline void  set_size(const uword n_obj_in);
   inline void  set_size(const uword n_rows_in, const uword n_cols_in);
   inline void  set_size(const uword n_rows_in, const uword n_cols_in, const uword n_slices_in);
+  inline void  set_size(const SizeMat&  s);
+  inline void  set_size(const SizeCube& s);
   
   template<typename oT2>
   inline void copy_size(const field<oT2>& x);

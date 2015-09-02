@@ -47,10 +47,11 @@ class Mat : public Base< eT, Mat<eT> >
   inline ~Mat();
   inline  Mat();
   
-  inline Mat(const uword in_rows, const uword in_cols);
+  inline explicit Mat(const uword in_rows, const uword in_cols);
+  inline explicit Mat(const SizeMat& s);
   
-  template<typename fill_type>
-  inline Mat(const uword in_rows, const uword in_cols, const fill::fill_class<fill_type>& f);
+  template<typename fill_type> inline Mat(const uword in_rows, const uword in_cols, const fill::fill_class<fill_type>& f);
+  template<typename fill_type> inline Mat(const SizeMat& s,                         const fill::fill_class<fill_type>& f);
   
   inline                  Mat(const char*        text);
   inline const Mat& operator=(const char*        text);
@@ -397,11 +398,14 @@ class Mat : public Base< eT, Mat<eT> >
   
   inline void set_size(const uword in_elem);
   inline void set_size(const uword in_rows, const uword in_cols);
+  inline void set_size(const SizeMat& s);
   
   inline void   resize(const uword in_elem);
   inline void   resize(const uword in_rows, const uword in_cols);
+  inline void   resize(const SizeMat& s);
   
   inline void  reshape(const uword in_rows, const uword in_cols);
+  inline void  reshape(const SizeMat& s);
   inline void  reshape(const uword in_rows, const uword in_cols, const uword dim);
   
   
@@ -420,21 +424,26 @@ class Mat : public Base< eT, Mat<eT> >
   inline const Mat& zeros();
   inline const Mat& zeros(const uword in_elem);
   inline const Mat& zeros(const uword in_rows, const uword in_cols);
+  inline const Mat& zeros(const SizeMat& s);
   
   inline const Mat& ones();
   inline const Mat& ones(const uword in_elem);
   inline const Mat& ones(const uword in_rows, const uword in_cols);
+  inline const Mat& ones(const SizeMat& s);
   
   inline const Mat& randu();
   inline const Mat& randu(const uword in_elem);
   inline const Mat& randu(const uword in_rows, const uword in_cols);
+  inline const Mat& randu(const SizeMat& s);
   
   inline const Mat& randn();
   inline const Mat& randn(const uword in_elem);
   inline const Mat& randn(const uword in_rows, const uword in_cols);
+  inline const Mat& randn(const SizeMat& s);
   
   inline const Mat& eye();
   inline const Mat& eye(const uword in_rows, const uword in_cols);
+  inline const Mat& eye(const SizeMat& s);
   
   inline void reset();
   

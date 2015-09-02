@@ -25,10 +25,12 @@ class Row : public Mat<eT>
   inline          Row();
   inline          Row(const Row<eT>& X);
   inline explicit Row(const uword N);
-  inline          Row(const uword in_rows, const uword in_cols);
+  inline explicit Row(const uword in_rows, const uword in_cols);
+  inline explicit Row(const SizeMat& s);
   
   template<typename fill_type> inline Row(const uword n_elem,                       const fill::fill_class<fill_type>& f);
   template<typename fill_type> inline Row(const uword in_rows, const uword in_cols, const fill::fill_class<fill_type>& f);
+  template<typename fill_type> inline Row(const SizeMat& s,                         const fill::fill_class<fill_type>& f);
   
   inline                  Row(const char*        text);
   inline const Row& operator=(const char*        text);

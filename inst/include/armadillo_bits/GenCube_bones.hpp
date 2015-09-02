@@ -1,5 +1,5 @@
-// Copyright (C) 2011-2013 Conrad Sanderson
-// Copyright (C) 2011-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2011-2015 Conrad Sanderson
+// Copyright (C) 2011-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,7 +20,7 @@ class GenCube : public BaseCube<eT, GenCube<eT, gen_type> >
   typedef typename get_pod_type<elem_type>::result pod_type;
   
   static const bool prefer_at_accessor = false;
-  static const bool is_simple          = (is_same_type<gen_type, gen_ones_full>::value) || (is_same_type<gen_type, gen_zeros>::value); 
+  static const bool is_simple          = (is_same_type<gen_type, gen_ones>::value) || (is_same_type<gen_type, gen_zeros>::value); 
   
   arma_aligned const uword n_rows;
   arma_aligned const uword n_cols;

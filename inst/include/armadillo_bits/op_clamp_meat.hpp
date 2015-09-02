@@ -1,5 +1,5 @@
-// Copyright (C) 2014 Conrad Sanderson
-// Copyright (C) 2014 NICTA (www.nicta.com.au)
+// Copyright (C) 2014-2015 Conrad Sanderson
+// Copyright (C) 2014-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -61,30 +61,28 @@ op_clamp::apply_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, co
     
     typename Proxy<T1>::ea_type A = P.get_ea();
     
-    uword i,j;
-    for(i=0, j=1; j<N; i+=2, j+=2)
+    uword j;
+    for(j=1; j<N; j+=2)
       {
-      eT val_i = A[i];
-      eT val_j = A[j];
+      eT val_i = A[j-1];
+      eT val_j = A[j  ];
       
-           if(val_i < min_val)  { val_i = min_val; }
-      else if(val_i > max_val)  { val_i = max_val; }
+      val_i = (val_i < min_val) ? min_val : ((val_i > max_val) ? max_val : val_i);
+      val_j = (val_j < min_val) ? min_val : ((val_j > max_val) ? max_val : val_j);
       
-           if(val_j < min_val)  { val_j = min_val; }
-      else if(val_j > max_val)  { val_j = max_val; }
-      
-      out_mem[i] = val_i;
-      out_mem[j] = val_j;
+      (*out_mem) = val_i;  out_mem++;
+      (*out_mem) = val_j;  out_mem++;
       }
+    
+    const uword i = j-1;
     
     if(i < N)
       {
       eT val_i = A[i];
       
-           if(val_i < min_val)  { val_i = min_val; }
-      else if(val_i > max_val)  { val_i = max_val; }
+      val_i = (val_i < min_val) ? min_val : ((val_i > max_val) ? max_val : val_i);
       
-      out_mem[i] = val_i;
+      (*out_mem) = val_i;
       }
     }
   else
@@ -94,10 +92,9 @@ op_clamp::apply_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, co
       {
       eT val = P.at(row,col);
       
-           if(val < min_val)  { val = min_val; }
-      else if(val > max_val)  { val = max_val; }
+      val = (val < min_val) ? min_val : ((val > max_val) ? max_val : val);
       
-      (*out_mem) = val;  ++out_mem;
+      (*out_mem) = val;  out_mem++;
       }
     }
   }
