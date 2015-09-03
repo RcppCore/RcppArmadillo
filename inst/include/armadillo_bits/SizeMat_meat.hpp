@@ -28,7 +28,7 @@ SizeMat::operator[](const uword dim) const
   if(dim == 0)  { return n_rows; }
   if(dim == 1)  { return n_cols; }
   
-  return uword(0);
+  return uword(1);
   }
 
 
@@ -40,9 +40,9 @@ SizeMat::operator()(const uword dim) const
   if(dim == 0)  { return n_rows; }
   if(dim == 1)  { return n_cols; }
   
-  arma_debug_check(true, "size(): dimension out of bounds");
+  arma_debug_check(true, "size(): index out of bounds");
   
-  return uword(0);
+  return uword(1);
   }
 
 
@@ -74,31 +74,61 @@ SizeMat::operator!=(const SizeMat& s) const
 
 
 inline
-bool
-SizeMat::operator==(const SizeCube& s) const
+SizeMat
+SizeMat::operator+(const SizeMat& s) const
   {
-  if(n_rows   != s.n_rows  )  { return false; }
-  
-  if(n_cols   != s.n_cols  )  { return false; }
-  
-  if(uword(1) != s.n_slices)  { return false; }
-  
-  return true;
+  return SizeMat( (n_rows + s.n_rows), (n_cols + s.n_cols) );
   }
 
 
 
 inline
-bool
-SizeMat::operator!=(const SizeCube& s) const
+SizeMat
+SizeMat::operator-(const SizeMat& s) const
   {
-  if(n_rows   != s.n_rows  )  { return true; }
+  const uword out_n_rows = (n_rows > s.n_rows) ? (n_rows - s.n_rows) : uword(0);
+  const uword out_n_cols = (n_cols > s.n_cols) ? (n_cols - s.n_cols) : uword(0);
   
-  if(n_cols   != s.n_cols  )  { return true; }
+  return SizeMat(out_n_rows, out_n_cols);
+  }
+
+
+
+inline
+SizeMat
+SizeMat::operator+(const uword val) const
+  {
+  return SizeMat( (n_rows + val), (n_cols + val) );
+  }
+
+
+
+inline
+SizeMat
+SizeMat::operator-(const uword val) const
+  {
+  const uword out_n_rows = (n_rows > val) ? (n_rows - val) : uword(0);
+  const uword out_n_cols = (n_cols > val) ? (n_cols - val) : uword(0);
   
-  if(uword(1) != s.n_slices)  { return true; }
-  
-  return false;
+  return SizeMat(out_n_rows, out_n_cols);
+  }
+
+
+
+inline
+SizeMat
+SizeMat::operator*(const uword val) const
+  {
+  return SizeMat( (n_rows * val), (n_cols * val) );
+  }
+
+
+
+inline
+SizeMat
+SizeMat::operator/(const uword val) const
+  {
+  return SizeMat( (n_rows / val), (n_cols / val) );
   }
 
 

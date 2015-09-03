@@ -2,6 +2,18 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.5.500.2.0 (2015-09-03)}{
+  \itemize{
+    \item Upgraded to Armadillo 5.500.2 ("Molotov Cocktail")
+    \itemize{
+      \item expanded object constructors and generators to handle \code{size()} based specification of dimensions
+      \item faster handling of submatrix rows
+      \item faster \code{clamp()}
+      \item fixes for handling sparse matrices
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.5.400.2.0 (2015-08-17)}{
   \itemize{
     \item Upgraded to Armadillo 5.400.2 ("Plutocracy Incorporated Deluxe")
