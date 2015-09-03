@@ -141,7 +141,7 @@ class field
   inline const subview_field<oT> operator()(const uword in_row1, const uword in_col1, const uword in_slice1, const SizeCube& s) const;
   
   
-  inline void print(const std::string extra_text = "") const;
+  inline void print(                           const std::string extra_text = "") const;
   inline void print(std::ostream& user_stream, const std::string extra_text = "") const;
   
   inline void fill(const oT& x);

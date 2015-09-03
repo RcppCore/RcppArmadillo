@@ -46,16 +46,16 @@ struct SpBase
   inline const SpOp<derived,spop_htrans> ht() const;  //!< Hermitian transpose
   inline const SpOp<derived,spop_strans> st() const;  //!< simple transpose
   
-  inline void print(const std::string extra_text = "") const;
+  inline void print(                           const std::string extra_text = "") const;
   inline void print(std::ostream& user_stream, const std::string extra_text = "") const;
   
-  inline void raw_print(const std::string extra_text = "") const;
+  inline void raw_print(                           const std::string extra_text = "") const;
   inline void raw_print(std::ostream& user_stream, const std::string extra_text = "") const;
   
-  inline void print_dense(const std::string extra_text = "") const;
+  inline void print_dense(                           const std::string extra_text = "") const;
   inline void print_dense(std::ostream& user_stream, const std::string extra_text = "") const;
   
-  inline void raw_print_dense(const std::string extra_text = "") const;
+  inline void raw_print_dense(                           const std::string extra_text = "") const;
   inline void raw_print_dense(std::ostream& user_stream, const std::string extra_text = "") const;
   
   inline arma_warn_unused elem_type min() const;

@@ -27,8 +27,14 @@ class SizeCube
   inline bool operator==(const SizeCube& s) const;
   inline bool operator!=(const SizeCube& s) const;
   
-  inline bool operator==(const SizeMat& s) const;
-  inline bool operator!=(const SizeMat& s) const;
+  inline SizeCube operator+(const SizeCube& s) const;
+  inline SizeCube operator-(const SizeCube& s) const;
+  
+  inline SizeCube operator+(const uword val) const;
+  inline SizeCube operator-(const uword val) const;
+  
+  inline SizeCube operator*(const uword val) const;
+  inline SizeCube operator/(const uword val) const;
   };
 
 

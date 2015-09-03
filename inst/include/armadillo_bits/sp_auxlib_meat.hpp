@@ -579,6 +579,7 @@ sp_auxlib::spsolve(Mat<typename T1::elem_type>& X, const SpBase<typename T1::ele
     arma_ignore(X);
     arma_ignore(A_expr);
     arma_ignore(B_expr);
+    arma_ignore(user_opts);
     arma_stop("spsolve(): use of SuperLU needs to be enabled");
     return false;
     }

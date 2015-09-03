@@ -103,10 +103,10 @@ struct Base
   {
   arma_inline const derived& get_ref() const;
   
-  inline void print(const std::string extra_text = "") const;
+  inline void print(                           const std::string extra_text = "") const;
   inline void print(std::ostream& user_stream, const std::string extra_text = "") const;
   
-  inline void raw_print(const std::string extra_text = "") const;
+  inline void raw_print(                           const std::string extra_text = "") const;
   inline void raw_print(std::ostream& user_stream, const std::string extra_text = "") const;
   
   inline arma_warn_unused elem_type min() const;
