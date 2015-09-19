@@ -1,3 +1,12 @@
+2015-09-19  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.5.600.2.0
+        * inst/NEWS.Rd: Release 0.5.600.2.0
+
+	* inst/include/*: Upgraded to release 5.600.2 of Armadillo
+
+        * debian/*: Changes for Debian release of 0.5.600.2.0
+
 2015-09-03  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.5.500.2.0

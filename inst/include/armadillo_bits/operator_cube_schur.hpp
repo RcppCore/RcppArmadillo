@@ -54,4 +54,68 @@ operator%
 
 
 
+template<typename eT, typename T2>
+arma_inline
+Cube<eT>
+operator%
+  (
+  const subview_cube_each1<eT>& X,
+  const Base<eT,T2>&            Y
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_cube_each1_aux::operator_schur(X, Y.get_ref());
+  }
+
+
+
+template<typename T1, typename eT>
+arma_inline
+Cube<eT>
+operator%
+  (
+  const Base<eT,T1>&            X,
+  const subview_cube_each1<eT>& Y
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_cube_each1_aux::operator_schur(Y, X.get_ref());  // NOTE: swapped order
+  }
+
+
+
+template<typename eT, typename TB, typename T2>
+arma_inline
+Cube<eT>
+operator%
+  (
+  const subview_cube_each2<eT,TB>& X,
+  const Base<eT,T2>&               Y
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_cube_each2_aux::operator_schur(X, Y.get_ref());
+  }
+
+
+
+template<typename T1, typename eT, typename TB>
+arma_inline
+Cube<eT>
+operator%
+  (
+  const Base<eT,T1>&               X,
+  const subview_cube_each2<eT,TB>& Y
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_cube_each2_aux::operator_schur(Y, X.get_ref());  // NOTE: swapped order
+  }
+
+
+
 //! @}

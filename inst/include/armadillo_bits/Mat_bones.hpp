@@ -250,11 +250,17 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename T2> arma_inline const subview_elem2<eT,T2,T2> cols(const Base<uword,T2>& ci) const;
   
   
-  arma_inline subview_each1< Mat<eT>, 0 > each_col();
-  arma_inline subview_each1< Mat<eT>, 1 > each_row();
+  arma_inline       subview_each1< Mat<eT>, 0 > each_col();
+  arma_inline       subview_each1< Mat<eT>, 1 > each_row();
   
-  template<typename T1> inline subview_each2< Mat<eT>, 0, T1 > each_col(const Base<uword, T1>& indices);
-  template<typename T1> inline subview_each2< Mat<eT>, 1, T1 > each_row(const Base<uword, T1>& indices);
+  arma_inline const subview_each1< Mat<eT>, 0 > each_col() const;
+  arma_inline const subview_each1< Mat<eT>, 1 > each_row() const;
+  
+  template<typename T1> inline       subview_each2< Mat<eT>, 0, T1 > each_col(const Base<uword, T1>& indices);
+  template<typename T1> inline       subview_each2< Mat<eT>, 1, T1 > each_row(const Base<uword, T1>& indices);
+  
+  template<typename T1> inline const subview_each2< Mat<eT>, 0, T1 > each_col(const Base<uword, T1>& indices) const;
+  template<typename T1> inline const subview_each2< Mat<eT>, 1, T1 > each_row(const Base<uword, T1>& indices) const;
   
   arma_inline       diagview<eT> diag(const sword in_id = 0);
   arma_inline const diagview<eT> diag(const sword in_id = 0) const;

@@ -1429,6 +1429,56 @@ Cube<eT>::operator()(const Base<uword,T1>& a) const
 
 
 
+template<typename eT>
+arma_inline
+subview_cube_each1<eT>
+Cube<eT>::each_slice()
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_cube_each1<eT>(*this);
+  }
+
+
+
+template<typename eT>
+arma_inline
+const subview_cube_each1<eT>
+Cube<eT>::each_slice() const
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_cube_each1<eT>(*this);
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+subview_cube_each2<eT, T1>
+Cube<eT>::each_slice(const Base<uword, T1>& indices)
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_cube_each2<eT, T1>(*this, indices);
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+const subview_cube_each2<eT, T1>
+Cube<eT>::each_slice(const Base<uword, T1>& indices) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_cube_each2<eT, T1>(*this, indices);
+  }
+
+
+
 //! remove specified slice
 template<typename eT>
 inline
