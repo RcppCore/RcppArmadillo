@@ -2,6 +2,17 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.5.600.2.0 (2015-09-19)}{
+  \itemize{
+    \item Upgraded to Armadillo 5.600.2 ("Molotov Cocktail Deluxe")
+    \itemize{
+      \item expanded \code{.each_col()} and \code{.each_row()} to handle out-of-place operations
+      \item added \code{.each_slice()} for repeated matrix operations on each slice of a cube
+      \item faster handling of compound expressions by \code{join_rows()} and \code{join_cols()}
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.5.500.2.0 (2015-09-03)}{
   \itemize{
     \item Upgraded to Armadillo 5.500.2 ("Molotov Cocktail")

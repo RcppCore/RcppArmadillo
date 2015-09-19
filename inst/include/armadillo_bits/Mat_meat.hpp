@@ -3762,6 +3762,30 @@ Mat<eT>::each_row()
 
 
 template<typename eT>
+arma_inline
+const subview_each1< Mat<eT>, 0 >
+Mat<eT>::each_col() const
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_each1< Mat<eT>, 0>(*this);
+  }
+
+
+
+template<typename eT>
+arma_inline
+const subview_each1< Mat<eT>, 1 >
+Mat<eT>::each_row() const
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_each1< Mat<eT>, 1>(*this);
+  }
+
+
+
+template<typename eT>
 template<typename T1>
 inline
 subview_each2< Mat<eT>, 0, T1 >
@@ -3779,6 +3803,32 @@ template<typename T1>
 inline
 subview_each2< Mat<eT>, 1, T1 >
 Mat<eT>::each_row(const Base<uword, T1>& indices)
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_each2< Mat<eT>, 1, T1 >(*this, indices);
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+const subview_each2< Mat<eT>, 0, T1 >
+Mat<eT>::each_col(const Base<uword, T1>& indices) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_each2< Mat<eT>, 0, T1 >(*this, indices);
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+const subview_each2< Mat<eT>, 1, T1 >
+Mat<eT>::each_row(const Base<uword, T1>& indices) const
   {
   arma_extra_debug_sigprint();
   

@@ -132,6 +132,13 @@ class Cube : public BaseCube< eT, Cube<eT> >
   template<typename T1> arma_inline const subview_elem1<eT,T1> operator()(const Base<uword,T1>& a) const;
   
   
+  arma_inline       subview_cube_each1<eT> each_slice();
+  arma_inline const subview_cube_each1<eT> each_slice() const;
+  
+  template<typename T1> inline       subview_cube_each2<eT, T1> each_slice(const Base<uword, T1>& indices);
+  template<typename T1> inline const subview_cube_each2<eT, T1> each_slice(const Base<uword, T1>& indices) const;
+
+
   inline void shed_slice(const uword slice_num);
   
   inline void shed_slices(const uword in_slice1, const uword in_slice2);

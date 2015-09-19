@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 Conrad Sanderson
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // Copyright (C) 2012 Ryan Curtin
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -228,6 +228,70 @@ operator+
   
   // Just call the other order (these operations are commutative)
   return (y + x);
+  }
+
+
+
+template<typename parent, unsigned int mode, typename T2>
+arma_inline
+Mat<typename parent::elem_type>
+operator+
+  (
+  const subview_each1<parent,mode>&          X,
+  const Base<typename parent::elem_type,T2>& Y
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_each1_aux::operator_plus(X, Y.get_ref());
+  }
+
+
+
+template<typename T1, typename parent, unsigned int mode>
+arma_inline
+Mat<typename parent::elem_type>
+operator+
+  (
+  const Base<typename parent::elem_type,T1>& X,
+  const subview_each1<parent,mode>&          Y
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_each1_aux::operator_plus(Y, X.get_ref());  // NOTE: swapped order
+  }
+
+
+
+template<typename parent, unsigned int mode, typename TB, typename T2>
+arma_inline
+Mat<typename parent::elem_type>
+operator+
+  (
+  const subview_each2<parent,mode,TB>&       X,
+  const Base<typename parent::elem_type,T2>& Y
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_each2_aux::operator_plus(X, Y.get_ref());
+  }
+
+
+
+template<typename T1, typename parent, unsigned int mode, typename TB>
+arma_inline
+Mat<typename parent::elem_type>
+operator+
+  (
+  const Base<typename parent::elem_type,T1>& X,
+  const subview_each2<parent,mode,TB>&       Y
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_each2_aux::operator_plus(Y, X.get_ref());  // NOTE: swapped order
   }
 
 

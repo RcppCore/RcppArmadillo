@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2010 Conrad Sanderson
-// Copyright (C) 2009-2010 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2015 Conrad Sanderson
+// Copyright (C) 2009-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -116,6 +116,70 @@ operator/
   promote_type<eT1,eT2>::check();
   
   return mtGlueCube<out_eT, T1, T2, glue_mixed_div>( X.get_ref(), Y.get_ref() );
+  }
+
+
+
+template<typename eT, typename T2>
+arma_inline
+Cube<eT>
+operator/
+  (
+  const subview_cube_each1<eT>& X,
+  const Base<eT,T2>&            Y
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_cube_each1_aux::operator_div(X, Y.get_ref());
+  }
+
+
+
+template<typename T1, typename eT>
+arma_inline
+Cube<eT>
+operator/
+  (
+  const Base<eT,T1>&            X,
+  const subview_cube_each1<eT>& Y
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_cube_each1_aux::operator_div(X.get_ref(), Y);
+  }
+
+
+
+template<typename eT, typename TB, typename T2>
+arma_inline
+Cube<eT>
+operator/
+  (
+  const subview_cube_each2<eT,TB>& X,
+  const Base<eT,T2>&               Y
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_cube_each2_aux::operator_div(X, Y.get_ref());
+  }
+
+
+
+template<typename T1, typename eT, typename TB>
+arma_inline
+Cube<eT>
+operator/
+  (
+  const Base<eT,T1>&               X,
+  const subview_cube_each2<eT,TB>& Y
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_cube_each2_aux::operator_div(X.get_ref(), Y);
   }
 
 

@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2013 Conrad Sanderson
-// Copyright (C) 2010-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2015 Conrad Sanderson
+// Copyright (C) 2010-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,13 +22,10 @@ glue_join::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_join>& 
   
   const uword join_type = X.aux_uword;
   
-  const unwrap<T1> A_tmp(X.A);
-  const unwrap<T2> B_tmp(X.B);
+  const Proxy<T1> A(X.A);
+  const Proxy<T2> B(X.B);
   
-  const Mat<eT>& A = A_tmp.M;
-  const Mat<eT>& B = B_tmp.M;
-  
-  if( (&out != &A) && (&out != &B) )
+  if( (A.is_alias(out) == false) && (B.is_alias(out) == false) )
     {
     glue_join::apply_noalias(out, A, B, join_type);
     }
@@ -44,18 +41,18 @@ glue_join::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_join>& 
 
 
 
-template<typename eT>
+template<typename T1, typename T2>
 inline
 void
-glue_join::apply_noalias(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const uword join_type)
+glue_join::apply_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& A, const Proxy<T2>& B, const uword join_type)
   {
   arma_extra_debug_sigprint();
   
-  const uword A_n_rows = A.n_rows;
-  const uword A_n_cols = A.n_cols;
+  const uword A_n_rows = A.get_n_rows();
+  const uword A_n_cols = A.get_n_cols();
   
-  const uword B_n_rows = B.n_rows;
-  const uword B_n_cols = B.n_cols;
+  const uword B_n_rows = B.get_n_rows();
+  const uword B_n_cols = B.get_n_cols();
   
   if(join_type == 0)
     {
@@ -69,7 +66,7 @@ glue_join::apply_noalias(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const
     {
     arma_debug_check
       (
-      ( (A_n_rows != B.n_rows) && ( (A_n_rows > 0) || (A_n_cols > 0) ) && ( (B_n_rows > 0) || (B_n_cols > 0) ) ),
+      ( (A_n_rows != B_n_rows) && ( (A_n_rows > 0) || (A_n_cols > 0) ) && ( (B_n_rows > 0) || (B_n_cols > 0) ) ),
       "join_rows() / join_horiz(): number of rows must be the same"
       );
     }
@@ -81,14 +78,14 @@ glue_join::apply_noalias(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const
     
     if( out.n_elem > 0 )
       {
-      if(A.is_empty() == false)
+      if(A.get_n_elem() > 0)
         { 
-        out.submat(0,        0,   A_n_rows-1, out.n_cols-1) = A;
+        out.submat(0,        0,   A_n_rows-1, out.n_cols-1) = A.Q;
         }
       
-      if(B.is_empty() == false)
+      if(B.get_n_elem() > 0)
         {
-        out.submat(A_n_rows, 0, out.n_rows-1, out.n_cols-1) = B;
+        out.submat(A_n_rows, 0, out.n_rows-1, out.n_cols-1) = B.Q;
         }
       }
     }
@@ -98,14 +95,14 @@ glue_join::apply_noalias(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const
     
     if( out.n_elem > 0 )
       {
-      if(A.is_empty() == false)
+      if(A.get_n_elem() > 0)
         {
-        out.submat(0, 0,        out.n_rows-1,   A.n_cols-1) = A;
+        out.submat(0, 0,        out.n_rows-1,   A_n_cols-1) = A.Q;
         }
       
-      if(B.is_empty() == false)
+      if(B.get_n_elem() > 0)
         {
-        out.submat(0, A_n_cols, out.n_rows-1, out.n_cols-1) = B;
+        out.submat(0, A_n_cols, out.n_rows-1, out.n_cols-1) = B.Q;
         }
       }
     }
