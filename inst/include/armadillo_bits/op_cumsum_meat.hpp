@@ -132,13 +132,28 @@ op_cumsum::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumsum>& in)
 template<typename T1>
 inline
 void
-op_cumsum_simple::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumsum_simple>& in)
+op_cumsum_default::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumsum_default>& in)
   {
   arma_extra_debug_sigprint();
   
-  const Op<T1,op_cumsum> tmp(in.m, in.aux_uword_a, 0);
+  typedef typename T1::elem_type eT;
   
-  op_cumsum::apply(out, tmp);
+  const quasi_unwrap<T1> U(in.m);
+  
+  const uword dim = (T1::is_row) ? 1 : 0;
+  
+  if(U.is_alias(out))
+    {
+    Mat<eT> tmp;
+    
+    op_cumsum::apply_noalias(tmp, U.M, dim);
+    
+    out.steal_mem(tmp);
+    }
+  else
+    {
+    op_cumsum::apply_noalias(out, U.M, dim);
+    }
   }
 
 

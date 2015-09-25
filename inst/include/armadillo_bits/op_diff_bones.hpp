@@ -24,12 +24,12 @@ class op_diff
 
 
 
-class op_diff_simple
+class op_diff_default
   {
   public:
   
   template<typename T1>
-  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_diff_simple>& in);
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_diff_default>& in);
   };
 
 

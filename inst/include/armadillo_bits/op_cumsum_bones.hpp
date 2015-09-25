@@ -24,12 +24,12 @@ class op_cumsum
 
 
 
-class op_cumsum_simple
+class op_cumsum_default
   {
   public:
   
   template<typename T1>
-  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumsum_simple>& in);
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumsum_default>& in);
   };
 
 

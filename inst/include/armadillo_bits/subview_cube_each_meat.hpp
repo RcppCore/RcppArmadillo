@@ -94,9 +94,12 @@ subview_cube_each1<eT>::operator= (const Base<eT,T1>& in)
   
   subview_cube_each_common<eT>::check_size(A);
   
-  const uword p_n_slices = p.n_slices;
+  const uword p_n_slices     = p.n_slices;
+  const uword p_n_elem_slice = p.n_elem_slice;
   
-  for(uword i=0; i < p_n_slices; ++i)  { p.slice(i) = A; }
+  const eT* A_mem = A.memptr();
+  
+  for(uword i=0; i < p_n_slices; ++i)  { arrayops::copy( p.slice_memptr(i), A_mem, p_n_elem_slice ); }
   }
 
 
@@ -116,9 +119,12 @@ subview_cube_each1<eT>::operator+= (const Base<eT,T1>& in)
   
   subview_cube_each_common<eT>::check_size(A);
   
-  const uword p_n_slices = p.n_slices;
+  const uword p_n_slices     = p.n_slices;
+  const uword p_n_elem_slice = p.n_elem_slice;
+  
+  const eT* A_mem = A.memptr();
     
-  for(uword i=0; i < p_n_slices; ++i)  { p.slice(i) += A; }
+  for(uword i=0; i < p_n_slices; ++i)  { arrayops::inplace_plus( p.slice_memptr(i), A_mem, p_n_elem_slice ); }
   }
 
 
@@ -138,9 +144,12 @@ subview_cube_each1<eT>::operator-= (const Base<eT,T1>& in)
   
   subview_cube_each_common<eT>::check_size(A);
   
-  const uword p_n_slices = p.n_slices;
+  const uword p_n_slices     = p.n_slices;
+  const uword p_n_elem_slice = p.n_elem_slice;
   
-  for(uword i=0; i < p_n_slices; ++i)  { p.slice(i) -= A; }
+  const eT* A_mem = A.memptr();
+  
+  for(uword i=0; i < p_n_slices; ++i)  { arrayops::inplace_minus( p.slice_memptr(i), A_mem, p_n_elem_slice ); }
   }
 
 
@@ -160,9 +169,12 @@ subview_cube_each1<eT>::operator%= (const Base<eT,T1>& in)
   
   subview_cube_each_common<eT>::check_size(A);
   
-  const uword p_n_slices = p.n_slices;
+  const uword p_n_slices     = p.n_slices;
+  const uword p_n_elem_slice = p.n_elem_slice;
   
-  for(uword i=0; i < p_n_slices; ++i)  { p.slice(i) %= A; }
+  const eT* A_mem = A.memptr();
+  
+  for(uword i=0; i < p_n_slices; ++i)  { arrayops::inplace_mul( p.slice_memptr(i), A_mem, p_n_elem_slice ); }
   }
 
 
@@ -182,9 +194,12 @@ subview_cube_each1<eT>::operator/= (const Base<eT,T1>& in)
   
   subview_cube_each_common<eT>::check_size(A);
   
-  const uword p_n_slices = p.n_slices;
+  const uword p_n_slices     = p.n_slices;
+  const uword p_n_elem_slice = p.n_elem_slice;
   
-  for(uword i=0; i < p_n_slices; ++i)  { p.slice(i) /= A; }
+  const eT* A_mem = A.memptr();
+  
+  for(uword i=0; i < p_n_slices; ++i)  { arrayops::inplace_div( p.slice_memptr(i), A_mem, p_n_elem_slice ); }
   }
 
 
@@ -244,10 +259,13 @@ subview_cube_each2<eT,TB>::operator= (const Base<eT,T1>& in)
   
   check_indices(U.M);
   
-  const uword p_n_slices = p.n_slices;
-  
+  const uword p_n_slices     = p.n_slices;
+  const uword p_n_elem_slice = p.n_elem_slice;
+    
   const uword* indices_mem = U.M.memptr();
   const uword  N           = U.M.n_elem;
+  
+  const eT* A_mem = A.memptr();
   
   for(uword i=0; i < N; ++i)
     {
@@ -255,7 +273,7 @@ subview_cube_each2<eT,TB>::operator= (const Base<eT,T1>& in)
     
     arma_debug_check( (slice > p_n_slices), "each_slice(): index out of bounds" );
     
-    p.slice(slice) = A;
+    arrayops::copy(p.slice_memptr(slice), A_mem, p_n_elem_slice);
     }
   }
 
@@ -280,10 +298,13 @@ subview_cube_each2<eT,TB>::operator+= (const Base<eT,T1>& in)
   
   check_indices(U.M);
   
-  const uword p_n_slices = p.n_slices;
-  
+  const uword p_n_slices     = p.n_slices;
+  const uword p_n_elem_slice = p.n_elem_slice;
+    
   const uword* indices_mem = U.M.memptr();
   const uword  N           = U.M.n_elem;
+  
+  const eT* A_mem = A.memptr();
   
   for(uword i=0; i < N; ++i)
     {
@@ -291,7 +312,7 @@ subview_cube_each2<eT,TB>::operator+= (const Base<eT,T1>& in)
     
     arma_debug_check( (slice > p_n_slices), "each_slice(): index out of bounds" );
     
-    p.slice(slice) += A;
+    arrayops::inplace_plus(p.slice_memptr(slice), A_mem, p_n_elem_slice);
     }
   }
 
@@ -316,10 +337,13 @@ subview_cube_each2<eT,TB>::operator-= (const Base<eT,T1>& in)
   
   check_indices(U.M);
   
-  const uword p_n_slices = p.n_slices;
-  
+  const uword p_n_slices     = p.n_slices;
+  const uword p_n_elem_slice = p.n_elem_slice;
+    
   const uword* indices_mem = U.M.memptr();
   const uword  N           = U.M.n_elem;
+  
+  const eT* A_mem = A.memptr();
   
   for(uword i=0; i < N; ++i)
     {
@@ -327,7 +351,7 @@ subview_cube_each2<eT,TB>::operator-= (const Base<eT,T1>& in)
     
     arma_debug_check( (slice > p_n_slices), "each_slice(): index out of bounds" );
     
-    p.slice(slice) -= A;
+    arrayops::inplace_minus(p.slice_memptr(slice), A_mem, p_n_elem_slice);
     }
   }
 
@@ -352,10 +376,13 @@ subview_cube_each2<eT,TB>::operator%= (const Base<eT,T1>& in)
   
   check_indices(U.M);
   
-  const uword p_n_slices = p.n_slices;
-  
+  const uword p_n_slices     = p.n_slices;
+  const uword p_n_elem_slice = p.n_elem_slice;
+    
   const uword* indices_mem = U.M.memptr();
   const uword  N           = U.M.n_elem;
+  
+  const eT* A_mem = A.memptr();
   
   for(uword i=0; i < N; ++i)
     {
@@ -363,7 +390,7 @@ subview_cube_each2<eT,TB>::operator%= (const Base<eT,T1>& in)
     
     arma_debug_check( (slice > p_n_slices), "each_slice(): index out of bounds" );
     
-    p.slice(slice) %= A;
+    arrayops::inplace_mul(p.slice_memptr(slice), A_mem, p_n_elem_slice);
     }
   }
 
@@ -388,10 +415,13 @@ subview_cube_each2<eT,TB>::operator/= (const Base<eT,T1>& in)
   
   check_indices(U.M);
   
-  const uword p_n_slices = p.n_slices;
-  
+  const uword p_n_slices     = p.n_slices;
+  const uword p_n_elem_slice = p.n_elem_slice;
+    
   const uword* indices_mem = U.M.memptr();
   const uword  N           = U.M.n_elem;
+  
+  const eT* A_mem = A.memptr();
   
   for(uword i=0; i < N; ++i)
     {
@@ -399,7 +429,7 @@ subview_cube_each2<eT,TB>::operator/= (const Base<eT,T1>& in)
     
     arma_debug_check( (slice > p_n_slices), "each_slice(): index out of bounds" );
     
-    p.slice(slice) /= A;
+    arrayops::inplace_div(p.slice_memptr(slice), A_mem, p_n_elem_slice);
     }
   }
 
@@ -424,9 +454,11 @@ subview_cube_each1_aux::operator_plus
   
   const Cube<eT>& p = X.p;
   
+  const uword p_n_rows   = p.n_rows;
+  const uword p_n_cols   = p.n_cols;
   const uword p_n_slices = p.n_slices;
   
-  Cube<eT> out(p.n_rows, p.n_cols, p_n_slices);
+  Cube<eT> out(p_n_rows, p_n_cols, p_n_slices);
   
   const unwrap<T2>   tmp(Y.get_ref());
   const Mat<eT>& A = tmp.M;
@@ -435,7 +467,10 @@ subview_cube_each1_aux::operator_plus
   
   for(uword i=0; i < p_n_slices; ++i)
     {
-    out.slice(i) = p.slice(i) + A;
+          Mat<eT> out_slice(              out.slice_memptr(i),  p_n_rows, p_n_cols, false, true);
+    const Mat<eT>   p_slice(const_cast<eT*>(p.slice_memptr(i)), p_n_rows, p_n_cols, false, true);
+    
+    out_slice = p_slice + A;
     }
   
   return out;
@@ -456,9 +491,11 @@ subview_cube_each1_aux::operator_minus
   
   const Cube<eT>& p = X.p;
   
+  const uword p_n_rows   = p.n_rows;
+  const uword p_n_cols   = p.n_cols;
   const uword p_n_slices = p.n_slices;
   
-  Cube<eT> out(p.n_rows, p.n_cols, p_n_slices);
+  Cube<eT> out(p_n_rows, p_n_cols, p_n_slices);
   
   const unwrap<T2>   tmp(Y.get_ref());
   const Mat<eT>& A = tmp.M;
@@ -467,7 +504,10 @@ subview_cube_each1_aux::operator_minus
   
   for(uword i=0; i < p_n_slices; ++i)
     {
-    out.slice(i) = p.slice(i) - A;
+          Mat<eT> out_slice(              out.slice_memptr(i),  p_n_rows, p_n_cols, false, true);
+    const Mat<eT>   p_slice(const_cast<eT*>(p.slice_memptr(i)), p_n_rows, p_n_cols, false, true);
+    
+    out_slice = p_slice - A;
     }
   
   return out;
@@ -488,9 +528,11 @@ subview_cube_each1_aux::operator_minus
   
   const Cube<eT>& p = Y.p;
   
+  const uword p_n_rows   = p.n_rows;
+  const uword p_n_cols   = p.n_cols;
   const uword p_n_slices = p.n_slices;
   
-  Cube<eT> out(p.n_rows, p.n_cols, p_n_slices);
+  Cube<eT> out(p_n_rows, p_n_cols, p_n_slices);
   
   const unwrap<T1>   tmp(X.get_ref());
   const Mat<eT>& A = tmp.M;
@@ -499,7 +541,10 @@ subview_cube_each1_aux::operator_minus
   
   for(uword i=0; i < p_n_slices; ++i)
     {
-    out.slice(i) = A - p.slice(i);
+          Mat<eT> out_slice(              out.slice_memptr(i),  p_n_rows, p_n_cols, false, true);
+    const Mat<eT>   p_slice(const_cast<eT*>(p.slice_memptr(i)), p_n_rows, p_n_cols, false, true);
+    
+    out_slice = A - p_slice;
     }
   
   return out;
@@ -520,9 +565,11 @@ subview_cube_each1_aux::operator_schur
   
   const Cube<eT>& p = X.p;
   
+  const uword p_n_rows   = p.n_rows;
+  const uword p_n_cols   = p.n_cols;
   const uword p_n_slices = p.n_slices;
   
-  Cube<eT> out(p.n_rows, p.n_cols, p_n_slices);
+  Cube<eT> out(p_n_rows, p_n_cols, p_n_slices);
   
   const unwrap<T2>   tmp(Y.get_ref());
   const Mat<eT>& A = tmp.M;
@@ -531,7 +578,10 @@ subview_cube_each1_aux::operator_schur
   
   for(uword i=0; i < p_n_slices; ++i)
     {
-    out.slice(i) = p.slice(i) % A;
+          Mat<eT> out_slice(              out.slice_memptr(i),  p_n_rows, p_n_cols, false, true);
+    const Mat<eT>   p_slice(const_cast<eT*>(p.slice_memptr(i)), p_n_rows, p_n_cols, false, true);
+    
+    out_slice = p_slice % A;
     }
   
   return out;
@@ -552,9 +602,11 @@ subview_cube_each1_aux::operator_div
   
   const Cube<eT>& p = X.p;
   
+  const uword p_n_rows   = p.n_rows;
+  const uword p_n_cols   = p.n_cols;
   const uword p_n_slices = p.n_slices;
   
-  Cube<eT> out(p.n_rows, p.n_cols, p_n_slices);
+  Cube<eT> out(p_n_rows, p_n_cols, p_n_slices);
   
   const unwrap<T2>   tmp(Y.get_ref());
   const Mat<eT>& A = tmp.M;
@@ -563,7 +615,10 @@ subview_cube_each1_aux::operator_div
   
   for(uword i=0; i < p_n_slices; ++i)
     {
-    out.slice(i) = p.slice(i) / A;
+          Mat<eT> out_slice(              out.slice_memptr(i),  p_n_rows, p_n_cols, false, true);
+    const Mat<eT>   p_slice(const_cast<eT*>(p.slice_memptr(i)), p_n_rows, p_n_cols, false, true);
+    
+    out_slice = p_slice / A;
     }
   
   return out;
@@ -584,9 +639,11 @@ subview_cube_each1_aux::operator_div
   
   const Cube<eT>& p = Y.p;
   
+  const uword p_n_rows   = p.n_rows;
+  const uword p_n_cols   = p.n_cols;
   const uword p_n_slices = p.n_slices;
   
-  Cube<eT> out(p.n_rows, p.n_cols, p_n_slices);
+  Cube<eT> out(p_n_rows, p_n_cols, p_n_slices);
   
   const unwrap<T1>   tmp(X.get_ref());
   const Mat<eT>& A = tmp.M;
@@ -595,7 +652,10 @@ subview_cube_each1_aux::operator_div
   
   for(uword i=0; i < p_n_slices; ++i)
     {
-    out.slice(i) = A / p.slice(i);
+          Mat<eT> out_slice(              out.slice_memptr(i),  p_n_rows, p_n_cols, false, true);
+    const Mat<eT>   p_slice(const_cast<eT*>(p.slice_memptr(i)), p_n_rows, p_n_cols, false, true);
+    
+    out_slice = A / p_slice;
     }
   
   return out;
@@ -622,7 +682,8 @@ subview_cube_each2_aux::operator_plus
   
   const Cube<eT>& p = X.p;
   
-  const uword p_n_slices = p.n_slices;
+  const uword p_n_slices     = p.n_slices;
+  const uword p_n_elem_slice = p.n_elem_slice;
   
   Cube<eT> out = p;
   
@@ -637,13 +698,15 @@ subview_cube_each2_aux::operator_plus
   const uword* indices_mem = U.M.memptr();
   const uword  N           = U.M.n_elem;
   
+  const eT* A_mem = A.memptr();
+  
   for(uword i=0; i < N; ++i)
     {
     const uword slice = indices_mem[i];
     
     arma_debug_check( (slice > p_n_slices), "each_slice(): index out of bounds" );
     
-    out.slice(slice) += A;
+    arrayops::inplace_plus(out.slice_memptr(slice), A_mem, p_n_elem_slice);
     }
   
   return out;
@@ -664,7 +727,8 @@ subview_cube_each2_aux::operator_minus
   
   const Cube<eT>& p = X.p;
   
-  const uword p_n_slices = p.n_slices;
+  const uword p_n_slices     = p.n_slices;
+  const uword p_n_elem_slice = p.n_elem_slice;
   
   Cube<eT> out = p;
   
@@ -679,13 +743,15 @@ subview_cube_each2_aux::operator_minus
   const uword* indices_mem = U.M.memptr();
   const uword  N           = U.M.n_elem;
   
+  const eT* A_mem = A.memptr();
+  
   for(uword i=0; i < N; ++i)
     {
     const uword slice = indices_mem[i];
     
     arma_debug_check( (slice > p_n_slices), "each_slice(): index out of bounds" );
     
-    out.slice(slice) -= A;
+    arrayops::inplace_minus(out.slice_memptr(slice), A_mem, p_n_elem_slice);
     }
   
   return out;
@@ -706,6 +772,8 @@ subview_cube_each2_aux::operator_minus
   
   const Cube<eT>& p = Y.p;
   
+  const uword p_n_rows   = p.n_rows;
+  const uword p_n_cols   = p.n_cols;
   const uword p_n_slices = p.n_slices;
   
   Cube<eT> out = p;
@@ -727,7 +795,10 @@ subview_cube_each2_aux::operator_minus
     
     arma_debug_check( (slice > p_n_slices), "each_slice(): index out of bounds" );
     
-    out.slice(slice) = A - p.slice(slice);
+          Mat<eT> out_slice(              out.slice_memptr(slice),  p_n_rows, p_n_cols, false, true);
+    const Mat<eT>   p_slice(const_cast<eT*>(p.slice_memptr(slice)), p_n_rows, p_n_cols, false, true);
+    
+    out_slice = A - p_slice;
     }
   
   return out;
@@ -748,7 +819,8 @@ subview_cube_each2_aux::operator_schur
   
   const Cube<eT>& p = X.p;
   
-  const uword p_n_slices = p.n_slices;
+  const uword p_n_slices     = p.n_slices;
+  const uword p_n_elem_slice = p.n_elem_slice;
   
   Cube<eT> out = p;
   
@@ -763,13 +835,15 @@ subview_cube_each2_aux::operator_schur
   const uword* indices_mem = U.M.memptr();
   const uword  N           = U.M.n_elem;
   
+  const eT* A_mem = A.memptr();
+  
   for(uword i=0; i < N; ++i)
     {
     const uword slice = indices_mem[i];
     
     arma_debug_check( (slice > p_n_slices), "each_slice(): index out of bounds" );
     
-    out.slice(slice) %= A;
+    arrayops::inplace_mul(out.slice_memptr(slice), A_mem, p_n_elem_slice);
     }
   
   return out;
@@ -790,7 +864,8 @@ subview_cube_each2_aux::operator_div
   
   const Cube<eT>& p = X.p;
   
-  const uword p_n_slices = p.n_slices;
+  const uword p_n_slices     = p.n_slices;
+  const uword p_n_elem_slice = p.n_elem_slice;
   
   Cube<eT> out = p;
   
@@ -805,13 +880,15 @@ subview_cube_each2_aux::operator_div
   const uword* indices_mem = U.M.memptr();
   const uword  N           = U.M.n_elem;
   
+  const eT* A_mem = A.memptr();
+  
   for(uword i=0; i < N; ++i)
     {
     const uword slice = indices_mem[i];
     
     arma_debug_check( (slice > p_n_slices), "each_slice(): index out of bounds" );
     
-    out.slice(slice) /= A;
+    arrayops::inplace_div(out.slice_memptr(slice), A_mem, p_n_elem_slice);
     }
   
   return out;
@@ -832,6 +909,8 @@ subview_cube_each2_aux::operator_div
   
   const Cube<eT>& p = Y.p;
   
+  const uword p_n_rows   = p.n_rows;
+  const uword p_n_cols   = p.n_cols;
   const uword p_n_slices = p.n_slices;
   
   Cube<eT> out = p;
@@ -853,7 +932,10 @@ subview_cube_each2_aux::operator_div
     
     arma_debug_check( (slice > p_n_slices), "each_slice(): index out of bounds" );
     
-    out.slice(slice) = A / p.slice(slice);
+          Mat<eT> out_slice(              out.slice_memptr(slice),  p_n_rows, p_n_cols, false, true);
+    const Mat<eT>   p_slice(const_cast<eT*>(p.slice_memptr(slice)), p_n_rows, p_n_cols, false, true);
+    
+    out_slice = A / p_slice;
     }
   
   return out;

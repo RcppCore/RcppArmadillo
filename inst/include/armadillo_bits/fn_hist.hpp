@@ -1,5 +1,5 @@
-// Copyright (C) 2012 Conrad Sanderson
-// Copyright (C) 2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2012-2015 Conrad Sanderson
+// Copyright (C) 2012-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,38 +8,50 @@
 
 
 template<typename T1>
-inline
-const mtOp<uword,T1,op_hist>
-hist
-  (
-  const Base<typename T1::elem_type,T1>& A,
-  const uword n_bins = 10,
-  const arma_empty_class junk1 = arma_empty_class(),
-  const typename arma_not_cx<typename T1::elem_type>::result* junk2 = 0
-  )
+arma_inline
+typename
+enable_if2
+  <
+  (is_arma_type<T1>::value) && (is_not_complex<typename T1::elem_type>::value),
+  const mtOp<uword,T1,op_hist>
+  >::result
+hist(const T1& A, const uword n_bins = 10)
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk1);
-  arma_ignore(junk2);
   
-  return mtOp<uword,T1,op_hist>( A.get_ref(), n_bins, 0 );
+  return mtOp<uword,T1,op_hist>(A, n_bins, 0);
   }
 
 
 
 template<typename T1, typename T2>
-inline
-const mtGlue<uword,T1,T2,glue_hist>
-hist
-  (
-  const Base<typename T1::elem_type,T1>& A,
-  const Base<typename T1::elem_type,T2>& B,
-  const uword dim = 0,
-  const typename arma_not_cx<typename T1::elem_type>::result* junk = 0
-  )
+arma_inline
+typename
+enable_if2
+  <
+  (is_arma_type<T1>::value) && (is_arma_type<T2>::value) && (is_not_complex<typename T1::elem_type>::value) && (is_same_type<typename T1::elem_type, typename T2::elem_type>::value),
+  const mtGlue<uword,T1,T2,glue_hist_default>
+  >::result
+hist(const T1& X, const T2& Y)
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
-  return mtGlue<uword,T1,T2,glue_hist>( A.get_ref(), B.get_ref(), dim );
+  return mtGlue<uword,T1,T2,glue_hist_default>(X, Y);
+  }
+
+
+
+template<typename T1, typename T2>
+arma_inline
+typename
+enable_if2
+  <
+  (is_arma_type<T1>::value) && (is_arma_type<T2>::value) && (is_not_complex<typename T1::elem_type>::value) && (is_same_type<typename T1::elem_type, typename T2::elem_type>::value),
+  const mtGlue<uword,T1,T2,glue_hist>
+  >::result
+hist(const T1& X, const T2& Y, const uword dim)
+  {
+  arma_extra_debug_sigprint();
+  
+  return mtGlue<uword,T1,T2,glue_hist>(X, Y, dim);
   }

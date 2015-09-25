@@ -1668,7 +1668,6 @@ field<oT>::init(const uword n_rows_in, const uword n_cols_in)
 
 
 
-//! internal field construction; if the requested size is small enough, memory from the stack is used. otherwise memory is allocated via 'new'
 template<typename oT>
 inline
 void

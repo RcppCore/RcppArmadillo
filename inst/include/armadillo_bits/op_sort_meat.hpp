@@ -107,6 +107,8 @@ op_sort::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword sort_type, co
     return;
     }
   
+  arma_debug_check( (sort_type > 1), "sort(): parameter 'sort_type' must be 0 or 1" );
+  arma_debug_check( (X.has_nan()),   "sort(): detected NaN"                         );
   
   if(dim == 0)  // sort the contents of each column
     {
@@ -173,21 +175,49 @@ op_sort::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort>& in)
   const uword sort_type = in.aux_uword_a;
   const uword dim       = in.aux_uword_b;
   
-  arma_debug_check( (sort_type > 1), "sort(): parameter 'sort_type' must be 0 or 1" );
-  arma_debug_check( (dim > 1),       "sort(): parameter 'dim' must be 0 or 1"       );
-  arma_debug_check( (X.has_nan()),   "sort(): detected NaN"                         );
-  
   if(U.is_alias(out))
     {
-    Mat<eT> out2;
+    Mat<eT> tmp;
     
-    op_sort::apply_noalias(out2, X, sort_type, dim);
+    op_sort::apply_noalias(tmp, X, sort_type, dim);
     
-    out.steal_mem(out2);
+    out.steal_mem(tmp);
     }
   else
     {
-    apply_noalias(out, X, sort_type, dim);
+    op_sort::apply_noalias(out, X, sort_type, dim);
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_sort_default::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort_default>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const quasi_unwrap<T1> U(in.m);
+  
+  const Mat<eT>& X = U.M;
+  
+  const uword sort_type = in.aux_uword_a;
+  const uword dim       = (T1::is_row) ? 1 : 0;
+  
+  if(U.is_alias(out))
+    {
+    Mat<eT> tmp;
+    
+    op_sort::apply_noalias(tmp, X, sort_type, dim);
+    
+    out.steal_mem(tmp);
+    }
+  else
+    {
+    op_sort::apply_noalias(out, X, sort_type, dim);
     }
   }
 

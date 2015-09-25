@@ -1,5 +1,5 @@
-// Copyright (C) 2009-2012 Conrad Sanderson
-// Copyright (C) 2009-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2015 Conrad Sanderson
+// Copyright (C) 2009-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,24 +9,13 @@
 //! \addtogroup op_prod
 //! @{
 
-//! \brief
-//! Immediate product of elements of a matrix along a specified dimension (either rows or columns).
-//! The result is stored in a dense matrix that has either one column or one row.
-//! See the prod() function for more details.
-template<typename T1>
+
+template<typename eT>
 inline
 void
-op_prod::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_prod>& in)
+op_prod::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim)
   {
   arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  const uword dim = in.aux_uword_a;
-  arma_debug_check( (dim > 1), "prod(): parameter 'dim' must be 0 or 1" );
-  
-  const unwrap_check<T1> tmp(in.m, out);
-  const Mat<eT>& X     = tmp.M;
   
   const uword X_n_rows = X.n_rows;
   const uword X_n_cols = X.n_cols;
@@ -37,35 +26,57 @@ op_prod::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_prod>& in)
     
     eT* out_mem = out.memptr();
     
-    for(uword col=0; col<X_n_cols; ++col)
+    for(uword col=0; col < X_n_cols; ++col)
       {
       out_mem[col] = arrayops::product(X.colptr(col), X_n_rows);
       }
     }
   else  // traverse across columns (i.e. find the product in each row)
     {
-    out.set_size(X_n_rows, 1);
+    out.ones(X_n_rows, 1);
     
     eT* out_mem = out.memptr();
     
-    for(uword row=0; row<X_n_rows; ++row)
+    for(uword col=0; col < X_n_cols; ++col)
       {
-      eT val = eT(1);
+      const eT* X_col_mem = X.colptr(col);
       
-      uword i,j;
-      for(i=0, j=1; j < X_n_cols; i+=2, j+=2)
+      for(uword row=0; row < X_n_rows; ++row)
         {
-        val *= X.at(row,i);
-        val *= X.at(row,j);
+        out_mem[row] *= X_col_mem[row];
         }
-      
-      if(i < X_n_cols)
-        {
-        val *= X.at(row,i);
-        }
-      
-      out_mem[row] = val;
       }
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_prod::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_prod>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const uword dim = in.aux_uword_a;
+  
+  arma_debug_check( (dim > 1), "prod(): parameter 'dim' must be 0 or 1" );
+  
+  const quasi_unwrap<T1> U(in.m);
+  
+  if(U.is_alias(out))
+    {
+    Mat<eT> tmp;
+    
+    op_prod::apply_noalias(tmp, U.M, dim);
+    
+    out.steal_mem(tmp);
+    }
+  else
+    {
+    op_prod::apply_noalias(out, U.M, dim);
     }
   }
 

@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,6 +23,12 @@ namespace atlas
   #if defined(ARMA_USE_WRAPPER)
   extern "C"
     {
+    
+    float  wrapper_cblas_sasum(const int N, const float  *X, const int incX);
+    double wrapper_cblas_dasum(const int N, const double *X, const int incX);
+    
+    float  wrapper_cblas_snrm2(const int N, const float  *X, const int incX);
+    double wrapper_cblas_dnrm2(const int N, const double *X, const int incX);
     
     float  wrapper_cblas_sdot(const int N, const float  *X, const int incX, const float  *Y, const int incY);
     double wrapper_cblas_ddot(const int N, const double *X, const int incX, const double *Y, const int incY);

@@ -7,209 +7,125 @@
 
 
 
-template<typename T1, typename T2>
+template<typename eT>
 inline
 void
-glue_hist::apply(Mat<uword>& out, const mtGlue<uword,T1,T2,glue_hist>& in)
+glue_hist::apply_noalias(Mat<uword>& out, const Mat<eT>& X, const Mat<eT>& C, const uword dim)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
-  
-  const uword dim = in.aux_uword;
-  
-  const unwrap_check_mixed<T1> tmp1(in.A, out);
-  const unwrap_check_mixed<T2> tmp2(in.B, out);
-  
-  const Mat<eT>& X = tmp1.M;
-  const Mat<eT>& C = tmp2.M;
-  
-  
-  arma_debug_check
-    (
-    ((C.is_vec() == false) && (C.is_empty() == false)),
-    "hist(): parameter 'centers' must be a vector"
-    );
-  
-  arma_debug_check
-    (
-    (dim > 1),
-    "hist(): parameter 'dim' must be 0 or 1"
-    );
+  arma_debug_check( ((C.is_vec() == false) && (C.is_empty() == false)), "hist(): parameter 'centers' must be a vector" );
   
   const uword X_n_rows = X.n_rows;
   const uword X_n_cols = X.n_cols;
-  const uword X_n_elem = X.n_elem;
   
   const uword C_n_elem = C.n_elem;
   
-  if( C_n_elem == 0 )
-    {
-    out.reset();
-    return;
-    }
-  
-  // for vectors we are currently ignoring the "dim" parameter
-  
-  uword out_n_rows = 0;
-  uword out_n_cols = 0;
-  
-  if( (X.vec_state == 0) && (X.n_elem == 1u) )
-    {
-    if(out.vec_state == 1u)
-      {
-      out_n_rows = C_n_elem;
-      out_n_cols = 1;
-      }
-    else
-      {
-      out_n_rows = 1;
-      out_n_cols = C_n_elem;
-      }
-    }
-  else
-  if( (X.vec_state > 0) || X.is_vec() )
-    {
-    if(X.vec_state == 2u)
-      {
-      out_n_rows = 1;
-      out_n_cols = C_n_elem;
-      }
-    else
-    if(X.vec_state == 1u)
-      {
-      out_n_rows = C_n_elem;
-      out_n_cols = 1;
-      }
-    else
-    if(X.is_rowvec())
-      {
-      out_n_rows = 1;
-      out_n_cols = C_n_elem;
-      }
-    else
-    if(X.is_colvec())
-      {
-      out_n_rows = C_n_elem;
-      out_n_cols = 1;
-      }
-    }
-  else
-    {
-    if(dim == 0)
-      {
-      out_n_rows = C_n_elem;
-      out_n_cols = X_n_cols;
-      }
-    else
-    if(dim == 1)
-      {
-      out_n_rows = X_n_rows;
-      out_n_cols = C_n_elem;
-      }
-    }
-  
-  out.zeros(out_n_rows, out_n_cols);
-  
+  if( C_n_elem == 0 )  { out.reset(); return; }
   
   const eT* C_mem    = C.memptr();
   const eT  center_0 = C_mem[0];
   
-  if( (X.vec_state > 0) || X.is_vec() )
+  if(dim == 0)
     {
-    const eT*    X_mem   = X.memptr();
-          uword* out_mem = out.memptr();
+    out.zeros(C_n_elem, X_n_cols);
     
-    for(uword i=0; i < X_n_elem; ++i)
+    for(uword col=0; col < X_n_cols; ++col)
       {
-      const eT val = X_mem[i];
+      const eT*    X_coldata   = X.colptr(col);
+            uword* out_coldata = out.colptr(col);
       
-      if(is_finite(val))
+      for(uword row=0; row < X_n_rows; ++row)
         {
-        eT    opt_dist  = (val >= center_0) ? (val - center_0) : (center_0 - val);
-        uword opt_index = 0;
+        const eT val = X_coldata[row];
         
-        for(uword j=1; j < C_n_elem; ++j)
+        if(arma_isfinite(val))
           {
-          const eT center = C_mem[j];
-          const eT dist   = (val >= center) ? (val - center) : (center - val);
+          eT    opt_dist  = (center_0 >= val) ? (center_0 - val) : (val - center_0);
+          uword opt_index = 0;
           
-          if(dist < opt_dist)
+          for(uword j=1; j < C_n_elem; ++j)
             {
-            opt_dist  = dist;
-            opt_index = j;
+            const eT center = C_mem[j];
+            const eT dist   = (center >= val) ? (center - val) : (val - center);
+            
+            if(dist < opt_dist)
+              {
+              opt_dist  = dist;
+              opt_index = j;
+              }
+            else
+              {
+              break;
+              }
             }
-          else
-            {
-            break;
-            }
+          
+          out_coldata[opt_index]++;
           }
-        
-        out_mem[opt_index]++;
-        }
-      else
-        {
-        // -inf
-        if(val < eT(0)) { out_mem[0]++; }
-        
-        // +inf
-        if(val > eT(0)) { out_mem[C_n_elem-1]++; }
-        
-        // ignore NaN
+        else
+          {
+          // -inf
+          if(val < eT(0)) { out_coldata[0]++; }
+          
+          // +inf
+          if(val > eT(0)) { out_coldata[C_n_elem-1]++; }
+          
+          // ignore NaN
+          }
         }
       }
     }
   else
+  if(dim == 1)
     {
-    if(dim == 0)
+    out.zeros(X_n_rows, C_n_elem);
+    
+    if(X_n_rows == 1)
       {
-      for(uword col=0; col < X_n_cols; ++col)
+      const uword  X_n_elem = X.n_elem;
+      const eT*    X_mem    = X.memptr();
+            uword* out_mem  = out.memptr();
+      
+      for(uword i=0; i < X_n_elem; ++i)
         {
-        const eT*    X_coldata   = X.colptr(col);
-              uword* out_coldata = out.colptr(col);
+        const eT val = X_mem[i];
         
-        for(uword row=0; row < X_n_rows; ++row)
+        if(is_finite(val))
           {
-          const eT val = X_coldata[row];
+          eT    opt_dist  = (val >= center_0) ? (val - center_0) : (center_0 - val);
+          uword opt_index = 0;
           
-          if(arma_isfinite(val))
+          for(uword j=1; j < C_n_elem; ++j)
             {
-            eT    opt_dist  = (center_0 >= val) ? (center_0 - val) : (val - center_0);
-            uword opt_index = 0;
+            const eT center = C_mem[j];
+            const eT dist   = (val >= center) ? (val - center) : (center - val);
             
-            for(uword j=1; j < C_n_elem; ++j)
+            if(dist < opt_dist)
               {
-              const eT center = C_mem[j];
-              const eT dist   = (center >= val) ? (center - val) : (val - center);
-              
-              if(dist < opt_dist)
-                {
-                opt_dist  = dist;
-                opt_index = j;
-                }
-              else
-                {
-                break;
-                }
+              opt_dist  = dist;
+              opt_index = j;
               }
-            
-            out_coldata[opt_index]++;
+            else
+              {
+              break;
+              }
             }
-          else
-            {
-            // -inf
-            if(val < eT(0)) { out_coldata[0]++; }
-            
-            // +inf
-            if(val > eT(0)) { out_coldata[C_n_elem-1]++; }
-            
-            // ignore NaN
-            }
+          
+          out_mem[opt_index]++;
+          }
+        else
+          {
+          // -inf
+          if(val < eT(0)) { out_mem[0]++; }
+          
+          // +inf
+          if(val > eT(0)) { out_mem[C_n_elem-1]++; }
+          
+          // ignore NaN
           }
         }
       }
     else
-    if(dim == 1)
       {
       for(uword row=0; row < X_n_rows; ++row)
         {
@@ -253,5 +169,64 @@ glue_hist::apply(Mat<uword>& out, const mtGlue<uword,T1,T2,glue_hist>& in)
           }
         }
       }
+    }
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+void
+glue_hist::apply(Mat<uword>& out, const mtGlue<uword,T1,T2,glue_hist>& expr)
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword dim = expr.aux_uword;
+  
+  arma_debug_check( (dim > 1), "hist(): parameter 'dim' must be 0 or 1" );
+  
+  const quasi_unwrap<T1> UA(expr.A);
+  const quasi_unwrap<T2> UB(expr.B);
+  
+  if(UA.is_alias(out) || UB.is_alias(out))
+    {
+    Mat<uword> tmp;
+    
+    glue_hist::apply_noalias(tmp, UA.M, UB.M, dim);
+    
+    out.steal_mem(tmp);
+    }
+  else
+    {
+    glue_hist::apply_noalias(out, UA.M, UB.M, dim);
+    }
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+void
+glue_hist_default::apply(Mat<uword>& out, const mtGlue<uword,T1,T2,glue_hist_default>& expr)
+  {
+  arma_extra_debug_sigprint();
+  
+  const quasi_unwrap<T1> UA(expr.A);
+  const quasi_unwrap<T2> UB(expr.B);
+  
+  //const uword dim = ( (T1::is_row) || ((UA.M.vec_state == 0) && (UA.M.n_elem <= 1) && (out.vec_state == 2)) ) ? 1 : 0;
+  const uword dim = (T1::is_row) ? 1 : 0;
+  
+  if(UA.is_alias(out) || UB.is_alias(out))
+    {
+    Mat<uword> tmp;
+    
+    glue_hist::apply_noalias(tmp, UA.M, UB.M, dim);
+    
+    out.steal_mem(tmp);
+    }
+  else
+    {
+    glue_hist::apply_noalias(out, UA.M, UB.M, dim);
     }
   }

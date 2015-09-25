@@ -24,12 +24,12 @@ class op_cumprod
 
 
 
-class op_cumprod_simple
+class op_cumprod_default
   {
   public:
   
   template<typename T1>
-  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumprod_simple>& in);
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumprod_default>& in);
   };
 
 

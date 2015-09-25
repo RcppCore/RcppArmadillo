@@ -3595,56 +3595,58 @@ auxlib::solve_tr(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const uword l
 //
 // Schur decomposition
 
-template<typename eT>
+template<typename eT, typename T1>
 inline
 bool
-auxlib::schur_dec(Mat<eT>& Z, Mat<eT>& T, const Mat<eT>& A)
+auxlib::schur(Mat<eT>& U, Mat<eT>& S, const Base<eT,T1>& X, const bool calc_U)
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_LAPACK)
     {
-    arma_debug_check( (A.is_square() == false), "schur_dec(): given matrix is not square" );
+    S = X.get_ref();
     
-    if(A.is_empty())
+    arma_debug_check( (S.is_square() == false), "schur(): given matrix is not square" );
+    
+    if(S.is_empty())
       {
-      Z.reset();
-      T.reset();
+      U.reset();
+      S.reset();
       return true;
       }
     
-    arma_debug_assert_blas_size(A);
+    arma_debug_assert_blas_size(S);
     
-    const uword A_n_rows = A.n_rows;
+    const uword S_n_rows = S.n_rows;
     
-    Z.set_size(A_n_rows, A_n_rows);
-    T = A;
+    if(calc_U) { U.set_size(S_n_rows, S_n_rows); } else { U.set_size(1,1); }
     
-    char    jobvs    = 'V';                // get Schur vectors (Z)
-    char     sort    = 'N';                // do not sort eigenvalues/vectors
+    char      jobvs  = calc_U ? 'V' : 'N'; // calculate Schur vectors?
+    char      sort   = 'N';                // do not sort eigenvalues/vectors
     blas_int* select = 0;                  // pointer to sorting function
-    blas_int    n    = blas_int(A_n_rows);
-    blas_int sdim    = 0;                  // output for sorting
-    blas_int lwork   = 3 * ( (std::max)(blas_int(1), 3*n) );
-    blas_int info    = 0;
+    blas_int  n      = blas_int(S_n_rows);
+    blas_int  sdim   = 0;                  // output for sorting
+    blas_int  ldvs   = calc_U ? n : blas_int(1);
+    blas_int  lwork  = 3 * ( (std::max)(blas_int(1), 3*n) );
+    blas_int  info   = 0;
     
     podarray<eT>       work( static_cast<uword>(lwork) );
-    podarray<blas_int> bwork(A_n_rows);
+    podarray<blas_int> bwork(S_n_rows);
     
-    podarray<eT> wr(A_n_rows);             // output for eigenvalues
-    podarray<eT> wi(A_n_rows);             // output for eigenvalues
+    podarray<eT> wr(S_n_rows);             // output for eigenvalues
+    podarray<eT> wi(S_n_rows);             // output for eigenvalues
     
-    lapack::gees(&jobvs, &sort, select, &n, T.memptr(), &n, &sdim, wr.memptr(), wi.memptr(), Z.memptr(), &n, work.memptr(), &lwork, bwork.memptr(), &info);
+    lapack::gees(&jobvs, &sort, select, &n, S.memptr(), &n, &sdim, wr.memptr(), wi.memptr(), U.memptr(), &ldvs, work.memptr(), &lwork, bwork.memptr(), &info);
     
     return (info == 0);
     }
   #else
     {
-    arma_ignore(Z);
-    arma_ignore(T);
-    arma_ignore(A);
+    arma_ignore(U);
+    arma_ignore(S);
+    arma_ignore(X);
     
-    arma_stop("schur_dec(): use of LAPACK needs to be enabled");
+    arma_stop("schur(): use of LAPACK needs to be enabled");
     return false;
     }
   #endif
@@ -3652,58 +3654,60 @@ auxlib::schur_dec(Mat<eT>& Z, Mat<eT>& T, const Mat<eT>& A)
 
 
 
-template<typename cT>
+template<typename T, typename T1>
 inline
 bool
-auxlib::schur_dec(Mat<std::complex<cT> >& Z, Mat<std::complex<cT> >& T, const Mat<std::complex<cT> >& A)
+auxlib::schur(Mat<std::complex<T> >& U, Mat<std::complex<T> >& S, const Base<std::complex<T>,T1>& X, const bool calc_U)
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_LAPACK)
     {
-    arma_debug_check( (A.is_square() == false), "schur_dec(): matrix A is not square" );
+    typedef std::complex<T> eT;
+  
+    S = X.get_ref();
     
-    if(A.is_empty())
+    arma_debug_check( (S.is_square() == false), "schur(): given matrix is not square" );
+    
+    if(S.is_empty())
       {
-      Z.reset();
-      T.reset();
+      U.reset();
+      S.reset();
       return true;
       }
     
-    arma_debug_assert_blas_size(A);
+    arma_debug_assert_blas_size(S);
     
-    typedef std::complex<cT> eT;
+    const uword S_n_rows = S.n_rows;
     
-    const uword A_n_rows = A.n_rows;
+    if(calc_U) { U.set_size(S_n_rows, S_n_rows); } else { U.set_size(1,1); }
     
-    Z.set_size(A_n_rows, A_n_rows);
-    T = A;
-    
-    char        jobvs = 'V';                // get Schur vectors (Z)
-    char         sort = 'N';                // do not sort eigenvalues/vectors
-    blas_int*  select = 0;                  // pointer to sorting function
-    blas_int        n = blas_int(A_n_rows);
-    blas_int     sdim = 0;                  // output for sorting
-    blas_int lwork    = 3 * ( (std::max)(blas_int(1), 2*n) );
-    blas_int info     = 0;
+    char      jobvs  = calc_U ? 'V' : 'N'; // calculate Schur vectors?
+    char      sort   = 'N';                // do not sort eigenvalues/vectors
+    blas_int* select = 0;                  // pointer to sorting function
+    blas_int  n      = blas_int(S_n_rows);
+    blas_int  sdim   = 0;                  // output for sorting
+    blas_int  ldvs   = calc_U ? n : blas_int(1);
+    blas_int  lwork  = 3 * ( (std::max)(blas_int(1), 2*n) );
+    blas_int  info   = 0;
     
     podarray<eT>       work( static_cast<uword>(lwork) );
-    podarray<blas_int> bwork(A_n_rows);
+    podarray<blas_int> bwork(S_n_rows);
     
-    podarray<eT>     w(A_n_rows);           // output for eigenvalues
-    podarray<cT> rwork(A_n_rows);
+    podarray<eT>     w(S_n_rows);           // output for eigenvalues
+    podarray< T> rwork(S_n_rows);
     
-    lapack::cx_gees(&jobvs, &sort, select, &n, T.memptr(), &n, &sdim, w.memptr(), Z.memptr(), &n, work.memptr(), &lwork, rwork.memptr(), bwork.memptr(), &info);
+    lapack::cx_gees(&jobvs, &sort, select, &n, S.memptr(), &n, &sdim, w.memptr(), U.memptr(), &ldvs, work.memptr(), &lwork, rwork.memptr(), bwork.memptr(), &info);
     
     return (info == 0);
     }
   #else
     {
-    arma_ignore(Z);
-    arma_ignore(T);
-    arma_ignore(A);
+    arma_ignore(U);
+    arma_ignore(S);
+    arma_ignore(X);
     
-    arma_stop("schur_dec(): use of LAPACK needs to be enabled");
+    arma_stop("schur(): use of LAPACK needs to be enabled");
     return false;
     }
   #endif
@@ -3743,8 +3747,8 @@ auxlib::syl(Mat<eT>& X, const Mat<eT>& A, const Mat<eT>& B, const Mat<eT>& C)
     {
     Mat<eT> Z1, Z2, T1, T2;
     
-    const bool status_sd1 = auxlib::schur_dec(Z1, T1, A);
-    const bool status_sd2 = auxlib::schur_dec(Z2, T2, B);
+    const bool status_sd1 = auxlib::schur(Z1, T1, A);
+    const bool status_sd2 = auxlib::schur(Z2, T2, B);
     
     if( (status_sd1 == false) || (status_sd2 == false) )
       {

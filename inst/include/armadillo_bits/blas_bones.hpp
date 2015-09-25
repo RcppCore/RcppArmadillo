@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,6 +11,12 @@
 
 
 #if !defined(ARMA_BLAS_CAPITALS)
+  
+  #define arma_sasum sasum
+  #define arma_dasum dasum
+  
+  #define arma_snrm2 snrm2
+  #define arma_dnrm2 dnrm2
   
   #define arma_sdot  sdot
   #define arma_ddot  ddot
@@ -32,6 +38,12 @@
   #define arma_zherk zherk
   
 #else
+  
+  #define arma_sasum SASUM
+  #define arma_dasum DASUM
+  
+  #define arma_snrm2 SNRM2
+  #define arma_dnrm2 DNRM2
   
   #define arma_sdot  SDOT
   #define arma_ddot  DDOT
@@ -58,6 +70,12 @@
 
 extern "C"
   {
+  float  arma_fortran(arma_sasum)(blas_int* n, const float*  x, blas_int* incx);
+  double arma_fortran(arma_dasum)(blas_int* n, const double* x, blas_int* incx);
+  
+  float  arma_fortran(arma_snrm2)(blas_int* n, const float*  x, blas_int* incx);
+  double arma_fortran(arma_dnrm2)(blas_int* n, const double* x, blas_int* incx);
+  
   float  arma_fortran(arma_sdot)(blas_int* n, const float*  x, blas_int* incx, const float*  y, blas_int* incy);
   double arma_fortran(arma_ddot)(blas_int* n, const double* x, blas_int* incx, const double* y, blas_int* incy);
   
@@ -76,12 +94,6 @@ extern "C"
   
   void arma_fortran(arma_cherk)(const char* uplo, const char* transA, const blas_int* n, const blas_int* k, const  float* alpha, const   void* A, const blas_int* ldA, const  float* beta,   void* C, const blas_int* ldC);
   void arma_fortran(arma_zherk)(const char* uplo, const char* transA, const blas_int* n, const blas_int* k, const double* alpha, const   void* A, const blas_int* ldA, const double* beta,   void* C, const blas_int* ldC);
-  
-  // void   arma_fortran(arma_dswap)(const blas_int* n, double* x, const blas_int* incx, double* y, const blas_int* incy);
-  // void   arma_fortran(arma_dscal)(const blas_int* n, const double* alpha, double* x, const blas_int* incx);
-  // void   arma_fortran(arma_dcopy)(const blas_int* n, const double* x, const blas_int* incx, double* y, const blas_int* incy);
-  // void   arma_fortran(arma_daxpy)(const blas_int* n, const double* alpha, const double* x, const blas_int* incx, double* y, const blas_int* incy);
-  // void   arma_fortran(arma_dger )(const blas_int* m, const blas_int* n, const double* alpha, const double* x, const blas_int* incx, const double* y, const blas_int* incy, double* A, const blas_int* ldA);
   }
 
 

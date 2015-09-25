@@ -204,8 +204,8 @@
   #if defined(ARMA_USE_CXX11)
     #if (ARMA_GCC_VERSION < 40800)
       #pragma message ("WARNING: compiler is in C++11 mode, but it has incomplete support for C++11 features;")
-      #pragma message ("WARNING: if something breaks, you get to keep all the pieces")
-      #pragma message ("WARNING: To forcefully prevent Armadillo from using C++11 features,")
+      #pragma message ("WARNING: if something breaks, you get to keep all the pieces.")
+      #pragma message ("WARNING: to forcefully prevent Armadillo from using C++11 features,")
       #pragma message ("WARNING: #define ARMA_DONT_USE_CXX11 before #include <armadillo>")
       #define ARMA_DONT_USE_CXX11_CHRONO
     #endif

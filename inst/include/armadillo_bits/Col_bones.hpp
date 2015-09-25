@@ -57,7 +57,7 @@ class Col : public Mat<eT>
   template<typename T1> inline                   Col(const Base<eT,T1>& X);
   template<typename T1> inline const Col&  operator=(const Base<eT,T1>& X);
   
-  inline Col(      eT* aux_mem, const uword aux_length, const bool copy_aux_mem = true, const bool strict = true);
+  inline Col(      eT* aux_mem, const uword aux_length, const bool copy_aux_mem = true, const bool strict = false);
   inline Col(const eT* aux_mem, const uword aux_length);
   
   template<typename T1, typename T2>
