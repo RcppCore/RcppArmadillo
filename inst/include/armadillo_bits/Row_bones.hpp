@@ -57,7 +57,7 @@ class Row : public Mat<eT>
   template<typename T1> inline                   Row(const Base<eT,T1>& X);
   template<typename T1> inline const Row&  operator=(const Base<eT,T1>& X);
   
-  inline Row(      eT* aux_mem, const uword aux_length, const bool copy_aux_mem = true, const bool strict = true);
+  inline Row(      eT* aux_mem, const uword aux_length, const bool copy_aux_mem = true, const bool strict = false);
   inline Row(const eT* aux_mem, const uword aux_length);
   
   template<typename T1, typename T2>

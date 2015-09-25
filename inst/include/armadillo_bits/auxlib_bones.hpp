@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2014 Conrad Sanderson
-// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // Copyright (C) 2009 Edmund Highcock
 // Copyright (C) 2011 James Sanders
 // Copyright (C) 2012 Eric Jon Sundstrom
@@ -185,19 +185,15 @@ class auxlib
   inline static bool svd_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, const Base< std::complex<T>, T1>& X, const char mode);
   
   
-  // EXPERIMENTAL
   template<typename eT, typename T1>
   inline static bool svd_dc(Col<eT>& S, const Base<eT,T1>& X, uword& n_rows, uword& n_cols);
   
-  // EXPERIMENTAL
   template<typename T, typename T1>
   inline static bool svd_dc(Col<T>& S, const Base<std::complex<T>, T1>& X, uword& n_rows, uword& n_cols);
   
-  // EXPERIMENTAL
   template<typename eT, typename T1>
   inline static bool svd_dc(Col<eT>& S, const Base<eT,T1>& X);
   
-  // EXPERIMENTAL
   template<typename T, typename T1>
   inline static bool svd_dc(Col<T>& S, const Base<std::complex<T>, T1>& X);
   
@@ -233,16 +229,16 @@ class auxlib
   
   template<typename eT>
   inline static bool solve_tr(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const uword layout);
-
-
+  
+  
   //
   // Schur decomposition
   
-  template<typename eT>
-  inline static bool schur_dec(Mat<eT>& Z, Mat<eT>& T, const Mat<eT>& A);
+  template<typename eT, typename T1>
+  inline static bool schur(Mat<eT>& U, Mat<eT>& S, const Base<eT,T1>& X, const bool calc_U = true);
   
-  template<typename cT>
-  inline static bool schur_dec(Mat<std::complex<cT> >& Z, Mat<std::complex<cT> >& T, const Mat<std::complex<cT> >& A);
+  template<typename  T, typename T1>
+  inline static bool schur(Mat<std::complex<T> >& U, Mat<std::complex<T> >& S, const Base<std::complex<T>,T1>& X, const bool calc_U = true);
   
   
   //

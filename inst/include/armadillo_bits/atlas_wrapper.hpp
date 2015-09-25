@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,6 +18,58 @@ namespace atlas
   
   template<typename T>
   inline static const  T  tmp_real(const std::complex<T>& X) { return X.real(); }
+  
+  
+  
+  template<typename eT>
+  arma_inline
+  eT
+  cblas_asum(const int N, const eT* X)
+    {
+    arma_type_check((is_supported_blas_type<eT>::value == false));
+    
+    if(is_float<eT>::value)
+      {
+      typedef float T;
+      return eT( arma_wrapper(cblas_sasum)(N, (const T*)X, 1) );
+      }
+    else
+    if(is_double<eT>::value)
+      {
+      typedef double T;
+      return eT( arma_wrapper(cblas_dasum)(N, (const T*)X, 1) );
+      }
+    else
+      {
+      return eT(0);
+      }
+    }
+  
+  
+  
+  template<typename eT>
+  arma_inline
+  eT
+  cblas_nrm2(const int N, const eT* X)
+    {
+    arma_type_check((is_supported_blas_type<eT>::value == false));
+    
+    if(is_float<eT>::value)
+      {
+      typedef float T;
+      return eT( arma_wrapper(cblas_snrm2)(N, (const T*)X, 1) );
+      }
+    else
+    if(is_double<eT>::value)
+      {
+      typedef double T;
+      return eT( arma_wrapper(cblas_dnrm2)(N, (const T*)X, 1) );
+      }
+    else
+      {
+      return eT(0);
+      }
+    }
   
   
   
@@ -50,7 +102,7 @@ namespace atlas
   template<typename eT>
   arma_inline
   eT
-  cx_cblas_dot(const int N, const eT* X, const eT* Y)
+  cblas_cx_dot(const int N, const eT* X, const eT* Y)
     {
     arma_type_check((is_supported_blas_type<eT>::value == false));
     

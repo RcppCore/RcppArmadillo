@@ -198,37 +198,6 @@ class arrayops
   arma_hot arma_pure inline static
   bool
   has_nan(const eT* src, const uword n_elem);
-  
-  template<typename eT>
-  arma_hot arma_pure inline static
-  typename get_pod_type<eT>::result
-  norm_1(const eT* src, const uword n_elem);
-  
-  template<typename eT>
-  arma_hot arma_pure inline static
-  eT
-  norm_2(const eT* src, const uword n_elem, const typename arma_not_cx<eT>::result* junk = 0);
-  
-  template<typename T>
-  arma_hot arma_pure inline static
-  T
-  norm_2(const std::complex<T>* src, const uword n_elem);
-  
-  template<typename eT>
-  arma_hot arma_pure inline static
-  typename get_pod_type<eT>::result
-  norm_k(const eT* src, const uword n_elem, const int k);
-  
-  template<typename eT>
-  arma_hot arma_pure inline static
-  typename get_pod_type<eT>::result
-  norm_max(const eT* src, const uword n_elem);
-  
-  template<typename eT>
-  arma_hot arma_pure inline static
-  typename get_pod_type<eT>::result
-  norm_min(const eT* src, const uword n_elem);
-  
   };
 
 

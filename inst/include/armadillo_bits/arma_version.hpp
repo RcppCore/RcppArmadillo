@@ -11,10 +11,10 @@
 
 
 
-#define ARMA_VERSION_MAJOR 5
-#define ARMA_VERSION_MINOR 600
-#define ARMA_VERSION_PATCH 2
-#define ARMA_VERSION_NAME  "Molotov Cocktail Deluxe"
+#define ARMA_VERSION_MAJOR 6
+#define ARMA_VERSION_MINOR 000
+#define ARMA_VERSION_PATCH 1
+#define ARMA_VERSION_NAME  "test version"
 
 
 

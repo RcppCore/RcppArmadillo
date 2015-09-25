@@ -17,14 +17,11 @@ Mat<eT>::~Mat()
   {
   arma_extra_debug_sigprint_this(this);
   
-  if(mem_state == 0)
+  if( (mem_state == 0) && (n_elem > arma_config::mat_prealloc) )
     {
-    if(n_elem > arma_config::mat_prealloc)
-      {
-      memory::release( access::rw(mem) );
-      }
+    memory::release( access::rw(mem) );
     }
-    
+  
   if(arma_config::debug == true)
     {
     // try to expose buggy user code that accesses deleted objects
@@ -209,7 +206,7 @@ Mat<eT>::init_cold()
     }
   else
     {
-    arma_extra_debug_print("Mat::init(): allocating memory");
+    arma_extra_debug_print("Mat::init(): acquiring memory");
     
     access::rw(mem) = memory::acquire<eT>(n_elem);
     }
@@ -217,7 +214,6 @@ Mat<eT>::init_cold()
 
 
 
-//! internal matrix construction; if the requested size is small enough, memory from the stack is used. otherwise memory is allocated via 'new'
 template<typename eT>
 inline
 void
@@ -225,10 +221,7 @@ Mat<eT>::init_warm(uword in_n_rows, uword in_n_cols)
   {
   arma_extra_debug_sigprint( arma_boost::format("in_n_rows = %d, in_n_cols = %d") % in_n_rows % in_n_cols );
   
-  if( (n_rows == in_n_rows) && (n_cols == in_n_cols) )
-    {
-    return;
-    }
+  if( (n_rows == in_n_rows) && (n_cols == in_n_cols) )  { return; }
   
   bool  err_state = false;
   char* err_msg   = 0;
@@ -236,51 +229,19 @@ Mat<eT>::init_warm(uword in_n_rows, uword in_n_cols)
   const uhword t_vec_state = vec_state;
   const uhword t_mem_state = mem_state;
   
-  arma_debug_set_error
-    (
-    err_state,
-    err_msg,
-    (t_mem_state == 3),
-    "Mat::init(): size is fixed and hence cannot be changed"
-    );
+  arma_debug_set_error( err_state, err_msg, (t_mem_state == 3), "Mat::init(): size is fixed and hence cannot be changed" );
   
   if(t_vec_state > 0)
     {
     if( (in_n_rows == 0) && (in_n_cols == 0) )
       {
-      if(t_vec_state == 1)
-        {
-        in_n_cols = 1;
-        }
-      else
-      if(t_vec_state == 2)
-        {
-        in_n_rows = 1;
-        }
+      if(t_vec_state == 1)  { in_n_cols = 1; }
+      if(t_vec_state == 2)  { in_n_rows = 1; }
       }
     else
       {
-      if(t_vec_state == 1)
-        {
-        arma_debug_set_error
-          (
-          err_state,
-          err_msg,
-          (in_n_cols != 1),
-          "Mat::init(): requested size is not compatible with column vector layout"
-          );
-        }
-      else
-      if(t_vec_state == 2)
-        {
-        arma_debug_set_error
-          (
-          err_state,
-          err_msg,
-          (in_n_rows != 1),
-          "Mat::init(): requested size is not compatible with row vector layout"
-          );
-        }
+      if(t_vec_state == 1)  { arma_debug_set_error( err_state, err_msg, (in_n_cols != 1), "Mat::init(): requested size is not compatible with column vector layout" ); }
+      if(t_vec_state == 2)  { arma_debug_set_error( err_state, err_msg, (in_n_rows != 1), "Mat::init(): requested size is not compatible with row vector layout"    ); }
       }
     }
   
@@ -312,46 +273,56 @@ Mat<eT>::init_warm(uword in_n_rows, uword in_n_cols)
   if(old_n_elem == new_n_elem)
     {
     arma_extra_debug_print("Mat::init(): reusing memory");
-    
     access::rw(n_rows) = in_n_rows;
     access::rw(n_cols) = in_n_cols;
     }
-  else
+  else  // condition: old_n_elem != new_n_elem
     {
-    arma_debug_check
-      (
-      (t_mem_state == 2),
-      "Mat::init(): mismatch between size of auxiliary memory and requested size"
-      );
+    arma_debug_check( (t_mem_state == 2), "Mat::init(): mismatch between size of auxiliary memory and requested size" );
     
-    if(t_mem_state == 0)
+    if(new_n_elem < old_n_elem)  // reuse existing memory if possible
       {
-      if(old_n_elem > arma_config::mat_prealloc)
+      if( (t_mem_state == 0) && (new_n_elem <= arma_config::mat_prealloc) )
         {
-        arma_extra_debug_print("Mat::init(): freeing memory");
+        if(old_n_elem > arma_config::mat_prealloc)
+          {
+          arma_extra_debug_print("Mat::init(): releasing memory");
+          memory::release( access::rw(mem) );
+          }
         
-        memory::release( access::rw(mem) );
+        arma_extra_debug_print("Mat::init(): using local memory");
+        access::rw(mem) = mem_local;
+        }
+      else
+        {
+        arma_extra_debug_print("Mat::init(): reusing memory");
         }
       }
-    
-    
-    if(new_n_elem <= arma_config::mat_prealloc)
+    else  // condition: new_n_elem > old_n_elem
       {
-      arma_extra_debug_print("Mat::init(): using local memory");
+      if( (t_mem_state == 0) && (old_n_elem > arma_config::mat_prealloc) )
+        {
+        arma_extra_debug_print("Mat::init(): releasing memory");
+        memory::release( access::rw(mem) );
+        }
       
-      access::rw(mem) = mem_local;
-      }
-    else
-      {
-      arma_extra_debug_print("Mat::init(): allocating memory");
+      if(new_n_elem <= arma_config::mat_prealloc)
+        {
+        arma_extra_debug_print("Mat::init(): using local memory");
+        access::rw(mem) = mem_local;
+        }
+      else
+        {
+        arma_extra_debug_print("Mat::init(): acquiring memory");
+        access::rw(mem) = memory::acquire<eT>(new_n_elem);
+        }
       
-      access::rw(mem) = memory::acquire<eT>(new_n_elem);
+      access::rw(mem_state) = 0;
       }
-    
-    access::rw(n_rows)    = in_n_rows;
-    access::rw(n_cols)    = in_n_cols;
-    access::rw(n_elem)    = new_n_elem;
-    access::rw(mem_state) = 0;
+      
+    access::rw(n_rows) = in_n_rows;
+    access::rw(n_cols) = in_n_cols;
+    access::rw(n_elem) = new_n_elem;
     }
   }
 
@@ -1105,50 +1076,49 @@ Mat<eT>::steal_mem(Mat<eT>& x)
   {
   arma_extra_debug_sigprint();
   
-  if(this != &x)
+  if(this == &x)  { return; }
+  
+  const uword  x_n_rows    = x.n_rows;
+  const uword  x_n_cols    = x.n_cols;
+  const uword  x_n_elem    = x.n_elem;
+  const uhword x_vec_state = x.vec_state;
+  const uhword x_mem_state = x.mem_state;
+  
+  const uhword t_vec_state = vec_state;
+  const uhword t_mem_state = mem_state;
+  
+  bool layout_ok = false;
+  
+  if(t_vec_state == x_vec_state)
     {
-    const uword  x_n_rows    = x.n_rows;
-    const uword  x_n_cols    = x.n_cols;
-    const uword  x_n_elem    = x.n_elem;
-    const uhword x_vec_state = x.vec_state;
-    const uhword x_mem_state = x.mem_state;
+    layout_ok = true;
+    }
+  else
+    {
+    if( (t_vec_state == 1) && (x_n_cols == 1) )  { layout_ok = true; }
+    if( (t_vec_state == 2) && (x_n_rows == 1) )  { layout_ok = true; }
+    }
+  
+  
+  if( (t_mem_state <= 1) && ( ((x_mem_state == 0) && (x_n_elem > arma_config::mat_prealloc)) || (x_mem_state == 1) ) && layout_ok )
+    {
+    reset();
     
-    const uhword t_vec_state = vec_state;
-    const uhword t_mem_state = mem_state;
+    access::rw(n_rows)    = x_n_rows;
+    access::rw(n_cols)    = x_n_cols;
+    access::rw(n_elem)    = x_n_elem;
+    access::rw(mem_state) = x_mem_state;
+    access::rw(mem)       = x.mem;
     
-    bool layout_ok = false;
-    
-    if(t_vec_state == x_vec_state)
-      {
-      layout_ok = true;
-      }
-    else
-      {
-      if( (t_vec_state == 1) && (x_n_cols == 1) )  { layout_ok = true; }
-      if( (t_vec_state == 2) && (x_n_rows == 1) )  { layout_ok = true; }
-      }
-    
-    
-    if( (t_mem_state <= 1) && ( ((x_mem_state == 0) && (x_n_elem > arma_config::mat_prealloc)) || (x_mem_state == 1) ) && layout_ok )
-      {
-      reset();
-      
-      access::rw(n_rows)    = x_n_rows;
-      access::rw(n_cols)    = x_n_cols;
-      access::rw(n_elem)    = x_n_elem;
-      access::rw(mem_state) = x_mem_state;
-      access::rw(mem)       = x.mem;
-      
-      access::rw(x.n_rows)    = 0;
-      access::rw(x.n_cols)    = 0;
-      access::rw(x.n_elem)    = 0;
-      access::rw(x.mem_state) = 0;
-      access::rw(x.mem)       = 0;
-      }
-    else
-      {
-      (*this).operator=(x);
-      }
+    access::rw(x.n_rows)    = 0;
+    access::rw(x.n_cols)    = 0;
+    access::rw(x.n_elem)    = 0;
+    access::rw(x.mem_state) = 0;
+    access::rw(x.mem)       = 0;
+    }
+  else
+    {
+    (*this).operator=(x);
     }
   }
 

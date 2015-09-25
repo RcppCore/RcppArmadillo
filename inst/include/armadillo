@@ -93,7 +93,7 @@ namespace arma
   
   // preliminaries
   
-  #include "armadillo_bits/forward_bones.hpp"
+  #include "armadillo_bits/arma_forward.hpp"
   #include "armadillo_bits/arma_static_check.hpp"
   #include "armadillo_bits/typedef_elem.hpp"
   #include "armadillo_bits/typedef_elem_check.hpp"
@@ -257,6 +257,7 @@ namespace arma
   #include "armadillo_bits/op_expmat_bones.hpp"
   #include "armadillo_bits/op_nonzeros_bones.hpp"
   #include "armadillo_bits/op_diff_bones.hpp"
+  #include "armadillo_bits/op_norm_bones.hpp"
   
   #include "armadillo_bits/glue_times_bones.hpp"
   #include "armadillo_bits/glue_mixed_bones.hpp"
@@ -466,6 +467,7 @@ namespace arma
   #include "armadillo_bits/fn_interp1.hpp"
   #include "armadillo_bits/fn_qz.hpp"
   #include "armadillo_bits/fn_diff.hpp"
+  #include "armadillo_bits/fn_schur.hpp"
   
   #include "armadillo_bits/fn_speye.hpp"
   #include "armadillo_bits/fn_spones.hpp"
@@ -473,7 +475,6 @@ namespace arma
   #include "armadillo_bits/fn_sprandu.hpp"
   #include "armadillo_bits/fn_eigs_sym.hpp"
   #include "armadillo_bits/fn_eigs_gen.hpp"
-  #include "armadillo_bits/fn_norm_sparse.hpp"
   #include "armadillo_bits/fn_spsolve.hpp"
   #include "armadillo_bits/fn_svds.hpp"
   
@@ -594,6 +595,7 @@ namespace arma
   #include "armadillo_bits/op_expmat_meat.hpp"
   #include "armadillo_bits/op_nonzeros_meat.hpp"
   #include "armadillo_bits/op_diff_meat.hpp"
+  #include "armadillo_bits/op_norm_meat.hpp"
   
   #include "armadillo_bits/glue_times_meat.hpp"
   #include "armadillo_bits/glue_mixed_meat.hpp"

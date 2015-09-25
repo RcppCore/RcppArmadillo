@@ -470,9 +470,11 @@ arma_ostream::print(std::ostream& o, const Cube<eT>& x, const bool modify)
     {
     for(uword slice=0; slice < x.n_slices; ++slice)
       {
+      const Mat<eT> tmp(const_cast<eT*>(x.slice_memptr(slice)), x.n_rows, x.n_cols, false);
+      
       o << "[cube slice " << slice << ']' << '\n';
       o.width(cell_width);
-      arma_ostream::print(o, x.slice(slice), false);
+      arma_ostream::print(o, tmp, false);
       o << '\n';
       }
     }

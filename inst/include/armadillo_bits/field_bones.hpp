@@ -29,16 +29,16 @@ class field
   
   typedef oT object_type;
   
-  const uword n_rows;     //!< number of rows in the field (read-only)
-  const uword n_cols;     //!< number of columns in the field (read-only)
-  const uword n_slices;   //!< number of slices in the field (read-only)
-  const uword n_elem;     //!< number of elements in the field (read-only)
+  const uword n_rows;     //!< number of rows     (read-only)
+  const uword n_cols;     //!< number of columns  (read-only)
+  const uword n_slices;   //!< number of slices   (read-only)
+  const uword n_elem;     //!< number of elements (read-only)
   
   
   private:
   
-  arma_aligned oT** mem;                                     //!< pointer to memory used by the object
-  arma_aligned oT*  mem_local[ field_prealloc_n_elem::val ]; //!< Internal memory, to avoid calling the 'new' operator for small amounts of memory
+  arma_aligned oT** mem;                                     //!< pointers to stored objects
+  arma_aligned oT*  mem_local[ field_prealloc_n_elem::val ]; //!< local storage, for small fields
   
   
   public:

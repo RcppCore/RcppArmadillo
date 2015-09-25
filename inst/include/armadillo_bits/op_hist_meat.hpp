@@ -1,5 +1,5 @@
-// Copyright (C) 2012 Conrad Sanderson
-// Copyright (C) 2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2012-2015 Conrad Sanderson
+// Copyright (C) 2012-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,20 +12,16 @@
 
 
 
-template<typename T1>
+template<typename eT>
 inline
 void
-op_hist::apply(Mat<uword>& out, const mtOp<uword, T1, op_hist>& X)
+op_hist::apply_noalias(Mat<uword>& out, const Mat<eT>& A, const uword n_bins, const bool A_is_row)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
+  arma_debug_check( ((A.is_vec() == false) && (A.is_empty() == false)), "hist(): only vectors are supported when automatically determining bin centers" );
   
-  const uword n_bins = X.aux_uword_a;
-  
-  const unwrap_check_mixed<T1> tmp(X.m, out);
-  const Mat<eT>& A           = tmp.M;
-  
+  if(n_bins == 0)  { out.reset(); return; }
   
         uword A_n_elem = A.n_elem;
   const eT*   A_mem    = A.memptr();
@@ -57,23 +53,45 @@ op_hist::apply(Mat<uword>& out, const mtOp<uword, T1, op_hist>& X)
   if(arma_isfinite(min_val) == false) { min_val = priv::most_neg<eT>(); }
   if(arma_isfinite(max_val) == false) { max_val = priv::most_pos<eT>(); }
   
-  if(n_bins >= 1)
+  Col<eT> c(n_bins);
+  eT* c_mem = c.memptr();
+  
+  for(uword ii=0; ii < n_bins; ++ii)
     {
-    Col<eT> c(n_bins);
-    eT* c_mem = c.memptr();
+    c_mem[ii] = (0.5 + ii) / double(n_bins);   // TODO: may need to be modified for integer matrices
+    }
+  
+  c = ((max_val - min_val) * c) + min_val;
+  
+  const uword dim = (A_is_row) ? 1 : 0;
+  
+  glue_hist::apply_noalias(out, A, c, dim);
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_hist::apply(Mat<uword>& out, const mtOp<uword, T1, op_hist>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword n_bins = X.aux_uword_a;
+  
+  const quasi_unwrap<T1> U(X.m);
+  
+  if(U.is_alias(out))
+    {
+    Mat<uword> tmp;
     
-    for(uword ii=0; ii < n_bins; ++ii)
-      {
-      c_mem[ii] = (0.5 + ii) / double(n_bins);   // TODO: may need to be modified for integer matrices
-      }
+    op_hist::apply_noalias(tmp, U.M, n_bins, (T1::is_row));
     
-    c = ((max_val - min_val) * c) + min_val;
-    
-    out = hist(A, c);
+    out.steal_mem(tmp);
     }
   else
     {
-    out.reset();
+    op_hist::apply_noalias(out, U.M, n_bins, (T1::is_row));
     }
   }
 

@@ -2,6 +2,21 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.6.000.1.0 (2015-09-25)}{
+  \itemize{
+    \item Upgraded to Armadillo 6.000.1-test ("test version")
+    \itemize{
+      \item faster \code{norm()} and \code{normalise()} when using ATLAS or OpenBLAS
+      \item added Schur decomposition: \code{schur()}
+      \item stricter handling of matrix objects by \code{hist()} and \code{histc()}
+      \item advanced constructors for using auxiliary memory by Mat,
+      Col, Row and Cube now have the default of \emph{strict = false}  
+      \item Cube class now delays allocation of .slice() related structures until needed
+      \item expanded \code{join_slices()} to handle joining cubes with matrices
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.5.600.2.0 (2015-09-19)}{
   \itemize{
     \item Upgraded to Armadillo 5.600.2 ("Molotov Cocktail Deluxe")

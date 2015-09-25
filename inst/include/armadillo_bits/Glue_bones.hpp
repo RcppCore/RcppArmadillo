@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2012 Conrad Sanderson
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -32,8 +32,15 @@ class Glue : public Base<typename T1::elem_type, Glue<T1, T2, glue_type> >
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  static const bool is_row = (is_same_type<glue_type, glue_times>::value) ? T1::is_row : false;
-  static const bool is_col = (is_same_type<glue_type, glue_times>::value) ? T2::is_col : false;
+  static const bool is_row = \
+       (is_same_type<glue_type, glue_times>::value && T1::is_row)
+    || (is_same_type<glue_type,glue_conv>::value && T1::is_row)
+    || (is_same_type<glue_type,glue_join_rows>::value && T1::is_row && T2::is_row);
+    
+  static const bool is_col = \
+       (is_same_type<glue_type, glue_times>::value && T2::is_col)
+    || (is_same_type<glue_type,glue_conv>::value && T1::is_col)
+    || (is_same_type<glue_type,glue_join_cols>::value && T1::is_col && T2::is_col);
   
   arma_inline  Glue(const T1& in_A, const T2& in_B);
   arma_inline  Glue(const T1& in_A, const T2& in_B, const uword in_aux_uword);
