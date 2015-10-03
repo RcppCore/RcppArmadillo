@@ -28,10 +28,10 @@ class Mat : public Base< eT, Mat<eT> >
   const uhword vec_state; //!< 0: matrix layout; 1: column vector layout; 2: row vector layout
   const uhword mem_state;
   
-  // mem_state = 0: normal matrix which manages its own memory; 
-  // mem_state = 1: use auxiliary memory until a change in the number of elements requires more memory; 
-  // mem_state = 2: use auxiliary memory and don't allow the number of elements to be changed; 
-  // mem_state = 3: fixed size (eg. via template based size specification).
+  // mem_state = 0: normal matrix which manages its own memory
+  // mem_state = 1: use auxiliary memory until a size change
+  // mem_state = 2: use auxiliary memory and don't allow the number of elements to be changed
+  // mem_state = 3: fixed size (eg. via template based size specification)
   
   arma_aligned const eT* const mem;  //!< pointer to the memory used for storing elements (memory is read-only)
   
@@ -414,7 +414,8 @@ class Mat : public Base< eT, Mat<eT> >
   
   inline void  reshape(const uword in_rows, const uword in_cols);
   inline void  reshape(const SizeMat& s);
-  inline void  reshape(const uword in_rows, const uword in_cols, const uword dim);
+  
+  arma_deprecated inline void reshape(const uword in_rows, const uword in_cols, const uword dim);  //!< NOTE: don't use this form: it's deprecated
   
   
   template<typename functor>

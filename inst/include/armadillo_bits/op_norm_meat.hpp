@@ -889,8 +889,6 @@ op_norm::mat_norm_2(const Proxy<T1>& P)
   
   typedef typename T1::pod_type   T;
   
-  // TODO: is the SVD based approach only valid for square matrices?
-  
   Col<T> S;
   svd(S, P.Q);
   

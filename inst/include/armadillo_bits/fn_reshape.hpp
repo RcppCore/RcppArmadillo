@@ -35,7 +35,9 @@ reshape(const T1& X, const SizeMat& s)
 
 
 
+//! NOTE: this form is deprecated: don't use it
 template<typename T1>
+arma_deprecated
 inline
 const Op<T1, op_reshape_ext>
 reshape(const Base<typename T1::elem_type,T1>& X, const uword in_n_rows, const uword in_n_cols, const uword dim)

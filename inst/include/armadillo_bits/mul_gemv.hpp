@@ -362,11 +362,11 @@ class gemv
         arma_debug_assert_blas_size(A);
         
         const char      trans_A     = (do_trans_A) ? ( is_cx<eT>::yes ? 'C' : 'T' ) : 'N';
-        const blas_int  m           = A.n_rows;
-        const blas_int  n           = A.n_cols;
+        const blas_int  m           = blas_int(A.n_rows);
+        const blas_int  n           = blas_int(A.n_cols);
         const eT        local_alpha = (use_alpha) ? alpha : eT(1);
         //const blas_int  lda         = A.n_rows;
-        const blas_int  inc         = 1;
+        const blas_int  inc         = blas_int(1);
         const eT        local_beta  = (use_beta) ? beta : eT(0);
         
         arma_extra_debug_print( arma_boost::format("blas::gemv(): trans_A = %c") % trans_A );

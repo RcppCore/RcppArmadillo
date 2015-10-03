@@ -36,10 +36,10 @@ class Cube : public BaseCube< eT, Cube<eT> >
   const uword  n_elem;       //!< number of elements in the cube   (read-only)
   const uword  mem_state;
   
-  // mem_state = 0: normal cube which manages its own memory; 
-  // mem_state = 1: use auxiliary memory until a change in the number of elements requires more memory; 
-  // mem_state = 2: use auxiliary memory and don't allow the number of elements to be changed; 
-  // mem_state = 3: fixed size (eg. via template based size specification).
+  // mem_state = 0: normal cube which manages its own memory
+  // mem_state = 1: use auxiliary memory until a size change
+  // mem_state = 2: use auxiliary memory and don't allow the number of elements to be changed
+  // mem_state = 3: fixed size (eg. via template based size specification)
   
   arma_aligned const eT* const mem;  //!< pointer to the memory used for storing elements (memory is read-only)
   
