@@ -6055,8 +6055,9 @@ Mat<eT>::reshape(const SizeMat& s)
 
 
 
-//!< don't use this in new code; kept only for compatibility with old code
+//!< NOTE: don't use this in new code; kept only for compatibility with old code
 template<typename eT>
+arma_deprecated
 inline
 void
 Mat<eT>::reshape(const uword in_rows, const uword in_cols, const uword dim)

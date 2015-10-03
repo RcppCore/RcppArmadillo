@@ -291,9 +291,9 @@ class gemm
         const char trans_A = (do_trans_A) ? ( is_cx<eT>::yes ? 'C' : 'T' ) : 'N';
         const char trans_B = (do_trans_B) ? ( is_cx<eT>::yes ? 'C' : 'T' ) : 'N';
         
-        const blas_int m   = C.n_rows;
-        const blas_int n   = C.n_cols;
-        const blas_int k   = (do_trans_A) ? A.n_rows : A.n_cols;
+        const blas_int m   = blas_int(C.n_rows);
+        const blas_int n   = blas_int(C.n_cols);
+        const blas_int k   = (do_trans_A) ? blas_int(A.n_rows) : blas_int(A.n_cols);
         
         const eT local_alpha = (use_alpha) ? alpha : eT(1);
         

@@ -1,3 +1,9 @@
+r-cran-rcpparmadillo (0.6.100.0.0-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Dirk Eddelbuettel <edd@debian.org>  Sat, 03 Oct 2015 07:46:57 -0500
+
 r-cran-rcpparmadillo (0.5.600.2.0-1) unstable; urgency=low
 
   * New upstream release

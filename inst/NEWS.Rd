@@ -2,9 +2,9 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
-\section{Changes in RcppArmadillo version 0.6.000.1.0 (2015-09-25)}{
+\section{Changes in RcppArmadillo version 0.6.100.0.0 (2015-10-03)}{
   \itemize{
-    \item Upgraded to Armadillo 6.000.1-test ("test version")
+    \item Upgraded to Armadillo 6.100.0 ("Midnight Blue")
     \itemize{
       \item faster \code{norm()} and \code{normalise()} when using ATLAS or OpenBLAS
       \item added Schur decomposition: \code{schur()}
@@ -14,6 +14,13 @@
       \item Cube class now delays allocation of .slice() related structures until needed
       \item expanded \code{join_slices()} to handle joining cubes with matrices
     }
+  }
+}
+    
+\section{Changes in RcppArmadillo version 0.6.000.1.0 (2015-09-25)}{
+  \itemize{
+    \item Upgraded to Armadillo test / bug-fix release 0.6.000.1-test
+    \item Non-CRAN release
   }
 }
 

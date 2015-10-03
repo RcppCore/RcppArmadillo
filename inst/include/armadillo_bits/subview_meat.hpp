@@ -634,25 +634,25 @@ subview<eT>::operator%=(const SpBase<eT, T1>& x)
   typename SpProxy<T1>::const_iterator_type cit     = p.begin();
   typename SpProxy<T1>::const_iterator_type cit_end = p.end();
   
-  uword row = 0;
-  uword col = 0;
+  uword r = 0;
+  uword c = 0;
   
   while(cit != cit_end)
     {
     const uword cit_row = cit.row();
     const uword cit_col = cit.col();
     
-    while( ((row == cit_row) && (col == cit_col)) == false )
+    while( ((r == cit_row) && (c == cit_col)) == false )
       {
-      at(row,col) = eT(0);
+      at(r,c) = eT(0);
       
-      row++;  if(row >= s_n_rows)  { row = 0; col++; }
+      r++;  if(r >= s_n_rows)  { r = 0; c++; }
       }
     
-    at(row, col) *= (*cit); 
+    at(r, c) *= (*cit); 
     
     ++cit;
-    row++;  if(row >= s_n_rows)  { row = 0; col++; }
+    r++;  if(r >= s_n_rows)  { r = 0; c++; }
     }
   }
 

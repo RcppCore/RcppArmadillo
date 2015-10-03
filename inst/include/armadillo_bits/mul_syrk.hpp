@@ -344,8 +344,8 @@ class syrk
         
         const char trans_A = (do_trans_A) ? 'T' : 'N';
         
-        const blas_int n = C.n_cols;
-        const blas_int k = (do_trans_A) ? A.n_rows : A.n_cols;
+        const blas_int n = blas_int(C.n_cols);
+        const blas_int k = (do_trans_A) ? blas_int(A.n_rows) : blas_int(A.n_cols);
         
         const eT local_alpha = (use_alpha) ? alpha : eT(1);
         const eT local_beta  = (use_beta)  ? beta  : eT(0);
