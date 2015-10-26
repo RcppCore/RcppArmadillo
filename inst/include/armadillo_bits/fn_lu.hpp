@@ -1,5 +1,6 @@
-// Copyright (C) 2008-2011 Conrad Sanderson
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 National ICT Australia (NICTA)
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -34,7 +35,7 @@ lu
     {
     L.reset();
     U.reset();
-    arma_bad("lu(): failed to converge", false);
+    arma_bad("lu(): decomposition failed", false);
     }
   
   return status;
@@ -67,7 +68,7 @@ lu
     L.reset();
     U.reset();
     P.reset();
-    arma_bad("lu(): failed to converge", false);
+    arma_bad("lu(): decomposition failed", false);
     }
   
   return status;

@@ -1,6 +1,7 @@
-// Copyright (C) 2013-2015 Ryan Curtin
-// Copyright (C) 2013-2015 Conrad Sanderson
-// Copyright (C) 2013-2015 NICTA
+// Copyright (C) 2013-2015 National ICT Australia (NICTA)
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
+// Written by Ryan Curtin
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -254,11 +255,11 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     // Now recover the eigenvectors.
     for (uword i = 0; i < n_eigvals; ++i)
       {
-      // ARPACK ?neupd lays things out kinda odd in memory; so does LAPACK
-      // ?geev (see auxlib::eig_gen()).
+      // ARPACK ?neupd lays things out kinda odd in memory;
+      // so does LAPACK ?geev -- see auxlib::eig_gen()
       if((i < n_eigvals - 1) && (eigval[i] == std::conj(eigval[i + 1])))
         {
-        for (uword j = 0; j < n; ++j)
+        for (uword j = 0; j < uword(n); ++j)
           {
           eigvec.at(j, i)     = std::complex<T>(z[n * i + j], z[n * (i + 1) + j]);
           eigvec.at(j, i + 1) = std::complex<T>(z[n * i + j], -z[n * (i + 1) + j]);
@@ -269,7 +270,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
       if((i == n_eigvals - 1) && (std::complex<T>(eigval[i]).imag() != 0.0))
         {
         // We don't have the matched conjugate eigenvalue.
-        for (uword j = 0; j < n; ++j)
+        for (uword j = 0; j < uword(n); ++j)
           {
           eigvec.at(j, i) = std::complex<T>(z[n * i + j], z[n * (i + 1) + j]);
           }
@@ -277,7 +278,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
       else
         {
         // The eigenvector is entirely real.
-        for (uword j = 0; j < n; ++j)
+        for (uword j = 0; j < uword(n); ++j)
           {
           eigvec.at(j, i) = std::complex<T>(z[n * i + j], T(0));
           }

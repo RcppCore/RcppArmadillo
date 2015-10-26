@@ -2,12 +2,12 @@
 // (1) source code written by Conrad Sanderson, and
 // (2) a modified form of source code referred to as "kissfft.hh".
 // 
-// This compilation is Copyright (C) 2013 Conrad Sanderson
+// This compilation is Copyright (C) 2013 National ICT Australia (NICTA)
 // and is subject to the terms of the Mozilla Public License, v. 2.0.
 // 
 // The source code that is distinct and separate from "kissfft.hh"
-// is Copyright (C) 2013 Conrad Sanderson and is subject to the
-// terms of the Mozilla Public License, v. 2.0.
+// is Copyright (C) 2013 National ICT Australia (NICTA)
+// and is subject to the terms of the Mozilla Public License, v. 2.0.
 // 
 // If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.

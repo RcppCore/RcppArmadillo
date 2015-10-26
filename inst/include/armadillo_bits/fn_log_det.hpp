@@ -1,5 +1,6 @@
-// Copyright (C) 2010-2011 Conrad Sanderson
-// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2015 National ICT Australia (NICTA)
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -50,7 +51,9 @@ log_det
   
   const diagmat_proxy<T1> A(X.m);
   
-  const uword N = A.n_elem;
+  arma_debug_check( (A.n_rows != A.n_cols), "log_det(): matrix is not square" );
+  
+  const uword N = (std::min)(A.n_rows, A.n_cols);
   
   if(N == 0)
     {

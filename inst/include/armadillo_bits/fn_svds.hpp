@@ -1,5 +1,6 @@
-// Copyright (C) 2015 Conrad Sanderson
-// Copyright (C) 2015 NICTA (www.nicta.com.au)
+// Copyright (C) 2015 National ICT Australia (NICTA)
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -207,7 +208,7 @@ svds_helper
       U.reset();
       S.reset();
       V.reset();
-      arma_bad("svds(): failed to converge", false);
+      arma_bad("svds(): decomposition failed", false);
       
       return false;
       }
@@ -277,9 +278,9 @@ svds
   
   if(status == false)
     {
-    arma_bad("svds(): failed to converge", false);
+    arma_bad("svds(): decomposition failed", false);
     }
-  
+
   return status;
   }
 
@@ -305,10 +306,10 @@ svds
   Mat<typename T1::elem_type> V;
   
   const bool status = svds_helper(U, S, V, X.get_ref(), k, tol, false);
-
+  
   if(status == false)
     {
-    arma_bad("svds(): failed to converge", false);
+    arma_bad("svds(): decomposition failed", false);
     }
   
   return status;
@@ -340,7 +341,7 @@ svds
   
   if(status == false)
     {
-    arma_bad("svds(): failed to converge", true);
+    arma_bad("svds(): decomposition failed");
     }
   
   return S;

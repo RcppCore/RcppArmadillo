@@ -1,6 +1,8 @@
-// Copyright (C) 2011-2014 Ryan Curtin
-// Copyright (C) 2012-2015 Conrad Sanderson
-// Copyright (C) 2011 Matthew Amidon
+// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
+// Written by Ryan Curtin
+// Written by Matthew Amidon
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this

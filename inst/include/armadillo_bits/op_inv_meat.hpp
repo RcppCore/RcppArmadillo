@@ -1,5 +1,6 @@
-// Copyright (C) 2008-2014 Conrad Sanderson
-// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -76,7 +77,9 @@ op_inv::apply_diagmat(Mat<typename T1::elem_type>& out, const T1& X)
   
   const diagmat_proxy<T1> A(X);
   
-  const uword N = A.n_elem;
+  arma_debug_check( (A.n_rows != A.n_cols), "inv(): given matrix is not square" );
+  
+  const uword N = (std::min)(A.n_rows, A.n_cols);
   
   bool status = true;
   

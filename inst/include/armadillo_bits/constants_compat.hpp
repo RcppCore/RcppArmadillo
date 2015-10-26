@@ -1,5 +1,6 @@
-// Copyright (C) 2008-2011 Conrad Sanderson
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 National ICT Australia (NICTA)
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -83,7 +84,7 @@ class Phy
   static eT mu_B()      { return eT(927.4009994e-26); }
   
   //! characteristic impedance of vacuum (in ohms)
-  static eT Z_0()       { return eT(3.76730313461771e-2); }
+  static eT Z_0()       { return eT(376.730313461771); }
   
   //! conductance quantum (in siemens)
   static eT G_0()       { return eT(7.7480917310e-5); }

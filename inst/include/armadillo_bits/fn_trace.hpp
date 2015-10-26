@@ -1,6 +1,7 @@
-// Copyright (C) 2008-2012 Conrad Sanderson
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2012 Ryan Curtin
+// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
+// Written by Ryan Curtin
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +12,6 @@
 //! @{
 
 
-//! Immediate trace (sum of diagonal elements) of a square dense matrix
 template<typename T1>
 arma_hot
 arma_warn_unused
@@ -25,9 +25,7 @@ trace(const T1& X)
   
   const Proxy<T1> A(X);
   
-  arma_debug_check( (A.get_n_rows() != A.get_n_cols()), "trace(): matrix must be square sized" );
-  
-  const uword N = A.get_n_rows();
+  const uword N = (std::min)(A.get_n_rows(), A.get_n_cols());
   
   eT val1 = eT(0);
   eT val2 = eT(0);
@@ -62,7 +60,7 @@ trace(const Op<T1, op_diagmat>& X)
   
   const diagmat_proxy<T1> A(X.m);
   
-  const uword N = A.n_elem;
+  const uword N = (std::min)(A.n_rows, A.n_cols);
   
   eT val = eT(0);
   
@@ -76,51 +74,57 @@ trace(const Op<T1, op_diagmat>& X)
 
 
 
-//! speedup for trace(A*B), where the result of A*B is a square sized matrix
 template<typename T1, typename T2>
 arma_hot
 inline
 typename T1::elem_type
-trace_mul_unwrap(const T1& XA, const T2& XB)
+trace_mul_unwrap(const Proxy<T1>& PA, const T2& XB)
   {
   arma_extra_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
-  const Proxy<T1>    PA(XA);
   const unwrap<T2> tmpB(XB);
   
   const Mat<eT>& B = tmpB.M;
+
+  const uword A_n_rows = PA.get_n_rows();
+  const uword A_n_cols = PA.get_n_cols();
   
-  arma_debug_assert_mul_size(PA.get_n_rows(), PA.get_n_cols(), B.n_rows, B.n_cols, "matrix multiplication");
+  const uword B_n_rows = B.n_rows;
+  const uword B_n_cols = B.n_cols;
   
-  arma_debug_check( (PA.get_n_rows() != B.n_cols), "trace(): matrix must be square sized" );
+  arma_debug_assert_mul_size(A_n_rows, A_n_cols, B_n_rows, B_n_cols, "matrix multiplication");
   
-  const uword N1 = PA.get_n_rows();   // equivalent to B.n_cols, due to square size requirements
-  const uword N2 = PA.get_n_cols();   // equivalent to B.n_rows, due to matrix multiplication requirements
+  const uword N = (std::min)(A_n_rows, B_n_cols);
   
   eT val = eT(0);
   
-  for(uword i=0; i<N1; ++i)
+  for(uword k=0; k < N; ++k)
     {
-    const eT* B_colmem = B.colptr(i);
+    const eT* B_colptr = B.colptr(k);
     
     eT acc1 = eT(0);
     eT acc2 = eT(0);
     
-    uword j,k;
-    for(j=0, k=1; k < N2; j+=2, k+=2)
+    uword j;
+    
+    for(j=1; j < A_n_cols; j+=2)
       {
-      const eT tmp_j = B_colmem[j];
-      const eT tmp_k = B_colmem[k];
+      const uword i = (j-1);
       
-      acc1 += PA.at(i,j) * tmp_j;
-      acc2 += PA.at(i,k) * tmp_k;
+      const eT tmp_i = B_colptr[i];
+      const eT tmp_j = B_colptr[j];
+      
+      acc1 += PA.at(k, i) * tmp_i;
+      acc2 += PA.at(k, j) * tmp_j;
       }
     
-    if(j < N2)
+    const uword i = (j-1);
+    
+    if(i < A_n_cols)
       {
-      acc1 += PA.at(i,j) * B_colmem[j];
+      acc1 += PA.at(k, i) * B_colptr[i];
       }
     
     val += (acc1 + acc2);
@@ -136,47 +140,54 @@ template<typename T1, typename T2>
 arma_hot
 inline
 typename T1::elem_type
-trace_mul_proxy(const T1& XA, const T2& XB)
+trace_mul_proxy(const Proxy<T1>& PA, const T2& XB)
   {
   arma_extra_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
-  const Proxy<T1> PA(XA);
   const Proxy<T2> PB(XB);
   
-  if(is_Mat<typename Proxy<T2>::stored_type>::value == true)
+  if(is_Mat<typename Proxy<T2>::stored_type>::value)
     {
-    return trace_mul_unwrap(PA.Q, PB.Q);
+    return trace_mul_unwrap(PA, PB.Q);
     }
   
-  arma_debug_assert_mul_size(PA.get_n_rows(), PA.get_n_cols(), PB.get_n_rows(), PB.get_n_cols(), "matrix multiplication");
+  const uword A_n_rows = PA.get_n_rows();
+  const uword A_n_cols = PA.get_n_cols();
   
-  arma_debug_check( (PA.get_n_rows() != PB.get_n_cols()), "trace(): matrix must be square sized" );
+  const uword B_n_rows = PB.get_n_rows();
+  const uword B_n_cols = PB.get_n_cols();
   
-  const uword N1 = PA.get_n_rows();   // equivalent to PB.get_n_cols(), due to square size requirements
-  const uword N2 = PA.get_n_cols();   // equivalent to PB.get_n_rows(), due to matrix multiplication requirements
+  arma_debug_assert_mul_size(A_n_rows, A_n_cols, B_n_rows, B_n_cols, "matrix multiplication");
+  
+  const uword N = (std::min)(A_n_rows, B_n_cols);
   
   eT val = eT(0);
   
-  for(uword i=0; i<N1; ++i)
+  for(uword k=0; k < N; ++k)
     {
     eT acc1 = eT(0);
     eT acc2 = eT(0);
     
-    uword j,k;
-    for(j=0, k=1; k < N2; j+=2, k+=2)
+    uword j;
+    
+    for(j=1; j < A_n_cols; j+=2)
       {
-      const eT tmp_j = PB.at(j,i);
-      const eT tmp_k = PB.at(k,i);
+      const uword i = (j-1);
       
-      acc1 += PA.at(i,j) * tmp_j;
-      acc2 += PA.at(i,k) * tmp_k;
+      const eT tmp_i = PB.at(i, k);
+      const eT tmp_j = PB.at(j, k);
+      
+      acc1 += PA.at(k, i) * tmp_i;
+      acc2 += PA.at(k, j) * tmp_j;
       }
     
-    if(j < N2)
+    const uword i = (j-1);
+    
+    if(i < A_n_cols)
       {
-      acc1 += PA.at(i,j) * PB.at(j,i);
+      acc1 += PA.at(k, i) * PB.at(i, k);
       }
     
     val += (acc1 + acc2);
@@ -197,7 +208,9 @@ trace(const Glue<T1, T2, glue_times>& X)
   {
   arma_extra_debug_sigprint();
   
-  return (is_Mat<T2>::value) ? trace_mul_unwrap(X.A, X.B) : trace_mul_proxy(X.A, X.B);
+  const Proxy<T1> PA(X.A);
+  
+  return (is_Mat<T2>::value) ? trace_mul_unwrap(PA, X.B) : trace_mul_proxy(PA, X.B);
   }
 
 
@@ -213,8 +226,6 @@ trace(const T1& x)
   arma_extra_debug_sigprint();
   
   const SpProxy<T1> p(x);
-  
-  arma_debug_check( (p.get_n_rows() != p.get_n_cols()), "trace(): matrix must be square sized" );
   
   typedef typename T1::elem_type eT;
   

@@ -1,7 +1,8 @@
-// Copyright (C) 2010-2013 Conrad Sanderson
-// Copyright (C) 2010-2013 NICTA (www.nicta.com.au)
-// Copyright (C) 2010 Dimitrios Bouzas
-// Copyright (C) 2011 Stanislav Funiak
+// Copyright (C) 2010-2013 National ICT Australia (NICTA)
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
+// Written by Dimitrios Bouzas
+// Written by Stanislav Funiak
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -601,7 +602,7 @@ op_princomp::apply
     {
     out.reset();
     
-    arma_bad("princomp(): failed to converge");
+    arma_bad("princomp(): decomposition failed");
     }
   }
 

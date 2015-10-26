@@ -1,6 +1,7 @@
-// Copyright (C) 2013-2014 Ryan Curtin
-// Copyright (C) 2013-2014 Conrad Sanderson
-// Copyright (C) 2013-2014 NICTA
+// Copyright (C) 2013-2014 National ICT Australia (NICTA)
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
+// Written by Ryan Curtin
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,7 +38,7 @@ eigs_gen
   if(status == false)
     {
     eigval.reset();
-    arma_bad("eigs_gen(): failed to converge");
+    arma_bad("eigs_gen(): decomposition failed");
     }
   
   return eigval;
@@ -71,7 +72,7 @@ eigs_gen
   if(status == false)
     {
     eigval.reset();
-    arma_bad("eigs_gen(): failed to converge", false);
+    arma_bad("eigs_gen(): decomposition failed", false);
     }
   
   return status;
@@ -97,7 +98,7 @@ eigs_gen
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  arma_debug_check( void_ptr(&eigval) == void_ptr(&eigvec), "eigs_gen(): eigval is an alias of eigvec" );
+  arma_debug_check( void_ptr(&eigval) == void_ptr(&eigvec), "eigs_gen(): parameter 'eigval' is an alias of parameter 'eigvec'" );
   
   const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form, tol);
   
@@ -105,7 +106,7 @@ eigs_gen
     {
     eigval.reset();
     eigvec.reset();
-    arma_bad("eigs_gen(): failed to converge", false);
+    arma_bad("eigs_gen(): decomposition failed", false);
     }
   
   return status;

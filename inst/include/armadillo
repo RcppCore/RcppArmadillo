@@ -1,5 +1,6 @@
-// Copyright (C) 2008-2015 Conrad Sanderson
-// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -128,18 +129,18 @@ namespace arma
   #include "armadillo_bits/BaseCube_bones.hpp"
   #include "armadillo_bits/SpBase_bones.hpp"
   
-  #include "armadillo_bits/blas_bones.hpp"
-  #include "armadillo_bits/lapack_bones.hpp"
-  #include "armadillo_bits/atlas_bones.hpp"
-  #include "armadillo_bits/arpack_bones.hpp"
-  #include "armadillo_bits/superlu_bones.hpp"
-  #include "armadillo_bits/hdf5_bones.hpp"
+  #include "armadillo_bits/def_blas.hpp"
+  #include "armadillo_bits/def_lapack.hpp"
+  #include "armadillo_bits/def_atlas.hpp"
+  #include "armadillo_bits/def_arpack.hpp"
+  #include "armadillo_bits/def_superlu.hpp"
+  #include "armadillo_bits/def_hdf5.hpp"
   
-  #include "armadillo_bits/blas_wrapper.hpp"
-  #include "armadillo_bits/lapack_wrapper.hpp"
-  #include "armadillo_bits/atlas_wrapper.hpp"
-  #include "armadillo_bits/arpack_wrapper.hpp"
-  #include "armadillo_bits/superlu_wrapper.hpp"
+  #include "armadillo_bits/wrapper_blas.hpp"
+  #include "armadillo_bits/wrapper_lapack.hpp"
+  #include "armadillo_bits/wrapper_atlas.hpp"
+  #include "armadillo_bits/wrapper_arpack.hpp"
+  #include "armadillo_bits/wrapper_superlu.hpp"
   
   #include "armadillo_bits/cond_rel_bones.hpp"
   #include "armadillo_bits/arrayops_bones.hpp"
@@ -281,6 +282,7 @@ namespace arma
   #include "armadillo_bits/spop_strans_bones.hpp"
   #include "armadillo_bits/spop_htrans_bones.hpp"
   #include "armadillo_bits/spop_misc_bones.hpp"
+  #include "armadillo_bits/spop_diagmat_bones.hpp"
   #include "armadillo_bits/spop_mean_bones.hpp"
   #include "armadillo_bits/spop_var_bones.hpp"
   
@@ -393,8 +395,8 @@ namespace arma
   #include "armadillo_bits/fn_trans.hpp"
   #include "armadillo_bits/fn_det.hpp"
   #include "armadillo_bits/fn_log_det.hpp"
-  #include "armadillo_bits/fn_eig_sym.hpp"
   #include "armadillo_bits/fn_eig_gen.hpp"
+  #include "armadillo_bits/fn_eig_sym.hpp"
   #include "armadillo_bits/fn_eig_pair.hpp"
   #include "armadillo_bits/fn_lu.hpp"
   #include "armadillo_bits/fn_zeros.hpp"
@@ -619,6 +621,7 @@ namespace arma
   #include "armadillo_bits/spop_strans_meat.hpp"
   #include "armadillo_bits/spop_htrans_meat.hpp"
   #include "armadillo_bits/spop_misc_meat.hpp"
+  #include "armadillo_bits/spop_diagmat_meat.hpp"
   #include "armadillo_bits/spop_mean_meat.hpp"
   #include "armadillo_bits/spop_var_meat.hpp"
   

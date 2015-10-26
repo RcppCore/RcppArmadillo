@@ -1,4 +1,6 @@
-// Copyright (C) 2012-2015 Conrad Sanderson
+// Copyright (C) 2012-2015 National ICT Australia (NICTA)
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -293,108 +295,6 @@ spop_resize::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_resiz
   out = in.m;
   
   out.resize(in.aux_uword_a, in.aux_uword_b);
-  }
-
-
-
-template<typename T1>
-inline
-void
-spop_diagmat::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_diagmat>& in)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  const SpProxy<T1> p(in.m);
-  
-  if(p.is_alias(out) == false)
-    {
-    spop_diagmat::apply_noalias(out, p);
-    }
-  else
-    {
-    SpMat<eT> tmp;
-    
-    spop_diagmat::apply_noalias(tmp, p);
-    
-    out.steal_mem(tmp);
-    }
-  }
-
-
-
-template<typename T1>
-inline
-void
-spop_diagmat::apply_noalias(SpMat<typename T1::elem_type>& out, const SpProxy<T1>& p)
-  {
-  arma_extra_debug_sigprint();
-  
-  const uword n_rows = p.get_n_rows();
-  const uword n_cols = p.get_n_cols();
-  
-  const bool p_is_vec = (n_rows == 1) || (n_cols == 1);
-  
-  if(p_is_vec)    // generate a diagonal matrix out of a vector
-    {
-    const uword N = (n_rows == 1) ? n_cols : n_rows;
-    
-    out.zeros(N, N);
-    
-    if(p.get_n_nonzero() == 0)  { return; }
-    
-    typename SpProxy<T1>::const_iterator_type it     = p.begin();
-    typename SpProxy<T1>::const_iterator_type it_end = p.end();
-      
-    if(n_cols == 1)
-      {
-      while(it != it_end)
-        {
-        const uword row = it.row();
-        
-        out.at(row,row) = (*it);
-        
-        ++it;
-        }
-      }
-    else
-    if(n_rows == 1)
-      {
-      while(it != it_end)
-        {
-        const uword col = it.col();
-        
-        out.at(col,col) = (*it);
-        
-        ++it;
-        }
-      }
-    }
-  else   // generate a diagonal matrix out of a matrix
-    {
-    arma_debug_check( (n_rows != n_cols), "diagmat(): given matrix is not square" );
-    
-    out.zeros(n_rows, n_rows);
-    
-    if(p.get_n_nonzero() == 0)  { return; }
-    
-    typename SpProxy<T1>::const_iterator_type it     = p.begin();
-    typename SpProxy<T1>::const_iterator_type it_end = p.end();
-      
-    while(it != it_end)
-      {
-      const uword row = it.row();
-      const uword col = it.col();
-      
-      if(row == col)
-        {
-        out.at(row,row) = (*it);
-        }
-      
-      ++it;
-      }
-    }
   }
 
 

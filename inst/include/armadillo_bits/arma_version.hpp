@@ -1,5 +1,6 @@
-// Copyright (C) 2009-2015 Conrad Sanderson
-// Copyright (C) 2009-2015 NICTA (www.nicta.com.au)
+// Copyright (C) 2009-2015 National ICT Australia (NICTA)
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,9 +13,9 @@
 
 
 #define ARMA_VERSION_MAJOR 6
-#define ARMA_VERSION_MINOR 100
+#define ARMA_VERSION_MINOR 200
 #define ARMA_VERSION_PATCH 0
-#define ARMA_VERSION_NAME  "Midnight Blue"
+#define ARMA_VERSION_NAME  "development version"
 
 
 
