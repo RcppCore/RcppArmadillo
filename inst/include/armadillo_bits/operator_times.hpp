@@ -1,6 +1,7 @@
-// Copyright (C) 2008-2012 Conrad Sanderson
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2012 Ryan Curtin
+// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
+// Written by Ryan Curtin
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -170,13 +171,14 @@ operator*
   const diagmat_proxy<T1> A(X.m);
   const diagmat_proxy<T2> B(Y.m);
   
-  arma_debug_assert_mul_size(A.n_elem, A.n_elem, B.n_elem, B.n_elem, "matrix multiplication");
+  arma_debug_assert_mul_size(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "matrix multiplication");
   
-  const uword N = A.n_elem;
+  Mat<out_eT> out(A.n_rows, B.n_cols, fill::zeros);
   
-  Mat<out_eT> out(N,N);
+  const uword A_length = (std::min)(A.n_rows, A.n_cols);
+  const uword B_length = (std::min)(B.n_rows, B.n_cols);
   
-  out.zeros();
+  const uword N = (std::min)(A_length, B_length);
   
   for(uword i=0; i<N; ++i)
     {

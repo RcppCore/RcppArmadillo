@@ -1,11 +1,11 @@
-// Copyright (C) 2008-2015 Conrad Sanderson
-// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
-// Copyright (C) 2009 Edmund Highcock
-// Copyright (C) 2011 James Sanders
-// Copyright (C) 2011 Stanislav Funiak
-// Copyright (C) 2012 Eric Jon Sundstrom
-// Copyright (C) 2012 Michael McNeil Forbes
-// Copyright (C) 2015 Keith O'Hara
+// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
+// Written by James Sanders
+// Written by Stanislav Funiak
+// Written by Eric Jon Sundstrom
+// Written by Michael McNeil Forbes
+// Written by Keith O'Hara
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,7 +17,7 @@
 
 
 
-//! immediate matrix inverse
+//! matrix inverse
 template<typename eT, typename T1>
 inline
 bool
@@ -603,7 +603,7 @@ auxlib::det_tinymat(const Mat<eT>& X, const uword N)
 
 
 
-//! immediate determinant of a matrix using ATLAS or LAPACK
+//! determinant of a matrix using ATLAS or LAPACK
 template<typename eT>
 inline
 eT
@@ -696,7 +696,7 @@ auxlib::det_lapack(const Mat<eT>& X, const bool make_copy)
 
 
 
-//! immediate log determinant of a matrix using ATLAS or LAPACK
+//! log determinant of a matrix using ATLAS or LAPACK
 template<typename eT, typename T1>
 inline
 bool
@@ -814,7 +814,7 @@ auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const 
 
 
 
-//! immediate LU decomposition of a matrix using ATLAS or LAPACK
+//! LU decomposition of a matrix using ATLAS or LAPACK
 template<typename eT, typename T1>
 inline
 bool
@@ -1027,7 +1027,174 @@ auxlib::lu(Mat<eT>& L, Mat<eT>& U, const Base<eT,T1>& X)
 
 
 
-//! immediate eigenvalues of a symmetric real matrix using LAPACK
+//! eigen decomposition of a general square matrix (real); parameter 'mode' indicates whether left and/or eigenvectors are calculated
+template<typename T1>
+inline
+bool
+auxlib::eig_gen
+  (
+         Mat< std::complex<typename T1::pod_type> >& eigval,
+         Mat<typename T1::pod_type>&                 eigvec_l,
+         Mat<typename T1::pod_type>&                 eigvec_r,
+  const Base<typename T1::pod_type,T1>&              XX,
+  const char                                         mode
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  #if defined(ARMA_USE_LAPACK)
+    {
+    typedef typename T1::pod_type T;
+    
+    Mat<T> X = XX.get_ref();
+    
+    arma_debug_check( (X.is_square() == false), "eig_gen(): given matrix must be square" );
+    
+    arma_debug_assert_blas_size(X);
+    
+    if(X.is_empty())
+      {
+      eigval.reset();
+      eigvec_l.reset();
+      eigvec_r.reset();
+      return true;
+      }
+    
+    if(X.is_finite() == false)  { return false; }
+    
+    eigval.set_size(X.n_rows);
+    
+    char jobvl = char(0);
+    char jobvr = char(0);
+    
+    switch(mode)
+      {
+      case 'n':  { jobvl = 'N'; jobvr = 'N'; }  break;
+      case 'l':  { jobvl = 'V'; jobvr = 'N'; }  break;
+      case 'r':  { jobvl = 'N'; jobvr = 'V'; }  break;
+      case 'b':  { jobvl = 'V'; jobvr = 'V'; }  break;
+      default:   return false;
+      }
+    
+    eigvec_l.set_size( ((jobvl == 'V') ? X.n_rows : uword(1)), X.n_rows );
+    eigvec_r.set_size( ((jobvr == 'V') ? X.n_rows : uword(1)), X.n_rows );
+    
+    blas_int N     = blas_int(X.n_rows);
+    blas_int ldvl  = blas_int(eigvec_l.n_rows);
+    blas_int ldvr  = blas_int(eigvec_r.n_rows);
+    blas_int lwork = 3 * ( (std::max)(blas_int(1), 4*N) );
+    blas_int info  = 0;
+    
+    podarray<T> work( static_cast<uword>(lwork) );
+    
+    podarray<T> tmp_real(X.n_rows);
+    podarray<T> tmp_imag(X.n_rows);
+    
+    lapack::geev(&jobvl, &jobvr, &N, X.memptr(), &N, tmp_real.memptr(), tmp_imag.memptr(), eigvec_l.memptr(), &ldvl, eigvec_r.memptr(), &ldvr, work.memptr(), &lwork, &info);
+    
+    std::complex<T>* eigval_mem = eigval.memptr();
+    
+    for(uword i=0; i < X.n_rows; ++i)  { eigval_mem[i] = std::complex<T>(tmp_real[i], tmp_imag[i]); }
+    
+    return (info == 0);
+    }
+  #else
+    {
+    arma_ignore(eigval);
+    arma_ignore(eigvec_l);
+    arma_ignore(eigvec_r);
+    arma_ignore(XX);
+    arma_ignore(mode);
+    arma_stop("eig_gen(): use of LAPACK needs to be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
+//! eigen decomposition of a general square matrix (complex); parameter 'mode' indicates whether left and/or eigenvectors are calculated
+template<typename T1>
+inline
+bool
+auxlib::eig_gen
+  (
+         Mat< std::complex<typename T1::pod_type> >&     eigval,
+         Mat< std::complex<typename T1::pod_type> >&     eigvec_l, 
+         Mat< std::complex<typename T1::pod_type> >&     eigvec_r, 
+  const Base< std::complex<typename T1::pod_type>, T1 >& XX, 
+  const char                                             mode
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  #if defined(ARMA_USE_LAPACK)
+    {
+    typedef typename T1::pod_type     T;
+    typedef typename std::complex<T> eT;
+    
+    Mat<eT> X = XX.get_ref();
+    
+    arma_debug_check( (X.is_square() == false), "eig_gen(): given matrix must be square" );
+    
+    arma_debug_assert_blas_size(X);
+    
+    if(X.is_empty())
+      {
+      eigval.reset();
+      eigvec_l.reset();
+      eigvec_r.reset();
+      return true;
+      }
+    
+    if(X.is_finite() == false)  { return false; }
+    
+    eigval.set_size(X.n_rows);
+    
+    char jobvl = char(0);
+    char jobvr = char(0);
+    
+    switch(mode)
+      {
+      case 'n':  { jobvl = 'N'; jobvr = 'N'; }  break;
+      case 'l':  { jobvl = 'V'; jobvr = 'N'; }  break;
+      case 'r':  { jobvl = 'N'; jobvr = 'V'; }  break;
+      case 'b':  { jobvl = 'V'; jobvr = 'V'; }  break;
+      default:   return false;
+      }
+    
+    eigvec_l.set_size( ((jobvl == 'V') ? X.n_rows : uword(1)), X.n_rows );
+    eigvec_r.set_size( ((jobvr == 'V') ? X.n_rows : uword(1)), X.n_rows );
+    
+    blas_int N     = blas_int(X.n_rows);
+    blas_int ldvl  = blas_int(eigvec_l.n_rows);
+    blas_int ldvr  = blas_int(eigvec_r.n_rows);
+    blas_int lwork = 3 * ( (std::max)(blas_int(1), 2*N) );
+    blas_int info  = 0;
+    
+    podarray<eT>  work( static_cast<uword>(lwork) );
+    podarray< T> rwork( static_cast<uword>(2*N)   );
+    
+    lapack::cx_geev(&jobvl, &jobvr, &N, X.memptr(), &N, eigval.memptr(), eigvec_l.memptr(), &ldvl, eigvec_r.memptr(), &ldvr, work.memptr(), &lwork, rwork.memptr(), &info);
+    
+    return (info == 0);
+    }
+  #else
+    {
+    arma_ignore(eigval);
+    arma_ignore(eigvec_l);
+    arma_ignore(eigvec_r);
+    arma_ignore(XX);
+    arma_ignore(mode);
+    arma_stop("eig_gen(): use of LAPACK needs to be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
+//! eigenvalues of a symmetric real matrix using LAPACK
 template<typename eT, typename T1>
 inline
 bool
@@ -1076,7 +1243,7 @@ auxlib::eig_sym(Col<eT>& eigval, const Base<eT,T1>& X)
 
 
 
-//! immediate eigenvalues of a hermitian complex matrix using LAPACK
+//! eigenvalues of a hermitian complex matrix using LAPACK
 template<typename T, typename T1>
 inline
 bool
@@ -1129,7 +1296,7 @@ auxlib::eig_sym(Col<T>& eigval, const Base<std::complex<T>,T1>& X)
 
 
 
-//! immediate eigenvalues and eigenvectors of a symmetric real matrix using LAPACK
+//! eigenvalues and eigenvectors of a symmetric real matrix using LAPACK
 template<typename eT, typename T1>
 inline
 bool
@@ -1180,7 +1347,7 @@ auxlib::eig_sym(Col<eT>& eigval, Mat<eT>& eigvec, const Base<eT,T1>& X)
 
 
 
-//! immediate eigenvalues and eigenvectors of a hermitian complex matrix using LAPACK
+//! eigenvalues and eigenvectors of a hermitian complex matrix using LAPACK
 template<typename T, typename T1>
 inline
 bool
@@ -1235,7 +1402,7 @@ auxlib::eig_sym(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Base<std::
 
 
 
-//! immediate eigenvalues and eigenvectors of a symmetric real matrix using LAPACK (divide and conquer algorithm)
+//! eigenvalues and eigenvectors of a symmetric real matrix using LAPACK (divide and conquer algorithm)
 template<typename eT, typename T1>
 inline
 bool
@@ -1289,7 +1456,7 @@ auxlib::eig_sym_dc(Col<eT>& eigval, Mat<eT>& eigvec, const Base<eT,T1>& X)
 
 
 
-//! immediate eigenvalues and eigenvectors of a hermitian complex matrix using LAPACK (divide and conquer algorithm)
+//! eigenvalues and eigenvectors of a hermitian complex matrix using LAPACK (divide and conquer algorithm)
 template<typename T, typename T1>
 inline
 bool
@@ -1347,265 +1514,35 @@ auxlib::eig_sym_dc(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Base<st
 
 
 
-//! Eigenvalues and eigenvectors of a general square real matrix using LAPACK.
-//! The argument 'side' specifies which eigenvectors should be calculated
-//! (see code for mode details).
-template<typename T, typename T1>
-inline
-bool
-auxlib::eig_gen
-  (
-  Col< std::complex<T> >&   eigval,
-  Mat<T>&                 l_eigvec,
-  Mat<T>&                 r_eigvec,
-  const Base<T,T1>&       X,
-  const char              side
-  )
-  {
-  arma_extra_debug_sigprint();
-  
-  #if defined(ARMA_USE_LAPACK)
-    {
-    char jobvl;
-    char jobvr;
-    
-    switch(side)
-      {
-      case 'l':  // left
-        jobvl = 'V';
-        jobvr = 'N';
-        break;
-        
-      case 'r':  // right
-        jobvl = 'N';
-        jobvr = 'V';
-        break;
-        
-      case 'b':  // both
-        jobvl = 'V';
-        jobvr = 'V';
-        break;
-        
-      case 'n':  // neither
-        jobvl = 'N';
-        jobvr = 'N';
-        break;
-      
-      default:
-        arma_stop("eig_gen(): parameter 'side' is invalid");
-        return false;
-      }
-    
-    Mat<T> A(X.get_ref());
-    arma_debug_check( (A.is_square() == false), "eig_gen(): given matrix is not square" );
-    
-    if(A.is_empty())
-      {
-      eigval.reset();
-      l_eigvec.reset();
-      r_eigvec.reset();
-      return true;
-      }
-    
-    if(A.is_finite() == false)  { return false; }  // workaround for a bug in LAPACK 3.5
-    
-    arma_debug_assert_blas_size(A);
-    
-    const uword A_n_rows = A.n_rows;
-    
-    eigval.set_size(A_n_rows);
-    
-    l_eigvec.set_size( ((jobvl == 'V') ? A_n_rows : 1), A_n_rows );
-    r_eigvec.set_size( ((jobvr == 'V') ? A_n_rows : 1), A_n_rows );
-    
-    blas_int N     = blas_int(A_n_rows);
-    blas_int ldvl  = blas_int(l_eigvec.n_rows);
-    blas_int ldvr  = blas_int(r_eigvec.n_rows);
-    blas_int lwork = 3 * ( (std::max)(blas_int(1), 4*N) );
-    blas_int info  = 0;
-    
-    podarray<T> work( static_cast<uword>(lwork) );
-    
-    podarray<T> wr(A_n_rows);
-    podarray<T> wi(A_n_rows);
-    
-    arma_extra_debug_print("lapack::geev()");
-    lapack::geev(&jobvl, &jobvr, &N, A.memptr(), &N, wr.memptr(), wi.memptr(), l_eigvec.memptr(), &ldvl, r_eigvec.memptr(), &ldvr, work.memptr(), &lwork, &info);
-    
-    eigval.set_size(A_n_rows);
-    for(uword i=0; i<A_n_rows; ++i)
-      {
-      eigval[i] = std::complex<T>(wr[i], wi[i]);
-      }
-    
-    return (info == 0);
-    }
-  #else
-    {
-    arma_ignore(eigval);
-    arma_ignore(l_eigvec);
-    arma_ignore(r_eigvec);
-    arma_ignore(X);
-    arma_ignore(side);
-    arma_stop("eig_gen(): use of LAPACK needs to be enabled");
-    return false;
-    }
-  #endif
-  }
-
-
-
-
-
-//! Eigenvalues and eigenvectors of a general square complex matrix using LAPACK
-//! The argument 'side' specifies which eigenvectors should be calculated
-//! (see code for mode details).
-template<typename T, typename T1>
-inline
-bool
-auxlib::eig_gen
-  (
-  Col< std::complex<T> >&              eigval,
-  Mat< std::complex<T> >&            l_eigvec, 
-  Mat< std::complex<T> >&            r_eigvec, 
-  const Base< std::complex<T>, T1 >& X, 
-  const char                         side
-  )
-  {
-  arma_extra_debug_sigprint();
-  
-  #if defined(ARMA_USE_LAPACK)
-    {
-    typedef typename std::complex<T> eT;
-    
-    char jobvl;
-    char jobvr;
-    
-    switch(side)
-      {
-      case 'l':  // left
-        jobvl = 'V';
-        jobvr = 'N';
-        break;
-        
-      case 'r':  // right
-        jobvl = 'N';
-        jobvr = 'V';
-        break;
-        
-      case 'b':  // both
-        jobvl = 'V';
-        jobvr = 'V';
-        break;
-        
-      case 'n':  // neither
-        jobvl = 'N';
-        jobvr = 'N';
-        break;
-      
-      default:
-        arma_stop("eig_gen(): parameter 'side' is invalid");
-        return false;
-      }
-    
-    Mat<eT> A(X.get_ref());
-    arma_debug_check( (A.is_square() == false), "eig_gen(): given matrix is not square" );
-    
-    if(A.is_empty())
-      {
-      eigval.reset();
-      l_eigvec.reset();
-      r_eigvec.reset();
-      return true;
-      }
-    
-    if(A.is_finite() == false)  { return false; }  // workaround for a bug in LAPACK 3.5
-    
-    arma_debug_assert_blas_size(A);
-    
-    const uword A_n_rows = A.n_rows;
-    
-    eigval.set_size(A_n_rows);
-    
-    l_eigvec.set_size( ((jobvl == 'V') ? A_n_rows : 1), A_n_rows );
-    r_eigvec.set_size( ((jobvr == 'V') ? A_n_rows : 1), A_n_rows );
-    
-    blas_int N     = blas_int(A_n_rows);
-    blas_int ldvl  = blas_int(l_eigvec.n_rows);
-    blas_int ldvr  = blas_int(r_eigvec.n_rows);
-    blas_int lwork = 3 * ( (std::max)(blas_int(1), 2*N) );
-    blas_int info  = 0;
-    
-    podarray<eT>  work( static_cast<uword>(lwork) );
-    podarray<T>  rwork( static_cast<uword>(2*N)   );
-    
-    arma_extra_debug_print("lapack::cx_geev()");
-    lapack::cx_geev(&jobvl, &jobvr, &N, A.memptr(), &N, eigval.memptr(), l_eigvec.memptr(), &ldvl, r_eigvec.memptr(), &ldvr, work.memptr(), &lwork, rwork.memptr(), &info);
-    
-    return (info == 0);
-    }
-  #else
-    {
-    arma_ignore(eigval);
-    arma_ignore(l_eigvec);
-    arma_ignore(r_eigvec);
-    arma_ignore(X);
-    arma_ignore(side);
-    arma_stop("eig_gen(): use of LAPACK needs to be enabled");
-    return false;
-    }
-  #endif
-  }
-
-
-
 //! Eigenvalues and eigenvectors of general square real matrix pair.
-//! The argument 'side' specifies which eigenvectors should be calculated.
+//! The argument 'mode' specifies which eigenvectors should be calculated.
 template<typename T, typename T1, typename T2>
 inline
 bool
 auxlib::eig_pair
   (
-  Col< std::complex<T> >&   eigval,
-  Mat<T>&                 l_eigvec,
-  Mat<T>&                 r_eigvec,
+  Col< std::complex<T> >& eigval,
+  Mat<T>&                 eigvec_l,
+  Mat<T>&                 eigvec_r,
   const Base<T,T1>&       X,
   const Base<T,T2>&       Y,
-  const char              side
+  const char              mode
   )
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_LAPACK)
     {
-    char jobvl;
-    char jobvr;
+    char jobvl = char(0);
+    char jobvr = char(0);
     
-    switch(side)
+    switch(mode)
       {
-      case 'l':  // left
-        jobvl = 'V';
-        jobvr = 'N';
-        break;
-        
-      case 'r':  // right
-        jobvl = 'N';
-        jobvr = 'V';
-        break;
-        
-      case 'b':  // both
-        jobvl = 'V';
-        jobvr = 'V';
-        break;
-        
-      case 'n':  // neither
-        jobvl = 'N';
-        jobvr = 'N';
-        break;
-      
-      default:
-        arma_stop("eig_pair(): parameter 'side' is invalid");
-        return false;
+      case 'n':  { jobvl = 'N'; jobvr = 'N'; }  break;
+      case 'l':  { jobvl = 'V'; jobvr = 'N'; }  break;
+      case 'r':  { jobvl = 'N'; jobvr = 'V'; }  break;
+      case 'b':  { jobvl = 'V'; jobvr = 'V'; }  break;
+      default:   return false;
       }
     
     Mat<T> A(X.get_ref());
@@ -1618,8 +1555,8 @@ auxlib::eig_pair
     if(A.is_empty())
       {
       eigval.reset();
-      l_eigvec.reset();
-      r_eigvec.reset();
+      eigvec_l.reset();
+      eigvec_r.reset();
       return true;
       }
     
@@ -1629,12 +1566,12 @@ auxlib::eig_pair
     
     eigval.set_size(A_n_rows);
     
-    l_eigvec.set_size( ((jobvl == 'V') ? A_n_rows : 1), A_n_rows );
-    r_eigvec.set_size( ((jobvr == 'V') ? A_n_rows : 1), A_n_rows );
+    eigvec_l.set_size( ((jobvl == 'V') ? A_n_rows : 1), A_n_rows );
+    eigvec_r.set_size( ((jobvr == 'V') ? A_n_rows : 1), A_n_rows );
     
     blas_int N     = blas_int(A_n_rows);
-    blas_int ldvl  = blas_int(l_eigvec.n_rows);
-    blas_int ldvr  = blas_int(r_eigvec.n_rows);
+    blas_int ldvl  = blas_int(eigvec_l.n_rows);
+    blas_int ldvr  = blas_int(eigvec_r.n_rows);
     blas_int lwork = 3 * ( (std::max)(blas_int(1), 8*N) );
     blas_int info  = 0;
     
@@ -1650,7 +1587,7 @@ auxlib::eig_pair
       &jobvl, &jobvr, &N,
       A.memptr(), &N,  B.memptr(), &N,
       alphar.memptr(), alphai.memptr(), beta.memptr(),
-      l_eigvec.memptr(), &ldvl, r_eigvec.memptr(), &ldvr,
+      eigvec_l.memptr(), &ldvl, eigvec_r.memptr(), &ldvr,
       work.memptr(), &lwork,
       &info
       );
@@ -1702,11 +1639,11 @@ auxlib::eig_pair
   #else
     {
     arma_ignore(eigval);
-    arma_ignore(l_eigvec);
-    arma_ignore(r_eigvec);
+    arma_ignore(eigvec_l);
+    arma_ignore(eigvec_r);
     arma_ignore(X);
     arma_ignore(Y);
-    arma_ignore(side);
+    arma_ignore(mode);
     arma_stop("eig_pair(): use of LAPACK needs to be enabled");
     return false;
     }
@@ -1718,18 +1655,18 @@ auxlib::eig_pair
 
 
 //! Eigenvalues and eigenvectors of general square complex matrix pair.
-//! The argument 'side' specifies which eigenvectors should be calculated
+//! The argument 'mode' specifies which eigenvectors should be calculated
 template<typename T, typename T1, typename T2>
 inline
 bool
 auxlib::eig_pair
   (
-  Col< std::complex<T> >&              eigval,
-  Mat< std::complex<T> >&            l_eigvec, 
-  Mat< std::complex<T> >&            r_eigvec, 
+  Col< std::complex<T> >&            eigval,
+  Mat< std::complex<T> >&            eigvec_l, 
+  Mat< std::complex<T> >&            eigvec_r, 
   const Base< std::complex<T>, T1 >& X, 
   const Base< std::complex<T>, T2 >& Y, 
-  const char                         side
+  const char                         mode
   )
   {
   arma_extra_debug_sigprint();
@@ -1738,34 +1675,16 @@ auxlib::eig_pair
     {
     typedef typename std::complex<T> eT;
     
-    char jobvl;
-    char jobvr;
+    char jobvl = char(0);
+    char jobvr = char(0);
     
-    switch(side)
+    switch(mode)
       {
-      case 'l':  // left
-        jobvl = 'V';
-        jobvr = 'N';
-        break;
-        
-      case 'r':  // right
-        jobvl = 'N';
-        jobvr = 'V';
-        break;
-        
-      case 'b':  // both
-        jobvl = 'V';
-        jobvr = 'V';
-        break;
-        
-      case 'n':  // neither
-        jobvl = 'N';
-        jobvr = 'N';
-        break;
-      
-      default:
-        arma_stop("eig_pair(): parameter 'side' is invalid");
-        return false;
+      case 'n':  { jobvl = 'N'; jobvr = 'N'; }  break;
+      case 'l':  { jobvl = 'V'; jobvr = 'N'; }  break;
+      case 'r':  { jobvl = 'N'; jobvr = 'V'; }  break;
+      case 'b':  { jobvl = 'V'; jobvr = 'V'; }  break;
+      default:   return false;
       }
     
     Mat<eT> A(X.get_ref());
@@ -1778,8 +1697,8 @@ auxlib::eig_pair
     if(A.is_empty())
       {
       eigval.reset();
-      l_eigvec.reset();
-      r_eigvec.reset();
+      eigvec_l.reset();
+      eigvec_r.reset();
       return true;
       }
     
@@ -1790,12 +1709,12 @@ auxlib::eig_pair
     podarray<eT> alpha(A_n_rows);
     podarray<eT>  beta(A_n_rows);
     
-    l_eigvec.set_size( ((jobvl == 'V') ? A_n_rows : 1), A_n_rows );
-    r_eigvec.set_size( ((jobvr == 'V') ? A_n_rows : 1), A_n_rows );
+    eigvec_l.set_size( ((jobvl == 'V') ? A_n_rows : 1), A_n_rows );
+    eigvec_r.set_size( ((jobvr == 'V') ? A_n_rows : 1), A_n_rows );
     
     blas_int N     = blas_int(A_n_rows);
-    blas_int ldvl  = blas_int(l_eigvec.n_rows);
-    blas_int ldvr  = blas_int(r_eigvec.n_rows);
+    blas_int ldvl  = blas_int(eigvec_l.n_rows);
+    blas_int ldvr  = blas_int(eigvec_r.n_rows);
     blas_int lwork = 3 * ((std::max)(blas_int(1),2*N));
     blas_int info  = 0;
     
@@ -1808,7 +1727,7 @@ auxlib::eig_pair
       &jobvl, &jobvr, &N,
       A.memptr(), &N, B.memptr(), &N,
       alpha.memptr(), beta.memptr(),
-      l_eigvec.memptr(), &ldvl, r_eigvec.memptr(), &ldvr,
+      eigvec_l.memptr(), &ldvl, eigvec_r.memptr(), &ldvr,
       work.memptr(), &lwork, rwork.memptr(),
       &info
       );
@@ -1850,11 +1769,11 @@ auxlib::eig_pair
   #else
     {
     arma_ignore(eigval);
-    arma_ignore(l_eigvec);
-    arma_ignore(r_eigvec);
+    arma_ignore(eigvec_l);
+    arma_ignore(eigvec_r);
     arma_ignore(X);
     arma_ignore(Y);
-    arma_ignore(side);
+    arma_ignore(mode);
     arma_stop("eig_pair(): use of LAPACK needs to be enabled");
     return false;
     }
@@ -2551,8 +2470,8 @@ auxlib::svd_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X, const
     blas_int ldu  = 0;
     blas_int ldvt = 0;
     
-    char jobu;
-    char jobvt;
+    char jobu  = char(0);
+    char jobvt = char(0);
     
     switch(mode)
       {
@@ -2699,8 +2618,8 @@ auxlib::svd_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V
     blas_int ldu  = 0;
     blas_int ldvt = 0;
     
-    char jobu;
-    char jobvt;
+    char jobu  = char(0);
+    char jobvt = char(0);
     
     switch(mode)
       {
@@ -3851,40 +3770,22 @@ auxlib::dlyap(Mat<eT>& X, const Mat<eT>& A, const Mat<eT>& Q)
 template<typename T, typename T1, typename T2>
 inline
 bool
-auxlib::qz(Mat<T>& A, Mat<T>& B, Mat<T>& vsl, Mat<T>& vsr, const Base<T,T1>& X, const Base<T,T2>& Y, const char side)
+auxlib::qz(Mat<T>& A, Mat<T>& B, Mat<T>& vsl, Mat<T>& vsr, const Base<T,T1>& X, const Base<T,T2>& Y, const char mode)
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_LAPACK)
     {
-    char jobvsl;
-    char jobvsr;
+    char jobvsl = char(0);
+    char jobvsr = char(0);
     
-    switch(side)
+    switch(mode)
       {
-      case 'l':  // left
-        jobvsl = 'V';
-        jobvsr = 'N';
-        break;
-      
-      case 'r':  // right
-        jobvsl = 'N';
-        jobvsr = 'V';
-        break;
-      
-      case 'b':  // both
-        jobvsl = 'V';
-        jobvsr = 'V';
-        break;
-      
-      case 'n':  // neither
-        jobvsl = 'N';
-        jobvsr = 'N';
-        break;
-      
-      default:
-        arma_stop("qz(): parameter 'side' is invalid");
-        return false;
+      case 'n':  { jobvsl = 'N'; jobvsr = 'N'; }  break;
+      case 'l':  { jobvsl = 'V'; jobvsr = 'N'; }  break;
+      case 'r':  { jobvsl = 'N'; jobvsr = 'V'; }  break;
+      case 'b':  { jobvsl = 'V'; jobvsr = 'V'; }  break;
+      default:   return false;
       }
     
     char     eigsort = 'N';
@@ -3949,7 +3850,7 @@ auxlib::qz(Mat<T>& A, Mat<T>& B, Mat<T>& vsl, Mat<T>& vsr, const Base<T,T1>& X, 
     arma_ignore(vsr);
     arma_ignore(X);
     arma_ignore(Y);
-    arma_ignore(side);
+    arma_ignore(mode);
     arma_stop("qz(): use of LAPACK needs to be enabled");
     return false;
     }
@@ -3964,7 +3865,7 @@ auxlib::qz(Mat<T>& A, Mat<T>& B, Mat<T>& vsl, Mat<T>& vsr, const Base<T,T1>& X, 
 template<typename T, typename T1, typename T2>
 inline
 bool
-auxlib::qz(Mat< std::complex<T> >& A, Mat< std::complex<T> >& B, Mat< std::complex<T> >& vsl, Mat< std::complex<T> >& vsr, const Base< std::complex<T>, T1 >& X, const Base< std::complex<T>, T2 >& Y, const char side)
+auxlib::qz(Mat< std::complex<T> >& A, Mat< std::complex<T> >& B, Mat< std::complex<T> >& vsl, Mat< std::complex<T> >& vsr, const Base< std::complex<T>, T1 >& X, const Base< std::complex<T>, T2 >& Y, const char mode)
   {
   arma_extra_debug_sigprint();
   
@@ -3972,34 +3873,16 @@ auxlib::qz(Mat< std::complex<T> >& A, Mat< std::complex<T> >& B, Mat< std::compl
     {
     typedef typename std::complex<T> eT;
     
-    char jobvsl;
-    char jobvsr;
+    char jobvsl = char(0);
+    char jobvsr = char(0);
     
-    switch(side)
+    switch(mode)
       {
-      case 'l':  // left
-        jobvsl = 'V';
-        jobvsr = 'N';
-        break;
-      
-      case 'r':  // right
-        jobvsl = 'N';
-        jobvsr = 'V';
-        break;
-      
-      case 'b':  // both
-        jobvsl = 'V';
-        jobvsr = 'V';
-        break;
-      
-      case 'n':  // neither
-        jobvsl = 'N';
-        jobvsr = 'N';
-        break;
-      
-      default:
-        arma_stop("qz(): parameter 'side' is invalid");
-        return false;
+      case 'n':  { jobvsl = 'N'; jobvsr = 'N'; }  break;
+      case 'l':  { jobvsl = 'V'; jobvsr = 'N'; }  break;
+      case 'r':  { jobvsl = 'N'; jobvsr = 'V'; }  break;
+      case 'b':  { jobvsl = 'V'; jobvsr = 'V'; }  break;
+      default:   return false;
       }
     
     char     eigsort = 'N';
@@ -4064,7 +3947,7 @@ auxlib::qz(Mat< std::complex<T> >& A, Mat< std::complex<T> >& B, Mat< std::compl
     arma_ignore(vsr);
     arma_ignore(X);
     arma_ignore(Y);
-    arma_ignore(side);
+    arma_ignore(mode);
     arma_stop("qz(): use of LAPACK needs to be enabled");
     return false;
     }

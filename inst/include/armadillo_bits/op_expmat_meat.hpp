@@ -1,5 +1,6 @@
-// Copyright (C) 2014 Conrad Sanderson
-// Copyright (C) 2014 NICTA (www.nicta.com.au)
+// Copyright (C) 2014-2015 National ICT Australia (NICTA)
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,9 +34,11 @@ op_expmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_expmat>& expr
     {
     out = expr.m;  // force the evaluation of diagmat()
     
-    const uword n_rows = out.n_rows;
+    arma_debug_check( (out.is_square() == false), "expmat(): given matrix is not square sized" );
     
-    for(uword i=0; i<n_rows; ++i)
+    const uword N = (std::min)(out.n_rows, out.n_cols);
+    
+    for(uword i=0; i<N; ++i)
       {
       out.at(i,i) = std::exp( out.at(i,i) );
       }

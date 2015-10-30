@@ -1,5 +1,6 @@
-// Copyright (C) 2008-2014 Conrad Sanderson
-// Copyright (C) 2008-2014 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -781,38 +782,30 @@ glue_times_diag::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue
   
   if( (strip_diagmat<T1>::do_diagmat == true) && (strip_diagmat<T2>::do_diagmat == false) )
     {
+    arma_extra_debug_print("glue_times_diag::apply(): diagmat(A) * B");
+    
     const diagmat_proxy_check<T1_stripped> A(S1.M, out);
     
     const unwrap_check<T2> tmp(X.B, out);
     const Mat<eT>& B     = tmp.M;
     
-    const uword A_n_elem = A.n_elem;
+    const uword A_n_rows = A.n_rows;
+    const uword A_n_cols = A.n_cols;
+    const uword A_length = (std::min)(A_n_rows, A_n_cols);
+    
     const uword B_n_rows = B.n_rows;
     const uword B_n_cols = B.n_cols;
     
-    arma_debug_assert_mul_size(A_n_elem, A_n_elem, B_n_rows, B_n_cols, "matrix multiplication");
+    arma_debug_assert_mul_size(A_n_rows, A_n_cols, B_n_rows, B_n_cols, "matrix multiplication");
     
-    out.set_size(A_n_elem, B_n_cols);
+    out.zeros(A_n_rows, B_n_cols);
     
     for(uword col=0; col < B_n_cols; ++col)
       {
             eT* out_coldata = out.colptr(col);
-      const eT* B_coldata   = B.colptr(col);
+      const eT*   B_coldata =   B.colptr(col);
       
-      uword i,j;
-      for(i=0, j=1; j < B_n_rows; i+=2, j+=2)
-        {
-        eT tmp_i = A[i];
-        eT tmp_j = A[j];
-        
-        tmp_i *= B_coldata[i];
-        tmp_j *= B_coldata[j];
-        
-        out_coldata[i] = tmp_i;
-        out_coldata[j] = tmp_j;
-        }
-      
-      if(i < B_n_rows)
+      for(uword i=0; i < A_length; ++i)
         {
         out_coldata[i] = A[i] * B_coldata[i];
         }
@@ -821,6 +814,8 @@ glue_times_diag::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue
   else
   if( (strip_diagmat<T1>::do_diagmat == false) && (strip_diagmat<T2>::do_diagmat == true) )
     {
+    arma_extra_debug_print("glue_times_diag::apply(): A * diagmat(B)");
+    
     const unwrap_check<T1> tmp(X.A, out);
     const Mat<eT>& A     = tmp.M;
     
@@ -828,30 +823,23 @@ glue_times_diag::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue
     
     const uword A_n_rows = A.n_rows;
     const uword A_n_cols = A.n_cols;
-    const uword B_n_elem = B.n_elem;
     
-    arma_debug_assert_mul_size(A_n_rows, A_n_cols, B_n_elem, B_n_elem, "matrix multiplication");
+    const uword B_n_rows = B.n_rows;
+    const uword B_n_cols = B.n_cols;
+    const uword B_length = (std::min)(B_n_rows, B_n_cols);
     
-    out.set_size(A_n_rows, B_n_elem);
+    arma_debug_assert_mul_size(A_n_rows, A_n_cols, B_n_rows, B_n_cols, "matrix multiplication");
     
-    for(uword col=0; col < A_n_cols; ++col)
+    out.zeros(A_n_rows, B_n_cols);
+    
+    for(uword col=0; col < B_length; ++col)
       {
       const eT  val = B[col];
       
             eT* out_coldata = out.colptr(col);
       const eT*   A_coldata =   A.colptr(col);
       
-      uword i,j;
-      for(i=0, j=1; j < A_n_rows; i+=2, j+=2)
-        {
-        const eT tmp_i = A_coldata[i] * val;
-        const eT tmp_j = A_coldata[j] * val;
-        
-        out_coldata[i] = tmp_i;
-        out_coldata[j] = tmp_j;
-        }
-      
-      if(i < A_n_rows)
+      for(uword i=0; i < A_n_rows; ++i)
         {
         out_coldata[i] = A_coldata[i] * val;
         }
@@ -860,17 +848,21 @@ glue_times_diag::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue
   else
   if( (strip_diagmat<T1>::do_diagmat == true) && (strip_diagmat<T2>::do_diagmat == true) )
     {
+    arma_extra_debug_print("glue_times_diag::apply(): diagmat(A) * diagmat(B)");
+    
     const diagmat_proxy_check<T1_stripped> A(S1.M, out);
     const diagmat_proxy_check<T2_stripped> B(S2.M, out);
     
-    const uword A_n_elem = A.n_elem;
-    const uword B_n_elem = B.n_elem;
+    arma_debug_assert_mul_size(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "matrix multiplication");
     
-    arma_debug_assert_mul_size(A_n_elem, A_n_elem, B_n_elem, B_n_elem, "matrix multiplication");
+    out.zeros(A.n_rows, B.n_cols);
     
-    out.zeros(A_n_elem, A_n_elem);
+    const uword A_length = (std::min)(A.n_rows, A.n_cols);
+    const uword B_length = (std::min)(B.n_rows, B.n_cols);
     
-    for(uword i=0; i < A_n_elem; ++i)
+    const uword N = (std::min)(A_length, B_length);
+    
+    for(uword i=0; i < N; ++i)
       {
       out.at(i,i) = A[i] * B[i];
       }

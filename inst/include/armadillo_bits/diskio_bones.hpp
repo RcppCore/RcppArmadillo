@@ -1,8 +1,9 @@
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2012 Conrad Sanderson
-// Copyright (C) 2009-2010 Ian Cullinan
-// Copyright (C) 2012 Ryan Curtin
-// Copyright (C) 2013 Szabolcs Horvat
+// Copyright (C) 2008-2013 National ICT Australia (NICTA)
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
+// Written by Ian Cullinan
+// Written by Ryan Curtin
+// Written by Szabolcs Horvat
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this

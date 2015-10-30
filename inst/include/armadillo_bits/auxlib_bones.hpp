@@ -1,8 +1,8 @@
-// Copyright (C) 2008-2015 Conrad Sanderson
-// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
-// Copyright (C) 2009 Edmund Highcock
-// Copyright (C) 2011 James Sanders
-// Copyright (C) 2012 Eric Jon Sundstrom
+// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
+// Written by James Sanders
+// Written by Eric Jon Sundstrom
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,7 @@
 //! @{
 
 
-//! wrapper for accessing external functions defined in ATLAS, LAPACK or BLAS libraries
+//! interface functions for accessing decompositions in LAPACK and ATLAS
 class auxlib
   {
   public:
@@ -99,6 +99,16 @@ class auxlib
   
   
   //
+  // eig_gen
+  
+  template<typename T1>
+  inline static bool eig_gen(Mat< std::complex<typename T1::pod_type> >& eigval, Mat<typename T1::pod_type>& eigvec_l, Mat<typename T1::pod_type>& eigvec_r, const Base<typename T1::pod_type,T1>& XX, const char mode);
+  
+  template<typename T1>
+  inline static bool eig_gen(Mat< std::complex<typename T1::pod_type> >& eigval, Mat< std::complex<typename T1::pod_type> >& eigvec_l, Mat< std::complex<typename T1::pod_type> >& eigvec_r, const Base< std::complex<typename T1::pod_type>, T1 >& XX, const char mode);
+  
+  
+  //
   // eig_sym
   
   template<typename eT, typename T1> 
@@ -121,23 +131,13 @@ class auxlib
   
   
   //
-  // eig_gen
-  
-  template<typename T, typename T1>
-  inline static bool eig_gen(Col< std::complex<T> >& eigval, Mat<T>& l_eigvec, Mat<T>& r_eigvec, const Base<T,T1>& X, const char side);
-  
-  template<typename T, typename T1>
-  inline static bool eig_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& l_eigvec, Mat< std::complex<T> >& r_eigvec, const Base< std::complex<T>, T1 >& X, const char side);
-  
-  
-  //
   // eig_pair
   
   template<typename T, typename T1, typename T2>
-  inline static bool eig_pair(Col< std::complex<T> >& eigval, Mat<T>& l_eigvec, Mat<T>& r_eigvec, const Base<T,T1>& X, const Base<T,T2>& Y, const char side);
+  inline static bool eig_pair(Col< std::complex<T> >& eigval, Mat<T>& eigvec_l, Mat<T>& eigvec_r, const Base<T,T1>& X, const Base<T,T2>& Y, const char mode);
   
   template<typename T, typename T1, typename T2>
-  inline static bool eig_pair(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& l_eigvec, Mat< std::complex<T> >& r_eigvec, const Base< std::complex<T>, T1 >& X, const Base< std::complex<T>, T2 >& Y, const char side);
+  inline static bool eig_pair(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec_l, Mat< std::complex<T> >& eigvec_r, const Base< std::complex<T>, T1 >& X, const Base< std::complex<T>, T2 >& Y, const char mode);
   
   
   //
@@ -266,12 +266,10 @@ class auxlib
   // QZ decomposition
   
   template<typename T, typename T1, typename T2>
-  inline static bool qz(Mat<T>& A, Mat<T>& B, Mat<T>& vsl, Mat<T>& vsr, const Base<T,T1>& X, const Base<T,T2>& Y, const char side);
+  inline static bool qz(Mat<T>& A, Mat<T>& B, Mat<T>& vsl, Mat<T>& vsr, const Base<T,T1>& X, const Base<T,T2>& Y, const char mode);
   
   template<typename T, typename T1, typename T2>
-  inline static bool qz(Mat< std::complex<T> >& A, Mat< std::complex<T> >& B, Mat< std::complex<T> >& vsl, Mat< std::complex<T> >& vsr, const Base< std::complex<T>, T1 >& X, const Base< std::complex<T>, T2 >& Y, const char side);
-  
-  
+  inline static bool qz(Mat< std::complex<T> >& A, Mat< std::complex<T> >& B, Mat< std::complex<T> >& vsl, Mat< std::complex<T> >& vsr, const Base< std::complex<T>, T1 >& X, const Base< std::complex<T>, T2 >& Y, const char mode);
   };
 
 
