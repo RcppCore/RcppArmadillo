@@ -1,11 +1,12 @@
 // Copyright (C) 2013-2014 National ICT Australia (NICTA)
 // 
-// Written by Conrad Sanderson - http://conradsanderson.id.au
-// Written by Ryan Curtin
-// 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// -------------------------------------------------------------------
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
+// Written by Ryan Curtin
 
 
 //! \addtogroup fn_eigs_gen
@@ -72,7 +73,7 @@ eigs_gen
   if(status == false)
     {
     eigval.reset();
-    arma_bad("eigs_gen(): decomposition failed", false);
+    arma_debug_warn("eigs_gen(): decomposition failed");
     }
   
   return status;
@@ -106,7 +107,7 @@ eigs_gen
     {
     eigval.reset();
     eigvec.reset();
-    arma_bad("eigs_gen(): decomposition failed", false);
+    arma_debug_warn("eigs_gen(): decomposition failed");
     }
   
   return status;

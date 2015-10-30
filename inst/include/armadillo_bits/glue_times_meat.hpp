@@ -1,10 +1,11 @@
 // Copyright (C) 2008-2015 National ICT Australia (NICTA)
 // 
-// Written by Conrad Sanderson - http://conradsanderson.id.au
-// 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// -------------------------------------------------------------------
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
 
 
 //! \addtogroup glue_times
@@ -82,7 +83,7 @@ glue_times_redirect2_helper<true>::apply(Mat<typename T1::elem_type>& out, const
     
     Mat<eT> A = A_strip.M;
     
-    arma_debug_check( (A.is_square() == false), "inv(): given matrix is not square" );
+    arma_debug_check( (A.is_square() == false), "inv(): given matrix must be square sized" );
     
     const unwrap_check<T2> B_tmp(X.B, out);
     const Mat<eT>& B = B_tmp.M;
@@ -178,7 +179,7 @@ glue_times_redirect3_helper<true>::apply(Mat<typename T1::elem_type>& out, const
     
     Mat<eT> A = A_strip.M;
     
-    arma_debug_check( (A.is_square() == false), "inv(): given matrix is not square" );
+    arma_debug_check( (A.is_square() == false), "inv(): given matrix must be square sized" );
     
     const partial_unwrap<T2> tmp2(X.A.B);
     const partial_unwrap<T3> tmp3(X.B  );
@@ -218,7 +219,7 @@ glue_times_redirect3_helper<true>::apply(Mat<typename T1::elem_type>& out, const
     
     Mat<eT> B = B_strip.M;
     
-    arma_debug_check( (B.is_square() == false), "inv(): given matrix is not square" );
+    arma_debug_check( (B.is_square() == false), "inv(): given matrix must be square sized" );
     
     const unwrap<T3> C_tmp(X.B);
     const Mat<eT>& C = C_tmp.M;

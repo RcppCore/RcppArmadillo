@@ -1,11 +1,12 @@
 // Copyright (C) 2015 National ICT Australia (NICTA)
 // 
-// Written by Conrad Sanderson - http://conradsanderson.id.au
-// Written by Ryan Curtin
-// 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// -------------------------------------------------------------------
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
+// Written by Ryan Curtin
 
 
 //! \addtogroup fn_spsolve
@@ -49,23 +50,23 @@ spsolve_helper
   else
   if(sig == 'l')  // brutal LAPACK solver
     {
-    arma_debug_warn( (settings.id != 0), "spsolve(): ignoring settings not applicable to LAPACK based solver" );
+    if(settings.id != 0)  { arma_debug_warn("spsolve(): ignoring settings not applicable to LAPACK based solver"); }
     
     Mat<eT> AA;
     
-    bool conversion_ok = true;
+    bool conversion_ok = false;
     
     try
       {
       Mat<eT> tmp(A.get_ref());  // conversion from sparse to dense can throw std::bad_alloc
       
       AA.steal_mem(tmp);
+      
+      conversion_ok = true;
       }
     catch(std::bad_alloc&)
       {
-      conversion_ok = false;
-      
-      arma_debug_warn(true, "spsolve(): not enough memory to use LAPACK based solver");
+      arma_debug_warn("spsolve(): not enough memory to use LAPACK based solver");
       }
     
     if(conversion_ok)
@@ -103,7 +104,7 @@ spsolve
   
   if(status == false)
     {
-    arma_debug_warn(true, "spsolve(): solution not found");
+    arma_debug_warn("spsolve(): solution not found");
     }
   
   return status;

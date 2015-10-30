@@ -1,7 +1,14 @@
+2015-10-30  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.6.199.2.0 [GitHub only]
+        * inst/NEWS.Rd: Release 0.6.199.2.0 [GitHub only]
+
+	* inst/include/*: Upgraded to release 6.200.2-test of Armadillo
+
 2015-10-26  Dirk Eddelbuettel  <edd@debian.org>
 
-        * DESCRIPTION: Release 0.6.199.1.0 [GitHub only]
-        * inst/NEWS.Rd: Release 0.6.199.1.0 [GitHub only]
+        * DESCRIPTION: Release 0.6.199.0.0 [GitHub only]
+        * inst/NEWS.Rd: Release 0.6.199.0.0 [GitHub only]
 
 	* inst/include/*: Upgraded to release 6.200.0-test of Armadillo
 

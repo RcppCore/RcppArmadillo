@@ -1,19 +1,20 @@
 // Copyright (C) 2008-2012 National ICT Australia (NICTA)
 // 
-// Written by Conrad Sanderson - http://conradsanderson.id.au
-// Written by Ryan Curtin
-// Written by Matthew Amidon
-// 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// -------------------------------------------------------------------
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
+// Written by Ryan Curtin
+// Written by Matthew Amidon
 
 
 //! \addtogroup SpRow
 //! @{
 
-//! Class for sparse row vectors (sparse matrices with only one row)
 
+//! Class for sparse row vectors (sparse matrices with only one row)
 template<typename eT>
 class SpRow : public SpMat<eT>
   {

@@ -1,10 +1,11 @@
 // Copyright (C) 2011-2012 National ICT Australia (NICTA)
 // 
-// Written by Conrad Sanderson - http://conradsanderson.id.au
-// 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// -------------------------------------------------------------------
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
 
 
 //! \addtogroup fn_syl_lyap
@@ -42,7 +43,7 @@ syl
   if(status == false)
     {
     out.reset();
-    arma_bad("syl(): equation appears to be singular", false);
+    arma_debug_warn("syl(): solution not found");
     }
   
   return status;
@@ -81,7 +82,7 @@ syl
   if(status == false)
     {
     out.reset();
-    arma_bad("syl(): equation appears to be singular");
+    arma_bad("syl(): solution not found");
     }
   
   return out;

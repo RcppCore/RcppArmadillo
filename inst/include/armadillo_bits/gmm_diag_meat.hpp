@@ -1,10 +1,15 @@
 // Copyright (C) 2014-2015 National ICT Australia (NICTA)
 // 
-// Written by Conrad Sanderson - http://conradsanderson.id.au
-// 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// -------------------------------------------------------------------
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
+
+
+//! \addtogroup gmm_diag
+//! @{
 
 
 namespace gmm_priv
@@ -659,8 +664,8 @@ gmm_diag<eT>::learn
   const unwrap<T1>   tmp_X(data.get_ref());
   const Mat<eT>& X = tmp_X.M;
   
-  if(X.is_empty()          )  { arma_warn(true, "gmm_diag::learn(): given matrix is empty"             ); return false; }
-  if(X.is_finite() == false)  { arma_warn(true, "gmm_diag::learn(): given matrix has non-finite values"); return false; }
+  if(X.is_empty()          )  { arma_debug_warn("gmm_diag::learn(): given matrix is empty"             ); return false; }
+  if(X.is_finite() == false)  { arma_debug_warn("gmm_diag::learn(): given matrix has non-finite values"); return false; }
   
   if(N_gaus == 0)  { reset(); return true; }
   
@@ -689,14 +694,14 @@ gmm_diag<eT>::learn
   
   if(seed_mode == keep_existing)
     {
-    if(means.is_empty()        )  { arma_warn(true, "gmm_diag::learn(): no existing means"      ); return false; }
-    if(X.n_rows != means.n_rows)  { arma_warn(true, "gmm_diag::learn(): dimensionality mismatch"); return false; }
+    if(means.is_empty()        )  { arma_debug_warn("gmm_diag::learn(): no existing means"      ); return false; }
+    if(X.n_rows != means.n_rows)  { arma_debug_warn("gmm_diag::learn(): dimensionality mismatch"); return false; }
     
     // TODO: also check for number of vectors?
     }
   else
     {
-    if(X.n_cols < N_gaus)  { arma_warn(true, "gmm_diag::learn(): number of vectors is less than number of gaussians"); return false; }
+    if(X.n_cols < N_gaus)  { arma_debug_warn("gmm_diag::learn(): number of vectors is less than number of gaussians"); return false; }
     
     reset(X.n_rows, N_gaus);
     
@@ -720,7 +725,7 @@ gmm_diag<eT>::learn
     
     stream_state.restore(get_stream_err2());
     
-    if(status == false)  { arma_warn(true, "gmm_diag::learn(): k-means algorithm failed; not enough data, or too many gaussians requested"); init(orig); return false; }
+    if(status == false)  { arma_debug_warn("gmm_diag::learn(): k-means algorithm failed; not enough data, or too many gaussians requested"); init(orig); return false; }
     }
   
   
@@ -747,7 +752,7 @@ gmm_diag<eT>::learn
     
     stream_state.restore(get_stream_err2());
     
-    if(status == false)  { arma_warn(true, "gmm_diag::learn(): EM algorithm failed"); init(orig); return false; }
+    if(status == false)  { arma_debug_warn("gmm_diag::learn(): EM algorithm failed"); init(orig); return false; }
     }
   
   mah_aux.reset();
@@ -2103,3 +2108,6 @@ gmm_diag<eT>::em_fix_params(const eT var_floor)
 
 
 }
+
+
+//! @}

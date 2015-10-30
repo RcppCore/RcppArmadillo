@@ -1,10 +1,15 @@
 // Copyright (C) 2014 National ICT Australia (NICTA)
 // 
-// Written by Conrad Sanderson - http://conradsanderson.id.au
-// 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// -------------------------------------------------------------------
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
+
+
+//! \addtogroup gmm_diag
+//! @{
 
 
 struct gmm_dist_mode { const uword id;  inline explicit gmm_dist_mode(const uword in_id) : id(in_id) {} };
@@ -190,3 +195,5 @@ class gmm_diag
 typedef gmm_priv::gmm_diag<double>  gmm_diag;
 typedef gmm_priv::gmm_diag<float>  fgmm_diag;
 
+
+//! @}

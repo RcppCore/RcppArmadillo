@@ -1,10 +1,11 @@
 // Copyright (C) 2009-2015 National ICT Australia (NICTA)
 // 
-// Written by Conrad Sanderson - http://conradsanderson.id.au
-// 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// -------------------------------------------------------------------
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
 
 
 //! \addtogroup arma_version
@@ -14,7 +15,7 @@
 
 #define ARMA_VERSION_MAJOR 6
 #define ARMA_VERSION_MINOR 200
-#define ARMA_VERSION_PATCH 0
+#define ARMA_VERSION_PATCH 2
 #define ARMA_VERSION_NAME  "development version"
 
 

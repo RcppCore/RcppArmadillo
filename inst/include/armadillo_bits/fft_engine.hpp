@@ -42,6 +42,9 @@
 // OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
+//! \addtogroup fft_engine
+//! @{
+
 
 template<typename cx_type, uword fixed_N, bool> struct store {};
 
@@ -407,3 +410,6 @@ class fft_engine : public store<cx_type, fixed_N, (fixed_N > 0)>
 
 
   };
+
+
+//! @}

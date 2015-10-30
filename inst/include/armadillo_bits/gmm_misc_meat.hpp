@@ -1,10 +1,15 @@
 // Copyright (C) 2014 National ICT Australia (NICTA)
 // 
-// Written by Conrad Sanderson - http://conradsanderson.id.au
-// 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// -------------------------------------------------------------------
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
+
+
+//! \addtogroup gmm_diag
+//! @{
 
 
 namespace gmm_priv
@@ -304,3 +309,6 @@ distance<eT, uword(2)>::eval(const uword N, const eT* A, const eT* B, const eT* 
   }
 
 }
+
+
+//! @}

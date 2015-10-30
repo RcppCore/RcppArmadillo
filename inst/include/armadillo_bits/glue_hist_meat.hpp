@@ -1,11 +1,15 @@
 // Copyright (C) 2012-2015 National ICT Australia (NICTA)
 // 
-// Written by Conrad Sanderson - http://conradsanderson.id.au
-// 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// -------------------------------------------------------------------
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
 
+
+//! \addtogroup glue_hist
+//! @{
 
 
 template<typename eT>
@@ -231,3 +235,6 @@ glue_hist_default::apply(Mat<uword>& out, const mtGlue<uword,T1,T2,glue_hist_def
     glue_hist::apply_noalias(out, UA.M, UB.M, dim);
     }
   }
+
+
+//! @}

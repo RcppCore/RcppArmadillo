@@ -1,10 +1,11 @@
 // Copyright (C) 2009-2011 National ICT Australia (NICTA)
 // 
-// Written by Conrad Sanderson - http://conradsanderson.id.au
-// 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// -------------------------------------------------------------------
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
 
 
 //! \addtogroup running_stat
@@ -155,7 +156,7 @@ running_stat<eT>::operator() (const typename running_stat<eT>::T sample)
   
   if( arma_isfinite(sample) == false )
     {
-    arma_warn(true, "running_stat: sample ignored as it is non-finite" );
+    arma_debug_warn("running_stat: sample ignored as it is non-finite" );
     return;
     }
   
@@ -174,7 +175,7 @@ running_stat<eT>::operator() (const std::complex< typename running_stat<eT>::T >
   
   if( arma_isfinite(sample) == false )
     {
-    arma_warn(true, "running_stat: sample ignored as it is non-finite" );
+    arma_debug_warn("running_stat: sample ignored as it is non-finite" );
     return;
     }
   
