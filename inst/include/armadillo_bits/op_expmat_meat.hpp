@@ -1,10 +1,11 @@
 // Copyright (C) 2014-2015 National ICT Australia (NICTA)
 // 
-// Written by Conrad Sanderson - http://conradsanderson.id.au
-// 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// -------------------------------------------------------------------
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
 
 
 
@@ -34,7 +35,7 @@ op_expmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_expmat>& expr
     {
     out = expr.m;  // force the evaluation of diagmat()
     
-    arma_debug_check( (out.is_square() == false), "expmat(): given matrix is not square sized" );
+    arma_debug_check( (out.is_square() == false), "expmat(): given matrix must be square sized" );
     
     const uword N = (std::min)(out.n_rows, out.n_cols);
     
@@ -48,7 +49,7 @@ op_expmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_expmat>& expr
     const unwrap<T1>   tmp(expr.m);
     const Mat<eT>& A = tmp.M;
     
-    arma_debug_check( (A.is_square() == false), "expmat(): given matrix is not square sized" );
+    arma_debug_check( (A.is_square() == false), "expmat(): given matrix must be square sized" );
     
     const T norm_val = arma::norm(A, "inf");
     

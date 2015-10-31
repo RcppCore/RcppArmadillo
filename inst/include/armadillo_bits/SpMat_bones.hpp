@@ -1,18 +1,20 @@
 // Copyright (C) 2008-2015 National ICT Australia (NICTA)
 // 
-// Written by Conrad Sanderson - http://conradsanderson.id.au
-// Written by Ryan Curtin
-// Written by Matthew Amidon
-// 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// -------------------------------------------------------------------
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
+// Written by Ryan Curtin
+// Written by Matthew Amidon
+
 
 //! \addtogroup SpMat
 //! @{
 
-//! Sparse matrix class, with data stored in compressed sparse column (CSC) format
 
+//! Sparse matrix class, with data stored in compressed sparse column (CSC) format
 template<typename eT>
 class SpMat : public SpBase< eT, SpMat<eT> >
   {

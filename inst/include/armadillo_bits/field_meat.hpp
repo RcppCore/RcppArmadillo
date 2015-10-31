@@ -1,11 +1,12 @@
 // Copyright (C) 2008-2014 National ICT Australia (NICTA)
 // 
-// Written by Conrad Sanderson - http://conradsanderson.id.au
-// Written by Ian Cullinan
-// 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// -------------------------------------------------------------------
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
+// Written by Ian Cullinan
 
 
 //! \addtogroup field
@@ -1467,11 +1468,11 @@ field<oT>::save(const std::string name, const file_type type, const bool print_s
     {
     if(err_msg.length() > 0)
       {
-      arma_warn(true, "field::save(): ", err_msg, name);
+      arma_debug_warn("field::save(): ", err_msg, name);
       }
     else
       {
-      arma_warn(true, "field::save(): couldn't write to ", name);
+      arma_debug_warn("field::save(): couldn't write to ", name);
       }
     }
   
@@ -1494,11 +1495,11 @@ field<oT>::save(std::ostream& os, const file_type type, const bool print_status)
     {
     if(err_msg.length() > 0)
       {
-      arma_warn(true, "field::save(): ", err_msg, "[ostream]");
+      arma_debug_warn("field::save(): ", err_msg, "[ostream]");
       }
     else
       {
-      arma_warn(true, "field::save(): couldn't write to [ostream]");
+      arma_debug_warn("field::save(): couldn't write to [ostream]");
       }
     }
   
@@ -1521,11 +1522,11 @@ field<oT>::load(const std::string name, const file_type type, const bool print_s
     {
     if(err_msg.length() > 0)
       {
-      arma_warn(true, "field::load(): ", err_msg, name);
+      arma_debug_warn("field::load(): ", err_msg, name);
       }
     else
       {
-      arma_warn(true, "field::load(): couldn't read from ", name);
+      arma_debug_warn("field::load(): couldn't read from ", name);
       }
     }
   
@@ -1553,11 +1554,11 @@ field<oT>::load(std::istream& is, const file_type type, const bool print_status)
     {
     if(err_msg.length() > 0)
       {
-      arma_warn(true, "field::load(): ", err_msg, "[istream]");
+      arma_debug_warn("field::load(): ", err_msg, "[istream]");
       }
     else
       {
-      arma_warn(true, "field::load(): couldn't read from [istream]");
+      arma_debug_warn("field::load(): couldn't read from [istream]");
       }
     }
   

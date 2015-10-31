@@ -1,10 +1,11 @@
 // Copyright (C) 2009-2012 National ICT Australia (NICTA)
 // 
-// Written by Conrad Sanderson - http://conradsanderson.id.au
-// 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// -------------------------------------------------------------------
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
 
 
 //! \addtogroup fn_qr
@@ -35,7 +36,7 @@ qr
     {
     Q.reset();
     R.reset();
-    arma_bad("qr(): decomposition failed", false);
+    arma_debug_warn("qr(): decomposition failed");
     }
   
   return status;
@@ -66,7 +67,7 @@ qr_econ
     {
     Q.reset();
     R.reset();
-    arma_bad("qr_econ(): decomposition failed", false);
+    arma_debug_warn("qr_econ(): decomposition failed");
     }
   
   return status;

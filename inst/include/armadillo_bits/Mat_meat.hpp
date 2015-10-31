@@ -1,11 +1,12 @@
 // Copyright (C) 2008-2015 National ICT Australia (NICTA)
 // 
-// Written by Conrad Sanderson - http://conradsanderson.id.au
-// Written by Ryan Curtin
-// 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// -------------------------------------------------------------------
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
+// Written by Ryan Curtin
 
 
 //! \addtogroup Mat
@@ -6680,11 +6681,11 @@ Mat<eT>::save(const std::string name, const file_type type, const bool print_sta
       break;
     
     default:
-      arma_warn(print_status, "Mat::save(): unsupported file type");
+      if(print_status)  { arma_debug_warn("Mat::save(): unsupported file type"); }
       save_okay = false;
     }
   
-  arma_warn( (print_status && (save_okay == false)), "Mat::save(): couldn't write to ", name);
+  if(print_status && (save_okay == false))  { arma_debug_warn("Mat::save(): couldn't write to ", name); }
   
   return save_okay;
   }
@@ -6728,11 +6729,11 @@ Mat<eT>::save(std::ostream& os, const file_type type, const bool print_status) c
       break;
     
     default:
-      arma_warn(print_status, "Mat::save(): unsupported file type");
+      if(print_status)  { arma_debug_warn("Mat::save(): unsupported file type"); }
       save_okay = false;
     }
   
-  arma_warn( (print_status && (save_okay == false)), "Mat::save(): couldn't write to the given stream");
+  if(print_status && (save_okay == false))  { arma_debug_warn("Mat::save(): couldn't write to the given stream"); }
   
   return save_okay;
   }
@@ -6785,7 +6786,7 @@ Mat<eT>::load(const std::string name, const file_type type, const bool print_sta
       break;
 
     default:
-      arma_warn(print_status, "Mat::load(): unsupported file type");
+      if(print_status)  { arma_debug_warn("Mat::load(): unsupported file type"); }
       load_okay = false;
     }
   
@@ -6793,11 +6794,11 @@ Mat<eT>::load(const std::string name, const file_type type, const bool print_sta
     {
     if(err_msg.length() > 0)
       {
-      arma_warn(true, "Mat::load(): ", err_msg, name);
+      arma_debug_warn("Mat::load(): ", err_msg, name);
       }
     else
       {
-      arma_warn(true, "Mat::load(): couldn't read ", name);
+      arma_debug_warn("Mat::load(): couldn't read ", name);
       }
     }
   
@@ -6853,7 +6854,7 @@ Mat<eT>::load(std::istream& is, const file_type type, const bool print_status)
       break;
     
     default:
-      arma_warn(print_status, "Mat::load(): unsupported file type");
+      if(print_status)  { arma_debug_warn("Mat::load(): unsupported file type"); }
       load_okay = false;
     }
   
@@ -6862,11 +6863,11 @@ Mat<eT>::load(std::istream& is, const file_type type, const bool print_status)
     {
     if(err_msg.length() > 0)
       {
-      arma_warn(true, "Mat::load(): ", err_msg, "the given stream");
+      arma_debug_warn("Mat::load(): ", err_msg, "the given stream");
       }
     else
       {
-      arma_warn(true, "Mat::load(): couldn't load from the given stream");
+      arma_debug_warn("Mat::load(): couldn't load from the given stream");
       }
     }
   

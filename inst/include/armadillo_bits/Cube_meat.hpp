@@ -1,10 +1,11 @@
 // Copyright (C) 2008-2015 National ICT Australia (NICTA)
 // 
-// Written by Conrad Sanderson - http://conradsanderson.id.au
-// 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// -------------------------------------------------------------------
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
 
 
 //! \addtogroup Cube
@@ -615,7 +616,7 @@ Cube<eT>::Cube(eT* aux_mem, const uword aux_n_rows, const uword aux_n_cols, cons
   {
   arma_extra_debug_sigprint_this(this);
   
-  arma_debug_warn( (prealloc_mat == true), "Cube::Cube(): parameter 'prealloc_mat' ignored as it's no longer used");
+  if(prealloc_mat == true)  { arma_debug_warn("Cube::Cube(): parameter 'prealloc_mat' ignored as it's no longer used"); }
   
   if(copy_aux_mem == true)
     {
@@ -3471,11 +3472,11 @@ Cube<eT>::save(const std::string name, const file_type type, const bool print_st
       break;
     
     default:
-      arma_warn(print_status, "Cube::save(): unsupported file type");
+      if(print_status)  { arma_debug_warn("Cube::save(): unsupported file type"); }
       save_okay = false;
     }
   
-  arma_warn( (print_status && (save_okay == false)), "Cube::save(): couldn't write to ", name);
+  if(print_status && (save_okay == false))  { arma_debug_warn("Cube::save(): couldn't write to ", name); }
   
   return save_okay;
   }
@@ -3515,11 +3516,11 @@ Cube<eT>::save(std::ostream& os, const file_type type, const bool print_status) 
       break;
     
     default:
-      arma_warn(print_status, "Cube::save(): unsupported file type");
+      if(print_status)  { arma_debug_warn("Cube::save(): unsupported file type"); }
       save_okay = false;
     }
   
-  arma_warn( (print_status && (save_okay == false)), "Cube::save(): couldn't write to given stream");
+  if(print_status && (save_okay == false))  { arma_debug_warn("Cube::save(): couldn't write to given stream"); }
   
   return save_okay;
   }
@@ -3568,7 +3569,7 @@ Cube<eT>::load(const std::string name, const file_type type, const bool print_st
       break;
     
     default:
-      arma_warn(print_status, "Cube::load(): unsupported file type");
+      if(print_status)  { arma_debug_warn("Cube::load(): unsupported file type"); }
       load_okay = false;
     }
   
@@ -3576,11 +3577,11 @@ Cube<eT>::load(const std::string name, const file_type type, const bool print_st
     {
     if(err_msg.length() > 0)
       {
-      arma_warn(true, "Cube::load(): ", err_msg, name);
+      arma_debug_warn("Cube::load(): ", err_msg, name);
       }
     else
       {
-      arma_warn(true, "Cube::load(): couldn't read ", name);
+      arma_debug_warn("Cube::load(): couldn't read ", name);
       }
     }
   
@@ -3632,7 +3633,7 @@ Cube<eT>::load(std::istream& is, const file_type type, const bool print_status)
       break;
     
     default:
-      arma_warn(print_status, "Cube::load(): unsupported file type");
+      if(print_status)  { arma_debug_warn("Cube::load(): unsupported file type"); }
       load_okay = false;
     }
   
@@ -3641,11 +3642,11 @@ Cube<eT>::load(std::istream& is, const file_type type, const bool print_status)
     {
     if(err_msg.length() > 0)
       {
-      arma_warn(true, "Cube::load(): ", err_msg, "the given stream");
+      arma_debug_warn("Cube::load(): ", err_msg, "the given stream");
       }
     else
       {
-      arma_warn(true, "Cube::load(): couldn't load from the given stream");
+      arma_debug_warn("Cube::load(): couldn't load from the given stream");
       }
     }
   

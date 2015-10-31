@@ -1,11 +1,12 @@
 // Copyright (C) 2015 National ICT Australia (NICTA)
 // 
-// Written by Conrad Sanderson - http://conradsanderson.id.au
-// Written by Keith O'Hara
-// 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// -------------------------------------------------------------------
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
+// Written by Keith O'Hara
 
 
 //! \addtogroup fn_qz
@@ -13,7 +14,7 @@
 
 
 
-//! QZ decomposition for pair of N-by-N general matrices (A,B)
+//! QZ decomposition for pair of N-by-N general matrices A and B
 template<typename T1, typename T2>
 inline
 typename
@@ -28,13 +29,13 @@ qz
          Mat<typename T1::elem_type>&    BB,
          Mat<typename T1::elem_type>&    Q,
          Mat<typename T1::elem_type>&    Z,
-  const Base<typename T1::elem_type,T1>& A,
-  const Base<typename T1::elem_type,T2>& B
+  const Base<typename T1::elem_type,T1>& A_expr,
+  const Base<typename T1::elem_type,T2>& B_expr
   )
   {
   arma_extra_debug_sigprint();
   
-  const bool status = auxlib::qz(AA, BB, Q, Z, A, B, 'b');
+  const bool status = auxlib::qz(AA, BB, Q, Z, A_expr.get_ref(), B_expr.get_ref());
   
   if(status == false)
     {
@@ -42,7 +43,7 @@ qz
     BB.reset();
     Q.reset();
     Z.reset();
-    arma_bad("qz(): decomposition failed", false);
+    arma_debug_warn("qz(): decomposition failed");
     }
   
   return status;

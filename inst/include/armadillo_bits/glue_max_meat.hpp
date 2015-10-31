@@ -1,10 +1,11 @@
 // Copyright (C) 2013 National ICT Australia (NICTA)
 // 
-// Written by Conrad Sanderson - http://conradsanderson.id.au
-// 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// -------------------------------------------------------------------
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
 
 
 
@@ -23,7 +24,7 @@ glue_max::apply(Mat<eT>& out, const Proxy<T1>& PA, const Proxy<T2>& PB)
   const uword n_rows = PA.get_n_rows();
   const uword n_cols = PA.get_n_cols();
   
-  arma_debug_assert_same_size(n_rows, n_cols, PB.get_n_rows(), PB.get_n_cols(), "max(): given objects do not have the same size");
+  arma_debug_assert_same_size(n_rows, n_cols, PB.get_n_rows(), PB.get_n_cols(), "max(): given matrices must have the same size");
   
   out.set_size(n_rows, n_cols);
   
@@ -67,7 +68,7 @@ glue_max::apply(Mat< std::complex<T> >& out, const Proxy<T1>& PA, const Proxy<T2
   const uword n_rows = PA.get_n_rows();
   const uword n_cols = PA.get_n_cols();
   
-  arma_debug_assert_same_size(n_rows, n_cols, PB.get_n_rows(), PB.get_n_cols(), "max(): given objects do not have the same size");
+  arma_debug_assert_same_size(n_rows, n_cols, PB.get_n_rows(), PB.get_n_cols(), "max(): given matrices must have the same size");
   
   out.set_size(n_rows, n_cols);
   

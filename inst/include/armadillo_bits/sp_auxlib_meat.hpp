@@ -1,11 +1,12 @@
 // Copyright (C) 2013-2015 National ICT Australia (NICTA)
 // 
-// Written by Conrad Sanderson - http://conradsanderson.id.au
-// Written by Ryan Curtin
-// 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// -------------------------------------------------------------------
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
+// Written by Ryan Curtin
 
 
 //! \addtogroup sp_auxlib
@@ -80,7 +81,7 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
     SpProxy<T1> p(X.get_ref());
     
     // Make sure it's square.
-    arma_debug_check( (p.get_n_rows() != p.get_n_cols()), "eigs_sym(): given sparse matrix is not square");
+    arma_debug_check( (p.get_n_rows() != p.get_n_cols()), "eigs_sym(): given matrix must be square sized");
     
     // Make sure we aren't asking for every eigenvalue.
     arma_debug_check( (n_eigvals + 1 >= p.get_n_rows()), "eigs_sym(): n_eigvals + 1 must be less than the number of rows in the matrix");
@@ -126,9 +127,7 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
     // Check for errors.
     if(info != 0)
       {
-      std::stringstream tmp;
-      tmp << "eigs_sym(): ARPACK error " << info << " in seupd()";
-      arma_debug_warn(true, tmp.str());
+      arma_debug_warn("eigs_sym(): ARPACK error ", info, " in seupd()");
       return false;
       }
     
@@ -143,7 +142,7 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
     arma_ignore(form_str);
     arma_ignore(default_tol);
     
-    arma_stop("eigs_sym(): use of ARPACK needs to be enabled");
+    arma_stop("eigs_sym(): use of ARPACK must be enabled");
     return false;
     }
   #endif
@@ -191,7 +190,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     SpProxy<T1> p(X.get_ref());
     
     // Make sure it's square.
-    arma_debug_check( (p.get_n_rows() != p.get_n_cols()), "eigs_gen(): given sparse matrix is not square");
+    arma_debug_check( (p.get_n_rows() != p.get_n_cols()), "eigs_gen(): given matrix must be square sized");
     
     // Make sure we aren't asking for every eigenvalue.
     arma_debug_check( (n_eigvals + 1 >= p.get_n_rows()), "eigs_gen(): n_eigvals + 1 must be less than the number of rows in the matrix");
@@ -237,9 +236,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     // Check for errors.
     if(info != 0)
       {
-      std::stringstream tmp;
-      tmp << "eigs_gen(): ARPACK error " << info << " in neupd()";
-      arma_debug_warn(true, tmp.str());
+      arma_debug_warn("eigs_gen(): ARPACK error ", info, " in neupd()");
       return false;
       }
     
@@ -296,7 +293,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     arma_ignore(form_str);
     arma_ignore(default_tol);
     
-    arma_stop("eigs_gen(): use of ARPACK needs to be enabled");
+    arma_stop("eigs_gen(): use of ARPACK must be enabled");
     return false;
     }
   #endif
@@ -345,7 +342,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     SpProxy<T1> p(X.get_ref());
     
     // Make sure it's square.
-    arma_debug_check( (p.get_n_rows() != p.get_n_cols()), "eigs_gen(): given sparse matrix is not square");
+    arma_debug_check( (p.get_n_rows() != p.get_n_cols()), "eigs_gen(): given matrix must be square sized");
     
     // Make sure we aren't asking for every eigenvalue.
     arma_debug_check( (n_eigvals + 1 >= p.get_n_rows()), "eigs_gen(): n_eigvals + 1 must be less than the number of rows in the matrix");
@@ -396,9 +393,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     // Check for errors.
     if(info != 0)
       {
-      std::stringstream tmp;
-      tmp << "eigs_gen(): ARPACK error " << info << " in neupd()";
-      arma_debug_warn(true, tmp.str());
+      arma_debug_warn("eigs_gen(): ARPACK error ", info, " in neupd()");
       return false;
       }
     
@@ -413,7 +408,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     arma_ignore(form_str);
     arma_ignore(default_tol);
     
-    arma_stop("eigs_gen(): use of ARPACK needs to be enabled");
+    arma_stop("eigs_gen(): use of ARPACK must be enabled");
     return false;
     }
   #endif
@@ -544,21 +539,21 @@ sp_auxlib::spsolve(Mat<typename T1::elem_type>& X, const SpBase<typename T1::ele
       {
       std::stringstream tmp;
       tmp << "spsolve(): could not solve system; LU factorisation completed, but detected zero in U(" << (info-1) << ',' << (info-1) << ')';
-      arma_debug_warn(true, tmp.str());
+      arma_debug_warn(tmp.str());
       }
     else
     if(info > int(A.n_cols))
       {
       std::stringstream tmp;
       tmp << "spsolve(): memory allocation failure: could not allocate " << (info - int(A.n_cols)) << " bytes";
-      arma_debug_warn(true, tmp.str());
+      arma_debug_warn(tmp.str());
       }
     else
     if(info < 0)
       {
       std::stringstream tmp;
       tmp << "spsolve(): unknown SuperLU error code from gssv(): " << info;
-      arma_debug_warn(true, tmp.str());
+      arma_debug_warn(tmp.str());
       }
     
     
@@ -581,7 +576,7 @@ sp_auxlib::spsolve(Mat<typename T1::elem_type>& X, const SpBase<typename T1::ele
     arma_ignore(A_expr);
     arma_ignore(B_expr);
     arma_ignore(user_opts);
-    arma_stop("spsolve(): use of SuperLU needs to be enabled");
+    arma_stop("spsolve(): use of SuperLU must be enabled");
     return false;
     }
   #endif
@@ -754,7 +749,7 @@ sp_auxlib::spsolve(Mat<typename T1::elem_type>& X, const SpBase<typename T1::ele
       if(out.Stype == superlu::SLU_DN)      { tmp << "SLU_DN";     }
       if(out.Stype == superlu::SLU_NR_loc)  { tmp << "SLU_NR_loc"; }
       
-      arma_debug_warn(true, tmp.str());
+      arma_debug_warn(tmp.str());
       arma_bad("sp_auxlib::destroy_supermatrix(): internal error");
       }
     }
@@ -876,18 +871,15 @@ sp_auxlib::run_aupd
     if( (info != 0) && (info != 1) )
       {
       // Print warnings if there was a failure.
-      std::stringstream tmp;
       
       if(sym)
         {
-        tmp << "eigs_sym(): ARPACK error " << info << " in saupd()";
+        arma_debug_warn("eigs_sym(): ARPACK error ", info, " in saupd()");
         }
       else
         {
-        tmp << "eigs_gen(): ARPACK error " << info << " in naupd()";
+        arma_debug_warn("eigs_gen(): ARPACK error ", info, " in naupd()");
         }
-      
-      arma_debug_warn(true, tmp.str());
       
       return; // Parent frame can look at the value of info.
       }
