@@ -53,3 +53,39 @@ arma::cx_cube cx_cube_test(const arma::cx_cube& x) {
 arma::cx_fcube cx_fcube_test(const arma::cx_fcube& x) {
   return arma::pow(x, 2);
 }
+
+// [[Rcpp::export]]
+arma::cube as_cube(Rcpp::NumericVector x) {
+  arma::cube y = Rcpp::as<arma::cube>(x);
+  return arma::pow(y, 2);
+}
+
+// [[Rcpp::export]]
+arma::fcube as_fcube(Rcpp::NumericVector x) {
+  arma::fcube y = Rcpp::as<arma::fcube>(x);
+  return arma::pow(y, 2);
+}
+
+// [[Rcpp::export]]
+arma::icube as_icube(Rcpp::IntegerVector x) {
+  arma::icube y = Rcpp::as<arma::icube>(x);
+  return arma::pow(y, 2);
+}
+
+// [[Rcpp::export]]
+arma::ucube as_ucube(Rcpp::IntegerVector x) {
+  arma::ucube y = Rcpp::as<arma::ucube>(x);
+  return arma::pow(y, 2);
+}
+
+// [[Rcpp::export]]
+arma::cx_cube as_cx_cube(Rcpp::ComplexVector x) {
+  arma::cx_cube y = Rcpp::as<arma::cx_cube>(x);
+  return arma::pow(y, 2);
+}
+
+// [[Rcpp::export]]
+arma::cx_fcube as_cx_fcube(Rcpp::ComplexVector x) {
+  arma::cx_fcube y = Rcpp::as<arma::cx_fcube>(x);
+  return arma::pow(y, 2);
+}

@@ -28,17 +28,17 @@ test.cube <- function() {
   int_cube <- array(1L:27L, rep(3, 3))
   cplx_cube <- array(1.5:27.5 + 2i, rep(3, 3))
   
-  ## check cube (Cube<double>) and fcube (Cube<float>), no NAs
-  checkEquals(cube_test(dbl_cube), (dbl_cube ** 2), "cube_test no NA")
-  checkEquals(fcube_test(dbl_cube), (dbl_cube ** 2), "fcube_test no NA")
+  ## check cube (Cube<double>) and fcube (Cube<float>)
+  checkEquals(cube_test(dbl_cube), (dbl_cube ** 2), "cube_test")
+  checkEquals(fcube_test(dbl_cube), (dbl_cube ** 2), "fcube_test")
   
-  ## check icube (Cube<sword>) and ucube (Cube<uword>), no NAs
-  checkEquals(icube_test(int_cube), (int_cube ** 2), "icube_test no NA")
-  checkEquals(ucube_test(int_cube), (int_cube ** 2), "ucube_test no NA")
+  ## check icube (Cube<sword>) and ucube (Cube<uword>)
+  checkEquals(icube_test(int_cube), (int_cube ** 2), "icube_test")
+  checkEquals(ucube_test(int_cube), (int_cube ** 2), "ucube_test")
   
-  ## check cx_cube (Cube<cx_double>) and cx_fcube (Cube<cx_float>), no NAs
-  checkEquals(cx_cube_test(cplx_cube), (cplx_cube ** 2), "cx_cube_test no NA")
-  checkEquals(cx_fcube_test(cplx_cube), (cplx_cube ** 2), "cx_fcube_test no NA",
+  ## check cx_cube (Cube<cx_double>) and cx_fcube (Cube<cx_float>)
+  checkEquals(cx_cube_test(cplx_cube), (cplx_cube ** 2), "cx_cube_test")
+  checkEquals(cx_fcube_test(cplx_cube), (cplx_cube ** 2), "cx_fcube_test",
               tolerance = 1.5e-7)
   
   
@@ -70,4 +70,23 @@ test.cube <- function() {
   checkTrue(
     inherits(try(cx_fcube_test(cplx_cube), silent = TRUE), "try-error"),
     "cx_fcube_test bad dimensions")
+  
+  
+  ## sanity check for explicit calls to Rcpp::as< arma::Cube<T> > 
+  dbl_cube <- array(1.5:27.5, rep(3, 3))
+  int_cube <- array(1L:27L, rep(3, 3))
+  cplx_cube <- array(1.5:27.5 + 2i, rep(3, 3))
+  
+  ## check cube (Cube<double>) and fcube (Cube<float>)
+  checkEquals(as_cube(dbl_cube), (dbl_cube ** 2), "as_cube")
+  checkEquals(as_fcube(dbl_cube), (dbl_cube ** 2), "as_fcube")
+  
+  ## check icube (Cube<sword>) and ucube (Cube<uword>)
+  checkEquals(as_icube(int_cube), (int_cube ** 2), "as_icube")
+  checkEquals(as_ucube(int_cube), (int_cube ** 2), "as_ucube")
+  
+  ## check cx_cube (Cube<cx_double>) and cx_fcube (Cube<cx_float>)
+  checkEquals(as_cx_cube(cplx_cube), (cplx_cube ** 2), "as_cx_cube")
+  checkEquals(as_cx_fcube(cplx_cube), (cplx_cube ** 2), "as_cx_fcube",
+              tolerance = 1.5e-7)
 }
