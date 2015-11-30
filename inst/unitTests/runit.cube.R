@@ -42,25 +42,6 @@ test.cube <- function() {
               tolerance = 1.5e-7)
   
   
-  ## modify test objects to contain NA value
-  dbl_cube[2, 2, 2] <- NA
-  int_cube[2, 2, 2] <- NA
-  cplx_cube[2, 2, 2] <- NA
-  
-  ## check cube (Cube<double>) and fcube (Cube<float>), with NAs
-  checkEquals(cube_test(dbl_cube), (dbl_cube ** 2), "cube_test with NA")
-  checkEquals(fcube_test(dbl_cube), (dbl_cube ** 2), "fcube_test with NA")
-  
-  ## check icube (Cube<sword>) and ucube (Cube<uword>), with NAs
-  checkEquals(icube_test(int_cube), (int_cube ** 2), "icube_test with NA")
-  checkEquals(ucube_test(int_cube), (int_cube ** 2), "ucube_test with NA")
-  
-  ## check cx_cube (Cube<cx_double>) and cx_fcube (Cube<cx_float>), with NAs
-  checkEquals(cx_cube_test(cplx_cube), (cplx_cube ** 2), "cx_cube_test with NA")
-  checkEquals(cx_fcube_test(cplx_cube), (cplx_cube ** 2), "cx_fcube_test with NA",
-              tolerance = 1.5e-7)
-  
-  
   ## test that exception is thrown with dims(x) != 3
   dbl_cube <- array(1.5:16.5, rep(2, 4))
   int_cube <- array(1L:16L, rep(2, 4))
