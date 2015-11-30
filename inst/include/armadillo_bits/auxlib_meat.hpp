@@ -1070,10 +1070,13 @@ auxlib::eig_gen
     podarray<T> vals_real(X.n_rows);
     podarray<T> vals_imag(X.n_rows);
     
-    arma_extra_debug_print("lapack::geev()");
+    arma_extra_debug_print("lapack::geev() -- START");
     lapack::geev(&jobvl, &jobvr, &N, X.memptr(), &N, vals_real.memptr(), vals_imag.memptr(), vl, &ldvl, vr, &ldvr, work.memptr(), &lwork, &info);
+    arma_extra_debug_print("lapack::geev() -- END");
     
     if(info != 0)  { return false; }
+    
+    arma_extra_debug_print("reformatting eigenvalues and eigenvectors");
     
     std::complex<T>* vals_mem = vals.memptr();
     
@@ -1102,7 +1105,7 @@ auxlib::eig_gen
           }
         }
       }
-      
+    
     return true;
     }
   #else
@@ -1176,8 +1179,9 @@ auxlib::eig_gen
     podarray<eT>  work( static_cast<uword>(lwork) );
     podarray< T> rwork( static_cast<uword>(2*N)   );
     
-    arma_extra_debug_print("lapack::cx_geev()");
+    arma_extra_debug_print("lapack::cx_geev() -- START");
     lapack::cx_geev(&jobvl, &jobvr, &N, X.memptr(), &N, vals.memptr(), vl, &ldvl, vr, &ldvr, work.memptr(), &lwork, rwork.memptr(), &info);
+    arma_extra_debug_print("lapack::cx_geev() -- END");
     
     return (info == 0);
     }
@@ -1247,8 +1251,9 @@ auxlib::eig_gen_dual
     podarray<T> vals_real(X.n_rows);
     podarray<T> vals_imag(X.n_rows);
     
-    arma_extra_debug_print("lapack::geev()");
+    arma_extra_debug_print("lapack::geev() -- START");
     lapack::geev(&jobvl, &jobvr, &N, X.memptr(), &N, vals_real.memptr(), vals_imag.memptr(), vecs_l.memptr(), &ldvl, vecs_r.memptr(), &ldvr, work.memptr(), &lwork, &info);
+    arma_extra_debug_print("lapack::geev() -- END");
     
     std::complex<T>* vals_mem = vals.memptr();
     
@@ -1321,8 +1326,9 @@ auxlib::eig_gen_dual
     podarray<eT>  work( static_cast<uword>(lwork) );
     podarray< T> rwork( static_cast<uword>(2*N)   );
     
-    arma_extra_debug_print("lapack::cx_geev()");
+    arma_extra_debug_print("lapack::cx_geev() -- START");
     lapack::cx_geev(&jobvl, &jobvr, &N, X.memptr(), &N, vals.memptr(), vecs_l.memptr(), &ldvl, vecs_r.memptr(), &ldvr, work.memptr(), &lwork, rwork.memptr(), &info);
+    arma_extra_debug_print("lapack::cx_geev() -- END");
     
     return (info == 0);
     }
@@ -1414,6 +1420,8 @@ auxlib::eig_pair
     lapack::ggev(&jobvl, &jobvr, &N, A.memptr(), &N,  B.memptr(), &N, alphar.memptr(), alphai.memptr(), beta.memptr(), vl, &ldvl, vr, &ldvr, work.memptr(), &lwork, &info);
     
     if(info != 0)  { return false; }
+    
+    arma_extra_debug_print("reformatting eigenvalues and eigenvectors");
     
           eT*   vals_mem =   vals.memptr();
     const  T* alphar_mem = alphar.memptr();

@@ -1,6 +1,15 @@
 \name{NEWS}
 \title{News for Package 'RcppArmadillo'}
-\newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
+
+\section{Changes in RcppArmadillo version 0.6.200.2.0 (2015-10-31)}{
+  \itemize{
+    \item Upgraded to Armadillo 6.200.0 ("Midnight Blue Deluxe")
+    \itemize{
+      \item expanded \code{diagmat()} to handle non-square matrices and arbitrary diagonals
+      \item expanded \code{trace()} to handle non-square matrices
+    }
+  }
+}
 
 \section{Changes in RcppArmadillo version 0.6.100.0.0 (2015-10-03)}{
   \itemize{
@@ -243,7 +252,7 @@
     \item The \code{RcppArmadillo.package.skeleton()} function will now
     prefer \code{pkgKitten::kitten()} over \code{package.skeleton()} in
     order to create a working package which passes \code{R CMD check}.
-    \item The \cpkg{pkgKitten} package is now a \code{Suggests:} 
+    \item The \CRANpkg{pkgKitten} package is now a \code{Suggests:} 
     \item A manual page was added to provide documentation for the
     functions provided by the skeleton package.
     \item A small update was made to the package manual page.
@@ -386,8 +395,8 @@
       \item fix for saving field objects
       \item workaround for a bug in the Intel compiler
     }
-    \item Updated for \cpkg{Rcpp} (>= 0.11.0) by removing linking step
-    from build process, added appropriate dependency on \cpkg{Rcpp}
+    \item Updated for \CRANpkg{Rcpp} (>= 0.11.0) by removing linking step
+    from build process, added appropriate dependency on \CRANpkg{Rcpp}
     \item Updated \code{RcppArmadillo.package.skeleton} function
     accordingly to use proper \code{NAMESPACE} import
     \item Rewritten \code{rcpparma_hello_world} (which is used by the
@@ -416,7 +425,7 @@
     \itemize{
       \item added eigen decompositions of sparse matrices:
       \code{eigs_sym()} and \code{eigs_gen()} [ but this requires
-      linking against ARPACK which \cpkg{RcppArmadillo} as a
+      linking against ARPACK which \CRANpkg{RcppArmadillo} as a
       pure-template package does not do, and R is not linked against
       ARPACK either. ]
       \item added eigen decomposition for pair of matrices: \code{eig_pair()}
@@ -519,7 +528,7 @@
       of elements satisfying a relational condition 
     }
     \item Added conversion support for sparse matrices (of type double)
-    created by the \cpkg{Matrix} package as class \code{dgCMatrix}
+    created by the \CRANpkg{Matrix} package as class \code{dgCMatrix}
     \item Moved vignette sources from \code{inst/doc} to \code{vignettes};
     set \code{BuildVignettes: FALSE} as the \code{minted} mode for
     \code{LaTeX} upsets the CRAN builders.
