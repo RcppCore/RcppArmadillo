@@ -117,6 +117,94 @@ namespace traits {
     private:
         S4 mat ;
     } ;
+    
+    // 30 November 2015
+    // default Exporter-Cube specialization:
+    // handles cube, icube, and cx_cube
+    // fails on fcube, ucube, and cx_fcube
+    template <typename T>
+    class Exporter< arma::Cube<T> > {
+    public:
+        typedef arma::Cube<T> cube_t;
+        enum { RTYPE = Rcpp::traits::r_sexptype_traits<T>::rtype };
+        typedef typename Rcpp::traits::storage_type<RTYPE>::type value_t;
+        Exporter(SEXP x) : vec(x) {}
+      
+        cube_t get() {
+            Rcpp::Vector<INTSXP> dims = vec.attr("dim");
+            if (dims.size() != 3) {
+                std::string msg = 
+                  "Error converting object to arma::Cube<T>:\n"
+                  "Input array must have exactly 3 dimensions.\n";
+                Rcpp::stop(msg);
+            }
+          
+            cube_t result(
+                reinterpret_cast<T*>(vec.begin()),
+                dims[0], dims[1], dims[2], false);
+            return result;
+        }
+      
+    private:
+        Rcpp::Vector<RTYPE> vec;
+    };
+    
+    // specializations for 3 cube typedefs that fail above
+    // first use viable conversion SEXP -> Cube<other_t>
+    // then use conv_to<cube_t>::from(other_t other)
+    template <>
+    class Exporter<arma::fcube> {
+    public:
+        typedef arma::fcube cube_t;
+        
+        Exporter(SEXP x)
+            : tmp(Exporter<arma::cube>(x).get()) {}
+        
+        cube_t get() {
+            cube_t result = arma::conv_to<cube_t>::from(tmp);
+            return result;
+        }
+      
+    private:
+        typedef arma::cube other_t;
+        other_t tmp;
+    };
+    
+    template <>
+    class Exporter<arma::ucube> {
+    public:
+        typedef arma::ucube cube_t;
+      
+        Exporter(SEXP x)
+            : tmp(Exporter<arma::icube>(x).get()) {}
+        
+        cube_t get() {
+            cube_t result = arma::conv_to<cube_t>::from(tmp);
+            return result;
+        }
+      
+    private:
+        typedef arma::icube other_t;
+        other_t tmp;
+    };
+    
+    template <>
+    class Exporter<arma::cx_fcube> {
+    public:
+        typedef arma::cx_fcube cube_t;
+      
+        Exporter(SEXP x)
+            : tmp(Exporter<arma::cx_cube>(x).get()) {}
+      
+        cube_t get() {
+            cube_t result = arma::conv_to<cube_t>::from(tmp);
+            return result;
+        }
+      
+    private:
+        typedef arma::cx_cube other_t;
+        other_t tmp;
+    };
 
 } // end traits
         
