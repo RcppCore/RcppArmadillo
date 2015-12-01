@@ -1,11 +1,17 @@
-2015-10-31  Dirk Eddelbuettel  <edd@debian.org>
+2015-12-01  Dirk Eddelbuettel  <edd@debian.org>
 
-        * DESCRIPTION: Release 0.6.200.2.0
-        * inst/NEWS.Rd: Release 0.6.200.2.0
+        * DESCRIPTION: Release 0.6.299.0.0 [GitHub only]
+        * inst/NEWS.Rd: Release 0.6.299.0.0 [GitHub only]
 
-	* inst/include/*: Upgraded to release 6.200.2 of Armadillo
+	* inst/include/*: Upgraded to release 6.300.0-test of Armadillo
 
-        * debian/*: Changes for Debian release of 0.6.200.2.0
+2015-11-30  Nathan Russell <russell.nr2012@gmail.com>
+
+        * inst/include/RcppArmadilloAs.h: Support as<> converters to the
+	Armadillo cube type
+
+        * inst/unitTests/cpp/cube.cpp: Unit tests for Cube converter
+	* inst/unitTests/runit.cube.R: Idem
 
 2015-10-30  Dirk Eddelbuettel  <edd@debian.org>
 
