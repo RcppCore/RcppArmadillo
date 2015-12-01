@@ -10,7 +10,7 @@
       \item tbd
     }
     \item Added support for \code{Cube} types via \code{as<>} converters
-    (PR \ghpr{64} by Nathan Russell, fixing \ghit{63})
+    (PR \ghpr{64} by Nathan Russell, fixing \ghit{63} and \ghit{42})
   }
 }
 
