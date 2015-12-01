@@ -833,12 +833,12 @@ Mat<eT>::operator=(const Mat<eT>& in_mat)
       {
       if(x_n_cols_found == false)
         {
-        x_n_cols       = (*it).size();
+        x_n_cols       = uword((*it).size());
         x_n_cols_found = true;
         }
       else
         {
-        arma_check( ((*it).size() != x_n_cols), "Mat::init(): inconsistent number of columns in initialiser list" );
+        arma_check( (uword((*it).size()) != x_n_cols), "Mat::init(): inconsistent number of columns in initialiser list" );
         }
       }
     
@@ -6086,6 +6086,37 @@ Mat<eT>::copy_size(const Base<eT2, expr>& X)
   const uword X_n_cols = P.get_n_cols();
   
   init_warm(X_n_rows, X_n_cols);
+  }
+
+
+
+//! apply a functor to each element
+template<typename eT>
+template<typename functor>
+inline
+const Mat<eT>&
+Mat<eT>::for_each(functor F)
+  {
+  arma_extra_debug_sigprint();
+  
+  eT* data = memptr();
+  
+  const uword N = n_elem;
+  
+  uword ii, jj;
+  
+  for(ii=0, jj=1; jj < N; ii+=2, jj+=2)
+    {
+    F(data[ii]);
+    F(data[jj]);
+    }
+  
+  if(ii < N)
+    {
+    F(data[ii]);
+    }
+  
+  return *this;
   }
 
 

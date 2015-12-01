@@ -420,11 +420,9 @@ class Mat : public Base< eT, Mat<eT> >
   arma_deprecated inline void reshape(const uword in_rows, const uword in_cols, const uword dim);  //!< NOTE: don't use this form: it's deprecated
   
   
-  template<typename functor>
-  inline const Mat& transform(functor F);
-  
-  template<typename functor>
-  inline const Mat& imbue(functor F);
+  template<typename functor> inline const Mat&  for_each(functor F);
+  template<typename functor> inline const Mat& transform(functor F);
+  template<typename functor> inline const Mat&     imbue(functor F);
   
   
   arma_hot inline const Mat& fill(const eT val);

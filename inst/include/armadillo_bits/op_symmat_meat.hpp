@@ -25,7 +25,7 @@ op_symmat::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_symmat>& in)
   const unwrap<T1>   tmp(in.m);
   const Mat<eT>& A = tmp.M;
   
-  arma_debug_check( (A.is_square() == false), "symmatu()/symmatl(): given matrix must be square" );
+  arma_debug_check( (A.is_square() == false), "symmatu()/symmatl(): given matrix must be square sized" );
   
   const uword N     = A.n_rows;
   const bool  upper = (in.aux_uword_a == 0);
@@ -105,7 +105,7 @@ op_symmat_cx::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_symmat_cx>&
   const unwrap<T1>   tmp(in.m);
   const Mat<eT>& A = tmp.M;
   
-  arma_debug_check( (A.is_square() == false), "symmatu()/symmatl(): given matrix must be square" );
+  arma_debug_check( (A.is_square() == false), "symmatu()/symmatl(): given matrix must be square sized" );
   
   const uword N  = A.n_rows;
   

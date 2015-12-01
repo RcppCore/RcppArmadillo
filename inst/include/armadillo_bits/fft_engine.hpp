@@ -204,7 +204,7 @@ class fft_engine : public store<cx_type, fixed_N, (fixed_N > 0)>
       
       tmp[3] = tmp[1] + tmp[2];
       
-      Y[m] = cx_type( (Y[0].real() - (0.5*tmp[3].real())), (Y[0].imag() - (0.5*tmp[3].imag())) );
+      Y[m] = cx_type( (Y[0].real() - (T(0.5)*tmp[3].real())), (Y[0].imag() - (T(0.5)*tmp[3].imag())) );
       
       Y[0] += tmp[3];
       

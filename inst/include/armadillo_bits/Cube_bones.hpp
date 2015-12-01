@@ -266,11 +266,9 @@ class Cube : public BaseCube< eT, Cube<eT> >
   template<typename eT2> inline void copy_size(const Cube<eT2>& m);
   
   
-  template<typename functor>
-  inline const Cube& transform(functor F);
-  
-  template<typename functor>
-  inline const Cube& imbue(functor F);
+  template<typename functor> inline const Cube&  for_each(functor F);
+  template<typename functor> inline const Cube& transform(functor F);
+  template<typename functor> inline const Cube&     imbue(functor F);
   
   
   inline const Cube& fill(const eT val);

@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2014 National ICT Australia (NICTA)
+// Copyright (C) 2008-2015 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -425,6 +425,67 @@ subview_field<oT>::print(std::ostream& user_stream, const std::string extra_text
     }
   
   arma_ostream::print(user_stream, *this);
+  }
+
+
+
+template<typename oT>
+template<typename functor>
+inline
+void
+subview_field<oT>::for_each(functor F)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview_field<oT>& t = *this;
+  
+  if(t.n_slices == 1)
+    {
+    for(uword col=0; col < t.n_cols; ++col)
+    for(uword row=0; row < t.n_rows; ++row)
+      {
+      F( t.at(row,col) );
+      }
+    }
+  else
+    {
+    for(uword slice=0; slice < t.n_slices; ++slice)
+    for(uword col=0;   col   < t.n_cols;   ++col  )
+    for(uword row=0;   row   < t.n_rows;   ++row  )
+      {
+      F( t.at(row,col,slice) );
+      }
+    }
+  }
+
+
+
+template<typename oT>
+inline
+void
+subview_field<oT>::fill(const oT& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview_field<oT>& t = *this;
+  
+  if(t.n_slices == 1)
+    {
+    for(uword col=0; col < t.n_cols; ++col)
+    for(uword row=0; row < t.n_rows; ++row)
+      {
+      t.at(row,col) = x;
+      }
+    }
+  else
+    {
+    for(uword slice=0; slice < t.n_slices; ++slice)
+    for(uword col=0;   col   < t.n_cols;   ++col  )
+    for(uword row=0;   row   < t.n_rows;   ++row  )
+      {
+      t.at(row,col,slice) = x;
+      }
+    }
   }
 
 

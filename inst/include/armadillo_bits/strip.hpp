@@ -1,4 +1,4 @@
-// Copyright (C) 2010-2013 National ICT Australia (NICTA)
+// Copyright (C) 2010-2015 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -65,7 +65,6 @@ struct strip_inv
   
   const T1& M;
   
-  static const bool slow   = false;
   static const bool do_inv = false;
   };
 
@@ -79,13 +78,11 @@ struct strip_inv< Op<T1, op_inv> >
   arma_hot inline
   strip_inv(const Op<T1, op_inv>& X)
     : M(X.m)
-    , slow(X.aux_uword_a == 1)
     {
     arma_extra_debug_sigprint();
     }
   
-  const T1&  M;
-  const bool slow;
+  const T1& M;
   
   static const bool do_inv = true;
   };
@@ -100,13 +97,11 @@ struct strip_inv< Op<T1, op_inv_sympd> >
   arma_hot inline
   strip_inv(const Op<T1, op_inv_sympd>& X)
     : M(X.m)
-    , slow(X.aux_uword_a == 1)
     {
     arma_extra_debug_sigprint();
     }
   
-  const T1&  M;
-  const bool slow;
+  const T1& M;
   
   static const bool do_inv = true;
   };

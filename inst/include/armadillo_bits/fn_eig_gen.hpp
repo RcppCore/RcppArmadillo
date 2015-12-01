@@ -77,8 +77,38 @@ eig_gen
   (
         Col< std::complex<typename T1::pod_type> >& eigvals,
         Mat< std::complex<typename T1::pod_type> >& eigvecs,
+  const Base<typename T1::elem_type, T1>&           expr
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (void_ptr(&eigvals) == void_ptr(&eigvecs)), "eig_gen(): parameter 'eigval' is an alias of parameter 'eigvec'" );
+  
+  const bool status = auxlib::eig_gen(eigvals, eigvecs, uword(2), expr.get_ref());
+  
+  if(status == false)
+    {
+    eigvals.reset();
+    eigvecs.reset();
+    arma_debug_warn("eig_gen(): decomposition failed");
+    }
+  
+  return status;
+  }
+
+
+
+//! NOTE: this form is deprecated -- don't use it
+template<typename T1>
+arma_deprecated
+inline
+typename enable_if2< is_supported_blas_type<typename T1::pod_type>::value, bool >::result
+eig_gen
+  (
+        Col< std::complex<typename T1::pod_type> >& eigvals,
+        Mat< std::complex<typename T1::pod_type> >& eigvecs,
   const Base<typename T1::elem_type, T1>&           expr,
-  const char                                        mode = 'r'
+  const char                                        mode
   )
   {
   arma_extra_debug_sigprint();

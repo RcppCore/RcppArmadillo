@@ -16,7 +16,7 @@
 template<typename eT>
 inline
 void
-op_inv::apply(Mat<eT>& out, const Mat<eT>& A, const bool slow)
+op_inv::apply(Mat<eT>& out, const Mat<eT>& A)
   {
   arma_extra_debug_sigprint();
   
@@ -24,7 +24,7 @@ op_inv::apply(Mat<eT>& out, const Mat<eT>& A, const bool slow)
   // - auxlib::inv() copies A to out before inversion
   // - for 2x2 and 3x3 matrices the code is alias safe
   
-  bool status = auxlib::inv(out, A, slow);
+  bool status = auxlib::inv(out, A);
   
   if(status == false)
     {
@@ -53,9 +53,7 @@ op_inv::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv>& X)
     }
   else
     {
-    const uword mode = X.aux_uword_a;
-    
-    status = (mode == 0) ? auxlib::inv(out, X.m) : auxlib::inv(out, X.m, true);
+    status = auxlib::inv(out, X.m);
     }
     
   if(status == false)

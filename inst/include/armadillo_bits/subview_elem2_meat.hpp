@@ -561,7 +561,7 @@ subview_elem2<eT,T1,T2>::extract(Mat<eT>& actual_out, const subview_elem2<eT,T1,
   
   const bool alias = (&actual_out == &m_local);
   
-  arma_extra_debug_warn(alias, "subview_elem2::extract(): aliasing detected");
+  if(alias)  { arma_extra_debug_print("subview_elem2::extract(): aliasing detected"); }
   
   Mat<eT>* tmp_out = alias ? new Mat<eT>() : 0;
   Mat<eT>& out     = alias ? *tmp_out      : actual_out;

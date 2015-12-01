@@ -1,4 +1,4 @@
-// Copyright (C) 2009-2013 National ICT Australia (NICTA)
+// Copyright (C) 2009-2015 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,153 +13,250 @@
 
 
 
-//! Solve a system of linear equations, i.e., A*X = B, where X is unknown.
-//! For a square matrix A, this function is conceptually the same as X = inv(A)*B,
-//! but is done more efficiently.
-//! The number of rows in A and B must be the same.
-//! B can be either a column vector or a matrix.
-//! This function will also try to provide approximate solutions
-//! to under-determined as well as over-determined systems (non-square A matrices).
+//
+// solve_gen
+
 
 template<typename T1, typename T2>
 inline
-const Glue<T1, T2, glue_solve>
+typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, const Glue<T1, T2, glue_solve_gen> >::result
 solve
   (
   const Base<typename T1::elem_type,T1>& A,
   const Base<typename T1::elem_type,T2>& B,
-  const bool slow = false,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  const solve_opts::opts&                opts = solve_opts::none
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
-  return Glue<T1, T2, glue_solve>(A.get_ref(), B.get_ref(), ((slow == false) ? 0 : 1) );
+  return Glue<T1, T2, glue_solve_gen>(A.get_ref(), B.get_ref(), opts.flags);
   }
 
 
 
 template<typename T1, typename T2>
 inline
-const Glue<T1, T2, glue_solve>
+typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, const Glue<T1, T2, glue_solve_gen> >::result
 solve
   (
   const Base<typename T1::elem_type,T1>& A,
   const Base<typename T1::elem_type,T2>& B,
-  const char* method,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  const bool   // argument kept only for compatibility with old user code
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
-  const char sig = (method != NULL) ? method[0] : char(0);
-  
-  arma_debug_check( ((sig != 's') && (sig != 'f')), "solve(): unknown method specified" );
-  
-  return Glue<T1, T2, glue_solve>( A.get_ref(), B.get_ref(), ((sig == 'f') ? 0 : 1) );
+  return Glue<T1, T2, glue_solve_gen>(A.get_ref(), B.get_ref(), solve_opts::flag_none);
   }
 
 
 
 template<typename T1, typename T2>
 inline
-const Glue<T1, T2, glue_solve_tr>
+typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, const Glue<T1, T2, glue_solve_gen> >::result
 solve
   (
-  const Op<T1, op_trimat>& A,
+  const Base<typename T1::elem_type,T1>& A,
   const Base<typename T1::elem_type,T2>& B,
-  const bool slow = false,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  const char*   // argument kept only for compatibility with old user code
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(slow);
-  arma_ignore(junk);
   
-  return Glue<T1, T2, glue_solve_tr>(A.m, B.get_ref(), A.aux_uword_a);
+  return Glue<T1, T2, glue_solve_gen>(A.get_ref(), B.get_ref(), solve_opts::flag_none);
   }
 
 
 
 template<typename T1, typename T2>
 inline
-const Glue<T1, T2, glue_solve_tr>
-solve
-  (
-  const Op<T1, op_trimat>& A,
-  const Base<typename T1::elem_type,T2>& B,
-  const char* method,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
-  )
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk);
-  
-  const char sig = (method != NULL) ? method[0] : char(0);
-  
-  arma_debug_check( ((sig != 's') && (sig != 'f')), "solve(): unknown method specified" );
-  
-  return Glue<T1, T2, glue_solve_tr>(A.m, B.get_ref(), A.aux_uword_a);
-  }
-
-
-
-template<typename T1, typename T2>
-inline
-bool
+typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, bool >::result
 solve
   (
          Mat<typename T1::elem_type>&    out,
   const Base<typename T1::elem_type,T1>& A,
   const Base<typename T1::elem_type,T2>& B,
-  const bool slow = false,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  const solve_opts::opts&                opts = solve_opts::none
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
-  try
-    {
-    out = solve( A.get_ref(), B.get_ref(), slow );
-    }
-  catch(std::runtime_error&)
-    {
-    return false;
-    }
-  
-  return true;
+  return glue_solve_gen::apply(out, A.get_ref(), B.get_ref(), opts.flags);
   }
 
 
 
 template<typename T1, typename T2>
 inline
-bool
+typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, bool >::result
 solve
   (
          Mat<typename T1::elem_type>&    out,
   const Base<typename T1::elem_type,T1>& A,
   const Base<typename T1::elem_type,T2>& B,
-  const char* method,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  const bool   // argument kept only for compatibility with old user code
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
-  try
-    {
-    out = solve( A.get_ref(), B.get_ref(), method );
-    }
-  catch(std::runtime_error&)
-    {
-    return false;
-    }
+  return glue_solve_gen::apply(out, A.get_ref(), B.get_ref(), solve_opts::flag_none);
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, bool >::result
+solve
+  (
+         Mat<typename T1::elem_type>&    out,
+  const Base<typename T1::elem_type,T1>& A,
+  const Base<typename T1::elem_type,T2>& B,
+  const char*   // argument kept only for compatibility with old user code
+  )
+  {
+  arma_extra_debug_sigprint();
   
-  return true;
+  return glue_solve_gen::apply(out, A.get_ref(), B.get_ref(), solve_opts::flag_none);
+  }
+
+
+
+//
+// solve_tri
+
+
+template<typename T1, typename T2>
+inline
+typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, const Glue<T1, T2, glue_solve_tri> >::result
+solve
+  (
+  const Op<T1, op_trimat>&               A,
+  const Base<typename T1::elem_type,T2>& B,
+  const solve_opts::opts&                opts = solve_opts::none
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  uword flags = opts.flags;
+  
+  if(A.aux_uword_a == 0)  {  flags |= solve_opts::flag_triu; }
+  if(A.aux_uword_a == 1)  {  flags |= solve_opts::flag_tril; }
+  
+  return Glue<T1, T2, glue_solve_tri>(A.m, B.get_ref(), flags);
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, const Glue<T1, T2, glue_solve_tri> >::result
+solve
+  (
+  const Op<T1, op_trimat>&               A,
+  const Base<typename T1::elem_type,T2>& B,
+  const bool   // argument kept only for compatibility with old user code
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  uword flags = solve_opts::flag_none;
+  
+  if(A.aux_uword_a == 0)  {  flags |= solve_opts::flag_triu; }
+  if(A.aux_uword_a == 1)  {  flags |= solve_opts::flag_tril; }
+  
+  return Glue<T1, T2, glue_solve_tri>(A.m, B.get_ref(), flags);
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, const Glue<T1, T2, glue_solve_tri> >::result
+solve
+  (
+  const Op<T1, op_trimat>&               A,
+  const Base<typename T1::elem_type,T2>& B,
+  const char*   // argument kept only for compatibility with old user code
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  uword flags = solve_opts::flag_none;
+  
+  if(A.aux_uword_a == 0)  {  flags |= solve_opts::flag_triu; }
+  if(A.aux_uword_a == 1)  {  flags |= solve_opts::flag_tril; }
+  
+  return Glue<T1, T2, glue_solve_tri>(A.m, B.get_ref(), flags);
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, bool >::result
+solve
+  (
+         Mat<typename T1::elem_type>&    out,
+  const   Op<T1, op_trimat>&             A,
+  const Base<typename T1::elem_type,T2>& B,
+  const solve_opts::opts&                opts = solve_opts::none
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  uword flags = opts.flags;
+  
+  if(A.aux_uword_a == 0)  {  flags |= solve_opts::flag_triu; }
+  if(A.aux_uword_a == 1)  {  flags |= solve_opts::flag_tril; }
+  
+  return glue_solve_tri::apply(out, A.m, B.get_ref(), flags);
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, bool >::result
+solve
+  (
+         Mat<typename T1::elem_type>&    out,
+  const   Op<T1, op_trimat>&             A,
+  const Base<typename T1::elem_type,T2>& B,
+  const bool   // argument kept only for compatibility with old user code
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  uword flags = solve_opts::flag_none;
+  
+  if(A.aux_uword_a == 0)  {  flags |= solve_opts::flag_triu; }
+  if(A.aux_uword_a == 1)  {  flags |= solve_opts::flag_tril; }
+  
+  return glue_solve_tri::apply(out, A.m, B.get_ref(), flags);
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, bool >::result
+solve
+  (
+         Mat<typename T1::elem_type>&    out,
+  const   Op<T1, op_trimat>&             A,
+  const Base<typename T1::elem_type,T2>& B,
+  const char*   // argument kept only for compatibility with old user code
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  uword flags = solve_opts::flag_none;
+  
+  if(A.aux_uword_a == 0)  {  flags |= solve_opts::flag_triu; }
+  if(A.aux_uword_a == 1)  {  flags |= solve_opts::flag_tril; }
+  
+  return glue_solve_tri::apply(out, A.m, B.get_ref(), flags);
   }
 
 

@@ -85,6 +85,7 @@ class subview : public Base<eT, subview<eT> >
   inline static void schur_inplace(Mat<eT>& out, const subview& in);
   inline static void   div_inplace(Mat<eT>& out, const subview& in);
   
+  template<typename functor> inline void  for_each(functor F);
   template<typename functor> inline void transform(functor F);
   template<typename functor> inline void     imbue(functor F);
   

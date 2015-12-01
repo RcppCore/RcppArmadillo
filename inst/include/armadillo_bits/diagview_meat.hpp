@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2013 National ICT Australia (NICTA)
+// Copyright (C) 2008-2015 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -194,7 +194,7 @@ diagview<eT>::operator= (const Base<eT,T1>& o)
   
   const bool is_alias = P.is_alias(d_m);
   
-  arma_extra_debug_warn(is_alias, "aliasing detected");
+  if(is_alias)  { arma_extra_debug_print("aliasing detected"); }
   
   if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::prefer_at_accessor) || (is_alias) )
     {
@@ -267,7 +267,7 @@ diagview<eT>::operator+=(const Base<eT,T1>& o)
   
   const bool is_alias = P.is_alias(d_m);
   
-  arma_extra_debug_warn(is_alias, "aliasing detected");
+  if(is_alias)  { arma_extra_debug_print("aliasing detected"); }
   
   if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::prefer_at_accessor) || (is_alias) )
     {
@@ -340,7 +340,7 @@ diagview<eT>::operator-=(const Base<eT,T1>& o)
   
   const bool is_alias = P.is_alias(d_m);
   
-  arma_extra_debug_warn(is_alias, "aliasing detected");
+  if(is_alias)  { arma_extra_debug_print("aliasing detected"); }
   
   if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::prefer_at_accessor) || (is_alias) )
     {
@@ -413,7 +413,7 @@ diagview<eT>::operator%=(const Base<eT,T1>& o)
   
   const bool is_alias = P.is_alias(d_m);
   
-  arma_extra_debug_warn(is_alias, "aliasing detected");
+  if(is_alias)  { arma_extra_debug_print("aliasing detected"); }
   
   if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::prefer_at_accessor) || (is_alias) )
     {
@@ -486,7 +486,7 @@ diagview<eT>::operator/=(const Base<eT,T1>& o)
   
   const bool is_alias = P.is_alias(d_m);
   
-  arma_extra_debug_warn(is_alias, "aliasing detected");
+  if(is_alias)  { arma_extra_debug_print("aliasing detected"); }
   
   if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::prefer_at_accessor) || (is_alias) )
     {

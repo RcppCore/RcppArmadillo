@@ -1,4 +1,4 @@
-// Copyright (C) 2009-2012 National ICT Australia (NICTA)
+// Copyright (C) 2009-2015 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,90 +13,188 @@
 
 
 
-template<typename eT, typename T2>
+//
+// glue_solve_gen
+
+
+template<typename T1, typename T2>
 inline
 void
-glue_solve::solve_direct(Mat<eT>& out, Mat<eT>& A, const Base<eT,T2>& X, const bool slow)
+glue_solve_gen::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_solve_gen>& X)
   {
   arma_extra_debug_sigprint();
   
-  const uword A_n_rows = A.n_rows;
-  const uword A_n_cols = A.n_cols;
+  const bool status = glue_solve_gen::apply( out, X.A, X.B, X.aux_uword );
+  
+  if(status == false)
+    {
+    arma_bad("solve(): solution not found");
+    }
+  }
+
+
+
+template<typename eT, typename T1, typename T2>
+inline
+bool
+glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>& B_expr, const uword flags)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename get_pod_type<eT>::result T;
+  
+  const bool fast        = bool(flags & solve_opts::flag_fast       );
+  const bool equilibrate = bool(flags & solve_opts::flag_equilibrate);
+  const bool no_approx   = bool(flags & solve_opts::flag_no_approx  );
+  
+  arma_extra_debug_print("glue_solve_gen::apply(): enabled flags:");
+  
+  if(fast       )  { arma_extra_debug_print("fast");        }
+  if(equilibrate)  { arma_extra_debug_print("equilibrate"); }
+  if(no_approx  )  { arma_extra_debug_print("no_approx");   }
+  
+  T    rcond  = T(0);
+  bool status = false;
+  
+  Mat<eT> A = A_expr.get_ref();
+  
+  if(A.n_rows == A.n_cols)
+    {
+    arma_extra_debug_print("glue_solve_gen::apply(): detected square system");
+    
+    if(fast)
+      {
+      arma_extra_debug_print("glue_solve_gen::apply(): (fast)");
+      
+      if(equilibrate)  { arma_debug_warn("solve(): option 'equilibrate' ignored, as option 'fast' is enabled"); }
+      
+      status = auxlib::solve_square_fast(out, A, B_expr.get_ref());  // A is overwritten
+      }
+    else
+      {
+      arma_extra_debug_print("glue_solve_gen::apply(): (refine)");
+      
+      status = auxlib::solve_square_refine(out, rcond, A, B_expr, equilibrate);  // A is overwritten
+      }
+    
+    if( (status == false) && (no_approx == false) )
+      {
+      arma_extra_debug_print("glue_solve_gen::apply(): solving rank deficient system");
+      
+      if(rcond > T(0))
+        {
+        arma_debug_warn("system appears singular (rcond: ", rcond, "); attempting approximate solution");
+        }
+      else
+        {
+        arma_debug_warn("system appears singular; attempting approximate solution");
+        }
+      
+      Mat<eT> AA = A_expr.get_ref();
+      status = auxlib::solve_approx_svd(out, AA, B_expr.get_ref());  // AA is overwritten
+      }
+    }
+  else
+    {
+    arma_extra_debug_print("glue_solve_gen::apply(): detected non-square system");
+    
+    if(equilibrate)  { arma_debug_warn( "solve(): option 'equilibrate' ignored for non-square matrix" ); }
+    
+    if(fast)
+      {
+      status = auxlib::solve_approx_fast(out, A, B_expr.get_ref());  // A is overwritten
+      
+      if(status == false)
+        {
+        Mat<eT> AA = A_expr.get_ref();
+        
+        status = auxlib::solve_approx_svd(out, AA, B_expr.get_ref());  // AA is overwritten
+        }
+      }
+    else
+      {
+      status = auxlib::solve_approx_svd(out, A, B_expr.get_ref());  // A is overwritten
+      }
+    }
+  
+  
+  if(status == false)  { out.reset(); }
+  
+  return status;
+  }
+
+
+
+//
+// glue_solve_tri
+
+
+template<typename T1, typename T2>
+inline
+void
+glue_solve_tri::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_solve_tri>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool status = glue_solve_tri::apply( out, X.A, X.B, X.aux_uword );
+  
+  if(status == false)
+    {
+    arma_bad("solve(): solution not found");
+    }
+  }
+
+
+
+template<typename eT, typename T1, typename T2>
+inline
+bool
+glue_solve_tri::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>& B_expr, const uword flags)
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool fast        = bool(flags & solve_opts::flag_fast       );
+  const bool equilibrate = bool(flags & solve_opts::flag_equilibrate);
+  const bool no_approx   = bool(flags & solve_opts::flag_no_approx  );
+  const bool triu        = bool(flags & solve_opts::flag_triu       );
+  const bool tril        = bool(flags & solve_opts::flag_tril       );
+  
+  arma_extra_debug_print("glue_solve_tri::apply(): enabled flags:");
+  
+  if(fast       )  { arma_extra_debug_print("fast");        }
+  if(equilibrate)  { arma_extra_debug_print("equilibrate"); }
+  if(no_approx  )  { arma_extra_debug_print("no_approx");   }
+  if(triu       )  { arma_extra_debug_print("triu");        }
+  if(tril       )  { arma_extra_debug_print("tril");        }
   
   bool status = false;
   
-  if(A_n_rows == A_n_cols)
+  if(equilibrate)  { arma_debug_warn("solve(): option 'equilibrate' ignored for triangular matrices"); }
+  
+  const unwrap_check<T1> U(A_expr.get_ref(), out);
+  const Mat<eT>& A     = U.M;
+  
+  arma_debug_check( (A.is_square() == false), "solve(): matrix marked as triangular must be square sized" );
+  
+  const uword layout = (triu) ? uword(0) : uword(1);
+  
+  status = auxlib::solve_tri(out, A, B_expr.get_ref(), layout);  // A is not modified
+  
+  if( (status == false) && (no_approx == false) )
     {
-    status = auxlib::solve(out, A, X, slow);
-    }
-  else
-  if(A_n_rows > A_n_cols)
-    {
-    arma_extra_debug_print("solve(): detected over-determined system");
-    status = auxlib::solve_od(out, A, X);
-    }
-  else
-    {
-    arma_extra_debug_print("solve(): detected under-determined system");
-    status = auxlib::solve_ud(out, A, X);
+    arma_extra_debug_print("glue_solve_tri::apply(): solving rank deficient system");
+    
+    arma_debug_warn("system appears singular; attempting approximate solution");
+    
+    Mat<eT> triA = (triu) ? trimatu( A_expr.get_ref() ) : trimatl( A_expr.get_ref() );
+    
+    status = auxlib::solve_approx_svd(out, triA, B_expr.get_ref());  // triA is overwritten
     }
   
-  if(status == false)
-    {
-    out.reset();
-    arma_bad("solve(): solution not found");
-    }
-  }
-
-
-
-template<typename T1, typename T2>
-inline
-void
-glue_solve::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_solve>& X)
-  {
-  arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
+  if(status == false)  { out.reset(); }
   
-  Mat<eT> A = X.A.get_ref();
-  
-  glue_solve::solve_direct( out, A, X.B, (X.aux_uword == 1) );
-  }
-
-
-
-template<typename T1, typename T2>
-inline
-void
-glue_solve_tr::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_solve_tr>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  const unwrap_check<T1> A_tmp(X.A, out);
-  const unwrap_check<T2> B_tmp(X.B, out);
-  
-  const Mat<eT>& A = A_tmp.M;
-  const Mat<eT>& B = B_tmp.M;
-  
-  bool  err_state = false;
-  char* err_msg   = 0;
-  
-  arma_debug_set_error( err_state, err_msg, ((&A) == (&B)),           "solve(): A is an alias of B" );
-  arma_debug_set_error( err_state, err_msg, (A.n_rows != B.n_rows),   "solve(): number of rows in A and B must be the same" );
-  arma_debug_set_error( err_state, err_msg, (A.is_square() == false), "solve(): A is not a square matrix" );
-  
-  arma_debug_check(err_state, err_msg);
-  
-  const bool status = auxlib::solve_tr(out, A, B, X.aux_uword);
-  
-  if(status == false)
-    {
-    out.reset();
-    arma_bad("solve(): solution not found");
-    }
+  return status;
   }
 
 

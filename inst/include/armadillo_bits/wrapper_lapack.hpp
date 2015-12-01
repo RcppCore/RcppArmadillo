@@ -649,6 +649,52 @@ namespace lapack
   template<typename eT>
   inline
   void
+  gesvx(char* fact, char* trans, blas_int* n, blas_int* nrhs, eT* a, blas_int* lda, eT* af, blas_int* ldaf, blas_int* ipiv, char* equed, eT* r, eT* c, eT* b, blas_int* ldb, eT* x, blas_int* ldx, eT* rcond, eT* ferr, eT* berr, eT* work, blas_int* iwork, blas_int* info)
+    {
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
+    
+    if(is_float<eT>::value)
+      {
+      typedef float T;
+      arma_fortran(arma_sgesvx)(fact, trans, n, nrhs, (T*)a, lda, (T*)af, ldaf, ipiv, equed, (T*)r, (T*)c, (T*)b, ldb, (T*)x, ldx, (T*)rcond, (T*)ferr, (T*)berr, (T*)work, iwork, info);
+      }
+    else
+    if(is_double<eT>::value)
+      {
+      typedef double T;
+      arma_fortran(arma_dgesvx)(fact, trans, n, nrhs, (T*)a, lda, (T*)af, ldaf, ipiv, equed, (T*)r, (T*)c, (T*)b, ldb, (T*)x, ldx, (T*)rcond, (T*)ferr, (T*)berr, (T*)work, iwork, info);
+      }
+    }
+  
+  
+  
+  template<typename T, typename eT>
+  inline
+  void
+  cx_gesvx(char* fact, char* trans, blas_int* n, blas_int* nrhs, eT* a, blas_int* lda, eT* af, blas_int* ldaf, blas_int* ipiv, char* equed, T* r, T* c, eT* b, blas_int* ldb, eT* x, blas_int* ldx, T* rcond, T* ferr, T* berr, eT* work, T* rwork, blas_int* info)
+    {
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
+    
+    if(is_supported_complex_float<eT>::value)
+      {
+      typedef float               pod_T;
+      typedef std::complex<float>  cx_T;
+      arma_fortran(arma_cgesvx)(fact, trans, n, nrhs, (cx_T*)a, lda, (cx_T*)af, ldaf, ipiv, equed, (pod_T*)r, (pod_T*)c, (cx_T*)b, ldb, (cx_T*)x, ldx, (pod_T*)rcond, (pod_T*)ferr, (pod_T*)berr, (cx_T*)work, (pod_T*)rwork, info);
+      }
+    else
+    if(is_supported_complex_double<eT>::value)
+      {
+      typedef double               pod_T;
+      typedef std::complex<double>  cx_T;
+      arma_fortran(arma_zgesvx)(fact, trans, n, nrhs, (cx_T*)a, lda, (cx_T*)af, ldaf, ipiv, equed, (pod_T*)r, (pod_T*)c, (cx_T*)b, ldb, (cx_T*)x, ldx, (pod_T*)rcond, (pod_T*)ferr, (pod_T*)berr, (cx_T*)work, (pod_T*)rwork, info);
+      }
+    }
+  
+  
+  
+  template<typename eT>
+  inline
+  void
   gels(char* trans, blas_int* m, blas_int* n, blas_int* nrhs, eT* a, blas_int* lda, eT* b, blas_int* ldb, eT* work, blas_int* lwork, blas_int* info)
     {
     arma_type_check(( is_supported_blas_type<eT>::value == false ));
@@ -675,6 +721,54 @@ namespace lapack
       {
       typedef std::complex<double> T;
       arma_fortran(arma_zgels)(trans, m, n, nrhs, (T*)a, lda, (T*)b, ldb, (T*)work, lwork, info);
+      }
+    }
+  
+  
+  
+  template<typename eT>
+  inline
+  void
+  gelsd(blas_int* m, blas_int* n, blas_int* nrhs, eT* a, blas_int* lda, eT* b, blas_int* ldb, eT* S, eT* rcond, blas_int* rank, eT* work, blas_int* lwork, blas_int* iwork, blas_int* info)
+    {
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
+    
+    if(is_float<eT>::value)
+      {
+      typedef float T;
+      arma_fortran(arma_sgelsd)(m, n, nrhs, (T*)a, lda, (T*)b, ldb, (T*)S, (T*)rcond, rank, (T*)work, lwork, iwork, info);
+      }
+    else
+    if(is_double<eT>::value)
+      {
+      typedef double T;
+      arma_fortran(arma_dgelsd)(m, n, nrhs, (T*)a, lda, (T*)b, ldb, (T*)S, (T*)rcond, rank, (T*)work, lwork, iwork, info);
+      }
+    }
+  
+  
+  
+  template<typename T>
+  inline
+  void
+  cx_gelsd(blas_int* m, blas_int* n, blas_int* nrhs, std::complex<T>* a, blas_int* lda, std::complex<T>* b, blas_int* ldb, T* S, T* rcond, blas_int* rank, std::complex<T>* work, blas_int* lwork, T* rwork, blas_int* iwork, blas_int* info)
+    {
+    typedef typename std::complex<T> eT;
+    
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
+    
+    if(is_supported_complex_float<eT>::value)
+      {
+      typedef float               pod_T;
+      typedef std::complex<float>  cx_T;
+      arma_fortran(arma_cgelsd)(m, n, nrhs, (cx_T*)a, lda, (cx_T*)b, ldb, (pod_T*)S, (pod_T*)rcond, rank, (cx_T*)work, lwork, (pod_T*)rwork, iwork, info);
+      }
+    else
+    if(is_supported_complex_double<eT>::value)
+      {
+      typedef double               pod_T;
+      typedef std::complex<double>  cx_T;
+      arma_fortran(arma_zgelsd)(m, n, nrhs, (cx_T*)a, lda, (cx_T*)b, ldb, (pod_T*)S, (pod_T*)rcond, rank, (cx_T*)work, lwork, (pod_T*)rwork, iwork, info);
       }
     }
   
@@ -717,7 +811,7 @@ namespace lapack
   template<typename eT>
   inline
   void
-  gees(char* jobvs, char* sort, blas_int* select, blas_int* n, eT* a, blas_int* lda, blas_int* sdim, eT* wr, eT* wi, eT* vs, blas_int* ldvs, eT* work, blas_int* lwork, blas_int* bwork, blas_int* info)
+  gees(char* jobvs, char* sort, void* select, blas_int* n, eT* a, blas_int* lda, blas_int* sdim, eT* wr, eT* wi, eT* vs, blas_int* ldvs, eT* work, blas_int* lwork, blas_int* bwork, blas_int* info)
     {
     arma_type_check(( is_supported_blas_type<eT>::value == false ));
     
@@ -739,7 +833,7 @@ namespace lapack
   template<typename T>
   inline
   void
-  cx_gees(char* jobvs, char* sort, blas_int* select, blas_int* n, std::complex<T>* a, blas_int* lda, blas_int* sdim, std::complex<T>* w, std::complex<T>* vs, blas_int* ldvs, std::complex<T>* work, blas_int* lwork, T* rwork, blas_int* bwork, blas_int* info)
+  cx_gees(char* jobvs, char* sort, void* select, blas_int* n, std::complex<T>* a, blas_int* lda, blas_int* sdim, std::complex<T>* w, std::complex<T>* vs, blas_int* ldvs, std::complex<T>* work, blas_int* lwork, T* rwork, blas_int* bwork, blas_int* info)
     {
     arma_type_check(( is_supported_blas_type<T>::value == false ));
     arma_type_check(( is_supported_blas_type< std::complex<T> >::value == false ));
@@ -866,7 +960,7 @@ namespace lapack
   void
   gges
     (
-    char* jobvsl, char* jobvsr, char* sort, char* selctg, blas_int* n,
+    char* jobvsl, char* jobvsr, char* sort, void* selctg, blas_int* n,
     eT* a, blas_int* lda, eT* b, blas_int* ldb, blas_int* sdim,
     eT* alphar, eT* alphai, eT* beta,
     eT* vsl, blas_int* ldvsl, eT* vsr, blas_int* ldvsr,
@@ -896,7 +990,7 @@ namespace lapack
   void
   cx_gges
     (
-    char* jobvsl, char* jobvsr, char* sort, char* selctg, blas_int* n,
+    char* jobvsl, char* jobvsr, char* sort, void* selctg, blas_int* n,
     eT* a, blas_int* lda, eT* b, blas_int* ldb, blas_int* sdim,
     eT* alpha, eT* beta,
     eT* vsl, blas_int* ldvsl, eT* vsr, blas_int* ldvsr,
@@ -923,6 +1017,101 @@ namespace lapack
     }
   
   
+  
+  template<typename eT>
+  inline
+  typename get_pod_type<eT>::result
+  lange(char* norm, blas_int* m, blas_int* n, eT* a, blas_int* lda, typename get_pod_type<eT>::result* work)
+    {
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
+    
+    typedef typename get_pod_type<eT>::result out_T;
+    
+    if(is_float<eT>::value)
+      {
+      typedef float pod_T;
+      typedef float     T;
+      return out_T( arma_fortran(arma_slange)(norm, m, n, (T*)a, lda, (pod_T*)work) );
+      }
+    else
+    if(is_double<eT>::value)
+      {
+      typedef double pod_T;
+      typedef double     T;
+      return out_T( arma_fortran(arma_dlange)(norm, m, n, (T*)a, lda, (pod_T*)work) );
+      }
+    else
+    if(is_supported_complex_float<eT>::value)
+      {
+      typedef float               pod_T;
+      typedef std::complex<float>     T;
+      return out_T( arma_fortran(arma_clange)(norm, m, n, (T*)a, lda, (pod_T*)work) );
+      }
+    else
+    if(is_supported_complex_double<eT>::value)
+      {
+      typedef double               pod_T;
+      typedef std::complex<double>     T;
+      return out_T( arma_fortran(arma_zlange)(norm, m, n, (T*)a, lda, (pod_T*)work) );
+      }
+    }
+  
+
+
+  template<typename eT>
+  inline
+  void
+  gecon(char* norm, blas_int* n, eT* a, blas_int* lda, eT* anorm, eT* rcond, eT* work, blas_int* iwork, blas_int* info)
+    {
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
+    
+    if(is_float<eT>::value)
+      {
+      typedef float T;
+      arma_fortran(arma_sgecon)(norm, n, (T*)a, lda, (T*)anorm, (T*)rcond, (T*)work, iwork, info);
+      }
+    else
+    if(is_double<eT>::value)
+      {
+      typedef double T;
+      arma_fortran(arma_dgecon)(norm, n, (T*)a, lda, (T*)anorm, (T*)rcond, (T*)work, iwork, info);
+      }
+    }
+  
+  
+  
+  template<typename T>
+  inline
+  void
+  cx_gecon(char* norm, blas_int* n, std::complex<T>* a, blas_int* lda, T* anorm, T* rcond, std::complex<T>* work, T* rwork, blas_int* info)
+    {
+    typedef typename std::complex<T> eT;
+    
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
+    
+    if(is_supported_complex_float<eT>::value)
+      {
+      typedef float                    pod_T;
+      typedef typename std::complex<T>  cx_T;
+      arma_fortran(arma_cgecon)(norm, n, (cx_T*)a, lda, (pod_T*)anorm, (pod_T*)rcond, (cx_T*)work, (pod_T*)rwork, info);
+      }
+    else
+    if(is_supported_complex_double<eT>::value)
+      {
+      typedef double                   pod_T;
+      typedef typename std::complex<T>  cx_T;
+      arma_fortran(arma_zgecon)(norm, n, (cx_T*)a, lda, (pod_T*)anorm, (pod_T*)rcond, (cx_T*)work, (pod_T*)rwork, info);
+      }
+    }
+  
+  
+  
+  inline
+  blas_int
+  laenv(blas_int* ispec, char* name, char* opts, blas_int* n1, blas_int* n2, blas_int* n3, blas_int* n4)
+    {
+    return arma_fortran(arma_ilaenv)(ispec, name, opts, n1, n2, n3, n4);
+    }
   }
 
 

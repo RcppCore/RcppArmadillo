@@ -171,7 +171,7 @@ namespace blas
         blas_int inc = 1;
         
         typedef float T;
-        return arma_fortran(arma_sdot)(&n, (const T*)x, &inc, (const T*)y, &inc);
+        return eT( arma_fortran(arma_sdot)(&n, (const T*)x, &inc, (const T*)y, &inc) );
         }
       #endif
       }
@@ -182,7 +182,7 @@ namespace blas
       blas_int inc = 1;
       
       typedef double T;
-      return arma_fortran(arma_ddot)(&n, (const T*)x, &inc, (const T*)y, &inc);
+      return eT( arma_fortran(arma_ddot)(&n, (const T*)x, &inc, (const T*)y, &inc) );
       }
     else
     if( (is_supported_complex_float<eT>::value) || (is_supported_complex_double<eT>::value) )

@@ -18,8 +18,8 @@
 
 template<typename parent, unsigned int mode>
 inline
-subview_each_common<parent,mode>::subview_each_common(const parent& in_p)
-  : p(in_p)
+subview_each_common<parent,mode>::subview_each_common(const parent& in_P)
+  : P(in_P)
   {
   arma_extra_debug_sigprint();
   }
@@ -51,7 +51,7 @@ arma_inline
 const Mat<typename parent::elem_type>&
 subview_each_common<parent,mode>::get_mat_ref() const
   {
-  return get_mat_ref_helper(p);
+  return get_mat_ref_helper(P);
   }
 
 
@@ -65,14 +65,14 @@ subview_each_common<parent,mode>::check_size(const Mat<typename parent::elem_typ
     {
     if(mode == 0)
       {
-      if( (A.n_rows != p.n_rows) || (A.n_cols != 1) )
+      if( (A.n_rows != P.n_rows) || (A.n_cols != 1) )
         {
         arma_stop( incompat_size_string(A) );
         }
       }
     else
       {
-      if( (A.n_rows != 1) || (A.n_cols != p.n_cols) )
+      if( (A.n_rows != 1) || (A.n_cols != P.n_cols) )
         {
         arma_stop( incompat_size_string(A) );
         }
@@ -92,11 +92,11 @@ subview_each_common<parent,mode>::incompat_size_string(const Mat<typename parent
   
   if(mode == 0)
     {
-    tmp << "each_col(): incompatible size; expected " << p.n_rows << "x1" << ", got " << A.n_rows << 'x' << A.n_cols;
+    tmp << "each_col(): incompatible size; expected " << P.n_rows << "x1" << ", got " << A.n_rows << 'x' << A.n_cols;
     }
   else
     {
-    tmp << "each_row(): incompatible size; expected 1x" << p.n_cols << ", got " << A.n_rows << 'x' << A.n_cols;
+    tmp << "each_row(): incompatible size; expected 1x" << P.n_cols << ", got " << A.n_rows << 'x' << A.n_cols;
     }
   
   return tmp.str();
@@ -121,8 +121,8 @@ subview_each1<parent,mode>::~subview_each1()
 
 template<typename parent, unsigned int mode>
 inline
-subview_each1<parent,mode>::subview_each1(const parent& in_p)
-  : subview_each_common<parent,mode>::subview_each_common(in_p)
+subview_each1<parent,mode>::subview_each1(const parent& in_P)
+  : subview_each_common<parent,mode>::subview_each_common(in_P)
   {
   arma_extra_debug_sigprint();
   }
@@ -137,7 +137,7 @@ subview_each1<parent,mode>::operator= (const Base<eT,T1>& in)
   {
   arma_extra_debug_sigprint();
   
-  parent& p = access::rw(subview_each_common<parent,mode>::p);
+  parent& p = access::rw(subview_each_common<parent,mode>::P);
   
   const unwrap_check<T1> tmp( in.get_ref(), (*this).get_mat_ref() );
   const Mat<eT>& A     = tmp.M;
@@ -174,7 +174,7 @@ subview_each1<parent,mode>::operator+= (const Base<eT,T1>& in)
   {
   arma_extra_debug_sigprint();
   
-  parent& p = access::rw(subview_each_common<parent,mode>::p);
+  parent& p = access::rw(subview_each_common<parent,mode>::P);
   
   const unwrap_check<T1> tmp( in.get_ref(), (*this).get_mat_ref() );
   const Mat<eT>& A     = tmp.M;
@@ -211,7 +211,7 @@ subview_each1<parent,mode>::operator-= (const Base<eT,T1>& in)
   {
   arma_extra_debug_sigprint();
   
-  parent& p = access::rw(subview_each_common<parent,mode>::p);
+  parent& p = access::rw(subview_each_common<parent,mode>::P);
   
   const unwrap_check<T1> tmp( in.get_ref(), (*this).get_mat_ref() );
   const Mat<eT>& A     = tmp.M;
@@ -248,7 +248,7 @@ subview_each1<parent,mode>::operator%= (const Base<eT,T1>& in)
   {
   arma_extra_debug_sigprint();
   
-  parent& p = access::rw(subview_each_common<parent,mode>::p);
+  parent& p = access::rw(subview_each_common<parent,mode>::P);
   
   const unwrap_check<T1> tmp( in.get_ref(), (*this).get_mat_ref() );
   const Mat<eT>& A     = tmp.M;
@@ -285,7 +285,7 @@ subview_each1<parent,mode>::operator/= (const Base<eT,T1>& in)
   {
   arma_extra_debug_sigprint();
   
-  parent& p = access::rw(subview_each_common<parent,mode>::p);
+  parent& p = access::rw(subview_each_common<parent,mode>::P);
   
   const unwrap_check<T1> tmp( in.get_ref(), (*this).get_mat_ref() );
   const Mat<eT>& A     = tmp.M;
@@ -331,8 +331,8 @@ subview_each2<parent,mode,TB>::~subview_each2()
 
 template<typename parent, unsigned int mode, typename TB>
 inline
-subview_each2<parent,mode,TB>::subview_each2(const parent& in_p, const Base<uword, TB>& in_indices)
-  : subview_each_common<parent,mode>::subview_each_common(in_p)
+subview_each2<parent,mode,TB>::subview_each2(const parent& in_P, const Base<uword, TB>& in_indices)
+  : subview_each_common<parent,mode>::subview_each_common(in_P)
   , base_indices(in_indices)
   {
   arma_extra_debug_sigprint();
@@ -365,7 +365,7 @@ subview_each2<parent,mode,TB>::operator= (const Base<eT,T1>& in)
   {
   arma_extra_debug_sigprint();
   
-  parent& p = access::rw(subview_each_common<parent,mode>::p);
+  parent& p = access::rw(subview_each_common<parent,mode>::P);
   
   const unwrap_check<T1> tmp( in.get_ref(), (*this).get_mat_ref() );
   const Mat<eT>& A     = tmp.M;
@@ -420,7 +420,7 @@ subview_each2<parent,mode,TB>::operator+= (const Base<eT,T1>& in)
   {
   arma_extra_debug_sigprint();
   
-  parent& p = access::rw(subview_each_common<parent,mode>::p);
+  parent& p = access::rw(subview_each_common<parent,mode>::P);
   
   const unwrap_check<T1> tmp( in.get_ref(), (*this).get_mat_ref() );
   const Mat<eT>& A     = tmp.M;
@@ -473,7 +473,7 @@ subview_each2<parent,mode,TB>::operator-= (const Base<eT,T1>& in)
   {
   arma_extra_debug_sigprint();
   
-  parent& p = access::rw(subview_each_common<parent,mode>::p);
+  parent& p = access::rw(subview_each_common<parent,mode>::P);
   
   const unwrap_check<T1> tmp( in.get_ref(), (*this).get_mat_ref() );
   const Mat<eT>& A     = tmp.M;
@@ -526,7 +526,7 @@ subview_each2<parent,mode,TB>::operator%= (const Base<eT,T1>& in)
   {
   arma_extra_debug_sigprint();
   
-  parent& p = access::rw(subview_each_common<parent,mode>::p);
+  parent& p = access::rw(subview_each_common<parent,mode>::P);
   
   const unwrap_check<T1> tmp( in.get_ref(), (*this).get_mat_ref() );
   const Mat<eT>& A     = tmp.M;
@@ -579,7 +579,7 @@ subview_each2<parent,mode,TB>::operator/= (const Base<eT,T1>& in)
   {
   arma_extra_debug_sigprint();
   
-  parent& p = access::rw(subview_each_common<parent,mode>::p);
+  parent& p = access::rw(subview_each_common<parent,mode>::P);
   
   const unwrap_check<T1> tmp( in.get_ref(), (*this).get_mat_ref() );
   const Mat<eT>& A     = tmp.M;
@@ -643,7 +643,7 @@ subview_each1_aux::operator_plus
   
   typedef typename parent::elem_type eT;
   
-  const parent& p = X.p;
+  const parent& p = X.P;
   
   const uword p_n_rows = p.n_rows;
   const uword p_n_cols = p.n_cols;
@@ -705,7 +705,7 @@ subview_each1_aux::operator_minus
   
   typedef typename parent::elem_type eT;
   
-  const parent& p = X.p;
+  const parent& p = X.P;
   
   const uword p_n_rows = p.n_rows;
   const uword p_n_cols = p.n_cols;
@@ -767,7 +767,7 @@ subview_each1_aux::operator_minus
   
   typedef typename parent::elem_type eT;
   
-  const parent& p = Y.p;
+  const parent& p = Y.P;
   
   const uword p_n_rows = p.n_rows;
   const uword p_n_cols = p.n_cols;
@@ -829,7 +829,7 @@ subview_each1_aux::operator_schur
   
   typedef typename parent::elem_type eT;
   
-  const parent& p = X.p;
+  const parent& p = X.P;
   
   const uword p_n_rows = p.n_rows;
   const uword p_n_cols = p.n_cols;
@@ -891,7 +891,7 @@ subview_each1_aux::operator_div
   
   typedef typename parent::elem_type eT;
   
-  const parent& p = X.p;
+  const parent& p = X.P;
   
   const uword p_n_rows = p.n_rows;
   const uword p_n_cols = p.n_cols;
@@ -953,7 +953,7 @@ subview_each1_aux::operator_div
   
   typedef typename parent::elem_type eT;
   
-  const parent& p = Y.p;
+  const parent& p = Y.P;
   
   const uword p_n_rows = p.n_rows;
   const uword p_n_cols = p.n_cols;
@@ -1021,7 +1021,7 @@ subview_each2_aux::operator_plus
   
   typedef typename parent::elem_type eT;
   
-  const parent& p = X.p;
+  const parent& p = X.P;
   
   const uword p_n_rows = p.n_rows;
   const uword p_n_cols = p.n_cols;
@@ -1083,7 +1083,7 @@ subview_each2_aux::operator_minus
   
   typedef typename parent::elem_type eT;
   
-  const parent& p = X.p;
+  const parent& p = X.P;
   
   const uword p_n_rows = p.n_rows;
   const uword p_n_cols = p.n_cols;
@@ -1145,7 +1145,7 @@ subview_each2_aux::operator_minus
   
   typedef typename parent::elem_type eT;
   
-  const parent& p = Y.p;
+  const parent& p = Y.P;
   
   const uword p_n_rows = p.n_rows;
   const uword p_n_cols = p.n_cols;
@@ -1213,7 +1213,7 @@ subview_each2_aux::operator_schur
   
   typedef typename parent::elem_type eT;
   
-  const parent& p = X.p;
+  const parent& p = X.P;
   
   const uword p_n_rows = p.n_rows;
   const uword p_n_cols = p.n_cols;
@@ -1275,7 +1275,7 @@ subview_each2_aux::operator_div
   
   typedef typename parent::elem_type eT;
   
-  const parent& p = X.p;
+  const parent& p = X.P;
   
   const uword p_n_rows = p.n_rows;
   const uword p_n_cols = p.n_cols;
@@ -1337,7 +1337,7 @@ subview_each2_aux::operator_div
   
   typedef typename parent::elem_type eT;
   
-  const parent& p = Y.p;
+  const parent& p = Y.P;
   
   const uword p_n_rows = p.n_rows;
   const uword p_n_cols = p.n_cols;
