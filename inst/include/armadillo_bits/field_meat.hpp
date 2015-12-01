@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2014 National ICT Australia (NICTA)
+// Copyright (C) 2008-2015 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -252,6 +252,165 @@ field<oT>::set_size(const SizeCube& s)
   {
   init(s.n_rows, s.n_cols, s.n_slices);
   }
+
+
+
+#if defined(ARMA_USE_CXX11)
+  
+  template<typename oT>
+  inline
+  field<oT>::field(const std::initializer_list<oT>& list)
+    : n_rows  (0)
+    , n_cols  (0)
+    , n_slices(0)
+    , n_elem  (0)
+    {
+    arma_extra_debug_sigprint_this(this);
+    
+    (*this).operator=(list);
+    }
+  
+  
+  
+  template<typename oT>
+  inline
+  const field<oT>&
+  field<oT>::operator=(const std::initializer_list<oT>& list)
+    {
+    arma_extra_debug_sigprint();
+    
+    const uword N = uword(list.size());
+    
+    set_size(1, N);
+    
+    const oT* item_ptr = list.begin();
+    
+    for(uword i=0; i<N; ++i)
+      {
+      operator[](i) = item_ptr[i];
+      }
+    
+    return *this;
+    }
+  
+  
+  
+  template<typename oT>
+  inline
+  field<oT>::field(const std::initializer_list< std::initializer_list<oT> >& list)
+    : n_rows  (0)
+    , n_cols  (0)
+    , n_slices(0)
+    , n_elem  (0)
+    {
+    arma_extra_debug_sigprint_this(this);
+    
+    (*this).operator=(list);
+    }
+  
+  
+  
+  template<typename oT>
+  inline
+  const field<oT>&
+  field<oT>::operator=(const std::initializer_list< std::initializer_list<oT> >& list)
+    {
+    arma_extra_debug_sigprint();
+    
+    uword x_n_rows = uword(list.size());
+    uword x_n_cols = 0;
+    
+    bool x_n_cols_found = false;
+    
+    auto it     = list.begin();
+    auto it_end = list.end();
+    
+    for(; it != it_end; ++it)
+      {
+      if(x_n_cols_found == false)
+        {
+        x_n_cols       = uword( (*it).size() );
+        x_n_cols_found = true;
+        }
+      else
+        {
+        arma_check( (uword((*it).size()) != x_n_cols), "Mat::init(): inconsistent number of columns in initialiser list" );
+        }
+      }
+    
+    field<oT>& t = (*this);
+    
+    t.set_size(x_n_rows, x_n_cols);
+    
+    uword row_num = 0;
+    
+    auto row_it     = list.begin();
+    auto row_it_end = list.end();
+    
+    for(; row_it != row_it_end; ++row_it)
+      {
+      uword col_num = 0;
+      
+      auto col_it     = (*row_it).begin();
+      auto col_it_end = (*row_it).end();
+      
+      for(; col_it != col_it_end; ++col_it)
+        {
+        t.at(row_num, col_num) = (*col_it);
+        ++col_num;
+        }
+      
+      ++row_num;
+      }
+    
+    return *this;
+    }
+  
+  
+  
+  template<typename oT>
+  inline
+  field<oT>::field(field<oT>&& X)
+    : n_rows  (X.n_rows  )
+    , n_cols  (X.n_cols  )
+    , n_slices(X.n_slices)
+    , n_elem  (X.n_elem  )
+    , mem     (X.mem     )
+    {
+    arma_extra_debug_sigprint(arma_boost::format("this = %x   X = %x") % this % &X);
+    
+    access::rw(X.n_rows  ) = 0;
+    access::rw(X.n_cols  ) = 0;
+    access::rw(X.n_slices) = 0;
+    access::rw(X.n_elem  ) = 0;
+    access::rw(X.mem     ) = 0;
+    }
+  
+  
+  
+  template<typename oT>
+  inline
+  const field<oT>&
+  field<oT>::operator=(field<oT>&& X)
+    {
+    arma_extra_debug_sigprint(arma_boost::format("this = %x   X = %x") % this % &X);
+    
+    access::rw(n_rows  ) = X.n_rows;
+    access::rw(n_cols  ) = X.n_cols;
+    access::rw(n_slices) = X.n_slices;
+    access::rw(n_elem  ) = X.n_elem;
+    access::rw(mem     ) = X.mem;
+    
+    access::rw(X.n_rows  ) = 0;
+    access::rw(X.n_cols  ) = 0;
+    access::rw(X.n_elem  ) = 0;
+    access::rw(X.n_slices) = 0;
+    access::rw(X.mem     ) = 0;
+    
+    return *this;
+    }
+  
+#endif
 
 
 
@@ -1203,10 +1362,31 @@ field<oT>::print(std::ostream& user_stream, const std::string extra_text) const
 
 
 
+//! apply a functor to each object
+template<typename oT>
+template<typename functor>
+inline
+const field<oT>&
+field<oT>::for_each(functor F)
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword N = n_elem;
+  
+  for(uword i=0; i < N; ++i)
+    {
+    F(operator[](i));
+    }
+  
+  return *this;
+  }
+
+
+
 //! fill the field with an object
 template<typename oT>
 inline
-void
+const field<oT>&
 field<oT>::fill(const oT& x)
   {
   arma_extra_debug_sigprint();
@@ -1217,6 +1397,8 @@ field<oT>::fill(const oT& x)
     {
     t[i] = x;
     }
+  
+  return *this;
   }
 
 

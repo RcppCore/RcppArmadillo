@@ -16,8 +16,10 @@
 template<typename derived>
 struct Base_inv_yes
   {
-  arma_inline const Op<derived,op_inv> i(const bool  slow   = false) const;   //!< matrix inverse
-  arma_inline const Op<derived,op_inv> i(const char* method        ) const;   //!< matrix inverse
+  arma_inline const Op<derived,op_inv> i() const;   //!< matrix inverse
+  
+  arma_inline const Op<derived,op_inv> i(const bool ) const;   //!< kept only for compatibility with old user code
+  arma_inline const Op<derived,op_inv> i(const char*) const;   //!< kept only for compatibility with old user code
   };
 
 

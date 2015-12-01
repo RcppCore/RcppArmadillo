@@ -1,5 +1,18 @@
 \name{NEWS}
 \title{News for Package 'RcppArmadillo'}
+\newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
+\newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
+
+\section{Changes in RcppArmadillo version 0.6.300.0.0 [test release] (2015-10-31)}{
+  \itemize{
+    \item Upgraded to Armadillo 6.300.0 ("tba")
+    \itemize{
+      \item tbd
+    }
+  }
+  \item Added support for \code{Cube} types via \code{as<>} converters
+  (PR \ghpr{64} by Nathan Russell, fixing \ghit{63})
+}
 
 \section{Changes in RcppArmadillo version 0.6.200.2.0 (2015-10-31)}{
   \itemize{

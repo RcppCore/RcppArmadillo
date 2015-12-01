@@ -12,20 +12,24 @@
 //! @{
 
 
-#if   UCHAR_MAX >= 0xff
-  typedef unsigned char    u8;
-  typedef          char    s8;
-#elif defined(UINT8_MAX)
-  typedef          uint8_t u8;
-  typedef           int8_t s8;
+#if (defined(ARMA_U8_TYPE) && defined(ARMA_S8_TYPE))
+    typedef ARMA_U8_TYPE     u8;
+    typedef ARMA_S8_TYPE     s8;
 #else
-  #error "don't know how to typedef 'u8' on this system"
+  #if   UCHAR_MAX >= 0xff
+    typedef unsigned char    u8;
+    typedef          char    s8;
+  #elif defined(UINT8_MAX)
+    typedef          uint8_t u8;
+    typedef           int8_t s8;
+  #else
+    #error "don't know how to typedef 'u8' on this system"
+  #endif
 #endif
 
 // NOTE:
-// "signed char" is not the same as "char". 
-// http://www.embedded.com/columns/programmingpointers/206107018
-// http://en.wikipedia.org/wiki/C_variable_types_and_declarations
+// "char" is not guaranteed to be the same as "signed char" 
+// https://en.wikipedia.org/wiki/C_data_types
 
 
 #if   USHRT_MAX >= 0xffff

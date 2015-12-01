@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2014 National ICT Australia (NICTA)
+// Copyright (C) 2008-2015 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -69,6 +69,9 @@ class subview_field
   inline void print(const std::string extra_text = "") const;
   inline void print(std::ostream& user_stream, const std::string extra_text = "") const;
   
+  template<typename functor> inline void for_each(functor F);
+  
+  inline void fill(const oT& x);
   
   inline static void extract(field<oT>& out, const subview_field& in);
   

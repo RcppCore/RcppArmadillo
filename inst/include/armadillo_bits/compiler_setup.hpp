@@ -328,7 +328,7 @@
   
   #if defined(__apple_build_version__)
     #undef ARMA_USE_EXTERN_CXX11_RNG
-    // because Apple engineers are too lazy to implement thread_local
+    // TODO: check the status of support for "extern thread_local" in clang shipped with Mac OS X
   #endif
   
   #if (defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE >= 200112L))
@@ -368,9 +368,11 @@
   #endif
   
   #if defined(ARMA_USE_CXX11)
-    #if (_MSC_VER < 1800)
+    #if (_MSC_VER < 1900)
       #pragma message ("WARNING: compiler is in C++11 mode, but it has incomplete support for C++11 features;")
-      #pragma message ("WARNING: if something breaks, you get to keep all the pieces")
+      #pragma message ("WARNING: if something breaks, you get to keep all the pieces.")
+      #pragma message ("WARNING: to forcefully prevent Armadillo from using C++11 features,")
+      #pragma message ("WARNING: #define ARMA_DONT_USE_CXX11 before #include <armadillo>")
     #endif
   #endif
   

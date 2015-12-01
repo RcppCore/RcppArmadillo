@@ -127,7 +127,7 @@ subview<eT>::inplace_op(const Base<eT,T1>& in, const char* identifier)
   
   const bool is_alias = P.is_alias(s.m);
   
-  arma_extra_debug_warn(is_alias, "aliasing detected");
+  if(is_alias)  { arma_extra_debug_print("aliasing detected"); }
   
   if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (is_alias) )
     {
@@ -695,6 +695,49 @@ subview<eT>::operator= (const Gen<T1,gen_type>& in)
   arma_debug_assert_same_size(n_rows, n_cols, in.n_rows, in.n_cols, "copy into submatrix");
   
   in.apply(*this);
+  }
+
+
+
+//! apply a functor to each element
+template<typename eT>
+template<typename functor>
+inline
+void
+subview<eT>::for_each(functor F)
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword local_n_cols = n_cols;
+  const uword local_n_rows = n_rows;
+  
+  Mat<eT>& X = const_cast< Mat<eT>& >(m);
+  
+  if(local_n_rows == 1)
+    {
+    const uword urow          = aux_row1;
+    const uword start_col     = aux_col1;
+    const uword end_col_plus1 = start_col + local_n_cols;
+    
+    for(uword ucol = start_col; ucol < end_col_plus1; ++ucol)
+      {
+      F( X.at(urow, ucol) );
+      }
+    }
+  else
+    {
+    const uword start_col = aux_col1;
+    const uword start_row = aux_row1;
+    
+    const uword end_col_plus1 = start_col + local_n_cols;
+    const uword end_row_plus1 = start_row + local_n_rows;
+    
+    for(uword ucol = start_col; ucol < end_col_plus1; ++ucol)
+    for(uword urow = start_row; urow < end_row_plus1; ++urow)
+      {
+      F( X.at(urow, ucol) );
+      }
+    }
   }
 
 
