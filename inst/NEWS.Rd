@@ -9,9 +9,9 @@
     \itemize{
       \item tbd
     }
+    \item Added support for \code{Cube} types via \code{as<>} converters
+    (PR \ghpr{64} by Nathan Russell, fixing \ghit{63})
   }
-  \item Added support for \code{Cube} types via \code{as<>} converters
-  (PR \ghpr{64} by Nathan Russell, fixing \ghit{63})
 }
 
 \section{Changes in RcppArmadillo version 0.6.200.2.0 (2015-10-31)}{
