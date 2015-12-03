@@ -317,11 +317,11 @@ struct superlu_opts : public spsolve_opts_base
   inline superlu_opts()
     : spsolve_opts_base(1)
     {
-    equilibrate  = true;
+    equilibrate  = false;
     symmetric    = false;
     pivot_thresh = 1.0;
     permutation  = COLAMD;
-    refine       = REF_NONE;
+    refine       = REF_DOUBLE;
     }
   };
 

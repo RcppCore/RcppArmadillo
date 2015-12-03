@@ -21,7 +21,7 @@ field<oT>::~field()
   
   delete_objects();
   
-  if(n_elem > sizeof(mem_local)/sizeof(oT*) )
+  if(n_elem > field_prealloc_n_elem::val)
     {
     delete [] mem;
     }
@@ -375,9 +375,18 @@ field<oT>::set_size(const SizeCube& s)
     , n_cols  (X.n_cols  )
     , n_slices(X.n_slices)
     , n_elem  (X.n_elem  )
-    , mem     (X.mem     )
     {
     arma_extra_debug_sigprint(arma_boost::format("this = %x   X = %x") % this % &X);
+    
+    if(n_elem > field_prealloc_n_elem::val)
+      {
+      mem = X.mem;
+      }
+    else
+      {
+      arrayops::copy(&mem_local[0], &X.mem_local[0], n_elem);
+      mem = mem_local;
+      }
     
     access::rw(X.n_rows  ) = 0;
     access::rw(X.n_cols  ) = 0;
@@ -399,7 +408,16 @@ field<oT>::set_size(const SizeCube& s)
     access::rw(n_cols  ) = X.n_cols;
     access::rw(n_slices) = X.n_slices;
     access::rw(n_elem  ) = X.n_elem;
-    access::rw(mem     ) = X.mem;
+    
+    if(n_elem > field_prealloc_n_elem::val)
+      {
+      mem = X.mem;
+      }
+    else
+      {
+      arrayops::copy(&mem_local[0], &X.mem_local[0], n_elem);
+      mem = mem_local;
+      }
     
     access::rw(X.n_rows  ) = 0;
     access::rw(X.n_cols  ) = 0;
@@ -1889,12 +1907,12 @@ field<oT>::init(const uword n_rows_in, const uword n_cols_in, const uword n_slic
     {
     delete_objects();
     
-    if(n_elem > sizeof(mem_local)/sizeof(oT*) )
+    if(n_elem > field_prealloc_n_elem::val)
       {
       delete [] mem;
       }
     
-    if(n_elem_new <= sizeof(mem_local)/sizeof(oT*) )
+    if(n_elem_new <= field_prealloc_n_elem::val)
       {
       mem = mem_local;
       }

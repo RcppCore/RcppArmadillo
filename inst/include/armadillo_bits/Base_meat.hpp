@@ -229,7 +229,7 @@ Base_inv_yes<derived>::i(const bool) const   // argument kept only for compatibi
 template<typename derived>
 arma_inline
 const Op<derived,op_inv>
-Base_inv_yes<derived>::i(const char* method) const   // argument kept only for compatibility with old user code
+Base_inv_yes<derived>::i(const char*) const   // argument kept only for compatibility with old user code
   {
   return Op<derived,op_inv>(static_cast<const derived&>(*this));
   }

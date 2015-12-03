@@ -135,6 +135,14 @@ namespace superlu
     yes_no_t      lookahead_etree;
     yes_no_t      SymPattern;
     } superlu_options_t;
+
+
+  typedef struct
+    {
+    float for_lu;
+    float total_needed;
+    } mem_usage_t;
+  
   }
 }
 
@@ -252,6 +260,13 @@ namespace superlu
     yes_no_t      lookahead_etree;
     yes_no_t      SymPattern;
     } superlu_options_t;
+  
+  
+  typedef struct
+    {
+    float for_lu;
+    float total_needed;
+    } mem_usage_t;
   
   
   typedef struct
