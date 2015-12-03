@@ -3,11 +3,15 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.6.300.0.0 [test release] (2015-10-31)}{
+\section{Changes in RcppArmadillo version 0.6.300.2.0 (2015-12-03)}{
   \itemize{
-    \item Upgraded to Armadillo 6.300.0 ("tba")
+    \item Upgraded to Armadillo 6.300.2 ("Flying Spaghetti Monster")
     \itemize{
-      \item tbd
+      \item expanded \code{solve()} to find approximate solutions for rank-deficient systems
+      \item faster handling of non-contiguous submatrix views in compound expressions
+      \item added \code{.for_each()} to Mat, Row, Col, Cube and field classes
+      \item added \code{rcond()} for estimating the reciprocal condition number
+      \item fixes for \code{spsolve()}, \code{eigs_sym()}, \code{eigs_gen()}, \code{svds()}
     }
     \item Added support for \code{Cube} types via \code{as<>} converters
     (PR \ghpr{64} by Nathan Russell, fixing \ghit{63} and \ghit{42})

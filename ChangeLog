@@ -1,3 +1,12 @@
+2015-12-03  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.6.300.2.0
+        * inst/NEWS.Rd: Release 0.6.300.2.0
+
+	* inst/include/*: Upgraded to release 6.300.2 of Armadillo
+
+        * debian/*: Changes for Debian release of 0.6.300.2.0
+
 2015-12-01  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.6.299.0.0 [GitHub only]
