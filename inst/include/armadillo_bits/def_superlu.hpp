@@ -17,6 +17,11 @@ extern "C"
   extern void arma_wrapper(cgssv)(superlu::superlu_options_t*, superlu::SuperMatrix*, int*, int*, superlu::SuperMatrix*, superlu::SuperMatrix*, superlu::SuperMatrix*, superlu::SuperLUStat_t*, int*);
   extern void arma_wrapper(zgssv)(superlu::superlu_options_t*, superlu::SuperMatrix*, int*, int*, superlu::SuperMatrix*, superlu::SuperMatrix*, superlu::SuperMatrix*, superlu::SuperLUStat_t*, int*);
   
+  extern void arma_wrapper(sgssvx)(superlu::superlu_options_t*, superlu::SuperMatrix*, int*, int*, int*, char*,  float*,  float*, superlu::SuperMatrix*, superlu::SuperMatrix*, void*, int, superlu::SuperMatrix*, superlu::SuperMatrix*,  float*,  float*,  float*,  float*, superlu::mem_usage_t*, superlu::SuperLUStat_t*, int*);
+  extern void arma_wrapper(dgssvx)(superlu::superlu_options_t*, superlu::SuperMatrix*, int*, int*, int*, char*, double*, double*, superlu::SuperMatrix*, superlu::SuperMatrix*, void*, int, superlu::SuperMatrix*, superlu::SuperMatrix*, double*, double*, double*, double*, superlu::mem_usage_t*, superlu::SuperLUStat_t*, int*);
+  extern void arma_wrapper(cgssvx)(superlu::superlu_options_t*, superlu::SuperMatrix*, int*, int*, int*, char*,  float*,  float*, superlu::SuperMatrix*, superlu::SuperMatrix*, void*, int, superlu::SuperMatrix*, superlu::SuperMatrix*,  float*,  float*,  float*,  float*, superlu::mem_usage_t*, superlu::SuperLUStat_t*, int*);
+  extern void arma_wrapper(zgssvx)(superlu::superlu_options_t*, superlu::SuperMatrix*, int*, int*, int*, char*, double*, double*, superlu::SuperMatrix*, superlu::SuperMatrix*, void*, int, superlu::SuperMatrix*, superlu::SuperMatrix*, double*, double*, double*, double*, superlu::mem_usage_t*, superlu::SuperLUStat_t*, int*);
+  
   extern void arma_wrapper(StatInit)(superlu::SuperLUStat_t*);
   extern void arma_wrapper(StatFree)(superlu::SuperLUStat_t*);
   extern void arma_wrapper(set_default_options)(superlu::superlu_options_t*);

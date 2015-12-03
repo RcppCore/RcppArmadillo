@@ -46,14 +46,19 @@ class sp_auxlib
   // spsolve() via SuperLU
   
   template<typename T1, typename T2>
-  inline static bool spsolve(Mat<typename T1::elem_type>& out, const SpBase<typename T1::elem_type, T1>& A, const Base<typename T1::elem_type, T2>& B, const superlu_opts& user_opts);
+  inline static bool spsolve_simple(Mat<typename T1::elem_type>& out, const SpBase<typename T1::elem_type, T1>& A, const Base<typename T1::elem_type, T2>& B, const superlu_opts& user_opts);
+  
+  template<typename T1, typename T2>
+  inline static bool spsolve_refine(Mat<typename T1::elem_type>& out, typename T1::pod_type& out_rcond, const SpBase<typename T1::elem_type, T1>& A, const Base<typename T1::elem_type, T2>& B, const superlu_opts& user_opts);
   
   #if defined(ARMA_USE_SUPERLU)
-    template<typename eT>
-    inline static bool convert_to_supermatrix(superlu::SuperMatrix& out, const SpMat<eT>& A);
+    inline static void set_superlu_opts(superlu::superlu_options_t& options, const superlu_opts& user_opts);
     
     template<typename eT>
-    inline static bool convert_to_supermatrix(superlu::SuperMatrix& out, const Mat<eT>& A);
+    inline static bool copy_to_supermatrix(superlu::SuperMatrix& out, const SpMat<eT>& A);
+    
+    template<typename eT>
+    inline static bool wrap_to_supermatrix(superlu::SuperMatrix& out, const Mat<eT>& A);
     
     inline static void destroy_supermatrix(superlu::SuperMatrix& out);
   #endif

@@ -31,11 +31,14 @@ spsolve_helper
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
+  typedef typename T1::pod_type   T;
   typedef typename T1::elem_type eT;
   
   const char sig = (solver != NULL) ? solver[0] : char(0);
   
   arma_debug_check( ((sig != 'l') && (sig != 's')), "spsolve(): unknown solver" );
+  
+  T rcond = T(0);
   
   bool status = false;
   
@@ -45,7 +48,14 @@ spsolve_helper
     
     arma_debug_check( ( (opts.pivot_thresh < double(0)) || (opts.pivot_thresh > double(1)) ), "spsolve(): pivot_thresh out of bounds" );
     
-    status = sp_auxlib::spsolve(out, A.get_ref(), B.get_ref(), opts);
+    if( (opts.equilibrate == false) && (opts.refine == superlu_opts::REF_NONE) )
+      {
+      status = sp_auxlib::spsolve_simple(out, A.get_ref(), B.get_ref(), opts);
+      }
+    else
+      {
+      status = sp_auxlib::spsolve_refine(out, rcond, A.get_ref(), B.get_ref(), opts);
+      }
     }
   else
   if(sig == 'l')  // brutal LAPACK solver
@@ -73,13 +83,18 @@ spsolve_helper
       {
       arma_debug_check( (AA.n_rows != AA.n_cols), "spsolve(): matrix A must be square sized" );
       
-      typename get_pod_type<eT>::result rcond;
-      
       status = auxlib::solve_square_refine(out, rcond, AA, B.get_ref(), false);
       }
     }
   
-  if(status == false)  { out.reset(); }
+  
+  if(status == false)
+    {
+    if(rcond > T(0))  { arma_debug_warn("spsolve(): system appears singular (rcond: ", rcond, ")"); }
+    else              { arma_debug_warn("spsolve(): system appears singular");                      }
+    
+    out.reset();
+    }
   
   return status;
   }
@@ -103,11 +118,6 @@ spsolve
   arma_ignore(junk);
   
   const bool status = spsolve_helper(out, A.get_ref(), B.get_ref(), solver, settings);
-  
-  if(status == false)
-    {
-    arma_debug_warn("spsolve(): solution not found");
-    }
   
   return status;
   }
