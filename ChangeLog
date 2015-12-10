@@ -1,3 +1,7 @@
+2015-12-09  Dirk Eddelbuettel  <edd@debian.org>
+
+	* configure: Further refinement
+
 2015-12-08  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.6.300.2.1 [GitHub only]
