@@ -1,6 +1,13 @@
+2015-12-12  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.6.300.2.2
+        * inst/NEWS.Rd: Release 0.6.300.2.2
+
+	* configure (hasRlapack): Reworded test messages
+
 2015-12-09  Dirk Eddelbuettel  <edd@debian.org>
 
-	* configure: Further refinement
+	* configure: Further refinements in test for partial LAPACK
 
 2015-12-08  Dirk Eddelbuettel  <edd@debian.org>
 

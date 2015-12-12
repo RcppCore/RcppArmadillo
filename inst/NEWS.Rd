@@ -3,7 +3,7 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.6.300.2.1 (2015-12-08)}{
+\section{Changes in RcppArmadillo version 0.6.300.2.2 (2015-12-12)}{
   \itemize{
     \item Upgraded to Armadillo 6.300.3-test ("Flying Spaghetti Monster")
     \itemize{

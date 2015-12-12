@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright 2013 - 2014  Dirk Eddelbuettel
+# Copyright 2013 - 2015  Dirk Eddelbuettel
 #
 # Licensed under GPL 2 or later
 
@@ -31,7 +31,7 @@ hasRlapack=$(echo ${lapack} | grep lRlapack)
 
 if [ "${hasRlapack}" == "" ]; then
     ## We are using a full Lapack and can use zgesdd -- so #undef remains
-    echo "divide-and-conquer complex SVD available via system LAPACK"
+    echo "system LAPACK found"
     cp inst/include/RcppArmadilloLapack.h.in inst/include/RcppArmadilloLapack.h 
 #elif [ "$newR" == "yes" ]; then
 #    ## The R version is recent enough and has an augmented internal Rlapack
@@ -39,8 +39,8 @@ if [ "${hasRlapack}" == "" ]; then
 #    cp inst/include/RcppArmadilloLapack.h.in inst/include/RcppArmadilloLapack.h 
 else
     ## We are using a R's subset of Lapack and CANNOT use zgesdd etc, so we mark it
-    echo " divide-and-conquer complex SVD unavailable via R-supplied LAPACK"
-    echo "* divide-and-conquer algorithm for complex SVD will be redirected to default"
+    echo "R-supplied partial LAPACK found"
+    echo "* some operations may not be available"
     sed -e 's/\/\/ \#undef ARMA_CRIPPLED_LAPACK/\#define ARMA_CRIPPLED_LAPACK 1/' \
         inst/include/RcppArmadilloLapack.h.in > inst/include/RcppArmadilloLapack.h 
 fi
