@@ -2,7 +2,7 @@
 //
 // RcppArmadilloLapack.h: Toggle for use of zgesdd 
 //
-// Copyright (C)  2013  Dirk Eddelbuettel
+// Copyright (C)  2013 - 2015  Dirk Eddelbuettel
 //
 // This file is part of RcppArmadillo.
 //
@@ -23,6 +23,6 @@
 #define RcppArmadillo__RcppArmadilloLapack__h
 
 // value on next line may be changed to #define by the configure script
-// #undef ARMA_DONT_USE_CX_GESDD
+// #undef ARMA_CRIPPLED_LAPACK
 
 #endif

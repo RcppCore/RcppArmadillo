@@ -89,7 +89,7 @@
 // one. Only the latter has zgesdd, a complex-valued SVD using divide-and-conquer 
 #if defined(WIN32) || defined(_WIN32)
   // on Windows we do not assume ZGESDD
-  #define ARMA_DONT_USE_CX_GESDD 1
+  #define ARMA_CRIPPLED_LAPACK 1
 #else
   // on the other OSs we test via LAPACK_LIBS (in configure) which
   // updates this include file

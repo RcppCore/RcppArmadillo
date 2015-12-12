@@ -1,3 +1,18 @@
+2015-12-09  Dirk Eddelbuettel  <edd@debian.org>
+
+	* configure: Further refinement
+
+2015-12-08  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.6.300.2.1 [GitHub only]
+        * inst/NEWS.Rd: Release 0.6.300.2.1 [GitHub only]
+
+	* inst/include/*: Upgraded to release 6.300.3-test of Armadillo
+
+	* inst/include/RcppArmadilloConfig.h: Updated #define for limited LAPACK
+	* inst/include/RcppArmadilloLapack.h.in: Updated conditional #define
+	* configure: Updated test for Rlapack and corresponding #define
+
 2015-12-03  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.6.300.2.0

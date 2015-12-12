@@ -15,7 +15,7 @@
 
 #define ARMA_VERSION_MAJOR 6
 #define ARMA_VERSION_MINOR 300
-#define ARMA_VERSION_PATCH 2
+#define ARMA_VERSION_PATCH 3
 #define ARMA_VERSION_NAME  "Flying Spaghetti Monster"
 
 

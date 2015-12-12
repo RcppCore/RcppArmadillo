@@ -3,6 +3,17 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.6.300.2.1 (2015-12-08)}{
+  \itemize{
+    \item Upgraded to Armadillo 6.300.3-test ("Flying Spaghetti Monster")
+    \itemize{
+      \item Additional test in \code{auxlib_meat.hpp} for limited LAPACK
+    }
+    \item Updated test and \code{#define} for limited LAPACK version R
+    might be built with on Unix-alike systems
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.6.300.2.0 (2015-12-03)}{
   \itemize{
     \item Upgraded to Armadillo 6.300.2 ("Flying Spaghetti Monster")
