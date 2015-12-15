@@ -1480,6 +1480,49 @@ Cube<eT>::each_slice(const Base<uword, T1>& indices) const
 
 
 
+#if defined(ARMA_USE_CXX11)
+  
+  //! apply a lambda function to each slice, where each slice is interpreted as a matrix
+  template<typename eT>
+  inline
+  const Cube<eT>&
+  Cube<eT>::each_slice(const std::function< void(Mat<eT>&) >& F)
+    {
+    arma_extra_debug_sigprint();
+    
+    for(uword slice_id=0; slice_id < n_slices; ++slice_id)
+      {
+      Mat<eT> tmp('j', slice_memptr(slice_id), n_rows, n_cols);
+      
+      F(tmp);
+      }
+    
+    return *this;
+    }
+  
+  
+  
+  template<typename eT>
+  inline
+  const Cube<eT>&
+  Cube<eT>::each_slice(const std::function< void(const Mat<eT>&) >& F) const
+    {
+    arma_extra_debug_sigprint();
+    
+    for(uword slice_id=0; slice_id < n_slices; ++slice_id)
+      {
+      const Mat<eT> tmp('j', slice_memptr(slice_id), n_rows, n_cols);
+      
+      F(tmp);
+      }
+    
+    return *this;
+    }
+  
+#endif
+
+
+
 //! remove specified slice
 template<typename eT>
 inline
@@ -3023,6 +3066,36 @@ Cube<eT>::for_each(functor F)
   arma_extra_debug_sigprint();
   
   eT* data = memptr();
+  
+  const uword N = n_elem;
+  
+  uword ii, jj;
+  
+  for(ii=0, jj=1; jj < N; ii+=2, jj+=2)
+    {
+    F(data[ii]);
+    F(data[jj]);
+    }
+  
+  if(ii < N)
+    {
+    F(data[ii]);
+    }
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename functor>
+inline
+const Cube<eT>&
+Cube<eT>::for_each(functor F) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const eT* data = memptr();
   
   const uword N = n_elem;
   

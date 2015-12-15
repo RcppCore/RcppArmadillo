@@ -70,6 +70,7 @@ class subview_field
   inline void print(std::ostream& user_stream, const std::string extra_text = "") const;
   
   template<typename functor> inline void for_each(functor F);
+  template<typename functor> inline void for_each(functor F) const;
   
   inline void fill(const oT& x);
   

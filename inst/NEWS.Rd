@@ -3,6 +3,18 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.6.400.2.0 (2015-12-15)}{
+  \itemize{
+    \item Upgraded to Armadillo 6.400.2 ("Flying Spaghetti Monster Deluxe")
+    \itemize{
+      \item expanded \code{each_col()}, \code{each_row()} and
+      \code{each_slice()} to handle C++11 lambda functions 
+      \item added \code{ind2sub()} and \code{sub2ind()}
+      \item fixes for corner cases in gmm_diag class
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.6.300.2.2 (2015-12-12)}{
   \itemize{
     \item Upgraded to Armadillo 6.300.3-test ("Flying Spaghetti Monster")
