@@ -454,9 +454,9 @@ field<oT>::operator[] (const uword i)
   {
   return (*mem[i]);
   }
-  
-  
-  
+
+
+
 //! linear element accessor (treats the field as a vector); no bounds check
 template<typename oT>
 arma_inline
@@ -476,9 +476,9 @@ field<oT>::at(const uword i)
   {
   return (*mem[i]);
   }
-  
-  
-  
+
+
+
 //! linear element accessor (treats the field as a vector); no bounds check
 template<typename oT>
 arma_inline
@@ -499,9 +499,9 @@ field<oT>::operator() (const uword i)
   arma_debug_check( (i >= n_elem), "field::operator(): index out of bounds");
   return (*mem[i]);
   }
-  
-  
-  
+
+
+
 //! linear element accessor (treats the field as a vector); bounds checking not done when ARMA_NO_DEBUG is defined
 template<typename oT>
 arma_inline
@@ -1380,24 +1380,79 @@ field<oT>::print(std::ostream& user_stream, const std::string extra_text) const
 
 
 
-//! apply a functor to each object
-template<typename oT>
-template<typename functor>
-inline
-const field<oT>&
-field<oT>::for_each(functor F)
-  {
-  arma_extra_debug_sigprint();
+#if defined(ARMA_USE_CXX11)
   
-  const uword N = n_elem;
-  
-  for(uword i=0; i < N; ++i)
+  //! apply a lambda function to each object
+  template<typename oT>
+  inline
+  const field<oT>&
+  field<oT>::for_each(const std::function< void(oT&) >& F)
     {
-    F(operator[](i));
+    arma_extra_debug_sigprint();
+    
+    for(uword i=0; i < n_elem; ++i)
+      {
+      F(operator[](i));
+      }
+    
+    return *this;
     }
   
-  return *this;
-  }
+  
+  
+  template<typename oT>
+  inline
+  const field<oT>&
+  field<oT>::for_each(const std::function< void(const oT&) >& F) const
+    {
+    arma_extra_debug_sigprint();
+    
+    for(uword i=0; i < n_elem; ++i)
+      {
+      F(operator[](i));
+      }
+    
+    return *this;
+    }
+  
+#else
+  
+  //! apply a functor to each object
+  template<typename oT>
+  template<typename functor>
+  inline
+  const field<oT>&
+  field<oT>::for_each(functor F)
+    {
+    arma_extra_debug_sigprint();
+    
+    for(uword i=0; i < n_elem; ++i)
+      {
+      F(operator[](i));
+      }
+    
+    return *this;
+    }
+  
+  
+  
+  template<typename oT>
+  template<typename functor>
+  inline
+  const field<oT>&
+  field<oT>::for_each(functor F) const
+    {
+    arma_extra_debug_sigprint();
+    
+    for(uword i=0; i < n_elem; ++i)
+      {
+      F(operator[](i));
+      }
+    
+    return *this;
+    }
+  
+#endif
 
 
 
@@ -1938,9 +1993,7 @@ field<oT>::init(const uword n_rows_in, const uword n_cols_in, const uword n_slic
       }
     
     create_objects();
-    
     }
-  
   }
 
 
@@ -1960,7 +2013,6 @@ field<oT>::delete_objects()
       mem[i] = 0;
       }
     }
-  
   }
 
 
@@ -1976,7 +2028,6 @@ field<oT>::create_objects()
     {
     mem[i] = new oT;
     }
-  
   }
 
 
@@ -2316,9 +2367,9 @@ field_aux::reset_objects(field< Col<eT> >& x)
     (*(x.mem[i])).reset();
     }
   }
-  
-  
-  
+
+
+
 template<typename eT>
 inline
 void

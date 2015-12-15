@@ -54,6 +54,7 @@
   #include <initializer_list>
   #include <cstdint>
   #include <random>
+  #include <functional>
   #if !defined(ARMA_DONT_USE_CXX11_CHRONO)
     #include <chrono>
   #endif

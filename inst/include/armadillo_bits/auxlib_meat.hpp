@@ -1490,7 +1490,17 @@ auxlib::eig_pair
   {
   arma_extra_debug_sigprint();
   
-  #if defined(ARMA_USE_LAPACK)
+  #if (defined(ARMA_USE_LAPACK) && defined(ARMA_CRIPPLED_LAPACK))
+    {
+    arma_ignore(vals);
+    arma_ignore(vecs);
+    arma_ignore(mode);
+    arma_ignore(A_expr);
+    arma_ignore(B_expr);
+    arma_stop("eig_pair() for complex matrices not available due to crippled LAPACK");
+    return false;
+    }
+  #elif defined(ARMA_USE_LAPACK)
     {
     typedef typename T1::pod_type     T;
     typedef typename std::complex<T> eT;
@@ -3663,9 +3673,7 @@ auxlib::solve_approx_svd(Mat< std::complex<typename T1::pod_type> >& out, Mat< s
     arma_ignore(out);
     arma_ignore(A);
     arma_ignore(B_expr);
-    
     arma_debug_warn("solve() for rank-deficient matrices not available due to crippled LAPACK");
-    
     return false;
     }
   #elif defined(ARMA_USE_LAPACK)
@@ -3898,7 +3906,16 @@ auxlib::schur(Mat<std::complex<T> >& U, Mat<std::complex<T> >& S, const Base<std
   {
   arma_extra_debug_sigprint();
   
-  #if defined(ARMA_USE_LAPACK)
+  #if (defined(ARMA_USE_LAPACK) && defined(ARMA_CRIPPLED_LAPACK))
+    {
+    arma_ignore(U);
+    arma_ignore(S);
+    arma_ignore(X);
+    arma_ignore(calc_U);
+    arma_stop("schur() for complex matrices not available due to crippled LAPACK");
+    return false;
+    }
+  #elif defined(ARMA_USE_LAPACK)
     {
     typedef std::complex<T> eT;
   
@@ -3943,6 +3960,7 @@ auxlib::schur(Mat<std::complex<T> >& U, Mat<std::complex<T> >& S, const Base<std
     arma_ignore(U);
     arma_ignore(S);
     arma_ignore(X);
+    arma_ignore(calc_U);
     arma_stop("schur(): use of LAPACK must be enabled");
     return false;
     }
@@ -4109,7 +4127,18 @@ auxlib::qz(Mat< std::complex<T> >& A, Mat< std::complex<T> >& B, Mat< std::compl
   {
   arma_extra_debug_sigprint();
   
-  #if defined(ARMA_USE_LAPACK)
+  #if (defined(ARMA_USE_LAPACK) && defined(ARMA_CRIPPLED_LAPACK))
+    {
+    arma_ignore(A);
+    arma_ignore(B);
+    arma_ignore(vsl);
+    arma_ignore(vsr);
+    arma_ignore(X_expr);
+    arma_ignore(Y_expr);
+    arma_stop("qz() for complex matrices not available due to crippled LAPACK");
+    return false;
+    }
+  #elif defined(ARMA_USE_LAPACK)
     {
     typedef typename std::complex<T> eT;
     

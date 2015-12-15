@@ -86,6 +86,8 @@ class subview : public Base<eT, subview<eT> >
   inline static void   div_inplace(Mat<eT>& out, const subview& in);
   
   template<typename functor> inline void  for_each(functor F);
+  template<typename functor> inline void  for_each(functor F) const;
+  
   template<typename functor> inline void transform(functor F);
   template<typename functor> inline void     imbue(functor F);
   
@@ -156,6 +158,14 @@ class subview : public Base<eT, subview<eT> >
   
   template<typename T1> inline subview_each2< subview<eT>, 0, T1 > each_col(const Base<uword, T1>& indices);
   template<typename T1> inline subview_each2< subview<eT>, 1, T1 > each_row(const Base<uword, T1>& indices);
+  
+  #if defined(ARMA_USE_CXX11)
+  inline void each_col(const std::function< void(      Col<eT>&) >& F);
+  inline void each_col(const std::function< void(const Col<eT>&) >& F) const;
+  
+  inline void each_row(const std::function< void(      Row<eT>&) >& F);
+  inline void each_row(const std::function< void(const Row<eT>&) >& F) const;
+  #endif
   
   inline       diagview<eT> diag(const sword in_id = 0);
   inline const diagview<eT> diag(const sword in_id = 0) const;

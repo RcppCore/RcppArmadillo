@@ -461,6 +461,37 @@ subview_field<oT>::for_each(functor F)
 
 
 template<typename oT>
+template<typename functor>
+inline
+void
+subview_field<oT>::for_each(functor F) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const subview_field<oT>& t = *this;
+  
+  if(t.n_slices == 1)
+    {
+    for(uword col=0; col < t.n_cols; ++col)
+    for(uword row=0; row < t.n_rows; ++row)
+      {
+      F( t.at(row,col) );
+      }
+    }
+  else
+    {
+    for(uword slice=0; slice < t.n_slices; ++slice)
+    for(uword col=0;   col   < t.n_cols;   ++col  )
+    for(uword row=0;   row   < t.n_rows;   ++row  )
+      {
+      F( t.at(row,col,slice) );
+      }
+    }
+  }
+
+
+
+template<typename oT>
 inline
 void
 subview_field<oT>::fill(const oT& x)

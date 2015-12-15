@@ -1027,6 +1027,34 @@ subview_cube<eT>::for_each(functor F)
 
 
 
+template<typename eT>
+template<typename functor>
+inline
+void
+subview_cube<eT>::for_each(functor F) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const Cube<eT>& Q = m;
+  
+  const uword start_col   = aux_col1;
+  const uword start_row   = aux_row1;
+  const uword start_slice = aux_slice1;
+  
+  const uword end_col_plus1   = start_col   + n_cols;
+  const uword end_row_plus1   = start_row   + n_rows;
+  const uword end_slice_plus1 = start_slice + n_slices;
+  
+  for(uword uslice = start_slice; uslice < end_slice_plus1; ++uslice)
+  for(uword ucol   = start_col;     ucol < end_col_plus1;   ++ucol  )
+  for(uword urow   = start_row;     urow < end_row_plus1;   ++urow  )
+    {
+    F( Q.at(urow, ucol, uslice) );
+    }
+  }
+
+
+
 //! transform each element in the subview using a functor
 template<typename eT>
 template<typename functor>
@@ -1082,6 +1110,62 @@ subview_cube<eT>::imbue(functor F)
     Q.at(urow, ucol, uslice) = eT( F() );
     }
   }
+
+
+
+#if defined(ARMA_USE_CXX11)
+  
+  //! apply a lambda function to each slice, where each slice is interpreted as a matrix
+  template<typename eT>
+  inline
+  void
+  subview_cube<eT>::each_slice(const std::function< void(Mat<eT>&) >& F)
+    {
+    arma_extra_debug_sigprint();
+    
+    Mat<eT> tmp1(n_rows, n_cols);
+    Mat<eT> tmp2('j', tmp1.memptr(), n_rows, n_cols);
+    
+    for(uword slice_id=0; slice_id < n_slices; ++slice_id)
+      {
+      for(uword col_id=0; col_id < n_cols; ++col_id)
+        {
+        arrayops::copy( tmp1.colptr(col_id), slice_colptr(slice_id, col_id), n_rows );
+        }
+      
+      F(tmp2);
+      
+      for(uword col_id=0; col_id < n_cols; ++col_id)
+        {
+        arrayops::copy( slice_colptr(slice_id, col_id), tmp1.colptr(col_id), n_rows );
+        }
+      }
+    }
+  
+  
+  
+  template<typename eT>
+  inline
+  void
+  subview_cube<eT>::each_slice(const std::function< void(const Mat<eT>&) >& F) const
+    {
+    arma_extra_debug_sigprint();
+    
+          Mat<eT> tmp1(n_rows, n_cols);
+    const Mat<eT> tmp2('j', tmp1.memptr(), n_rows, n_cols);
+    
+    for(uword slice_id=0; slice_id < n_slices; ++slice_id)
+      {
+      for(uword col_id=0; col_id < n_cols; ++col_id)
+        {
+        arrayops::copy( tmp1.colptr(col_id), slice_colptr(slice_id, col_id), n_rows );
+        }
+      
+      F(tmp2);
+      }
+    }
+  
+#endif
 
 
 

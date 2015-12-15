@@ -104,11 +104,11 @@ inline
 void
 arma_rng_cxx11::randi_fill(eT* mem, const uword N, const int a, const int b)
   {
-  std::uniform_int_distribution<int> i_distr(a, b);
+  std::uniform_int_distribution<int> local_i_distr(a, b);
   
   for(uword i=0; i<N; ++i)
     {
-    mem[i] = eT(i_distr(engine));
+    mem[i] = eT(local_i_distr(engine));
     }
   }
 

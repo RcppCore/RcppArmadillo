@@ -1505,7 +1505,7 @@ gmm_diag<eT>::generate_initial_means(const Mat<eT>& X, const gmm_seed_mode& seed
         
         if( (rs.mean() >= max_dist) && (ignore_i == false))
           {
-          max_dist = rs.mean(); best_i = i;
+          max_dist = eT(rs.mean()); best_i = i;
           }
         }
       
