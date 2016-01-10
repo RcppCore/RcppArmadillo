@@ -1,3 +1,7 @@
+2016-01-10  Dirk Eddelbuettel  <edd@debian.org>
+
+	* configure: Use /usr/bin/env bash as shebang
+
 2015-12-15  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.6.400.2.0
