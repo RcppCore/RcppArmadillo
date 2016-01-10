@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
-# Copyright 2013 - 2015  Dirk Eddelbuettel
+# Copyright 2013 - 2016  Dirk Eddelbuettel
 #
 # Licensed under GPL 2 or later
 
