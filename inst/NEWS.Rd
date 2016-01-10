@@ -3,6 +3,18 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.6.500 (2016-xx-yy)}{
+  \itemize{
+    \item Upgraded to Armadillo ...
+    \itemize{
+      \item ...
+    }
+    \item The \code{configure} script now uses \code{#!/usr/bin/env
+      bash} to cope with systems that do not have \code{#!/bin/bash} (PR
+    \ghpr{75} fixing issue \ghpr{74})
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.6.400.2.0 (2015-12-15)}{
   \itemize{
     \item Upgraded to Armadillo 6.400.2 ("Flying Spaghetti Monster Deluxe")
