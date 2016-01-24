@@ -343,7 +343,7 @@ arma_check(const bool state, const T1& x)
   {
   if(state==true)
     {
-    arma_stop(arma_boost::str_wrapper(x));
+    arma_stop(arma_str::str_wrapper(x));
     }
   }
 

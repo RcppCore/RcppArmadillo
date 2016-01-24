@@ -40,7 +40,7 @@ class eop_core
   
   // common
   
-  template<typename eT> arma_hot arma_pure arma_inline static eT process(const eT val, const eT k);
+  template<typename eT> arma_hot arma_inline static eT process(const eT val, const eT k);
   };
 
 

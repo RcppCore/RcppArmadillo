@@ -889,7 +889,6 @@ arrayops::inplace_div_base(eT* dest, const eT val, const uword n_elem)
 
 template<typename eT>
 arma_hot
-arma_pure
 inline
 eT
 arrayops::accumulate(const eT* src, const uword n_elem)
@@ -937,7 +936,6 @@ arrayops::accumulate(const eT* src, const uword n_elem)
 
 template<typename eT>
 arma_hot
-arma_pure
 inline
 eT
 arrayops::product(const eT* src, const uword n_elem)
@@ -965,7 +963,6 @@ arrayops::product(const eT* src, const uword n_elem)
 
 template<typename eT>
 arma_hot
-arma_pure
 inline
 bool
 arrayops::is_finite(const eT* src, const uword n_elem)
@@ -998,7 +995,6 @@ arrayops::is_finite(const eT* src, const uword n_elem)
 
 template<typename eT>
 arma_hot
-arma_pure
 inline
 bool
 arrayops::has_inf(const eT* src, const uword n_elem)
@@ -1025,7 +1021,6 @@ arrayops::has_inf(const eT* src, const uword n_elem)
 
 template<typename eT>
 arma_hot
-arma_pure
 inline
 bool
 arrayops::has_nan(const eT* src, const uword n_elem)

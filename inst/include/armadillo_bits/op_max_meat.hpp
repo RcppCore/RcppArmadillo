@@ -146,7 +146,6 @@ op_max::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim, const typ
 
 
 template<typename eT>
-arma_pure
 inline
 eT
 op_max::direct_max(const eT* const X, const uword n_elem)

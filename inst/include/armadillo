@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -101,7 +101,7 @@ namespace arma
   #include "armadillo_bits/typedef_elem.hpp"
   #include "armadillo_bits/typedef_elem_check.hpp"
   #include "armadillo_bits/typedef_mat.hpp"
-  #include "armadillo_bits/arma_boost.hpp"
+  #include "armadillo_bits/arma_str.hpp"
   #include "armadillo_bits/arma_version.hpp"
   #include "armadillo_bits/arma_config.hpp"
   #include "armadillo_bits/traits.hpp"
@@ -277,6 +277,11 @@ namespace arma
   #include "armadillo_bits/glue_histc_bones.hpp"
   #include "armadillo_bits/glue_max_bones.hpp"
   #include "armadillo_bits/glue_min_bones.hpp"
+  
+  #if !defined(ARMA_BAD_COMPILER)
+    #include "armadillo_bits/gmm_misc_bones.hpp"
+    #include "armadillo_bits/gmm_diag_bones.hpp"
+  #endif
   
   #include "armadillo_bits/spop_max_bones.hpp"
   #include "armadillo_bits/spop_min_bones.hpp"
@@ -472,6 +477,7 @@ namespace arma
   #include "armadillo_bits/fn_qz.hpp"
   #include "armadillo_bits/fn_diff.hpp"
   #include "armadillo_bits/fn_schur.hpp"
+  #include "armadillo_bits/fn_kmeans.hpp"
   
   #include "armadillo_bits/fn_speye.hpp"
   #include "armadillo_bits/fn_spones.hpp"
@@ -482,18 +488,12 @@ namespace arma
   #include "armadillo_bits/fn_spsolve.hpp"
   #include "armadillo_bits/fn_svds.hpp"
   
+  
   //
   // misc stuff
   
   #include "armadillo_bits/hdf5_misc.hpp"
   #include "armadillo_bits/fft_engine.hpp"
-  
-  #if !defined(ARMA_BAD_COMPILER)
-    #include "armadillo_bits/gmm_misc_bones.hpp"
-    #include "armadillo_bits/gmm_misc_meat.hpp"
-    #include "armadillo_bits/gmm_diag_bones.hpp"
-    #include "armadillo_bits/gmm_diag_meat.hpp"
-  #endif
   
   //
   // classes implementing various forms of dense matrix multiplication
@@ -616,6 +616,11 @@ namespace arma
   #include "armadillo_bits/glue_histc_meat.hpp"
   #include "armadillo_bits/glue_max_meat.hpp"
   #include "armadillo_bits/glue_min_meat.hpp"
+  
+  #if !defined(ARMA_BAD_COMPILER)
+    #include "armadillo_bits/gmm_misc_meat.hpp"
+    #include "armadillo_bits/gmm_diag_meat.hpp"
+  #endif
   
   #include "armadillo_bits/spop_max_meat.hpp"
   #include "armadillo_bits/spop_min_meat.hpp"

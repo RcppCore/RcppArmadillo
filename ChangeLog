@@ -1,3 +1,10 @@
+2016-01-24  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.6.500.2.1 [GitHub only]
+        * inst/NEWS.Rd: Release 0.6.500.2.1 [GitHub only]
+
+        * inst/include/*: Upgraded to release 6.500.3-test of Armadillo
+
 2016-01-10  Dirk Eddelbuettel  <edd@debian.org>
 
 	* configure: Use /usr/bin/env bash as shebang

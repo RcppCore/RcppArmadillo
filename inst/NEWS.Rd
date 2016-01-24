@@ -3,11 +3,14 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.6.500 (2016-xx-yy)}{
+\section{Changes in RcppArmadillo version 0.6.500.2 (2016-01-yy)}{
   \itemize{
-    \item Upgraded to Armadillo ...
+    \item Upgraded to Armadillo 6.500.3-test
     \itemize{
-      \item ...
+      \item added \code{conv2()} for 2D convolution
+      \item added stand-alone \code{kmeans()} function for clustering data
+      \item extended \code{conv()} to optionally provide central convolution
+      \item faster handling of multiply-and-accumulate by \code{accu()}
     }
     \item The \code{configure} script now uses \code{#!/usr/bin/env
       bash} to cope with systems that do not have \code{#!/bin/bash} (PR

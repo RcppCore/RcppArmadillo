@@ -200,7 +200,7 @@ SpMat<eT>::SpMat(const SpMat<eT>& x)
     , col_ptrs(NULL)
     {
     arma_extra_debug_sigprint_this(this);
-    arma_extra_debug_sigprint(arma_boost::format("this = %x   in_mat = %x") % this % &in_mat);
+    arma_extra_debug_sigprint(arma_str::format("this = %x   in_mat = %x") % this % &in_mat);
     
     (*this).steal_mem(in_mat);
     }
@@ -212,7 +212,7 @@ SpMat<eT>::SpMat(const SpMat<eT>& x)
   const SpMat<eT>&
   SpMat<eT>::operator=(SpMat<eT>&& in_mat)
     {
-    arma_extra_debug_sigprint(arma_boost::format("this = %x   in_mat = %x") % this % &in_mat);
+    arma_extra_debug_sigprint(arma_str::format("this = %x   in_mat = %x") % this % &in_mat);
     
     (*this).steal_mem(in_mat);
     

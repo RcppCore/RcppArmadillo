@@ -16,7 +16,6 @@
 //! for two arrays, generic version for non-complex values
 template<typename eT>
 arma_hot
-arma_pure
 arma_inline
 typename arma_not_cx<eT>::result
 op_dot::direct_dot_arma(const uword n_elem, const eT* const A, const eT* const B)
@@ -62,7 +61,6 @@ op_dot::direct_dot_arma(const uword n_elem, const eT* const A, const eT* const B
 //! for two arrays, generic version for complex values
 template<typename eT>
 arma_hot
-arma_pure
 inline
 typename arma_cx_only<eT>::result
 op_dot::direct_dot_arma(const uword n_elem, const eT* const A, const eT* const B)
@@ -97,7 +95,6 @@ op_dot::direct_dot_arma(const uword n_elem, const eT* const A, const eT* const B
 //! for two arrays, float and double version
 template<typename eT>
 arma_hot
-arma_pure
 inline
 typename arma_real_only<eT>::result
 op_dot::direct_dot(const uword n_elem, const eT* const A, const eT* const B)
@@ -136,7 +133,6 @@ op_dot::direct_dot(const uword n_elem, const eT* const A, const eT* const B)
 template<typename eT>
 inline
 arma_hot
-arma_pure
 typename arma_cx_only<eT>::result
 op_dot::direct_dot(const uword n_elem, const eT* const A, const eT* const B)
   {
@@ -171,7 +167,6 @@ op_dot::direct_dot(const uword n_elem, const eT* const A, const eT* const B)
 //! for two arrays, integral version
 template<typename eT>
 arma_hot
-arma_pure
 inline
 typename arma_integral_only<eT>::result
 op_dot::direct_dot(const uword n_elem, const eT* const A, const eT* const B)
@@ -185,7 +180,6 @@ op_dot::direct_dot(const uword n_elem, const eT* const A, const eT* const B)
 //! for three arrays
 template<typename eT>
 arma_hot
-arma_pure
 inline
 eT
 op_dot::direct_dot(const uword n_elem, const eT* const A, const eT* const B, const eT* C)
@@ -382,7 +376,6 @@ op_norm_dot::apply(const T1& X, const T2& Y)
 
 template<typename eT>
 arma_hot
-arma_pure
 inline
 eT
 op_cdot::direct_cdot_arma(const uword n_elem, const eT* const A, const eT* const B)
@@ -416,7 +409,6 @@ op_cdot::direct_cdot_arma(const uword n_elem, const eT* const A, const eT* const
 
 template<typename eT>
 arma_hot
-arma_pure
 inline
 eT
 op_cdot::direct_cdot(const uword n_elem, const eT* const A, const eT* const B)

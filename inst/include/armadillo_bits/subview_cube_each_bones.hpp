@@ -18,7 +18,7 @@ class subview_cube_each_common
   {
   public:
   
-  const Cube<eT>& p;
+  const Cube<eT>& P;
   
   inline void check_size(const Mat<eT>& A) const;
   

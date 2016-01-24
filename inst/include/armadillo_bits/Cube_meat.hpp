@@ -163,7 +163,7 @@ Cube<eT>::Cube(const SizeCube& s, const fill::fill_class<fill_type>&)
     , mat_ptrs(0)
     {
     arma_extra_debug_sigprint_this(this);
-    arma_extra_debug_sigprint(arma_boost::format("this = %x   in_cube = %x") % this % &in_cube);
+    arma_extra_debug_sigprint(arma_str::format("this = %x   in_cube = %x") % this % &in_cube);
     
     (*this).steal_mem(in_cube);
     }
@@ -175,7 +175,7 @@ Cube<eT>::Cube(const SizeCube& s, const fill::fill_class<fill_type>&)
   const Cube<eT>&
   Cube<eT>::operator=(Cube<eT>&& in_cube)
     {
-    arma_extra_debug_sigprint(arma_boost::format("this = %x   in_cube = %x") % this % &in_cube);
+    arma_extra_debug_sigprint(arma_str::format("this = %x   in_cube = %x") % this % &in_cube);
     
     (*this).steal_mem(in_cube);
     
@@ -191,7 +191,7 @@ inline
 void
 Cube<eT>::init_cold()
   {
-  arma_extra_debug_sigprint( arma_boost::format("n_rows = %d, n_cols = %d, n_slices = %d") % n_rows % n_cols % n_slices );
+  arma_extra_debug_sigprint( arma_str::format("n_rows = %d, n_cols = %d, n_slices = %d") % n_rows % n_cols % n_slices );
   
   #if (defined(ARMA_USE_CXX11) || defined(ARMA_64BIT_WORD))
     const char* error_message = "Cube::init(): requested size is too large";
@@ -243,7 +243,7 @@ inline
 void
 Cube<eT>::init_warm(const uword in_n_rows, const uword in_n_cols, const uword in_n_slices)
   {
-  arma_extra_debug_sigprint( arma_boost::format("in_n_rows = %d, in_n_cols = %d, in_n_slices = %d") % in_n_rows % in_n_cols % in_n_slices );
+  arma_extra_debug_sigprint( arma_str::format("in_n_rows = %d, in_n_cols = %d, in_n_slices = %d") % in_n_rows % in_n_cols % in_n_slices );
   
   if( (n_rows == in_n_rows) && (n_cols == in_n_cols) && (n_slices == in_n_slices) )  { return; }
   
@@ -570,7 +570,7 @@ Cube<eT>::Cube(const Cube<eT>& x)
   , mat_ptrs(0)
   {
   arma_extra_debug_sigprint_this(this);
-  arma_extra_debug_sigprint(arma_boost::format("this = %x   in_cube = %x") % this % &x);
+  arma_extra_debug_sigprint(arma_str::format("this = %x   in_cube = %x") % this % &x);
   
   init_cold();
   
@@ -585,7 +585,7 @@ inline
 const Cube<eT>&
 Cube<eT>::operator=(const Cube<eT>& x)
   {
-  arma_extra_debug_sigprint(arma_boost::format("this = %x   in_cube = %x") % this % &x);
+  arma_extra_debug_sigprint(arma_str::format("this = %x   in_cube = %x") % this % &x);
   
   if(this != &x)
     {
@@ -3984,7 +3984,7 @@ Cube<eT>::swap(Cube<eT>& B)
   {
   Cube<eT>& A = (*this);
   
-  arma_extra_debug_sigprint(arma_boost::format("A = %x   B = %x") % &A % &B);
+  arma_extra_debug_sigprint(arma_str::format("A = %x   B = %x") % &A % &B);
   
   if( (A.mem_state == 0) && (B.mem_state == 0) && (A.n_elem > Cube_prealloc::mem_n_elem) && (B.n_elem > Cube_prealloc::mem_n_elem) )
     {

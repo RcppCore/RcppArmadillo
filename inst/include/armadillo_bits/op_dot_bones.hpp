@@ -19,30 +19,30 @@ class op_dot
   public:
   
   template<typename eT>
-  arma_hot arma_pure arma_inline static
+  arma_hot arma_inline static
   typename arma_not_cx<eT>::result
   direct_dot_arma(const uword n_elem, const eT* const A, const eT* const B);
   
   template<typename eT>
-  arma_hot arma_pure inline static
+  arma_hot inline static
   typename arma_cx_only<eT>::result
   direct_dot_arma(const uword n_elem, const eT* const A, const eT* const B);
   
   template<typename eT>
-  arma_hot arma_pure inline static typename arma_real_only<eT>::result
+  arma_hot inline static typename arma_real_only<eT>::result
   direct_dot(const uword n_elem, const eT* const A, const eT* const B);
   
   template<typename eT>
-  arma_hot arma_pure inline static typename arma_cx_only<eT>::result
+  arma_hot inline static typename arma_cx_only<eT>::result
   direct_dot(const uword n_elem, const eT* const A, const eT* const B);
   
   template<typename eT>
-  arma_hot arma_pure inline static typename arma_integral_only<eT>::result
+  arma_hot inline static typename arma_integral_only<eT>::result
   direct_dot(const uword n_elem, const eT* const A, const eT* const B);
   
   
   template<typename eT>
-  arma_hot arma_pure inline static eT direct_dot(const uword n_elem, const eT* const A, const eT* const B, const eT* C);
+  arma_hot inline static eT direct_dot(const uword n_elem, const eT* const A, const eT* const B, const eT* C);
   
   template<typename T1, typename T2>
   arma_hot inline static typename T1::elem_type apply(const T1& X, const T2& Y);

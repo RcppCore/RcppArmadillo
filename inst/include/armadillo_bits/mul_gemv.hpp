@@ -371,7 +371,7 @@ class gemv
         const blas_int  inc         = blas_int(1);
         const eT        local_beta  = (use_beta) ? beta : eT(0);
         
-        arma_extra_debug_print( arma_boost::format("blas::gemv(): trans_A = %c") % trans_A );
+        arma_extra_debug_print( arma_str::format("blas::gemv(): trans_A = %c") % trans_A );
         
         blas::gemv<eT>
           (

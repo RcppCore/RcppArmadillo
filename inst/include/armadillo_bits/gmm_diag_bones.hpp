@@ -1,4 +1,4 @@
-// Copyright (C) 2014 National ICT Australia (NICTA)
+// Copyright (C) 2014-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -134,6 +134,20 @@ class gmm_diag
     );
   
   
+  template<typename T1>
+  inline
+  bool
+  kmeans_wrapper
+    (
+           Mat<eT>&       user_means,
+    const Base<eT,T1>&    data,
+    const uword           n_gaus,
+    const gmm_seed_mode&  seed_mode,
+    const uword           km_iter,
+    const bool            print_mode
+    );
+  
+  
   //
   
   protected:
@@ -174,7 +188,7 @@ class gmm_diag
   
   template<uword dist_id> inline void generate_initial_dcovs_and_hefts(const Mat<eT>& X, const eT var_floor);
   
-  template<uword dist_id> inline bool km_iterate(const Mat<eT>& X, const uword max_iter, const bool verbose);
+  template<uword dist_id> inline bool km_iterate(const Mat<eT>& X, const uword max_iter, const bool verbose, const char* signature);
   
   template<uword dist_id> inline void km_update_stats(const Mat<eT>& X, const uword start_index, const uword end_index, const Mat<eT>& old_means, field< running_mean_vec<eT> >& running_means) const;
   

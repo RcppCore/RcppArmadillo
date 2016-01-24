@@ -11,8 +11,6 @@
 
 #undef arma_hot
 #undef arma_cold
-#undef arma_pure
-#undef arma_const
 #undef arma_aligned
 #undef arma_align_mem
 #undef arma_warn_unused
@@ -24,8 +22,6 @@
 
 #define arma_hot
 #define arma_cold
-#define arma_pure
-#define arma_const
 #define arma_aligned
 #define arma_align_mem
 #define arma_warn_unused
@@ -180,8 +176,6 @@
   
   #define ARMA_GOOD_COMPILER
   
-  #undef  arma_pure
-  #undef  arma_const
   #undef  arma_aligned
   #undef  arma_align_mem
   #undef  arma_warn_unused
@@ -190,8 +184,6 @@
   #undef  arma_inline
   #undef  arma_noinline
   
-  #define arma_pure               __attribute__((__pure__))
-  #define arma_const              __attribute__((__const__))
   #define arma_aligned            __attribute__((__aligned__))
   #define arma_align_mem          __attribute__((__aligned__(16)))
   #define arma_warn_unused        __attribute__((__warn_unused_result__))
@@ -263,16 +255,6 @@
   
   #if !defined(__has_attribute)
     #define __has_attribute(x) 0
-  #endif
-  
-  #if __has_attribute(__pure__)
-    #undef  arma_pure
-    #define arma_pure __attribute__((__pure__))
-  #endif
-  
-  #if __has_attribute(__const__)
-    #undef  arma_const
-    #define arma_const __attribute__((__const__))
   #endif
   
   #if __has_attribute(__aligned__)
