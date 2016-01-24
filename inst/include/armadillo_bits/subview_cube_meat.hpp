@@ -1660,7 +1660,7 @@ subview_cube<eT>::extract(Cube<eT>& out, const subview_cube<eT>& in)
   const uword n_cols   = in.n_cols;
   const uword n_slices = in.n_slices;
   
-  arma_extra_debug_print(arma_boost::format("out.n_rows = %d   out.n_cols = %d    out.n_slices = %d    in.m.n_rows = %d   in.m.n_cols = %d   in.m.n_slices = %d") % out.n_rows % out.n_cols % out.n_slices % in.m.n_rows % in.m.n_cols % in.m.n_slices);
+  arma_extra_debug_print(arma_str::format("out.n_rows = %d   out.n_cols = %d    out.n_slices = %d    in.m.n_rows = %d   in.m.n_cols = %d   in.m.n_slices = %d") % out.n_rows % out.n_cols % out.n_slices % in.m.n_rows % in.m.n_cols % in.m.n_slices);
   
   
   for(uword slice = 0; slice < n_slices; ++slice)

@@ -1277,7 +1277,7 @@ subview<eT>::extract(Mat<eT>& out, const subview<eT>& in)
   const uword n_rows = in.n_rows;  // number of rows in the subview
   const uword n_cols = in.n_cols;  // number of columns in the subview
   
-  arma_extra_debug_print(arma_boost::format("out.n_rows = %d   out.n_cols = %d    in.m.n_rows = %d  in.m.n_cols = %d") % out.n_rows % out.n_cols % in.m.n_rows % in.m.n_cols );
+  arma_extra_debug_print(arma_str::format("out.n_rows = %d   out.n_cols = %d    in.m.n_rows = %d  in.m.n_cols = %d") % out.n_rows % out.n_cols % in.m.n_rows % in.m.n_cols );
   
   
   if(in.is_vec() == true)

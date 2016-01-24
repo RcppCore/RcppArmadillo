@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -103,26 +103,20 @@ class auxlib
   // eig_gen
   
   template<typename T1>
-  inline static bool eig_gen(Mat< std::complex<typename T1::pod_type> >& vals, Mat< std::complex<typename T1::pod_type> >& vecs, const uword mode, const Base<typename T1::pod_type,T1>& expr);
+  inline static bool eig_gen(Mat< std::complex<typename T1::pod_type> >& vals, Mat< std::complex<typename T1::pod_type> >& vecs, const bool vecs_on, const Base<typename T1::pod_type,T1>& expr);
   
   template<typename T1>
-  inline static bool eig_gen(Mat< std::complex<typename T1::pod_type> >& vals, Mat< std::complex<typename T1::pod_type> >& vecs, const uword mode, const Base< std::complex<typename T1::pod_type>, T1 >& expr);
-  
-  template<typename T1>
-  inline static bool eig_gen_dual(Mat< std::complex<typename T1::pod_type> >& vals, Mat<typename T1::pod_type>& vecs_l, Mat<typename T1::pod_type>& vecs_r, const Base<typename T1::pod_type,T1>& expr);
-  
-  template<typename T1>
-  inline static bool eig_gen_dual(Mat< std::complex<typename T1::pod_type> >& vals, Mat< std::complex<typename T1::pod_type> >& vecs_l, Mat< std::complex<typename T1::pod_type> >& vecs_r, const Base< std::complex<typename T1::pod_type>, T1 >& expr);
+  inline static bool eig_gen(Mat< std::complex<typename T1::pod_type> >& vals, Mat< std::complex<typename T1::pod_type> >& vecs, const bool vecs_on, const Base< std::complex<typename T1::pod_type>, T1 >& expr);
   
   
   //
   // eig_pair
   
   template<typename T1, typename T2>
-  inline static bool eig_pair(Mat< std::complex<typename T1::pod_type> >& vals, Mat< std::complex<typename T1::pod_type> >& vecs, const uword mode, const Base<typename T1::pod_type,T1>& A_expr, const Base<typename T1::pod_type,T2>& B_expr);
+  inline static bool eig_pair(Mat< std::complex<typename T1::pod_type> >& vals, Mat< std::complex<typename T1::pod_type> >& vecs, const bool vecs_on, const Base<typename T1::pod_type,T1>& A_expr, const Base<typename T1::pod_type,T2>& B_expr);
   
   template<typename T1, typename T2>
-  inline static bool eig_pair(Mat< std::complex<typename T1::pod_type> >& vals, Mat< std::complex<typename T1::pod_type> >& vecs, const uword mode, const Base< std::complex<typename T1::pod_type>, T1 >& A_expr, const Base< std::complex<typename T1::pod_type>, T2 >& B_expr);
+  inline static bool eig_pair(Mat< std::complex<typename T1::pod_type> >& vals, Mat< std::complex<typename T1::pod_type> >& vecs, const bool vecs_on, const Base< std::complex<typename T1::pod_type>, T1 >& A_expr, const Base< std::complex<typename T1::pod_type>, T2 >& B_expr);
   
   
   //

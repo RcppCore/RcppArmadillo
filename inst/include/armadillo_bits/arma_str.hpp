@@ -8,14 +8,14 @@
 // Written by Conrad Sanderson - http://conradsanderson.id.au
 
 
-//! \addtogroup arma_boost
+//! \addtogroup arma_str
 //! @{
 
 
-namespace arma_boost
+namespace arma_str
   {
   
-  #if defined(ARMA_HAVE_SNPRINTF)
+  #if ( defined(ARMA_USE_CXX11) || defined(ARMA_HAVE_SNPRINTF) )
     
     #define arma_snprintf std::snprintf
     

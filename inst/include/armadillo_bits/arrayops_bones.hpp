@@ -177,27 +177,27 @@ class arrayops
   // scalar = op(array)
   
   template<typename eT>
-  arma_hot arma_pure inline static
+  arma_hot inline static
   eT
   accumulate(const eT* src, const uword n_elem);
   
   template<typename eT>
-  arma_hot arma_pure inline static
+  arma_hot inline static
   eT
   product(const eT* src, const uword n_elem);
   
   template<typename eT>
-  arma_hot arma_pure inline static
+  arma_hot inline static
   bool
   is_finite(const eT* src, const uword n_elem);
   
   template<typename eT>
-  arma_hot arma_pure inline static
+  arma_hot inline static
   bool
   has_inf(const eT* src, const uword n_elem);
   
   template<typename eT>
-  arma_hot arma_pure inline static
+  arma_hot inline static
   bool
   has_nan(const eT* src, const uword n_elem);
   };

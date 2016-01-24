@@ -180,7 +180,7 @@ inline
 void
 Mat<eT>::init_cold()
   {
-  arma_extra_debug_sigprint( arma_boost::format("n_rows = %d, n_cols = %d") % n_rows % n_cols );
+  arma_extra_debug_sigprint( arma_str::format("n_rows = %d, n_cols = %d") % n_rows % n_cols );
   
   // ensure that n_elem can hold the result of (n_rows * n_cols)
   
@@ -221,7 +221,7 @@ inline
 void
 Mat<eT>::init_warm(uword in_n_rows, uword in_n_cols)
   {
-  arma_extra_debug_sigprint( arma_boost::format("in_n_rows = %d, in_n_cols = %d") % in_n_rows % in_n_cols );
+  arma_extra_debug_sigprint( arma_str::format("in_n_rows = %d, in_n_cols = %d") % in_n_rows % in_n_cols );
   
   if( (n_rows == in_n_rows) && (n_cols == in_n_cols) )  { return; }
   
@@ -625,7 +625,7 @@ Mat<eT>::operator=(const std::vector<eT>& x)
     , mem_state(0       )
     , mem      (        )
     {
-    arma_extra_debug_sigprint(arma_boost::format("this = %x   X = %x") % this % &X);
+    arma_extra_debug_sigprint(arma_str::format("this = %x   X = %x") % this % &X);
     
     if( ((X.mem_state == 0) && (X.n_elem > arma_config::mat_prealloc)) || (X.mem_state == 1) || (X.mem_state == 2) )
       {
@@ -661,7 +661,7 @@ Mat<eT>::operator=(const std::vector<eT>& x)
   const Mat<eT>&
   Mat<eT>::operator=(Mat<eT>&& X)
     {
-    arma_extra_debug_sigprint(arma_boost::format("this = %x   X = %x") % this % &X);
+    arma_extra_debug_sigprint(arma_str::format("this = %x   X = %x") % this % &X);
     
     (*this).steal_mem(X);
     
@@ -767,7 +767,7 @@ Mat<eT>::Mat(const Mat<eT>& in_mat)
   , mem_state(0)
   , mem()
   {
-  arma_extra_debug_sigprint(arma_boost::format("this = %x   in_mat = %x") % this % &in_mat);
+  arma_extra_debug_sigprint(arma_str::format("this = %x   in_mat = %x") % this % &in_mat);
   
   init_cold();
   
@@ -782,7 +782,7 @@ inline
 const Mat<eT>&
 Mat<eT>::operator=(const Mat<eT>& in_mat)
   {
-  arma_extra_debug_sigprint(arma_boost::format("this = %x   in_mat = %x") % this % &in_mat);
+  arma_extra_debug_sigprint(arma_str::format("this = %x   in_mat = %x") % this % &in_mat);
   
   if(this != &in_mat)
     {
@@ -949,7 +949,7 @@ Mat<eT>::swap(Mat<eT>& B)
   {
   Mat<eT>& A = (*this);
   
-  arma_extra_debug_sigprint(arma_boost::format("A = %x   B = %x") % &A % &B);
+  arma_extra_debug_sigprint(arma_str::format("A = %x   B = %x") % &A % &B);
 
   bool layout_ok = false;
   

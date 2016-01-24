@@ -1,4 +1,4 @@
-// Copyright (C) 2014-2015 National ICT Australia (NICTA)
+// Copyright (C) 2014-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -730,8 +730,8 @@ gmm_diag<eT>::learn
     
     bool status = false;
     
-         if(dist_mode == eucl_dist)  { status = km_iterate<1>(X, km_iter, print_mode); }
-    else if(dist_mode == maha_dist)  { status = km_iterate<2>(X, km_iter, print_mode); }
+         if(dist_mode == eucl_dist)  { status = km_iterate<1>(X, km_iter, print_mode, "gmm_diag::learn(): k-means"); }
+    else if(dist_mode == maha_dist)  { status = km_iterate<2>(X, km_iter, print_mode, "gmm_diag::learn(): k-means"); }
     
     stream_state.restore(get_stream_err2());
     
@@ -768,6 +768,83 @@ gmm_diag<eT>::learn
   mah_aux.reset();
   
   init_constants();
+  
+  return true;
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+bool
+gmm_diag<eT>::kmeans_wrapper
+  (
+        Mat<eT>&       user_means,
+  const Base<eT,T1>&   data,
+  const uword          N_gaus,
+  const gmm_seed_mode& seed_mode,
+  const uword          km_iter,
+  const bool           print_mode
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool seed_mode_ok = \
+       (seed_mode == keep_existing)
+    || (seed_mode == static_subset)
+    || (seed_mode == static_spread)
+    || (seed_mode == random_subset)
+    || (seed_mode == random_spread);
+  
+  arma_debug_check( (seed_mode_ok == false), "kmeans(): unknown seed_mode" );
+  
+  const unwrap<T1>   tmp_X(data.get_ref());
+  const Mat<eT>& X = tmp_X.M;
+  
+  if(X.is_empty()          )  { arma_debug_warn("kmeans(): given matrix is empty"             ); return false; }
+  if(X.is_finite() == false)  { arma_debug_warn("kmeans(): given matrix has non-finite values"); return false; }
+  
+  if(N_gaus == 0)  { reset(); return true; }
+  
+  
+  // initial means
+  
+  if(seed_mode == keep_existing)
+    {
+    access::rw(means) = user_means;
+    
+    if(means.is_empty()        )  { arma_debug_warn("kmeans(): no existing means"      ); return false; }
+    if(X.n_rows != means.n_rows)  { arma_debug_warn("kmeans(): dimensionality mismatch"); return false; }
+    
+    // TODO: also check for number of vectors?
+    }
+  else
+    {
+    if(X.n_cols < N_gaus)  { arma_debug_warn("kmeans(): number of vectors is less than number of means"); return false; }
+    
+    access::rw(means).zeros(X.n_rows, N_gaus);
+    
+    if(print_mode)  { get_stream_err2() << "kmeans(): generating initial means\n"; }
+    
+    generate_initial_means<1>(X, seed_mode);
+    }
+  
+  
+  // k-means
+  
+  if(km_iter > 0)
+    {
+    const arma_ostream_state stream_state(get_stream_err2());
+    
+    bool status = false;
+    
+    status = km_iterate<1>(X, km_iter, print_mode, "kmeans()");
+    
+    stream_state.restore(get_stream_err2());
+    
+    if(status == false)  { arma_debug_warn("kmeans(): clustering failed; not enough data, or too many means requested"); return false; }
+    }
   
   return true;
   }
@@ -1574,7 +1651,7 @@ template<typename eT>
 template<uword dist_id>
 inline
 bool
-gmm_diag<eT>::km_iterate(const Mat<eT>& X, const uword max_iter, const bool verbose)
+gmm_diag<eT>::km_iterate(const Mat<eT>& X, const uword max_iter, const bool verbose, const char* signature)
   {
   arma_extra_debug_sigprint();
   
@@ -1613,11 +1690,11 @@ gmm_diag<eT>::km_iterate(const Mat<eT>& X, const uword max_iter, const bool verb
     
     for(uword t=0; t < n_threads; ++t)  { t_running_means[t].set_size(N_gaus); }
     
-    vec tmp_mean(N_dims);
+    Col<eT> tmp_mean(N_dims);
     
     if(verbose)
       {
-      get_stream_err2() << "gmm_diag::learn(): k-means: n_threads: " << n_threads  << '\n';
+      get_stream_err2() << signature << ": n_threads: " << n_threads  << '\n';
       }
   #endif
   
@@ -1704,7 +1781,7 @@ gmm_diag<eT>::km_iterate(const Mat<eT>& X, const uword max_iter, const bool verb
     
     if(n_dead_means > 0)
       {
-      if(verbose)  { get_stream_err2() << "gmm_diag::learn(): k-means: recovering from dead means\n"; }
+      if(verbose)  { get_stream_err2() << signature << ": recovering from dead means\n"; }
       
       if(n_dead_means == 1)
         {
@@ -1755,7 +1832,7 @@ gmm_diag<eT>::km_iterate(const Mat<eT>& X, const uword max_iter, const bool verb
         
         if(n_resurrected_means != n_dead_means)
           {
-          if(verbose)  { get_stream_err2() << "gmm_diag::learn(): k-means: WARNING: did not resurrect all dead means\n"; }
+          if(verbose)  { get_stream_err2() << signature << ": WARNING: did not resurrect all dead means\n"; }
           }
         }
       }
@@ -1769,7 +1846,7 @@ gmm_diag<eT>::km_iterate(const Mat<eT>& X, const uword max_iter, const bool verb
     
     if(verbose)
       {
-      get_stream_err2() << "gmm_diag::learn(): k-means: iteration: ";
+      get_stream_err2() << signature << ": iteration: ";
       get_stream_err2().unsetf(ios::scientific);
       get_stream_err2().setf(ios::fixed);
       get_stream_err2().width(std::streamsize(4));

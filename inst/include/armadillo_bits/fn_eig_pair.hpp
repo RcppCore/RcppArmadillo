@@ -1,4 +1,4 @@
-// Copyright (C) 2015 National ICT Australia (NICTA)
+// Copyright (C) 2015-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,7 +28,7 @@ eig_pair
   Col< std::complex<T> > eigvals;
   Mat< std::complex<T> > eigvecs;
   
-  const bool status = auxlib::eig_pair(eigvals, eigvecs, uword(0), A_expr.get_ref(), B_expr.get_ref());
+  const bool status = auxlib::eig_pair(eigvals, eigvecs, false, A_expr.get_ref(), B_expr.get_ref());
   
   if(status == false)
     {
@@ -57,7 +57,7 @@ eig_pair
   
   Mat< std::complex<T> > eigvecs;
   
-  const bool status = auxlib::eig_pair(eigvals, eigvecs, uword(0), A_expr.get_ref(), B_expr.get_ref());
+  const bool status = auxlib::eig_pair(eigvals, eigvecs, false, A_expr.get_ref(), B_expr.get_ref());
   
   if(status == false)
     {
@@ -85,7 +85,7 @@ eig_pair
   
   arma_debug_check( (void_ptr(&eigvals) == void_ptr(&eigvecs)), "eig_pair(): parameter 'eigval' is an alias of parameter 'eigvec'" );
   
-  const bool status = auxlib::eig_pair(eigvals, eigvecs, uword(2), A_expr.get_ref(), B_expr.get_ref());
+  const bool status = auxlib::eig_pair(eigvals, eigvecs, true, A_expr.get_ref(), B_expr.get_ref());
   
   if(status == false)
     {

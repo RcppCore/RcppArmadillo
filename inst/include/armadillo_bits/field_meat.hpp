@@ -59,7 +59,7 @@ field<oT>::field(const field& x)
   , n_elem(0)
   , mem(0)
   {
-  arma_extra_debug_sigprint(arma_boost::format("this = %x   x = %x") % this % &x);
+  arma_extra_debug_sigprint(arma_str::format("this = %x   x = %x") % this % &x);
   
   init(x);
   }
@@ -202,7 +202,7 @@ inline
 void
 field<oT>::set_size(const uword n_elem_in)
   {
-  arma_extra_debug_sigprint(arma_boost::format("n_elem_in = %d") % n_elem_in);
+  arma_extra_debug_sigprint(arma_str::format("n_elem_in = %d") % n_elem_in);
   
   init(n_elem_in, 1);
   }
@@ -215,7 +215,7 @@ inline
 void
 field<oT>::set_size(const uword n_rows_in, const uword n_cols_in)
   {
-  arma_extra_debug_sigprint(arma_boost::format("n_rows_in = %d, n_cols_in = %d") % n_rows_in % n_cols_in);
+  arma_extra_debug_sigprint(arma_str::format("n_rows_in = %d, n_cols_in = %d") % n_rows_in % n_cols_in);
   
   init(n_rows_in, n_cols_in);
   }
@@ -228,7 +228,7 @@ inline
 void
 field<oT>::set_size(const uword n_rows_in, const uword n_cols_in, const uword n_slices_in)
   {
-  arma_extra_debug_sigprint(arma_boost::format("n_rows_in = %d, n_cols_in = %d, n_slices_in = %d") % n_rows_in % n_cols_in % n_slices_in);
+  arma_extra_debug_sigprint(arma_str::format("n_rows_in = %d, n_cols_in = %d, n_slices_in = %d") % n_rows_in % n_cols_in % n_slices_in);
   
   init(n_rows_in, n_cols_in, n_slices_in);
   }
@@ -376,7 +376,7 @@ field<oT>::set_size(const SizeCube& s)
     , n_slices(X.n_slices)
     , n_elem  (X.n_elem  )
     {
-    arma_extra_debug_sigprint(arma_boost::format("this = %x   X = %x") % this % &X);
+    arma_extra_debug_sigprint(arma_str::format("this = %x   X = %x") % this % &X);
     
     if(n_elem > field_prealloc_n_elem::val)
       {
@@ -402,7 +402,7 @@ field<oT>::set_size(const SizeCube& s)
   const field<oT>&
   field<oT>::operator=(field<oT>&& X)
     {
-    arma_extra_debug_sigprint(arma_boost::format("this = %x   X = %x") % this % &X);
+    arma_extra_debug_sigprint(arma_str::format("this = %x   X = %x") % this % &X);
     
     access::rw(n_rows  ) = X.n_rows;
     access::rw(n_cols  ) = X.n_cols;
@@ -1930,7 +1930,7 @@ inline
 void
 field<oT>::init(const uword n_rows_in, const uword n_cols_in, const uword n_slices_in)
   {
-  arma_extra_debug_sigprint( arma_boost::format("n_rows_in = %d, n_cols_in = %d, n_slices_in = %d") % n_rows_in % n_cols_in % n_slices_in );
+  arma_extra_debug_sigprint( arma_str::format("n_rows_in = %d, n_cols_in = %d, n_slices_in = %d") % n_rows_in % n_cols_in % n_slices_in );
   
   #if (defined(ARMA_USE_CXX11) || defined(ARMA_64BIT_WORD))
     const char* error_message = "field::init(): requested size is too large";
@@ -2003,7 +2003,7 @@ inline
 void
 field<oT>::delete_objects()
   {
-  arma_extra_debug_sigprint( arma_boost::format("n_elem = %d") % n_elem );
+  arma_extra_debug_sigprint( arma_str::format("n_elem = %d") % n_elem );
   
   for(uword i=0; i<n_elem; ++i)
     {
@@ -2022,7 +2022,7 @@ inline
 void
 field<oT>::create_objects()
   {
-  arma_extra_debug_sigprint( arma_boost::format("n_elem = %d") % n_elem );
+  arma_extra_debug_sigprint( arma_str::format("n_elem = %d") % n_elem );
   
   for(uword i=0; i<n_elem; ++i)
     {

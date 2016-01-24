@@ -197,7 +197,6 @@ op_mean::apply_noalias_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& 
 
 
 template<typename eT>
-arma_pure
 inline
 eT
 op_mean::direct_mean(const eT* const X, const uword n_elem)
@@ -214,7 +213,6 @@ op_mean::direct_mean(const eT* const X, const uword n_elem)
 
 
 template<typename eT>
-arma_pure
 inline
 eT
 op_mean::direct_mean_robust(const eT* const X, const uword n_elem)

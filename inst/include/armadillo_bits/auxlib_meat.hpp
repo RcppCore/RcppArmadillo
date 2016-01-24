@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -999,7 +999,7 @@ auxlib::eig_gen
   (
          Mat< std::complex<typename T1::pod_type> >& vals,
          Mat< std::complex<typename T1::pod_type> >& vecs,
-  const uword                                        mode,
+  const bool                                         vecs_on,
   const Base<typename T1::pod_type,T1>&              expr
   )
   {
@@ -1028,10 +1028,7 @@ auxlib::eig_gen
     
     Mat<T> tmp(1,1);
     
-    const bool calc_l = (mode == 1);
-    const bool calc_r = (mode == 2);
-    
-    if(calc_l || calc_r)
+    if(vecs_on)
       {
       vecs.set_size(X.n_rows, X.n_rows);
        tmp.set_size(X.n_rows, X.n_rows);
@@ -1039,14 +1036,14 @@ auxlib::eig_gen
     
     podarray<T> junk(1);
     
-    char     jobvl = (calc_l) ? 'V' : 'N';
-    char     jobvr = (calc_r) ? 'V' : 'N';
+    char     jobvl = 'N';
+    char     jobvr = (vecs_on) ? 'V' : 'N';
     blas_int N     = blas_int(X.n_rows);
-    T*       vl    = (calc_l) ? tmp.memptr() : junk.memptr();
-    T*       vr    = (calc_r) ? tmp.memptr() : junk.memptr();
-    blas_int ldvl  = (calc_l) ? blas_int(tmp.n_rows) : blas_int(1);
-    blas_int ldvr  = (calc_r) ? blas_int(tmp.n_rows) : blas_int(1);
-    blas_int lwork = (calc_l || calc_r) ? (3 * ((std::max)(blas_int(1), 4*N)) ) : (3 * ((std::max)(blas_int(1), 3*N)) );
+    T*       vl    = junk.memptr();
+    T*       vr    = (vecs_on) ? tmp.memptr() : junk.memptr();
+    blas_int ldvl  = blas_int(1);
+    blas_int ldvr  = (vecs_on) ? blas_int(tmp.n_rows) : blas_int(1);
+    blas_int lwork = (vecs_on) ? (3 * ((std::max)(blas_int(1), 4*N)) ) : (3 * ((std::max)(blas_int(1), 3*N)) );
     blas_int info  = 0;
     
     podarray<T> work( static_cast<uword>(lwork) );
@@ -1066,7 +1063,7 @@ auxlib::eig_gen
     
     for(uword i=0; i < X.n_rows; ++i)  { vals_mem[i] = std::complex<T>(vals_real[i], vals_imag[i]); }
     
-    if(calc_l || calc_r)
+    if(vecs_on)
       {
       for(uword j=0; j < X.n_rows; ++j)
         {
@@ -1096,7 +1093,7 @@ auxlib::eig_gen
     {
     arma_ignore(vals);
     arma_ignore(vecs);
-    arma_ignore(mode);
+    arma_ignore(vecs_on);
     arma_ignore(expr);
     arma_stop("eig_gen(): use of LAPACK must be enabled");
     return false;
@@ -1114,7 +1111,7 @@ auxlib::eig_gen
   (
          Mat< std::complex<typename T1::pod_type> >&     vals,
          Mat< std::complex<typename T1::pod_type> >&     vecs, 
-  const uword                                            mode,
+  const bool                                             vecs_on,
   const Base< std::complex<typename T1::pod_type>, T1 >& expr
   )
   {
@@ -1142,20 +1139,17 @@ auxlib::eig_gen
     
     vals.set_size(X.n_rows, 1);
     
-    const bool calc_l = (mode == 1);
-    const bool calc_r = (mode == 2);
-    
-    if(calc_l || calc_r) { vecs.set_size(X.n_rows, X.n_rows); }
+    if(vecs_on)  { vecs.set_size(X.n_rows, X.n_rows); }
     
     podarray<eT> junk(1);
     
-    char     jobvl = (calc_l) ? 'V' : 'N';
-    char     jobvr = (calc_r) ? 'V' : 'N';
+    char     jobvl = 'N';
+    char     jobvr = (vecs_on) ? 'V' : 'N';
     blas_int N     = blas_int(X.n_rows);
-    eT*      vl    = (calc_l) ? vecs.memptr() : junk.memptr();
-    eT*      vr    = (calc_r) ? vecs.memptr() : junk.memptr();
-    blas_int ldvl  = (calc_l) ? blas_int(vecs.n_rows) : blas_int(1);
-    blas_int ldvr  = (calc_r) ? blas_int(vecs.n_rows) : blas_int(1);
+    eT*      vl    = junk.memptr();
+    eT*      vr    = (vecs_on) ? vecs.memptr() : junk.memptr();
+    blas_int ldvl  = blas_int(1);
+    blas_int ldvr  = (vecs_on) ? blas_int(vecs.n_rows) : blas_int(1);
     blas_int lwork = 3 * ((std::max)(blas_int(1), 2*N));
     blas_int info  = 0;
     
@@ -1172,154 +1166,7 @@ auxlib::eig_gen
     {
     arma_ignore(vals);
     arma_ignore(vecs);
-    arma_ignore(mode);
-    arma_ignore(expr);
-    arma_stop("eig_gen(): use of LAPACK must be enabled");
-    return false;
-    }
-  #endif
-  }
-
-
-
-//! eigen decomposition of general square matrix (real); calculate both left and right eigenvectors
-template<typename T1>
-inline
-bool
-auxlib::eig_gen_dual
-  (
-         Mat< std::complex<typename T1::pod_type> >& vals,
-         Mat<typename T1::pod_type>&                 vecs_l,
-         Mat<typename T1::pod_type>&                 vecs_r,
-  const Base<typename T1::pod_type,T1>&              expr
-  )
-  {
-  arma_extra_debug_sigprint();
-  
-  #if defined(ARMA_USE_LAPACK)
-    {
-    typedef typename T1::pod_type T;
-    
-    Mat<T> X = expr.get_ref();
-    
-    arma_debug_check( (X.is_square() == false), "eig_gen(): given matrix must be square sized" );
-    
-    arma_debug_assert_blas_size(X);
-    
-    if(X.is_empty())
-      {
-      vals.reset();
-      vecs_l.reset();
-      vecs_r.reset();
-      return true;
-      }
-    
-    if(X.is_finite() == false)  { return false; }
-    
-    vals.set_size(X.n_rows, 1);
-    
-    vecs_l.set_size(X.n_rows, X.n_rows);
-    vecs_r.set_size(X.n_rows, X.n_rows);
-    
-    char     jobvl = 'V';
-    char     jobvr = 'V';
-    blas_int N     = blas_int(X.n_rows);
-    blas_int ldvl  = blas_int(vecs_l.n_rows);
-    blas_int ldvr  = blas_int(vecs_r.n_rows);
-    blas_int lwork = (3 * ((std::max)(blas_int(1), 4*N)) );
-    blas_int info  = 0;
-    
-    podarray<T> work( static_cast<uword>(lwork) );
-    
-    podarray<T> vals_real(X.n_rows);
-    podarray<T> vals_imag(X.n_rows);
-    
-    arma_extra_debug_print("lapack::geev() -- START");
-    lapack::geev(&jobvl, &jobvr, &N, X.memptr(), &N, vals_real.memptr(), vals_imag.memptr(), vecs_l.memptr(), &ldvl, vecs_r.memptr(), &ldvr, work.memptr(), &lwork, &info);
-    arma_extra_debug_print("lapack::geev() -- END");
-    
-    std::complex<T>* vals_mem = vals.memptr();
-    
-    for(uword i=0; i < X.n_rows; ++i)  { vals_mem[i] = std::complex<T>(vals_real[i], vals_imag[i]); }
-    
-    return (info == 0);
-    }
-  #else
-    {
-    arma_ignore(vals);
-    arma_ignore(vecs_l);
-    arma_ignore(vecs_r);
-    arma_ignore(expr);
-    arma_stop("eig_gen(): use of LAPACK must be enabled");
-    return false;
-    }
-  #endif
-  }
-
-
-
-//! eigen decomposition of general square matrix (complex); calculate both left and right eigenvectors
-template<typename T1>
-inline
-bool
-auxlib::eig_gen_dual
-  (
-         Mat< std::complex<typename T1::pod_type> >&     vals,
-         Mat< std::complex<typename T1::pod_type> >&     vecs_l, 
-         Mat< std::complex<typename T1::pod_type> >&     vecs_r, 
-  const Base< std::complex<typename T1::pod_type>, T1 >& expr
-  )
-  {
-  arma_extra_debug_sigprint();
-  
-  #if defined(ARMA_USE_LAPACK)
-    {
-    typedef typename T1::pod_type     T;
-    typedef typename std::complex<T> eT;
-    
-    Mat<eT> X = expr.get_ref();
-    
-    arma_debug_check( (X.is_square() == false), "eig_gen(): given matrix must be square sized" );
-    
-    arma_debug_assert_blas_size(X);
-    
-    if(X.is_empty())
-      {
-      vals.reset();
-      vecs_l.reset();
-      vecs_r.reset();
-      return true;
-      }
-    
-    if(X.is_finite() == false)  { return false; }
-    
-    vals.set_size(X.n_rows, 1);
-    
-    vecs_l.set_size(X.n_rows, X.n_rows);
-    vecs_r.set_size(X.n_rows, X.n_rows);
-    
-    char     jobvl = 'V';
-    char     jobvr = 'V';
-    blas_int N     = blas_int(X.n_rows);
-    blas_int ldvl  = blas_int(vecs_l.n_rows);
-    blas_int ldvr  = blas_int(vecs_r.n_rows);
-    blas_int lwork = 3 * ((std::max)(blas_int(1), 2*N));
-    blas_int info  = 0;
-    
-    podarray<eT>  work( static_cast<uword>(lwork) );
-    podarray< T> rwork( static_cast<uword>(2*N)   );
-    
-    arma_extra_debug_print("lapack::cx_geev() -- START");
-    lapack::cx_geev(&jobvl, &jobvr, &N, X.memptr(), &N, vals.memptr(), vecs_l.memptr(), &ldvl, vecs_r.memptr(), &ldvr, work.memptr(), &lwork, rwork.memptr(), &info);
-    arma_extra_debug_print("lapack::cx_geev() -- END");
-    
-    return (info == 0);
-    }
-  #else
-    {
-    arma_ignore(vals);
-    arma_ignore(vecs_l);
-    arma_ignore(vecs_r);
+    arma_ignore(vecs_on);
     arma_ignore(expr);
     arma_stop("eig_gen(): use of LAPACK must be enabled");
     return false;
@@ -1337,7 +1184,7 @@ auxlib::eig_pair
   (
         Mat< std::complex<typename T1::pod_type> >& vals,
         Mat< std::complex<typename T1::pod_type> >& vecs,
-  const uword                                       mode,
+  const bool                                        vecs_on,
   const Base<typename T1::pod_type,T1>&             A_expr,
   const Base<typename T1::pod_type,T2>&             B_expr
   )
@@ -1372,10 +1219,7 @@ auxlib::eig_pair
     
     Mat<T> tmp(1,1);
     
-    const bool calc_l = (mode == 1);
-    const bool calc_r = (mode == 2);
-    
-    if(calc_l || calc_r)
+    if(vecs_on)
       {
       vecs.set_size(A.n_rows, A.n_rows);
        tmp.set_size(A.n_rows, A.n_rows);
@@ -1383,13 +1227,13 @@ auxlib::eig_pair
     
     podarray<T> junk(1);
     
-    char     jobvl = (calc_l) ? 'V' : 'N';
-    char     jobvr = (calc_r) ? 'V' : 'N';
+    char     jobvl = 'N';
+    char     jobvr = (vecs_on) ? 'V' : 'N';
     blas_int N     = blas_int(A.n_rows);
-    T*       vl    = (calc_l) ? tmp.memptr() : junk.memptr();
-    T*       vr    = (calc_r) ? tmp.memptr() : junk.memptr();
-    blas_int ldvl  = (calc_l) ? blas_int(tmp.n_rows) : blas_int(1);
-    blas_int ldvr  = (calc_r) ? blas_int(tmp.n_rows) : blas_int(1);
+    T*       vl    = junk.memptr();
+    T*       vr    = (vecs_on) ? tmp.memptr() : junk.memptr();
+    blas_int ldvl  = blas_int(1);
+    blas_int ldvr  = (vecs_on) ? blas_int(tmp.n_rows) : blas_int(1);
     blas_int lwork = 3 * ((std::max)(blas_int(1), 8*N));
     blas_int info  = 0;
     
@@ -1434,7 +1278,7 @@ auxlib::eig_pair
     
     if(beta_has_zero)  { arma_debug_warn("eig_pair(): given matrices appear ill-conditioned"); }
     
-    if(calc_l || calc_r)
+    if(vecs_on)
       {
       for(uword j=0; j<A.n_rows; ++j)
         {
@@ -1464,7 +1308,7 @@ auxlib::eig_pair
     {
     arma_ignore(vals);
     arma_ignore(vecs);
-    arma_ignore(mode);
+    arma_ignore(vecs_on);
     arma_ignore(A_expr);
     arma_ignore(B_expr);
     arma_stop("eig_pair(): use of LAPACK must be enabled");
@@ -1483,7 +1327,7 @@ auxlib::eig_pair
   (
         Mat< std::complex<typename T1::pod_type> >&      vals,
         Mat< std::complex<typename T1::pod_type> >&      vecs,
-  const uword                                            mode,
+  const bool                                             vecs_on,
   const Base< std::complex<typename T1::pod_type>, T1 >& A_expr,
   const Base< std::complex<typename T1::pod_type>, T2 >& B_expr
   )
@@ -1494,7 +1338,7 @@ auxlib::eig_pair
     {
     arma_ignore(vals);
     arma_ignore(vecs);
-    arma_ignore(mode);
+    arma_ignore(vecs_on);
     arma_ignore(A_expr);
     arma_ignore(B_expr);
     arma_stop("eig_pair() for complex matrices not available due to crippled LAPACK");
@@ -1526,20 +1370,17 @@ auxlib::eig_pair
     
     vals.set_size(A.n_rows, 1);
     
-    const bool calc_l = (mode == 1);
-    const bool calc_r = (mode == 2);
-    
-    if(calc_l || calc_r)  { vecs.set_size(A.n_rows, A.n_rows); }
+    if(vecs_on)  { vecs.set_size(A.n_rows, A.n_rows); }
     
     podarray<eT> junk(1);
     
-    char     jobvl = (calc_l) ? 'V' : 'N';
-    char     jobvr = (calc_r) ? 'V' : 'N';
+    char     jobvl = 'N';
+    char     jobvr = (vecs_on) ? 'V' : 'N';
     blas_int N     = blas_int(A.n_rows);
-    eT*      vl    = (calc_l) ? vecs.memptr() : junk.memptr();
-    eT*      vr    = (calc_r) ? vecs.memptr() : junk.memptr();
-    blas_int ldvl  = (calc_l) ? blas_int(vecs.n_rows) : blas_int(1);
-    blas_int ldvr  = (calc_r) ? blas_int(vecs.n_rows) : blas_int(1);
+    eT*      vl    = junk.memptr();
+    eT*      vr    = (vecs_on) ? vecs.memptr() : junk.memptr();
+    blas_int ldvl  = blas_int(1);
+    blas_int ldvr  = (vecs_on) ? blas_int(vecs.n_rows) : blas_int(1);
     blas_int lwork = 3 * ((std::max)(blas_int(1),2*N));
     blas_int info  = 0;
     
@@ -1579,7 +1420,7 @@ auxlib::eig_pair
     {
     arma_ignore(vals);
     arma_ignore(vecs);
-    arma_ignore(mode);
+    arma_ignore(vecs_on);
     arma_ignore(A_expr);
     arma_ignore(B_expr);
     arma_stop("eig_pair(): use of LAPACK must be enabled");
@@ -4216,11 +4057,12 @@ inline
 typename T1::pod_type
 auxlib::rcond(const Base<typename T1::pod_type,T1>& A_expr)
   {
-  typedef typename T1::pod_type   T;
-  typedef typename T1::elem_type eT;
+  typedef typename T1::pod_type T;
   
   #if defined(ARMA_USE_LAPACK)
     {
+    typedef typename T1::elem_type eT;
+    
     Mat<eT> A = A_expr.get_ref();
     
     arma_debug_check( (A.is_square() == false), "rcond(): matrix must be square sized" );
@@ -4270,11 +4112,12 @@ inline
 typename T1::pod_type
 auxlib::rcond(const Base<std::complex<typename T1::pod_type>,T1>& A_expr)
   {
-  typedef typename T1::pod_type   T;
-  typedef typename T1::elem_type eT;
+  typedef typename T1::pod_type T;
   
   #if defined(ARMA_USE_LAPACK)
     {
+    typedef typename T1::elem_type eT;
+    
     Mat<eT> A = A_expr.get_ref();
     
     arma_debug_check( (A.is_square() == false), "rcond(): matrix must be square sized" );

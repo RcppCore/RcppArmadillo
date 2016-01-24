@@ -237,7 +237,7 @@ Row<eT>::operator=(const std::vector<eT>& x)
   Row<eT>::Row(Row<eT>&& X)
     : Mat<eT>(arma_vec_indicator(), 2)
     {
-    arma_extra_debug_sigprint(arma_boost::format("this = %x   X = %x") % this % &X);
+    arma_extra_debug_sigprint(arma_str::format("this = %x   X = %x") % this % &X);
     
     access::rw(Mat<eT>::n_rows) = 1;
     access::rw(Mat<eT>::n_cols) = X.n_cols;
@@ -277,7 +277,7 @@ Row<eT>::operator=(const std::vector<eT>& x)
   const Row<eT>&
   Row<eT>::operator=(Row<eT>&& X)
     {
-    arma_extra_debug_sigprint(arma_boost::format("this = %x   X = %x") % this % &X);
+    arma_extra_debug_sigprint(arma_str::format("this = %x   X = %x") % this % &X);
     
     (*this).steal_mem(X);
     

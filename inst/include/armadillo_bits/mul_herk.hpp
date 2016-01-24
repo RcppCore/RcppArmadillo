@@ -42,7 +42,6 @@ class herk_helper
   template<typename eT>
   static
   arma_hot
-  arma_pure
   inline
   eT
   dot_conj_row(const uword n_elem, const eT* const A, const Mat<eT>& B, const uword row)
@@ -398,7 +397,7 @@ class herk
         
         const blas_int lda = (do_trans_A) ? k : n;
         
-        arma_extra_debug_print( arma_boost::format("blas::herk(): trans_A = %c") % trans_A );
+        arma_extra_debug_print( arma_str::format("blas::herk(): trans_A = %c") % trans_A );
         
         blas::herk<T>
           (
