@@ -1,4 +1,4 @@
-// Copyright (C) 2010-2013 National ICT Australia (NICTA)
+// Copyright (C) 2010-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -85,6 +85,17 @@ class eop_aux
   template<typename eT> arma_inline static typename arma_integral_only<eT>::result round (const eT  x) { return x;                                                        }
   template<typename eT> arma_inline static typename     arma_real_only<eT>::result round (const eT  x) { return (x >= eT(0)) ? std::floor(x+0.5) : std::ceil(x-0.5);      }
   template<typename eT> arma_inline static typename       arma_cx_only<eT>::result round (const eT& x) { return eT( eop_aux::round(x.real()), eop_aux::round(x.imag()) ); }
+  #endif
+  
+  
+  #if defined(ARMA_USE_CXX11)
+  template<typename eT> arma_inline static typename arma_integral_only<eT>::result trunc (const eT  x) { return x;                                                        }
+  template<typename eT> arma_inline static typename     arma_real_only<eT>::result trunc (const eT  x) { return std::trunc(x);                                            }
+  template<typename eT> arma_inline static typename       arma_cx_only<eT>::result trunc (const eT& x) { return eT( std::trunc(x.real()), std::trunc(x.imag()) );         }
+  #else
+  template<typename eT> arma_inline static typename arma_integral_only<eT>::result trunc (const eT  x) { return x;                                                        }
+  template<typename eT> arma_inline static typename     arma_real_only<eT>::result trunc (const eT  x) { return (x >= eT(0)) ? std::floor(x) : std::ceil(x);              }
+  template<typename eT> arma_inline static typename       arma_cx_only<eT>::result trunc (const eT& x) { return eT( eop_aux::trunc(x.real()), eop_aux::trunc(x.imag()) ); }
   #endif
   
   
