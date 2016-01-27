@@ -3,18 +3,22 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.6.500.2 (2016-01-yy)}{
+\section{Changes in RcppArmadillo version 0.6.500.4.0 (2016-01-26)}{
   \itemize{
-    \item Upgraded to Armadillo 6.500.3-test
+    \item Upgraded to Armadillo 6.500.4 (Gourmet Electron Jumper)
     \itemize{
       \item added \code{conv2()} for 2D convolution
       \item added stand-alone \code{kmeans()} function for clustering data
+      \item added \code{trunc()}
       \item extended \code{conv()} to optionally provide central convolution
       \item faster handling of multiply-and-accumulate by \code{accu()}
+      when using Intel MKL, ATLAS or OpenBLAS 
     }
     \item The \code{configure} script now uses \code{#!/usr/bin/env
       bash} to cope with systems that do not have \code{#!/bin/bash} (PR
     \ghpr{75} fixing issue \ghpr{74})
+    \item RcppArmadillo now defines ARMA_32BIT_WORD to ensure we always
+    use integer vectors that be passed to R
   }
 }
 

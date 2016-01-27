@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,6 +11,8 @@
 
 #undef arma_hot
 #undef arma_cold
+#undef arma_pure
+#undef arma_const
 #undef arma_aligned
 #undef arma_align_mem
 #undef arma_warn_unused
@@ -22,6 +24,8 @@
 
 #define arma_hot
 #define arma_cold
+#define arma_pure
+#define arma_const
 #define arma_aligned
 #define arma_align_mem
 #define arma_warn_unused
@@ -63,9 +67,10 @@
 
 #if defined(__CYGWIN__)
   #if defined(ARMA_USE_CXX11)
-    #undef ARMA_USE_CXX11
-    #undef ARMA_USE_EXTERN_CXX11_RNG
-    #pragma message ("WARNING: disabled use of C++11 features in Armadillo, due to incomplete support for C++11 by Cygwin")
+    #pragma message ("WARNING: Cygwin may have incomplete support for C++11 features;")
+    #pragma message ("WARNING: if something breaks, you get to keep all the pieces.")
+    #pragma message ("WARNING: to forcefully prevent Armadillo from using C++11 features,")
+    #pragma message ("WARNING: #define ARMA_DONT_USE_CXX11 before #include <armadillo>")
   #endif
 #endif
 
@@ -176,6 +181,8 @@
   
   #define ARMA_GOOD_COMPILER
   
+  #undef  arma_pure
+  #undef  arma_const
   #undef  arma_aligned
   #undef  arma_align_mem
   #undef  arma_warn_unused
@@ -184,6 +191,8 @@
   #undef  arma_inline
   #undef  arma_noinline
   
+  #define arma_pure               __attribute__((__pure__))
+  #define arma_const              __attribute__((__const__))
   #define arma_aligned            __attribute__((__aligned__))
   #define arma_align_mem          __attribute__((__aligned__(16)))
   #define arma_warn_unused        __attribute__((__warn_unused_result__))
@@ -255,6 +264,16 @@
   
   #if !defined(__has_attribute)
     #define __has_attribute(x) 0
+  #endif
+  
+  #if __has_attribute(__pure__)
+    #undef  arma_pure
+    #define arma_pure __attribute__((__pure__))
+  #endif
+  
+  #if __has_attribute(__const__)
+    #undef  arma_const
+    #define arma_const __attribute__((__const__))
   #endif
   
   #if __has_attribute(__aligned__)

@@ -1,4 +1,4 @@
-// Copyright (C) 2010-2015 National ICT Australia (NICTA)
+// Copyright (C) 2010-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -864,6 +864,9 @@ eop_core<eop_ceil             >::process(const eT val, const eT  ) { return eop_
 
 template<> template<typename eT> arma_hot arma_inline eT
 eop_core<eop_round            >::process(const eT val, const eT  ) { return eop_aux::round(val);      }
+
+template<> template<typename eT> arma_hot arma_inline eT
+eop_core<eop_trunc            >::process(const eT val, const eT  ) { return eop_aux::trunc(val);      }
 
 template<> template<typename eT> arma_hot arma_inline eT
 eop_core<eop_sign             >::process(const eT val, const eT  ) { return eop_aux::sign(val);       }

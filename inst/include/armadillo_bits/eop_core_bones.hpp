@@ -1,4 +1,4 @@
-// Copyright (C) 2010-2015 National ICT Australia (NICTA)
+// Copyright (C) 2010-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -81,6 +81,7 @@ class eop_pow               : public eop_core<eop_pow>               {};
 class eop_floor             : public eop_core<eop_floor>             {};
 class eop_ceil              : public eop_core<eop_ceil>              {};
 class eop_round             : public eop_core<eop_round>             {};
+class eop_trunc             : public eop_core<eop_trunc>             {};
 class eop_sign              : public eop_core<eop_sign>              {};
 
 

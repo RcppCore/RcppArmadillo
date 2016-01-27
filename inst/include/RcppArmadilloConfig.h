@@ -3,7 +3,7 @@
 //
 // RcppArmadilloConfig.h: Rcpp/Armadillo glue
 //
-// Copyright (C)  2010 - 2014  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2010 - 2016  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 //
 // This file is part of RcppArmadillo.
 //
@@ -95,6 +95,12 @@
   // updates this include file
   #include <RcppArmadilloLapack.h>
 #endif
+
+
+// Under C++11 and C++14, Armadillo now defaults to using int64_t for
+// integers.  This prevents us from passing integer vectors to R as
+// only used int32_t -- so we select the shorter representation here.
+#define ARMA_32BIT_WORD 1
 
 #endif
 
