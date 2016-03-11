@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -96,8 +96,8 @@ class Cube : public BaseCube< eT, Cube<eT> >
   inline const Cube& operator%=(const subview_cube<eT>& X);
   inline const Cube& operator/=(const subview_cube<eT>& X);
   
-  arma_inline       Mat<eT>& slice(const uword in_slice);
-  arma_inline const Mat<eT>& slice(const uword in_slice) const;
+  inline       Mat<eT>& slice(const uword in_slice);
+  inline const Mat<eT>& slice(const uword in_slice) const;
   
   arma_inline       subview_cube<eT> slices(const uword in_slice1, const uword in_slice2);
   arma_inline const subview_cube<eT> slices(const uword in_slice1, const uword in_slice2) const;

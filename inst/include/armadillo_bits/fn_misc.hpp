@@ -268,6 +268,8 @@ sympd(const Base<typename T1::elem_type,T1>& X)
   {
   arma_extra_debug_sigprint();
   
+  arma_debug_warn("sympd() is deprecated and will be removed; change inv(sympd(X)) to inv_sympd(X)");
+  
   return X.get_ref();
   }
 

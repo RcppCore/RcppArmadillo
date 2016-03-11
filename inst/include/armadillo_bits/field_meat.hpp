@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -496,7 +496,7 @@ arma_inline
 oT&
 field<oT>::operator() (const uword i)
   {
-  arma_debug_check( (i >= n_elem), "field::operator(): index out of bounds");
+  arma_debug_check( (i >= n_elem), "field::operator(): index out of bounds" );
   return (*mem[i]);
   }
 
@@ -508,7 +508,7 @@ arma_inline
 const oT&
 field<oT>::operator() (const uword i) const
   {
-  arma_debug_check( (i >= n_elem), "field::operator(): index out of bounds");
+  arma_debug_check( (i >= n_elem), "field::operator(): index out of bounds" );
   return (*mem[i]);
   }
 
@@ -520,7 +520,7 @@ arma_inline
 oT&
 field<oT>::operator() (const uword in_row, const uword in_col)
   {
-  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols)), "field::operator(): index out of bounds");
+  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols) || (0 >= n_slices) ), "field::operator(): index out of bounds" );
   return (*mem[in_row + in_col*n_rows]);
   }
 
@@ -532,7 +532,7 @@ arma_inline
 const oT&
 field<oT>::operator() (const uword in_row, const uword in_col) const
   {
-  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols)), "field::operator(): index out of bounds");
+  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols) || (0 >= n_slices) ), "field::operator(): index out of bounds" );
   return (*mem[in_row + in_col*n_rows]);
   }
 
@@ -544,7 +544,7 @@ arma_inline
 oT&
 field<oT>::operator() (const uword in_row, const uword in_col, const uword in_slice)
   {
-  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols) || (in_slice >= n_slices)), "field::operator(): index out of bounds");
+  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols) || (in_slice >= n_slices)), "field::operator(): index out of bounds" );
   return (*mem[in_row + in_col*n_rows + in_slice*(n_rows*n_cols)]);
   }
 
@@ -556,7 +556,7 @@ arma_inline
 const oT&
 field<oT>::operator() (const uword in_row, const uword in_col, const uword in_slice) const
   {
-  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols) || (in_slice >= n_slices)), "field::operator(): index out of bounds");
+  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols) || (in_slice >= n_slices)), "field::operator(): index out of bounds" );
   return (*mem[in_row + in_col*n_rows + in_slice*(n_rows*n_cols)]);
   }
 
@@ -670,7 +670,7 @@ field<oT>::col(const uword col_num)
   
   arma_debug_check( (n_slices >= 2), "field::col(): field must be 2D" );
 
-  arma_debug_check( (col_num >= n_cols), "field::col(): out of bounds");
+  arma_debug_check( (col_num >= n_cols), "field::col(): out of bounds" );
   
   return subview_field<oT>(*this, 0, col_num, n_rows, 1);
   }
@@ -687,7 +687,7 @@ field<oT>::col(const uword col_num) const
   
   arma_debug_check( (n_slices >= 2), "field::col(): field must be 2D" );
 
-  arma_debug_check( (col_num >= n_cols), "field::col(): out of bounds");
+  arma_debug_check( (col_num >= n_cols), "field::col(): out of bounds" );
   
   return subview_field<oT>(*this, 0, col_num, n_rows, 1);
   }
@@ -702,7 +702,7 @@ field<oT>::slice(const uword slice_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (slice_num >= n_slices), "field::slice(): out of bounds");
+  arma_debug_check( (slice_num >= n_slices), "field::slice(): out of bounds" );
   
   return subview_field<oT>(*this, 0, 0, slice_num, n_rows, n_cols, 1);
   }
@@ -717,7 +717,7 @@ field<oT>::slice(const uword slice_num) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (slice_num >= n_slices), "field::slice(): out of bounds");
+  arma_debug_check( (slice_num >= n_slices), "field::slice(): out of bounds" );
   
   return subview_field<oT>(*this, 0, 0, slice_num, n_rows, n_cols, 1);
   }
@@ -1969,7 +1969,14 @@ field<oT>::init(const uword n_rows_in, const uword n_cols_in, const uword n_slic
     
     if(n_elem_new <= field_prealloc_n_elem::val)
       {
-      mem = mem_local;
+      if(n_elem_new == 0)
+        {
+        mem = NULL;
+        }
+      else
+        {
+        mem = mem_local;
+        }
       }
     else
       {
@@ -1977,20 +1984,10 @@ field<oT>::init(const uword n_rows_in, const uword n_cols_in, const uword n_slic
       arma_check_bad_alloc( (mem == 0), "field::init(): out of memory" );
       }
     
-    access::rw(n_elem) = n_elem_new;
-    
-    if(n_elem_new == 0)
-      {
-      access::rw(n_rows)   = 0;
-      access::rw(n_cols)   = 0;
-      access::rw(n_slices) = 0;
-      }
-    else
-      {
-      access::rw(n_rows)   = n_rows_in;
-      access::rw(n_cols)   = n_cols_in;
-      access::rw(n_slices) = n_slices_in;
-      }
+    access::rw(n_rows)   = n_rows_in;
+    access::rw(n_cols)   = n_cols_in;
+    access::rw(n_slices) = n_slices_in;
+    access::rw(n_elem)   = n_elem_new;
     
     create_objects();
     }

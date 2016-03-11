@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -203,3 +203,10 @@
   #undef ARMA_PRINT_HDF5_ERRORS
 #endif
 
+
+// if Armadillo was installed on this system via CMake and ARMA_USE_WRAPPER is not defined,
+// ARMA_AUX_LIBS lists the libraries required by Armadillo on this system, and
+// ARMA_AUX_INCDIRS lists the include directories required by Armadillo on this system.
+// Do not use these unless you know what you are doing.
+#define ARMA_AUX_LIBS ${ARMA_LIBS}
+#define ARMA_AUX_INCDIRS ${CMAKE_REQUIRED_INCLUDES}

@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -139,6 +139,208 @@ op_min::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim, const typ
     for(uword row=0; row<X_n_rows; ++row)
       {
       out_mem[row] = op_min::direct_min( X, row );
+      }
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_min::apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_min>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const uword dim = in.aux_uword_a;
+  arma_debug_check( (dim > 2), "min(): parameter 'dim' must be 0 or 1 or 2" );
+  
+  const unwrap_cube<T1> U(in.m);
+  const Cube<eT>& X =   U.M;
+  
+  if(&out != &X)
+    {
+    op_min::apply_noalias(out, X, dim);
+    }
+  else
+    {
+    Cube<eT> tmp;
+    
+    op_min::apply_noalias(tmp, X, dim);
+    
+    out.steal_mem(tmp);
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
+op_min::apply_noalias(Cube<eT>& out, const Cube<eT>& X, const uword dim, const typename arma_not_cx<eT>::result* junk)
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  const uword X_n_rows   = X.n_rows;
+  const uword X_n_cols   = X.n_cols;
+  const uword X_n_slices = X.n_slices;
+  
+  if(dim == 0)
+    {
+    arma_extra_debug_print("op_min::apply(): dim = 0");
+    
+    out.set_size((X_n_rows > 0) ? 1 : 0, X_n_cols, X_n_slices);
+    
+    if(X_n_rows == 0)  { return; }
+    
+    for(uword slice=0; slice < X_n_slices; ++slice)
+      {
+      eT* out_mem = out.slice_memptr(slice);
+      
+      for(uword col=0; col < X_n_cols; ++col)
+        {
+        out_mem[col] = op_min::direct_min( X.slice_colptr(slice,col), X_n_rows );
+        }
+      }
+    }
+  else
+  if(dim == 1)
+    {
+    arma_extra_debug_print("op_min::apply(): dim = 1");
+    
+    out.set_size(X_n_rows, (X_n_cols > 0) ? 1 : 0, X_n_slices);
+    
+    if(X_n_cols == 0)  { return; }
+    
+    for(uword slice=0; slice < X_n_slices; ++slice)
+      {
+      eT* out_mem = out.slice_memptr(slice);
+      
+      arrayops::copy(out_mem, X.slice_colptr(slice,0), X_n_rows);
+      
+      for(uword col=1; col < X_n_cols; ++col)
+        {
+        const eT* col_mem = X.slice_colptr(slice,col);
+        
+        for(uword row=0; row < X_n_rows; ++row)
+          {
+          const eT col_val = col_mem[row];
+          
+          if(col_val < out_mem[row])  { out_mem[row] = col_val; }
+          }
+        }
+      }
+    }
+  else
+  if(dim == 2)
+    {
+    arma_extra_debug_print("op_min::apply(): dim = 2");
+    
+    out.set_size(X_n_rows, X_n_cols, (X_n_slices > 0) ? 1 : 0);
+    
+    if(X_n_slices == 0)  { return; }
+    
+    const uword N = X.n_elem_slice;
+    
+    eT* out_mem = out.slice_memptr(0);
+    
+    arrayops::copy(out_mem, X.slice_memptr(0), N);
+    
+    for(uword slice=1; slice < X_n_slices; ++slice)
+      {
+      const eT* X_mem = X.slice_memptr(slice);
+      
+      for(uword i=0; i < N; ++i)
+        {
+        const eT val = X_mem[i];
+        
+        if(val < out_mem[i])  { out_mem[i] = val; }
+        }
+      }
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
+op_min::apply_noalias(Cube<eT>& out, const Cube<eT>& X, const uword dim, const typename arma_cx_only<eT>::result* junk)
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  const uword X_n_rows   = X.n_rows;
+  const uword X_n_cols   = X.n_cols;
+  const uword X_n_slices = X.n_slices;
+  
+  if(dim == 0)
+    {
+    arma_extra_debug_print("op_min::apply(): dim = 0");
+    
+    out.set_size((X_n_rows > 0) ? 1 : 0, X_n_cols, X_n_slices);
+    
+    if(X_n_rows == 0)  { return; }
+    
+    for(uword slice=0; slice < X_n_slices; ++slice)
+      {
+      eT* out_mem = out.slice_memptr(slice);
+      
+      for(uword col=0; col < X_n_cols; ++col)
+        {
+        out_mem[col] = op_min::direct_min( X.slice_colptr(slice,col), X_n_rows );
+        }
+      }
+    }
+  else
+  if(dim == 1)
+    {
+    arma_extra_debug_print("op_min::apply(): dim = 1");
+    
+    out.set_size(X_n_rows, (X_n_cols > 0) ? 1 : 0, X_n_slices);
+    
+    if(X_n_cols == 0)  { return; }
+    
+    for(uword slice=0; slice < X_n_slices; ++slice)
+      {
+      eT* out_mem = out.slice_memptr(slice);
+      
+      const Mat<eT> tmp('j', X.slice_memptr(slice), X_n_rows, X_n_cols);
+      
+      for(uword row=0; row < X_n_rows; ++row)
+        {
+        out_mem[row] = op_min::direct_min(tmp, row);
+        }
+      }
+    }
+  else
+  if(dim == 2)
+    {
+    arma_extra_debug_print("op_min::apply(): dim = 2");
+    
+    out.set_size(X_n_rows, X_n_cols, (X_n_slices > 0) ? 1 : 0);
+    
+    if(X_n_slices == 0)  { return; }
+    
+    const uword N = X.n_elem_slice;
+    
+    eT* out_mem = out.slice_memptr(0);
+    
+    arrayops::copy(out_mem, X.slice_memptr(0), N);
+    
+    for(uword slice=1; slice < X_n_slices; ++slice)
+      {
+      const eT* X_mem = X.slice_memptr(slice);
+      
+      for(uword i=0; i < N; ++i)
+        {
+        const eT& val = X_mem[i];
+        
+        if(std::abs(val) < std::abs(out_mem[i]))  { out_mem[i] = val; }
+        }
       }
     }
   }

@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -285,13 +285,17 @@ arma_ostream::print_elem_zero(std::ostream& o, const bool modify)
   {
   if(modify == true)
     {
-    const std::streamsize orig_precision = o.precision();
+    const ios::fmtflags   save_flags     = o.flags();
+    const std::streamsize save_precision = o.precision();
     
+    o.unsetf(ios::scientific);
+    o.setf(ios::fixed);
     o.precision(0);
     
     o << eT(0);
     
-    o.precision(orig_precision);
+    o.flags(save_flags);
+    o.precision(save_precision);
     }
   else
     {
@@ -466,8 +470,6 @@ arma_ostream::print(std::ostream& o, const Cube<eT>& x, const bool modify)
   
   const arma_ostream_state stream_state(o);
   
-  const std::streamsize cell_width = modify ? arma_ostream::modify_stream(o, x.memptr(), x.n_elem) : o.width();
-  
   if(x.is_empty() == false)
     {
     for(uword slice=0; slice < x.n_slices; ++slice)
@@ -475,8 +477,7 @@ arma_ostream::print(std::ostream& o, const Cube<eT>& x, const bool modify)
       const Mat<eT> tmp(const_cast<eT*>(x.slice_memptr(slice)), x.n_rows, x.n_cols, false);
       
       o << "[cube slice " << slice << ']' << '\n';
-      o.width(cell_width);
-      arma_ostream::print(o, tmp, false);
+      arma_ostream::print(o, tmp, modify);
       o << '\n';
       }
     }
@@ -576,41 +577,48 @@ arma_ostream::print(std::ostream& o, const subview_field<oT>& x)
   const uword x_n_cols   = x.n_cols;
   const uword x_n_slices = x.n_slices;
   
-  if(x_n_slices == 1)
+  if(x.is_empty() == false)
     {
-    for(uword col=0; col<x_n_cols; ++col)
+    if(x_n_slices == 1)
       {
-      o << "[field column " << col << ']' << '\n'; 
-      for(uword row=0; row<x_n_rows; ++row)
-        {
-        o.width(cell_width);
-        o << x.at(row,col) << '\n';
-        }
-      
-      o << '\n';
-      }
-    }
-  else
-    {
-    for(uword slice=0; slice<x_n_slices; ++slice)
-      {
-      o << "[field slice " << slice << ']' << '\n';
-      
       for(uword col=0; col<x_n_cols; ++col)
         {
-        o << "[field column " << col << ']' << '\n';
-        
+        o << "[field column " << col << ']' << '\n'; 
         for(uword row=0; row<x_n_rows; ++row)
           {
           o.width(cell_width);
-          o << x.at(row,col,slice) << '\n';
+          o << x.at(row,col) << '\n';
           }
         
         o << '\n';
         }
-      
-      o << '\n';
       }
+    else
+      {
+      for(uword slice=0; slice<x_n_slices; ++slice)
+        {
+        o << "[field slice " << slice << ']' << '\n';
+        
+        for(uword col=0; col<x_n_cols; ++col)
+          {
+          o << "[field column " << col << ']' << '\n';
+          
+          for(uword row=0; row<x_n_rows; ++row)
+            {
+            o.width(cell_width);
+            o << x.at(row,col,slice) << '\n';
+            }
+          
+          o << '\n';
+          }
+        
+        o << '\n';
+        }
+      }
+    }
+  else
+    {
+    o << "[field size: " << x_n_rows << 'x' << x_n_cols << 'x' << x_n_slices << "]\n";
     }
   
   o.flush();

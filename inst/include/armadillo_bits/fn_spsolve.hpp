@@ -1,4 +1,4 @@
-// Copyright (C) 2015 National ICT Australia (NICTA)
+// Copyright (C) 2015-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -90,8 +90,8 @@ spsolve_helper
   
   if(status == false)
     {
-    if(rcond > T(0))  { arma_debug_warn("spsolve(): system appears singular (rcond: ", rcond, ")"); }
-    else              { arma_debug_warn("spsolve(): system appears singular");                      }
+    if(rcond > T(0))  { arma_debug_warn("spsolve(): system seems singular (rcond: ", rcond, ")"); }
+    else              { arma_debug_warn("spsolve(): system seems singular");                      }
     
     out.reset();
     }
