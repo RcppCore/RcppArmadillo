@@ -12,6 +12,8 @@
       \item added \code{shift()} for circular shifts of elements
       \item added \code{sqrtmat()} for finding the square root of a matrix
     }
+    \item The \code{configure} script now reflects the full LAPACK
+    fallback offered by R 3.3.0 or later (PR \ghpr{81})
   }
 }
 
