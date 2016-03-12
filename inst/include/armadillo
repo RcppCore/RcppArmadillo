@@ -112,7 +112,7 @@ namespace arma
   #include "armadillo_bits/span.hpp"
   #include "armadillo_bits/distr_param.hpp"
   #include "armadillo_bits/constants.hpp"
-  #include "armadillo_bits/constants_compat.hpp"
+  #include "armadillo_bits/constants_old.hpp"
   
   #ifdef ARMA_RNG_ALT
     #include ARMA_INCFILE_WRAP(ARMA_RNG_ALT)
@@ -233,6 +233,7 @@ namespace arma
   #include "armadillo_bits/op_resize_bones.hpp"
   #include "armadillo_bits/op_cov_bones.hpp"
   #include "armadillo_bits/op_cor_bones.hpp"
+  #include "armadillo_bits/op_shift_bones.hpp"
   #include "armadillo_bits/op_shuffle_bones.hpp"
   #include "armadillo_bits/op_prod_bones.hpp"
   #include "armadillo_bits/op_pinv_bones.hpp"
@@ -261,6 +262,7 @@ namespace arma
   #include "armadillo_bits/op_nonzeros_bones.hpp"
   #include "armadillo_bits/op_diff_bones.hpp"
   #include "armadillo_bits/op_norm_bones.hpp"
+  #include "armadillo_bits/op_sqrtmat_bones.hpp"
   
   #include "armadillo_bits/glue_times_bones.hpp"
   #include "armadillo_bits/glue_mixed_bones.hpp"
@@ -435,6 +437,7 @@ namespace arma
   #include "armadillo_bits/fn_resize.hpp"
   #include "armadillo_bits/fn_cov.hpp"
   #include "armadillo_bits/fn_cor.hpp"
+  #include "armadillo_bits/fn_shift.hpp"
   #include "armadillo_bits/fn_shuffle.hpp"
   #include "armadillo_bits/fn_prod.hpp"
   #include "armadillo_bits/fn_eps.hpp"
@@ -478,6 +481,7 @@ namespace arma
   #include "armadillo_bits/fn_diff.hpp"
   #include "armadillo_bits/fn_schur.hpp"
   #include "armadillo_bits/fn_kmeans.hpp"
+  #include "armadillo_bits/fn_sqrtmat.hpp"
   
   #include "armadillo_bits/fn_speye.hpp"
   #include "armadillo_bits/fn_spones.hpp"
@@ -572,6 +576,7 @@ namespace arma
   #include "armadillo_bits/op_resize_meat.hpp"
   #include "armadillo_bits/op_cov_meat.hpp"
   #include "armadillo_bits/op_cor_meat.hpp"
+  #include "armadillo_bits/op_shift_meat.hpp"
   #include "armadillo_bits/op_shuffle_meat.hpp"
   #include "armadillo_bits/op_prod_meat.hpp"
   #include "armadillo_bits/op_pinv_meat.hpp"
@@ -600,6 +605,7 @@ namespace arma
   #include "armadillo_bits/op_nonzeros_meat.hpp"
   #include "armadillo_bits/op_diff_meat.hpp"
   #include "armadillo_bits/op_norm_meat.hpp"
+  #include "armadillo_bits/op_sqrtmat_meat.hpp"
   
   #include "armadillo_bits/glue_times_meat.hpp"
   #include "armadillo_bits/glue_mixed_meat.hpp"

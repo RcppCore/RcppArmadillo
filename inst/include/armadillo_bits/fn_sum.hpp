@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2012 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -117,6 +117,23 @@ const typename arma_scalar_only<T>::result &
 sum(const T& x)
   {
   return x;
+  }
+
+
+
+//! sum of cube
+template<typename T1>
+arma_inline
+const OpCube<T1, op_sum>
+sum
+  (
+  const BaseCube<typename T1::elem_type,T1>& X,
+  const uword dim = 0
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  return OpCube<T1, op_sum>(X.get_ref(), dim, 0);
   }
 
 

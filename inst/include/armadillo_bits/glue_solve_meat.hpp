@@ -1,4 +1,4 @@
-// Copyright (C) 2009-2015 National ICT Australia (NICTA)
+// Copyright (C) 2009-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -83,11 +83,11 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
       
       if(rcond > T(0))
         {
-        arma_debug_warn("solve(): system appears singular (rcond: ", rcond, "); attempting approximate solution");
+        arma_debug_warn("solve(): system seems singular (rcond: ", rcond, "); attempting approx solution");
         }
       else
         {
-        arma_debug_warn("solve(): system appears singular; attempting approximate solution");
+        arma_debug_warn("solve(): system seems singular; attempting approx solution");
         }
       
       Mat<eT> AA = A_expr.get_ref();
@@ -184,7 +184,7 @@ glue_solve_tri::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
     {
     arma_extra_debug_print("glue_solve_tri::apply(): solving rank deficient system");
     
-    arma_debug_warn("solve(): system appears singular; attempting approximate solution");
+    arma_debug_warn("solve(): system seems singular; attempting approx solution");
     
     Mat<eT> triA = (triu) ? trimatu( A_expr.get_ref() ) : trimatl( A_expr.get_ref() );
     

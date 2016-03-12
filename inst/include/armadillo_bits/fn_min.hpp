@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -133,6 +133,38 @@ min
   arma_extra_debug_sigprint();
   
   return Glue<T1, T2, glue_min>(X, Y);
+  }
+
+
+
+template<typename T1>
+arma_inline
+const OpCube<T1, op_min>
+min
+  (
+  const BaseCube<typename T1::elem_type, T1>& X,
+  const uword dim = 0
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  return OpCube<T1, op_min>(X.get_ref(), dim, 0);
+  }
+
+
+
+template<typename T1, typename T2>
+arma_inline
+const GlueCube<T1, T2, glue_min>
+min
+  (
+  const BaseCube<typename T1::elem_type, T1>& X,
+  const BaseCube<typename T1::elem_type, T2>& Y
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  return GlueCube<T1, T2, glue_min>(X.get_ref(), Y.get_ref());
   }
 
 

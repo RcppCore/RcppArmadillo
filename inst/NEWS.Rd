@@ -3,6 +3,18 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.6.600.3.0 (2016-03-18)}{
+  \itemize{
+    \item Upgraded to Armadillo 6.600.3.test
+    \itemize{
+      \item expanded \code{sum()}, \code{mean()}, \code{min()}, \code{max()} to handle cubes
+      \item expanded \code{Cube} class to handle arbitrarily sized empty cubes (eg. 0x5x2)
+      \item added \code{shift()} for circular shifts of elements
+      \item added \code{sqrtmat()} for finding the square root of a matrix
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.6.500.4.0 (2016-01-26)}{
   \itemize{
     \item Upgraded to Armadillo 6.500.4 (Gourmet Electron Jumper)

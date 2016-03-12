@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -202,14 +202,19 @@ Mat<eT>::init_cold()
   
   if(n_elem <= arma_config::mat_prealloc)
     {
-    arma_extra_debug_print("Mat::init(): using local memory");
-    
-    access::rw(mem) = mem_local;
+    if(n_elem == 0)
+      {
+      access::rw(mem) = NULL;
+      }
+    else
+      {
+      arma_extra_debug_print("Mat::init(): using local memory");
+      access::rw(mem) = mem_local;
+      }
     }
   else
     {
     arma_extra_debug_print("Mat::init(): acquiring memory");
-    
     access::rw(mem) = memory::acquire<eT>(n_elem);
     }
   }
@@ -292,8 +297,15 @@ Mat<eT>::init_warm(uword in_n_rows, uword in_n_cols)
           memory::release( access::rw(mem) );
           }
         
-        arma_extra_debug_print("Mat::init(): using local memory");
-        access::rw(mem) = mem_local;
+        if(new_n_elem == 0)
+          {
+          access::rw(mem) = NULL;
+          }
+        else
+          {
+          arma_extra_debug_print("Mat::init(): using local memory");
+          access::rw(mem) = mem_local;
+          }
         }
       else
         {

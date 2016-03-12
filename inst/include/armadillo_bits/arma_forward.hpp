@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -78,6 +78,8 @@ class op_normalise_vec;
 class op_clamp;
 class op_cumsum_default;
 class op_cumprod_default;
+class op_shift;
+class op_shift_default;
 class op_shuffle;
 class op_shuffle_default;
 class op_sort;
@@ -190,7 +192,7 @@ template<typename out_eT, typename T1, typename T2, typename  glue_type> class m
 template<typename T1> class Proxy;
 template<typename T1> class ProxyCube;
 
-
+template<typename T1> class diagmat_proxy;
 
 class spop_strans;
 class spop_htrans;

@@ -1,4 +1,4 @@
-// Copyright (C) 2009-2015 National ICT Australia (NICTA)
+// Copyright (C) 2009-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -193,6 +193,186 @@ op_mean::apply_noalias_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& 
     op_mean::apply_noalias_unwrap(out, P, dim);
     }
   }
+
+
+
+//
+// cubes
+
+
+
+template<typename T1>
+inline
+void
+op_mean::apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_mean>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const uword dim = in.aux_uword_a;
+  arma_debug_check( (dim > 2), "mean(): parameter 'dim' must be 0 or 1 or 2" );
+  
+  const ProxyCube<T1> P(in.m);
+  
+  if(P.is_alias(out) == false)
+    {
+    op_mean::apply_noalias(out, P, dim);
+    }
+  else
+    {
+    Cube<eT> tmp;
+    
+    op_mean::apply_noalias(tmp, P, dim);
+    
+    out.steal_mem(tmp);
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_mean::apply_noalias(Cube<typename T1::elem_type>& out, const ProxyCube<T1>& P, const uword dim)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(is_Cube<typename ProxyCube<T1>::stored_type>::value)
+    {
+    op_mean::apply_noalias_unwrap(out, P, dim);
+    }
+  else
+    {
+    op_mean::apply_noalias_proxy(out, P, dim);
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_mean::apply_noalias_unwrap(Cube<typename T1::elem_type>& out, const ProxyCube<T1>& P, const uword dim)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type            eT;
+  typedef typename get_pod_type<eT>::result  T;
+  
+  typedef typename ProxyCube<T1>::stored_type P_stored_type;
+  
+  const unwrap_cube<P_stored_type> U(P.Q);
+  
+  const Cube<eT>& X = U.M;
+  
+  const uword X_n_rows   = X.n_rows;
+  const uword X_n_cols   = X.n_cols;
+  const uword X_n_slices = X.n_slices;
+  
+  if(dim == 0)
+    {
+    out.set_size((X_n_rows > 0) ? 1 : 0, X_n_cols, X_n_slices);
+    
+    if(X_n_rows == 0)  { return; }
+    
+    for(uword slice=0; slice < X_n_slices; ++slice)
+      {
+      eT* out_mem = out.slice_memptr(slice);
+      
+      for(uword col=0; col < X_n_cols; ++col)
+        {
+        out_mem[col] = op_mean::direct_mean( X.slice_colptr(slice,col), X_n_rows );
+        }
+      }
+    }
+  else
+  if(dim == 1)
+    {
+    out.zeros(X_n_rows, (X_n_cols > 0) ? 1 : 0, X_n_slices);
+    
+    if(X_n_cols == 0)  { return; }
+    
+    for(uword slice=0; slice < X_n_slices; ++slice)
+      {
+      eT* out_mem = out.slice_memptr(slice);
+      
+      for(uword col=0; col < X_n_cols; ++col)
+        {
+        const eT* col_mem = X.slice_colptr(slice,col);
+        
+        for(uword row=0; row < X_n_rows; ++row)
+          {
+          out_mem[row] += col_mem[row];
+          }
+        }
+      
+      const Mat<eT> tmp('j', X.slice_memptr(slice), X_n_rows, X_n_cols);
+      
+      for(uword row=0; row < X_n_rows; ++row)
+        {
+        out_mem[row] /= T(X_n_cols);
+        
+        if(arma_isfinite(out_mem[row]) == false)
+          {
+          out_mem[row] = op_mean::direct_mean_robust( tmp, row );
+          }
+        }
+      }
+    }
+  else
+  if(dim == 2)
+    {
+    out.zeros(X_n_rows, X_n_cols, (X_n_slices > 0) ? 1 : 0);
+    
+    if(X_n_slices == 0)  { return; }
+    
+    eT* out_mem = out.memptr();
+    
+    for(uword slice=0; slice < X_n_slices; ++slice)
+      {
+      arrayops::inplace_plus(out_mem, X.slice_memptr(slice), X.n_elem_slice );
+      }
+    
+    out /= T(X_n_slices);
+    
+    podarray<eT> tmp(X_n_slices);
+      
+    for(uword col=0; col < X_n_cols; ++col)
+    for(uword row=0; row < X_n_rows; ++row)
+      {
+      if(arma_isfinite(out.at(row,col,0)) == false)
+        {
+        for(uword slice=0; slice < X_n_slices; ++slice)
+          {
+          tmp[slice] = X.at(row,col,slice);
+          }
+        
+        out.at(row,col,0) = op_mean::direct_mean_robust(tmp.memptr(), X_n_slices);
+        }
+      }
+    }
+  }
+
+
+
+template<typename T1>
+arma_hot
+inline
+void
+op_mean::apply_noalias_proxy(Cube<typename T1::elem_type>& out, const ProxyCube<T1>& P, const uword dim)
+  {
+  arma_extra_debug_sigprint();
+  
+  op_mean::apply_noalias_unwrap(out, P, dim);
+  
+  // TODO: implement specialised handling
+  }
+
+
+
+
+//
 
 
 
