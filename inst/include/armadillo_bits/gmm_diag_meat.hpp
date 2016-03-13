@@ -79,8 +79,6 @@ gmm_diag<eT>::reset()
   {
   arma_extra_debug_sigprint();
   
-  mah_aux.reset();
-  
   init(0, 0);
   }
 
@@ -92,8 +90,6 @@ void
 gmm_diag<eT>::reset(const uword in_n_dims, const uword in_n_gaus)
   {
   arma_extra_debug_sigprint();
-  
-  mah_aux.reset();
   
   init(in_n_dims, in_n_gaus);
   }
@@ -1527,6 +1523,8 @@ inline
 void
 gmm_diag<eT>::generate_initial_means(const Mat<eT>& X, const gmm_seed_mode& seed_mode)
   {
+  arma_extra_debug_sigprint();
+  
   const uword N_dims = means.n_rows;
   const uword N_gaus = means.n_cols;
   
@@ -1603,6 +1601,8 @@ inline
 void
 gmm_diag<eT>::generate_initial_dcovs_and_hefts(const Mat<eT>& X, const eT var_floor)
   {
+  arma_extra_debug_sigprint();
+  
   const uword N_dims = means.n_rows;
   const uword N_gaus = means.n_cols;
   

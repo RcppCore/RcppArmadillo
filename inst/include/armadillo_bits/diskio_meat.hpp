@@ -804,8 +804,8 @@ diskio::save_raw_ascii(const Mat<eT>& x, std::ostream& f)
   if( (is_float<eT>::value) || (is_double<eT>::value) )
     {
     f.setf(ios::scientific);
-    f.precision(12);
-    cell_width = 20;
+    f.precision(14);
+    cell_width = 22;
     }
   
   for(uword row=0; row < x.n_rows; ++row)
@@ -930,8 +930,8 @@ diskio::save_arma_ascii(const Mat<eT>& x, std::ostream& f)
   if( (is_float<eT>::value) || (is_double<eT>::value) )
     {
     f.setf(ios::scientific);
-    f.precision(12);
-    cell_width = 20;
+    f.precision(14);
+    cell_width = 22;
     }
     
   for(uword row=0; row < x.n_rows; ++row)
@@ -1007,7 +1007,7 @@ diskio::save_csv_ascii(const Mat<eT>& x, std::ostream& f)
   if( (is_float<eT>::value) || (is_double<eT>::value) )
     {
     f.setf(ios::scientific);
-    f.precision(12);
+    f.precision(14);
     }
   
   uword x_n_rows = x.n_rows;
@@ -2293,7 +2293,7 @@ diskio::save_coord_ascii(const SpMat<eT>& x, std::ostream& f)
     if( (is_float<eT>::value) || (is_double<eT>::value) )
       {
       f.setf(ios::scientific);
-      f.precision(12);
+      f.precision(14);
       }
     
     f << (*iter) << '\n';
@@ -2347,7 +2347,7 @@ diskio::save_coord_ascii(const SpMat< std::complex<T> >& x, std::ostream& f)
     if( (is_float<T>::value) || (is_double<T>::value) )
       {
       f.setf(ios::scientific);
-      f.precision(12);
+      f.precision(14);
       }
     
     const eT val = (*iter);
@@ -3145,8 +3145,8 @@ diskio::save_raw_ascii(const Cube<eT>& x, std::ostream& f)
   if( (is_float<eT>::value) || (is_double<eT>::value) )
     {
     f.setf(ios::scientific);
-    f.precision(12);
-    cell_width = 20;
+    f.precision(14);
+    cell_width = 22;
     }
   
   for(uword slice=0; slice < x.n_slices; ++slice)
@@ -3274,8 +3274,8 @@ diskio::save_arma_ascii(const Cube<eT>& x, std::ostream& f)
   if( (is_float<eT>::value) || (is_double<eT>::value) )
     {
     f.setf(ios::scientific);
-    f.precision(12);
-    cell_width = 20;
+    f.precision(14);
+    cell_width = 22;
     }
     
   for(uword slice=0; slice < x.n_slices; ++slice)
