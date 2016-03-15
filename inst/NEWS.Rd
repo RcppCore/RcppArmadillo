@@ -3,15 +3,15 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.6.600.4.0 (2016-03-18)}{
+\section{Changes in RcppArmadillo version 0.6.600.4.0 (2016-03-15)}{
   \itemize{
-    \item Upgraded to Armadillo 6.600.4.test
+    \item Upgraded to Armadillo 6.600.4 (Catabolic Amalgamator)
     \itemize{
       \item expanded \code{sum()}, \code{mean()}, \code{min()}, \code{max()} to handle cubes
       \item expanded \code{Cube} class to handle arbitrarily sized empty cubes (eg. 0x5x2)
       \item added \code{shift()} for circular shifts of elements
       \item added \code{sqrtmat()} for finding the square root of a matrix
-      \item added bugfix in \code{gmm_diag} 
+      \item fix for \code{gmm_diag} when using Mahalanobis distance
     }
     \item The \code{configure} script now reflects the full LAPACK
     fallback offered by R 3.3.0 or later (PR \ghpr{81})
