@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,27 +17,27 @@
 //! Generate a vector with 'num' elements.
 //! The values of the elements linearly increase from 'start' upto (and including) 'end'.
 
-template<typename vec_type>
+template<typename out_type>
 inline
 typename
 enable_if2
   <
-  is_Mat<vec_type>::value,
-  vec_type
+  is_Mat<out_type>::value,
+  out_type
   >::result
 linspace
   (
-  const typename vec_type::pod_type start,
-  const typename vec_type::pod_type end,
-  const uword num = 100u
+  const typename out_type::pod_type start,
+  const typename out_type::pod_type end,
+  const uword                       num = 100u
   )
   {
   arma_extra_debug_sigprint();
   
-  typedef typename vec_type::elem_type eT;
-  typedef typename vec_type::pod_type   T;
+  typedef typename out_type::elem_type eT;
+  typedef typename out_type::pod_type   T;
   
-  vec_type x;
+  out_type x;
   
   if(num >= 2)
     {
@@ -83,11 +83,57 @@ linspace
 
 
 inline
-mat
+vec
 linspace(const double start, const double end, const uword num = 100u)
   {
   arma_extra_debug_sigprint();
-  return linspace<mat>(start, end, num);
+  return linspace<vec>(start, end, num);
+  }
+
+
+
+template<typename out_type>
+inline
+typename
+enable_if2
+  <
+  (is_Mat<out_type>::value && is_real<typename out_type::pod_type>::value),
+  out_type
+  >::result
+logspace
+  (
+  const typename out_type::pod_type A,
+  const typename out_type::pod_type B,
+  const uword                       N = 50u
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename out_type::elem_type eT;
+  typedef typename out_type::pod_type   T;
+  
+  out_type x = linspace<out_type>(A,B,N);
+  
+  const uword n_elem = x.n_elem;
+  
+  eT* x_mem = x.memptr();
+  
+  for(uword i=0; i < n_elem; ++i)
+    {
+    x_mem[i] = std::pow(T(10), x_mem[i]);
+    }
+  
+  return x;
+  }
+
+
+
+inline
+vec
+logspace(const double A, const double B, const uword N = 50u)
+  {
+  arma_extra_debug_sigprint();
+  return logspace<vec>(A, B, N);
   }
 
 

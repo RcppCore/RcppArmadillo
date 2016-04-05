@@ -606,9 +606,9 @@ struct Proxy_xtrans_vector< Op<T1, op_strans> >
   static const bool has_subview        = quasi_unwrap<T1>::has_subview;
   static const bool fake_mat           = true;
   
-  // NOTE: the Op class takes care of swapping row and col for op_htrans
-  static const bool is_row = Op<T1, op_htrans>::is_row;
-  static const bool is_col = Op<T1, op_htrans>::is_col;
+  // NOTE: the Op class takes care of swapping row and col for op_strans
+  static const bool is_row = Op<T1, op_strans>::is_row;
+  static const bool is_col = Op<T1, op_strans>::is_col;
   
   arma_aligned const quasi_unwrap<T1> U; // avoid copy if T1 is a Row, Col or subview_col
   arma_aligned const Mat<elem_type>   Q;

@@ -3572,6 +3572,16 @@ Cube<eT>::save(const std::string name, const file_type type, const bool print_st
       save_okay = diskio::save_hdf5_binary(*this, name);
       break;
     
+    case hdf5_binary_trans:
+      {
+      Cube<eT> tmp;
+      
+      op_strans_cube::apply_noalias(tmp, (*this));
+      
+      save_okay = diskio::save_hdf5_binary(tmp, name);
+      }
+      break;
+    
     default:
       if(print_status)  { arma_debug_warn("Cube::save(): unsupported file type"); }
       save_okay = false;
@@ -3667,6 +3677,16 @@ Cube<eT>::load(const std::string name, const file_type type, const bool print_st
 
     case hdf5_binary:
       load_okay = diskio::load_hdf5_binary(*this, name, err_msg);
+      break;
+    
+    case hdf5_binary_trans:
+      {
+      Cube<eT> tmp;
+      
+      load_okay = diskio::load_hdf5_binary(tmp, name, err_msg);
+      
+      if(load_okay)  { op_strans_cube::apply_noalias((*this), tmp); }
+      }
       break;
     
     default:

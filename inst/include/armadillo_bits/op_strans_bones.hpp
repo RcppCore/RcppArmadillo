@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2013 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -72,6 +72,16 @@ class op_strans2
   arma_hot inline static void apply_proxy(Mat<typename T1::elem_type>& out, const T1& X, const typename T1::elem_type val);
   
   // NOTE: there is no direct handling of Op<T1,op_strans2>, as op_strans2::apply_proxy() is currently only called by op_htrans2 for non-complex numbers
+  };
+
+
+
+class op_strans_cube
+  {
+  public:
+  
+  template<typename eT>
+  inline static void apply_noalias(Cube<eT>& out, const Cube<eT>& X);
   };
 
 

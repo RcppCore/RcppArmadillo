@@ -209,6 +209,7 @@ namespace arma
   #include "armadillo_bits/eop_core_bones.hpp"
   #include "armadillo_bits/eglue_core_bones.hpp"
   
+  #include "armadillo_bits/GenSpecialiser.hpp"
   #include "armadillo_bits/Gen_bones.hpp"
   #include "armadillo_bits/GenCube_bones.hpp"
   
@@ -263,6 +264,7 @@ namespace arma
   #include "armadillo_bits/op_diff_bones.hpp"
   #include "armadillo_bits/op_norm_bones.hpp"
   #include "armadillo_bits/op_sqrtmat_bones.hpp"
+  #include "armadillo_bits/op_logmat_bones.hpp"
   
   #include "armadillo_bits/glue_times_bones.hpp"
   #include "armadillo_bits/glue_mixed_bones.hpp"
@@ -279,6 +281,7 @@ namespace arma
   #include "armadillo_bits/glue_histc_bones.hpp"
   #include "armadillo_bits/glue_max_bones.hpp"
   #include "armadillo_bits/glue_min_bones.hpp"
+  #include "armadillo_bits/glue_trapz_bones.hpp"
   
   #if !defined(ARMA_BAD_COMPILER)
     #include "armadillo_bits/gmm_misc_bones.hpp"
@@ -412,9 +415,11 @@ namespace arma
   #include "armadillo_bits/fn_ones.hpp"
   #include "armadillo_bits/fn_eye.hpp"
   #include "armadillo_bits/fn_misc.hpp"
+  #include "armadillo_bits/fn_regspace.hpp"
   #include "armadillo_bits/fn_find.hpp"
   #include "armadillo_bits/fn_find_unique.hpp"
   #include "armadillo_bits/fn_elem.hpp"
+  #include "armadillo_bits/fn_approx_equal.hpp"
   #include "armadillo_bits/fn_norm.hpp"
   #include "armadillo_bits/fn_dot.hpp"
   #include "armadillo_bits/fn_randu.hpp"
@@ -482,6 +487,8 @@ namespace arma
   #include "armadillo_bits/fn_schur.hpp"
   #include "armadillo_bits/fn_kmeans.hpp"
   #include "armadillo_bits/fn_sqrtmat.hpp"
+  #include "armadillo_bits/fn_logmat.hpp"
+  #include "armadillo_bits/fn_trapz.hpp"
   
   #include "armadillo_bits/fn_speye.hpp"
   #include "armadillo_bits/fn_spones.hpp"
@@ -606,6 +613,7 @@ namespace arma
   #include "armadillo_bits/op_diff_meat.hpp"
   #include "armadillo_bits/op_norm_meat.hpp"
   #include "armadillo_bits/op_sqrtmat_meat.hpp"
+  #include "armadillo_bits/op_logmat_meat.hpp"
   
   #include "armadillo_bits/glue_times_meat.hpp"
   #include "armadillo_bits/glue_mixed_meat.hpp"
@@ -622,6 +630,7 @@ namespace arma
   #include "armadillo_bits/glue_histc_meat.hpp"
   #include "armadillo_bits/glue_max_meat.hpp"
   #include "armadillo_bits/glue_min_meat.hpp"
+  #include "armadillo_bits/glue_trapz_meat.hpp"
   
   #if !defined(ARMA_BAD_COMPILER)
     #include "armadillo_bits/gmm_misc_meat.hpp"

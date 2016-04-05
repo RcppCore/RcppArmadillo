@@ -14,21 +14,7 @@
 
 #if defined(ARMA_BAD_COMPILER)
 
-
-template<typename T1>
-inline
-bool
-kmeans(Mat<typename T1::elem_type>& means, const Base<typename T1::elem_type,T1>&, const uword, const gmm_seed_mode&, const uword, const bool)
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_stop("kmeans(): unsupported/inadequate compiler");
-  
-  means.reset();
-  
-  return false;
-  }
-
+#pragma message("WARNING: kmeans() function disabled due to unsupported/inadequate compiler")
 
 #else
 
