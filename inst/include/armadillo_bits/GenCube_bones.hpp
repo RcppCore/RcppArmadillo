@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2015 National ICT Australia (NICTA)
+// Copyright (C) 2011-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,9 @@
 
 //! support class for generator functions (eg. zeros, randu, randn, ...)
 template<typename eT, typename gen_type>
-class GenCube : public BaseCube<eT, GenCube<eT, gen_type> >
+class GenCube
+  : public BaseCube<eT, GenCube<eT, gen_type> >
+  , public GenSpecialiser<eT, is_same_type<gen_type, gen_zeros>::yes, is_same_type<gen_type, gen_ones>::yes, is_same_type<gen_type, gen_randu>::yes, is_same_type<gen_type, gen_randn>::yes>
   {
   public:
   
@@ -31,8 +33,6 @@ class GenCube : public BaseCube<eT, GenCube<eT, gen_type> >
   arma_inline  GenCube(const uword in_n_rows, const uword in_n_cols, const uword in_n_slices);
   arma_inline ~GenCube();
   
-  arma_inline static eT generate();
-  
   arma_inline eT operator[] (const uword i)                                       const;
   arma_inline eT at         (const uword row, const uword col, const uword slice) const;
   arma_inline eT at_alt     (const uword i)                                       const;
@@ -42,6 +42,8 @@ class GenCube : public BaseCube<eT, GenCube<eT, gen_type> >
   inline void apply_inplace_minus(Cube<eT>& out) const;
   inline void apply_inplace_schur(Cube<eT>& out) const;
   inline void apply_inplace_div  (Cube<eT>& out) const;
+  
+  inline void apply(subview_cube<elem_type>& out) const;
   };
 
 

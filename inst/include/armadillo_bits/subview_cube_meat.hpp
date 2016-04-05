@@ -998,6 +998,21 @@ subview_cube<eT>::operator/= (const Base<eT,T1>& in)
 
 
 
+template<typename eT>
+template<typename gen_type>
+inline
+void
+subview_cube<eT>::operator= (const GenCube<eT,gen_type>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_assert_same_size(n_rows, n_cols, n_slices, in.n_rows, in.n_cols, in.n_slices, "copy into subcube");
+  
+  in.apply(*this);
+  }
+
+
+
 //! apply a functor to each element
 template<typename eT>
 template<typename functor>

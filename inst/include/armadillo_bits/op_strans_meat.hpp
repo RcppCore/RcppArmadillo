@@ -729,4 +729,23 @@ op_strans2::apply_proxy(Mat<typename T1::elem_type>& out, const T1& X, const typ
 
 
 
+template<typename eT>
+inline
+void
+op_strans_cube::apply_noalias(Cube<eT>& out, const Cube<eT>& X)
+  {
+  out.set_size(X.n_cols, X.n_rows, X.n_slices);
+  
+  for(uword s=0; s < X.n_slices; ++s)
+    {
+    Mat<eT> out_slice( out.slice_memptr(s), X.n_cols, X.n_rows, false, true );
+    
+    const Mat<eT> X_slice( const_cast<eT*>(X.slice_memptr(s)), X.n_rows, X.n_cols, false, true );
+    
+    op_strans::apply_mat_noalias(out_slice, X_slice);
+    }
+  }
+
+
+
 //! @}

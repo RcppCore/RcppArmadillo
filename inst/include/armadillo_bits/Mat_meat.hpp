@@ -6893,6 +6893,16 @@ Mat<eT>::save(const std::string name, const file_type type, const bool print_sta
       save_okay = diskio::save_hdf5_binary(*this, name);
       break;
     
+    case hdf5_binary_trans:
+      {
+      Mat<eT> tmp;
+      
+      op_strans::apply_mat_noalias(tmp, *this);
+      
+      save_okay = diskio::save_hdf5_binary(tmp, name);
+      }
+      break;
+    
     default:
       if(print_status)  { arma_debug_warn("Mat::save(): unsupported file type"); }
       save_okay = false;
@@ -6996,6 +7006,16 @@ Mat<eT>::load(const std::string name, const file_type type, const bool print_sta
     
     case hdf5_binary:
       load_okay = diskio::load_hdf5_binary(*this, name, err_msg);
+      break;
+
+    case hdf5_binary_trans:
+      {
+      Mat<eT> tmp;
+      
+      load_okay = diskio::load_hdf5_binary(tmp, name, err_msg);
+      
+      if(load_okay)  { op_strans::apply_mat_noalias(*this, tmp); }
+      }
       break;
 
     default:

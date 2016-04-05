@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2015 National ICT Australia (NICTA)
+// Copyright (C) 2011-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,9 @@
 
 //! support class for generator functions (eg. zeros, randu, randn, ...)
 template<typename T1, typename gen_type>
-class Gen : public Base<typename T1::elem_type, Gen<T1, gen_type> >
+class Gen
+  : public Base<typename T1::elem_type, Gen<T1, gen_type> >
+  , public GenSpecialiser<typename T1::elem_type, is_same_type<gen_type, gen_zeros>::yes, is_same_type<gen_type, gen_ones>::yes, is_same_type<gen_type, gen_randu>::yes, is_same_type<gen_type, gen_randn>::yes>
   {
   public:
   
@@ -32,8 +34,6 @@ class Gen : public Base<typename T1::elem_type, Gen<T1, gen_type> >
   
   arma_inline  Gen(const uword in_n_rows, const uword in_n_cols);
   arma_inline ~Gen();
-  
-  arma_inline static elem_type generate();
   
   arma_inline elem_type operator[] (const uword ii)                   const;
   arma_inline elem_type at         (const uword row, const uword col) const;

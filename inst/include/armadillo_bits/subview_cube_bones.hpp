@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -68,7 +68,9 @@ class subview_cube : public BaseCube<eT, subview_cube<eT> >
   template<typename T1> inline void operator-= (const Base<eT,T1>& x);
   template<typename T1> inline void operator%= (const Base<eT,T1>& x);
   template<typename T1> inline void operator/= (const Base<eT,T1>& x);
-
+  
+  template<typename gen_type> inline void operator=(const GenCube<eT,gen_type>& x);
+  
   inline static void       extract(Cube<eT>& out, const subview_cube& in);
   inline static void  plus_inplace(Cube<eT>& out, const subview_cube& in);
   inline static void minus_inplace(Cube<eT>& out, const subview_cube& in);

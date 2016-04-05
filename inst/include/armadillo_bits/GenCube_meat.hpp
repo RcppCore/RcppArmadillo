@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2015 National ICT Australia (NICTA)
+// Copyright (C) 2011-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,23 +37,9 @@ GenCube<eT, gen_type>::~GenCube()
 template<typename eT, typename gen_type>
 arma_inline
 eT
-GenCube<eT, gen_type>::generate()
-  {
-       if(is_same_type<gen_type, gen_ones >::yes) { return eT(1);                     }
-  else if(is_same_type<gen_type, gen_zeros>::yes) { return eT(0);                     }
-  else if(is_same_type<gen_type, gen_randu>::yes) { return eT(arma_rng::randu<eT>()); }
-  else if(is_same_type<gen_type, gen_randn>::yes) { return eT(arma_rng::randn<eT>()); }
-  else                                            { return eT();                      }
-  }
-
-
-
-template<typename eT, typename gen_type>
-arma_inline
-eT
 GenCube<eT, gen_type>::operator[](const uword) const
   {
-  return GenCube<eT, gen_type>::generate();
+  return (*this).generate();
   }
 
 
@@ -63,7 +49,7 @@ arma_inline
 eT
 GenCube<eT, gen_type>::at(const uword, const uword, const uword) const
   {
-  return GenCube<eT, gen_type>::generate();
+  return (*this).generate();
   }
 
 
@@ -73,7 +59,7 @@ arma_inline
 eT
 GenCube<eT, gen_type>::at_alt(const uword) const
   {
-  return GenCube<eT, gen_type>::generate();
+  return (*this).generate();
   }
 
 
@@ -113,8 +99,8 @@ GenCube<eT, gen_type>::apply_inplace_plus(Cube<eT>& out) const
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    const eT tmp_i = GenCube<eT, gen_type>::generate();
-    const eT tmp_j = GenCube<eT, gen_type>::generate();
+    const eT tmp_i = (*this).generate();
+    const eT tmp_j = (*this).generate();
     
     out_mem[i] += tmp_i;
     out_mem[j] += tmp_j;
@@ -122,7 +108,7 @@ GenCube<eT, gen_type>::apply_inplace_plus(Cube<eT>& out) const
   
   if(i < n_elem)
     {
-    out_mem[i] += GenCube<eT, gen_type>::generate();
+    out_mem[i] += (*this).generate();
     }
   }
 
@@ -146,8 +132,8 @@ GenCube<eT, gen_type>::apply_inplace_minus(Cube<eT>& out) const
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    const eT tmp_i = GenCube<eT, gen_type>::generate();
-    const eT tmp_j = GenCube<eT, gen_type>::generate();
+    const eT tmp_i = (*this).generate();
+    const eT tmp_j = (*this).generate();
     
     out_mem[i] -= tmp_i;
     out_mem[j] -= tmp_j;
@@ -155,7 +141,7 @@ GenCube<eT, gen_type>::apply_inplace_minus(Cube<eT>& out) const
   
   if(i < n_elem)
     {
-    out_mem[i] -= GenCube<eT, gen_type>::generate();
+    out_mem[i] -= (*this).generate();
     }
   }
 
@@ -179,8 +165,8 @@ GenCube<eT, gen_type>::apply_inplace_schur(Cube<eT>& out) const
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    const eT tmp_i = GenCube<eT, gen_type>::generate();
-    const eT tmp_j = GenCube<eT, gen_type>::generate();
+    const eT tmp_i = (*this).generate();
+    const eT tmp_j = (*this).generate();
     
     out_mem[i] *= tmp_i;
     out_mem[j] *= tmp_j;
@@ -188,7 +174,7 @@ GenCube<eT, gen_type>::apply_inplace_schur(Cube<eT>& out) const
   
   if(i < n_elem)
     {
-    out_mem[i] *= GenCube<eT, gen_type>::generate();
+    out_mem[i] *= (*this).generate();
     }
   }
 
@@ -212,8 +198,8 @@ GenCube<eT, gen_type>::apply_inplace_div(Cube<eT>& out) const
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    const eT tmp_i = GenCube<eT, gen_type>::generate();
-    const eT tmp_j = GenCube<eT, gen_type>::generate();
+    const eT tmp_i = (*this).generate();
+    const eT tmp_j = (*this).generate();
     
     out_mem[i] /= tmp_i;
     out_mem[j] /= tmp_j;
@@ -221,10 +207,27 @@ GenCube<eT, gen_type>::apply_inplace_div(Cube<eT>& out) const
   
   if(i < n_elem)
     {
-    out_mem[i] /= GenCube<eT, gen_type>::generate();
+    out_mem[i] /= (*this).generate();
     }
   }
 
+
+
+template<typename eT, typename gen_type>
+inline
+void
+GenCube<eT, gen_type>::apply(subview_cube<eT>& out) const
+  {
+  arma_extra_debug_sigprint();
+  
+  // NOTE: we're assuming that the subcube has the same dimensions as the GenCube object
+  // this is checked by subview_cube::operator=()
+  
+       if(is_same_type<gen_type, gen_ones >::yes) { out.ones();  }
+  else if(is_same_type<gen_type, gen_zeros>::yes) { out.zeros(); }
+  else if(is_same_type<gen_type, gen_randu>::yes) { out.randu(); }
+  else if(is_same_type<gen_type, gen_randn>::yes) { out.randn(); }
+  }
 
 
 

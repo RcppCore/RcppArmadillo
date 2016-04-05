@@ -36,22 +36,6 @@ Gen<T1, gen_type>::~Gen()
 template<typename T1, typename gen_type>
 arma_inline
 typename T1::elem_type
-Gen<T1, gen_type>::generate()
-  {
-  typedef typename T1::elem_type eT;
-  
-       if(is_same_type<gen_type, gen_ones >::yes) { return eT(1);                     }
-  else if(is_same_type<gen_type, gen_zeros>::yes) { return eT(0);                     }
-  else if(is_same_type<gen_type, gen_randu>::yes) { return eT(arma_rng::randu<eT>()); }
-  else if(is_same_type<gen_type, gen_randn>::yes) { return eT(arma_rng::randn<eT>()); }
-  else                                            { return eT();                      }
-  }
-
-
-
-template<typename T1, typename gen_type>
-arma_inline
-typename T1::elem_type
 Gen<T1, gen_type>::operator[](const uword ii) const
   {
   typedef typename T1::elem_type eT;
@@ -62,7 +46,7 @@ Gen<T1, gen_type>::operator[](const uword ii) const
     }
   else
     {
-    return Gen<T1, gen_type>::generate();
+    return (*this).generate();
     }
   }
 
@@ -81,7 +65,7 @@ Gen<T1, gen_type>::at(const uword row, const uword col) const
     }
   else
     {
-    return Gen<T1, gen_type>::generate();
+    return (*this).generate();
     }
   }
 
@@ -145,8 +129,8 @@ Gen<T1, gen_type>::apply_inplace_plus(Mat<typename T1::elem_type>& out) const
     uword iq,jq;
     for(iq=0, jq=1; jq < n_elem; iq+=2, jq+=2)
       {
-      const eT tmp_i = Gen<T1, gen_type>::generate();
-      const eT tmp_j = Gen<T1, gen_type>::generate();
+      const eT tmp_i = (*this).generate();
+      const eT tmp_j = (*this).generate();
       
       out_mem[iq] += tmp_i;
       out_mem[jq] += tmp_j;
@@ -154,10 +138,9 @@ Gen<T1, gen_type>::apply_inplace_plus(Mat<typename T1::elem_type>& out) const
     
     if(iq < n_elem)
       {
-      out_mem[iq] += Gen<T1, gen_type>::generate();
+      out_mem[iq] += (*this).generate();
       }
     }
-  
   }
 
 
@@ -192,8 +175,8 @@ Gen<T1, gen_type>::apply_inplace_minus(Mat<typename T1::elem_type>& out) const
     uword iq,jq;
     for(iq=0, jq=1; jq < n_elem; iq+=2, jq+=2)
       {
-      const eT tmp_i = Gen<T1, gen_type>::generate();
-      const eT tmp_j = Gen<T1, gen_type>::generate();
+      const eT tmp_i = (*this).generate();
+      const eT tmp_j = (*this).generate();
       
       out_mem[iq] -= tmp_i;
       out_mem[jq] -= tmp_j;
@@ -201,10 +184,9 @@ Gen<T1, gen_type>::apply_inplace_minus(Mat<typename T1::elem_type>& out) const
     
     if(iq < n_elem)
       {
-      out_mem[iq] -= Gen<T1, gen_type>::generate();
+      out_mem[iq] -= (*this).generate();
       }
     }
-  
   }
 
 
@@ -240,8 +222,8 @@ Gen<T1, gen_type>::apply_inplace_schur(Mat<typename T1::elem_type>& out) const
     uword iq,jq;
     for(iq=0, jq=1; jq < n_elem; iq+=2, jq+=2)
       {
-      const eT tmp_i = Gen<T1, gen_type>::generate();
-      const eT tmp_j = Gen<T1, gen_type>::generate();
+      const eT tmp_i = (*this).generate();
+      const eT tmp_j = (*this).generate();
       
       out_mem[iq] *= tmp_i;
       out_mem[jq] *= tmp_j;
@@ -249,10 +231,9 @@ Gen<T1, gen_type>::apply_inplace_schur(Mat<typename T1::elem_type>& out) const
     
     if(iq < n_elem)
       {
-      out_mem[iq] *= Gen<T1, gen_type>::generate();
+      out_mem[iq] *= (*this).generate();
       }
     }
-  
   }
 
 
@@ -290,8 +271,8 @@ Gen<T1, gen_type>::apply_inplace_div(Mat<typename T1::elem_type>& out) const
     uword iq,jq;
     for(iq=0, jq=1; jq < n_elem; iq+=2, jq+=2)
       {
-      const eT tmp_i = Gen<T1, gen_type>::generate();
-      const eT tmp_j = Gen<T1, gen_type>::generate();
+      const eT tmp_i = (*this).generate();
+      const eT tmp_j = (*this).generate();
       
       out_mem[iq] /= tmp_i;
       out_mem[jq] /= tmp_j;
@@ -299,12 +280,10 @@ Gen<T1, gen_type>::apply_inplace_div(Mat<typename T1::elem_type>& out) const
     
     if(iq < n_elem)
       {
-      out_mem[iq] /= Gen<T1, gen_type>::generate();
+      out_mem[iq] /= (*this).generate();
       }
     }
-  
   }
-
 
 
 
@@ -328,4 +307,3 @@ Gen<T1, gen_type>::apply(subview<typename T1::elem_type>& out) const
 
 
 //! @}
-
