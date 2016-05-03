@@ -91,25 +91,47 @@ namespace traits {
             IntegerVector p = mat.slot("p") ;     
             Vector<RTYPE> x = mat.slot("x") ;
                         
-            arma::SpMat<T> res(dims[0], dims[1]);
-                        
-            // create space for values, copy and set sentinel
-            arma::access::rw(res.values) = arma::memory::acquire_chunked<T>(x.size() + 1);
-            arma::arrayops::copy(arma::access::rwp(res.values), x.begin(), x.size());
-            arma::access::rw(res.values[x.size()]) = T(0.0);                    // sets sentinel
-
-            // create space for row_indices, copy and set sentinel
-            arma::access::rw(res.row_indices) = arma::memory::acquire_chunked<arma::uword>(i.size() + 1);
-            std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices)); 
-            arma::access::rw(res.values[i.size()]) = arma::uword(0);            // sets sentinel
-
-            // the space for col_ptrs is already initialized when we call the
-            // constructor a few lines above so we only need to fill the appropriate
-            // values, and the sentinel is already set to uword_max as well.
+            // arma::SpMat<T> res(dims[0], dims[1]);
+            arma::SpMat<T> res((unsigned) dims[0], (unsigned) dims[1]);
+            
+            // Resizing
+            res.mem_resize((unsigned) x.size());
+            
+            // Copying elements
+            std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
             std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
-                        
-            // set the number of non-zero elements
-            arma::access::rw(res.n_nonzero) = x.size();
+            std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
+            
+            // Setting the sentinel
+            arma::access::rw(res.col_ptrs[(unsigned) dims[1] + 1]) =
+              std::numeric_limits<arma::uword>::max();
+              
+            // // create space for values, copy and set sentinel
+            // arma::access::rw(res.values) = arma::memory::acquire_chunked<T>(x.size() + 1);
+            // arma::arrayops::copy(arma::access::rwp(res.values), x.begin(), x.size());
+            // arma::access::rw(res.values[x.size()]) = T(0.0);                    // sets sentinel
+            // 
+            // // create space for row_indices, copy and set sentinel
+            // arma::access::rw(res.row_indices) = arma::memory::acquire_chunked<arma::uword>(i.size() + 1);
+            // std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
+            // arma::access::rw(res.values[i.size()]) = arma::uword(0);            // sets sentinel
+            // 
+            // // the space for col_ptrs is already initialized when we call the
+            // // constructor a few lines above so we only need to fill the appropriate
+            // // values, and the sentinel is already set to uword_max as well.
+            // std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
+            // 
+            // // set the number of non-zero elements
+            // arma::access::rw(res.n_nonzero) = x.size();
+            
+            // // Using BATCH constructor
+            // arma::SpMat<T> res(
+            //     Rcpp::as< arma::uvec >(i),
+            //     Rcpp::as< arma::uvec >(p),
+            //     Rcpp::as< arma::Col<T> >(x),
+            //     (unsigned) dims[0],
+            //     (unsigned) dims[1]
+            // );
                         
             return res;
         }
