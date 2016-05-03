@@ -3,6 +3,19 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.6.700.6.0 (2016-05-03)}{
+  \itemize{
+    \item Upgraded to Armadillo 6.700.3 (Catabolic Amalgamator Deluxe)
+    \itemize{
+      \item fix for handling empty matrices by \code{kron()}
+      \item fix for clang warning in advanced matrix constructors
+      \item fix for false deprecated warning in \code{trunc_log()} and \code{trunc_exp()}
+      \item fix for gcc-6.1 warning about misleading indentation
+      \item corrected documentation for the \code{solve()} function
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.6.700.3.0 (2016-04-05)}{
   \itemize{
     \item Upgraded to Armadillo 6.700.3 (Catabolic Amalgamator Deluxe)
