@@ -1,4 +1,4 @@
-// Copyright (C) 2009-2013 National ICT Australia (NICTA)
+// Copyright (C) 2009-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,6 +30,8 @@ glue_kron::direct_kron(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
   
   out.set_size(A_rows*B_rows, A_cols*B_cols);
   
+  if(out.is_empty())  { return; }
+  
   for(uword j = 0; j < A_cols; j++)
     {
     for(uword i = 0; i < A_rows; i++)
@@ -60,6 +62,8 @@ glue_kron::direct_kron(Mat< std::complex<T> >& out, const Mat< std::complex<T> >
   
   out.set_size(A_rows*B_rows, A_cols*B_cols);
   
+  if(out.is_empty())  { return; }
+  
   Mat<eT> tmp_B = conv_to< Mat<eT> >::from(B);
   
   for(uword j = 0; j < A_cols; j++)
@@ -89,6 +93,8 @@ glue_kron::direct_kron(Mat< std::complex<T> >& out, const Mat<T>& A, const Mat< 
   const uword B_cols = B.n_cols;
   
   out.set_size(A_rows*B_rows, A_cols*B_cols);
+  
+  if(out.is_empty())  { return; }
   
   for(uword j = 0; j < A_cols; j++)
     {

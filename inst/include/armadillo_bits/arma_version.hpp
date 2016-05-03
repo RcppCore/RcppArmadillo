@@ -1,4 +1,4 @@
-// Copyright (C) 2009-2015 National ICT Australia (NICTA)
+// Copyright (C) 2009-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,7 @@
 
 #define ARMA_VERSION_MAJOR 6
 #define ARMA_VERSION_MINOR 700
-#define ARMA_VERSION_PATCH 3
+#define ARMA_VERSION_PATCH 6
 #define ARMA_VERSION_NAME  "Catabolic Amalgamator Deluxe"
 
 

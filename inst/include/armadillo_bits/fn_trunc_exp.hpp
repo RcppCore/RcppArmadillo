@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2012 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,7 +20,7 @@ static
 typename arma_real_only<eT>::result
 trunc_exp(const eT x)
   {
-  if(std::numeric_limits<eT>::is_iec559 && (x >= Math<eT>::log_max() ))
+  if(std::numeric_limits<eT>::is_iec559 && (x >= Datum<eT>::log_max ))
     {
     return std::numeric_limits<eT>::max();
     }

@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2015 National ICT Australia (NICTA)
+// Copyright (C) 2011-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,7 @@
 
 
 template<typename T1>
+arma_warn_unused
 inline
 const Op<T1, op_resize>
 resize(const Base<typename T1::elem_type,T1>& X, const uword in_n_rows, const uword in_n_cols)
@@ -26,6 +27,7 @@ resize(const Base<typename T1::elem_type,T1>& X, const uword in_n_rows, const uw
 
 
 template<typename T1>
+arma_warn_unused
 inline
 const Op<T1, op_resize>
 resize(const Base<typename T1::elem_type,T1>& X, const SizeMat& s)
@@ -38,6 +40,7 @@ resize(const Base<typename T1::elem_type,T1>& X, const SizeMat& s)
 
 
 template<typename T1>
+arma_warn_unused
 inline
 const OpCube<T1, op_resize>
 resize(const BaseCube<typename T1::elem_type,T1>& X, const uword in_n_rows, const uword in_n_cols, const uword in_n_slices)
@@ -50,6 +53,7 @@ resize(const BaseCube<typename T1::elem_type,T1>& X, const uword in_n_rows, cons
 
 
 template<typename T1>
+arma_warn_unused
 inline
 const OpCube<T1, op_resize>
 resize(const BaseCube<typename T1::elem_type,T1>& X, const SizeCube& s)
@@ -62,6 +66,7 @@ resize(const BaseCube<typename T1::elem_type,T1>& X, const SizeCube& s)
 
 
 template<typename T1>
+arma_warn_unused
 inline
 const SpOp<T1, spop_resize>
 resize(const SpBase<typename T1::elem_type, T1>& X, const uword in_n_rows, const uword in_n_cols)
@@ -74,6 +79,7 @@ resize(const SpBase<typename T1::elem_type, T1>& X, const uword in_n_rows, const
 
 
 template<typename T1>
+arma_warn_unused
 inline
 const SpOp<T1, spop_resize>
 resize(const SpBase<typename T1::elem_type, T1>& X, const SizeMat& s)
