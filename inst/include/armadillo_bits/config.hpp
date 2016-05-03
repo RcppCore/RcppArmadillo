@@ -187,7 +187,7 @@
   #undef ARMA_USE_EXTERN_CXX11_RNG
 #endif
 
-#if defined(ARMA_32BIT_WORD) && !defined(ARMA_64BIT_WORD)
+#if defined(ARMA_32BIT_WORD)
   #undef ARMA_64BIT_WORD
 #endif
 
