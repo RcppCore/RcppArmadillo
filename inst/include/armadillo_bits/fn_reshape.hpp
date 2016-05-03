@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,7 @@
 
 
 template<typename T1>
+arma_warn_unused
 inline
 typename enable_if2< is_arma_type<T1>::value, const Op<T1, op_reshape> >::result
 reshape(const T1& X, const uword in_n_rows, const uword in_n_cols)
@@ -26,6 +27,7 @@ reshape(const T1& X, const uword in_n_rows, const uword in_n_cols)
 
 
 template<typename T1>
+arma_warn_unused
 inline
 typename enable_if2< is_arma_type<T1>::value, const Op<T1, op_reshape> >::result
 reshape(const T1& X, const SizeMat& s)
@@ -54,6 +56,7 @@ reshape(const Base<typename T1::elem_type,T1>& X, const uword in_n_rows, const u
 
 
 template<typename T1>
+arma_warn_unused
 inline
 const OpCube<T1, op_reshape_ext>
 reshape(const BaseCube<typename T1::elem_type,T1>& X, const uword in_n_rows, const uword in_n_cols, const uword in_n_slices, const uword dim = 0)
@@ -68,6 +71,7 @@ reshape(const BaseCube<typename T1::elem_type,T1>& X, const uword in_n_rows, con
 
 
 template<typename T1>
+arma_warn_unused
 inline
 const OpCube<T1, op_reshape_ext>
 reshape(const BaseCube<typename T1::elem_type,T1>& X, const SizeCube& s, const uword dim = 0)
@@ -82,6 +86,7 @@ reshape(const BaseCube<typename T1::elem_type,T1>& X, const SizeCube& s, const u
 
 
 template<typename T1>
+arma_warn_unused
 inline
 const SpOp<T1, spop_reshape>
 reshape(const SpBase<typename T1::elem_type, T1>& X, const uword in_n_rows, const uword in_n_cols)
@@ -94,6 +99,7 @@ reshape(const SpBase<typename T1::elem_type, T1>& X, const uword in_n_rows, cons
 
 
 template<typename T1>
+arma_warn_unused
 inline
 const SpOp<T1, spop_reshape>
 reshape(const SpBase<typename T1::elem_type, T1>& X, const SizeMat& s)

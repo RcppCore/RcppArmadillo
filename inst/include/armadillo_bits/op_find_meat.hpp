@@ -1,4 +1,4 @@
-// Copyright (C) 2010-2014 National ICT Australia (NICTA)
+// Copyright (C) 2010-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -118,7 +118,7 @@ op_find::helper
       else if(is_same_type<op_type, op_rel_gteq_post>::yes)  { not_zero_i = (tpi >= val); }
       else if(is_same_type<op_type, op_rel_eq       >::yes)  { not_zero_i = (tpi == val); }
       else if(is_same_type<op_type, op_rel_noteq    >::yes)  { not_zero_i = (tpi != val); }
-      else not_zero_i = false;
+      else { not_zero_i = false; }
       
            if(is_same_type<op_type, op_rel_lt_pre   >::yes)  { not_zero_j = (val <  tpj); }
       else if(is_same_type<op_type, op_rel_lt_post  >::yes)  { not_zero_j = (tpj <  val); }
@@ -130,7 +130,7 @@ op_find::helper
       else if(is_same_type<op_type, op_rel_gteq_post>::yes)  { not_zero_j = (tpj >= val); }
       else if(is_same_type<op_type, op_rel_eq       >::yes)  { not_zero_j = (tpj == val); }
       else if(is_same_type<op_type, op_rel_noteq    >::yes)  { not_zero_j = (tpj != val); }
-      else not_zero_j = false;
+      else { not_zero_j = false; }
       
       if(not_zero_i == true)  { indices_mem[n_nz] = i;  ++n_nz; }
       if(not_zero_j == true)  { indices_mem[n_nz] = j;  ++n_nz; }
@@ -152,7 +152,7 @@ op_find::helper
       else if(is_same_type<op_type, op_rel_gteq_post>::yes)  { not_zero = (tmp >= val); }
       else if(is_same_type<op_type, op_rel_eq       >::yes)  { not_zero = (tmp == val); }
       else if(is_same_type<op_type, op_rel_noteq    >::yes)  { not_zero = (tmp != val); }
-      else not_zero = false;
+      else { not_zero = false; }
       
       if(not_zero == true)  { indices_mem[n_nz] = i;  ++n_nz; }
       }
@@ -181,7 +181,7 @@ op_find::helper
       else if(is_same_type<op_type, op_rel_gteq_post>::yes)  { not_zero = (tmp >= val); }
       else if(is_same_type<op_type, op_rel_eq       >::yes)  { not_zero = (tmp == val); }
       else if(is_same_type<op_type, op_rel_noteq    >::yes)  { not_zero = (tmp != val); }
-      else not_zero = false;
+      else { not_zero = false; }
       
       if(not_zero == true)  { indices_mem[n_nz] = i;  ++n_nz; }
       
@@ -235,7 +235,7 @@ op_find::helper
       
            if(is_same_type<op_type, op_rel_eq   >::yes)  { not_zero = (tmp == val); }
       else if(is_same_type<op_type, op_rel_noteq>::yes)  { not_zero = (tmp != val); }
-      else not_zero = false;
+      else { not_zero = false; }
       
       if(not_zero == true) { indices_mem[n_nz] = i;  ++n_nz; }
       }
@@ -256,7 +256,7 @@ op_find::helper
       
            if(is_same_type<op_type, op_rel_eq   >::yes)  { not_zero = (tmp == val); }
       else if(is_same_type<op_type, op_rel_noteq>::yes)  { not_zero = (tmp != val); }
-      else not_zero = false;
+      else { not_zero = false; }
       
       if(not_zero == true) { indices_mem[n_nz] = i;  ++n_nz; }
       
@@ -322,7 +322,7 @@ op_find::helper
     else if(is_same_type<glue_type, glue_rel_noteq >::yes)  { not_zero = (tmp1 != tmp2); }
     else if(is_same_type<glue_type, glue_rel_and   >::yes)  { not_zero = (tmp1 && tmp2); }
     else if(is_same_type<glue_type, glue_rel_or    >::yes)  { not_zero = (tmp1 || tmp2); }
-    else not_zero = false;
+    else { not_zero = false; }
     
     if(not_zero == true)  { indices_mem[n_nz] = i;  ++n_nz; }
     }
@@ -376,7 +376,7 @@ op_find::helper
       
            if(is_same_type<glue_type, glue_rel_eq    >::yes)  { not_zero = (PA[i] == PB[i]); }
       else if(is_same_type<glue_type, glue_rel_noteq >::yes)  { not_zero = (PA[i] != PB[i]); }
-      else not_zero = false;
+      else { not_zero = false; }
       
       if(not_zero == true)  { indices_mem[n_nz] = i;  ++n_nz; }
       }
@@ -395,7 +395,7 @@ op_find::helper
       
            if(is_same_type<glue_type, glue_rel_eq    >::yes)  { not_zero = (A.at(row,col) == B.at(row,col)); }
       else if(is_same_type<glue_type, glue_rel_noteq >::yes)  { not_zero = (A.at(row,col) != B.at(row,col)); }
-      else not_zero = false;
+      else { not_zero = false; }
       
       if(not_zero == true)  { indices_mem[n_nz] = i;  ++n_nz; }
       

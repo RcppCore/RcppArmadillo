@@ -14,6 +14,7 @@
 
 
 template<typename T1>
+arma_warn_unused
 inline
 typename
 enable_if2

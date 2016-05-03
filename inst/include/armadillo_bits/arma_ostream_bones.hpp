@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2014 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -46,18 +46,18 @@ class arma_ostream
   template<typename eT> arma_inline static void print_elem(std::ostream& o, const eT&              x, const bool modify);
   template<typename  T>      inline static void print_elem(std::ostream& o, const std::complex<T>& x, const bool modify);
 
-  template<typename eT> inline static void print(std::ostream& o, const  Mat<eT>& m, const bool modify);
-  template<typename eT> inline static void print(std::ostream& o, const Cube<eT>& m, const bool modify);
+  template<typename eT> arma_cold inline static void print(std::ostream& o, const  Mat<eT>& m, const bool modify);
+  template<typename eT> arma_cold inline static void print(std::ostream& o, const Cube<eT>& m, const bool modify);
   
-  template<typename oT> inline static void print(std::ostream& o, const field<oT>&         m);
-  template<typename oT> inline static void print(std::ostream& o, const subview_field<oT>& m);
+  template<typename oT> arma_cold inline static void print(std::ostream& o, const field<oT>&         m);
+  template<typename oT> arma_cold inline static void print(std::ostream& o, const subview_field<oT>& m);
 
 
-  template<typename eT> inline static void print_dense(std::ostream& o, const SpMat<eT>& m, const bool modify);
-  template<typename eT> inline static void       print(std::ostream& o, const SpMat<eT>& m, const bool modify);
+  template<typename eT> arma_cold inline static void print_dense(std::ostream& o, const SpMat<eT>& m, const bool modify);
+  template<typename eT> arma_cold inline static void       print(std::ostream& o, const SpMat<eT>& m, const bool modify);
   
-  inline static void print(std::ostream& o, const SizeMat&  S);
-  inline static void print(std::ostream& o, const SizeCube& S);
+  arma_cold inline static void print(std::ostream& o, const SizeMat&  S);
+  arma_cold inline static void print(std::ostream& o, const SizeCube& S);
   };
 
 
