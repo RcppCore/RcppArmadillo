@@ -13,6 +13,8 @@
       \item fix for gcc-6.1 warning about misleading indentation
       \item corrected documentation for the \code{solve()} function
     }
+    \item Added support for \code{int64_t} when required during compilation time.
+    (PR \ghpr{89} by George G. Vega Yon, fixing \ghpr{88})
   }
 }
 

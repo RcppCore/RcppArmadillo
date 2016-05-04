@@ -100,7 +100,10 @@
 // Under C++11 and C++14, Armadillo now defaults to using int64_t for
 // integers.  This prevents us from passing integer vectors to R as
 // only used int32_t -- so we select the shorter representation here.
-#define ARMA_32BIT_WORD 1
+// Unless int64_t is explicitly required during compilation.
+#if !defined(ARMA_64BIT_WORD)
+  #define ARMA_32BIT_WORD 1
+#endif
 
 #endif
 
