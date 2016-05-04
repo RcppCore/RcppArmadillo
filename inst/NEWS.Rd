@@ -14,8 +14,8 @@
       \item corrected documentation for the \code{solve()} function
     }
     \item Added support for \code{int64_t} (\code{ARMA_64BIT_WORD}) when required during compilation time.
-    (PR \ghpr{89} by George G. Vega Yon, fixing \ghpr{88})
-    \item Fixed bug in \code{SpMat} exporter (PR \ghpr{90} by George G. Vega Yon,
+    (PR \ghpr{90} by George G. Vega Yon, fixing \ghpr{88})
+    \item Fixed bug in \code{SpMat} exporter (PR \ghpr{91} by George G. Vega Yon,
     fixing \ghit{89} and \ghit{72})
   }
 }
