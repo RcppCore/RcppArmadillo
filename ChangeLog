@@ -1,3 +1,10 @@
+2016-05-04  George G. Vega Yon  <g.vegayon@gmail.com>
+
+        * DESCRIPTION: Release 0.6.700.6.0 [GitHub only]
+        * inst/NEWS.Rd: Release 0.6.700.6.0 [GitHub only]
+
+	* inst/include/RcppArmadilloConfig.h: Added support for int64_t when required
+	
 2016-05-03  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.6.700.6.0 [GitHub only]
