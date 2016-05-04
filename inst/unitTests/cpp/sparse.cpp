@@ -58,3 +58,22 @@ arma::sp_mat sparseSqrt(arma::sp_mat SM) {
 arma::sp_mat sparseSquare(arma::sp_mat SM) {
     return arma::square(SM);
 }
+
+// [[Rcpp::export]]
+arma::sp_mat sparseIterators(arma::sp_mat SM, double val) {
+    arma::sp_mat::iterator begin = SM.begin();
+    arma::sp_mat::iterator end   = SM.end();
+    
+    for (arma::sp_mat::iterator it = begin; it != end; ++it)
+      (*it) += val;
+    
+    return SM;
+}
+
+// [[Rcpp::export]]
+Rcpp::List sparseList(Rcpp::List l) {
+    arma::sp_mat mat1 = l[0];
+    arma::sp_mat mat2 = l[0];
+    
+    return Rcpp::List::create(mat1, mat2);
+}

@@ -1,9 +1,9 @@
 2016-05-04  George G. Vega Yon  <g.vegayon@gmail.com>
 
-        * DESCRIPTION: Release 0.6.700.6.0 [GitHub only]
-        * inst/NEWS.Rd: Release 0.6.700.6.0 [GitHub only]
-
 	* inst/include/RcppArmadilloConfig.h: Added support for int64_t when required
+	* inst/include/RcppArmadilloAs.h: Fixing bug in SpMat exporter
+	* inst/unitTests/cpp/sparse.cpp: Added two new tests
+	* inst/unitTests/runit.sparse.R: Added two new tests
 	
 2016-05-03  Dirk Eddelbuettel  <edd@debian.org>
 

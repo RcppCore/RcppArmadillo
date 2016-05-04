@@ -74,5 +74,22 @@ if (.runThisTest) {
     test.sparse.square <- function() {
         checkEquals(SM^2, sparseSquare(SM), msg="squareSparse")
     }
+    
+    test.sparse.iterators <- function() {
+        SM <- matrix(0, 5, 5)
+        diag(SM) <- 1:5
+        SM <- methods::as(SM, "dgCMatrix")
+        spM <- sparseIterators(SM, -1.5)
+        diag(SM) <- diag(SM) - 1.5
+        checkEquals(SM, spM, msg="sparseIterators")
+    }
+    
+    test.sparse.list <- function() {
+        SM <- matrix(0, 5, 5)
+        diag(SM) <- 1:5
+        SM <- methods::as(SM, "dgCMatrix")
+        l  <- list(SM, SM)
+        checkEquals(l, sparseList(l), msg="sparseList")
+    }
    
 }
