@@ -2,7 +2,7 @@ Source: r-cran-rcpparmadillo
 Section: gnu-r
 Priority: optional
 Maintainer: Dirk Eddelbuettel <edd@debian.org>
-Build-Depends: debhelper (>= 7.0.0), r-base-dev (>= 3.2.4), r-cran-rcpp (>= 0.11.0), r-cran-pkgkitten, cdbs
+Build-Depends: debhelper (>= 7.0.0), r-base-dev (>= 3.3.0), r-cran-rcpp (>= 0.11.0), r-cran-pkgkitten, cdbs
 Standards-Version: 3.9.6
 Homepage: http://dirk.eddelbuettel.com/code/rcpp.armadillo.html
 

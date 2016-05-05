@@ -3,9 +3,9 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.6.700.6.0 (2016-05-03)}{
+\section{Changes in RcppArmadillo version 0.6.700.6.0 (2016-05-05)}{
   \itemize{
-    \item Upgraded to Armadillo 6.700.3 (Catabolic Amalgamator Deluxe)
+    \item Upgraded to Armadillo 6.700.6 (Catabolic Amalgamator Deluxe)
     \itemize{
       \item fix for handling empty matrices by \code{kron()}
       \item fix for clang warning in advanced matrix constructors
@@ -13,8 +13,9 @@
       \item fix for gcc-6.1 warning about misleading indentation
       \item corrected documentation for the \code{solve()} function
     }
-    \item Added support for \code{int64_t} (\code{ARMA_64BIT_WORD}) when required during compilation time.
-    (PR \ghpr{90} by George G. Vega Yon, fixing \ghpr{88})
+    \item Added support for \code{int64_t} (\code{ARMA_64BIT_WORD}) when
+    required during compilation time. (PR \ghpr{90} by George G. Vega
+    Yon, fixing \ghpr{88}) 
     \item Fixed bug in \code{SpMat} exporter (PR \ghpr{91} by George G. Vega Yon,
     fixing \ghit{89} and \ghit{72})
   }
