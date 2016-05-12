@@ -2692,7 +2692,7 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 if test "${GXX}" = yes; then
     { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether g++ version is sufficient" >&5
 $as_echo_n "checking whether g++ version is sufficient... " >&6; }
-    gxx_version=`${CXX} -v 2>&1 | awk '/^.*g.. version/ {print $3}'`
+    gxx_version=$(${CXX} -v 2>&1 | awk '/^.*g.. version/ {print $3}')
     case ${gxx_version} in
         1.*|2.*|3.*|4.0.*|4.1.*|4.2.*|4.3.*|4.4.*|4.5.*)
              { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
@@ -2703,8 +2703,8 @@ $as_echo "$as_me: WARNING: Only g++ version 4.6 or greater can be used with Rcpp
         ;;
 	4.6.*|4.7.*|4.8.*|4.9.*|5.*|6.*)
 	     gxx_newer_than_45="-fpermissive"
-             { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes: ${gxx_version}" >&5
-$as_echo "yes: ${gxx_version}" >&6; }
+             { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes (${gxx_version})" >&5
+$as_echo "yes (${gxx_version})" >&6; }
 	;;
     esac
 fi
@@ -2720,17 +2720,41 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking LAPACK_LIBS" >&5
 $as_echo_n "checking LAPACK_LIBS... " >&6; }
 
+## external LAPACK has the required function
+lapack=$(${R_HOME}/bin/R CMD config LAPACK_LIBS)
+hasRlapack=$(echo ${lapack} | grep lRlapack)
+## internal Rlapack now the required functions if "new enough": R 3.3.0 or later
+newR=$("${R_HOME}/bin/Rscript" --vanilla -e 'if (getRversion() >= "3.3.0") cat("yes") else cat("no")')
+#AC_MSG_RESULT(["${lapack} -- ${hasRlapack} -- ${newR}"])
+#AC_MSG_RESULT([${newR}])
 
-
-
+if test x"${hasRlapack}" == x"aa"; then
+    ## We are using a full Lapack and can use zgesdd -- so #undef remains
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: system LAPACK found" >&5
+$as_echo "system LAPACK found" >&6; }
+    have_good_lapack="#define"
+    arma_crippled_lapack="ARMA_CRIPPLED_LAPACK 1"
+else
+    if test x"${newR}" == x"yes"; then
+        ## The R versions are recent enough and has an augmented internal Rlapack
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: fallback LAPACK from R 3.3.0 or later used" >&5
+$as_echo "fallback LAPACK from R 3.3.0 or later used" >&6; }
+        have_good_lapack="#define"
+        arma_crippled_lapack="ARMA_CRIPPLED_LAPACK 1"
+    else
+        ## We are using an older R's subset of Lapack and CANNOT use zgesdd etc, so we mark it
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: R-supplied partial LAPACK found" >&5
+$as_echo "R-supplied partial LAPACK found" >&6; }
+        { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Some complex-valued LAPACK functions may not be available" >&5
+$as_echo "$as_me: WARNING: Some complex-valued LAPACK functions may not be available" >&2;}
+        have_good_lapack="#undef"
+        arma_crippled_lapack="ARMA_CRIPPLED_LAPACK"
+    fi
+fi
 
 ## GOOD
 have_good_lapack="#define"
 arma_crippled_lapack="ARMA_CRIPPLED_LAPACK 1"
-
-## BAD
-have_good_lapack="#undef"
-arma_crippled_lapack="ARMA_CRIPPLED_LAPACK"
 
 ## now use all these
 HAVE_GOOD_LAPACK="${have_good_lapack}"
