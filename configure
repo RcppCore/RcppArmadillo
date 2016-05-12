@@ -45,4 +45,28 @@ else
         inst/include/RcppArmadilloLapack.h.in > inst/include/RcppArmadilloLapack.h 
 fi
 
+function checkoldcompiler() {
+    ## store compiler argument (obtained via, say, R CMD config CXX)
+    cxx=${1}
+    ## try the compiler, and see if we can extract a version following g..
+    ## not that this only works for 
+    match=$(${cxx} -v 2>&1 | awk '/^.*g.. version/ {print $3}')
+    ## now test the match (if we have one)
+    if [ x${match} != x ]; then
+        case ${match} in
+            1.*|2.*|3.*|4.0.*|4.1.*|4.2.*|4.3.*|4.4.*|4.5.*)
+	        echo "* ERROR: Your g++ version ${match} is too old to build RcppArmadillo. "
+                echo "* ERROR: You must upgrade to a version supporting a minimum of C++11."
+                echo "* ERROR: At least g++ 4.6.* or later is recommended."
+                exit -1
+                ;;
+	    4.6.*|4.7.*|4.8.*|4.9.*|5.*|6.*)
+	        #echo "GOOD: g++ version ${match} is sufficient."
+	        ;;
+        esac
+    fi
+}
 
+checkoldcompiler "$(R CMD config CXX)"
+checkoldcompiler "$(R CMD config CXX1X)"
+exit 0
