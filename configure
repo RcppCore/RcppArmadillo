@@ -2725,10 +2725,12 @@ lapack=$(${R_HOME}/bin/R CMD config LAPACK_LIBS)
 hasRlapack=$(echo ${lapack} | grep lRlapack)
 ## internal Rlapack now the required functions if "new enough": R 3.3.0 or later
 newR=$("${R_HOME}/bin/Rscript" --vanilla -e 'if (getRversion() >= "3.3.0") cat("yes") else cat("no")')
-#AC_MSG_RESULT(["${lapack} -- ${hasRlapack} -- ${newR}"])
-#AC_MSG_RESULT([${newR}])
 
-if test x"${hasRlapack}" == x"aa"; then
+## in what follows below we substitute both side of the define/undef
+## while this may seem a little unusual we do it to fully reproduce the
+## previous bash-based implementation
+
+if test x"${hasRlapack}" == x""; then
     ## We are using a full Lapack and can use zgesdd -- so #undef remains
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: system LAPACK found" >&5
 $as_echo "system LAPACK found" >&6; }
@@ -2751,10 +2753,6 @@ $as_echo "$as_me: WARNING: Some complex-valued LAPACK functions may not be avail
         arma_crippled_lapack="ARMA_CRIPPLED_LAPACK"
     fi
 fi
-
-## GOOD
-have_good_lapack="#define"
-arma_crippled_lapack="ARMA_CRIPPLED_LAPACK 1"
 
 ## now use all these
 HAVE_GOOD_LAPACK="${have_good_lapack}"
