@@ -3,6 +3,17 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.6.xxx.x.x (2016-xx-xx)}{
+  \itemize{
+    \item Upgraded to Armadillo 6.xxx.x (xxxxxxxxxxxxxxxxxxxxxxxxxxxx)
+    \itemize{
+      \item TBD
+    }
+    \item The \code{configure} code now checks against old \code{g++}
+    version which are no longer sufficient to build the package.
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.6.700.6.0 (2016-05-05)}{
   \itemize{
     \item Upgraded to Armadillo 6.700.6 (Catabolic Amalgamator Deluxe)

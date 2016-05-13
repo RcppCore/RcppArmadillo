@@ -1,3 +1,12 @@
+2016-05-12  Dirk Eddelbuettel  <edd@debian.org>
+
+	* configure.ac: Rewriting configure as autoconf script for better
+	compiler tests
+
+	* configure (checkoldcompiler): Add test to guard against old g++
+	compilers (such as g++-4.4 used on some RHEL and CentOS releases)
+	which are no longer sufficient to build RcppArmadillo.
+
 2016-05-05  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.6.700.6.0
