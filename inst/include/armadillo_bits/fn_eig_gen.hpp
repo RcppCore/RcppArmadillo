@@ -33,7 +33,7 @@ eig_gen
   if(status == false)
     {
     eigvals.reset();
-    arma_bad("eig_gen(): decomposition failed");
+    arma_stop_runtime_error("eig_gen(): decomposition failed");
     }
   
   return eigvals;

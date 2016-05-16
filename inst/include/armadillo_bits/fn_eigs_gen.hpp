@@ -39,7 +39,7 @@ eigs_gen
   if(status == false)
     {
     eigval.reset();
-    arma_bad("eigs_gen(): decomposition failed");
+    arma_stop_runtime_error("eigs_gen(): decomposition failed");
     }
   
   return eigval;

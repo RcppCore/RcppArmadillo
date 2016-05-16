@@ -1,18 +1,18 @@
 // This Source Code Form is a compilation of:
 // (1) source code written by Ryan Curtin and Conrad Sanderson, and
-// (2) extracts from SuperLU 4.3 source code.
+// (2) extracts from SuperLU 5.2 source code.
 
-// This compilation is Copyright (C) 2015 National ICT Australia (NICTA)
+// This compilation is Copyright (C) 2016 National ICT Australia (NICTA)
 // and is subject to the terms of the Mozilla Public License, v. 2.0.
 // 
-// The source code that is distinct and separate from SuperLU 4.3 source code
-// is Copyright (C) 2015 National ICT Australia (NICTA)
+// The source code that is distinct and separate from SuperLU 5.2 source code
+// is Copyright (C) 2016 National ICT Australia (NICTA)
 // and is subject to the terms of the Mozilla Public License, v. 2.0.
 // 
 // If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 // 
-// The original SuperLU 4.3 source code is licensed under a 3-clause BSD license,
+// The original SuperLU 5.2 source code is licensed under a 3-clause BSD license,
 // as follows:
 // 
 // Copyright (c) 2003, The Regents of the University of California, through
@@ -59,16 +59,16 @@
 // and manually specify a few SuperLU structures and function prototypes.
 //
 // CAVEAT:
-// This code requires SuperLU version 4.3,
-// and assumes that newer 4.x versions will have no API changes.
+// This code requires SuperLU version 5.2,
+// and assumes that newer 5.x versions will have no API changes.
 
 namespace arma
 {
 
 namespace superlu
   {
-  // slu_*defs.h has int typedef'fed to int_t.  I'll just write it as int for
-  // simplicity, where I can, but supermatrix.h needs int_t.
+  // slu_*defs.h has int typedefed to int_t.
+  // I'll just write it as int for simplicity, where I can, but supermatrix.h needs int_t.
   typedef int int_t;
   
   // Include supermatrix.h.  This gives us SuperMatrix.
@@ -143,6 +143,44 @@ namespace superlu
     float total_needed;
     } mem_usage_t;
   
+  
+  typedef struct e_node
+    {
+    int   size;
+    void* mem;
+    } ExpHeader;
+  
+  
+  typedef struct
+    {
+    int   size;
+    int   used;
+    int   top1;
+    int   top2;
+    void* array;
+    } LU_stack_t;
+  
+  
+  typedef struct
+    {
+    int*       xsup;
+    int*       supno;   
+    int*       lsub;
+    int*       xlsub;
+    void*      lusup;
+    int*       xlusup;
+    void*      ucol;
+    int*       usub;
+    int*       xusub;
+    int        nzlmax;
+    int        nzumax;
+    int        nzlumax;
+    int        n;
+    LU_space_t MemModel;
+    int        num_expansions;
+    ExpHeader* expanders;
+    LU_stack_t stack;
+    } GlobalLU_t;
   }
 }
 
@@ -152,8 +190,8 @@ namespace superlu
 // Not using any SuperLU headers, so define all required enums and structs.
 // 
 // CAVEAT:
-// This code requires SuperLU version 4.3,
-// and assumes that newer 4.x versions will have no API changes.
+// This code requires SuperLU version 5.2,
+// and assumes that newer 5.x versions will have no API changes.
 
 namespace arma
 {
@@ -227,6 +265,7 @@ namespace superlu
                 METIS_AT_PLUS_A, PARMETIS, ZOLTAN, MY_PERMC}      colperm_t;
   typedef enum {NOTRANS, TRANS, CONJ}                             trans_t;
   typedef enum {NOREFINE, SLU_SINGLE=1, SLU_DOUBLE, SLU_EXTRA}    IterRefine_t;
+  typedef enum {SYSTEM, USER}                                     LU_space_t;
   typedef enum {ONE_NORM, TWO_NORM, INF_NORM}                     norm_t;
   typedef enum {SILU, SMILU_1, SMILU_2, SMILU_3}                  milu_t;
 
@@ -284,6 +323,44 @@ namespace superlu
     void* nzval;
     } DNformat;
   
+  
+  typedef struct e_node
+    {
+    int   size;
+    void* mem;
+    } ExpHeader;
+  
+  
+  typedef struct
+    {
+    int   size;
+    int   used;
+    int   top1;
+    int   top2;
+    void* array;
+    } LU_stack_t;
+  
+  
+  typedef struct
+    {
+    int*       xsup;
+    int*       supno;   
+    int*       lsub;
+    int*       xlsub;
+    void*      lusup;
+    int*       xlusup;
+    void*      ucol;
+    int*       usub;
+    int*       xusub;
+    int        nzlmax;
+    int        nzumax;
+    int        nzlumax;
+    int        n;
+    LU_space_t MemModel;
+    int        num_expansions;
+    ExpHeader* expanders;
+    LU_stack_t stack;
+    } GlobalLU_t;
   }
 }
 

@@ -60,7 +60,7 @@ namespace superlu
         SuperMatrix* B, SuperMatrix* X,
         typename get_pod_type<eT>::result* rpg, typename get_pod_type<eT>::result* rcond,
         typename get_pod_type<eT>::result* ferr, typename get_pod_type<eT>::result* berr,
-        mem_usage_t* mu, SuperLUStat_t* stat, int* info
+        GlobalLU_t* glu, mem_usage_t* mu, SuperLUStat_t* stat, int* info
        )
     {
     arma_type_check(( is_supported_blas_type<eT>::value == false ));
@@ -68,25 +68,25 @@ namespace superlu
     if(is_float<eT>::value)
       {
       typedef float T;
-      arma_wrapper(sgssvx)(opts, A, perm_c, perm_r, etree, equed, (T*)R, (T*)C, L, U, work, lwork, B, X, (T*)rpg, (T*)rcond, (T*)ferr, (T*)berr, mu, stat, info);
+      arma_wrapper(sgssvx)(opts, A, perm_c, perm_r, etree, equed, (T*)R, (T*)C, L, U, work, lwork, B, X, (T*)rpg, (T*)rcond, (T*)ferr, (T*)berr, glu, mu, stat, info);
       }
     else
     if(is_double<eT>::value)
       {
       typedef double T;
-      arma_wrapper(dgssvx)(opts, A, perm_c, perm_r, etree, equed, (T*)R, (T*)C, L, U, work, lwork, B, X, (T*)rpg, (T*)rcond, (T*)ferr, (T*)berr, mu, stat, info);
+      arma_wrapper(dgssvx)(opts, A, perm_c, perm_r, etree, equed, (T*)R, (T*)C, L, U, work, lwork, B, X, (T*)rpg, (T*)rcond, (T*)ferr, (T*)berr, glu, mu, stat, info);
       }
     else
     if(is_supported_complex_float<eT>::value)
       {
       typedef float T;
-      arma_wrapper(cgssvx)(opts, A, perm_c, perm_r, etree, equed, (T*)R, (T*)C, L, U, work, lwork, B, X, (T*)rpg, (T*)rcond, (T*)ferr, (T*)berr, mu, stat, info);
+      arma_wrapper(cgssvx)(opts, A, perm_c, perm_r, etree, equed, (T*)R, (T*)C, L, U, work, lwork, B, X, (T*)rpg, (T*)rcond, (T*)ferr, (T*)berr, glu, mu, stat, info);
       }
     else
     if(is_supported_complex_double<eT>::value)
       {
       typedef double T;
-      arma_wrapper(zgssvx)(opts, A, perm_c, perm_r, etree, equed, (T*)R, (T*)C, L, U, work, lwork, B, X, (T*)rpg, (T*)rcond, (T*)ferr, (T*)berr, mu, stat, info);
+      arma_wrapper(zgssvx)(opts, A, perm_c, perm_r, etree, equed, (T*)R, (T*)C, L, U, work, lwork, B, X, (T*)rpg, (T*)rcond, (T*)ferr, (T*)berr, glu, mu, stat, info);
       }
     }
   

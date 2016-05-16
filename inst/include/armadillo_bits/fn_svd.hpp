@@ -60,7 +60,7 @@ svd
   if(status == false)
     {
     out.reset();
-    arma_bad("svd(): decomposition failed");
+    arma_stop_runtime_error("svd(): decomposition failed");
     }
   
   return out;

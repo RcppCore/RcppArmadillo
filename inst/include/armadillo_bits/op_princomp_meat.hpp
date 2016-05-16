@@ -603,7 +603,7 @@ op_princomp::apply
     {
     out.reset();
     
-    arma_bad("princomp(): decomposition failed");
+    arma_stop_runtime_error("princomp(): decomposition failed");
     }
   }
 

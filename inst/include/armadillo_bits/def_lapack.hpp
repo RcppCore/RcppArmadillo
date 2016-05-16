@@ -148,6 +148,28 @@
   
   #define arma_ilaenv ilaenv
   
+  #define arma_ssytrs ssytrs
+  #define arma_dsytrs dsytrs
+  #define arma_csytrs csytrs
+  #define arma_zsytrs zsytrs
+  
+  #define arma_sgetrs sgetrs
+  #define arma_dgetrs dgetrs
+  #define arma_cgetrs cgetrs
+  #define arma_zgetrs zgetrs
+  
+  #define arma_slahqr slahqr
+  #define arma_dlahqr dlahqr
+  
+  #define arma_sstedc sstedc
+  #define arma_dstedc dstedc
+  
+  #define arma_strevc strevc
+  #define arma_dtrevc dtrevc
+  
+  #define arma_slarnv slarnv
+  #define arma_dlarnv dlarnv
+  
 #else
   
   #define arma_sgetrf SGETRF
@@ -281,6 +303,28 @@
   #define arma_zgecon ZGECON
   
   #define arma_ilaenv ILAENV
+  
+  #define arma_ssytrs SSYTRS
+  #define arma_dsytrs DSYTRS
+  #define arma_csytrs CSYTRS
+  #define arma_zsytrs ZSYTRS
+  
+  #define arma_sgetrs SGETRS
+  #define arma_dgetrs DGETRS
+  #define arma_cgetrs CGETRS
+  #define arma_zgetrs ZGETRS
+  
+  #define arma_slahqr SLAHQR
+  #define arma_dlahqr DLAHQR
+  
+  #define arma_sstedc SSTEDC
+  #define arma_dstedc DSTEDC
+  
+  #define arma_strevc STREVC
+  #define arma_dtrevc DTREVC
+  
+  #define arma_slarnv SLARNV
+  #define arma_dlarnv DLARNV
   
 #endif
 
@@ -462,6 +506,34 @@ extern "C"
   
   // obtain parameters according to the local configuration of lapack
   blas_int arma_fortran(arma_ilaenv)(blas_int* ispec, char* name, char* opts, blas_int* n1, blas_int* n2, blas_int* n3, blas_int* n4);
+  
+  // solve linear equations using LDL decomposition
+  void arma_fortran(arma_ssytrs)(char* uplo, blas_int* n, blas_int* nrhs, float*  a, blas_int* lda, blas_int* ipiv, float*  b, blas_int* ldb, blas_int* info);
+  void arma_fortran(arma_dsytrs)(char* uplo, blas_int* n, blas_int* nrhs, double* a, blas_int* lda, blas_int* ipiv, double* b, blas_int* ldb, blas_int* info);
+  void arma_fortran(arma_csytrs)(char* uplo, blas_int* n, blas_int* nrhs, void*   a, blas_int* lda, blas_int* ipiv, void*   b, blas_int* ldb, blas_int* info);
+  void arma_fortran(arma_zsytrs)(char* uplo, blas_int* n, blas_int* nrhs, void*   a, blas_int* lda, blas_int* ipiv, void*   b, blas_int* ldb, blas_int* info);
+  
+  // solve linear equations using LU decomposition
+  void arma_fortran(arma_sgetrs)(char* trans, blas_int* n, blas_int* nrhs, float*  a, blas_int* lda, blas_int* ipiv, float*  b, blas_int* ldb, blas_int* info);
+  void arma_fortran(arma_dgetrs)(char* trans, blas_int* n, blas_int* nrhs, double* a, blas_int* lda, blas_int* ipiv, double* b, blas_int* ldb, blas_int* info);
+  void arma_fortran(arma_cgetrs)(char* trans, blas_int* n, blas_int* nrhs, void*   a, blas_int* lda, blas_int* ipiv, void*   b, blas_int* ldb, blas_int* info);
+  void arma_fortran(arma_zgetrs)(char* trans, blas_int* n, blas_int* nrhs, void*   a, blas_int* lda, blas_int* ipiv, void*   b, blas_int* ldb, blas_int* info);
+  
+  // calculate eigenvalues of an upper Hessenberg matrix
+  void arma_fortran(arma_slahqr)(blas_int* wantt, blas_int* wantz, blas_int* n, blas_int* ilo, blas_int* ihi, float*  h, blas_int* ldh, float*  wr, float*  wi, blas_int* iloz, blas_int* ihiz, float*  z, blas_int* ldz, blas_int* info);
+  void arma_fortran(arma_dlahqr)(blas_int* wantt, blas_int* wantz, blas_int* n, blas_int* ilo, blas_int* ihi, double* h, blas_int* ldh, double* wr, double* wi, blas_int* iloz, blas_int* ihiz, double* z, blas_int* ldz, blas_int* info);
+  
+  // calculate eigenvalues of a symmetric tridiagonal matrix
+  void arma_fortran(arma_sstedc)(char* compz, blas_int* n, float*  d, float*  e, float*  z, blas_int* ldz, float*  work, blas_int* lwork, blas_int* iwork, blas_int* liwork, blas_int* info);
+  void arma_fortran(arma_dstedc)(char* compz, blas_int* n, double* d, double* e, double* z, blas_int* ldz, double* work, blas_int* lwork, blas_int* iwork, blas_int* liwork, blas_int* info);
+  
+  // calculate eigenvectors of a Schur form matrix
+  void arma_fortran(arma_strevc)(char* side, char* howmny, blas_int* select, blas_int* n, float*  t, blas_int* ldt, float*  vl, blas_int* ldvl, float*  vr, blas_int* ldvr, blas_int* mm, blas_int* m, float*  work, blas_int* info);
+  void arma_fortran(arma_dtrevc)(char* side, char* howmny, blas_int* select, blas_int* n, double* t, blas_int* ldt, double* vl, blas_int* ldvl, double* vr, blas_int* ldvr, blas_int* mm, blas_int* m, double* work, blas_int* info);
+  
+  // generate a vector of random numbers
+  void arma_fortran(arma_slarnv)(blas_int* idist, blas_int* iseed, blas_int* n, float*  x);
+  void arma_fortran(arma_dlarnv)(blas_int* idist, blas_int* iseed, blas_int* n, double* x);
   }
 
 

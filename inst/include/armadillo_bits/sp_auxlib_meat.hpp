@@ -1,4 +1,4 @@
-// Copyright (C) 2013-2015 National ICT Australia (NICTA)
+// Copyright (C) 2013-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,6 +7,7 @@
 // 
 // Written by Conrad Sanderson - http://conradsanderson.id.au
 // Written by Ryan Curtin
+// Written by Yixuan Qiu
 
 
 //! \addtogroup sp_auxlib
@@ -56,6 +57,119 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
   {
   arma_extra_debug_sigprint();
   
+  #if defined(ARMA_USE_NEWARP)
+    {
+    return sp_auxlib::eigs_sym_newarp(eigval, eigvec, X, n_eigvals, form_str, default_tol);
+    }
+  #else
+    {
+    return sp_auxlib::eigs_sym_arpack(eigval, eigvec, X, n_eigvals, form_str, default_tol);
+    }
+  #endif
+  }
+
+
+
+template<typename eT, typename T1>
+inline
+bool
+sp_auxlib::eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, const uword n_eigvals, const char* form_str, const eT default_tol)
+  {
+  arma_extra_debug_sigprint();
+  
+  const form_type form_val = sp_auxlib::interpret_form_str(form_str);
+  
+  arma_debug_check( (form_val != form_lm) && (form_val != form_sm) && (form_val != form_la) && (form_val != form_sa), "eigs_sym(): unknown form specified" );
+  
+  const newarp::SparseGenMatProd<eT> op(X.get_ref());
+  
+  arma_debug_check( (op.n_rows != op.n_cols), "eigs_sym(): given matrix must be square sized" );
+  
+  arma_debug_check( (n_eigvals >= op.n_rows), "eigs_sym(): n_eigvals must be less than the number of rows in the matrix" );
+  
+  // If the matrix is empty, the case is trivial.
+  if( (op.n_cols == 0) || (n_eigvals == 0) ) // We already know n_cols == n_rows.
+    {
+    eigval.reset();
+    eigvec.reset();
+    return true;
+    }
+  
+  uword n   = op.n_rows;
+  uword ncv = n_eigvals + 2 + 1;
+  
+  if(ncv < (2 * n_eigvals + 1)) { ncv = 2 * n_eigvals + 1; }
+  if(ncv > n)                   { ncv = n; }
+  
+  eT tol = (std::max)(default_tol, std::numeric_limits<eT>::epsilon());
+  
+  // eigval.set_size(n_eigvals);
+  // eigvec.set_size(n, n_eigvals);
+  
+  bool status = true;
+  
+  uword nconv = 0;
+  
+  try
+    {
+    if(form_val == form_lm)
+      {
+      newarp::SymEigsSolver< eT, newarp::EigsSelect::LARGEST_MAGN, newarp::SparseGenMatProd<eT> > eigs(op, n_eigvals, ncv);
+      eigs.init();
+      nconv  = eigs.compute(1000, tol);
+      eigval = eigs.eigenvalues();
+      eigvec = eigs.eigenvectors();
+      }
+    else
+    if(form_val == form_sm)
+      {
+      newarp::SymEigsSolver< eT, newarp::EigsSelect::SMALLEST_MAGN, newarp::SparseGenMatProd<eT> > eigs(op, n_eigvals, ncv);
+      eigs.init();
+      nconv  = eigs.compute(1000, tol);
+      eigval = eigs.eigenvalues();
+      eigvec = eigs.eigenvectors();
+      }
+    else
+    if(form_val == form_la)
+      {
+      newarp::SymEigsSolver< eT, newarp::EigsSelect::LARGEST_ALGE, newarp::SparseGenMatProd<eT> > eigs(op, n_eigvals, ncv);
+      eigs.init();
+      nconv  = eigs.compute(1000, tol);
+      eigval = eigs.eigenvalues();
+      eigvec = eigs.eigenvectors();
+      }
+    else
+    if(form_val == form_sa)
+      {
+      newarp::SymEigsSolver< eT, newarp::EigsSelect::SMALLEST_ALGE, newarp::SparseGenMatProd<eT> > eigs(op, n_eigvals, ncv);
+      eigs.init();
+      nconv  = eigs.compute(1000, tol);
+      eigval = eigs.eigenvalues();
+      eigvec = eigs.eigenvectors();
+      }
+    }
+  catch(const std::runtime_error&)
+    {
+    status = false;
+    }
+  
+  if(status == true)
+    {
+    if(nconv == 0)  { status = false; }
+    }
+  
+  return status;
+  }
+
+
+
+template<typename eT, typename T1>
+inline
+bool
+sp_auxlib::eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, const uword n_eigvals, const char* form_str, const eT default_tol)
+  {
+  arma_extra_debug_sigprint();
+  
   #if defined(ARMA_USE_ARPACK)
     {
     const form_type form_val = sp_auxlib::interpret_form_str(form_str);
@@ -88,7 +202,7 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
     arma_debug_check( (n_eigvals >= p.get_n_rows()), "eigs_sym(): n_eigvals must be less than the number of rows in the matrix" );
     
     // If the matrix is empty, the case is trivial.
-    if(p.get_n_cols() == 0) // We already know n_cols == n_rows.
+    if( (p.get_n_cols() == 0) || (n_eigvals == 0) ) // We already know n_cols == n_rows.
       {
       eigval.reset();
       eigvec.reset();
@@ -120,8 +234,8 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
     blas_int ldz = n;
     
     // seupd() will output directly into the eigval and eigvec objects.
-    eigval.set_size(n_eigvals);
-    eigvec.set_size(n, n_eigvals);
+    eigval.zeros(n_eigvals);
+    eigvec.zeros(n, n_eigvals);
     
     arpack::seupd(&rvec, &howmny, select.memptr(), eigval.memptr(), eigvec.memptr(), &ldz, (eT*) NULL, &bmat, &n, which, &nev, &tol, resid.memptr(), &ncv, v.memptr(), &ldv, iparam.memptr(), ipntr.memptr(), workd.memptr(), workl.memptr(), &lworkl, &info);
     
@@ -156,6 +270,138 @@ template<typename T, typename T1>
 inline
 bool
 sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase<T, T1>& X, const uword n_eigvals, const char* form_str, const T default_tol)
+  {
+  arma_extra_debug_sigprint();
+  
+  #if defined(ARMA_USE_NEWARP)
+    {
+    return sp_auxlib::eigs_gen_newarp(eigval, eigvec, X, n_eigvals, form_str, default_tol);
+    }
+  #else
+    {
+    return sp_auxlib::eigs_gen_arpack(eigval, eigvec, X, n_eigvals, form_str, default_tol);
+    }
+  #endif
+  }
+
+
+
+template<typename T, typename T1>
+inline
+bool
+sp_auxlib::eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase<T, T1>& X, const uword n_eigvals, const char* form_str, const T default_tol)
+  {
+  arma_extra_debug_sigprint();
+  
+  const form_type form_val = sp_auxlib::interpret_form_str(form_str);
+  
+  arma_debug_check( (form_val == form_none), "eigs_gen(): unknown form specified" );
+  
+  const newarp::SparseGenMatProd<T> op(X.get_ref());
+  
+  arma_debug_check( (op.n_rows != op.n_cols), "eigs_sym(): given matrix must be square sized" );
+  
+  arma_debug_check( (n_eigvals + 1 >= op.n_rows), "eigs_gen(): n_eigvals + 1 must be less than the number of rows in the matrix" );
+  
+  // If the matrix is empty, the case is trivial.
+  if( (op.n_cols == 0) || (n_eigvals == 0) ) // We already know n_cols == n_rows.
+    {
+    eigval.reset();
+    eigvec.reset();
+    return true;
+    }
+  
+  uword n   = op.n_rows;
+  uword ncv = n_eigvals + 2 + 1;
+  
+  if(ncv < (2 * n_eigvals + 1)) { ncv = 2 * n_eigvals + 1; }
+  if(ncv > n)                   { ncv = n; }
+  
+  T tol = (std::max)(default_tol, std::numeric_limits<T>::epsilon());
+  
+  // eigval.set_size(n_eigvals);
+  // eigvec.set_size(n, n_eigvals);
+  
+  bool status = true;
+  
+  uword nconv = 0;
+  
+  try
+    {
+    if(form_val == form_lm)
+      {
+      newarp::GenEigsSolver< T, newarp::EigsSelect::LARGEST_MAGN, newarp::SparseGenMatProd<T> > eigs(op, n_eigvals, ncv);
+      eigs.init();
+      nconv  = eigs.compute(1000, tol);
+      eigval = eigs.eigenvalues();
+      eigvec = eigs.eigenvectors();
+      }
+    else
+    if(form_val == form_sm)
+      {
+      newarp::GenEigsSolver< T, newarp::EigsSelect::SMALLEST_MAGN, newarp::SparseGenMatProd<T> > eigs(op, n_eigvals, ncv);
+      eigs.init();
+      nconv  = eigs.compute(1000, tol);
+      eigval = eigs.eigenvalues();
+      eigvec = eigs.eigenvectors();
+      }
+    else
+    if(form_val == form_lr)
+      {
+      newarp::GenEigsSolver< T, newarp::EigsSelect::LARGEST_REAL, newarp::SparseGenMatProd<T> > eigs(op, n_eigvals, ncv);
+      eigs.init();
+      nconv  = eigs.compute(1000, tol);
+      eigval = eigs.eigenvalues();
+      eigvec = eigs.eigenvectors();
+      }
+    else
+    if(form_val == form_sr)
+      {
+      newarp::GenEigsSolver< T, newarp::EigsSelect::SMALLEST_REAL, newarp::SparseGenMatProd<T> > eigs(op, n_eigvals, ncv);
+      eigs.init();
+      nconv  = eigs.compute(1000, tol);
+      eigval = eigs.eigenvalues();
+      eigvec = eigs.eigenvectors();
+      }
+    else
+    if(form_val == form_li)
+      {
+      newarp::GenEigsSolver< T, newarp::EigsSelect::LARGEST_IMAG, newarp::SparseGenMatProd<T> > eigs(op, n_eigvals, ncv);
+      eigs.init();
+      nconv  = eigs.compute(1000, tol);
+      eigval = eigs.eigenvalues();
+      eigvec = eigs.eigenvectors();
+      }
+    else
+    if(form_val == form_si)
+      {
+      newarp::GenEigsSolver< T, newarp::EigsSelect::SMALLEST_IMAG, newarp::SparseGenMatProd<T> > eigs(op, n_eigvals, ncv);
+      eigs.init();
+      nconv  = eigs.compute(1000, tol);
+      eigval = eigs.eigenvalues();
+      eigvec = eigs.eigenvectors();
+      }
+    }
+  catch(const std::runtime_error&)
+    {
+    status = false;
+    }
+  
+  if(status == true)
+    {
+    if(nconv == 0)  { status = false; }
+    }
+  
+  return status;
+  }
+
+
+
+
+template<typename T, typename T1>
+inline
+bool
+sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase<T, T1>& X, const uword n_eigvals, const char* form_str, const T default_tol)
   {
   arma_extra_debug_sigprint();
   
@@ -197,7 +443,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     arma_debug_check( (n_eigvals + 1 >= p.get_n_rows()), "eigs_gen(): n_eigvals + 1 must be less than the number of rows in the matrix" );
     
     // If the matrix is empty, the case is trivial.
-    if(p.get_n_cols() == 0) // We already know n_cols == n_rows.
+    if( (p.get_n_cols() == 0) || (n_eigvals == 0) ) // We already know n_cols == n_rows.
       {
       eigval.reset();
       eigvec.reset();
@@ -232,6 +478,10 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     blas_int ldz = n;
     podarray<T> workev(3 * ncv);
     
+    dr.zeros();
+    di.zeros();
+    z.zeros();
+    
     arpack::neupd(&rvec, &howmny, select.memptr(), dr.memptr(), di.memptr(), z.memptr(), &ldz, (T*) NULL, (T*) NULL, workev.memptr(), &bmat, &n, which, &nev, &tol, resid.memptr(), &ncv, v.memptr(), &ldv, iparam.memptr(), ipntr.memptr(), workd.memptr(), workl.memptr(), &lworkl, rwork.memptr(), &info);
     
     // Check for errors.
@@ -243,7 +493,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     
     // Put it into the outputs.
     eigval.set_size(n_eigvals);
-    eigvec.set_size(n, n_eigvals);
+    eigvec.zeros(n, n_eigvals);
     
     for (uword i = 0; i < n_eigvals; ++i)
       {
@@ -302,7 +552,6 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
 
 
 
-
 //! immediate eigendecomposition of non-symmetric complex sparse object
 template<typename T, typename T1>
 inline
@@ -349,7 +598,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     arma_debug_check( (n_eigvals + 1 >= p.get_n_rows()), "eigs_gen(): n_eigvals + 1 must be less than the number of rows in the matrix" );
     
     // If the matrix is empty, the case is trivial.
-    if(p.get_n_cols() == 0) // We already know n_cols == n_rows.
+    if( (p.get_n_cols() == 0) || (n_eigvals == 0) ) // We already know n_cols == n_rows.
       {
       eigval.reset();
       eigvec.reset();
@@ -384,8 +633,8 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     podarray<std::complex<T> > workev(2 * ncv);
     
     // Prepare the outputs; neupd() will write directly to them.
-    eigval.set_size(n_eigvals);
-    eigvec.set_size(n, n_eigvals);
+    eigval.zeros(n_eigvals);
+    eigvec.zeros(n, n_eigvals);
     std::complex<T> sigma;
     
     arpack::neupd(&rvec, &howmny, select.memptr(), eigval.memptr(),
@@ -409,7 +658,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     arma_ignore(form_str);
     arma_ignore(default_tol);
     
-    arma_stop("eigs_gen(): use of ARPACK must be enabled");
+    arma_stop("eigs_gen(): use of ARPACK must be enabled for decomposition of complex matrices");
     return false;
     }
   #endif
@@ -469,7 +718,8 @@ sp_auxlib::spsolve_simple(Mat<typename T1::elem_type>& X, const SpBase<typename 
       
       if(overflow)
         {
-        arma_bad("spsolve(): integer overflow: matrix dimensions are too large for integer type used by SuperLU");
+        arma_stop_runtime_error("spsolve(): integer overflow: matrix dimensions are too large for integer type used by SuperLU");
+        return false;
         }
       }
     
@@ -617,7 +867,8 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
       
       if(overflow)
         {
-        arma_bad("spsolve(): integer overflow: matrix dimensions are too large for integer type used by SuperLU");
+        arma_stop_runtime_error("spsolve(): integer overflow: matrix dimensions are too large for integer type used by SuperLU");
+        return false;
         }
       }
     
@@ -670,6 +921,9 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     arrayops::inplace_set(ferr, T(0), B.n_cols+1);
     arrayops::inplace_set(berr, T(0), B.n_cols+1);
     
+    superlu::GlobalLU_t glu;
+    arrayops::inplace_set(reinterpret_cast<char*>(&glu), char(0), sizeof(superlu::GlobalLU_t));
+    
     superlu::mem_usage_t  mu;
     arrayops::inplace_set(reinterpret_cast<char*>(&mu), char(0), sizeof(superlu::mem_usage_t));
     
@@ -684,7 +938,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     char  work[8];
     int  lwork = int(0);  // 0 means superlu will allocate memory
     
-    superlu::gssvx<eT>(&options, &a, perm_c, perm_r, etree, equed, R, C, &l, &u, &work[0], lwork, &b, &x, &rpg, &rcond, ferr, berr, &mu, &stat, &info);
+    superlu::gssvx<eT>(&options, &a, perm_c, perm_r, etree, equed, R, C, &l, &u, &work[0], lwork, &b, &x, &rpg, &rcond, ferr, berr, &glu, &mu, &stat, &info);
     
     // Process the return code.
     if( (info > 0) && (info <= int(A.n_cols)) )
@@ -948,7 +1202,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
       if(out.Stype == superlu::SLU_NR_loc)  { tmp << "SLU_NR_loc"; }
       
       arma_debug_warn(tmp.str());
-      arma_bad("sp_auxlib::destroy_supermatrix(): internal error");
+      arma_stop_runtime_error("sp_auxlib::destroy_supermatrix(): internal error");
       }
     }
   

@@ -82,7 +82,7 @@ syl
   if(status == false)
     {
     out.reset();
-    arma_bad("syl(): solution not found");
+    arma_stop_runtime_error("syl(): solution not found");
     }
   
   return out;

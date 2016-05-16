@@ -63,7 +63,7 @@ op_pinv::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_pinv>& in)
   if(status == false)
     {
     out.reset();
-    arma_bad("pinv(): svd failed");
+    arma_stop_runtime_error("pinv(): svd failed");
     return;
     }
   

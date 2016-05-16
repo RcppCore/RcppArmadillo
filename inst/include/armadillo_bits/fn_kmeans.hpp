@@ -12,12 +12,6 @@
 //! @{
 
 
-#if defined(ARMA_BAD_COMPILER)
-
-#pragma message("WARNING: kmeans() function disabled due to unsupported/inadequate compiler")
-
-#else
-
 
 template<typename T1>
 inline
@@ -51,10 +45,6 @@ kmeans
   
   return status;
   }
-
-
-#endif
-
 
 
 

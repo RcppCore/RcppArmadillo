@@ -4667,6 +4667,8 @@ inline
 typename SpMat<eT>::iterator
 SpMat<eT>::begin()
   {
+  arma_extra_debug_sigprint();
+  
   return iterator(*this);
   }
 
@@ -4677,6 +4679,8 @@ inline
 typename SpMat<eT>::const_iterator
 SpMat<eT>::begin() const
   {
+  arma_extra_debug_sigprint();
+  
   return const_iterator(*this);
   }
 

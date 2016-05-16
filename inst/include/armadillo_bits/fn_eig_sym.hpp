@@ -62,7 +62,7 @@ eig_sym
   if(status == false)
     {
     out.reset();
-    arma_bad("eig_sym(): decomposition failed");
+    arma_stop_runtime_error("eig_sym(): decomposition failed");
     }
   
   return out;

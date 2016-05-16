@@ -39,7 +39,7 @@ rank
   
   if(status == false)
     {
-    arma_bad("rank(): svd failed");
+    arma_stop_runtime_error("rank(): svd failed");
     
     return uword(0);
     }

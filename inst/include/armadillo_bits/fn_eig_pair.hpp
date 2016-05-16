@@ -33,7 +33,7 @@ eig_pair
   if(status == false)
     {
     eigvals.reset();
-    arma_bad("eig_pair(): decomposition failed");
+    arma_stop_runtime_error("eig_pair(): decomposition failed");
     }
   
   return eigvals;

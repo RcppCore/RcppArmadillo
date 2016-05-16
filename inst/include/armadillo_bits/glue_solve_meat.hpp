@@ -28,7 +28,7 @@ glue_solve_gen::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_so
   
   if(status == false)
     {
-    arma_bad("solve(): solution not found");
+    arma_stop_runtime_error("solve(): solution not found");
     }
   }
 
@@ -140,7 +140,7 @@ glue_solve_tri::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_so
   
   if(status == false)
     {
-    arma_bad("solve(): solution not found");
+    arma_stop_runtime_error("solve(): solution not found");
     }
   }
 

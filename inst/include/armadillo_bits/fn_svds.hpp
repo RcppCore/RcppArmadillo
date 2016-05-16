@@ -1,4 +1,4 @@
-// Copyright (C) 2015 National ICT Australia (NICTA)
+// Copyright (C) 2015-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -32,12 +32,6 @@ svds_helper
   
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
-  
-  if(arma_config::arpack == false)
-    {
-    arma_stop("svds(): use of ARPACK must be enabled");
-    return false;
-    }
   
   arma_debug_check
     (
@@ -156,7 +150,7 @@ svds_helper
   
   if(arma_config::arpack == false)
     {
-    arma_stop("svds(): use of ARPACK must be enabled");
+    arma_stop("svds(): use of ARPACK must be enabled for decomposition of complex matrices");
     return false;
     }
   
@@ -209,7 +203,6 @@ svds_helper
       U.reset();
       S.reset();
       V.reset();
-      arma_debug_warn("svds(): decomposition failed");
       
       return false;
       }
@@ -334,7 +327,7 @@ svds
   
   const bool status = svds_helper(U, S, V, X.get_ref(), k, tol, false);
   
-  if(status == false)  { arma_bad("svds(): decomposition failed"); }
+  if(status == false)  { arma_stop_runtime_error("svds(): decomposition failed"); }
   
   return S;
   }

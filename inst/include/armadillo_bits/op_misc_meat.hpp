@@ -302,7 +302,7 @@ op_orth::apply( Mat<typename T1::elem_type>& out, const Op<T1, op_orth>& expr )
   
   V.reset();
   
-  if(status == false)  { out.reset(); arma_bad("orth(): svd failed"); return; }
+  if(status == false)  { out.reset(); arma_stop_runtime_error("orth(): svd failed"); return; }
   
   if(s.is_empty())  { out.reset(); return; }
   
@@ -353,7 +353,7 @@ op_null::apply( Mat<typename T1::elem_type>& out, const Op<T1, op_null>& expr )
   
   U.reset();
   
-  if(status == false)  { out.reset(); arma_bad("null(): svd failed"); return; }
+  if(status == false)  { out.reset(); arma_stop_runtime_error("null(): svd failed"); return; }
   
   if(s.is_empty())  { out.reset(); return; }
   

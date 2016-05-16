@@ -25,17 +25,23 @@
 //// Without BLAS, matrix multiplication will still work, but might be slower.
 #endif
 
+#if !defined(ARMA_USE_NEWARP)
+#define ARMA_USE_NEWARP
+//// Uncomment the above line to enable the built-in partial emulation of ARPACK.
+//// This is used for eigen decompositions of real (non-complex) sparse matrices, eg. eigs_sym(), svds() 
+#endif
+
 #if !defined(ARMA_USE_ARPACK)
 #cmakedefine ARMA_USE_ARPACK
 //// Uncomment the above line if you have ARPACK or a high-speed replacement for ARPACK.
-//// ARPACK is required for eigendecompositions of sparse matrices, eg. eigs_sym(), svds() 
+//// ARPACK is required for eigen decompositions of complex sparse matrices
 #endif
 
 #if !defined(ARMA_USE_SUPERLU)
 #cmakedefine ARMA_USE_SUPERLU
 //// Uncomment the above line if you have SuperLU.
 //// SuperLU is used for solving sparse linear systems via spsolve()
-//// Caveat: only SuperLU version 4.3 can be used!
+//// Caveat: only SuperLU version 5.2 can be used!
 #endif
 
 #if !defined(ARMA_SUPERLU_INCLUDE_DIR)
@@ -149,6 +155,10 @@
 
 #if defined(ARMA_DONT_USE_BLAS)
   #undef ARMA_USE_BLAS
+#endif
+
+#if defined(ARMA_DONT_USE_NEWARP)
+  #undef ARMA_USE_NEWARP
 #endif
 
 #if defined(ARMA_DONT_USE_ARPACK)

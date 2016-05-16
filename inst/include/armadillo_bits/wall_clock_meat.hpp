@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -35,7 +35,7 @@ wall_clock::tic()
   {
   arma_extra_debug_sigprint();
   
-  #if defined(ARMA_USE_CXX11) && !defined(ARMA_DONT_USE_CXX11_CHRONO)
+  #if defined(ARMA_USE_CXX11)
     {
     chrono_time1 = std::chrono::steady_clock::now();
     valid = true;
@@ -63,7 +63,7 @@ wall_clock::toc()
   
   if(valid)
     {
-    #if defined(ARMA_USE_CXX11) && !defined(ARMA_DONT_USE_CXX11_CHRONO)
+    #if defined(ARMA_USE_CXX11)
       {
       const std::chrono::steady_clock::time_point chrono_time2 = std::chrono::steady_clock::now();
       

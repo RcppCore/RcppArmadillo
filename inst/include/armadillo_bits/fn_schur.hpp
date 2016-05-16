@@ -64,7 +64,7 @@ schur
   if(status == false)
     {
     S.reset();
-    arma_bad("schur(): decomposition failed");
+    arma_stop_runtime_error("schur(): decomposition failed");
     }
   
   return S;

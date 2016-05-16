@@ -37,7 +37,7 @@ eigs_sym
   if(status == false)
     {
     eigval.reset();
-    arma_bad("eigs_sym(): decomposition failed");
+    arma_stop_runtime_error("eigs_sym(): decomposition failed");
     }
   
   return eigval;

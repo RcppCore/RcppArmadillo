@@ -286,7 +286,9 @@ op_logmat_cx::apply_common(Mat< std::complex<T> >& out, Mat< std::complex<T> >& 
     if(helper_ok == false)  { return false; }
     }
   
-  out = std::pow(double(2),int(iter)) * U * S * U.t();
+  out = U * S * U.t();
+  
+  out *= eT(eop_aux::pow(double(2), double(iter)));
   
   return true;
   }

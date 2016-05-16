@@ -147,7 +147,7 @@ spsolve
   
   if(status == false)
     {
-    arma_bad("spsolve(): solution not found");
+    arma_stop_runtime_error("spsolve(): solution not found");
     }
   
   return out;

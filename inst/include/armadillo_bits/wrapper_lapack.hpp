@@ -1112,6 +1112,164 @@ namespace lapack
     {
     return arma_fortran(arma_ilaenv)(ispec, name, opts, n1, n2, n3, n4);
     }
+  
+  
+  
+  template<typename eT>
+  inline
+  void
+  sytrs(char* uplo, blas_int* n, blas_int* nrhs, eT* a, blas_int* lda, blas_int* ipiv, eT* b, blas_int* ldb, blas_int* info)
+    {
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
+    
+    if(is_float<eT>::value)
+      {
+      typedef float T;
+      arma_fortran(arma_ssytrs)(uplo, n, nrhs, (T*)a, lda, ipiv, (T*)b, ldb, info);
+        }
+      else
+      if(is_double<eT>::value)
+        {
+        typedef double T;
+        arma_fortran(arma_dsytrs)(uplo, n, nrhs, (T*)a, lda, ipiv, (T*)b, ldb, info);
+        }
+      else
+      if(is_supported_complex_float<eT>::value)
+        {
+        typedef std::complex<float> T;
+        arma_fortran(arma_csytrs)(uplo, n, nrhs, (T*)a, lda, ipiv, (T*)b, ldb, info);
+        }
+      else
+      if(is_supported_complex_double<eT>::value)
+        {
+        typedef std::complex<double> T;
+        arma_fortran(arma_zsytrs)(uplo, n, nrhs, (T*)a, lda, ipiv, (T*)b, ldb, info);
+        }
+      }
+  
+  
+  
+  template<typename eT>
+  inline
+  void
+  getrs(char* trans, blas_int* n, blas_int* nrhs, eT* a, blas_int* lda, blas_int* ipiv, eT* b, blas_int* ldb, blas_int* info)
+    {
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
+    
+    if(is_float<eT>::value)
+      {
+      typedef float T;
+      arma_fortran(arma_sgetrs)(trans, n, nrhs, (T*)a, lda, ipiv, (T*)b, ldb, info);
+      }
+    else
+    if(is_double<eT>::value)
+      {
+      typedef double T;
+      arma_fortran(arma_dgetrs)(trans, n, nrhs, (T*)a, lda, ipiv, (T*)b, ldb, info);
+      }
+    else
+    if(is_supported_complex_float<eT>::value)
+      {
+      typedef std::complex<float> T;
+      arma_fortran(arma_cgetrs)(trans, n, nrhs, (T*)a, lda, ipiv, (T*)b, ldb, info);
+      }
+    else
+    if(is_supported_complex_double<eT>::value)
+      {
+      typedef std::complex<double> T;
+      arma_fortran(arma_zgetrs)(trans, n, nrhs, (T*)a, lda, ipiv, (T*)b, ldb, info);
+      }
+    }
+  
+  
+  
+  template<typename eT>
+  inline
+  void
+  lahqr(blas_int* wantt, blas_int* wantz, blas_int* n, blas_int* ilo, blas_int* ihi, eT* h, blas_int* ldh, eT* wr, eT* wi, blas_int* iloz, blas_int* ihiz, eT* z, blas_int* ldz, blas_int* info)
+    {
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
+    
+    if(is_float<eT>::value)
+      {
+      typedef float T;
+      arma_fortran(arma_slahqr)(wantt, wantz, n, ilo, ihi, (T*)h, ldh, (T*)wr, (T*)wi, iloz, ihiz, (T*)z, ldz, info);
+      }
+    else
+    if(is_double<eT>::value)
+      {
+      typedef double T;
+      arma_fortran(arma_dlahqr)(wantt, wantz, n, ilo, ihi, (T*)h, ldh, (T*)wr, (T*)wi, iloz, ihiz, (T*)z, ldz, info);
+      }
+    }
+  
+  
+  
+  template<typename eT>
+  inline
+  void
+  stedc(char* compz, blas_int* n, eT* d, eT* e, eT* z, blas_int* ldz, eT* work, blas_int* lwork, blas_int* iwork, blas_int* liwork, blas_int* info)
+    {
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
+    
+    if(is_float<eT>::value)
+      {
+      typedef float T;
+      arma_fortran(arma_sstedc)(compz, n, (T*)d, (T*)e, (T*)z, ldz, (T*)work, lwork, iwork, liwork, info);
+      }
+    else
+    if(is_double<eT>::value)
+      {
+      typedef double T;
+      arma_fortran(arma_dstedc)(compz, n, (T*)d, (T*)e, (T*)z, ldz, (T*)work, lwork, iwork, liwork, info);
+      }
+    }
+  
+  
+  
+  template<typename eT>
+  inline
+  void
+  trevc(char* side, char* howmny, blas_int* select, blas_int* n, eT* t, blas_int* ldt, eT* vl, blas_int* ldvl, eT* vr, blas_int* ldvr, blas_int* mm, blas_int* m, eT* work, blas_int* info)
+    {
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
+    
+    if(is_float<eT>::value)
+      {
+      typedef float T;
+      arma_fortran(arma_strevc)(side, howmny, select, n, (T*)t, ldt, (T*)vl, ldvl, (T*)vr, ldvr, mm, m, (T*)work, info);
+      }
+    else
+    if(is_double<eT>::value)
+      {
+      typedef double T;
+      arma_fortran(arma_dtrevc)(side, howmny, select, n, (T*)t, ldt, (T*)vl, ldvl, (T*)vr, ldvr, mm, m, (T*)work, info);
+      }
+    }
+  
+  
+  
+  template<typename eT>
+  inline
+  void
+  larnv(blas_int* idist, blas_int* iseed, blas_int* n, eT* x)
+    {
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
+    
+    if(is_float<eT>::value)
+      {
+      typedef float T;
+      arma_fortran(arma_slarnv)(idist, iseed, n, (T*)x);
+      }
+    else
+    if(is_double<eT>::value)
+      {
+      typedef double T;
+      arma_fortran(arma_dlarnv)(idist, iseed, n, (T*)x);
+      }
+    }
+  
+  
   }
 
 

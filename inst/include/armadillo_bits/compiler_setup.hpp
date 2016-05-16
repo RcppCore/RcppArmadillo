@@ -68,10 +68,8 @@
 
 #if defined(__CYGWIN__)
   #if defined(ARMA_USE_CXX11)
-    #pragma message ("WARNING: Cygwin may have incomplete support for C++11 features;")
-    #pragma message ("WARNING: if something breaks, you get to keep all the pieces.")
-    #pragma message ("WARNING: to forcefully prevent Armadillo from using C++11 features,")
-    #pragma message ("WARNING: #define ARMA_DONT_USE_CXX11 before #include <armadillo>")
+    #undef  ARMA_PRINT_CXX11_WARNING
+    #define ARMA_PRINT_CXX11_WARNING
   #endif
 #endif
 
@@ -140,7 +138,7 @@
 #endif
 
 
-#if defined(__MINGW32__)
+#if defined(__MINGW32__) || defined(__CYGWIN__) || defined(_MSC_VER)
   #undef ARMA_HAVE_POSIX_MEMALIGN
 #endif
 
@@ -171,8 +169,13 @@
   #undef  ARMA_GCC_VERSION
   #define ARMA_GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
   
-  #if (ARMA_GCC_VERSION < 40200)
+  #if (ARMA_GCC_VERSION < 40400)
     #error "*** Need a newer compiler ***"
+  #endif
+  
+  #if (ARMA_GCC_VERSION < 40600)
+    #pragma message ("WARNING: this compiler is OUTDATED and has INCOMPLETE support for the C++ standard;")
+    #pragma message ("WARNING: if something breaks, you get to keep all the pieces")
   #endif
   
   #if ( (ARMA_GCC_VERSION >= 40700) && (ARMA_GCC_VERSION <= 40701) )
@@ -203,15 +206,12 @@
   
   #if defined(ARMA_USE_CXX11)
     #if (ARMA_GCC_VERSION < 40800)
-      #pragma message ("WARNING: compiler is in C++11 mode, but it has INCOMPLETE support for C++11 features;")
-      #pragma message ("WARNING: if something breaks, you get to keep all the pieces.")
-      #pragma message ("WARNING: to forcefully prevent Armadillo from using C++11 features,")
-      #pragma message ("WARNING: #define ARMA_DONT_USE_CXX11 before #include <armadillo>")
-      #define ARMA_DONT_USE_CXX11_CHRONO
+      #undef  ARMA_PRINT_CXX11_WARNING
+      #define ARMA_PRINT_CXX11_WARNING
     #endif
   #endif
   
-  #if !defined(ARMA_USE_CXX11)
+  #if !defined(ARMA_USE_CXX11) && !defined(__GXX_EXPERIMENTAL_CXX0X__)
     #if defined(_GLIBCXX_USE_C99_MATH_TR1) && defined(_GLIBCXX_USE_C99_COMPLEX_TR1)
       #define ARMA_HAVE_TR1
     #endif
@@ -332,7 +332,7 @@
 
 #if defined(__INTEL_COMPILER)
   
-  #if (__INTEL_COMPILER_BUILD_DATE < 20090623)
+  #if (__INTEL_COMPILER < 1300)
     #error "*** Need a newer compiler ***"
   #endif
   
@@ -340,27 +340,26 @@
   #undef  ARMA_HAVE_ICC_ASSUME_ALIGNED
   #define ARMA_HAVE_ICC_ASSUME_ALIGNED
   
+  #if defined(ARMA_USE_CXX11)
+    #if (__INTEL_COMPILER < 1500)
+      #undef  ARMA_PRINT_CXX11_WARNING
+      #define ARMA_PRINT_CXX11_WARNING
+    #endif
+  #endif
+  
 #endif
 
 
 #if defined(_MSC_VER)
   
-  #if (_MSC_VER < 1600)
-    #error "*** Need a newer compiler ***"
-  #endif
-  
   #if (_MSC_VER < 1700)
-    #pragma message ("WARNING: this compiler is OUTDATED and has INCOMPLETE support for the C++ standard;")
-    #pragma message ("WARNING: if something breaks, you get to keep all the pieces")
-    #define ARMA_BAD_COMPILER
+    #error "*** Need a newer compiler ***"
   #endif
   
   #if defined(ARMA_USE_CXX11)
     #if (_MSC_VER < 1900)
-      #pragma message ("WARNING: compiler is in C++11 mode, but it has INCOMPLETE support for C++11 features;")
-      #pragma message ("WARNING: if something breaks, you get to keep all the pieces.")
-      #pragma message ("WARNING: to forcefully prevent Armadillo from using C++11 features,")
-      #pragma message ("WARNING: #define ARMA_DONT_USE_CXX11 before #include <armadillo>")
+      #undef  ARMA_PRINT_CXX11_WARNING
+      #define ARMA_PRINT_CXX11_WARNING
     #endif
   #endif
   
@@ -419,7 +418,29 @@
   #if (__SUNPRO_CC < 0x5100)
     #error "*** Need a newer compiler ***"
   #endif
-    
+  
+  #if defined(ARMA_USE_CXX11)
+    #if (__SUNPRO_CC < 0x5130)
+      #undef  ARMA_PRINT_CXX11_WARNING
+      #define ARMA_PRINT_CXX11_WARNING
+    #endif
+  #endif
+  
+#endif
+
+
+#if defined(ARMA_PRINT_CXX11_WARNING)
+  #if defined(__CYGWIN__)
+    #pragma message ("WARNING: Cygwin may have incomplete support for C++11 features;")
+  #else
+    #pragma message ("WARNING: compiler is in C++11 mode, but it has INCOMPLETE support for C++11 features;")
+  #endif
+  
+  #pragma message ("WARNING: if something breaks, you get to keep all the pieces.")
+  #pragma message ("WARNING: to forcefully prevent Armadillo from using C++11 features,")
+  #pragma message ("WARNING: #define ARMA_DONT_USE_CXX11 before #include <armadillo>")
+
+  #undef ARMA_PRINT_CXX11_WARNING
 #endif
 
 

@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -84,10 +84,7 @@ get_stream_err2()
 
 
 
-//
-// arma_stop
-
-//! print a message to get_stream_err1() and/or throw a logic_error exception
+//! print a message to get_stream_err1() and throw logic_error exception
 template<typename T1>
 arma_cold
 arma_noinline
@@ -106,6 +103,7 @@ arma_stop(const T1& x)
 
 
 
+//! print a message to get_stream_err2() and throw bad_alloc exception
 template<typename T1>
 arma_cold
 arma_noinline
@@ -128,16 +126,13 @@ arma_stop_bad_alloc(const T1& x)
 
 
 
-//
-// arma_bad
-
-//! print a message to get_stream_err2() and/or throw a run-time error exception
+//! print a message to get_stream_err2() and throw runtime_error exception
 template<typename T1>
 arma_cold
 arma_noinline
 static
 void
-arma_bad(const T1& x)
+arma_stop_runtime_error(const T1& x)
   {
   #if defined(ARMA_PRINT_ERRORS)
     {
@@ -1119,7 +1114,7 @@ arma_assert_blas_size(const T1& A)
     
     if(overflow)
       {
-      arma_bad("integer overflow: matrix dimensions are too large for integer type used by BLAS and LAPACK");
+      arma_stop_runtime_error("integer overflow: matrix dimensions are too large for integer type used by BLAS and LAPACK");
       }
     }
   }
@@ -1143,7 +1138,7 @@ arma_assert_blas_size(const T1& A, const T2& B)
     
     if(overflow)
       {
-      arma_bad("integer overflow: matrix dimensions are too large for integer type used by BLAS and LAPACK");
+      arma_stop_runtime_error("integer overflow: matrix dimensions are too large for integer type used by BLAS and LAPACK");
       }
     }
   }
@@ -1165,7 +1160,7 @@ arma_assert_atlas_size(const T1& A)
     
     if(overflow)
       {
-      arma_bad("integer overflow: matrix dimensions are too large for integer type used by ATLAS");
+      arma_stop_runtime_error("integer overflow: matrix dimensions are too large for integer type used by ATLAS");
       }
     }
   }
@@ -1189,7 +1184,7 @@ arma_assert_atlas_size(const T1& A, const T2& B)
     
     if(overflow)
       {
-      arma_bad("integer overflow: matrix dimensions are too large for integer type used by ATLAS");
+      arma_stop_runtime_error("integer overflow: matrix dimensions are too large for integer type used by ATLAS");
       }
     }
   }
@@ -1292,6 +1287,7 @@ arma_assert_atlas_size(const T1& A, const T2& B)
         out << "@ arma_config::openmp       = " << arma_config::openmp       << '\n';
         out << "@ arma_config::lapack       = " << arma_config::lapack       << '\n';
         out << "@ arma_config::blas         = " << arma_config::blas         << '\n';
+        out << "@ arma_config::newarp       = " << arma_config::newarp       << '\n';
         out << "@ arma_config::arpack       = " << arma_config::arpack       << '\n';
         out << "@ arma_config::superlu      = " << arma_config::superlu      << '\n';
         out << "@ arma_config::atlas        = " << arma_config::atlas        << '\n';

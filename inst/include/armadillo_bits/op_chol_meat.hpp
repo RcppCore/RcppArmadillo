@@ -25,7 +25,7 @@ op_chol::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_chol>& X)
   if(status == false)
     {
     out.reset();
-    arma_bad("chol(): decomposition failed");
+    arma_stop_runtime_error("chol(): decomposition failed");
     }
   }
 

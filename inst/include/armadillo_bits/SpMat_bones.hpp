@@ -414,7 +414,7 @@ class SpMat : public SpBase< eT, SpMat<eT> >
     inline iterator(SpMat& in_M, uword initial_pos = 0) : const_iterator(in_M, initial_pos) { }
     inline iterator(SpMat& in_M, uword in_row, uword in_col) : const_iterator(in_M, in_row, in_col) { }
     inline iterator(SpMat& in_M, uword in_row, uword in_col, uword in_pos) : const_iterator(in_M, in_row, in_col, in_pos) { }
-    inline iterator(const const_iterator& other) : const_iterator(other) { }
+    inline iterator(const iterator& other) : const_iterator(other) { }
     
     inline arma_hot SpValProxy<SpMat<eT> > operator*();
     
