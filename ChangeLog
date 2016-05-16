@@ -1,3 +1,10 @@
+2016-05-16  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.7.100.0.0 [GitHub only]
+        * inst/NEWS.Rd: Release 0.7.100.0.0 [GitHub only]
+
+	* inst/include/*: Upgraded to release 7.100.0 of Armadillo
+
 2016-05-12  Dirk Eddelbuettel  <edd@debian.org>
 
 	* configure.ac: Rewriting configure as autoconf script for better

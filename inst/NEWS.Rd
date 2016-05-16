@@ -3,11 +3,14 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.6.xxx.x.x (2016-xx-xx)}{
+\section{Changes in RcppArmadillo version 0.7.100.0.0 (2016-05-16)}{
   \itemize{
-    \item Upgraded to Armadillo 6.xxx.x (xxxxxxxxxxxxxxxxxxxxxxxxxxxx)
+    \item Upgraded to Armadillo test release 7.100.0 
     \itemize{
-      \item TBD
+      \item \code{spsolve()} now requires SuperLU 5.2
+      \item \code{eigs_sym()}, \code{eigs_gen()} and \code{svds()} now
+      use a built-in reimplementation of ARPACK for real (non-complex)
+      matrices (code contributed by Yixuan Qiu) 
     }
     \item The \code{configure} code now checks against old \code{g++}
     version which are no longer sufficient to build the package.
