@@ -358,7 +358,7 @@ SymEigsSolver<eT, SelectionRule, OpType>::compute(uword maxit, eT tol)
   {
   arma_extra_debug_sigprint();
   
-  // The m-step Arnoldi factorization
+  // The m-step Arnoldi factorisation
   factorise_from(1, ncv, fac_f);
   retrieve_ritzpair();
   // Restarting

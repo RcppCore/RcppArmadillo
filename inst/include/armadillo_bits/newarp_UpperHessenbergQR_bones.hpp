@@ -38,7 +38,7 @@ class UpperHessenbergQR
   //! QR decomposition of an upper Hessenberg matrix `mat_obj`.
   inline UpperHessenbergQR(const Mat<eT>& mat_obj);
 
-  //! Conduct the QR factorization of an upper Hessenberg matrix.
+  //! Conduct the QR factorisation of an upper Hessenberg matrix.
   virtual void compute(const Mat<eT>& mat_obj);
 
   //! Return the \f$RQ\f$ matrix, the multiplication of \f$R\f$ and \f$Q\f$,
@@ -66,7 +66,7 @@ class TridiagQR : public UpperHessenbergQR<eT>
   //! QR decomposition of a tridiagonal matrix `mat_obj`.
   inline TridiagQR(const Mat<eT>& mat_obj);
 
-  //! Conduct the QR factorization of a tridiagonal matrix.
+  //! Conduct the QR factorisation of a tridiagonal matrix.
   inline void compute(const Mat<eT>& mat_obj);
 
   //! Return the \f$RQ\f$ matrix, the multiplication of \f$R\f$ and \f$Q\f$,

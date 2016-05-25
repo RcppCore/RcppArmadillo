@@ -33,9 +33,9 @@ class GenEigsSolver
   const uword             ncv;       // number of ritz values
   uword                   nmatop;    // number of matrix operations called
   uword                   niter;     // number of restarting iterations
-  Mat<eT>                 fac_V;     // V matrix in the Arnoldi factorization
-  Mat<eT>                 fac_H;     // H matrix in the Arnoldi factorization
-  Col<eT>                 fac_f;     // residual in the Arnoldi factorization
+  Mat<eT>                 fac_V;     // V matrix in the Arnoldi factorisation
+  Mat<eT>                 fac_H;     // H matrix in the Arnoldi factorisation
+  Col<eT>                 fac_f;     // residual in the Arnoldi factorisation
   Mat< std::complex<eT> > ritz_vec;  // ritz vectors
   std::vector<bool>       ritz_conv; // indicator of the convergence of ritz values
   const eT                prec;      // precision parameter used to test convergence
@@ -43,10 +43,10 @@ class GenEigsSolver
                                      // epsilon is the machine precision,
                                      // e.g. ~= 1e-16 for the "double" type
 
-  // Arnoldi factorization starting from step-k
-  inline void factorize_from(uword from_k, uword to_m, const Col<eT>& fk);
+  // Arnoldi factorisation starting from step-k
+  inline void factorise_from(uword from_k, uword to_m, const Col<eT>& fk);
 
-  // Implicitly restarted Arnoldi factorization
+  // Implicitly restarted Arnoldi factorisation
   inline void restart(uword k);
 
   // Calculate the number of converged Ritz values

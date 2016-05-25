@@ -300,15 +300,17 @@ namespace arma
   #include "armadillo_bits/spglue_times_bones.hpp"
   #include "armadillo_bits/spglue_join_bones.hpp"
   
-  #include "armadillo_bits/newarp_EigsSelect.hpp"
-  #include "armadillo_bits/newarp_DenseGenMatProd_bones.hpp"
-  #include "armadillo_bits/newarp_SparseGenMatProd_bones.hpp"
-  #include "armadillo_bits/newarp_DoubleShiftQR_bones.hpp"
-  #include "armadillo_bits/newarp_GenEigsSolver_bones.hpp"
-  #include "armadillo_bits/newarp_SymEigsSolver_bones.hpp"
-  #include "armadillo_bits/newarp_TridiagEigen_bones.hpp"
-  #include "armadillo_bits/newarp_UpperHessenbergEigen_bones.hpp"
-  #include "armadillo_bits/newarp_UpperHessenbergQR_bones.hpp"
+  #if defined(ARMA_USE_NEWARP)
+    #include "armadillo_bits/newarp_EigsSelect.hpp"
+    #include "armadillo_bits/newarp_DenseGenMatProd_bones.hpp"
+    #include "armadillo_bits/newarp_SparseGenMatProd_bones.hpp"
+    #include "armadillo_bits/newarp_DoubleShiftQR_bones.hpp"
+    #include "armadillo_bits/newarp_GenEigsSolver_bones.hpp"
+    #include "armadillo_bits/newarp_SymEigsSolver_bones.hpp"
+    #include "armadillo_bits/newarp_TridiagEigen_bones.hpp"
+    #include "armadillo_bits/newarp_UpperHessenbergEigen_bones.hpp"
+    #include "armadillo_bits/newarp_UpperHessenbergQR_bones.hpp"
+  #endif
   
   
   //
@@ -656,17 +658,19 @@ namespace arma
   #include "armadillo_bits/spglue_minus_meat.hpp"
   #include "armadillo_bits/spglue_times_meat.hpp"
   #include "armadillo_bits/spglue_join_meat.hpp"
-
-  #include "armadillo_bits/newarp_cx_attrib.hpp"
-  #include "armadillo_bits/newarp_SortEigenvalue.hpp"
-  #include "armadillo_bits/newarp_DenseGenMatProd_meat.hpp"
-  #include "armadillo_bits/newarp_SparseGenMatProd_meat.hpp"
-  #include "armadillo_bits/newarp_DoubleShiftQR_meat.hpp"
-  #include "armadillo_bits/newarp_GenEigsSolver_meat.hpp"
-  #include "armadillo_bits/newarp_SymEigsSolver_meat.hpp"
-  #include "armadillo_bits/newarp_TridiagEigen_meat.hpp"
-  #include "armadillo_bits/newarp_UpperHessenbergEigen_meat.hpp"
-  #include "armadillo_bits/newarp_UpperHessenbergQR_meat.hpp"
+  
+  #if defined(ARMA_USE_NEWARP)
+    #include "armadillo_bits/newarp_cx_attrib.hpp"
+    #include "armadillo_bits/newarp_SortEigenvalue.hpp"
+    #include "armadillo_bits/newarp_DenseGenMatProd_meat.hpp"
+    #include "armadillo_bits/newarp_SparseGenMatProd_meat.hpp"
+    #include "armadillo_bits/newarp_DoubleShiftQR_meat.hpp"
+    #include "armadillo_bits/newarp_GenEigsSolver_meat.hpp"
+    #include "armadillo_bits/newarp_SymEigsSolver_meat.hpp"
+    #include "armadillo_bits/newarp_TridiagEigen_meat.hpp"
+    #include "armadillo_bits/newarp_UpperHessenbergEigen_meat.hpp"
+    #include "armadillo_bits/newarp_UpperHessenbergQR_meat.hpp"
+  #endif
   }
 
 
