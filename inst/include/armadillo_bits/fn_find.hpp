@@ -1,4 +1,4 @@
-// Copyright (C) 2010-2014 National ICT Australia (NICTA)
+// Copyright (C) 2010-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,7 @@
 
 
 template<typename T1>
+arma_warn_unused
 inline
 typename
 enable_if2
@@ -31,6 +32,7 @@ find(const T1& X)
 
 
 template<typename T1>
+arma_warn_unused
 inline
 const mtOp<uword, T1, op_find>
 find(const Base<typename T1::elem_type,T1>& X, const uword k, const char* direction = "first")
@@ -57,6 +59,7 @@ find(const Base<typename T1::elem_type,T1>& X, const uword k, const char* direct
 
 
 template<typename T1>
+arma_warn_unused
 inline
 uvec
 find(const BaseCube<typename T1::elem_type,T1>& X)
@@ -75,6 +78,7 @@ find(const BaseCube<typename T1::elem_type,T1>& X)
 
 
 template<typename T1>
+arma_warn_unused
 inline
 uvec
 find(const BaseCube<typename T1::elem_type,T1>& X, const uword k, const char* direction = "first")
@@ -93,6 +97,7 @@ find(const BaseCube<typename T1::elem_type,T1>& X, const uword k, const char* di
 
 
 template<typename T1, typename op_rel_type>
+arma_warn_unused
 inline
 uvec
 find(const mtOpCube<uword, T1, op_rel_type>& X, const uword k = 0, const char* direction = "first")
@@ -111,6 +116,7 @@ find(const mtOpCube<uword, T1, op_rel_type>& X, const uword k = 0, const char* d
 
 
 template<typename T1, typename T2, typename glue_rel_type>
+arma_warn_unused
 inline
 uvec
 find(const mtGlueCube<uword, T1, T2, glue_rel_type>& X, const uword k = 0, const char* direction = "first")
@@ -138,6 +144,7 @@ find(const mtGlueCube<uword, T1, T2, glue_rel_type>& X, const uword k = 0, const
 
 
 template<typename T1>
+arma_warn_unused
 inline
 typename
 enable_if2
@@ -155,6 +162,7 @@ find_finite(const T1& X)
 
 
 template<typename T1>
+arma_warn_unused
 inline
 typename
 enable_if2
@@ -176,6 +184,7 @@ find_nonfinite(const T1& X)
 
 
 template<typename T1>
+arma_warn_unused
 inline
 uvec
 find_finite(const BaseCube<typename T1::elem_type,T1>& X)
@@ -194,6 +203,7 @@ find_finite(const BaseCube<typename T1::elem_type,T1>& X)
 
 
 template<typename T1>
+arma_warn_unused
 inline
 uvec
 find_nonfinite(const BaseCube<typename T1::elem_type,T1>& X)

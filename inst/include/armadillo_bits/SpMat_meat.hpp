@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -1014,7 +1014,7 @@ SpMat<eT>::operator%=(const Base<eT, T1>& x)
 
   while(it != end())
     {
-    // prefer_at_accessor == false can't save us any work here
+    // use_at == false can't save us any work here
     if(((*it) * p.at(it.row(), it.col())) != eT(0))
       {
       ++new_n_nonzero;
@@ -1029,7 +1029,7 @@ SpMat<eT>::operator%=(const Base<eT, T1>& x)
   uword cur_pos = 0;
   while(c_it != end())
     {
-    // prefer_at_accessor == false can't save us any work here
+    // use_at == false can't save us any work here
     const eT val = (*c_it) * p.at(c_it.row(), c_it.col());
     if(val != eT(0))
       {
@@ -4558,7 +4558,7 @@ SpMat<eT>::init_xform(const SpBase<eT,T1>& A, const Functor& func)
   arma_extra_debug_sigprint();
   
   // if possible, avoid doing a copy and instead apply func to the generated elements
-  if(SpProxy<T1>::Q_created_by_proxy)
+  if(SpProxy<T1>::Q_is_generated)
     {
     (*this) = A.get_ref();
     

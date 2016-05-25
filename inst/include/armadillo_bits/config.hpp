@@ -157,7 +157,7 @@
   #undef ARMA_USE_BLAS
 #endif
 
-#if defined(ARMA_DONT_USE_NEWARP)
+#if defined(ARMA_DONT_USE_NEWARP) || !defined(ARMA_USE_LAPACK)
   #undef ARMA_USE_NEWARP
 #endif
 

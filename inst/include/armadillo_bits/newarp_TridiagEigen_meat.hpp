@@ -82,7 +82,7 @@ TridiagEigen<eT>::compute(const Mat<eT>& mat_obj)
   
   lapack::stedc(&compz, &n, main_diag.memptr(), sub_diag.memptr(), evecs.memptr(), &n, work.memptr(), &lwork, iwork.memptr(), &liwork, &info);
   
-  if(info < 0)  { arma_stop("lapack::stedc(): illegal value"); return; }
+  if(info < 0)  { arma_stop_logic_error("lapack::stedc(): illegal value"); return; }
   
   if(info > 0)  { arma_stop_runtime_error("lapack::stedc(): failed to compute all eigenvalues"); return; }
   

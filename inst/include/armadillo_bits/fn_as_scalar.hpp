@@ -1,4 +1,4 @@
-// Copyright (C) 2010-2015 National ICT Australia (NICTA)
+// Copyright (C) 2010-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -58,7 +58,7 @@ as_scalar_redirect<N>::apply(const T1& X)
     return Datum<eT>::nan;
     }
   
-  return (Proxy<T1>::prefer_at_accessor) ? P.at(0,0) : P[0];
+  return (Proxy<T1>::use_at) ? P.at(0,0) : P[0];
   }
 
 
@@ -75,10 +75,11 @@ as_scalar_redirect<2>::apply(const Glue<T1, T2, glue_times>& X)
   // T1 must result in a matrix with one row
   // T2 must result in a matrix with one column
   
-  const bool has_all_mat        = (is_Mat<T1>::value || is_Mat_trans<T1>::value) && (is_Mat<T2>::value || is_Mat_trans<T2>::value);
-  const bool prefer_at_accessor = Proxy<T1>::prefer_at_accessor                  || Proxy<T2>::prefer_at_accessor;
+  const bool has_all_mat = (is_Mat<T1>::value || is_Mat_trans<T1>::value) && (is_Mat<T2>::value || is_Mat_trans<T2>::value);
   
-  const bool do_partial_unwrap = has_all_mat || prefer_at_accessor;
+  const bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);
+  
+  const bool do_partial_unwrap = (has_all_mat || use_at);
   
   if(do_partial_unwrap == true)
     {
@@ -301,8 +302,8 @@ as_scalar_diag(const Glue< Glue<T1, T2, glue_times_diag>, T3, glue_times >& X)
 
 
 template<typename T1, typename T2>
-arma_inline
 arma_warn_unused
+arma_inline
 typename T1::elem_type
 as_scalar(const Glue<T1, T2, glue_times>& X, const typename arma_not_cx<typename T1::elem_type>::result* junk = 0)
   {
@@ -326,8 +327,8 @@ as_scalar(const Glue<T1, T2, glue_times>& X, const typename arma_not_cx<typename
 
 
 template<typename T1>
-inline
 arma_warn_unused
+inline
 typename T1::elem_type
 as_scalar(const Base<typename T1::elem_type,T1>& X)
   {
@@ -344,7 +345,7 @@ as_scalar(const Base<typename T1::elem_type,T1>& X)
     return Datum<eT>::nan;
     }
   
-  return (Proxy<T1>::prefer_at_accessor) ? P.at(0,0) : P[0];
+  return (Proxy<T1>::use_at) ? P.at(0,0) : P[0];
   }
 
 
@@ -355,8 +356,8 @@ template<typename T1, typename T2, typename eglue_type> inline arma_warn_unused 
 
 
 template<typename T1, typename eop_type>
-inline
 arma_warn_unused
+inline
 typename T1::elem_type
 as_scalar(const eOp<T1, eop_type>& X)
   {
@@ -395,8 +396,8 @@ as_scalar(const eGlue<T1, T2, eglue_type>& X)
 
 
 template<typename T1>
-inline
 arma_warn_unused
+inline
 typename T1::elem_type
 as_scalar(const BaseCube<typename T1::elem_type,T1>& X)
   {
@@ -413,14 +414,14 @@ as_scalar(const BaseCube<typename T1::elem_type,T1>& X)
     return Datum<eT>::nan;
     }
   
-  return (ProxyCube<T1>::prefer_at_accessor) ? P.at(0,0,0) : P[0];
+  return (ProxyCube<T1>::use_at) ? P.at(0,0,0) : P[0];
   }
 
 
 
 template<typename T>
-arma_inline
 arma_warn_unused
+arma_inline
 const typename arma_scalar_only<T>::result &
 as_scalar(const T& x)
   {
@@ -430,8 +431,8 @@ as_scalar(const T& x)
 
 
 template<typename T1>
-inline
 arma_warn_unused
+inline
 typename T1::elem_type
 as_scalar(const SpBase<typename T1::elem_type, T1>& X)
   {

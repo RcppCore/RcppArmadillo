@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2010 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,7 @@
 
 //! extract a diagonal from a matrix
 template<typename T1>
+arma_warn_unused
 arma_inline
 const Op<T1, op_diagvec>
 diagvec(const Base<typename T1::elem_type,T1>& X, const sword diag_id = 0)

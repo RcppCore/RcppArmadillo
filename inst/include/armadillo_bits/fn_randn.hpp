@@ -12,6 +12,7 @@
 //! @{
 
 
+arma_warn_unused
 inline
 double
 randn()
@@ -21,6 +22,7 @@ randn()
 
 
 template<typename eT>
+arma_warn_unused
 inline
 typename arma_scalar_only<eT>::result
 randn()
@@ -31,6 +33,7 @@ randn()
 
 
 //! Generate a vector with all elements set to random values with a gaussian distribution (zero mean, unit variance)
+arma_warn_unused
 arma_inline
 const Gen<vec, gen_randn>
 randn(const uword n_elem)
@@ -43,6 +46,7 @@ randn(const uword n_elem)
 
 
 template<typename obj_type>
+arma_warn_unused
 arma_inline
 const Gen<obj_type, gen_randn>
 randn(const uword n_elem, const arma_empty_class junk1 = arma_empty_class(), const typename arma_Mat_Col_Row_only<obj_type>::result* junk2 = 0)
@@ -64,6 +68,7 @@ randn(const uword n_elem, const arma_empty_class junk1 = arma_empty_class(), con
 
 
 //! Generate a dense matrix with all elements set to random values with a gaussian distribution (zero mean, unit variance)
+arma_warn_unused
 arma_inline
 const Gen<mat, gen_randn>
 randn(const uword n_rows, const uword n_cols)
@@ -75,6 +80,7 @@ randn(const uword n_rows, const uword n_cols)
 
 
 
+arma_warn_unused
 arma_inline
 const Gen<mat, gen_randn>
 randn(const SizeMat& s)
@@ -87,6 +93,7 @@ randn(const SizeMat& s)
 
 
 template<typename obj_type>
+arma_warn_unused
 arma_inline
 const Gen<obj_type, gen_randn>
 randn(const uword n_rows, const uword n_cols, const typename arma_Mat_Col_Row_only<obj_type>::result* junk = 0)
@@ -110,6 +117,7 @@ randn(const uword n_rows, const uword n_cols, const typename arma_Mat_Col_Row_on
 
 
 template<typename obj_type>
+arma_warn_unused
 arma_inline
 const Gen<obj_type, gen_randn>
 randn(const SizeMat& s, const typename arma_Mat_Col_Row_only<obj_type>::result* junk = 0)
@@ -122,6 +130,7 @@ randn(const SizeMat& s, const typename arma_Mat_Col_Row_only<obj_type>::result* 
 
 
 
+arma_warn_unused
 arma_inline
 const GenCube<cube::elem_type, gen_randn>
 randn(const uword n_rows, const uword n_cols, const uword n_slices)
@@ -133,6 +142,7 @@ randn(const uword n_rows, const uword n_cols, const uword n_slices)
 
 
 
+arma_warn_unused
 arma_inline
 const GenCube<cube::elem_type, gen_randn>
 randn(const SizeCube& s)
@@ -145,6 +155,7 @@ randn(const SizeCube& s)
 
 
 template<typename cube_type>
+arma_warn_unused
 arma_inline
 const GenCube<typename cube_type::elem_type, gen_randn>
 randn(const uword n_rows, const uword n_cols, const uword n_slices, const typename arma_Cube_only<cube_type>::result* junk = 0)
@@ -158,6 +169,7 @@ randn(const uword n_rows, const uword n_cols, const uword n_slices, const typena
 
 
 template<typename cube_type>
+arma_warn_unused
 arma_inline
 const GenCube<typename cube_type::elem_type, gen_randn>
 randn(const SizeCube& s, const typename arma_Cube_only<cube_type>::result* junk = 0)

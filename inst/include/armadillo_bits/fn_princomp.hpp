@@ -1,4 +1,4 @@
-// Copyright (C) 2010-2012 National ICT Australia (NICTA)
+// Copyright (C) 2010-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -153,6 +153,7 @@ princomp
 
 
 template<typename T1>
+arma_warn_unused
 inline
 const Op<T1, op_princomp>
 princomp

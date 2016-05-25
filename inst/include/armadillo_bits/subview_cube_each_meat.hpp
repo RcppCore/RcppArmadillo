@@ -35,7 +35,7 @@ subview_cube_each_common<eT>::check_size(const Mat<eT>& A) const
     {
     if( (A.n_rows != P.n_rows) || (A.n_cols != P.n_cols) )
       {
-      arma_stop( incompat_size_string(A) );
+      arma_stop_logic_error( incompat_size_string(A) );
       }
     }
   }

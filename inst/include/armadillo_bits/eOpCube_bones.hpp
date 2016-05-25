@@ -1,4 +1,4 @@
-// Copyright (C) 2010-2013 National ICT Australia (NICTA)
+// Copyright (C) 2010-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,8 +21,8 @@ class eOpCube : public BaseCube<typename T1::elem_type, eOpCube<T1, eop_type> >
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  static const bool prefer_at_accessor = ProxyCube<T1>::prefer_at_accessor;
-  static const bool has_subview        = ProxyCube<T1>::has_subview;
+  static const bool use_at      = ProxyCube<T1>::use_at;
+  static const bool has_subview = ProxyCube<T1>::has_subview;
   
   arma_aligned const ProxyCube<T1> P;
   arma_aligned       elem_type     aux;          //!< storage of auxiliary data, user defined format

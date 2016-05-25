@@ -1,4 +1,4 @@
-// Copyright (C) 2009-2015 National ICT Australia (NICTA)
+// Copyright (C) 2009-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -143,7 +143,7 @@ op_prod::prod(const Base<typename T1::elem_type,T1>& X)
   
   eT val = eT(1);
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     typedef typename Proxy<T1>::ea_type ea_type;
     

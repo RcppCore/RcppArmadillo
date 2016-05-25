@@ -110,7 +110,7 @@ internal_approx_equal_worker
   
   if( (PA.get_n_rows() != PB.get_n_rows()) || (PA.get_n_cols() != PB.get_n_cols()) )  { return false; }
   
-  if( (Proxy<T1>::prefer_at_accessor == false) && (Proxy<T2>::prefer_at_accessor == false) )
+  if( (Proxy<T1>::use_at == false) && (Proxy<T2>::use_at == false) )
     {
     const uword N = PA.get_n_elem();
     
@@ -203,7 +203,7 @@ internal_approx_equal_worker
   
   if( (PA.get_n_rows() != PB.get_n_rows()) || (PA.get_n_cols() != PB.get_n_cols()) || (PA.get_n_slices() != PB.get_n_slices()) )  { return false; }
   
-  if( (ProxyCube<T1>::prefer_at_accessor == false) && (ProxyCube<T2>::prefer_at_accessor == false) )
+  if( (ProxyCube<T1>::use_at == false) && (ProxyCube<T2>::use_at == false) )
     {
     const uword N = PA.get_n_elem();
     

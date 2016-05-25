@@ -8,13 +8,13 @@
 // Written by Conrad Sanderson - http://conradsanderson.id.au
 
 
-
 //! \addtogroup fn_trunc_exp
 //! @{
 
 
 
 template<typename eT>
+arma_warn_unused
 inline
 static
 typename arma_real_only<eT>::result
@@ -33,6 +33,7 @@ trunc_exp(const eT x)
 
 
 template<typename eT>
+arma_warn_unused
 inline
 static
 typename arma_integral_only<eT>::result
@@ -44,6 +45,7 @@ trunc_exp(const eT x)
 
 
 template<typename T>
+arma_warn_unused
 inline
 static
 std::complex<T>
@@ -55,6 +57,7 @@ trunc_exp(const std::complex<T>& x)
 
 
 template<typename T1>
+arma_warn_unused
 arma_inline
 const eOp<T1, eop_trunc_exp>
 trunc_exp(const Base<typename T1::elem_type,T1>& A)
@@ -67,6 +70,7 @@ trunc_exp(const Base<typename T1::elem_type,T1>& A)
 
 
 template<typename T1>
+arma_warn_unused
 arma_inline
 const eOpCube<T1, eop_trunc_exp>
 trunc_exp(const BaseCube<typename T1::elem_type,T1>& A)

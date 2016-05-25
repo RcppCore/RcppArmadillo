@@ -1,4 +1,4 @@
-// Copyright (C) 2013 National ICT Australia (NICTA)
+// Copyright (C) 2013-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -58,7 +58,7 @@ glue_max::apply(Mat<eT>& out, const Proxy<T1>& PA, const Proxy<T2>& PB)
   
   eT* out_mem = out.memptr();
   
-  if( (Proxy<T1>::prefer_at_accessor == false) && (Proxy<T2>::prefer_at_accessor == false) )
+  if( (Proxy<T1>::use_at == false) && (Proxy<T2>::use_at == false) )
     {
     typename Proxy<T1>::ea_type A = PA.get_ea();
     typename Proxy<T2>::ea_type B = PB.get_ea();
@@ -102,7 +102,7 @@ glue_max::apply(Mat< std::complex<T> >& out, const Proxy<T1>& PA, const Proxy<T2
   
   eT* out_mem = out.memptr();
   
-  if( (Proxy<T1>::prefer_at_accessor == false) && (Proxy<T2>::prefer_at_accessor == false) )
+  if( (Proxy<T1>::use_at == false) && (Proxy<T2>::use_at == false) )
     {
     typename Proxy<T1>::ea_type A = PA.get_ea();
     typename Proxy<T2>::ea_type B = PB.get_ea();
@@ -179,7 +179,7 @@ glue_max::apply(Cube<eT>& out, const ProxyCube<T1>& PA, const ProxyCube<T2>& PB)
   
   eT* out_mem = out.memptr();
   
-  if( (ProxyCube<T1>::prefer_at_accessor == false) && (ProxyCube<T2>::prefer_at_accessor == false) )
+  if( (ProxyCube<T1>::use_at == false) && (ProxyCube<T2>::use_at == false) )
     {
     typename ProxyCube<T1>::ea_type A = PA.get_ea();
     typename ProxyCube<T2>::ea_type B = PB.get_ea();
@@ -225,7 +225,7 @@ glue_max::apply(Cube< std::complex<T> >& out, const ProxyCube<T1>& PA, const Pro
   
   eT* out_mem = out.memptr();
   
-  if( (ProxyCube<T1>::prefer_at_accessor == false) && (ProxyCube<T2>::prefer_at_accessor == false) )
+  if( (ProxyCube<T1>::use_at == false) && (ProxyCube<T2>::use_at == false) )
     {
     typename ProxyCube<T1>::ea_type A = PA.get_ea();
     typename ProxyCube<T2>::ea_type B = PB.get_ea();

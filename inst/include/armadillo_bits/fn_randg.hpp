@@ -1,4 +1,4 @@
-// Copyright (C) 2015 National ICT Australia (NICTA)
+// Copyright (C) 2015-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,7 @@
 
 
 template<typename obj_type>
+arma_warn_unused
 inline
 obj_type
 randg(const uword n_rows, const uword n_cols, const distr_param& param = distr_param(), const typename arma_Mat_Col_Row_only<obj_type>::result* junk = 0)
@@ -81,7 +82,7 @@ randg(const uword n_rows, const uword n_cols, const distr_param& param = distr_p
     arma_ignore(n_cols);
     arma_ignore(param);
     
-    arma_stop("randg(): C++11 compiler required");
+    arma_stop_logic_error("randg(): C++11 compiler required");
     
     return obj_type();
     }
@@ -91,6 +92,7 @@ randg(const uword n_rows, const uword n_cols, const distr_param& param = distr_p
 
 
 template<typename obj_type>
+arma_warn_unused
 inline
 obj_type
 randg(const SizeMat& s, const distr_param& param = distr_param(), const typename arma_Mat_Col_Row_only<obj_type>::result* junk = 0)
@@ -104,6 +106,7 @@ randg(const SizeMat& s, const distr_param& param = distr_param(), const typename
 
 
 template<typename obj_type>
+arma_warn_unused
 inline
 obj_type
 randg(const uword n_elem, const distr_param& param = distr_param(), const arma_empty_class junk1 = arma_empty_class(), const typename arma_Mat_Col_Row_only<obj_type>::result* junk2 = 0)
@@ -124,6 +127,7 @@ randg(const uword n_elem, const distr_param& param = distr_param(), const arma_e
 
 
 
+arma_warn_unused
 inline
 mat
 randg(const uword n_rows, const uword n_cols, const distr_param& param = distr_param())
@@ -135,6 +139,7 @@ randg(const uword n_rows, const uword n_cols, const distr_param& param = distr_p
 
 
 
+arma_warn_unused
 inline
 mat
 randg(const SizeMat& s, const distr_param& param = distr_param())
@@ -146,6 +151,7 @@ randg(const SizeMat& s, const distr_param& param = distr_param())
 
 
 
+arma_warn_unused
 inline
 vec
 randg(const uword n_elem, const distr_param& param = distr_param())
@@ -158,6 +164,7 @@ randg(const uword n_elem, const distr_param& param = distr_param())
 
 
 template<typename cube_type>
+arma_warn_unused
 inline
 cube_type
 randg(const uword n_rows, const uword n_cols, const uword n_slices, const distr_param& param = distr_param(), const typename arma_Cube_only<cube_type>::result* junk = 0)
@@ -216,7 +223,7 @@ randg(const uword n_rows, const uword n_cols, const uword n_slices, const distr_
     arma_ignore(n_slices);
     arma_ignore(param);
     
-    arma_stop("randg(): C++11 compiler required");
+    arma_stop_logic_error("randg(): C++11 compiler required");
     
     return cube_type();
     }
@@ -226,6 +233,7 @@ randg(const uword n_rows, const uword n_cols, const uword n_slices, const distr_
 
 
 template<typename cube_type>
+arma_warn_unused
 inline
 cube_type
 randg(const SizeCube& s, const distr_param& param = distr_param(), const typename arma_Cube_only<cube_type>::result* junk = 0)
@@ -238,6 +246,7 @@ randg(const SizeCube& s, const distr_param& param = distr_param(), const typenam
 
 
 
+arma_warn_unused
 inline
 cube
 randg(const uword n_rows, const uword n_cols, const uword n_slices, const distr_param& param = distr_param())
@@ -249,6 +258,7 @@ randg(const uword n_rows, const uword n_cols, const uword n_slices, const distr_
 
 
 
+arma_warn_unused
 inline
 cube
 randg(const SizeCube& s, const distr_param& param = distr_param())

@@ -1,4 +1,4 @@
-// Copyright (C) 2010-2013 National ICT Australia (NICTA)
+// Copyright (C) 2010-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,9 +22,9 @@ class eOp : public Base<typename T1::elem_type, eOp<T1, eop_type> >
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef          Proxy<T1>                       proxy_type;
   
-  static const bool prefer_at_accessor = Proxy<T1>::prefer_at_accessor;
-  static const bool has_subview        = Proxy<T1>::has_subview;
-  static const bool fake_mat           = Proxy<T1>::fake_mat;
+  static const bool use_at      = Proxy<T1>::use_at;
+  static const bool has_subview = Proxy<T1>::has_subview;
+  static const bool fake_mat    = Proxy<T1>::fake_mat;
   
   static const bool is_row = Proxy<T1>::is_row;
   static const bool is_col = Proxy<T1>::is_col;

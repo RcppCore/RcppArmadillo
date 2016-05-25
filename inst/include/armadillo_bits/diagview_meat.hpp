@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -196,7 +196,7 @@ diagview<eT>::operator= (const Base<eT,T1>& o)
   
   if(is_alias)  { arma_extra_debug_print("aliasing detected"); }
   
-  if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::prefer_at_accessor) || (is_alias) )
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::use_at) || (is_alias) )
     {
     const unwrap_check<typename Proxy<T1>::stored_type> tmp(P.Q, is_alias);
     const Mat<eT>& x = tmp.M;
@@ -269,7 +269,7 @@ diagview<eT>::operator+=(const Base<eT,T1>& o)
   
   if(is_alias)  { arma_extra_debug_print("aliasing detected"); }
   
-  if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::prefer_at_accessor) || (is_alias) )
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::use_at) || (is_alias) )
     {
     const unwrap_check<typename Proxy<T1>::stored_type> tmp(P.Q, is_alias);
     const Mat<eT>& x = tmp.M;
@@ -342,7 +342,7 @@ diagview<eT>::operator-=(const Base<eT,T1>& o)
   
   if(is_alias)  { arma_extra_debug_print("aliasing detected"); }
   
-  if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::prefer_at_accessor) || (is_alias) )
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::use_at) || (is_alias) )
     {
     const unwrap_check<typename Proxy<T1>::stored_type> tmp(P.Q, is_alias);
     const Mat<eT>& x = tmp.M;
@@ -415,7 +415,7 @@ diagview<eT>::operator%=(const Base<eT,T1>& o)
   
   if(is_alias)  { arma_extra_debug_print("aliasing detected"); }
   
-  if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::prefer_at_accessor) || (is_alias) )
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::use_at) || (is_alias) )
     {
     const unwrap_check<typename Proxy<T1>::stored_type> tmp(P.Q, is_alias);
     const Mat<eT>& x = tmp.M;
@@ -488,7 +488,7 @@ diagview<eT>::operator/=(const Base<eT,T1>& o)
   
   if(is_alias)  { arma_extra_debug_print("aliasing detected"); }
   
-  if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::prefer_at_accessor) || (is_alias) )
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::use_at) || (is_alias) )
     {
     const unwrap_check<typename Proxy<T1>::stored_type> tmp(P.Q, is_alias);
     const Mat<eT>& x = tmp.M;

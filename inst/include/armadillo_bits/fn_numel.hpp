@@ -1,4 +1,4 @@
-// Copyright (C) 2013 National ICT Australia (NICTA)
+// Copyright (C) 2013-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,7 @@
 
 
 template<typename T1>
+arma_warn_unused
 inline
 typename enable_if2< is_arma_type<T1>::value, uword >::result
 numel(const T1& X)
@@ -28,6 +29,7 @@ numel(const T1& X)
 
 
 template<typename T1>
+arma_warn_unused
 inline
 typename enable_if2< is_arma_cube_type<T1>::value, uword >::result
 numel(const T1& X)
@@ -42,6 +44,7 @@ numel(const T1& X)
 
 
 template<typename T1>
+arma_warn_unused
 inline
 typename enable_if2< is_arma_sparse_type<T1>::value, uword >::result
 numel(const T1& X)
@@ -56,6 +59,7 @@ numel(const T1& X)
 
 
 template<typename oT>
+arma_warn_unused
 inline
 uword
 numel(const field<oT>& X)
@@ -68,6 +72,7 @@ numel(const field<oT>& X)
 
 
 template<typename oT>
+arma_warn_unused
 inline
 uword
 numel(const subview_field<oT>& X)

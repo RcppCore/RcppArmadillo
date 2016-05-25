@@ -1,3 +1,12 @@
+2016-05-25  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.7.100.3.0
+        * inst/NEWS.Rd: Release 0.7.100.3.0
+
+        * debian/*: Changes for Debian release of 0.7.100.3.0
+
+	* inst/include/*: Upgraded to release 7.100.3 of Armadillo
+
 2016-05-16  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.7.100.0.0 [GitHub only]

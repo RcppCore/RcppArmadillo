@@ -13,6 +13,7 @@
 
 
 template<typename T1, typename T2>
+arma_warn_unused
 inline
 typename enable_if2< is_supported_blas_type<typename T1::pod_type>::value, Col< std::complex<typename T1::pod_type> > >::result
 eig_pair

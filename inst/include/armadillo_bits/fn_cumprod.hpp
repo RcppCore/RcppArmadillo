@@ -1,4 +1,4 @@
-// Copyright (C) 2015 National ICT Australia (NICTA)
+// Copyright (C) 2015-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,7 @@
 
 
 template<typename T1>
+arma_warn_unused
 arma_inline
 typename
 enable_if2
@@ -31,6 +32,7 @@ cumprod(const T1& X)
 
 
 template<typename T1>
+arma_warn_unused
 arma_inline
 typename
 enable_if2
@@ -48,8 +50,8 @@ cumprod(const T1& X, const uword dim)
 
 
 template<typename T>
-arma_inline
 arma_warn_unused
+arma_inline
 const typename arma_scalar_only<T>::result &
 cumprod(const T& x)
   {

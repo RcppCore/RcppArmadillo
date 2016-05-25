@@ -1,4 +1,4 @@
-// Copyright (C) 2015 National ICT Australia (NICTA)
+// Copyright (C) 2015-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,7 @@
 
 
 template<typename T1>
+arma_warn_unused
 inline
 typename
 enable_if2
@@ -35,6 +36,7 @@ find_unique
 
 
 template<typename T1>
+arma_warn_unused
 inline
 uvec
 find_unique

@@ -1,4 +1,4 @@
-// Copyright (C) 2013-2015 National ICT Australia (NICTA)
+// Copyright (C) 2013-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -53,7 +53,7 @@ op_vectorise_col::apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>&
       {
       eT* outmem = out.memptr();
       
-      if(Proxy<T1>::prefer_at_accessor == false)
+      if(Proxy<T1>::use_at == false)
         {
         // TODO: add handling of aligned access ?
         
@@ -237,7 +237,7 @@ op_vectorise_cube_col::apply(Mat<typename T1::elem_type>& out, const BaseCube<ty
     {
     eT* outmem = out.memptr();
     
-    if(ProxyCube<T1>::prefer_at_accessor == false)
+    if(ProxyCube<T1>::use_at == false)
       {
       typename ProxyCube<T1>::ea_type A = P.get_ea();
       

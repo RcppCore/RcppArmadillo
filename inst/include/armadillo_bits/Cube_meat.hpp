@@ -383,9 +383,9 @@ Cube<eT>::init
   
   eT* out_mem = (*this).memptr();
   
-  const bool prefer_at_accessor = ( ProxyCube<T1>::prefer_at_accessor || ProxyCube<T2>::prefer_at_accessor );
+  const bool use_at = ( ProxyCube<T1>::use_at || ProxyCube<T2>::use_at );
   
-  if(prefer_at_accessor == false)
+  if(use_at == false)
     {
     typedef typename ProxyCube<T1>::ea_type ea_type1;
     typedef typename ProxyCube<T2>::ea_type ea_type2;
@@ -1371,6 +1371,66 @@ Cube<eT>::tube(const span& row_span, const span& col_span) const
     );
   
   return subview_cube<eT>(*this, in_row1, in_col1, 0, subcube_n_rows, subcube_n_cols, n_slices);
+  }
+
+
+
+template<typename eT>
+inline
+subview_cube<eT>
+Cube<eT>::head_slices(const uword N)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (N > n_slices), "Cube::head_slices(): size out of bounds" );
+  
+  return subview_cube<eT>(*this, 0, 0, 0, n_rows, n_cols, N);
+  }
+
+
+
+template<typename eT>
+inline
+const subview_cube<eT>
+Cube<eT>::head_slices(const uword N) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (N > n_slices), "Cube::head_slices(): size out of bounds" );
+  
+  return subview_cube<eT>(*this, 0, 0, 0, n_rows, n_cols, N);
+  }
+
+
+
+template<typename eT>
+inline
+subview_cube<eT>
+Cube<eT>::tail_slices(const uword N)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (N > n_slices), "Cube::tail_slices(): size out of bounds" );
+  
+  const uword start_slice = n_slices - N;
+  
+  return subview_cube<eT>(*this, 0, 0, start_slice, n_rows, n_cols, N);
+  }
+
+
+
+template<typename eT>
+inline
+const subview_cube<eT>
+Cube<eT>::tail_slices(const uword N) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (N > n_slices), "Cube::tail_slices(): size out of bounds" );
+  
+  const uword start_slice = n_slices - N;
+  
+  return subview_cube<eT>(*this, 0, 0, start_slice, n_rows, n_cols, N);
   }
 
 
@@ -4609,7 +4669,7 @@ Cube_aux::set_real(Cube< std::complex<T> >& out, const BaseCube<T,T1>& X)
   
   eT* out_mem = out.memptr();
   
-  if(ProxyCube<T1>::prefer_at_accessor == false)
+  if(ProxyCube<T1>::use_at == false)
     {
     typedef typename ProxyCube<T1>::ea_type ea_type;
     
@@ -4661,7 +4721,7 @@ Cube_aux::set_imag(Cube< std::complex<T> >& out, const BaseCube<T,T1>& X)
   
   eT* out_mem = out.memptr();
   
-  if(ProxyCube<T1>::prefer_at_accessor == false)
+  if(ProxyCube<T1>::use_at == false)
     {
     typedef typename ProxyCube<T1>::ea_type ea_type;
     

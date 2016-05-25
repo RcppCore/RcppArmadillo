@@ -86,7 +86,7 @@ UpperHessenbergEigen<eT>::compute(const Mat<eT>& mat_obj)
   
   lapack::trevc(&side, &howmny, (blas_int*) NULL, &n, mat_T.memptr(), &n, (eT*) NULL, &n, mat_Z.memptr(), &n, &n, &m, work.memptr(), &info);
   
-  if(info < 0)  { arma_stop("lapack::trevc(): illegal value"); return; }
+  if(info < 0)  { arma_stop_logic_error("lapack::trevc(): illegal value"); return; }
   
   computed = true;
   }

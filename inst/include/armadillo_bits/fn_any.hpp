@@ -1,4 +1,4 @@
-// Copyright (C) 2013-2015 National ICT Australia (NICTA)
+// Copyright (C) 2013-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,7 @@
 
 
 template<typename T1>
+arma_warn_unused
 arma_inline
 const mtOp<uword, T1, op_any>
 any
@@ -34,6 +35,7 @@ any
 
 
 template<typename T1>
+arma_warn_unused
 arma_inline
 const mtOp<uword, T1, op_any>
 any
@@ -52,8 +54,8 @@ any
 
 
 template<typename T1>
-inline
 arma_warn_unused
+inline
 bool
 any
   (
@@ -72,8 +74,8 @@ any
 
 
 template<typename T1>
-inline
 arma_warn_unused
+inline
 bool
 any(const mtOp<uword, T1, op_any>& in)
   {
@@ -86,6 +88,7 @@ any(const mtOp<uword, T1, op_any>& in)
 
 
 template<typename T1>
+arma_warn_unused
 arma_inline
 const Op< mtOp<uword, T1, op_any>, op_any>
 any(const mtOp<uword, T1, op_any>& in, const uword dim)

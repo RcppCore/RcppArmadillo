@@ -1,4 +1,4 @@
-// Copyright (C) 2010-2014 National ICT Australia (NICTA)
+// Copyright (C) 2010-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,9 +37,9 @@ struct Proxy_fixed
   typedef const elem_type*                         ea_type;
   typedef const T1&                                aligned_ea_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = false;
-  static const bool fake_mat           = false;
+  static const bool use_at      = false;
+  static const bool has_subview = false;
+  static const bool fake_mat    = false;
   
   static const bool is_row = T1::is_row;
   static const bool is_col = T1::is_col;
@@ -112,9 +112,9 @@ class Proxy< Mat<eT> >
   typedef const eT*                                ea_type;
   typedef const Mat<eT>&                           aligned_ea_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = false;
-  static const bool fake_mat           = false;
+  static const bool use_at      = false;
+  static const bool has_subview = false;
+  static const bool fake_mat    = false;
   
   static const bool is_row = false;
   static const bool is_col = false;
@@ -157,9 +157,9 @@ class Proxy< Col<eT> >
   typedef const eT*                                ea_type;
   typedef const Col<eT>&                           aligned_ea_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = false;
-  static const bool fake_mat           = false;
+  static const bool use_at      = false;
+  static const bool has_subview = false;
+  static const bool fake_mat    = false;
   
   static const bool is_row = false;
   static const bool is_col = true;
@@ -202,9 +202,9 @@ class Proxy< Row<eT> >
   typedef const eT*                                ea_type;
   typedef const Row<eT>&                           aligned_ea_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = false;
-  static const bool fake_mat           = false;
+  static const bool use_at      = false;
+  static const bool has_subview = false;
+  static const bool fake_mat    = false;
   
   static const bool is_row = true;
   static const bool is_col = false;
@@ -247,9 +247,9 @@ class Proxy< Gen<T1, gen_type > >
   typedef const Gen<T1, gen_type>&                 ea_type;
   typedef const Gen<T1, gen_type>&                 aligned_ea_type;
   
-  static const bool prefer_at_accessor = Gen<T1, gen_type>::prefer_at_accessor;
-  static const bool has_subview        = false;
-  static const bool fake_mat           = false;
+  static const bool use_at      = Gen<T1, gen_type>::use_at;
+  static const bool has_subview = false;
+  static const bool fake_mat    = false;
   
   static const bool is_row = Gen<T1, gen_type>::is_row;
   static const bool is_col = Gen<T1, gen_type>::is_col;
@@ -292,9 +292,9 @@ class Proxy< Op<T1, op_type> >
   typedef const elem_type*                         ea_type;
   typedef const Mat<elem_type>&                    aligned_ea_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = false;
-  static const bool fake_mat           = false;
+  static const bool use_at      = false;
+  static const bool has_subview = false;
+  static const bool fake_mat    = false;
   
   static const bool is_row = Op<T1, op_type>::is_row;
   static const bool is_col = Op<T1, op_type>::is_col;
@@ -345,9 +345,9 @@ class Proxy_diagvec_mat< Op<T1, op_diagvec> >
   typedef const diagview<elem_type>&               ea_type;
   typedef const diagview<elem_type>&               aligned_ea_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = true;
-  static const bool fake_mat           = false;
+  static const bool use_at      = false;
+  static const bool has_subview = true;
+  static const bool fake_mat    = false;
   
   static const bool is_row = false;
   static const bool is_col = true;
@@ -399,9 +399,9 @@ class Proxy_diagvec_expr< Op<T1, op_diagvec> >
   typedef const elem_type*                         ea_type;
   typedef const Mat<elem_type>&                    aligned_ea_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = false;
-  static const bool fake_mat           = false;
+  static const bool use_at      = false;
+  static const bool has_subview = false;
+  static const bool fake_mat    = false;
   
   static const bool is_row = false;
   static const bool is_col = true;
@@ -480,9 +480,9 @@ struct Proxy_xtrans_default< Op<T1, op_htrans> >
   typedef const xtrans_mat<elem_type,true>&        ea_type;
   typedef const xtrans_mat<elem_type,true>&        aligned_ea_type;
   
-  static const bool prefer_at_accessor = true;
-  static const bool has_subview        = true;
-  static const bool fake_mat           = false;
+  static const bool use_at      = true;
+  static const bool has_subview = true;
+  static const bool fake_mat    = false;
   
   static const bool is_row = false;
   static const bool is_col = false;
@@ -519,9 +519,9 @@ struct Proxy_xtrans_default< Op<T1, op_strans> >
   typedef const xtrans_mat<elem_type,false>&       ea_type;
   typedef const xtrans_mat<elem_type,false>&       aligned_ea_type;
   
-  static const bool prefer_at_accessor = true;
-  static const bool has_subview        = true;
-  static const bool fake_mat           = false;
+  static const bool use_at      = true;
+  static const bool has_subview = true;
+  static const bool fake_mat    = false;
   
   static const bool is_row = false;
   static const bool is_col = false;
@@ -564,9 +564,9 @@ struct Proxy_xtrans_vector< Op<T1, op_htrans> >
   typedef const elem_type*                         ea_type;
   typedef const Mat<elem_type>&                    aligned_ea_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = quasi_unwrap<T1>::has_subview;
-  static const bool fake_mat           = true;
+  static const bool use_at      = false;
+  static const bool has_subview = quasi_unwrap<T1>::has_subview;
+  static const bool fake_mat    = true;
   
   // NOTE: the Op class takes care of swapping row and col for op_htrans
   static const bool is_row = Op<T1, op_htrans>::is_row;
@@ -602,9 +602,9 @@ struct Proxy_xtrans_vector< Op<T1, op_strans> >
   typedef const elem_type*                         ea_type;
   typedef const Mat<elem_type>&                    aligned_ea_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = quasi_unwrap<T1>::has_subview;
-  static const bool fake_mat           = true;
+  static const bool use_at      = false;
+  static const bool has_subview = quasi_unwrap<T1>::has_subview;
+  static const bool fake_mat    = true;
   
   // NOTE: the Op class takes care of swapping row and col for op_strans
   static const bool is_row = Op<T1, op_strans>::is_row;
@@ -668,9 +668,9 @@ class Proxy< Op<T1, op_htrans> >
   typedef typename Proxy_xtrans::ea_type         ea_type;
   typedef typename Proxy_xtrans::aligned_ea_type aligned_ea_type;
   
-  static const bool prefer_at_accessor = Proxy_xtrans::prefer_at_accessor;
-  static const bool has_subview        = Proxy_xtrans::has_subview;
-  static const bool fake_mat           = Proxy_xtrans::fake_mat;
+  static const bool use_at      = Proxy_xtrans::use_at;
+  static const bool has_subview = Proxy_xtrans::has_subview;
+  static const bool fake_mat    = Proxy_xtrans::fake_mat;
   
   static const bool is_row = Proxy_xtrans::is_row;
   static const bool is_col = Proxy_xtrans::is_col;
@@ -728,9 +728,9 @@ class Proxy< Op<T1, op_strans> >
   typedef typename Proxy_xtrans::ea_type         ea_type;
   typedef typename Proxy_xtrans::aligned_ea_type aligned_ea_type;
   
-  static const bool prefer_at_accessor = Proxy_xtrans::prefer_at_accessor;
-  static const bool has_subview        = Proxy_xtrans::has_subview;
-  static const bool fake_mat           = Proxy_xtrans::fake_mat;
+  static const bool use_at      = Proxy_xtrans::use_at;
+  static const bool has_subview = Proxy_xtrans::has_subview;
+  static const bool fake_mat    = Proxy_xtrans::fake_mat;
   
   static const bool is_row = Proxy_xtrans::is_row;
   static const bool is_col = Proxy_xtrans::is_col;
@@ -771,9 +771,9 @@ struct Proxy_subview_row_htrans_cx
   typedef const subview_row_htrans<eT>&     ea_type;
   typedef const subview_row_htrans<eT>&     aligned_ea_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = true;
-  static const bool fake_mat           = false;
+  static const bool use_at      = false;
+  static const bool has_subview = true;
+  static const bool fake_mat    = false;
   
   static const bool is_row = false;
   static const bool is_col = true;
@@ -801,9 +801,9 @@ struct Proxy_subview_row_htrans_non_cx
   typedef const subview_row_strans<eT>&     ea_type;
   typedef const subview_row_strans<eT>&     aligned_ea_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = true;
-  static const bool fake_mat           = false;
+  static const bool use_at      = false;
+  static const bool has_subview = true;
+  static const bool fake_mat    = false;
   
   static const bool is_row = false;
   static const bool is_col = true;
@@ -859,9 +859,9 @@ class Proxy< Op<subview_row<eT>, op_htrans> >
   typedef typename Proxy_sv_row_ht::ea_type     ea_type;
   typedef typename Proxy_sv_row_ht::ea_type     aligned_ea_type;
   
-  static const bool prefer_at_accessor = Proxy_sv_row_ht::prefer_at_accessor;
-  static const bool has_subview        = Proxy_sv_row_ht::has_subview;
-  static const bool fake_mat           = Proxy_sv_row_ht::fake_mat;
+  static const bool use_at      = Proxy_sv_row_ht::use_at;
+  static const bool has_subview = Proxy_sv_row_ht::has_subview;
+  static const bool fake_mat    = Proxy_sv_row_ht::fake_mat;
   
   static const bool is_row = false;
   static const bool is_col = true;
@@ -904,9 +904,9 @@ class Proxy< Op<subview_row<eT>, op_strans> >
   typedef const subview_row_strans<eT>&     ea_type;
   typedef const subview_row_strans<eT>&     aligned_ea_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = true;
-  static const bool fake_mat           = false;
+  static const bool use_at      = false;
+  static const bool has_subview = true;
+  static const bool fake_mat    = false;
   
   static const bool is_row = false;
   static const bool is_col = true;
@@ -951,9 +951,9 @@ class Proxy< Op< Row< std::complex<T> >, op_htrans> >
   typedef const xvec_htrans<eT>&    ea_type;
   typedef const xvec_htrans<eT>&    aligned_ea_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = false;
-  static const bool fake_mat           = false;
+  static const bool use_at      = false;
+  static const bool has_subview = false;
+  static const bool fake_mat    = false;
   
   static const bool is_row = false;
   static const bool is_col = true;
@@ -1000,9 +1000,9 @@ class Proxy< Op< Col< std::complex<T> >, op_htrans> >
   typedef const xvec_htrans<eT>&    ea_type;
   typedef const xvec_htrans<eT>&    aligned_ea_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = false;
-  static const bool fake_mat           = false;
+  static const bool use_at      = false;
+  static const bool has_subview = false;
+  static const bool fake_mat    = false;
   
   static const bool is_row = true;
   static const bool is_col = false;
@@ -1049,9 +1049,9 @@ class Proxy< Op< subview_col< std::complex<T> >, op_htrans> >
   typedef const xvec_htrans<eT>&    ea_type;
   typedef const xvec_htrans<eT>&    aligned_ea_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = true;
-  static const bool fake_mat           = false;
+  static const bool use_at      = false;
+  static const bool has_subview = true;
+  static const bool fake_mat    = false;
   
   static const bool is_row = true;
   static const bool is_col = false;
@@ -1096,9 +1096,9 @@ class Proxy< Op<T1, op_htrans2> >
   typedef const eOp< Op<T1, op_htrans>, eop_scalar_times>& ea_type;
   typedef const eOp< Op<T1, op_htrans>, eop_scalar_times>& aligned_ea_type;
   
-  static const bool prefer_at_accessor = eOp< Op<T1, op_htrans>, eop_scalar_times>::prefer_at_accessor;
-  static const bool has_subview        = eOp< Op<T1, op_htrans>, eop_scalar_times>::has_subview;
-  static const bool fake_mat           = eOp< Op<T1, op_htrans>, eop_scalar_times>::fake_mat;
+  static const bool use_at      = eOp< Op<T1, op_htrans>, eop_scalar_times>::use_at;
+  static const bool has_subview = eOp< Op<T1, op_htrans>, eop_scalar_times>::has_subview;
+  static const bool fake_mat    = eOp< Op<T1, op_htrans>, eop_scalar_times>::fake_mat;
   
   // NOTE: the Op class takes care of swapping row and col for op_htrans
   static const bool is_row = eOp< Op<T1, op_htrans>, eop_scalar_times>::is_row;
@@ -1144,9 +1144,9 @@ class Proxy< Op<T1, op_vectorise_col> >
   typedef const elem_type*                         ea_type;
   typedef const Mat<elem_type>&                    aligned_ea_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = true;
-  static const bool fake_mat           = true;
+  static const bool use_at      = false;
+  static const bool has_subview = true;
+  static const bool fake_mat    = true;
   
   static const bool is_row = false;
   static const bool is_col = true;
@@ -1191,9 +1191,9 @@ class Proxy< Glue<T1, T2, glue_type> >
   typedef const elem_type*                         ea_type;
   typedef const Mat<elem_type>&                    aligned_ea_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = false;
-  static const bool fake_mat           = false;
+  static const bool use_at      = false;
+  static const bool has_subview = false;
+  static const bool fake_mat    = false;
   
   static const bool is_row = Glue<T1, T2, glue_type>::is_row;
   static const bool is_col = Glue<T1, T2, glue_type>::is_col;
@@ -1236,9 +1236,9 @@ class Proxy< subview<eT> >
   typedef const subview<eT>&                       ea_type;
   typedef const subview<eT>&                       aligned_ea_type;
   
-  static const bool prefer_at_accessor = true;
-  static const bool has_subview        = true;
-  static const bool fake_mat           = false;
+  static const bool use_at      = true;
+  static const bool has_subview = true;
+  static const bool fake_mat    = false;
   
   static const bool is_row = false;
   static const bool is_col = false;
@@ -1281,9 +1281,9 @@ class Proxy< subview_col<eT> >
   typedef const eT*                                ea_type;
   typedef const subview_col<eT>&                   aligned_ea_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = true;
-  static const bool fake_mat           = false;
+  static const bool use_at      = false;
+  static const bool has_subview = true;
+  static const bool fake_mat    = false;
   
   static const bool is_row = false;
   static const bool is_col = true;
@@ -1326,9 +1326,9 @@ class Proxy< subview_row<eT> >
   typedef const subview_row<eT>&                   ea_type;
   typedef const subview_row<eT>&                   aligned_ea_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = true;
-  static const bool fake_mat           = false;
+  static const bool use_at      = false;
+  static const bool has_subview = true;
+  static const bool fake_mat    = false;
   
   static const bool is_row = true;
   static const bool is_col = false;
@@ -1371,9 +1371,9 @@ class Proxy< subview_row_strans<eT> >
   typedef const subview_row_strans<eT>&            ea_type;
   typedef const subview_row_strans<eT>&            aligned_ea_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = true;
-  static const bool fake_mat           = false;
+  static const bool use_at      = false;
+  static const bool has_subview = true;
+  static const bool fake_mat    = false;
   
   static const bool is_row = false;
   static const bool is_col = true;
@@ -1416,9 +1416,9 @@ class Proxy< subview_row_htrans<eT> >
   typedef const subview_row_htrans<eT>&            ea_type;
   typedef const subview_row_htrans<eT>&            aligned_ea_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = true;
-  static const bool fake_mat           = false;
+  static const bool use_at      = false;
+  static const bool has_subview = true;
+  static const bool fake_mat    = false;
   
   static const bool is_row = false;
   static const bool is_col = true;
@@ -1461,9 +1461,9 @@ class Proxy< xtrans_mat<eT, do_conj> >
   typedef const eT*                                ea_type;
   typedef const Mat<eT>&                           aligned_ea_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = false;
-  static const bool fake_mat           = false;
+  static const bool use_at      = false;
+  static const bool has_subview = false;
+  static const bool fake_mat    = false;
   
   static const bool is_row = false;
   static const bool is_col = false;
@@ -1506,9 +1506,9 @@ class Proxy< xvec_htrans<eT> >
   typedef const eT*                                ea_type;
   typedef const Mat<eT>&                           aligned_ea_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = false;
-  static const bool fake_mat           = false;
+  static const bool use_at      = false;
+  static const bool has_subview = false;
+  static const bool fake_mat    = false;
   
   static const bool is_row = false;
   static const bool is_col = false;
@@ -1551,9 +1551,9 @@ class Proxy< subview_elem1<eT,T1> >
   typedef const Proxy< subview_elem1<eT,T1> >&     ea_type;
   typedef const Proxy< subview_elem1<eT,T1> >&     aligned_ea_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = true;
-  static const bool fake_mat           = false;
+  static const bool use_at      = false;
+  static const bool has_subview = true;
+  static const bool fake_mat    = false;
   
   static const bool is_row = false;
   static const bool is_col = true;
@@ -1577,9 +1577,9 @@ class Proxy< subview_elem1<eT,T1> >
   arma_inline uword get_n_cols() const { return 1;              }
   arma_inline uword get_n_elem() const { return R.get_n_elem(); }
   
-  arma_inline elem_type operator[] (const uword i)                const { const uword ii = (Proxy<T1>::prefer_at_accessor) ? R.at(i,  0) : R[i  ]; arma_debug_check( (ii >= Q.m.n_elem), "Mat::elem(): index out of bounds" ); return Q.m[ii]; }
-  arma_inline elem_type at         (const uword row, const uword) const { const uword ii = (Proxy<T1>::prefer_at_accessor) ? R.at(row,0) : R[row]; arma_debug_check( (ii >= Q.m.n_elem), "Mat::elem(): index out of bounds" ); return Q.m[ii]; }
-  arma_inline elem_type at_alt     (const uword i)                const { const uword ii = (Proxy<T1>::prefer_at_accessor) ? R.at(i,  0) : R[i  ]; arma_debug_check( (ii >= Q.m.n_elem), "Mat::elem(): index out of bounds" ); return Q.m[ii]; }
+  arma_inline elem_type operator[] (const uword i)                const { const uword ii = (Proxy<T1>::use_at) ? R.at(i,  0) : R[i  ]; arma_debug_check( (ii >= Q.m.n_elem), "Mat::elem(): index out of bounds" ); return Q.m[ii]; }
+  arma_inline elem_type at         (const uword row, const uword) const { const uword ii = (Proxy<T1>::use_at) ? R.at(row,0) : R[row]; arma_debug_check( (ii >= Q.m.n_elem), "Mat::elem(): index out of bounds" ); return Q.m[ii]; }
+  arma_inline elem_type at_alt     (const uword i)                const { const uword ii = (Proxy<T1>::use_at) ? R.at(i,  0) : R[i  ]; arma_debug_check( (ii >= Q.m.n_elem), "Mat::elem(): index out of bounds" ); return Q.m[ii]; }
   
   arma_inline         ea_type         get_ea() const { return (*this); }
   arma_inline aligned_ea_type get_aligned_ea() const { return (*this); }
@@ -1603,9 +1603,9 @@ class Proxy< subview_elem2<eT,T1,T2> >
   typedef const eT*                                ea_type;
   typedef const Mat<eT>&                           aligned_ea_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = false;
-  static const bool fake_mat           = false;
+  static const bool use_at      = false;
+  static const bool has_subview = false;
+  static const bool fake_mat    = false;
   
   static const bool is_row = false;
   static const bool is_col = false;
@@ -1648,9 +1648,9 @@ class Proxy< diagview<eT> >
   typedef const diagview<eT>&                      ea_type;
   typedef const diagview<eT>&                      aligned_ea_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = true;
-  static const bool fake_mat           = false;
+  static const bool use_at      = false;
+  static const bool has_subview = true;
+  static const bool fake_mat    = false;
   
   static const bool is_row = false;
   static const bool is_col = true;
@@ -1693,9 +1693,9 @@ class Proxy< spdiagview<eT> >
   typedef const spdiagview<eT>&                    ea_type;
   typedef const spdiagview<eT>&                    aligned_ea_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = false;
-  static const bool fake_mat           = false;
+  static const bool use_at      = false;
+  static const bool has_subview = false;
+  static const bool fake_mat    = false;
   
   static const bool is_row = false;
   static const bool is_col = true;
@@ -1738,9 +1738,9 @@ class Proxy< eOp<T1, eop_type > >
   typedef const eOp<T1, eop_type>&                 ea_type;
   typedef const eOp<T1, eop_type>&                 aligned_ea_type;
   
-  static const bool prefer_at_accessor = eOp<T1, eop_type>::prefer_at_accessor;
-  static const bool has_subview        = eOp<T1, eop_type>::has_subview;
-  static const bool fake_mat           = eOp<T1, eop_type>::fake_mat;
+  static const bool use_at      = eOp<T1, eop_type>::use_at;
+  static const bool has_subview = eOp<T1, eop_type>::has_subview;
+  static const bool fake_mat    = eOp<T1, eop_type>::fake_mat;
   
   static const bool is_row = eOp<T1, eop_type>::is_row;
   static const bool is_col = eOp<T1, eop_type>::is_col;
@@ -1783,9 +1783,9 @@ class Proxy< eGlue<T1, T2, eglue_type > >
   typedef const eGlue<T1, T2, eglue_type>&         ea_type;
   typedef const eGlue<T1, T2, eglue_type>&         aligned_ea_type;
   
-  static const bool prefer_at_accessor = eGlue<T1, T2, eglue_type>::prefer_at_accessor;
-  static const bool has_subview        = eGlue<T1, T2, eglue_type>::has_subview;
-  static const bool fake_mat           = eGlue<T1, T2, eglue_type>::fake_mat;
+  static const bool use_at      = eGlue<T1, T2, eglue_type>::use_at;
+  static const bool has_subview = eGlue<T1, T2, eglue_type>::has_subview;
+  static const bool fake_mat    = eGlue<T1, T2, eglue_type>::fake_mat;
   
   static const bool is_row = eGlue<T1, T2, eglue_type>::is_row;
   static const bool is_col = eGlue<T1, T2, eglue_type>::is_col;
@@ -1828,9 +1828,9 @@ class Proxy< mtOp<out_eT, T1, op_type> >
   typedef          const elem_type*             ea_type;
   typedef          const Mat<out_eT>&           aligned_ea_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = false;
-  static const bool fake_mat           = false;
+  static const bool use_at      = false;
+  static const bool has_subview = false;
+  static const bool fake_mat    = false;
   
   static const bool is_row = mtOp<out_eT, T1, op_type>::is_row;
   static const bool is_col = mtOp<out_eT, T1, op_type>::is_col;
@@ -1873,9 +1873,9 @@ class Proxy< mtGlue<out_eT, T1, T2, glue_type > >
   typedef          const elem_type*             ea_type;
   typedef          const Mat<out_eT>&           aligned_ea_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool has_subview        = false;
-  static const bool fake_mat           = false;
+  static const bool use_at      = false;
+  static const bool has_subview = false;
+  static const bool fake_mat    = false;
   
   static const bool is_row = mtGlue<out_eT, T1, T2, glue_type>::is_row;
   static const bool is_col = mtGlue<out_eT, T1, T2, glue_type>::is_col;

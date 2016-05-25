@@ -1,4 +1,4 @@
-// Copyright (C) 2009-2015 National ICT Australia (NICTA)
+// Copyright (C) 2009-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -246,7 +246,7 @@ op_median::median_vec
     }
   else
     {
-    if(Proxy<T1>::prefer_at_accessor == false)
+    if(Proxy<T1>::use_at == false)
       {
       typedef typename Proxy<T1>::ea_type ea_type;
       
@@ -270,7 +270,7 @@ op_median::median_vec
         }
       else
         {
-        arma_stop("op_median::median_vec(): expected a vector" );
+        arma_stop_logic_error("op_median::median_vec(): expected a vector" );
         }
       }
     }
@@ -308,7 +308,7 @@ op_median::median_vec
   
   std::vector< arma_cx_median_packet<T> > tmp_vec(n_elem);
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     typedef typename Proxy<T1>::ea_type ea_type;
     
@@ -362,7 +362,7 @@ op_median::median_vec
       }
     else
       {
-      arma_stop("op_median::median_vec(): expected a vector" );
+      arma_stop_logic_error("op_median::median_vec(): expected a vector" );
       
       return eT(0);
       }

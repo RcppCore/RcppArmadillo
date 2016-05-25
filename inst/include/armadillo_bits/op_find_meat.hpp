@@ -37,7 +37,7 @@ op_find::helper
   uword* indices_mem = indices.memptr();
   uword  n_nz        = 0;
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     typename Proxy<T1>::ea_type PA = A.get_ea();
     
@@ -95,7 +95,7 @@ op_find::helper
   uword* indices_mem = indices.memptr();
   uword  n_nz        = 0;
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     typename Proxy<T1>::ea_type PA = A.get_ea();
     
@@ -225,7 +225,7 @@ op_find::helper
   uword  n_nz        = 0;
   
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     for(uword i=0; i<n_elem; ++i)
       {
@@ -368,7 +368,7 @@ op_find::helper
   uword  n_nz        = 0;
   
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     for(uword i=0; i<n_elem; ++i)
       {
@@ -479,7 +479,7 @@ op_find_finite::apply(Mat<uword>& out, const mtOp<uword, T1, op_find_finite>& X)
   uword* indices_mem = indices.memptr();
   uword  count       = 0;
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     const typename Proxy<T1>::ea_type Pea = P.get_ea();
     
@@ -525,7 +525,7 @@ op_find_nonfinite::apply(Mat<uword>& out, const mtOp<uword, T1, op_find_nonfinit
   uword* indices_mem = indices.memptr();
   uword  count       = 0;
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     const typename Proxy<T1>::ea_type Pea = P.get_ea();
     

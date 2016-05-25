@@ -16,7 +16,7 @@ namespace newarp
 template<typename eT, int SelectionRule, typename OpType>
 inline
 void
-GenEigsSolver<eT, SelectionRule, OpType>::factorize_from(uword from_k, uword to_m, const Col<eT>& fk)
+GenEigsSolver<eT, SelectionRule, OpType>::factorise_from(uword from_k, uword to_m, const Col<eT>& fk)
   {
   arma_extra_debug_sigprint();
   
@@ -163,7 +163,7 @@ GenEigsSolver<eT, SelectionRule, OpType>::restart(uword k)
   fac_V.head_cols(k + 1) = Vs;
 
   Col<eT> fk = fac_f * Q(ncv - 1, k - 1) + fac_V.col(k) * fac_H(k, k - 1);
-  factorize_from(k, ncv, fk);
+  factorise_from(k, ncv, fk);
   retrieve_ritzpair();
 }
 
@@ -368,8 +368,8 @@ GenEigsSolver<eT, SelectionRule, OpType>::compute(uword maxit, eT tol)
   {
   arma_extra_debug_sigprint();
   
-  // The m-step Arnoldi factorization
-  factorize_from(1, ncv, fac_f);
+  // The m-step Arnoldi factorisation
+  factorise_from(1, ncv, fac_f);
   retrieve_ritzpair();
   // Restarting
   uword i, nconv = 0, nev_adj;

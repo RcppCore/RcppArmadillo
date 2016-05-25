@@ -14,6 +14,7 @@
 
 
 template<typename T1, typename T2>
+arma_warn_unused
 inline
 const Glue<T1, T2, glue_trapz>
 trapz
@@ -31,6 +32,7 @@ trapz
 
 
 template<typename T1>
+arma_warn_unused
 inline
 const Op<T1, op_trapz>
 trapz

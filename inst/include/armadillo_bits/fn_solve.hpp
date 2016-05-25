@@ -1,4 +1,4 @@
-// Copyright (C) 2009-2015 National ICT Australia (NICTA)
+// Copyright (C) 2009-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,6 +18,7 @@
 
 
 template<typename T1, typename T2>
+arma_warn_unused
 inline
 typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, const Glue<T1, T2, glue_solve_gen> >::result
 solve
@@ -35,6 +36,7 @@ solve
 
 
 template<typename T1, typename T2>
+arma_warn_unused
 inline
 typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, const Glue<T1, T2, glue_solve_gen> >::result
 solve
@@ -52,6 +54,7 @@ solve
 
 
 template<typename T1, typename T2>
+arma_warn_unused
 inline
 typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, const Glue<T1, T2, glue_solve_gen> >::result
 solve
@@ -127,6 +130,7 @@ solve
 
 
 template<typename T1, typename T2>
+arma_warn_unused
 inline
 typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, const Glue<T1, T2, glue_solve_tri> >::result
 solve
@@ -149,6 +153,7 @@ solve
 
 
 template<typename T1, typename T2>
+arma_warn_unused
 inline
 typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, const Glue<T1, T2, glue_solve_tri> >::result
 solve
@@ -171,6 +176,7 @@ solve
 
 
 template<typename T1, typename T2>
+arma_warn_unused
 inline
 typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, const Glue<T1, T2, glue_solve_tri> >::result
 solve

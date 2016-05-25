@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2015 National ICT Australia (NICTA)
+// Copyright (C) 2012-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -136,7 +136,7 @@ spop_min::vector_min
   
   if(p.get_n_nonzero() == 0)  { return eT(0); }
   
-  if(SpProxy<T1>::must_use_iterator == false)
+  if(SpProxy<T1>::use_iterator == false)
     {
     // direct access of values
     if(p.get_n_nonzero() == p.get_n_elem())
@@ -200,7 +200,7 @@ spop_min::min(const SpBase<typename T1::elem_type, T1>& X)
 
   eT min_val = priv::most_pos<eT>();
 
-  if(SpProxy<T1>::must_use_iterator)
+  if(SpProxy<T1>::use_iterator)
     {
     // We have to iterate over the elements.
     typedef typename SpProxy<T1>::const_iterator_type it_type;
@@ -257,7 +257,7 @@ spop_min::min_with_index(const SpProxy<T1>& P, uword& index_of_min_val)
   
   eT min_val = priv::most_pos<eT>();
   
-  if(SpProxy<T1>::must_use_iterator)
+  if(SpProxy<T1>::use_iterator)
     {
     // We have to iterate over the elements.
     typedef typename SpProxy<T1>::const_iterator_type it_type;
@@ -477,7 +477,7 @@ spop_min::vector_min
   
   if(p.get_n_nonzero() == 0)  { return eT(0); }
   
-  if(SpProxy<T1>::must_use_iterator == false)
+  if(SpProxy<T1>::use_iterator == false)
     {
     // direct access of values
     if(p.get_n_nonzero() == p.get_n_elem())
@@ -557,7 +557,7 @@ spop_min::min(const SpBase<typename T1::elem_type, T1>& X)
    T min_val = priv::most_pos<T>();
   eT ret_val;
 
-  if(SpProxy<T1>::must_use_iterator)
+  if(SpProxy<T1>::use_iterator)
     {
     // We have to iterate over the elements.
     typedef typename SpProxy<T1>::const_iterator_type it_type;
@@ -593,10 +593,7 @@ spop_min::min(const SpBase<typename T1::elem_type, T1>& X)
     }
   else
     {
-    if (T(0) < min_val)
-      return eT(0);
-    else
-      return ret_val;
+    return (T(0) < min_val) ? eT(0) : ret_val;
     }
   }
 
@@ -625,7 +622,7 @@ spop_min::min_with_index(const SpProxy<T1>& P, uword& index_of_min_val)
   
   T min_val = priv::most_pos<T>();
   
-  if(SpProxy<T1>::must_use_iterator)
+  if(SpProxy<T1>::use_iterator)
     {
     // We have to iterate over the elements.
     typedef typename SpProxy<T1>::const_iterator_type it_type;

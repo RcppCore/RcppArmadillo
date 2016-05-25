@@ -1,4 +1,4 @@
-// Copyright (C) 2010-2015 National ICT Australia (NICTA)
+// Copyright (C) 2010-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -183,7 +183,7 @@ eglue_core<eglue_type>::apply(outT& out, const eGlue<T1, T2, eglue_type>& x)
   
   typedef typename T1::elem_type eT;
   
-  const bool prefer_at_accessor = (Proxy<T1>::prefer_at_accessor || Proxy<T2>::prefer_at_accessor);
+  const bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);
   
   // NOTE: we're assuming that the matrix has already been set to the correct size and there is no aliasing;
   // size setting and alias checking is done by either the Mat contructor or operator=()
@@ -191,7 +191,7 @@ eglue_core<eglue_type>::apply(outT& out, const eGlue<T1, T2, eglue_type>& x)
   
   eT* out_mem = out.memptr();
   
-  if(prefer_at_accessor == false)
+  if(use_at == false)
     {
     const uword n_elem = x.get_n_elem();
     
@@ -266,9 +266,9 @@ eglue_core<eglue_type>::apply_inplace_plus(Mat<typename T1::elem_type>& out, con
   
   eT* out_mem = out.memptr();
   
-  const bool prefer_at_accessor = (Proxy<T1>::prefer_at_accessor || Proxy<T2>::prefer_at_accessor);
+  const bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);
   
-  if(prefer_at_accessor == false)
+  if(use_at == false)
     {
     const uword n_elem = x.get_n_elem();
     
@@ -340,9 +340,9 @@ eglue_core<eglue_type>::apply_inplace_minus(Mat<typename T1::elem_type>& out, co
   
   eT* out_mem = out.memptr();
   
-  const bool prefer_at_accessor = (Proxy<T1>::prefer_at_accessor || Proxy<T2>::prefer_at_accessor);
+  const bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);
   
-  if(prefer_at_accessor == false)
+  if(use_at == false)
     {
     const uword n_elem = x.get_n_elem();
     
@@ -414,9 +414,9 @@ eglue_core<eglue_type>::apply_inplace_schur(Mat<typename T1::elem_type>& out, co
   
   eT* out_mem = out.memptr();
   
-  const bool prefer_at_accessor = (Proxy<T1>::prefer_at_accessor || Proxy<T2>::prefer_at_accessor);
+  const bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);
   
-  if(prefer_at_accessor == false)
+  if(use_at == false)
     {
     const uword n_elem = x.get_n_elem();
     
@@ -488,9 +488,9 @@ eglue_core<eglue_type>::apply_inplace_div(Mat<typename T1::elem_type>& out, cons
   
   eT* out_mem = out.memptr();
   
-  const bool prefer_at_accessor = (Proxy<T1>::prefer_at_accessor || Proxy<T2>::prefer_at_accessor);
+  const bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);
   
-  if(prefer_at_accessor == false)
+  if(use_at == false)
     {
     const uword n_elem = x.get_n_elem();
     
@@ -560,7 +560,7 @@ eglue_core<eglue_type>::apply(Cube<typename T1::elem_type>& out, const eGlueCube
   
   typedef typename T1::elem_type eT;
   
-  const bool prefer_at_accessor = (ProxyCube<T1>::prefer_at_accessor || ProxyCube<T2>::prefer_at_accessor);
+  const bool use_at = (ProxyCube<T1>::use_at || ProxyCube<T2>::use_at);
   
   // NOTE: we're assuming that the cube has already been set to the correct size and there is no aliasing;
   // size setting and alias checking is done by either the Cube contructor or operator=()
@@ -568,7 +568,7 @@ eglue_core<eglue_type>::apply(Cube<typename T1::elem_type>& out, const eGlueCube
   
   eT* out_mem = out.memptr();
   
-  if(prefer_at_accessor == false)
+  if(use_at == false)
     {
     const uword n_elem = out.n_elem;
     
@@ -645,9 +645,9 @@ eglue_core<eglue_type>::apply_inplace_plus(Cube<typename T1::elem_type>& out, co
   
   eT* out_mem = out.memptr();
   
-  const bool prefer_at_accessor = (ProxyCube<T1>::prefer_at_accessor || ProxyCube<T2>::prefer_at_accessor);
+  const bool use_at = (ProxyCube<T1>::use_at || ProxyCube<T2>::use_at);
   
-  if(prefer_at_accessor == false)
+  if(use_at == false)
     {
     const uword n_elem = out.n_elem;
     
@@ -720,9 +720,9 @@ eglue_core<eglue_type>::apply_inplace_minus(Cube<typename T1::elem_type>& out, c
   
   eT* out_mem = out.memptr();
   
-  const bool prefer_at_accessor = (ProxyCube<T1>::prefer_at_accessor || ProxyCube<T2>::prefer_at_accessor);
+  const bool use_at = (ProxyCube<T1>::use_at || ProxyCube<T2>::use_at);
   
-  if(prefer_at_accessor == false)
+  if(use_at == false)
     {
     const uword n_elem = out.n_elem;
     
@@ -795,9 +795,9 @@ eglue_core<eglue_type>::apply_inplace_schur(Cube<typename T1::elem_type>& out, c
   
   eT* out_mem = out.memptr();
   
-  const bool prefer_at_accessor = (ProxyCube<T1>::prefer_at_accessor || ProxyCube<T2>::prefer_at_accessor);
+  const bool use_at = (ProxyCube<T1>::use_at || ProxyCube<T2>::use_at);
   
-  if(prefer_at_accessor == false)
+  if(use_at == false)
     {
     const uword n_elem = out.n_elem;
     
@@ -870,9 +870,9 @@ eglue_core<eglue_type>::apply_inplace_div(Cube<typename T1::elem_type>& out, con
   
   eT* out_mem = out.memptr();
   
-  const bool prefer_at_accessor = (ProxyCube<T1>::prefer_at_accessor || ProxyCube<T2>::prefer_at_accessor);
+  const bool use_at = (ProxyCube<T1>::use_at || ProxyCube<T2>::use_at);
   
-  if(prefer_at_accessor == false)
+  if(use_at == false)
     {
     const uword n_elem = out.n_elem;
     

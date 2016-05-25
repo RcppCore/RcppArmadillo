@@ -1,4 +1,4 @@
-// Copyright (C) 2009-2015 National ICT Australia (NICTA)
+// Copyright (C) 2009-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,6 +15,7 @@
 
 
 template<typename T1>
+arma_warn_unused
 arma_inline
 typename
 enable_if2
@@ -35,6 +36,7 @@ shuffle
 
 
 template<typename T1>
+arma_warn_unused
 arma_inline
 typename
 enable_if2

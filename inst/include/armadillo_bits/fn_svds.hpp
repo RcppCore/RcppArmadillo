@@ -150,7 +150,7 @@ svds_helper
   
   if(arma_config::arpack == false)
     {
-    arma_stop("svds(): use of ARPACK must be enabled for decomposition of complex matrices");
+    arma_stop_logic_error("svds(): use of ARPACK must be enabled for decomposition of complex matrices");
     return false;
     }
   
@@ -307,6 +307,7 @@ svds
 
 //! find the k largest singular values of sparse matrix X
 template<typename T1>
+arma_warn_unused
 inline
 Col<typename T1::pod_type>
 svds

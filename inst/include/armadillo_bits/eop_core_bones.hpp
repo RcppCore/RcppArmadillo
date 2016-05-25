@@ -83,6 +83,9 @@ class eop_ceil              : public eop_core<eop_ceil>              {};
 class eop_round             : public eop_core<eop_round>             {};
 class eop_trunc             : public eop_core<eop_trunc>             {};
 class eop_sign              : public eop_core<eop_sign>              {};
+class eop_erf               : public eop_core<eop_erf>               {};
+class eop_erfc              : public eop_core<eop_erfc>              {};
+class eop_lgamma            : public eop_core<eop_lgamma>            {};
 
 
 

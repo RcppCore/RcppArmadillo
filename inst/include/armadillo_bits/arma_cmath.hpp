@@ -367,7 +367,7 @@ arma_acos(const std::complex<T>& x)
   #else
     {
     arma_ignore(x);
-    arma_stop("acos(): need C++11 compiler");
+    arma_stop_logic_error("acos(): need C++11 compiler");
     
     return std::complex<T>(0);
     }
@@ -392,7 +392,7 @@ arma_asin(const std::complex<T>& x)
   #else
     {
     arma_ignore(x);
-    arma_stop("asin(): need C++11 compiler");
+    arma_stop_logic_error("asin(): need C++11 compiler");
     
     return std::complex<T>(0);
     }
@@ -417,7 +417,7 @@ arma_atan(const std::complex<T>& x)
   #else
     {
     arma_ignore(x);
-    arma_stop("atan(): need C++11 compiler");
+    arma_stop_logic_error("atan(): need C++11 compiler");
     
     return std::complex<T>(0);
     }
@@ -539,7 +539,7 @@ arma_acosh(const std::complex<T>& x)
   #else
     {
     arma_ignore(x);
-    arma_stop("acosh(): need C++11 compiler");
+    arma_stop_logic_error("acosh(): need C++11 compiler");
     
     return std::complex<T>(0);
     }
@@ -564,7 +564,7 @@ arma_asinh(const std::complex<T>& x)
   #else
     {
     arma_ignore(x);
-    arma_stop("asinh(): need C++11 compiler");
+    arma_stop_logic_error("asinh(): need C++11 compiler");
     
     return std::complex<T>(0);
     }
@@ -589,7 +589,7 @@ arma_atanh(const std::complex<T>& x)
   #else
     {
     arma_ignore(x);
-    arma_stop("atanh(): need C++11 compiler");
+    arma_stop_logic_error("atanh(): need C++11 compiler");
     
     return std::complex<T>(0);
     }

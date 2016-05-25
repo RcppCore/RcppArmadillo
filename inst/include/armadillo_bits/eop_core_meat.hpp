@@ -174,7 +174,7 @@ eop_core<eop_type>::apply(outT& out, const eOp<T1, eop_type>& x)
   const eT  k       = x.aux;
         eT* out_mem = out.memptr();
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     const uword n_elem = x.get_n_elem();
     
@@ -234,7 +234,7 @@ eop_core<eop_type>::apply_inplace_plus(Mat<typename T1::elem_type>& out, const e
   const eT  k       = x.aux;
         eT* out_mem = out.memptr();
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     const uword n_elem = x.get_n_elem();
     
@@ -291,7 +291,7 @@ eop_core<eop_type>::apply_inplace_minus(Mat<typename T1::elem_type>& out, const 
   const eT  k       = x.aux;
         eT* out_mem = out.memptr();
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     const uword n_elem = x.get_n_elem();
     
@@ -348,7 +348,7 @@ eop_core<eop_type>::apply_inplace_schur(Mat<typename T1::elem_type>& out, const 
   const eT  k       = x.aux;
         eT* out_mem = out.memptr();
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     const uword n_elem = x.get_n_elem();
     
@@ -405,7 +405,7 @@ eop_core<eop_type>::apply_inplace_div(Mat<typename T1::elem_type>& out, const eO
   const eT  k       = x.aux;
         eT* out_mem = out.memptr();
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     const uword n_elem = x.get_n_elem();
     
@@ -465,7 +465,7 @@ eop_core<eop_type>::apply(Cube<typename T1::elem_type>& out, const eOpCube<T1, e
   const eT  k       = x.aux;
         eT* out_mem = out.memptr();
   
-  if(ProxyCube<T1>::prefer_at_accessor == false)
+  if(ProxyCube<T1>::use_at == false)
     {
     const uword n_elem = out.n_elem;
     
@@ -527,7 +527,7 @@ eop_core<eop_type>::apply_inplace_plus(Cube<typename T1::elem_type>& out, const 
   const eT  k       = x.aux;
         eT* out_mem = out.memptr();
   
-  if(ProxyCube<T1>::prefer_at_accessor == false)
+  if(ProxyCube<T1>::use_at == false)
     {
     const uword n_elem = out.n_elem;
     
@@ -585,7 +585,7 @@ eop_core<eop_type>::apply_inplace_minus(Cube<typename T1::elem_type>& out, const
   const eT  k       = x.aux;
         eT* out_mem = out.memptr();
   
-  if(ProxyCube<T1>::prefer_at_accessor == false)
+  if(ProxyCube<T1>::use_at == false)
     {
     const uword n_elem = out.n_elem;
     
@@ -643,7 +643,7 @@ eop_core<eop_type>::apply_inplace_schur(Cube<typename T1::elem_type>& out, const
   const eT  k       = x.aux;
         eT* out_mem = out.memptr();
   
-  if(ProxyCube<T1>::prefer_at_accessor == false)
+  if(ProxyCube<T1>::use_at == false)
     {
     const uword n_elem = out.n_elem;
     
@@ -701,7 +701,7 @@ eop_core<eop_type>::apply_inplace_div(Cube<typename T1::elem_type>& out, const e
   const eT  k       = x.aux;
         eT* out_mem = out.memptr();
   
-  if(ProxyCube<T1>::prefer_at_accessor == false)
+  if(ProxyCube<T1>::use_at == false)
     {
     const uword n_elem = out.n_elem;
     
@@ -751,7 +751,7 @@ arma_inline
 eT
 eop_core<eop_type>::process(const eT, const eT)
   {
-  arma_stop("eop_core::process(): unhandled eop_type");
+  arma_stop_logic_error("eop_core::process(): unhandled eop_type");
   return eT(0);
   }
 
@@ -870,6 +870,15 @@ eop_core<eop_trunc            >::process(const eT val, const eT  ) { return eop_
 
 template<> template<typename eT> arma_hot arma_inline eT
 eop_core<eop_sign             >::process(const eT val, const eT  ) { return eop_aux::sign(val);       }
+
+template<> template<typename eT> arma_hot arma_inline eT
+eop_core<eop_erf              >::process(const eT val, const eT  ) { return eop_aux::erf(val);        }
+
+template<> template<typename eT> arma_hot arma_inline eT
+eop_core<eop_erfc             >::process(const eT val, const eT  ) { return eop_aux::erfc(val);       }
+
+template<> template<typename eT> arma_hot arma_inline eT
+eop_core<eop_lgamma           >::process(const eT val, const eT  ) { return eop_aux::lgamma(val);     }
 
 
 #undef arma_applier_1u

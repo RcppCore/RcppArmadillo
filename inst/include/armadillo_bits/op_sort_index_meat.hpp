@@ -1,4 +1,4 @@
-// Copyright (C) 2009-2015 National ICT Australia (NICTA)
+// Copyright (C) 2009-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,7 +29,7 @@ arma_sort_index_helper(Mat<uword>& out, const Proxy<T1>& P, const uword sort_typ
   
   std::vector< arma_sort_index_packet<eT, uword> > packet_vec(n_elem);
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     for(uword i=0; i<n_elem; ++i)
       {
@@ -123,7 +123,7 @@ arma_sort_index_helper(Mat<uword>& out, const Proxy<T1>& P, const uword sort_typ
   
   std::vector< arma_sort_index_packet<T, uword> > packet_vec(n_elem);
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     for(uword i=0; i<n_elem; ++i)
       {

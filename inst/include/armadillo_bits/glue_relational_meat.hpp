@@ -1,4 +1,4 @@
-// Copyright (C) 2009-2014 National ICT Australia (NICTA)
+// Copyright (C) 2009-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -39,9 +39,9 @@
     \
     uword* out_mem = out.memptr();\
     \
-    const bool prefer_at_accessor = (Proxy<T1>::prefer_at_accessor || Proxy<T2>::prefer_at_accessor);\
+    const bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);\
     \
-    if(prefer_at_accessor == false)\
+    if(use_at == false)\
       {\
       typename Proxy<T1>::ea_type A = P1.get_ea();\
       typename Proxy<T2>::ea_type B = P2.get_ea();\
@@ -105,9 +105,9 @@
     \
     uword* out_mem = out.memptr();\
     \
-    const bool prefer_at_accessor = (ProxyCube<T1>::prefer_at_accessor || ProxyCube<T2>::prefer_at_accessor);\
+    const bool use_at = (ProxyCube<T1>::use_at || ProxyCube<T2>::use_at);\
     \
-    if(prefer_at_accessor == false)\
+    if(use_at == false)\
       {\
       typename ProxyCube<T1>::ea_type A = P1.get_ea();\
       typename ProxyCube<T2>::ea_type B = P2.get_ea();\
