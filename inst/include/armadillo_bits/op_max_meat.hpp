@@ -357,7 +357,6 @@ op_max::direct_max(const eT* const X, const uword n_elem)
   eT max_val = priv::most_neg<eT>();
   
   uword i,j;
-  
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
     const eT X_i = X[i];
@@ -366,7 +365,6 @@ op_max::direct_max(const eT* const X, const uword n_elem)
     if(X_i > max_val) { max_val = X_i; }
     if(X_j > max_val) { max_val = X_j; }
     }
-  
   
   if(i < n_elem)
     {
@@ -392,7 +390,6 @@ op_max::direct_max(const eT* const X, const uword n_elem, uword& index_of_max_va
   uword best_index = 0;
   
   uword i,j;
-  
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
     const eT X_i = X[i];
@@ -410,7 +407,6 @@ op_max::direct_max(const eT* const X, const uword n_elem, uword& index_of_max_va
       best_index = j;
       }
     }
-  
   
   if(i < n_elem)
     {
@@ -543,7 +539,7 @@ op_max::max(const Base<typename T1::elem_type,T1>& X)
   
   eT max_val = priv::most_neg<eT>();
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     typedef typename Proxy<T1>::ea_type ea_type;
     
@@ -641,7 +637,7 @@ op_max::max_with_index(const Proxy<T1>& P, uword& index_of_max_val)
   eT    best_val   = priv::most_neg<eT>();
   uword best_index = 0;
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     typedef typename Proxy<T1>::ea_type ea_type;
     
@@ -876,7 +872,7 @@ op_max::max(const Base<typename T1::elem_type,T1>& X)
   
   T max_val = priv::most_neg<T>();
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     typedef typename Proxy<T1>::ea_type ea_type;
     
@@ -962,7 +958,7 @@ op_max::max_with_index(const Proxy<T1>& P, uword& index_of_max_val)
   
   T best_val = priv::most_neg<T>();
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     typedef typename Proxy<T1>::ea_type ea_type;
     

@@ -16,6 +16,7 @@
 //! Convolution, which is also equivalent to polynomial multiplication and FIR digital filtering.
 
 template<typename T1, typename T2>
+arma_warn_unused
 inline
 typename
 enable_if2
@@ -39,6 +40,7 @@ conv(const T1& A, const T2& B, const char* shape = "full")
 
 
 template<typename T1, typename T2>
+arma_warn_unused
 inline
 typename
 enable_if2

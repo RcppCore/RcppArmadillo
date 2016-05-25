@@ -1,4 +1,4 @@
-// Copyright (C) 2013 National ICT Australia (NICTA)
+// Copyright (C) 2013-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,7 +27,7 @@ op_any::any_vec_helper(const Base<typename T1::elem_type, T1>& X)
   
   const uword n_elem = P.get_n_elem();
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     typename Proxy<T1>::ea_type Pea = P.get_ea();
     
@@ -74,7 +74,7 @@ op_any::any_vec_helper
   const Proxy<T1> P(X.m);
   
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     typename Proxy<T1>::ea_type Pea = P.get_ea();
     
@@ -151,9 +151,9 @@ op_any::any_vec_helper
   
   arma_debug_assert_same_size(A, B, "relational operator");
   
-  const bool prefer_at_accessor = Proxy<T1>::prefer_at_accessor || Proxy<T2>::prefer_at_accessor;
+  const bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);
   
-  if(prefer_at_accessor == false)
+  if(use_at == false)
     {
     ea_type1 PA = A.get_ea();
     ea_type2 PB = B.get_ea();

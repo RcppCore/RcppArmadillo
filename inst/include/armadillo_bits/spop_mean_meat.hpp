@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2015 National ICT Australia (NICTA)
+// Copyright (C) 2012-2016 National ICT Australia (NICTA)
 //
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -74,7 +74,7 @@ spop_mean::apply_noalias_fast
     {
     Row<eT> acc(p_n_cols, fill::zeros);
     
-    if(SpProxy<T1>::must_use_iterator)
+    if(SpProxy<T1>::use_iterator)
       {
       typename SpProxy<T1>::const_iterator_type it     = p.begin();
       typename SpProxy<T1>::const_iterator_type it_end = p.end();
@@ -148,7 +148,7 @@ spop_mean::apply_noalias_slow
     for(uword col = 0; col < p_n_cols; ++col)
       {
       // Do we have to use an iterator or can we use memory directly?
-      if(SpProxy<T1>::must_use_iterator)
+      if(SpProxy<T1>::use_iterator)
         {
         typename SpProxy<T1>::const_iterator_type it  = p.begin_col(col);
         typename SpProxy<T1>::const_iterator_type end = p.begin_col(col + 1);
@@ -263,14 +263,14 @@ spop_mean::mean_all(const SpBase<typename T1::elem_type, T1>& X)
   
   SpProxy<T1> p(X.get_ref());
   
-  if(SpProxy<T1>::must_use_iterator)
+  if(SpProxy<T1>::use_iterator)
     {
     typename SpProxy<T1>::const_iterator_type it  = p.begin();
     typename SpProxy<T1>::const_iterator_type end = p.end();
 
     return spop_mean::iterator_mean(it, end, p.get_n_elem() - p.get_n_nonzero(), typename T1::elem_type(0));
     }
-  else // must_use_iterator == false; that is, we can directly access the values array
+  else // use_iterator == false; that is, we can directly access the values array
     {
     return spop_mean::direct_mean(p.get_values(), p.get_n_nonzero(), p.get_n_elem());
     }

@@ -1,4 +1,4 @@
-// Copyright (C) 2013 National ICT Australia (NICTA)
+// Copyright (C) 2013-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,6 +18,7 @@
 
 
 template<typename T1>
+arma_warn_unused
 inline
 typename
 enable_if2
@@ -46,6 +47,7 @@ fft2(const T1& A)
 
 
 template<typename T1>
+arma_warn_unused
 inline
 typename
 enable_if2
@@ -70,6 +72,7 @@ fft2(const T1& A, const uword n_rows, const uword n_cols)
 
 
 template<typename T1>
+arma_warn_unused
 inline
 typename
 enable_if2
@@ -98,6 +101,7 @@ ifft2(const T1& A)
 
 
 template<typename T1>
+arma_warn_unused
 inline
 typename
 enable_if2

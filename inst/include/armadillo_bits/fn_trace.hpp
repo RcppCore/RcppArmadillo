@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,8 +14,8 @@
 
 
 template<typename T1>
-arma_hot
 arma_warn_unused
+arma_hot
 inline
 typename enable_if2<is_arma_type<T1>::value, typename T1::elem_type>::result
 trace(const T1& X)
@@ -49,8 +49,8 @@ trace(const T1& X)
 
 
 template<typename T1>
-arma_hot
 arma_warn_unused
+arma_hot
 inline
 typename T1::elem_type
 trace(const Op<T1, op_diagmat>& X)
@@ -201,8 +201,8 @@ trace_mul_proxy(const Proxy<T1>& PA, const T2& XB)
 
 //! speedup for trace(A*B), where the result of A*B is a square sized matrix
 template<typename T1, typename T2>
-arma_hot
 arma_warn_unused
+arma_hot
 inline
 typename T1::elem_type
 trace(const Glue<T1, T2, glue_times>& X)
@@ -218,8 +218,8 @@ trace(const Glue<T1, T2, glue_times>& X)
 
 //! trace of sparse object
 template<typename T1>
-arma_hot
 arma_warn_unused
+arma_hot
 inline
 typename enable_if2<is_arma_sparse_type<T1>::value, typename T1::elem_type>::result
 trace(const T1& x)

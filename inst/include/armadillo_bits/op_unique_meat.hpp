@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2015 National ICT Australia (NICTA)
+// Copyright (C) 2012-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -32,7 +32,7 @@ op_unique::apply_helper(Mat<typename T1::elem_type>& out, const Proxy<T1>& P)
   
   if(n_elem == 1)
     {
-    const eT tmp = Proxy<T1>::prefer_at_accessor ? P.at(0,0) : P[0];
+    const eT tmp = (Proxy<T1>::use_at) ? P.at(0,0) : P[0];
     
     out.set_size(n_rows, n_cols);
     
@@ -45,7 +45,7 @@ op_unique::apply_helper(Mat<typename T1::elem_type>& out, const Proxy<T1>& P)
   
   eT* X_mem = X.memptr();
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     typename Proxy<T1>::ea_type Pea = P.get_ea();
     

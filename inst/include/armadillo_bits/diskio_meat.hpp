@@ -1250,7 +1250,7 @@ diskio::save_hdf5_binary(const Mat<eT>& x, const std::string& final_name)
     arma_ignore(x);
     arma_ignore(final_name);
     
-    arma_stop("Mat::save(): use of HDF5 needs to be enabled");
+    arma_stop_logic_error("Mat::save(): use of HDF5 needs to be enabled");
     
     return false;
     }
@@ -2128,7 +2128,7 @@ diskio::load_hdf5_binary(Mat<eT>& x, const std::string& name, std::string& err_m
     arma_ignore(name);
     arma_ignore(err_msg);
 
-    arma_stop("Mat::load(): use of HDF5 needs to be enabled");
+    arma_stop_logic_error("Mat::load(): use of HDF5 needs to be enabled");
 
     return false;
     }
@@ -3417,7 +3417,7 @@ diskio::save_hdf5_binary(const Cube<eT>& x, const std::string& final_name)
     arma_ignore(x);
     arma_ignore(final_name);
 
-    arma_stop("Cube::save(): use of HDF5 needs to be enabled");
+    arma_stop_logic_error("Cube::save(): use of HDF5 needs to be enabled");
 
     return false;
     }
@@ -3881,7 +3881,7 @@ diskio::load_hdf5_binary(Cube<eT>& x, const std::string& name, std::string& err_
     arma_ignore(name);
     arma_ignore(err_msg);
 
-    arma_stop("Cube::load(): use of HDF5 needs to be enabled");
+    arma_stop_logic_error("Cube::load(): use of HDF5 needs to be enabled");
 
     return false;
     }

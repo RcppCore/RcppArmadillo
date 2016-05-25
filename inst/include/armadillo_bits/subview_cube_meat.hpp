@@ -579,7 +579,7 @@ subview_cube<eT>::operator= (const Base<eT,T1>& in)
     {
     if(arma_config::debug == true)
       {
-      arma_stop( arma_incompat_size_string(t, x, "copy into subcube") );
+      arma_stop_logic_error( arma_incompat_size_string(t, x, "copy into subcube") );
       }
     }
   }
@@ -682,7 +682,7 @@ subview_cube<eT>::operator+= (const Base<eT,T1>& in)
     {
     if(arma_config::debug == true)
       {
-      arma_stop( arma_incompat_size_string(t, x, "addition") );
+      arma_stop_logic_error( arma_incompat_size_string(t, x, "addition") );
       }
     }
   }
@@ -785,7 +785,7 @@ subview_cube<eT>::operator-= (const Base<eT,T1>& in)
     {
     if(arma_config::debug == true)
       {
-      arma_stop( arma_incompat_size_string(t, x, "subtraction") );
+      arma_stop_logic_error( arma_incompat_size_string(t, x, "subtraction") );
       }
     }
   }
@@ -888,7 +888,7 @@ subview_cube<eT>::operator%= (const Base<eT,T1>& in)
     {
     if(arma_config::debug == true)
       {
-      arma_stop( arma_incompat_size_string(t, x, "element-wise multiplication") );
+      arma_stop_logic_error( arma_incompat_size_string(t, x, "element-wise multiplication") );
       }
     }
   }
@@ -991,7 +991,7 @@ subview_cube<eT>::operator/= (const Base<eT,T1>& in)
     {
     if(arma_config::debug == true)
       {
-      arma_stop( arma_incompat_size_string(t, x, "element-wise division") );
+      arma_stop_logic_error( arma_incompat_size_string(t, x, "element-wise division") );
       }
     }
   }
@@ -1913,7 +1913,7 @@ subview_cube<eT>::plus_inplace(Mat<eT>& out, const subview_cube<eT>& in)
         <<  in_n_rows << 'x' <<  in_n_cols << 'x' << in_n_slices << " cube interpreted as "
         <<  in_n_rows << 'x' <<  in_n_cols << " matrix";
       
-      arma_stop(tmp.str());
+      arma_stop_logic_error(tmp.str());
       }
     
     for(uword col=0; col < in_n_cols; ++col)
@@ -2014,7 +2014,7 @@ subview_cube<eT>::minus_inplace(Mat<eT>& out, const subview_cube<eT>& in)
         <<  in_n_rows << 'x' <<  in_n_cols << 'x' << in_n_slices << " cube interpreted as "
         <<  in_n_rows << 'x' <<  in_n_cols << " matrix";
       
-      arma_stop(tmp.str());
+      arma_stop_logic_error(tmp.str());
       }
     
     for(uword col=0; col < in_n_cols; ++col)
@@ -2115,7 +2115,7 @@ subview_cube<eT>::schur_inplace(Mat<eT>& out, const subview_cube<eT>& in)
         <<  in_n_rows << 'x' <<  in_n_cols << 'x' << in_n_slices << " cube interpreted as "
         <<  in_n_rows << 'x' <<  in_n_cols << " matrix";
       
-      arma_stop(tmp.str());
+      arma_stop_logic_error(tmp.str());
       }
     
     for(uword col=0; col < in_n_cols; ++col)
@@ -2216,7 +2216,7 @@ subview_cube<eT>::div_inplace(Mat<eT>& out, const subview_cube<eT>& in)
         <<  in_n_rows << 'x' <<  in_n_cols << 'x' << in_n_slices << " cube interpreted as "
         <<  in_n_rows << 'x' <<  in_n_cols << " matrix";
       
-      arma_stop(tmp.str());
+      arma_stop_logic_error(tmp.str());
       }
     
     for(uword col=0; col < in_n_cols; ++col)

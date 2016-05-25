@@ -79,6 +79,7 @@ arma_rng::set_seed(const arma_rng::seed_type val)
 
 
 
+arma_cold
 inline
 void
 arma_rng::set_seed_random()

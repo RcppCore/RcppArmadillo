@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2012 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -116,7 +116,7 @@ podarray<eT>::podarray(const Proxy<T1>& P)
   
   eT* out_mem = (*this).memptr();
     
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     typename Proxy<T1>::ea_type A = P.get_ea();
     

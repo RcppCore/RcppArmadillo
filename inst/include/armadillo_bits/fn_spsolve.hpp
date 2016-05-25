@@ -125,6 +125,7 @@ spsolve
 
 
 template<typename T1, typename T2>
+arma_warn_unused
 inline
 Mat<typename T1::elem_type>
 spsolve

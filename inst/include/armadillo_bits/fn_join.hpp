@@ -1,4 +1,4 @@
-// Copyright (C) 2010-2015 National ICT Australia (NICTA)
+// Copyright (C) 2010-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,7 @@
 
 
 template<typename T1, typename T2>
+arma_warn_unused
 inline
 typename
 enable_if2
@@ -31,6 +32,7 @@ join_cols(const T1& A, const T2& B)
 
 
 template<typename T1, typename T2>
+arma_warn_unused
 inline
 typename
 enable_if2
@@ -48,6 +50,7 @@ join_vert(const T1& A, const T2& B)
 
 
 template<typename T1, typename T2>
+arma_warn_unused
 inline
 typename
 enable_if2
@@ -65,6 +68,7 @@ join_rows(const T1& A, const T2& B)
 
 
 template<typename T1, typename T2>
+arma_warn_unused
 inline
 typename
 enable_if2
@@ -85,6 +89,7 @@ join_horiz(const T1& A, const T2& B)
 // for cubes
 
 template<typename T1, typename T2>
+arma_warn_unused
 inline
 const GlueCube<T1, T2, glue_join_slices>
 join_slices(const BaseCube<typename T1::elem_type,T1>& A, const BaseCube<typename T1::elem_type,T2>& B)
@@ -97,6 +102,7 @@ join_slices(const BaseCube<typename T1::elem_type,T1>& A, const BaseCube<typenam
 
 
 template<typename T1, typename T2>
+arma_warn_unused
 inline
 Cube<typename T1::elem_type>
 join_slices(const Base<typename T1::elem_type,T1>& A, const Base<typename T1::elem_type,T2>& B)
@@ -121,6 +127,7 @@ join_slices(const Base<typename T1::elem_type,T1>& A, const Base<typename T1::el
 
 
 template<typename T1, typename T2>
+arma_warn_unused
 inline
 Cube<typename T1::elem_type>
 join_slices(const Base<typename T1::elem_type,T1>& A, const BaseCube<typename T1::elem_type,T2>& B)
@@ -139,6 +146,7 @@ join_slices(const Base<typename T1::elem_type,T1>& A, const BaseCube<typename T1
 
 
 template<typename T1, typename T2>
+arma_warn_unused
 inline
 Cube<typename T1::elem_type>
 join_slices(const BaseCube<typename T1::elem_type,T1>& A, const Base<typename T1::elem_type,T2>& B)
@@ -160,6 +168,7 @@ join_slices(const BaseCube<typename T1::elem_type,T1>& A, const Base<typename T1
 // for sparse matrices
 
 template<typename T1, typename T2>
+arma_warn_unused
 inline
 const SpGlue<T1, T2, spglue_join_cols>
 join_cols(const SpBase<typename T1::elem_type,T1>& A, const SpBase<typename T1::elem_type,T2>& B)
@@ -172,6 +181,7 @@ join_cols(const SpBase<typename T1::elem_type,T1>& A, const SpBase<typename T1::
 
 
 template<typename T1, typename T2>
+arma_warn_unused
 inline
 const SpGlue<T1, T2, spglue_join_cols>
 join_vert(const SpBase<typename T1::elem_type,T1>& A, const SpBase<typename T1::elem_type,T2>& B)
@@ -184,6 +194,7 @@ join_vert(const SpBase<typename T1::elem_type,T1>& A, const SpBase<typename T1::
 
 
 template<typename T1, typename T2>
+arma_warn_unused
 inline
 const SpGlue<T1, T2, spglue_join_rows>
 join_rows(const SpBase<typename T1::elem_type,T1>& A, const SpBase<typename T1::elem_type,T2>& B)
@@ -196,6 +207,7 @@ join_rows(const SpBase<typename T1::elem_type,T1>& A, const SpBase<typename T1::
 
 
 template<typename T1, typename T2>
+arma_warn_unused
 inline
 const SpGlue<T1, T2, spglue_join_rows>
 join_horiz(const SpBase<typename T1::elem_type,T1>& A, const SpBase<typename T1::elem_type,T2>& B)

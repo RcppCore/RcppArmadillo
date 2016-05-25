@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -38,7 +38,7 @@ op_diagmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_diagmat>& X)
       
       out.zeros(N, N);
       
-      if(Proxy<T1>::prefer_at_accessor == false)
+      if(Proxy<T1>::use_at == false)
         {
         typename Proxy<T1>::ea_type P_ea = P.get_ea();
         
@@ -74,7 +74,7 @@ op_diagmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_diagmat>& X)
       podarray<eT> tmp(N);
       eT* tmp_mem = tmp.memptr();
       
-      if(Proxy<T1>::prefer_at_accessor == false)
+      if(Proxy<T1>::use_at == false)
         {
         typename Proxy<T1>::ea_type P_ea = P.get_ea();
         
@@ -158,7 +158,7 @@ op_diagmat2::apply(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const u
     
     out.zeros(n_elem + n_pad, n_elem + n_pad);
     
-    if(Proxy<T1>::prefer_at_accessor == false)
+    if(Proxy<T1>::use_at == false)
       {
       typename Proxy<T1>::ea_type Pea = P.get_ea();
       

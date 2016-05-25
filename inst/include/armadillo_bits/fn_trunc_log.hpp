@@ -14,6 +14,7 @@
 
 
 template<typename eT>
+arma_warn_unused
 inline
 static
 typename arma_real_only<eT>::result
@@ -39,6 +40,7 @@ trunc_log(const eT x)
 
 
 template<typename eT>
+arma_warn_unused
 inline
 static
 typename arma_integral_only<eT>::result
@@ -50,6 +52,7 @@ trunc_log(const eT x)
 
 
 template<typename T>
+arma_warn_unused
 inline
 static
 std::complex<T>
@@ -61,6 +64,7 @@ trunc_log(const std::complex<T>& x)
 
 
 template<typename T1>
+arma_warn_unused
 arma_inline
 const eOp<T1, eop_trunc_log>
 trunc_log(const Base<typename T1::elem_type,T1>& A)
@@ -73,6 +77,7 @@ trunc_log(const Base<typename T1::elem_type,T1>& A)
 
 
 template<typename T1>
+arma_warn_unused
 arma_inline
 const eOpCube<T1, eop_trunc_log>
 trunc_log(const BaseCube<typename T1::elem_type,T1>& A)

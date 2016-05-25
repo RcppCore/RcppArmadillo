@@ -14,10 +14,8 @@
 
 
 
-//! \brief
-//! kronecker product of two matrices,
-//! with the matrices having the same element type
 template<typename T1, typename T2>
+arma_warn_unused
 arma_inline
 const Glue<T1,T2,glue_kron>
 kron(const Base<typename T1::elem_type,T1>& A, const Base<typename T1::elem_type,T2>& B)
@@ -29,10 +27,8 @@ kron(const Base<typename T1::elem_type,T1>& A, const Base<typename T1::elem_type
 
 
 
-//! \brief
-//! kronecker product of two matrices,
-//! with the matrices having different element types
 template<typename T, typename T1, typename T2>
+arma_warn_unused
 inline
 Mat<typename eT_promoter<T1,T2>::eT>
 kron(const Base<std::complex<T>,T1>& X, const Base<T,T2>& Y)
@@ -58,10 +54,8 @@ kron(const Base<std::complex<T>,T1>& X, const Base<T,T2>& Y)
 
 
 
-//! \brief
-//! kronecker product of two matrices,
-//! with the matrices having different element types
 template<typename T, typename T1, typename T2>
+arma_warn_unused
 inline
 Mat<typename eT_promoter<T1,T2>::eT>
 kron(const Base<T,T1>& X, const Base<std::complex<T>,T2>& Y)
@@ -88,6 +82,7 @@ kron(const Base<T,T1>& X, const Base<std::complex<T>,T2>& Y)
 
 
 // template<typename T1, typename T2>
+// arma_warn_unused
 // inline
 // SpMat<typename T1::elem_type>
 // kron(const SpBase<typename T1::elem_type, T1>& A_expr, const SpBase<typename T1::elem_type, T2>& B_expr)

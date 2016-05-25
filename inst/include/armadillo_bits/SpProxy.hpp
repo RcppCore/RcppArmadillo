@@ -26,8 +26,8 @@ class SpProxy< SpMat<eT> >
   typedef typename SpMat<eT>::const_iterator       const_iterator_type;
   typedef typename SpMat<eT>::const_row_iterator   const_row_iterator_type;
 
-  static const bool must_use_iterator  = false;
-  static const bool Q_created_by_proxy = false;
+  static const bool use_iterator   = false;
+  static const bool Q_is_generated = false;
 
   static const bool is_row = false;
   static const bool is_col = false;
@@ -78,8 +78,8 @@ class SpProxy< SpCol<eT> >
   typedef typename SpCol<eT>::const_iterator       const_iterator_type;
   typedef typename SpCol<eT>::const_row_iterator   const_row_iterator_type;
   
-  static const bool must_use_iterator  = false;
-  static const bool Q_created_by_proxy = false;
+  static const bool use_iterator   = false;
+  static const bool Q_is_generated = false;
   
   static const bool is_row = false;
   static const bool is_col = true;
@@ -130,8 +130,8 @@ class SpProxy< SpRow<eT> >
   typedef typename SpRow<eT>::const_iterator       const_iterator_type;
   typedef typename SpRow<eT>::const_row_iterator   const_row_iterator_type;
   
-  static const bool must_use_iterator  = false;
-  static const bool Q_created_by_proxy = false;
+  static const bool use_iterator   = false;
+  static const bool Q_is_generated = false;
   
   static const bool is_row = true;
   static const bool is_col = false;
@@ -182,8 +182,8 @@ class SpProxy< SpSubview<eT> >
   typedef typename SpSubview<eT>::const_iterator       const_iterator_type;
   typedef typename SpSubview<eT>::const_row_iterator   const_row_iterator_type;
 
-  static const bool must_use_iterator  = true;
-  static const bool Q_created_by_proxy = false;
+  static const bool use_iterator   = true;
+  static const bool Q_is_generated = false;
 
   static const bool is_row = false;
   static const bool is_col = false;
@@ -235,8 +235,8 @@ class SpProxy< SpOp<T1, spop_type> >
   typedef typename SpMat<eT>::const_iterator       const_iterator_type;
   typedef typename SpMat<eT>::const_row_iterator   const_row_iterator_type;
   
-  static const bool must_use_iterator  = false;
-  static const bool Q_created_by_proxy = true;
+  static const bool use_iterator   = false;
+  static const bool Q_is_generated = true;
   
   static const bool is_row = SpOp<T1, spop_type>::is_row;
   static const bool is_col = SpOp<T1, spop_type>::is_col;
@@ -288,8 +288,8 @@ class SpProxy< SpGlue<T1, T2, spglue_type> >
   typedef typename SpMat<eT>::const_iterator       const_iterator_type;
   typedef typename SpMat<eT>::const_row_iterator   const_row_iterator_type;
   
-  static const bool must_use_iterator  = false;
-  static const bool Q_created_by_proxy = true;
+  static const bool use_iterator   = false;
+  static const bool Q_is_generated = true;
   
   static const bool is_row = SpGlue<T1, T2, spglue_type>::is_row;
   static const bool is_col = SpGlue<T1, T2, spglue_type>::is_col;
@@ -341,8 +341,8 @@ class SpProxy< mtSpOp<out_eT, T1, spop_type> >
   typedef typename SpMat<out_eT>::const_iterator       const_iterator_type;
   typedef typename SpMat<out_eT>::const_row_iterator   const_row_iterator_type;
   
-  static const bool must_use_iterator  = false;
-  static const bool Q_created_by_proxy = true;
+  static const bool use_iterator   = false;
+  static const bool Q_is_generated = true;
   
   static const bool is_row = mtSpOp<out_eT, T1, spop_type>::is_row;
   static const bool is_col = mtSpOp<out_eT, T1, spop_type>::is_col;

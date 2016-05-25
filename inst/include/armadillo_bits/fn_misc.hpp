@@ -13,11 +13,8 @@
 
 
 
-//! \brief
-//! Generate a vector with 'num' elements.
-//! The values of the elements linearly increase from 'start' upto (and including) 'end'.
-
 template<typename out_type>
+arma_warn_unused
 inline
 typename
 enable_if2
@@ -82,6 +79,7 @@ linspace
 
 
 
+arma_warn_unused
 inline
 vec
 linspace(const double start, const double end, const uword num = 100u)
@@ -93,6 +91,7 @@ linspace(const double start, const double end, const uword num = 100u)
 
 
 template<typename out_type>
+arma_warn_unused
 inline
 typename
 enable_if2
@@ -128,6 +127,7 @@ logspace
 
 
 
+arma_warn_unused
 inline
 vec
 logspace(const double A, const double B, const uword N = 50u)
@@ -142,6 +142,7 @@ logspace(const double A, const double B, const uword N = 50u)
 // log_exp_add
 
 template<typename eT>
+arma_warn_unused
 inline
 typename arma_real_only<eT>::result
 log_add_exp(eT log_a, eT log_b)
@@ -167,6 +168,7 @@ log_add_exp(eT log_a, eT log_b)
 
 // for compatibility with earlier versions
 template<typename eT>
+arma_warn_unused
 inline
 typename arma_real_only<eT>::result
 log_add(eT log_a, eT log_b)
@@ -177,8 +179,8 @@ log_add(eT log_a, eT log_b)
 
 
 template<typename eT>
-arma_inline
 arma_warn_unused
+arma_inline
 bool
 is_finite(const eT x, const typename arma_scalar_only<eT>::result* junk = 0)
   {
@@ -190,8 +192,8 @@ is_finite(const eT x, const typename arma_scalar_only<eT>::result* junk = 0)
 
 
 template<typename T1>
-inline
 arma_warn_unused
+inline
 typename
 enable_if2
   <
@@ -216,7 +218,7 @@ is_finite(const T1& X)
     }
   
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     const typename Proxy<T1>::ea_type Pea = P.get_ea();
     
@@ -255,8 +257,8 @@ is_finite(const T1& X)
 
 
 template<typename T1>
-inline
 arma_warn_unused
+inline
 bool
 is_finite(const SpBase<typename T1::elem_type,T1>& X)
   {
@@ -288,8 +290,8 @@ is_finite(const SpBase<typename T1::elem_type,T1>& X)
 
 
 template<typename T1>
-inline
 arma_warn_unused
+inline
 bool
 is_finite(const BaseCube<typename T1::elem_type,T1>& X)
   {
@@ -346,6 +348,7 @@ swap(Cube<eT>& A, Cube<eT>& B)
 
 
 template<typename T1>
+arma_warn_unused
 arma_inline
 const Op<T1, op_orth>
 orth(const Base<typename T1::elem_type, T1>& X, const typename T1::pod_type tol = 0.0, const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0)
@@ -376,6 +379,7 @@ orth(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type, T1>& X
 
 
 template<typename T1>
+arma_warn_unused
 arma_inline
 const Op<T1, op_null>
 null(const Base<typename T1::elem_type, T1>& X, const typename T1::pod_type tol = 0.0, const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0)
@@ -405,6 +409,7 @@ null(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type, T1>& X
 
 
 
+arma_warn_unused
 inline
 uvec
 ind2sub(const SizeMat& s, const uword i)
@@ -423,6 +428,7 @@ ind2sub(const SizeMat& s, const uword i)
 
 
 
+arma_warn_unused
 inline
 uvec
 ind2sub(const SizeCube& s, const uword i)
@@ -449,6 +455,7 @@ ind2sub(const SizeCube& s, const uword i)
 
 
 
+arma_warn_unused
 arma_inline
 uword
 sub2ind(const SizeMat& s, const uword row, const uword col)
@@ -462,6 +469,7 @@ sub2ind(const SizeMat& s, const uword row, const uword col)
 
 
 
+arma_warn_unused
 arma_inline
 uword
 sub2ind(const SizeCube& s, const uword row, const uword col, const uword slice)

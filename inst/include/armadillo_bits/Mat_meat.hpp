@@ -923,9 +923,9 @@ Mat<eT>::init
   
   eT* out_mem = (*this).memptr();
   
-  const bool prefer_at_accessor = ( Proxy<T1>::prefer_at_accessor || Proxy<T2>::prefer_at_accessor );
+  const bool use_at = ( Proxy<T1>::use_at || Proxy<T2>::use_at );
   
-  if(prefer_at_accessor == false)
+  if(use_at == false)
     {
     typedef typename Proxy<T1>::ea_type ea_type1;
     typedef typename Proxy<T2>::ea_type ea_type2;
@@ -8790,7 +8790,7 @@ Mat_aux::set_real(Mat< std::complex<T> >& out, const Base<T,T1>& X)
   
   eT* out_mem = out.memptr();
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     typedef typename Proxy<T1>::ea_type ea_type;
     
@@ -8834,7 +8834,7 @@ Mat_aux::set_imag(Mat< std::complex<T> >& out, const Base<T,T1>& X)
   
   eT* out_mem = out.memptr();
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     typedef typename Proxy<T1>::ea_type ea_type;
     

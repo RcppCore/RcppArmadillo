@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2014 National ICT Australia (NICTA)
+// Copyright (C) 2011-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,7 @@
 
 
 template<typename T1>
+arma_warn_unused
 arma_inline
 typename enable_if2< is_cx<typename T1::elem_type>::no, const Op<T1, op_symmat> >::result
 symmatu(const Base<typename T1::elem_type,T1>& X, const bool do_conj = false)
@@ -26,6 +27,7 @@ symmatu(const Base<typename T1::elem_type,T1>& X, const bool do_conj = false)
 
 
 template<typename T1>
+arma_warn_unused
 arma_inline
 typename enable_if2< is_cx<typename T1::elem_type>::no, const Op<T1, op_symmat> >::result
 symmatl(const Base<typename T1::elem_type,T1>& X, const bool do_conj = false)
@@ -39,6 +41,7 @@ symmatl(const Base<typename T1::elem_type,T1>& X, const bool do_conj = false)
 
 
 template<typename T1>
+arma_warn_unused
 arma_inline
 typename enable_if2< is_cx<typename T1::elem_type>::yes, const Op<T1, op_symmat_cx> >::result
 symmatu(const Base<typename T1::elem_type,T1>& X, const bool do_conj = true)
@@ -51,6 +54,7 @@ symmatu(const Base<typename T1::elem_type,T1>& X, const bool do_conj = true)
 
 
 template<typename T1>
+arma_warn_unused
 arma_inline
 typename enable_if2< is_cx<typename T1::elem_type>::yes, const Op<T1, op_symmat_cx> >::result
 symmatl(const Base<typename T1::elem_type,T1>& X, const bool do_conj = true)

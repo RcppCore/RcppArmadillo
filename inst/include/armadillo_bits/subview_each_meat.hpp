@@ -67,14 +67,14 @@ subview_each_common<parent,mode>::check_size(const Mat<typename parent::elem_typ
       {
       if( (A.n_rows != P.n_rows) || (A.n_cols != 1) )
         {
-        arma_stop( incompat_size_string(A) );
+        arma_stop_logic_error( incompat_size_string(A) );
         }
       }
     else
       {
       if( (A.n_rows != 1) || (A.n_cols != P.n_cols) )
         {
-        arma_stop( incompat_size_string(A) );
+        arma_stop_logic_error( incompat_size_string(A) );
         }
       }
     }

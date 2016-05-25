@@ -348,7 +348,7 @@ op_min::apply_noalias(Cube<eT>& out, const Cube<eT>& X, const uword dim, const t
 
 
 template<typename eT>
-inline 
+inline
 eT
 op_min::direct_min(const eT* const X, const uword n_elem)
   {
@@ -422,12 +422,12 @@ op_min::direct_min(const eT* const X, const uword n_elem, uword& index_of_min_va
   index_of_min_val = best_index;
   
   return min_val;
-  }  
+  }
 
 
 
 template<typename eT>
-inline 
+inline
 eT
 op_min::direct_min(const Mat<eT>& X, const uword row)
   {
@@ -539,7 +539,7 @@ op_min::min(const Base<typename T1::elem_type,T1>& X)
   
   eT min_val = priv::most_pos<eT>();
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     typedef typename Proxy<T1>::ea_type ea_type;
     
@@ -637,7 +637,7 @@ op_min::min_with_index(const Proxy<T1>& P, uword& index_of_min_val)
   eT    best_val   = priv::most_pos<eT>();
   uword best_index = 0;
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     typedef typename Proxy<T1>::ea_type ea_type;
     
@@ -698,7 +698,7 @@ op_min::min_with_index(const Proxy<T1>& P, uword& index_of_min_val)
 
 
 template<typename T>
-inline 
+inline
 std::complex<T>
 op_min::direct_min(const std::complex<T>* const X, const uword n_elem)
   {
@@ -724,7 +724,7 @@ op_min::direct_min(const std::complex<T>* const X, const uword n_elem)
 
 
 template<typename T>
-inline 
+inline
 std::complex<T>
 op_min::direct_min(const std::complex<T>* const X, const uword n_elem, uword& index_of_min_val)
   {
@@ -872,7 +872,7 @@ op_min::min(const Base<typename T1::elem_type,T1>& X)
   
   T min_val = priv::most_pos<T>();
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     typedef typename Proxy<T1>::ea_type ea_type;
     
@@ -958,7 +958,7 @@ op_min::min_with_index(const Proxy<T1>& P, uword& index_of_min_val)
   
   T best_val = priv::most_pos<T>();
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     typedef typename Proxy<T1>::ea_type ea_type;
     

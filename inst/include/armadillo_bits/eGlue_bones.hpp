@@ -1,4 +1,4 @@
-// Copyright (C) 2010-2013 National ICT Australia (NICTA)
+// Copyright (C) 2010-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,9 +22,9 @@ class eGlue : public Base<typename T1::elem_type, eGlue<T1, T2, eglue_type> >
   typedef          Proxy<T1>                       proxy1_type;
   typedef          Proxy<T2>                       proxy2_type;
   
-  static const bool prefer_at_accessor = (Proxy<T1>::prefer_at_accessor || Proxy<T2>::prefer_at_accessor);
-  static const bool has_subview        = (Proxy<T1>::has_subview        || Proxy<T2>::has_subview       );
-  static const bool fake_mat           = (Proxy<T1>::fake_mat           || Proxy<T2>::fake_mat          );
+  static const bool use_at      = (Proxy<T1>::use_at      || Proxy<T2>::use_at     );
+  static const bool has_subview = (Proxy<T1>::has_subview || Proxy<T2>::has_subview);
+  static const bool fake_mat    = (Proxy<T1>::fake_mat    || Proxy<T2>::fake_mat   );
   
   static const bool is_col = (Proxy<T1>::is_col || Proxy<T2>::is_col);
   static const bool is_row = (Proxy<T1>::is_row || Proxy<T2>::is_row);

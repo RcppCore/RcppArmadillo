@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,7 +37,7 @@ class diagmat_proxy_default
   elem_type
   operator[](const uword i) const
     {
-    if(Proxy<T1>::prefer_at_accessor == false)
+    if(Proxy<T1>::use_at == false)
       {
       return P_is_vec ? P[i] : P.at(i,i);
       }
@@ -61,7 +61,7 @@ class diagmat_proxy_default
     {
     if(row == col)
       {
-      if(Proxy<T1>::prefer_at_accessor == false)
+      if(Proxy<T1>::use_at == false)
         {
         return (P_is_vec) ? P[row] : P.at(row,row);
         }

@@ -1,4 +1,4 @@
-// Copyright (C) 2015 National ICT Australia (NICTA)
+// Copyright (C) 2015-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,7 @@
 
 
 template<typename T1>
+arma_warn_unused
 inline
 const Op<T1,op_nonzeros>
 nonzeros(const Base<typename T1::elem_type,T1>& X)
@@ -25,6 +26,7 @@ nonzeros(const Base<typename T1::elem_type,T1>& X)
 
 
 template<typename T1>
+arma_warn_unused
 inline
 Col<typename T1::elem_type>
 nonzeros(const SpBase<typename T1::elem_type,T1>& X)

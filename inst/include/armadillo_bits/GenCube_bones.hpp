@@ -23,8 +23,8 @@ class GenCube
   typedef          eT                              elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  static const bool prefer_at_accessor = false;
-  static const bool is_simple          = (is_same_type<gen_type, gen_ones>::value) || (is_same_type<gen_type, gen_zeros>::value); 
+  static const bool use_at    = false;
+  static const bool is_simple = (is_same_type<gen_type, gen_ones>::value) || (is_same_type<gen_type, gen_zeros>::value); 
   
   arma_aligned const uword n_rows;
   arma_aligned const uword n_cols;

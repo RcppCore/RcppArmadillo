@@ -1,4 +1,4 @@
-// Copyright (C) 2010-2015 National ICT Australia (NICTA)
+// Copyright (C) 2010-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -227,7 +227,7 @@ subview_elem1<eT,T1>::inplace_op(const Base<eT,T2>& x)
   
   const bool is_alias = P.is_alias(m);
   
-  if( (is_alias == false) && (Proxy<T2>::prefer_at_accessor == false) )
+  if( (is_alias == false) && (Proxy<T2>::use_at == false) )
     {
     typename Proxy<T2>::ea_type X = P.get_ea();
     
@@ -261,7 +261,7 @@ subview_elem1<eT,T1>::inplace_op(const Base<eT,T2>& x)
     }
   else
     {
-    arma_extra_debug_print("subview_elem1::inplace_op(): aliasing or prefer_at_accessor detected");
+    arma_extra_debug_print("subview_elem1::inplace_op(): aliasing or use_at detected");
     
     const unwrap_check<typename Proxy<T2>::stored_type> tmp(P.Q, is_alias);
     const Mat<eT>& M = tmp.M;

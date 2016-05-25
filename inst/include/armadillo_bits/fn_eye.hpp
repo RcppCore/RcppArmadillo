@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,7 @@
 
 
 
+arma_warn_unused
 arma_inline
 const Gen<mat, gen_eye>
 eye(const uword n_rows, const uword n_cols)
@@ -24,6 +25,7 @@ eye(const uword n_rows, const uword n_cols)
 
 
 
+arma_warn_unused
 arma_inline
 const Gen<mat, gen_eye>
 eye(const SizeMat& s)
@@ -36,6 +38,7 @@ eye(const SizeMat& s)
 
 
 template<typename obj_type>
+arma_warn_unused
 arma_inline
 const Gen<obj_type, gen_eye>
 eye(const uword n_rows, const uword n_cols, const typename arma_Mat_Col_Row_only<obj_type>::result* junk = 0)
@@ -59,6 +62,7 @@ eye(const uword n_rows, const uword n_cols, const typename arma_Mat_Col_Row_only
 
 
 template<typename obj_type>
+arma_warn_unused
 arma_inline
 const Gen<obj_type, gen_eye>
 eye(const SizeMat& s, const typename arma_Mat_Col_Row_only<obj_type>::result* junk = 0)
@@ -72,6 +76,7 @@ eye(const SizeMat& s, const typename arma_Mat_Col_Row_only<obj_type>::result* ju
 
 
 template<typename obj_type>
+arma_warn_unused
 inline
 obj_type
 eye(const uword n_rows, const uword n_cols, const typename arma_SpMat_SpCol_SpRow_only<obj_type>::result* junk = NULL)
@@ -99,6 +104,7 @@ eye(const uword n_rows, const uword n_cols, const typename arma_SpMat_SpCol_SpRo
 
 
 template<typename obj_type>
+arma_warn_unused
 inline
 obj_type
 eye(const SizeMat& s, const typename arma_SpMat_SpCol_SpRow_only<obj_type>::result* junk = NULL)

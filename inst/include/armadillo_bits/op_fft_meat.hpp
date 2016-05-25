@@ -1,4 +1,4 @@
-// Copyright (C) 2013 National ICT Australia (NICTA)
+// Copyright (C) 2013-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -68,7 +68,7 @@ op_fft_real::apply( Mat< std::complex<typename T1::pod_type> >& out, const mtOp<
     
     const uword N = (std::min)(N_user, N_orig);
     
-    if(Proxy<T1>::prefer_at_accessor == false)
+    if(Proxy<T1>::use_at == false)
       {
       typename Proxy<T1>::ea_type X = P.get_ea();
       
@@ -320,7 +320,7 @@ op_fft_cx::copy_vec_proxy(typename Proxy<T1>::elem_type* dest, const Proxy<T1>& 
   {
   arma_extra_debug_sigprint();
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     typename Proxy<T1>::ea_type X = P.get_ea();
     

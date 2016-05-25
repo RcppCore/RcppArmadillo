@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2015 National ICT Australia (NICTA)
+// Copyright (C) 2012-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -79,7 +79,7 @@ spop_var::apply_noalias
     
     for(uword col = 0; col < p_n_cols; ++col)
       {
-      if(SpProxy<T1>::must_use_iterator)
+      if(SpProxy<T1>::use_iterator)
         {
         // We must use an iterator; we can't access memory directly.
         typename SpProxy<T1>::const_iterator_type it  = p.begin_col(col);

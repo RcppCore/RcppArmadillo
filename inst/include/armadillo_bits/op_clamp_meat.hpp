@@ -1,4 +1,4 @@
-// Copyright (C) 2014-2015 National ICT Australia (NICTA)
+// Copyright (C) 2014-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -57,7 +57,7 @@ op_clamp::apply_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, co
   
   eT* out_mem = out.memptr();
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     const uword N = P.get_n_elem();
     

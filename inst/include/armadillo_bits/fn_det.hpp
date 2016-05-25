@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,8 +14,8 @@
 
 
 template<typename T1>
-inline
 arma_warn_unused
+inline
 typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, typename T1::elem_type >::result
 det
   (
@@ -30,8 +30,8 @@ det
 
 
 template<typename T1>
-inline
 arma_warn_unused
+inline
 typename T1::elem_type
 det
   (
@@ -70,8 +70,8 @@ det
 
 
 template<typename T1>
-inline
 arma_warn_unused
+inline
 typename T1::elem_type
 det
   (
@@ -110,8 +110,8 @@ det
 
 //! determinant of inv(A), without doing the inverse operation
 template<typename T1>
-inline
 arma_warn_unused
+inline
 typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, typename T1::elem_type >::result
 det
   (
@@ -132,8 +132,8 @@ det
 
 
 template<typename T1>
-inline
 arma_warn_unused
+inline
 typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, typename T1::elem_type >::result
 det
   (
@@ -149,8 +149,8 @@ det
 
 
 template<typename T1>
-inline
 arma_warn_unused
+inline
 typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, typename T1::elem_type >::result
 det
   (
@@ -166,8 +166,8 @@ det
 
 
 template<typename T>
-arma_inline
 arma_warn_unused
+arma_inline
 const typename arma_scalar_only<T>::result &
 det(const T& x)
   {

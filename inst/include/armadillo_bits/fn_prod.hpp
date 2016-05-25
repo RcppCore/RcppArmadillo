@@ -1,4 +1,4 @@
-// Copyright (C) 2009-2012 National ICT Australia (NICTA)
+// Copyright (C) 2009-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,6 +21,7 @@
 //! NOTE: this function works differently than in Matlab/Octave.
 
 template<typename T1>
+arma_warn_unused
 arma_inline
 const Op<T1, op_prod>
 prod
@@ -41,6 +42,7 @@ prod
 
 
 template<typename T1>
+arma_warn_unused
 arma_inline
 const Op<T1, op_prod>
 prod
@@ -59,8 +61,8 @@ prod
 
 
 template<typename T1>
-inline
 arma_warn_unused
+inline
 typename T1::elem_type
 prod
   (
@@ -78,13 +80,9 @@ prod
 
 
 
-//! \brief
-//! Immediate 'product of all values' operation,
-//! invoked, for example, by: prod(prod(A))
-
 template<typename T1>
-inline
 arma_warn_unused
+inline
 typename T1::elem_type
 prod(const Op<T1, op_prod>& in)
   {
@@ -97,6 +95,7 @@ prod(const Op<T1, op_prod>& in)
 
 
 template<typename T1>
+arma_warn_unused
 inline
 const Op<Op<T1, op_prod>, op_prod>
 prod(const Op<T1, op_prod>& in, const uword dim)
@@ -109,8 +108,8 @@ prod(const Op<T1, op_prod>& in, const uword dim)
 
 
 template<typename T>
-arma_inline
 arma_warn_unused
+arma_inline
 const typename arma_scalar_only<T>::result &
 prod(const T& x)
   {

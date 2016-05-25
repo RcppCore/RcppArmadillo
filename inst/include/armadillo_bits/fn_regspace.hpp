@@ -200,6 +200,7 @@ regspace
 
 
 template<typename vec_type>
+arma_warn_unused
 inline
 typename
 enable_if2
@@ -229,6 +230,7 @@ regspace
 
 
 
+arma_warn_unused
 inline
 vec
 regspace(const double start, const double delta, const double end)
@@ -240,6 +242,7 @@ regspace(const double start, const double delta, const double end)
 
 
 
+arma_warn_unused
 inline
 vec
 regspace(const double start, const double end)

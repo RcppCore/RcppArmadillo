@@ -284,7 +284,7 @@ auxlib::inv_inplace_lapack(Mat<eT>& out)
     }
   #else
     {
-    arma_stop("inv(): use of ATLAS or LAPACK must be enabled");
+    arma_stop_logic_error("inv(): use of ATLAS or LAPACK must be enabled");
     return false;
     }
   #endif
@@ -333,7 +333,7 @@ auxlib::inv_tr(Mat<eT>& out, const Base<eT,T1>& X, const uword layout)
     arma_ignore(out);
     arma_ignore(X);
     arma_ignore(layout);
-    arma_stop("inv(): use of LAPACK must be enabled");
+    arma_stop_logic_error("inv(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -393,7 +393,7 @@ auxlib::inv_sym(Mat<eT>& out, const Base<eT,T1>& X, const uword layout)
     arma_ignore(out);
     arma_ignore(X);
     arma_ignore(layout);
-    arma_stop("inv(): use of LAPACK must be enabled");
+    arma_stop_logic_error("inv(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -438,7 +438,7 @@ auxlib::inv_sympd(Mat<eT>& out, const Base<eT,T1>& X)
     {
     arma_ignore(out);
     arma_ignore(X);
-    arma_stop("inv_sympd(): use of LAPACK must be enabled");
+    arma_stop_logic_error("inv_sympd(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -643,7 +643,7 @@ auxlib::det_lapack(const Mat<eT>& X, const bool make_copy)
     }
   #else
     {
-    arma_stop("det(): use of ATLAS or LAPACK must be enabled");
+    arma_stop_logic_error("det(): use of ATLAS or LAPACK must be enabled");
     return eT(0);
     }
   #endif
@@ -762,7 +762,7 @@ auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const 
     out_val  = eT(0);
     out_sign =  T(0);
     
-    arma_stop("log_det(): use of ATLAS or LAPACK must be enabled");
+    arma_stop_logic_error("log_det(): use of ATLAS or LAPACK must be enabled");
     
     return false;
     }
@@ -853,7 +853,7 @@ auxlib::lu(Mat<eT>& L, Mat<eT>& U, podarray<blas_int>& ipiv, const Base<eT,T1>& 
     }
   #else
     {
-    arma_stop("lu(): use of ATLAS or LAPACK must be enabled");
+    arma_stop_logic_error("lu(): use of ATLAS or LAPACK must be enabled");
     
     return false;
     }
@@ -1087,7 +1087,7 @@ auxlib::eig_gen
     arma_ignore(vecs);
     arma_ignore(vecs_on);
     arma_ignore(expr);
-    arma_stop("eig_gen(): use of LAPACK must be enabled");
+    arma_stop_logic_error("eig_gen(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -1160,7 +1160,7 @@ auxlib::eig_gen
     arma_ignore(vecs);
     arma_ignore(vecs_on);
     arma_ignore(expr);
-    arma_stop("eig_gen(): use of LAPACK must be enabled");
+    arma_stop_logic_error("eig_gen(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -1303,7 +1303,7 @@ auxlib::eig_pair
     arma_ignore(vecs_on);
     arma_ignore(A_expr);
     arma_ignore(B_expr);
-    arma_stop("eig_pair(): use of LAPACK must be enabled");
+    arma_stop_logic_error("eig_pair(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -1333,7 +1333,7 @@ auxlib::eig_pair
     arma_ignore(vecs_on);
     arma_ignore(A_expr);
     arma_ignore(B_expr);
-    arma_stop("eig_pair() for complex matrices not available due to crippled LAPACK");
+    arma_stop_logic_error("eig_pair() for complex matrices not available due to crippled LAPACK");
     return false;
     }
   #elif defined(ARMA_USE_LAPACK)
@@ -1415,7 +1415,7 @@ auxlib::eig_pair
     arma_ignore(vecs_on);
     arma_ignore(A_expr);
     arma_ignore(B_expr);
-    arma_stop("eig_pair(): use of LAPACK must be enabled");
+    arma_stop_logic_error("eig_pair(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -1465,7 +1465,7 @@ auxlib::eig_sym(Col<eT>& eigval, const Base<eT,T1>& X)
     {
     arma_ignore(eigval);
     arma_ignore(X);
-    arma_stop("eig_sym(): use of LAPACK must be enabled");
+    arma_stop_logic_error("eig_sym(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -1518,7 +1518,7 @@ auxlib::eig_sym(Col<T>& eigval, const Base<std::complex<T>,T1>& X)
     {
     arma_ignore(eigval);
     arma_ignore(X);
-    arma_stop("eig_sym(): use of LAPACK must be enabled");
+    arma_stop_logic_error("eig_sym(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -1570,7 +1570,7 @@ auxlib::eig_sym(Col<eT>& eigval, Mat<eT>& eigvec, const Base<eT,T1>& X)
     arma_ignore(eigval);
     arma_ignore(eigvec);
     arma_ignore(X);
-    arma_stop("eig_sym(): use of LAPACK must be enabled");
+    arma_stop_logic_error("eig_sym(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -1625,7 +1625,7 @@ auxlib::eig_sym(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Base<std::
     arma_ignore(eigval);
     arma_ignore(eigvec);
     arma_ignore(X);
-    arma_stop("eig_sym(): use of LAPACK must be enabled");
+    arma_stop_logic_error("eig_sym(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -1679,7 +1679,7 @@ auxlib::eig_sym_dc(Col<eT>& eigval, Mat<eT>& eigvec, const Base<eT,T1>& X)
     arma_ignore(eigval);
     arma_ignore(eigvec);
     arma_ignore(X);
-    arma_stop("eig_sym(): use of LAPACK must be enabled");
+    arma_stop_logic_error("eig_sym(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -1737,7 +1737,7 @@ auxlib::eig_sym_dc(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Base<st
     arma_ignore(eigval);
     arma_ignore(eigvec);
     arma_ignore(X);
-    arma_stop("eig_sym(): use of LAPACK must be enabled");
+    arma_stop_logic_error("eig_sym(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -1798,7 +1798,7 @@ auxlib::chol(Mat<eT>& out, const Base<eT,T1>& X, const uword layout)
     arma_ignore(X);
     arma_ignore(layout);
     
-    arma_stop("chol(): use of LAPACK must be enabled");
+    arma_stop_logic_error("chol(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -1891,7 +1891,7 @@ auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
     arma_ignore(Q);
     arma_ignore(R);
     arma_ignore(X);
-    arma_stop("qr(): use of LAPACK must be enabled");
+    arma_stop_logic_error("qr(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -2003,7 +2003,7 @@ auxlib::qr_econ(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
     arma_ignore(Q);
     arma_ignore(R);
     arma_ignore(X);
-    arma_stop("qr_econ(): use of LAPACK must be enabled");
+    arma_stop_logic_error("qr_econ(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -2076,7 +2076,7 @@ auxlib::svd(Col<eT>& S, const Base<eT,T1>& X, uword& X_n_rows, uword& X_n_cols)
     arma_ignore(X);
     arma_ignore(X_n_rows);
     arma_ignore(X_n_cols);
-    arma_stop("svd(): use of LAPACK must be enabled");
+    arma_stop_logic_error("svd(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -2155,7 +2155,7 @@ auxlib::svd(Col<T>& S, const Base<std::complex<T>, T1>& X, uword& X_n_rows, uwor
     arma_ignore(X_n_rows);
     arma_ignore(X_n_cols);
 
-    arma_stop("svd(): use of LAPACK must be enabled");
+    arma_stop_logic_error("svd(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -2256,7 +2256,7 @@ auxlib::svd(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
     arma_ignore(S);
     arma_ignore(V);
     arma_ignore(X);
-    arma_stop("svd(): use of LAPACK must be enabled");
+    arma_stop_logic_error("svd(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -2335,7 +2335,7 @@ auxlib::svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, con
     arma_ignore(S);
     arma_ignore(V);
     arma_ignore(X);
-    arma_stop("svd(): use of LAPACK must be enabled");
+    arma_stop_logic_error("svd(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -2449,7 +2449,7 @@ auxlib::svd_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X, const
     arma_ignore(V);
     arma_ignore(X);
     arma_ignore(mode);
-    arma_stop("svd(): use of LAPACK must be enabled");
+    arma_stop_logic_error("svd(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -2565,7 +2565,7 @@ auxlib::svd_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V
     arma_ignore(V);
     arma_ignore(X);
     arma_ignore(mode);
-    arma_stop("svd(): use of LAPACK must be enabled");
+    arma_stop_logic_error("svd(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -2625,7 +2625,7 @@ auxlib::svd_dc(Col<eT>& S, const Base<eT,T1>& X, uword& X_n_rows, uword& X_n_col
     arma_ignore(X);
     arma_ignore(X_n_rows);
     arma_ignore(X_n_cols);
-    arma_stop("svd(): use of LAPACK must be enabled");
+    arma_stop_logic_error("svd(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -2694,7 +2694,7 @@ auxlib::svd_dc(Col<T>& S, const Base<std::complex<T>, T1>& X, uword& X_n_rows, u
     arma_ignore(X);
     arma_ignore(X_n_rows);
     arma_ignore(X_n_cols);
-    arma_stop("svd(): use of LAPACK must be enabled");
+    arma_stop_logic_error("svd(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -2784,7 +2784,7 @@ auxlib::svd_dc(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
     arma_ignore(S);
     arma_ignore(V);
     arma_ignore(X);
-    arma_stop("svd(): use of LAPACK must be enabled");
+    arma_stop_logic_error("svd(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -2858,7 +2858,7 @@ auxlib::svd_dc(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, 
     arma_ignore(S);
     arma_ignore(V);
     arma_ignore(X);
-    arma_stop("svd(): use of LAPACK must be enabled");
+    arma_stop_logic_error("svd(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -2923,7 +2923,7 @@ auxlib::svd_dc_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
     arma_ignore(S);
     arma_ignore(V);
     arma_ignore(X);
-    arma_stop("svd(): use of LAPACK must be enabled");
+    arma_stop_logic_error("svd(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -2998,7 +2998,7 @@ auxlib::svd_dc_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >
     arma_ignore(S);
     arma_ignore(V);
     arma_ignore(X);
-    arma_stop("svd(): use of LAPACK must be enabled");
+    arma_stop_logic_error("svd(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -3102,7 +3102,7 @@ auxlib::solve_square_fast(Mat<typename T1::elem_type>& out, Mat<typename T1::ele
     }
   #else
     {
-    arma_stop("solve(): use of ATLAS or LAPACK must be enabled");
+    arma_stop_logic_error("solve(): use of ATLAS or LAPACK must be enabled");
     return false;
     }
   #endif
@@ -3194,7 +3194,7 @@ auxlib::solve_square_refine(Mat<typename T1::pod_type>& out, typename T1::pod_ty
     arma_ignore(out_rcond);
     arma_ignore(A);
     arma_ignore(B_expr);
-    arma_stop("solve(): use of LAPACK must be enabled");
+    arma_stop_logic_error("solve(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -3296,7 +3296,7 @@ auxlib::solve_square_refine(Mat< std::complex<typename T1::pod_type> >& out, typ
     arma_ignore(out_rcond);
     arma_ignore(A);
     arma_ignore(B_expr);
-    arma_stop("solve(): use of LAPACK must be enabled");
+    arma_stop_logic_error("solve(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -3374,7 +3374,7 @@ auxlib::solve_approx_fast(Mat<typename T1::elem_type>& out, Mat<typename T1::ele
     arma_ignore(out);
     arma_ignore(A);
     arma_ignore(B_expr);
-    arma_stop("solve(): use of LAPACK must be enabled");
+    arma_stop_logic_error("solve(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -3486,7 +3486,7 @@ auxlib::solve_approx_svd(Mat<typename T1::pod_type>& out, Mat<typename T1::pod_t
     arma_ignore(out);
     arma_ignore(A);
     arma_ignore(B_expr);
-    arma_stop("solve(): use of LAPACK must be enabled");
+    arma_stop_logic_error("solve(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -3612,7 +3612,7 @@ auxlib::solve_approx_svd(Mat< std::complex<typename T1::pod_type> >& out, Mat< s
     arma_ignore(out);
     arma_ignore(A);
     arma_ignore(B_expr);
-    arma_stop("solve(): use of LAPACK must be enabled");
+    arma_stop_logic_error("solve(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -3662,7 +3662,7 @@ auxlib::solve_tri(Mat<typename T1::elem_type>& out, const Mat<typename T1::elem_
     arma_ignore(A);
     arma_ignore(B_expr);
     arma_ignore(layout);
-    arma_stop("solve(): use of LAPACK must be enabled");
+    arma_stop_logic_error("solve(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -3724,7 +3724,7 @@ auxlib::schur(Mat<eT>& U, Mat<eT>& S, const Base<eT,T1>& X, const bool calc_U)
     arma_ignore(U);
     arma_ignore(S);
     arma_ignore(X);
-    arma_stop("schur(): use of LAPACK must be enabled");
+    arma_stop_logic_error("schur(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -3760,7 +3760,7 @@ auxlib::schur(Mat<std::complex<T> >& U, Mat<std::complex<T> >& S, const bool cal
     arma_ignore(U);
     arma_ignore(S);
     arma_ignore(calc_U);
-    arma_stop("schur() for complex matrices not available due to crippled LAPACK");
+    arma_stop_logic_error("schur() for complex matrices not available due to crippled LAPACK");
     return false;
     }
   #elif defined(ARMA_USE_LAPACK)
@@ -3804,7 +3804,7 @@ auxlib::schur(Mat<std::complex<T> >& U, Mat<std::complex<T> >& S, const bool cal
     arma_ignore(U);
     arma_ignore(S);
     arma_ignore(calc_U);
-    arma_stop("schur(): use of LAPACK must be enabled");
+    arma_stop_logic_error("schur(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -3871,7 +3871,7 @@ auxlib::syl(Mat<eT>& X, const Mat<eT>& A, const Mat<eT>& B, const Mat<eT>& C)
     arma_ignore(A);
     arma_ignore(B);
     arma_ignore(C);
-    arma_stop("syl(): use of LAPACK must be enabled");
+    arma_stop_logic_error("syl(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -3952,7 +3952,7 @@ auxlib::qz(Mat<T>& A, Mat<T>& B, Mat<T>& vsl, Mat<T>& vsr, const Base<T,T1>& X_e
     arma_ignore(vsr);
     arma_ignore(X_expr);
     arma_ignore(Y_expr);
-    arma_stop("qz(): use of LAPACK must be enabled");
+    arma_stop_logic_error("qz(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -3978,7 +3978,7 @@ auxlib::qz(Mat< std::complex<T> >& A, Mat< std::complex<T> >& B, Mat< std::compl
     arma_ignore(vsr);
     arma_ignore(X_expr);
     arma_ignore(Y_expr);
-    arma_stop("qz() for complex matrices not available due to crippled LAPACK");
+    arma_stop_logic_error("qz() for complex matrices not available due to crippled LAPACK");
     return false;
     }
   #elif defined(ARMA_USE_LAPACK)
@@ -4046,7 +4046,7 @@ auxlib::qz(Mat< std::complex<T> >& A, Mat< std::complex<T> >& B, Mat< std::compl
     arma_ignore(vsr);
     arma_ignore(X_expr);
     arma_ignore(Y_expr);
-    arma_stop("qz(): use of LAPACK must be enabled");
+    arma_stop_logic_error("qz(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -4100,7 +4100,7 @@ auxlib::rcond(const Base<typename T1::pod_type,T1>& A_expr)
   #else
     {
     arma_ignore(A_expr);
-    arma_stop("rcond(): use of LAPACK must be enabled");
+    arma_stop_logic_error("rcond(): use of LAPACK must be enabled");
     }
   #endif
   
@@ -4157,7 +4157,7 @@ auxlib::rcond(const Base<std::complex<typename T1::pod_type>,T1>& A_expr)
   #else
     {
     arma_ignore(A_expr);
-    arma_stop("rcond(): use of LAPACK must be enabled");
+    arma_stop_logic_error("rcond(): use of LAPACK must be enabled");
     }
   #endif
   

@@ -257,7 +257,7 @@ sp_auxlib::eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1
     arma_ignore(form_str);
     arma_ignore(default_tol);
     
-    arma_stop("eigs_sym(): use of ARPACK must be enabled");
+    arma_stop_logic_error("eigs_sym(): use of ARPACK must be enabled");
     return false;
     }
   #endif
@@ -544,7 +544,7 @@ sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
     arma_ignore(form_str);
     arma_ignore(default_tol);
     
-    arma_stop("eigs_gen(): use of ARPACK must be enabled");
+    arma_stop_logic_error("eigs_gen(): use of ARPACK must be enabled");
     return false;
     }
   #endif
@@ -658,7 +658,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     arma_ignore(form_str);
     arma_ignore(default_tol);
     
-    arma_stop("eigs_gen(): use of ARPACK must be enabled for decomposition of complex matrices");
+    arma_stop_logic_error("eigs_gen(): use of ARPACK must be enabled for decomposition of complex matrices");
     return false;
     }
   #endif
@@ -687,13 +687,13 @@ sp_auxlib::spsolve_simple(Mat<typename T1::elem_type>& X, const SpBase<typename 
     
     if(A.n_rows > A.n_cols)
       {
-      arma_stop("spsolve(): solving over-determined systems currently not supported");
+      arma_stop_logic_error("spsolve(): solving over-determined systems currently not supported");
       X.reset();
       return false;
       }
     else if(A.n_rows < A.n_cols)
       {
-      arma_stop("spsolve(): solving under-determined systems currently not supported");
+      arma_stop_logic_error("spsolve(): solving under-determined systems currently not supported");
       X.reset();
       return false;
       }
@@ -796,7 +796,7 @@ sp_auxlib::spsolve_simple(Mat<typename T1::elem_type>& X, const SpBase<typename 
     arma_ignore(A_expr);
     arma_ignore(B_expr);
     arma_ignore(user_opts);
-    arma_stop("spsolve(): use of SuperLU must be enabled");
+    arma_stop_logic_error("spsolve(): use of SuperLU must be enabled");
     return false;
     }
   #endif
@@ -833,13 +833,13 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     
     if(A.n_rows > A.n_cols)
       {
-      arma_stop("spsolve(): solving over-determined systems currently not supported");
+      arma_stop_logic_error("spsolve(): solving over-determined systems currently not supported");
       X.reset();
       return false;
       }
     else if(A.n_rows < A.n_cols)
       {
-      arma_stop("spsolve(): solving under-determined systems currently not supported");
+      arma_stop_logic_error("spsolve(): solving under-determined systems currently not supported");
       X.reset();
       return false;
       }
@@ -990,7 +990,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     arma_ignore(A_expr);
     arma_ignore(B_expr);
     arma_ignore(user_opts);
-    arma_stop("spsolve(): use of SuperLU must be enabled");
+    arma_stop_logic_error("spsolve(): use of SuperLU must be enabled");
     return false;
     }
   #endif

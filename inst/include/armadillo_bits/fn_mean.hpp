@@ -14,6 +14,7 @@
 
 
 template<typename T1>
+arma_warn_unused
 arma_inline
 const Op<T1, op_mean>
 mean
@@ -34,6 +35,7 @@ mean
 
 
 template<typename T1>
+arma_warn_unused
 arma_inline
 const Op<T1, op_mean>
 mean
@@ -52,8 +54,8 @@ mean
 
 
 template<typename T1>
-inline
 arma_warn_unused
+inline
 typename T1::elem_type
 mean
   (
@@ -71,12 +73,9 @@ mean
 
 
 
-//! \brief
-//! Immediate 'find mean value' operation,
-//! invoked, for example, by: mean(mean(A))
 template<typename T1>
-inline
 arma_warn_unused
+inline
 typename T1::elem_type
 mean(const Op<T1, op_mean>& in)
   {
@@ -89,6 +88,7 @@ mean(const Op<T1, op_mean>& in)
 
 
 template<typename T1>
+arma_warn_unused
 arma_inline
 const Op< Op<T1, op_mean>, op_mean>
 mean(const Op<T1, op_mean>& in, const uword dim)
@@ -101,8 +101,8 @@ mean(const Op<T1, op_mean>& in, const uword dim)
 
 
 template<typename T>
-arma_inline
 arma_warn_unused
+arma_inline
 const typename arma_scalar_only<T>::result &
 mean(const T& x)
   {
@@ -112,6 +112,7 @@ mean(const T& x)
 
 
 template<typename T1>
+arma_warn_unused
 arma_inline
 const OpCube<T1, op_mean>
 mean
@@ -128,8 +129,8 @@ mean
 
 
 template<typename T1>
-inline
 arma_warn_unused
+inline
 const SpOp<T1, spop_mean>
 mean
   (
@@ -150,8 +151,8 @@ mean
 
 
 template<typename T1>
-inline
 arma_warn_unused
+inline
 const SpOp<T1, spop_mean>
 mean
   (
@@ -169,8 +170,8 @@ mean
 
 
 template<typename T1>
-inline
 arma_warn_unused
+inline
 typename T1::elem_type
 mean
   (
@@ -190,8 +191,8 @@ mean
 
 
 template<typename T1>
-inline
 arma_warn_unused
+inline
 typename T1::elem_type
 mean(const SpOp<T1, spop_mean>& in)
   {

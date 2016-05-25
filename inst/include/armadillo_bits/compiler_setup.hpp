@@ -31,12 +31,6 @@
 #define arma_noinline
 #define arma_ignore(variable)  ((void)(variable))
 
-// arma_pure and arma_const kept only for compatibility with old code
-#undef  arma_pure
-#define arma_pure
-#undef  arma_const
-#define arma_const
-
 #undef arma_fortran_noprefix
 #undef arma_fortran_prefix
 
@@ -64,14 +58,6 @@
 
 #undef  ARMA_INCFILE_WRAP
 #define ARMA_INCFILE_WRAP(x) <x>
-
-
-#if defined(__CYGWIN__)
-  #if defined(ARMA_USE_CXX11)
-    #undef  ARMA_PRINT_CXX11_WARNING
-    #define ARMA_PRINT_CXX11_WARNING
-  #endif
-#endif
 
 
 #if defined(ARMA_USE_CXX11)
@@ -175,7 +161,7 @@
   
   #if (ARMA_GCC_VERSION < 40600)
     #pragma message ("WARNING: this compiler is OUTDATED and has INCOMPLETE support for the C++ standard;")
-    #pragma message ("WARNING: if something breaks, you get to keep all the pieces")
+    #pragma message ("WARNING: if something breaks, you get to keep all the pieces.")
   #endif
   
   #if ( (ARMA_GCC_VERSION >= 40700) && (ARMA_GCC_VERSION <= 40701) )
@@ -185,6 +171,8 @@
   
   #define ARMA_GOOD_COMPILER
   
+  #undef  arma_hot
+  #undef  arma_cold
   #undef  arma_aligned
   #undef  arma_align_mem
   #undef  arma_warn_unused
@@ -193,6 +181,8 @@
   #undef  arma_inline
   #undef  arma_noinline
   
+  #define arma_hot                __attribute__((__hot__))
+  #define arma_cold               __attribute__((__cold__))
   #define arma_aligned            __attribute__((__aligned__))
   #define arma_align_mem          __attribute__((__aligned__(16)))
   #define arma_warn_unused        __attribute__((__warn_unused_result__))
@@ -211,18 +201,10 @@
     #endif
   #endif
   
-  #if !defined(ARMA_USE_CXX11) && !defined(__GXX_EXPERIMENTAL_CXX0X__)
+  #if !defined(ARMA_USE_CXX11) && !defined(__GXX_EXPERIMENTAL_CXX0X__) && (__cplusplus < 201103L) 
     #if defined(_GLIBCXX_USE_C99_MATH_TR1) && defined(_GLIBCXX_USE_C99_COMPLEX_TR1)
       #define ARMA_HAVE_TR1
     #endif
-  #endif
-  
-  #if (ARMA_GCC_VERSION >= 40300)
-    #undef  arma_hot
-    #undef  arma_cold
-    
-    #define arma_hot  __attribute__((__hot__))
-    #define arma_cold __attribute__((__cold__))
   #endif
   
   #if (ARMA_GCC_VERSION >= 40700)
@@ -236,7 +218,7 @@
     #define ARMA_SIMPLE_LOOPS
   #endif
   
-  #if (defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE >= 200112L))
+  #if !defined(ARMA_USE_CXX11) && (defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE >= 200112L))
     #define ARMA_HAVE_SNPRINTF
     #define ARMA_HAVE_ISFINITE
     #define ARMA_HAVE_LOG1P
@@ -319,7 +301,7 @@
     // TODO: check the status of support for "extern thread_local" in clang shipped with Mac OS X
   #endif
   
-  #if (defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE >= 200112L))
+  #if !defined(ARMA_USE_CXX11) && (defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE >= 200112L))
     #define ARMA_HAVE_SNPRINTF
     #define ARMA_HAVE_ISFINITE
     #define ARMA_HAVE_LOG1P
@@ -429,13 +411,20 @@
 #endif
 
 
+#if defined(ARMA_USE_CXX11) && defined(__CYGWIN__)
+  #pragma message ("WARNING: Cygwin may have incomplete support for C++11 features.")
+#endif
+
+
+#if defined(ARMA_USE_CXX11) && (__cplusplus < 201103L)
+  #undef  ARMA_PRINT_CXX11_WARNING
+  #define ARMA_PRINT_CXX11_WARNING
+#endif
+
+
 #if defined(ARMA_PRINT_CXX11_WARNING)
-  #if defined(__CYGWIN__)
-    #pragma message ("WARNING: Cygwin may have incomplete support for C++11 features;")
-  #else
-    #pragma message ("WARNING: compiler is in C++11 mode, but it has INCOMPLETE support for C++11 features;")
-  #endif
-  
+  #pragma message ("WARNING: use of C++11 features has been enabled,")
+  #pragma message ("WARNING: but this compiler has INCOMPLETE support for C++11;")
   #pragma message ("WARNING: if something breaks, you get to keep all the pieces.")
   #pragma message ("WARNING: to forcefully prevent Armadillo from using C++11 features,")
   #pragma message ("WARNING: #define ARMA_DONT_USE_CXX11 before #include <armadillo>")

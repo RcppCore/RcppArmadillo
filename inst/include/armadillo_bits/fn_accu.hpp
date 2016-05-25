@@ -132,8 +132,8 @@ accu_proxy_at(const Proxy<T1>& P)
 
 //! accumulate the elements of a matrix
 template<typename T1>
-arma_hot
 arma_warn_unused
+arma_hot
 inline
 typename enable_if2< is_arma_type<T1>::value, typename T1::elem_type >::result
 accu(const T1& X)
@@ -144,7 +144,7 @@ accu(const T1& X)
   
   const bool have_direct_mem = (is_Mat<typename Proxy<T1>::stored_type>::value) || (is_subview_col<typename Proxy<T1>::stored_type>::value);
   
-  return (Proxy<T1>::prefer_at_accessor) ? accu_proxy_at(P) : (have_direct_mem ? accu_proxy_mat(P) : accu_proxy_linear(P));
+  return (Proxy<T1>::use_at) ? accu_proxy_at(P) : (have_direct_mem ? accu_proxy_mat(P) : accu_proxy_linear(P));
   }
 
 
@@ -176,7 +176,7 @@ accu(const eGlue<T1,T2,eglue_schur>& expr)
   
   const Proxy<expr_type> P(expr);
   
-  return (Proxy<expr_type>::prefer_at_accessor) ? accu_proxy_at(P) : accu_proxy_linear(P);
+  return (Proxy<expr_type>::use_at) ? accu_proxy_at(P) : accu_proxy_linear(P);
   }
 
 
@@ -198,7 +198,7 @@ accu(const mtOp<uword,T1,op_rel_noteq>& X)
   
   uword n_nonzero = 0;
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     typedef typename Proxy<T1>::ea_type ea_type;
     
@@ -253,7 +253,7 @@ accu(const mtOp<uword,T1,op_rel_eq>& X)
   
   uword n_nonzero = 0;
   
-  if(Proxy<T1>::prefer_at_accessor == false)
+  if(Proxy<T1>::use_at == false)
     {
     typedef typename Proxy<T1>::ea_type ea_type;
     
@@ -294,8 +294,8 @@ accu(const mtOp<uword,T1,op_rel_eq>& X)
 
 //! accumulate the elements of a subview (submatrix)
 template<typename eT>
-arma_hot
 arma_warn_unused
+arma_hot
 inline
 eT
 accu(const subview<eT>& X)
@@ -336,8 +336,8 @@ accu(const subview<eT>& X)
 
 
 template<typename eT>
-arma_hot
 arma_warn_unused
+arma_hot
 inline
 eT
 accu(const subview_col<eT>& X)
@@ -360,7 +360,7 @@ accu_cube_proxy(const ProxyCube<T1>& P)
   typedef typename T1::elem_type          eT;
   typedef typename ProxyCube<T1>::ea_type ea_type;
   
-  if(ProxyCube<T1>::prefer_at_accessor == false)
+  if(ProxyCube<T1>::use_at == false)
     {
           ea_type Pea    = P.get_ea();
     const uword   n_elem = P.get_n_elem();
@@ -416,8 +416,8 @@ accu_cube_proxy(const ProxyCube<T1>& P)
 
 //! accumulate the elements of a cube
 template<typename T1>
-arma_hot
 arma_warn_unused
+arma_hot
 inline
 typename T1::elem_type
 accu(const BaseCube<typename T1::elem_type,T1>& X)
@@ -480,8 +480,8 @@ accu(const T& x)
 
 //! accumulate values in a sparse object
 template<typename T1>
-arma_hot
 arma_warn_unused
+arma_hot
 inline
 typename enable_if2<is_arma_sparse_type<T1>::value, typename T1::elem_type>::result
 accu(const T1& x)
@@ -492,7 +492,7 @@ accu(const T1& x)
   
   const SpProxy<T1> p(x);
   
-  if(SpProxy<T1>::must_use_iterator == false)
+  if(SpProxy<T1>::use_iterator == false)
     {
     // direct counting
     return arrayops::accumulate(p.get_values(), p.get_n_nonzero());

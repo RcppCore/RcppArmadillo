@@ -1,4 +1,4 @@
-// Copyright (C) 2009-2010 National ICT Australia (NICTA)
+// Copyright (C) 2009-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,6 +15,7 @@
 
 
 template<typename T1>
+arma_warn_unused
 inline
 const Op<T1, op_cor>
 cor(const Base<typename T1::elem_type,T1>& X, const uword norm_type = 0)
@@ -29,6 +30,7 @@ cor(const Base<typename T1::elem_type,T1>& X, const uword norm_type = 0)
 
 
 template<typename T1, typename T2>
+arma_warn_unused
 inline
 const Glue<T1,T2,glue_cor>
 cor(const Base<typename T1::elem_type,T1>& A, const Base<typename T1::elem_type,T2>& B, const uword norm_type = 0)
