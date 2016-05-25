@@ -3,10 +3,13 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.7.100.0.0 (2016-05-16)}{
+\section{Changes in RcppArmadillo version 0.7.100.3.0 (2016-05-25)}{
   \itemize{
-    \item Upgraded to Armadillo test release 7.100.0 
+    \item Upgraded to Armadillo test release 7.100.3 
     \itemize{
+      \item added \code{erf()}, \code{erfc()}, \code{lgamma()}
+      \item added \code{.head_slices()} and \code{.tail_slices()} to
+      subcube views 
       \item \code{spsolve()} now requires SuperLU 5.2
       \item \code{eigs_sym()}, \code{eigs_gen()} and \code{svds()} now
       use a built-in reimplementation of ARPACK for real (non-complex)
@@ -23,7 +26,8 @@
     \itemize{
       \item fix for handling empty matrices by \code{kron()}
       \item fix for clang warning in advanced matrix constructors
-      \item fix for false deprecated warning in \code{trunc_log()} and \code{trunc_exp()}
+      \item fix for false deprecated warning in \code{trunc_log()} and
+      \code{trunc_exp()} 
       \item fix for gcc-6.1 warning about misleading indentation
       \item corrected documentation for the \code{solve()} function
     }
