@@ -14,10 +14,6 @@ AC_PREREQ(2.61)
 ## Process this file with autoconf to produce a configure script.
 AC_INIT(RcppArmadillo, m4_esyscmd_s([awk -e '/^Version:/ {print $2}' DESCRIPTION]))
 
-## We are using C++
-AC_LANG(C++)
-AC_REQUIRE_CPP
-
 ## Set R_HOME, respecting an environment variable if one is set 
 : ${R_HOME=$(R RHOME)}
 if test -z "${R_HOME}"; then
@@ -26,6 +22,10 @@ fi
 ## Use R to set CXX and CXXFLAGS
 CXX=$(${R_HOME}/bin/R CMD config CXX)
 CXXFLAGS=$("${R_HOME}/bin/R" CMD config CXXFLAGS)
+
+## We are using C++
+AC_LANG(C++)
+AC_REQUIRE_CPP
 
 ## Check the C++ compiler using the CXX value set
 AC_PROG_CXX

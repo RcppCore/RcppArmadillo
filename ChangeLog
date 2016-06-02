@@ -1,6 +1,11 @@
-2016-05-30  Dirk Eddelbuettel  <edd@debian.org>
+2016-06-02  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.7.100.3.1
+	* configure.ac: Move R-based CXX init before first autoconf commands
+	* configure: Ditto
+
+2016-05-30  Dirk Eddelbuettel  <edd@debian.org>
+
 	* configure.ac: Refined test for minimal g++ version to first set CXX
 	based on the existing R configuratin
 	* configure: Ditto
