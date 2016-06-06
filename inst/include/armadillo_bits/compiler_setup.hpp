@@ -366,6 +366,7 @@
   #pragma warning(disable: 4710)  // function not inlined
   #pragma warning(disable: 4711)  // call was inlined
   #pragma warning(disable: 4714)  // __forceinline can't be inlined
+  #pragma warning(disable: 4800)  // value forced to bool
   
   // #if (_MANAGED == 1) || (_M_CEE == 1)
   //   

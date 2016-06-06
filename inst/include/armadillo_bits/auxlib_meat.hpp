@@ -249,7 +249,7 @@ auxlib::inv_inplace_lapack(Mat<eT>& out)
     {
     arma_debug_assert_blas_size(out);
     
-    blas_int n_rows = out.n_rows;
+    blas_int n_rows = blas_int(out.n_rows);
     blas_int lwork  = (std::max)(blas_int(podarray_prealloc_n_elem::val), n_rows);
     blas_int info   = 0;
     
@@ -1765,7 +1765,7 @@ auxlib::chol(Mat<eT>& out, const Base<eT,T1>& X, const uword layout)
     const uword out_n_rows = out.n_rows;
     
     char      uplo = (layout == 0) ? 'U' : 'L';
-    blas_int  n    = out_n_rows;
+    blas_int  n    = blas_int(out_n_rows);
     blas_int  info = 0;
     
     arma_extra_debug_print("lapack::potrf()");

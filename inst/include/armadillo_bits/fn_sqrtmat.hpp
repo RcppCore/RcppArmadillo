@@ -46,7 +46,14 @@ sqrtmat(Mat< std::complex<typename T1::elem_type> >& Y, const Base<typename T1::
   {
   arma_extra_debug_sigprint();
   
-  return op_sqrtmat::apply_direct(Y, X.get_ref());
+  const bool status = op_sqrtmat::apply_direct(Y, X.get_ref());
+  
+  if(status == false)
+    {
+    arma_debug_warn("sqrtmat(): given matrix seems singular; may not have a square root");
+    }
+  
+  return status;
   }
 
 
@@ -58,7 +65,14 @@ sqrtmat(Mat<typename T1::elem_type>& Y, const Base<typename T1::elem_type,T1>& X
   {
   arma_extra_debug_sigprint();
   
-  return op_sqrtmat_cx::apply_direct(Y, X.get_ref());
+  const bool status = op_sqrtmat_cx::apply_direct(Y, X.get_ref());
+  
+  if(status == false)
+    {
+    arma_debug_warn("sqrtmat(): given matrix seems singular; may not have a square root");
+    }
+  
+  return status;
   }
 
 

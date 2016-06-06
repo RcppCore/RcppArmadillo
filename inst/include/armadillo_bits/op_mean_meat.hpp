@@ -648,6 +648,18 @@ op_mean::mean_all_robust(const diagview<eT>& X)
 template<typename T1>
 inline
 typename T1::elem_type 
+op_mean::mean_all(const Op<T1,op_vectorise_col>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  return op_mean::mean_all(X.m);
+  }
+
+
+
+template<typename T1>
+inline
+typename T1::elem_type 
 op_mean::mean_all(const Base<typename T1::elem_type, T1>& X)
   {
   arma_extra_debug_sigprint();

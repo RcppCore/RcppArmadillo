@@ -30,8 +30,8 @@ op_logmat::apply(Mat< std::complex<typename T1::elem_type> >& out, const mtOp<st
   
   if(status == false)
     {
-    arma_debug_check(true, "logmat(): transformation failed");
     out.reset();
+    arma_stop_runtime_error("logmat(): transformation failed");
     }
   }
 
@@ -130,8 +130,8 @@ op_logmat_cx::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_logmat_cx>&
   
   if(status == false)
     {
-    arma_debug_check(true, "logmat(): transformation failed");
     out.reset();
+    arma_stop_runtime_error("logmat(): transformation failed");
     }
   }
 
@@ -235,7 +235,7 @@ op_logmat_cx::apply_common(Mat< std::complex<T> >& out, Mat< std::complex<T> >& 
   
   const bool schur_ok = auxlib::schur(U,S);
   
-  if(schur_ok == false)  { arma_debug_warn("logmat(): schur decomposition failed"); return false; }
+  if(schur_ok == false)  { arma_extra_debug_print("logmat(): schur decomposition failed"); return false; }
   
 //double theta[] = { 1.10e-5, 1.82e-3, 1.62e-2,               5.39e-2,               1.14e-1,               1.87e-1,               2.64e-1              };
   double theta[] = { 0.0,     0.0,     1.6206284795015624e-2, 5.3873532631381171e-2, 1.1352802267628681e-1, 1.8662860613541288e-1, 2.642960831111435e-1 };
@@ -268,9 +268,9 @@ op_logmat_cx::apply_common(Mat< std::complex<T> >& out, Mat< std::complex<T> >& 
       if( ((j1 - j2) <= 1) || (p == 2) )  { m = j1; break; }
       }
     
-    const bool sqrtmat_ok = sqrtmat(S,S);
+    const bool sqrtmat_ok = op_sqrtmat_cx::apply_direct(S,S);
     
-    if(sqrtmat_ok == false)  { arma_debug_warn("logmat(): sqrtmat() failed"); return false; }
+    if(sqrtmat_ok == false)  { arma_extra_debug_print("logmat(): sqrtmat() failed"); return false; }
     
     iter++;
     }
@@ -302,6 +302,8 @@ op_logmat_cx::helper(Mat<eT>& A, const uword m)
   {
   arma_extra_debug_sigprint();
   
+  if(A.is_finite() == false)  { return false; }
+  
   const vec indices = regspace<vec>(1,m-1);
   
   mat tmp(m,m,fill::zeros);
@@ -314,7 +316,7 @@ op_logmat_cx::helper(Mat<eT>& A, const uword m)
   
   const bool eig_ok = eig_sym(eigval, eigvec, tmp);
   
-  if(eig_ok == false)  { arma_debug_warn("logmat(): eig_sym() failed"); return false; }
+  if(eig_ok == false)  { arma_extra_debug_print("logmat(): eig_sym() failed"); return false; }
   
   const vec nodes   = (eigval + 1.0) / 2.0;
   const vec weights = square(eigvec.row(0).t());
@@ -332,7 +334,7 @@ op_logmat_cx::helper(Mat<eT>& A, const uword m)
     //const bool solve_ok = solve( X, (nodes(i)*A + eye< Mat<eT> >(N,N)), A, solve_opts::fast );
     const bool solve_ok = solve( X, trimatu(nodes(i)*A + eye< Mat<eT> >(N,N)), A );
     
-    if(solve_ok == false)  { arma_debug_warn("logmat(): solve() failed"); return false; }
+    if(solve_ok == false)  { arma_extra_debug_print("logmat(): solve() failed"); return false; }
     
     B += weights(i) * X;
     }

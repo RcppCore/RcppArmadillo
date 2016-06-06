@@ -2181,8 +2181,8 @@ SpMat<eT>::diag(const sword in_id) const
   {
   arma_extra_debug_sigprint();
   
-  const uword row_offset = (in_id < 0) ? -in_id : 0;
-  const uword col_offset = (in_id > 0) ?  in_id : 0;
+  const uword row_offset = uword( (in_id < 0) ? -in_id : 0 );
+  const uword col_offset = uword( (in_id > 0) ?  in_id : 0 );
   
   arma_debug_check
     (

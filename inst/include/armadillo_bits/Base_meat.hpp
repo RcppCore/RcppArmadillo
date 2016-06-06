@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -168,7 +168,7 @@ Base<elem_type,derived>::min(uword& row_of_min_val, uword& col_of_min_val) const
   {
   const Proxy<derived> P( (*this).get_ref() );
   
-  uword index;
+  uword index = 0;
   
   const elem_type val = op_min::min_with_index(P, index);
   
@@ -189,7 +189,7 @@ Base<elem_type,derived>::max(uword& row_of_max_val, uword& col_of_max_val) const
   {
   const Proxy<derived> P( (*this).get_ref() );
   
-  uword index;
+  uword index = 0;
   
   const elem_type val = op_max::max_with_index(P, index);
   
@@ -199,6 +199,54 @@ Base<elem_type,derived>::max(uword& row_of_max_val, uword& col_of_max_val) const
   col_of_max_val = index / local_n_rows;
   
   return val;
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+uword
+Base<elem_type,derived>::index_min() const
+  {
+  const Proxy<derived> P( (*this).get_ref() );
+  
+  uword index = 0;
+  
+  if(P.get_n_elem() == 0)
+    {
+    arma_debug_check(true, "index_min(): object has no elements");
+    }
+  else
+    {
+    op_min::min_with_index(P, index);
+    }
+  
+  return index;
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+uword
+Base<elem_type,derived>::index_max() const
+  {
+  const Proxy<derived> P( (*this).get_ref() );
+  
+  uword index = 0;
+  
+  if(P.get_n_elem() == 0)
+    {
+    arma_debug_check(true, "index_max(): object has no elements");
+    }
+  else
+    {
+    op_max::max_with_index(P, index);
+    }
+  
+  return index;
   }
 
 

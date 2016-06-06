@@ -25,7 +25,33 @@ expmat(const Base<typename T1::elem_type,T1>& A)
   {
   arma_extra_debug_sigprint();
   
-  return Op<T1,op_expmat>( A.get_ref() );
+  return Op<T1,op_expmat>(A.get_ref());
+  }
+
+
+
+template<typename T1>
+inline
+typename
+enable_if2
+  <
+  is_real<typename T1::pod_type>::value,
+  bool
+  >::result
+expmat(Mat<typename T1::elem_type>& B, const Base<typename T1::elem_type,T1>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool status = op_expmat::apply_direct(B, A);
+  
+  if(status == false)
+    {
+    arma_debug_warn("expmat(): given matrix appears ill-conditioned");
+    B.reset();
+    return false;
+    }
+  
+  return true;
   }
 
 

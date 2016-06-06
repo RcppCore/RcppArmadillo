@@ -88,7 +88,7 @@ arma_stop_logic_error(const T1& x)
   {
   #if defined(ARMA_PRINT_ERRORS)
     {
-    get_stream_err1() << "\nerror: " << x << '\n';
+    get_stream_err1() << "\nerror: " << x << std::endl;
     }
   #endif
   
@@ -107,7 +107,7 @@ arma_stop_bad_alloc(const T1& x)
   {
   #if defined(ARMA_PRINT_ERRORS)
     {
-    get_stream_err2() << "\nerror: " << x << '\n';
+    get_stream_err2() << "\nerror: " << x << std::endl;
     }
   #else
     {
@@ -130,7 +130,7 @@ arma_stop_runtime_error(const T1& x)
   {
   #if defined(ARMA_PRINT_ERRORS)
     {
-    get_stream_err2() << "\nerror: " << x << '\n';
+    get_stream_err2() << "\nerror: " << x << std::endl;
     }
   #endif
   

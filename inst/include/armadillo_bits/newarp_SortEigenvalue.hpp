@@ -23,6 +23,7 @@ struct SortingTarget
   {
   arma_inline static typename get_pod_type<eT>::result get(const eT& val)
     {
+    arma_ignore(val);
     arma_stop_logic_error("newarp::SortingTarget: incompatible selection rule");
     
     typedef typename get_pod_type<eT>::result out_T;

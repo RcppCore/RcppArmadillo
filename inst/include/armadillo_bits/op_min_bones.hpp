@@ -16,7 +16,7 @@ class op_min
   {
   public:
   
-  //
+  // 
   // dense matrices
   
   template<typename T1>
@@ -61,7 +61,13 @@ class op_min
   inline static typename arma_not_cx<typename T1::elem_type>::result min(const Base<typename T1::elem_type, T1>& X);
   
   template<typename T1>
+  inline static typename arma_not_cx<typename T1::elem_type>::result min(const BaseCube<typename T1::elem_type, T1>& X);
+  
+  template<typename T1>
   inline static typename arma_not_cx<typename T1::elem_type>::result min_with_index(const Proxy<T1>& P, uword& index_of_min_val);
+  
+  template<typename T1>
+  inline static typename arma_not_cx<typename T1::elem_type>::result min_with_index(const ProxyCube<T1>& P, uword& index_of_min_val);
   
   
   //
@@ -77,13 +83,19 @@ class op_min
   inline static std::complex<T> direct_min(const Mat< std::complex<T> >& X, const uword row);
   
   template<typename T>
-  inline static std::complex<T> min(const subview< std::complex<T> >&X);
+  inline static std::complex<T> min(const subview< std::complex<T> >& X);
   
   template<typename T1>
   inline static typename arma_cx_only<typename T1::elem_type>::result min(const Base<typename T1::elem_type, T1>& X);
   
   template<typename T1>
+  inline static typename arma_cx_only<typename T1::elem_type>::result min(const BaseCube<typename T1::elem_type, T1>& X);
+  
+  template<typename T1>
   inline static typename arma_cx_only<typename T1::elem_type>::result min_with_index(const Proxy<T1>& P, uword& index_of_min_val);
+  
+  template<typename T1>
+  inline static typename arma_cx_only<typename T1::elem_type>::result min_with_index(const ProxyCube<T1>& P, uword& index_of_min_val);
   };
 
 

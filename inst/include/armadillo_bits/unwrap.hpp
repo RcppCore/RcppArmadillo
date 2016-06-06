@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -296,6 +296,28 @@ struct quasi_unwrap< Col<eT> >
 
 
 template<typename eT>
+struct quasi_unwrap< subview<eT> >
+  {
+  static const bool has_subview = true;
+  
+  inline
+  quasi_unwrap(const subview<eT>& A)
+    : sv( A                  )
+    , M ( A, (A.n_cols == 1) )  // reuse memory if the subview has only one column
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const subview<eT>& sv;
+  const Mat<eT>      M;
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return ( (sv.n_cols == 1) ? (void_ptr(&(sv.m)) == void_ptr(&X)) : false ); }
+  };
+
+
+
+template<typename eT>
 struct quasi_unwrap< subview_row<eT> >
   {
   static const bool has_subview = false;
@@ -310,7 +332,7 @@ struct quasi_unwrap< subview_row<eT> >
   const Row<eT> M;
   
   template<typename eT2>
-  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&M) == void_ptr(&X)); }
+  arma_inline bool is_alias(const Mat<eT2>&) const { return false; }
   };
 
 

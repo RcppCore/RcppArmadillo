@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2014 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -50,6 +50,12 @@ struct BaseCube
   
   inline void raw_print(                           const std::string extra_text = "") const;
   inline void raw_print(std::ostream& user_stream, const std::string extra_text = "") const;
+  
+  inline arma_warn_unused elem_type min() const;
+  inline arma_warn_unused elem_type max() const;
+  
+  inline arma_warn_unused uword index_min() const;
+  inline arma_warn_unused uword index_max() const;
   };
 
 

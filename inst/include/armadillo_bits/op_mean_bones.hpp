@@ -86,6 +86,9 @@ class op_mean
   //
   
   template<typename T1>
+  inline static typename T1::elem_type mean_all(const Op<T1,op_vectorise_col>& X);
+  
+  template<typename T1>
   inline static typename T1::elem_type mean_all(const Base<typename T1::elem_type, T1>& X);
   
   

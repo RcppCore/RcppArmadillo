@@ -53,6 +53,53 @@ op_any::any_vec_helper(const Base<typename T1::elem_type, T1>& X)
 
 
 
+template<typename eT>
+inline
+bool
+op_any::any_vec_helper(const subview<eT>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword X_n_rows = X.n_rows;
+  const uword X_n_cols = X.n_cols;
+  
+  if(X_n_rows == 1)
+    {
+    for(uword col=0; col < X_n_cols; ++col)
+      {
+      if(X.at(0,col) != eT(0))  { return true; }
+      }
+    }
+  else
+    {
+    for(uword col=0; col < X_n_cols; ++col)
+      {
+      const eT* X_colmem = X.colptr(col);
+      
+      for(uword row=0; row < X_n_rows; ++row)
+        {
+        if(X_colmem[row] != eT(0))  { return true; }
+        }
+      }
+    }
+  
+  return false;
+  }
+
+
+
+template<typename T1>
+inline
+bool
+op_any::any_vec_helper(const Op<T1, op_vectorise_col>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  return op_any::any_vec_helper(X.m);
+  }
+
+
+
 template<typename T1, typename op_type>
 inline
 bool

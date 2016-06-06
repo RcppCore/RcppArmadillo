@@ -1817,6 +1817,32 @@ Mat<eT>::Mat
 
 
 
+template<typename eT>
+inline
+Mat<eT>::Mat(const subview<eT>& X, const bool use_colmem)
+  : n_rows(X.n_rows)
+  , n_cols(X.n_cols)
+  , n_elem(X.n_elem)
+  , vec_state(0)
+  , mem_state(use_colmem ? 3 : 0)
+  , mem      (use_colmem ? X.colptr(0) : NULL)
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  if(use_colmem)
+    {
+    arma_extra_debug_print("Mat::Mat(): using existing memory in a submatrix");
+    }
+  else
+    {
+    init_cold();
+    
+    subview<eT>::extract(*this, X);
+    }
+  }
+
+
+
 //! construct a matrix from subview (e.g. construct a matrix from a delayed submatrix operation)
 template<typename eT>
 inline
@@ -3993,8 +4019,8 @@ Mat<eT>::diag(const sword in_id) const
   {
   arma_extra_debug_sigprint();
   
-  const uword row_offset = (in_id < 0) ? -in_id : 0;
-  const uword col_offset = (in_id > 0) ?  in_id : 0;
+  const uword row_offset = uword( (in_id < 0) ? -in_id : 0 );
+  const uword col_offset = uword( (in_id > 0) ?  in_id : 0 );
   
   arma_debug_check
     (

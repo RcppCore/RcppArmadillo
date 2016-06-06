@@ -816,7 +816,7 @@ diskio::save_raw_ascii(const Mat<eT>& x, std::ostream& f)
       
       if( (is_float<eT>::value) || (is_double<eT>::value) )
         {
-        f.width(cell_width);
+        f.width(std::streamsize(cell_width));
         }
       
       arma_ostream::print_elem(f, x.at(row,col), false);
@@ -942,7 +942,7 @@ diskio::save_arma_ascii(const Mat<eT>& x, std::ostream& f)
       
       if( (is_float<eT>::value) || (is_double<eT>::value) )        
         {
-        f.width(cell_width);
+        f.width(std::streamsize(cell_width));
         }
       
       arma_ostream::print_elem(f, x.at(row,col), false);
@@ -1456,7 +1456,7 @@ diskio::load_raw_binary(Mat<eT>& x, std::istream& f, std::string& err_msg)
   //f.seekg(0, ios::beg);
   f.seekg(pos1);
   
-  x.set_size(N / sizeof(eT), 1);
+  x.set_size(N / uword(sizeof(eT)), 1);
   
   f.clear();
   f.read( reinterpret_cast<char *>(x.memptr()), std::streamsize(N) );
@@ -3159,7 +3159,7 @@ diskio::save_raw_ascii(const Cube<eT>& x, std::ostream& f)
         
         if( (is_float<eT>::value) || (is_double<eT>::value) )
           {
-          f.width(cell_width);
+          f.width(std::streamsize(cell_width));
           }
         
         arma_ostream::print_elem(f, x.at(row,col,slice), false);
@@ -3288,7 +3288,7 @@ diskio::save_arma_ascii(const Cube<eT>& x, std::ostream& f)
         
         if( (is_float<eT>::value) || (is_double<eT>::value) )        
           {
-          f.width(cell_width);
+          f.width(std::streamsize(cell_width));
           }
         
         arma_ostream::print_elem(f, x.at(row,col,slice), false);
@@ -3536,7 +3536,7 @@ diskio::load_raw_binary(Cube<eT>& x, std::istream& f, std::string& err_msg)
   //f.seekg(0, ios::beg);
   f.seekg(pos1);
   
-  x.set_size(N / sizeof(eT), 1, 1);
+  x.set_size(N / uword(sizeof(eT)), 1, 1);
   
   f.clear();
   f.read( reinterpret_cast<char *>(x.memptr()), std::streamsize(N) );

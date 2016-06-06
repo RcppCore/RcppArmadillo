@@ -46,7 +46,15 @@ logmat(Mat< std::complex<typename T1::elem_type> >& Y, const Base<typename T1::e
   {
   arma_extra_debug_sigprint();
   
-  return op_logmat::apply_direct(Y, X.get_ref(), n_iters);
+  const bool status = op_logmat::apply_direct(Y, X.get_ref(), n_iters);
+  
+  if(status == false)
+    {
+    Y.reset();
+    arma_debug_warn("logmat(): transformation failed");
+    }
+  
+  return status;
   }
 
 
@@ -58,7 +66,15 @@ logmat(Mat<typename T1::elem_type>& Y, const Base<typename T1::elem_type,T1>& X,
   {
   arma_extra_debug_sigprint();
   
-  return op_logmat_cx::apply_direct(Y, X.get_ref(), n_iters);
+  const bool status = op_logmat_cx::apply_direct(Y, X.get_ref(), n_iters);
+  
+  if(status == false)
+    {
+    Y.reset();
+    arma_debug_warn("logmat(): transformation failed");
+    }
+  
+  return status;
   }
 
 

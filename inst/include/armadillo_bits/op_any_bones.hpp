@@ -1,4 +1,4 @@
-// Copyright (C) 2013 National ICT Australia (NICTA)
+// Copyright (C) 2013-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,6 +22,16 @@ class op_any
   template<typename T1>
   static inline bool
   any_vec_helper(const Base<typename T1::elem_type, T1>& X);
+  
+  
+  template<typename eT>
+  static inline bool
+  any_vec_helper(const subview<eT>& X);
+  
+  
+  template<typename T1>
+  static inline bool
+  any_vec_helper(const Op<T1, op_vectorise_col>& X);
   
   
   template<typename T1, typename op_type>

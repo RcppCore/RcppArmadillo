@@ -16,10 +16,9 @@
 template<typename T1, bool sort_stable>
 inline
 bool
-arma_sort_index_helper(Mat<uword>& out, const Proxy<T1>& P, const uword sort_type, typename arma_not_cx<typename T1::elem_type>::result* junk = 0)
+arma_sort_index_helper(Mat<uword>& out, const Proxy<T1>& P, const uword sort_type)
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
   
@@ -27,7 +26,7 @@ arma_sort_index_helper(Mat<uword>& out, const Proxy<T1>& P, const uword sort_typ
   
   out.set_size(n_elem, 1);
   
-  std::vector< arma_sort_index_packet<eT, uword> > packet_vec(n_elem);
+  std::vector< arma_sort_index_packet<eT> > packet_vec(n_elem);
   
   if(Proxy<T1>::use_at == false)
     {
@@ -67,7 +66,7 @@ arma_sort_index_helper(Mat<uword>& out, const Proxy<T1>& P, const uword sort_typ
     {
     // ascend
     
-    arma_sort_index_helper_ascend comparator;
+    arma_sort_index_helper_ascend<eT> comparator;
     
     if(sort_stable == false)
       {
@@ -82,101 +81,7 @@ arma_sort_index_helper(Mat<uword>& out, const Proxy<T1>& P, const uword sort_typ
     {
     // descend
     
-    arma_sort_index_helper_descend comparator;
-    
-    if(sort_stable == false)
-      {
-      std::sort( packet_vec.begin(), packet_vec.end(), comparator );
-      }
-    else
-      {
-      std::stable_sort( packet_vec.begin(), packet_vec.end(), comparator );
-      }
-    }
-  
-  uword* out_mem = out.memptr();
-  
-  for(uword i=0; i<n_elem; ++i)
-    {
-    out_mem[i] = packet_vec[i].index;
-    }
-  
-  return true;
-  }
-
-
-
-template<typename T1, bool sort_stable>
-inline
-bool
-arma_sort_index_helper(Mat<uword>& out, const Proxy<T1>& P, const uword sort_type, typename arma_cx_only<typename T1::elem_type>::result* junk = 0)
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk);
-  
-  typedef typename T1::elem_type            eT;
-  typedef typename get_pod_type<eT>::result  T;
-  
-  const uword n_elem = P.get_n_elem();
-  
-  out.set_size(n_elem, 1);
-  
-  std::vector< arma_sort_index_packet<T, uword> > packet_vec(n_elem);
-  
-  if(Proxy<T1>::use_at == false)
-    {
-    for(uword i=0; i<n_elem; ++i)
-      {
-      const T val = std::abs(P[i]);
-      
-      if(arma_isnan(val))  { out.reset(); return false; }
-      
-      packet_vec[i].val   = val;
-      packet_vec[i].index = i;
-      }
-    }
-  else
-    {
-    const uword n_rows = P.get_n_rows();
-    const uword n_cols = P.get_n_cols();
-    
-    uword i = 0;
-    
-    for(uword col=0; col < n_cols; ++col)
-    for(uword row=0; row < n_rows; ++row)
-      {
-      const T val = std::abs(P.at(row,col));
-      
-      if(arma_isnan(val))  { out.reset(); return false; }
-      
-      packet_vec[i].val   = val;
-      packet_vec[i].index = i;
-      
-      ++i;
-      }
-    }
-  
-  
-  if(sort_type == 0)
-    {
-    // ascend
-    
-    arma_sort_index_helper_ascend comparator;
-    
-    if(sort_stable == false)
-      {
-      std::sort( packet_vec.begin(), packet_vec.end(), comparator );
-      }
-    else
-      {
-      std::stable_sort( packet_vec.begin(), packet_vec.end(), comparator );
-      }
-    }
-  else
-    {
-    // descend
-    
-    arma_sort_index_helper_descend comparator;
+    arma_sort_index_helper_descend<eT> comparator;
     
     if(sort_stable == false)
       {
