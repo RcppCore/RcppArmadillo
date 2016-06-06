@@ -105,9 +105,6 @@ class subview_cube : public BaseCube<eT, subview_cube<eT> >
   inline arma_warn_unused bool has_inf() const;
   inline arma_warn_unused bool has_nan() const;
   
-  inline arma_warn_unused eT min() const;
-  inline arma_warn_unused eT max() const;
-  
   inline eT  at_alt    (const uword i) const;
   
   inline eT& operator[](const uword i);

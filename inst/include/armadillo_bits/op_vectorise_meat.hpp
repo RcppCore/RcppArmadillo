@@ -21,9 +21,55 @@ op_vectorise_col::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_vectori
   {
   arma_extra_debug_sigprint();
   
-  const Proxy<T1> P(in.m);
+  typedef typename T1::elem_type eT;
   
-  op_vectorise_col::apply_proxy(out, P);
+  if(is_same_type< T1, subview<eT> >::yes)
+    {
+    op_vectorise_col::apply_subview(out, reinterpret_cast< const subview<eT>& >(in.m));
+    }
+  else
+    {
+    const Proxy<T1> P(in.m);
+    
+    op_vectorise_col::apply_proxy(out, P);
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
+op_vectorise_col::apply_subview(Mat<eT>& out, const subview<eT>& sv)
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool is_alias = (&out == &(sv.m));
+  
+  if(is_alias == false)
+    {
+    const uword sv_n_rows = sv.n_rows;
+    const uword sv_n_cols = sv.n_cols;
+    
+    out.set_size(sv.n_elem, 1);
+    
+    eT* out_mem = out.memptr();
+    
+    for(uword col=0; col < sv_n_cols; ++col)
+      {
+      arrayops::copy(out_mem, sv.colptr(col), sv_n_rows);
+      
+      out_mem += sv_n_rows;
+      }
+    }
+  else
+    {
+    Mat<eT> tmp;
+    
+    op_vectorise_col::apply_subview(tmp, sv);
+    
+    out.steal_mem(tmp);
+    }
   }
 
 
@@ -221,7 +267,54 @@ op_vectorise_cube_col::apply(Mat<typename T1::elem_type>& out, const BaseCube<ty
   
   typedef typename T1::elem_type eT;
   
-  ProxyCube<T1> P(in.get_ref());
+  if(is_same_type< T1, subview_cube<eT> >::yes)
+    {
+    op_vectorise_cube_col::apply_subview(out, reinterpret_cast< const subview_cube<eT>& >(in.get_ref()));
+    }
+  else
+    {
+    const ProxyCube<T1> P(in.get_ref());
+    
+    op_vectorise_cube_col::apply_proxy(out, P);
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
+op_vectorise_cube_col::apply_subview(Mat<eT>& out, const subview_cube<eT>& sv)
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword sv_n_rows   = sv.n_rows;
+  const uword sv_n_cols   = sv.n_cols;
+  const uword sv_n_slices = sv.n_slices;
+  
+  out.set_size(sv.n_elem, 1);
+  
+  eT* out_mem = out.memptr();
+  
+  for(uword slice=0; slice < sv_n_slices; ++slice)
+  for(uword   col=0;   col < sv_n_cols;   ++col  )
+    {
+    arrayops::copy(out_mem, sv.slice_colptr(slice,col), sv_n_rows);
+    
+    out_mem += sv_n_rows;
+    }
+  }
+  
+  
+  
+template<typename T1>
+inline
+void
+op_vectorise_cube_col::apply_proxy(Mat<typename T1::elem_type>& out, const ProxyCube<T1>& P)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
   
   const uword N = P.get_n_elem();
   
@@ -273,6 +366,7 @@ op_vectorise_cube_col::apply(Mat<typename T1::elem_type>& out, const BaseCube<ty
       }
     }
   }
+
 
 
 

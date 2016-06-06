@@ -619,6 +619,73 @@ op_max::max(const Base<typename T1::elem_type,T1>& X)
 template<typename T1>
 inline
 typename arma_not_cx<typename T1::elem_type>::result
+op_max::max(const BaseCube<typename T1::elem_type,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const ProxyCube<T1> P(X.get_ref());
+  
+  const uword n_elem = P.get_n_elem();
+  
+  if(n_elem == 0)
+    {
+    arma_debug_check(true, "max(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
+  
+  eT max_val = priv::most_neg<eT>();
+  
+  if(ProxyCube<T1>::use_at == false)
+    {
+    typedef typename ProxyCube<T1>::ea_type ea_type;
+    
+    ea_type A = P.get_ea();
+    
+    uword i,j;
+    
+    for(i=0, j=1; j<n_elem; i+=2, j+=2)
+      {
+      const eT tmp_i = A[i];
+      const eT tmp_j = A[j];
+      
+      if(tmp_i > max_val) { max_val = tmp_i; }
+      if(tmp_j > max_val) { max_val = tmp_j; }
+      }
+    
+    if(i < n_elem)
+      {
+      const eT tmp_i = A[i];
+      
+      if(tmp_i > max_val) { max_val = tmp_i; }
+      }
+    }
+  else
+    {
+    const uword n_rows   = P.get_n_rows();
+    const uword n_cols   = P.get_n_cols();
+    const uword n_slices = P.get_n_slices();
+    
+    for(uword slice=0; slice < n_slices; ++slice)
+    for(uword   col=0;   col < n_cols;   ++col  )
+    for(uword   row=0;   row < n_rows;   ++row  )
+      {
+      const eT tmp = P.at(row,col,slice);
+
+      if(tmp > max_val) { max_val = tmp; }
+      }
+    }
+  
+  return max_val;
+  }
+
+
+
+template<typename T1>
+inline
+typename arma_not_cx<typename T1::elem_type>::result
 op_max::max_with_index(const Proxy<T1>& P, uword& index_of_max_val)
   {
   arma_extra_debug_sigprint();
@@ -697,6 +764,67 @@ op_max::max_with_index(const Proxy<T1>& P, uword& index_of_max_val)
 
 
 
+template<typename T1>
+inline
+typename arma_not_cx<typename T1::elem_type>::result
+op_max::max_with_index(const ProxyCube<T1>& P, uword& index_of_max_val)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const uword n_elem = P.get_n_elem();
+  
+  if(n_elem == 0)
+    {
+    arma_debug_check(true, "max(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
+  
+  eT    best_val   = priv::most_neg<eT>();
+  uword best_index = 0;
+  
+  if(ProxyCube<T1>::use_at == false)
+    {
+    typedef typename ProxyCube<T1>::ea_type ea_type;
+    
+    ea_type A = P.get_ea();
+    
+    for(uword i=0; i < n_elem; ++i)
+      {
+      const eT tmp = A[i];
+      
+      if(tmp > best_val)  { best_val = tmp;  best_index = i; }
+      }
+    }
+  else
+    {
+    const uword n_rows   = P.get_n_rows();
+    const uword n_cols   = P.get_n_cols();
+    const uword n_slices = P.get_n_slices();
+    
+    uword count = 0;
+    
+    for(uword slice=0; slice < n_slices; ++slice)
+    for(uword   col=0;   col < n_cols;   ++col  )
+    for(uword   row=0;   row < n_rows;   ++row  )
+      {
+      const eT tmp = P.at(row,col,slice);
+      
+      if(tmp > best_val)  { best_val = tmp;  best_index = count; }
+      
+      ++count;
+      }
+    }
+  
+  index_of_max_val = best_index;
+  
+  return best_val;
+  }
+
+
+
 template<typename T>
 inline
 std::complex<T>
@@ -705,7 +833,7 @@ op_max::direct_max(const std::complex<T>* const X, const uword n_elem)
   arma_extra_debug_sigprint();
   
   uword index   = 0;
-  T   max_val = priv::most_neg<T>();
+  T     max_val = priv::most_neg<T>();
   
   for(uword i=0; i<n_elem; ++i)
     {
@@ -731,7 +859,7 @@ op_max::direct_max(const std::complex<T>* const X, const uword n_elem, uword& in
   arma_extra_debug_sigprint();
   
   uword index   = 0;
-  T   max_val = priv::most_neg<T>();
+  T     max_val = priv::most_neg<T>();
   
   for(uword i=0; i<n_elem; ++i)
     {
@@ -940,6 +1068,78 @@ op_max::max(const Base<typename T1::elem_type,T1>& X)
 template<typename T1>
 inline
 typename arma_cx_only<typename T1::elem_type>::result
+op_max::max(const BaseCube<typename T1::elem_type,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type            eT;
+  typedef typename get_pod_type<eT>::result T;
+  
+  const ProxyCube<T1> P(X.get_ref());
+  
+  const uword n_elem = P.get_n_elem();
+  
+  if(n_elem == 0)
+    {
+    arma_debug_check(true, "max(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
+  
+  T max_val = priv::most_neg<T>();
+  
+  if(ProxyCube<T1>::use_at == false)
+    {
+    typedef typename ProxyCube<T1>::ea_type ea_type;
+    
+    ea_type A = P.get_ea();
+    
+    uword index = 0;
+    
+    for(uword i=0; i<n_elem; ++i)
+      {
+      const T tmp = std::abs(A[i]);
+      
+      if(tmp > max_val)
+        {
+        max_val = tmp;
+        index   = i;
+        }
+      }
+    
+    return( A[index] );
+    }
+  else
+    {
+    const uword n_rows   = P.get_n_rows();
+    const uword n_cols   = P.get_n_cols();
+    const uword n_slices = P.get_n_slices();
+    
+    eT max_val_orig = eT(0);
+    
+    for(uword slice=0; slice < n_slices; ++slice)
+    for(uword   col=0;   col < n_cols;   ++col  )
+    for(uword   row=0;   row < n_rows;   ++row  )
+      {
+      const eT tmp_orig = P.at(row,col,slice);
+      const  T tmp      = std::abs(tmp_orig);
+      
+      if(tmp > max_val)
+        {
+        max_val      = tmp;
+        max_val_orig = tmp_orig;
+        }
+      }
+    
+    return max_val_orig;
+    }
+  }
+
+
+
+template<typename T1>
+inline
+typename arma_cx_only<typename T1::elem_type>::result
 op_max::max_with_index(const Proxy<T1>& P, uword& index_of_max_val)
   {
   arma_extra_debug_sigprint();
@@ -1035,6 +1235,81 @@ op_max::max_with_index(const Proxy<T1>& P, uword& index_of_max_val)
     index_of_max_val = best_index;
     
     return P.at(best_row, best_col);
+    }
+  }
+
+
+
+template<typename T1>
+inline
+typename arma_cx_only<typename T1::elem_type>::result
+op_max::max_with_index(const ProxyCube<T1>& P, uword& index_of_max_val)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type            eT;
+  typedef typename get_pod_type<eT>::result T;
+  
+  const uword n_elem = P.get_n_elem();
+  
+  if(n_elem == 0)
+    {
+    arma_debug_check(true, "max(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
+  
+  T best_val = priv::most_neg<T>();
+  
+  if(ProxyCube<T1>::use_at == false)
+    {
+    typedef typename ProxyCube<T1>::ea_type ea_type;
+    
+    ea_type A = P.get_ea();
+    
+    uword best_index = 0;
+    
+    for(uword i=0; i < n_elem; ++i)
+      {
+      const T tmp = std::abs(A[i]);
+      
+      if(tmp > best_val)  { best_val = tmp;  best_index = i; }
+      }
+    
+    index_of_max_val = best_index;
+    
+    return( A[best_index] );
+    }
+  else
+    {
+    const uword n_rows   = P.get_n_rows();
+    const uword n_cols   = P.get_n_cols();
+    const uword n_slices = P.get_n_slices();
+    
+    eT    best_val_orig = eT(0);
+    uword best_index    = 0;
+    uword count         = 0;
+    
+    for(uword slice=0; slice < n_slices; ++slice)
+    for(uword   col=0;   col < n_cols;   ++col  )
+    for(uword   row=0;   row < n_rows;   ++row  )
+      {
+      const eT tmp_orig = P.at(row,col,slice);
+      const  T tmp      = std::abs(tmp_orig);
+      
+      if(tmp > best_val)
+        {
+        best_val      = tmp;
+        best_val_orig = tmp_orig;
+        best_index    = count;
+        }
+      
+      ++count;
+      }
+    
+    index_of_max_val = best_index;
+    
+    return best_val_orig;
     }
   }
 

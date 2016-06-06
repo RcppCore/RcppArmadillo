@@ -1,4 +1,4 @@
-// Copyright (C) 2014-2015 National ICT Australia (NICTA)
+// Copyright (C) 2014-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,13 +27,30 @@ op_expmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_expmat>& expr
   {
   arma_extra_debug_sigprint();
   
+  const bool status = op_expmat::apply_direct(out, expr.m);
+  
+  if(status == false)
+    {
+    out.reset();
+    arma_stop_runtime_error("expmat(): given matrix appears ill-conditioned");
+    }
+  }
+
+
+
+template<typename T1>
+inline
+bool
+op_expmat::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type, T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
   
-  
   if(is_op_diagmat<T1>::value)
     {
-    out = expr.m;  // force the evaluation of diagmat()
+    out = X.get_ref();  // force the evaluation of diagmat()
     
     arma_debug_check( (out.is_square() == false), "expmat(): given matrix must be square sized" );
     
@@ -46,8 +63,7 @@ op_expmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_expmat>& expr
     }
   else
     {
-    const unwrap<T1>   tmp(expr.m);
-    const Mat<eT>& A = tmp.M;
+    Mat<eT> A = X.get_ref();
     
     arma_debug_check( (A.is_square() == false), "expmat(): given matrix must be square sized" );
     
@@ -59,14 +75,14 @@ op_expmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_expmat>& expr
     
     const uword s = uword( (std::max)(int(0), exponent + int(1)) );
     
-    const Mat<eT> AA = A / eT(eop_aux::pow(double(2), double(s)));
+    A /= eT(eop_aux::pow(double(2), double(s)));
     
     T c = T(0.5);
     
-    Mat<eT> E(AA.n_rows, AA.n_rows, fill::eye);  E += c * AA;
-    Mat<eT> D(AA.n_rows, AA.n_rows, fill::eye);  D -= c * AA;
+    Mat<eT> E(A.n_rows, A.n_rows, fill::eye);  E += c * A;
+    Mat<eT> D(A.n_rows, A.n_rows, fill::eye);  D -= c * A;
     
-    Mat<eT> X = AA;
+    Mat<eT> X = A;
     
     bool positive = true;
     
@@ -76,7 +92,7 @@ op_expmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_expmat>& expr
       {
       c = c * T(N - i + 1) / T(i * (2*N - i + 1));
       
-      X = AA * X;
+      X = A * X;
       
       E += c * X;
       
@@ -85,10 +101,16 @@ op_expmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_expmat>& expr
       positive = (positive) ? false : true;
       }
     
-    out = solve(D, E);
+    if( (D.is_finite() == false) || (E.is_finite() == false) )  { return false; }
+    
+    const bool status = solve(out, D, E);
+    
+    if(status == false)  { return false; }
     
     for(uword i=0; i < s; ++i)  { out = out * out; }
     }
+  
+  return true;
   }
 
 

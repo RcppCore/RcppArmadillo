@@ -28,7 +28,12 @@ op_sqrtmat::apply(Mat< std::complex<typename T1::elem_type> >& out, const mtOp<s
   {
   arma_extra_debug_sigprint();
   
-  op_sqrtmat::apply_direct(out, in.m);
+  const bool status = op_sqrtmat::apply_direct(out, in.m);
+  
+  if(status == false)
+    {
+    arma_debug_warn("sqrtmat(): given matrix seems singular; may not have a square root");
+    }
   }
 
 
@@ -66,11 +71,6 @@ op_sqrtmat::apply_direct(Mat< std::complex<typename T1::elem_type> >& out, const
       {
       out.at(i,i) = std::sqrt( std::complex<T>(val) );
       }
-    }
-  
-  if(singular)
-    {
-    arma_debug_warn("sqrtmat(): given matrix seems singular; may not have a square root");
     }
   
   return (singular) ? false : true;
@@ -116,7 +116,7 @@ op_sqrtmat::apply_direct(Mat< std::complex<typename T1::elem_type> >& out, const
   
   if(schur_ok == false)
     {
-    arma_debug_warn("sqrtmat(): schur decomposition failed");
+    arma_extra_debug_print("sqrtmat(): schur decomposition failed");
     out.reset();
     return false;
     }
@@ -129,11 +129,6 @@ op_sqrtmat::apply_direct(Mat< std::complex<typename T1::elem_type> >& out, const
   
   out = X*U.t();
   
-  if(status == false)
-    {
-    arma_debug_warn("sqrtmat(): given matrix seems singular; may not have a square root");
-    }
-
   return status;
   }
 
@@ -146,7 +141,12 @@ op_sqrtmat_cx::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sqrtmat_cx
   {
   arma_extra_debug_sigprint();
   
-  op_sqrtmat_cx::apply_direct(out, in.m);
+  const bool status = op_sqrtmat_cx::apply_direct(out, in.m);
+  
+  if(status == false)
+    {
+    arma_debug_warn("sqrtmat(): given matrix seems singular; may not have a square root");
+    }
   }
 
 
@@ -210,11 +210,6 @@ op_sqrtmat_cx::apply_direct_noalias(Mat<typename T1::elem_type>& out, const diag
     out.at(i,i) = std::sqrt(val);
     }
   
-  if(singular)
-    {
-    arma_debug_warn("sqrtmat(): given matrix seems singular; may not have a square root");
-    }
-  
   return (singular) ? false : true;
   }
 
@@ -244,7 +239,7 @@ op_sqrtmat_cx::apply_direct(Mat<typename T1::elem_type>& out, const Base<typenam
   
   if(schur_ok == false)
     {
-    arma_debug_warn("sqrtmat(): schur decomposition failed");
+    arma_extra_debug_print("sqrtmat(): schur decomposition failed");
     out.reset();
     return false;
     }
@@ -256,11 +251,6 @@ op_sqrtmat_cx::apply_direct(Mat<typename T1::elem_type>& out, const Base<typenam
   S.reset();
   
   out = X*U.t();
-  
-  if(status == false)
-    {
-    arma_debug_warn("sqrtmat(): given matrix seems singular; may not have a square root");
-    }
   
   return status;
   }

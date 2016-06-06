@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -70,6 +70,16 @@ struct arma_ascend_sort_helper< std::complex<T> >
   typedef typename std::complex<T> eT;
   
   inline bool operator() (const eT& a, const eT& b) const { return (std::abs(a) < std::abs(b)); }
+  
+  // inline
+  // bool
+  // operator() (const eT& a, const eT& b) const
+  //   {
+  //   const T abs_a = std::abs(a);
+  //   const T abs_b = std::abs(b);
+  //   
+  //   return ( (abs_a != abs_b) ? (abs_a < abs_b) : (std::arg(a) < std::arg(b)) );
+  //   }
   };
 
 
@@ -80,6 +90,16 @@ struct arma_descend_sort_helper< std::complex<T> >
   typedef typename std::complex<T> eT;
   
   inline bool operator() (const eT& a, const eT& b) const { return (std::abs(a) > std::abs(b)); }
+  
+  // inline
+  // bool
+  // operator() (const eT& a, const eT& b) const
+  //   {
+  //   const T abs_a = std::abs(a);
+  //   const T abs_b = std::abs(b);
+  //   
+  //   return ( (abs_a != abs_b) ? (abs_a > abs_b) : (std::arg(a) > std::arg(b)) );
+  //   }
   };
 
 

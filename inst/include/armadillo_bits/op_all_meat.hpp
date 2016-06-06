@@ -46,12 +46,61 @@ op_all::all_vec_helper(const Base<typename T1::elem_type, T1>& X)
     for(uword col=0; col < n_cols; ++col)
     for(uword row=0; row < n_rows; ++row)
       {
-      if(P.at(row,col) != eT(0))  { ++count; }
+      count += (P.at(row,col) != eT(0)) ? uword(1) : uword(0);
       }
     }
   
-  // NOTE: for empty vectors it makes more sense to return false, but we need to return true for compatability with Octave
+  // NOTE: for empty vectors it makes more sense to return false, but we need to return true for compatibility with Octave
   return (n_elem == count);
+  }
+
+
+
+template<typename eT>
+inline
+bool
+op_all::all_vec_helper(const subview<eT>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword X_n_rows = X.n_rows;
+  const uword X_n_cols = X.n_cols;
+  
+  uword count = 0;
+  
+  if(X_n_rows == 1)
+    {
+    for(uword col=0; col < X_n_cols; ++col)
+      {
+      count += (X.at(0,col) != eT(0)) ? uword(1) : uword(0);
+      }
+    }
+  else
+    {
+    for(uword col=0; col < X_n_cols; ++col)
+      {
+      const eT* X_colmem = X.colptr(col);
+      
+      for(uword row=0; row < X_n_rows; ++row)
+        {
+        count += (X_colmem[row] != eT(0)) ? uword(1) : uword(0);
+        }
+      }
+    }
+  
+  return (X.n_elem == count);
+  }
+
+
+
+template<typename T1>
+inline
+bool
+op_all::all_vec_helper(const Op<T1, op_vectorise_col>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  return op_all::all_vec_helper(X.m);
   }
 
 

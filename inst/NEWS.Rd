@@ -3,6 +3,20 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.7.200.1.0 (2016-06-06)}{
+  \itemize{
+    \item Upgraded to Armadillo test release 7.200.1 
+    \itemize{
+      \item added \code{.index_min()} and \code{.index_max()}
+      \item expanded \code{ind2sub()} to handle vectors of indices
+      \item expanded \code{sub2ind()} to handle matrix of subscripts
+      \item expanded \code{expmat()}, \code{logmat()} and
+      \code{sqrtmat()} to optionally return a bool indicating success
+      \item faster handling of compound expressions by \code{vectorise()}
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.7.100.3.0 (2016-05-25)}{
   \itemize{
     \item Upgraded to Armadillo test release 7.100.3 

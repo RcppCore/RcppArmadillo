@@ -1,3 +1,10 @@
+2016-06-06  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version): Release 0.7.200.1.0 (GH-only)
+	* inst/NEWS.Rd: Release 0.7.200.1.0 (GH-only)
+
+	* inst/include/*: Upgraded to release 7.200.1 of Armadillo
+
 2016-06-02  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.7.100.3.1
