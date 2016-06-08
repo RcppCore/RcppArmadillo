@@ -1,3 +1,9 @@
+2016-06-09  Dirk Eddelbuettel  <edd@debian.org>
+
+	* configure.ac: Correct assignment for fully-featured versus
+	incomplete LAPACK set in inst/include/RcppArmadilloLapack.h
+	* configure: Ditto
+
 2016-06-06  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version): Release 0.7.200.1.0 (GH-only)
