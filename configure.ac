@@ -64,20 +64,20 @@ newR=$("${R_HOME}/bin/Rscript" --vanilla -e 'if (getRversion() >= "3.3.0") cat("
 if test x"${hasRlapack}" == x""; then
     ## We are using a full Lapack and can use zgesdd -- so #undef remains
     AC_MSG_RESULT([system LAPACK found])
-    have_good_lapack="#define"
-    arma_crippled_lapack="ARMA_CRIPPLED_LAPACK 1"
+    have_good_lapack="#undef"
+    arma_crippled_lapack="ARMA_CRIPPLED_LAPACK"
 else
     if test x"${newR}" == x"yes"; then
         ## The R versions are recent enough and has an augmented internal Rlapack
         AC_MSG_RESULT([fallback LAPACK from R 3.3.0 or later used])
-        have_good_lapack="#define"
-        arma_crippled_lapack="ARMA_CRIPPLED_LAPACK 1"
+        have_good_lapack="#undef"
+        arma_crippled_lapack="ARMA_CRIPPLED_LAPACK"
     else     
         ## We are using an older R's subset of Lapack and CANNOT use zgesdd etc, so we mark it
         AC_MSG_RESULT([R-supplied partial LAPACK found])
         AC_MSG_WARN([Some complex-valued LAPACK functions may not be available])
-        have_good_lapack="#undef"
-        arma_crippled_lapack="ARMA_CRIPPLED_LAPACK"
+        have_good_lapack="#define"
+        arma_crippled_lapack="ARMA_CRIPPLED_LAPACK 1"
     fi
 fi
 

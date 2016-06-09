@@ -14,6 +14,8 @@
       \code{sqrtmat()} to optionally return a bool indicating success
       \item faster handling of compound expressions by \code{vectorise()}
     }
+    \item The \code{configure} code now (once again) sets the values for
+    the LAPACK feature \code{#define} correctly.
   }
 }
 
