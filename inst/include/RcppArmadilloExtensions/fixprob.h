@@ -35,7 +35,7 @@ namespace Rcpp{
                 // pop stack
                 double prob_value = prob(ii);
               
-                if (arma::is_finite(prob_value)) //does this work??
+                if (!arma::is_finite(prob_value)) //does this work??
                     throw std::range_error( "NAs not allowed in probability" ) ;
                 if (prob_value < 0.0)
                     throw std::range_error( "Negative probabilities not allowed" ) ;
