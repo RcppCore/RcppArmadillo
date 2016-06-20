@@ -1,7 +1,9 @@
 2016-06-19  James Joseph Balamuta  <balamut2@illinois.edu>
 
-	* inst/include/RcppArmadilloExtensions/sample.h: Rewrote sampling functions to use only armadillo outside of the supplied data vector.
-  * inst/include/RcppArmadilloExtensions/fixprob.h: Updated fix probability check code to use armadillo object for probability.
+	* inst/include/RcppArmadilloExtensions/sample.h: Rewrote sampling
+	functions to use only armadillo outside of the supplied data vector.
+	* inst/include/RcppArmadilloExtensions/fixprob.h: Updated fix
+	probability check code to use armadillo object for probability.
 
 2016-06-09  Dirk Eddelbuettel  <edd@debian.org>
 

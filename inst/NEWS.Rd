@@ -3,9 +3,17 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.7.x00.y.0 (2016-07-xx)}{
+  \itemize{
+    \item Upgraded to Armadillo release 7.x00.y
+    \item The sampling extension was rewritten to use Armadillo vector types
+    instead of Rcpp types (PR \ghpr{101} by James Balamuta)
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.7.200.1.0 (2016-06-06)}{
   \itemize{
-    \item Upgraded to Armadillo test release 7.200.1 
+    \item Upgraded to Armadillo release 7.200.1 
     \itemize{
       \item added \code{.index_min()} and \code{.index_max()}
       \item expanded \code{ind2sub()} to handle vectors of indices
