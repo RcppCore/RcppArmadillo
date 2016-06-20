@@ -25,20 +25,23 @@
 #include <RcppArmadillo.h>
 namespace Rcpp{
     namespace RcppArmadillo{
-
-        void FixProb(NumericVector &prob, const int size, const bool replace) {
+    
+        void FixProb(arma::vec &prob, const int size, const bool replace) {
             // prob is modified in-place.  
             double sum = 0.0;
             int ii, nPos = 0;
             int nn = prob.size();
             for (ii = 0; ii < nn; ii++) {
-                if (!R_FINITE(prob[ii])) //does this work??
+                // pop stack
+                double prob_value = prob(ii);
+              
+                if (!arma::is_finite(prob_value)) //does this work??
                     throw std::range_error( "NAs not allowed in probability" ) ;
-                if (prob[ii] < 0.0)
+                if (prob_value < 0.0)
                     throw std::range_error( "Negative probabilities not allowed" ) ;
-                if (prob[ii] > 0.0) {
+                if (prob_value > 0.0) {
                     nPos++;
-                    sum += prob[ii];
+                    sum += prob_value;
                 }
             }
             if (nPos == 0 || (!replace && size > nPos)) {
