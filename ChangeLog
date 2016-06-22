@@ -1,3 +1,10 @@
+2016-06-22  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version): Release 0.7.200.2.0 (GH-only)
+	* inst/NEWS.Rd: Release 0.7.200.2.0 (GH-only)
+
+	* inst/include/*: Upgraded to release 7.200.2 of Armadillo
+
 2016-06-19  James Joseph Balamuta  <balamut2@illinois.edu>
 
 	* inst/include/RcppArmadilloExtensions/sample.h: Rewrote sampling
