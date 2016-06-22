@@ -3331,14 +3331,14 @@ auxlib::solve_approx_fast(Mat<typename T1::elem_type>& out, Mat<typename T1::ele
     
     Mat<eT> tmp( (std::max)(A.n_rows, A.n_cols), B.n_cols );
     
-    if(size(tmp) == size(B))
+    if(arma::size(tmp) == arma::size(B))
       {
       tmp = B;
       }
     else
       {
       tmp.zeros();
-      tmp(0,0, size(B)) = B;
+      tmp(0,0, arma::size(B)) = B;
       }
     
     char      trans = 'N';
@@ -3408,14 +3408,14 @@ auxlib::solve_approx_svd(Mat<typename T1::pod_type>& out, Mat<typename T1::pod_t
     
     Mat<eT> tmp( (std::max)(A.n_rows, A.n_cols), B.n_cols );
     
-    if(size(tmp) == size(B))
+    if(arma::size(tmp) == arma::size(B))
       {
       tmp = B;
       }
     else
       {
       tmp.zeros();
-      tmp(0,0, size(B)) = B;
+      tmp(0,0, arma::size(B)) = B;
       }
     
     blas_int m     = blas_int(A.n_rows);
@@ -3529,14 +3529,14 @@ auxlib::solve_approx_svd(Mat< std::complex<typename T1::pod_type> >& out, Mat< s
     
     Mat<eT> tmp( (std::max)(A.n_rows, A.n_cols), B.n_cols );
     
-    if(size(tmp) == size(B))
+    if(arma::size(tmp) == arma::size(B))
       {
       tmp = B;
       }
     else
       {
       tmp.zeros();
-      tmp(0,0, size(B)) = B;
+      tmp(0,0, arma::size(B)) = B;
       }
     
     blas_int m     = blas_int(A.n_rows);

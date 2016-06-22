@@ -114,7 +114,7 @@ gmm_diag<eT>::set_params(const Base<eT,T1>& in_means_expr, const Base<eT,T2>& in
   
   arma_debug_check
     (
-    (size(in_means) != size(in_dcovs)) || (in_hefts.n_cols != in_means.n_cols) || (in_hefts.n_rows != 1),
+    (arma::size(in_means) != arma::size(in_dcovs)) || (in_hefts.n_cols != in_means.n_cols) || (in_hefts.n_rows != 1),
     "gmm_diag::set_params(): given parameters have inconsistent and/or wrong sizes"
     );
   
@@ -286,8 +286,8 @@ gmm_diag<eT>::save(const std::string name) const
     Q.slice(0).row(0) = hefts;
     Q.slice(1).row(0).zeros();  // reserved for future use
     
-    Q.slice(0).submat(1, 0, size(means)) = means;
-    Q.slice(1).submat(1, 0, size(dcovs)) = dcovs;
+    Q.slice(0).submat(1, 0, arma::size(means)) = means;
+    Q.slice(1).submat(1, 0, arma::size(dcovs)) = dcovs;
     }
   
   const bool status = Q.save(name, arma_binary);

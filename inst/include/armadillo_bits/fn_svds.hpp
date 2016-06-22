@@ -66,8 +66,8 @@ svds_helper
     SpMat<eT> B  = A / A_max;
     SpMat<eT> Bt = B.t();
     
-    C(0, A.n_rows, size(B) ) = B;
-    C(A.n_rows, 0, size(Bt)) = Bt;
+    C(0, A.n_rows, arma::size(B) ) = B;
+    C(A.n_rows, 0, arma::size(Bt)) = Bt;
     
     Bt.reset();
     B.reset();
@@ -187,8 +187,8 @@ svds_helper
     SpMat<eT> B  = A / A_max;
     SpMat<eT> Bt = B.t();
     
-    C(0, A.n_rows, size(B) ) = B;
-    C(A.n_rows, 0, size(Bt)) = Bt;
+    C(0, A.n_rows, arma::size(B) ) = B;
+    C(A.n_rows, 0, arma::size(Bt)) = Bt;
     
     Bt.reset();
     B.reset();

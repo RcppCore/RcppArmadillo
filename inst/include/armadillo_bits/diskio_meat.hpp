@@ -1459,7 +1459,7 @@ diskio::load_raw_binary(Mat<eT>& x, std::istream& f, std::string& err_msg)
   x.set_size(N / uword(sizeof(eT)), 1);
   
   f.clear();
-  f.read( reinterpret_cast<char *>(x.memptr()), std::streamsize(N) );
+  f.read( reinterpret_cast<char *>(x.memptr()), std::streamsize(x.n_elem * uword(sizeof(eT))) );
   
   return f.good();
   }
@@ -3539,7 +3539,7 @@ diskio::load_raw_binary(Cube<eT>& x, std::istream& f, std::string& err_msg)
   x.set_size(N / uword(sizeof(eT)), 1, 1);
   
   f.clear();
-  f.read( reinterpret_cast<char *>(x.memptr()), std::streamsize(N) );
+  f.read( reinterpret_cast<char *>(x.memptr()), std::streamsize(x.n_elem * uword(sizeof(eT))) );
   
   return f.good();
   }
