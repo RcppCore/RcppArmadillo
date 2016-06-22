@@ -3238,7 +3238,7 @@ SpMat<eT>::reshape(const uword in_rows, const uword in_cols, const uword dim)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (dim > 1), "SpMat::reshape(): paramter 'dim' must be 0 or 1" );
+  arma_debug_check( (dim > 1), "SpMat::reshape(): parameter 'dim' must be 0 or 1" );
   
   if(dim == 0)
     {

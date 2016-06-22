@@ -96,7 +96,7 @@ eigs_sym
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  arma_debug_check( void_ptr(&eigval) == void_ptr(&eigvec), "eigs_sym(): paramater 'eigval' is an alias of parameter 'eigvec'" );
+  arma_debug_check( void_ptr(&eigval) == void_ptr(&eigvec), "eigs_sym(): parameter 'eigval' is an alias of parameter 'eigvec'" );
   
   const bool status = sp_auxlib::eigs_sym(eigval, eigvec, X, n_eigvals, form, tol);
   

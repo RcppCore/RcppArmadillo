@@ -104,11 +104,11 @@ glue_conv::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_conv>& 
       {
       const uword start = uword( std::floor( double(B.n_elem) / double(2) ) );
       
-      out = (A_is_col) ? tmp(start, 0, size(A)) : tmp(0, start, size(A));
+      out = (A_is_col) ? tmp(start, 0, arma::size(A)) : tmp(0, start, arma::size(A));
       }
     else
       {
-      out.zeros( size(A) );
+      out.zeros( arma::size(A) );
       }
     }
   }
@@ -157,7 +157,7 @@ glue_conv2::apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
   
   Mat<eT> X( (W.n_rows + 2*H_n_rows_m1), (W.n_cols + 2*H_n_cols_m1), fill::zeros );
   
-  X( H_n_rows_m1, H_n_cols_m1, size(W) ) = W;  // zero padded version of 2D image
+  X( H_n_rows_m1, H_n_cols_m1, arma::size(W) ) = W;  // zero padded version of 2D image
   
   for(uword col=0; col < out_n_cols; ++col)
     {
@@ -216,11 +216,11 @@ glue_conv2::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_conv2>
       const uword start_row = uword( std::floor( double(B.n_rows) / double(2) ) );
       const uword start_col = uword( std::floor( double(B.n_cols) / double(2) ) );
       
-      out = tmp(start_row, start_col, size(A));
+      out = tmp(start_row, start_col, arma::size(A));
       }
     else
       {
-      out.zeros( size(A) );
+      out.zeros( arma::size(A) );
       }
     }
   }
