@@ -3,7 +3,7 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.7.200.y.0 (2016-07-xx)}{
+\section{Changes in RcppArmadillo version 0.7.200.2.0 (2016-07-22)}{
   \itemize{
     \item Upgraded to Armadillo release 7.200.2 
     \item The sampling extension was rewritten to use Armadillo vector types

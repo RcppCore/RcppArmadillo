@@ -1,3 +1,8 @@
+2016-07-22  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version): Release 0.7.200.2.0 (CRAN)
+	* DESCRIPTION (Date): Updated
+
 2016-06-22  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version): Release 0.7.200.2.0 (GH-only)
