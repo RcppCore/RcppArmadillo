@@ -696,6 +696,38 @@ Row<eT>::operator()(const span& col_span) const
 template<typename eT>
 arma_inline
 subview_row<eT>
+Row<eT>::subvec(const uword start_col, const SizeMat& s)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (s.n_rows != 1), "Row::subvec(): given size does not specify a row vector" );
+  
+  arma_debug_check( ( (start_col >= Mat<eT>::n_cols) || ((start_col + s.n_cols) > Mat<eT>::n_cols) ), "Row::subvec(): size out of bounds" );
+  
+  return subview_row<eT>(*this, 0, start_col, s.n_cols);
+  }
+
+
+
+template<typename eT>
+arma_inline
+const subview_row<eT>
+Row<eT>::subvec(const uword start_col, const SizeMat& s) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (s.n_rows != 1), "Row::subvec(): given size does not specify a row vector" );
+  
+  arma_debug_check( ( (start_col >= Mat<eT>::n_cols) || ((start_col + s.n_cols) > Mat<eT>::n_cols) ), "Row::subvec(): size out of bounds" );
+  
+  return subview_row<eT>(*this, 0, start_col, s.n_cols);
+  }
+
+
+
+template<typename eT>
+arma_inline
+subview_row<eT>
 Row<eT>::head(const uword N)
   {
   arma_extra_debug_sigprint();
