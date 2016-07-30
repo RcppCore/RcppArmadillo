@@ -3,6 +3,17 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.7.300.1.0 (2016-07-30)}{
+  \itemize{
+    \item Upgraded to Armadillo release 7.300.1
+    \itemize{
+      \item added \code{index_min()} and \code{index_max()} standalone functions
+      \item expanded \code{.subvec()} to accept \code{size()} arguments
+      \item more robust handling of non-square matrices by \code{lu()}
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.7.200.2.0 (2016-07-22)}{
   \itemize{
     \item Upgraded to Armadillo release 7.200.2 
