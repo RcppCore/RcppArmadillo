@@ -805,7 +805,7 @@ auxlib::lu(Mat<eT>& L, Mat<eT>& U, podarray<blas_int>& ipiv, const Base<eT,T1>& 
       arma_extra_debug_print("atlas::clapack_getrf()");
       int info = atlas::clapack_getrf(atlas::CblasColMajor, U_n_rows, U_n_cols, U.memptr(), U_n_rows, ipiv.memptr());
       
-      status = (info == 0);
+      status = (info >= 0);
       }
     #elif defined(ARMA_USE_LAPACK)
       {
@@ -824,7 +824,7 @@ auxlib::lu(Mat<eT>& L, Mat<eT>& U, podarray<blas_int>& ipiv, const Base<eT,T1>& 
       // take into account that Fortran counts from 1
       arrayops::inplace_minus(ipiv.memptr(), blas_int(1), ipiv.n_elem);
       
-      status = (info == 0);
+      status = (info >= 0);
       }
     #endif
     

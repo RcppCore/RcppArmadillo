@@ -98,6 +98,9 @@ class Row : public Mat<eT>
   arma_inline       subview_row<eT> operator()(const span& col_span);
   arma_inline const subview_row<eT> operator()(const span& col_span) const;
   
+  arma_inline       subview_row<eT> subvec(const uword start_col, const SizeMat& s);
+  arma_inline const subview_row<eT> subvec(const uword start_col, const SizeMat& s) const;
+  
   arma_inline       subview_row<eT> head(const uword N);
   arma_inline const subview_row<eT> head(const uword N) const;
   

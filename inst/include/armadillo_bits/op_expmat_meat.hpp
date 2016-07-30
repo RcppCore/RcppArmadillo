@@ -41,7 +41,7 @@ op_expmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_expmat>& expr
 template<typename T1>
 inline
 bool
-op_expmat::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type, T1>& X)
+op_expmat::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type, T1>& expr)
   {
   arma_extra_debug_sigprint();
   
@@ -50,7 +50,7 @@ op_expmat::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1
   
   if(is_op_diagmat<T1>::value)
     {
-    out = X.get_ref();  // force the evaluation of diagmat()
+    out = expr.get_ref();  // force the evaluation of diagmat()
     
     arma_debug_check( (out.is_square() == false), "expmat(): given matrix must be square sized" );
     
@@ -63,7 +63,7 @@ op_expmat::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1
     }
   else
     {
-    Mat<eT> A = X.get_ref();
+    Mat<eT> A = expr.get_ref();
     
     arma_debug_check( (A.is_square() == false), "expmat(): given matrix must be square sized" );
     
