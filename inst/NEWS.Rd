@@ -6,6 +6,9 @@
 \section{Changes in RcppArmadillo version 0.7.400.0.0 (2016-08-12)}{
   \itemize{
     \item Upgraded to Armadillo release 7.400.0-test
+    \itemize{
+      \item added \code{expmat_sym()}, \code{logmat_sympd()}, \code{sqrtmat_sympd()}                                                                               
+      \item added \code{.replace()}  
   }
 }
 
