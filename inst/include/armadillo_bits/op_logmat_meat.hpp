@@ -346,4 +346,73 @@ op_logmat_cx::helper(Mat<eT>& A, const uword m)
 
 
 
+template<typename T1>
+inline
+void
+op_logmat_sympd::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_logmat_sympd>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool status = op_logmat_sympd::apply_direct(out, in.m);
+  
+  if(status == false)
+    {
+    out.reset();
+    arma_stop_runtime_error("logmat_sympd(): transformation failed");
+    }
+  }
+
+
+
+template<typename T1>
+inline
+bool
+op_logmat_sympd::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& expr)
+  {
+  arma_extra_debug_sigprint();
+  
+  #if defined(ARMA_USE_LAPACK)
+    {
+    typedef typename T1::pod_type   T;
+    typedef typename T1::elem_type eT;
+    
+    const unwrap<T1>   U(expr.get_ref());
+    const Mat<eT>& X = U.M;
+    
+    arma_debug_check( (X.is_square() == false), "logmat_sympd(): given matrix must be square sized" );
+    
+    Col< T> eigval;
+    Mat<eT> eigvec;
+    
+    const bool status = auxlib::eig_sym_dc(eigval, eigvec, X);
+    
+    if(status == false)  { return false; }
+    
+    const uword N          = eigval.n_elem;
+    const T*    eigval_mem = eigval.memptr();
+    
+    bool all_pos = true;
+    
+    for(uword i=0; i<N; ++i)  { all_pos = (eigval_mem[i] < T(0)) ? false : all_pos; }
+    
+    if(all_pos == false)  { return false; }
+    
+    eigval = log(eigval);
+    
+    out = eigvec * diagmat(eigval) * eigvec.t();
+    
+    return true;
+    }
+  #else
+    {
+    arma_ignore(out);
+    arma_ignore(expr);
+    arma_stop_logic_error("logmat_sympd(): use of LAPACK must be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
 //! @}

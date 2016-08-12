@@ -1187,6 +1187,28 @@ subview_cube<eT>::imbue(functor F)
 template<typename eT>
 inline
 void
+subview_cube<eT>::replace(const eT old_val, const eT new_val)
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword local_n_rows   = n_rows;
+  const uword local_n_cols   = n_cols;
+  const uword local_n_slices = n_slices;
+  
+  for(uword slice = 0; slice < local_n_slices; ++slice)
+    {
+    for(uword col = 0; col < local_n_cols; ++col)
+      {
+      arrayops::replace(slice_colptr(slice,col), local_n_rows, old_val, new_val);
+      }
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
 subview_cube<eT>::fill(const eT val)
   {
   arma_extra_debug_sigprint();

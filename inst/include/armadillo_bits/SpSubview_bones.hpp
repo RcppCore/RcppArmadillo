@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2012 National ICT Australia (NICTA)
+// Copyright (C) 2011-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -77,6 +77,8 @@ class SpSubview : public SpBase<eT, SpSubview<eT> >
   inline static void schur_inplace(Mat<eT>& out, const subview& in);
   inline static void   div_inplace(Mat<eT>& out, const subview& in);
   */
+
+  inline void replace(const eT old_val, const eT new_val);
 
   inline void fill(const eT val);
   inline void zeros();

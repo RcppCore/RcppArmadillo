@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2015 National ICT Australia (NICTA)
+// Copyright (C) 2011-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -39,6 +39,11 @@ class arrayops
   template<typename eT>
   arma_hot inline static void
   fill_zeros(eT* dest, const uword n_elem);
+  
+  
+  template<typename eT>
+  arma_hot inline static void
+  replace(eT* mem, const uword n_elem, const eT old_val, const eT new_val);
   
   
   // 

@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2015 National ICT Australia (NICTA)
+// Copyright (C) 2011-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -133,6 +133,34 @@ void
 arrayops::fill_zeros(eT* dest, const uword n_elem)
   {
   arrayops::inplace_set(dest, eT(0), n_elem);
+  }
+
+
+
+template<typename eT>
+arma_hot
+inline
+void
+arrayops::replace(eT* mem, const uword n_elem, const eT old_val, const eT new_val)
+  {
+  if(arma_isnan(old_val))
+    {
+    for(uword i=0; i<n_elem; ++i)
+      {
+      eT& val = mem[i];
+      
+      val = (arma_isnan(val)) ? new_val : val;
+      }
+    }
+  else
+    {
+    for(uword i=0; i<n_elem; ++i)
+      {
+      eT& val = mem[i];
+      
+      val = (val == old_val) ? new_val : val;
+      }
+    }
   }
 
 

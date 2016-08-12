@@ -1,4 +1,4 @@
-// Copyright (C) 2009-2015 National ICT Australia (NICTA)
+// Copyright (C) 2009-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,16 +23,35 @@ op_pinv::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_pinv>& in)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type            eT;
-  typedef typename get_pod_type<eT>::result  T;
+  typedef typename T1::pod_type T;
+  
+  const T tol = access::tmp_real(in.aux);
   
   const bool use_divide_and_conquer = (in.aux_uword_a == 1);
   
-  T tol = access::tmp_real(in.aux);
+  const bool status = op_pinv::apply_direct(out, in.m, tol, use_divide_and_conquer);
+  
+  if(status == false)
+    {
+    arma_stop_runtime_error("pinv(): svd failed");
+    }
+  }
+
+
+
+template<typename T1>
+inline
+bool
+op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& expr, typename T1::pod_type tol, const bool use_divide_and_conquer)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  typedef typename T1::pod_type   T;
   
   arma_debug_check((tol < T(0)), "pinv(): tolerance must be >= 0");
   
-  const Proxy<T1> P(in.m);
+  const Proxy<T1> P(expr.get_ref());
   
   const uword n_rows = P.get_n_rows();
   const uword n_cols = P.get_n_cols();
@@ -40,7 +59,7 @@ op_pinv::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_pinv>& in)
   if( (n_rows*n_cols) == 0 )
     {
     out.set_size(n_cols,n_rows);
-    return;
+    return true;
     }
   
   
@@ -63,8 +82,7 @@ op_pinv::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_pinv>& in)
   if(status == false)
     {
     out.reset();
-    arma_stop_runtime_error("pinv(): svd failed");
-    return;
+    return false;
     }
   
   const uword s_n_elem = s.n_elem;
@@ -114,6 +132,8 @@ op_pinv::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_pinv>& in)
     {
     out.zeros(n_cols, n_rows);
     }
+  
+  return true;
   }
 
 

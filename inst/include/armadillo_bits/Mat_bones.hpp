@@ -438,6 +438,8 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename functor> inline const Mat&     imbue(functor F);
   
   
+  inline const Mat& replace(const eT old_val, const eT new_val);
+  
   arma_hot inline const Mat& fill(const eT val);
   
   template<typename fill_type>

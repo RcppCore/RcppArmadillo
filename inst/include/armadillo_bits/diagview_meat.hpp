@@ -865,6 +865,39 @@ diagview<eT>::st() const
 template<typename eT>
 inline
 void
+diagview<eT>::replace(const eT old_val, const eT new_val)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>& x = const_cast< Mat<eT>& >(m);
+  
+  const uword local_n_elem = n_elem;
+  
+  if(arma_isnan(old_val))
+    {
+    for(uword ii=0; ii < local_n_elem; ++ii)
+      {
+      eT& val = x.at(ii+row_offset, ii+col_offset);
+      
+      val = (arma_isnan(val)) ? new_val : val;
+      }
+    }
+  else
+    {
+    for(uword ii=0; ii < local_n_elem; ++ii)
+      {
+      eT& val = x.at(ii+row_offset, ii+col_offset);
+      
+      val = (val == old_val) ? new_val : val;
+      }
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
 diagview<eT>::fill(const eT val)
   {
   arma_extra_debug_sigprint();

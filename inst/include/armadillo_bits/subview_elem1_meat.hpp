@@ -338,6 +338,60 @@ subview_elem1<eT,T1>::st() const
 template<typename eT, typename T1>
 inline
 void
+subview_elem1<eT,T1>::replace(const eT old_val, const eT new_val)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>& m_local = const_cast< Mat<eT>& >(m);
+  
+        eT*   m_mem    = m_local.memptr();
+  const uword m_n_elem = m_local.n_elem;
+  
+  const unwrap_check_mixed<T1> tmp(a.get_ref(), m_local);
+  const umat& aa = tmp.M;
+  
+  arma_debug_check
+    (
+    ( (aa.is_vec() == false) && (aa.is_empty() == false) ),
+    "Mat::elem(): given object is not a vector"
+    );
+  
+  const uword* aa_mem    = aa.memptr();
+  const uword  aa_n_elem = aa.n_elem;
+  
+  if(arma_isnan(old_val))
+    {
+    for(uword iq=0; iq < aa_n_elem; ++iq)
+      {
+      const uword ii = aa_mem[iq];
+      
+      arma_debug_check( (ii >= m_n_elem), "Mat::elem(): index out of bounds" );
+      
+      eT& val = m_mem[ii];
+      
+      val = (arma_isnan(val)) ? new_val : val;
+      }
+    }
+  else
+    {
+    for(uword iq=0; iq < aa_n_elem; ++iq)
+      {
+      const uword ii = aa_mem[iq];
+      
+      arma_debug_check( (ii >= m_n_elem), "Mat::elem(): index out of bounds" );
+      
+      eT& val = m_mem[ii];
+      
+      val = (val == old_val) ? new_val : val;
+      }
+    }
+  }
+
+
+
+template<typename eT, typename T1>
+inline
+void
 subview_elem1<eT,T1>::fill(const eT val)
   {
   arma_extra_debug_sigprint();
