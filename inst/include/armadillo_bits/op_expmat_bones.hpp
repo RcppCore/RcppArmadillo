@@ -27,4 +27,17 @@ class op_expmat
 
 
 
+class op_expmat_sym
+  {
+  public:
+  
+  template<typename T1>
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_expmat_sym>& in);
+  
+  template<typename T1>
+  inline static bool apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& expr);
+  };
+
+
+
 //! @}

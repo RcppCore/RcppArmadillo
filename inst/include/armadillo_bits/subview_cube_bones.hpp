@@ -94,6 +94,8 @@ class subview_cube : public BaseCube<eT, subview_cube<eT> >
   inline void each_slice(const std::function< void(const Mat<eT>&) >& F) const;
   #endif
   
+  inline void replace(const eT old_val, const eT new_val);
+  
   inline void fill(const eT val);
   inline void zeros();
   inline void ones();

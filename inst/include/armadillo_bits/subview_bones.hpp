@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -90,6 +90,8 @@ class subview : public Base<eT, subview<eT> >
   
   template<typename functor> inline void transform(functor F);
   template<typename functor> inline void     imbue(functor F);
+  
+  inline void replace(const eT old_val, const eT new_val);
   
   inline void fill(const eT val);
   inline void zeros();

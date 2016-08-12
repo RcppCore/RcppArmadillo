@@ -17,52 +17,54 @@
 template<typename T1>
 arma_warn_unused
 inline
-const Op<T1, op_pinv>
+typename enable_if2< is_real<typename T1::pod_type>::value, const Op<T1, op_pinv> >::result
 pinv
   (
   const Base<typename T1::elem_type,T1>& X,
-  const typename T1::elem_type           tol    = 0.0,
-  const char*                            method = "dc",
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  const typename T1::pod_type            tol    = 0.0,
+  const char*                            method = "dc"
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
+  
+  typedef typename T1::elem_type eT;
   
   const char sig = (method != NULL) ? method[0] : char(0);
   
   arma_debug_check( ((sig != 's') && (sig != 'd')), "pinv(): unknown method specified" );
   
-  return (sig == 'd') ? Op<T1, op_pinv>(X.get_ref(), tol, 1, 0) : Op<T1, op_pinv>(X.get_ref(), tol, 0, 0);
+  return (sig == 'd') ? Op<T1, op_pinv>(X.get_ref(), eT(tol), 1, 0) : Op<T1, op_pinv>(X.get_ref(), eT(tol), 0, 0);
   }
 
 
 
 template<typename T1>
 inline
-bool
+typename enable_if2< is_real<typename T1::pod_type>::value, bool >::result
 pinv
   (
          Mat<typename T1::elem_type>&    out,
   const Base<typename T1::elem_type,T1>& X,
-  const typename T1::elem_type           tol    = 0.0,
-  const char*                            method = "dc",
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  const typename T1::pod_type            tol    = 0.0,
+  const char*                            method = "dc"
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
-  try
+  const char sig = (method != NULL) ? method[0] : char(0);
+  
+  arma_debug_check( ((sig != 's') && (sig != 'd')), "pinv(): unknown method specified" );
+  
+  const bool use_divide_and_conquer = (sig == 'd');
+  
+  const bool status = op_pinv::apply_direct(out, X.get_ref(), tol, use_divide_and_conquer);
+  
+  if(status == false)
     {
-    out = pinv(X, tol, method);
-    }
-  catch(std::runtime_error&)
-    {
-    return false;
+    arma_debug_warn("pinv(): svd failed");
     }
   
-  return true;
+  return status;
   }
 
 

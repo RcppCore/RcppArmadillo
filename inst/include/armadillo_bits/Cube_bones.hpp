@@ -282,6 +282,8 @@ class Cube : public BaseCube< eT, Cube<eT> >
   template<typename functor> inline const Cube& transform(functor F);
   template<typename functor> inline const Cube&     imbue(functor F);
   
+  inline const Cube& replace(const eT old_val, const eT new_val);
+  
   inline const Cube& fill(const eT val);
   
   inline const Cube& zeros();

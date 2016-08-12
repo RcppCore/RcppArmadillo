@@ -3245,6 +3245,20 @@ Cube<eT>::imbue(functor F)
 
 
 
+template<typename eT>
+inline
+const Cube<eT>&
+Cube<eT>::replace(const eT old_val, const eT new_val)
+  {
+  arma_extra_debug_sigprint();
+  
+  arrayops::replace(memptr(), n_elem, old_val, new_val);
+  
+  return *this;
+  }
+
+
+
 //! fill the cube with the specified value
 template<typename eT>
 inline

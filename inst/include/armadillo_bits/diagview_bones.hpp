@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2013 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -79,6 +79,8 @@ class diagview : public Base<eT, diagview<eT> >
   arma_inline const Op<diagview<eT>,op_htrans>  t() const;
   arma_inline const Op<diagview<eT>,op_htrans> ht() const;
   arma_inline const Op<diagview<eT>,op_strans> st() const;
+  
+  inline void replace(const eT old_val, const eT new_val);
   
   inline void fill(const eT val);
   inline void zeros();

@@ -3268,6 +3268,29 @@ SpMat<eT>::reshape(const uword in_rows, const uword in_cols, const uword dim)
 template<typename eT>
 inline
 const SpMat<eT>&
+SpMat<eT>::replace(const eT old_val, const eT new_val)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(old_val == eT(0))
+    {
+    arma_debug_warn("SpMat::replace(): replacement not done, as old_val = 0");
+    }
+  else
+    {
+    arrayops::replace(access::rwp(values), n_nonzero, old_val, new_val);
+    
+    if(new_val == eT(0))  { remove_zeros(); }
+    }
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+inline
+const SpMat<eT>&
 SpMat<eT>::zeros()
   {
   arma_extra_debug_sigprint();

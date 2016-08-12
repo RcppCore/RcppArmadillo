@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -289,6 +289,8 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   inline void  reshape(const uword in_rows, const uword in_cols);
   inline void  reshape(const SizeMat& s);
   inline void  reshape(const uword in_rows, const uword in_cols, const uword dim);  // this form is deprecated: don't use it
+  
+  inline const SpMat& replace(const eT old_val, const eT new_val);
   
   inline const SpMat& zeros();
   inline const SpMat& zeros(const uword in_elem);

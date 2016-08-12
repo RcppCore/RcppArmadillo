@@ -6400,6 +6400,20 @@ Mat<eT>::imbue(functor F)
 
 
 
+template<typename eT>
+inline
+const Mat<eT>&
+Mat<eT>::replace(const eT old_val, const eT new_val)
+  {
+  arma_extra_debug_sigprint();
+  
+  arrayops::replace(memptr(), n_elem, old_val, new_val);
+  
+  return *this;
+  }
+
+
+
 //! fill the matrix with the specified value
 template<typename eT>
 arma_hot

@@ -861,6 +861,56 @@ subview<eT>::imbue(functor F)
 template<typename eT>
 inline
 void
+subview<eT>::replace(const eT old_val, const eT new_val)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview<eT>& s = *this;
+  
+  const uword s_n_cols = s.n_cols;
+  const uword s_n_rows = s.n_rows;
+  
+  if(s_n_rows == 1)
+    {
+    Mat<eT>& A = const_cast< Mat<eT>& >(s.m);
+    
+    const uword A_n_rows = A.n_rows;
+    
+    eT* Aptr = &(A.at(s.aux_row1,s.aux_col1));
+    
+    if(arma_isnan(old_val))
+      {
+      for(uword ucol=0; ucol < s_n_cols; ++ucol)
+        {
+        (*Aptr) = (arma_isnan(*Aptr)) ? new_val : (*Aptr);
+        
+        Aptr += A_n_rows;
+        }
+      }
+    else
+      {
+      for(uword ucol=0; ucol < s_n_cols; ++ucol)
+        {
+        (*Aptr) = ((*Aptr) == old_val) ? new_val : (*Aptr);
+        
+        Aptr += A_n_rows;
+        }
+      }
+    }
+  else
+    {
+    for(uword ucol=0; ucol < s_n_cols; ++ucol)
+      {
+      arrayops::replace(s.colptr(ucol), s_n_rows, old_val, new_val);
+      }
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
 subview<eT>::fill(const eT val)
   {
   arma_extra_debug_sigprint();
