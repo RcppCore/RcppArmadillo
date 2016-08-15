@@ -252,6 +252,8 @@ spop_max::max_with_index(const SpProxy<T1>& P, uword& index_of_max_val)
     {
     arma_debug_check(true, "max(): object has no elements");
     
+    index_of_max_val = uword(0);
+    
     return Datum<eT>::nan;
     }
   
@@ -580,6 +582,8 @@ spop_max::max_with_index(const SpProxy<T1>& P, uword& index_of_max_val)
   if(n_elem == 0)
     {
     arma_debug_check(true, "max(): object has no elements");
+    
+    index_of_max_val = uword(0);
     
     return Datum<eT>::nan;
     }
