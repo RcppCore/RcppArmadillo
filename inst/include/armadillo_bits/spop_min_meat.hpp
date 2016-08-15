@@ -252,6 +252,8 @@ spop_min::min_with_index(const SpProxy<T1>& P, uword& index_of_min_val)
     {
     arma_debug_check(true, "min(): object has no elements");
     
+    index_of_min_val = uword(0);
+    
     return Datum<eT>::nan;
     }
   
@@ -616,6 +618,8 @@ spop_min::min_with_index(const SpProxy<T1>& P, uword& index_of_min_val)
   if(n_elem == 0)
     {
     arma_debug_check(true, "min(): object has no elements");
+    
+    index_of_min_val = uword(0);
     
     return Datum<eT>::nan;
     }

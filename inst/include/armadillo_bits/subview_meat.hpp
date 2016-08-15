@@ -2899,6 +2899,8 @@ subview_col<eT>::min(uword& index_of_min_val) const
     {
     arma_debug_check(true, "min(): object has no elements");
     
+    index_of_min_val = uword(0);
+    
     return Datum<eT>::nan;
     }
   else
@@ -2919,6 +2921,8 @@ subview_col<eT>::max(uword& index_of_max_val) const
   if(subview<eT>::n_elem == 0)
     {
     arma_debug_check(true, "max(): object has no elements");
+    
+    index_of_max_val = uword(0);
     
     return Datum<eT>::nan;
     }

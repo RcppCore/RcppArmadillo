@@ -3521,6 +3521,8 @@ Cube<eT>::min(uword& index_of_min_val) const
     {
     arma_debug_check(true, "Cube::min(): object has no elements");
     
+    index_of_min_val = uword(0);
+    
     return Datum<eT>::nan;
     }
   
@@ -3540,6 +3542,8 @@ Cube<eT>::max(uword& index_of_max_val) const
     {
     arma_debug_check(true, "Cube::max(): object has no elements");
     
+    index_of_max_val = uword(0);
+    
     return Datum<eT>::nan;
     }
   
@@ -3558,6 +3562,10 @@ Cube<eT>::min(uword& row_of_min_val, uword& col_of_min_val, uword& slice_of_min_
   if(n_elem == 0)
     {
     arma_debug_check(true, "Cube::min(): object has no elements");
+    
+    row_of_min_val   = uword(0);
+    col_of_min_val   = uword(0);
+    slice_of_min_val = uword(0);
     
     return Datum<eT>::nan;
     }
@@ -3589,6 +3597,10 @@ Cube<eT>::max(uword& row_of_max_val, uword& col_of_max_val, uword& slice_of_max_
   if(n_elem == 0)
     {
     arma_debug_check(true, "Cube::max(): object has no elements");
+    
+    row_of_max_val   = uword(0);
+    col_of_max_val   = uword(0);
+    slice_of_max_val = uword(0);
     
     return Datum<eT>::nan;
     }

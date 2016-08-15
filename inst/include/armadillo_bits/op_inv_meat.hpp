@@ -148,7 +148,7 @@ op_inv_sympd::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv_sympd>&
   if(status == false)
     {
     out.reset();
-    arma_stop_runtime_error("inv_sympd(): matrix seems singular");
+    arma_stop_runtime_error("inv_sympd(): matrix is singular or not positive definite");
     }
   }
 
