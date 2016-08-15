@@ -3,11 +3,12 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.7.400.0.0 (2016-08-12)}{
+\section{Changes in RcppArmadillo version 0.7.400.1.0 (2016-08-15)}{
   \itemize{
-    \item Upgraded to Armadillo release 7.400.0-test
+    \item Upgraded to Armadillo release 7.400.1 (Feral Winter Deluxe)
     \itemize{
-      \item added \code{expmat_sym()}, \code{logmat_sympd()}, \code{sqrtmat_sympd()}                                                                               
+      \item added \code{expmat_sym()}, \code{logmat_sympd()},
+        \code{sqrtmat_sympd()}
       \item added \code{.replace()}  
   }
 }
