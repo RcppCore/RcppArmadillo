@@ -9,7 +9,8 @@
     \itemize{
       \item added \code{expmat_sym()}, \code{logmat_sympd()},
         \code{sqrtmat_sympd()}
-      \item added \code{.replace()}  
+        \item added \code{.replace()}
+      }
   }
 }
 
