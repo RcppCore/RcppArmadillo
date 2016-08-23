@@ -132,7 +132,7 @@ det
 
 
 template<typename T1>
-arma_warn_unused
+arma_deprecated
 inline
 typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, typename T1::elem_type >::result
 det
@@ -143,13 +143,15 @@ det
   {
   arma_extra_debug_sigprint();
   
+  // arma_debug_warn("det(X,bool) is deprecated and will be removed; change to det(X)");
+  
   return det(X.get_ref());
   }
 
 
 
 template<typename T1>
-arma_warn_unused
+arma_deprecated
 inline
 typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, typename T1::elem_type >::result
 det
@@ -159,6 +161,8 @@ det
   )
   {
   arma_extra_debug_sigprint();
+  
+  // arma_debug_warn("det(X,char*) is deprecated and will be removed; change to det(X)");
   
   return det(X.get_ref());
   }

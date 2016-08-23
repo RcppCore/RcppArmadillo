@@ -12,6 +12,7 @@
 //! @{
 
 
+
 template<typename T1>
 arma_warn_unused
 arma_inline
@@ -23,21 +24,45 @@ enable_if2
   >::result
 sort
   (
-  const T1&   X,
-  const uword sort_type = 0
+  const T1& X
   )
   {
   arma_extra_debug_sigprint();
+  
+  return Op<T1, op_sort_default>(X, 0, 0);
+  }
+
+
+
+//! kept only for compatibility with old code
+template<typename T1>
+arma_deprecated
+inline
+typename
+enable_if2
+  <
+  (is_arma_type<T1>::value),
+  const Op<T1, op_sort_default>
+  >::result
+sort
+  (
+  const T1&   X,
+  const uword sort_type
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  // arma_debug_warn("sort(X,uword) is deprecated and will be removed; change to sort(X,sort_direction)");
   
   return Op<T1, op_sort_default>(X, sort_type, 0);
   }
 
 
 
-//! kept for compatibility with old code
+//! kept only for compatibility with old code
 template<typename T1>
-arma_warn_unused
-arma_inline
+arma_deprecated
+inline
 typename
 enable_if2
   <
@@ -53,6 +78,8 @@ sort
   {
   arma_extra_debug_sigprint();
   
+  // arma_debug_warn("sort(X,uword,uword) is deprecated and will be removed; change to sort(X,sort_direction,dim)");
+  
   return Op<T1, op_sort>(X, sort_type, dim);
   }
 
@@ -60,7 +87,7 @@ sort
 
 template<typename T1, typename T2>
 arma_warn_unused
-arma_inline
+inline
 typename
 enable_if2
   <
@@ -88,7 +115,7 @@ sort
 
 template<typename T1, typename T2>
 arma_warn_unused
-arma_inline
+inline
 typename
 enable_if2
   <

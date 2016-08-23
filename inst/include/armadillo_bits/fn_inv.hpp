@@ -30,8 +30,8 @@ inv
 
 
 template<typename T1>
-arma_warn_unused
-arma_inline
+arma_deprecated
+inline
 typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, const Op<T1, op_inv> >::result
 inv
   (
@@ -41,14 +41,16 @@ inv
   {
   arma_extra_debug_sigprint();
   
+  // arma_debug_warn("inv(X,bool) is deprecated and will be removed; change to inv(X)");
+  
   return Op<T1, op_inv>(X.get_ref());
   }
 
 
 
 template<typename T1>
-arma_warn_unused
-arma_inline
+arma_deprecated
+inline
 typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, const Op<T1, op_inv> >::result
 inv
   (
@@ -57,6 +59,8 @@ inv
   )
   {
   arma_extra_debug_sigprint();
+  
+  // arma_debug_warn("inv(X,char*) is deprecated and will be removed; change to inv(X)");
   
   return Op<T1, op_inv>(X.get_ref());
   }
@@ -80,8 +84,8 @@ inv
 
 
 template<typename T1>
-arma_warn_unused
-arma_inline
+arma_deprecated
+inline
 typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, const Op<T1, op_inv_tr> >::result
 inv
   (
@@ -91,14 +95,16 @@ inv
   {
   arma_extra_debug_sigprint();
   
+  // arma_debug_warn("inv(X,bool) is deprecated and will be removed; change to inv(X)");
+  
   return Op<T1, op_inv_tr>(X.m, X.aux_uword_a, 0);
   }
 
 
 
 template<typename T1>
-arma_warn_unused
-arma_inline
+arma_deprecated
+inline
 typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, const Op<T1, op_inv_tr> >::result
 inv
   (
@@ -107,6 +113,8 @@ inv
   )
   {
   arma_extra_debug_sigprint();
+  
+  // arma_debug_warn("inv(X,char*) is deprecated and will be removed; change to inv(X)");
   
   return Op<T1, op_inv_tr>(X.m, X.aux_uword_a, 0);
   }
@@ -139,6 +147,7 @@ inv
 
 
 template<typename T1>
+arma_deprecated
 inline
 typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, bool >::result
 inv
@@ -150,12 +159,15 @@ inv
   {
   arma_extra_debug_sigprint();
   
+  // arma_debug_warn("inv(Y,X,bool) is deprecated and will be removed; change to inv(Y,X)");
+  
   return inv(out,X);
   }
 
 
 
 template<typename T1>
+arma_deprecated
 inline
 typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, bool >::result
 inv
@@ -166,6 +178,8 @@ inv
   )
   {
   arma_extra_debug_sigprint();
+  
+  // arma_debug_warn("inv(Y,X,char*) is deprecated and will be removed; change to inv(Y,X)");
   
   return inv(out,X);
   }
@@ -189,8 +203,8 @@ inv_sympd
 
 
 template<typename T1>
-arma_warn_unused
-arma_inline
+arma_deprecated
+inline
 typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, const Op<T1, op_inv_sympd> >::result
 inv_sympd
   (
@@ -200,14 +214,16 @@ inv_sympd
   {
   arma_extra_debug_sigprint();
   
+  // arma_debug_warn("inv_sympd(X,bool) is deprecated and will be removed; change to inv_sympd(X)");
+  
   return Op<T1, op_inv_sympd>(X.get_ref());
   }
 
 
 
 template<typename T1>
-arma_warn_unused
-arma_inline
+arma_deprecated
+inline
 typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, const Op<T1, op_inv_sympd> >::result
 inv_sympd
   (
@@ -216,6 +232,8 @@ inv_sympd
   )
   {
   arma_extra_debug_sigprint();
+  
+  // arma_debug_warn("inv_sympd(X,char*) is deprecated and will be removed; change to inv_sympd(X)");
   
   return Op<T1, op_inv_sympd>(X.get_ref());
   }
@@ -248,6 +266,7 @@ inv_sympd
 
 
 template<typename T1>
+arma_deprecated
 inline
 typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, bool >::result
 inv_sympd
@@ -259,12 +278,15 @@ inv_sympd
   {
   arma_extra_debug_sigprint();
   
+  // arma_debug_warn("inv_sympd(Y,X,bool) is deprecated and will be removed; change to inv_sympd(Y,X)");
+  
   return inv_sympd(out,X);
   }
 
 
 
 template<typename T1>
+arma_deprecated
 inline
 typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, bool >::result
 inv_sympd
@@ -275,6 +297,8 @@ inv_sympd
   )
   {
   arma_extra_debug_sigprint();
+  
+  // arma_debug_warn("inv_sympd(Y,X,char*) is deprecated and will be removed; change to inv_sympd(Y,X)");
   
   return inv_sympd(out,X);
   }
