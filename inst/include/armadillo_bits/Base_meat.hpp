@@ -265,20 +265,26 @@ Base_inv_yes<derived>::i() const
 
 
 template<typename derived>
-arma_inline
+arma_deprecated
+inline
 const Op<derived,op_inv>
 Base_inv_yes<derived>::i(const bool) const   // argument kept only for compatibility with old user code
   {
+  // arma_debug_warn(".i(bool) is deprecated and will be removed; change to .i()");
+  
   return Op<derived,op_inv>(static_cast<const derived&>(*this));
   }
 
 
 
 template<typename derived>
-arma_inline
+arma_deprecated
+inline
 const Op<derived,op_inv>
 Base_inv_yes<derived>::i(const char*) const   // argument kept only for compatibility with old user code
   {
+  // arma_debug_warn(".i(char*) is deprecated and will be removed; change to .i()");
+  
   return Op<derived,op_inv>(static_cast<const derived&>(*this));
   }
 

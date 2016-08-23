@@ -411,7 +411,7 @@
 #endif
 
 
-#if defined(ARMA_USE_CXX11) && defined(__CYGWIN__)
+#if defined(ARMA_USE_CXX11) && defined(__CYGWIN__) && !defined(ARMA_DONT_PRINT_CXX11_WARNING)
   #pragma message ("WARNING: Cygwin may have incomplete support for C++11 features.")
 #endif
 
@@ -422,15 +422,16 @@
 #endif
 
 
-#if defined(ARMA_PRINT_CXX11_WARNING)
+#if defined(ARMA_PRINT_CXX11_WARNING) && !defined(ARMA_DONT_PRINT_CXX11_WARNING)
   #pragma message ("WARNING: use of C++11 features has been enabled,")
   #pragma message ("WARNING: but this compiler has INCOMPLETE support for C++11;")
   #pragma message ("WARNING: if something breaks, you get to keep all the pieces.")
   #pragma message ("WARNING: to forcefully prevent Armadillo from using C++11 features,")
   #pragma message ("WARNING: #define ARMA_DONT_USE_CXX11 before #include <armadillo>")
-
-  #undef ARMA_PRINT_CXX11_WARNING
 #endif
+
+
+#undef ARMA_PRINT_CXX11_WARNING
 
 
 #if defined(log2)
