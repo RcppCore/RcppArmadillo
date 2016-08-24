@@ -7,6 +7,8 @@
 
         * debian/*: Debian release of 0.7.400.2.0
 
+	* .travis.yml: Switch to using run.sh for Travis CI
+
 2016-08-23  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version): Release 0.7.400.1.1 (GH-only)
