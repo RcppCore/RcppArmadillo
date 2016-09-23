@@ -89,4 +89,27 @@ test.cube <- function() {
   checkEquals(as_cx_cube(cplx_cube), (cplx_cube ** 2), "as_cx_cube")
   checkEquals(as_cx_fcube(cplx_cube), (cplx_cube ** 2), "as_cx_fcube",
               tolerance = 1.5e-7)
+  
+  
+  ## check that deep copying works for doubles
+  dbl_cube <- array(0.1 + 1:8, rep(2, 3))
+  as_cube_copy(dbl_cube)
+  checkEquals(dbl_cube, array(0.1 + 1:8, rep(2, 3)), "as_deep_copy")
+  dbl_cube <- array(0.1 + 1:8, rep(2, 3))
+  cube_no_copy(dbl_cube)
+  checkEquals(dbl_cube, array(c(111, 0.1 + 2:8), rep(2, 3)), "no_deep_copy")
+  #deep copy due to conversion from int -> double
+  dbl_cube <- array(1L:8L, rep(2, 3))
+  cube_no_copy(dbl_cube)
+  checkEquals(dbl_cube, array(1L:8L, rep(2, 3)), "conv_deep_copy")
+  
+  ## check that deep copying works for floats
+  dbl_cube <- array(0.1 + 1:8, rep(2, 3))
+  as_fcube_copy(dbl_cube)
+  checkEquals(dbl_cube, array(0.1 + 1:8, rep(2, 3)), "f_as_deep_copy")
+  dbl_cube <- array(0.1 + 1:8, rep(2, 3))
+  #deep copy due to conversion from double -> float
+  fcube_no_copy(dbl_cube)
+  checkEquals(dbl_cube, array(0.1 + 1:8, rep(2, 3)), "f_conv_deep_copy")
+  
 }
