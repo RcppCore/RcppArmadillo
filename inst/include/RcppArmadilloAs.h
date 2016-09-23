@@ -117,6 +117,8 @@ namespace traits {
     // default Exporter-Cube specialization:
     // handles cube, icube, and cx_cube
     // fails on fcube, ucube, and cx_fcube
+    
+    //make a copy when using as<arma::cube> like in vec/mat cases
     template <typename T>
     class Exporter< arma::Cube<T> > {
     public:
@@ -125,7 +127,7 @@ namespace traits {
         typedef typename Rcpp::traits::storage_type<RTYPE>::type value_t;
         Exporter(SEXP x) : vec(x) {}
       
-        cube_t get() {
+        cube_t get(bool copy = true) {
             Rcpp::Vector<INTSXP> dims = vec.attr("dim");
             if (dims.size() != 3) {
                 std::string msg = 
@@ -136,7 +138,7 @@ namespace traits {
           
             cube_t result(
                 reinterpret_cast<T*>(vec.begin()),
-                dims[0], dims[1], dims[2], false);
+                dims[0], dims[1], dims[2], copy);
             return result;
         }
       
@@ -153,7 +155,7 @@ namespace traits {
         typedef arma::fcube cube_t;
         
         Exporter(SEXP x)
-            : tmp(Exporter<arma::cube>(x).get()) {}
+            : tmp(Exporter<arma::cube>(x).get(false)) {}
         
         cube_t get() {
             cube_t result = arma::conv_to<cube_t>::from(tmp);
@@ -171,7 +173,7 @@ namespace traits {
         typedef arma::ucube cube_t;
       
         Exporter(SEXP x)
-            : tmp(Exporter<arma::icube>(x).get()) {}
+            : tmp(Exporter<arma::icube>(x).get(false)) {}
         
         cube_t get() {
             cube_t result = arma::conv_to<cube_t>::from(tmp);
@@ -189,7 +191,7 @@ namespace traits {
         typedef arma::cx_fcube cube_t;
       
         Exporter(SEXP x)
-            : tmp(Exporter<arma::cx_cube>(x).get()) {}
+            : tmp(Exporter<arma::cx_cube>(x).get(false)) {}
       
         cube_t get() {
             cube_t result = arma::conv_to<cube_t>::from(tmp);
@@ -276,6 +278,50 @@ namespace traits {
     
     /* End Armadillo vector as support classes */
     
+    template <typename T, typename CUBE, typename REF, 
+      typename NEEDS_CAST = typename Rcpp::traits::r_sexptype_needscast<T>::type>
+    class ArmaCube_InputParameter;
+    
+    template <typename T, typename CUBE, typename REF>
+    class ArmaCube_InputParameter<T, CUBE, REF, Rcpp::traits::false_type> {
+    public:
+      ArmaCube_InputParameter( SEXP x_ ) : c(x_), dims(c.attr("dim")), cube( reinterpret_cast<T*>( c.begin() ), 
+        dims[0], dims[1], dims[2], false ) {
+            if (dims.size() != 3) {
+                std::string msg = 
+                  "Error converting object to arma::Cube<T>:\n"
+                  "Input array must have exactly 3 dimensions.\n";
+                Rcpp::stop(msg);
+            }
+      }
+      
+      inline operator REF(){
+        return cube ;        
+      }
+      
+    private:
+      Rcpp::Vector< Rcpp::traits::r_sexptype_traits<T>::rtype > c ;
+      Rcpp::Vector<INTSXP> dims;
+      CUBE cube ;
+      
+    } ;
+    
+    template <typename T, typename CUBE, typename REF>
+    class ArmaCube_InputParameter<T, CUBE, REF, Rcpp::traits::true_type> {
+    public:
+      ArmaCube_InputParameter( SEXP x_ ): c(x_), cube( as<CUBE>(c) ) {}
+      
+      inline operator REF(){
+        return cube ;        
+      }
+      
+    private:
+      Rcpp::Vector< Rcpp::traits::r_sexptype_traits<T>::rtype > c ;
+      CUBE cube ;
+    } ;
+    
+    /* End Armadillo vector as support classes */
+    
 #define MAKE_INPUT_PARAMETER(INPUT_TYPE,TYPE,REF)                       \
     template <typename T>                                               \
     class INPUT_TYPE<TYPE> : public ArmaVec_InputParameter<T, TYPE, REF >{ \
@@ -305,6 +351,19 @@ namespace traits {
     MAKE_INPUT_PARAMETER(ReferenceInputParameter     , arma::Mat<T>, arma::Mat<T>&       )
     MAKE_INPUT_PARAMETER(ConstInputParameter         , arma::Mat<T>, const arma::Mat<T>  )
 
+#undef MAKE_INPUT_PARAMETER
+
+#define MAKE_INPUT_PARAMETER(INPUT_TYPE,TYPE,REF)                             \
+    template <typename T>                                                   \
+    class INPUT_TYPE<TYPE> : public ArmaCube_InputParameter<T, TYPE, REF >{  \
+      public:                                                               \
+        INPUT_TYPE( SEXP x) : ArmaCube_InputParameter<T, TYPE, REF >(x){}    \
+    } ;                                                                                                                 
+    
+    MAKE_INPUT_PARAMETER(ConstReferenceInputParameter, arma::Cube<T>, const arma::Cube<T>& )
+    MAKE_INPUT_PARAMETER(ReferenceInputParameter     , arma::Cube<T>, arma::Cube<T>&       )
+    MAKE_INPUT_PARAMETER(ConstInputParameter         , arma::Cube<T>, const arma::Cube<T>  )
+      
 #undef MAKE_INPUT_PARAMETER
     
 }

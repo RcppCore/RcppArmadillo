@@ -89,3 +89,25 @@ arma::cx_fcube as_cx_fcube(Rcpp::ComplexVector x) {
   arma::cx_fcube y = Rcpp::as<arma::cx_fcube>(x);
   return arma::pow(y, 2);
 }
+
+// [[Rcpp::export]]
+void as_cube_copy(Rcpp::NumericVector x) {
+  arma::cube y(Rcpp::as<arma::cube>(x));
+  y(0) = 111.0;
+}
+
+// [[Rcpp::export]]
+void as_fcube_copy(Rcpp::NumericVector x) {
+  arma::fcube y(Rcpp::as<arma::fcube>(x));
+  y(0) = 111.0;
+}
+
+// [[Rcpp::export]]
+void cube_no_copy(arma::cube& x) {
+  x(0) = 111.0;
+}
+
+// [[Rcpp::export]]
+void fcube_no_copy(arma::fcube& x) {
+  x(0) = 111.0;
+}
