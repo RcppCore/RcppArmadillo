@@ -1,3 +1,9 @@
+2016-09-23  Jouni Helske  <jouni.helske@jyu.fi>
+
+	* inst/include/RcppArmadilloAs.h: as<arma::Cube> always 
+	makes a copy as the vec/mat cases.
+	* inst/include/RcppArmadilloForward.h: Ditto.
+	
 2016-08-24  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version): Release 0.7.400.2.0 (CRAN)
