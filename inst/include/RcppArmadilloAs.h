@@ -381,7 +381,7 @@ namespace traits {
     class INPUT_TYPE<TYPE> : public ArmaCube_InputParameter<T, TYPE, REF >{  \
       public:                                                               \
         INPUT_TYPE( SEXP x) : ArmaCube_InputParameter<T, TYPE, REF >(x){}    \
-    } ;                                                                                                                  
+    } ;                                                                                                                 
     
     MAKE_INPUT_PARAMETER(ConstReferenceInputParameter, arma::Cube<T>, const arma::Cube<T>& )
     MAKE_INPUT_PARAMETER(ReferenceInputParameter     , arma::Cube<T>, arma::Cube<T>&       )
