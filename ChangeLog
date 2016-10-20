@@ -1,3 +1,12 @@
+2016-10-20  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version): Release 0.7.500.0.0 (CRAN)
+	* DESCRIPTION (Date): Updated
+
+	* inst/include/*: Finalised as 7.500.0 of Armadillo
+
+        * debian/*: Debian release of 0.7.500.0.0
+
 2016-08-24  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version): Release 0.7.400.2.0 (CRAN)
