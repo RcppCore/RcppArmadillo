@@ -1,4 +1,4 @@
-// Copyright (C) 2015 National ICT Australia (NICTA)
+// Copyright (C) 2015-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -203,6 +203,21 @@ subview_cube_each1<eT>::operator/= (const Base<eT,T1>& in)
   const eT* A_mem = A.memptr();
   
   for(uword i=0; i < p_n_slices; ++i)  { arrayops::inplace_div( p.slice_memptr(i), A_mem, p_n_elem_slice ); }
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+void
+subview_cube_each1<eT>::operator*= (const Base<eT,T1>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  Cube<eT>& C = access::rw(subview_cube_each_common<eT>::P);
+  
+  C = C.each_slice() * in.get_ref();
   }
 
 
@@ -659,6 +674,68 @@ subview_cube_each1_aux::operator_div
     const Mat<eT>   p_slice(const_cast<eT*>(p.slice_memptr(i)), p_n_rows, p_n_cols, false, true);
     
     out_slice = A / p_slice;
+    }
+  
+  return out;
+  }
+
+
+
+template<typename eT, typename T2>
+inline
+Cube<eT>
+subview_cube_each1_aux::operator_times
+  (
+  const subview_cube_each1<eT>& X,
+  const Base<eT,T2>&            Y
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  const Cube<eT>& C = X.P;
+  
+  const unwrap<T2>   tmp(Y.get_ref());
+  const Mat<eT>& M = tmp.M;
+  
+  Cube<eT> out(C.n_rows, M.n_cols, C.n_slices);
+  
+  for(uword i=0; i < C.n_slices; ++i)
+    {
+          Mat<eT> out_slice(              out.slice_memptr(i),  C.n_rows, M.n_cols, false, true);
+    const Mat<eT>   C_slice(const_cast<eT*>(C.slice_memptr(i)), C.n_rows, C.n_cols, false, true);
+    
+    out_slice = C_slice * M;
+    }
+  
+  return out;
+  }
+
+
+
+template<typename T1, typename eT>
+inline
+Cube<eT>
+subview_cube_each1_aux::operator_times
+  (
+  const Base<eT,T1>&            X,
+  const subview_cube_each1<eT>& Y
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  const unwrap<T1>   tmp(X.get_ref());
+  const Mat<eT>& M = tmp.M;
+  
+  const Cube<eT>& C = Y.P;
+  
+  Cube<eT> out(M.n_rows, C.n_cols, C.n_slices);
+  
+  for(uword i=0; i < C.n_slices; ++i)
+    {
+          Mat<eT> out_slice(              out.slice_memptr(i),  M.n_rows, C.n_cols, false, true);
+    const Mat<eT>   C_slice(const_cast<eT*>(C.slice_memptr(i)), C.n_rows, C.n_cols, false, true);
+    
+    out_slice = M * C_slice;
     }
   
   return out;

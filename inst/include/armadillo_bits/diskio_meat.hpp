@@ -652,22 +652,17 @@ arma_cold
 bool
 diskio::safe_rename(const std::string& old_name, const std::string& new_name)
   {
-  std::fstream f(new_name.c_str(), std::fstream::out | std::fstream::app);
+  const char* new_name_c_str = new_name.c_str();
+  
+  std::fstream f(new_name_c_str, std::fstream::out | std::fstream::app);
   f.put(' ');
   
-  bool save_okay = f.good();
-  f.close();
+  if(f.good()) { f.close(); } else { return false; }
   
-  if(save_okay == true)
-    {
-    std::remove(new_name.c_str());
-    
-    const int mv_result = std::rename(old_name.c_str(), new_name.c_str());
-    
-    save_okay = (mv_result == 0);
-    }
+  if(std::remove(                  new_name_c_str) != 0)  { return false; }
+  if(std::rename(old_name.c_str(), new_name_c_str) != 0)  { return false; }
   
-  return save_okay;
+  return true;
   }
 
 
@@ -1894,7 +1889,7 @@ diskio::load_pgm_binary(Mat<eT>& x, std::istream& f, std::string& err_msg)
     f >> f_maxval;
     f.get();
     
-    if( (f_maxval > 0) || (f_maxval <= 65535) )
+    if( (f_maxval > 0) && (f_maxval <= 65535) )
       {
       x.set_size(f_n_rows,f_n_cols);
       
@@ -1945,7 +1940,7 @@ diskio::load_pgm_binary(Mat<eT>& x, std::istream& f, std::string& err_msg)
     else
       {
       load_okay = false;
-      err_msg = "currently no code available to handle loading ";
+      err_msg = "functionality unimplemented to handle loading ";
       }
     
     if(f.good() == false)

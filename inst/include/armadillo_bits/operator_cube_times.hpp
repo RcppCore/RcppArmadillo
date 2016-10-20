@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2010 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -77,6 +77,38 @@ operator*
   arma_extra_debug_sigprint();
   
   return mtOpCube<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_times>('j', X.get_ref(), k);
+  }
+
+
+
+template<typename eT, typename T2>
+arma_inline
+Cube<eT>
+operator*
+  (
+  const subview_cube_each1<eT>& X,
+  const Base<eT,T2>&            Y
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_cube_each1_aux::operator_times(X, Y.get_ref());
+  }
+
+
+
+template<typename T1, typename eT>
+arma_inline
+Cube<eT>
+operator*
+  (
+  const Base<eT,T1>&            X,
+  const subview_cube_each1<eT>& Y
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_cube_each1_aux::operator_times(X.get_ref(), Y);
   }
 
 
