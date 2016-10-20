@@ -260,10 +260,10 @@ class auxlib
   // QZ decomposition
   
   template<typename T, typename T1, typename T2>
-  inline static bool qz(Mat<T>& A, Mat<T>& B, Mat<T>& vsl, Mat<T>& vsr, const Base<T,T1>& X_expr, const Base<T,T2>& Y_expr);
+  inline static bool qz(Mat<T>& A, Mat<T>& B, Mat<T>& vsl, Mat<T>& vsr, const Base<T,T1>& X_expr, const Base<T,T2>& Y_expr, const char mode);
   
   template<typename T, typename T1, typename T2>
-  inline static bool qz(Mat< std::complex<T> >& A, Mat< std::complex<T> >& B, Mat< std::complex<T> >& vsl, Mat< std::complex<T> >& vsr, const Base< std::complex<T>, T1 >& X_expr, const Base< std::complex<T>, T2 >& Y_expr);
+  inline static bool qz(Mat< std::complex<T> >& A, Mat< std::complex<T> >& B, Mat< std::complex<T> >& vsl, Mat< std::complex<T> >& vsr, const Base< std::complex<T>, T1 >& X_expr, const Base< std::complex<T>, T2 >& Y_expr, const char mode);
   
   
   // 
@@ -275,6 +275,24 @@ class auxlib
   template<typename T1>
   inline static typename T1::pod_type rcond(const Base<std::complex<typename T1::pod_type>,T1>& A_expr);
   };
+
+
+
+namespace qz_helper
+  {
+  template<typename T> inline blas_int select_lhp(const T* x_ptr, const T* y_ptr, const T* z_ptr);
+  template<typename T> inline blas_int select_rhp(const T* x_ptr, const T* y_ptr, const T* z_ptr);
+  template<typename T> inline blas_int select_iuc(const T* x_ptr, const T* y_ptr, const T* z_ptr);
+  template<typename T> inline blas_int select_ouc(const T* x_ptr, const T* y_ptr, const T* z_ptr);
+  
+  template<typename T> inline blas_int cx_select_lhp(const std::complex<T>* x_ptr, const std::complex<T>* y_ptr);
+  template<typename T> inline blas_int cx_select_rhp(const std::complex<T>* x_ptr, const std::complex<T>* y_ptr);
+  template<typename T> inline blas_int cx_select_iuc(const std::complex<T>* x_ptr, const std::complex<T>* y_ptr);
+  template<typename T> inline blas_int cx_select_ouc(const std::complex<T>* x_ptr, const std::complex<T>* y_ptr);
+  
+  template<typename T> inline void_ptr ptr_cast(blas_int (*function)(const T*, const T*, const T*));
+  template<typename T> inline void_ptr ptr_cast(blas_int (*function)(const std::complex<T>*, const std::complex<T>*));
+  }
 
 
 //! @}

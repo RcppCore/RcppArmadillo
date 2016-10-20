@@ -3877,7 +3877,7 @@ Mat<eT>::each_row(const Base<uword, T1>& indices) const
     
     for(uword ii=0; ii < n_cols; ++ii)
       {
-      const Col<eT> tmp(colptr(ii), n_rows, false, true);
+      const Col<eT> tmp(const_cast<eT*>(colptr(ii)), n_rows, false, true);
       F(tmp);
       }
     

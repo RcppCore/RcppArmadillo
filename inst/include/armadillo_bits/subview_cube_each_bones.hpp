@@ -1,4 +1,4 @@
-// Copyright (C) 2015 National ICT Australia (NICTA)
+// Copyright (C) 2015-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -56,6 +56,7 @@ class subview_cube_each1 : public subview_cube_each_common<eT>
   template<typename T1> inline void operator-= (const Base<eT,T1>& x);
   template<typename T1> inline void operator%= (const Base<eT,T1>& x);
   template<typename T1> inline void operator/= (const Base<eT,T1>& x);
+  template<typename T1> inline void operator*= (const Base<eT,T1>& x);
   
   
   private:
@@ -116,6 +117,12 @@ class subview_cube_each1_aux
   
   template<typename T1, typename eT>
   static inline Cube<eT> operator_div(const Base<eT,T1>& X, const subview_cube_each1<eT>& Y);
+  
+  template<typename eT, typename T2>
+  static inline Cube<eT> operator_times(const subview_cube_each1<eT>& X,const Base<eT,T2>& Y);
+  
+  template<typename T1, typename eT>
+  static inline Cube<eT> operator_times(const Base<eT,T1>& X, const subview_cube_each1<eT>& Y);
   };
 
 
@@ -141,6 +148,8 @@ class subview_cube_each2_aux
   
   template<typename T1, typename eT, typename TB>
   static inline Cube<eT> operator_div(const Base<eT,T1>& X, const subview_cube_each2<eT,TB>& Y);
+  
+  // TODO: operator_times
   };
 
 

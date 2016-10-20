@@ -19,7 +19,7 @@ arma_inline
 void
 arrayops::copy(eT* dest, const eT* src, const uword n_elem)
   {
-  if( (n_elem <= 16) && (is_cx<eT>::no) )
+  if( (n_elem <= 9) && (is_cx<eT>::no) )
     {
     arrayops::copy_small(dest, src, n_elem);
     }
@@ -39,13 +39,6 @@ arrayops::copy_small(eT* dest, const eT* src, const uword n_elem)
   {
   switch(n_elem)
     {
-    case 16:  dest[15] = src[15];
-    case 15:  dest[14] = src[14];
-    case 14:  dest[13] = src[13];
-    case 13:  dest[12] = src[12];
-    case 12:  dest[11] = src[11];
-    case 11:  dest[10] = src[10];
-    case 10:  dest[ 9] = src[ 9];
     case  9:  dest[ 8] = src[ 8];
     case  8:  dest[ 7] = src[ 7];
     case  7:  dest[ 6] = src[ 6];

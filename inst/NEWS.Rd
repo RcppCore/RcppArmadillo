@@ -3,6 +3,16 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.7.500.0.0 (2016-10-20)}{
+  \itemize{
+    \item Upgraded to Armadillo release 7.500.0 (Coup d'Etat)
+    \itemize{
+      \item Expanded \code{qz()} to optionally specify ordering of the Schur form
+      \item Expanded \code{each_slice()} to support matrix multiplication
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.7.400.2.0 (2016-08-24)}{
   \itemize{
     \item Upgraded to Armadillo release 7.400.2 (Feral Winter Deluxe)
