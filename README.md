@@ -1,5 +1,5 @@
 
-## RcppArmadillo [![Build Status](https://travis-ci.org/RcppCore/RcppArmadillo.svg)](https://travis-ci.org/RcppCore/RcppArmadillo) [![License](http://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg?style=flat)](http://www.gnu.org/licenses/gpl-2.0.html) [![CRAN](http://www.r-pkg.org/badges/version/RcppArmadillo)](http://cran.r-project.org/package=RcppArmadillo) [![Downloads](http://cranlogs.r-pkg.org/badges/RcppArmadillo?color=brightgreen)](http://www.r-pkg.org/pkg/RcppArmadillo)
+## RcppArmadillo [![Build Status](https://travis-ci.org/RcppCore/RcppArmadillo.svg)](https://travis-ci.org/RcppCore/RcppArmadillo) [![License](http://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg?style=flat)](http://www.gnu.org/licenses/gpl-2.0.html) [![CRAN](http://www.r-pkg.org/badges/version/RcppArmadillo)](https://cran.r-project.org/package=RcppArmadillo) [![Downloads](http://cranlogs.r-pkg.org/badges/RcppArmadillo?color=brightgreen)](http://www.r-pkg.org/pkg/RcppArmadillo)
 
 R and Armadillo via Rcpp
 
@@ -30,7 +30,7 @@ C++ integration.
 ### Status
 
 The package is under active development with releases to
-[CRAN](http://cran.r-project.org) about once a month.
+[CRAN](https://cran.r-project.org) about once a month.
 
 ### Documentation
 
