@@ -59,7 +59,7 @@ namespace Rcpp{
         
         // Enables supplying an arma probability
         template <class T> 
-        T sample(const T &x, const int size, const bool replace, arma::vec prob_){
+        T sample(const T &x, const int size, const bool replace, arma::vec &prob_){
           return sample_main(x, size, replace, prob_);
         }
 
