@@ -146,8 +146,8 @@ namespace Rcpp{
             double rU;
             int ii, jj;
             int nOrig_1 = nOrig - 1;
-            arma::uvec perm = arma::sort_index(prob, 1); //descending sort of index
-            prob = arma::sort(prob, 1);  // descending sort of prob
+            arma::uvec perm = arma::sort_index(prob, "descend"); //descending sort of index
+            prob = arma::sort(prob, "descend");  // descending sort of prob
             // cumulative probabilities 
             prob = arma::cumsum(prob);
             // compute the sample 
@@ -208,8 +208,8 @@ namespace Rcpp{
             int ii, jj, kk;
             int nOrig_1 = nOrig - 1;
             double rT, mass, totalmass = 1.0;
-            arma::uvec perm = arma::sort_index(prob, 1); //descending sort of index
-            prob = arma::sort(prob, 1);  // descending sort of prob
+            arma::uvec perm = arma::sort_index(prob, "descend"); //descending sort of index
+            prob = arma::sort(prob, "descend");  // descending sort of prob
             // compute the sample 
             for (ii = 0; ii < size; ii++, nOrig_1--) {
                 rT = totalmass * unif_rand();
