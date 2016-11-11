@@ -1,3 +1,10 @@
+2016-11-11  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version): Release 0.7.500.1.0 (GH-only)
+	* inst/NEWS.Rd: Release 0.7.500.1.0 (GH-only)
+
+	* inst/include/*: Upgraded to release 7.500.1 of Armadillo
+
 2016-10-25  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/RcppArmadilloExtensions/sample.h (Rcpp): Update to
