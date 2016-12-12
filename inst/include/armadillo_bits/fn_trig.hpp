@@ -12,10 +12,14 @@
 //! @{
 
 //
-// trigonometric functions:
+// single argument trigonometric functions:
 // cos family: cos, acos, cosh, acosh
 // sin family: sin, asin, sinh, asinh
 // tan family: tan, atan, tanh, atanh
+// 
+// dual argument trigonometric functions:
+// atan2
+// hypot
 
 
 //
@@ -24,12 +28,12 @@
 template<typename T1>
 arma_warn_unused
 arma_inline
-const eOp<T1, eop_cos>
-cos(const Base<typename T1::elem_type,T1>& A)
+typename enable_if2< is_arma_type<T1>::value, const eOp<T1, eop_cos> >::result
+cos(const T1& A)
   {
   arma_extra_debug_sigprint();
   
-  return eOp<T1, eop_cos>(A.get_ref());
+  return eOp<T1, eop_cos>(A);
   }
 
 
@@ -53,12 +57,12 @@ cos(const BaseCube<typename T1::elem_type,T1>& A)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const eOp<T1, eop_acos>
-acos(const Base<typename T1::elem_type,T1>& A)
+typename enable_if2< is_arma_type<T1>::value, const eOp<T1, eop_acos> >::result
+acos(const T1& A)
   {
   arma_extra_debug_sigprint();
   
-  return eOp<T1, eop_acos>(A.get_ref());
+  return eOp<T1, eop_acos>(A);
   }
 
 
@@ -82,12 +86,12 @@ acos(const BaseCube<typename T1::elem_type,T1>& A)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const eOp<T1, eop_cosh>
-cosh(const Base<typename T1::elem_type,T1>& A)
+typename enable_if2< is_arma_type<T1>::value, const eOp<T1, eop_cosh> >::result
+cosh(const T1& A)
   {
   arma_extra_debug_sigprint();
   
-  return eOp<T1, eop_cosh>(A.get_ref());
+  return eOp<T1, eop_cosh>(A);
   }
 
 
@@ -111,12 +115,12 @@ cosh(const BaseCube<typename T1::elem_type,T1>& A)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const eOp<T1, eop_acosh>
-acosh(const Base<typename T1::elem_type,T1>& A)
+typename enable_if2< is_arma_type<T1>::value, const eOp<T1, eop_acosh> >::result
+acosh(const T1& A)
   {
   arma_extra_debug_sigprint();
   
-  return eOp<T1, eop_acosh>(A.get_ref());
+  return eOp<T1, eop_acosh>(A);
   }
 
 
@@ -140,12 +144,12 @@ acosh(const BaseCube<typename T1::elem_type,T1>& A)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const eOp<T1, eop_sin>
-sin(const Base<typename T1::elem_type,T1>& A)
+typename enable_if2< is_arma_type<T1>::value, const eOp<T1, eop_sin> >::result
+sin(const T1& A)
   {
   arma_extra_debug_sigprint();
   
-  return eOp<T1, eop_sin>(A.get_ref());
+  return eOp<T1, eop_sin>(A);
   }
 
 
@@ -169,12 +173,12 @@ sin(const BaseCube<typename T1::elem_type,T1>& A)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const eOp<T1, eop_asin>
-asin(const Base<typename T1::elem_type,T1>& A)
+typename enable_if2< is_arma_type<T1>::value, const eOp<T1, eop_asin> >::result
+asin(const T1& A)
   {
   arma_extra_debug_sigprint();
   
-  return eOp<T1, eop_asin>(A.get_ref());
+  return eOp<T1, eop_asin>(A);
   }
 
 
@@ -198,12 +202,12 @@ asin(const BaseCube<typename T1::elem_type,T1>& A)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const eOp<T1, eop_sinh>
-sinh(const Base<typename T1::elem_type,T1>& A)
+typename enable_if2< is_arma_type<T1>::value, const eOp<T1, eop_sinh> >::result
+sinh(const T1& A)
   {
   arma_extra_debug_sigprint();
   
-  return eOp<T1, eop_sinh>(A.get_ref());
+  return eOp<T1, eop_sinh>(A);
   }
 
 
@@ -227,12 +231,12 @@ sinh(const BaseCube<typename T1::elem_type,T1>& A)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const eOp<T1, eop_asinh>
-asinh(const Base<typename T1::elem_type,T1>& A)
+typename enable_if2< is_arma_type<T1>::value, const eOp<T1, eop_asinh> >::result
+asinh(const T1& A)
   {
   arma_extra_debug_sigprint();
   
-  return eOp<T1, eop_asinh>(A.get_ref());
+  return eOp<T1, eop_asinh>(A);
   }
 
 
@@ -256,12 +260,12 @@ asinh(const BaseCube<typename T1::elem_type,T1>& A)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const eOp<T1, eop_tan>
-tan(const Base<typename T1::elem_type,T1>& A)
+typename enable_if2< is_arma_type<T1>::value, const eOp<T1, eop_tan> >::result
+tan(const T1& A)
   {
   arma_extra_debug_sigprint();
   
-  return eOp<T1, eop_tan>(A.get_ref());
+  return eOp<T1, eop_tan>(A);
   }
 
 
@@ -285,12 +289,12 @@ tan(const BaseCube<typename T1::elem_type,T1>& A)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const eOp<T1, eop_atan>
-atan(const Base<typename T1::elem_type,T1>& A)
+typename enable_if2< is_arma_type<T1>::value, const eOp<T1, eop_atan> >::result
+atan(const T1& A)
   {
   arma_extra_debug_sigprint();
   
-  return eOp<T1, eop_atan>(A.get_ref());
+  return eOp<T1, eop_atan>(A);
   }
 
 
@@ -314,12 +318,12 @@ atan(const BaseCube<typename T1::elem_type,T1>& A)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const eOp<T1, eop_tanh>
-tanh(const Base<typename T1::elem_type,T1>& A)
+typename enable_if2< is_arma_type<T1>::value, const eOp<T1, eop_tanh> >::result
+tanh(const T1& A)
   {
   arma_extra_debug_sigprint();
   
-  return eOp<T1, eop_tanh>(A.get_ref());
+  return eOp<T1, eop_tanh>(A);
   }
 
 
@@ -343,12 +347,12 @@ tanh(const BaseCube<typename T1::elem_type,T1>& A)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const eOp<T1, eop_atanh>
-atanh(const Base<typename T1::elem_type,T1>& A)
+typename enable_if2< is_arma_type<T1>::value, const eOp<T1, eop_atanh> >::result
+atanh(const T1& A)
   {
   arma_extra_debug_sigprint();
   
-  return eOp<T1, eop_atanh>(A.get_ref());
+  return eOp<T1, eop_atanh>(A);
   }
 
 
@@ -362,6 +366,74 @@ atanh(const BaseCube<typename T1::elem_type,T1>& A)
   arma_extra_debug_sigprint();
   
   return eOpCube<T1, eop_atanh>(A.get_ref());
+  }
+
+
+
+//
+// atan2
+
+template<typename T1, typename T2>
+arma_warn_unused
+arma_inline
+typename
+enable_if2
+  <
+  (is_arma_type<T1>::value && is_arma_type<T2>::value && is_real<typename T1::elem_type>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value),
+  const Glue<T1, T2, glue_atan2>
+  >::result
+atan2(const T1& Y, const T2& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  return Glue<T1, T2, glue_atan2>(Y, X);
+  }
+
+
+
+template<typename T1, typename T2>
+arma_warn_unused
+arma_inline
+typename enable_if2< is_real<typename T1::elem_type>::value, const GlueCube<T1, T2, glue_atan2> >::result
+atan2(const BaseCube<typename T1::elem_type,T1>& Y, const BaseCube<typename T1::elem_type,T2>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  return GlueCube<T1, T2, glue_atan2>(Y.get_ref(), X.get_ref());
+  }
+
+
+
+//
+// hypot
+
+template<typename T1, typename T2>
+arma_warn_unused
+arma_inline
+typename
+enable_if2
+  <
+  (is_arma_type<T1>::value && is_arma_type<T2>::value && is_real<typename T1::elem_type>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value),
+  const Glue<T1, T2, glue_hypot>
+  >::result
+hypot(const T1& X, const T2& Y)
+  {
+  arma_extra_debug_sigprint();
+  
+  return Glue<T1, T2, glue_hypot>(X, Y);
+  }
+
+
+
+template<typename T1, typename T2>
+arma_warn_unused
+arma_inline
+typename enable_if2< is_real<typename T1::elem_type>::value, const GlueCube<T1, T2, glue_hypot> >::result
+hypot(const BaseCube<typename T1::elem_type,T1>& X, const BaseCube<typename T1::elem_type,T2>& Y)
+  {
+  arma_extra_debug_sigprint();
+  
+  return GlueCube<T1, T2, glue_hypot>(X.get_ref(), Y.get_ref());
   }
 
 

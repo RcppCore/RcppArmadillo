@@ -21,6 +21,7 @@ DoubleShiftQR<eT>::compute_reflector(const eT& x1, const eT& x2, const eT& x3, u
   
   // In general case the reflector affects 3 rows
   ref_nr(ind) = 3;
+  eT x2x3 = eT(0);
   // If x3 is zero, decrease nr by 1
   if(std::abs(x3) < prec)
     {
@@ -34,13 +35,17 @@ DoubleShiftQR<eT>::compute_reflector(const eT& x1, const eT& x2, const eT& x3, u
       {
       ref_nr(ind) = 2;
       }
+    x2x3 = std::abs(x2);
+    }
+  else
+    {
+    x2x3 = arma_hypot(x2, x3);
     }
 
   // x1' = x1 - rho * ||x||
   // rho = -sign(x1), if x1 == 0, we choose rho = 1
-  eT tmp = x2 * x2 + x3 * x3;
-  eT x1_new = x1 - ((x1 <= 0) - (x1 > 0)) * std::sqrt(x1 * x1 + tmp);
-  eT x_norm = std::sqrt(x1_new * x1_new + tmp);
+  eT x1_new = x1 - ((x1 <= 0) - (x1 > 0)) * arma_hypot(x1, x2x3);
+  eT x_norm = arma_hypot(x1_new, x2x3);
   // Double check the norm of new x
   if(x_norm < prec)
     {
@@ -251,8 +256,8 @@ inline
 DoubleShiftQR<eT>::DoubleShiftQR(uword size)
   : n(size)
   , prec(std::numeric_limits<eT>::epsilon())
-  , eps_rel(std::pow(prec, eT(0.75)))
-  , eps_abs(std::min(std::pow(prec, eT(0.75)), n * prec))
+  , eps_rel(prec)
+  , eps_abs(prec)
   , computed(false)
   {
   arma_extra_debug_sigprint();
@@ -270,8 +275,8 @@ DoubleShiftQR<eT>::DoubleShiftQR(const Mat<eT>& mat_obj, eT s, eT t)
   , ref_u(3, n)
   , ref_nr(n)
   , prec(std::numeric_limits<eT>::epsilon())
-  , eps_rel(std::pow(prec, eT(0.75)))
-  , eps_abs(std::min(std::pow(prec, eT(0.75)), n * prec))
+  , eps_rel(prec)
+  , eps_abs(prec)
   , computed(false)
   {
   arma_extra_debug_sigprint();

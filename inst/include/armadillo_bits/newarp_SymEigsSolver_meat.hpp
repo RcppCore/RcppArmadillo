@@ -34,7 +34,7 @@ SymEigsSolver<eT, SelectionRule, OpType>::factorise_from(uword from_k, uword to_
     // If beta = 0, then the next V is not full rank
     // We need to generate a new residual vector that is orthogonal
     // to the current V, which we call a restart
-    if(beta < prec)
+    if(beta < eps)
       {
       // Generate new random vector for fac_f
       blas_int idist = 2;
@@ -86,7 +86,7 @@ SymEigsSolver<eT, SelectionRule, OpType>::factorise_from(uword from_k, uword to_
     Col<eT> Vf = Vs.t() * fac_f;
     // If not, iteratively correct the residual
     uword count = 0;
-    while(count < 5 && abs(Vf).max() > prec * beta)
+    while(count < 5 && abs(Vf).max() > approx0 * beta)
       {
       // f <- f - V * Vf
       fac_f -= Vs * Vf;
@@ -162,12 +162,12 @@ SymEigsSolver<eT, SelectionRule, OpType>::num_converged(eT tol)
   {
   arma_extra_debug_sigprint();
   
-  // thresh = tol * max(prec, abs(theta)), theta for ritz value
+  // thresh = tol * max(approx0, abs(theta)), theta for ritz value
   const eT f_norm = norm(fac_f);
   for(uword i = 0; i < nev; i++)
     {
-    eT thresh = tol * std::max(prec, std::abs(ritz_val(i)));
-    eT resid = std::abs(ritz_vec(ncv - 1, i)) * f_norm;
+    eT thresh = tol * std::max(approx0, std::abs(ritz_val(i)));
+    eT resid = std::abs(ritz_est(i)) * f_norm;
     ritz_conv[i] = (resid < thresh);
     }
 
@@ -184,15 +184,20 @@ SymEigsSolver<eT, SelectionRule, OpType>::nev_adjusted(uword nconv)
   arma_extra_debug_sigprint();
   
   uword nev_new = nev;
+  for(uword i = nev; i < ncv; i++)
+    {
+    if(std::abs(ritz_est(i)) < eps) { nev_new++; }
+    }
 
   // Adjust nev_new, according to dsaup2.f line 677~684 in ARPACK
-  nev_new = nev + std::min(nconv, (ncv - nev) / 2);
-  if(nev == 1 && ncv >= 6)
+  nev_new += std::min(nconv, (ncv - nev_new) / 2);
+  if(nev_new >= ncv) { nev_new = ncv - 1; }
+  if(nev_new == 1 && ncv >= 6)
     {
     nev_new = ncv / 2;
     }
   else
-  if(nev == 1 && ncv > 2)
+  if(nev_new == 1 && ncv > 2)
     {
     nev_new = 2;
     }
@@ -239,6 +244,7 @@ SymEigsSolver<eT, SelectionRule, OpType>::retrieve_ritzpair()
   for(uword i = 0; i < ncv; i++)
     {
     ritz_val(i) = evals(ind[i]);
+    ritz_est(i) = evecs(ncv - 1, ind[i]);
     }
   for(uword i = 0; i < nev; i++)
     {
@@ -289,7 +295,8 @@ SymEigsSolver<eT, SelectionRule, OpType>::SymEigsSolver(const OpType& op_, uword
   , ncv(ncv_ > dim_n ? dim_n : ncv_)
   , nmatop(0)
   , niter(0)
-  , prec(std::pow(std::numeric_limits<eT>::epsilon(), eT(2.0) / 3))
+  , eps(std::numeric_limits<eT>::epsilon())
+  , approx0(std::pow(eps, eT(2.0) / 3))
   {
   arma_extra_debug_sigprint();
   
@@ -312,6 +319,7 @@ SymEigsSolver<eT, SelectionRule, OpType>::init(eT* init_resid)
   fac_f.zeros(dim_n);
   ritz_val.zeros(ncv);
   ritz_vec.zeros(ncv, nev);
+  ritz_est.zeros(ncv);
   ritz_conv.assign(nev, false);
 
   nmatop = 0;
@@ -321,7 +329,7 @@ SymEigsSolver<eT, SelectionRule, OpType>::init(eT* init_resid)
   // The first column of fac_V
   Col<eT> v(fac_V.colptr(0), dim_n, false);
   eT rnorm = norm(r);
-  arma_debug_check( (rnorm < prec), "newarp::SymEigsSolver::init(): initial residual vector cannot be zero" );
+  arma_debug_check( (rnorm < eps), "newarp::SymEigsSolver::init(): initial residual vector cannot be zero" );
   v = r / rnorm;
 
   Col<eT> w(dim_n);
