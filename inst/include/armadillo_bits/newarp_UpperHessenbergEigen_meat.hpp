@@ -116,7 +116,9 @@ UpperHessenbergEigen<eT>::eigenvectors()
   
   arma_debug_check( (computed == false), "newarp::UpperHessenbergEigen::eigenvectors(): need to call compute() first" );
 
-  eT prec = std::pow(std::numeric_limits<eT>::epsilon(), eT(2.0) / 3);
+  // in fact Lapack will set the imaginary parts of real eigenvalues to be exact zero
+  // here we just use a small value
+  eT prec = std::numeric_limits<eT>::epsilon();
   
   Mat< std::complex<eT> > evecs(n, n);
   

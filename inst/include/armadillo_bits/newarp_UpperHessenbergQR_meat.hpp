@@ -63,7 +63,7 @@ UpperHessenbergQR<eT>::compute(const Mat<eT>& mat_obj)
 
     xi = mat_T(i,     i);  // mat_T(i, i)
     xj = mat_T(i + 1, i);  // mat_T(i + 1, i)
-    r = std::sqrt(xi * xi + xj * xj);
+    r = arma_hypot(xi, xj);
     if(r <= eps)
       {
       r = 0;
@@ -210,7 +210,7 @@ TridiagQR<eT>::compute(const Mat<eT>& mat_obj)
     {
     xi = this->mat_T(i,     i);  // mat_T(i, i)
     xj = this->mat_T(i + 1, i);  // mat_T(i + 1, i)
-    r = std::sqrt(xi * xi + xj * xj);
+    r = arma_hypot(xi, xj);
     if(r <= eps)
       {
       r = 0;
