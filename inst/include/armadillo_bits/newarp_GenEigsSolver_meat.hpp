@@ -333,7 +333,7 @@ GenEigsSolver<eT, SelectionRule, OpType>::init(eT* init_resid)
   // The first column of fac_V
   Col<eT> v(fac_V.colptr(0), dim_n, false);
   eT rnorm = norm(r);
-  arma_debug_check( (rnorm < eps), "newarp::GenEigsSolver::init(): initial residual vector cannot be zero" );
+  arma_check( (rnorm < eps), "newarp::GenEigsSolver::init(): initial residual vector cannot be zero" );
   v = r / rnorm;
 
   Col<eT> w(dim_n);
@@ -402,19 +402,20 @@ GenEigsSolver<eT, SelectionRule, OpType>::eigenvalues()
   
   uword nconv = std::count(ritz_conv.begin(), ritz_conv.end(), true);
   Col< std::complex<eT> > res(nconv);
-
-  if(!nconv) { return res; }
-
-  uword j = 0;
-  for(uword i = 0; i < nev; i++)
+  
+  if(nconv > 0)
     {
-    if(ritz_conv[i])
+    uword j = 0;
+    for(uword i = 0; i < nev; i++)
       {
-      res(j) = ritz_val(i);
-      j++;
+      if(ritz_conv[i])
+        {
+        res(j) = ritz_val(i);
+        j++;
+        }
       }
     }
-
+  
   return res;
   }
 
@@ -430,22 +431,23 @@ GenEigsSolver<eT, SelectionRule, OpType>::eigenvectors(uword nvec)
   uword nconv = std::count(ritz_conv.begin(), ritz_conv.end(), true);
   nvec = std::min(nvec, nconv);
   Mat< std::complex<eT> > res(dim_n, nvec);
-
-  if(!nvec) { return res; }
-
-  Mat< std::complex<eT> > ritz_vec_conv(ncv, nvec);
-  uword j = 0;
-  for(uword i = 0; (i < nev) && (j < nvec); i++)
+  
+  if(nvec > 0)
     {
-    if(ritz_conv[i])
+    Mat< std::complex<eT> > ritz_vec_conv(ncv, nvec);
+    uword j = 0;
+    for(uword i = 0; (i < nev) && (j < nvec); i++)
       {
-      ritz_vec_conv.col(j) = ritz_vec.col(i);
-      j++;
+      if(ritz_conv[i])
+        {
+        ritz_vec_conv.col(j) = ritz_vec.col(i);
+        j++;
+        }
       }
+    
+    res = fac_V * ritz_vec_conv;
     }
-
-  res = fac_V * ritz_vec_conv;
-
+  
   return res;
   }
 

@@ -3,9 +3,9 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.7.599.0.0 (2016-12-12)}{
+\section{Changes in RcppArmadillo version 0.7.600.1.0 (2016-12-16)}{
   \itemize{
-    \item Upgraded to Armadillo release 7.600.0-test
+    \item Upgraded to Armadillo release 7.600.1 (Coup d'Etat Deluxe)
     \itemize{
       \item more accurate \code{eigs_sym()} and \code{eigs_gen()}
       \item expanded \code{floor()}, \code{ceil()}, \code{round()},
