@@ -3,6 +3,15 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.7.600.2.0 (2017-01-05)}{
+  \itemize{
+    \item Upgraded to Armadillo release 7.600.2 (Coup d'Etat Deluxe)
+    \itemize{
+      \item Bug fix to memory allocation for \code{fields}
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.7.600.1.0 (2016-12-16)}{
   \itemize{
     \item Upgraded to Armadillo release 7.600.1 (Coup d'Etat Deluxe)
