@@ -13,6 +13,11 @@
       \item added \code{range()} to statistics functions
       \item expanded \code{trimatu()}/\code{trimatl()} and
       \code{symmatu()}/\code{symmatl()} to handle sparse matrice 
+\section{Changes in RcppArmadillo version 0.7.600.2.0 (2017-01-05)}{
+  \itemize{
+    \item Upgraded to Armadillo release 7.600.2 (Coup d'Etat Deluxe)
+    \itemize{
+      \item Bug fix to memory allocation for \code{fields}
     }
   }
 }

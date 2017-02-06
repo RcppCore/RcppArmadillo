@@ -5,6 +5,9 @@
 	* inst/include/*: Upgraded to release 7.700.0 of Armadillo
 
         * debian/*: Debian release of 0.7.700.0.0
+2017-01-05  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): 0.7.600.2.0 (GH-only)
 
 2017-01-04  Dirk Eddelbuettel  <edd@debian.org>
 
