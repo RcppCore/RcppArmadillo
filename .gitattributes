@@ -1,2 +1,3 @@
+DESCRIPTION merge=union
 ChangeLog merge=union
 inst/NEWS.Rd merge=union
