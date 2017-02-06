@@ -1,4 +1,4 @@
-// Copyright (C) 2009-2013 National ICT Australia (NICTA)
+// Copyright (C) 2009-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,9 +12,24 @@
 //! @{
 
 
-template<typename obj_type, bool> struct rsv_get_elem_type                  { };
-template<typename obj_type>       struct rsv_get_elem_type<obj_type, false> { typedef          obj_type            elem_type; };
-template<typename obj_type>       struct rsv_get_elem_type<obj_type, true>  { typedef typename obj_type::elem_type elem_type; };
+template<typename obj_type, bool> struct rsv_get_elem_type_worker                  { };
+template<typename obj_type>       struct rsv_get_elem_type_worker<obj_type, false> { typedef          obj_type            result; };
+template<typename obj_type>       struct rsv_get_elem_type_worker<obj_type, true>  { typedef typename obj_type::elem_type result; };
+
+template<typename obj_type> struct rsv_get_elem_type { typedef typename rsv_get_elem_type_worker<obj_type, is_Mat<obj_type>::value>::result elem_type; };
+
+
+template<typename obj_type, bool> struct rsv_get_return_type1_worker                  { };
+template<typename obj_type>       struct rsv_get_return_type1_worker<obj_type, false> { typedef Mat<obj_type>  result; };
+template<typename obj_type>       struct rsv_get_return_type1_worker<obj_type, true>  { typedef obj_type       result; };
+
+template<typename obj_type> struct rsv_get_return_type1 { typedef typename rsv_get_return_type1_worker<obj_type, is_Mat<obj_type>::value>::result return_type1; };
+
+
+template<typename return_type1> struct rsv_get_return_type2            { };
+template<typename eT>           struct rsv_get_return_type2< Mat<eT> > { typedef Mat<typename get_pod_type<eT>::result> return_type2; };
+template<typename eT>           struct rsv_get_return_type2< Row<eT> > { typedef Row<typename get_pod_type<eT>::result> return_type2; };
+template<typename eT>           struct rsv_get_return_type2< Col<eT> > { typedef Col<typename get_pod_type<eT>::result> return_type2; };
 
 
 //! Class for keeping statistics of a continuously sampled process / signal.
@@ -27,9 +42,12 @@ class running_stat_vec
   public:
   
   // voodoo for compatibility with old user code
-  typedef typename rsv_get_elem_type<obj_type, is_Mat<obj_type>::value>::elem_type eT;
+  typedef typename rsv_get_elem_type<obj_type>::elem_type eT;
   
   typedef typename get_pod_type<eT>::result T;
+  
+  typedef typename rsv_get_return_type1<obj_type    >::return_type1 return_type1;
+  typedef typename rsv_get_return_type2<return_type1>::return_type2 return_type2;
   
   inline ~running_stat_vec();
   inline  running_stat_vec(const bool in_calc_cov = false);  // TODO: investigate char* overload, eg. "calc_cov", "no_calc_cov"
@@ -43,14 +61,15 @@ class running_stat_vec
   
   inline void reset();
   
-  inline const Mat<eT>&  mean() const;
+  inline const return_type1&  mean() const;
   
-  inline const Mat< T>&  var   (const uword norm_type = 0);
-  inline       Mat< T>   stddev(const uword norm_type = 0) const;
-  inline const Mat<eT>&  cov   (const uword norm_type = 0);
+  inline const return_type2&  var   (const uword norm_type = 0);
+  inline       return_type2   stddev(const uword norm_type = 0) const;
+  inline const Mat<eT>&       cov   (const uword norm_type = 0);
   
-  inline const Mat<eT>& min() const;
-  inline const Mat<eT>& max() const;
+  inline const return_type1& min()   const;
+  inline const return_type1& max()   const;
+  inline       return_type1  range() const;
   
   inline T count() const;
   
@@ -63,18 +82,18 @@ class running_stat_vec
   
   arma_aligned arma_counter<T> counter;
   
-  arma_aligned Mat<eT> r_mean;
-  arma_aligned Mat< T> r_var;
-  arma_aligned Mat<eT> r_cov;
+  arma_aligned return_type1 r_mean;
+  arma_aligned return_type2 r_var;
+  arma_aligned Mat<eT>      r_cov;
   
-  arma_aligned Mat<eT> min_val;
-  arma_aligned Mat<eT> max_val;
+  arma_aligned return_type1 min_val;
+  arma_aligned return_type1 max_val;
   
   arma_aligned Mat< T> min_val_norm;
   arma_aligned Mat< T> max_val_norm;
   
-  arma_aligned Mat< T> r_var_dummy;
-  arma_aligned Mat<eT> r_cov_dummy;
+  arma_aligned return_type2 r_var_dummy;
+  arma_aligned Mat<eT>      r_cov_dummy;
   
   arma_aligned Mat<eT> tmp1;
   arma_aligned Mat<eT> tmp2;

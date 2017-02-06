@@ -1,4 +1,4 @@
-// Copyright (C) 2009-2013 National ICT Australia (NICTA)
+// Copyright (C) 2009-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -63,8 +63,9 @@ class running_stat
   inline  T var   (const uword norm_type = 0) const;
   inline  T stddev(const uword norm_type = 0) const;
   
-  inline eT min()  const;
-  inline eT max()  const;
+  inline eT min()   const;
+  inline eT max()   const;
+  inline eT range() const;
   
   inline T count() const;
   

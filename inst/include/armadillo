@@ -267,6 +267,7 @@ namespace arma
   #include "armadillo_bits/op_norm_bones.hpp"
   #include "armadillo_bits/op_sqrtmat_bones.hpp"
   #include "armadillo_bits/op_logmat_bones.hpp"
+  #include "armadillo_bits/op_range_bones.hpp"
   
   #include "armadillo_bits/glue_times_bones.hpp"
   #include "armadillo_bits/glue_mixed_bones.hpp"
@@ -286,6 +287,8 @@ namespace arma
   #include "armadillo_bits/glue_trapz_bones.hpp"
   #include "armadillo_bits/glue_atan2_bones.hpp"
   #include "armadillo_bits/glue_hypot_bones.hpp"
+  #include "armadillo_bits/glue_polyfit_bones.hpp"
+  #include "armadillo_bits/glue_polyval_bones.hpp"
   
   #include "armadillo_bits/gmm_misc_bones.hpp"
   #include "armadillo_bits/gmm_diag_bones.hpp"
@@ -299,6 +302,8 @@ namespace arma
   #include "armadillo_bits/spop_diagmat_bones.hpp"
   #include "armadillo_bits/spop_mean_bones.hpp"
   #include "armadillo_bits/spop_var_bones.hpp"
+  #include "armadillo_bits/spop_trimat_bones.hpp"
+  #include "armadillo_bits/spop_symmat_bones.hpp"
   
   #include "armadillo_bits/spglue_plus_bones.hpp"
   #include "armadillo_bits/spglue_minus_bones.hpp"
@@ -507,6 +512,9 @@ namespace arma
   #include "armadillo_bits/fn_sqrtmat.hpp"
   #include "armadillo_bits/fn_logmat.hpp"
   #include "armadillo_bits/fn_trapz.hpp"
+  #include "armadillo_bits/fn_range.hpp"
+  #include "armadillo_bits/fn_polyfit.hpp"
+  #include "armadillo_bits/fn_polyval.hpp"
   
   #include "armadillo_bits/fn_speye.hpp"
   #include "armadillo_bits/fn_spones.hpp"
@@ -634,6 +642,7 @@ namespace arma
   #include "armadillo_bits/op_norm_meat.hpp"
   #include "armadillo_bits/op_sqrtmat_meat.hpp"
   #include "armadillo_bits/op_logmat_meat.hpp"
+  #include "armadillo_bits/op_range_meat.hpp"
   
   #include "armadillo_bits/glue_times_meat.hpp"
   #include "armadillo_bits/glue_mixed_meat.hpp"
@@ -653,6 +662,8 @@ namespace arma
   #include "armadillo_bits/glue_trapz_meat.hpp"
   #include "armadillo_bits/glue_atan2_meat.hpp"
   #include "armadillo_bits/glue_hypot_meat.hpp"
+  #include "armadillo_bits/glue_polyfit_meat.hpp"
+  #include "armadillo_bits/glue_polyval_meat.hpp"
   
   #include "armadillo_bits/gmm_misc_meat.hpp"
   #include "armadillo_bits/gmm_diag_meat.hpp"
@@ -666,6 +677,8 @@ namespace arma
   #include "armadillo_bits/spop_diagmat_meat.hpp"
   #include "armadillo_bits/spop_mean_meat.hpp"
   #include "armadillo_bits/spop_var_meat.hpp"
+  #include "armadillo_bits/spop_trimat_meat.hpp"
+  #include "armadillo_bits/spop_symmat_meat.hpp"
   
   #include "armadillo_bits/spglue_plus_meat.hpp"
   #include "armadillo_bits/spglue_minus_meat.hpp"

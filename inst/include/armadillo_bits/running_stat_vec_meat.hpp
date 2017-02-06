@@ -1,4 +1,4 @@
-// Copyright (C) 2009-2013 National ICT Australia (NICTA)
+// Copyright (C) 2009-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -163,7 +163,7 @@ running_stat_vec<obj_type>::reset()
 //! mean or average value
 template<typename obj_type>
 inline
-const Mat< typename running_stat_vec<obj_type>::eT >&
+const typename running_stat_vec<obj_type>::return_type1&
 running_stat_vec<obj_type>::mean() const
   {
   arma_extra_debug_sigprint();
@@ -176,7 +176,7 @@ running_stat_vec<obj_type>::mean() const
 //! variance
 template<typename obj_type>
 inline
-const Mat< typename running_stat_vec<obj_type>::T >&
+const typename running_stat_vec<obj_type>::return_type2&
 running_stat_vec<obj_type>::var(const uword norm_type)
   {
   arma_extra_debug_sigprint();
@@ -212,7 +212,7 @@ running_stat_vec<obj_type>::var(const uword norm_type)
 //! standard deviation
 template<typename obj_type>
 inline
-Mat< typename running_stat_vec<obj_type>::T >
+typename running_stat_vec<obj_type>::return_type2
 running_stat_vec<obj_type>::stddev(const uword norm_type) const
   {
   arma_extra_debug_sigprint();
@@ -234,7 +234,8 @@ running_stat_vec<obj_type>::stddev(const uword norm_type) const
     }
   else
     {
-    return Mat<T>();
+    typedef typename running_stat_vec<obj_type>::return_type2 out_type;
+    return out_type();
     }
   }
 
@@ -269,7 +270,9 @@ running_stat_vec<obj_type>::cov(const uword norm_type)
       }
     else
       {
-      r_cov_dummy.zeros(r_mean.n_rows, r_mean.n_cols);
+      const uword out_size = (std::max)(r_mean.n_rows, r_mean.n_cols);
+      
+      r_cov_dummy.zeros(out_size, out_size);
       
       return r_cov_dummy;
       }
@@ -288,7 +291,7 @@ running_stat_vec<obj_type>::cov(const uword norm_type)
 //! vector with minimum values
 template<typename obj_type>
 inline
-const Mat< typename running_stat_vec<obj_type>::eT >&
+const typename running_stat_vec<obj_type>::return_type1&
 running_stat_vec<obj_type>::min() const
   {
   arma_extra_debug_sigprint();
@@ -301,12 +304,24 @@ running_stat_vec<obj_type>::min() const
 //! vector with maximum values
 template<typename obj_type>
 inline
-const Mat< typename running_stat_vec<obj_type>::eT >&
+const typename running_stat_vec<obj_type>::return_type1&
 running_stat_vec<obj_type>::max() const
   {
   arma_extra_debug_sigprint();
   
   return max_val;
+  }
+
+
+
+template<typename obj_type>
+inline
+typename running_stat_vec<obj_type>::return_type1
+running_stat_vec<obj_type>::range() const
+  {
+  arma_extra_debug_sigprint();
+  
+  return (max_val - min_val);
   }
 
 
