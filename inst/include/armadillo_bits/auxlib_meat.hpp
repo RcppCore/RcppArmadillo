@@ -686,6 +686,8 @@ auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const 
     arma_extra_debug_print("atlas::clapack_getrf()");
     const int info = atlas::clapack_getrf(atlas::CblasColMajor, tmp.n_rows, tmp.n_cols, tmp.memptr(), tmp.n_rows, ipiv.memptr());
     
+    if(info < 0)  { return false; }
+    
     // on output tmp appears to be L+U_alt, where U_alt is U with the main diagonal set to zero
     
     sword sign = (is_complex<eT>::value == false) ? ( (access::tmp_real( tmp.at(0,0) ) < T(0)) ? -1 : +1 ) : +1;
@@ -710,7 +712,7 @@ auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const 
     out_val  = val;
     out_sign = T(sign);
     
-    return (info == 0);
+    return true;
     }
   #elif defined(ARMA_USE_LAPACK)
     {
@@ -734,6 +736,8 @@ auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const 
     
     arma_extra_debug_print("lapack::getrf()");
     lapack::getrf(&n_rows, &n_cols, tmp.memptr(), &n_rows, ipiv.memptr(), &info);
+    
+    if(info < 0)  { return false; }
     
     // on output tmp appears to be L+U_alt, where U_alt is U with the main diagonal set to zero
     
@@ -759,7 +763,7 @@ auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const 
     out_val  = val;
     out_sign = T(sign);
     
-    return (info == 0);
+    return true;
     }
   #else
     {

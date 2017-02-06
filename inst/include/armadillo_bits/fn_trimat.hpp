@@ -38,4 +38,30 @@ trimatl(const Base<typename T1::elem_type,T1>& X)
 
 
 
+template<typename T1>
+arma_warn_unused
+arma_inline
+const SpOp<T1, spop_trimat>
+trimatu(const SpBase<typename T1::elem_type,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  return SpOp<T1, spop_trimat>(X.get_ref(), 0, 0);
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+arma_inline
+const SpOp<T1, spop_trimat>
+trimatl(const SpBase<typename T1::elem_type,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  return SpOp<T1, spop_trimat>(X.get_ref(), 1, 0);
+  }
+
+
+
 //! @}
