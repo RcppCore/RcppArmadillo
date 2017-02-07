@@ -3,16 +3,20 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.7.700.0.0 (2017-02-06)}{
+\section{Changes in RcppArmadillo version 0.7.700.0.0 (2017-02-07)}{
   \itemize{
-    \item Upgraded to Armadillo release 7.700.0 (Coup d'Etat)
+    \item Upgraded to Armadillo release 7.700.0 ("Rogue State")
     \itemize{
       \item added \code{polyfit()} and \code{polyval()}
       \item added second form of \code{log_det()} to directly return the
       result as a complex number 
       \item added \code{range()} to statistics functions
       \item expanded \code{trimatu()}/\code{trimatl()} and
-      \code{symmatu()}/\code{symmatl()} to handle sparse matrice 
+      \code{symmatu()}/\code{symmatl()} to handle sparse matrice
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.7.600.2.0 (2017-01-05)}{
   \itemize{
     \item Upgraded to Armadillo release 7.600.2 (Coup d'Etat Deluxe)
