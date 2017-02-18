@@ -2,7 +2,7 @@
 //
 // fastLm.cpp: Rcpp/Armadillo glue example of a simple lm() alternative
 //
-// Copyright (C)  2010 - 2013 Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2010 - 2017  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 //
 // This file is part of RcppArmadillo.
 //
@@ -20,7 +20,7 @@
 // along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <RcppArmadillo.h>
-using namespace Rcpp ;
+using namespace Rcpp;
 
 // [[Rcpp::export]]
 List fastLm(const arma::mat& X, const arma::colvec& y) {
@@ -34,8 +34,8 @@ List fastLm(const arma::mat& X, const arma::colvec& y) {
                                                         
     arma::colvec std_err = arma::sqrt(s2 * arma::diagvec(arma::pinv(arma::trans(X)*X)));  
 
-    return List::create(_["coefficients"] = coef,
-                        _["stderr"]       = std_err,
-                        _["df.residual"]  = n - k    );
+    return List::create(Named("coefficients") = coef,
+                        Named("stderr")       = std_err,
+                        Named("df.residual")  = n - k);
 }
 
