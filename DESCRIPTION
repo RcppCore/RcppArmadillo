@@ -1,8 +1,8 @@
 Package: RcppArmadillo
 Type: Package
 Title: 'Rcpp' Integration for the 'Armadillo' Templated Linear Algebra Library
-Version: 0.7.700.0.0
-Date: 2017-02-07
+Version: 0.7.800.0.0
+Date: 2017-02-19
 Author: Dirk Eddelbuettel, Romain Francois and Doug Bates
 Maintainer: Dirk Eddelbuettel <edd@debian.org>
 Description: 'Armadillo' is a templated C++ linear algebra library (by Conrad
@@ -12,11 +12,12 @@ Description: 'Armadillo' is a templated C++ linear algebra library (by Conrad
  provided through optional integration with LAPACK and ATLAS libraries.
  The 'RcppArmadillo' package includes the header files from the templated
  'Armadillo' library. Thus users do not need to install 'Armadillo' itself in
- order to use 'RcppArmadillo'. 'Armadillo' is licensed under the MPL 2.0, while
- 'RcppArmadillo' (the 'Rcpp' bindings/bridge to Armadillo) is licensed under the
- GNU GPL version 2 or later, as is the rest of 'Rcpp'.  Note that Armadillo
- requires a fairly recent compiler; for the g++ family at least version 4.6.*
- is required.
+ order to use 'RcppArmadillo'. From release 7.800.0 on, 'Armadillo' is
+ licensed under Apache License 2; previous releases were under licensed as
+ MPL 2.0, while 'RcppArmadillo' (the 'Rcpp' bindings/bridge to Armadillo) is
+ licensed under the GNU GPL version 2 or later, as is the rest of 'Rcpp'.
+ Note that Armadillo requires a fairly recent compiler; for the g++ family at
+ least version 4.6.* is required.
 License: GPL (>= 2)
 LazyLoad: yes
 LinkingTo: Rcpp
