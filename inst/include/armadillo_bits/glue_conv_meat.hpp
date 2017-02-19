@@ -1,11 +1,17 @@
-// Copyright (C) 2010-2016 National ICT Australia (NICTA)
+// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 National ICT Australia (NICTA)
 // 
-// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-// file, You can obtain one at http://mozilla.org/MPL/2.0/.
-// -------------------------------------------------------------------
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// http://www.apache.org/licenses/LICENSE-2.0
 // 
-// Written by Conrad Sanderson - http://conradsanderson.id.au
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// ------------------------------------------------------------------------
 
 
 //! \addtogroup glue_conv
@@ -28,8 +34,6 @@ glue_conv::apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const bool A_
   const uword   x_n_elem    = x.n_elem;
   const uword out_n_elem    = ((h_n_elem + x_n_elem) > 0) ? (h_n_elem + x_n_elem - 1) : uword(0);
   
-  (A_is_col) ? out.set_size(out_n_elem, 1) : out.set_size(1, out_n_elem);
-  
   if( (h_n_elem == 0) || (x_n_elem == 0) )  { out.zeros(); return; }
   
   
@@ -51,6 +55,8 @@ glue_conv::apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const bool A_
   
   arrayops::copy( &(xx_mem[h_n_elem_m1]), x_mem, x_n_elem );
   
+  
+  (A_is_col) ? out.set_size(out_n_elem, 1) : out.set_size(1, out_n_elem);
   
   eT* out_mem = out.memptr();
         
@@ -132,9 +138,8 @@ glue_conv2::apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
   const uword out_n_rows = ((W.n_rows + G.n_rows) > 0) ? (W.n_rows + G.n_rows - 1) : uword(0);
   const uword out_n_cols = ((W.n_cols + G.n_cols) > 0) ? (W.n_cols + G.n_cols - 1) : uword(0);
   
-  out.set_size( out_n_rows, out_n_cols );
-  
   if(G.is_empty() || W.is_empty())  { out.zeros(); return; }
+  
   
   Mat<eT> H(G.n_rows, G.n_cols);  // flipped filter coefficients
   
@@ -155,9 +160,13 @@ glue_conv2::apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
       }
     }
   
+  
   Mat<eT> X( (W.n_rows + 2*H_n_rows_m1), (W.n_cols + 2*H_n_cols_m1), fill::zeros );
   
   X( H_n_rows_m1, H_n_cols_m1, arma::size(W) ) = W;  // zero padded version of 2D image
+  
+  
+  out.set_size( out_n_rows, out_n_cols );
   
   for(uword col=0; col < out_n_cols; ++col)
     {
