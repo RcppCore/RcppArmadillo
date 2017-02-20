@@ -1,3 +1,8 @@
+2017-02-20  Dirk Eddelbuettel  <edd@debian.org>
+
+	* NAMESPACE (useDynLib): Add .registration=TRUE; some other edits
+	* src/init.c: Added 'R_registerRoutines()' & 'R_useDynamicSymbols()'
+
 2017-02-19  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Release 0.7.800.0.0 (GH-only)
