@@ -318,6 +318,10 @@
 
 #if defined(__INTEL_COMPILER)
   
+  #if (__INTEL_COMPILER == 9999)
+    #error "*** Need a newer compiler ***"
+  #endif
+  
   #if (__INTEL_COMPILER < 1300)
     #error "*** Need a newer compiler ***"
   #endif
@@ -354,6 +358,8 @@
     #endif
   #endif
   
+  #undef  arma_deprecated
+  #define arma_deprecated __declspec(deprecated)
   // #undef  arma_inline
   // #define arma_inline inline __forceinline
   
