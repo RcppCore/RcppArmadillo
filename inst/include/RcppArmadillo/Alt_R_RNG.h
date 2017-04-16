@@ -63,6 +63,8 @@ inline void arma_rng_alt::set_seed(const arma_rng_alt::seed_type val) {
     // see http://cran.r-project.org/doc/manuals/r-devel/R-exts.html#Random-numbers
     //
     // std::srand(val);
+    (void) val;                 // to suppress a -Wunused warning
+    //
     static int havewarned = 0;
     if (havewarned++ == 0) {
         ::Rf_warning("When called from R, the RNG seed has to be set at the R level via set.seed()");

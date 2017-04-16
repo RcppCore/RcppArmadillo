@@ -1,3 +1,8 @@
+2017-04-16  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/RcppArmadillo/Alt_R_RNG.h (set_seed): Add a simple
+	null-op to suppress a -Wunused warning
+
 2017-04-12  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Release 0.7.800.2.0
