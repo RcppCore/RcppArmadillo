@@ -3,6 +3,18 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.7.900.0.0 (2017-05-30)}{
+  \itemize{
+    \item Upgraded to Armadillo release 7.900.0 (???)
+    \itemize{
+      \item ...
+    }
+    \item Added gcc 7 to support compiler check (James Balamuta in \ghpr{128}
+    addressing \ghit{126}).
+  }
+}
+
+
 \section{Changes in RcppArmadillo version 0.7.800.2.0 (2017-04-12)}{
   \itemize{
     \item Upgraded to Armadillo release 7.800.2 (Rogue State Redux)

@@ -1,3 +1,8 @@
+2017-05-06  James Joseph Balamuta  <balamut2@illinois.edu>
+
+	* configure.ac: Added gcc7 to viable gcc compiler list
+	* configure: idem
+
 2017-04-16  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/RcppArmadillo/Alt_R_RNG.h (set_seed): Add a simple

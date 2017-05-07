@@ -39,7 +39,7 @@ if test "${GXX}" = yes; then
 	     AC_MSG_WARN([Only g++ version 4.6 or greater can be used with RcppArmadillo.])
 	     AC_MSG_ERROR([Please use a different compiler.])   
         ;;
-	4.6.*|4.7.*|4.8.*|4.9.*|5.*|6.*)
+	4.6.*|4.7.*|4.8.*|4.9.*|5.*|6.*|7.*)
 	     gxx_newer_than_45="-fpermissive"
              AC_MSG_RESULT([(${gxx_version}) yes])
 	;;
