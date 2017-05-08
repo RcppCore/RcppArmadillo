@@ -3,17 +3,24 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.7.899.0.0 (2017-04-12)}{
+  \itemize{
+    \item Upgraded to Armadillo development release 7.899.0
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.7.800.2.0 (2017-04-12)}{
   \itemize{
     \item Upgraded to Armadillo release 7.800.2 (Rogue State Redux)
     \itemize{
       \item The Armadillo license changed to Apache License 2.0
-    }
+    }   
     \item The \code{DESCRIPTION} file now mentions the Apache License
     2.0, as well as the former MPL2 license used for earlier releases.
-    \item The file \code{src/init.c} file now mentions the Apache License
-    2.0, as well as the former MPL2 license used for earlier releases.
+    \item A new file \code{init.c} was added with calls to
+    \code{R_registerRoutines()} and \code{R_useDynamicSymbols()}
     \item Symbol registration is enabled in \code{useDynLib}
+    \item The \code{fastLm} example was updated
   }
 }
 
