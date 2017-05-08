@@ -1,3 +1,8 @@
+2017-05-06  James Joseph Balamuta  <balamut2@illinois.edu>
+
+	* configure.ac: Added gcc7 to viable gcc compiler list
+	* configure: Idem
+  
 2017-05-03  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Test release 0.7.899.0.0

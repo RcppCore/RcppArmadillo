@@ -7,8 +7,11 @@
   \itemize{
     \item Upgraded to Armadillo development release 7.899.0
   }
-}
+  \item Added gcc 7 to support compiler check (James Balamuta in \ghpr{128}
+  addressing \ghit{126}).
 
+}
+                         
 \section{Changes in RcppArmadillo version 0.7.800.2.0 (2017-04-12)}{
   \itemize{
     \item Upgraded to Armadillo release 7.800.2 (Rogue State Redux)
