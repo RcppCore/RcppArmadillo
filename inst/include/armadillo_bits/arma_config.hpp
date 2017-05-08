@@ -29,9 +29,9 @@ struct arma_config
   
   
   #if defined(ARMA_OPENMP_THRESHOLD)
-    static const uword mp_threshold = (sword(ARMA_OPENMP_THRESHOLD) > 0) ? uword(ARMA_OPENMP_THRESHOLD) : 256;
+    static const uword mp_threshold = (sword(ARMA_OPENMP_THRESHOLD) > 0) ? uword(ARMA_OPENMP_THRESHOLD) : 384;
   #else
-    static const uword mp_threshold = 256;
+    static const uword mp_threshold = 384;
   #endif
   
   

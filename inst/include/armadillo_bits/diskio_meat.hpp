@@ -1671,7 +1671,7 @@ diskio::load_csv_ascii(Mat<eT>& x, std::istream& f, std::string&)
   {
   arma_extra_debug_sigprint();
   
-  // TODO: replace with a more efficient implementation
+  // TODO: replace with more efficient implementation
   
   bool load_okay = f.good();
   
@@ -1785,7 +1785,7 @@ diskio::load_csv_ascii(Mat< std::complex<T> >& x, std::istream& f, std::string&)
   {
   arma_extra_debug_sigprint();
   
-  // TODO: replace with a more efficient implementation
+  // TODO: replace with more efficient implementation
   
   bool load_okay = f.good();
   
@@ -2743,6 +2743,8 @@ diskio::load_coord_ascii(SpMat<eT>& x, std::istream& f, std::string& err_msg)
   arma_extra_debug_sigprint();
   arma_ignore(err_msg);
   
+  // TODO: replace with more efficient implementation
+  
   bool load_okay = f.good();
   
   f.clear();
@@ -2967,6 +2969,8 @@ diskio::load_coord_ascii(SpMat< std::complex<T> >& x, std::istream& f, std::stri
   {
   arma_extra_debug_sigprint();
   arma_ignore(err_msg);
+  
+  // TODO: replace with more efficient implementation
   
   bool load_okay = f.good();
   

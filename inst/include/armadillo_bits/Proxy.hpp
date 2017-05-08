@@ -328,7 +328,7 @@ class Proxy< Gen<T1, gen_randn > >
   arma_inline elem_type at_alt     (const uword i)                    const { return Q.at_alt(i);    }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
-  arma_inline aligned_ea_type get_aligned_ea() const { return Q; }
+  arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
   
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>&) const { return false; }
