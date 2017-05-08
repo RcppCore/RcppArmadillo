@@ -700,7 +700,7 @@ Mat<eT>::operator=(const std::vector<eT>& x)
 //! Set the matrix to be equal to the specified scalar.
 //! NOTE: the size of the matrix will be 1x1
 template<typename eT>
-arma_inline
+inline
 const Mat<eT>&
 Mat<eT>::operator=(const eT val)
   {
@@ -715,7 +715,7 @@ Mat<eT>::operator=(const eT val)
 
 //! In-place addition of a scalar to all elements of the matrix
 template<typename eT>
-arma_inline
+inline
 const Mat<eT>&
 Mat<eT>::operator+=(const eT val)
   {
@@ -730,7 +730,7 @@ Mat<eT>::operator+=(const eT val)
 
 //! In-place subtraction of a scalar from all elements of the matrix
 template<typename eT>
-arma_inline
+inline
 const Mat<eT>&
 Mat<eT>::operator-=(const eT val)
   {
@@ -745,7 +745,7 @@ Mat<eT>::operator-=(const eT val)
 
 //! In-place multiplication of all elements of the matrix with a scalar
 template<typename eT>
-arma_inline
+inline
 const Mat<eT>&
 Mat<eT>::operator*=(const eT val)
   {
@@ -760,7 +760,7 @@ Mat<eT>::operator*=(const eT val)
 
 //! In-place division of all elements of the matrix with a scalar
 template<typename eT>
-arma_inline
+inline
 const Mat<eT>&
 Mat<eT>::operator/=(const eT val)
   {
@@ -4843,7 +4843,6 @@ Mat<eT>::operator/=(const eOp<T1, eop_type>& X)
 
 
 
-//! EXPERIMENTAL
 template<typename eT>
 template<typename T1, typename op_type>
 inline
@@ -4862,7 +4861,6 @@ Mat<eT>::Mat(const mtOp<eT, T1, op_type>& X)
 
 
 
-//! EXPERIMENTAL
 template<typename eT>
 template<typename T1, typename op_type>
 inline
@@ -4878,7 +4876,6 @@ Mat<eT>::operator=(const mtOp<eT, T1, op_type>& X)
 
 
 
-//! EXPERIMENTAL
 template<typename eT>
 template<typename T1, typename op_type>
 inline
@@ -4894,7 +4891,6 @@ Mat<eT>::operator+=(const mtOp<eT, T1, op_type>& X)
 
 
 
-//! EXPERIMENTAL
 template<typename eT>
 template<typename T1, typename op_type>
 inline
@@ -4910,7 +4906,6 @@ Mat<eT>::operator-=(const mtOp<eT, T1, op_type>& X)
 
 
 
-//! EXPERIMENTAL
 template<typename eT>
 template<typename T1, typename op_type>
 inline
@@ -4926,7 +4921,6 @@ Mat<eT>::operator*=(const mtOp<eT, T1, op_type>& X)
 
 
 
-//! EXPERIMENTAL
 template<typename eT>
 template<typename T1, typename op_type>
 inline
@@ -4942,7 +4936,6 @@ Mat<eT>::operator%=(const mtOp<eT, T1, op_type>& X)
 
 
 
-//! EXPERIMENTAL
 template<typename eT>
 template<typename T1, typename op_type>
 inline
@@ -5276,7 +5269,6 @@ Mat<eT>::operator/=(const eGlue<T1, T2, eglue_type>& X)
 
 
 
-//! EXPERIMENTAL: create a matrix from mtGlue, i.e. run the previously delayed binary operations
 template<typename eT>
 template<typename T1, typename T2, typename glue_type>
 inline
@@ -5295,7 +5287,6 @@ Mat<eT>::Mat(const mtGlue<eT, T1, T2, glue_type>& X)
 
 
 
-//! EXPERIMENTAL: create a matrix from Glue, i.e. run the previously delayed binary operations
 template<typename eT>
 template<typename T1, typename T2, typename glue_type>
 inline
@@ -5311,7 +5302,6 @@ Mat<eT>::operator=(const mtGlue<eT, T1, T2, glue_type>& X)
 
 
 
-//! EXPERIMENTAL: in-place matrix addition, with the right-hand-side operands having delayed operations
 template<typename eT>
 template<typename T1, typename T2, typename glue_type>
 inline
@@ -5327,7 +5317,6 @@ Mat<eT>::operator+=(const mtGlue<eT, T1, T2, glue_type>& X)
 
 
 
-//! EXPERIMENTAL: in-place matrix subtraction, with the right-hand-side operands having delayed operations
 template<typename eT>
 template<typename T1, typename T2, typename glue_type>
 inline
@@ -5343,7 +5332,6 @@ Mat<eT>::operator-=(const mtGlue<eT, T1, T2, glue_type>& X)
 
 
 
-//! EXPERIMENTAL: in-place matrix multiplications, with the right-hand-side operands having delayed operations
 template<typename eT>
 template<typename T1, typename T2, typename glue_type>
 inline
@@ -5361,7 +5349,6 @@ Mat<eT>::operator*=(const mtGlue<eT, T1, T2, glue_type>& X)
 
 
 
-//! EXPERIMENTAL: in-place matrix element-wise multiplication, with the right-hand-side operands having delayed operations
 template<typename eT>
 template<typename T1, typename T2, typename glue_type>
 inline
@@ -5377,7 +5364,6 @@ Mat<eT>::operator%=(const mtGlue<eT, T1, T2, glue_type>& X)
 
 
 
-//! EXPERIMENTAL: in-place matrix element-wise division, with the right-hand-side operands having delayed operations
 template<typename eT>
 template<typename T1, typename T2, typename glue_type>
 inline
@@ -8658,7 +8644,7 @@ Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::ones()
 
 //! prefix ++
 template<typename eT>
-arma_inline
+inline
 void
 Mat_aux::prefix_pp(Mat<eT>& x)
   {
@@ -8683,7 +8669,7 @@ Mat_aux::prefix_pp(Mat<eT>& x)
 
 //! prefix ++ for complex numbers (work around for limitations of the std::complex class)
 template<typename T>
-arma_inline
+inline
 void
 Mat_aux::prefix_pp(Mat< std::complex<T> >& x)
   {
@@ -8694,7 +8680,7 @@ Mat_aux::prefix_pp(Mat< std::complex<T> >& x)
 
 //! postfix ++
 template<typename eT>
-arma_inline
+inline
 void
 Mat_aux::postfix_pp(Mat<eT>& x)
   {
@@ -8719,7 +8705,7 @@ Mat_aux::postfix_pp(Mat<eT>& x)
 
 //! postfix ++ for complex numbers (work around for limitations of the std::complex class)
 template<typename T>
-arma_inline
+inline
 void
 Mat_aux::postfix_pp(Mat< std::complex<T> >& x)
   {
@@ -8730,7 +8716,7 @@ Mat_aux::postfix_pp(Mat< std::complex<T> >& x)
 
 //! prefix --
 template<typename eT>
-arma_inline
+inline
 void
 Mat_aux::prefix_mm(Mat<eT>& x)
   {
@@ -8755,7 +8741,7 @@ Mat_aux::prefix_mm(Mat<eT>& x)
 
 //! prefix -- for complex numbers (work around for limitations of the std::complex class)
 template<typename T>
-arma_inline
+inline
 void
 Mat_aux::prefix_mm(Mat< std::complex<T> >& x)
   {
@@ -8766,7 +8752,7 @@ Mat_aux::prefix_mm(Mat< std::complex<T> >& x)
 
 //! postfix --
 template<typename eT>
-arma_inline
+inline
 void
 Mat_aux::postfix_mm(Mat<eT>& x)
   {
@@ -8791,7 +8777,7 @@ Mat_aux::postfix_mm(Mat<eT>& x)
 
 //! postfix ++ for complex numbers (work around for limitations of the std::complex class)
 template<typename T>
-arma_inline
+inline
 void
 Mat_aux::postfix_mm(Mat< std::complex<T> >& x)
   {
