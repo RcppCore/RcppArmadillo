@@ -3,6 +3,12 @@
 	* DESCRIPTION (Version, Date): Release 0.7.900.0.0 (GH-only)
 
 	* inst/include/armadillo*: Upgraded to Armadillo 7.900.0
+2017-05-10  James Joseph Balamuta  <balamut2@illinois.edu>
+
+	* man/armadillo_set_seed.Rd: Clarified RNG usage in C++98 and C++11 modes.
+	* man/armadillo_set_seed_random.Rd: idem
+	* R/RcppExports.R: idem
+	* src/RcppArmadillo.cpp: idem
 
 2017-05-06  James Joseph Balamuta  <balamut2@illinois.edu>
 
