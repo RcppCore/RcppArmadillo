@@ -55,7 +55,7 @@ gmm_diag<eT>::gmm_diag(const gmm_diag<eT>& x)
 
 template<typename eT>
 inline
-const gmm_diag<eT>&
+gmm_diag<eT>&
 gmm_diag<eT>::operator=(const gmm_diag<eT>& x)
   {
   arma_extra_debug_sigprint();
@@ -1082,7 +1082,7 @@ gmm_diag<eT>::internal_vec_log_p(const T1& X) const
       
       const uword n_threads = boundaries.n_cols;
       
-      #pragma omp parallel for
+      #pragma omp parallel for schedule(static)
       for(uword t=0; t < n_threads; ++t)
         {
         const uword start_index = boundaries.at(0,t);
@@ -1138,7 +1138,7 @@ gmm_diag<eT>::internal_vec_log_p(const T1& X, const uword gaus_id) const
       
       const uword n_threads = boundaries.n_cols;
       
-      #pragma omp parallel for
+      #pragma omp parallel for schedule(static)
       for(uword t=0; t < n_threads; ++t)
         {
         const uword start_index = boundaries.at(0,t);
@@ -1195,7 +1195,7 @@ gmm_diag<eT>::internal_avg_log_p(const T1& X) const
     field< running_mean_scalar<eT> > t_running_means(n_threads);
     
     
-    #pragma omp parallel for
+    #pragma omp parallel for schedule(static)
     for(uword t=0; t < n_threads; ++t)
       {
       const uword start_index = boundaries.at(0,t);
@@ -1266,7 +1266,7 @@ gmm_diag<eT>::internal_avg_log_p(const T1& X, const uword gaus_id) const
     field< running_mean_scalar<eT> > t_running_means(n_threads);
     
     
-    #pragma omp parallel for
+    #pragma omp parallel for schedule(static)
     for(uword t=0; t < n_threads; ++t)
       {
       const uword start_index = boundaries.at(0,t);
@@ -1717,7 +1717,7 @@ gmm_diag<eT>::km_iterate(const Mat<eT>& X, const uword max_iter, const bool verb
       
       // km_update_stats() is the "map" operation, which produces partial means
       
-      #pragma omp parallel for
+      #pragma omp parallel for schedule(static)
       for(uword t=0; t < n_threads; ++t)
         {
         field< running_mean_vec<eT> >& current_running_means = t_running_means[t];
@@ -2041,7 +2041,7 @@ gmm_diag<eT>::em_update_params
     
   #if defined(ARMA_USE_OPENMP)
     {
-    #pragma omp parallel for
+    #pragma omp parallel for schedule(static)
     for(uword t=0; t<n_threads; t++)
       {
       Mat<eT>& acc_means          = t_acc_means[t];

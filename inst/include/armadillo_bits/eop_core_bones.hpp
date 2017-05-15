@@ -62,7 +62,7 @@ class eop_scalar_times      : public eop_core<eop_scalar_times>      , public eo
 class eop_scalar_div_pre    : public eop_core<eop_scalar_div_pre>    , public eop_use_mp_false {};
 class eop_scalar_div_post   : public eop_core<eop_scalar_div_post>   , public eop_use_mp_false {};
 class eop_square            : public eop_core<eop_square>            , public eop_use_mp_false {};
-class eop_sqrt              : public eop_core<eop_sqrt>              , public eop_use_mp_false {};
+class eop_sqrt              : public eop_core<eop_sqrt>              , public eop_use_mp_true  {};
 class eop_pow               : public eop_core<eop_pow>               , public eop_use_mp_false {};  // for pow(), use_mp is selectively enabled in eop_core_meat.hpp
 class eop_log               : public eop_core<eop_log>               , public eop_use_mp_true  {};
 class eop_log2              : public eop_core<eop_log2>              , public eop_use_mp_true  {};

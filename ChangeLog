@@ -1,3 +1,9 @@
+2017-05-15  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Release 0.7.900.1.0 (GH-only)
+
+	* inst/include/armadillo*: Upgraded to Armadillo 7.900.1
+
 2017-05-10  James Joseph Balamuta  <balamut2@illinois.edu>
 
 	* man/armadillo_set_seed.Rd: Clarified RNG usage in C++98 and C++11 modes.
@@ -5,11 +11,17 @@
 	* R/RcppExports.R: idem
 	* src/RcppArmadillo.cpp: idem
 
+2017-05-08  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Release 0.7.900.0.0 (GH-only)
+
+	* inst/include/armadillo*: Upgraded to Armadillo 7.900.0
+
 2017-05-06  James Joseph Balamuta  <balamut2@illinois.edu>
 
 	* configure.ac: Added gcc7 to viable gcc compiler list
 	* configure: Idem
-  
+
 2017-05-03  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Test release 0.7.899.0.0
