@@ -179,8 +179,6 @@
 
 #if (defined(ARMA_USE_OPENMP) && defined(ARMA_USE_CXX11))
   
-  struct eglue_core_mp_avail { static const bool value = true; };
-  
   #define arma_applier_1_mp(operatorA, operatorB) \
     {\
     _Pragma("omp parallel for schedule(static)")\
@@ -230,8 +228,6 @@
   
 #else
   
-  struct eglue_core_mp_avail { static const bool value = false; };
-  
   #define arma_applier_1_mp(operatorA, operatorB)  arma_applier_1u(operatorA, operatorB)
   #define arma_applier_2_mp(operatorA, operatorB)  arma_applier_2(operatorA, operatorB)
   #define arma_applier_3_mp(operatorA, operatorB)  arma_applier_3(operatorA, operatorB)
@@ -257,7 +253,7 @@ eglue_core<eglue_type>::apply(outT& out, const eGlue<T1, T2, eglue_type>& x)
   typedef typename T1::elem_type eT;
   
   const bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);
-  const bool use_mp = (Proxy<T1>::use_mp || Proxy<T2>::use_mp) && eglue_core_mp_avail::value;
+  const bool use_mp = (Proxy<T1>::use_mp || Proxy<T2>::use_mp) && (arma_config::cxx11 && arma_config::openmp);
   
   // NOTE: we're assuming that the matrix has already been set to the correct size and there is no aliasing;
   // size setting and alias checking is done by either the Mat contructor or operator=()
@@ -364,7 +360,7 @@ eglue_core<eglue_type>::apply_inplace_plus(Mat<typename T1::elem_type>& out, con
   eT* out_mem = out.memptr();
   
   const bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);
-  const bool use_mp = (Proxy<T1>::use_mp || Proxy<T2>::use_mp) && eglue_core_mp_avail::value;
+  const bool use_mp = (Proxy<T1>::use_mp || Proxy<T2>::use_mp) && (arma_config::cxx11 && arma_config::openmp);
   
   if(use_at == false)
     {
@@ -462,7 +458,7 @@ eglue_core<eglue_type>::apply_inplace_minus(Mat<typename T1::elem_type>& out, co
   eT* out_mem = out.memptr();
   
   const bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);
-  const bool use_mp = (Proxy<T1>::use_mp || Proxy<T2>::use_mp) && eglue_core_mp_avail::value;
+  const bool use_mp = (Proxy<T1>::use_mp || Proxy<T2>::use_mp) && (arma_config::cxx11 && arma_config::openmp);
   
   if(use_at == false)
     {
@@ -560,7 +556,7 @@ eglue_core<eglue_type>::apply_inplace_schur(Mat<typename T1::elem_type>& out, co
   eT* out_mem = out.memptr();
   
   const bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);
-  const bool use_mp = (Proxy<T1>::use_mp || Proxy<T2>::use_mp) && eglue_core_mp_avail::value;
+  const bool use_mp = (Proxy<T1>::use_mp || Proxy<T2>::use_mp) && (arma_config::cxx11 && arma_config::openmp);
   
   if(use_at == false)
     {
@@ -658,7 +654,7 @@ eglue_core<eglue_type>::apply_inplace_div(Mat<typename T1::elem_type>& out, cons
   eT* out_mem = out.memptr();
   
   const bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);
-  const bool use_mp = (Proxy<T1>::use_mp || Proxy<T2>::use_mp) && eglue_core_mp_avail::value;
+  const bool use_mp = (Proxy<T1>::use_mp || Proxy<T2>::use_mp) && (arma_config::cxx11 && arma_config::openmp);
   
   if(use_at == false)
     {
@@ -754,7 +750,7 @@ eglue_core<eglue_type>::apply(Cube<typename T1::elem_type>& out, const eGlueCube
   typedef typename T1::elem_type eT;
   
   const bool use_at = (ProxyCube<T1>::use_at || ProxyCube<T2>::use_at);
-  const bool use_mp = (ProxyCube<T1>::use_mp || ProxyCube<T2>::use_mp) && eglue_core_mp_avail::value;
+  const bool use_mp = (ProxyCube<T1>::use_mp || ProxyCube<T2>::use_mp) && (arma_config::cxx11 && arma_config::openmp);
   
   // NOTE: we're assuming that the cube has already been set to the correct size and there is no aliasing;
   // size setting and alias checking is done by either the Cube contructor or operator=()
@@ -863,7 +859,7 @@ eglue_core<eglue_type>::apply_inplace_plus(Cube<typename T1::elem_type>& out, co
   eT* out_mem = out.memptr();
   
   const bool use_at = (ProxyCube<T1>::use_at || ProxyCube<T2>::use_at);
-  const bool use_mp = (ProxyCube<T1>::use_mp || ProxyCube<T2>::use_mp) && eglue_core_mp_avail::value;
+  const bool use_mp = (ProxyCube<T1>::use_mp || ProxyCube<T2>::use_mp) && (arma_config::cxx11 && arma_config::openmp);
   
   if(use_at == false)
     {
@@ -962,7 +958,7 @@ eglue_core<eglue_type>::apply_inplace_minus(Cube<typename T1::elem_type>& out, c
   eT* out_mem = out.memptr();
   
   const bool use_at = (ProxyCube<T1>::use_at || ProxyCube<T2>::use_at);
-  const bool use_mp = (ProxyCube<T1>::use_mp || ProxyCube<T2>::use_mp) && eglue_core_mp_avail::value;
+  const bool use_mp = (ProxyCube<T1>::use_mp || ProxyCube<T2>::use_mp) && (arma_config::cxx11 && arma_config::openmp);
   
   if(use_at == false)
     {
@@ -1061,7 +1057,7 @@ eglue_core<eglue_type>::apply_inplace_schur(Cube<typename T1::elem_type>& out, c
   eT* out_mem = out.memptr();
   
   const bool use_at = (ProxyCube<T1>::use_at || ProxyCube<T2>::use_at);
-  const bool use_mp = (ProxyCube<T1>::use_mp || ProxyCube<T2>::use_mp) && eglue_core_mp_avail::value;
+  const bool use_mp = (ProxyCube<T1>::use_mp || ProxyCube<T2>::use_mp) && (arma_config::cxx11 && arma_config::openmp);
   
   if(use_at == false)
     {
@@ -1160,7 +1156,7 @@ eglue_core<eglue_type>::apply_inplace_div(Cube<typename T1::elem_type>& out, con
   eT* out_mem = out.memptr();
   
   const bool use_at = (ProxyCube<T1>::use_at || ProxyCube<T2>::use_at);
-  const bool use_mp = (ProxyCube<T1>::use_mp || ProxyCube<T2>::use_mp) && eglue_core_mp_avail::value;
+  const bool use_mp = (ProxyCube<T1>::use_mp || ProxyCube<T2>::use_mp) && (arma_config::cxx11 && arma_config::openmp);
   
   if(use_at == false)
     {
