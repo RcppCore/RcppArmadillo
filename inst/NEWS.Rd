@@ -18,6 +18,7 @@
     }
     \item Added gcc 7 to support compiler check (James Balamuta in \ghpr{128}
     addressing \ghit{126}).
+    \item A unit test helper function for \code{rmultinom} was corrected.
   }
 }
                          

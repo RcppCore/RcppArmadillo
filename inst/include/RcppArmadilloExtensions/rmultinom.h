@@ -37,11 +37,11 @@ namespace Rcpp{
             int probsize = prob.size();
             // Return object
             IntegerVector draws(probsize);
-            if ( size < 0 || size == NA_INTEGER)  throw std::range_error( "Invalid size" );
+            if (size < 0 || size == NA_INTEGER) throw std::range_error( "Invalid size");
             long double p_tot = 0.;
-             p_tot = std::accumulate(prob.begin(), prob.end(), p_tot);
-            if(fabs((double)(p_tot - 1.)) > 1e-7){
-                throw std::range_error( "Probabilities don't sum to 1, please use FixProb" );
+            p_tot = std::accumulate(prob.begin(), prob.end(), p_tot);
+            if (fabs((double)(p_tot - 1.)) > 1e-7) {
+                throw std::range_error("Probabilities don't sum to 1, please use FixProb");
             }
             
             // do as rbinom
@@ -50,18 +50,15 @@ namespace Rcpp{
             }
             //rmultinom(size, REAL(prob), k, &INTEGER(ans)[ik]);
             // for each slot
-            for(ii = 0; ii < probsize-1; ii++) { /* (p_tot, n) are for "remaining binomial" */
-                if(prob[ii]) {
+            for (ii = 0; ii < probsize-1; ii++) { /* (p_tot, n) are for "remaining binomial" */
+                if (prob[ii]) {
                     pp = prob[ii] / p_tot;
                     // >= 1; > 1 happens because of rounding 
-                    draws[ii] = ((pp < 1.) ? 
-                        (int) Rf_rbinom((double) size,  pp) :
-                         size
-                    );
+                    draws[ii] = ((pp < 1.) ? (int) Rf_rbinom((double) size,  pp) : size);
                     size -= draws[ii];
-                }; // else { ret[ii] = 0; }
+                } // else { ret[ii] = 0; }
                 // all done
-                if(size <= 0)  return draws;
+                if (size <= 0)  return draws;
                 // i.e. p_tot = sum(prob[(k+1):K]) 
                 p_tot -= prob[ii]; 
             }

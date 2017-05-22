@@ -1,3 +1,8 @@
+2017-05-21  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/unitTests/cpp/rmultinom.cpp: More careful use of Armadillo
+	vectors and Rcpp vectors
+
 2017-05-15  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Release 0.7.900.1.0 (GH-only)
