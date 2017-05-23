@@ -1,3 +1,11 @@
+2017-05-22  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/inline.R: Support OpenMP
+	* src/Makevars: Ditto
+	* src/Makevars.win: Ditto
+	* inst/skeleton/Makevars: Ditto
+	* inst/skeleton/Makevars.win: Ditto
+
 2017-05-21  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/unitTests/cpp/rmultinom.cpp: More careful use of Armadillo

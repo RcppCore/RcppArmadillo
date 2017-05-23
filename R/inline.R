@@ -1,4 +1,4 @@
-## Copyright (C)       2010 - 2014  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+## Copyright (C)       2010 - 2017  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 ##
 ## This file is part of RcppArmadillo.
 ##
@@ -16,8 +16,8 @@
 ## along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
 inlineCxxPlugin <- Rcpp:::Rcpp.plugin.maker(
-	include.before = "#include <RcppArmadillo.h>", 
-	libs           = "$(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)", 
-	package        = "RcppArmadillo"
+    include.before = "#include <RcppArmadillo.h>",
+    libs           = "$(SHLIB_OPENMP_CFLAGS) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)",
+    package        = "RcppArmadillo"
 )
 
