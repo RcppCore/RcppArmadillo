@@ -1,3 +1,15 @@
+2017-05-24  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Release 0.7.900.1.2 (GH-only)
+	* src/RcppExports.cpp: Regenerated under Rcpp 0.12.11 with included
+	package registration
+	* R/RcppExports.R: Regenerated under Rcpp 0.12.11 with unquoted registered
+	function calls
+	* src/init.c: Removed
+
+	* README.md: Switch to https for a few badge URLs
+	* R/inline.R (inlineCxxPlugin): Use '::' to import from Rcpp
+
 2017-05-23  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/inline.R (inlineCxxPlugin): Also enable OpenMP as a compile-time option
@@ -12,6 +24,7 @@
 
 2017-05-21  Dirk Eddelbuettel  <edd@debian.org>
 
+	* DESCRIPTION (Version, Date): Release 0.7.900.1.1 (GH-only)
 	* inst/unitTests/cpp/rmultinom.cpp: More careful use of Armadillo
 	vectors and Rcpp vectors
 

@@ -48,3 +48,16 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+
+static const R_CallMethodDef CallEntries[] = {
+    {"RcppArmadillo_fastLm", (DL_FUNC) &RcppArmadillo_fastLm, 2},
+    {"RcppArmadillo_armadillo_version", (DL_FUNC) &RcppArmadillo_armadillo_version, 1},
+    {"RcppArmadillo_armadillo_set_seed_random", (DL_FUNC) &RcppArmadillo_armadillo_set_seed_random, 0},
+    {"RcppArmadillo_armadillo_set_seed", (DL_FUNC) &RcppArmadillo_armadillo_set_seed, 1},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_RcppArmadillo(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
+}
