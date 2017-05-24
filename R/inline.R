@@ -17,7 +17,7 @@
 
 inlineCxxPlugin <- function(...) {
     plugin <-
-        Rcpp:::Rcpp.plugin.maker(
+        Rcpp::Rcpp.plugin.maker(
                    include.before = "#include <RcppArmadillo.h>",
                    libs           = "$(SHLIB_OPENMP_CFLAGS) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)",
                    package        = "RcppArmadillo"
