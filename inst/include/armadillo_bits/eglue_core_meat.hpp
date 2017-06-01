@@ -190,7 +190,24 @@
   
   #define arma_applier_2_mp(operatorA, operatorB) \
     {\
-    if(n_rows != 1)\
+    if(n_cols == 1)\
+      {\
+      _Pragma("omp parallel for schedule(static)")\
+      for(uword count=0; count < n_rows; ++count)\
+        {\
+        out_mem[count] operatorA P1.at(count,0) operatorB P2.at(count,0);\
+        }\
+      }\
+    else\
+    if(n_rows == 1)\
+      {\
+      _Pragma("omp parallel for schedule(static)")\
+      for(uword count=0; count < n_cols; ++count)\
+        {\
+        out_mem[count] operatorA P1.at(0,count) operatorB P2.at(0,count);\
+        }\
+      }\
+    else\
       {\
       _Pragma("omp parallel for schedule(static)")\
       for(uword col=0; col<n_cols; ++col)\
@@ -201,27 +218,17 @@
           }\
         }\
       }\
-    else\
-      {\
-      _Pragma("omp parallel for schedule(static)")\
-      for(uword count=0; count < n_cols; ++count)\
-        {\
-        out_mem[count] operatorA P1.at(0,count) operatorB P2.at(0,count);\
-        }\
-      }\
     }
   
   #define arma_applier_3_mp(operatorA, operatorB) \
     {\
+    _Pragma("omp parallel for schedule(static)")\
     for(uword slice=0; slice<n_slices; ++slice)\
       {\
-      _Pragma("omp parallel for schedule(static)")\
       for(uword col=0; col<n_cols; ++col)\
+      for(uword row=0; row<n_rows; ++row)\
         {\
-        for(uword row=0; row<n_rows; ++row)\
-          {\
-          out.at(row,col,slice) operatorA P1.at(row,col,slice) operatorB P2.at(row,col,slice);\
-          }\
+        out.at(row,col,slice) operatorA P1.at(row,col,slice) operatorB P2.at(row,col,slice);\
         }\
       }\
     }
@@ -820,7 +827,7 @@ eglue_core<eglue_type>::apply(Cube<typename T1::elem_type>& out, const eGlueCube
     const ProxyCube<T1>& P1 = x.P1;
     const ProxyCube<T2>& P2 = x.P2;
     
-    if(use_mp && (x.get_n_elem_slice() >= ((is_cx<eT>::yes || (ProxyCube<T1>::use_mp && ProxyCube<T2>::use_mp)) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
+    if(use_mp && (x.get_n_elem() >= ((is_cx<eT>::yes || (ProxyCube<T1>::use_mp && ProxyCube<T2>::use_mp)) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
       {
            if(is_same_type<eglue_type, eglue_plus >::yes) { arma_applier_3_mp(=, +); }
       else if(is_same_type<eglue_type, eglue_minus>::yes) { arma_applier_3_mp(=, -); }
@@ -919,7 +926,7 @@ eglue_core<eglue_type>::apply_inplace_plus(Cube<typename T1::elem_type>& out, co
     const ProxyCube<T1>& P1 = x.P1;
     const ProxyCube<T2>& P2 = x.P2;
     
-    if(use_mp && (x.get_n_elem_slice() >= ((is_cx<eT>::yes || (ProxyCube<T1>::use_mp && ProxyCube<T2>::use_mp)) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
+    if(use_mp && (x.get_n_elem() >= ((is_cx<eT>::yes || (ProxyCube<T1>::use_mp && ProxyCube<T2>::use_mp)) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
       {
            if(is_same_type<eglue_type, eglue_plus >::yes) { arma_applier_3_mp(+=, +); }
       else if(is_same_type<eglue_type, eglue_minus>::yes) { arma_applier_3_mp(+=, -); }
@@ -1018,7 +1025,7 @@ eglue_core<eglue_type>::apply_inplace_minus(Cube<typename T1::elem_type>& out, c
     const ProxyCube<T1>& P1 = x.P1;
     const ProxyCube<T2>& P2 = x.P2;
     
-    if(use_mp && (x.get_n_elem_slice() >= ((is_cx<eT>::yes || (ProxyCube<T1>::use_mp && ProxyCube<T2>::use_mp)) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
+    if(use_mp && (x.get_n_elem() >= ((is_cx<eT>::yes || (ProxyCube<T1>::use_mp && ProxyCube<T2>::use_mp)) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
       {
            if(is_same_type<eglue_type, eglue_plus >::yes) { arma_applier_3_mp(-=, +); }
       else if(is_same_type<eglue_type, eglue_minus>::yes) { arma_applier_3_mp(-=, -); }
@@ -1117,7 +1124,7 @@ eglue_core<eglue_type>::apply_inplace_schur(Cube<typename T1::elem_type>& out, c
     const ProxyCube<T1>& P1 = x.P1;
     const ProxyCube<T2>& P2 = x.P2;
     
-    if(use_mp && (x.get_n_elem_slice() >= ((is_cx<eT>::yes || (ProxyCube<T1>::use_mp && ProxyCube<T2>::use_mp)) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
+    if(use_mp && (x.get_n_elem() >= ((is_cx<eT>::yes || (ProxyCube<T1>::use_mp && ProxyCube<T2>::use_mp)) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
       {
            if(is_same_type<eglue_type, eglue_plus >::yes) { arma_applier_3_mp(*=, +); }
       else if(is_same_type<eglue_type, eglue_minus>::yes) { arma_applier_3_mp(*=, -); }
@@ -1216,7 +1223,7 @@ eglue_core<eglue_type>::apply_inplace_div(Cube<typename T1::elem_type>& out, con
     const ProxyCube<T1>& P1 = x.P1;
     const ProxyCube<T2>& P2 = x.P2;
     
-    if(use_mp && (x.get_n_elem_slice() >= ((is_cx<eT>::yes || (ProxyCube<T1>::use_mp && ProxyCube<T2>::use_mp)) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
+    if(use_mp && (x.get_n_elem() >= ((is_cx<eT>::yes || (ProxyCube<T1>::use_mp && ProxyCube<T2>::use_mp)) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
       {
            if(is_same_type<eglue_type, eglue_plus >::yes) { arma_applier_3_mp(/=, +); }
       else if(is_same_type<eglue_type, eglue_minus>::yes) { arma_applier_3_mp(/=, -); }
