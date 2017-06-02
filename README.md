@@ -1,5 +1,5 @@
 
-## RcppArmadillo [![Build Status](https://travis-ci.org/RcppCore/RcppArmadillo.svg)](https://travis-ci.org/RcppCore/RcppArmadillo) [![License](https://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg?style=flat)](https://www.gnu.org/licenses/gpl-2.0.html) [![CRAN](https://www.r-pkg.org/badges/version/RcppArmadillo)](https://cran.r-project.org/package=RcppArmadillo) [![Downloads](https://cranlogs.r-pkg.org/badges/RcppArmadillo?color=brightgreen)](https://www.r-pkg.org/pkg/RcppArmadillo)
+## RcppArmadillo [![Build Status](https://travis-ci.org/RcppCore/RcppArmadillo.svg)](https://travis-ci.org/RcppCore/RcppArmadillo) [![License](https://eddelbuettel.github.io/badges/GPL2+.svg)](https://www.gnu.org/licenses/gpl-2.0.html) [![CRAN](https://www.r-pkg.org/badges/version/RcppArmadillo)](https://cran.r-project.org/package=RcppArmadillo) [![Downloads](https://cranlogs.r-pkg.org/badges/RcppArmadillo?color=brightgreen)](https://www.r-pkg.org/pkg/RcppArmadillo)
 
 R and Armadillo via Rcpp
 
@@ -14,7 +14,7 @@ provided through optional integration with LAPACK and ATLAS libraries.
 A delayed evaluation approach is employed (during compile time) to combine 
 several operations into one, and to reduce (or eliminate) the need for 
 temporaries. This is accomplished through recursive templates and template 
-meta-programming.   
+meta-programming.
 
 This library is useful if C++ has been decided as the language of choice 
 (due to speed and/or integration capabilities), rather than another language.
@@ -30,7 +30,7 @@ C++ integration.
 ### Status
 
 The package is under active development with releases to
-[CRAN](https://cran.r-project.org) about once a month.
+[CRAN](https://cran.r-project.org) about once every other month.
 
 ### Documentation
 

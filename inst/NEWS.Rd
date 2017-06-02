@@ -3,9 +3,9 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.7.900.1.0 (2017-05-15)}{
+\section{Changes in RcppArmadillo version 0.7.900.2.0 (2017-06-02)}{
   \itemize{
-    \item Upgraded to Armadillo release 7.900.1 (Evil Banana Republic)
+    \item Upgraded to Armadillo release 7.900.2 (Evil Banana Republic)
     \itemize{
       \item Expanded \code{clamp()} to handle cubes
       \item Computationally expensive element-wise functions (such as
@@ -18,7 +18,9 @@
     }
     \item Added gcc 7 to support compiler check (James Balamuta in \ghpr{128}
     addressing \ghit{126}).
-    \item A unit test helper function for \code{rmultinom} was corrected.
+    \item A unit test helper function for \code{rmultinom} was
+    corrected (\ghpr{133}).
+    \item OpenMP support was added to the skeleton helper in \code{inline.R}
   }
 }
                          
