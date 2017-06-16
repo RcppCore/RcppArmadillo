@@ -97,7 +97,7 @@ namespace traits {
             
             // Get the type of sparse matrix
             std::string type = Rcpp::as<std::string>(mat.slot("class"));
-            if (type == "dgCMatrix"){
+            if (type == "dgCMatrix") {
                 IntegerVector i = mat.slot("i");
                 IntegerVector p = mat.slot("p");
                 Vector<RTYPE> x = mat.slot("x");
@@ -110,7 +110,7 @@ namespace traits {
                 std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
                 std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
             }
-            else if (type == "dtCMatrix"){
+            else if (type == "dtCMatrix") {
                 // The following 3 lines might be duplicate, but when the type == dgT or dgR, we have to include the lines inside the conditional statements rather than outside.
                 IntegerVector i = mat.slot("i");
                 IntegerVector p = mat.slot("p");
@@ -125,11 +125,11 @@ namespace traits {
                 std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
                 std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
                 
-                if (diag == "U"){
+                if (diag == "U") {
                     res.diag().ones();
                 }
             }
-            else if (type == "dsCMatrix"){
+            else if (type == "dsCMatrix") {
                 // The following 3 lines might be duplicate, but when the type == dgT or dgR, we have to include the lines inside the conditional statements rather than outside.
                 IntegerVector i = mat.slot("i");
                 IntegerVector p = mat.slot("p");
@@ -144,9 +144,9 @@ namespace traits {
                 std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
                 std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
                 
-                if(uplo == "U"){
+                if (uplo == "U") {
                     res = symmatu(res);
-                }else{
+                } else {
                     res = symmatl(res);
                 }
             }
