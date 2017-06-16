@@ -91,5 +91,22 @@ if (.runThisTest) {
         l  <- list(SM, SM)
         checkEquals(l, sparseList(l), msg="sparseList")
     }
+    
+    test.dtc2dgc <- function() {
+        mtxt <- c("0 0 0 3",
+                  "0 0 7 0",
+                  "0 0 0 0",
+                  "0 0 0 0")
+        M <- as.matrix(read.table(textConnection(mtxt)))
+        dimnames(M) <- NULL
+        dtc <- Matrix(M, sparse=TRUE)
+        dgc <- as(dtc, "dgCMatrix")
+        
+        checkEquals(dgc, dtc2dgc(dtc), msg="dtc2dgc")
+    }
+    
+    
+    
+    
    
 }
