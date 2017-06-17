@@ -102,11 +102,24 @@ if (.runThisTest) {
         dtc <- Matrix(M, sparse=TRUE)
         dgc <- as(dtc, "dgCMatrix")
         
-        checkEquals(dgc, dtc2dgc(dtc), msg="dtc2dgc")
+        checkEquals(dgc, asSpMat(dtc), msg="asSpMat")
+        
+        dtc@diag <- "U"
+        dgc <- as(dtc, "dgCMatrix")
+        checkEquals(dgc, asSpMat(dtc), msg="asSpMat")
     }
     
-    
-    
-    
-   
+    test.dsc2dgc <- function() {
+        mtxt <- c("10  0  1  0  3",
+                  "0  10  0  1  0",
+                  "1  0  10  0  1",
+                  "0  1  0  10  0",
+                  "3  0  1  0  10")
+        M <- as.matrix(read.table(textConnection(mtxt)))
+        dimnames(M) <- NULL
+        dsc <- Matrix(M, sparse=TRUE)
+        dgc <- as(dsc, "dgCMatrix")
+        
+        checkEquals(dgc, asSpMat(dsc), msg="asSpMat")
+    }
 }
