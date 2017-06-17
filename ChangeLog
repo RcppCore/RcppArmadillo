@@ -1,3 +1,8 @@
+2017-06-17  Binxiang Ni  <binxiangni@gmail.com>
+
+  * inst/include/RcppArmadilloAs.h: Add conversion for dtCMatrix & dsCMatrix
+  * inst/unitTests/runit.sparse.R: Add unit tests for the conversion for      dtCMatrix & dsCMatrix
+
 2017-06-04  Dirk Eddelbuettel  <edd@debian.org>
 
 	* configure.ac: Whitespace changes
