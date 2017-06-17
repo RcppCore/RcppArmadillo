@@ -100,12 +100,11 @@ if (.runThisTest) {
         M <- as.matrix(read.table(textConnection(mtxt)))
         dimnames(M) <- NULL
         dtc <- Matrix(M, sparse=TRUE)
-        dgc <- as(dtc, "dgCMatrix")
-        
+        dgc <- methods::as(dtc, "dgCMatrix")
         checkEquals(dgc, asSpMat(dtc), msg="asSpMat")
         
         dtc@diag <- "U"
-        dgc <- as(dtc, "dgCMatrix")
+        dgc <- methods::as(dtc, "dgCMatrix")
         checkEquals(dgc, asSpMat(dtc), msg="asSpMat")
     }
     
@@ -118,13 +117,55 @@ if (.runThisTest) {
         M <- as.matrix(read.table(textConnection(mtxt)))
         dimnames(M) <- NULL
         dsc <- Matrix(M, sparse=TRUE)
-        dgc <- as(dsc, "dgCMatrix")
-        
+        dgc <- methods::as(dsc, "dgCMatrix")
         checkEquals(dgc, asSpMat(dsc), msg="asSpMat")
         
         dsc <- t(dsc)
-        dgc <- as(dsc, "dgCMatrix")
-        
+        dgc <- methods::as(dsc, "dgCMatrix")
         checkEquals(dgc, asSpMat(dsc), msg="asSpMat")
     }
+    
+    test.dgt2dgc <- function() {
+        dgt <- methods::as(SM, "dgTMatrix")
+        checkEquals(SM, asSpMat(dgt), msg="asSpMat")
+    }
+    
+    test.dtt2dgc <- function() {
+        mtxt <- c("0 0 0 3",
+                  "0 0 7 0",
+                  "0 0 0 0",
+                  "0 0 0 0")
+        M <- as.matrix(read.table(textConnection(mtxt)))
+        dimnames(M) <- NULL
+        dtc <- Matrix(M, sparse=TRUE)
+        dgc <- methods::as(dtc, "dgCMatrix")
+        dtt <- methods::as(dtc, "dtTMatrix")
+        checkEquals(dgc, asSpMat(dtt), msg="asSpMat")
+
+        dtc@diag <- "U"
+        dgc <- methods::as(dtc, "dgCMatrix")
+        dtt <- methods::as(dtc, "dtTMatrix")
+        checkEquals(dgc, asSpMat(dtt), msg="asSpMat")
+    }
+    
+    test.dst2dgc <- function() {
+        mtxt <- c("10  0  1  0  3",
+                  "0  10  0  1  0",
+                  "1  0  10  0  1",
+                  "0  1  0  10  0",
+                  "3  0  1  0  10")
+        M <- as.matrix(read.table(textConnection(mtxt)))
+        dimnames(M) <- NULL
+        dsc <- Matrix(M, sparse=TRUE)
+        dgc <- methods::as(dsc, "dgCMatrix")
+        dst <- methods::as(dsc, "dsTMatrix")
+        checkEquals(dgc, asSpMat(dst), msg="asSpMat")
+
+        dsc <- t(dsc)
+        dgc <- methods::as(dsc, "dgCMatrix")
+        dst <- methods::as(dsc, "dsTMatrix")
+        checkEquals(dgc, asSpMat(dst), msg="asSpMat")
+    }
 }
+    
+    
