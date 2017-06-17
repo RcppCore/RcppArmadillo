@@ -121,5 +121,10 @@ if (.runThisTest) {
         dgc <- as(dsc, "dgCMatrix")
         
         checkEquals(dgc, asSpMat(dsc), msg="asSpMat")
+        
+        dsc <- t(dsc)
+        dgc <- as(dsc, "dgCMatrix")
+        
+        checkEquals(dgc, asSpMat(dsc), msg="asSpMat")
     }
 }
