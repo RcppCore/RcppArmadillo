@@ -79,7 +79,8 @@ Rcpp::List sparseList(Rcpp::List l) {
 }
 
 // [[Rcpp::export]]
-arma::sp_mat dtc2dgc(S4 mat){
+arma::sp_mat dtc2dgc(SEXP S){
+    S4 mat = S;
     IntegerVector dims = mat.slot("Dim");
     int nrow = dims[0];
     int ncol = dims[1];
@@ -92,7 +93,7 @@ arma::sp_mat dtc2dgc(S4 mat){
     if (type == "dtCMatrix") {
         IntegerVector i = mat.slot("i");
         IntegerVector p = mat.slot("p");
-        Vector<RTYPE> x = mat.slot("x");
+        IntegerVector x = mat.slot("x");
         std::string diag = Rcpp::as<std::string>(mat.slot("diag"));
         
         // Making space for the elements
