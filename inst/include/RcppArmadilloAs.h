@@ -111,7 +111,6 @@ namespace traits {
                 std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
             }
             else if (type == "dtCMatrix") {
-                // The following 3 lines might be duplicate, but when the type == dgT or dgR, we have to include the lines inside the conditional statements rather than outside.
                 IntegerVector i = mat.slot("i");
                 IntegerVector p = mat.slot("p");
                 Vector<RTYPE> x = mat.slot("x");
@@ -130,7 +129,6 @@ namespace traits {
                 }
             }
             else if (type == "dsCMatrix") {
-                // The following 3 lines might be duplicate, but when the type == dgT or dgR, we have to include the lines inside the conditional statements rather than outside.
                 IntegerVector i = mat.slot("i");
                 IntegerVector p = mat.slot("p");
                 Vector<RTYPE> x = mat.slot("x");
@@ -140,6 +138,90 @@ namespace traits {
                 res.mem_resize(static_cast<unsigned>(x.size()));
                 
                 // Copying elements
+                std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
+                std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
+                std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
+                
+                if (uplo == "U") {
+                    res = symmatu(res);
+                } else {
+                    res = symmatl(res);
+                }
+            }
+            else if (type == "dgTMatrix") {
+                IntegerVector tj = mat.slot("j");
+                IntegerVector i = mat.slot("i");
+                Vector<RTYPE> x = mat.slot("x");
+                IntegerVector p = IntegerVector(ncol + 1);
+                
+                int nnz = x.size();
+                // Count the number of nnz in each column
+                for(int idx = 0; idx < nnz; idx++){
+                    int col = tj[idx];
+                    p[col + 1]++;
+                }
+                
+                // Cumsum p
+                for(int col = 0, cumsum = 0; col < ncol + 1; col++){
+                    cumsum += p[col];
+                    p[col] = cumsum;
+                }
+                
+                res.mem_resize(static_cast<unsigned>(x.size()));
+                std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
+                std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
+                std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
+            }
+            else if (type == "dtTMatrix") {
+                IntegerVector tj = mat.slot("j");
+                IntegerVector i = mat.slot("i");
+                Vector<RTYPE> x = mat.slot("x");
+                IntegerVector p = IntegerVector(ncol + 1);
+                std::string diag = Rcpp::as<std::string>(mat.slot("diag"));
+
+                int nnz = x.size();
+                // Count the number of nnz in each column
+                for(int idx = 0; idx < nnz; idx++){
+                    int col = tj[idx];
+                    p[col + 1]++;
+                }
+
+                // Cumsum p
+                for(int col = 0, cumsum = 0; col < ncol + 1; col++){
+                    cumsum += p[col];
+                    p[col] = cumsum;
+                }
+
+                res.mem_resize(static_cast<unsigned>(x.size()));
+                std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
+                std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
+                std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
+
+                if (diag == "U"){
+                    res.diag().ones();
+                }
+            }
+            else if (type == "dsTMatrix") {
+                IntegerVector tj = mat.slot("j");
+                IntegerVector i = mat.slot("i");
+                Vector<RTYPE> x = mat.slot("x");
+                IntegerVector p = IntegerVector(ncol + 1);
+                std::string uplo = Rcpp::as<std::string>(mat.slot("uplo"));
+                
+                int nnz = x.size();
+                // Count the number of nnz in each column
+                for(int idx = 0; idx < nnz; idx++){
+                    int col = tj[idx];
+                    p[col + 1]++;
+                }
+              
+                // Cumsum p
+                for(int col = 0, cumsum = 0; col < ncol + 1; col++){
+                    cumsum += p[col];
+                    p[col] = cumsum;
+                }
+              
+                res.mem_resize(static_cast<unsigned>(x.size()));
                 std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
                 std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
                 std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
