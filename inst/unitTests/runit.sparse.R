@@ -166,6 +166,6 @@ if (.runThisTest) {
         dst <- methods::as(dsc, "dsTMatrix")
         checkEquals(dgc, asSpMat(dst), msg="asSpMat")
     }
-}
+  }
     
     
