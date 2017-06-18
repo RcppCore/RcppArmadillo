@@ -77,7 +77,9 @@ namespace traits {
     private:
         MATRIX mat ;
     };
-         
+    
+    // 14 June 2017
+    // Add support for dgCMatrix, dtCMatrix and dsCMatrix
     template <typename T>
     class Exporter< arma::SpMat<T> > {
     public:
@@ -87,23 +89,70 @@ namespace traits {
             const int  RTYPE = Rcpp::traits::r_sexptype_traits<T>::rtype;
         
             IntegerVector dims = mat.slot("Dim");
-            IntegerVector i = mat.slot("i") ;
-            IntegerVector p = mat.slot("p") ;     
-            Vector<RTYPE> x = mat.slot("x") ;
+            int nrow = dims[0];
+            int ncol = dims[1];
             
-            // Creating an empty SpMat            
-            arma::SpMat<T> res((unsigned) dims[0], (unsigned) dims[1]);
+            // Creating an empty SpMat
+            arma::SpMat<T> res(static_cast<unsigned>(nrow), static_cast<unsigned>(ncol));
             
-            // Making space for the elements
-            res.mem_resize((unsigned) x.size());
-            
-            // Copying elements
-            std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
-            std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
-            std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
+            // Get the type of sparse matrix
+            std::string type = Rcpp::as<std::string>(mat.slot("class"));
+            if (type == "dgCMatrix") {
+                IntegerVector i = mat.slot("i");
+                IntegerVector p = mat.slot("p");
+                Vector<RTYPE> x = mat.slot("x");
+                
+                // Making space for the elements
+                res.mem_resize(static_cast<unsigned>(x.size()));
+                
+                // Copying elements
+                std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
+                std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
+                std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
+            }
+            else if (type == "dtCMatrix") {
+                // The following 3 lines might be duplicate, but when the type == dgT or dgR, we have to include the lines inside the conditional statements rather than outside.
+                IntegerVector i = mat.slot("i");
+                IntegerVector p = mat.slot("p");
+                Vector<RTYPE> x = mat.slot("x");
+                std::string diag = Rcpp::as<std::string>(mat.slot("diag"));
+                
+                // Making space for the elements
+                res.mem_resize(static_cast<unsigned>(x.size()));
+                
+                // Copying elements
+                std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
+                std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
+                std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
+                
+                if (diag == "U") {
+                    res.diag().ones();
+                }
+            }
+            else if (type == "dsCMatrix") {
+                // The following 3 lines might be duplicate, but when the type == dgT or dgR, we have to include the lines inside the conditional statements rather than outside.
+                IntegerVector i = mat.slot("i");
+                IntegerVector p = mat.slot("p");
+                Vector<RTYPE> x = mat.slot("x");
+                std::string uplo = Rcpp::as<std::string>(mat.slot("uplo"));
+                
+                // Making space for the elements
+                res.mem_resize(static_cast<unsigned>(x.size()));
+                
+                // Copying elements
+                std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
+                std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
+                std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
+                
+                if (uplo == "U") {
+                    res = symmatu(res);
+                } else {
+                    res = symmatl(res);
+                }
+            }
             
             // Setting the sentinel
-            arma::access::rw(res.col_ptrs[(unsigned) dims[1] + 1]) =
+            arma::access::rw(res.col_ptrs[static_cast<unsigned>(ncol + 1)]) =
               std::numeric_limits<arma::uword>::max();
                         
             return res;

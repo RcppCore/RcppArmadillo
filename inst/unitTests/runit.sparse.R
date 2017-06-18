@@ -91,5 +91,40 @@ if (.runThisTest) {
         l  <- list(SM, SM)
         checkEquals(l, sparseList(l), msg="sparseList")
     }
-   
+    
+    test.dtc2dgc <- function() {
+        mtxt <- c("0 0 0 3",
+                  "0 0 7 0",
+                  "0 0 0 0",
+                  "0 0 0 0")
+        M <- as.matrix(read.table(textConnection(mtxt)))
+        dimnames(M) <- NULL
+        dtc <- Matrix(M, sparse=TRUE)
+        dgc <- as(dtc, "dgCMatrix")
+        
+        checkEquals(dgc, asSpMat(dtc), msg="asSpMat")
+        
+        dtc@diag <- "U"
+        dgc <- as(dtc, "dgCMatrix")
+        checkEquals(dgc, asSpMat(dtc), msg="asSpMat")
+    }
+    
+    test.dsc2dgc <- function() {
+        mtxt <- c("10  0  1  0  3",
+                  "0  10  0  1  0",
+                  "1  0  10  0  1",
+                  "0  1  0  10  0",
+                  "3  0  1  0  10")
+        M <- as.matrix(read.table(textConnection(mtxt)))
+        dimnames(M) <- NULL
+        dsc <- Matrix(M, sparse=TRUE)
+        dgc <- as(dsc, "dgCMatrix")
+        
+        checkEquals(dgc, asSpMat(dsc), msg="asSpMat")
+        
+        dsc <- t(dsc)
+        dgc <- as(dsc, "dgCMatrix")
+        
+        checkEquals(dgc, asSpMat(dsc), msg="asSpMat")
+    }
 }
