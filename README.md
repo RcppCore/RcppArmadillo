@@ -44,4 +44,4 @@ Romain Francois, Dirk Eddelbuettel and Doug Bates
 
 ### License
 
-GPL (>= 2)
+GPL (>= 3)
