@@ -166,6 +166,46 @@ if (.runThisTest) {
         dst <- methods::as(dsc, "dsTMatrix")
         checkEquals(dgc, asSpMat(dst), msg="asSpMat")
     }
-  }
     
+    test.dgr2dgc <- function() {
+        dgr <- methods::as(M, "dgRMatrix")
+        checkEquals(SM, asSpMat(dgr), msg="asSpMat")
+    }
     
+    test.dtr2dgc <- function() {
+        mtxt <- c("0 0 0 3",
+                  "0 0 7 0",
+                  "0 0 0 0",
+                  "0 0 0 0")
+        M <- as.matrix(read.table(textConnection(mtxt)))
+        dimnames(M) <- NULL
+        dtc <- Matrix(M, sparse=TRUE)
+        dgc <- methods::as(dtc, "dgCMatrix")
+        dtr <- methods::as(dtc, "RsparseMatrix")
+        checkEquals(dgc, asSpMat(dtr), msg="asSpMat")
+        
+        dtc@diag <- "U"
+        dgc <- methods::as(dtc, "dgCMatrix")
+        dtr <- methods::as(dtc, "RsparseMatrix")
+        checkEquals(dgc, asSpMat(dtr), msg="asSpMat")
+    }
+    
+    test.dsr2dgc <- function() {
+        mtxt <- c("10  0  1  0  3",
+                  "0  10  0  1  0",
+                  "1  0  10  0  1",
+                  "0  1  0  10  0",
+                  "3  0  1  0  10")
+        M <- as.matrix(read.table(textConnection(mtxt)))
+        dimnames(M) <- NULL
+        dsc <- Matrix(M, sparse=TRUE)
+        dgc <- methods::as(dsc, "dgCMatrix")
+        dsr <- methods::as(dsc, "RsparseMatrix")
+        checkEquals(dgc, asSpMat(dsr), msg="asSpMat")
+        
+        dsc <- t(dsc)
+        dgc <- methods::as(dsc, "dgCMatrix")
+        dsr <- methods::as(dsc, "RsparseMatrix")
+        checkEquals(dgc, asSpMat(dsr), msg="asSpMat")
+    }
+}
