@@ -167,7 +167,10 @@ namespace traits {
                     p[col] = cumsum;
                 }
                 
+                // Making space for the elements
                 res.mem_resize(static_cast<unsigned>(x.size()));
+                
+                // Copying elements
                 std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
                 std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
                 std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
@@ -192,7 +195,10 @@ namespace traits {
                     p[col] = cumsum;
                 }
 
+                // Making space for the elements
                 res.mem_resize(static_cast<unsigned>(x.size()));
+                
+                // Copying elements
                 std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
                 std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
                 std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
@@ -221,7 +227,172 @@ namespace traits {
                     p[col] = cumsum;
                 }
               
+                // Making space for the elements
                 res.mem_resize(static_cast<unsigned>(x.size()));
+                
+                // Copying elements
+                std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
+                std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
+                std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
+                
+                if (uplo == "U") {
+                    res = symmatu(res);
+                } else {
+                    res = symmatl(res);
+                }
+            }
+            else if (type == "dgRMatrix") {
+                IntegerVector rj = mat.slot("j");
+                IntegerVector rp = mat.slot("p");
+                Vector<RTYPE> rx = mat.slot("x");
+              
+                int nnz = rx.size();
+                IntegerVector i = IntegerVector(nnz);
+                IntegerVector p = IntegerVector(ncol + 1);
+                NumericVector x = NumericVector(nnz);
+              
+                // Count the nnz in each column
+                for(int n = 0; n < nnz; n++){
+                    p[rj[n] + 1]++;
+                }
+                
+                // Cumsum p
+                for(int col = 0, cumsum = 0; col < ncol + 1; col++){
+                    cumsum += p[col];
+                    p[col] = cumsum;
+                }
+                
+                // https://github.com/scipy/scipy/blob/master/scipy/sparse/sparsetools/csr.h#L436
+                // Calculate i&x
+                for(int row = 0; row < nrow; row++){
+                    for(int tmp = rp[row]; tmp < rp[row + 1]; tmp++){
+                        int col = rj[tmp];
+                        int dest = p[col];
+                    
+                        i[dest] = row;
+                        x[dest] = rx[tmp];
+                    
+                        p[col]++;
+                    }
+                }
+                
+                // Fix the p
+                for(int col = 0, last = 0; col <= ncol; col++){
+                    int tmp  = p[col];
+                    p[col] = last;
+                    last = tmp;
+                }
+                
+                // Making space for the elements
+                res.mem_resize(static_cast<unsigned>(x.size()));
+                
+                // Copying elements
+                std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
+                std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
+                std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
+            }
+            else if (type == "dtRMatrix") {
+                IntegerVector rj = mat.slot("j");
+                IntegerVector rp = mat.slot("p");
+                Vector<RTYPE> rx = mat.slot("x");
+                std::string diag = Rcpp::as<std::string>(mat.slot("diag"));
+                
+                int nnz = rx.size();
+                IntegerVector i = IntegerVector(nnz);
+                IntegerVector p = IntegerVector(ncol + 1);
+                NumericVector x = NumericVector(nnz);
+                
+                // Count the nnz in each column
+                for(int n = 0; n < nnz; n++){
+                    p[rj[n] + 1]++;
+                }
+                
+                // Cumsum p
+                for(int col = 0, cumsum = 0; col < ncol + 1; col++){
+                    cumsum += p[col];
+                    p[col] = cumsum;
+                }
+                
+                // https://github.com/scipy/scipy/blob/master/scipy/sparse/sparsetools/csr.h#L436
+                // Calculate i&x
+                for(int row = 0; row < nrow; row++){
+                    for(int tmp = rp[row]; tmp < rp[row + 1]; tmp++){
+                        int col = rj[tmp];
+                        int dest = p[col];
+                    
+                        i[dest] = row;
+                        x[dest] = rx[tmp];
+                    
+                        p[col]++;
+                    }
+                }
+                
+                // Fix the p
+                for(int col = 0, last = 0; col <= ncol; col++){
+                    int tmp  = p[col];
+                    p[col] = last;
+                    last = tmp;
+                }
+                
+                // Making space for the elements
+                res.mem_resize(static_cast<unsigned>(x.size()));
+                
+                // Copying elements
+                std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
+                std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
+                std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
+                
+                if (diag == "U"){
+                    res.diag().ones();
+                }
+            }
+            else if (type == "dsRMatrix") {
+                IntegerVector rj = mat.slot("j");
+                IntegerVector rp = mat.slot("p");
+                Vector<RTYPE> rx = mat.slot("x");
+                std::string uplo = Rcpp::as<std::string>(mat.slot("uplo"));
+                
+                int nnz = rx.size();
+                IntegerVector i = IntegerVector(nnz);
+                IntegerVector p = IntegerVector(ncol + 1);
+                NumericVector x = NumericVector(nnz);
+                
+                // Count the nnz in each column
+                for(int n = 0; n < nnz; n++){
+                    p[rj[n] + 1]++;
+                }
+                
+                // Cumsum p
+                for(int col = 0, cumsum = 0; col < ncol + 1; col++){
+                    cumsum += p[col];
+                    p[col] = cumsum;
+                }
+                
+                // https://github.com/scipy/scipy/blob/master/scipy/sparse/sparsetools/csr.h#L436
+                // Calculate i&x
+                for(int row = 0; row < nrow; row++){
+                    for(int tmp = rp[row]; tmp < rp[row + 1]; tmp++){
+                        int col = rj[tmp];
+                        int dest = p[col];
+                    
+                        i[dest] = row;
+                        x[dest] = rx[tmp];
+                    
+                        p[col]++;
+                    }
+                }
+                
+                // Fix the p
+                for(int col = 0, last = 0; col <= ncol; col++){
+                    int tmp  = p[col];
+                    p[col] = last;
+                    last = tmp;
+                }
+                
+                // Making space for the elements
+                res.mem_resize(static_cast<unsigned>(x.size()));
+                
+                // Copying elements
                 std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
                 std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
                 std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
