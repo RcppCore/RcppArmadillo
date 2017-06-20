@@ -1,18 +1,28 @@
+2017-06-19  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Roll minor version
+
+	* .travis.yml (group): Added as required by Travis CI
 
 2017-06-19  Binxiang Ni  <binxiangni@gmail.com>
 
-	* inst/include/RcppArmadilloAs.h: Add conversion for dgR, dtR & dsRMatrix
-	* inst/unitTests/runit.sparse.R: Add unit tests for the conversion for dgR, dtR & dsRMatrix
+	* inst/include/RcppArmadilloAs.h: Add conversion for dgR, dtR &
+	dsRMatrix
+	* inst/unitTests/runit.sparse.R: Add unit tests for the conversion
+	for dgR, dtR & dsRMatrix
 
 2017-06-18  Binxiang Ni  <binxiangni@gmail.com>
 
-	* inst/include/RcppArmadilloAs.h: Add conversion for dgT, dtT & dsTMatrix
-	* inst/unitTests/runit.sparse.R: Add unit tests for the conversion for dgT, dtT & dsTMatrix
+	* inst/include/RcppArmadilloAs.h: Add conversion for dgT, dtT &
+	dsTMatrix
+	* inst/unitTests/runit.sparse.R: Add unit tests for the conversion
+	for dgT, dtT & dsTMatrix
 
 2017-06-17  Binxiang Ni  <binxiangni@gmail.com>
 
 	* inst/include/RcppArmadilloAs.h: Add conversion for dtC & dsCMatrix
-	* inst/unitTests/runit.sparse.R: Add unit tests for the conversion for dtC & dsCMatrix
+	* inst/unitTests/runit.sparse.R: Add unit tests for the conversion
+	for dtC & dsCMatrix
 
 2017-06-04  Dirk Eddelbuettel  <edd@debian.org>
 

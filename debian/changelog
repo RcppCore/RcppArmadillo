@@ -1,3 +1,11 @@
+r-cran-rcpparmadillo (0.7.900.2.0-1) unstable; urgency=medium
+
+  * New upstream release
+  
+  * debian/control: Set Build-Depends: to current R version
+
+ -- Dirk Eddelbuettel <edd@debian.org>  Sun, 04 Jun 2017 09:00:34 -0500
+
 r-cran-rcpparmadillo (0.7.800.2.0-1) unstable; urgency=medium
 
   * New upstream release
