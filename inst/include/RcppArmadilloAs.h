@@ -79,7 +79,7 @@ namespace traits {
     };
     
     // 14 June 2017
-    // Add support for dgCMatrix, dtCMatrix and dsCMatrix
+    // Add support for sparse matrices other than dgCMatrix
     template <typename T>
     class Exporter< arma::SpMat<T> > {
     public:
@@ -249,7 +249,7 @@ namespace traits {
                 int nnz = rx.size();
                 IntegerVector i = IntegerVector(nnz);
                 IntegerVector p = IntegerVector(ncol + 1);
-                NumericVector x = NumericVector(nnz);
+                Vector<RTYPE> x = Vector<RTYPE>(nnz);
               
                 // Count the nnz in each column
                 for(int n = 0; n < nnz; n++){
@@ -300,7 +300,7 @@ namespace traits {
                 int nnz = rx.size();
                 IntegerVector i = IntegerVector(nnz);
                 IntegerVector p = IntegerVector(ncol + 1);
-                NumericVector x = NumericVector(nnz);
+                Vector<RTYPE> x = Vector<RTYPE>(nnz);
                 
                 // Count the nnz in each column
                 for(int n = 0; n < nnz; n++){
@@ -355,7 +355,7 @@ namespace traits {
                 int nnz = rx.size();
                 IntegerVector i = IntegerVector(nnz);
                 IntegerVector p = IntegerVector(ncol + 1);
-                NumericVector x = NumericVector(nnz);
+                Vector<RTYPE> x = Vector<RTYPE>(nnz);
                 
                 // Count the nnz in each column
                 for(int n = 0; n < nnz; n++){
@@ -403,6 +403,65 @@ namespace traits {
                     res = symmatl(res);
                 }
             }
+            else if (type == "pMatrix") {
+                std::vector<int> i;
+                IntegerVector p(ncol + 1);
+                IntegerVector x(ncol, 1);
+                IntegerVector perm = mat.slot("perm");
+                
+                // Sort the row number by the column number
+                std::map <int, int> colrow;
+                for(int tmp = 0; tmp < perm.size(); tmp++){
+                    colrow[perm[tmp]] = tmp;
+                }
+                
+                // Calculate i
+                for(std::map<int, int>::iterator tmp = colrow.begin(); tmp != colrow.end(); tmp++){
+                    i.push_back(tmp -> second);
+                }
+              
+                // Calculate p
+                for(int tmp = 0; tmp < p.size(); tmp++){
+                    p[tmp] = tmp;
+                }
+              
+                // Making space for the elements
+                res.mem_resize(static_cast<unsigned>(x.size()));
+              
+                // Copying elements
+                std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
+                std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
+                std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
+            }
+            else if (type == "ddiMatrix") {
+                IntegerVector i(ncol);
+                IntegerVector p(ncol+1);
+                std::string diag = Rcpp::as<std::string>(mat.slot("diag"));
+                Vector<RTYPE> x = no_init(ncol);
+                if (diag == "U") {
+                  x.fill(1);
+                } else {
+                  x = Vector<RTYPE>(mat.slot("x"));
+                }
+
+                // Calculate i
+                for(int tmp = 0; tmp < i.size(); tmp++){
+                    i[tmp] = tmp;
+                }
+
+                // Calculate p
+                for(int tmp = 0; tmp < p.size(); tmp++){
+                    p[tmp] = tmp;
+                }
+
+                // Making space for the elements
+                res.mem_resize(static_cast<unsigned>(x.size()));
+
+                // Copying elements
+                std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
+                std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
+                std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
+            }
             
             // Setting the sentinel
             arma::access::rw(res.col_ptrs[static_cast<unsigned>(ncol + 1)]) =
@@ -410,7 +469,8 @@ namespace traits {
                         
             return res;
         }
-                
+        
+        
     private:
         S4 mat ;
     } ;
