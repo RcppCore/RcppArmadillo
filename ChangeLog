@@ -1,3 +1,8 @@
+2017-06-21  Binxiang Ni  <binxiangni@gmail.com>
+
+	* inst/include/RcppArmadilloAs.h: Add conversion for pMatrix & ddiMatrix
+	* inst/unitTests/runit.sparse.R: Add unit tests for the conversion for pMatrix & ddiMatrix
+
 2017-06-19  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Roll minor version

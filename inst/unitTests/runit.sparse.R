@@ -208,4 +208,34 @@ if (.runThisTest) {
         dsr <- methods::as(dsc, "RsparseMatrix")
         checkEquals(dgc, asSpMat(dsr), msg="asSpMat")
     }
+    
+    test.p2dgc <- function() {
+        mtxt <- c("0 1 0",
+                  "0 0 1",
+                  "1 0 0")
+        M <- as.matrix(read.table(textConnection(mtxt)))
+        dimnames(M) <- NULL
+        dgc <- methods::as(M, "dgCMatrix")
+        p <- as(as.integer(c(2,3,1)), "pMatrix")
+        checkEquals(dgc, asSpMat(p), msg="asSpMat")
+    }
+    
+    test.ddi2dgc <- function() {
+        mtxt <- c("1 0 0",
+                  "0 1 0",
+                  "0 0 1")
+        M <- as.matrix(read.table(textConnection(mtxt)))
+        dimnames(M) <- NULL
+        dgc <- methods::as(M, "dgCMatrix")
+        ddi <- methods::as(M, "diagonalMatrix")
+        checkEquals(dgc, asSpMat(ddi), msg="asSpMat")
+
+        mtxt <- c("10 0",
+                  "0  1")
+        M <- as.matrix(read.table(textConnection(mtxt)))
+        dimnames(M) <- NULL
+        dgc <- methods::as(M, "dgCMatrix")
+        ddi <- methods::as(M, "diagonalMatrix")
+        checkEquals(dgc, asSpMat(ddi), msg="asSpMat")
+    }
 }
