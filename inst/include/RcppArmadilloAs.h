@@ -149,15 +149,40 @@ namespace traits {
                 }
             }
             else if (type == "dgTMatrix") {
+                IntegerVector ti = mat.slot("i");
                 IntegerVector tj = mat.slot("j");
-                IntegerVector i = mat.slot("i");
-                Vector<RTYPE> x = mat.slot("x");
+                Vector<RTYPE> tx = mat.slot("x");
+                
+                // Create a map to sort the i, j, x
+                typedef std::pair<int, int> Key;
+                typedef std::map<Key, double> Map;
+                Map jix;
+                int tnnz = tx.size();
+                for(int idx = 0; idx < tnnz; idx++){
+                    Key p(tj[idx], ti[idx]);
+                    if (jix.find(p) != jix.end()) {
+                        jix[p] += tx[idx];
+                    } else {
+                        jix[p] = tx[idx];
+                    }
+                }
+                
+                // Get the new i, j, x;
+                int nnz = jix.size();
+                std::vector<int> i;
+                std::vector<int> j;
+                std::vector<double> x;
                 IntegerVector p = IntegerVector(ncol + 1);
                 
-                int nnz = x.size();
+                for(Map::iterator tmp = jix.begin(); tmp != jix.end(); tmp++){
+                    j.push_back((tmp -> first).first);
+                    i.push_back((tmp -> first).second);
+                    x.push_back(tmp -> second);
+                }
+                
                 // Count the number of nnz in each column
                 for(int idx = 0; idx < nnz; idx++){
-                    int col = tj[idx];
+                    int col = j[idx];
                     p[col + 1]++;
                 }
                 
@@ -176,25 +201,50 @@ namespace traits {
                 std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
             }
             else if (type == "dtTMatrix") {
+                IntegerVector ti = mat.slot("i");
                 IntegerVector tj = mat.slot("j");
-                IntegerVector i = mat.slot("i");
-                Vector<RTYPE> x = mat.slot("x");
-                IntegerVector p = IntegerVector(ncol + 1);
+                Vector<RTYPE> tx = mat.slot("x");
                 std::string diag = Rcpp::as<std::string>(mat.slot("diag"));
-
-                int nnz = x.size();
+                
+                // Create a map to sort the i, j, x
+                typedef std::pair<int, int> Key;
+                typedef std::map<Key, double> Map;
+                Map jix;
+                int tnnz = tx.size();
+                for(int idx = 0; idx < tnnz; idx++){
+                    Key p(tj[idx], ti[idx]);
+                    if (jix.find(p) != jix.end()) {
+                        jix[p] += tx[idx];
+                    } else {
+                        jix[p] = tx[idx];
+                    }
+                }
+                
+                // Get the new i, j, x;
+                int nnz = jix.size();
+                std::vector<int> i;
+                std::vector<int> j;
+                std::vector<double> x;
+                IntegerVector p = IntegerVector(ncol + 1);
+                
+                for(Map::iterator tmp = jix.begin(); tmp != jix.end(); tmp++){
+                    j.push_back((tmp -> first).first);
+                    i.push_back((tmp -> first).second);
+                    x.push_back(tmp -> second);
+                }
+                
                 // Count the number of nnz in each column
                 for(int idx = 0; idx < nnz; idx++){
-                    int col = tj[idx];
+                    int col = j[idx];
                     p[col + 1]++;
                 }
-
+                
                 // Cumsum p
                 for(int col = 0, cumsum = 0; col < ncol + 1; col++){
                     cumsum += p[col];
                     p[col] = cumsum;
                 }
-
+                
                 // Making space for the elements
                 res.mem_resize(static_cast<unsigned>(x.size()));
                 
@@ -202,31 +252,56 @@ namespace traits {
                 std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
                 std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
                 std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
-
+                
                 if (diag == "U"){
                     res.diag().ones();
                 }
             }
             else if (type == "dsTMatrix") {
+                IntegerVector ti = mat.slot("i");
                 IntegerVector tj = mat.slot("j");
-                IntegerVector i = mat.slot("i");
-                Vector<RTYPE> x = mat.slot("x");
-                IntegerVector p = IntegerVector(ncol + 1);
+                Vector<RTYPE> tx = mat.slot("x");
                 std::string uplo = Rcpp::as<std::string>(mat.slot("uplo"));
                 
-                int nnz = x.size();
+                // Create a map to sort the i, j, x
+                typedef std::pair<int, int> Key;
+                typedef std::map<Key, double> Map;
+                Map jix;
+                int tnnz = tx.size();
+                for(int idx = 0; idx < tnnz; idx++){
+                    Key p(tj[idx], ti[idx]);
+                    if (jix.find(p) != jix.end()) {
+                        jix[p] += tx[idx];
+                    } else {
+                        jix[p] = tx[idx];
+                    }
+                }
+                
+                // Get the new i, j, x;
+                int nnz = jix.size();
+                std::vector<int> i;
+                std::vector<int> j;
+                std::vector<double> x;
+                IntegerVector p = IntegerVector(ncol + 1);
+                
+                for(Map::iterator tmp = jix.begin(); tmp != jix.end(); tmp++){
+                    j.push_back((tmp -> first).first);
+                    i.push_back((tmp -> first).second);
+                    x.push_back(tmp -> second);
+                }
+                
                 // Count the number of nnz in each column
                 for(int idx = 0; idx < nnz; idx++){
-                    int col = tj[idx];
+                    int col = j[idx];
                     p[col + 1]++;
                 }
-              
+                
                 // Cumsum p
                 for(int col = 0, cumsum = 0; col < ncol + 1; col++){
                     cumsum += p[col];
                     p[col] = cumsum;
                 }
-              
+                
                 // Making space for the elements
                 res.mem_resize(static_cast<unsigned>(x.size()));
                 
@@ -234,7 +309,7 @@ namespace traits {
                 std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
                 std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
                 std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
-                
+              
                 if (uplo == "U") {
                     res = symmatu(res);
                 } else {

@@ -1,3 +1,8 @@
+2017-07-04  Binxiang Ni  <binxiangni@gmail.com>
+
+	* inst/include/RcppArmadilloAs.h: Rewrite conversion for dgT, dtT & dsTMatrix to support two extreme cases
+	* inst/unitTests/runit.sparseConversion.R: Add file-based tests for conversion of sparse matrices
+
 2017-06-23  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/AUTHORS: Added
