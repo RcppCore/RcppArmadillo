@@ -1,3 +1,7 @@
+2017-07-08  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/unitTests/runit.sparseConversion.R: Use text= in read.table
+
 2017-07-04  Binxiang Ni  <binxiangni@gmail.com>
 
 	* inst/include/RcppArmadilloAs.h: Rewrite conversion for dgT, dtT
