@@ -31,7 +31,7 @@ if (.runThisTest) {
               " 0  22   0   0  25  26",
               " 0   0  33  34   0  36",
               "41   0  43  44   0  46")
-    M <- as.matrix(read.table(textConnection(mtxt)))
+    M <- as.matrix(read.table(text=mtxt))
     dimnames(M) <- NULL
     SM <- Matrix(M, sparse=TRUE)
 
@@ -53,7 +53,7 @@ if (.runThisTest) {
         mtxt <- c("0 0 1",
                   "0 2 0",
                   "3 0 0")
-        M <- as.matrix(read.table(textConnection(mtxt)))
+        M <- as.matrix(read.table(text=mtxt))
         dimnames(M) <- NULL
         SM <- Matrix(M, sparse=TRUE)
 
@@ -97,7 +97,7 @@ if (.runThisTest) {
                   "0 0 7 0",
                   "0 0 0 0",
                   "0 0 0 0")
-        M <- as.matrix(read.table(textConnection(mtxt)))
+        M <- as.matrix(read.table(text=mtxt))
         dimnames(M) <- NULL
         dtc <- Matrix(M, sparse=TRUE)
         dgc <- methods::as(dtc, "dgCMatrix")
@@ -114,7 +114,7 @@ if (.runThisTest) {
                   "1  0  10  0  1",
                   "0  1  0  10  0",
                   "3  0  1  0  10")
-        M <- as.matrix(read.table(textConnection(mtxt)))
+        M <- as.matrix(read.table(text=mtxt))
         dimnames(M) <- NULL
         dsc <- Matrix(M, sparse=TRUE)
         dgc <- methods::as(dsc, "dgCMatrix")
@@ -135,7 +135,7 @@ if (.runThisTest) {
                   "0 0 7 0",
                   "0 0 0 0",
                   "0 0 0 0")
-        M <- as.matrix(read.table(textConnection(mtxt)))
+        M <- as.matrix(read.table(text=mtxt))
         dimnames(M) <- NULL
         dtc <- Matrix(M, sparse=TRUE)
         dgc <- methods::as(dtc, "dgCMatrix")
@@ -154,7 +154,7 @@ if (.runThisTest) {
                   "1  0  10  0  1",
                   "0  1  0  10  0",
                   "3  0  1  0  10")
-        M <- as.matrix(read.table(textConnection(mtxt)))
+        M <- as.matrix(read.table(text=mtxt))
         dimnames(M) <- NULL
         dsc <- Matrix(M, sparse=TRUE)
         dgc <- methods::as(dsc, "dgCMatrix")
@@ -177,7 +177,7 @@ if (.runThisTest) {
                   "0 0 7 0",
                   "0 0 0 0",
                   "0 0 0 0")
-        M <- as.matrix(read.table(textConnection(mtxt)))
+        M <- as.matrix(read.table(text=mtxt))
         dimnames(M) <- NULL
         dtc <- Matrix(M, sparse=TRUE)
         dgc <- methods::as(dtc, "dgCMatrix")
@@ -196,7 +196,7 @@ if (.runThisTest) {
                   "1  0  10  0  1",
                   "0  1  0  10  0",
                   "3  0  1  0  10")
-        M <- as.matrix(read.table(textConnection(mtxt)))
+        M <- as.matrix(read.table(text=mtxt))
         dimnames(M) <- NULL
         dsc <- Matrix(M, sparse=TRUE)
         dgc <- methods::as(dsc, "dgCMatrix")
@@ -209,11 +209,28 @@ if (.runThisTest) {
         checkEquals(dgc, asSpMat(dsr), msg="asSpMat")
     }
     
+    test.ind2dgc <- function() {
+        mtxt <- c("0 1 0",
+                  "0 1 0",
+                  "0 1 0",
+                  "0 0 1",
+                  "0 0 1",
+                  "0 0 1",
+                  "1 0 0",
+                  "1 0 0",
+                  "1 0 0")
+        M <- as.matrix(read.table(text=mtxt))
+        dimnames(M) <- NULL
+        dgc <- methods::as(M, "dgCMatrix")
+        ind <- as(rep(c(2,3,1), e=3), "indMatrix")
+        checkEquals(dgc, asSpMat(ind), msg="asSpMat")
+    }
+    
     test.p2dgc <- function() {
         mtxt <- c("0 1 0",
                   "0 0 1",
                   "1 0 0")
-        M <- as.matrix(read.table(textConnection(mtxt)))
+        M <- as.matrix(read.table(text=mtxt))
         dimnames(M) <- NULL
         dgc <- methods::as(M, "dgCMatrix")
         p <- as(as.integer(c(2,3,1)), "pMatrix")
@@ -224,7 +241,7 @@ if (.runThisTest) {
         mtxt <- c("1 0 0",
                   "0 1 0",
                   "0 0 1")
-        M <- as.matrix(read.table(textConnection(mtxt)))
+        M <- as.matrix(read.table(text=mtxt))
         dimnames(M) <- NULL
         dgc <- methods::as(M, "dgCMatrix")
         ddi <- methods::as(M, "diagonalMatrix")
@@ -232,7 +249,7 @@ if (.runThisTest) {
 
         mtxt <- c("10 0",
                   "0  1")
-        M <- as.matrix(read.table(textConnection(mtxt)))
+        M <- as.matrix(read.table(text=mtxt))
         dimnames(M) <- NULL
         dgc <- methods::as(M, "dgCMatrix")
         ddi <- methods::as(M, "diagonalMatrix")

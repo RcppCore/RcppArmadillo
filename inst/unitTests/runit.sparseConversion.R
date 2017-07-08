@@ -533,7 +533,7 @@ if (.runThisTest) {
         #           "0   0    0.03333333 0     0",
         #           "0   0    0          0.025 0",
         #           "0   0    0          0     0.02")
-        # M <- as.matrix(read.table(textConnection(mtxt)))
+        # M <- as.matrix(read.table(text=mtxt))
         # dimnames(M) <- NULL
         # dgc <- as(M, "dgCMatrix")
         # checkEquals(dgc, asSpMat(solve(D5)), msg="ddi2dgC_7")
@@ -544,43 +544,59 @@ if (.runThisTest) {
         # mtxt <- c("1 0 0",
         #           "0 0 0",
         #           "0 0 0")
-        # M <- as.matrix(read.table(textConnection(mtxt)))
+        # M <- as.matrix(read.table(text=mtxt))
         # dimnames(M) <- NULL
         # dgc <- as(M, "dgCMatrix")
         # checkEquals(dgc, asSpMat(ddi), msg="ddi2dgC_8")
     }
 
-    # test.as.ind2dgc <- function() {
-    #     ## [Matrix] p74 (indMatrix) (To be continued)
-    #     sm1 <- as(rep(c(2,3,1), e=3), "indMatrix")
-    #     set.seed(27)
-    #     s10 <- as(sample(10, 30, replace=TRUE),"indMatrix")
-    #     set.seed(27)
-    #     IM1 <- as(sample(1:20, 100, replace=TRUE), "indMatrix")
-    #     set.seed(27)
-    #     IM2 <- as(sample(1:18, 100, replace=TRUE), "indMatrix")
-    #
-    #     ## [Matrix] p74 (indMatrix) (To be continued)
-    #     as(2:4, "indMatrix")
-    #     as(list(2:4, 5), "indMatrix")
-    #
-    #     ## [Matrix] p74 (indMatrix) (To be continued)
-    #     ind <- s10[1:4, ]
-    #     dgc <- as(as(ind, "matrix"), "dgCMatrix")
-    #     checkEquals(dgc, asSpMat(ind), msg="ind2dgC")
-    #
-    #     I1 <- as(c(5:1,6:4,7:3), "indMatrix")
-    #     dgc <- as(as(I1, "matrix"), "dgCMatrix")
-    #     checkEquals(dgc, asSpMat(I1), msg="ind2dgC")
-    #
-    #     ## [Matrix] p116 (indMatrix)
-    #     set.seed(11)
-    #     p10 <- as(sample(10),"pMatrix")
-    #     ind <- p10[1:3, ]
-    #     dgc <- as(as(ind, "matrix"), "dgCMatrix")
-    #     checkEquals(dgc, asSpMat(ind), msg="ind2dgC")
-    # }
-    #
+    test.as.ind2dgc <- function() {
+        ## [Matrix] p74 (indMatrix) 
+        sm1 <- as(rep(c(2,3,1), e=3), "indMatrix")
+        dgc <- as(as(sm1, "matrix"), "dgCMatrix")
+        checkEquals(dgc, asSpMat(sm1), msg="ind2dgc_1")
+      
+        set.seed(27)
+        s10 <- as(sample(10, 30, replace=TRUE),"indMatrix")
+        dgc <- as(as(s10, "matrix"), "dgCMatrix")
+        checkEquals(dgc, asSpMat(s10), msg="ind2dgc_2")
+      
+        set.seed(27)
+        IM1 <- as(sample(1:20, 100, replace=TRUE), "indMatrix")
+        dgc <- as(as(IM1, "matrix"), "dgCMatrix")
+        checkEquals(dgc, asSpMat(IM1), msg="ind2dgc_3")
+      
+        set.seed(27)
+        IM2 <- as(sample(1:18, 100, replace=TRUE), "indMatrix")
+        dgc <- as(as(IM2, "matrix"), "dgCMatrix")
+        checkEquals(dgc, asSpMat(IM2), msg="ind2dgc_4")
+      
+        ## [Matrix] p74 (indMatrix)
+        ind <- as(2:4, "indMatrix")
+        dgc <- as(as(ind, "matrix"), "dgCMatrix")
+        checkEquals(dgc, asSpMat(ind), msg="ind2dgc_5")
+      
+        ind <- as(list(2:4, 5), "indMatrix")
+        dgc <- as(as(ind, "matrix"), "dgCMatrix")
+        checkEquals(dgc, asSpMat(ind), msg="ind2dgc_6")
+      
+        ## [Matrix] p74 (indMatrix)
+        ind <- s10[1:4, ]
+        dgc <- as(as(ind, "matrix"), "dgCMatrix")
+        checkEquals(dgc, asSpMat(ind), msg="ind2dgC_7")
+      
+        I1 <- as(c(5:1,6:4,7:3), "indMatrix")
+        dgc <- as(as(I1, "matrix"), "dgCMatrix")
+        checkEquals(dgc, asSpMat(I1), msg="ind2dgC_8")
+      
+        ## [Matrix] p116 (indMatrix)
+        set.seed(11)
+        p10 <- as(sample(10),"pMatrix")
+        ind <- p10[1:3, ]
+        dgc <- as(as(ind, "matrix"), "dgCMatrix")
+        checkEquals(dgc, asSpMat(ind), msg="ind2dgC_9")
+    }
+    
     # test.as.lgc2dgc <- function() {
     #     ## [Matrix] p87 (lgCMatrix) (To be continued)
     #     lm <- (m > 1)
@@ -622,7 +638,7 @@ if (.runThisTest) {
     #               "1 0 0",
     #               "1 0 0",
     #               "1 0 0")
-    #     M <- as.matrix(read.table(textConnection(mtxt)))
+    #     M <- as.matrix(read.table(text=mtxt))
     #     dimnames(M) <- NULL
     #     dgc <- as(M, "dgCMatrix")
     #     checkEquals(dgc, asSpMat(ngt), msg="ngT2dgC")
@@ -637,7 +653,7 @@ if (.runThisTest) {
     #               "0 0 1 0",
     #               "0 0 0 0",
     #               "1 0 0 0")
-    #     M <- as.matrix(read.table(textConnection(mtxt)))
+    #     M <- as.matrix(read.table(text=mtxt))
     #     dimnames(M) <- NULL
     #     dgc <- as(M, "dgCMatrix")
     #     checkEquals(dgc, asSpMat(ngt), msg="ngT2dgC")
