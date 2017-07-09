@@ -478,6 +478,47 @@ namespace traits {
                     res = symmatl(res);
                 }
             }
+            else if (type == "indMatrix") {
+                std::vector<int> i;
+                IntegerVector p(ncol + 1);
+                IntegerVector x(nrow, 1);
+                IntegerVector perm = mat.slot("perm");
+                
+                typedef std::pair<int, int> Key;
+                typedef std::set<Key> Set;
+                Set permiSet;
+                
+                // Sort i;
+                int nnz = perm.size();
+                for(int tmp = 0; tmp < nnz; tmp++){
+                    Key permi(perm[tmp], tmp);
+                    permiSet.insert(permi);
+                }
+                
+                for(Set::iterator tmp = permiSet.begin(); tmp != permiSet.end(); tmp++){
+                    i.push_back(tmp -> second);
+                }
+                
+                // Count the number of nnz in each column
+                for(int idx = 0; idx < nnz; idx++){
+                    int col = perm[idx];
+                    p[col]++;
+                }
+                
+                // Cumsum p
+                for(int col = 0, cumsum = 0; col < ncol + 1; col++){
+                    cumsum += p[col];
+                    p[col] = cumsum;
+                }
+                
+                // Making space for the elements
+                res.mem_resize(static_cast<unsigned>(x.size()));
+                
+                // Copying elements
+                std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
+                std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
+                std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
+            }
             else if (type == "pMatrix") {
                 std::vector<int> i;
                 IntegerVector p(ncol + 1);
@@ -485,13 +526,14 @@ namespace traits {
                 IntegerVector perm = mat.slot("perm");
                 
                 // Sort the row number by the column number
-                std::map <int, int> colrow;
+                typedef std::map <int, int> Map;
+                Map colrow;
                 for(int tmp = 0; tmp < perm.size(); tmp++){
                     colrow[perm[tmp]] = tmp;
                 }
                 
                 // Calculate i
-                for(std::map<int, int>::iterator tmp = colrow.begin(); tmp != colrow.end(); tmp++){
+                for(Map::iterator tmp = colrow.begin(); tmp != colrow.end(); tmp++){
                     i.push_back(tmp -> second);
                 }
               
