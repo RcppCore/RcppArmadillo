@@ -172,27 +172,31 @@ if (.runThisTest) {
         mm <- Matrix(toeplitz(c(10, 0, 1, 0, 3)), sparse = TRUE)
         dgc <- as(mm, "dgCMatrix")
         checkEquals(dgc, asSpMat(mm), msg="dsC2dgC_3")
+        
+        mm <- t(mm)
+        dgc <- as(mm, "dgCMatrix")
+        checkEquals(dgc, asSpMat(mm), msg="dsC2dgC_4")
 
         ## [Matrix] p51 (dsCMatrix)
         mm <- Matrix(toeplitz(c(10, 0, 1, 0, 3)), sparse = TRUE)
         mT <- as(mm, "dgTMatrix")
         symM <- as(mT, "symmetricMatrix")
         symC <- as(symM, "CsparseMatrix")
-        checkEquals(dgc, asSpMat(symC), msg="dsC2dgC_4")
+        checkEquals(dgc, asSpMat(symC), msg="dsC2dgC_5")
 
         sC <- Matrix(mT, sparse=TRUE, forceCheck=TRUE)
-        checkEquals(dgc, asSpMat(sC), msg="dsC2dgC_5")
+        checkEquals(dgc, asSpMat(sC), msg="dsC2dgC_6")
 
         ## [Matrix] p129 (dsCMatrix)
         S9 <- rsparsematrix(9, 9, nnz = 10, symmetric=TRUE)
         dgc <- as(S9, "dgCMatrix")
-        checkEquals(dgc, asSpMat(S9), msg="dsC2dgC_6")
+        checkEquals(dgc, asSpMat(S9), msg="dsC2dgC_7")
 
         ## [Matrix] p142 (dsCMatrix)
         i <- c(1,3:8); j <- c(2,9,6:10); x <- 7 * (1:7)
         sA <- sparseMatrix(i, j, x = x, symmetric = TRUE)
         dgc <- as(sA, "dgCMatrix")
-        checkEquals(dgc, asSpMat(sA), msg="dsC2dgC_7")
+        checkEquals(dgc, asSpMat(sA), msg="dsC2dgC_8")
     }
 
     test.as.dgt2dgc <- function() {
@@ -303,6 +307,17 @@ if (.runThisTest) {
         dgt <- new("dgTMatrix", x = rep(1, 7), i = as.integer(c(0, 0, 1, 3, 1, 0, 0)), j = as.integer(c(0, 2, 1, 3, 1, 0, 0)), Dim= as.integer(c(4, 4)))
         dgc <- as(dgt, "dgCMatrix")
         checkEquals(dgc, asSpMat(dgt), msg="dgT2dgC_17")
+        
+        ## (dgTMatrix)
+        mtxt <- c("11   0   0  14   0  16",
+                  " 0  22   0   0  25  26",
+                  " 0   0  33  34   0  36",
+                  "41   0  43  44   0  46")
+        M <- as.matrix(read.table(text=mtxt))
+        dimnames(M) <- NULL
+        SM <- Matrix(M, sparse=TRUE)
+        dgt <- as(SM, "dgTMatrix")
+        checkEquals(SM, asSpMat(dgt), msg="dgT2dgC_18")
     }
 
     test.as.dtt2dgc <- function() {
@@ -399,6 +414,17 @@ if (.runThisTest) {
         dgr <- as(as(dgt, "matrix"), "dgRMatrix")
         dgc <- as(dgt, "dgCMatrix")
         checkEquals(dgc, asSpMat(dgr), msg="dgR2dgC_4")
+        
+        ## (dgRMatrix)
+        mtxt <- c("11   0   0  14   0  16",
+                  " 0  22   0   0  25  26",
+                  " 0   0  33  34   0  36",
+                  "41   0  43  44   0  46")
+        M <- as.matrix(read.table(text=mtxt))
+        dimnames(M) <- NULL
+        SM <- Matrix(M, sparse=TRUE)
+        dgr <- as(M, "dgRMatrix")
+        checkEquals(SM, asSpMat(dgr), msg="dgR2dgC_5")
     }
 
     test.as.dtr2dgc <- function() {
@@ -419,6 +445,23 @@ if (.runThisTest) {
         dimnames(M) <- NULL
         dgc <- as(M, "dgCMatrix")
         checkEquals(dgc, asSpMat(m3), msg="dtR2dgC_2")
+        
+        ## (dtRMatrix)
+        mtxt <- c("0 0 0 3",
+                  "0 0 7 0",
+                  "0 0 0 0",
+                  "0 0 0 0")
+        M <- as.matrix(read.table(text=mtxt))
+        dimnames(M) <- NULL
+        dtc <- Matrix(M, sparse=TRUE)
+        dgc <- methods::as(dtc, "dgCMatrix")
+        dtr <- methods::as(dtc, "RsparseMatrix")
+        checkEquals(dgc, asSpMat(dtr), msg="dtR2dgC_3")
+        
+        dtc@diag <- "U"
+        dgc <- methods::as(dtc, "dgCMatrix")
+        dtr <- methods::as(dtc, "RsparseMatrix")
+        checkEquals(dgc, asSpMat(dtr), msg="dtR2dgC_4")
     }
 
     test.as.dsr2dgc <- function() {
@@ -440,6 +483,24 @@ if (.runThisTest) {
         dimnames(M) <- NULL
         dgc <- as(M, "dgCMatrix")
         checkEquals(dgc, asSpMat(dR), msg="dsR2dgC_2")
+        
+        ## (dsRMatrix)
+        mtxt <- c("10  0  1  0  3",
+                  "0  10  0  1  0",
+                  "1  0  10  0  1",
+                  "0  1  0  10  0",
+                  "3  0  1  0  10")
+        M <- as.matrix(read.table(text=mtxt))
+        dimnames(M) <- NULL
+        dsc <- Matrix(M, sparse=TRUE)
+        dgc <- methods::as(dsc, "dgCMatrix")
+        dsr <- methods::as(dsc, "RsparseMatrix")
+        checkEquals(dgc, asSpMat(dsr), msg="dsR2dgC_3")
+        
+        dsc <- t(dsc)
+        dgc <- methods::as(dsc, "dgCMatrix")
+        dsr <- methods::as(dsc, "RsparseMatrix")
+        checkEquals(dgc, asSpMat(dsr), msg="dsR2dgC_4")
     }
 
     test.as.p2dgc <- function() {
@@ -528,26 +589,26 @@ if (.runThisTest) {
         dgc <- as(M, "dgCMatrix")
         checkEquals(dgc, asSpMat(D5), msg="ddi2dgC_6")
 
-        # mtxt <- c("0.1 0    0          0     0",
-        #           "0   0.05 0          0     0",
-        #           "0   0    0.03333333 0     0",
-        #           "0   0    0          0.025 0",
-        #           "0   0    0          0     0.02")
-        # M <- as.matrix(read.table(text=mtxt))
-        # dimnames(M) <- NULL
-        # dgc <- as(M, "dgCMatrix")
-        # checkEquals(dgc, asSpMat(solve(D5)), msg="ddi2dgC_7")
+        D6 <- Diagonal(x = c(10, 20, 40, 50))
+        mtxt <- c("0.1 0    0     0",
+                  "0   0.05 0     0",
+                  "0   0    0.025 0",
+                  "0   0    0     0.02")
+        M <- as.matrix(read.table(text=mtxt))
+        dimnames(M) <- NULL
+        dgc <- as(M, "dgCMatrix")
+        checkEquals(dgc, asSpMat(solve(D6)), msg="ddi2dgC_7")
 
         ## [Matrix] p85 (ddiMatrix)
-        # lM <- Diagonal(x = c(TRUE,FALSE,FALSE))
-        # ddi <- crossprod(lM)
-        # mtxt <- c("1 0 0",
-        #           "0 0 0",
-        #           "0 0 0")
-        # M <- as.matrix(read.table(text=mtxt))
-        # dimnames(M) <- NULL
-        # dgc <- as(M, "dgCMatrix")
-        # checkEquals(dgc, asSpMat(ddi), msg="ddi2dgC_8")
+        lM <- Diagonal(x = c(TRUE,FALSE,FALSE))
+        ddi <- crossprod(lM)
+        mtxt <- c("1 0 0",
+                  "0 0 0",
+                  "0 0 0")
+        M <- as.matrix(read.table(text=mtxt))
+        dimnames(M) <- NULL
+        dgc <- as(M, "dgCMatrix")
+        checkEquals(dgc, asSpMat(ddi), msg="ddi2dgC_8")
     }
 
     test.as.ind2dgc <- function() {

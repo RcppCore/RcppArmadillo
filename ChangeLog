@@ -1,3 +1,12 @@
+2017-07-10  Binxiang Ni  <binxiangni@gmail.com>
+
+	* inst/include/RcppArmadilloAs.h: Rewrite conversion for ddiMatrix
+	to support an extreme case
+	* inst/unitTests/runit.sparse.R: Move unit tests for the conversion
+	for sparse matrices to runit.sparseConversion.R
+	* inst/unitTests/runit.sparseConversion.R: Add more unit tests for 
+	the conversion for ddiMatrix
+
 2017-07-08  Binxiang Ni  <binxiangni@gmail.com>
 
 	* inst/include/RcppArmadilloAs.h: Add conversion for indMatrix
