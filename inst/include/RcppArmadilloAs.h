@@ -551,24 +551,30 @@ namespace traits {
                 std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
             }
             else if (type == "ddiMatrix") {
-                IntegerVector i(ncol);
-                IntegerVector p(ncol+1);
+                std::vector<int> i;
+                std::vector<int> p;
+                std::vector<double> x;
                 std::string diag = Rcpp::as<std::string>(mat.slot("diag"));
-                Vector<RTYPE> x = no_init(ncol);
+                
                 if (diag == "U") {
-                  x.fill(1);
+                    for(int idx = 0; idx < ncol; idx++){
+                        i.push_back(idx);
+                        p.push_back(idx);
+                        x.push_back(1);
+                    }
+                    p.push_back(ncol);
                 } else {
-                  x = Vector<RTYPE>(mat.slot("x"));
-                }
-
-                // Calculate i
-                for(int tmp = 0; tmp < i.size(); tmp++){
-                    i[tmp] = tmp;
-                }
-
-                // Calculate p
-                for(int tmp = 0; tmp < p.size(); tmp++){
-                    p[tmp] = tmp;
+                    Vector<RTYPE> tmpx = mat.slot("x");
+                    int tmpp = 0;
+                    for(int idx = 0; idx < ncol; idx++){
+                        p.push_back(tmpp);
+                        if (tmpx[idx] != 0) {
+                            i.push_back(idx);
+                            x.push_back(tmpx[idx]);
+                            tmpp++;
+                        }
+                    }
+                    p.push_back(tmpp);
                 }
 
                 // Making space for the elements
