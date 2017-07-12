@@ -585,6 +585,9 @@ namespace traits {
                 std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
                 std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
             }
+            else {
+                Rcpp::stop(type + " is not supported.");
+            }
             
             // Setting the sentinel
             arma::access::rw(res.col_ptrs[static_cast<unsigned>(ncol + 1)]) =
