@@ -1,3 +1,10 @@
+2017-07-11  Binxiang Ni  <binxiangni@gmail.com>
+
+	* inst/include/RcppArmadilloAs.h: Add a stop message for matrices 
+	that cannot be converted
+	* inst/unitTests/runit.sparseConversion.R: Add unit tests for matrices
+	that cannot be converted
+
 2017-07-10  Binxiang Ni  <binxiangni@gmail.com>
 
 	* inst/include/RcppArmadilloAs.h: Rewrite conversion for ddiMatrix
