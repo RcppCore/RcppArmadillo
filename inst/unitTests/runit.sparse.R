@@ -90,4 +90,16 @@ if (.runThisTest) {
         l  <- list(SM, SM)
         checkEquals(l, sparseList(l), msg="sparseList")
     }
+    
+    test.speye <- function() {
+      SM <- speye(4, 4)
+      SM2 <- sparseMatrix(i = c(1:4), j = c(1:4), x = 1)
+      checkEquals(SM, SM2, msg="speye")
+      SM <- speye(3, 5)
+      SM2 <- sparseMatrix(i = c(1:3), j = c(1:3), x = 1, dims = c(3, 5))
+      checkEquals(SM, SM2, msg="speye")
+      SM <- speye(5, 3)
+      SM2 <- sparseMatrix(i = c(1:3), j = c(1:3), x = 1, dims = c(5, 3))
+      checkEquals(SM, SM2, msg="speye")
+    }
 }
