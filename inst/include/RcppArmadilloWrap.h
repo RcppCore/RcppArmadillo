@@ -62,11 +62,19 @@ namespace Rcpp{
     }
 
     template <typename T> SEXP wrap( const arma::Col<T>& data ){
+#if defined(RCPP_ARMADILLO_RETURN_COLVEC_AS_VECTOR) || defined(RCPP_ARMADILLO_RETURN_ANYVEC_AS_VECTOR)
+        return RcppArmadillo::arma_wrap( data ) ;
+#else
         return RcppArmadillo::arma_wrap( data, Dimension( data.n_elem, 1) ) ;
+#endif
     }
 
     template <typename T> SEXP wrap( const arma::Row<T>& data ){
+#if defined(RCPP_ARMADILLO_RETURN_ROWVEC_AS_VECTOR) || defined(RCPP_ARMADILLO_RETURN_ANYVEC_AS_VECTOR)
+        return RcppArmadillo::arma_wrap( data ) ;
+#else
         return RcppArmadillo::arma_wrap(data, Dimension( 1, data.n_elem ) ) ;
+#endif
     }
 
     template <typename T> SEXP wrap( const arma::Cube<T>& data ){
