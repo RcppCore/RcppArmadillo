@@ -1,15 +1,52 @@
+% !Rnw driver = highlight::HighlightWeaveLatex()
 \documentclass[10pt]{article}
 %\VignetteIndexEntry{RcppArmadillo-sparseMatrix}
+%\VignetteEngine{highlight::highlight}
 %\VignetteKeywords{R, C++, Armadillo, linear algebra, sparse matrix}
 %\VignettePackage{RcppArmadillo}
 
-\usepackage{vmargin}
-\setmargrb{1.5in}{0.75in}{1.5in}{0.75in}
+\usepackage[USletter]{vmargin}
+\setmargrb{0.75in}{0.75in}{0.75in}{0.75in}
 
-\usepackage{color}               % color use
+\usepackage{color,alltt}          % color use
+\usepackage[authoryear,round,longnamesfirst]{natbib}
+\usepackage[colorlinks]{hyperref}
+\definecolor{link}{rgb}{0,0,0.3}	%% next few lines courtesy of RJournal.sty
+\hypersetup{
+    colorlinks,%
+    citecolor=link,%
+    filecolor=link,%
+    linkcolor=link,%
+    urlcolor=link
+}
+
+\usepackage{microtype}                     %% cf http://www.khirevich.com/latex/microtype/
+\usepackage[T1]{fontenc}		   %% cf http://www.khirevich.com/latex/font/
+\usepackage[bitstream-charter]{mathdesign} %% cf http://www.khirevich.com/latex/font/
 
 \RequirePackage{ae,mathpple}    % ae as a default font pkg works with Sweave
 \RequirePackage[T1]{fontenc}
+
+\newcommand{\proglang}[1]{\textsf{#1}}
+\newcommand{\pkg}[1]{{\fontseries{b}\selectfont #1}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\R}[0]{\proglang{R}}
+\newcommand{\Rs}[0]{\proglang{R }}
+
+%% defined as a stop-gap measure til interaction with highlight is sorted out
+\newcommand{\hlboxlessthan}{   \hlnormalsizeboxlessthan}
+\newcommand{\hlboxgreaterthan}{\hlnormalsizeboxgreaterthan}
+\newcommand{\hlboxopenbrace}{  \hlnormalsizeboxopenbrace}
+\newcommand{\hlboxclosebrace}{ \hlnormalsizeboxclosebrace}
+\newcommand{\hlboxbacktick}{   \hlnormalsizeboxbacktick}
+\newcommand{\hlboxunderscore}{ \hlnormalsizeboxunderscore}
+
+%% This corresponds to setting boxes=TRUE for highlight
+\newsavebox{\hlbox}
+\definecolor{hlBg}{rgb}{0.949019607843137,0.949019607843137,0.949019607843137}
+\definecolor{hlBd}{rgb}{0.9,0.9,0.9} % border
+\renewenvironment{Hchunk}{\vspace{0.5em}\noindent\begin{lrbox}{\hlbox}\begin{minipage}[b]{.9\textwidth}}%
+    {\end{minipage}\end{lrbox}\fcolorbox{hlBd}{hlBg}{\usebox{\hlbox}}\vspace{0.5em}}
 
 \usepackage{listings}
 \definecolor{darkgray}{rgb}{0.975,0.975,0.975}
@@ -44,9 +81,9 @@
 \usepackage{indentfirst}
 
 %%% from jss.cls defs
-\makeatletter
-\newcommand\code{\bgroup\@makeother\_\@makeother\~\@makeother\$\@codex}
-\def\@codex#1{{\normalfont\ttfamily\hyphenchar\font=-1 #1}\egroup}
+%\makeatletter
+%\newcommand\code{\bgroup\@makeother\_\@makeother\~\@makeother\$\@codex}
+%\def\@codex#1{{\normalfont\ttfamily\hyphenchar\font=-1 #1}\egroup}
 
 <<echo=FALSE,print=FALSE>>=
 prettyVersion <- packageDescription("RcppArmadillo")$Version #$
@@ -59,7 +96,7 @@ prettyDate <- format(Sys.Date(), "%B %e, %Y")
 
 \begin{document}
 \maketitle
-\SweaveOpts{concordance=TRUE}
+%\SweaveOpts{concordance=TRUE}
 
 \section{Introduction}
 
@@ -71,6 +108,7 @@ In the library "Armadillo", sparse matrix is currently stored as \href{https://e
 
 \section{Sparse Matrix}
 \subsection{dgCMatrix}
+\subsubsection{Synopsis}
 \begin{itemize}
   \item Description: general column-oriented numeric sparse matrix.
   \item Constructor
@@ -84,14 +122,11 @@ In the library "Armadillo", sparse matrix is currently stored as \href{https://e
       \item \code{as(*, "CsparseMatrix")} 
       \item \code{as(*, "dgCMatrix")}
     \end{itemize}
-  \item Examples
-\lstset{
-  language=C++,
-  basicstyle=\ttfamily\small,
-  caption={Support for dgCMatrix},
-  label={code:dgCMatrix in RcppArmadillo}
-}
-\begin{lstlisting}[frame=tb]
+\end{itemize}
+
+\subsubsection{C++ Code}
+
+<<lang=cpp>>=
 #include <RcppArmadillo.h>
 // [[Rcpp::depends(RcppArmadillo)]]
 
@@ -102,8 +137,11 @@ using namespace arma;
 sp_mat sqrt_(sp_mat X) {
   return sqrt(X);
 }
-  
-/* 
+@
+
+\subsubsection{R Code}
+
+<<lang=r>>=
 R> i <- c(1,3:8); j <- c(2,9,6:10); x <- 7 * (1:7)
 R> A <- sparseMatrix(i, j, x = x) 
 R> sqrt_(A)
@@ -117,11 +155,10 @@ R> sqrt_(A)
 [6,] . .        . . . .        .        5.91608 .        .
 [7,] . .        . . . .        .        .       6.480741 .
 [8,] . .        . . . .        .        .       .        7
-*/
-\end{lstlisting}
-\end{itemize}
+@
 
 \subsection{dtCMatrix}
+\subsubsection{Synopsis}
 \begin{itemize}
   \item Description: triangular column-oriented numeric sparse matrix.
   \item Constructor
@@ -135,14 +172,11 @@ R> sqrt_(A)
       \item \code{as(*, "triangularMatrix")}
       \item \code{as(*, "dtCMatrix")}
     \end{itemize}
-  \item Examples
-\lstset{
-  language=C++,
-  basicstyle=\ttfamily\small,
-  caption={Support for dtCMatrix},
-  label={code:dtCMatrix in RcppArmadillo}
-}
-\begin{lstlisting}[frame=tb]
+\end{itemize}
+
+\subsubsection{C++ Code}
+
+<<lang=cpp>>=
 #include <RcppArmadillo.h>
 // [[Rcpp::depends(RcppArmadillo)]]
 
@@ -153,13 +187,16 @@ using namespace arma;
 sp_mat symmatl_(sp_mat X) {
   return symmatl(X);
 }
+@
 
-/*
-R > dtC <- new("dtCMatrix", Dim = c(5L, 5L), uplo = "L",
+\subsubsection{R Code}
+
+<<lang=r>>=
+R> dtC <- new("dtCMatrix", Dim = c(5L, 5L), uplo = "L",
               x = c(10, 1, 3, 10, 1, 10, 1, 10, 10),
               i = c(0L, 2L, 4L, 1L, 3L,2L, 4L, 3L, 4L),
               p = c(0L, 3L, 5L, 7:9))
-R > symmatl_(dtC)
+R> symmatl_(dtC)
 5 x 5 sparse Matrix of class "dtCMatrix"
 
 [1,] 10  .  1  .  3
@@ -167,11 +204,10 @@ R > symmatl_(dtC)
 [3,]  1  . 10  .  1
 [4,]  .  1  . 10  .
 [5,]  3  .  1  . 10
-*/
-\end{lstlisting}
-\end{itemize}
+@
 
 \subsection{dsCMatrix}
+\subsubsection{Synopsis}
 \begin{itemize}
   \item Description: symmetric column-oriented numeric sparse matrix.
   \item Constructor
@@ -185,14 +221,11 @@ R > symmatl_(dtC)
       \item \code{as(*, "symmetricMatrix")}
       \item \code{as(*, "dsCMatrix")}
     \end{itemize}
-  \item Examples
-\lstset{
-  language=C++,
-  basicstyle=\ttfamily\small,
-  caption={Support for dsCMatrix},
-  label={code:dsCMatrix in RcppArmadillo}
-}
-\begin{lstlisting}[frame=tb]
+\end{itemize}
+
+\subsubsection{C++ Code}
+
+<<lang=cpp>>=
 #include <RcppArmadillo.h>
 // [[Rcpp::depends(RcppArmadillo)]]
   
@@ -203,8 +236,11 @@ using namespace arma;
 sp_mat trimatu_(sp_mat X) {
   return trimatu(X);
 }
+@
 
-/*
+\subsubsection{R Code}
+
+<<lang=r>>=
 R> i <- c(1,3:8); j <- c(2,9,6:10); x <- 7 * (1:7)
 R> dsC <- sparseMatrix(i, j, x = x, symmetric = TRUE)
 R> trimatu_(dsC)
@@ -220,11 +256,10 @@ R> trimatu_(dsC)
 [8,] . . . . .  .  .  .  . 49
 [9,] . . . . .  .  .  .  .  .
 [10,] . . . . .  .  .  .  .  .
-*/
-\end{lstlisting}
-\end{itemize}
+@
 
 \subsection{dgTMatrix}
+\subsubsection{Synopsis}
 \begin{itemize}
   \item Description: general numeric sparse matrix in triplet form.
   \item Constructor
@@ -238,14 +273,11 @@ R> trimatu_(dsC)
       \item \code{as(*, "TsparseMatrix")}
       \item \code{as(*, "dgTMatrix")}
     \end{itemize}
-  \item Examples
-\lstset{
-  language=C++,
-  basicstyle=\ttfamily\small,
-  caption={Support for dgTMatrix},
-  label={code:dgTMatrix in RcppArmadillo}
-}
-\begin{lstlisting}[frame=tb]
+\end{itemize}
+
+\subsubsection{C++ Code}
+
+<<lang=cpp>>=
 #include <RcppArmadillo.h>
 // [[Rcpp::depends(RcppArmadillo)]]
 
@@ -266,8 +298,11 @@ sp_mat trans_(sp_mat X) {
 int trace_(sp_mat X) {
   return trace(X);
 }
+@
 
-/*
+\subsubsection{R Code}
+
+<<lang=r>>=
 R> dgT <- new("dgTMatrix",
               i = c(1L,1L,0L,3L,3L),
               j = c(2L,2L,4L,0L,0L), 
@@ -276,11 +311,10 @@ R> dgT_t <- trans_(dgT)
 R> prod <- multiply(dgT, dgT_t)
 R> trace_(prod)
 [1] 9900
-*/
-\end{lstlisting}
-\end{itemize}
+@
 
 \subsection{dtTMatrix}
+\subsubsection{Synopsis}
 \begin{itemize}
   \item Description: triangular numeric sparse matrix in triplet form.
   \item Constructor
@@ -293,14 +327,11 @@ R> trace_(prod)
       \item \code{as(*, "triangularMatrix")}
       \item \code{as(*, "dtTMatrix")}
     \end{itemize}
-  \item Examples
-\lstset{
-  language=C++,
-  basicstyle=\ttfamily\small,
-  caption={Support for dtTMatrix},
-  label={code:dtTMatrix in RcppArmadillo}
-}
-\begin{lstlisting}[frame=tb]
+\end{itemize}
+
+\subsubsection{C++ Code}
+
+<<lang=cpp>>=
 #include <RcppArmadillo.h>
 // [[Rcpp::depends(RcppArmadillo)]]
 
@@ -312,8 +343,11 @@ sp_mat diag_ones(sp_mat X) {
   X.diag().ones();
   return X;
 }
+@
 
-/*
+\subsubsection{R Code}
+
+<<lang=r>>=
 R> dtT <- new("dtTMatrix", x= c(3,7), 
               i= 0:1, j=3:2, Dim= as.integer(c(4,4)))
 R> diag_ones(dtT)
@@ -323,11 +357,10 @@ R> diag_ones(dtT)
 [2,] . 1 7 .
 [3,] . . 1 .
 [4,] . . . 1
-*/
-\end{lstlisting}
-\end{itemize}
+@
 
 \subsection{dsTMatrix}
+\subsubsection{Synopsis}
 \begin{itemize}
 \item Description: symmetric numeric sparse matrix in triplet form.
   \item Constructor
@@ -340,14 +373,11 @@ R> diag_ones(dtT)
       \item \code{as(*, "symmetricMatrix")}
       \item \code{as(*, "dsTMatrix")}
     \end{itemize}
-  \item Examples
-\lstset{
-  language=C++,
-  basicstyle=\ttfamily\small,
-  caption={Support for dsTMatrix},
-  label={code:dsTMatrix in RcppArmadillo}
-}
-\begin{lstlisting}[frame=tb]
+\end{itemize}
+
+\subsubsection{C++ Code}
+
+<<lang=cpp>>=
 #include <RcppArmadillo.h>
 // [[Rcpp::depends(RcppArmadillo)]]
 
@@ -358,19 +388,21 @@ using namespace arma;
 int trace_(sp_mat X) {
   return trace(X);
 }
+@
 
-/*
+\subsubsection{R Code}
+
+<<lang=r>>=
 R> mm <- Matrix(toeplitz(c(10, 0, 1, 0, 3)), 
                 sparse = TRUE)
 R> mT <- as(mm, "dgTMatrix")
 R> dsT <- as(mT, "symmetricMatrix")
 R> trace_(dsT)
 [1] 50
-*/
-\end{lstlisting}
-\end{itemize}
+@
 
 \subsection{dgRMatrix}
+\subsubsection{Synopsis}
 \begin{itemize}
   \item Description: general row-oriented numeric sparse matrix.
   \item Constructor
@@ -382,14 +414,11 @@ R> trace_(dsT)
       \item \code{as(*, "RsparseMatrix")}
       \item \code{as(*, "dgRatrix")}
     \end{itemize}
-  \item Examples
-\lstset{
-  language=C++,
-  basicstyle=\ttfamily\small,
-  caption={Support for dgRMatrix},
-  label={code:dgRMatrix in RcppArmadillo}
-}
-\begin{lstlisting}[frame=tb]
+\end{itemize}
+
+\subsubsection{C++ Code}
+
+<<lang=cpp>>=
 #include <RcppArmadillo.h>
 // [[Rcpp::depends(RcppArmadillo)]]
 
@@ -400,8 +429,11 @@ using namespace arma;
 sp_mat square_(sp_mat X) {
   return square(X);
 }
+@
 
-/*
+\subsubsection{R Code}
+
+<<lang=r>>=
 R> library(Matrix)
 R> dgR <- new("dgRMatrix", j=c(0L,2L,1L,3L),
               p=c(0L,2L,3L,3L,4L),
@@ -414,25 +446,21 @@ R> square_(dgR)
 [2,] . 4 . .
 [3,] . . . .
 [4,] . . . 1
-*/
-\end{lstlisting}
-\end{itemize}
+@
 
 \subsection{dtRMatrix}
+\subsubsection{Synopsis}
 \begin{itemize}
   \item Description: triangular row-oriented numeric sparse matrix.
   \item Constructor
     \begin{itemize}
       \item \code{new("dtRMatrix", ...)}
     \end{itemize}
-  \item Examples
-\lstset{
-  language=C++,
-  basicstyle=\ttfamily\small,
-  caption={Support for dtRMatrix},
-  label={code:dtRMatrix in RcppArmadillo}
-}
-\begin{lstlisting}[frame=tb]
+\end{itemize}
+
+\subsubsection{C++ Code}
+
+<<lang=cpp>>=
 #include <RcppArmadillo.h>
 // [[Rcpp::depends(RcppArmadillo)]]
 
@@ -443,8 +471,11 @@ using namespace arma;
 sp_mat repmat_(sp_mat X, int i, int j) {
   return repmat(X, i, j);
 }
+@
 
-/*
+\subsubsection{R Code}
+
+<<lang=r>>=
 R> dtR <- new("dtRMatrix", Dim = c(2L,2L),
               x = c(5, 1:2), p = c(0L,2:3), j= c(0:1,1L))
 R> repmat_(dtR, 2, 2)
@@ -454,11 +485,10 @@ R> repmat_(dtR, 2, 2)
 [2,] . 2 . 2
 [3,] 5 1 5 1
 [4,] . 2 . 2
-*/
-\end{lstlisting}
-\end{itemize}
+@
 
 \subsection{dsRMatrix}
+\subsubsection{Synopsis}
 \begin{itemize}
   \item Description: symmetric row-oriented numeric sparse matrix.
   \item Constructor
@@ -469,14 +499,11 @@ R> repmat_(dtR, 2, 2)
     \begin{itemize}
       \item \code{as("dsCMatrix", "dsRMatrix")}
     \end{itemize}
-  \item Examples
-\lstset{
-  language=C++,
-  basicstyle=\ttfamily\small,
-  caption={Support for dsRMatrix},
-  label={code:dsRMatrix in RcppArmadillo}
-}
-\begin{lstlisting}[frame=tb]
+\end{itemize}
+
+\subsubsection{C++ Code}
+
+<<lang=cpp>>=
 #include <RcppArmadillo.h>
 // [[Rcpp::depends(RcppArmadillo)]]
 
@@ -487,8 +514,11 @@ using namespace arma;
 sp_mat sign_(sp_mat X) {
   return sign(X);
 }
+@
 
-/*
+\subsubsection{R Code}
+
+<<lang=r>>=
 R> dsR <- new("dsRMatrix", Dim = c(2L,2L),
               x = c(-3,1), j = c(1L,1L), p = 0:2)
 R> sign_(dsR)
@@ -496,11 +526,10 @@ R> sign_(dsR)
 
 [1,]  . -1
 [2,] -1  1
-*/
-\end{lstlisting}
-\end{itemize}
+@
 
 \subsection{indMatrix}
+\subsubsection{Synopsis}
 \begin{itemize}
   \item Description: index matrix.
   \item Constructor
@@ -511,14 +540,11 @@ R> sign_(dsR)
     \begin{itemize}
       \item \code{as(*, "indMatrix")}
     \end{itemize}
-  \item Examples
-\lstset{
-  language=C++,
-  basicstyle=\ttfamily\small,
-  caption={Support for indMatrix},
-  label={code:indMatrix in RcppArmadillo}
-}
-\begin{lstlisting}[frame=tb]
+\end{itemize}
+
+\subsubsection{C++ Code}
+
+<<lang=cpp>>=
 #include <RcppArmadillo.h>
 // [[Rcpp::depends(RcppArmadillo)]]
 
@@ -529,8 +555,11 @@ using namespace arma;
 sp_mat multiply(sp_mat A, sp_mat B) {
   return A * B;
 }
+@
 
-/*
+\subsubsection{R Code}
+
+<<lang=r>>=
 R> ind <- as(2:4, "indMatrix")
 R> dgT <- new("dgTMatrix",
               i = c(1L,1L,0L,3L,3L),
@@ -542,11 +571,10 @@ R> multiply(ind, dgT)
 [1,]  . . 30 . .
 [2,]  . .  . . .
 [3,] 90 .  . . .
-*/
-\end{lstlisting}
-\end{itemize}
+@
 
 \subsection{pMatrix}
+\subsubsection{Synopsis}
 \begin{itemize}
   \item Description: permutation matrix.
   \item Constructor
@@ -557,14 +585,11 @@ R> multiply(ind, dgT)
     \begin{itemize}
       \item \code{as(*, "pMatrix")}
     \end{itemize}
-  \item Examples
-  \lstset{
-  language=C++,
-  basicstyle=\ttfamily\small,
-  caption={Support for pMatrix},
-  label={code:pMatrix in RcppArmadillo}
-}
-\begin{lstlisting}[frame=tb]
+\end{itemize}
+
+\subsubsection{C++ Code}
+
+<<lang=cpp>>=
 #include <RcppArmadillo.h>
 // [[Rcpp::depends(RcppArmadillo)]]
 
@@ -575,8 +600,11 @@ using namespace arma;
 sp_mat multiply(sp_mat A, sp_mat B) {
   return A * B;
 }
+@
 
-/*
+\subsubsection{R Code}
+
+<<lang=r>>=
 R> pM <- as(c(2,3,1,4), "pMatrix")
 R> dgT <- new("dgTMatrix",
               i = c(1L,1L,0L,3L,3L),
@@ -589,11 +617,10 @@ R> multiply(pM, dgT)
 [2,]  . .  . .  .
 [3,]  . .  . . 30
 [4,] 90 .  . .  .
-*/
-\end{lstlisting}
-\end{itemize}
+@
 
 \subsection{ddiMatrix}
+\subsubsection{Synopsis}
 \begin{itemize}
   \item Description: numeric diagonal Matrix.
   \item Constructor
@@ -601,14 +628,11 @@ R> multiply(pM, dgT)
       \item \code{new("ddiMatrix", ...)}
       \item \code{Diagonal(*)}
     \end{itemize}
-  \item Examples
-  \lstset{
-  language=C++,
-  basicstyle=\ttfamily\small,
-  caption={Support for ddiMatrix},
-  label={code:ddiMatrix in RcppArmadillo}
-}
-\begin{lstlisting}[frame=tb]
+\end{itemize}
+
+\subsubsection{C++ Code}
+
+<<lang=cpp>>=
 #include <RcppArmadillo.h>
 // [[Rcpp::depends(RcppArmadillo)]]
 
@@ -619,8 +643,11 @@ using namespace arma;
 sp_mat multiply(sp_mat A, sp_mat B) {
   return A * B;
 }
+@
 
-/*
+\subsubsection{R Code}
+
+<<lang=r>>=
 R> ddi <- Diagonal(4)
 R> dgR <- new("dgRMatrix", j=c(0L,2L,1L,3L),
               p=c(0L,2L,3L,3L,4L),
@@ -633,8 +660,6 @@ R> multiply(ddi, dgR)
 [2,] . 2 . .
 [3,] . . . .
 [4,] . . . 1
-*/
-\end{lstlisting}
-\end{itemize}
+@
 
 \end{document}
