@@ -1,6 +1,26 @@
+2017-08-01  Serguei Sokol  <sokol@insa-toulouse.fr>
+
+	* inst/include/RcppArmadilloWrap.h: Allow collapsed returns of row
+	or column vector if appropriate #define is set
+
+	* inst/unitTests/runit.RcppArmadillo.R: Corresponding unit test
+	* inst/unitTests/cpp/any_as_vec.cpp: Ditto
+	* inst/unitTests/cpp/armadillo.cpp: Ditto
+	* inst/unitTests/cpp/colrow_as_vec.cpp: Ditto
+
+	* R/unit.test.R: Generalization for test helper
+
+2017-07-31  Dirk Eddelbuettel  <edd@debian.org>
+
+	* vignettes/RcppArmadillo-sparseMatrix.Rnw: Use highlight engine
+
+2017-07-31  Binxiang Ni  <binxiangni@gmail.com>
+
+	* vignettes/RcppArmadillo-sparseMatrix.Rnw: New vignette
+
 2017-07-11  Binxiang Ni  <binxiangni@gmail.com>
 
-	* inst/include/RcppArmadilloAs.h: Add a stop message for matrices 
+	* inst/include/RcppArmadilloAs.h: Add a stop message for matrices
 	that cannot be converted
 	* inst/unitTests/runit.sparseConversion.R: Add unit tests for matrices
 	that cannot be converted
@@ -11,7 +31,7 @@
 	to support an extreme case
 	* inst/unitTests/runit.sparse.R: Move unit tests for the conversion
 	for sparse matrices to runit.sparseConversion.R
-	* inst/unitTests/runit.sparseConversion.R: Add more unit tests for 
+	* inst/unitTests/runit.sparseConversion.R: Add more unit tests for
 	the conversion for ddiMatrix
 
 2017-07-08  Binxiang Ni  <binxiangni@gmail.com>
@@ -19,7 +39,7 @@
 	* inst/include/RcppArmadilloAs.h: Add conversion for indMatrix
 	* inst/unitTests/runit.sparse.R: Add unit tests for the conversion
 	for indMatrix
-	* inst/unitTests/runit.sparseConversion.R: Add more unit tests for 
+	* inst/unitTests/runit.sparseConversion.R: Add more unit tests for
 	the conversion for indMatrix
 
 2017-07-08  Dirk Eddelbuettel  <edd@debian.org>
