@@ -167,7 +167,8 @@
   
   #define arma_applier_1_mp(operatorA) \
     {\
-    _Pragma("omp parallel for schedule(static)")\
+    const int n_threads = mp_thread_limit::get();\
+    _Pragma("omp parallel for schedule(static) num_threads(n_threads)")\
     for(uword i=0; i<n_elem; ++i)\
       {\
       out_mem[i] operatorA eop_core<eop_type>::process(P[i], k);\
@@ -176,9 +177,10 @@
   
   #define arma_applier_2_mp(operatorA) \
     {\
+    const int n_threads = mp_thread_limit::get();\
     if(n_cols == 1)\
       {\
-      _Pragma("omp parallel for schedule(static)")\
+      _Pragma("omp parallel for schedule(static) num_threads(n_threads)")\
       for(uword count=0; count < n_rows; ++count)\
         {\
         out_mem[count] operatorA eop_core<eop_type>::process(P.at(count,0), k);\
@@ -187,7 +189,7 @@
     else\
     if(n_rows == 1)\
       {\
-      _Pragma("omp parallel for schedule(static)")\
+      _Pragma("omp parallel for schedule(static) num_threads(n_threads)")\
       for(uword count=0; count < n_cols; ++count)\
         {\
         out_mem[count] operatorA eop_core<eop_type>::process(P.at(0,count), k);\
@@ -195,7 +197,7 @@
       }\
     else\
       {\
-      _Pragma("omp parallel for schedule(static)")\
+      _Pragma("omp parallel for schedule(static) num_threads(n_threads)")\
       for(uword col=0; col < n_cols; ++col)\
         {\
         for(uword row=0; row < n_rows; ++row)\
@@ -208,7 +210,8 @@
   
   #define arma_applier_3_mp(operatorA) \
     {\
-    _Pragma("omp parallel for schedule(static)")\
+    const int n_threads = mp_thread_limit::get();\
+    _Pragma("omp parallel for schedule(static) num_threads(n_threads)")\
     for(uword slice=0; slice<n_slices; ++slice)\
       {\
       for(uword col=0; col<n_cols; ++col)\
@@ -257,7 +260,7 @@ eop_core<eop_type>::apply(outT& out, const eOp<T1, eop_type>& x)
     {
     const uword n_elem = x.get_n_elem();
     
-    if(use_mp && (n_elem >= ((is_cx<eT>::yes) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
+    if(use_mp && mp_gate<eT>::eval(n_elem))
       {
       typename Proxy<T1>::ea_type P = x.P.get_ea();
       
@@ -297,7 +300,7 @@ eop_core<eop_type>::apply(outT& out, const eOp<T1, eop_type>& x)
     
     const Proxy<T1>& P = x.P;
     
-    if(use_mp && (x.get_n_elem() >= ((is_cx<eT>::yes) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
+    if(use_mp && mp_gate<eT>::eval(x.get_n_elem()))
       {
       arma_applier_2_mp(=);
       }
@@ -335,7 +338,7 @@ eop_core<eop_type>::apply_inplace_plus(Mat<typename T1::elem_type>& out, const e
     {
     const uword n_elem = x.get_n_elem();
     
-    if(use_mp && (n_elem >= ((is_cx<eT>::yes) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
+    if(use_mp && mp_gate<eT>::eval(n_elem))
       {
       typename Proxy<T1>::ea_type P = x.P.get_ea();
       
@@ -372,7 +375,7 @@ eop_core<eop_type>::apply_inplace_plus(Mat<typename T1::elem_type>& out, const e
     {
     const Proxy<T1>& P = x.P;
     
-    if(use_mp && (x.get_n_elem() >= ((is_cx<eT>::yes) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
+    if(use_mp && mp_gate<eT>::eval(x.get_n_elem()))
       {
       arma_applier_2_mp(+=);
       }
@@ -410,7 +413,7 @@ eop_core<eop_type>::apply_inplace_minus(Mat<typename T1::elem_type>& out, const 
     {
     const uword n_elem = x.get_n_elem();
     
-    if(use_mp && (n_elem >= ((is_cx<eT>::yes) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
+    if(use_mp && mp_gate<eT>::eval(n_elem))
       {
       typename Proxy<T1>::ea_type P = x.P.get_ea();
       
@@ -447,7 +450,7 @@ eop_core<eop_type>::apply_inplace_minus(Mat<typename T1::elem_type>& out, const 
     {
     const Proxy<T1>& P = x.P;
     
-    if(use_mp && (x.get_n_elem() >= ((is_cx<eT>::yes) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
+    if(use_mp && mp_gate<eT>::eval(x.get_n_elem()))
       {
       arma_applier_2_mp(-=);
       }
@@ -485,7 +488,7 @@ eop_core<eop_type>::apply_inplace_schur(Mat<typename T1::elem_type>& out, const 
     {
     const uword n_elem = x.get_n_elem();
     
-    if(use_mp && (n_elem >= ((is_cx<eT>::yes) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
+    if(use_mp && mp_gate<eT>::eval(n_elem))
       {
       typename Proxy<T1>::ea_type P = x.P.get_ea();
       
@@ -522,7 +525,7 @@ eop_core<eop_type>::apply_inplace_schur(Mat<typename T1::elem_type>& out, const 
     {
     const Proxy<T1>& P = x.P;
     
-    if(use_mp && (x.get_n_elem() >= ((is_cx<eT>::yes) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
+    if(use_mp && mp_gate<eT>::eval(x.get_n_elem()))
       {
       arma_applier_2_mp(*=);
       }
@@ -560,7 +563,7 @@ eop_core<eop_type>::apply_inplace_div(Mat<typename T1::elem_type>& out, const eO
     {
     const uword n_elem = x.get_n_elem();
     
-    if(use_mp && (n_elem >= ((is_cx<eT>::yes) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
+    if(use_mp && mp_gate<eT>::eval(n_elem))
       {
       typename Proxy<T1>::ea_type P = x.P.get_ea();
       
@@ -597,7 +600,7 @@ eop_core<eop_type>::apply_inplace_div(Mat<typename T1::elem_type>& out, const eO
     {
     const Proxy<T1>& P = x.P;
     
-    if(use_mp && (x.get_n_elem() >= ((is_cx<eT>::yes) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
+    if(use_mp && mp_gate<eT>::eval(x.get_n_elem()))
       {
       arma_applier_2_mp(/=);
       }
@@ -638,7 +641,7 @@ eop_core<eop_type>::apply(Cube<typename T1::elem_type>& out, const eOpCube<T1, e
     {
     const uword n_elem = out.n_elem;
     
-    if(use_mp && (n_elem >= ((is_cx<eT>::yes) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
+    if(use_mp && mp_gate<eT>::eval(n_elem))
       {
       typename ProxyCube<T1>::ea_type P = x.P.get_ea();
       
@@ -679,7 +682,7 @@ eop_core<eop_type>::apply(Cube<typename T1::elem_type>& out, const eOpCube<T1, e
     
     const ProxyCube<T1>& P = x.P;
     
-    if(use_mp && (x.get_n_elem() >= ((is_cx<eT>::yes) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
+    if(use_mp && mp_gate<eT>::eval(x.get_n_elem()))
       {
       arma_applier_3_mp(=);
       }
@@ -718,7 +721,7 @@ eop_core<eop_type>::apply_inplace_plus(Cube<typename T1::elem_type>& out, const 
     {
     const uword n_elem = out.n_elem;
     
-    if(use_mp && (n_elem >= ((is_cx<eT>::yes) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
+    if(use_mp && mp_gate<eT>::eval(n_elem))
       {
       typename ProxyCube<T1>::ea_type P = x.P.get_ea();
       
@@ -755,7 +758,7 @@ eop_core<eop_type>::apply_inplace_plus(Cube<typename T1::elem_type>& out, const 
     {
     const ProxyCube<T1>& P = x.P;
     
-    if(use_mp && (x.get_n_elem() >= ((is_cx<eT>::yes) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
+    if(use_mp && mp_gate<eT>::eval(x.get_n_elem()))
       {
       arma_applier_3_mp(+=);
       }
@@ -794,7 +797,7 @@ eop_core<eop_type>::apply_inplace_minus(Cube<typename T1::elem_type>& out, const
     {
     const uword n_elem = out.n_elem;
       
-    if(use_mp && (n_elem >= ((is_cx<eT>::yes) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
+    if(use_mp && mp_gate<eT>::eval(n_elem))
       {
       typename ProxyCube<T1>::ea_type P = x.P.get_ea();
       
@@ -831,7 +834,7 @@ eop_core<eop_type>::apply_inplace_minus(Cube<typename T1::elem_type>& out, const
     {
     const ProxyCube<T1>& P = x.P;
     
-    if(use_mp && (x.get_n_elem() >= ((is_cx<eT>::yes) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
+    if(use_mp && mp_gate<eT>::eval(x.get_n_elem()))
       {
       arma_applier_3_mp(-=);
       }
@@ -870,7 +873,7 @@ eop_core<eop_type>::apply_inplace_schur(Cube<typename T1::elem_type>& out, const
     {
     const uword n_elem = out.n_elem;
     
-    if(use_mp && (n_elem >= ((is_cx<eT>::yes) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
+    if(use_mp && mp_gate<eT>::eval(n_elem))
       {
       typename ProxyCube<T1>::ea_type P = x.P.get_ea();
       
@@ -907,7 +910,7 @@ eop_core<eop_type>::apply_inplace_schur(Cube<typename T1::elem_type>& out, const
     {
     const ProxyCube<T1>& P = x.P;
     
-    if(use_mp && (x.get_n_elem() >= ((is_cx<eT>::yes) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
+    if(use_mp && mp_gate<eT>::eval(x.get_n_elem()))
       {
       arma_applier_3_mp(*=);
       }
@@ -946,7 +949,7 @@ eop_core<eop_type>::apply_inplace_div(Cube<typename T1::elem_type>& out, const e
     {
     const uword n_elem = out.n_elem;
     
-    if(use_mp && (n_elem >= ((is_cx<eT>::yes) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
+    if(use_mp && mp_gate<eT>::eval(n_elem))
       {
       typename ProxyCube<T1>::ea_type P = x.P.get_ea();
       
@@ -983,7 +986,7 @@ eop_core<eop_type>::apply_inplace_div(Cube<typename T1::elem_type>& out, const e
     {
     const ProxyCube<T1>& P = x.P;
     
-    if(use_mp && (x.get_n_elem() >= ((is_cx<eT>::yes) ? (arma_config::mp_threshold/uword(2)) : (arma_config::mp_threshold))))
+    if(use_mp && mp_gate<eT>::eval(x.get_n_elem()))
       {
       arma_applier_3_mp(/=);
       }

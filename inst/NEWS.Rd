@@ -5,16 +5,34 @@
 
 \section{Changes in RcppArmadillo version 0.7.960.0.0 (2017-08-xx)}{
   \itemize{
-    \item Upgraded to Armadillo release 7.900.0 (...)
+    \item Upgraded to Armadillo release 7.960.0 (Northern Banana Republic Deluxe)
     \itemize{
+      \item faster \code{randn()} when using OpenMP (NB: usually omitted
+      when used fromR)
+      \item faster \code{gmm_diag} class, for Gaussian mixture models
+      with diagonal covariance matrices
+      \item added \code{.sum_log_p()} to the \code{gmm_diag} class
+      \item added \code{gmm_full} class, for Gaussian mixture models
+      with full covariance matrices 
+      \item expanded \code{.each_slice()} to optionally use OpenMP for
+      multi-threaded execution
     }
+    \item Upgraded to Armadillo release 7.950.0 (Northern Banana Republic)
+    \itemize{
+      \item expanded \code{accu()} and \code{sum()} to use OpenMP for
+      processing expressions with computationally expensive element-wise
+      functions
+      \item expanded \code{trimatu()} and \code{trimatl()} to allow
+      specification of the diagonal which delineates the boundary of the
+      triangular part
+    }
+    \item Enhanced support for sparse matrices (Binxiang Ni as part of
+    Google Summer of Code 2018; \ghpr{135}, \ghpr{135}, \ghpr{136},
+    \ghpr{139}, \ghpr{140}, \ghpr{142}, \ghpr{144}, \ghpr{145},
+    \ghpr{147}, \ghpr{152}). 
+    \item Optional return of row or column vectors in collapsed form if
+    appropriate \code{#define} is set (Serguei Sokol in \ghpr{151})
   }
-  \itemize Enhanced support for sparse matrices (Binxiang Ni during
-  Google Summer of Code 2018; \ghpr{135}, \ghpr{135}, \ghpr{136},
-  \ghpr{139}, \ghpr{140}, \ghpr{142}, \ghpr{144}, \ghpr{145},
-  \ghpr{147}, \ghpr{152}). 
-  \itemize Optional return of row or column vectors in collapsed form if
-  appropriate \code{#define} is set (Serguei Sokol in \ghpr{151})
 }
 
 \section{Changes in RcppArmadillo version 0.7.900.2.0 (2017-06-02)}{

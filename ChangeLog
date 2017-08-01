@@ -1,3 +1,7 @@
+2017-08-01  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/armadillo*: Upgraded to Armadillo 7.960.0
+
 2017-08-01  Serguei Sokol  <sokol@insa-toulouse.fr>
 
 	* inst/include/RcppArmadilloWrap.h: Allow collapsed returns of row
