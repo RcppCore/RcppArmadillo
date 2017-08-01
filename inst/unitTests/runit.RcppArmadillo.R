@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
-.setUp <- RcppArmadillo:::unit_test_setup( "armadillo.cpp", "RcppArmadillo" )
+.setUp <- RcppArmadillo:::unit_test_setup( c("armadillo.cpp", "colrow_as_vec.cpp", "any_as_vec.cpp"), "RcppArmadillo" )
 
 test.wrap.R <- function(){
     fx <- wrap_
@@ -236,4 +236,15 @@ test.armadillo.unsigned.as <- function() {
     checkEquals(mat, c_umat_test(mat))
     checkEquals(mat, r_umat_test(mat))
     checkEquals(mat, cr_umat_test(mat))
+}
+test.armadillo.as_vector <- function() {
+    vec <- 1:3
+    vecc <- as.matrix(1:3)
+    vecr <- t(vecc)
+    checkEquals(vecc, vecc_test(vec), msg="legacy vec")
+    checkEquals(vecr, vecr_test(vecr), msg="legacy rowvec")
+    checkEquals(vec, vecc_as_v_test(vec), msg="vec as vector")
+    checkEquals(vec, vecr_as_v_test(vec), msg="rowvec as vector")
+    checkEquals(vec, veccany_as_v_test(vec), msg="vec (by any) as vector")
+    checkEquals(vec, vecrany_as_v_test(vec), msg="rowvec (by any) as vector")
 }
