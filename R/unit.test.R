@@ -35,12 +35,14 @@ unit_test_setup <- function(file = NULL, packages = NULL) {
             }
         }
         if (!is.null(file)) {
-            if (exists("pathRcppArmadilloTests")) {
-                sourceCpp(file.path(get("pathRcppArmadilloTests"), "cpp", file))
-            } else if (file.exists(file.path("cpp", file))) {
-                sourceCpp(file.path( "cpp", file))
-            } else {
-                sourceCpp(system.file("unitTests", "cpp", file, package="RcppArmadillo"))
+            for (f in file) {
+                if (exists("pathRcppArmadilloTests")) {
+                    sourceCpp(file.path(get("pathRcppArmadilloTests"), "cpp", f))
+                } else if (file.exists(file.path("cpp", f))) {
+                    sourceCpp(file.path( "cpp", f))
+                } else {
+                    sourceCpp(system.file("unitTests", "cpp", f, package="RcppArmadillo"))
+                }
             }
         }
     }
