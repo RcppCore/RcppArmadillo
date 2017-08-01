@@ -434,7 +434,6 @@ sp_mat square_(sp_mat X) {
 \subsubsection{R Code}
 
 <<lang=r>>=
-R> library(Matrix)
 R> dgR <- new("dgRMatrix", j=c(0L,2L,1L,3L),
               p=c(0L,2L,3L,3L,4L),
               x=c(3,1,2,1),
