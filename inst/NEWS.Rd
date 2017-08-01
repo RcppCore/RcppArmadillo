@@ -3,6 +3,20 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.7.960.0.0 (2017-08-xx)}{
+  \itemize{
+    \item Upgraded to Armadillo release 7.900.0 (...)
+    \itemize{
+    }
+  }
+  \itemize Enhanced support for sparse matrices (Binxiang Ni during
+  Google Summer of Code 2018; \ghpr{135}, \ghpr{135}, \ghpr{136},
+  \ghpr{139}, \ghpr{140}, \ghpr{142}, \ghpr{144}, \ghpr{145},
+  \ghpr{147}, \ghpr{152}). 
+  \itemize Optional return of row or column vectors in collapsed form if
+  appropriate \code{#define} is set (Serguei Sokol in \ghpr{151})
+}
+
 \section{Changes in RcppArmadillo version 0.7.900.2.0 (2017-06-02)}{
   \itemize{
     \item Upgraded to Armadillo release 7.900.2 (Evil Banana Republic)
