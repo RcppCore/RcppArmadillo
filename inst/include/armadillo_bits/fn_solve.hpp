@@ -41,6 +41,7 @@ solve
 
 
 
+//! NOTE: don't use this form: it will be removed
 template<typename T1, typename T2>
 arma_deprecated
 inline
@@ -61,6 +62,7 @@ solve
 
 
 
+//! NOTE: don't use this form: it will be removed
 template<typename T1, typename T2>
 arma_deprecated
 inline
@@ -99,6 +101,7 @@ solve
 
 
 
+//! NOTE: don't use this form: it will be removed
 template<typename T1, typename T2>
 arma_deprecated
 inline
@@ -120,6 +123,7 @@ solve
 
 
 
+//! NOTE: don't use this form: it will be removed
 template<typename T1, typename T2>
 arma_deprecated
 inline
@@ -168,6 +172,7 @@ solve
 
 
 
+//! NOTE: don't use this form: it will be removed
 template<typename T1, typename T2>
 arma_deprecated
 inline
@@ -193,6 +198,7 @@ solve
 
 
 
+//! NOTE: don't use this form: it will be removed
 template<typename T1, typename T2>
 arma_deprecated
 inline
@@ -241,6 +247,7 @@ solve
 
 
 
+//! NOTE: don't use this form: it will be removed
 template<typename T1, typename T2>
 arma_deprecated
 inline
@@ -267,6 +274,7 @@ solve
 
 
 
+//! NOTE: don't use this form: it will be removed
 template<typename T1, typename T2>
 arma_deprecated
 inline

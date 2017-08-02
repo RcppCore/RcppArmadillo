@@ -125,6 +125,13 @@ op_sum::apply_noalias_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P
   
   typedef typename T1::elem_type eT;
   
+  if( arma_config::openmp && Proxy<T1>::use_mp && mp_gate<eT>::eval(P.get_n_elem()) )
+    {
+    op_sum::apply_noalias_proxy_mp(out, P, dim);
+    
+    return;
+    }
+  
   const uword P_n_rows = P.get_n_rows();
   const uword P_n_cols = P.get_n_cols();
   
@@ -166,6 +173,74 @@ op_sum::apply_noalias_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P
       out_mem[row] += P.at(row,col);
       }
     }
+  }
+
+
+
+template<typename T1>
+arma_hot
+inline
+void
+op_sum::apply_noalias_proxy_mp(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const uword dim)
+  {
+  arma_extra_debug_sigprint();
+  
+  #if defined(ARMA_USE_OPENMP)
+    {
+    typedef typename T1::elem_type eT;
+    
+    const uword P_n_rows = P.get_n_rows();
+    const uword P_n_cols = P.get_n_cols();
+    
+    const int n_threads = mp_thread_limit::get();
+    
+    if(dim == 0)
+      {
+      out.set_size(1, P_n_cols);
+      
+      eT* out_mem = out.memptr();
+      
+      #pragma omp parallel for schedule(static) num_threads(n_threads)
+      for(uword col=0; col < P_n_cols; ++col)
+        {
+        eT val1 = eT(0);
+        eT val2 = eT(0);
+        
+        uword i,j;
+        for(i=0, j=1; j < P_n_rows; i+=2, j+=2)
+          {
+          val1 += P.at(i,col);
+          val2 += P.at(j,col);
+          }
+        
+        if(i < P_n_rows)
+          {
+          val1 += P.at(i,col);
+          }
+        
+        out_mem[col] = (val1 + val2);
+        }
+      }
+    else
+      {
+      out.set_size(P_n_rows, 1);
+      
+      eT* out_mem = out.memptr();
+      
+      #pragma omp parallel for schedule(static) num_threads(n_threads)
+      for(uword row=0; row < P_n_rows; ++row)
+        {
+        eT acc = eT(0);
+        for(uword col=0; col < P_n_cols; ++col)
+          {
+          acc += P.at(row,col);
+          }
+        
+        out_mem[row] = acc;
+        }
+      }
+    }
+  #endif
   }
 
 
@@ -301,6 +376,13 @@ op_sum::apply_noalias_proxy(Cube<typename T1::elem_type>& out, const ProxyCube<T
   
   typedef typename T1::elem_type eT;
   
+  if( arma_config::openmp && ProxyCube<T1>::use_mp && mp_gate<eT>::eval(P.get_n_elem()) )
+    {
+    op_sum::apply_noalias_proxy_mp(out, P, dim);
+    
+    return;
+    }
+  
   const uword P_n_rows   = P.get_n_rows();
   const uword P_n_cols   = P.get_n_cols();
   const uword P_n_slices = P.get_n_slices();
@@ -368,6 +450,117 @@ op_sum::apply_noalias_proxy(Cube<typename T1::elem_type>& out, const ProxyCube<T
         }
       }
     }
+  }
+
+
+
+template<typename T1>
+arma_hot
+inline
+void
+op_sum::apply_noalias_proxy_mp(Cube<typename T1::elem_type>& out, const ProxyCube<T1>& P, const uword dim)
+  {
+  arma_extra_debug_sigprint();
+  
+  #if defined(ARMA_USE_OPENMP)
+    {
+    typedef typename T1::elem_type eT;
+    
+    const uword P_n_rows   = P.get_n_rows();
+    const uword P_n_cols   = P.get_n_cols();
+    const uword P_n_slices = P.get_n_slices();
+    
+    const int n_threads = mp_thread_limit::get();
+    
+    if(dim == 0)
+      {
+      out.set_size(1, P_n_cols, P_n_slices);
+      
+      #pragma omp parallel for schedule(static) num_threads(n_threads)
+      for(uword slice=0; slice < P_n_slices; ++slice)
+        {
+        eT* out_mem = out.slice_memptr(slice);
+        
+        for(uword col=0; col < P_n_cols; ++col)
+          {
+          eT val1 = eT(0);
+          eT val2 = eT(0);
+          
+          uword i,j;
+          for(i=0, j=1; j < P_n_rows; i+=2, j+=2)
+            {
+            val1 += P.at(i,col,slice);
+            val2 += P.at(j,col,slice);
+            }
+          
+          if(i < P_n_rows)
+            {
+            val1 += P.at(i,col,slice);
+            }
+          
+          out_mem[col] = (val1 + val2);
+          }
+        }
+      }
+    else
+    if(dim == 1)
+      {
+      out.zeros(P_n_rows, 1, P_n_slices);
+      
+      #pragma omp parallel for schedule(static) num_threads(n_threads)
+      for(uword slice=0; slice < P_n_slices; ++slice)
+        {
+        eT* out_mem = out.slice_memptr(slice);
+        
+        for(uword col=0; col < P_n_cols; ++col)
+        for(uword row=0; row < P_n_rows; ++row)
+          {
+          out_mem[row] += P.at(row,col,slice);
+          }
+        }
+      }
+    else
+    if(dim == 2)
+      {
+      out.zeros(P_n_rows, P_n_cols, 1);
+      
+      if(P_n_cols >= P_n_rows)
+        {
+        #pragma omp parallel for schedule(static) num_threads(n_threads)
+        for(uword col=0; col < P_n_cols; ++col)
+          {
+          for(uword row=0; row < P_n_rows; ++row)
+            {
+            eT acc = eT(0);
+            for(uword slice=0; slice < P_n_slices; ++slice)
+              {
+              acc += P.at(row,col,slice);
+              }
+            
+            out.at(row,col,0) = acc;
+            }
+          }
+        }
+      else
+        {
+        #pragma omp parallel for schedule(static) num_threads(n_threads)
+        for(uword row=0; row < P_n_rows; ++row)
+          {
+          for(uword col=0; col < P_n_cols; ++col)
+            {
+            eT acc = eT(0);
+            for(uword slice=0; slice < P_n_slices; ++slice)
+              {
+              acc += P.at(row,col,slice);
+              }
+            
+            out.at(row,col,0) = acc;
+            }
+          }
+        }
+      }
+    }
+  #endif
   }
 
 

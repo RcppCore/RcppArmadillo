@@ -137,6 +137,7 @@ det
 
 
 
+//! NOTE: don't use this form: it will be removed
 template<typename T1>
 arma_deprecated
 inline
@@ -156,6 +157,7 @@ det
 
 
 
+//! NOTE: don't use this form: it will be removed
 template<typename T1>
 arma_deprecated
 inline
