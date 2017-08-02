@@ -77,3 +77,8 @@ Rcpp::List sparseList(Rcpp::List l) {
     
     return Rcpp::List::create(mat1, mat2);
 }
+
+// [[Rcpp::export]]
+arma::sp_mat speye(int nrow, int ncol) {
+    return arma::speye(nrow, ncol);
+}
