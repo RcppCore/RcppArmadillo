@@ -105,5 +105,13 @@
   #define ARMA_32BIT_WORD 1
 #endif
 
+// To return arma::vec or arma::rowvec as R vector (i.e. dimensionless),
+// one of the following macro can be defined before including
+// RcppArmadillo.h. "ANYVEC" applys for both col- and row-vec.
+//#define RCPP_ARMADILLO_RETURN_COLVEC_AS_VECTOR
+//#define RCPP_ARMADILLO_RETURN_ROWVEC_AS_VECTOR
+//#define RCPP_ARMADILLO_RETURN_ANYVEC_AS_VECTOR
+
+
 #endif
 
