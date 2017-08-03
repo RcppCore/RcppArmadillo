@@ -95,14 +95,15 @@ namespace Rcpp{
         IntegerVector i(sm.row_indices, sm.row_indices + sm.n_nonzero);
         IntegerVector p(sm.col_ptrs, sm.col_ptrs + sm.n_cols+1 ) ;
 
-        std::string klass ;
-        switch( RTYPE ){
-            case REALSXP: klass = "dgCMatrix" ; break ;
-            // case INTSXP : klass = "igCMatrix" ; break ; class not exported
-            case LGLSXP : klass = "lgCMatrix" ; break ;
-            default:
-                throw std::invalid_argument( "RTYPE not matched in conversion to sparse matrix" ) ;
-        }
+        std::string klass = "dgCMatrix";
+        // Since logical sparse matrix is not supported for now, the conditional statement is not currently used. 
+        // switch( RTYPE ){
+        //     case REALSXP: klass = "dgCMatrix" ; break ;
+        //     // case INTSXP : klass = "igCMatrix" ; break ; class not exported
+        //     case LGLSXP : klass = "lgCMatrix" ; break ;
+        //     default:
+        //         throw std::invalid_argument( "RTYPE not matched in conversion to sparse matrix" ) ;
+        // }
         S4 s(klass);
         s.slot("i")   = i;
         s.slot("p")   = p;
