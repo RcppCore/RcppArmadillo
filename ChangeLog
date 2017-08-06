@@ -1,3 +1,21 @@
+2017-08-06  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Rolled to fictional pre-release
+	number 0.7.959.0.0 is preparation of 0.7.960.0.0 release
+
+	* inst/NEWS.Rd: Expanded description of GSoC 2017 work by Binxiang
+
+2017-08-03  Binxiang Ni  <binxiangni@gmail.com>
+
+	* inst/include/RcppArmadilloWrap.h: Comment-out unreachable code
+
+2017-08-02  Qiang Kou (KK) <qkou@qkou.info>
+
+	* inst/include/armadillo_bits/SpMat_meat.hpp: Correct use of 'p'
+	in dgCMatrix (by pulling in upstream patch from Armadillo)
+	* inst/unitTests/cpp/sparse.cpp: New speye() unit tests
+	* inst/unitTests/runit.sparse.R: Ditto
+
 2017-08-01  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/armadillo*: Upgraded to Armadillo 7.960.0
