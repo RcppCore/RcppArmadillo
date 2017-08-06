@@ -32,6 +32,30 @@
     \ghpr{147}, \ghpr{152}). 
     \item Optional return of row or column vectors in collapsed form if
     appropriate \code{#define} is set (Serguei Sokol in \ghpr{151})
+    Google Summer of Code 2018)
+    \itemize{
+      \item Add support for \code{dtCMatrix} and \code{dsCMatrix}
+      (\ghpr{135})
+      \item Add conversion and unit tests for \code{dgT}, \code{dtT} and
+      \code{dsTMatrix} (\ghpr{136})
+      \item Add conversion and unit tests for \code{dgR}, \code{dtR} and
+      \code{dsRMatrix} (\ghpr{139})
+      \item Add conversion and unit tests for \code{pMatrix} and
+      \code{ddiMatrix} (\ghpr{140})
+      \item Rewrite conversion for \code{dgT}, \code{dtT} and
+      \code{dsTMatrix}, and add file-based tests (\ghpr{142})
+      \item Add conversion and unit tests for \code{indMatrix} (\ghpr{144})
+      \item Rewrite conversion for \code{ddiMatrix} (\ghpr{145})
+      \item Add a warning message for matrices that cannot be converted
+      (\ghpr{147}) 
+      \item Add new vignette for sparse matrix support (\ghpr{152}; Dirk
+      in \ghpr{153})
+    }
+    \item Optional return of row or column vectors in collapsed form if
+    appropriate \code{#define} is set (Serguei Sokol in \ghpr{151} and
+    \ghpr{154}) 
+    \item Correct \code{speye()} for non-symmetric cases (Qiang Kou in
+    \ghpr{150} closing \ghit{149}).
   }
 }
 
