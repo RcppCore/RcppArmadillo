@@ -51,7 +51,6 @@
     \ghpr{154}) 
     \item Correct \code{speye()} for non-symmetric cases (Qiang Kou in
     \ghpr{150} closing \ghit{149}).
-    \ghpr{150) closing \ghit{149}).
   }
 }
 
