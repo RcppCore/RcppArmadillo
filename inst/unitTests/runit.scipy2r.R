@@ -37,11 +37,15 @@ test.csc2dgc <- function() {
   checkEquals(dgC, RcppArmadillo:::py2r(csc), msg="csc2dgc")
 }
 
-#test.coo2dgt <- function() {
-#  coo <- sp$coo_matrix(mat)
-#  dgT <- methods::as(M, "dgTMatrix")
-#  checkEquals(dgT, py2r(coo), msg="coo2dgt")
-#}
+test.coo2dgt <- function() {
+  coo <- sp$coo_matrix(mat)
+  dgT <- new("dgTMatrix", 
+             i = c(0L, 0L, 1L, 2L, 2L, 2L),
+             j = c(0L, 2L, 2L, 0L, 1L, 2L),
+             x = c(1, 4, 5, 2, 3, 6),
+             Dim = c(3L, 3L))
+  checkEquals(dgT, RcppArmadillo:::py2r(coo), msg="coo2dgt")
+}
 
 test.csr2dgr <- function() {
   csr <- sp$csr_matrix(mat)
