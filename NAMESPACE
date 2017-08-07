@@ -4,14 +4,14 @@ import("Rcpp")
 import("reticulate")
 importFrom("stats", "coef", "fitted", "model.frame", "model.matrix", "model.response", "printCoefmat", "pt")
 importFrom("utils", "packageDescription", "package.skeleton")
+importFrom("methods", "new")
 
 export("fastLmPure",
        "fastLm",
        "RcppArmadillo.package.skeleton",
        "armadillo_version",
        "armadillo_set_seed",
-       "armadillo_set_seed_random",
-       "py2r")
+       "armadillo_set_seed_random")
 S3method("fastLm", "default")
 S3method("fastLm", "formula")
 S3method("predict", "fastLm")
