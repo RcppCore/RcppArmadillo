@@ -1,5 +1,8 @@
 2017-08-07  Dirk Eddelbuettel  <edd@debian.org>
 
+	* inst/unitTests/runit.scipy2r.R: Whitespace edits
+	* R/SciPy2R.R: Idem; also renamed from py2R, removed one require()
+
 	* .travis.yml (install): Also install reticulate and (r-cran-)jsonlite
 
 2017-08-07  Binxiang Ni  <binxiangni@gmail.com>
