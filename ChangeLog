@@ -1,3 +1,12 @@
+2017-08-07  Dirk Eddelbuettel  <edd@debian.org>
+
+	* .travis.yml (install): Also install reticulate and (r-cran-)jsonlite
+
+2017-08-07  Binxiang Ni  <binxiangni@gmail.com>
+
+	* R/py2r.R: Python to R conversion
+	* inst/unitTests/runit.scipy2r.R: Unit tests
+
 2017-08-06  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Rolled to fictional pre-release
