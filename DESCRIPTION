@@ -23,6 +23,6 @@ License: GPL (>= 2)
 LazyLoad: yes
 LinkingTo: Rcpp
 Imports: Rcpp (>= 0.11.0), stats, utils
-Suggests: RUnit, Matrix, pkgKitten
+Suggests: RUnit, Matrix, pkgKitten, reticulate
 URL: http://dirk.eddelbuettel.com/code/rcpp.armadillo.html
 BugReports: https://github.com/RcppCore/RcppArmadillo/issues
