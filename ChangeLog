@@ -1,3 +1,13 @@
+2017-08-08  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Rolled to pre-release 0.7.959.0.1
+	in preparation of 0.7.960.0.0 release "real soon now"
+
+	* tests/doRUnit.R: Small edits and improvements
+
+	* inst/unitTests/runit.sparseConversion.R: Run Kronecker products
+	once in setup under suppressMessages to suppress dispatch messages
+
 2017-08-07  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/unitTests/runit.scipy2r.R: Whitespace edits

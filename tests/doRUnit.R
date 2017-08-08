@@ -1,5 +1,5 @@
-# Copyright (C) 2010 - 2013 Dirk Eddelbuettel, Romain Francois and Douglas Bates
-# Copyright (C) 2014        Dirk Eddelbuettel
+# Copyright (C) 2010 - 2013  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+# Copyright (C) 2014 - 2017  Dirk Eddelbuettel
 # Earlier copyrights Gregor Gorjanc, Martin Maechler and Murray Stokely as detailed below
 #
 # This file is part of RcppArmadillo.
@@ -25,35 +25,29 @@
 ## and changed further by Martin Maechler
 ## and more changes by Murray Stokely in HistogramTools
 ## and then used adapted in RProtoBuf
-## and now used in Rcpp and here 
+## and now used in Rcpp and here
 ##
 ## Dirk Eddelbuettel, Feb - June 2014
 
-stopifnot(require(RUnit, quietly=TRUE))
-stopifnot(require(RcppArmadillo, quietly=TRUE))
+if (requireNamespace("RUnit", quietly=TRUE) &&
+    requireNamespace("RcppArmadillo", quietly=TRUE)) {
 
-## Define tests
-testSuite <- defineTestSuite(name="RcppArmadillo Unit Tests",
-                             dirs=system.file("unitTests", package = "RcppArmadillo"),
-                             testFuncRegexp = "^[Tt]est.+")
+    library(RUnit)
+    library(RcppArmadillo)
 
-## without this, we get (or used to get) unit test failures
-Sys.setenv("R_TESTS"="")
+    ## Define tests
+    testSuite <- defineTestSuite(name="RcppArmadillo Unit Tests",
+                                 dirs=system.file("unitTests", package = "RcppArmadillo"),
+                                 testFuncRegexp = "^[Tt]est.+")
 
-## Run tests
-tests <- runTestSuite(testSuite)
+    Sys.setenv("R_TESTS"="")	    	# without this, we get (or used to get) unit test failures
 
-## Print results
-printTextProtocol(tests)
+    tests <- runTestSuite(testSuite)    # run tests
+    printTextProtocol(tests)		# print results
 
-## Return success or failure to R CMD CHECK
-if (getErrors(tests)$nFail > 0) {
-    stop("TEST FAILED!")
-}
-if (getErrors(tests)$nErr > 0) {
-    stop("TEST HAD ERRORS!")
-}
-if (getErrors(tests)$nTestFunc < 1) {
-    stop("NO TEST FUNCTIONS RUN!")
+    ## Return success or failure to R CMD CHECK
+    if (getErrors(tests)$nFail > 0) stop("TEST FAILED!")
+    if (getErrors(tests)$nErr > 0) stop("TEST HAD ERRORS!")
+    if (getErrors(tests)$nTestFunc < 1) stop("NO TEST FUNCTIONS RUN!")
 }
 
