@@ -27,7 +27,7 @@
       triangular part
     }
     \item Enhanced support for sparse matrices (Binxiang Ni as part of
-    Google Summer of Code 2018)
+    Google Summer of Code 2017)
     \itemize{
       \item Add support for \code{dtCMatrix} and \code{dsCMatrix}
       (\ghpr{135})
@@ -45,6 +45,8 @@
       (\ghpr{147}) 
       \item Add new vignette for sparse matrix support (\ghpr{152}; Dirk
       in \ghpr{153})
+      \item Add support for sparse matrix conversion from Python SciPy
+      (\ghpr{158} addressing \ghit{141})
     }
     \item Optional return of row or column vectors in collapsed form if
     appropriate \code{#define} is set (Serguei Sokol in \ghpr{151} and
