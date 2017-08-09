@@ -18,42 +18,51 @@
 
 ## Reference: https://docs.scipy.org/doc/scipy-0.19.1/reference/sparse.html
 
-suppressMessages(require(Matrix))
-suppressMessages(require(reticulate))
+.runThisTest <- requireNamespace("Matrix", quietly=TRUE) && requireNamespace("reticulate", quietly=TRUE)
 
-np <- import("numpy")
-mat <- np$array(list(list(1, 0, 4), list(0, 0, 5), list(2, 3, 6)))
-sp <- import("scipy.sparse")
+if (.runThisTest) {
 
-mtxt <- c("1 0 4",
-          "0 0 5",
-          "2 3 6")
-M <- as.matrix(read.table(text=mtxt))
-dimnames(M) <- NULL
+    suppressMessages({
+        library(Matrix)
+        library(reticulate)
+    })
 
-test.csc2dgc <- function() {
-    csc <- sp$csc_matrix(mat)
-    dgC <- methods::as(M, "dgCMatrix")
-    checkEquals(dgC, RcppArmadillo:::.SciPy2R(csc), msg="csc2dgc")
-}
+    ## could also test for NumPy here
+    np <- import("numpy")
+    mat <- np$array(list(list(1, 0, 4), list(0, 0, 5), list(2, 3, 6)))
+    sp <- import("scipy.sparse")
 
-test.coo2dgt <- function() {
-    coo <- sp$coo_matrix(mat)
-    dgT <- new("dgTMatrix",
-               i = c(0L, 0L, 1L, 2L, 2L, 2L),
-               j = c(0L, 2L, 2L, 0L, 1L, 2L),
-               x = c(1, 4, 5, 2, 3, 6),
-               Dim = c(3L, 3L))
-    checkEquals(dgT, RcppArmadillo:::.SciPy2R(coo), msg="coo2dgt")
-}
+    mtxt <- c("1 0 4",
+              "0 0 5",
+              "2 3 6")
+    M <- as.matrix(read.table(text=mtxt))
+    dimnames(M) <- NULL
 
-test.csr2dgr <- function() {
-    csr <- sp$csr_matrix(mat)
-    dgR <- methods::as(M, "dgRMatrix")
-    checkEquals(dgR, RcppArmadillo:::.SciPy2R(csr), msg="csr2dgr")
-}
+    test.csc2dgc <- function() {
+        csc <- sp$csc_matrix(mat)
+        dgC <- methods::as(M, "dgCMatrix")
+        checkEquals(dgC, RcppArmadillo:::.SciPy2R(csc), msg="csc2dgc")
+    }
 
-test.other <- function() {
-    bsr <- sp$bsr_matrix(list(3, 4))
-    checkException(RcppArmadillo:::.SciPy2R(bsr))
+    test.coo2dgt <- function() {
+        coo <- sp$coo_matrix(mat)
+        dgT <- new("dgTMatrix",
+                   i = c(0L, 0L, 1L, 2L, 2L, 2L),
+                   j = c(0L, 2L, 2L, 0L, 1L, 2L),
+                   x = c(1, 4, 5, 2, 3, 6),
+                   Dim = c(3L, 3L))
+        checkEquals(dgT, RcppArmadillo:::.SciPy2R(coo), msg="coo2dgt")
+    }
+
+    test.csr2dgr <- function() {
+        csr <- sp$csr_matrix(mat)
+        dgR <- methods::as(M, "dgRMatrix")
+        checkEquals(dgR, RcppArmadillo:::.SciPy2R(csr), msg="csr2dgr")
+    }
+
+    test.other <- function() {
+        bsr <- sp$bsr_matrix(list(3, 4))
+        checkException(RcppArmadillo:::.SciPy2R(bsr))
+    }
+
 }

@@ -1,4 +1,4 @@
-## .sciPy2R.R: Conversion of SciPy sparse matrix to R
+## .SciPy2R.R: Conversion of SciPy sparse matrix to R
 ##
 ## Copyright (C) 2017  Binxiang Ni and Dirk Eddelbuettel
 ##
@@ -18,23 +18,27 @@
 ## along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
 .SciPy2R <- function(spmat) {
+    if (!requireNamespace("reticulate", quietly=TRUE)) {
+        stop("You must install the 'reticulate' package (and have SciPy).", call.=FALSE)
+    }
+
     type <- spmat$getformat()
     shape <- unlist(spmat$shape)
-    data <- as.vector(py_get_attr(spmat, "data"))
+    data <- as.vector(reticulate::py_get_attr(spmat, "data"))
     if (type == "csc") {
-        indices <- as.vector(py_get_attr(spmat, "indices"))
-        indptr <- as.vector(py_get_attr(spmat, "indptr"))
+        indices <- as.vector(reticulate::py_get_attr(spmat, "indices"))
+        indptr <- as.vector(reticulate::py_get_attr(spmat, "indptr"))
         res <- new("dgCMatrix", i = indices, p = indptr, x = data, Dim = shape)
     } else if (type == "coo") {
-        row <- as.vector(py_get_attr(spmat, "row"))
-        col <- as.vector(py_get_attr(spmat, "col"))
+        row <- as.vector(reticulate::py_get_attr(spmat, "row"))
+        col <- as.vector(reticulate::py_get_attr(spmat, "col"))
         res <- new("dgTMatrix", i = row, j = col, x = data, Dim = shape)
     } else if (type == "csr") {
-        indices <- as.vector(py_get_attr(spmat, "indices"))
-        indptr <- as.vector(py_get_attr(spmat, "indptr"))
+        indices <- as.vector(reticulate::py_get_attr(spmat, "indices"))
+        indptr <- as.vector(reticulate::py_get_attr(spmat, "indptr"))
         res <- new("dgRMatrix", j = indices, p = indptr, x = data, Dim = shape)
     } else {
-        stop("Only CSC, COO and CSR matrices from SciPy are supported.")
+        stop("Only CSC, COO and CSR matrices from SciPy are supported.", call.=FALSE)
     }
     return(res)
 }
