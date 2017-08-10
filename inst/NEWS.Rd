@@ -3,9 +3,9 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.7.960.0.0 (2017-08-xx)}{
+\section{Changes in RcppArmadillo version 0.7.960.1.0 (2017-08-xx)}{
   \itemize{
-    \item Upgraded to Armadillo release 7.960.0 (Northern Banana Republic Deluxe)
+    \item Upgraded to Armadillo release 7.960.1 (Northern Banana Republic Deluxe)
     \itemize{
       \item faster \code{randn()} when using OpenMP (NB: usually omitted
       when used fromR)
@@ -53,6 +53,10 @@
     \ghpr{154}) 
     \item Correct \code{speye()} for non-symmetric cases (Qiang Kou in
     \ghpr{150} closing \ghit{149}).
+    \item Ensure tests using Scientific Pyton and reticulate are properly
+    conditioned on the packages being present.
+    \item Added \code{.aspell/} directory with small local directory now
+    supported by R-devel.
   }
 }
 

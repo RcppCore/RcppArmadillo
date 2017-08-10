@@ -1,3 +1,17 @@
+2017-08-10  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/armadillo_bits/*: Updated to upstream release 7.960.1
+
+	* .aspell/: Added for new R-devel spell checker interface
+
+	* DESCRIPTION (Version, Date): Rolled to pre-release 0.7.959.0.3
+
+2017-08-09  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/unitTests/runit.scipy2r.R: Condition test on having SciPy
+
+	* DESCRIPTION (Version, Date): Rolled to pre-release 0.7.959.0.2
+
 2017-08-08  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Rolled to pre-release 0.7.959.0.1
