@@ -1,3 +1,9 @@
+2017-08-18  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Roll minor version
+
+	* inst/include/RcppArmadilloAs.h (Rcpp): Improved S4 inheritance check
+
 2017-08-11  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Release 0.7.960.1.0
