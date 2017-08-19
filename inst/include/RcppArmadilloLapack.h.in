@@ -25,4 +25,7 @@
 // value on next line may be changed between #undef and #define by the configure script
 @HAVE_GOOD_LAPACK@ @ARMA_CRIPPLED_LAPACK@
 
+// from configure test for OpenMP
+@HAVE_OPENMP@
+
 #endif

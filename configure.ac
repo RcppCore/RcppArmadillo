@@ -4,7 +4,7 @@
 ##
 ##  'Rcpp' Integration for the 'Armadillo' Templated Linear Algebra Library
 ##
-##  Copyright (C) 2016  Dirk Eddelbuettel 
+##  Copyright (C) 2016 - 2017  Dirk Eddelbuettel 
 ##
 ##  Licensed under GPL-2 or later
 
@@ -34,12 +34,12 @@ if test "${GXX}" = yes; then
     AC_MSG_CHECKING([whether g++ version is sufficient])
     gxx_version=$(${CXX} -v 2>&1 | awk '/^.*g.. version/ {print $3}')
     case ${gxx_version} in
-        1.*|2.*|3.*|4.0.*|4.1.*|4.2.*|4.3.*|4.4.*|4.5.*)
+        1.*|2.*|3.*|4.0.*|4.1.*|4.2.*|4.3.*|4.4.*|4.5.*|4.6.*|4.7.0|4.7.1)
              AC_MSG_RESULT([no])
-             AC_MSG_WARN([Only g++ version 4.6 or greater can be used with RcppArmadillo.])
+             AC_MSG_WARN([Only g++ version 4.7.2 or greater can be used with RcppArmadillo.])
              AC_MSG_ERROR([Please use a different compiler.])   
         ;;
-        4.6.*|4.7.*|4.8.*|4.9.*|5.*|6.*|7.*)
+        4.7.[2-9]|4.8.*|4.9.*|5.*|6.*|7.*|8.*)
              gxx_newer_than_45="-fpermissive"
              AC_MSG_RESULT([(${gxx_version}) yes])
         ;;
@@ -81,8 +81,24 @@ else
     fi
 fi
 
+## Check for OpenMP
+AC_MSG_CHECKING([for OpenMP])
+## if R has -fopenmp we should be good
+allldflags=$(${R_HOME}/bin/R CMD config --ldflags)
+hasOpenMP=$(echo ${allldflags} | grep -- -fopenmp)
+if test x"${hasOpenMP}" == x""; then
+   AC_MSG_RESULT([missing])
+   have_openmp="#define ARMA_DONT_USE_OPENMP 1"
+else   
+   AC_MSG_RESULT([found])
+   have_openmp="#define ARMA_USE_OPENMP 1"
+fi
+
+
+
 ## now use all these
 AC_SUBST([HAVE_GOOD_LAPACK],["${have_good_lapack}"])
 AC_SUBST([ARMA_CRIPPLED_LAPACK], ["${arma_crippled_lapack}"])
+AC_SUBST([HAVE_OPENMP], ["${have_openmp}"])
 AC_CONFIG_FILES([inst/include/RcppArmadilloLapack.h])
 AC_OUTPUT
