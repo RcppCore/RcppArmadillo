@@ -23,7 +23,7 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-List fastLm(const arma::mat& X, const arma::colvec& y) {
+List fastLm_impl(const arma::mat& X, const arma::colvec& y) {
     int n = X.n_rows, k = X.n_cols;
         
     arma::colvec coef = arma::solve(X, y);    // fit model y ~ X

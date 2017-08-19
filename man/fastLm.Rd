@@ -1,5 +1,6 @@
 \name{fastLm}
 \alias{fastLm}
+\alias{fastLm_cpp}
 \alias{fastLmPure}
 \alias{fastLm.default}
 \alias{fastLm.formula}

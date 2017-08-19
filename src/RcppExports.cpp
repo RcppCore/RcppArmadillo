@@ -6,21 +6,21 @@
 
 using namespace Rcpp;
 
-// fastLm
-List fastLm(const arma::mat& X, const arma::colvec& y);
-RcppExport SEXP RcppArmadillo_fastLm(SEXP XSEXP, SEXP ySEXP) {
+// fastLm_impl
+List fastLm_impl(const arma::mat& X, const arma::colvec& y);
+RcppExport SEXP _RcppArmadillo_fastLm_impl(SEXP XSEXP, SEXP ySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
     Rcpp::traits::input_parameter< const arma::colvec& >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(fastLm(X, y));
+    rcpp_result_gen = Rcpp::wrap(fastLm_impl(X, y));
     return rcpp_result_gen;
 END_RCPP
 }
 // armadillo_version
 IntegerVector armadillo_version(bool single);
-RcppExport SEXP RcppArmadillo_armadillo_version(SEXP singleSEXP) {
+RcppExport SEXP _RcppArmadillo_armadillo_version(SEXP singleSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -31,7 +31,7 @@ END_RCPP
 }
 // armadillo_set_seed_random
 void armadillo_set_seed_random();
-RcppExport SEXP RcppArmadillo_armadillo_set_seed_random() {
+RcppExport SEXP _RcppArmadillo_armadillo_set_seed_random() {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     armadillo_set_seed_random();
@@ -40,7 +40,7 @@ END_RCPP
 }
 // armadillo_set_seed
 void armadillo_set_seed(unsigned int val);
-RcppExport SEXP RcppArmadillo_armadillo_set_seed(SEXP valSEXP) {
+RcppExport SEXP _RcppArmadillo_armadillo_set_seed(SEXP valSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< unsigned int >::type val(valSEXP);
@@ -50,10 +50,10 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"RcppArmadillo_fastLm", (DL_FUNC) &RcppArmadillo_fastLm, 2},
-    {"RcppArmadillo_armadillo_version", (DL_FUNC) &RcppArmadillo_armadillo_version, 1},
-    {"RcppArmadillo_armadillo_set_seed_random", (DL_FUNC) &RcppArmadillo_armadillo_set_seed_random, 0},
-    {"RcppArmadillo_armadillo_set_seed", (DL_FUNC) &RcppArmadillo_armadillo_set_seed, 1},
+    {"_RcppArmadillo_fastLm_impl", (DL_FUNC) &_RcppArmadillo_fastLm_impl, 2},
+    {"_RcppArmadillo_armadillo_version", (DL_FUNC) &_RcppArmadillo_armadillo_version, 1},
+    {"_RcppArmadillo_armadillo_set_seed_random", (DL_FUNC) &_RcppArmadillo_armadillo_set_seed_random, 0},
+    {"_RcppArmadillo_armadillo_set_seed", (DL_FUNC) &_RcppArmadillo_armadillo_set_seed, 1},
     {NULL, NULL, 0}
 };
 
