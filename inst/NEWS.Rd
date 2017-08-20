@@ -3,6 +3,17 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.7.960.1.1 (2017-08-20)}{
+  \itemize{
+    \item Added improved check for inherited S4 matrix classes
+    (\ghpr{162} fixing \ghit{161})
+    \item Changed \code{fastLm} C++ function to \code{fastLm_impl} to not
+    clash with R method (\ghpr{164} fixing \ghpr{163})
+    \item Added OpenMP check for \code{configure} (\ghpr{166} fixing
+    \ghit{165})
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.7.960.1.0 (2017-08-11)}{
   \itemize{
     \item Upgraded to Armadillo release 7.960.1 (Northern Banana Republic Deluxe)
@@ -53,7 +64,7 @@
     \ghpr{154}) 
     \item Correct \code{speye()} for non-symmetric cases (Qiang Kou in
     \ghpr{150} closing \ghit{149}).
-    \item Ensure tests using Scientific Pyton and reticulate are properly
+    \item Ensure tests using Scientific Python and reticulate are properly
     conditioned on the packages being present.
     \item Added \code{.aspell/} directory with small local directory now
     supported by R-devel.

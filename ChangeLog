@@ -1,3 +1,27 @@
+2017-08-20  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Release 0.7.960.1.1
+
+	* man/RcppArmadillo-package.Rd: Minor edits
+	* man/fastLm.Rd: Idem
+	* README.md: Idem
+
+	* src/Makevars.win: Small cosmetic edits as in Makevars
+
+2017-08-19  Dirk Eddelbuettel  <edd@debian.org>
+
+	* configure.ac: Added simple OpenMP detection
+	* configure: Idem
+	* inst/include/RcppArmadilloLapack.h.in: Apply variable here
+	* src/Makevars: Small edits
+
+	* src/fastLm.cpp: Renamed fastLm to fastLm_impl to not clash with
+	R method of same name now that .registration is true
+	* inst/unitTests/runit.fastLm.R: Updated test call
+	* src/RcppExports.cpp: Regenerated
+	* R/RcppExports.R: Idem
+	* man/fastLm.Rd: New alias
+
 2017-08-18  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Roll minor version
