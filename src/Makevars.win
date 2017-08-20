@@ -1,28 +1,22 @@
 ## -*- mode: makefile; -*-
 
 PKG_CXXFLAGS = -I../inst/include -I. $(SHLIB_OPENMP_CXXFLAGS) 
-PKG_LIBS = $(SHLIB_OPENMP_CFLAGS) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
+PKG_LIBS = $(SHLIB_OPENMP_CXXFLAGS) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
 
 ## With R 3.1.0 or later, you can uncomment the following line to tell R to 
 ## enable compilation with C++11 (where available)
-# CXX_STD = CXX11
+##
+## Also, OpenMP support in Armadillo prefers C++11 support. However, for wider
+## availability of the package we do not yet enforce this here.  It is however
+## recommended for client packages to set it.
+##
+#CXX_STD = CXX11
 
 ## Armadillo itself use the following define which we also set
 ## automatically if we see USE_CXX1X defined; outside of a package it
-## may be needed explicitly.
+## may be needed explicitly
 ## In general, this can be enabled here via
 ##    PKG_CXXFLAGS = -DARMA_USE_CXX11
 ## or via 
 ##    #define ARMA_USE_CXX11 
-## before RcppArmadillo.h is included
-##
-## Note, however, that R on Windows (currently) uses the g++ 4.6.2
-## compiler via Rtools which does NOT provide all the features used by
-## Armadillo so if a package enables C++11 for its own code, it should
-## also use the following define to turn it off in Armadillo:
-##    #define ARMA_DONT_USE_CXX11
-## This can be enabled via
-##    PKG_CXXFLAGS = -DARMA_DONT_USE_CXX11
-## or via 
-##    #define ARMA_DONT_USE_CXX11 
 ## before RcppArmadillo.h is included

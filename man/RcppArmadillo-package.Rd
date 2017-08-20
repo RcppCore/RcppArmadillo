@@ -68,7 +68,8 @@
 
 
 \author{
-  For RcppArmadillo: Romain Francois, Dirk Eddelbuettel and Doug Bates
+  For RcppArmadillo: Dirk Eddelbuettel, Romain Francois, Doug Bates and
+  Binxiang Ni
 	
   Maintainer: Dirk Eddelbuettel <edd@debian.org>
 

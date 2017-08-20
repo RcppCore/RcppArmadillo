@@ -30,17 +30,20 @@ C++ integration.
 ### Status
 
 The package is under active development with releases to
-[CRAN](https://cran.r-project.org) about once every other month.
+[CRAN](https://cran.r-project.org) about once every other month, and
+widely-used by other CRAN packages as can be seen from the
+[CRAN package page](https://cran.r-project.org/package=RcppArmadillo).
 
 ### Documentation
 
-The package contains a pdf vignette which is a pre-print of the [paper by
-Eddelbuettel and Sanderson](http://dx.doi.org/10.1016/j.csda.2013.02.005) 
-in CSDA (2014).
+The package contains a pdf vignette which is a pre-print of the
+[paper by Eddelbuettel and Sanderson](http://dx.doi.org/10.1016/j.csda.2013.02.005)
+in CSDA (2014), as well as an introductory vignette for the sparse
+matrix conversions.
 
 ### Authors
 
-Romain Francois, Dirk Eddelbuettel and Doug Bates
+Dirk Eddelbuettel, Romain Francois, Doug Bates and Binxiang Ni
 
 ### License
 

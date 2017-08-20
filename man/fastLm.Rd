@@ -1,6 +1,5 @@
 \name{fastLm}
 \alias{fastLm}
-\alias{fastLm_cpp}
 \alias{fastLmPure}
 \alias{fastLm.default}
 \alias{fastLm.formula}
@@ -67,7 +66,7 @@ fastLm(X, \dots)
 \references{Armadillo project: \url{http://arma.sourceforge.net/}}
 \author{
   Armadillo is written by Conrad Sanderson. RcppArmadillo is written by
-  Romain Francois, Dirk Eddelbuettel and Douglas Bates.
+  Romain Francois, Dirk Eddelbuettel, Douglas Bates and Binxiang Ni.
 }
 \examples{
   data(trees, package="datasets")
