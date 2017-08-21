@@ -100,5 +100,5 @@ fi
 AC_SUBST([HAVE_GOOD_LAPACK],["${have_good_lapack}"])
 AC_SUBST([ARMA_CRIPPLED_LAPACK], ["${arma_crippled_lapack}"])
 AC_SUBST([HAVE_OPENMP], ["${have_openmp}"])
-AC_CONFIG_FILES([inst/include/RcppArmadilloLapack.h])
+AC_CONFIG_FILES([inst/include/RcppArmadilloConfigGenerated.h])
 AC_OUTPUT

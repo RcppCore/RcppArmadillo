@@ -85,15 +85,20 @@
 #undef NDEBUG
 #endif
 
-// R can be built with its own Rlapack library, or use an external
-// one. Only the latter has zgesdd, a complex-valued SVD using divide-and-conquer 
+// On Windows do not read autoconf-updated header
 #if defined(WIN32) || defined(_WIN32)
+  // R can be built with its own Rlapack library, or use an external
+  // one. Only the latter has zgesdd, a complex-valued SVD using divide-and-conquer 
   // on Windows we do not assume ZGESDD
   #define ARMA_CRIPPLED_LAPACK 1
+  // on Windows we can now assume OpenMP with Rtools / gcc 4.9.3
+  // note that performance is said to still be poor
+  // cf https://cran.r-project.org/doc/manuals/r-devel/R-admin.html#The-MinGW_002dw64-toolchain
+  #define ARMA_USE_OPENMP
 #else
   // on the other OSs we test via LAPACK_LIBS (in configure) which
   // updates this include file
-  #include <RcppArmadilloLapack.h>
+  #include <RcppArmadilloConfigGenerated.h>
 #endif
 
 
