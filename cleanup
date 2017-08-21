@@ -15,7 +15,8 @@ rm -f  config.log config.status confdefs.h \
        vignettes/*.bbl \
        vignettes/*~ \
        */*~ *~ \
-       inst/include/RcppArmadilloLapack.h
+       inst/include/RcppArmadilloLapack.h \
+       inst/include/RcppArmadilloConfigGenerated.h
 
 rm -rf autom4te.cache/ \
        vignettes/auto/

@@ -1,3 +1,14 @@
+2017-08-21  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Roll minor version
+
+	* inst/include/RcppArmadilloConfigGenerated.h.in: Renamed from
+	inst/include/RcppArmadilloLapack.h.in to reflect use beyond LAPACK
+	* inst/include/RcppArmadilloConfig.h: Updated
+	* configure.ac: Idem
+	* configure: Idem
+	* cleanup.sh: Idem
+
 2017-08-20  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Release 0.7.960.1.1
