@@ -19,11 +19,11 @@ inlineCxxPlugin <- function(...) {
     plugin <-
         Rcpp::Rcpp.plugin.maker(
                    include.before = "#include <RcppArmadillo.h>",
-                   libs           = "$(SHLIB_OPENMP_CFLAGS) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)",
+                   libs           = "@HAVE_OPENMP_R_CFLAG@ $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)",
                    package        = "RcppArmadillo"
                )
     settings <- plugin()
-    settings$env$PKG_CPPFLAGS <- "-I../inst/include $(SHLIB_OPENMP_CXXFLAGS)"
+    settings$env$PKG_CPPFLAGS <- "-I../inst/include @HAVE_OPENMP_R_CXXFLAG@"
     settings
 }
 

@@ -28,4 +28,7 @@
 // from configure test for OpenMP
 @HAVE_OPENMP@
 
+// disables warning if compiler does not support OpenMP
+@HAVE_OPENMP_WARNING@
+
 #endif
