@@ -81,19 +81,28 @@ else
     fi
 fi
 
-## Check for OpenMP
-AC_MSG_CHECKING([for OpenMP])
-## if R has -fopenmp we should be good
-allldflags=$(${R_HOME}/bin/R CMD config --ldflags)
-hasOpenMP=$(echo ${allldflags} | grep -- -fopenmp)
-if test x"${hasOpenMP}" == x""; then
-   AC_MSG_RESULT([missing])
-   have_openmp="#define ARMA_DONT_USE_OPENMP 1"
-else   
+## Check for broken systems produced by a corporation based in Cupertino
+AC_MSG_CHECKING([for macOS])
+RSysinfoName=$("${R_HOME}/bin/Rscript" --vanilla -e 'cat(Sys.info()[["sysname"]])')
+if test x"${RSysinfoName}" == x"Darwin"; then
    AC_MSG_RESULT([found])
-   have_openmp="#define ARMA_USE_OPENMP 1"
+   AC_MSG_WARN([OpenMP unavailable and turned off.])
+   have_openmp="#define ARMA_DONT_USE_OPENMP 1"
+else
+   AC_MSG_RESULT([not found as on ${RSysinfoName}])
+   ## Check for OpenMP
+   AC_MSG_CHECKING([for OpenMP])
+   ## if R has -fopenmp we should be good
+   allldflags=$(${R_HOME}/bin/R CMD config --ldflags)
+   hasOpenMP=$(echo ${allldflags} | grep -- -fopenmp)
+   if test x"${hasOpenMP}" == x""; then
+      AC_MSG_RESULT([missing])
+      have_openmp="#define ARMA_DONT_USE_OPENMP 1"
+   else   
+      AC_MSG_RESULT([found])
+      have_openmp="#define ARMA_USE_OPENMP 1"
+   fi
 fi
-
 
 
 ## now use all these
