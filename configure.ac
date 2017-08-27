@@ -8,7 +8,9 @@
 ##
 ##  Licensed under GPL-2 or later
 
-## require at least autoconf 2.61
+## Run this script using autoconf -i under the RcppArmadillo package directory
+
+## Require at least autoconf 2.61
 AC_PREREQ(2.61)
 
 ## Process this file with autoconf to produce a configure script.
@@ -19,9 +21,14 @@ AC_INIT(RcppArmadillo, m4_esyscmd_s([awk -e '/^Version:/ {print $2}' DESCRIPTION
 if test -z "${R_HOME}"; then
     AC_MSG_ERROR([Could not determine R_HOME.])   
 fi
-## Use R to set CXX and CXXFLAGS
+
+## Use R to set CC, CXX, CFLAGS, and CXXFLAGS
+RBIN="${R_HOME}/bin/R"
+CC=$(${R_HOME}/bin/R CMD config CC)
+CFLAGS=$(${R_HOME}/bin/R CMD config CFLAGS)
 CXX=$(${R_HOME}/bin/R CMD config CXX)
-CXXFLAGS=$("${R_HOME}/bin/R" CMD config CXXFLAGS)
+CXXFLAGS=$(${R_HOME}/bin/R CMD config CXXFLAGS)
+LIBS="${PKG_LIBS}"
 
 ## We are using C++
 AC_LANG(C++)
@@ -29,6 +36,7 @@ AC_REQUIRE_CPP
 
 ## Check the C++ compiler using the CXX value set
 AC_PROG_CXX
+
 ## If it is g++, we have GXX set so let's examine it
 if test "${GXX}" = yes; then
     AC_MSG_CHECKING([whether g++ version is sufficient])
@@ -51,13 +59,13 @@ fi
 ## Check for suitable LAPACK_LIBS
 AC_MSG_CHECKING([LAPACK_LIBS])
 
-## external LAPACK has the required function
+## External LAPACK has the required function
 lapack=$(${R_HOME}/bin/R CMD config LAPACK_LIBS)
 hasRlapack=$(echo ${lapack} | grep lRlapack)
 ## internal Rlapack now the required functions if "new enough": R 3.3.0 or later
 newR=$("${R_HOME}/bin/Rscript" --vanilla -e 'if (getRversion() >= "3.3.0") cat("yes") else cat("no")')
 
-## in what follows below we substitute both side of the define/undef
+## In what follows below we substitute both side of the define/undef
 ## while this may seem a little unusual we do it to fully reproduce the
 ## previous bash-based implementation
 
@@ -81,24 +89,73 @@ else
     fi
 fi
 
-## Check for OpenMP
-AC_MSG_CHECKING([for OpenMP])
-## if R has -fopenmp we should be good
-allldflags=$(${R_HOME}/bin/R CMD config --ldflags)
-hasOpenMP=$(echo ${allldflags} | grep -- -fopenmp)
-if test x"${hasOpenMP}" == x""; then
-   AC_MSG_RESULT([missing])
-   have_openmp="#define ARMA_DONT_USE_OPENMP 1"
-else   
-   AC_MSG_RESULT([found])
-   have_openmp="#define ARMA_USE_OPENMP 1"
+
+## Store whether openmp should be checked
+supported_openmp_os=yes
+
+## Simplify life to avoid AC_CANONICAL_HOST headaches
+OSNAME=`uname -s 2>/dev/null`
+
+if test "x$OSNAME" = xDarwin; then
+    supported_openmp_os=no
 fi
 
+## The next part has been modified slightly from simon's OpenMP check script
+## https://stat.ethz.ch/pipermail/r-devel/2010-September/058488.html
 
+## Account for systems with broken OMP libraries...
+ac_pkg_openmp=no
 
-## now use all these
+## Checks for programs
+AC_PROG_CC
+  
+## Only run checks if openmp is supported on the os
+if test "${supported_openmp_os}" = "yes"; then
+  
+  ## Checks for OpenMP
+  AC_OPENMP
+  
+  if test -n "${OPENMP_CFLAGS}"; then
+    AC_MSG_CHECKING([whether OpenMP will work in a package])
+    AC_LANG_CONFTEST(
+    [AC_LANG_PROGRAM([[#include <omp.h>]], [[ return omp_get_num_threads (); ]])])
+    PKG_CFLAGS="${OPENMP_CFLAGS}" PKG_LIBS="${OPENMP_CFLAGS}" "${R_HOME}/bin/R" CMD SHLIB conftest.c 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD && "${R_HOME}/bin/R" --vanilla -q -e "dyn.load(paste('conftest',.Platform\$dynlib.ext,sep=''))" 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD && ac_pkg_openmp=yes
+    AC_MSG_RESULT([${ac_pkg_openmp}])
+  fi
+fi 
+
+if test "${ac_pkg_openmp}" = "yes"; then
+   AC_MSG_RESULT([found])
+   have_openmp="#define ARMA_USE_OPENMP 1"
+   have_openmp_warning=""
+   have_openmp_r_cflag='$(SHLIB_OPENMP_CFLAGS)'
+   have_openmp_r_cxxflag='$(SHLIB_OPENMP_CXXFLAGS)'
+fi
+
+if test "${ac_pkg_openmp}" = "no"; then
+   
+   if test "${supported_openmp_os}" = "no"; then
+      AC_MSG_WARN([OpenMP support on macOS has been temporarily disabled due to detection issues with the binary.])
+   else
+      AC_MSG_WARN([No OpenMP support. If using GCC, upgrade to >= 4.2. If using clang, upgrade to >= 3.8.0])   
+   fi
+
+   have_openmp="#define ARMA_DONT_USE_OPENMP 1"
+   have_openmp_warning="#define ARMA_DONT_PRINT_OPENMP_WARNING 1"
+   have_openmp_r_cflag=""
+   have_openmp_r_cxxflag=""
+fi
+
+## Now use all these
 AC_SUBST([HAVE_GOOD_LAPACK],["${have_good_lapack}"])
 AC_SUBST([ARMA_CRIPPLED_LAPACK], ["${arma_crippled_lapack}"])
 AC_SUBST([HAVE_OPENMP], ["${have_openmp}"])
+AC_SUBST([HAVE_OPENMP_WARNING], ["${have_openmp_warning}"])
+AC_SUBST([HAVE_OPENMP_R_CFLAG], ["${have_openmp_r_cflag}"])
+AC_SUBST([HAVE_OPENMP_R_CXXFLAG], ["${have_openmp_r_cxxflag}"])
 AC_CONFIG_FILES([inst/include/RcppArmadilloConfigGenerated.h])
+# Set flags for inline.R
+AC_CONFIG_FILES([R/inline.R])
+# Also needed in the Makevars
+AC_CONFIG_FILES([src/Makevars])
 AC_OUTPUT

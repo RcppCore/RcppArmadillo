@@ -1,0 +1,9 @@
+RcppArmadillo-*.aux
+RcppArmadillo-*.out
+RcppArmadillo-*.toc
+RcppArmadillo-*.bbl
+RcppArmadillo-*.blg
+RcppArmadillo-*.log
+RcppArmadillo-*.tex
+RcppArmadillo-*.pdf
+unitTests-results/
