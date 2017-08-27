@@ -3,7 +3,7 @@
 %\VignetteIndexEntry{RcppArmadillo-sparseMatrix}
 %\VignetteEngine{highlight::highlight}
 %\VignetteKeywords{R, C++, Armadillo, linear algebra, sparse matrix}
-%\VignettePackage{RcppArmadillo}
+%\VignetteDepends{RcppArmadillo}
 
 \usepackage[USletter]{vmargin}
 \setmargrb{0.75in}{0.75in}{0.75in}{0.75in}
