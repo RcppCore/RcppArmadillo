@@ -10,7 +10,9 @@ PKG_LIBS = $(SHLIB_OPENMP_CXXFLAGS) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
 ## availability of the package we do not yet enforce this here.  It is however
 ## recommended for client packages to set it.
 ##
-#CXX_STD = CXX11
+## And with R 3.4.0, and RcppArmadillo 0.7.960.*, we turn C++11 on as OpenMP
+## support within Armadillo prefers / requires it
+CXX_STD = CXX11
 
 ## Armadillo itself use the following define which we also set
 ## automatically if we see USE_CXX1X defined; outside of a package it
