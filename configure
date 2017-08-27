@@ -583,6 +583,7 @@ PACKAGE_URL=''
 
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
+OPENMP_FLAG
 HAVE_OPENMP
 ARMA_CRIPPLED_LAPACK
 HAVE_GOOD_LAPACK
@@ -2759,6 +2760,10 @@ $as_echo "$as_me: WARNING: Some complex-valued LAPACK functions may not be avail
     fi
 fi
 
+## Default the OpenMP flag to the empty string.
+## If and only if OpenMP is found, expand to $(SHLIB_OPENMP_CXXFLAGS)
+openmp_flag=""
+
 ## Check for broken systems produced by a corporation based in Cupertino
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for macOS" >&5
 $as_echo_n "checking for macOS... " >&6; }
@@ -2770,8 +2775,8 @@ $as_echo "found" >&6; }
 $as_echo "$as_me: WARNING: OpenMP unavailable and turned off." >&2;}
    have_openmp="#define ARMA_DONT_USE_OPENMP 1"
 else
-   { $as_echo "$as_me:${as_lineno-$LINENO}: result: not found: ${RSysinfoName}" >&5
-$as_echo "not found: ${RSysinfoName}" >&6; }
+   { $as_echo "$as_me:${as_lineno-$LINENO}: result: not found as on ${RSysinfoName}" >&5
+$as_echo "not found as on ${RSysinfoName}" >&6; }
    ## Check for OpenMP
    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for OpenMP" >&5
 $as_echo_n "checking for OpenMP... " >&6; }
@@ -2786,6 +2791,9 @@ $as_echo "missing" >&6; }
       { $as_echo "$as_me:${as_lineno-$LINENO}: result: found" >&5
 $as_echo "found" >&6; }
       have_openmp="#define ARMA_USE_OPENMP 1"
+      openmp_flag='$(SHLIB_OPENMP_CXXFLAGS)'
+      { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: \"Setting ${openmp_flag}\"" >&5
+$as_echo "$as_me: WARNING: \"Setting ${openmp_flag}\"" >&2;}
    fi
 fi
 
@@ -2797,7 +2805,9 @@ ARMA_CRIPPLED_LAPACK="${arma_crippled_lapack}"
 
 HAVE_OPENMP="${have_openmp}"
 
-ac_config_files="$ac_config_files inst/include/RcppArmadilloConfigGenerated.h"
+OPENMP_FLAG="${openmp_flag}"
+
+ac_config_files="$ac_config_files inst/include/RcppArmadilloConfigGenerated.h src/Makevars"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -3505,6 +3515,7 @@ for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
     "inst/include/RcppArmadilloConfigGenerated.h") CONFIG_FILES="$CONFIG_FILES inst/include/RcppArmadilloConfigGenerated.h" ;;
+    "src/Makevars") CONFIG_FILES="$CONFIG_FILES src/Makevars" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

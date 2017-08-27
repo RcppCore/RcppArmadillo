@@ -81,6 +81,10 @@ else
     fi
 fi
 
+## Default the OpenMP flag to the empty string.
+## If and only if OpenMP is found, expand to $(SHLIB_OPENMP_CXXFLAGS)
+openmp_flag=""
+
 ## Check for broken systems produced by a corporation based in Cupertino
 AC_MSG_CHECKING([for macOS])
 RSysinfoName=$("${R_HOME}/bin/Rscript" --vanilla -e 'cat(Sys.info()[["sysname"]])')
@@ -101,6 +105,7 @@ else
    else   
       AC_MSG_RESULT([found])
       have_openmp="#define ARMA_USE_OPENMP 1"
+      openmp_flag='$(SHLIB_OPENMP_CXXFLAGS)'
    fi
 fi
 
@@ -109,5 +114,6 @@ fi
 AC_SUBST([HAVE_GOOD_LAPACK],["${have_good_lapack}"])
 AC_SUBST([ARMA_CRIPPLED_LAPACK], ["${arma_crippled_lapack}"])
 AC_SUBST([HAVE_OPENMP], ["${have_openmp}"])
-AC_CONFIG_FILES([inst/include/RcppArmadilloConfigGenerated.h])
+AC_SUBST([OPENMP_FLAG], ["${openmp_flag}"])
+AC_CONFIG_FILES([inst/include/RcppArmadilloConfigGenerated.h src/Makevars])
 AC_OUTPUT
