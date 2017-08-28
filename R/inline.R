@@ -16,14 +16,17 @@
 ## along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
 inlineCxxPlugin <- function(...) {
+    ismacos <- Sys.info()[["sysname"]] == "Darwin"
+    openmpflag <- if (ismacos) "" else "$(SHLIB_OPENMP_CFLAGS)"
     plugin <-
         Rcpp::Rcpp.plugin.maker(
-                   include.before = "#include <RcppArmadillo.h>",
-                   libs           = "$(SHLIB_OPENMP_CFLAGS) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)",
-                   package        = "RcppArmadillo"
-               )
+                  include.before = "#include <RcppArmadillo.h>",
+                  libs           = paste(openmpflag, "$(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)"),
+                  package        = "RcppArmadillo"
+              )
     settings <- plugin()
-    settings$env$PKG_CPPFLAGS <- "-I../inst/include $(SHLIB_OPENMP_CXXFLAGS)"
+    settings$env$PKG_CPPFLAGS <- paste("-I../inst/include", openmpflag)
+    if (!ismacos) settings$env$USE_CXX11 <- "yes"
     settings
 }
 
