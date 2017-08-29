@@ -1,3 +1,22 @@
+2017-08-29  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Release 0.7.960.1.2
+
+2017-08-27  Dirk Eddelbuettel  <edd@debian.org>
+
+	* configure.ac: Detect macOS to turn off OpenMP in src/Makevars
+	* configure: Idem
+	* src/Makevars: New configure var for OpenMP linker/compiler flags
+	* inline.R: Similarly turn OpenMP off on macOS
+
+	* src/Makevars: Compile under C++11
+	* src/Makevars.win: Idem
+
+2017-08-26  James Joseph Balamuta  <balamut2@illinois.edu>
+
+	* DESCRIPTION: Also Suggests: highlight
+	* vignettes/RcppArmadillo-sparseMatrix.Rnw: Set VignetteDepends
+
 2017-08-21  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Roll minor version

@@ -3,6 +3,15 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.7.960.1.2 (2017-08-29)}{
+  \itemize{
+    \item On macOS, OpenMP support is now turned off (\ghpr{170}).
+    \item The package is now compiling under the C++11 standard (\ghpr{170}).
+    \item The vignette dependency are correctly set (James and Dirk in
+    \ghpr{168} and \ghpr{169})
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.7.960.1.1 (2017-08-20)}{
   \itemize{
     \item Added improved check for inherited S4 matrix classes
