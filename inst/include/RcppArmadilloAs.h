@@ -105,6 +105,9 @@ namespace traits {
                 // Making space for the elements
                 res.mem_resize(static_cast<unsigned>(x.size()));
                 
+                // In order to access the internal arrays of the SpMat class
+                res.sync();
+                
                 // Copying elements
                 std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
                 std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
@@ -118,6 +121,9 @@ namespace traits {
                 
                 // Making space for the elements
                 res.mem_resize(static_cast<unsigned>(x.size()));
+                
+                // In order to access the internal arrays of the SpMat class
+                res.sync();
                 
                 // Copying elements
                 std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
@@ -136,6 +142,9 @@ namespace traits {
                 
                 // Making space for the elements
                 res.mem_resize(static_cast<unsigned>(x.size()));
+                
+                // In order to access the internal arrays of the SpMat class
+                res.sync();
                 
                 // Copying elements
                 std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
@@ -195,6 +204,9 @@ namespace traits {
                 // Making space for the elements
                 res.mem_resize(static_cast<unsigned>(x.size()));
                 
+                // In order to access the internal arrays of the SpMat class
+                res.sync();
+                
                 // Copying elements
                 std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
                 std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
@@ -247,6 +259,9 @@ namespace traits {
                 
                 // Making space for the elements
                 res.mem_resize(static_cast<unsigned>(x.size()));
+                
+                // In order to access the internal arrays of the SpMat class
+                res.sync();
                 
                 // Copying elements
                 std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
@@ -305,6 +320,9 @@ namespace traits {
                 // Making space for the elements
                 res.mem_resize(static_cast<unsigned>(x.size()));
                 
+                // In order to access the internal arrays of the SpMat class
+                res.sync();
+                
                 // Copying elements
                 std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
                 std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
@@ -361,6 +379,9 @@ namespace traits {
                 // Making space for the elements
                 res.mem_resize(static_cast<unsigned>(x.size()));
                 
+                // In order to access the internal arrays of the SpMat class
+                res.sync();
+                
                 // Copying elements
                 std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
                 std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
@@ -411,6 +432,9 @@ namespace traits {
                 
                 // Making space for the elements
                 res.mem_resize(static_cast<unsigned>(x.size()));
+                
+                // In order to access the internal arrays of the SpMat class
+                res.sync();
                 
                 // Copying elements
                 std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
@@ -467,6 +491,9 @@ namespace traits {
                 // Making space for the elements
                 res.mem_resize(static_cast<unsigned>(x.size()));
                 
+                // In order to access the internal arrays of the SpMat class
+                res.sync();
+                
                 // Copying elements
                 std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
                 std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
@@ -514,6 +541,9 @@ namespace traits {
                 // Making space for the elements
                 res.mem_resize(static_cast<unsigned>(x.size()));
                 
+                // In order to access the internal arrays of the SpMat class
+                res.sync();
+                
                 // Copying elements
                 std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
                 std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
@@ -544,6 +574,9 @@ namespace traits {
               
                 // Making space for the elements
                 res.mem_resize(static_cast<unsigned>(x.size()));
+                
+                // In order to access the internal arrays of the SpMat class
+                res.sync();
               
                 // Copying elements
                 std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
@@ -579,6 +612,9 @@ namespace traits {
 
                 // Making space for the elements
                 res.mem_resize(static_cast<unsigned>(x.size()));
+                
+                // In order to access the internal arrays of the SpMat class
+                res.sync();
 
                 // Copying elements
                 std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
@@ -588,6 +624,9 @@ namespace traits {
             else {
                 Rcpp::stop(type + " is not supported.");
             }
+            
+            // In order to access the internal arrays of the SpMat class
+            res.sync();
             
             // Setting the sentinel
             arma::access::rw(res.col_ptrs[static_cast<unsigned>(ncol + 1)]) =

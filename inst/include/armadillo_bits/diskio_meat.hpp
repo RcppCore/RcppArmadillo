@@ -799,6 +799,7 @@ diskio::save_raw_ascii(const Mat<eT>& x, std::ostream& f)
   
   if(is_real<eT>::value)
     {
+    f.unsetf(ios::fixed);
     f.setf(ios::scientific);
     f.precision(14);
     cell_width = 22;
@@ -806,6 +807,7 @@ diskio::save_raw_ascii(const Mat<eT>& x, std::ostream& f)
   
   if(is_cx<eT>::value)
     {
+    f.unsetf(ios::fixed);
     f.setf(ios::scientific);
     f.precision(14);
     }
@@ -929,6 +931,7 @@ diskio::save_arma_ascii(const Mat<eT>& x, std::ostream& f)
   
   if(is_real<eT>::value)
     {
+    f.unsetf(ios::fixed);
     f.setf(ios::scientific);
     f.precision(14);
     cell_width = 22;
@@ -936,6 +939,7 @@ diskio::save_arma_ascii(const Mat<eT>& x, std::ostream& f)
   
   if(is_cx<eT>::value)
     {
+    f.unsetf(ios::fixed);
     f.setf(ios::scientific);
     f.precision(14);
     }
@@ -1010,6 +1014,7 @@ diskio::save_csv_ascii(const Mat<eT>& x, std::ostream& f)
   
   if( (is_float<eT>::value) || (is_double<eT>::value) )
     {
+    f.unsetf(ios::fixed);
     f.setf(ios::scientific);
     f.precision(14);
     }
@@ -1052,6 +1057,7 @@ diskio::save_csv_ascii(const Mat< std::complex<T> >& x, std::ostream& f)
   
   if( (is_float<T>::value) || (is_double<T>::value) )
     {
+    f.unsetf(ios::fixed);
     f.setf(ios::scientific);
     f.precision(14);
     }
@@ -1246,7 +1252,7 @@ diskio::save_pgm_binary(const Mat< std::complex<T> >& x, std::ostream& f)
 template<typename eT>
 inline 
 bool 
-diskio::save_hdf5_binary(const Mat<eT>& x, const std::string& final_name)
+diskio::save_hdf5_binary(const Mat<eT>& x, const hdf5_name& spec)
   {
   arma_extra_debug_sigprint();
   
@@ -1261,9 +1267,9 @@ diskio::save_hdf5_binary(const Mat<eT>& x, const std::string& final_name)
     
     bool save_okay = false;
     
-    const std::string tmp_name = diskio::gen_tmp_name(final_name);
+    const std::string tmp_name = diskio::gen_tmp_name(spec.filename);
     
-    // Set up the file according to HDF5's preferences  
+    // Set up the file according to HDF5's preferences
     hid_t file = arma_H5Fcreate(tmp_name.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
     
     // We need to create a dataset, datatype, and dataspace
@@ -1277,10 +1283,28 @@ diskio::save_hdf5_binary(const Mat<eT>& x, const std::string& final_name)
     // If this returned something invalid, well, it's time to crash.
     arma_check(datatype == -1, "Mat::save(): unknown datatype for HDF5");
     
-    // MATLAB forces the users to specify a name at save time for HDF5; Octave
-    // will use the default of 'dataset' unless otherwise specified, so we will
-    // use that.
-    hid_t dataset = arma_H5Dcreate(file, "dataset", datatype, dataspace, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+    // MATLAB forces the users to specify a name at save time for HDF5;
+    // Octave will use the default of 'dataset' unless otherwise specified.
+    // If the user hasn't specified a dataset name, we will use 'dataset'
+    // We may have to split out the group name from the dataset name.
+    std::vector<hid_t> groups;
+    std::string full_name = spec.dsname;
+    size_t loc;
+    while ((loc = full_name.find("/")) != std::string::npos)
+      {
+      // Create another group...
+      if (loc != 0) // Ignore the first /, if there is a leading /.
+        {
+        hid_t gid = arma_H5Gcreate((groups.size() == 0) ? file : groups[groups.size() - 1], full_name.substr(0, loc).c_str(), H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+        groups.push_back(gid);
+        }
+
+      full_name = full_name.substr(loc + 1);
+      }
+    
+    const std::string dataset_name = (full_name.empty() == false) ? full_name : std::string("dataset");
+
+    hid_t dataset = arma_H5Dcreate(groups.size() == 0 ? file : groups[groups.size() - 1], dataset_name.c_str(), datatype, dataspace, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
     
     // H5Dwrite does not make a distinction between row-major and column-major;
     // it just writes the memory.  MATLAB and Octave store HDF5 matrices as
@@ -1292,16 +1316,17 @@ diskio::save_hdf5_binary(const Mat<eT>& x, const std::string& final_name)
     arma_H5Dclose(dataset);
     arma_H5Tclose(datatype);
     arma_H5Sclose(dataspace);
+    for (size_t i = 0; i < groups.size(); ++i)  { arma_H5Gclose(groups[i]); }
     arma_H5Fclose(file);
     
-    if(save_okay == true) { save_okay = diskio::safe_rename(tmp_name, final_name); }
+    if(save_okay == true) { save_okay = diskio::safe_rename(tmp_name, spec.filename); }
     
     return save_okay;
     }
   #else
     {
     arma_ignore(x);
-    arma_ignore(final_name);
+    arma_ignore(spec);
     
     arma_stop_logic_error("Mat::save(): use of HDF5 needs to be enabled");
     
@@ -2284,13 +2309,12 @@ diskio::load_pgm_binary(Mat< std::complex<T> >& x, std::istream& is, std::string
 template<typename eT>
 inline
 bool
-diskio::load_hdf5_binary(Mat<eT>& x, const std::string& name, std::string& err_msg)
+diskio::load_hdf5_binary(Mat<eT>& x, const hdf5_name& spec, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_HDF5)
     {
-
     // These may be necessary to store the error handler (if we need to).
     herr_t (*old_func)(hid_t, void*);
     void *old_client_data;
@@ -2307,19 +2331,31 @@ diskio::load_hdf5_binary(Mat<eT>& x, const std::string& name, std::string& err_m
 
     bool load_okay = false;
     
-    hid_t fid = arma_H5Fopen(name.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
+    hid_t fid = arma_H5Fopen(spec.filename.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
     
     if(fid >= 0)
       {
       // MATLAB HDF5 dataset names are user-specified;
       // Octave tends to store the datasets in a group, with the actual dataset being referred to as "value".
-      // So we will search for "dataset" and "value", and if those are not found we will take the first dataset we do find.
-      std::vector<std::string> searchNames;
-      searchNames.push_back("dataset");
-      searchNames.push_back("value");
+      // If the user hasn't specified a dataset, we will search for "dataset" and "value",
+      // and if those are not found we will take the first dataset we do find.
       
-      hid_t dataset = hdf5_misc::search_hdf5_file(searchNames, fid, 2, false);
-
+      std::vector<std::string> searchNames;
+      
+      const bool exact = (spec.dsname.empty() == false);
+      
+      if(exact)
+        {
+        searchNames.push_back(spec.dsname);
+        }
+      else
+        {
+        searchNames.push_back("dataset");
+        searchNames.push_back("value"  );
+        }
+      
+      hid_t dataset = hdf5_misc::search_hdf5_file(searchNames, fid, 2, exact);
+      
       if(dataset >= 0)
         {
         hid_t filespace = arma_H5Dget_space(dataset);
@@ -2405,7 +2441,7 @@ diskio::load_hdf5_binary(Mat<eT>& x, const std::string& name, std::string& err_m
   #else
     {
     arma_ignore(x);
-    arma_ignore(name);
+    arma_ignore(spec);
     arma_ignore(err_msg);
 
     arma_stop_logic_error("Mat::load(): use of HDF5 needs to be enabled");
@@ -2561,22 +2597,19 @@ diskio::save_coord_ascii(const SpMat<eT>& x, std::ostream& f)
   
   const ios::fmtflags orig_flags = f.flags();
   
+  if( (is_float<eT>::value) || (is_double<eT>::value) )
+    {
+    f.unsetf(ios::fixed);
+    f.setf(ios::scientific);
+    f.precision(14);
+    }
+    
   typename SpMat<eT>::const_iterator iter     = x.begin();
   typename SpMat<eT>::const_iterator iter_end = x.end();
   
   for(; iter != iter_end; ++iter)
     {
-    f.setf(ios::fixed);
-    
-    f << iter.row() << ' ' << iter.col() << ' ';
-    
-    if( (is_float<eT>::value) || (is_double<eT>::value) )
-      {
-      f.setf(ios::scientific);
-      f.precision(14);
-      }
-    
-    f << (*iter) << '\n';
+    f << iter.row() << ' ' << iter.col() << ' ' << (*iter) << '\n';
     }
   
   
@@ -2588,8 +2621,6 @@ diskio::save_coord_ascii(const SpMat<eT>& x, std::ostream& f)
     
     if( x.at(max_row, max_col) == eT(0) )
       {
-      f.setf(ios::fixed);
-      
       f << max_row << ' ' << max_col << " 0\n";
       }
     }
@@ -2611,28 +2642,25 @@ diskio::save_coord_ascii(const SpMat< std::complex<T> >& x, std::ostream& f)
   {
   arma_extra_debug_sigprint();
   
+  typedef typename std::complex<T> eT;
+  
   const ios::fmtflags orig_flags = f.flags();
   
-  typedef typename std::complex<T> eT;
+  if( (is_float<T>::value) || (is_double<T>::value) )
+    {
+    f.unsetf(ios::fixed);
+    f.setf(ios::scientific);
+    f.precision(14);
+    }
   
   typename SpMat<eT>::const_iterator iter     = x.begin();
   typename SpMat<eT>::const_iterator iter_end = x.end();
   
   for(; iter != iter_end; ++iter)
     {
-    f.setf(ios::fixed);
-    
-    f << iter.row() << ' ' << iter.col() << ' ';
-    
-    if( (is_float<T>::value) || (is_double<T>::value) )
-      {
-      f.setf(ios::scientific);
-      f.precision(14);
-      }
-    
     const eT val = (*iter);
     
-    f << val.real() << ' ' << val.imag() << '\n';
+    f << iter.row() << ' ' << iter.col() << ' ' << val.real() << ' ' << val.imag() << '\n';
     }
   
   // make sure it's possible to figure out the matrix size later
@@ -2643,8 +2671,6 @@ diskio::save_coord_ascii(const SpMat< std::complex<T> >& x, std::ostream& f)
     
     if( x.at(max_row, max_col) == eT(0) )
       {
-      f.setf(ios::fixed);
-      
       f << max_row << ' ' << max_col << " 0 0\n";
       }
     }
@@ -2743,19 +2769,15 @@ diskio::load_coord_ascii(SpMat<eT>& x, std::istream& f, std::string& err_msg)
   arma_extra_debug_sigprint();
   arma_ignore(err_msg);
   
-  // TODO: replace with more efficient implementation
-  
   bool load_okay = f.good();
   
   f.clear();
   const std::fstream::pos_type pos1 = f.tellg();
   
-  //
   // work out the size
   
   uword f_n_rows = 0;
   uword f_n_cols = 0;
-  uword f_n_nz   = 0;
   
   bool size_found = false;
   
@@ -2765,21 +2787,11 @@ diskio::load_coord_ascii(SpMat<eT>& x, std::istream& f, std::string& err_msg)
   std::stringstream line_stream;
   std::stringstream ss;
   
-  uword last_line_row = 0;
-  uword last_line_col = 0;
-  
-  bool first_line   = true;
-  bool weird_format = false;
-  
-  
   while( (f.good() == true) && (load_okay == true) )
     {
     std::getline(f, line_string);
     
-    if(line_string.size() == 0)
-      {
-      break;
-      }
+    if(line_string.size() == 0)  { break; }
     
     line_stream.clear();
     line_stream.str(line_string);
@@ -2791,105 +2803,33 @@ diskio::load_coord_ascii(SpMat<eT>& x, std::istream& f, std::string& err_msg)
     
     line_stream >> line_row;
     
-    if(line_stream.good() == false)
-      {
-      load_okay = false;
-      break;
-      }
+    if(line_stream.good() == false)  { load_okay = false; break; }
     
     line_stream >> line_col;
     
     size_found = true;
     
-    if(f_n_rows < line_row)  f_n_rows = line_row;
-    if(f_n_cols < line_col)  f_n_cols = line_col;
-    
-    if(first_line == true)
-      {
-      first_line = false;
-      }
-    else
-      {
-      if( (line_col < last_line_col) || ((line_row <= last_line_row) && (line_col <= last_line_col)) )
-        {
-        weird_format = true;
-        }
-      }
-    
-    last_line_row = line_row;
-    last_line_col = line_col;
-    
-    
-    if(line_stream.good() == true)
-      {
-      eT final_val = eT(0);
-      
-      line_stream >> token;
-      
-      if(line_stream.fail() == false)
-        {
-        eT val = eT(0);
-        
-        ss.clear();
-        ss.str(token);
-        
-        ss >> val;
-        
-        if(ss.fail() == false)
-          {
-          final_val = val;
-          }
-        else
-          {
-          val = eT(0);
-          
-          const bool success = diskio::convert_naninf( val, token );
-          
-          if(success == true)
-            {
-            final_val = val;
-            }
-          }
-        }
-      
-      if(final_val != eT(0))
-        {
-        ++f_n_nz;
-        }
-      }
+    if(f_n_rows < line_row)  { f_n_rows = line_row; }
+    if(f_n_cols < line_col)  { f_n_cols = line_col; }
     }
   
   
-  if(size_found == true)
-    {
-    // take into account that indices start at 0
-    f_n_rows++;
-    f_n_cols++;
-    }
+  // take into account that indices start at 0
+  if(size_found)  { ++f_n_rows;  ++f_n_cols; }
   
   
-  if(load_okay == true)
+  if(load_okay)
     {
     f.clear();
     f.seekg(pos1);
     
-    x.set_size(f_n_rows, f_n_cols);
+    MapMat<eT> tmp(f_n_rows, f_n_cols);
     
-    if(weird_format == false)
-      {
-      x.mem_resize(f_n_nz);
-      }
-    
-    uword pos = 0;
-    
-    while(f.good() == true)
+    while(f.good())
       {
       std::getline(f, line_string);
       
-      if(line_string.size() == 0)
-        {
-        break;
-        }
+      if(line_string.size() == 0)  { break; }
       
       line_stream.clear();
       line_stream.str(line_string);
@@ -2923,38 +2863,14 @@ diskio::load_coord_ascii(SpMat<eT>& x, std::istream& f, std::string& err_msg)
           
           const bool success = diskio::convert_naninf( val, token );
           
-          if(success == true)
-            {
-            final_val = val;
-            }
+          if(success)  { final_val = val; }
           }
         }
       
-      
-      if(final_val != eT(0))
-        {
-        if(weird_format == false)
-          {
-          access::rw(x.row_indices[pos]) = line_row;
-          access::rw(x.values[pos])      = final_val;
-          ++access::rw(x.col_ptrs[line_col + 1]);
-          
-          ++pos;
-          }
-        else
-          {
-          x.at(line_row,line_col) = final_val;
-          }
-        }
+      if(final_val != eT(0))  { tmp(line_row,line_col) = final_val; }
       }
     
-    if(weird_format == false)
-      {
-      for(uword c = 1; c <= f_n_cols; ++c)
-        {
-        access::rw(x.col_ptrs[c]) += x.col_ptrs[c - 1];
-        }
-      }
+    x = tmp;
     }
   
   return load_okay;
@@ -2970,19 +2886,15 @@ diskio::load_coord_ascii(SpMat< std::complex<T> >& x, std::istream& f, std::stri
   arma_extra_debug_sigprint();
   arma_ignore(err_msg);
   
-  // TODO: replace with more efficient implementation
-  
   bool load_okay = f.good();
   
   f.clear();
   const std::fstream::pos_type pos1 = f.tellg();
   
-  //
   // work out the size
   
   uword f_n_rows = 0;
   uword f_n_cols = 0;
-  uword f_n_nz   = 0;
   
   bool size_found = false;
   
@@ -2993,20 +2905,11 @@ diskio::load_coord_ascii(SpMat< std::complex<T> >& x, std::istream& f, std::stri
   std::stringstream line_stream;
   std::stringstream ss;
   
-  uword last_line_row = 0;
-  uword last_line_col = 0;
-  
-  bool first_line   = true;
-  bool weird_format = false;
-  
   while( (f.good() == true) && (load_okay == true) )
     {
     std::getline(f, line_string);
     
-    if(line_string.size() == 0)
-      {
-      break;
-      }
+    if(line_string.size() == 0)  { break; }
     
     line_stream.clear();
     line_stream.str(line_string);
@@ -3018,11 +2921,7 @@ diskio::load_coord_ascii(SpMat< std::complex<T> >& x, std::istream& f, std::stri
     
     line_stream >> line_row;
     
-    if(line_stream.good() == false)
-      {
-      load_okay = false;
-      break;
-      }
+    if(line_stream.good() == false)  { load_okay = false; break; }
     
     line_stream >> line_col;
     
@@ -3030,119 +2929,21 @@ diskio::load_coord_ascii(SpMat< std::complex<T> >& x, std::istream& f, std::stri
     
     if(f_n_rows < line_row)  f_n_rows = line_row;
     if(f_n_cols < line_col)  f_n_cols = line_col;
-    
-    
-    if(first_line == true)
-      {
-      first_line = false;
-      }
-    else
-      {
-      if( (line_col < last_line_col) || ((line_row <= last_line_row) && (line_col <= last_line_col)) )
-        {
-        weird_format = true;
-        }
-      }
-    
-    last_line_row = line_row;
-    last_line_col = line_col;
-    
-    
-    if(line_stream.good() == true)
-      {
-      T final_val_real = T(0);
-      T final_val_imag = T(0);
-      
-      
-      line_stream >> token_real;
-      
-      if(line_stream.fail() == false)
-        {
-        T val_real = T(0);
-        
-        ss.clear();
-        ss.str(token_real);
-        
-        ss >> val_real;
-        
-        if(ss.fail() == false)
-          {
-          final_val_real = val_real;
-          }
-        else
-          {
-          val_real = T(0);
-          
-          const bool success = diskio::convert_naninf( val_real, token_real );
-          
-          if(success == true)
-            {
-            final_val_real = val_real;
-            }
-          }
-        }
-      
-      
-      line_stream >> token_imag;
-      
-      if(line_stream.fail() == false)
-        {
-        T val_imag = T(0);
-        
-        ss.clear();
-        ss.str(token_imag);
-        
-        ss >> val_imag;
-        
-        if(ss.fail() == false)
-          {
-          final_val_imag = val_imag;
-          }
-        else
-          {
-          val_imag = T(0);
-          
-          const bool success = diskio::convert_naninf( val_imag, token_imag );
-          
-          if(success == true)
-            {
-            final_val_imag = val_imag;
-            }
-          }
-        }
-      
-      
-      if( (final_val_real != T(0)) || (final_val_imag != T(0)) )
-        {
-        ++f_n_nz;
-        }
-      }
     }
   
   
-  if(size_found == true)
-    {
-    // take into account that indices start at 0
-    f_n_rows++;
-    f_n_cols++;
-    }
+  // take into account that indices start at 0
+  if(size_found)  { ++f_n_rows;  ++f_n_cols; }
   
   
-  if(load_okay == true)
+  if(load_okay)
     {
     f.clear();
     f.seekg(pos1);
     
-    x.set_size(f_n_rows, f_n_cols);
+    MapMat< std::complex<T> > tmp(f_n_rows, f_n_cols);
     
-    if(weird_format == false)
-      {
-      x.mem_resize(f_n_nz);
-      }
-    
-    uword pos = 0;
-    
-    while(f.good() == true)
+    while(f.good())
       {
       std::getline(f, line_string);
       
@@ -3222,31 +3023,12 @@ diskio::load_coord_ascii(SpMat< std::complex<T> >& x, std::istream& f, std::stri
         }
       
       
-      if( (final_val_real != T(0)) || (final_val_imag != T(0)) )
-        {
-        if(weird_format == false)
-          {
-          access::rw(x.row_indices[pos]) = line_row;
-          access::rw(x.values[pos])      = std::complex<T>(final_val_real, final_val_imag);
-          ++access::rw(x.col_ptrs[line_col + 1]);
-          
-          ++pos;
-          }
-        else
-          {
-          x.at(line_row,line_col) = std::complex<T>(final_val_real, final_val_imag);
-          }
-        }
+      const std::complex<T> final_val = std::complex<T>(final_val_real, final_val_imag);
+      
+      if(final_val != std::complex<T>(0))  { tmp(line_row,line_col) = final_val; }
       }
     
-    
-    if(weird_format == false)
-      {
-      for(uword c = 1; c <= f_n_cols; ++c)
-        {
-        access::rw(x.col_ptrs[c]) += x.col_ptrs[c - 1];
-        }
-      }
+    x = tmp;
     }
   
   return load_okay;
@@ -3426,6 +3208,7 @@ diskio::save_raw_ascii(const Cube<eT>& x, std::ostream& f)
   
   if(is_real<eT>::value)
     {
+    f.unsetf(ios::fixed);
     f.setf(ios::scientific);
     f.precision(14);
     cell_width = 22;
@@ -3433,6 +3216,7 @@ diskio::save_raw_ascii(const Cube<eT>& x, std::ostream& f)
   
   if(is_cx<eT>::value)
     {
+    f.unsetf(ios::fixed);
     f.setf(ios::scientific);
     f.precision(14);
     }
@@ -3559,6 +3343,7 @@ diskio::save_arma_ascii(const Cube<eT>& x, std::ostream& f)
   
   if(is_real<eT>::value)
     {
+    f.unsetf(ios::fixed);
     f.setf(ios::scientific);
     f.precision(14);
     cell_width = 22;
@@ -3566,6 +3351,7 @@ diskio::save_arma_ascii(const Cube<eT>& x, std::ostream& f)
   
   if(is_cx<eT>::value)
     {
+    f.unsetf(ios::fixed);
     f.setf(ios::scientific);
     f.precision(14);
     }
@@ -3655,7 +3441,7 @@ diskio::save_arma_binary(const Cube<eT>& x, std::ostream& f)
 template<typename eT>
 inline
 bool
-diskio::save_hdf5_binary(const Cube<eT>& x, const std::string& final_name)
+diskio::save_hdf5_binary(const Cube<eT>& x, const hdf5_name& spec)
   {
   arma_extra_debug_sigprint();
 
@@ -3670,7 +3456,7 @@ diskio::save_hdf5_binary(const Cube<eT>& x, const std::string& final_name)
 
     bool save_okay = false;
 
-    const std::string tmp_name = diskio::gen_tmp_name(final_name);
+    const std::string tmp_name = diskio::gen_tmp_name(spec.filename);
 
     // Set up the file according to HDF5's preferences
     hid_t file = arma_H5Fcreate(tmp_name.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
@@ -3687,10 +3473,28 @@ diskio::save_hdf5_binary(const Cube<eT>& x, const std::string& final_name)
     // If this returned something invalid, well, it's time to crash.
     arma_check(datatype == -1, "Cube::save(): unknown datatype for HDF5");
 
-    // MATLAB forces the users to specify a name at save time for HDF5; Octave
-    // will use the default of 'dataset' unless otherwise specified, so we will
-    // use that.
-    hid_t dataset = arma_H5Dcreate(file, "dataset", datatype, dataspace, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+    // MATLAB forces the users to specify a name at save time for HDF5;
+    // Octave will use the default of 'dataset' unless otherwise specified.
+    // If the user hasn't specified a dataset name, we will use 'dataset'
+    // We may have to split out the group name from the dataset name.
+    std::vector<hid_t> groups;
+    std::string full_name = spec.dsname;
+    size_t loc;
+    while ((loc = full_name.find("/")) != std::string::npos)
+      {
+      // Create another group...
+      if (loc != 0) // Ignore the first /, if there is a leading /.
+        {
+        hid_t gid = arma_H5Gcreate((groups.size() == 0) ? file : groups[groups.size() - 1], full_name.substr(0, loc).c_str(), H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+        groups.push_back(gid);
+        }
+
+      full_name = full_name.substr(loc + 1);
+      }
+    
+    const std::string dataset_name = (full_name.empty() == false) ? full_name : std::string("dataset");
+    
+    hid_t dataset = arma_H5Dcreate(groups.size() == 0 ? file : groups[groups.size() - 1], dataset_name.c_str(), datatype, dataspace, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 
     herr_t status = arma_H5Dwrite(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, x.mem);
     save_okay = (status >= 0);
@@ -3698,16 +3502,17 @@ diskio::save_hdf5_binary(const Cube<eT>& x, const std::string& final_name)
     arma_H5Dclose(dataset);
     arma_H5Tclose(datatype);
     arma_H5Sclose(dataspace);
+    for (size_t i = 0; i < groups.size(); ++i)  { arma_H5Gclose(groups[i]); }
     arma_H5Fclose(file);
 
-    if(save_okay == true) { save_okay = diskio::safe_rename(tmp_name, final_name); }
+    if(save_okay == true) { save_okay = diskio::safe_rename(tmp_name, spec.filename); }
 
     return save_okay;
     }
   #else
     {
     arma_ignore(x);
-    arma_ignore(final_name);
+    arma_ignore(spec);
 
     arma_stop_logic_error("Cube::save(): use of HDF5 needs to be enabled");
 
@@ -4048,13 +3853,12 @@ diskio::load_arma_binary(Cube<eT>& x, std::istream& f, std::string& err_msg)
 template<typename eT>
 inline
 bool
-diskio::load_hdf5_binary(Cube<eT>& x, const std::string& name, std::string& err_msg)
+diskio::load_hdf5_binary(Cube<eT>& x, const hdf5_name& spec, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
 
   #if defined(ARMA_USE_HDF5)
     {
-
     // These may be necessary to store the error handler (if we need to).
     herr_t (*old_func)(hid_t, void*);
     void *old_client_data;
@@ -4071,19 +3875,31 @@ diskio::load_hdf5_binary(Cube<eT>& x, const std::string& name, std::string& err_
 
     bool load_okay = false;
 
-    hid_t fid = arma_H5Fopen(name.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
+    hid_t fid = arma_H5Fopen(spec.filename.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
 
     if(fid >= 0)
       {
       // MATLAB HDF5 dataset names are user-specified;
       // Octave tends to store the datasets in a group, with the actual dataset being referred to as "value".
-      // So we will search for "dataset" and "value", and if those are not found we will take the first dataset we do find.
+      // If the user hasn't specified a dataset, we will search for "dataset" and "value",
+      // and if those are not found we will take the first dataset we do find.
+      
       std::vector<std::string> searchNames;
-      searchNames.push_back("dataset");
-      searchNames.push_back("value");
-
-      hid_t dataset = hdf5_misc::search_hdf5_file(searchNames, fid, 3, false);
-
+      
+      const bool exact = (spec.dsname.empty() == false);
+      
+      if(exact)
+        {
+        searchNames.push_back(spec.dsname);
+        }
+      else
+        {
+        searchNames.push_back("dataset");
+        searchNames.push_back("value"  );
+        }
+      
+      hid_t dataset = hdf5_misc::search_hdf5_file(searchNames, fid, 3, exact);
+      
       if(dataset >= 0)
         {
         hid_t filespace = arma_H5Dget_space(dataset);
@@ -4170,7 +3986,7 @@ diskio::load_hdf5_binary(Cube<eT>& x, const std::string& name, std::string& err_
   #else
     {
     arma_ignore(x);
-    arma_ignore(name);
+    arma_ignore(spec);
     arma_ignore(err_msg);
 
     arma_stop_logic_error("Cube::load(): use of HDF5 needs to be enabled");

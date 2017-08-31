@@ -26,16 +26,10 @@ field<oT>::~field()
   
   delete_objects();
   
-  if(n_elem > field_prealloc_n_elem::val)
-    {
-    delete [] mem;
-    }
+  if(n_elem > field_prealloc_n_elem::val)  { delete [] mem; }
   
-  if(arma_config::debug == true)
-    {
-    // try to expose buggy user code that accesses deleted objects
-    mem = 0;
-    }
+  // try to expose buggy user code that accesses deleted objects
+  if(arma_config::debug)  { mem = 0; }
   }
 
 
@@ -1345,14 +1339,14 @@ field<oT>::print(const std::string extra_text) const
   
   if(extra_text.length() != 0)
     {
-    const std::streamsize orig_width = ARMA_DEFAULT_OSTREAM.width();
+    const std::streamsize orig_width = get_cout_stream().width();
     
-    ARMA_DEFAULT_OSTREAM << extra_text << '\n';
-  
-    ARMA_DEFAULT_OSTREAM.width(orig_width);
+    get_cout_stream() << extra_text << '\n';
+    
+    get_cout_stream().width(orig_width);
     }
   
-  arma_ostream::print(ARMA_DEFAULT_OSTREAM, *this);
+  arma_ostream::print(get_cout_stream(), *this);
   }
 
 
