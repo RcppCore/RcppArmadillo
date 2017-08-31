@@ -14,45 +14,23 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup arma_version
+//! \addtogroup glue_affmul
 //! @{
 
 
 
-#define ARMA_VERSION_MAJOR 8
-#define ARMA_VERSION_MINOR 100
-#define ARMA_VERSION_PATCH 0
-#define ARMA_VERSION_NAME  "Feral Pursuits"
-
-
-
-struct arma_version
+class glue_affmul
   {
-  static const unsigned int major = ARMA_VERSION_MAJOR;
-  static const unsigned int minor = ARMA_VERSION_MINOR;
-  static const unsigned int patch = ARMA_VERSION_PATCH;
+  public:
   
-  static
-  inline
-  std::string
-  as_string()
-    {
-    const char* nickname = ARMA_VERSION_NAME;
-    
-    std::stringstream ss;
-    ss << arma_version::major
-       << '.'
-       << arma_version::minor
-       << '.'
-       << arma_version::patch
-       << " ("
-       << nickname
-       << ')';
-    
-    return ss.str();
-    }
+  template<typename T1, typename T2>
+  inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_affmul>& X);
+  
+  template<typename T1, typename T2>
+  inline static void apply_noalias(Mat<typename T1::elem_type>& out, const T1& A, const T2& B);
   };
 
 
 
 //! @}
+

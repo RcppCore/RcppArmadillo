@@ -72,7 +72,7 @@ class SpSubview : public SpBase<eT, SpSubview<eT> >
   template<typename T1> inline const SpSubview& operator*=(const SpBase<eT, T1>& x);
   template<typename T1> inline const SpSubview& operator%=(const SpBase<eT, T1>& x);
   template<typename T1> inline const SpSubview& operator/=(const SpBase<eT, T1>& x);
-
+  
   /*
   inline static void extract(SpMat<eT>& out, const SpSubview& in);
 
@@ -89,20 +89,20 @@ class SpSubview : public SpBase<eT, SpSubview<eT> >
   inline void ones();
   inline void eye();
 
-  arma_hot inline SpValProxy<SpSubview<eT> > operator[](const uword i);
-  arma_hot inline eT                         operator[](const uword i) const;
+  arma_hot inline MapMat_svel<eT> operator[](const uword i);
+  arma_hot inline eT              operator[](const uword i) const;
 
-  arma_hot inline SpValProxy<SpSubview<eT> > operator()(const uword i);
-  arma_hot inline eT                         operator()(const uword i) const;
+  arma_hot inline MapMat_svel<eT> operator()(const uword i);
+  arma_hot inline eT              operator()(const uword i) const;
 
-  arma_hot inline SpValProxy<SpSubview<eT> > operator()(const uword in_row, const uword in_col);
-  arma_hot inline eT                         operator()(const uword in_row, const uword in_col) const;
+  arma_hot inline MapMat_svel<eT> operator()(const uword in_row, const uword in_col);
+  arma_hot inline eT              operator()(const uword in_row, const uword in_col) const;
 
-  arma_hot inline SpValProxy<SpSubview<eT> > at(const uword i);
-  arma_hot inline eT                         at(const uword i) const;
+  arma_hot inline MapMat_svel<eT> at(const uword i);
+  arma_hot inline eT              at(const uword i) const;
 
-  arma_hot inline SpValProxy<SpSubview<eT> > at(const uword in_row, const uword in_col);
-  arma_hot inline eT                         at(const uword in_row, const uword in_col) const;
+  arma_hot inline MapMat_svel<eT> at(const uword in_row, const uword in_col);
+  arma_hot inline eT              at(const uword in_row, const uword in_col) const;
 
   inline bool check_overlap(const SpSubview& x) const;
 
@@ -154,7 +154,7 @@ class SpSubview : public SpBase<eT, SpSubview<eT> >
     inline iterator_base(const SpSubview& in_M);
     inline iterator_base(const SpSubview& in_M, const uword col, const uword pos, const uword skip_pos);
 
-    inline eT operator*() const;
+    arma_inline eT operator*() const;
 
     // Don't hold location internally; call "dummy" methods to get that information.
     arma_inline uword row() const { return M.m.row_indices[internal_pos + skip_pos] - M.aux_row1; }

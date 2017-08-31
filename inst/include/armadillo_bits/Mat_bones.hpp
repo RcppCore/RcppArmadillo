@@ -143,14 +143,6 @@ class Mat : public Base< eT, Mat<eT> >
   inline Mat& operator%=(const diagview<eT>& X);
   inline Mat& operator/=(const diagview<eT>& X);
   
-  inline             Mat(const spdiagview<eT>& X);
-  inline Mat&  operator=(const spdiagview<eT>& X);
-  inline Mat& operator+=(const spdiagview<eT>& X);
-  inline Mat& operator-=(const spdiagview<eT>& X);
-  inline Mat& operator*=(const spdiagview<eT>& X);
-  inline Mat& operator%=(const spdiagview<eT>& X);
-  inline Mat& operator/=(const spdiagview<eT>& X);
-  
   template<typename T1> inline             Mat(const subview_elem1<eT,T1>& X);
   template<typename T1> inline Mat& operator= (const subview_elem1<eT,T1>& X);
   template<typename T1> inline Mat& operator+=(const subview_elem1<eT,T1>& X);
@@ -175,6 +167,15 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename T1> inline Mat& operator*=(const SpBase<eT, T1>& m);
   template<typename T1> inline Mat& operator%=(const SpBase<eT, T1>& m);
   template<typename T1> inline Mat& operator/=(const SpBase<eT, T1>& m);
+  
+  inline explicit    Mat(const spdiagview<eT>& X);
+  inline Mat&  operator=(const spdiagview<eT>& X);
+  inline Mat& operator+=(const spdiagview<eT>& X);
+  inline Mat& operator-=(const spdiagview<eT>& X);
+  inline Mat& operator*=(const spdiagview<eT>& X);
+  inline Mat& operator%=(const spdiagview<eT>& X);
+  inline Mat& operator/=(const spdiagview<eT>& X);
+  
   
   inline mat_injector<Mat> operator<<(const eT val);
   inline mat_injector<Mat> operator<<(const injector_end_of_row<>& x);
@@ -474,7 +475,8 @@ class Mat : public Base< eT, Mat<eT> >
   inline const Mat& eye(const uword in_rows, const uword in_cols);
   inline const Mat& eye(const SizeMat& s);
   
-  inline void reset();
+  inline void      reset();
+  inline void soft_reset();
   
   
   template<typename T1> inline void set_real(const Base<pod_type,T1>& X);
@@ -492,15 +494,19 @@ class Mat : public Base< eT, Mat<eT> >
   
   
   inline bool save(const std::string   name, const file_type type = arma_binary, const bool print_status = true) const;
+  inline bool save(const hdf5_name&    spec, const file_type type = hdf5_binary, const bool print_status = true) const;
   inline bool save(      std::ostream& os,   const file_type type = arma_binary, const bool print_status = true) const;
   
   inline bool load(const std::string   name, const file_type type = auto_detect, const bool print_status = true);
+  inline bool load(const hdf5_name&    spec, const file_type type = hdf5_binary, const bool print_status = true);
   inline bool load(      std::istream& is,   const file_type type = auto_detect, const bool print_status = true);
   
   inline bool quiet_save(const std::string   name, const file_type type = arma_binary) const;
+  inline bool quiet_save(const hdf5_name&    spec, const file_type type = hdf5_binary) const;
   inline bool quiet_save(      std::ostream& os,   const file_type type = arma_binary) const;
   
   inline bool quiet_load(const std::string   name, const file_type type = auto_detect);
+  inline bool quiet_load(const hdf5_name&    spec, const file_type type = hdf5_binary);
   inline bool quiet_load(      std::istream& is,   const file_type type = auto_detect);
   
   
