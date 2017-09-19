@@ -3,9 +3,29 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.7.960.0.0 (2017-08-xx)}{
+\section{Changes in RcppArmadillo version 0.7.960.1.2 (2017-08-29)}{
   \itemize{
-    \item Upgraded to Armadillo release 7.960.0 (Northern Banana Republic Deluxe)
+    \item On macOS, OpenMP support is now turned off (\ghpr{170}).
+    \item The package is now compiling under the C++11 standard (\ghpr{170}).
+    \item The vignette dependency are correctly set (James and Dirk in
+    \ghpr{168} and \ghpr{169})
+  }
+}
+
+\section{Changes in RcppArmadillo version 0.7.960.1.1 (2017-08-20)}{
+  \itemize{
+    \item Added improved check for inherited S4 matrix classes
+    (\ghpr{162} fixing \ghit{161})
+    \item Changed \code{fastLm} C++ function to \code{fastLm_impl} to not
+    clash with R method (\ghpr{164} fixing \ghpr{163})
+    \item Added OpenMP check for \code{configure} (\ghpr{166} fixing
+    \ghit{165})
+  }
+}
+
+\section{Changes in RcppArmadillo version 0.7.960.1.0 (2017-08-11)}{
+  \itemize{
+    \item Upgraded to Armadillo release 7.960.1 (Northern Banana Republic Deluxe)
     \itemize{
       \item faster \code{randn()} when using OpenMP (NB: usually omitted
       when used fromR)
@@ -33,6 +53,7 @@
     \item Optional return of row or column vectors in collapsed form if
     appropriate \code{#define} is set (Serguei Sokol in \ghpr{151})
     Google Summer of Code 2018)
+    Google Summer of Code 2017)
     \itemize{
       \item Add support for \code{dtCMatrix} and \code{dsCMatrix}
       (\ghpr{135})
@@ -50,12 +71,18 @@
       (\ghpr{147}) 
       \item Add new vignette for sparse matrix support (\ghpr{152}; Dirk
       in \ghpr{153})
+      \item Add support for sparse matrix conversion from Python SciPy
+      (\ghpr{158} addressing \ghit{141})
     }
     \item Optional return of row or column vectors in collapsed form if
     appropriate \code{#define} is set (Serguei Sokol in \ghpr{151} and
     \ghpr{154}) 
     \item Correct \code{speye()} for non-symmetric cases (Qiang Kou in
     \ghpr{150} closing \ghit{149}).
+    \item Ensure tests using Scientific Python and reticulate are properly
+    conditioned on the packages being present.
+    \item Added \code{.aspell/} directory with small local directory now
+    supported by R-devel.
   }
 }
 

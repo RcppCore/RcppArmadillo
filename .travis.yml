@@ -13,7 +13,8 @@ before_install:
   - ./run.sh bootstrap
 
 install:
-  - ./run.sh install_aptget  r-cran-rcpp r-cran-runit r-cran-matrix r-cran-pkgkitten
+  - ./run.sh install_aptget  r-cran-rcpp r-cran-runit r-cran-matrix r-cran-pkgkitten r-cran-jsonlite python-scipy r-cran-highlight
+  - ./run.sh install_r reticulate
 
 script:
   - ./run.sh run_tests

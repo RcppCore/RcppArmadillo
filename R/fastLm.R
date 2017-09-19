@@ -1,6 +1,6 @@
 ## fastLm.R: Rcpp/Armadillo implementation of lm()
 ##
-## Copyright (C)  2010 - 2013  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+## Copyright (C)  2010 - 2017  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 ##
 ## This file is part of RcppArmadillo.
 ##
@@ -21,7 +21,7 @@ fastLmPure <- function(X, y) {
 
     stopifnot(is.matrix(X), is.numeric(y), nrow(y)==nrow(X))
 
-    .Call( "RcppArmadillo_fastLm", X, y, PACKAGE = "RcppArmadillo" )
+    .Call(`_RcppArmadillo_fastLm_impl`, X, y)
 }
 
 fastLm <- function(X, ...) UseMethod("fastLm")

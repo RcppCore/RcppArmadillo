@@ -39,7 +39,23 @@ if (.runThisTest) {
 
     ## setting up an example matrix -- using the fact that the as<sp_mat>
     ## converter prefers sparse matrix objects create by the Matrix package
-    suppressMessages(require(Matrix))
+    suppressMessages({
+        library(Matrix)
+        library(stats)
+        ## Per email with Martin Maechler, hard to suppress such messages on
+        ## first (and only) use of particular dispatches.  So simply running
+        ## twice: once silent, and again to test and possibly fail visibly.
+        kronecker(Diagonal(3), Matrix(0+0:5, 3, 2))
+        ##
+        n1 <- 10
+        p <- 5
+        a <- rnorm(n1*p)
+        a[abs(a)<0.5] <- 0
+        A <- matrix(a,n1,p)
+        RA <- as(A, "dgRMatrix")
+        dgt <- RA %x% matrix(1:4,2,2)
+
+    })
 
     test.as.dgc2dgc <- function() {
         ## [Matrix] p10 (dgCMatrix)
@@ -172,7 +188,7 @@ if (.runThisTest) {
         mm <- Matrix(toeplitz(c(10, 0, 1, 0, 3)), sparse = TRUE)
         dgc <- as(mm, "dgCMatrix")
         checkEquals(dgc, asSpMat(mm), msg="dsC2dgC_3")
-        
+
         mm <- t(mm)
         dgc <- as(mm, "dgCMatrix")
         checkEquals(dgc, asSpMat(mm), msg="dsC2dgC_4")
@@ -307,7 +323,7 @@ if (.runThisTest) {
         dgt <- new("dgTMatrix", x = rep(1, 7), i = as.integer(c(0, 0, 1, 3, 1, 0, 0)), j = as.integer(c(0, 2, 1, 3, 1, 0, 0)), Dim= as.integer(c(4, 4)))
         dgc <- as(dgt, "dgCMatrix")
         checkEquals(dgc, asSpMat(dgt), msg="dgT2dgC_17")
-        
+
         ## (dgTMatrix)
         mtxt <- c("11   0   0  14   0  16",
                   " 0  22   0   0  25  26",
@@ -414,7 +430,7 @@ if (.runThisTest) {
         dgr <- as(as(dgt, "matrix"), "dgRMatrix")
         dgc <- as(dgt, "dgCMatrix")
         checkEquals(dgc, asSpMat(dgr), msg="dgR2dgC_4")
-        
+
         ## (dgRMatrix)
         mtxt <- c("11   0   0  14   0  16",
                   " 0  22   0   0  25  26",
@@ -445,7 +461,7 @@ if (.runThisTest) {
         dimnames(M) <- NULL
         dgc <- as(M, "dgCMatrix")
         checkEquals(dgc, asSpMat(m3), msg="dtR2dgC_2")
-        
+
         ## (dtRMatrix)
         mtxt <- c("0 0 0 3",
                   "0 0 7 0",
@@ -457,7 +473,7 @@ if (.runThisTest) {
         dgc <- methods::as(dtc, "dgCMatrix")
         dtr <- methods::as(dtc, "RsparseMatrix")
         checkEquals(dgc, asSpMat(dtr), msg="dtR2dgC_3")
-        
+
         dtc@diag <- "U"
         dgc <- methods::as(dtc, "dgCMatrix")
         dtr <- methods::as(dtc, "RsparseMatrix")
@@ -483,7 +499,7 @@ if (.runThisTest) {
         dimnames(M) <- NULL
         dgc <- as(M, "dgCMatrix")
         checkEquals(dgc, asSpMat(dR), msg="dsR2dgC_2")
-        
+
         ## (dsRMatrix)
         mtxt <- c("10  0  1  0  3",
                   "0  10  0  1  0",
@@ -496,7 +512,7 @@ if (.runThisTest) {
         dgc <- methods::as(dsc, "dgCMatrix")
         dsr <- methods::as(dsc, "RsparseMatrix")
         checkEquals(dgc, asSpMat(dsr), msg="dsR2dgC_3")
-        
+
         dsc <- t(dsc)
         dgc <- methods::as(dsc, "dgCMatrix")
         dsr <- methods::as(dsc, "RsparseMatrix")
@@ -612,44 +628,44 @@ if (.runThisTest) {
     }
 
     test.as.ind2dgc <- function() {
-        ## [Matrix] p74 (indMatrix) 
+        ## [Matrix] p74 (indMatrix)
         sm1 <- as(rep(c(2,3,1), e=3), "indMatrix")
         dgc <- as(as(sm1, "matrix"), "dgCMatrix")
         checkEquals(dgc, asSpMat(sm1), msg="ind2dgc_1")
-      
+
         set.seed(27)
         s10 <- as(sample(10, 30, replace=TRUE),"indMatrix")
         dgc <- as(as(s10, "matrix"), "dgCMatrix")
         checkEquals(dgc, asSpMat(s10), msg="ind2dgc_2")
-      
+
         set.seed(27)
         IM1 <- as(sample(1:20, 100, replace=TRUE), "indMatrix")
         dgc <- as(as(IM1, "matrix"), "dgCMatrix")
         checkEquals(dgc, asSpMat(IM1), msg="ind2dgc_3")
-      
+
         set.seed(27)
         IM2 <- as(sample(1:18, 100, replace=TRUE), "indMatrix")
         dgc <- as(as(IM2, "matrix"), "dgCMatrix")
         checkEquals(dgc, asSpMat(IM2), msg="ind2dgc_4")
-      
+
         ## [Matrix] p74 (indMatrix)
         ind <- as(2:4, "indMatrix")
         dgc <- as(as(ind, "matrix"), "dgCMatrix")
         checkEquals(dgc, asSpMat(ind), msg="ind2dgc_5")
-      
+
         ind <- as(list(2:4, 5), "indMatrix")
         dgc <- as(as(ind, "matrix"), "dgCMatrix")
         checkEquals(dgc, asSpMat(ind), msg="ind2dgc_6")
-      
+
         ## [Matrix] p74 (indMatrix)
         ind <- s10[1:4, ]
         dgc <- as(as(ind, "matrix"), "dgCMatrix")
         checkEquals(dgc, asSpMat(ind), msg="ind2dgC_7")
-      
+
         I1 <- as(c(5:1,6:4,7:3), "indMatrix")
         dgc <- as(as(I1, "matrix"), "dgCMatrix")
         checkEquals(dgc, asSpMat(I1), msg="ind2dgC_8")
-      
+
         ## [Matrix] p116 (indMatrix)
         set.seed(11)
         p10 <- as(sample(10),"pMatrix")
@@ -657,43 +673,43 @@ if (.runThisTest) {
         dgc <- as(as(ind, "matrix"), "dgCMatrix")
         checkEquals(dgc, asSpMat(ind), msg="ind2dgC_9")
     }
-    
+
     test.stop <- function() {
         ## [Matrix] p87 (lgCMatrix)
         m <- Matrix(c(0,0,2:0), 3,5, dimnames=list(LETTERS[1:3],NULL))
         lm <- (m > 1)
         checkException(asSpMat(lm))
-        
-        # [Matrix] p152 (lgTMatrix) 
+
+        # [Matrix] p152 (lgTMatrix)
         L <- spMatrix(9, 30, i = rep(1:9, 3), 1:27,
                       (1:27) %% 4 != 1)
         checkException(asSpMat(L))
-        
-        ## [Matrix] p111 (ngCMatrix) 
+
+        ## [Matrix] p111 (ngCMatrix)
         m <- Matrix(c(0,0,2:0), 3,5, dimnames=list(LETTERS[1:3],NULL))
         dimnames(m) <- NULL
         nm <- as(m, "nsparseMatrix")
         checkException(asSpMat(nm))
-        
-        ## [Matrix] p74 (ngTMatrix) 
+
+        ## [Matrix] p74 (ngTMatrix)
         sm1 <- as(rep(c(2,3,1), e=3), "indMatrix")
         ngt <- as(sm1, "ngTMatrix")
         checkException(asSpMat(ngt))
-        
-        ## [Matrix] p85 (ntTMatrix) 
+
+        ## [Matrix] p85 (ntTMatrix)
         lM <- Diagonal(x = c(TRUE,FALSE,FALSE))
         nM <- as(lM, "nMatrix")
         checkException(asSpMat(nM))
-        
-        ## [Matrix] p85 (nsCMatrix) 
+
+        ## [Matrix] p85 (nsCMatrix)
         nsc <- crossprod(nM)
         checkException(asSpMat(nsc))
-        
-        ## [Matrix] p42 (ldiMatrix) 
+
+        ## [Matrix] p42 (ldiMatrix)
         ldi <- Diagonal(x = (1:4) >= 2)
         checkException(asSpMat(ldi))
     }
-    
+
     # test.as.lgc2dgc <- function() {
     #     ## [Matrix] p87 (lgCMatrix) (To be continued)
     #     lm <- (m > 1)

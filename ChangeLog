@@ -1,3 +1,106 @@
+2017-08-29  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Release 0.7.960.1.2
+
+2017-08-27  Dirk Eddelbuettel  <edd@debian.org>
+
+	* configure.ac: Detect macOS to turn off OpenMP in src/Makevars
+	* configure: Idem
+	* src/Makevars: New configure var for OpenMP linker/compiler flags
+	* inline.R: Similarly turn OpenMP off on macOS
+
+	* src/Makevars: Compile under C++11
+	* src/Makevars.win: Idem
+
+2017-08-26  James Joseph Balamuta  <balamut2@illinois.edu>
+
+	* DESCRIPTION: Also Suggests: highlight
+	* vignettes/RcppArmadillo-sparseMatrix.Rnw: Set VignetteDepends
+
+2017-08-21  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Roll minor version
+
+	* inst/include/RcppArmadilloConfigGenerated.h.in: Renamed from
+	inst/include/RcppArmadilloLapack.h.in to reflect use beyond LAPACK
+	* inst/include/RcppArmadilloConfig.h: Updated
+	* configure.ac: Idem
+	* configure: Idem
+	* cleanup.sh: Idem
+
+2017-08-20  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Release 0.7.960.1.1
+
+	* man/RcppArmadillo-package.Rd: Minor edits
+	* man/fastLm.Rd: Idem
+	* README.md: Idem
+
+	* src/Makevars.win: Small cosmetic edits as in Makevars
+
+2017-08-19  Dirk Eddelbuettel  <edd@debian.org>
+
+	* configure.ac: Added simple OpenMP detection
+	* configure: Idem
+	* inst/include/RcppArmadilloLapack.h.in: Apply variable here
+	* src/Makevars: Small edits
+
+	* src/fastLm.cpp: Renamed fastLm to fastLm_impl to not clash with
+	R method of same name now that .registration is true
+	* inst/unitTests/runit.fastLm.R: Updated test call
+	* src/RcppExports.cpp: Regenerated
+	* R/RcppExports.R: Idem
+	* man/fastLm.Rd: New alias
+
+2017-08-18  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Roll minor version
+
+	* inst/include/RcppArmadilloAs.h (Rcpp): Improved S4 inheritance check
+
+2017-08-11  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Release 0.7.960.1.0
+	* inst/NEWS.Rd: Idem
+
+	* DESCRIPTION (Author): New co-author Binxinag Ni
+
+2017-08-10  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/armadillo_bits/*: Updated to upstream release 7.960.1
+
+	* .aspell/: Added for new R-devel spell checker interface
+
+	* DESCRIPTION (Version, Date): Rolled to pre-release 0.7.959.0.3
+
+2017-08-09  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/unitTests/runit.scipy2r.R: Condition test on having SciPy
+
+	* DESCRIPTION (Version, Date): Rolled to pre-release 0.7.959.0.2
+
+2017-08-08  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Rolled to pre-release 0.7.959.0.1
+	in preparation of 0.7.960.0.0 release "real soon now"
+
+	* tests/doRUnit.R: Small edits and improvements
+
+	* inst/unitTests/runit.sparseConversion.R: Run Kronecker products
+	once in setup under suppressMessages to suppress dispatch messages
+
+2017-08-07  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/unitTests/runit.scipy2r.R: Whitespace edits
+	* R/SciPy2R.R: Idem; also renamed from py2R, removed one require()
+
+	* .travis.yml (install): Also install reticulate and (r-cran-)jsonlite
+
+2017-08-07  Binxiang Ni  <binxiangni@gmail.com>
+
+	* R/py2r.R: Python to R conversion
+	* inst/unitTests/runit.scipy2r.R: Unit tests
+
 2017-08-06  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Rolled to fictional pre-release

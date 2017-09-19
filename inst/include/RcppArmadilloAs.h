@@ -24,7 +24,7 @@
 #define RcppArmadillo__RcppArmadilloAs__h
 
 namespace Rcpp{
-
+   
 namespace traits {
 
     template <typename T> 
@@ -97,7 +97,7 @@ namespace traits {
             
             // Get the type of sparse matrix
             std::string type = Rcpp::as<std::string>(mat.slot("class"));
-            if (type == "dgCMatrix") {
+            if (type == "dgCMatrix" || mat.is("dgCMatrix")) {
                 IntegerVector i = mat.slot("i");
                 IntegerVector p = mat.slot("p");
                 Vector<RTYPE> x = mat.slot("x");
@@ -110,7 +110,7 @@ namespace traits {
                 std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
                 std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
             }
-            else if (type == "dtCMatrix") {
+            else if (type == "dtCMatrix" || mat.is("dtCMatrix")) {
                 IntegerVector i = mat.slot("i");
                 IntegerVector p = mat.slot("p");
                 Vector<RTYPE> x = mat.slot("x");
@@ -128,7 +128,7 @@ namespace traits {
                     res.diag().ones();
                 }
             }
-            else if (type == "dsCMatrix") {
+            else if (type == "dsCMatrix" || mat.is("dsCMatrix")) {
                 IntegerVector i = mat.slot("i");
                 IntegerVector p = mat.slot("p");
                 Vector<RTYPE> x = mat.slot("x");
@@ -148,7 +148,7 @@ namespace traits {
                     res = symmatl(res);
                 }
             }
-            else if (type == "dgTMatrix") {
+            else if (type == "dgTMatrix" || mat.is("dgTMatrix")) {
                 IntegerVector ti = mat.slot("i");
                 IntegerVector tj = mat.slot("j");
                 Vector<RTYPE> tx = mat.slot("x");
@@ -200,7 +200,7 @@ namespace traits {
                 std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
                 std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
             }
-            else if (type == "dtTMatrix") {
+            else if (type == "dtTMatrix" || mat.is("dtTMatrix")) {
                 IntegerVector ti = mat.slot("i");
                 IntegerVector tj = mat.slot("j");
                 Vector<RTYPE> tx = mat.slot("x");
@@ -257,7 +257,7 @@ namespace traits {
                     res.diag().ones();
                 }
             }
-            else if (type == "dsTMatrix") {
+            else if (type == "dsTMatrix" || mat.is("dsTMatrix")) {
                 IntegerVector ti = mat.slot("i");
                 IntegerVector tj = mat.slot("j");
                 Vector<RTYPE> tx = mat.slot("x");
@@ -316,7 +316,7 @@ namespace traits {
                     res = symmatl(res);
                 }
             }
-            else if (type == "dgRMatrix") {
+            else if (type == "dgRMatrix" || mat.is("dgRMatrix")) {
                 IntegerVector rj = mat.slot("j");
                 IntegerVector rp = mat.slot("p");
                 Vector<RTYPE> rx = mat.slot("x");
@@ -366,7 +366,7 @@ namespace traits {
                 std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
                 std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
             }
-            else if (type == "dtRMatrix") {
+            else if (type == "dtRMatrix" || mat.is("dtRMatrix")) {
                 IntegerVector rj = mat.slot("j");
                 IntegerVector rp = mat.slot("p");
                 Vector<RTYPE> rx = mat.slot("x");
@@ -421,7 +421,7 @@ namespace traits {
                     res.diag().ones();
                 }
             }
-            else if (type == "dsRMatrix") {
+            else if (type == "dsRMatrix" || mat.is("dsRMatrix")) {
                 IntegerVector rj = mat.slot("j");
                 IntegerVector rp = mat.slot("p");
                 Vector<RTYPE> rx = mat.slot("x");
@@ -478,7 +478,7 @@ namespace traits {
                     res = symmatl(res);
                 }
             }
-            else if (type == "indMatrix") {
+            else if (type == "indMatrix" || mat.is("indMatrix")) {
                 std::vector<int> i;
                 IntegerVector p(ncol + 1);
                 IntegerVector x(nrow, 1);
@@ -519,7 +519,7 @@ namespace traits {
                 std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
                 std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
             }
-            else if (type == "pMatrix") {
+            else if (type == "pMatrix" || mat.is("pMatrix")) {
                 std::vector<int> i;
                 IntegerVector p(ncol + 1);
                 IntegerVector x(ncol, 1);
@@ -550,7 +550,7 @@ namespace traits {
                 std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
                 std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
             }
-            else if (type == "ddiMatrix") {
+            else if (type == "ddiMatrix" || mat.is("ddiMatrix")) {
                 std::vector<int> i;
                 std::vector<int> p;
                 std::vector<double> x;
