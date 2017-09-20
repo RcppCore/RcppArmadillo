@@ -148,21 +148,30 @@ namespace traits {
                     res = symmatl(res);
                 }
             }
-            else if (type == "dgTMatrix" || mat.is("dgTMatrix") ||
-                    type == "dtTMatrix" || mat.is("dtTMatrix") ||
-                    type == "dsTMatrix" || mat.is("dsTMatrix")) {
+            else if (type == "dgTMatrix" || mat.is("dgTMatrix")) {
                 arma::urowvec ti = mat.slot("i");
                 arma::urowvec tj = mat.slot("j");
                 arma::Col<T> tx = mat.slot("x");
                 
-                res=arma::sp_mat(true, arma::join_cols(ti, tj), tx, nrow, ncol, true, false);
-                if ((type == "dtTMatrix" || mat.is("dtTMatrix")) &&
-                        Rcpp::as<std::string>(mat.slot("diag")) == "U") {
+                res = arma::sp_mat(true, arma::join_cols(ti, tj), tx, nrow, ncol, true, false);
+            }
+            else if (type == "dtTMatrix" || mat.is("dtTMatrix")) {
+                arma::urowvec ti = mat.slot("i");
+                arma::urowvec tj = mat.slot("j");
+                arma::Col<T> tx = mat.slot("x");
+                
+                res = arma::sp_mat(true, arma::join_cols(ti, tj), tx, nrow, ncol, true, false);
+                if (Rcpp::as<std::string>(mat.slot("diag")) == "U") {
                     res.diag().ones();
                 }
-                if (type == "dsTMatrix" || mat.is("dsTMatrix")) {
-                    res = Rcpp::as<std::string>(mat.slot("uplo")) == "U" ? symmatu(res) : symmatl(res);
-                }
+            }
+            else if (type == "dsTMatrix" || mat.is("dsTMatrix")) {
+                arma::urowvec ti = mat.slot("i");
+                arma::urowvec tj = mat.slot("j");
+                arma::Col<T> tx = mat.slot("x");
+                
+                res = arma::sp_mat(true, arma::join_cols(ti, tj), tx, nrow, ncol, true, false);
+                res = Rcpp::as<std::string>(mat.slot("uplo")) == "U" ? symmatu(res) : symmatl(res);
             }
             else if (type == "dgRMatrix" || mat.is("dgRMatrix")) {
                 IntegerVector rj = mat.slot("j");
