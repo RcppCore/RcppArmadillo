@@ -148,172 +148,20 @@ namespace traits {
                     res = symmatl(res);
                 }
             }
-            else if (type == "dgTMatrix" || mat.is("dgTMatrix")) {
-                IntegerVector ti = mat.slot("i");
-                IntegerVector tj = mat.slot("j");
-                Vector<RTYPE> tx = mat.slot("x");
+            else if (type == "dgTMatrix" || mat.is("dgTMatrix") ||
+                    type == "dtTMatrix" || mat.is("dtTMatrix") ||
+                    type == "dsTMatrix" || mat.is("dsTMatrix")) {
+                arma::urowvec ti = mat.slot("i");
+                arma::urowvec tj = mat.slot("j");
+                arma::Col<T> tx = mat.slot("x");
                 
-                // Create a map to sort the i, j, x
-                typedef std::pair<int, int> Key;
-                typedef std::map<Key, double> Map;
-                Map jix;
-                int tnnz = tx.size();
-                for(int idx = 0; idx < tnnz; idx++){
-                    Key p(tj[idx], ti[idx]);
-                    if (jix.find(p) != jix.end()) {
-                        jix[p] += tx[idx];
-                    } else {
-                        jix[p] = tx[idx];
-                    }
-                }
-                
-                // Get the new i, j, x;
-                int nnz = jix.size();
-                std::vector<int> i;
-                std::vector<int> j;
-                std::vector<double> x;
-                IntegerVector p = IntegerVector(ncol + 1);
-                
-                for(Map::iterator tmp = jix.begin(); tmp != jix.end(); tmp++){
-                    j.push_back((tmp -> first).first);
-                    i.push_back((tmp -> first).second);
-                    x.push_back(tmp -> second);
-                }
-                
-                // Count the number of nnz in each column
-                for(int idx = 0; idx < nnz; idx++){
-                    int col = j[idx];
-                    p[col + 1]++;
-                }
-                
-                // Cumsum p
-                for(int col = 0, cumsum = 0; col < ncol + 1; col++){
-                    cumsum += p[col];
-                    p[col] = cumsum;
-                }
-                
-                // Making space for the elements
-                res.mem_resize(static_cast<unsigned>(x.size()));
-                
-                // Copying elements
-                std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
-                std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
-                std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
-            }
-            else if (type == "dtTMatrix" || mat.is("dtTMatrix")) {
-                IntegerVector ti = mat.slot("i");
-                IntegerVector tj = mat.slot("j");
-                Vector<RTYPE> tx = mat.slot("x");
-                std::string diag = Rcpp::as<std::string>(mat.slot("diag"));
-                
-                // Create a map to sort the i, j, x
-                typedef std::pair<int, int> Key;
-                typedef std::map<Key, double> Map;
-                Map jix;
-                int tnnz = tx.size();
-                for(int idx = 0; idx < tnnz; idx++){
-                    Key p(tj[idx], ti[idx]);
-                    if (jix.find(p) != jix.end()) {
-                        jix[p] += tx[idx];
-                    } else {
-                        jix[p] = tx[idx];
-                    }
-                }
-                
-                // Get the new i, j, x;
-                int nnz = jix.size();
-                std::vector<int> i;
-                std::vector<int> j;
-                std::vector<double> x;
-                IntegerVector p = IntegerVector(ncol + 1);
-                
-                for(Map::iterator tmp = jix.begin(); tmp != jix.end(); tmp++){
-                    j.push_back((tmp -> first).first);
-                    i.push_back((tmp -> first).second);
-                    x.push_back(tmp -> second);
-                }
-                
-                // Count the number of nnz in each column
-                for(int idx = 0; idx < nnz; idx++){
-                    int col = j[idx];
-                    p[col + 1]++;
-                }
-                
-                // Cumsum p
-                for(int col = 0, cumsum = 0; col < ncol + 1; col++){
-                    cumsum += p[col];
-                    p[col] = cumsum;
-                }
-                
-                // Making space for the elements
-                res.mem_resize(static_cast<unsigned>(x.size()));
-                
-                // Copying elements
-                std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
-                std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
-                std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
-                
-                if (diag == "U"){
+                res=arma::sp_mat(true, arma::join_cols(ti, tj), tx, nrow, ncol, true, false);
+                if ((type == "dtTMatrix" || mat.is("dtTMatrix")) &&
+                        Rcpp::as<std::string>(mat.slot("diag")) == "U") {
                     res.diag().ones();
                 }
-            }
-            else if (type == "dsTMatrix" || mat.is("dsTMatrix")) {
-                IntegerVector ti = mat.slot("i");
-                IntegerVector tj = mat.slot("j");
-                Vector<RTYPE> tx = mat.slot("x");
-                std::string uplo = Rcpp::as<std::string>(mat.slot("uplo"));
-                
-                // Create a map to sort the i, j, x
-                typedef std::pair<int, int> Key;
-                typedef std::map<Key, double> Map;
-                Map jix;
-                int tnnz = tx.size();
-                for(int idx = 0; idx < tnnz; idx++){
-                    Key p(tj[idx], ti[idx]);
-                    if (jix.find(p) != jix.end()) {
-                        jix[p] += tx[idx];
-                    } else {
-                        jix[p] = tx[idx];
-                    }
-                }
-                
-                // Get the new i, j, x;
-                int nnz = jix.size();
-                std::vector<int> i;
-                std::vector<int> j;
-                std::vector<double> x;
-                IntegerVector p = IntegerVector(ncol + 1);
-                
-                for(Map::iterator tmp = jix.begin(); tmp != jix.end(); tmp++){
-                    j.push_back((tmp -> first).first);
-                    i.push_back((tmp -> first).second);
-                    x.push_back(tmp -> second);
-                }
-                
-                // Count the number of nnz in each column
-                for(int idx = 0; idx < nnz; idx++){
-                    int col = j[idx];
-                    p[col + 1]++;
-                }
-                
-                // Cumsum p
-                for(int col = 0, cumsum = 0; col < ncol + 1; col++){
-                    cumsum += p[col];
-                    p[col] = cumsum;
-                }
-                
-                // Making space for the elements
-                res.mem_resize(static_cast<unsigned>(x.size()));
-                
-                // Copying elements
-                std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
-                std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
-                std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
-              
-                if (uplo == "U") {
-                    res = symmatu(res);
-                } else {
-                    res = symmatl(res);
+                if (type == "dsTMatrix" || mat.is("dsTMatrix")) {
+                    res = Rcpp::as<std::string>(mat.slot("uplo")) == "U" ? symmatu(res) : symmatl(res);
                 }
             }
             else if (type == "dgRMatrix" || mat.is("dgRMatrix")) {
