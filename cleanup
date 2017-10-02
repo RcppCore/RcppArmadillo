@@ -17,7 +17,8 @@ rm -f  config.log config.status confdefs.h \
        */*~ *~ \
        inst/include/RcppArmadilloLapack.h \
        inst/include/RcppArmadilloConfigGenerated.h \
-       src/Makevars
+       src/Makevars \
+       vignettes/jss.bst vignettes/pinp.cls
 
 rm -rf autom4te.cache/ \
        vignettes/auto/

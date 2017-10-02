@@ -29,6 +29,8 @@
     performance (Serguei Sokol in \ghpr{175} addressing \ghit{173})
     \item Sparse matrices call \code{.sync()} before accessing internal
     arrays (Binxiang Ni in \ghpr{171})
+    \item The sparse matrix vignette has been converted to Rmarkdown
+    using the pinp package, and is now correctly indexed. (\ghpr{176})
   }
 }
 

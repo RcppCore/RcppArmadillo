@@ -6,6 +6,9 @@
 	* inst/include/RcppArmadilloConfig.h: Update to ARMA_COUT_STREAM
 	and ARMA_CERR_STREAM
 
+	* vignettes/RcppArmadillo-sparseMatrix.Rmd: Converted to markdown
+	using pinp package, added missing vignette entries
+
 2017-09-20  Serguei Sokol  <sokol@insa-toulouse.fr>
 
 	* inst/include/RcppArmadilloAs.h: Use native constructors for dgt,
