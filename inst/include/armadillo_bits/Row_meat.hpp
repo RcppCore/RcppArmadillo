@@ -55,7 +55,7 @@ Row<eT>::Row(const uword in_n_elem)
 template<typename eT>
 inline
 Row<eT>::Row(const uword in_n_rows, const uword in_n_cols)
-  : Mat<eT>(arma_vec_indicator(), 2)
+  : Mat<eT>(arma_vec_indicator(), 0, 0, 2)
   {
   arma_extra_debug_sigprint();
   
@@ -67,7 +67,7 @@ Row<eT>::Row(const uword in_n_rows, const uword in_n_cols)
 template<typename eT>
 inline
 Row<eT>::Row(const SizeMat& s)
-  : Mat<eT>(arma_vec_indicator(), 2)
+  : Mat<eT>(arma_vec_indicator(), 0, 0, 2)
   {
   arma_extra_debug_sigprint();
   
@@ -93,7 +93,7 @@ template<typename eT>
 template<typename fill_type>
 inline
 Row<eT>::Row(const uword in_n_rows, const uword in_n_cols, const fill::fill_class<fill_type>& f)
-  : Mat<eT>(arma_vec_indicator(), 2)
+  : Mat<eT>(arma_vec_indicator(), 0, 0, 2)
   {
   arma_extra_debug_sigprint();
   
@@ -108,7 +108,7 @@ template<typename eT>
 template<typename fill_type>
 inline
 Row<eT>::Row(const SizeMat& s, const fill::fill_class<fill_type>& f)
-  : Mat<eT>(arma_vec_indicator(), 2)
+  : Mat<eT>(arma_vec_indicator(), 0, 0, 2)
   {
   arma_extra_debug_sigprint();
   
@@ -122,12 +122,11 @@ Row<eT>::Row(const SizeMat& s, const fill::fill_class<fill_type>& f)
 template<typename eT>
 inline
 Row<eT>::Row(const char* text)
+  : Mat<eT>(arma_vec_indicator(), 2)
   {
   arma_extra_debug_sigprint();
   
-  access::rw(Mat<eT>::vec_state) = 2;
-  
-  Mat<eT>::operator=(text);
+  (*this).operator=(text);
   }
   
 
@@ -139,7 +138,14 @@ Row<eT>::operator=(const char* text)
   {
   arma_extra_debug_sigprint();
   
-  Mat<eT>::operator=(text);
+  Mat<eT> tmp(text);
+  
+  arma_debug_check( ((tmp.n_elem > 0) && (tmp.is_vec() == false)), "Mat::init(): requested size is not compatible with row vector layout" );
+  
+  access::rw(tmp.n_rows) = 1;
+  access::rw(tmp.n_cols) = tmp.n_elem;
+  
+  (*this).steal_mem(tmp);
   
   return *this;
   }
@@ -149,12 +155,11 @@ Row<eT>::operator=(const char* text)
 template<typename eT>
 inline
 Row<eT>::Row(const std::string& text)
+  : Mat<eT>(arma_vec_indicator(), 2)
   {
   arma_extra_debug_sigprint();
   
-  access::rw(Mat<eT>::vec_state) = 2;
-  
-  Mat<eT>::operator=(text);
+  (*this).operator=(text);
   }
 
 
@@ -166,7 +171,14 @@ Row<eT>::operator=(const std::string& text)
   {
   arma_extra_debug_sigprint();
   
-  Mat<eT>::operator=(text);
+  Mat<eT> tmp(text);
+  
+  arma_debug_check( ((tmp.n_elem > 0) && (tmp.is_vec() == false)), "Mat::init(): requested size is not compatible with row vector layout" );
+  
+  access::rw(tmp.n_rows) = 1;
+  access::rw(tmp.n_cols) = tmp.n_elem;
+  
+  (*this).steal_mem(tmp);
   
   return *this;
   }
@@ -214,12 +226,11 @@ Row<eT>::operator=(const std::vector<eT>& x)
   template<typename eT>
   inline
   Row<eT>::Row(const std::initializer_list<eT>& list)
+    : Mat<eT>(arma_vec_indicator(), 2)
     {
     arma_extra_debug_sigprint();
     
-    access::rw(Mat<eT>::vec_state) = 2;
-    
-    Mat<eT>::operator=(list);
+    (*this).operator=(list);
     }
   
   
@@ -231,7 +242,14 @@ Row<eT>::operator=(const std::vector<eT>& x)
     {
     arma_extra_debug_sigprint();
     
-    Mat<eT>::operator=(list);
+    Mat<eT> tmp(list);
+    
+    arma_debug_check( ((tmp.n_elem > 0) && (tmp.is_vec() == false)), "Mat::init(): requested size is not compatible with row vector layout" );
+    
+    access::rw(tmp.n_rows) = 1;
+    access::rw(tmp.n_cols) = tmp.n_elem;
+    
+    (*this).steal_mem(tmp);
     
     return *this;
     }
@@ -304,23 +322,6 @@ Row<eT>::operator=(const std::vector<eT>& x)
 
 template<typename eT>
 inline
-Row<eT>::Row(const SpRow<eT>& X)
-  : Mat<eT>(arma_vec_indicator(), 1, X.n_elem, 1)
-  {
-  arma_extra_debug_sigprint_this(this);
-
-  arrayops::inplace_set(Mat<eT>::memptr(), eT(0), X.n_elem);
-
-  for(typename SpRow<eT>::const_iterator it = X.begin(); it != X.end(); ++it)
-    {
-    at(it.col()) = (*it);
-    }
-  }
-
-
-
-template<typename eT>
-inline
 Row<eT>&
 Row<eT>::operator=(const eT val)
   {
@@ -365,6 +366,34 @@ template<typename T1>
 inline
 Row<eT>&
 Row<eT>::operator=(const Base<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>::operator=(X.get_ref());
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+Row<eT>::Row(const SpBase<eT,T1>& X)
+  : Mat<eT>(arma_vec_indicator(), 2)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>::operator=(X.get_ref());
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+Row<eT>&
+Row<eT>::operator=(const SpBase<eT,T1>& X)
   {
   arma_extra_debug_sigprint();
   
@@ -1053,7 +1082,7 @@ Row<eT>::end_row(const uword row_num) const
 
 template<typename eT>
 template<uword fixed_n_elem>
-inline
+arma_inline
 Row<eT>::fixed<fixed_n_elem>::fixed()
   : Row<eT>( arma_fixed_indicator(), fixed_n_elem, ((use_extra) ? mem_local_extra : Mat<eT>::mem_local) )
   {

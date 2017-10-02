@@ -14,27 +14,23 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup op_chol
+//! \addtogroup glue_affmul
 //! @{
 
 
 
-template<typename T1>
-inline
-void
-op_chol::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_chol>& X)
+class glue_affmul
   {
-  arma_extra_debug_sigprint();
+  public:
   
-  const bool status = auxlib::chol(out, X.m, X.aux_uword_a);
+  template<typename T1, typename T2>
+  inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_affmul>& X);
   
-  if(status == false)
-    {
-    out.soft_reset();
-    arma_stop_runtime_error("chol(): decomposition failed");
-    }
-  }
+  template<typename T1, typename T2>
+  inline static void apply_noalias(Mat<typename T1::elem_type>& out, const T1& A, const T2& B);
+  };
 
 
 
 //! @}
+
