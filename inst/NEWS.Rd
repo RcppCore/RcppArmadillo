@@ -3,6 +3,35 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.8.100.1.0 (2017-10-02)}{
+  \itemize{
+    \item Upgraded to Armadillo release 8.100.1 (Feral Pursuits)
+    \itemize{
+      \item faster incremental construction of sparse matrices via
+      element access operators
+      \item faster diagonal views in sparse matrices
+      \item expanded \code{SpMat} to save/load sparse matrices in coord
+      format
+      \item expanded \code{.save()},\code{.load()} to allow
+      specification of datasets within HDF5 files
+      \item added \code{affmul()} to simplify application of affine
+      transformations
+      \item warnings and errors are now printed by default to the
+      \code{std::cerr} stream
+      \item added \code{set_cerr_stream()} and \code{get_cerr_stream()}
+      to replace \code{set_stream_err1()}, \code{set_stream_err2()},
+      \code{get_stream_err1()}, \code{get_stream_err2()} 
+      \item new configuration options \code{ARMA_COUT_STREAM} and
+      \code{ARMA_CERR_STREAM}
+    }
+    \item Constructors for sparse matrices of types \code{dgt},
+    \code{dtt} amd \code{dst} now use Armadillo code for improved
+    performance (Serguei Sokol in \ghpr{175} addressing \ghit{173})
+    \item Sparse matrices call \code{.sync()} before accessing internal
+    arrays (Binxiang Ni in \ghpr{171})
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.7.960.1.2 (2017-08-29)}{
   \itemize{
     \item On macOS, OpenMP support is now turned off (\ghpr{170}).
