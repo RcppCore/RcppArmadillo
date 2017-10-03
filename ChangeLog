@@ -1,3 +1,24 @@
+2017-10-02  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/armadillo: Upgraded to Armadillo 8.100.1
+	* inst/include/armadillo_bits/*: Idem
+
+	* inst/include/RcppArmadilloConfig.h: Update to ARMA_COUT_STREAM
+	and ARMA_CERR_STREAM
+
+	* vignettes/RcppArmadillo-sparseMatrix.Rmd: Converted to markdown
+	using pinp package, added missing vignette entries
+
+2017-09-20  Serguei Sokol  <sokol@insa-toulouse.fr>
+
+	* inst/include/RcppArmadilloAs.h: Use native constructors for dgt,
+	dtt, dst type conversion
+
+2017-08-31  Binxiang Ni  <binxiangni@gmail.com>
+
+	* inst/include/RcppArmadilloAs.h: Call .sync() before assessing
+	internals of the SpMat classes [early patch to the 8.100.* code]
+
 2017-08-29  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Release 0.7.960.1.2

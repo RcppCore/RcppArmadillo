@@ -74,10 +74,18 @@
 // fall back to the C++98 RNG (often from the C library) by defining neither.
 
 // Rcpp has its own stream object which cooperates more nicely with R's i/o
-// And as of Armadillo 2.4.3, we can use this stream object as well 
-#if !defined(ARMA_DEFAULT_OSTREAM)
-#define ARMA_DEFAULT_OSTREAM Rcpp::Rcout
+// And as of Armadillo 2.4.3, we can use this stream object as well
+//
+// As of Armadillo 8.100.1, this has been renamed to ARMA_COUT_STREAM and
+// ARMA_CERR_STREAM was added
+// 
+#if !defined(ARMA_COUT_OSTREAM)
+#define ARMA_COUT_STREAM Rcpp::Rcout
 #endif
+#if !defined(ARMA_CERR_OSTREAM)
+#define ARMA_CERR_STREAM Rcpp::Rcerr
+#endif
+
 
 // R now defines NDEBUG which suppresses a number of useful Armadillo tests
 // Users can still defined it later, and/or define ARMA_NO_DEBUG

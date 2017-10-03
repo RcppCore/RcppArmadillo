@@ -22,11 +22,9 @@
 template<typename eT>
 inline
 SpRow<eT>::SpRow()
-  : SpMat<eT>(1, 0)
+  : SpMat<eT>(arma_vec_indicator(), 2)
   {
   arma_extra_debug_sigprint();
-
-  access::rw(SpMat<eT>::vec_state) = 2;
   }
 
 
@@ -34,11 +32,9 @@ SpRow<eT>::SpRow()
 template<typename eT>
 inline
 SpRow<eT>::SpRow(const uword in_n_elem)
-  : SpMat<eT>(1, in_n_elem)
+  : SpMat<eT>(arma_vec_indicator(), 1, in_n_elem, 2)
   {
   arma_extra_debug_sigprint();
-
-  access::rw(SpMat<eT>::vec_state) = 2;
   }
 
 
@@ -46,13 +42,21 @@ SpRow<eT>::SpRow(const uword in_n_elem)
 template<typename eT>
 inline
 SpRow<eT>::SpRow(const uword in_n_rows, const uword in_n_cols)
-  : SpMat<eT>(in_n_rows, in_n_cols)
+  : SpMat<eT>(arma_vec_indicator(), in_n_rows, in_n_cols, 2)
   {
   arma_extra_debug_sigprint();
+  }
 
-  arma_debug_check((in_n_rows != 1), "SpRow::SpRow(): must have only one row");
 
-  access::rw(SpMat<eT>::vec_state) = 2;
+
+template<typename eT>
+inline
+SpRow<eT>::SpRow(const SizeMat& s)
+  : SpMat<eT>(arma_vec_indicator(), 0, 0, 2)
+  {
+  arma_extra_debug_sigprint();
+  
+  SpMat<eT>::init(s.n_rows, s.n_cols);
   }
 
 
@@ -60,13 +64,11 @@ SpRow<eT>::SpRow(const uword in_n_rows, const uword in_n_cols)
 template<typename eT>
 inline
 SpRow<eT>::SpRow(const char* text)
-  : SpMat<eT>(text)
+  : SpMat<eT>(arma_vec_indicator(), 2)
   {
   arma_extra_debug_sigprint();
-
-  access::rw(SpMat<eT>::vec_state) = 2;
-
-  arma_debug_check((SpMat<eT>::n_rows != 1), "SpRow::SpRow(): must have only one row");
+  
+  SpMat<eT>::init(std::string(text));
   }
   
 
@@ -77,10 +79,8 @@ SpRow<eT>&
 SpRow<eT>::operator=(const char* text)
   {
   arma_extra_debug_sigprint();
-
-  access::rw(SpMat<eT>::vec_state) = 2;
   
-  SpMat<eT>::operator=(text);
+  SpMat<eT>::init(std::string(text));
   
   return *this;
   }
@@ -90,13 +90,11 @@ SpRow<eT>::operator=(const char* text)
 template<typename eT>
 inline
 SpRow<eT>::SpRow(const std::string& text)
-  : SpMat<eT>(text)
+  : SpMat<eT>(arma_vec_indicator(), 2)
   {
   arma_extra_debug_sigprint();
-
-  access::rw(SpMat<eT>::vec_state) = 2;
   
-  arma_debug_check((SpMat<eT>::n_rows != 1), "SpRow::SpRow(): must have only one row");
+  SpMat<eT>::init(text);
   }
 
 
@@ -108,7 +106,7 @@ SpRow<eT>::operator=(const std::string& text)
   {
   arma_extra_debug_sigprint();
   
-  SpMat<eT>::operator=(text);
+  SpMat<eT>::init(text);
   
   return *this;
   }
@@ -133,10 +131,9 @@ template<typename eT>
 template<typename T1>
 inline
 SpRow<eT>::SpRow(const Base<eT,T1>& X)
+  : SpMat<eT>(arma_vec_indicator(), 2)
   {
   arma_extra_debug_sigprint();
-
-  access::rw(SpMat<eT>::vec_state) = 2;
   
   SpMat<eT>::operator=(X.get_ref());
   }
@@ -162,10 +159,9 @@ template<typename eT>
 template<typename T1>
 inline
 SpRow<eT>::SpRow(const SpBase<eT,T1>& X)
+  : SpMat<eT>(arma_vec_indicator(), 2)
   {
   arma_extra_debug_sigprint();
-
-  access::rw(SpMat<eT>::vec_state) = 2;
   
   SpMat<eT>::operator=(X.get_ref());
   }
@@ -195,10 +191,9 @@ SpRow<eT>::SpRow
   const SpBase<typename SpRow<eT>::pod_type, T1>& A,
   const SpBase<typename SpRow<eT>::pod_type, T2>& B
   )
+  : SpMat<eT>(arma_vec_indicator(), 2)
   {
   arma_extra_debug_sigprint();
-
-  access::rw(SpMat<eT>::vec_state) = 2;
   
   SpMat<eT>::init(A,B);
   }
@@ -233,6 +228,8 @@ SpRow<eT>::shed_cols(const uword in_col1, const uword in_col2)
     (in_col1 > in_col2) || (in_col2 >= SpMat<eT>::n_cols),
     "SpRow::shed_cols(): indices out of bounds or incorrectly used"
     );
+  
+  SpMat<eT>::sync_csc();
   
   const uword diff = (in_col2 - in_col1 + 1);
 
@@ -293,6 +290,8 @@ SpRow<eT>::shed_cols(const uword in_col1, const uword in_col2)
 
   access::rw(SpMat<eT>::n_cols) -= diff;
   access::rw(SpMat<eT>::n_elem) -= diff;
+  
+  SpMat<eT>::invalidate_cache();
   }
 
 

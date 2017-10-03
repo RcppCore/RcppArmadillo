@@ -31,6 +31,8 @@ SpSubview<eT>::SpSubview(const SpMat<eT>& in_m, const uword in_row1, const uword
   {
   arma_extra_debug_sigprint();
   
+  m.sync_csc();
+  
   // There must be a O(1) way to do this
   uword lend     = m.col_ptrs[in_col1 + in_n_cols];
   uword lend_row = in_row1 + in_n_rows;
@@ -62,6 +64,8 @@ SpSubview<eT>::SpSubview(SpMat<eT>& in_m, const uword in_row1, const uword in_co
   , n_nonzero(0)
   {
   arma_extra_debug_sigprint();
+  
+  m.sync_csc();
   
   // There must be a O(1) way to do this
   uword lend     = m.col_ptrs[in_col1 + in_n_cols];
@@ -140,6 +144,9 @@ SpSubview<eT>::operator*=(const eT val)
   {
   arma_extra_debug_sigprint();
   
+  m.sync_csc();
+  m.invalidate_cache();
+  
   const uword lstart_row = aux_row1;
   const uword lend_row   = aux_row1 + n_rows;
   
@@ -148,6 +155,8 @@ SpSubview<eT>::operator*=(const eT val)
   
   const uword* m_row_indices = m.row_indices;
         eT*    m_values      = access::rwp(m.values);
+  
+  bool has_zero = false;
   
   for(uword c = lstart_col; c < lend_col; ++c)
     {
@@ -160,18 +169,25 @@ SpSubview<eT>::operator*=(const eT val)
       
       if( (m_row_indices_r >= lstart_row) && (m_row_indices_r < lend_row) )
         {
-        m_values[r] *= val;
+        eT& m_values_r = m_values[r];
+        
+        m_values_r *= val;
+        
+        if(m_values_r == eT(0))  { has_zero = true; }
         }
       }
     }
   
-  const uword old_m_n_nonzero = m.n_nonzero;
-  
-  access::rw(m).remove_zeros();
-  
-  if(m.n_nonzero != old_m_n_nonzero)
+  if(has_zero)
     {
-    access::rw(n_nonzero) = n_nonzero - (old_m_n_nonzero - m.n_nonzero); 
+    const uword old_m_n_nonzero = m.n_nonzero;
+    
+    access::rw(m).remove_zeros();
+    
+    if(m.n_nonzero != old_m_n_nonzero)
+      {
+      access::rw(n_nonzero) = n_nonzero - (old_m_n_nonzero - m.n_nonzero); 
+      }
     }
   
   return *this;
@@ -188,6 +204,9 @@ SpSubview<eT>::operator/=(const eT val)
   
   arma_debug_check( (val == eT(0)), "element-wise division: division by zero" );
   
+  m.sync_csc();
+  m.invalidate_cache();
+  
   const uword lstart_row = aux_row1;
   const uword lend_row   = aux_row1 + n_rows;
   
@@ -196,6 +215,8 @@ SpSubview<eT>::operator/=(const eT val)
   
   const uword* m_row_indices = m.row_indices;
         eT*    m_values      = access::rwp(m.values);
+  
+  bool has_zero = false;
   
   for(uword c = lstart_col; c < lend_col; ++c)
     {
@@ -208,18 +229,25 @@ SpSubview<eT>::operator/=(const eT val)
       
       if( (m_row_indices_r >= lstart_row) && (m_row_indices_r < lend_row) )
         {
-        m_values[r] /= val;
+        eT& m_values_r = m_values[r];
+        
+        m_values_r /= val;
+        
+        if(m_values_r == eT(0))  { has_zero = true; }
         }
       }
     }
   
-  const uword old_m_n_nonzero = m.n_nonzero;
-  
-  access::rw(m).remove_zeros();
-  
-  if(m.n_nonzero != old_m_n_nonzero)
+  if(has_zero)
     {
-    access::rw(n_nonzero) = n_nonzero - (old_m_n_nonzero - m.n_nonzero); 
+    const uword old_m_n_nonzero = m.n_nonzero;
+    
+    access::rw(m).remove_zeros();
+    
+    if(m.n_nonzero != old_m_n_nonzero)
+      {
+      access::rw(n_nonzero) = n_nonzero - (old_m_n_nonzero - m.n_nonzero); 
+      }
     }
   
   return *this;
@@ -815,9 +843,20 @@ SpSubview<eT>::replace(const eT old_val, const eT new_val)
   
   if(old_val == eT(0))
     {
-    arma_debug_warn("SpSubview::replace(): replacement not done, as old_val = 0");
+    if(new_val != eT(0))
+      {
+      Mat<eT> tmp(*this);
+      
+      tmp.replace(old_val, new_val);
+      
+      (*this).operator=(tmp);
+      }
+    
     return;
     }
+  
+  m.sync_csc();
+  m.invalidate_cache();
   
   const uword lstart_row = aux_row1;
   const uword lend_row   = aux_row1 + n_rows;
@@ -940,7 +979,7 @@ SpSubview<eT>::eye()
 template<typename eT>
 arma_hot
 inline
-SpValProxy<SpSubview<eT> >
+MapMat_svel<eT>
 SpSubview<eT>::operator[](const uword i)
   {
   const uword lrow = i % n_rows;
@@ -968,7 +1007,7 @@ SpSubview<eT>::operator[](const uword i) const
 template<typename eT>
 arma_hot
 inline
-SpValProxy< SpSubview<eT> >
+MapMat_svel<eT>
 SpSubview<eT>::operator()(const uword i)
   {
   arma_debug_check( (i >= n_elem), "SpSubview::operator(): index out of bounds");
@@ -1000,7 +1039,7 @@ SpSubview<eT>::operator()(const uword i) const
 template<typename eT>
 arma_hot
 inline
-SpValProxy< SpSubview<eT> >
+MapMat_svel<eT>
 SpSubview<eT>::operator()(const uword in_row, const uword in_col)
   {
   arma_debug_check( (in_row >= n_rows) || (in_col >= n_cols), "SpSubview::operator(): index out of bounds");
@@ -1026,7 +1065,7 @@ SpSubview<eT>::operator()(const uword in_row, const uword in_col) const
 template<typename eT>
 arma_hot
 inline
-SpValProxy< SpSubview<eT> >
+MapMat_svel<eT>
 SpSubview<eT>::at(const uword i)
   {
   const uword lrow = i % n_rows;
@@ -1054,30 +1093,12 @@ SpSubview<eT>::at(const uword i) const
 template<typename eT>
 arma_hot
 inline
-SpValProxy< SpSubview<eT> >
+MapMat_svel<eT>
 SpSubview<eT>::at(const uword in_row, const uword in_col)
   {
-  const uword colptr      = m.col_ptrs[in_col + aux_col1];
-  const uword next_colptr = m.col_ptrs[in_col + aux_col1 + 1];
-
-  // Step through the row indices to see if our element exists.
-  for(uword i = colptr; i < next_colptr; ++i)
-    {
-    // First check that we have not stepped past it.
-    if((in_row + aux_row1) < m.row_indices[i])
-      {
-      return SpValProxy<SpSubview<eT> >(in_row, in_col, *this); // Proxy for a zero value.
-      }
-
-    // Now check if we are at the correct place.
-    if((in_row + aux_row1) == m.row_indices[i]) // If we are, return a reference to the value.
-      {
-      return SpValProxy<SpSubview<eT> >(in_row, in_col, *this, &access::rw(m.values[i]));
-      }
-    }
-
-  // We did not find it, so it does not exist.
-  return SpValProxy<SpSubview<eT> >(in_row, in_col, *this);
+  m.sync_cache();
+  
+  return m.cache.svel(aux_row1 + in_row, aux_col1 + in_col, m.sync_state, access::rw(m.n_nonzero), access::rw(n_nonzero));
   }
 
 
@@ -1452,8 +1473,8 @@ SpSubview<eT>::swap_rows(const uword in_row1, const uword in_row2)
 
   for(uword c = lstart_col; c < lend_col; ++c)
     {
-    eT val = m.at(in_row1 + aux_row1, c);
-    access::rw(m).at(in_row2 + aux_row1, c) = m.at(in_row1 + aux_row1, c);
+    const eT val = access::rw(m).at(in_row1 + aux_row1, c);
+    access::rw(m).at(in_row2 + aux_row1, c) = eT( access::rw(m).at(in_row1 + aux_row1, c) );
     access::rw(m).at(in_row1 + aux_row1, c) = val;
     }
   }
@@ -1474,8 +1495,8 @@ SpSubview<eT>::swap_cols(const uword in_col1, const uword in_col2)
 
   for(uword r = lstart_row; r < lend_row; ++r)
     {
-    eT val = m.at(r, in_col1 + aux_col1);
-    access::rw(m).at(r, in_col1 + aux_col1) = m.at(r, in_col2 + aux_col1);
+    const eT val = access::rw(m).at(r, in_col1 + aux_col1);
+    access::rw(m).at(r, in_col1 + aux_col1) = eT( access::rw(m).at(r, in_col2 + aux_col1) );
     access::rw(m).at(r, in_col2 + aux_col1) = val;
     }
   }
@@ -1497,6 +1518,8 @@ inline
 typename SpSubview<eT>::const_iterator
 SpSubview<eT>::begin() const
   {
+  m.sync_csc();
+  
   return const_iterator(*this);
   }
 
@@ -1507,6 +1530,8 @@ inline
 typename SpSubview<eT>::iterator
 SpSubview<eT>::begin_col(const uword col_num)
   {
+  m.sync_csc();
+  
   return iterator(*this, 0, col_num);
   }
 
@@ -1516,6 +1541,8 @@ inline
 typename SpSubview<eT>::const_iterator
 SpSubview<eT>::begin_col(const uword col_num) const
   {
+  m.sync_csc();
+  
   return const_iterator(*this, 0, col_num);
   }
 
@@ -1526,6 +1553,8 @@ inline
 typename SpSubview<eT>::row_iterator
 SpSubview<eT>::begin_row(const uword row_num)
   {
+  m.sync_csc();
+  
   return row_iterator(*this, row_num, 0);
   }
 
@@ -1536,6 +1565,8 @@ inline
 typename SpSubview<eT>::const_row_iterator
 SpSubview<eT>::begin_row(const uword row_num) const
   {
+  m.sync_csc();
+  
   return const_row_iterator(*this, row_num, 0);
   }
 
@@ -1546,6 +1577,8 @@ inline
 typename SpSubview<eT>::iterator
 SpSubview<eT>::end()
   {
+  m.sync_csc();
+  
   return iterator(*this, 0, n_cols, n_nonzero, m.n_nonzero - n_nonzero);
   }
 
@@ -1556,6 +1589,8 @@ inline
 typename SpSubview<eT>::const_iterator
 SpSubview<eT>::end() const
   {
+  m.sync_csc();
+  
   return const_iterator(*this, 0, n_cols, n_nonzero, m.n_nonzero - n_nonzero);
   }
 
@@ -1566,6 +1601,8 @@ inline
 typename SpSubview<eT>::row_iterator
 SpSubview<eT>::end_row()
   {
+  m.sync_csc();
+  
   return row_iterator(*this, n_nonzero);
   }
 
@@ -1576,6 +1613,8 @@ inline
 typename SpSubview<eT>::const_row_iterator
 SpSubview<eT>::end_row() const
   {
+  m.sync_csc();
+  
   return const_row_iterator(*this, n_nonzero);
   }
 
@@ -1586,6 +1625,8 @@ inline
 typename SpSubview<eT>::row_iterator
 SpSubview<eT>::end_row(const uword row_num)
   {
+  m.sync_csc();
+  
   return row_iterator(*this, row_num + 1, 0);
   }
 
@@ -1596,6 +1637,8 @@ inline
 typename SpSubview<eT>::const_row_iterator
 SpSubview<eT>::end_row(const uword row_num) const
   {
+  m.sync_csc();
+  
   return const_row_iterator(*this, row_num + 1, 0);
   }
 
