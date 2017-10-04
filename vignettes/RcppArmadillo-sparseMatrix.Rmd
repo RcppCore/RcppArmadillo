@@ -43,6 +43,59 @@ header-includes:
   \newcommand{\R}{\proglang{R}\ } 
   \newcommand{\Rns}{\proglang{R}} 
 
+include-after: >
+  \begin{thebibliography}{5}
+  \newcommand{\enquote}[1]{``#1''}
+  \providecommand{\natexlab}[1]{#1}
+  \providecommand{\url}[1]{\texttt{#1}}
+  \providecommand{\urlprefix}{URL }
+  \expandafter\ifx\csname urlstyle\endcsname\relax
+    \providecommand{\doi}[1]{doi:\discretionary{}{}{}#1}\else
+    \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
+    \urlstyle{rm}\Url}\fi
+  \providecommand{\eprint}[2][]{\url{#2}}
+  
+  \bibitem[{Bates and Maechler(2017)}]{CRAN:Matrix}
+  Bates D, Maechler M (2017).
+  \newblock \emph{\pkg{Matrix}: Sparse and Dense Matrix Classes and Methods}.
+  \newblock R package version 1.2-11,
+    \urlprefix\url{http://CRAN.R-Project.org/package=Matrix}.
+  
+  \bibitem[{Eddelbuettel \emph{et~al.}(2017)Eddelbuettel, Fran\c{c}ois, Bates,
+    and Ni}]{CRAN:RcppArmadillo}
+  Eddelbuettel D, Fran\c{c}ois R, Bates D, Ni B (2017).
+  \newblock \emph{RcppArmadillo: Rcpp integration for Armadillo templated linear
+    algebra library}.
+  \newblock R package version 0.7.960.1.2,
+    \urlprefix\url{http://CRAN.R-Project.org/package=RcppArmadillo}.
+  
+  \bibitem[{Eddelbuettel and
+    Sanderson(2014)}]{Eddelbuettel+Sanderson:2014:RcppArmadillo}
+  Eddelbuettel D, Sanderson C (2014).
+  \newblock \enquote{{RcppArmadillo}: Accelerating {R} with High-Performance
+    {C++} Linear Algebra.}
+  \newblock \emph{Computational Statistics and Data Analysis}, \textbf{71},
+    1054--1063.
+  \newblock \doi{10.1016/j.csda.2013.02.005}.
+  \newblock \urlprefix\url{http://dx.doi.org/10.1016/j.csda.2013.02.005}.
+  
+  \bibitem[{Sanderson(2010)}]{Sanderson:2010:Armadillo}
+  Sanderson C (2010).
+  \newblock \enquote{{Armadillo}: {An} open source {C++} Algebra Library for Fast
+    Prototyping and Computationally Intensive Experiments.}
+  \newblock \emph{Technical report}, {NICTA}.
+  \newblock \urlprefix\url{http://arma.sf.net}.
+  
+  \bibitem[{Sanderson and Curtin(2016)}]{Sanderson+Curtin:2016}
+  Sanderson C, Curtin R (2016).
+  \newblock \enquote{Armadillo: {A Template-Based C++ Library for Linear
+    Algebra}.}
+  \newblock \emph{{JOSS}}, \textbf{1}(2).
+  \newblock \doi{10.21105/joss.00026}.
+  \newblock \urlprefix\url{http://dx.doi.org/10.21105/joss.00026}.
+
+  \end{thebibliography}
+
 vignette: >
   %\VignetteIndexEntry{RcppArmadillo-sparseMatrix}
   %\VignetteKeywords{R, C++, Armadillo, linear algebra, sparse matrix}
@@ -60,25 +113,27 @@ library(Matrix)
 
 # Introduction
 
-The documentation is intended for the convenience of RcppArmadillo sparse matrix users
-based on integration of the documentation of library
-[Matrix](https://cran.r-project.org/web/packages/Matrix/Matrix.pdf)
-and [Armadillo](http://arma.sourceforge.net/docs.html#SpMat).
+The documentation is intended for the convenience of RcppArmadillo sparse matrix users based on
+integration of the documentation of library
+[Matrix](https://cran.r-project.org/web/packages/Matrix/Matrix.pdf) \citep{CRAN:Matrix} and
+[Armadillo](http://arma.sourceforge.net/docs.html#SpMat)
+\citep{Sanderson:2010:Armadillo,Sanderson+Curtin:2016}.
 
-There are 31 types of sparse matrices in the package "Matrix" that can
-be directly used. But for now, only 12 of them are supported in
-RcppArmadillo: `dgCMatrix`, `dtCMatrix`, `dsCMatrix`, `dgTMatrix`, `dtTMatrix`,
-`dsTMatrix`, `dgRMatrix`, `dtRMatrix`, `dsRMatrix`, `indMatrix`, `pMatrix`,
-`ddiMatrix`.
+There are 31 types of sparse matrices in the [Matrix](https://cran.r-project.org/package=Matrix)
+package that can be used directly. But for now, only 12 of them are supported in RcppArmadillo:
+`dgCMatrix`, `dtCMatrix`, `dsCMatrix`, `dgTMatrix`, `dtTMatrix`, `dsTMatrix`, `dgRMatrix`,
+`dtRMatrix`, `dsRMatrix`, `indMatrix`, `pMatrix`, `ddiMatrix`.
 
-In the library "Armadillo", sparse matrix is currently stored as
+In the [Armadillo](http://arma.sourceforge.net/docs.html#SpMat) library, sparse matrix content is
+currently stored as
 [CSC](https://en.wikipedia.org/wiki/Sparse_matrix#Compressed_sparse_column_.28CSC_or_CCS.29)
-format. Such kind of format is quite similar to numeric
-column-oriented sparse matrix in the library \pkg{Matrix} (including
-`dgCMatrix`, `dtCMatrix` and `dsCMatrix`). When a sparse matrix from the
-package \pkg{Matrix} is passed through \pkg{RcppArmadillo}, it will be converted
-or mapped to CSC format, then undertaken operations on, and finally
-ouput as a `dgCMatrix` in R.
+format. Such kind of format is quite similar to numeric column-oriented sparse matrix in the library
+[Matrix](https://cran.r-project.org/package=Matrix) (including `dgCMatrix`, `dtCMatrix` and
+`dsCMatrix`). When a sparse matrix from the package
+[Matrix](https://cran.r-project.org/package=Matrix) is passed through the
+[RcppArmadillo](https://cran.r-project.org/package=RcppArmadillo)) package
+\citep{Eddelbuettel+Sanderson:2014:RcppArmadillo,CRAN:RcppArmadillo}, it will be converted or mapped to
+CSC format, then undertaken operations on, and finally ouput as a `dgCMatrix` in R.
 
 
 In what follows, we will always assume this common header:
@@ -274,7 +329,7 @@ R> trace_(prod)
 - Description: triangular numeric sparse matrix in triplet form.
 - Constructor \
     - `new("dtTMatrix", ...)` \
-    - `code{sparseMatrix(*, triangular=TRUE, giveCsparse=FALSE)` \
+    - `code{sparseMatrix(*, triangular=TRUE, giveCsparse=FALSE)` 
 - Coercion\
     - `as(*, "triangularMatrix")`\
     - `as(*, "dtTMatrix")`\
@@ -308,10 +363,10 @@ R> diag_ones(dtT)
 
 ### Synopsis
 
-- Description: symmetric numeric sparse matrix in triplet form.\
+- Description: symmetric numeric sparse matrix in triplet form.
 - Constructor \
     - `new("dsTMatrix", ...)` \
-    - `sparseMatrix(*, symmetric=TRUE, giveCsparse=FALSE)`\
+    - `sparseMatrix(*, symmetric=TRUE, giveCsparse=FALSE)`
 - Coercion\
     - `as(*, "symmetricMatrix")`\
     - `as(*, "dsTMatrix")`\
@@ -342,7 +397,7 @@ R> trace_(dsT)
 
 - Description: general row-oriented numeric sparse matrix.
 - Constructor\
-    - `new("dgRMatrix", ...)`\
+    - `new("dgRMatrix", ...)`
 - Coercion\
     - `as(*, "RsparseMatrix")`\
     - `as(*, "dgRatrix")` \
@@ -410,7 +465,7 @@ R> repmat_(dtR, 2, 2)
 
 - Description: symmetric row-oriented numeric sparse matrix.
 - Constructor \
-    - `new("dsRMatrix", ...)`\
+    - `new("dsRMatrix", ...)`
 - Coercion \
     - `as("dsCMatrix", "dsRMatrix")`
 
@@ -477,9 +532,9 @@ R> multiply(ind, dgT)
 
 ### Synopsis
 
-- Description: permutation matrix.\
+- Description: permutation matrix.
 - Constructor\
-    - `new("pMatrix", ...)`\
+    - `new("pMatrix", ...)`
 - Coercion \
     - `as(*, "pMatrix")`
 
@@ -514,7 +569,7 @@ R> multiply(pM, dgT)
 
 ### Synopsis
 
-- Description: numeric diagonal Matrix.\
+- Description: numeric diagonal Matrix.
 - Constructor\
     - `new("ddiMatrix", ...)`\
     - `Diagonal(*)`\
@@ -544,7 +599,3 @@ R> multiply(ddi, dgR)
 [3,] . . . .
 [4,] . . . 1
 ```
-
-\newpage
-
-FIN

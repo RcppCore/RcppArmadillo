@@ -13,6 +13,7 @@ rm -f  config.log config.status confdefs.h \
        vignettes/RcppArmadillo-*.pdf \
        vignettes/*.blg \
        vignettes/*.bbl \
+       vignettes/*.xwm \
        vignettes/*~ \
        */*~ *~ \
        inst/include/RcppArmadilloLapack.h \
