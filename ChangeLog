@@ -1,6 +1,11 @@
+2017-10-05  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Release 0.8.100.1.0
+
 2017-10-04  Dirk Eddelbuettel  <edd@debian.org>
 
-	* vignettes/RcppArmadillo-sparseMatrix.Rmd: Some edits, added references
+	* vignettes/RcppArmadillo-sparseMatrix.Rmd: Some edits, added
+	references
 
 2017-10-02  Dirk Eddelbuettel  <edd@debian.org>
 
