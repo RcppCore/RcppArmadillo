@@ -10,10 +10,12 @@ group: edge
 
 before_install:
   - curl -OLs https://eddelbuettel.github.io/r-travis/run.sh && chmod 0755 run.sh
+  # add our launchpad repo which has (inter alia) r-cran-pinp
+  - sudo add-apt-repository -y ppa:edd/misc
   - ./run.sh bootstrap
 
 install:
-  - ./run.sh install_aptget  r-cran-rcpp r-cran-runit r-cran-matrix r-cran-pkgkitten r-cran-jsonlite python-scipy r-cran-highlight
+  - ./run.sh install_aptget  r-cran-rcpp r-cran-runit r-cran-matrix r-cran-pkgkitten r-cran-jsonlite python-scipy r-cran-pinp
   - ./run.sh install_r reticulate
 
 script:

@@ -2,6 +2,8 @@
 
 	* DESCRIPTION (Version, Date): Release 0.8.100.1.0
 
+	* .travis.yml (install): Also install r-cran-pinp
+
 2017-10-04  Dirk Eddelbuettel  <edd@debian.org>
 
 	* vignettes/RcppArmadillo-sparseMatrix.Rmd: Some edits, added
