@@ -87,8 +87,9 @@ namespace Rcpp{
     
     template <typename T> SEXP wrap ( const arma::SpMat<T>& sm ){
         const int  RTYPE = Rcpp::traits::r_sexptype_traits<T>::rtype;
-            
-        IntegerVector dim = IntegerVector::create( sm.n_rows, sm.n_cols );
+
+        sm.sync();              // important: update internal state of SpMat object
+        IntegerVector dim = IntegerVector::create(sm.n_rows, sm.n_cols);
 		
         // copy the data into R objects
         Vector<RTYPE> x(sm.values, sm.values + sm.n_nonzero ) ;
