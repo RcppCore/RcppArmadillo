@@ -1,10 +1,16 @@
+2017-10-10  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Release 0.8.100.1.0
+	* inst/NEWS.Rd: Idem
+	* configure: Idem
+
 2017-10-09  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/RcppArmadilloWrap.h (Rcpp): Call sync() on SpMat
 
 2017-10-05  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Release 0.8.100.1.0
+	* DESCRIPTION (Version, Date): Release 0.8.100.1.0 (incomplete)
 
 	* .travis.yml (install): Also install r-cran-pinp
 
