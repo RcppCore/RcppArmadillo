@@ -19,12 +19,12 @@
 
 RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
                                            environment=.GlobalEnv,
-                                           path=".", force=FALSE, 
-                                           code_files=character(), 
+                                           path=".", force=FALSE,
+                                           code_files=character(),
                                            example_code=TRUE) {
-	
+
     env <- parent.frame(1)
-	
+
     if (! length(list)) {
         fake <- TRUE
         assign("Rcpp.fake.fun", function(){}, envir = env)
@@ -54,34 +54,34 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
                  cat(paste(e, "\n")) # print error
                  stop(paste("error while calling `", skelFunName, "`", sep=""))
              })
-	
+
     message("\nAdding RcppArmadillo settings")
-	
-    ## now pick things up 
+
+    ## now pick things up
     root <- file.path(path, name)
-	
+
     ## Add Rcpp to the DESCRIPTION
     DESCRIPTION <- file.path(root, "DESCRIPTION")
     if (file.exists(DESCRIPTION)) {
-        x <- cbind(read.dcf(DESCRIPTION), 
-                   "Imports" = sprintf("Rcpp (>= %s)", packageDescription("Rcpp")[["Version"]]), 
+        x <- cbind(read.dcf(DESCRIPTION),
+                   "Imports" = sprintf("Rcpp (>= %s)", packageDescription("Rcpp")[["Version"]]),
                    "LinkingTo" = "Rcpp, RcppArmadillo")
         write.dcf(x, file=DESCRIPTION)
         message(" >> added Imports: Rcpp")
         message(" >> added LinkingTo: Rcpp, RcppArmadillo")
     }
-	
-    ## add a useDynLib to NAMESPACE, 
+
+    ## add a useDynLib to NAMESPACE,
     NAMESPACE <- file.path( root, "NAMESPACE")
     lines <- readLines( NAMESPACE )
     if (! grepl("useDynLib", lines)) {
-        lines <- c(sprintf("useDynLib(%s)", name),
+        lines <- c(sprintf("useDynLib(%s, .registration=TRUE)", name),
                    "importFrom(Rcpp, evalCpp)",        ## ensures Rcpp instantiation
                    lines)
         writeLines(lines, con = NAMESPACE)
         message( " >> added useDynLib and importFrom directives to NAMESPACE")
     }
-	
+
     ## lay things out in the src directory
     src <- file.path(root, "src")
     if (!file.exists(src)) {
@@ -97,13 +97,13 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
         file.copy(file.path(skeleton, "Makevars"), Makevars)
         message(" >> added Makevars file with Rcpp settings")
     }
-	
+
     Makevars.win <- file.path(src, "Makevars.win")
-    if (! file.exists( Makevars.win)) {
+    if (! file.exists(Makevars.win)) {
         file.copy(file.path(skeleton, "Makevars.win"), Makevars.win)
         message(" >> added Makevars.win file with RcppArmadillo settings")
     }
-		
+
     if (example_code) {
         file.copy(file.path(skeleton, "rcpparma_hello_world.cpp"), src)
         message(" >> added example src file using armadillo classes")
@@ -113,13 +113,13 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
 	Rcpp::compileAttributes(root)
         message(" >> invoked Rcpp::compileAttributes to create wrappers")
     }
-    
+
     if (fake) {
         rm("Rcpp.fake.fun", envir=env)
         unlink(file.path(root, "R"  , "Rcpp.fake.fun.R"))
         unlink(file.path(root, "man", "Rcpp.fake.fun.Rd"))
     }
-	
+
     invisible(NULL)
 }
 
