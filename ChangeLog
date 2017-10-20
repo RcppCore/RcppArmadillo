@@ -1,3 +1,14 @@
+2017-10-20  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Roll minor version
+
+	* inst/include/RcppArmadilloConfigGenerated.h.in: Suppress warnings
+	from Armadillo by setting ARMA_DONT_PRINT_OPENMP_WARNING as client packages
+	may fail to pass -fopenmp on systems where we expect it
+
+	* configure.ac: Minor cleanup
+	* configure: Idem
+
 2017-10-14  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Roll minor version

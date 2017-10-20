@@ -23,9 +23,16 @@
 #define RcppArmadillo__RcppArmadilloConfigGenerated__h
 
 // value on next line may be changed between #undef and #define by the configure script
-@HAVE_GOOD_LAPACK@ @ARMA_CRIPPLED_LAPACK@
+@ARMA_LAPACK@
 
-// from configure test for OpenMP
-@HAVE_OPENMP@
+// from configure test for OpenMP with test based on how R is configure
+@ARMA_HAVE_OPENMP@
+
+// Many client packages do not set the OpenMP compiler flag in their src/Makevars
+// (ie add $(SHLIB_OPENMP_CXXFLAGS) to the PKG_CXXFLAGS line as we do) so to tone
+// down the line noise we ask Armadillo not to print the warning
+#ifdef ARMA_USE_OPENMP
+#define ARMA_DONT_PRINT_OPENMP_WARNING 1
+#endif
 
 #endif
