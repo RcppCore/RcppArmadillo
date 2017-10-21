@@ -3,6 +3,20 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo [GitHub Only] version 0.8.200.1.0 (2017-10-21)}{
+  \itemize{
+    \item 
+    \item Upgraded to Armadillo release 8.200.1 (Feral Pursuits Deluxe)
+    \itemize{
+      \item added \code{intersect()} for finding common elements in two vectors/matrices
+      \item expanded \code{affmul()} to handle non-square matrices
+    }
+    \item Updated the skeleton package to current packaging standards
+    \item Suppress warnings from Armadillo about missing OpenMP support
+    and \code{-fopenmp} flags by setting \code{ARMA_DONT_PRINT_OPENMP_WARNING}
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.8.100.1.0 (2017-10-10)}{
   \itemize{
     \item Upgraded to Armadillo release 8.100.1 (Feral Pursuits)
