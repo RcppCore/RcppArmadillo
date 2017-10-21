@@ -14,36 +14,23 @@
 // ------------------------------------------------------------------------
 
 
-namespace newarp
-{
+//! \addtogroup glue_intersect
+//! @{
 
 
-template<typename eT>
-inline 
-DenseGenMatProd<eT>::DenseGenMatProd(const Mat<eT>& mat_obj)
-  : op_mat(mat_obj)
-  , n_rows(mat_obj.n_rows)
-  , n_cols(mat_obj.n_cols)
+
+class glue_intersect
   {
-  arma_extra_debug_sigprint();
-  }
-
-
-
-// Perform the matrix-vector multiplication operation \f$y=Ax\f$.
-// y_out = A * x_in
-template<typename eT>
-inline
-void
-DenseGenMatProd<eT>::perform_op(eT* x_in, eT* y_out) const
-  {
-  arma_extra_debug_sigprint();
+  public:
   
-  const Col<eT> x(x_in , n_cols, false, true);
-        Col<eT> y(y_out, n_rows, false, true);
+  template<typename T1, typename T2>
+  inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_intersect>& X);
   
-  y = op_mat * x;
-  }
+  template<typename T1, typename T2>
+  inline static void apply(Mat<typename T1::elem_type>& out, uvec& iA, uvec& iB, const Base<typename T1::elem_type,T1>& A_expr, const Base<typename T1::elem_type,T2>& B_expr, const bool calc_indx);
+  };
 
 
-}  // namespace newarp
+
+//! @}
+

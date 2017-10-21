@@ -1646,16 +1646,15 @@ SpSubview<eT>::end_row(const uword row_num) const
 
 template<typename eT>
 inline
-arma_hot
 arma_warn_unused
 eT&
-SpSubview<eT>::add_element(const uword in_row, const uword in_col, const eT in_val)
+SpSubview<eT>::insert_element(const uword in_row, const uword in_col, const eT in_val)
   {
   arma_extra_debug_sigprint();
 
-  // This may not actually add an element.
+  // This may not actually insert an element.
   const uword old_n_nonzero = m.n_nonzero;
-  eT& retval = access::rw(m).add_element(in_row + aux_row1, in_col + aux_col1, in_val);
+  eT& retval = access::rw(m).insert_element(in_row + aux_row1, in_col + aux_col1, in_val);
   // Update n_nonzero (if necessary).
   access::rw(n_nonzero) += (m.n_nonzero - old_n_nonzero);
 
@@ -1675,6 +1674,18 @@ SpSubview<eT>::delete_element(const uword in_row, const uword in_col)
   const uword old_n_nonzero = m.n_nonzero;
   access::rw(m).delete_element(in_row + aux_row1, in_col + aux_col1);
   access::rw(n_nonzero) -= (old_n_nonzero - m.n_nonzero);
+  }
+
+
+
+template<typename eT>
+inline
+void
+SpSubview<eT>::invalidate_cache() const
+  {
+  arma_extra_debug_sigprint();
+  
+  m.invalidate_cache();
   }
 
 

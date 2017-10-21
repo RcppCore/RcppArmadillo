@@ -14,36 +14,50 @@
 // ------------------------------------------------------------------------
 
 
-namespace newarp
-{
+//! \addtogroup fn_intersect
+//! @{
 
 
-template<typename eT>
-inline 
-DenseGenMatProd<eT>::DenseGenMatProd(const Mat<eT>& mat_obj)
-  : op_mat(mat_obj)
-  , n_rows(mat_obj.n_rows)
-  , n_cols(mat_obj.n_cols)
+
+template<typename T1, typename T2>
+arma_warn_unused
+inline
+typename
+enable_if2
+  <
+  ( is_arma_type<T1>::value && is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value ),
+  const Glue<T1, T2, glue_intersect>
+  >::result
+intersect
+  (
+  const T1& A,
+  const T2& B
+  )
   {
   arma_extra_debug_sigprint();
+  
+  return Glue<T1, T2, glue_intersect>(A, B);
   }
 
 
 
-// Perform the matrix-vector multiplication operation \f$y=Ax\f$.
-// y_out = A * x_in
-template<typename eT>
+template<typename T1, typename T2>
 inline
 void
-DenseGenMatProd<eT>::perform_op(eT* x_in, eT* y_out) const
+intersect
+  (
+  Mat<typename T1::elem_type>&            C,
+  uvec&                                  iA,
+  uvec&                                  iB, 
+  const Base<typename T1::elem_type,T1>&  A,
+  const Base<typename T1::elem_type,T2>&  B
+  )
   {
   arma_extra_debug_sigprint();
   
-  const Col<eT> x(x_in , n_cols, false, true);
-        Col<eT> y(y_out, n_rows, false, true);
-  
-  y = op_mat * x;
+  glue_intersect::apply(C, iA, iB, A.get_ref(), B.get_ref(), true);  
   }
 
 
-}  // namespace newarp
+
+//! @}
