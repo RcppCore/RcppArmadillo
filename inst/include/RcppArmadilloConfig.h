@@ -109,6 +109,16 @@
   #include <RcppArmadilloConfigGenerated.h>
 #endif
 
+// Many client packages do not set the OpenMP compiler flag in their src/Makevars
+// (ie add $(SHLIB_OPENMP_CXXFLAGS) to the PKG_CXXFLAGS line as we do) so to tone
+// down the line noise we ask Armadillo not to print the warning
+#if defined(ARMA_USE_OPENMP)
+  //#if !defined(_OPENMP)
+  //  #pragma message("NOTE: To enable OpenMP-based speedups, add -fopenmp to the compiler flags. See Writing R Extension (Sec 1.2.1) and R Inst. + Admin. (Sec 6.3.3) for details.")
+  //#endif
+  #define ARMA_DONT_PRINT_OPENMP_WARNING 1
+#endif
+
 
 // Under C++11 and C++14, Armadillo now defaults to using int64_t for
 // integers.  This prevents us from passing integer vectors to R as

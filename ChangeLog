@@ -6,15 +6,11 @@
 	* inst/include/armadillo: Upgraded to Armadillo 8.200.1
 	* inst/include/armadillo_bits/*: Idem
 
-2017-10-20  Dirk Eddelbuettel  <edd@debian.org>
+	* inst/include/RcppArmadilloConfig.h: Set ARMA_DONT_PRINT_OPENMP_WARNING to
+	suppress warnings from Armadillo when client packages fail to set -fopenmp
 
-	* DESCRIPTION (Version, Date): Roll minor version
-
-	* inst/include/RcppArmadilloConfigGenerated.h.in: Suppress warnings
-	from Armadillo by setting ARMA_DONT_PRINT_OPENMP_WARNING as client packages
-	may fail to pass -fopenmp on systems where we expect it
-
-	* configure.ac: Minor cleanup
+	* inst/include/RcppArmadilloConfigGenerated.h.in: Small cleanups
+	* configure.ac: Idem
 	* configure: Idem
 
 2017-10-14  Dirk Eddelbuettel  <edd@debian.org>
