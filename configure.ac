@@ -43,6 +43,10 @@ if test "${GXX}" = yes; then
              gxx_newer_than_45="-fpermissive"
              AC_MSG_RESULT([(${gxx_version}) yes])
         ;;
+        *)
+             AC_MSG_RESULT([almost])
+             AC_MSG_WARN([Compiler self-identifies as being compliant with GNUC extensions but is not g++.])
+        ;;
     esac
 fi
 
