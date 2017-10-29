@@ -3,6 +3,12 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo [GitHub Only] version 0.8.200.1.1 (2017-10-29)}{
+  \itemize{
+    \item Updated configure code to check for g++ 5.4 or later to enable OpenMP.
+  }
+}
+
 \section{Changes in RcppArmadillo [GitHub Only] version 0.8.200.1.0 (2017-10-21)}{
   \itemize{
     \item 

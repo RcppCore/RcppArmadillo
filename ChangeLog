@@ -1,3 +1,10 @@
+2017-10-29  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.8.200.1.1 [GitHub only]
+        * inst/NEWS.Rd: Release 0.8.200.1.1 [GitHub only]
+
+	* inst/include/RcppArmadilloConfigGenerated.h.in: Minor edit to comment
+
 2017-10-28  Dirk Eddelbuettel  <edd@debian.org>
 
 	* configure.ac: Repair for OpenMP use as Armadillo needs g++ 5.4 or later
