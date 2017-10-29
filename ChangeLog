@@ -1,3 +1,8 @@
+2017-10-28  Dirk Eddelbuettel  <edd@debian.org>
+
+	* configure.ac: Repair for OpenMP use as Armadillo needs g++ 5.4 or later
+	* configure: Idem
+
 2017-10-22  Dirk Eddelbuettel  <edd@debian.org>
 
 	* configure.ac: Add default branch to g++ test with thanks to James

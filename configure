@@ -2440,6 +2440,10 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
 
 
+## default to not even thinking about OpenMP as Armadillo wants a pragma
+## variant available if and only if C++11 is used with g++ 5.4 or newer
+can_use_openmp=""
+
 ## Check the C++ compiler using the CXX value set
 ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
@@ -2711,16 +2715,25 @@ $as_echo "no" >&6; }
 $as_echo "$as_me: WARNING: Only g++ version 4.7.2 or greater can be used with RcppArmadillo." >&2;}
              as_fn_error $? "Please use a different compiler." "$LINENO" 5
         ;;
-        4.7.2-9|4.8.*|4.9.*|5.*|6.*|7.*|8.*)
-             gxx_newer_than_45="-fpermissive"
-             { $as_echo "$as_me:${as_lineno-$LINENO}: result: (${gxx_version}) yes" >&5
-$as_echo "(${gxx_version}) yes" >&6; }
+        4.7.2-9|4.8.*|4.9.*|5.0-3*)
+             { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes, but without OpenMP as version ${gxx_version} (Armadillo constraint)" >&5
+$as_echo "yes, but without OpenMP as version ${gxx_version} (Armadillo constraint)" >&6; }
+             ## we know this one is bad
+             can_use_openmp="no"
+        ;;
+        5.4-9*|6.*|7.*|8.*)
+             { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes, with OpenMP as version ${gxx_version}" >&5
+$as_echo "yes, with OpenMP as version ${gxx_version}" >&6; }
+             ## we know this one is good, yay
+             can_use_openmp="yes"
         ;;
         *)
              { $as_echo "$as_me:${as_lineno-$LINENO}: result: almost" >&5
 $as_echo "almost" >&6; }
              { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Compiler self-identifies as being compliant with GNUC extensions but is not g++." >&5
 $as_echo "$as_me: WARNING: Compiler self-identifies as being compliant with GNUC extensions but is not g++." >&2;}
+             ## we know nothing, so no
+             can_use_openmp="no"
         ;;
     esac
 fi
@@ -2765,6 +2778,8 @@ fi
 ## Default the OpenMP flag to the empty string.
 ## If and only if OpenMP is found, expand to $(SHLIB_OPENMP_CXXFLAGS)
 openmp_flag=""
+## Set the fallback, by default it is nope
+arma_have_openmp="#define ARMA_DONT_USE_OPENMP 1"
 
 ## Check for broken systems produced by a corporation based in Cupertino
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for macOS" >&5
@@ -2779,21 +2794,23 @@ $as_echo "$as_me: WARNING: OpenMP unavailable and turned off." >&2;}
 else
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: not found as on ${RSysinfoName}" >&5
 $as_echo "not found as on ${RSysinfoName}" >&6; }
-   ## Check for OpenMP
-   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for OpenMP" >&5
+   ## Check for OpenMP if and only if we have a suitable compile
+   if test x"${can_use_openmp}" == x"yes"; then
+      { $as_echo "$as_me:${as_lineno-$LINENO}: checking for OpenMP" >&5
 $as_echo_n "checking for OpenMP... " >&6; }
-   ## if R has -fopenmp we should be good
-   allldflags=$(${R_HOME}/bin/R CMD config --ldflags)
-   hasOpenMP=$(echo ${allldflags} | grep -- -fopenmp)
-   if test x"${hasOpenMP}" == x""; then
-      { $as_echo "$as_me:${as_lineno-$LINENO}: result: missing" >&5
+      ## if R has -fopenmp we should be good
+      allldflags=$(${R_HOME}/bin/R CMD config --ldflags)
+      hasOpenMP=$(echo ${allldflags} | grep -- -fopenmp)
+      if test x"${hasOpenMP}" == x""; then
+         { $as_echo "$as_me:${as_lineno-$LINENO}: result: missing" >&5
 $as_echo "missing" >&6; }
-      arma_have_openmp="#define ARMA_DONT_USE_OPENMP 1"
-   else
-      { $as_echo "$as_me:${as_lineno-$LINENO}: result: found" >&5
-$as_echo "found" >&6; }
-      arma_have_openmp="#define ARMA_USE_OPENMP 1"
-      openmp_flag='$(SHLIB_OPENMP_CXXFLAGS)'
+         arma_have_openmp="#define ARMA_DONT_USE_OPENMP 1"
+      else
+         { $as_echo "$as_me:${as_lineno-$LINENO}: result: found and suitable" >&5
+$as_echo "found and suitable" >&6; }
+         arma_have_openmp="#define ARMA_USE_OPENMP 1"
+         openmp_flag='$(SHLIB_OPENMP_CXXFLAGS)'
+      fi
    fi
 fi
 
