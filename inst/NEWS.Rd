@@ -3,8 +3,9 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo [GitHub Only] version 0.8.200.1.1 (2017-10-29)}{
+\section{Changes in RcppArmadillo [GitHub Only] version 0.8.200.2.0 (2017-11-08)}{
   \itemize{
+    \item Upgraded to Armadillo release 8.200.2 (Feral Pursuits Deluxe)
     \item Updated configure code to check for g++ 5.4 or later to enable OpenMP.
   }
 }
