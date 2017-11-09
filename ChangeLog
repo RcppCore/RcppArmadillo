@@ -1,3 +1,9 @@
+2017-11-08  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Release 0.8.200.2.0 [GitHub only]
+
+	* inst/include/armadillo_bits/*: Upgraded to Armadillo 8.200.2
+
 2017-10-29  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.8.200.1.1 [GitHub only]
