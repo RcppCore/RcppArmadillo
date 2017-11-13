@@ -78,11 +78,10 @@
 \references{
   Armadillo project: \url{http://arma.sourceforge.net/}
 
-  Conrad Sanderson,
-  \href{http://arma.sourceforge.net/armadillo_nicta_2010.pdf}{Armadillo:
-  An Open Source C++ Linear Algebra Library 
-  for Fast Prototyping and Computationally Intensive
-  Experiments}. Technical Report, NICTA, 2010.
+  Conrad Sanderson and Ryan Curtin.
+  \href{http://arma.sourceforge.net/armadillo_joss_2016.pdf}{Armadillo:
+  a template-based C++ library for linear algebra}.
+  Journal of Open Source Software, Vol. 1, pp. 26, 2016.
 
   Dirk Eddelbuettel and Conrad Sanderson,
   "RcppArmadillo: Accelerating R with high-performance C++ linear algebra", 
