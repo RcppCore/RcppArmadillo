@@ -52,12 +52,14 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
   const bool fast        = bool(flags & solve_opts::flag_fast       );
   const bool equilibrate = bool(flags & solve_opts::flag_equilibrate);
   const bool no_approx   = bool(flags & solve_opts::flag_no_approx  );
+  const bool no_band     = bool(flags & solve_opts::flag_no_band    );
   
   arma_extra_debug_print("glue_solve_gen::apply(): enabled flags:");
   
   if(fast       )  { arma_extra_debug_print("fast");        }
   if(equilibrate)  { arma_extra_debug_print("equilibrate"); }
   if(no_approx  )  { arma_extra_debug_print("no_approx");   }
+  if(no_band    )  { arma_extra_debug_print("no_band");     }
   
   T    rcond  = T(0);
   bool status = false;
@@ -68,20 +70,44 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
     {
     arma_extra_debug_print("glue_solve_gen::apply(): detected square system");
     
+    uword KL = 0;
+    uword KU = 0;
+    
+    const bool is_band = ((no_band == false) && (auxlib::crippled_lapack(A) == false)) ? band_helper::is_band(KL, KU, A, uword(32)) : false;
+    
     if(fast)
       {
-      arma_extra_debug_print("glue_solve_gen::apply(): (fast)");
-      
       if(equilibrate)  { arma_debug_warn("solve(): option 'equilibrate' ignored, as option 'fast' is enabled"); }
       
-      status = auxlib::solve_square_fast(out, A, B_expr.get_ref());  // A is overwritten
+      if(is_band == false)
+        {
+        arma_extra_debug_print("glue_solve_gen::apply(): fast + dense");
+      
+        status = auxlib::solve_square_fast(out, A, B_expr.get_ref());  // A is overwritten
+        }
+      else
+        {
+        arma_extra_debug_print("glue_solve_gen::apply(): fast + band");
+        
+        status = auxlib::solve_band_fast(out, A, KL, KU, B_expr.get_ref());
+        }
       }
     else
       {
-      arma_extra_debug_print("glue_solve_gen::apply(): (refine)");
-      
-      status = auxlib::solve_square_refine(out, rcond, A, B_expr, equilibrate);  // A is overwritten
+      if(is_band == false)
+        {
+        arma_extra_debug_print("glue_solve_gen::apply(): refine + dense");
+        
+        status = auxlib::solve_square_refine(out, rcond, A, B_expr, equilibrate);  // A is overwritten
+        }
+      else
+        {
+        arma_extra_debug_print("glue_solve_gen::apply(): refine + band");
+        
+        status = auxlib::solve_band_refine(out, rcond, A, KL, KU, B_expr, equilibrate);
+        }
       }
+    
     
     if( (status == false) && (no_approx == false) )
       {

@@ -3721,7 +3721,7 @@ Cube<eT>::save(const std::string name, const file_type type, const bool print_st
   {
   arma_extra_debug_sigprint();
   
-  bool save_okay;
+  bool save_okay = false;
   
   switch(type)
     {
@@ -3744,19 +3744,13 @@ Cube<eT>::save(const std::string name, const file_type type, const bool print_st
     case ppm_binary:
       save_okay = diskio::save_ppm_binary(*this, name);
       break;
-
+    
     case hdf5_binary:
-      save_okay = diskio::save_hdf5_binary(*this, hdf5_name(name));
+      return (*this).save(hdf5_name(name));
       break;
     
-    case hdf5_binary_trans:
-      {
-      Cube<eT> tmp;
-      
-      op_strans_cube::apply_noalias(tmp, (*this));
-      
-      save_okay = diskio::save_hdf5_binary(tmp, hdf5_name(name));
-      }
+    case hdf5_binary_trans:  // kept for compatibility with earlier versions of Armadillo
+      return (*this).save(hdf5_name(name, std::string(), hdf5_opts::trans));
       break;
     
     default:
@@ -3778,30 +3772,51 @@ Cube<eT>::save(const hdf5_name& spec, const file_type type, const bool print_sta
   {
   arma_extra_debug_sigprint();
   
-  bool save_okay;
+  // handling of hdf5_binary_trans kept for compatibility with earlier versions of Armadillo
   
-  switch(type)
+  if( (type != hdf5_binary) && (type != hdf5_binary_trans) )
     {
-    case hdf5_binary:
-      save_okay = diskio::save_hdf5_binary(*this, spec);
-      break;
-    
-    case hdf5_binary_trans:
-      {
-      Cube<eT> tmp;
-      
-      op_strans_cube::apply_noalias(tmp, (*this));
-      
-      save_okay = diskio::save_hdf5_binary(tmp, spec);
-      }
-      break;
-    
-    default:
-      if(print_status)  { arma_debug_warn("Cube::save(): unsupported file type"); }
-      save_okay = false;
+    arma_debug_check(true, "Cube::save(): unsupported file type for hdf5_name()");
+    return false;
     }
   
-  if(print_status && (save_okay == false))  { arma_debug_warn("Cube::save(): couldn't write to ", spec.filename); }
+  const bool do_trans = bool(spec.opts.flags & hdf5_opts::flag_trans  ) || (type == hdf5_binary_trans);
+  const bool append   = bool(spec.opts.flags & hdf5_opts::flag_append );
+  const bool replace  = bool(spec.opts.flags & hdf5_opts::flag_replace);
+  
+  if(append && replace)
+    {
+    arma_debug_check(true, "Cube::save(): only one of 'append' or 'replace' options can be used");
+    return false;
+    }
+  
+  bool save_okay = false;
+  std::string err_msg;
+  
+  if(do_trans)
+    {
+    Cube<eT> tmp;
+    
+    op_strans_cube::apply_noalias(tmp, (*this));
+    
+    save_okay = diskio::save_hdf5_binary(tmp, spec, err_msg);
+    }
+  else
+    {
+    save_okay = diskio::save_hdf5_binary(*this, spec, err_msg);
+    }
+  
+  if((print_status == true) && (save_okay == false))
+    {
+    if(err_msg.length() > 0)
+      {
+      arma_debug_warn("Cube::save(): ", err_msg, spec.filename);
+      }
+    else
+      {
+      arma_debug_warn("Cube::save(): couldn't write to ", spec.filename);
+      }
+    }
   
   return save_okay;
   }
@@ -3816,7 +3831,7 @@ Cube<eT>::save(std::ostream& os, const file_type type, const bool print_status) 
   {
   arma_extra_debug_sigprint();
   
-  bool save_okay;
+  bool save_okay = false;
   
   switch(type)
     {
@@ -3860,7 +3875,7 @@ Cube<eT>::load(const std::string name, const file_type type, const bool print_st
   {
   arma_extra_debug_sigprint();
   
-  bool load_okay;
+  bool load_okay = false;
   std::string err_msg;
   
   switch(type)
@@ -3888,19 +3903,13 @@ Cube<eT>::load(const std::string name, const file_type type, const bool print_st
     case ppm_binary:
       load_okay = diskio::load_ppm_binary(*this, name, err_msg);
       break;
-
+    
     case hdf5_binary:
-      load_okay = diskio::load_hdf5_binary(*this, hdf5_name(name), err_msg);
+      return (*this).load(hdf5_name(name));
       break;
     
-    case hdf5_binary_trans:
-      {
-      Cube<eT> tmp;
-      
-      load_okay = diskio::load_hdf5_binary(tmp, hdf5_name(name), err_msg);
-      
-      if(load_okay)  { op_strans_cube::apply_noalias((*this), tmp); }
-      }
+    case hdf5_binary_trans:  // kept for compatibility with earlier versions of Armadillo
+      return (*this).load(hdf5_name(name, std::string(), hdf5_opts::trans));
       break;
     
     default:
@@ -3924,7 +3933,7 @@ Cube<eT>::load(const std::string name, const file_type type, const bool print_st
     {
     (*this).soft_reset();
     }
-    
+  
   return load_okay;
   }
 
@@ -3937,29 +3946,31 @@ Cube<eT>::load(const hdf5_name& spec, const file_type type, const bool print_sta
   {
   arma_extra_debug_sigprint();
   
-  bool load_okay;
+  if( (type != hdf5_binary) && (type != hdf5_binary_trans) )
+    {
+    if(print_status)  { arma_debug_warn("Cube::load(): unsupported file type for hdf5_name()"); }
+    (*this).soft_reset();
+    return false;
+    }
+  
+  bool load_okay = false;
   std::string err_msg;
   
-  switch(type)
+  const bool do_trans = bool(spec.opts.flags & hdf5_opts::flag_trans) || (type == hdf5_binary_trans);
+  
+  if(do_trans)
     {
-    case hdf5_binary:
-      load_okay = diskio::load_hdf5_binary(*this, spec, err_msg);
-      break;
+    Cube<eT> tmp;
     
-    case hdf5_binary_trans:
-      {
-      Cube<eT> tmp;
-      
-      load_okay = diskio::load_hdf5_binary(tmp, spec, err_msg);
-      
-      if(load_okay)  { op_strans_cube::apply_noalias((*this), tmp); }
-      }
-      break;
+    load_okay = diskio::load_hdf5_binary(tmp, spec, err_msg);
     
-    default:
-      if(print_status)  { arma_debug_warn("Cube::load(): unsupported file type"); }
-      load_okay = false;
+    if(load_okay)  { op_strans_cube::apply_noalias((*this), tmp); }
     }
+  else
+    {
+    load_okay = diskio::load_hdf5_binary(*this, spec, err_msg);
+    }
+  
   
   if( (print_status == true) && (load_okay == false) )
     {
@@ -3977,7 +3988,7 @@ Cube<eT>::load(const hdf5_name& spec, const file_type type, const bool print_sta
     {
     (*this).soft_reset();
     }
-    
+  
   return load_okay;
   }
 
@@ -3991,7 +4002,7 @@ Cube<eT>::load(std::istream& is, const file_type type, const bool print_status)
   {
   arma_extra_debug_sigprint();
   
-  bool load_okay;
+  bool load_okay = false;
   std::string err_msg;
   
   switch(type)
@@ -4025,7 +4036,6 @@ Cube<eT>::load(std::istream& is, const file_type type, const bool print_status)
       load_okay = false;
     }
   
-  
   if( (print_status == true) && (load_okay == false) )
     {
     if(err_msg.length() > 0)
@@ -4042,7 +4052,7 @@ Cube<eT>::load(std::istream& is, const file_type type, const bool print_status)
     {
     (*this).soft_reset();
     }
-    
+  
   return load_okay;
   }
 

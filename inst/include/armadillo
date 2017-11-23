@@ -523,6 +523,7 @@ namespace arma
   #include "armadillo_bits/fn_polyfit.hpp"
   #include "armadillo_bits/fn_polyval.hpp"
   #include "armadillo_bits/fn_intersect.hpp"
+  #include "armadillo_bits/fn_normpdf.hpp"
   
   #include "armadillo_bits/fn_speye.hpp"
   #include "armadillo_bits/fn_spones.hpp"
@@ -538,6 +539,7 @@ namespace arma
   
   #include "armadillo_bits/hdf5_misc.hpp"
   #include "armadillo_bits/fft_engine.hpp"
+  #include "armadillo_bits/band_helper.hpp"
   
   //
   // classes implementing various forms of dense matrix multiplication
