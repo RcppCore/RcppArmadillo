@@ -3,6 +3,19 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo [GitHub Only] version 0.8.300.0.0 (2017-11-22)}{
+  \itemize{
+    \item Upgraded to Armadillo release 8.300.0 (Tropical Shenanigans)
+    \itemize{
+      \item faster handling of band matrices by \code{solve()}
+      \item faster handling of band matrices by \code{chol()}
+      \item faster \code{randg()} when using OpenMP
+      \item added \code{normpdf()}
+      \item expanded \code{.save()} to allow appending new datasets to existing HDF5 files
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo [GitHub Only] version 0.8.200.2.0 (2017-11-08)}{
   \itemize{
     \item Upgraded to Armadillo release 8.200.2 (Feral Pursuits Deluxe)
@@ -12,7 +25,6 @@
 
 \section{Changes in RcppArmadillo [GitHub Only] version 0.8.200.1.0 (2017-10-21)}{
   \itemize{
-    \item 
     \item Upgraded to Armadillo release 8.200.1 (Feral Pursuits Deluxe)
     \itemize{
       \item added \code{intersect()} for finding common elements in two vectors/matrices
