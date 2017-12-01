@@ -1,3 +1,9 @@
+2017-12-01  Serguei Sokol  <sokol at insa-toulouse.fr>
+
+	* inst/include/RcppArmadilloAs.h: Support conversion from
+	simple_triplet_matrix
+	* inst/unitTests/runit.sparseConversion.R: Test conversion
+
 2017-11-22  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.8.300.0.0 [GitHub only]

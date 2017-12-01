@@ -13,6 +13,8 @@
       \item added \code{normpdf()}
       \item expanded \code{.save()} to allow appending new datasets to existing HDF5 files
     }
+    \item Conversion from \code{simple_triplet_matrix} is now supported
+    (Serguei Sokol in \ghpr{192}).
   }
 }
 
