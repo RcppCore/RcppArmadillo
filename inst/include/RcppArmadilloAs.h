@@ -83,7 +83,19 @@ namespace traits {
     template <typename T>
     class Exporter< arma::SpMat<T> > {
     public:
-        Exporter( SEXP x ) : mat(x){}
+        Exporter( SEXP x ) {
+            if (Rf_inherits(x, "simple_triplet_matrix")) {
+                List li = x;
+                mat = S4("dgTMatrix");
+                mat.slot("i") = as<NumericVector>(li["i"]) - 1;
+                mat.slot("j") = as<NumericVector>(li["j"]) - 1;
+                mat.slot("x") = li["v"];
+                mat.slot("Dim") = IntegerVector::create(li["nrow"], li["ncol"]);
+            }
+            else {
+                mat = x;
+            }
+        }
                 
         arma::SpMat<T> get(){
             const int  RTYPE = Rcpp::traits::r_sexptype_traits<T>::rtype;
