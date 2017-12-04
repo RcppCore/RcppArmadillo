@@ -452,16 +452,17 @@
 #endif
 
 
-#if ( defined(ARMA_USE_OPENMP) && (!defined(_OPENMP) || (defined(_OPENMP) && (_OPENMP < 200805))) )
+#if ( defined(ARMA_USE_OPENMP) && (!defined(_OPENMP) || (defined(_OPENMP) && (_OPENMP < 201107))) )
   // we require OpenMP 3.0 to enable parallelisation of for loops with unsigned integers;
-  // earlier versions of OpenMP can only handle signed integers
+  // earlier versions of OpenMP can only handle signed integers;
+  // we require OpenMP 3.1 for atomic read and atomic write
   #undef  ARMA_USE_OPENMP
   #undef  ARMA_PRINT_OPENMP_WARNING
   #define ARMA_PRINT_OPENMP_WARNING
 #endif
 
 
-#if ( (defined(_OPENMP) && (_OPENMP < 200805)) && !defined(ARMA_DONT_USE_OPENMP) )
+#if ( (defined(_OPENMP) && (_OPENMP < 201107)) && !defined(ARMA_DONT_USE_OPENMP) )
   // if the compiler has an ancient version of OpenMP and use of OpenMP hasn't been explicitly disabled,
   // print a warning to ensure there is no confusion about OpenMP support
   #undef  ARMA_USE_OPENMP
@@ -471,7 +472,7 @@
 
 
 #if defined(ARMA_PRINT_OPENMP_WARNING) && !defined(ARMA_DONT_PRINT_OPENMP_WARNING)
-  #pragma message ("WARNING: use of OpenMP disabled; compiler support for OpenMP 3.0+ not detected")
+  #pragma message ("WARNING: use of OpenMP disabled; compiler support for OpenMP 3.1+ not detected")
 #endif
 
 

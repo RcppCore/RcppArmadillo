@@ -5688,7 +5688,6 @@ SpMat<eT>::invalidate_cache() const
   arma_extra_debug_sigprint();
   
   cache.reset();
-  
   sync_state = 0;
   }
 
@@ -5707,18 +5706,44 @@ SpMat<eT>::invalidate_csc() const
 
 
 template<typename eT>
-arma_inline
+inline
 void
 SpMat<eT>::sync_cache() const
   {
   arma_extra_debug_sigprint();
   
+  // using approach adapted from http://preshing.com/20130930/double-checked-locking-is-fixed-in-cpp11/
+  // 
+  // OpenMP mode:
+  // sync_state uses atomic read/write, which has an implied flush;
+  // flush is also implicitly executed at the entrance and the exit of critical section;
+  // data races are prevented by the 'critical' directive
+  // 
+  // C++11  mode:
+  // underlying type for sync_state is std::atomic<int>;
+  // reading and writing to sync_state uses std::memory_order_seq_cst which has an implied fence;
+  // data races are prevented via the mutex
+  
   #if defined(_OPENMP)
-  #pragma omp critical
     if(sync_state == 0)
       {
-      cache      = (*this);
-      sync_state = 2;
+      #pragma omp critical
+      if(sync_state == 0)
+        {
+        cache      = (*this);
+        sync_state = 2;
+        }
+      }
+  #elif defined(ARMA_USE_CXX11)
+    if(sync_state == 0)
+      {
+      cache_mutex.lock();
+      if(sync_state == 0)
+        {
+        cache      = (*this);
+        sync_state = 2;
+        }
+      cache_mutex.unlock();
       }
   #else
     if(sync_state == 0)
@@ -5746,17 +5771,38 @@ SpMat<eT>::sync_csc() const
   // sync_state is only set to 1 by non-const element access operators,
   // so the shenanigans with const_cast are to satisfy the compiler
   
+  // see also the note in sync_cache() above
+  
   #if defined(_OPENMP)
-  #pragma omp critical
     if(sync_state == 1)
       {
-      SpMat<eT> tmp(cache);
-      
-      SpMat<eT>& x = const_cast< SpMat<eT>& >(*this);
-      
-      x.steal_mem_simple(tmp);
-      
-      sync_state = 2;
+      #pragma omp critical
+      if(sync_state == 1)
+        {
+        SpMat<eT> tmp(cache);
+        
+        SpMat<eT>& x = const_cast< SpMat<eT>& >(*this);
+        
+        x.steal_mem_simple(tmp);
+        
+        sync_state = 2;
+        }
+      }
+  #elif defined(ARMA_USE_CXX11)
+    if(sync_state == 1)
+      {
+      cache_mutex.lock();
+      if(sync_state == 1)
+        {
+        SpMat<eT> tmp(cache);
+        
+        SpMat<eT>& x = const_cast< SpMat<eT>& >(*this);
+        
+        x.steal_mem_simple(tmp);
+        
+        sync_state = 2;
+        }
+      cache_mutex.unlock();
       }
   #else
     if(sync_state == 1)

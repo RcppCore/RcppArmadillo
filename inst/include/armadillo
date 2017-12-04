@@ -59,6 +59,8 @@
   #include <random>
   #include <functional>
   #include <chrono>
+  #include <mutex>
+  #include <atomic>
 #endif
 
 
