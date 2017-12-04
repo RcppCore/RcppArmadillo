@@ -227,6 +227,51 @@ class spglue_minus2;
 class spglue_times;
 class spglue_times2;
 
+struct state_type
+  {
+  #if   defined(_OPENMP)
+                int  state;
+  #elif defined(ARMA_USE_CXX11)
+    std::atomic<int> state;
+  #else
+                int  state;
+  #endif
+  
+  // openmp: "omp atomic" does an implicit flush on the affected variable
+  // C++11:  std::atomic<>::load() and std::atomic<>::store() use std::memory_order_seq_cst by default, which has an implied fence
+  
+  arma_inline
+  operator int () const
+    {
+    int out;
+    
+    #if   defined(_OPENMP)
+      #pragma omp atomic read
+      out = state;
+    #elif defined(ARMA_USE_CXX11)
+      out = state.load();
+    #else
+      out = state;
+    #endif
+    
+    return out;
+    }
+  
+  arma_inline
+  void
+  operator= (const int in_state)
+    {
+    #if   defined(_OPENMP)
+      #pragma omp atomic write
+      state = in_state;
+    #elif defined(ARMA_USE_CXX11)
+      state.store(in_state);
+    #else
+      state = in_state;
+    #endif
+    }
+  };
+
 
 template<                 typename T1, typename spop_type> class   SpOp;
 template<typename out_eT, typename T1, typename spop_type> class mtSpOp;
