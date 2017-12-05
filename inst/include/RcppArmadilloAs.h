@@ -84,13 +84,9 @@ namespace traits {
     class Exporter< arma::SpMat<T> > {
     public:
         Exporter( SEXP x ) {
-            if (Rf_inherits(x, "simple_triplet_matrix")) {
-                List li = x;
-                mat = S4("dgTMatrix");
-                mat.slot("i") = as<NumericVector>(li["i"]) - 1;
-                mat.slot("j") = as<NumericVector>(li["j"]) - 1;
-                mat.slot("x") = li["v"];
-                mat.slot("Dim") = IntegerVector::create(li["nrow"], li["ncol"]);
+            is_stm=Rf_inherits(x, "simple_triplet_matrix");
+            if (is_stm) {
+                li = x;
             }
             else {
                 mat = x;
@@ -99,6 +95,13 @@ namespace traits {
                 
         arma::SpMat<T> get(){
             const int  RTYPE = Rcpp::traits::r_sexptype_traits<T>::rtype;
+            if (is_stm) {
+                arma::urowvec ti = as<arma::urowvec>(li["i"]);
+                arma::urowvec tj = as<arma::urowvec>(li["j"]);
+                arma::Col<T> tx = li["v"];
+                arma::SpMat<T> res = arma::sp_mat(true, arma::join_cols(ti, tj)-1, tx, li["nrow"], li["ncol"], true, false);
+                return res;
+            }
         
             IntegerVector dims = mat.slot("Dim");
             int nrow = dims[0];
@@ -498,6 +501,8 @@ namespace traits {
         
     private:
         S4 mat ;
+        List li;
+        bool is_stm;
     } ;
     
     // 30 November 2015
