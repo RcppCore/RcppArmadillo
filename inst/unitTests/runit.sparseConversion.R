@@ -674,11 +674,15 @@ if (.runThisTest) {
         checkEquals(dgc, asSpMat(ind), msg="ind2dgC_9")
     } 
     if (suppressMessages(require(slam))) {
+        ## simple_triplet_matrix from package slam
         test.as.stm2dgc <- function() {
-            ## simple_triplet_matrix from package slam
             stm <- as.simple_triplet_matrix(diag(2))
             dgc <- as(as(stm, "matrix"), "dgCMatrix")
             checkEquals(dgc, asSpMat(stm), msg="stm2dgc")
+        }
+        test.as.stm2stm <- function() {
+            stm <- as.simple_triplet_matrix(diag(2))
+            checkEquals(stm, asStm(stm), msg="stm2stm")
         }
     }
 
