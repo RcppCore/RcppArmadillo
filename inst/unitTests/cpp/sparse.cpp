@@ -26,6 +26,10 @@
 arma::sp_mat asSpMat(SEXP S) {
     return Rcpp::as<arma::sp_mat>(S);
 }
+// [[Rcpp::export]]
+Rcpp::List asStm(SEXP S) {
+    return Rcpp::simple_triplet_matrix(Rcpp::as<arma::sp_mat>(S));
+}
 
 // [[Rcpp::export]]
 arma::sp_mat sparseAddition(arma::sp_mat SM) {
