@@ -446,10 +446,10 @@ class Mat : public Base< eT, Mat<eT> >
   
   inline const Mat& replace(const eT old_val, const eT new_val);
   
-  arma_hot inline const Mat& fill(const eT val);
+  inline const Mat& fill(const eT val);
   
   template<typename fill_type>
-  arma_hot inline const Mat& fill(const fill::fill_class<fill_type>& f);
+  inline const Mat& fill(const fill::fill_class<fill_type>& f);
   
   inline const Mat& zeros();
   inline const Mat& zeros(const uword in_elem);
@@ -493,21 +493,21 @@ class Mat : public Base< eT, Mat<eT> >
   inline eT max(uword& row_of_max_val, uword& col_of_max_val) const;
   
   
-  inline bool save(const std::string   name, const file_type type = arma_binary, const bool print_status = true) const;
-  inline bool save(const hdf5_name&    spec, const file_type type = hdf5_binary, const bool print_status = true) const;
-  inline bool save(      std::ostream& os,   const file_type type = arma_binary, const bool print_status = true) const;
+  inline arma_cold bool save(const std::string   name, const file_type type = arma_binary, const bool print_status = true) const;
+  inline arma_cold bool save(const hdf5_name&    spec, const file_type type = hdf5_binary, const bool print_status = true) const;
+  inline arma_cold bool save(      std::ostream& os,   const file_type type = arma_binary, const bool print_status = true) const;
   
-  inline bool load(const std::string   name, const file_type type = auto_detect, const bool print_status = true);
-  inline bool load(const hdf5_name&    spec, const file_type type = hdf5_binary, const bool print_status = true);
-  inline bool load(      std::istream& is,   const file_type type = auto_detect, const bool print_status = true);
+  inline arma_cold bool load(const std::string   name, const file_type type = auto_detect, const bool print_status = true);
+  inline arma_cold bool load(const hdf5_name&    spec, const file_type type = hdf5_binary, const bool print_status = true);
+  inline arma_cold bool load(      std::istream& is,   const file_type type = auto_detect, const bool print_status = true);
   
-  inline bool quiet_save(const std::string   name, const file_type type = arma_binary) const;
-  inline bool quiet_save(const hdf5_name&    spec, const file_type type = hdf5_binary) const;
-  inline bool quiet_save(      std::ostream& os,   const file_type type = arma_binary) const;
+  inline arma_cold bool quiet_save(const std::string   name, const file_type type = arma_binary) const;
+  inline arma_cold bool quiet_save(const hdf5_name&    spec, const file_type type = hdf5_binary) const;
+  inline arma_cold bool quiet_save(      std::ostream& os,   const file_type type = arma_binary) const;
   
-  inline bool quiet_load(const std::string   name, const file_type type = auto_detect);
-  inline bool quiet_load(const hdf5_name&    spec, const file_type type = hdf5_binary);
-  inline bool quiet_load(      std::istream& is,   const file_type type = auto_detect);
+  inline arma_cold bool quiet_load(const std::string   name, const file_type type = auto_detect);
+  inline arma_cold bool quiet_load(const hdf5_name&    spec, const file_type type = hdf5_binary);
+  inline arma_cold bool quiet_load(      std::istream& is,   const file_type type = auto_detect);
   
   
   // for container-like functionality
@@ -521,26 +521,39 @@ class Mat : public Base< eT, Mat<eT> >
   typedef       eT*       col_iterator;
   typedef const eT* const_col_iterator;
   
+  class const_row_iterator;
+  
   class row_iterator
     {
     public:
     
+    inline row_iterator();
+    inline row_iterator(const row_iterator& X);
     inline row_iterator(Mat<eT>& in_M, const uword in_row);
     
-    inline eT& operator* ();
+    inline arma_warn_unused eT& operator* ();
     
-    inline row_iterator& operator++();
-    inline void          operator++(int);
+    inline                  row_iterator& operator++();
+    inline arma_warn_unused row_iterator  operator++(int);
     
-    inline row_iterator& operator--();
-    inline void          operator--(int);
+    inline                  row_iterator& operator--();
+    inline arma_warn_unused row_iterator  operator--(int);
     
-    inline bool operator!=(const row_iterator& X) const;
-    inline bool operator==(const row_iterator& X) const;
+    inline arma_warn_unused bool operator!=(const       row_iterator& X) const;
+    inline arma_warn_unused bool operator==(const       row_iterator& X) const;
+    inline arma_warn_unused bool operator!=(const const_row_iterator& X) const;
+    inline arma_warn_unused bool operator==(const const_row_iterator& X) const;
     
-    arma_aligned Mat<eT>& M;
-    arma_aligned uword    row;
-    arma_aligned uword    col;
+    typedef std::bidirectional_iterator_tag iterator_category;
+    typedef eT                              value_type;
+    typedef std::ptrdiff_t                  difference_type;  // TODO: not certain on this one
+    typedef eT*                             pointer;
+    typedef eT&                             reference;
+    
+    arma_aligned Mat<eT>* M;
+    arma_aligned eT*      current_ptr;
+    arma_aligned uword    current_row;
+    arma_aligned uword    current_col;
     };
   
   
@@ -548,23 +561,34 @@ class Mat : public Base< eT, Mat<eT> >
     {
     public:
     
-    const_row_iterator(const Mat<eT>& in_M, const uword in_row);
-    const_row_iterator(const row_iterator& X);
+    inline const_row_iterator();
+    inline const_row_iterator(const       row_iterator& X);
+    inline const_row_iterator(const const_row_iterator& X);
+    inline const_row_iterator(const Mat<eT>& in_M, const uword in_row);
     
-    inline eT operator*() const;
+    inline arma_warn_unused const eT& operator*() const;
     
-    inline const_row_iterator& operator++();
-    inline void                operator++(int);
+    inline                  const_row_iterator& operator++();
+    inline arma_warn_unused const_row_iterator  operator++(int);
     
-    inline const_row_iterator& operator--();
-    inline void                operator--(int);
+    inline                  const_row_iterator& operator--();
+    inline arma_warn_unused const_row_iterator  operator--(int);
     
-    inline bool operator!=(const const_row_iterator& X) const;
-    inline bool operator==(const const_row_iterator& X) const;
+    inline arma_warn_unused bool operator!=(const       row_iterator& X) const;
+    inline arma_warn_unused bool operator==(const       row_iterator& X) const;
+    inline arma_warn_unused bool operator!=(const const_row_iterator& X) const;
+    inline arma_warn_unused bool operator==(const const_row_iterator& X) const;
     
-    arma_aligned const Mat<eT>& M;
-    arma_aligned       uword    row;
-    arma_aligned       uword    col;
+    typedef std::bidirectional_iterator_tag iterator_category;
+    typedef eT                              value_type;
+    typedef std::ptrdiff_t                  difference_type;  // TODO: not certain on this one
+    typedef const eT*                       pointer;
+    typedef const eT&                       reference;
+    
+    arma_aligned const Mat<eT>* M;
+    arma_aligned const eT*      current_ptr;
+    arma_aligned       uword    current_row;
+    arma_aligned       uword    current_col;
     };
   
   
@@ -578,33 +602,32 @@ class Mat : public Base< eT, Mat<eT> >
     inline row_col_iterator(const row_col_iterator& in_it);
     inline row_col_iterator(Mat<eT>& in_M, const uword row = 0, const uword col = 0);
     
-    inline arma_hot eT& operator*();
+    inline arma_warn_unused eT& operator*();
     
-    inline arma_hot row_col_iterator& operator++();
-    inline arma_hot row_col_iterator  operator++(int);
-    inline arma_hot row_col_iterator& operator--();
-    inline arma_hot row_col_iterator  operator--(int);
+    inline                  row_col_iterator& operator++();
+    inline arma_warn_unused row_col_iterator  operator++(int);
     
-    inline uword row() const;
-    inline uword col() const;
+    inline                  row_col_iterator& operator--();
+    inline arma_warn_unused row_col_iterator  operator--(int);
     
-    inline arma_hot bool operator==(const       row_col_iterator& rhs) const;
-    inline arma_hot bool operator!=(const       row_col_iterator& rhs) const;
-    inline arma_hot bool operator==(const const_row_col_iterator& rhs) const;
-    inline arma_hot bool operator!=(const const_row_col_iterator& rhs) const;
+    inline arma_warn_unused uword row() const;
+    inline arma_warn_unused uword col() const;
     
-    // So that we satisfy the STL iterator types.
+    inline arma_warn_unused bool operator==(const       row_col_iterator& rhs) const;
+    inline arma_warn_unused bool operator!=(const       row_col_iterator& rhs) const;
+    inline arma_warn_unused bool operator==(const const_row_col_iterator& rhs) const;
+    inline arma_warn_unused bool operator!=(const const_row_col_iterator& rhs) const;
+    
     typedef std::bidirectional_iterator_tag iterator_category;
     typedef eT                              value_type;
-    typedef uword                           difference_type; // not certain on this one
-    typedef const eT*                       pointer;
-    typedef const eT&                       reference;
+    typedef std::ptrdiff_t                  difference_type;  // TODO: not certain on this one
+    typedef eT*                             pointer;
+    typedef eT&                             reference;
     
     arma_aligned Mat<eT>* M;
-    
-    arma_aligned eT*    current_pos;
-    arma_aligned uword  internal_col;
-    arma_aligned uword  internal_row;
+    arma_aligned eT*      current_ptr;
+    arma_aligned uword    current_col;
+    arma_aligned uword    current_row;
     };
   
   
@@ -617,33 +640,33 @@ class Mat : public Base< eT, Mat<eT> >
     inline const_row_col_iterator(const const_row_col_iterator& in_it);
     inline const_row_col_iterator(const Mat<eT>& in_M, const uword row = 0, const uword col = 0);
     
-    inline arma_hot const eT& operator*() const;
+    inline arma_warn_unused const eT& operator*() const;
     
-    inline arma_hot const_row_col_iterator& operator++();
-    inline arma_hot const_row_col_iterator  operator++(int);
-    inline arma_hot const_row_col_iterator& operator--();
-    inline arma_hot const_row_col_iterator  operator--(int);
+    inline                  const_row_col_iterator& operator++();
+    inline arma_warn_unused const_row_col_iterator  operator++(int);
     
-    inline uword row() const;
-    inline uword col() const;
+    inline                  const_row_col_iterator& operator--();
+    inline arma_warn_unused const_row_col_iterator  operator--(int);
     
-    inline arma_hot bool operator==(const const_row_col_iterator& rhs) const;
-    inline arma_hot bool operator!=(const const_row_col_iterator& rhs) const;
-    inline arma_hot bool operator==(const       row_col_iterator& rhs) const;
-    inline arma_hot bool operator!=(const       row_col_iterator& rhs) const;
+    inline arma_warn_unused uword row() const;
+    inline arma_warn_unused uword col() const;
+    
+    inline arma_warn_unused bool operator==(const const_row_col_iterator& rhs) const;
+    inline arma_warn_unused bool operator!=(const const_row_col_iterator& rhs) const;
+    inline arma_warn_unused bool operator==(const       row_col_iterator& rhs) const;
+    inline arma_warn_unused bool operator!=(const       row_col_iterator& rhs) const;
     
     // So that we satisfy the STL iterator types.
     typedef std::bidirectional_iterator_tag iterator_category;
     typedef eT                              value_type;
-    typedef uword                           difference_type; // not certain on this one
+    typedef std::ptrdiff_t                  difference_type;  // TODO: not certain on this one
     typedef const eT*                       pointer;
     typedef const eT&                       reference;
     
     arma_aligned const Mat<eT>* M;
-    
-    arma_aligned const eT*    current_pos;
-    arma_aligned       uword  internal_col;
-    arma_aligned       uword  internal_row;
+    arma_aligned const eT*      current_ptr;
+    arma_aligned       uword    current_col;
+    arma_aligned       uword    current_row;
     };
   
   
@@ -693,7 +716,7 @@ class Mat : public Base< eT, Mat<eT> >
   inline void init_cold();
   inline void init_warm(uword in_rows, uword in_cols);
   
-  inline void init(const std::string& text);
+  inline arma_cold void init(const std::string& text);
   
   #if defined(ARMA_USE_CXX11)
     inline void init(const std::initializer_list<eT>& list);
@@ -813,9 +836,9 @@ class Mat<eT>::fixed : public Mat<eT>
   
   arma_inline arma_warn_unused bool is_vec() const;
   
-  arma_hot inline const Mat<eT>& fill(const eT val);
-  arma_hot inline const Mat<eT>& zeros();
-  arma_hot inline const Mat<eT>& ones();
+  inline const Mat<eT>& fill(const eT val);
+  inline const Mat<eT>& zeros();
+  inline const Mat<eT>& ones();
   };
 
 

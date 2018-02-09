@@ -14,45 +14,42 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup arma_version
+//! \addtogroup op_chi2rnd
 //! @{
 
 
-
-#define ARMA_VERSION_MAJOR 8
-#define ARMA_VERSION_MINOR 399
-#define ARMA_VERSION_PATCH 1
-#define ARMA_VERSION_NAME  "8.400 RC1"
-
-
-
-struct arma_version
+class op_chi2rnd
   {
-  static const unsigned int major = ARMA_VERSION_MAJOR;
-  static const unsigned int minor = ARMA_VERSION_MINOR;
-  static const unsigned int patch = ARMA_VERSION_PATCH;
+  public:
   
-  static
-  inline
-  std::string
-  as_string()
-    {
-    const char* nickname = ARMA_VERSION_NAME;
-    
-    std::stringstream ss;
-    ss << arma_version::major
-       << '.'
-       << arma_version::minor
-       << '.'
-       << arma_version::patch
-       << " ("
-       << nickname
-       << ')';
-    
-    return ss.str();
-    }
+  template<typename T1>
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_chi2rnd>& in);
+  
+  template<typename T1>
+  inline static void apply_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& P);
+  
+  template<typename eT>
+  inline static void fill_constant_df(Mat<eT>& out, const eT df);
   };
 
+
+
+#if defined(ARMA_USE_CXX11)
+
+template<typename eT>
+class op_chi2rnd_varying_df
+  {
+  public:
+  
+  arma_aligned std::mt19937_64 motor;
+  
+  inline ~op_chi2rnd_varying_df();
+  inline  op_chi2rnd_varying_df();
+  
+  inline eT operator()(const eT df);
+  };
+
+#endif
 
 
 //! @}

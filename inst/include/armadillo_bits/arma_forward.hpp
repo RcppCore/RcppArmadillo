@@ -110,6 +110,7 @@ class op_unique;
 class op_unique_index;
 class op_diff_default;
 class op_hist;
+class op_chi2rnd;
 
 class eop_conj;
 
@@ -229,7 +230,7 @@ class spglue_times2;
 
 struct state_type
   {
-  #if   defined(_OPENMP)
+  #if   defined(ARMA_USE_OPENMP)
                 int  state;
   #elif defined(ARMA_USE_CXX11)
     std::atomic<int> state;
@@ -245,7 +246,7 @@ struct state_type
     {
     int out;
     
-    #if   defined(_OPENMP)
+    #if   defined(ARMA_USE_OPENMP)
       #pragma omp atomic read
       out = state;
     #elif defined(ARMA_USE_CXX11)
@@ -261,7 +262,7 @@ struct state_type
   void
   operator= (const int in_state)
     {
-    #if   defined(_OPENMP)
+    #if   defined(ARMA_USE_OPENMP)
       #pragma omp atomic write
       state = in_state;
     #elif defined(ARMA_USE_CXX11)

@@ -29,9 +29,9 @@ struct arma_config
   
   
   #if defined(ARMA_OPENMP_THRESHOLD)
-    static const uword mp_threshold = (sword(ARMA_OPENMP_THRESHOLD) > 0) ? uword(ARMA_OPENMP_THRESHOLD) : 384;
+    static const uword mp_threshold = (sword(ARMA_OPENMP_THRESHOLD) > 0) ? uword(ARMA_OPENMP_THRESHOLD) : 320;
   #else
-    static const uword mp_threshold = 384;
+    static const uword mp_threshold = 320;
   #endif
   
   
@@ -139,6 +139,13 @@ struct arma_config
     static const bool cxx11 = true;
   #else
     static const bool cxx11 = false;
+  #endif
+  
+  
+  #if (defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE >= 200112L))
+    static const bool posix = true;
+  #else
+    static const bool posix = false;
   #endif
   
   

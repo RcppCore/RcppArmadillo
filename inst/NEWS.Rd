@@ -3,6 +3,24 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.8.399.0.0 (2018-02-09)}{
+  \itemize{
+    \item Upgraded to Armadillo release 8.400.rc1 (Tropical Shenanigans Replacement)
+    \itemize{
+      \item added \code{wishrnd()} and \code{iwishrnd()} for generation of random Wishart matrices
+      \item added \code{chi2rnd()} for generation of chi-squared random numbers
+      \item added \code{normcdf()}
+      \item added submatrix & subcube iterators
+      \item faster handling of sparse matrices by \code{repmat()}
+      \item faster loading of CSV files
+      \item expanded \code{kron()} to handle sparse matrices
+      \item expanded \code{index_min()} and \code{index_max()} to handle cubes
+      \item expanded \code{randi()}, \code{randu()}, \code{randn()},
+      \code{randg()} to output single scalars 
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.8.300.1.0 (2017-12-04)}{
   \itemize{
     \item Upgraded to Armadillo release 8.300.1 (Tropical Shenanigans)
