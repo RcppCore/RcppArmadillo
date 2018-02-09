@@ -68,6 +68,8 @@ arma_ostream::modify_stream(std::ostream& o, const eT* data, const uword n_elem)
     {
     const eT val = data[i];
     
+    if(arma_isfinite(val) == false)  { continue; }
+    
     if(
       ( cond_rel< (sizeof(eT) > 4) && (is_same_type<uword,eT>::yes || is_same_type<sword,eT>::yes) >::geq(val, eT(+10000000000)) )
       ||
@@ -202,8 +204,10 @@ arma_ostream::modify_stream(std::ostream& o, typename SpMat<eT>::const_iterator 
 
   for(typename SpMat<eT>::const_iterator it = begin; it.pos() < n_elem; ++it)
     {
-    const eT val = *it;
-
+    const eT val = (*it);
+    
+    if(arma_isfinite(val) == false)  { continue; }
+    
     if(
       val >= eT(+100) ||
       ( (is_signed<eT>::value == true) && (val <= eT(-100)) ) ||

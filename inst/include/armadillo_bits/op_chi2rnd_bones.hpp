@@ -14,41 +14,42 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup op_index_min
+//! \addtogroup op_chi2rnd
 //! @{
 
 
-class op_index_min
+class op_chi2rnd
   {
   public:
   
-  // dense matrices
+  template<typename T1>
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_chi2rnd>& in);
   
   template<typename T1>
-  inline static void apply(Mat<uword>& out, const mtOp<uword,T1,op_index_min>& in);
+  inline static void apply_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& P);
   
   template<typename eT>
-  inline static void apply_noalias(Mat<uword>& out, const Mat<eT>& X, const uword dim);
-  
-  
-  // cubes
-  
-  template<typename T1>
-  inline static void apply(Cube<uword>& out, const mtOpCube<uword, T1, op_index_min>& in);  
-  
-  template<typename eT>
-  inline static void apply_noalias(Cube<uword>& out, const Cube<eT>& X, const uword dim, const typename arma_not_cx<eT>::result* junk = 0);
-  
-  template<typename eT>
-  inline static void apply_noalias(Cube<uword>& out, const Cube<eT>& X, const uword dim, const typename arma_cx_only<eT>::result* junk = 0);
-  
-  
-  // sparse matrices
-  
-  template<typename T1>
-  inline static void apply(Mat<uword>& out, const SpBase<typename T1::elem_type,T1>& expr, const uword dim);
+  inline static void fill_constant_df(Mat<eT>& out, const eT df);
   };
 
+
+
+#if defined(ARMA_USE_CXX11)
+
+template<typename eT>
+class op_chi2rnd_varying_df
+  {
+  public:
+  
+  arma_aligned std::mt19937_64 motor;
+  
+  inline ~op_chi2rnd_varying_df();
+  inline  op_chi2rnd_varying_df();
+  
+  inline eT operator()(const eT df);
+  };
+
+#endif
 
 
 //! @}
