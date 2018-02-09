@@ -20,9 +20,9 @@
 
 
 #define ARMA_VERSION_MAJOR 8
-#define ARMA_VERSION_MINOR 300
+#define ARMA_VERSION_MINOR 399
 #define ARMA_VERSION_PATCH 1
-#define ARMA_VERSION_NAME  "Tropical Shenanigans"
+#define ARMA_VERSION_NAME  "8.400 RC1"
 
 
 

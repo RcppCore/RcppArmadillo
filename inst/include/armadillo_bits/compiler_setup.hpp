@@ -127,9 +127,11 @@
   #undef  ARMA_BLAS_SDOT_BUG
   #define ARMA_BLAS_SDOT_BUG
   
-  #undef  ARMA_HAVE_POSIX_MEMALIGN
+  // #undef  ARMA_HAVE_POSIX_MEMALIGN
+  // NOTE: posix_memalign() is available since macOS 10.6 (late 2009 onwards)
+  
   #undef  ARMA_USE_EXTERN_CXX11_RNG
-  // TODO: thread local storage (TLS) (eg. "extern thread_local") appears currently broken on Mac OS X
+  // TODO: thread_local seems to work in Apple clang since Xcode 8 (mid 2016 onwards)
 #endif
 
 
@@ -165,7 +167,7 @@
   #define ARMA_GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
   
   #if (ARMA_GCC_VERSION < 40400)
-    #error "*** Need a newer compiler ***"
+    #error "*** newer compiler required ***"
   #endif
   
   #if (ARMA_GCC_VERSION < 40600)
@@ -317,11 +319,11 @@
 #if defined(__INTEL_COMPILER)
   
   #if (__INTEL_COMPILER == 9999)
-    #error "*** Need a newer compiler ***"
+    #error "*** newer compiler required ***"
   #endif
   
   #if (__INTEL_COMPILER < 1300)
-    #error "*** Need a newer compiler ***"
+    #error "*** newer compiler required ***"
   #endif
   
   #undef  ARMA_HAVE_GCC_ASSUME_ALIGNED
@@ -341,7 +343,7 @@
 #if defined(_MSC_VER)
   
   #if (_MSC_VER < 1700)
-    #error "*** Need a newer compiler ***"
+    #error "*** newer compiler required ***"
   #endif
   
   #if (_MSC_VER < 1800)
@@ -413,7 +415,7 @@
   // http://www.oracle.com/technetwork/server-storage/solarisstudio/documentation/cplusplus-faq-355066.html
   
   #if (__SUNPRO_CC < 0x5100)
-    #error "*** Need a newer compiler ***"
+    #error "*** newer compiler required ***"
   #endif
   
   #if defined(ARMA_USE_CXX11)

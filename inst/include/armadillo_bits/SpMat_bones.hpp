@@ -335,17 +335,17 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   // saving and loading
   // TODO: implement auto_detect for sparse matrices
   
-  inline bool save(const std::string   name, const file_type type = arma_binary, const bool print_status = true) const;
-  inline bool save(      std::ostream& os,   const file_type type = arma_binary, const bool print_status = true) const;
+  inline arma_cold bool save(const std::string   name, const file_type type = arma_binary, const bool print_status = true) const;
+  inline arma_cold bool save(      std::ostream& os,   const file_type type = arma_binary, const bool print_status = true) const;
   
-  inline bool load(const std::string   name, const file_type type = arma_binary, const bool print_status = true);
-  inline bool load(      std::istream& is,   const file_type type = arma_binary, const bool print_status = true);
+  inline arma_cold bool load(const std::string   name, const file_type type = arma_binary, const bool print_status = true);
+  inline arma_cold bool load(      std::istream& is,   const file_type type = arma_binary, const bool print_status = true);
   
-  inline bool quiet_save(const std::string   name, const file_type type = arma_binary) const;
-  inline bool quiet_save(      std::ostream& os,   const file_type type = arma_binary) const;
+  inline arma_cold bool quiet_save(const std::string   name, const file_type type = arma_binary) const;
+  inline arma_cold bool quiet_save(      std::ostream& os,   const file_type type = arma_binary) const;
   
-  inline bool quiet_load(const std::string   name, const file_type type = arma_binary);
-  inline bool quiet_load(      std::istream& is,   const file_type type = arma_binary);
+  inline arma_cold bool quiet_load(const std::string   name, const file_type type = arma_binary);
+  inline arma_cold bool quiet_load(      std::istream& is,   const file_type type = arma_binary);
   
   
   
@@ -376,10 +376,9 @@ class SpMat : public SpBase< eT, SpMat<eT> >
     arma_aligned       uword  internal_col;
     arma_aligned       uword  internal_pos;
     
-    // so that we satisfy the STL iterator types
     typedef std::bidirectional_iterator_tag iterator_category;
     typedef eT                              value_type;
-    typedef uword                           difference_type; // not certain on this one
+    typedef std::ptrdiff_t                  difference_type;  // TODO: not certain on this one
     typedef const eT*                       pointer;
     typedef const eT&                       reference;
     };
@@ -396,11 +395,11 @@ class SpMat : public SpBase< eT, SpMat<eT> >
     inline const_iterator(const SpMat& in_M, uword in_row, uword in_col, uword in_pos);
     inline const_iterator(const const_iterator& other);
     
-    inline arma_hot const_iterator& operator++();
-    inline arma_hot const_iterator  operator++(int);
+    inline arma_hot         const_iterator& operator++();
+    inline arma_warn_unused const_iterator  operator++(int);
     
-    inline arma_hot const_iterator& operator--();
-    inline arma_hot const_iterator  operator--(int);
+    inline arma_hot         const_iterator& operator--();
+    inline arma_warn_unused const_iterator  operator--(int);
     
     inline arma_hot bool operator==(const const_iterator& rhs) const;
     inline arma_hot bool operator!=(const const_iterator& rhs) const;
@@ -433,11 +432,11 @@ class SpMat : public SpBase< eT, SpMat<eT> >
     inline arma_hot SpValProxy<SpMat<eT> > operator*();
     
     // overloads needed for return type correctness
-    inline arma_hot iterator& operator++();
-    inline arma_hot iterator  operator++(int);
+    inline arma_hot         iterator& operator++();
+    inline arma_warn_unused iterator  operator++(int);
     
-    inline arma_hot iterator& operator--();
-    inline arma_hot iterator  operator--(int);
+    inline arma_hot         iterator& operator--();
+    inline arma_warn_unused iterator  operator--(int);
     
     // this has a different value_type than iterator_base
     typedef SpValProxy<SpMat<eT> >         value_type;
@@ -455,11 +454,11 @@ class SpMat : public SpBase< eT, SpMat<eT> >
     inline const_row_iterator(const SpMat& in_M, uword in_row, uword in_col);
     inline const_row_iterator(const const_row_iterator& other);
     
-    inline arma_hot const_row_iterator& operator++();
-    inline arma_hot const_row_iterator  operator++(int);
+    inline arma_hot         const_row_iterator& operator++();
+    inline arma_warn_unused const_row_iterator  operator++(int);
     
-    inline arma_hot const_row_iterator& operator--();
-    inline arma_hot const_row_iterator  operator--(int);
+    inline arma_hot         const_row_iterator& operator--();
+    inline arma_warn_unused const_row_iterator  operator--(int);
     
     uword internal_row; // hold row internally because we use internal_pos differently
     uword actual_pos;   // actual position in matrix
@@ -494,11 +493,11 @@ class SpMat : public SpBase< eT, SpMat<eT> >
     inline arma_hot SpValProxy<SpMat<eT> > operator*();
     
     // overloads required for return type correctness
-    inline arma_hot row_iterator& operator++();
-    inline arma_hot row_iterator  operator++(int);
+    inline arma_hot         row_iterator& operator++();
+    inline arma_warn_unused row_iterator  operator++(int);
     
-    inline arma_hot row_iterator& operator--();
-    inline arma_hot row_iterator  operator--(int);
+    inline arma_hot         row_iterator& operator--();
+    inline arma_warn_unused row_iterator  operator--(int);
     
     // this has a different value_type than iterator_base
     typedef SpValProxy<SpMat<eT> >         value_type;
@@ -606,7 +605,7 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   // 1: CSC needs to be updated from cache
   // 2: no update required
   
-  #if !defined(_OPENMP) && defined(ARMA_USE_CXX11)
+  #if !defined(ARMA_USE_OPENMP) && defined(ARMA_USE_CXX11)
   arma_aligned mutable std::mutex cache_mutex;
   #endif
   
