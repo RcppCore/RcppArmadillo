@@ -79,10 +79,10 @@
 // As of Armadillo 8.100.1, this has been renamed to ARMA_COUT_STREAM and
 // ARMA_CERR_STREAM was added
 // 
-#if !defined(ARMA_COUT_OSTREAM)
+#if !defined(ARMA_COUT_STREAM)
 #define ARMA_COUT_STREAM Rcpp::Rcout
 #endif
-#if !defined(ARMA_CERR_OSTREAM)
+#if !defined(ARMA_CERR_STREAM)
 #define ARMA_CERR_STREAM Rcpp::Rcerr
 #endif
 
