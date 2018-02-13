@@ -3,9 +3,9 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.8.399.0.0 (2018-02-09)}{
+\section{Changes in RcppArmadillo version 0.8.399.1.0 (2018-02-12)}{
   \itemize{
-    \item Upgraded to Armadillo release 8.400.rc1 (Tropical Shenanigans Replacement)
+    \item Upgraded to Armadillo release 8.400.rc2 (Tropical Shenanigans Replacement)
     \itemize{
       \item added \code{wishrnd()} and \code{iwishrnd()} for generation of random Wishart matrices
       \item added \code{chi2rnd()} for generation of chi-squared random numbers

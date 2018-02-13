@@ -1,3 +1,10 @@
+2018-02-12  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.8.399.1.0 [GitHub only]
+        * inst/NEWS.Rd: Release 0.8.399.1.0
+
+	* inst/include/armadillo_bits/*: Upgraded to Armadillo 8.400.rc2
+
 2018-02-10  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/RcppArmadilloConfig.h: Test if ARMA_COUT_STREAM is
