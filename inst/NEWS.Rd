@@ -18,6 +18,8 @@
       \item expanded \code{randi()}, \code{randu()}, \code{randn()},
       \code{randg()} to output single scalars 
     }
+    \item The \code{configure} generated header settings for LAPACK and
+    OpenMP can be overridden by the user.
   }
 }
 
