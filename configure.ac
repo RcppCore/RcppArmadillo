@@ -4,7 +4,7 @@
 ##
 ##  'Rcpp' Integration for the 'Armadillo' Templated Linear Algebra Library
 ##
-##  Copyright (C) 2016 - 2017  Dirk Eddelbuettel 
+##  Copyright (C) 2016 - 2018  Dirk Eddelbuettel 
 ##
 ##  Licensed under GPL-2 or later
 
@@ -48,7 +48,7 @@ if test "${GXX}" = yes; then
              ## we know this one is bad
              can_use_openmp="no"
         ;;
-        5.[4-9]*|6.*|7.*|8.*)
+        5.[4-9]*|6.*|7.*|8.*|9.*)
              AC_MSG_RESULT([yes, with OpenMP as version ${gxx_version}])
              ## we know this one is good, yay
              can_use_openmp="yes"

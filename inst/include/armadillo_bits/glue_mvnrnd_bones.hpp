@@ -14,44 +14,23 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup arma_version
+//! \addtogroup glue_mvnrnd
 //! @{
 
 
-
-#define ARMA_VERSION_MAJOR 8
-#define ARMA_VERSION_MINOR 400
-#define ARMA_VERSION_PATCH 0
-#define ARMA_VERSION_NAME  "Entropy Bandit"
-
-
-
-struct arma_version
-  {
-  static const unsigned int major = ARMA_VERSION_MAJOR;
-  static const unsigned int minor = ARMA_VERSION_MINOR;
-  static const unsigned int patch = ARMA_VERSION_PATCH;
-  
-  static
-  inline
-  std::string
-  as_string()
-    {
-    const char* nickname = ARMA_VERSION_NAME;
-    
-    std::stringstream ss;
-    ss << arma_version::major
-       << '.'
-       << arma_version::minor
-       << '.'
-       << arma_version::patch
-       << " ("
-       << nickname
-       << ')';
-    
-    return ss.str();
-    }
-  };
+class glue_mvnrnd
+   {
+   public:
+   
+   template<typename T1, typename T2>
+   inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_mvnrnd>& expr);
+   
+   template<typename T1, typename T2>
+   inline static bool apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& M, const Base<typename T1::elem_type,T2>& C, const uword N);
+   
+   template<typename eT>
+   inline static bool apply_noalias(Mat<eT>& out, const Mat<eT>& M, const Mat<eT>& C, const uword N);
+   };
 
 
 

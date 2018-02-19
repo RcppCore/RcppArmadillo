@@ -3,23 +3,26 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.8.399.1.0 (2018-02-12)}{
+\section{Changes in RcppArmadillo version 0.8.400.0.0 (2018-02-19)}{
   \itemize{
-    \item Upgraded to Armadillo release 8.400.rc2 (Tropical Shenanigans Replacement)
+    \item Upgraded to Armadillo release 8.400.rc2 (Entropy Bandit)
     \itemize{
-      \item added \code{wishrnd()} and \code{iwishrnd()} for generation of random Wishart matrices
-      \item added \code{chi2rnd()} for generation of chi-squared random numbers
-      \item added \code{normcdf()}
-      \item added submatrix & subcube iterators
       \item faster handling of sparse matrices by \code{repmat()}
       \item faster loading of CSV files
       \item expanded \code{kron()} to handle sparse matrices
       \item expanded \code{index_min()} and \code{index_max()} to handle cubes
       \item expanded \code{randi()}, \code{randu()}, \code{randn()},
       \code{randg()} to output single scalars 
+      \item added submatrix & subcube iterators
+      \item added \code{normcdf()}
+      \item added \code{mvnrnd()}
+      \item added \code{chi2rnd()} 
+      \item added \code{wishrnd()} and \code{iwishrnd()} 
     }
     \item The \code{configure} generated header settings for LAPACK and
     OpenMP can be overridden by the user.
+    \item This release was preceded by two release candidates which were
+    tested extensively.
   }
 }
 
