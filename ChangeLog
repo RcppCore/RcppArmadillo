@@ -1,3 +1,14 @@
+2018-02-19  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Release 0.8.400.0.0
+        * inst/NEWS.Rd: Release 0.8.400.0.0
+
+	* inst/include/armadillo: Upgraded to Armadillo 8.400.0
+	* inst/include/armadillo_bits/*: Idem
+
+	* configure.ac: Update
+	* configure: Idem
+
 2018-02-13  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/RcppArmadilloConfigGenerated.h.in: Protect two #define
