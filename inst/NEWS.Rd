@@ -3,9 +3,24 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.8.499.0.0 (2018-03-26)}{
+  \itemize{
+    \item Upgraded to Armadillo release 8.500.rc1 (8.500 rc1)
+    \itemize{
+      \item faster element access in sparse matrices
+      \item faster row iterators for sparse matrices
+      \item faster handling of compound expressions by \code{trace()}
+      \item expanded \code{normalise()} to handle sparse matrices
+      \item expanded \code{.transform()} and \code{.for_each()} to handle sparse matrices
+      \item added \code{reverse()} for reversing order of elements
+      \item added \code{roots()} for finding the roots of a polynomial
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.8.400.0.0 (2018-02-19)}{
   \itemize{
-    \item Upgraded to Armadillo release 8.400.rc2 (Entropy Bandit)
+    \item Upgraded to Armadillo release 8.400.0 (Entropy Bandit)
     \itemize{
       \item faster handling of sparse matrices by \code{repmat()}
       \item faster loading of CSV files

@@ -14,59 +14,46 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup fn_flip
+//! \addtogroup fn_roots
 //! @{
 
 
 
 template<typename T1>
 arma_warn_unused
-arma_inline
-typename enable_if2< is_arma_type<T1>::value, const Op<T1, op_flipud> >::result
-flipud(const T1& X)
+inline
+typename
+enable_if2
+  <
+  is_supported_blas_type<typename T1::elem_type>::value,
+  const mtOp<std::complex<typename T1::pod_type>, T1, op_roots>
+  >::result
+roots(const Base<typename T1::elem_type, T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  return Op<T1, op_flipud>(X);
+  return mtOp<std::complex<typename T1::pod_type>, T1, op_roots>(X.get_ref());
   }
 
 
 
 template<typename T1>
-arma_warn_unused
-arma_inline
-typename enable_if2< is_arma_type<T1>::value, const Op<T1, op_fliplr> >::result
-fliplr(const T1& X)
+inline
+typename
+enable_if2
+  <
+  is_supported_blas_type<typename T1::elem_type>::value,
+  bool
+  >::result
+roots(Mat< std::complex<typename T1::pod_type> >& out, const Base<typename T1::elem_type, T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  return Op<T1, op_fliplr>(X);
-  }
-
-
-
-template<typename T1>
-arma_warn_unused
-arma_inline
-const SpOp<T1, spop_flipud>
-flipud(const SpBase<typename T1::elem_type,T1>& X)
-  {
-  arma_extra_debug_sigprint();
+  const bool status = op_roots::apply_direct(out, X.get_ref());
   
-  return SpOp<T1, spop_flipud>(X.get_ref());
-  }
-
-
-
-template<typename T1>
-arma_warn_unused
-arma_inline
-const SpOp<T1, spop_fliplr>
-fliplr(const SpBase<typename T1::elem_type,T1>& X)
-  {
-  arma_extra_debug_sigprint();
+  if(status == false)  { arma_debug_warn("roots(): eigen decomposition failed"); }
   
-  return SpOp<T1, spop_fliplr>(X.get_ref());
+  return status;
   }
 
 

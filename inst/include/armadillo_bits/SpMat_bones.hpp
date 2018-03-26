@@ -242,18 +242,18 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   
   
   // access the i-th element; if there is nothing at element i, 0 is returned
-  arma_inline arma_warn_unused MapMat_elem<eT> operator[] (const uword i);
-  arma_inline arma_warn_unused eT              operator[] (const uword i) const;
-  arma_inline arma_warn_unused MapMat_elem<eT> at         (const uword i);
-  arma_inline arma_warn_unused eT              at         (const uword i) const;
-  arma_inline arma_warn_unused MapMat_elem<eT> operator() (const uword i);
-  arma_inline arma_warn_unused eT              operator() (const uword i) const;
+  arma_inline arma_warn_unused SpMat_MapMat_val<eT> operator[] (const uword i);
+  arma_inline arma_warn_unused eT                   operator[] (const uword i) const;
+  arma_inline arma_warn_unused SpMat_MapMat_val<eT> at         (const uword i);
+  arma_inline arma_warn_unused eT                   at         (const uword i) const;
+  arma_inline arma_warn_unused SpMat_MapMat_val<eT> operator() (const uword i);
+  arma_inline arma_warn_unused eT                   operator() (const uword i) const;
   
   // access the element at the given row and column; if there is nothing at that position, 0 is returned
-  arma_inline arma_warn_unused MapMat_elem<eT> at         (const uword in_row, const uword in_col);
-  arma_inline arma_warn_unused eT              at         (const uword in_row, const uword in_col) const;
-  arma_inline arma_warn_unused MapMat_elem<eT> operator() (const uword in_row, const uword in_col);
-  arma_inline arma_warn_unused eT              operator() (const uword in_row, const uword in_col) const;
+  arma_inline arma_warn_unused SpMat_MapMat_val<eT> at         (const uword in_row, const uword in_col);
+  arma_inline arma_warn_unused eT                   at         (const uword in_row, const uword in_col) const;
+  arma_inline arma_warn_unused SpMat_MapMat_val<eT> operator() (const uword in_row, const uword in_col);
+  arma_inline arma_warn_unused eT                   operator() (const uword in_row, const uword in_col) const;
   
   
   arma_inline arma_warn_unused bool is_empty()  const;
@@ -302,7 +302,13 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   
   inline void  reshape(const uword in_rows, const uword in_cols);
   inline void  reshape(const SizeMat& s);
-  inline void  reshape(const uword in_rows, const uword in_cols, const uword dim);  // this form is deprecated: don't use it
+  
+  arma_deprecated inline void reshape(const uword in_rows, const uword in_cols, const uword dim);  //!< NOTE: don't use this form: it will be removed
+  
+  template<typename functor> inline const SpMat&  for_each(functor F);
+  template<typename functor> inline const SpMat&  for_each(functor F) const;
+  
+  template<typename functor> inline const SpMat& transform(functor F);
   
   inline const SpMat& replace(const eT old_val, const eT new_val);
   
@@ -460,8 +466,8 @@ class SpMat : public SpBase< eT, SpMat<eT> >
     inline arma_hot         const_row_iterator& operator--();
     inline arma_warn_unused const_row_iterator  operator--(int);
     
-    uword internal_row; // hold row internally because we use internal_pos differently
-    uword actual_pos;   // actual position in matrix
+    uword internal_row; // hold row internally
+    uword actual_pos; // this holds the true position we are at in the matrix, as column-major indexing
     
     arma_inline eT operator*() const { return iterator_base::M->values[actual_pos]; }
     
@@ -506,21 +512,26 @@ class SpMat : public SpBase< eT, SpMat<eT> >
     };
   
   
+  typedef       iterator       col_iterator;
+  typedef const_iterator const_col_iterator;
+  
   typedef       iterator       row_col_iterator;
   typedef const_iterator const_row_col_iterator;
   
   
   inline       iterator     begin();
   inline const_iterator     begin() const;
+  inline const_iterator    cbegin() const;
   
   inline       iterator     end();
   inline const_iterator     end() const;
+  inline const_iterator    cend() const;
   
-  inline       iterator     begin_col(const uword col_num);
-  inline const_iterator     begin_col(const uword col_num) const;
+  inline       col_iterator begin_col(const uword col_num);
+  inline const_col_iterator begin_col(const uword col_num) const;
   
-  inline       iterator     end_col(const uword col_num);
-  inline const_iterator     end_col(const uword col_num) const;
+  inline       col_iterator end_col(const uword col_num);
+  inline const_col_iterator end_col(const uword col_num) const;
   
   inline       row_iterator begin_row(const uword row_num = 0);
   inline const_row_iterator begin_row(const uword row_num = 0) const;
@@ -620,10 +631,12 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   friend class SpSubview<eT>;
   friend class SpRow<eT>;
   friend class SpCol<eT>;
+  friend class SpMat_MapMat_val<eT>;
+  friend class SpSubview_MapMat_val<eT>;
   
   
   public:
-    
+  
   #ifdef ARMA_EXTRA_SPMAT_PROTO
     #include ARMA_INCFILE_WRAP(ARMA_EXTRA_SPMAT_PROTO)
   #endif

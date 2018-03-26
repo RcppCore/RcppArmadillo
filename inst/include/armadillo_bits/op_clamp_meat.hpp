@@ -27,21 +27,17 @@ op_clamp::apply(Mat<typename T1::elem_type>& out, const mtOp<typename T1::elem_t
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
-  
   const Proxy<T1> P(in.m);
   
-  if(P.is_alias(out) && (is_Mat<T1>::value == false))
+  if(is_Mat<typename Proxy<T1>::stored_type>::value || P.is_alias(out))
     {
-    Mat<eT> tmp;
+    const unwrap<typename Proxy<T1>::stored_type> U(P.Q);
     
-    op_clamp::apply_noalias(tmp, P, in.aux, in.aux_out_eT);
-    
-    out.steal_mem(tmp);
+    op_clamp::apply_direct(out, U.M, in.aux, in.aux_out_eT);
     }
   else
     {
-    op_clamp::apply_noalias(out, P, in.aux, in.aux_out_eT);
+    op_clamp::apply_proxy_noalias(out, P, in.aux, in.aux_out_eT);
     }
   }
 
@@ -50,7 +46,7 @@ op_clamp::apply(Mat<typename T1::elem_type>& out, const mtOp<typename T1::elem_t
 template<typename T1>
 inline
 void
-op_clamp::apply_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const typename T1::elem_type min_val, const typename T1::elem_type max_val)
+op_clamp::apply_proxy_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const typename T1::elem_type min_val, const typename T1::elem_type max_val)
   {
   arma_extra_debug_sigprint();
   
@@ -109,6 +105,41 @@ op_clamp::apply_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, co
 
 
 
+template<typename eT>
+inline
+void
+op_clamp::apply_direct(Mat<eT>& out, const Mat<eT>& X, const eT min_val, const eT max_val)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(&out != &X)
+    {
+    const Proxy< Mat<eT> > P(X);
+    
+    op_clamp::apply_proxy_noalias(out, P, min_val, max_val);
+    }
+  else  // inplace operation
+    {
+    const uword N = out.n_elem;
+    
+    eT* out_mem = out.memptr();
+    
+    for(uword i=0; i<N; ++i)
+      {
+      eT& out_val = out_mem[i];
+      
+           if(out_val < min_val)  { out_val = min_val; }
+      else if(out_val > max_val)  { out_val = max_val; }
+      }
+    }
+  }
+
+
+
+//
+
+
+
 template<typename T1>
 inline
 void
@@ -116,21 +147,17 @@ op_clamp::apply(Cube<typename T1::elem_type>& out, const mtOpCube<typename T1::e
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
-  
   const ProxyCube<T1> P(in.m);
   
-  if(P.is_alias(out) && (is_Cube<T1>::value == false))
+  if((is_Cube<typename ProxyCube<T1>::stored_type>::value) || P.is_alias(out))
     {
-    Cube<eT> tmp;
+    const unwrap_cube<typename ProxyCube<T1>::stored_type> U(P.Q);
     
-    op_clamp::apply_noalias(tmp, P, in.aux, in.aux_out_eT);
-    
-    out.steal_mem(tmp);
+    op_clamp::apply_direct(out, U.M, in.aux, in.aux_out_eT);
     }
   else
     {
-    op_clamp::apply_noalias(out, P, in.aux, in.aux_out_eT);
+    op_clamp::apply_proxy_noalias(out, P, in.aux, in.aux_out_eT);
     }
   }
 
@@ -139,7 +166,7 @@ op_clamp::apply(Cube<typename T1::elem_type>& out, const mtOpCube<typename T1::e
 template<typename T1>
 inline
 void
-op_clamp::apply_noalias(Cube<typename T1::elem_type>& out, const ProxyCube<T1>& P, const typename T1::elem_type min_val, const typename T1::elem_type max_val)
+op_clamp::apply_proxy_noalias(Cube<typename T1::elem_type>& out, const ProxyCube<T1>& P, const typename T1::elem_type min_val, const typename T1::elem_type max_val)
   {
   arma_extra_debug_sigprint();
   
@@ -194,6 +221,37 @@ op_clamp::apply_noalias(Cube<typename T1::elem_type>& out, const ProxyCube<T1>& 
       val = (val < min_val) ? min_val : ((val > max_val) ? max_val : val);
       
       (*out_mem) = val;  out_mem++;
+      }
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
+op_clamp::apply_direct(Cube<eT>& out, const Cube<eT>& X, const eT min_val, const eT max_val)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(&out != &X)
+    {
+    const ProxyCube< Cube<eT> > P(X);
+    
+    op_clamp::apply_proxy_noalias(out, P, min_val, max_val);
+    }
+  else  // inplace operation
+    {
+    const uword N = out.n_elem;
+    
+    eT* out_mem = out.memptr();
+    
+    for(uword i=0; i<N; ++i)
+      {
+      eT& out_val = out_mem[i];
+      
+           if(out_val < min_val)  { out_val = min_val; }
+      else if(out_val > max_val)  { out_val = max_val; }
       }
     }
   }
