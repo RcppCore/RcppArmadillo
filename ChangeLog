@@ -1,3 +1,8 @@
+2018-03-26  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/armadillo: Upgraded to Armadillo 8.500.rc1
+	* inst/include/armadillo_bits/*: Idem
+
 2018-02-19  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Release 0.8.400.0.0

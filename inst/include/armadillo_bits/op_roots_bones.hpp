@@ -14,43 +14,23 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup arma_version
+//! \addtogroup op_roots
 //! @{
 
 
 
-#define ARMA_VERSION_MAJOR 8
-#define ARMA_VERSION_MINOR 499
-#define ARMA_VERSION_PATCH 1
-#define ARMA_VERSION_NAME  "8.500 RC1"
-
-
-
-struct arma_version
+class op_roots
   {
-  static const unsigned int major = ARMA_VERSION_MAJOR;
-  static const unsigned int minor = ARMA_VERSION_MINOR;
-  static const unsigned int patch = ARMA_VERSION_PATCH;
+  public:
   
-  static
-  inline
-  std::string
-  as_string()
-    {
-    const char* nickname = ARMA_VERSION_NAME;
-    
-    std::stringstream ss;
-    ss << arma_version::major
-       << '.'
-       << arma_version::minor
-       << '.'
-       << arma_version::patch
-       << " ("
-       << nickname
-       << ')';
-    
-    return ss.str();
-    }
+  template<typename T1>
+  inline static void apply(Mat< std::complex<typename T1::pod_type> >& out, const mtOp<std::complex<typename T1::pod_type>, T1, op_roots>& expr);
+  
+  template<typename T1>
+  inline static bool apply_direct(Mat< std::complex<typename T1::pod_type> >& out, const Base<typename T1::elem_type, T1>& X);
+  
+  template<typename eT>
+  inline static bool apply_noalias(Mat< std::complex<typename get_pod_type<eT>::result> >& out, const Mat<eT>& X);
   };
 
 
