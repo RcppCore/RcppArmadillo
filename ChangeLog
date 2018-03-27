@@ -1,3 +1,12 @@
+2018-03-27  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: New minor version 0.8.499.0.1
+
+2018-03-27  Keith O'Hara  <keith.ohara@nyu.edu>
+
+	* inst/include/armadillo_bits/auxlib_meat.hpp: Remove several no
+	longer needed define tests for the limited LAPACK shipped with R
+
 2018-03-26  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.8.499.0.0 [GitHub only]
