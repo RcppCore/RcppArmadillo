@@ -2,10 +2,13 @@
 
         * DESCRIPTION: New minor version 0.8.499.0.1
 
-2018-03-27  Keith O'Hara  <keith.ohara@nyu.edu>
+2018-03-27  Keith O'Hara  <kth.ohr@gmail.com>
 
 	* inst/include/armadillo_bits/auxlib_meat.hpp: Remove several no
 	longer needed define tests for the limited LAPACK shipped with R
+
+	* inst/unitTests/cpp/Rlapack.cpp: Unit tests for these features
+	* inst/unitTests/runit.Rlapack.R: Idem
 
 2018-03-26  Dirk Eddelbuettel  <edd@debian.org>
 

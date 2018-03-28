@@ -15,6 +15,8 @@
       \item added \code{reverse()} for reversing order of elements
       \item added \code{roots()} for finding the roots of a polynomial
     }
+    \item Fewer LAPACK compile-time guards are used, new unit tests for underlying
+    features have been added (Keith O'Hara in \ghpr{211} addressing \ghit{207}).
   }
 }
 
