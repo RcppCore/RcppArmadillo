@@ -70,28 +70,20 @@ AC_MSG_CHECKING([LAPACK_LIBS])
 ## external LAPACK has the required function
 lapack=$(${R_HOME}/bin/R CMD config LAPACK_LIBS)
 hasRlapack=$(echo ${lapack} | grep lRlapack)
-## internal Rlapack now the required functions if "new enough": R 3.3.0 or later
-newR=$("${R_HOME}/bin/Rscript" --vanilla -e 'if (getRversion() >= "3.3.0") cat("yes") else cat("no")')
 
 ## in what follows below we substitute both side of the define/undef
 ## while this may seem a little unusual we do it to fully reproduce the
 ## previous bash-based implementation
 
 if test x"${hasRlapack}" == x""; then
-    ## We are using a full Lapack and can use zgesdd -- so #undef remains
+    ## We are using a full Lapack and can use zgbsv -- so #undef remains
     AC_MSG_RESULT([system LAPACK found])
     arma_lapack="#undef ARMA_CRIPPLED_LAPACK"
 else
-    if test x"${newR}" == x"yes"; then
-        ## The R versions are recent enough and has an augmented internal Rlapack
-        AC_MSG_RESULT([fallback LAPACK from R 3.3.0 or later used])
-        arma_lapack="#undef ARMA_CRIPPLED_LAPACK"
-    else     
-        ## We are using an older R's subset of Lapack and CANNOT use zgesdd etc, so we mark it
-        AC_MSG_RESULT([R-supplied partial LAPACK found])
-        AC_MSG_WARN([Some complex-valued LAPACK functions may not be available])
-        arma_lapack="#define ARMA_CRIPPLED_LAPACK 1"
-    fi
+    ## We are using R's subset of Lapack and CANNOT use zgbsv etc, so we mark it
+    AC_MSG_RESULT([R-supplied partial LAPACK found])
+    AC_MSG_WARN([Some complex-valued LAPACK functions may not be available])
+    arma_lapack="#define ARMA_CRIPPLED_LAPACK 1"
 fi
 
 ## Default the OpenMP flag to the empty string.
