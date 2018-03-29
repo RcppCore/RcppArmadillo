@@ -1,3 +1,12 @@
+2018-03-29  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Depends): Require R (>= 3.3.0)
+
+2018-03-29  Keith O'Hara  <kth.ohr@gmail.com>
+
+	* configure.ac: Updated check for limited LAPACK
+	* configure: Idem
+
 2018-03-27  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: New minor version 0.8.499.0.1

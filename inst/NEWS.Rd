@@ -3,7 +3,7 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.8.499.0.0 (2018-03-26)}{
+\section{Changes in RcppArmadillo version 0.8.499.0.2 (2018-03-29)}{
   \itemize{
     \item Upgraded to Armadillo release 8.500.rc1 (8.500 rc1)
     \itemize{
@@ -17,6 +17,8 @@
     }
     \item Fewer LAPACK compile-time guards are used, new unit tests for underlying
     features have been added (Keith O'Hara in \ghpr{211} addressing \ghit{207}).
+    \item The configure check for LAPACK features has been updated
+    accordingly (Keith O'Hara in \ghpr{214} addressing \ghit{213}).
   }
 }
 
