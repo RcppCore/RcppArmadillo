@@ -43,12 +43,12 @@ if test "${GXX}" = yes; then
              AC_MSG_WARN([Only g++ version 4.7.2 or greater can be used with RcppArmadillo.])
              AC_MSG_ERROR([Please use a different compiler.])   
         ;;
-        4.7.[2-9]|4.8.*|4.9.*|5.[0-3]*)
+        4.7.*|4.8.*|4.9.*|5.0*|5.1*|5.2*|5.3*)        
              AC_MSG_RESULT([yes, but without OpenMP as version ${gxx_version} (Armadillo constraint)])
              ## we know this one is bad
              can_use_openmp="no"
         ;;
-        5.[4-9]*|6.*|7.*|8.*|9.*)
+        5.4*|5.5*|5.6*|5.7*|5.8*|5.9*|6.*|7.*|8.*|9.*|10.*)
              AC_MSG_RESULT([yes, with OpenMP as version ${gxx_version}])
              ## we know this one is good, yay
              can_use_openmp="yes"
