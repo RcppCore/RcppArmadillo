@@ -3,9 +3,9 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.8.499.0.2 (2018-03-29)}{
+\section{Changes in RcppArmadillo version 0.8.499.1.0 (2018-04-17)}{
   \itemize{
-    \item Upgraded to Armadillo release 8.500.rc1 (8.500 rc1)
+    \item Upgraded to Armadillo release 8.500.rc2 (8.500 rc2)
     \itemize{
       \item faster element access in sparse matrices
       \item faster row iterators for sparse matrices
@@ -14,11 +14,17 @@
       \item expanded \code{.transform()} and \code{.for_each()} to handle sparse matrices
       \item added \code{reverse()} for reversing order of elements
       \item added \code{roots()} for finding the roots of a polynomial
+      \item faster \code{transpose} of sparse matrices
+      \item faster sparse * dense matrix multiplication
+      \item faster handling of sparse matrices by \code{trace()}
+      \item added \code{repelem()} for replicating elements
     }
     \item Fewer LAPACK compile-time guards are used, new unit tests for underlying
     features have been added (Keith O'Hara in \ghpr{211} addressing \ghit{207}).
     \item The configure check for LAPACK features has been updated
     accordingly (Keith O'Hara in \ghpr{214} addressing \ghit{213}).
+    \item The compile-time check for \code{g++} is now more robust to
+    minimal shell versions (\ghpr{217} addressing \ghit{216}).
   }
 }
 

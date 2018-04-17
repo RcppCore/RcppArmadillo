@@ -474,35 +474,9 @@ operator*
   
   typedef typename T1::elem_type eT;
   
-  const SpProxy<T1> pa(x);
-  const   Proxy<T2> pb(y);
+  Mat<eT> result;
   
-  arma_debug_assert_mul_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "matrix multiplication");
-  
-  Mat<eT> result(pa.get_n_rows(), pb.get_n_cols());
-  result.zeros();
-  
-  if( (pa.get_n_nonzero() > 0) && (pb.get_n_elem() > 0) )
-    {
-    typename SpProxy<T1>::const_iterator_type x_it     = pa.begin();
-    typename SpProxy<T1>::const_iterator_type x_it_end = pa.end();
-    
-    const uword result_n_cols = result.n_cols;
-      
-    while(x_it != x_it_end)
-      {
-      const eT    x_it_val = (*x_it);
-      const uword x_it_row = x_it.row();
-      const uword x_it_col = x_it.col();
-      
-      for(uword col = 0; col < result_n_cols; ++col)
-        {
-        result.at(x_it_row, col) += x_it_val * pb.at(x_it_col, col);
-        }
-      
-      ++x_it;
-      }
-    }
+  spglue_times_misc::sparse_times_dense(result, x, y);
   
   return result;
   }
@@ -528,35 +502,9 @@ operator*
   
   typedef typename T1::elem_type eT;
   
-  const   Proxy<T1> pa(x);
-  const SpProxy<T2> pb(y);
+  Mat<eT> result;
   
-  arma_debug_assert_mul_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "matrix multiplication");
-  
-  Mat<eT> result(pa.get_n_rows(), pb.get_n_cols());
-  result.zeros();
-  
-  if( (pa.get_n_elem() > 0) && (pb.get_n_nonzero() > 0) )
-    {
-    typename SpProxy<T2>::const_iterator_type y_it     = pb.begin();
-    typename SpProxy<T2>::const_iterator_type y_it_end = pb.end();
-    
-    const uword result_n_rows = result.n_rows;
-    
-    while(y_it != y_it_end)
-      {
-      const eT    y_it_val = (*y_it);
-      const uword y_it_col = y_it.col();
-      const uword y_it_row = y_it.row();
-      
-      for(uword row = 0; row < result_n_rows; ++row)
-        {
-        result.at(row, y_it_col) += pa.at(row, y_it_row) * y_it_val;
-        }
-      
-      ++y_it;
-      }
-    }
+  spglue_times_misc::dense_times_sparse(result, x, y);
   
   return result;
   }

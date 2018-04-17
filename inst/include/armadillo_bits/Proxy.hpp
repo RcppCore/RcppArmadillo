@@ -47,7 +47,8 @@
 // get_ea()         = return the object that provides linear access to elements via operator[i]
 // get_aligned_ea() = return the object that provides linear access to elements via at_alt(i); valid only if is_aligned() returns true
 // 
-// is_alias(X)      = return true/false indicating whether the Q object aliases X
+// is_alias(X)      = return true/false indicating whether the Q object aliases matrix X
+// has_overlap(X)   = return true/false indicating whether the Q object has overlap with subview X
 // is_aligned()     = return true/false indicating whether the Q object has aligned memory
 
 
@@ -101,6 +102,9 @@ struct Proxy_fixed
   
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&Q) == void_ptr(&X)); }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return is_alias(X.m); }
   
   arma_inline bool is_aligned() const
     {
@@ -176,7 +180,10 @@ class Proxy< Mat<eT> >
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
   
   template<typename eT2>
-  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&Q) == void_ptr(&X)); }
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (is_same_type<eT,eT2>::value) ? (void_ptr(&Q) == void_ptr(&X)) : false; }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return is_alias(X.m); }
   
   arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
   };
@@ -222,7 +229,10 @@ class Proxy< Col<eT> >
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
   
   template<typename eT2>
-  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&Q) == void_ptr(&X)); }
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (is_same_type<eT,eT2>::value) ? (void_ptr(&Q) == void_ptr(&X)) : false; }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return is_alias(X.m); }
   
   arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
   };
@@ -268,7 +278,10 @@ class Proxy< Row<eT> >
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
   
   template<typename eT2>
-  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&Q) == void_ptr(&X)); }
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (is_same_type<eT,eT2>::value) ? (void_ptr(&Q) == void_ptr(&X)) : false; }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return is_alias(X.m); }
   
   arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
   };
@@ -316,6 +329,9 @@ class Proxy< Gen<T1, gen_type> >
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>&) const { return false; }
   
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>&) const { return false; }
+  
   arma_inline bool is_aligned() const { return Gen<T1, gen_type>::is_simple; }
   };
 
@@ -361,6 +377,9 @@ class Proxy< Gen<T1, gen_randu> >
   
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>&) const { return false; }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>&) const { return false; }
   
   arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
   };
@@ -408,6 +427,9 @@ class Proxy< Gen<T1, gen_randn> >
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>&) const { return false; }
   
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>&) const { return false; }
+  
   arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
   };
 
@@ -453,6 +475,9 @@ class Proxy< eOp<T1, eop_type> >
   
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return Q.P.is_alias(X); }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return Q.P.has_overlap(X); }
   
   arma_inline bool is_aligned() const { return Q.P.is_aligned(); }
   };
@@ -500,6 +525,9 @@ class Proxy< eGlue<T1, T2, eglue_type> >
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return (Q.P1.is_alias(X) || Q.P2.is_alias(X)); }
   
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return (Q.P1.has_overlap(X) || Q.P2.has_overlap(X)); }
+  
   arma_inline bool is_aligned() const { return (Q.P1.is_aligned() && Q.P2.is_aligned()); }
   };
 
@@ -545,6 +573,9 @@ class Proxy< Op<T1, op_type> >
   
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>&) const { return false; }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>&) const { return false; }
   
   arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
   };
@@ -592,6 +623,9 @@ class Proxy< Glue<T1, T2, glue_type> >
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>&) const { return false; }
   
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>&) const { return false; }
+  
   arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
   };
 
@@ -637,6 +671,9 @@ class Proxy< mtOp<out_eT, T1, op_type> >
   
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>&) const { return false; }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>&) const { return false; }
   
   arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
   };
@@ -684,6 +721,9 @@ class Proxy< mtGlue<out_eT, T1, T2, glue_type> >
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>&) const { return false; }
   
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>&) const { return false; }
+  
   arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
   };
 
@@ -728,7 +768,10 @@ class Proxy< subview<eT> >
   arma_inline aligned_ea_type get_aligned_ea() const { return Q; }
   
   template<typename eT2>
-  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&(Q.m)) == void_ptr(&X)); }
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (is_same_type<eT,eT2>::value) ? (void_ptr(&(Q.m)) == void_ptr(&X)) : false; }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return Q.check_overlap(X); }
   
   arma_inline bool is_aligned() const { return false; }
   };
@@ -774,7 +817,10 @@ class Proxy< subview_col<eT> >
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;        }
   
   template<typename eT2>
-  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&(Q.m)) == void_ptr(&X)); }
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (is_same_type<eT,eT2>::value) ? (void_ptr(&(Q.m)) == void_ptr(&X)) : false; }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return Q.check_overlap(X); }
   
   arma_inline bool is_aligned() const { return memory::is_aligned(Q.colmem); }
   };
@@ -820,7 +866,10 @@ class Proxy< subview_row<eT> >
   arma_inline aligned_ea_type get_aligned_ea() const { return Q; }
   
   template<typename eT2>
-  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&(Q.m)) == void_ptr(&X)); }
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (is_same_type<eT,eT2>::value) ? (void_ptr(&(Q.m)) == void_ptr(&X)) : false; }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return Q.check_overlap(X); }
   
   arma_inline bool is_aligned() const { return false; }
   };
@@ -875,6 +924,9 @@ class Proxy< subview_elem1<eT,T1> >
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return ( (void_ptr(&X) == void_ptr(&(Q.m))) || (R.is_alias(X)) ); }
   
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return is_alias(X.m); }
+  
   arma_inline bool is_aligned() const { return false; }
   };
 
@@ -921,6 +973,9 @@ class Proxy< subview_elem2<eT,T1,T2> >
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>&) const { return false; }
   
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>&) const { return false; }
+  
   arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
   };
 
@@ -965,7 +1020,10 @@ class Proxy< diagview<eT> >
   arma_inline aligned_ea_type get_aligned_ea() const { return Q; }
   
   template<typename eT2>
-  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&(Q.m)) == void_ptr(&X)); }
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (is_same_type<eT,eT2>::value) ? (void_ptr(&(Q.m)) == void_ptr(&X)) : false; }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return is_alias(X.m); }
   
   arma_inline bool is_aligned() const { return false; }
   };
@@ -1022,6 +1080,9 @@ class Proxy_diagvec_mat< Op<T1, op_diagvec> >
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&R) == void_ptr(&X)); }
   
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return is_alias(X.m); }
+  
   arma_inline bool is_aligned() const { return false; }
   };
 
@@ -1075,6 +1136,9 @@ class Proxy_diagvec_expr< Op<T1, op_diagvec> >
   
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>&) const { return false; }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>&) const { return false; }
   
   arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
   };
@@ -1152,6 +1216,9 @@ struct Proxy_xtrans_default< Op<T1, op_htrans> >
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return void_ptr(&(U.M)) == void_ptr(&X); }
   
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return is_alias(X.m); }
+  
   arma_inline bool is_aligned() const { return false; }
   };
 
@@ -1191,6 +1258,9 @@ struct Proxy_xtrans_default< Op<T1, op_strans> >
   
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return void_ptr(&(U.M)) == void_ptr(&X); }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return is_alias(X.m); }
   
   arma_inline bool is_aligned() const { return false; }
   };
@@ -1239,6 +1309,9 @@ struct Proxy_xtrans_vector< Op<T1, op_htrans> >
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return U.is_alias(X); }
   
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return is_alias(X.m); }
+  
   arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
   };
 
@@ -1277,6 +1350,9 @@ struct Proxy_xtrans_vector< Op<T1, op_strans> >
   
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return U.is_alias(X); }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return is_alias(X.m); }
   
   arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
   };
@@ -1350,6 +1426,9 @@ class Proxy< Op<T1, op_htrans> >
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return Proxy_xtrans::is_alias(X); }
   
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return Proxy_xtrans::has_overlap(X); }
+  
   arma_inline bool is_aligned() const { return Proxy_xtrans::is_aligned(); }
   };
 
@@ -1411,6 +1490,9 @@ class Proxy< Op<T1, op_strans> >
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return Proxy_xtrans::is_alias(X); }
   
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return Proxy_xtrans::has_overlap(X); }
+  
   arma_inline bool is_aligned() const { return Proxy_xtrans::is_aligned(); }
   };
 
@@ -1443,6 +1525,9 @@ struct Proxy_subview_row_htrans_cx
   
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&(Q.sv_row.m)) == void_ptr(&X)); }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return is_alias(X.m); }
   };
 
 
@@ -1474,6 +1559,9 @@ struct Proxy_subview_row_htrans_non_cx
   
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&(Q.sv_row.m)) == void_ptr(&X)); }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return is_alias(X.m); }
   };
 
 
@@ -1545,6 +1633,9 @@ class Proxy< Op<subview_row<eT>, op_htrans> >
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return Proxy_sv_row_ht::is_alias(X); }
   
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return Proxy_sv_row_ht::has_overlap(X); }
+  
   arma_inline bool is_aligned() const { return false; }
   };
 
@@ -1590,6 +1681,9 @@ class Proxy< Op<subview_row<eT>, op_strans> >
   
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&(Q.sv_row.m)) == void_ptr(&X)); }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return is_alias(X.m); }
   
   arma_inline bool is_aligned() const { return false; }
   };
@@ -1641,6 +1735,9 @@ class Proxy< Op< Row< std::complex<T> >, op_htrans> >
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return void_ptr(&src) == void_ptr(&X); }
   
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return is_alias(X.m); }
+  
   arma_inline bool is_aligned() const { return false; }
   };
 
@@ -1690,6 +1787,9 @@ class Proxy< Op< Col< std::complex<T> >, op_htrans> >
   
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return void_ptr(&src) == void_ptr(&X); }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return is_alias(X.m); }
   
   arma_inline bool is_aligned() const { return false; }
   };
@@ -1741,6 +1841,9 @@ class Proxy< Op< subview_col< std::complex<T> >, op_htrans> >
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return void_ptr(&src.m) == void_ptr(&X); }
   
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return is_alias(X.m); }
+  
   arma_inline bool is_aligned() const { return false; }
   };
 
@@ -1790,6 +1893,9 @@ class Proxy< Op<T1, op_htrans2> >
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return Q.P.is_alias(X); }
   
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return is_alias(X.m); }
+  
   arma_inline bool is_aligned() const { return Q.P.is_aligned(); }
   };
 
@@ -1835,6 +1941,9 @@ class Proxy< subview_row_strans<eT> >
   
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&(Q.sv_row.m)) == void_ptr(&X)); }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return is_alias(X.m); }
   
   arma_inline bool is_aligned() const { return false; }
   };
@@ -1882,6 +1991,9 @@ class Proxy< subview_row_htrans<eT> >
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&(Q.sv_row.m)) == void_ptr(&X)); }
   
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return is_alias(X.m); }
+  
   arma_inline bool is_aligned() const { return false; }
   };
 
@@ -1928,6 +2040,9 @@ class Proxy< xtrans_mat<eT, do_conj> >
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>&) const { return false; }
   
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>&) const { return false; }
+  
   arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
   };
 
@@ -1973,6 +2088,9 @@ class Proxy< xvec_htrans<eT> >
   
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>&) const { return false; }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>&) const { return false; }
   
   arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
   };
@@ -2030,6 +2148,9 @@ class Proxy_vectorise_col_mat< Op<T1, op_vectorise_col> >
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return ( void_ptr(&X) == void_ptr(&(U.M)) ); }
   
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return is_alias(X.m); }
+  
   arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
   };
 
@@ -2085,6 +2206,9 @@ class Proxy_vectorise_col_expr< Op<T1, op_vectorise_col> >
   
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return R.is_alias(X); }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return is_alias(X.m); }
   
   arma_inline bool is_aligned() const { return R.is_aligned(); }
   };

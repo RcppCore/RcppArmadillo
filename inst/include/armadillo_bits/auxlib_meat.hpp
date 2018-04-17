@@ -1821,6 +1821,8 @@ auxlib::chol_band(Mat< std::complex<T> >& X, const uword KD, const uword layout)
   
   #if defined(ARMA_CRIPPLED_LAPACK)
     {
+    arma_extra_debug_print("auxlib::chol_band(): redirecting to auxlib::chol() due to crippled LAPACK");
+    
     arma_ignore(KD);
     
     return auxlib::chol(X, layout);
@@ -3752,6 +3754,8 @@ auxlib::solve_band_fast(Mat< std::complex<typename T1::pod_type> >& out, Mat< st
   
   #if defined(ARMA_CRIPPLED_LAPACK)
     {
+    arma_extra_debug_print("auxlib::solve_band_fast(): redirecting to auxlib::solve_square_fast() due to crippled LAPACK");
+    
     arma_ignore(KL);
     arma_ignore(KU);
     
@@ -3940,6 +3944,8 @@ auxlib::solve_band_refine(Mat< std::complex<typename T1::pod_type> >& out, typen
   
   #if defined(ARMA_CRIPPLED_LAPACK)
     {
+    arma_extra_debug_print("auxlib::solve_band_refine(): redirecting to auxlib::solve_square_refine() due to crippled LAPACK");
+    
     arma_ignore(KL);
     arma_ignore(KU);
     
@@ -4539,6 +4545,8 @@ auxlib::crippled_lapack(const Base<typename T1::elem_type, T1>&)
   {
   #if defined(ARMA_CRIPPLED_LAPACK)
     {
+    arma_extra_debug_print("auxlib::crippled_lapack(): true");
+    
     return (is_cx<typename T1::elem_type>::yes);
     }
   #else
