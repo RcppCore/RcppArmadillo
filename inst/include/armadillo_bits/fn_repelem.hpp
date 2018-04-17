@@ -14,25 +14,39 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup spop_strans
+
+//! \addtogroup fn_repelem
 //! @{
 
 
-//! simple transpose operation (no complex conjugates) for sparse matrices 
-
-class spop_strans
+template<typename T1>
+arma_warn_unused
+arma_inline
+typename
+enable_if2
+  <
+  is_arma_type<T1>::value,
+  const Op<T1, op_repelem>
+  >::result
+repelem(const T1& A, const uword r, const uword c)
   {
-  public:
-  
-  template<typename eT>
-  inline static void apply_noalias(SpMat<eT>& B, const SpMat<eT>& A);
-  
-  template<typename T1>
-  inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_strans>& in);
-  
-  template<typename T1>
-  inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_htrans>& in);
-  };
+  arma_extra_debug_sigprint();
+
+  return Op<T1, op_repelem>(A, r, c);
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+arma_inline
+const SpOp<T1, spop_repelem>
+repelem(const SpBase<typename T1::elem_type,T1>& A, const uword r, const uword c)
+  {
+  arma_extra_debug_sigprint();
+
+  return SpOp<T1, spop_repelem>(A.get_ref(), r, c);
+  }
 
 
 

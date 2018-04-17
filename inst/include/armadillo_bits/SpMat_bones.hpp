@@ -131,6 +131,14 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   template<typename T1> inline SpMat& operator/=(const Base<eT, T1>& m);
   template<typename T1> inline SpMat& operator%=(const Base<eT, T1>& m);
   
+  template<typename T1> inline explicit    SpMat(const Op<T1, op_diagmat>& expr);
+  template<typename T1> inline SpMat&  operator=(const Op<T1, op_diagmat>& expr);
+  template<typename T1> inline SpMat& operator+=(const Op<T1, op_diagmat>& expr);
+  template<typename T1> inline SpMat& operator-=(const Op<T1, op_diagmat>& expr);
+  template<typename T1> inline SpMat& operator*=(const Op<T1, op_diagmat>& expr);
+  template<typename T1> inline SpMat& operator/=(const Op<T1, op_diagmat>& expr);
+  template<typename T1> inline SpMat& operator%=(const Op<T1, op_diagmat>& expr);
+  
   
   //! construction of complex matrix out of two non-complex matrices
   template<typename T1, typename T2>
@@ -277,17 +285,17 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   arma_inline arma_warn_unused bool in_range(const uword in_row, const uword in_col, const SizeMat& s) const;
   
   
-  inline void impl_print(                           const std::string& extra_text) const;
-  inline void impl_print(std::ostream& user_stream, const std::string& extra_text) const;
+  arma_cold inline void impl_print(                           const std::string& extra_text) const;
+  arma_cold inline void impl_print(std::ostream& user_stream, const std::string& extra_text) const;
   
-  inline void impl_raw_print(                           const std::string& extra_text) const;
-  inline void impl_raw_print(std::ostream& user_stream, const std::string& extra_text) const;
+  arma_cold inline void impl_raw_print(                           const std::string& extra_text) const;
+  arma_cold inline void impl_raw_print(std::ostream& user_stream, const std::string& extra_text) const;
   
-  inline void impl_print_dense(                           const std::string& extra_text) const;
-  inline void impl_print_dense(std::ostream& user_stream, const std::string& extra_text) const;
+  arma_cold inline void impl_print_dense(                           const std::string& extra_text) const;
+  arma_cold inline void impl_print_dense(std::ostream& user_stream, const std::string& extra_text) const;
   
-  inline void impl_raw_print_dense(                           const std::string& extra_text) const;
-  inline void impl_raw_print_dense(std::ostream& user_stream, const std::string& extra_text) const;
+  arma_cold inline void impl_raw_print_dense(                           const std::string& extra_text) const;
+  arma_cold inline void impl_raw_print_dense(std::ostream& user_stream, const std::string& extra_text) const;
   
   
   template<typename eT2> inline void copy_size(const SpMat<eT2>& m);

@@ -14,24 +14,19 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup spop_strans
+
+//! \addtogroup op_repelem
 //! @{
 
 
-//! simple transpose operation (no complex conjugates) for sparse matrices 
 
-class spop_strans
+class op_repelem
   {
   public:
   
-  template<typename eT>
-  inline static void apply_noalias(SpMat<eT>& B, const SpMat<eT>& A);
+  template<typename obj> inline static void apply_noalias(Mat<typename obj::elem_type>& out, const obj& X, const uword copies_per_row, const uword copies_per_col);
   
-  template<typename T1>
-  inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_strans>& in);
-  
-  template<typename T1>
-  inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_htrans>& in);
+  template<typename T1> inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_repelem>& in);
   };
 
 

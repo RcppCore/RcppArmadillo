@@ -305,4 +305,174 @@ spglue_times2::apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spgl
 
 
 
+//
+//
+//
+
+
+
+template<typename T1, typename T2>
+inline
+void
+spglue_times_misc::sparse_times_dense(Mat<typename T1::elem_type>& out, const T1& x, const T2& y)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  if(is_op_diagmat<T2>::value)
+    {
+    const SpMat<eT> tmp(y);
+    
+    out = x * tmp;
+    }
+  else
+    {
+    const unwrap_spmat<T1> UA(x);
+    const quasi_unwrap<T2> UB(y);
+    
+    const SpMat<eT>& A = UA.M;
+    const   Mat<eT>& B = UB.M;
+    
+    const uword A_n_rows = A.n_rows;
+    const uword A_n_cols = A.n_cols;
+    
+    const uword B_n_rows = B.n_rows;
+    const uword B_n_cols = B.n_cols;
+    
+    arma_debug_assert_mul_size(A_n_rows, A_n_cols, B_n_rows, B_n_cols, "matrix multiplication");
+    
+    if(B_n_cols >= (B_n_rows / uword(100)))
+      {
+      arma_extra_debug_print("using transpose-based multiplication");
+      
+      const SpMat<eT> At = A.st();
+      const   Mat<eT> Bt = B.st();
+      
+      if(A_n_rows == B_n_cols)
+        {
+        out = Bt * At;
+        out = strans(out);  // since 'out' is square-sized, this will do an inplace transpose
+        }
+      else
+        {
+        out = strans(Bt * At);
+        }
+      }
+    else
+      {
+      arma_extra_debug_print("using standard multiplication");
+      
+      out.zeros(A_n_rows, B_n_cols);
+      
+      typename SpMat<eT>::const_iterator A_it     = A.begin();
+      typename SpMat<eT>::const_iterator A_it_end = A.end();
+      
+      while(A_it != A_it_end)
+        {
+        const eT    A_it_val = (*A_it);
+        const uword A_it_row = A_it.row();
+        const uword A_it_col = A_it.col();
+        
+        for(uword col = 0; col < B_n_cols; ++col)
+          {
+          out.at(A_it_row, col) += A_it_val * B.at(A_it_col, col);
+          }
+        
+        ++A_it;
+        }
+      }
+    }
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+void
+spglue_times_misc::dense_times_sparse(Mat<typename T1::elem_type>& out, const T1& x, const T2& y)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  if(is_op_diagmat<T1>::value)
+    {
+    const SpMat<eT> tmp(x);
+    
+    out = tmp * y;
+    }
+  else
+    {
+    const   Proxy<T1> pa(x);
+    const SpProxy<T2> pb(y);
+    
+    arma_debug_assert_mul_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "matrix multiplication");
+    
+    out.zeros(pa.get_n_rows(), pb.get_n_cols());
+    
+    if( (pa.get_n_elem() > 0) && (pb.get_n_nonzero() > 0) )
+      {
+      if( (arma_config::openmp) && (mp_thread_limit::in_parallel() == false) && (pa.get_n_rows() <= (pa.get_n_cols() / uword(100))) )
+        {
+        #if defined(ARMA_USE_OPENMP)
+          {
+          arma_extra_debug_print("using parallelised multiplication");
+          
+          const quasi_unwrap<typename   Proxy<T1>::stored_type> UX(pa.Q);
+          const unwrap_spmat<typename SpProxy<T2>::stored_type> UY(pb.Q);
+          
+          const   Mat<eT>& X = UX.M;
+          const SpMat<eT>& Y = UY.M;
+          
+          const uword Y_n_cols  = Y.n_cols;
+          const int   n_threads = mp_thread_limit::get();
+          
+          #pragma omp parallel for schedule(static) num_threads(n_threads)
+          for(uword i=0; i < Y_n_cols; ++i)
+            {
+            const uword col_offset_1 = Y.col_ptrs[i  ];
+            const uword col_offset_2 = Y.col_ptrs[i+1];
+            
+            const uword col_offset_delta = col_offset_2 - col_offset_1;
+            
+            const uvec    indices(const_cast<uword*>(&(Y.row_indices[col_offset_1])), col_offset_delta, false, false);
+            const Col<eT>   Y_col(const_cast<   eT*>(&(Y.values[col_offset_1])     ), col_offset_delta, false, false);
+            
+            out.col(i) = X.cols(indices) * Y_col;
+            }
+          }
+        #endif
+        }
+      else
+        {
+        arma_extra_debug_print("using standard multiplication");
+        
+        typename SpProxy<T2>::const_iterator_type y_it     = pb.begin();
+        typename SpProxy<T2>::const_iterator_type y_it_end = pb.end();
+        
+        const uword out_n_rows = out.n_rows;
+        
+        while(y_it != y_it_end)
+          {
+          const eT    y_it_val = (*y_it);
+          const uword y_it_col = y_it.col();
+          const uword y_it_row = y_it.row();
+          
+          eT* out_col = out.colptr(y_it_col);
+          
+          for(uword row = 0; row < out_n_rows; ++row)
+            {
+            out_col[row] += pa.at(row, y_it_row) * y_it_val;
+            }
+          
+          ++y_it;
+          }
+        }
+      }
+    }
+  }
+
+
+
 //! @}

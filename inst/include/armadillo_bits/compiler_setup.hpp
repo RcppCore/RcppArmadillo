@@ -295,7 +295,10 @@
     #define arma_hot __attribute__((__hot__))
   #endif
   
-  #if __has_attribute(__cold__)
+  #if __has_attribute(__minsize__)
+    #undef  arma_cold
+    #define arma_cold __attribute__((__minsize__))
+  #elif __has_attribute(__cold__)
     #undef  arma_cold
     #define arma_cold __attribute__((__cold__))
   #endif
@@ -504,7 +507,7 @@
 
 #if defined(ARMA_GCC_VERSION) && (ARMA_GCC_VERSION >= 50400) && !defined(ARMA_USE_CXX11)
   #if !defined(ARMA_PRINT_CXX11_WARNING) && !defined(ARMA_PRINT_OPENMP_CXX11_WARNING) && !defined(ARMA_DONT_PRINT_CXX11_WARNING)
-    #pragma message ("NOTE: suggest to enable C++11 mode for faster code; add -std=c++11 to compiler flags")
+    #pragma message ("NOTE: suggest to enable C++14 mode for faster code; add -std=c++14 to compiler flags")
   #endif
 #endif
 
