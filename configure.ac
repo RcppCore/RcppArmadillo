@@ -62,7 +62,47 @@ if test "${GXX}" = yes; then
     esac
 fi
 
+## Check for Apple LLVM
 
+AC_MSG_CHECKING([for macOS])
+RSysinfoName=$("${R_HOME}/bin/Rscript" --vanilla -e 'cat(Sys.info()[["sysname"]])')
+
+if test x"${RSysinfoName}" == x"Darwin"; then
+    AC_MSG_RESULT([found])
+    AC_MSG_CHECKING([for macOS Apple compiler])
+
+    apple_compiler=$($CXX --version 2>&1 | grep -i -c -e 'apple llvm')
+
+    if test x"${apple_compiler}" == x"1"; then
+        AC_MSG_RESULT([found])
+        AC_MSG_WARN([OpenMP unavailable and turned off.])
+        can_use_openmp="no"
+    else
+        AC_MSG_RESULT([not found])
+        if test x"${can_use_openmp}" == x"no"; then
+            AC_MSG_CHECKING([for clang compiler])
+            clang_compiler=$($CXX --version 2>&1 | grep -i -c -e 'clang')
+
+            if test x"${clang_compiler}" == x"1"; then
+                AC_MSG_RESULT([found])
+                AC_MSG_CHECKING([for OpenMP compatible version of clang])
+                clang_version=$(${CXX} -v 2>&1 | awk '/^.*clang version/ {print $3}')
+
+                case ${clang_version} in
+                    4.*|5.*|6.*|7.*|8.*)
+                        AC_MSG_RESULT([found and suitable])
+                        can_use_openmp="yes"
+                    ;;
+                    *)
+                        AC_MSG_RESULT([not found])
+                        AC_MSG_WARN([OpenMP unavailable and turned off.])
+                        can_use_openmp="no"
+                    ;;
+                esac
+            fi
+        fi
+    fi
+fi
 
 ## Check for suitable LAPACK_LIBS
 AC_MSG_CHECKING([LAPACK_LIBS])
@@ -92,30 +132,19 @@ openmp_flag=""
 ## Set the fallback, by default it is nope
 arma_have_openmp="#define ARMA_DONT_USE_OPENMP 1"
 
-## Check for broken systems produced by a corporation based in Cupertino
-AC_MSG_CHECKING([for macOS])
-RSysinfoName=$("${R_HOME}/bin/Rscript" --vanilla -e 'cat(Sys.info()[["sysname"]])')
-if test x"${RSysinfoName}" == x"Darwin"; then
-   AC_MSG_RESULT([found])
-   AC_MSG_WARN([OpenMP unavailable and turned off.])
-   arma_have_openmp="#define ARMA_DONT_USE_OPENMP 1"
-else
-   AC_MSG_RESULT([not found as on ${RSysinfoName}])
-   ## Check for OpenMP if and only if we have a suitable compile
-   if test x"${can_use_openmp}" == x"yes"; then
-      AC_MSG_CHECKING([for OpenMP])
-      ## if R has -fopenmp we should be good
-      allldflags=$(${R_HOME}/bin/R CMD config --ldflags)
-      hasOpenMP=$(echo ${allldflags} | grep -- -fopenmp)
-      if test x"${hasOpenMP}" == x""; then
-         AC_MSG_RESULT([missing])
-         arma_have_openmp="#define ARMA_DONT_USE_OPENMP 1"
-      else   
-         AC_MSG_RESULT([found and suitable])
-         arma_have_openmp="#define ARMA_USE_OPENMP 1"
-         openmp_flag='$(SHLIB_OPENMP_CXXFLAGS)'
-      fi
-   fi
+if test x"${can_use_openmp}" == x"yes"; then
+    AC_MSG_CHECKING([for OpenMP])
+    ## if R has -fopenmp we should be good
+    allldflags=$(${R_HOME}/bin/R CMD config --ldflags)
+    hasOpenMP=$(echo ${allldflags} | grep -- -fopenmp)
+    if test x"${hasOpenMP}" == x""; then
+        AC_MSG_RESULT([missing])
+        arma_have_openmp="#define ARMA_DONT_USE_OPENMP 1"
+    else   
+        AC_MSG_RESULT([found and suitable])
+        arma_have_openmp="#define ARMA_USE_OPENMP 1"
+        openmp_flag='$(SHLIB_OPENMP_CXXFLAGS)'
+    fi
 fi
 
 
