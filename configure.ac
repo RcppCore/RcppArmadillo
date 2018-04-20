@@ -81,7 +81,7 @@ if test x"${RSysinfoName}" == x"Darwin"; then
         AC_MSG_RESULT([not found])
         if test x"${can_use_openmp}" == x"no"; then
             AC_MSG_CHECKING([for clang compiler])
-            clang_compiler=$($CXX --version 2>&1 | grep -i -c -e 'clang')
+            clang_compiler=$($CXX --version 2>&1 | grep -i -c -e 'clang ')
 
             if test x"${clang_compiler}" == x"1"; then
                 AC_MSG_RESULT([found])

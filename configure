@@ -2752,7 +2752,7 @@ $as_echo "not found" >&6; }
         if test x"${can_use_openmp}" == x"no"; then
             { $as_echo "$as_me:${as_lineno-$LINENO}: checking for clang compiler" >&5
 $as_echo_n "checking for clang compiler... " >&6; }
-            clang_compiler=$($CXX --version 2>&1 | grep -i -c -e 'clang')
+            clang_compiler=$($CXX --version 2>&1 | grep -i -c -e 'clang ')
 
             if test x"${clang_compiler}" == x"1"; then
                 { $as_echo "$as_me:${as_lineno-$LINENO}: result: found" >&5
