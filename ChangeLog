@@ -1,3 +1,8 @@
+2018-04-21  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.8.500.0
+        * inst/NEWS.Rd: Release 0.8.500.0
+
 2018-04-20  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/armadillo: Upgraded to Armadillo 8.500
