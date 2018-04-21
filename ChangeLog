@@ -1,3 +1,13 @@
+2018-04-20  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/armadillo: Upgraded to Armadillo 8.500
+	* inst/include/armadillo_bits/*: Idem
+
+2018-04-19  Keith O'Hara  <kth.ohr@gmail.com>
+
+	* configure.ac: Compile-time checks for macOS compilers
+	* configure: Idem
+
 2018-04-17  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.8.499.1.0 [GitHub only]

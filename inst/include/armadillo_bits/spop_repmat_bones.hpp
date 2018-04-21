@@ -14,45 +14,25 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup arma_version
+//! \addtogroup spop_repmat
 //! @{
 
 
 
-#define ARMA_VERSION_MAJOR 8
-#define ARMA_VERSION_MINOR 500
-#define ARMA_VERSION_PATCH 0
-#define ARMA_VERSION_NAME  "Caffeine Raider"
-
-
-
-struct arma_version
+class spop_repmat
   {
-  static const unsigned int major = ARMA_VERSION_MAJOR;
-  static const unsigned int minor = ARMA_VERSION_MINOR;
-  static const unsigned int patch = ARMA_VERSION_PATCH;
+  public:
   
-  static
-  inline
-  std::string
-  as_string()
-    {
-    const char* nickname = ARMA_VERSION_NAME;
-    
-    std::stringstream ss;
-    ss << arma_version::major
-       << '.'
-       << arma_version::minor
-       << '.'
-       << arma_version::patch
-       << " ("
-       << nickname
-       << ')';
-    
-    return ss.str();
-    }
+  template<typename T1>
+  inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_repmat>& X);
+  
+  template<typename eT>
+  inline static void apply_noalias(SpMat<eT>& out, const uword A_n_rows, const uword A_n_cols, const SpMat<eT>& B);
   };
 
 
 
 //! @}
+
+
+
