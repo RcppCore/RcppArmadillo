@@ -1777,8 +1777,6 @@ fi
 CXX=$(${R_HOME}/bin/R CMD config CXX)
 CXXFLAGS=$("${R_HOME}/bin/R" CMD config CXXFLAGS)
 
-CXX=g++-mp-7
-
 ## We are using C++
 ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
