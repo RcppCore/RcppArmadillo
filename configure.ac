@@ -12,7 +12,7 @@
 AC_PREREQ(2.61)
 
 ## Process this file with autoconf to produce a configure script.
-AC_INIT(RcppArmadillo, m4_esyscmgd_s([awk -e '/^Version:/ {print $2}' DESCRIPTION]))
+AC_INIT(RcppArmadillo, m4_esyscmd_s([awk -e '/^Version:/ {print $2}' DESCRIPTION]))
 
 ## Set R_HOME, respecting an environment variable if one is set 
 : ${R_HOME=$(R RHOME)}
@@ -79,27 +79,28 @@ if test x"${RSysinfoName}" == x"Darwin"; then
         can_use_openmp="no"
     else
         AC_MSG_RESULT([not found])
-        if test x"${can_use_openmp}" == x"no"; then
-            AC_MSG_CHECKING([for clang compiler])
-            clang_compiler=$($CXX --version 2>&1 | grep -i -c -e 'clang ')
+        AC_MSG_CHECKING([for clang compiler])
+        clang_compiler=$($CXX --version 2>&1 | grep -i -c -e 'clang ')
 
-            if test x"${clang_compiler}" == x"1"; then
-                AC_MSG_RESULT([found])
-                AC_MSG_CHECKING([for OpenMP compatible version of clang])
-                clang_version=$(${CXX} -v 2>&1 | awk '/^.*clang version/ {print $3}')
+        if test x"${clang_compiler}" == x"1"; then
+            AC_MSG_RESULT([found])
+            AC_MSG_CHECKING([for OpenMP compatible version of clang])
+            clang_version=$(${CXX} -v 2>&1 | awk '/^.*clang version/ {print $3}')
 
-                case ${clang_version} in
-                    4.*|5.*|6.*|7.*|8.*)
-                        AC_MSG_RESULT([found and suitable])
-                        can_use_openmp="yes"
-                    ;;
-                    *)
-                        AC_MSG_RESULT([not found])
-                        AC_MSG_WARN([OpenMP unavailable and turned off.])
-                        can_use_openmp="no"
-                    ;;
-                esac
-            fi
+            case ${clang_version} in
+                4.*|5.*|6.*|7.*|8.*)
+                    AC_MSG_RESULT([found and suitable])
+                    can_use_openmp="yes"
+                ;;
+                *)
+                    AC_MSG_RESULT([not found])
+                    AC_MSG_WARN([OpenMP unavailable and turned off.])
+                    can_use_openmp="no"
+                ;;
+            esac
+        else
+            AC_MSG_RESULT([not found])
+            AC_MSG_WARN([unsupported macOS build detected; if anything breaks, you keep the pieces.])
         fi
     fi
 fi

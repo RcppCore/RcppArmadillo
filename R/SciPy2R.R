@@ -25,11 +25,16 @@
     type <- spmat$getformat()
     shape <- unlist(spmat$shape)
     data <- as.vector(reticulate::py_get_attr(spmat, "data"))
-    if (type == "csc") {
-        indices <- as.vector(reticulate::py_get_attr(spmat, "indices"))
-        indptr <- as.vector(reticulate::py_get_attr(spmat, "indptr"))
-        res <- new("dgCMatrix", i = indices, p = indptr, x = data, Dim = shape)
-    } else if (type == "coo") {
+    
+    # Since CSC Matrix from SciPy has been automatically converted to dgCMatrix, 
+    # the conversion for csc matrix is no longer needed.
+    
+    # if (type == "csc") {
+    #     indices <- as.vector(reticulate::py_get_attr(spmat, "indices"))
+    #     indptr <- as.vector(reticulate::py_get_attr(spmat, "indptr"))
+    #     res <- new("dgCMatrix", i = indices, p = indptr, x = data, Dim = shape)
+    # } 
+    if (type == "coo") {
         row <- as.vector(reticulate::py_get_attr(spmat, "row"))
         col <- as.vector(reticulate::py_get_attr(spmat, "col"))
         res <- new("dgTMatrix", i = row, j = col, x = data, Dim = shape)

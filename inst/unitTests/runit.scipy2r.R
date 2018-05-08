@@ -38,11 +38,14 @@ if (.runThisTest) {
                   "2 3 6")
         M <- as.matrix(read.table(text=mtxt))
         dimnames(M) <- NULL
-
+        
+        # Since 'reticulate' automatically converts CSC matrix to dgCMatrix, 
+        # no need to convert it in RcppArmadillo
+        
         test.csc2dgc <- function() {
             csc <- sp$csc_matrix(mat)
             dgC <- methods::as(M, "dgCMatrix")
-            checkEquals(dgC, RcppArmadillo:::.SciPy2R(csc), msg="csc2dgc")
+            checkEquals(dgC, csc, msg="csc2dgc")
         }
 
         test.coo2dgt <- function() {
