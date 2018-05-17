@@ -3,6 +3,9 @@
 	* DESCRIPTION (Suggests): Add 'slam' used in two unit test functions
 	(and already conditional)
 
+	* .travis.yml (install): Add r-cran-slam to packages to install;
+	switch reticulate to r-cran-reticulate as both are in the c4d2u PPA
+
 2018-05-15  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.8.500.1.0
