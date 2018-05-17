@@ -3,6 +3,17 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.8.500.1.1 (2018-05-171) [GH only]}{
+  \itemize{
+    \item Upgraded to Armadillo release 8.500.1 (Caffeine Raider)
+    \itemize{
+      \item bug fix for banded matricex
+    }
+    \item Added \code{slam} to Suggests: as it is used in two unit test
+    functions [CRAN requests]
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.8.500.0 (2018-04-21)}{
   \itemize{
     \item Upgraded to Armadillo release 8.500 (Caffeine Raider)
