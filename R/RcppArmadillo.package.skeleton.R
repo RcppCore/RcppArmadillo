@@ -37,9 +37,6 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
     skelFunName <- ifelse(haveKitten, "kitten", "package.skeleton")
     message("\nCalling ", skelFunName, " to create basic package.")
 
-    
-    
-    
     ## first let the traditional version (or the kitten alternate) do its business
     call <- match.call()
     call[[1]] <- skelFunUsed
