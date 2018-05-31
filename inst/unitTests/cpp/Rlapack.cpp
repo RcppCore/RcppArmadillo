@@ -19,6 +19,8 @@
 // You should have received a copy of the GNU General Public License
 // along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
+// #define ARMA_EXTRA_DEBUG
+
 #include <RcppArmadillo.h>
 
 using namespace Rcpp;
@@ -112,4 +114,22 @@ arma::cx_mat cx_solve_test(const int n)
     arma::cx_vec x3 = solve(C, b);
 
     return C*x3 - b;
+}
+
+// [[Rcpp::export]]
+arma::cx_mat cx_solve_band_test(const int n)
+{
+    // trigger solve_tridiag_refine
+
+    int n_tri_rows = std::min(34,n);
+    arma::cx_mat A_tri = arma::zeros<arma::cx_mat>(n_tri_rows,n_tri_rows);
+
+    A_tri.diag() = arma::randu<arma::cx_mat>(n_tri_rows,1);
+    A_tri.diag(1) = arma::randu<arma::cx_mat>(n_tri_rows-1,1);
+    A_tri.diag(-1) = arma::randu<arma::cx_mat>(n_tri_rows-1,1);
+
+    arma::cx_vec b_tri = arma::randu<arma::cx_vec>(n_tri_rows);
+    arma::cx_vec x_tri = solve(A_tri, b_tri);
+
+    return A_tri*x_tri - b_tri;
 }
