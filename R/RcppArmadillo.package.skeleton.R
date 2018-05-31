@@ -37,13 +37,16 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
     skelFunName <- ifelse(haveKitten, "kitten", "package.skeleton")
     message("\nCalling ", skelFunName, " to create basic package.")
 
+    
+    
+    
     ## first let the traditional version (or the kitten alternate) do its business
     call <- match.call()
     call[[1]] <- skelFunUsed
+    if ("example_code" %in% names(call)){
+        call[["example_code"]] <- NULL	# remove the example_code argument
+    }
     if (! haveKitten) {                 # in the package.skeleton() case
-        if ("example_code" %in% names(call)){
-            call[["example_code"]] <- NULL	# remove the example_code argument
-        }
         if (fake) {
             call[["list"]] <- "Rcpp.fake.fun"
         }
