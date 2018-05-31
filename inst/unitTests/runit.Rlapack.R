@@ -26,6 +26,7 @@ test.Rlapack <- function() {
     ## create variables
 
     n <- 5 # size the of matrices generated in tests
+    n_tri <- 50 # size the of matrices generated in tridiagonal tests
 
     ## Basic operations
 
@@ -33,13 +34,15 @@ test.Rlapack <- function() {
     rl2 <- norm(cx_qz_test(n),"2")
     rl3 <- cx_rank_test(n)                # should equal n
     rl4 <- norm(cx_solve_test(n),"2")
-    rl5 <- norm(cx_pinv_test(n),"2")      # should be (approx) an identity matrix
-    rl6 <- norm(cx_schur_test(n),"2")
+    rl5 <- norm(cx_solve_band_test(n_tri),"2")
+    rl6 <- norm(cx_pinv_test(n),"2")      # should be (approx) an identity matrix
+    rl7 <- norm(cx_schur_test(n),"2")
 
     checkEquals(rl1,  0,  msg="eig_pair for complex matrices")
     checkEquals(rl2,  0,  msg="qz for complex matrices")
     checkEquals(rl3,  n,  msg="rank complex matrices")
     checkEquals(rl4,  0,  msg="solve for complex matrices")
-    checkEquals(rl5,  1,  msg="pinv for complex matrices")
-    checkEquals(rl6,  0,  msg="schur for complex matrices")
+    checkEquals(rl5,  0,  msg="solve for band complex matrices")
+    checkEquals(rl6,  1,  msg="pinv for complex matrices")
+    checkEquals(rl7,  0,  msg="schur for complex matrices")
 }
