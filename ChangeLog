@@ -1,3 +1,14 @@
+2018-05-31  Santiago Olivella  <solivella@gmail.com>
+
+	* R/RcppArmadillo.package.skeleton.R: Correct behavior when
+	example_code=FALSE and pkgKitten is available
+
+2018-05-31  Keith O'Hara  <kth.ohr@gmail.com>
+
+	* inst/unitTests/cpp/Rlapack.cpp: Update Rlapack tests for band
+	matrix solvers
+	* inst/unitTests/runit.Rlapack.R: Idem
+
 2018-05-17  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Suggests): Add 'slam' used in two unit test functions

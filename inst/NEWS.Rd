@@ -11,6 +11,11 @@
     }
     \item Added \code{slam} to Suggests: as it is used in two unit test
     functions [CRAN requests]
+    \item The \code{RcppArmadillo.package.skeleton()} function now works
+    with \code{example_code=FALSE} when \CRANpkg{pkgKitten} is present
+    (Santiago Olivella in \ghpr{231} fixing \ghpr{229})
+    \item The LAPACK tests now cover band matrix solvers (Keith O'Hara
+    in \ghpr{230}).
   }
 }
 
