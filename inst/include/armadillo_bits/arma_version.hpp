@@ -20,9 +20,9 @@
 
 
 #define ARMA_VERSION_MAJOR 8
-#define ARMA_VERSION_MINOR 500
+#define ARMA_VERSION_MINOR 599
 #define ARMA_VERSION_PATCH 1
-#define ARMA_VERSION_NAME  "Caffeine Raider"
+#define ARMA_VERSION_NAME  "8.600-RC1"
 
 
 
