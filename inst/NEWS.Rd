@@ -3,7 +3,13 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.8.500.1.1 (2018-05-171) [GH only]}{
+\section{Changes in RcppArmadillo version 0.8.599.0 (2018-06-15) [GH only]}{
+  \itemize{
+    \item Upgraded to Armadillo release 8.600.rc1 
+  }
+}
+
+\section{Changes in RcppArmadillo version 0.8.500.1.1 (2018-05-17) [GH only]}{
   \itemize{
     \item Upgraded to Armadillo release 8.500.1 (Caffeine Raider)
     \itemize{
