@@ -90,9 +90,9 @@ arma_rng_cxx98::randn_val()
   // http://en.wikipedia.org/wiki/Box-Muller_transformation
   // http://en.wikipedia.org/wiki/Marsaglia_polar_method
   
-  double tmp1;
-  double tmp2;
-  double w;
+  double tmp1 = double(0);
+  double tmp2 = double(0);
+  double w    = double(0);
   
   do
     {
@@ -116,9 +116,9 @@ arma_rng_cxx98::randn_dual_val(eT& out1, eT& out2)
   // make sure we are internally using at least floats
   typedef typename promote_type<eT,float>::result eTp;
   
-  eTp tmp1;
-  eTp tmp2;
-  eTp w;
+  eTp tmp1 = eTp(0);
+  eTp tmp2 = eTp(0);
+  eTp w    = eTp(0);
   
   do
     {
