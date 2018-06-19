@@ -57,7 +57,7 @@ class gemm_mixed_large
       in_eT1* A_rowdata = tmp.memptr();
       
       #if defined(ARMA_USE_OPENMP)
-      const bool use_mp = (B_n_cols >= 2) && (B.n_elem >= 16384) && (mp_thread_limit::in_parallel() == false);
+      const bool use_mp = (B_n_cols >= 2) && (B.n_elem >= 8192) && (mp_thread_limit::in_parallel() == false);
       #else
       const bool use_mp = false;
       #endif
@@ -120,7 +120,7 @@ class gemm_mixed_large
     if( (do_trans_A == true) && (do_trans_B == false) )
       {
       #if defined(ARMA_USE_OPENMP)
-      const bool use_mp = (B_n_cols >= 2) && (B.n_elem >= 16384) && (mp_thread_limit::in_parallel() == false);
+      const bool use_mp = (B_n_cols >= 2) && (B.n_elem >= 8192) && (mp_thread_limit::in_parallel() == false);
       #else
       const bool use_mp = false;
       #endif

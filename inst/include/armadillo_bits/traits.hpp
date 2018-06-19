@@ -257,6 +257,18 @@ template<typename eT>
 struct is_subview_cube< const subview_cube<eT> >
   { static const bool value = true; };
 
+template<typename T>
+struct is_subview_cube_slices
+  { static const bool value = false; };
+
+template<typename eT, typename T1>
+struct is_subview_cube_slices< subview_cube_slices<eT,T1> >
+  { static const bool value = true; };
+
+template<typename eT, typename T1>
+struct is_subview_cube_slices< const subview_cube_slices<eT,T1> >
+  { static const bool value = true; };
+
 
 //
 //
@@ -682,6 +694,7 @@ struct is_arma_cube_type
   || is_eGlueCube<T1>::value
   || is_mtGlueCube<T1>::value
   || is_subview_cube<T1>::value
+  || is_subview_cube_slices<T1>::value
   ;
   };
 
