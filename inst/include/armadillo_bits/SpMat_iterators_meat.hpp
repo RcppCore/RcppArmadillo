@@ -445,7 +445,7 @@ SpMat<eT>::const_row_iterator::const_row_iterator(const SpMat<eT>& in_M, uword i
 
         // This is the number of elements in the column with row index less than
         // in_row.
-        const uword offset = (pos_ptr - start_ptr);
+        const uword offset = uword(pos_ptr - start_ptr);
 
         if (iterator_base::M->row_indices[col_offset + offset] == row)
           {
@@ -519,7 +519,7 @@ SpMat<eT>::const_row_iterator::const_row_iterator(const SpMat<eT>& in_M, uword i
 
       // This is the number of elements in the column with row index less than
       // in_row.
-      const uword offset = (pos_ptr - start_ptr);
+      const uword offset = uword(pos_ptr - start_ptr);
 
       cur_pos += offset;
 

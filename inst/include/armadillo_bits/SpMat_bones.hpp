@@ -591,6 +591,7 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   inline void init(const  SpMat<eT>& x);
   inline void init(const MapMat<eT>& x);
   
+  inline void init_simple(const SpMat<eT>& x);
   
   inline void init_batch_std(const Mat<uword>& locations, const Mat<eT>& values, const bool sort_locations);
   inline void init_batch_add(const Mat<uword>& locations, const Mat<eT>& values, const bool sort_locations);

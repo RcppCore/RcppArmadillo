@@ -177,9 +177,9 @@ class SpMat_MapMat_val
   
   public:
   
-  arma_inline operator eT() const;
+  inline operator eT() const;
   
-  arma_inline SpMat_MapMat_val<eT>& operator= (const SpMat_MapMat_val<eT>& x);
+  inline SpMat_MapMat_val<eT>& operator= (const SpMat_MapMat_val<eT>& x);
   
   inline SpMat_MapMat_val<eT>& operator= (const eT in_val);
   inline SpMat_MapMat_val<eT>& operator+=(const eT in_val);
@@ -218,9 +218,9 @@ class SpSubview_MapMat_val
   
   public:
   
-  arma_inline operator eT() const;
+  inline operator eT() const;
   
-  arma_inline SpSubview_MapMat_val<eT>& operator= (const SpSubview_MapMat_val<eT>& x);
+  inline SpSubview_MapMat_val<eT>& operator= (const SpSubview_MapMat_val<eT>& x);
   
   inline SpSubview_MapMat_val<eT>& operator= (const eT in_val);
   inline SpSubview_MapMat_val<eT>& operator+=(const eT in_val);

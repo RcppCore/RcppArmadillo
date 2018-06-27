@@ -1,42 +1,49 @@
+2018-06-27  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.8.600.0.0
+        * inst/NEWS.Rd: Release 0.8.600.0.0
+
+        * inst/include/armadillo_bits/*: Armadillo 8.600.0
+
 2018-06-19  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.8.599.1 [github-only]
         * inst/NEWS.Rd: Release 0.8.599.1
 
-	* inst/include/armadillo_bits/*: Armadillo 8.600.rc2
+        * inst/include/armadillo_bits/*: Armadillo 8.600.rc2
 
 2018-06-16  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.8.599.0 [github-only]
         * inst/NEWS.Rd: Release 0.8.599.0
 
-	* inst/include/armadillo_bits/*: Armadillo 8.600.rc1
+        * inst/include/armadillo_bits/*: Armadillo 8.600.rc1
 
 2018-05-31  Santiago Olivella  <solivella@gmail.com>
 
-	* R/RcppArmadillo.package.skeleton.R: Correct behavior when
-	example_code=FALSE and pkgKitten is available
+        * R/RcppArmadillo.package.skeleton.R: Correct behavior when
+        example_code=FALSE and pkgKitten is available
 
 2018-05-31  Keith O'Hara  <kth.ohr@gmail.com>
 
-	* inst/unitTests/cpp/Rlapack.cpp: Update Rlapack tests for band
-	matrix solvers
-	* inst/unitTests/runit.Rlapack.R: Idem
+        * inst/unitTests/cpp/Rlapack.cpp: Update Rlapack tests for band
+        matrix solvers
+        * inst/unitTests/runit.Rlapack.R: Idem
 
 2018-05-17  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Suggests): Add 'slam' used in two unit test functions
-	(and already conditional)
+        * DESCRIPTION (Suggests): Add 'slam' used in two unit test functions
+        (and already conditional)
 
-	* .travis.yml (install): Add r-cran-slam to packages to install;
-	switch reticulate to r-cran-reticulate as both are in the c4d2u PPA
+        * .travis.yml (install): Add r-cran-slam to packages to install;
+        switch reticulate to r-cran-reticulate as both are in the c4d2u PPA
 
 2018-05-15  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.8.500.1.0
         * inst/NEWS.Rd: Release 0.8.500.1.0
 
-	* inst/include/armadillo_bits/*: Armadillo 8.500.1
+        * inst/include/armadillo_bits/*: Armadillo 8.500.1
 
 2018-04-21  Dirk Eddelbuettel  <edd@debian.org>
 
@@ -45,38 +52,38 @@
 
 2018-04-20  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/armadillo: Upgraded to Armadillo 8.500
-	* inst/include/armadillo_bits/*: Idem
+        * inst/include/armadillo: Upgraded to Armadillo 8.500
+        * inst/include/armadillo_bits/*: Idem
 
 2018-04-19  Keith O'Hara  <kth.ohr@gmail.com>
 
-	* configure.ac: Compile-time checks for macOS compilers
-	* configure: Idem
+        * configure.ac: Compile-time checks for macOS compilers
+        * configure: Idem
 
 2018-04-17  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.8.499.1.0 [GitHub only]
         * inst/NEWS.Rd: Release 0.8.499.1.0
 
-	* inst/include/armadillo: Upgraded to Armadillo 8.500.rc2
-	* inst/include/armadillo_bits/*: Idem
+        * inst/include/armadillo: Upgraded to Armadillo 8.500.rc2
+        * inst/include/armadillo_bits/*: Idem
 
 2018-04-14  Dirk Eddelbuettel  <edd@debian.org>
 
-	* configure.ac: Comparison across ranges does not work reliably so
-	explicitly enumerate alternative accepted g++ versions
-	* configure: Regenerated
+        * configure.ac: Comparison across ranges does not work reliably so
+        explicitly enumerate alternative accepted g++ versions
+        * configure: Regenerated
 
 2018-03-29  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION (Version, Date): New minor version 0.8.499.0.2
 
-	* DESCRIPTION (Depends): Require R (>= 3.3.0)
+        * DESCRIPTION (Depends): Require R (>= 3.3.0)
 
 2018-03-29  Keith O'Hara  <kth.ohr@gmail.com>
 
-	* configure.ac: Updated check for limited LAPACK
-	* configure: Idem
+        * configure.ac: Updated check for limited LAPACK
+        * configure: Idem
 
 2018-03-27  Dirk Eddelbuettel  <edd@debian.org>
 
@@ -84,639 +91,639 @@
 
 2018-03-27  Keith O'Hara  <kth.ohr@gmail.com>
 
-	* inst/include/armadillo_bits/auxlib_meat.hpp: Remove several no
-	longer needed define tests for the limited LAPACK shipped with R
+        * inst/include/armadillo_bits/auxlib_meat.hpp: Remove several no
+        longer needed define tests for the limited LAPACK shipped with R
 
-	* inst/unitTests/cpp/Rlapack.cpp: Unit tests for these features
-	* inst/unitTests/runit.Rlapack.R: Idem
+        * inst/unitTests/cpp/Rlapack.cpp: Unit tests for these features
+        * inst/unitTests/runit.Rlapack.R: Idem
 
 2018-03-26  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.8.499.0.0 [GitHub only]
         * inst/NEWS.Rd: Release 0.8.499.0.0
 
-	* inst/include/armadillo: Upgraded to Armadillo 8.500.rc1
-	* inst/include/armadillo_bits/*: Idem
+        * inst/include/armadillo: Upgraded to Armadillo 8.500.rc1
+        * inst/include/armadillo_bits/*: Idem
 
 2018-02-19  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Release 0.8.400.0.0
+        * DESCRIPTION (Version, Date): Release 0.8.400.0.0
         * inst/NEWS.Rd: Release 0.8.400.0.0
 
-	* inst/include/armadillo: Upgraded to Armadillo 8.400.0
-	* inst/include/armadillo_bits/*: Idem
+        * inst/include/armadillo: Upgraded to Armadillo 8.400.0
+        * inst/include/armadillo_bits/*: Idem
 
-	* configure.ac: Update
-	* configure: Idem
+        * configure.ac: Update
+        * configure: Idem
 
 2018-02-13  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/RcppArmadilloConfigGenerated.h.in: Protect two #define
-	statements by #ifndef clauses
+        * inst/include/RcppArmadilloConfigGenerated.h.in: Protect two #define
+        statements by #ifndef clauses
 
 2018-02-12  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.8.399.1.0 [GitHub only]
         * inst/NEWS.Rd: Release 0.8.399.1.0
 
-	* inst/include/armadillo_bits/*: Upgraded to Armadillo 8.400.rc2
+        * inst/include/armadillo_bits/*: Upgraded to Armadillo 8.400.rc2
 
 2018-02-10  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/RcppArmadilloConfig.h: Test if ARMA_COUT_STREAM is
-	defined, not ARMA_COUT_OSTREAM; and ditto for ARMA_CERR_STREAM
+        * inst/include/RcppArmadilloConfig.h: Test if ARMA_COUT_STREAM is
+        defined, not ARMA_COUT_OSTREAM; and ditto for ARMA_CERR_STREAM
 
 2018-02-09  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.8.399.0.0 [GitHub only]
         * inst/NEWS.Rd: Release 0.8.399.0.0
 
-	* inst/include/armadillo: Upgraded to Armadillo 8.400.rc1
-	* inst/include/armadillo_bits/*: Idem
+        * inst/include/armadillo: Upgraded to Armadillo 8.400.rc1
+        * inst/include/armadillo_bits/*: Idem
 
 2017-12-04  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.8.300.1.0
         * inst/NEWS.Rd: Release 0.8.300.1.0
 
-	* inst/include/armadillo: Upgraded to Armadillo 8.300.1
-	* inst/include/armadillo_bits/*: Idem
+        * inst/include/armadillo: Upgraded to Armadillo 8.300.1
+        * inst/include/armadillo_bits/*: Idem
 
 2017-12-01  Serguei Sokol  <sokol at insa-toulouse.fr>
 
-	* inst/include/RcppArmadilloAs.h: Support conversion from
-	simple_triplet_matrix
-	* inst/unitTests/runit.sparseConversion.R: Test conversion
+        * inst/include/RcppArmadilloAs.h: Support conversion from
+        simple_triplet_matrix
+        * inst/unitTests/runit.sparseConversion.R: Test conversion
 
 2017-11-22  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.8.300.0.0 [GitHub only]
         * inst/NEWS.Rd: Release 0.8.300.0.0 [GitHub only]
 
-	* inst/include/armadillo: Upgraded to Armadillo 8.300.0
-	* inst/include/armadillo_bits/*: Idem
+        * inst/include/armadillo: Upgraded to Armadillo 8.300.0
+        * inst/include/armadillo_bits/*: Idem
 
 2017-11-08  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Release 0.8.200.2.0 [GitHub only]
+        * DESCRIPTION (Version, Date): Release 0.8.200.2.0 [GitHub only]
 
-	* inst/include/armadillo_bits/*: Upgraded to Armadillo 8.200.2
+        * inst/include/armadillo_bits/*: Upgraded to Armadillo 8.200.2
 
 2017-10-29  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.8.200.1.1 [GitHub only]
         * inst/NEWS.Rd: Release 0.8.200.1.1 [GitHub only]
 
-	* inst/include/RcppArmadilloConfigGenerated.h.in: Minor edit to comment
+        * inst/include/RcppArmadilloConfigGenerated.h.in: Minor edit to comment
 
 2017-10-28  Dirk Eddelbuettel  <edd@debian.org>
 
-	* configure.ac: Repair for OpenMP use as Armadillo needs g++ 5.4 or later
-	* configure: Idem
+        * configure.ac: Repair for OpenMP use as Armadillo needs g++ 5.4 or later
+        * configure: Idem
 
 2017-10-22  Dirk Eddelbuettel  <edd@debian.org>
 
-	* configure.ac: Add default branch to g++ test with thanks to James
-	* configure: Idem
+        * configure.ac: Add default branch to g++ test with thanks to James
+        * configure: Idem
 
 2017-10-21  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.8.200.1.0 [GitHub only]
         * inst/NEWS.Rd: Release 0.8.200.1.0 [GitHub only]
 
-	* inst/include/armadillo: Upgraded to Armadillo 8.200.1
-	* inst/include/armadillo_bits/*: Idem
+        * inst/include/armadillo: Upgraded to Armadillo 8.200.1
+        * inst/include/armadillo_bits/*: Idem
 
-	* inst/include/RcppArmadilloConfig.h: Set ARMA_DONT_PRINT_OPENMP_WARNING to
-	suppress warnings from Armadillo when client packages fail to set -fopenmp
+        * inst/include/RcppArmadilloConfig.h: Set ARMA_DONT_PRINT_OPENMP_WARNING to
+        suppress warnings from Armadillo when client packages fail to set -fopenmp
 
-	* inst/include/RcppArmadilloConfigGenerated.h.in: Small cleanups
-	* configure.ac: Idem
-	* configure: Idem
+        * inst/include/RcppArmadilloConfigGenerated.h.in: Small cleanups
+        * configure.ac: Idem
+        * configure: Idem
 
 2017-10-14  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Roll minor version
+        * DESCRIPTION (Version, Date): Roll minor version
 
-	* inst/skeleton/Makevars (CXX_STD): Update C++11 settings
-	* inst/skeleton/Makevars.win (CXX_STD): Idem
+        * inst/skeleton/Makevars (CXX_STD): Update C++11 settings
+        * inst/skeleton/Makevars.win (CXX_STD): Idem
 
 2017-10-12  Dirk Eddelbuettel  <edd@debian.org>
 
-	* R/RcppArmadillo.package.skeleton.R: Also set .registration=TRUE
-	in NAMESPACE file
+        * R/RcppArmadillo.package.skeleton.R: Also set .registration=TRUE
+        in NAMESPACE file
 
 2017-10-10  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Release 0.8.100.1.0
-	* inst/NEWS.Rd: Idem
-	* configure: Idem
+        * DESCRIPTION (Version, Date): Release 0.8.100.1.0
+        * inst/NEWS.Rd: Idem
+        * configure: Idem
 
 2017-10-09  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/RcppArmadilloWrap.h (Rcpp): Call sync() on SpMat
+        * inst/include/RcppArmadilloWrap.h (Rcpp): Call sync() on SpMat
 
 2017-10-05  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Release 0.8.100.1.0 (incomplete)
+        * DESCRIPTION (Version, Date): Release 0.8.100.1.0 (incomplete)
 
-	* .travis.yml (install): Also install r-cran-pinp
+        * .travis.yml (install): Also install r-cran-pinp
 
 2017-10-04  Dirk Eddelbuettel  <edd@debian.org>
 
-	* vignettes/RcppArmadillo-sparseMatrix.Rmd: Some edits, added
-	references
+        * vignettes/RcppArmadillo-sparseMatrix.Rmd: Some edits, added
+        references
 
 2017-10-02  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/armadillo: Upgraded to Armadillo 8.100.1
-	* inst/include/armadillo_bits/*: Idem
+        * inst/include/armadillo: Upgraded to Armadillo 8.100.1
+        * inst/include/armadillo_bits/*: Idem
 
-	* inst/include/RcppArmadilloConfig.h: Update to ARMA_COUT_STREAM
-	and ARMA_CERR_STREAM
+        * inst/include/RcppArmadilloConfig.h: Update to ARMA_COUT_STREAM
+        and ARMA_CERR_STREAM
 
-	* vignettes/RcppArmadillo-sparseMatrix.Rmd: Converted to markdown
-	using pinp package, added missing vignette entries
+        * vignettes/RcppArmadillo-sparseMatrix.Rmd: Converted to markdown
+        using pinp package, added missing vignette entries
 
 2017-09-20  Serguei Sokol  <sokol@insa-toulouse.fr>
 
-	* inst/include/RcppArmadilloAs.h: Use native constructors for dgt,
-	dtt, dst type conversion
+        * inst/include/RcppArmadilloAs.h: Use native constructors for dgt,
+        dtt, dst type conversion
 
 2017-08-31  Binxiang Ni  <binxiangni@gmail.com>
 
-	* inst/include/RcppArmadilloAs.h: Call .sync() before assessing
-	internals of the SpMat classes [early patch to the 8.100.* code]
+        * inst/include/RcppArmadilloAs.h: Call .sync() before assessing
+        internals of the SpMat classes [early patch to the 8.100.* code]
 
 2017-08-29  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Release 0.7.960.1.2
+        * DESCRIPTION (Version, Date): Release 0.7.960.1.2
 
 2017-08-27  Dirk Eddelbuettel  <edd@debian.org>
 
-	* configure.ac: Detect macOS to turn off OpenMP in src/Makevars
-	* configure: Idem
-	* src/Makevars: New configure var for OpenMP linker/compiler flags
-	* inline.R: Similarly turn OpenMP off on macOS
+        * configure.ac: Detect macOS to turn off OpenMP in src/Makevars
+        * configure: Idem
+        * src/Makevars: New configure var for OpenMP linker/compiler flags
+        * inline.R: Similarly turn OpenMP off on macOS
 
-	* src/Makevars: Compile under C++11
-	* src/Makevars.win: Idem
+        * src/Makevars: Compile under C++11
+        * src/Makevars.win: Idem
 
 2017-08-26  James Joseph Balamuta  <balamut2@illinois.edu>
 
-	* DESCRIPTION: Also Suggests: highlight
-	* vignettes/RcppArmadillo-sparseMatrix.Rnw: Set VignetteDepends
+        * DESCRIPTION: Also Suggests: highlight
+        * vignettes/RcppArmadillo-sparseMatrix.Rnw: Set VignetteDepends
 
 2017-08-21  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Roll minor version
+        * DESCRIPTION (Version, Date): Roll minor version
 
-	* inst/include/RcppArmadilloConfigGenerated.h.in: Renamed from
-	inst/include/RcppArmadilloLapack.h.in to reflect use beyond LAPACK
-	* inst/include/RcppArmadilloConfig.h: Updated
-	* configure.ac: Idem
-	* configure: Idem
-	* cleanup.sh: Idem
+        * inst/include/RcppArmadilloConfigGenerated.h.in: Renamed from
+        inst/include/RcppArmadilloLapack.h.in to reflect use beyond LAPACK
+        * inst/include/RcppArmadilloConfig.h: Updated
+        * configure.ac: Idem
+        * configure: Idem
+        * cleanup.sh: Idem
 
 2017-08-20  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Release 0.7.960.1.1
+        * DESCRIPTION (Version, Date): Release 0.7.960.1.1
 
-	* man/RcppArmadillo-package.Rd: Minor edits
-	* man/fastLm.Rd: Idem
-	* README.md: Idem
+        * man/RcppArmadillo-package.Rd: Minor edits
+        * man/fastLm.Rd: Idem
+        * README.md: Idem
 
-	* src/Makevars.win: Small cosmetic edits as in Makevars
+        * src/Makevars.win: Small cosmetic edits as in Makevars
 
 2017-08-19  Dirk Eddelbuettel  <edd@debian.org>
 
-	* configure.ac: Added simple OpenMP detection
-	* configure: Idem
-	* inst/include/RcppArmadilloLapack.h.in: Apply variable here
-	* src/Makevars: Small edits
+        * configure.ac: Added simple OpenMP detection
+        * configure: Idem
+        * inst/include/RcppArmadilloLapack.h.in: Apply variable here
+        * src/Makevars: Small edits
 
-	* src/fastLm.cpp: Renamed fastLm to fastLm_impl to not clash with
-	R method of same name now that .registration is true
-	* inst/unitTests/runit.fastLm.R: Updated test call
-	* src/RcppExports.cpp: Regenerated
-	* R/RcppExports.R: Idem
-	* man/fastLm.Rd: New alias
+        * src/fastLm.cpp: Renamed fastLm to fastLm_impl to not clash with
+        R method of same name now that .registration is true
+        * inst/unitTests/runit.fastLm.R: Updated test call
+        * src/RcppExports.cpp: Regenerated
+        * R/RcppExports.R: Idem
+        * man/fastLm.Rd: New alias
 
 2017-08-18  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Roll minor version
+        * DESCRIPTION (Version, Date): Roll minor version
 
-	* inst/include/RcppArmadilloAs.h (Rcpp): Improved S4 inheritance check
+        * inst/include/RcppArmadilloAs.h (Rcpp): Improved S4 inheritance check
 
 2017-08-11  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Release 0.7.960.1.0
-	* inst/NEWS.Rd: Idem
+        * DESCRIPTION (Version, Date): Release 0.7.960.1.0
+        * inst/NEWS.Rd: Idem
 
-	* DESCRIPTION (Author): New co-author Binxinag Ni
+        * DESCRIPTION (Author): New co-author Binxinag Ni
 
 2017-08-10  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/armadillo_bits/*: Updated to upstream release 7.960.1
+        * inst/include/armadillo_bits/*: Updated to upstream release 7.960.1
 
-	* .aspell/: Added for new R-devel spell checker interface
+        * .aspell/: Added for new R-devel spell checker interface
 
-	* DESCRIPTION (Version, Date): Rolled to pre-release 0.7.959.0.3
+        * DESCRIPTION (Version, Date): Rolled to pre-release 0.7.959.0.3
 
 2017-08-09  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/unitTests/runit.scipy2r.R: Condition test on having SciPy
+        * inst/unitTests/runit.scipy2r.R: Condition test on having SciPy
 
-	* DESCRIPTION (Version, Date): Rolled to pre-release 0.7.959.0.2
+        * DESCRIPTION (Version, Date): Rolled to pre-release 0.7.959.0.2
 
 2017-08-08  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Rolled to pre-release 0.7.959.0.1
-	in preparation of 0.7.960.0.0 release "real soon now"
+        * DESCRIPTION (Version, Date): Rolled to pre-release 0.7.959.0.1
+        in preparation of 0.7.960.0.0 release "real soon now"
 
-	* tests/doRUnit.R: Small edits and improvements
+        * tests/doRUnit.R: Small edits and improvements
 
-	* inst/unitTests/runit.sparseConversion.R: Run Kronecker products
-	once in setup under suppressMessages to suppress dispatch messages
+        * inst/unitTests/runit.sparseConversion.R: Run Kronecker products
+        once in setup under suppressMessages to suppress dispatch messages
 
 2017-08-07  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/unitTests/runit.scipy2r.R: Whitespace edits
-	* R/SciPy2R.R: Idem; also renamed from py2R, removed one require()
+        * inst/unitTests/runit.scipy2r.R: Whitespace edits
+        * R/SciPy2R.R: Idem; also renamed from py2R, removed one require()
 
-	* .travis.yml (install): Also install reticulate and (r-cran-)jsonlite
+        * .travis.yml (install): Also install reticulate and (r-cran-)jsonlite
 
 2017-08-07  Binxiang Ni  <binxiangni@gmail.com>
 
-	* R/py2r.R: Python to R conversion
-	* inst/unitTests/runit.scipy2r.R: Unit tests
+        * R/py2r.R: Python to R conversion
+        * inst/unitTests/runit.scipy2r.R: Unit tests
 
 2017-08-06  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Rolled to fictional pre-release
-	number 0.7.959.0.0 is preparation of 0.7.960.0.0 release
+        * DESCRIPTION (Version, Date): Rolled to fictional pre-release
+        number 0.7.959.0.0 is preparation of 0.7.960.0.0 release
 
-	* inst/NEWS.Rd: Expanded description of GSoC 2017 work by Binxiang
+        * inst/NEWS.Rd: Expanded description of GSoC 2017 work by Binxiang
 
 2017-08-03  Binxiang Ni  <binxiangni@gmail.com>
 
-	* inst/include/RcppArmadilloWrap.h: Comment-out unreachable code
+        * inst/include/RcppArmadilloWrap.h: Comment-out unreachable code
 
 2017-08-02  Qiang Kou (KK) <qkou@qkou.info>
 
-	* inst/include/armadillo_bits/SpMat_meat.hpp: Correct use of 'p'
-	in dgCMatrix (by pulling in upstream patch from Armadillo)
-	* inst/unitTests/cpp/sparse.cpp: New speye() unit tests
-	* inst/unitTests/runit.sparse.R: Ditto
+        * inst/include/armadillo_bits/SpMat_meat.hpp: Correct use of 'p'
+        in dgCMatrix (by pulling in upstream patch from Armadillo)
+        * inst/unitTests/cpp/sparse.cpp: New speye() unit tests
+        * inst/unitTests/runit.sparse.R: Ditto
 
 2017-08-01  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/armadillo*: Upgraded to Armadillo 7.960.0
+        * inst/include/armadillo*: Upgraded to Armadillo 7.960.0
 
 2017-08-01  Serguei Sokol  <sokol@insa-toulouse.fr>
 
-	* inst/include/RcppArmadilloWrap.h: Allow collapsed returns of row
-	or column vector if appropriate #define is set
+        * inst/include/RcppArmadilloWrap.h: Allow collapsed returns of row
+        or column vector if appropriate #define is set
 
-	* inst/unitTests/runit.RcppArmadillo.R: Corresponding unit test
-	* inst/unitTests/cpp/any_as_vec.cpp: Ditto
-	* inst/unitTests/cpp/armadillo.cpp: Ditto
-	* inst/unitTests/cpp/colrow_as_vec.cpp: Ditto
+        * inst/unitTests/runit.RcppArmadillo.R: Corresponding unit test
+        * inst/unitTests/cpp/any_as_vec.cpp: Ditto
+        * inst/unitTests/cpp/armadillo.cpp: Ditto
+        * inst/unitTests/cpp/colrow_as_vec.cpp: Ditto
 
-	* R/unit.test.R: Generalization for test helper
+        * R/unit.test.R: Generalization for test helper
 
 2017-07-31  Dirk Eddelbuettel  <edd@debian.org>
 
-	* vignettes/RcppArmadillo-sparseMatrix.Rnw: Use highlight engine
+        * vignettes/RcppArmadillo-sparseMatrix.Rnw: Use highlight engine
 
 2017-07-31  Binxiang Ni  <binxiangni@gmail.com>
 
-	* vignettes/RcppArmadillo-sparseMatrix.Rnw: New vignette
+        * vignettes/RcppArmadillo-sparseMatrix.Rnw: New vignette
 
 2017-07-11  Binxiang Ni  <binxiangni@gmail.com>
 
-	* inst/include/RcppArmadilloAs.h: Add a stop message for matrices
-	that cannot be converted
-	* inst/unitTests/runit.sparseConversion.R: Add unit tests for matrices
-	that cannot be converted
+        * inst/include/RcppArmadilloAs.h: Add a stop message for matrices
+        that cannot be converted
+        * inst/unitTests/runit.sparseConversion.R: Add unit tests for matrices
+        that cannot be converted
 
 2017-07-10  Binxiang Ni  <binxiangni@gmail.com>
 
-	* inst/include/RcppArmadilloAs.h: Rewrite conversion for ddiMatrix
-	to support an extreme case
-	* inst/unitTests/runit.sparse.R: Move unit tests for the conversion
-	for sparse matrices to runit.sparseConversion.R
-	* inst/unitTests/runit.sparseConversion.R: Add more unit tests for
-	the conversion for ddiMatrix
+        * inst/include/RcppArmadilloAs.h: Rewrite conversion for ddiMatrix
+        to support an extreme case
+        * inst/unitTests/runit.sparse.R: Move unit tests for the conversion
+        for sparse matrices to runit.sparseConversion.R
+        * inst/unitTests/runit.sparseConversion.R: Add more unit tests for
+        the conversion for ddiMatrix
 
 2017-07-08  Binxiang Ni  <binxiangni@gmail.com>
 
-	* inst/include/RcppArmadilloAs.h: Add conversion for indMatrix
-	* inst/unitTests/runit.sparse.R: Add unit tests for the conversion
-	for indMatrix
-	* inst/unitTests/runit.sparseConversion.R: Add more unit tests for
-	the conversion for indMatrix
+        * inst/include/RcppArmadilloAs.h: Add conversion for indMatrix
+        * inst/unitTests/runit.sparse.R: Add unit tests for the conversion
+        for indMatrix
+        * inst/unitTests/runit.sparseConversion.R: Add more unit tests for
+        the conversion for indMatrix
 
 2017-07-08  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/unitTests/runit.sparseConversion.R: Use text= in read.table
+        * inst/unitTests/runit.sparseConversion.R: Use text= in read.table
 
 2017-07-04  Binxiang Ni  <binxiangni@gmail.com>
 
-	* inst/include/RcppArmadilloAs.h: Rewrite conversion for dgT, dtT
-	& dsTMatrix to support two extreme cases
-	* inst/unitTests/runit.sparseConversion.R: Add new unit tests
-	for conversion of sparse matrices
+        * inst/include/RcppArmadilloAs.h: Rewrite conversion for dgT, dtT
+        & dsTMatrix to support two extreme cases
+        * inst/unitTests/runit.sparseConversion.R: Add new unit tests
+        for conversion of sparse matrices
 
 2017-06-23  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/AUTHORS: Added
-	* inst/COPYRIGHTS: Idem
+        * inst/AUTHORS: Added
+        * inst/COPYRIGHTS: Idem
 
 2017-06-21  Binxiang Ni  <binxiangni@gmail.com>
 
-	* inst/include/RcppArmadilloAs.h: Add conversion for pMatrix &
-	ddiMatrix
-	* inst/unitTests/runit.sparse.R: Add unit tests for the conversion
-	for pMatrix & ddiMatrix
+        * inst/include/RcppArmadilloAs.h: Add conversion for pMatrix &
+        ddiMatrix
+        * inst/unitTests/runit.sparse.R: Add unit tests for the conversion
+        for pMatrix & ddiMatrix
 
 2017-06-19  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Roll minor version
+        * DESCRIPTION (Version, Date): Roll minor version
 
-	* .travis.yml (group): Added as required by Travis CI
+        * .travis.yml (group): Added as required by Travis CI
 
 2017-06-19  Binxiang Ni  <binxiangni@gmail.com>
 
-	* inst/include/RcppArmadilloAs.h: Add conversion for dgR, dtR &
-	dsRMatrix
-	* inst/unitTests/runit.sparse.R: Add unit tests for the conversion
-	for dgR, dtR & dsRMatrix
+        * inst/include/RcppArmadilloAs.h: Add conversion for dgR, dtR &
+        dsRMatrix
+        * inst/unitTests/runit.sparse.R: Add unit tests for the conversion
+        for dgR, dtR & dsRMatrix
 
 2017-06-18  Binxiang Ni  <binxiangni@gmail.com>
 
-	* inst/include/RcppArmadilloAs.h: Add conversion for dgT, dtT &
-	dsTMatrix
-	* inst/unitTests/runit.sparse.R: Add unit tests for the conversion
-	for dgT, dtT & dsTMatrix
+        * inst/include/RcppArmadilloAs.h: Add conversion for dgT, dtT &
+        dsTMatrix
+        * inst/unitTests/runit.sparse.R: Add unit tests for the conversion
+        for dgT, dtT & dsTMatrix
 
 2017-06-17  Binxiang Ni  <binxiangni@gmail.com>
 
-	* inst/include/RcppArmadilloAs.h: Add conversion for dtC & dsCMatrix
-	* inst/unitTests/runit.sparse.R: Add unit tests for the conversion
-	for dtC & dsCMatrix
+        * inst/include/RcppArmadilloAs.h: Add conversion for dtC & dsCMatrix
+        * inst/unitTests/runit.sparse.R: Add unit tests for the conversion
+        for dtC & dsCMatrix
 
 2017-06-04  Dirk Eddelbuettel  <edd@debian.org>
 
-	* configure.ac: Whitespace changes
-	* configure: Regenerated
+        * configure.ac: Whitespace changes
+        * configure: Regenerated
 
 2017-06-02  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Release 0.7.900.2.0
-	* inst/NEWS.Rd: Idem
+        * DESCRIPTION (Version, Date): Release 0.7.900.2.0
+        * inst/NEWS.Rd: Idem
 
-	* README.md: Use alternate for img.shields.io GPL-2+ badge
+        * README.md: Use alternate for img.shields.io GPL-2+ badge
 
-	* src/Makevars (CXX_STD): Do not enable C++11 by default to not
-	require too modern a compiler
+        * src/Makevars (CXX_STD): Do not enable C++11 by default to not
+        require too modern a compiler
 
 2017-06-01  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/armadillo*: Upgraded to Armadillo 7.900.2
+        * inst/include/armadillo*: Upgraded to Armadillo 7.900.2
 
 2017-05-24  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Release 0.7.900.1.2 (GH-only)
-	* src/RcppExports.cpp: Regenerated under Rcpp 0.12.11 with included
-	package registration
-	* R/RcppExports.R: Regenerated under Rcpp 0.12.11 with unquoted registered
-	function calls
-	* src/init.c: Removed
+        * DESCRIPTION (Version, Date): Release 0.7.900.1.2 (GH-only)
+        * src/RcppExports.cpp: Regenerated under Rcpp 0.12.11 with included
+        package registration
+        * R/RcppExports.R: Regenerated under Rcpp 0.12.11 with unquoted registered
+        function calls
+        * src/init.c: Removed
 
-	* README.md: Switch to https for a few badge URLs
-	* R/inline.R (inlineCxxPlugin): Use '::' to import from Rcpp
+        * README.md: Switch to https for a few badge URLs
+        * R/inline.R (inlineCxxPlugin): Use '::' to import from Rcpp
 
 2017-05-23  Dirk Eddelbuettel  <edd@debian.org>
 
-	* R/inline.R (inlineCxxPlugin): Also enable OpenMP as a compile-time option
+        * R/inline.R (inlineCxxPlugin): Also enable OpenMP as a compile-time option
 
 2017-05-22  Dirk Eddelbuettel  <edd@debian.org>
 
-	* R/inline.R (inlineCxxPlugin): Support OpenMP
-	* src/Makevars: Ditto
-	* src/Makevars.win: Ditto
-	* inst/skeleton/Makevars: Ditto
-	* inst/skeleton/Makevars.win: Ditto
+        * R/inline.R (inlineCxxPlugin): Support OpenMP
+        * src/Makevars: Ditto
+        * src/Makevars.win: Ditto
+        * inst/skeleton/Makevars: Ditto
+        * inst/skeleton/Makevars.win: Ditto
 
 2017-05-21  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Release 0.7.900.1.1 (GH-only)
-	* inst/unitTests/cpp/rmultinom.cpp: More careful use of Armadillo
-	vectors and Rcpp vectors
+        * DESCRIPTION (Version, Date): Release 0.7.900.1.1 (GH-only)
+        * inst/unitTests/cpp/rmultinom.cpp: More careful use of Armadillo
+        vectors and Rcpp vectors
 
 2017-05-15  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Release 0.7.900.1.0 (GH-only)
+        * DESCRIPTION (Version, Date): Release 0.7.900.1.0 (GH-only)
 
-	* inst/include/armadillo*: Upgraded to Armadillo 7.900.1
+        * inst/include/armadillo*: Upgraded to Armadillo 7.900.1
 
 2017-05-10  James Joseph Balamuta  <balamut2@illinois.edu>
 
-	* man/armadillo_set_seed.Rd: Clarified RNG usage in C++98 and C++11 modes.
-	* man/armadillo_set_seed_random.Rd: idem
-	* R/RcppExports.R: idem
-	* src/RcppArmadillo.cpp: idem
+        * man/armadillo_set_seed.Rd: Clarified RNG usage in C++98 and C++11 modes.
+        * man/armadillo_set_seed_random.Rd: idem
+        * R/RcppExports.R: idem
+        * src/RcppArmadillo.cpp: idem
 
 2017-05-08  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Release 0.7.900.0.0 (GH-only)
+        * DESCRIPTION (Version, Date): Release 0.7.900.0.0 (GH-only)
 
-	* inst/include/armadillo*: Upgraded to Armadillo 7.900.0
+        * inst/include/armadillo*: Upgraded to Armadillo 7.900.0
 
 2017-05-06  James Joseph Balamuta  <balamut2@illinois.edu>
 
-	* configure.ac: Added gcc7 to viable gcc compiler list
-	* configure: Idem
+        * configure.ac: Added gcc7 to viable gcc compiler list
+        * configure: Idem
 
 2017-05-03  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Test release 0.7.899.0.0
+        * DESCRIPTION (Version, Date): Test release 0.7.899.0.0
 
-	* inst/include/armadillo*: Upgraded to Armadillo 7.899.0
+        * inst/include/armadillo*: Upgraded to Armadillo 7.899.0
 
-	* src/Makevars (PKG_LIBS): Enable OpenMP and C++11
+        * src/Makevars (PKG_LIBS): Enable OpenMP and C++11
 
 2017-04-16  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/RcppArmadillo/Alt_R_RNG.h (set_seed): Add a simple
-	null-op to suppress a -Wunused warning
+        * inst/include/RcppArmadillo/Alt_R_RNG.h (set_seed): Add a simple
+        null-op to suppress a -Wunused warning
 
 2017-04-12  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Release 0.7.800.2.0
+        * DESCRIPTION (Version, Date): Release 0.7.800.2.0
 
-	* inst/include/armadillo*: Upgraded to Armadillo 7.800.2
+        * inst/include/armadillo*: Upgraded to Armadillo 7.800.2
 
 2017-02-20  Dirk Eddelbuettel  <edd@debian.org>
 
-	* NAMESPACE (useDynLib): Add .registration=TRUE; some other edits
-	* src/init.c: Added 'R_registerRoutines()' & 'R_useDynamicSymbols()'
+        * NAMESPACE (useDynLib): Add .registration=TRUE; some other edits
+        * src/init.c: Added 'R_registerRoutines()' & 'R_useDynamicSymbols()'
 
 2017-02-19  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Release 0.7.800.0.0 (GH-only)
-	* DESCRIPTION (Description): Mention that Armadillo is now licensed
-	as Apache License 2 (as a change from Mozilla MPL 2.0)
+        * DESCRIPTION (Version, Date): Release 0.7.800.0.0 (GH-only)
+        * DESCRIPTION (Description): Mention that Armadillo is now licensed
+        as Apache License 2 (as a change from Mozilla MPL 2.0)
 
-	* inst/include/armadillo*: Upgraded to Armadillo 7.800.0
+        * inst/include/armadillo*: Upgraded to Armadillo 7.800.0
 
 2017-02-18  Dirk Eddelbuettel  <edd@debian.org>
 
-	* src/fastLm.cpp: Whitespace tweaks, using Named(), update copyright
+        * src/fastLm.cpp: Whitespace tweaks, using Named(), update copyright
 
-	* .travis.yml (before_install): Use https
+        * .travis.yml (before_install): Use https
 
 2017-02-06  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Release 0.7.700.0.0 (CRAN)
+        * DESCRIPTION (Version, Date): Release 0.7.700.0.0 (CRAN)
 
-	* inst/include/*: Upgraded to release 7.700.0 of Armadillo
+        * inst/include/*: Upgraded to release 7.700.0 of Armadillo
 
         * debian/*: Debian release of 0.7.700.0.0
 
 2017-01-05  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): 0.7.600.2.0 (GH-only)
+        * DESCRIPTION (Version, Date): 0.7.600.2.0 (GH-only)
 
 2017-01-04  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/armadillo_bits/: Armadillo release 7.600.2
+        * inst/include/armadillo_bits/: Armadillo release 7.600.2
 
 2016-12-16  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Release 0.7.600.1.0
-	* inst/NEWS.Rd: Release 0.7.600.1.0
+        * DESCRIPTION (Version, Date): Release 0.7.600.1.0
+        * inst/NEWS.Rd: Release 0.7.600.1.0
 
         * debian/*: Debian release of 0.7.600.1.0
 
-	* inst/include/*: Upgraded to release 7.600.1 of Armadillo
+        * inst/include/*: Upgraded to release 7.600.1 of Armadillo
 
 2016-12-12  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version): Release 0.7.599.0 (GH-only)
-	* inst/NEWS.Rd: Release 0.7.599.0 (GH-only)
+        * DESCRIPTION (Version): Release 0.7.599.0 (GH-only)
+        * inst/NEWS.Rd: Release 0.7.599.0 (GH-only)
 
-	* inst/include/*: Upgraded to release 7.600.0-test of Armadillo
+        * inst/include/*: Upgraded to release 7.600.0-test of Armadillo
 
 2016-11-11  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version): Release 0.7.500.1.0 (GH-only)
-	* inst/NEWS.Rd: Release 0.7.500.1.0 (GH-only)
+        * DESCRIPTION (Version): Release 0.7.500.1.0 (GH-only)
+        * inst/NEWS.Rd: Release 0.7.500.1.0 (GH-only)
 
-	* inst/include/*: Upgraded to release 7.500.1 of Armadillo
+        * inst/include/*: Upgraded to release 7.500.1 of Armadillo
 
 2016-10-25  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/RcppArmadilloExtensions/sample.h (Rcpp): Update to
-	newer Armadillo interface: descending sort order is now signaled
-	by using the more explicit string "descend" as opposed to (uword) 1
+        * inst/include/RcppArmadilloExtensions/sample.h (Rcpp): Update to
+        newer Armadillo interface: descending sort order is now signaled
+        by using the more explicit string "descend" as opposed to (uword) 1
 
 2016-10-20  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Release 0.7.500.0.0
+        * DESCRIPTION (Version, Date): Release 0.7.500.0.0
 
-	* DESCRIPTION (Description): Noted minimum of g+++ 4.6 or later
+        * DESCRIPTION (Description): Noted minimum of g+++ 4.6 or later
 
 2016-10-20  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/*: Upgraded to release 7.500.0 of Armadillo
+        * inst/include/*: Upgraded to release 7.500.0 of Armadillo
 
         * debian/*: Debian release of 0.7.500.0.0
 
-	* .gitattributes: Added
+        * .gitattributes: Added
 
 2016-08-24  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Release 0.7.400.2.0 (CRAN)
+        * DESCRIPTION (Version, Date): Release 0.7.400.2.0 (CRAN)
 
-	* inst/include/*: Finalised as 7.400.2 of Armadillo
+        * inst/include/*: Finalised as 7.400.2 of Armadillo
 
         * debian/*: Debian release of 0.7.400.2.0
 
-	* .travis.yml: Switch to using run.sh for Travis CI
+        * .travis.yml: Switch to using run.sh for Travis CI
 
 2016-08-23  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version): Release 0.7.400.1.1 (GH-only)
-	* inst/NEWS.Rd: Release 0.7.400.1.1 (GH-only)
+        * DESCRIPTION (Version): Release 0.7.400.1.1 (GH-only)
+        * inst/NEWS.Rd: Release 0.7.400.1.1 (GH-only)
 
-	* inst/include/*: Upgraded to release 7.400.2.test of Armadillo
+        * inst/include/*: Upgraded to release 7.400.2.test of Armadillo
 
 2016-08-15  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version): Release 0.7.400.1.0 (GH-only)
-	* inst/NEWS.Rd: Release 0.7.400.1.0 (GH-only)
+        * DESCRIPTION (Version): Release 0.7.400.1.0 (GH-only)
+        * inst/NEWS.Rd: Release 0.7.400.1.0 (GH-only)
 
-	* inst/include/*: Upgraded to release 7.400.1 of Armadillo
+        * inst/include/*: Upgraded to release 7.400.1 of Armadillo
 
 2016-08-12  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version): Release 0.7.400.0.0 (GH-only)
-	* inst/NEWS.Rd: Release 0.7.400.0.0 (GH-only)
+        * DESCRIPTION (Version): Release 0.7.400.0.0 (GH-only)
+        * inst/NEWS.Rd: Release 0.7.400.0.0 (GH-only)
 
-	* inst/include/*: Upgraded to release 7.400.0-test of Armadillo
+        * inst/include/*: Upgraded to release 7.400.0-test of Armadillo
 
 2016-07-30  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version): Release 0.7.300.1.0 (GH-only)
-	* inst/NEWS.Rd: Release 0.7.300.1.0 (GH-only)
+        * DESCRIPTION (Version): Release 0.7.300.1.0 (GH-only)
+        * inst/NEWS.Rd: Release 0.7.300.1.0 (GH-only)
 
-	* inst/include/*: Upgraded to release 7.300.1 of Armadillo
+        * inst/include/*: Upgraded to release 7.300.1 of Armadillo
 
 2016-07-22  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version): Release 0.7.200.2.0 (CRAN)
-	* DESCRIPTION (Date): Updated
+        * DESCRIPTION (Version): Release 0.7.200.2.0 (CRAN)
+        * DESCRIPTION (Date): Updated
 
 2016-06-22  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version): Release 0.7.200.2.0 (GH-only)
-	* inst/NEWS.Rd: Release 0.7.200.2.0 (GH-only)
+        * DESCRIPTION (Version): Release 0.7.200.2.0 (GH-only)
+        * inst/NEWS.Rd: Release 0.7.200.2.0 (GH-only)
 
-	* inst/include/*: Upgraded to release 7.200.2 of Armadillo
+        * inst/include/*: Upgraded to release 7.200.2 of Armadillo
 
 2016-06-19  James Joseph Balamuta  <balamut2@illinois.edu>
 
-	* inst/include/RcppArmadilloExtensions/sample.h: Rewrote sampling
-	functions to use only armadillo outside of the supplied data vector.
-	* inst/include/RcppArmadilloExtensions/fixprob.h: Updated fix
-	probability check code to use armadillo object for probability.
+        * inst/include/RcppArmadilloExtensions/sample.h: Rewrote sampling
+        functions to use only armadillo outside of the supplied data vector.
+        * inst/include/RcppArmadilloExtensions/fixprob.h: Updated fix
+        probability check code to use armadillo object for probability.
 
 2016-06-09  Dirk Eddelbuettel  <edd@debian.org>
 
-	* configure.ac: Correct assignment for fully-featured versus
-	incomplete LAPACK set in inst/include/RcppArmadilloLapack.h
-	* configure: Ditto
+        * configure.ac: Correct assignment for fully-featured versus
+        incomplete LAPACK set in inst/include/RcppArmadilloLapack.h
+        * configure: Ditto
 
 2016-06-06  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version): Release 0.7.200.1.0 (GH-only)
-	* inst/NEWS.Rd: Release 0.7.200.1.0 (GH-only)
+        * DESCRIPTION (Version): Release 0.7.200.1.0 (GH-only)
+        * inst/NEWS.Rd: Release 0.7.200.1.0 (GH-only)
 
-	* inst/include/*: Upgraded to release 7.200.1 of Armadillo
+        * inst/include/*: Upgraded to release 7.200.1 of Armadillo
 
 2016-06-02  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.7.100.3.1
-	* configure.ac: Move R-based CXX init before first autoconf commands
-	* configure: Ditto
+        * configure.ac: Move R-based CXX init before first autoconf commands
+        * configure: Ditto
 
 2016-05-30  Dirk Eddelbuettel  <edd@debian.org>
 
-	* configure.ac: Refined test for minimal g++ version to first set CXX
-	based on the existing R configuratin
-	* configure: Ditto
+        * configure.ac: Refined test for minimal g++ version to first set CXX
+        based on the existing R configuratin
+        * configure: Ditto
 
 2016-05-25  Dirk Eddelbuettel  <edd@debian.org>
 
@@ -725,23 +732,23 @@
 
         * debian/*: Changes for Debian release of 0.7.100.3.0
 
-	* inst/include/*: Upgraded to release 7.100.3 of Armadillo
+        * inst/include/*: Upgraded to release 7.100.3 of Armadillo
 
 2016-05-16  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.7.100.0.0 [GitHub only]
         * inst/NEWS.Rd: Release 0.7.100.0.0 [GitHub only]
 
-	* inst/include/*: Upgraded to release 7.100.0 of Armadillo
+        * inst/include/*: Upgraded to release 7.100.0 of Armadillo
 
 2016-05-12  Dirk Eddelbuettel  <edd@debian.org>
 
-	* configure.ac: Rewriting configure as autoconf script for better
-	compiler tests
+        * configure.ac: Rewriting configure as autoconf script for better
+        compiler tests
 
-	* configure (checkoldcompiler): Add test to guard against old g++
-	compilers (such as g++-4.4 used on some RHEL and CentOS releases)
-	which are no longer sufficient to build RcppArmadillo.
+        * configure (checkoldcompiler): Add test to guard against old g++
+        compilers (such as g++-4.4 used on some RHEL and CentOS releases)
+        which are no longer sufficient to build RcppArmadillo.
 
 2016-05-05  Dirk Eddelbuettel  <edd@debian.org>
 
@@ -752,21 +759,21 @@
 
 2016-05-04  George G. Vega Yon  <g.vegayon@gmail.com>
 
-	* inst/include/RcppArmadilloConfig.h: Added support for int64_t when required
-	* inst/include/RcppArmadilloAs.h: Fixing bug in SpMat exporter
-	* inst/unitTests/cpp/sparse.cpp: Added two new tests
-	* inst/unitTests/runit.sparse.R: Added two new tests
+        * inst/include/RcppArmadilloConfig.h: Added support for int64_t when required
+        * inst/include/RcppArmadilloAs.h: Fixing bug in SpMat exporter
+        * inst/unitTests/cpp/sparse.cpp: Added two new tests
+        * inst/unitTests/runit.sparse.R: Added two new tests
 
 2016-05-03  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/*: Upgraded to release 6.700.6 of Armadillo
+        * inst/include/*: Upgraded to release 6.700.6 of Armadillo
 
 2016-04-05  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.6.700.3.0
         * inst/NEWS.Rd: Release 0.6.700.3.0
 
-	* inst/include/*: Upgraded to release 6.700.3 of Armadillo
+        * inst/include/*: Upgraded to release 6.700.3 of Armadillo
 
         * debian/*: Changes for Debian release of 0.6.600.4.0
 
@@ -775,7 +782,7 @@
         * DESCRIPTION: Release 0.6.600.4.0
         * inst/NEWS.Rd: Release 0.6.600.4.0
 
-	* inst/include/*: Upgraded to release 6.600.4 of Armadillo
+        * inst/include/*: Upgraded to release 6.600.4 of Armadillo
 
         * debian/*: Changes for Debian release of 0.6.600.4.0
 
@@ -784,17 +791,17 @@
         * DESCRIPTION: Release 0.6.600.3.1 [GitHub only]
         * inst/NEWS.Rd: Release 0.6.600.3.1 [GitHub only]
 
-	* inst/include/*: Upgraded to release 6.600.4-test of Armadillo
+        * inst/include/*: Upgraded to release 6.600.4-test of Armadillo
 
-	* configure: Take R 3.3.0 with a complete fallback for LAPACK into
-	consideration when checking for LAPACK features
+        * configure: Take R 3.3.0 with a complete fallback for LAPACK into
+        consideration when checking for LAPACK features
 
 2016-03-11  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.6.600.2.1 [GitHub only]
         * inst/NEWS.Rd: Release 0.6.600.2.1 [GitHub only]
 
-	* inst/include/*: Upgraded to release 6.600.3-test of Armadillo
+        * inst/include/*: Upgraded to release 6.600.3-test of Armadillo
 
 2016-01-26  Dirk Eddelbuettel  <edd@debian.org>
 
@@ -805,9 +812,9 @@
 
         * debian/*: Changes for Debian release of 0.6.500.4.0
 
-	* inst/include/RcppArmadilloConfig.h (ARMA_32BIT_WORD): Define to
-  	  ensure 32-bit words are used even with C++11 or C++14
-	* inst/include/RcppArmadillo.h: Added some comments
+        * inst/include/RcppArmadilloConfig.h (ARMA_32BIT_WORD): Define to
+          ensure 32-bit words are used even with C++11 or C++14
+        * inst/include/RcppArmadillo.h: Added some comments
 
 2016-01-24  Dirk Eddelbuettel  <edd@debian.org>
 
@@ -818,7 +825,7 @@
 
 2016-01-10  Dirk Eddelbuettel  <edd@debian.org>
 
-	* configure: Use /usr/bin/env bash as shebang
+        * configure: Use /usr/bin/env bash as shebang
 
 2015-12-15  Dirk Eddelbuettel  <edd@debian.org>
 
