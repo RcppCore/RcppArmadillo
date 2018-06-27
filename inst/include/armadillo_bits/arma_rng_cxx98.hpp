@@ -57,6 +57,9 @@ arma_rng_cxx98::randi_val()
   {
   #if (RAND_MAX == 32767)
     {
+    // NOTE: this is a better-than-nothing solution
+    // NOTE: see also arma_rng_cxx98::randi_max_val()
+    
     u32 val1 = u32(std::rand());
     u32 val2 = u32(std::rand());
     

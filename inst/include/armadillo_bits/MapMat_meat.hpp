@@ -25,9 +25,7 @@ MapMat<eT>::~MapMat()
   {
   arma_extra_debug_sigprint_this(this);
   
-  reset();
-  
-  if(map_ptr)  { delete map_ptr; }
+  if(map_ptr)  { (*map_ptr).clear();  delete map_ptr; }
   
   // try to expose buggy user code that accesses deleted objects
   if(arma_config::debug)  { map_ptr = NULL; }
@@ -230,7 +228,11 @@ MapMat<eT>::reset()
   {
   arma_extra_debug_sigprint();
   
-  init_warm(0, 0);
+  access::rw(n_rows) = 0;
+  access::rw(n_cols) = 0;
+  access::rw(n_elem) = 0;
+  
+  (*map_ptr).clear();
   }
 
 
@@ -798,7 +800,7 @@ MapMat<eT>::init_warm(const uword in_n_rows, const uword in_n_cols)
   access::rw(n_cols) = in_n_cols;
   access::rw(n_elem) = new_n_elem;
   
-  if( (new_n_elem == 0) && ((*map_ptr).empty() == false) )  { (*map_ptr).clear(); }
+  if(new_n_elem == 0)  { (*map_ptr).clear(); }
   }
 
 
@@ -1098,22 +1100,17 @@ SpMat_MapMat_val<eT>::SpMat_MapMat_val(SpMat<eT>& in_s_parent, MapMat<eT>& in_m_
 
 
 template<typename eT>
-arma_inline
+inline
 SpMat_MapMat_val<eT>::operator eT() const
   {
   arma_extra_debug_sigprint();
   
-  const SpMat<eT>& const_s_parent = s_parent;
+  const  SpMat<eT>& const_s_parent = s_parent;
+  const MapMat<eT>& const_m_parent = m_parent;
   
-  return const_s_parent.get_value(row,col);  // use the const version of get_value()
+  // get the element from the cache if it has more recent data than CSC
   
-  // s_parent.sync_cache();
-  // 
-  // const MapMat<eT>& const_m_parent = m_parent;
-  // 
-  // const uword index = (const_m_parent.n_rows * col) + row;
-  //   
-  // return const_m_parent.operator[](index);
+  return (const_s_parent.sync_state == 1) ? const_m_parent.at(row,col) : const_s_parent.get_value(row,col);
   }
 
 
@@ -1457,22 +1454,17 @@ SpSubview_MapMat_val<eT>::update_n_nonzeros()
 
 
 template<typename eT>
-arma_inline
+inline
 SpSubview_MapMat_val<eT>::operator eT() const
   {
   arma_extra_debug_sigprint();
   
-  const SpMat<eT>& const_s_parent = v_parent.m;
+  const  SpMat<eT>& const_s_parent = v_parent.m;
+  const MapMat<eT>& const_m_parent = m_parent;
   
-  return const_s_parent.get_value(row,col);  // use the const version of get_value()
+  // get the element from the cache if it has more recent data than CSC
   
-  // v_parent.m.sync_cache();
-  // 
-  // const MapMat<eT>& const_m_parent = m_parent;
-  // 
-  // const uword index = (const_m_parent.n_rows * col) + row;
-  //   
-  // return const_m_parent.operator[](index);
+  return (const_s_parent.sync_state == 1) ? const_m_parent.at(row,col) : const_s_parent.get_value(row,col);
   }
 
 

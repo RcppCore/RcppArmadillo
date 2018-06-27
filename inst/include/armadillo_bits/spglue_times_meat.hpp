@@ -442,7 +442,7 @@ spglue_times_misc::dense_times_sparse(Mat<typename T1::elem_type>& out, const T1
             const uword col_offset_delta = col_offset_2 - col_offset_1;
             
             const uvec    indices(const_cast<uword*>(&(Y.row_indices[col_offset_1])), col_offset_delta, false, false);
-            const Col<eT>   Y_col(const_cast<   eT*>(&(Y.values[col_offset_1])     ), col_offset_delta, false, false);
+            const Col<eT>   Y_col(const_cast<   eT*>(&(     Y.values[col_offset_1])), col_offset_delta, false, false);
             
             out.col(i) = X.cols(indices) * Y_col;
             }

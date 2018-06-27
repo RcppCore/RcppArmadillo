@@ -1930,6 +1930,7 @@ auxlib::hess(Mat<eT>& H, const Base<eT,T1>& X, Col<eT>& tao)
     {
     arma_ignore(H);
     arma_ignore(X);
+    arma_ignore(tao);
     arma_stop_logic_error("hess(): use of LAPACK must be enabled");
     return false;
     }

@@ -134,10 +134,12 @@ namespace arma_str
       {
       if(using_local_buffer == false)
         {
-        buffer = new char[buffer_size];
+        buffer = new char[size_t(buffer_size)];
         }
       
       required_size = arma_snprintf(buffer, size_t(buffer_size), X.A.A.c_str(), X.B);
+      
+      if(required_size < 0)  { break; }
       
       if(required_size < buffer_size)
         {
@@ -186,10 +188,12 @@ namespace arma_str
       {
       if(using_local_buffer == false)
         {
-        buffer = new char[buffer_size];
+        buffer = new char[size_t(buffer_size)];
         }
       
       required_size = arma_snprintf(buffer, size_t(buffer_size), X.A.A.A.c_str(), X.A.B, X.B);
+      
+      if(required_size < 0)  { break; }
       
       if(required_size < buffer_size)
         {
@@ -238,10 +242,12 @@ namespace arma_str
       {
       if(using_local_buffer == false)
         {
-        buffer = new char[buffer_size];
+        buffer = new char[size_t(buffer_size)];
         }
       
       required_size = arma_snprintf(buffer, size_t(buffer_size), X.A.A.A.A.c_str(), X.A.A.B, X.A.B, X.B);
+      
+      if(required_size < 0)  { break; }
       
       if(required_size < buffer_size)
         {
@@ -290,10 +296,12 @@ namespace arma_str
       {
       if(using_local_buffer == false)
         {
-        buffer = new char[buffer_size];
+        buffer = new char[size_t(buffer_size)];
         }
       
       required_size = arma_snprintf(buffer, size_t(buffer_size), X.A.A.A.A.A.c_str(), X.A.A.A.B, X.A.A.B, X.A.B, X.B);
+      
+      if(required_size < 0)  { break; }
       
       if(required_size < buffer_size)
         {
@@ -342,10 +350,12 @@ namespace arma_str
       {
       if(using_local_buffer == false)
         {
-        buffer = new char[buffer_size];
+        buffer = new char[size_t(buffer_size)];
         }
       
       required_size = arma_snprintf(buffer, size_t(buffer_size), X.A.A.A.A.A.A.c_str(), X.A.A.A.A.B, X.A.A.A.B, X.A.A.B, X.A.B, X.B);
+      
+      if(required_size < 0)  { break; }
       
       if(required_size < buffer_size)
         {
@@ -394,10 +404,12 @@ namespace arma_str
       {
       if(using_local_buffer == false)
         {
-        buffer = new char[buffer_size];
+        buffer = new char[size_t(buffer_size)];
         }
       
       required_size = arma_snprintf(buffer, size_t(buffer_size), X.A.A.A.A.A.A.A.c_str(), X.A.A.A.A.A.B, X.A.A.A.A.B, X.A.A.A.B, X.A.A.B, X.A.B, X.B);
+      
+      if(required_size < 0)  { break; }
       
       if(required_size < buffer_size)
         {

@@ -640,7 +640,7 @@ SpSubview<eT>::const_row_iterator::const_row_iterator(const SpSubview<eT>& in_M,
         {
         const uword* pos_ptr = std::lower_bound(start_ptr, end_ptr, row + aux_row);
 
-        const uword offset = (pos_ptr - start_ptr);
+        const uword offset = uword(pos_ptr - start_ptr);
 
         if (iterator_base::M->m.row_indices[col_offset + offset] == row + aux_row)
           {
@@ -723,7 +723,7 @@ SpSubview<eT>::const_row_iterator::const_row_iterator(const SpSubview<eT>& in_M,
 
         // This is the number of elements in the subview with row index less
         // than in_row.
-        cur_pos += (pos_ptr - first_subview_ptr);
+        cur_pos += uword(pos_ptr - first_subview_ptr);
 
         if (pos_ptr != end_ptr && (*pos_ptr) < aux_row + iterator_base::M->n_rows)
           {
