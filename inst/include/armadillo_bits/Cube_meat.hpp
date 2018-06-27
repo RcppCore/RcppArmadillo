@@ -857,6 +857,112 @@ Cube<eT>::operator/=(const subview_cube<eT>& X)
 
 
 
+template<typename eT>
+template<typename T1>
+inline
+Cube<eT>::Cube(const subview_cube_slices<eT,T1>& X)
+  : n_rows(0)
+  , n_cols(0)
+  , n_elem_slice(0)
+  , n_slices(0)
+  , n_elem(0)
+  , mem_state(0)
+  , mem()
+  , mat_ptrs(0)
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  subview_cube_slices<eT,T1>::extract(*this, X);
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+Cube<eT>&
+Cube<eT>::operator=(const subview_cube_slices<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool alias = (this == &(X.m));
+  
+  if(alias == false)
+    {
+    subview_cube_slices<eT,T1>::extract(*this, X);
+    }
+  else
+    {
+    Cube<eT> tmp(X);
+    
+    steal_mem(tmp);
+    }
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+Cube<eT>&
+Cube<eT>::operator+=(const subview_cube_slices<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview_cube_slices<eT,T1>::plus_inplace(*this, X);
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+Cube<eT>&
+Cube<eT>::operator-=(const subview_cube_slices<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview_cube_slices<eT,T1>::minus_inplace(*this, X);
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+Cube<eT>&
+Cube<eT>::operator%=(const subview_cube_slices<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview_cube_slices<eT,T1>::schur_inplace(*this, X);
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+Cube<eT>&
+Cube<eT>::operator/=(const subview_cube_slices<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview_cube_slices<eT,T1>::div_inplace(*this, X);
+  
+  return *this;
+  }
+
+
+
 //! creation of subview_cube (subcube comprised of specified row)
 template<typename eT>
 arma_inline
@@ -1790,6 +1896,32 @@ Cube<eT>::each_slice(const Base<uword, T1>& indices) const
     return *this;
     }
 #endif
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+subview_cube_slices<eT, T1>
+Cube<eT>::slices(const Base<uword, T1>& indices)
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_cube_slices<eT, T1>(*this, indices);
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+const subview_cube_slices<eT, T1>
+Cube<eT>::slices(const Base<uword, T1>& indices) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return subview_cube_slices<eT, T1>(*this, indices);
+  }
 
 
 

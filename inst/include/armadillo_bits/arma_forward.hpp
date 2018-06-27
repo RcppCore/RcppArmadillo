@@ -63,6 +63,7 @@ template<typename parent, unsigned int mode, typename TB> class subview_each2;
 
 template<typename eT>              class subview_cube_each1;
 template<typename eT, typename TB> class subview_cube_each2;
+template<typename eT, typename T1> class subview_cube_slices;
 
 
 class SizeMat;

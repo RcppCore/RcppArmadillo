@@ -1,3 +1,10 @@
+2018-06-19  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.8.599.1 [github-only]
+        * inst/NEWS.Rd: Release 0.8.599.1
+
+	* inst/include/armadillo_bits/*: Armadillo 8.600.rc2
+
 2018-06-16  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.8.599.0 [github-only]

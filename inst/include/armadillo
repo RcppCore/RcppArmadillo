@@ -185,6 +185,7 @@ namespace arma
   #include "armadillo_bits/diagview_bones.hpp"
   #include "armadillo_bits/subview_each_bones.hpp"
   #include "armadillo_bits/subview_cube_each_bones.hpp"
+  #include "armadillo_bits/subview_cube_slices_bones.hpp"
   
   
   #include "armadillo_bits/diskio_bones.hpp"
@@ -603,6 +604,7 @@ namespace arma
   #include "armadillo_bits/diagview_meat.hpp"
   #include "armadillo_bits/subview_each_meat.hpp"
   #include "armadillo_bits/subview_cube_each_meat.hpp"
+  #include "armadillo_bits/subview_cube_slices_meat.hpp"
 
   #include "armadillo_bits/SpValProxy_meat.hpp"
   #include "armadillo_bits/SpMat_meat.hpp"
