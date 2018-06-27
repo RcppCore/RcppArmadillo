@@ -3,9 +3,24 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.8.599.1 (2018-06-19) [GH only]}{
+\section{Changes in RcppArmadillo version 0.8.600.0.0 (2018-06-26)}{
   \itemize{
-    \item Upgraded to Armadillo release 8.600.rc2
+    \item Upgraded to Armadillo release 8.600.0 (Sabretooth Rugrat)
+    \itemize{
+      \item added \code{hess()} for Hessenberg decomposition
+      \item added \code{.row()}, \code{.rows()}, \code{.col()},
+      \code{.cols()} to subcube views 
+      \item expanded \code{.shed_rows()} and \code{.shed_cols()} to
+      handle cubes 
+      \item expanded \code{.insert_rows()} and \code{.insert_cols()} to
+      handle cubes 
+      \item expanded subcube views to allow non-contiguous access to
+      slices 
+      \item improved tuning of sparse matrix element access operators
+      \item faster handling of tridiagonal matrices by \code{solve()}
+      \item faster multiplication of matrices with differing element
+      types when using OpenMP 
+    }
   }
 }
 
