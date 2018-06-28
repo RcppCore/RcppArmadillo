@@ -37,64 +37,13 @@ fontsize: 11pt
 
 output: pinp::pinp
 
+bibliography: RcppArmadillo.bib
+
 header-includes:
   \newcommand{\proglang}[1]{\textsf{#1}}
   \newcommand{\pkg}[1]{\textbf{#1}}
   \newcommand{\R}{\proglang{R}\ } 
   \newcommand{\Rns}{\proglang{R}} 
-
-include-after: >
-  \begin{thebibliography}{5}
-  \newcommand{\enquote}[1]{``#1''}
-  \providecommand{\natexlab}[1]{#1}
-  \providecommand{\url}[1]{\texttt{#1}}
-  \providecommand{\urlprefix}{URL }
-  \expandafter\ifx\csname urlstyle\endcsname\relax
-    \providecommand{\doi}[1]{doi:\discretionary{}{}{}#1}\else
-    \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
-    \urlstyle{rm}\Url}\fi
-  \providecommand{\eprint}[2][]{\url{#2}}
-  
-  \bibitem[{Bates and Maechler(2017)}]{CRAN:Matrix}
-  Bates D, Maechler M (2017).
-  \newblock \emph{\pkg{Matrix}: Sparse and Dense Matrix Classes and Methods}.
-  \newblock R package version 1.2-11,
-    \urlprefix\url{http://CRAN.R-Project.org/package=Matrix}.
-  
-  \bibitem[{Eddelbuettel \emph{et~al.}(2017)Eddelbuettel, Fran\c{c}ois, Bates,
-    and Ni}]{CRAN:RcppArmadillo}
-  Eddelbuettel D, Fran\c{c}ois R, Bates D, Ni B (2017).
-  \newblock \emph{RcppArmadillo: Rcpp integration for Armadillo templated linear
-    algebra library}.
-  \newblock R package version 0.7.960.1.2,
-    \urlprefix\url{http://CRAN.R-Project.org/package=RcppArmadillo}.
-  
-  \bibitem[{Eddelbuettel and
-    Sanderson(2014)}]{Eddelbuettel+Sanderson:2014:RcppArmadillo}
-  Eddelbuettel D, Sanderson C (2014).
-  \newblock \enquote{{RcppArmadillo}: Accelerating {R} with High-Performance
-    {C++} Linear Algebra.}
-  \newblock \emph{Computational Statistics and Data Analysis}, \textbf{71},
-    1054--1063.
-  \newblock \doi{10.1016/j.csda.2013.02.005}.
-  \newblock \urlprefix\url{http://dx.doi.org/10.1016/j.csda.2013.02.005}.
-  
-  \bibitem[{Sanderson(2010)}]{Sanderson:2010:Armadillo}
-  Sanderson C (2010).
-  \newblock \enquote{{Armadillo}: {An} open source {C++} Algebra Library for Fast
-    Prototyping and Computationally Intensive Experiments.}
-  \newblock \emph{Technical report}, {NICTA}.
-  \newblock \urlprefix\url{http://arma.sf.net}.
-  
-  \bibitem[{Sanderson and Curtin(2016)}]{Sanderson+Curtin:2016}
-  Sanderson C, Curtin R (2016).
-  \newblock \enquote{Armadillo: {A Template-Based C++ Library for Linear
-    Algebra}.}
-  \newblock \emph{{JOSS}}, \textbf{1}(2).
-  \newblock \doi{10.21105/joss.00026}.
-  \newblock \urlprefix\url{http://dx.doi.org/10.21105/joss.00026}.
-
-  \end{thebibliography}
 
 vignette: >
   %\VignetteIndexEntry{RcppArmadillo-sparseMatrix}
