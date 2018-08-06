@@ -3,6 +3,13 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.8.700.0.0 (2018-xx-yy)}{
+  \itemize{
+    \item Aligned OpenMP flags in the RcppArmadillo.package.skeleton
+    used Makevars{,.win} to not use one C and C++ flag.
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.8.600.0.0 (2018-06-28)}{
   \itemize{
     \item Upgraded to Armadillo release 8.600.0 (Sabretooth Rugrat)
