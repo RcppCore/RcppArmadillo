@@ -47,7 +47,12 @@ spsolve_helper
   
   bool status = false;
   
-  const superlu_opts& opts = (settings.id == 1) ? static_cast<const superlu_opts&>(settings) : superlu_opts();
+  superlu_opts superlu_opts_default;
+  
+  if(is_float <T>::value)  { superlu_opts_default.refine = superlu_opts::REF_SINGLE; }
+  if(is_double<T>::value)  { superlu_opts_default.refine = superlu_opts::REF_DOUBLE; }
+  
+  const superlu_opts& opts = (settings.id == 1) ? static_cast<const superlu_opts&>(settings) : superlu_opts_default;
   
   arma_debug_check( ( (opts.pivot_thresh < double(0)) || (opts.pivot_thresh > double(1)) ), "spsolve(): pivot_thresh out of bounds" );
   

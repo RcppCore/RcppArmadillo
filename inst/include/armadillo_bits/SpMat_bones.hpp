@@ -271,6 +271,12 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   arma_inline arma_warn_unused bool is_square() const;
        inline arma_warn_unused bool is_finite() const;
   
+  inline arma_warn_unused bool is_symmetric() const;
+  inline arma_warn_unused bool is_symmetric(const typename get_pod_type<eT>::result tol) const;
+  
+  inline arma_warn_unused bool is_hermitian() const;
+  inline arma_warn_unused bool is_hermitian(const typename get_pod_type<eT>::result tol) const;
+  
   inline arma_warn_unused bool has_inf() const;
   inline arma_warn_unused bool has_nan() const;
   
@@ -602,15 +608,11 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   
   private:
   
-  inline arma_hot arma_warn_unused SpValProxy<SpMat<eT> > get_value(const uword i);
-  inline arma_hot arma_warn_unused eT                     get_value(const uword i) const;
+  inline arma_hot arma_warn_unused eT get_value(const uword i                         ) const;
+  inline arma_hot arma_warn_unused eT get_value(const uword in_row, const uword in_col) const;
   
-  inline arma_hot arma_warn_unused SpValProxy<SpMat<eT> > get_value(const uword in_row, const uword in_col);
-  inline arma_hot arma_warn_unused eT                     get_value(const uword in_row, const uword in_col) const;
-  
-  
-  arma_inline arma_hot arma_warn_unused uword get_position(const uword i) const;
-  arma_inline arma_hot                  void  get_position(const uword i, uword& row_of_i, uword& col_of_i) const;
+  inline arma_hot arma_warn_unused eT get_value_csc(const uword i                         ) const;
+  inline arma_hot arma_warn_unused eT get_value_csc(const uword in_row, const uword in_col) const;
   
   
   inline arma_warn_unused eT&  insert_element(const uword in_row, const uword in_col, const eT in_val = eT(0));
@@ -625,7 +627,7 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   // 1: CSC needs to be updated from cache
   // 2: no update required
   
-  #if !defined(ARMA_USE_OPENMP) && defined(ARMA_USE_CXX11)
+  #if defined(ARMA_USE_CXX11)
   arma_aligned mutable std::mutex cache_mutex;
   #endif
   

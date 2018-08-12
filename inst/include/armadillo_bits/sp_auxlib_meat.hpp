@@ -768,6 +768,8 @@ sp_auxlib::spsolve_simple(Mat<typename T1::elem_type>& X, const SpBase<typename 
       return true;
       }
     
+    if(A.n_nonzero == uword(0))  { X.soft_reset(); return false; }
+    
     if(arma_config::debug)
       {
       bool overflow;
@@ -916,6 +918,8 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
       return true;
       }
     
+    if(A.n_nonzero == uword(0))  { X.soft_reset(); return false; }
+    
     if(arma_config::debug)
       {
       bool overflow;
@@ -1004,7 +1008,13 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     arma_extra_debug_print("superlu::gssvx()");
     superlu::gssvx<eT>(&options, &a, perm_c, perm_r, etree, equed, R, C, &l, &u, &work[0], lwork, &b, &x, &rpg, &rcond, ferr, berr, &glu, &mu, &stat, &info);
     
+    bool status = false;
+    
     // Process the return code.
+    if(info == 0)
+      {
+      status = true;
+      }
     if( (info > 0) && (info <= int(A.n_cols)) )
       {
       // std::stringstream tmp;
@@ -1014,7 +1024,11 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     else
     if(info == int(A.n_cols+1))
       {
-      // arma_debug_warn("spsolve(): system solved, but rcond is less than machine precision");
+      if(user_opts.allow_ugly)
+        {
+        arma_debug_warn("spsolve(): system is singular to working precision (rcond: ", rcond, ")");
+        status = true;
+        }
       }
     else
     if(info > int(A.n_cols+1))
@@ -1045,7 +1059,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     
     out_rcond = rcond;
     
-    return (info == 0);
+    return status;
     }
   #else
     {

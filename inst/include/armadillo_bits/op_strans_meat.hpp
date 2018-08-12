@@ -21,7 +21,7 @@
 
 //! for tiny square matrices (size <= 4x4)
 template<typename eT, typename TA>
-arma_hot
+arma_cold
 inline
 void
 op_strans::apply_mat_noalias_tinysq(Mat<eT>& out, const TA& A)
@@ -386,7 +386,7 @@ op_strans::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_strans>& in)
 
 //! for tiny square matrices (size <= 4x4)
 template<typename eT, typename TA>
-arma_hot
+arma_cold
 inline
 void
 op_strans2::apply_noalias_tinysq(Mat<eT>& out, const TA& A, const eT val)

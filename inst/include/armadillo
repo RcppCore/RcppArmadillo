@@ -370,35 +370,7 @@ namespace arma
 
   #include "armadillo_bits/strip.hpp"
   
-  #include "armadillo_bits/Op_meat.hpp"
-  #include "armadillo_bits/OpCube_meat.hpp"
-  #include "armadillo_bits/SpOp_meat.hpp"
-  
-  #include "armadillo_bits/mtOp_meat.hpp"
-  #include "armadillo_bits/mtOpCube_meat.hpp"
-  #include "armadillo_bits/mtSpOp_meat.hpp"
-  
-  #include "armadillo_bits/Glue_meat.hpp"
-  #include "armadillo_bits/GlueCube_meat.hpp"
-  #include "armadillo_bits/SpGlue_meat.hpp"
-  
   #include "armadillo_bits/eop_aux.hpp"
-  
-  #include "armadillo_bits/eOp_meat.hpp"
-  #include "armadillo_bits/eOpCube_meat.hpp"
-  
-  #include "armadillo_bits/eGlue_meat.hpp"
-  #include "armadillo_bits/eGlueCube_meat.hpp"
-
-  #include "armadillo_bits/mtGlue_meat.hpp"
-  #include "armadillo_bits/mtGlueCube_meat.hpp"
-  
-  #include "armadillo_bits/Base_meat.hpp"
-  #include "armadillo_bits/BaseCube_meat.hpp"
-  #include "armadillo_bits/SpBase_meat.hpp"
-  
-  #include "armadillo_bits/Gen_meat.hpp"
-  #include "armadillo_bits/GenCube_meat.hpp"
   
   //
   // ostream
@@ -562,6 +534,7 @@ namespace arma
   #include "armadillo_bits/hdf5_misc.hpp"
   #include "armadillo_bits/fft_engine.hpp"
   #include "armadillo_bits/band_helper.hpp"
+  #include "armadillo_bits/sympd_helper.hpp"
   
   //
   // classes implementing various forms of dense matrix multiplication
@@ -574,6 +547,34 @@ namespace arma
   
   //
   // class meat
+  
+  #include "armadillo_bits/Op_meat.hpp"
+  #include "armadillo_bits/OpCube_meat.hpp"
+  #include "armadillo_bits/SpOp_meat.hpp"
+  
+  #include "armadillo_bits/mtOp_meat.hpp"
+  #include "armadillo_bits/mtOpCube_meat.hpp"
+  #include "armadillo_bits/mtSpOp_meat.hpp"
+  
+  #include "armadillo_bits/Glue_meat.hpp"
+  #include "armadillo_bits/GlueCube_meat.hpp"
+  #include "armadillo_bits/SpGlue_meat.hpp"
+  
+  #include "armadillo_bits/eOp_meat.hpp"
+  #include "armadillo_bits/eOpCube_meat.hpp"
+  
+  #include "armadillo_bits/eGlue_meat.hpp"
+  #include "armadillo_bits/eGlueCube_meat.hpp"
+
+  #include "armadillo_bits/mtGlue_meat.hpp"
+  #include "armadillo_bits/mtGlueCube_meat.hpp"
+  
+  #include "armadillo_bits/Base_meat.hpp"
+  #include "armadillo_bits/BaseCube_meat.hpp"
+  #include "armadillo_bits/SpBase_meat.hpp"
+  
+  #include "armadillo_bits/Gen_meat.hpp"
+  #include "armadillo_bits/GenCube_meat.hpp"
   
   #include "armadillo_bits/eop_core_meat.hpp"
   #include "armadillo_bits/eglue_core_meat.hpp"

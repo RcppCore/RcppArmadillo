@@ -161,7 +161,7 @@ arma_rng_cxx11::randg_fill(eT* mem, const uword N, const double a, const double 
     if((N < 512) || omp_in_parallel())  { (*this).randg_fill_simple(mem, N, a, b); return; }
     
     typedef std::mt19937_64                  motor_type;
-    typedef std::mt19937_64::result_type      seed_type;
+    typedef std::mt19937_64::result_type      ovum_type;
     typedef std::gamma_distribution<double>  distr_type;
     
     const uword n_threads = uword( mp_thread_limit::get() );
@@ -176,7 +176,7 @@ arma_rng_cxx11::randg_fill(eT* mem, const uword N, const double a, const double 
       motor_type& g_motor_t = g_motor[t];
       distr_type& g_distr_t = g_distr[t];
       
-      g_motor_t.seed( seed_type(t) + seed_type((*this).randi_val()) );
+      g_motor_t.seed( ovum_type(t) + ovum_type((*this).randi_val()) );
       
       g_distr_t.param( g_distr_base.param() );
       }

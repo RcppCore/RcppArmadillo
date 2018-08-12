@@ -18,7 +18,7 @@
 //! @{
 
 
-//! wrapper for accesing external functions for sparse matrices defined in ARPACK
+//! wrapper for accesing external functions in ARPACK and SuperLU
 class sp_auxlib
   {
   public:

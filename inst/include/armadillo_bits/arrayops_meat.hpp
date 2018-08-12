@@ -38,7 +38,7 @@ arrayops::copy(eT* dest, const eT* src, const uword n_elem)
 
 
 template<typename eT>
-arma_hot
+arma_cold
 inline
 void
 arrayops::copy_small(eT* dest, const eT* src, const uword n_elem)
@@ -64,71 +64,6 @@ arrayops::copy_small(eT* dest, const eT* src, const uword n_elem)
     case  1:  dest[ 0] = src[ 0];
     // fallthrough
     default:  ;
-    }
-  }
-
-
-
-template<typename eT>
-arma_hot
-inline
-void
-arrayops::copy_forwards(eT* dest, const eT* src, const uword n_elem)
-  {
-  // can't use std::memcpy(), as we don't know how it copies data
-  uword j;
-  
-  for(j=1; j < n_elem; j+=2)
-    {
-    const eT tmp_i = (*src);  src++;
-    const eT tmp_j = (*src);  src++;
-    
-    (*dest) = tmp_i;  dest++;
-    (*dest) = tmp_j;  dest++;
-    }
-  
-  if((j-1) < n_elem)
-    {
-    (*dest) = (*src);
-    }
-  }
-
-
-
-template<typename eT>
-arma_hot
-inline
-void
-arrayops::copy_backwards(eT* dest, const eT* src, const uword n_elem)
-  {
-  // can't use std::memcpy(), as we don't know how it copies data
-  
-  // for(uword i=0; i < n_elem; ++i) 
-  //   {
-  //   const uword j = n_elem-i-1;
-  //   
-  //   dest[j] = src[j];
-  //   }
-  
-  if(n_elem > 0)
-    {
-          eT* dest_it = &(dest[n_elem-1]);
-    const eT*  src_it = &( src[n_elem-1]);
-    
-    uword j;
-    for(j=1; j < n_elem; j+=2) 
-      {
-      const eT tmp_i = (*src_it);  src_it--;
-      const eT tmp_j = (*src_it);  src_it--;
-      
-      (*dest_it) = tmp_i;  dest_it--;
-      (*dest_it) = tmp_j;  dest_it--;
-      }
-    
-    if((j-1) < n_elem)
-      {
-      (*dest_it) = (*src_it);
-      }
     }
   }
 
@@ -668,7 +603,7 @@ arrayops::inplace_set_base(eT* dest, const eT val, const uword n_elem)
 
 
 template<typename eT>
-arma_hot
+arma_cold
 inline
 void
 arrayops::inplace_set_small(eT* dest, const eT val, const uword n_elem)

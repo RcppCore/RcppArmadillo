@@ -426,7 +426,7 @@ MapMat<eT>::operator[](const uword index)
 
 
 template<typename eT>
-arma_inline
+inline
 arma_warn_unused
 eT
 MapMat<eT>::operator[](const uword index) const
@@ -455,7 +455,7 @@ MapMat<eT>::operator()(const uword index)
 
 
 template<typename eT>
-arma_inline
+inline
 arma_warn_unused
 eT
 MapMat<eT>::operator()(const uword index) const
@@ -486,7 +486,7 @@ MapMat<eT>::at(const uword in_row, const uword in_col)
 
 
 template<typename eT>
-arma_inline
+inline
 arma_warn_unused
 eT
 MapMat<eT>::at(const uword in_row, const uword in_col) const
@@ -519,7 +519,7 @@ MapMat<eT>::operator()(const uword in_row, const uword in_col)
 
 
 template<typename eT>
-arma_inline
+inline
 arma_warn_unused
 eT
 MapMat<eT>::operator()(const uword in_row, const uword in_col) const
@@ -1105,12 +1105,9 @@ SpMat_MapMat_val<eT>::operator eT() const
   {
   arma_extra_debug_sigprint();
   
-  const  SpMat<eT>& const_s_parent = s_parent;
-  const MapMat<eT>& const_m_parent = m_parent;
+  const SpMat<eT>& const_s_parent = s_parent;  // declare as const for clarity of intent
   
-  // get the element from the cache if it has more recent data than CSC
-  
-  return (const_s_parent.sync_state == 1) ? const_m_parent.at(row,col) : const_s_parent.get_value(row,col);
+  return const_s_parent.get_value(row,col);
   }
 
 
@@ -1459,12 +1456,9 @@ SpSubview_MapMat_val<eT>::operator eT() const
   {
   arma_extra_debug_sigprint();
   
-  const  SpMat<eT>& const_s_parent = v_parent.m;
-  const MapMat<eT>& const_m_parent = m_parent;
+  const SpMat<eT>& const_s_parent = v_parent.m;  // declare as const for clarity of intent
   
-  // get the element from the cache if it has more recent data than CSC
-  
-  return (const_s_parent.sync_state == 1) ? const_m_parent.at(row,col) : const_s_parent.get_value(row,col);
+  return const_s_parent.get_value(row,col);
   }
 
 

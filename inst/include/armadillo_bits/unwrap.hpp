@@ -172,8 +172,6 @@ struct quasi_unwrap_default
   {
   typedef typename T1::elem_type eT;
   
-  static const bool has_subview = false;
-  
   inline
   quasi_unwrap_default(const T1& A)
     : M(A)
@@ -182,7 +180,11 @@ struct quasi_unwrap_default
     }
   
   // NOTE: DO NOT DIRECTLY CHECK FOR ALIASING BY TAKING THE ADDRESS OF THE "M" OBJECT IN ANY quasi_unwrap CLASS !!!
-  const Mat<eT> M;
+  Mat<eT> M;
+  
+  static const bool is_const     = false;
+  static const bool has_subview  = false;
+  static const bool has_orig_mem = false;
   
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>&) const { return false; }
@@ -195,8 +197,6 @@ struct quasi_unwrap_fixed
   {
   typedef typename T1::elem_type eT;
   
-  static const bool has_subview = false;
-  
   inline explicit
   quasi_unwrap_fixed(const T1& A)
     : M(A)
@@ -205,6 +205,10 @@ struct quasi_unwrap_fixed
     }
   
   const T1& M;
+  
+  static const bool is_const     = true;
+  static const bool has_subview  = false;
+  static const bool has_orig_mem = true;
   
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&M) == void_ptr(&X)); }
@@ -227,13 +231,15 @@ struct quasi_unwrap : public quasi_unwrap_redirect<T1, is_Mat_fixed<T1>::value >
   {
   typedef typename quasi_unwrap_redirect<T1, is_Mat_fixed<T1>::value >::result quasi_unwrap_extra;
   
-  static const bool has_subview = quasi_unwrap_extra::has_subview;
-  
   inline
   quasi_unwrap(const T1& A)
     : quasi_unwrap_extra(A)
     {
     }
+  
+  static const bool is_const     = quasi_unwrap_extra::is_const;
+  static const bool has_subview  = quasi_unwrap_extra::has_subview;
+  static const bool has_orig_mem = quasi_unwrap_extra::has_orig_mem;
   
   using quasi_unwrap_extra::M;
   using quasi_unwrap_extra::is_alias;
@@ -244,8 +250,6 @@ struct quasi_unwrap : public quasi_unwrap_redirect<T1, is_Mat_fixed<T1>::value >
 template<typename eT>
 struct quasi_unwrap< Mat<eT> >
   {
-  static const bool has_subview = false;
-  
   inline
   quasi_unwrap(const Mat<eT>& A)
     : M(A)
@@ -254,6 +258,10 @@ struct quasi_unwrap< Mat<eT> >
     }
   
   const Mat<eT>& M;
+  
+  static const bool is_const     = true;
+  static const bool has_subview  = false;
+  static const bool has_orig_mem = true;
   
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&M) == void_ptr(&X)); }
@@ -264,7 +272,6 @@ struct quasi_unwrap< Mat<eT> >
 template<typename eT>
 struct quasi_unwrap< Row<eT> >
   {
-  static const bool has_subview = false;
   
   inline
   quasi_unwrap(const Row<eT>& A)
@@ -275,6 +282,10 @@ struct quasi_unwrap< Row<eT> >
   
   const Row<eT>& M;
   
+  static const bool is_const     = true;
+  static const bool has_subview  = false;
+  static const bool has_orig_mem = true;
+  
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&M) == void_ptr(&X)); }
   };
@@ -284,8 +295,6 @@ struct quasi_unwrap< Row<eT> >
 template<typename eT>
 struct quasi_unwrap< Col<eT> >
   {
-  static const bool has_subview = false;
-  
   inline
   quasi_unwrap(const Col<eT>& A)
     : M(A)
@@ -294,6 +303,10 @@ struct quasi_unwrap< Col<eT> >
     }
   
   const Col<eT>& M;
+  
+  static const bool is_const     = true;
+  static const bool has_subview  = false;
+  static const bool has_orig_mem = true;
   
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&M) == void_ptr(&X)); }
@@ -304,8 +317,6 @@ struct quasi_unwrap< Col<eT> >
 template<typename eT>
 struct quasi_unwrap< subview<eT> >
   {
-  static const bool has_subview = true;
-  
   inline
   quasi_unwrap(const subview<eT>& A)
     : sv( A                  )
@@ -317,6 +328,10 @@ struct quasi_unwrap< subview<eT> >
   const subview<eT>& sv;
   const Mat<eT>      M;
   
+  static const bool is_const     = true;
+  static const bool has_subview  = true;
+  static const bool has_orig_mem = false;
+  
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return ( (sv.n_cols == 1) ? (void_ptr(&(sv.m)) == void_ptr(&X)) : false ); }
   };
@@ -326,8 +341,6 @@ struct quasi_unwrap< subview<eT> >
 template<typename eT>
 struct quasi_unwrap< subview_row<eT> >
   {
-  static const bool has_subview = false;
-  
   inline
   quasi_unwrap(const subview_row<eT>& A)
     : M(A)
@@ -335,7 +348,11 @@ struct quasi_unwrap< subview_row<eT> >
     arma_extra_debug_sigprint();
     }
   
-  const Row<eT> M;
+  Row<eT> M;
+  
+  static const bool is_const     = false;
+  static const bool has_subview  = false;
+  static const bool has_orig_mem = false;
   
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>&) const { return false; }
@@ -346,8 +363,6 @@ struct quasi_unwrap< subview_row<eT> >
 template<typename eT>
 struct quasi_unwrap< subview_col<eT> >
   {
-  static const bool has_subview = true;
-  
   inline
   quasi_unwrap(const subview_col<eT>& A)
     : orig( A.m )
@@ -359,6 +374,10 @@ struct quasi_unwrap< subview_col<eT> >
   const Mat<eT>& orig;
   const Col<eT>  M;
   
+  static const bool is_const     = true;
+  static const bool has_subview  = true;
+  static const bool has_orig_mem = true;
+  
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&orig) == void_ptr(&X)); }
   };
@@ -368,8 +387,6 @@ struct quasi_unwrap< subview_col<eT> >
 template<typename out_eT, typename T1, typename T2, typename glue_type>
 struct quasi_unwrap< mtGlue<out_eT, T1, T2, glue_type> >
   {
-  static const bool has_subview = false;
-  
   inline
   quasi_unwrap(const mtGlue<out_eT, T1, T2, glue_type>& A)
     : M(A)
@@ -377,7 +394,11 @@ struct quasi_unwrap< mtGlue<out_eT, T1, T2, glue_type> >
     arma_extra_debug_sigprint();
     }
   
-  const Mat<out_eT> M;
+  Mat<out_eT> M;
+  
+  static const bool is_const     = false;
+  static const bool has_subview  = false;
+  static const bool has_orig_mem = false;
   
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>&) const { return false; }
@@ -388,8 +409,6 @@ struct quasi_unwrap< mtGlue<out_eT, T1, T2, glue_type> >
 template<typename out_eT, typename T1, typename op_type>
 struct quasi_unwrap< mtOp<out_eT, T1, op_type> >
   {
-  static const bool has_subview = false;
-  
   inline
   quasi_unwrap(const mtOp<out_eT, T1, op_type>& A)
     : M(A)
@@ -397,7 +416,11 @@ struct quasi_unwrap< mtOp<out_eT, T1, op_type> >
     arma_extra_debug_sigprint();
     }
   
-  const Mat<out_eT> M;
+  Mat<out_eT> M;
+  
+  static const bool is_const     = false;
+  static const bool has_subview  = false;
+  static const bool has_orig_mem = false;
   
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>&) const { return false; }
@@ -408,8 +431,6 @@ struct quasi_unwrap< mtOp<out_eT, T1, op_type> >
 template<typename T1>
 struct quasi_unwrap< Op<T1, op_vectorise_col> >
   {
-  static const bool has_subview = true;
-  
   typedef typename T1::elem_type eT;
   
   inline
@@ -423,8 +444,188 @@ struct quasi_unwrap< Op<T1, op_vectorise_col> >
   const unwrap<T1> U;
   const Mat<eT>    M;
   
+  static const bool is_const     = true;
+  static const bool has_subview  = true;
+  static const bool has_orig_mem = true;
+  
   template<typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&(U.M)) == void_ptr(&X)); }
+  };
+
+
+
+template<typename eT>
+struct quasi_unwrap< Op<Col<eT>, op_strans> >
+  {
+  inline
+  quasi_unwrap(const Op<Col<eT>, op_strans>& A)
+    : orig(A.m)
+    , M   (const_cast<eT*>(A.m.memptr()), A.m.n_elem, false, false)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const Col<eT>& orig;
+  const Row<eT>  M;
+  
+  static const bool is_const     = true;
+  static const bool has_subview  = true;
+  static const bool has_orig_mem = true;
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&orig) == void_ptr(&X)); }
+  };
+
+
+
+template<typename eT>
+struct quasi_unwrap< Op<Row<eT>, op_strans> >
+  {
+  inline
+  quasi_unwrap(const Op<Row<eT>, op_strans>& A)
+    : orig(A.m)
+    , M   (const_cast<eT*>(A.m.memptr()), A.m.n_elem, false, false)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const Row<eT>& orig;
+  const Col<eT>  M;
+  
+  static const bool is_const     = true;
+  static const bool has_subview  = true;
+  static const bool has_orig_mem = true;
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&orig) == void_ptr(&X)); }
+  };
+
+
+
+template<typename T1>
+struct quasi_unwrap_Col_htrans
+  {
+  inline quasi_unwrap_Col_htrans(const T1&) {}
+  };
+
+
+
+template<typename eT>
+struct quasi_unwrap_Col_htrans< Op<Col<eT>, op_htrans> >
+  {
+  inline
+  quasi_unwrap_Col_htrans(const Op<Col<eT>, op_htrans>& A)
+    : orig(A.m)
+    , M   (const_cast<eT*>(A.m.memptr()), A.m.n_elem, false, false)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const Col<eT>& orig;
+  const Row<eT>  M;
+  
+  static const bool is_const     = true;
+  static const bool has_subview  = true;
+  static const bool has_orig_mem = true;
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&orig) == void_ptr(&X)); }
+  };
+
+
+
+template<typename T1, bool condition>
+struct quasi_unwrap_Col_htrans_redirect {};
+
+template<typename T1>
+struct quasi_unwrap_Col_htrans_redirect<T1, true>  { typedef quasi_unwrap_default<T1>    result; };
+
+template<typename T1>
+struct quasi_unwrap_Col_htrans_redirect<T1, false> { typedef quasi_unwrap_Col_htrans<T1> result; };
+
+
+template<typename eT>
+struct quasi_unwrap< Op<Col<eT>, op_htrans> >
+  : public quasi_unwrap_Col_htrans_redirect< Op<Col<eT>, op_htrans>, is_cx<eT>::value >::result
+  {
+  typedef typename quasi_unwrap_Col_htrans_redirect< Op<Col<eT>, op_htrans>, is_cx<eT>::value >::result quasi_unwrap_Col_htrans_extra;
+  
+  inline
+  quasi_unwrap(const Op<Col<eT>, op_htrans>& A)
+    : quasi_unwrap_Col_htrans_extra(A)
+    {
+    }
+  
+  static const bool is_const     = quasi_unwrap_Col_htrans_extra::is_const;
+  static const bool has_subview  = quasi_unwrap_Col_htrans_extra::has_subview;
+  static const bool has_orig_mem = quasi_unwrap_Col_htrans_extra::has_orig_mem;
+  
+  using quasi_unwrap_Col_htrans_extra::M;
+  using quasi_unwrap_Col_htrans_extra::is_alias;
+  };
+
+
+
+template<typename T1>
+struct quasi_unwrap_Row_htrans
+  {
+  inline quasi_unwrap_Row_htrans(const T1&) {}
+  };
+
+
+
+template<typename eT>
+struct quasi_unwrap_Row_htrans< Op<Row<eT>, op_htrans> >
+  {
+  inline
+  quasi_unwrap_Row_htrans(const Op<Row<eT>, op_htrans>& A)
+    : orig(A.m)
+    , M   (const_cast<eT*>(A.m.memptr()), A.m.n_elem, false, false)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const Row<eT>& orig;
+  const Col<eT>  M;
+  
+  static const bool is_const     = true;
+  static const bool has_subview  = true;
+  static const bool has_orig_mem = true;
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&orig) == void_ptr(&X)); }
+  };
+
+
+
+template<typename T1, bool condition>
+struct quasi_unwrap_Row_htrans_redirect {};
+
+template<typename T1>
+struct quasi_unwrap_Row_htrans_redirect<T1, true>  { typedef quasi_unwrap_default<T1>    result; };
+
+template<typename T1>
+struct quasi_unwrap_Row_htrans_redirect<T1, false> { typedef quasi_unwrap_Row_htrans<T1> result; };
+
+
+template<typename eT>
+struct quasi_unwrap< Op<Row<eT>, op_htrans> >
+  : public quasi_unwrap_Row_htrans_redirect< Op<Row<eT>, op_htrans>, is_cx<eT>::value >::result
+  {
+  typedef typename quasi_unwrap_Row_htrans_redirect< Op<Row<eT>, op_htrans>, is_cx<eT>::value >::result quasi_unwrap_Row_htrans_extra;
+  
+  inline
+  quasi_unwrap(const Op<Row<eT>, op_htrans>& A)
+    : quasi_unwrap_Row_htrans_extra(A)
+    {
+    }
+  
+  static const bool is_const     = quasi_unwrap_Row_htrans_extra::is_const;
+  static const bool has_subview  = quasi_unwrap_Row_htrans_extra::has_subview;
+  static const bool has_orig_mem = quasi_unwrap_Row_htrans_extra::has_orig_mem;
+  
+  using quasi_unwrap_Row_htrans_extra::M;
+  using quasi_unwrap_Row_htrans_extra::is_alias;
   };
 
 

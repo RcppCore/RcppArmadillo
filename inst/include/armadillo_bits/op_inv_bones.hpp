@@ -24,14 +24,14 @@ class op_inv
   {
   public:
   
-  template<typename eT>
-  inline static void apply(Mat<eT>& out, const Mat<eT>& A);
-  
   template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv>& in);
   
+  template<typename eT>
+  inline static void apply_noalias(Mat<eT>& out, const Mat<eT>& A);
+  
   template<typename T1>
-  inline static bool apply_diagmat(Mat<typename T1::elem_type>& out, const T1& X);
+  inline static void apply_diagmat(Mat<typename T1::elem_type>& out, const T1& X);
   };
 
 

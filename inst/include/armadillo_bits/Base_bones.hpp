@@ -130,6 +130,18 @@ struct Base
   
   inline arma_warn_unused uword index_min() const;
   inline arma_warn_unused uword index_max() const;
+  
+  inline arma_warn_unused bool is_symmetric() const;
+  inline arma_warn_unused bool is_symmetric(const typename get_pod_type<elem_type>::result tol) const;
+  
+  inline arma_warn_unused bool is_hermitian() const;
+  inline arma_warn_unused bool is_hermitian(const typename get_pod_type<elem_type>::result tol) const;
+  
+  inline arma_warn_unused bool is_empty()  const;
+  inline arma_warn_unused bool is_square() const;
+  inline arma_warn_unused bool is_vec()    const;
+  inline arma_warn_unused bool is_colvec() const;
+  inline arma_warn_unused bool is_rowvec() const;
   };
 
 

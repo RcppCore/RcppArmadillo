@@ -241,8 +241,8 @@ SpRow<eT>::shed_cols(const uword in_col1, const uword in_col2)
     {
     const uword elem_diff = end - start;
 
-    eT*    new_values      = memory::acquire_chunked<eT>   (SpMat<eT>::n_nonzero - elem_diff);
-    uword* new_row_indices = memory::acquire_chunked<uword>(SpMat<eT>::n_nonzero - elem_diff);
+    eT*    new_values      = memory::acquire<eT>   (SpMat<eT>::n_nonzero - elem_diff);
+    uword* new_row_indices = memory::acquire<uword>(SpMat<eT>::n_nonzero - elem_diff);
 
     // Copy first set of elements, if necessary.
     if (start > 0)

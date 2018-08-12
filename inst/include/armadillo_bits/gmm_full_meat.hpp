@@ -185,8 +185,8 @@ gmm_full<eT>::set_means(const Base<eT,T1>& in_means_expr)
   
   const Mat<eT>& in_means = tmp.M;
   
-  arma_debug_check( (size(in_means) != size(means)), "gmm_full::set_means(): given means have incompatible size" );
-  arma_debug_check( (in_means.is_finite() == false), "gmm_full::set_means(): given means have non-finite values" );
+  arma_debug_check( (arma::size(in_means) != arma::size(means)), "gmm_full::set_means(): given means have incompatible size" );
+  arma_debug_check( (in_means.is_finite() == false),             "gmm_full::set_means(): given means have non-finite values" );
   
   access::rw(means) = in_means;
   }
@@ -205,8 +205,8 @@ gmm_full<eT>::set_fcovs(const BaseCube<eT,T1>& in_fcovs_expr)
   
   const Cube<eT>& in_fcovs = tmp.M;
   
-  arma_debug_check( (size(in_fcovs) != size(fcovs)), "gmm_full::set_fcovs(): given fcovs have incompatible size" );
-  arma_debug_check( (in_fcovs.is_finite() == false), "gmm_full::set_fcovs(): given fcovs have non-finite values" );
+  arma_debug_check( (arma::size(in_fcovs) != arma::size(fcovs)), "gmm_full::set_fcovs(): given fcovs have incompatible size" );
+  arma_debug_check( (in_fcovs.is_finite() == false),             "gmm_full::set_fcovs(): given fcovs have non-finite values" );
   
   for(uword i=0; i < in_fcovs.n_slices; ++i)
     {
@@ -232,9 +232,9 @@ gmm_full<eT>::set_hefts(const Base<eT,T1>& in_hefts_expr)
   
   const Mat<eT>& in_hefts = tmp.M;
   
-  arma_debug_check( (size(in_hefts) != size(hefts)),     "gmm_full::set_hefts(): given hefts have incompatible size" );
-  arma_debug_check( (in_hefts.is_finite() == false),     "gmm_full::set_hefts(): given hefts have non-finite values" );
-  arma_debug_check( (any(vectorise(in_hefts) <  eT(0))), "gmm_full::set_hefts(): given hefts have negative values"   );
+  arma_debug_check( (arma::size(in_hefts) != arma::size(hefts)), "gmm_full::set_hefts(): given hefts have incompatible size" );
+  arma_debug_check( (in_hefts.is_finite() == false),             "gmm_full::set_hefts(): given hefts have non-finite values" );
+  arma_debug_check( (any(vectorise(in_hefts) <  eT(0))),         "gmm_full::set_hefts(): given hefts have negative values"   );
   
   const eT s = accu(in_hefts);
   

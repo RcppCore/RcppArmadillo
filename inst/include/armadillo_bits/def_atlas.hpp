@@ -20,7 +20,6 @@
 //! \namespace atlas namespace for ATLAS functions (imported from the global namespace)
 namespace atlas
   {
-  
   using ::CblasColMajor;
   using ::CblasNoTrans;
   using ::CblasTrans;
@@ -31,7 +30,6 @@ namespace atlas
   #if defined(ARMA_USE_WRAPPER)
   extern "C"
     {
-    
     float  wrapper_cblas_sasum(const int N, const float  *X, const int incX);
     double wrapper_cblas_dasum(const int N, const double *X, const int incX);
     
@@ -112,9 +110,24 @@ namespace atlas
     int wrapper_clapack_cgesv(const enum CBLAS_ORDER Order, const int N, const int NRHS, void   *A, const int lda, int *ipiv, void   *B, const int ldb);
     int wrapper_clapack_zgesv(const enum CBLAS_ORDER Order, const int N, const int NRHS, void   *A, const int lda, int *ipiv, void   *B, const int ldb);
     
+    
+    
+    int wrapper_clapack_spotrf(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo, const int N,  float *A, const int lda);
+    int wrapper_clapack_dpotrf(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo, const int N, double *A, const int lda);
+    int wrapper_clapack_cpotrf(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo, const int N,   void *A, const int lda);
+    int wrapper_clapack_zpotrf(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo, const int N,   void *A, const int lda);
+    
+    int wrapper_clapack_spotri(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo, const int N,  float *A, const int lda);
+    int wrapper_clapack_dpotri(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo, const int N, double *A, const int lda);
+    int wrapper_clapack_cpotri(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo, const int N,   void *A, const int lda);
+    int wrapper_clapack_zpotri(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo, const int N,   void *A, const int lda);
+    
+    int wrapper_clapack_sposv(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo, const int N, const int NRHS,  float *A, const int lda,  float *B, const int ldb);
+    int wrapper_clapack_dposv(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo, const int N, const int NRHS, double *A, const int lda, double *B, const int ldb);
+    int wrapper_clapack_cposv(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo, const int N, const int NRHS,   void *A, const int lda,   void *B, const int ldb);
+    int wrapper_clapack_zposv(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo, const int N, const int NRHS,   void *A, const int lda,   void *B, const int ldb);
     }
   #endif
-  
   }
 
 

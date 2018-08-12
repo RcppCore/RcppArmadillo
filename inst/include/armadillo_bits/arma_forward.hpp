@@ -450,6 +450,7 @@ struct superlu_opts : public spsolve_opts_base
   
   typedef enum {REF_NONE, REF_SINGLE, REF_DOUBLE, REF_EXTRA} refine_type;
   
+  bool             allow_ugly;
   bool             equilibrate;
   bool             symmetric;
   double           pivot_thresh;
@@ -459,6 +460,7 @@ struct superlu_opts : public spsolve_opts_base
   inline superlu_opts()
     : spsolve_opts_base(1)
     {
+    allow_ugly   = false;
     equilibrate  = false;
     symmetric    = false;
     pivot_thresh = 1.0;

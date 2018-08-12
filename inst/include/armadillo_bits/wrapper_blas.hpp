@@ -53,7 +53,6 @@ namespace blas
       typedef std::complex<double> T;
       arma_fortran(arma_zgemv)(transA, m, n, (const T*)alpha, (const T*)A, ldA, (const T*)x, incx, (const T*)beta, (T*)y, incy);
       }
-    
     }
   
   
@@ -88,7 +87,6 @@ namespace blas
       typedef std::complex<double> T;
       arma_fortran(arma_zgemm)(transA, transB, m, n, k, (const T*)alpha, (const T*)A, ldA, (const T*)B, ldB, (const T*)beta, (T*)C, ldC);
       }
-    
     }
   
   
@@ -214,10 +212,8 @@ namespace blas
       
       return result[0];
       }
-    else
-      {
-      return eT(0);
-      }
+
+    return eT(0);
     }
   
   
@@ -246,10 +242,8 @@ namespace blas
       typedef double T;
       return arma_fortran(arma_dasum)(&n, (const T*)x, &inc);
       }
-    else
-      {
-      return eT(0);
-      }
+    
+    return eT(0);
     }
   
   
@@ -278,12 +272,12 @@ namespace blas
       typedef double T;
       return arma_fortran(arma_dnrm2)(&n, (const T*)x, &inc);
       }
-    else
-      {
-      return eT(0);
-      }
+    
+    return eT(0);
     }
-  }
+  
+  
+  }   // namespace blas
 
 
 #endif

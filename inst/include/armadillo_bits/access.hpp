@@ -30,9 +30,13 @@ class access
   template<typename eT> arma_inline static const eT& tmp_real(const eT&              X) { return X;        }
   template<typename  T> arma_inline static const   T tmp_real(const std::complex<T>& X) { return X.real(); }
   
+  //! internal function to obtain the imag part of either a plain number or a complex number
+  template<typename eT> arma_inline static const eT tmp_imag(const eT                ) { return eT(0);    }
+  template<typename  T> arma_inline static const  T tmp_imag(const std::complex<T>& X) { return X.imag(); }
+  
   //! internal function to work around braindead compilers
-  template<typename eT> arma_inline static const typename enable_if2<is_not_complex<eT>::value, const eT&>::result alt_conj(const eT& X) { return X;            }
-  template<typename eT> arma_inline static const typename enable_if2<    is_complex<eT>::value, const eT >::result alt_conj(const eT& X) { return std::conj(X); }
+  template<typename eT> arma_inline static const typename enable_if2<is_cx<eT>::no,  const eT&>::result alt_conj(const eT& X) { return X;            }
+  template<typename eT> arma_inline static const typename enable_if2<is_cx<eT>::yes, const eT >::result alt_conj(const eT& X) { return std::conj(X); }
   };
 
 

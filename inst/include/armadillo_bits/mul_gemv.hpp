@@ -37,7 +37,6 @@ class gemv_emul_tinysq
   
   
   template<typename eT, const uword i>
-  arma_hot
   arma_inline
   static
   void
@@ -58,7 +57,7 @@ class gemv_emul_tinysq
   
 
   template<typename eT, typename TA>
-  arma_hot
+  arma_cold
   inline
   static
   void

@@ -81,16 +81,16 @@ class MapMat
   inline void speye(const SizeMat& s);
   
   arma_inline arma_warn_unused MapMat_val<eT> operator[](const uword index);
-  arma_inline arma_warn_unused            eT  operator[](const uword index) const;
+       inline arma_warn_unused            eT  operator[](const uword index) const;
   
   arma_inline arma_warn_unused MapMat_val<eT> operator()(const uword index);
-  arma_inline arma_warn_unused            eT  operator()(const uword index) const;
+       inline arma_warn_unused            eT  operator()(const uword index) const;
   
   arma_inline arma_warn_unused MapMat_val<eT>         at(const uword in_row, const uword in_col);
-  arma_inline arma_warn_unused            eT          at(const uword in_row, const uword in_col) const;
+       inline arma_warn_unused            eT          at(const uword in_row, const uword in_col) const;
   
   arma_inline arma_warn_unused MapMat_val<eT> operator()(const uword in_row, const uword in_col);
-  arma_inline arma_warn_unused            eT  operator()(const uword in_row, const uword in_col) const;
+       inline arma_warn_unused            eT  operator()(const uword in_row, const uword in_col) const;
   
   inline arma_warn_unused bool is_empty()  const;
   inline arma_warn_unused bool is_vec()    const;

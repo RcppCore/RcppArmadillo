@@ -36,38 +36,21 @@ class auxlib
   //
   // inv
   
-  template<typename eT, typename T1>
-  inline static bool inv(Mat<eT>& out, const Base<eT,T1>& X);
-  
   template<typename eT>
   inline static bool inv(Mat<eT>& out, const Mat<eT>& A);
   
   template<typename eT>
-  inline static bool inv_noalias_tinymat(Mat<eT>& out, const Mat<eT>& X, const uword N);
-  
-  template<typename eT>
-  inline static bool inv_inplace_lapack(Mat<eT>& out);
-  
-  
-  //
-  // inv_tr
+  arma_cold inline static bool inv_tiny(Mat<eT>& out, const Mat<eT>& X);
   
   template<typename eT, typename T1>
   inline static bool inv_tr(Mat<eT>& out, const Base<eT,T1>& X, const uword layout);
   
-  
-  //
-  // inv_sym
-  
-  template<typename eT, typename T1>
-  inline static bool inv_sym(Mat<eT>& out, const Base<eT,T1>& X, const uword layout);
-  
-  
-  //
-  // inv_sympd
-  
   template<typename eT, typename T1>
   inline static bool inv_sympd(Mat<eT>& out, const Base<eT,T1>& X);
+  
+  template<typename eT>
+  arma_cold inline static bool inv_sympd_tiny(Mat<eT>& out, const Mat<eT>& X);
+  
   
   
   //
@@ -77,7 +60,7 @@ class auxlib
   inline static eT det(const Base<eT,T1>& X);
   
   template<typename eT>
-  inline static eT det_tinymat(const Mat<eT>& X, const uword N);
+  arma_cold inline static eT det_tinymat(const Mat<eT>& X, const uword N);
   
   template<typename eT>
   inline static eT det_lapack(const Mat<eT>& X, const bool make_copy);
@@ -236,6 +219,9 @@ class auxlib
   // solve
   
   template<typename T1>
+  arma_cold inline static bool solve_square_tiny(Mat<typename T1::elem_type>& out, const Mat<typename T1::elem_type>& A, const Base<typename T1::elem_type,T1>& B_expr);
+  
+  template<typename T1>
   inline static bool solve_square_fast(Mat<typename T1::elem_type>& out, Mat<typename T1::elem_type>& A, const Base<typename T1::elem_type,T1>& B_expr);
   
   template<typename T1>
@@ -243,6 +229,18 @@ class auxlib
   
   template<typename T1>
   inline static bool solve_square_refine(Mat< std::complex<typename T1::pod_type> >& out, typename T1::pod_type& out_rcond, Mat< std::complex<typename T1::pod_type> >& A, const Base<std::complex<typename T1::pod_type>,T1>& B_expr, const bool equilibrate);
+  
+  template<typename T1>
+  inline static bool solve_sympd_fast(Mat<typename T1::elem_type>& out, Mat<typename T1::elem_type>& A, const Base<typename T1::elem_type,T1>& B_expr, const bool extra_check = false);
+  
+  template<typename T1>
+  inline static bool solve_sympd_fast_common(Mat<typename T1::elem_type>& out, Mat<typename T1::elem_type>& A, const Base<typename T1::elem_type,T1>& B_expr);
+  
+  template<typename T1>
+  inline static bool solve_sympd_refine(Mat<typename T1::pod_type>& out, typename T1::pod_type& out_rcond, Mat<typename T1::pod_type>& A, const Base<typename T1::pod_type,T1>& B_expr, const bool equilibrate);
+  
+  template<typename T1>
+  inline static bool solve_sympd_refine(Mat< std::complex<typename T1::pod_type> >& out, typename T1::pod_type& out_rcond, Mat< std::complex<typename T1::pod_type> >& A, const Base<std::complex<typename T1::pod_type>,T1>& B_expr, const bool equilibrate);
   
   template<typename T1>
   inline static bool solve_approx_fast(Mat<typename T1::elem_type>& out, Mat<typename T1::elem_type>& A, const Base<typename T1::elem_type,T1>& B_expr);

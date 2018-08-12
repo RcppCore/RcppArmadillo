@@ -541,3 +541,12 @@
   #pragma message ("WARNING: detected 'min' and/or 'max' macros and undefined them;")
   #pragma message ("WARNING: you may wish to define NOMINMAX before including any windows header")
 #endif
+
+
+
+//
+// handle more stupid macros
+// https://sourceware.org/bugzilla/show_bug.cgi?id=19239
+
+#undef minor
+#undef major

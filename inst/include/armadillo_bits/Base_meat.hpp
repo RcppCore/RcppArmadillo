@@ -261,6 +261,233 @@ Base<elem_type,derived>::index_max() const
 
 
 
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
+Base<elem_type,derived>::is_symmetric() const
+  {
+  arma_extra_debug_sigprint();
+  
+  const quasi_unwrap<derived> U( (*this).get_ref() );
+  
+  const Mat<elem_type>& A = U.M;
+  
+  if(A.n_rows != A.n_cols)  { return false; }
+  if(A.n_elem <= 1       )  { return true;  }
+  
+  const uword N   = A.n_rows;
+  const uword Nm1 = N-1;
+  
+  const elem_type* A_col = A.memptr();
+  
+  for(uword j=0; j < Nm1; ++j)
+    {
+    const uword jp1 = j+1;
+    
+    const elem_type* A_row = &(A.at(j,jp1));
+    
+    for(uword i=jp1; i < N; ++i)
+      {
+      if(A_col[i] != (*A_row))  { return false; }
+      
+      A_row += N;
+      }
+    
+    A_col += N;
+    }
+  
+  return true;
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
+Base<elem_type,derived>::is_symmetric(const typename get_pod_type<elem_type>::result tol) const
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename get_pod_type<elem_type>::result T;
+  
+  if(tol == T(0))  { return (*this).is_symmetric(); }
+  
+  arma_debug_check( (tol < T(0)), "is_symmetric(): parameter 'tol' must be >= 0" );
+  
+  const quasi_unwrap<derived> U( (*this).get_ref() );
+  
+  const Mat<elem_type>& A = U.M;
+  
+  if(A.n_rows != A.n_cols)  { return false; }
+  if(A.n_elem <= 1       )  { return true;  }
+  
+  const T norm_A = as_scalar( arma::max(sum(abs(A), 1), 0) );
+  
+  if(norm_A == T(0))  { return true; }
+  
+  const T norm_A_Ast = as_scalar( arma::max(sum(abs(A - A.st()), 1), 0) );
+  
+  return ( (norm_A_Ast / norm_A) <= tol );
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
+Base<elem_type,derived>::is_hermitian() const
+  {
+  arma_extra_debug_sigprint();
+  
+  const quasi_unwrap<derived> U( (*this).get_ref() );
+  
+  const Mat<elem_type>& A = U.M;
+  
+  if(A.n_rows != A.n_cols)  { return false; }
+  if(A.n_elem == 0       )  { return true;  }
+  
+  const uword N   = A.n_rows;
+  const uword Nm1 = N-1;
+  
+  const elem_type* A_col = A.memptr();
+  
+  for(uword j=0; j < Nm1; ++j)
+    {
+    const uword jp1 = j+1;
+    
+    const elem_type* A_row = &(A.at(j,jp1));
+    
+    for(uword i=jp1; i < N; ++i)
+      {
+      if(A_col[i] != access::alt_conj(*A_row))  { return false; }
+      
+      A_row += N;
+      }
+    
+    A_col += N;
+    }
+  
+  return true;
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
+Base<elem_type,derived>::is_hermitian(const typename get_pod_type<elem_type>::result tol) const
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename get_pod_type<elem_type>::result T;
+  
+  if(tol == T(0))  { return (*this).is_hermitian(); }
+  
+  arma_debug_check( (tol < T(0)), "is_hermitian(): parameter 'tol' must be >= 0" );
+  
+  const quasi_unwrap<derived> U( (*this).get_ref() );
+  
+  const Mat<elem_type>& A = U.M;
+  
+  if(A.n_rows != A.n_cols)  { return false; }
+  if(A.n_elem == 0       )  { return true;  }
+  
+  const T norm_A = as_scalar( arma::max(sum(abs(A), 1), 0) );
+  
+  if(norm_A == T(0))  { return true; }
+  
+  const T norm_A_At = as_scalar( arma::max(sum(abs(A - A.t()), 1), 0) );
+  
+  return ( (norm_A_At / norm_A) <= tol );
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
+Base<elem_type,derived>::is_empty() const
+  {
+  arma_extra_debug_sigprint();
+  
+  const Proxy<derived> P( (*this).get_ref() );
+  
+  return (P.get_n_elem() == uword(0));
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
+Base<elem_type,derived>::is_square() const
+  {
+  arma_extra_debug_sigprint();
+  
+  const Proxy<derived> P( (*this).get_ref() );
+  
+  return (P.get_n_rows() == P.get_n_cols());
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
+Base<elem_type,derived>::is_vec() const
+  {
+  arma_extra_debug_sigprint();
+  
+  if( (Proxy<derived>::is_row) || (Proxy<derived>::is_col) )  { return true; }
+  
+  const Proxy<derived> P( (*this).get_ref() );
+  
+  return ( (P.get_n_rows() == uword(1)) || (P.get_n_cols() == uword(1)) );
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
+Base<elem_type,derived>::is_colvec() const
+  {
+  arma_extra_debug_sigprint();
+  
+  if(Proxy<derived>::is_col)  { return true; }
+  
+  const Proxy<derived> P( (*this).get_ref() );
+  
+  return (P.get_n_cols() == uword(1));
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
+Base<elem_type,derived>::is_rowvec() const
+  {
+  arma_extra_debug_sigprint();
+  
+  if(Proxy<derived>::is_row)  { return true; }
+  
+  const Proxy<derived> P( (*this).get_ref() );
+  
+  return (P.get_n_rows() == uword(1));
+  }
+
+
+
 //
 // extra functions defined in Base_inv_yes
 

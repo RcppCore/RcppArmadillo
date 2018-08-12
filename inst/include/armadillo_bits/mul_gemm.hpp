@@ -27,7 +27,7 @@ class gemm_emul_tinysq
   
   
   template<typename eT, typename TA, typename TB>
-  arma_hot
+  arma_cold
   inline
   static
   void
