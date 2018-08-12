@@ -3,7 +3,21 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.8.700.0.0 (2018-xx-yy)}{
+\section{Changes in RcppArmadillo version 0.9.100.0 (2018-xx-yy)}{
+  \itemize{
+    \item Upgraded to Armadillo release 9.100.RC1 (Sabretooth Rugrat)
+    \itemize{
+      \item faster handling of symmetric/hermitian positive definite matrices by \code{solve()}
+      \item faster handling of \code{inv_sympd()} in compound expressions
+      \item added \code{.is_symmetric()}
+      \item added \code{.is_hermitian()}
+      \item expanded \code{spsolve()} to optionally allow keeping
+      solutions of systems singular to working precision 
+      \item new configuration options \code{ARMA_OPTIMISE_SOLVE_BAND}
+      and \code{ARMA_OPTIMISE_SOLVE_SYMPD}
+      smarter use of the element cache in sparse matrices
+    }
+  }
   \itemize{
     \item Aligned OpenMP flags in the RcppArmadillo.package.skeleton
     used Makevars{,.win} to not use one C and C++ flag.
