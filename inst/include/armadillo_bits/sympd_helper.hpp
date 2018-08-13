@@ -40,6 +40,8 @@ guess_sympd(const Mat<eT>& A)
   
   if((A.n_rows != A.n_cols) || (A.n_elem == 0))  { return false; }
   
+  const eT threshold = eT(10) * std::numeric_limits<eT>::epsilon();  // allow some leeway
+  
   const uword N = A.n_rows;
   
   const eT* A_col = A.memptr();
@@ -70,7 +72,7 @@ guess_sympd(const Mat<eT>& A)
       {
       const eT A_ij = A_col[i];
       
-      if( (A_ij != (*A_row)) || (std::abs(A_ij) > max_diag) )  { return false; }
+      if( (std::abs(A_ij - (*A_row)) > threshold) || (std::abs(A_ij) > max_diag) )  { return false; }
       
       A_row += N;
       }
@@ -104,13 +106,13 @@ guess_sympd(const Mat<eT>& A)
   
   if((A.n_rows != A.n_cols) || (A.n_elem == 0))  { return false; }
   
+  const T threshold = T(10) * std::numeric_limits<T>::epsilon();  // allow some leeway
+  
   const uword N = A.n_rows;
   
   const eT* A_col = A.memptr();
   
   T max_diag = T(0);
-  
-  const T threshold = T(2) * std::numeric_limits<T>::epsilon();
   
   for(uword j=0; j < N; ++j)
     {
@@ -136,9 +138,15 @@ guess_sympd(const Mat<eT>& A)
     
     for(uword i=jp1; i < N; ++i)
       {
-      const eT& A_ij = A_col[i];
+      const eT& A_ij      = A_col[i];
+      const  T  A_ij_real = std::real(A_ij);
+      const  T  A_ij_imag = std::imag(A_ij);
       
-      if( (A_ij != std::conj(*A_row)) || (std::abs(std::real(A_ij)) > max_diag) || (std::abs(std::imag(A_ij)) > max_diag) )  { return false; }
+      const eT& A_ji      = (*A_row);
+      const  T  A_ji_real = std::real(A_ji);
+      const  T  A_ji_imag = std::imag(A_ji);
+      
+      if( (std::abs(A_ij_real - A_ji_real) > threshold) || (std::abs(A_ij_imag + A_ji_imag) > threshold) || (std::abs(A_ij_real) > max_diag) || (std::abs(A_ij_imag) > max_diag) )  { return false; }
       
       A_row += N;
       }

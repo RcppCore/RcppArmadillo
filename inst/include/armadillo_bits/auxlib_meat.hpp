@@ -3392,8 +3392,9 @@ auxlib::solve_sympd_fast(Mat<typename T1::elem_type>& out, Mat<typename T1::elem
     }
   #endif
   }
-  
-  
+
+
+
 template<typename T1>
 inline
 bool

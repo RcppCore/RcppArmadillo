@@ -342,6 +342,8 @@ Base<elem_type,derived>::is_hermitian() const
   {
   arma_extra_debug_sigprint();
   
+  typedef typename get_pod_type<elem_type>::result T;
+  
   const quasi_unwrap<derived> U( (*this).get_ref() );
   
   const Mat<elem_type>& A = U.M;
@@ -349,10 +351,20 @@ Base<elem_type,derived>::is_hermitian() const
   if(A.n_rows != A.n_cols)  { return false; }
   if(A.n_elem == 0       )  { return true;  }
   
-  const uword N   = A.n_rows;
-  const uword Nm1 = N-1;
+  const uword N = A.n_rows;
   
   const elem_type* A_col = A.memptr();
+  
+  for(uword j=0; j < N; ++j)
+    {
+    if( access::tmp_imag(A_col[j]) != T(0) )  { return false; }
+    
+    A_col += N;
+    }
+  
+  A_col = A.memptr();
+  
+  const uword Nm1 = N-1;
   
   for(uword j=0; j < Nm1; ++j)
     {
