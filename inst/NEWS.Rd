@@ -3,9 +3,9 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.9.100.0 (2018-xx-yy)}{
+\section{Changes in RcppArmadillo version 0.9.100.1 (2018-xx-yy)}{
   \itemize{
-    \item Upgraded to Armadillo release 9.100.RC1 (Sabretooth Rugrat)
+    \item Upgraded to Armadillo release 9.100.RC2 ()
     \itemize{
       \item faster handling of symmetric/hermitian positive definite matrices by \code{solve()}
       \item faster handling of \code{inv_sympd()} in compound expressions
