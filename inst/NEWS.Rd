@@ -7,7 +7,8 @@
   \itemize{
     \item Upgraded to Armadillo release 9.100.RC2 ()
     \itemize{
-      \item faster handling of symmetric/hermitian positive definite matrices by \code{solve()}
+      \item faster handling of symmetric/hermitian positive definite
+      matrices by \code{solve()} 
       \item faster handling of \code{inv_sympd()} in compound expressions
       \item added \code{.is_symmetric()}
       \item added \code{.is_hermitian()}
@@ -16,6 +17,8 @@
       \item new configuration options \code{ARMA_OPTIMISE_SOLVE_BAND}
       and \code{ARMA_OPTIMISE_SOLVE_SYMPD}
       smarter use of the element cache in sparse matrices
+      \item more lenient check for symmetric/hermitian positive definite
+      matrices 
     }
   }
   \itemize{
