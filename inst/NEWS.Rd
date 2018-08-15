@@ -3,9 +3,9 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.9.100.1 (2018-xx-yy)}{
+\section{Changes in RcppArmadillo version 0.9.100.4.0 (2018-08-15)}{
   \itemize{
-    \item Upgraded to Armadillo release 9.100.RC2 ()
+    \item Upgraded to Armadillo release 9.100.4 (Armatus Ad Infinitum)
     \itemize{
       \item faster handling of symmetric/hermitian positive definite
       matrices by \code{solve()} 
@@ -17,8 +17,7 @@
       \item new configuration options \code{ARMA_OPTIMISE_SOLVE_BAND}
       and \code{ARMA_OPTIMISE_SOLVE_SYMPD}
       smarter use of the element cache in sparse matrices
-      \item more lenient check for symmetric/hermitian positive definite
-      matrices 
+      \item smarter use of the element cache in sparse matrices
     }
   }
   \itemize{
