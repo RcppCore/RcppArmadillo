@@ -19,8 +19,6 @@
       smarter use of the element cache in sparse matrices
       \item smarter use of the element cache in sparse matrices
     }
-  }
-  \itemize{
     \item Aligned OpenMP flags in the RcppArmadillo.package.skeleton
     used Makevars{,.win} to not use one C and C++ flag.
   }
