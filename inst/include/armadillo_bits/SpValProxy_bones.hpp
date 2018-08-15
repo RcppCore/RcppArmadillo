@@ -60,6 +60,9 @@ class SpValProxy
   //! This will work for any other operations that do not modify a value.
   arma_inline operator eT() const;
   
+  arma_inline typename get_pod_type<eT>::result real() const;
+  arma_inline typename get_pod_type<eT>::result imag() const;
+  
   
   private:
   

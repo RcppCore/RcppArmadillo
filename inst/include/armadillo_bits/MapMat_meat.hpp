@@ -891,6 +891,38 @@ MapMat_val<eT>::operator eT() const
 
 template<typename eT>
 arma_inline
+typename get_pod_type<eT>::result
+MapMat_val<eT>::real() const
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename get_pod_type<eT>::result T;
+  
+  const MapMat<eT>& const_parent = parent;
+  
+  return T( access::tmp_real( const_parent.operator[](index) ) );
+  }
+
+
+
+template<typename eT>
+arma_inline
+typename get_pod_type<eT>::result
+MapMat_val<eT>::imag() const
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename get_pod_type<eT>::result T;
+  
+  const MapMat<eT>& const_parent = parent;
+  
+  return T( access::tmp_imag( const_parent.operator[](index) ) );
+  }
+
+
+
+template<typename eT>
+arma_inline
 void
 MapMat_val<eT>::operator=(const MapMat_val<eT>& x)
   {
@@ -1108,6 +1140,38 @@ SpMat_MapMat_val<eT>::operator eT() const
   const SpMat<eT>& const_s_parent = s_parent;  // declare as const for clarity of intent
   
   return const_s_parent.get_value(row,col);
+  }
+
+
+
+template<typename eT>
+inline
+typename get_pod_type<eT>::result
+SpMat_MapMat_val<eT>::real() const
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename get_pod_type<eT>::result T;
+  
+  const SpMat<eT>& const_s_parent = s_parent;  // declare as const for clarity of intent
+  
+  return T( access::tmp_real( const_s_parent.get_value(row,col) ) );
+  }
+
+
+
+template<typename eT>
+inline
+typename get_pod_type<eT>::result
+SpMat_MapMat_val<eT>::imag() const
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename get_pod_type<eT>::result T;
+  
+  const SpMat<eT>& const_s_parent = s_parent;  // declare as const for clarity of intent
+  
+  return T( access::tmp_imag( const_s_parent.get_value(row,col) ) );
   }
 
 
@@ -1459,6 +1523,38 @@ SpSubview_MapMat_val<eT>::operator eT() const
   const SpMat<eT>& const_s_parent = v_parent.m;  // declare as const for clarity of intent
   
   return const_s_parent.get_value(row,col);
+  }
+
+
+
+template<typename eT>
+inline
+typename get_pod_type<eT>::result
+SpSubview_MapMat_val<eT>::real() const
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename get_pod_type<eT>::result T;
+  
+  const SpMat<eT>& const_s_parent = v_parent.m;  // declare as const for clarity of intent
+  
+  return T( access::tmp_real( const_s_parent.get_value(row,col) ) );
+  }
+
+
+
+template<typename eT>
+inline
+typename get_pod_type<eT>::result
+SpSubview_MapMat_val<eT>::imag() const
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename get_pod_type<eT>::result T;
+  
+  const SpMat<eT>& const_s_parent = v_parent.m;  // declare as const for clarity of intent
+  
+  return T( access::tmp_imag( const_s_parent.get_value(row,col) ) );
   }
 
 

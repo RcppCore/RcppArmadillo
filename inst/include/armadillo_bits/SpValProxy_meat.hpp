@@ -334,14 +334,31 @@ template<typename T1>
 arma_inline
 SpValProxy<T1>::operator eT() const
   {
-  if (val_ptr)
-    {
-    return *val_ptr;
-    }
-  else
-    {
-    return eT(0);
-    }
+  return (val_ptr) ? eT(*val_ptr) : eT(0);
+  }
+
+
+
+template<typename T1>
+arma_inline
+typename get_pod_type<typename SpValProxy<T1>::eT>::result
+SpValProxy<T1>::real() const
+  {
+  typedef typename get_pod_type<eT>::result T;
+  
+  return T( access::tmp_real( (val_ptr) ? eT(*val_ptr) : eT(0) ) );
+  }
+
+
+
+template<typename T1>
+arma_inline
+typename get_pod_type<typename SpValProxy<T1>::eT>::result
+SpValProxy<T1>::imag() const
+  {
+  typedef typename get_pod_type<eT>::result T;
+  
+  return T( access::tmp_imag( (val_ptr) ? eT(*val_ptr) : eT(0) ) );
   }
 
 

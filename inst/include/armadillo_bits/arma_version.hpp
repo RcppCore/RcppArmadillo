@@ -21,8 +21,8 @@
 
 #define ARMA_VERSION_MAJOR 9
 #define ARMA_VERSION_MINOR 100
-#define ARMA_VERSION_PATCH 2
-#define ARMA_VERSION_NAME  "9.100-RC2"
+#define ARMA_VERSION_PATCH 4
+#define ARMA_VERSION_NAME  "Armatus Ad Infinitum"
 
 
 

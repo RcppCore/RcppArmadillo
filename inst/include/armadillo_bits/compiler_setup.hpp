@@ -458,9 +458,8 @@
 
 
 #if ( defined(ARMA_USE_OPENMP) && (!defined(_OPENMP) || (defined(_OPENMP) && (_OPENMP < 201107))) )
-  // we require OpenMP 3.0 to enable parallelisation of for loops with unsigned integers;
-  // earlier versions of OpenMP can only handle signed integers;
-  // we require OpenMP 3.1 for atomic read and atomic write
+  // OpenMP 3.1 required for atomic read and atomic write
+  // OpenMP 3.0 required for parallelisation of loops with unsigned integers
   #undef  ARMA_USE_OPENMP
   #undef  ARMA_PRINT_OPENMP_WARNING
   #define ARMA_PRINT_OPENMP_WARNING

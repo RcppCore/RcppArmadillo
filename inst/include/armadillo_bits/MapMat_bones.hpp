@@ -142,6 +142,9 @@ class MapMat_val
   
   arma_inline operator eT() const;
   
+  arma_inline typename get_pod_type<eT>::result real() const;
+  arma_inline typename get_pod_type<eT>::result imag() const;
+  
   arma_inline void operator= (const MapMat_val<eT>& x);
   arma_inline void operator= (const eT in_val);
   arma_inline void operator+=(const eT in_val);
@@ -178,6 +181,9 @@ class SpMat_MapMat_val
   public:
   
   inline operator eT() const;
+  
+  inline typename get_pod_type<eT>::result real() const;
+  inline typename get_pod_type<eT>::result imag() const;
   
   inline SpMat_MapMat_val<eT>& operator= (const SpMat_MapMat_val<eT>& x);
   
@@ -219,6 +225,9 @@ class SpSubview_MapMat_val
   public:
   
   inline operator eT() const;
+  
+  inline typename get_pod_type<eT>::result real() const;
+  inline typename get_pod_type<eT>::result imag() const;
   
   inline SpSubview_MapMat_val<eT>& operator= (const SpSubview_MapMat_val<eT>& x);
   
