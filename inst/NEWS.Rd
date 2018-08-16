@@ -3,7 +3,7 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.9.100.4.0 (2018-08-15)}{
+\section{Changes in RcppArmadillo version 0.9.100.5.0 (2018-08-16)}{
   \itemize{
     \item Upgraded to Armadillo release 9.100.4 (Armatus Ad Infinitum)
     \itemize{

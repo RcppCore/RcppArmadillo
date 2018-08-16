@@ -1,9 +1,9 @@
-2018-08-15  Dirk Eddelbuettel  <edd@debian.org>
+2018-08-16  Dirk Eddelbuettel  <edd@debian.org>
 
-        * DESCRIPTION: Release 0.9.100.4.0
-        * inst/NEWS.Rd: Release 0.9.100.4.0
+        * DESCRIPTION: Release 0.9.100.5.0
+        * inst/NEWS.Rd: Release 0.9.100.5.0
 
-        * inst/include/armadillo_bits/*: Armadillo 9.100.4
+        * inst/include/armadillo_bits/*: Armadillo 9.100.5
 
 2018-08-13  Dirk Eddelbuettel  <edd@debian.org>
 
