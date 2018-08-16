@@ -360,7 +360,7 @@ auxlib::inv_sympd_tiny(Mat<eT>& out, const Mat<eT>& X)
   {
   arma_extra_debug_sigprint();
   
-  if(sympd_helper::guess_sympd(X) == false)  { return false; }
+  // if(sympd_helper::guess_sympd(X) == false)  { return false; }
   
   return auxlib::inv_tiny(out, X);
   }
@@ -3188,11 +3188,13 @@ auxlib::solve_square_refine(Mat<typename T1::pod_type>& out, typename T1::pod_ty
     
     quasi_unwrap<T1> UB(B_expr.get_ref());  // deliberately not declaring as const
     
+    const Mat<eT>& UB_M_as_Mat = UB.M;  // so we don't confuse the ?: operator below
+    
     const bool use_copy = ((equilibrate && UB.is_const) || UB.is_alias(out));
     
-    Mat<eT> B_tmp;  if(use_copy)  { B_tmp = UB.M; }
+    Mat<eT> B_tmp;  if(use_copy)  { B_tmp = UB_M_as_Mat; }
     
-    const Mat<eT>& B = (use_copy) ? B_tmp : UB.M;  // using const ref for B in case UB.M is a const ref
+    const Mat<eT>& B = (use_copy) ? B_tmp : UB_M_as_Mat;
     
     arma_debug_check( (A.n_rows != B.n_rows), "solve(): number of rows in the given matrices must be the same" );
       
@@ -3288,11 +3290,13 @@ auxlib::solve_square_refine(Mat< std::complex<typename T1::pod_type> >& out, typ
     
     quasi_unwrap<T1> UB(B_expr.get_ref());  // deliberately not declaring as const
     
+    const Mat<eT>& UB_M_as_Mat = UB.M;  // so we don't confuse the ?: operator below
+    
     const bool use_copy = ((equilibrate && UB.is_const) || UB.is_alias(out));
     
-    Mat<eT> B_tmp;  if(use_copy)  { B_tmp = UB.M; }
+    Mat<eT> B_tmp;  if(use_copy)  { B_tmp = UB_M_as_Mat; }
     
-    const Mat<eT>& B = (use_copy) ? B_tmp : UB.M;  // using const ref for B in case UB.M is a const ref
+    const Mat<eT>& B = (use_copy) ? B_tmp : UB_M_as_Mat;
     
     arma_debug_check( (A.n_rows != B.n_rows), "solve(): number of rows in the given matrices must be the same" );
       
@@ -3374,11 +3378,9 @@ auxlib::solve_square_refine(Mat< std::complex<typename T1::pod_type> >& out, typ
 template<typename T1>
 inline
 bool
-auxlib::solve_sympd_fast(Mat<typename T1::elem_type>& out, Mat<typename T1::elem_type>& A, const Base<typename T1::elem_type,T1>& B_expr, const bool extra_check)
+auxlib::solve_sympd_fast(Mat<typename T1::elem_type>& out, Mat<typename T1::elem_type>& A, const Base<typename T1::elem_type,T1>& B_expr)
   {
   arma_extra_debug_sigprint();
-  
-  if(extra_check && (A.n_rows <= 4) && (sympd_helper::guess_sympd(A) == false))  { return false; }
   
   #if defined(ARMA_CRIPPLED_LAPACK)
     {
@@ -3484,11 +3486,13 @@ auxlib::solve_sympd_refine(Mat<typename T1::pod_type>& out, typename T1::pod_typ
     
     quasi_unwrap<T1> UB(B_expr.get_ref());  // deliberately not declaring as const
     
+    const Mat<eT>& UB_M_as_Mat = UB.M;  // so we don't confuse the ?: operator below
+    
     const bool use_copy = ((equilibrate && UB.is_const) || UB.is_alias(out));
     
-    Mat<eT> B_tmp;  if(use_copy)  { B_tmp = UB.M; }
+    Mat<eT> B_tmp;  if(use_copy)  { B_tmp = UB_M_as_Mat; }
     
-    const Mat<eT>& B = (use_copy) ? B_tmp : UB.M;  // using const ref for B in case UB.M is a const ref
+    const Mat<eT>& B = (use_copy) ? B_tmp : UB_M_as_Mat;
     
     arma_debug_check( (A.n_rows != B.n_rows), "solve(): number of rows in the given matrices must be the same" );
     
@@ -3571,11 +3575,13 @@ auxlib::solve_sympd_refine(Mat< std::complex<typename T1::pod_type> >& out, type
     
     quasi_unwrap<T1> UB(B_expr.get_ref());  // deliberately not declaring as const
     
+    const Mat<eT>& UB_M_as_Mat = UB.M;  // so we don't confuse the ?: operator below
+    
     const bool use_copy = ((equilibrate && UB.is_const) || UB.is_alias(out));
     
-    Mat<eT> B_tmp;  if(use_copy)  { B_tmp = UB.M; }
+    Mat<eT> B_tmp;  if(use_copy)  { B_tmp = UB_M_as_Mat; }
     
-    const Mat<eT>& B = (use_copy) ? B_tmp : UB.M;  // using const ref for B in case UB.M is a const ref
+    const Mat<eT>& B = (use_copy) ? B_tmp : UB_M_as_Mat;
     
     arma_debug_check( (A.n_rows != B.n_rows), "solve(): number of rows in the given matrices must be the same" );
       
