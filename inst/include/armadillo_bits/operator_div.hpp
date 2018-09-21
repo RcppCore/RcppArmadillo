@@ -199,8 +199,6 @@ operator/
   
   arma_debug_assert_same_size(n_rows, n_cols, pb.get_n_rows(), pb.get_n_cols(), "element-wise division");
   
-  SpMat<eT> result(n_rows, n_cols);
-  
   uword new_n_nonzero = 0;
   
   for(uword col=0; col < n_cols; ++col)
@@ -214,7 +212,7 @@ operator/
       }
     }
   
-  result.mem_resize(new_n_nonzero);
+  SpMat<eT> result(arma_reserve_indicator(), n_rows, n_cols, new_n_nonzero);
   
   uword cur_pos = 0;
   

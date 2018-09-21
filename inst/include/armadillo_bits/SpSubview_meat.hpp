@@ -290,12 +290,10 @@ SpSubview<eT>::operator=(const Base<eT, T1>& in)
     box_count += (b_mem[i] != eT(0)) ? uword(1) : uword(0);
     }
   
-  SpMat<eT> out(pa.get_n_rows(), pa.get_n_cols());
-  
   const uword alt_count = pa.get_n_nonzero() - (*this).n_nonzero + box_count;
   
   // Resize memory to correct size.
-  out.mem_resize(alt_count);
+  SpMat<eT> out(arma_reserve_indicator(), pa.get_n_rows(), pa.get_n_cols(), alt_count);
   
   typename SpProxy< SpMat<eT> >::const_iterator_type x_it  = pa.begin();
   typename SpProxy< SpMat<eT> >::const_iterator_type x_end = pa.end();
@@ -584,12 +582,10 @@ SpSubview<eT>::operator_equ_common(const SpBase<eT, T1>& in)
   
   const uword pa_n_rows = pa.get_n_rows();
   
-  SpMat<eT> out(pa.get_n_rows(), pa.get_n_cols());
-  
   const uword alt_count = pa.get_n_nonzero() - (*this).n_nonzero + pb.get_n_nonzero();
   
   // Resize memory to correct size.
-  out.mem_resize(alt_count);
+  SpMat<eT> out(arma_reserve_indicator(), pa.get_n_rows(), pa.get_n_cols(), alt_count);
   
   typename SpProxy< SpMat<eT> >::const_iterator_type x_it  = pa.begin();
   typename SpProxy< SpMat<eT> >::const_iterator_type x_end = pa.end();

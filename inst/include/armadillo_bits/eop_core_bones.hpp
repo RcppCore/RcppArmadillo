@@ -84,6 +84,7 @@ class eop_tanh              : public eop_core<eop_tanh>              , public eo
 class eop_acosh             : public eop_core<eop_acosh>             , public eop_use_mp_true  {};
 class eop_asinh             : public eop_core<eop_asinh>             , public eop_use_mp_true  {};
 class eop_atanh             : public eop_core<eop_atanh>             , public eop_use_mp_true  {};
+class eop_sinc              : public eop_core<eop_sinc>              , public eop_use_mp_true  {};
 class eop_eps               : public eop_core<eop_eps>               , public eop_use_mp_true  {};
 class eop_abs               : public eop_core<eop_abs>               , public eop_use_mp_false {};
 class eop_arg               : public eop_core<eop_arg>               , public eop_use_mp_false {};

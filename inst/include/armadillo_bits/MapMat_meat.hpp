@@ -232,7 +232,7 @@ MapMat<eT>::reset()
   access::rw(n_cols) = 0;
   access::rw(n_elem) = 0;
   
-  (*map_ptr).clear();
+  if((*map_ptr).empty() == false)  { (*map_ptr).clear(); }
   }
 
 

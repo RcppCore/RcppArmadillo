@@ -55,9 +55,7 @@ spop_trimat::apply_noalias(SpMat<typename T1::elem_type>& out, const SpProxy<T1>
   const uword n_rows = P.get_n_rows();
   const uword n_cols = P.get_n_cols();  
   
-  out.set_size(n_rows, n_cols);
-  
-  out.mem_resize(new_n_nonzero);
+  out.reserve(n_rows, n_cols, new_n_nonzero);
   
   uword new_index = 0;
   

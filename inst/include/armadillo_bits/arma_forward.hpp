@@ -224,11 +224,8 @@ class spop_htrans;
 class spop_scalar_times;
 
 class spglue_plus;
-class spglue_plus2;
-
 class spglue_minus;
-class spglue_minus2;
-
+class spglue_schur;
 class spglue_times;
 class spglue_times2;
 
@@ -288,8 +285,9 @@ template<typename T1> class SpProxy;
 
 
 
-struct arma_vec_indicator   {};
-struct arma_fixed_indicator {};
+struct arma_vec_indicator     {};
+struct arma_fixed_indicator   {};
+struct arma_reserve_indicator {};
 
 
 //! \addtogroup injector

@@ -289,7 +289,6 @@ operator*
 //! multiplication of two sparse objects
 template<typename T1, typename T2>
 inline
-arma_hot
 typename
 enable_if2
   <
@@ -305,74 +304,6 @@ operator*
   arma_extra_debug_sigprint();
 
   return SpGlue<T1,T2,spglue_times>(x, y);
-  }
-
-
-
-//! convert "(sparse + sparse) * scalar" to specialised operation "scalar * (sparse + sparse)"
-template<typename T1, typename T2>
-inline
-const SpGlue<T1,T2,spglue_plus2>
-operator*
-  (
-  const SpGlue<T1,T2,spglue_plus>& X,
-  const typename T1::elem_type k
-  )
-  {
-  arma_extra_debug_sigprint();
-  
-  return SpGlue<T1,T2,spglue_plus2>(X.A, X.B, k);
-  }
-
-
-
-//! convert "scalar * (sparse + sparse)" to specialised operation 
-template<typename T1, typename T2>
-inline
-const SpGlue<T1,T2,spglue_plus2>
-operator*
-  (
-  const typename T1::elem_type k,
-  const SpGlue<T1,T2,spglue_plus>& X
-  )
-  {
-  arma_extra_debug_sigprint();
-  
-  return SpGlue<T1,T2,spglue_plus2>(X.A, X.B, k);
-  }
-
-
-
-//! convert "(sparse - sparse) * scalar" to specialised operation "scalar * (sparse - sparse)"
-template<typename T1, typename T2>
-inline
-const SpGlue<T1,T2,spglue_minus2>
-operator*
-  (
-  const SpGlue<T1,T2,spglue_minus>& X,
-  const typename T1::elem_type k
-  )
-  {
-  arma_extra_debug_sigprint();
-  
-  return SpGlue<T1,T2,spglue_minus2>(X.A, X.B, k);
-  }
-
-
-
-//! convert "scalar * (sparse - sparse)" to specialised operation 
-template<typename T1, typename T2>
-inline
-const SpGlue<T1,T2,spglue_minus2>
-operator*
-  (
-  const typename T1::elem_type k,
-  const SpGlue<T1,T2,spglue_minus>& X
-  )
-  {
-  arma_extra_debug_sigprint();
-  
-  return SpGlue<T1,T2,spglue_minus2>(X.A, X.B, k);
   }
 
 

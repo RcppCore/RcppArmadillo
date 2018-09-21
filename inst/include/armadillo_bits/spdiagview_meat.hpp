@@ -709,9 +709,7 @@ spdiagview<eT>::extract(SpMat<eT>& out, const spdiagview<eT>& d)
     d_n_nonzero += ( val != eT(0)) ? uword(1) : uword(0);
     }
   
-  out.set_size(d_n_elem, 1);
-  
-  out.mem_resize(d_n_nonzero);
+  out.reserve(d_n_elem, 1, d_n_nonzero);
   
   uword count = 0;
   for(uword i=0; i < d_n_elem; ++i)

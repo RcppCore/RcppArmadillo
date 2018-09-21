@@ -115,7 +115,7 @@ glue_times_redirect2_helper<true>::apply(Mat<typename T1::elem_type>& out, const
   
   #if defined(ARMA_OPTIMISE_SOLVE_SYMPD)
     {
-    if( (strip_inv<T2>::do_inv_sympd) && (is_cx<eT>::no) )
+    if(strip_inv<T2>::do_inv_sympd)
       {
       // replace A*inv_sympd(B) with trans( solve(trans(B),trans(A)) )
       // transpose of B is avoided as B is explicitly marked as symmetric

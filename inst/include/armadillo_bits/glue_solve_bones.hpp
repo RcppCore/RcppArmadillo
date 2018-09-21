@@ -78,6 +78,7 @@ namespace solve_opts
   static const uword flag_tril        = uword(1u << 4);
   static const uword flag_no_band     = uword(1u << 5);
   static const uword flag_no_sympd    = uword(1u << 6);
+  static const uword flag_allow_ugly  = uword(1u << 7);
   
   struct opts_none        : public opts { inline opts_none()        : opts(flag_none       ) {} };
   struct opts_fast        : public opts { inline opts_fast()        : opts(flag_fast       ) {} };
@@ -87,6 +88,7 @@ namespace solve_opts
   struct opts_tril        : public opts { inline opts_tril()        : opts(flag_tril       ) {} };
   struct opts_no_band     : public opts { inline opts_no_band()     : opts(flag_no_band    ) {} };
   struct opts_no_sympd    : public opts { inline opts_no_sympd()    : opts(flag_no_sympd   ) {} };
+  struct opts_allow_ugly  : public opts { inline opts_allow_ugly()  : opts(flag_allow_ugly ) {} };
   
   static const opts_none        none;
   static const opts_fast        fast;
@@ -96,6 +98,7 @@ namespace solve_opts
   static const opts_tril        tril;
   static const opts_no_band     no_band;
   static const opts_no_sympd    no_sympd;
+  static const opts_allow_ugly  allow_ugly;
   }
 
 

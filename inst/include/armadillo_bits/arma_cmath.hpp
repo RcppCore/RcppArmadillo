@@ -683,6 +683,64 @@ arma_hypot(const double x, const double y)
 
 
 //
+// implementation of arma_sinc()
+
+
+template<typename eT>
+arma_inline
+eT
+arma_sinc_generic(const eT x)
+  {
+  typedef typename get_pod_type<eT>::result T;
+  
+  const eT tmp = Datum<T>::pi * x;
+  
+  return (tmp == eT(0)) ? eT(1) : eT( std::sin(tmp) / tmp );
+  }
+
+
+
+template<typename eT>
+arma_inline
+eT
+arma_sinc(const eT x)
+  {
+  return eT( arma_sinc_generic( double(x) ) );
+  }
+
+
+
+template<>
+arma_inline
+float
+arma_sinc(const float x)
+  {
+  return arma_sinc_generic(x);
+  }
+
+
+
+template<>
+arma_inline
+double
+arma_sinc(const double x)
+  {
+  return arma_sinc_generic(x);
+  }
+
+
+
+template<typename T>
+arma_inline
+std::complex<T>
+arma_sinc(const std::complex<T>& x)
+  {
+  return arma_sinc_generic(x);
+  }
+
+
+
+//
 // wrappers for arg()
 
 

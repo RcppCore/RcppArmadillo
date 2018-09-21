@@ -17,15 +17,19 @@
 //! \addtogroup fn_trig
 //! @{
 
-//
+
 // single argument trigonometric functions:
 // cos family: cos, acos, cosh, acosh
 // sin family: sin, asin, sinh, asinh
 // tan family: tan, atan, tanh, atanh
 // 
+// misc functions:
+// sinc
+// 
 // dual argument trigonometric functions:
 // atan2
 // hypot
+
 
 
 //
@@ -372,6 +376,46 @@ atanh(const BaseCube<typename T1::elem_type,T1>& A)
   arma_extra_debug_sigprint();
   
   return eOpCube<T1, eop_atanh>(A.get_ref());
+  }
+
+
+
+//
+// sinc
+
+template<typename T>
+arma_warn_unused
+arma_inline
+const typename arma_scalar_only<T>::result
+sinc(const T x)
+  {
+  return arma_sinc(x);
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+arma_inline
+typename enable_if2< is_arma_type<T1>::value, const eOp<T1, eop_sinc> >::result
+sinc(const T1& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  return eOp<T1, eop_sinc>(A);
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+arma_inline
+const eOpCube<T1, eop_sinc>
+sinc(const BaseCube<typename T1::elem_type,T1>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  return eOpCube<T1, eop_sinc>(A.get_ref());
   }
 
 

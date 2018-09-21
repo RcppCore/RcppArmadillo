@@ -61,10 +61,8 @@ spglue_plus::apply_noalias(SpMat<eT>& out, const SpProxy<T1>& pa, const SpProxy<
   
   if( (pa.get_n_nonzero() != 0) && (pb.get_n_nonzero() != 0) )
     {
-    out.zeros(pa.get_n_rows(), pa.get_n_cols());
-    
     // Resize memory to correct size.
-    out.mem_resize(n_unique(pa, pb, op_n_unique_add()));
+    out.reserve(pa.get_n_rows(), pa.get_n_cols(), n_unique(pa, pb, op_n_unique_add()));
     
     // Now iterate across both matrices.
     typename SpProxy<T1>::const_iterator_type x_it = pa.begin();
@@ -154,44 +152,6 @@ spglue_plus::apply_noalias(SpMat<eT>& out, const SpProxy<T1>& pa, const SpProxy<
       return;
       }
     }
-  }
-
-
-
-//
-//
-// spglue_plus2: scalar*(A + B)
-
-
-
-template<typename T1, typename T2>
-arma_hot
-inline
-void
-spglue_plus2::apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglue_plus2>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  const SpProxy<T1> pa(X.A);
-  const SpProxy<T2> pb(X.B);
-  
-  const bool is_alias = pa.is_alias(out) || pb.is_alias(out);
-  
-  if(is_alias == false)
-    {
-    spglue_plus::apply_noalias(out, pa, pb);
-    }
-  else
-    {
-    SpMat<eT> tmp;
-    spglue_plus::apply_noalias(tmp, pa, pb);
-    
-    out.steal_mem(tmp);
-    }
-  
-  out *= X.aux;
   }
 
 

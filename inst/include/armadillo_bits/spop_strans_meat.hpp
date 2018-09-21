@@ -26,11 +26,9 @@ spop_strans::apply_noalias(SpMat<eT>& B, const SpMat<eT>& A)
   {
   arma_extra_debug_sigprint();
   
-  B.zeros(A.n_cols, A.n_rows);  // deliberately swapped
+  B.reserve(A.n_cols, A.n_rows, A.n_nonzero);  // deliberately swapped
   
   if(A.n_nonzero == 0)  { return; }
-  
-  B.mem_resize(A.n_nonzero);
   
   // This follows the TRANSP algorithm described in
   // 'Sparse Matrix Multiplication Package (SMMP)'
