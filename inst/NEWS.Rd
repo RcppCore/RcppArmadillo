@@ -3,9 +3,9 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.9.199.0.0 (2018-08-16)}{
+\section{Changes in RcppArmadillo version 0.9.199.1.0 (2018-10-03)}{
   \itemize{
-    \item Upgraded to Armadillo release 9.100.4 (Armatus Ad Infinitum)
+    \item Upgraded to Armadillo release 9.200.rc2 (Armatus Ad Infinitum)
     \itemize{
       \item faster handling of symmetric positive definite matrices by
       \code{rcond()}
