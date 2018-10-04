@@ -15,6 +15,8 @@
       \item expanded \code{solve()} to optionally allow keeping
       solutions of systems singular to working precision 
     }
+    \item Commented-out sparse matrix test consistently failing on the
+    fedora-clang machine CRAN, and only there. No fix without access.
   }
 }
 
