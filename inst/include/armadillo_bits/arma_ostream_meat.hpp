@@ -316,7 +316,7 @@ arma_ostream::print_elem_zero(std::ostream& o, const bool modify)
 
 //! Print an element to the specified stream
 template<typename eT>
-arma_inline
+inline
 void
 arma_ostream::print_elem(std::ostream& o, const eT& x, const bool modify)
   {

@@ -1022,13 +1022,10 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
       // arma_debug_warn(tmp.str());
       }
     else
-    if(info == int(A.n_cols+1))
+    if( (info == int(A.n_cols+1)) && (user_opts.allow_ugly) )
       {
-      if(user_opts.allow_ugly)
-        {
-        arma_debug_warn("spsolve(): system is singular to working precision (rcond: ", rcond, ")");
-        status = true;
-        }
+      arma_debug_warn("spsolve(): system is singular to working precision (rcond: ", rcond, ")");
+      status = true;
       }
     else
     if(info > int(A.n_cols+1))

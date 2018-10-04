@@ -1359,10 +1359,6 @@ template<typename spglue_type> struct is_spglue_times               { static con
 template<>                     struct is_spglue_times<spglue_times> { static const bool value = true;  };
 
 
-template<typename spglue_type> struct is_spglue_times2               { static const bool value = false; };
-template<>                     struct is_spglue_times<spglue_times2> { static const bool value = true;  };
-
-
 
 template<typename T1>
 struct is_outer_product

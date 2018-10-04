@@ -35,7 +35,7 @@ SpMat<eT>::SpMat()
   {
   arma_extra_debug_sigprint_this(this);
   
-  init(0,0);
+  init_cold(0,0);
   }
 
 
@@ -73,7 +73,7 @@ SpMat<eT>::SpMat(const uword in_rows, const uword in_cols)
   {
   arma_extra_debug_sigprint_this(this);
 
-  init(in_rows, in_cols);
+  init_cold(in_rows, in_cols);
   }
 
 
@@ -92,7 +92,7 @@ SpMat<eT>::SpMat(const SizeMat& s)
   {
   arma_extra_debug_sigprint_this(this);
   
-  init(s.n_rows, s.n_cols);
+  init_cold(s.n_rows, s.n_cols);
   }
 
 
@@ -111,7 +111,7 @@ SpMat<eT>::SpMat(const arma_reserve_indicator&, const uword in_rows, const uword
   {
   arma_extra_debug_sigprint_this(this);
   
-  init(in_rows, in_cols, new_n_nonzero);
+  init_cold(in_rows, in_cols, new_n_nonzero);
   }
 
 
@@ -306,11 +306,11 @@ SpMat<eT>::SpMat(const Base<uword,T1>& locations_expr, const Base<eT,T2>& vals_e
   arma_debug_check( (locs.n_cols != vals.n_elem), "SpMat::SpMat(): number of locations is different than number of values" );
 
   // If there are no elements in the list, max() will fail.
-  if(locs.n_cols == 0)  { init(0, 0); return; }
+  if(locs.n_cols == 0)  { init_cold(0, 0); return; }
   
   // Automatically determine size before pruning zeros.
   uvec bounds = arma::max(locs, 1);
-  init(bounds[0] + 1, bounds[1] + 1);
+  init_cold(bounds[0] + 1, bounds[1] + 1);
   
   // Ensure that there are no zeros
   const uword N_old = vals.n_elem;
@@ -381,7 +381,7 @@ SpMat<eT>::SpMat(const Base<uword,T1>& locations_expr, const Base<eT,T2>& vals_e
   arma_debug_check( (locs.n_rows != 2),           "SpMat::SpMat(): locations matrix must have two rows"                    );
   arma_debug_check( (locs.n_cols != vals.n_elem), "SpMat::SpMat(): number of locations is different than number of values" );
   
-  init(in_n_rows, in_n_cols);
+  init_cold(in_n_rows, in_n_cols);
 
   // Ensure that there are no zeros, unless the user asked not to.
   if(check_for_zeros)
@@ -453,7 +453,7 @@ SpMat<eT>::SpMat(const bool add_values, const Base<uword,T1>& locations_expr, co
   arma_debug_check( (locs.n_rows != 2),           "SpMat::SpMat(): locations matrix must have two rows"                    );
   arma_debug_check( (locs.n_cols != vals.n_elem), "SpMat::SpMat(): number of locations is different than number of values" );
   
-  init(in_n_rows, in_n_cols);
+  init_cold(in_n_rows, in_n_cols);
 
   // Ensure that there are no zeros, unless the user asked not to.
   if(check_for_zeros)
@@ -542,7 +542,7 @@ SpMat<eT>::SpMat
   arma_debug_check( (vals.is_vec()   == false), "SpMat::SpMat(): given 'values' object is not a vector" );
   
   // Resize to correct number of elements (this also sets n_nonzero)
-  init(in_n_rows, in_n_cols, vals.n_elem);
+  init_cold(in_n_rows, in_n_cols, vals.n_elem);
   
   arma_debug_check( (rowind.n_elem != vals.n_elem), "SpMat::SpMat(): number of row indices is not equal to number of values" );
   arma_debug_check( (colptr.n_elem != (n_cols+1) ), "SpMat::SpMat(): number of column pointers is not equal to n_cols+1" );
@@ -814,7 +814,7 @@ SpMat<eT>::SpMat
   const uword l_n_cols = X.n_cols;
   
   // Set size of matrix correctly.
-  init(l_n_rows, l_n_cols, n_unique(X, Y, op_n_unique_count()));
+  init_cold(l_n_rows, l_n_cols, n_unique(X, Y, op_n_unique_count()));
   
   // Now on a second iteration, fill it.
   typename SpMat<T>::const_iterator x_it  = X.begin();
@@ -3754,7 +3754,7 @@ SpMat<eT>::reshape(const uword in_rows, const uword in_cols)
   uword* new_row_indices = memory::acquire<uword>(n_nonzero + 1);
   access::rw(new_row_indices[n_nonzero]) = 0;
   
-  arrayops::inplace_set(new_col_ptrs, uword(0), in_cols + 1);
+  arrayops::fill_zeros(new_col_ptrs, in_cols + 1);
   
   const_iterator it     = begin();
   const_iterator it_end = end();
@@ -4626,6 +4626,24 @@ SpMat<eT>::init(uword in_rows, uword in_cols, const uword new_n_nonzero)
   
   invalidate_cache(); // placed here, as init() is used during matrix modification
   
+  // Clean out the existing memory.
+  if(values     )  { memory::release(access::rw(values));      }
+  if(row_indices)  { memory::release(access::rw(row_indices)); }
+  if(col_ptrs   )  { memory::release(access::rw(col_ptrs));    }
+  
+  init_cold(in_rows, in_cols, new_n_nonzero);
+  }
+
+
+
+template<typename eT>
+inline
+void
+arma_cold
+SpMat<eT>::init_cold(uword in_rows, uword in_cols, const uword new_n_nonzero)
+  {
+  arma_extra_debug_sigprint();
+  
   // Verify that we are allowed to do this.
   if(vec_state > 0)
     {
@@ -4658,11 +4676,6 @@ SpMat<eT>::init(uword in_rows, uword in_cols, const uword new_n_nonzero)
       error_message
     );
   
-  // Clean out the existing memory.
-  if(values     )  { memory::release(access::rw(values));      }
-  if(row_indices)  { memory::release(access::rw(row_indices)); }
-  if(col_ptrs   )  { memory::release(access::rw(col_ptrs));    }
-  
   access::rw(values)      = memory::acquire<eT>   (new_n_nonzero + 1);
   access::rw(row_indices) = memory::acquire<uword>(new_n_nonzero + 1);
   access::rw(col_ptrs)    = memory::acquire<uword>(in_cols + 2);
@@ -4673,7 +4686,7 @@ SpMat<eT>::init(uword in_rows, uword in_cols, const uword new_n_nonzero)
   // fill column pointers with 0,
   // except for the last element which contains the maximum possible element
   // (so iterators terminate correctly).
-  arrayops::inplace_set(access::rwp(col_ptrs), uword(0), in_cols + 1);
+  arrayops::fill_zeros(access::rwp(col_ptrs), in_cols + 1);
   
   access::rw(col_ptrs[in_cols + 1]) = std::numeric_limits<uword>::max();
   
@@ -4886,7 +4899,7 @@ SpMat<eT>::init_batch_std(const Mat<uword>& locs, const Mat<eT>& vals, const boo
   mem_resize(vals.n_elem);
   
   // Reset column pointers to zero.
-  arrayops::inplace_set(access::rwp(col_ptrs), uword(0), n_cols + 1);
+  arrayops::fill_zeros(access::rwp(col_ptrs), n_cols + 1);
   
   bool actually_sorted = true;
   
@@ -5029,7 +5042,7 @@ SpMat<eT>::init_batch_add(const Mat<uword>& locs, const Mat<eT>& vals, const boo
     }
   
   // Reset column pointers to zero.
-  arrayops::inplace_set(access::rwp(col_ptrs), uword(0), n_cols + 1);
+  arrayops::fill_zeros(access::rwp(col_ptrs), n_cols + 1);
   
   bool actually_sorted = true;
   
@@ -5206,7 +5219,7 @@ SpMat<eT>::SpMat(const arma_vec_indicator&, const uword in_vec_state)
   const uword in_n_rows = (in_vec_state == 2) ? 1 : 0;
   const uword in_n_cols = (in_vec_state == 1) ? 1 : 0;
   
-  init(in_n_rows, in_n_cols);
+  init_cold(in_n_rows, in_n_cols);
   }
 
 
@@ -5226,7 +5239,7 @@ SpMat<eT>::SpMat(const arma_vec_indicator&, const uword in_n_rows, const uword i
   {
   arma_extra_debug_sigprint_this(this);
   
-  init(in_n_rows, in_n_cols);
+  init_cold(in_n_rows, in_n_cols);
   }
 
 
@@ -5517,6 +5530,16 @@ SpMat<eT>::init_xform_mt(const SpBase<eT2,T1>& A, const Functor& func)
 
 
 template<typename eT>
+arma_inline
+bool
+SpMat<eT>::is_alias(const SpMat<eT>& X) const
+  {
+  return (&X == this);
+  }
+
+
+
+template<typename eT>
 inline
 typename SpMat<eT>::iterator
 SpMat<eT>::begin()
@@ -5621,6 +5644,26 @@ SpMat<eT>::begin_col(const uword col_num) const
 template<typename eT>
 inline
 typename SpMat<eT>::col_iterator
+SpMat<eT>::begin_col_no_sync(const uword col_num)
+  {
+  return col_iterator(*this, 0, col_num);
+  }
+
+
+
+template<typename eT>
+inline
+typename SpMat<eT>::const_col_iterator
+SpMat<eT>::begin_col_no_sync(const uword col_num) const
+  {
+  return const_col_iterator(*this, 0, col_num);
+  }
+
+
+
+template<typename eT>
+inline
+typename SpMat<eT>::col_iterator
 SpMat<eT>::end_col(const uword col_num)
   {
   sync_csc();
@@ -5637,6 +5680,26 @@ SpMat<eT>::end_col(const uword col_num) const
   {
   sync_csc();
   
+  return const_col_iterator(*this, 0, col_num + 1);
+  }
+
+
+
+template<typename eT>
+inline
+typename SpMat<eT>::col_iterator
+SpMat<eT>::end_col_no_sync(const uword col_num)
+  {
+  return col_iterator(*this, 0, col_num + 1);
+  }
+
+
+
+template<typename eT>
+inline
+typename SpMat<eT>::const_col_iterator
+SpMat<eT>::end_col_no_sync(const uword col_num) const
+  {
   return const_col_iterator(*this, 0, col_num + 1);
   }
 

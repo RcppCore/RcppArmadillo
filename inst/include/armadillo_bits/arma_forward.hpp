@@ -227,7 +227,6 @@ class spglue_plus;
 class spglue_minus;
 class spglue_schur;
 class spglue_times;
-class spglue_times2;
 
 struct state_type
   {
@@ -238,6 +237,8 @@ struct state_type
   #else
                 int  state;
   #endif
+  
+  arma_inline state_type() : state(int(0)) {}
   
   // openmp: "omp atomic" does an implicit flush on the affected variable
   // C++11:  std::atomic<>::load() and std::atomic<>::store() use std::memory_order_seq_cst by default, which has an implied fence

@@ -30,6 +30,16 @@ SpBase<elem_type,derived>::get_ref() const
 
 
 template<typename elem_type, typename derived>
+arma_inline
+bool
+SpBase<elem_type,derived>::is_alias(const SpMat<elem_type>& X) const
+  {
+  return (*this).get_ref().is_alias(X);
+  }
+
+
+
+template<typename elem_type, typename derived>
 inline
 const SpOp<derived, spop_htrans>
 SpBase<elem_type,derived>::t() const

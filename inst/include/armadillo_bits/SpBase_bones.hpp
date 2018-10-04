@@ -50,6 +50,8 @@ struct SpBase
   {
   arma_inline const derived& get_ref() const;
   
+  arma_inline bool is_alias(const SpMat<elem_type>& X) const;
+  
   inline const SpOp<derived,spop_htrans>  t() const;  //!< Hermitian transpose
   inline const SpOp<derived,spop_htrans> ht() const;  //!< Hermitian transpose
   inline const SpOp<derived,spop_strans> st() const;  //!< simple transpose
