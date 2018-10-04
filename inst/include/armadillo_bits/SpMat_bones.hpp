@@ -347,6 +347,12 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   
   inline void reset();
   
+  //! don't use this unless you're writing internal Armadillo code
+  inline void reserve(const uword in_rows, const uword in_cols, const uword new_n_nonzero);
+  
+  //! don't use this unless you're writing internal Armadillo code
+  inline SpMat(const arma_reserve_indicator&, const uword in_rows, const uword in_cols, const uword new_n_nonzero);
+  
   
   template<typename T1> inline void set_real(const SpBase<pod_type,T1>& X);
   template<typename T1> inline void set_imag(const SpBase<pod_type,T1>& X);
@@ -592,7 +598,7 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   
   protected:
   
-  inline void init(uword in_rows, uword in_cols);
+  inline void init(uword in_rows, uword in_cols, const uword new_n_nonzero = 0);
   inline void init(const std::string& text);
   inline void init(const  SpMat<eT>& x);
   inline void init(const MapMat<eT>& x);

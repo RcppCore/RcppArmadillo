@@ -505,9 +505,7 @@ spop_diagvec::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_diagv
     n_nonzero += (val != eT(0)) ? uword(1) : uword(0);
     }
   
-  out.set_size(len, 1);
-  
-  out.mem_resize(n_nonzero);
+  out.reserve(len, 1, n_nonzero);
   
   uword count = 0;
   for(uword i=0; i < len; ++i)

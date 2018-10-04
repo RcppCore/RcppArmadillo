@@ -18,6 +18,7 @@
 //! @{
 
 
+
 template<typename T1>
 arma_warn_unused
 inline
@@ -26,27 +27,7 @@ cond(const Base<typename T1::elem_type, T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::pod_type T;
-  
-  Col<T> S;
-  
-  const bool status = auxlib::svd_dc(S, X);
-  
-  if(status == false)
-    {
-    arma_debug_warn("cond(): svd failed");
-    
-    return T(0);
-    }
-  
-  if(S.n_elem > 0)
-    {
-    return T( max(S) / min(S) );
-    }
-  else
-    {
-    return T(0);
-    }
+  return op_cond::cond(X.get_ref());
   }
 
 
@@ -59,7 +40,7 @@ rcond(const Base<typename T1::elem_type, T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  return auxlib::rcond(X.get_ref());
+  return op_cond::rcond(X.get_ref());
   }
 
 

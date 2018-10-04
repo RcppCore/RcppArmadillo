@@ -23,13 +23,13 @@ class diskio
   {
   public:
   
-  template<typename eT> inline static std::string gen_txt_header(const Mat<eT>& x);
-  template<typename eT> inline static std::string gen_bin_header(const Mat<eT>& x);
+  template<typename eT> inline arma_cold static std::string gen_txt_header(const Mat<eT>&);
+  template<typename eT> inline arma_cold static std::string gen_bin_header(const Mat<eT>&);
   
-  template<typename eT> inline static std::string gen_bin_header(const SpMat<eT>& x);
+  template<typename eT> inline arma_cold static std::string gen_bin_header(const SpMat<eT>&);
 
-  template<typename eT> inline static std::string gen_txt_header(const Cube<eT>& x);
-  template<typename eT> inline static std::string gen_bin_header(const Cube<eT>& x);
+  template<typename eT> inline arma_cold static std::string gen_txt_header(const Cube<eT>&);
+  template<typename eT> inline arma_cold static std::string gen_bin_header(const Cube<eT>&);
   
   inline arma_cold static file_type guess_file_type(std::istream& f);
   

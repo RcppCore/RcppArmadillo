@@ -108,6 +108,11 @@ spsolve_helper
         flags |= solve_opts::flag_equilibrate;
         }
       
+      if(opts.allow_ugly == true)
+        {
+        flags |= solve_opts::flag_allow_ugly;
+        }
+      
       status = glue_solve_gen::apply(out, AA, B.get_ref(), flags);
       }
     }
@@ -119,6 +124,11 @@ spsolve_helper
     else              { arma_debug_warn("spsolve(): system seems singular");                      }
     
     out.soft_reset();
+    }
+  
+  if( (status == true) && (rcond > T(0)) && (rcond <= (T(0.5)*std::numeric_limits<T>::epsilon())) )
+    {
+    arma_debug_warn("solve(): solution computed, but system seems singular to working precision (rcond: ", rcond, ")");
     }
   
   return status;

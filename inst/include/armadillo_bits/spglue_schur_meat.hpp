@@ -14,7 +14,7 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup spglue_minus
+//! \addtogroup spglue_schur
 //! @{
 
 
@@ -23,7 +23,7 @@ template<typename T1, typename T2>
 arma_hot
 inline
 void
-spglue_minus::apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglue_minus>& X)
+spglue_schur::apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglue_schur>& X)
   {
   arma_extra_debug_sigprint();
   
@@ -36,12 +36,12 @@ spglue_minus::apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglu
   
   if(is_alias == false)
     {
-    spglue_minus::apply_noalias(out, pa, pb);
+    spglue_schur::apply_noalias(out, pa, pb);
     }
   else
     {
     SpMat<eT> tmp;
-    spglue_minus::apply_noalias(tmp, pa, pb);
+    spglue_schur::apply_noalias(tmp, pa, pb);
     
     out.steal_mem(tmp);
     }
@@ -53,16 +53,16 @@ template<typename eT, typename T1, typename T2>
 arma_hot
 inline
 void
-spglue_minus::apply_noalias(SpMat<eT>& result, const SpProxy<T1>& pa, const SpProxy<T2>& pb)
+spglue_schur::apply_noalias(SpMat<eT>& out, const SpProxy<T1>& pa, const SpProxy<T2>& pb)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "subtraction");
+  arma_debug_assert_same_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "element-wise multiplication");
   
   if( (pa.get_n_nonzero() != 0) && (pb.get_n_nonzero() != 0) )
     {
     // Resize memory to correct size.
-    result.reserve(pa.get_n_rows(), pa.get_n_cols(), n_unique(pa, pb, op_n_unique_sub()));
+    out.reserve(pa.get_n_rows(), pa.get_n_cols(), n_unique(pa, pb, op_n_unique_mul()));
     
     // Now iterate across both matrices.
     typename SpProxy<T1>::const_iterator_type x_it = pa.begin();
@@ -72,17 +72,17 @@ spglue_minus::apply_noalias(SpMat<eT>& result, const SpProxy<T1>& pa, const SpPr
     typename SpProxy<T2>::const_iterator_type y_end = pb.end();
     
     uword cur_val = 0;
-    while((x_it != x_end) || (y_it != y_end))
+    while( (x_it != x_end) || (y_it != y_end) )
       {
       if(x_it == y_it)
         {
-        const eT val = (*x_it) - (*y_it);
+        const eT val = (*x_it) * (*y_it);
         
         if(val != eT(0))
           {
-          access::rw(result.values[cur_val]) = val;
-          access::rw(result.row_indices[cur_val]) = x_it.row();
-          ++access::rw(result.col_ptrs[x_it.col() + 1]);
+          access::rw(out.values[cur_val]) = val;
+          access::rw(out.row_indices[cur_val]) = x_it.row();
+          ++access::rw(out.col_ptrs[x_it.col() + 1]);
           ++cur_val;
           }
         
@@ -99,56 +99,28 @@ spglue_minus::apply_noalias(SpMat<eT>& result, const SpProxy<T1>& pa, const SpPr
         
         if((x_it_col < y_it_col) || ((x_it_col == y_it_col) && (x_it_row < y_it_row))) // if y is closer to the end
           {
-          const eT val = (*x_it);
-          
-          if(val != eT(0))
-            {
-            access::rw(result.values[cur_val]) = val;
-            access::rw(result.row_indices[cur_val]) = x_it_row;
-            ++access::rw(result.col_ptrs[x_it_col + 1]);
-            ++cur_val;
-            }
-            
           ++x_it;
           }
         else
           {
-          const eT val = (*y_it);
-          
-          if(val != eT(0))
-            {
-            access::rw(result.values[cur_val]) = -(val);  // take the negative
-            access::rw(result.row_indices[cur_val]) = y_it_row;
-            ++access::rw(result.col_ptrs[y_it_col + 1]);
-            ++cur_val;
-            }
-          
           ++y_it;
           }
         }
       }
     
+    const uword out_n_cols = out.n_cols;
+    
+    uword* col_ptrs = access::rwp(out.col_ptrs);
+    
     // Fix column pointers to be cumulative.
-    for(uword c = 1; c <= result.n_cols; ++c)
+    for(uword c = 1; c <= out_n_cols; ++c)
       {
-      access::rw(result.col_ptrs[c]) += result.col_ptrs[c - 1];
+      col_ptrs[c] += col_ptrs[c - 1];
       }
     }
   else
     {
-    if(pa.get_n_nonzero() == 0)
-      {
-      result = pb.Q;
-      result *= eT(-1);
-      
-      return;
-      }
-    
-    if(pb.get_n_nonzero() == 0)
-      {
-      result = pa.Q;
-      return;
-      }
+    out.zeros(pa.get_n_rows(), pa.get_n_cols());
     }
   }
 

@@ -56,13 +56,11 @@ spop_repmat::apply_noalias(SpMat<eT>& out, const uword A_n_rows, const uword A_n
   const uword B_n_rows = B.n_rows;
   const uword B_n_cols = B.n_cols;
   
-  out.zeros(A_n_rows * B_n_rows, A_n_cols * B_n_cols);
-  
   const uword out_n_nonzero = A_n_rows * A_n_cols * B.n_nonzero;
   
-  if(out_n_nonzero == 0)  { return; }
+  out.reserve(A_n_rows * B_n_rows, A_n_cols * B_n_cols, out_n_nonzero);
   
-  out.mem_resize(out_n_nonzero);
+  if(out_n_nonzero == 0)  { return; }
   
   access::rw(out.col_ptrs[0]) = 0;
   

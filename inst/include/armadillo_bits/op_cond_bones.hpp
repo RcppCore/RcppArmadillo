@@ -14,23 +14,17 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup spglue_minus
+//! \addtogroup op_cond
 //! @{
 
 
-
-class spglue_minus
+class op_cond
   {
   public:
   
-  template<typename T1, typename T2>
-  arma_hot inline static void apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglue_minus>& X);
-  
-  template<typename eT, typename T1, typename T2>
-  arma_hot inline static void apply_noalias(SpMat<eT>& result, const SpProxy<T1>& pa, const SpProxy<T2>& pb);
+  template<typename T1> static inline typename T1::pod_type  cond(const Base<typename T1::elem_type, T1>& X);
+  template<typename T1> static inline typename T1::pod_type rcond(const Base<typename T1::elem_type, T1>& X);
   };
 
 
-
 //! @}
-

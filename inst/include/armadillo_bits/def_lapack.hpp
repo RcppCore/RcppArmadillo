@@ -178,6 +178,11 @@
   #define arma_cgecon cgecon
   #define arma_zgecon zgecon
   
+  #define arma_spocon spocon
+  #define arma_dpocon dpocon
+  #define arma_cpocon cpocon
+  #define arma_zpocon zpocon
+  
   #define arma_ilaenv ilaenv
   
   #define arma_slahqr slahqr
@@ -353,6 +358,11 @@
   #define arma_dgecon DGECON
   #define arma_cgecon CGECON
   #define arma_zgecon ZGECON
+  
+  #define arma_spocon SPOCON
+  #define arma_dpocon DPOCON
+  #define arma_cpocon CPOCON
+  #define arma_zpocon ZPOCON
   
   #define arma_ilaenv ILAENV
   
@@ -581,13 +591,21 @@ extern "C"
   float  arma_fortran(arma_clange)(char* norm, blas_int* m, blas_int* n,   void* a, blas_int* lda,  float* work);
   double arma_fortran(arma_zlange)(char* norm, blas_int* m, blas_int* n,   void* a, blas_int* lda, double* work);
   
-  // reciprocal of condition number (real)
+  // reciprocal of condition number (real, generic matrix)
   void arma_fortran(arma_sgecon)(char* norm, blas_int* n,  float* a, blas_int* lda,  float* anorm,  float* rcond,  float* work, blas_int* iwork, blas_int* info);
   void arma_fortran(arma_dgecon)(char* norm, blas_int* n, double* a, blas_int* lda, double* anorm, double* rcond, double* work, blas_int* iwork, blas_int* info);
   
-  // reciprocal of condition number (complex)
+  // reciprocal of condition number (complex, generic matrix)
   void arma_fortran(arma_cgecon)(char* norm, blas_int* n, void* a, blas_int* lda,  float* anorm,  float* rcond, void* work,  float* rwork, blas_int* info);
   void arma_fortran(arma_zgecon)(char* norm, blas_int* n, void* a, blas_int* lda, double* anorm, double* rcond, void* work, double* rwork, blas_int* info);
+  
+  // reciprocal of condition number (real, symmetric positive definite matrix)
+  void arma_fortran(arma_spocon)(char* uplo, blas_int* n,  float* a, blas_int* lda,  float* anorm,  float* rcond,  float* work, blas_int* iwork, blas_int* info);
+  void arma_fortran(arma_dpocon)(char* uplo, blas_int* n, double* a, blas_int* lda, double* anorm, double* rcond, double* work, blas_int* iwork, blas_int* info);
+  
+  // reciprocal of condition number (complex, hermitian positive definite matrix)
+  void arma_fortran(arma_cpocon)(char* uplo, blas_int* n, void* a, blas_int* lda,  float* anorm,  float* rcond, void* work,  float* rwork, blas_int* info);
+  void arma_fortran(arma_zpocon)(char* uplo, blas_int* n, void* a, blas_int* lda, double* anorm, double* rcond, void* work, double* rwork, blas_int* info);
   
   // obtain parameters according to the local configuration of lapack
   blas_int arma_fortran(arma_ilaenv)(blas_int* ispec, char* name, char* opts, blas_int* n1, blas_int* n2, blas_int* n3, blas_int* n4);

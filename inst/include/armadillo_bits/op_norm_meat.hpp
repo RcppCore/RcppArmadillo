@@ -957,7 +957,8 @@ op_norm::mat_norm_2(const SpProxy<T1>& P, const typename arma_real_only<typename
   
   const SpMat<eT>  C = (A.n_rows <= A.n_cols) ? (A*B) : (B*A);
   
-  const Col<T> eigval = eigs_sym(C, 1);
+  Col<T> eigval;
+  eigs_sym(eigval, C, 1);
   
   return (eigval.n_elem > 0) ? std::sqrt(eigval[0]) : T(0);
   }
@@ -972,22 +973,28 @@ op_norm::mat_norm_2(const SpProxy<T1>& P, const typename arma_cx_only<typename T
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  //typedef typename T1::elem_type eT;
+  typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
   
-  arma_ignore(P);
-  arma_stop_logic_error("norm(): unimplemented norm type for complex sparse matrices");
+  // we're calling eigs_gen(), which currently requires ARPACK
+  #if !defined(ARMA_USE_ARPACK)
+    {
+    arma_stop_logic_error("norm(): use of ARPACK must be enabled for norm of complex matrices");
+    return T(0);
+    }
+  #endif
   
-  return T(0);
+  const unwrap_spmat<typename SpProxy<T1>::stored_type> tmp(P.Q);
   
-  // const unwrap_spmat<typename SpProxy<T1>::stored_type> tmp(P.Q);
-  // 
-  // const SpMat<eT>& A = tmp.M;
-  // const SpMat<eT>  B = trans(A);
-  // 
-  // const SpMat<eT>  C = (A.n_rows <= A.n_cols) ? (A*B) : (B*A);
-  // 
-  // const Col<eT> eigval = eigs_gen(C, 1);
+  const SpMat<eT>& A = tmp.M;
+  const SpMat<eT>  B = trans(A);
+  
+  const SpMat<eT>  C = (A.n_rows <= A.n_cols) ? (A*B) : (B*A);
+  
+  Col<eT> eigval;
+  eigs_gen(eigval, C, 1);
+  
+  return (eigval.n_elem > 0) ? std::sqrt(std::real(eigval[0])) : T(0);
   }
 
 

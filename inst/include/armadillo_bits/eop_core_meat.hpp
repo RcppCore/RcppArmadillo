@@ -1105,6 +1105,9 @@ template<> template<typename eT> arma_hot arma_inline eT
 eop_core<eop_atanh            >::process(const eT val, const eT  ) { return eop_aux::atanh(val);      }
 
 template<> template<typename eT> arma_hot arma_inline eT
+eop_core<eop_sinc             >::process(const eT val, const eT  ) { return arma_sinc(val);           }
+
+template<> template<typename eT> arma_hot arma_inline eT
 eop_core<eop_eps              >::process(const eT val, const eT  ) { return eop_aux::direct_eps(val); }
 
 template<> template<typename eT> arma_hot arma_inline eT

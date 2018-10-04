@@ -32,15 +32,5 @@ class spglue_plus
 
 
 
-class spglue_plus2
-  {
-  public:
-  
-  template<typename T1, typename T2>
-  arma_hot inline static void apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglue_plus2>& X);
-  };
-
-
-
 //! @}
 
