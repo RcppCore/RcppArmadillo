@@ -308,6 +308,9 @@ class SpSubview : public SpBase<eT, SpSubview<eT> >
 
   inline       row_iterator end_row(const uword row_num);
   inline const_row_iterator end_row(const uword row_num) const;
+  
+  //! don't use this unless you're writing internal Armadillo code
+  arma_inline bool is_alias(const SpMat<eT>& X) const;
 
 
   private:

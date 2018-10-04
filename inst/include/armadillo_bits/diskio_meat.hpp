@@ -31,30 +31,28 @@ diskio::gen_txt_header(const Mat<eT>&)
   {
   arma_type_check(( is_supported_elem_type<eT>::value == false ));
   
-  std::string header;
-  
-       if( is_u8<eT>::value)  { header = "ARMA_MAT_TXT_IU001"; }
-  else if( is_s8<eT>::value)  { header = "ARMA_MAT_TXT_IS001"; }
-  else if(is_u16<eT>::value)  { header = "ARMA_MAT_TXT_IU002"; }
-  else if(is_s16<eT>::value)  { header = "ARMA_MAT_TXT_IS002"; }
-  else if(is_u32<eT>::value)  { header = "ARMA_MAT_TXT_IU004"; }
-  else if(is_s32<eT>::value)  { header = "ARMA_MAT_TXT_IS004"; }
+       if( is_u8<eT>::value)  { return std::string("ARMA_MAT_TXT_IU001"); }
+  else if( is_s8<eT>::value)  { return std::string("ARMA_MAT_TXT_IS001"); }
+  else if(is_u16<eT>::value)  { return std::string("ARMA_MAT_TXT_IU002"); }
+  else if(is_s16<eT>::value)  { return std::string("ARMA_MAT_TXT_IS002"); }
+  else if(is_u32<eT>::value)  { return std::string("ARMA_MAT_TXT_IU004"); }
+  else if(is_s32<eT>::value)  { return std::string("ARMA_MAT_TXT_IS004"); }
 #if defined(ARMA_USE_U64S64)
-  else if(is_u64<eT>::value)  { header = "ARMA_MAT_TXT_IU008"; }
-  else if(is_s64<eT>::value)  { header = "ARMA_MAT_TXT_IS008"; }
+  else if(is_u64<eT>::value)  { return std::string("ARMA_MAT_TXT_IU008"); }
+  else if(is_s64<eT>::value)  { return std::string("ARMA_MAT_TXT_IS008"); }
 #endif
 #if defined(ARMA_ALLOW_LONG)
-  else if(is_ulng_t_32<eT>::value)  { header = "ARMA_MAT_TXT_IU004"; }
-  else if(is_slng_t_32<eT>::value)  { header = "ARMA_MAT_TXT_IS004"; }
-  else if(is_ulng_t_64<eT>::value)  { header = "ARMA_MAT_TXT_IU008"; }
-  else if(is_slng_t_64<eT>::value)  { header = "ARMA_MAT_TXT_IS008"; }
+  else if(is_ulng_t_32<eT>::value)  { return std::string("ARMA_MAT_TXT_IU004"); }
+  else if(is_slng_t_32<eT>::value)  { return std::string("ARMA_MAT_TXT_IS004"); }
+  else if(is_ulng_t_64<eT>::value)  { return std::string("ARMA_MAT_TXT_IU008"); }
+  else if(is_slng_t_64<eT>::value)  { return std::string("ARMA_MAT_TXT_IS008"); }
 #endif
-  else if(         is_float<eT>::value)  { header = "ARMA_MAT_TXT_FN004"; }
-  else if(        is_double<eT>::value)  { header = "ARMA_MAT_TXT_FN008"; }
-  else if( is_complex_float<eT>::value)  { header = "ARMA_MAT_TXT_FC008"; }
-  else if(is_complex_double<eT>::value)  { header = "ARMA_MAT_TXT_FC016"; }
+  else if(         is_float<eT>::value)  { return std::string("ARMA_MAT_TXT_FN004"); }
+  else if(        is_double<eT>::value)  { return std::string("ARMA_MAT_TXT_FN008"); }
+  else if( is_complex_float<eT>::value)  { return std::string("ARMA_MAT_TXT_FC008"); }
+  else if(is_complex_double<eT>::value)  { return std::string("ARMA_MAT_TXT_FC016"); }
   
-  return header;
+  return std::string();
   }
 
 
@@ -72,30 +70,28 @@ diskio::gen_bin_header(const Mat<eT>&)
   {
   arma_type_check(( is_supported_elem_type<eT>::value == false ));
   
-  std::string header;
-  
-       if( is_u8<eT>::value)  { header = "ARMA_MAT_BIN_IU001"; }
-  else if( is_s8<eT>::value)  { header = "ARMA_MAT_BIN_IS001"; }
-  else if(is_u16<eT>::value)  { header = "ARMA_MAT_BIN_IU002"; }
-  else if(is_s16<eT>::value)  { header = "ARMA_MAT_BIN_IS002"; }
-  else if(is_u32<eT>::value)  { header = "ARMA_MAT_BIN_IU004"; }
-  else if(is_s32<eT>::value)  { header = "ARMA_MAT_BIN_IS004"; }
+       if( is_u8<eT>::value)  { return std::string("ARMA_MAT_BIN_IU001"); }
+  else if( is_s8<eT>::value)  { return std::string("ARMA_MAT_BIN_IS001"); }
+  else if(is_u16<eT>::value)  { return std::string("ARMA_MAT_BIN_IU002"); }
+  else if(is_s16<eT>::value)  { return std::string("ARMA_MAT_BIN_IS002"); }
+  else if(is_u32<eT>::value)  { return std::string("ARMA_MAT_BIN_IU004"); }
+  else if(is_s32<eT>::value)  { return std::string("ARMA_MAT_BIN_IS004"); }
 #if defined(ARMA_USE_U64S64)
-  else if(is_u64<eT>::value)  { header = "ARMA_MAT_BIN_IU008"; }
-  else if(is_s64<eT>::value)  { header = "ARMA_MAT_BIN_IS008"; }
+  else if(is_u64<eT>::value)  { return std::string("ARMA_MAT_BIN_IU008"); }
+  else if(is_s64<eT>::value)  { return std::string("ARMA_MAT_BIN_IS008"); }
 #endif
 #if defined(ARMA_ALLOW_LONG)
-  else if(is_ulng_t_32<eT>::value)  { header = "ARMA_MAT_BIN_IU004"; }
-  else if(is_slng_t_32<eT>::value)  { header = "ARMA_MAT_BIN_IS004"; }
-  else if(is_ulng_t_64<eT>::value)  { header = "ARMA_MAT_BIN_IU008"; }
-  else if(is_slng_t_64<eT>::value)  { header = "ARMA_MAT_BIN_IS008"; }
+  else if(is_ulng_t_32<eT>::value)  { return std::string("ARMA_MAT_BIN_IU004"); }
+  else if(is_slng_t_32<eT>::value)  { return std::string("ARMA_MAT_BIN_IS004"); }
+  else if(is_ulng_t_64<eT>::value)  { return std::string("ARMA_MAT_BIN_IU008"); }
+  else if(is_slng_t_64<eT>::value)  { return std::string("ARMA_MAT_BIN_IS008"); }
 #endif
-  else if(         is_float<eT>::value)  { header = "ARMA_MAT_BIN_FN004"; }
-  else if(        is_double<eT>::value)  { header = "ARMA_MAT_BIN_FN008"; }
-  else if( is_complex_float<eT>::value)  { header = "ARMA_MAT_BIN_FC008"; }
-  else if(is_complex_double<eT>::value)  { header = "ARMA_MAT_BIN_FC016"; }
+  else if(         is_float<eT>::value)  { return std::string("ARMA_MAT_BIN_FN004"); }
+  else if(        is_double<eT>::value)  { return std::string("ARMA_MAT_BIN_FN008"); }
+  else if( is_complex_float<eT>::value)  { return std::string("ARMA_MAT_BIN_FC008"); }
+  else if(is_complex_double<eT>::value)  { return std::string("ARMA_MAT_BIN_FC016"); }
   
-  return header;
+  return std::string();
   }
 
 
@@ -113,30 +109,28 @@ diskio::gen_bin_header(const SpMat<eT>&)
   {
   arma_type_check(( is_supported_elem_type<eT>::value == false ));
   
-  std::string header;
-  
-       if( is_u8<eT>::value)  { header = "ARMA_SPM_BIN_IU001"; }
-  else if( is_s8<eT>::value)  { header = "ARMA_SPM_BIN_IS001"; }
-  else if(is_u16<eT>::value)  { header = "ARMA_SPM_BIN_IU002"; }
-  else if(is_s16<eT>::value)  { header = "ARMA_SPM_BIN_IS002"; }
-  else if(is_u32<eT>::value)  { header = "ARMA_SPM_BIN_IU004"; }
-  else if(is_s32<eT>::value)  { header = "ARMA_SPM_BIN_IS004"; }
+       if( is_u8<eT>::value)  { return std::string("ARMA_SPM_BIN_IU001"); }
+  else if( is_s8<eT>::value)  { return std::string("ARMA_SPM_BIN_IS001"); }
+  else if(is_u16<eT>::value)  { return std::string("ARMA_SPM_BIN_IU002"); }
+  else if(is_s16<eT>::value)  { return std::string("ARMA_SPM_BIN_IS002"); }
+  else if(is_u32<eT>::value)  { return std::string("ARMA_SPM_BIN_IU004"); }
+  else if(is_s32<eT>::value)  { return std::string("ARMA_SPM_BIN_IS004"); }
 #if defined(ARMA_USE_U64S64)
-  else if(is_u64<eT>::value)  { header = "ARMA_SPM_BIN_IU008"; }
-  else if(is_s64<eT>::value)  { header = "ARMA_SPM_BIN_IS008"; }
+  else if(is_u64<eT>::value)  { return std::string("ARMA_SPM_BIN_IU008"); }
+  else if(is_s64<eT>::value)  { return std::string("ARMA_SPM_BIN_IS008"); }
 #endif
 #if defined(ARMA_ALLOW_LONG)
-  else if(is_ulng_t_32<eT>::value)  { header = "ARMA_SPM_BIN_IU004"; }
-  else if(is_slng_t_32<eT>::value)  { header = "ARMA_SPM_BIN_IS004"; }
-  else if(is_ulng_t_64<eT>::value)  { header = "ARMA_SPM_BIN_IU008"; }
-  else if(is_slng_t_64<eT>::value)  { header = "ARMA_SPM_BIN_IS008"; }
+  else if(is_ulng_t_32<eT>::value)  { return std::string("ARMA_SPM_BIN_IU004"); }
+  else if(is_slng_t_32<eT>::value)  { return std::string("ARMA_SPM_BIN_IS004"); }
+  else if(is_ulng_t_64<eT>::value)  { return std::string("ARMA_SPM_BIN_IU008"); }
+  else if(is_slng_t_64<eT>::value)  { return std::string("ARMA_SPM_BIN_IS008"); }
 #endif
-  else if(         is_float<eT>::value)  { header = "ARMA_SPM_BIN_FN004"; }
-  else if(        is_double<eT>::value)  { header = "ARMA_SPM_BIN_FN008"; }
-  else if( is_complex_float<eT>::value)  { header = "ARMA_SPM_BIN_FC008"; }
-  else if(is_complex_double<eT>::value)  { header = "ARMA_SPM_BIN_FC016"; }
+  else if(         is_float<eT>::value)  { return std::string("ARMA_SPM_BIN_FN004"); }
+  else if(        is_double<eT>::value)  { return std::string("ARMA_SPM_BIN_FN008"); }
+  else if( is_complex_float<eT>::value)  { return std::string("ARMA_SPM_BIN_FC008"); }
+  else if(is_complex_double<eT>::value)  { return std::string("ARMA_SPM_BIN_FC016"); }
   
-  return header;
+  return std::string();
   }
 
 
@@ -153,30 +147,28 @@ diskio::gen_txt_header(const Cube<eT>&)
   {
   arma_type_check(( is_supported_elem_type<eT>::value == false ));
   
-  std::string header;
-  
-       if( is_u8<eT>::value)  { header = "ARMA_CUB_TXT_IU001"; }
-  else if( is_s8<eT>::value)  { header = "ARMA_CUB_TXT_IS001"; }
-  else if(is_u16<eT>::value)  { header = "ARMA_CUB_TXT_IU002"; }
-  else if(is_s16<eT>::value)  { header = "ARMA_CUB_TXT_IS002"; }
-  else if(is_u32<eT>::value)  { header = "ARMA_CUB_TXT_IU004"; }
-  else if(is_s32<eT>::value)  { header = "ARMA_CUB_TXT_IS004"; }
+       if( is_u8<eT>::value)  { return std::string("ARMA_CUB_TXT_IU001"); }
+  else if( is_s8<eT>::value)  { return std::string("ARMA_CUB_TXT_IS001"); }
+  else if(is_u16<eT>::value)  { return std::string("ARMA_CUB_TXT_IU002"); }
+  else if(is_s16<eT>::value)  { return std::string("ARMA_CUB_TXT_IS002"); }
+  else if(is_u32<eT>::value)  { return std::string("ARMA_CUB_TXT_IU004"); }
+  else if(is_s32<eT>::value)  { return std::string("ARMA_CUB_TXT_IS004"); }
 #if defined(ARMA_USE_U64S64)
-  else if(is_u64<eT>::value)  { header = "ARMA_CUB_TXT_IU008"; }
-  else if(is_s64<eT>::value)  { header = "ARMA_CUB_TXT_IS008"; }
+  else if(is_u64<eT>::value)  { return std::string("ARMA_CUB_TXT_IU008"); }
+  else if(is_s64<eT>::value)  { return std::string("ARMA_CUB_TXT_IS008"); }
 #endif
 #if defined(ARMA_ALLOW_LONG)
-  else if(is_ulng_t_32<eT>::value)  { header = "ARMA_CUB_TXT_IU004"; }
-  else if(is_slng_t_32<eT>::value)  { header = "ARMA_CUB_TXT_IS004"; }
-  else if(is_ulng_t_64<eT>::value)  { header = "ARMA_CUB_TXT_IU008"; }
-  else if(is_slng_t_64<eT>::value)  { header = "ARMA_CUB_TXT_IS008"; }
+  else if(is_ulng_t_32<eT>::value)  { return std::string("ARMA_CUB_TXT_IU004"); }
+  else if(is_slng_t_32<eT>::value)  { return std::string("ARMA_CUB_TXT_IS004"); }
+  else if(is_ulng_t_64<eT>::value)  { return std::string("ARMA_CUB_TXT_IU008"); }
+  else if(is_slng_t_64<eT>::value)  { return std::string("ARMA_CUB_TXT_IS008"); }
 #endif
-  else if(         is_float<eT>::value)  { header = "ARMA_CUB_TXT_FN004"; }
-  else if(        is_double<eT>::value)  { header = "ARMA_CUB_TXT_FN008"; }
-  else if( is_complex_float<eT>::value)  { header = "ARMA_CUB_TXT_FC008"; }
-  else if(is_complex_double<eT>::value)  { header = "ARMA_CUB_TXT_FC016"; }
+  else if(         is_float<eT>::value)  { return std::string("ARMA_CUB_TXT_FN004"); }
+  else if(        is_double<eT>::value)  { return std::string("ARMA_CUB_TXT_FN008"); }
+  else if( is_complex_float<eT>::value)  { return std::string("ARMA_CUB_TXT_FC008"); }
+  else if(is_complex_double<eT>::value)  { return std::string("ARMA_CUB_TXT_FC016"); }
   
-  return header;
+  return std::string();
   }
 
 
@@ -194,30 +186,28 @@ diskio::gen_bin_header(const Cube<eT>&)
   {
   arma_type_check(( is_supported_elem_type<eT>::value == false ));
   
-  std::string header;
-  
-       if( is_u8<eT>::value)  { header = "ARMA_CUB_BIN_IU001"; }
-  else if( is_s8<eT>::value)  { header = "ARMA_CUB_BIN_IS001"; }
-  else if(is_u16<eT>::value)  { header = "ARMA_CUB_BIN_IU002"; }
-  else if(is_s16<eT>::value)  { header = "ARMA_CUB_BIN_IS002"; }
-  else if(is_u32<eT>::value)  { header = "ARMA_CUB_BIN_IU004"; }
-  else if(is_s32<eT>::value)  { header = "ARMA_CUB_BIN_IS004"; }
+       if( is_u8<eT>::value)  { return std::string("ARMA_CUB_BIN_IU001"); }
+  else if( is_s8<eT>::value)  { return std::string("ARMA_CUB_BIN_IS001"); }
+  else if(is_u16<eT>::value)  { return std::string("ARMA_CUB_BIN_IU002"); }
+  else if(is_s16<eT>::value)  { return std::string("ARMA_CUB_BIN_IS002"); }
+  else if(is_u32<eT>::value)  { return std::string("ARMA_CUB_BIN_IU004"); }
+  else if(is_s32<eT>::value)  { return std::string("ARMA_CUB_BIN_IS004"); }
 #if defined(ARMA_USE_U64S64)
-  else if(is_u64<eT>::value)  { header = "ARMA_CUB_BIN_IU008"; }
-  else if(is_s64<eT>::value)  { header = "ARMA_CUB_BIN_IS008"; }
+  else if(is_u64<eT>::value)  { return std::string("ARMA_CUB_BIN_IU008"); }
+  else if(is_s64<eT>::value)  { return std::string("ARMA_CUB_BIN_IS008"); }
 #endif
 #if defined(ARMA_ALLOW_LONG)
-  else if(is_ulng_t_32<eT>::value)  { header = "ARMA_CUB_BIN_IU004"; }
-  else if(is_slng_t_32<eT>::value)  { header = "ARMA_CUB_BIN_IS004"; }
-  else if(is_ulng_t_64<eT>::value)  { header = "ARMA_CUB_BIN_IU008"; }
-  else if(is_slng_t_64<eT>::value)  { header = "ARMA_CUB_BIN_IS008"; }
+  else if(is_ulng_t_32<eT>::value)  { return std::string("ARMA_CUB_BIN_IU004"); }
+  else if(is_slng_t_32<eT>::value)  { return std::string("ARMA_CUB_BIN_IS004"); }
+  else if(is_ulng_t_64<eT>::value)  { return std::string("ARMA_CUB_BIN_IU008"); }
+  else if(is_slng_t_64<eT>::value)  { return std::string("ARMA_CUB_BIN_IS008"); }
 #endif
-  else if(         is_float<eT>::value)  { header = "ARMA_CUB_BIN_FN004"; }
-  else if(        is_double<eT>::value)  { header = "ARMA_CUB_BIN_FN008"; }
-  else if( is_complex_float<eT>::value)  { header = "ARMA_CUB_BIN_FC008"; }
-  else if(is_complex_double<eT>::value)  { header = "ARMA_CUB_BIN_FC016"; }
+  else if(         is_float<eT>::value)  { return std::string("ARMA_CUB_BIN_FN004"); }
+  else if(        is_double<eT>::value)  { return std::string("ARMA_CUB_BIN_FN008"); }
+  else if( is_complex_float<eT>::value)  { return std::string("ARMA_CUB_BIN_FC008"); }
+  else if(is_complex_double<eT>::value)  { return std::string("ARMA_CUB_BIN_FC016"); }
   
-  return header;
+  return std::string();
   }
 
 

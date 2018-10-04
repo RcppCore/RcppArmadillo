@@ -550,8 +550,14 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   inline       col_iterator begin_col(const uword col_num);
   inline const_col_iterator begin_col(const uword col_num) const;
   
+  inline       col_iterator begin_col_no_sync(const uword col_num);
+  inline const_col_iterator begin_col_no_sync(const uword col_num) const;
+  
   inline       col_iterator end_col(const uword col_num);
   inline const_col_iterator end_col(const uword col_num) const;
+  
+  inline       col_iterator end_col_no_sync(const uword col_num);
+  inline const_col_iterator end_col_no_sync(const uword col_num) const;
   
   inline       row_iterator begin_row(const uword row_num = 0);
   inline const_row_iterator begin_row(const uword row_num = 0) const;
@@ -595,10 +601,15 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   template<              typename T1, typename Functor> arma_hot inline void init_xform   (const SpBase<eT, T1>& x, const Functor& func);
   template<typename eT2, typename T1, typename Functor> arma_hot inline void init_xform_mt(const SpBase<eT2,T1>& x, const Functor& func);
   
+  //! don't use this unless you're writing internal Armadillo code
+  arma_inline bool is_alias(const SpMat<eT>& X) const;
+  
   
   protected:
   
-  inline void init(uword in_rows, uword in_cols, const uword new_n_nonzero = 0);
+  inline void                init(uword in_rows, uword in_cols, const uword new_n_nonzero = 0);
+  inline void arma_cold init_cold(uword in_rows, uword in_cols, const uword new_n_nonzero = 0);
+  
   inline void init(const std::string& text);
   inline void init(const  SpMat<eT>& x);
   inline void init(const MapMat<eT>& x);

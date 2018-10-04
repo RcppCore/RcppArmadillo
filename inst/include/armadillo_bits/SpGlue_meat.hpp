@@ -51,4 +51,14 @@ SpGlue<T1,T2,spglue_type>::~SpGlue()
 
 
 
+template<typename T1, typename T2, typename spglue_type>
+arma_inline
+bool
+SpGlue<T1,T2,spglue_type>::is_alias(const SpMat<typename T1::elem_type>& X) const
+  {
+  return (A.is_alias(X) || B.is_alias(X));
+  }
+
+
+
 //! @}

@@ -28,24 +28,20 @@ spglue_times::apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglu
   
   typedef typename T1::elem_type eT;
   
-  // unconditionally unwrapping, as the column iterator in SpSubview is slow
+  const unwrap_spmat<T1> UA(X.A);
+  const unwrap_spmat<T2> UB(X.B);
   
-  const unwrap_spmat<T1> tmp1(X.A);
-  const unwrap_spmat<T2> tmp2(X.B);
-  
-  const SpProxy<typename unwrap_spmat<T1>::stored_type> pa(tmp1.M);
-  const SpProxy<typename unwrap_spmat<T2>::stored_type> pb(tmp2.M);
-  
-  const bool is_alias = pa.is_alias(out) || pb.is_alias(out);
+  const bool is_alias = (UA.is_alias(out) || UB.is_alias(out));
   
   if(is_alias == false)
     {
-    spglue_times::apply_noalias(out, pa, pb);
+    spglue_times::apply_noalias(out, UA.M, UB.M);
     }
   else
     {
     SpMat<eT> tmp;
-    spglue_times::apply_noalias(tmp, pa, pb);
+    
+    spglue_times::apply_noalias(tmp, UA.M, UB.M);
     
     out.steal_mem(tmp);
     }
@@ -53,18 +49,50 @@ spglue_times::apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglu
 
 
 
-template<typename eT, typename T1, typename T2>
-arma_hot
+template<typename T1, typename T2>
 inline
 void
-spglue_times::apply_noalias(SpMat<eT>& c, const SpProxy<T1>& pa, const SpProxy<T2>& pb)
+spglue_times::apply(SpMat<typename T1::elem_type>& out, const SpGlue<SpOp<T1,spop_scalar_times>,T2,spglue_times>& X)
   {
   arma_extra_debug_sigprint();
   
-  const uword x_n_rows = pa.get_n_rows();
-  const uword x_n_cols = pa.get_n_cols();
-  const uword y_n_rows = pb.get_n_rows();
-  const uword y_n_cols = pb.get_n_cols();
+  typedef typename T1::elem_type eT;
+  
+  const unwrap_spmat<T1> UA(X.A.m);
+  const unwrap_spmat<T2> UB(X.B);
+  
+  const bool is_alias = (UA.is_alias(out) || UB.is_alias(out));
+  
+  if(is_alias == false)
+    {
+    spglue_times::apply_noalias(out, UA.M, UB.M);
+    }
+  else
+    {
+    SpMat<eT> tmp;
+    
+    spglue_times::apply_noalias(tmp, UA.M, UB.M);
+    
+    out.steal_mem(tmp);
+    }
+  
+  out *= X.A.aux;
+  }
+
+
+
+template<typename eT>
+arma_hot
+inline
+void
+spglue_times::apply_noalias(SpMat<eT>& c, const SpMat<eT>& x, const SpMat<eT>& y)
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword x_n_rows = x.n_rows;
+  const uword x_n_cols = x.n_cols;
+  const uword y_n_rows = y.n_rows;
+  const uword y_n_cols = y.n_cols;
 
   arma_debug_assert_mul_size(x_n_rows, x_n_cols, y_n_rows, y_n_cols, "matrix multiplication");
 
@@ -80,8 +108,8 @@ spglue_times::apply_noalias(SpMat<eT>& c, const SpProxy<T1>& pa, const SpProxy<T
   //SpMat<typename T1::elem_type> c(x_n_rows, y_n_cols); // Initializes col_ptrs to 0.
   c.zeros(x_n_rows, y_n_cols);
   
-  //if( (pa.get_n_elem() == 0) || (pb.get_n_elem() == 0) )
-  if( (pa.get_n_nonzero() == 0) || (pb.get_n_nonzero() == 0) )
+  //if( (x.n_elem == 0) || (y.n_elem == 0) )
+  if( (x.n_nonzero == 0) || (y.n_nonzero == 0) )
     {
     return;
     }
@@ -90,8 +118,8 @@ spglue_times::apply_noalias(SpMat<eT>& c, const SpProxy<T1>& pa, const SpProxy<T
   podarray<uword> index(x_n_rows);
   index.fill(x_n_rows); // Fill with invalid links.
   
-  typename SpProxy<T2>::const_iterator_type y_it  = pb.begin();
-  typename SpProxy<T2>::const_iterator_type y_end = pb.end();
+  typename SpMat<eT>::const_iterator y_it  = y.begin();
+  typename SpMat<eT>::const_iterator y_end = y.end();
 
   // SYMBMM: calculate column pointers for resultant matrix to obtain a good
   // upper bound on the number of nonzero elements.
@@ -102,7 +130,7 @@ spglue_times::apply_noalias(SpMat<eT>& c, const SpProxy<T1>& pa, const SpProxy<T
     const uword y_it_row = y_it.row();
     
     // Look through the column that this point (*y_it) could affect.
-    typename SpProxy<T1>::const_iterator_type x_it = pa.begin_col(y_it_row);
+    typename SpMat<eT>::const_iterator x_it = x.begin_col_no_sync(y_it_row);
     
     while(x_it.col() == y_it_row)
       {
@@ -182,7 +210,7 @@ spglue_times::apply_noalias(SpMat<eT>& c, const SpProxy<T1>& pa, const SpProxy<T
     access::rw(c.col_ptrs[cur_col]) = cur_pos;
 
     // Check all elements in this column.
-    typename SpProxy<T2>::const_iterator_type y_col_it = pb.begin_col(cur_col);
+    typename SpMat<eT>::const_iterator y_col_it = y.begin_col_no_sync(cur_col);
     
     while(y_col_it.col() == cur_col)
       {
@@ -190,7 +218,7 @@ spglue_times::apply_noalias(SpMat<eT>& c, const SpProxy<T1>& pa, const SpProxy<T
       
       // Check all elements in the column of the other matrix corresponding to
       // the row of this column.
-      typename SpProxy<T1>::const_iterator_type x_col_it = pa.begin_col(y_col_it_row);
+      typename SpMat<eT>::const_iterator x_col_it = x.begin_col_no_sync(y_col_it_row);
 
       const eT y_value = (*y_col_it);
 
@@ -264,43 +292,6 @@ spglue_times::apply_noalias(SpMat<eT>& c, const SpProxy<T1>& pa, const SpProxy<T
   // Update last column pointer and resize to actual memory size.
   access::rw(c.col_ptrs[c.n_cols]) = cur_pos;
   c.mem_resize(cur_pos);
-  }
-
-
-
-//
-//
-// spglue_times2: scalar*(A * B)
-
-
-
-template<typename T1, typename T2>
-inline
-void
-spglue_times2::apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglue_times2>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  const SpProxy<T1> pa(X.A);
-  const SpProxy<T2> pb(X.B);
-  
-  const bool is_alias = pa.is_alias(out) || pb.is_alias(out);
-  
-  if(is_alias == false)
-    {
-    spglue_times::apply_noalias(out, pa, pb);
-    }
-  else
-    {
-    SpMat<eT> tmp;
-    spglue_times::apply_noalias(tmp, pa, pb);
-    
-    out.steal_mem(tmp);
-    }
-  
-  out *= X.aux;
   }
 
 

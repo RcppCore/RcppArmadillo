@@ -1816,6 +1816,16 @@ SpSubview<eT>::end_row(const uword row_num) const
 
 
 template<typename eT>
+arma_inline
+bool
+SpSubview<eT>::is_alias(const SpMat<eT>& X) const
+  {
+  return m.is_alias(X);
+  }
+
+
+
+template<typename eT>
 inline
 arma_warn_unused
 eT&

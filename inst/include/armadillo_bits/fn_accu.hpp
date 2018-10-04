@@ -755,46 +755,12 @@ accu(const SpGlue<T1,T2,spglue_plus>& expr)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
+  const unwrap_spmat<T1> UA(expr.A);
+  const unwrap_spmat<T2> UB(expr.B);
   
-  const SpProxy<T1> px(expr.A);
-  const SpProxy<T2> py(expr.B);
+  arma_debug_assert_same_size(UA.M.n_rows, UA.M.n_cols, UB.M.n_rows, UB.M.n_cols, "addition");
   
-  typename SpProxy<T1>::const_iterator_type x_it     = px.begin();
-  typename SpProxy<T1>::const_iterator_type x_it_end = px.end();
-  
-  typename SpProxy<T2>::const_iterator_type y_it     = py.begin();
-  typename SpProxy<T2>::const_iterator_type y_it_end = py.end();
-  
-  eT acc = eT(0);
-  
-  while( (x_it != x_it_end) || (y_it != y_it_end) )
-    {
-    if(x_it == y_it)
-      {
-      acc += ((*x_it) + (*y_it));
-      
-      ++x_it;
-      ++y_it;
-      }
-    else
-      {
-      if((x_it.col() < y_it.col()) || ((x_it.col() == y_it.col()) && (x_it.row() < y_it.row()))) // if y is closer to the end
-        {
-        acc += (*x_it);
-        
-        ++x_it;
-        }
-      else // x is closer to the end
-        {
-        acc += (*y_it);
-        
-        ++y_it;
-        }
-      }
-    }
-  
-  return acc;
+  return (accu(UA.M) + accu(UB.M));
   }
 
 
@@ -808,46 +774,12 @@ accu(const SpGlue<T1,T2,spglue_minus>& expr)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
+  const unwrap_spmat<T1> UA(expr.A);
+  const unwrap_spmat<T2> UB(expr.B);
   
-  const SpProxy<T1> px(expr.A);
-  const SpProxy<T2> py(expr.B);
+  arma_debug_assert_same_size(UA.M.n_rows, UA.M.n_cols, UB.M.n_rows, UB.M.n_cols, "subtraction");
   
-  typename SpProxy<T1>::const_iterator_type x_it     = px.begin();
-  typename SpProxy<T1>::const_iterator_type x_it_end = px.end();
-  
-  typename SpProxy<T2>::const_iterator_type y_it     = py.begin();
-  typename SpProxy<T2>::const_iterator_type y_it_end = py.end();
-  
-  eT acc = eT(0);
-  
-  while( (x_it != x_it_end) || (y_it != y_it_end) )
-    {
-    if(x_it == y_it)
-      {
-      acc += ((*x_it) - (*y_it));
-      
-      ++x_it;
-      ++y_it;
-      }
-    else
-      {
-      if((x_it.col() < y_it.col()) || ((x_it.col() == y_it.col()) && (x_it.row() < y_it.row()))) // if y is closer to the end
-        {
-        acc += (*x_it);
-        
-        ++x_it;
-        }
-      else // x is closer to the end
-        {
-        acc -= (*y_it);  // subtraction
-        
-        ++y_it;
-        }
-      }
-    }
-  
-  return acc;
+  return (accu(UA.M) - accu(UB.M));
   }
 
 

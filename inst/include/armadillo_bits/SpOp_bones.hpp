@@ -35,6 +35,7 @@ class SpOp : public SpBase<typename T1::elem_type, SpOp<T1, op_type> >
   inline          SpOp(const T1& in_m, const uword     in_aux_uword_a, const uword in_aux_uword_b);
   inline         ~SpOp();
   
+  arma_inline bool is_alias(const SpMat<elem_type>& X) const;
   
   arma_aligned const T1&       m;            //!< storage of reference to the operand (eg. a matrix)
   arma_aligned       elem_type aux;          //!< storage of auxiliary data, user defined format
