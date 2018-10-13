@@ -59,6 +59,47 @@ spop_scalar_times::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_
 
 namespace priv
   {
+  template<typename T>
+  struct functor_cx_scalar_times
+    {
+    typedef std::complex<T> out_eT;
+    
+    const out_eT k;
+    
+    functor_cx_scalar_times(const out_eT in_k) : k(in_k) {}
+    
+    arma_inline out_eT operator()(const T val) const { return val * k; }
+    };
+  }
+
+
+
+template<typename T1>
+inline
+void
+spop_cx_scalar_times::apply(SpMat< std::complex<typename T1::pod_type> >& out, const mtSpOp< std::complex<typename T1::pod_type>, T1, spop_cx_scalar_times >& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::pod_type         T;
+  typedef typename std::complex<T> out_eT;
+  
+  if(in.aux_out_eT != out_eT(0))
+    {
+    out.init_xform_mt(in.m, priv::functor_cx_scalar_times<T>(in.aux_out_eT));
+    }
+  else
+    {
+    const SpProxy<T1> P(in.m);
+    
+    out.zeros( P.get_n_rows(), P.get_n_cols() );
+    }
+  }
+
+
+
+namespace priv
+  {
   struct functor_square
     {
     template<typename eT>
@@ -446,7 +487,7 @@ namespace priv
   struct functor_sign
     {
     template<typename eT>
-    arma_inline eT operator()(const eT val) const { return eop_aux::sign(val); }
+    arma_inline eT operator()(const eT val) const { return arma_sign(val); }
     };
   }
 

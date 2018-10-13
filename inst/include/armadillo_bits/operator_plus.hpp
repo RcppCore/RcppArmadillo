@@ -238,6 +238,85 @@ operator+
 
 
 
+//! addition of two sparse objects with different element types
+template<typename T1, typename T2>
+inline
+typename
+enable_if2
+  <
+  (is_arma_sparse_type<T1>::value && is_arma_sparse_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::no),
+  SpMat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result >
+  >::result
+operator+
+  (
+  const T1& X,
+  const T2& Y
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  SpMat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result > out;
+  
+  spglue_plus_mixed::sparse_plus_sparse(out, X, Y);
+  
+  return out;
+  }
+
+
+
+//! addition of sparse and non-sparse objects with different element types
+template<typename T1, typename T2>
+inline
+typename
+enable_if2
+  <
+  (is_arma_type<T1>::value && is_arma_sparse_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::no),
+  Mat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result >
+  >::result
+operator+
+  (
+  const T1& x,
+  const T2& y
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result > out;
+  
+  spglue_plus_mixed::dense_plus_sparse(out, x, y);
+  
+  return out;
+  }
+
+
+
+//! addition of sparse and non-sparse objects with different element types
+template<typename T1, typename T2>
+inline
+typename
+enable_if2
+  <
+  (is_arma_sparse_type<T1>::value && is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::no),
+  Mat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result >
+  >::result
+operator+
+  (
+  const T1& x,
+  const T2& y
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result > out;
+  
+  // Just call the other order (these operations are commutative)
+  spglue_plus_mixed::dense_plus_sparse(out, y, x);
+  
+  return out;
+  }
+
+
+
 template<typename parent, unsigned int mode, typename T2>
 arma_inline
 Mat<typename parent::elem_type>

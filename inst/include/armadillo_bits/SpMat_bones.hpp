@@ -348,6 +348,9 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   inline void reset();
   
   //! don't use this unless you're writing internal Armadillo code
+  template<typename eT2> inline void copy_layout(const SpMat<eT2>& x);
+  
+  //! don't use this unless you're writing internal Armadillo code
   inline void reserve(const uword in_rows, const uword in_cols, const uword new_n_nonzero);
   
   //! don't use this unless you're writing internal Armadillo code

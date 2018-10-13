@@ -387,6 +387,11 @@
   #pragma warning(disable: 4714)  // __forceinline can't be inlined
   #pragma warning(disable: 4800)  // value forced to bool
   
+  #if defined(ARMA_USE_CXX11)
+    #pragma warning(disable: 4519)  // default template args are only allowed on a class template
+  #endif
+  
+  
   // #if (_MANAGED == 1) || (_M_CEE == 1)
   //   
   //   // don't do any alignment when compiling in "managed code" mode 

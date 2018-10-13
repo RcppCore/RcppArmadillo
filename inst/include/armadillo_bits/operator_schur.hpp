@@ -111,61 +111,11 @@ operator%
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
+  SpMat<typename T1::elem_type> out;
   
-  const   Proxy<T1> pa(x);
-  const SpProxy<T2> pb(y);
+  spglue_schur_misc::dense_schur_sparse(out, x, y);
   
-  arma_debug_assert_same_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "element-wise multiplication");
-  
-  // count new size
-  uword new_n_nonzero = 0;
-  
-  typename SpProxy<T2>::const_iterator_type it     = pb.begin();
-  typename SpProxy<T2>::const_iterator_type it_end = pb.end();
-  
-  while(it != it_end)
-    {
-    if( ((*it) * pa.at(it.row(), it.col())) != eT(0) )
-      {
-      ++new_n_nonzero;
-      }
-    
-    ++it;
-    }
-  
-  // Resize memory accordingly.
-  SpMat<eT> result(arma_reserve_indicator(), pa.get_n_rows(), pa.get_n_cols(), new_n_nonzero);
-  
-  uword cur_val = 0;
-  
-  typename SpProxy<T2>::const_iterator_type it2 = pb.begin();
-  
-  while(it2 != it_end)
-    {
-    const uword it2_row = it2.row();
-    const uword it2_col = it2.col();
-    
-    const eT val = (*it2) * pa.at(it2_row, it2_col);
-    
-    if(val != eT(0))
-      {
-      access::rw(result.values[cur_val]) = val;
-      access::rw(result.row_indices[cur_val]) = it2_row;
-      ++access::rw(result.col_ptrs[it2_col + 1]);
-      ++cur_val;
-      }
-    
-    ++it2;
-    }
-  
-  // Fix column pointers.
-  for(uword c = 1; c <= result.n_cols; ++c)
-    {
-    access::rw(result.col_ptrs[c]) += result.col_ptrs[c - 1];
-    }
-  
-  return result;
+  return out;
   }
 
 
@@ -187,8 +137,91 @@ operator%
   {
   arma_extra_debug_sigprint();
   
+  SpMat<typename T1::elem_type> out;
+  
   // This operation is commutative.
-  return (y % x);
+  spglue_schur_misc::dense_schur_sparse(out, y, x);
+  
+  return out;
+  }
+
+
+
+//! element-wise multiplication of two sparse objects with different element types
+template<typename T1, typename T2>
+inline
+typename
+enable_if2
+  <
+  (is_arma_sparse_type<T1>::value && is_arma_sparse_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::no),
+  SpMat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result >
+  >::result
+operator%
+  (
+  const T1& X,
+  const T2& Y
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  SpMat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result > out;
+  
+  spglue_schur_mixed::sparse_schur_sparse(out, X, Y);
+  
+  return out;
+  }
+
+
+
+//! element-wise multiplication of one dense and one sparse object with different element types
+template<typename T1, typename T2>
+inline
+typename
+enable_if2
+  <
+  (is_arma_type<T1>::value && is_arma_sparse_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::no),
+  SpMat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result >
+  >::result
+operator%
+  (
+  const T1& x,
+  const T2& y
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  SpMat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result > out;
+  
+  spglue_schur_mixed::dense_schur_sparse(out, x, y);
+  
+  return out;
+  }
+
+
+
+//! element-wise multiplication of one sparse and one dense object with different element types
+template<typename T1, typename T2>
+inline
+typename
+enable_if2
+  <
+  (is_arma_sparse_type<T1>::value && is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::no),
+  SpMat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result >
+  >::result
+operator%
+  (
+  const T1& x,
+  const T2& y
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  SpMat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result > out;
+  
+  // This operation is commutative.
+  spglue_schur_mixed::dense_schur_sparse(out, y, x);
+  
+  return out;
   }
 
 

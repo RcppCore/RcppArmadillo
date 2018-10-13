@@ -133,11 +133,6 @@ class eop_aux
   template<typename eT> arma_inline static typename              arma_real_only<eT>::result arma_abs (const eT               x) { return std::abs(x); }
   template<typename  T> arma_inline static typename              arma_real_only< T>::result arma_abs (const std::complex<T>& x) { return std::abs(x); }
   
-  template<typename eT> arma_inline static typename arma_unsigned_integral_only<eT>::result sign (const eT  x) { return (x > eT(0)) ? eT(+1) : eT(0);                                                                      }
-  template<typename eT> arma_inline static typename   arma_signed_integral_only<eT>::result sign (const eT  x) { return (x > eT(0)) ? eT(+1) : ( (x < eT(0)) ? eT(-1) : eT(0) );                                           }
-  template<typename eT> arma_inline static typename              arma_real_only<eT>::result sign (const eT  x) { return (x > eT(0)) ? eT(+1) : ( (x < eT(0)) ? eT(-1) : eT(0) );                                           }
-  template<typename eT> arma_inline static typename                arma_cx_only<eT>::result sign (const eT& x) { typedef typename eT::value_type T; return (x.real() != T(0) && x.imag() != T(0)) ? (x / std::abs(x)) : x; }
-  
   #if defined(ARMA_USE_CXX11)
   template<typename eT> arma_inline static typename arma_integral_only<eT>::result erf (const eT  x) { return eT( std::erf(double(x)) ); }
   template<typename eT> arma_inline static typename     arma_real_only<eT>::result erf (const eT  x) { return std::erf(x);               }
