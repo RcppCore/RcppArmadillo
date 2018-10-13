@@ -4308,6 +4308,27 @@ SpMat<eT>::reset()
 
 
 
+//! Set the size to the size of another matrix.
+template<typename eT>
+template<typename eT2>
+inline
+void
+SpMat<eT>::copy_layout(const SpMat<eT2>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(void_ptr(this) == void_ptr(&x))  { return; }
+  
+  init(x.n_rows, x.n_cols, x.n_nonzero);
+  
+  if(x.row_indices)  { arrayops::copy(access::rwp(row_indices), x.row_indices, x.n_nonzero + 1); }
+  if(x.col_ptrs   )  { arrayops::copy(access::rwp(col_ptrs),    x.col_ptrs,    x.n_cols    + 1); }
+  
+  // NOTE: 'values' array is not initialised
+  }
+
+
+
 template<typename eT>
 inline
 void
@@ -4676,12 +4697,9 @@ SpMat<eT>::init_cold(uword in_rows, uword in_cols, const uword new_n_nonzero)
       error_message
     );
   
+  access::rw(col_ptrs)    = memory::acquire<uword>(in_cols + 2);
   access::rw(values)      = memory::acquire<eT>   (new_n_nonzero + 1);
   access::rw(row_indices) = memory::acquire<uword>(new_n_nonzero + 1);
-  access::rw(col_ptrs)    = memory::acquire<uword>(in_cols + 2);
-  
-  access::rw(     values[new_n_nonzero]) = 0;
-  access::rw(row_indices[new_n_nonzero]) = 0;
   
   // fill column pointers with 0,
   // except for the last element which contains the maximum possible element
@@ -4689,6 +4707,9 @@ SpMat<eT>::init_cold(uword in_rows, uword in_cols, const uword new_n_nonzero)
   arrayops::fill_zeros(access::rwp(col_ptrs), in_cols + 1);
   
   access::rw(col_ptrs[in_cols + 1]) = std::numeric_limits<uword>::max();
+  
+  access::rw(     values[new_n_nonzero]) = 0;
+  access::rw(row_indices[new_n_nonzero]) = 0;
   
   // Set the new size accordingly.
   access::rw(n_rows)    = in_rows;

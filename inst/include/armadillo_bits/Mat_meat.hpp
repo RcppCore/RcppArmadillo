@@ -347,6 +347,7 @@ Mat<eT>::init_warm(uword in_n_rows, uword in_n_cols)
 //! create the matrix from a textual description
 template<typename eT>
 inline
+arma_cold
 Mat<eT>::Mat(const char* text)
   : n_rows(0)
   , n_cols(0)
@@ -365,6 +366,7 @@ Mat<eT>::Mat(const char* text)
 //! create the matrix from a textual description
 template<typename eT>
 inline
+arma_cold
 Mat<eT>&
 Mat<eT>::operator=(const char* text)
   {
@@ -379,6 +381,7 @@ Mat<eT>::operator=(const char* text)
 //! create the matrix from a textual description
 template<typename eT>
 inline
+arma_cold
 Mat<eT>::Mat(const std::string& text)
   : n_rows(0)
   , n_cols(0)
@@ -397,6 +400,7 @@ Mat<eT>::Mat(const std::string& text)
 //! create the matrix from a textual description
 template<typename eT>
 inline
+arma_cold
 Mat<eT>&
 Mat<eT>::operator=(const std::string& text)
   {

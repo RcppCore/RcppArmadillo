@@ -62,11 +62,11 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename fill_type> inline Mat(const uword in_rows, const uword in_cols, const fill::fill_class<fill_type>& f);
   template<typename fill_type> inline Mat(const SizeMat& s,                         const fill::fill_class<fill_type>& f);
   
-  inline            Mat(const char*        text);
-  inline Mat& operator=(const char*        text);
+  inline arma_cold            Mat(const char*        text);
+  inline arma_cold Mat& operator=(const char*        text);
   
-  inline            Mat(const std::string& text);
-  inline Mat& operator=(const std::string& text);
+  inline arma_cold            Mat(const std::string& text);
+  inline arma_cold Mat& operator=(const std::string& text);
   
   inline            Mat(const std::vector<eT>& x);
   inline Mat& operator=(const std::vector<eT>& x);

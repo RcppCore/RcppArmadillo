@@ -930,6 +930,19 @@ trunc(const SpBase<typename T1::elem_type,T1>& X)
 //
 // sign
 
+template<typename eT>
+arma_warn_unused
+arma_inline
+typename arma_scalar_only<eT>::result
+sign(const eT x)
+  {
+  arma_extra_debug_sigprint();
+  
+  return arma_sign(x);
+  }
+
+
+
 template<typename T1>
 arma_warn_unused
 arma_inline

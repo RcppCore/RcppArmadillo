@@ -48,5 +48,20 @@ class spglue_times_misc
 
 
 
-//! @}
+class spglue_times_mixed
+  {
+  public:
+  
+  template<typename T1, typename T2>
+  inline static void sparse_times_sparse(SpMat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result >& out, const T1& X, const T2& Y);
 
+  template<typename T1, typename T2>
+  inline static void sparse_times_dense(Mat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result >& out, const T1& X, const T2& Y);
+
+  template<typename T1, typename T2>
+  inline static void dense_times_sparse(Mat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result >& out, const T1& X, const T2& Y);
+  };
+
+
+
+//! @}

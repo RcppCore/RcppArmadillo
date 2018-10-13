@@ -28,6 +28,16 @@ class spop_scalar_times
 
 
 
+class spop_cx_scalar_times
+  {
+  public:
+  
+  template<typename T1>
+  inline static void apply(SpMat< std::complex<typename T1::pod_type> >& out, const mtSpOp< std::complex<typename T1::pod_type>, T1, spop_cx_scalar_times>& in);
+  };
+
+
+
 class spop_square
   {
   public:

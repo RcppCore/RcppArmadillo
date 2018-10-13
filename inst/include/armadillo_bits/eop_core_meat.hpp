@@ -1135,7 +1135,7 @@ template<> template<typename eT> arma_hot arma_inline eT
 eop_core<eop_trunc            >::process(const eT val, const eT  ) { return eop_aux::trunc(val);      }
 
 template<> template<typename eT> arma_hot arma_inline eT
-eop_core<eop_sign             >::process(const eT val, const eT  ) { return eop_aux::sign(val);       }
+eop_core<eop_sign             >::process(const eT val, const eT  ) { return arma_sign(val);           }
 
 template<> template<typename eT> arma_hot arma_inline eT
 eop_core<eop_erf              >::process(const eT val, const eT  ) { return eop_aux::erf(val);        }
