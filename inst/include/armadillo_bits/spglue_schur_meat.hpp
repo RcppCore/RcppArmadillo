@@ -256,7 +256,7 @@ spglue_schur_mixed::sparse_schur_sparse(SpMat< typename promote_type<typename T1
     const SpMat<eT1>& A = UA.M;
     const SpMat<eT2>& B = UB.M;
     
-    SpMat<out_eT> AA;  AA.copy_layout(A);
+    SpMat<out_eT> AA(arma_layout_indicator(), A);
     
     for(uword i=0; i < A.n_nonzero; ++i)  { access::rw(AA.values[i]) = out_eT(A.values[i]); }
     
@@ -277,7 +277,7 @@ spglue_schur_mixed::sparse_schur_sparse(SpMat< typename promote_type<typename T1
     
     const SpMat<out_eT>& AA = reinterpret_cast< const SpMat<out_eT>& >(A);
     
-    SpMat<out_eT> BB;  BB.copy_layout(B);
+    SpMat<out_eT> BB(arma_layout_indicator(), B);
     
     for(uword i=0; i < B.n_nonzero; ++i)  { access::rw(BB.values[i]) = out_eT(B.values[i]); }
     
@@ -293,8 +293,8 @@ spglue_schur_mixed::sparse_schur_sparse(SpMat< typename promote_type<typename T1
     const SpMat<eT1>& A = UA.M;
     const SpMat<eT2>& B = UB.M;
     
-    SpMat<out_eT> AA;  AA.copy_layout(A);
-    SpMat<out_eT> BB;  BB.copy_layout(B);
+    SpMat<out_eT> AA(arma_layout_indicator(), A);
+    SpMat<out_eT> BB(arma_layout_indicator(), B);
     
     for(uword i=0; i < A.n_nonzero; ++i)  { access::rw(AA.values[i]) = out_eT(A.values[i]); }
     for(uword i=0; i < B.n_nonzero; ++i)  { access::rw(BB.values[i]) = out_eT(B.values[i]); }

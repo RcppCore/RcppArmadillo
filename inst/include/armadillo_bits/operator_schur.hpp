@@ -139,7 +139,8 @@ operator%
   
   SpMat<typename T1::elem_type> out;
   
-  // This operation is commutative.
+  // Just call the other order (these operations are commutative)
+  // TODO: if there is a matrix size mismatch, the debug assert will print the matrix sizes in wrong order
   spglue_schur_misc::dense_schur_sparse(out, y, x);
   
   return out;
@@ -218,7 +219,8 @@ operator%
   
   SpMat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result > out;
   
-  // This operation is commutative.
+  // Just call the other order (these operations are commutative)
+  // TODO: if there is a matrix size mismatch, the debug assert will print the matrix sizes in wrong order
   spglue_schur_mixed::dense_schur_sparse(out, y, x);
   
   return out;

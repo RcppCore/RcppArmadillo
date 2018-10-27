@@ -817,7 +817,13 @@ accu(const SpGlue<T1,T2,spglue_schur>& expr)
       }
     else
       {
-      if((x_it.col() < y_it.col()) || ((x_it.col() == y_it.col()) && (x_it.row() < y_it.row()))) // if y is closer to the end
+      const uword x_it_col = x_it.col();
+      const uword x_it_row = x_it.row();
+      
+      const uword y_it_col = y_it.col();
+      const uword y_it_row = y_it.row();
+      
+      if((x_it_col < y_it_col) || ((x_it_col == y_it_col) && (x_it_row < y_it_row))) // if y is closer to the end
         {
         ++x_it;
         }

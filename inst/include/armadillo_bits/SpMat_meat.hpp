@@ -116,6 +116,33 @@ SpMat<eT>::SpMat(const arma_reserve_indicator&, const uword in_rows, const uword
 
 
 
+template<typename eT>
+template<typename eT2>
+inline
+SpMat<eT>::SpMat(const arma_layout_indicator&, const SpMat<eT2>& x)
+  : n_rows(0)
+  , n_cols(0)
+  , n_elem(0)
+  , n_nonzero(0)
+  , vec_state(0)
+  , values(NULL)
+  , row_indices(NULL)
+  , col_ptrs(NULL)
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  init_cold(x.n_rows, x.n_cols, x.n_nonzero);
+  
+  if(x.n_nonzero == 0)  { return; }
+  
+  if(x.row_indices)  { arrayops::copy(access::rwp(row_indices), x.row_indices, x.n_nonzero + 1); }
+  if(x.col_ptrs   )  { arrayops::copy(access::rwp(col_ptrs),    x.col_ptrs,    x.n_cols    + 1); }
+  
+  // NOTE: 'values' array is not initialised
+  }
+
+
+
 /**
  * Assemble from text.
  */
@@ -4304,27 +4331,6 @@ SpMat<eT>::reset()
       init(1, 0);
       break;
     }
-  }
-
-
-
-//! Set the size to the size of another matrix.
-template<typename eT>
-template<typename eT2>
-inline
-void
-SpMat<eT>::copy_layout(const SpMat<eT2>& x)
-  {
-  arma_extra_debug_sigprint();
-  
-  if(void_ptr(this) == void_ptr(&x))  { return; }
-  
-  init(x.n_rows, x.n_cols, x.n_nonzero);
-  
-  if(x.row_indices)  { arrayops::copy(access::rwp(row_indices), x.row_indices, x.n_nonzero + 1); }
-  if(x.col_ptrs   )  { arrayops::copy(access::rwp(col_ptrs),    x.col_ptrs,    x.n_cols    + 1); }
-  
-  // NOTE: 'values' array is not initialised
   }
 
 
