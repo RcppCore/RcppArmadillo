@@ -32,6 +32,14 @@ class op_htrans
   
   //
   
+  template<typename T>
+  arma_hot inline static void block_worker(std::complex<T>* Y, const std::complex<T>* X, const uword X_n_rows, const uword Y_n_rows, const uword n_rows, const uword n_cols);
+  
+  template<typename T>
+  arma_hot inline static void apply_mat_noalias_large(Mat< std::complex<T> >& out, const Mat< std::complex<T> >& A);
+  
+  //
+  
   template<typename eT>
   arma_hot arma_inline static void apply_mat_inplace(Mat<eT>& out, const typename arma_not_cx<eT>::result* junk = 0);
   

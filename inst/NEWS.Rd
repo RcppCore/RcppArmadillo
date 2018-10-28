@@ -3,15 +3,22 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.9.199.1.0 (2018-10-03)}{
+\section{Changes in RcppArmadillo version 0.9.199.2.0 (2018-10-27)}{
   \itemize{
-    \item Upgraded to Armadillo release 9.200.rc2 (Armatus Ad Infinitum)
+    \item Upgraded to Armadillo release 9.200.rc3 (Armatus Ad Infinitum)
     \itemize{
       \item faster handling of symmetric positive definite matrices by
       \code{rcond()}
+      \item faster transpose of matrices with size ≥ 512x512
       \item faster handling of compound sparse matrix expressions by
-      \code{accu()}
+      \code{accu()},  \code{diagmat()}, \code{trace()}
       \item added \code{sinc()}
+      \item expanded \code{sign()} to handle scalar arguments
+      \item expanded operators (\code{*}, \code{\%}, \code{+}, \code{−})
+      to handle sparse matrices with differing element types
+      (eg. multiplication of complex matrix by real matrix) 
+      \item expanded \code{conv_to()} to allow conversion between sparse
+      matrices with differing element types 
       \item expanded \code{solve()} to optionally allow keeping
       solutions of systems singular to working precision 
     }

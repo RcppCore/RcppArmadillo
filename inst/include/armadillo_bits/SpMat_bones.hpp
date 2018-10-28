@@ -348,14 +348,14 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   inline void reset();
   
   //! don't use this unless you're writing internal Armadillo code
-  template<typename eT2> inline void copy_layout(const SpMat<eT2>& x);
-  
-  //! don't use this unless you're writing internal Armadillo code
   inline void reserve(const uword in_rows, const uword in_cols, const uword new_n_nonzero);
   
   //! don't use this unless you're writing internal Armadillo code
   inline SpMat(const arma_reserve_indicator&, const uword in_rows, const uword in_cols, const uword new_n_nonzero);
   
+  //! don't use this unless you're writing internal Armadillo code
+  template<typename eT2>
+  inline SpMat(const arma_layout_indicator&, const SpMat<eT2>& x);
   
   template<typename T1> inline void set_real(const SpBase<pod_type,T1>& X);
   template<typename T1> inline void set_imag(const SpBase<pod_type,T1>& X);

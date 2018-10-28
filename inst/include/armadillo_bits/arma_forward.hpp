@@ -289,6 +289,7 @@ template<typename T1> class SpProxy;
 struct arma_vec_indicator     {};
 struct arma_fixed_indicator   {};
 struct arma_reserve_indicator {};
+struct arma_layout_indicator  {};
 
 
 //! \addtogroup injector

@@ -95,6 +95,83 @@ op_strans::apply_mat_noalias_tinysq(Mat<eT>& out, const TA& A)
 
 
 
+template<typename eT>
+arma_hot
+inline
+void
+op_strans::block_worker(eT* Y, const eT* X, const uword X_n_rows, const uword Y_n_rows, const uword n_rows, const uword n_cols)
+  {
+  for(uword row = 0; row < n_rows; ++row)
+    {
+    const uword Y_offset = row * Y_n_rows;
+    
+    for(uword col = 0; col < n_cols; ++col)
+      {
+      const uword X_offset = col * X_n_rows;
+      
+      Y[col + Y_offset] = X[row + X_offset];
+      }
+    }
+  }
+
+
+
+template<typename eT>
+arma_hot
+inline
+void
+op_strans::apply_mat_noalias_large(Mat<eT>& out, const Mat<eT>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword n_rows = A.n_rows;
+  const uword n_cols = A.n_cols;
+  
+  const uword block_size = 32;
+  
+  const uword n_rows_base = block_size * (n_rows / block_size);
+  const uword n_cols_base = block_size * (n_cols / block_size);
+  
+  const uword n_rows_extra = n_rows - n_rows_base;
+  const uword n_cols_extra = n_cols - n_cols_base;
+  
+  const eT* X =   A.memptr();
+        eT* Y = out.memptr();
+  
+  for(uword row = 0; row < n_rows_base; row += block_size)
+    {
+    const uword Y_offset = row * n_cols;
+    
+    for(uword col = 0; col < n_cols_base; col += block_size)
+      {
+      const uword X_offset = col * n_rows;
+      
+      op_strans::block_worker(&Y[col + Y_offset], &X[row + X_offset], n_rows, n_cols, block_size, block_size);
+      }
+    
+    const uword X_offset = n_cols_base * n_rows;
+    
+    op_strans::block_worker(&Y[n_cols_base + Y_offset], &X[row + X_offset], n_rows, n_cols, block_size, n_cols_extra);
+    }
+
+  if(n_rows_extra == 0)  { return; }
+  
+  const uword Y_offset = n_rows_base * n_cols;
+  
+  for(uword col = 0; col < n_cols_base; col += block_size)
+    {
+    const uword X_offset = col * n_rows;
+    
+    op_strans::block_worker(&Y[col + Y_offset], &X[n_rows_base + X_offset], n_rows, n_cols, n_rows_extra, block_size);
+    }
+  
+  const uword X_offset = n_cols_base * n_rows;
+  
+  op_strans::block_worker(&Y[n_cols_base + Y_offset], &X[n_rows_base + X_offset], n_rows, n_cols, n_rows_extra, n_cols_extra);
+  }
+
+
+
 //! Immediate transpose of a dense matrix
 template<typename eT, typename TA>
 arma_hot
@@ -118,6 +195,11 @@ op_strans::apply_mat_noalias(Mat<eT>& out, const TA& A)
     if( (A_n_rows <= 4) && (A_n_rows == A_n_cols) )
       {
       op_strans::apply_mat_noalias_tinysq(out, A);
+      }
+    else
+    if( (A_n_rows >= 512) && (A_n_cols >= 512) )
+      {
+      op_strans::apply_mat_noalias_large(out, A);
       }
     else
       {
@@ -500,6 +582,12 @@ op_strans2::apply_noalias(Mat<eT>& out, const TA& A, const eT val)
     if( (A_n_rows <= 4) && (A_n_rows == A_n_cols) )
       {
       op_strans2::apply_noalias_tinysq(out, A, val);
+      }
+    else
+    if( (A_n_rows >= 512) && (A_n_cols >= 512) )
+      {
+      op_strans::apply_mat_noalias_large(out, A);
+      arrayops::inplace_mul( out.memptr(), val, out.n_elem );
       }
     else
       {

@@ -233,6 +233,7 @@ operator+
   arma_extra_debug_sigprint();
   
   // Just call the other order (these operations are commutative)
+  // TODO: if there is a matrix size mismatch, the debug assert will print the matrix sizes in wrong order
   return (y + x);
   }
 
@@ -310,6 +311,7 @@ operator+
   Mat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result > out;
   
   // Just call the other order (these operations are commutative)
+  // TODO: if there is a matrix size mismatch, the debug assert will print the matrix sizes in wrong order
   spglue_plus_mixed::dense_plus_sparse(out, y, x);
   
   return out;
