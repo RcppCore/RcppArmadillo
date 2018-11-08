@@ -93,13 +93,21 @@ spglue_join_rows::apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,s
   
   typedef typename T1::elem_type eT;
   
-  const unwrap_spmat<T1> A_tmp(X.A);
-  const unwrap_spmat<T2> B_tmp(X.B);
+  const unwrap_spmat<T1> UA(X.A);
+  const unwrap_spmat<T2> UB(X.B);
   
-  const SpMat<eT>& A = A_tmp.M;
-  const SpMat<eT>& B = B_tmp.M;
-  
-  spglue_join_rows::apply_direct(out, A, B);
+  if(UA.is_alias(out) || UB.is_alias(out))
+    {
+    SpMat<eT> tmp;
+    
+    spglue_join_rows::apply_noalias(tmp, UA.M, UB.M);
+    
+    out.steal_mem(tmp);
+    }
+  else
+    {
+    spglue_join_rows::apply_noalias(out, UA.M, UB.M);
+    }
   }
 
 
@@ -107,7 +115,7 @@ spglue_join_rows::apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,s
 template<typename eT>
 inline
 void
-spglue_join_rows::apply_direct(SpMat<eT>& out, const SpMat<eT>& A, const SpMat<eT>& B)
+spglue_join_rows::apply_noalias(SpMat<eT>& out, const SpMat<eT>& A, const SpMat<eT>& B)
   {
   arma_extra_debug_sigprint();
   
@@ -135,47 +143,63 @@ spglue_join_rows::apply_direct(SpMat<eT>& out, const SpMat<eT>& A, const SpMat<e
     return;
     }
   
-  umat    locs(2, C_n_nz);
-  Col<eT> vals(   C_n_nz);
+  out.reserve(C_n_rows, C_n_cols, C_n_nz);
   
-  uword* locs_mem = locs.memptr();
-  eT*    vals_mem = vals.memptr();
+  arrayops::copy( access::rwp(out.values),          A.values, A_n_nz   );
+  arrayops::copy( access::rwp(out.values) + A_n_nz, B.values, B_n_nz+1 );
   
-  typename SpMat<eT>::const_iterator A_it = A.begin();
+  arrayops::copy( access::rwp(out.row_indices),          A.row_indices, A_n_nz   );
+  arrayops::copy( access::rwp(out.row_indices) + A_n_nz, B.row_indices, B_n_nz+1 );
   
-  for(uword i=0; i < A_n_nz; ++i)
-    {
-    const uword row = A_it.row();
-    const uword col = A_it.col();
-    
-    (*locs_mem) = row;  locs_mem++;
-    (*locs_mem) = col;  locs_mem++;
-    
-    (*vals_mem) = (*A_it); vals_mem++;
-    
-    ++A_it;
-    }
+  arrayops::copy( access::rwp(out.col_ptrs),            A.col_ptrs, A_n_cols   );
+  arrayops::copy( access::rwp(out.col_ptrs) + A_n_cols, B.col_ptrs, B_n_cols+2 );
   
-  typename SpMat<eT>::const_iterator B_it = B.begin();
+  arrayops::inplace_plus( access::rwp(out.col_ptrs) + A_n_cols, A_n_nz, B_n_cols+1 );
   
-  for(uword i=0; i < B_n_nz; ++i)
-    {
-    const uword row =            B_it.row();
-    const uword col = A_n_cols + B_it.col();
-    
-    (*locs_mem) = row;  locs_mem++;
-    (*locs_mem) = col;  locs_mem++;
-    
-    (*vals_mem) = (*B_it); vals_mem++;
-    
-    ++B_it;
-    }
   
-  // TODO: the first element of B within C will always have a larger index than the last element of A in C;
-  // TODO: so, is sorting really necessary here?
-  SpMat<eT> tmp(locs, vals, C_n_rows, C_n_cols, true, false);
-  
-  out.steal_mem(tmp);
+  // // OLD METHOD
+  // 
+  // umat    locs(2, C_n_nz);
+  // Col<eT> vals(   C_n_nz);
+  // 
+  // uword* locs_mem = locs.memptr();
+  // eT*    vals_mem = vals.memptr();
+  // 
+  // typename SpMat<eT>::const_iterator A_it = A.begin();
+  // 
+  // for(uword i=0; i < A_n_nz; ++i)
+  //   {
+  //   const uword row = A_it.row();
+  //   const uword col = A_it.col();
+  //   
+  //   (*locs_mem) = row;  locs_mem++;
+  //   (*locs_mem) = col;  locs_mem++;
+  //   
+  //   (*vals_mem) = (*A_it); vals_mem++;
+  //   
+  //   ++A_it;
+  //   }
+  // 
+  // typename SpMat<eT>::const_iterator B_it = B.begin();
+  // 
+  // for(uword i=0; i < B_n_nz; ++i)
+  //   {
+  //   const uword row =            B_it.row();
+  //   const uword col = A_n_cols + B_it.col();
+  //   
+  //   (*locs_mem) = row;  locs_mem++;
+  //   (*locs_mem) = col;  locs_mem++;
+  //   
+  //   (*vals_mem) = (*B_it); vals_mem++;
+  //   
+  //   ++B_it;
+  //   }
+  // 
+  // // TODO: the first element of B within C will always have a larger index than the last element of A in C;
+  // // TODO: so, is sorting really necessary here?
+  // SpMat<eT> tmp(locs, vals, C_n_rows, C_n_cols, true, false);
+  // 
+  // out.steal_mem(tmp);
   }
 
 

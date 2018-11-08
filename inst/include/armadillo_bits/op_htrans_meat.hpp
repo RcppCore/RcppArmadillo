@@ -117,7 +117,7 @@ op_htrans::apply_mat_noalias_large(Mat< std::complex<T> >& out, const Mat< std::
   const uword n_rows = A.n_rows;
   const uword n_cols = A.n_cols;
   
-  const uword block_size = 32;
+  const uword block_size = 64;
   
   const uword n_rows_base = block_size * (n_rows / block_size);
   const uword n_cols_base = block_size * (n_cols / block_size);
