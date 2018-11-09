@@ -5,3 +5,4 @@ src/lapack
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^.*\.tar\.gz$
+^local

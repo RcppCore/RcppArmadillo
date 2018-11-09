@@ -25,6 +25,7 @@
     }
     \item Commented-out sparse matrix test consistently failing on the
     fedora-clang machine CRAN, and only there. No fix without access.
+    \item The 'Unit test' vignette is no longer included.
   }
 }
 
