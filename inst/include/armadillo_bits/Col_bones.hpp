@@ -183,9 +183,9 @@ class Col<eT>::fixed : public Col<eT>
   static const bool is_col = true;
   static const bool is_row = false;
   
-  static const uword n_rows = fixed_n_elem;
-  static const uword n_cols = 1;
-  static const uword n_elem = fixed_n_elem;
+  static const uword n_rows;  // value provided below the class definition
+  static const uword n_cols;  // value provided below the class definition
+  static const uword n_elem;  // value provided below the class definition
   
   arma_inline fixed();
   arma_inline fixed(const fixed<fixed_n_elem>& X);
@@ -246,6 +246,23 @@ class Col<eT>::fixed : public Col<eT>
   arma_hot inline const Col<eT>& zeros();
   arma_hot inline const Col<eT>& ones();
   };
+
+
+
+// these definitions are outside of the class due to bizarre C++ rules;
+// C++17 has inline variables to address this shortcoming
+
+template<typename eT>
+template<uword fixed_n_elem>
+const uword Col<eT>::fixed<fixed_n_elem>::n_rows = fixed_n_elem;
+
+template<typename eT>
+template<uword fixed_n_elem>
+const uword Col<eT>::fixed<fixed_n_elem>::n_cols = 1u;
+
+template<typename eT>
+template<uword fixed_n_elem>
+const uword Col<eT>::fixed<fixed_n_elem>::n_elem = fixed_n_elem;
 
 
 

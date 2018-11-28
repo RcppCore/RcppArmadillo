@@ -21,7 +21,7 @@
 
 #define ARMA_VERSION_MAJOR 9
 #define ARMA_VERSION_MINOR 200
-#define ARMA_VERSION_PATCH 4
+#define ARMA_VERSION_PATCH 5
 #define ARMA_VERSION_NAME  "Carpe Noctem"
 
 
