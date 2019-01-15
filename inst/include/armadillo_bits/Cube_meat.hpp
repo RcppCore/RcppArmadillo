@@ -973,7 +973,7 @@ Cube<eT>::row(const uword in_row)
   
   arma_debug_check( (in_row >= n_rows), "Cube::row(): index out of bounds" );
   
-  rows(in_row, in_row);
+  return (*this).rows(in_row, in_row);
   }
 
 
@@ -988,7 +988,7 @@ Cube<eT>::row(const uword in_row) const
   
   arma_debug_check( (in_row >= n_rows), "Cube::row(): index out of bounds" );
   
-  rows(in_row, in_row);
+  return (*this).rows(in_row, in_row);
   }
 
 
@@ -1003,7 +1003,7 @@ Cube<eT>::col(const uword in_col)
   
   arma_debug_check( (in_col >= n_cols), "Cube::col(): index out of bounds" );
   
-  cols(in_col, in_col);
+  return (*this).cols(in_col, in_col);
   }
 
 
@@ -1018,7 +1018,7 @@ Cube<eT>::col(const uword in_col) const
   
   arma_debug_check( (in_col >= n_cols), "Cube::col(): index out of bounds" );
   
-  cols(in_col, in_col);
+  return (*this).cols(in_col, in_col);
   }
 
 

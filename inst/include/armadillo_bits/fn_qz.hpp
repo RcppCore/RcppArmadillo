@@ -49,10 +49,10 @@ qz
   
   if(status == false)
     {
-    AA.reset();
-    BB.reset();
-    Q.reset();
-    Z.reset();
+    AA.soft_reset();
+    BB.soft_reset();
+    Q.soft_reset();
+    Z.soft_reset();
     arma_debug_warn("qz(): decomposition failed");
     }
   

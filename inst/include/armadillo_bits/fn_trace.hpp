@@ -78,11 +78,11 @@ trace(const Op<T1, op_diagmat>& X)
 
 
 
-//! speedup for trace(A*B)
+//! speedup for trace(A*B); non-complex elements
 template<typename T1, typename T2>
 arma_warn_unused
 inline
-typename T1::elem_type
+typename enable_if2< is_cx<typename T1::elem_type>::no, typename T1::elem_type>::result
 trace(const Glue<T1, T2, glue_times>& X)
   {
   arma_extra_debug_sigprint();
@@ -195,6 +195,54 @@ trace(const Glue<T1, T2, glue_times>& X)
     }
   
   return (use_alpha) ? (alpha * acc) : acc;
+  }
+
+
+
+//! speedup for trace(A*B); complex elements
+template<typename T1, typename T2>
+arma_warn_unused
+inline
+typename enable_if2< is_cx<typename T1::elem_type>::yes, typename T1::elem_type>::result
+trace(const Glue<T1, T2, glue_times>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const quasi_unwrap<T1> UA(X.A);
+  const quasi_unwrap<T2> UB(X.B);
+  
+  const Mat<eT>& A = UA.M;
+  const Mat<eT>& B = UB.M;
+  
+  const uword A_n_rows = A.n_rows;
+  const uword A_n_cols = A.n_cols;
+
+  const uword B_n_rows = B.n_rows;
+  const uword B_n_cols = B.n_cols;
+  
+  arma_debug_assert_mul_size(A_n_rows, A_n_cols, B_n_rows, B_n_cols, "matrix multiplication");
+  
+  if( (A.n_elem == 0) || (B.n_elem == 0) )  { return eT(0); }
+  
+  const uword N = (std::min)(A_n_rows, B_n_cols);
+  
+  eT acc = eT(0);
+  
+  for(uword k=0; k < N; ++k)
+    {
+    const eT* B_colptr = B.colptr(k);
+    
+    // condition: A_n_cols = B_n_rows
+    
+    for(uword i=0; i < A_n_cols; ++i)
+      {
+      acc += A.at(k, i) * B_colptr[i];
+      }
+    }
+  
+  return acc;
   }
 
 
