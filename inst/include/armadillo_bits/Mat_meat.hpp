@@ -6712,6 +6712,7 @@ Mat<eT>::eye(const SizeMat& s)
 
 template<typename eT>
 inline
+arma_cold
 void
 Mat<eT>::reset()
   {
@@ -6737,6 +6738,7 @@ Mat<eT>::reset()
 
 template<typename eT>
 inline
+arma_cold
 void
 Mat<eT>::soft_reset()
   {
