@@ -1,11 +1,11 @@
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 // http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,9 +17,9 @@
 #if defined(ARMA_USE_HDF5)
 
 #if !defined(ARMA_USE_HDF5_ALT)
-  
+
   // macros needed if the wrapper run-time library is not being used
-  
+
   #define arma_H5Tcopy      H5Tcopy
   #define arma_H5Tcreate    H5Tcreate
   #define arma_H5Tinsert    H5Tinsert
@@ -52,10 +52,10 @@
   #define arma_H5Gcreate    H5Gcreate
   #define arma_H5Gopen      H5Gopen
   #define arma_H5Gclose     H5Gclose
-  
+
   #define arma_H5Lexists    H5Lexists
   #define arma_H5Ldelete    H5Ldelete
-  
+
   #define arma_H5T_NATIVE_UCHAR   H5T_NATIVE_UCHAR
   #define arma_H5T_NATIVE_CHAR    H5T_NATIVE_CHAR
   #define arma_H5T_NATIVE_SHORT   H5T_NATIVE_SHORT
@@ -81,7 +81,7 @@ extern "C"
   herr_t arma_H5Tinsert(hid_t dtype_id, const char* name, size_t offset, hid_t field_id);
   htri_t arma_H5Tequal(hid_t dtype_id1, hid_t dtype_id2);
   herr_t arma_H5Tclose(hid_t dtype_id);
-  
+
   hid_t  arma_H5Dopen(hid_t loc_id, const char* name, hid_t dapl_id);
   hid_t  arma_H5Dget_type(hid_t dataset_id);
   herr_t arma_H5Dclose(hid_t dataset_id);
@@ -89,29 +89,29 @@ extern "C"
   herr_t arma_H5Dwrite(hid_t dataset_id, hid_t mem_type_id, hid_t mem_space_id, hid_t file_space_id, hid_t xfer_plist_id, const void* buf);
   hid_t  arma_H5Dget_space(hid_t dataset_id);
   herr_t arma_H5Dread(hid_t dataset_id, hid_t mem_type_id, hid_t mem_space_id, hid_t file_space_id, hid_t xfer_plist_id, void* buf);
-  
+
   int    arma_H5Sget_simple_extent_ndims(hid_t space_id);
   int    arma_H5Sget_simple_extent_dims(hid_t space_id, hsize_t* dims, hsize_t* maxdims);
   herr_t arma_H5Sclose(hid_t space_id);
   hid_t  arma_H5Screate_simple(int rank, const hsize_t* current_dims, const hsize_t* maximum_dims);
-  
+
   herr_t arma_H5Ovisit(hid_t object_id, H5_index_t index_type, H5_iter_order_t order, H5O_iterate_t op, void* op_data);
-  
+
   herr_t arma_H5Eset_auto(hid_t estack_id, H5E_auto_t func, void* client_data);
   herr_t arma_H5Eget_auto(hid_t estack_id, H5E_auto_t* func, void** client_data);
-  
+
   hid_t  arma_H5Fopen(const char* name, unsigned flags, hid_t fapl_id);
   hid_t  arma_H5Fcreate(const char* name, unsigned flags, hid_t fcpl_id, hid_t fapl_id);
   herr_t arma_H5Fclose(hid_t file_id);
   htri_t arma_H5Fis_hdf5(const char* name);
-  
+
   hid_t  arma_H5Gcreate(hid_t loc_id, const char* name, hid_t lcpl_id, hid_t gcpl_id, hid_t gapl_id);
   hid_t  arma_H5Gopen(hid_t loc_id, const char* name, hid_t gapl_id);
   herr_t arma_H5Gclose(hid_t group_id);
-  
+
   htri_t arma_H5Lexists(hid_t loc_id, const char* name, hid_t lapl_id);
   herr_t arma_H5Ldelete(hid_t loc_id, const char* name, hid_t lapl_id);
-  
+
   // Wrapper variables that represent the hid_t values for the H5T_NATIVE_*
   // types.  Note that H5T_NATIVE_UCHAR itself is a macro that resolves to about
   // forty other macros, and we definitely don't want to hijack those,
@@ -128,9 +128,9 @@ extern "C"
   extern hid_t arma_H5T_NATIVE_ULLONG;
   extern hid_t arma_H5T_NATIVE_FLOAT;
   extern hid_t arma_H5T_NATIVE_DOUBLE;
-  
+
   }
-  
+
   // Lastly, we have to hijack H5open() and H5check_version(), which are called
   // by some expanded macros of the other H5* functions.  This means we can't
   // create arma_H5open(), because we can't modify those macros.  Instead, we'll
@@ -145,10 +145,10 @@ extern "C"
   // #undef ARMA_USE_WRAPPER in their Armadillo configuration.
   herr_t H5open();
   herr_t H5check_version(unsigned majnum, unsigned minnum, unsigned relnum);
-  
+
   using arma::H5open;
   using arma::H5check_version;
-  
+
 #endif
 
 #endif

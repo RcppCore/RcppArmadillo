@@ -3,9 +3,26 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.9.200.7.0 (2019-01-17)}{
+  \itemize{
+    \item Upgraded to Armadillo release 9.200.7 (Carpe Noctem)
+    \item Fixes in 9.200.7 compared to 9.200.5:
+    \itemize{
+      \item handling complex compound expressions by \code{trace()}
+      \item handling \code{.rows()} and \code{.cols()} by the
+      \code{Cube} class 
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.9.200.5.0 (2018-11-09)}{
   \itemize{
     \item Upgraded to Armadillo release 9.200.5 (Carpe Noctem)
+    \item Changes in this release
+    \itemize{
+      \item linking issue when using fixed size matrices and vectors
+      \item faster handling of common cases by \code{princomp()}
+    }
   }
 }
 
