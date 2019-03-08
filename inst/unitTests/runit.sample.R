@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
-.setUp <- RcppArmadillo:::unit_test_setup( "sample.cpp" ) 
+.setUp <- RcppArmadillo:::unit_test_setup( "sample.cpp" )
 
 test.sample <- function() {
     ## set up S3 dispatching,
@@ -53,6 +53,9 @@ test.sample <- function() {
     ## Un-normalized probs
     probs <- seq(from=0, to=1, length.out=N)
     #probs <- probs/sum(probs)
+
+    ## Needed for a change in R 3.6.0 reducing a bias in very large samples
+    suppressWarnings(RNGversion("3.5.0"))
 
     ## Run the S3 generic function csample
     ## and associated R function on each data type
