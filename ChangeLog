@@ -1,3 +1,8 @@
+2019-03-08  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Release 0.9.200.7.1
+        * inst/NEWS.Rd: Release 0.9.200.7.1
+
 2019-03-07  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): New minor version

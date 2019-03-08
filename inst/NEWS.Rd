@@ -3,6 +3,15 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.9.200.7.1 (2019-03-08)}{
+  \itemize{
+    \item Explicit setting of \code{RNGversion("3.5.0")} in one unit
+    test to accomodate the change in \code{sample()} in R 3.6.0
+    \item Back-ported a fix to the Wishart RNG from upstream (Dirk in
+    \ghpr{248} fixing \ghit{247})
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.9.200.7.0 (2019-01-17)}{
   \itemize{
     \item Upgraded to Armadillo release 9.200.7 (Carpe Noctem)
@@ -15,7 +24,7 @@
   }
 }
 
-\section{Changes in RcppArmadillo version 0.9.200.5.0 (2018-11-09)}{
+\section{Changes in RcppArmadillo version 0.9.200.5.0 (2018-11-27)}{
   \itemize{
     \item Upgraded to Armadillo release 9.200.5 (Carpe Noctem)
     \item Changes in this release
