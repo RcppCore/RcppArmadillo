@@ -29,7 +29,7 @@ class Gen
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  static const bool use_at    = (is_same_type<gen_type, gen_eye>::value) ? true : false;
+  static const bool use_at    = (is_same_type<gen_type, gen_eye>::value);
   static const bool is_simple = (is_same_type<gen_type, gen_ones>::value) || (is_same_type<gen_type, gen_zeros>::value); 
   
   static const bool is_row = T1::is_row;

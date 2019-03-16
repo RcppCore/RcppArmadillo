@@ -502,6 +502,30 @@ struct quasi_unwrap< Op<Row<eT>, op_strans> >
 
 
 
+template<typename eT>
+struct quasi_unwrap< Op<subview_col<eT>, op_strans> >
+  {
+  inline
+  quasi_unwrap(const Op<subview_col<eT>, op_strans>& A)
+    : orig( A.m.m )
+    , M   ( const_cast<eT*>( A.m.colptr(0) ), A.m.n_rows, false, false )
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const Mat<eT>& orig;
+  const Row<eT>  M;
+  
+  static const bool is_const     = true;
+  static const bool has_subview  = true;
+  static const bool has_orig_mem = true;
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&X) == void_ptr(&orig)); }
+  };
+
+
+
 template<typename T1>
 struct quasi_unwrap_Col_htrans
   {
@@ -626,6 +650,70 @@ struct quasi_unwrap< Op<Row<eT>, op_htrans> >
   
   using quasi_unwrap_Row_htrans_extra::M;
   using quasi_unwrap_Row_htrans_extra::is_alias;
+  };
+
+
+
+template<typename T1>
+struct quasi_unwrap_subview_col_htrans
+  {
+  inline quasi_unwrap_subview_col_htrans(const T1&) {}
+  };
+
+
+
+template<typename eT>
+struct quasi_unwrap_subview_col_htrans< Op<subview_col<eT>, op_htrans> >
+  {
+  inline
+  quasi_unwrap_subview_col_htrans(const Op<subview_col<eT>, op_htrans>& A)
+    : orig(A.m.m)
+    , M   (const_cast<eT*>(A.m.colptr(0)), A.m.n_rows, false, false)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const Mat<eT>& orig;
+  const Row<eT>  M;
+  
+  static const bool is_const     = true;
+  static const bool has_subview  = true;
+  static const bool has_orig_mem = true;
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&orig) == void_ptr(&X)); }
+  };
+
+
+
+template<typename T1, bool condition>
+struct quasi_unwrap_subview_col_htrans_redirect {};
+
+template<typename T1>
+struct quasi_unwrap_subview_col_htrans_redirect<T1, true>  { typedef quasi_unwrap_default<T1>            result; };
+
+template<typename T1>
+struct quasi_unwrap_subview_col_htrans_redirect<T1, false> { typedef quasi_unwrap_subview_col_htrans<T1> result; };
+
+
+template<typename eT>
+struct quasi_unwrap< Op<subview_col<eT>, op_htrans> >
+  : public quasi_unwrap_subview_col_htrans_redirect< Op<subview_col<eT>, op_htrans>, is_cx<eT>::value >::result
+  {
+  typedef typename quasi_unwrap_subview_col_htrans_redirect< Op<subview_col<eT>, op_htrans>, is_cx<eT>::value >::result quasi_unwrap_subview_col_htrans_extra;
+  
+  inline
+  quasi_unwrap(const Op<subview_col<eT>, op_htrans>& A)
+    : quasi_unwrap_subview_col_htrans_extra(A)
+    {
+    }
+  
+  static const bool is_const     = quasi_unwrap_subview_col_htrans_extra::is_const;
+  static const bool has_subview  = quasi_unwrap_subview_col_htrans_extra::has_subview;
+  static const bool has_orig_mem = quasi_unwrap_subview_col_htrans_extra::has_orig_mem;
+  
+  using quasi_unwrap_subview_col_htrans_extra::M;
+  using quasi_unwrap_subview_col_htrans_extra::is_alias;
   };
 
 

@@ -432,7 +432,7 @@ static
 std::string
 arma_incompat_size_string(const uword A_n_rows, const uword A_n_cols, const uword B_n_rows, const uword B_n_cols, const char* x)
   {
-  std::stringstream tmp;
+  std::ostringstream tmp;
   
   tmp << x << ": incompatible matrix dimensions: " << A_n_rows << 'x' << A_n_cols << " and " << B_n_rows << 'x' << B_n_cols;
   
@@ -447,7 +447,7 @@ static
 std::string
 arma_incompat_size_string(const uword A_n_rows, const uword A_n_cols, const uword A_n_slices, const uword B_n_rows, const uword B_n_cols, const uword B_n_slices, const char* x)
   {
-  std::stringstream tmp;
+  std::ostringstream tmp;
   
   tmp << x << ": incompatible cube dimensions: " << A_n_rows << 'x' << A_n_cols << 'x' << A_n_slices << " and " << B_n_rows << 'x' << B_n_cols << 'x' << B_n_slices;
   
@@ -463,7 +463,7 @@ static
 std::string
 arma_incompat_size_string(const subview_cube<eT>& Q, const Mat<eT>& A, const char* x)
   {
-  std::stringstream tmp;
+  std::ostringstream tmp;
   
   tmp << x
       << ": interpreting matrix as cube with dimensions: "
@@ -879,7 +879,7 @@ arma_assert_cube_as_mat(const Mat<eT>& M, const T1& Q, const char* x, const bool
     {
     if( ( (Q_n_rows == 1) || (Q_n_cols == 1) || (Q_n_slices == 1) ) == false )
       {
-      std::stringstream tmp;
+      std::ostringstream tmp;
         
       tmp << x
           << ": can't interpret cube with dimensions "
@@ -895,7 +895,7 @@ arma_assert_cube_as_mat(const Mat<eT>& M, const T1& Q, const char* x, const bool
       {
       if( (M_vec_state == 1) && (Q_n_cols != 1) )
         {
-        std::stringstream tmp;
+        std::ostringstream tmp;
         
         tmp << x
             << ": can't interpret cube with dimensions "
@@ -907,7 +907,7 @@ arma_assert_cube_as_mat(const Mat<eT>& M, const T1& Q, const char* x, const bool
       
       if( (M_vec_state == 2) && (Q_n_rows != 1) )
         {
-        std::stringstream tmp;
+        std::ostringstream tmp;
         
         tmp << x
             << ": can't interpret cube with dimensions "
@@ -921,7 +921,7 @@ arma_assert_cube_as_mat(const Mat<eT>& M, const T1& Q, const char* x, const bool
       {
       if( (Q_n_cols != 1) && (Q_n_rows != 1) )
         {
-        std::stringstream tmp;
+        std::ostringstream tmp;
         
         tmp << x
             << ": can't interpret cube with dimensions "
@@ -952,7 +952,7 @@ arma_assert_cube_as_mat(const Mat<eT>& M, const T1& Q, const char* x, const bool
           == false
         )
         {
-        std::stringstream tmp;
+        std::ostringstream tmp;
         
         tmp << x
             << ": can't interpret cube with dimensions "
@@ -969,7 +969,7 @@ arma_assert_cube_as_mat(const Mat<eT>& M, const T1& Q, const char* x, const bool
         {
         if( (M_vec_state == 1) && (Q_n_rows != M_n_rows) )
           {
-          std::stringstream tmp;
+          std::ostringstream tmp;
           
           tmp << x
               << ": can't interpret cube with dimensions "
@@ -982,7 +982,7 @@ arma_assert_cube_as_mat(const Mat<eT>& M, const T1& Q, const char* x, const bool
         
         if( (M_vec_state == 2) && (Q_n_cols != M_n_cols) )
           {
-          std::stringstream tmp;
+          std::ostringstream tmp;
           
           tmp << x
               << ": can't interpret cube with dimensions "
@@ -997,7 +997,7 @@ arma_assert_cube_as_mat(const Mat<eT>& M, const T1& Q, const char* x, const bool
         {
         if( ( (M_n_cols == Q_n_slices) || (M_n_rows == Q_n_slices) ) == false )
           {
-          std::stringstream tmp;
+          std::ostringstream tmp;
           
           tmp << x
               << ": can't interpret cube with dimensions "

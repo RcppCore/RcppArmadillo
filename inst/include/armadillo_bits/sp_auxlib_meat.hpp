@@ -827,7 +827,7 @@ sp_auxlib::spsolve_simple(Mat<typename T1::elem_type>& X, const SpBase<typename 
     // Process the return code.
     if( (info > 0) && (info <= int(A.n_cols)) )
       {
-      // std::stringstream tmp;
+      // std::ostringstream tmp;
       // tmp << "spsolve(): could not solve system; LU factorisation completed, but detected zero in U(" << (info-1) << ',' << (info-1) << ')';
       // arma_debug_warn(tmp.str());
       }
@@ -1017,7 +1017,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
       }
     if( (info > 0) && (info <= int(A.n_cols)) )
       {
-      // std::stringstream tmp;
+      // std::ostringstream tmp;
       // tmp << "spsolve(): could not solve system; LU factorisation completed, but detected zero in U(" << (info-1) << ',' << (info-1) << ')';
       // arma_debug_warn(tmp.str());
       }
@@ -1261,7 +1261,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
       {
       // Uh, crap.
       
-      std::stringstream tmp;
+      std::ostringstream tmp;
       
       tmp << "sp_auxlib::destroy_supermatrix(): unhandled Stype" << std::endl;
       tmp << "Stype  val: " << out.Stype << std::endl;

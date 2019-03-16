@@ -5687,129 +5687,134 @@ Mat<eT>::is_sorted(const char* direction, const uword dim) const
   {
   arma_extra_debug_sigprint();
   
-  const char sig = (direction != NULL) ? direction[0] : char(0);
+  const char sig1 = (direction != NULL) ? direction[0] : char(0);
   
-  arma_debug_check( ((sig != 'a') && (sig != 'd')), "Mat::is_sorted(): unknown sort direction" );
+  // direction is one of:
+  // "ascend"
+  // "descend"
+  // "strictascend" 
+  // "strictdescend"
+  
+  arma_debug_check( ((sig1 != 'a') && (sig1 != 'd') && (sig1 != 's')), "Mat::is_sorted(): unknown sort direction" );
+  
+  // "strictascend" 
+  // "strictdescend"
+  //  0123456
+  
+  const char sig2 = (sig1 == 's') ? direction[6] : char(0);  
+  
+  if(sig1 == 's')  { arma_debug_check( ((sig2 != 'a') && (sig2 != 'd')), "Mat::is_sorted(): unknown sort direction" ); }
   
   arma_debug_check( (dim > 1), "Mat::is_sorted(): parameter 'dim' must be 0 or 1" );
+  
+  if(sig1 == 'a')
+    {
+    // case: ascend
+    
+    // deliberately using the opposite direction comparator,
+    // as we need to handle the case of two elements being equal
+    
+    arma_gt_comparator<eT> comparator;
+    
+    return (*this).is_sorted_helper(comparator, dim);
+    }
+  else
+  if(sig1 == 'd')
+    {
+    // case: descend
+    
+    // deliberately using the opposite direction comparator,
+    // as we need to handle the case of two elements being equal
+    
+    arma_lt_comparator<eT> comparator;
+    
+    return (*this).is_sorted_helper(comparator, dim);
+    }
+  else
+  if((sig1 == 's') && (sig2 == 'a'))
+    {
+    // case: strict ascend
+    
+    arma_geq_comparator<eT> comparator;
+    
+    return (*this).is_sorted_helper(comparator, dim);
+    }
+  else
+  if((sig1 == 's') && (sig2 == 'd'))
+    {
+    // case: strict descend
+    
+    arma_leq_comparator<eT> comparator;
+    
+    return (*this).is_sorted_helper(comparator, dim);
+    }
+  
+  return true;
+  }
+
+
+
+template<typename eT>
+template<typename comparator>
+inline
+arma_warn_unused
+bool
+Mat<eT>::is_sorted_helper(const comparator& comp, const uword dim) const
+  {
+  arma_extra_debug_sigprint();
   
   if(n_elem <= 1)  { return true; }
   
   const uword local_n_cols = n_cols;
   const uword local_n_rows = n_rows;
   
-  if(sig == 'a')
+  if(dim == 0)
     {
-    // deliberately using the opposite direction comparator,
-    // as we need to handle the case of two elements being equal
+    if(local_n_rows <= 1u)  { return true; }
     
-    arma_descend_sort_helper<eT> comparator;
+    const uword local_n_rows_m1 = local_n_rows - 1;
     
-    if(dim == 0)
+    for(uword c=0; c < local_n_cols; ++c)
       {
-      if(local_n_rows <= 1u)  { return true; }
+      const eT* coldata = colptr(c);
       
-      const uword local_n_rows_m1 = local_n_rows - 1;
-      
-      for(uword c=0; c < local_n_cols; ++c)
+      for(uword r=0; r < local_n_rows_m1; ++r)
         {
-        const eT* coldata = colptr(c);
+        const eT val1 = (*coldata); coldata++;
+        const eT val2 = (*coldata);
         
-        for(uword r=0; r < local_n_rows_m1; ++r)
-          {
-          const eT val1 = (*coldata); coldata++;
-          const eT val2 = (*coldata);
-          
-          if(comparator(val1,val2))  { return false; }
-          }
-        }
-      }
-    else  // dim == 1
-      {
-      if(local_n_cols <= 1u)  { return true; }
-      
-      const uword local_n_cols_m1 = local_n_cols - 1;
-      
-      if(local_n_rows == 1)
-        {
-        const eT* rowdata = memptr();
-        
-        for(uword c=0; c < local_n_cols_m1; ++c)
-          {
-          const eT val1 = (*rowdata);  rowdata++;
-          const eT val2 = (*rowdata);
-          
-          if(comparator(val1,val2))  { return false; }
-          }
-        }
-      else
-        {
-        for(uword r=0; r < local_n_rows;    ++r)
-        for(uword c=0; c < local_n_cols_m1; ++c)
-          {
-          const eT val1 = at(r,c  );
-          const eT val2 = at(r,c+1);
-          
-          if(comparator(val1,val2))  { return false; }
-          }
+        if(comp(val1,val2))  { return false; }
         }
       }
     }
   else
-  if(sig == 'd')
+  if(dim == 1)
     {
-    // deliberately using the opposite direction comparator,
-    // as we need to handle the case of two elements being equal
+    if(local_n_cols <= 1u)  { return true; }
     
-    arma_ascend_sort_helper<eT> comparator;
+    const uword local_n_cols_m1 = local_n_cols - 1;
     
-    if(dim == 0)
+    if(local_n_rows == 1)
       {
-      if(local_n_rows <= 1u)  { return true; }
+      const eT* rowdata = memptr();
       
-      const uword local_n_rows_m1 = local_n_rows - 1;
-      
-      for(uword c=0; c < local_n_cols; ++c)
+      for(uword c=0; c < local_n_cols_m1; ++c)
         {
-        const eT* coldata = colptr(c);
+        const eT val1 = (*rowdata);  rowdata++;
+        const eT val2 = (*rowdata);
         
-        for(uword r=0; r < local_n_rows_m1; ++r)
-          {
-          const eT val1 = (*coldata); coldata++;
-          const eT val2 = (*coldata);
-          
-          if(comparator(val1,val2))  { return false; }
-          }
+        if(comp(val1,val2))  { return false; }
         }
       }
-    else  // dim == 1
+    else
       {
-      if(local_n_cols <= 1u)  { return true; }
-      
-      const uword local_n_cols_m1 = local_n_cols - 1;
-      
-      if(local_n_rows == 1)
+      for(uword r=0; r < local_n_rows;    ++r)
+      for(uword c=0; c < local_n_cols_m1; ++c)
         {
-        const eT* rowdata = memptr();
+        const eT val1 = at(r,c  );
+        const eT val2 = at(r,c+1);
         
-        for(uword c=0; c < local_n_cols_m1; ++c)
-          {
-          const eT val1 = (*rowdata);  rowdata++;
-          const eT val2 = (*rowdata);
-          
-          if(comparator(val1,val2))  { return false; }
-          }
-        }
-      else
-        {
-        for(uword r=0; r < local_n_rows;    ++r)
-        for(uword c=0; c < local_n_cols_m1; ++c)
-          {
-          const eT val1 = at(r,c  );
-          const eT val2 = at(r,c+1);
-          
-          if(comparator(val1,val2))  { return false; }
-          }
+        if(comp(val1,val2))  { return false; }
         }
       }
     }

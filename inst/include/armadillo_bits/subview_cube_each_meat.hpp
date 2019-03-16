@@ -54,7 +54,7 @@ inline
 const std::string
 subview_cube_each_common<eT>::incompat_size_string(const Mat<eT>& A) const
   {
-  std::stringstream tmp;
+  std::ostringstream tmp;
   
   tmp << "each_slice(): incompatible size; expected " << P.n_rows << 'x' << P.n_cols << ", got " << A.n_rows << 'x' << A.n_cols;
   

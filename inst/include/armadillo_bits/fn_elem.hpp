@@ -274,6 +274,35 @@ log10(const BaseCube<typename T1::elem_type,T1>& A)
 
 
 //
+// log1p
+
+template<typename T1>
+arma_warn_unused
+arma_inline
+typename enable_if2< is_arma_type<T1>::value, const eOp<T1, eop_log1p> >::result
+log1p(const T1& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  return eOp<T1, eop_log1p>(A);
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+arma_inline
+const eOpCube<T1, eop_log1p>
+log1p(const BaseCube<typename T1::elem_type,T1>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  return eOpCube<T1, eop_log1p>(A.get_ref());
+  }
+
+
+
+//
 // exp
 
 template<typename T1>
@@ -354,6 +383,34 @@ exp10(const BaseCube<typename T1::elem_type,T1>& A)
   arma_extra_debug_sigprint();
   
   return eOpCube<T1, eop_exp10>(A.get_ref());
+  }
+
+
+
+// expm1
+
+template<typename T1>
+arma_warn_unused
+arma_inline
+typename enable_if2< is_arma_type<T1>::value, const eOp<T1, eop_expm1> >::result
+expm1(const T1& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  return eOp<T1, eop_expm1>(A);
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+arma_inline
+const eOpCube<T1, eop_expm1>
+expm1(const BaseCube<typename T1::elem_type,T1>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  return eOpCube<T1, eop_expm1>(A.get_ref());
   }
 
 

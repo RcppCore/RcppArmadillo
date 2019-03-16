@@ -220,7 +220,7 @@ op_shuffle_default::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_shuff
   
   const unwrap<T1> U(in.m);
   
-  const uword dim = (T1::is_row) ? 1 : 0;
+  const uword dim = (T1::is_row) ? 1 : 0;  // NOTE: this only checks the type; U.M.n_rows == 1 is not checked
   
   op_shuffle::apply_direct(out, U.M, dim);
   }

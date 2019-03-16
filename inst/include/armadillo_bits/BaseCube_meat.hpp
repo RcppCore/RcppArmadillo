@@ -151,6 +151,39 @@ BaseCube<elem_type,derived>::index_max() const
 
 
 
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
+BaseCube<elem_type,derived>::is_finite() const
+  {
+  arma_extra_debug_sigprint();
+  
+  const ProxyCube<derived> P( (*this).get_ref() );
+  
+  if(is_Cube<typename ProxyCube<derived>::stored_type>::value)
+    {
+    const unwrap_cube<typename ProxyCube<derived>::stored_type> U(P.Q);
+    
+    return arrayops::is_finite( U.M.memptr(), U.M.n_elem );
+    }
+  
+  const uword n_r = P.get_n_rows();
+  const uword n_c = P.get_n_cols();
+  const uword n_s = P.get_n_slices();
+  
+  for(uword s=0; s<n_s; ++s)
+  for(uword c=0; c<n_c; ++c)
+  for(uword r=0; r<n_r; ++r)
+    {
+    if( arma_isfinite(P.at(r,c,s)) == false )  { return false; }
+    }
+  
+  return true;
+  }
+
+
+
 //
 // extra functions defined in BaseCube_eval_Cube
 

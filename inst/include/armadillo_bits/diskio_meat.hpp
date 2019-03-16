@@ -291,7 +291,7 @@ diskio::gen_tmp_name(const std::string& x)
   const u16 a = u16( (u.val >> 8)   & 0xFFFF );
   const u16 b = u16( (std::clock()) & 0xFFFF );
   
-  std::stringstream ss;
+  std::ostringstream ss;
   
   ss << x << ".tmp_";
   

@@ -35,20 +35,9 @@ inline
 void
 Base<elem_type,derived>::print(const std::string extra_text) const
   {
-  if(is_op_strans<derived>::value || is_op_htrans<derived>::value)
-    {
-    const Proxy<derived> P( (*this).get_ref() );
-    
-    const quasi_unwrap< typename Proxy<derived>::stored_type > tmp(P.Q);
-    
-    tmp.M.impl_print(extra_text);
-    }
-  else
-    {
-    const quasi_unwrap<derived> tmp( (*this).get_ref() );
-    
-    tmp.M.impl_print(extra_text);
-    }
+  const quasi_unwrap<derived> tmp( (*this).get_ref() );
+  
+  tmp.M.impl_print(extra_text);
   }
 
 
@@ -59,20 +48,9 @@ inline
 void
 Base<elem_type,derived>::print(std::ostream& user_stream, const std::string extra_text) const
   {
-  if(is_op_strans<derived>::value || is_op_htrans<derived>::value)
-    {
-    const Proxy<derived> P( (*this).get_ref() );
-    
-    const quasi_unwrap< typename Proxy<derived>::stored_type > tmp(P.Q);
-    
-    tmp.M.impl_print(user_stream, extra_text);
-    }
-  else
-    {
-    const quasi_unwrap<derived> tmp( (*this).get_ref() );
-    
-    tmp.M.impl_print(user_stream, extra_text);
-    }
+  const quasi_unwrap<derived> tmp( (*this).get_ref() );
+  
+  tmp.M.impl_print(user_stream, extra_text);
   }
   
 
@@ -83,20 +61,9 @@ inline
 void
 Base<elem_type,derived>::raw_print(const std::string extra_text) const
   {
-  if(is_op_strans<derived>::value || is_op_htrans<derived>::value)
-    {
-    const Proxy<derived> P( (*this).get_ref() );
-    
-    const quasi_unwrap< typename Proxy<derived>::stored_type > tmp(P.Q);
-    
-    tmp.M.impl_raw_print(extra_text);
-    }
-  else
-    {
-    const quasi_unwrap<derived> tmp( (*this).get_ref() );
-    
-    tmp.M.impl_raw_print(extra_text);
-    }
+  const quasi_unwrap<derived> tmp( (*this).get_ref() );
+  
+  tmp.M.impl_raw_print(extra_text);
   }
 
 
@@ -107,20 +74,9 @@ inline
 void
 Base<elem_type,derived>::raw_print(std::ostream& user_stream, const std::string extra_text) const
   {
-  if(is_op_strans<derived>::value || is_op_htrans<derived>::value)
-    {
-    const Proxy<derived> P( (*this).get_ref() );
-    
-    const quasi_unwrap< typename Proxy<derived>::stored_type > tmp(P.Q);
-    
-    tmp.M.impl_raw_print(user_stream, extra_text);
-    }
-  else
-    {
-    const quasi_unwrap<derived> tmp( (*this).get_ref() );
-    
-    tmp.M.impl_raw_print(user_stream, extra_text);
-    }
+  const quasi_unwrap<derived> tmp( (*this).get_ref() );
+  
+  tmp.M.impl_raw_print(user_stream, extra_text);
   }
 
 
@@ -500,24 +456,69 @@ Base<elem_type,derived>::is_rowvec() const
 
 
 
-//
-// extra functions defined in Base_inv_yes
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
+Base<elem_type,derived>::is_finite() const
+  {
+  arma_extra_debug_sigprint();
+  
+  const Proxy<derived> P( (*this).get_ref() );
+  
+  if(is_Mat<typename Proxy<derived>::stored_type>::value)
+    {
+    const quasi_unwrap<typename Proxy<derived>::stored_type> U(P.Q);
+    
+    return arrayops::is_finite( U.M.memptr(), U.M.n_elem );
+    }
+  
+  if(Proxy<derived>::use_at == false)
+    {
+    const typename Proxy<derived>::ea_type Pea = P.get_ea();
+    
+    const uword n_elem = P.get_n_elem();
+    
+    for(uword i=0; i<n_elem; ++i)
+      {
+      if(arma_isfinite(Pea[i]) == false)  { return false; }
+      }
+    }
+  else
+    {
+    const uword n_rows = P.get_n_rows();
+    const uword n_cols = P.get_n_cols();
+    
+    for(uword col=0; col<n_cols; ++col)
+    for(uword row=0; row<n_rows; ++row)
+      {
+      if(arma_isfinite(P.at(row,col)) == false)  { return false; }
+      }
+    }
+  
+  return true;
+  }
 
-template<typename derived>
+
+
+//
+// extra functions defined in Base_extra_yes
+
+template<typename elem_type, typename derived>
 arma_inline
 const Op<derived,op_inv>
-Base_inv_yes<derived>::i() const
+Base_extra_yes<elem_type, derived>::i() const
   {
   return Op<derived,op_inv>(static_cast<const derived&>(*this));
   }
 
 
 
-template<typename derived>
+template<typename elem_type, typename derived>
 arma_deprecated
 inline
 const Op<derived,op_inv>
-Base_inv_yes<derived>::i(const bool) const   // argument kept only for compatibility with old user code
+Base_extra_yes<elem_type, derived>::i(const bool) const   // argument kept only for compatibility with old user code
   {
   // arma_debug_warn(".i(bool) is deprecated and will be removed; change to .i()");
   
@@ -526,15 +527,66 @@ Base_inv_yes<derived>::i(const bool) const   // argument kept only for compatibi
 
 
 
-template<typename derived>
+template<typename elem_type, typename derived>
 arma_deprecated
 inline
 const Op<derived,op_inv>
-Base_inv_yes<derived>::i(const char*) const   // argument kept only for compatibility with old user code
+Base_extra_yes<elem_type, derived>::i(const char*) const   // argument kept only for compatibility with old user code
   {
   // arma_debug_warn(".i(char*) is deprecated and will be removed; change to .i()");
   
   return Op<derived,op_inv>(static_cast<const derived&>(*this));
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
+Base_extra_yes<elem_type,derived>::is_sympd() const
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename get_pod_type<elem_type>::result T;
+  
+  Mat<elem_type> X = static_cast<const derived&>(*this);
+  
+  // default value for tol
+  const T tol = T(100) * std::numeric_limits<T>::epsilon() * norm(X, "fro");
+  
+  if(X.is_hermitian(tol) == false)  { return false; }
+  
+  if(X.is_empty())  { return false; }
+  
+  X.diag() -= elem_type(tol);
+  
+  return auxlib::chol_simple(X);
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
+Base_extra_yes<elem_type,derived>::is_sympd(typename get_pod_type<elem_type>::result tol) const
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename get_pod_type<elem_type>::result T;
+  
+  arma_debug_check( (tol < T(0)), "is_sympd(): parameter 'tol' must be >= 0" );
+  
+  Mat<elem_type> X = static_cast<const derived&>(*this);
+  
+  if(X.is_hermitian(tol) == false)  { return false; }
+  
+  if(X.is_empty())  { return false; }
+  
+  X.diag() -= elem_type(tol);
+  
+  return auxlib::chol_simple(X);
   }
 
 

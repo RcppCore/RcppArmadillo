@@ -1869,7 +1869,7 @@ subview_cube<eT>::plus_inplace(Mat<eT>& out, const subview_cube<eT>& in)
     {
     if( (arma_config::debug) && ((out_n_rows != in_n_rows) || (out_n_cols != in_n_cols)) )
       {
-      std::stringstream tmp;
+      std::ostringstream tmp;
       
       tmp
         << "in-place addition: "
@@ -1970,7 +1970,7 @@ subview_cube<eT>::minus_inplace(Mat<eT>& out, const subview_cube<eT>& in)
     {
     if( (arma_config::debug) && ((out_n_rows != in_n_rows) || (out_n_cols != in_n_cols)) )
       {
-      std::stringstream tmp;
+      std::ostringstream tmp;
       
       tmp
         << "in-place subtraction: "
@@ -2071,7 +2071,7 @@ subview_cube<eT>::schur_inplace(Mat<eT>& out, const subview_cube<eT>& in)
     {
     if( (arma_config::debug) && ((out_n_rows != in_n_rows) || (out_n_cols != in_n_cols)) )
       {
-      std::stringstream tmp;
+      std::ostringstream tmp;
       
       tmp
         << "in-place element-wise multiplication: "
@@ -2172,7 +2172,7 @@ subview_cube<eT>::div_inplace(Mat<eT>& out, const subview_cube<eT>& in)
     {
     if( (arma_config::debug) && ((out_n_rows != in_n_rows) || (out_n_cols != in_n_cols)) )
       {
-      std::stringstream tmp;
+      std::ostringstream tmp;
       
       tmp
         << "in-place element-wise division: "

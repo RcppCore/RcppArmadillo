@@ -1091,6 +1091,216 @@ auxlib::eig_gen
 
 
 
+//! eigen decomposition of general square matrix (real, balance given matrix)
+template<typename T1>
+inline
+bool
+auxlib::eig_gen_balance
+  (
+         Mat< std::complex<typename T1::pod_type> >& vals,
+         Mat< std::complex<typename T1::pod_type> >& vecs,
+  const bool                                         vecs_on,
+  const Base<typename T1::pod_type,T1>&              expr
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  #if defined(ARMA_USE_LAPACK)
+    {
+    typedef typename T1::pod_type T;
+    
+    Mat<T> X = expr.get_ref();
+    
+    arma_debug_check( (X.is_square() == false), "eig_gen(): given matrix must be square sized" );
+    
+    arma_debug_assert_blas_size(X);
+    
+    if(X.is_empty())
+      {
+      vals.reset();
+      vecs.reset();
+      return true;
+      }
+    
+    if(X.is_finite() == false)  { return false; }
+    
+    vals.set_size(X.n_rows, 1);
+    
+    Mat<T> tmp(1,1);
+    
+    if(vecs_on)
+      {
+      vecs.set_size(X.n_rows, X.n_rows);
+       tmp.set_size(X.n_rows, X.n_rows);
+      }
+    
+    podarray<T> junk(1);
+    
+    char     bal   = 'B'; 
+    char     jobvl = 'N';
+    char     jobvr = (vecs_on) ? 'V' : 'N';
+    char     sense = 'N';
+    blas_int N     = blas_int(X.n_rows);
+    T*       vl    = junk.memptr();
+    T*       vr    = (vecs_on) ? tmp.memptr() : junk.memptr();
+    blas_int ldvl  = blas_int(1);
+    blas_int ldvr  = (vecs_on) ? blas_int(tmp.n_rows) : blas_int(1);
+    blas_int ilo   = blas_int(0);
+    blas_int ihi   = blas_int(0);
+    T        abnrm = T(0);
+    blas_int lwork = 3 * ((std::max)(blas_int(1), blas_int(2*N)));
+    blas_int info  = blas_int(0);
+    
+    podarray<T>  scale(X.n_rows);
+    podarray<T> rconde(X.n_rows);
+    podarray<T> rcondv(X.n_rows);
+    
+    podarray<T>         work( static_cast<uword>(lwork) );
+    podarray<blas_int> iwork( uword(1) );  // iwork not used by lapack::geevx() as sense = 'N'
+    
+    podarray<T> vals_real(X.n_rows);
+    podarray<T> vals_imag(X.n_rows);
+    
+    arma_extra_debug_print("lapack::geevx() -- START");
+    lapack::geevx(&bal, &jobvl, &jobvr, &sense, &N, X.memptr(), &N, vals_real.memptr(), vals_imag.memptr(), vl, &ldvl, vr, &ldvr, &ilo, &ihi, scale.memptr(), &abnrm, rconde.memptr(), rcondv.memptr(), work.memptr(), &lwork, iwork.memptr(), &info);
+    arma_extra_debug_print("lapack::geevx() -- END");
+    
+    if(info != 0)  { return false; }
+    
+    arma_extra_debug_print("reformatting eigenvalues and eigenvectors");
+    
+    std::complex<T>* vals_mem = vals.memptr();
+    
+    for(uword i=0; i < X.n_rows; ++i)  { vals_mem[i] = std::complex<T>(vals_real[i], vals_imag[i]); }
+    
+    if(vecs_on)
+      {
+      for(uword j=0; j < X.n_rows; ++j)
+        {
+        if( (j < (X.n_rows-1)) && (vals_mem[j] == std::conj(vals_mem[j+1])) )
+          {
+          for(uword i=0; i < X.n_rows; ++i)
+            {
+            vecs.at(i,j)   = std::complex<T>( tmp.at(i,j),  tmp.at(i,j+1) );
+            vecs.at(i,j+1) = std::complex<T>( tmp.at(i,j), -tmp.at(i,j+1) );
+            }
+          
+          ++j;
+          }
+        else
+          {
+          for(uword i=0; i<X.n_rows; ++i)
+            {
+            vecs.at(i,j) = std::complex<T>(tmp.at(i,j), T(0));
+            }
+          }
+        }
+      }
+    
+    return true;
+    }
+  #else
+    {
+    arma_ignore(vals);
+    arma_ignore(vecs);
+    arma_ignore(vecs_on);
+    arma_ignore(expr);
+    arma_stop_logic_error("eig_gen(): use of LAPACK must be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
+//! eigen decomposition of general square matrix (complex, balance given matrix)
+template<typename T1>
+inline
+bool
+auxlib::eig_gen_balance
+  (
+         Mat< std::complex<typename T1::pod_type> >&     vals,
+         Mat< std::complex<typename T1::pod_type> >&     vecs, 
+  const bool                                             vecs_on,
+  const Base< std::complex<typename T1::pod_type>, T1 >& expr
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  #if defined(ARMA_CRIPPLED_LAPACK)
+    {
+    arma_extra_debug_print("auxlib::eig_gen_balance(): redirecting to auxlib::eig_gen() due to crippled LAPACK");
+    
+    return auxlib::eig_gen(vals, vecs, vecs_on, expr);
+    }
+  #elif defined(ARMA_USE_LAPACK)
+    {
+    typedef typename T1::pod_type     T;
+    typedef typename std::complex<T> eT;
+    
+    Mat<eT> X = expr.get_ref();
+    
+    arma_debug_check( (X.is_square() == false), "eig_gen(): given matrix must be square sized" );
+    
+    arma_debug_assert_blas_size(X);
+    
+    if(X.is_empty())
+      {
+      vals.reset();
+      vecs.reset();
+      return true;
+      }
+    
+    if(X.is_finite() == false)  { return false; }
+    
+    vals.set_size(X.n_rows, 1);
+    
+    if(vecs_on)  { vecs.set_size(X.n_rows, X.n_rows); }
+    
+    podarray<eT> junk(1);
+    
+    char     bal   = 'B';
+    char     jobvl = 'N';
+    char     jobvr = (vecs_on) ? 'V' : 'N';
+    char     sense = 'N';
+    blas_int N     = blas_int(X.n_rows);
+    eT*      vl    = junk.memptr();
+    eT*      vr    = (vecs_on) ? vecs.memptr() : junk.memptr();
+    blas_int ldvl  = blas_int(1);
+    blas_int ldvr  = (vecs_on) ? blas_int(vecs.n_rows) : blas_int(1);
+    blas_int ilo   = blas_int(0);
+    blas_int ihi   = blas_int(0);
+    T        abnrm = T(0);
+    blas_int lwork = 3 * ((std::max)(blas_int(1), blas_int(2*N)));
+    blas_int info  = blas_int(0);
+    
+    podarray<T>  scale(X.n_rows);
+    podarray<T> rconde(X.n_rows);
+    podarray<T> rcondv(X.n_rows);
+    
+    podarray<eT>  work( static_cast<uword>(lwork) );
+    podarray< T> rwork( static_cast<uword>(2*N)   );
+    
+    arma_extra_debug_print("lapack::cx_geevx() -- START");
+    lapack::cx_geevx(&bal, &jobvl, &jobvr, &sense, &N, X.memptr(), &N, vals.memptr(), vl, &ldvl, vr, &ldvr, &ilo, &ihi, scale.memptr(), &abnrm, rconde.memptr(), rcondv.memptr(), work.memptr(), &lwork, rwork.memptr(), &info);
+    arma_extra_debug_print("lapack::cx_geevx() -- END");
+    
+    return (info == 0);
+    }
+  #else
+    {
+    arma_ignore(vals);
+    arma_ignore(vecs);
+    arma_ignore(vecs_on);
+    arma_ignore(expr);
+    arma_stop_logic_error("eig_gen(): use of LAPACK must be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
 //! eigendecomposition of general square real matrix pair (real)
 template<typename T1, typename T2>
 inline
@@ -1651,6 +1861,49 @@ auxlib::eig_sym_dc(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Base<st
     arma_ignore(eigvec);
     arma_ignore(X);
     arma_stop_logic_error("eig_sym(): use of LAPACK must be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
+template<typename eT>
+inline
+bool
+auxlib::chol_simple(Mat<eT>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  #if defined(ARMA_USE_ATLAS)
+    {
+    arma_debug_assert_atlas_size(X);
+    
+    int info = 0;
+    
+    arma_extra_debug_print("atlas::clapack_potrf()");
+    info = atlas::clapack_potrf(atlas::CblasColMajor, atlas::CblasUpper, X.n_rows, X.memptr(), X.n_rows);
+    
+    return (info == 0);
+    }
+  #elif defined(ARMA_USE_LAPACK)
+    {
+    arma_debug_assert_blas_size(X);
+    
+    char      uplo = 'U';
+    blas_int  n    = blas_int(X.n_rows);
+    blas_int  info = 0;
+    
+    arma_extra_debug_print("lapack::potrf()");
+    lapack::potrf(&uplo, &n, X.memptr(), &n, &info);
+    
+    return (info == 0);
+    }
+  #else
+    {
+    arma_ignore(X);
+    
+    arma_stop_logic_error("chol(): use of ATLAS or LAPACK must be enabled");
     return false;
     }
   #endif

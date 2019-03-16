@@ -21,16 +21,14 @@
 //! Eigenvalues of real/complex symmetric/hermitian matrix X
 template<typename T1>
 inline
-bool
+typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, bool >::result
 eig_sym
   (
          Col<typename T1::pod_type>&     eigval,
-  const Base<typename T1::elem_type,T1>& X,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  const Base<typename T1::elem_type,T1>& X
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
   // unwrap_check not used as T1::elem_type and T1::pod_type may not be the same.
   // furthermore, it doesn't matter if X is an alias of eigval, as auxlib::eig_sym() makes a copy of X
@@ -52,15 +50,13 @@ eig_sym
 template<typename T1>
 arma_warn_unused
 inline
-Col<typename T1::pod_type>
+typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, Col<typename T1::pod_type> >::result
 eig_sym
   (
-  const Base<typename T1::elem_type,T1>& X,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  const Base<typename T1::elem_type,T1>& X
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
   Col<typename T1::pod_type> out;
   const bool status = auxlib::eig_sym(out, X);
@@ -79,18 +75,16 @@ eig_sym
 //! Eigenvalues and eigenvectors of real/complex symmetric/hermitian matrix X
 template<typename T1> 
 inline
-bool
+typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, bool >::result
 eig_sym
   (
          Col<typename T1::pod_type>&     eigval,
          Mat<typename T1::elem_type>&    eigvec,
   const Base<typename T1::elem_type,T1>& X,
-  const char* method =                   "dc",
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  const char* method =                   "dc"
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
   

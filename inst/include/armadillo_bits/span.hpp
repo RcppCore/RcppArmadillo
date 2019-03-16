@@ -22,7 +22,7 @@
 struct span_alt {};
 
 
-template<typename Dummy = int>
+template<typename junk = int>
 class span_base
   {
   public:
@@ -30,8 +30,8 @@ class span_base
   };
 
 
-template<typename Dummy>
-const span_alt span_base<Dummy>::all = span_alt();
+template<typename junk>
+const span_alt span_base<junk>::all = span_alt();
 
 
 class span : public span_base<>
@@ -44,14 +44,18 @@ class span : public span_base<>
   
   inline
   span()
-    : whole(true)
+    : a(0)
+    , b(0)
+    , whole(true)
     {
     }
   
   
   inline
   span(const span_alt&)
-    : whole(true)
+    : a(0)
+    , b(0)
+    , whole(true)
     {
     }
   
