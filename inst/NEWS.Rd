@@ -3,6 +3,12 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.9.299.0.0 (2019-03-16)}{
+  \itemize{
+    \item Upgraded to Armadillo release 9.300-RC1
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.9.200.7.1 (2019-03-08)}{
   \itemize{
     \item Explicit setting of \code{RNGversion("3.5.0")} in one unit
