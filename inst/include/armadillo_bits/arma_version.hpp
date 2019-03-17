@@ -20,9 +20,9 @@
 
 
 #define ARMA_VERSION_MAJOR 9
-#define ARMA_VERSION_MINOR 200
-#define ARMA_VERSION_PATCH 7
-#define ARMA_VERSION_NAME  "Carpe Noctem"
+#define ARMA_VERSION_MINOR 300
+#define ARMA_VERSION_PATCH 1
+#define ARMA_VERSION_NAME  "9.300-RC1"
 
 
 
@@ -39,7 +39,8 @@ struct arma_version
     {
     const char* nickname = ARMA_VERSION_NAME;
     
-    std::stringstream ss;
+    std::ostringstream ss;
+    
     ss << arma_version::major
        << '.'
        << arma_version::minor

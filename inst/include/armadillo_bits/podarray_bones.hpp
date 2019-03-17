@@ -53,8 +53,8 @@ class podarray
   
   arma_inline explicit podarray(const eT* X, const uword new_N);
   
-  template<typename T1>
-  inline explicit podarray(const Proxy<T1>& P);
+  // template<typename T1>
+  // inline explicit podarray(const Proxy<T1>& P);
   
   arma_inline eT& operator[] (const uword i);
   arma_inline eT  operator[] (const uword i) const;

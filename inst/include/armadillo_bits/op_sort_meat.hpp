@@ -28,13 +28,13 @@ op_sort::direct_sort(eT* X, const uword n_elem, const uword sort_type)
   
   if(sort_type == 0)
     {
-    arma_ascend_sort_helper<eT> comparator;
+    arma_lt_comparator<eT> comparator;
     
     std::sort(&X[0], &X[n_elem], comparator);
     }
   else
     {
-    arma_descend_sort_helper<eT> comparator;
+    arma_gt_comparator<eT> comparator;
     
     std::sort(&X[0], &X[n_elem], comparator);
     }
@@ -49,7 +49,7 @@ op_sort::direct_sort_ascending(eT* X, const uword n_elem)
   {
   arma_extra_debug_sigprint();
   
-  arma_ascend_sort_helper<eT> comparator;
+  arma_lt_comparator<eT> comparator;
     
   std::sort(&X[0], &X[n_elem], comparator);
   }

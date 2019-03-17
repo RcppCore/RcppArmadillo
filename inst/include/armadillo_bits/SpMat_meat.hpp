@@ -5933,8 +5933,8 @@ template<typename eT>
 inline
 arma_hot
 arma_warn_unused
-eT
-SpMat<eT>::get_value_csc(const uword in_row, const uword in_col) const
+const eT*
+SpMat<eT>::find_value_csc(const uword in_row, const uword in_col) const
   {
   const uword      col_offset = col_ptrs[in_col    ];
   const uword next_col_offset = col_ptrs[in_col + 1];
@@ -5949,39 +5949,136 @@ SpMat<eT>::get_value_csc(const uword in_row, const uword in_col) const
     const uword offset = uword(pos_ptr - start_ptr);
     const uword index  = offset + col_offset;
     
-    return values[index];
+    return &(values[index]);
     }
   
-  return eT(0);
+  return NULL;
+  }
+
+
+
+template<typename eT>
+inline
+arma_hot
+arma_warn_unused
+eT
+SpMat<eT>::get_value_csc(const uword in_row, const uword in_col) const
+  {
+  const eT* val_ptr = find_value_csc(in_row, in_col);
   
+  return (val_ptr != NULL) ? eT(*val_ptr) : eT(0);
+  }
+
+
+
+template<typename eT>
+inline
+arma_hot
+arma_warn_unused
+bool
+SpMat<eT>::try_add_value_csc(const uword in_row, const uword in_col, const eT in_val)
+  {
+  const eT* val_ptr = find_value_csc(in_row, in_col);
   
-  // // OLD METHOD - LINEAR SEARCH
-  // 
-  // sync_csc();
-  // 
-  // const uword colptr      = col_ptrs[in_col];
-  // const uword next_colptr = col_ptrs[in_col + 1];
-  // 
-  // // Step through the row indices to see if our element exists.
-  // for (uword i = colptr; i < next_colptr; ++i)
-  //   {
-  //   const uword row_index = row_indices[i];
-  //   
-  //   // First check that we have not stepped past it.
-  //   if (in_row < row_index) // If we have, then it doesn't exist: return 0.
-  //     {
-  //     return eT(0);
-  //     }
-  //   
-  //   // Now check if we are at the correct place.
-  //   if (in_row == row_index) // If we are, return the value.
-  //     {
-  //     return values[i];
-  //     }
-  //   }
-  // 
-  // // We did not find it, so it does not exist: return 0.
-  // return eT(0);
+  if(val_ptr != NULL)
+    {
+    const eT new_val = eT(*val_ptr) + in_val;
+    
+    if(new_val != eT(0))
+      {
+      access::rw(*val_ptr) = new_val;
+      
+      invalidate_cache();
+      
+      return true;
+      }
+    }
+  
+  return false;
+  }
+
+
+
+template<typename eT>
+inline
+arma_hot
+arma_warn_unused
+bool
+SpMat<eT>::try_sub_value_csc(const uword in_row, const uword in_col, const eT in_val)
+  {
+  const eT* val_ptr = find_value_csc(in_row, in_col);
+  
+  if(val_ptr != NULL)
+    {
+    const eT new_val = eT(*val_ptr) - in_val;
+    
+    if(new_val != eT(0))
+      {
+      access::rw(*val_ptr) = new_val;
+      
+      invalidate_cache();
+      
+      return true;
+      }
+    }
+  
+  return false;
+  }
+
+
+
+template<typename eT>
+inline
+arma_hot
+arma_warn_unused
+bool
+SpMat<eT>::try_mul_value_csc(const uword in_row, const uword in_col, const eT in_val)
+  {
+  const eT* val_ptr = find_value_csc(in_row, in_col);
+  
+  if(val_ptr != NULL)
+    {
+    const eT new_val = eT(*val_ptr) * in_val;
+    
+    if(new_val != eT(0))
+      {
+      access::rw(*val_ptr) = new_val;
+      
+      invalidate_cache();
+      
+      return true;
+      }
+    }
+  
+  return false;
+  }
+
+
+
+template<typename eT>
+inline
+arma_hot
+arma_warn_unused
+bool
+SpMat<eT>::try_div_value_csc(const uword in_row, const uword in_col, const eT in_val)
+  {
+  const eT* val_ptr = find_value_csc(in_row, in_col);
+  
+  if(val_ptr != NULL)
+    {
+    const eT new_val = eT(*val_ptr) / in_val;
+    
+    if(new_val != eT(0))
+      {
+      access::rw(*val_ptr) = new_val;
+      
+      invalidate_cache();
+      
+      return true;
+      }
+    }
+  
+  return false;
   }
 
 
@@ -6154,6 +6251,8 @@ void
 SpMat<eT>::invalidate_cache() const
   {
   arma_extra_debug_sigprint();
+  
+  if(sync_state == 0)  { return; }
   
   cache.reset();
   sync_state = 0;

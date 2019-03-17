@@ -212,7 +212,7 @@
     #endif
   #endif
   
-  #if !defined(ARMA_USE_CXX11) && !defined(__GXX_EXPERIMENTAL_CXX0X__) && (__cplusplus < 201103L) 
+  #if !defined(ARMA_USE_CXX11) && !defined(__GXX_EXPERIMENTAL_CXX0X__) && (__cplusplus < 201103L) && !defined(ARMA_DONT_USE_TR1)
     #if defined(_GLIBCXX_USE_C99_MATH_TR1) && defined(_GLIBCXX_USE_C99_COMPLEX_TR1)
       #define ARMA_HAVE_TR1
     #endif

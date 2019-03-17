@@ -628,12 +628,18 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   
   private:
   
+  inline arma_hot arma_warn_unused const eT* find_value_csc(const uword in_row, const uword in_col) const;
+  
   inline arma_hot arma_warn_unused eT get_value(const uword i                         ) const;
   inline arma_hot arma_warn_unused eT get_value(const uword in_row, const uword in_col) const;
   
   inline arma_hot arma_warn_unused eT get_value_csc(const uword i                         ) const;
   inline arma_hot arma_warn_unused eT get_value_csc(const uword in_row, const uword in_col) const;
   
+  inline arma_hot arma_warn_unused bool try_add_value_csc(const uword in_row, const uword in_col, const eT in_val);
+  inline arma_hot arma_warn_unused bool try_sub_value_csc(const uword in_row, const uword in_col, const eT in_val);
+  inline arma_hot arma_warn_unused bool try_mul_value_csc(const uword in_row, const uword in_col, const eT in_val);
+  inline arma_hot arma_warn_unused bool try_div_value_csc(const uword in_row, const uword in_col, const eT in_val);
   
   inline arma_warn_unused eT&  insert_element(const uword in_row, const uword in_col, const eT in_val = eT(0));
   inline                  void delete_element(const uword in_row, const uword in_col);

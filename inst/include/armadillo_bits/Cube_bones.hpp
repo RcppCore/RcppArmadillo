@@ -276,7 +276,7 @@ class Cube : public BaseCube< eT, Cube<eT> >
   arma_inline const Cube& operator--();
   arma_inline void        operator--(int);
   
-  arma_inline arma_warn_unused bool is_finite() const;
+       inline arma_warn_unused bool is_finite() const;
   arma_inline arma_warn_unused bool is_empty()  const;
   
   inline arma_warn_unused bool has_inf() const;

@@ -189,6 +189,7 @@ log_add(eT log_a, eT log_b)
   
 
 
+//! kept for compatibility with old user code
 template<typename eT>
 arma_warn_unused
 arma_inline
@@ -202,71 +203,21 @@ is_finite(const eT x, const typename arma_scalar_only<eT>::result* junk = 0)
 
 
 
+//! kept for compatibility with old user code
 template<typename T1>
 arma_warn_unused
 inline
-typename
-enable_if2
-  <
-  is_arma_type<T1>::value,
-  bool
-  >::result
-is_finite(const T1& X)
+bool
+is_finite(const Base<typename T1::elem_type,T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
-  
-  const Proxy<T1> P(X);
-  
-  const bool have_direct_mem = (is_Mat<typename Proxy<T1>::stored_type>::value) || (is_subview_col<typename Proxy<T1>::stored_type>::value);
-  
-  if(have_direct_mem)
-    {
-    const quasi_unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
-    
-    return tmp.M.is_finite();
-    }
-  
-  
-  if(Proxy<T1>::use_at == false)
-    {
-    const typename Proxy<T1>::ea_type Pea = P.get_ea();
-    
-    const uword n_elem = P.get_n_elem();
-    
-    uword i,j;
-    
-    for(i=0, j=1; j<n_elem; i+=2, j+=2)
-      {
-      const eT val_i = Pea[i];
-      const eT val_j = Pea[j];
-      
-      if( (arma_isfinite(val_i) == false) || (arma_isfinite(val_j) == false) )  { return false; }
-      }
-    
-    if(i < n_elem)
-      {
-      if(arma_isfinite(Pea[i]) == false)  { return false; }
-      }
-    }
-  else
-    {
-    const uword n_rows = P.get_n_rows();
-    const uword n_cols = P.get_n_cols();
-    
-    for(uword col=0; col<n_cols; ++col)
-    for(uword row=0; row<n_rows; ++row)
-      {
-      if(arma_isfinite(P.at(row,col)) == false)  { return false; }
-      }
-    }
-  
-  return true;
+  return X.is_finite();
   }
 
 
 
+//! kept for compatibility with old user code
 template<typename T1>
 arma_warn_unused
 inline
@@ -275,31 +226,12 @@ is_finite(const SpBase<typename T1::elem_type,T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  const SpProxy<T1> P(X.get_ref());
-  
-  if(is_SpMat<typename SpProxy<T1>::stored_type>::value)
-    {
-    const unwrap_spmat<typename SpProxy<T1>::stored_type> tmp(P.Q);
-    
-    return tmp.M.is_finite();
-    }
-  else
-    {
-    typename SpProxy<T1>::const_iterator_type it     = P.begin();
-    typename SpProxy<T1>::const_iterator_type it_end = P.end();
-    
-    while(it != it_end)
-      {
-      if(arma_isfinite(*it) == false)  { return false; }
-      ++it;
-      }
-    }
-  
-  return true;
+  return X.is_finite();
   }
 
 
 
+//! kept for compatibility with old user code
 template<typename T1>
 arma_warn_unused
 inline
@@ -308,12 +240,7 @@ is_finite(const BaseCube<typename T1::elem_type,T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
-  
-  const unwrap_cube<T1> tmp(X.get_ref());
-  const Cube<eT>& A =   tmp.M;
-  
-  return A.is_finite();
+  return X.is_finite();
   }
 
 

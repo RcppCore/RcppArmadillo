@@ -3329,11 +3329,13 @@ Cube<eT>::operator--(int)
 
 //! returns true if all of the elements are finite
 template<typename eT>
-arma_inline
+inline
 arma_warn_unused
 bool
 Cube<eT>::is_finite() const
   {
+  arma_extra_debug_sigprint();
+  
   return arrayops::is_finite( memptr(), n_elem );
   }
 

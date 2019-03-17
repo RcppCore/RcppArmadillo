@@ -94,7 +94,7 @@ inline
 const std::string
 subview_each_common<parent,mode>::incompat_size_string(const Mat<typename parent::elem_type>& A) const
   {
-  std::stringstream tmp;
+  std::ostringstream tmp;
   
   if(mode == 0)
     {

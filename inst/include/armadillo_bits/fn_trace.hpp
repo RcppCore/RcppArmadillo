@@ -208,41 +208,169 @@ trace(const Glue<T1, T2, glue_times>& X)
   {
   arma_extra_debug_sigprint();
   
+  typedef typename T1::pod_type   T;
   typedef typename T1::elem_type eT;
   
-  const quasi_unwrap<T1> UA(X.A);
-  const quasi_unwrap<T2> UB(X.B);
+  const partial_unwrap<T1> tmp1(X.A);
+  const partial_unwrap<T2> tmp2(X.B);
   
-  const Mat<eT>& A = UA.M;
-  const Mat<eT>& B = UB.M;
+  const typename partial_unwrap<T1>::stored_type& A = tmp1.M;
+  const typename partial_unwrap<T2>::stored_type& B = tmp2.M;
+  
+  const bool use_alpha = partial_unwrap<T1>::do_times || partial_unwrap<T2>::do_times;
+  const eT       alpha = use_alpha ? (tmp1.get_val() * tmp2.get_val()) : eT(0);
+  
+  arma_debug_assert_trans_mul_size< partial_unwrap<T1>::do_trans, partial_unwrap<T2>::do_trans >(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "matrix multiplication");
+  
+  if( (A.n_elem == 0) || (B.n_elem == 0) )
+    {
+    return eT(0);
+    }
   
   const uword A_n_rows = A.n_rows;
   const uword A_n_cols = A.n_cols;
-
+  
   const uword B_n_rows = B.n_rows;
   const uword B_n_cols = B.n_cols;
   
-  arma_debug_assert_mul_size(A_n_rows, A_n_cols, B_n_rows, B_n_cols, "matrix multiplication");
-  
-  if( (A.n_elem == 0) || (B.n_elem == 0) )  { return eT(0); }
-  
-  const uword N = (std::min)(A_n_rows, B_n_cols);
-  
   eT acc = eT(0);
   
-  for(uword k=0; k < N; ++k)
+  if( (partial_unwrap<T1>::do_trans == false) && (partial_unwrap<T2>::do_trans == false) )
     {
-    const eT* B_colptr = B.colptr(k);
+    const uword N = (std::min)(A_n_rows, B_n_cols);
     
-    // condition: A_n_cols = B_n_rows
+    T acc_real = T(0);
+    T acc_imag = T(0);
     
-    for(uword i=0; i < A_n_cols; ++i)
+    for(uword k=0; k < N; ++k)
       {
-      acc += A.at(k, i) * B_colptr[i];
+      const eT* B_colptr = B.colptr(k);
+      
+      // condition: A_n_cols = B_n_rows
+      
+      for(uword i=0; i < A_n_cols; ++i)
+        {
+        // acc += A.at(k, i) * B_colptr[i];
+        
+        const std::complex<T>& xx = A.at(k, i);
+        const std::complex<T>& yy = B_colptr[i];
+        
+        const T a = xx.real();
+        const T b = xx.imag();
+        
+        const T c = yy.real();
+        const T d = yy.imag();
+        
+        acc_real += (a*c) - (b*d);
+        acc_imag += (a*d) + (b*c);
+        }
       }
+    
+    acc = std::complex<T>(acc_real, acc_imag);
+    }
+  else
+  if( (partial_unwrap<T1>::do_trans == true) && (partial_unwrap<T2>::do_trans == false) )
+    {
+    const uword N = (std::min)(A_n_cols, B_n_cols);
+    
+    T acc_real = T(0);
+    T acc_imag = T(0);
+    
+    for(uword k=0; k < N; ++k)
+      {
+      const eT* A_colptr = A.colptr(k);
+      const eT* B_colptr = B.colptr(k);
+      
+      // condition: A_n_rows = B_n_rows
+      
+      for(uword i=0; i < A_n_rows; ++i)
+        {
+        // acc += std::conj(A_colptr[i]) * B_colptr[i];
+        
+        const std::complex<T>& xx = A_colptr[i];
+        const std::complex<T>& yy = B_colptr[i];
+        
+        const T a = xx.real();
+        const T b = xx.imag();
+        
+        const T c = yy.real();
+        const T d = yy.imag();
+        
+        // take into account the complex conjugate of xx
+        
+        acc_real += (a*c) + (b*d);
+        acc_imag += (a*d) - (b*c);
+        }
+      }
+    
+    acc = std::complex<T>(acc_real, acc_imag);
+    }
+  else
+  if( (partial_unwrap<T1>::do_trans == false) && (partial_unwrap<T2>::do_trans == true) )
+    {
+    const uword N = (std::min)(A_n_rows, B_n_rows);
+    
+    T acc_real = T(0);
+    T acc_imag = T(0);
+    
+    for(uword k=0; k < N; ++k)
+      {
+      // condition: A_n_cols = B_n_cols
+      for(uword i=0; i < A_n_cols; ++i)
+        {
+        // acc += A.at(k,i) * std::conj(B.at(k,i));
+        
+        const std::complex<T>& xx = A.at(k, i);
+        const std::complex<T>& yy = B.at(k, i);
+        
+        const T a = xx.real();
+        const T b = xx.imag();
+        
+        const T c =  yy.real();
+        const T d = -yy.imag();  // take the conjugate
+        
+        acc_real += (a*c) - (b*d);
+        acc_imag += (a*d) + (b*c);
+        }
+      }
+    
+    acc = std::complex<T>(acc_real, acc_imag);
+    }
+  else
+  if( (partial_unwrap<T1>::do_trans == true) && (partial_unwrap<T2>::do_trans == true) )
+    {
+    const uword N = (std::min)(A_n_cols, B_n_rows);
+    
+    T acc_real = T(0);
+    T acc_imag = T(0);
+    
+    for(uword k=0; k < N; ++k)
+      {
+      const eT* A_colptr = A.colptr(k);
+      
+      // condition: A_n_rows = B_n_cols
+      for(uword i=0; i < A_n_rows; ++i)
+        {
+        // acc += std::conj(A_colptr[i]) * std::conj(B.at(k,i));
+        
+        const std::complex<T>& xx = A_colptr[i];
+        const std::complex<T>& yy = B.at(k, i);
+        
+        const T a =  xx.real();
+        const T b = -xx.imag();  // take the conjugate
+        
+        const T c =  yy.real();
+        const T d = -yy.imag();  // take the conjugate
+        
+        acc_real += (a*c) - (b*d);
+        acc_imag += (a*d) + (b*c);
+        }
+      }
+    
+    acc = std::complex<T>(acc_real, acc_imag);
     }
   
-  return acc;
+  return (use_alpha) ? eT(alpha * acc) : eT(acc);
   }
 
 
@@ -395,6 +523,7 @@ trace(const SpGlue<T1, T2, spglue_times>& expr)
   
   eT acc = eT(0);
   
+  // TODO: the threshold may need tuning for complex matrices
   if( (A.n_nonzero >= 5*N) || (B.n_nonzero >= 5*N) )
     {
     for(uword k=0; k < N; ++k)
@@ -467,6 +596,66 @@ trace(const SpGlue<SpOp<T1, spop_htrans>, T2, spglue_times>& expr)
         const uword i     = B_it.row();
         
         acc += A.at(i,k) * B_val;
+        
+        ++B_it;
+        }
+      }
+    }
+  else
+    {
+    const SpMat<eT> AtB = A.t() * B;
+    
+    acc = trace(AtB);
+    }
+  
+  return acc;
+  }
+
+
+
+//! trace of sparse object; speedup for trace(A.t()*B); complex elements
+template<typename T1, typename T2>
+arma_warn_unused
+inline
+typename enable_if2< is_cx<typename T1::elem_type>::yes, typename T1::elem_type>::result
+trace(const SpGlue<SpOp<T1, spop_htrans>, T2, spglue_times>& expr)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const unwrap_spmat<T1> UA(expr.A.m);
+  const unwrap_spmat<T2> UB(expr.B);
+  
+  const SpMat<eT>& A = UA.M;
+  const SpMat<eT>& B = UB.M;
+  
+  // NOTE: deliberately swapped A.n_rows and A.n_cols to take into account the requested transpose operation
+  arma_debug_assert_mul_size(A.n_cols, A.n_rows, B.n_rows, B.n_cols, "matrix multiplication");
+  
+  if( (A.n_nonzero == 0) || (B.n_nonzero == 0) )
+    {
+    return eT(0);
+    }
+  
+  const uword N = (std::min)(A.n_cols, B.n_cols);
+  
+  eT acc = eT(0);
+  
+  // TODO: the threshold may need tuning for complex matrices
+  if( (A.n_nonzero >= 5*N) || (B.n_nonzero >= 5*N) )
+    {
+    for(uword k=0; k < N; ++k)
+      {
+      typename SpMat<eT>::const_col_iterator B_it     = B.begin_col_no_sync(k);
+      typename SpMat<eT>::const_col_iterator B_it_end = B.end_col_no_sync(k);
+      
+      while(B_it != B_it_end)
+        {
+        const eT    B_val = (*B_it);
+        const uword i     = B_it.row();
+        
+        acc += std::conj(A.at(i,k)) * B_val;
         
         ++B_it;
         }

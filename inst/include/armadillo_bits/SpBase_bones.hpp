@@ -79,6 +79,8 @@ struct SpBase
   
   inline arma_warn_unused uword index_min() const;
   inline arma_warn_unused uword index_max() const;
+  
+  inline arma_warn_unused bool is_finite() const;
   };
 
 

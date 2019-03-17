@@ -1057,6 +1057,9 @@ template<> template<typename eT> arma_hot arma_inline eT
 eop_core<eop_trunc_log        >::process(const eT val, const eT  ) { return    arma::trunc_log(val);  }
 
 template<> template<typename eT> arma_hot arma_inline eT
+eop_core<eop_log1p            >::process(const eT val, const eT  ) { return eop_aux::log1p(val);      }
+
+template<> template<typename eT> arma_hot arma_inline eT
 eop_core<eop_exp              >::process(const eT val, const eT  ) { return eop_aux::exp(val);        }
 
 template<> template<typename eT> arma_hot arma_inline eT
@@ -1067,6 +1070,9 @@ eop_core<eop_exp10            >::process(const eT val, const eT  ) { return eop_
 
 template<> template<typename eT> arma_hot arma_inline eT
 eop_core<eop_trunc_exp        >::process(const eT val, const eT  ) { return    arma::trunc_exp(val);  }
+
+template<> template<typename eT> arma_hot arma_inline eT
+eop_core<eop_expm1            >::process(const eT val, const eT  ) { return eop_aux::expm1(val);      }
 
 template<> template<typename eT> arma_hot arma_inline eT
 eop_core<eop_cos              >::process(const eT val, const eT  ) { return eop_aux::cos(val);        }
