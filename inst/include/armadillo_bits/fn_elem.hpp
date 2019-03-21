@@ -279,7 +279,7 @@ log10(const BaseCube<typename T1::elem_type,T1>& A)
 template<typename T1>
 arma_warn_unused
 arma_inline
-typename enable_if2< is_arma_type<T1>::value, const eOp<T1, eop_log1p> >::result
+typename enable_if2< (is_arma_type<T1>::value && is_cx<typename T1::elem_type>::no), const eOp<T1, eop_log1p> >::result
 log1p(const T1& A)
   {
   arma_extra_debug_sigprint();
@@ -292,7 +292,7 @@ log1p(const T1& A)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const eOpCube<T1, eop_log1p>
+typename enable_if2< is_cx<typename T1::elem_type>::no, const eOpCube<T1, eop_log1p> >::result
 log1p(const BaseCube<typename T1::elem_type,T1>& A)
   {
   arma_extra_debug_sigprint();
@@ -392,7 +392,7 @@ exp10(const BaseCube<typename T1::elem_type,T1>& A)
 template<typename T1>
 arma_warn_unused
 arma_inline
-typename enable_if2< is_arma_type<T1>::value, const eOp<T1, eop_expm1> >::result
+typename enable_if2< (is_arma_type<T1>::value && is_cx<typename T1::elem_type>::no), const eOp<T1, eop_expm1> >::result
 expm1(const T1& A)
   {
   arma_extra_debug_sigprint();
@@ -405,7 +405,7 @@ expm1(const T1& A)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const eOpCube<T1, eop_expm1>
+typename enable_if2< is_cx<typename T1::elem_type>::no, const eOpCube<T1, eop_expm1> >::result
 expm1(const BaseCube<typename T1::elem_type,T1>& A)
   {
   arma_extra_debug_sigprint();
