@@ -3,6 +3,27 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.9.399.1.0 (2019-04-21)}{
+  \itemize{
+    \item Upgraded to Armadillo release 9.400-RC1 ()
+    \itemize{
+      \item faster \code{cov()} and \code{cor()}
+      \item expanded \code{.shed_rows()} / \code{.shed_cols()} /
+      \code{.shed_slices()} to remove rows/columns/slices specified in a
+      vector 
+      \item expanded element-wise versions of \code{max()} and
+      \code{min()} to handle sparse matrices
+      \item optimised handling of sparse matrix expressions:
+      \code{sparse \% (sparse +- scalar)} and \code{sparse / (sparse +- scalar)} 
+      \item expanded \code{eig_sym()}, \code{chol()},
+      \code{expmat_sym()}, \code{logmat_sympd()}, \code{sqrtmat_sympd()},
+      \code{inv_sympd()} to print a warning if the given matrix is not
+      symmetric 
+      more consistent detection of vector expressions
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.9.300.2.0 (2019-03-21)}{
   \itemize{
     \item Upgraded to Armadillo release 9.300.2 (Fomo Spiral)
