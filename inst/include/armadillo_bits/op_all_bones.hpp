@@ -21,6 +21,7 @@
 
 
 class op_all
+  : public traits_op_xvec
   {
   public:
   

@@ -20,6 +20,7 @@
 
 
 class op_princomp
+  : public traits_op_default
   {
   public:
   

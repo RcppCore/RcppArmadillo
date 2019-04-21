@@ -24,6 +24,14 @@ class spglue_times
   public:
   
   template<typename T1, typename T2>
+  struct traits
+    {
+    static const bool is_row  = T1::is_row;
+    static const bool is_col  = T2::is_col;
+    static const bool is_xvec = false;
+    };
+  
+  template<typename T1, typename T2>
   inline static void apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglue_times>& X);
   
   template<typename T1, typename T2>
@@ -40,6 +48,14 @@ class spglue_times_misc
   public:
   
   template<typename T1, typename T2>
+  struct traits
+    {
+    static const bool is_row  = T1::is_row;
+    static const bool is_col  = T2::is_col;
+    static const bool is_xvec = false;
+    };
+  
+  template<typename T1, typename T2>
   inline static void sparse_times_dense(Mat<typename T1::elem_type>& out, const T1& x, const T2& y);
   
   template<typename T1, typename T2>
@@ -53,8 +69,16 @@ class spglue_times_mixed
   public:
   
   template<typename T1, typename T2>
-  inline static void sparse_times_sparse(SpMat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result >& out, const T1& X, const T2& Y);
-
+  struct traits
+    {
+    static const bool is_row  = T1::is_row;
+    static const bool is_col  = T2::is_col;
+    static const bool is_xvec = false;
+    };
+  
+  template<typename T1, typename T2>
+  inline static void apply(SpMat<typename eT_promoter<T1,T2>::eT>& out, const mtSpGlue<typename eT_promoter<T1,T2>::eT, T1, T2, spglue_times_mixed>& expr);
+  
   template<typename T1, typename T2>
   inline static void sparse_times_dense(Mat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result >& out, const T1& X, const T2& Y);
 

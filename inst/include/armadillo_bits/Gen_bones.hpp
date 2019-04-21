@@ -32,8 +32,9 @@ class Gen
   static const bool use_at    = (is_same_type<gen_type, gen_eye>::value);
   static const bool is_simple = (is_same_type<gen_type, gen_ones>::value) || (is_same_type<gen_type, gen_zeros>::value); 
   
-  static const bool is_row = T1::is_row;
-  static const bool is_col = T1::is_col;
+  static const bool is_row  = T1::is_row;
+  static const bool is_col  = T1::is_col;
+  static const bool is_xvec = T1::is_xvec;
   
   arma_aligned const uword n_rows;
   arma_aligned const uword n_cols;

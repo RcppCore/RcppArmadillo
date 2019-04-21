@@ -34,8 +34,9 @@ class SpProxy< SpMat<eT> >
   static const bool use_iterator   = false;
   static const bool Q_is_generated = false;
 
-  static const bool is_row = false;
-  static const bool is_col = false;
+  static const bool is_row  = false;
+  static const bool is_col  = false;
+  static const bool is_xvec = false;
 
   arma_aligned const SpMat<eT>& Q;
 
@@ -87,8 +88,9 @@ class SpProxy< SpCol<eT> >
   static const bool use_iterator   = false;
   static const bool Q_is_generated = false;
   
-  static const bool is_row = false;
-  static const bool is_col = true;
+  static const bool is_row  = false;
+  static const bool is_col  = true;
+  static const bool is_xvec = false;
   
   arma_aligned const SpCol<eT>& Q;
   
@@ -140,8 +142,9 @@ class SpProxy< SpRow<eT> >
   static const bool use_iterator   = false;
   static const bool Q_is_generated = false;
   
-  static const bool is_row = true;
-  static const bool is_col = false;
+  static const bool is_row  = true;
+  static const bool is_col  = false;
+  static const bool is_xvec = false;
   
   arma_aligned const SpRow<eT>& Q;
   
@@ -193,8 +196,9 @@ class SpProxy< SpSubview<eT> >
   static const bool use_iterator   = true;
   static const bool Q_is_generated = false;
 
-  static const bool is_row = false;
-  static const bool is_col = false;
+  static const bool is_row  = false;
+  static const bool is_col  = false;
+  static const bool is_xvec = false;
 
   arma_aligned const SpSubview<eT>& Q;
 
@@ -246,8 +250,9 @@ class SpProxy< spdiagview<eT> >
   static const bool use_iterator   = false;
   static const bool Q_is_generated = true;
   
-  static const bool is_row = false;
-  static const bool is_col = true;
+  static const bool is_row  = false;
+  static const bool is_col  = true;
+  static const bool is_xvec = false;
   
   arma_aligned const SpMat<eT> Q;
   
@@ -299,8 +304,9 @@ class SpProxy< SpOp<T1, spop_type> >
   static const bool use_iterator   = false;
   static const bool Q_is_generated = true;
   
-  static const bool is_row = SpOp<T1, spop_type>::is_row;
-  static const bool is_col = SpOp<T1, spop_type>::is_col;
+  static const bool is_row  = SpOp<T1, spop_type>::is_row;
+  static const bool is_col  = SpOp<T1, spop_type>::is_col;
+  static const bool is_xvec = SpOp<T1, spop_type>::is_xvec;
   
   arma_aligned const SpMat<eT> Q;
   
@@ -352,8 +358,9 @@ class SpProxy< SpGlue<T1, T2, spglue_type> >
   static const bool use_iterator   = false;
   static const bool Q_is_generated = true;
   
-  static const bool is_row = SpGlue<T1, T2, spglue_type>::is_row;
-  static const bool is_col = SpGlue<T1, T2, spglue_type>::is_col;
+  static const bool is_row  = SpGlue<T1, T2, spglue_type>::is_row;
+  static const bool is_col  = SpGlue<T1, T2, spglue_type>::is_col;
+  static const bool is_xvec = SpGlue<T1, T2, spglue_type>::is_xvec;
   
   arma_aligned const SpMat<eT> Q;
   
@@ -404,12 +411,66 @@ class SpProxy< mtSpOp<out_eT, T1, spop_type> >
   static const bool use_iterator   = false;
   static const bool Q_is_generated = true;
   
-  static const bool is_row = mtSpOp<out_eT, T1, spop_type>::is_row;
-  static const bool is_col = mtSpOp<out_eT, T1, spop_type>::is_col;
+  static const bool is_row  = mtSpOp<out_eT, T1, spop_type>::is_row;
+  static const bool is_col  = mtSpOp<out_eT, T1, spop_type>::is_col;
+  static const bool is_xvec = mtSpOp<out_eT, T1, spop_type>::is_xvec;
   
   arma_aligned const SpMat<out_eT> Q;
   
   inline explicit SpProxy(const mtSpOp<out_eT, T1, spop_type>& A)
+    : Q(A)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  arma_inline uword get_n_rows()    const { return is_row ? 1 : Q.n_rows; }
+  arma_inline uword get_n_cols()    const { return is_col ? 1 : Q.n_cols; }
+  arma_inline uword get_n_elem()    const { return Q.n_elem;              }
+  arma_inline uword get_n_nonzero() const { return Q.n_nonzero;           }
+  
+  arma_inline elem_type operator[](const uword i)                    const { return Q[i];           }
+  arma_inline elem_type at        (const uword row, const uword col) const { return Q.at(row, col); }
+  
+  arma_inline const out_eT* get_values()      const { return Q.values;      }
+  arma_inline const uword*  get_row_indices() const { return Q.row_indices; }
+  arma_inline const uword*  get_col_ptrs()    const { return Q.col_ptrs;    }
+  
+  arma_inline const_iterator_type     begin()                            const { return Q.begin();            }
+  arma_inline const_iterator_type     begin_col(const uword col_num)     const { return Q.begin_col(col_num); }
+  arma_inline const_row_iterator_type begin_row(const uword row_num = 0) const { return Q.begin_row(row_num); }
+  
+  arma_inline const_iterator_type     end()                        const { return Q.end();            }
+  arma_inline const_row_iterator_type end_row()                    const { return Q.end_row();        }
+  arma_inline const_row_iterator_type end_row(const uword row_num) const { return Q.end_row(row_num); }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const SpMat<eT2>&) const { return false; }
+  };
+
+
+
+template<typename out_eT, typename T1, typename T2, typename spglue_type>
+class SpProxy< mtSpGlue<out_eT, T1, T2, spglue_type> >
+  {
+  public:
+  
+  typedef          out_eT                          elem_type;
+  typedef typename get_pod_type<elem_type>::result pod_type;
+  typedef SpMat<out_eT>                            stored_type;
+  
+  typedef typename SpMat<out_eT>::const_iterator       const_iterator_type;
+  typedef typename SpMat<out_eT>::const_row_iterator   const_row_iterator_type;
+  
+  static const bool use_iterator   = false;
+  static const bool Q_is_generated = true;
+  
+  static const bool is_row  = mtSpGlue<out_eT, T1, T2, spglue_type>::is_row;
+  static const bool is_col  = mtSpGlue<out_eT, T1, T2, spglue_type>::is_col;
+  static const bool is_xvec = mtSpGlue<out_eT, T1, T2, spglue_type>::is_xvec;
+  
+  arma_aligned const SpMat<out_eT> Q;
+  
+  inline explicit SpProxy(const mtSpGlue<out_eT, T1, T2, spglue_type>& A)
     : Q(A)
     {
     arma_extra_debug_sigprint();

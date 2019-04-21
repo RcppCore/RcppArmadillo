@@ -25,13 +25,20 @@ arma_inline
 void
 arrayops::copy(eT* dest, const eT* src, const uword n_elem)
   {
-  if( (n_elem <= 9) && (is_cx<eT>::no) )
+  if(is_cx<eT>::no)
     {
-    arrayops::copy_small(dest, src, n_elem);
+    if(n_elem <= 9)
+      {
+      arrayops::copy_small(dest, src, n_elem);
+      }
+    else
+      {
+      std::memcpy(dest, src, n_elem*sizeof(eT));
+      }
     }
   else
     {
-    std::memcpy(dest, src, n_elem*sizeof(eT));
+    if(n_elem > 0)  { std::memcpy(dest, src, n_elem*sizeof(eT)); }
     }
   }
 
@@ -549,7 +556,7 @@ arrayops::inplace_set(eT* dest, const eT val, const uword n_elem)
     {
     if( (val == eT(0)) && (std::numeric_limits<eT>::is_integer || (std::numeric_limits<pod_type>::is_iec559 && is_real<pod_type>::value)) )
       {
-      std::memset((void*)dest, 0, sizeof(eT)*n_elem);
+      if(n_elem > 0)  { std::memset((void*)dest, 0, sizeof(eT)*n_elem); }
       }
     else
       {

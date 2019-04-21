@@ -320,7 +320,7 @@ op_logmat_cx::helper(Mat<eT>& A, const uword m)
   vec eigval;
   mat eigvec;
   
-  const bool eig_ok = eig_sym(eigval, eigvec, tmp);
+  const bool eig_ok = eig_sym_helper(eigval, eigvec, tmp, 'd', "logmat()");
   
   if(eig_ok == false)  { arma_extra_debug_print("logmat(): eig_sym() failed"); return false; }
   
@@ -390,7 +390,7 @@ op_logmat_sympd::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
     Col< T> eigval;
     Mat<eT> eigvec;
     
-    const bool status = auxlib::eig_sym_dc(eigval, eigvec, X);
+    const bool status = eig_sym_helper(eigval, eigvec, X, 'd', "logmat_sympd()");
     
     if(status == false)  { return false; }
     

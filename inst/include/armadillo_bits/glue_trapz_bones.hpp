@@ -24,6 +24,14 @@ class glue_trapz
   {
   public:
   
+  template<typename T1, typename T2>
+  struct traits
+    {
+    static const bool is_row  = false;
+    static const bool is_col  = false;
+    static const bool is_xvec = true;
+    };
+  
   template<typename T1, typename T2> inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_trapz>& in);
   
   template<typename eT> inline static void apply_noalias(Mat<eT>& out, const Mat<eT>& X, const Mat<eT>& Y, const uword dim);
@@ -32,6 +40,7 @@ class glue_trapz
 
 
 class op_trapz
+  : public traits_op_xvec
   {
   public:
   

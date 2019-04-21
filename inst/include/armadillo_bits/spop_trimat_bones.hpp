@@ -20,6 +20,7 @@
 
 
 class spop_trimat
+  : public traits_op_default
   {
   public:
   

@@ -34,7 +34,7 @@ internal_approx_equal_abs_diff(const eT& x, const eT& y, const typename get_pod_
       }
     else
       {
-      if( eop_aux::arma_abs( ( cond_rel< is_not_complex<eT>::value >::gt(x, y) ) ? (x-y) : (y-x) ) > tol )  { return false; }
+      if( eop_aux::arma_abs( ( cond_rel< is_cx<eT>::no >::gt(x, y) ) ? (x-y) : (y-x) ) > tol )  { return false; }
       }
     }
   
@@ -79,7 +79,7 @@ internal_approx_equal_rel_diff(const eT& a, const eT& b, const typename get_pod_
       
       const T max_c = (std::max)(abs_a,abs_b);
       
-      const T abs_d = eop_aux::arma_abs( ( cond_rel< is_not_complex<eT>::value >::gt(a, b) ) ? (a-b) : (b-a) );
+      const T abs_d = eop_aux::arma_abs( ( cond_rel< is_cx<eT>::no >::gt(a, b) ) ? (a-b) : (b-a) );
       
       if( abs_d > (tol * max_c) )  { return false; }
       }

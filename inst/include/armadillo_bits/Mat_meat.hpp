@@ -916,8 +916,8 @@ Mat<eT>::init
   
   typedef typename T1::elem_type T;
   
-  arma_type_check(( is_complex<eT>::value == false ));   //!< compile-time abort if eT is not std::complex
-  arma_type_check(( is_complex< T>::value == true  ));   //!< compile-time abort if  T is     std::complex
+  arma_type_check(( is_cx<eT>::no  ));   //!< compile-time abort if eT is not std::complex
+  arma_type_check(( is_cx< T>::yes ));   //!< compile-time abort if  T is     std::complex
   
   arma_type_check(( is_same_type< std::complex<T>, eT >::no ));   //!< compile-time abort if types are not compatible
   
@@ -4220,6 +4220,146 @@ Mat<eT>::shed_cols(const uword in_col1, const uword in_col2)
 
 
 
+//! remove specified rows
+template<typename eT>
+template<typename T1>
+inline
+void
+Mat<eT>::shed_rows(const Base<uword, T1>& indices)
+  {
+  arma_extra_debug_sigprint();
+  
+  const unwrap_check_mixed<T1> U(indices.get_ref(), *this);
+  const Mat<uword>& tmp1 = U.M;
+  
+  arma_debug_check( ((tmp1.is_vec() == false) && (tmp1.is_empty() == false)), "Mat::shed_rows(): list of indices must be a vector" );
+  
+  if(tmp1.is_empty()) { return; }
+  
+  const Col<uword> tmp2(const_cast<uword*>(tmp1.memptr()), tmp1.n_elem, false, false);
+  
+  const Col<uword>& rows_to_shed = (tmp2.is_sorted("strictascend") == false)
+                                   ? Col<uword>(unique(tmp2))
+                                   : Col<uword>(const_cast<uword*>(tmp2.memptr()), tmp2.n_elem, false, false);
+  
+  const uword* rows_to_shed_mem = rows_to_shed.memptr();
+  const uword  N                = rows_to_shed.n_elem;
+  
+  if(arma_config::debug)
+    {
+    for(uword i=0; i<N; ++i)
+      {
+      arma_debug_check( (rows_to_shed_mem[i] >= n_rows), "Mat::shed_rows(): indices out of bounds" );
+      }
+    }
+  
+  Col<uword> tmp3(n_rows);
+  
+  uword* tmp3_mem = tmp3.memptr();
+  
+  uword i     = 0;
+  uword count = 0;
+  
+  for(uword j=0; j < n_rows; ++j)
+    {
+    if(i < N)
+      {
+      if( j != rows_to_shed_mem[i] )
+        {
+        tmp3_mem[count] = j;
+        ++count;
+        }
+      else
+        {
+        ++i;
+        }
+      }
+    else
+      {
+      tmp3_mem[count] = j;
+      ++count;
+      }
+    }
+  
+  const Col<uword> rows_to_keep(tmp3.memptr(), count, false, false);
+  
+  Mat<eT> X = (*this).rows(rows_to_keep);
+  
+  steal_mem(X);
+  }
+
+
+
+//! remove specified columns
+template<typename eT>
+template<typename T1>
+inline
+void
+Mat<eT>::shed_cols(const Base<uword, T1>& indices)
+  {
+  arma_extra_debug_sigprint();
+  
+  const unwrap_check_mixed<T1> U(indices.get_ref(), *this);
+  const Mat<uword>& tmp1 = U.M;
+  
+  arma_debug_check( ((tmp1.is_vec() == false) && (tmp1.is_empty() == false)), "Mat::shed_cols(): list of indices must be a vector" );
+  
+  if(tmp1.is_empty()) { return; }
+  
+  const Col<uword> tmp2(const_cast<uword*>(tmp1.memptr()), tmp1.n_elem, false, false);
+  
+  const Col<uword>& cols_to_shed = (tmp2.is_sorted("strictascend") == false)
+                                   ? Col<uword>(unique(tmp2))
+                                   : Col<uword>(const_cast<uword*>(tmp2.memptr()), tmp2.n_elem, false, false);
+  
+  const uword* cols_to_shed_mem = cols_to_shed.memptr();
+  const uword  N                = cols_to_shed.n_elem;
+  
+  if(arma_config::debug)
+    {
+    for(uword i=0; i<N; ++i)
+      {
+      arma_debug_check( (cols_to_shed_mem[i] >= n_cols), "Mat::shed_cols(): indices out of bounds" );
+      }
+    }
+  
+  Col<uword> tmp3(n_cols);
+  
+  uword* tmp3_mem = tmp3.memptr();
+  
+  uword i     = 0;
+  uword count = 0;
+  
+  for(uword j=0; j < n_cols; ++j)
+    {
+    if(i < N)
+      {
+      if( j != cols_to_shed_mem[i] )
+        {
+        tmp3_mem[count] = j;
+        ++count;
+        }
+      else
+        {
+        ++i;
+        }
+      }
+    else
+      {
+      tmp3_mem[count] = j;
+      ++count;
+      }
+    }
+  
+  const Col<uword> cols_to_keep(tmp3.memptr(), count, false, false);
+  
+  Mat<eT> X = (*this).cols(cols_to_keep);
+  
+  steal_mem(X);
+  }
+
+
+
 //! insert N rows at the specified row position,
 //! optionally setting the elements of the inserted rows to zero
 template<typename eT>
@@ -4948,6 +5088,134 @@ Mat<eT>&
 Mat<eT>::operator/=(const mtOp<eT, T1, op_type>& X)
   {
   arma_extra_debug_sigprint();
+  
+  const Mat<eT> m(X);
+  
+  return (*this).operator/=(m);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+Mat<eT>::Mat(const SpToDOp<T1, op_type>& X)
+  : n_rows(0)
+  , n_cols(0)
+  , n_elem(0)
+  , vec_state(0)
+  , mem_state(0)
+  , mem()
+  {
+  arma_extra_debug_sigprint_this(this);
+
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+
+  op_type::apply(*this, X);
+  }
+
+
+
+//! create a matrix from an SpToDOp, i.e. run the previously delayed unary operations
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+Mat<eT>&
+Mat<eT>::operator=(const SpToDOp<T1, op_type>& X)
+  {
+  arma_extra_debug_sigprint();
+
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+  
+  op_type::apply(*this, X);
+  
+  return *this;
+  }
+
+
+
+//! in-place matrix addition, with the right-hand-side operand having delayed operations
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+Mat<eT>&
+Mat<eT>::operator+=(const SpToDOp<T1, op_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+  
+  const Mat<eT> m(X);
+  
+  return (*this).operator+=(m);
+  }
+
+
+
+//! in-place matrix subtraction, with the right-hand-side operand having delayed operations
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+Mat<eT>&
+Mat<eT>::operator-=(const SpToDOp<T1, op_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+  
+  const Mat<eT> m(X);
+  
+  return (*this).operator-=(m);
+  }
+
+
+
+//! in-place matrix multiplication, with the right-hand-side operand having delayed operations
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+Mat<eT>&
+Mat<eT>::operator*=(const SpToDOp<T1, op_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+  
+  glue_times::apply_inplace(*this, X);
+  
+  return *this;
+  }
+
+
+
+//! in-place matrix element-wise multiplication, with the right-hand-side operand having delayed operations
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+Mat<eT>&
+Mat<eT>::operator%=(const SpToDOp<T1, op_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+  
+  const Mat<eT> m(X);
+  
+  return (*this).operator%=(m);
+  }
+
+
+
+//! in-place matrix element-wise division, with the right-hand-side operand having delayed operations
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+Mat<eT>&
+Mat<eT>::operator/=(const SpToDOp<T1, op_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   const Mat<eT> m(X);
   

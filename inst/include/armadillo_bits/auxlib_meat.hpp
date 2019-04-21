@@ -287,6 +287,19 @@ auxlib::inv_sympd(Mat<eT>& out, const Base<eT,T1>& X)
   
   if(out.is_empty())  { return true; }
   
+  // if(auxlib::rudimentary_sym_check(out) == false)
+  //   {
+  //   if(is_cx<eT>::no )  { arma_debug_warn("inv_sympd(): given matrix is not symmetric"); }
+  //   if(is_cx<eT>::yes)  { arma_debug_warn("inv_sympd(): given matrix is not hermitian"); }
+  //   return false;
+  //   }
+  
+  if((arma_config::debug) && (auxlib::rudimentary_sym_check(out) == false))
+    {
+    if(is_cx<eT>::no )  { arma_debug_warn("inv_sympd(): given matrix is not symmetric"); }
+    if(is_cx<eT>::yes)  { arma_debug_warn("inv_sympd(): given matrix is not hermitian"); }
+    }
+  
   if(out.n_rows <= 4)
     {
     Mat<eT> tmp;
@@ -606,15 +619,15 @@ auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const 
     
     // on output tmp appears to be L+U_alt, where U_alt is U with the main diagonal set to zero
     
-    sword sign = (is_complex<eT>::value == false) ? ( (access::tmp_real( tmp.at(0,0) ) < T(0)) ? -1 : +1 ) : +1;
-    eT    val  = (is_complex<eT>::value == false) ? std::log( (access::tmp_real( tmp.at(0,0) ) < T(0)) ? tmp.at(0,0)*T(-1) : tmp.at(0,0) ) : std::log( tmp.at(0,0) );
+    sword sign = (is_cx<eT>::no) ? ( (access::tmp_real( tmp.at(0,0) ) < T(0)) ? -1 : +1 ) : +1;
+    eT    val  = (is_cx<eT>::no) ? std::log( (access::tmp_real( tmp.at(0,0) ) < T(0)) ? tmp.at(0,0)*T(-1) : tmp.at(0,0) ) : std::log( tmp.at(0,0) );
     
     for(uword i=1; i < tmp.n_rows; ++i)
       {
       const eT x = tmp.at(i,i);
       
-      sign *= (is_complex<eT>::value == false) ? ( (access::tmp_real(x) < T(0)) ? -1 : +1 ) : +1;
-      val  += (is_complex<eT>::value == false) ? std::log( (access::tmp_real(x) < T(0)) ? x*T(-1) : x ) : std::log(x);
+      sign *= (is_cx<eT>::no) ? ( (access::tmp_real(x) < T(0)) ? -1 : +1 ) : +1;
+      val  += (is_cx<eT>::no) ? std::log( (access::tmp_real(x) < T(0)) ? x*T(-1) : x ) : std::log(x);
       }
     
     for(uword i=0; i < tmp.n_rows; ++i)
@@ -657,15 +670,15 @@ auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const 
     
     // on output tmp appears to be L+U_alt, where U_alt is U with the main diagonal set to zero
     
-    sword sign = (is_complex<eT>::value == false) ? ( (access::tmp_real( tmp.at(0,0) ) < T(0)) ? -1 : +1 ) : +1;
-    eT    val  = (is_complex<eT>::value == false) ? std::log( (access::tmp_real( tmp.at(0,0) ) < T(0)) ? tmp.at(0,0)*T(-1) : tmp.at(0,0) ) : std::log( tmp.at(0,0) );
+    sword sign = (is_cx<eT>::no) ? ( (access::tmp_real( tmp.at(0,0) ) < T(0)) ? -1 : +1 ) : +1;
+    eT    val  = (is_cx<eT>::no) ? std::log( (access::tmp_real( tmp.at(0,0) ) < T(0)) ? tmp.at(0,0)*T(-1) : tmp.at(0,0) ) : std::log( tmp.at(0,0) );
     
     for(uword i=1; i < tmp.n_rows; ++i)
       {
       const eT x = tmp.at(i,i);
       
-      sign *= (is_complex<eT>::value == false) ? ( (access::tmp_real(x) < T(0)) ? -1 : +1 ) : +1;
-      val  += (is_complex<eT>::value == false) ? std::log( (access::tmp_real(x) < T(0)) ? x*T(-1) : x ) : std::log(x);
+      sign *= (is_cx<eT>::no) ? ( (access::tmp_real(x) < T(0)) ? -1 : +1 ) : +1;
+      val  += (is_cx<eT>::no) ? std::log( (access::tmp_real(x) < T(0)) ? x*T(-1) : x ) : std::log(x);
       }
     
     for(uword i=0; i < tmp.n_rows; ++i)
@@ -1566,6 +1579,17 @@ auxlib::eig_sym(Col<eT>& eigval, const Base<eT,T1>& X)
       return true;
       }
     
+    // if(auxlib::rudimentary_sym_check(A) == false)
+    //   {
+    //   arma_debug_warn("eig_sym(): given matrix is not symmetric");
+    //   return false;
+    //   }
+    
+    if((arma_config::debug) && (auxlib::rudimentary_sym_check(A) == false))
+      {
+      arma_debug_warn("eig_sym(): given matrix is not symmetric");
+      }
+    
     arma_debug_assert_blas_size(A);
     
     eigval.set_size(A.n_rows);
@@ -1618,6 +1642,17 @@ auxlib::eig_sym(Col<T>& eigval, const Base<std::complex<T>,T1>& X)
       return true;
       }
     
+    // if(auxlib::rudimentary_sym_check(A) == false)
+    //   {
+    //   arma_debug_warn("eig_sym(): given matrix is not hermitian");
+    //   return false;
+    //   }
+    
+    if((arma_config::debug) && (auxlib::rudimentary_sym_check(A) == false))
+      {
+      arma_debug_warn("eig_sym(): given matrix is not hermitian");
+      }
+    
     arma_debug_assert_blas_size(A);
     
     eigval.set_size(A.n_rows);
@@ -1650,16 +1685,16 @@ auxlib::eig_sym(Col<T>& eigval, const Base<std::complex<T>,T1>& X)
 
 
 //! eigenvalues and eigenvectors of a symmetric real matrix
-template<typename eT, typename T1>
+template<typename eT>
 inline
 bool
-auxlib::eig_sym(Col<eT>& eigval, Mat<eT>& eigvec, const Base<eT,T1>& X)
+auxlib::eig_sym(Col<eT>& eigval, Mat<eT>& eigvec, const Mat<eT>& X)
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_LAPACK)
     {
-    eigvec = X.get_ref();
+    eigvec = X;
     
     arma_debug_check( (eigvec.is_square() == false), "eig_sym(): given matrix must be square sized" );
     
@@ -1702,10 +1737,10 @@ auxlib::eig_sym(Col<eT>& eigval, Mat<eT>& eigvec, const Base<eT,T1>& X)
 
 
 //! eigenvalues and eigenvectors of a hermitian complex matrix
-template<typename T, typename T1>
+template<typename T>
 inline
 bool
-auxlib::eig_sym(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Base<std::complex<T>,T1>& X)
+auxlib::eig_sym(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Mat< std::complex<T> >& X)
   {
   arma_extra_debug_sigprint();
   
@@ -1713,7 +1748,7 @@ auxlib::eig_sym(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Base<std::
     {
     typedef typename std::complex<T> eT;
     
-    eigvec = X.get_ref();
+    eigvec = X;
     
     arma_debug_check( (eigvec.is_square() == false), "eig_sym(): given matrix must be square sized" );
     
@@ -1757,16 +1792,16 @@ auxlib::eig_sym(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Base<std::
 
 
 //! eigenvalues and eigenvectors of a symmetric real matrix (divide and conquer algorithm)
-template<typename eT, typename T1>
+template<typename eT>
 inline
 bool
-auxlib::eig_sym_dc(Col<eT>& eigval, Mat<eT>& eigvec, const Base<eT,T1>& X)
+auxlib::eig_sym_dc(Col<eT>& eigval, Mat<eT>& eigvec, const Mat<eT>& X)
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_LAPACK)
     {
-    eigvec = X.get_ref();
+    eigvec = X;
     
     arma_debug_check( (eigvec.is_square() == false), "eig_sym(): given matrix must be square sized" );
     
@@ -1811,10 +1846,10 @@ auxlib::eig_sym_dc(Col<eT>& eigval, Mat<eT>& eigvec, const Base<eT,T1>& X)
 
 
 //! eigenvalues and eigenvectors of a hermitian complex matrix (divide and conquer algorithm)
-template<typename T, typename T1>
+template<typename T>
 inline
 bool
-auxlib::eig_sym_dc(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Base<std::complex<T>,T1>& X)
+auxlib::eig_sym_dc(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Mat< std::complex<T> >& X)
   {
   arma_extra_debug_sigprint();
   
@@ -1822,7 +1857,7 @@ auxlib::eig_sym_dc(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Base<st
     {
     typedef typename std::complex<T> eT;
     
-    eigvec = X.get_ref();
+    eigvec = X;
     
     arma_debug_check( (eigvec.is_square() == false), "eig_sym(): given matrix must be square sized" );
     
@@ -5451,6 +5486,66 @@ auxlib::crippled_lapack(const Base<typename T1::elem_type, T1>&)
     return false;
     }
   #endif
+  }
+
+
+
+template<typename eT>
+inline
+bool
+auxlib::rudimentary_sym_check(const Mat<eT>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword N   = X.n_rows;
+  const uword Nm1 = N-1;
+  
+  if(N != X.n_cols)  { return false; }
+  if(N <= uword(1))  { return true;  }
+  
+  const eT* X_mem = X.memptr();
+  
+  const eT A = X_mem[Nm1  ];  // bottom-left corner (ie. last value in first column)
+  const eT B = X_mem[Nm1*N];  // top-right   corner (ie. first value in last column)
+  
+  const eT delta = std::abs(A - B);
+  
+  const eT threshold = eT(100)*std::numeric_limits<eT>::epsilon();  // allow some leeway
+  
+  return (delta <= threshold);
+  }
+
+
+
+template<typename T>
+inline
+bool
+auxlib::rudimentary_sym_check(const Mat< std::complex<T> >& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  // NOTE: the function name is a misnomer, as it checks for hermitian complex matrices;
+  // NOTE: for simplicity of use, the function name is the same as for real matrices
+  
+  typedef typename std::complex<T> eT;
+  
+  const uword N   = X.n_rows;
+  const uword Nm1 = N-1;
+  
+  if(N != X.n_cols)  { return false; }
+  if(N == uword(0))  { return true;  }
+  
+  const eT* X_mem = X.memptr();
+  
+  const eT& A = X_mem[Nm1  ];  // bottom-left corner (ie. last value in first column)
+  const eT& B = X_mem[Nm1*N];  // top-right   corner (ie. first value in last column)
+  
+  const T delta1 = std::abs(A.real() - B.real());
+  const T delta2 = std::abs(A.imag() + B.imag());  // take into account the conjugate
+  
+  const T threshold = T(100)*std::numeric_limits<T>::epsilon();  // allow some leeway
+  
+  return ( (delta1 <= threshold) && (delta2 <= threshold) );
   }
 
 

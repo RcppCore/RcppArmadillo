@@ -24,7 +24,24 @@ inline
 typename
 enable_if2
   <
-  is_arma_type<T1>::value,
+  is_arma_type<T1>::value && resolves_to_vector<T1>::yes,
+  const Op<T1,op_unique_vec>
+  >::result
+unique(const T1& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  return Op<T1,op_unique_vec>(A);
+  }
+
+
+template<typename T1>
+arma_warn_unused
+inline
+typename
+enable_if2
+  <
+  is_arma_type<T1>::value && resolves_to_vector<T1>::no,
   const Op<T1,op_unique>
   >::result
 unique(const T1& A)

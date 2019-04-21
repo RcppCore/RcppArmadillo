@@ -29,8 +29,9 @@ class diagview : public Base<eT, diagview<eT> >
   
   arma_aligned const Mat<eT>& m;
   
-  static const bool is_row = false;
-  static const bool is_col = true;
+  static const bool is_row  = false;
+  static const bool is_col  = true;
+  static const bool is_xvec = false;
   
   const uword row_offset;
   const uword col_offset;

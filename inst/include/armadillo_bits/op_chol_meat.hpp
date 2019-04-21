@@ -44,11 +44,26 @@ op_chol::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   {
   arma_extra_debug_sigprint();
   
+  typedef typename T1::elem_type eT;
+  
   out = A_expr.get_ref();
   
   arma_debug_check( (out.is_square() == false), "chol(): given matrix must be square sized" );
   
   if(out.is_empty())  { return true; }
+  
+  // if(auxlib::rudimentary_sym_check(out) == false)
+  //   {
+  //   if(is_cx<eT>::no )  { arma_debug_warn("chol(): given matrix is not symmetric"); }
+  //   if(is_cx<eT>::yes)  { arma_debug_warn("chol(): given matrix is not hermitian"); }
+  //   return false;
+  //   }
+  
+  if((arma_config::debug) && (auxlib::rudimentary_sym_check(out) == false))
+    {
+    if(is_cx<eT>::no )  { arma_debug_warn("chol(): given matrix is not symmetric"); }
+    if(is_cx<eT>::yes)  { arma_debug_warn("chol(): given matrix is not hermitian"); }
+    }
   
   uword KD = 0;
   

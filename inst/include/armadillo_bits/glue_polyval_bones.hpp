@@ -24,6 +24,14 @@ class glue_polyval
   {
   public:
   
+  template<typename T1, typename T2>
+  struct traits
+    {
+    static const bool is_row  = T2::is_row;
+    static const bool is_col  = T2::is_col;
+    static const bool is_xvec = T2::is_xvec;
+    };
+  
   template<typename eT> inline static void apply_noalias(Mat<eT>& out, const Mat<eT>& P, const Mat<eT>& X);
   
   template<typename T1, typename T2> inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_polyval>& expr);

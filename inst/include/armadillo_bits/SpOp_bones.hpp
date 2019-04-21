@@ -27,8 +27,9 @@ class SpOp : public SpBase<typename T1::elem_type, SpOp<T1, op_type> >
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  static const bool is_row = (T1::is_row && is_spop_elem<op_type>::value) || ( T1::is_col && (is_same_type<op_type, spop_strans>::value || is_same_type<op_type, spop_htrans>::value) );
-  static const bool is_col = (T1::is_col && is_spop_elem<op_type>::value) || ( T1::is_row && (is_same_type<op_type, spop_strans>::value || is_same_type<op_type, spop_htrans>::value) );
+  static const bool is_row  = op_type::template traits<T1>::is_row;
+  static const bool is_col  = op_type::template traits<T1>::is_col;
+  static const bool is_xvec = op_type::template traits<T1>::is_xvec;
   
   inline explicit SpOp(const T1& in_m);
   inline          SpOp(const T1& in_m, const elem_type in_aux);
@@ -37,10 +38,10 @@ class SpOp : public SpBase<typename T1::elem_type, SpOp<T1, op_type> >
   
   arma_inline bool is_alias(const SpMat<elem_type>& X) const;
   
-  arma_aligned const T1&       m;            //!< storage of reference to the operand (eg. a matrix)
-  arma_aligned       elem_type aux;          //!< storage of auxiliary data, user defined format
-  arma_aligned       uword     aux_uword_a;  //!< storage of auxiliary data, uword format
-  arma_aligned       uword     aux_uword_b;  //!< storage of auxiliary data, uword format
+  arma_aligned const T1&       m;            //!< the operand; must be derived from SpBase
+  arma_aligned       elem_type aux;          //!< auxiliary data, using the element type as used by T1
+  arma_aligned       uword     aux_uword_a;  //!< auxiliary data, uword format
+  arma_aligned       uword     aux_uword_b;  //!< auxiliary data, uword format
   };
 
 

@@ -19,6 +19,7 @@
 
 
 class spop_diagmat
+  : public traits_op_default
   {
   public:
   
@@ -45,6 +46,7 @@ class spop_diagmat
 
 
 class spop_diagmat2
+  : public traits_op_default
   {
   public:
   

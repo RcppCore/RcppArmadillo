@@ -194,6 +194,8 @@ class Cube : public BaseCube< eT, Cube<eT> >
   inline void shed_cols(const uword in_col1, const uword in_col2);
   inline void shed_slices(const uword in_slice1, const uword in_slice2);
   
+  template<typename T1> inline void shed_slices(const Base<uword, T1>& indices);
+  
   inline void insert_rows(const uword row_num, const uword N, const bool set_to_zero = true);
   inline void insert_cols(const uword row_num, const uword N, const bool set_to_zero = true);
   inline void insert_slices(const uword slice_num, const uword N, const bool set_to_zero = true);

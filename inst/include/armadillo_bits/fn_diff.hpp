@@ -25,8 +25,8 @@ arma_inline
 typename
 enable_if2
   <
-  is_arma_type<T1>::value,
-  const Op<T1, op_diff_default>
+  is_arma_type<T1>::value && resolves_to_vector<T1>::yes,
+  const Op<T1, op_diff_vec>
   >::result
 diff
   (
@@ -36,7 +36,29 @@ diff
   {
   arma_extra_debug_sigprint();
   
-  return Op<T1, op_diff_default>(X, k, 0);
+  return Op<T1, op_diff_vec>(X, k, 0);
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+arma_inline
+typename
+enable_if2
+  <
+  is_arma_type<T1>::value && resolves_to_vector<T1>::no,
+  const Op<T1, op_diff>
+  >::result
+diff
+  (
+  const T1&   X,
+  const uword k = 1
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  return Op<T1, op_diff>(X, k, 0);
   }
 
 

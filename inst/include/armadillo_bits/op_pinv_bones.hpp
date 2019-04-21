@@ -21,6 +21,7 @@
 
 
 class op_pinv
+  : public traits_op_default
   {
   public:
   

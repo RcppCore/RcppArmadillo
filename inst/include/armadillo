@@ -197,6 +197,7 @@ namespace arma
   #include "armadillo_bits/Op_bones.hpp"
   #include "armadillo_bits/OpCube_bones.hpp"
   #include "armadillo_bits/SpOp_bones.hpp"
+  #include "armadillo_bits/SpToDOp_bones.hpp"
   
   #include "armadillo_bits/eOp_bones.hpp"
   #include "armadillo_bits/eOpCube_bones.hpp"
@@ -209,6 +210,7 @@ namespace arma
   #include "armadillo_bits/eGlue_bones.hpp"
   #include "armadillo_bits/mtGlue_bones.hpp"
   #include "armadillo_bits/SpGlue_bones.hpp"
+  #include "armadillo_bits/mtSpGlue_bones.hpp"
   
   #include "armadillo_bits/GlueCube_bones.hpp"
   #include "armadillo_bits/eGlueCube_bones.hpp"
@@ -283,6 +285,8 @@ namespace arma
   #include "armadillo_bits/op_wishrnd_bones.hpp"
   #include "armadillo_bits/op_roots_bones.hpp"
   #include "armadillo_bits/op_cond_bones.hpp"
+  #include "armadillo_bits/op_sp_plus_bones.hpp"
+  #include "armadillo_bits/op_sp_minus_bones.hpp"
   
   #include "armadillo_bits/glue_times_bones.hpp"
   #include "armadillo_bits/glue_mixed_bones.hpp"
@@ -334,6 +338,8 @@ namespace arma
   #include "armadillo_bits/spglue_times_bones.hpp"
   #include "armadillo_bits/spglue_join_bones.hpp"
   #include "armadillo_bits/spglue_kron_bones.hpp"
+  #include "armadillo_bits/spglue_min_bones.hpp"
+  #include "armadillo_bits/spglue_max_bones.hpp"
   
   #if defined(ARMA_USE_NEWARP)
     #include "armadillo_bits/newarp_EigsSelect.hpp"
@@ -556,6 +562,7 @@ namespace arma
   #include "armadillo_bits/Op_meat.hpp"
   #include "armadillo_bits/OpCube_meat.hpp"
   #include "armadillo_bits/SpOp_meat.hpp"
+  #include "armadillo_bits/SpToDOp_meat.hpp"
   
   #include "armadillo_bits/mtOp_meat.hpp"
   #include "armadillo_bits/mtOpCube_meat.hpp"
@@ -564,6 +571,7 @@ namespace arma
   #include "armadillo_bits/Glue_meat.hpp"
   #include "armadillo_bits/GlueCube_meat.hpp"
   #include "armadillo_bits/SpGlue_meat.hpp"
+  #include "armadillo_bits/mtSpGlue_meat.hpp"
   
   #include "armadillo_bits/eOp_meat.hpp"
   #include "armadillo_bits/eOpCube_meat.hpp"
@@ -689,6 +697,8 @@ namespace arma
   #include "armadillo_bits/op_wishrnd_meat.hpp"
   #include "armadillo_bits/op_roots_meat.hpp"
   #include "armadillo_bits/op_cond_meat.hpp"
+  #include "armadillo_bits/op_sp_plus_meat.hpp"
+  #include "armadillo_bits/op_sp_minus_meat.hpp"
   
   #include "armadillo_bits/glue_times_meat.hpp"
   #include "armadillo_bits/glue_mixed_meat.hpp"
@@ -740,6 +750,8 @@ namespace arma
   #include "armadillo_bits/spglue_times_meat.hpp"
   #include "armadillo_bits/spglue_join_meat.hpp"
   #include "armadillo_bits/spglue_kron_meat.hpp"
+  #include "armadillo_bits/spglue_min_meat.hpp"
+  #include "armadillo_bits/spglue_max_meat.hpp"
   
   #if defined(ARMA_USE_NEWARP)
     #include "armadillo_bits/newarp_cx_attrib.hpp"

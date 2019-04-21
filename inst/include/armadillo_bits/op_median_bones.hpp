@@ -39,6 +39,7 @@ operator< (const arma_cx_median_packet<T>& A, const arma_cx_median_packet<T>& B)
 
 //! Class for finding median values of a matrix
 class op_median
+  : public traits_op_xvec
   {
   public:
   

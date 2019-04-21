@@ -146,6 +146,8 @@ struct Base
   inline arma_warn_unused bool is_colvec() const;
   inline arma_warn_unused bool is_rowvec() const;
   inline arma_warn_unused bool is_finite() const;
+  inline arma_warn_unused bool has_inf()   const;
+  inline arma_warn_unused bool has_nan()   const;
   };
 
 

@@ -351,7 +351,7 @@ op_sqrtmat_sympd::apply_direct(Mat<typename T1::elem_type>& out, const Base<type
     Col< T> eigval;
     Mat<eT> eigvec;
     
-    const bool status = auxlib::eig_sym_dc(eigval, eigvec, X);
+    const bool status = eig_sym_helper(eigval, eigvec, X, 'd', "sqrtmat_sympd()");
     
     if(status == false)  { return false; }
     

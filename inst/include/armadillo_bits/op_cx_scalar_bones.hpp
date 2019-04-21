@@ -20,6 +20,7 @@
 
 
 class op_cx_scalar_times
+  : public traits_op_passthru
   {
   public:
   
@@ -38,12 +39,12 @@ class op_cx_scalar_times
              Cube< typename std::complex<typename T1::pod_type> >& out,
     const mtOpCube<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_times>& X
     );
-
   };
 
 
 
 class op_cx_scalar_plus
+  : public traits_op_passthru
   {
   public:
   
@@ -62,12 +63,12 @@ class op_cx_scalar_plus
              Cube< typename std::complex<typename T1::pod_type> >& out,
     const mtOpCube<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_plus>& X
     );
-
   };
 
 
 
 class op_cx_scalar_minus_pre
+  : public traits_op_passthru
   {
   public:
   
@@ -86,12 +87,12 @@ class op_cx_scalar_minus_pre
              Cube< typename std::complex<typename T1::pod_type> >& out,
     const mtOpCube<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_minus_pre>& X
     );
-
   };
 
 
 
 class op_cx_scalar_minus_post
+  : public traits_op_passthru
   {
   public:
   
@@ -110,12 +111,12 @@ class op_cx_scalar_minus_post
              Cube< typename std::complex<typename T1::pod_type> >& out,
     const mtOpCube<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_minus_post>& X
     );
-
   };
 
 
 
 class op_cx_scalar_div_pre
+  : public traits_op_passthru
   {
   public:
   
@@ -134,12 +135,12 @@ class op_cx_scalar_div_pre
              Cube< typename std::complex<typename T1::pod_type> >& out,
     const mtOpCube<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_div_pre>& X
     );
-
   };
 
 
 
 class op_cx_scalar_div_post
+  : public traits_op_passthru
   {
   public:
   
@@ -158,7 +159,6 @@ class op_cx_scalar_div_post
              Cube< typename std::complex<typename T1::pod_type> >& out,
     const mtOpCube<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_div_post>& X
     );
-
   };
 
 
