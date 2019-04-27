@@ -21,7 +21,7 @@
 
 // Add a scalar to a sparse matrix; this will return a dense matrix.
 class op_sp_plus
-  : public traits_op_default
+  : public traits_op_passthru
   {
   public:
   

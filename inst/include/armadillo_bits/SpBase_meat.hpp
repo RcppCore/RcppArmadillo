@@ -431,4 +431,24 @@ SpBase<elem_type,derived>::is_finite() const
 
 
 
+template<typename elem_type, typename derived>
+inline
+const SpOp<derived,spop_vectorise_col>
+SpBase<elem_type, derived>::as_col() const
+  {
+  return SpOp<derived,spop_vectorise_col>( (*this).get_ref() );
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+const SpOp<derived,spop_vectorise_row>
+SpBase<elem_type, derived>::as_row() const
+  {
+  return SpOp<derived,spop_vectorise_row>( (*this).get_ref() );
+  }
+
+
+
 //! @}

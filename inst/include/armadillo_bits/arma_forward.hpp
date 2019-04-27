@@ -77,8 +77,10 @@ class op_strans;
 class op_htrans;
 class op_htrans2;
 class op_inv;
+class op_inv_sympd;
 class op_diagmat;
 class op_trimat;
+class op_vectorise_row;
 class op_vectorise_col;
 class glue_times;
 class glue_times_diag;
@@ -131,7 +133,6 @@ struct traits_op_default
   };
 
 
-
 struct traits_op_xvec
   {
   template<typename T1>
@@ -142,7 +143,6 @@ struct traits_op_xvec
     static const bool is_xvec = true;
     };
   };
-
 
 
 struct traits_op_col
@@ -157,6 +157,17 @@ struct traits_op_col
   };
 
 
+struct traits_op_row
+  {
+  template<typename T1>
+  struct traits
+    {
+    static const bool is_row  = true;
+    static const bool is_col  = false;
+    static const bool is_xvec = false;
+    };
+  };
+
 
 struct traits_op_passthru
   {
@@ -170,7 +181,6 @@ struct traits_op_passthru
   };
 
 
-
 struct traits_glue_default
   {
   template<typename T1, typename T2>
@@ -181,7 +191,6 @@ struct traits_glue_default
     static const bool is_xvec = false;
     };
   };
-
 
 
 struct traits_glue_or
@@ -232,6 +241,8 @@ template<typename T1> class diagmat_proxy;
 
 class spop_strans;
 class spop_htrans;
+class spop_vectorise_row;
+class spop_vectorise_col;
 
 class spglue_plus;
 class spglue_minus;
@@ -239,7 +250,6 @@ class spglue_schur;
 class spglue_times;
 class spglue_max;
 class spglue_min;
-
 
 struct state_type
   {

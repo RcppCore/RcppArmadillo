@@ -591,6 +591,26 @@ Base<elem_type,derived>::has_nan() const
 
 
 
+template<typename elem_type, typename derived>
+arma_inline
+const Op<derived,op_vectorise_col>
+Base<elem_type, derived>::as_col() const
+  {
+  return Op<derived,op_vectorise_col>( (*this).get_ref() );
+  }
+
+
+
+template<typename elem_type, typename derived>
+arma_inline
+const Op<derived,op_vectorise_row>
+Base<elem_type, derived>::as_row() const
+  {
+  return Op<derived,op_vectorise_row>( (*this).get_ref() );
+  }
+
+
+
 //
 // extra functions defined in Base_extra_yes
 

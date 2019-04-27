@@ -452,7 +452,7 @@ operator+
   {
   arma_extra_debug_sigprint();
 
-  return SpToDOp<T1, op_sp_plus>(x.m, x.aux + k);
+  return SpToDOp<T1, op_sp_minus_pre>(x.m, x.aux + k);
   }
 
 

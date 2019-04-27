@@ -27,15 +27,27 @@ op_vectorise_col::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_vectori
   {
   arma_extra_debug_sigprint();
   
+  op_vectorise_col::apply_direct(out, in.m);
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_vectorise_col::apply_direct(Mat<typename T1::elem_type>& out, const T1& expr)
+  {
+  arma_extra_debug_sigprint();
+  
   typedef typename T1::elem_type eT;
   
   if(is_same_type< T1, subview<eT> >::yes)
     {
-    op_vectorise_col::apply_subview(out, reinterpret_cast< const subview<eT>& >(in.m));
+    op_vectorise_col::apply_subview(out, reinterpret_cast< const subview<eT>& >(expr));
     }
   else
     {
-    const Proxy<T1> P(in.m);
+    const Proxy<T1> P(expr);
     
     op_vectorise_col::apply_proxy(out, P);
     }
@@ -179,7 +191,19 @@ op_vectorise_row::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_vectori
   {
   arma_extra_debug_sigprint();
   
-  const Proxy<T1> P(in.m);
+  op_vectorise_row::apply_direct(out, in.m);
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_vectorise_row::apply_direct(Mat<typename T1::elem_type>& out, const T1& expr)
+  {
+  arma_extra_debug_sigprint();
+  
+  const Proxy<T1> P(expr);
   
   op_vectorise_row::apply_proxy(out, P);
   }
@@ -197,29 +221,46 @@ op_vectorise_row::apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>&
   
   if(P.is_alias(out) == false)
     {
-    out.set_size( 1, P.get_n_elem() );
+    const uword n_rows = P.get_n_rows();
+    const uword n_cols = P.get_n_cols();
+    const uword n_elem = P.get_n_elem();
+    
+    out.set_size(1, n_elem);
     
     eT* outmem = out.memptr();
     
-    const uword n_rows = P.get_n_rows();
-    const uword n_cols = P.get_n_cols();
-    
-    for(uword row=0; row < n_rows; ++row)
+    if(n_cols == 1)
       {
-      uword i,j;
-      
-      for(i=0, j=1; j < n_cols; i+=2, j+=2)
+      if(is_Mat<typename Proxy<T1>::stored_type>::value == true)
         {
-        const eT tmp_i = P.at(row,i);
-        const eT tmp_j = P.at(row,j);
+        const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
         
-        *outmem = tmp_i; outmem++;
-        *outmem = tmp_j; outmem++;
+        arrayops::copy(out.memptr(), tmp.M.memptr(), n_elem);
         }
-      
-      if(i < n_cols)
+      else
         {
-        *outmem = P.at(row,i); outmem++;
+        for(uword i=0; i < n_elem; ++i)  { outmem[i] = P.at(i,0); }
+        }
+      }
+    else
+      {
+      for(uword row=0; row < n_rows; ++row)
+        {
+        uword i,j;
+        
+        for(i=0, j=1; j < n_cols; i+=2, j+=2)
+          {
+          const eT tmp_i = P.at(row,i);
+          const eT tmp_j = P.at(row,j);
+          
+          *outmem = tmp_i; outmem++;
+          *outmem = tmp_j; outmem++;
+          }
+        
+        if(i < n_cols)
+          {
+          *outmem = P.at(row,i); outmem++;
+          }
         }
       }
     }
@@ -244,17 +285,15 @@ op_vectorise_all::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_vectori
   {
   arma_extra_debug_sigprint();
   
-  const Proxy<T1> P(in.m);
-  
   const uword dim = in.aux_uword_a;
   
   if(dim == 0)
     {
-    op_vectorise_col::apply_proxy(out, P);
+    op_vectorise_col::apply_direct(out, in.m);
     }
   else
     {
-    op_vectorise_row::apply_proxy(out, P);
+    op_vectorise_row::apply_direct(out, in.m);
     }
   }
 

@@ -85,6 +85,8 @@ class Row : public Mat<eT>
   arma_inline const Op<Row<eT>,op_htrans> ht() const;
   arma_inline const Op<Row<eT>,op_strans> st() const;
   
+  arma_inline const Op<Row<eT>,op_strans> as_col() const;
+  
   arma_inline       subview_row<eT> col(const uword col_num);
   arma_inline const subview_row<eT> col(const uword col_num) const;
   

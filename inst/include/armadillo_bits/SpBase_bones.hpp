@@ -88,6 +88,9 @@ struct SpBase
   
   inline arma_warn_unused bool is_finite() const;
   
+  inline const SpOp<derived,spop_vectorise_col> as_col() const;
+  inline const SpOp<derived,spop_vectorise_row> as_row() const;
+  
   // TODO: is_empty()
   // TODO: is_vec()
   // TODO: is_rowvec()

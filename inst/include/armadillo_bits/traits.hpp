@@ -1190,6 +1190,24 @@ struct has_op_inv< Glue<T1, Op<T2,op_inv>, glue_times> >
 
 
 
+template<typename T1>
+struct has_op_inv_sympd
+  { static const bool value = false; };
+
+template<typename T1>
+struct has_op_inv_sympd< Op<T1,op_inv_sympd> >
+  { static const bool value = true;  };
+
+template<typename T1, typename T2>
+struct has_op_inv_sympd< Glue<Op<T1,op_inv_sympd>, T2, glue_times> >
+  { static const bool value = true;  };
+
+template<typename T1, typename T2>
+struct has_op_inv_sympd< Glue<T1, Op<T2,op_inv_sympd>, glue_times> >
+  { static const bool value = true;  };
+
+
+
 template<typename T>
 struct has_nested_op_traits
   {

@@ -472,7 +472,7 @@ as_scalar(const BaseCube<typename T1::elem_type,T1>& X)
 template<typename T>
 arma_warn_unused
 arma_inline
-const typename arma_scalar_only<T>::result &
+typename arma_scalar_only<T>::result
 as_scalar(const T& x)
   {
   return x;

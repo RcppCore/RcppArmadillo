@@ -546,6 +546,16 @@ Row<eT>::st() const
 
 template<typename eT>
 arma_inline
+const Op<Row<eT>,op_strans>
+Row<eT>::as_col() const
+  {
+  return Op<Row<eT>,op_strans>(*this);
+  }
+
+
+
+template<typename eT>
+arma_inline
 subview_row<eT>
 Row<eT>::col(const uword in_col1)
   {
