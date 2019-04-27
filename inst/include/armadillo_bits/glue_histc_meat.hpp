@@ -34,6 +34,12 @@ glue_histc::apply_noalias(Mat<uword>& C, const Mat<eT>& A, const Mat<eT>& B, con
   
   if( B_n_elem == uword(0) )  { C.reset(); return; }
   
+  arma_debug_check
+    (
+    ((Col<eT>(const_cast<eT*>(B.memptr()), B_n_elem, false, false)).is_sorted("strictascend") == false),
+    "hist(): given 'edges' vector does not contain monotonically increasing values"
+    );
+  
   const eT*   B_mem       = B.memptr();
   const uword B_n_elem_m1 = B_n_elem - 1;
   
@@ -139,8 +145,7 @@ glue_histc_default::apply(Mat<uword>& C, const mtGlue<uword,T1,T2,glue_histc_def
   const quasi_unwrap<T1> UA(expr.A);
   const quasi_unwrap<T2> UB(expr.B);
   
-  //const uword dim = ( (T1::is_row) || ((UA.M.vec_state == 0) && (UA.M.n_elem <= 1) && (C.vec_state == 2)) ) ? 1 : 0;
-  const uword dim = (T1::is_row) ? 1 : 0;
+  const uword dim = (T1::is_xvec) ? uword(UA.M.is_rowvec() ? 1 : 0) : uword((T1::is_row) ? 1 : 0);
   
   if(UA.is_alias(C) || UB.is_alias(C))
     {

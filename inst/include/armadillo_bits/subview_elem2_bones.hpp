@@ -27,8 +27,9 @@ class subview_elem2 : public Base<eT, subview_elem2<eT,T1,T2> >
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  static const bool is_row = false;
-  static const bool is_col = false;
+  static const bool is_row  = false;
+  static const bool is_col  = false;
+  static const bool is_xvec = false;
   
   arma_aligned const Mat<eT>& m;
   

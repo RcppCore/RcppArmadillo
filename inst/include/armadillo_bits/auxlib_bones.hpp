@@ -125,17 +125,17 @@ class auxlib
   template<typename T, typename T1> 
   inline static bool eig_sym(Col<T>& eigval, const Base<std::complex<T>,T1>& X);
   
-  template<typename eT, typename T1>
-  inline static bool eig_sym(Col<eT>& eigval, Mat<eT>& eigvec, const Base<eT,T1>& X);
+  template<typename eT>
+  inline static bool eig_sym(Col<eT>& eigval, Mat<eT>& eigvec, const Mat<eT>& X);
   
-  template<typename T, typename T1>
-  inline static bool eig_sym(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Base<std::complex<T>,T1>& X);
+  template<typename T>
+  inline static bool eig_sym(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Mat< std::complex<T> >& X);
   
-  template<typename eT, typename T1>
-  inline static bool eig_sym_dc(Col<eT>& eigval, Mat<eT>& eigvec, const Base<eT,T1>& X);
+  template<typename eT>
+  inline static bool eig_sym_dc(Col<eT>& eigval, Mat<eT>& eigvec, const Mat<eT>& X);
   
-  template<typename T, typename T1>
-  inline static bool eig_sym_dc(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Base<std::complex<T>,T1>& X);
+  template<typename T>
+  inline static bool eig_sym_dc(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Mat< std::complex<T> >& X);
   
   
   //
@@ -348,6 +348,12 @@ class auxlib
   
   template<typename T1>
   inline static bool crippled_lapack(const Base<typename T1::elem_type, T1>&);
+  
+  template<typename eT>
+  inline static bool rudimentary_sym_check(const Mat<eT>& X);
+  
+  template<typename T>
+  inline static bool rudimentary_sym_check(const Mat< std::complex<T> >& X);
   };
 
 

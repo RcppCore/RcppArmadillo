@@ -74,4 +74,27 @@ vectorise(const BaseCube<typename T1::elem_type, T1>& X)
 
 
 
+//! for compatibility purposes: allows compiling user code designed for earlier versions of Armadillo
+template<typename T>
+arma_warn_unused
+arma_inline
+typename
+enable_if2
+  <
+  is_supported_elem_type<T>::value,
+  Col<T>
+  >::result
+vectorise(const T& val)
+  {
+  arma_extra_debug_sigprint();
+  
+  Col<T> out(1);
+  
+  out[0] = val;
+  
+  return out;
+  }
+
+
+
 //! @}

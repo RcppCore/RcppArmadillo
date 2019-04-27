@@ -202,7 +202,7 @@ op_sort::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort>& in)
 template<typename T1>
 inline
 void
-op_sort_default::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort_default>& in)
+op_sort_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort_vec>& in)
   {
   arma_extra_debug_sigprint();
   
@@ -213,7 +213,7 @@ op_sort_default::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort_def
   const Mat<eT>& X = U.M;
   
   const uword sort_type = in.aux_uword_a;
-  const uword dim       = (T1::is_row) ? 1 : 0;
+  const uword dim       = (T1::is_xvec) ? uword(U.M.is_rowvec() ? 1 : 0) : uword((T1::is_row) ? 1 : 0);
   
   if(U.is_alias(out))
     {

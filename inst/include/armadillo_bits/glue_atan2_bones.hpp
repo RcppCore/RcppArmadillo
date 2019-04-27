@@ -21,6 +21,7 @@
 
 
 class glue_atan2
+  : public traits_glue_or
   {
   public:
   

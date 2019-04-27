@@ -30,7 +30,7 @@ class diagmat_proxy_default
   inline
   diagmat_proxy_default(const T1& X)
     : P       ( X )
-    , P_is_vec( (resolves_to_vector<T1>::value) || (P.get_n_rows() == 1) || (P.get_n_cols() == 1) )
+    , P_is_vec( (resolves_to_vector<T1>::yes) || (P.get_n_rows() == 1) || (P.get_n_cols() == 1) )
     , P_is_col( T1::is_col || (P.get_n_cols() == 1) )
     , n_rows  ( P_is_vec ? P.get_n_elem() : P.get_n_rows() )
     , n_cols  ( P_is_vec ? P.get_n_elem() : P.get_n_cols() )
@@ -348,7 +348,7 @@ class diagmat_proxy_check_default
   inline
   diagmat_proxy_check_default(const T1& X, const Mat<typename T1::elem_type>&)
     : P(X)
-    , P_is_vec( (resolves_to_vector<T1>::value) || (P.n_rows == 1) || (P.n_cols == 1) )
+    , P_is_vec( (resolves_to_vector<T1>::yes) || (P.n_rows == 1) || (P.n_cols == 1) )
     , n_rows( P_is_vec ? P.n_elem : P.n_rows )
     , n_cols( P_is_vec ? P.n_elem : P.n_cols )
     {

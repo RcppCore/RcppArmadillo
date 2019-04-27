@@ -20,6 +20,7 @@
 
 //! Class for finding mean values of a matrix
 class op_mean
+  : public traits_op_xvec
   {
   public:
   

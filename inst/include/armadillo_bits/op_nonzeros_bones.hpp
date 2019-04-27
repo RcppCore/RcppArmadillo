@@ -21,6 +21,7 @@
 
 
 class op_nonzeros
+  : public traits_op_col
   {
   public:
   

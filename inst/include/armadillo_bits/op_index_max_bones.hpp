@@ -19,6 +19,7 @@
 
 
 class op_index_max
+  : public traits_op_xvec
   {
   public:
   

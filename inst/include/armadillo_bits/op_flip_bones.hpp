@@ -20,6 +20,7 @@
 
 
 class op_flipud
+  : public traits_op_passthru
   {
   public:
   
@@ -37,6 +38,7 @@ class op_flipud
 
 
 class op_fliplr
+  : public traits_op_passthru
   {
   public:
   

@@ -188,7 +188,7 @@ op_diff::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_diff>& in)
 template<typename T1>
 inline
 void
-op_diff_default::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_diff_default>& in)
+op_diff_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_diff_vec>& in)
   {
   arma_extra_debug_sigprint();
   
@@ -200,7 +200,7 @@ op_diff_default::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_diff_def
   
   const quasi_unwrap<T1> U(in.m);
   
-  const uword dim = (T1::is_row) ? 1 : 0;
+  const uword dim = (T1::is_xvec) ? uword(U.M.is_rowvec() ? 1 : 0) : uword((T1::is_row) ? 1 : 0);
   
   if(U.is_alias(out))
     {

@@ -37,12 +37,12 @@ class OpCube : public BaseCube<typename T1::elem_type, OpCube<T1, op_type> >
   inline          OpCube(const BaseCube<typename T1::elem_type, T1>& in_m, const uword in_aux_uword_a, const uword in_aux_uword_b, const uword in_aux_uword_c, const uword in_aux_uword_d, const char junk);
   inline         ~OpCube();
   
-  arma_aligned const T1&       m;            //!< storage of reference to the operand (e.g. a cube)
-  arma_aligned       elem_type aux;          //!< storage of auxiliary data, user defined format
-  arma_aligned       uword     aux_uword_a;  //!< storage of auxiliary data, uword format
-  arma_aligned       uword     aux_uword_b;  //!< storage of auxiliary data, uword format
-  arma_aligned       uword     aux_uword_c;  //!< storage of auxiliary data, uword format
-  arma_aligned       uword     aux_uword_d;  //!< storage of auxiliary data, uword format
+  arma_aligned const T1&       m;            //!< the operand; must be derived from BaseCube
+  arma_aligned       elem_type aux;          //!< auxiliary data, using the element type as used by T1
+  arma_aligned       uword     aux_uword_a;  //!< auxiliary data, uword format
+  arma_aligned       uword     aux_uword_b;  //!< auxiliary data, uword format
+  arma_aligned       uword     aux_uword_c;  //!< auxiliary data, uword format
+  arma_aligned       uword     aux_uword_d;  //!< auxiliary data, uword format
   
   };
 

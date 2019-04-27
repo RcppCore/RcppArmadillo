@@ -95,7 +95,7 @@ arma_inline
 typename
 enable_if2
   <
-  is_arma_type<T1>::value && is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value && is_not_complex<typename T1::elem_type>::value,
+  is_arma_type<T1>::value && is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value && is_cx<typename T1::elem_type>::no,
   typename T1::elem_type
   >::result
 cdot
@@ -118,7 +118,7 @@ arma_inline
 typename
 enable_if2
   <
-  is_arma_type<T1>::value && is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value && is_complex<typename T1::elem_type>::value,
+  is_arma_type<T1>::value && is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value && is_cx<typename T1::elem_type>::yes,
   typename T1::elem_type
   >::result
 cdot
@@ -142,7 +142,7 @@ arma_inline
 typename
 enable_if2
   <
-  is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value && is_complex<typename T1::elem_type>::value,
+  is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value && is_cx<typename T1::elem_type>::yes,
   typename T1::elem_type
   >::result
 dot

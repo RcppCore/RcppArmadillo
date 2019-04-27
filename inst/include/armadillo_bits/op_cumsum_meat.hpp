@@ -31,6 +31,8 @@ op_cumsum::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim)
   
   out.set_size(n_rows,n_cols);
   
+  if(out.n_elem == 0)  { return; }
+  
   if(dim == 0)
     {
     if(n_cols == 1)
@@ -140,7 +142,7 @@ op_cumsum::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumsum>& in)
 template<typename T1>
 inline
 void
-op_cumsum_default::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumsum_default>& in)
+op_cumsum_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumsum_vec>& in)
   {
   arma_extra_debug_sigprint();
   
@@ -148,7 +150,7 @@ op_cumsum_default::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumsum
   
   const quasi_unwrap<T1> U(in.m);
   
-  const uword dim = (T1::is_row) ? 1 : 0;
+  const uword dim = (T1::is_xvec) ? uword(U.M.is_rowvec() ? 1 : 0) : uword((T1::is_row) ? 1 : 0);
   
   if(U.is_alias(out))
     {

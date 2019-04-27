@@ -24,7 +24,7 @@ arma_inline
 typename
 enable_if2
   <
-  (is_arma_type<T1>::value) && (is_arma_type<T2>::value) && (is_not_complex<typename T1::elem_type>::value) && (is_same_type<typename T1::elem_type, typename T2::elem_type>::value),
+  is_arma_type<T1>::value && is_arma_type<T2>::value && is_cx<typename T1::elem_type>::no && is_same_type<typename T1::elem_type, typename T2::elem_type>::value,
   const mtGlue<uword,T1,T2,glue_histc_default>
   >::result
 histc(const T1& X, const T2& Y)
@@ -42,7 +42,7 @@ arma_inline
 typename
 enable_if2
   <
-  (is_arma_type<T1>::value) && (is_arma_type<T2>::value) && (is_not_complex<typename T1::elem_type>::value) && (is_same_type<typename T1::elem_type, typename T2::elem_type>::value),
+  is_arma_type<T1>::value && is_arma_type<T2>::value && is_cx<typename T1::elem_type>::no && is_same_type<typename T1::elem_type, typename T2::elem_type>::value,
   const mtGlue<uword,T1,T2,glue_histc>
   >::result
 histc(const T1& X, const T2& Y, const uword dim)

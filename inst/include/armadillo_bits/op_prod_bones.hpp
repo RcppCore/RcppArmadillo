@@ -19,6 +19,7 @@
 
 
 class op_prod
+  : public traits_op_xvec
   {
   public:
   

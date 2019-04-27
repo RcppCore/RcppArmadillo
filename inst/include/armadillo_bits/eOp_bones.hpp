@@ -33,8 +33,9 @@ class eOp : public Base<typename T1::elem_type, eOp<T1, eop_type> >
   static const bool has_subview = Proxy<T1>::has_subview;
   static const bool fake_mat    = Proxy<T1>::fake_mat;
   
-  static const bool is_row = Proxy<T1>::is_row;
-  static const bool is_col = Proxy<T1>::is_col;
+  static const bool is_row  = Proxy<T1>::is_row;
+  static const bool is_col  = Proxy<T1>::is_col;
+  static const bool is_xvec = Proxy<T1>::is_xvec;
   
   arma_aligned const Proxy<T1> P;
   

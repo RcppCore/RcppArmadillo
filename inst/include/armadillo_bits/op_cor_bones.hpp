@@ -21,13 +21,12 @@
 
 
 class op_cor
+  : public traits_op_default
   {
   public:
   
-  template<typename eT> inline static void direct_cor(Mat<eT>&                out, const Mat<eT>& X,                const uword norm_type);
-  template<typename  T> inline static void direct_cor(Mat< std::complex<T> >& out, const Mat< std::complex<T> >& X, const uword norm_type);
-  
-  template<typename T1> inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cor>& in);
+  template<typename T1> inline static void apply(Mat<typename T1::elem_type>& out, const Op< T1,               op_cor>& in);
+  template<typename T1> inline static void apply(Mat<typename T1::elem_type>& out, const Op< Op<T1,op_htrans>, op_cor>& in);
   };
 
 

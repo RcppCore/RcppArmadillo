@@ -415,7 +415,7 @@ typename
 enable_if2
   <
   (is_arma_sparse_type<T1>::value && is_arma_sparse_type<T2>::value && (is_same_type<typename T1::elem_type, typename T2::elem_type>::no)),
-  SpMat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result >
+  const mtSpGlue< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result, T1, T2, spglue_times_mixed >
   >::result
 operator*
   (
@@ -425,11 +425,14 @@ operator*
   {
   arma_extra_debug_sigprint();
   
-  SpMat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result > out;
+  typedef typename T1::elem_type eT1;
+  typedef typename T2::elem_type eT2;
   
-  spglue_times_mixed::sparse_times_sparse(out, X, Y);
+  typedef typename promote_type<eT1,eT2>::result out_eT;
   
-  return out;
+  promote_type<eT1,eT2>::check();
+  
+  return mtSpGlue<out_eT, T1, T2, spglue_times_mixed>( X, Y );
   }
 
 

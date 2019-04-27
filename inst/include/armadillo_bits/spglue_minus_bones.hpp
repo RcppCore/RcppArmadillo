@@ -20,6 +20,7 @@
 
 
 class spglue_minus
+  : public traits_glue_or
   {
   public:
   
@@ -36,11 +37,12 @@ class spglue_minus
 
 
 class spglue_minus_mixed
+  : public traits_glue_or
   {
   public:
   
   template<typename T1, typename T2>
-  inline static void sparse_minus_sparse(SpMat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result >& out, const T1& X, const T2& Y);
+  inline static void apply(SpMat<typename eT_promoter<T1,T2>::eT>& out, const mtSpGlue<typename eT_promoter<T1,T2>::eT, T1, T2, spglue_minus_mixed>& expr);
   
   template<typename T1, typename T2>
   inline static void sparse_minus_dense(Mat< typename promote_type<typename T1::elem_type, typename T2::elem_type >::result>& out, const T1& X, const T2& Y);

@@ -25,8 +25,8 @@ arma_inline
 typename
 enable_if2
   <
-  (is_arma_type<T1>::value),
-  const Op<T1, op_shift_default>
+  is_arma_type<T1>::value && resolves_to_vector<T1>::yes,
+  const Op<T1, op_shift_vec>
   >::result
 shift
   (
@@ -39,7 +39,32 @@ shift
   const uword len = (N < 0) ? uword(-N) : uword(N);
   const uword neg = (N < 0) ? uword( 1) : uword(0);
   
-  return Op<T1, op_shift_default>(X, len, neg, uword(0), 'j');
+  return Op<T1, op_shift_vec>(X, len, neg, uword(0), 'j');
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+arma_inline
+typename
+enable_if2
+  <
+  is_arma_type<T1>::value && resolves_to_vector<T1>::no,
+  const Op<T1, op_shift>
+  >::result
+shift
+  (
+  const T1&   X,
+  const sword N
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword len = (N < 0) ? uword(-N) : uword(N);
+  const uword neg = (N < 0) ? uword( 1) : uword(0);
+  
+  return Op<T1, op_shift>(X, len, neg, uword(0), 'j');
   }
 
 

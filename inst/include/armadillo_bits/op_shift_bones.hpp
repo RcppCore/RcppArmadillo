@@ -20,16 +20,18 @@
 
 
 
-class op_shift_default
+class op_shift_vec
+  : public traits_op_passthru
   {
   public:
   
-  template<typename T1> inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_shift_default>& in);
+  template<typename T1> inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_shift_vec>& in);
   };
 
 
 
 class op_shift
+  : public traits_op_default
   {
   public:
   

@@ -468,23 +468,21 @@ spglue_times_misc::dense_times_sparse(Mat<typename T1::elem_type>& out, const T1
 template<typename T1, typename T2>
 inline
 void
-spglue_times_mixed::sparse_times_sparse(SpMat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result >& out, const T1& X, const T2& Y)
+spglue_times_mixed::apply(SpMat<typename eT_promoter<T1,T2>::eT>& out, const mtSpGlue<typename eT_promoter<T1,T2>::eT, T1, T2, spglue_times_mixed>& expr)
   {
   arma_extra_debug_sigprint();
   
   typedef typename T1::elem_type eT1;
   typedef typename T2::elem_type eT2;
   
-  typedef typename promote_type<eT1,eT2>::result out_eT;
-  
-  promote_type<eT1,eT2>::check();
+  typedef typename eT_promoter<T1,T2>::eT out_eT;
   
   if( (is_same_type<eT1,out_eT>::no) && (is_same_type<eT2,out_eT>::yes) )
     {
     // upgrade T1
     
-    const unwrap_spmat<T1> UA(X);
-    const unwrap_spmat<T2> UB(Y);
+    const unwrap_spmat<T1> UA(expr.A);
+    const unwrap_spmat<T2> UB(expr.B);
     
     const SpMat<eT1>& A = UA.M;
     const SpMat<eT2>& B = UB.M;
@@ -495,15 +493,15 @@ spglue_times_mixed::sparse_times_sparse(SpMat< typename promote_type<typename T1
     
     const SpMat<out_eT>& BB = reinterpret_cast< const SpMat<out_eT>& >(B);
     
-    spglue_times::apply_noalias(out, AA, BB);
+    out = AA * BB;
     }
   else
   if( (is_same_type<eT1,out_eT>::yes) && (is_same_type<eT2,out_eT>::no) )
     {
     // upgrade T2 
     
-    const unwrap_spmat<T1> UA(X);
-    const unwrap_spmat<T2> UB(Y);
+    const unwrap_spmat<T1> UA(expr.A);
+    const unwrap_spmat<T2> UB(expr.B);
     
     const SpMat<eT1>& A = UA.M;
     const SpMat<eT2>& B = UB.M;
@@ -514,14 +512,14 @@ spglue_times_mixed::sparse_times_sparse(SpMat< typename promote_type<typename T1
     
     for(uword i=0; i < B.n_nonzero; ++i)  { access::rw(BB.values[i]) = out_eT(B.values[i]); }
     
-    spglue_times::apply_noalias(out, AA, BB);
+    out = AA * BB;
     }
   else
     {
     // upgrade T1 and T2
     
-    const unwrap_spmat<T1> UA(X);
-    const unwrap_spmat<T2> UB(Y);
+    const unwrap_spmat<T1> UA(expr.A);
+    const unwrap_spmat<T2> UB(expr.B);
     
     const SpMat<eT1>& A = UA.M;
     const SpMat<eT2>& B = UB.M;
@@ -532,7 +530,7 @@ spglue_times_mixed::sparse_times_sparse(SpMat< typename promote_type<typename T1
     for(uword i=0; i < A.n_nonzero; ++i)  { access::rw(AA.values[i]) = out_eT(A.values[i]); }
     for(uword i=0; i < B.n_nonzero; ++i)  { access::rw(BB.values[i]) = out_eT(B.values[i]); }
     
-    spglue_times::apply_noalias(out, AA, BB);
+    out = AA * BB;
     }
   }
 

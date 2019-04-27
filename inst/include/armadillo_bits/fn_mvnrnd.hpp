@@ -26,13 +26,13 @@ typename
 enable_if2
   <
   is_real<typename T1::elem_type>::value,
-  const Glue<T1, T2, glue_mvnrnd>
+  const Glue<T1, T2, glue_mvnrnd_vec>
   >::result
 mvnrnd(const Base<typename T1::elem_type, T1>& M, const Base<typename T1::elem_type, T2>& C)
   {
   arma_extra_debug_sigprint();
   
-  return Glue<T1, T2, glue_mvnrnd>(M.get_ref(), C.get_ref(), uword(1));
+  return Glue<T1, T2, glue_mvnrnd_vec>(M.get_ref(), C.get_ref());
   }
 
 

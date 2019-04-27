@@ -289,7 +289,7 @@ typename
 enable_if2
   <
   (is_arma_sparse_type<T1>::value && is_arma_sparse_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::no),
-  SpMat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result >
+  const mtSpGlue< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result, T1, T2, spglue_minus_mixed >
   >::result
 operator-
   (
@@ -299,11 +299,14 @@ operator-
   {
   arma_extra_debug_sigprint();
   
-  SpMat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result > out;
+  typedef typename T1::elem_type eT1;
+  typedef typename T2::elem_type eT2;
   
-  spglue_minus_mixed::sparse_minus_sparse(out, X, Y);
+  typedef typename promote_type<eT1,eT2>::result out_eT;
   
-  return out;
+  promote_type<eT1,eT2>::check();
+  
+  return mtSpGlue<out_eT, T1, T2, spglue_minus_mixed>( X, Y );
   }
 
 
@@ -356,6 +359,144 @@ operator-
   spglue_minus_mixed::dense_minus_sparse(out, x, y);
   
   return out;
+  }
+
+
+
+//! sparse - scalar
+template<typename T1>
+arma_inline
+typename
+enable_if2< is_arma_sparse_type<T1>::value, const SpToDOp<T1, op_sp_minus_post> >::result
+operator-
+  (
+  const T1&                    X,
+  const typename T1::elem_type k
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  return SpToDOp<T1, op_sp_minus_post>(X, k);
+  }
+
+
+
+//! scalar - sparse
+template<typename T1>
+arma_inline
+typename
+enable_if2< is_arma_sparse_type<T1>::value, const SpToDOp<T1, op_sp_minus_pre> >::result
+operator-
+  (
+  const typename T1::elem_type k,
+  const T1&                    X
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  return SpToDOp<T1, op_sp_minus_pre>(X, k);
+  }
+
+
+
+// TODO: this is an uncommon use case; remove?
+//! multiple applications of add/subtract scalars can be condensed
+template<typename T1, typename op_type>
+inline
+typename
+enable_if2
+  <
+  (is_arma_sparse_type<T1>::value &&
+      (is_same_type<op_type, op_sp_plus>::value ||
+       is_same_type<op_type, op_sp_minus_post>::value)),
+  const SpToDOp<T1, op_sp_minus_post>
+  >::result
+operator-
+  (
+  const SpToDOp<T1, op_type>&  x,
+  const typename T1::elem_type k
+  )
+  {
+  arma_extra_debug_sigprint();
+
+  const typename T1::elem_type aux = (is_same_type<op_type, op_sp_plus>::value) ? -x.aux : x.aux;
+
+  return SpToDOp<T1, op_sp_minus_post>(x.m, aux + k);
+  }
+
+
+
+// TODO: this is an uncommon use case; remove?
+//! multiple applications of add/subtract scalars can be condensed
+template<typename T1, typename op_type>
+inline
+typename
+enable_if2
+  <
+  (is_arma_sparse_type<T1>::value &&
+      (is_same_type<op_type, op_sp_plus>::value ||
+       is_same_type<op_type, op_sp_minus_post>::value)),
+  const SpToDOp<T1, op_sp_minus_pre>
+  >::result
+operator-
+  (
+  const typename T1::elem_type k,
+  const SpToDOp<T1, op_type>&  x
+  )
+  {
+  arma_extra_debug_sigprint();
+
+  const typename T1::elem_type aux = (is_same_type<op_type, op_sp_plus>::value) ? -x.aux : x.aux;
+
+  return SpToDOp<T1, op_sp_minus_pre>(x.m, k + aux);
+  }
+
+
+
+// TODO: this is an uncommon use case; remove?
+//! multiple applications of add/subtract scalars can be condensed
+template<typename T1, typename op_type>
+inline
+typename
+enable_if2
+  <
+  (is_arma_sparse_type<T1>::value &&
+       is_same_type<op_type, op_sp_minus_pre>::value),
+  const SpToDOp<T1, op_sp_minus_pre>
+  >::result
+operator-
+  (
+  const SpToDOp<T1, op_type>&  x,
+  const typename T1::elem_type k
+  )
+  {
+  arma_extra_debug_sigprint();
+
+  return SpToDOp<T1, op_sp_minus_pre>(x.m, x.aux - k);
+  }
+
+
+
+// TODO: this is an uncommon use case; remove?
+//! multiple applications of add/subtract scalars can be condensed
+template<typename T1, typename op_type>
+inline
+typename
+enable_if2
+  <
+  (is_arma_sparse_type<T1>::value &&
+       is_same_type<op_type, op_sp_minus_pre>::value),
+  const SpToDOp<T1, op_sp_plus>
+  >::result
+operator-
+  (
+  const typename T1::elem_type k,
+  const SpToDOp<T1, op_type>&  x
+  )
+  {
+  arma_extra_debug_sigprint();
+
+  return SpToDOp<T1, op_sp_plus>(x.m, k - x.aux);
   }
 
 

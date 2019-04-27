@@ -20,6 +20,7 @@
 
 
 class spglue_schur
+  : public traits_glue_or
   {
   public:
   
@@ -36,6 +37,7 @@ class spglue_schur
 
 
 class spglue_schur_misc
+  : public traits_glue_or
   {
   public:
   
@@ -46,11 +48,12 @@ class spglue_schur_misc
 
 
 class spglue_schur_mixed
+  : public traits_glue_or
   {
   public:
   
   template<typename T1, typename T2>
-  inline static void sparse_schur_sparse(SpMat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result >& out, const T1& X, const T2& Y);
+  inline static void apply(SpMat<typename eT_promoter<T1,T2>::eT>& out, const mtSpGlue<typename eT_promoter<T1,T2>::eT, T1, T2, spglue_schur_mixed>& expr);
   
   template<typename T1, typename T2>
   inline static void dense_schur_sparse(SpMat< typename promote_type<typename T1::elem_type, typename T2::elem_type >::result>& out, const T1& X, const T2& Y);

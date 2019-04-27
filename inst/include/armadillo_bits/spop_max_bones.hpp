@@ -19,6 +19,7 @@
 
 
 class spop_max
+  : public traits_op_xvec
   {
   public:
   

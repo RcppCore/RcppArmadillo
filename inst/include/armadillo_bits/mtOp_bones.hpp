@@ -31,46 +31,9 @@ class mtOp : public Base<out_eT, mtOp<out_eT, T1, op_type> >
   
   typedef typename T1::elem_type                in_eT;
   
-  static const bool is_row = \
-    (
-    // operations which result in a row vector if the input is a row vector
-    T1::is_row &&
-      (
-         is_op_mixed_elem<op_type>::value
-      || is_same_type<op_type, op_clamp>::value
-      || is_same_type<op_type, op_hist>::value
-      || is_same_type<op_type, op_real>::value
-      || is_same_type<op_type, op_imag>::value
-      || is_same_type<op_type, op_abs>::value
-      || is_same_type<op_type, op_arg>::value
-      )
-    );
-  
-  static const bool is_col = \
-    (
-    // operations which always result in a column vector
-       (is_same_type<op_type, op_find>::value)
-    || (is_same_type<op_type, op_find_simple>::value)
-    || (is_same_type<op_type, op_find_unique>::value)
-    || (is_same_type<op_type, op_sort_index>::value)
-    || (is_same_type<op_type, op_stable_sort_index>::value)
-    || (is_same_type<op_type, op_roots>::value)
-    )
-    ||
-    (
-    // operations which result in a column vector if the input is a column vector
-    T1::is_col &&
-      (
-         is_op_mixed_elem<op_type>::value
-      || is_same_type<op_type, op_clamp>::value
-      || is_same_type<op_type, op_hist>::value
-      || is_same_type<op_type, op_real>::value
-      || is_same_type<op_type, op_imag>::value
-      || is_same_type<op_type, op_abs>::value
-      || is_same_type<op_type, op_arg>::value
-      )
-    );
-  
+  static const bool is_row  = op_type::template traits<T1>::is_row;
+  static const bool is_col  = op_type::template traits<T1>::is_col;
+  static const bool is_xvec = op_type::template traits<T1>::is_xvec;
   
   inline explicit mtOp(const T1& in_m);
   inline          mtOp(const T1& in_m, const in_eT in_aux);
@@ -84,11 +47,11 @@ class mtOp : public Base<out_eT, mtOp<out_eT, T1, op_type> >
   inline         ~mtOp();
     
   
-  arma_aligned const T1&    m;            //!< storage of reference to the operand (eg. a matrix)
-  arma_aligned       in_eT  aux;          //!< storage of auxiliary data, using the element type as used by T1
-  arma_aligned       out_eT aux_out_eT;   //!< storage of auxiliary data, using the element type as specified by the out_eT template parameter
-  arma_aligned       uword  aux_uword_a;  //!< storage of auxiliary data, uword format
-  arma_aligned       uword  aux_uword_b;  //!< storage of auxiliary data, uword format
+  arma_aligned const T1&    m;            //!< the operand; must be derived from Base
+  arma_aligned       in_eT  aux;          //!< auxiliary data, using the element type as used by T1
+  arma_aligned       out_eT aux_out_eT;   //!< auxiliary data, using the element type as specified by the out_eT template parameter
+  arma_aligned       uword  aux_uword_a;  //!< auxiliary data, uword format
+  arma_aligned       uword  aux_uword_b;  //!< auxiliary data, uword format
   
   };
 

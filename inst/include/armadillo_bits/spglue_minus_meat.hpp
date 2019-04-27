@@ -178,7 +178,7 @@ spglue_minus::apply_noalias(SpMat<eT>& out, const SpMat<eT>& A, const SpMat<eT>&
 template<typename T1, typename T2>
 inline
 void
-spglue_minus_mixed::sparse_minus_sparse(SpMat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result >& out, const T1& X, const T2& Y)
+spglue_minus_mixed::apply(SpMat<typename eT_promoter<T1,T2>::eT>& out, const mtSpGlue<typename eT_promoter<T1,T2>::eT, T1, T2, spglue_minus_mixed>& expr)
   {
   arma_extra_debug_sigprint();
   
@@ -193,8 +193,8 @@ spglue_minus_mixed::sparse_minus_sparse(SpMat< typename promote_type<typename T1
     {
     // upgrade T1
     
-    const unwrap_spmat<T1> UA(X);
-    const unwrap_spmat<T2> UB(Y);
+    const unwrap_spmat<T1> UA(expr.A);
+    const unwrap_spmat<T2> UB(expr.B);
     
     const SpMat<eT1>& A = UA.M;
     const SpMat<eT2>& B = UB.M;
@@ -205,15 +205,15 @@ spglue_minus_mixed::sparse_minus_sparse(SpMat< typename promote_type<typename T1
     
     const SpMat<out_eT>& BB = reinterpret_cast< const SpMat<out_eT>& >(B);
     
-    spglue_minus::apply_noalias(out, AA, BB);
+    out = AA - BB;
     }
   else
   if( (is_same_type<eT1,out_eT>::yes) && (is_same_type<eT2,out_eT>::no) )
     {
     // upgrade T2 
     
-    const unwrap_spmat<T1> UA(X);
-    const unwrap_spmat<T2> UB(Y);
+    const unwrap_spmat<T1> UA(expr.A);
+    const unwrap_spmat<T2> UB(expr.B);
     
     const SpMat<eT1>& A = UA.M;
     const SpMat<eT2>& B = UB.M;
@@ -224,14 +224,14 @@ spglue_minus_mixed::sparse_minus_sparse(SpMat< typename promote_type<typename T1
     
     for(uword i=0; i < B.n_nonzero; ++i)  { access::rw(BB.values[i]) = out_eT(B.values[i]); }
     
-    spglue_minus::apply_noalias(out, AA, BB);
+    out = AA - BB;
     }
   else
     {
     // upgrade T1 and T2
     
-    const unwrap_spmat<T1> UA(X);
-    const unwrap_spmat<T2> UB(Y);
+    const unwrap_spmat<T1> UA(expr.A);
+    const unwrap_spmat<T2> UB(expr.B);
     
     const SpMat<eT1>& A = UA.M;
     const SpMat<eT2>& B = UB.M;
@@ -242,7 +242,7 @@ spglue_minus_mixed::sparse_minus_sparse(SpMat< typename promote_type<typename T1
     for(uword i=0; i < A.n_nonzero; ++i)  { access::rw(AA.values[i]) = out_eT(A.values[i]); }
     for(uword i=0; i < B.n_nonzero; ++i)  { access::rw(BB.values[i]) = out_eT(B.values[i]); }
     
-    spglue_minus::apply_noalias(out, AA, BB);
+    out = AA - BB;
     }
   }
 

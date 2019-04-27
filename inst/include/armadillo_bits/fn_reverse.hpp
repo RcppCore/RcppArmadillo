@@ -25,7 +25,7 @@ inline
 typename
 enable_if2
   <
-  (is_arma_type<T1>::value && (resolves_to_vector<T1>::value == true)),
+  is_arma_type<T1>::value && resolves_to_vector<T1>::yes,
   const Op<T1, op_reverse_vec>
   >::result
 reverse
@@ -46,9 +46,25 @@ inline
 typename
 enable_if2
   <
-  (is_arma_type<T1>::value && (resolves_to_vector<T1>::value == true)),
-  const Op<T1, op_reverse_mat>
+  is_arma_type<T1>::value && resolves_to_vector<T1>::no,
+  const Op<T1, op_reverse>
   >::result
+reverse
+  (
+  const T1& X
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  return Op<T1, op_reverse>(X, 0, 0);
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+inline
+typename enable_if2< is_arma_type<T1>::value, const Op<T1, op_reverse> >::result
 reverse
   (
   const T1&   X,
@@ -57,29 +73,7 @@ reverse
   {
   arma_extra_debug_sigprint();
   
-  return Op<T1, op_reverse_mat>(X, dim, 0);
-  }
-
-
-
-template<typename T1>
-arma_warn_unused
-inline
-typename
-enable_if2
-  <
-  (is_arma_type<T1>::value && (resolves_to_vector<T1>::value == false)),
-  const Op<T1, op_reverse_mat>
-  >::result
-reverse
-  (
-  const T1&   X,
-  const uword dim = 0
-  )
-  {
-  arma_extra_debug_sigprint();
-  
-  return Op<T1, op_reverse_mat>(X, dim, 0);
+  return Op<T1, op_reverse>(X, dim, 0);
   }
 
 

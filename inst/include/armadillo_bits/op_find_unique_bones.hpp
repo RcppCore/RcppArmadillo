@@ -20,6 +20,7 @@
 
 
 class op_find_unique
+  : public traits_op_col
   {
   public:
   

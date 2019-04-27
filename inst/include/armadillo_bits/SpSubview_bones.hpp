@@ -28,8 +28,9 @@ class SpSubview : public SpBase<eT, SpSubview<eT> >
   typedef eT elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  static const bool is_row = false;
-  static const bool is_col = false;
+  static const bool is_row  = false;
+  static const bool is_col  = false;
+  static const bool is_xvec = false;
   
   const uword aux_row1;
   const uword aux_col1;

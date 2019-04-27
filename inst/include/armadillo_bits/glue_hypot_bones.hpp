@@ -21,6 +21,7 @@
 
 
 class glue_hypot
+  : public traits_glue_or
   {
   public:
   

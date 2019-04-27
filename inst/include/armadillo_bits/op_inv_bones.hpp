@@ -21,6 +21,7 @@
 
 //! 'invert matrix' operation (general matrices)
 class op_inv
+  : public traits_op_default
   {
   public:
   
@@ -38,6 +39,7 @@ class op_inv
 
 //! 'invert matrix' operation (triangular matrices)
 class op_inv_tr
+  : public traits_op_default
   {
   public:
   
@@ -49,6 +51,7 @@ class op_inv_tr
 
 //! 'invert matrix' operation (symmetric positive definite matrices)
 class op_inv_sympd
+  : public traits_op_default
   {
   public:
   

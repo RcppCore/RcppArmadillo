@@ -23,7 +23,7 @@
 template<typename T1>
 inline
 void
-op_shift_default::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_shift_default>& in)
+op_shift_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_shift_vec>& in)
   {
   arma_extra_debug_sigprint();
   
@@ -31,7 +31,8 @@ op_shift_default::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_shift_d
   
   const uword len = in.aux_uword_a;
   const uword neg = in.aux_uword_b;
-  const uword dim = (T1::is_row) ? 1 : 0;  // NOTE: this only checks the type; U.M.n_rows == 1 is not checked
+  
+  const uword dim = (T1::is_xvec) ? uword(U.M.is_rowvec() ? 1 : 0) : uword((T1::is_row) ? 1 : 0);
   
   op_shift::apply_direct(out, U.M, len, neg, dim);
   }

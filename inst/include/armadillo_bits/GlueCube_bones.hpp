@@ -31,8 +31,8 @@ class GlueCube : public BaseCube<typename T1::elem_type, GlueCube<T1, T2, glue_t
   arma_inline  GlueCube(const BaseCube<typename T1::elem_type, T1>& in_A, const BaseCube<typename T1::elem_type, T2>& in_B);
   arma_inline ~GlueCube();
   
-  const T1& A;  //!< first operand
-  const T2& B;  //!< second operand
+  const T1& A;  //!< first operand;  must be derived from BaseCube
+  const T2& B;  //!< second operand; must be derived from BaseCube
   
   };
 

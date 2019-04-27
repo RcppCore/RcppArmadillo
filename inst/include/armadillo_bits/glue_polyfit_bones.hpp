@@ -24,6 +24,14 @@ class glue_polyfit
   {
   public:
   
+  template<typename T1, typename T2>
+  struct traits
+    {
+    static const bool is_row  = false;
+    static const bool is_col  = true;
+    static const bool is_xvec = false;
+    };
+  
   template<typename eT> inline static bool apply_noalias(Mat<eT>& out, const Col<eT>& X, const Col<eT>& Y, const uword N);
   
   template<typename T1, typename T2> inline static bool apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& X_expr, const Base<typename T1::elem_type, T2>& Y_expr, const uword N);

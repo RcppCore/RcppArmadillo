@@ -27,8 +27,9 @@ class Col : public Mat<eT>
   typedef eT                                elem_type;
   typedef typename get_pod_type<eT>::result pod_type;
   
-  static const bool is_col = true;
-  static const bool is_row = false;
+  static const bool is_col  = true;
+  static const bool is_row  = false;
+  static const bool is_xvec = false;
   
   inline          Col();
   inline          Col(const Col<eT>& X);
@@ -180,8 +181,9 @@ class Col<eT>::fixed : public Col<eT>
   typedef eT                                elem_type;
   typedef typename get_pod_type<eT>::result pod_type;
   
-  static const bool is_col = true;
-  static const bool is_row = false;
+  static const bool is_col  = true;
+  static const bool is_row  = false;
+  static const bool is_xvec = false;
   
   static const uword n_rows;  // value provided below the class definition
   static const uword n_cols;  // value provided below the class definition

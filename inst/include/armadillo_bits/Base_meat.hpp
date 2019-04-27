@@ -413,7 +413,7 @@ Base<elem_type,derived>::is_vec() const
   {
   arma_extra_debug_sigprint();
   
-  if( (Proxy<derived>::is_row) || (Proxy<derived>::is_col) )  { return true; }
+  if( (Proxy<derived>::is_row) || (Proxy<derived>::is_col) || (Proxy<derived>::is_xvec) )  { return true; }
   
   const Proxy<derived> P( (*this).get_ref() );
   
@@ -497,6 +497,96 @@ Base<elem_type,derived>::is_finite() const
     }
   
   return true;
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
+Base<elem_type,derived>::has_inf() const
+  {
+  arma_extra_debug_sigprint();
+  
+  const Proxy<derived> P( (*this).get_ref() );
+  
+  if(is_Mat<typename Proxy<derived>::stored_type>::value)
+    {
+    const quasi_unwrap<typename Proxy<derived>::stored_type> U(P.Q);
+    
+    return arrayops::has_inf( U.M.memptr(), U.M.n_elem );
+    }
+  
+  if(Proxy<derived>::use_at == false)
+    {
+    const typename Proxy<derived>::ea_type Pea = P.get_ea();
+    
+    const uword n_elem = P.get_n_elem();
+    
+    for(uword i=0; i<n_elem; ++i)
+      {
+      if(arma_isinf(Pea[i]))  { return true; }
+      }
+    }
+  else
+    {
+    const uword n_rows = P.get_n_rows();
+    const uword n_cols = P.get_n_cols();
+    
+    for(uword col=0; col<n_cols; ++col)
+    for(uword row=0; row<n_rows; ++row)
+      {
+      if(arma_isinf(P.at(row,col)))  { return true; }
+      }
+    }
+  
+  return false;
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
+Base<elem_type,derived>::has_nan() const
+  {
+  arma_extra_debug_sigprint();
+  
+  const Proxy<derived> P( (*this).get_ref() );
+  
+  if(is_Mat<typename Proxy<derived>::stored_type>::value)
+    {
+    const quasi_unwrap<typename Proxy<derived>::stored_type> U(P.Q);
+    
+    return arrayops::has_nan( U.M.memptr(), U.M.n_elem );
+    }
+  
+  if(Proxy<derived>::use_at == false)
+    {
+    const typename Proxy<derived>::ea_type Pea = P.get_ea();
+    
+    const uword n_elem = P.get_n_elem();
+    
+    for(uword i=0; i<n_elem; ++i)
+      {
+      if(arma_isnan(Pea[i]))  { return true; }
+      }
+    }
+  else
+    {
+    const uword n_rows = P.get_n_rows();
+    const uword n_cols = P.get_n_cols();
+    
+    for(uword col=0; col<n_cols; ++col)
+    for(uword row=0; row<n_rows; ++row)
+      {
+      if(arma_isnan(P.at(row,col)))  { return true; }
+      }
+    }
+  
+  return false;
   }
 
 

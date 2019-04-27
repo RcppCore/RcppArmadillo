@@ -23,9 +23,14 @@
 class glue_cor
   {
   public:
-
-  template<typename eT> inline static void direct_cor(Mat<eT>&                out, const Mat<eT>&                A, const Mat<eT>&                B, const uword norm_type);
-  template<typename T>  inline static void direct_cor(Mat< std::complex<T> >& out, const Mat< std::complex<T> >& A, const Mat< std::complex<T> >& B, const uword norm_type);
+  
+  template<typename T1, typename T2>
+  struct traits
+    {
+    static const bool is_row  = false; // T1::is_col;  // TODO: check
+    static const bool is_col  = false; // T2::is_col;  // TODO: check
+    static const bool is_xvec = false;
+    };
   
   template<typename T1, typename T2> inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_cor>& X);
   };

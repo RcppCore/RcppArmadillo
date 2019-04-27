@@ -281,7 +281,7 @@ op_htrans::apply_proxy(Mat<typename T1::elem_type>& out, const T1& X)
     
     const bool is_alias = P.is_alias(out);
     
-    if( (resolves_to_vector<T1>::value == true) && (Proxy<T1>::use_at == false) )
+    if( (resolves_to_vector<T1>::yes) && (Proxy<T1>::use_at == false) )
       {
       if(is_alias == false)
         {
@@ -542,7 +542,7 @@ op_htrans2::apply_proxy(Mat<typename T1::elem_type>& out, const T1& X, const typ
     
     const bool is_alias = P.is_alias(out);
     
-    if( (resolves_to_vector<T1>::value == true) && (Proxy<T1>::use_at == false) )
+    if( (resolves_to_vector<T1>::yes) && (Proxy<T1>::use_at == false) )
       {
       if(is_alias == false)
         {

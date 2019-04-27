@@ -21,58 +21,16 @@
 
 template<typename T1>
 arma_warn_unused
-arma_inline
-const mtOp<uword, T1, op_any>
-any
-  (
-  const T1&   X,
-  const uword dim = 0,
-  const typename enable_if< is_arma_type<T1>::value       == true  >::result* junk1 = 0,
-  const typename enable_if< resolves_to_vector<T1>::value == false >::result* junk2 = 0
-  )
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk1);
-  arma_ignore(junk2);
-  
-  return mtOp<uword, T1, op_any>(X, dim, 0);
-  }
-
-
-
-template<typename T1>
-arma_warn_unused
-arma_inline
-const mtOp<uword, T1, op_any>
-any
-  (
-  const T1&   X,
-  const uword dim,
-  const typename enable_if<resolves_to_vector<T1>::value == true>::result* junk = 0
-  )
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk);
-  
-  return mtOp<uword, T1, op_any>(X, dim, 0);
-  }
-
-
-
-template<typename T1>
-arma_warn_unused
 inline
-bool
-any
-  (
-  const T1& X,
-  const arma_empty_class junk1 = arma_empty_class(),
-  const typename enable_if<resolves_to_vector<T1>::value == true>::result* junk2 = 0
-  )
+typename
+enable_if2
+  <
+  is_arma_type<T1>::value && resolves_to_vector<T1>::yes,
+  bool
+  >::result
+any(const T1& X)
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk1);
-  arma_ignore(junk2);
   
   return op_any::any_vec(X);
   }
@@ -81,14 +39,18 @@ any
 
 template<typename T1>
 arma_warn_unused
-inline
-bool
-any(const mtOp<uword, T1, op_any>& in)
+arma_inline
+typename
+enable_if2
+  <
+  is_arma_type<T1>::value && resolves_to_vector<T1>::no,
+  const mtOp<uword, T1, op_any>
+  >::result
+any(const T1& X)
   {
   arma_extra_debug_sigprint();
-  arma_extra_debug_print("any(): two consecutive calls to any() detected");
   
-  return op_any::any_vec(in.m);
+  return mtOp<uword, T1, op_any>(X, 0, 0);
   }
 
 
@@ -96,12 +58,34 @@ any(const mtOp<uword, T1, op_any>& in)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const Op< mtOp<uword, T1, op_any>, op_any>
-any(const mtOp<uword, T1, op_any>& in, const uword dim)
+typename
+enable_if2
+  <
+  is_arma_type<T1>::value,
+  const mtOp<uword, T1, op_any>
+  >::result
+any(const T1& X, const uword dim)
   {
   arma_extra_debug_sigprint();
   
-  return mtOp<uword, mtOp<uword, T1, op_any>, op_any>(in, dim, 0);
+  return mtOp<uword, T1, op_any>(X, dim, 0);
+  }
+
+
+
+//! for compatibility purposes: allows compiling user code designed for earlier versions of Armadillo
+template<typename T>
+arma_warn_unused
+arma_inline
+typename
+enable_if2
+  <
+  is_supported_elem_type<T>::value,
+  bool
+  >::result
+any(const T& val)
+  {
+  return (val != T(0));
   }
 
 

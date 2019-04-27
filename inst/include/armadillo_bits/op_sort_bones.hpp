@@ -20,6 +20,7 @@
 
 
 class op_sort
+  : public traits_op_default
   {
   public:
   
@@ -44,12 +45,13 @@ class op_sort
 
 
 
-class op_sort_default
+class op_sort_vec
+  : public traits_op_passthru
   {
   public:
   
   template<typename T1>
-  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort_default>& in);
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort_vec>& in);
   };
 
 
