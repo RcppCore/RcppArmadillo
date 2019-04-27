@@ -5498,21 +5498,27 @@ auxlib::rudimentary_sym_check(const Mat<eT>& X)
   arma_extra_debug_sigprint();
   
   const uword N   = X.n_rows;
-  const uword Nm1 = N-1;
-  
+  const uword Nm2 = N-2;
+    
   if(N != X.n_cols)  { return false; }
   if(N <= uword(1))  { return true;  }
   
   const eT* X_mem = X.memptr();
   
-  const eT A = X_mem[Nm1  ];  // bottom-left corner (ie. last value in first column)
-  const eT B = X_mem[Nm1*N];  // top-right   corner (ie. first value in last column)
+  const eT* X_offsetA = &(X_mem[Nm2  ]);
+  const eT* X_offsetB = &(X_mem[Nm2*N]);
   
-  const eT delta = std::abs(A - B);
+  const eT A1 = *(X_offsetA  ); 
+  const eT A2 = *(X_offsetA+1);  // bottom-left corner (ie. last value in first column)
+  const eT B1 = *(X_offsetB  );  
+  const eT B2 = *(X_offsetB+N);  // top-right   corner (ie. first value in last column)
+  
+  const eT delta1 = std::abs(A1 - B1);
+  const eT delta2 = std::abs(A2 - B2);
   
   const eT threshold = eT(100)*std::numeric_limits<eT>::epsilon();  // allow some leeway
   
-  return (delta <= threshold);
+  return ( (delta1 <= threshold) && (delta2 <= threshold) );
   }
 
 

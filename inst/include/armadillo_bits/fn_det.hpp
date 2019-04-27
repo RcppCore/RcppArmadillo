@@ -180,7 +180,7 @@ det
 template<typename T>
 arma_warn_unused
 arma_inline
-const typename arma_scalar_only<T>::result &
+typename arma_scalar_only<T>::result
 det(const T& x)
   {
   return x;

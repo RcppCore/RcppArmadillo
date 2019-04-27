@@ -704,7 +704,7 @@ accu(const eGlueCube<T1,T2,eglue_schur>& expr)
 template<typename T>
 arma_warn_unused
 inline
-const typename arma_scalar_only<T>::result &
+typename arma_scalar_only<T>::result
 accu(const T& x)
   {
   return x;

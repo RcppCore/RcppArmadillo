@@ -93,6 +93,26 @@ glue_times_redirect2_helper<true>::apply(Mat<typename T1::elem_type>& out, const
     
     arma_debug_check( (A.is_square() == false), "inv(): given matrix must be square sized" );
     
+    if(strip_inv<T1>::do_inv_sympd)
+      {
+      // if(auxlib::rudimentary_sym_check(A) == false)
+      //   {
+      //   if(is_cx<eT>::no )  { arma_debug_warn("inv_sympd(): given matrix is not symmetric"); }
+      //   if(is_cx<eT>::yes)  { arma_debug_warn("inv_sympd(): given matrix is not hermitian"); }
+      //   
+      //   out.soft_reset();
+      //   arma_stop_runtime_error("matrix multiplication: problem with matrix inverse; suggest to use solve() instead");
+      //   
+      //   return;
+      //   }
+      
+      if( (arma_config::debug) && (auxlib::rudimentary_sym_check(A) == false) )
+        {
+        if(is_cx<eT>::no )  { arma_debug_warn("inv_sympd(): given matrix is not symmetric"); }
+        if(is_cx<eT>::yes)  { arma_debug_warn("inv_sympd(): given matrix is not hermitian"); }
+        }
+      }
+    
     const unwrap_check<T2> B_tmp(X.B, out);
     const Mat<eT>& B = B_tmp.M;
     
@@ -129,6 +149,23 @@ glue_times_redirect2_helper<true>::apply(Mat<typename T1::elem_type>& out, const
       Mat<eT> B = B_strip.M;
       
       arma_debug_check( (B.is_square() == false), "inv_sympd(): given matrix must be square sized" );
+      
+      // if(auxlib::rudimentary_sym_check(B) == false)
+      //   {
+      //   if(is_cx<eT>::no )  { arma_debug_warn("inv_sympd(): given matrix is not symmetric"); }
+      //   if(is_cx<eT>::yes)  { arma_debug_warn("inv_sympd(): given matrix is not hermitian"); }
+      //   
+      //   out.soft_reset();
+      //   arma_stop_runtime_error("matrix multiplication: problem with matrix inverse; suggest to use solve() instead");
+      //   
+      //   return;
+      //   }
+      
+      if( (arma_config::debug) && (auxlib::rudimentary_sym_check(B) == false) )
+        {
+        if(is_cx<eT>::no )  { arma_debug_warn("inv_sympd(): given matrix is not symmetric"); }
+        if(is_cx<eT>::yes)  { arma_debug_warn("inv_sympd(): given matrix is not hermitian"); }
+        }
       
       arma_debug_assert_mul_size(At.n_cols, At.n_rows, B.n_rows, B.n_cols, "matrix multiplication");
       
@@ -513,7 +550,7 @@ glue_times::apply_inplace_plus(Mat<typename T1::elem_type>& out, const Glue<T1, 
   typedef typename T1::elem_type            eT;
   typedef typename get_pod_type<eT>::result  T;
   
-  if( (is_outer_product<T1>::value) || (has_op_inv<T1>::value) || (has_op_inv<T2>::value) )
+  if( (is_outer_product<T1>::value) || (has_op_inv<T1>::value) || (has_op_inv<T2>::value) || (has_op_inv_sympd<T1>::value) || (has_op_inv_sympd<T2>::value) )
     {
     // partial workaround for corner cases
     

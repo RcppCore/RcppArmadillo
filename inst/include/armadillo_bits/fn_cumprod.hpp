@@ -76,7 +76,7 @@ cumprod(const T1& X, const uword dim)
 template<typename T>
 arma_warn_unused
 arma_inline
-const typename arma_scalar_only<T>::result &
+typename arma_scalar_only<T>::result
 cumprod(const T& x)
   {
   return x;

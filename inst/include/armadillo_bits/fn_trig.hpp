@@ -386,7 +386,7 @@ atanh(const BaseCube<typename T1::elem_type,T1>& A)
 template<typename T>
 arma_warn_unused
 arma_inline
-const typename arma_scalar_only<T>::result
+typename arma_scalar_only<T>::result
 sinc(const T x)
   {
   return arma_sinc(x);

@@ -3140,6 +3140,16 @@ subview_col<eT>::st() const
 
 
 template<typename eT>
+arma_inline
+const Op<subview_col<eT>,op_strans>
+subview_col<eT>::as_row() const
+  {
+  return Op<subview_col<eT>,op_strans>(*this);
+  }
+
+
+
+template<typename eT>
 inline
 void
 subview_col<eT>::fill(const eT val)
@@ -3710,6 +3720,16 @@ template<typename eT>
 arma_inline
 const Op<subview_row<eT>,op_strans>
 subview_row<eT>::st() const
+  {
+  return Op<subview_row<eT>,op_strans>(*this);
+  }
+
+
+
+template<typename eT>
+arma_inline
+const Op<subview_row<eT>,op_strans>
+subview_row<eT>::as_col() const
   {
   return Op<subview_row<eT>,op_strans>(*this);
   }

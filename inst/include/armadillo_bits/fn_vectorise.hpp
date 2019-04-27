@@ -74,27 +74,43 @@ vectorise(const BaseCube<typename T1::elem_type, T1>& X)
 
 
 
-//! for compatibility purposes: allows compiling user code designed for earlier versions of Armadillo
-template<typename T>
+//! Vectorization for sparse objects.
+template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename
 enable_if2
   <
-  is_supported_elem_type<T>::value,
-  Col<T>
+  is_arma_sparse_type<T1>::value,
+  const SpOp<T1, spop_vectorise_col>
   >::result
-vectorise(const T& val)
+vectorise(const T1& X)
   {
   arma_extra_debug_sigprint();
-  
-  Col<T> out(1);
-  
-  out[0] = val;
-  
-  return out;
+
+  return SpOp<T1, spop_vectorise_col>(X);
   }
 
+
+
+//! Vectorization for sparse objects.
+template<typename T1>
+arma_warn_unused
+inline
+typename
+enable_if2
+  <
+  is_arma_sparse_type<T1>::value,
+  const SpOp<T1, spop_vectorise_all>
+  >::result
+vectorise(const T1& X, const uword dim)
+  {
+  arma_extra_debug_sigprint();
+
+  arma_debug_check( (dim > 1), "vectorise(): parameter 'dim' must be 0 or 1" );
+
+  return SpOp<T1, spop_vectorise_all>(X, dim, 0);
+  }
 
 
 //! @}

@@ -441,8 +441,8 @@ struct arma_rng::randn< std::complex<T> >
   inline
   operator std::complex<T> () const
     {
-    T a = T(0);
-    T b = T(0);
+    T a(0);
+    T b(0);
     
     arma_rng::randn<T>::dual_val(a, b);
     
