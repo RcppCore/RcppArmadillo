@@ -329,6 +329,9 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   inline void  reshape(const uword in_rows, const uword in_cols);
   inline void  reshape(const SizeMat& s);
   
+  inline void  reshape_helper_generic(const uword in_rows, const uword in_cols);  //! internal use only
+  inline void  reshape_helper_intovec();                                          //! internal use only
+  
   arma_deprecated inline void reshape(const uword in_rows, const uword in_cols, const uword dim);  //!< NOTE: don't use this form: it will be removed
   
   template<typename functor> inline const SpMat&  for_each(functor F);

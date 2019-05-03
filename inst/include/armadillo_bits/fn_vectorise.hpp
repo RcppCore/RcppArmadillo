@@ -65,6 +65,8 @@ vectorise(const BaseCube<typename T1::elem_type, T1>& X)
   {
   arma_extra_debug_sigprint();
   
+  // TODO: implement CubeToMatOp to avoid copying cube memory within compound matrix expressions
+  
   Col<typename T1::elem_type> out;
   
   op_vectorise_cube_col::apply(out, X);

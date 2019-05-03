@@ -21,7 +21,7 @@
 
 #define ARMA_VERSION_MAJOR 9
 #define ARMA_VERSION_MINOR 400
-#define ARMA_VERSION_PATCH 2
+#define ARMA_VERSION_PATCH 3
 #define ARMA_VERSION_NAME  "Surrogate Miscreant"
 
 

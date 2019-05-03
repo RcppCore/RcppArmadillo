@@ -42,6 +42,13 @@ linspace
   
   out_type x;
   
+  if(num == 1)
+    {
+    x.set_size(1);
+    
+    x[0] = eT(end);
+    }
+  else
   if(num >= 2)
     {
     x.set_size(num);
@@ -72,17 +79,6 @@ linspace
       
       x_mem[num_m1] = eT(end);
       }
-    }
-  else
-    {
-    x.set_size(1);
-    
-    x[0] = eT(end);
-    
-    // NOTE: returning "end" for num <= 1 is kept for compatibility with Matlab & Octave,
-    // NOTE: but for num = 0 this probably causes more problems than it helps
-    
-    // TODO: in version 8.0, return an empty vector when num = 0
     }
   
   return x;

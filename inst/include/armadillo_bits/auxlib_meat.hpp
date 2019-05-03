@@ -5499,7 +5499,7 @@ auxlib::rudimentary_sym_check(const Mat<eT>& X)
   
   const uword N   = X.n_rows;
   const uword Nm2 = N-2;
-    
+  
   if(N != X.n_cols)  { return false; }
   if(N <= uword(1))  { return true;  }
   
@@ -5513,12 +5513,18 @@ auxlib::rudimentary_sym_check(const Mat<eT>& X)
   const eT B1 = *(X_offsetB  );  
   const eT B2 = *(X_offsetB+N);  // top-right   corner (ie. first value in last column)
   
+  const eT C1 = (std::max)(std::abs(A1), std::abs(B1));
+  const eT C2 = (std::max)(std::abs(A2), std::abs(B2));
+  
   const eT delta1 = std::abs(A1 - B1);
   const eT delta2 = std::abs(A2 - B2);
   
-  const eT threshold = eT(100)*std::numeric_limits<eT>::epsilon();  // allow some leeway
+  const eT tol = eT(1000)*std::numeric_limits<eT>::epsilon();  // allow some leeway
   
-  return ( (delta1 <= threshold) && (delta2 <= threshold) );
+  const bool okay1 = ( (delta1 <= tol) || (delta1 <= (C1 * tol)) );
+  const bool okay2 = ( (delta2 <= tol) || (delta2 <= (C2 * tol)) );
+  
+  return (okay1 && okay2);
   }
 
 
@@ -5546,12 +5552,18 @@ auxlib::rudimentary_sym_check(const Mat< std::complex<T> >& X)
   const eT& A = X_mem[Nm1  ];  // bottom-left corner (ie. last value in first column)
   const eT& B = X_mem[Nm1*N];  // top-right   corner (ie. first value in last column)
   
-  const T delta1 = std::abs(A.real() - B.real());
-  const T delta2 = std::abs(A.imag() + B.imag());  // take into account the conjugate
+  const T C_real = (std::max)(std::abs(A.real()), std::abs(B.real()));
+  const T C_imag = (std::max)(std::abs(A.imag()), std::abs(B.imag()));
   
-  const T threshold = T(100)*std::numeric_limits<T>::epsilon();  // allow some leeway
+  const T delta_real = std::abs(A.real() - B.real());
+  const T delta_imag = std::abs(A.imag() + B.imag());  // take into account the conjugate
   
-  return ( (delta1 <= threshold) && (delta2 <= threshold) );
+  const T tol = T(1000)*std::numeric_limits<T>::epsilon();  // allow some leeway
+  
+  const bool okay_real = ( (delta_real <= tol) || (delta_real <= (C_real * tol)) );
+  const bool okay_imag = ( (delta_imag <= tol) || (delta_imag <= (C_imag * tol)) );
+  
+  return (okay_real && okay_imag);
   }
 
 
