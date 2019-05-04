@@ -19,7 +19,7 @@
 
 
 
-template<bool ERROR___INCORRECT_OR_UNSUPPORTED_TYPE>
+template<bool ERROR___TYPE_MISMATCH_OR_UNSUPPORTED_TYPE>
 struct arma_type_check_cxx1998
   {
   arma_inline
@@ -28,7 +28,7 @@ struct arma_type_check_cxx1998
   apply()
     {
     static const char
-    junk[ ERROR___INCORRECT_OR_UNSUPPORTED_TYPE ? -1 : +1 ];
+    junk[ ERROR___TYPE_MISMATCH_OR_UNSUPPORTED_TYPE ? -1 : +1 ];
     }
   };
 
@@ -51,7 +51,7 @@ struct arma_type_check_cxx1998<false>
   
   #define arma_static_check(condition, message)  static_assert( !(condition), #message )
   
-  #define arma_type_check(condition)  static_assert( !(condition), "error: incorrect or unsupported type" )
+  #define arma_type_check(condition)  static_assert( !(condition), "error: type mismatch or unsupported type" )
   
 #else
 

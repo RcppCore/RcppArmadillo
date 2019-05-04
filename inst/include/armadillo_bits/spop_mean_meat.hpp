@@ -289,6 +289,32 @@ spop_mean::mean_all(const SpBase<typename T1::elem_type, T1>& X)
 
 
 
+template<typename T1, typename spop_type>
+inline
+typename T1::elem_type
+spop_mean::mean_all(const SpOp<T1, spop_type>& expr)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const bool is_vectorise = \
+       (is_same_type<spop_type, spop_vectorise_row>::yes)
+    || (is_same_type<spop_type, spop_vectorise_col>::yes)
+    || (is_same_type<spop_type, spop_vectorise_all>::yes);
+  
+  if(is_vectorise)
+    {
+    return spop_mean::mean_all(expr.m);
+    }
+  
+  const SpMat<eT> tmp = expr;
+  
+  return spop_mean::mean_all(tmp);
+  }
+
+
+
 template<typename T1, typename eT>
 inline
 eT

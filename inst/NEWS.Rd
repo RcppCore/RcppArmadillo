@@ -3,6 +3,19 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.9.400.3.0 (2019-05-03) [GH only]}{
+  \itemize{
+    \item Upgraded to Armadillo release 9.400.3 (Surrogate Miscreant)
+    \itemize{
+      \item check for symmetric / hermitian matrices (used by
+      decomposition functions) has been made more robust
+      \item \code{linspace()} and \code{logspace()} now honour requests
+      for generation of vectors with zero elements
+      \item fix for vectorisation / flattening of complex sparse matrices
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.9.400.2.0 (2019-04-28)}{
   \itemize{
     \item Upgraded to Armadillo release 9.400.2 (Surrogate Miscreant)
