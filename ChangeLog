@@ -1,8 +1,10 @@
-2019-05-03  Dirk Eddelbuettel  <edd@debian.org>
+2019-05-09  Dirk Eddelbuettel  <edd@debian.org>
 
-        * DESCRIPTION: Release 0.9.400.3.0 [github-only]
+        * DESCRIPTION: Release 0.9.400.3.0
         * inst/NEWS.Rd: Release 0.9.400.3.0
 
+2019-05-03  Dirk Eddelbuettel  <edd@debian.org>
+	
 	* inst/include/armadillo_bits/*:  Armadillo 9.400.3
 
 2019-04-28  Dirk Eddelbuettel  <edd@debian.org>

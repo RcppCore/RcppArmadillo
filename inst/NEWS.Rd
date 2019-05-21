@@ -3,7 +3,7 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.9.400.3.0 (2019-05-03) [GH only]}{
+\section{Changes in RcppArmadillo version 0.9.400.3.0 (2019-05-09)}{
   \itemize{
     \item Upgraded to Armadillo release 9.400.3 (Surrogate Miscreant)
     \itemize{
