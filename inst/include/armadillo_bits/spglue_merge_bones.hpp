@@ -14,44 +14,22 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup arma_version
+//! \addtogroup spglue_merge
 //! @{
 
 
 
-#define ARMA_VERSION_MAJOR 9
-#define ARMA_VERSION_MINOR 500
-#define ARMA_VERSION_PATCH 1
-#define ARMA_VERSION_NAME  "9.500-RC1"
-
-
-
-struct arma_version
+//! used only by SpSubview
+class spglue_merge
+  : public traits_glue_or
   {
-  static const unsigned int major = ARMA_VERSION_MAJOR;
-  static const unsigned int minor = ARMA_VERSION_MINOR;
-  static const unsigned int patch = ARMA_VERSION_PATCH;
+  public:
   
-  static
-  inline
-  std::string
-  as_string()
-    {
-    const char* nickname = ARMA_VERSION_NAME;
-    
-    std::ostringstream ss;
-    
-    ss << arma_version::major
-       << '.'
-       << arma_version::minor
-       << '.'
-       << arma_version::patch
-       << " ("
-       << nickname
-       << ')';
-    
-    return ss.str();
-    }
+  template<typename eT>
+  arma_hot inline static void apply(SpMat<eT>& out, const SpMat<eT>& A, const SpMat<eT>& B);
+  
+  template<typename eT>
+  arma_hot inline static void apply_noalias(SpMat<eT>& out, const SpMat<eT>& A, const SpMat<eT>& B);
   };
 
 

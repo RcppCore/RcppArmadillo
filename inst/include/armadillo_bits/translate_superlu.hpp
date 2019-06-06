@@ -38,12 +38,12 @@ namespace superlu
       arma_wrapper(dgssv)(options, A, perm_c, perm_r, L, U, B, stat, info);
       }
     else
-    if(is_supported_complex_float<eT>::value)
+    if(is_cx_float<eT>::value)
       {
       arma_wrapper(cgssv)(options, A, perm_c, perm_r, L, U, B, stat, info);
       }
     else
-    if(is_supported_complex_double<eT>::value)
+    if(is_cx_double<eT>::value)
       {
       arma_wrapper(zgssv)(options, A, perm_c, perm_r, L, U, B, stat, info);
       }
@@ -82,13 +82,13 @@ namespace superlu
       arma_wrapper(dgssvx)(opts, A, perm_c, perm_r, etree, equed, (T*)R, (T*)C, L, U, work, lwork, B, X, (T*)rpg, (T*)rcond, (T*)ferr, (T*)berr, glu, mu, stat, info);
       }
     else
-    if(is_supported_complex_float<eT>::value)
+    if(is_cx_float<eT>::value)
       {
       typedef float T;
       arma_wrapper(cgssvx)(opts, A, perm_c, perm_r, etree, equed, (T*)R, (T*)C, L, U, work, lwork, B, X, (T*)rpg, (T*)rcond, (T*)ferr, (T*)berr, glu, mu, stat, info);
       }
     else
-    if(is_supported_complex_double<eT>::value)
+    if(is_cx_double<eT>::value)
       {
       typedef double T;
       arma_wrapper(zgssvx)(opts, A, perm_c, perm_r, etree, equed, (T*)R, (T*)C, L, U, work, lwork, B, X, (T*)rpg, (T*)rcond, (T*)ferr, (T*)berr, glu, mu, stat, info);

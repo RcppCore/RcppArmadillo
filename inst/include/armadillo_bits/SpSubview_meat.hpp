@@ -263,191 +263,101 @@ SpSubview<eT>::operator=(const Base<eT, T1>& in)
   {
   arma_extra_debug_sigprint();
   
-  // this is a modified version of SpSubview::operator_equ_common(const SpBase)
+  const quasi_unwrap<T1> U(in.get_ref());
   
-  const SpProxy< SpMat<eT> > pa((*this).m);
+  arma_debug_assert_same_size(n_rows, n_cols, U.M.n_rows, U.M.n_cols, "insertion into sparse submatrix");
   
-  const unwrap<T1>     b_tmp(in.get_ref());
-  const Mat<eT>&   b = b_tmp.M;
+  if(n_elem == 0)  { return *this; }
   
-  arma_debug_assert_same_size(n_rows, n_cols, b.n_rows, b.n_cols, "insertion into sparse submatrix");
   
-  const uword pa_start_row = (*this).aux_row1;
-  const uword pa_start_col = (*this).aux_col1;
+  // generate matrix B
   
-  const uword pa_end_row = pa_start_row + (*this).n_rows - 1;
-  const uword pa_end_col = pa_start_col + (*this).n_cols - 1;
+  const eT*   U_M_memptr = U.M.memptr();
+  const uword U_M_n_elem = U.M.n_elem;
   
-  const uword pa_n_rows = pa.get_n_rows();
+  uword B_n_nonzero = 0;
   
-  const uword b_n_elem = b.n_elem;
-  const eT*   b_mem    = b.memptr();
-  
-  uword box_count = 0;
-  
-  for(uword i=0; i<b_n_elem; ++i)
+  for(uword i=0; i < U_M_n_elem; ++i)
     {
-    box_count += (b_mem[i] != eT(0)) ? uword(1) : uword(0);
+    B_n_nonzero += (U_M_memptr[i] != eT(0)) ? uword(1) : uword(0);
     }
   
-  const uword alt_count = pa.get_n_nonzero() - (*this).n_nonzero + box_count;
+  SpMat<eT> B(arma_reserve_indicator(), m.n_rows, m.n_cols, B_n_nonzero);
   
-  // Resize memory to correct size.
-  SpMat<eT> out(arma_reserve_indicator(), pa.get_n_rows(), pa.get_n_cols(), alt_count);
+  uword B_count = 0;
   
-  typename SpProxy< SpMat<eT> >::const_iterator_type x_it  = pa.begin();
-  typename SpProxy< SpMat<eT> >::const_iterator_type x_end = pa.end();
-  
-  uword b_row = 0;
-  uword b_col = 0;
-    
-  bool x_it_ok = (x_it != x_end);
-  bool y_it_ok = ( (b_row < b.n_rows) && (b_col < b.n_cols) );
-  
-  uword x_it_row = (x_it_ok) ? x_it.row() : 0;
-  uword x_it_col = (x_it_ok) ? x_it.col() : 0;
-  
-  uword y_it_row = (y_it_ok) ? b_row + pa_start_row : 0;
-  uword y_it_col = (y_it_ok) ? b_col + pa_start_col : 0;
-    
-  uword cur_val = 0;
-  while(x_it_ok || y_it_ok)
+  for(uword col=0; col < U.M.n_cols; ++col)
+  for(uword row=0; row < U.M.n_rows; ++row)
     {
-    const bool x_inside_box = (x_it_row >= pa_start_row) && (x_it_row <= pa_end_row) && (x_it_col >= pa_start_col) && (x_it_col <= pa_end_col);
-    const bool y_inside_box = (y_it_row >= pa_start_row) && (y_it_row <= pa_end_row) && (y_it_col >= pa_start_col) && (y_it_col <= pa_end_col);
+    const eT val = (*U_M_memptr);  U_M_memptr++;
     
-    const eT x_val = x_inside_box ? eT(0) : ( x_it_ok ? (*x_it) : eT(0) );
-    
-    const eT y_val = y_inside_box ? ( y_it_ok ? b.at(b_row,b_col) : eT(0) ) : eT(0);
-    
-    if( (x_it_row == y_it_row) && (x_it_col == y_it_col) )
+    if(val != eT(0))
       {
-      if( (x_val != eT(0)) || (y_val != eT(0)) )  
-        {
-        access::rw(out.values[cur_val]) = (x_val != eT(0)) ? x_val : y_val;
-        access::rw(out.row_indices[cur_val]) = x_it_row;
-        ++access::rw(out.col_ptrs[x_it_col + 1]);
-        ++cur_val;
-        }
-      
-      if(x_it_ok)
-        {
-        ++x_it;
-        
-        if(x_it == x_end)  { x_it_ok = false; }
-        }
-      
-      if(x_it_ok)
-        {
-        x_it_row = x_it.row();
-        x_it_col = x_it.col();
-        }
-      else
-        {
-        x_it_row++;
-        
-        if(x_it_row >= pa_n_rows)  { x_it_row = 0; x_it_col++; }
-        }
-      
-      if(y_it_ok)
-        {
-        b_row++;
-        
-        if(b_row >= b.n_rows)  { b_row = 0; b_col++; }
-        
-        if( (b_row > b.n_rows) || (b_col > b.n_cols) )  { y_it_ok = false; }
-        }
-      
-      if(y_it_ok)
-        {
-        y_it_row = b_row + pa_start_row;
-        y_it_col = b_col + pa_start_col;
-        }
-      else
-        {
-        y_it_row++;
-        
-        if(y_it_row >= pa_n_rows)  { y_it_row = 0; y_it_col++; }
-        }
-      }
-    else
-      {
-      if((x_it_col < y_it_col) || ((x_it_col == y_it_col) && (x_it_row < y_it_row))) // if y is closer to the end
-        {
-        if(x_val != eT(0))
-          {
-          access::rw(out.values[cur_val]) = x_val;
-          access::rw(out.row_indices[cur_val]) = x_it_row;
-          ++access::rw(out.col_ptrs[x_it_col + 1]);
-          ++cur_val;
-          }
-        
-        if(x_it_ok)
-          {
-          ++x_it;
-          
-          if(x_it == x_end)  { x_it_ok = false; }
-          }
-        
-        if(x_it_ok)
-          {
-          x_it_row = x_it.row();
-          x_it_col = x_it.col();
-          }
-        else
-          {
-          x_it_row++;
-          
-          if(x_it_row >= pa_n_rows)  { x_it_row = 0; x_it_col++; }
-          }
-        }
-      else
-        {
-        if(y_val != eT(0))
-          {
-          access::rw(out.values[cur_val]) = y_val;
-          access::rw(out.row_indices[cur_val]) = y_it_row;
-          ++access::rw(out.col_ptrs[y_it_col + 1]);
-          ++cur_val;
-          }
-        
-        if(y_it_ok)
-          {
-          b_row++;
-          
-          if(b_row >= b.n_rows)  { b_row = 0; b_col++; }
-          
-          if( (b_row > b.n_rows) || (b_col > b.n_cols) )  { y_it_ok = false; }
-          }
-        
-        if(y_it_ok)
-          {
-          y_it_row = b_row + pa_start_row;
-          y_it_col = b_col + pa_start_col;
-          }
-        else
-          {
-          y_it_row++;
-          
-          if(y_it_row >= pa_n_rows)  { y_it_row = 0; y_it_col++; }
-          }
-        }
+      access::rw(B.values[B_count])      = val;
+      access::rw(B.row_indices[B_count]) = row + aux_row1;
+      access::rw(B.col_ptrs[col + aux_col1 + 1])++;
+      ++B_count;
       }
     }
   
-  const uword out_n_cols = out.n_cols;
-  
-  uword* col_ptrs = access::rwp(out.col_ptrs);
-  
-  // Fix column pointers to be cumulative.
-  for(uword c = 1; c <= out_n_cols; ++c)
+  for(uword i=0; i < B.n_cols; ++i)
     {
-    col_ptrs[c] += col_ptrs[c - 1];
+    access::rw(B.col_ptrs[i + 1]) += B.col_ptrs[i];
     }
   
-  access::rw((*this).m).steal_mem(out);
   
-  access::rw(n_nonzero) = box_count;
+  if(n_nonzero == 0)
+    {
+    //// insert into submatrix
+    
+    //access::rw(m) = m + B;
+    spglue_merge::apply(access::rw(m), m, B);
+    }
+  else
+    {
+    // generate matrix A
+    
+    const uword row_start = aux_row1;
+    const uword col_start = aux_col1;
+    
+    const uword row_end   = aux_row1 + n_rows - 1;
+    const uword col_end   = aux_col1 + n_cols - 1;
+    
+    SpMat<eT> A(arma_reserve_indicator(), m.n_rows, m.n_cols, m.n_nonzero - n_nonzero);
+    
+    typename SpMat<eT>::const_iterator m_it     = m.begin();
+    typename SpMat<eT>::const_iterator m_it_end = m.end();
+    
+    uword A_count = 0;
+    
+    for(; m_it != m_it_end; ++m_it)
+      {
+      const uword m_it_row = m_it.row();
+      const uword m_it_col = m_it.col();
+      
+      const bool inside_box = ((m_it_row >= row_start) && (m_it_row <= row_end)) && ((m_it_col >= col_start) && (m_it_col <= col_end));
+      
+      if(inside_box == false)
+        {
+        access::rw(A.values[A_count])      = (*m_it);
+        access::rw(A.row_indices[A_count]) = m_it_row;
+        access::rw(A.col_ptrs[m_it_col + 1])++;
+        ++A_count;
+        }
+      }
+    
+    for(uword i=0; i < A.n_cols; ++i)
+      {
+      access::rw(A.col_ptrs[i + 1]) += A.col_ptrs[i];
+      }
+    
+    //// insert into submatrix
+    
+    //access::rw(m) = A + B;
+    spglue_merge::apply(access::rw(m), A, B);
+    }
+  
+  access::rw(n_nonzero) = B_n_nonzero;
   
   return *this;
   }
@@ -556,186 +466,100 @@ SpSubview<eT>::operator_equ_common(const SpBase<eT, T1>& in)
   {
   arma_extra_debug_sigprint();
   
-  // algorithm:
-  // instead of directly inserting values into the matrix underlying the subview,
-  // create a new matrix by merging the underlying matrix with the input object,
-  // and then replacing the underlying matrix with the created matrix.
-  // 
-  // the merging process requires pretending that the input object
-  // has the same size as the underlying matrix.
-  // while iterating through the elements of the input object,
-  // this requires adjusting the row and column locations of each element,
-  // as well as providing fake zero elements.
-  // in effect there is a proxy for a proxy.
+  const unwrap_spmat<T1> U(in.get_ref());
   
-  
-  const SpProxy< SpMat<eT> > pa((*this).m   );
-  const SpProxy< T1        > pb(in.get_ref());
-  
-  arma_debug_assert_same_size(n_rows, n_cols, pb.get_n_rows(), pb.get_n_cols(), "insertion into sparse submatrix");
-  
-  const uword pa_start_row = (*this).aux_row1;
-  const uword pa_start_col = (*this).aux_col1;
-  
-  const uword pa_end_row = pa_start_row + (*this).n_rows - 1;
-  const uword pa_end_col = pa_start_col + (*this).n_cols - 1;
-  
-  const uword pa_n_rows = pa.get_n_rows();
-  
-  const uword alt_count = pa.get_n_nonzero() - (*this).n_nonzero + pb.get_n_nonzero();
-  
-  // Resize memory to correct size.
-  SpMat<eT> out(arma_reserve_indicator(), pa.get_n_rows(), pa.get_n_cols(), alt_count);
-  
-  typename SpProxy< SpMat<eT> >::const_iterator_type x_it  = pa.begin();
-  typename SpProxy< SpMat<eT> >::const_iterator_type x_end = pa.end();
-  
-  typename SpProxy<T1>::const_iterator_type y_it  = pb.begin();
-  typename SpProxy<T1>::const_iterator_type y_end = pb.end();
-  
-  bool x_it_ok = (x_it != x_end);
-  bool y_it_ok = (y_it != y_end);
-  
-  uword x_it_row = (x_it_ok) ? x_it.row() : 0;
-  uword x_it_col = (x_it_ok) ? x_it.col() : 0;
-  
-  uword y_it_row = (y_it_ok) ? y_it.row() + pa_start_row : 0;
-  uword y_it_col = (y_it_ok) ? y_it.col() + pa_start_col : 0;
-    
-  uword cur_val = 0;
-  while(x_it_ok || y_it_ok)
+  if(U.is_alias(m))
     {
-    const bool x_inside_box = (x_it_row >= pa_start_row) && (x_it_row <= pa_end_row) && (x_it_col >= pa_start_col) && (x_it_col <= pa_end_col);
-    const bool y_inside_box = (y_it_row >= pa_start_row) && (y_it_row <= pa_end_row) && (y_it_col >= pa_start_col) && (y_it_col <= pa_end_col);
+    const SpMat<eT> tmp(U.M);
     
-    const eT x_val = x_inside_box ? eT(0) : ( x_it_ok ? (*x_it) : eT(0) );
-    
-    const eT y_val = y_inside_box ? ( y_it_ok ? (*y_it) : eT(0) ) : eT(0);
-    
-    if( (x_it_row == y_it_row) && (x_it_col == y_it_col) )
-      {
-      if( (x_val != eT(0)) || (y_val != eT(0)) )  
-        {
-        access::rw(out.values[cur_val]) = (x_val != eT(0)) ? x_val : y_val;
-        access::rw(out.row_indices[cur_val]) = x_it_row;
-        ++access::rw(out.col_ptrs[x_it_col + 1]);
-        ++cur_val;
-        }
-      
-      if(x_it_ok)
-        {
-        ++x_it;
-        
-        if(x_it == x_end)  { x_it_ok = false; }
-        }
-      
-      if(x_it_ok)
-        {
-        x_it_row = x_it.row();
-        x_it_col = x_it.col();
-        }
-      else
-        {
-        x_it_row++;
-        
-        if(x_it_row >= pa_n_rows)  { x_it_row = 0; x_it_col++; }
-        }
-      
-      if(y_it_ok)
-        {
-        ++y_it;
-        
-        if(y_it == y_end)  { y_it_ok = false; }
-        }
-      
-      if(y_it_ok)
-        {
-        y_it_row = y_it.row() + pa_start_row;
-        y_it_col = y_it.col() + pa_start_col;
-        }
-      else
-        {
-        y_it_row++;
-        
-        if(y_it_row >= pa_n_rows)  { y_it_row = 0; y_it_col++; }
-        }
-      }
-    else
-      {
-      if((x_it_col < y_it_col) || ((x_it_col == y_it_col) && (x_it_row < y_it_row))) // if y is closer to the end
-        {
-        if(x_val != eT(0))
-          {
-          access::rw(out.values[cur_val]) = x_val;
-          access::rw(out.row_indices[cur_val]) = x_it_row;
-          ++access::rw(out.col_ptrs[x_it_col + 1]);
-          ++cur_val;
-          }
-        
-        if(x_it_ok)
-          {
-          ++x_it;
-          
-          if(x_it == x_end)  { x_it_ok = false; }
-          }
-        
-        if(x_it_ok)
-          {
-          x_it_row = x_it.row();
-          x_it_col = x_it.col();
-          }
-        else
-          {
-          x_it_row++;
-          
-          if(x_it_row >= pa_n_rows)  { x_it_row = 0; x_it_col++; }
-          }
-        }
-      else
-        {
-        if(y_val != eT(0))
-          {
-          access::rw(out.values[cur_val]) = y_val;
-          access::rw(out.row_indices[cur_val]) = y_it_row;
-          ++access::rw(out.col_ptrs[y_it_col + 1]);
-          ++cur_val;
-          }
-        
-        if(y_it_ok)
-          {
-          ++y_it;
-          
-          if(y_it == y_end)  { y_it_ok = false; }
-          }
-        
-        if(y_it_ok)
-          {
-          y_it_row = y_it.row() + pa_start_row;
-          y_it_col = y_it.col() + pa_start_col;
-          }
-        else
-          {
-          y_it_row++;
-          
-          if(y_it_row >= pa_n_rows)  { y_it_row = 0; y_it_col++; }
-          }
-        }
-      }
+    return (*this).operator_equ_common(tmp);
     }
   
-  const uword out_n_cols = out.n_cols;
+  arma_debug_assert_same_size(n_rows, n_cols, U.M.n_rows, U.M.n_cols, "insertion into sparse submatrix");
   
-  uword* col_ptrs = access::rwp(out.col_ptrs);
+  if(n_elem == 0)  { return *this; }
   
-  // Fix column pointers to be cumulative.
-  for(uword c = 1; c <= out_n_cols; ++c)
+  
+  // generate matrix B
+  
+  const uword U_M_n_nonzero = U.M.n_nonzero;
+  
+  SpMat<eT> B(arma_reserve_indicator(), m.n_rows, m.n_cols, U_M_n_nonzero);
+  
+  typename SpMat<eT>::const_iterator U_it = U.M.begin();
+  
+  for(uword i=0; i < U_M_n_nonzero; ++i)
     {
-    col_ptrs[c] += col_ptrs[c - 1];
+    access::rw(B.row_indices[i]) = U_it.row() + aux_row1;
+    access::rw(B.col_ptrs[U_it.col() + aux_col1 + 1])++;
+    ++U_it;
     }
   
-  access::rw((*this).m).steal_mem(out);
+  for(uword i=0; i < B.n_cols; ++i)
+    {
+    access::rw(B.col_ptrs[i + 1]) += B.col_ptrs[i];
+    }
   
-  access::rw(n_nonzero) = pb.get_n_nonzero();
+  const eT* B_values_orig = B.values;
+  
+  access::rw(B.values) = U.M.values;  // copy pointer instead of the entire array
+  
+  
+  if(n_nonzero == 0)
+    {
+    //// insert into submatrix
+    
+    //access::rw(m) = m + B;
+    spglue_merge::apply(access::rw(m), m, B);
+    }
+  else
+    {
+    // generate matrix A
+    
+    const uword row_start = aux_row1;
+    const uword col_start = aux_col1;
+    
+    const uword row_end   = aux_row1 + n_rows - 1;
+    const uword col_end   = aux_col1 + n_cols - 1;
+    
+    SpMat<eT> A(arma_reserve_indicator(), m.n_rows, m.n_cols, m.n_nonzero - n_nonzero);
+    
+    typename SpMat<eT>::const_iterator m_it     = m.begin();
+    typename SpMat<eT>::const_iterator m_it_end = m.end();
+    
+    uword A_count = 0;
+    
+    for(; m_it != m_it_end; ++m_it)
+      {
+      const uword m_it_row = m_it.row();
+      const uword m_it_col = m_it.col();
+      
+      const bool inside_box = ((m_it_row >= row_start) && (m_it_row <= row_end)) && ((m_it_col >= col_start) && (m_it_col <= col_end));
+      
+      if(inside_box == false)
+        {
+        access::rw(A.values[A_count])      = (*m_it);
+        access::rw(A.row_indices[A_count]) = m_it_row;
+        access::rw(A.col_ptrs[m_it_col + 1])++;
+        ++A_count;
+        }
+      }
+    
+    for(uword i=0; i < A.n_cols; ++i)
+      {
+      access::rw(A.col_ptrs[i + 1]) += A.col_ptrs[i];
+      }
+    
+    //// insert into submatrix
+    
+    //access::rw(m) = A + B;
+    spglue_merge::apply(access::rw(m), A, B);
+    }
+  
+  
+  access::rw(B.values) = B_values_orig;  // restore original pointer
+  
+  access::rw(n_nonzero) = U_M_n_nonzero;
   
   return *this;
   }

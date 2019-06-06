@@ -1131,12 +1131,12 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
       out.Dtype = superlu::SLU_D;
       }
     else
-    if(is_supported_complex_float<eT>::value)
+    if(is_cx_float<eT>::value)
       {
       out.Dtype = superlu::SLU_C;
       }
     else
-    if(is_supported_complex_double<eT>::value)
+    if(is_cx_double<eT>::value)
       {
       out.Dtype = superlu::SLU_Z;
       }
@@ -1199,12 +1199,12 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
       out.Dtype = superlu::SLU_D;
       }
     else
-    if(is_supported_complex_float<eT>::value)
+    if(is_cx_float<eT>::value)
       {
       out.Dtype = superlu::SLU_C;
       }
     else
-    if(is_supported_complex_double<eT>::value)
+    if(is_cx_double<eT>::value)
       {
       out.Dtype = superlu::SLU_Z;
       }

@@ -144,11 +144,11 @@ namespace arma
   #include "armadillo_bits/def_superlu.hpp"
   #include "armadillo_bits/def_hdf5.hpp"
   
-  #include "armadillo_bits/wrapper_blas.hpp"
-  #include "armadillo_bits/wrapper_lapack.hpp"
-  #include "armadillo_bits/wrapper_atlas.hpp"
-  #include "armadillo_bits/wrapper_arpack.hpp"
-  #include "armadillo_bits/wrapper_superlu.hpp"
+  #include "armadillo_bits/translate_blas.hpp"
+  #include "armadillo_bits/translate_lapack.hpp"
+  #include "armadillo_bits/translate_atlas.hpp"
+  #include "armadillo_bits/translate_arpack.hpp"
+  #include "armadillo_bits/translate_superlu.hpp"
   
   #include "armadillo_bits/cond_rel_bones.hpp"
   #include "armadillo_bits/arrayops_bones.hpp"
@@ -341,6 +341,7 @@ namespace arma
   #include "armadillo_bits/spglue_kron_bones.hpp"
   #include "armadillo_bits/spglue_min_bones.hpp"
   #include "armadillo_bits/spglue_max_bones.hpp"
+  #include "armadillo_bits/spglue_merge_bones.hpp"
   
   #if defined(ARMA_USE_NEWARP)
     #include "armadillo_bits/newarp_EigsSelect.hpp"
@@ -754,6 +755,7 @@ namespace arma
   #include "armadillo_bits/spglue_kron_meat.hpp"
   #include "armadillo_bits/spglue_min_meat.hpp"
   #include "armadillo_bits/spglue_max_meat.hpp"
+  #include "armadillo_bits/spglue_merge_meat.hpp"
   
   #if defined(ARMA_USE_NEWARP)
     #include "armadillo_bits/newarp_cx_attrib.hpp"

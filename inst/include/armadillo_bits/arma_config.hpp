@@ -154,6 +154,13 @@ struct arma_config
   #else
     static const bool openmp = false;
   #endif
+  
+  
+  #if defined(ARMA_USE_FORTRAN_HIDDEN_ARGS)
+    static const bool hidden_args = true;
+  #else
+    static const bool hidden_args = false;
+  #endif
   };
 
 

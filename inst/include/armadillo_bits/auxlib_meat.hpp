@@ -420,6 +420,8 @@ auxlib::det_tinymat(const Mat<eT>& X, const uword N)
   {
   arma_extra_debug_sigprint();
   
+  const eT* Xm = X.memptr();
+  
   switch(N)
     {
     case 0:
@@ -427,13 +429,11 @@ auxlib::det_tinymat(const Mat<eT>& X, const uword N)
       break;
     
     case 1:
-      return X[0];
+      return Xm[0];
       break;
     
     case 2:
       {
-      const eT* Xm = X.memptr();
-      
       return ( Xm[pos<0,0>::n2]*Xm[pos<1,1>::n2] - Xm[pos<0,1>::n2]*Xm[pos<1,0>::n2] );
       }
       break;
@@ -448,8 +448,6 @@ auxlib::det_tinymat(const Mat<eT>& X, const uword N)
       // const double tmp6 = X.at(2,2) * X.at(1,0) * X.at(0,1);
       // return (tmp1+tmp2+tmp3) - (tmp4+tmp5+tmp6);
       
-      const eT* Xm = X.memptr();
-      
       const eT val1 = Xm[pos<0,0>::n3]*(Xm[pos<2,2>::n3]*Xm[pos<1,1>::n3] - Xm[pos<2,1>::n3]*Xm[pos<1,2>::n3]);
       const eT val2 = Xm[pos<1,0>::n3]*(Xm[pos<2,2>::n3]*Xm[pos<0,1>::n3] - Xm[pos<2,1>::n3]*Xm[pos<0,2>::n3]);
       const eT val3 = Xm[pos<2,0>::n3]*(Xm[pos<1,2>::n3]*Xm[pos<0,1>::n3] - Xm[pos<1,1>::n3]*Xm[pos<0,2>::n3]);
@@ -460,8 +458,6 @@ auxlib::det_tinymat(const Mat<eT>& X, const uword N)
     
     case 4:
       {
-      const eT* Xm = X.memptr();
-      
       const eT val = \
           Xm[pos<0,3>::n4] * Xm[pos<1,2>::n4] * Xm[pos<2,1>::n4] * Xm[pos<3,0>::n4] \
         - Xm[pos<0,2>::n4] * Xm[pos<1,3>::n4] * Xm[pos<2,1>::n4] * Xm[pos<3,0>::n4] \
@@ -2209,7 +2205,7 @@ auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
       lapack::orgqr(&m, &m, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &lwork, &info);
       }
     else
-    if( (is_supported_complex_float<eT>::value) || (is_supported_complex_double<eT>::value) )
+    if( (is_cx_float<eT>::value) || (is_cx_double<eT>::value) )
       {
       arma_extra_debug_print("lapack::ungqr()");
       lapack::ungqr(&m, &m, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &lwork, &info);
@@ -2321,7 +2317,7 @@ auxlib::qr_econ(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
       lapack::orgqr(&m, &n, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &lwork, &info);
       }
     else
-    if( (is_supported_complex_float<eT>::value) || (is_supported_complex_double<eT>::value) )
+    if( (is_cx_float<eT>::value) || (is_cx_double<eT>::value) )
       {
       arma_extra_debug_print("lapack::ungqr()");
       lapack::ungqr(&m, &n, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &lwork, &info);
@@ -4056,11 +4052,13 @@ auxlib::solve_approx_svd(Mat<typename T1::pod_type>& out, Mat<typename T1::pod_t
     
     podarray<eT> S(min_mn);
     
+    // NOTE: with LAPACK 3.8, can use the workspace query to also obtain liwork,
+    // NOTE: which makes the call to lapack::laenv() redundant
     
     blas_int ispec = blas_int(9);
     
     const char* const_name = (is_float<eT>::value) ? "SGELSD" : "DGELSD";
-    const char* const_opts = "";
+    const char* const_opts = " ";
     
     char* name = const_cast<char*>(const_name);
     char* opts = const_cast<char*>(const_opts);
@@ -4070,7 +4068,9 @@ auxlib::solve_approx_svd(Mat<typename T1::pod_type>& out, Mat<typename T1::pod_t
     blas_int n3 = nrhs;
     blas_int n4 = lda;
     
-    blas_int smlsiz = (std::max)( blas_int(25), lapack::laenv(&ispec, name, opts, &n1, &n2, &n3, &n4) );  // in case lapack::laenv() returns -1
+    blas_int laenv_result = (arma_config::hidden_args) ? blas_int(lapack::laenv(&ispec, name, opts, &n1, &n2, &n3, &n4, 6, 1)) : blas_int(0);
+    
+    blas_int smlsiz    = (std::max)( blas_int(25), laenv_result );
     blas_int smlsiz_p1 = blas_int(1) + smlsiz;
     
     blas_int nlvl   = (std::max)( blas_int(0), blas_int(1) + blas_int( std::log(double(min_mn) / double(smlsiz_p1))/double(0.69314718055994530942) ) );
@@ -4085,6 +4085,8 @@ auxlib::solve_approx_svd(Mat<typename T1::pod_type>& out, Mat<typename T1::pod_t
     lapack::gelsd(&m, &n, &nrhs, A.memptr(), &lda, tmp.memptr(), &ldb, S.memptr(), &rcond, &rank, &work_query[0], &lwork_query, iwork.memptr(), &info);
     
     if(info != 0)  { return false; }
+    
+    // NOTE: in LAPACK 3.8, iwork[0] returns the minimum liwork
     
     blas_int lwork = static_cast<blas_int>( access::tmp_real(work_query[0]) );
     
@@ -4172,7 +4174,7 @@ auxlib::solve_approx_svd(Mat< std::complex<typename T1::pod_type> >& out, Mat< s
     blas_int ispec = blas_int(9);
     
     const char* const_name = (is_float<T>::value) ? "CGELSD" : "ZGELSD";
-    const char* const_opts = "";
+    const char* const_opts = " ";
     
     char* name = const_cast<char*>(const_name);
     char* opts = const_cast<char*>(const_opts);
@@ -4182,7 +4184,9 @@ auxlib::solve_approx_svd(Mat< std::complex<typename T1::pod_type> >& out, Mat< s
     blas_int n3 = nrhs;
     blas_int n4 = lda;
     
-    blas_int smlsiz = (std::max)( blas_int(25), lapack::laenv(&ispec, name, opts, &n1, &n2, &n3, &n4) );  // in case lapack::laenv() returns -1
+    blas_int laenv_result = (arma_config::hidden_args) ? blas_int(lapack::laenv(&ispec, name, opts, &n1, &n2, &n3, &n4, 6, 1)) : blas_int(0);
+    
+    blas_int smlsiz = (std::max)( blas_int(25), laenv_result );
     blas_int smlsiz_p1 = blas_int(1) + smlsiz;
     
     blas_int nlvl = (std::max)( blas_int(0), blas_int(1) + blas_int( std::log(double(min_mn) / double(smlsiz_p1))/double(0.69314718055994530942) ) );
@@ -5519,7 +5523,7 @@ auxlib::rudimentary_sym_check(const Mat<eT>& X)
   const eT delta1 = std::abs(A1 - B1);
   const eT delta2 = std::abs(A2 - B2);
   
-  const eT tol = eT(1000)*std::numeric_limits<eT>::epsilon();  // allow some leeway
+  const eT tol = eT(10000)*std::numeric_limits<eT>::epsilon();  // allow some leeway
   
   const bool okay1 = ( (delta1 <= tol) || (delta1 <= (C1 * tol)) );
   const bool okay2 = ( (delta2 <= tol) || (delta2 <= (C2 * tol)) );
@@ -5558,7 +5562,7 @@ auxlib::rudimentary_sym_check(const Mat< std::complex<T> >& X)
   const T delta_real = std::abs(A.real() - B.real());
   const T delta_imag = std::abs(A.imag() + B.imag());  // take into account the conjugate
   
-  const T tol = T(1000)*std::numeric_limits<T>::epsilon();  // allow some leeway
+  const T tol = T(10000)*std::numeric_limits<T>::epsilon();  // allow some leeway
   
   const bool okay_real = ( (delta_real <= tol) || (delta_real <= (C_real * tol)) );
   const bool okay_imag = ( (delta_imag <= tol) || (delta_imag <= (C_imag * tol)) );

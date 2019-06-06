@@ -46,6 +46,48 @@ size(const Base<typename T1::elem_type,T1>& X)
 
 
 
+// explicit overload to workround ADL issues with C++17 std::size()
+template<typename eT>
+arma_warn_unused
+inline
+const SizeMat
+size(const Mat<eT>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  return SizeMat( X.n_rows, X.n_cols );
+  }
+
+
+
+// explicit overload to workround ADL issues with C++17 std::size()
+template<typename eT>
+arma_warn_unused
+inline
+const SizeMat
+size(const Row<eT>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  return SizeMat( X.n_rows, X.n_cols );
+  }
+
+
+
+// explicit overload to workround ADL issues with C++17 std::size()
+template<typename eT>
+arma_warn_unused
+inline
+const SizeMat
+size(const Col<eT>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  return SizeMat( X.n_rows, X.n_cols );
+  }
+
+
+
 template<typename T1>
 arma_warn_unused
 inline
@@ -88,6 +130,20 @@ size(const BaseCube<typename T1::elem_type, T1>& X)
 
 
 
+// explicit overload to workround ADL issues with C++17 std::size()
+template<typename eT>
+arma_warn_unused
+inline
+const SizeCube
+size(const Cube<eT>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  return SizeCube( X.n_rows, X.n_cols, X.n_slices );
+  }
+
+
+
 template<typename T1>
 arma_warn_unused
 inline
@@ -114,6 +170,20 @@ size(const SpBase<typename T1::elem_type,T1>& X)
   const SpProxy<T1> P(X.get_ref());
   
   return SizeMat( P.get_n_rows(), P.get_n_cols() );
+  }
+
+
+
+// explicit overload to workround ADL issues with C++17 std::size()
+template<typename eT>
+arma_warn_unused
+inline
+const SizeMat
+size(const SpMat<eT>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  return SizeMat( X.n_rows, X.n_cols );
   }
 
 

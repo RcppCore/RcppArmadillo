@@ -4023,6 +4023,8 @@ SpMat<eT>::reshape_helper_intovec()
     {
     const uword t_index = (it.col() * t_n_rows) + it.row();
     
+    // ensure the iterator is pointing to the next element
+    // before we overwrite the row index of the current element
     ++it;
     
     access::rw(row_indices[i]) = t_index;

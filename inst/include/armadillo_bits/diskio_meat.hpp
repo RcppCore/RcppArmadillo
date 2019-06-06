@@ -47,10 +47,10 @@ diskio::gen_txt_header(const Mat<eT>&)
   else if(is_ulng_t_64<eT>::value)  { return std::string("ARMA_MAT_TXT_IU008"); }
   else if(is_slng_t_64<eT>::value)  { return std::string("ARMA_MAT_TXT_IS008"); }
 #endif
-  else if(         is_float<eT>::value)  { return std::string("ARMA_MAT_TXT_FN004"); }
-  else if(        is_double<eT>::value)  { return std::string("ARMA_MAT_TXT_FN008"); }
-  else if( is_complex_float<eT>::value)  { return std::string("ARMA_MAT_TXT_FC008"); }
-  else if(is_complex_double<eT>::value)  { return std::string("ARMA_MAT_TXT_FC016"); }
+  else if(    is_float<eT>::value)  { return std::string("ARMA_MAT_TXT_FN004"); }
+  else if(   is_double<eT>::value)  { return std::string("ARMA_MAT_TXT_FN008"); }
+  else if( is_cx_float<eT>::value)  { return std::string("ARMA_MAT_TXT_FC008"); }
+  else if(is_cx_double<eT>::value)  { return std::string("ARMA_MAT_TXT_FC016"); }
   
   return std::string();
   }
@@ -86,10 +86,10 @@ diskio::gen_bin_header(const Mat<eT>&)
   else if(is_ulng_t_64<eT>::value)  { return std::string("ARMA_MAT_BIN_IU008"); }
   else if(is_slng_t_64<eT>::value)  { return std::string("ARMA_MAT_BIN_IS008"); }
 #endif
-  else if(         is_float<eT>::value)  { return std::string("ARMA_MAT_BIN_FN004"); }
-  else if(        is_double<eT>::value)  { return std::string("ARMA_MAT_BIN_FN008"); }
-  else if( is_complex_float<eT>::value)  { return std::string("ARMA_MAT_BIN_FC008"); }
-  else if(is_complex_double<eT>::value)  { return std::string("ARMA_MAT_BIN_FC016"); }
+  else if(    is_float<eT>::value)  { return std::string("ARMA_MAT_BIN_FN004"); }
+  else if(   is_double<eT>::value)  { return std::string("ARMA_MAT_BIN_FN008"); }
+  else if( is_cx_float<eT>::value)  { return std::string("ARMA_MAT_BIN_FC008"); }
+  else if(is_cx_double<eT>::value)  { return std::string("ARMA_MAT_BIN_FC016"); }
   
   return std::string();
   }
@@ -125,10 +125,10 @@ diskio::gen_bin_header(const SpMat<eT>&)
   else if(is_ulng_t_64<eT>::value)  { return std::string("ARMA_SPM_BIN_IU008"); }
   else if(is_slng_t_64<eT>::value)  { return std::string("ARMA_SPM_BIN_IS008"); }
 #endif
-  else if(         is_float<eT>::value)  { return std::string("ARMA_SPM_BIN_FN004"); }
-  else if(        is_double<eT>::value)  { return std::string("ARMA_SPM_BIN_FN008"); }
-  else if( is_complex_float<eT>::value)  { return std::string("ARMA_SPM_BIN_FC008"); }
-  else if(is_complex_double<eT>::value)  { return std::string("ARMA_SPM_BIN_FC016"); }
+  else if(    is_float<eT>::value)  { return std::string("ARMA_SPM_BIN_FN004"); }
+  else if(   is_double<eT>::value)  { return std::string("ARMA_SPM_BIN_FN008"); }
+  else if( is_cx_float<eT>::value)  { return std::string("ARMA_SPM_BIN_FC008"); }
+  else if(is_cx_double<eT>::value)  { return std::string("ARMA_SPM_BIN_FC016"); }
   
   return std::string();
   }
@@ -163,10 +163,10 @@ diskio::gen_txt_header(const Cube<eT>&)
   else if(is_ulng_t_64<eT>::value)  { return std::string("ARMA_CUB_TXT_IU008"); }
   else if(is_slng_t_64<eT>::value)  { return std::string("ARMA_CUB_TXT_IS008"); }
 #endif
-  else if(         is_float<eT>::value)  { return std::string("ARMA_CUB_TXT_FN004"); }
-  else if(        is_double<eT>::value)  { return std::string("ARMA_CUB_TXT_FN008"); }
-  else if( is_complex_float<eT>::value)  { return std::string("ARMA_CUB_TXT_FC008"); }
-  else if(is_complex_double<eT>::value)  { return std::string("ARMA_CUB_TXT_FC016"); }
+  else if(    is_float<eT>::value)  { return std::string("ARMA_CUB_TXT_FN004"); }
+  else if(   is_double<eT>::value)  { return std::string("ARMA_CUB_TXT_FN008"); }
+  else if( is_cx_float<eT>::value)  { return std::string("ARMA_CUB_TXT_FC008"); }
+  else if(is_cx_double<eT>::value)  { return std::string("ARMA_CUB_TXT_FC016"); }
   
   return std::string();
   }
@@ -202,10 +202,10 @@ diskio::gen_bin_header(const Cube<eT>&)
   else if(is_ulng_t_64<eT>::value)  { return std::string("ARMA_CUB_BIN_IU008"); }
   else if(is_slng_t_64<eT>::value)  { return std::string("ARMA_CUB_BIN_IS008"); }
 #endif
-  else if(         is_float<eT>::value)  { return std::string("ARMA_CUB_BIN_FN004"); }
-  else if(        is_double<eT>::value)  { return std::string("ARMA_CUB_BIN_FN008"); }
-  else if( is_complex_float<eT>::value)  { return std::string("ARMA_CUB_BIN_FC008"); }
-  else if(is_complex_double<eT>::value)  { return std::string("ARMA_CUB_BIN_FC016"); }
+  else if(    is_float<eT>::value)  { return std::string("ARMA_CUB_BIN_FN004"); }
+  else if(   is_double<eT>::value)  { return std::string("ARMA_CUB_BIN_FN008"); }
+  else if( is_cx_float<eT>::value)  { return std::string("ARMA_CUB_BIN_FC008"); }
+  else if(is_cx_double<eT>::value)  { return std::string("ARMA_CUB_BIN_FC016"); }
   
   return std::string();
   }

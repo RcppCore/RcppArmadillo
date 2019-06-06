@@ -208,7 +208,7 @@ op_abs::apply( Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_type
   
   const uword n_rows = P.get_n_rows();
   const uword n_cols = P.get_n_cols();
-    
+  
   out.set_size(n_rows, n_cols);
   
   T* out_mem = out.memptr();
@@ -220,10 +220,23 @@ op_abs::apply( Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_type
     const uword   n_elem  = P.get_n_elem();
           ea_type A       = P.get_ea();
     
-    for(uword i=0; i < n_elem; ++i)
+    #if defined(ARMA_USE_OPENMP)
       {
-      out_mem[i] = std::abs( A[i] );
+      const int n_threads = mp_thread_limit::get();
+      #pragma omp parallel for schedule(static) num_threads(n_threads)
+      for(uword i=0; i < n_elem; ++i)
+        {
+        out_mem[i] = std::abs( A[i] );
+        }
       }
+    #else
+      {
+      for(uword i=0; i < n_elem; ++i)
+        {
+        out_mem[i] = std::abs( A[i] );
+        }
+      }
+    #endif
     }
   else
     {
@@ -264,10 +277,23 @@ op_abs::apply( Cube<typename T1::pod_type>& out, const mtOpCube<typename T1::pod
     const uword   n_elem  = P.get_n_elem();
           ea_type A       = P.get_ea();
     
-    for(uword i=0; i < n_elem; ++i)
+    #if defined(ARMA_USE_OPENMP)
       {
-      out_mem[i] = std::abs( A[i] );
+      const int n_threads = mp_thread_limit::get();
+      #pragma omp parallel for schedule(static) num_threads(n_threads)
+      for(uword i=0; i < n_elem; ++i)
+        {
+        out_mem[i] = std::abs( A[i] );
+        }
       }
+    #else
+      {
+      for(uword i=0; i < n_elem; ++i)
+        {
+        out_mem[i] = std::abs( A[i] );
+        }
+      }
+    #endif
     }
   else
     {
