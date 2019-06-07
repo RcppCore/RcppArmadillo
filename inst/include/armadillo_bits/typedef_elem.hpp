@@ -107,6 +107,15 @@ typedef          long slng_t;
 #endif
 
 
+typedef std::complex<float>  cx_float;
+typedef std::complex<double> cx_double;
+
+typedef void* void_ptr;
+
+
+//
+
+
 #if   defined(ARMA_BLAS_LONG_LONG)
   typedef long long blas_int;
   #define ARMA_MAX_BLAS_INT 0x7fffffffffffffffULL
@@ -119,10 +128,40 @@ typedef          long slng_t;
 #endif
 
 
-typedef std::complex<float>  cx_float;
-typedef std::complex<double> cx_double;
+// NOTE: blas_len is the fortran type for "hidden" arguments that specify the length of character arguments;
+// NOTE: it varies across compilers, compiler versions and systems (eg. 32 bit vs 64 bit);
+// NOTE: the default setting of "size_t" is an educated guess.
+// NOTE: ---
+// NOTE: for gcc / gfortran:  https://gcc.gnu.org/onlinedocs/gfortran/Argument-passing-conventions.html
+// NOTE: gcc 7 and earlier: int
+// NOTE: gcc 8 and 9:       size_t
+// NOTE: ---
+// NOTE: for ifort (intel fortran compiler): 
+// NOTE: "Intel Fortran Compiler User and Reference Guides", Document Number: 304970-006US, 2009, p. 301
+// NOTE: http://www.complexfluids.ethz.ch/MK/ifort.pdf
+// NOTE: the type is unsigned 4-byte integer on 32 bit systems
+// NOTE: the type is unsigned 8-byte integer on 64 bit systems
+// NOTE: ---
+// NOTE: for NAG fortran: https://www.nag.co.uk/nagware/np/r62_doc/manual/compiler_11_1.html#AUTOTOC_11_1
+// NOTE: Chrlen = usually int, or long long on 64-bit Windows
+// NOTE: ---
+// TODO: flang:  https://github.com/flang-compiler/flang/wiki
+// TODO: other compilers: http://fortranwiki.org/fortran/show/Compilers
 
-typedef void* void_ptr;
+#if !defined(ARMA_FORTRAN_CHARLEN_TYPE)
+  #if defined(__GNUC__) && !defined(__clang__)
+    #if (__GNUC__ <= 7)
+      #define ARMA_FORTRAN_CHARLEN_TYPE int
+    #else
+      #define ARMA_FORTRAN_CHARLEN_TYPE size_t
+    #endif
+  #else
+    // TODO: determine the type for other compilers
+    #define ARMA_FORTRAN_CHARLEN_TYPE size_t
+  #endif
+#endif
+
+typedef ARMA_FORTRAN_CHARLEN_TYPE blas_len;
 
 
 //! @}

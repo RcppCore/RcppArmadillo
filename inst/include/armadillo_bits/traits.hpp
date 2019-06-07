@@ -893,51 +893,6 @@ struct is_real<double>
 
 
 template<typename T1>
-struct is_complex
-  { static const bool value = false; };
-
-// template<>
-template<typename eT>
-struct is_complex< std::complex<eT> >
-  { static const bool value = true; };
-
-
-
-template<typename T1>
-struct is_complex_float
-  { static const bool value = false; };
-
-template<>
-struct is_complex_float< std::complex<float> >
-  { static const bool value = true; };
-
-
-
-template<typename T1>
-struct is_complex_double
-  { static const bool value = false; };
-
-template<>
-struct is_complex_double< std::complex<double> >
-  { static const bool value = true; };
-
-
-
-template<typename T1>
-struct is_complex_strict
-  { static const bool value = false; };
-
-template<>
-struct is_complex_strict< std::complex<float> >
-  { static const bool value = true; };
-
-template<>
-struct is_complex_strict< std::complex<double> >
-  { static const bool value = true; };
-
-
-
-template<typename T1>
 struct is_cx
   {
   static const bool value = false;
@@ -956,35 +911,39 @@ struct is_cx< std::complex<T> >
 
 
 
-//! check for a weird implementation of the std::complex class
 template<typename T1>
-struct is_supported_complex
-  { static const bool value = false; };
-
-//template<>
-template<typename eT>
-struct is_supported_complex< std::complex<eT> >
-  { static const bool value = ( sizeof(std::complex<eT>) == 2*sizeof(eT) ); };
-
-
-
-template<typename T1>
-struct is_supported_complex_float
-  { static const bool value = false; };
+struct is_cx_float
+  {
+  static const bool value = false;
+  static const bool yes   = false;
+  static const bool no    = true;
+  };
 
 template<>
-struct is_supported_complex_float< std::complex<float> >
-  { static const bool value = ( sizeof(std::complex<float>) == 2*sizeof(float) ); };
+struct is_cx_float< std::complex<float> >
+  {
+  static const bool value = true;
+  static const bool yes   = true;
+  static const bool no    = false;
+  };
 
 
 
 template<typename T1>
-struct is_supported_complex_double
-  { static const bool value = false; };
+struct is_cx_double
+  {
+  static const bool value = false;
+  static const bool yes   = false;
+  static const bool no    = true;
+  };
 
 template<>
-struct is_supported_complex_double< std::complex<double> >
-  { static const bool value = ( sizeof(std::complex<double>) == 2*sizeof(double) ); };
+struct is_cx_double< std::complex<double> >
+  {
+  static const bool value = true;
+  static const bool yes   = true;
+  static const bool no    = false;
+  };
 
 
 
@@ -1008,8 +967,8 @@ struct is_supported_elem_type
 #endif
     is_float<T1>::value ||
     is_double<T1>::value ||
-    is_supported_complex_float<T1>::value ||
-    is_supported_complex_double<T1>::value;
+    is_cx_float<T1>::value ||
+    is_cx_double<T1>::value;
   };
 
 
@@ -1020,8 +979,8 @@ struct is_supported_blas_type
   static const bool value = \
     is_float<T1>::value ||
     is_double<T1>::value ||
-    is_supported_complex_float<T1>::value ||
-    is_supported_complex_double<T1>::value;
+    is_cx_float<T1>::value ||
+    is_cx_double<T1>::value;
   };
 
 

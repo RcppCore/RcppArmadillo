@@ -79,9 +79,43 @@
 #endif
 
 
+// NOTE: "For arguments of CHARACTER type, the character length is passed as a hidden argument at the end of the argument list."
+// NOTE: https://gcc.gnu.org/onlinedocs/gfortran/Argument-passing-conventions.html
+
 
 extern "C"
-  {
+{
+#if defined(ARMA_USE_FORTRAN_HIDDEN_ARGS)
+  
+  float  arma_fortran(arma_sasum)(blas_int* n, const float*  x, blas_int* incx);
+  double arma_fortran(arma_dasum)(blas_int* n, const double* x, blas_int* incx);
+  
+  float  arma_fortran(arma_snrm2)(blas_int* n, const float*  x, blas_int* incx);
+  double arma_fortran(arma_dnrm2)(blas_int* n, const double* x, blas_int* incx);
+  
+  float  arma_fortran(arma_sdot)(blas_int* n, const float*  x, blas_int* incx, const float*  y, blas_int* incy);
+  double arma_fortran(arma_ddot)(blas_int* n, const double* x, blas_int* incx, const double* y, blas_int* incy);
+  
+  void arma_fortran(arma_sgemv)(const char* transA, const blas_int* m, const blas_int* n, const float*  alpha, const float*  A, const blas_int* ldA, const float*  x, const blas_int* incx, const float*  beta, float*  y, const blas_int* incy, blas_len transA_len);
+  void arma_fortran(arma_dgemv)(const char* transA, const blas_int* m, const blas_int* n, const double* alpha, const double* A, const blas_int* ldA, const double* x, const blas_int* incx, const double* beta, double* y, const blas_int* incy, blas_len transA_len);
+  void arma_fortran(arma_cgemv)(const char* transA, const blas_int* m, const blas_int* n, const void*   alpha, const void*   A, const blas_int* ldA, const void*   x, const blas_int* incx, const void*   beta, void*   y, const blas_int* incy, blas_len transA_len);
+  void arma_fortran(arma_zgemv)(const char* transA, const blas_int* m, const blas_int* n, const void*   alpha, const void*   A, const blas_int* ldA, const void*   x, const blas_int* incx, const void*   beta, void*   y, const blas_int* incy, blas_len transA_len);
+  
+  void arma_fortran(arma_sgemm)(const char* transA, const char* transB, const blas_int* m, const blas_int* n, const blas_int* k, const float*  alpha, const float*  A, const blas_int* ldA, const float*  B, const blas_int* ldB, const float*  beta, float*  C, const blas_int* ldC, blas_len transA_len, blas_len transB_len);
+  void arma_fortran(arma_dgemm)(const char* transA, const char* transB, const blas_int* m, const blas_int* n, const blas_int* k, const double* alpha, const double* A, const blas_int* ldA, const double* B, const blas_int* ldB, const double* beta, double* C, const blas_int* ldC, blas_len transA_len, blas_len transB_len);
+  void arma_fortran(arma_cgemm)(const char* transA, const char* transB, const blas_int* m, const blas_int* n, const blas_int* k, const void*   alpha, const void*   A, const blas_int* ldA, const void*   B, const blas_int* ldB, const void*   beta, void*   C, const blas_int* ldC, blas_len transA_len, blas_len transB_len);
+  void arma_fortran(arma_zgemm)(const char* transA, const char* transB, const blas_int* m, const blas_int* n, const blas_int* k, const void*   alpha, const void*   A, const blas_int* ldA, const void*   B, const blas_int* ldB, const void*   beta, void*   C, const blas_int* ldC, blas_len transA_len, blas_len transB_len);
+  
+  void arma_fortran(arma_ssyrk)(const char* uplo, const char* transA, const blas_int* n, const blas_int* k, const  float* alpha, const  float* A, const blas_int* ldA, const  float* beta,  float* C, const blas_int* ldC, blas_len uplo_len, blas_len transA_len);
+  void arma_fortran(arma_dsyrk)(const char* uplo, const char* transA, const blas_int* n, const blas_int* k, const double* alpha, const double* A, const blas_int* ldA, const double* beta, double* C, const blas_int* ldC, blas_len uplo_len, blas_len transA_len);
+  
+  void arma_fortran(arma_cherk)(const char* uplo, const char* transA, const blas_int* n, const blas_int* k, const  float* alpha, const   void* A, const blas_int* ldA, const  float* beta,   void* C, const blas_int* ldC, blas_len uplo_len, blas_len transA_len);
+  void arma_fortran(arma_zherk)(const char* uplo, const char* transA, const blas_int* n, const blas_int* k, const double* alpha, const   void* A, const blas_int* ldA, const double* beta,   void* C, const blas_int* ldC, blas_len uplo_len, blas_len transA_len);
+  
+#else
+  
+  // prototypes without hidden arguments
+  
   float  arma_fortran(arma_sasum)(blas_int* n, const float*  x, blas_int* incx);
   double arma_fortran(arma_dasum)(blas_int* n, const double* x, blas_int* incx);
   
@@ -106,7 +140,9 @@ extern "C"
   
   void arma_fortran(arma_cherk)(const char* uplo, const char* transA, const blas_int* n, const blas_int* k, const  float* alpha, const   void* A, const blas_int* ldA, const  float* beta,   void* C, const blas_int* ldC);
   void arma_fortran(arma_zherk)(const char* uplo, const char* transA, const blas_int* n, const blas_int* k, const double* alpha, const   void* A, const blas_int* ldA, const double* beta,   void* C, const blas_int* ldC);
-  }
+  
+#endif
+}
 
 
 #endif

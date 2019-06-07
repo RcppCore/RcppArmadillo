@@ -37,34 +37,46 @@
 #define arma_noinline
 #define arma_ignore(variable)  ((void)(variable))
 
-#undef arma_fortran_noprefix
-#undef arma_fortran_prefix
-
-#undef arma_fortran2_noprefix
-#undef arma_fortran2_prefix
+#undef arma_fortran_sans_prefix_B
+#undef arma_fortran_with_prefix_B
  
 #if defined(ARMA_BLAS_UNDERSCORE)
-  #define arma_fortran2_noprefix(function) function##_
-  #define arma_fortran2_prefix(function)   wrapper_##function##_
+  #define arma_fortran_sans_prefix_B(function) function##_
+  
+  #if defined(ARMA_USE_FORTRAN_HIDDEN_ARGS)  
+    #define arma_fortran_with_prefix_B(function) wrapper2_##function##_
+  #else
+    #define arma_fortran_with_prefix_B(function) wrapper_##function##_
+  #endif
 #else
-  #define arma_fortran2_noprefix(function) function
-  #define arma_fortran2_prefix(function)   wrapper_##function
+  #define arma_fortran_sans_prefix_B(function) function
+  
+  #if defined(ARMA_USE_FORTRAN_HIDDEN_ARGS)  
+    #define arma_fortran_with_prefix_B(function) wrapper2_##function
+  #else
+    #define arma_fortran_with_prefix_B(function) wrapper_##function
+  #endif
 #endif
 
+#undef arma_fortran
+#undef arma_wrapper
+
 #if defined(ARMA_USE_WRAPPER)
-  #define arma_fortran(function) arma_fortran2_prefix(function)
+  #define arma_fortran(function) arma_fortran_with_prefix_B(function)
   #define arma_wrapper(function) wrapper_##function
 #else
-  #define arma_fortran(function) arma_fortran2_noprefix(function)
+  #define arma_fortran(function) arma_fortran_sans_prefix_B(function)
   #define arma_wrapper(function) function
 #endif
 
-#define arma_fortran_prefix(function)   arma_fortran2_prefix(function)
-#define arma_fortran_noprefix(function) arma_fortran2_noprefix(function)
+#undef arma_fortran_sans_prefix
+#undef arma_fortran_with_prefix
+
+#define arma_fortran_sans_prefix(function) arma_fortran_sans_prefix_B(function)
+#define arma_fortran_with_prefix(function) arma_fortran_with_prefix_B(function)
 
 #undef  ARMA_INCFILE_WRAP
 #define ARMA_INCFILE_WRAP(x) <x>
-
 
 #if defined(ARMA_USE_CXX11)
   
@@ -487,17 +499,13 @@
 #endif
 
 
-#if ( (defined(_OPENMP) && (_OPENMP < 201107)) && !defined(ARMA_DONT_USE_OPENMP) )
-  // if the compiler has an ancient version of OpenMP and use of OpenMP hasn't been explicitly disabled,
-  // print a warning to ensure there is no confusion about OpenMP support
-  #undef  ARMA_USE_OPENMP
-  #undef  ARMA_PRINT_OPENMP_WARNING
-  #define ARMA_PRINT_OPENMP_WARNING
-#endif
-
-
 #if defined(ARMA_PRINT_OPENMP_WARNING) && !defined(ARMA_DONT_PRINT_OPENMP_WARNING)
   #pragma message ("WARNING: use of OpenMP disabled; compiler support for OpenMP 3.1+ not detected")
+  
+  #if (defined(_OPENMP) && (_OPENMP < 201107))
+    #pragma message ("NOTE: your compiler appears to have an ancient version of OpenMP")
+    #pragma message ("NOTE: consider upgrading to a better compiler")
+  #endif
 #endif
 
 

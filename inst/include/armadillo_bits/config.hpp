@@ -74,6 +74,13 @@
 // #define ARMA_BLAS_LONG_LONG
 //// Uncomment the above line if your BLAS and LAPACK libraries use "long long" instead of "int"
 
+#define ARMA_USE_FORTRAN_HIDDEN_ARGS
+//// Comment out the above line to call BLAS and LAPACK functions without using so-called "hidden" arguments.
+//// Fortran functions (compiled without a BIND(C) declaration) that have char arguments
+//// (like many BLAS and LAPACK functions) also have associated "hidden" arguments.
+//// For each char argument, the corresponding "hidden" argument specifies the number of characters.
+//// These "hidden" arguments are typically tacked onto the end of function definitions.
+
 // #define ARMA_USE_TBB_ALLOC
 //// Uncomment the above line if you want to use Intel TBB scalable_malloc() and scalable_free() instead of standard malloc() and free()
 
@@ -225,6 +232,10 @@
 #if defined(ARMA_DONT_USE_WRAPPER)
   #undef ARMA_USE_WRAPPER
   #undef ARMA_USE_HDF5_ALT
+#endif
+
+#if defined(ARMA_DONT_USE_FORTRAN_HIDDEN_ARGS)
+  #undef ARMA_USE_FORTRAN_HIDDEN_ARGS
 #endif
 
 #if defined(ARMA_DONT_USE_CXX11)

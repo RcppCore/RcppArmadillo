@@ -83,7 +83,7 @@ inline
 typename
 enable_if2
   <
-  (is_arma_type<T1>::value && is_complex_strict<typename T1::elem_type>::value),
+  (is_arma_type<T1>::value && (is_cx_float<typename T1::elem_type>::yes || is_cx_double<typename T1::elem_type>::yes)),
   Mat< std::complex<typename T1::pod_type> >
   >::result
 ifft2(const T1& A)
@@ -112,7 +112,7 @@ inline
 typename
 enable_if2
   <
-  (is_arma_type<T1>::value && is_complex_strict<typename T1::elem_type>::value),
+  (is_arma_type<T1>::value && (is_cx_float<typename T1::elem_type>::yes || is_cx_double<typename T1::elem_type>::yes)),
   Mat< std::complex<typename T1::pod_type> >
   >::result
 ifft2(const T1& A, const uword n_rows, const uword n_cols)

@@ -3,6 +3,25 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.9.499.1.0 (2019-06-06)}{
+  \itemize{
+    \item Upgraded to Armadillo release 9.500-RC1 
+    \itemize{
+      \item Expanded \code{solve()} with \code{solve_opts::likely_sympd}
+      to indicate that the given matrix is likely positive definite 
+      \item more robust automatic detection of positive definite
+      matrices by \code{solve()} and \code{inv()} 
+      \item faster handling of sparse submatrices
+      \item extended LAPACK function prototypes to follow Fortran
+      passing conventions for so-called "hidden arguments", in order
+      to address GCC Bug 90329; to use previous LAPACK function
+      prototypes without the "hidden arguments",
+      \code{#define ARMA_DONT_USE_FORTRAN_HIDDEN_ARGS before
+        #include <armadillo> }
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.9.400.3.0 (2019-05-09)}{
   \itemize{
     \item Upgraded to Armadillo release 9.400.3 (Surrogate Miscreant)
