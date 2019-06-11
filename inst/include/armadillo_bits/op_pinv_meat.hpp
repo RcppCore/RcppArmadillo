@@ -125,11 +125,51 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
     
     if(n_rows >= n_cols)
       {
-      out = ( (V.n_cols > count) ? V.cols(0,count-1) : V ) * diagmat(s2) * trans( (U.n_cols > count) ? U.cols(0,count-1) : U );
+      // out = ( (V.n_cols > count) ? V.cols(0,count-1) : V ) * diagmat(s2) * trans( (U.n_cols > count) ? U.cols(0,count-1) : U );
+      
+      Mat<eT> tmp;
+      
+      if(count < V.n_cols)
+        {
+        tmp = V.cols(0,count-1) * diagmat(s2);
+        }
+      else
+        {
+        tmp = V * diagmat(s2);
+        }
+      
+      if(count < U.n_cols)
+        {
+        out = tmp * trans(U.cols(0,count-1));
+        }
+      else
+        {
+        out = tmp * trans(U);
+        }
       }
     else
       {
-      out = ( (U.n_cols > count) ? U.cols(0,count-1) : U ) * diagmat(s2) * trans( (V.n_cols > count) ? V.cols(0,count-1) : V );
+      // out = ( (U.n_cols > count) ? U.cols(0,count-1) : U ) * diagmat(s2) * trans( (V.n_cols > count) ? V.cols(0,count-1) : V );
+      
+      Mat<eT> tmp;
+      
+      if(count < U.n_cols)
+        {
+        tmp = U.cols(0,count-1) * diagmat(s2);
+        }
+      else
+        {
+        tmp = U * diagmat(s2);
+        }
+      
+      if(count < V.n_cols)
+        {
+        out = tmp * trans(V.cols(0,count-1));
+        }
+      else
+        {
+        out = tmp * trans(V);
+        }
       }
     }
   else

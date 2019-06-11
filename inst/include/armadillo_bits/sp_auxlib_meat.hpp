@@ -61,19 +61,26 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
   {
   arma_extra_debug_sigprint();
   
+  const unwrap_spmat<T1> U(X.get_ref());
+  
+  if((arma_config::debug) && (sp_auxlib::rudimentary_sym_check(U.M) == false))
+    {
+    if(is_cx<eT>::no )  { arma_debug_warn("eigs_sym(): given matrix is not symmetric"); }
+    if(is_cx<eT>::yes)  { arma_debug_warn("eigs_sym(): given matrix is not hermitian"); }
+    }
+  
   #if   defined(ARMA_USE_NEWARP)
     {
-    return sp_auxlib::eigs_sym_newarp(eigval, eigvec, X, n_eigvals, form_str, default_tol);
+    return sp_auxlib::eigs_sym_newarp(eigval, eigvec, U.M, n_eigvals, form_str, default_tol);
     }
   #elif defined(ARMA_USE_ARPACK)
     {
-    return sp_auxlib::eigs_sym_arpack(eigval, eigvec, X, n_eigvals, form_str, default_tol);
+    return sp_auxlib::eigs_sym_arpack(eigval, eigvec, U.M, n_eigvals, form_str, default_tol);
     }
   #else
     {
     arma_ignore(eigval);
     arma_ignore(eigvec);
-    arma_ignore(X);
     arma_ignore(n_eigvals);
     arma_ignore(form_str);
     arma_ignore(default_tol);
@@ -86,10 +93,10 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
 
 
 
-template<typename eT, typename T1>
+template<typename eT>
 inline
 bool
-sp_auxlib::eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X_expr, const uword n_eigvals, const char* form_str, const eT default_tol)
+sp_auxlib::eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X, const uword n_eigvals, const char* form_str, const eT default_tol)
   {
   arma_extra_debug_sigprint();
   
@@ -98,9 +105,6 @@ sp_auxlib::eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1
     const form_type form_val = sp_auxlib::interpret_form_str(form_str);
     
     arma_debug_check( (form_val != form_lm) && (form_val != form_sm) && (form_val != form_la) && (form_val != form_sa), "eigs_sym(): unknown form specified" );
-    
-    const unwrap_spmat<T1> U(X_expr.get_ref());
-    const SpMat<eT>&       X = U.M;
     
     const newarp::SparseGenMatProd<eT> op(X);
     
@@ -185,7 +189,7 @@ sp_auxlib::eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1
     {
     arma_ignore(eigval);
     arma_ignore(eigvec);
-    arma_ignore(X_expr);
+    arma_ignore(X);
     arma_ignore(n_eigvals);
     arma_ignore(form_str);
     arma_ignore(default_tol);
@@ -197,10 +201,10 @@ sp_auxlib::eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1
 
 
 
-template<typename eT, typename T1>
+template<typename eT>
 inline
 bool
-sp_auxlib::eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, const uword n_eigvals, const char* form_str, const eT default_tol)
+sp_auxlib::eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X, const uword n_eigvals, const char* form_str, const eT default_tol)
   {
   arma_extra_debug_sigprint();
   
@@ -225,18 +229,15 @@ sp_auxlib::eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1
       default:       which = which_lm;  break;
       }
     
-    // Make a sparse proxy object.
-    SpProxy<T1> p(X.get_ref());
-    
     // Make sure it's square.
-    arma_debug_check( (p.get_n_rows() != p.get_n_cols()), "eigs_sym(): given matrix must be square sized" );
+    arma_debug_check( (X.n_rows != X.n_cols), "eigs_sym(): given matrix must be square sized" );
     
     // Make sure we aren't asking for every eigenvalue.
     // The _saupd() functions allow asking for one more eigenvalue than the _naupd() functions.
-    arma_debug_check( (n_eigvals >= p.get_n_rows()), "eigs_sym(): n_eigvals must be less than the number of rows in the matrix" );
+    arma_debug_check( (n_eigvals >= X.n_rows), "eigs_sym(): n_eigvals must be less than the number of rows in the matrix" );
     
     // If the matrix is empty, the case is trivial.
-    if( (p.get_n_cols() == 0) || (n_eigvals == 0) ) // We already know n_cols == n_rows.
+    if( (X.n_cols == 0) || (n_eigvals == 0) ) // We already know n_cols == n_rows.
       {
       eigval.reset();
       eigvec.reset();
@@ -250,7 +251,7 @@ sp_auxlib::eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1
     podarray<blas_int> iparam, ipntr;
     podarray<eT> rwork; // Not used in this case.
     
-    run_aupd(n_eigvals, which, p, true /* sym, not gen */, n, tol, resid, ncv, v, ldv, iparam, ipntr, workd, workl, lworkl, rwork, info);
+    run_aupd(n_eigvals, which, X, true /* sym, not gen */, n, tol, resid, ncv, v, ldv, iparam, ipntr, workd, workl, lworkl, rwork, info);
     
     if(info != 0)
       {
@@ -308,11 +309,15 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
   
   #if defined(ARMA_USE_NEWARP)
     {
-    return sp_auxlib::eigs_gen_newarp(eigval, eigvec, X, n_eigvals, form_str, default_tol);
+    const unwrap_spmat<T1> U(X.get_ref());
+  
+    return sp_auxlib::eigs_gen_newarp(eigval, eigvec, U.M, n_eigvals, form_str, default_tol);
     }
   #elif defined(ARMA_USE_ARPACK)
     {
-    return sp_auxlib::eigs_gen_arpack(eigval, eigvec, X, n_eigvals, form_str, default_tol);
+    const unwrap_spmat<T1> U(X.get_ref());
+  
+    return sp_auxlib::eigs_gen_arpack(eigval, eigvec, U.M, n_eigvals, form_str, default_tol);
     }
   #else
     {
@@ -331,10 +336,10 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
 
 
 
-template<typename T, typename T1>
+template<typename T>
 inline
 bool
-sp_auxlib::eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase<T, T1>& X_expr, const uword n_eigvals, const char* form_str, const T default_tol)
+sp_auxlib::eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpMat<T>& X, const uword n_eigvals, const char* form_str, const T default_tol)
   {
   arma_extra_debug_sigprint();
   
@@ -343,9 +348,6 @@ sp_auxlib::eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
     const form_type form_val = sp_auxlib::interpret_form_str(form_str);
     
     arma_debug_check( (form_val == form_none), "eigs_gen(): unknown form specified" );
-    
-    const unwrap_spmat<T1> U(X_expr.get_ref());
-    const SpMat<T>&        X = U.M;
     
     const newarp::SparseGenMatProd<T> op(X);
     
@@ -448,7 +450,7 @@ sp_auxlib::eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
     {
     arma_ignore(eigval);
     arma_ignore(eigvec);
-    arma_ignore(X_expr);
+    arma_ignore(X);
     arma_ignore(n_eigvals);
     arma_ignore(form_str);
     arma_ignore(default_tol);
@@ -461,10 +463,10 @@ sp_auxlib::eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
 
 
 
-template<typename T, typename T1>
+template<typename T>
 inline
 bool
-sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase<T, T1>& X, const uword n_eigvals, const char* form_str, const T default_tol)
+sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpMat<T>& X, const uword n_eigvals, const char* form_str, const T default_tol)
   {
   arma_extra_debug_sigprint();
   
@@ -496,17 +498,14 @@ sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
       }
     
     
-    // Make a sparse proxy object.
-    SpProxy<T1> p(X.get_ref());
-    
     // Make sure it's square.
-    arma_debug_check( (p.get_n_rows() != p.get_n_cols()), "eigs_gen(): given matrix must be square sized" );
+    arma_debug_check( (X.n_rows != X.n_cols), "eigs_gen(): given matrix must be square sized" );
     
     // Make sure we aren't asking for every eigenvalue.
-    arma_debug_check( (n_eigvals + 1 >= p.get_n_rows()), "eigs_gen(): n_eigvals + 1 must be less than the number of rows in the matrix" );
+    arma_debug_check( (n_eigvals + 1 >= X.n_rows), "eigs_gen(): n_eigvals + 1 must be less than the number of rows in the matrix" );
     
     // If the matrix is empty, the case is trivial.
-    if( (p.get_n_cols() == 0) || (n_eigvals == 0) ) // We already know n_cols == n_rows.
+    if( (X.n_cols == 0) || (n_eigvals == 0) ) // We already know n_cols == n_rows.
       {
       eigval.reset();
       eigvec.reset();
@@ -520,7 +519,7 @@ sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
     podarray<blas_int> iparam, ipntr;
     podarray<T> rwork; // Not used in the real case.
     
-    run_aupd(n_eigvals, which, p, false /* gen, not sym */, n, tol, resid, ncv, v, ldv, iparam, ipntr, workd, workl, lworkl, rwork, info);
+    run_aupd(n_eigvals, which, X, false /* gen, not sym */, n, tol, resid, ncv, v, ldv, iparam, ipntr, workd, workl, lworkl, rwork, info);
     
     if(info != 0)
       {
@@ -618,12 +617,14 @@ sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
 template<typename T, typename T1>
 inline
 bool
-sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase< std::complex<T>, T1>& X, const uword n_eigvals, const char* form_str, const T default_tol)
+sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase< std::complex<T>, T1>& X_expr, const uword n_eigvals, const char* form_str, const T default_tol)
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_ARPACK)
     {
+    typedef typename std::complex<T> eT;
+    
     const form_type form_val = sp_auxlib::interpret_form_str(form_str);
     
     arma_debug_check( (form_val == form_none), "eigs_gen(): unknown form specified" );
@@ -649,18 +650,18 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
       default:       which = which_lm;
       }
     
+    const unwrap_spmat<T1> U(X_expr.get_ref());
     
-    // Make a sparse proxy object.
-    SpProxy<T1> p(X.get_ref());
+    const SpMat<eT>& X = U.M;
     
     // Make sure it's square.
-    arma_debug_check( (p.get_n_rows() != p.get_n_cols()), "eigs_gen(): given matrix must be square sized" );
+    arma_debug_check( (X.n_rows != X.n_cols), "eigs_gen(): given matrix must be square sized" );
     
     // Make sure we aren't asking for every eigenvalue.
-    arma_debug_check( (n_eigvals + 1 >= p.get_n_rows()), "eigs_gen(): n_eigvals + 1 must be less than the number of rows in the matrix" );
+    arma_debug_check( (n_eigvals + 1 >= X.n_rows), "eigs_gen(): n_eigvals + 1 must be less than the number of rows in the matrix" );
     
     // If the matrix is empty, the case is trivial.
-    if( (p.get_n_cols() == 0) || (n_eigvals == 0) ) // We already know n_cols == n_rows.
+    if( (X.n_cols == 0) || (n_eigvals == 0) ) // We already know n_cols == n_rows.
       {
       eigval.reset();
       eigvec.reset();
@@ -674,7 +675,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     podarray<blas_int> iparam, ipntr;
     podarray<T> rwork;
     
-    run_aupd(n_eigvals, which, p, false /* gen, not sym */, n, tol, resid, ncv, v, ldv, iparam, ipntr, workd, workl, lworkl, rwork, info);
+    run_aupd(n_eigvals, which, X, false /* gen, not sym */, n, tol, resid, ncv, v, ldv, iparam, ipntr, workd, workl, lworkl, rwork, info);
     
     if(info != 0)
       {
@@ -715,7 +716,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     {
     arma_ignore(eigval);
     arma_ignore(eigvec);
-    arma_ignore(X);
+    arma_ignore(X_expr);
     arma_ignore(n_eigvals);
     arma_ignore(form_str);
     arma_ignore(default_tol);
@@ -1285,12 +1286,12 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
 
 
 
-template<typename eT, typename T, typename T1>
+template<typename eT, typename T>
 inline
 void
 sp_auxlib::run_aupd
   (
-  const uword n_eigvals, char* which, const SpProxy<T1>& p, const bool sym,
+  const uword n_eigvals, char* which, const SpMat<T>& X, const bool sym,
   blas_int& n, eT& tol,
   podarray<T>& resid, blas_int& ncv, podarray<T>& v, blas_int& ldv,
   podarray<blas_int>& iparam, podarray<blas_int>& ipntr,
@@ -1308,7 +1309,7 @@ sp_auxlib::run_aupd
     // where we call saupd()/naupd() many times.
     blas_int ido = 0; // This must be 0 for the first call.
     char bmat = 'I'; // We are considering the standard eigenvalue problem.
-    n = p.get_n_rows(); // The size of the matrix.
+    n = X.n_rows; // The size of the matrix.
     blas_int nev = n_eigvals;
     
     resid.set_size(n);
@@ -1379,8 +1380,8 @@ sp_auxlib::run_aupd
           Col<T> in(workd.memptr() + ipntr(0) - 1, n, false /* don't copy */);
           
           out.zeros();
-          typename SpProxy<T1>::const_iterator_type x_it     = p.begin();
-          typename SpProxy<T1>::const_iterator_type x_it_end = p.end();
+          typename SpMat<T>::const_iterator x_it     = X.begin();
+          typename SpMat<T>::const_iterator x_it_end = X.end();
           
           while(x_it != x_it_end)
             {
@@ -1422,7 +1423,7 @@ sp_auxlib::run_aupd
   #else
     arma_ignore(n_eigvals);
     arma_ignore(which);
-    arma_ignore(p);
+    arma_ignore(X);
     arma_ignore(sym);
     arma_ignore(n);
     arma_ignore(tol);
@@ -1439,3 +1440,107 @@ sp_auxlib::run_aupd
     arma_ignore(info);
   #endif
   }
+
+
+
+template<typename eT>
+inline
+bool
+sp_auxlib::rudimentary_sym_check(const SpMat<eT>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(X.n_rows != X.n_cols)  { return false; }
+  
+  const eT tol = eT(10000) * std::numeric_limits<eT>::epsilon();  // allow some leeway
+  
+  typename SpMat<eT>::const_iterator it     = X.begin();
+  typename SpMat<eT>::const_iterator it_end = X.end();
+  
+  const uword n_check_limit = (std::max)( uword(2), uword(X.n_nonzero/100) );
+  
+  uword n_check = 1;
+  
+  while( (it != it_end) && (n_check <= n_check_limit) )
+    {
+    const uword it_row = it.row();
+    const uword it_col = it.col();
+    
+    if(it_row != it_col)
+      {
+      const eT A = (*it);
+      const eT B = X.at( it_col, it_row );  // deliberately swapped
+      
+      const eT C = (std::max)(std::abs(A), std::abs(B));
+      
+      const eT delta = std::abs(A - B);
+     
+      if(( (delta <= tol) || (delta <= (C * tol)) ) == false)  { return false; }
+      
+      ++n_check;
+      }
+    
+    ++it;
+    }
+  
+  return true;
+  }
+
+
+
+template<typename T>
+inline
+bool
+sp_auxlib::rudimentary_sym_check(const SpMat< std::complex<T> >& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  // NOTE: the function name is a misnomer, as it checks for hermitian complex matrices;
+  // NOTE: for simplicity of use, the function name is the same as for real matrices
+  
+  typedef typename std::complex<T> eT;
+  
+  if(X.n_rows != X.n_cols)  { return false; }
+  
+  const T tol = T(10000) * std::numeric_limits<T>::epsilon();  // allow some leeway
+  
+  typename SpMat<eT>::const_iterator it     = X.begin();
+  typename SpMat<eT>::const_iterator it_end = X.end();
+  
+  const uword n_check_limit = (std::max)( uword(2), uword(X.n_nonzero/100) );
+  
+  uword n_check = 1;
+  
+  while( (it != it_end) && (n_check <= n_check_limit) )
+    {
+    const uword it_row = it.row();
+    const uword it_col = it.col();
+    
+    if(it_row != it_col)
+      {
+      const eT A = (*it);
+      const eT B = X.at( it_col, it_row );  // deliberately swapped
+      
+      const T C_real = (std::max)(std::abs(A.real()), std::abs(B.real()));
+      const T C_imag = (std::max)(std::abs(A.imag()), std::abs(B.imag()));
+      
+      const T delta_real = std::abs(A.real() - B.real());
+      const T delta_imag = std::abs(A.imag() + B.imag());  // take into account the conjugate
+      
+      const bool okay_real = ( (delta_real <= tol) || (delta_real <= (C_real * tol)) );
+      const bool okay_imag = ( (delta_imag <= tol) || (delta_imag <= (C_imag * tol)) );
+      
+      if( (okay_real == false) || (okay_imag == false) )  { return false; }
+      
+      ++n_check;
+      }
+    
+    ++it;
+    }
+  
+  return true;
+  }
+
+
+
+//! @}

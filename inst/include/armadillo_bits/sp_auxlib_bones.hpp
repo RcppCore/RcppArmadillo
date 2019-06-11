@@ -36,11 +36,11 @@ class sp_auxlib
   template<typename eT, typename T1>
   inline static bool eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, const uword n_eigvals, const char* form_str, const eT default_tol);
   
-  template<typename eT, typename T1>
-  inline static bool eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, const uword n_eigvals, const char* form_str, const eT default_tol);
+  template<typename eT>
+  inline static bool eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X, const uword n_eigvals, const char* form_str, const eT default_tol);
   
-  template<typename eT, typename T1>
-  inline static bool eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, const uword n_eigvals, const char* form_str, const eT default_tol);
+  template<typename eT>
+  inline static bool eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X, const uword n_eigvals, const char* form_str, const eT default_tol);
   
   //
   // eigs_gen()
@@ -48,11 +48,11 @@ class sp_auxlib
   template<typename T, typename T1>
   inline static bool eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase<T, T1>& X, const uword n_eigvals, const char* form_str, const T default_tol);
   
-  template<typename T, typename T1>
-  inline static bool eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase<T, T1>& X, const uword n_eigvals, const char* form_str, const T default_tol);
+  template<typename T>
+  inline static bool eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpMat<T>& X, const uword n_eigvals, const char* form_str, const T default_tol);
   
-  template<typename T, typename T1>
-  inline static bool eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase<T, T1>& X, const uword n_eigvals, const char* form_str, const T default_tol);
+  template<typename T>
+  inline static bool eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpMat<T>& X, const uword n_eigvals, const char* form_str, const T default_tol);
   
   template<typename T, typename T1>
   inline static bool eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase< std::complex<T>, T1>& X, const uword n_eigvals, const char* form_str, const T default_tol);
@@ -87,15 +87,21 @@ class sp_auxlib
   // all of the extra variables are later used by seupd()/neupd(), but those
   // functions are very different and we can't combine their code
   
-  template<typename eT, typename T, typename T1>
+  template<typename eT, typename T>
   inline static void run_aupd
     (
-    const uword n_eigvals, char* which, const SpProxy<T1>& p, const bool sym,
+    const uword n_eigvals, char* which, const SpMat<T>& X, const bool sym,
     blas_int& n, eT& tol,
     podarray<T>& resid, blas_int& ncv, podarray<T>& v, blas_int& ldv,
     podarray<blas_int>& iparam, podarray<blas_int>& ipntr,
     podarray<T>& workd, podarray<T>& workl, blas_int& lworkl, podarray<eT>& rwork,
     blas_int& info
     );
-
+  
+  
+  template<typename eT>
+  inline static bool rudimentary_sym_check(const SpMat<eT>& X);
+  
+  template<typename T>
+  inline static bool rudimentary_sym_check(const SpMat< std::complex<T> >& X);
   };
