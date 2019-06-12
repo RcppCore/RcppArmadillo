@@ -5,7 +5,7 @@
 
 \section{Changes in RcppArmadillo version 0.9.500.2.0 (2019-06-11)}{
   \itemize{
-    \item Upgraded to Armadillo release 9.500.2
+    \item Upgraded to Armadillo release 9.500.2 (Riot Compact)
     \itemize{
       \item Expanded \code{solve()} with \code{solve_opts::likely_sympd}
       to indicate that the given matrix is likely positive definite 
