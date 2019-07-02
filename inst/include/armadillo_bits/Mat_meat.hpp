@@ -6687,6 +6687,20 @@ Mat<eT>::replace(const eT old_val, const eT new_val)
 
 
 
+template<typename eT>
+inline
+const Mat<eT>&
+Mat<eT>::clean(const typename get_pod_type<eT>::result threshold)
+  {
+  arma_extra_debug_sigprint();
+  
+  arrayops::clean(memptr(), n_elem, threshold);
+  
+  return *this;
+  }
+
+
+
 //! fill the matrix with the specified value
 template<typename eT>
 inline
@@ -8066,14 +8080,17 @@ inline
 typename Mat<eT>::row_col_iterator&
 Mat<eT>::row_col_iterator::operator++()
   {
-  current_ptr++;
-  current_row++;
-  
-  // Check to see if we moved a column.
-  if(current_row == M->n_rows)
+  if(current_col < M->n_cols)
     {
-    current_col++;
-    current_row = 0;
+    current_ptr++;
+    current_row++;
+    
+    // Check to see if we moved a column.
+    if(current_row == M->n_rows)
+      {
+      current_col++;
+      current_row = 0;
+      }
     }
   
   return *this;
@@ -8268,14 +8285,17 @@ inline
 typename Mat<eT>::const_row_col_iterator&
 Mat<eT>::const_row_col_iterator::operator++()
   {
-  current_ptr++;
-  current_row++;
-  
-  // Check to see if we moved a column.
-  if(current_row == M->n_rows)
+  if(current_col < M->n_cols)
     {
-    current_col++;
-    current_row = 0;
+    current_ptr++;
+    current_row++;
+    
+    // Check to see if we moved a column.
+    if(current_row == M->n_rows)
+      {
+      current_col++;
+      current_row = 0;
+      }
     }
   
   return *this;

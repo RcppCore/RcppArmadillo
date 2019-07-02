@@ -916,6 +916,26 @@ subview<eT>::replace(const eT old_val, const eT new_val)
 template<typename eT>
 inline
 void
+subview<eT>::clean(const typename get_pod_type<eT>::result threshold)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview<eT>& s = *this;
+  
+  const uword s_n_cols = s.n_cols;
+  const uword s_n_rows = s.n_rows;
+  
+  for(uword ucol=0; ucol < s_n_cols; ++ucol)
+    {
+    arrayops::clean( s.colptr(ucol), s_n_rows, threshold );
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
 subview<eT>::fill(const eT val)
   {
   arma_extra_debug_sigprint();

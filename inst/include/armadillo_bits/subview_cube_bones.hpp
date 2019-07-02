@@ -102,6 +102,8 @@ class subview_cube : public BaseCube<eT, subview_cube<eT> >
   
   inline void replace(const eT old_val, const eT new_val);
   
+  inline void clean(const pod_type threshold);
+  
   inline void fill(const eT val);
   inline void zeros();
   inline void ones();
