@@ -121,7 +121,7 @@ cppFunction(code=src, depends="RcppArmadillo")
 
 
 fastLmPureDotCall <- function(X, y) {
-    .Call("RcppArmadillo_fastLm", X, y, PACKAGE = "RcppArmadillo")
+    .Call("_RcppArmadillo_fastLm_impl", X, y, PACKAGE = "RcppArmadillo")
 }
 
 
