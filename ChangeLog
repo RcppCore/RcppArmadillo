@@ -1,3 +1,11 @@
+2019-07-02  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.9.599.2.0 [github-only]
+        * inst/NEWS.Rd: Release 0.9.499.2.0
+
+	* inst/include/armadillo: Armadillo 9.600-RC2
+	* inst/include/armadillo_bits/*: Idem
+
 2019-06-11  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.9.500.2.0

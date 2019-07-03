@@ -3958,6 +3958,20 @@ Cube<eT>::replace(const eT old_val, const eT new_val)
 
 
 
+template<typename eT>
+inline
+const Cube<eT>&
+Cube<eT>::clean(const typename get_pod_type<eT>::result threshold)
+  {
+  arma_extra_debug_sigprint();
+  
+  arrayops::clean(memptr(), n_elem, threshold);
+  
+  return *this;
+  }
+
+
+
 //! fill the cube with the specified value
 template<typename eT>
 inline

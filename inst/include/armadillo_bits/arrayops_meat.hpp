@@ -115,6 +115,55 @@ arrayops::replace(eT* mem, const uword n_elem, const eT old_val, const eT new_va
 
 
 
+template<typename eT>
+arma_hot
+inline
+void
+arrayops::clean(eT* mem, const uword n_elem, const eT abs_limit, const typename arma_not_cx<eT>::result* junk)
+  {
+  arma_ignore(junk);
+  
+  for(uword i=0; i<n_elem; ++i)
+    {
+    eT& val = mem[i];
+    
+    val = (std::abs(val) <= abs_limit) ? eT(0) : val;
+    }
+  }
+
+
+
+template<typename T>
+arma_hot
+inline
+void
+arrayops::clean(std::complex<T>* mem, const uword n_elem, const T abs_limit)
+  {
+  typedef typename std::complex<T> eT;
+  
+  for(uword i=0; i<n_elem; ++i)
+    {
+    eT& val = mem[i];
+    
+    T val_real = std::real(val);
+    T val_imag = std::imag(val);
+    
+    if(std::abs(val_real) <= abs_limit)
+      {
+      val_imag = (std::abs(val_imag) <= abs_limit) ? T(0) : val_imag;
+      
+      val = std::complex<T>(T(0), val_imag);
+      }
+    else
+    if(std::abs(val_imag) <= abs_limit)
+      {
+      val = std::complex<T>(val_real, T(0));
+      }
+    }
+  }
+
+
+
 template<typename out_eT, typename in_eT>
 arma_hot
 arma_inline

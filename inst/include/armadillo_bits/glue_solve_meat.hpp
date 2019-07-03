@@ -206,7 +206,8 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
     {
     arma_extra_debug_print("glue_solve_gen::apply(): detected non-square system");
     
-    if(equilibrate)  { arma_debug_warn( "solve(): option 'equilibrate' ignored for non-square matrix" ); }
+    if(equilibrate)   { arma_debug_warn( "solve(): option 'equilibrate' ignored for non-square matrix" );  }
+    if(likely_sympd)  { arma_debug_warn( "solve(): option 'likely_sympd' ignored for non-square matrix" ); }
     
     if(fast)
       {
@@ -261,23 +262,26 @@ glue_solve_tri::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
   {
   arma_extra_debug_sigprint();
   
-  const bool fast        = bool(flags & solve_opts::flag_fast       );
-  const bool equilibrate = bool(flags & solve_opts::flag_equilibrate);
-  const bool no_approx   = bool(flags & solve_opts::flag_no_approx  );
-  const bool triu        = bool(flags & solve_opts::flag_triu       );
-  const bool tril        = bool(flags & solve_opts::flag_tril       );
+  const bool fast         = bool(flags & solve_opts::flag_fast        );
+  const bool equilibrate  = bool(flags & solve_opts::flag_equilibrate );
+  const bool no_approx    = bool(flags & solve_opts::flag_no_approx   );
+  const bool triu         = bool(flags & solve_opts::flag_triu        );
+  const bool tril         = bool(flags & solve_opts::flag_tril        );
+  const bool likely_sympd = bool(flags & solve_opts::flag_likely_sympd);
   
   arma_extra_debug_print("glue_solve_tri::apply(): enabled flags:");
   
-  if(fast       )  { arma_extra_debug_print("fast");        }
-  if(equilibrate)  { arma_extra_debug_print("equilibrate"); }
-  if(no_approx  )  { arma_extra_debug_print("no_approx");   }
-  if(triu       )  { arma_extra_debug_print("triu");        }
-  if(tril       )  { arma_extra_debug_print("tril");        }
+  if(fast        )  { arma_extra_debug_print("fast");         }
+  if(equilibrate )  { arma_extra_debug_print("equilibrate");  }
+  if(no_approx   )  { arma_extra_debug_print("no_approx");    }
+  if(triu        )  { arma_extra_debug_print("triu");         }
+  if(tril        )  { arma_extra_debug_print("tril");         }
+  if(likely_sympd)  { arma_extra_debug_print("likely_sympd"); }
   
   bool status = false;
   
-  if(equilibrate)  { arma_debug_warn("solve(): option 'equilibrate' ignored for triangular matrices"); }
+  if(equilibrate)   { arma_debug_warn("solve(): option 'equilibrate' ignored for triangular matrix");  }
+  if(likely_sympd)  { arma_debug_warn("solve(): option 'likely_sympd' ignored for triangular matrix"); }
   
   const quasi_unwrap<T1> U(A_expr.get_ref());
   const Mat<eT>& A     = U.M;

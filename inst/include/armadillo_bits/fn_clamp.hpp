@@ -55,4 +55,43 @@ clamp(const BaseCube<typename T1::elem_type,T1>& X, const typename T1::elem_type
 
 
 
+template<typename T1>
+arma_warn_unused
+inline
+typename
+enable_if2
+  <
+  is_cx<typename T1::elem_type>::no,
+  SpMat<typename T1::elem_type>
+  >::result
+clamp(const SpBase<typename T1::elem_type,T1>& X, const typename T1::elem_type min_val, const typename T1::elem_type max_val)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  arma_debug_check( (min_val > max_val), "clamp(): min_val has to be smaller than max_val" );
+  
+  SpMat<eT> out = X.get_ref();
+  
+  out.sync();
+  
+  const uword N = out.n_nonzero;
+  
+  eT* out_values = access::rwp(out.values);
+  
+  for(uword i=0; i<N; ++i)
+    {
+    eT& out_val = out_values[i];
+    
+    out_val = (out_val < min_val) ? min_val : ( (out_val > max_val) ? max_val : out_val );
+    }
+  
+  if( (min_val == eT(0)) || (max_val == eT(0)) )  { out.remove_zeros(); }
+  
+  return out;
+  }
+
+
+
 //! @}

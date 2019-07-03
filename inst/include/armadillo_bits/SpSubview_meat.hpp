@@ -144,6 +144,10 @@ SpSubview<eT>::operator*=(const eT val)
   {
   arma_extra_debug_sigprint();
   
+  if(val == eT(0))  { (*this).zeros(); return *this; }
+  
+  if((n_elem == 0) || (n_nonzero == 0))  { return *this; }
+  
   m.sync_csc();
   m.invalidate_cache();
   
@@ -267,97 +271,7 @@ SpSubview<eT>::operator=(const Base<eT, T1>& in)
   
   arma_debug_assert_same_size(n_rows, n_cols, U.M.n_rows, U.M.n_cols, "insertion into sparse submatrix");
   
-  if(n_elem == 0)  { return *this; }
-  
-  
-  // generate matrix B
-  
-  const eT*   U_M_memptr = U.M.memptr();
-  const uword U_M_n_elem = U.M.n_elem;
-  
-  uword B_n_nonzero = 0;
-  
-  for(uword i=0; i < U_M_n_elem; ++i)
-    {
-    B_n_nonzero += (U_M_memptr[i] != eT(0)) ? uword(1) : uword(0);
-    }
-  
-  SpMat<eT> B(arma_reserve_indicator(), m.n_rows, m.n_cols, B_n_nonzero);
-  
-  uword B_count = 0;
-  
-  for(uword col=0; col < U.M.n_cols; ++col)
-  for(uword row=0; row < U.M.n_rows; ++row)
-    {
-    const eT val = (*U_M_memptr);  U_M_memptr++;
-    
-    if(val != eT(0))
-      {
-      access::rw(B.values[B_count])      = val;
-      access::rw(B.row_indices[B_count]) = row + aux_row1;
-      access::rw(B.col_ptrs[col + aux_col1 + 1])++;
-      ++B_count;
-      }
-    }
-  
-  for(uword i=0; i < B.n_cols; ++i)
-    {
-    access::rw(B.col_ptrs[i + 1]) += B.col_ptrs[i];
-    }
-  
-  
-  if(n_nonzero == 0)
-    {
-    //// insert into submatrix
-    
-    //access::rw(m) = m + B;
-    spglue_merge::apply(access::rw(m), m, B);
-    }
-  else
-    {
-    // generate matrix A
-    
-    const uword row_start = aux_row1;
-    const uword col_start = aux_col1;
-    
-    const uword row_end   = aux_row1 + n_rows - 1;
-    const uword col_end   = aux_col1 + n_cols - 1;
-    
-    SpMat<eT> A(arma_reserve_indicator(), m.n_rows, m.n_cols, m.n_nonzero - n_nonzero);
-    
-    typename SpMat<eT>::const_iterator m_it     = m.begin();
-    typename SpMat<eT>::const_iterator m_it_end = m.end();
-    
-    uword A_count = 0;
-    
-    for(; m_it != m_it_end; ++m_it)
-      {
-      const uword m_it_row = m_it.row();
-      const uword m_it_col = m_it.col();
-      
-      const bool inside_box = ((m_it_row >= row_start) && (m_it_row <= row_end)) && ((m_it_col >= col_start) && (m_it_col <= col_end));
-      
-      if(inside_box == false)
-        {
-        access::rw(A.values[A_count])      = (*m_it);
-        access::rw(A.row_indices[A_count]) = m_it_row;
-        access::rw(A.col_ptrs[m_it_col + 1])++;
-        ++A_count;
-        }
-      }
-    
-    for(uword i=0; i < A.n_cols; ++i)
-      {
-      access::rw(A.col_ptrs[i + 1]) += A.col_ptrs[i];
-      }
-    
-    //// insert into submatrix
-    
-    //access::rw(m) = A + B;
-    spglue_merge::apply(access::rw(m), A, B);
-    }
-  
-  access::rw(n_nonzero) = B_n_nonzero;
+  spglue_merge::subview_merge(*this, U.M);
   
   return *this;
   }
@@ -477,89 +391,7 @@ SpSubview<eT>::operator_equ_common(const SpBase<eT, T1>& in)
   
   arma_debug_assert_same_size(n_rows, n_cols, U.M.n_rows, U.M.n_cols, "insertion into sparse submatrix");
   
-  if(n_elem == 0)  { return *this; }
-  
-  
-  // generate matrix B
-  
-  const uword U_M_n_nonzero = U.M.n_nonzero;
-  
-  SpMat<eT> B(arma_reserve_indicator(), m.n_rows, m.n_cols, U_M_n_nonzero);
-  
-  typename SpMat<eT>::const_iterator U_it = U.M.begin();
-  
-  for(uword i=0; i < U_M_n_nonzero; ++i)
-    {
-    access::rw(B.row_indices[i]) = U_it.row() + aux_row1;
-    access::rw(B.col_ptrs[U_it.col() + aux_col1 + 1])++;
-    ++U_it;
-    }
-  
-  for(uword i=0; i < B.n_cols; ++i)
-    {
-    access::rw(B.col_ptrs[i + 1]) += B.col_ptrs[i];
-    }
-  
-  const eT* B_values_orig = B.values;
-  
-  access::rw(B.values) = U.M.values;  // copy pointer instead of the entire array
-  
-  
-  if(n_nonzero == 0)
-    {
-    //// insert into submatrix
-    
-    //access::rw(m) = m + B;
-    spglue_merge::apply(access::rw(m), m, B);
-    }
-  else
-    {
-    // generate matrix A
-    
-    const uword row_start = aux_row1;
-    const uword col_start = aux_col1;
-    
-    const uword row_end   = aux_row1 + n_rows - 1;
-    const uword col_end   = aux_col1 + n_cols - 1;
-    
-    SpMat<eT> A(arma_reserve_indicator(), m.n_rows, m.n_cols, m.n_nonzero - n_nonzero);
-    
-    typename SpMat<eT>::const_iterator m_it     = m.begin();
-    typename SpMat<eT>::const_iterator m_it_end = m.end();
-    
-    uword A_count = 0;
-    
-    for(; m_it != m_it_end; ++m_it)
-      {
-      const uword m_it_row = m_it.row();
-      const uword m_it_col = m_it.col();
-      
-      const bool inside_box = ((m_it_row >= row_start) && (m_it_row <= row_end)) && ((m_it_col >= col_start) && (m_it_col <= col_end));
-      
-      if(inside_box == false)
-        {
-        access::rw(A.values[A_count])      = (*m_it);
-        access::rw(A.row_indices[A_count]) = m_it_row;
-        access::rw(A.col_ptrs[m_it_col + 1])++;
-        ++A_count;
-        }
-      }
-    
-    for(uword i=0; i < A.n_cols; ++i)
-      {
-      access::rw(A.col_ptrs[i + 1]) += A.col_ptrs[i];
-      }
-    
-    //// insert into submatrix
-    
-    //access::rw(m) = A + B;
-    spglue_merge::apply(access::rw(m), A, B);
-    }
-  
-  
-  access::rw(B.values) = B_values_orig;  // restore original pointer
-  
-  access::rw(n_nonzero) = U_M_n_nonzero;
+  spglue_merge::subview_merge(*this, U.M);
   
   return *this;
   }
@@ -889,6 +721,34 @@ SpSubview<eT>::replace(const eT old_val, const eT new_val)
 template<typename eT>
 inline
 void
+SpSubview<eT>::clean(const typename get_pod_type<eT>::result threshold)
+  {
+  arma_extra_debug_sigprint();
+  
+  if((n_elem == 0) || (n_nonzero == 0))  { return; }
+  
+  // TODO: replace with a more efficient implementation
+  
+  SpMat<eT> tmp(*this);
+  
+  tmp.clean(threshold);
+  
+  if(is_cx<eT>::yes)
+    {
+    (*this).operator=(tmp);
+    }
+  else
+  if(tmp.n_nonzero != n_nonzero)
+    {
+    (*this).operator=(tmp);
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
 SpSubview<eT>::fill(const eT val)
   {
   arma_extra_debug_sigprint();
@@ -916,7 +776,52 @@ SpSubview<eT>::zeros()
   {
   arma_extra_debug_sigprint();
   
-  (*this).operator*=(eT(0));
+  if((n_elem == 0) || (n_nonzero == 0))  { return; }
+  
+  if((m.n_nonzero - n_nonzero) == 0)
+    {
+    access::rw(m).zeros();
+    access::rw(n_nonzero) = 0;
+    return;
+    }
+  
+  SpMat<eT> tmp(arma_reserve_indicator(), m.n_rows, m.n_cols, m.n_nonzero - n_nonzero);
+  
+  const uword sv_row_start = aux_row1;
+  const uword sv_col_start = aux_col1;
+  
+  const uword sv_row_end   = aux_row1 + n_rows - 1;
+  const uword sv_col_end   = aux_col1 + n_cols - 1;
+  
+  typename SpMat<eT>::const_iterator m_it     = m.begin();
+  typename SpMat<eT>::const_iterator m_it_end = m.end();
+  
+  uword tmp_count = 0;
+  
+  for(; m_it != m_it_end; ++m_it)
+    {
+    const uword m_it_row = m_it.row();
+    const uword m_it_col = m_it.col();
+    
+    const bool inside_box = ((m_it_row >= sv_row_start) && (m_it_row <= sv_row_end)) && ((m_it_col >= sv_col_start) && (m_it_col <= sv_col_end));
+    
+    if(inside_box == false)
+      {
+      access::rw(tmp.values[tmp_count])      = (*m_it);
+      access::rw(tmp.row_indices[tmp_count]) = m_it_row;
+      access::rw(tmp.col_ptrs[m_it_col + 1])++;
+      ++tmp_count;
+      }
+    }
+  
+  for(uword i=0; i < tmp.n_cols; ++i)
+    {
+    access::rw(tmp.col_ptrs[i + 1]) += tmp.col_ptrs[i];
+    }
+  
+  access::rw(m).steal_mem(tmp);
+  
+  access::rw(n_nonzero) = 0;
   }
 
 

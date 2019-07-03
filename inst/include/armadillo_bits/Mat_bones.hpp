@@ -461,6 +461,8 @@ class Mat : public Base< eT, Mat<eT> >
   
   inline const Mat& replace(const eT old_val, const eT new_val);
   
+  inline const Mat& clean(const pod_type threshold);
+  
   inline const Mat& fill(const eT val);
   
   template<typename fill_type>

@@ -4202,6 +4202,27 @@ SpMat<eT>::replace(const eT old_val, const eT new_val)
 template<typename eT>
 inline
 const SpMat<eT>&
+SpMat<eT>::clean(const typename get_pod_type<eT>::result threshold)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(n_nonzero == 0)  { return *this; }
+  
+  sync_csc();
+  invalidate_cache();
+  
+  arrayops::clean(access::rwp(values), n_nonzero, threshold);
+  
+  remove_zeros();
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+inline
+const SpMat<eT>&
 SpMat<eT>::zeros()
   {
   arma_extra_debug_sigprint();
@@ -4989,7 +5010,7 @@ SpMat<eT>::init(const SpMat<eT>& x)
   #if defined(ARMA_USE_OPENMP)
     if(x.sync_state == 1)
       {
-      #pragma omp critical
+      #pragma omp critical (arma_SpMat_init)
       if(x.sync_state == 1)
         {
         (*this).init(x.cache);
@@ -6536,7 +6557,7 @@ SpMat<eT>::sync_cache() const
   #if defined(ARMA_USE_OPENMP)
     if(sync_state == 0)
       {
-      #pragma omp critical
+      #pragma omp critical (arma_SpMat_sync)
       if(sync_state == 0)
         {
         cache      = (*this);
@@ -6585,7 +6606,7 @@ SpMat<eT>::sync_csc() const
   #if defined(ARMA_USE_OPENMP)
     if(sync_state == 1)
       {
-      #pragma omp critical
+      #pragma omp critical (arma_SpMat_sync)
       if(sync_state == 1)
         {
         SpMat<eT> tmp(cache);

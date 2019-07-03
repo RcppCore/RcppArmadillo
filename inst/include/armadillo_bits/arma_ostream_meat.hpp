@@ -731,13 +731,44 @@ arma_ostream::print(std::ostream& o, const SpMat<eT>& m, const bool modify)
   o.unsetf(ios::scientific);
   o.setf(ios::right);
   o.setf(ios::fixed);
-  o.precision(2);
   
-  const uword m_n_nonzero = m.n_nonzero;
+  const uword  m_n_nonzero = m.n_nonzero;
+  const double density     = (m.n_elem > 0) ? (double(m_n_nonzero) / double(m.n_elem) * double(100)) : double(0);
   
-  o << "[matrix size: " << m.n_rows << 'x' << m.n_cols << "; n_nonzero: " << m_n_nonzero
-    << "; density: " << ((m.n_elem > 0) ? (double(m_n_nonzero) / double(m.n_elem) * double(100)) : double(0))
-    << "%]\n\n";
+  o << "[matrix size: " << m.n_rows << 'x' << m.n_cols << "; n_nonzero: " << m_n_nonzero;
+  
+  if(density == double(0))
+    {
+    o.precision(0);
+    }
+  else
+  if(density >= (double(10.0)-std::numeric_limits<double>::epsilon()))
+    {
+    o.precision(1);
+    }
+  else
+  if(density > (double(0.01)-std::numeric_limits<double>::epsilon()))
+    {
+    o.precision(2);
+    }
+  else
+  if(density > (double(0.001)-std::numeric_limits<double>::epsilon()))
+    {
+    o.precision(3);
+    }
+  else
+  if(density > (double(0.0001)-std::numeric_limits<double>::epsilon()))
+    {
+    o.precision(4);
+    }
+  else
+    {
+    o.unsetf(ios::fixed);
+    o.setf(ios::scientific);
+    o.precision(2);
+    }
+  
+  o << "; density: " << density  << "%]\n\n";
   
   if(modify == false) { stream_state.restore(o); }
   
