@@ -3,9 +3,9 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.9.599.2.0 (2019-07-02)}{
+\section{Changes in RcppArmadillo version 0.9.599.3.0 (2019-07-09)}{
   \itemize{
-    \item Upgraded to Armadillo release 9.600-RC2 (Riot Compact)
+    \item Upgraded to Armadillo release 9.600-RC3 (Riot Compact)
     \itemize{
       \item faster handling of sparse submatrices
       \item faster handling of sparse matrices by \code{symmatu()} and \code{symmatl()}

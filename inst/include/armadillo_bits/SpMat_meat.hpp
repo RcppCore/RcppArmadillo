@@ -2791,17 +2791,9 @@ SpMat<eT>::swap_rows(const uword in_row1, const uword in_row2)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check
-    (
-    (in_row1 >= n_rows) || (in_row2 >= n_rows),
-    "SpMat::swap_rows(): out of bounds"
-    );
-
-  // Sanity check.
-  if (in_row1 == in_row2)
-    {
-    return;
-    }
+  arma_debug_check( ((in_row1 >= n_rows) || (in_row2 >= n_rows)), "SpMat::swap_rows(): out of bounds" );
+  
+  if(in_row1 == in_row2)  { return; }
   
   sync_csc();
   invalidate_cache();
@@ -2904,13 +2896,25 @@ SpMat<eT>::swap_cols(const uword in_col1, const uword in_col2)
   {
   arma_extra_debug_sigprint();
   
-  // slow but works
-  for(uword lrow = 0; lrow < n_rows; ++lrow)
-    {
-    const eT tmp = at(lrow, in_col1);
-    at(lrow, in_col1) = eT( at(lrow, in_col2) );
-    at(lrow, in_col2) = tmp;
-    }
+  arma_debug_check( ((in_col1 >= n_cols) || (in_col2 >= n_cols)), "SpMat::swap_cols(): out of bounds" );
+  
+  if(in_col1 == in_col2)  { return; }
+  
+  // TODO: this is a rudimentary implementation
+  
+  SpMat<eT> tmp = (*this);
+  
+  tmp.col(in_col1) = (*this).col(in_col2);
+  tmp.col(in_col2) = (*this).col(in_col1);
+  
+  steal_mem(tmp);
+  
+  // for(uword lrow = 0; lrow < n_rows; ++lrow)
+  //   {
+  //   const eT tmp = at(lrow, in_col1);
+  //   at(lrow, in_col1) = eT( at(lrow, in_col2) );
+  //   at(lrow, in_col2) = tmp;
+  //   }
   }
 
 
@@ -6239,6 +6243,28 @@ inline
 arma_hot
 arma_warn_unused
 bool
+SpMat<eT>::try_set_value_csc(const uword in_row, const uword in_col, const eT in_val)
+  {
+  const eT* val_ptr = find_value_csc(in_row, in_col);
+  
+  if(val_ptr == NULL)  { return (in_val == eT(0)); }
+  
+  if(in_val == eT(0))  { return false; }
+  
+  access::rw(*val_ptr) = in_val;
+  
+  invalidate_cache();
+  
+  return true;
+  }
+
+
+
+template<typename eT>
+inline
+arma_hot
+arma_warn_unused
+bool
 SpMat<eT>::try_add_value_csc(const uword in_row, const uword in_col, const eT in_val)
   {
   const eT* val_ptr = find_value_csc(in_row, in_col);
@@ -6518,6 +6544,7 @@ SpMat<eT>::invalidate_cache() const
   if(sync_state == 0)  { return; }
   
   cache.reset();
+  
   sync_state = 0;
   }
 
@@ -6555,33 +6582,48 @@ SpMat<eT>::sync_cache() const
   // data races are prevented via the mutex
   
   #if defined(ARMA_USE_OPENMP)
+    {
     if(sync_state == 0)
       {
-      #pragma omp critical (arma_SpMat_sync)
-      if(sync_state == 0)
+      #pragma omp critical (arma_SpMat_cache)
         {
-        cache      = (*this);
-        sync_state = 2;
+        sync_cache_simple();
         }
       }
+    }
   #elif defined(ARMA_USE_CXX11)
+    {
     if(sync_state == 0)
       {
       cache_mutex.lock();
-      if(sync_state == 0)
-        {
-        cache      = (*this);
-        sync_state = 2;
-        }
+      
+      sync_cache_simple();
+      
       cache_mutex.unlock();
       }
+    }
   #else
-    if(sync_state == 0)
-      {
-      cache      = (*this);
-      sync_state = 2;
-      }
+    {
+    sync_cache_simple();
+    }
   #endif
+  }
+
+
+
+
+template<typename eT>
+inline
+void
+SpMat<eT>::sync_cache_simple() const
+  {
+  arma_extra_debug_sigprint();
+  
+  if(sync_state == 0)
+    {
+    cache      = (*this);
+    sync_state = 2;
+    }
   }
 
 
@@ -6606,7 +6648,7 @@ SpMat<eT>::sync_csc() const
   #if defined(ARMA_USE_OPENMP)
     if(sync_state == 1)
       {
-      #pragma omp critical (arma_SpMat_sync)
+      #pragma omp critical (arma_SpMat_cache)
       if(sync_state == 1)
         {
         SpMat<eT> tmp(cache);

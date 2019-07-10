@@ -288,7 +288,7 @@ spglue_merge::subview_merge(SpSubview<eT>& sv, const Mat<eT>& B)
     
   while(x_it_valid || y_it_valid)
     {
-    eT out_val;
+    eT out_val = eT(0);
     
     const uword x_it_row = (x_it_valid) ? uword(x_it.row()) : uword(0);
     const uword x_it_col = (x_it_valid) ? uword(x_it.col()) : uword(0);

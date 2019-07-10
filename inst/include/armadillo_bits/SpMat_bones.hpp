@@ -653,6 +653,7 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   inline arma_hot arma_warn_unused eT get_value_csc(const uword i                         ) const;
   inline arma_hot arma_warn_unused eT get_value_csc(const uword in_row, const uword in_col) const;
   
+  inline arma_hot arma_warn_unused bool try_set_value_csc(const uword in_row, const uword in_col, const eT in_val);
   inline arma_hot arma_warn_unused bool try_add_value_csc(const uword in_row, const uword in_col, const eT in_val);
   inline arma_hot arma_warn_unused bool try_sub_value_csc(const uword in_row, const uword in_col, const eT in_val);
   inline arma_hot arma_warn_unused bool try_mul_value_csc(const uword in_row, const uword in_col, const eT in_val);
@@ -677,8 +678,9 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   arma_inline void invalidate_cache() const;
   arma_inline void invalidate_csc()   const;
   
-  inline void sync_cache() const;
-  inline void sync_csc()   const;
+  inline void sync_cache()        const;
+  inline void sync_cache_simple() const;
+  inline void sync_csc()          const;
   
   
   friend class SpValProxy< SpMat<eT> >;  // allow SpValProxy to call insert_element() and delete_element()
