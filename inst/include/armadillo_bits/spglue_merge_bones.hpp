@@ -31,6 +31,9 @@ class spglue_merge
   
   template<typename eT>
   arma_hot inline static void symmat_merge(SpMat<eT>& out, const SpMat<eT>& A, const SpMat<eT>& B);
+  
+  template<typename eT>
+  arma_hot inline static void diagview_merge(SpMat<eT>& out, const SpMat<eT>& A, const SpMat<eT>& B);
   };
 
 

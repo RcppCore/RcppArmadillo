@@ -1543,6 +1543,23 @@ SpMat_MapMat_val<eT>::mul(const eT in_val)
       
       access::rw(s_parent.n_nonzero) = m_parent.get_n_nonzero();
       }
+    else
+      {
+      // element not found, ie. it's zero; zero multiplied by anything is zero, except for nan and inf
+      if(arma_isfinite(in_val) == false)
+        {
+        const eT result = eT(0) * in_val;
+        
+        if(result != eT(0))  // paranoia, in case compiling with -ffast-math
+          {
+          m_parent.set_val(index, result);
+          
+          s_parent.sync_state = 1;
+          
+          access::rw(s_parent.n_nonzero) = m_parent.get_n_nonzero();
+          }
+        }
+      }
     }
   }
 
@@ -1577,21 +1594,24 @@ SpMat_MapMat_val<eT>::div(const eT in_val)
       if(val == eT(0))  { map_ref.erase(it); }
       
       s_parent.sync_state = 1;
+      
       access::rw(s_parent.n_nonzero) = m_parent.get_n_nonzero();
       }
     else
       {
-      // silly operation, but included for completness
-      
-      const eT val = eT(0) / in_val;
-      
-      if(val != eT(0))
+      // element not found, ie. it's zero; zero divided by anything is zero, except for zero and nan
+      if( (in_val == eT(0)) || (arma_isnan(in_val)) )
         {
-        m_parent.set_val(index, val);
+        const eT result = eT(0) / in_val;
         
-        s_parent.sync_state = 1;
-        
-        access::rw(s_parent.n_nonzero) = m_parent.get_n_nonzero();
+        if(result != eT(0))  // paranoia, in case compiling with -ffast-math
+          {
+          m_parent.set_val(index, result);
+          
+          s_parent.sync_state = 1;
+          
+          access::rw(s_parent.n_nonzero) = m_parent.get_n_nonzero();
+          }
         }
       }
     }

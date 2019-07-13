@@ -681,6 +681,7 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   inline void sync_cache()        const;
   inline void sync_cache_simple() const;
   inline void sync_csc()          const;
+  inline void sync_csc_simple()   const;
   
   
   friend class SpValProxy< SpMat<eT> >;  // allow SpValProxy to call insert_element() and delete_element()
@@ -689,6 +690,7 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   friend class SpCol<eT>;
   friend class SpMat_MapMat_val<eT>;
   friend class SpSubview_MapMat_val<eT>;
+  friend class spdiagview<eT>;
   
   
   public:

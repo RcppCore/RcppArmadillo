@@ -50,12 +50,18 @@ spdiagview<eT>::operator= (const spdiagview<eT>& x)
   
   spdiagview<eT>& d = *this;
   
-  arma_debug_check( (d.n_elem != x.n_elem), "spdiagview: diagonals have incompatible lengths");
+  arma_debug_check( (d.n_elem != x.n_elem), "spdiagview: diagonals have incompatible lengths" );
   
         SpMat<eT>& d_m = const_cast< SpMat<eT>& >(d.m);
   const SpMat<eT>& x_m = x.m;
   
-  if(&d_m != &x_m)
+  if( (&d_m == &x_m) || ((d.row_offset == 0) && (d.col_offset == 0)) )
+    {
+    const Mat<eT> tmp(x);
+    
+    (*this).operator=(tmp);
+    }
+  else
     {
     const uword d_n_elem     = d.n_elem;
     const uword d_row_offset = d.row_offset;
@@ -69,12 +75,6 @@ spdiagview<eT>::operator= (const spdiagview<eT>& x)
       d_m.at(i + d_row_offset, i + d_col_offset) = x_m.at(i + x_row_offset, i + x_col_offset);
       }
     }
-  else
-    {
-    const Mat<eT> tmp = x;
-    
-    (*this).operator=(tmp);
-    }
   }
 
 
@@ -85,6 +85,8 @@ void
 spdiagview<eT>::operator+=(const eT val)
   {
   arma_extra_debug_sigprint();
+  
+  if(val == eT(0))  { return; }
   
   SpMat<eT>& t_m = const_cast< SpMat<eT>& >(m);
   
@@ -107,6 +109,8 @@ spdiagview<eT>::operator-=(const eT val)
   {
   arma_extra_debug_sigprint();
   
+  if(val == eT(0))  { return; }
+  
   SpMat<eT>& t_m = const_cast< SpMat<eT>& >(m);
   
   const uword t_n_elem     = n_elem;
@@ -127,6 +131,8 @@ void
 spdiagview<eT>::operator*=(const eT val)
   {
   arma_extra_debug_sigprint();
+  
+  if(val == eT(0))  { (*this).zeros(); return; }
   
   SpMat<eT>& t_m = const_cast< SpMat<eT>& >(m);
   
@@ -179,34 +185,48 @@ spdiagview<eT>::operator= (const Base<eT,T1>& o)
   const uword d_n_elem     = d.n_elem;
   const uword d_row_offset = d.row_offset;
   const uword d_col_offset = d.col_offset;
-    
-  const Proxy<T1> P( o.get_ref() );
+  
+  const quasi_unwrap<T1> U(o.get_ref());
+  const Mat<eT>& x     = U.M;
+  
+  const eT* x_mem = x.memptr();
   
   arma_debug_check
     (
-    ( (d_n_elem != P.get_n_elem()) || ((P.get_n_rows() != 1) && (P.get_n_cols() != 1)) ),
+    ( (d_n_elem != x.n_elem) || ((x.n_rows != 1) && (x.n_cols != 1)) ),
     "spdiagview: given object has incompatible size"
     );
   
-  if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::use_at) )
+  if( (d_row_offset == 0) && (d_col_offset == 0) )
     {
-    const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
-    const Mat<eT>& x = tmp.M;
+    SpMat<eT> tmp1;
     
-    const eT* x_mem = x.memptr();
-
+    tmp1.eye(d_m.n_rows, d_m.n_cols);
+    
+    bool has_zero = false;
+    
     for(uword i=0; i < d_n_elem; ++i)
       {
-      d_m.at(i + d_row_offset, i + d_col_offset) = x_mem[i];
+      const eT val = x_mem[i];
+      
+      access::rw(tmp1.values[i]) = val;
+      
+      if(val == eT(0))  { has_zero = true; }
       }
+    
+    if(has_zero)  { tmp1.remove_zeros(); }
+    
+    SpMat<eT> tmp2;
+    
+    spglue_merge::diagview_merge(tmp2, d_m, tmp1);
+    
+    d_m.steal_mem(tmp2);
     }
   else
     {
-    typename Proxy<T1>::ea_type Pea = P.get_ea();
-      
     for(uword i=0; i < d_n_elem; ++i)
       {
-      d_m.at(i + d_row_offset, i + d_col_offset) = Pea[i];
+      d_m.at(i + d_row_offset, i + d_col_offset) = x_mem[i];
       }
     }
   }
@@ -418,48 +438,18 @@ spdiagview<eT>::operator= (const SpBase<eT,T1>& o)
   {
   arma_extra_debug_sigprint();
   
-  spdiagview<eT>& d = *this;
-  
-  SpMat<eT>& d_m = const_cast< SpMat<eT>& >(d.m);
-  
-  const uword d_n_elem     = d.n_elem;
-  const uword d_row_offset = d.row_offset;
-  const uword d_col_offset = d.col_offset;
-  
-  const SpProxy<T1> P( o.get_ref() );
+  const unwrap_spmat<T1> U( o.get_ref() );
+  const SpMat<eT>& x   = U.M;
   
   arma_debug_check
     (
-    ( (d_n_elem != P.get_n_elem()) || ((P.get_n_rows() != 1) && (P.get_n_cols() != 1)) ),
+    ( (n_elem != x.n_elem) || ((x.n_rows != 1) && (x.n_cols != 1)) ),
     "spdiagview: given object has incompatible size"
     );
   
-  if( SpProxy<T1>::use_iterator || P.is_alias(d_m) )
-    {
-    const SpMat<eT> tmp(P.Q);
-    
-    if(tmp.n_cols == 1)
-      {
-      for(uword i=0; i < d_n_elem; ++i)  { d_m.at(i + d_row_offset, i + d_col_offset) = tmp.at(i,0); }
-      }
-    else
-    if(tmp.n_rows == 1)
-      {
-      for(uword i=0; i < d_n_elem; ++i)  { d_m.at(i + d_row_offset, i + d_col_offset) = tmp.at(0,i); }
-      }
-    }
-  else
-    {
-    if(P.get_n_cols() == 1)
-      {
-      for(uword i=0; i < d_n_elem; ++i)  { d_m.at(i + d_row_offset, i + d_col_offset) = P.at(i,0); }
-      }
-    else
-    if(P.get_n_rows() == 1)
-      {
-      for(uword i=0; i < d_n_elem; ++i)  { d_m.at(i + d_row_offset, i + d_col_offset) = P.at(0,i); }
-      }
-    }
+  const Mat<eT> tmp(x);
+  
+  (*this).operator=(tmp);
   }
 
 
@@ -693,8 +683,6 @@ spdiagview<eT>::extract(SpMat<eT>& out, const spdiagview<eT>& d)
   const uword d_row_offset = d.row_offset;
   const uword d_col_offset = d.col_offset;
   
-  d_m.sync();
-  
   Col<eT> cache(d_n_elem);
   eT* cache_mem = cache.memptr();
   
@@ -706,7 +694,7 @@ spdiagview<eT>::extract(SpMat<eT>& out, const spdiagview<eT>& d)
     
     cache_mem[i] = val;
     
-    d_n_nonzero += ( val != eT(0)) ? uword(1) : uword(0);
+    d_n_nonzero += (val != eT(0)) ? uword(1) : uword(0);
     }
   
   out.reserve(d_n_elem, 1, d_n_nonzero);
@@ -747,13 +735,11 @@ spdiagview<eT>::extract(Mat<eT>& out, const spdiagview<eT>& in)
   const uword in_row_offset = in.row_offset;
   const uword in_col_offset = in.col_offset;
   
-  in_m.sync();
-  
   eT* out_mem = out.memptr();
   
   for(uword i=0; i < in_n_elem; ++i)
     {
-    out_mem[i] = in_m.at(i + in_row_offset, i + in_col_offset );
+    out_mem[i] = in_m.at(i + in_row_offset, i + in_col_offset);
     }
   }
 
@@ -874,13 +860,68 @@ spdiagview<eT>::fill(const eT val)
   {
   arma_extra_debug_sigprint();
   
-  SpMat<eT>& x = const_cast< SpMat<eT>& >(m);
-  
-  const uword local_n_elem = n_elem;
-  
-  for(uword i=0; i < local_n_elem; ++i)
+  if( (row_offset == 0) && (col_offset == 0) )
     {
-    x.at(i+row_offset, i+col_offset) = val;
+    if(val == eT(0))
+      {
+      SpMat<eT> tmp(arma_reserve_indicator(), m.n_rows, m.n_cols, m.n_nonzero);  // worst case scenario
+      
+      typename SpMat<eT>::const_iterator it     = m.begin();
+      typename SpMat<eT>::const_iterator it_end = m.end();
+      
+      uword count = 0;
+        
+      for(; it != it_end; ++it)
+        {
+        const uword row = it.row();
+        const uword col = it.col();
+        
+        if(row != col)
+          {
+          access::rw(tmp.values[count])      = (*it);
+          access::rw(tmp.row_indices[count]) = row;
+          access::rw(tmp.col_ptrs[col + 1])++;
+          ++count;
+          }
+        }
+      
+      for(uword i=0; i < tmp.n_cols; ++i)
+        {
+        access::rw(tmp.col_ptrs[i + 1]) += tmp.col_ptrs[i];
+        }
+      
+      // quick resize without reallocating memory and copying data
+      access::rw(         tmp.n_nonzero) = count;
+      access::rw(     tmp.values[count]) = eT(0);
+      access::rw(tmp.row_indices[count]) = uword(0);
+      
+      access::rw(m).steal_mem(tmp);
+      }
+    else  // val != eT(0)
+      {
+      SpMat<eT> tmp1;
+      
+      tmp1.eye(m.n_rows, m.n_cols);
+      
+      if(val != eT(1))  { tmp1 *= val; }
+      
+      SpMat<eT> tmp2;
+      
+      spglue_merge::diagview_merge(tmp2, m, tmp1);
+      
+      access::rw(m).steal_mem(tmp2);
+      }
+    }
+  else
+    {
+    SpMat<eT>& x = const_cast< SpMat<eT>& >(m);
+    
+    const uword local_n_elem = n_elem;
+    
+    for(uword i=0; i < local_n_elem; ++i)
+      {
+      x.at(i+row_offset, i+col_offset) = val;
+      }
     }
   }
 
