@@ -22,7 +22,7 @@
 #define ARMA_VERSION_MAJOR 9
 #define ARMA_VERSION_MINOR 600
 #define ARMA_VERSION_PATCH 4
-#define ARMA_VERSION_NAME  "9.600-RC4"
+#define ARMA_VERSION_NAME  "Napa Invasion"
 
 
 
