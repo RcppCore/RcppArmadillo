@@ -60,18 +60,12 @@ vectorise(const T1& X, const uword dim)
 template<typename T1>
 arma_warn_unused
 inline
-Col<typename T1::elem_type>
+CubeToMatOp<T1, op_vectorise_cube_col>
 vectorise(const BaseCube<typename T1::elem_type, T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  // TODO: implement CubeToMatOp to avoid copying cube memory within compound matrix expressions
-  
-  Col<typename T1::elem_type> out;
-  
-  op_vectorise_cube_col::apply(out, X);
-  
-  return out;
+  return CubeToMatOp<T1, op_vectorise_cube_col>(X.get_ref());
   }
 
 

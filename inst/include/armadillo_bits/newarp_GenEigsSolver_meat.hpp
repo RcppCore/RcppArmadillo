@@ -47,7 +47,7 @@ GenEigsSolver<eT, SelectionRule, OpType>::factorise_from(uword from_k, uword to_
       blas_int iseed[4] = {1, 3, 5, 7};
       iseed[0] = (i + 100) % 4095;
       blas_int n = dim_n;
-      lapack::larnv(&idist, iseed, &n, fac_f.memptr());
+      lapack::larnv(&idist, &iseed[0], &n, fac_f.memptr());
       // f <- f - V * V' * f, so that f is orthogonal to V
       Mat<eT> Vs(fac_V.memptr(), dim_n, i, false); // First i columns
       Col<eT> Vf = Vs.t() * fac_f;
@@ -363,7 +363,7 @@ GenEigsSolver<eT, SelectionRule, OpType>::init()
   blas_int idist = 2;                // Uniform(-1, 1)
   blas_int iseed[4] = {1, 3, 5, 7};  // Fixed random seed
   blas_int n = dim_n;
-  lapack::larnv(&idist, iseed, &n, init_resid.memptr());
+  lapack::larnv(&idist, &iseed[0], &n, init_resid.memptr());
   init(init_resid.memptr());
   }
 

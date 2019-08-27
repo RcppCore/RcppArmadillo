@@ -94,9 +94,12 @@ class diskio
   //
   // sparse matrix saving
   
+  template<typename eT> inline static bool save_csv_ascii  (const SpMat<eT>& x, const std::string& final_name);
   template<typename eT> inline static bool save_coord_ascii(const SpMat<eT>& x, const std::string& final_name);
   template<typename eT> inline static bool save_arma_binary(const SpMat<eT>& x, const std::string& final_name);
   
+  template<typename eT> inline static bool save_csv_ascii  (const SpMat<eT>& x,                std::ostream& f);
+  template<typename  T> inline static bool save_csv_ascii  (const SpMat< std::complex<T> >& x, std::ostream& f);
   template<typename eT> inline static bool save_coord_ascii(const SpMat<eT>& x,                std::ostream& f);
   template<typename  T> inline static bool save_coord_ascii(const SpMat< std::complex<T> >& x, std::ostream& f);
   template<typename eT> inline static bool save_arma_binary(const SpMat<eT>& x,                std::ostream& f);
@@ -105,9 +108,12 @@ class diskio
   //
   // sparse matrix loading
   
+  template<typename eT> inline static bool load_csv_ascii  (SpMat<eT>& x, const std::string& name, std::string& err_msg);
   template<typename eT> inline static bool load_coord_ascii(SpMat<eT>& x, const std::string& name, std::string& err_msg);
   template<typename eT> inline static bool load_arma_binary(SpMat<eT>& x, const std::string& name, std::string& err_msg);
   
+  template<typename eT> inline static bool load_csv_ascii  (SpMat<eT>& x,                std::istream& f, std::string& err_msg);
+  template<typename  T> inline static bool load_csv_ascii  (SpMat< std::complex<T> >& x, std::istream& f, std::string& err_msg);
   template<typename eT> inline static bool load_coord_ascii(SpMat<eT>& x,                std::istream& f, std::string& err_msg);
   template<typename  T> inline static bool load_coord_ascii(SpMat< std::complex<T> >& x, std::istream& f, std::string& err_msg);
   template<typename eT> inline static bool load_arma_binary(SpMat<eT>& x,                std::istream& f, std::string& err_msg);

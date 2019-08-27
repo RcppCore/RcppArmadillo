@@ -84,6 +84,97 @@ spglue_join_cols::apply_noalias(SpMat<eT>& out, const SpMat<eT>& A, const SpMat<
 
 
 
+template<typename eT, typename T1, typename T2, typename T3>
+inline
+void
+spglue_join_cols::apply(SpMat<eT>& out, const SpBase<eT,T1>& A_expr, const SpBase<eT,T2>& B_expr, const SpBase<eT,T3>& C_expr)
+  {
+  arma_extra_debug_sigprint();
+  
+  const unwrap_spmat<T1> UA(A_expr.get_ref());
+  const unwrap_spmat<T2> UB(B_expr.get_ref());
+  const unwrap_spmat<T3> UC(C_expr.get_ref());
+  
+  const SpMat<eT>& A = UA.M;
+  const SpMat<eT>& B = UB.M;
+  const SpMat<eT>& C = UC.M;
+  
+  const uword out_n_rows = A.n_rows + B.n_rows + C.n_rows;
+  const uword out_n_cols = (std::max)((std::max)(A.n_cols, B.n_cols), C.n_cols);
+  
+  arma_debug_check( ((A.n_cols != out_n_cols) && ((A.n_rows > 0) || (A.n_cols > 0))), "join_cols() / join_vert(): number of columns must be the same" );
+  arma_debug_check( ((B.n_cols != out_n_cols) && ((B.n_rows > 0) || (B.n_cols > 0))), "join_cols() / join_vert(): number of columns must be the same" );
+  arma_debug_check( ((C.n_cols != out_n_cols) && ((C.n_rows > 0) || (C.n_cols > 0))), "join_cols() / join_vert(): number of columns must be the same" );
+  
+  out.set_size(out_n_rows, out_n_cols);
+  
+  if(out.n_elem == 0)  { return; }
+  
+  uword row_start  = 0;
+  uword row_end_p1 = 0;
+  
+  if(A.n_elem > 0)  { row_end_p1 += A.n_rows; out.rows(row_start, row_end_p1 - 1) = A; }
+  
+  row_start = row_end_p1;
+  
+  if(B.n_elem > 0)  { row_end_p1 += B.n_rows; out.rows(row_start, row_end_p1 - 1) = B; }
+  
+  row_start = row_end_p1;
+  
+  if(C.n_elem > 0)  { row_end_p1 += C.n_rows; out.rows(row_start, row_end_p1 - 1) = C; }
+  }
+
+
+
+template<typename eT, typename T1, typename T2, typename T3, typename T4>
+inline
+void
+spglue_join_cols::apply(SpMat<eT>& out, const SpBase<eT,T1>& A_expr, const SpBase<eT,T2>& B_expr, const SpBase<eT,T3>& C_expr, const SpBase<eT,T4>& D_expr)
+  {
+  arma_extra_debug_sigprint();
+  
+  const unwrap_spmat<T1> UA(A_expr.get_ref());
+  const unwrap_spmat<T2> UB(B_expr.get_ref());
+  const unwrap_spmat<T3> UC(C_expr.get_ref());
+  const unwrap_spmat<T4> UD(D_expr.get_ref());
+  
+  const SpMat<eT>& A = UA.M;
+  const SpMat<eT>& B = UB.M;
+  const SpMat<eT>& C = UC.M;
+  const SpMat<eT>& D = UD.M;
+  
+  const uword out_n_rows = A.n_rows + B.n_rows + C.n_rows + D.n_rows;
+  const uword out_n_cols = (std::max)(((std::max)((std::max)(A.n_cols, B.n_cols), C.n_cols)), D.n_cols);
+  
+  arma_debug_check( ((A.n_cols != out_n_cols) && ((A.n_rows > 0) || (A.n_cols > 0))), "join_cols() / join_vert(): number of columns must be the same" );
+  arma_debug_check( ((B.n_cols != out_n_cols) && ((B.n_rows > 0) || (B.n_cols > 0))), "join_cols() / join_vert(): number of columns must be the same" );
+  arma_debug_check( ((C.n_cols != out_n_cols) && ((C.n_rows > 0) || (C.n_cols > 0))), "join_cols() / join_vert(): number of columns must be the same" );
+  arma_debug_check( ((D.n_cols != out_n_cols) && ((D.n_rows > 0) || (D.n_cols > 0))), "join_cols() / join_vert(): number of columns must be the same" );
+  
+  out.set_size(out_n_rows, out_n_cols);
+  
+  if(out.n_elem == 0)  { return; }
+  
+  uword row_start  = 0;
+  uword row_end_p1 = 0;
+  
+  if(A.n_elem > 0)  { row_end_p1 += A.n_rows; out.rows(row_start, row_end_p1 - 1) = A; }
+  
+  row_start = row_end_p1;
+  
+  if(B.n_elem > 0)  { row_end_p1 += B.n_rows; out.rows(row_start, row_end_p1 - 1) = B; }
+  
+  row_start = row_end_p1;
+  
+  if(C.n_elem > 0)  { row_end_p1 += C.n_rows; out.rows(row_start, row_end_p1 - 1) = C; }
+  
+  row_start = row_end_p1;
+  
+  if(D.n_elem > 0)  { row_end_p1 += D.n_rows; out.rows(row_start, row_end_p1 - 1) = D; }
+  }
+
+
+
 template<typename T1, typename T2>
 inline
 void
@@ -200,6 +291,56 @@ spglue_join_rows::apply_noalias(SpMat<eT>& out, const SpMat<eT>& A, const SpMat<
   // SpMat<eT> tmp(locs, vals, C_n_rows, C_n_cols, true, false);
   // 
   // out.steal_mem(tmp);
+  }
+
+
+
+template<typename eT, typename T1, typename T2, typename T3>
+inline
+void
+spglue_join_rows::apply(SpMat<eT>& out, const SpBase<eT,T1>& A_expr, const SpBase<eT,T2>& B_expr, const SpBase<eT,T3>& C_expr)
+  {
+  arma_extra_debug_sigprint();
+  
+  const unwrap_spmat<T1> UA(A_expr.get_ref());
+  const unwrap_spmat<T2> UB(B_expr.get_ref());
+  const unwrap_spmat<T3> UC(C_expr.get_ref());
+  
+  const SpMat<eT>& A = UA.M;
+  const SpMat<eT>& B = UB.M;
+  const SpMat<eT>& C = UC.M;
+  
+  SpMat<eT> tmp;
+  
+  spglue_join_rows::apply_noalias(tmp, A,   B);
+  spglue_join_rows::apply_noalias(out, tmp, C);
+  }
+
+
+
+template<typename eT, typename T1, typename T2, typename T3, typename T4>
+inline
+void
+spglue_join_rows::apply(SpMat<eT>& out, const SpBase<eT,T1>& A_expr, const SpBase<eT,T2>& B_expr, const SpBase<eT,T3>& C_expr, const SpBase<eT,T4>& D_expr)
+  {
+  arma_extra_debug_sigprint();
+  
+  const unwrap_spmat<T1> UA(A_expr.get_ref());
+  const unwrap_spmat<T2> UB(B_expr.get_ref());
+  const unwrap_spmat<T3> UC(C_expr.get_ref());
+  const unwrap_spmat<T4> UD(D_expr.get_ref());
+  
+  const SpMat<eT>& A = UA.M;
+  const SpMat<eT>& B = UB.M;
+  const SpMat<eT>& C = UC.M;
+  const SpMat<eT>& D = UD.M;
+  
+  SpMat<eT> AB;
+  SpMat<eT> ABC;
+  
+  spglue_join_rows::apply_noalias(AB,  A,   B);
+  spglue_join_rows::apply_noalias(ABC, AB,  C);
+  spglue_join_rows::apply_noalias(out, ABC, D);
   }
 
 

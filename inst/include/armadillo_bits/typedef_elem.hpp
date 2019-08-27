@@ -128,6 +128,23 @@ typedef void* void_ptr;
 #endif
 
 
+//
+
+
+#ifdef ARMA_USE_MKL_TYPES
+  // for compatibility with MKL
+  typedef MKL_Complex8  blas_cxf;
+  typedef MKL_Complex16 blas_cxd;
+#else
+  // standard BLAS and LAPACK prototypes use "void*" pointers for complex arrays
+  typedef void blas_cxf;
+  typedef void blas_cxd;
+#endif
+
+
+//
+
+
 // NOTE: blas_len is the fortran type for "hidden" arguments that specify the length of character arguments;
 // NOTE: it varies across compilers, compiler versions and systems (eg. 32 bit vs 64 bit);
 // NOTE: the default setting of "size_t" is an educated guess.

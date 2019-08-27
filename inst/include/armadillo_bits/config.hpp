@@ -87,6 +87,12 @@
 // #define ARMA_USE_MKL_ALLOC
 //// Uncomment the above line if you want to use Intel MKL mkl_malloc() and mkl_free() instead of standard malloc() and free()
 
+// #define ARMA_USE_MKL_TYPES
+//// Uncomment the above line if you want to use Intel MKL types for complex numbers.
+//// You will need to include appropriate MKL headers before the Armadillo header.
+//// You may also need to enable or disable the following options:
+//// ARMA_BLAS_LONG, ARMA_BLAS_LONG_LONG, ARMA_USE_FORTRAN_HIDDEN_ARGS
+
 // #define ARMA_USE_ATLAS
 // #define ARMA_ATLAS_INCLUDE_DIR /usr/include/
 //// If you're using ATLAS and the compiler can't find cblas.h and/or clapack.h

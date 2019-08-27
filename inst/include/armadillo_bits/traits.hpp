@@ -302,6 +302,19 @@ struct is_Op< const Op<T1,op_type> >
 
 
 template<typename T>
+struct is_CubeToMatOp
+  { static const bool value = false; };
+ 
+template<typename T1, typename op_type>
+struct is_CubeToMatOp< CubeToMatOp<T1,op_type> >
+  { static const bool value = true; };
+ 
+template<typename T1, typename op_type>
+struct is_CubeToMatOp< const CubeToMatOp<T1,op_type> >
+  { static const bool value = true; };
+
+
+template<typename T>
 struct is_SpToDOp
   { static const bool value = false; };
  
@@ -505,6 +518,7 @@ struct is_arma_type2
   =  is_Mat<T1>::value
   || is_Gen<T1>::value
   || is_Op<T1>::value
+  || is_CubeToMatOp<T1>::value
   || is_SpToDOp<T1>::value
   || is_Glue<T1>::value
   || is_eOp<T1>::value

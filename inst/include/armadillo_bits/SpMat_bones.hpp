@@ -667,9 +667,9 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   
   arma_aligned mutable MapMat<eT> cache;
   arma_aligned mutable state_type sync_state;
-  // 0: cache needs to be updated from CSC
-  // 1: CSC needs to be updated from cache
-  // 2: no update required
+  // 0: cache needs to be updated from CSC (ie.   CSC has more recent data)
+  // 1: CSC needs to be updated from cache (ie. cache has more recent data)
+  // 2: no update required                 (ie. CSC and cache contain the same data)
   
   #if defined(ARMA_USE_CXX11)
   arma_aligned mutable std::mutex cache_mutex;

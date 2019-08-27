@@ -2197,6 +2197,98 @@ diskio::load_auto_detect(Mat<eT>& x, std::istream& f, std::string& err_msg)
 
 
 
+//! Save a sparse matrix in CSV format
+template<typename eT>
+inline
+bool
+diskio::save_csv_ascii(const SpMat<eT>& x, const std::string& final_name)
+  {
+  arma_extra_debug_sigprint();
+  
+  const std::string tmp_name = diskio::gen_tmp_name(final_name);
+  
+  std::ofstream f(tmp_name.c_str());
+  
+  bool save_okay = f.is_open();
+  
+  if(save_okay)
+    {
+    save_okay = diskio::save_csv_ascii(x, f);
+    
+    f.flush();
+    f.close();
+    
+    if(save_okay)  { save_okay = diskio::safe_rename(tmp_name, final_name); }
+    }
+  
+  return save_okay;
+  }
+
+
+
+//! Save a sparse matrix in CSV format
+template<typename eT>
+inline
+bool
+diskio::save_csv_ascii(const SpMat<eT>& x, std::ostream& f)
+  {
+  arma_extra_debug_sigprint();
+  
+  const ios::fmtflags orig_flags = f.flags();
+  
+  if( (is_float<eT>::value) || (is_double<eT>::value) )
+    {
+    f.unsetf(ios::fixed);
+    f.setf(ios::scientific);
+    f.precision(14);
+    }
+  
+  x.sync();
+  
+  uword x_n_rows = x.n_rows;
+  uword x_n_cols = x.n_cols;
+  
+  for(uword row=0; row < x_n_rows; ++row)
+    {
+    for(uword col=0; col < x_n_cols; ++col)
+      {
+      const eT val = x.at(row,col);
+      
+      if(val != eT(0))  { arma_ostream::print_elem(f, val, false); }
+      
+      if( col < (x_n_cols-1) )  { f.put(','); }
+      }
+    
+    f.put('\n');
+    }
+  
+  const bool save_okay = f.good();
+  
+  f.flags(orig_flags);
+  
+  return save_okay;
+  }
+
+
+
+//! Save a sparse matrix in CSV format (complex numbers)
+template<typename T>
+inline
+bool
+diskio::save_csv_ascii(const SpMat< std::complex<T> >& x, std::ostream& f)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_ignore(x);
+  arma_ignore(f);
+  
+  arma_warn("saving complex sparse matrices as csv_ascii not yet implemented");
+  
+  return false;
+  }
+
+
+
 //! Save a matrix in ASCII coord format
 template<typename eT>
 inline
@@ -2370,6 +2462,134 @@ diskio::save_arma_binary(const SpMat<eT>& x, std::ostream& f)
   f.write( reinterpret_cast<const char*>(x.col_ptrs),    std::streamsize((x.n_cols+1)*sizeof(uword)) );
   
   return f.good();
+  }
+
+
+
+template<typename eT>
+inline
+bool
+diskio::load_csv_ascii(SpMat<eT>& x, const std::string& name, std::string& err_msg)
+  {
+  arma_extra_debug_sigprint();
+  
+  std::fstream f;
+  f.open(name.c_str(), std::fstream::in | std::fstream::binary);
+  
+  bool load_okay = f.is_open();
+  
+  if(load_okay)
+    {
+    load_okay = diskio::load_csv_ascii(x, f, err_msg);
+    f.close();
+    }
+  
+  return load_okay;
+  }
+
+
+
+template<typename eT>
+inline
+bool
+diskio::load_csv_ascii(SpMat<eT>& x, std::istream& f, std::string& err_msg)
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(err_msg);
+  
+  // TODO: replace with more efficient implementation
+  
+  bool load_okay = f.good();
+  
+  f.clear();
+  const std::fstream::pos_type pos1 = f.tellg();
+  
+  //
+  // work out the size
+  
+  uword f_n_rows = 0;
+  uword f_n_cols = 0;
+  
+  std::string       line_string;
+  std::stringstream line_stream;
+  
+  std::string token;
+  
+  while( f.good() && load_okay )
+    {
+    std::getline(f, line_string);
+    
+    if(line_string.size() == 0)  { break; }
+    
+    line_stream.clear();
+    line_stream.str(line_string);
+    
+    uword line_n_cols = 0;
+    
+    while(line_stream.good())
+      {
+      std::getline(line_stream, token, ',');
+      ++line_n_cols;
+      }
+    
+    if(f_n_cols < line_n_cols)  { f_n_cols = line_n_cols; }
+    
+    ++f_n_rows;
+    }
+  
+  f.clear();
+  f.seekg(pos1);
+  
+  x.zeros(f_n_rows, f_n_cols);
+  
+  uword row = 0;
+  
+  while(f.good())
+    {
+    std::getline(f, line_string);
+    
+    if(line_string.size() == 0)  { break; }
+    
+    line_stream.clear();
+    line_stream.str(line_string);
+    
+    uword col = 0;
+    
+    while(line_stream.good())
+      {
+      std::getline(line_stream, token, ',');
+      
+      eT val = eT(0);
+      
+      diskio::convert_token( val, token );
+      
+      if(val != eT(0))  { x(row,col) = val; }
+      
+      ++col;
+      }
+    
+    ++row;
+    }
+  
+  return load_okay;
+  }
+
+
+
+template<typename T>
+inline
+bool
+diskio::load_csv_ascii(SpMat< std::complex<T> >& x, std::istream& f, std::string& err_msg)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_ignore(x);
+  arma_ignore(f);
+  arma_ignore(err_msg);
+  
+  arma_warn("loading complex sparse matrices as csv_ascii not yet implemented");
+  
+  return false;
   }
 
 

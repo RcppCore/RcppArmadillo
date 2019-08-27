@@ -18,6 +18,9 @@
 //! @{
 
 
+// TODO: document the conditions and restrictions for the use of each unwrap variant:
+// TODO: unwrap, unwrap_check, quasi_unwrap, partial_unwrap, partial_unwrap_check
+
 
 template<typename T1>
 struct unwrap_default
@@ -319,8 +322,8 @@ struct quasi_unwrap< subview<eT> >
   {
   inline
   quasi_unwrap(const subview<eT>& A)
-    : sv( A                  )
-    , M ( A, (A.n_cols == 1) )  // reuse memory if the subview has only one column
+    : sv( A                                                  )
+    , M ( A, ((A.aux_row1 == 0) && (A.n_rows == A.m.n_rows)) )  // reuse memory if the subview is a contiguous chunk
     {
     arma_extra_debug_sigprint();
     }
@@ -333,7 +336,7 @@ struct quasi_unwrap< subview<eT> >
   static const bool has_orig_mem = false;
   
   template<typename eT2>
-  arma_inline bool is_alias(const Mat<eT2>& X) const { return ( (sv.n_cols == 1) ? (void_ptr(&(sv.m)) == void_ptr(&X)) : false ); }
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return ( ((sv.aux_row1 == 0) && (sv.n_rows == sv.m.n_rows)) ? (void_ptr(&(sv.m)) == void_ptr(&X)) : false ); }
   };
 
 
@@ -1217,6 +1220,33 @@ struct partial_unwrap< Col<eT> >
   static const bool do_times = false;
   
   const Col<eT>& M;
+  };
+
+
+
+template<typename eT>
+struct partial_unwrap< subview<eT> >
+  {
+  typedef Mat<eT> stored_type;
+  
+  inline
+  partial_unwrap(const subview<eT>& A)
+    : sv( A                                                  )
+    , M ( A, ((A.aux_row1 == 0) && (A.n_rows == A.m.n_rows)) )  // reuse memory if the subview is a contiguous chunk
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  arma_inline eT get_val() const { return eT(1); }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return ( ((sv.aux_row1 == 0) && (sv.n_rows == sv.m.n_rows)) ? (void_ptr(&(sv.m)) == void_ptr(&X)) : false ); }
+  
+  static const bool do_trans = false;
+  static const bool do_times = false;
+  
+  const subview<eT>& sv;
+  const Mat<eT>      M;
   };
 
 

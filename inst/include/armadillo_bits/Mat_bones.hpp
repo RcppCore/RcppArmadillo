@@ -339,6 +339,14 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename T1, typename op_type> inline Mat& operator%=(const mtOp<eT, T1, op_type>& X);
   template<typename T1, typename op_type> inline Mat& operator/=(const mtOp<eT, T1, op_type>& X);
 
+  template<typename T1, typename op_type> inline             Mat(const CubeToMatOp<T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat&  operator=(const CubeToMatOp<T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat& operator+=(const CubeToMatOp<T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat& operator-=(const CubeToMatOp<T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat& operator*=(const CubeToMatOp<T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat& operator%=(const CubeToMatOp<T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat& operator/=(const CubeToMatOp<T1, op_type>& X);
+  
   template<typename T1, typename op_type> inline             Mat(const SpToDOp<T1, op_type>& X);
   template<typename T1, typename op_type> inline Mat&  operator=(const SpToDOp<T1, op_type>& X);
   template<typename T1, typename op_type> inline Mat& operator+=(const SpToDOp<T1, op_type>& X);
