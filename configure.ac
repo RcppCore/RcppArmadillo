@@ -4,7 +4,7 @@
 ##
 ##  'Rcpp' Integration for the 'Armadillo' Templated Linear Algebra Library
 ##
-##  Copyright (C) 2016 - 2018  Dirk Eddelbuettel 
+##  Copyright (C) 2016 - 2018  Dirk Eddelbuettel
 ##
 ##  Licensed under GPL-2 or later
 
@@ -14,10 +14,10 @@ AC_PREREQ(2.61)
 ## Process this file with autoconf to produce a configure script.
 AC_INIT(RcppArmadillo, m4_esyscmd_s([awk -e '/^Version:/ {print $2}' DESCRIPTION]))
 
-## Set R_HOME, respecting an environment variable if one is set 
+## Set R_HOME, respecting an environment variable if one is set
 : ${R_HOME=$(R RHOME)}
 if test -z "${R_HOME}"; then
-    AC_MSG_ERROR([Could not determine R_HOME.])   
+    AC_MSG_ERROR([Could not determine R_HOME.])
 fi
 ## Use R to set CXX and CXXFLAGS
 CXX=$(${R_HOME}/bin/R CMD config CXX)
@@ -41,14 +41,14 @@ if test "${GXX}" = yes; then
         1.*|2.*|3.*|4.0.*|4.1.*|4.2.*|4.3.*|4.4.*|4.5.*|4.6.*|4.7.0|4.7.1)
              AC_MSG_RESULT([no])
              AC_MSG_WARN([Only g++ version 4.7.2 or greater can be used with RcppArmadillo.])
-             AC_MSG_ERROR([Please use a different compiler.])   
+             AC_MSG_ERROR([Please use a different compiler.])
         ;;
-        4.7.*|4.8.*|4.9.*|5.0*|5.1*|5.2*|5.3*)        
+        4.7.*|4.8.*|4.9.*|5.0*|5.1*|5.2*|5.3*)
              AC_MSG_RESULT([yes, but without OpenMP as version ${gxx_version} (Armadillo constraint)])
              ## we know this one is bad
              can_use_openmp="no"
         ;;
-        5.4*|5.5*|5.6*|5.7*|5.8*|5.9*|6.*|7.*|8.*|9.*|10.*)
+        5.4*|5.5*|5.6*|5.7*|5.8*|5.9*|6.*|7.*|8.*|9.*|10.*|11.*|12.*)
              AC_MSG_RESULT([yes, with OpenMP as version ${gxx_version}])
              ## we know this one is good, yay
              can_use_openmp="yes"
@@ -88,7 +88,7 @@ if test x"${RSysinfoName}" == x"Darwin"; then
             clang_version=$(${CXX} -v 2>&1 | awk '/^.*clang version/ {print $3}')
 
             case ${clang_version} in
-                4.*|5.*|6.*|7.*|8.*)
+                4.*|5.*|6.*|7.*|8.*|9.*|10.*|11.*)
                     AC_MSG_RESULT([found and suitable])
                     can_use_openmp="yes"
                 ;;
@@ -141,7 +141,7 @@ if test x"${can_use_openmp}" == x"yes"; then
     if test x"${hasOpenMP}" == x""; then
         AC_MSG_RESULT([missing])
         arma_have_openmp="#define ARMA_DONT_USE_OPENMP 1"
-    else   
+    else
         AC_MSG_RESULT([found and suitable])
         arma_have_openmp="#define ARMA_USE_OPENMP 1"
         openmp_flag='$(SHLIB_OPENMP_CXXFLAGS)'

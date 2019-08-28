@@ -1,3 +1,7 @@
+2019-08-28  Dirk Eddelbuettel  <edd@debian.org>
+
+	* configure.ac: Expand list of known gcc and clang versions
+
 2019-08-27  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.9.699.1.0 [github-only]

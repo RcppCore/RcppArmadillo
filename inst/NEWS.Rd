@@ -14,6 +14,8 @@
       \item added \code{randperm()} to generate a vector with random
       permutation of a sequence of integers 
     }
+    \item Expanded the list of known good \code{gcc} and \code{clang}
+    versions in \code{configure.ac}
   }
 }
 
