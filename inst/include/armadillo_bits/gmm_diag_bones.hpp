@@ -133,18 +133,18 @@ class gmm_diag
   inline eT internal_scalar_log_p(const eT* x                     ) const;
   inline eT internal_scalar_log_p(const eT* x, const uword gaus_id) const;
   
-  template<typename T1> inline Row<eT> internal_vec_log_p(const T1& X                     ) const;
-  template<typename T1> inline Row<eT> internal_vec_log_p(const T1& X, const uword gaus_id) const;
+  inline Row<eT> internal_vec_log_p(const Mat<eT>& X                     ) const;
+  inline Row<eT> internal_vec_log_p(const Mat<eT>& X, const uword gaus_id) const;
   
-  template<typename T1> inline eT internal_sum_log_p(const T1& X                     ) const;
-  template<typename T1> inline eT internal_sum_log_p(const T1& X, const uword gaus_id) const;
+  inline eT internal_sum_log_p(const Mat<eT>& X                     ) const;
+  inline eT internal_sum_log_p(const Mat<eT>& X, const uword gaus_id) const;
   
-  template<typename T1> inline eT internal_avg_log_p(const T1& X                     ) const;
-  template<typename T1> inline eT internal_avg_log_p(const T1& X, const uword gaus_id) const;
+  inline eT internal_avg_log_p(const Mat<eT>& X                     ) const;
+  inline eT internal_avg_log_p(const Mat<eT>& X, const uword gaus_id) const;
   
-  template<typename T1> inline uword internal_scalar_assign(const T1& X, const gmm_dist_mode& dist_mode) const;
+  inline uword internal_scalar_assign(const Mat<eT>& X, const gmm_dist_mode& dist_mode) const;
   
-  template<typename T1> inline void internal_vec_assign(urowvec& out, const T1& X, const gmm_dist_mode& dist_mode) const;
+  inline void internal_vec_assign(urowvec& out, const Mat<eT>& X, const gmm_dist_mode& dist_mode) const;
   
   inline void internal_raw_hist(urowvec& hist, const Mat<eT>& X, const gmm_dist_mode& dist_mode) const;
   

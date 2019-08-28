@@ -1424,7 +1424,7 @@ SpMat_MapMat_val<eT>::set(const eT in_val)
   {
   arma_extra_debug_sigprint();
   
-  const bool done = (s_parent.sync_state != 1) ? s_parent.try_set_value_csc(row, col, in_val) : false;
+  const bool done = (s_parent.sync_state == 0) ? s_parent.try_set_value_csc(row, col, in_val) : false;
   
   if(done == false)
     {
@@ -1449,7 +1449,7 @@ SpMat_MapMat_val<eT>::add(const eT in_val)
   {
   arma_extra_debug_sigprint();
   
-  const bool done = (s_parent.sync_state != 1) ? s_parent.try_add_value_csc(row, col, in_val) : false;
+  const bool done = (s_parent.sync_state == 0) ? s_parent.try_add_value_csc(row, col, in_val) : false;
     
   if(done == false)
     {
@@ -1480,7 +1480,7 @@ SpMat_MapMat_val<eT>::sub(const eT in_val)
   {
   arma_extra_debug_sigprint();
   
-  const bool done = (s_parent.sync_state != 1) ? s_parent.try_sub_value_csc(row, col, in_val) : false;
+  const bool done = (s_parent.sync_state == 0) ? s_parent.try_sub_value_csc(row, col, in_val) : false;
   
   if(done == false)
     {
@@ -1511,7 +1511,7 @@ SpMat_MapMat_val<eT>::mul(const eT in_val)
   {
   arma_extra_debug_sigprint();
   
-  const bool done = (s_parent.sync_state != 1) ? s_parent.try_mul_value_csc(row, col, in_val) : false;
+  const bool done = (s_parent.sync_state == 0) ? s_parent.try_mul_value_csc(row, col, in_val) : false;
   
   if(done == false)
     {
@@ -1572,7 +1572,7 @@ SpMat_MapMat_val<eT>::div(const eT in_val)
   {
   arma_extra_debug_sigprint();
   
-  const bool done = (s_parent.sync_state != 1) ? s_parent.try_div_value_csc(row, col, in_val) : false;
+  const bool done = (s_parent.sync_state == 0) ? s_parent.try_div_value_csc(row, col, in_val) : false;
   
   if(done == false)
     {

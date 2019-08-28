@@ -5133,8 +5133,8 @@ auxlib::qz(Mat<T>& A, Mat<T>& B, Mat<T>& vsl, Mat<T>& vsr, const Base<T,T1>& X_e
     podarray<T> alphai(A.n_rows);
     podarray<T>   beta(A.n_rows);
     
-    podarray<T>   work( static_cast<uword>(lwork) );
-    podarray<T>  bwork( static_cast<uword>(N)     );
+    podarray<T>         work( static_cast<uword>(lwork) );
+    podarray<blas_int> bwork( static_cast<uword>(N)     );
     
     arma_extra_debug_print("lapack::gges()");
     
@@ -5223,9 +5223,9 @@ auxlib::qz(Mat< std::complex<T> >& A, Mat< std::complex<T> >& B, Mat< std::compl
     podarray<eT> alpha(A.n_rows);
     podarray<eT>  beta(A.n_rows);
     
-    podarray<eT>  work( static_cast<uword>(lwork) );
-    podarray< T> rwork( static_cast<uword>(8*N)   );
-    podarray< T> bwork( static_cast<uword>(N)     );
+    podarray<eT>        work( static_cast<uword>(lwork) );
+    podarray< T>       rwork( static_cast<uword>(8*N)   );
+    podarray<blas_int> bwork( static_cast<uword>(N)     );
     
     arma_extra_debug_print("lapack::cx_gges()");
     

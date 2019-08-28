@@ -14,44 +14,35 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup arma_version
+//! \addtogroup spglue_relational
 //! @{
 
 
 
-#define ARMA_VERSION_MAJOR 9
-#define ARMA_VERSION_MINOR 700
-#define ARMA_VERSION_PATCH 1
-#define ARMA_VERSION_NAME  "9.700-RC1"
-
-
-
-struct arma_version
+class spglue_rel_lt
+  : public traits_glue_or
   {
-  static const unsigned int major = ARMA_VERSION_MAJOR;
-  static const unsigned int minor = ARMA_VERSION_MINOR;
-  static const unsigned int patch = ARMA_VERSION_PATCH;
+  public:
   
-  static
-  inline
-  std::string
-  as_string()
-    {
-    const char* nickname = ARMA_VERSION_NAME;
-    
-    std::ostringstream ss;
-    
-    ss << arma_version::major
-       << '.'
-       << arma_version::minor
-       << '.'
-       << arma_version::patch
-       << " ("
-       << nickname
-       << ')';
-    
-    return ss.str();
-    }
+  template<typename T1, typename T2>
+  inline static void apply(SpMat<uword>& out, const mtSpGlue<uword, T1, T2, spglue_rel_lt>& X);
+  
+  template<typename T1, typename T2>
+  inline static void apply_noalias(SpMat<uword>& out, const SpProxy<T1>& PA, const SpProxy<T2>& PB);
+  };
+
+
+
+class spglue_rel_gt
+  : public traits_glue_or
+  {
+  public:
+  
+  template<typename T1, typename T2>
+  inline static void apply(SpMat<uword>& out, const mtSpGlue<uword, T1, T2, spglue_rel_gt>& X);
+  
+  template<typename T1, typename T2>
+  inline static void apply_noalias(SpMat<uword>& out, const SpProxy<T1>& PA, const SpProxy<T2>& PB);
   };
 
 

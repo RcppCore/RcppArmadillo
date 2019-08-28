@@ -948,6 +948,24 @@ SpMat<eT>::operator=(const Base<eT, T1>& expr)
   {
   arma_extra_debug_sigprint();
   
+  if(is_same_type< T1, Gen<Mat<eT>, gen_zeros> >::yes)
+    {
+    const Proxy<T1> P(expr.get_ref());
+    
+    (*this).zeros( P.get_n_rows(), P.get_n_cols() );
+    
+    return *this;
+    }
+  
+  if(is_same_type< T1, Gen<Mat<eT>, gen_eye> >::yes)
+    {
+    const Proxy<T1> P(expr.get_ref());
+    
+    (*this).eye( P.get_n_rows(), P.get_n_cols() );
+    
+    return *this;
+    }
+  
   const quasi_unwrap<T1> tmp(expr.get_ref());
   const Mat<eT>& x     = tmp.M;
   
@@ -966,6 +984,8 @@ SpMat<eT>::operator=(const Base<eT, T1>& expr)
     }
   
   init(x_n_rows, x_n_cols, n);
+  
+  if(n == 0)  { return *this; }
   
   // Now the memory is resized correctly; set nonzero elements.
   n = 0;
@@ -1389,6 +1409,8 @@ SpMat<eT>&
 SpMat<eT>::operator=(const SpSubview<eT>& X)
   {
   arma_extra_debug_sigprint();
+  
+  if(X.n_nonzero == 0)  { zeros(X.n_rows, X.n_cols); return *this; }
   
   X.m.sync_csc();
   
@@ -4631,13 +4653,9 @@ SpMat<eT>::save(const std::string name, const file_type type, const bool print_s
   
   switch(type)
     {
-    // case raw_ascii:
-    //   save_okay = diskio::save_raw_ascii(*this, name);
-    //   break;
-    
-    // case csv_ascii:
-    //   save_okay = diskio::save_csv_ascii(*this, name);
-    //   break;
+    case csv_ascii:
+      save_okay = diskio::save_csv_ascii(*this, name);
+      break;
     
     case arma_binary:
       save_okay = diskio::save_arma_binary(*this, name);
@@ -4674,13 +4692,9 @@ SpMat<eT>::save(std::ostream& os, const file_type type, const bool print_status)
   
   switch(type)
     {
-    // case raw_ascii:
-    //   save_okay = diskio::save_raw_ascii(*this, os);
-    //   break;
-    
-    // case csv_ascii:
-    //   save_okay = diskio::save_csv_ascii(*this, os);
-    //   break;
+    case csv_ascii:
+      save_okay = diskio::save_csv_ascii(*this, os);
+      break;
     
     case arma_binary:
       save_okay = diskio::save_arma_binary(*this, os);
@@ -4722,13 +4736,9 @@ SpMat<eT>::load(const std::string name, const file_type type, const bool print_s
     //   load_okay = diskio::load_auto_detect(*this, name, err_msg);
     //   break;
     
-    // case raw_ascii:
-    //   load_okay = diskio::load_raw_ascii(*this, name, err_msg);
-    //   break;
-    
-    // case csv_ascii:
-    //   load_okay = diskio::load_csv_ascii(*this, name, err_msg);
-    //   break;
+    case csv_ascii:
+      load_okay = diskio::load_csv_ascii(*this, name, err_msg);
+      break;
     
     case arma_binary:
       load_okay = diskio::load_arma_binary(*this, name, err_msg);
@@ -4785,13 +4795,9 @@ SpMat<eT>::load(std::istream& is, const file_type type, const bool print_status)
     //   load_okay = diskio::load_auto_detect(*this, is, err_msg);
     //   break;
     
-    // case raw_ascii:
-    //   load_okay = diskio::load_raw_ascii(*this, is, err_msg);
-    //   break;
-    
-    // case csv_ascii:
-    //   load_okay = diskio::load_csv_ascii(*this, is, err_msg);
-    //   break;
+    case csv_ascii:
+      load_okay = diskio::load_csv_ascii(*this, is, err_msg);
+      break;
     
     case arma_binary:
       load_okay = diskio::load_arma_binary(*this, is, err_msg);

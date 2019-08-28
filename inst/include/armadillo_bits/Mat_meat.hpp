@@ -5099,6 +5099,128 @@ Mat<eT>::operator/=(const mtOp<eT, T1, op_type>& X)
 template<typename eT>
 template<typename T1, typename op_type>
 inline
+Mat<eT>::Mat(const CubeToMatOp<T1, op_type>& X)
+  : n_rows(0)
+  , n_cols(0)
+  , n_elem(0)
+  , vec_state(0)
+  , mem_state(0)
+  , mem()
+  {
+  arma_extra_debug_sigprint_this(this);
+
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+
+  op_type::apply(*this, X);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+Mat<eT>&
+Mat<eT>::operator=(const CubeToMatOp<T1, op_type>& X)
+  {
+  arma_extra_debug_sigprint();
+
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+  
+  op_type::apply(*this, X);
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+Mat<eT>&
+Mat<eT>::operator+=(const CubeToMatOp<T1, op_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+  
+  (*this) = (*this) + X;
+  
+  return (*this);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+Mat<eT>&
+Mat<eT>::operator-=(const CubeToMatOp<T1, op_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+  
+  (*this) = (*this) - X;
+  
+  return (*this);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+Mat<eT>&
+Mat<eT>::operator*=(const CubeToMatOp<T1, op_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+  
+  glue_times::apply_inplace(*this, X);
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+Mat<eT>&
+Mat<eT>::operator%=(const CubeToMatOp<T1, op_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+  
+  (*this) = (*this) % X;
+  
+  return (*this);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+Mat<eT>&
+Mat<eT>::operator/=(const CubeToMatOp<T1, op_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+  
+  (*this) = (*this) / X;
+  
+  return (*this);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
 Mat<eT>::Mat(const SpToDOp<T1, op_type>& X)
   : n_rows(0)
   , n_cols(0)

@@ -37,6 +37,40 @@ join_cols(const T1& A, const T2& B)
 
 
 
+template<typename eT, typename T1, typename T2, typename T3>
+arma_warn_unused
+inline
+Mat<eT>
+join_cols(const Base<eT,T1>& A, const Base<eT,T2>& B, const Base<eT,T3>& C)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT> out;
+  
+  glue_join_cols::apply(out, A.get_ref(), B.get_ref(), C.get_ref());
+  
+  return out;
+  }
+
+
+
+template<typename eT, typename T1, typename T2, typename T3, typename T4>
+arma_warn_unused
+inline
+Mat<eT>
+join_cols(const Base<eT,T1>& A, const Base<eT,T2>& B, const Base<eT,T3>& C, const Base<eT,T4>& D)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT> out;
+  
+  glue_join_cols::apply(out, A.get_ref(), B.get_ref(), C.get_ref(), D.get_ref());
+  
+  return out;
+  }
+
+
+
 template<typename T1, typename T2>
 arma_warn_unused
 inline
@@ -51,6 +85,40 @@ join_vert(const T1& A, const T2& B)
   arma_extra_debug_sigprint();
   
   return Glue<T1, T2, glue_join_cols>(A, B);
+  }
+
+
+
+template<typename eT, typename T1, typename T2, typename T3>
+arma_warn_unused
+inline
+Mat<eT>
+join_vert(const Base<eT,T1>& A, const Base<eT,T2>& B, const Base<eT,T3>& C)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT> out;
+  
+  glue_join_cols::apply(out, A.get_ref(), B.get_ref(), C.get_ref());
+  
+  return out;
+  }
+
+
+
+template<typename eT, typename T1, typename T2, typename T3, typename T4>
+arma_warn_unused
+inline
+Mat<eT>
+join_vert(const Base<eT,T1>& A, const Base<eT,T2>& B, const Base<eT,T3>& C, const Base<eT,T4>& D)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT> out;
+  
+  glue_join_cols::apply(out, A.get_ref(), B.get_ref(), C.get_ref(), D.get_ref());
+  
+  return out;
   }
 
 
@@ -73,6 +141,40 @@ join_rows(const T1& A, const T2& B)
 
 
 
+template<typename eT, typename T1, typename T2, typename T3>
+arma_warn_unused
+inline
+Mat<eT>
+join_rows(const Base<eT,T1>& A, const Base<eT,T2>& B, const Base<eT,T3>& C)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT> out;
+  
+  glue_join_rows::apply(out, A.get_ref(), B.get_ref(), C.get_ref());
+  
+  return out;
+  }
+
+
+
+template<typename eT, typename T1, typename T2, typename T3, typename T4>
+arma_warn_unused
+inline
+Mat<eT>
+join_rows(const Base<eT,T1>& A, const Base<eT,T2>& B, const Base<eT,T3>& C, const Base<eT,T4>& D)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT> out;
+  
+  glue_join_rows::apply(out, A.get_ref(), B.get_ref(), C.get_ref(), D.get_ref());
+  
+  return out;
+  }
+
+
+
 template<typename T1, typename T2>
 arma_warn_unused
 inline
@@ -87,6 +189,40 @@ join_horiz(const T1& A, const T2& B)
   arma_extra_debug_sigprint();
   
   return Glue<T1, T2, glue_join_rows>(A, B);
+  }
+
+
+
+template<typename eT, typename T1, typename T2, typename T3>
+arma_warn_unused
+inline
+Mat<eT>
+join_horiz(const Base<eT,T1>& A, const Base<eT,T2>& B, const Base<eT,T3>& C)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT> out;
+  
+  glue_join_rows::apply(out, A.get_ref(), B.get_ref(), C.get_ref());
+  
+  return out;
+  }
+
+
+
+template<typename eT, typename T1, typename T2, typename T3, typename T4>
+arma_warn_unused
+inline
+Mat<eT>
+join_horiz(const Base<eT,T1>& A, const Base<eT,T2>& B, const Base<eT,T3>& C, const Base<eT,T4>& D)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT> out;
+  
+  glue_join_rows::apply(out, A.get_ref(), B.get_ref(), C.get_ref(), D.get_ref());
+  
+  return out;
   }
 
 
@@ -186,6 +322,40 @@ join_cols(const SpBase<typename T1::elem_type,T1>& A, const SpBase<typename T1::
 
 
 
+template<typename eT, typename T1, typename T2, typename T3>
+arma_warn_unused
+inline
+SpMat<eT>
+join_cols(const SpBase<eT,T1>& A, const SpBase<eT,T2>& B, const SpBase<eT,T3>& C)
+  {
+  arma_extra_debug_sigprint();
+  
+  SpMat<eT> out;
+  
+  spglue_join_cols::apply(out, A.get_ref(), B.get_ref(), C.get_ref());
+  
+  return out;
+  }
+
+
+
+template<typename eT, typename T1, typename T2, typename T3, typename T4>
+arma_warn_unused
+inline
+SpMat<eT>
+join_cols(const SpBase<eT,T1>& A, const SpBase<eT,T2>& B, const SpBase<eT,T3>& C, const SpBase<eT,T4>& D)
+  {
+  arma_extra_debug_sigprint();
+  
+  SpMat<eT> out;
+  
+  spglue_join_cols::apply(out, A.get_ref(), B.get_ref(), C.get_ref(), D.get_ref());
+  
+  return out;
+  }
+
+
+
 template<typename T1, typename T2>
 arma_warn_unused
 inline
@@ -195,6 +365,40 @@ join_vert(const SpBase<typename T1::elem_type,T1>& A, const SpBase<typename T1::
   arma_extra_debug_sigprint();
   
   return SpGlue<T1, T2, spglue_join_cols>(A.get_ref(), B.get_ref());
+  }
+
+
+
+template<typename eT, typename T1, typename T2, typename T3>
+arma_warn_unused
+inline
+SpMat<eT>
+join_vert(const SpBase<eT,T1>& A, const SpBase<eT,T2>& B, const SpBase<eT,T3>& C)
+  {
+  arma_extra_debug_sigprint();
+  
+  SpMat<eT> out;
+  
+  spglue_join_cols::apply(out, A.get_ref(), B.get_ref(), C.get_ref());
+  
+  return out;
+  }
+
+
+
+template<typename eT, typename T1, typename T2, typename T3, typename T4>
+arma_warn_unused
+inline
+SpMat<eT>
+join_vert(const SpBase<eT,T1>& A, const SpBase<eT,T2>& B, const SpBase<eT,T3>& C, const SpBase<eT,T4>& D)
+  {
+  arma_extra_debug_sigprint();
+  
+  SpMat<eT> out;
+  
+  spglue_join_cols::apply(out, A.get_ref(), B.get_ref(), C.get_ref(), D.get_ref());
+  
+  return out;
   }
 
 
@@ -212,6 +416,40 @@ join_rows(const SpBase<typename T1::elem_type,T1>& A, const SpBase<typename T1::
 
 
 
+template<typename eT, typename T1, typename T2, typename T3>
+arma_warn_unused
+inline
+SpMat<eT>
+join_rows(const SpBase<eT,T1>& A, const SpBase<eT,T2>& B, const SpBase<eT,T3>& C)
+  {
+  arma_extra_debug_sigprint();
+  
+  SpMat<eT> out;
+  
+  spglue_join_rows::apply(out, A.get_ref(), B.get_ref(), C.get_ref());
+  
+  return out;
+  }
+
+
+
+template<typename eT, typename T1, typename T2, typename T3, typename T4>
+arma_warn_unused
+inline
+SpMat<eT>
+join_rows(const SpBase<eT,T1>& A, const SpBase<eT,T2>& B, const SpBase<eT,T3>& C, const SpBase<eT,T4>& D)
+  {
+  arma_extra_debug_sigprint();
+  
+  SpMat<eT> out;
+  
+  spglue_join_rows::apply(out, A.get_ref(), B.get_ref(), C.get_ref(), D.get_ref());
+  
+  return out;
+  }
+
+
+
 template<typename T1, typename T2>
 arma_warn_unused
 inline
@@ -221,6 +459,40 @@ join_horiz(const SpBase<typename T1::elem_type,T1>& A, const SpBase<typename T1:
   arma_extra_debug_sigprint();
   
   return SpGlue<T1, T2, spglue_join_rows>(A.get_ref(), B.get_ref());
+  }
+
+
+
+template<typename eT, typename T1, typename T2, typename T3>
+arma_warn_unused
+inline
+SpMat<eT>
+join_horiz(const SpBase<eT,T1>& A, const SpBase<eT,T2>& B, const SpBase<eT,T3>& C)
+  {
+  arma_extra_debug_sigprint();
+  
+  SpMat<typename T1::elem_type> out;
+  
+  spglue_join_rows::apply(out, A.get_ref(), B.get_ref(), C.get_ref());
+  
+  return out;
+  }
+
+
+
+template<typename eT, typename T1, typename T2, typename T3, typename T4>
+arma_warn_unused
+inline
+SpMat<eT>
+join_horiz(const SpBase<eT,T1>& A, const SpBase<eT,T2>& B, const SpBase<eT,T3>& C, const SpBase<eT,T4>& D)
+  {
+  arma_extra_debug_sigprint();
+  
+  SpMat<eT> out;
+  
+  spglue_join_rows::apply(out, A.get_ref(), B.get_ref(), C.get_ref(), D.get_ref());
+  
+  return out;
   }
 
 

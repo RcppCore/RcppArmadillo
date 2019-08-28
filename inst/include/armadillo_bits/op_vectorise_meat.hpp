@@ -306,7 +306,7 @@ op_vectorise_all::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_vectori
 template<typename T1>
 inline
 void
-op_vectorise_cube_col::apply(Mat<typename T1::elem_type>& out, const BaseCube<typename T1::elem_type, T1>& in)
+op_vectorise_cube_col::apply(Mat<typename T1::elem_type>& out, const CubeToMatOp<T1, op_vectorise_cube_col>& in)
   {
   arma_extra_debug_sigprint();
   
@@ -314,11 +314,11 @@ op_vectorise_cube_col::apply(Mat<typename T1::elem_type>& out, const BaseCube<ty
   
   if(is_same_type< T1, subview_cube<eT> >::yes)
     {
-    op_vectorise_cube_col::apply_subview(out, reinterpret_cast< const subview_cube<eT>& >(in.get_ref()));
+    op_vectorise_cube_col::apply_subview(out, reinterpret_cast< const subview_cube<eT>& >(in.m));
     }
   else
     {
-    const ProxyCube<T1> P(in.get_ref());
+    const ProxyCube<T1> P(in.m);
     
     op_vectorise_cube_col::apply_proxy(out, P);
     }

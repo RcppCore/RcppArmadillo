@@ -94,6 +94,9 @@ class glue_rel_noteq;
 class glue_rel_and;
 class glue_rel_or;
 
+class spglue_rel_lt;
+class spglue_rel_gt;
+
 class op_rel_lt_pre;
 class op_rel_lt_post;
 class op_rel_gt_pre;
@@ -212,10 +215,11 @@ template<const bool, const bool, const bool>             class gemv;
 
 template<                 typename eT, typename gen_type> class  Gen; 
 
-template<                 typename T1, typename  op_type> class      Op; 
-template<                 typename T1, typename eop_type> class     eOp;
-template<                 typename T1, typename  op_type> class SpToDOp; 
-template<typename out_eT, typename T1, typename  op_type> class    mtOp;
+template<                 typename T1, typename  op_type> class          Op; 
+template<                 typename T1, typename eop_type> class         eOp;
+template<                 typename T1, typename  op_type> class     SpToDOp; 
+template<                 typename T1, typename  op_type> class CubeToMatOp;
+template<typename out_eT, typename T1, typename  op_type> class        mtOp;
 
 template<                 typename T1, typename T2, typename  glue_type> class   Glue;
 template<                 typename T1, typename T2, typename eglue_type> class  eGlue;

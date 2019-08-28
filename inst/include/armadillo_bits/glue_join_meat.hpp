@@ -85,6 +85,97 @@ glue_join_cols::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_jo
 
 
 
+template<typename eT, typename T1, typename T2, typename T3>
+inline
+void
+glue_join_cols::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>& B_expr, const Base<eT,T3>& C_expr)
+  {
+  arma_extra_debug_sigprint();
+  
+  const quasi_unwrap<T1> UA(A_expr.get_ref());
+  const quasi_unwrap<T2> UB(B_expr.get_ref());
+  const quasi_unwrap<T3> UC(C_expr.get_ref());
+  
+  const Mat<eT>& A = UA.M;
+  const Mat<eT>& B = UB.M;
+  const Mat<eT>& C = UC.M;
+  
+  const uword out_n_rows = A.n_rows + B.n_rows + C.n_rows;
+  const uword out_n_cols = (std::max)((std::max)(A.n_cols, B.n_cols), C.n_cols);
+  
+  arma_debug_check( ((A.n_cols != out_n_cols) && ((A.n_rows > 0) || (A.n_cols > 0))), "join_cols() / join_vert(): number of columns must be the same" );
+  arma_debug_check( ((B.n_cols != out_n_cols) && ((B.n_rows > 0) || (B.n_cols > 0))), "join_cols() / join_vert(): number of columns must be the same" );
+  arma_debug_check( ((C.n_cols != out_n_cols) && ((C.n_rows > 0) || (C.n_cols > 0))), "join_cols() / join_vert(): number of columns must be the same" );
+  
+  out.set_size(out_n_rows, out_n_cols);
+  
+  if(out.n_elem == 0)  { return; }
+  
+  uword row_start  = 0;
+  uword row_end_p1 = 0;
+  
+  if(A.n_elem > 0)  { row_end_p1 += A.n_rows; out.rows(row_start, row_end_p1 - 1) = A; }
+  
+  row_start = row_end_p1;
+  
+  if(B.n_elem > 0)  { row_end_p1 += B.n_rows; out.rows(row_start, row_end_p1 - 1) = B; }
+  
+  row_start = row_end_p1;
+  
+  if(C.n_elem > 0)  { row_end_p1 += C.n_rows; out.rows(row_start, row_end_p1 - 1) = C; }
+  }
+
+
+
+template<typename eT, typename T1, typename T2, typename T3, typename T4>
+inline
+void
+glue_join_cols::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>& B_expr, const Base<eT,T3>& C_expr, const Base<eT,T4>& D_expr)
+  {
+  arma_extra_debug_sigprint();
+  
+  const quasi_unwrap<T1> UA(A_expr.get_ref());
+  const quasi_unwrap<T2> UB(B_expr.get_ref());
+  const quasi_unwrap<T3> UC(C_expr.get_ref());
+  const quasi_unwrap<T4> UD(D_expr.get_ref());
+  
+  const Mat<eT>& A = UA.M;
+  const Mat<eT>& B = UB.M;
+  const Mat<eT>& C = UC.M;
+  const Mat<eT>& D = UD.M;
+  
+  const uword out_n_rows = A.n_rows + B.n_rows + C.n_rows + D.n_rows;
+  const uword out_n_cols = (std::max)(((std::max)((std::max)(A.n_cols, B.n_cols), C.n_cols)), D.n_cols);
+  
+  arma_debug_check( ((A.n_cols != out_n_cols) && ((A.n_rows > 0) || (A.n_cols > 0))), "join_cols() / join_vert(): number of columns must be the same" );
+  arma_debug_check( ((B.n_cols != out_n_cols) && ((B.n_rows > 0) || (B.n_cols > 0))), "join_cols() / join_vert(): number of columns must be the same" );
+  arma_debug_check( ((C.n_cols != out_n_cols) && ((C.n_rows > 0) || (C.n_cols > 0))), "join_cols() / join_vert(): number of columns must be the same" );
+  arma_debug_check( ((D.n_cols != out_n_cols) && ((D.n_rows > 0) || (D.n_cols > 0))), "join_cols() / join_vert(): number of columns must be the same" );
+  
+  out.set_size(out_n_rows, out_n_cols);
+  
+  if(out.n_elem == 0)  { return; }
+  
+  uword row_start  = 0;
+  uword row_end_p1 = 0;
+  
+  if(A.n_elem > 0)  { row_end_p1 += A.n_rows; out.rows(row_start, row_end_p1 - 1) = A; }
+  
+  row_start = row_end_p1;
+  
+  if(B.n_elem > 0)  { row_end_p1 += B.n_rows; out.rows(row_start, row_end_p1 - 1) = B; }
+  
+  row_start = row_end_p1;
+  
+  if(C.n_elem > 0)  { row_end_p1 += C.n_rows; out.rows(row_start, row_end_p1 - 1) = C; }
+  
+  row_start = row_end_p1;
+  
+  if(D.n_elem > 0)  { row_end_p1 += D.n_rows; out.rows(row_start, row_end_p1 - 1) = D; }
+  }
+
+
+
 template<typename T1, typename T2>
 inline
 void
@@ -147,6 +238,97 @@ glue_join_rows::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_jo
     
     out.steal_mem(tmp);
     }
+  }
+
+
+
+template<typename eT, typename T1, typename T2, typename T3>
+inline
+void
+glue_join_rows::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>& B_expr, const Base<eT,T3>& C_expr)
+  {
+  arma_extra_debug_sigprint();
+  
+  const quasi_unwrap<T1> UA(A_expr.get_ref());
+  const quasi_unwrap<T2> UB(B_expr.get_ref());
+  const quasi_unwrap<T3> UC(C_expr.get_ref());
+  
+  const Mat<eT>& A = UA.M;
+  const Mat<eT>& B = UB.M;
+  const Mat<eT>& C = UC.M;
+  
+  const uword out_n_rows = (std::max)((std::max)(A.n_rows, B.n_rows), C.n_rows);
+  const uword out_n_cols = A.n_cols + B.n_cols + C.n_cols;
+  
+  arma_debug_check( ((A.n_rows != out_n_rows) && ((A.n_rows > 0) || (A.n_cols > 0))), "join_rows() / join_horiz(): number of rows must be the same" );
+  arma_debug_check( ((B.n_rows != out_n_rows) && ((B.n_rows > 0) || (B.n_cols > 0))), "join_rows() / join_horiz(): number of rows must be the same" );
+  arma_debug_check( ((C.n_rows != out_n_rows) && ((C.n_rows > 0) || (C.n_cols > 0))), "join_rows() / join_horiz(): number of rows must be the same" );
+  
+  out.set_size(out_n_rows, out_n_cols);
+  
+  if(out.n_elem == 0)  { return; }
+  
+  uword col_start  = 0;
+  uword col_end_p1 = 0;
+  
+  if(A.n_elem > 0)  { col_end_p1 += A.n_cols; out.cols(col_start, col_end_p1 - 1) = A; }
+  
+  col_start = col_end_p1;
+  
+  if(B.n_elem > 0)  { col_end_p1 += B.n_cols; out.cols(col_start, col_end_p1 - 1) = B; }
+  
+  col_start = col_end_p1;
+  
+  if(C.n_elem > 0)  { col_end_p1 += C.n_cols; out.cols(col_start, col_end_p1 - 1) = C; }
+  }
+
+
+
+template<typename eT, typename T1, typename T2, typename T3, typename T4>
+inline
+void
+glue_join_rows::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>& B_expr, const Base<eT,T3>& C_expr, const Base<eT,T4>& D_expr)
+  {
+  arma_extra_debug_sigprint();
+  
+  const quasi_unwrap<T1> UA(A_expr.get_ref());
+  const quasi_unwrap<T2> UB(B_expr.get_ref());
+  const quasi_unwrap<T3> UC(C_expr.get_ref());
+  const quasi_unwrap<T4> UD(D_expr.get_ref());
+  
+  const Mat<eT>& A = UA.M;
+  const Mat<eT>& B = UB.M;
+  const Mat<eT>& C = UC.M;
+  const Mat<eT>& D = UD.M;
+  
+  const uword out_n_rows = (std::max)(((std::max)((std::max)(A.n_rows, B.n_rows), C.n_rows)), D.n_rows);
+  const uword out_n_cols = A.n_cols + B.n_cols + C.n_cols + D.n_cols;
+  
+  arma_debug_check( ((A.n_rows != out_n_rows) && ((A.n_rows > 0) || (A.n_cols > 0))), "join_rows() / join_horiz(): number of rows must be the same" );
+  arma_debug_check( ((B.n_rows != out_n_rows) && ((B.n_rows > 0) || (B.n_cols > 0))), "join_rows() / join_horiz(): number of rows must be the same" );
+  arma_debug_check( ((C.n_rows != out_n_rows) && ((C.n_rows > 0) || (C.n_cols > 0))), "join_rows() / join_horiz(): number of rows must be the same" );
+  arma_debug_check( ((D.n_rows != out_n_rows) && ((D.n_rows > 0) || (D.n_cols > 0))), "join_rows() / join_horiz(): number of rows must be the same" );
+  
+  out.set_size(out_n_rows, out_n_cols);
+  
+  if(out.n_elem == 0)  { return; }
+  
+  uword col_start  = 0;
+  uword col_end_p1 = 0;
+  
+  if(A.n_elem > 0)  { col_end_p1 += A.n_cols; out.cols(col_start, col_end_p1 - 1) = A; }
+  
+  col_start = col_end_p1;
+  
+  if(B.n_elem > 0)  { col_end_p1 += B.n_cols; out.cols(col_start, col_end_p1 - 1) = B; }
+  
+  col_start = col_end_p1;
+  
+  if(C.n_elem > 0)  { col_end_p1 += C.n_cols; out.cols(col_start, col_end_p1 - 1) = C; }
+  
+  col_start = col_end_p1;
+  
+  if(D.n_elem > 0)  { col_end_p1 += D.n_cols; out.cols(col_start, col_end_p1 - 1) = D; }
   }
 
 

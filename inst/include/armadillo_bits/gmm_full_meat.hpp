@@ -496,19 +496,11 @@ gmm_full<eT>::log_p(const T1& expr, const gmm_empty_arg& junk1, typename enable_
   arma_ignore(junk1);
   arma_ignore(junk2);
   
-  if(is_subview<T1>::value)
-    {
-    const subview<eT>& X = reinterpret_cast< const subview<eT>& >(expr);
-    
-    return internal_vec_log_p(X);
-    }
-  else
-    {
-    const unwrap<T1>   tmp(expr);
-    const Mat<eT>& X = tmp.M;
-    
-    return internal_vec_log_p(X);
-    }
+  const quasi_unwrap<T1> tmp(expr);
+  
+  const Mat<eT>& X = tmp.M;
+  
+  return internal_vec_log_p(X);
   }
 
 
@@ -522,19 +514,11 @@ gmm_full<eT>::log_p(const T1& expr, const uword gaus_id, typename enable_if<((is
   arma_extra_debug_sigprint();
   arma_ignore(junk2);
   
-  if(is_subview<T1>::value)
-    {
-    const subview<eT>& X = reinterpret_cast< const subview<eT>& >(expr);
-    
-    return internal_vec_log_p(X, gaus_id);
-    }
-  else
-    {
-    const unwrap<T1>   tmp(expr);
-    const Mat<eT>& X = tmp.M;
-    
-    return internal_vec_log_p(X, gaus_id);
-    }
+  const quasi_unwrap<T1> tmp(expr);
+  
+  const Mat<eT>& X = tmp.M;
+  
+  return internal_vec_log_p(X, gaus_id);
   }
 
 
@@ -547,19 +531,11 @@ gmm_full<eT>::sum_log_p(const Base<eT,T1>& expr) const
   {
   arma_extra_debug_sigprint();
   
-  if(is_subview<T1>::value)
-    {
-    const subview<eT>& X = reinterpret_cast< const subview<eT>& >( expr.get_ref() );
-    
-    return internal_sum_log_p(X);
-    }
-  else
-    {
-    const unwrap<T1>   tmp(expr.get_ref());
-    const Mat<eT>& X = tmp.M;
-    
-    return internal_sum_log_p(X);
-    }
+  const quasi_unwrap<T1> tmp(expr.get_ref());
+  
+  const Mat<eT>& X = tmp.M;
+  
+  return internal_sum_log_p(X);
   }
 
 
@@ -572,19 +548,11 @@ gmm_full<eT>::sum_log_p(const Base<eT,T1>& expr, const uword gaus_id) const
   {
   arma_extra_debug_sigprint();
   
-  if(is_subview<T1>::value)
-    {
-    const subview<eT>& X = reinterpret_cast< const subview<eT>& >( expr.get_ref() );
-    
-    return internal_sum_log_p(X, gaus_id);
-    }
-  else
-    {
-    const unwrap<T1>   tmp(expr.get_ref());
-    const Mat<eT>& X = tmp.M;
-    
-    return internal_sum_log_p(X, gaus_id);
-    }
+  const quasi_unwrap<T1> tmp(expr.get_ref());
+  
+  const Mat<eT>& X = tmp.M;
+  
+  return internal_sum_log_p(X, gaus_id);
   }
 
 
@@ -597,19 +565,11 @@ gmm_full<eT>::avg_log_p(const Base<eT,T1>& expr) const
   {
   arma_extra_debug_sigprint();
   
-  if(is_subview<T1>::value)
-    {
-    const subview<eT>& X = reinterpret_cast< const subview<eT>& >( expr.get_ref() );
-    
-    return internal_avg_log_p(X);
-    }
-  else
-    {
-    const unwrap<T1>   tmp(expr.get_ref());
-    const Mat<eT>& X = tmp.M;
-    
-    return internal_avg_log_p(X);
-    }
+  const quasi_unwrap<T1> tmp(expr.get_ref());
+  
+  const Mat<eT>& X = tmp.M;
+  
+  return internal_avg_log_p(X);
   }
 
 
@@ -622,19 +582,11 @@ gmm_full<eT>::avg_log_p(const Base<eT,T1>& expr, const uword gaus_id) const
   {
   arma_extra_debug_sigprint();
   
-  if(is_subview<T1>::value)
-    {
-    const subview<eT>& X = reinterpret_cast< const subview<eT>& >( expr.get_ref() );
-    
-    return internal_avg_log_p(X, gaus_id);
-    }
-  else
-    {
-    const unwrap<T1>   tmp(expr.get_ref());
-    const Mat<eT>& X = tmp.M;
-    
-    return internal_avg_log_p(X, gaus_id);
-    }
+  const quasi_unwrap<T1> tmp(expr.get_ref());
+  
+  const Mat<eT>& X = tmp.M;
+  
+  return internal_avg_log_p(X, gaus_id);
   }
 
 
@@ -648,19 +600,11 @@ gmm_full<eT>::assign(const T1& expr, const gmm_dist_mode& dist, typename enable_
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  if(is_subview_col<T1>::value)
-    {
-    const subview_col<eT>& X = reinterpret_cast< const subview_col<eT>& >(expr);
-    
-    return internal_scalar_assign(X, dist);
-    }
-  else
-    {
-    const unwrap<T1>   tmp(expr);
-    const Mat<eT>& X = tmp.M;
-    
-    return internal_scalar_assign(X, dist);
-    }
+  const quasi_unwrap<T1> tmp(expr);
+  
+  const Mat<eT>& X = tmp.M;
+  
+  return internal_scalar_assign(X, dist);
   }
 
 
@@ -676,19 +620,11 @@ gmm_full<eT>::assign(const T1& expr, const gmm_dist_mode& dist, typename enable_
   
   urowvec out;
   
-  if(is_subview<T1>::value)
-    {
-    const subview<eT>& X = reinterpret_cast< const subview<eT>& >(expr);
-    
-    internal_vec_assign(out, X, dist);
-    }
-  else
-    {
-    const unwrap<T1>   tmp(expr);
-    const Mat<eT>& X = tmp.M;
-    
-    internal_vec_assign(out, X, dist);
-    }
+  const quasi_unwrap<T1> tmp(expr);
+  
+  const Mat<eT>& X = tmp.M;
+  
+  internal_vec_assign(out, X, dist);
   
   return out;
   }
@@ -1196,10 +1132,9 @@ gmm_full<eT>::internal_scalar_log_p(const eT* x, const uword g) const
 
 
 template<typename eT>
-template<typename T1>
 inline
 Row<eT>
-gmm_full<eT>::internal_vec_log_p(const T1& X) const
+gmm_full<eT>::internal_vec_log_p(const Mat<eT>& X) const
   {
   arma_extra_debug_sigprint();
   
@@ -1250,10 +1185,9 @@ gmm_full<eT>::internal_vec_log_p(const T1& X) const
 
 
 template<typename eT>
-template<typename T1>
 inline
 Row<eT>
-gmm_full<eT>::internal_vec_log_p(const T1& X, const uword gaus_id) const
+gmm_full<eT>::internal_vec_log_p(const Mat<eT>& X, const uword gaus_id) const
   {
   arma_extra_debug_sigprint();
   
@@ -1305,10 +1239,9 @@ gmm_full<eT>::internal_vec_log_p(const T1& X, const uword gaus_id) const
 
 
 template<typename eT>
-template<typename T1>
 inline
 eT
-gmm_full<eT>::internal_sum_log_p(const T1& X) const
+gmm_full<eT>::internal_sum_log_p(const Mat<eT>& X) const
   {
   arma_extra_debug_sigprint();
   
@@ -1362,10 +1295,9 @@ gmm_full<eT>::internal_sum_log_p(const T1& X) const
 
 
 template<typename eT>
-template<typename T1>
 inline
 eT
-gmm_full<eT>::internal_sum_log_p(const T1& X, const uword gaus_id) const
+gmm_full<eT>::internal_sum_log_p(const Mat<eT>& X, const uword gaus_id) const
   {
   arma_extra_debug_sigprint();
   
@@ -1420,10 +1352,9 @@ gmm_full<eT>::internal_sum_log_p(const T1& X, const uword gaus_id) const
 
 
 template<typename eT>
-template<typename T1>
 inline
 eT
-gmm_full<eT>::internal_avg_log_p(const T1& X) const
+gmm_full<eT>::internal_avg_log_p(const Mat<eT>& X) const
   {
   arma_extra_debug_sigprint();
   
@@ -1489,10 +1420,9 @@ gmm_full<eT>::internal_avg_log_p(const T1& X) const
 
 
 template<typename eT>
-template<typename T1>
 inline
 eT
-gmm_full<eT>::internal_avg_log_p(const T1& X, const uword gaus_id) const
+gmm_full<eT>::internal_avg_log_p(const Mat<eT>& X, const uword gaus_id) const
   {
   arma_extra_debug_sigprint();
   
@@ -1559,10 +1489,9 @@ gmm_full<eT>::internal_avg_log_p(const T1& X, const uword gaus_id) const
 
 
 template<typename eT>
-template<typename T1>
 inline
 uword
-gmm_full<eT>::internal_scalar_assign(const T1& X, const gmm_dist_mode& dist_mode) const
+gmm_full<eT>::internal_scalar_assign(const Mat<eT>& X, const gmm_dist_mode& dist_mode) const
   {
   arma_extra_debug_sigprint();
   
@@ -1624,10 +1553,9 @@ gmm_full<eT>::internal_scalar_assign(const T1& X, const gmm_dist_mode& dist_mode
 
 
 template<typename eT>
-template<typename T1>
 inline
 void
-gmm_full<eT>::internal_vec_assign(urowvec& out, const T1& X, const gmm_dist_mode& dist_mode) const
+gmm_full<eT>::internal_vec_assign(urowvec& out, const Mat<eT>& X, const gmm_dist_mode& dist_mode) const
   {
   arma_extra_debug_sigprint();
   
@@ -1911,10 +1839,8 @@ gmm_full<eT>::generate_initial_means(const Mat<eT>& X, const gmm_seed_mode& seed
     {
     uvec initial_indices;
     
-         if(seed_mode == static_subset)  { initial_indices = linspace<uvec>(0, X.n_cols-1, N_gaus);                   }
-    else if(seed_mode == random_subset)  { initial_indices = uvec(sort_index(randu<vec>(X.n_cols))).rows(0,N_gaus-1); }
-    
-    // not using randi() here as on some primitive systems it produces vectors with non-unique values
+         if(seed_mode == static_subset)  { initial_indices = linspace<uvec>(0, X.n_cols-1, N_gaus); }
+    else if(seed_mode == random_subset)  { initial_indices = randperm<uvec>(X.n_cols, N_gaus);      }
     
     // initial_indices.print("initial_indices:");
     
