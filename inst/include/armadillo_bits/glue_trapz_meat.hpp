@@ -30,23 +30,20 @@ glue_trapz::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_trapz>
   
   const uword dim = in.aux_uword;
   
-  const unwrap<T1> UX(in.A);
-  const unwrap<T2> UY(in.B);
+  const quasi_unwrap<T1> UX(in.A);
+  const quasi_unwrap<T2> UY(in.B);
   
-  const Mat<eT>& X = UX.M;
-  const Mat<eT>& Y = UY.M;
-  
-  if( (&out == &X) || (&out == &Y) )
+  if( UX.is_alias(out) || UY.is_alias(out) )
     {
     Mat<eT> tmp;
     
-    glue_trapz::apply_noalias(tmp, X, Y, dim);
+    glue_trapz::apply_noalias(tmp, UX.M, UY.M, dim);
     
     out.steal_mem(tmp);
     }
   else
     {
-    glue_trapz::apply_noalias(out, X, Y, dim);
+    glue_trapz::apply_noalias(out, UX.M, UY.M, dim);
     }
   }
 
@@ -113,20 +110,19 @@ op_trapz::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_trapz>& in)
   
   const uword dim = in.aux_uword_a;
   
-  const unwrap<T1>   UY(in.m);
-  const Mat<eT>& Y = UY.M;
+  const quasi_unwrap<T1> UY(in.m);
   
-  if(&out == &Y)
+  if(UY.is_alias(out))
     {
     Mat<eT> tmp;
     
-    op_trapz::apply_noalias(tmp, Y, dim);
+    op_trapz::apply_noalias(tmp, UY.M, dim);
     
     out.steal_mem(tmp);
     }
   else
     {
-    op_trapz::apply_noalias(out, Y, dim);
+    op_trapz::apply_noalias(out, UY.M, dim);
     }
   }
 

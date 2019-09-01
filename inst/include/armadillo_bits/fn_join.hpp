@@ -253,8 +253,8 @@ join_slices(const Base<typename T1::elem_type,T1>& A, const Base<typename T1::el
   
   typedef typename T1::elem_type eT;
   
-  const unwrap<T1> UA(A.get_ref());
-  const unwrap<T2> UB(B.get_ref());
+  const quasi_unwrap<T1> UA(A.get_ref());
+  const quasi_unwrap<T2> UB(B.get_ref());
   
   arma_debug_assert_same_size(UA.M.n_rows, UA.M.n_cols, UB.M.n_rows, UB.M.n_cols, "join_slices(): incompatible dimensions");
   
@@ -278,7 +278,7 @@ join_slices(const Base<typename T1::elem_type,T1>& A, const BaseCube<typename T1
   
   typedef typename T1::elem_type eT;
   
-  const unwrap<T1> U(A.get_ref());
+  const quasi_unwrap<T1> U(A.get_ref());
   
   const Cube<eT> M(const_cast<eT*>(U.M.memptr()), U.M.n_rows, U.M.n_cols, 1, false);
   
@@ -297,7 +297,7 @@ join_slices(const BaseCube<typename T1::elem_type,T1>& A, const Base<typename T1
   
   typedef typename T1::elem_type eT;
   
-  const unwrap<T2> U(B.get_ref());
+  const quasi_unwrap<T2> U(B.get_ref());
   
   const Cube<eT> M(const_cast<eT*>(U.M.memptr()), U.M.n_rows, U.M.n_cols, 1, false);
   

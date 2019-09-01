@@ -726,6 +726,12 @@ class Mat : public Base< eT, Mat<eT> >
   inline bool  empty() const;
   inline uword size()  const;
   
+  inline       eT& front();
+  inline const eT& front() const;
+  
+  inline       eT& back();
+  inline const eT& back() const;
+  
   inline void swap(Mat& B);
   
   inline void steal_mem(Mat& X);  //!< don't use this unless you're writing code internal to Armadillo

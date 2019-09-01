@@ -99,13 +99,13 @@ op_nonzeros::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_nonzeros>& 
 template<typename T1>
 inline
 void
-op_nonzeros::apply_noalias(Mat<typename T1::elem_type>& out, const SpBase<typename T1::elem_type,T1>& X)
+op_nonzeros_spmat::apply(Mat<typename T1::elem_type>& out, const SpToDOp<T1, op_nonzeros_spmat>& X)
   {
   arma_extra_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
-  const SpProxy<T1> P(X.get_ref());
+  const SpProxy<T1> P(X.m);
   
   const uword N = P.get_n_nonzero();
   
@@ -129,8 +129,7 @@ op_nonzeros::apply_noalias(Mat<typename T1::elem_type>& out, const SpBase<typena
       }
     }
   }
-  
-  
-  
-  
+
+
+
 //! @}

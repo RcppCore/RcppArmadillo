@@ -21,8 +21,8 @@
 
 #define ARMA_VERSION_MAJOR 9
 #define ARMA_VERSION_MINOR 700
-#define ARMA_VERSION_PATCH 1
-#define ARMA_VERSION_NAME  "9.700-RC1"
+#define ARMA_VERSION_PATCH 2
+#define ARMA_VERSION_NAME  "Gangster Democracy"
 
 
 
