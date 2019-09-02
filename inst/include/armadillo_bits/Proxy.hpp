@@ -895,6 +895,58 @@ class Proxy< SpToDOp<T1, op_type> >
 
 
 
+template<typename T1>
+class Proxy< SpToDOp<T1, op_nonzeros_spmat> >
+  {
+  public:
+  
+  typedef typename T1::elem_type                   elem_type;
+  typedef typename get_pod_type<elem_type>::result pod_type;
+  typedef Mat<elem_type>                           stored_type;
+  typedef const elem_type*                         ea_type;
+  typedef const Mat<elem_type>&                    aligned_ea_type;
+  
+  static const bool use_at      = false;
+  static const bool use_mp      = false;
+  static const bool has_subview = false;
+  static const bool fake_mat    = true;
+  
+  static const bool is_row  = false;
+  static const bool is_col  = true;
+  static const bool is_xvec = false;
+  
+  arma_aligned const unwrap_spmat<T1> U;
+  arma_aligned const Mat<elem_type>   Q;
+  
+  inline explicit Proxy(const SpToDOp<T1, op_nonzeros_spmat>& A)
+    : U(A.m)
+    , Q(const_cast<elem_type*>(U.M.values), U.M.n_nonzero, 1, false, true)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  arma_inline uword get_n_rows() const { return Q.n_rows; }
+  arma_inline uword get_n_cols() const { return 1;        }
+  arma_inline uword get_n_elem() const { return Q.n_elem; }
+  
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
+  arma_inline elem_type at         (const uword row, const uword) const { return Q[row];      }
+  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
+  
+  arma_inline         ea_type         get_ea() const { return Q.memptr(); }
+  arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>&) const { return false; }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>&) const { return false; }
+  
+  arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
+  };
+
+
+
 template<typename eT>
 class Proxy< subview<eT> >
   {

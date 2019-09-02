@@ -94,9 +94,6 @@ class glue_rel_noteq;
 class glue_rel_and;
 class glue_rel_or;
 
-class spglue_rel_lt;
-class spglue_rel_gt;
-
 class op_rel_lt_pre;
 class op_rel_lt_post;
 class op_rel_gt_pre;
@@ -113,6 +110,22 @@ class gen_ones;
 class gen_zeros;
 class gen_randu;
 class gen_randn;
+
+
+
+class spop_strans;
+class spop_htrans;
+class spop_vectorise_row;
+class spop_vectorise_col;
+
+class spglue_plus;
+class spglue_minus;
+class spglue_schur;
+class spglue_times;
+class spglue_max;
+class spglue_min;
+class spglue_rel_lt;
+class spglue_rel_gt;
 
 
 
@@ -243,17 +256,12 @@ template<typename T1> class ProxyCube;
 
 template<typename T1> class diagmat_proxy;
 
-class spop_strans;
-class spop_htrans;
-class spop_vectorise_row;
-class spop_vectorise_col;
+template<typename T1> struct unwrap;
+template<typename T1> struct unwrap_cube;
+template<typename T1> struct unwrap_spmat;
 
-class spglue_plus;
-class spglue_minus;
-class spglue_schur;
-class spglue_times;
-class spglue_max;
-class spglue_min;
+
+
 
 struct state_type
   {

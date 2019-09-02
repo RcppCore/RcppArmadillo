@@ -672,8 +672,8 @@ op_mean::mean_all(const Base<typename T1::elem_type, T1>& X)
   
   typedef typename T1::elem_type eT;
   
-  const unwrap<T1>   tmp(X.get_ref());
-  const Mat<eT>& A = tmp.M;
+  const quasi_unwrap<T1> tmp(X.get_ref());
+  const Mat<eT>&     A = tmp.M;
   
   const uword A_n_elem = A.n_elem;
   

@@ -495,7 +495,7 @@ sub2ind(const SizeMat& s, const Base<uword,T1>& subscripts)
   const uword s_n_rows = s.n_rows;
   const uword s_n_cols = s.n_cols;
   
-  const unwrap<T1> U(subscripts.get_ref());
+  const quasi_unwrap<T1> U(subscripts.get_ref());
   
   arma_debug_check( (U.M.n_rows != 2), "sub2ind(): matrix of subscripts must have 2 rows" );
   
@@ -552,7 +552,7 @@ sub2ind(const SizeCube& s, const Base<uword,T1>& subscripts)
   const uword s_n_cols   = s.n_cols;
   const uword s_n_slices = s.n_slices;
   
-  const unwrap<T1> U(subscripts.get_ref());
+  const quasi_unwrap<T1> U(subscripts.get_ref());
   
   arma_debug_check( (U.M.n_rows != 3), "sub2ind(): matrix of subscripts must have 3 rows" );
   
