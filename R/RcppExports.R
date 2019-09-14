@@ -64,27 +64,27 @@ fastLm_impl <- function(X, y) {
     .Call(`_RcppArmadillo_vecrany_as_v_test`, v)
 }
 
-wrap_ <- function() {
+.wrap_ <- function() {
     .Call(`_RcppArmadillo_wrap_`)
 }
 
-wrapGlue_ <- function() {
+.wrapGlue_ <- function() {
     .Call(`_RcppArmadillo_wrapGlue_`)
 }
 
-wrapOp_ <- function() {
+.wrapOp_ <- function() {
     .Call(`_RcppArmadillo_wrapOp_`)
 }
 
-asMat_ <- function(input) {
+.asMat_ <- function(input) {
     .Call(`_RcppArmadillo_asMat_`, input)
 }
 
-asCol_ <- function(input) {
+.asCol_ <- function(input) {
     .Call(`_RcppArmadillo_asCol_`, input)
 }
 
-asRow_ <- function(input) {
+.asRow_ <- function(input) {
     .Call(`_RcppArmadillo_asRow_`, input)
 }
 
@@ -92,107 +92,107 @@ cxMat_ <- function() {
     .Call(`_RcppArmadillo_cxMat_`)
 }
 
-mtOp_ <- function() {
+.mtOp_ <- function() {
     .Call(`_RcppArmadillo_mtOp_`)
 }
 
-mtGlue_ <- function() {
+.mtGlue_ <- function() {
     .Call(`_RcppArmadillo_mtGlue_`)
 }
 
-sugar_ <- function(xx) {
+.sugar_ <- function(xx) {
     .Call(`_RcppArmadillo_sugar_`, xx)
 }
 
-sugarCplx_ <- function(xx) {
+.sugarCplx_ <- function(xx) {
     .Call(`_RcppArmadillo_sugarCplx_`, xx)
 }
 
-sugarCtor_ <- function(xx) {
+.sugarCtor_ <- function(xx) {
     .Call(`_RcppArmadillo_sugarCtor_`, xx)
 }
 
-sugarMatrixCtor_ <- function(xx) {
+.sugarMatrixCtor_ <- function(xx) {
     .Call(`_RcppArmadillo_sugarMatrixCtor_`, xx)
 }
 
-mat_plain <- function(x) {
+.mat_plain <- function(x) {
     .Call(`_RcppArmadillo_mat_plain`, x)
 }
 
-mat_const <- function(x) {
+.mat_const <- function(x) {
     .Call(`_RcppArmadillo_mat_const`, x)
 }
 
-mat_ref <- function(x) {
+.mat_ref <- function(x) {
     .Call(`_RcppArmadillo_mat_ref`, x)
 }
 
-mat_const_ref <- function(x) {
+.mat_const_ref <- function(x) {
     .Call(`_RcppArmadillo_mat_const_ref`, x)
 }
 
-vec_plain <- function(x) {
+.vec_plain <- function(x) {
     .Call(`_RcppArmadillo_vec_plain`, x)
 }
 
-vec_const <- function(x) {
+.vec_const <- function(x) {
     .Call(`_RcppArmadillo_vec_const`, x)
 }
 
-vec_ref <- function(x) {
+.vec_ref <- function(x) {
     .Call(`_RcppArmadillo_vec_ref`, x)
 }
 
-vec_const_ref <- function(x) {
+.vec_const_ref <- function(x) {
     .Call(`_RcppArmadillo_vec_const_ref`, x)
 }
 
-cx_mat_plain <- function(x) {
+.cx_mat_plain <- function(x) {
     .Call(`_RcppArmadillo_cx_mat_plain`, x)
 }
 
-cx_mat_const <- function(x) {
+.cx_mat_const <- function(x) {
     .Call(`_RcppArmadillo_cx_mat_const`, x)
 }
 
-cx_mat_ref <- function(x) {
+.cx_mat_ref <- function(x) {
     .Call(`_RcppArmadillo_cx_mat_ref`, x)
 }
 
-cx_mat_const_ref <- function(x) {
+.cx_mat_const_ref <- function(x) {
     .Call(`_RcppArmadillo_cx_mat_const_ref`, x)
 }
 
-uvec_test <- function(v) {
+.uvec_test <- function(v) {
     .Call(`_RcppArmadillo_uvec_test`, v)
 }
 
-c_uvec_test <- function(v) {
+.c_uvec_test <- function(v) {
     .Call(`_RcppArmadillo_c_uvec_test`, v)
 }
 
-r_uvec_test <- function(v) {
+.r_uvec_test <- function(v) {
     .Call(`_RcppArmadillo_r_uvec_test`, v)
 }
 
-cr_uvec_test <- function(v) {
+.cr_uvec_test <- function(v) {
     .Call(`_RcppArmadillo_cr_uvec_test`, v)
 }
 
-umat_test <- function(v) {
+.umat_test <- function(v) {
     .Call(`_RcppArmadillo_umat_test`, v)
 }
 
-c_umat_test <- function(v) {
+.c_umat_test <- function(v) {
     .Call(`_RcppArmadillo_c_umat_test`, v)
 }
 
-r_umat_test <- function(v) {
+.r_umat_test <- function(v) {
     .Call(`_RcppArmadillo_r_umat_test`, v)
 }
 
-cr_umat_test <- function(v) {
+.cr_umat_test <- function(v) {
     .Call(`_RcppArmadillo_cr_umat_test`, v)
 }
 
@@ -214,53 +214,5 @@ cr_umat_test <- function(v) {
 
 .complexCppTests <- function(A, B, V, S) {
     .Call(`_RcppArmadillo_complexCppTests`, A, B, V, S)
-}
-
-.cube_test <- function(x) {
-    .Call(`_RcppArmadillo_cube_test`, x)
-}
-
-.fcube_test <- function(x) {
-    .Call(`_RcppArmadillo_fcube_test`, x)
-}
-
-.icube_test <- function(x) {
-    .Call(`_RcppArmadillo_icube_test`, x)
-}
-
-.ucube_test <- function(x) {
-    .Call(`_RcppArmadillo_ucube_test`, x)
-}
-
-.cx_cube_test <- function(x) {
-    .Call(`_RcppArmadillo_cx_cube_test`, x)
-}
-
-.cx_fcube_test <- function(x) {
-    .Call(`_RcppArmadillo_cx_fcube_test`, x)
-}
-
-.as_cube <- function(x) {
-    .Call(`_RcppArmadillo_as_cube`, x)
-}
-
-.as_fcube <- function(x) {
-    .Call(`_RcppArmadillo_as_fcube`, x)
-}
-
-.as_icube <- function(x) {
-    .Call(`_RcppArmadillo_as_icube`, x)
-}
-
-.as_ucube <- function(x) {
-    .Call(`_RcppArmadillo_as_ucube`, x)
-}
-
-.as_cx_cube <- function(x) {
-    .Call(`_RcppArmadillo_as_cx_cube`, x)
-}
-
-.as_cx_fcube <- function(x) {
-    .Call(`_RcppArmadillo_as_cx_fcube`, x)
 }
 
