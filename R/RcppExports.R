@@ -212,7 +212,3 @@ cxMat_ <- function() {
     .Call(`_RcppArmadillo_vecr_as_v_test`, v)
 }
 
-.complexCppTests <- function(A, B, V, S) {
-    .Call(`_RcppArmadillo_complexCppTests`, A, B, V, S)
-}
-

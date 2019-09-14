@@ -2,7 +2,8 @@
 //
 // complex.cpp: RcppArmadillo unit tests for complex vectors and matrices
 //
-// Copyright (C) 2013 - 2014  Baptiste Auguie and Dirk Eddelbuettel
+// Copyright (C) 2013 - 2019  Baptiste Auguie and Dirk Eddelbuettel
+// Copyright (C) 2019         Dirk Eddelbuettel
 //
 // This file is part of RcppArmadillo.
 //
@@ -24,9 +25,9 @@
 using namespace Rcpp;
 using namespace arma;
 
-// [ [ Rcpp::depends(RcppArmadillo) ] ]
+// [[Rcpp::depends(RcppArmadillo)]]
 
-// [[Rcpp::export(.complexCppTests)]]
+// [[Rcpp::export]]
 List complexCppTests(const arma::mat& A,
                      const arma::mat& B,
                      const arma::cx_colvec& V,

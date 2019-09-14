@@ -20,6 +20,8 @@
 
 library(RcppArmadillo)
 
+Rcpp::sourceCpp("cpp/complex.cpp")
+
 set.seed(123)
 
 ## create variables
@@ -33,7 +35,7 @@ S <- matrix(rnorm(5*3), nrow=3)
 
 ## Basic operations
 
-rl <- RcppArmadillo:::.complexCppTests(A, B, V, S)   # returns results list from C++
+rl <- complexCppTests(A, B, V, S)   # returns results list from C++
 
 expect_equal(rl[["C"]],     C)#,          msg="complex matrix")
 expect_equal(rl[["Cst"]],   t(C))#,       msg="complex matrix transpose")

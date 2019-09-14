@@ -19,9 +19,9 @@
 # along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
 
-Rcpp::sourceCpp("cpp/cube.cpp")
-
 library(RcppArmadillo)
+
+Rcpp::sourceCpp("cpp/cube.cpp")
 
 ## test arrays
 dbl_cube <- array(1.5:27.5, rep(3, 3))

@@ -471,20 +471,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// complexCppTests
-List complexCppTests(const arma::mat& A, const arma::mat& B, const arma::cx_colvec& V, const arma::mat& S);
-RcppExport SEXP _RcppArmadillo_complexCppTests(SEXP ASEXP, SEXP BSEXP, SEXP VSEXP, SEXP SSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type A(ASEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type B(BSEXP);
-    Rcpp::traits::input_parameter< const arma::cx_colvec& >::type V(VSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type S(SSEXP);
-    rcpp_result_gen = Rcpp::wrap(complexCppTests(A, B, V, S));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_RcppArmadillo_armadillo_version", (DL_FUNC) &_RcppArmadillo_armadillo_version, 1},
@@ -530,7 +516,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RcppArmadillo_vecr_test", (DL_FUNC) &_RcppArmadillo_vecr_test, 1},
     {"_RcppArmadillo_vecc_as_v_test", (DL_FUNC) &_RcppArmadillo_vecc_as_v_test, 1},
     {"_RcppArmadillo_vecr_as_v_test", (DL_FUNC) &_RcppArmadillo_vecr_as_v_test, 1},
-    {"_RcppArmadillo_complexCppTests", (DL_FUNC) &_RcppArmadillo_complexCppTests, 4},
     {NULL, NULL, 0}
 };
 
