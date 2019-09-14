@@ -1,6 +1,6 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
 //
-// cube.cpp: RcppArmadillo unit test code for cube types 
+// cube.cpp: RcppArmadillo unit test code for cube types
 //
 // Copyright (C) 2015 Dirk Eddelbuettel and Nathan Russell
 //
@@ -21,70 +21,70 @@
 
 // 30 November 2015
 
-// [[Rcpp::depends(RcppArmadillo)]]
+// [ [ Rcpp::depends(RcppArmadillo) ] ]
 #include <RcppArmadillo.h>
 
-// [[Rcpp::export]]
+// [[Rcpp::export(.cube_test)]]
 arma::cube cube_test(const arma::cube& x) {
   return arma::pow(x, 2);
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(.fcube_test)]]
 arma::fcube fcube_test(const arma::fcube& x) {
   return arma::pow(x, 2);
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(.icube_test)]]
 arma::icube icube_test(const arma::icube& x) {
   return arma::pow(x, 2);
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(.ucube_test)]]
 arma::ucube ucube_test(const arma::ucube& x) {
   return arma::pow(x, 2);
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(.cx_cube_test)]]
 arma::cx_cube cx_cube_test(const arma::cx_cube& x) {
   return arma::pow(x, 2);
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(.cx_fcube_test)]]
 arma::cx_fcube cx_fcube_test(const arma::cx_fcube& x) {
   return arma::pow(x, 2);
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(.as_cube)]]
 arma::cube as_cube(Rcpp::NumericVector x) {
   arma::cube y = Rcpp::as<arma::cube>(x);
   return arma::pow(y, 2);
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(.as_fcube)]]
 arma::fcube as_fcube(Rcpp::NumericVector x) {
   arma::fcube y = Rcpp::as<arma::fcube>(x);
   return arma::pow(y, 2);
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(.as_icube)]]
 arma::icube as_icube(Rcpp::IntegerVector x) {
   arma::icube y = Rcpp::as<arma::icube>(x);
   return arma::pow(y, 2);
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(.as_ucube)]]
 arma::ucube as_ucube(Rcpp::IntegerVector x) {
   arma::ucube y = Rcpp::as<arma::ucube>(x);
   return arma::pow(y, 2);
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(.as_cx_cube)]]
 arma::cx_cube as_cx_cube(Rcpp::ComplexVector x) {
   arma::cx_cube y = Rcpp::as<arma::cx_cube>(x);
   return arma::pow(y, 2);
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(.as_cx_fcube)]]
 arma::cx_fcube as_cx_fcube(Rcpp::ComplexVector x) {
   arma::cx_fcube y = Rcpp::as<arma::cx_fcube>(x);
   return arma::pow(y, 2);

@@ -60,3 +60,51 @@ fastLm_impl <- function(X, y) {
     .Call(`_RcppArmadillo_complexCppTests`, A, B, V, S)
 }
 
+.cube_test <- function(x) {
+    .Call(`_RcppArmadillo_cube_test`, x)
+}
+
+.fcube_test <- function(x) {
+    .Call(`_RcppArmadillo_fcube_test`, x)
+}
+
+.icube_test <- function(x) {
+    .Call(`_RcppArmadillo_icube_test`, x)
+}
+
+.ucube_test <- function(x) {
+    .Call(`_RcppArmadillo_ucube_test`, x)
+}
+
+.cx_cube_test <- function(x) {
+    .Call(`_RcppArmadillo_cx_cube_test`, x)
+}
+
+.cx_fcube_test <- function(x) {
+    .Call(`_RcppArmadillo_cx_fcube_test`, x)
+}
+
+.as_cube <- function(x) {
+    .Call(`_RcppArmadillo_as_cube`, x)
+}
+
+.as_fcube <- function(x) {
+    .Call(`_RcppArmadillo_as_fcube`, x)
+}
+
+.as_icube <- function(x) {
+    .Call(`_RcppArmadillo_as_icube`, x)
+}
+
+.as_ucube <- function(x) {
+    .Call(`_RcppArmadillo_as_ucube`, x)
+}
+
+.as_cx_cube <- function(x) {
+    .Call(`_RcppArmadillo_as_cx_cube`, x)
+}
+
+.as_cx_fcube <- function(x) {
+    .Call(`_RcppArmadillo_as_cx_fcube`, x)
+}
+

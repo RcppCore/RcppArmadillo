@@ -62,6 +62,138 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cube_test
+arma::cube cube_test(const arma::cube& x);
+RcppExport SEXP _RcppArmadillo_cube_test(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::cube& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(cube_test(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fcube_test
+arma::fcube fcube_test(const arma::fcube& x);
+RcppExport SEXP _RcppArmadillo_fcube_test(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::fcube& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(fcube_test(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// icube_test
+arma::icube icube_test(const arma::icube& x);
+RcppExport SEXP _RcppArmadillo_icube_test(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::icube& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(icube_test(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// ucube_test
+arma::ucube ucube_test(const arma::ucube& x);
+RcppExport SEXP _RcppArmadillo_ucube_test(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::ucube& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(ucube_test(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cx_cube_test
+arma::cx_cube cx_cube_test(const arma::cx_cube& x);
+RcppExport SEXP _RcppArmadillo_cx_cube_test(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::cx_cube& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(cx_cube_test(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cx_fcube_test
+arma::cx_fcube cx_fcube_test(const arma::cx_fcube& x);
+RcppExport SEXP _RcppArmadillo_cx_fcube_test(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::cx_fcube& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(cx_fcube_test(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// as_cube
+arma::cube as_cube(Rcpp::NumericVector x);
+RcppExport SEXP _RcppArmadillo_as_cube(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(as_cube(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// as_fcube
+arma::fcube as_fcube(Rcpp::NumericVector x);
+RcppExport SEXP _RcppArmadillo_as_fcube(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(as_fcube(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// as_icube
+arma::icube as_icube(Rcpp::IntegerVector x);
+RcppExport SEXP _RcppArmadillo_as_icube(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(as_icube(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// as_ucube
+arma::ucube as_ucube(Rcpp::IntegerVector x);
+RcppExport SEXP _RcppArmadillo_as_ucube(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(as_ucube(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// as_cx_cube
+arma::cx_cube as_cx_cube(Rcpp::ComplexVector x);
+RcppExport SEXP _RcppArmadillo_as_cx_cube(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(as_cx_cube(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// as_cx_fcube
+arma::cx_fcube as_cx_fcube(Rcpp::ComplexVector x);
+RcppExport SEXP _RcppArmadillo_as_cx_fcube(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(as_cx_fcube(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_RcppArmadillo_armadillo_version", (DL_FUNC) &_RcppArmadillo_armadillo_version, 1},
@@ -69,6 +201,18 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RcppArmadillo_armadillo_set_seed", (DL_FUNC) &_RcppArmadillo_armadillo_set_seed, 1},
     {"_RcppArmadillo_fastLm_impl", (DL_FUNC) &_RcppArmadillo_fastLm_impl, 2},
     {"_RcppArmadillo_complexCppTests", (DL_FUNC) &_RcppArmadillo_complexCppTests, 4},
+    {"_RcppArmadillo_cube_test", (DL_FUNC) &_RcppArmadillo_cube_test, 1},
+    {"_RcppArmadillo_fcube_test", (DL_FUNC) &_RcppArmadillo_fcube_test, 1},
+    {"_RcppArmadillo_icube_test", (DL_FUNC) &_RcppArmadillo_icube_test, 1},
+    {"_RcppArmadillo_ucube_test", (DL_FUNC) &_RcppArmadillo_ucube_test, 1},
+    {"_RcppArmadillo_cx_cube_test", (DL_FUNC) &_RcppArmadillo_cx_cube_test, 1},
+    {"_RcppArmadillo_cx_fcube_test", (DL_FUNC) &_RcppArmadillo_cx_fcube_test, 1},
+    {"_RcppArmadillo_as_cube", (DL_FUNC) &_RcppArmadillo_as_cube, 1},
+    {"_RcppArmadillo_as_fcube", (DL_FUNC) &_RcppArmadillo_as_fcube, 1},
+    {"_RcppArmadillo_as_icube", (DL_FUNC) &_RcppArmadillo_as_icube, 1},
+    {"_RcppArmadillo_as_ucube", (DL_FUNC) &_RcppArmadillo_as_ucube, 1},
+    {"_RcppArmadillo_as_cx_cube", (DL_FUNC) &_RcppArmadillo_as_cx_cube, 1},
+    {"_RcppArmadillo_as_cx_fcube", (DL_FUNC) &_RcppArmadillo_as_cx_fcube, 1},
     {NULL, NULL, 0}
 };
 
