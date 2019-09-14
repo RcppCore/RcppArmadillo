@@ -5,7 +5,7 @@
 
 using namespace Rcpp;
 
-// [[Rcpp::export]]
+// [[Rcpp::export(.vecc_as_v_test)]]
 arma::vec vecc_as_v_test(arma::vec v) { return(v); }
-// [[Rcpp::export]]
+// [[Rcpp::export(.vecr_as_v_test)]]
 arma::rowvec vecr_as_v_test(arma::rowvec v) { return(v); }

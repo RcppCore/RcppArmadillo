@@ -252,10 +252,19 @@ test.armadillo.as_vector <- function() {
     checkEquals(vec, vecrany_as_v_test(vec), msg="rowvec (by any) as vector")
 }
 
+
+
 vec <- 1:3
 vecc <- as.matrix(1:3)
 vecr <- t(vecc)
 
+#expect_equal(vecc, vecc_test(vec))#, msg="legacy vec")
+#expect_equal(vecr, vecr_test(vecr))#, msg="legacy rowvec")
+
 ## regression as we now use vecc and vecr?
-expect_equivalent(vecc, RcppArmadillo:::.veccany_as_v_test(vec))#, msg="vec (by any) as vector")
-expect_equivalent(vecr, RcppArmadillo:::.vecrany_as_v_test(vec))#, msg="rowvec (by any) as vector")
+expect_equal(vecc, RcppArmadillo:::.vecc_as_v_test(vec))#, msg="vec as vector")
+expect_equal(vecr, RcppArmadillo:::.vecr_as_v_test(vec))#, msg="rowvec as vector")
+
+## regression as we now use vecc and vecr?
+expect_equal(vecc, RcppArmadillo:::.veccany_as_v_test(vec))#, msg="vec (by any) as vector")
+expect_equal(vecr, RcppArmadillo:::.vecrany_as_v_test(vec))#, msg="rowvec (by any) as vector")

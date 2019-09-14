@@ -204,11 +204,11 @@ vecr_test <- function(v) {
     .Call(`_RcppArmadillo_vecr_test`, v)
 }
 
-vecc_as_v_test <- function(v) {
+.vecc_as_v_test <- function(v) {
     .Call(`_RcppArmadillo_vecc_as_v_test`, v)
 }
 
-vecr_as_v_test <- function(v) {
+.vecr_as_v_test <- function(v) {
     .Call(`_RcppArmadillo_vecr_as_v_test`, v)
 }
 
