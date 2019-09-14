@@ -1,4 +1,4 @@
-// [[Rcpp::depends(RcppArmadillo)]]
+// [ [ Rcpp::depends(RcppArmadillo) ] ]
 #define RCPP_ARMADILLO_RETURN_COLVEC_AS_VECTOR
 #define RCPP_ARMADILLO_RETURN_ROWVEC_AS_VECTOR
 #include <RcppArmadillo.h>

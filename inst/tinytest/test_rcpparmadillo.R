@@ -1,6 +1,7 @@
 #!/usr/bin/r -t
 #
-# Copyright (C) 2010 - 2013  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+# Copyright (C) 2010 - 2019  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+# Copyright (C) 2019         Dirk Eddelbuettel
 #
 # This file is part of RcppArmadillo.
 #
@@ -17,7 +18,9 @@
 # You should have received a copy of the GNU General Public License
 # along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
-.setUp <- RcppArmadillo:::unit_test_setup( c("armadillo.cpp", "colrow_as_vec.cpp", "any_as_vec.cpp"), "RcppArmadillo" )
+#.setUp <- RcppArmadillo:::unit_test_setup( c("armadillo.cpp", "colrow_as_vec.cpp", "any_as_vec.cpp"), "RcppArmadillo" )
+
+library(RcppArmadillo)
 
 test.wrap.R <- function(){
     fx <- wrap_
@@ -248,3 +251,11 @@ test.armadillo.as_vector <- function() {
     checkEquals(vec, veccany_as_v_test(vec), msg="vec (by any) as vector")
     checkEquals(vec, vecrany_as_v_test(vec), msg="rowvec (by any) as vector")
 }
+
+vec <- 1:3
+vecc <- as.matrix(1:3)
+vecr <- t(vecc)
+
+## regression as we now use vecc and vecr?
+expect_equivalent(vecc, RcppArmadillo:::.veccany_as_v_test(vec))#, msg="vec (by any) as vector")
+expect_equivalent(vecr, RcppArmadillo:::.vecrany_as_v_test(vec))#, msg="rowvec (by any) as vector")
