@@ -2,7 +2,8 @@
 //
 // armadillo.cpp: RcppArmadillo unit test code
 //
-// Copyright (C) 2010 - 2013  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C) 2010 - 2019  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C) 2019         Dirk Eddelbuettel
 //
 // This file is part of RcppArmadillo.
 //
@@ -19,12 +20,12 @@
 // You should have received a copy of the GNU General Public License
 // along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
-// [ [ Rcpp::depends(RcppArmadillo) ] ]
+// [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
 
 using namespace Rcpp;
 
-// [[Rcpp::export(.wrap_)]]
+// [[Rcpp::export]]
 List wrap_() {
 
     // using the Named(.) = . notation
@@ -72,7 +73,7 @@ List wrap_() {
     return output;
 }
 
-// [[Rcpp::export(.wrapGlue_)]]
+// [[Rcpp::export]]
 List wrapGlue_() {
     arma::mat m1 = arma::eye<arma::mat>( 3, 3 );
     arma::mat m2 = arma::eye<arma::mat>( 3, 3 );
@@ -82,7 +83,7 @@ List wrapGlue_() {
     return res;
 }
 
-// [[Rcpp::export(.wrapOp_)]]
+// [[Rcpp::export]]
 List wrapOp_() {
     arma::mat m1 = arma::eye<arma::mat>( 3, 3 );
 
@@ -91,7 +92,7 @@ List wrapOp_() {
     return res;
 }
 
-// [[Rcpp::export(.asMat_)]]
+// [[Rcpp::export]]
 List asMat_(List input) {
     arma::imat m1 = input[0]; /* implicit as */
     arma::mat  m2 = input[1]; /* implicit as */
@@ -106,7 +107,7 @@ List asMat_(List input) {
     return res;
 }
 
-// [[Rcpp::export(.asCol_)]]
+// [[Rcpp::export]]
 List asCol_(List input) {
     arma::icolvec m1 = input[0]; /* implicit as */
     arma::colvec  m2 = input[1]; /* implicit as */
@@ -120,7 +121,7 @@ List asCol_(List input) {
     return res;
 }
 
-// [[Rcpp::export(.asRow_)]]
+// [[Rcpp::export]]
 List asRow_(List input) {
     arma::irowvec m1 = input[0]; /* implicit as */
     arma::rowvec  m2 = input[1]; /* implicit as */
@@ -141,7 +142,7 @@ List cxMat_() {
     return List::create( _["double"] = m1, _["float"] = m2 );
 }
 
-// [[Rcpp::export(.mtOp_)]]
+// [[Rcpp::export]]
 ComplexMatrix mtOp_() {
     std::complex<double> x( 1.0, 2.0 );
     arma::mat m1  = arma::eye<arma::mat> ( 3, 3 );
@@ -149,7 +150,7 @@ ComplexMatrix mtOp_() {
     return wrap( x * m1 );
 }
 
-// [[Rcpp::export(.mtGlue_)]]
+// [[Rcpp::export]]
 NumericMatrix mtGlue_() {
     arma::imat m2 = arma::eye<arma::imat> ( 3, 3 );
     arma::mat m1  = arma::eye<arma::mat> ( 3, 3 );
@@ -157,19 +158,19 @@ NumericMatrix mtGlue_() {
     return wrap( m1 + m2 );
 }
 
-// [[Rcpp::export(.sugar_)]]
+// [[Rcpp::export]]
 NumericMatrix sugar_(NumericVector xx) {
     arma::mat m = xx + xx;
     return wrap( m );
 }
 
-// [[Rcpp::export(.sugarCplx_)]]
+// [[Rcpp::export]]
 ComplexMatrix sugarCplx_(ComplexVector xx) {
     arma::cx_mat m = exp( xx );
     return wrap( m );
 }
 
-// [[Rcpp::export(.sugarCtor_)]]
+// [[Rcpp::export]]
 List sugarCtor_(NumericVector xx) {
     arma::mat m = xx + xx;
     arma::colvec co = xx;
@@ -183,7 +184,7 @@ double norm( double x, double y){
     return ::sqrt( x*x + y*y );
 }
 
-// [[Rcpp::export(.sugarMatrixCtor_)]]
+// [[Rcpp::export]]
 List sugarMatrixCtor_(NumericVector xx) {
     NumericVector yy = NumericVector::create( 1 );
     arma::mat m = diag( xx );
@@ -212,92 +213,92 @@ List sugarMatrixCtor_(NumericVector xx) {
 // }
 
 
-// [[Rcpp::export(.mat_plain)]]
+// [[Rcpp::export]]
 int mat_plain(arma::mat x) {
     return x.n_elem;
 }
 
-// [[Rcpp::export(.mat_const)]]
+// [[Rcpp::export]]
 int mat_const(const arma::mat x) {
     return x.n_elem;
 }
 
-// [[Rcpp::export(.mat_ref)]]
+// [[Rcpp::export]]
 int mat_ref(arma::mat & x) {
     return x.n_elem;
 }
 
-// [[Rcpp::export(.mat_const_ref)]]
+// [[Rcpp::export]]
 int mat_const_ref(const arma::mat & x) {
     return x.n_elem;
 }
 
-// [[Rcpp::export(.vec_plain)]]
+// [[Rcpp::export]]
 int vec_plain(arma::vec x) {
     return x.n_elem;
 }
 
-// [[Rcpp::export(.vec_const)]]
+// [[Rcpp::export]]
 int vec_const(const arma::vec x) {
     return x.n_elem;
 }
 
-// [[Rcpp::export(.vec_ref)]]
+// [[Rcpp::export]]
 int vec_ref(arma::vec & x) {
     return x.n_elem;
 }
 
-// [[Rcpp::export(.vec_const_ref)]]
+// [[Rcpp::export]]
 int vec_const_ref(const arma::vec & x) {
     return x.n_elem;
 }
 
-// [[Rcpp::export(.cx_mat_plain)]]
+// [[Rcpp::export]]
 int cx_mat_plain(arma::cx_mat x) {
     return x.n_elem;
 }
 
-// [[Rcpp::export(.cx_mat_const)]]
+// [[Rcpp::export]]
 int cx_mat_const(const arma::cx_mat x) {
     return x.n_elem;
 }
 
-// [[Rcpp::export(.cx_mat_ref)]]
+// [[Rcpp::export]]
 int cx_mat_ref(arma::cx_mat & x) {
     return x.n_elem;
 }
 
-// [[Rcpp::export(.cx_mat_const_ref)]]
+// [[Rcpp::export]]
 int cx_mat_const_ref(const arma::cx_mat & x) {
     return x.n_elem;
 }
 
-// [[Rcpp::export(.uvec_test)]]
+// [[Rcpp::export]]
 arma::uvec uvec_test(arma::uvec v) { return(v); }
 
-// [[Rcpp::export(.c_uvec_test)]]
+// [[Rcpp::export]]
 arma::uvec c_uvec_test(const arma::uvec v) { return(v); }
 
-// [[Rcpp::export(.r_uvec_test)]]
+// [[Rcpp::export]]
 arma::uvec r_uvec_test(arma::uvec& v) { return(v); }
 
-// [[Rcpp::export(.cr_uvec_test)]]
+// [[Rcpp::export]]
 arma::uvec cr_uvec_test(const arma::uvec& v) { return(v); }
 
-// [[Rcpp::export(.umat_test)]]
+// [[Rcpp::export]]
 arma::umat umat_test(arma::umat v) { return(v); }
 
-// [[Rcpp::export(.c_umat_test)]]
+// [[Rcpp::export]]
 arma::umat c_umat_test(const arma::umat v) { return(v); }
 
-// [[Rcpp::export(.r_umat_test)]]
+// [[Rcpp::export]]
 arma::umat r_umat_test(arma::umat& v) { return(v); }
 
-// [[Rcpp::export(.cr_umat_test)]]
+// [[Rcpp::export]]
 arma::umat cr_umat_test(const arma::umat& v) { return(v); }
 
-// [[Rcpp::export(.vecc_test)]]
+// [[Rcpp::export]]
 arma::vec vecc_test(arma::vec v) { return(v); }
 
-// [[Rcpp::export(.vecr_test)]]
+// [[Rcpp::export]]
 arma::rowvec vecr_test(arma::rowvec v) { return(v); }

@@ -18,9 +18,9 @@
 # You should have received a copy of the GNU General Public License
 # along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
-#.setUp <- RcppArmadillo:::unit_test_setup( c("armadillo.cpp", "colrow_as_vec.cpp", "any_as_vec.cpp"), "RcppArmadillo" )
-
 library(RcppArmadillo)
+
+Rcpp::sourceCpp("cpp/armadillo.cpp")
 
 test.wrap.R <- function(){
     fx <- wrap_
@@ -227,43 +227,32 @@ test.armadillo.mat.const.ref <- function() {
     checkEquals(fx(m), 9, msg = "Const Reference Matrix function signature" )
 }
 
-test.armadillo.unsigned.as <- function() {
-    vec <- as.matrix(1:3)
-    checkEquals(vec, uvec_test(vec))
-    checkEquals(vec, c_uvec_test(vec))
-    checkEquals(vec, r_uvec_test(vec))
-    checkEquals(vec, cr_uvec_test(vec))
+Rcpp::sourceCpp("cpp/colrow_as_vec.cpp")
 
-    mat <- matrix(1:4, nrow=2)
-    checkEquals(mat, umat_test(mat))
-    checkEquals(mat, c_umat_test(mat))
-    checkEquals(mat, r_umat_test(mat))
-    checkEquals(mat, cr_umat_test(mat))
-}
+vec <- as.matrix(1:3)
+expect_equal(vec, uvec_test(vec))
+expect_equal(vec, c_uvec_test(vec))
+expect_equal(vec, r_uvec_test(vec))
+expect_equal(vec, cr_uvec_test(vec))
 
-## test.armadillo.as_vector <- function() {
-##     vec <- 1:3
-##     vecc <- as.matrix(1:3)
-##     vecr <- t(vecc)
-##     checkEquals(vecc, vecc_test(vec), msg="legacy vec")
-##     checkEquals(vecr, vecr_test(vecr), msg="legacy rowvec")
-##     checkEquals(vec, vecc_as_v_test(vec), msg="vec as vector")
-##     checkEquals(vec, vecr_as_v_test(vec), msg="rowvec as vector")
-##     checkEquals(vec, veccany_as_v_test(vec), msg="vec (by any) as vector")
-##     checkEquals(vec, vecrany_as_v_test(vec), msg="rowvec (by any) as vector")
-## }
+mat <- matrix(1:4, nrow=2)
+expect_equal(mat, umat_test(mat))
+expect_equal(mat, c_umat_test(mat))
+expect_equal(mat, r_umat_test(mat))
+expect_equal(mat, cr_umat_test(mat))
+
+
+Rcpp::sourceCpp("cpp/any_as_vec.cpp")
 
 vec <- 1:3
 vecc <- as.matrix(1:3)
 vecr <- t(vecc)
 
-expect_equal(vecc, RcppArmadillo:::.vecc_test(vec))#, msg="legacy vec")
-expect_equal(vecr, RcppArmadillo:::.vecr_test(vecr))#, msg="legacy rowvec")
+expect_equal(vecc, vecc_test(vec))#, msg="legacy vec")
+expect_equal(vecr, vecr_test(vecr))#, msg="legacy rowvec")
 
-## regression as we now use vecc and vecr?
-expect_equal(vecc, RcppArmadillo:::.vecc_as_v_test(vec))#, msg="vec as vector")
-expect_equal(vecr, RcppArmadillo:::.vecr_as_v_test(vec))#, msg="rowvec as vector")
+expect_equal(vec, vecc_as_v_test(vec))#, msg="vec as vector")
+expect_equal(vec, vecr_as_v_test(vec))#, msg="rowvec as vector")
 
-## regression as we now use vecc and vecr?
-expect_equal(vecc, RcppArmadillo:::.veccany_as_v_test(vec))#, msg="vec (by any) as vector")
-expect_equal(vecr, RcppArmadillo:::.vecrany_as_v_test(vec))#, msg="rowvec (by any) as vector")
+expect_equal(vec, veccany_as_v_test(vec))#, msg="vec (by any) as vector")
+expect_equal(vec, vecrany_as_v_test(vec))#, msg="rowvec (by any) as vector")
