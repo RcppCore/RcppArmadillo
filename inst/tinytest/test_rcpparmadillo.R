@@ -240,26 +240,25 @@ test.armadillo.unsigned.as <- function() {
     checkEquals(mat, r_umat_test(mat))
     checkEquals(mat, cr_umat_test(mat))
 }
-test.armadillo.as_vector <- function() {
-    vec <- 1:3
-    vecc <- as.matrix(1:3)
-    vecr <- t(vecc)
-    checkEquals(vecc, vecc_test(vec), msg="legacy vec")
-    checkEquals(vecr, vecr_test(vecr), msg="legacy rowvec")
-    checkEquals(vec, vecc_as_v_test(vec), msg="vec as vector")
-    checkEquals(vec, vecr_as_v_test(vec), msg="rowvec as vector")
-    checkEquals(vec, veccany_as_v_test(vec), msg="vec (by any) as vector")
-    checkEquals(vec, vecrany_as_v_test(vec), msg="rowvec (by any) as vector")
-}
 
-
+## test.armadillo.as_vector <- function() {
+##     vec <- 1:3
+##     vecc <- as.matrix(1:3)
+##     vecr <- t(vecc)
+##     checkEquals(vecc, vecc_test(vec), msg="legacy vec")
+##     checkEquals(vecr, vecr_test(vecr), msg="legacy rowvec")
+##     checkEquals(vec, vecc_as_v_test(vec), msg="vec as vector")
+##     checkEquals(vec, vecr_as_v_test(vec), msg="rowvec as vector")
+##     checkEquals(vec, veccany_as_v_test(vec), msg="vec (by any) as vector")
+##     checkEquals(vec, vecrany_as_v_test(vec), msg="rowvec (by any) as vector")
+## }
 
 vec <- 1:3
 vecc <- as.matrix(1:3)
 vecr <- t(vecc)
 
-#expect_equal(vecc, vecc_test(vec))#, msg="legacy vec")
-#expect_equal(vecr, vecr_test(vecr))#, msg="legacy rowvec")
+expect_equal(vecc, RcppArmadillo:::.vecc_test(vec))#, msg="legacy vec")
+expect_equal(vecr, RcppArmadillo:::.vecr_test(vecr))#, msg="legacy rowvec")
 
 ## regression as we now use vecc and vecr?
 expect_equal(vecc, RcppArmadillo:::.vecc_as_v_test(vec))#, msg="vec as vector")

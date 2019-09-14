@@ -296,8 +296,8 @@ arma::umat r_umat_test(arma::umat& v) { return(v); }
 // [[Rcpp::export]]
 arma::umat cr_umat_test(const arma::umat& v) { return(v); }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(.vecc_test)]]
 arma::vec vecc_test(arma::vec v) { return(v); }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(.vecr_test)]]
 arma::rowvec vecr_test(arma::rowvec v) { return(v); }

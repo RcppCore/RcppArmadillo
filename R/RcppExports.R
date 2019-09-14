@@ -196,11 +196,11 @@ cr_umat_test <- function(v) {
     .Call(`_RcppArmadillo_cr_umat_test`, v)
 }
 
-vecc_test <- function(v) {
+.vecc_test <- function(v) {
     .Call(`_RcppArmadillo_vecc_test`, v)
 }
 
-vecr_test <- function(v) {
+.vecr_test <- function(v) {
     .Call(`_RcppArmadillo_vecr_test`, v)
 }
 
