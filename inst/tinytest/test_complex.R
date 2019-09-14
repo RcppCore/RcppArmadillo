@@ -1,6 +1,7 @@
 #!/usr/bin/r -t
 #
-# Copyright (C) 2013  Baptiste Auguie and Dirk Eddelbuettel
+# Copyright (C) 2013 - 2019 Baptiste Auguie and Dirk Eddelbuettel
+# Copyright (C) 2019        Dirk Eddelbuettel
 #
 # This file is part of RcppArmadillo.
 #
@@ -17,34 +18,33 @@
 # You should have received a copy of the GNU General Public License
 # along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
-.setUp <- RcppArmadillo:::unit_test_setup("complex.cpp")
+library(RcppArmadillo)
 
-test.complex <- function() {
+Rcpp::sourceCpp("cpp/complex.cpp")
 
-    set.seed(123)
+set.seed(123)
 
-    ## create variables
+## create variables
 
-    A <- matrix(rnorm(9), 3)
-    B <- matrix(rnorm(9), 3)
-    C <- A + 1i * B
+A <- matrix(rnorm(9), 3)
+B <- matrix(rnorm(9), 3)
+C <- A + 1i * B
 
-    V <- rnorm(3) + 1i * rnorm(3)
-    S <- matrix(rnorm(5*3), nrow=3)
+V <- rnorm(3) + 1i * rnorm(3)
+S <- matrix(rnorm(5*3), nrow=3)
 
-    ## Basic operations
+## Basic operations
 
-    rl <- complexCppTests(A, B, V, S)   # returns results list from C++
+rl <- complexCppTests(A, B, V, S)   # returns results list from C++
 
-    checkEquals(rl[["C"]],     C,          msg="complex matrix")
-    checkEquals(rl[["Cst"]],   t(C),       msg="complex matrix transpose")
-    checkEquals(rl[["Ct"]],    Conj(t(C)), msg="complex matrix transpose conjugated")
-    checkEquals(rl[["conjC"]], Conj(C),    msg="complex matrix conjugated")
-    checkEquals(rl[["absC"]],  Mod(C),     msg="complex matrix mod")
-    checkEquals(rl[["CV"]],    C %*% V,    msg="complex matrix product")
-    checkEquals(rl[["CS"]],    C %*% S,    msg="complex matrix times vector")
-    checkEquals(rl[["CC"]],    C * C,      msg="complex matrix ops mult")
-    checkEquals(rl[["CdC"]],   C / C,      msg="complex matrix ops div")
-    checkEquals(rl[["CpC"]],   C + C,      msg="complex matrix ops plus")
-    checkEquals(rl[["CmC"]],   C - C,      msg="complex matrix ops minus")
-}
+expect_equal(rl[["C"]],     C)#,          msg="complex matrix")
+expect_equal(rl[["Cst"]],   t(C))#,       msg="complex matrix transpose")
+expect_equal(rl[["Ct"]],    Conj(t(C)))#, msg="complex matrix transpose conjugated")
+expect_equal(rl[["conjC"]], Conj(C))#,    msg="complex matrix conjugated")
+expect_equal(rl[["absC"]],  Mod(C))#,     msg="complex matrix mod")
+expect_equal(rl[["CV"]],    C %*% V)#,    msg="complex matrix product")
+expect_equal(rl[["CS"]],    C %*% S)#,    msg="complex matrix times vector")
+expect_equal(rl[["CC"]],    C * C)#,      msg="complex matrix ops mult")
+expect_equal(rl[["CdC"]],   C / C)#,      msg="complex matrix ops div")
+expect_equal(rl[["CpC"]],   C + C)#,      msg="complex matrix ops plus")
+expect_equal(rl[["CmC"]],   C - C)#,      msg="complex matrix ops minus")
