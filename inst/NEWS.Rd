@@ -5,7 +5,7 @@
 
 \section{Changes in RcppArmadillo version 0.9.800.x.0 (2019-10-xx)}{
   \itemize{
-    \item The package now uses \pkg{tinytest} for unit tests.
+    \item The package now uses \pkg{tinytest} for unit tests (\ghpr{269}).
   }
 }
 
