@@ -3,6 +3,12 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.9.800.x.0 (2019-10-xx)}{
+  \itemize{
+    \item The package now uses \pkg{tinytest} for unit tests.
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.9.700.2.0 (2019-09-01)}{
   \itemize{
     \item Upgraded to Armadillo release 9.700.2 (Gangster Democracy)
