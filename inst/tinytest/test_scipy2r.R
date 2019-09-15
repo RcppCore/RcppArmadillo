@@ -20,7 +20,7 @@
 ## Reference: https://docs.scipy.org/doc/scipy-0.19.1/reference/sparse.html
 
 if (!requireNamespace("Matrix", quietly=TRUE)) exit_file("Package Matrix missing")
-if (!requireNamespace("reticulate", quietly=TRUE))) exit_file("Package reticulate missing")
+if (!requireNamespace("reticulate", quietly=TRUE)) exit_file("Package reticulate missing")
 
 suppressMessages({
     library(Matrix)
