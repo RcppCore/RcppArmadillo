@@ -2,7 +2,7 @@
 //
 // rng.cpp: RcppArmadillo unit test code for fallback RNG
 //
-// Copyright (C) 2014  Dirk Eddelbuettel
+// Copyright (C) 2014 - 2019  Dirk Eddelbuettel
 //
 // This file is part of RcppArmadillo.
 //

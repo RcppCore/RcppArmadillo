@@ -1,8 +1,9 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
 //
-// armadillo.cpp: RcppArmadillo unit test code 
+// armadillo.cpp: RcppArmadillo unit test code
 //
-// Copyright (C) 2010 - 2013  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C) 2010 - 2019  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C) 2019         Dirk Eddelbuettel
 //
 // This file is part of RcppArmadillo.
 //
@@ -68,7 +69,7 @@ List wrap_() {
                                _["rows : Row<T>"]      = rows,
                                _["columns : Col<T>"]   = cols,
                                _["fields  : field<T>"] = fields );
-    
+
     return output;
 }
 
@@ -213,62 +214,62 @@ List sugarMatrixCtor_(NumericVector xx) {
 
 
 // [[Rcpp::export]]
-int mat_plain(arma::mat x) { 
+int mat_plain(arma::mat x) {
     return x.n_elem;
 }
 
 // [[Rcpp::export]]
-int mat_const(const arma::mat x) { 
+int mat_const(const arma::mat x) {
     return x.n_elem;
 }
 
 // [[Rcpp::export]]
-int mat_ref(arma::mat & x) { 
+int mat_ref(arma::mat & x) {
     return x.n_elem;
 }
 
 // [[Rcpp::export]]
-int mat_const_ref(const arma::mat & x) { 
+int mat_const_ref(const arma::mat & x) {
     return x.n_elem;
 }
 
 // [[Rcpp::export]]
-int vec_plain(arma::vec x) { 
+int vec_plain(arma::vec x) {
     return x.n_elem;
 }
 
 // [[Rcpp::export]]
-int vec_const(const arma::vec x) { 
+int vec_const(const arma::vec x) {
     return x.n_elem;
 }
 
 // [[Rcpp::export]]
-int vec_ref(arma::vec & x) { 
+int vec_ref(arma::vec & x) {
     return x.n_elem;
 }
 
 // [[Rcpp::export]]
-int vec_const_ref(const arma::vec & x) { 
+int vec_const_ref(const arma::vec & x) {
     return x.n_elem;
 }
 
 // [[Rcpp::export]]
-int cx_mat_plain(arma::cx_mat x) { 
+int cx_mat_plain(arma::cx_mat x) {
     return x.n_elem;
 }
 
 // [[Rcpp::export]]
-int cx_mat_const(const arma::cx_mat x) { 
+int cx_mat_const(const arma::cx_mat x) {
     return x.n_elem;
 }
 
 // [[Rcpp::export]]
-int cx_mat_ref(arma::cx_mat & x) { 
+int cx_mat_ref(arma::cx_mat & x) {
     return x.n_elem;
 }
 
 // [[Rcpp::export]]
-int cx_mat_const_ref(const arma::cx_mat & x) { 
+int cx_mat_const_ref(const arma::cx_mat & x) {
     return x.n_elem;
 }
 

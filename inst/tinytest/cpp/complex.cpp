@@ -2,7 +2,8 @@
 //
 // complex.cpp: RcppArmadillo unit tests for complex vectors and matrices
 //
-// Copyright (C) 2013 - 2014  Baptiste Auguie and Dirk Eddelbuettel 
+// Copyright (C) 2013 - 2019  Baptiste Auguie and Dirk Eddelbuettel
+// Copyright (C) 2019         Dirk Eddelbuettel
 //
 // This file is part of RcppArmadillo.
 //
@@ -25,11 +26,11 @@ using namespace Rcpp;
 using namespace arma;
 
 // [[Rcpp::depends(RcppArmadillo)]]
-          
+
 // [[Rcpp::export]]
-List complexCppTests(const arma::mat& A, 
-                     const arma::mat& B, 
-                     const arma::cx_colvec& V, 
+List complexCppTests(const arma::mat& A,
+                     const arma::mat& B,
+                     const arma::cx_colvec& V,
                      const arma::mat& S) {
 
     arma::cx_mat C(A, B); 				// create complex matrix
@@ -44,11 +45,11 @@ List complexCppTests(const arma::mat& A,
     arma::cx_mat CpC = C + C; 				// addition
     arma::cx_mat CmC = C - C; 				// subtraction
 
-    return List::create(_["C"]  = C, 
-                        _["Cst"]  = Cst, 
-                        _["Ct"]  = Ct, 
-                        _["conjC"]  = conjC, 
-                        _["absC"]  = absC, 
+    return List::create(_["C"]  = C,
+                        _["Cst"]  = Cst,
+                        _["Ct"]  = Ct,
+                        _["conjC"]  = conjC,
+                        _["absC"]  = absC,
                         _["CV"]  = CtV,
                         _["CS"]  = CtS,
                         _["CC"]  = CC,

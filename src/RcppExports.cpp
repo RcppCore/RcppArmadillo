@@ -6,18 +6,6 @@
 
 using namespace Rcpp;
 
-// fastLm_impl
-List fastLm_impl(const arma::mat& X, const arma::colvec& y);
-RcppExport SEXP _RcppArmadillo_fastLm_impl(SEXP XSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
-    Rcpp::traits::input_parameter< const arma::colvec& >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(fastLm_impl(X, y));
-    return rcpp_result_gen;
-END_RCPP
-}
 // armadillo_version
 IntegerVector armadillo_version(bool single);
 RcppExport SEXP _RcppArmadillo_armadillo_version(SEXP singleSEXP) {
@@ -48,12 +36,24 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// fastLm_impl
+List fastLm_impl(const arma::mat& X, const arma::colvec& y);
+RcppExport SEXP _RcppArmadillo_fastLm_impl(SEXP XSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::colvec& >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(fastLm_impl(X, y));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_RcppArmadillo_fastLm_impl", (DL_FUNC) &_RcppArmadillo_fastLm_impl, 2},
     {"_RcppArmadillo_armadillo_version", (DL_FUNC) &_RcppArmadillo_armadillo_version, 1},
     {"_RcppArmadillo_armadillo_set_seed_random", (DL_FUNC) &_RcppArmadillo_armadillo_set_seed_random, 0},
     {"_RcppArmadillo_armadillo_set_seed", (DL_FUNC) &_RcppArmadillo_armadillo_set_seed, 1},
+    {"_RcppArmadillo_fastLm_impl", (DL_FUNC) &_RcppArmadillo_fastLm_impl, 2},
     {NULL, NULL, 0}
 };
 
