@@ -24,7 +24,7 @@ LazyLoad: yes
 Depends: R (>= 3.3.0)
 LinkingTo: Rcpp
 Imports: Rcpp (>= 0.11.0), stats, utils, methods
-Suggests: tinytest, RUnit, Matrix, pkgKitten, reticulate, rmarkdown, knitr, pinp, slam
+Suggests: tinytest, Matrix, pkgKitten, reticulate, rmarkdown, knitr, pinp, slam
 VignetteBuilder: knitr
 URL: http://dirk.eddelbuettel.com/code/rcpp.armadillo.html
 BugReports: https://github.com/RcppCore/RcppArmadillo/issues
