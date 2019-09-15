@@ -78,13 +78,13 @@ expect_equal(c12, asSpMat(c12))#, msg="dgC2dgC_3")
 
 ## [Matrix] p87 (dgCMatrix)
 m <- Matrix(c(0,0,2:0), 3,5, dimnames=list(LETTERS[1:3],NULL))
-dimnames(m) <- NULL
+m <- unname(m)
 expect_equal(m, asSpMat(m))#, msg="dgC2dgC_4")
 
 ## [Matrix] p118 (dgCMatrix)
 f1 <- gl(5, 3, labels = LETTERS[1:5])
 X <- as(f1, "sparseMatrix")
-dimnames(X) <- NULL
+X <- unname(X)
 expect_equal(X, asSpMat(X))#, msg="dgC2dgC_5")
 
 ## [Matrix] p142 (dgCMatrix)
