@@ -14,6 +14,9 @@
 
  	* .travis.yml: Replace RUnit with tinytest
 	
+	* inst/include/RcppArmadilloSugar.h: Switch one int to size_t and add
+	one cast in order to quieten two compiler warnings
+
 2019-09-01  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Release 0.9.700.2.0

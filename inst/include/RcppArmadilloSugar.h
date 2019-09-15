@@ -28,24 +28,24 @@ namespace Rcpp{
 // forward is not needed anymore, but we just leave this
 // for backwards compatibility
 template <typename T>
-inline const T& forward(const T& x) { return x; } 
+inline const T& forward(const T& x) { return x; }
 
 template <typename T> List simple_triplet_matrix ( const arma::SpMat<T>& sm ){
     const int  RTYPE = Rcpp::traits::r_sexptype_traits<T>::rtype;
     sm.sync();              // important: update internal state of SpMat object
-    
+
     // copy the data into R objects
     Vector<RTYPE> x(sm.values, sm.values + sm.n_nonzero);
     IntegerVector i(sm.row_indices, sm.row_indices + sm.n_nonzero);
     i=i+1;
     IntegerVector p(sm.col_ptrs, sm.col_ptrs + sm.n_cols + 1);
     IntegerVector j(i.size());
-    for (int cp=1, ie=0; ie < sm.n_nonzero; ie++) {
-        for (; p[cp] <= ie && cp < sm.n_cols; cp++)
+    for (size_t cp=1, ie=0; ie < sm.n_nonzero; ie++) {
+        for (; static_cast<size_t>(p[cp]) <= ie && cp < sm.n_cols; cp++)
             ;
         j[ie] = cp;
     }
-    
+
     List s;
     s("i") = i;
     s("j") = j;
@@ -60,4 +60,3 @@ template <typename T> List simple_triplet_matrix ( const arma::SpMat<T>& sm ){
 } // Rcpp
 
 #endif
-
