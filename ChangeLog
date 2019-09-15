@@ -1,3 +1,17 @@
+2019-09-14  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Replaced Suggests: of RUnit with tinytest
+	
+	* inst/tinytest/*: Added
+	* tests/tinytest.R: Added converted RUnit tests
+	
+	* tests/doRUnit.R: Removed
+	* inst/unitTests/*: Removed, converted into tinytest files
+
+	* R/unit.test.R: Removed helper script
+
+ 	* .travis.yml: Replace RUnit with tinytest
+	
 2019-09-01  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Release 0.9.700.2.0
