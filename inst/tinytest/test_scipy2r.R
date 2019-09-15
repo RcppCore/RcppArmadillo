@@ -1,5 +1,6 @@
 ## py2r.R: Conversion of SciPy sparse matrix to R
-### Copyright (C) 2017  Binxiang Ni and Dirk Eddelbuettel
+##
+## Copyright (C) 2017 - 2019  Binxiang Ni and Dirk Eddelbuettel
 ##
 ## This file is part of RcppArmadillo.
 ##
@@ -18,55 +19,49 @@
 
 ## Reference: https://docs.scipy.org/doc/scipy-0.19.1/reference/sparse.html
 
-.runThisTest <- requireNamespace("Matrix", quietly=TRUE) && requireNamespace("reticulate", quietly=TRUE)
+if (!requireNamespace("Matrix", quietly=TRUE)) exit_file("Package Matrix missing")
+if (!requireNamespace("reticulate", quietly=TRUE))) exit_file("Package reticulate missing")
 
-if (.runThisTest) {
+suppressMessages({
+    library(Matrix)
+    library(reticulate)
+})
 
-    suppressMessages({
-        library(Matrix)
-        library(reticulate)
-    })
+## SciPy implies NumPy too
+if (! py_module_available("scipy")) exit_file("Module scipy missing")
 
-    if (py_module_available("scipy")) { # SciPy implies NumPy too
+np <- import("numpy")
+mat <- np$array(list(list(1, 0, 4), list(0, 0, 5), list(2, 3, 6)))
+sp <- import("scipy.sparse")
 
-        np <- import("numpy")
-        mat <- np$array(list(list(1, 0, 4), list(0, 0, 5), list(2, 3, 6)))
-        sp <- import("scipy.sparse")
+mtxt <- c("1 0 4",
+          "0 0 5",
+          "2 3 6")
+M <- as.matrix(read.table(text=mtxt))
+dimnames(M) <- NULL
 
-        mtxt <- c("1 0 4",
-                  "0 0 5",
-                  "2 3 6")
-        M <- as.matrix(read.table(text=mtxt))
-        dimnames(M) <- NULL
-        
-        # Since 'reticulate' automatically converts CSC matrix to dgCMatrix, 
-        # no need to convert it in RcppArmadillo
-        
-        test.csc2dgc <- function() {
-            csc <- sp$csc_matrix(mat)
-            dgC <- methods::as(M, "dgCMatrix")
-            checkEquals(dgC, csc, msg="csc2dgc")
-        }
+## Since 'reticulate' automatically converts CSC matrix to dgCMatrix,
+## no need to convert it in RcppArmadillo
 
-        test.coo2dgt <- function() {
-            coo <- sp$coo_matrix(mat)
-            dgT <- new("dgTMatrix",
-                       i = c(0L, 0L, 1L, 2L, 2L, 2L),
-                       j = c(0L, 2L, 2L, 0L, 1L, 2L),
-                       x = c(1, 4, 5, 2, 3, 6),
-                       Dim = c(3L, 3L))
-            checkEquals(dgT, RcppArmadillo:::.SciPy2R(coo), msg="coo2dgt")
-        }
+#test.csc2dgc <- function() {
+csc <- sp$csc_matrix(mat)
+dgC <- methods::as(M, "dgCMatrix")
+expect_equal(dgC, csc)#, msg="csc2dgc")
 
-        test.csr2dgr <- function() {
-            csr <- sp$csr_matrix(mat)
-            dgR <- methods::as(M, "dgRMatrix")
-            checkEquals(dgR, RcppArmadillo:::.SciPy2R(csr), msg="csr2dgr")
-        }
+#test.coo2dgt <- function() {
+coo <- sp$coo_matrix(mat)
+dgT <- new("dgTMatrix",
+           i = c(0L, 0L, 1L, 2L, 2L, 2L),
+           j = c(0L, 2L, 2L, 0L, 1L, 2L),
+           x = c(1, 4, 5, 2, 3, 6),
+           Dim = c(3L, 3L))
+expect_equal(dgT, RcppArmadillo:::.SciPy2R(coo))#, msg="coo2dgt")
 
-        test.other <- function() {
-            bsr <- sp$bsr_matrix(list(3, 4))
-            checkException(RcppArmadillo:::.SciPy2R(bsr))
-        }
-    }
-}
+#test.csr2dgr <- function() {
+csr <- sp$csr_matrix(mat)
+dgR <- methods::as(M, "dgRMatrix")
+expect_equal(dgR, RcppArmadillo:::.SciPy2R(csr))#, msg="csr2dgr")
+
+#test.other <- function() {
+bsr <- sp$bsr_matrix(list(3, 4))
+expect_error(RcppArmadillo:::.SciPy2R(bsr))
