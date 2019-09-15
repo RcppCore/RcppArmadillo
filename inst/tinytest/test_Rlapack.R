@@ -18,8 +18,6 @@
 # You should have received a copy of the GNU General Public License
 # along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
-.setUp <- RcppArmadillo:::unit_test_setup("Rlapack.cpp")
-
 library(RcppArmadillo)
 
 Rcpp::sourceCpp("cpp/Rlapack.cpp")
