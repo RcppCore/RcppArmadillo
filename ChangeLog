@@ -1,3 +1,7 @@
+2019-09-29  Dirk Eddelbuettel  <edd@debian.org>
+
+	* README.md: Add Stackoverflow badge, add use count
+
 2019-09-14  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION (Version, Date): Roll minor version
