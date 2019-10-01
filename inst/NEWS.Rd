@@ -5,7 +5,10 @@
 
 \section{Changes in RcppArmadillo version 0.9.800.x.0 (2019-10-xx)}{
   \itemize{
-    \item The package now uses \pkg{tinytest} for unit tests (\ghpr{269}).
+    \item The package now uses \pkg{tinytest} for unit tests (Dirk in
+    \ghpr{269}).
+    \item The \code{configure.ac} script is now more careful about shell
+    portability (Min Kim in \ghpr{270}).
   }
 }
 
