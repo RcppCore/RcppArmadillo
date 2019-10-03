@@ -127,6 +127,8 @@ class Col : public Mat<eT>
   inline void shed_row (const uword row_num);
   inline void shed_rows(const uword in_row1, const uword in_row2);
   
+  template<typename T1> inline void shed_rows(const Base<uword, T1>& indices);
+  
                         inline void insert_rows(const uword row_num, const uword N, const bool set_to_zero = true);
   template<typename T1> inline void insert_rows(const uword row_num, const Base<eT,T1>& X);
   

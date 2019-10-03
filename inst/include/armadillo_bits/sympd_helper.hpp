@@ -141,7 +141,7 @@ guess_sympd(const Mat<eT>& A)
   
   const T square_max_diag = max_diag * max_diag;
   
-  if(std::isfinite(square_max_diag) == false)  { return false; }
+  if(arma_isfinite(square_max_diag) == false)  { return false; }
   
   A_col = A_mem;
   
@@ -165,7 +165,7 @@ guess_sympd(const Mat<eT>& A)
       // avoid using std::abs(), as that is time consuming due to division and std::sqrt()
       const T square_A_ij_abs = (A_ij_real * A_ij_real) + (A_ij_imag * A_ij_imag);
       
-      if(std::isfinite(square_A_ij_abs) == false)  { return false; }
+      if(arma_isfinite(square_A_ij_abs) == false)  { return false; }
       
       if(square_A_ij_abs >= square_max_diag)  { return false; }
       

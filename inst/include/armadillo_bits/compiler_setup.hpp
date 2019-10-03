@@ -144,6 +144,7 @@
   
   #undef  ARMA_USE_EXTERN_CXX11_RNG
   // TODO: thread_local seems to work in Apple clang since Xcode 8 (mid 2016 onwards)
+  // NOTE: https://stackoverflow.com/questions/28094794/why-does-apple-clang-disallow-c11-thread-local-when-official-clang-supports
 #endif
 
 

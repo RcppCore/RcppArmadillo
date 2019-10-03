@@ -1,3 +1,7 @@
+2019-10-02  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/armadillo*: Armadillo 10.100-rc1
+
 2019-09-30  Min Kim  <msk@dolbo.net>
 
 	* configure.ac: Portability fixes 

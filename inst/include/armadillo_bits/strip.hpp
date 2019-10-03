@@ -117,4 +117,48 @@ struct strip_inv< Op<T1, op_inv_sympd> >
 
 
 
+template<typename T1>
+struct strip_trimat
+  {
+  typedef T1 stored_type;
+  
+  const T1& M;
+  
+  static const bool do_trimat = false;
+  static const bool do_triu   = false;
+  static const bool do_tril   = false;
+  
+  inline
+  strip_trimat(const T1& X)
+    : M(X)
+    {
+    arma_extra_debug_sigprint();
+    }
+  };
+
+
+
+template<typename T1>
+struct strip_trimat< Op<T1, op_trimat> >
+  {
+  typedef T1 stored_type;
+  
+  const T1& M;
+  
+  static const bool do_trimat = true;
+         const bool do_triu;
+         const bool do_tril;
+  
+  inline
+  strip_trimat(const Op<T1, op_trimat>& X)
+    : M(X.m)
+    , do_triu(X.aux_uword_a == 0)
+    , do_tril(X.aux_uword_a == 1)
+    {
+    arma_extra_debug_sigprint();
+    }
+  };
+
+
+
 //! @}

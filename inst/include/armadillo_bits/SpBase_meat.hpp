@@ -402,6 +402,82 @@ template<typename elem_type, typename derived>
 inline
 arma_warn_unused
 bool
+SpBase<elem_type,derived>::is_trimatu() const
+  {
+  arma_extra_debug_sigprint();
+  
+  const SpProxy<derived> P( (*this).get_ref() );
+  
+  if(P.get_n_rows() != P.get_n_cols())  { return false; }
+  
+  typename SpProxy<derived>::const_iterator_type it     = P.begin();
+  typename SpProxy<derived>::const_iterator_type it_end = P.end();
+  
+  while(it != it_end)
+    {
+    if(it.row() > it.col())  { return false; }
+    ++it;
+    }
+  
+  return true;
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
+SpBase<elem_type,derived>::is_trimatl() const
+  {
+  arma_extra_debug_sigprint();
+  
+  const SpProxy<derived> P( (*this).get_ref() );
+  
+  if(P.get_n_rows() != P.get_n_cols())  { return false; }
+  
+  typename SpProxy<derived>::const_iterator_type it     = P.begin();
+  typename SpProxy<derived>::const_iterator_type it_end = P.end();
+  
+  while(it != it_end)
+    {
+    if(it.row() < it.col())  { return false; }
+    ++it;
+    }
+  
+  return true;
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
+SpBase<elem_type,derived>::is_diagmat() const
+  {
+  arma_extra_debug_sigprint();
+  
+  const SpProxy<derived> P( (*this).get_ref() );
+  
+  typename SpProxy<derived>::const_iterator_type it     = P.begin();
+  typename SpProxy<derived>::const_iterator_type it_end = P.end();
+  
+  while(it != it_end)
+    {
+    if(it.row() != it.col())  { return false; }
+    ++it;
+    }
+  
+  return true;
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
 SpBase<elem_type,derived>::is_empty() const
   {
   arma_extra_debug_sigprint();

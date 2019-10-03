@@ -31,7 +31,7 @@ is_band(uword& out_KL, uword& out_KU, const Mat<eT>& A, const uword N_min)
   arma_extra_debug_sigprint();
   
   // NOTE: assuming that A has a square size
-  // NOTE  assuming that N_min is >= 4
+  // NOTE: assuming that N_min is >= 4
   
   const uword N = A.n_rows;
   
@@ -109,7 +109,7 @@ is_band_lower(uword& out_KD, const Mat<eT>& A, const uword N_min)
   arma_extra_debug_sigprint();
   
   // NOTE: assuming that A has a square size
-  // NOTE  assuming that N_min is >= 4
+  // NOTE: assuming that N_min is >= 4
   
   const uword N = A.n_rows;
   
@@ -172,7 +172,7 @@ is_band_upper(uword& out_KD, const Mat<eT>& A, const uword N_min)
   arma_extra_debug_sigprint();
   
   // NOTE: assuming that A has a square size
-  // NOTE  assuming that N_min is >= 4
+  // NOTE: assuming that N_min is >= 4
   
   const uword N = A.n_rows;
   

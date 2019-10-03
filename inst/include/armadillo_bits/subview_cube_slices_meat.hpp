@@ -42,6 +42,45 @@ subview_cube_slices<eT,T1>::subview_cube_slices
 
 
 template<typename eT, typename T1>
+inline
+void
+subview_cube_slices<eT,T1>::inplace_rand(const uword rand_mode)
+  {
+  arma_extra_debug_sigprint();
+  
+  Cube<eT>& m_local = const_cast< Cube<eT>& >(m);
+  
+  const uword m_n_slices     = m_local.n_slices;
+  const uword m_n_elem_slice = m_local.n_elem_slice;
+  
+  const quasi_unwrap<T1> U(base_si.get_ref());
+  const umat& si       = U.M;
+  
+  arma_debug_check
+    (
+    ( (si.is_vec() == false) && (si.is_empty() == false) ),
+    "Cube::slices(): given object is not a vector"
+    );
+  
+  const uword* si_mem    = si.memptr();
+  const uword  si_n_elem = si.n_elem;
+  
+  for(uword si_count=0; si_count < si_n_elem; ++si_count)
+    {
+    const uword i = si_mem[si_count];
+    
+    arma_debug_check( (i >= m_n_slices), "Cube::slices(): index out of bounds" );
+    
+    eT* m_slice_ptr = m_local.slice_memptr(i);
+    
+    if(rand_mode == 0)  { arma_rng::randu<eT>::fill(m_slice_ptr, m_n_elem_slice); }
+    if(rand_mode == 1)  { arma_rng::randn<eT>::fill(m_slice_ptr, m_n_elem_slice); }
+    }
+  }
+
+
+
+template<typename eT, typename T1>
 template<typename op_type>
 inline
 void
@@ -170,6 +209,30 @@ subview_cube_slices<eT,T1>::ones()
   arma_extra_debug_sigprint();
   
   inplace_op<op_internal_equ>(eT(1));
+  }
+
+
+
+template<typename eT, typename T1>
+inline
+void
+subview_cube_slices<eT,T1>::randu()
+  {
+  arma_extra_debug_sigprint();
+  
+  inplace_rand(0);
+  }
+
+
+
+template<typename eT, typename T1>
+inline
+void
+subview_cube_slices<eT,T1>::randn()
+  {
+  arma_extra_debug_sigprint();
+  
+  inplace_rand(1);
   }
 
 

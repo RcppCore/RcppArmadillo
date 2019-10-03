@@ -501,7 +501,7 @@ struct superlu_opts : public spsolve_opts_base
     symmetric    = false;
     pivot_thresh = 1.0;
     permutation  = COLAMD;
-    refine       = REF_DOUBLE;
+    refine       = REF_NONE;
     }
   };
 

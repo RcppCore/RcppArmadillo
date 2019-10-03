@@ -140,14 +140,17 @@ struct Base
   inline arma_warn_unused bool is_hermitian() const;
   inline arma_warn_unused bool is_hermitian(const typename get_pod_type<elem_type>::result tol) const;
   
-  inline arma_warn_unused bool is_empty()  const;
-  inline arma_warn_unused bool is_square() const;
-  inline arma_warn_unused bool is_vec()    const;
-  inline arma_warn_unused bool is_colvec() const;
-  inline arma_warn_unused bool is_rowvec() const;
-  inline arma_warn_unused bool is_finite() const;
-  inline arma_warn_unused bool has_inf()   const;
-  inline arma_warn_unused bool has_nan()   const;
+  inline arma_warn_unused bool is_trimatu() const;
+  inline arma_warn_unused bool is_trimatl() const;
+  inline arma_warn_unused bool is_diagmat() const;
+  inline arma_warn_unused bool is_empty()   const;
+  inline arma_warn_unused bool is_square()  const;
+  inline arma_warn_unused bool is_vec()     const;
+  inline arma_warn_unused bool is_colvec()  const;
+  inline arma_warn_unused bool is_rowvec()  const;
+  inline arma_warn_unused bool is_finite()  const;
+  inline arma_warn_unused bool has_inf()    const;
+  inline arma_warn_unused bool has_nan()    const;
   
   arma_inline const Op<derived,op_vectorise_col> as_col() const;
   arma_inline const Op<derived,op_vectorise_row> as_row() const;

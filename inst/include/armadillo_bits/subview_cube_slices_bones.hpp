@@ -41,14 +41,16 @@ class subview_cube_slices : public BaseCube<eT, subview_cube_slices<eT,T1> >
   
   inline ~subview_cube_slices();
   
+  inline void inplace_rand(const uword rand_mode);
+  
   template<typename op_type>                inline void inplace_op(const eT val);
   template<typename op_type, typename expr> inline void inplace_op(const BaseCube<eT,expr>& x);
   
   inline void fill(const eT val);
   inline void zeros();
   inline void ones();
-  // inline void randu();  // TODO
-  // inline void randn();  // TODO
+  inline void randu();
+  inline void randn();
   
   inline void operator+= (const eT val);
   inline void operator-= (const eT val);
