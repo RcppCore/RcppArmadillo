@@ -3,8 +3,18 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.9.800.x.0 (2019-10-xx)}{
+\section{Changes in RcppArmadillo version 0.10.100.x.0 (2019-10-xx)}{
   \itemize{
+    \item Upgraded to Armadillo release 10.100 ()
+    \itemize{
+      \item faster \code{solve()} in default operation; iterative
+      refinement is no longer applied by default; use
+      \code{solve_opts::refine} to explicitly enable refinement 
+      \item faster \code{expmat()}
+      \item faster handling of triangular matrices by \code{rcond()}
+      \item added \code{.is_trimatu()} and \code{.is_trimatl()}
+      \item added \code{.is_diagmat()}
+    }
     \item The package now uses \pkg{tinytest} for unit tests (Dirk in
     \ghpr{269}).
     \item The \code{configure.ac} script is now more careful about shell
