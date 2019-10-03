@@ -930,6 +930,20 @@ Col<eT>::shed_rows(const uword in_row1, const uword in_row2)
 
 
 
+//! remove specified rows
+template<typename eT>
+template<typename T1>
+inline
+void
+Col<eT>::shed_rows(const Base<uword, T1>& indices)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>::shed_rows(indices);
+  }
+
+
+
 //! insert N rows at the specified row position,
 //! optionally setting the elements of the inserted rows to zero
 template<typename eT>

@@ -49,8 +49,8 @@ spsolve_helper
   
   superlu_opts superlu_opts_default;
   
-  if(is_float <T>::value)  { superlu_opts_default.refine = superlu_opts::REF_SINGLE; }
-  if(is_double<T>::value)  { superlu_opts_default.refine = superlu_opts::REF_DOUBLE; }
+  // if(is_float <T>::value)  { superlu_opts_default.refine = superlu_opts::REF_SINGLE; }
+  // if(is_double<T>::value)  { superlu_opts_default.refine = superlu_opts::REF_DOUBLE; }
   
   const superlu_opts& opts = (settings.id == 1) ? static_cast<const superlu_opts&>(settings) : superlu_opts_default;
   
@@ -70,7 +70,7 @@ spsolve_helper
   else
   if(sig == 'l')  // brutal LAPACK solver
     {
-    if( (settings.id != 0) && ((opts.symmetric) || (opts.pivot_thresh != double(1.0))) )
+    if( (settings.id != 0) && ((opts.symmetric) || (opts.pivot_thresh != double(1))) )
       {
       arma_debug_warn("spsolve(): ignoring settings not applicable to LAPACK based solver");
       }
@@ -98,20 +98,9 @@ spsolve_helper
       
       uword flags = solve_opts::flag_none;
       
-      if( (opts.equilibrate == false) && (opts.refine == superlu_opts::REF_NONE) )
-        {
-        flags |= solve_opts::flag_fast;
-        }
-      else
-      if(opts.equilibrate == true)
-        {
-        flags |= solve_opts::flag_equilibrate;
-        }
-      
-      if(opts.allow_ugly == true)
-        {
-        flags |= solve_opts::flag_allow_ugly;
-        }
+      if(opts.refine      != superlu_opts::REF_NONE)  { flags |= solve_opts::flag_refine;      }
+      if(opts.equilibrate == true                  )  { flags |= solve_opts::flag_equilibrate; }
+      if(opts.allow_ugly  == true                  )  { flags |= solve_opts::flag_allow_ugly;  }
       
       status = glue_solve_gen::apply(out, AA, B.get_ref(), flags);
       }
@@ -126,7 +115,7 @@ spsolve_helper
     out.soft_reset();
     }
   
-  if( (status == true) && (rcond > T(0)) && (rcond <= (T(0.5)*std::numeric_limits<T>::epsilon())) )
+  if( (status == true) && (rcond > T(0)) && (rcond < auxlib::epsilon_lapack(out)) )
     {
     arma_debug_warn("solve(): solution computed, but system seems singular to working precision (rcond: ", rcond, ")");
     }

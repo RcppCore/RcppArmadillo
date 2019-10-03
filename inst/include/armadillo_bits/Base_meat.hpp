@@ -379,6 +379,78 @@ template<typename elem_type, typename derived>
 inline
 arma_warn_unused
 bool
+Base<elem_type,derived>::is_trimatu() const
+  {
+  arma_extra_debug_sigprint();
+  
+  const quasi_unwrap<derived> U( (*this).get_ref() );
+  
+  if(U.M.n_rows != U.M.n_cols)  { return false; }
+  
+  if(U.M.n_elem <= 1)  { return true; }
+  
+  return trimat_helper::is_triu(U.M);
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
+Base<elem_type,derived>::is_trimatl() const
+  {
+  arma_extra_debug_sigprint();
+  
+  const quasi_unwrap<derived> U( (*this).get_ref() );
+  
+  if(U.M.n_rows != U.M.n_cols)  { return false; }
+  
+  if(U.M.n_elem <= 1)  { return true; }
+  
+  return trimat_helper::is_tril(U.M);
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
+Base<elem_type,derived>::is_diagmat() const
+  {
+  arma_extra_debug_sigprint();
+  
+  const quasi_unwrap<derived> U( (*this).get_ref() );
+  
+  const Mat<elem_type>& A = U.M;
+  
+  if(A.n_elem <= 1)  { return true; }
+  
+  const uword A_n_rows = A.n_rows;
+  const uword A_n_cols = A.n_cols;
+  
+  const elem_type* A_colmem = A.memptr();
+  
+  for(uword A_col=0; A_col < A_n_cols; ++A_col)
+    {
+    for(uword A_row=0; A_row < A_n_rows; ++A_row)
+      {
+      if( (A_colmem[A_row] != elem_type(0)) && (A_row != A_col) )  { return false; }
+      }
+    
+    A_colmem += A_n_rows;
+    }
+  
+  return true;
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
 Base<elem_type,derived>::is_empty() const
   {
   arma_extra_debug_sigprint();

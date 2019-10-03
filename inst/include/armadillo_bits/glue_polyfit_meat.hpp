@@ -49,7 +49,7 @@ glue_polyfit::apply_noalias(Mat<eT>& out, const Col<eT>& X, const Col<eT>& Y, co
   
   if(status1 == false)  { return false; }
   
-  const bool status2 = auxlib::solve_tri(out, R, (Q.t() * Y), uword(0));
+  const bool status2 = auxlib::solve_trimat_fast(out, R, (Q.t() * Y), uword(0));
   
   if(status2 == false)  { return false; }
   
