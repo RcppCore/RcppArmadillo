@@ -3,9 +3,9 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.10.100.x.0 (2019-10-xx)}{
+\section{Changes in RcppArmadillo version 0.9.799.x.0 (2019-10-xx)}{
   \itemize{
-    \item Upgraded to Armadillo release 10.100 ()
+    \item Upgraded to Armadillo release 9.800 ()
     \itemize{
       \item faster \code{solve()} in default operation; iterative
       refinement is no longer applied by default; use

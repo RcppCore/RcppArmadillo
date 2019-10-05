@@ -1,3 +1,8 @@
+2019-10-04  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version): Upstream change of heart, 0.9.799.1.0 it is
+	* inst/NEWS.Rd: Ditto
+
 2019-10-02  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): 0.10.99.1.0 [github-only]
