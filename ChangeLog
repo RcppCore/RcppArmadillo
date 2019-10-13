@@ -1,3 +1,7 @@
+2019-10-13  Dirk Eddelbuettel  <edd@debian.org>
+
+	* README.md: Added CRAN + BioConductor badges for reverse depends
+
 2019-10-09  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION (Version, Date): Release 0.9.800.1.0
