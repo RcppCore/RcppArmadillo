@@ -3,15 +3,16 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.9.799.x.0 (2019-10-xx)}{
+\section{Changes in RcppArmadillo version 0.9.800.1.0 (2019-10-09)}{
   \itemize{
-    \item Upgraded to Armadillo release 9.800 ()
+    \item Upgraded to Armadillo release 9.800 (Horizon Scraper)
     \itemize{
       \item faster \code{solve()} in default operation; iterative
       refinement is no longer applied by default; use
       \code{solve_opts::refine} to explicitly enable refinement 
       \item faster \code{expmat()}
       \item faster handling of triangular matrices by \code{rcond()}
+      \item added \code{.front()} and \code{.back()}
       \item added \code{.is_trimatu()} and \code{.is_trimatl()}
       \item added \code{.is_diagmat()}
     }

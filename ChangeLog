@@ -1,110 +1,117 @@
+2019-10-09  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION (Version, Date): Release 0.9.800.1.0
+        * inst/NEWS.Rd: Release 0.9.800.1.0
+
+        * inst/include/armadillo_bits/*: Armadillo 9.800.1
+
 2019-10-04  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version): Upstream change of heart, 0.9.799.1.0 it is
-	* inst/NEWS.Rd: Ditto
+        * DESCRIPTION (Version): Upstream change of heart, 0.9.799.1.0 it is
+        * inst/NEWS.Rd: Ditto
 
 2019-10-02  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): 0.10.99.1.0 [github-only]
+        * DESCRIPTION (Version, Date): 0.10.99.1.0 [github-only]
 
-	* inst/include/armadillo*: Armadillo 10.100-rc1
+        * inst/include/armadillo*: Armadillo 10.100-rc1
 
 2019-09-30  Min Kim  <msk@dolbo.net>
 
-	* configure.ac: Portability fixes 
+        * configure.ac: Portability fixes
 
 2019-09-29  Dirk Eddelbuettel  <edd@debian.org>
 
-	* README.md: Add Stackoverflow badge, add use count
+        * README.md: Add Stackoverflow badge, add use count
 
 2019-09-14  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION (Version, Date): Roll minor version
 
-	* DESCRIPTION: Replaced Suggests: of RUnit with tinytest
-	
-	* inst/tinytest/*: Added
-	* tests/tinytest.R: Added converted RUnit tests
-	
-	* tests/doRUnit.R: Removed
-	* inst/unitTests/*: Removed, converted into tinytest files
+        * DESCRIPTION: Replaced Suggests: of RUnit with tinytest
 
-	* R/unit.test.R: Removed helper script
+        * inst/tinytest/*: Added
+        * tests/tinytest.R: Added converted RUnit tests
 
- 	* .travis.yml: Replace RUnit with tinytest
-	
-	* inst/include/RcppArmadilloSugar.h: Switch one int to size_t and add
-	one cast in order to quieten two compiler warnings
+        * tests/doRUnit.R: Removed
+        * inst/unitTests/*: Removed, converted into tinytest files
+
+        * R/unit.test.R: Removed helper script
+
+        * .travis.yml: Replace RUnit with tinytest
+
+        * inst/include/RcppArmadilloSugar.h: Switch one int to size_t and add
+        one cast in order to quieten two compiler warnings
 
 2019-09-01  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Release 0.9.700.2.0
+        * DESCRIPTION (Version, Date): Release 0.9.700.2.0
         * inst/NEWS.Rd: Release 0.9.700.2.0
 
-	* inst/include/armadillo_bits/*: Armadillo 9.700.2
+        * inst/include/armadillo_bits/*: Armadillo 9.700.2
 
 2019-08-28  Dirk Eddelbuettel  <edd@debian.org>
 
-	* configure.ac: Expand list of known gcc and clang versions
+        * configure.ac: Expand list of known gcc and clang versions
 
 2019-08-27  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.9.699.1.0 [github-only]
         * inst/NEWS.Rd: Release 0.9.699.1.0
 
-	* inst/include/armadillo: Armadillo 9.700-RC1
-	* inst/include/armadillo_bits/*: Idem
+        * inst/include/armadillo: Armadillo 9.700-RC1
+        * inst/include/armadillo_bits/*: Idem
 
 2019-07-14  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.9.600.4.0
         * inst/NEWS.Rd: Release 0.9.600.4.0
 
-	* inst/include/armadillo_bits/*: Armadillo 9.600.4
+        * inst/include/armadillo_bits/*: Armadillo 9.600.4
 
 2019-07-13  irk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.9.599.4.0 [github-only]
         * inst/NEWS.Rd: Release 0.9.599.4.0
 
-	* inst/include/armadillo: Armadillo 9.600-RC4
-	* inst/include/armadillo_bits/*: Idem
+        * inst/include/armadillo: Armadillo 9.600-RC4
+        * inst/include/armadillo_bits/*: Idem
 
 2019-07-10 Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.9.599.3.0 [github-only]
         * inst/NEWS.Rd: Release 0.9.599.3.0
 
-	* inst/include/armadillo: Armadillo 9.600-RC3
-	* inst/include/armadillo_bits/*: Idem
+        * inst/include/armadillo: Armadillo 9.600-RC3
+        * inst/include/armadillo_bits/*: Idem
 
 2019-07-03  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/examples/fastLm.r (fastLmPureDotCall): Update example
+        * inst/examples/fastLm.r (fastLmPureDotCall): Update example
 
 2019-07-02  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.9.599.2.0 [github-only]
         * inst/NEWS.Rd: Release 0.9.599.2.0
 
-	* inst/include/armadillo: Armadillo 9.600-RC2
-	* inst/include/armadillo_bits/*: Idem
+        * inst/include/armadillo: Armadillo 9.600-RC2
+        * inst/include/armadillo_bits/*: Idem
 
 2019-06-11  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.9.500.2.0
         * inst/NEWS.Rd: Release 0.9.500.2.0
 
-	* inst/include/armadillo: Armadillo 9.500.2
-	* inst/include/armadillo_bits/*: Idem
+        * inst/include/armadillo: Armadillo 9.500.2
+        * inst/include/armadillo_bits/*: Idem
 
 2019-06-06  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.9.499.1.0 [github-only]
         * inst/NEWS.Rd: Release 0.9.499.1.0
 
-	* inst/include/armadillo: Armadillo 9.500-RC1
-	* inst/include/armadillo_bits/*: Idem
+        * inst/include/armadillo: Armadillo 9.500-RC1
+        * inst/include/armadillo_bits/*: Idem
 
 2019-05-09  Dirk Eddelbuettel  <edd@debian.org>
 
@@ -113,7 +120,7 @@
 
 2019-05-03  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/armadillo_bits/*:  Armadillo 9.400.3
+        * inst/include/armadillo_bits/*:  Armadillo 9.400.3
 
 2019-04-28  Dirk Eddelbuettel  <edd@debian.org>
 
@@ -125,80 +132,80 @@
         * DESCRIPTION: Release 0.9.399.2.0 [github-only]
         * inst/NEWS.Rd: Release 0.9.399.2.0
 
-	* inst/include/armadillo_bits/*: Armadillo 9.400.2
+        * inst/include/armadillo_bits/*: Armadillo 9.400.2
 
 2019-04-21  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.9.399.1.0 [github-only]
         * inst/NEWS.Rd: Release 0.9.399.1.0
 
-	* inst/include/armadillo_bits/*: Armadillo 9.400-RC1
+        * inst/include/armadillo_bits/*: Armadillo 9.400-RC1
 
 2019-03-21  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Release 0.9.300.2.0
+        * DESCRIPTION (Version, Date): Release 0.9.300.2.0
         * inst/NEWS.Rd: Release 0.9.300.2.0
 
-	* inst/include/armadillo_bits/*: Armadillo 9.300.2
+        * inst/include/armadillo_bits/*: Armadillo 9.300.2
 
 2019-03-16  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.9.299.0.0 [github-only]
         * inst/NEWS.Rd: Release 0.9.199.0.0
 
-	* inst/include/armadillo_bits/*: Armadillo 9.300-RC1
+        * inst/include/armadillo_bits/*: Armadillo 9.300-RC1
 
 2019-03-08  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Release 0.9.200.7.1
+        * DESCRIPTION (Version, Date): Release 0.9.200.7.1
         * inst/NEWS.Rd: Release 0.9.200.7.1
 
 2019-03-07  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): New minor version
+        * DESCRIPTION (Version, Date): New minor version
 
-	* inst/unitTests/runit.sample.R (csample): Set the sample() behaviour
-	to R 3.5.0 as R 3.6.0 has a breaking change (for the better)
+        * inst/unitTests/runit.sample.R (csample): Set the sample() behaviour
+        to R 3.5.0 as R 3.6.0 has a breaking change (for the better)
 
-	* inst/include/armadillo_bits/op_wishrnd_meat.hpp
-	(apply_noalias_mode2): Backport a fix from Armadillo upstream
+        * inst/include/armadillo_bits/op_wishrnd_meat.hpp
+        (apply_noalias_mode2): Backport a fix from Armadillo upstream
 
 2019-01-17  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Release 0.9.200.7.0
+        * DESCRIPTION (Version, Date): Release 0.9.200.7.0
         * inst/NEWS.Rd: Release 0.9.200.7.0
 
-	* inst/include/armadillo_bits/def_hdf5.hpp: CRLF -> CR
-	* inst/include/armadillo_bits/fn_spsolve.hpp: Idem
+        * inst/include/armadillo_bits/def_hdf5.hpp: CRLF -> CR
+        * inst/include/armadillo_bits/fn_spsolve.hpp: Idem
 
 2019-01-15  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/armadillo_bits/*: Armadillo 9.200.7
+        * inst/include/armadillo_bits/*: Armadillo 9.200.7
 
 2018-11-27  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Release 0.9.200.5.0
+        * DESCRIPTION (Version, Date): Release 0.9.200.5.0
         * inst/NEWS.Rd: Release 0.9.200.5.0
 
-	* inst/include/armadillo_bits/*: Armadillo 9.200.5
+        * inst/include/armadillo_bits/*: Armadillo 9.200.5
 
 2018-11-09  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Release 0.9.200.4.0
+        * DESCRIPTION (Version, Date): Release 0.9.200.4.0
         * inst/NEWS.Rd: Release 0.9.200.4.0
 
-	* vignettes/Rcpp-unitTests.Rnw: Removed as less useful now
+        * vignettes/Rcpp-unitTests.Rnw: Removed as less useful now
 
 2018-11-08  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/armadillo_bits/*: Armadillo 9.200.4
+        * inst/include/armadillo_bits/*: Armadillo 9.200.4
 
 2018-10-27  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.9.199.2.0 [github-only]
         * inst/NEWS.Rd: Release 0.9.199.2.0
 
-	* inst/include/armadillo_bits/*: Armadillo 9.200.RC3
+        * inst/include/armadillo_bits/*: Armadillo 9.200.RC3
 
 2018-10-13  Dirk Eddelbuettel  <edd@debian.org>
 
@@ -209,8 +216,8 @@
 
 2018-10-04  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/unitTests/runit.sparseConversion.R (test.stop): Comment-out a
-	test which consistently fails on fedora-clang at CRAN, and only there
+        * inst/unitTests/runit.sparseConversion.R (test.stop): Comment-out a
+        test which consistently fails on fedora-clang at CRAN, and only there
 
 2018-10-03  Dirk Eddelbuettel  <edd@debian.org>
 
@@ -228,7 +235,7 @@
 
 2018-09-02  Dirk Eddelbuettel  <edd@debian.org>
 
-	* .travis.yml: Switch Travis CI to R 3.5 repo
+        * .travis.yml: Switch Travis CI to R 3.5 repo
 
 2018-08-16  Dirk Eddelbuettel  <edd@debian.org>
 
@@ -253,9 +260,9 @@
 
 2018-08-06  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/skeleton/Makevars: Align PKG_CXXFLAGS and PKG_LIBS to both use
-	SHLIB_OPENMP_CXXFLAGS and not once SHLIB_OPENMP_CFLAGS [CRAN request]
-	* inst/skeleton/Makevars.win: Idem
+        * inst/skeleton/Makevars: Align PKG_CXXFLAGS and PKG_LIBS to both use
+        SHLIB_OPENMP_CXXFLAGS and not once SHLIB_OPENMP_CFLAGS [CRAN request]
+        * inst/skeleton/Makevars.win: Idem
 
 2018-06-28  Dirk Eddelbuettel  <edd@debian.org>
 
@@ -264,8 +271,8 @@
 
         * inst/include/armadillo_bits/*: Armadillo 8.600.0
 
-	* vignettes/RcppArmadillo-sparseMatrix.Rmd: Do not use biobliography
-	embedded in yaml header as pandoc2 no longer supports it
+        * vignettes/RcppArmadillo-sparseMatrix.Rmd: Do not use biobliography
+        embedded in yaml header as pandoc2 no longer supports it
 
 2018-06-19  Dirk Eddelbuettel  <edd@debian.org>
 
