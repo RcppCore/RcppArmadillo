@@ -2,6 +2,8 @@
 
 	* README.md: Added CRAN + BioConductor badges for reverse depends
 
+	* R/RcppArmadillo.package.skeleton.R: remove force argument if unused
+
 2019-10-09  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION (Version, Date): Release 0.9.800.1.0
