@@ -1,6 +1,6 @@
 ## RcppArmadillo.package.skeleton.R: makes a skeleton for a package that wants to use RcppArmadillo
 ##
-## Copyright (C)  2010 - 2015  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+## Copyright (C)  2010 - 2019  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 ##
 ## This file is part of RcppArmadillo.
 ##
@@ -46,6 +46,10 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
     if (! haveKitten) {                 # in the package.skeleton() case
         if (fake) {
             call[["list"]] <- "Rcpp.fake.fun"
+        }
+    } else {
+        if (force) {
+            call[["force"]] <- NULL
         }
     }
 
@@ -122,4 +126,3 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
 
     invisible(NULL)
 }
-
