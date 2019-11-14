@@ -1,3 +1,7 @@
+2019-11-14  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/RcppArmadilloExtensions/sample.h: Const correctness
+
 2019-10-13  Dirk Eddelbuettel  <edd@debian.org>
 
 	* README.md: Added CRAN + BioConductor badges for reverse depends
