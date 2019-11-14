@@ -32,7 +32,7 @@
 namespace Rcpp{
     namespace RcppArmadillo{
 
-        template <class T> T sample_main(const T &x, const int size, const bool replace, arma::vec &prob_);
+        template <class T> T sample_main(const T &x, const int size, const bool replace, const arma::vec &prob_);
         void SampleNoReplace(arma::uvec &index, int nOrig, int size);
         void SampleReplace(arma::uvec &index, int nOrig, int size);
         void ProbSampleNoReplace(arma::uvec &index, int nOrig, int size, arma::vec &prob);
@@ -46,20 +46,20 @@ namespace Rcpp{
         template <class T> 
         T sample(const T &x, const int size, const bool replace){
           // Creates a zero-size vector in arma (cannot directly call arma::vec(0))
-          arma::vec prob = arma::zeros<arma::vec>(0);
+          const arma::vec prob = arma::zeros<arma::vec>(0);
           return sample_main(x, size, replace, prob);
         }
 
         // Convert from NumericVector to arma vector
         template <class T> 
         T sample(const T &x, const int size, const bool replace, NumericVector prob_){
-          arma::vec prob(prob_.begin(), prob_.size(), false);
+          const arma::vec prob(prob_.begin(), prob_.size(), false);
           return sample_main(x, size, replace, prob);
         }
         
         // Enables supplying an arma probability
         template <class T> 
-        T sample(const T &x, const int size, const bool replace, arma::vec &prob_){
+        T sample(const T &x, const int size, const bool replace, const arma::vec &prob_){
           return sample_main(x, size, replace, prob_);
         }
 
@@ -67,8 +67,7 @@ namespace Rcpp{
         
         // Supply any class
         template <class T> 
-        T sample_main(const T &x, const int size, const bool replace, arma::vec &prob) {
-
+        T sample_main(const T &x, const int size, const bool replace, const arma::vec &prob) {
             // Templated sample -- should work on any Rcpp Vector
             int ii, jj;
             int nOrig = x.size();
@@ -92,20 +91,23 @@ namespace Rcpp{
             } else { 
                 if (probsize != nOrig) throw std::range_error( "Number of probabilities must equal input vector length" ) ;
 
-                // fixprob will be modified in-place
-                FixProb(prob, size, replace);
+                // copy prob
+                // fprob will be modified in-place
+                // (and possibly clobbered by workers)
+                arma::vec fprob = prob;
+                FixProb(fprob, size, replace);
                 
                 // Reuse the values
                 if (replace) {
                     // check for walker alias conditions 
-                    int walker_test = sum( (prob * nOrig) > 0.1);
+                    int walker_test = sum( (fprob * nOrig) > 0.1);
                     if (walker_test > 200) {
-                        WalkerProbSampleReplace(index, nOrig, size, prob);
+                        WalkerProbSampleReplace(index, nOrig, size, fprob);
                     } else {
-                        ProbSampleReplace(index, nOrig, size, prob);
+                        ProbSampleReplace(index, nOrig, size, fprob);
                     }
                 } else {
-                    ProbSampleNoReplace(index, nOrig, size, prob);
+                    ProbSampleNoReplace(index, nOrig, size, fprob);
                 }
             }
             // copy the results into the return vector
