@@ -554,7 +554,7 @@ class Mat : public Base< eT, Mat<eT> >
     
     inline row_iterator();
     inline row_iterator(const row_iterator& X);
-    inline row_iterator(Mat<eT>& in_M, const uword in_row);
+    inline row_iterator(Mat<eT>& in_M, const uword in_row, const uword in_col);
     
     inline arma_warn_unused eT& operator* ();
     
@@ -576,7 +576,6 @@ class Mat : public Base< eT, Mat<eT> >
     typedef eT&                             reference;
     
     arma_aligned Mat<eT>* M;
-    arma_aligned eT*      current_ptr;
     arma_aligned uword    current_row;
     arma_aligned uword    current_col;
     };
@@ -589,7 +588,7 @@ class Mat : public Base< eT, Mat<eT> >
     inline const_row_iterator();
     inline const_row_iterator(const       row_iterator& X);
     inline const_row_iterator(const const_row_iterator& X);
-    inline const_row_iterator(const Mat<eT>& in_M, const uword in_row);
+    inline const_row_iterator(const Mat<eT>& in_M, const uword in_row, const uword in_col);
     
     inline arma_warn_unused const eT& operator*() const;
     
@@ -611,7 +610,6 @@ class Mat : public Base< eT, Mat<eT> >
     typedef const eT&                       reference;
     
     arma_aligned const Mat<eT>* M;
-    arma_aligned const eT*      current_ptr;
     arma_aligned       uword    current_row;
     arma_aligned       uword    current_col;
     };

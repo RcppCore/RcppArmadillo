@@ -31,7 +31,9 @@ class diskio
   template<typename eT> inline arma_cold static std::string gen_txt_header(const Cube<eT>&);
   template<typename eT> inline arma_cold static std::string gen_bin_header(const Cube<eT>&);
   
-  inline arma_cold static file_type guess_file_type(std::istream& f);
+  inline arma_deprecated static file_type guess_file_type(std::istream& f);
+  
+  inline arma_cold static file_type guess_file_type_internal(std::istream& f);
   
   inline arma_cold static std::string gen_tmp_name(const std::string& x);
   
