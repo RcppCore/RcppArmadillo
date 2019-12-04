@@ -142,8 +142,8 @@
   // #undef  ARMA_HAVE_POSIX_MEMALIGN
   // NOTE: posix_memalign() is available since macOS 10.6 (late 2009 onwards)
   
-  #undef  ARMA_USE_EXTERN_CXX11_RNG
-  // TODO: thread_local seems to work in Apple clang since Xcode 8 (mid 2016 onwards)
+  // #undef  ARMA_USE_EXTERN_CXX11_RNG
+  // NOTE: thread_local seems to work in Apple clang since Xcode 8 (mid 2016 onwards)
   // NOTE: https://stackoverflow.com/questions/28094794/why-does-apple-clang-disallow-c11-thread-local-when-official-clang-supports
 #endif
 
@@ -399,7 +399,7 @@
   
   #pragma warning(disable: 4127)  // conditional expression is constant
   #pragma warning(disable: 4180)  // qualifier has no meaning
-  #pragma warning(disable: 4244)  // possible loss of data when converting types
+  #pragma warning(disable: 4244)  // possible loss of data when converting types (see also 4305)
   #pragma warning(disable: 4510)  // default constructor could not be generated
   #pragma warning(disable: 4511)  // copy constructor can't be generated
   #pragma warning(disable: 4512)  // assignment operator can't be generated

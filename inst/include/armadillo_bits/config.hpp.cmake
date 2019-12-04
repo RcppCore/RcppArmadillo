@@ -115,7 +115,7 @@
 // #define ARMA_64BIT_WORD
 //// Uncomment the above line if you require matrices/vectors capable of holding more than 4 billion elements.
 //// Your machine and compiler must have support for 64 bit integers (eg. via "long" or "long long").
-//// Note that ARMA_64BIT_WORD is automatically enabled when a C++11 compiler is detected.
+//// Note that ARMA_64BIT_WORD is automatically enabled when a C++11 compiler is detected and std::size_t has 64 bits.
 #endif
 
 #if !defined(ARMA_USE_HDF5)

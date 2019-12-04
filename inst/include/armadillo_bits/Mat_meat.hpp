@@ -7796,7 +7796,6 @@ template<typename eT>
 inline
 Mat<eT>::row_iterator::row_iterator()
   : M          (NULL)
-  , current_ptr(NULL)
   , current_row(0   )
   , current_col(0   )
   {
@@ -7810,7 +7809,6 @@ template<typename eT>
 inline
 Mat<eT>::row_iterator::row_iterator(const row_iterator& X)
   : M          (X.M          )
-  , current_ptr(X.current_ptr)
   , current_row(X.current_row)
   , current_col(X.current_col)
   {
@@ -7821,11 +7819,10 @@ Mat<eT>::row_iterator::row_iterator(const row_iterator& X)
 
 template<typename eT>
 inline
-Mat<eT>::row_iterator::row_iterator(Mat<eT>& in_M, const uword in_row)
-  : M          (&in_M               )
-  , current_ptr(&(in_M.at(in_row,0)))
-  , current_row(in_row              )
-  , current_col(0                   )
+Mat<eT>::row_iterator::row_iterator(Mat<eT>& in_M, const uword in_row, const uword in_col)
+  : M          (&in_M )
+  , current_row(in_row)
+  , current_col(in_col)
   {
   arma_extra_debug_sigprint();
   }
@@ -7838,7 +7835,7 @@ arma_warn_unused
 eT&
 Mat<eT>::row_iterator::operator*()
   {
-  return (*current_ptr);
+  return M->at(current_row,current_col);
   }
 
 
@@ -7854,12 +7851,6 @@ Mat<eT>::row_iterator::operator++()
     {
     current_col = 0;
     current_row++;
-    
-    current_ptr = &(M->at(current_row, 0));
-    }
-  else
-    {
-    current_ptr += M->n_rows;
     }
   
   return *this;
@@ -7890,8 +7881,6 @@ Mat<eT>::row_iterator::operator--()
   if(current_col > 0)
     {
     current_col--;
-    
-    current_ptr -= M->n_rows;
     }
   else
     {
@@ -7899,8 +7888,6 @@ Mat<eT>::row_iterator::operator--()
       {
       current_col = M->n_cols - 1;
       current_row--;
-      
-      current_ptr = &(M->at(current_row, current_col));
       }
     }
   
@@ -7930,7 +7917,7 @@ arma_warn_unused
 bool
 Mat<eT>::row_iterator::operator!=(const typename Mat<eT>::row_iterator& X) const
   {
-  return (current_ptr != X.current_ptr);
+  return ( (current_row != X.current_row) || (current_col != X.current_col) );
   }
 
 
@@ -7941,7 +7928,7 @@ arma_warn_unused
 bool
 Mat<eT>::row_iterator::operator==(const typename Mat<eT>::row_iterator& X) const
   {
-  return (current_ptr == X.current_ptr);
+  return ( (current_row == X.current_row) && (current_col == X.current_col) );
   }
 
 
@@ -7952,7 +7939,7 @@ arma_warn_unused
 bool
 Mat<eT>::row_iterator::operator!=(const typename Mat<eT>::const_row_iterator& X) const
   {
-  return (current_ptr != X.current_ptr);
+  return ( (current_row != X.current_row) || (current_col != X.current_col) );
   }
 
 
@@ -7963,7 +7950,7 @@ arma_warn_unused
 bool
 Mat<eT>::row_iterator::operator==(const typename Mat<eT>::const_row_iterator& X) const
   {
-  return (current_ptr == X.current_ptr);
+  return ( (current_row == X.current_row) && (current_col == X.current_col) );
   }
 
 
@@ -7972,7 +7959,6 @@ template<typename eT>
 inline
 Mat<eT>::const_row_iterator::const_row_iterator()
   : M          (NULL)
-  , current_ptr(NULL)
   , current_row(0   )
   , current_col(0   )
   {
@@ -7986,7 +7972,6 @@ template<typename eT>
 inline
 Mat<eT>::const_row_iterator::const_row_iterator(const typename Mat<eT>::row_iterator& X)
   : M          (X.M          )
-  , current_ptr(X.current_ptr)
   , current_row(X.current_row)
   , current_col(X.current_col)
   {
@@ -7999,7 +7984,6 @@ template<typename eT>
 inline
 Mat<eT>::const_row_iterator::const_row_iterator(const typename Mat<eT>::const_row_iterator& X)
   : M          (X.M          )
-  , current_ptr(X.current_ptr)
   , current_row(X.current_row)
   , current_col(X.current_col)
   {
@@ -8010,11 +7994,10 @@ Mat<eT>::const_row_iterator::const_row_iterator(const typename Mat<eT>::const_ro
 
 template<typename eT>
 inline
-Mat<eT>::const_row_iterator::const_row_iterator(const Mat<eT>& in_M, const uword in_row)
-  : M          (&in_M               )
-  , current_ptr(&(in_M.at(in_row,0)))
-  , current_row(in_row              )
-  , current_col(0                   )
+Mat<eT>::const_row_iterator::const_row_iterator(const Mat<eT>& in_M, const uword in_row, const uword in_col)
+  : M          (&in_M )
+  , current_row(in_row)
+  , current_col(in_col)
   {
   arma_extra_debug_sigprint();
   }
@@ -8027,7 +8010,7 @@ arma_warn_unused
 const eT&
 Mat<eT>::const_row_iterator::operator*() const
   {
-  return (*current_ptr);
+  return M->at(current_row,current_col);
   }
 
 
@@ -8043,12 +8026,6 @@ Mat<eT>::const_row_iterator::operator++()
     {
     current_col = 0;
     current_row++;
-    
-    current_ptr = &(M->at(current_row, 0));
-    }
-  else
-    {
-    current_ptr += M->n_rows;
     }
   
   return *this;
@@ -8079,8 +8056,6 @@ Mat<eT>::const_row_iterator::operator--()
   if(current_col > 0)
     {
     current_col--;
-    
-    current_ptr -= M->n_rows;
     }
   else
     {
@@ -8088,8 +8063,6 @@ Mat<eT>::const_row_iterator::operator--()
       {
       current_col = M->n_cols - 1;
       current_row--;
-      
-      current_ptr = &(M->at(current_row, current_col));
       }
     }
   
@@ -8119,7 +8092,7 @@ arma_warn_unused
 bool
 Mat<eT>::const_row_iterator::operator!=(const typename Mat<eT>::row_iterator& X) const
   {
-  return (current_ptr != X.current_ptr);
+  return ( (current_row != X.current_row) || (current_col != X.current_col) );
   }
 
 
@@ -8130,7 +8103,7 @@ arma_warn_unused
 bool
 Mat<eT>::const_row_iterator::operator==(const typename Mat<eT>::row_iterator& X) const
   {
-  return (current_ptr == X.current_ptr);
+  return ( (current_row == X.current_row) && (current_col == X.current_col) );
   }
 
 
@@ -8141,7 +8114,7 @@ arma_warn_unused
 bool
 Mat<eT>::const_row_iterator::operator!=(const typename Mat<eT>::const_row_iterator& X) const
   {
-  return (current_ptr != X.current_ptr);
+  return ( (current_row != X.current_row) || (current_col != X.current_col) );
   }
 
 
@@ -8152,7 +8125,7 @@ arma_warn_unused
 bool
 Mat<eT>::const_row_iterator::operator==(const typename Mat<eT>::const_row_iterator& X) const
   {
-  return (current_ptr == X.current_ptr);
+  return ( (current_row == X.current_row) && (current_col == X.current_col) );
   }
 
 
@@ -8692,7 +8665,7 @@ Mat<eT>::begin_row(const uword row_num)
   
   arma_debug_check( (row_num >= n_rows), "Mat::begin_row(): index out of bounds" );
   
-  return typename Mat<eT>::row_iterator(*this, row_num);
+  return typename Mat<eT>::row_iterator(*this, row_num, uword(0));
   }
 
 
@@ -8706,7 +8679,7 @@ Mat<eT>::begin_row(const uword row_num) const
   
   arma_debug_check( (row_num >= n_rows), "Mat::begin_row(): index out of bounds" );
   
-  return typename Mat<eT>::const_row_iterator(*this, row_num);
+  return typename Mat<eT>::const_row_iterator(*this, row_num, uword(0));
   }
 
 
@@ -8720,7 +8693,7 @@ Mat<eT>::end_row(const uword row_num)
   
   arma_debug_check( (row_num >= n_rows), "Mat::end_row(): index out of bounds" );
   
-  return typename Mat<eT>::row_iterator(*this, row_num + 1);
+  return typename Mat<eT>::row_iterator(*this, (row_num + uword(1)), 0);
   }
 
 
@@ -8734,7 +8707,7 @@ Mat<eT>::end_row(const uword row_num) const
   
   arma_debug_check( (row_num >= n_rows), "Mat::end_row(): index out of bounds" );
   
-  return typename Mat<eT>::const_row_iterator(*this, row_num + 1);
+  return typename Mat<eT>::const_row_iterator(*this, (row_num + uword(1)), 0);
   }
 
 

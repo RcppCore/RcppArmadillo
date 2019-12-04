@@ -213,9 +213,21 @@ diskio::gen_bin_header(const Cube<eT>&)
 
 
 inline
-arma_cold
+arma_deprecated
 file_type
 diskio::guess_file_type(std::istream& f)
+  {
+  arma_extra_debug_sigprint();
+  
+  return diskio::guess_file_type_internal(f);
+  }
+
+
+
+inline
+arma_cold
+file_type
+diskio::guess_file_type_internal(std::istream& f)
   {
   arma_extra_debug_sigprint();
   
@@ -2164,7 +2176,7 @@ diskio::load_auto_detect(Mat<eT>& x, std::istream& f, std::string& err_msg)
     }
   else
     {
-    const file_type ft = guess_file_type(f);
+    const file_type ft = guess_file_type_internal(f);
     
     switch(ft)
       {
@@ -3844,7 +3856,7 @@ diskio::load_auto_detect(Cube<eT>& x, std::istream& f, std::string& err_msg)
     }
   else
     {
-    const file_type ft = guess_file_type(f);
+    const file_type ft = guess_file_type_internal(f);
     
     switch(ft)
       {

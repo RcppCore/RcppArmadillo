@@ -6149,6 +6149,10 @@ auxlib::rudimentary_sym_check(const Mat< std::complex<T> >& X)
   
   const eT* X_mem = X.memptr();
   
+  const T tol = T(10000)*std::numeric_limits<T>::epsilon();  // allow some leeway
+  
+  if(std::abs(X_mem[0].imag()) > tol)  { return false; }
+  
   const eT& A = X_mem[Nm1  ];  // bottom-left corner (ie. last value in first column)
   const eT& B = X_mem[Nm1*N];  // top-right   corner (ie. first value in last column)
   
@@ -6157,8 +6161,6 @@ auxlib::rudimentary_sym_check(const Mat< std::complex<T> >& X)
   
   const T delta_real = std::abs(A.real() - B.real());
   const T delta_imag = std::abs(A.imag() + B.imag());  // take into account the conjugate
-  
-  const T tol = T(10000)*std::numeric_limits<T>::epsilon();  // allow some leeway
   
   const bool okay_real = ( (delta_real <= tol) || (delta_real <= (C_real * tol)) );
   const bool okay_imag = ( (delta_imag <= tol) || (delta_imag <= (C_imag * tol)) );
