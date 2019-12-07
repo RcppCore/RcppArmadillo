@@ -3,8 +3,9 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.9.900.x.0 (2019-xx-yy)}{
+\section{Changes in RcppArmadillo version 0.9.800.3.0 (2019-12-04)}{
   \itemize{
+    \item Upgraded to Armadillo release 9.800.3 (Horizon Scraper)
     \item The \code{sample} function passes the prob vector as const allowing
     subsequent calls (Christian Gunning in \ghpr{276} fixing \ghit{275})
   }
