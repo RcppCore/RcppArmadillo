@@ -43,6 +43,9 @@
 // DESCRIPTION file) and/or defining #define-ing ARMA_USE_CXX11_RNG
 #define ARMA_RNG_ALT         RcppArmadillo/Alt_R_RNG.h
 
+// workaround to mitigate possible interference from a system-level installation of Armadillo
+#define ARMA_DONT_USE_WRAPPER
+
 #include <armadillo>
 
 /* forward declarations */
