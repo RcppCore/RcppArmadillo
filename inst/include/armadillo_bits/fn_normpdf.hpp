@@ -69,7 +69,7 @@ normpdf_helper(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_ty
         
         const eT tmp = (X_ea[i] - M_ea[i]) / sigma;
         
-        out_mem[i] = std::exp(-0.5 * (tmp*tmp)) / (sigma * Datum<eT>::sqrt2pi);
+        out_mem[i] = std::exp(eT(-0.5) * (tmp*tmp)) / (sigma * Datum<eT>::sqrt2pi);
         }
       }
     #endif
@@ -82,7 +82,7 @@ normpdf_helper(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_ty
       
       const eT tmp = (X_ea[i] - M_ea[i]) / sigma;
       
-      out_mem[i] = std::exp(-0.5 * (tmp*tmp)) / (sigma * Datum<eT>::sqrt2pi);
+      out_mem[i] = std::exp(eT(-0.5) * (tmp*tmp)) / (sigma * Datum<eT>::sqrt2pi);
       }
     }
   }
@@ -94,7 +94,7 @@ arma_inline
 typename enable_if2< (is_real<eT>::value), eT >::result
 normpdf(const eT x)
   {
-  const eT out = std::exp(-0.5 * (x*x)) / Datum<eT>::sqrt2pi;
+  const eT out = std::exp(eT(-0.5) * (x*x)) / Datum<eT>::sqrt2pi;
   
   return out;
   }
@@ -108,7 +108,7 @@ normpdf(const eT x, const eT mu, const eT sigma)
   {
   const eT tmp = (x - mu) / sigma;
   
-  const eT out = std::exp(-0.5 * (tmp*tmp)) / (sigma * Datum<eT>::sqrt2pi);
+  const eT out = std::exp(eT(-0.5) * (tmp*tmp)) / (sigma * Datum<eT>::sqrt2pi);
   
   return out;
   }
