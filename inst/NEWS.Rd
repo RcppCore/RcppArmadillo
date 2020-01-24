@@ -3,6 +3,15 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.9.800.4.0 (2020-20-24)}{
+  \itemize{
+    \item Upgraded to Armadillo release 9.800.4 (Horizon Scraper)
+    \itemize{
+      \item fixes for incorrect type promotion in \code{normpdf()}
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.9.800.3.0 (2019-12-04)}{
   \itemize{
     \item Upgraded to Armadillo release 9.800.3 (Horizon Scraper)

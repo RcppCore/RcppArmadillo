@@ -1,8 +1,9 @@
 2020-01-24  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/tinytest/test_scipy2r.R: Skip this test for now.
+        * DESCRIPTION (Version, Date): Release 0.9.800.4.0
+        * inst/NEWS.Rd: Release 0.9.800.4.0
 
-	* tests/tinytest.R: Suppress '' for now
+	* inst/tinytest/test_scipy2r.R: Skip this test for now
 
 2020-01-23  Dirk Eddelbuettel  <edd@debian.org>
 
