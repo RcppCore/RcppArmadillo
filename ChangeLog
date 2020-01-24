@@ -1,3 +1,13 @@
+2020-01-24  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/tinytest/test_scipy2r.R: Skip this test for now.
+
+	* tests/tinytest.R: Suppress '' for now
+
+2020-01-23  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/armadillo_bits/: Armadillo 9.800.4
+
 2019-12-04  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION (Version, Date): Release 0.9.800.3.0
