@@ -1,3 +1,9 @@
+2020-01-26  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/tinytest/test_scipy2r.R: Condition on reticulate (>= 1.14)
+	which no longer needs extra helper to convert from scipy
+	* R/SciPy2R.R (.SciPy2R): Added .Deprecated() call
+
 2020-01-24  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION (Version, Date): Release 0.9.800.4.0

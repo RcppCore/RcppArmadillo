@@ -1,6 +1,6 @@
 ## .SciPy2R.R: Conversion of SciPy sparse matrix to R
 ##
-## Copyright (C) 2017  Binxiang Ni and Dirk Eddelbuettel
+## Copyright (C) 2017 - 2020  Binxiang Ni and Dirk Eddelbuettel
 ##
 ## This file is part of RcppArmadillo.
 ##
@@ -18,6 +18,9 @@
 ## along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
 .SciPy2R <- function(spmat) {
+    .Deprecated("This function is no longer needed as 'reticulate' now converts from 'scipy'.",
+                package="reticulate")
+
     if (!requireNamespace("reticulate", quietly=TRUE)) {
         stop("You must install the 'reticulate' package (and have SciPy).", call.=FALSE)
     }
@@ -25,15 +28,15 @@
     type <- spmat$getformat()
     shape <- unlist(spmat$shape)
     data <- as.vector(reticulate::py_get_attr(spmat, "data"))
-    
-    # Since CSC Matrix from SciPy has been automatically converted to dgCMatrix, 
+
+    # Since CSC Matrix from SciPy has been automatically converted to dgCMatrix,
     # the conversion for csc matrix is no longer needed.
-    
+
     # if (type == "csc") {
     #     indices <- as.vector(reticulate::py_get_attr(spmat, "indices"))
     #     indptr <- as.vector(reticulate::py_get_attr(spmat, "indptr"))
     #     res <- new("dgCMatrix", i = indices, p = indptr, x = data, Dim = shape)
-    # } 
+    # }
     if (type == "coo") {
         row <- as.vector(reticulate::py_get_attr(spmat, "row"))
         col <- as.vector(reticulate::py_get_attr(spmat, "col"))
