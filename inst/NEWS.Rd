@@ -3,7 +3,16 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.9.800.4.0 (2020-20-24)}{
+\section{Changes in RcppArmadillo version 0.9.xxx.y.0 (2020-xx-yy)}{
+  \itemize{
+    \item Upgraded to Armadillo release 9.xxx.y (zzzzzzz zzzzzzz)
+  }
+  \item The sparse matrix test using scipy, if available, is now
+  simplified thanks to for performant \CRANpkg{reticulate} code.
+  }
+}
+
+\section{Changes in RcppArmadillo version 0.9.800.4.0 (2020-01-24)}{
   \itemize{
     \item Upgraded to Armadillo release 9.800.4 (Horizon Scraper)
     \itemize{
