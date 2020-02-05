@@ -1307,6 +1307,27 @@ template<typename eT>
 inline
 arma_warn_unused
 bool
+subview<eT>::is_zero(const typename get_pod_type<eT>::result tol) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword local_n_rows = n_rows;
+  const uword local_n_cols = n_cols;
+  
+  for(uword ii=0; ii<local_n_cols; ++ii)
+    {
+    if(arrayops::is_zero(colptr(ii), local_n_rows, tol) == false)  { return false; }
+    }
+  
+  return true;
+  }
+
+
+
+template<typename eT>
+inline
+arma_warn_unused
+bool
 subview<eT>::has_inf() const
   {
   arma_extra_debug_sigprint();

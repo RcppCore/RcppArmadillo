@@ -200,6 +200,16 @@ class arrayops
   template<typename eT>
   arma_hot inline static
   bool
+  is_zero(const eT* mem, const uword n_elem, const eT abs_limit, const typename arma_not_cx<eT>::result* junk = 0);
+  
+  template<typename T>
+  arma_hot inline static
+  bool
+  is_zero(const std::complex<T>* mem, const uword n_elem, const T abs_limit);
+  
+  template<typename eT>
+  arma_hot inline static
+  bool
   is_finite(const eT* src, const uword n_elem);
   
   template<typename eT>

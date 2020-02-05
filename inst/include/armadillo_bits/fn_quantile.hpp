@@ -14,28 +14,43 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup fn_cross
+//! \addtogroup fn_quantile
 //! @{
 
 
-
-//! cross product (only valid for 3 dimensional vectors)
 template<typename T1, typename T2>
 arma_warn_unused
-inline
+arma_inline
 typename
 enable_if2
   <
-  is_arma_type<T1>::value && is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value,
-  const Glue<T1, T2, glue_cross>
+  is_arma_type<T1>::value && is_cx<typename T1::elem_type>::no && is_real<typename T2::elem_type>::value,
+  const mtGlue<typename T2::elem_type,T1,T2,glue_quantile_default>
   >::result
-cross(const T1& X, const T2& Y)
+quantile(const T1& X, const Base<typename T2::elem_type,T2>& P)
   {
   arma_extra_debug_sigprint();
   
-  return Glue<T1, T2, glue_cross>(X, Y);
+  return mtGlue<typename T2::elem_type,T1,T2,glue_quantile_default>(X, P.get_ref());
   }
 
+
+
+template<typename T1, typename T2>
+arma_warn_unused
+arma_inline
+typename
+enable_if2
+  <
+  is_arma_type<T1>::value && is_cx<typename T1::elem_type>::no && is_real<typename T2::elem_type>::value,
+  const mtGlue<typename T2::elem_type,T1,T2,glue_quantile>
+  >::result
+quantile(const T1& X, const Base<typename T2::elem_type,T2>& P, const uword dim)
+  {
+  arma_extra_debug_sigprint();
+  
+  return mtGlue<typename T2::elem_type,T1,T2,glue_quantile>(X, P.get_ref(), dim);
+  }
 
 
 //! @}

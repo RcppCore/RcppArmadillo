@@ -42,7 +42,7 @@ norm
     return T(0);
     }
   
-  const bool is_vec = (T1::is_row) || (T1::is_col) || (P.get_n_rows() == 1) || (P.get_n_cols() == 1);
+  const bool is_vec = (T1::is_xvec) || (T1::is_row) || (T1::is_col) || (P.get_n_rows() == 1) || (P.get_n_cols() == 1);
   
   if(is_vec)
     {
@@ -110,7 +110,7 @@ norm
     }
   
   const char sig    = (method != NULL) ? method[0] : char(0);
-  const bool is_vec = (T1::is_row) || (T1::is_col) || (P.get_n_rows() == 1) || (P.get_n_cols() == 1);
+  const bool is_vec = (T1::is_xvec) || (T1::is_row) || (T1::is_col) || (P.get_n_rows() == 1) || (P.get_n_cols() == 1);
   
   if(is_vec)
     {

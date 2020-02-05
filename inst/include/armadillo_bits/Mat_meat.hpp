@@ -7365,7 +7365,7 @@ Mat<eT>::save(const std::string name, const file_type type, const bool print_sta
       break;
     
     case csv_ascii:
-      save_okay = diskio::save_csv_ascii(*this, name);
+      return (*this).save(csv_name(name), type, print_status);
       break;
     
     case raw_binary:
@@ -7459,6 +7459,83 @@ Mat<eT>::save(const hdf5_name& spec, const file_type type, const bool print_stat
 
 
 
+template<typename eT>
+inline
+arma_cold
+bool
+Mat<eT>::save(const csv_name& spec, const file_type type, const bool print_status) const
+  {
+  arma_extra_debug_sigprint();
+  
+  if(type != csv_ascii)
+    {
+    arma_debug_check(true, "Mat::save(): unsupported file type for csv_name()");
+    return false;
+    }
+  
+  const bool   do_trans  = bool(spec.opts.flags & csv_opts::flag_trans      );
+  const bool   no_header = bool(spec.opts.flags & csv_opts::flag_no_header  );
+        bool with_header = bool(spec.opts.flags & csv_opts::flag_with_header);
+  
+  arma_extra_debug_print("Mat::save(csv_name): enabled flags:");
+  
+  if(do_trans   )  { arma_extra_debug_print("trans");       }
+  if(no_header  )  { arma_extra_debug_print("no_header");   }
+  if(with_header)  { arma_extra_debug_print("with_header"); }
+  
+  if(no_header)  { with_header = false; }
+  
+  if(with_header)
+    {
+    if( (spec.header_ro.n_cols != 1) && (spec.header_ro.n_rows != 1) )
+      {
+      if(print_status)  { arma_debug_warn("Mat::save(): given header must have a vector layout"); }
+      return false;
+      }
+    
+    for(uword i=0; i < spec.header_ro.n_elem; ++i)
+      {
+      const std::string& token = spec.header_ro.at(i);
+      
+      if(token.find(',') != std::string::npos)
+        {
+        if(print_status)  { arma_debug_warn("Mat::save(): token within the header contains a comma: '", token, "'"); }
+        return false;
+        }
+      }
+    
+    const uword save_n_cols = (do_trans) ? (*this).n_rows : (*this).n_cols;
+    
+    if(spec.header_ro.n_elem != save_n_cols)
+      {
+      if(print_status)  { arma_debug_warn("Mat::save(): size mistmach between header and matrix"); }
+      return false;
+      }
+    }
+  
+  bool save_okay = false;
+  
+  if(do_trans)
+    {
+    const Mat<eT> tmp = (*this).st();
+    
+    save_okay = diskio::save_csv_ascii(tmp, spec.filename, spec.header_ro, with_header);
+    }
+  else
+    {
+    save_okay = diskio::save_csv_ascii(*this, spec.filename, spec.header_ro, with_header);
+    }
+  
+  if((print_status == true) && (save_okay == false))
+    {
+    arma_debug_warn("Mat::save(): couldn't write to ", spec.filename);
+    }
+  
+  return save_okay;
+  }
+
+
+
 //! save the matrix to a stream
 template<typename eT>
 inline
@@ -7535,7 +7612,7 @@ Mat<eT>::load(const std::string name, const file_type type, const bool print_sta
       break;
     
     case csv_ascii:
-      load_okay = diskio::load_csv_ascii(*this, name, err_msg);
+      return (*this).load(csv_name(name), type, print_status);
       break;
     
     case raw_binary:
@@ -7641,6 +7718,93 @@ Mat<eT>::load(const hdf5_name& spec, const file_type type, const bool print_stat
 
 
 
+template<typename eT>
+inline
+arma_cold
+bool
+Mat<eT>::load(const csv_name& spec, const file_type type, const bool print_status)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(type != csv_ascii)
+    {
+    arma_debug_check(true, "Mat::load(): unsupported file type for csv_name()");
+    return false;
+    }
+  
+  const bool   do_trans  = bool(spec.opts.flags & csv_opts::flag_trans      );
+  const bool   no_header = bool(spec.opts.flags & csv_opts::flag_no_header  );
+        bool with_header = bool(spec.opts.flags & csv_opts::flag_with_header);
+  
+  arma_extra_debug_print("Mat::load(csv_name): enabled flags:");
+  
+  if(do_trans   )  { arma_extra_debug_print("trans");       }
+  if(no_header  )  { arma_extra_debug_print("no_header");   }
+  if(with_header)  { arma_extra_debug_print("with_header"); }
+  
+  if(no_header)  { with_header = false; }
+  
+  bool load_okay = false;
+  std::string err_msg;
+  
+  if(do_trans)
+    {
+    Mat<eT> tmp_mat;
+    
+    load_okay = diskio::load_csv_ascii(tmp_mat, spec.filename, err_msg, spec.header_rw, with_header);
+    
+    if(load_okay)
+      {
+      (*this) = tmp_mat.st();
+      
+      if(with_header)
+        {
+        // field::set_size() preserves data if the number of elements hasn't changed
+        spec.header_rw.set_size(spec.header_rw.n_elem, 1);
+        }
+      }
+    }
+  else
+    {
+    load_okay = diskio::load_csv_ascii(*this, spec.filename, err_msg, spec.header_rw, with_header);
+    }
+  
+  if(print_status)
+    {
+    if(load_okay == false)
+      {
+      if(err_msg.length() > 0)
+        {
+        arma_debug_warn("Mat::load(): ", err_msg, spec.filename);
+        }
+      else
+        {
+        arma_debug_warn("Mat::load(): couldn't read ", spec.filename);
+        }
+      }
+    else
+      {
+      const uword load_n_cols = (do_trans) ? (*this).n_rows : (*this).n_cols;
+      
+      if(with_header && (spec.header_rw.n_elem != load_n_cols))
+        {
+        arma_debug_warn("Mat::load(): size mistmach between header and matrix");
+        }
+      }
+    }
+  
+  if(load_okay == false)
+    {
+    (*this).soft_reset();
+    
+    if(with_header)  { spec.header_rw.reset(); }
+    }
+  
+  return load_okay;
+  }
+
+
+
 //! load a matrix from a stream
 template<typename eT>
 inline
@@ -7737,6 +7901,19 @@ Mat<eT>::quiet_save(const hdf5_name& spec, const file_type type) const
 
 
 
+template<typename eT>
+inline
+arma_cold
+bool
+Mat<eT>::quiet_save(const csv_name& spec, const file_type type) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).save(spec, type, false);
+  }
+
+
+
 //! save the matrix to a stream, without printing any error messages
 template<typename eT>
 inline
@@ -7770,6 +7947,19 @@ inline
 arma_cold
 bool
 Mat<eT>::quiet_load(const hdf5_name& spec, const file_type type)
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).load(spec, type, false);
+  }
+
+
+
+template<typename eT>
+inline
+arma_cold
+bool
+Mat<eT>::quiet_load(const csv_name& spec, const file_type type)
   {
   arma_extra_debug_sigprint();
   

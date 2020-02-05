@@ -75,7 +75,7 @@ normcdf_helper(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_ty
           {
           const eT tmp = (X_ea[i] - M_ea[i]) / (S_ea[i] * (-Datum<eT>::sqrt2));
           
-          out_mem[i] = 0.5 * std::erfc(tmp);
+          out_mem[i] = eT(0.5) * std::erfc(tmp);
           }
         }
       #endif
@@ -86,7 +86,7 @@ normcdf_helper(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_ty
         {
         const eT tmp = (X_ea[i] - M_ea[i]) / (S_ea[i] * (-Datum<eT>::sqrt2));
         
-        out_mem[i] = 0.5 * std::erfc(tmp);
+        out_mem[i] = eT(0.5) * std::erfc(tmp);
         }
       }
     }
@@ -96,7 +96,8 @@ normcdf_helper(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_ty
 
 
 template<typename eT>
-arma_inline
+inline
+arma_warn_unused
 typename enable_if2< (is_real<eT>::value), eT >::result
 normcdf(const eT x)
   {
@@ -108,7 +109,7 @@ normcdf(const eT x)
     }
   #else
     {
-    const eT out = 0.5 * std::erfc( x / (-Datum<eT>::sqrt2) );
+    const eT out = eT(0.5) * std::erfc( x / (-Datum<eT>::sqrt2) );
     
     return out;
     }
@@ -119,6 +120,7 @@ normcdf(const eT x)
 
 template<typename eT>
 inline
+arma_warn_unused
 typename enable_if2< (is_real<eT>::value), eT >::result
 normcdf(const eT x, const eT mu, const eT sigma)
   {
@@ -132,7 +134,7 @@ normcdf(const eT x, const eT mu, const eT sigma)
     {
     const eT tmp = (x - mu) / (sigma * (-Datum<eT>::sqrt2));
     
-    const eT out = 0.5 * std::erfc(tmp);
+    const eT out = eT(0.5) * std::erfc(tmp);
     
     return out;
     }
@@ -143,6 +145,7 @@ normcdf(const eT x, const eT mu, const eT sigma)
 
 template<typename eT, typename T2, typename T3>
 inline
+arma_warn_unused
 typename enable_if2< (is_real<eT>::value), Mat<eT> >::result
 normcdf(const eT x, const Base<eT, T2>& M_expr, const Base<eT, T3>& S_expr)
   {
@@ -162,6 +165,7 @@ normcdf(const eT x, const Base<eT, T2>& M_expr, const Base<eT, T3>& S_expr)
 
 template<typename T1>
 inline
+arma_warn_unused
 typename enable_if2< (is_real<typename T1::elem_type>::value), Mat<typename T1::elem_type> >::result
 normcdf(const Base<typename T1::elem_type, T1>& X_expr)
   {
@@ -183,6 +187,7 @@ normcdf(const Base<typename T1::elem_type, T1>& X_expr)
 
 template<typename T1>
 inline
+arma_warn_unused
 typename enable_if2< (is_real<typename T1::elem_type>::value), Mat<typename T1::elem_type> >::result
 normcdf(const Base<typename T1::elem_type, T1>& X_expr, const typename T1::elem_type mu, const typename T1::elem_type sigma)
   {
@@ -204,6 +209,7 @@ normcdf(const Base<typename T1::elem_type, T1>& X_expr, const typename T1::elem_
 
 template<typename T1, typename T2, typename T3>
 inline
+arma_warn_unused
 typename enable_if2< (is_real<typename T1::elem_type>::value), Mat<typename T1::elem_type> >::result
 normcdf(const Base<typename T1::elem_type, T1>& X_expr, const Base<typename T1::elem_type, T2>& M_expr, const Base<typename T1::elem_type, T3>& S_expr)
   {

@@ -292,6 +292,8 @@ inline
 void
 arma_ostream::print_elem_zero(std::ostream& o, const bool modify)
   {
+  typedef typename promote_type<eT, s16>::result promoted_eT;
+  
   if(modify)
     {
     const ios::fmtflags   save_flags     = o.flags();
@@ -301,109 +303,120 @@ arma_ostream::print_elem_zero(std::ostream& o, const bool modify)
     o.setf(ios::fixed);
     o.precision(0);
     
-    o << eT(0);
+    o << promoted_eT(0);
     
     o.flags(save_flags);
     o.precision(save_precision);
     }
   else
     {
-    o << eT(0);
+    o << promoted_eT(0);
     }
   }
 
 
 
-//! Print an element to the specified stream
 template<typename eT>
 inline
 void
 arma_ostream::print_elem(std::ostream& o, const eT& x, const bool modify)
   {
+  if(x == eT(0))
+    {
+    arma_ostream::print_elem_zero<eT>(o, modify);
+    }
+  else
+    {
+    arma_ostream::raw_print_elem(o, x);
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
+arma_ostream::raw_print_elem(std::ostream& o, const eT& x)
+  {
   if(is_signed<eT>::value)
     {
     typedef typename promote_type<eT, s16>::result promoted_eT;
     
-    if(x != eT(0))
+    if(arma_isfinite(x))
       {
-      if(arma_isfinite(x))
-        {
-        o << promoted_eT(x);
-        }
-      else
-        {
-        o << ( arma_isinf(x) ? ((x <= eT(0)) ? "-inf" : "inf") : "nan" );
-        }
+      o << promoted_eT(x);
       }
     else
       {
-      arma_ostream::print_elem_zero<promoted_eT>(o, modify);
+      o << ( arma_isinf(x) ? ((x <= eT(0)) ? "-inf" : "inf") : "nan" );
       }
     }
   else
     {
     typedef typename promote_type<eT, u16>::result promoted_eT;
     
-    if(x != eT(0))
-      {
-      o << promoted_eT(x);
-      }
-    else
-      {
-      arma_ostream::print_elem_zero<promoted_eT>(o, modify);
-      }
+    o << promoted_eT(x);
     }
   }
 
 
 
-//! Print a complex element to the specified stream
 template<typename T>
 inline
 void
 arma_ostream::print_elem(std::ostream& o, const std::complex<T>& x, const bool modify)
   {
-  if( (x.real() != T(0)) || (x.imag() != T(0)) || (modify == false) )
-    {
-    std::ostringstream ss;
-    ss.flags(o.flags());
-    //ss.imbue(o.getloc());
-    ss.precision(o.precision());
-    
-    ss << '(';
-    
-    const T a = x.real();
-    
-    if(arma_isfinite(a))
-      {
-      ss << a;
-      }
-    else
-      {
-      ss << ( arma_isinf(a) ? ((a <= T(0)) ? "-inf" : "+inf") : "nan" );
-      }
-    
-    ss << ',';
-    
-    const T b = x.imag();
-    
-    if(arma_isfinite(b))
-      {
-      ss << b;
-      }
-    else
-      {
-      ss << ( arma_isinf(b) ? ((b <= T(0)) ? "-inf" : "+inf") : "nan" );
-      }
-    
-    ss << ')';
-    
-    o << ss.str();
-    }
-  else
+  if( (x.real() == T(0)) && (x.imag() == T(0)) && (modify) )
     {
     o << "(0,0)";
     }
+  else
+    {
+    arma_ostream::raw_print_elem(o, x);
+    }
+  }
+
+
+
+template<typename T>
+inline
+void
+arma_ostream::raw_print_elem(std::ostream& o, const std::complex<T>& x)
+  {
+  std::ostringstream ss;
+  ss.flags(o.flags());
+  //ss.imbue(o.getloc());
+  ss.precision(o.precision());
+  
+  ss << '(';
+  
+  const T a = x.real();
+  
+  if(arma_isfinite(a))
+    {
+    ss << a;
+    }
+  else
+    {
+    ss << ( arma_isinf(a) ? ((a <= T(0)) ? "-inf" : "+inf") : "nan" );
+    }
+  
+  ss << ',';
+  
+  const T b = x.imag();
+  
+  if(arma_isfinite(b))
+    {
+    ss << b;
+    }
+  else
+    {
+    ss << ( arma_isinf(b) ? ((b <= T(0)) ? "-inf" : "+inf") : "nan" );
+    }
+  
+  ss << ')';
+  
+  o << ss.str();
   }
 
 

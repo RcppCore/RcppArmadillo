@@ -63,6 +63,8 @@ struct BaseCube
   inline arma_warn_unused uword index_min() const;
   inline arma_warn_unused uword index_max() const;
   
+  inline arma_warn_unused bool is_zero(const typename get_pod_type<elem_type>::result tol = 0) const;
+  
   inline arma_warn_unused bool is_empty()  const;
   inline arma_warn_unused bool is_finite() const;
   inline arma_warn_unused bool has_inf()   const;

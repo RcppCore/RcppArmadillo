@@ -155,6 +155,59 @@ template<typename elem_type, typename derived>
 inline
 arma_warn_unused
 bool
+BaseCube<elem_type,derived>::is_zero(const typename get_pod_type<elem_type>::result tol) const
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename get_pod_type<elem_type>::result T;
+  
+  arma_debug_check( (tol < T(0)), "is_zero(): parameter 'tol' must be >= 0" );
+  
+  if(ProxyCube<derived>::use_at || is_Cube<typename ProxyCube<derived>::stored_type>::value)
+    {
+    const unwrap_cube<derived> U( (*this).get_ref() );
+    
+    return arrayops::is_zero( U.M.memptr(), U.M.n_elem, tol );
+    }
+  
+  const ProxyCube<derived> P( (*this).get_ref() );
+  
+  const uword n_elem = P.get_n_elem();
+  
+  if(n_elem == 0)  { return false; }
+  
+  const typename ProxyCube<derived>::ea_type Pea = P.get_ea();
+  
+  if(is_cx<elem_type>::yes)
+    {
+    for(uword i=0; i<n_elem; ++i)
+      {
+      const elem_type val = Pea[i];
+      
+      const T val_real = access::tmp_real(val);
+      const T val_imag = access::tmp_imag(val);
+      
+      if(std::abs(val_real) > tol)  { return false; }
+      if(std::abs(val_imag) > tol)  { return false; }
+      }
+    }
+  else  // not complex
+    {
+    for(uword i=0; i < n_elem; ++i)
+      {
+      if(std::abs(Pea[i]) > tol)  { return false; }
+      }
+    }
+  
+  return true;
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
 BaseCube<elem_type,derived>::is_empty() const
   {
   arma_extra_debug_sigprint();

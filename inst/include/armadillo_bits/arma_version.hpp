@@ -20,9 +20,9 @@
 
 
 #define ARMA_VERSION_MAJOR 9
-#define ARMA_VERSION_MINOR 800
-#define ARMA_VERSION_PATCH 4
-#define ARMA_VERSION_NAME  "Horizon Scraper"
+#define ARMA_VERSION_MINOR 850
+#define ARMA_VERSION_PATCH 1
+#define ARMA_VERSION_NAME  "9.850 RC1"
 
 
 
