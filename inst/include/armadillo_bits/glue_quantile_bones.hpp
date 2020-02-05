@@ -14,13 +14,29 @@
 // ------------------------------------------------------------------------
 
 
-
-//! \addtogroup glue_cross
+//! \addtogroup glue_quantile
 //! @{
 
 
+class glue_quantile
+  : public traits_glue_default
+  {
+  public:
+  
+  template<typename eTa, typename eTb>
+  inline static void worker(eTb* out_mem, Col<eTa>& Y, const Mat<eTb>& P);
+  
+  
+  template<typename eTa, typename eTb>
+  inline static void apply_noalias(Mat<eTb>& out, const Mat<eTa>& X, const Mat<eTb>& P, const uword dim);
+  
+  template<typename T1, typename T2>
+  inline static void apply(Mat<typename T2::elem_type>& out, const mtGlue<typename T2::elem_type,T1,T2,glue_quantile>& expr);
+  };
 
-class glue_cross
+
+
+class glue_quantile_default
   {
   public:
   
@@ -29,12 +45,12 @@ class glue_cross
     {
     static const bool is_row  = T1::is_row;
     static const bool is_col  = T1::is_col;
-    static const bool is_xvec = true;
+    static const bool is_xvec = T1::is_xvec;
     };
   
-  template<typename T1, typename T2> inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_cross>& X);
+  template<typename T1, typename T2>
+  inline static void apply(Mat<typename T2::elem_type>& out, const mtGlue<typename T2::elem_type,T1,T2,glue_quantile_default>& expr);
   };
-
 
 
 //! @}

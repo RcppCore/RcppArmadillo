@@ -382,15 +382,19 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   // TODO: implement auto_detect for sparse matrices
   
   inline arma_cold bool save(const std::string   name, const file_type type = arma_binary, const bool print_status = true) const;
+  inline arma_cold bool save(const csv_name&     spec, const file_type type =   csv_ascii, const bool print_status = true) const;
   inline arma_cold bool save(      std::ostream& os,   const file_type type = arma_binary, const bool print_status = true) const;
   
   inline arma_cold bool load(const std::string   name, const file_type type = arma_binary, const bool print_status = true);
+  inline arma_cold bool load(const csv_name&     spec, const file_type type =   csv_ascii, const bool print_status = true);
   inline arma_cold bool load(      std::istream& is,   const file_type type = arma_binary, const bool print_status = true);
   
   inline arma_cold bool quiet_save(const std::string   name, const file_type type = arma_binary) const;
+  inline arma_cold bool quiet_save(const csv_name&     spec, const file_type type =   csv_ascii) const;
   inline arma_cold bool quiet_save(      std::ostream& os,   const file_type type = arma_binary) const;
   
   inline arma_cold bool quiet_load(const std::string   name, const file_type type = arma_binary);
+  inline arma_cold bool quiet_load(const csv_name&     spec, const file_type type =   csv_ascii);
   inline arma_cold bool quiet_load(      std::istream& is,   const file_type type = arma_binary);
   
   

@@ -1,3 +1,11 @@
+2020-02-05  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.9.849.1.0 [github-only]
+        * inst/NEWS.Rd: Release 0.9.849.1.0
+
+        * inst/include/armadillo: Armadillo 9.850.rc1
+        * inst/include/armadillo_bits/*: Idem
+
 2020-01-26  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/tinytest/test_scipy2r.R: Condition on reticulate (>= 1.14)

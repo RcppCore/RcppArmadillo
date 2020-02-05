@@ -27,7 +27,11 @@ class op_diagmat
   template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_diagmat>& X);
   
-  // TODO: implement specialised handling of Op<Glue<T1,T2,glue_times>,op_diagmat>
+  template<typename T1, typename T2>
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op< Glue<T1,T2,glue_times>, op_diagmat>& X, const typename arma_not_cx<typename T1::elem_type>::result* junk = 0);
+  
+  template<typename T1, typename T2>
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op< Glue<T1,T2,glue_times>, op_diagmat>& X, const typename arma_cx_only<typename T1::elem_type>::result* junk = 0);
   };
 
 

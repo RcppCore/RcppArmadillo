@@ -143,6 +143,196 @@ op_diagmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_diagmat>& X)
 
 
 
+template<typename T1, typename T2>
+inline
+void
+op_diagmat::apply(Mat<typename T1::elem_type>& out, const Op< Glue<T1,T2,glue_times>, op_diagmat>& X, const typename arma_not_cx<typename T1::elem_type>::result* junk)
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  // TODO: this is a rudimentary implementation; adapt code from trace()
+  
+  typedef typename T1::elem_type eT;
+  
+  const quasi_unwrap<T1> tmp1(X.m.A);
+  const quasi_unwrap<T2> tmp2(X.m.B);
+  
+  const Mat<eT>& A = tmp1.M;
+  const Mat<eT>& B = tmp2.M;
+  
+  arma_debug_assert_trans_mul_size< false, false >(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "matrix multiplication");
+  
+  const uword A_n_rows = A.n_rows;
+  const uword A_n_cols = A.n_cols;
+  
+  //const uword B_n_rows = B.n_rows;  // TODO: use for adapted code
+  const uword B_n_cols = B.n_cols;
+  
+  if( (A_n_rows == 0) || (B_n_cols == 0) )  { out.set_size(A_n_rows, B_n_cols); return; }
+  
+  const bool C_is_vec = (A_n_rows == 1) || (B_n_cols == 1);
+  
+  if(C_is_vec)
+    {
+    const Mat<eT> C     = A*B;
+    const eT*     C_mem = C.memptr();
+    
+    const uword N = (A_n_rows == 1) ? B_n_cols : A_n_rows;
+    
+    out.zeros(N, N);
+    
+    for(uword i=0; i<N; ++i)
+      {
+      out.at(i,i) = C_mem[i];
+      }
+    }
+  else
+    {
+    const uword N = (std::min)(A_n_rows, B_n_cols);
+    
+    podarray<eT> C(N);
+    C.zeros();
+    
+    eT* C_mem = C.memptr();
+    
+    for(uword k=0; k < N; ++k)
+      {
+      const eT* B_colptr = B.colptr(k);
+      
+      // condition: A_n_cols = B_n_rows
+      
+      eT acc1 = eT(0);
+      eT acc2 = eT(0);
+      
+      uword j;
+      
+      for(j=1; j < A_n_cols; j+=2)
+        {
+        const uword i = (j-1);
+        
+        const eT tmp_i = B_colptr[i];
+        const eT tmp_j = B_colptr[j];
+        
+        acc1 += A.at(k, i) * tmp_i;
+        acc2 += A.at(k, j) * tmp_j;
+        }
+      
+      const uword i = (j-1);
+      
+      if(i < A_n_cols)
+        {
+        acc1 += A.at(k, i) * B_colptr[i];
+        }
+      
+      C_mem[k] = (acc1 + acc2);
+      }
+    
+    out.zeros(A_n_rows, B_n_cols);
+    
+    for(uword i=0; i<N; ++i)
+      {
+      out.at(i,i) = C_mem[i];
+      }
+    }
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+void
+op_diagmat::apply(Mat<typename T1::elem_type>& out, const Op< Glue<T1,T2,glue_times>, op_diagmat>& X, const typename arma_cx_only<typename T1::elem_type>::result* junk)
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  // TODO: this is a rudimentary implementation; adapt code from trace()
+  
+  typedef typename T1::pod_type   T;
+  typedef typename T1::elem_type eT;
+  
+  const quasi_unwrap<T1> tmp1(X.m.A);
+  const quasi_unwrap<T2> tmp2(X.m.B);
+  
+  const Mat<eT>& A = tmp1.M;
+  const Mat<eT>& B = tmp2.M;
+  
+  arma_debug_assert_trans_mul_size< false, false >(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "matrix multiplication");
+  
+  const uword A_n_rows = A.n_rows;
+  const uword A_n_cols = A.n_cols;
+  
+  //const uword B_n_rows = B.n_rows;  // TODO: use for adapted code
+  const uword B_n_cols = B.n_cols;
+  
+  if( (A_n_rows == 0) || (B_n_cols == 0) )  { out.set_size(A_n_rows, B_n_cols); return; }
+  
+  const bool C_is_vec = (A_n_rows == 1) || (B_n_cols == 1);
+  
+  if(C_is_vec)
+    {
+    const Mat<eT> C     = A*B;
+    const eT*     C_mem = C.memptr();
+    
+    const uword N = (A_n_rows == 1) ? B_n_cols : A_n_rows;
+    
+    out.zeros(N, N);
+    
+    for(uword i=0; i<N; ++i)
+      {
+      out.at(i,i) = C_mem[i];
+      }
+    }
+  else
+    {
+    const uword N = (std::min)(A_n_rows, B_n_cols);
+    
+    podarray<eT> C(N);
+    C.zeros();
+    
+    eT* C_mem = C.memptr();
+    
+    for(uword k=0; k < N; ++k)
+      {
+      const eT* B_colptr = B.colptr(k);
+      
+      // condition: A_n_cols = B_n_rows
+      
+      T acc_real = T(0);
+      T acc_imag = T(0);
+      
+      for(uword i=0; i < A_n_cols; ++i)
+        {
+        // acc += A.at(k, i) * B_colptr[i];
+        
+        const std::complex<T>& xx = A.at(k, i);
+        const std::complex<T>& yy = B_colptr[i];
+        
+        const T a = xx.real();
+        const T b = xx.imag();
+        
+        const T c = yy.real();
+        const T d = yy.imag();
+        
+        acc_real += (a*c) - (b*d);
+        acc_imag += (a*d) + (b*c);
+        }
+      
+      C_mem[k] = std::complex<T>(acc_real,acc_imag);
+      }
+    
+    out.zeros(A_n_rows, B_n_cols);
+    
+    for(uword i=0; i<N; ++i)
+      {
+      out.at(i,i) = C_mem[i];
+      }
+    }
+  }
+
+
+
 template<typename T1>
 inline
 void

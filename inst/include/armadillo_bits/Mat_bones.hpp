@@ -520,18 +520,22 @@ class Mat : public Base< eT, Mat<eT> >
   
   inline arma_cold bool save(const std::string   name, const file_type type = arma_binary, const bool print_status = true) const;
   inline arma_cold bool save(const hdf5_name&    spec, const file_type type = hdf5_binary, const bool print_status = true) const;
+  inline arma_cold bool save(const  csv_name&    spec, const file_type type =   csv_ascii, const bool print_status = true) const;
   inline arma_cold bool save(      std::ostream& os,   const file_type type = arma_binary, const bool print_status = true) const;
   
   inline arma_cold bool load(const std::string   name, const file_type type = auto_detect, const bool print_status = true);
   inline arma_cold bool load(const hdf5_name&    spec, const file_type type = hdf5_binary, const bool print_status = true);
+  inline arma_cold bool load(const  csv_name&    spec, const file_type type =   csv_ascii, const bool print_status = true);
   inline arma_cold bool load(      std::istream& is,   const file_type type = auto_detect, const bool print_status = true);
   
   inline arma_cold bool quiet_save(const std::string   name, const file_type type = arma_binary) const;
   inline arma_cold bool quiet_save(const hdf5_name&    spec, const file_type type = hdf5_binary) const;
+  inline arma_cold bool quiet_save(const  csv_name&    spec, const file_type type =   csv_ascii) const;
   inline arma_cold bool quiet_save(      std::ostream& os,   const file_type type = arma_binary) const;
   
   inline arma_cold bool quiet_load(const std::string   name, const file_type type = auto_detect);
   inline arma_cold bool quiet_load(const hdf5_name&    spec, const file_type type = hdf5_binary);
+  inline arma_cold bool quiet_load(const  csv_name&    spec, const file_type type =   csv_ascii);
   inline arma_cold bool quiet_load(      std::istream& is,   const file_type type = auto_detect);
   
   

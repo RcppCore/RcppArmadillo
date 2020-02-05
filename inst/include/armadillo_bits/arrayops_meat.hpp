@@ -994,6 +994,72 @@ template<typename eT>
 arma_hot
 inline
 bool
+arrayops::is_zero(const eT* mem, const uword n_elem, const eT abs_limit, const typename arma_not_cx<eT>::result* junk)
+  {
+  arma_ignore(junk);
+  
+  if(n_elem == 0)  { return false; }
+  
+  if(abs_limit == eT(0))
+    {
+    for(uword i=0; i<n_elem; ++i)
+      {
+      if(mem[i] != eT(0))  { return false; }
+      }
+    }
+  else
+    {
+    for(uword i=0; i<n_elem; ++i)
+      {
+      if(std::abs(mem[i]) > abs_limit)  { return false; }
+      }
+    }
+  
+  return true;
+  }
+
+
+
+template<typename T>
+arma_hot
+inline
+bool
+arrayops::is_zero(const std::complex<T>* mem, const uword n_elem, const T abs_limit)
+  {
+  typedef typename std::complex<T> eT;
+  
+  if(n_elem == 0)  { return false; }
+  
+  if(abs_limit == T(0))
+    {
+    for(uword i=0; i<n_elem; ++i)
+      {
+      const eT& val = mem[i];
+      
+      if(std::real(val) != T(0))  { return false; }
+      if(std::imag(val) != T(0))  { return false; }
+      }
+    }
+  else
+    {
+    for(uword i=0; i<n_elem; ++i)
+      {
+      const eT& val = mem[i];
+      
+      if(std::abs(std::real(val)) > abs_limit)  { return false; }
+      if(std::abs(std::imag(val)) > abs_limit)  { return false; }
+      }
+    }
+  
+  return true;
+  }
+
+
+
+template<typename eT>
+arma_hot
+inline
+bool
 arrayops::is_finite(const eT* src, const uword n_elem)
   {
   uword j;

@@ -112,8 +112,8 @@ bool
 op_any::any_vec_helper
   (
   const mtOp<uword, T1, op_type>& X,
-  const typename arma_op_rel_only<op_type>::result           junk1,
-  const typename arma_not_cx<typename T1::elem_type>::result junk2
+  const typename arma_op_rel_only<op_type>::result*           junk1,
+  const typename arma_not_cx<typename T1::elem_type>::result* junk2
   )
   {
   arma_extra_debug_sigprint();
@@ -183,9 +183,9 @@ bool
 op_any::any_vec_helper
   (
   const mtGlue<uword, T1, T2, glue_type>& X,
-  const typename arma_glue_rel_only<glue_type>::result       junk1,
-  const typename arma_not_cx<typename T1::elem_type>::result junk2,
-  const typename arma_not_cx<typename T2::elem_type>::result junk3
+  const typename arma_glue_rel_only<glue_type>::result*       junk1,
+  const typename arma_not_cx<typename T1::elem_type>::result* junk2,
+  const typename arma_not_cx<typename T2::elem_type>::result* junk3
   )
   {
   arma_extra_debug_sigprint();

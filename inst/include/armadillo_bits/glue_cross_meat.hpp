@@ -32,12 +32,9 @@ glue_cross::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue_cros
   const Proxy<T1> PA(X.A);
   const Proxy<T2> PB(X.B);
   
-  arma_debug_check( ((PA.get_n_elem() != 3) || (PB.get_n_elem() != 3)), "cross(): input vectors must have 3 elements" );
+  arma_debug_check( ((PA.get_n_elem() != 3) || (PB.get_n_elem() != 3)), "cross(): each vector must have 3 elements" );
   
-  const uword PA_n_rows = Proxy<T1>::is_row ? 1 : PA.get_n_rows();
-  const uword PA_n_cols = Proxy<T1>::is_col ? 1 : PA.get_n_cols();
-  
-  out.set_size(PA_n_rows, PA_n_cols);
+  out.set_size(PA.get_n_rows(), PA.get_n_cols());
   
   eT* out_mem = out.memptr();
   
@@ -60,7 +57,7 @@ glue_cross::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue_cros
     }
   else
     {
-    const bool PA_is_col = Proxy<T1>::is_col ? true : (PA_n_cols       == 1);
+    const bool PA_is_col = Proxy<T1>::is_col ? true : (PA.get_n_cols() == 1);
     const bool PB_is_col = Proxy<T2>::is_col ? true : (PB.get_n_cols() == 1);
     
     const eT ax = PA.at(0,0);

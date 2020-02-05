@@ -47,11 +47,15 @@ class arma_ostream
   template<typename eT> inline static std::streamsize modify_stream(std::ostream& o, typename SpMat<eT>::const_iterator begin, const uword n_elem, const typename arma_not_cx<eT>::result* junk = 0);
   template<typename  T> inline static std::streamsize modify_stream(std::ostream& o, typename SpMat< T>::const_iterator begin, const uword n_elem, const typename arma_cx_only<T>::result* junk = 0);
   
-  template<typename eT> inline static void print_elem_zero(std::ostream& o, const bool modify);
+  template<typename eT> inline static void     print_elem_zero(std::ostream& o, const bool modify);
+  template<typename eT> inline static void raw_print_elem_zero(std::ostream& o);
   
-  template<typename eT> inline static void print_elem(std::ostream& o, const eT&              x, const bool modify);
-  template<typename  T> inline static void print_elem(std::ostream& o, const std::complex<T>& x, const bool modify);
-
+  template<typename eT> inline static void     print_elem(std::ostream& o, const eT& x, const bool modify);
+  template<typename eT> inline static void raw_print_elem(std::ostream& o, const eT& x);
+  
+  template<typename  T> inline static void     print_elem(std::ostream& o, const std::complex<T>& x, const bool modify);
+  template<typename  T> inline static void raw_print_elem(std::ostream& o, const std::complex<T>& x);
+  
   template<typename eT> arma_cold inline static void print(std::ostream& o, const  Mat<eT>& m, const bool modify);
   template<typename eT> arma_cold inline static void print(std::ostream& o, const Cube<eT>& m, const bool modify);
   
