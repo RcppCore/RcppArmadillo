@@ -3,9 +3,9 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.9.849.1.0 (2020-02-05)}{
+\section{Changes in RcppArmadillo version 0.9.850.1.0 (2020-02-09)}{
   \itemize{
-    \item Upgraded to Armadillo release 9.850 RC1
+    \item Upgraded to Armadillo release 9.850.1 (Pyrocumulus Wrath)
     \itemize{
       \item{faster handling of compound expressions by \code{diagmat()}}
       \item{expanded \code{.save()} and \code{.load()} to handle CSV files with headers via
