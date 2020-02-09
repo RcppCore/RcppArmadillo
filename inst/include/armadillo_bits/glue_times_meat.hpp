@@ -118,6 +118,8 @@ glue_times_redirect2_helper<true>::apply(Mat<typename T1::elem_type>& out, const
     
     arma_debug_assert_mul_size(A, B, "matrix multiplication");
     
+    // TODO: detect sympd via sympd_helper::guess_sympd(A) ?
+    
     #if defined(ARMA_OPTIMISE_SOLVE_SYMPD)
       const bool status = (strip_inv<T1>::do_inv_sympd) ? auxlib::solve_sympd_fast(out, A, B) : auxlib::solve_square_fast(out, A, B);
     #else
@@ -291,6 +293,8 @@ glue_times_redirect3_helper<true>::apply(Mat<typename T1::elem_type>& out, const
       (BC, B, C, alpha);
     
     arma_debug_assert_mul_size(A, BC, "matrix multiplication");
+    
+    // TODO: detect sympd via sympd_helper::guess_sympd(A) ?
     
     #if defined(ARMA_OPTIMISE_SOLVE_SYMPD)
       const bool status = (strip_inv<T1>::do_inv_sympd) ? auxlib::solve_sympd_fast(out, A, BC) : auxlib::solve_square_fast(out, A, BC);

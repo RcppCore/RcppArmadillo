@@ -860,7 +860,7 @@ spdiagview<eT>::fill(const eT val)
   {
   arma_extra_debug_sigprint();
   
-  if( (row_offset == 0) && (col_offset == 0) )
+  if( (row_offset == 0) && (col_offset == 0) && (m.sync_state != 1) )
     {
     if(val == eT(0))
       {
