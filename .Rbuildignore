@@ -6,3 +6,4 @@ src/lapack
 ^\.Rproj\.user$
 ^.*\.tar\.gz$
 ^local
+^vignettes/rmd

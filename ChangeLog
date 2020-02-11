@@ -1,5 +1,7 @@
 2020-02-10  Dirk Eddelbuettel  <edd@debian.org>
 
+	* DESCRIPTION (Version, Date): Roll minor version
+
 	* vignettes/RcppArmadillo-intro.Rnw: Wraps pre-made vignette
 	* vignettes/RcppArmadillo-sparseMatrix.Rmd: Idem
 	* vignettes/rmd/Makefile: Added
