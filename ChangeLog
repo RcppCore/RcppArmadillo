@@ -1,3 +1,14 @@
+2020-02-10  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Roll minor version
+
+	* vignettes/RcppArmadillo-intro.Rnw: Wraps pre-made vignette
+	* vignettes/RcppArmadillo-sparseMatrix.Rmd: Idem
+	* vignettes/rmd/Makefile: Added
+
+	* DESCRIPTION (Suggests): Remove Suggests for rmarkdown, knitr, pinp;
+	(VignetteBuilder): Removed
+
 2020-02-09  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.9.850.1.0 [github-only]
