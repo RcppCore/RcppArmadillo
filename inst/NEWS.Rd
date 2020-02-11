@@ -3,6 +3,12 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.9.xxx.y.z (2020-xx-yy)}{
+  \itemize{
+    \item Vignettes are now pre-made and include (\ghpr{285})
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.9.850.1.0 (2020-02-09)}{
   \itemize{
     \item Upgraded to Armadillo release 9.850.1 (Pyrocumulus Wrath)
