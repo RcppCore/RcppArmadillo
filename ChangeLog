@@ -1,9 +1,11 @@
 2020-02-10  Dirk Eddelbuettel  <edd@debian.org>
 
-	* vignettes/rmd/RcppArmadillo-intro.Rnw: Wraps pre-made vignette
-	* vignettes/rmd/RcppArmadillo-sparseMatrix.Rmd: Idem
+	* vignettes/RcppArmadillo-intro.Rnw: Wraps pre-made vignette
+	* vignettes/RcppArmadillo-sparseMatrix.Rmd: Idem
 	* vignettes/rmd/Makefile: Added
-	* vignettes/pdf/*: Idem
+
+	* DESCRIPTION (Suggests): Remove Suggests for rmarkdown, knitr, pinp;
+	(VignetteBuilder): Removed
 
 2020-02-09  Dirk Eddelbuettel  <edd@debian.org>
 
