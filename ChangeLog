@@ -1,3 +1,10 @@
+2020-02-10  Dirk Eddelbuettel  <edd@debian.org>
+
+	* vignettes/rmd/RcppArmadillo-intro.Rnw: Wraps pre-made vignette
+	* vignettes/rmd/RcppArmadillo-sparseMatrix.Rmd: Idem
+	* vignettes/rmd/Makefile: Added
+	* vignettes/pdf/*: Idem
+
 2020-02-09  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.9.850.1.0 [github-only]
