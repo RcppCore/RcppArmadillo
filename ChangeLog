@@ -1,3 +1,7 @@
+2020-02-14  Dirk Eddelbuettel  <edd@debian.org>
+
+	* README.md: Add a Debian badge
+
 2020-02-10  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Roll minor version
