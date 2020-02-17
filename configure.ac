@@ -103,6 +103,8 @@ if test x"${RSysinfoName}" = x"Darwin"; then
             AC_MSG_WARN([unsupported macOS build detected; if anything breaks, you keep the pieces.])
         fi
     fi
+else
+    AC_MSG_RESULT([no])
 fi
 
 ## Check for suitable LAPACK_LIBS

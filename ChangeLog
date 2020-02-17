@@ -1,3 +1,8 @@
+2020-02-17  Dirk Eddelbuettel  <edd@debian.org>
+
+	* configure.ac: Provide a negative message for the macOS test
+	* configure: Idem
+
 2020-02-14  Dirk Eddelbuettel  <edd@debian.org>
 
 	* README.md: Add a Debian badge
