@@ -3,8 +3,16 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.9.xxx.y.z (2020-xx-yy)}{
+\section{Changes in RcppArmadillo version 0.9.859.1.0 (2020-xx-yy)}{
   \itemize{
+    \item Upgraded to Armadillo release 9.860-RC1
+    \itemize{
+      \item Added \code{powmat()}
+      \item Faster access to columns in sparse submatrix views
+      \item Faster handling of relational expressions by \code{accu()}
+      \item Faster handling of sympd matrices by \code{expmat()}, \code{logmat()}, \code{sqrtmat()}
+      \item Workaround for save/load issues with HDF5 v1.12
+    }
     \item Vignettes are now pre-made and include (\ghpr{285})
   }
 }
