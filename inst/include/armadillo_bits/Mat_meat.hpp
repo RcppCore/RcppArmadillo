@@ -6525,6 +6525,7 @@ Mat<eT>::set_size(const uword in_elem)
   switch(vec_state)
     {
     case 0:
+      // fallthrough
     case 1:
       init_warm(in_elem, 1);
       break;
@@ -6576,6 +6577,7 @@ Mat<eT>::resize(const uword in_elem)
   switch(vec_state)
     {
     case 0:
+      // fallthrough
     case 1:
       (*this).resize(in_elem, 1);
       break;

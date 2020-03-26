@@ -30,9 +30,11 @@ op_inv::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv>& X)
   
   const strip_diagmat<T1> strip(X.m);
   
+  bool status = false;
+  
   if(strip.do_diagmat)
     {
-    op_inv::apply_diagmat(out, strip.M);
+    status = op_inv::apply_diagmat(out, strip.M);
     }
   else
     {
@@ -42,14 +44,20 @@ op_inv::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv>& X)
       {
       Mat<eT> tmp;
       
-      op_inv::apply_noalias(tmp, U.M);
+      status = op_inv::apply_noalias(tmp, U.M);
       
       out.steal_mem(tmp);
       }
     else
       {
-      op_inv::apply_noalias(out, U.M);
+      status = op_inv::apply_noalias(out, U.M);
       }
+    }
+  
+  if(status == false)
+    {
+    out.soft_reset();
+    arma_stop_runtime_error("inv(): matrix seems singular");
     }
   }
 
@@ -57,7 +65,7 @@ op_inv::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv>& X)
 
 template<typename eT>
 inline
-void
+bool
 op_inv::apply_noalias(Mat<eT>& out, const Mat<eT>& A)
   {
   arma_extra_debug_sigprint();
@@ -71,9 +79,38 @@ op_inv::apply_noalias(Mat<eT>& out, const Mat<eT>& A)
     status = auxlib::inv_tiny(out, A);
     }
   else
-  if(sympd_helper::guess_sympd(A))
+  if(A.is_diagmat())
     {
-    status = auxlib::inv_sympd(out, A);
+    return op_inv::apply_diagmat(out, A);
+    }
+  else
+    {
+    const bool is_triu =                     trimat_helper::is_triu(A);
+    const bool is_tril = (is_triu) ? false : trimat_helper::is_tril(A);
+    
+    if(is_triu || is_tril)
+      {
+      const uword layout = (is_triu) ? uword(0) : uword(1);
+      
+      return auxlib::inv_tr(out, A, layout);
+      }
+    else
+      {
+      #if defined(ARMA_OPTIMISE_SYMPD)
+        const bool try_sympd = sympd_helper::guess_sympd_anysize(A);
+      #else
+        const bool try_sympd = false;
+      #endif
+      
+      if(try_sympd)
+        {
+        status = auxlib::inv_sympd(out, A);
+        
+        if(status == false)  { arma_extra_debug_print("warning: sympd optimisation failed"); }
+        }
+      
+      // auxlib::inv_sympd() may have failed because A isn't really sympd
+      }
     }
   
   if(status == false)
@@ -81,18 +118,14 @@ op_inv::apply_noalias(Mat<eT>& out, const Mat<eT>& A)
     status = auxlib::inv(out, A);
     }
   
-  if(status == false)
-    {
-    out.soft_reset();
-    arma_stop_runtime_error("inv(): matrix seems singular");
-    }
+  return status;
   }
 
 
 
 template<typename T1>
 inline
-void
+bool
 op_inv::apply_diagmat(Mat<typename T1::elem_type>& out, const T1& X)
   {
   arma_extra_debug_sigprint();
@@ -117,7 +150,7 @@ op_inv::apply_diagmat(Mat<typename T1::elem_type>& out, const T1& X)
       
       out.at(i,i) = eT(1) / val;
       
-      if(val == eT(0))  { status = false; }
+      status = (val == eT(0)) ? false : status;
       }
     }
   else
@@ -130,17 +163,13 @@ op_inv::apply_diagmat(Mat<typename T1::elem_type>& out, const T1& X)
       
       tmp.at(i,i) = eT(1) / val;
       
-      if(val == eT(0))  { status = false; }
+      status = (val == eT(0)) ? false : status;
       }
     
     out.steal_mem(tmp);
     }
   
-  if(status == false)
-    {
-    out.soft_reset();
-    arma_stop_runtime_error("inv(): matrix seems singular");
-    }
+  return status;
   }
 
 

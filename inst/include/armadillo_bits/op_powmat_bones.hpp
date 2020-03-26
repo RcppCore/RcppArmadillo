@@ -14,49 +14,33 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup op_inv
+
+//! \addtogroup op_powmat
 //! @{
 
 
 
-//! 'invert matrix' operation (general matrices)
-class op_inv
+class op_powmat
   : public traits_op_default
   {
   public:
   
   template<typename T1>
-  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv>& in);
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_powmat>& expr);
   
   template<typename eT>
-  inline static bool apply_noalias(Mat<eT>& out, const Mat<eT>& A);
-  
-  template<typename T1>
-  inline static bool apply_diagmat(Mat<typename T1::elem_type>& out, const T1& X);
+  inline static void apply(Mat<eT>& out, const Mat<eT>& X, const uword y);
   };
 
 
 
-//! 'invert matrix' operation (triangular matrices)
-class op_inv_tr
+class op_powmat_cx
   : public traits_op_default
   {
   public:
   
   template<typename T1>
-  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv_tr>& in);
-  };
-
-
-
-//! 'invert matrix' operation (symmetric positive definite matrices)
-class op_inv_sympd
-  : public traits_op_default
-  {
-  public:
-  
-  template<typename T1>
-  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv_sympd>& in);
+  inline static void apply(Mat< std::complex<typename T1::pod_type> >& out, const mtOp<std::complex<typename T1::pod_type>,T1,op_powmat_cx>& expr);
   };
 
 

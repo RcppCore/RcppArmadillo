@@ -56,14 +56,14 @@ class auxlib
   //
   // det
   
-  template<typename eT, typename T1>
-  inline static eT det(const Base<eT,T1>& X);
+  template<typename eT>
+  inline static eT det(const Mat<eT>& A);
   
   template<typename eT>
   arma_cold inline static eT det_tinymat(const Mat<eT>& X, const uword N);
   
   template<typename eT>
-  inline static eT det_lapack(const Mat<eT>& X, const bool make_copy);
+  inline static eT det_lapack(const Mat<eT>& X);
   
   
   //

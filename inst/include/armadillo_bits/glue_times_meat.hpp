@@ -120,7 +120,7 @@ glue_times_redirect2_helper<true>::apply(Mat<typename T1::elem_type>& out, const
     
     // TODO: detect sympd via sympd_helper::guess_sympd(A) ?
     
-    #if defined(ARMA_OPTIMISE_SOLVE_SYMPD)
+    #if defined(ARMA_OPTIMISE_SYMPD)
       const bool status = (strip_inv<T1>::do_inv_sympd) ? auxlib::solve_sympd_fast(out, A, B) : auxlib::solve_square_fast(out, A, B);
     #else
       const bool status = auxlib::solve_square_fast(out, A, B);
@@ -135,7 +135,7 @@ glue_times_redirect2_helper<true>::apply(Mat<typename T1::elem_type>& out, const
     return;
     }
   
-  #if defined(ARMA_OPTIMISE_SOLVE_SYMPD)
+  #if defined(ARMA_OPTIMISE_SYMPD)
     {
     if(strip_inv<T2>::do_inv_sympd)
       {
@@ -296,7 +296,7 @@ glue_times_redirect3_helper<true>::apply(Mat<typename T1::elem_type>& out, const
     
     // TODO: detect sympd via sympd_helper::guess_sympd(A) ?
     
-    #if defined(ARMA_OPTIMISE_SOLVE_SYMPD)
+    #if defined(ARMA_OPTIMISE_SYMPD)
       const bool status = (strip_inv<T1>::do_inv_sympd) ? auxlib::solve_sympd_fast(out, A, BC) : auxlib::solve_square_fast(out, A, BC);
     #else
       const bool status = auxlib::solve_square_fast(out, A, BC);
@@ -331,7 +331,7 @@ glue_times_redirect3_helper<true>::apply(Mat<typename T1::elem_type>& out, const
     
     Mat<eT> solve_result;
     
-    #if defined(ARMA_OPTIMISE_SOLVE_SYMPD)
+    #if defined(ARMA_OPTIMISE_SYMPD)
       const bool status = (strip_inv<T2>::do_inv_sympd) ? auxlib::solve_sympd_fast(solve_result, B, C) : auxlib::solve_square_fast(solve_result, B, C);
     #else
       const bool status = auxlib::solve_square_fast(solve_result, B, C);

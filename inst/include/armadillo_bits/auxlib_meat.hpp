@@ -380,21 +380,14 @@ auxlib::inv_sympd_tiny(Mat<eT>& out, const Mat<eT>& X)
 
 
 
-template<typename eT, typename T1>
+template<typename eT>
 inline
 eT
-auxlib::det(const Base<eT,T1>& X)
+auxlib::det(const Mat<eT>& A)
   {
   arma_extra_debug_sigprint();
   
   typedef typename get_pod_type<eT>::result T;
-  
-  const bool make_copy = (is_Mat<T1>::value) ? true : false;
-  
-  const unwrap<T1>   tmp(X.get_ref());
-  const Mat<eT>& A = tmp.M;
-  
-  arma_debug_check( (A.is_square() == false), "det(): given matrix must be square sized" );
   
   const uword N = A.n_rows;
   
@@ -405,9 +398,11 @@ auxlib::det(const Base<eT,T1>& X)
     const  T det_min = std::numeric_limits<T>::epsilon();
     
     if(std::abs(det_val) >= det_min)  { return det_val; }
+    
+    // fallthrough if obtained determinant is suspect
     }
   
-  return auxlib::det_lapack(A, make_copy);
+  return auxlib::det_lapack(A);
   }
 
 
@@ -501,15 +496,11 @@ auxlib::det_tinymat(const Mat<eT>& X, const uword N)
 template<typename eT>
 inline
 eT
-auxlib::det_lapack(const Mat<eT>& X, const bool make_copy)
+auxlib::det_lapack(const Mat<eT>& X)
   {
   arma_extra_debug_sigprint();
   
-  Mat<eT> X_copy;
-  
-  if(make_copy)  { X_copy = X; }
-  
-  Mat<eT>& tmp = (make_copy) ? X_copy : const_cast< Mat<eT>& >(X);
+  Mat<eT> tmp = X;
   
   if(tmp.is_empty())  { return eT(1); }
   
