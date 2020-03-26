@@ -508,6 +508,7 @@
 #if defined(ARMA_USE_OPENMP) && defined(ARMA_USE_CXX11)
   #if (defined(ARMA_GCC_VERSION) && (ARMA_GCC_VERSION < 50400))
     // due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=57580
+    // TODO: gcc 4.9.4 is also fixed, so use a more fine-grained gcc version check?
     #undef ARMA_USE_OPENMP
     #if !defined(ARMA_DONT_PRINT_OPENMP_WARNING)
       #pragma message ("WARNING: use of OpenMP disabled due to compiler bug in gcc <= 5.3")

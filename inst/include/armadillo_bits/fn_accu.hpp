@@ -413,6 +413,118 @@ accu(const mtOp<uword,T1,op_rel_eq>& X)
 
 
 
+template<typename T1, typename T2>
+arma_warn_unused
+inline
+uword
+accu(const mtGlue<uword,T1,T2,glue_rel_noteq>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  const Proxy<T1> PA(X.A);
+  const Proxy<T2> PB(X.B);
+  
+  arma_debug_assert_same_size(PA, PB, "operator!=");
+  
+  uword n_nonzero = 0;
+  
+  if( (Proxy<T1>::use_at == false) && (Proxy<T2>::use_at == false) )
+    {
+    typedef typename Proxy<T1>::ea_type PA_ea_type;
+    typedef typename Proxy<T2>::ea_type PB_ea_type;
+    
+          PA_ea_type A      = PA.get_ea();
+          PB_ea_type B      = PB.get_ea();
+    const uword      n_elem = PA.get_n_elem();
+    
+    for(uword i=0; i < n_elem; ++i)
+      {
+      n_nonzero += (A[i] != B[i]) ? uword(1) : uword(0);
+      }
+    }
+  else
+    {
+    const uword PA_n_cols = PA.get_n_cols();
+    const uword PA_n_rows = PA.get_n_rows();
+    
+    if(PA_n_rows == 1)
+      {
+      for(uword col=0; col < PA_n_cols; ++col)
+        {
+        n_nonzero += (PA.at(0,col) != PB.at(0,col)) ? uword(1) : uword(0);
+        }
+      }
+    else
+      {
+      for(uword col=0; col < PA_n_cols; ++col)
+      for(uword row=0; row < PA_n_rows; ++row)
+        {
+        n_nonzero += (PA.at(row,col) != PB.at(row,col)) ? uword(1) : uword(0);
+        }
+      }
+    }
+  
+  return n_nonzero;
+  }
+
+
+
+template<typename T1, typename T2>
+arma_warn_unused
+inline
+uword
+accu(const mtGlue<uword,T1,T2,glue_rel_eq>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  const Proxy<T1> PA(X.A);
+  const Proxy<T2> PB(X.B);
+  
+  arma_debug_assert_same_size(PA, PB, "operator==");
+  
+  uword n_nonzero = 0;
+  
+  if( (Proxy<T1>::use_at == false) && (Proxy<T2>::use_at == false) )
+    {
+    typedef typename Proxy<T1>::ea_type PA_ea_type;
+    typedef typename Proxy<T2>::ea_type PB_ea_type;
+    
+          PA_ea_type A      = PA.get_ea();
+          PB_ea_type B      = PB.get_ea();
+    const uword      n_elem = PA.get_n_elem();
+    
+    for(uword i=0; i < n_elem; ++i)
+      {
+      n_nonzero += (A[i] == B[i]) ? uword(1) : uword(0);
+      }
+    }
+  else
+    {
+    const uword PA_n_cols = PA.get_n_cols();
+    const uword PA_n_rows = PA.get_n_rows();
+    
+    if(PA_n_rows == 1)
+      {
+      for(uword col=0; col < PA_n_cols; ++col)
+        {
+        n_nonzero += (PA.at(0,col) == PB.at(0,col)) ? uword(1) : uword(0);
+        }
+      }
+    else
+      {
+      for(uword col=0; col < PA_n_cols; ++col)
+      for(uword row=0; row < PA_n_rows; ++row)
+        {
+        n_nonzero += (PA.at(row,col) == PB.at(row,col)) ? uword(1) : uword(0);
+        }
+      }
+    }
+  
+  return n_nonzero;
+  }
+
+
+
 //! accumulate the elements of a subview (submatrix)
 template<typename eT>
 arma_warn_unused

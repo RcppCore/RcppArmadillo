@@ -603,6 +603,12 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   inline bool  empty() const;
   inline uword size()  const;
   
+  arma_inline arma_warn_unused SpMat_MapMat_val<eT> front();
+  arma_inline arma_warn_unused eT                   front() const;
+  
+  arma_inline arma_warn_unused SpMat_MapMat_val<eT> back();
+  arma_inline arma_warn_unused eT                   back() const;
+  
   // Resize memory.
   // If the new size is larger, the column pointers and new memory still need to be correctly set.
   // If the new size is smaller, the first new_n_nonzero elements will be copied.

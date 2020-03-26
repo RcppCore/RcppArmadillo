@@ -92,6 +92,8 @@ op_wishrnd::apply_noalias_mode1(Mat<eT>& out, const Mat<eT>& S, const eT df)
   
   if(S.is_empty())  { out.reset(); return true; }
   
+  if(auxlib::rudimentary_sym_check(S) == false)  { return false; }
+  
   Mat<eT> D;
   
   const bool status = op_chol::apply_direct(D, S, 0);
@@ -241,6 +243,8 @@ op_iwishrnd::apply_noalias_mode1(Mat<eT>& out, const Mat<eT>& T, const eT df)
   arma_debug_check( (T.is_square() == false), "iwishrnd(): given matrix must be square sized" );
   
   if(T.is_empty())  { out.reset(); return true; }
+  
+  if(auxlib::rudimentary_sym_check(T) == false)  { return false; }
   
   Mat<eT> Tinv;
   Mat<eT> Dinv;

@@ -410,6 +410,12 @@ class Cube : public BaseCube< eT, Cube<eT> >
   inline bool  empty() const;
   inline uword size()  const;
   
+  inline       eT& front();
+  inline const eT& front() const;
+  
+  inline       eT& back();
+  inline const eT& back() const;
+  
   inline void swap(Cube& B);
   
   inline void steal_mem(Cube& X);  //!< don't use this unless you're writing code internal to Armadillo

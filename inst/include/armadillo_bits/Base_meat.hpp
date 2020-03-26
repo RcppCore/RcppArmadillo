@@ -480,19 +480,25 @@ Base<elem_type,derived>::is_diagmat() const
   
   if(A.n_elem <= 1)  { return true; }
   
+  // NOTE: we're NOT assuming the matrix has a square size
+  
   const uword A_n_rows = A.n_rows;
   const uword A_n_cols = A.n_cols;
   
-  const elem_type* A_colmem = A.memptr();
+  const elem_type* A_mem = A.memptr();
+  
+  if(A_mem[1] != elem_type(0))  { return false; }
+  
+  // if we got to this point, do a thorough check
   
   for(uword A_col=0; A_col < A_n_cols; ++A_col)
     {
     for(uword A_row=0; A_row < A_n_rows; ++A_row)
       {
-      if( (A_colmem[A_row] != elem_type(0)) && (A_row != A_col) )  { return false; }
+      if( (A_mem[A_row] != elem_type(0)) && (A_row != A_col) )  { return false; }
       }
     
-    A_colmem += A_n_rows;
+    A_mem += A_n_rows;
     }
   
   return true;

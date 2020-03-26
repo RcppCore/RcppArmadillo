@@ -315,6 +315,15 @@ spglue_times_misc::sparse_times_dense(Mat<typename T1::elem_type>& out, const T1
     const SpMat<eT>& A = UA.M;
     const   Mat<eT>& B = UB.M;
     
+    if(B.is_diagmat())
+      {
+      const SpMat<eT> tmp(diagmat(B));
+      
+      out = A * tmp;
+      
+      return;
+      }
+    
     const uword A_n_rows = A.n_rows;
     const uword A_n_cols = A.n_cols;
     
@@ -390,42 +399,48 @@ spglue_times_misc::dense_times_sparse(Mat<typename T1::elem_type>& out, const T1
     }
   else
     {
-    const   Proxy<T1> pa(x);
-    const SpProxy<T2> pb(y);
+    const quasi_unwrap<T1> UA(x);
+    const unwrap_spmat<T2> UB(y);
     
-    arma_debug_assert_mul_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "matrix multiplication");
+    const   Mat<eT>& A = UA.M;
+    const SpMat<eT>& B = UB.M;
     
-    out.zeros(pa.get_n_rows(), pb.get_n_cols());
-    
-    if( (pa.get_n_elem() > 0) && (pb.get_n_nonzero() > 0) )
+    if(A.is_diagmat())
       {
-      if( (arma_config::openmp) && (mp_thread_limit::in_parallel() == false) && (pa.get_n_rows() <= (pa.get_n_cols() / uword(100))) )
+      const SpMat<eT> tmp(diagmat(A));
+      
+      out = tmp * B;
+      
+      return;
+      }
+    
+    arma_debug_assert_mul_size(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "matrix multiplication");
+    
+    out.zeros(A.n_rows, B.n_cols);
+    
+    if( (A.n_elem > 0) && (B.n_nonzero > 0) )
+      {
+      if( (arma_config::openmp) && (mp_thread_limit::in_parallel() == false) && (A.n_rows <= (A.n_cols / uword(100))) )
         {
         #if defined(ARMA_USE_OPENMP)
           {
           arma_extra_debug_print("using parallelised multiplication");
           
-          const quasi_unwrap<typename   Proxy<T1>::stored_type> UX(pa.Q);
-          const unwrap_spmat<typename SpProxy<T2>::stored_type> UY(pb.Q);
-          
-          const   Mat<eT>& X = UX.M;
-          const SpMat<eT>& Y = UY.M;
-          
-          const uword Y_n_cols  = Y.n_cols;
+          const uword B_n_cols  = B.n_cols;
           const int   n_threads = mp_thread_limit::get();
           
           #pragma omp parallel for schedule(static) num_threads(n_threads)
-          for(uword i=0; i < Y_n_cols; ++i)
+          for(uword i=0; i < B_n_cols; ++i)
             {
-            const uword col_offset_1 = Y.col_ptrs[i  ];
-            const uword col_offset_2 = Y.col_ptrs[i+1];
+            const uword col_offset_1 = B.col_ptrs[i  ];
+            const uword col_offset_2 = B.col_ptrs[i+1];
             
             const uword col_offset_delta = col_offset_2 - col_offset_1;
             
-            const uvec    indices(const_cast<uword*>(&(Y.row_indices[col_offset_1])), col_offset_delta, false, false);
-            const Col<eT>   Y_col(const_cast<   eT*>(&(     Y.values[col_offset_1])), col_offset_delta, false, false);
+            const uvec    indices(const_cast<uword*>(&(B.row_indices[col_offset_1])), col_offset_delta, false, false);
+            const Col<eT>   B_col(const_cast<   eT*>(&(     B.values[col_offset_1])), col_offset_delta, false, false);
             
-            out.col(i) = X.cols(indices) * Y_col;
+            out.col(i) = A.cols(indices) * B_col;
             }
           }
         #endif
@@ -434,25 +449,25 @@ spglue_times_misc::dense_times_sparse(Mat<typename T1::elem_type>& out, const T1
         {
         arma_extra_debug_print("using standard multiplication");
         
-        typename SpProxy<T2>::const_iterator_type y_it     = pb.begin();
-        typename SpProxy<T2>::const_iterator_type y_it_end = pb.end();
+        typename SpMat<eT>::const_iterator B_it     = B.begin();
+        typename SpMat<eT>::const_iterator B_it_end = B.end();
         
         const uword out_n_rows = out.n_rows;
         
-        while(y_it != y_it_end)
+        while(B_it != B_it_end)
           {
-          const eT    y_it_val = (*y_it);
-          const uword y_it_col = y_it.col();
-          const uword y_it_row = y_it.row();
+          const eT    B_it_val = (*B_it);
+          const uword B_it_col = B_it.col();
+          const uword B_it_row = B_it.row();
           
-          eT* out_col = out.colptr(y_it_col);
+          eT* out_col = out.colptr(B_it_col);
           
           for(uword row = 0; row < out_n_rows; ++row)
             {
-            out_col[row] += pa.at(row, y_it_row) * y_it_val;
+            out_col[row] += A.at(row, B_it_row) * B_it_val;
             }
           
-          ++y_it;
+          ++B_it;
           }
         }
       }

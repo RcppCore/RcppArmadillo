@@ -122,6 +122,12 @@ class subview : public Base<eT, subview<eT> >
   inline eT&         at(const uword in_row, const uword in_col);
   inline eT          at(const uword in_row, const uword in_col) const;
   
+  inline eT&         front();
+  inline eT          front() const;
+  
+  inline eT&         back();
+  inline eT          back() const;
+  
   arma_inline       eT* colptr(const uword in_col);
   arma_inline const eT* colptr(const uword in_col) const;
   
