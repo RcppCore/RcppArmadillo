@@ -6,6 +6,8 @@
         * inst/include/armadillo: Armadillo 9.860-rc1
         * inst/include/armadillo_bits/*: Idem
 
+	* .travis.yml: No longer need r-cran-pinp
+
 2020-02-17  Dirk Eddelbuettel  <edd@debian.org>
 
 	* configure.ac: Provide a negative message for the macOS test
