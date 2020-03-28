@@ -12,29 +12,49 @@
 [![BioConductor use](https://jangorecki.gitlab.io/rdeps/RcppArmadillo/BioC_usage.svg?sanitize=true)](https://cran.r-project.org/package=RcppArmadillo)
 [![StackOverflow](https://img.shields.io/badge/stackoverflow-rcpp-orange.svg)](https://stackoverflow.com/questions/tagged/rcpp)
 
-### Overview
 
-[Armadillo](http://arma.sf.net) is a templated C++ linear algebra library
-written by Conrad Sanderson that aims towards a good balance between speed and ease of use. Integer,
-floating point and complex numbers are supported, as well as a subset of
-trigonometric and statistics functions. Various matrix decompositions are
-provided through optional integration with LAPACK and ATLAS libraries.
+### Synopsis 
 
-A delayed evaluation approach is employed (during compile time) to combine
-several operations into one, and to reduce (or eliminate) the need for
-temporaries. This is accomplished through recursive templates and template
-meta-programming.
+RcppArmadillo provides an interface from R to and from [Armadillo](http://arma.sf.net) by
+utilising the [Rcpp R/C++ interface library](http://dirk.eddelbuettel.com/code/rcpp.html).
 
-This library is useful if C++ has been decided as the language of choice
-(due to speed and/or integration capabilities), rather than another language.
+### What is Armadillo?
 
-The RcppArmadillo package includes the header files from the templated
-Armadillo library. Thus users do not need to install Armadillo itself in
-order to use RcppArmadillo.
+[Armadillo](http://arma.sf.net) is a high-quality linear algebra library for the C++ language,
+aiming towards a good balance between speed and ease of use. It provides high-level syntax and
+[functionality](http://arma.sourceforge.net/docs.html) deliberately similar to Matlab (TM).
+See [its website]([Armadillo](http://arma.sf.net)) more information about Armadillo.
 
-This Armadillo integration provides a nice illustration of the
-capabilities of the [Rcpp](http://www.rcpp.org) package for seamless R and
-C++ integration.
+### So give me an example!
+
+Glad you asked. Here is a light-weight and fast implementation of linear regression:
+
+```c++
+#include <RcppArmadillo.h>
+
+// [[Rcpp::export]]
+Rcpp::List fastLm(const arma::mat& X, const arma::colvec& y) {
+    int n = X.n_rows, k = X.n_cols;
+        
+    arma::colvec coef = arma::solve(X, y);    // fit model y ~ X
+    arma::colvec res  = y - X*coef;           // residuals
+
+    // std.errors of coefficients
+    double s2 = std::inner_product(res.begin(), res.end(), res.begin(), 0.0)/(n - k);
+                                                        
+    arma::colvec std_err = arma::sqrt(s2 * arma::diagvec(arma::pinv(arma::trans(X)*X)));  
+
+    return Rcpp::List::create(Rcpp::Named("coefficients") = coef,
+                              Rcpp::Named("stderr")       = std_err,
+                              Rcpp::Named("df.residual")  = n - k);
+}
+```
+
+You can
+[`Rcpp::sourceCpp()`](https://cran.r-project.org/web/packages/Rcpp/vignettes/Rcpp-attributes.pdf)
+the file above to compile the function.  A slightly more involved version is also included in the
+package [as the `fastLm()`](https://github.com/RcppCore/RcppArmadillo/blob/master/R/fastLm.R)
+function.
 
 ### Status
 
@@ -50,6 +70,20 @@ The package contains a pdf vignette which is a pre-print of the
 [paper by Eddelbuettel and Sanderson](http://dx.doi.org/10.1016/j.csda.2013.02.005)
 in CSDA (2014), as well as an introductory vignette for the sparse
 matrix conversions.
+
+### Installation
+
+RcppArmadillo is a [CRAN package](https://cran.r-project.org/package=RcppArmadillo), and lives
+otherwise in its own habitat on [GitHub](https://github.com/RcppCore/RcppArmadillo) within the
+[RcppCore](https://github.com/RcppCore) GitHub organization.
+
+Run
+
+```r
+install.packages("RcppArmadillo")
+```
+
+to install from your nearest CRAN mirror.
 
 ### Authors
 
