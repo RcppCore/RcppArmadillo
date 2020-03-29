@@ -31,6 +31,7 @@ Glad you asked. Here is a light-weight and fast implementation of linear regress
 
 ```c++
 #include <RcppArmadillo.h>
+// [[Rcpp::depends(RcppArmadillo)]
 
 // [[Rcpp::export]]
 Rcpp::List fastLm(const arma::mat& X, const arma::colvec& y) {
