@@ -23,7 +23,7 @@ utilising the [Rcpp R/C++ interface library](http://dirk.eddelbuettel.com/code/r
 [Armadillo](http://arma.sf.net) is a high-quality linear algebra library for the C++ language,
 aiming towards a good balance between speed and ease of use. It provides high-level syntax and
 [functionality](http://arma.sourceforge.net/docs.html) deliberately similar to Matlab (TM).
-See [its website]([Armadillo](http://arma.sf.net)) more information about Armadillo.
+See [its website](http://arma.sf.net) more information about Armadillo.
 
 ### So give me an example!
 
@@ -52,7 +52,7 @@ Rcpp::List fastLm(const arma::mat& X, const arma::colvec& y) {
 ```
 
 You can
-[`Rcpp::sourceCpp()`](https://cran.r-project.org/web/packages/Rcpp/vignettes/Rcpp-attributes.pdf)
+[`Rcpp::sourceCpp()`](https://cran.r-project.org/package=Rcpp/vignettes/Rcpp-attributes.pdf)
 the file above to compile the function.  A slightly more involved version is also included in the
 package [as the `fastLm()`](https://github.com/RcppCore/RcppArmadillo/blob/master/R/fastLm.R)
 function.
