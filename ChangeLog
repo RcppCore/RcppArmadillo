@@ -1,3 +1,8 @@
+2020-04-10  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/tinytest/test_scipy2r.R: Skip test on 32-bit Windows
+	* inst/tinytest/test_complex.R: Ditto
+
 2020-03-30  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.9.860.1.0

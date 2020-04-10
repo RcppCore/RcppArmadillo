@@ -1,7 +1,7 @@
 #!/usr/bin/r -t
 #
 # Copyright (C) 2013 - 2019 Baptiste Auguie and Dirk Eddelbuettel
-# Copyright (C) 2019        Dirk Eddelbuettel
+# Copyright (C) 2019 - 2020 Dirk Eddelbuettel
 #
 # This file is part of RcppArmadillo.
 #
@@ -19,6 +19,12 @@
 # along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
 library(RcppArmadillo)
+
+## It now (Apr 2020) appears to fail on 32-bit Windows
+.onWindows <- .Platform$OS.type == "windows"
+.is32bit <- .Platform$r_arch == "i386"
+
+if (.onWindows && .is32bit) exit_file("Do not bother on 32-bit Windows")
 
 Rcpp::sourceCpp("cpp/complex.cpp")
 

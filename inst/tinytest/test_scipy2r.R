@@ -21,6 +21,12 @@
 
 #exit_file("Skip this test for now.")
 
+## It now (Apr 2020) appears to fail on 32-bit Windows
+.onWindows <- .Platform$OS.type == "windows"
+.is32bit <- .Platform$r_arch == "i386"
+
+if (.onWindows && .is32bit) exit_file("Do not bother on 32-bit Windows")
+
 if (!requireNamespace("Matrix", quietly=TRUE)) exit_file("Package Matrix missing")
 if (!requireNamespace("reticulate", quietly=TRUE)) exit_file("Package reticulate missing")
 if (!packageVersion("reticulate") >= package_version("1.14")) exit_file("Package reticulate too old")

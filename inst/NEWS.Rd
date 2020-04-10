@@ -14,6 +14,7 @@
       \item Workaround for save/load issues with HDF5 v1.12
     }
     \item Vignettes are now pre-made and include (\ghpr{285})
+    \item Two test files are now skipped on 32-bit Windows
   }
 }
 
