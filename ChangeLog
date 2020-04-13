@@ -1,3 +1,7 @@
+2020-04-13  Dirk Eddelbuettel  <edd@debian.org>
+
+        * inst/include/armadillo_bits: Armadillo 9.860.2
+
 2020-04-10  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/tinytest/test_scipy2r.R: Skip test on 32-bit Windows
