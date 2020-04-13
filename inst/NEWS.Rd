@@ -3,9 +3,9 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.9.860.1.0 (2020-03-30)}{
+\section{Changes in RcppArmadillo version 0.9.860.2.0 (2020-04-13)}{
   \itemize{
-    \item Upgraded to Armadillo release 9.860.1 (Roasted Mocha Fix)
+    \item Upgraded to Armadillo release 9.860.2 (Roasted Mocha Fix)
     \itemize{
       \item Added \code{powmat()}
       \item Faster access to columns in sparse submatrix views

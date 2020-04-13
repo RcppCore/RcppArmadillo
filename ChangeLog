@@ -1,5 +1,8 @@
 2020-04-13  Dirk Eddelbuettel  <edd@debian.org>
 
+        * DESCRIPTION: Release 0.9.860.2.0
+        * inst/NEWS.Rd: Release 0.9.860.2.0
+
         * inst/include/armadillo_bits: Armadillo 9.860.2
 
 2020-04-10  Dirk Eddelbuettel  <edd@debian.org>
