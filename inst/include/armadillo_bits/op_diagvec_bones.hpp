@@ -28,10 +28,27 @@ class op_diagvec
   inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_diagvec>& X);
   
   template<typename T1>
-  arma_hot inline static void apply_unwrap(Mat<typename T1::elem_type>& out, const T1& X,       const uword row_offset, const uword col_offset, const uword len);
+  inline static void apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P);
+  
+  template<typename T1, typename T2>
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op< Glue<T1,T2,glue_times>, op_diagvec>& X, const typename arma_not_cx<typename T1::elem_type>::result* junk = 0);
+  
+  template<typename T1, typename T2>
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op< Glue<T1,T2,glue_times>, op_diagvec>& X, const typename arma_cx_only<typename T1::elem_type>::result* junk = 0);
+  };
+
+
+
+class op_diagvec2
+  : public traits_op_col
+  {
+  public:
   
   template<typename T1>
-  arma_hot inline static void apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const uword row_offset, const uword col_offset, const uword len);
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_diagvec2>& X);
+  
+  template<typename T1>
+  inline static void apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const uword row_offset, const uword col_offset);
   };
 
 

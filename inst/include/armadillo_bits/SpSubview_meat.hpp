@@ -1065,56 +1065,56 @@ SpSubview<eT>::is_vec() const
 
 template<typename eT>
 inline
-SpSubview<eT>
+SpSubview_row<eT>
 SpSubview<eT>::row(const uword row_num)
   {
   arma_extra_debug_sigprint();
-
+  
   arma_debug_check(row_num >= n_rows, "SpSubview::row(): out of bounds");
-
-  return submat(row_num, 0, row_num, n_cols - 1);
+  
+  return SpSubview_row<eT>(const_cast< SpMat<eT>& >(m), row_num + aux_row1, aux_col1, n_cols);
   }
 
 
 
 template<typename eT>
 inline
-const SpSubview<eT>
+const SpSubview_row<eT>
 SpSubview<eT>::row(const uword row_num) const
   {
   arma_extra_debug_sigprint();
-
+  
   arma_debug_check(row_num >= n_rows, "SpSubview::row(): out of bounds");
-
-  return submat(row_num, 0, row_num, n_cols - 1);
+  
+  return SpSubview_row<eT>(m, row_num + aux_row1, aux_col1, n_cols);
   }
 
 
 
 template<typename eT>
 inline
-SpSubview<eT>
+SpSubview_col<eT>
 SpSubview<eT>::col(const uword col_num)
   {
   arma_extra_debug_sigprint();
-
+  
   arma_debug_check(col_num >= n_cols, "SpSubview::col(): out of bounds");
-
-  return submat(0, col_num, n_rows - 1, col_num);
+  
+  return SpSubview_col<eT>(const_cast< SpMat<eT>& >(m), col_num + aux_col1, aux_row1, n_rows);
   }
 
 
 
 template<typename eT>
 inline
-const SpSubview<eT>
+const SpSubview_col<eT>
 SpSubview<eT>::col(const uword col_num) const
   {
   arma_extra_debug_sigprint();
-
+  
   arma_debug_check(col_num >= n_cols, "SpSubview::col(): out of bounds");
-
-  return submat(0, col_num, n_rows - 1, col_num);
+  
+  return SpSubview_col<eT>(m, col_num + aux_col1, aux_row1, n_rows);
   }
 
 
@@ -1622,69 +1622,256 @@ SpSubview<eT>::invalidate_cache() const
 
 
 
-/**
- * Sparse subview col
- *
+//
+//
+//
+
+
+
 template<typename eT>
 inline
-SpSubview_col<eT>::SpSubview_col(const Mat<eT>& in_m, const uword in_col)
+SpSubview_col<eT>::SpSubview_col(const SpMat<eT>& in_m, const uword in_col)
+  : SpSubview<eT>(in_m, 0, in_col, in_m.n_rows, 1)
   {
   arma_extra_debug_sigprint();
   }
 
+
+
 template<typename eT>
 inline
-SpSubview_col<eT>::SpSubview_col(Mat<eT>& in_m, const uword in_col)
+SpSubview_col<eT>::SpSubview_col(SpMat<eT>& in_m, const uword in_col)
+  : SpSubview<eT>(in_m, 0, in_col, in_m.n_rows, 1)
   {
   arma_extra_debug_sigprint();
   }
 
+
+
 template<typename eT>
 inline
-SpSubview_col<eT>::SpSubview_col(const Mat<eT>& in_m, const uword in_col, const uword in_row1, const uword in_n_rows)
+SpSubview_col<eT>::SpSubview_col(const SpMat<eT>& in_m, const uword in_col, const uword in_row1, const uword in_n_rows)
+  : SpSubview<eT>(in_m, in_row1, in_col, in_n_rows, 1)
   {
   arma_extra_debug_sigprint();
   }
 
-template<typename eT>
-inline
-SpSubview_col<eT>::SpSubview_col(Mat<eT>& in_m, const uword in_col, const uword in_row1, const uword in_n_rows)
-  {
-  arma_extra_debug_sigprint();
-  }
-*/
 
-/**
- * Sparse subview row
- *
+
 template<typename eT>
 inline
-SpSubview_row<eT>::SpSubview_row(const Mat<eT>& in_m, const uword in_row)
+SpSubview_col<eT>::SpSubview_col(SpMat<eT>& in_m, const uword in_col, const uword in_row1, const uword in_n_rows)
+  : SpSubview<eT>(in_m, in_row1, in_col, in_n_rows, 1)
   {
   arma_extra_debug_sigprint();
   }
 
+
+
 template<typename eT>
 inline
-SpSubview_row<eT>::SpSubview_row(Mat<eT>& in_m, const uword in_row)
+void
+SpSubview_col<eT>::operator=(const SpSubview<eT>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  SpSubview<eT>::operator=(x);
+  }
+
+
+
+template<typename eT>
+inline
+void
+SpSubview_col<eT>::operator=(const SpSubview_col<eT>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  SpSubview<eT>::operator=(x); // interprets 'SpSubview_col' as 'SpSubview'
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+void
+SpSubview_col<eT>::operator=(const SpBase<eT,T1>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  SpSubview<eT>::operator=(x);
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+void
+SpSubview_col<eT>::operator=(const Base<eT,T1>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  SpSubview<eT>::operator=(x);
+  }
+
+
+
+template<typename eT>
+inline
+const SpOp<SpSubview_col<eT>,spop_htrans>
+SpSubview_col<eT>::t() const
+  {
+  return SpOp<SpSubview_col<eT>,spop_htrans>(*this);
+  }
+
+
+
+template<typename eT>
+inline
+const SpOp<SpSubview_col<eT>,spop_htrans>
+SpSubview_col<eT>::ht() const
+  {
+  return SpOp<SpSubview_col<eT>,spop_htrans>(*this);
+  }
+
+
+
+template<typename eT>
+inline
+const SpOp<SpSubview_col<eT>,spop_strans>
+SpSubview_col<eT>::st() const
+  {
+  return SpOp<SpSubview_col<eT>,spop_strans>(*this);
+  }
+
+
+
+//
+//
+//
+
+
+
+template<typename eT>
+inline
+SpSubview_row<eT>::SpSubview_row(const SpMat<eT>& in_m, const uword in_row)
+  : SpSubview<eT>(in_m, in_row, 0, 1, in_m.n_cols)
   {
   arma_extra_debug_sigprint();
   }
 
+
+
 template<typename eT>
 inline
-SpSubview_row<eT>::SpSubview_row(const Mat<eT>& in_m, const uword in_row, const uword in_col1, const uword in_n_cols)
+SpSubview_row<eT>::SpSubview_row(SpMat<eT>& in_m, const uword in_row)
+  : SpSubview<eT>(in_m, in_row, 0, 1, in_m.n_cols)
   {
   arma_extra_debug_sigprint();
   }
 
+
+
 template<typename eT>
 inline
-SpSubview_row<eT>::SpSubview_row(Mat<eT>& in_m, const uword in_row, const uword in_col1, const uword in_n_cols)
+SpSubview_row<eT>::SpSubview_row(const SpMat<eT>& in_m, const uword in_row, const uword in_col1, const uword in_n_cols)
+  : SpSubview<eT>(in_m, in_row, in_col1, 1, in_n_cols)
   {
   arma_extra_debug_sigprint();
   }
-*/
+
+
+
+template<typename eT>
+inline
+SpSubview_row<eT>::SpSubview_row(SpMat<eT>& in_m, const uword in_row, const uword in_col1, const uword in_n_cols)
+  : SpSubview<eT>(in_m, in_row, in_col1, 1, in_n_cols)
+  {
+  arma_extra_debug_sigprint();
+  }
+
+
+
+template<typename eT>
+inline
+void
+SpSubview_row<eT>::operator=(const SpSubview<eT>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  SpSubview<eT>::operator=(x);
+  }
+
+
+
+template<typename eT>
+inline
+void
+SpSubview_row<eT>::operator=(const SpSubview_row<eT>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  SpSubview<eT>::operator=(x); // interprets 'SpSubview_row' as 'SpSubview'
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+void
+SpSubview_row<eT>::operator=(const SpBase<eT,T1>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  SpSubview<eT>::operator=(x);
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+void
+SpSubview_row<eT>::operator=(const Base<eT,T1>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  SpSubview<eT>::operator=(x);
+  }
+
+
+
+template<typename eT>
+inline
+const SpOp<SpSubview_row<eT>,spop_htrans>
+SpSubview_row<eT>::t() const
+  {
+  return SpOp<SpSubview_row<eT>,spop_htrans>(*this);
+  }
+
+
+
+template<typename eT>
+inline
+const SpOp<SpSubview_row<eT>,spop_htrans>
+SpSubview_row<eT>::ht() const
+  {
+  return SpOp<SpSubview_row<eT>,spop_htrans>(*this);
+  }
+
+
+
+template<typename eT>
+inline
+const SpOp<SpSubview_row<eT>,spop_strans>
+SpSubview_row<eT>::st() const
+  {
+  return SpOp<SpSubview_row<eT>,spop_strans>(*this);
+  }
+
 
 
 //! @}

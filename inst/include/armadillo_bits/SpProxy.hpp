@@ -280,6 +280,114 @@ class SpProxy< SpSubview<eT> >
 
 
 template<typename eT>
+class SpProxy< SpSubview_col<eT> >
+  {
+  public:
+  
+  typedef eT                                           elem_type;
+  typedef typename get_pod_type<elem_type>::result     pod_type;
+  typedef SpSubview_col<eT>                            stored_type;
+  
+  typedef typename SpSubview<eT>::const_iterator       const_iterator_type;
+  typedef typename SpSubview<eT>::const_row_iterator   const_row_iterator_type;
+  
+  static const bool use_iterator   = true;
+  static const bool Q_is_generated = false;
+  
+  static const bool is_row  = false;
+  static const bool is_col  = true;
+  static const bool is_xvec = false;
+  
+  arma_aligned const SpSubview_col<eT>& Q;
+  
+  inline explicit SpProxy(const SpSubview_col<eT>& A)
+    : Q(A)
+    {
+    arma_extra_debug_sigprint();
+    Q.m.sync();
+    }
+  
+  arma_inline uword get_n_rows()    const { return Q.n_rows;    }
+  arma_inline uword get_n_cols()    const { return 1;           }
+  arma_inline uword get_n_elem()    const { return Q.n_elem;    }
+  arma_inline uword get_n_nonzero() const { return Q.n_nonzero; }
+  
+  arma_inline elem_type operator[](const uword i)                const { return Q.at(i,   0); }
+  arma_inline elem_type at        (const uword row, const uword) const { return Q.at(row, 0); }
+  
+  arma_inline const eT*    get_values()      const { return Q.m.values;      }
+  arma_inline const uword* get_row_indices() const { return Q.m.row_indices; }
+  arma_inline const uword* get_col_ptrs()    const { return Q.m.col_ptrs;    }
+  
+  arma_inline const_iterator_type     begin()                            const { return Q.begin();            }
+  arma_inline const_iterator_type     begin_col(const uword col_num)     const { return Q.begin_col(col_num); }
+  arma_inline const_row_iterator_type begin_row(const uword row_num = 0) const { return Q.begin_row(row_num); }
+  
+  arma_inline const_iterator_type     end()                        const { return Q.end();            }
+  arma_inline const_row_iterator_type end_row()                    const { return Q.end_row();        }
+  arma_inline const_row_iterator_type end_row(const uword row_num) const { return Q.end_row(row_num); }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const SpMat<eT2>& X) const { return (void_ptr(&Q.m) == void_ptr(&X)); }
+  };
+
+
+
+template<typename eT>
+class SpProxy< SpSubview_row<eT> >
+  {
+  public:
+  
+  typedef eT                                           elem_type;
+  typedef typename get_pod_type<elem_type>::result     pod_type;
+  typedef SpSubview_row<eT>                            stored_type;
+  
+  typedef typename SpSubview<eT>::const_iterator       const_iterator_type;
+  typedef typename SpSubview<eT>::const_row_iterator   const_row_iterator_type;
+
+  static const bool use_iterator   = true;
+  static const bool Q_is_generated = false;
+  
+  static const bool is_row  = true;
+  static const bool is_col  = false;
+  static const bool is_xvec = false;
+  
+  arma_aligned const SpSubview_row<eT>& Q;
+  
+  inline explicit SpProxy(const SpSubview_row<eT>& A)
+    : Q(A)
+    {
+    arma_extra_debug_sigprint();
+    Q.m.sync();
+    }
+  
+  arma_inline uword get_n_rows()    const { return 1;           }
+  arma_inline uword get_n_cols()    const { return Q.n_cols;    }
+  arma_inline uword get_n_elem()    const { return Q.n_elem;    }
+  arma_inline uword get_n_nonzero() const { return Q.n_nonzero; }
+  
+  arma_inline elem_type operator[](const uword i)                const { return Q.at(0, i  ); }
+  arma_inline elem_type at        (const uword, const uword col) const { return Q.at(0, col); }
+  
+  arma_inline const eT*    get_values()      const { return Q.m.values;      }
+  arma_inline const uword* get_row_indices() const { return Q.m.row_indices; }
+  arma_inline const uword* get_col_ptrs()    const { return Q.m.col_ptrs;    }
+  
+  arma_inline const_iterator_type     begin()                            const { return Q.begin();            }
+  arma_inline const_iterator_type     begin_col(const uword col_num)     const { return Q.begin_col(col_num); }
+  arma_inline const_row_iterator_type begin_row(const uword row_num = 0) const { return Q.begin_row(row_num); }
+  
+  arma_inline const_iterator_type     end()                        const { return Q.end();            }
+  arma_inline const_row_iterator_type end_row()                    const { return Q.end_row();        }
+  arma_inline const_row_iterator_type end_row(const uword row_num) const { return Q.end_row(row_num); }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const SpMat<eT2>& X) const { return (void_ptr(&Q.m) == void_ptr(&X)); }
+  };
+
+
+
+template<typename eT>
 class SpProxy< spdiagview<eT> >
   {
   public:
