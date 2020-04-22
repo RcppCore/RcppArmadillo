@@ -331,6 +331,39 @@ class diagmat_proxy< subview_col<eT> >
 
 
 
+template<typename T1, typename T2>
+class diagmat_proxy< Glue<T1,T2,glue_times> >
+  {
+  public:
+  
+  typedef typename T1::elem_type                   elem_type;
+  typedef typename get_pod_type<elem_type>::result pod_type;
+  
+  inline
+  diagmat_proxy(const Glue<T1,T2,glue_times>& X)
+    {
+    op_diagmat::apply_times(P, X.A, X.B);
+    
+    n_rows = P.n_rows;
+    n_cols = P.n_cols;
+    
+    arma_extra_debug_sigprint();
+    }
+  
+  arma_inline elem_type operator[] (const uword i)                    const { return P.at(i,i);                                   }
+  arma_inline elem_type at         (const uword row, const uword col) const { return (row == col) ? P.at(row,row) : elem_type(0); }
+  
+  arma_inline bool is_alias(const Mat<elem_type>&) const { return false; }
+  
+  static const bool P_is_vec = false;
+  
+  Mat<elem_type> P;
+  uword          n_rows;
+  uword          n_cols;
+  };
+
+
+
 //
 //
 //
@@ -580,6 +613,37 @@ class diagmat_proxy_check< subview_col<eT> >
   const Col<eT> P;
   const uword   n_rows;
   const uword   n_cols;
+  };
+
+
+
+template<typename T1, typename T2>
+class diagmat_proxy_check< Glue<T1,T2,glue_times> >
+  {
+  public:
+  
+  typedef typename T1::elem_type                   elem_type;
+  typedef typename get_pod_type<elem_type>::result pod_type;
+  
+  inline
+  diagmat_proxy_check(const Glue<T1,T2,glue_times>& X, const Mat<elem_type>&)
+    {
+    op_diagmat::apply_times(P, X.A, X.B);
+    
+    n_rows = P.n_rows;
+    n_cols = P.n_cols;
+    
+    arma_extra_debug_sigprint();
+    }
+  
+  arma_inline elem_type operator[] (const uword i)                    const { return P.at(i,i);                                   }
+  arma_inline elem_type at         (const uword row, const uword col) const { return (row == col) ? P.at(row,row) : elem_type(0); }
+  
+  static const bool P_is_vec = false;
+  
+  Mat<elem_type> P;
+  uword          n_rows;
+  uword          n_cols;
   };
 
 

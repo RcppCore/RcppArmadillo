@@ -494,6 +494,7 @@ namespace arma
   #include "armadillo_bits/fn_trunc_log.hpp"
   #include "armadillo_bits/fn_toeplitz.hpp"
   #include "armadillo_bits/fn_trimat.hpp"
+  #include "armadillo_bits/fn_trimat_ind.hpp"
   #include "armadillo_bits/fn_cumsum.hpp"
   #include "armadillo_bits/fn_cumprod.hpp"
   #include "armadillo_bits/fn_symmat.hpp"

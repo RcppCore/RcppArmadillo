@@ -200,17 +200,17 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   template<typename T1, typename T2, typename spglue_type> inline SpMat& operator/=(const mtSpGlue<eT, T1, T2, spglue_type>& X);
   
   
-  arma_inline       SpSubview<eT> row(const uword row_num);
-  arma_inline const SpSubview<eT> row(const uword row_num) const;
+  arma_inline       SpSubview_row<eT> row(const uword row_num);
+  arma_inline const SpSubview_row<eT> row(const uword row_num) const;
   
-  inline            SpSubview<eT> operator()(const uword row_num, const span& col_span);
-  inline      const SpSubview<eT> operator()(const uword row_num, const span& col_span) const;
+  inline            SpSubview_row<eT> operator()(const uword row_num, const span& col_span);
+  inline      const SpSubview_row<eT> operator()(const uword row_num, const span& col_span) const;
   
-  arma_inline       SpSubview<eT> col(const uword col_num);
-  arma_inline const SpSubview<eT> col(const uword col_num) const;
+  arma_inline       SpSubview_col<eT> col(const uword col_num);
+  arma_inline const SpSubview_col<eT> col(const uword col_num) const;
   
-  inline            SpSubview<eT> operator()(const span& row_span, const uword col_num);
-  inline      const SpSubview<eT> operator()(const span& row_span, const uword col_num) const;
+  inline            SpSubview_col<eT> operator()(const span& row_span, const uword col_num);
+  inline      const SpSubview_col<eT> operator()(const span& row_span, const uword col_num) const;
   
   arma_inline       SpSubview<eT> rows(const uword in_row1, const uword in_row2);
   arma_inline const SpSubview<eT> rows(const uword in_row1, const uword in_row2) const;

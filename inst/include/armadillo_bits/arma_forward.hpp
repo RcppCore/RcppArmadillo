@@ -46,6 +46,8 @@ template<typename eT> class SpMat;
 template<typename eT> class SpCol;
 template<typename eT> class SpRow;
 template<typename eT> class SpSubview;
+template<typename eT> class SpSubview_col;
+template<typename eT> class SpSubview_row;
 
 template<typename eT> class diagview;
 template<typename eT> class spdiagview;

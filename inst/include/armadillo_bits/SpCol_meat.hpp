@@ -200,6 +200,36 @@ SpCol<eT>::SpCol
 
 
 
+template<typename eT>
+inline
+const SpOp<SpCol<eT>,spop_htrans>
+SpCol<eT>::t() const
+  {
+  return SpOp<SpCol<eT>,spop_htrans>(*this);
+  }
+
+
+
+template<typename eT>
+inline
+const SpOp<SpCol<eT>,spop_htrans>
+SpCol<eT>::ht() const
+  {
+  return SpOp<SpCol<eT>,spop_htrans>(*this);
+  }
+
+
+
+template<typename eT>
+inline
+const SpOp<SpCol<eT>,spop_strans>
+SpCol<eT>::st() const
+  {
+  return SpOp<SpCol<eT>,spop_strans>(*this);
+  }
+
+
+
 //! remove specified row
 template<typename eT>
 inline

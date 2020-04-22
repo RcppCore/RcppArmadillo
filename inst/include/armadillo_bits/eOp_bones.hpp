@@ -31,7 +31,6 @@ class eOp : public Base<typename T1::elem_type, eOp<T1, eop_type> >
   static const bool use_at      = Proxy<T1>::use_at;
   static const bool use_mp      = Proxy<T1>::use_mp || eop_type::use_mp;
   static const bool has_subview = Proxy<T1>::has_subview;
-  static const bool fake_mat    = Proxy<T1>::fake_mat;
   
   static const bool is_row  = Proxy<T1>::is_row;
   static const bool is_col  = Proxy<T1>::is_col;

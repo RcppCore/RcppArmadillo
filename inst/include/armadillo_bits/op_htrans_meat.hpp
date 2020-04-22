@@ -267,92 +267,105 @@ op_htrans::apply_proxy(Mat<typename T1::elem_type>& out, const T1& X)
   
   const Proxy<T1> P(X);
   
-  // allow detection of in-place transpose
-  if( (is_Mat<typename Proxy<T1>::stored_type>::value == true) && (Proxy<T1>::fake_mat == false) )
+  const uword n_rows = P.get_n_rows();
+  const uword n_cols = P.get_n_cols();
+  
+  const bool is_alias = P.is_alias(out);
+  
+  if( (resolves_to_vector<T1>::yes) && (Proxy<T1>::use_at == false) )
     {
-    const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
-    
-    op_htrans::apply_mat(out, tmp.M);
+    if(is_alias == false)
+      {
+      out.set_size(n_cols, n_rows);
+      
+      eT* out_mem = out.memptr();
+      
+      const uword n_elem = P.get_n_elem();
+      
+      typename Proxy<T1>::ea_type Pea = P.get_ea();
+      
+      for(uword i=0; i < n_elem; ++i)
+        {
+        out_mem[i] = std::conj(Pea[i]);
+        }
+      }
+    else  // aliasing
+      {
+      Mat<eT> out2(n_cols, n_rows);
+      
+      eT* out_mem = out2.memptr();
+      
+      const uword n_elem = P.get_n_elem();
+      
+      typename Proxy<T1>::ea_type Pea = P.get_ea();
+      
+      for(uword i=0; i < n_elem; ++i)
+        {
+        out_mem[i] = std::conj(Pea[i]);
+        }
+      
+      out.steal_mem(out2);
+      }
     }
   else
     {
-    const uword n_rows = P.get_n_rows();
-    const uword n_cols = P.get_n_cols();
-    
-    const bool is_alias = P.is_alias(out);
-    
-    if( (resolves_to_vector<T1>::yes) && (Proxy<T1>::use_at == false) )
+    if(is_alias == false)
       {
-      if(is_alias == false)
+      out.set_size(n_cols, n_rows);
+      
+      eT* outptr = out.memptr();
+      
+      for(uword k=0; k < n_rows; ++k)
         {
-        out.set_size(n_cols, n_rows);
-        
-        eT* out_mem = out.memptr();
-        
-        const uword n_elem = P.get_n_elem();
-        
-        typename Proxy<T1>::ea_type Pea = P.get_ea();
-        
-        for(uword i=0; i < n_elem; ++i)
+        for(uword j=0; j < n_cols; ++j)
           {
-          out_mem[i] = std::conj(Pea[i]);
+          (*outptr) = std::conj(P.at(k,j));
+          
+          outptr++;
           }
-        }
-      else  // aliasing
-        {
-        Mat<eT> out2(n_cols, n_rows);
-        
-        eT* out_mem = out2.memptr();
-        
-        const uword n_elem = P.get_n_elem();
-        
-        typename Proxy<T1>::ea_type Pea = P.get_ea();
-        
-        for(uword i=0; i < n_elem; ++i)
-          {
-          out_mem[i] = std::conj(Pea[i]);
-          }
-        
-        out.steal_mem(out2);
         }
       }
-    else
+    else // aliasing
       {
-      if(is_alias == false)
+      Mat<eT> out2(n_cols, n_rows);
+      
+      eT* out2ptr = out2.memptr();
+      
+      for(uword k=0; k < n_rows; ++k)
         {
-        out.set_size(n_cols, n_rows);
-        
-        eT* outptr = out.memptr();
-        
-        for(uword k=0; k < n_rows; ++k)
+        for(uword j=0; j < n_cols; ++j)
           {
-          for(uword j=0; j < n_cols; ++j)
-            {
-            (*outptr) = std::conj(P.at(k,j));
-            
-            outptr++;
-            }
+          (*out2ptr) = std::conj(P.at(k,j));
+          
+          out2ptr++;
           }
         }
-      else // aliasing
-        {
-        Mat<eT> out2(n_cols, n_rows);
-        
-        eT* out2ptr = out2.memptr();
-        
-        for(uword k=0; k < n_rows; ++k)
-          {
-          for(uword j=0; j < n_cols; ++j)
-            {
-            (*out2ptr) = std::conj(P.at(k,j));
-            
-            out2ptr++;
-            }
-          }
-        
-        out.steal_mem(out2);
-        }
+      
+      out.steal_mem(out2);
       }
+    }
+  }
+
+
+
+template<typename T1>
+arma_hot
+inline
+void
+op_htrans::apply_direct(Mat<typename T1::elem_type>& out, const T1& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  // allow detection of in-place transpose
+  if(is_Mat<T1>::value || is_Mat<typename Proxy<T1>::stored_type>::value)
+    {
+    const unwrap<T1> U(X);
+    
+    op_htrans::apply_mat(out, U.M);
+    }
+  else
+    {
+    op_htrans::apply_proxy(out, X);
     }
   }
 
@@ -367,7 +380,7 @@ op_htrans::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_htrans>& in, c
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  op_strans::apply_proxy(out, in.m);
+  op_strans::apply_direct(out, in.m);
   }
 
 
@@ -381,7 +394,7 @@ op_htrans::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_htrans>& in, c
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  op_htrans::apply_proxy(out, in.m);
+  op_htrans::apply_direct(out, in.m);
   }
 
 
@@ -411,216 +424,7 @@ op_htrans::apply(Mat<typename T1::elem_type>& out, const Op< Op<T1, op_trimat>, 
 
 
 
-template<typename eT>
-arma_hot
-arma_inline
-void
-op_htrans2::apply_noalias(Mat<eT>& out, const Mat<eT>& A, const eT val)
-  {
-  arma_extra_debug_sigprint();
-  
-  const uword A_n_rows = A.n_rows;
-  const uword A_n_cols = A.n_cols;
-  
-  out.set_size(A_n_cols, A_n_rows);
-  
-  if( (A_n_cols == 1) || (A_n_rows == 1) )
-    {
-    const uword n_elem = A.n_elem;
-    
-    const eT* A_mem   = A.memptr();
-          eT* out_mem = out.memptr();
-    
-    for(uword i=0; i < n_elem; ++i)
-      {
-      out_mem[i] = val * std::conj(A_mem[i]);
-      }
-    }
-  else
-  if( (A_n_rows >= 512) && (A_n_cols >= 512) )
-    {
-    op_htrans::apply_mat_noalias_large(out, A);
-    arrayops::inplace_mul( out.memptr(), val, out.n_elem );
-    }
-  else
-    {
-    eT* outptr = out.memptr();
-    
-    for(uword k=0; k < A_n_rows; ++k)
-      {
-      const eT* Aptr = &(A.at(k,0));
-      
-      for(uword j=0; j < A_n_cols; ++j)
-        {
-        (*outptr) = val * std::conj(*Aptr);
-        
-        Aptr += A_n_rows;
-        outptr++;
-        }
-      }
-    }
-  }
-
-
-
-template<typename eT>
-arma_hot
-inline
-void
-op_htrans2::apply(Mat<eT>& out, const Mat<eT>& A, const eT val)
-  {
-  arma_extra_debug_sigprint();
-  
-  if(&out != &A)
-    {
-    op_htrans2::apply_noalias(out, A, val);
-    }
-  else
-    {
-    const uword n_rows = out.n_rows;
-    const uword n_cols = out.n_cols;
-      
-    if(n_rows == n_cols)
-      {
-      arma_extra_debug_print("doing in-place hermitian transpose of a square matrix");
-      
-      // TODO: do multiplication while swapping
-      
-      for(uword col=0; col < n_cols; ++col)
-        {
-        eT* coldata = out.colptr(col);
-        
-        out.at(col,col) = std::conj( out.at(col,col) );
-        
-        for(uword row=(col+1); row < n_rows; ++row)
-          {
-          const eT val1 = std::conj(coldata[row]);
-          const eT val2 = std::conj(out.at(col,row));
-          
-          out.at(col,row) = val1;
-          coldata[row]    = val2;
-          }
-        }
-      
-      arrayops::inplace_mul( out.memptr(), val, out.n_elem );
-      }
-    else
-      {
-      Mat<eT> tmp;
-      op_htrans2::apply_noalias(tmp, A, val);
-      
-      out.steal_mem(tmp);
-      }
-    }
-  }
-
-
-
 template<typename T1>
-arma_hot
-inline
-void
-op_htrans2::apply_proxy(Mat<typename T1::elem_type>& out, const T1& X, const typename T1::elem_type val)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  const Proxy<T1> P(X);
-  
-  // allow detection of in-place transpose
-  if( (is_Mat<typename Proxy<T1>::stored_type>::value == true) && (Proxy<T1>::fake_mat == false) )
-    {
-    const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
-    
-    op_htrans2::apply(out, tmp.M, val);
-    }
-  else
-    {
-    const uword n_rows = P.get_n_rows();
-    const uword n_cols = P.get_n_cols();
-    
-    const bool is_alias = P.is_alias(out);
-    
-    if( (resolves_to_vector<T1>::yes) && (Proxy<T1>::use_at == false) )
-      {
-      if(is_alias == false)
-        {
-        out.set_size(n_cols, n_rows);
-        
-        eT* out_mem = out.memptr();
-        
-        const uword n_elem = P.get_n_elem();
-        
-        typename Proxy<T1>::ea_type Pea = P.get_ea();
-        
-        for(uword i=0; i < n_elem; ++i)
-          {
-          out_mem[i] = val * std::conj(Pea[i]);
-          }
-        }
-      else  // aliasing
-        {
-        Mat<eT> out2(n_cols, n_rows);
-        
-        eT* out_mem = out2.memptr();
-        
-        const uword n_elem = P.get_n_elem();
-        
-        typename Proxy<T1>::ea_type Pea = P.get_ea();
-        
-        for(uword i=0; i < n_elem; ++i)
-          {
-          out_mem[i] = val * std::conj(Pea[i]);
-          }
-        
-        out.steal_mem(out2);
-        }
-      }
-    else
-      {
-      if(is_alias == false)
-        {
-        out.set_size(n_cols, n_rows);
-        
-        eT* outptr = out.memptr();
-        
-        for(uword k=0; k < n_rows; ++k)
-          {
-          for(uword j=0; j < n_cols; ++j)
-            {
-            (*outptr) = val * std::conj(P.at(k,j));
-            
-            outptr++;
-            }
-          }
-        }
-      else // aliasing
-        {
-        Mat<eT> out2(n_cols, n_rows);
-        
-        eT* out2ptr = out2.memptr();
-        
-        for(uword k=0; k < n_rows; ++k)
-          {
-          for(uword j=0; j < n_cols; ++j)
-            {
-            (*out2ptr) = val * std::conj(P.at(k,j));
-            
-            out2ptr++;
-            }
-          }
-        
-        out.steal_mem(out2);
-        }
-      }
-    }
-  }
-
-
-
-template<typename T1>
-arma_hot
 inline
 void
 op_htrans2::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_htrans2>& in, const typename arma_not_cx<typename T1::elem_type>::result* junk)
@@ -628,13 +432,14 @@ op_htrans2::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_htrans2>& in,
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  op_strans2::apply_proxy(out, in.m, in.aux);
+  op_strans::apply_direct(out, in.m);
+  
+  arrayops::inplace_mul(out.memptr(), in.aux, out.n_elem);
   }
 
 
 
 template<typename T1>
-arma_hot
 inline
 void
 op_htrans2::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_htrans2>& in, const typename arma_cx_only<typename T1::elem_type>::result* junk)
@@ -642,7 +447,9 @@ op_htrans2::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_htrans2>& in,
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  op_htrans2::apply_proxy(out, in.m, in.aux);
+  op_htrans::apply_direct(out, in.m);
+  
+  arrayops::inplace_mul(out.memptr(), in.aux, out.n_elem);
   }
 
 

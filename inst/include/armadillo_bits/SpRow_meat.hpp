@@ -200,6 +200,36 @@ SpRow<eT>::SpRow
 
 
 
+template<typename eT>
+inline
+const SpOp<SpRow<eT>,spop_htrans>
+SpRow<eT>::t() const
+  {
+  return SpOp<SpRow<eT>,spop_htrans>(*this);
+  }
+
+
+
+template<typename eT>
+inline
+const SpOp<SpRow<eT>,spop_htrans>
+SpRow<eT>::ht() const
+  {
+  return SpOp<SpRow<eT>,spop_htrans>(*this);
+  }
+
+
+
+template<typename eT>
+inline
+const SpOp<SpRow<eT>,spop_strans>
+SpRow<eT>::st() const
+  {
+  return SpOp<SpRow<eT>,spop_strans>(*this);
+  }
+
+
+
 //! remove specified columns
 template<typename eT>
 inline

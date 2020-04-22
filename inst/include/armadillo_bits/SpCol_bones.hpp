@@ -54,6 +54,10 @@ class SpCol : public SpMat<eT>
   template<typename T1, typename T2>
   inline explicit SpCol(const SpBase<pod_type,T1>& A, const SpBase<pod_type,T2>& B);
   
+  inline const SpOp<SpCol<eT>,spop_htrans>  t() const;
+  inline const SpOp<SpCol<eT>,spop_htrans> ht() const;
+  inline const SpOp<SpCol<eT>,spop_strans> st() const;
+  
   inline void shed_row (const uword row_num);
   inline void shed_rows(const uword in_row1, const uword in_row2);
   
