@@ -3,15 +3,26 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.9.869.1.0 (2020-04-22)}{
+  \itemize{
+    \item Upgraded to Armadillo release 9.870-rc1 ()
+    \itemize{
+      \item faster handling of matrix multiplication expressions by \code{diagvec()} and \code{diagmat()}
+      \item added \code{trimatu_ind()} and \code{trimatl_ind()}
+      \item more consistent detection of sparse vector expressions
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.9.860.2.0 (2020-04-13)}{
   \itemize{
     \item Upgraded to Armadillo release 9.860.2 (Roasted Mocha Fix)
     \itemize{
-      \item Added \code{powmat()}
-      \item Faster access to columns in sparse submatrix views
-      \item Faster handling of relational expressions by \code{accu()}
-      \item Faster handling of sympd matrices by \code{expmat()}, \code{logmat()}, \code{sqrtmat()}
-      \item Workaround for save/load issues with HDF5 v1.12
+      \item added \code{powmat()}
+      \item faster access to columns in sparse submatrix views
+      \item faster handling of relational expressions by \code{accu()}
+      \item faster handling of sympd matrices by \code{expmat()}, \code{logmat()}, \code{sqrtmat()}
+      \item workaround for save/load issues with HDF5 v1.12
     }
     \item Vignettes are now pre-made and include (\ghpr{285})
     \item Two test files are now skipped on 32-bit Windows
@@ -22,12 +33,12 @@
   \itemize{
     \item Upgraded to Armadillo release 9.850.1 (Pyrocumulus Wrath)
     \itemize{
-      \item{faster handling of compound expressions by \code{diagmat()}}
-      \item{expanded \code{.save()} and \code{.load()} to handle CSV files with headers via
-        csv_name(filename,header) specification}
-      \item{added \code{log_normpdf()}}
-      \item{added \code{.is_zero()}}
-      \item{added \code{quantile()}}
+      \item faster handling of compound expressions by \code{diagmat()}
+      \item expanded \code{.save()} and \code{.load()} to handle CSV files with headers via
+        csv_name(filename,header) specification
+      \item added \code{log_normpdf()}
+      \item added \code{.is_zero()}
+      \item added \code{quantile()}
     }
     \item The sparse matrix test using scipy, if available, is now
     simplified thanks to recently added \CRANpkg{reticulate} conversions.
