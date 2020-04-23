@@ -1,3 +1,7 @@
+2020-04-23  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/armadillo_bits/: Armadillo 9.870-rc2
+
 2020-04-22  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.9.869.1.0 [github-only]

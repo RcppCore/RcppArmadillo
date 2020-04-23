@@ -178,7 +178,7 @@ operator+
 
 
 
-//! addition of sparse and non-sparse object
+//! addition of one dense and one sparse object
 template<typename T1, typename T2>
 inline
 typename
@@ -215,7 +215,7 @@ operator+
 
 
 
-//! addition of sparse and non-sparse object
+//! addition of one sparse and one dense object
 template<typename T1, typename T2>
 inline
 typename
@@ -232,9 +232,22 @@ operator+
   {
   arma_extra_debug_sigprint();
   
-  // Just call the other order (these operations are commutative)
-  // TODO: if there is a matrix size mismatch, the debug assert will print the matrix sizes in wrong order
-  return (y + x);
+  const SpProxy<T1> pa(x);
+  
+  Mat<typename T1::elem_type> result(y);
+  
+  arma_debug_assert_same_size( pa.get_n_rows(), pa.get_n_cols(), result.n_rows, result.n_cols, "addition" );
+  
+  typename SpProxy<T1>::const_iterator_type it     = pa.begin();
+  typename SpProxy<T1>::const_iterator_type it_end = pa.end();
+  
+  while(it != it_end)
+    {
+    result.at(it.row(), it.col()) += (*it);
+    ++it;
+    }
+  
+  return result;
   }
 
 
