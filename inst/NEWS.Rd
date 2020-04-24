@@ -3,11 +3,12 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.9.869.2.0 (2020-04-23)}{
+\section{Changes in RcppArmadillo version 0.9.870.2.0 (2020-04-24)}{
   \itemize{
-    \item Upgraded to Armadillo release 9.870-rc1 ()
+    \item Upgraded to Armadillo release 9.870.2 (Roasted Mocha Retox)
     \itemize{
-      \item faster handling of matrix multiplication expressions by \code{diagvec()} and \code{diagmat()}
+      \item faster handling of matrix multiplication expressions by
+      \code{diagvec()} and \code{diagmat()} 
       \item added \code{trimatu_ind()} and \code{trimatl_ind()}
       \item more consistent detection of sparse vector expressions
     }
