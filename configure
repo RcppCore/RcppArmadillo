@@ -2710,7 +2710,7 @@ can_use_openmp="no"
 ## Ensure TMPDIR is set.
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for suitable tempdir" >&5
 $as_echo_n "checking for suitable tempdir... " >&6; }
-TMPDIR=$("${R_HOME}/bin/R" --vanilla --slave -e "writeLines(dirname(tempdir()))")
+TMPDIR=$("${R_HOME}/bin/R" --vanilla --slave -e "cat(dirname(tempdir()))")
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: ${TMPDIR}" >&5
 $as_echo "${TMPDIR}" >&6; }
 

@@ -40,7 +40,7 @@ can_use_openmp="no"
 
 ## Ensure TMPDIR is set.
 AC_MSG_CHECKING([for suitable tempdir])
-TMPDIR=$("${R_HOME}/bin/R" --vanilla --slave -e "writeLines(dirname(tempdir()))")
+TMPDIR=$("${R_HOME}/bin/R" --vanilla --slave -e "cat(dirname(tempdir()))")
 AC_MSG_RESULT([${TMPDIR}])
 
 ## Check if R is configured to compile programs using OpenMP out-of-the-box.
