@@ -3,6 +3,16 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.9.xxx.y.0 (2020-xx-xx)}{
+  \itemize{
+    \item Upgraded to Armadillo release 9.xxx.x (xxxxxxxxxxxxxxxxx)
+    \itemize{
+    }
+    \item OpenMP capability is tested explicitlu (Kevin Ushey in
+    \ghpr{294} fixing \ghit{290}, Dirk in \ghpr{295})
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.9.870.2.0 (2020-04-24)}{
   \itemize{
     \item Upgraded to Armadillo release 9.870.2 (Roasted Mocha Retox)
