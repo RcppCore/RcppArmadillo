@@ -1,3 +1,11 @@
+2020-05-05  Dirk Eddelbuettel  <edd@debian.org>
+
+	* configure.ac: Tweaks to wording, whitespace and cleanup
+
+2020-05-04  Kevin Ushey  <kevinushey@gmail.com>
+
+	* configure.ac: Add explicit check for functioning OpenMP
+
 2020-04-24  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.9.870.2.0

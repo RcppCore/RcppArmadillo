@@ -21,7 +21,6 @@ if test -z "${R_HOME}"; then
 fi
 
 ## Use R to set CXX and CXXFLAGS
-R=${R_HOME}/bin/R
 CXX=$(${R_HOME}/bin/R CMD config CXX)
 CXXFLAGS=$("${R_HOME}/bin/R" CMD config CXXFLAGS)
 
@@ -39,7 +38,7 @@ openmp_already_works="no"
 can_use_openmp="no"
 
 ## Check if R is configured to compile programs using OpenMP out-of-the-box.
-AC_MSG_CHECKING([whether R can compile programs using OpenMP already])
+AC_MSG_CHECKING([whether R can already compile programs using OpenMP])
 
 owd=$(pwd)
 cd "${TMPDIR}"
@@ -51,7 +50,7 @@ int main() {
 }
 EOF
 
-"${R}" CMD SHLIB test-omp.cpp >/dev/null 2>&1
+${R_HOME}/bin/R CMD SHLIB --clean test-omp.cpp >/dev/null 2>&1
 if test x"$?" = x"0"; then
     AC_MSG_RESULT([yes])
     openmp_already_works="yes"
@@ -59,85 +58,88 @@ else
     AC_MSG_RESULT([no])
 fi
 
+## cleanup, the .o was already removed by added --clean
+rm -f test-omp.cpp test-omp.dylib test-omp.so
+
 cd "${owd}"
 
 if test x"${openmp_already_works}" = x"no"; then
 
-## Check the C++ compiler using the CXX value set
+    ## Check the C++ compiler using the CXX value set
 
-## If it is g++, we have GXX set so let's examine it
-if test "${GXX}" = yes; then
-    AC_MSG_CHECKING([whether g++ version is sufficient])
-    gxx_version=$(${CXX} -v 2>&1 | awk '/^.*g.. version/ {print $3}')
-    case ${gxx_version} in
-        1.*|2.*|3.*|4.0.*|4.1.*|4.2.*|4.3.*|4.4.*|4.5.*|4.6.*|4.7.0|4.7.1)
-             AC_MSG_RESULT([no])
-             AC_MSG_WARN([Only g++ version 4.7.2 or greater can be used with RcppArmadillo.])
-             AC_MSG_ERROR([Please use a different compiler.])
-        ;;
-        4.7.*|4.8.*|4.9.*|5.0*|5.1*|5.2*|5.3*)
-             AC_MSG_RESULT([yes, but without OpenMP as version ${gxx_version} (Armadillo constraint)])
-             ## we know this one is bad
-             can_use_openmp="no"
-        ;;
-        5.4*|5.5*|5.6*|5.7*|5.8*|5.9*|6.*|7.*|8.*|9.*|10.*|11.*|12.*)
-             AC_MSG_RESULT([yes, with OpenMP as version ${gxx_version}])
-             ## we know this one is good, yay
-             can_use_openmp="yes"
-        ;;
-        *)
-             AC_MSG_RESULT([almost])
-             AC_MSG_WARN([Compiler self-identifies as being compliant with GNUC extensions but is not g++.])
-             ## we know nothing, so no
-             can_use_openmp="no"
-        ;;
-    esac
-fi
+    ## If it is g++, we have GXX set so let's examine it
+    if test "${GXX}" = yes; then
+        AC_MSG_CHECKING([whether g++ version is sufficient])
+        gxx_version=$(${CXX} -v 2>&1 | awk '/^.*g.. version/ {print $3}')
+        case ${gxx_version} in
+            1.*|2.*|3.*|4.0.*|4.1.*|4.2.*|4.3.*|4.4.*|4.5.*|4.6.*|4.7.0|4.7.1)
+                 AC_MSG_RESULT([no])
+                 AC_MSG_WARN([Only g++ version 4.7.2 or greater can be used with RcppArmadillo.])
+                 AC_MSG_ERROR([Please use a different compiler.])
+            ;;
+            4.7.*|4.8.*|4.9.*|5.0*|5.1*|5.2*|5.3*)
+                 AC_MSG_RESULT([yes, but without OpenMP as version ${gxx_version} (Armadillo constraint)])
+                 ## we know this one is bad
+                 can_use_openmp="no"
+            ;;
+            5.4*|5.5*|5.6*|5.7*|5.8*|5.9*|6.*|7.*|8.*|9.*|10.*|11.*|12.*)
+                 AC_MSG_RESULT([yes, with OpenMP as version ${gxx_version}])
+                 ## we know this one is good, yay
+                 can_use_openmp="yes"
+            ;;
+            *)
+                 AC_MSG_RESULT([almost])
+                 AC_MSG_WARN([Compiler self-identifies as being compliant with GNUC extensions but is not g++.])
+                 ## we know nothing, so no
+                 can_use_openmp="no"
+            ;;
+        esac
+    fi
 
-## Check for Apple LLVM
+    ## Check for Apple LLVM
 
-AC_MSG_CHECKING([for macOS])
-RSysinfoName=$("${R_HOME}/bin/Rscript" --vanilla -e 'cat(Sys.info()[["sysname"]])')
+    AC_MSG_CHECKING([for macOS])
+    RSysinfoName=$("${R_HOME}/bin/Rscript" --vanilla -e 'cat(Sys.info()[["sysname"]])')
 
-if test x"${RSysinfoName}" = x"Darwin"; then
-    AC_MSG_RESULT([found])
-    AC_MSG_CHECKING([for macOS Apple compiler])
-
-    apple_compiler=$($CXX --version 2>&1 | grep -i -c -e 'apple llvm')
-
-    if test x"${apple_compiler}" = x"1"; then
+    if test x"${RSysinfoName}" = x"Darwin"; then
         AC_MSG_RESULT([found])
-        AC_MSG_WARN([OpenMP unavailable and turned off.])
-        can_use_openmp="no"
-    else
-        AC_MSG_RESULT([not found])
-        AC_MSG_CHECKING([for clang compiler])
-        clang_compiler=$($CXX --version 2>&1 | grep -i -c -e 'clang ')
+        AC_MSG_CHECKING([for macOS Apple compiler])
 
-        if test x"${clang_compiler}" = x"1"; then
+        apple_compiler=$($CXX --version 2>&1 | grep -i -c -e 'apple llvm')
+
+        if test x"${apple_compiler}" = x"1"; then
             AC_MSG_RESULT([found])
-            AC_MSG_CHECKING([for OpenMP compatible version of clang])
-            clang_version=$(${CXX} -v 2>&1 | awk '/^.*clang version/ {print $3}')
-
-            case ${clang_version} in
-                4.*|5.*|6.*|7.*|8.*|9.*|10.*|11.*)
-                    AC_MSG_RESULT([found and suitable])
-                    can_use_openmp="yes"
-                ;;
-                *)
-                    AC_MSG_RESULT([not found])
-                    AC_MSG_WARN([OpenMP unavailable and turned off.])
-                    can_use_openmp="no"
-                ;;
-            esac
+            AC_MSG_WARN([OpenMP unavailable and turned off.])
+            can_use_openmp="no"
         else
             AC_MSG_RESULT([not found])
-            AC_MSG_WARN([unsupported macOS build detected; if anything breaks, you keep the pieces.])
+            AC_MSG_CHECKING([for clang compiler])
+            clang_compiler=$($CXX --version 2>&1 | grep -i -c -e 'clang ')
+
+            if test x"${clang_compiler}" = x"1"; then
+                AC_MSG_RESULT([found])
+                AC_MSG_CHECKING([for OpenMP compatible version of clang])
+                clang_version=$(${CXX} -v 2>&1 | awk '/^.*clang version/ {print $3}')
+
+                case ${clang_version} in
+                    4.*|5.*|6.*|7.*|8.*|9.*|10.*|11.*)
+                        AC_MSG_RESULT([found and suitable])
+                        can_use_openmp="yes"
+                    ;;
+                    *)
+                        AC_MSG_RESULT([not found])
+                        AC_MSG_WARN([OpenMP unavailable and turned off.])
+                        can_use_openmp="no"
+                    ;;
+                esac
+            else
+                AC_MSG_RESULT([not found])
+                AC_MSG_WARN([unsupported macOS build detected; if anything breaks, you keep the pieces.])
+            fi
         fi
+    else
+        AC_MSG_RESULT([no])
     fi
-else
-    AC_MSG_RESULT([no])
-fi
 
 fi # if test x"${openmp_already_works}" = x"no"
 
