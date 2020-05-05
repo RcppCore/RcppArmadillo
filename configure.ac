@@ -38,10 +38,19 @@ openmp_already_works="no"
 can_use_openmp="no"
 
 ## Check if R is configured to compile programs using OpenMP out-of-the-box.
-AC_MSG_CHECKING([whether R can already compile programs using OpenMP])
+AC_MSG_CHECKING([whether R CMD SHLIB can compile programs using OpenMP already])
+
+## Ensure TMPDIR is set.
+if test x"${TMPDIR}" = x""; then
+    TMPDIR=/tmp
+fi
+
+## Create private directory in TMPDIR.
+BUILDDIR="${TMPDIR}/rcpparmadillo-$$-$RANDOM"
+mkdir -p "${BUILDDIR}"
 
 owd=$(pwd)
-cd "${TMPDIR}"
+cd "${BUILDDIR}"
 
 cat <<EOF > test-omp.cpp
 #include <omp.h>
@@ -50,7 +59,8 @@ int main() {
 }
 EOF
 
-${R_HOME}/bin/R CMD SHLIB --clean test-omp.cpp >/dev/null 2>&1
+## Execute R CMD SHLIB.
+"${R_HOME}/bin/R" CMD SHLIB test-omp.cpp >/dev/null 2>&1
 if test x"$?" = x"0"; then
     AC_MSG_RESULT([yes])
     openmp_already_works="yes"
@@ -58,11 +68,12 @@ else
     AC_MSG_RESULT([no])
 fi
 
-## cleanup, the .o was already removed by added --clean
-rm -f test-omp.cpp test-omp.dylib test-omp.so
-
+## Go back home.
 cd "${owd}"
+rm -rf "${BUILDDIR}"
 
+## If the above checks failed, then perform other heuristics
+## based on the compiler version, etc.
 if test x"${openmp_already_works}" = x"no"; then
 
     ## Check the C++ compiler using the CXX value set
