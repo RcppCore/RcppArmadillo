@@ -19,20 +19,52 @@ AC_INIT(RcppArmadillo, m4_esyscmd_s([awk -e '/^Version:/ {print $2}' DESCRIPTION
 if test -z "${R_HOME}"; then
     AC_MSG_ERROR([Could not determine R_HOME.])
 fi
+
 ## Use R to set CXX and CXXFLAGS
+R=${R_HOME}/bin/R
 CXX=$(${R_HOME}/bin/R CMD config CXX)
 CXXFLAGS=$("${R_HOME}/bin/R" CMD config CXXFLAGS)
 
 ## We are using C++
 AC_LANG(C++)
 AC_REQUIRE_CPP
+AC_PROG_CXX
+
+## Is R already configured to compile things using OpenMP without
+## any extra hand-holding?
+openmp_already_works="no"
 
 ## default to not even thinking about OpenMP as Armadillo wants a pragma
 ## variant available if and only if C++11 is used with g++ 5.4 or newer
-can_use_openmp=""
+can_use_openmp="no"
+
+## Check if R is configured to compile programs using OpenMP out-of-the-box.
+AC_MSG_CHECKING([whether R can compile programs using OpenMP already])
+
+owd=$(pwd)
+cd "${TMPDIR}"
+
+cat <<EOF > test-omp.cpp
+#include <omp.h>
+int main() {
+  return omp_get_num_threads();
+}
+EOF
+
+"${R}" CMD SHLIB test-omp.cpp >/dev/null 2>&1
+if test x"$?" = x"0"; then
+    AC_MSG_RESULT([yes])
+    openmp_already_works="yes"
+else
+    AC_MSG_RESULT([no])
+fi
+
+cd "${owd}"
+
+if test x"${openmp_already_works}" = x"no"; then
 
 ## Check the C++ compiler using the CXX value set
-AC_PROG_CXX
+
 ## If it is g++, we have GXX set so let's examine it
 if test "${GXX}" = yes; then
     AC_MSG_CHECKING([whether g++ version is sufficient])
@@ -107,6 +139,8 @@ else
     AC_MSG_RESULT([no])
 fi
 
+fi # if test x"${openmp_already_works}" = x"no"
+
 ## Check for suitable LAPACK_LIBS
 AC_MSG_CHECKING([LAPACK_LIBS])
 
@@ -132,8 +166,13 @@ fi
 ## Default the OpenMP flag to the empty string.
 ## If and only if OpenMP is found, expand to $(SHLIB_OPENMP_CXXFLAGS)
 openmp_flag=""
+
 ## Set the fallback, by default it is nope
 arma_have_openmp="#define ARMA_DONT_USE_OPENMP 1"
+
+if test x"${openmp_already_works}" = x"yes"; then
+    arma_have_openmp="#define ARMA_USE_OPENMP 1"
+fi
 
 if test x"${can_use_openmp}" = x"yes"; then
     AC_MSG_CHECKING([for OpenMP])
