@@ -2706,14 +2706,17 @@ openmp_already_works="no"
 ## variant available if and only if C++11 is used with g++ 5.4 or newer
 can_use_openmp="no"
 
-## Check if R is configured to compile programs using OpenMP out-of-the-box.
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether R CMD SHLIB can compile using OpenMP directly" >&5
-$as_echo_n "checking whether R CMD SHLIB can compile using OpenMP directly... " >&6; }
 
 ## Ensure TMPDIR is set.
-if test x"${TMPDIR}" = x""; then
-    TMPDIR=/tmp
-fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for suitable tempdir" >&5
+$as_echo_n "checking for suitable tempdir... " >&6; }
+TMPDIR=$("${R_HOME}/bin/R" --vanilla --slave -e "writeLines(dirname(tempdir()))")
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: ${TMPDIR}" >&5
+$as_echo "${TMPDIR}" >&6; }
+
+## Check if R is configured to compile programs using OpenMP out-of-the-box.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether R CMD SHLIB can compile programs using OpenMP already" >&5
+$as_echo_n "checking whether R CMD SHLIB can compile programs using OpenMP already... " >&6; }
 
 ## Create private directory in TMPDIR.
 BUILDDIR="${TMPDIR}/rcpparmadillo-$$-$RANDOM"
@@ -2743,7 +2746,6 @@ fi
 ## Go back home.
 cd "${owd}"
 rm -rf "${BUILDDIR}"
-
 
 ## If the above checks failed, then perform other heuristics
 ## based on the compiler version, etc.

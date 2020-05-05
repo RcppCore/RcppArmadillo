@@ -37,13 +37,14 @@ openmp_already_works="no"
 ## variant available if and only if C++11 is used with g++ 5.4 or newer
 can_use_openmp="no"
 
-## Check if R is configured to compile programs using OpenMP out-of-the-box.
-AC_MSG_CHECKING([whether R CMD SHLIB can compile programs using OpenMP already])
 
 ## Ensure TMPDIR is set.
-if test x"${TMPDIR}" = x""; then
-    TMPDIR=/tmp
-fi
+AC_MSG_CHECKING([for suitable tempdir])
+TMPDIR=$("${R_HOME}/bin/R" --vanilla --slave -e "writeLines(dirname(tempdir()))")
+AC_MSG_RESULT([${TMPDIR}])
+
+## Check if R is configured to compile programs using OpenMP out-of-the-box.
+AC_MSG_CHECKING([whether R CMD SHLIB can compile programs using OpenMP already])
 
 ## Create private directory in TMPDIR.
 BUILDDIR="${TMPDIR}/rcpparmadillo-$$-$RANDOM"
