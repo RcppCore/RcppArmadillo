@@ -8,8 +8,8 @@
     \item Upgraded to Armadillo release 9.xxx.x (xxxxxxxxxxxxxxxxx)
     \itemize{
     }
-    \item OpenMP capability is tested explicitlu (Kevin Ushey in
-    \ghpr{294} fixing \ghit{290}, Dirk in \ghpr{295})
+    \item OpenMP capability is tested explicitly (Kevin Ushey and Dirk
+    in \ghpr{294}, ghpr{295}, and \ghpr{296} all fixing \ghit{290}).
   }
 }
 
