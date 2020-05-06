@@ -1,3 +1,11 @@
+2020-05-06  Dirk Eddelbuettel  <edd@debian.org>
+
+	* configure.ac: Rebasing and rewording
+
+2020-05-05  Kevin Ushey  <kevinushey@gmail.com>
+
+	* configure.ac: Improve temporary directory determination and use
+
 2020-05-05  Dirk Eddelbuettel  <edd@debian.org>
 
 	* configure.ac: Tweaks to wording, whitespace and cleanup
