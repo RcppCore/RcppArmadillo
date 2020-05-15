@@ -135,6 +135,13 @@ struct arma_config
   #endif
   
   
+  #if defined(ARMA_USE_CXX11_MUTEX)
+    static const bool cxx11_mutex = true;
+  #else
+    static const bool cxx11_mutex = false;
+  #endif
+  
+  
   #if (defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE >= 200112L))
     static const bool posix = true;
   #else

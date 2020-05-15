@@ -2332,6 +2332,195 @@ auxlib::qr_econ(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
 template<typename eT, typename T1>
 inline
 bool
+auxlib::qr_pivot(Mat<eT>& Q, Mat<eT>& R, Mat<uword>& P, const Base<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  #if defined(ARMA_USE_LAPACK)
+    {
+    R = X.get_ref();
+    
+    const uword R_n_rows = R.n_rows;
+    const uword R_n_cols = R.n_cols;
+    
+    if(R.is_empty())
+      {
+      Q.eye(R_n_rows, R_n_rows);
+      
+      P.set_size(R_n_cols, 1);
+      
+      for(uword col=0; col < R_n_cols; ++col)  { P.at(col) = col; }
+      
+      return true;
+      }
+    
+    arma_debug_assert_blas_size(R);
+    
+    blas_int m         = static_cast<blas_int>(R_n_rows);
+    blas_int n         = static_cast<blas_int>(R_n_cols);
+    blas_int lwork     = 0;
+    blas_int lwork_min = (std::max)(blas_int(3*n + 1), (std::max)(m,n));  // take into account requirements of geqp3() and orgqr()
+    blas_int k         = (std::min)(m,n);
+    blas_int info      = 0;
+    
+    podarray<eT>        tau( static_cast<uword>(k) );
+    podarray<blas_int> jpvt( R_n_cols );
+    
+    jpvt.zeros();
+    
+    eT        work_query[2];
+    blas_int lwork_query = -1;
+    
+    arma_extra_debug_print("lapack::geqp3()");
+    lapack::geqp3(&m, &n, R.memptr(), &m, jpvt.memptr(), tau.memptr(), &work_query[0], &lwork_query, &info);
+    
+    if(info != 0)  { return false; }
+    
+    blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+    
+    lwork = (std::max)(lwork_proposed, lwork_min);
+    
+    podarray<eT> work( static_cast<uword>(lwork) );
+    
+    arma_extra_debug_print("lapack::geqp3()");
+    lapack::geqp3(&m, &n, R.memptr(), &m, jpvt.memptr(), tau.memptr(), work.memptr(), &lwork, &info);
+    
+    if(info != 0)  { return false; }
+    
+    Q.set_size(R_n_rows, R_n_rows);
+    
+    arrayops::copy( Q.memptr(), R.memptr(), (std::min)(Q.n_elem, R.n_elem) );
+    
+    //
+    // construct R and P
+    
+    P.set_size(R_n_cols, 1);
+    
+    for(uword col=0; col < R_n_cols; ++col)
+      {
+      for(uword row=(col+1); row < R_n_rows; ++row)  { R.at(row,col) = eT(0); }
+      
+      P.at(col) = jpvt[col] - 1;  // take into account that Fortran counts from 1
+      }
+    
+    arma_extra_debug_print("lapack::orgqr()");
+    lapack::orgqr(&m, &m, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &lwork, &info);
+    
+    return (info == 0);
+    }
+  #else
+    {
+    arma_ignore(Q);
+    arma_ignore(R);
+    arma_ignore(P);
+    arma_ignore(X);
+    arma_stop_logic_error("qr(): use of LAPACK must be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
+template<typename T, typename T1>
+inline
+bool
+auxlib::qr_pivot(Mat< std::complex<T> >& Q, Mat< std::complex<T> >& R, Mat<uword>& P, const Base<std::complex<T>,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  #if defined(ARMA_USE_LAPACK)
+    {
+    typedef typename std::complex<T> eT;
+    
+    R = X.get_ref();
+    
+    const uword R_n_rows = R.n_rows;
+    const uword R_n_cols = R.n_cols;
+    
+    if(R.is_empty())
+      {
+      Q.eye(R_n_rows, R_n_rows);
+      
+      P.set_size(R_n_cols, 1);
+      
+      for(uword col=0; col < R_n_cols; ++col)  { P.at(col) = col; }
+      
+      return true;
+      }
+    
+    arma_debug_assert_blas_size(R);
+    
+    blas_int m         = static_cast<blas_int>(R_n_rows);
+    blas_int n         = static_cast<blas_int>(R_n_cols);
+    blas_int lwork     = 0;
+    blas_int lwork_min = (std::max)(blas_int(3*n + 1), (std::max)(m,n));  // take into account requirements of geqp3() and ungqr()
+    blas_int k         = (std::min)(m,n);
+    blas_int info      = 0;
+    
+    podarray<eT>         tau( static_cast<uword>(k) );
+    podarray< T>       rwork( 2*R_n_cols );
+    podarray<blas_int>  jpvt( R_n_cols );
+    
+    jpvt.zeros();
+    
+    eT        work_query[2];
+    blas_int lwork_query = -1;
+    
+    arma_extra_debug_print("lapack::geqp3()");
+    lapack::cx_geqp3(&m, &n, R.memptr(), &m, jpvt.memptr(), tau.memptr(), &work_query[0], &lwork_query, rwork.memptr(), &info);
+    
+    if(info != 0)  { return false; }
+    
+    blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+    
+    lwork = (std::max)(lwork_proposed, lwork_min);
+    
+    podarray<eT> work( static_cast<uword>(lwork) );
+    
+    arma_extra_debug_print("lapack::geqp3()");
+    lapack::cx_geqp3(&m, &n, R.memptr(), &m, jpvt.memptr(), tau.memptr(), work.memptr(), &lwork, rwork.memptr(), &info);
+    
+    if(info != 0)  { return false; }
+    
+    Q.set_size(R_n_rows, R_n_rows);
+    
+    arrayops::copy( Q.memptr(), R.memptr(), (std::min)(Q.n_elem, R.n_elem) );
+    
+    //
+    // construct R and P
+    
+    P.set_size(R_n_cols, 1);
+    
+    for(uword col=0; col < R_n_cols; ++col)
+      {
+      for(uword row=(col+1); row < R_n_rows; ++row)  { R.at(row,col) = eT(0); }
+      
+      P.at(col) = jpvt[col] - 1;  // take into account that Fortran counts from 1
+      }
+    
+    arma_extra_debug_print("lapack::ungqr()");
+    lapack::ungqr(&m, &m, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &lwork, &info);
+    
+    return (info == 0);
+    }
+  #else
+    {
+    arma_ignore(Q);
+    arma_ignore(R);
+    arma_ignore(P);
+    arma_ignore(X);
+    arma_stop_logic_error("qr(): use of LAPACK must be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
+template<typename eT, typename T1>
+inline
+bool
 auxlib::svd(Col<eT>& S, const Base<eT,T1>& X, uword& X_n_rows, uword& X_n_cols)
   {
   arma_extra_debug_sigprint();
