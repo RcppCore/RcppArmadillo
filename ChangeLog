@@ -1,3 +1,11 @@
+2020-05-15  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.9.880.1.0
+        * inst/NEWS.Rd: Release 0.9.880.1.0
+
+        * inst/include/armadillo: Armadillo 9.880.1
+        * inst/include/armadillo_bits: Armadillo 9.880.1
+
 2020-05-06  Dirk Eddelbuettel  <edd@debian.org>
 
 	* configure.ac: Rebasing and rewording
