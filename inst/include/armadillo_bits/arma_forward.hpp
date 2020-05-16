@@ -269,7 +269,7 @@ struct state_type
   {
   #if   defined(ARMA_USE_OPENMP)
                 int  state;
-  #elif defined(ARMA_USE_CXX11)
+  #elif defined(ARMA_USE_CXX11_MUTEX)
     std::atomic<int> state;
   #else
                 int  state;
@@ -288,7 +288,7 @@ struct state_type
     #if   defined(ARMA_USE_OPENMP)
       #pragma omp atomic read
       out = state;
-    #elif defined(ARMA_USE_CXX11)
+    #elif defined(ARMA_USE_CXX11_MUTEX)
       out = state.load();
     #else
       out = state;
@@ -304,7 +304,7 @@ struct state_type
     #if   defined(ARMA_USE_OPENMP)
       #pragma omp atomic write
       state = in_state;
-    #elif defined(ARMA_USE_CXX11)
+    #elif defined(ARMA_USE_CXX11_MUTEX)
       state.store(in_state);
     #else
       state = in_state;

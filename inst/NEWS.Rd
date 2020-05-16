@@ -3,10 +3,14 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.9.xxx.y.0 (2020-xx-xx)}{
+\section{Changes in RcppArmadillo version 0.9.880.1.0 (2020-05-15)}{
   \itemize{
-    \item Upgraded to Armadillo release 9.xxx.x (xxxxxxxxxxxxxxxxx)
+    \item Upgraded to Armadillo release 9.880.1 (Roasted Mocha Detox)
     \itemize{
+      \item expanded \code{qr()} to optionally use pivoted decomposition
+      \item updated physical constants to NIST 2018 CODATA values
+      \item added \code{ARMA_DONT_USE_CXX11_MUTEX} confguration option
+      to disable use of \code{std::mutex} 
     }
     \item OpenMP capability is tested explicitly (Kevin Ushey and Dirk
     in \ghpr{294}, ghpr{295}, and \ghpr{296} all fixing \ghit{290}).

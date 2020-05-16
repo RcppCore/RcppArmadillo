@@ -414,7 +414,7 @@ SpBase<elem_type,derived>::is_zero(const typename get_pod_type<elem_type>::resul
   
   if(P.get_n_elem() == 0)  { return false; }
   
-  if( (tol == T(0)) && (P.get_n_nonzero() == 0) )  { return true; }
+  if(P.get_n_nonzero() == 0)  { return true; }
   
   if(is_SpMat<typename SpProxy<derived>::stored_type>::value)
     {

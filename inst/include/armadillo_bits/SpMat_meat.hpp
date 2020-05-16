@@ -5206,7 +5206,7 @@ SpMat<eT>::init(const SpMat<eT>& x)
         init_done = true;
         }
       }
-  #elif defined(ARMA_USE_CXX11)
+  #elif defined(ARMA_USE_CXX11_MUTEX)
     if(x.sync_state == 1)
       {
       x.cache_mutex.lock();
@@ -6816,7 +6816,7 @@ SpMat<eT>::sync_cache() const
         }
       }
     }
-  #elif defined(ARMA_USE_CXX11)
+  #elif defined(ARMA_USE_CXX11_MUTEX)
     {
     if(sync_state == 0)
       {
@@ -6869,7 +6869,7 @@ SpMat<eT>::sync_csc() const
         sync_csc_simple();
         }
       }
-  #elif defined(ARMA_USE_CXX11)
+  #elif defined(ARMA_USE_CXX11_MUTEX)
     if(sync_state == 1)
       {
       cache_mutex.lock();
