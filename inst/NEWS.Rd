@@ -13,7 +13,7 @@
       to disable use of \code{std::mutex} 
     }
     \item OpenMP capability is tested explicitly (Kevin Ushey and Dirk
-    in \ghpr{294}, ghpr{295}, and \ghpr{296} all fixing \ghit{290}).
+    in \ghpr{294}, \ghpr{295}, and \ghpr{296} all fixing \ghit{290}).
   }
 }
 
