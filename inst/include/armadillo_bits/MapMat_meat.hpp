@@ -1204,7 +1204,7 @@ SpMat_MapMat_val<eT>::operator=(const eT in_val)
       (*this).set(in_val);
       }
     }
-  #elif defined(ARMA_USE_CXX11_MUTEX)
+  #elif (defined(ARMA_USE_CXX11) && !defined(ARMA_DONT_USE_CXX11_MUTEX))
     {
     s_parent.cache_mutex.lock();
     
@@ -1239,7 +1239,7 @@ SpMat_MapMat_val<eT>::operator+=(const eT in_val)
       (*this).add(in_val);
       }
     }
-  #elif defined(ARMA_USE_CXX11_MUTEX)
+  #elif (defined(ARMA_USE_CXX11) && !defined(ARMA_DONT_USE_CXX11_MUTEX))
     {
     s_parent.cache_mutex.lock();
     
@@ -1274,7 +1274,7 @@ SpMat_MapMat_val<eT>::operator-=(const eT in_val)
       (*this).sub(in_val);
       }
     }
-  #elif defined(ARMA_USE_CXX11_MUTEX)
+  #elif (defined(ARMA_USE_CXX11) && !defined(ARMA_DONT_USE_CXX11_MUTEX))
     {
     s_parent.cache_mutex.lock();
     
@@ -1307,7 +1307,7 @@ SpMat_MapMat_val<eT>::operator*=(const eT in_val)
       (*this).mul(in_val);
       }
     }
-  #elif defined(ARMA_USE_CXX11_MUTEX)
+  #elif (defined(ARMA_USE_CXX11) && !defined(ARMA_DONT_USE_CXX11_MUTEX))
     {
     s_parent.cache_mutex.lock();
     
@@ -1340,7 +1340,7 @@ SpMat_MapMat_val<eT>::operator/=(const eT in_val)
       (*this).div(in_val);
       }
     }
-  #elif defined(ARMA_USE_CXX11_MUTEX)
+  #elif (defined(ARMA_USE_CXX11) && !defined(ARMA_DONT_USE_CXX11_MUTEX))
     {
     s_parent.cache_mutex.lock();
     

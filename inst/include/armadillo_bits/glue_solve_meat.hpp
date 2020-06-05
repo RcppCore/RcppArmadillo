@@ -272,17 +272,33 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
     
     if(fast)
       {
-      status = auxlib::solve_approx_fast(out, A, B_expr.get_ref());  // A is overwritten
-      
-      if(status == false)
-        {
-        A = A_expr.get_ref();  // as A was overwritten
-        
-        status = auxlib::solve_approx_svd(out, A, B_expr.get_ref());  // A is overwritten
-        }
+      status = auxlib::solve_rect_fast(out, A, B_expr.get_ref());  // A is overwritten
       }
     else
       {
+      status = auxlib::solve_rect_rcond(out, rcond, A, B_expr.get_ref(), allow_ugly);  // A is overwritten
+      }
+
+    if( (status == true) && (rcond > T(0)) && (rcond < auxlib::epsilon_lapack(A)) )
+      {
+      arma_debug_warn("solve(): solution computed, but system seems singular to working precision (rcond: ", rcond, ")");
+      }
+    
+    if( (status == false) && (no_approx == false) )
+      {
+      arma_extra_debug_print("glue_solve_gen::apply(): solving rank deficient system");
+      
+      if(rcond > T(0))
+        {
+        arma_debug_warn("solve(): system seems singular (rcond: ", rcond, "); attempting approx solution");
+        }
+      else
+        {
+        arma_debug_warn("solve(): system seems singular; attempting approx solution");
+        }
+      
+      A = A_expr.get_ref();  // as A was overwritten
+      
       status = auxlib::solve_approx_svd(out, A, B_expr.get_ref());  // A is overwritten
       }
     }
