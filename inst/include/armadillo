@@ -63,7 +63,7 @@
 #endif
 
 
-#if defined(ARMA_USE_CXX11_MUTEX)
+#if (defined(ARMA_USE_CXX11) && !defined(ARMA_DONT_USE_CXX11_MUTEX))
   #include <mutex>
   #include <atomic>
 #endif

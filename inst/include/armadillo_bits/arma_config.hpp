@@ -135,7 +135,7 @@ struct arma_config
   #endif
   
   
-  #if defined(ARMA_USE_CXX11_MUTEX)
+  #if (defined(ARMA_USE_CXX11) && !defined(ARMA_DONT_USE_CXX11_MUTEX))
     static const bool cxx11_mutex = true;
   #else
     static const bool cxx11_mutex = false;

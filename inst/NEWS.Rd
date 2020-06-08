@@ -3,10 +3,14 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.9.xxx.x.0 (2020-xx-xx)}{
+\section{Changes in RcppArmadillo version 0.9.899.1.0 (2020-06-05)}{
   \itemize{
-    \item Upgraded to Armadillo release 9.xxx.x (...................)
+    \item Upgraded to Armadillo release 9.900-rc1 (9.900-rc1)
     \itemize{
+      \item faster \code{solve()} for under/over-determined systems
+      \item faster \code{eig_gen()} and \code{eig_pair()} for large matrices
+      \item expanded \code{eig_gen()} and \code{eig_pair()} to
+      optionally provide left and right eigenvectors
     }
     \item Switch Travis CI testing to R 4.0.0, use bionic as base distro
     and test R 3.6.3 and 4.0.0 in a matrix (Dirk in \ghpr{298}).

@@ -105,11 +105,6 @@
 //// Note that ARMA_USE_CXX11 is automatically enabled when a C++11 compiler is detected.
 #endif
 
-#if defined(ARMA_USE_CXX11)
-  #define ARMA_USE_CXX11_MUTEX
-  //// Comment out the above line to disable use of std::mutex in C++11
-#endif
-
 #if !defined(ARMA_USE_OPENMP)
 // #define ARMA_USE_OPENMP
 //// Uncomment the above line to forcefully enable use of OpenMP for parallelisation.
@@ -254,12 +249,12 @@
 
 #if defined(ARMA_DONT_USE_CXX11)
   #undef ARMA_USE_CXX11
-  #undef ARMA_USE_CXX11_MUTEX
   #undef ARMA_USE_EXTERN_CXX11_RNG
 #endif
 
-#if defined(ARMA_DONT_USE_CXX11_MUTEX)
-  #undef ARMA_USE_CXX11_MUTEX
+#if !defined(ARMA_DONT_USE_CXX11_MUTEX)
+  // #define ARMA_DONT_USE_CXX11_MUTEX
+  //// Uncomment the above line to disable use of std::mutex in C++11
 #endif
 
 #if defined(ARMA_DONT_USE_OPENMP)
