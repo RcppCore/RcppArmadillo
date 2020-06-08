@@ -22,7 +22,7 @@
 #define ARMA_VERSION_MAJOR 9
 #define ARMA_VERSION_MINOR 900
 #define ARMA_VERSION_PATCH 1
-#define ARMA_VERSION_NAME  "9.900-RC1"
+#define ARMA_VERSION_NAME  "Nocturnal Misbehaviour"
 
 
 
