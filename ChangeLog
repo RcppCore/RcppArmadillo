@@ -1,3 +1,8 @@
+2020-06-08  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/RcppArmadillo.package.skeleton.R: Accomodate a R 4.0.0 change
+	about NAMESPACE exports from package.skeleton()
+
 2020-06-05  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.9.899.1.0 [github-only]

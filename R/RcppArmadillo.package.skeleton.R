@@ -78,6 +78,11 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
     ## add a useDynLib to NAMESPACE,
     NAMESPACE <- file.path( root, "NAMESPACE")
     lines <- readLines( NAMESPACE )
+    ## remove *.fake.fun and set exportPattern (will also be in Rcpp 1.0.5)
+    lines <- lines[!grepl("^export.*fake\\.fun", lines)]
+    if (! grepl("^exportPattern", lines)) {
+        lines <- c(lines, "exportPattern(\"^[[:alpha:]]+\")")
+    }
     if (! grepl("useDynLib", lines)) {
         lines <- c(sprintf("useDynLib(%s, .registration=TRUE)", name),
                    "importFrom(Rcpp, evalCpp)",        ## ensures Rcpp instantiation
