@@ -1,5 +1,10 @@
 2020-06-08  Dirk Eddelbuettel  <edd@debian.org>
 
+        * DESCRIPTION: Release 0.9.900.1.0
+        * inst/NEWS.Rd: Release 0.9.900.1.0
+
+        * inst/include/armadillo_bits: Armadillo 9.900.1
+
 	* R/RcppArmadillo.package.skeleton.R: Accomodate a R 4.0.0 change
 	about NAMESPACE exports from package.skeleton()
 
