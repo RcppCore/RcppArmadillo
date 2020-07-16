@@ -6601,10 +6601,6 @@ SpMat<eT>::try_div_value_csc(const uword in_row, const uword in_col, const eT in
  * Insert an element at the given position, and return a reference to it.  
  * The element will be set to 0, unless otherwise specified.
  * If the element already exists, its value will be overwritten.
- *
- * @param in_row Row of new element.
- * @param in_col Column of new element.
- * @param in_val Value to set new element to (default 0).
  */
 template<typename eT>
 inline
@@ -6693,9 +6689,6 @@ SpMat<eT>::insert_element(const uword in_row, const uword in_col, const eT val)
 
 /**
  * Delete an element at the given position.
- *
- * @param in_row Row of element to be deleted.
- * @param in_col Column of element to be deleted.
  */
 template<typename eT>
 inline
