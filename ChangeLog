@@ -1,9 +1,11 @@
+2020-07-17  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.9.900.2.0
+        * inst/NEWS.Rd: Release 0.9.900.2.0
+
 2020-07-15  Dirk Eddelbuettel  <edd@debian.org>
 
-        * DESCRIPTION: Release 0.9.900.1.0.1
-        * inst/NEWS.Rd: Release 0.9.900.1.0.1
-
-	* inst/include/armadillo_bits/*: Armadillo 9.900.2-test
+	* inst/include/armadillo_bits/*: Armadillo 9.900.2
 
 	* configure.ac: One small improvement for AC_INIT
 
