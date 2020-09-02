@@ -19,7 +19,7 @@
 
 
 template<typename eT>
-arma_inline
+inline
 SpSubview<eT>::SpSubview(const SpMat<eT>& in_m, const uword in_row1, const uword in_col1, const uword in_n_rows, const uword in_n_cols)
   : m(in_m)
   , aux_row1(in_row1)
@@ -53,7 +53,7 @@ SpSubview<eT>::SpSubview(const SpMat<eT>& in_m, const uword in_row1, const uword
 
 
 template<typename eT>
-arma_inline
+inline
 SpSubview<eT>::SpSubview(SpMat<eT>& in_m, const uword in_row1, const uword in_col1, const uword in_n_rows, const uword in_n_cols)
   : m(in_m)
   , aux_row1(in_row1)

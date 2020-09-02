@@ -1152,6 +1152,8 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     
     if(nc == NULL)  { return false; }
     
+    A.sync();
+    
     nc->nnz    = A.n_nonzero;
     nc->nzval  = (void*)          superlu::malloc(sizeof(eT)             * A.n_nonzero   );
     nc->colptr = (superlu::int_t*)superlu::malloc(sizeof(superlu::int_t) * (A.n_cols + 1));
