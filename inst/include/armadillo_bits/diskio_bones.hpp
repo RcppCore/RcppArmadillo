@@ -23,6 +23,21 @@ class diskio
   {
   public:
   
+  inline arma_deprecated static file_type guess_file_type(std::istream& f);
+  
+  
+  private:
+  
+  template<typename eT> friend class   Mat;
+  template<typename eT> friend class  Cube;
+  template<typename eT> friend class SpMat;
+  template<typename oT> friend class field;
+  
+  friend class   Mat_aux;
+  friend class  Cube_aux;
+  friend class SpMat_aux;
+  friend class field_aux;
+  
   template<typename eT> inline arma_cold static std::string gen_txt_header(const Mat<eT>&);
   template<typename eT> inline arma_cold static std::string gen_bin_header(const Mat<eT>&);
   
@@ -30,8 +45,6 @@ class diskio
 
   template<typename eT> inline arma_cold static std::string gen_txt_header(const Cube<eT>&);
   template<typename eT> inline arma_cold static std::string gen_bin_header(const Cube<eT>&);
-  
-  inline arma_deprecated static file_type guess_file_type(std::istream& f);
   
   inline arma_cold static file_type guess_file_type_internal(std::istream& f);
   

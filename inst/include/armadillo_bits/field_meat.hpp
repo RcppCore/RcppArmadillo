@@ -1943,10 +1943,10 @@ field<oT>::init(const uword n_rows_in, const uword n_cols_in, const uword n_slic
   {
   arma_extra_debug_sigprint( arma_str::format("n_rows_in = %d, n_cols_in = %d, n_slices_in = %d") % n_rows_in % n_cols_in % n_slices_in );
   
-  #if (defined(ARMA_USE_CXX11) || defined(ARMA_64BIT_WORD))
+  #if defined(ARMA_64BIT_WORD)
     const char* error_message = "field::init(): requested size is too large";
   #else
-    const char* error_message = "field::init(): requested size is too large; suggest to compile in C++11 mode or enable ARMA_64BIT_WORD";
+    const char* error_message = "field::init(): requested size is too large; suggest to compile in C++11 mode and/or enable ARMA_64BIT_WORD";
   #endif
   
   arma_debug_check

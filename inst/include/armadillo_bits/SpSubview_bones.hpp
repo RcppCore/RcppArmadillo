@@ -43,8 +43,8 @@ class SpSubview : public SpBase<eT, SpSubview<eT> >
   
   protected:
 
-  arma_inline SpSubview(const SpMat<eT>& in_m, const uword in_row1, const uword in_col1, const uword in_n_rows, const uword in_n_cols);
-  arma_inline SpSubview(      SpMat<eT>& in_m, const uword in_row1, const uword in_col1, const uword in_n_rows, const uword in_n_cols);
+  inline SpSubview(const SpMat<eT>& in_m, const uword in_row1, const uword in_col1, const uword in_n_rows, const uword in_n_cols);
+  inline SpSubview(      SpMat<eT>& in_m, const uword in_row1, const uword in_col1, const uword in_n_rows, const uword in_n_cols);
 
   public:
 

@@ -186,10 +186,10 @@ Mat<eT>::init_cold()
   
   // ensure that n_elem can hold the result of (n_rows * n_cols)
   
-  #if (defined(ARMA_USE_CXX11) || defined(ARMA_64BIT_WORD))
+  #if defined(ARMA_64BIT_WORD)
     const char* error_message = "Mat::init(): requested size is too large";
   #else
-    const char* error_message = "Mat::init(): requested size is too large; suggest to compile in C++11 mode or enable ARMA_64BIT_WORD";
+    const char* error_message = "Mat::init(): requested size is too large; suggest to compile in C++11 mode and/or enable ARMA_64BIT_WORD";
   #endif
   
   arma_debug_check

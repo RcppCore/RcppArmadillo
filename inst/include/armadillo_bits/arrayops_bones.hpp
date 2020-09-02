@@ -33,7 +33,7 @@ class arrayops
   
   
   template<typename eT>
-  arma_hot inline static void
+  inline static void
   fill_zeros(eT* dest, const uword n_elem);
   
   
@@ -128,6 +128,11 @@ class arrayops
   arma_hot inline static
   void
   inplace_set(eT* dest, const eT val, const uword n_elem);
+  
+  template<typename eT>
+  arma_hot inline static
+  void
+  inplace_set_simple(eT* dest, const eT val, const uword n_elem);
   
   template<typename eT>
   arma_hot inline static

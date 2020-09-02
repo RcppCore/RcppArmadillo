@@ -77,12 +77,20 @@ arrayops::copy_small(eT* dest, const eT* src, const uword n_elem)
 
 
 template<typename eT>
-arma_hot
 inline
 void
 arrayops::fill_zeros(eT* dest, const uword n_elem)
   {
-  arrayops::inplace_set(dest, eT(0), n_elem);
+  typedef typename get_pod_type<eT>::result pod_type;
+  
+  if(std::numeric_limits<eT>::is_integer || std::numeric_limits<pod_type>::is_iec559)
+    {
+    if(n_elem > 0)  { std::memset((void*)dest, 0, sizeof(eT)*n_elem); }
+    }
+  else
+    {
+    arrayops::inplace_set_simple(dest, eT(0), n_elem);
+    }
   }
 
 
@@ -595,31 +603,40 @@ inline
 void
 arrayops::inplace_set(eT* dest, const eT val, const uword n_elem)
   {
-  typedef typename get_pod_type<eT>::result pod_type;
-  
-  if( (n_elem <= 9) && (is_cx<eT>::no) )
+  if(val == eT(0))
     {
-    arrayops::inplace_set_small(dest, val, n_elem);
+    arrayops::fill_zeros(dest, n_elem);
     }
   else
     {
-    if( (val == eT(0)) && (std::numeric_limits<eT>::is_integer || (std::numeric_limits<pod_type>::is_iec559 && is_real<pod_type>::value)) )
+    if( (n_elem <= 9) && (is_cx<eT>::no) )
       {
-      if(n_elem > 0)  { std::memset((void*)dest, 0, sizeof(eT)*n_elem); }
+      arrayops::inplace_set_small(dest, val, n_elem);
       }
     else
       {
-      if(memory::is_aligned(dest))
-        {
-        memory::mark_as_aligned(dest);
-        
-        arrayops::inplace_set_base(dest, val, n_elem);
-        }
-      else
-        {
-        arrayops::inplace_set_base(dest, val, n_elem);
-        }
+      arrayops::inplace_set_simple(dest, val, n_elem);
       }
+    }
+  }
+
+
+
+template<typename eT>
+arma_hot
+inline
+void
+arrayops::inplace_set_simple(eT* dest, const eT val, const uword n_elem)
+  {
+  if(memory::is_aligned(dest))
+    {
+    memory::mark_as_aligned(dest);
+    
+    arrayops::inplace_set_base(dest, val, n_elem);
+    }
+  else
+    {
+    arrayops::inplace_set_base(dest, val, n_elem);
     }
   }
 
