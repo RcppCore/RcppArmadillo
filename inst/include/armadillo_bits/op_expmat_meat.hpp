@@ -146,7 +146,7 @@ op_expmat::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1
     
     if( (D.is_finite() == false) || (E.is_finite() == false) )  { return false; }
     
-    const bool status = solve(out, D, E);
+    const bool status = solve(out, D, E, solve_opts::no_approx);
     
     if(status == false)  { return false; }
     

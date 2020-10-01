@@ -1013,7 +1013,7 @@ gmm_diag<eT>::internal_gen_boundaries(const uword N) const
     const uword n_threads_avail = (omp_in_parallel()) ? uword(1) : uword(omp_get_max_threads());
     const uword n_threads       = (n_threads_avail > 0) ? ( (n_threads_avail <= N) ? n_threads_avail : 1 ) : 1;
   #else
-    static const uword n_threads = 1;
+    static constexpr uword n_threads = 1;
   #endif
   
   // get_cout_stream() << "gmm_diag::internal_gen_boundaries(): n_threads: " << n_threads << '\n';

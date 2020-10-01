@@ -315,7 +315,7 @@ spop_var::iterator_var
 
   const uword it_begin_pos = it.pos();
 
-  while (it != end)
+  while(it != end)
     {
     const eT tmp = mean - (*it);
 
@@ -326,12 +326,12 @@ spop_var::iterator_var
     }
 
   const uword n_nonzero = (it.pos() - it_begin_pos);
-  if (n_nonzero == 0)
+  if(n_nonzero == 0)
     {
     return eT(0);
     }
 
-  if (n_nonzero + n_zero == 1)
+  if(n_nonzero + n_zero == 1)
     {
     return eT(0); // only one element
     }
@@ -376,7 +376,7 @@ spop_var::iterator_var
 
   const uword it_begin_pos = it.pos();
 
-  while (it != end)
+  while(it != end)
     {
     eT tmp = mean - (*it);
 
@@ -387,12 +387,12 @@ spop_var::iterator_var
     }
 
   const uword n_nonzero = (it.pos() - it_begin_pos);
-  if (n_nonzero == 0)
+  if(n_nonzero == 0)
     {
     return T(0);
     }
 
-  if (n_nonzero + n_zero == 1)
+  if(n_nonzero + n_zero == 1)
     {
     return T(0); // only one element
     }

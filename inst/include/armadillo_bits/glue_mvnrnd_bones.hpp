@@ -25,9 +25,9 @@ class glue_mvnrnd_vec
   template<typename T1, typename T2>
   struct traits
     {
-    static const bool is_row  = false;
-    static const bool is_col  = true;
-    static const bool is_xvec = false;
+    static constexpr bool is_row  = false;
+    static constexpr bool is_col  = true;
+    static constexpr bool is_xvec = false;
     };
   
   template<typename T1, typename T2>

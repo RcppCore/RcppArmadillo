@@ -26,7 +26,7 @@ svd
   (
          Col<typename T1::pod_type>&     S,
   const Base<typename T1::elem_type,T1>& X,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();
@@ -54,7 +54,7 @@ Col<typename T1::pod_type>
 svd
   (
   const Base<typename T1::elem_type,T1>& X,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();
@@ -85,7 +85,7 @@ svd
          Mat<typename T1::elem_type>&    V,
   const Base<typename T1::elem_type,T1>& X,
   const char*                            method = "dc",
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();
@@ -97,7 +97,7 @@ svd
     "svd(): two or more output objects are the same object"
     );
   
-  const char sig = (method != NULL) ? method[0] : char(0);
+  const char sig = (method != nullptr) ? method[0] : char(0);
   
   arma_debug_check( ((sig != 's') && (sig != 'd')), "svd(): unknown method specified" );
   
@@ -128,7 +128,7 @@ svd_econ
   const Base<typename T1::elem_type,T1>& X,
   const char                             mode,
   const char*                            method = "dc",
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();
@@ -146,7 +146,7 @@ svd_econ
     "svd_econ(): parameter 'mode' is incorrect"
     );
   
-  const char sig = (method != NULL) ? method[0] : char(0);
+  const char sig = (method != nullptr) ? method[0] : char(0);
   
   arma_debug_check( ((sig != 's') && (sig != 'd')), "svd_econ(): unknown method specified" );
   
@@ -176,13 +176,13 @@ svd_econ
   const Base<typename T1::elem_type,T1>& X,
   const char*                            mode   = "both",
   const char*                            method = "dc",
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  return svd_econ(U, S, V, X, ((mode != NULL) ? mode[0] : char(0)), method);
+  return svd_econ(U, S, V, X, ((mode != nullptr) ? mode[0] : char(0)), method);
   }
 
 

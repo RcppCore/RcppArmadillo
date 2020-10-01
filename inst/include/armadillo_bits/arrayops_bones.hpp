@@ -44,7 +44,7 @@ class arrayops
   
   template<typename eT>
   arma_hot inline static void
-  clean(eT* mem, const uword n_elem, const eT abs_limit, const typename arma_not_cx<eT>::result* junk = 0);
+  clean(eT* mem, const uword n_elem, const eT abs_limit, const typename arma_not_cx<eT>::result* junk = nullptr);
   
   
   template<typename T>
@@ -57,11 +57,11 @@ class arrayops
   
   template<typename out_eT, typename in_eT>
   arma_hot arma_inline static void
-  convert_cx_scalar(out_eT& out, const in_eT&  in, const typename arma_not_cx<out_eT>::result* junk1 = 0, const typename arma_not_cx< in_eT>::result* junk2 = 0);
+  convert_cx_scalar(out_eT& out, const in_eT&  in, const typename arma_not_cx<out_eT>::result* junk1 = nullptr, const typename arma_not_cx< in_eT>::result* junk2 = nullptr);
   
   template<typename out_eT, typename in_T>
   arma_hot arma_inline static void
-  convert_cx_scalar(out_eT& out, const std::complex<in_T>& in, const typename arma_not_cx<out_eT>::result* junk = 0);
+  convert_cx_scalar(out_eT& out, const std::complex<in_T>& in, const typename arma_not_cx<out_eT>::result* junk = nullptr);
   
   template<typename out_T, typename in_T>
   arma_hot arma_inline static void
@@ -205,7 +205,7 @@ class arrayops
   template<typename eT>
   arma_hot inline static
   bool
-  is_zero(const eT* mem, const uword n_elem, const eT abs_limit, const typename arma_not_cx<eT>::result* junk = 0);
+  is_zero(const eT* mem, const uword n_elem, const eT abs_limit, const typename arma_not_cx<eT>::result* junk = nullptr);
   
   template<typename T>
   arma_hot inline static

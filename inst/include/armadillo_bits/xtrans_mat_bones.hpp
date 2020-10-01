@@ -19,18 +19,18 @@
 
 
 template<typename eT, bool do_conj>
-class xtrans_mat : public Base<eT, xtrans_mat<eT, do_conj> >
+class xtrans_mat : public Base< eT, xtrans_mat<eT, do_conj> >
   {
   public:
   
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  static const bool is_row  = false;
-  static const bool is_col  = false;
-  static const bool is_xvec = false;
+  static constexpr bool is_row  = false;
+  static constexpr bool is_col  = false;
+  static constexpr bool is_xvec = false;
   
-  static const bool really_do_conj = (do_conj && is_cx<eT>::yes);
+  static constexpr bool really_do_conj = (do_conj && is_cx<eT>::yes);
   
   arma_aligned const   Mat<eT>& X;
   arma_aligned mutable Mat<eT>  Y;

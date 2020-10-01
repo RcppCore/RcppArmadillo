@@ -27,7 +27,7 @@ rank
   (
   const Base<typename T1::elem_type,T1>& X,
         typename T1::pod_type            tol = 0.0,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();

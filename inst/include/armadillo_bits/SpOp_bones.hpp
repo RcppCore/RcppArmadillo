@@ -20,16 +20,16 @@
 
 
 template<typename T1, typename op_type>
-class SpOp : public SpBase<typename T1::elem_type, SpOp<T1, op_type> >
+class SpOp : public SpBase< typename T1::elem_type, SpOp<T1, op_type> >
   {
   public:
   
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  static const bool is_row  = op_type::template traits<T1>::is_row;
-  static const bool is_col  = op_type::template traits<T1>::is_col;
-  static const bool is_xvec = op_type::template traits<T1>::is_xvec;
+  static constexpr bool is_row  = op_type::template traits<T1>::is_row;
+  static constexpr bool is_col  = op_type::template traits<T1>::is_col;
+  static constexpr bool is_xvec = op_type::template traits<T1>::is_xvec;
   
   inline explicit SpOp(const T1& in_m);
   inline          SpOp(const T1& in_m, const elem_type in_aux);

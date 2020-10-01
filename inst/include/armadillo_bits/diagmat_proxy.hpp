@@ -90,7 +90,7 @@ class diagmat_proxy_default
     }
   
   
-  arma_inline bool is_alias(const Mat<elem_type>&) const { return false; }
+  constexpr bool is_alias(const Mat<elem_type>&) const { return false; }
   
   const Proxy<T1> P;
   const bool      P_is_vec;
@@ -143,9 +143,9 @@ class diagmat_proxy_fixed
   
   const T1& P;
   
-  static const bool  P_is_vec = (T1::n_rows == 1) || (T1::n_cols == 1);
-  static const uword n_rows   = P_is_vec ? T1::n_elem : T1::n_rows;
-  static const uword n_cols   = P_is_vec ? T1::n_elem : T1::n_cols;
+  static constexpr bool  P_is_vec = (T1::n_rows == 1) || (T1::n_cols == 1);
+  static constexpr uword n_rows   = P_is_vec ? T1::n_elem : T1::n_rows;
+  static constexpr uword n_cols   = P_is_vec ? T1::n_elem : T1::n_cols;
   };
 
 
@@ -161,11 +161,11 @@ struct diagmat_proxy_redirect<T1, true>  { typedef diagmat_proxy_fixed<T1>   res
 
 
 template<typename T1>
-class diagmat_proxy : public diagmat_proxy_redirect<T1, is_Mat_fixed<T1>::value >::result
+class diagmat_proxy : public diagmat_proxy_redirect<T1, is_Mat_fixed<T1>::value>::result
   {
   public:
   inline diagmat_proxy(const T1& X)
-    : diagmat_proxy_redirect< T1, is_Mat_fixed<T1>::value >::result(X)
+    : diagmat_proxy_redirect<T1, is_Mat_fixed<T1>::value>::result(X)
     {
     }
   };
@@ -226,7 +226,7 @@ class diagmat_proxy< Row<eT> >
   
   arma_inline bool is_alias(const Mat<eT>& X) const { return (void_ptr(&X) == void_ptr(&P)); }
   
-  static const bool P_is_vec = true;
+  static constexpr bool P_is_vec = true;
   
   const Row<eT>& P;
   const uword    n_rows;
@@ -258,7 +258,7 @@ class diagmat_proxy< Col<eT> >
   
   arma_inline bool is_alias(const Mat<eT>& X) const { return (void_ptr(&X) == void_ptr(&P)); }
   
-  static const bool P_is_vec = true;
+  static constexpr bool P_is_vec = true;
   
   const Col<eT>& P;
   const uword    n_rows;
@@ -290,7 +290,7 @@ class diagmat_proxy< subview_row<eT> >
   
   arma_inline bool is_alias(const Mat<eT>& X) const { return (void_ptr(&X) == void_ptr(&(P.m))); }
   
-  static const bool P_is_vec = true;
+  static constexpr bool P_is_vec = true;
   
   const subview_row<eT>& P;
   const uword            n_rows;
@@ -322,7 +322,7 @@ class diagmat_proxy< subview_col<eT> >
   
   arma_inline bool is_alias(const Mat<eT>& X) const { return (void_ptr(&X) == void_ptr(&(P.m))); }
   
-  static const bool P_is_vec = true;
+  static constexpr bool P_is_vec = true;
   
   const subview_col<eT>& P;
   const uword            n_rows;
@@ -353,9 +353,9 @@ class diagmat_proxy< Glue<T1,T2,glue_times> >
   arma_inline elem_type operator[] (const uword i)                    const { return P.at(i,i);                                   }
   arma_inline elem_type at         (const uword row, const uword col) const { return (row == col) ? P.at(row,row) : elem_type(0); }
   
-  arma_inline bool is_alias(const Mat<elem_type>&) const { return false; }
+  constexpr bool is_alias(const Mat<elem_type>&) const { return false; }
   
-  static const bool P_is_vec = false;
+  static constexpr bool P_is_vec = false;
   
   Mat<elem_type> P;
   uword          n_rows;
@@ -421,9 +421,9 @@ class diagmat_proxy_check_fixed
   
   const Mat<eT> P;  // TODO: why not just store X directly as T1& ?  test with fixed size vectors and matrices
   
-  static const bool  P_is_vec = (T1::n_rows == 1) || (T1::n_cols == 1);
-  static const uword n_rows   = P_is_vec ? T1::n_elem : T1::n_rows;
-  static const uword n_cols   = P_is_vec ? T1::n_elem : T1::n_cols;
+  static constexpr bool  P_is_vec = (T1::n_rows == 1) || (T1::n_cols == 1);
+  static constexpr uword n_rows   = P_is_vec ? T1::n_elem : T1::n_rows;
+  static constexpr uword n_cols   = P_is_vec ? T1::n_elem : T1::n_cols;
   };
 
 
@@ -439,11 +439,11 @@ struct diagmat_proxy_check_redirect<T1, true>  { typedef diagmat_proxy_check_fix
 
 
 template<typename T1>
-class diagmat_proxy_check : public diagmat_proxy_check_redirect<T1, is_Mat_fixed<T1>::value >::result
+class diagmat_proxy_check : public diagmat_proxy_check_redirect<T1, is_Mat_fixed<T1>::value>::result
   {
   public:
   inline diagmat_proxy_check(const T1& X, const Mat<typename T1::elem_type>& out)
-    : diagmat_proxy_check_redirect< T1, is_Mat_fixed<T1>::value >::result(X, out)
+    : diagmat_proxy_check_redirect<T1, is_Mat_fixed<T1>::value>::result(X, out)
     {
     }
   };
@@ -513,7 +513,7 @@ class diagmat_proxy_check< Row<eT> >
   arma_inline elem_type operator[] (const uword i)                    const { return P[i];                                 }
   arma_inline elem_type at         (const uword row, const uword col) const { return (row == col) ? P[row] : elem_type(0); }
   
-  static const bool P_is_vec = true;
+  static constexpr bool P_is_vec = true;
   
   const Row<eT>* P_local;
   const Row<eT>& P;
@@ -549,7 +549,7 @@ class diagmat_proxy_check< Col<eT> >
   arma_inline elem_type operator[] (const uword i)                    const { return P[i];                                 }
   arma_inline elem_type at         (const uword row, const uword col) const { return (row == col) ? P[row] : elem_type(0); }
   
-  static const bool P_is_vec = true;
+  static constexpr bool P_is_vec = true;
   
   const Col<eT>* P_local;
   const Col<eT>& P;
@@ -579,7 +579,7 @@ class diagmat_proxy_check< subview_row<eT> >
   arma_inline elem_type operator[] (const uword i)                    const { return P[i];                                 }
   arma_inline elem_type at         (const uword row, const uword col) const { return (row == col) ? P[row] : elem_type(0); }
   
-  static const bool P_is_vec = true;
+  static constexpr bool P_is_vec = true;
   
   const Row<eT> P;
   const uword   n_rows;
@@ -608,7 +608,7 @@ class diagmat_proxy_check< subview_col<eT> >
   arma_inline elem_type operator[] (const uword i)                    const { return P[i];                                 }
   arma_inline elem_type at         (const uword row, const uword col) const { return (row == col) ? P[row] : elem_type(0); }
   
-  static const bool P_is_vec = true;
+  static constexpr bool P_is_vec = true;
   
   const Col<eT> P;
   const uword   n_rows;
@@ -639,7 +639,7 @@ class diagmat_proxy_check< Glue<T1,T2,glue_times> >
   arma_inline elem_type operator[] (const uword i)                    const { return P.at(i,i);                                   }
   arma_inline elem_type at         (const uword row, const uword col) const { return (row == col) ? P.at(row,row) : elem_type(0); }
   
-  static const bool P_is_vec = false;
+  static constexpr bool P_is_vec = false;
   
   Mat<elem_type> P;
   uword          n_rows;

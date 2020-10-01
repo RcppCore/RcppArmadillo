@@ -78,29 +78,17 @@
 #undef  ARMA_INCFILE_WRAP
 #define ARMA_INCFILE_WRAP(x) <x>
 
-#if defined(ARMA_USE_CXX11)
-  
-  #undef  ARMA_USE_U64S64
-  #define ARMA_USE_U64S64
-  
-  #if !defined(ARMA_32BIT_WORD)
-    #undef  ARMA_64BIT_WORD
-    #define ARMA_64BIT_WORD
-  #endif
-  
-  #if defined(ARMA_64BIT_WORD) && defined(SIZE_MAX)
-    #if (SIZE_MAX < 0xFFFFFFFFFFFFFFFFull)
-      // #pragma message ("WARNING: disabled use of 64 bit integers, as std::size_t is smaller than 64 bits")
-      #undef ARMA_64BIT_WORD
-    #endif
-  #endif
-  
+
+#if !defined(ARMA_32BIT_WORD)
+  #undef  ARMA_64BIT_WORD
+  #define ARMA_64BIT_WORD
 #endif
 
-
-#if defined(ARMA_64BIT_WORD)
-  #undef  ARMA_USE_U64S64
-  #define ARMA_USE_U64S64
+#if defined(ARMA_64BIT_WORD) && defined(SIZE_MAX)
+  #if (SIZE_MAX < 0xFFFFFFFFFFFFFFFFull)
+    // #pragma message ("WARNING: disabled use of 64 bit integers, as std::size_t is smaller than 64 bits")
+    #undef ARMA_64BIT_WORD
+  #endif
 #endif
 
 
@@ -110,20 +98,6 @@
 #define ARMA_SIMPLE_LOOPS
 
 #undef ARMA_GOOD_COMPILER
-
-#undef ARMA_HAVE_TR1
-#undef ARMA_HAVE_GETTIMEOFDAY
-#undef ARMA_HAVE_SNPRINTF
-#undef ARMA_HAVE_ISFINITE
-#undef ARMA_HAVE_LOG1P
-#undef ARMA_HAVE_ISINF
-#undef ARMA_HAVE_ISNAN
-
-
-#if (defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE >= 200112L))
-  #define ARMA_HAVE_GETTIMEOFDAY
-#endif
-
 
 // posix_memalign() is part of IEEE standard 1003.1
 // http://pubs.opengroup.org/onlinepubs/009696899/functions/posix_memalign.html
@@ -141,10 +115,6 @@
   
   // #undef  ARMA_HAVE_POSIX_MEMALIGN
   // NOTE: posix_memalign() is available since macOS 10.6 (late 2009 onwards)
-  
-  // #undef  ARMA_USE_EXTERN_CXX11_RNG
-  // NOTE: thread_local seems to work in Apple clang since Xcode 8 (mid 2016 onwards)
-  // NOTE: https://stackoverflow.com/questions/28094794/why-does-apple-clang-disallow-c11-thread-local-when-official-clang-supports
 #endif
 
 
@@ -161,10 +131,8 @@
   #define ARMA_FNSIG  __FUNCSIG__ 
 #elif defined(__INTEL_COMPILER)
   #define ARMA_FNSIG  __FUNCTION__
-#elif defined(ARMA_USE_CXX11)
-  #define ARMA_FNSIG  __func__
 #else 
-  #define ARMA_FNSIG  "(unknown)"
+  #define ARMA_FNSIG  __func__
 #endif
 
 
@@ -219,25 +187,11 @@
   #undef  ARMA_HAVE_GCC_ASSUME_ALIGNED
   #define ARMA_HAVE_GCC_ASSUME_ALIGNED
   
-  #if !defined(ARMA_USE_CXX11) && !defined(__GXX_EXPERIMENTAL_CXX0X__) && (__cplusplus < 201103L) && !defined(ARMA_DONT_USE_TR1)
-    #if defined(_GLIBCXX_USE_C99_MATH_TR1) && defined(_GLIBCXX_USE_C99_COMPLEX_TR1)
-      #define ARMA_HAVE_TR1
-    #endif
-  #endif
-  
   // gcc's vectoriser can handle elaborate loops
   #undef ARMA_SIMPLE_LOOPS
   
   #if defined(__OPTIMIZE_SIZE__)
     #define ARMA_SIMPLE_LOOPS
-  #endif
-  
-  #if !defined(ARMA_USE_CXX11) && (defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE >= 200112L))
-    #define ARMA_HAVE_SNPRINTF
-    #define ARMA_HAVE_ISFINITE
-    #define ARMA_HAVE_LOG1P
-    #define ARMA_HAVE_ISINF
-    #define ARMA_HAVE_ISNAN
   #endif
   
 #endif
@@ -319,14 +273,6 @@
     #define ARMA_HAVE_GCC_ASSUME_ALIGNED
   #endif
   
-  #if !defined(ARMA_USE_CXX11) && (defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE >= 200112L))
-    #define ARMA_HAVE_SNPRINTF
-    #define ARMA_HAVE_ISFINITE
-    #define ARMA_HAVE_LOG1P
-    #define ARMA_HAVE_ISINF
-    #define ARMA_HAVE_ISNAN
-  #endif
-  
 #endif
 
 
@@ -336,7 +282,7 @@
     #error "*** newer compiler required ***"
   #endif
   
-  #if (__INTEL_COMPILER < 1400)
+  #if (__INTEL_COMPILER < 1500)
     #error "*** newer compiler required ***"
   #endif
   
@@ -344,32 +290,13 @@
   #undef  ARMA_HAVE_ICC_ASSUME_ALIGNED
   #define ARMA_HAVE_ICC_ASSUME_ALIGNED
   
-  #if defined(ARMA_USE_CXX11)
-    #if (__INTEL_COMPILER < 1500)
-      #undef  ARMA_PRINT_CXX11_WARNING
-      #define ARMA_PRINT_CXX11_WARNING
-    #endif
-  #endif
-  
 #endif
 
 
 #if defined(_MSC_VER)
   
-  #if (_MSC_VER < 1700)
+  #if (_MSC_VER < 1900)
     #error "*** newer compiler required ***"
-  #endif
-  
-  #if (_MSC_VER < 1800)
-    #undef  ARMA_PRINT_CXX98_WARNING
-    #define ARMA_PRINT_CXX98_WARNING
-  #endif
-  
-  #if defined(ARMA_USE_CXX11)
-    #if (_MSC_VER < 1900)
-      #undef  ARMA_PRINT_CXX11_WARNING
-      #define ARMA_PRINT_CXX11_WARNING
-    #endif
   #endif
   
   #undef  arma_deprecated
@@ -397,10 +324,7 @@
   #pragma warning(disable: 4711)  // call was inlined
   #pragma warning(disable: 4714)  // __forceinline can't be inlined
   #pragma warning(disable: 4800)  // value forced to bool
-  
-  #if defined(ARMA_USE_CXX11)
-    #pragma warning(disable: 4519)  // default template args are only allowed on a class template
-  #endif
+  #pragma warning(disable: 4519)  // C++11: default template args are only allowed on a class template
   
   
   // #if (_MANAGED == 1) || (_M_CEE == 1)
@@ -433,49 +357,29 @@
   // http://www.oracle.com/technetwork/server-storage/solarisstudio/training/index-jsp-141991.html
   // http://www.oracle.com/technetwork/server-storage/solarisstudio/documentation/cplusplus-faq-355066.html
   
-  #if (__SUNPRO_CC < 0x5130)
+  #if (__SUNPRO_CC < 0x5140)
     #error "*** newer compiler required ***"
-  #endif
-  
-  #if defined(ARMA_USE_CXX11)
-    #if (__SUNPRO_CC < 0x5140)
-      #undef  ARMA_PRINT_CXX11_WARNING
-      #define ARMA_PRINT_CXX11_WARNING
-    #endif
   #endif
   
 #endif
 
 
-#if defined(ARMA_USE_CXX11) && defined(__CYGWIN__) && !defined(ARMA_DONT_PRINT_CXX11_WARNING)
+#if defined(__CYGWIN__) && !defined(ARMA_DONT_PRINT_CXX11_WARNING)
   #pragma message ("WARNING: Cygwin may have incomplete support for C++11 features.")
 #endif
 
 
-#if defined(ARMA_USE_CXX11) && (__cplusplus < 201103L)
-  #undef  ARMA_PRINT_CXX11_WARNING
-  #define ARMA_PRINT_CXX11_WARNING
-#endif
-
-
-#if defined(ARMA_PRINT_CXX98_WARNING) && !defined(ARMA_DONT_PRINT_CXX98_WARNING)
-  #pragma message ("WARNING: this compiler is OUTDATED and has INCOMPLETE support for the C++ standard;")
-  #pragma message ("WARNING: if something breaks, you get to keep all the pieces.")
-#endif
-
-
-#if defined(ARMA_PRINT_CXX11_WARNING) && !defined(ARMA_DONT_PRINT_CXX11_WARNING)
-  #pragma message ("WARNING: use of C++11 features has been enabled,")
-  #pragma message ("WARNING: but this compiler has INCOMPLETE support for C++11;")
-  #pragma message ("WARNING: if something breaks, you get to keep all the pieces.")
-  #pragma message ("WARNING: to forcefully prevent Armadillo from using C++11 features,")
-  #pragma message ("WARNING: #define ARMA_DONT_USE_CXX11 before #include <armadillo>")
+#if !defined(ARMA_DONT_USE_OPENMP)
+  #if (defined(_OPENMP) && (_OPENMP >= 201107))
+    #undef  ARMA_USE_OPENMP
+    #define ARMA_USE_OPENMP
+  #endif
 #endif
 
 
 #if ( defined(ARMA_USE_OPENMP) && (!defined(_OPENMP) || (defined(_OPENMP) && (_OPENMP < 201107))) )
-  // OpenMP 3.1 required for atomic read and atomic write
   // OpenMP 3.0 required for parallelisation of loops with unsigned integers
+  // OpenMP 3.1 required for atomic read and atomic write
   #undef  ARMA_USE_OPENMP
   #undef  ARMA_PRINT_OPENMP_WARNING
   #define ARMA_PRINT_OPENMP_WARNING
@@ -492,20 +396,7 @@
 #endif
 
 
-#if defined(ARMA_USE_OPENMP) && !defined(ARMA_USE_CXX11)
-  #if (defined(ARMA_GCC_VERSION) && (ARMA_GCC_VERSION >= 50400)) || (defined(__clang__) && !defined(ARMA_DETECTED_FAKE_CLANG))
-    #undef  ARMA_PRINT_OPENMP_CXX11_WARNING
-    #define ARMA_PRINT_OPENMP_CXX11_WARNING
-  #endif
-#endif
-
-
-#if defined(ARMA_PRINT_OPENMP_CXX11_WARNING) && !defined(ARMA_DONT_PRINT_OPENMP_WARNING)
-  #pragma message ("WARNING: support for OpenMP requires C++11/C++14; add -std=c++11 or -std=c++14 to compiler flags")
-#endif
-
-
-#if defined(ARMA_USE_OPENMP) && defined(ARMA_USE_CXX11)
+#if defined(ARMA_USE_OPENMP)
   #if (defined(ARMA_GCC_VERSION) && (ARMA_GCC_VERSION < 50400))
     // due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=57580
     // TODO: gcc 4.9.4 is also fixed, so use a more fine-grained gcc version check?
@@ -517,23 +408,13 @@
 #endif
 
 
-#if defined(ARMA_GCC_VERSION) && (ARMA_GCC_VERSION >= 50400) && !defined(ARMA_USE_CXX11)
-  #if !defined(ARMA_PRINT_CXX11_WARNING) && !defined(ARMA_PRINT_OPENMP_CXX11_WARNING) && !defined(ARMA_DONT_PRINT_CXX11_WARNING)
-    #pragma message ("NOTE: suggest to enable C++14 mode for faster code; add -std=c++14 to compiler flags")
-  #endif
-#endif
-
-
 
 // cleanup
 
 #undef ARMA_DETECTED_FAKE_GCC
 #undef ARMA_DETECTED_FAKE_CLANG
 #undef ARMA_GCC_VERSION
-#undef ARMA_PRINT_CXX98_WARNING
-#undef ARMA_PRINT_CXX11_WARNING
 #undef ARMA_PRINT_OPENMP_WARNING
-#undef ARMA_PRINT_OPENMP_CXX11_WARNING
 
 
 

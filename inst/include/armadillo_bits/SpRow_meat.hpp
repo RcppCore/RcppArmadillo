@@ -267,7 +267,7 @@ SpRow<eT>::shed_cols(const uword in_col1, const uword in_col2)
   const uword start = SpMat<eT>::col_ptrs[in_col1];
   const uword end   = SpMat<eT>::col_ptrs[in_col2 + 1];
 
-  if (start != end)
+  if(start != end)
     {
     const uword elem_diff = end - start;
 
@@ -275,14 +275,14 @@ SpRow<eT>::shed_cols(const uword in_col1, const uword in_col2)
     uword* new_row_indices = memory::acquire<uword>(SpMat<eT>::n_nonzero - elem_diff);
 
     // Copy first set of elements, if necessary.
-    if (start > 0)
+    if(start > 0)
       {
       arrayops::copy(new_values, SpMat<eT>::values, start);
       arrayops::copy(new_row_indices, SpMat<eT>::row_indices, start);
       }
 
     // Copy last set of elements, if necessary.
-    if (end != SpMat<eT>::n_nonzero)
+    if(end != SpMat<eT>::n_nonzero)
       {
       arrayops::copy(new_values + start, SpMat<eT>::values + end, (SpMat<eT>::n_nonzero - end));
       arrayops::copy(new_row_indices + start, SpMat<eT>::row_indices + end, (SpMat<eT>::n_nonzero - end));
@@ -301,13 +301,13 @@ SpRow<eT>::shed_cols(const uword in_col1, const uword in_col2)
   uword* new_col_ptrs = memory::acquire<uword>(SpMat<eT>::n_cols - diff + 1);
 
   // Copy first part of column pointers.
-  if (in_col1 > 0)
+  if(in_col1 > 0)
     {
     arrayops::copy(new_col_ptrs, SpMat<eT>::col_ptrs, in_col1);
     }
 
   // Copy last part of column pointers (and adjust their values as necessary).
-  if (in_col2 < SpMat<eT>::n_cols - 1)
+  if(in_col2 < SpMat<eT>::n_cols - 1)
     {
     arrayops::copy(new_col_ptrs + in_col1, SpMat<eT>::col_ptrs + in_col2 + 1, SpMat<eT>::n_cols - in_col2);
     // Modify their values.

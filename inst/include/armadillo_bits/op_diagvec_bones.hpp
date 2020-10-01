@@ -31,10 +31,10 @@ class op_diagvec
   inline static void apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P);
   
   template<typename T1, typename T2>
-  inline static void apply(Mat<typename T1::elem_type>& out, const Op< Glue<T1,T2,glue_times>, op_diagvec>& X, const typename arma_not_cx<typename T1::elem_type>::result* junk = 0);
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op< Glue<T1,T2,glue_times>, op_diagvec>& X, const typename arma_not_cx<typename T1::elem_type>::result* junk = nullptr);
   
   template<typename T1, typename T2>
-  inline static void apply(Mat<typename T1::elem_type>& out, const Op< Glue<T1,T2,glue_times>, op_diagvec>& X, const typename arma_cx_only<typename T1::elem_type>::result* junk = 0);
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op< Glue<T1,T2,glue_times>, op_diagvec>& X, const typename arma_cx_only<typename T1::elem_type>::result* junk = nullptr);
   };
 
 

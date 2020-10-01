@@ -41,7 +41,7 @@ qz
   {
   arma_extra_debug_sigprint();
   
-  const char sig = (select != NULL) ? select[0] : char(0);
+  const char sig = (select != nullptr) ? select[0] : char(0);
   
   arma_debug_check( ( (sig != 'n') && (sig != 'l') && (sig != 'r') && (sig != 'i') && (sig != 'o') ), "qz(): unknown select form" );
   

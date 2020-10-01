@@ -32,13 +32,9 @@ class subview_cube_each_common
   protected:
   
   arma_inline subview_cube_each_common(const Cube<eT>& in_p);
+       inline subview_cube_each_common() = delete;
   
   arma_cold inline const std::string incompat_size_string(const Mat<eT>& A) const;
-  
-  
-  private:
-  
-  subview_cube_each_common();
   };
 
 
@@ -50,6 +46,7 @@ class subview_cube_each1 : public subview_cube_each_common<eT>
   protected:
   
   arma_inline subview_cube_each1(const Cube<eT>& in_p);
+       inline subview_cube_each1() = delete;
   
   
   public:
@@ -65,8 +62,6 @@ class subview_cube_each1 : public subview_cube_each_common<eT>
   template<typename T1> inline void operator*= (const Base<eT,T1>& x);
   
   
-  private:
-  
   friend class Cube<eT>;
   };
 
@@ -78,6 +73,7 @@ class subview_cube_each2 : public subview_cube_each_common<eT>
   protected:
   
   inline subview_cube_each2(const Cube<eT>& in_p, const Base<uword, TB>& in_indices);
+  inline subview_cube_each2() = delete;
   
   
   public:
@@ -94,8 +90,6 @@ class subview_cube_each2 : public subview_cube_each_common<eT>
   template<typename T1> inline void operator%= (const Base<eT,T1>& x);
   template<typename T1> inline void operator/= (const Base<eT,T1>& x);
   
-  
-  private:
   
   friend class Cube<eT>;
   };

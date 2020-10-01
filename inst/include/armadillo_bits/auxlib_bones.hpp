@@ -27,9 +27,9 @@ class auxlib
   template<const uword row, const uword col>
   struct pos
     {
-    static const uword n2 = row + col*2;
-    static const uword n3 = row + col*3;
-    static const uword n4 = row + col*4;
+    static constexpr uword n2 = row + col*2;
+    static constexpr uword n3 = row + col*3;
+    static constexpr uword n4 = row + col*4;
     };
   
   
@@ -371,10 +371,10 @@ class auxlib
   inline static bool schur(Mat<eT>& U, Mat<eT>& S, const Base<eT,T1>& X, const bool calc_U = true);
   
   template<typename  T, typename T1>
-  inline static bool schur(Mat<std::complex<T> >& U, Mat<std::complex<T> >& S, const Base<std::complex<T>,T1>& X, const bool calc_U = true);
+  inline static bool schur(Mat< std::complex<T> >& U, Mat< std::complex<T> >& S, const Base<std::complex<T>,T1>& X, const bool calc_U = true);
   
   template<typename  T>
-  inline static bool schur(Mat<std::complex<T> >& U, Mat<std::complex<T> >& S, const bool calc_U = true);
+  inline static bool schur(Mat< std::complex<T> >& U, Mat< std::complex<T> >& S, const bool calc_U = true);
   
   //
   // syl (solution of the Sylvester equation AX + XB = C)

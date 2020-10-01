@@ -20,16 +20,16 @@
 
 
 template<typename eT, typename T1, typename T2>
-class subview_elem2 : public Base<eT, subview_elem2<eT,T1,T2> >
+class subview_elem2 : public Base< eT, subview_elem2<eT,T1,T2> >
   {
   public:    
   
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  static const bool is_row  = false;
-  static const bool is_col  = false;
-  static const bool is_xvec = false;
+  static constexpr bool is_row  = false;
+  static constexpr bool is_col  = false;
+  static constexpr bool is_xvec = false;
   
   arma_aligned const Mat<eT>& m;
   
@@ -48,12 +48,17 @@ class subview_elem2 : public Base<eT, subview_elem2<eT,T1,T2> >
   public:
   
   inline ~subview_elem2();
+  inline  subview_elem2() = delete;
   
   template<typename op_type>
   inline void inplace_op(const eT val);
   
   template<typename op_type, typename expr>
   inline void inplace_op(const Base<eT,expr>& x);
+  
+  inline void replace(const eT old_val, const eT new_val);
+  
+  inline void clean(const pod_type threshold);
   
   inline void fill(const eT val);
   inline void zeros();
@@ -81,6 +86,12 @@ class subview_elem2 : public Base<eT, subview_elem2<eT,T1,T2> >
   template<typename expr> inline void operator%= (const Base<eT,expr>& x);
   template<typename expr> inline void operator/= (const Base<eT,expr>& x);
   
+  template<typename expr> inline void operator=  (const SpBase<eT,expr>& x);
+  template<typename expr> inline void operator+= (const SpBase<eT,expr>& x);
+  template<typename expr> inline void operator-= (const SpBase<eT,expr>& x);
+  template<typename expr> inline void operator%= (const SpBase<eT,expr>& x);
+  template<typename expr> inline void operator/= (const SpBase<eT,expr>& x);
+  
   inline static void extract(Mat<eT>& out, const subview_elem2& in);
   
   inline static void  plus_inplace(Mat<eT>& out, const subview_elem2& in);
@@ -89,11 +100,7 @@ class subview_elem2 : public Base<eT, subview_elem2<eT,T1,T2> >
   inline static void   div_inplace(Mat<eT>& out, const subview_elem2& in);
   
   
-  
-  private:
-  
   friend class Mat<eT>;
-  subview_elem2();
   };
 
 

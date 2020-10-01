@@ -28,7 +28,7 @@ qr
          Mat<typename T1::elem_type>&    Q,
          Mat<typename T1::elem_type>&    R,
   const Base<typename T1::elem_type,T1>& X,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();
@@ -59,7 +59,7 @@ qr_econ
          Mat<typename T1::elem_type>&    Q,
          Mat<typename T1::elem_type>&    R,
   const Base<typename T1::elem_type,T1>& X,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();
@@ -98,7 +98,7 @@ qr
   
   arma_debug_check( (&Q == &R), "qr(): Q and R are the same object");
   
-  const char sig = (P_mode != NULL) ? P_mode[0] : char(0);
+  const char sig = (P_mode != nullptr) ? P_mode[0] : char(0);
   
   arma_debug_check( ((sig != 'm') && (sig != 'v')), "qr(): argument 'P_mode' must be \"vector\" or \"matrix\"" );
   

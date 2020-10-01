@@ -20,16 +20,16 @@
 
 
 template<typename T1, typename T2, typename spglue_type>
-class SpGlue : public SpBase<typename T1::elem_type, SpGlue<T1, T2, spglue_type> >
+class SpGlue : public SpBase< typename T1::elem_type, SpGlue<T1, T2, spglue_type> >
   {
   public:
   
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  static const bool is_row  = spglue_type::template traits<T1,T2>::is_row;
-  static const bool is_col  = spglue_type::template traits<T1,T2>::is_col;
-  static const bool is_xvec = spglue_type::template traits<T1,T2>::is_xvec;
+  static constexpr bool is_row  = spglue_type::template traits<T1,T2>::is_row;
+  static constexpr bool is_col  = spglue_type::template traits<T1,T2>::is_col;
+  static constexpr bool is_xvec = spglue_type::template traits<T1,T2>::is_xvec;
   
   inline  SpGlue(const T1& in_A, const T2& in_B);
   inline  SpGlue(const T1& in_A, const T2& in_B, const elem_type in_aux);

@@ -21,7 +21,7 @@
 //! support class for generator functions (eg. zeros, randu, randn, ...)
 template<typename T1, typename gen_type>
 class Gen
-  : public Base<typename T1::elem_type, Gen<T1, gen_type> >
+  : public Base< typename T1::elem_type, Gen<T1, gen_type> >
   , public GenSpecialiser<typename T1::elem_type, is_same_type<gen_type, gen_zeros>::yes, is_same_type<gen_type, gen_ones>::yes, is_same_type<gen_type, gen_randu>::yes, is_same_type<gen_type, gen_randn>::yes>
   {
   public:
@@ -29,12 +29,12 @@ class Gen
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  static const bool use_at    = (is_same_type<gen_type, gen_eye>::value);
-  static const bool is_simple = (is_same_type<gen_type, gen_ones>::value) || (is_same_type<gen_type, gen_zeros>::value); 
+  static constexpr bool use_at    = (is_same_type<gen_type, gen_eye>::value);
+  static constexpr bool is_simple = (is_same_type<gen_type, gen_ones>::value) || (is_same_type<gen_type, gen_zeros>::value); 
   
-  static const bool is_row  = T1::is_row;
-  static const bool is_col  = T1::is_col;
-  static const bool is_xvec = T1::is_xvec;
+  static constexpr bool is_row  = T1::is_row;
+  static constexpr bool is_col  = T1::is_col;
+  static constexpr bool is_xvec = T1::is_xvec;
   
   arma_aligned const uword n_rows;
   arma_aligned const uword n_cols;

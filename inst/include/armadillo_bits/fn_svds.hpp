@@ -30,7 +30,7 @@ svds_helper
   const uword                              k,
   const typename T1::pod_type              tol,
   const bool                               calc_UV,
-  const typename arma_real_only<typename T1::elem_type>::result* junk = 0
+  const typename arma_real_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();
@@ -81,7 +81,10 @@ svds_helper
     Col<eT> eigval;
     Mat<eT> eigvec;
     
-    const bool status = sp_auxlib::eigs_sym(eigval, eigvec, C, kk, "la", (tol / Datum<T>::sqrt2));
+    eigs_opts opts;
+    opts.tol = (tol / Datum<T>::sqrt2);
+    
+    const bool status = eigs_sym(eigval, eigvec, C, kk, "la", opts);
     
     if(status == false)
       {
@@ -145,7 +148,7 @@ svds_helper
   const uword                              k,
   const typename T1::pod_type              tol,
   const bool                               calc_UV,
-  const typename arma_cx_only<typename T1::elem_type>::result* junk = 0
+  const typename arma_cx_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();
@@ -202,7 +205,10 @@ svds_helper
     Col<eT> eigval_tmp;
     Mat<eT> eigvec;
     
-    const bool status = sp_auxlib::eigs_gen(eigval_tmp, eigvec, C, kk, "lr", (tol / Datum<T>::sqrt2));
+    eigs_opts opts;
+    opts.tol = (tol / Datum<T>::sqrt2);
+    
+    const bool status = eigs_gen(eigval_tmp, eigvec, C, kk, "lr", opts);
     
     if(status == false)
       {
@@ -268,7 +274,7 @@ svds
   const SpBase<typename T1::elem_type,T1>& X,
   const uword                              k,
   const typename T1::pod_type              tol  = 0.0,
-  const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk = 0
+  const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();
@@ -293,7 +299,7 @@ svds
   const SpBase<typename T1::elem_type,T1>& X,
   const uword                              k,
   const typename T1::pod_type              tol  = 0.0,
-  const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk = 0
+  const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();
@@ -321,7 +327,7 @@ svds
   const SpBase<typename T1::elem_type,T1>& X,
   const uword                              k,
   const typename T1::pod_type              tol  = 0.0,
-  const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk = 0
+  const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();

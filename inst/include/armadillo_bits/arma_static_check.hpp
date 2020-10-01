@@ -18,49 +18,11 @@
 //! @{
 
 
+#undef  arma_static_check
+#define arma_static_check(condition, message)  static_assert( !(condition), message )
 
-template<bool ERROR___TYPE_MISMATCH_OR_UNSUPPORTED_TYPE>
-struct arma_type_check_cxx1998
-  {
-  arma_inline
-  static
-  void
-  apply()
-    {
-    static const char
-    junk[ ERROR___TYPE_MISMATCH_OR_UNSUPPORTED_TYPE ? -1 : +1 ];
-    }
-  };
-
-
-
-template<>
-struct arma_type_check_cxx1998<false>
-  {
-  arma_inline
-  static
-  void
-  apply()
-    {
-    }
-  };
-
-
-
-#if defined(ARMA_USE_CXX11)
-  
-  #define arma_static_check(condition, message)  static_assert( !(condition), #message )
-  
-  #define arma_type_check(condition)  static_assert( !(condition), "error: type mismatch or unsupported type" )
-  
-#else
-
-  #define arma_static_check(condition, message)  static const char message[ (condition) ? -1 : +1 ]
-  
-  #define arma_type_check(condition)  arma_type_check_cxx1998<condition>::apply()
-
-#endif
-
+#undef  arma_type_check
+#define arma_type_check(condition)             static_assert( !(condition), "error: type mismatch or unsupported type" )
 
 
 //! @}

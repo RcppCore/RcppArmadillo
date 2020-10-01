@@ -189,7 +189,7 @@ class gemm_emul
     const TB&      B,
     const eT       alpha = eT(1),
     const eT       beta  = eT(0),
-    const typename arma_not_cx<eT>::result* junk = 0
+    const typename arma_not_cx<eT>::result* junk = nullptr
     )
     {
     arma_extra_debug_sigprint();
@@ -212,7 +212,7 @@ class gemm_emul
     const Mat<eT>& B,
     const eT       alpha = eT(1),
     const eT       beta  = eT(0),
-    const typename arma_cx_only<eT>::result* junk = 0
+    const typename arma_cx_only<eT>::result* junk = nullptr
     )
     {
     arma_extra_debug_sigprint();

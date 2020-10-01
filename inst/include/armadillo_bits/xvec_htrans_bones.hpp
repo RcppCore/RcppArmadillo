@@ -19,16 +19,16 @@
 
 
 template<typename eT>
-class xvec_htrans : public Base<eT, xvec_htrans<eT> >
+class xvec_htrans : public Base< eT, xvec_htrans<eT> >
   {
   public:
   
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  static const bool is_row  = false;
-  static const bool is_col  = false;
-  static const bool is_xvec = true;
+  static constexpr bool is_row  = false;
+  static constexpr bool is_col  = false;
+  static constexpr bool is_xvec = true;
   
   arma_aligned const eT* const mem;
   

@@ -27,17 +27,17 @@ class op_strans
   template<typename T1>
   struct traits
     {
-    static const bool is_row  = T1::is_col;  // deliberately swapped
-    static const bool is_col  = T1::is_row;
-    static const bool is_xvec = T1::is_xvec;
+    static constexpr bool is_row  = T1::is_col;  // deliberately swapped
+    static constexpr bool is_col  = T1::is_row;
+    static constexpr bool is_xvec = T1::is_xvec;
     };
   
   template<const bool do_flip, const uword row, const uword col>
   struct pos
     {
-    static const uword n2 = (do_flip == false) ? (row + col*2) : (col + row*2);
-    static const uword n3 = (do_flip == false) ? (row + col*3) : (col + row*3);
-    static const uword n4 = (do_flip == false) ? (row + col*4) : (col + row*4);
+    static constexpr uword n2 = (do_flip == false) ? (row + col*2) : (col + row*2);
+    static constexpr uword n3 = (do_flip == false) ? (row + col*3) : (col + row*3);
+    static constexpr uword n4 = (do_flip == false) ? (row + col*4) : (col + row*4);
     };
   
   template<typename eT, typename TA>

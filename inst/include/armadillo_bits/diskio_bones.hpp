@@ -55,8 +55,6 @@ class diskio
   template<typename eT> inline static bool convert_token(eT&              val, const std::string& token);
   template<typename  T> inline static bool convert_token(std::complex<T>& val, const std::string& token);
   
-  template<typename eT> arma_deprecated inline static bool convert_naninf(eT& val, const std::string& token);
-  
   template<typename eT> inline static std::streamsize prepare_stream(std::ostream& f);
   
   

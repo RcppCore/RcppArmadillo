@@ -34,6 +34,7 @@ class subview_each_common
   protected:
   
   arma_inline subview_each_common(const parent& in_P);
+       inline subview_each_common() = delete;
   
   arma_inline const Mat<typename parent::elem_type>& get_mat_ref_helper(const Mat    <typename parent::elem_type>& X) const;
   arma_inline const Mat<typename parent::elem_type>& get_mat_ref_helper(const subview<typename parent::elem_type>& X) const;
@@ -41,11 +42,6 @@ class subview_each_common
   arma_inline const Mat<typename parent::elem_type>& get_mat_ref() const;
   
   arma_cold inline const std::string incompat_size_string(const Mat<typename parent::elem_type>& A) const;
-  
-  
-  private:
-  
-  subview_each_common();
   };
 
 
@@ -64,6 +60,7 @@ class subview_each1 : public subview_each_common<parent, mode>
   typedef typename parent::elem_type eT;
   
   inline ~subview_each1();
+  inline  subview_each1() = delete;
   
   // deliberately returning void
   template<typename T1> inline void operator=  (const Base<eT,T1>& x);
@@ -72,8 +69,6 @@ class subview_each1 : public subview_each_common<parent, mode>
   template<typename T1> inline void operator%= (const Base<eT,T1>& x);
   template<typename T1> inline void operator/= (const Base<eT,T1>& x);
   
-  
-  private:
   
   friend class Mat<eT>;
   friend class subview<eT>;
@@ -96,7 +91,9 @@ class subview_each2 : public subview_each_common<parent, mode>
   typedef typename parent::elem_type eT;
   
   inline void check_indices(const Mat<uword>& indices) const;
+  
   inline ~subview_each2();
+  inline  subview_each2() = delete;
   
   // deliberately returning void
   template<typename T1> inline void operator=  (const Base<eT,T1>& x);
@@ -105,8 +102,6 @@ class subview_each2 : public subview_each_common<parent, mode>
   template<typename T1> inline void operator%= (const Base<eT,T1>& x);
   template<typename T1> inline void operator/= (const Base<eT,T1>& x);
   
-  
-  private:
   
   friend class Mat<eT>;
   friend class subview<eT>;

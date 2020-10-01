@@ -6302,7 +6302,7 @@ auxlib::schur(Mat<eT>& U, Mat<eT>& S, const Base<eT,T1>& X, const bool calc_U)
 template<typename T, typename T1>
 inline
 bool
-auxlib::schur(Mat<std::complex<T> >& U, Mat<std::complex<T> >& S, const Base<std::complex<T>,T1>& X, const bool calc_U)
+auxlib::schur(Mat< std::complex<T> >& U, Mat< std::complex<T> >& S, const Base<std::complex<T>,T1>& X, const bool calc_U)
   {
   arma_extra_debug_sigprint();
   
@@ -6318,7 +6318,7 @@ auxlib::schur(Mat<std::complex<T> >& U, Mat<std::complex<T> >& S, const Base<std
 template<typename T>
 inline
 bool
-auxlib::schur(Mat<std::complex<T> >& U, Mat<std::complex<T> >& S, const bool calc_U)
+auxlib::schur(Mat< std::complex<T> >& U, Mat< std::complex<T> >& S, const bool calc_U)
   {
   arma_extra_debug_sigprint();
   

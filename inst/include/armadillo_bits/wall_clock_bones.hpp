@@ -34,14 +34,7 @@ class wall_clock
   
   bool valid;
   
-  #if defined(ARMA_USE_CXX11)
-    std::chrono::steady_clock::time_point chrono_time1;
-  #elif defined(ARMA_HAVE_GETTIMEOFDAY)
-    struct timeval posix_time1;
-    struct timeval posix_time2;
-  #else
-    std::clock_t time1;
-  #endif
+  std::chrono::steady_clock::time_point chrono_time1;
   };
 
 

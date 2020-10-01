@@ -21,7 +21,7 @@
 
 struct podarray_prealloc_n_elem
   {
-  static const uword val = 16;
+  static constexpr uword val = 16;
   };
 
 

@@ -20,7 +20,7 @@
 
 
 template<typename T1, typename eop_type>
-class eOp : public Base<typename T1::elem_type, eOp<T1, eop_type> >
+class eOp : public Base< typename T1::elem_type, eOp<T1, eop_type> >
   {
   public:
   
@@ -28,13 +28,13 @@ class eOp : public Base<typename T1::elem_type, eOp<T1, eop_type> >
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef          Proxy<T1>                       proxy_type;
   
-  static const bool use_at      = Proxy<T1>::use_at;
-  static const bool use_mp      = Proxy<T1>::use_mp || eop_type::use_mp;
-  static const bool has_subview = Proxy<T1>::has_subview;
+  static constexpr bool use_at      = Proxy<T1>::use_at;
+  static constexpr bool use_mp      = Proxy<T1>::use_mp || eop_type::use_mp;
+  static constexpr bool has_subview = Proxy<T1>::has_subview;
   
-  static const bool is_row  = Proxy<T1>::is_row;
-  static const bool is_col  = Proxy<T1>::is_col;
-  static const bool is_xvec = Proxy<T1>::is_xvec;
+  static constexpr bool is_row  = Proxy<T1>::is_row;
+  static constexpr bool is_col  = Proxy<T1>::is_col;
+  static constexpr bool is_xvec = Proxy<T1>::is_xvec;
   
   arma_aligned const Proxy<T1> P;
   

@@ -22,29 +22,23 @@ namespace junk
   {
   struct arma_elem_size_test
     {
+    arma_static_check( (sizeof(u8) != 1), "error: type 'u8' has unsupported size" );
+    arma_static_check( (sizeof(s8) != 1), "error: type 's8' has unsupported size" );
     
-    // arma_static_check( (sizeof(size_t) < sizeof(uword)),  ERROR___TYPE_SIZE_T_IS_SMALLER_THAN_UWORD );
+    arma_static_check( (sizeof(u16) != 2), "error: type 'u16' has unsupported size" );
+    arma_static_check( (sizeof(s16) != 2), "error: type 's16' has unsupported size" );
     
-    arma_static_check( (sizeof(u8) != 1), ERROR___TYPE_U8_HAS_UNSUPPORTED_SIZE );
-    arma_static_check( (sizeof(s8) != 1), ERROR___TYPE_S8_HAS_UNSUPPORTED_SIZE );
+    arma_static_check( (sizeof(u32) != 4), "error: type 'u32' has unsupported size" );
+    arma_static_check( (sizeof(s32) != 4), "error: type 's32' has unsupported size" );
     
-    arma_static_check( (sizeof(u16) != 2), ERROR___TYPE_U16_HAS_UNSUPPORTED_SIZE );
-    arma_static_check( (sizeof(s16) != 2), ERROR___TYPE_S16_HAS_UNSUPPORTED_SIZE );
+    arma_static_check( (sizeof(u64) != 8), "error: type 'u64' has unsupported size" );
+    arma_static_check( (sizeof(s64) != 8), "error: type 's64' has unsupported size" );
     
-    arma_static_check( (sizeof(u32) != 4), ERROR___TYPE_U32_HAS_UNSUPPORTED_SIZE );
-    arma_static_check( (sizeof(s32) != 4), ERROR___TYPE_S32_HAS_UNSUPPORTED_SIZE );
+    arma_static_check( (sizeof(float)  != 4), "error: type 'float' has unsupported size" );
+    arma_static_check( (sizeof(double) != 8), "error: type 'double' has unsupported size" );
     
-    #if defined(ARMA_USE_U64S64)
-      arma_static_check( (sizeof(u64) != 8), ERROR___TYPE_U64_HAS_UNSUPPORTED_SIZE );
-      arma_static_check( (sizeof(s64) != 8), ERROR___TYPE_S64_HAS_UNSUPPORTED_SIZE );
-    #endif
-    
-    arma_static_check( (sizeof(float)  != 4), ERROR___TYPE_FLOAT_HAS_UNSUPPORTED_SIZE );
-    arma_static_check( (sizeof(double) != 8), ERROR___TYPE_DOUBLE_HAS_UNSUPPORTED_SIZE );
-    
-    arma_static_check( (sizeof(std::complex<float>)  != 8),  ERROR___TYPE_COMPLEX_FLOAT_HAS_UNSUPPORTED_SIZE );
-    arma_static_check( (sizeof(std::complex<double>) != 16), ERROR___TYPE_COMPLEX_DOUBLE_HAS_UNSUPPORTED_SIZE );
-    
+    arma_static_check( (sizeof(std::complex<float>)  != 8),  "type 'std::complex<float>' has unsupported size" );
+    arma_static_check( (sizeof(std::complex<double>) != 16), "type 'std::complex<double>' has unsupported size" );
     };
   }
 

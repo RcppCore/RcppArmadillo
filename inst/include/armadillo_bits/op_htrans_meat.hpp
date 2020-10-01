@@ -399,26 +399,6 @@ op_htrans::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_htrans>& in, c
 
 
 
-template<typename T1>
-arma_hot
-inline
-void
-op_htrans::apply(Mat<typename T1::elem_type>& out, const Op< Op<T1, op_trimat>, op_htrans>& in)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  const unwrap<T1>   tmp(in.m.m);
-  const Mat<eT>& A = tmp.M;
-  
-  const bool upper = in.m.aux_uword_a;
-  
-  op_trimat::apply_htrans(out, A, upper);
-  }
-
-
-
 //
 // op_htrans2
 

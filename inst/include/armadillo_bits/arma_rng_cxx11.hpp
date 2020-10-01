@@ -18,9 +18,6 @@
 //! @{
 
 
-#if defined(ARMA_USE_CXX11)
-
-
 class arma_rng_cxx11
   {
   public:
@@ -206,9 +203,6 @@ arma_rng_cxx11::randg_fill(eT* mem, const uword N, const double a, const double 
     }
   #endif
   }
-
-
-#endif
 
 
 //! @}

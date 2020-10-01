@@ -55,7 +55,7 @@ log_normpdf_helper(Mat<typename T1::elem_type>& out, const Base<typename T1::ele
   typename Proxy<T2>::ea_type M_ea = PM.get_ea();
   typename Proxy<T3>::ea_type S_ea = PS.get_ea();
   
-  const bool use_mp = arma_config::cxx11 && arma_config::openmp && mp_gate<eT,true>::eval(N);
+  const bool use_mp = arma_config::openmp && mp_gate<eT,true>::eval(N);
   
   if(use_mp)
     {

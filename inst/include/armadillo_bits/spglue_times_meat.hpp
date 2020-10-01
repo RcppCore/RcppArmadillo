@@ -108,11 +108,8 @@ spglue_times::apply_noalias(SpMat<eT>& c, const SpMat<eT>& x, const SpMat<eT>& y
   //SpMat<typename T1::elem_type> c(x_n_rows, y_n_cols); // Initializes col_ptrs to 0.
   c.zeros(x_n_rows, y_n_cols);
   
-  //if( (x.n_elem == 0) || (y.n_elem == 0) )
-  if( (x.n_nonzero == 0) || (y.n_nonzero == 0) )
-    {
-    return;
-    }
+  //if( (x.n_elem == 0) || (y.n_elem == 0) )  { return; }
+  if( (x.n_nonzero == 0) || (y.n_nonzero == 0) )  { return; }
   
   // Auxiliary storage which denotes when items have been found.
   podarray<uword> index(x_n_rows);
@@ -261,7 +258,7 @@ spglue_times::apply_noalias(SpMat<eT>& c, const SpMat<eT>& x, const SpMat<eT>& y
       }
 
     // Now sort the indices.
-    if (cur_index != 0)
+    if(cur_index != 0)
       {
       op_sort::direct_sort_ascending(sorted_indices.memptr(), cur_index);
 

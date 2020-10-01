@@ -14,23 +14,44 @@
 // ------------------------------------------------------------------------
 
 
+#undef ARMA_HAVE_CXX11
+#undef ARMA_HAVE_CXX14
+#undef ARMA_HAVE_CXX17
 
 #if (__cplusplus >= 201103L)
-  #undef  ARMA_USE_CXX11
-  #define ARMA_USE_CXX11
+  #define ARMA_HAVE_CXX11
+#endif
+
+#if (__cplusplus >= 201402L)
+  #define ARMA_HAVE_CXX14
+#endif
+
+#if (__cplusplus >= 201703L)
+  #define ARMA_HAVE_CXX17
 #endif
 
 
 // MS really can't get its proverbial shit together
 #if (defined(_MSVC_LANG) && (_MSVC_LANG >= 201402L))
-  #undef  ARMA_USE_CXX11
-  #define ARMA_USE_CXX11
-  #undef  ARMA_DONT_PRINT_CXX11_WARNING
-  #define ARMA_DONT_PRINT_CXX11_WARNING
+  #undef  ARMA_HAVE_CXX11
+  #undef  ARMA_HAVE_CXX14
+  
+  #define ARMA_HAVE_CXX11
+  #define ARMA_HAVE_CXX14
 #endif
 
 
-#if (defined(_OPENMP) && (_OPENMP >= 201107))
-  #undef  ARMA_USE_OPENMP
-  #define ARMA_USE_OPENMP
+// handle config option from earlier versions of Armadillo
+#if defined(ARMA_DONT_USE_CXX11)
+  #undef ARMA_HAVE_CXX11
 #endif
+
+
+#if !defined(ARMA_HAVE_CXX11)
+  #error "*** C++11 compiler required; enable C++11 mode in your compiler, or use an earlier version of Armadillo"
+#endif
+
+
+// for compatibility with earlier versions of Armadillo
+#undef  ARMA_USE_CXX11
+#define ARMA_USE_CXX11

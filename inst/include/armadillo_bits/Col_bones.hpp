@@ -27,9 +27,9 @@ class Col : public Mat<eT>
   typedef eT                                elem_type;
   typedef typename get_pod_type<eT>::result pod_type;
   
-  static const bool is_col  = true;
-  static const bool is_row  = false;
-  static const bool is_xvec = false;
+  static constexpr bool is_col  = true;
+  static constexpr bool is_row  = false;
+  static constexpr bool is_xvec = false;
   
   inline          Col();
   inline          Col(const Col<eT>& X);
@@ -50,13 +50,11 @@ class Col : public Mat<eT>
   inline            Col(const std::vector<eT>& x);
   inline Col& operator=(const std::vector<eT>& x);
   
-  #if defined(ARMA_USE_CXX11)
   inline            Col(const std::initializer_list<eT>& list);
   inline Col& operator=(const std::initializer_list<eT>& list);
   
   inline            Col(Col&& m);
   inline Col& operator=(Col&& m);
-  #endif
   
   inline Col& operator=(const eT val);
   inline Col& operator=(const Col& m);
@@ -173,7 +171,7 @@ class Col<eT>::fixed : public Col<eT>
   {
   private:
   
-  static const bool use_extra = (fixed_n_elem > arma_config::mat_prealloc);
+  static constexpr bool use_extra = (fixed_n_elem > arma_config::mat_prealloc);
   
   arma_align_mem eT mem_local_extra[ (use_extra) ? fixed_n_elem : 1 ];
   
@@ -185,9 +183,9 @@ class Col<eT>::fixed : public Col<eT>
   typedef eT                                elem_type;
   typedef typename get_pod_type<eT>::result pod_type;
   
-  static const bool is_col  = true;
-  static const bool is_row  = false;
-  static const bool is_xvec = false;
+  static constexpr bool is_col  = true;
+  static constexpr bool is_row  = false;
+  static constexpr bool is_xvec = false;
   
   static const uword n_rows;  // value provided below the class definition
   static const uword n_cols;  // value provided below the class definition
@@ -215,10 +213,8 @@ class Col<eT>::fixed : public Col<eT>
   
   using Col<eT>::operator();
   
-  #if defined(ARMA_USE_CXX11)
-    inline          fixed(const std::initializer_list<eT>& list);
-    inline Col& operator=(const std::initializer_list<eT>& list);
-  #endif
+  inline          fixed(const std::initializer_list<eT>& list);
+  inline Col& operator=(const std::initializer_list<eT>& list);
   
   arma_inline Col& operator=(const fixed<fixed_n_elem>& X);
   

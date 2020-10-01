@@ -45,7 +45,7 @@ find(const Base<typename T1::elem_type,T1>& X, const uword k, const char* direct
   {
   arma_extra_debug_sigprint();
   
-  const char sig = (direction != NULL) ? direction[0] : char(0);
+  const char sig = (direction != nullptr) ? direction[0] : char(0);
   
   arma_debug_check
     (

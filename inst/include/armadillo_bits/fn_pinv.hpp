@@ -34,7 +34,7 @@ pinv
   
   typedef typename T1::elem_type eT;
   
-  const char sig = (method != NULL) ? method[0] : char(0);
+  const char sig = (method != nullptr) ? method[0] : char(0);
   
   arma_debug_check( ((sig != 's') && (sig != 'd')), "pinv(): unknown method specified" );
   
@@ -56,7 +56,7 @@ pinv
   {
   arma_extra_debug_sigprint();
   
-  const char sig = (method != NULL) ? method[0] : char(0);
+  const char sig = (method != nullptr) ? method[0] : char(0);
   
   arma_debug_check( ((sig != 's') && (sig != 'd')), "pinv(): unknown method specified" );
   

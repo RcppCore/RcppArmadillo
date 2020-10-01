@@ -19,18 +19,18 @@
 
 
 
-#define ARMA_VERSION_MAJOR 9
-#define ARMA_VERSION_MINOR 900
-#define ARMA_VERSION_PATCH 3
-#define ARMA_VERSION_NAME  "Nocturnal Misbehaviour"
+#define ARMA_VERSION_MAJOR 10
+#define ARMA_VERSION_MINOR 0
+#define ARMA_VERSION_PATCH 91
+#define ARMA_VERSION_NAME  "10.1-RC1"
 
 
 
 struct arma_version
   {
-  static const unsigned int major = ARMA_VERSION_MAJOR;
-  static const unsigned int minor = ARMA_VERSION_MINOR;
-  static const unsigned int patch = ARMA_VERSION_PATCH;
+  static constexpr unsigned int major = ARMA_VERSION_MAJOR;
+  static constexpr unsigned int minor = ARMA_VERSION_MINOR;
+  static constexpr unsigned int patch = ARMA_VERSION_PATCH;
   
   static
   inline

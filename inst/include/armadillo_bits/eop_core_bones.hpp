@@ -50,8 +50,8 @@ class eop_core
   };
 
 
-struct eop_use_mp_true  { static const bool use_mp = true;  };
-struct eop_use_mp_false { static const bool use_mp = false; };
+struct eop_use_mp_true  { static constexpr bool use_mp = true;  };
+struct eop_use_mp_false { static constexpr bool use_mp = false; };
 
 
 class eop_neg               : public eop_core<eop_neg>               , public eop_use_mp_false {};

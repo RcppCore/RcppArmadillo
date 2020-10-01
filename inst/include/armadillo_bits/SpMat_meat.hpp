@@ -29,9 +29,9 @@ SpMat<eT>::SpMat()
   , n_elem(0)
   , n_nonzero(0)
   , vec_state(0)
-  , values(NULL)
-  , row_indices(NULL)
-  , col_ptrs(NULL)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -67,9 +67,9 @@ SpMat<eT>::SpMat(const uword in_rows, const uword in_cols)
   , n_elem(0)
   , n_nonzero(0)
   , vec_state(0)
-  , values(NULL)
-  , row_indices(NULL)
-  , col_ptrs(NULL)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -86,9 +86,9 @@ SpMat<eT>::SpMat(const SizeMat& s)
   , n_elem(0)
   , n_nonzero(0)
   , vec_state(0)
-  , values(NULL)
-  , row_indices(NULL)
-  , col_ptrs(NULL)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -105,9 +105,9 @@ SpMat<eT>::SpMat(const arma_reserve_indicator&, const uword in_rows, const uword
   , n_elem(0)
   , n_nonzero(0)
   , vec_state(0)
-  , values(NULL)
-  , row_indices(NULL)
-  , col_ptrs(NULL)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -125,9 +125,9 @@ SpMat<eT>::SpMat(const arma_layout_indicator&, const SpMat<eT2>& x)
   , n_elem(0)
   , n_nonzero(0)
   , vec_state(0)
-  , values(NULL)
-  , row_indices(NULL)
-  , col_ptrs(NULL)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -154,9 +154,9 @@ SpMat<eT>::SpMat(const char* text)
   , n_elem(0)
   , n_nonzero(0)
   , vec_state(0)
-  , values(NULL)
-  , row_indices(NULL)
-  , col_ptrs(NULL)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -187,9 +187,9 @@ SpMat<eT>::SpMat(const std::string& text)
   , n_elem(0)
   , n_nonzero(0)
   , vec_state(0)
-  , values(NULL)
-  , row_indices(NULL)
-  , col_ptrs(NULL)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
   {
   arma_extra_debug_sigprint();
   
@@ -220,9 +220,9 @@ SpMat<eT>::SpMat(const SpMat<eT>& x)
   , n_elem(0)
   , n_nonzero(0)
   , vec_state(0)
-  , values(NULL)
-  , row_indices(NULL)
-  , col_ptrs(NULL)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -231,41 +231,37 @@ SpMat<eT>::SpMat(const SpMat<eT>& x)
 
 
 
-#if defined(ARMA_USE_CXX11)
+template<typename eT>
+inline
+SpMat<eT>::SpMat(SpMat<eT>&& in_mat)
+  : n_rows(0)
+  , n_cols(0)
+  , n_elem(0)
+  , n_nonzero(0)
+  , vec_state(0)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
+  {
+  arma_extra_debug_sigprint_this(this);
+  arma_extra_debug_sigprint(arma_str::format("this = %x   in_mat = %x") % this % &in_mat);
   
-  template<typename eT>
-  inline
-  SpMat<eT>::SpMat(SpMat<eT>&& in_mat)
-    : n_rows(0)
-    , n_cols(0)
-    , n_elem(0)
-    , n_nonzero(0)
-    , vec_state(0)
-    , values(NULL)
-    , row_indices(NULL)
-    , col_ptrs(NULL)
-    {
-    arma_extra_debug_sigprint_this(this);
-    arma_extra_debug_sigprint(arma_str::format("this = %x   in_mat = %x") % this % &in_mat);
-    
-    (*this).steal_mem(in_mat);
-    }
+  (*this).steal_mem(in_mat);
+  }
+
+
+
+template<typename eT>
+inline
+SpMat<eT>&
+SpMat<eT>::operator=(SpMat<eT>&& in_mat)
+  {
+  arma_extra_debug_sigprint(arma_str::format("this = %x   in_mat = %x") % this % &in_mat);
   
+  (*this).steal_mem(in_mat);
   
-  
-  template<typename eT>
-  inline
-  SpMat<eT>&
-  SpMat<eT>::operator=(SpMat<eT>&& in_mat)
-    {
-    arma_extra_debug_sigprint(arma_str::format("this = %x   in_mat = %x") % this % &in_mat);
-    
-    (*this).steal_mem(in_mat);
-    
-    return *this;
-    }
-  
-#endif
+  return *this;
+  }
 
 
 
@@ -277,9 +273,9 @@ SpMat<eT>::SpMat(const MapMat<eT>& x)
   , n_elem(0)
   , n_nonzero(0)
   , vec_state(0)
-  , values(NULL)
-  , row_indices(NULL)
-  , col_ptrs(NULL)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -316,9 +312,9 @@ SpMat<eT>::SpMat(const Base<uword,T1>& locations_expr, const Base<eT,T2>& vals_e
   , n_elem(0)
   , n_nonzero(0)
   , vec_state(0)
-  , values(NULL)
-  , row_indices(NULL)
-  , col_ptrs(NULL)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -392,9 +388,9 @@ SpMat<eT>::SpMat(const Base<uword,T1>& locations_expr, const Base<eT,T2>& vals_e
   , n_elem(0)
   , n_nonzero(0)
   , vec_state(0)
-  , values(NULL)
-  , row_indices(NULL)
-  , col_ptrs(NULL)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -464,9 +460,9 @@ SpMat<eT>::SpMat(const bool add_values, const Base<uword,T1>& locations_expr, co
   , n_elem(0)
   , n_nonzero(0)
   , vec_state(0)
-  , values(NULL)
-  , row_indices(NULL)
-  , col_ptrs(NULL)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -550,9 +546,9 @@ SpMat<eT>::SpMat
   , n_elem(0)
   , n_nonzero(0)
   , vec_state(0)
-  , values(NULL)
-  , row_indices(NULL)
-  , col_ptrs(NULL)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -808,9 +804,9 @@ SpMat<eT>::SpMat(const SpToDOp<T1, op_type>& expr)
   , n_elem(0)
   , n_nonzero(0)
   , vec_state(0)
-  , values(NULL)
-  , row_indices(NULL)
-  , col_ptrs(NULL)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -838,9 +834,9 @@ SpMat<eT>::SpMat
   , n_elem(0)
   , n_nonzero(0)
   , vec_state(0)
-  , values(NULL)
-  , row_indices(NULL)
-  , col_ptrs(NULL)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
   {
   arma_extra_debug_sigprint();
   
@@ -929,9 +925,9 @@ SpMat<eT>::SpMat(const Base<eT, T1>& x)
   , n_elem(0)
   , n_nonzero(0)
   , vec_state(0)
-  , values(NULL)
-  , row_indices(NULL)
-  , col_ptrs(NULL)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -1236,9 +1232,9 @@ SpMat<eT>::SpMat(const Op<T1, op_diagmat>& expr)
   , n_elem(0)
   , n_nonzero(0)
   , vec_state(0)
-  , values(NULL)
-  , row_indices(NULL)
-  , col_ptrs(NULL)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
 
@@ -1379,9 +1375,9 @@ SpMat<eT>::SpMat(const SpSubview<eT>& X)
   , n_elem(0)
   , n_nonzero(0)
   , vec_state(0)
-  , values(NULL)
-  , row_indices(NULL)
-  , col_ptrs(NULL)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -1557,6 +1553,131 @@ SpMat<eT>::operator/=(const SpSubview<eT>& x)
 
 
 template<typename eT>
+template<typename T1>
+inline
+SpMat<eT>::SpMat(const SpSubview_col_list<eT,T1>& X)
+  : n_rows(0)
+  , n_cols(0)
+  , n_elem(0)
+  , n_nonzero(0)
+  , vec_state(0)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  SpSubview_col_list<eT,T1>::extract(*this, X);
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+SpMat<eT>&
+SpMat<eT>::operator=(const SpSubview_col_list<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool alias = (this == &(X.m));
+  
+  if(alias == false)
+    {
+    SpSubview_col_list<eT,T1>::extract(*this, X);
+    }
+  else
+    {
+    SpMat<eT> tmp(X);
+    
+    steal_mem(tmp);
+    }
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+SpMat<eT>&
+SpMat<eT>::operator+=(const SpSubview_col_list<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  SpSubview_col_list<eT,T1>::plus_inplace(*this, X);
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+SpMat<eT>&
+SpMat<eT>::operator-=(const SpSubview_col_list<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  SpSubview_col_list<eT,T1>::minus_inplace(*this, X);
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+SpMat<eT>&
+SpMat<eT>::operator*=(const SpSubview_col_list<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  sync_csc();
+  
+  SpMat<eT> z = (*this) * X;
+  
+  steal_mem(z);
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+SpMat<eT>&
+SpMat<eT>::operator%=(const SpSubview_col_list<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  SpSubview_col_list<eT,T1>::schur_inplace(*this, X);
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+SpMat<eT>&
+SpMat<eT>::operator/=(const SpSubview_col_list<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  SpSubview_col_list<eT,T1>::div_inplace(*this, X);
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
 inline
 SpMat<eT>::SpMat(const spdiagview<eT>& X)
   : n_rows(0)
@@ -1564,9 +1685,9 @@ SpMat<eT>::SpMat(const spdiagview<eT>& X)
   , n_elem(0)
   , n_nonzero(0)
   , vec_state(0)
-  , values(NULL)
-  , row_indices(NULL)
-  , col_ptrs(NULL)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -1668,9 +1789,9 @@ SpMat<eT>::SpMat(const SpOp<T1, spop_type>& X)
   , n_elem(0)
   , n_nonzero(0)
   , vec_state(0)
-  , values(NULL) // set in application of sparse operation
-  , row_indices(NULL)
-  , col_ptrs(NULL)
+  , values(nullptr) // set in application of sparse operation
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -1808,9 +1929,9 @@ SpMat<eT>::SpMat(const SpGlue<T1, T2, spglue_type>& X)
   , n_elem(0)
   , n_nonzero(0)
   , vec_state(0)
-  , values(NULL)
-  , row_indices(NULL)
-  , col_ptrs(NULL)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -1948,9 +2069,9 @@ SpMat<eT>::SpMat(const mtSpOp<eT, T1, spop_type>& X)
   , n_elem(0)
   , n_nonzero(0)
   , vec_state(0)
-  , values(NULL)
-  , row_indices(NULL)
-  , col_ptrs(NULL)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -2074,9 +2195,9 @@ SpMat<eT>::SpMat(const mtSpGlue<eT, T1, T2, spglue_type>& X)
   , n_elem(0)
   , n_nonzero(0)
   , vec_state(0)
-  , values(NULL)
-  , row_indices(NULL)
-  , col_ptrs(NULL)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -2767,6 +2888,32 @@ SpMat<eT>::tail_cols(const uword N) const
   const uword start_col = n_cols - N;
   
   return SpSubview<eT>(*this, 0, start_col, n_rows, N);
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+arma_inline
+SpSubview_col_list<eT, T1>
+SpMat<eT>::cols(const Base<uword, T1>& indices)
+  {
+  arma_extra_debug_sigprint();
+  
+  return SpSubview_col_list<eT, T1>(*this, indices);
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+arma_inline
+const SpSubview_col_list<eT, T1>
+SpMat<eT>::cols(const Base<uword, T1>& indices) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return SpSubview_col_list<eT, T1>(*this, indices);
   }
 
 
@@ -5116,7 +5263,7 @@ SpMat<eT>::init_cold(uword in_rows, uword in_cols, const uword new_n_nonzero)
   #if defined(ARMA_64BIT_WORD)
     const char* error_message = "SpMat::init(): requested size is too large";
   #else
-    const char* error_message = "SpMat::init(): requested size is too large; suggest to compile in C++11 mode and/or enable ARMA_64BIT_WORD";
+    const char* error_message = "SpMat::init(): requested size is too large; suggest to enable ARMA_64BIT_WORD";
   #endif
   
   // Ensure that n_elem can hold the result of (n_rows * n_cols)
@@ -5206,7 +5353,7 @@ SpMat<eT>::init(const SpMat<eT>& x)
         init_done = true;
         }
       }
-  #elif (defined(ARMA_USE_CXX11) && !defined(ARMA_DONT_USE_CXX11_MUTEX))
+  #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
     if(x.sync_state == 1)
       {
       x.cache_mutex.lock();
@@ -5666,9 +5813,9 @@ SpMat<eT>::SpMat(const arma_vec_indicator&, const uword in_vec_state)
   , n_elem(0)
   , n_nonzero(0)
   , vec_state(in_vec_state)
-  , values(NULL)
-  , row_indices(NULL)
-  , col_ptrs(NULL)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -5689,9 +5836,9 @@ SpMat<eT>::SpMat(const arma_vec_indicator&, const uword in_n_rows, const uword i
   , n_elem(0)
   , n_nonzero(0)
   , vec_state(in_vec_state)
-  , values(NULL)
-  , row_indices(NULL)
-  , col_ptrs(NULL)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -5875,9 +6022,9 @@ SpMat<eT>::steal_mem_simple(SpMat<eT>& x)
   access::rw(x.n_elem)    = 0;
   access::rw(x.n_nonzero) = 0;
   
-  access::rw(x.values)      = NULL;
-  access::rw(x.row_indices) = NULL;
-  access::rw(x.col_ptrs)    = NULL;
+  access::rw(x.values)      = nullptr;
+  access::rw(x.row_indices) = nullptr;
+  access::rw(x.col_ptrs)    = nullptr;
   }
 
 
@@ -6450,7 +6597,7 @@ SpMat<eT>::find_value_csc(const uword in_row, const uword in_col) const
     return &(values[index]);
     }
   
-  return NULL;
+  return nullptr;
   }
 
 
@@ -6464,7 +6611,7 @@ SpMat<eT>::get_value_csc(const uword in_row, const uword in_col) const
   {
   const eT* val_ptr = find_value_csc(in_row, in_col);
   
-  return (val_ptr != NULL) ? eT(*val_ptr) : eT(0);
+  return (val_ptr != nullptr) ? eT(*val_ptr) : eT(0);
   }
 
 
@@ -6479,7 +6626,7 @@ SpMat<eT>::try_set_value_csc(const uword in_row, const uword in_col, const eT in
   const eT* val_ptr = find_value_csc(in_row, in_col);
   
   // element not found, ie. it's zero; fail if trying to set it to non-zero value
-  if(val_ptr == NULL)  { return (in_val == eT(0)); }
+  if(val_ptr == nullptr)  { return (in_val == eT(0)); }
   
   // fail if trying to erase an existing element
   if(in_val == eT(0))  { return false; }
@@ -6503,7 +6650,7 @@ SpMat<eT>::try_add_value_csc(const uword in_row, const uword in_col, const eT in
   const eT* val_ptr = find_value_csc(in_row, in_col);
   
   // element not found, ie. it's zero; fail if trying to add a non-zero value
-  if(val_ptr == NULL)  { return (in_val == eT(0)); }
+  if(val_ptr == nullptr)  { return (in_val == eT(0)); }
   
   const eT new_val = eT(*val_ptr) + in_val;
   
@@ -6529,7 +6676,7 @@ SpMat<eT>::try_sub_value_csc(const uword in_row, const uword in_col, const eT in
   const eT* val_ptr = find_value_csc(in_row, in_col);
   
   // element not found, ie. it's zero; fail if trying to subtract a non-zero value
-  if(val_ptr == NULL)  { return (in_val == eT(0)); }
+  if(val_ptr == nullptr)  { return (in_val == eT(0)); }
   
   const eT new_val = eT(*val_ptr) - in_val;
   
@@ -6555,7 +6702,7 @@ SpMat<eT>::try_mul_value_csc(const uword in_row, const uword in_col, const eT in
   const eT* val_ptr = find_value_csc(in_row, in_col);
   
   // element not found, ie. it's zero; succeed if given value is finite; zero multiplied by anything is zero, except for nan and inf
-  if(val_ptr == NULL)  { return arma_isfinite(in_val); }
+  if(val_ptr == nullptr)  { return arma_isfinite(in_val); }
   
   const eT new_val = eT(*val_ptr) * in_val;
   
@@ -6581,7 +6728,7 @@ SpMat<eT>::try_div_value_csc(const uword in_row, const uword in_col, const eT in
   const eT* val_ptr = find_value_csc(in_row, in_col);
   
   // element not found, ie. it's zero; succeed if given value is not zero and not nan; zero divided by anything is zero, except for zero and nan
-  if(val_ptr == NULL)  { return ((in_val != eT(0)) && (arma_isnan(in_val) == false)); }
+  if(val_ptr == nullptr)  { return ((in_val != eT(0)) && (arma_isnan(in_val) == false)); }
   
   const eT new_val = eT(*val_ptr) / in_val;
   
@@ -6809,7 +6956,7 @@ SpMat<eT>::sync_cache() const
         }
       }
     }
-  #elif (defined(ARMA_USE_CXX11) && !defined(ARMA_DONT_USE_CXX11_MUTEX))
+  #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
     {
     if(sync_state == 0)
       {
@@ -6862,7 +7009,7 @@ SpMat<eT>::sync_csc() const
         sync_csc_simple();
         }
       }
-  #elif (defined(ARMA_USE_CXX11) && !defined(ARMA_DONT_USE_CXX11_MUTEX))
+  #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
     if(sync_state == 1)
       {
       cache_mutex.lock();

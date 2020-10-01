@@ -27,9 +27,9 @@ class spop_strans
   template<typename T1>
   struct traits
     {
-    static const bool is_row  = T1::is_col;  // deliberately swapped
-    static const bool is_col  = T1::is_row;
-    static const bool is_xvec = T1::is_xvec;
+    static constexpr bool is_row  = T1::is_col;  // deliberately swapped
+    static constexpr bool is_col  = T1::is_row;
+    static constexpr bool is_xvec = T1::is_xvec;
     };
   
   template<typename eT>

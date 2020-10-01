@@ -167,7 +167,7 @@ log_add_exp(eT log_a, eT log_b)
     }
   else
     {
-    return (log_a + arma_log1p(std::exp(negdelta)));
+    return (log_a + std::log1p(std::exp(negdelta)));
     }
   }
 
@@ -190,7 +190,7 @@ template<typename eT>
 arma_warn_unused
 arma_inline
 bool
-is_finite(const eT x, const typename arma_scalar_only<eT>::result* junk = 0)
+is_finite(const eT x, const typename arma_scalar_only<eT>::result* junk = nullptr)
   {
   arma_ignore(junk);
   
@@ -241,19 +241,19 @@ is_finite(const BaseCube<typename T1::elem_type,T1>& X)
 
 
 
-//! NOTE: don't use this function: it will be removed
-template<typename T1>
-arma_deprecated
-inline
-const T1&
-sympd(const Base<typename T1::elem_type,T1>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_debug_warn("sympd() is deprecated and will be removed; change inv(sympd(X)) to inv_sympd(X)");
-  
-  return X.get_ref();
-  }
+// //! NOTE: don't use this function: it will be removed
+// template<typename T1>
+// arma_deprecated
+// inline
+// const T1&
+// sympd(const Base<typename T1::elem_type,T1>& X)
+//   {
+//   arma_extra_debug_sigprint();
+//   
+//   arma_debug_warn("sympd() is deprecated and will be removed; change inv(sympd(X)) to inv_sympd(X)");
+//   
+//   return X.get_ref();
+//   }
 
 
 

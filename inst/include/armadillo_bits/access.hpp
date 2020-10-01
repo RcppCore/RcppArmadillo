@@ -23,19 +23,19 @@ class access
   public:
   
   //! internal function to allow modification of data declared as read-only (use with caution)
-  template<typename T1> arma_inline static T1&  rw (const T1& x)        { return const_cast<T1& >(x); }
-  template<typename T1> arma_inline static T1*& rwp(const T1* const& x) { return const_cast<T1*&>(x); }
+  template<typename T1>   constexpr static T1&  rw (const T1& x)        { return const_cast<T1& >(x); }
+  template<typename T1>   constexpr static T1*& rwp(const T1* const& x) { return const_cast<T1*&>(x); }
   
   //! internal function to obtain the real part of either a plain number or a complex number
-  template<typename eT> arma_inline static const eT& tmp_real(const eT&              X) { return X;        }
-  template<typename  T> arma_inline static const   T tmp_real(const std::complex<T>& X) { return X.real(); }
+  template<typename eT>   constexpr static const eT& tmp_real(const eT&              X) { return X;        }
+  template<typename  T>   constexpr static const   T tmp_real(const std::complex<T>& X) { return X.real(); }
   
   //! internal function to obtain the imag part of either a plain number or a complex number
-  template<typename eT> arma_inline static const eT tmp_imag(const eT                ) { return eT(0);    }
-  template<typename  T> arma_inline static const  T tmp_imag(const std::complex<T>& X) { return X.imag(); }
+  template<typename eT>   constexpr static const eT tmp_imag(const eT                ) { return eT(0);    }
+  template<typename  T>   constexpr static const  T tmp_imag(const std::complex<T>& X) { return X.imag(); }
   
   //! internal function to work around braindead compilers
-  template<typename eT> arma_inline static const typename enable_if2<is_cx<eT>::no,  const eT&>::result alt_conj(const eT& X) { return X;            }
+  template<typename eT>   constexpr static const typename enable_if2<is_cx<eT>::no,  const eT&>::result alt_conj(const eT& X) { return X;            }
   template<typename eT> arma_inline static const typename enable_if2<is_cx<eT>::yes, const eT >::result alt_conj(const eT& X) { return std::conj(X); }
   };
 
