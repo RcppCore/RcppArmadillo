@@ -20,7 +20,6 @@
 
 inline
 wall_clock::wall_clock()
-  : valid(false)
   {
   arma_extra_debug_sigprint();
   }
@@ -63,10 +62,8 @@ wall_clock::toc()
     
     return chrono_span.count();
     }
-  else
-    {  
-    return 0.0;
-    }
+  
+  return 0.0;
   }
 
 

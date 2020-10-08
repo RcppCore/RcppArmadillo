@@ -311,7 +311,7 @@ hdf5_search_callback
     
     // Now we have to check against our set of names.
     // Only check names which could be better.
-    for (size_t string_pos = 0; string_pos < search_info->best_match_position; ++string_pos)
+    for(size_t string_pos = 0; string_pos < search_info->best_match_position; ++string_pos)
       {
       // name is the full path (/path/to/dataset); names[string_pos] may be
       // "dataset", "/to/dataset", or "/path/to/dataset".
@@ -321,7 +321,7 @@ hdf5_search_callback
       
       // Count the number of forward slashes in names[string_pos].
       uword name_count = 0;
-      for (uword i = 0; i < search_info->names[string_pos].length(); ++i)
+      for(uword i = 0; i < search_info->names[string_pos].length(); ++i)
         {
         if((search_info->names[string_pos])[i] == '/') { ++name_count; }
         }
@@ -329,7 +329,7 @@ hdf5_search_callback
       // Count the number of forward slashes in the full name.
       uword count = 0;
       const std::string str = std::string(name);
-      for (uword i = 0; i < str.length(); ++i)
+      for(uword i = 0; i < str.length(); ++i)
         {
         if(str[i] == '/') { ++count; }
         }

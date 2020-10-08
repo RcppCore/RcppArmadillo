@@ -63,7 +63,7 @@ spglue_plus::apply_noalias(SpMat<eT>& out, const SpProxy<T1>& pa, const SpProxy<
   if(pa.get_n_nonzero() == 0)  { out = pb.Q; return; }
   if(pb.get_n_nonzero() == 0)  { out = pa.Q; return; }
   
-  const uword max_n_nonzero = spglue_elem_helper::max_n_nonzero_plus(pa, pb);
+  const uword max_n_nonzero = pa.get_n_nonzero() + pb.get_n_nonzero();
   
   // Resize memory to upper bound
   out.reserve(pa.get_n_rows(), pa.get_n_cols(), max_n_nonzero);
@@ -125,6 +125,8 @@ spglue_plus::apply_noalias(SpMat<eT>& out, const SpProxy<T1>& pa, const SpProxy<
       access::rw(out.col_ptrs[out_col + 1])++;
       ++count;
       }
+    
+    arma_check( (count > max_n_nonzero), "internal error: spglue_plus::apply_noalias(): count > max_n_nonzero" );
     }
   
   const uword out_n_cols = out.n_cols;

@@ -29,9 +29,9 @@ class mtOpCube : public BaseCube< out_eT, mtOpCube<out_eT, T1, op_type> >
   
   typedef          out_eT                       elem_type;
   typedef typename get_pod_type<out_eT>::result pod_type;
-
+  
   typedef typename T1::elem_type                in_eT;
-
+  
   inline explicit mtOpCube(const T1& in_m);
   inline          mtOpCube(const T1& in_m, const in_eT in_aux);
   inline          mtOpCube(const T1& in_m, const uword in_aux_uword_a, const uword in_aux_uword_b, const uword in_aux_uword_c);

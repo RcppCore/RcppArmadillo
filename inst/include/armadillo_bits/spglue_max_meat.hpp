@@ -58,11 +58,7 @@ spglue_max::apply_noalias(SpMat<eT>& out, const SpProxy<T1>& pa, const SpProxy<T
   
   arma_debug_assert_same_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "element-wise max");
   
-  if(pa.get_n_nonzero() == 0)  { out = pb.Q; return; }
-  if(pb.get_n_nonzero() == 0)  { out = pa.Q; return; }
-  
-  // The plus helper works here also to get an upper bound on n_nonzero.
-  const uword max_n_nonzero = spglue_elem_helper::max_n_nonzero_plus(pa, pb);
+  const uword max_n_nonzero = pa.get_n_nonzero() + pb.get_n_nonzero();
   
   // Resize memory to upper bound
   out.reserve(pa.get_n_rows(), pa.get_n_cols(), max_n_nonzero);
@@ -124,6 +120,8 @@ spglue_max::apply_noalias(SpMat<eT>& out, const SpProxy<T1>& pa, const SpProxy<T
       access::rw(out.col_ptrs[out_col + 1])++;
       ++count;
       }
+    
+    arma_check( (count > max_n_nonzero), "internal error: spglue_max::apply_noalias(): count > max_n_nonzero" );
     }
   
   const uword out_n_cols = out.n_cols;

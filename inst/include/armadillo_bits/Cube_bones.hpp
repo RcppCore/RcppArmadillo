@@ -313,8 +313,6 @@ class Cube : public BaseCube< eT, Cube<eT> >
   inline void resize(const uword in_rows, const uword in_cols, const uword in_slices);
   inline void resize(const SizeCube& s);
   
-  arma_deprecated inline void reshape(const uword in_rows, const uword in_cols, const uword in_slices, const uword dim);  //!< NOTE: don't use this form: it will be removed
-  
   
   template<typename eT2> inline void copy_size(const Cube<eT2>& m);
   

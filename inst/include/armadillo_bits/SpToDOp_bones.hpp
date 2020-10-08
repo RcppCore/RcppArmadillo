@@ -34,21 +34,20 @@ template<typename T1, typename op_type>
 class SpToDOp : public Base< typename T1::elem_type, SpToDOp<T1, op_type> >
   {
   public:
-
+  
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
-
+  
   inline explicit SpToDOp(const T1& in_m);
   inline          SpToDOp(const T1& in_m, const elem_type in_aux);
   inline         ~SpToDOp();
-
+  
   arma_aligned const T1&       m;            //!< the operand; must be derived from SpBase
   arma_aligned       elem_type aux;          //!< auxiliary data, using the element type as used by T1
-
+  
   static constexpr bool is_row  = op_type::template traits<T1>::is_row;
   static constexpr bool is_col  = op_type::template traits<T1>::is_col;
   static constexpr bool is_xvec = op_type::template traits<T1>::is_xvec;
-
   };
 
 

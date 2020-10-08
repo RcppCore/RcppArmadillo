@@ -66,7 +66,7 @@ spglue_schur::apply_noalias(SpMat<eT>& out, const SpProxy<T1>& pa, const SpProxy
     return;
     }
   
-  const uword max_n_nonzero = spglue_elem_helper::max_n_nonzero_schur(pa, pb);
+  const uword max_n_nonzero = (std::min)(pa.get_n_nonzero(), pb.get_n_nonzero());
   
   // Resize memory to upper bound
   out.reserve(pa.get_n_rows(), pa.get_n_cols(), max_n_nonzero);
@@ -115,6 +115,8 @@ spglue_schur::apply_noalias(SpMat<eT>& out, const SpProxy<T1>& pa, const SpProxy
         ++y_it;
         }
       }
+    
+    arma_check( (count > max_n_nonzero), "internal error: spglue_schur::apply_noalias(): count > max_n_nonzero" );
     }
   
   const uword out_n_cols = out.n_cols;
@@ -181,48 +183,55 @@ spglue_schur_misc::dense_schur_sparse(SpMat<typename T1::elem_type>& out, const 
   
   arma_debug_assert_same_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "element-wise multiplication");
   
-  // count new size
-  uword new_n_nonzero = 0;
+  const uword max_n_nonzero = pb.get_n_nonzero();
+  
+  // Resize memory to upper bound.
+  out.reserve(pa.get_n_rows(), pa.get_n_cols(), max_n_nonzero);
+  
+  uword count = 0;
   
   typename SpProxy<T2>::const_iterator_type it     = pb.begin();
   typename SpProxy<T2>::const_iterator_type it_end = pb.end();
   
   while(it != it_end)
     {
-    if( ((*it) * pa.at(it.row(), it.col())) != eT(0) )  { ++new_n_nonzero; }
+    const uword it_row = it.row();
+    const uword it_col = it.col();
     
-    ++it;
-    }
-  
-  // Resize memory accordingly.
-  out.reserve(pa.get_n_rows(), pa.get_n_cols(), new_n_nonzero);
-  
-  uword count = 0;
-  
-  typename SpProxy<T2>::const_iterator_type it2 = pb.begin();
-  
-  while(it2 != it_end)
-    {
-    const uword it2_row = it2.row();
-    const uword it2_col = it2.col();
-    
-    const eT val = (*it2) * pa.at(it2_row, it2_col);
+    const eT val = (*it) * pa.at(it_row, it_col);
     
     if(val != eT(0))
       {
       access::rw(        out.values[count]) = val;
-      access::rw(   out.row_indices[count]) = it2_row;
-      access::rw(out.col_ptrs[it2_col + 1])++;
+      access::rw(   out.row_indices[count]) = it_row;
+      access::rw(out.col_ptrs[it_col + 1])++;
       ++count;
       }
     
-    ++it2;
+    ++it;
+    
+    arma_check( (count > max_n_nonzero), "internal error: spglue_schur_misc::dense_schur_sparse(): count > max_n_nonzero" );
     }
   
   // Fix column pointers.
   for(uword c = 1; c <= out.n_cols; ++c)
     {
     access::rw(out.col_ptrs[c]) += out.col_ptrs[c - 1];
+    }
+  
+  if(count < max_n_nonzero)
+    {
+    if(count <= (max_n_nonzero/2))
+      {
+      out.mem_resize(count);
+      }
+    else
+      {
+      // quick resize without reallocating memory and copying data
+      access::rw(         out.n_nonzero) = count;
+      access::rw(     out.values[count]) = eT(0);
+      access::rw(out.row_indices[count]) = uword(0);
+      }
     }
   }
 

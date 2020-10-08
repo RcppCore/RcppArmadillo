@@ -1121,7 +1121,7 @@ diskio::save_hdf5_binary(const Mat<eT>& x, const hdf5_name& spec, std::string& e
     
     arma_H5Tclose(datatype);
     arma_H5Sclose(dataspace);
-    for (size_t i = 0; i < groups.size(); ++i)  { arma_H5Gclose(groups[i]); }
+    for(size_t i = 0; i < groups.size(); ++i)  { arma_H5Gclose(groups[i]); }
     arma_H5Fclose(file);
     
     if((use_existing_file == false) && (save_okay == true))  { save_okay = diskio::safe_rename(tmp_name, spec.filename); }
@@ -3415,7 +3415,7 @@ diskio::save_hdf5_binary(const Cube<eT>& x, const hdf5_name& spec, std::string& 
     
     arma_H5Tclose(datatype);
     arma_H5Sclose(dataspace);
-    for (size_t i = 0; i < groups.size(); ++i)  { arma_H5Gclose(groups[i]); }
+    for(size_t i = 0; i < groups.size(); ++i)  { arma_H5Gclose(groups[i]); }
     arma_H5Fclose(file);
     
     if((use_existing_file == false) && (save_okay == true))  { save_okay = diskio::safe_rename(tmp_name, spec.filename); }

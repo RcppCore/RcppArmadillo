@@ -114,46 +114,6 @@ det(const Op<T1, op_trimat>& X)
 
 
 
-// //! NOTE: don't use this form: it will be removed
-// template<typename T1>
-// arma_deprecated
-// inline
-// typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, typename T1::elem_type >::result
-// det
-//   (
-//   const Base<typename T1::elem_type,T1>& X,
-//   const bool   // argument kept only for compatibility with old user code
-//   )
-//   {
-//   arma_extra_debug_sigprint();
-//   
-//   // arma_debug_warn("det(X,bool) is deprecated and will be removed; change to det(X)");
-//   
-//   return det(X.get_ref());
-//   }
-
-
-
-// //! NOTE: don't use this form: it will be removed
-// template<typename T1>
-// arma_deprecated
-// inline
-// typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, typename T1::elem_type >::result
-// det
-//   (
-//   const Base<typename T1::elem_type,T1>& X,
-//   const char*   // argument kept only for compatibility with old user code
-//   )
-//   {
-//   arma_extra_debug_sigprint();
-//   
-//   // arma_debug_warn("det(X,char*) is deprecated and will be removed; change to det(X)");
-//   
-//   return det(X.get_ref());
-//   }
-
-
-
 template<typename T>
 arma_warn_unused
 arma_inline
