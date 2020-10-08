@@ -27,9 +27,9 @@ class glue_solve_gen
   template<typename T1, typename T2>
   struct traits
     {
-    static const bool is_row  = false;
-    static const bool is_col  = T2::is_col;
-    static const bool is_xvec = false;
+    static constexpr bool is_row  = false;
+    static constexpr bool is_col  = T2::is_col;
+    static constexpr bool is_xvec = false;
     };
   
   template<typename T1, typename T2> inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_solve_gen>& X);
@@ -46,9 +46,9 @@ class glue_solve_tri_default
   template<typename T1, typename T2>
   struct traits
     {
-    static const bool is_row  = false;
-    static const bool is_col  = T2::is_col;
-    static const bool is_xvec = false;
+    static constexpr bool is_row  = false;
+    static constexpr bool is_col  = T2::is_col;
+    static constexpr bool is_xvec = false;
     };
   
   template<typename T1, typename T2> inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_solve_tri_default>& X);
@@ -65,9 +65,9 @@ class glue_solve_tri
   template<typename T1, typename T2>
   struct traits
     {
-    static const bool is_row  = false;
-    static const bool is_col  = T2::is_col;
-    static const bool is_xvec = false;
+    static constexpr bool is_row  = false;
+    static constexpr bool is_col  = T2::is_col;
+    static constexpr bool is_xvec = false;
     };
   
   template<typename T1, typename T2> inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_solve_tri>& X);
@@ -105,18 +105,18 @@ namespace solve_opts
   // The values below (eg. 1u << 1) are for internal Armadillo use only.
   // The values can change without notice.
   
-  static const uword flag_none         = uword(0       );
-  static const uword flag_fast         = uword(1u <<  0);
-  static const uword flag_equilibrate  = uword(1u <<  1);
-  static const uword flag_no_approx    = uword(1u <<  2);
-  static const uword flag_triu         = uword(1u <<  3);
-  static const uword flag_tril         = uword(1u <<  4);
-  static const uword flag_no_band      = uword(1u <<  5);
-  static const uword flag_no_sympd     = uword(1u <<  6);
-  static const uword flag_allow_ugly   = uword(1u <<  7);
-  static const uword flag_likely_sympd = uword(1u <<  8);
-  static const uword flag_refine       = uword(1u <<  9);
-  static const uword flag_no_trimat    = uword(1u << 10);
+  static constexpr uword flag_none         = uword(0       );
+  static constexpr uword flag_fast         = uword(1u <<  0);
+  static constexpr uword flag_equilibrate  = uword(1u <<  1);
+  static constexpr uword flag_no_approx    = uword(1u <<  2);
+  static constexpr uword flag_triu         = uword(1u <<  3);
+  static constexpr uword flag_tril         = uword(1u <<  4);
+  static constexpr uword flag_no_band      = uword(1u <<  5);
+  static constexpr uword flag_no_sympd     = uword(1u <<  6);
+  static constexpr uword flag_allow_ugly   = uword(1u <<  7);
+  static constexpr uword flag_likely_sympd = uword(1u <<  8);
+  static constexpr uword flag_refine       = uword(1u <<  9);
+  static constexpr uword flag_no_trimat    = uword(1u << 10);
   
   struct opts_none         : public opts { inline opts_none()         : opts(flag_none        ) {} };
   struct opts_fast         : public opts { inline opts_fast()         : opts(flag_fast        ) {} };

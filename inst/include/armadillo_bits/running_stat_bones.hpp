@@ -102,16 +102,16 @@ class running_stat_aux
   public:
   
   template<typename eT>
-  inline static void update_stats(running_stat<eT>& x, const eT sample, const typename arma_not_cx<eT>::result* junk = 0);
+  inline static void update_stats(running_stat<eT>& x, const eT sample, const typename arma_not_cx<eT>::result* junk = nullptr);
   
   template<typename eT>
-  inline static void update_stats(running_stat<eT>& x, const std::complex<eT>& sample, const typename arma_not_cx<eT>::result* junk = 0);
+  inline static void update_stats(running_stat<eT>& x, const std::complex<eT>& sample, const typename arma_not_cx<eT>::result* junk = nullptr);
   
   template<typename eT>
-  inline static void update_stats(running_stat<eT>& x, const typename eT::value_type sample, const typename arma_cx_only<eT>::result* junk = 0);
+  inline static void update_stats(running_stat<eT>& x, const typename eT::value_type sample, const typename arma_cx_only<eT>::result* junk = nullptr);
   
   template<typename eT>
-  inline static void update_stats(running_stat<eT>& x, const eT& sample, const typename arma_cx_only<eT>::result* junk = 0);
+  inline static void update_stats(running_stat<eT>& x, const eT& sample, const typename arma_cx_only<eT>::result* junk = nullptr);
   };
 
 

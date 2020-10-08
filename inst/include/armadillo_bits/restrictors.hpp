@@ -32,14 +32,10 @@ template<> struct arma_scalar_only< u16       > { typedef u16       result; };
 template<> struct arma_scalar_only< s16       > { typedef s16       result; };
 template<> struct arma_scalar_only< u32       > { typedef u32       result; };
 template<> struct arma_scalar_only< s32       > { typedef s32       result; };
-#if defined(ARMA_USE_U64S64)
 template<> struct arma_scalar_only< u64       > { typedef u64       result; };
 template<> struct arma_scalar_only< s64       > { typedef s64       result; };
-#endif
-#if defined(ARMA_ALLOW_LONG)
 template<> struct arma_scalar_only< ulng_t    > { typedef ulng_t    result; };
 template<> struct arma_scalar_only< slng_t    > { typedef slng_t    result; };
-#endif
 template<> struct arma_scalar_only< float     > { typedef float     result; };
 template<> struct arma_scalar_only< double    > { typedef double    result; };
 template<> struct arma_scalar_only< cx_float  > { typedef cx_float  result; };
@@ -55,14 +51,10 @@ template<> struct arma_integral_only< u16    > { typedef u16 result; };
 template<> struct arma_integral_only< s16    > { typedef s16 result; };
 template<> struct arma_integral_only< u32    > { typedef u32 result; };
 template<> struct arma_integral_only< s32    > { typedef s32 result; };
-#if defined(ARMA_USE_U64S64)
 template<> struct arma_integral_only< u64    > { typedef u64 result; };
 template<> struct arma_integral_only< s64    > { typedef s64 result; };
-#endif
-#if defined(ARMA_ALLOW_LONG)
 template<> struct arma_integral_only< ulng_t > { typedef ulng_t result; };
 template<> struct arma_integral_only< slng_t > { typedef slng_t result; };
-#endif
 
 
 
@@ -71,12 +63,8 @@ template<typename T> struct arma_unsigned_integral_only { };
 template<> struct arma_unsigned_integral_only< u8     > { typedef u8     result; };
 template<> struct arma_unsigned_integral_only< u16    > { typedef u16    result; };
 template<> struct arma_unsigned_integral_only< u32    > { typedef u32    result; };
-#if defined(ARMA_USE_U64S64)
 template<> struct arma_unsigned_integral_only< u64    > { typedef u64    result; };
-#endif
-#if defined(ARMA_ALLOW_LONG)
 template<> struct arma_unsigned_integral_only< ulng_t > { typedef ulng_t result; };
-#endif
 
 
 
@@ -85,12 +73,8 @@ template<typename T> struct arma_signed_integral_only { };
 template<> struct arma_signed_integral_only< s8     > { typedef s8     result; };
 template<> struct arma_signed_integral_only< s16    > { typedef s16    result; };
 template<> struct arma_signed_integral_only< s32    > { typedef s32    result; };
-#if defined(ARMA_USE_U64S64)
 template<> struct arma_signed_integral_only< s64    > { typedef s64    result; };
-#endif
-#if defined(ARMA_ALLOW_LONG)
 template<> struct arma_signed_integral_only< slng_t > { typedef slng_t result; };
-#endif
 
 
 
@@ -99,12 +83,8 @@ template<typename T> struct arma_signed_only { };
 template<> struct arma_signed_only< s8        > { typedef s8        result; };
 template<> struct arma_signed_only< s16       > { typedef s16       result; };
 template<> struct arma_signed_only< s32       > { typedef s32       result; };
-#if defined(ARMA_USE_U64S64)
 template<> struct arma_signed_only< s64       > { typedef s64       result; };
-#endif
-#if defined(ARMA_ALLOW_LONG)
 template<> struct arma_signed_only< slng_t    > { typedef slng_t    result; };
-#endif
 template<> struct arma_signed_only< float     > { typedef float     result; };
 template<> struct arma_signed_only< double    > { typedef double    result; };
 template<> struct arma_signed_only< cx_float  > { typedef cx_float  result; };

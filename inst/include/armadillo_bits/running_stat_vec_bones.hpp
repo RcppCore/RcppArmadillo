@@ -119,7 +119,7 @@ class running_stat_vec_aux
     (
     running_stat_vec<obj_type>& x,
     const                  Mat<typename running_stat_vec<obj_type>::eT>& sample,
-    const typename arma_not_cx<typename running_stat_vec<obj_type>::eT>::result* junk = 0
+    const typename arma_not_cx<typename running_stat_vec<obj_type>::eT>::result* junk = nullptr
     );
   
   template<typename obj_type>
@@ -128,7 +128,7 @@ class running_stat_vec_aux
     (
     running_stat_vec<obj_type>& x,
     const          Mat<std::complex< typename running_stat_vec<obj_type>::T > >& sample,
-    const typename       arma_not_cx<typename running_stat_vec<obj_type>::eT>::result* junk = 0
+    const typename       arma_not_cx<typename running_stat_vec<obj_type>::eT>::result* junk = nullptr
     );
   
   template<typename obj_type>
@@ -137,7 +137,7 @@ class running_stat_vec_aux
     (
     running_stat_vec<obj_type>& x,
     const                  Mat< typename running_stat_vec<obj_type>::T >& sample,
-    const typename arma_cx_only<typename running_stat_vec<obj_type>::eT>::result* junk = 0
+    const typename arma_cx_only<typename running_stat_vec<obj_type>::eT>::result* junk = nullptr
     );
   
   template<typename obj_type>
@@ -146,7 +146,7 @@ class running_stat_vec_aux
     (
     running_stat_vec<obj_type>& x,
     const                   Mat<typename running_stat_vec<obj_type>::eT>& sample,
-    const typename arma_cx_only<typename running_stat_vec<obj_type>::eT>::result* junk = 0
+    const typename arma_cx_only<typename running_stat_vec<obj_type>::eT>::result* junk = nullptr
     );
   };
 

@@ -26,19 +26,9 @@ chi2rnd(const double df)
   {
   arma_extra_debug_sigprint();
   
-  #if defined(ARMA_USE_CXX11)
-    {
-    op_chi2rnd_varying_df<double> generator;
-    
-    return generator(df);
-    }
-  #else
-    {
-    arma_stop_logic_error("chi2rnd(): C++11 compiler required");
-    
-    return double(0);
-    }
-  #endif
+  op_chi2rnd_varying_df<double> generator;
+  
+  return generator(df);
   }
 
 
@@ -51,19 +41,9 @@ chi2rnd(const eT df)
   {
   arma_extra_debug_sigprint();
   
-  #if defined(ARMA_USE_CXX11)
-    {
-    op_chi2rnd_varying_df<eT> generator;
-    
-    return generator(df);
-    }
-  #else
-    {
-    arma_stop_logic_error("chi2rnd(): C++11 compiler required");
-    
-    return eT(0);
-    }
-  #endif
+  op_chi2rnd_varying_df<eT> generator;
+  
+  return generator(df);
   }
 
 

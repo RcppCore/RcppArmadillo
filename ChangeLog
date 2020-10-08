@@ -1,3 +1,11 @@
+2020-10-01  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/armadillo/: Armadillo 10.1-rc1
+	* inst/include/armadillo_bits/: Idem
+
+	* inst/include/RcppArmadillo/Mat_meat.h: Two added lines to set
+	n_alloc(0) as emailed by Conrad
+
 2020-09-02  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.9.900.3.0

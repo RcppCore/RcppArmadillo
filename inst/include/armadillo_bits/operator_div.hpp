@@ -23,7 +23,7 @@
 template<typename T1>
 arma_inline
 typename
-enable_if2< is_arma_type<T1>::value, const eOp<T1, eop_scalar_div_post> >::result
+enable_if2< is_arma_type<T1>::value, const eOp< T1, eop_scalar_div_post> >::result
 operator/
   (
   const T1&                    X,
@@ -41,7 +41,7 @@ operator/
 template<typename T1>
 arma_inline
 typename
-enable_if2< is_arma_type<T1>::value, const eOp<T1, eop_scalar_div_pre> >::result
+enable_if2< is_arma_type<T1>::value, const eOp< T1, eop_scalar_div_pre> >::result
 operator/
   (
   const typename T1::elem_type k,
@@ -154,7 +154,7 @@ operator/
 template<typename T1>
 inline
 typename
-enable_if2<is_arma_sparse_type<T1>::value, SpMat<typename T1::elem_type> >::result
+enable_if2< is_arma_sparse_type<T1>::value, SpMat<typename T1::elem_type> >::result
 operator/
   (
   const T1&                    X,

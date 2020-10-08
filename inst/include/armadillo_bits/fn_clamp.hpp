@@ -43,7 +43,7 @@ template<typename T1>
 arma_warn_unused
 inline
 const mtOpCube<typename T1::elem_type, T1, op_clamp>
-clamp(const BaseCube<typename T1::elem_type,T1>& X, const typename T1::elem_type min_val, const typename T1::elem_type max_val, typename arma_not_cx<typename T1::elem_type>::result* junk = 0)
+clamp(const BaseCube<typename T1::elem_type,T1>& X, const typename T1::elem_type min_val, const typename T1::elem_type max_val, typename arma_not_cx<typename T1::elem_type>::result* junk = nullptr)
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk);

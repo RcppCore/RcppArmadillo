@@ -27,16 +27,16 @@ class conv_to
   public:
   
   template<typename in_eT, typename T1>
-  inline static out_eT from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
+  inline static out_eT from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = nullptr);
 
   template<typename in_eT, typename T1>
-  inline static out_eT from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
+  inline static out_eT from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = nullptr);
   
   template<typename in_eT, typename T1>
-  inline static out_eT from(const BaseCube<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
+  inline static out_eT from(const BaseCube<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = nullptr);
   
   template<typename in_eT, typename T1>
-  inline static out_eT from(const BaseCube<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
+  inline static out_eT from(const BaseCube<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = nullptr);
   };
 
 
@@ -140,10 +140,10 @@ class conv_to< Mat<out_eT> >
   public:
   
   template<typename in_eT, typename T1>
-  inline static Mat<out_eT> from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
+  inline static Mat<out_eT> from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = nullptr);
   
   template<typename in_eT, typename T1>
-  inline static Mat<out_eT> from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
+  inline static Mat<out_eT> from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = nullptr);
   
   template<typename T1>
   inline static Mat<out_eT> from(const SpBase<out_eT, T1>& in);
@@ -151,10 +151,10 @@ class conv_to< Mat<out_eT> >
   
   
   template<typename in_eT>
-  inline static Mat<out_eT> from(const std::vector<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
+  inline static Mat<out_eT> from(const std::vector<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk = nullptr);
   
   template<typename in_eT>
-  inline static Mat<out_eT> from(const std::vector<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
+  inline static Mat<out_eT> from(const std::vector<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk = nullptr);
   };
 
 
@@ -272,18 +272,18 @@ class conv_to< Row<out_eT> >
   public:
   
   template<typename in_eT, typename T1>
-  inline static Row<out_eT> from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
+  inline static Row<out_eT> from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = nullptr);
   
   template<typename in_eT, typename T1>
-  inline static Row<out_eT> from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
+  inline static Row<out_eT> from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = nullptr);
   
   
   
   template<typename in_eT>
-  inline static Row<out_eT> from(const std::vector<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
+  inline static Row<out_eT> from(const std::vector<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk = nullptr);
   
   template<typename in_eT>
-  inline static Row<out_eT> from(const std::vector<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
+  inline static Row<out_eT> from(const std::vector<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk = nullptr);
   };
 
 
@@ -391,18 +391,18 @@ class conv_to< Col<out_eT> >
   public:
   
   template<typename in_eT, typename T1>
-  inline static Col<out_eT> from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
+  inline static Col<out_eT> from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = nullptr);
   
   template<typename in_eT, typename T1>
-  inline static Col<out_eT> from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
+  inline static Col<out_eT> from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = nullptr);
   
   
   
   template<typename in_eT>
-  inline static Col<out_eT> from(const std::vector<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
+  inline static Col<out_eT> from(const std::vector<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk = nullptr);
   
   template<typename in_eT>
-  inline static Col<out_eT> from(const std::vector<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
+  inline static Col<out_eT> from(const std::vector<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk = nullptr);
   };
 
 
@@ -510,10 +510,10 @@ class conv_to< SpMat<out_eT> >
   public:
   
   template<typename in_eT, typename T1>
-  inline static SpMat<out_eT> from(const SpBase<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
+  inline static SpMat<out_eT> from(const SpBase<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = nullptr);
   
   template<typename in_eT, typename T1>
-  inline static SpMat<out_eT> from(const SpBase<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
+  inline static SpMat<out_eT> from(const SpBase<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = nullptr);
   
   template<typename T1>
   inline static SpMat<out_eT> from(const Base<out_eT, T1>& in);
@@ -590,10 +590,10 @@ class conv_to< Cube<out_eT> >
   public:
   
   template<typename in_eT, typename T1>
-  inline static Cube<out_eT> from(const BaseCube<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
+  inline static Cube<out_eT> from(const BaseCube<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = nullptr);
   
   template<typename in_eT, typename T1>
-  inline static Cube<out_eT> from(const BaseCube<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
+  inline static Cube<out_eT> from(const BaseCube<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = nullptr);
   };
 
 
@@ -649,10 +649,10 @@ class conv_to< std::vector<out_eT> >
   public:
   
   template<typename in_eT, typename T1>
-  inline static std::vector<out_eT> from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = 0);
+  inline static std::vector<out_eT> from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = nullptr);
   
   template<typename in_eT, typename T1>
-  inline static std::vector<out_eT> from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = 0);
+  inline static std::vector<out_eT> from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = nullptr);
   };
 
 

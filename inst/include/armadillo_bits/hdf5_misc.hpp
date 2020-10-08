@@ -103,25 +103,21 @@ get_hdf5_type< unsigned long >()
   return arma_H5Tcopy(arma_H5T_NATIVE_ULONG);
   }
 
+template<>
+inline
+hid_t
+get_hdf5_type< long long >()
+  {
+  return arma_H5Tcopy(arma_H5T_NATIVE_LLONG);
+  }
 
-#if defined(ARMA_USE_U64S64) && defined(ULLONG_MAX)
-  template<>
-  inline
-  hid_t
-  get_hdf5_type< long long >()
-    {
-    return arma_H5Tcopy(arma_H5T_NATIVE_LLONG);
-    }
-
-  template<>
-  inline
-  hid_t
-  get_hdf5_type< unsigned long long >()
-    {
-    return arma_H5Tcopy(arma_H5T_NATIVE_ULLONG);
-    }
-#endif
-
+template<>
+inline
+hid_t
+get_hdf5_type< unsigned long long >()
+  {
+  return arma_H5Tcopy(arma_H5T_NATIVE_ULLONG);
+  }
 
 template<>
 inline
@@ -196,22 +192,22 @@ is_supported_arma_hdf5_type(hid_t datatype)
   search_type = get_hdf5_type<double>();
   is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
   arma_H5Tclose(search_type);
-  if (is_equal) { return true; }
+  if(is_equal) { return true; }
   
   search_type = get_hdf5_type< std::complex<double> >();
   is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
   arma_H5Tclose(search_type);
-  if (is_equal) { return true; }
+  if(is_equal) { return true; }
   
   search_type = get_hdf5_type<float>();
   is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
   arma_H5Tclose(search_type);
-  if (is_equal) { return true; }
+  if(is_equal) { return true; }
   
   search_type = get_hdf5_type< std::complex<float> >();
   is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
   arma_H5Tclose(search_type);
-  if (is_equal) { return true; }
+  if(is_equal) { return true; }
   
   
   // remaining supported types: u8, s8, u16, s16, u32, s32, u64, s64, ulng_t, slng_t
@@ -219,60 +215,52 @@ is_supported_arma_hdf5_type(hid_t datatype)
   search_type = get_hdf5_type<u8>();
   is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
   arma_H5Tclose(search_type);
-  if (is_equal) { return true; }
+  if(is_equal) { return true; }
   
   search_type = get_hdf5_type<s8>();
   is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
   arma_H5Tclose(search_type);
-  if (is_equal) { return true; }
+  if(is_equal) { return true; }
   
   search_type = get_hdf5_type<u16>();
   is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
   arma_H5Tclose(search_type);
-  if (is_equal) { return true; }
+  if(is_equal) { return true; }
   
   search_type = get_hdf5_type<s16>();
   is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
   arma_H5Tclose(search_type);
-  if (is_equal) { return true; }
+  if(is_equal) { return true; }
   
   search_type = get_hdf5_type<u32>();
   is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
   arma_H5Tclose(search_type);
-  if (is_equal) { return true; }
+  if(is_equal) { return true; }
   
   search_type = get_hdf5_type<s32>();
   is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
   arma_H5Tclose(search_type);
-  if (is_equal) { return true; }
+  if(is_equal) { return true; }
   
-  #if defined(ARMA_USE_U64S64)
-    {
-    search_type = get_hdf5_type<u64>();
-    is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
-    arma_H5Tclose(search_type);
-    if (is_equal) { return true; }
-    
-    search_type = get_hdf5_type<s64>();
-    is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
-    arma_H5Tclose(search_type);
-    if (is_equal) { return true; }
-    }
-  #endif
+  search_type = get_hdf5_type<u64>();
+  is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
+  arma_H5Tclose(search_type);
+  if(is_equal) { return true; }
   
-  #if defined(ARMA_ALLOW_LONG)
-    {
-    search_type = get_hdf5_type<ulng_t>();
-    is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
-    arma_H5Tclose(search_type);
-    if (is_equal) { return true; }
-    
-    search_type = get_hdf5_type<slng_t>();
-    is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
-    arma_H5Tclose(search_type);
-    if (is_equal) { return true; }
-    }
-  #endif
+  search_type = get_hdf5_type<s64>();
+  is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
+  arma_H5Tclose(search_type);
+  if(is_equal) { return true; }
+  
+  search_type = get_hdf5_type<ulng_t>();
+  is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
+  arma_H5Tclose(search_type);
+  if(is_equal) { return true; }
+  
+  search_type = get_hdf5_type<slng_t>();
+  is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
+  arma_H5Tclose(search_type);
+  if(is_equal) { return true; }
   
   return false;
   }
@@ -304,7 +292,7 @@ hdf5_search_callback
   hdf5_search_info* search_info = (hdf5_search_info*) operator_data;
 
   // We are looking for datasets.
-  if (info->type == H5O_TYPE_DATASET)
+  if(info->type == H5O_TYPE_DATASET)
     {
     // Check type of dataset to see if we could even load it.
     hid_t dataset  = arma_H5Dopen(loc_id, name, H5P_DEFAULT);
@@ -335,7 +323,7 @@ hdf5_search_callback
       uword name_count = 0;
       for (uword i = 0; i < search_info->names[string_pos].length(); ++i)
         {
-        if ((search_info->names[string_pos])[i] == '/') { ++name_count; }
+        if((search_info->names[string_pos])[i] == '/') { ++name_count; }
         }
 
       // Count the number of forward slashes in the full name.
@@ -343,16 +331,16 @@ hdf5_search_callback
       const std::string str = std::string(name);
       for (uword i = 0; i < str.length(); ++i)
         {
-        if (str[i] == '/') { ++count; }
+        if(str[i] == '/') { ++count; }
         }
 
       // Is the full string the same?
-      if (str == search_info->names[string_pos])
+      if(str == search_info->names[string_pos])
         {
         // We found it exactly.
         hid_t match_candidate = arma_H5Dopen(loc_id, name, H5P_DEFAULT);
 
-        if (match_candidate < 0)
+        if(match_candidate < 0)
           {
           return -1;
           }
@@ -361,11 +349,11 @@ hdf5_search_callback
         hid_t filespace = arma_H5Dget_space(match_candidate);
         int num_dims = arma_H5Sget_simple_extent_ndims(filespace);
         
-        if (num_dims <= search_info->num_dims)
+        if(num_dims <= search_info->num_dims)
           {
           // Valid dataset -- we'll keep it.
           // If we already have an existing match we have to close it.
-          if (search_info->best_match != -1)
+          if(search_info->best_match != -1)
             {
             arma_H5Dclose(search_info->best_match);
             }
@@ -382,16 +370,16 @@ hdf5_search_callback
       // If we are asking for more slashes than we have, this can't be a match.
       // Skip to below, where we decide whether or not to keep it anyway based
       // on the exactness condition of the search.
-      if (count <= name_count)
+      if(count <= name_count)
         {
         size_t start_pos = (count == 0) ? 0 : std::string::npos;
-        while (count > 0)
+        while(count > 0)
           {
           // Move pointer to previous slash.
           start_pos = str.rfind('/', start_pos);
           
           // Break if we've run out of slashes.
-          if (start_pos == std::string::npos) { break; }
+          if(start_pos == std::string::npos) { break; }
           
           --count;
           }
@@ -400,7 +388,7 @@ hdf5_search_callback
         const std::string substring = str.substr(start_pos);
 
         // Are they the same?
-        if (substring == search_info->names[string_pos])
+        if(substring == search_info->names[string_pos])
           {
           // We have found the object; it must be better than our existing match.
           hid_t match_candidate = arma_H5Dopen(loc_id, name, H5P_DEFAULT);
@@ -417,11 +405,11 @@ hdf5_search_callback
           hid_t filespace = arma_H5Dget_space(match_candidate);
           int num_dims = arma_H5Sget_simple_extent_ndims(filespace);
           
-          if (num_dims <= search_info->num_dims)
+          if(num_dims <= search_info->num_dims)
             {
             // Valid dataset -- we'll keep it.
             // If we already have an existing match we have to close it.
-            if (search_info->best_match != -1)
+            if(search_info->best_match != -1)
               {
               arma_H5Dclose(search_info->best_match);
               }
@@ -436,7 +424,7 @@ hdf5_search_callback
       
       
       // If they are not the same, but we have not found anything and we don't need an exact match, take this.
-      if ((search_info->exact == false) && (search_info->best_match == -1))
+      if((search_info->exact == false) && (search_info->best_match == -1))
         {
         hid_t match_candidate = arma_H5Dopen(loc_id, name, H5P_DEFAULT);
         
@@ -449,7 +437,7 @@ hdf5_search_callback
         hid_t filespace = arma_H5Dget_space(match_candidate);
         int num_dims = arma_H5Sget_simple_extent_ndims(filespace);
         
-        if (num_dims <= search_info->num_dims)
+        if(num_dims <= search_info->num_dims)
           {
           // Valid dataset -- we'll keep it.
           search_info->best_match = arma_H5Dopen(loc_id, name, H5P_DEFAULT);
@@ -606,72 +594,64 @@ load_and_convert_hdf5
     }
   
   
-  #if defined(ARMA_USE_U64S64)
+  // u64
+  search_type = get_hdf5_type<u64>();
+  is_equal = (arma_H5Tequal(datatype, search_type) > 0);
+  arma_H5Tclose(search_type);
+  
+  if(is_equal)
     {
-    // u64
-    search_type = get_hdf5_type<u64>();
-    is_equal = (arma_H5Tequal(datatype, search_type) > 0);
-    arma_H5Tclose(search_type);
-    
-    if(is_equal)
-      {
-      Col<u64> v(n_elem);
-      hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
-      arrayops::convert(dest, v.memptr(), n_elem);
+    Col<u64> v(n_elem);
+    hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
+    arrayops::convert(dest, v.memptr(), n_elem);
 
-      return status;
-      }
-    
-    
-    // s64
-    search_type = get_hdf5_type<s64>();
-    is_equal = (arma_H5Tequal(datatype, search_type) > 0);
-    arma_H5Tclose(search_type);
-    
-    if(is_equal)
-      {
-      Col<s64> v(n_elem);
-      hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
-      arrayops::convert(dest, v.memptr(), n_elem);
-
-      return status;
-      }
+    return status;
     }
-  #endif
   
   
-  #if defined(ARMA_ALLOW_LONG)
+  // s64
+  search_type = get_hdf5_type<s64>();
+  is_equal = (arma_H5Tequal(datatype, search_type) > 0);
+  arma_H5Tclose(search_type);
+  
+  if(is_equal)
     {
-    // ulng_t
-    search_type = get_hdf5_type<ulng_t>();
-    is_equal = (arma_H5Tequal(datatype, search_type) > 0);
-    arma_H5Tclose(search_type);
-    
-    if(is_equal)
-      {
-      Col<ulng_t> v(n_elem);
-      hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
-      arrayops::convert(dest, v.memptr(), n_elem);
+    Col<s64> v(n_elem);
+    hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
+    arrayops::convert(dest, v.memptr(), n_elem);
 
-      return status;
-      }
-    
-    
-    // slng_t
-    search_type = get_hdf5_type<slng_t>();
-    is_equal = (arma_H5Tequal(datatype, search_type) > 0);
-    arma_H5Tclose(search_type);
-    
-    if(is_equal)
-      {
-      Col<slng_t> v(n_elem);
-      hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
-      arrayops::convert(dest, v.memptr(), n_elem);
-
-      return status;
-      }
+    return status;
     }
-  #endif
+  
+  
+  // ulng_t
+  search_type = get_hdf5_type<ulng_t>();
+  is_equal = (arma_H5Tequal(datatype, search_type) > 0);
+  arma_H5Tclose(search_type);
+  
+  if(is_equal)
+    {
+    Col<ulng_t> v(n_elem);
+    hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
+    arrayops::convert(dest, v.memptr(), n_elem);
+
+    return status;
+    }
+  
+  
+  // slng_t
+  search_type = get_hdf5_type<slng_t>();
+  is_equal = (arma_H5Tequal(datatype, search_type) > 0);
+  arma_H5Tclose(search_type);
+  
+  if(is_equal)
+    {
+    Col<slng_t> v(n_elem);
+    hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
+    arrayops::convert(dest, v.memptr(), n_elem);
+
+    return status;
+    }
   
   
   // float

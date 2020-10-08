@@ -455,7 +455,7 @@ op_logmat_cx::helper(Mat<eT>& A, const uword m)
     // B += weights(i) * solve( (nodes(i)*A + eye< Mat<eT> >(N,N)), A );
     
     //const bool solve_ok = solve( X, (nodes(i)*A + eye< Mat<eT> >(N,N)), A, solve_opts::fast );
-    const bool solve_ok = solve( X, trimatu(nodes(i)*A + eye< Mat<eT> >(N,N)), A );
+    const bool solve_ok = solve( X, trimatu(nodes(i)*A + eye< Mat<eT> >(N,N)), A, solve_opts::no_approx );
     
     if(solve_ok == false)  { arma_extra_debug_print("logmat(): solve() failed"); return false; }
     

@@ -26,24 +26,24 @@ struct Op_traits {};
 template<typename T1, typename op_type>
 struct Op_traits<T1, op_type, true>
   {
-  static const bool is_row  = op_type::template traits<T1>::is_row;
-  static const bool is_col  = op_type::template traits<T1>::is_col;
-  static const bool is_xvec = op_type::template traits<T1>::is_xvec;
+  static constexpr bool is_row  = op_type::template traits<T1>::is_row;
+  static constexpr bool is_col  = op_type::template traits<T1>::is_col;
+  static constexpr bool is_xvec = op_type::template traits<T1>::is_xvec;
   };
 
 template<typename T1, typename op_type>
 struct Op_traits<T1, op_type, false>
   {
-  static const bool is_row  = false;
-  static const bool is_col  = false;
-  static const bool is_xvec = false;
+  static constexpr bool is_row  = false;
+  static constexpr bool is_col  = false;
+  static constexpr bool is_xvec = false;
   };
 
 
 template<typename T1, typename op_type>
 class Op
-  : public Base<typename T1::elem_type, Op<T1, op_type> >
-  , public Op_traits<T1, op_type, has_nested_op_traits<op_type>::value >
+  : public Base< typename T1::elem_type, Op<T1, op_type> >
+  , public Op_traits<T1, op_type, has_nested_op_traits<op_type>::value>
   {
   public:
   

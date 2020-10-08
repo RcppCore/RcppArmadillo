@@ -27,9 +27,9 @@ class glue_cov
   template<typename T1, typename T2>
   struct traits
     {
-    static const bool is_row  = false; // T1::is_col;  // TODO: check
-    static const bool is_col  = false; // T2::is_col;  // TODO: check
-    static const bool is_xvec = false;
+    static constexpr bool is_row  = false; // T1::is_col;  // TODO: check
+    static constexpr bool is_col  = false; // T2::is_col;  // TODO: check
+    static constexpr bool is_xvec = false;
     };
   
   template<typename T1, typename T2> inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_cov>& X);

@@ -28,9 +28,9 @@ class MapMat
   typedef eT                                elem_type;  //!< the type of elements stored in the matrix
   typedef typename get_pod_type<eT>::result  pod_type;  //!< if eT is std::complex<T>, pod_type is T; otherwise pod_type is eT
   
-  static const bool is_row  = false;
-  static const bool is_col  = false;
-  static const bool is_xvec = false;
+  static constexpr bool is_row  = false;
+  static constexpr bool is_col  = false;
+  static constexpr bool is_xvec = false;
   
   const uword n_rows;    //!< number of rows     (read-only)
   const uword n_cols;    //!< number of columns  (read-only)
@@ -58,10 +58,8 @@ class MapMat
   inline explicit MapMat(const SpMat<eT>& x);
   inline void  operator=(const SpMat<eT>& x);
   
-  #if defined(ARMA_USE_CXX11)
   inline          MapMat(MapMat<eT>&& x);
   inline void  operator=(MapMat<eT>&& x);
-  #endif
   
   inline void reset();
   inline void set_size(const uword in_n_rows);

@@ -20,16 +20,16 @@
 
 
 template<typename T1, typename eop_type>
-class eOpCube : public BaseCube<typename T1::elem_type, eOpCube<T1, eop_type> >
+class eOpCube : public BaseCube< typename T1::elem_type, eOpCube<T1, eop_type> >
   {
   public:
   
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  static const bool use_at      = ProxyCube<T1>::use_at;
-  static const bool use_mp      = ProxyCube<T1>::use_mp || eop_type::use_mp;
-  static const bool has_subview = ProxyCube<T1>::has_subview;
+  static constexpr bool use_at      = ProxyCube<T1>::use_at;
+  static constexpr bool use_mp      = ProxyCube<T1>::use_mp || eop_type::use_mp;
+  static constexpr bool has_subview = ProxyCube<T1>::has_subview;
   
   arma_aligned const ProxyCube<T1> P;
   arma_aligned       elem_type     aux;          //!< storage of auxiliary data, user defined format

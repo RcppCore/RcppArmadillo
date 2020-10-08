@@ -59,7 +59,7 @@ template<typename cx_type, uword fixed_N, bool> struct fft_store {};
 template<typename cx_type, uword fixed_N>
 struct fft_store<cx_type, fixed_N, true>
   {
-  static const uword N = fixed_N;
+  static constexpr uword N = fixed_N;
   
   arma_aligned cx_type coeffs_array[fixed_N];
   

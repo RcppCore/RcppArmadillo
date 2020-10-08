@@ -213,9 +213,9 @@ spop_max::max(const SpBase<typename T1::elem_type, T1>& X)
     it_type it     = P.begin();
     it_type it_end = P.end();
     
-    while (it != it_end)
+    while(it != it_end)
       {
-      if ((*it) > max_val)  { max_val = *it; }
+      if((*it) > max_val)  { max_val = *it; }
       
       ++it;
       }
@@ -272,9 +272,9 @@ spop_max::max_with_index(const SpProxy<T1>& P, uword& index_of_max_val)
     it_type it     = P.begin();
     it_type it_end = P.end();
     
-    while (it != it_end)
+    while(it != it_end)
       {
-      if ((*it) > max_val)
+      if((*it) > max_val)
         {
         max_val = *it;
         index_of_max_val = it.row() + it.col() * n_rows;
@@ -291,7 +291,7 @@ spop_max::max_with_index(const SpProxy<T1>& P, uword& index_of_max_val)
     // Convert to actual position in matrix.
     const uword row = P.get_row_indices()[index_of_max_val];
     uword col = 0;
-    while (P.get_col_ptrs()[++col] <= index_of_max_val) { }
+    while(P.get_col_ptrs()[++col] <= index_of_max_val) { }
     index_of_max_val = (col - 1) * n_rows + row;
     }
   
@@ -312,25 +312,25 @@ spop_max::max_with_index(const SpProxy<T1>& P, uword& index_of_max_val)
       it_type it     = P.begin();
       it_type it_end = P.end();
       
-      while (it != it_end)
+      while(it != it_end)
         {
         // Have we moved more than one position from the last place?
-        if ((it.col() == last_col) && (it.row() - last_row > 1))
+        if((it.col() == last_col) && (it.row() - last_row > 1))
           {
           index_of_max_val = it.col() * n_rows + last_row + 1;
           break;
           }
-        else if ((it.col() >= last_col + 1) && (last_row < n_rows - 1))
+        else if((it.col() >= last_col + 1) && (last_row < n_rows - 1))
           {
           index_of_max_val = last_col * n_rows + last_row + 1;
           break;
           }
-        else if ((it.col() == last_col + 1) && (it.row() > 0))
+        else if((it.col() == last_col + 1) && (it.row() > 0))
           {
           index_of_max_val = it.col() * n_rows;
           break;
           }
-        else if (it.col() > last_col + 1)
+        else if(it.col() > last_col + 1)
           {
           index_of_max_val = (last_col + 1) * n_rows;
           break;
@@ -536,11 +536,11 @@ spop_max::max(const SpBase<typename T1::elem_type, T1>& X)
     it_type it     = P.begin();
     it_type it_end = P.end();
     
-    while (it != it_end)
+    while(it != it_end)
       {
       const T tmp_val = std::abs(*it);
       
-      if (tmp_val > max_val)
+      if(tmp_val > max_val)
         {
         max_val = tmp_val;
         ret_val = *it;
@@ -603,11 +603,11 @@ spop_max::max_with_index(const SpProxy<T1>& P, uword& index_of_max_val)
     it_type it     = P.begin();
     it_type it_end = P.end();
     
-    while (it != it_end)
+    while(it != it_end)
       {
       const T tmp_val = std::abs(*it);
       
-      if (tmp_val > max_val)
+      if(tmp_val > max_val)
         {
                  max_val = tmp_val;
         index_of_max_val = it.row() + it.col() * n_rows;
@@ -624,7 +624,7 @@ spop_max::max_with_index(const SpProxy<T1>& P, uword& index_of_max_val)
     // Convert to actual position in matrix.
     const uword row = P.get_row_indices()[index_of_max_val];
     uword col = 0;
-    while (P.get_col_ptrs()[++col] <= index_of_max_val) { }
+    while(P.get_col_ptrs()[++col] <= index_of_max_val) { }
     index_of_max_val = (col - 1) * n_rows + row;
     }
   
@@ -645,25 +645,25 @@ spop_max::max_with_index(const SpProxy<T1>& P, uword& index_of_max_val)
       it_type it     = P.begin();
       it_type it_end = P.end();
       
-      while (it != it_end)
+      while(it != it_end)
         {
         // Have we moved more than one position from the last place?
-        if ((it.col() == last_col) && (it.row() - last_row > 1))
+        if((it.col() == last_col) && (it.row() - last_row > 1))
           {
           index_of_max_val = it.col() * n_rows + last_row + 1;
           break;
           }
-        else if ((it.col() >= last_col + 1) && (last_row < n_rows - 1))
+        else if((it.col() >= last_col + 1) && (last_row < n_rows - 1))
           {
           index_of_max_val = last_col * n_rows + last_row + 1;
           break;
           }
-        else if ((it.col() == last_col + 1) && (it.row() > 0))
+        else if((it.col() == last_col + 1) && (it.row() > 0))
           {
           index_of_max_val = it.col() * n_rows;
           break;
           }
-        else if (it.col() > last_col + 1)
+        else if(it.col() > last_col + 1)
           {
           index_of_max_val = (last_col + 1) * n_rows;
           break;

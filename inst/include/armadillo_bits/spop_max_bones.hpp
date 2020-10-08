@@ -29,10 +29,10 @@ class spop_max
   //
   
   template<typename T1>
-  inline static void apply_proxy(SpMat<typename T1::elem_type>& out, const SpProxy<T1>& p, const uword dim, const typename arma_not_cx<typename T1::elem_type>::result* junk = 0);
+  inline static void apply_proxy(SpMat<typename T1::elem_type>& out, const SpProxy<T1>& p, const uword dim, const typename arma_not_cx<typename T1::elem_type>::result* junk = nullptr);
   
   template<typename T1>
-  inline static typename T1::elem_type vector_max(const T1& X, const typename arma_not_cx<typename T1::elem_type>::result* junk = 0);
+  inline static typename T1::elem_type vector_max(const T1& X, const typename arma_not_cx<typename T1::elem_type>::result* junk = nullptr);
   
   template<typename T1>
   inline static typename arma_not_cx<typename T1::elem_type>::result max(const SpBase<typename T1::elem_type, T1>& X);
@@ -43,10 +43,10 @@ class spop_max
   //
   
   template<typename T1>
-  inline static void apply_proxy(SpMat<typename T1::elem_type>& out, const SpProxy<T1>& p, const uword dim, const typename arma_cx_only<typename T1::elem_type>::result* junk = 0);
+  inline static void apply_proxy(SpMat<typename T1::elem_type>& out, const SpProxy<T1>& p, const uword dim, const typename arma_cx_only<typename T1::elem_type>::result* junk = nullptr);
   
   template<typename T1>
-  inline static typename T1::elem_type vector_max(const T1& X, const typename arma_cx_only<typename T1::elem_type>::result* junk = 0);
+  inline static typename T1::elem_type vector_max(const T1& X, const typename arma_cx_only<typename T1::elem_type>::result* junk = nullptr);
   
   template<typename T1>
   inline static typename arma_cx_only<typename T1::elem_type>::result max(const SpBase<typename T1::elem_type, T1>& X);

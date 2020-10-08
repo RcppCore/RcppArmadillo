@@ -17,12 +17,15 @@
 #ifndef ARMA_INCLUDES
 #define ARMA_INCLUDES
 
+#include "armadillo_bits/config.hpp"
+#include "armadillo_bits/compiler_check.hpp"
 
 #include <cstdlib>
 #include <cstddef>
 #include <cstdio>
 #include <cstring>
 #include <climits>
+#include <cstdint>
 #include <cmath>
 #include <ctime>
 
@@ -37,65 +40,40 @@
 #include <vector>
 #include <utility>
 #include <map>
+#include <initializer_list>
+#include <random>
+#include <functional>
+#include <chrono>
 
+#if !defined(ARMA_DONT_USE_STD_MUTEX)
+  #include <mutex>
+  #include <atomic>
+#endif
+
+#if defined(ARMA_USE_TBB_ALLOC)
+  #include <tbb/scalable_allocator.h>
+#endif
+
+#if defined(ARMA_USE_MKL_ALLOC)
+  #include <mkl_service.h>
+#endif
 
 #if ( defined(__unix__) || defined(__unix) || defined(_POSIX_C_SOURCE) || (defined(__APPLE__) && defined(__MACH__)) ) && !defined(_WIN32)
   #include <unistd.h>
 #endif
 
 
-#if (defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE >= 200112L))
-  #include <sys/time.h>
-#endif
-
-
-#include "armadillo_bits/compiler_extra.hpp"
-#include "armadillo_bits/config.hpp"
 #include "armadillo_bits/compiler_setup.hpp"
-
-
-#if defined(ARMA_USE_CXX11)
-  #include <initializer_list>
-  #include <cstdint>
-  #include <random>
-  #include <functional>
-  #include <chrono>
-#endif
-
-
-#if (defined(ARMA_USE_CXX11) && !defined(ARMA_DONT_USE_CXX11_MUTEX))
-  #include <mutex>
-  #include <atomic>
-#endif
-
-
-#if defined(ARMA_USE_TBB_ALLOC)
-  #include <tbb/scalable_allocator.h>
-#endif
-
-
-#if defined(ARMA_USE_MKL_ALLOC)
-  #include <mkl_service.h>
-#endif
-
-
-#if !defined(ARMA_USE_CXX11)
-  #if defined(ARMA_HAVE_TR1)
-    #include <tr1/cmath>
-    #include <tr1/complex>
-  #endif
-#endif
-
-
-#include "armadillo_bits/include_atlas.hpp"
-#include "armadillo_bits/include_hdf5.hpp"
-#include "armadillo_bits/include_superlu.hpp"
 
 
 #if defined(ARMA_USE_OPENMP)
   #include <omp.h>
 #endif
 
+
+#include "armadillo_bits/include_atlas.hpp"
+#include "armadillo_bits/include_hdf5.hpp"
+#include "armadillo_bits/include_superlu.hpp"
 
 
 //! \namespace arma namespace for Armadillo classes and functions
@@ -176,6 +154,7 @@ namespace arma
   #include "armadillo_bits/SpCol_bones.hpp"
   #include "armadillo_bits/SpRow_bones.hpp"
   #include "armadillo_bits/SpSubview_bones.hpp"
+  #include "armadillo_bits/SpSubview_col_list_bones.hpp"
   #include "armadillo_bits/spdiagview_bones.hpp"
   #include "armadillo_bits/MapMat_bones.hpp"
   
@@ -645,6 +624,7 @@ namespace arma
   #include "armadillo_bits/SpRow_meat.hpp"
   #include "armadillo_bits/SpSubview_meat.hpp"
   #include "armadillo_bits/SpSubview_iterators_meat.hpp"
+  #include "armadillo_bits/SpSubview_col_list_meat.hpp"
   #include "armadillo_bits/spdiagview_meat.hpp"
   #include "armadillo_bits/MapMat_meat.hpp"
   

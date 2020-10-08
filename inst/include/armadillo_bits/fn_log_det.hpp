@@ -28,7 +28,7 @@ log_det
         typename T1::elem_type&          out_val,
         typename T1::pod_type&           out_sign,
   const Base<typename T1::elem_type,T1>& X,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();
@@ -58,7 +58,7 @@ log_det
         typename T1::elem_type& out_val,
         typename T1::pod_type&  out_sign,
   const Op<T1,op_diagmat>&      X,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();
@@ -107,7 +107,7 @@ std::complex<typename T1::pod_type>
 log_det
   (
   const Base<typename T1::elem_type,T1>& X,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();

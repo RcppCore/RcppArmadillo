@@ -33,7 +33,7 @@ eig_gen
   typedef typename T1::pod_type     T;
   typedef typename std::complex<T> eT;
   
-  const char sig = (option != NULL) ? option[0] : char(0);
+  const char sig = (option != nullptr) ? option[0] : char(0);
   
   arma_debug_check( ((sig != 'n') && (sig != 'b')), "eig_gen(): unknown option" );
   
@@ -70,7 +70,7 @@ eig_gen
   typedef typename T1::pod_type     T;
   typedef typename std::complex<T> eT;
   
-  const char sig = (option != NULL) ? option[0] : char(0);
+  const char sig = (option != nullptr) ? option[0] : char(0);
   
   arma_debug_check( ((sig != 'n') && (sig != 'b')), "eig_gen(): unknown option" );
   
@@ -106,7 +106,7 @@ eig_gen
   
   arma_debug_check( (void_ptr(&eigvals) == void_ptr(&eigvecs)), "eig_gen(): parameter 'eigval' is an alias of parameter 'eigvec'" );
   
-  const char sig = (option != NULL) ? option[0] : char(0);
+  const char sig = (option != nullptr) ? option[0] : char(0);
   
   arma_debug_check( ((sig != 'n') && (sig != 'b')), "eig_gen(): unknown option" );
   
@@ -144,7 +144,7 @@ eig_gen
   arma_debug_check( (void_ptr(&eigvals)  == void_ptr(&reigvecs)), "eig_gen(): parameter 'eigval' is an alias of parameter 'reigvec'" );
   arma_debug_check( (void_ptr(&leigvecs) == void_ptr(&reigvecs)), "eig_gen(): parameter 'leigvec' is an alias of parameter 'reigvec'" );
   
-  const char sig = (option != NULL) ? option[0] : char(0);
+  const char sig = (option != nullptr) ? option[0] : char(0);
   
   arma_debug_check( ((sig != 'n') && (sig != 'b')), "eig_gen(): unknown option" );
   

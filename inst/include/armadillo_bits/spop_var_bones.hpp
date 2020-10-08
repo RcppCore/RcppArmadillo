@@ -48,11 +48,11 @@ class spop_var
 
   // Calculate the variance using iterators, for non-complex numbers.
   template<typename T1, typename eT>
-  inline static eT iterator_var(T1& it, const T1& end, const uword n_zero, const uword norm_type, const eT junk1, const typename arma_not_cx<eT>::result* junk2 = 0);
+  inline static eT iterator_var(T1& it, const T1& end, const uword n_zero, const uword norm_type, const eT junk1, const typename arma_not_cx<eT>::result* junk2 = nullptr);
 
   // Calculate the variance using iterators, for complex numbers.
   template<typename T1, typename eT>
-  inline static typename get_pod_type<eT>::result iterator_var(T1& it, const T1& end, const uword n_zero, const uword norm_type, const eT junk1, const typename arma_cx_only<eT>::result* junk2 = 0);
+  inline static typename get_pod_type<eT>::result iterator_var(T1& it, const T1& end, const uword n_zero, const uword norm_type, const eT junk1, const typename arma_cx_only<eT>::result* junk2 = nullptr);
 
   };
 

@@ -316,7 +316,7 @@ class herk
   inline
   static
   void
-  apply_blas_type( Mat<std::complex<T> >& C, const TA& A, const T alpha = T(1), const T beta = T(0) )
+  apply_blas_type( Mat<std::complex<T>>& C, const TA& A, const T alpha = T(1), const T beta = T(0) )
     {
     arma_extra_debug_sigprint();
     
@@ -436,7 +436,7 @@ class herk
   inline
   static
   void
-  apply( Mat<eT>& C, const TA& A, const eT alpha = eT(1), const eT beta = eT(0), const typename arma_not_cx<eT>::result* junk = 0 )
+  apply( Mat<eT>& C, const TA& A, const eT alpha = eT(1), const eT beta = eT(0), const typename arma_not_cx<eT>::result* junk = nullptr )
     {
     arma_ignore(C);
     arma_ignore(A);

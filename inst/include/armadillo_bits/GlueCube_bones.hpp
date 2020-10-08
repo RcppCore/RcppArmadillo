@@ -21,7 +21,7 @@
 
 //! analog of the Glue class, intended for Cube objects
 template<typename T1, typename T2, typename glue_type>
-class GlueCube : public BaseCube<typename T1::elem_type, GlueCube<T1, T2, glue_type> >
+class GlueCube : public BaseCube< typename T1::elem_type, GlueCube<T1, T2, glue_type> >
   {
   public:
   

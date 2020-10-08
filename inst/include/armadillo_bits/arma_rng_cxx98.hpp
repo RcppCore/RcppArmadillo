@@ -104,7 +104,7 @@ arma_rng_cxx98::randn_val()
     
     w = tmp1*tmp1 + tmp2*tmp2;
     }
-  while ( w >= double(1) );
+  while( w >= double(1) );
   
   return double( tmp1 * std::sqrt( (double(-2) * std::log(w)) / w) );
   }
@@ -130,7 +130,7 @@ arma_rng_cxx98::randn_dual_val(eT& out1, eT& out2)
     
     w = tmp1*tmp1 + tmp2*tmp2;
     }
-  while ( w >= eTp(1) );
+  while( w >= eTp(1) );
   
   const eTp k = std::sqrt( (eTp(-2) * std::log(w)) / w);
   

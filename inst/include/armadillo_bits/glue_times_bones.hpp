@@ -27,13 +27,13 @@
 template<typename glue_type, typename T1>
 struct depth_lhs
   {
-  static const uword num = 0;
+  static constexpr uword num = 0;
   };
 
 template<typename glue_type, typename T1, typename T2>
 struct depth_lhs< glue_type, Glue<T1,T2,glue_type> >
   {
-  static const uword num = 1 + depth_lhs<glue_type, T1>::num;
+  static constexpr uword num = 1 + depth_lhs<glue_type, T1>::num;
   };
 
 
@@ -113,9 +113,9 @@ class glue_times
   template<typename T1, typename T2>
   struct traits
     {
-    static const bool is_row  = T1::is_row;
-    static const bool is_col  = T2::is_col;
-    static const bool is_xvec = false;
+    static constexpr bool is_row  = T1::is_row;
+    static constexpr bool is_col  = T2::is_col;
+    static constexpr bool is_xvec = false;
     };
   
   template<typename T1, typename T2>
@@ -152,9 +152,9 @@ class glue_times_diag
   template<typename T1, typename T2>
   struct traits
     {
-    static const bool is_row  = T1::is_row;
-    static const bool is_col  = T2::is_col;
-    static const bool is_xvec = false;
+    static constexpr bool is_row  = T1::is_row;
+    static constexpr bool is_col  = T2::is_col;
+    static constexpr bool is_xvec = false;
     };
   
   template<typename T1, typename T2>

@@ -221,102 +221,100 @@ Col<eT>::operator=(const std::vector<eT>& x)
 
 
 
-#if defined(ARMA_USE_CXX11)
+template<typename eT>
+inline
+Col<eT>::Col(const std::initializer_list<eT>& list)
+  : Mat<eT>(arma_vec_indicator(), 1)
+  {
+  arma_extra_debug_sigprint();
   
-  template<typename eT>
-  inline
-  Col<eT>::Col(const std::initializer_list<eT>& list)
-    : Mat<eT>(arma_vec_indicator(), 1)
+  (*this).operator=(list);
+  }
+
+
+
+template<typename eT>
+inline
+Col<eT>&
+Col<eT>::operator=(const std::initializer_list<eT>& list)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT> tmp(list);
+  
+  arma_debug_check( ((tmp.n_elem > 0) && (tmp.is_vec() == false)), "Mat::init(): requested size is not compatible with column vector layout" );
+  
+  access::rw(tmp.n_rows) = tmp.n_elem;
+  access::rw(tmp.n_cols) = 1;
+  
+  (*this).steal_mem(tmp);
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+inline
+Col<eT>::Col(Col<eT>&& X)
+  : Mat<eT>(arma_vec_indicator(), 1)
+  {
+  arma_extra_debug_sigprint(arma_str::format("this = %x   X = %x") % this % &X);
+  
+  access::rw(Mat<eT>::n_rows)  = X.n_rows;
+  access::rw(Mat<eT>::n_cols)  = 1;
+  access::rw(Mat<eT>::n_elem)  = X.n_elem;
+  access::rw(Mat<eT>::n_alloc) = X.n_alloc;
+  
+  if( (X.n_alloc > arma_config::mat_prealloc) || (X.mem_state == 1) || (X.mem_state == 2) )
     {
-    arma_extra_debug_sigprint();
+    access::rw(Mat<eT>::mem_state) = X.mem_state;
+    access::rw(Mat<eT>::mem)       = X.mem;
     
-    (*this).operator=(list);
+    access::rw(X.n_rows)    = 0;
+    access::rw(X.n_cols)    = 1;
+    access::rw(X.n_elem)    = 0;
+    access::rw(X.n_alloc)   = 0;
+    access::rw(X.mem_state) = 0;
+    access::rw(X.mem)       = nullptr;
     }
-  
-  
-  
-  template<typename eT>
-  inline
-  Col<eT>&
-  Col<eT>::operator=(const std::initializer_list<eT>& list)
+  else  // condition: (X.n_alloc <= arma_config::mat_prealloc) || (X.mem_state == 0) || (X.mem_state == 3)
     {
-    arma_extra_debug_sigprint();
+    (*this).init_cold();
     
-    Mat<eT> tmp(list);
+    arrayops::copy( (*this).memptr(), X.mem, X.n_elem );
     
-    arma_debug_check( ((tmp.n_elem > 0) && (tmp.is_vec() == false)), "Mat::init(): requested size is not compatible with column vector layout" );
-    
-    access::rw(tmp.n_rows) = tmp.n_elem;
-    access::rw(tmp.n_cols) = 1;
-    
-    (*this).steal_mem(tmp);
-    
-    return *this;
-    }
-  
-  
-  
-  template<typename eT>
-  inline
-  Col<eT>::Col(Col<eT>&& X)
-    : Mat<eT>(arma_vec_indicator(), 1)
-    {
-    arma_extra_debug_sigprint(arma_str::format("this = %x   X = %x") % this % &X);
-    
-    access::rw(Mat<eT>::n_rows) = X.n_rows;
-    access::rw(Mat<eT>::n_cols) = 1;
-    access::rw(Mat<eT>::n_elem) = X.n_elem;
-    
-    if( ((X.mem_state == 0) && (X.n_elem > arma_config::mat_prealloc)) || (X.mem_state == 1) || (X.mem_state == 2) )
+    if( (X.mem_state == 0) && (X.n_alloc <= arma_config::mat_prealloc) )
       {
-      access::rw(Mat<eT>::mem_state) = X.mem_state;
-      access::rw(Mat<eT>::mem)       = X.mem;
-      
-      access::rw(X.n_rows)    = 0;
-      access::rw(X.n_cols)    = 1;
-      access::rw(X.n_elem)    = 0;
-      access::rw(X.mem_state) = 0;
-      access::rw(X.mem)       = 0;
-      }
-    else
-      {
-      (*this).init_cold();
-      
-      arrayops::copy( (*this).memptr(), X.mem, X.n_elem );
-      
-      if( (X.mem_state == 0) && (X.n_elem <= arma_config::mat_prealloc) )
-        {
-        access::rw(X.n_rows) = 0;
-        access::rw(X.n_cols) = 1;
-        access::rw(X.n_elem) = 0;
-        access::rw(X.mem)    = 0;
-        }
+      access::rw(X.n_rows)  = 0;
+      access::rw(X.n_cols)  = 1;
+      access::rw(X.n_elem)  = 0;
+      access::rw(X.mem)     = nullptr;
       }
     }
+  }
+
+
+
+template<typename eT>
+inline
+Col<eT>&
+Col<eT>::operator=(Col<eT>&& X)
+  {
+  arma_extra_debug_sigprint(arma_str::format("this = %x   X = %x") % this % &X);
   
+  (*this).steal_mem(X);
   
-  
-  template<typename eT>
-  inline
-  Col<eT>&
-  Col<eT>::operator=(Col<eT>&& X)
+  if( (X.mem_state == 0) && (X.n_alloc <= arma_config::mat_prealloc) && (this != &X) )
     {
-    arma_extra_debug_sigprint(arma_str::format("this = %x   X = %x") % this % &X);
-    
-    (*this).steal_mem(X);
-    
-    if( (X.mem_state == 0) && (X.n_elem <= arma_config::mat_prealloc) && (this != &X) )
-      {
-      access::rw(X.n_rows) = 0;
-      access::rw(X.n_cols) = 1;
-      access::rw(X.n_elem) = 0;
-      access::rw(X.mem)    = 0;
-      }
-    
-    return *this;
+    access::rw(X.n_rows) = 0;
+    access::rw(X.n_cols) = 1;
+    access::rw(X.n_elem) = 0;
+    access::rw(X.mem)    = nullptr;
     }
   
-#endif
+  return *this;
+  }
 
 
 
@@ -1302,43 +1300,39 @@ Col<eT>::fixed<fixed_n_elem>::operator=(const subview_cube<eT>& X)
 
 
 
-#if defined(ARMA_USE_CXX11)
+template<typename eT>
+template<uword fixed_n_elem>
+inline
+Col<eT>::fixed<fixed_n_elem>::fixed(const std::initializer_list<eT>& list)
+  : Col<eT>( arma_fixed_indicator(), fixed_n_elem, ((use_extra) ? mem_local_extra : Mat<eT>::mem_local) )
+  {
+  arma_extra_debug_sigprint_this(this);
   
-  template<typename eT>
-  template<uword fixed_n_elem>
-  inline
-  Col<eT>::fixed<fixed_n_elem>::fixed(const std::initializer_list<eT>& list)
-    : Col<eT>( arma_fixed_indicator(), fixed_n_elem, ((use_extra) ? mem_local_extra : Mat<eT>::mem_local) )
-    {
-    arma_extra_debug_sigprint_this(this);
-    
-    (*this).operator=(list);
-    }
+  (*this).operator=(list);
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_elem>
+inline
+Col<eT>&
+Col<eT>::fixed<fixed_n_elem>::operator=(const std::initializer_list<eT>& list)
+  {
+  arma_extra_debug_sigprint();
   
+  const uword N = uword(list.size());
   
+  arma_debug_check( (N > fixed_n_elem), "Col::fixed: initialiser list is too long" );
   
-  template<typename eT>
-  template<uword fixed_n_elem>
-  inline
-  Col<eT>&
-  Col<eT>::fixed<fixed_n_elem>::operator=(const std::initializer_list<eT>& list)
-    {
-    arma_extra_debug_sigprint();
-    
-    const uword N = uword(list.size());
-    
-    arma_debug_check( (N > fixed_n_elem), "Col::fixed: initialiser list is too long" );
-    
-    eT* this_mem = (*this).memptr();
-    
-    arrayops::copy( this_mem, list.begin(), N );
-    
-    for(uword iq=N; iq < fixed_n_elem; ++iq) { this_mem[iq] = eT(0); }
-    
-    return *this;
-    }
+  eT* this_mem = (*this).memptr();
   
-#endif
+  arrayops::copy( this_mem, list.begin(), N );
+  
+  for(uword iq=N; iq < fixed_n_elem; ++iq) { this_mem[iq] = eT(0); }
+  
+  return *this;
+  }
 
 
 

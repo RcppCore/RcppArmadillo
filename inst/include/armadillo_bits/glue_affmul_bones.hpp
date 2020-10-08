@@ -26,9 +26,9 @@ class glue_affmul
   template<typename T1, typename T2>
   struct traits
     {
-    static const bool is_row  = T1::is_row;
-    static const bool is_col  = T2::is_col;
-    static const bool is_xvec = false;
+    static constexpr bool is_row  = T1::is_row;
+    static constexpr bool is_col  = T2::is_col;
+    static constexpr bool is_xvec = false;
     };
   
   template<typename T1, typename T2>

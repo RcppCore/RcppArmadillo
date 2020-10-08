@@ -74,16 +74,16 @@ class Phy
   public:
   
   //! atomic mass constant (in kg)
-  arma_deprecated static eT m_u()       {  return eT(Datum<eT>::m_u); }
+  arma_deprecated static eT m_u()       { return eT(Datum<eT>::m_u); }
   
   //! Avogadro constant
-  arma_deprecated static eT N_A()       {  return eT(Datum<eT>::N_A); }
+  arma_deprecated static eT N_A()       { return eT(Datum<eT>::N_A); }
   
   //! Boltzmann constant (in joules per kelvin)
-  arma_deprecated static eT k()         {  return eT(Datum<eT>::k); }
+  arma_deprecated static eT k()         { return eT(Datum<eT>::k); }
   
   //! Boltzmann constant (in eV/K)
-  arma_deprecated static eT k_evk()     {  return eT(Datum<eT>::k_evk); }
+  arma_deprecated static eT k_evk()     { return eT(Datum<eT>::k_evk); }
   
   //! Bohr radius (in meters)
   arma_deprecated static eT a_0()       { return eT(Datum<eT>::a_0); }

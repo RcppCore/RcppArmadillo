@@ -28,7 +28,7 @@ syl
   const Base<typename T1::elem_type,T1>& in_A,
   const Base<typename T1::elem_type,T2>& in_B,
   const Base<typename T1::elem_type,T3>& in_C,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();
@@ -66,7 +66,7 @@ syl
   const Base<typename T1::elem_type,T1>& in_A,
   const Base<typename T1::elem_type,T2>& in_B,
   const Base<typename T1::elem_type,T3>& in_C,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();

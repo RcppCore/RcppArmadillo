@@ -20,6 +20,7 @@
 
 
 template<typename eT>
+arma_cold
 inline
 mat_injector_row<eT>::mat_injector_row()
   : n_cols(0)
@@ -32,6 +33,7 @@ mat_injector_row<eT>::mat_injector_row()
 
 
 template<typename eT>
+arma_cold
 inline
 void
 mat_injector_row<eT>::insert(const eT val) const
@@ -66,6 +68,7 @@ mat_injector_row<eT>::insert(const eT val) const
 
 
 template<typename T1>
+arma_cold
 inline
 mat_injector<T1>::mat_injector(T1& in_X, const typename mat_injector<T1>::elem_type val)
   : X(in_X)
@@ -93,6 +96,7 @@ mat_injector<T1>::mat_injector(T1& in_X, const typename mat_injector<T1>::elem_t
 
 
 template<typename T1>
+arma_cold
 inline
 mat_injector<T1>::mat_injector(T1& in_X, const injector_end_of_row<>& x)
   : X(in_X)
@@ -121,6 +125,7 @@ mat_injector<T1>::mat_injector(T1& in_X, const injector_end_of_row<>& x)
 
 
 template<typename T1>
+arma_cold
 inline
 mat_injector<T1>::~mat_injector()
   {
@@ -219,6 +224,7 @@ mat_injector<T1>::~mat_injector()
 
 
 template<typename T1>
+arma_cold
 inline
 void
 mat_injector<T1>::insert(const typename mat_injector<T1>::elem_type val) const
@@ -236,6 +242,7 @@ mat_injector<T1>::insert(const typename mat_injector<T1>::elem_type val) const
 
 
 template<typename T1>
+arma_cold
 inline
 void
 mat_injector<T1>::end_of_row() const
@@ -264,7 +271,7 @@ mat_injector<T1>::end_of_row() const
 
 
 template<typename T1>
-arma_inline
+arma_cold
 const mat_injector<T1>&
 operator<<(const mat_injector<T1>& ref, const typename mat_injector<T1>::elem_type val)
   {
@@ -278,7 +285,7 @@ operator<<(const mat_injector<T1>& ref, const typename mat_injector<T1>::elem_ty
 
 
 template<typename T1>
-arma_inline
+arma_cold
 const mat_injector<T1>&
 operator<<(const mat_injector<T1>& ref, const injector_end_of_row<>& x)
   {
@@ -334,6 +341,7 @@ operator<<(const mat_injector<T1>& ref, const injector_end_of_row<>& x)
 
 
 template<typename oT>
+arma_cold
 inline
 field_injector_row<oT>::field_injector_row()
   : n_cols(0)
@@ -351,6 +359,7 @@ field_injector_row<oT>::field_injector_row()
 
 
 template<typename oT>
+arma_cold
 inline
 field_injector_row<oT>::~field_injector_row()
   {
@@ -363,6 +372,7 @@ field_injector_row<oT>::~field_injector_row()
 
 
 template<typename oT>
+arma_cold
 inline
 void
 field_injector_row<oT>::insert(const oT& val) const
@@ -401,6 +411,7 @@ field_injector_row<oT>::insert(const oT& val) const
 
 
 template<typename T1>
+arma_cold
 inline
 field_injector<T1>::field_injector(T1& in_X, const typename field_injector<T1>::object_type& val)
   : X(in_X)
@@ -428,6 +439,7 @@ field_injector<T1>::field_injector(T1& in_X, const typename field_injector<T1>::
 
 
 template<typename T1>
+arma_cold
 inline
 field_injector<T1>::field_injector(T1& in_X, const injector_end_of_row<>& x)
   : X(in_X)
@@ -456,6 +468,7 @@ field_injector<T1>::field_injector(T1& in_X, const injector_end_of_row<>& x)
 
 
 template<typename T1>
+arma_cold
 inline
 field_injector<T1>::~field_injector()
   {
@@ -513,6 +526,7 @@ field_injector<T1>::~field_injector()
 
 
 template<typename T1>
+arma_cold
 inline
 void
 field_injector<T1>::insert(const typename field_injector<T1>::object_type& val) const
@@ -530,6 +544,7 @@ field_injector<T1>::insert(const typename field_injector<T1>::object_type& val) 
 
 
 template<typename T1>
+arma_cold
 inline
 void
 field_injector<T1>::end_of_row() const
@@ -561,7 +576,7 @@ field_injector<T1>::end_of_row() const
 
 
 template<typename T1>
-arma_inline
+arma_cold
 const field_injector<T1>&
 operator<<(const field_injector<T1>& ref, const typename field_injector<T1>::object_type& val)
   {
@@ -575,7 +590,7 @@ operator<<(const field_injector<T1>& ref, const typename field_injector<T1>::obj
 
 
 template<typename T1>
-arma_inline
+arma_cold
 const field_injector<T1>&
 operator<<(const field_injector<T1>& ref, const injector_end_of_row<>& x)
   {

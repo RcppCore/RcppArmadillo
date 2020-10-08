@@ -34,7 +34,7 @@ struct unwrap_cube
   const Cube<eT> M;
   
   template<typename eT2>
-  arma_inline bool is_alias(const Cube<eT2>&) const { return false; }
+  constexpr bool is_alias(const Cube<eT2>&) const { return false; }
   };
 
 
@@ -87,8 +87,8 @@ struct unwrap_cube_check< Cube<eT> >
   {
   inline
   unwrap_cube_check(const Cube<eT>& A, const Cube<eT>& B)
-    : M_local( (&A == &B) ? new Cube<eT>(A) : 0 )
-    , M      ( (&A == &B) ? (*M_local)      : A )
+    : M_local( (&A == &B) ? new Cube<eT>(A) : nullptr )
+    , M      ( (&A == &B) ? (*M_local)      : A       )
     {
     arma_extra_debug_sigprint();
     }

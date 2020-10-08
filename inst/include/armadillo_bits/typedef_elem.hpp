@@ -60,28 +60,18 @@
 #endif
 
 
-#if defined(ARMA_USE_U64S64)
-  #if   ULLONG_MAX >= 0xffffffffffffffff
-    typedef unsigned long long u64;
-    typedef          long long s64;
-  #elif ULONG_MAX  >= 0xffffffffffffffff
-    typedef unsigned long      u64;
-    typedef          long      s64;
-    #define ARMA_U64_IS_LONG
-  #elif defined(UINT64_MAX)
-    typedef          uint64_t  u64;
-    typedef           int64_t  s64;
-  #else
-      #error "don't know how to typedef 'u64' on this system; please disable ARMA_64BIT_WORD"
-  #endif
+#if   ULLONG_MAX >= 0xffffffffffffffff
+  typedef unsigned long long u64;
+  typedef          long long s64;
+#elif defined(UINT64_MAX)
+  typedef          uint64_t  u64;
+  typedef           int64_t  s64;
+#else
+    #error "don't know how to typedef 'u64' on this system"
 #endif
 
 
-#if !defined(ARMA_USE_U64S64) || (defined(ARMA_USE_U64S64) && !defined(ARMA_U64_IS_LONG))
-  #define ARMA_ALLOW_LONG
-#endif
-
-
+// for compatibility with earlier versions of Armadillo
 typedef unsigned long ulng_t;
 typedef          long slng_t;
 

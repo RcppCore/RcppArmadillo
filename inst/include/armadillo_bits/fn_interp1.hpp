@@ -296,7 +296,7 @@ interp1
   
   uword sig = 0;
   
-  if(method    != NULL   )
+  if(method    != nullptr)
   if(method[0] != char(0))
   if(method[1] != char(0))
     {

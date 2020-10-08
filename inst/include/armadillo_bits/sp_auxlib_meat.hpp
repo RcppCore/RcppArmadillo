@@ -25,7 +25,7 @@ sp_auxlib::interpret_form_str(const char* form_str)
   arma_extra_debug_sigprint();
   
   // the order of the 3 if statements below is important
-  if( form_str    == NULL    )  { return form_none; }
+  if( form_str    == nullptr )  { return form_none; }
   if( form_str[0] == char(0) )  { return form_none; }
   if( form_str[1] == char(0) )  { return form_none; }
   
@@ -57,7 +57,7 @@ sp_auxlib::interpret_form_str(const char* form_str)
 template<typename eT, typename T1>
 inline
 bool
-sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, const uword n_eigvals, const char* form_str, const eT default_tol)
+sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, const uword n_eigvals, const form_type form_val, const eT sigma, const eigs_opts& opts)
   {
   arma_extra_debug_sigprint();
   
@@ -68,22 +68,31 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
     if(is_cx<eT>::no )  { arma_debug_warn("eigs_sym(): given matrix is not symmetric"); }
     if(is_cx<eT>::yes)  { arma_debug_warn("eigs_sym(): given matrix is not hermitian"); }
     }
+
+  // Redirect "sm" to ARPACK, if we can, because it's capable of shift-invert.
+  // This part can be removed after NEWARP is equipped with shift-invert as well.
+  #if defined(ARMA_USE_ARPACK) && defined(ARMA_USE_SUPERLU)
+    {
+    if(form_val == form_sm)  { return sp_auxlib::eigs_sym_arpack(eigval, eigvec, U.M, n_eigvals, form_val, sigma, opts); }
+    }
+  #endif
   
   #if   defined(ARMA_USE_NEWARP)
     {
-    return sp_auxlib::eigs_sym_newarp(eigval, eigvec, U.M, n_eigvals, form_str, default_tol);
+    return sp_auxlib::eigs_sym_newarp(eigval, eigvec, U.M, n_eigvals, form_val, sigma, opts);
     }
   #elif defined(ARMA_USE_ARPACK)
     {
-    return sp_auxlib::eigs_sym_arpack(eigval, eigvec, U.M, n_eigvals, form_str, default_tol);
+    return sp_auxlib::eigs_sym_arpack(eigval, eigvec, U.M, n_eigvals, form_val, sigma, opts);
     }
   #else
     {
     arma_ignore(eigval);
     arma_ignore(eigvec);
     arma_ignore(n_eigvals);
-    arma_ignore(form_str);
-    arma_ignore(default_tol);
+    arma_ignore(form_val);
+    arma_ignore(sigma);
+    arma_ignore(opts);
     
     arma_stop_logic_error("eigs_sym(): use of NEWARP or ARPACK must be enabled");
     return false;
@@ -96,15 +105,21 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
 template<typename eT>
 inline
 bool
-sp_auxlib::eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X, const uword n_eigvals, const char* form_str, const eT default_tol)
+sp_auxlib::eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X, const uword n_eigvals, const form_type form_val, const eT sigma, const eigs_opts& opts)
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_NEWARP)
     {
-    const form_type form_val = sp_auxlib::interpret_form_str(form_str);
-    
     arma_debug_check( (form_val != form_lm) && (form_val != form_sm) && (form_val != form_la) && (form_val != form_sa), "eigs_sym(): unknown form specified" );
+    
+    // Make sure we have sigma == 0 if we are not doing shift-invert
+    if(std::abs(sigma) > std::abs(std::numeric_limits<eT>::epsilon()))
+      {
+      arma_debug_warn("eigs_sym(): getting eigenvalues around 0 instead of ", sigma, " because ARPACK and/or SuperLU are not enabled. Please enable both ARPACK and SuperLU to use non-zero shifts.");
+      }
+    
+    // arma_ignore(sigma);  // Shift-invert is not implemented yet in the NEWARP wrapper!
     
     const newarp::SparseGenMatProd<eT> op(X);
     
@@ -121,12 +136,39 @@ sp_auxlib::eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
       }
     
     uword n   = op.n_rows;
-    uword ncv = n_eigvals + 2 + 1;
     
-    if(ncv < (2 * n_eigvals + 1)) { ncv = 2 * n_eigvals + 1; }
-    if(ncv > n)                   { ncv = n; }
+    // Use max(2*k+1, 20) as default subspace dimension for the sym case; MATLAB uses max(2*k, 20), but we need to be backward-compatible.
+    uword ncv_default = uword( ((2*n_eigvals+1)>(20)) ? (2*n_eigvals+1) : (20) );
     
-    eT tol = (std::max)(default_tol, std::numeric_limits<eT>::epsilon());
+    // Use opts.subdim only if it's within the limits, otherwise cap it.
+    uword ncv = ncv_default;
+    
+    if(opts.subdim != 0)
+      {
+      if(opts.subdim < (n_eigvals + 1))
+        {
+        arma_debug_warn("eigs_sym(): opts.subdim must be greater than k; using k+1 instead of ", opts.subdim);
+        ncv = uword(n_eigvals + 1);
+        }
+      else
+      if(opts.subdim > n)
+        {
+        arma_debug_warn("eigs_sym(): opts.subdim cannot be greater than n_rows; using n_rows instead of ", opts.subdim);
+        ncv = n;
+        }
+      else
+        {
+        ncv = uword(opts.subdim);
+        }
+      }
+    
+    // Re-check that we are within the limits
+    if(ncv < (n_eigvals + 1)) { ncv = (n_eigvals + 1); }
+    if(ncv > n              ) { ncv = n;               }
+    
+    eT tol = (std::max)(eT(opts.tol), std::numeric_limits<eT>::epsilon());
+    
+    uword maxiter = uword(opts.maxiter);
     
     // eigval.set_size(n_eigvals);
     // eigvec.set_size(n, n_eigvals);
@@ -141,7 +183,7 @@ sp_auxlib::eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
         {
         newarp::SymEigsSolver< eT, newarp::EigsSelect::LARGEST_MAGN, newarp::SparseGenMatProd<eT> > eigs(op, n_eigvals, ncv);
         eigs.init();
-        nconv  = eigs.compute(1000, tol);
+        nconv  = eigs.compute(maxiter, tol);
         eigval = eigs.eigenvalues();
         eigvec = eigs.eigenvectors();
         }
@@ -150,7 +192,7 @@ sp_auxlib::eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
         {
         newarp::SymEigsSolver< eT, newarp::EigsSelect::SMALLEST_MAGN, newarp::SparseGenMatProd<eT> > eigs(op, n_eigvals, ncv);
         eigs.init();
-        nconv  = eigs.compute(1000, tol);
+        nconv  = eigs.compute(maxiter, tol);
         eigval = eigs.eigenvalues();
         eigvec = eigs.eigenvectors();
         }
@@ -159,7 +201,7 @@ sp_auxlib::eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
         {
         newarp::SymEigsSolver< eT, newarp::EigsSelect::LARGEST_ALGE, newarp::SparseGenMatProd<eT> > eigs(op, n_eigvals, ncv);
         eigs.init();
-        nconv  = eigs.compute(1000, tol);
+        nconv  = eigs.compute(maxiter, tol);
         eigval = eigs.eigenvalues();
         eigvec = eigs.eigenvectors();
         }
@@ -168,7 +210,7 @@ sp_auxlib::eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
         {
         newarp::SymEigsSolver< eT, newarp::EigsSelect::SMALLEST_ALGE, newarp::SparseGenMatProd<eT> > eigs(op, n_eigvals, ncv);
         eigs.init();
-        nconv  = eigs.compute(1000, tol);
+        nconv  = eigs.compute(maxiter, tol);
         eigval = eigs.eigenvalues();
         eigvec = eigs.eigenvectors();
         }
@@ -191,8 +233,9 @@ sp_auxlib::eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
     arma_ignore(eigvec);
     arma_ignore(X);
     arma_ignore(n_eigvals);
-    arma_ignore(form_str);
-    arma_ignore(default_tol);
+    arma_ignore(form_val);
+    arma_ignore(sigma);
+    arma_ignore(opts);
     
     return false;
     }
@@ -204,14 +247,12 @@ sp_auxlib::eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
 template<typename eT>
 inline
 bool
-sp_auxlib::eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X, const uword n_eigvals, const char* form_str, const eT default_tol)
+sp_auxlib::eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X, const uword n_eigvals, const form_type form_val, const eT sigma, const eigs_opts& opts)
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_ARPACK)
     {
-    const form_type form_val = sp_auxlib::interpret_form_str(form_str);
-    
     arma_debug_check( (form_val != form_lm) && (form_val != form_sm) && (form_val != form_la) && (form_val != form_sa), "eigs_sym(): unknown form specified" );
     
     char  which_sm[3] = "SM";
@@ -227,6 +268,27 @@ sp_auxlib::eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
       case form_la:  which = which_la;  break;
 
       default:       which = which_lm;  break;
+      }
+
+    // Decide whether to use shift-invert or not
+    bool shiftinvert = false;
+    
+    if(form_val == form_sm)
+      {
+      #if defined(ARMA_USE_SUPERLU)
+        {
+        which       = which_lm;  // In shift-invert mode, "sm" maps to "lm" of the shift-inverted matrix
+        shiftinvert = true;
+        }
+      #else
+        {
+        // Make sure we have sigma == 0 if we are not doing shift-invert
+        if(std::abs(sigma) > std::abs(std::numeric_limits<eT>::epsilon()))
+          {
+          arma_debug_warn("eigs_sym(): getting eigenvalues around 0 instead of ", sigma, " because SuperLU is not enabled. Please enable SuperLU to use non-zero shifts.");
+          }
+        }
+      #endif
       }
     
     // Make sure it's square.
@@ -245,22 +307,49 @@ sp_auxlib::eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
       }
     
     // Set up variables that get used for neupd().
-    blas_int n, ncv, ldv, lworkl, info;
-    eT tol = default_tol;
+    blas_int n, ncv, ncv_default, ldv, lworkl, info, maxiter;
+    
+    eT tol  = eT(opts.tol);
+    maxiter = blas_int(opts.maxiter);
+    
     podarray<eT> resid, v, workd, workl;
     podarray<blas_int> iparam, ipntr;
     podarray<eT> rwork; // Not used in this case.
     
-    run_aupd(n_eigvals, which, X, true /* sym, not gen */, n, tol, resid, ncv, v, ldv, iparam, ipntr, workd, workl, lworkl, rwork, info);
+    n = blas_int(X.n_rows); // The size of the matrix.
     
-    if(info != 0)
+    // Use max(2*k+1, 20) as default subspace dimension for the sym case; MATLAB uses max(2*k, 20), but we need to be backward-compatible.
+    ncv_default = blas_int( ((2*n_eigvals+1)>(20)) ? (2*n_eigvals+1) : (20) );
+    
+    // Use opts.subdim only if it's within the limits
+    ncv = ncv_default;
+    
+    if(opts.subdim != 0)
       {
-      return false;
+      if(opts.subdim < (n_eigvals + 1))
+        {
+        arma_debug_warn("eigs_sym(): opts.subdim must be greater than k; using k+1 instead of ", opts.subdim);
+        ncv = blas_int(n_eigvals + 1);
+        }
+      else
+      if(blas_int(opts.subdim) > n)
+        {
+        arma_debug_warn("eigs_sym(): opts.subdim cannot be greater than n_rows; using n_rows instead of ", opts.subdim);
+        ncv = n;
+        }
+      else
+        {
+        ncv = blas_int(opts.subdim);
+        }
       }
+    
+    run_aupd(n_eigvals, which, sigma, shiftinvert, X, true /* sym, not gen */, n, tol, maxiter, resid, ncv, v, ldv, iparam, ipntr, workd, workl, lworkl, rwork, info);
+    
+    if(info != 0)  { return false; }
     
     // The process has converged, and now we need to recover the actual eigenvectors using seupd()
     blas_int rvec = 1; // .TRUE
-    blas_int nev  = n_eigvals;
+    blas_int nev  = blas_int(n_eigvals);
     
     char howmny = 'A';
     char bmat   = 'I'; // We are considering the standard eigenvalue problem.
@@ -272,7 +361,7 @@ sp_auxlib::eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
     eigval.zeros(n_eigvals);
     eigvec.zeros(n, n_eigvals);
     
-    arpack::seupd(&rvec, &howmny, select.memptr(), eigval.memptr(), eigvec.memptr(), &ldz, (eT*) NULL, &bmat, &n, which, &nev, &tol, resid.memptr(), &ncv, v.memptr(), &ldv, iparam.memptr(), ipntr.memptr(), workd.memptr(), workl.memptr(), &lworkl, &info);
+    arpack::seupd(&rvec, &howmny, select.memptr(), eigval.memptr(), eigvec.memptr(), &ldz, (eT*) &sigma, &bmat, &n, which, &nev, &tol, resid.memptr(), &ncv, v.memptr(), &ldv, iparam.memptr(), ipntr.memptr(), workd.memptr(), workl.memptr(), &lworkl, &info);
     
     // Check for errors.
     if(info != 0)
@@ -289,8 +378,8 @@ sp_auxlib::eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
     arma_ignore(eigvec);
     arma_ignore(X);
     arma_ignore(n_eigvals);
-    arma_ignore(form_str);
-    arma_ignore(default_tol);
+    arma_ignore(form_val);
+    arma_ignore(opts);
     
     return false;
     }
@@ -303,21 +392,27 @@ sp_auxlib::eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
 template<typename T, typename T1>
 inline
 bool
-sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase<T, T1>& X, const uword n_eigvals, const char* form_str, const T default_tol)
+sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase<T, T1>& X, const uword n_eigvals, const form_type form_val, const std::complex<T> sigma, const eigs_opts& opts)
   {
   arma_extra_debug_sigprint();
+
+  const unwrap_spmat<T1> U(X.get_ref());
+
+  // Redirect "sm" to ARPACK, if we can, because it's capable of shift-invert.
+  // This part can be removed after NEWARP is equipped with shift-invert as well.
+  #if defined(ARMA_USE_ARPACK) && defined(ARMA_USE_SUPERLU)
+    {
+    if(form_val == form_sm)  { return sp_auxlib::eigs_gen_arpack(eigval, eigvec, U.M, n_eigvals, form_val, sigma, opts); }
+    }
+  #endif
   
   #if defined(ARMA_USE_NEWARP)
     {
-    const unwrap_spmat<T1> U(X.get_ref());
-  
-    return sp_auxlib::eigs_gen_newarp(eigval, eigvec, U.M, n_eigvals, form_str, default_tol);
+    return sp_auxlib::eigs_gen_newarp(eigval, eigvec, U.M, n_eigvals, form_val, sigma, opts);
     }
   #elif defined(ARMA_USE_ARPACK)
     {
-    const unwrap_spmat<T1> U(X.get_ref());
-  
-    return sp_auxlib::eigs_gen_arpack(eigval, eigvec, U.M, n_eigvals, form_str, default_tol);
+    return sp_auxlib::eigs_gen_arpack(eigval, eigvec, U.M, n_eigvals, form_val, sigma, opts);
     }
   #else
     {
@@ -325,8 +420,9 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     arma_ignore(eigvec);
     arma_ignore(X);
     arma_ignore(n_eigvals);
-    arma_ignore(form_str);
-    arma_ignore(default_tol);
+    arma_ignore(form_val);
+    arma_ignore(sigma);
+    arma_ignore(opts);
     
     arma_stop_logic_error("eigs_gen(): use of NEWARP or ARPACK must be enabled");
     return false;
@@ -339,15 +435,22 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
 template<typename T>
 inline
 bool
-sp_auxlib::eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpMat<T>& X, const uword n_eigvals, const char* form_str, const T default_tol)
+sp_auxlib::eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpMat<T>& X, const uword n_eigvals, const form_type form_val, const std::complex<T> sigma, const eigs_opts& opts)
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_NEWARP)
     {
-    const form_type form_val = sp_auxlib::interpret_form_str(form_str);
-    
     arma_debug_check( (form_val == form_none), "eigs_gen(): unknown form specified" );
+    
+    
+    // Make sure we have sigma == 0 if we are not doing shift-invert
+    if(std::abs(sigma) > std::abs(std::numeric_limits<T>::epsilon()))
+      {
+      arma_debug_warn("eigs_gen(): getting eigenvalues around 0 instead of ", sigma, " because ARPACK and/or SuperLU are not enabled. Please enable both ARPACK and SuperLU to use non-zero shifts.");
+      }
+    
+    // arma_ignore(sigma);  // Shift-invert is not implemented yet in the NEWARP wrapper!
     
     const newarp::SparseGenMatProd<T> op(X);
     
@@ -364,12 +467,39 @@ sp_auxlib::eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
       }
     
     uword n   = op.n_rows;
-    uword ncv = n_eigvals + 2 + 1;
     
-    if(ncv < (2 * n_eigvals + 1)) { ncv = 2 * n_eigvals + 1; }
-    if(ncv > n)                   { ncv = n; }
+    // Use max(2*k+1, 20) as default subspace dimension for the gen case; same as MATLAB.
+    uword ncv_default = uword( ((2*n_eigvals+1)>(20)) ? (2*n_eigvals+1) : (20) );
     
-    T tol = (std::max)(default_tol, std::numeric_limits<T>::epsilon());
+    // Use opts.subdim only if it's within the limits
+    uword ncv = ncv_default;
+    
+    if(opts.subdim != 0)
+      {
+      if(opts.subdim < (n_eigvals + 3))
+        {
+        arma_debug_warn("eigs_gen(): opts.subdim must be greater than k+2; using k+3 instead of ", opts.subdim);
+        ncv = uword(n_eigvals + 3);
+        }
+      else
+      if(opts.subdim > n)
+        {
+        arma_debug_warn("eigs_gen(): opts.subdim cannot be greater than n_rows; using n_rows instead of ", opts.subdim);
+        ncv = n;
+        }
+      else
+        {
+        ncv = uword(opts.subdim);
+        }
+      }
+    
+    // Re-check that we are within the limits
+    if(ncv < (n_eigvals + 3)) { ncv = (n_eigvals + 3); }
+    if(ncv > n              ) { ncv = n;               }
+    
+    T tol = (std::max)(T(opts.tol), std::numeric_limits<T>::epsilon());
+    
+    uword maxiter = uword(opts.maxiter);
     
     // eigval.set_size(n_eigvals);
     // eigvec.set_size(n, n_eigvals);
@@ -384,7 +514,7 @@ sp_auxlib::eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
         {
         newarp::GenEigsSolver< T, newarp::EigsSelect::LARGEST_MAGN, newarp::SparseGenMatProd<T> > eigs(op, n_eigvals, ncv);
         eigs.init();
-        nconv  = eigs.compute(1000, tol);
+        nconv  = eigs.compute(maxiter, tol);
         eigval = eigs.eigenvalues();
         eigvec = eigs.eigenvectors();
         }
@@ -393,7 +523,7 @@ sp_auxlib::eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
         {
         newarp::GenEigsSolver< T, newarp::EigsSelect::SMALLEST_MAGN, newarp::SparseGenMatProd<T> > eigs(op, n_eigvals, ncv);
         eigs.init();
-        nconv  = eigs.compute(1000, tol);
+        nconv  = eigs.compute(maxiter, tol);
         eigval = eigs.eigenvalues();
         eigvec = eigs.eigenvectors();
         }
@@ -402,7 +532,7 @@ sp_auxlib::eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
         {
         newarp::GenEigsSolver< T, newarp::EigsSelect::LARGEST_REAL, newarp::SparseGenMatProd<T> > eigs(op, n_eigvals, ncv);
         eigs.init();
-        nconv  = eigs.compute(1000, tol);
+        nconv  = eigs.compute(maxiter, tol);
         eigval = eigs.eigenvalues();
         eigvec = eigs.eigenvectors();
         }
@@ -411,7 +541,7 @@ sp_auxlib::eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
         {
         newarp::GenEigsSolver< T, newarp::EigsSelect::SMALLEST_REAL, newarp::SparseGenMatProd<T> > eigs(op, n_eigvals, ncv);
         eigs.init();
-        nconv  = eigs.compute(1000, tol);
+        nconv  = eigs.compute(maxiter, tol);
         eigval = eigs.eigenvalues();
         eigvec = eigs.eigenvectors();
         }
@@ -420,7 +550,7 @@ sp_auxlib::eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
         {
         newarp::GenEigsSolver< T, newarp::EigsSelect::LARGEST_IMAG, newarp::SparseGenMatProd<T> > eigs(op, n_eigvals, ncv);
         eigs.init();
-        nconv  = eigs.compute(1000, tol);
+        nconv  = eigs.compute(maxiter, tol);
         eigval = eigs.eigenvalues();
         eigvec = eigs.eigenvectors();
         }
@@ -429,7 +559,7 @@ sp_auxlib::eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
         {
         newarp::GenEigsSolver< T, newarp::EigsSelect::SMALLEST_IMAG, newarp::SparseGenMatProd<T> > eigs(op, n_eigvals, ncv);
         eigs.init();
-        nconv  = eigs.compute(1000, tol);
+        nconv  = eigs.compute(maxiter, tol);
         eigval = eigs.eigenvalues();
         eigvec = eigs.eigenvectors();
         }
@@ -452,8 +582,9 @@ sp_auxlib::eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
     arma_ignore(eigvec);
     arma_ignore(X);
     arma_ignore(n_eigvals);
-    arma_ignore(form_str);
-    arma_ignore(default_tol);
+    arma_ignore(form_val);
+    arma_ignore(sigma);
+    arma_ignore(opts);
     
     return false;
     }
@@ -466,14 +597,12 @@ sp_auxlib::eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
 template<typename T>
 inline
 bool
-sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpMat<T>& X, const uword n_eigvals, const char* form_str, const T default_tol)
+sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpMat<T>& X, const uword n_eigvals, const form_type form_val, const std::complex<T> sigma, const eigs_opts& opts)
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_ARPACK)
     {
-    const form_type form_val = sp_auxlib::interpret_form_str(form_str);
-    
     arma_debug_check( (form_val == form_none), "eigs_gen(): unknown form specified" );
     
     char which_lm[3] = "LM";
@@ -497,6 +626,26 @@ sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
       default:       which = which_lm;
       }
     
+    // Decide whether to use shift-invert or not
+    bool shiftinvert = false;
+    
+    if(form_val == form_sm)
+      {
+      #if defined(ARMA_USE_SUPERLU)
+        {
+        which       = which_lm;  // In shift-invert mode, "sm" maps to "lm" of the shift-inverted matrix
+        shiftinvert = true;
+        }
+      #else
+        {
+        // Make sure we have sigma == 0 if we are not doing shift-invert
+        if(std::abs(sigma) > std::abs(std::numeric_limits<T>::epsilon()))
+          {
+          arma_debug_warn("eigs_gen(): getting eigenvalues around 0 instead of ", sigma, " because SuperLU is not enabled. Please enable SuperLU to use non-zero shifts.");
+          }
+        }
+      #endif
+      }
     
     // Make sure it's square.
     arma_debug_check( (X.n_rows != X.n_cols), "eigs_gen(): given matrix must be square sized" );
@@ -513,13 +662,63 @@ sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
       }
     
     // Set up variables that get used for neupd().
-    blas_int n, ncv, ldv, lworkl, info;
-    T tol = default_tol;
+    blas_int n, ncv, ncv_default, ldv, lworkl, info, maxiter;
+    
+    T tol   = T(opts.tol);
+    maxiter = blas_int(opts.maxiter);
+    
     podarray<T> resid, v, workd, workl;
     podarray<blas_int> iparam, ipntr;
     podarray<T> rwork; // Not used in the real case.
     
-    run_aupd(n_eigvals, which, X, false /* gen, not sym */, n, tol, resid, ncv, v, ldv, iparam, ipntr, workd, workl, lworkl, rwork, info);
+    n = blas_int(X.n_rows); // The size of the matrix.
+    
+    // Use max(2*k+1, 20) as default subspace dimension for the gen case; same as MATLAB.
+    ncv_default = blas_int( ((2*n_eigvals+1)>(20)) ? (2*n_eigvals+1) : (20) );
+    
+    // Use opts.subdim only if it's within the limits
+    ncv = ncv_default;
+    
+    if(opts.subdim != 0)
+      {
+      if(opts.subdim < (n_eigvals + 3))
+        {
+        arma_debug_warn("eigs_gen(): opts.subdim must be greater than k+2; using k+3 instead of ", opts.subdim);
+        ncv = blas_int(n_eigvals + 3);
+        }
+      else
+      if(blas_int(opts.subdim) > n)
+        {
+        arma_debug_warn("eigs_gen(): opts.subdim cannot be greater than n_rows; using n_rows instead of ", opts.subdim);
+        ncv = n;
+        }
+      else
+        {
+        ncv = blas_int(opts.subdim);
+        }
+      }
+    
+    // WARNING!!!
+    // We are still not able to apply truly complex shifts to real matrices,
+    // in which case the OP that ARPACKS wants is different (see [s/d]naupd).
+    // Also, if sigma contains a non-negligible imaginary part, retrieving the eigenvalues
+    // becomes utterly messy (see [s/d]eupd, remark #3).
+    // So far, we just consider the real part of sigma and discard the imaginary part
+    // (run_aupd() below is taking just the real part, and it's templated in this way).
+    // We should never get to the point in which the imaginary part of sigma is
+    // non-zero, though; the user-facing functions are currently converting X from
+    // real to complex if a truly complex sigma is detected. This check is here just
+    // for extra safety, and as a reminder of what's missing.
+    T sigmar = real(sigma);
+    T sigmai = imag(sigma);
+    
+    if(std::abs(sigmai) > std::numeric_limits<T>::epsilon())
+      {
+      arma_debug_warn("eigs_gen(): real matrices can be shifted only by a real shift, but the provided one is complex. Discarding the imaginary part of the shift.");
+      sigmai = T(0);
+      }
+    
+    run_aupd(n_eigvals, which, sigmar, shiftinvert, X, false /* gen, not sym */, n, tol, maxiter, resid, ncv, v, ldv, iparam, ipntr, workd, workl, lworkl, rwork, info);
     
     if(info != 0)
       {
@@ -528,23 +727,23 @@ sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
 
     // The process has converged, and now we need to recover the actual eigenvectors using neupd().
     blas_int rvec = 1; // .TRUE
-    blas_int nev = n_eigvals;
+    blas_int nev  = blas_int(n_eigvals);
     
     char howmny = 'A';
     char bmat   = 'I'; // We are considering the standard eigenvalue problem.
     
-    podarray<blas_int> select(ncv); // Logical array of dimension NCV.
-    podarray<T> dr(nev + 1); // Real array of dimension NEV + 1.
-    podarray<T> di(nev + 1); // Real array of dimension NEV + 1.
-    podarray<T> z(n * (nev + 1)); // Real N by NEV array if HOWMNY = 'A'.
+    podarray<blas_int> select(ncv);      // logical array of dimension NCV
+    podarray<T>        dr(nev + 1);      // real array of dimension NEV + 1
+    podarray<T>        di(nev + 1);      // real array of dimension NEV + 1
+    podarray<T>        z(n * (nev + 1)); // real N by NEV array if HOWMNY = 'A'
     blas_int ldz = n;
-    podarray<T> workev(3 * ncv);
+    podarray<T>        workev(3 * ncv);
     
     dr.zeros();
     di.zeros();
     z.zeros();
     
-    arpack::neupd(&rvec, &howmny, select.memptr(), dr.memptr(), di.memptr(), z.memptr(), &ldz, (T*) NULL, (T*) NULL, workev.memptr(), &bmat, &n, which, &nev, &tol, resid.memptr(), &ncv, v.memptr(), &ldv, iparam.memptr(), ipntr.memptr(), workd.memptr(), workl.memptr(), &lworkl, rwork.memptr(), &info);
+    arpack::neupd(&rvec, &howmny, select.memptr(), dr.memptr(), di.memptr(), z.memptr(), &ldz, (T*) &sigmar, (T*) &sigmai, workev.memptr(), &bmat, &n, which, &nev, &tol, resid.memptr(), &ncv, v.memptr(), &ldv, iparam.memptr(), ipntr.memptr(), workd.memptr(), workl.memptr(), &lworkl, rwork.memptr(), &info);
     
     // Check for errors.
     if(info != 0)
@@ -603,8 +802,9 @@ sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
     arma_ignore(eigvec);
     arma_ignore(X);
     arma_ignore(n_eigvals);
-    arma_ignore(form_str);
-    arma_ignore(default_tol);
+    arma_ignore(form_val);
+    arma_ignore(sigma);
+    arma_ignore(opts);
     
     return false;
     }
@@ -617,15 +817,13 @@ sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
 template<typename T, typename T1>
 inline
 bool
-sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase< std::complex<T>, T1>& X_expr, const uword n_eigvals, const char* form_str, const T default_tol)
+sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase< std::complex<T>, T1>& X_expr, const uword n_eigvals, const form_type form_val, const std::complex<T> sigma, const eigs_opts& opts)
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_ARPACK)
     {
     typedef typename std::complex<T> eT;
-    
-    const form_type form_val = sp_auxlib::interpret_form_str(form_str);
     
     arma_debug_check( (form_val == form_none), "eigs_gen(): unknown form specified" );
     
@@ -649,6 +847,27 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
       
       default:       which = which_lm;
       }
+
+    // Decide whether to use shift-invert or not
+    bool shiftinvert = false;
+    
+    if(form_val == form_sm)
+      {
+      #if defined(ARMA_USE_SUPERLU)
+        {
+        which       = which_lm;  // In shift-invert mode, "sm" maps to "lm" of the shift-inverted matrix
+        shiftinvert = true;
+        }
+      #else
+        {
+        // Make sure we have sigma == 0 if we are not doing shift-invert
+        if(abs(sigma) > std::abs(std::numeric_limits<T>::epsilon()))
+          {
+          arma_debug_warn("eigs_gen(): getting eigenvalues around 0 instead of ", sigma, " because SuperLU is not enabled. Please enable SuperLU to use non-zero shifts.");
+          }
+        }
+      #endif
+      }
     
     const unwrap_spmat<T1> U(X_expr.get_ref());
     
@@ -669,13 +888,43 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
       }
     
     // Set up variables that get used for neupd().
-    blas_int n, ncv, ldv, lworkl, info;
-    T tol = default_tol;
+    blas_int n, ncv, ncv_default, ldv, lworkl, info, maxiter;
+    
+    T tol   = T(opts.tol);
+    maxiter = blas_int(opts.maxiter);
+    
     podarray< std::complex<T> > resid, v, workd, workl;
     podarray<blas_int> iparam, ipntr;
     podarray<T> rwork;
     
-    run_aupd(n_eigvals, which, X, false /* gen, not sym */, n, tol, resid, ncv, v, ldv, iparam, ipntr, workd, workl, lworkl, rwork, info);
+    n = blas_int(X.n_rows); // The size of the matrix.
+    
+    // Use max(2*k+1, 20) as default subspace dimension for the gen case; same as MATLAB.
+    ncv_default = blas_int( ((2*n_eigvals+1)>(20)) ? (2*n_eigvals+1) : (20) );
+    
+    // Use opts.subdim only if it's within the limits
+    ncv = ncv_default;
+    
+    if(opts.subdim != 0)
+      {
+      if(opts.subdim < (n_eigvals + 3))
+        {
+        arma_debug_warn("eigs_gen(): opts.subdim must be greater than k+2; using k+3 instead of ", opts.subdim);
+        ncv = blas_int(n_eigvals + 3);
+        }
+      else
+      if(blas_int(opts.subdim) > n)
+        {
+        arma_debug_warn("eigs_gen(): opts.subdim cannot be greater than n_rows; using n_rows instead of ", opts.subdim);
+        ncv = n;
+        }
+      else
+        {
+        ncv = blas_int(opts.subdim);
+        }
+      }
+    
+    run_aupd(n_eigvals, which, sigma, shiftinvert, X, false /* gen, not sym */, n, tol, maxiter, resid, ncv, v, ldv, iparam, ipntr, workd, workl, lworkl, rwork, info);
     
     if(info != 0)
       {
@@ -684,21 +933,20 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     
     // The process has converged, and now we need to recover the actual eigenvectors using neupd().
     blas_int rvec = 1; // .TRUE
-    blas_int nev  = n_eigvals;
+    blas_int nev  = blas_int(n_eigvals);
     
     char howmny = 'A';
     char bmat   = 'I'; // We are considering the standard eigenvalue problem.
     
-    podarray<blas_int> select(ncv); // Logical array of dimension NCV.
-    podarray<std::complex<T> > d(nev + 1); // Real array of dimension NEV + 1.
-    podarray<std::complex<T> > z(n * nev); // Real N by NEV array if HOWMNY = 'A'.
+    podarray<blas_int>        select(ncv); // logical array of dimension NCV
+    podarray<std::complex<T>> d(nev + 1);  // complex array of dimension NEV + 1
+    podarray<std::complex<T>> z(n * nev);  // complex N by NEV array if HOWMNY = 'A'
     blas_int ldz = n;
-    podarray<std::complex<T> > workev(2 * ncv);
+    podarray<std::complex<T>> workev(2 * ncv);
     
     // Prepare the outputs; neupd() will write directly to them.
     eigval.zeros(n_eigvals);
     eigvec.zeros(n, n_eigvals);
-    std::complex<T> sigma;
     
     arpack::neupd(&rvec, &howmny, select.memptr(), eigval.memptr(),
 (std::complex<T>*) NULL, eigvec.memptr(), &ldz, (std::complex<T>*) &sigma, (std::complex<T>*) NULL, workev.memptr(), &bmat, &n, which, &nev, &tol, resid.memptr(), &ncv, v.memptr(), &ldv, iparam.memptr(), ipntr.memptr(), workd.memptr(), workl.memptr(), &lworkl, rwork.memptr(), &info);
@@ -718,9 +966,10 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     arma_ignore(eigvec);
     arma_ignore(X_expr);
     arma_ignore(n_eigvals);
-    arma_ignore(form_str);
-    arma_ignore(default_tol);
-    
+    arma_ignore(form_val);
+    arma_ignore(sigma);
+    arma_ignore(opts);
+
     arma_stop_logic_error("eigs_gen(): use of ARPACK must be enabled for decomposition of complex matrices");
     return false;
     }
@@ -754,7 +1003,8 @@ sp_auxlib::spsolve_simple(Mat<typename T1::elem_type>& X, const SpBase<typename 
       X.soft_reset();
       return false;
       }
-    else if(A.n_rows < A.n_cols)
+    else
+    if(A.n_rows < A.n_cols)
       {
       arma_stop_logic_error("spsolve(): solving under-determined systems currently not supported");
       X.soft_reset();
@@ -773,7 +1023,7 @@ sp_auxlib::spsolve_simple(Mat<typename T1::elem_type>& X, const SpBase<typename 
     
     if(arma_config::debug)
       {
-      bool overflow;
+      bool overflow = false;
       
       overflow = (A.n_nonzero > INT_MAX);
       overflow = (A.n_rows > INT_MAX) || overflow;
@@ -903,7 +1153,8 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
       X.soft_reset();
       return false;
       }
-    else if(A.n_rows < A.n_cols)
+    else
+    if(A.n_rows < A.n_cols)
       {
       arma_stop_logic_error("spsolve(): solving under-determined systems currently not supported");
       X.soft_reset();
@@ -1150,7 +1401,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     // not guaranteed to be new and delete.  See the comments in def_superlu.hpp
     superlu::NCformat* nc = (superlu::NCformat*)superlu::malloc(sizeof(superlu::NCformat));
     
-    if(nc == NULL)  { return false; }
+    if(nc == nullptr)  { return false; }
     
     A.sync();
     
@@ -1159,7 +1410,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     nc->colptr = (superlu::int_t*)superlu::malloc(sizeof(superlu::int_t) * (A.n_cols + 1));
     nc->rowind = (superlu::int_t*)superlu::malloc(sizeof(superlu::int_t) * A.n_nonzero   );
     
-    if( (nc->nzval == NULL) || (nc->colptr == NULL) || (nc->rowind == NULL) )  { return false; }
+    if( (nc->nzval == nullptr) || (nc->colptr == nullptr) || (nc->rowind == nullptr) )  { return false; }
     
     // Fill the matrix.
     arrayops::copy((eT*) nc->nzval, A.values, A.n_nonzero);
@@ -1217,7 +1468,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     // We have to create the object that stores the data.
     superlu::DNformat* dn = (superlu::DNformat*)superlu::malloc(sizeof(superlu::DNformat));
     
-    if(dn == NULL)  { return false; }
+    if(dn == nullptr)  { return false; }
     
     dn->lda   = A.n_rows;
     dn->nzval = (void*) A.memptr();  // re-use memory instead of copying
@@ -1243,6 +1494,11 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
       superlu::destroy_compcol_mat(&out);
       }
     else
+    if(out.Stype == superlu::SLU_NCP)
+      {
+      superlu::destroy_compcolperm_mat(&out);
+      }
+    else
     if(out.Stype == superlu::SLU_DN)
       {
       // superlu::destroy_dense_mat(&out);
@@ -1253,7 +1509,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
       
       superlu::DNformat* dn = (superlu::DNformat*) out.Store;
       
-      if(dn != NULL)  { superlu::free(dn); }
+      if(dn != nullptr)  { superlu::free(dn); }
       }
     else
     if(out.Stype == superlu::SLU_SC)
@@ -1288,19 +1544,24 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
 
 
 
+// Here 'sigma' is 'T', but should be 'eT'. So far, we are not still able
+// to apply complex shifts to real matrices.
 template<typename eT, typename T>
 inline
 void
 sp_auxlib::run_aupd
   (
-  const uword n_eigvals, char* which, const SpMat<T>& X, const bool sym,
-  blas_int& n, eT& tol,
+  const uword n_eigvals, char* which, const T sigma, const bool shiftinvert,
+  const SpMat<T>& X, const bool sym,
+  blas_int& n, eT& tol, blas_int& maxiter,
   podarray<T>& resid, blas_int& ncv, podarray<T>& v, blas_int& ldv,
   podarray<blas_int>& iparam, podarray<blas_int>& ipntr,
   podarray<T>& workd, podarray<T>& workl, blas_int& lworkl, podarray<eT>& rwork,
   blas_int& info
   )
   {
+  // TODO: this function is a mess
+  
   #if defined(ARMA_USE_ARPACK)
     {
     // ARPACK provides a "reverse communication interface" which is an
@@ -1311,22 +1572,21 @@ sp_auxlib::run_aupd
     // where we call saupd()/naupd() many times.
     blas_int ido = 0; // This must be 0 for the first call.
     char bmat = 'I'; // We are considering the standard eigenvalue problem.
-    n = X.n_rows; // The size of the matrix.
+    n = X.n_rows; // The size of the matrix (should already be set outside).
     blas_int nev = n_eigvals;
     
     resid.set_size(n);
     
-    // Two contraints on NCV: (NCV > NEV + 2) and (NCV <= N)
+    // Two contraints on NCV: (NCV > NEV) for sym problems or
+    // (NCV > NEV + 2) for gen problems and (NCV <= N)
     // 
     // We're calling either arpack::saupd() or arpack::naupd(),
     // which have slighly different minimum constraint and recommended value for NCV:
     // http://www.caam.rice.edu/software/ARPACK/UG/node136.html
     // http://www.caam.rice.edu/software/ARPACK/UG/node138.html
     
-    ncv = nev + 2 + 1;
-    
-    if (ncv < (2 * nev + 1)) { ncv = 2 * nev + 1; }
-    if (ncv > n            ) { ncv = n;           }
+    if(ncv < (nev + (sym ? 1 : 3))) { ncv = (nev + (sym ? 1 : 3)); }
+    if(ncv > n                    ) { ncv = n;                     }
     
     v.set_size(n * ncv); // Array N by NCV (output).
     rwork.set_size(ncv); // Work array of size NCV for complex calls.
@@ -1335,8 +1595,22 @@ sp_auxlib::run_aupd
     // IPARAM: integer array of length 11.
     iparam.zeros(11);
     iparam(0) = 1; // Exact shifts (not provided by us).
-    iparam(2) = 1000; // Maximum iterations; all the examples use 300, but they were written in the ancient times.
+    iparam(2) = maxiter; // Maximum iterations; all the examples use 300, but they were written in the ancient times.
     iparam(6) = 1; // Mode 1: A * x = lambda * x.
+    
+    // Change IPARAM for shift-invert
+    if(shiftinvert)
+      {
+      #if defined(ARMA_USE_SUPERLU)
+        {
+        iparam(6) = 3; // Mode 3:  A * x = lambda * M * x, M symmetric semi-definite. OP = inv[A - sigma*M]*M  (A complex)  or  Real_Part{ inv[A - sigma*M]*M }  (A real)  and  B = M.
+        }
+      #else
+        {
+        arma_stop_logic_error("run_aupd(): use of SuperLU must be enabled for shift-invert operation");
+        }
+      #endif
+      }
     
     // IPNTR: integer array of length 14 (output).
     ipntr.set_size(14);
@@ -1352,14 +1626,79 @@ sp_auxlib::run_aupd
     
     info = 0; // Set to 0 initially to use random initial vector.
     
+    #if defined(ARMA_USE_SUPERLU)
+      
+      superlu_opts superlu_opts_default;
+      superlu::superlu_options_t options;
+      sp_auxlib::set_superlu_opts(options, superlu_opts_default);
+      int lwork = 0;
+      superlu::trans_t trans = superlu::NOTRANS;
+      
+      superlu::GlobalLU_t Glu; /* Not needed on return. */
+      arrayops::fill_zeros(reinterpret_cast<char*>(&Glu), sizeof(superlu::GlobalLU_t));
+      
+      supermatrix_wrangler x;
+      supermatrix_wrangler xC;
+      
+      // Copy X if we have to shift by a non-zero number.
+      bool status_x = false;
+      
+      if(shiftinvert && std::abs(sigma) > std::abs(std::numeric_limits<T>::epsilon()))
+        {
+        SpMat<T> tmpX(X);
+        tmpX.diag() -= sigma;
+        status_x = sp_auxlib::copy_to_supermatrix(x.get_ref(), tmpX);
+        }
+      else
+        {
+        status_x = sp_auxlib::copy_to_supermatrix(x.get_ref(), X);
+        }
+
+      if(status_x == false)
+        {
+        arma_stop_runtime_error("run_aupd(): could not construct SuperLU matrix");
+        return;
+        }
+      
+      supermatrix_wrangler l;
+      supermatrix_wrangler u;
+      
+      superluintarray_wrangler perm_c(X.n_cols+1);  // paranoia: increase array length by 1
+      superluintarray_wrangler perm_r(X.n_rows+1);
+      superluintarray_wrangler etree (X.n_cols+1);
+      
+      superlustat_wrangler stat;
+      
+      int   panel_size = superlu::sp_ispec_environ(1);
+      int   relax      = superlu::sp_ispec_environ(2);
+      float drop_tol   = 0.0;
+      int   slu_info   = 0; // Return code.
+      
+      if(shiftinvert)
+        {
+        arma_extra_debug_print("shiftinvert = true");
+        arma_extra_debug_print("superlu::gstrf()");
+        superlu::get_permutation_c(options.ColPerm, x.get_ptr(), perm_c.get_ptr());
+        superlu::sp_preorder_mat(&options, x.get_ptr(), perm_c.get_ptr(), etree.get_ptr(), xC.get_ptr());
+        superlu::gstrf<T>(&options, xC.get_ptr(), drop_tol, relax, panel_size, etree.get_ptr(), NULL, lwork, perm_c.get_ptr(), perm_r.get_ptr(), l.get_ptr(), u.get_ptr(), &Glu, stat.get_ptr(), &slu_info);
+        }
+      
+    #endif
+    
     // All the parameters have been set or created.  Time to loop a lot.
-    while (ido != 99)
+    while(ido != 99)
       {
       // Call saupd() or naupd() with the current parameters.
       if(sym)
+        {
+        arma_extra_debug_print("arpack::saupd");
         arpack::saupd(&ido, &bmat, &n, which, &nev, &tol, resid.memptr(), &ncv, v.memptr(), &ldv, iparam.memptr(), ipntr.memptr(), workd.memptr(), workl.memptr(), &lworkl, &info);
+        }
       else
+        {
+        arma_extra_debug_print("arpack::naupd");
         arpack::naupd(&ido, &bmat, &n, which, &nev, &tol, resid.memptr(), &ncv, v.memptr(), &ldv, iparam.memptr(), ipntr.memptr(), workd.memptr(), workl.memptr(), &lworkl, rwork.memptr(), &info);
+        }
       
       // What do we do now?
       switch (ido)
@@ -1382,13 +1721,46 @@ sp_auxlib::run_aupd
           Col<T> in(workd.memptr() + ipntr(0) - 1, n, false /* don't copy */);
           
           out.zeros();
-          typename SpMat<T>::const_iterator x_it     = X.begin();
-          typename SpMat<T>::const_iterator x_it_end = X.end();
           
-          while(x_it != x_it_end)
+          if(shiftinvert)
             {
-            out[x_it.row()] += (*x_it) * in[x_it.col()];
-            ++x_it;
+            #if defined(ARMA_USE_SUPERLU)
+              {
+              arma_extra_debug_print("shiftinvert = true");
+              
+              // Consider getting the LU factorization from ZGSTRF, and then
+              // solve the system L*U*out = in (possibly with permutation matrix?)
+              // Instead of "spsolve(out,X,in)" we call gstrf above and gstrs below
+              
+              out = in;
+              supermatrix_wrangler out_slu;
+              
+              const bool status_out_slu = sp_auxlib::wrap_to_supermatrix(out_slu.get_ref(), out);
+              
+              if(status_out_slu == false)
+                {
+                arma_stop_runtime_error("run_aupd(): could not construct SuperLU matrix");
+                return;
+                }
+              
+              arma_extra_debug_print("superlu::gstrs()");
+              superlu::gstrs<T>(trans, l.get_ptr(), u.get_ptr(), perm_c.get_ptr(), perm_r.get_ptr(), out_slu.get_ptr(), stat.get_ptr(), &info);
+              }
+            #endif
+            }
+          else
+            {
+            typename SpMat<T>::const_iterator X_it     = X.begin();
+            typename SpMat<T>::const_iterator X_it_end = X.end();
+            
+            while(X_it != X_it_end)
+              {
+              const uword X_it_row = X_it.row();
+              const uword X_it_col = X_it.col();
+              
+              out[X_it_row] += (*X_it) * in[X_it_col];
+              ++X_it;
+              }
             }
           
           // No need to modify memory further since it was all done in-place.
@@ -1423,8 +1795,11 @@ sp_auxlib::run_aupd
       }
     }
   #else
+    {
     arma_ignore(n_eigvals);
     arma_ignore(which);
+    arma_ignore(sigma);
+    arma_ignore(shiftinvert);
     arma_ignore(X);
     arma_ignore(sym);
     arma_ignore(n);
@@ -1440,6 +1815,7 @@ sp_auxlib::run_aupd
     arma_ignore(lworkl);
     arma_ignore(rwork);
     arma_ignore(info);
+    }
   #endif
   }
 
@@ -1549,6 +1925,119 @@ sp_auxlib::rudimentary_sym_check(const SpMat< std::complex<T> >& X)
   return true;
   }
 
+
+
+#if defined(ARMA_USE_SUPERLU)
+
+inline
+supermatrix_wrangler::~supermatrix_wrangler()
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  if(used == false)  { return; }
+  
+  char* m_char   = reinterpret_cast<char*>(&m);
+  bool  all_zero = true;
+  
+  for(size_t i=0; i < sizeof(superlu::SuperMatrix); ++i)
+    {
+    if(m_char[i] != char(0))  { all_zero = false; break; }
+    }
+  
+  if(all_zero == false)  { sp_auxlib::destroy_supermatrix(m); }
+  }
+
+inline
+supermatrix_wrangler::supermatrix_wrangler()
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  arrayops::fill_zeros(reinterpret_cast<char*>(&m), sizeof(superlu::SuperMatrix));
+  }
+
+inline
+superlu::SuperMatrix&
+supermatrix_wrangler::get_ref()
+  {
+  used = true;
+  
+  return m;
+  }
+
+inline
+superlu::SuperMatrix*
+supermatrix_wrangler::get_ptr()
+  {
+  used = true;
+  
+  return &m;
+  }
+
+
+//
+
+
+inline
+superlustat_wrangler::~superlustat_wrangler()
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  superlu::free_stat(&stat);
+  }
+
+inline
+superlustat_wrangler::superlustat_wrangler()
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  arrayops::fill_zeros(reinterpret_cast<char*>(&stat), sizeof(superlu::SuperLUStat_t));
+  
+  superlu::init_stat(&stat);
+  }
+
+inline
+superlu::SuperLUStat_t*
+superlustat_wrangler::get_ptr()
+  {
+  return &stat;
+  }
+
+
+//
+
+
+inline
+superluintarray_wrangler::~superluintarray_wrangler()
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  if(mem != nullptr)
+    {
+    superlu::free(mem);
+    mem = nullptr;
+    }
+  }
+
+inline
+superluintarray_wrangler::superluintarray_wrangler(const uword n_elem)
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  mem = (int*)(superlu::malloc(n_elem * sizeof(int)));
+  
+  arma_check_bad_alloc( (mem == nullptr), "superlu::malloc(): out of memory" );
+  
+  arrayops::fill_zeros(mem, n_elem);
+  }
+
+inline
+int*
+superluintarray_wrangler::get_ptr()
+  {
+  return mem;
+  }
+
+#endif
 
 
 //! @}

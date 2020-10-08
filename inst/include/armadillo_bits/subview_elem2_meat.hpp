@@ -305,6 +305,38 @@ subview_elem2<eT,T1,T2>::inplace_op(const Base<eT,expr>& x)
 template<typename eT, typename T1, typename T2>
 inline
 void
+subview_elem2<eT,T1,T2>::replace(const eT old_val, const eT new_val)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT> tmp(*this);
+  
+  tmp.replace(old_val, new_val);
+  
+  (*this).operator=(tmp);
+  }
+
+
+
+template<typename eT, typename T1, typename T2>
+inline
+void
+subview_elem2<eT,T1,T2>::clean(const pod_type threshold)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT> tmp(*this);
+  
+  tmp.clean(threshold);
+  
+  (*this).operator=(tmp);
+  }
+
+
+
+template<typename eT, typename T1, typename T2>
+inline
+void
 subview_elem2<eT,T1,T2>::fill(const eT val)
   {
   arma_extra_debug_sigprint();
@@ -544,6 +576,86 @@ subview_elem2<eT,T1,T2>::operator/= (const Base<eT,expr>& x)
   arma_extra_debug_sigprint();
   
   inplace_op<op_internal_div>(x);
+  }
+
+
+
+//
+//
+
+
+
+template<typename eT, typename T1, typename T2>
+template<typename expr>
+inline
+void
+subview_elem2<eT,T1,T2>::operator= (const SpBase<eT,expr>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  const Mat<eT> tmp(x);
+  
+  inplace_op<op_internal_equ>(tmp);
+  }
+
+
+
+template<typename eT, typename T1, typename T2>
+template<typename expr>
+inline
+void
+subview_elem2<eT,T1,T2>::operator+= (const SpBase<eT,expr>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  const Mat<eT> tmp(x);
+  
+  inplace_op<op_internal_plus>(tmp);
+  }
+
+
+
+template<typename eT, typename T1, typename T2>
+template<typename expr>
+inline
+void
+subview_elem2<eT,T1,T2>::operator-= (const SpBase<eT,expr>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  const Mat<eT> tmp(x);
+  
+  inplace_op<op_internal_minus>(tmp);
+  }
+
+
+
+template<typename eT, typename T1, typename T2>
+template<typename expr>
+inline
+void
+subview_elem2<eT,T1,T2>::operator%= (const SpBase<eT,expr>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  const Mat<eT> tmp(x);
+  
+  inplace_op<op_internal_schur>(tmp);
+  }
+
+
+
+template<typename eT, typename T1, typename T2>
+template<typename expr>
+inline
+void
+subview_elem2<eT,T1,T2>::operator/= (const SpBase<eT,expr>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  const Mat<eT> tmp(x);
+  
+  inplace_op<op_internal_div>(tmp);
   }
 
 

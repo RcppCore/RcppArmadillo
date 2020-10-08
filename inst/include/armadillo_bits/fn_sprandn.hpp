@@ -30,7 +30,7 @@ sprandn
   const uword  n_rows,
   const uword  n_cols,
   const double density,
-  const typename arma_SpMat_SpCol_SpRow_only<obj_type>::result* junk = 0
+  const typename arma_SpMat_SpCol_SpRow_only<obj_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();
@@ -59,7 +59,7 @@ template<typename obj_type>
 arma_warn_unused
 inline
 obj_type
-sprandn(const SizeMat& s, const double density, const typename arma_SpMat_SpCol_SpRow_only<obj_type>::result* junk = 0)
+sprandn(const SizeMat& s, const double density, const typename arma_SpMat_SpCol_SpRow_only<obj_type>::result* junk = nullptr)
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk);

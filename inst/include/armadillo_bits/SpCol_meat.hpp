@@ -269,14 +269,14 @@ SpCol<eT>::shed_rows(const uword in_row1, const uword in_row2)
   for(uword i = 0; i < SpMat<eT>::n_nonzero; ++i)
     {
     // Start position found?
-    if (SpMat<eT>::row_indices[i] >= in_row1 && !start_found)
+    if(SpMat<eT>::row_indices[i] >= in_row1 && !start_found)
       {
       start = i;
       start_found = true;
       }
 
     // End position found?
-    if (SpMat<eT>::row_indices[i] > in_row2)
+    if(SpMat<eT>::row_indices[i] > in_row2)
       {
       end = i;
       end_found = true;
@@ -284,13 +284,13 @@ SpCol<eT>::shed_rows(const uword in_row1, const uword in_row2)
       }
     }
 
-  if (!end_found)
+  if(!end_found)
     {
     end = SpMat<eT>::n_nonzero;
     }
 
   // Now we can make the copy.
-  if (start != end)
+  if(start != end)
     {
     const uword elem_diff = end - start;
 
@@ -298,14 +298,14 @@ SpCol<eT>::shed_rows(const uword in_row1, const uword in_row2)
     uword* new_row_indices = memory::acquire<uword>(SpMat<eT>::n_nonzero - elem_diff);
 
     // Copy before the section we are dropping (if it exists).
-    if (start > 0)
+    if(start > 0)
       {
       arrayops::copy(new_values, SpMat<eT>::values, start);
       arrayops::copy(new_row_indices, SpMat<eT>::row_indices, start);
       }
 
     // Copy after the section we are dropping (if it exists).
-    if (end != SpMat<eT>::n_nonzero)
+    if(end != SpMat<eT>::n_nonzero)
       {
       arrayops::copy(new_values + start, SpMat<eT>::values + end, (SpMat<eT>::n_nonzero - end));
       arrayops::copy(new_row_indices + start, SpMat<eT>::row_indices + end, (SpMat<eT>::n_nonzero - end));
@@ -345,7 +345,7 @@ SpCol<eT>::shed_rows(const uword in_row1, const uword in_row2)
 // 
 //   for(uword row = 0; row < SpMat<eT>::n_rows; ++row)
 //     {
-//     if (SpMat<eT>::row_indices[row] >= row_num)
+//     if(SpMat<eT>::row_indices[row] >= row_num)
 //       {
 //       access::rw(SpMat<eT>::row_indices[row]) += N;
 //       }

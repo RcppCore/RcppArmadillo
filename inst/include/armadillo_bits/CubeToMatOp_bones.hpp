@@ -20,7 +20,7 @@
 
 
 template<typename T1, typename op_type>
-class CubeToMatOp : public Base<typename T1::elem_type, CubeToMatOp<T1, op_type> >
+class CubeToMatOp : public Base< typename T1::elem_type, CubeToMatOp<T1, op_type> >
   {
   public:
   
@@ -34,9 +34,9 @@ class CubeToMatOp : public Base<typename T1::elem_type, CubeToMatOp<T1, op_type>
   arma_aligned const T1&       m;            //!< the operand; must be derived from BaseCube
   arma_aligned       elem_type aux;          //!< auxiliary data, using the element type as used by T1
   
-  static const bool is_row  = op_type::template traits<T1>::is_row;
-  static const bool is_col  = op_type::template traits<T1>::is_col;
-  static const bool is_xvec = op_type::template traits<T1>::is_xvec;
+  static constexpr bool is_row  = op_type::template traits<T1>::is_row;
+  static constexpr bool is_col  = op_type::template traits<T1>::is_col;
+  static constexpr bool is_xvec = op_type::template traits<T1>::is_xvec;
   };
 
 

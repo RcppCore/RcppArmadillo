@@ -22,7 +22,7 @@ struct mtOp_dual_aux_indicator {};
 
 
 template<typename out_eT, typename T1, typename op_type>
-class mtOp : public Base<out_eT, mtOp<out_eT, T1, op_type> >
+class mtOp : public Base< out_eT, mtOp<out_eT, T1, op_type> >
   {
   public:
   
@@ -31,9 +31,9 @@ class mtOp : public Base<out_eT, mtOp<out_eT, T1, op_type> >
   
   typedef typename T1::elem_type                in_eT;
   
-  static const bool is_row  = op_type::template traits<T1>::is_row;
-  static const bool is_col  = op_type::template traits<T1>::is_col;
-  static const bool is_xvec = op_type::template traits<T1>::is_xvec;
+  static constexpr bool is_row  = op_type::template traits<T1>::is_row;
+  static constexpr bool is_col  = op_type::template traits<T1>::is_col;
+  static constexpr bool is_xvec = op_type::template traits<T1>::is_xvec;
   
   inline explicit mtOp(const T1& in_m);
   inline          mtOp(const T1& in_m, const in_eT in_aux);

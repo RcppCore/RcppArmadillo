@@ -331,7 +331,7 @@ spop_mean::iterator_mean(T1& it, const T1& end, const uword n_zero, const eT jun
   
   const uword it_begin_pos = it.pos();
   
-  while (it != end)
+  while(it != end)
     {
     acc += (*it);
     ++it;
@@ -360,7 +360,7 @@ spop_mean::iterator_mean_robust(T1& it, const T1& end, const uword n_zero, const
 
   const uword it_begin_pos = it.pos();
 
-  while (it != end)
+  while(it != end)
     {
     r_mean += ((*it - r_mean) / T(n_zero + (it.pos() - it_begin_pos) + 1));
     ++it;

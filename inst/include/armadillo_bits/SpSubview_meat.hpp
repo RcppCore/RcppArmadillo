@@ -54,40 +54,6 @@ SpSubview<eT>::SpSubview(const SpMat<eT>& in_m, const uword in_row1, const uword
 
 template<typename eT>
 inline
-SpSubview<eT>::SpSubview(SpMat<eT>& in_m, const uword in_row1, const uword in_col1, const uword in_n_rows, const uword in_n_cols)
-  : m(in_m)
-  , aux_row1(in_row1)
-  , aux_col1(in_col1)
-  , n_rows(in_n_rows)
-  , n_cols(in_n_cols)
-  , n_elem(in_n_rows * in_n_cols)
-  , n_nonzero(0)
-  {
-  arma_extra_debug_sigprint();
-  
-  m.sync_csc();
-  
-  // There must be a O(1) way to do this
-  uword lend     = m.col_ptrs[in_col1 + in_n_cols];
-  uword lend_row = in_row1 + in_n_rows;
-  uword count    = 0;
-  
-  for(uword i = m.col_ptrs[in_col1]; i < lend; ++i)
-    {
-    const uword m_row_indices_i = m.row_indices[i];
-    
-    const bool condition = (m_row_indices_i >= in_row1) && (m_row_indices_i < lend_row);
-    
-    count += condition ? uword(1) : uword(0);
-    }
-  
-  access::rw(n_nonzero) = count;
-  }
-
-
-
-template<typename eT>
-inline
 SpSubview<eT>::~SpSubview()
   {
   arma_extra_debug_sigprint();
@@ -102,10 +68,7 @@ SpSubview<eT>::operator+=(const eT val)
   {
   arma_extra_debug_sigprint();
   
-  if(val == eT(0))
-    {
-    return *this;
-    }
+  if(val == eT(0))  { return *this; }
   
   Mat<eT> tmp( (*this).n_rows, (*this).n_cols );
   
@@ -122,12 +85,9 @@ const SpSubview<eT>&
 SpSubview<eT>::operator-=(const eT val)
   {
   arma_extra_debug_sigprint();
-
-  if(val == eT(0))
-    {
-    return *this;
-    }
-
+  
+  if(val == eT(0))  { return *this; }
+  
   Mat<eT> tmp( (*this).n_rows, (*this).n_cols );
   
   tmp.fill(val);
@@ -320,7 +280,7 @@ const SpSubview<eT>&
 SpSubview<eT>::operator-=(const Base<eT, T1>& x)
   {
   arma_extra_debug_sigprint();
-
+  
   return (*this).operator=( (*this) - x.get_ref() );
   }
 
@@ -350,7 +310,7 @@ const SpSubview<eT>&
 SpSubview<eT>::operator%=(const Base<eT, T1>& x)
   {
   arma_extra_debug_sigprint();
-
+  
   return (*this).operator=( (*this) % x.get_ref() );
   }
 
@@ -363,7 +323,7 @@ const SpSubview<eT>&
 SpSubview<eT>::operator/=(const Base<eT, T1>& x)
   {
   arma_extra_debug_sigprint();
-
+  
   return (*this).operator=( (*this) / x.get_ref() );
   }
 
@@ -455,7 +415,7 @@ const SpSubview<eT>&
 SpSubview<eT>::operator*=(const SpBase<eT, T1>& x)
   {
   arma_extra_debug_sigprint();
-
+  
   return (*this).operator=( (*this) * x.get_ref() );
   }
 
@@ -854,7 +814,7 @@ void
 SpSubview<eT>::ones()
   {
   arma_extra_debug_sigprint();
-
+  
   (*this).fill(eT(1));
   }
 
@@ -884,7 +844,7 @@ SpSubview<eT>::operator[](const uword i)
   {
   const uword lrow = i % n_rows;
   const uword lcol = i / n_rows;
-
+  
   return (*this).at(lrow, lcol);
   }
 
@@ -898,7 +858,7 @@ SpSubview<eT>::operator[](const uword i) const
   {
   const uword lrow = i % n_rows;
   const uword lcol = i / n_rows;
-
+  
   return (*this).at(lrow, lcol);
   }
 
@@ -911,10 +871,10 @@ SpSubview_MapMat_val<eT>
 SpSubview<eT>::operator()(const uword i)
   {
   arma_debug_check( (i >= n_elem), "SpSubview::operator(): index out of bounds");
-
+  
   const uword lrow = i % n_rows;
   const uword lcol = i / n_rows;
-
+  
   return (*this).at(lrow, lcol);
   }
 
@@ -927,10 +887,10 @@ eT
 SpSubview<eT>::operator()(const uword i) const
   {
   arma_debug_check( (i >= n_elem), "SpSubview::operator(): index out of bounds");
-
+  
   const uword lrow = i % n_rows;
   const uword lcol = i / n_rows;
-
+  
   return (*this).at(lrow, lcol);
   }
 
@@ -943,7 +903,7 @@ SpSubview_MapMat_val<eT>
 SpSubview<eT>::operator()(const uword in_row, const uword in_col)
   {
   arma_debug_check( (in_row >= n_rows) || (in_col >= n_cols), "SpSubview::operator(): index out of bounds");
-
+  
   return (*this).at(in_row, in_col);
   }
 
@@ -956,7 +916,7 @@ eT
 SpSubview<eT>::operator()(const uword in_row, const uword in_col) const
   {
   arma_debug_check( (in_row >= n_rows) || (in_col >= n_cols), "SpSubview::operator(): index out of bounds");
-
+  
   return (*this).at(in_row, in_col);
   }
 
@@ -970,7 +930,7 @@ SpSubview<eT>::at(const uword i)
   {
   const uword lrow = i % n_rows;
   const uword lcol = i / n_cols;
-
+  
   return (*this).at(lrow, lcol);
   }
 
@@ -984,7 +944,7 @@ SpSubview<eT>::at(const uword i) const
   {
   const uword lrow = i % n_rows;
   const uword lcol = i / n_cols;
-
+  
   return (*this).at(lrow, lcol);
   }
 
@@ -1018,7 +978,7 @@ bool
 SpSubview<eT>::check_overlap(const SpSubview<eT>& x) const
   {
   const subview<eT>& t = *this;
-
+  
   if(&t.m != &x.m)
     {
     return false;
@@ -1033,19 +993,19 @@ SpSubview<eT>::check_overlap(const SpSubview<eT>& x) const
       {
       const uword t_row_start  = t.aux_row1;
       const uword t_row_end_p1 = t_row_start + t.n_rows;
-
+      
       const uword t_col_start  = t.aux_col1;
       const uword t_col_end_p1 = t_col_start + t.n_cols;
-
+      
       const uword x_row_start  = x.aux_row1;
       const uword x_row_end_p1 = x_row_start + x.n_rows;
-
+      
       const uword x_col_start  = x.aux_col1;
       const uword x_col_end_p1 = x_col_start + x.n_cols;
-
+      
       const bool outside_rows = ( (x_row_start >= t_row_end_p1) || (t_row_start >= x_row_end_p1) );
       const bool outside_cols = ( (x_col_start >= t_col_end_p1) || (t_col_start >= x_col_end_p1) );
-
+      
       return ( (outside_rows == false) && (outside_cols == false) );
       }
     }
@@ -1125,13 +1085,13 @@ SpSubview<eT>
 SpSubview<eT>::rows(const uword in_row1, const uword in_row2)
   {
   arma_extra_debug_sigprint();
-
+  
   arma_debug_check
     (
     (in_row1 > in_row2) || (in_row2 >= n_rows),
     "SpSubview::rows(): indices out of bounds or incorrectly used"
     );
-
+  
   return submat(in_row1, 0, in_row2, n_cols - 1);
   }
 
@@ -1143,7 +1103,7 @@ const SpSubview<eT>
 SpSubview<eT>::rows(const uword in_row1, const uword in_row2) const
   {
   arma_extra_debug_sigprint();
-
+  
   arma_debug_check
     (
     (in_row1 > in_row2) || (in_row2 >= n_rows),
@@ -1161,13 +1121,13 @@ SpSubview<eT>
 SpSubview<eT>::cols(const uword in_col1, const uword in_col2)
   {
   arma_extra_debug_sigprint();
-
+  
   arma_debug_check
     (
     (in_col1 > in_col2) || (in_col2 >= n_cols),
     "SpSubview::cols(): indices out of bounds or incorrectly used"
     );
-
+  
   return submat(0, in_col1, n_rows - 1, in_col2);
   }
 
@@ -1179,13 +1139,13 @@ const SpSubview<eT>
 SpSubview<eT>::cols(const uword in_col1, const uword in_col2) const
   {
   arma_extra_debug_sigprint();
-
+  
   arma_debug_check
     (
     (in_col1 > in_col2) || (in_col2 >= n_cols),
     "SpSubview::cols(): indices out of bounds or incorrectly used"
     );
-
+  
   return submat(0, in_col1, n_rows - 1, in_col2);
   }
 
@@ -1197,13 +1157,13 @@ SpSubview<eT>
 SpSubview<eT>::submat(const uword in_row1, const uword in_col1, const uword in_row2, const uword in_col2)
   {
   arma_extra_debug_sigprint();
-
+  
   arma_debug_check
     (
     (in_row1 > in_row2) || (in_col1 > in_col2) || (in_row2 >= n_rows) || (in_col2 >= n_cols),
     "SpSubview::submat(): indices out of bounds or incorrectly used"
     );
-
+  
   return access::rw(m).submat(in_row1 + aux_row1, in_col1 + aux_col1, in_row2 + aux_row1, in_col2 + aux_col1);
   }
 
@@ -1215,13 +1175,13 @@ const SpSubview<eT>
 SpSubview<eT>::submat(const uword in_row1, const uword in_col1, const uword in_row2, const uword in_col2) const
   {
   arma_extra_debug_sigprint();
-
+  
   arma_debug_check
     (
     (in_row1 > in_row2) || (in_col1 > in_col2) || (in_row2 >= n_rows) || (in_col2 >= n_cols),
     "SpSubview::submat(): indices out of bounds or incorrectly used"
     );
-
+  
   return m.submat(in_row1 + aux_row1, in_col1 + aux_col1, in_row2 + aux_row1, in_col2 + aux_col1);
   }
 
@@ -1233,16 +1193,16 @@ SpSubview<eT>
 SpSubview<eT>::submat(const span& row_span, const span& col_span)
   {
   arma_extra_debug_sigprint();
-
+  
   const bool row_all = row_span.whole;
   const bool col_all = row_span.whole;
-
+  
   const uword in_row1 = row_all ? 0      : row_span.a;
   const uword in_row2 = row_all ? n_rows : row_span.b;
-
+  
   const uword in_col1 = col_all ? 0      : col_span.a;
   const uword in_col2 = col_all ? n_cols : col_span.b;
-
+  
   arma_debug_check
     (
     ( row_all ? false : ((in_row1 > in_row2) || (in_row2 >= n_rows)))
@@ -1250,7 +1210,7 @@ SpSubview<eT>::submat(const span& row_span, const span& col_span)
     ( col_all ? false : ((in_col1 > in_col2) || (in_col2 >= n_cols))),
     "SpSubview::submat(): indices out of bounds or incorrectly used"
     );
-
+  
   return submat(in_row1, in_col1, in_row2, in_col2);
   }
 
@@ -1262,16 +1222,16 @@ const SpSubview<eT>
 SpSubview<eT>::submat(const span& row_span, const span& col_span) const
   {
   arma_extra_debug_sigprint();
-
+  
   const bool row_all = row_span.whole;
   const bool col_all = row_span.whole;
-
+  
   const uword in_row1 = row_all ? 0          : row_span.a;
   const uword in_row2 = row_all ? n_rows - 1 : row_span.b;
-
+  
   const uword in_col1 = col_all ? 0          : col_span.a;
   const uword in_col2 = col_all ? n_cols - 1 : col_span.b;
-
+  
   arma_debug_check
     (
     ( row_all ? false : ((in_row1 > in_row2) || (in_row2 >= n_rows)))
@@ -1279,7 +1239,7 @@ SpSubview<eT>::submat(const span& row_span, const span& col_span) const
     ( col_all ? false : ((in_col1 > in_col2) || (in_col2 >= n_cols))),
     "SpSubview::submat(): indices out of bounds or incorrectly used"
     );
-
+  
   return submat(in_row1, in_col1, in_row2, in_col2);
   }
 
@@ -1291,7 +1251,7 @@ SpSubview<eT>
 SpSubview<eT>::operator()(const uword row_num, const span& col_span)
   {
   arma_extra_debug_sigprint();
-
+  
   return submat(span(row_num, row_num), col_span);
   }
 
@@ -1303,7 +1263,7 @@ const SpSubview<eT>
 SpSubview<eT>::operator()(const uword row_num, const span& col_span) const
   {
   arma_extra_debug_sigprint();
-
+  
   return submat(span(row_num, row_num), col_span);
   }
 
@@ -1315,7 +1275,7 @@ SpSubview<eT>
 SpSubview<eT>::operator()(const span& row_span, const uword col_num)
   {
   arma_extra_debug_sigprint();
-
+  
   return submat(row_span, span(col_num, col_num));
   }
 
@@ -1327,7 +1287,7 @@ const SpSubview<eT>
 SpSubview<eT>::operator()(const span& row_span, const uword col_num) const
   {
   arma_extra_debug_sigprint();
-
+  
   return submat(row_span, span(col_num, col_num));
   }
 
@@ -1339,7 +1299,7 @@ SpSubview<eT>
 SpSubview<eT>::operator()(const span& row_span, const span& col_span)
   {
   arma_extra_debug_sigprint();
-
+  
   return submat(row_span, col_span);
   }
 
@@ -1351,7 +1311,7 @@ const SpSubview<eT>
 SpSubview<eT>::operator()(const span& row_span, const span& col_span) const
   {
   arma_extra_debug_sigprint();
-
+  
   return submat(row_span, col_span);
   }
 
@@ -1363,12 +1323,12 @@ void
 SpSubview<eT>::swap_rows(const uword in_row1, const uword in_row2)
   {
   arma_extra_debug_sigprint();
-
+  
   arma_debug_check((in_row1 >= n_rows) || (in_row2 >= n_rows), "SpSubview::swap_rows(): invalid row index");
-
+  
   const uword lstart_col = aux_col1;
   const uword lend_col   = aux_col1 + n_cols;
-
+  
   for(uword c = lstart_col; c < lend_col; ++c)
     {
     const eT val = access::rw(m).at(in_row1 + aux_row1, c);
@@ -1385,12 +1345,12 @@ void
 SpSubview<eT>::swap_cols(const uword in_col1, const uword in_col2)
   {
   arma_extra_debug_sigprint();
-
+  
   arma_debug_check((in_col1 >= n_cols) || (in_col2 >= n_cols), "SpSubview::swap_cols(): invalid column index");
-
+  
   const uword lstart_row = aux_row1;
   const uword lend_row   = aux_row1 + n_rows;
-
+  
   for(uword r = lstart_row; r < lend_row; ++r)
     {
     const eT val = access::rw(m).at(r, in_col1 + aux_col1);
@@ -1583,13 +1543,13 @@ eT&
 SpSubview<eT>::insert_element(const uword in_row, const uword in_col, const eT in_val)
   {
   arma_extra_debug_sigprint();
-
+  
   // This may not actually insert an element.
   const uword old_n_nonzero = m.n_nonzero;
   eT& retval = access::rw(m).insert_element(in_row + aux_row1, in_col + aux_col1, in_val);
   // Update n_nonzero (if necessary).
   access::rw(n_nonzero) += (m.n_nonzero - old_n_nonzero);
-
+  
   return retval;
   }
 
@@ -1601,7 +1561,7 @@ void
 SpSubview<eT>::delete_element(const uword in_row, const uword in_col)
   {
   arma_extra_debug_sigprint();
-
+  
   // This may not actually delete an element.
   const uword old_n_nonzero = m.n_nonzero;
   access::rw(m).delete_element(in_row + aux_row1, in_col + aux_col1);
@@ -1640,27 +1600,7 @@ SpSubview_col<eT>::SpSubview_col(const SpMat<eT>& in_m, const uword in_col)
 
 template<typename eT>
 inline
-SpSubview_col<eT>::SpSubview_col(SpMat<eT>& in_m, const uword in_col)
-  : SpSubview<eT>(in_m, 0, in_col, in_m.n_rows, 1)
-  {
-  arma_extra_debug_sigprint();
-  }
-
-
-
-template<typename eT>
-inline
 SpSubview_col<eT>::SpSubview_col(const SpMat<eT>& in_m, const uword in_col, const uword in_row1, const uword in_n_rows)
-  : SpSubview<eT>(in_m, in_row1, in_col, in_n_rows, 1)
-  {
-  arma_extra_debug_sigprint();
-  }
-
-
-
-template<typename eT>
-inline
-SpSubview_col<eT>::SpSubview_col(SpMat<eT>& in_m, const uword in_col, const uword in_row1, const uword in_n_rows)
   : SpSubview<eT>(in_m, in_row1, in_col, in_n_rows, 1)
   {
   arma_extra_debug_sigprint();
@@ -1766,27 +1706,7 @@ SpSubview_row<eT>::SpSubview_row(const SpMat<eT>& in_m, const uword in_row)
 
 template<typename eT>
 inline
-SpSubview_row<eT>::SpSubview_row(SpMat<eT>& in_m, const uword in_row)
-  : SpSubview<eT>(in_m, in_row, 0, 1, in_m.n_cols)
-  {
-  arma_extra_debug_sigprint();
-  }
-
-
-
-template<typename eT>
-inline
 SpSubview_row<eT>::SpSubview_row(const SpMat<eT>& in_m, const uword in_row, const uword in_col1, const uword in_n_cols)
-  : SpSubview<eT>(in_m, in_row, in_col1, 1, in_n_cols)
-  {
-  arma_extra_debug_sigprint();
-  }
-
-
-
-template<typename eT>
-inline
-SpSubview_row<eT>::SpSubview_row(SpMat<eT>& in_m, const uword in_row, const uword in_col1, const uword in_n_cols)
   : SpSubview<eT>(in_m, in_row, in_col1, 1, in_n_cols)
   {
   arma_extra_debug_sigprint();

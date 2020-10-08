@@ -97,6 +97,82 @@ namespace superlu
   
   
   
+  template<typename eT>
+  inline
+  void
+  gstrf(superlu_options_t* options,
+        SuperMatrix* A,
+        typename get_pod_type<eT>::result drop_tol, int relax,
+        int panel_size, int *etree,
+        void  *work,  int  lwork,
+        int* perm_c, int* perm_r,
+        SuperMatrix* L, SuperMatrix* U,
+        GlobalLU_t* Glu, SuperLUStat_t* stat, int* info
+       )
+    {
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
+
+    if(is_float<eT>::value)
+      {
+      typedef float T;
+      arma_wrapper(sgstrf)(options, A, (T)drop_tol, relax, panel_size, etree, work, lwork, perm_c, perm_r, L, U, Glu, stat, info);
+      }
+    else
+    if(is_double<eT>::value)
+      {
+      typedef double T;
+      arma_wrapper(dgstrf)(options, A, (T)drop_tol, relax, panel_size, etree, work, lwork, perm_c, perm_r, L, U, Glu, stat, info);
+      }
+    else
+    if(is_cx_float<eT>::value)
+      {
+      typedef float T;
+      arma_wrapper(cgstrf)(options, A, (T)drop_tol, relax, panel_size, etree, work, lwork, perm_c, perm_r, L, U, Glu, stat, info);
+      }
+    else
+    if(is_cx_double<eT>::value)
+      {
+      typedef double T;
+      arma_wrapper(zgstrf)(options, A, (T)drop_tol, relax, panel_size, etree, work, lwork, perm_c, perm_r, L, U, Glu, stat, info);
+      }
+    }
+
+
+
+  template<typename eT>
+  inline
+  void
+  gstrs(trans_t trans,
+        SuperMatrix* L, SuperMatrix* U,
+        int* perm_c, int* perm_r,
+        SuperMatrix* B, SuperLUStat_t* stat, int* info
+       )
+    {
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
+
+    if(is_float<eT>::value)
+      {
+      arma_wrapper(sgstrs)(trans, L, U, perm_c, perm_r, B, stat, info);
+      }
+    else
+    if(is_double<eT>::value)
+      {
+      arma_wrapper(dgstrs)(trans, L, U, perm_c, perm_r, B, stat, info);
+      }
+    else
+    if(is_cx_float<eT>::value)
+      {
+      arma_wrapper(cgstrs)(trans, L, U, perm_c, perm_r, B, stat, info);
+      }
+    else
+    if(is_cx_double<eT>::value)
+      {
+      arma_wrapper(zgstrs)(trans, L, U, perm_c, perm_r, B, stat, info);
+      }
+    }
+
+
+
   inline
   void
   init_stat(SuperLUStat_t* stat)
@@ -122,7 +198,33 @@ namespace superlu
     }
   
   
-  
+  inline
+  void
+  get_permutation_c(int ispec, SuperMatrix* A, int* perm_c)
+    {
+    arma_wrapper(get_perm_c)(ispec, A, perm_c);
+    }
+
+
+
+  inline
+  void
+  sp_preorder_mat(superlu_options_t* opts, SuperMatrix* A, int* perm_c, int* etree, SuperMatrix* AC)
+    {
+    arma_wrapper(sp_preorder)(opts, A, perm_c, etree, AC);
+    }
+
+
+
+  inline
+  int
+  sp_ispec_environ(int ispec)
+    {
+    return arma_wrapper(sp_ienv)(ispec);
+    }
+
+
+
   inline
   void
   destroy_supernode_mat(SuperMatrix* a)
@@ -137,6 +239,15 @@ namespace superlu
   destroy_compcol_mat(SuperMatrix* a)
     {
     arma_wrapper(Destroy_CompCol_Matrix)(a);
+    }
+
+
+
+  inline
+  void
+  destroy_compcolperm_mat(SuperMatrix* a)
+    {
+    arma_wrapper(Destroy_CompCol_Permuted)(a);
     }
 
 

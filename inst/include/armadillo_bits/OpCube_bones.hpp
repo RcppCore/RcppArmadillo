@@ -21,7 +21,7 @@
 //! Analog of the Op class, intended for cubes
 
 template<typename T1, typename op_type>
-class OpCube : public BaseCube<typename T1::elem_type, OpCube<T1, op_type> >
+class OpCube : public BaseCube< typename T1::elem_type, OpCube<T1, op_type> >
   {
   public:
   

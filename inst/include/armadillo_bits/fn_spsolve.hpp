@@ -30,7 +30,7 @@ spsolve_helper
   const   Base<typename T1::elem_type, T2>& B,
   const char*                          solver,
   const spsolve_opts_base&             settings,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();
@@ -39,7 +39,7 @@ spsolve_helper
   typedef typename T1::pod_type   T;
   typedef typename T1::elem_type eT;
   
-  const char sig = (solver != NULL) ? solver[0] : char(0);
+  const char sig = (solver != nullptr) ? solver[0] : char(0);
   
   arma_debug_check( ((sig != 'l') && (sig != 's')), "spsolve(): unknown solver" );
   
@@ -135,7 +135,7 @@ spsolve
   const   Base<typename T1::elem_type, T2>& B,
   const char*                          solver   = "superlu",
   const spsolve_opts_base&             settings = spsolve_opts_none(),
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();
@@ -158,7 +158,7 @@ spsolve
   const   Base<typename T1::elem_type, T2>& B,
   const char*                          solver   = "superlu",
   const spsolve_opts_base&             settings = spsolve_opts_none(),
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();

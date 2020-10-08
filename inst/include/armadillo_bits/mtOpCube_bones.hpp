@@ -23,7 +23,7 @@ struct mtOpCube_dual_aux_indicator {};
 
 
 template<typename out_eT, typename T1, typename op_type>
-class mtOpCube : public BaseCube<out_eT, mtOpCube<out_eT, T1, op_type> >
+class mtOpCube : public BaseCube< out_eT, mtOpCube<out_eT, T1, op_type> >
   {
   public:
   

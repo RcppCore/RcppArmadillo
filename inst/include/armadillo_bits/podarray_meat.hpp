@@ -364,21 +364,13 @@ podarray<eT>::copy_row(const Mat<eT>& A, const uword row)
 
 
 template<typename eT>
-arma_hot
 inline
 void
 podarray<eT>::init_cold(const uword new_n_elem)
   {
   arma_extra_debug_sigprint();
   
-  if(new_n_elem <= podarray_prealloc_n_elem::val )
-    {
-    mem = mem_local;
-    }
-  else
-    {
-    mem = memory::acquire<eT>(new_n_elem);
-    }
+  mem = (new_n_elem <= podarray_prealloc_n_elem::val) ? mem_local : memory::acquire<eT>(new_n_elem);
   }
 
 
@@ -390,24 +382,11 @@ podarray<eT>::init_warm(const uword new_n_elem)
   {
   arma_extra_debug_sigprint();
   
-  if(n_elem == new_n_elem)
-    {
-    return;
-    }
+  if(n_elem == new_n_elem)  { return; }
     
-  if(n_elem > podarray_prealloc_n_elem::val )
-    {
-    memory::release( mem );
-    }
+  if(n_elem > podarray_prealloc_n_elem::val)  { memory::release( mem ); }
   
-  if(new_n_elem <= podarray_prealloc_n_elem::val )
-    {
-    mem = mem_local;
-    }
-  else
-    {
-    mem = memory::acquire<eT>(new_n_elem);
-    }
+  mem = (new_n_elem <= podarray_prealloc_n_elem::val) ? mem_local : memory::acquire<eT>(new_n_elem);
   
   access::rw(n_elem) = new_n_elem;
   }
