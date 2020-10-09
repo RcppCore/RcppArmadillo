@@ -251,7 +251,7 @@ spop_var::direct_var
      T acc2 =  T(0);
     eT acc3 = eT(0);
 
-    for (uword i = 0; i < length; ++i)
+    for(uword i = 0; i < length; ++i)
       {
       const eT tmp = acc1 - X[i];
 

@@ -342,8 +342,6 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   inline void  reshape_helper_generic(const uword in_rows, const uword in_cols);  //! internal use only
   inline void  reshape_helper_intovec();                                          //! internal use only
   
-  arma_deprecated inline void reshape(const uword in_rows, const uword in_cols, const uword dim);  //!< NOTE: don't use this form: it will be removed
-  
   template<typename functor> inline const SpMat&  for_each(functor F);
   template<typename functor> inline const SpMat&  for_each(functor F) const;
   
@@ -638,8 +636,8 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   inline void steal_mem_simple(SpMat& X);
   
   //! don't use this unless you're writing internal Armadillo code
-  template<              typename T1, typename Functor> arma_hot inline void init_xform   (const SpBase<eT, T1>& x, const Functor& func);
-  template<typename eT2, typename T1, typename Functor> arma_hot inline void init_xform_mt(const SpBase<eT2,T1>& x, const Functor& func);
+  template<              typename T1, typename Functor> inline void init_xform   (const SpBase<eT, T1>& x, const Functor& func);
+  template<typename eT2, typename T1, typename Functor> inline void init_xform_mt(const SpBase<eT2,T1>& x, const Functor& func);
   
   //! don't use this unless you're writing internal Armadillo code
   arma_inline bool is_alias(const SpMat<eT>& X) const;

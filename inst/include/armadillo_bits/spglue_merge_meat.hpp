@@ -174,7 +174,7 @@ spglue_merge::subview_merge(SpSubview<eT>& sv, const SpMat<eT>& B)
     y_it_valid = (y_it != y_end);
     }
   
-  arma_check( (count != merge_n_nonzero), "spglue_merge::subview_merge(): internal error: count != merge_n_nonzero" );
+  arma_check( (count != merge_n_nonzero), "internal error: spglue_merge::subview_merge(): count != merge_n_nonzero" );
   
   const uword out_n_cols = out.n_cols;
   
@@ -362,7 +362,7 @@ spglue_merge::subview_merge(SpSubview<eT>& sv, const Mat<eT>& B)
     y_it_valid = (y_it != y_end);
     }
   
-  arma_check( (count != merge_n_nonzero), "spglue_merge::subview_merge(): internal error: count != merge_n_nonzero" );
+  arma_check( (count != merge_n_nonzero), "internal error: spglue_merge::subview_merge(): count != merge_n_nonzero" );
   
   const uword out_n_cols = out.n_cols;
   

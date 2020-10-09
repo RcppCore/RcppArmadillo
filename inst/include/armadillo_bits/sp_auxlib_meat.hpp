@@ -756,19 +756,19 @@ sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
     eigval.set_size(n_eigvals);
     eigvec.zeros(n, n_eigvals);
     
-    for (uword i = 0; i < n_eigvals; ++i)
+    for(uword i = 0; i < n_eigvals; ++i)
       {
       eigval[i] = std::complex<T>(dr[i], di[i]);
       }
     
     // Now recover the eigenvectors.
-    for (uword i = 0; i < n_eigvals; ++i)
+    for(uword i = 0; i < n_eigvals; ++i)
       {
       // ARPACK ?neupd lays things out kinda odd in memory;
       // so does LAPACK ?geev -- see auxlib::eig_gen()
       if((i < n_eigvals - 1) && (eigval[i] == std::conj(eigval[i + 1])))
         {
-        for (uword j = 0; j < uword(n); ++j)
+        for(uword j = 0; j < uword(n); ++j)
           {
           eigvec.at(j, i)     = std::complex<T>(z[n * i + j],  z[n * (i + 1) + j]);
           eigvec.at(j, i + 1) = std::complex<T>(z[n * i + j], -z[n * (i + 1) + j]);
@@ -779,7 +779,7 @@ sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
       if((i == n_eigvals - 1) && (std::complex<T>(eigval[i]).imag() != 0.0))
         {
         // We don't have the matched conjugate eigenvalue.
-        for (uword j = 0; j < uword(n); ++j)
+        for(uword j = 0; j < uword(n); ++j)
           {
           eigvec.at(j, i) = std::complex<T>(z[n * i + j], z[n * (i + 1) + j]);
           }
@@ -787,7 +787,7 @@ sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
       else
         {
         // The eigenvector is entirely real.
-        for (uword j = 0; j < uword(n); ++j)
+        for(uword j = 0; j < uword(n); ++j)
           {
           eigvec.at(j, i) = std::complex<T>(z[n * i + j], T(0));
           }
@@ -978,6 +978,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
 
 
 
+// TODO: refactor to use supermatrix_wrangler, superlustat_wrangler, superluintarray_wrangler
 template<typename T1, typename T2>
 inline
 bool
@@ -1120,6 +1121,7 @@ sp_auxlib::spsolve_simple(Mat<typename T1::elem_type>& X, const SpBase<typename 
 
 
 
+// TODO: refactor to use supermatrix_wrangler, superlustat_wrangler, superluintarray_wrangler
 template<typename T1, typename T2>
 inline
 bool
@@ -1416,8 +1418,8 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     arrayops::copy((eT*) nc->nzval, A.values, A.n_nonzero);
     
     // // These have to be copied by hand, because the types may differ.
-    // for (uword i = 0; i <= A.n_cols; ++i)  { nc->colptr[i] = (int_t) A.col_ptrs[i]; }
-    // for (uword i = 0; i < A.n_nonzero; ++i) { nc->rowind[i] = (int_t) A.row_indices[i]; }
+    // for(uword i = 0; i <= A.n_cols; ++i)  { nc->colptr[i] = (int_t) A.col_ptrs[i]; }
+    // for(uword i = 0; i < A.n_nonzero; ++i) { nc->rowind[i] = (int_t) A.row_indices[i]; }
     
     arrayops::convert(nc->colptr, A.col_ptrs,    A.n_cols+1 );
     arrayops::convert(nc->rowind, A.row_indices, A.n_nonzero);
@@ -1536,7 +1538,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
       if(out.Stype == superlu::SLU_NR_loc)  { tmp << "SLU_NR_loc"; }
       
       arma_debug_warn(tmp.str());
-      arma_stop_runtime_error("sp_auxlib::destroy_supermatrix(): internal error");
+      arma_stop_runtime_error("internal error: sp_auxlib::destroy_supermatrix()");
       }
     }
   

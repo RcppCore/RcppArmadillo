@@ -687,8 +687,8 @@ subview<eT>::operator/=(const SpBase<eT, T1>& x)
   // This is probably going to fill your subview with a bunch of NaNs,
   // so I'm not going to bother to implement it fast.
   // You can have slow NaNs.  They're fine too.
-  for (uword c = 0; c < n_cols; ++c)
-  for (uword r = 0; r < n_rows; ++r)
+  for(uword c = 0; c < n_cols; ++c)
+  for(uword r = 0; r < n_rows; ++r)
     {
     at(r, c) /= p.at(r, c);
     }

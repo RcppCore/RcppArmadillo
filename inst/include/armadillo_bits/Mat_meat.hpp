@@ -6715,7 +6715,19 @@ Mat<eT>::reshape(const uword in_rows, const uword in_cols, const uword dim)
   {
   arma_extra_debug_sigprint();
   
-  *this = arma::reshape(*this, in_rows, in_cols, dim);
+  // arma_debug_warn("this form of reshape() is deprecated and will be removed");
+  
+  arma_debug_check( (dim > 1), "reshape(): parameter 'dim' must be 0 or 1" );
+  
+  if(dim == 0)
+    {
+    *this = arma::reshape(*this, in_rows, in_cols);
+    }
+  else
+  if(dim == 1)
+    {
+    *this = arma::reshape(strans(*this), in_rows, in_cols);
+    }
   }
 
 

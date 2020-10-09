@@ -3,23 +3,27 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.10.0.1 (2020-10-01)}{
+\section{Changes in RcppArmadillo version 0.10.0.2.0 (2020-10-08)}{
   \itemize{
-    \item Upgraded to Armadillo release 10.1-rc1 (....)
+    \item Upgraded to Armadillo release 10.1-rc2 (....)
     \itemize{
       \item C++11 is now the minimum required C++ standard
       \item faster handling of compound expressions by \code{trimatu()}
       and \code{trimatl()} 
       \item expanded sparse submatrix views to handle the non-contiguous
       form of \code{X.cols(vector_of_column_indices)} 
-      \item expanded eigs_sym() and eigs_gen()\code{} with optional
+      \item expanded \code{eigs_sym()} and \code{eigs_gen()} with optional
       fine-grained parameters (subspace dimension, number of iterations,
       eigenvalues closest to specified value)
+      \item deprecated form of \code{reshape()} removed from Cube and SpMat classes
+      \item speedups for sparse matrix addition, subtraction and
+      element-wise multiplication
+      \item ignore the \code{ARMA_DONT_USE_CXX11} macro
     }
   }
 }
 
- \section{Changes in RcppArmadillo version 0.9.900.3.0 (2020-09-02)}{
+\section{Changes in RcppArmadillo version 0.9.900.3.0 (2020-09-02)}{
    \itemize{
      \item Upgraded to Armadillo release 9.900.3 (Nocturnal Misbehaviour)
      \itemize{
@@ -28,22 +32,6 @@
      }
    }
  }
-
-\section{Changes in RcppArmadillo version 0.9.900.3.0 (2020-09-02)}{
-  \itemize{
-    \item Upgraded to Armadillo release 10.1-rc1 (....)
-    \itemize{
-      \item C++11 is now the minimum required C++ standard
-      \item faster handling of compound expressions by \code{trimatu()}
-      and \code{trimatl()} 
-      \item expanded sparse submatrix views to handle the non-contiguous
-      form of \code{X.cols(vector_of_column_indices)} 
-      \item expanded eigs_sym() and eigs_gen()\code{} with optional
-      fine-grained parameters (subspace dimension, number of iterations,
-      eigenvalues closest to specified value) 
-    }
-  }
-}
 
 \section{Changes in RcppArmadillo version 0.9.900.2.0 (2020-07-17)}{
   \itemize{

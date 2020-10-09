@@ -41,9 +41,8 @@
 #endif
 
 
-// handle config option from earlier versions of Armadillo
 #if defined(ARMA_DONT_USE_CXX11)
-  #undef ARMA_HAVE_CXX11
+  #pragma message ("WARNING: ARMA_DONT_USE_CXX11 ignored")
 #endif
 
 

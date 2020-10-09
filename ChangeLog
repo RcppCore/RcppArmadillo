@@ -1,3 +1,10 @@
+2020-10-08  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/armadillo/: Armadillo 10.1-rc2
+	* inst/include/armadillo_bits/: Idem
+
+	* .travis.yml: Switch to focal and BSPM use
+
 2020-10-01  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/armadillo/: Armadillo 10.1-rc1

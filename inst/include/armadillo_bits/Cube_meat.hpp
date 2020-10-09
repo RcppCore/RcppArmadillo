@@ -3732,20 +3732,6 @@ Cube<eT>::reshape(const uword in_rows, const uword in_cols, const uword in_slice
 
 
 
-//! NOTE: don't use this form; it's deprecated and will be removed
-template<typename eT>
-arma_deprecated
-inline
-void
-Cube<eT>::reshape(const uword in_rows, const uword in_cols, const uword in_slices, const uword dim)
-  {
-  arma_extra_debug_sigprint();
-  
-  *this = arma::reshape(*this, in_rows, in_cols, in_slices, dim);
-  }
-
-
-
 //! change the cube to have user specified dimensions (data is preserved)
 template<typename eT>
 inline
@@ -3778,7 +3764,7 @@ Cube<eT>::reshape(const SizeCube& s)
   {
   arma_extra_debug_sigprint();
   
-  *this = arma::reshape(*this, s.n_rows, s.n_cols, s.n_slices, 0);
+  *this = arma::reshape(*this, s.n_rows, s.n_cols, s.n_slices);
   }
 
 

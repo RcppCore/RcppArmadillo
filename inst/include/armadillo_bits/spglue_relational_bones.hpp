@@ -47,4 +47,32 @@ class spglue_rel_gt
 
 
 
+class spglue_rel_and
+  : public traits_glue_or
+  {
+  public:
+  
+  template<typename T1, typename T2>
+  inline static void apply(SpMat<uword>& out, const mtSpGlue<uword, T1, T2, spglue_rel_and>& X);
+  
+  template<typename T1, typename T2>
+  inline static void apply_noalias(SpMat<uword>& out, const SpProxy<T1>& PA, const SpProxy<T2>& PB);
+  };
+
+
+
+class spglue_rel_or
+  : public traits_glue_or
+  {
+  public:
+  
+  template<typename T1, typename T2>
+  inline static void apply(SpMat<uword>& out, const mtSpGlue<uword, T1, T2, spglue_rel_or>& X);
+  
+  template<typename T1, typename T2>
+  inline static void apply_noalias(SpMat<uword>& out, const SpProxy<T1>& PA, const SpProxy<T2>& PB);
+  };
+
+
+
 //! @}

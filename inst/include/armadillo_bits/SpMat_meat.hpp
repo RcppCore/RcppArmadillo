@@ -1166,55 +1166,11 @@ SpMat<eT>::operator%=(const Base<eT, T1>& x)
   {
   arma_extra_debug_sigprint();
   
-  sync_csc();
+  SpMat<eT> tmp;
   
-  const Proxy<T1> p(x.get_ref());
-  
-  arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "element-wise multiplication");
-  
-  // Count the number of elements we will need.
-  const_iterator it     = begin();
-  const_iterator it_end = end();
-  
-  uword new_n_nonzero = 0;
-  
-  while(it != it_end)
-    {
-    // use_at == false can't save us any work here
-    if(((*it) * p.at(it.row(), it.col())) != eT(0))
-      {
-      ++new_n_nonzero;
-      }
-    ++it;
-    }
-  
-  SpMat<eT> tmp(arma_reserve_indicator(), n_rows, n_cols, new_n_nonzero);
-  
-  const_iterator c_it     = begin();
-  const_iterator c_it_end = end();
-  
-  uword cur_pos = 0;
-  
-  while(c_it != c_it_end)
-    {
-    // use_at == false can't save us any work here
-    const eT val = (*c_it) * p.at(c_it.row(), c_it.col());
-    if(val != eT(0))
-      {
-      access::rw(tmp.values[cur_pos]) = val;
-      access::rw(tmp.row_indices[cur_pos]) = c_it.row();
-      ++access::rw(tmp.col_ptrs[c_it.col() + 1]);
-      ++cur_pos;
-      }
-
-    ++c_it;
-    }
-  
-  // Fix column pointers.
-  for(uword c = 1; c <= n_cols; ++c)
-    {
-    access::rw(tmp.col_ptrs[c]) += tmp.col_ptrs[c - 1];
-    }
+  // Just call the other order (these operations are commutative)
+  // TODO: if there is a matrix size mismatch, the debug assert will print the matrix sizes in wrong order
+  spglue_schur_misc::dense_schur_sparse(tmp, x.get_ref(), (*this));
   
   steal_mem(tmp);
   
@@ -4228,44 +4184,6 @@ SpMat<eT>::reshape_helper_intovec()
 
 
 
-//! NOTE: don't use this form; it's deprecated and will be removed
-template<typename eT>
-arma_deprecated
-inline
-void
-SpMat<eT>::reshape(const uword in_rows, const uword in_cols, const uword dim)
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_debug_check( (dim > 1), "SpMat::reshape(): parameter 'dim' must be 0 or 1" );
-  
-  if(dim == 0)
-    {
-    (*this).reshape(in_rows, in_cols);
-    }
-  else
-  if(dim == 1)
-    {
-    arma_check( ((in_rows*in_cols) != n_elem), "SpMat::reshape(): changing the number of elements in a sparse matrix is currently not supported" );
-    
-    sync_csc();
-    
-    // Row-wise reshaping.  This is more tedious and we will use a separate sparse matrix to do it.
-    SpMat<eT> tmp(in_rows, in_cols);
-    
-    for(const_row_iterator it = begin_row(); it.pos() < n_nonzero; ++it)
-      {
-      uword vector_position = (it.row() * n_cols) + it.col();
-      
-      tmp((vector_position / in_cols), (vector_position % in_cols)) = (*it);
-      }
-    
-    steal_mem(tmp);
-    }
-  }
-
-
-
 //! apply a functor to each non-zero element
 template<typename eT>
 template<typename functor>
@@ -6031,7 +5949,6 @@ SpMat<eT>::steal_mem_simple(SpMat<eT>& x)
 
 template<typename eT>
 template<typename T1, typename Functor>
-arma_hot
 inline
 void
 SpMat<eT>::init_xform(const SpBase<eT,T1>& A, const Functor& func)
@@ -6070,7 +5987,6 @@ SpMat<eT>::init_xform(const SpBase<eT,T1>& A, const Functor& func)
 
 template<typename eT>
 template<typename eT2, typename T1, typename Functor>
-arma_hot
 inline
 void
 SpMat<eT>::init_xform_mt(const SpBase<eT2,T1>& A, const Functor& func)
@@ -6131,8 +6047,10 @@ SpMat<eT>::init_xform_mt(const SpBase<eT2,T1>& A, const Functor& func)
       
       if(val == eT(0))  { has_zero = true; }
       
-      access::rw(row_indices[it.pos()]) = it.row();
-      access::rw(values[it.pos()]) = val;
+      const uword it_pos = it.pos();
+      
+      access::rw(row_indices[it_pos]) = it.row();
+      access::rw(values[it_pos]) = val;
       ++access::rw(col_ptrs[it.col() + 1]);
       ++it;
       }
