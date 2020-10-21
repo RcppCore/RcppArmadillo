@@ -1,8 +1,7 @@
-// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
-//
+
 // RcppArmadillo.cpp: Rcpp/Armadillo glue
 //
-// Copyright (C)  2010 - 2014  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2010 - 2020  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 //
 // This file is part of RcppArmadillo.
 //
@@ -21,28 +20,28 @@
 
 #include <RcppArmadillo.h>
 
-using namespace Rcpp;
-
-//' Report the version of Armadillo 
-//' 
+//' Report the version of Armadillo
+//'
 //' @details The version is defined by Armadillo in the header \code{arma_version.hpp}.
 //' @param single A logical vector indicating whether a single return values is requested,
 //' or a named vector with three elements \code{major}, \code{minor} and \code{patch}.
-//' @return Depending on the value of \code{single}, either a single number describing the Armadillo version
-//' or a named vector with three elements \code{major}, \code{minor} and \code{patch}.
+//' @return Depending on the value of \code{single}, either a single number describing
+//' the Armadillo version or a named vector with three elements \code{major}, \code{minor}
+//' and \code{patch}.
 //' @seealso Armadillo header file \code{arma_version.hpp}.
 // [[Rcpp::export]]
-IntegerVector armadillo_version(bool single) {
+Rcpp::IntegerVector armadillo_version(bool single) {
 
     if (single) {
-        return wrap(10000*arma::arma_version::major +
-                    100*arma::arma_version::minor + 
-                    arma::arma_version::patch) ;
+        return Rcpp::wrap(10000*arma::arma_version::major +
+                          100*arma::arma_version::minor +
+                          arma::arma_version::patch) ;
     }
 
-    IntegerVector version = IntegerVector::create(_["major"] = arma::arma_version::major,
-                                                  _["minor"] = arma::arma_version::minor,
-                                                  _["patch"] = arma::arma_version::patch);
+    Rcpp::IntegerVector version =
+        Rcpp::IntegerVector::create(Rcpp::Named("major") = arma::arma_version::major,
+                                    Rcpp::Named("minor") = arma::arma_version::minor,
+                                    Rcpp::Named("patch") = arma::arma_version::patch);
     
     return version ;
 }

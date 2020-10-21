@@ -7,7 +7,7 @@
 using namespace Rcpp;
 
 // armadillo_version
-IntegerVector armadillo_version(bool single);
+Rcpp::IntegerVector armadillo_version(bool single);
 RcppExport SEXP _RcppArmadillo_armadillo_version(SEXP singleSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
