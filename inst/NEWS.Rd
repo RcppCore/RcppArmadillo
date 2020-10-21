@@ -3,6 +3,12 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.10.x.y.z (2020-10-xx)}{
+  \itemize{
+    \item Remove three unused int constants (\ghit{313})
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.10.1.0.0 (2020-10-09)}{
   \itemize{
     \item Upgraded to Armadillo release 10.1.0 (Orchid Ambush)

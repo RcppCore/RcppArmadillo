@@ -23,10 +23,6 @@
 
 using namespace Rcpp;
 
-const unsigned int arma::arma_version::major;
-const unsigned int arma::arma_version::minor;
-const unsigned int arma::arma_version::patch;
-
 //' Report the version of Armadillo 
 //' 
 //' @details The version is defined by Armadillo in the header \code{arma_version.hpp}.
