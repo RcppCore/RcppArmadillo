@@ -4,6 +4,9 @@
 
 	* src/RcppArmadillo.cpp: Remove three redundant const int
 
+	* configure.ac: No longer use m4 to get version number
+	* configure: Regenerated
+
 2020-10-09  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.10.1.0.0
