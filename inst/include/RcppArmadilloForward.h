@@ -46,7 +46,7 @@
 // workaround to mitigate possible interference from a system-level installation of Armadillo
 #define ARMA_DONT_USE_WRAPPER
 
-#include <armadillo>
+#include "armadillo"
 
 /* forward declarations */
 namespace Rcpp {
