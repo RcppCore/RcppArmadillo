@@ -1,3 +1,8 @@
+2020-10-26  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/RcppArmadillo.cpp: Rewrite version number accessors to be more
+	rebust of upstream and compiler settings
+
 2020-10-24  Condrad Sanderson  <conradsnicta@users.noreply.github.com>
 
 	* inst/include/RcppArmadilloForward.h: Switch to quoted #include
