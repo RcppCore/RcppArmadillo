@@ -1,7 +1,12 @@
 2020-10-26  Dirk Eddelbuettel  <edd@debian.org>
 
+	* DESCRIPTION (Version, Date): Roll minor version
+
 	* src/RcppArmadillo.cpp: Rewrite version number accessors to be more
 	rebust of upstream and compiler settings
+
+	* .editorconfig: Added for standardized editor behaviour
+	* .Rbuildignore: Exclude .editorconfig
 
 2020-10-24  Condrad Sanderson  <conradsnicta@users.noreply.github.com>
 

@@ -7,3 +7,4 @@ src/lapack
 ^.*\.tar\.gz$
 ^local
 ^vignettes/rmd
+^.editorconfig
