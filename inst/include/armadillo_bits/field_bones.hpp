@@ -71,6 +71,9 @@ class field
   inline void  set_size(const SizeMat&  s);
   inline void  set_size(const SizeCube& s);
   
+  inline            field(const std::vector<oT>& x);
+  inline field& operator=(const std::vector<oT>& x);
+  
   inline            field(const std::initializer_list<oT>& list);
   inline field& operator=(const std::initializer_list<oT>& list);
   
@@ -105,8 +108,8 @@ class field
   arma_inline const oT& operator()(const uword row, const uword col, const uword slice) const;
   
   
-  arma_deprecated inline field_injector<field> operator<<(const oT& val);
-  arma_deprecated inline field_injector<field> operator<<(const injector_end_of_row<>& x);
+  arma_cold inline field_injector<field> operator<<(const oT& val);
+  arma_cold inline field_injector<field> operator<<(const injector_end_of_row<>& x);
   
   
   inline       subview_field<oT> row(const uword row_num);

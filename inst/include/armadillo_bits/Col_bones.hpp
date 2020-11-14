@@ -77,7 +77,7 @@ class Col : public Mat<eT>
   inline            Col(const subview_cube<eT>& X);
   inline Col& operator=(const subview_cube<eT>& X);
   
-  inline mat_injector<Col> operator<<(const eT val);
+  arma_cold inline mat_injector<Col> operator<<(const eT val);
   
   arma_inline const Op<Col<eT>,op_htrans>  t() const;
   arma_inline const Op<Col<eT>,op_htrans> ht() const;

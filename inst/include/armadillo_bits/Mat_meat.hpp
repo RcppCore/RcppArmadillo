@@ -840,22 +840,12 @@ Mat<eT>::init(const std::initializer_list< std::initializer_list<eT> >& list)
   uword x_n_rows = uword(list.size());
   uword x_n_cols = 0;
   
-  bool x_n_cols_found = false;
-  
   auto it     = list.begin();
   auto it_end = list.end();
   
   for(; it != it_end; ++it)
     {
-    if(x_n_cols_found == false)
-      {
-      x_n_cols       = uword((*it).size());
-      x_n_cols_found = true;
-      }
-    else
-      {
-      arma_check( (uword((*it).size()) != x_n_cols), "Mat::init(): inconsistent number of columns in initialiser list" );
-      }
+    x_n_cols = (std::max)(x_n_cols, uword((*it).size()));
     }
   
   Mat<eT>& t = (*this);
@@ -885,6 +875,11 @@ Mat<eT>::init(const std::initializer_list< std::initializer_list<eT> >& list)
       {
       t.at(row_num, col_num) = (*col_it);
       ++col_num;
+      }
+    
+    for(uword c=col_num; c < x_n_cols; ++c)
+      {
+      t.at(row_num, c) = eT(0);
       }
     
     ++row_num;
@@ -2877,7 +2872,7 @@ Mat<eT>::operator/=(const spdiagview<eT>& X)
 
 
 template<typename eT>
-arma_deprecated
+arma_cold
 inline
 mat_injector< Mat<eT> >
 Mat<eT>::operator<<(const eT val)
@@ -2888,7 +2883,7 @@ Mat<eT>::operator<<(const eT val)
 
 
 template<typename eT>
-arma_deprecated
+arma_cold
 inline
 mat_injector< Mat<eT> >
 Mat<eT>::operator<<(const injector_end_of_row<>& x)

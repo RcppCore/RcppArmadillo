@@ -59,7 +59,7 @@ inline
 bool
 arma_isfinite(const std::complex<T>& x)
   {
-  return ((arma_isfinite(x.real()) == false) || (arma_isfinite(x.imag()) == false)) ? false : true;
+  return ( arma_isfinite(x.real()) && arma_isfinite(x.imag()) );
   }
 
 
