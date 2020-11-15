@@ -3,10 +3,13 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.10.1.2.0 (2020-11-14)}{
+\section{Changes in RcppArmadillo version 0.10.1.2.0 (2020-11-15)}{
   \itemize{
     \item Upgraded to Armadillo release 10.1.2 (Orchid Ambush)
     \item Remove three unused int constants (\ghit{313})
+    \item Include main armadillo header using quotes instead of brackets
+    \item Rewrite version number use in old-school mode because gcc 4.8.5
+    \item Skipping parts of sparse conversion on Windows as win-builder fails
   }
 }
 
