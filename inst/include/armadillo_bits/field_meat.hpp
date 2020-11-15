@@ -256,6 +256,42 @@ field<oT>::set_size(const SizeCube& s)
 
 template<typename oT>
 inline
+field<oT>::field(const std::vector<oT>& x)
+  : n_rows  (0)
+  , n_cols  (0)
+  , n_slices(0)
+  , n_elem  (0)
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  (*this).operator=(x);
+  }
+
+
+
+template<typename oT>
+inline
+field<oT>&
+field<oT>::operator=(const std::vector<oT>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword N = uword(x.size());
+  
+  set_size(N, 1);
+  
+  for(uword i=0; i<N; ++i)
+    {
+    operator[](i) = x[i];
+    }
+  
+  return *this;
+  }
+
+
+
+template<typename oT>
+inline
 field<oT>::field(const std::initializer_list<oT>& list)
   : n_rows  (0)
   , n_cols  (0)
@@ -317,22 +353,12 @@ field<oT>::operator=(const std::initializer_list< std::initializer_list<oT> >& l
   uword x_n_rows = uword(list.size());
   uword x_n_cols = 0;
   
-  bool x_n_cols_found = false;
-  
   auto it     = list.begin();
   auto it_end = list.end();
   
   for(; it != it_end; ++it)
     {
-    if(x_n_cols_found == false)
-      {
-      x_n_cols       = uword( (*it).size() );
-      x_n_cols_found = true;
-      }
-    else
-      {
-      arma_check( (uword((*it).size()) != x_n_cols), "field::init(): inconsistent number of columns in initialiser list" );
-      }
+    x_n_cols = (std::max)(x_n_cols, uword((*it).size()));
     }
   
   field<oT>& t = (*this);
@@ -355,6 +381,11 @@ field<oT>::operator=(const std::initializer_list< std::initializer_list<oT> >& l
       {
       t.at(row_num, col_num) = (*col_it);
       ++col_num;
+      }
+    
+    for(uword c=col_num; c < x_n_cols; ++c)
+      {
+      t.at(row_num, c) = oT();
       }
     
     ++row_num;
@@ -604,7 +635,7 @@ field<oT>::at(const uword in_row, const uword in_col, const uword in_slice) cons
 
 
 template<typename oT>
-arma_deprecated
+arma_cold
 inline
 field_injector< field<oT> >
 field<oT>::operator<<(const oT& val)
@@ -615,7 +646,7 @@ field<oT>::operator<<(const oT& val)
 
 
 template<typename oT>
-arma_deprecated
+arma_cold
 inline
 field_injector< field<oT> >
 field<oT>::operator<<(const injector_end_of_row<>& x)

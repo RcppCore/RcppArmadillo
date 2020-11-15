@@ -77,7 +77,7 @@ class Row : public Mat<eT>
   inline            Row(const subview_cube<eT>& X);
   inline Row& operator=(const subview_cube<eT>& X);
   
-  inline mat_injector<Row> operator<<(const eT val);
+  arma_cold inline mat_injector<Row> operator<<(const eT val);
   
   arma_inline const Op<Row<eT>,op_htrans>  t() const;
   arma_inline const Op<Row<eT>,op_htrans> ht() const;

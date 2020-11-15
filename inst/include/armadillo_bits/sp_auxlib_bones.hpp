@@ -34,28 +34,28 @@ class sp_auxlib
   // eigs_sym()
   
   template<typename eT, typename T1>
-  inline static bool eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, const uword n_eigvals, const form_type form_val, const eT sigma, const eigs_opts& opts);
+  inline static bool eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, const uword n_eigvals, const form_type form_val, const eigs_opts& opts);
   
   template<typename eT>
-  inline static bool eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X, const uword n_eigvals, const form_type form_val, const eT sigma, const eigs_opts& opts);
+  inline static bool eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X, const uword n_eigvals, const form_type form_val, const eigs_opts& opts);
   
   template<typename eT>
-  inline static bool eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X, const uword n_eigvals, const form_type form_val, const eT sigma, const eigs_opts& opts);
+  inline static bool eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X, const uword n_eigvals, const form_type form_val, const eigs_opts& opts);
   
   //
   // eigs_gen()
   
   template<typename T, typename T1>
-  inline static bool eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase<T, T1>& X, const uword n_eigvals, const form_type form_val, const std::complex<T> sigma, const eigs_opts& opts);
+  inline static bool eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase<T, T1>& X, const uword n_eigvals, const form_type form_val, const eigs_opts& opts);
   
   template<typename T>
-  inline static bool eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpMat<T>& X, const uword n_eigvals, const form_type form_val, const std::complex<T> sigma, const eigs_opts& opts);
+  inline static bool eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpMat<T>& X, const uword n_eigvals, const form_type form_val, const eigs_opts& opts);
   
   template<typename T>
-  inline static bool eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpMat<T>& X, const uword n_eigvals, const form_type form_val, const std::complex<T> sigma, const eigs_opts& opts);
+  inline static bool eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpMat<T>& X, const uword n_eigvals, const form_type form_val, const eigs_opts& opts);
   
   template<typename T, typename T1>
-  inline static bool eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase< std::complex<T>, T1>& X, const uword n_eigvals, const form_type form_val, const std::complex<T> sigma, const eigs_opts& opts);
+  inline static bool eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase< std::complex<T>, T1>& X, const uword n_eigvals, const form_type form_val, const eigs_opts& opts);
   
   
   //
@@ -90,7 +90,7 @@ class sp_auxlib
   template<typename eT, typename T>
   inline static void run_aupd
     (
-    const uword n_eigvals, char* which, const T sigma, const bool shiftinvert,
+    const uword n_eigvals, char* which,
     const SpMat<T>& X, const bool sym,
     blas_int& n, eT& tol, blas_int& maxiter,
     podarray<T>& resid, blas_int& ncv, podarray<T>& v, blas_int& ldv,
@@ -109,68 +109,4 @@ class sp_auxlib
 
 
 
-#if defined(ARMA_USE_SUPERLU)
-
-class supermatrix_wrangler
-  {
-  private:
-  
-  bool used = false;
-  
-  arma_aligned superlu::SuperMatrix m;
-  
-  public:
-  
-  inline ~supermatrix_wrangler();
-  inline  supermatrix_wrangler();
-  
-  inline supermatrix_wrangler(const supermatrix_wrangler&) = delete;
-  inline void operator=      (const supermatrix_wrangler&) = delete;
-  
-  inline superlu::SuperMatrix& get_ref();
-  inline superlu::SuperMatrix* get_ptr();
-  };
-
-
-class superlustat_wrangler
-  {
-  private:
-  
-  arma_aligned superlu::SuperLUStat_t stat;
-  
-  public:
-  
-  inline ~superlustat_wrangler();
-  inline  superlustat_wrangler();
-  
-  inline superlustat_wrangler(const superlustat_wrangler&) = delete;
-  inline void operator=      (const superlustat_wrangler&) = delete;
-  
-  inline superlu::SuperLUStat_t* get_ptr();
-  };
-
-
-class superluintarray_wrangler
-  {
-  private:
-  
-  arma_aligned int* mem = nullptr;
-  
-  public:
-  
-  inline ~superluintarray_wrangler();
-  inline  superluintarray_wrangler(const uword n_elem);
-  
-  inline superluintarray_wrangler()                                = delete;
-  inline superluintarray_wrangler(const superluintarray_wrangler&) = delete;
-  inline void operator=          (const superluintarray_wrangler&) = delete;
-  
-  inline int* get_ptr();
-  };
-
-#endif
-
-
-
 //! @}
-
