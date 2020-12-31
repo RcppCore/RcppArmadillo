@@ -1,3 +1,7 @@
+2020-12-30  Binxiang Ni  <binxiangni@gmail.com>
+
+	* inst/tinytest/test_sparseConversion.R: Coerce dtCMatrix to dgCMatrix in one unit test
+
 2020-11-15  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 0.10.1.2.0
