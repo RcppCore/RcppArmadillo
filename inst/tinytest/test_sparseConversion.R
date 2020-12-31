@@ -261,7 +261,7 @@ expect_equal(dgc, asSpMat(A))#, msg="dgT2dgC_7")
 
 ## [Matrix] p129 (dgTMatrix)
 set.seed(129)
-T2 <- rsparsematrix(40, 12, nnz = 99, giveCsparse=FALSE)
+T2 <- rsparsematrix(40, 12, nnz = 99, repr="T")
 dgc <- as(T2, "dgCMatrix")
 expect_equal(dgc, asSpMat(T2))#, msg="dgT2dgC_8")
 
