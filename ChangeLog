@@ -1,3 +1,7 @@
+2020-12-31  Binxiang Ni  <binxiangni@gmail.com>
+
+	* inst/tinytest/test_sparseConversion.R: Replace the checkException with equal_error function; checkExpection function is not available in tinytest 
+
 2020-12-31  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 0.10.1.2.1
