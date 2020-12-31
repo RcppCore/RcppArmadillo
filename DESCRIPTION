@@ -1,29 +1,29 @@
 Package: RcppArmadillo
 Type: Package
 Title: 'Rcpp' Integration for the 'Armadillo' Templated Linear Algebra Library
-Version: 0.10.1.2.0
-Date: 2020-11-15
+Version: 0.10.1.2.1
+Date: 2020-12-31
 Author: Dirk Eddelbuettel, Romain Francois, Doug Bates and Binxiang Ni
 Maintainer: Dirk Eddelbuettel <edd@debian.org>
 Description: 'Armadillo' is a templated C++ linear algebra library (by Conrad
- Sanderson) that aims towards a good balance between speed and ease of use. Integer,
- floating point and complex numbers are supported, as well as a subset of
- trigonometric and statistics functions. Various matrix decompositions are
- provided through optional integration with LAPACK and ATLAS libraries.
- The 'RcppArmadillo' package includes the header files from the templated
- 'Armadillo' library. Thus users do not need to install 'Armadillo' itself in
- order to use 'RcppArmadillo'. From release 7.800.0 on, 'Armadillo' is
- licensed under Apache License 2; previous releases were under licensed as
- MPL 2.0 from version 3.800.0 onwards and LGPL-3 prior to that;
- 'RcppArmadillo' (the 'Rcpp' bindings/bridge to Armadillo) is licensed under
- the GNU GPL version 2 or later, as is the rest of 'Rcpp'. Note that
- Armadillo requires a fairly recent compiler; for the g++ family at least
- version 4.6.* is required.
+ Sanderson) that aims towards a good balance between speed and ease of
+ use. Integer, floating point and complex numbers are supported, as
+ well as a subset of trigonometric and statistics functions. Various
+ matrix decompositions are provided through optional integration with
+ LAPACK and ATLAS libraries.  The 'RcppArmadillo' package includes the
+ header files from the templated 'Armadillo' library. Thus users do
+ not need to install 'Armadillo' itself in order to use
+ 'RcppArmadillo'. From release 7.800.0 on, 'Armadillo' is licensed
+ under Apache License 2; previous releases were under licensed as MPL
+ 2.0 from version 3.800.0 onwards and LGPL-3 prior to that;
+ 'RcppArmadillo' (the 'Rcpp' bindings/bridge to Armadillo) is licensed
+ under the GNU GPL version 2 or later, as is the rest of 'Rcpp'.
+ Armadillo requires a C++11 compiler.
 License: GPL (>= 2)
 LazyLoad: yes
 Depends: R (>= 3.3.0)
 LinkingTo: Rcpp
 Imports: Rcpp (>= 0.11.0), stats, utils, methods
-Suggests: tinytest, Matrix, pkgKitten, reticulate, slam
-URL: http://dirk.eddelbuettel.com/code/rcpp.armadillo.html
+Suggests: tinytest, Matrix (>= 1.3.0), pkgKitten, reticulate, slam
+URL: https://github.com/RcppCore/RcppArmadillo
 BugReports: https://github.com/RcppCore/RcppArmadillo/issues

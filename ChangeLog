@@ -3,6 +3,9 @@
 	* inst/tinytest/test_sparseConversion.R: Update one call to
 	rsparsematrix to suppress another warning from Matrix 1.3.0
 
+	* DESCRIPTION (Suggests): Change to versioned 'Suggests: Matrix (>=
+	1.3.0)', (Description): Minor rewording
+
 2020-12-30  Binxiang Ni  <binxiangni@gmail.com>
 
 	* inst/tinytest/test_sparseConversion.R: Coerce dtCMatrix to
