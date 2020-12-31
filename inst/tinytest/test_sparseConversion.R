@@ -110,7 +110,7 @@ if (.onWindows) exit_file("Skipping remainder on Windows")
 ## [slam] p12 (dgCMatrix)
 x <- matrix(c(1, 0, 0, 2), nrow = 2)
 SM <- Matrix(x, sparse = TRUE)
-dgc <- as(SM, "dgCMatrix")
+dgc <- as(as(SM, "dgCMatrix"), "dgCMatrix") #the first coercion only outputs dtC Matrix
 expect_equal(dgc, asSpMat(SM))#, msg="dgC2dgC_9")
 
 ## [SparseM] p21 (dgCMatrix)
