@@ -3,6 +3,12 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.10.1.2.1 (2020-12-31)}{
+  \item Correct one unit test for \pkg{Matrix} 1.3.0-caused changed
+  (Binxiang in \ghpr{319}).
+  \item Suppress one further warning from \pkg{Matrix} (Dirk)
+}
+
 \section{Changes in RcppArmadillo version 0.10.1.2.0 (2020-11-15)}{
   \itemize{
     \item Upgraded to Armadillo release 10.1.2 (Orchid Ambush)

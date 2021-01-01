@@ -1,6 +1,6 @@
 debian
-.travis.yml
-.git
+\.travis\.yml
+\.git
 src/lapack
 ^.*\.Rproj$
 ^\.Rproj\.user$
@@ -8,3 +8,4 @@ src/lapack
 ^local
 ^vignettes/rmd
 ^.editorconfig
+^\.github
