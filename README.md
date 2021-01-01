@@ -2,6 +2,7 @@
 ## RcppArmadillo: R and Armadillo via Rcpp
 
 [![Build Status](https://travis-ci.org/RcppCore/RcppArmadillo.svg)](https://travis-ci.org/RcppCore/RcppArmadillo)
+[![CI](https://github.com/RcppCore/RcppArmadillo/workflows/ci/badge.svg)](https://github.com/RcppCore/RcppArmadillo/actions?query=workflow%3Aci)
 [![License](https://eddelbuettel.github.io/badges/GPL2+.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
 [![CRAN](https://www.r-pkg.org/badges/version/RcppArmadillo)](https://cran.r-project.org/package=RcppArmadillo)
 [![Dependencies](https://tinyverse.netlify.com/badge/RcppArmadillo)](https://cran.r-project.org/package=RcppArmadillo)
@@ -44,7 +45,7 @@ Rcpp::List fastLm(const arma::mat& X, const arma::colvec& y) {
     // std.errors of coefficients
     double s2 = std::inner_product(res.begin(), res.end(), res.begin(), 0.0)/(n - k);
 
-    arma::colvec std_err = arma::sqrt(s2 * arma::diagvec(arma::pinv(arma::trans(X)*X)));  
+    arma::colvec std_err = arma::sqrt(s2 * arma::diagvec(arma::pinv(arma::trans(X)*X)));
 
     return Rcpp::List::create(Rcpp::Named("coefficients") = coef,
                               Rcpp::Named("stderr")       = std_err,

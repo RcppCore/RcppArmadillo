@@ -1,6 +1,7 @@
 2021-01-01  Dirk Eddelbuettel  <edd@debian.org>
 
         * .github/workflows/ci.yaml: Add CI runner using r-ci
+	* README.md: Add new badge
 
 	* inst/tinytest/test_sparseConversion.R: Condition updated test on
 	Matrix package version 1.3.0 or greater
