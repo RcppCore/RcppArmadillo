@@ -260,10 +260,12 @@ dgc <- as(A, "dgCMatrix")
 expect_equal(dgc, asSpMat(A))#, msg="dgT2dgC_7")
 
 ## [Matrix] p129 (dgTMatrix)
-set.seed(129)
-T2 <- rsparsematrix(40, 12, nnz = 99, repr="T")
-dgc <- as(T2, "dgCMatrix")
-expect_equal(dgc, asSpMat(T2))#, msg="dgT2dgC_8")
+if (utils::packageVersion("Matrix") >= "1.3.0") {
+    set.seed(129)
+    T2 <- rsparsematrix(40, 12, nnz = 99, repr="T")
+    dgc <- as(T2, "dgCMatrix")
+    expect_equal(dgc, asSpMat(T2))#, msg="dgT2dgC_8")
+}
 
 ## [Matrix] p152 (dgTMatrix)
 A <- spMatrix(10,20, i = c(1,3:8),
