@@ -83,7 +83,7 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
     if (!any(grepl("^exportPattern", lines))) {
         lines <- c(lines, "exportPattern(\"^[[:alpha:]]+\")")
     }
-    if (! grepl("useDynLib", lines)) {
+    if (!any(grepl("useDynLib", lines))) {
         lines <- c(sprintf("useDynLib(%s, .registration=TRUE)", name),
                    "importFrom(Rcpp, evalCpp)",        ## ensures Rcpp instantiation
                    lines)
