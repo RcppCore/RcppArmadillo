@@ -1,3 +1,8 @@
+2021-01-05  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/tinytest/test_sparseConversion.R: Set doDiag=FALSE to ensure
+	dgCMatrix return (accomodates Matrix >= 1.3.0, also conditioned on)
+
 2021-01-01  Dirk Eddelbuettel  <edd@debian.org>
 
         * .github/workflows/ci.yaml: Add CI runner using r-ci
