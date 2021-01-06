@@ -183,7 +183,7 @@ constexpr
 typename arma_real_only<eT>::result
 arma_sign(const eT x)
   {
-  return (x > eT(0)) ? eT(+1) : ( (x < eT(0)) ? eT(-1) : eT(0) );
+  return (x > eT(0)) ? eT(+1) : ( (x < eT(0)) ? eT(-1) : ((x == eT(0)) ? eT(0) : x) );
   }
 
 
