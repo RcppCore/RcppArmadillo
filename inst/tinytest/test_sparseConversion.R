@@ -108,10 +108,12 @@ expect_equal(SM, asSpMat(SM))#, msg="dgC2dgC_8")
 if (.onWindows) exit_file("Skipping remainder on Windows")
 
 ## [slam] p12 (dgCMatrix)
-x <- matrix(c(1, 0, 0, 2), nrow = 2)
-SM <- Matrix(x, sparse = TRUE)
-dgc <- as(as(SM, "dgCMatrix"), "dgCMatrix") #the first coercion only outputs dtC Matrix
-expect_equal(dgc, asSpMat(SM))#, msg="dgC2dgC_9")
+if (utils::packageVersion("Matrix") >= "1.3.0") {
+    x <- matrix(c(1, 0, 0, 2), nrow = 2)
+    SM <- Matrix(x, sparse = TRUE, doDiag=FALSE)
+    dgc <- as(SM, "dgCMatrix")
+    expect_equal(dgc, asSpMat(SM))#, msg="dgC2dgC_9")
+}
 
 ## [SparseM] p21 (dgCMatrix)
 set.seed(21)
