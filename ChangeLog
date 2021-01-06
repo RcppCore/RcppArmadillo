@@ -1,4 +1,4 @@
-2021-01-06  Conrad Sanderson  <conrad.sanderson.nospam@nogmail.com>
+2021-01-06  Conrad Sanderson  <cs.rcpparmadillo@gmail.com>
 
         * inst/include/armadillo_bits/arma_cmath.hpp: fix handling of NaN by arma::sign()
 
