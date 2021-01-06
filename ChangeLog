@@ -1,3 +1,7 @@
+2021-01-06  Conrad Sanderson  <conrad.sanderson.nospam@nogmail.com>
+
+        * inst/include/armadillo_bits/arma_cmath.hpp: fix handling of NaN by arma::sign()
+
 2021-01-01  Dirk Eddelbuettel  <edd@debian.org>
 
         * .github/workflows/ci.yaml: Add CI runner using r-ci
