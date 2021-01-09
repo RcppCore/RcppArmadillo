@@ -1,6 +1,6 @@
 #!/usr/bin/r -t
 ##
-## Copyright (C) 2017 - 2019  Binxiang Ni and Dirk Eddelbuettel
+## Copyright (C) 2017 - 2021  Binxiang Ni and Dirk Eddelbuettel
 ##
 ## This file is part of RcppArmadillo. It is based on the documentation
 ## of package Matrix, slam, SparseM, spam and SciPy, which are
