@@ -4,7 +4,7 @@
 ##
 ##  'Rcpp' Integration for the 'Armadillo' Templated Linear Algebra Library
 ##
-##  Copyright (C) 2016 - 2020  Dirk Eddelbuettel
+##  Copyright (C) 2016 - 2021  Dirk Eddelbuettel
 ##
 ##  Licensed under GPL-2 or later
 
@@ -12,7 +12,7 @@
 AC_PREREQ(2.61)
 
 ## Process this file with autoconf to produce a configure script.
-AC_INIT([RcppArmadillo], [0.10.2.1.1], [edd@debian.org])
+AC_INIT([RcppArmadillo], [0.10.2.1.2], [edd@debian.org])
 
 ## Set R_HOME, respecting an environment variable if one is set
 : ${R_HOME=$(R RHOME)}
