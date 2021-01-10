@@ -9,6 +9,7 @@
     (Binxiang in \ghpr{319} and Dirk in \ghpr{322}).
     \item Suppress one further warning from \pkg{Matrix} (Dirk)
     \item Apply an upstream \code{NaN} correction (Conrad in \ghpr{321})
+    \item Added GitHub Actions CI using \code{run.sh} from r-ci (Dirk)
   }
 }
 
