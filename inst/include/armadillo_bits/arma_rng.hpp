@@ -326,7 +326,7 @@ struct arma_rng::randn
     }
   
   
-  arma_inline
+  inline
   static
   void
   dual_val(eT& out1, eT& out2)
@@ -438,6 +438,27 @@ struct arma_rng::randn< std::complex<T> >
     arma_rng::randn<T>::dual_val(a, b);
     
     return std::complex<T>(a, b);
+    }
+  
+  
+  inline
+  static
+  void
+  dual_val(std::complex<T>& out1, std::complex<T>& out2)
+    {
+    #if defined(_MSC_VER)
+      T a;
+      T b;
+    #else
+      T a(0);
+      T b(0);
+    #endif
+    
+    arma_rng::randn<T>::dual_val(a,b);
+    out1 = std::complex<T>(a,b);
+    
+    arma_rng::randn<T>::dual_val(a,b);
+    out2 = std::complex<T>(a,b);
     }
   
   

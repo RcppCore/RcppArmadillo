@@ -30,7 +30,10 @@ SymEigsSolver<eT, SelectionRule, OpType>::factorise_from(uword from_k, uword to_
   fac_f = fk;
 
   Col<eT> w(dim_n);
-  eT beta = norm(fac_f), Hii = 0.0;
+  // Norm of f
+  eT beta = norm(fac_f);
+  // Used to test beta~=0
+  const eT beta_thresh = eps * eop_aux::sqrt(dim_n);
   // Keep the upperleft k x k submatrix of H and set other elements to 0
   fac_H.tail_cols(ncv - from_k).zeros();
   fac_H.submat(span(from_k, ncv - 1), span(0, from_k - 1)).zeros();
@@ -40,7 +43,7 @@ SymEigsSolver<eT, SelectionRule, OpType>::factorise_from(uword from_k, uword to_
     // If beta = 0, then the next V is not full rank
     // We need to generate a new residual vector that is orthogonal
     // to the current V, which we call a restart
-    if(beta < eps)
+    if(beta < near0)
       {
       // Generate new random vector for fac_f
       blas_int idist = 2;
@@ -63,14 +66,14 @@ SymEigsSolver<eT, SelectionRule, OpType>::factorise_from(uword from_k, uword to_
     v = fac_f / beta;
 
     // Note that H[i+1, i] equals to the unrestarted beta
-    if(restart) { fac_H(i, i - 1) = 0.0; } else { fac_H(i, i - 1) = beta; }
+    fac_H(i, i - 1) = restart ? eT(0) : beta;
 
     // w <- A * v, v = fac_V.col(i)
     op.perform_op(v.memptr(), w.memptr());
     nmatop++;
 
-    Hii = dot(v, w);
     fac_H(i - 1, i) = fac_H(i, i - 1); // Due to symmetry
+    eT Hii = dot(v, w);
     fac_H(i, i) = Hii;
 
     // f <- w - V * V' * w = w - H[i+1, i] * V{i} - H[i+1, i+1] * V{i+1}
@@ -90,10 +93,23 @@ SymEigsSolver<eT, SelectionRule, OpType>::factorise_from(uword from_k, uword to_
     // whether V' * (f/||f||) ~= 0
     Mat<eT> Vs(fac_V.memptr(), dim_n, i + 1, false); // First i+1 columns
     Col<eT> Vf = Vs.t() * fac_f;
+    eT ortho_err = abs(Vf).max();
     // If not, iteratively correct the residual
     uword count = 0;
-    while(count < 5 && abs(Vf).max() > approx0 * beta)
+    while(count < 5 && ortho_err > eps * beta)
       {
+      // There is an edge case: when beta=||f|| is close to zero, f mostly consists
+      // of rounding errors, so the test [ortho_err < eps * beta] is very
+      // likely to fail. In particular, if beta=0, then the test is ensured to fail.
+      // Hence when this happens, we force f to be zero, and then restart in the
+      // next iteration.
+      if(beta < beta_thresh)
+        {
+        fac_f.zeros();
+        beta = eT(0);
+        break;
+        }
+
       // f <- f - V * Vf
       fac_f -= Vs * Vf;
       // h <- h + Vf
@@ -104,6 +120,7 @@ SymEigsSolver<eT, SelectionRule, OpType>::factorise_from(uword from_k, uword to_
       beta = norm(fac_f);
 
       Vf = Vs.t() * fac_f;
+      ortho_err = abs(Vf).max();
       count++;
       }
     }
@@ -172,7 +189,7 @@ SymEigsSolver<eT, SelectionRule, OpType>::num_converged(eT tol)
   const eT f_norm = norm(fac_f);
   for(uword i = 0; i < nev; i++)
     {
-    eT thresh = tol * std::max(approx0, std::abs(ritz_val(i)));
+    eT thresh = tol * std::max(eps23, std::abs(ritz_val(i)));
     eT resid = std::abs(ritz_est(i)) * f_norm;
     ritz_conv[i] = (resid < thresh);
     }
@@ -192,7 +209,7 @@ SymEigsSolver<eT, SelectionRule, OpType>::nev_adjusted(uword nconv)
   uword nev_new = nev;
   for(uword i = nev; i < ncv; i++)
     {
-    if(std::abs(ritz_est(i)) < eps) { nev_new++; }
+    if(std::abs(ritz_est(i)) < near0) { nev_new++; }
     }
 
   // Adjust nev_new, according to dsaup2.f line 677~684 in ARPACK
@@ -269,7 +286,7 @@ SymEigsSolver<eT, SelectionRule, OpType>::sort_ritzpair()
   
   // SortEigenvalue<eT, EigsSelect::LARGEST_MAGN> sorting(ritz_val.memptr(), nev);
   
-  // sort Ritz values in ascending algebraic, to be consistent with ARPACK
+  // Sort Ritz values in ascending algebraic, to be consistent with ARPACK
   SortEigenvalue<eT, EigsSelect::SMALLEST_ALGE> sorting(ritz_val.memptr(), nev);
   
   std::vector<uword> ind = sorting.index();
@@ -302,7 +319,8 @@ SymEigsSolver<eT, SelectionRule, OpType>::SymEigsSolver(const OpType& op_, uword
   , nmatop(0)
   , niter(0)
   , eps(std::numeric_limits<eT>::epsilon())
-  , approx0(std::pow(eps, eT(2.0) / 3))
+  , eps23(std::pow(eps, eT(2.0) / 3))
+  , near0(std::numeric_limits<eT>::min() * eT(10))
   {
   arma_extra_debug_sigprint();
   
@@ -335,7 +353,7 @@ SymEigsSolver<eT, SelectionRule, OpType>::init(eT* init_resid)
   // The first column of fac_V
   Col<eT> v(fac_V.colptr(0), dim_n, false);
   eT rnorm = norm(r);
-  arma_check( (rnorm < eps), "newarp::SymEigsSolver::init(): initial residual vector cannot be zero" );
+  arma_check( (rnorm < near0), "newarp::SymEigsSolver::init(): initial residual vector cannot be zero" );
   v = r / rnorm;
 
   Col<eT> w(dim_n);
@@ -344,6 +362,10 @@ SymEigsSolver<eT, SelectionRule, OpType>::init(eT* init_resid)
 
   fac_H(0, 0) = dot(v, w);
   fac_f = w - v * fac_H(0, 0);
+
+  // In some cases f is zero in exact arithmetics, but due to rounding errors
+  // it may contain tiny fluctuations. When this happens, we force f to be zero
+  if(abs(fac_f).max() < eps)  { fac_f.zeros(); }
   }
 
 

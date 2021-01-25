@@ -1,11 +1,11 @@
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
-//
+// 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 // http://www.apache.org/licenses/LICENSE-2.0
-//
+// 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -118,7 +118,7 @@ bool
 arma_isnan(eT val)
   {
   arma_ignore(val);
-
+    
   return false;
   }
 
@@ -194,9 +194,9 @@ typename arma_cx_only<eT>::result
 arma_sign(const eT& x)
   {
   typedef typename eT::value_type T;
-
+  
   const T abs_x = std::abs(x);
-
+  
   return (abs_x != T(0)) ? (x / abs_x) : x;
   }
 
@@ -213,9 +213,9 @@ arma_hypot(const eT x, const eT y)
   {
   arma_ignore(x);
   arma_ignore(y);
-
+  
   arma_stop_runtime_error("arma_hypot(): not implemented for integer or complex element types");
-
+  
   return eT(0);
   }
 
@@ -251,9 +251,9 @@ eT
 arma_sinc_generic(const eT x)
   {
   typedef typename get_pod_type<eT>::result T;
-
+  
   const eT tmp = Datum<T>::pi * x;
-
+  
   return (tmp == eT(0)) ? eT(1) : eT( std::sin(tmp) / tmp );
   }
 

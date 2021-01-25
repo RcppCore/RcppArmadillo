@@ -73,7 +73,7 @@ op_toeplitz_c::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_toeplitz_c
   
   out.set_size(N,N);
   
-  if(X.is_rowvec() == true)
+  if(X.is_rowvec())
     {
     for(uword row=0; row < N; ++row)
       {

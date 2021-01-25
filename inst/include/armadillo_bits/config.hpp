@@ -74,6 +74,12 @@
 // #define ARMA_BLAS_LONG_LONG
 //// Uncomment the above line if your BLAS and LAPACK libraries use "long long" instead of "int"
 
+// #define ARMA_BLAS_NOEXCEPT
+//// Uncomment the above line if you require BLAS functions to have the 'noexcept' specification
+
+// #define ARMA_LAPACK_NOEXCEPT
+//// Uncomment the above line if you require LAPACK functions to have the 'noexcept' specification
+
 #define ARMA_USE_FORTRAN_HIDDEN_ARGS
 //// Comment out the above line to call BLAS and LAPACK functions without using so-called "hidden" arguments.
 //// Fortran functions (compiled without a BIND(C) declaration) that have char arguments

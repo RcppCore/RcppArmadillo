@@ -63,15 +63,18 @@ class ProxyCube< Cube<eT> >
   arma_inline uword get_n_slices()     const { return Q.n_slices;     }
   arma_inline uword get_n_elem()       const { return Q.n_elem;       }
   
-  arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
-  arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
-  arma_inline elem_type at_alt     (const uword i)                                       const { return Q.at_alt(i);           }
+  arma_inline elem_type operator[] (const uword i)                               const { return Q[i];          }
+  arma_inline elem_type at         (const uword r, const uword c, const uword s) const { return Q.at(r, c, s); }
+  arma_inline elem_type at_alt     (const uword i)                               const { return Q.at_alt(i);   }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
   
   template<typename eT2>
   arma_inline bool is_alias(const Cube<eT2>& X) const { return (void_ptr(&Q) == void_ptr(&X)); }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview_cube<eT2>& X) const { return is_alias(X.m); }
   
   arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
   };
@@ -107,15 +110,18 @@ class ProxyCube< GenCube<eT, gen_type> >
   arma_inline uword get_n_slices()     const { return Q.n_slices;                   }
   arma_inline uword get_n_elem()       const { return Q.n_rows*Q.n_cols*Q.n_slices; }
   
-  arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
-  arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
-  arma_inline elem_type at_alt     (const uword i)                                       const { return Q[i];                  }
+  arma_inline elem_type operator[] (const uword i)                               const { return Q[i];          }
+  arma_inline elem_type at         (const uword r, const uword c, const uword s) const { return Q.at(r, c, s); }
+  arma_inline elem_type at_alt     (const uword i)                               const { return Q[i];          }
   
   arma_inline         ea_type         get_ea() const { return Q; }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q; }
   
   template<typename eT2>
   constexpr bool is_alias(const Cube<eT2>&) const { return false; }
+  
+  template<typename eT2>
+  constexpr bool has_overlap(const subview_cube<eT2>&) const { return false; }
   
   arma_inline bool is_aligned() const { return GenCube<eT, gen_type>::is_simple; }
   };
@@ -151,15 +157,18 @@ class ProxyCube< GenCube<eT, gen_randu> >
   arma_inline uword get_n_slices()     const { return Q.n_slices;     }
   arma_inline uword get_n_elem()       const { return Q.n_elem;       }
   
-  arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
-  arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
-  arma_inline elem_type at_alt     (const uword i)                                       const { return Q.at_alt(i);           }
+  arma_inline elem_type operator[] (const uword i)                               const { return Q[i];          }
+  arma_inline elem_type at         (const uword r, const uword c, const uword s) const { return Q.at(r, c, s); }
+  arma_inline elem_type at_alt     (const uword i)                               const { return Q.at_alt(i);   }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
   
   template<typename eT2>
   constexpr bool is_alias(const Cube<eT2>&) const { return false; }
+  
+  template<typename eT2>
+  constexpr bool has_overlap(const subview_cube<eT2>&) const { return false; }
   
   arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
   };
@@ -195,15 +204,18 @@ class ProxyCube< GenCube<eT, gen_randn> >
   arma_inline uword get_n_slices()     const { return Q.n_slices;     }
   arma_inline uword get_n_elem()       const { return Q.n_elem;       }
   
-  arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
-  arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
-  arma_inline elem_type at_alt     (const uword i)                                       const { return Q.at_alt(i);           }
+  arma_inline elem_type operator[] (const uword i)                               const { return Q[i];          }
+  arma_inline elem_type at         (const uword r, const uword c, const uword s) const { return Q.at(r, c, s); }
+  arma_inline elem_type at_alt     (const uword i)                               const { return Q.at_alt(i);   }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
   
   template<typename eT2>
   constexpr bool is_alias(const Cube<eT2>&) const { return false; }
+  
+  template<typename eT2>
+  constexpr bool has_overlap(const subview_cube<eT2>&) const { return false; }
   
   arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
   };
@@ -239,15 +251,18 @@ class ProxyCube< OpCube<T1, op_type> >
   arma_inline uword get_n_slices()     const { return Q.n_slices;     }
   arma_inline uword get_n_elem()       const { return Q.n_elem;       }
   
-  arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
-  arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
-  arma_inline elem_type at_alt     (const uword i)                                       const { return Q.at_alt(i);           }
+  arma_inline elem_type operator[] (const uword i)                               const { return Q[i];          }
+  arma_inline elem_type at         (const uword r, const uword c, const uword s) const { return Q.at(r, c, s); }
+  arma_inline elem_type at_alt     (const uword i)                               const { return Q.at_alt(i);   }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
   
   template<typename eT2>
   constexpr bool is_alias(const Cube<eT2>&) const { return false; }
+  
+  template<typename eT2>
+  constexpr bool has_overlap(const subview_cube<eT2>&) const { return false; }
   
   arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
   };
@@ -283,15 +298,18 @@ class ProxyCube< GlueCube<T1, T2, glue_type> >
   arma_inline uword get_n_slices()     const { return Q.n_slices;     }
   arma_inline uword get_n_elem()       const { return Q.n_elem;       }
   
-  arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
-  arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
-  arma_inline elem_type at_alt     (const uword i)                                       const { return Q.at_alt(i);           }
+  arma_inline elem_type operator[] (const uword i)                               const { return Q[i];          }
+  arma_inline elem_type at         (const uword r, const uword c, const uword s) const { return Q.at(r, c, s); }
+  arma_inline elem_type at_alt     (const uword i)                               const { return Q.at_alt(i);   }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
   
   template<typename eT2>
   constexpr bool is_alias(const Cube<eT2>&) const { return false; }
+  
+  template<typename eT2>
+  constexpr bool has_overlap(const subview_cube<eT2>&) const { return false; }
   
   arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
   };
@@ -327,15 +345,18 @@ class ProxyCube< subview_cube<eT> >
   arma_inline uword get_n_slices()     const { return Q.n_slices;     }
   arma_inline uword get_n_elem()       const { return Q.n_elem;       }
   
-  arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
-  arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
-  arma_inline elem_type at_alt     (const uword i)                                       const { return Q.at_alt(i);           }
+  arma_inline elem_type operator[] (const uword i)                               const { return Q[i];          }
+  arma_inline elem_type at         (const uword r, const uword c, const uword s) const { return Q.at(r, c, s); }
+  arma_inline elem_type at_alt     (const uword i)                               const { return Q.at_alt(i);   }
   
   arma_inline         ea_type         get_ea() const { return Q; }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q; }
   
   template<typename eT2>
   arma_inline bool is_alias(const Cube<eT2>& X) const { return (void_ptr(&(Q.m)) == void_ptr(&X)); }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview_cube<eT2>& X) const { return Q.check_overlap(X); }
   
   constexpr bool is_aligned() const { return false; }
   };
@@ -371,15 +392,18 @@ class ProxyCube< subview_cube_slices<eT,T1> >
   arma_inline uword get_n_slices()     const { return Q.n_slices;     }
   arma_inline uword get_n_elem()       const { return Q.n_elem;       }
   
-  arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
-  arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
-  arma_inline elem_type at_alt     (const uword i)                                       const { return Q.at_alt(i);           }
+  arma_inline elem_type operator[] (const uword i)                               const { return Q[i];          }
+  arma_inline elem_type at         (const uword r, const uword c, const uword s) const { return Q.at(r, c, s); }
+  arma_inline elem_type at_alt     (const uword i)                               const { return Q.at_alt(i);   }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
   
   template<typename eT2>
   constexpr bool is_alias(const Cube<eT2>&) const { return false; }
+  
+  template<typename eT2>
+  constexpr bool has_overlap(const subview_cube<eT2>&) const { return false; }
   
   arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
   };
@@ -415,15 +439,18 @@ class ProxyCube< eOpCube<T1, eop_type > >
   arma_inline uword get_n_slices()     const { return Q.get_n_slices();     }
   arma_inline uword get_n_elem()       const { return Q.get_n_elem();       }
   
-  arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
-  arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
-  arma_inline elem_type at_alt     (const uword i)                                       const { return Q.at_alt(i);           }
+  arma_inline elem_type operator[] (const uword i)                               const { return Q[i];          }
+  arma_inline elem_type at         (const uword r, const uword c, const uword s) const { return Q.at(r, c, s); }
+  arma_inline elem_type at_alt     (const uword i)                               const { return Q.at_alt(i);   }
   
   arma_inline         ea_type         get_ea() const { return Q; }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q; }
   
   template<typename eT2>
   arma_inline bool is_alias(const Cube<eT2>& X) const { return Q.P.is_alias(X); }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview_cube<eT2>& X) const { return Q.P.has_overlap(X); }
   
   arma_inline bool is_aligned() const { return Q.P.is_aligned(); }
   };
@@ -459,15 +486,18 @@ class ProxyCube< eGlueCube<T1, T2, eglue_type > >
   arma_inline uword get_n_slices()     const { return Q.get_n_slices();     }
   arma_inline uword get_n_elem()       const { return Q.get_n_elem();       }
   
-  arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
-  arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
-  arma_inline elem_type at_alt     (const uword i)                                       const { return Q.at_alt(i);           }
+  arma_inline elem_type operator[] (const uword i)                               const { return Q[i];          }
+  arma_inline elem_type at         (const uword r, const uword c, const uword s) const { return Q.at(r, c, s); }
+  arma_inline elem_type at_alt     (const uword i)                               const { return Q.at_alt(i);   }
   
   arma_inline         ea_type         get_ea() const { return Q; }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q; }
   
   template<typename eT2>
   arma_inline bool is_alias(const Cube<eT2>& X) const { return (Q.P1.is_alias(X) || Q.P2.is_alias(X)); }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview_cube<eT2>& X) const { return (Q.P1.has_overlap(X) || Q.P2.has_overlap(X)); }
   
   arma_inline bool is_aligned() const { return Q.P1.is_aligned() && Q.P2.is_aligned(); }
   };
@@ -503,15 +533,18 @@ class ProxyCube< mtOpCube<out_eT, T1, op_type> >
   arma_inline uword get_n_slices()     const { return Q.n_slices;     }
   arma_inline uword get_n_elem()       const { return Q.n_elem;       }
   
-  arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
-  arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
-  arma_inline elem_type at_alt     (const uword i)                                       const { return Q.at_alt(i);           }
+  arma_inline elem_type operator[] (const uword i)                               const { return Q[i];          }
+  arma_inline elem_type at         (const uword r, const uword c, const uword s) const { return Q.at(r, c, s); }
+  arma_inline elem_type at_alt     (const uword i)                               const { return Q.at_alt(i);   }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
   
   template<typename eT2>
   constexpr bool is_alias(const Cube<eT2>&) const { return false; }
+  
+  template<typename eT2>
+  constexpr bool has_overlap(const subview_cube<eT2>&) const { return false; }
   
   arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
   };
@@ -547,15 +580,18 @@ class ProxyCube< mtGlueCube<out_eT, T1, T2, glue_type > >
   arma_inline uword get_n_slices()     const { return Q.n_slices;     }
   arma_inline uword get_n_elem()       const { return Q.n_elem;       }
   
-  arma_inline elem_type operator[] (const uword i)                                       const { return Q[i];                  }
-  arma_inline elem_type at         (const uword row, const uword col, const uword slice) const { return Q.at(row, col, slice); }
-  arma_inline elem_type at_alt     (const uword i)                                       const { return Q.at_alt(i);           }
+  arma_inline elem_type operator[] (const uword i)                               const { return Q[i];          }
+  arma_inline elem_type at         (const uword r, const uword c, const uword s) const { return Q.at(r, c, s); }
+  arma_inline elem_type at_alt     (const uword i)                               const { return Q.at_alt(i);   }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
   
   template<typename eT2>
   constexpr bool is_alias(const Cube<eT2>&) const { return false; }
+  
+  template<typename eT2>
+  constexpr bool has_overlap(const subview_cube<eT2>&) const { return false; }
   
   arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
   };

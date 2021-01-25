@@ -22,7 +22,7 @@ template<typename eT>
 inline
 subview_cube<eT>::~subview_cube()
   {
-  arma_extra_debug_sigprint();
+  arma_extra_debug_sigprint_this(this);
   }
 
 
@@ -49,7 +49,222 @@ subview_cube<eT>::subview_cube
   , n_slices    (in_n_slices)
   , n_elem      (n_elem_slice * in_n_slices)
   {
+  arma_extra_debug_sigprint_this(this);
+  }
+
+
+
+template<typename eT>
+inline
+subview_cube<eT>::subview_cube(const subview_cube<eT>& in)
+  : m           (in.m           )
+  , aux_row1    (in.aux_row1    )
+  , aux_col1    (in.aux_col1    )
+  , aux_slice1  (in.aux_slice1  )
+  , n_rows      (in.n_rows      )
+  , n_cols      (in.n_cols      )
+  , n_elem_slice(in.n_elem_slice)
+  , n_slices    (in.n_slices    )
+  , n_elem      (in.n_elem      )
+  {
+  arma_extra_debug_sigprint(arma_str::format("this = %x   in = %x") % this % &in);
+  }
+
+
+
+template<typename eT>
+inline
+subview_cube<eT>::subview_cube(subview_cube<eT>&& in)
+  : m           (in.m           )
+  , aux_row1    (in.aux_row1    )
+  , aux_col1    (in.aux_col1    )
+  , aux_slice1  (in.aux_slice1  )
+  , n_rows      (in.n_rows      )
+  , n_cols      (in.n_cols      )
+  , n_elem_slice(in.n_elem_slice)
+  , n_slices    (in.n_slices    )
+  , n_elem      (in.n_elem      )
+  {
+  arma_extra_debug_sigprint(arma_str::format("this = %x   in = %x") % this % &in);
+  
+  // for paranoia
+  
+  access::rw(in.aux_row1    ) = 0;
+  access::rw(in.aux_col1    ) = 0;
+  access::rw(in.aux_slice1  ) = 0;
+  access::rw(in.n_rows      ) = 0;
+  access::rw(in.n_cols      ) = 0;
+  access::rw(in.n_elem_slice) = 0;
+  access::rw(in.n_slices    ) = 0;
+  access::rw(in.n_elem      ) = 0;
+  }
+
+
+
+template<typename eT>
+template<typename op_type>
+inline
+void
+subview_cube<eT>::inplace_op(const eT val)
+  {
   arma_extra_debug_sigprint();
+  
+  subview_cube<eT>& t = *this;
+  
+  const uword t_n_rows   = t.n_rows;
+  const uword t_n_cols   = t.n_cols;
+  const uword t_n_slices = t.n_slices;
+  
+  for(uword s=0; s < t_n_slices; ++s)
+  for(uword c=0; c < t_n_cols;   ++c)
+    {
+    if(is_same_type<op_type, op_internal_plus >::yes)  { arrayops::inplace_plus ( slice_colptr(s,c), val, t_n_rows ); }
+    if(is_same_type<op_type, op_internal_minus>::yes)  { arrayops::inplace_minus( slice_colptr(s,c), val, t_n_rows ); }
+    if(is_same_type<op_type, op_internal_schur>::yes)  { arrayops::inplace_mul  ( slice_colptr(s,c), val, t_n_rows ); }
+    if(is_same_type<op_type, op_internal_div  >::yes)  { arrayops::inplace_div  ( slice_colptr(s,c), val, t_n_rows ); }
+    }
+  }
+
+
+
+
+
+
+template<typename eT>
+template<typename op_type, typename T1>
+inline
+void
+subview_cube<eT>::inplace_op(const BaseCube<eT,T1>& in, const char* identifier)
+  {
+  arma_extra_debug_sigprint();
+  
+  const ProxyCube<T1> P(in.get_ref());
+  
+  subview_cube<eT>& t = *this;
+  
+  const uword t_n_rows   = t.n_rows;
+  const uword t_n_cols   = t.n_cols;
+  const uword t_n_slices = t.n_slices;
+  
+  arma_debug_assert_same_size(t, P, identifier);
+  
+  const bool use_mp      = arma_config::openmp && ProxyCube<T1>::use_mp && mp_gate<eT>::eval(t.n_elem);
+  const bool has_overlap = P.has_overlap(t);
+  
+  if(has_overlap)  { arma_extra_debug_print("aliasing or overlap detected"); }
+  
+  if( (is_Cube<typename ProxyCube<T1>::stored_type>::value) || (use_mp) || (has_overlap) )
+    {
+    const unwrap_cube_check<typename ProxyCube<T1>::stored_type> tmp(P.Q, has_overlap);
+    const Cube<eT>& B = tmp.M;
+    
+    if( (is_same_type<op_type, op_internal_equ>::yes) && (t.aux_row1 == 0) && (t_n_rows == t.m.n_rows) )
+      {
+      for(uword s=0; s < t_n_slices; ++s)
+        {
+        arrayops::copy( t.slice_colptr(s,0), B.slice_colptr(s,0), t.n_elem_slice );
+        }
+      }
+    else
+      {
+      for(uword s=0; s < t_n_slices; ++s)
+      for(uword c=0; c < t_n_cols;   ++c)
+        {
+        if(is_same_type<op_type, op_internal_equ  >::yes)  { arrayops::copy         ( t.slice_colptr(s,c), B.slice_colptr(s,c), t_n_rows ); }
+        if(is_same_type<op_type, op_internal_plus >::yes)  { arrayops::inplace_plus ( t.slice_colptr(s,c), B.slice_colptr(s,c), t_n_rows ); }
+        if(is_same_type<op_type, op_internal_minus>::yes)  { arrayops::inplace_minus( t.slice_colptr(s,c), B.slice_colptr(s,c), t_n_rows ); }
+        if(is_same_type<op_type, op_internal_schur>::yes)  { arrayops::inplace_mul  ( t.slice_colptr(s,c), B.slice_colptr(s,c), t_n_rows ); }
+        if(is_same_type<op_type, op_internal_div  >::yes)  { arrayops::inplace_div  ( t.slice_colptr(s,c), B.slice_colptr(s,c), t_n_rows ); }
+        }
+      }
+    }
+  else  // use the Proxy
+    {
+    if(ProxyCube<T1>::use_at)
+      {
+      for(uword s=0; s < t_n_slices; ++s)
+      for(uword c=0; c < t_n_cols;   ++c)
+        {
+        eT* t_col_data = t.slice_colptr(s,c);
+        
+        for(uword r=0; r < t_n_rows; ++r)
+          {
+          const eT tmp = P.at(r,c,s);
+          
+          if(is_same_type<op_type, op_internal_equ  >::yes)  { (*t_col_data) =  tmp; t_col_data++; }
+          if(is_same_type<op_type, op_internal_plus >::yes)  { (*t_col_data) += tmp; t_col_data++; }
+          if(is_same_type<op_type, op_internal_minus>::yes)  { (*t_col_data) -= tmp; t_col_data++; }
+          if(is_same_type<op_type, op_internal_schur>::yes)  { (*t_col_data) *= tmp; t_col_data++; }
+          if(is_same_type<op_type, op_internal_div  >::yes)  { (*t_col_data) /= tmp; t_col_data++; }
+          }
+        }
+      }
+    else
+      {
+      typename ProxyCube<T1>::ea_type Pea = P.get_ea();
+      
+      uword count = 0;
+      
+      for(uword s=0; s < t_n_slices; ++s)
+      for(uword c=0; c < t_n_cols;   ++c)
+        {
+        eT* t_col_data = t.slice_colptr(s,c);
+        
+        for(uword r=0; r < t_n_rows; ++r)
+          {
+          const eT tmp = Pea[count];  count++;
+          
+          if(is_same_type<op_type, op_internal_equ  >::yes)  { (*t_col_data) =  tmp; t_col_data++; }
+          if(is_same_type<op_type, op_internal_plus >::yes)  { (*t_col_data) += tmp; t_col_data++; }
+          if(is_same_type<op_type, op_internal_minus>::yes)  { (*t_col_data) -= tmp; t_col_data++; }
+          if(is_same_type<op_type, op_internal_schur>::yes)  { (*t_col_data) *= tmp; t_col_data++; }
+          if(is_same_type<op_type, op_internal_div  >::yes)  { (*t_col_data) /= tmp; t_col_data++; }
+          }
+        }
+      }
+    }
+  }
+
+
+
+template<typename eT>
+template<typename op_type>
+inline
+void
+subview_cube<eT>::inplace_op(const subview_cube<eT>& x, const char* identifier)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(check_overlap(x))
+    {
+    const Cube<eT> tmp(x);
+    
+    if(is_same_type<op_type, op_internal_equ  >::yes)  { (*this).operator= (tmp); }
+    if(is_same_type<op_type, op_internal_plus >::yes)  { (*this).operator+=(tmp); }
+    if(is_same_type<op_type, op_internal_minus>::yes)  { (*this).operator-=(tmp); }
+    if(is_same_type<op_type, op_internal_schur>::yes)  { (*this).operator%=(tmp); }
+    if(is_same_type<op_type, op_internal_div  >::yes)  { (*this).operator/=(tmp); }
+    
+    return;
+    }
+  
+  subview_cube<eT>& t = *this;
+  
+  arma_debug_assert_same_size(t, x, identifier);
+  
+  const uword t_n_rows   = t.n_rows;
+  const uword t_n_cols   = t.n_cols;
+  const uword t_n_slices = t.n_slices;
+  
+  for(uword s=0; s < t_n_slices; ++s)
+  for(uword c=0; c < t_n_cols;   ++c)
+    {
+    if(is_same_type<op_type, op_internal_equ  >::yes)  { arrayops::copy         ( t.slice_colptr(s,c), x.slice_colptr(s,c), t_n_rows ); }
+    if(is_same_type<op_type, op_internal_plus >::yes)  { arrayops::inplace_plus ( t.slice_colptr(s,c), x.slice_colptr(s,c), t_n_rows ); }
+    if(is_same_type<op_type, op_internal_minus>::yes)  { arrayops::inplace_minus( t.slice_colptr(s,c), x.slice_colptr(s,c), t_n_rows ); }
+    if(is_same_type<op_type, op_internal_schur>::yes)  { arrayops::inplace_mul  ( t.slice_colptr(s,c), x.slice_colptr(s,c), t_n_rows ); }
+    if(is_same_type<op_type, op_internal_div  >::yes)  { arrayops::inplace_div  ( t.slice_colptr(s,c), x.slice_colptr(s,c), t_n_rows ); }
+    }
   }
 
 
@@ -80,17 +295,7 @@ subview_cube<eT>::operator+= (const eT val)
   {
   arma_extra_debug_sigprint();
   
-  const uword local_n_rows   = n_rows;
-  const uword local_n_cols   = n_cols;
-  const uword local_n_slices = n_slices;
-  
-  for(uword slice = 0; slice < local_n_slices; ++slice)
-    {
-    for(uword col = 0; col < local_n_cols; ++col)
-      {
-      arrayops::inplace_plus( slice_colptr(slice,col), val, local_n_rows );
-      }
-    }
+  inplace_op<op_internal_plus>(val);
   }
 
 
@@ -102,17 +307,7 @@ subview_cube<eT>::operator-= (const eT val)
   {
   arma_extra_debug_sigprint();
   
-  const uword local_n_rows   = n_rows;
-  const uword local_n_cols   = n_cols;
-  const uword local_n_slices = n_slices;
-  
-  for(uword slice = 0; slice < local_n_slices; ++slice)
-    {
-    for(uword col = 0; col < local_n_cols; ++col)
-      {
-      arrayops::inplace_minus( slice_colptr(slice,col), val, local_n_rows );
-      }
-    }
+  inplace_op<op_internal_minus>(val);
   }
 
 
@@ -124,17 +319,7 @@ subview_cube<eT>::operator*= (const eT val)
   {
   arma_extra_debug_sigprint();
   
-  const uword local_n_rows   = n_rows;
-  const uword local_n_cols   = n_cols;
-  const uword local_n_slices = n_slices;
-  
-  for(uword slice = 0; slice < local_n_slices; ++slice)
-    {
-    for(uword col = 0; col < local_n_cols; ++col)
-      {
-      arrayops::inplace_mul( slice_colptr(slice,col), val, local_n_rows );
-      }
-    }
+  inplace_op<op_internal_schur>(val);
   }
 
 
@@ -146,17 +331,7 @@ subview_cube<eT>::operator/= (const eT val)
   {
   arma_extra_debug_sigprint();
   
-  const uword local_n_rows   = n_rows;
-  const uword local_n_cols   = n_cols;
-  const uword local_n_slices = n_slices;
-  
-  for(uword slice = 0; slice < local_n_slices; ++slice)
-    {
-    for(uword col = 0; col < local_n_cols; ++col)
-      {
-      arrayops::inplace_div( slice_colptr(slice,col), val, local_n_rows );
-      }
-    }
+  inplace_op<op_internal_div>(val);
   }
 
 
@@ -169,24 +344,7 @@ subview_cube<eT>::operator= (const BaseCube<eT,T1>& in)
   {
   arma_extra_debug_sigprint();
   
-  const unwrap_cube<T1> tmp(in.get_ref());
-  
-  const Cube<eT>&         x = tmp.M;
-        subview_cube<eT>& t = *this;
-  
-  arma_debug_assert_same_size(t, x, "copy into subcube");
-  
-  const uword t_n_rows   = t.n_rows;
-  const uword t_n_cols   = t.n_cols;
-  const uword t_n_slices = t.n_slices;
-  
-  for(uword slice = 0; slice < t_n_slices; ++slice)
-    {
-    for(uword col = 0; col < t_n_cols; ++col)
-      {
-      arrayops::copy( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
-      }
-    }
+  inplace_op<op_internal_equ>(in, "copy into subcube");
   }
 
 
@@ -199,24 +357,7 @@ subview_cube<eT>::operator+= (const BaseCube<eT,T1>& in)
   {
   arma_extra_debug_sigprint();
   
-  const unwrap_cube<T1> tmp(in.get_ref());
-  
-  const Cube<eT>&         x = tmp.M;
-        subview_cube<eT>& t = *this;
-  
-  arma_debug_assert_same_size(t, x, "addition");
-  
-  const uword t_n_rows   = t.n_rows;
-  const uword t_n_cols   = t.n_cols;
-  const uword t_n_slices = t.n_slices;
-  
-  for(uword slice = 0; slice < t_n_slices; ++slice)
-    {
-    for(uword col = 0; col < t_n_cols; ++col)
-      {
-      arrayops::inplace_plus( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
-      }
-    }
+  inplace_op<op_internal_plus>(in, "addition");
   }
 
 
@@ -229,24 +370,7 @@ subview_cube<eT>::operator-= (const BaseCube<eT,T1>& in)
   {
   arma_extra_debug_sigprint();
   
-  const unwrap_cube<T1> tmp(in.get_ref());
-  
-  const Cube<eT>&         x = tmp.M;
-        subview_cube<eT>& t = *this;
-  
-  arma_debug_assert_same_size(t, x, "subtraction");
-  
-  const uword t_n_rows   = t.n_rows;
-  const uword t_n_cols   = t.n_cols;
-  const uword t_n_slices = t.n_slices;
-  
-  for(uword slice = 0; slice < t_n_slices; ++slice)
-    {
-    for(uword col = 0; col < t_n_cols; ++col)
-      {
-      arrayops::inplace_minus( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
-      }
-    }
+  inplace_op<op_internal_minus>(in, "subtraction");
   }
 
 
@@ -259,24 +383,7 @@ subview_cube<eT>::operator%= (const BaseCube<eT,T1>& in)
   {
   arma_extra_debug_sigprint();
   
-  const unwrap_cube<T1> tmp(in.get_ref());
-  
-  const Cube<eT>&         x = tmp.M;
-        subview_cube<eT>& t = *this;
-  
-  arma_debug_assert_same_size(t, x, "element-wise multiplication");
-  
-  const uword t_n_rows   = t.n_rows;
-  const uword t_n_cols   = t.n_cols;
-  const uword t_n_slices = t.n_slices;
-  
-  for(uword slice = 0; slice < t_n_slices; ++slice)
-    {
-    for(uword col = 0; col < t_n_cols; ++col)
-      {
-      arrayops::inplace_mul( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
-      }
-    }
+  inplace_op<op_internal_schur>(in, "element-wise multiplication");
   }
 
 
@@ -289,24 +396,7 @@ subview_cube<eT>::operator/= (const BaseCube<eT,T1>& in)
   {
   arma_extra_debug_sigprint();
   
-  const unwrap_cube<T1> tmp(in.get_ref());
-  
-  const Cube<eT>&         x = tmp.M;
-        subview_cube<eT>& t = *this;
-  
-  arma_debug_assert_same_size(t, x, "element-wise division");
-  
-  const uword t_n_rows   = t.n_rows;
-  const uword t_n_cols   = t.n_cols;
-  const uword t_n_slices = t.n_slices;
-  
-  for(uword slice = 0; slice < t_n_slices; ++slice)
-    {
-    for(uword col = 0; col < t_n_cols; ++col)
-      {
-      arrayops::inplace_div( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
-      }
-    }
+  inplace_op<op_internal_div>(in, "element-wise division");
   }
 
 
@@ -319,30 +409,7 @@ subview_cube<eT>::operator= (const subview_cube<eT>& x)
   {
   arma_extra_debug_sigprint();
   
-  if(check_overlap(x))
-    {
-    const Cube<eT> tmp(x);
-    
-    (*this).operator=(tmp);
-    
-    return;
-    }
-  
-  subview_cube<eT>& t = *this;
-  
-  arma_debug_assert_same_size(t, x, "copy into subcube");
-  
-  const uword t_n_rows   = t.n_rows;
-  const uword t_n_cols   = t.n_cols;
-  const uword t_n_slices = t.n_slices;
-  
-  for(uword slice = 0; slice < t_n_slices; ++slice)
-    {
-    for(uword col = 0; col < t_n_cols; ++col)
-      {
-      arrayops::copy( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
-      }
-    }
+  inplace_op<op_internal_equ>(x, "copy into subcube");
   }
 
 
@@ -354,30 +421,7 @@ subview_cube<eT>::operator+= (const subview_cube<eT>& x)
   {
   arma_extra_debug_sigprint();
   
-  if(check_overlap(x))
-    {
-    const Cube<eT> tmp(x);
-    
-    (*this).operator+=(tmp);
-    
-    return;
-    }
-  
-  subview_cube<eT>& t = *this;
-  
-  arma_debug_assert_same_size(t, x, "addition");
-  
-  const uword t_n_rows   = t.n_rows;
-  const uword t_n_cols   = t.n_cols;
-  const uword t_n_slices = t.n_slices;
-  
-  for(uword slice = 0; slice < t_n_slices; ++slice)
-    {
-    for(uword col = 0; col < t_n_cols; ++col)
-      {
-      arrayops::inplace_plus( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
-      }
-    }
+  inplace_op<op_internal_plus>(x, "addition");
   }
 
 
@@ -389,30 +433,7 @@ subview_cube<eT>::operator-= (const subview_cube<eT>& x)
   {
   arma_extra_debug_sigprint();
   
-  if(check_overlap(x))
-    {
-    const Cube<eT> tmp(x);
-    
-    (*this).operator-=(tmp);
-    
-    return;
-    }
-  
-  subview_cube<eT>& t = *this;
-  
-  arma_debug_assert_same_size(t, x, "subtraction");
-  
-  const uword t_n_rows   = t.n_rows;
-  const uword t_n_cols   = t.n_cols;
-  const uword t_n_slices = t.n_slices;
-  
-  for(uword slice = 0; slice < t_n_slices; ++slice)
-    {
-    for(uword col = 0; col < t_n_cols; ++col)
-      {
-      arrayops::inplace_minus( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
-      }
-    }
+  inplace_op<op_internal_minus>(x, "subtraction");
   }
 
 
@@ -424,30 +445,7 @@ subview_cube<eT>::operator%= (const subview_cube<eT>& x)
   {
   arma_extra_debug_sigprint();
   
-  if(check_overlap(x))
-    {
-    const Cube<eT> tmp(x);
-    
-    (*this).operator%=(tmp);
-    
-    return;
-    }
-  
-  subview_cube<eT>& t = *this;
-  
-  arma_debug_assert_same_size(t, x, "element-wise multiplication");
-  
-  const uword t_n_rows   = t.n_rows;
-  const uword t_n_cols   = t.n_cols;
-  const uword t_n_slices = t.n_slices;
-  
-  for(uword slice = 0; slice < t_n_slices; ++slice)
-    {
-    for(uword col = 0; col < t_n_cols; ++col)
-      {
-      arrayops::inplace_mul( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
-      }
-    }
+  inplace_op<op_internal_schur>(x, "element-wise multiplication");
   }
 
 
@@ -459,30 +457,7 @@ subview_cube<eT>::operator/= (const subview_cube<eT>& x)
   {
   arma_extra_debug_sigprint();
   
-  if(check_overlap(x))
-    {
-    const Cube<eT> tmp(x);
-    
-    (*this).operator/=(tmp);
-    
-    return;
-    }
-  
-  subview_cube<eT>& t = *this;
-  
-  arma_debug_assert_same_size(t, x, "element-wise division");
-  
-  const uword t_n_rows   = t.n_rows;
-  const uword t_n_cols   = t.n_cols;
-  const uword t_n_slices = t.n_slices;
-  
-  for(uword slice = 0; slice < t_n_slices; ++slice)
-    {
-    for(uword col = 0; col < t_n_cols; ++col)
-      {
-      arrayops::inplace_div( t.slice_colptr(slice,col), x.slice_colptr(slice,col), t_n_rows );
-      }
-    }
+  inplace_op<op_internal_div>(x, "element-wise division");
   }
 
 
@@ -1593,51 +1568,44 @@ subview_cube<eT>::slice_colptr(const uword in_slice, const uword in_col) const
 
 
 template<typename eT>
+template<typename eT2>
 inline
 bool
-subview_cube<eT>::check_overlap(const subview_cube<eT>& x) const
+subview_cube<eT>::check_overlap(const subview_cube<eT2>& x) const
   {
-  const subview_cube<eT>& t = *this;
+  if(is_same_type<eT,eT2>::value == false)  { return false; }
   
-  if(&t.m != &x.m)
-    {
-    return false;
-    }
-  else
-    {
-    if( (t.n_elem == 0) || (x.n_elem == 0) )
-      {
-      return false;
-      }
-    else
-      {
-      const uword t_row_start  = t.aux_row1;
-      const uword t_row_end_p1 = t_row_start + t.n_rows;
-      
-      const uword t_col_start  = t.aux_col1;
-      const uword t_col_end_p1 = t_col_start + t.n_cols;
-      
-      const uword t_slice_start  = t.aux_slice1;
-      const uword t_slice_end_p1 = t_slice_start + t.n_slices;
-      
-      
-      const uword x_row_start  = x.aux_row1;
-      const uword x_row_end_p1 = x_row_start + x.n_rows;
-      
-      const uword x_col_start  = x.aux_col1;
-      const uword x_col_end_p1 = x_col_start + x.n_cols;
-      
-      const uword x_slice_start  = x.aux_slice1;
-      const uword x_slice_end_p1 = x_slice_start + x.n_slices;
-      
-      
-      const bool outside_rows   = ( (x_row_start   >= t_row_end_p1  ) || (t_row_start   >= x_row_end_p1  ) );
-      const bool outside_cols   = ( (x_col_start   >= t_col_end_p1  ) || (t_col_start   >= x_col_end_p1  ) );
-      const bool outside_slices = ( (x_slice_start >= t_slice_end_p1) || (t_slice_start >= x_slice_end_p1) );
-      
-      return ( (outside_rows == false) && (outside_cols == false) && (outside_slices == false) );
-      }
-    }
+  const subview_cube<eT>& t = (*this);
+  
+  if(void_ptr(&(t.m)) != void_ptr(&(x.m)))  { return false; }
+  
+  if( (t.n_elem == 0) || (x.n_elem == 0) )  { return false; }
+  
+  const uword t_row_start  = t.aux_row1;
+  const uword t_row_end_p1 = t_row_start + t.n_rows;
+  
+  const uword t_col_start  = t.aux_col1;
+  const uword t_col_end_p1 = t_col_start + t.n_cols;
+  
+  const uword t_slice_start  = t.aux_slice1;
+  const uword t_slice_end_p1 = t_slice_start + t.n_slices;
+  
+  
+  const uword x_row_start  = x.aux_row1;
+  const uword x_row_end_p1 = x_row_start + x.n_rows;
+  
+  const uword x_col_start  = x.aux_col1;
+  const uword x_col_end_p1 = x_col_start + x.n_cols;
+  
+  const uword x_slice_start  = x.aux_slice1;
+  const uword x_slice_end_p1 = x_slice_start + x.n_slices;
+  
+  
+  const bool outside_rows   = ( (x_row_start   >= t_row_end_p1  ) || (t_row_start   >= x_row_end_p1  ) );
+  const bool outside_cols   = ( (x_col_start   >= t_col_end_p1  ) || (t_col_start   >= x_col_end_p1  ) );
+  const bool outside_slices = ( (x_slice_start >= t_slice_end_p1) || (t_slice_start >= x_slice_end_p1) );
+  
+  return ( (outside_rows == false) && (outside_cols == false) && (outside_slices == false) );
   }
 
 
@@ -1684,13 +1652,20 @@ subview_cube<eT>::extract(Cube<eT>& out, const subview_cube<eT>& in)
   
   arma_extra_debug_print(arma_str::format("out.n_rows = %d   out.n_cols = %d    out.n_slices = %d    in.m.n_rows = %d   in.m.n_cols = %d   in.m.n_slices = %d") % out.n_rows % out.n_cols % out.n_slices % in.m.n_rows % in.m.n_cols % in.m.n_slices);
   
-  
-  for(uword slice = 0; slice < n_slices; ++slice)
+  if( (in.aux_row1 == 0) && (n_rows == in.m.n_rows) )
     {
-    for(uword col = 0; col < n_cols; ++col)
+    for(uword s=0; s < n_slices; ++s)
       {
-      arrayops::copy( out.slice_colptr(slice,col), in.slice_colptr(slice,col), n_rows );
+      arrayops::copy( out.slice_colptr(s,0), in.slice_colptr(s,0), in.n_elem_slice );
       }
+    
+    return;
+    }
+  
+  for(uword s=0; s < n_slices; ++s)
+  for(uword c=0; c < n_cols;   ++c)
+    {
+    arrayops::copy( out.slice_colptr(s,c), in.slice_colptr(s,c), n_rows );
     }
   }
 
@@ -2365,13 +2340,13 @@ inline
 subview_cube<eT>::iterator::iterator()
   : M            (nullptr)
   , current_ptr  (nullptr)
-  , current_row  (0   )
-  , current_col  (0   )
-  , current_slice(0   )
-  , aux_row1     (0   )
-  , aux_col1     (0   )
-  , aux_row2_p1  (0   )
-  , aux_col2_p1  (0   )
+  , current_row  (0      )
+  , current_col  (0      )
+  , current_slice(0      )
+  , aux_row1     (0      )
+  , aux_col1     (0      )
+  , aux_row2_p1  (0      )
+  , aux_col2_p1  (0      )
   {
   arma_extra_debug_sigprint();
   // Technically this iterator is invalid (it does not point to a valid element)

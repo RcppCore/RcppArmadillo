@@ -28,7 +28,7 @@ class SymEigsSolver
   const uword       nev;       // number of eigenvalues requested
   Col<eT>           ritz_val;  // ritz values
 
-  // Sort the first nev Ritz pairs in decreasing magnitude order
+  // Sort the first nev Ritz pairs in ascending algebraic order
   // This is used to return the final results
   virtual void sort_ritzpair();
 
@@ -47,11 +47,9 @@ class SymEigsSolver
   std::vector<bool> ritz_conv; // indicator of the convergence of ritz values
   const eT          eps;       // the machine precision
                                // e.g. ~= 1e-16 for double type
-  const eT          approx0;   // a number that is approximately zero
-                               // approx0 = eps^(2/3)
-                               // used to test the orthogonality of vectors,
-                               // and in convergence test, tol*approx0 is
-                               // the absolute tolerance
+  const eT          eps23;     // eps^(2/3), used in convergence test
+                               // tol*eps23 is the absolute tolerance
+  const eT          near0;     // a very small value, but 1/near0 does not overflow
 
   // Arnoldi factorisation starting from step-k
   inline void factorise_from(uword from_k, uword to_m, const Col<eT>& fk);

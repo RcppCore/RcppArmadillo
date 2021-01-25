@@ -196,6 +196,10 @@ find(const SpBase<typename T1::elem_type,T1>& X, const uword k, const char* dire
   {
   arma_extra_debug_sigprint();
   
+  arma_ignore(X);
+  arma_ignore(k);
+  arma_ignore(direction);
+  
   arma_check(true, "find(SpBase,k,direction): not implemented yet");  // TODO
   
   Col<uword> out;

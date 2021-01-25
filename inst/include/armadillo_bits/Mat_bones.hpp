@@ -436,13 +436,6 @@ class Mat : public Base< eT, Mat<eT> >
   arma_inline arma_warn_unused const eT* memptr() const;
   
   
-  arma_cold inline void impl_print(                           const std::string& extra_text) const;
-  arma_cold inline void impl_print(std::ostream& user_stream, const std::string& extra_text) const;
-  
-  arma_cold inline void impl_raw_print(                           const std::string& extra_text) const;
-  arma_cold inline void impl_raw_print(std::ostream& user_stream, const std::string& extra_text) const;
-  
-  
   template<typename eT2, typename expr>
   inline void copy_size(const Base<eT2,expr>& X);
   

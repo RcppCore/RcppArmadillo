@@ -14,46 +14,28 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup arma_version
-//! @{
+namespace newarp
+{
 
 
-
-#define ARMA_VERSION_MAJOR 10
-#define ARMA_VERSION_MINOR 2
-#define ARMA_VERSION_PATCH 0
-#define ARMA_VERSION_NAME  "Cicada Swarm"
-
-
-
-struct arma_version
+//! This class implements the eigen solver for real symmetric matrices in the shift-and-invert mode.
+template<typename eT, int SelectionRule, typename OpType>
+class SymEigsShiftSolver : public SymEigsSolver<eT, SelectionRule, OpType>
   {
-  static constexpr unsigned int major = ARMA_VERSION_MAJOR;
-  static constexpr unsigned int minor = ARMA_VERSION_MINOR;
-  static constexpr unsigned int patch = ARMA_VERSION_PATCH;
-  
-  static
-  inline
-  std::string
-  as_string()
-    {
-    const char* nickname = ARMA_VERSION_NAME;
-    
-    std::ostringstream ss;
-    
-    ss << arma_version::major
-       << '.'
-       << arma_version::minor
-       << '.'
-       << arma_version::patch
-       << " ("
-       << nickname
-       << ')';
-    
-    return ss.str();
-    }
+  private:
+
+  const eT sigma;
+
+  // Sort the first nev Ritz pairs in ascending algebraic order
+  // This is used to return the final results
+  void sort_ritzpair();
+
+
+  public:
+
+  //! Constructor to create a solver object.
+  inline SymEigsShiftSolver(const OpType& op_, uword nev_, uword ncv_, const eT sigma_);
   };
 
 
-
-//! @}
+}  // namespace newarp

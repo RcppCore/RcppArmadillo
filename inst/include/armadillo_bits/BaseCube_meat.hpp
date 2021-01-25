@@ -35,9 +35,20 @@ inline
 void
 BaseCube<elem_type,derived>::print(const std::string extra_text) const
   {
+  arma_extra_debug_sigprint();
+  
   const unwrap_cube<derived> tmp( (*this).get_ref() );
   
-  tmp.M.impl_print(extra_text);
+  if(extra_text.length() != 0)
+    {
+    const std::streamsize orig_width = get_cout_stream().width();
+    
+    get_cout_stream() << extra_text << '\n';
+    
+    get_cout_stream().width(orig_width);
+    }
+  
+  arma_ostream::print(get_cout_stream(), tmp.M, true);
   }
 
 
@@ -48,9 +59,20 @@ inline
 void
 BaseCube<elem_type,derived>::print(std::ostream& user_stream, const std::string extra_text) const
   {
+  arma_extra_debug_sigprint();
+  
   const unwrap_cube<derived> tmp( (*this).get_ref() );
   
-  tmp.M.impl_print(user_stream, extra_text);
+  if(extra_text.length() != 0)
+    {
+    const std::streamsize orig_width = user_stream.width();
+    
+    user_stream << extra_text << '\n';
+    
+    user_stream.width(orig_width);
+    }
+  
+  arma_ostream::print(user_stream, tmp.M, true);
   }
   
 
@@ -61,9 +83,20 @@ inline
 void
 BaseCube<elem_type,derived>::raw_print(const std::string extra_text) const
   {
+  arma_extra_debug_sigprint();
+  
   const unwrap_cube<derived> tmp( (*this).get_ref() );
   
-  tmp.M.impl_raw_print(extra_text);
+  if(extra_text.length() != 0)
+    {
+    const std::streamsize orig_width = get_cout_stream().width();
+    
+    get_cout_stream() << extra_text << '\n';
+    
+    get_cout_stream().width(orig_width);
+    }
+  
+  arma_ostream::print(get_cout_stream(), tmp.M, false);
   }
 
 
@@ -74,9 +107,68 @@ inline
 void
 BaseCube<elem_type,derived>::raw_print(std::ostream& user_stream, const std::string extra_text) const
   {
+  arma_extra_debug_sigprint();
+  
   const unwrap_cube<derived> tmp( (*this).get_ref() );
   
-  tmp.M.impl_raw_print(user_stream, extra_text);
+  if(extra_text.length() != 0)
+    {
+    const std::streamsize orig_width = user_stream.width();
+    
+    user_stream << extra_text << '\n';
+    
+    user_stream.width(orig_width);
+    }
+  
+  arma_ostream::print(user_stream, tmp.M, false);
+  }
+
+
+
+template<typename elem_type, typename derived>
+arma_cold
+inline
+void
+BaseCube<elem_type,derived>::brief_print(const std::string extra_text) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const unwrap_cube<derived> tmp( (*this).get_ref() );
+  
+  if(extra_text.length() != 0)
+    {
+    const std::streamsize orig_width = get_cout_stream().width();
+    
+    get_cout_stream() << extra_text << '\n';
+    
+    get_cout_stream().width(orig_width);
+    }
+  
+  arma_ostream::brief_print(get_cout_stream(), tmp.M);
+  }
+
+
+
+template<typename elem_type, typename derived>
+arma_cold
+inline
+void
+BaseCube<elem_type,derived>::brief_print(std::ostream& user_stream, const std::string extra_text) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const unwrap_cube<derived> tmp( (*this).get_ref() );
+  
+  if(extra_text.length() != 0)
+    {
+    const std::streamsize orig_width = user_stream.width();
+    
+    user_stream << extra_text << '\n';
+    
+    user_stream.width(orig_width);
+    }
+  
+  arma_ostream::brief_print(user_stream, tmp.M);
   }
 
 
@@ -187,15 +279,15 @@ BaseCube<elem_type,derived>::is_zero(const typename get_pod_type<elem_type>::res
       const T val_real = access::tmp_real(val);
       const T val_imag = access::tmp_imag(val);
       
-      if(std::abs(val_real) > tol)  { return false; }
-      if(std::abs(val_imag) > tol)  { return false; }
+      if(eop_aux::arma_abs(val_real) > tol)  { return false; }
+      if(eop_aux::arma_abs(val_imag) > tol)  { return false; }
       }
     }
   else  // not complex
     {
     for(uword i=0; i < n_elem; ++i)
       {
-      if(std::abs(Pea[i]) > tol)  { return false; }
+      if(eop_aux::arma_abs(Pea[i]) > tol)  { return false; }
       }
     }
   

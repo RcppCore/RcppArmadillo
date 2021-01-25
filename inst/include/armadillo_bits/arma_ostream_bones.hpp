@@ -22,15 +22,15 @@
 class arma_ostream_state
   {
   private:
-
+  
   const ios::fmtflags   orig_flags;
   const std::streamsize orig_precision;
   const std::streamsize orig_width;
   const char            orig_fill;
-
-
+  
+  
   public:
-
+  
   inline arma_ostream_state(const std::ostream& o);
   
   inline void restore(std::ostream& o) const;
@@ -44,8 +44,8 @@ class arma_ostream
   
   template<typename eT> inline static std::streamsize modify_stream(std::ostream& o, const eT*              data, const uword n_elem);
   template<typename  T> inline static std::streamsize modify_stream(std::ostream& o, const std::complex<T>* data, const uword n_elem);
-  template<typename eT> inline static std::streamsize modify_stream(std::ostream& o, typename SpMat<eT>::const_iterator begin, const uword n_elem, const typename arma_not_cx<eT>::result* junk = nullptr);
-  template<typename  T> inline static std::streamsize modify_stream(std::ostream& o, typename SpMat< T>::const_iterator begin, const uword n_elem, const typename arma_cx_only<T>::result* junk = nullptr);
+  template<typename eT> inline static std::streamsize modify_stream(std::ostream& o, typename SpMat<eT>::const_iterator begin, const uword n_elem, const typename  arma_not_cx<eT>::result* junk = nullptr);
+  template<typename eT> inline static std::streamsize modify_stream(std::ostream& o, typename SpMat<eT>::const_iterator begin, const uword n_elem, const typename arma_cx_only<eT>::result* junk = nullptr);
   
   template<typename eT> inline static void     print_elem_zero(std::ostream& o, const bool modify);
   template<typename eT> inline static void raw_print_elem_zero(std::ostream& o);
@@ -61,13 +61,16 @@ class arma_ostream
   
   template<typename oT> arma_cold inline static void print(std::ostream& o, const field<oT>&         m);
   template<typename oT> arma_cold inline static void print(std::ostream& o, const subview_field<oT>& m);
-
-
+  
   template<typename eT> arma_cold inline static void print_dense(std::ostream& o, const SpMat<eT>& m, const bool modify);
   template<typename eT> arma_cold inline static void       print(std::ostream& o, const SpMat<eT>& m, const bool modify);
   
   arma_cold inline static void print(std::ostream& o, const SizeMat&  S);
   arma_cold inline static void print(std::ostream& o, const SizeCube& S);
+  
+  template<typename eT> arma_cold inline static void brief_print(std::ostream& o, const   Mat<eT>& m, const bool print_size = true);
+  template<typename eT> arma_cold inline static void brief_print(std::ostream& o, const  Cube<eT>& m);
+  template<typename eT> arma_cold inline static void brief_print(std::ostream& o, const SpMat<eT>& m);
   };
 
 

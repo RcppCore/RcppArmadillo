@@ -14,46 +14,36 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup arma_version
-//! @{
+namespace newarp
+{
 
 
-
-#define ARMA_VERSION_MAJOR 10
-#define ARMA_VERSION_MINOR 2
-#define ARMA_VERSION_PATCH 0
-#define ARMA_VERSION_NAME  "Cicada Swarm"
-
-
-
-struct arma_version
+//! Define matrix operations on existing matrix objects
+template<typename eT>
+class SparseGenRealShiftSolve
   {
-  static constexpr unsigned int major = ARMA_VERSION_MAJOR;
-  static constexpr unsigned int minor = ARMA_VERSION_MINOR;
-  static constexpr unsigned int patch = ARMA_VERSION_PATCH;
+  private:
   
-  static
-  inline
-  std::string
-  as_string()
-    {
-    const char* nickname = ARMA_VERSION_NAME;
-    
-    std::ostringstream ss;
-    
-    ss << arma_version::major
-       << '.'
-       << arma_version::minor
-       << '.'
-       << arma_version::patch
-       << " ("
-       << nickname
-       << ')';
-    
-    return ss.str();
-    }
+  #if defined(ARMA_USE_SUPERLU)
+    // The following objects are read-only in perform_op()
+    mutable superlu_supermatrix_wrangler l;
+    mutable superlu_supermatrix_wrangler u;
+    mutable superlu_array_wrangler<int>  perm_c;
+    mutable superlu_array_wrangler<int>  perm_r;
+  #endif
+  
+  
+  public:
+  
+  bool valid = false;
+  
+  const uword n_rows;  // number of rows of the underlying matrix
+  const uword n_cols;  // number of columns of the underlying matrix
+  
+  inline SparseGenRealShiftSolve(const SpMat<eT>& mat_obj, const eT shift);
+  
+  inline void perform_op(eT* x_in, eT* y_out) const;
   };
 
 
-
-//! @}
+}  // namespace newarp

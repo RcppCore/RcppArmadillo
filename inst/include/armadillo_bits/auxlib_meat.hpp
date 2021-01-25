@@ -761,7 +761,7 @@ auxlib::lu(Mat<eT>& L, Mat<eT>& U, podarray<blas_int>& ipiv, const Base<eT,T1>& 
         L.at(row,col) = eT(0);
         }
       
-      if( L.in_range(col,col) == true )
+      if( L.in_range(col,col) )
         {
         L.at(col,col) = eT(1);
         }

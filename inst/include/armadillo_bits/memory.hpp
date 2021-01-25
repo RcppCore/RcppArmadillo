@@ -29,11 +29,6 @@ class memory
   template<typename eT> arma_inline static bool      is_aligned(const eT*  mem);
   template<typename eT> arma_inline static void mark_as_aligned(      eT*& mem);
   template<typename eT> arma_inline static void mark_as_aligned(const eT*& mem);
-  
-  // deprecated functions that will be removed
-  
-  inline arma_deprecated static uword enlarge_to_mult_of_chunksize(const uword n_elem);         //! NOTE: do not use this function; it will be removed
-  template<typename eT> inline arma_deprecated static eT* acquire_chunked(const uword n_elem);  //! NOTE: do not use this function; it will be removed
   };
 
 
@@ -207,29 +202,6 @@ memory::mark_as_aligned(const eT*& mem)
     arma_ignore(mem);
     }
   #endif
-  }
-
-
-
-//! NOTE: do not use this function; it will be removed
-inline
-arma_deprecated
-uword
-memory::enlarge_to_mult_of_chunksize(const uword n_elem)   //! NOTE: do not use this function; it will be removed
-  {
-  return n_elem;
-  }
-
-
-
-//! NOTE: do not use this function; it will be removed
-template<typename eT>
-inline
-arma_deprecated
-eT*
-memory::acquire_chunked(const uword n_elem)   //! NOTE: do not use this function; it will be removed
-  {
-  return memory::acquire<eT>(n_elem);
   }
 
 

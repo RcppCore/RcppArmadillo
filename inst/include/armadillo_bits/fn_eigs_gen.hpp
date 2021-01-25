@@ -22,18 +22,16 @@
 template<typename T1>
 arma_warn_unused
 inline
-Col< std::complex<typename T1::pod_type> >
+typename enable_if2< is_real<typename T1::pod_type>::value, Col< std::complex<typename T1::pod_type> > >::result
 eigs_gen
   (
   const SpBase<typename T1::elem_type, T1>& X,
   const uword                               n_eigvals,
   const char*                               form = "lm",
-  const eigs_opts                           opts = eigs_opts(),
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
+  const eigs_opts                           opts = eigs_opts()
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
   typedef typename T1::pod_type T;
   
@@ -59,18 +57,16 @@ eigs_gen
 template<typename T1>
 arma_deprecated
 inline
-Col< std::complex<typename T1::pod_type> >
+typename enable_if2< is_real<typename T1::pod_type>::value, Col< std::complex<typename T1::pod_type> > >::result
 eigs_gen
   (
   const SpBase<typename T1::elem_type, T1>& X,
   const uword                               n_eigvals,
   const char*                               form,
-  const typename T1::pod_type               tol,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
+  const typename T1::pod_type               tol
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
   eigs_opts opts;
   opts.tol = tol;
@@ -80,22 +76,95 @@ eigs_gen
 
 
 
+template<typename T1>
+arma_warn_unused
+inline
+typename enable_if2< is_real<typename T1::pod_type>::value, Col< std::complex<typename T1::pod_type> > >::result
+eigs_gen
+  (
+  const SpBase<typename T1::elem_type, T1>& X,
+  const uword                               n_eigvals,
+  const std::complex<typename T1::pod_type> sigma,
+  const eigs_opts                           opts = eigs_opts()
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::pod_type T;
+  
+  Mat< std::complex<T> > eigvec;
+  Col< std::complex<T> > eigval;
+  
+  bool status = false;
+  
+  // If X is real and sigma is truly complex, treat X as complex.
+  // The reason is that we are still not able to apply truly complex shifts to real matrices
+  if( (is_real<typename T1::elem_type>::yes) && (std::imag(sigma) != T(0)) )
+    {
+    status = sp_auxlib::eigs_gen(eigval, eigvec, conv_to< SpMat< std::complex<T> > >::from(X), n_eigvals, sigma, opts);
+    }
+  else
+    {
+    status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, sigma, opts);
+    }
+  
+  if(status == false)
+    {
+    eigval.soft_reset();
+    arma_stop_runtime_error("eigs_gen(): decomposition failed");
+    }
+  
+  return eigval;
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+inline
+typename enable_if2< is_real<typename T1::pod_type>::value, Col< std::complex<typename T1::pod_type> > >::result
+eigs_gen
+  (
+  const SpBase<typename T1::elem_type, T1>& X,
+  const uword                               n_eigvals,
+  const double                              sigma,
+  const eigs_opts                           opts = eigs_opts()
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::pod_type T;
+  
+  Mat< std::complex<T> > eigvec;
+  Col< std::complex<T> > eigval;
+  
+  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, std::complex<T>(T(sigma)), opts);
+  
+  if(status == false)
+    {
+    eigval.soft_reset();
+    arma_stop_runtime_error("eigs_gen(): decomposition failed");
+    }
+  
+  return eigval;
+  }
+
+
+
 //! eigenvalues of general sparse matrix X
 template<typename T1>
 inline
-bool
+typename enable_if2< is_real<typename T1::pod_type>::value, bool >::result
 eigs_gen
   (
            Col< std::complex<typename T1::pod_type> >& eigval,
   const SpBase<typename T1::elem_type, T1>&            X,
   const uword                                          n_eigvals,
   const char*                                          form = "lm",
-  const eigs_opts                                      opts = eigs_opts(),
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
+  const eigs_opts                                      opts = eigs_opts()
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
   typedef typename T1::pod_type T;
   
@@ -120,19 +189,17 @@ eigs_gen
 template<typename T1>
 arma_deprecated
 inline
-bool
+typename enable_if2< is_real<typename T1::pod_type>::value, bool >::result
 eigs_gen
   (
            Col< std::complex<typename T1::pod_type> >& eigval,
   const SpBase<typename T1::elem_type, T1>&            X,
   const uword                                          n_eigvals,
   const char*                                          form,
-  const typename T1::pod_type                          tol,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
+  const typename T1::pod_type                          tol
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
   eigs_opts opts;
   opts.tol = tol;
@@ -142,10 +209,83 @@ eigs_gen
 
 
 
+template<typename T1>
+inline
+typename enable_if2< is_real<typename T1::pod_type>::value, bool >::result
+eigs_gen
+  (
+           Col< std::complex<typename T1::pod_type> >& eigval,
+  const SpBase<typename T1::elem_type, T1>&            X,
+  const uword                                          n_eigvals,
+  const std::complex<typename T1::pod_type>            sigma,
+  const eigs_opts                                      opts = eigs_opts()
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::pod_type T;
+  
+  Mat< std::complex<T> > eigvec;
+  
+  bool status = false;
+  
+  // If X is real and sigma is truly complex, treat X as complex.
+  // The reason is that we are still not able to apply truly complex shifts to real matrices
+  if( (is_real<typename T1::elem_type>::yes) && (std::imag(sigma) != T(0)) )
+    {
+    status = sp_auxlib::eigs_gen(eigval, eigvec, conv_to< SpMat< std::complex<T> > >::from(X), n_eigvals, sigma, opts);
+    }
+  else
+    {
+    status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, sigma, opts);
+    }
+  
+  if(status == false)
+    {
+    eigval.soft_reset();
+    arma_debug_warn("eigs_gen(): decomposition failed");
+    }
+  
+  return status;
+  }
+
+
+
+template<typename T1>
+inline
+typename enable_if2< is_real<typename T1::pod_type>::value, bool >::result
+eigs_gen
+  (
+           Col< std::complex<typename T1::pod_type> >& eigval,
+  const SpBase<typename T1::elem_type, T1>&            X,
+  const uword                                          n_eigvals,
+  const double                                         sigma,
+  const eigs_opts                                      opts = eigs_opts()
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::pod_type T;
+  
+  Mat< std::complex<T> > eigvec;
+  
+  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, std::complex<T>(T(sigma)), opts);
+  
+  if(status == false)
+    {
+    eigval.soft_reset();
+    arma_debug_warn("eigs_gen(): decomposition failed");
+    }
+  
+  return status;
+  }
+
+
+
 //! eigenvalues and eigenvectors of general sparse matrix X
 template<typename T1>
 inline
-bool
+typename enable_if2< is_real<typename T1::pod_type>::value, bool >::result
 eigs_gen
   (
          Col< std::complex<typename T1::pod_type> >& eigval,
@@ -153,12 +293,12 @@ eigs_gen
   const SpBase<typename T1::elem_type, T1>&          X,
   const uword                                        n_eigvals,
   const char*                                        form = "lm",
-  const eigs_opts                                    opts = eigs_opts(),
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
+  const eigs_opts                                    opts = eigs_opts()
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
+  
+  // typedef typename T1::pod_type T;
   
   arma_debug_check( void_ptr(&eigval) == void_ptr(&eigvec), "eigs_gen(): parameter 'eigval' is an alias of parameter 'eigvec'" );
   
@@ -182,7 +322,7 @@ eigs_gen
 template<typename T1>
 arma_deprecated
 inline
-bool
+typename enable_if2< is_real<typename T1::pod_type>::value, bool >::result
 eigs_gen
   (
          Col< std::complex<typename T1::pod_type> >& eigval,
@@ -190,17 +330,92 @@ eigs_gen
   const SpBase<typename T1::elem_type, T1>&          X,
   const uword                                        n_eigvals,
   const char*                                        form,
-  const typename T1::pod_type                        tol,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
+  const typename T1::pod_type                        tol
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
   eigs_opts opts;
   opts.tol = tol;
   
   return eigs_gen(eigval, eigvec, X, n_eigvals, form, opts);
+  }
+
+
+
+template<typename T1>
+inline
+typename enable_if2< is_real<typename T1::pod_type>::value, bool >::result
+eigs_gen
+  (
+         Col< std::complex<typename T1::pod_type> >& eigval,
+         Mat< std::complex<typename T1::pod_type> >& eigvec,
+  const SpBase<typename T1::elem_type, T1>&          X,
+  const uword                                        n_eigvals,
+  const std::complex<typename T1::pod_type>          sigma,
+  const eigs_opts                                    opts = eigs_opts()
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::pod_type T;
+  
+  arma_debug_check( void_ptr(&eigval) == void_ptr(&eigvec), "eigs_gen(): parameter 'eigval' is an alias of parameter 'eigvec'" );
+  
+  bool status = false;
+  
+  // If X is real and sigma is truly complex, treat X as complex.
+  // The reason is that we are still not able to apply truly complex shifts to real matrices
+  if( (is_real<typename T1::elem_type>::yes) && (std::imag(sigma) != T(0)) )
+    {
+    status = sp_auxlib::eigs_gen(eigval, eigvec, conv_to< SpMat< std::complex<T> > >::from(X), n_eigvals, sigma, opts);
+    }
+  else
+    {
+    status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, sigma, opts);
+    }
+  
+  if(status == false)
+    {
+    eigval.soft_reset();
+    eigvec.soft_reset();
+    arma_debug_warn("eigs_gen(): decomposition failed");
+    }
+  
+  return status;
+  }
+
+
+
+template<typename T1>
+inline
+typename enable_if2< is_real<typename T1::pod_type>::value, bool >::result
+eigs_gen
+  (
+         Col< std::complex<typename T1::pod_type> >& eigval,
+         Mat< std::complex<typename T1::pod_type> >& eigvec,
+  const SpBase<typename T1::elem_type, T1>&          X,
+  const uword                                        n_eigvals,
+  const double                                       sigma,
+  const eigs_opts                                    opts = eigs_opts()
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::pod_type T;
+  
+  arma_debug_check( void_ptr(&eigval) == void_ptr(&eigvec), "eigs_gen(): parameter 'eigval' is an alias of parameter 'eigvec'" );
+  
+  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, std::complex<T>(T(sigma)), opts);
+  
+  if(status == false)
+    {
+    eigval.soft_reset();
+    eigvec.soft_reset();
+    arma_debug_warn("eigs_gen(): decomposition failed");
+    }
+  
+  return status;
   }
 
 

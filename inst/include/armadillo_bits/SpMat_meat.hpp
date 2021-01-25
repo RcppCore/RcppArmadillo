@@ -339,10 +339,7 @@ SpMat<eT>::SpMat(const Base<uword,T1>& locations_expr, const Base<eT,T2>& vals_e
   const uword N_old = vals.n_elem;
         uword N_new = 0;
   
-  for(uword i = 0; i < N_old; ++i)
-    {
-    if(vals[i] != eT(0))  { ++N_new; }
-    }
+  for(uword i=0; i < N_old; ++i)  { N_new += (vals[i] != eT(0)) ? uword(1) : uword(0); }
   
   if(N_new != N_old)
     {
@@ -412,10 +409,7 @@ SpMat<eT>::SpMat(const Base<uword,T1>& locations_expr, const Base<eT,T2>& vals_e
     const uword N_old = vals.n_elem;
           uword N_new = 0;
     
-    for(uword i = 0; i < N_old; ++i)
-      {
-      if(vals[i] != eT(0))  { ++N_new; }
-      }
+    for(uword i=0; i < N_old; ++i)  { N_new += (vals[i] != eT(0)) ? uword(1) : uword(0); }
     
     if(N_new != N_old)
       {
@@ -484,10 +478,7 @@ SpMat<eT>::SpMat(const bool add_values, const Base<uword,T1>& locations_expr, co
     const uword N_old = vals.n_elem;
           uword N_new = 0;
     
-    for(uword i = 0; i < N_old; ++i)
-      {
-      if(vals[i] != eT(0))  { ++N_new; }
-      }
+    for(uword i=0; i < N_old; ++i)  { N_new += (vals[i] != eT(0)) ? uword(1) : uword(0); }
     
     if(N_new != N_old)
       {
@@ -597,9 +588,9 @@ SpMat<eT>::operator=(const eT val)
     init(1, 1, 1); // Sets col_ptrs to 0.
     
     // Manually set element.
-    access::rw(values[0]) = val;
+    access::rw(values[0])      = val;
     access::rw(row_indices[0]) = 0;
-    access::rw(col_ptrs[1]) = 1;
+    access::rw(col_ptrs[1])    = 1;
     }
   else
     {
@@ -778,16 +769,14 @@ SpMat<eT>::operator/=(const SpMat<eT>& x)
   {
   arma_extra_debug_sigprint();
   
+  // NOTE: use of this function is not advised; it is implemented only for completeness
+  
   arma_debug_assert_same_size(n_rows, n_cols, x.n_rows, x.n_cols, "element-wise division");
   
-  // If you use this method, you are probably stupid or misguided,
-  // but for compatibility with Mat, we have implemented it anyway.
   for(uword c = 0; c < n_cols; ++c)
+  for(uword r = 0; r < n_rows; ++r)
     {
-    for(uword r = 0; r < n_rows; ++r)
-      {
-      at(r, c) /= x.at(r, c);
-      }
+    at(r, c) /= x.at(r, c);
     }
   
   return *this;
@@ -974,10 +963,7 @@ SpMat<eT>::operator=(const Base<eT, T1>& expr)
   
   const eT* x_mem = x.memptr();
   
-  for(uword i = 0; i < x_n_elem; ++i)
-    {
-    n += (x_mem[i] != eT(0)) ? uword(1) : uword(0);
-    }
+  for(uword i=0; i < x_n_elem; ++i)  { n += (x_mem[i] != eT(0)) ? uword(1) : uword(0); }
   
   init(x_n_rows, x_n_cols, n);
   
@@ -3613,7 +3599,7 @@ SpMat<eT>::in_range(const span& x) const
   {
   arma_extra_debug_sigprint();
   
-  if(x.whole == true)
+  if(x.whole)
     {
     return true;
     }
@@ -3648,7 +3634,7 @@ SpMat<eT>::in_range(const span& row_span, const uword in_col) const
   {
   arma_extra_debug_sigprint();
   
-  if(row_span.whole == true)
+  if(row_span.whole)
     {
     return (in_col < n_cols);
     }
@@ -3671,7 +3657,7 @@ SpMat<eT>::in_range(const uword in_row, const span& col_span) const
   {
   arma_extra_debug_sigprint();
   
-  if(col_span.whole == true)
+  if(col_span.whole)
     {
     return (in_row < n_rows);
     }
@@ -3703,7 +3689,7 @@ SpMat<eT>::in_range(const span& row_span, const span& col_span) const
   const bool rows_ok = row_span.whole ? true : ( (in_row1 <= in_row2) && (in_row2 < n_rows) );
   const bool cols_ok = col_span.whole ? true : ( (in_col1 <= in_col2) && (in_col2 < n_cols) );
   
-  return ( (rows_ok == true) && (cols_ok == true) );
+  return ( rows_ok && cols_ok );
   }
 
 
@@ -3725,201 +3711,6 @@ SpMat<eT>::in_range(const uword in_row, const uword in_col, const SizeMat& s) co
     {
     return true;
     }
-  }
-
-
-
-template<typename eT>
-arma_cold
-inline
-void
-SpMat<eT>::impl_print(const std::string& extra_text) const
-  {
-  arma_extra_debug_sigprint();
-  
-  sync_csc();
-  
-  if(extra_text.length() != 0)
-    {
-    const std::streamsize orig_width = get_cout_stream().width();
-    
-    get_cout_stream() << extra_text << '\n';
-    
-    get_cout_stream().width(orig_width);
-    }
-  
-  arma_ostream::print(get_cout_stream(), *this, true);
-  }
-
-
-
-template<typename eT>
-arma_cold
-inline
-void
-SpMat<eT>::impl_print(std::ostream& user_stream, const std::string& extra_text) const
-  {
-  arma_extra_debug_sigprint();
-  
-  sync_csc();
-  
-  if(extra_text.length() != 0)
-    {
-    const std::streamsize orig_width = user_stream.width();
-    
-    user_stream << extra_text << '\n';
-    
-    user_stream.width(orig_width);
-    }
-  
-  arma_ostream::print(user_stream, *this, true);
-  }
-
-
-
-template<typename eT>
-arma_cold
-inline
-void
-SpMat<eT>::impl_raw_print(const std::string& extra_text) const
-  {
-  arma_extra_debug_sigprint();
-  
-  sync_csc();
-  
-  if(extra_text.length() != 0)
-    {
-    const std::streamsize orig_width = get_cout_stream().width();
-    
-    get_cout_stream() << extra_text << '\n';
-    
-    get_cout_stream().width(orig_width);
-    }
-  
-  arma_ostream::print(get_cout_stream(), *this, false);
-  }
-
-
-template<typename eT>
-arma_cold
-inline
-void
-SpMat<eT>::impl_raw_print(std::ostream& user_stream, const std::string& extra_text) const
-  {
-  arma_extra_debug_sigprint();
-  
-  sync_csc();
-  
-  if(extra_text.length() != 0)
-    {
-    const std::streamsize orig_width = user_stream.width();
-    
-    user_stream << extra_text << '\n';
-    
-    user_stream.width(orig_width);
-    }
-  
-  arma_ostream::print(user_stream, *this, false);
-  }
-
-
-
-/**
- * Matrix printing, prepends supplied text.
- * Prints 0 wherever no element exists.
- */
-template<typename eT>
-arma_cold
-inline
-void
-SpMat<eT>::impl_print_dense(const std::string& extra_text) const
-  {
-  arma_extra_debug_sigprint();
-  
-  sync_csc();
-  
-  if(extra_text.length() != 0)
-    {
-    const std::streamsize orig_width = get_cout_stream().width();
-    
-    get_cout_stream() << extra_text << '\n';
-    
-    get_cout_stream().width(orig_width);
-    }
-  
-  arma_ostream::print_dense(get_cout_stream(), *this, true);
-  }
-
-
-
-template<typename eT>
-arma_cold
-inline
-void
-SpMat<eT>::impl_print_dense(std::ostream& user_stream, const std::string& extra_text) const
-  {
-  arma_extra_debug_sigprint();
-  
-  sync_csc();
-  
-  if(extra_text.length() != 0)
-    {
-    const std::streamsize orig_width = user_stream.width();
-    
-    user_stream << extra_text << '\n';
-    
-    user_stream.width(orig_width);
-    }
-  
-  arma_ostream::print_dense(user_stream, *this, true);
-  }
-
-
-
-template<typename eT>
-arma_cold
-inline
-void
-SpMat<eT>::impl_raw_print_dense(const std::string& extra_text) const
-  {
-  arma_extra_debug_sigprint();
-  
-  sync_csc();
-  
-  if(extra_text.length() != 0)
-    {
-    const std::streamsize orig_width = get_cout_stream().width();
-    
-    get_cout_stream() << extra_text << '\n';
-    
-    get_cout_stream().width(orig_width);
-    }
-  
-  arma_ostream::print_dense(get_cout_stream(), *this, false);
-  }
-
-
-
-template<typename eT>
-arma_cold
-inline
-void
-SpMat<eT>::impl_raw_print_dense(std::ostream& user_stream, const std::string& extra_text) const
-  {
-  arma_extra_debug_sigprint();
-  
-  sync_csc();
-  
-  if(extra_text.length() != 0)
-    {
-    const std::streamsize orig_width = user_stream.width();
-    
-    user_stream << extra_text << '\n';
-    
-    user_stream.width(orig_width);
-    }
-  
-  arma_ostream::print_dense(user_stream, *this, false);
   }
 
 
@@ -4823,7 +4614,7 @@ SpMat<eT>::save(const csv_name& spec, const file_type type, const bool print_sta
     save_okay = diskio::save_csv_ascii(*this, spec.filename, spec.header_ro, with_header);
     }
   
-  if((print_status == true) && (save_okay == false))
+  if(print_status && (save_okay == false))
     {
     arma_debug_warn("SpMat::save(): couldn't write to ", spec.filename);
     }
@@ -4921,10 +4712,7 @@ SpMat<eT>::load(const std::string name, const file_type type, const bool print_s
       }
     }
   
-  if(load_okay == false)
-    {
-    (*this).reset();
-    }
+  if(load_okay == false)  { (*this).reset(); }
   
   return load_okay;
   }
@@ -4982,7 +4770,7 @@ SpMat<eT>::load(const csv_name& spec, const file_type type, const bool print_sta
     load_okay = diskio::load_csv_ascii(*this, spec.filename, err_msg, spec.header_rw, with_header);
     }
   
-  if(print_status == true)
+  if(print_status)
     {
     if(load_okay == false)
       {
@@ -5067,10 +4855,7 @@ SpMat<eT>::load(std::istream& is, const file_type type, const bool print_status)
       }
     }
   
-  if(load_okay == false)
-    {
-    (*this).reset();
-    }
+  if(load_okay == false)  { (*this).reset(); }
   
   return load_okay;
   }
@@ -5424,7 +5209,7 @@ SpMat<eT>::init_batch_std(const Mat<uword>& locs, const Mat<eT>& vals, const boo
   
   bool actually_sorted = true;
   
-  if(sort_locations == true)
+  if(sort_locations)
     {
     // check if we really need a time consuming sort
     
@@ -5567,7 +5352,7 @@ SpMat<eT>::init_batch_add(const Mat<uword>& locs, const Mat<eT>& vals, const boo
   
   bool actually_sorted = true;
   
-  if(sort_locations == true)
+  if(sort_locations)
     {
     // sort_index() uses std::sort() which may use quicksort... so we better
     // make sure it's not already sorted before taking an O(N^2) sort penalty.
@@ -5995,7 +5780,7 @@ SpMat<eT>::init_xform_mt(const SpBase<eT2,T1>& A, const Functor& func)
   
   const SpProxy<T1> P(A.get_ref());
   
-  if( (P.is_alias(*this) == true) || (is_SpMat<typename SpProxy<T1>::stored_type>::value == true) )
+  if( P.is_alias(*this) || (is_SpMat<typename SpProxy<T1>::stored_type>::value) )
     {
     // NOTE: unwrap_spmat will convert a submatrix to a matrix, which in effect takes care of aliasing with submatrices;
     // NOTE: however, when more delayed ops are implemented, more elaborate handling of aliasing will be necessary

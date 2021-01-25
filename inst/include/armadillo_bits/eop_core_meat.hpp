@@ -1152,6 +1152,9 @@ eop_core<eop_erfc             >::process(const eT val, const eT  ) { return eop_
 template<> template<typename eT> arma_hot arma_inline eT
 eop_core<eop_lgamma           >::process(const eT val, const eT  ) { return eop_aux::lgamma(val);     }
 
+template<> template<typename eT> arma_hot arma_inline eT
+eop_core<eop_tgamma           >::process(const eT val, const eT  ) { return eop_aux::tgamma(val);     }
+
 
 #undef arma_applier_1u
 #undef arma_applier_1a

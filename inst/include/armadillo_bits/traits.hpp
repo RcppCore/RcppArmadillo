@@ -934,15 +934,27 @@ struct is_double<double>
 
 template<typename T1>
 struct is_real
-  { static constexpr bool value = false; };
+  {
+  static constexpr bool value = false;
+  static constexpr bool yes   = false;
+  static constexpr bool no    = true;
+  };
 
 template<>
 struct is_real<float>
-  { static constexpr bool value = true; };
+  {
+  static constexpr bool value = true;
+  static constexpr bool yes   = true;
+  static constexpr bool no    = false;
+  };
   
 template<>
 struct is_real<double>
-  { static constexpr bool value = true; };
+  {
+  static constexpr bool value = true;
+  static constexpr bool yes   = true;
+  static constexpr bool no    = false;
+  };
 
 
 

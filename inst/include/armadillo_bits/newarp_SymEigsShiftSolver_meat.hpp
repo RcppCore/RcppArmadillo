@@ -14,46 +14,35 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup arma_version
-//! @{
+namespace newarp
+{
 
 
-
-#define ARMA_VERSION_MAJOR 10
-#define ARMA_VERSION_MINOR 2
-#define ARMA_VERSION_PATCH 0
-#define ARMA_VERSION_NAME  "Cicada Swarm"
-
-
-
-struct arma_version
+template<typename eT, int SelectionRule, typename OpType>
+inline
+void
+SymEigsShiftSolver<eT, SelectionRule, OpType>::sort_ritzpair()
   {
-  static constexpr unsigned int major = ARMA_VERSION_MAJOR;
-  static constexpr unsigned int minor = ARMA_VERSION_MINOR;
-  static constexpr unsigned int patch = ARMA_VERSION_PATCH;
-  
-  static
-  inline
-  std::string
-  as_string()
+  arma_extra_debug_sigprint();
+
+  // First transform back the Ritz values, and then sort
+  for(uword i = 0; i < this->nev; i++)
     {
-    const char* nickname = ARMA_VERSION_NAME;
-    
-    std::ostringstream ss;
-    
-    ss << arma_version::major
-       << '.'
-       << arma_version::minor
-       << '.'
-       << arma_version::patch
-       << " ("
-       << nickname
-       << ')';
-    
-    return ss.str();
+    this->ritz_val(i) = eT(1.0) / this->ritz_val(i) + sigma;
     }
-  };
+  SymEigsSolver<eT, SelectionRule, OpType>::sort_ritzpair();
+  }
 
 
 
-//! @}
+template<typename eT, int SelectionRule, typename OpType>
+inline
+SymEigsShiftSolver<eT, SelectionRule, OpType>::SymEigsShiftSolver(const OpType& op_, uword nev_, uword ncv_, const eT sigma_)
+  : SymEigsSolver<eT, SelectionRule, OpType>::SymEigsSolver(op_, nev_, ncv_)
+  , sigma(sigma_)
+  {
+  arma_extra_debug_sigprint();
+  }
+
+
+}  // namespace newarp

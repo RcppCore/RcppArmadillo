@@ -190,18 +190,18 @@ arma_ostream::modify_stream(std::ostream& o, typename SpMat<eT>::const_iterator 
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk);
-
+  
   o.unsetf(ios::showbase);
   o.unsetf(ios::uppercase);
   o.unsetf(ios::showpos);
-
+  
   o.fill(' ');
-
+  
   std::streamsize cell_width;
-
+  
   bool use_layout_B  = false;
   bool use_layout_C  = false;
-
+  
   for(typename SpMat<eT>::const_iterator it = begin; it.pos() < n_elem; ++it)
     {
     const eT val = (*it);
@@ -218,7 +218,7 @@ arma_ostream::modify_stream(std::ostream& o, typename SpMat<eT>::const_iterator 
       use_layout_C = true;
       break;
       }
-
+    
     if(
       (val >= eT(+10)) || ( (is_signed<eT>::value) && (val <= eT(-10)) )
       )
@@ -226,7 +226,7 @@ arma_ostream::modify_stream(std::ostream& o, typename SpMat<eT>::const_iterator 
       use_layout_B = true;
       }
     }
-
+  
   if(use_layout_C)
     {
     o.setf(ios::scientific);
@@ -259,10 +259,10 @@ arma_ostream::modify_stream(std::ostream& o, typename SpMat<eT>::const_iterator 
 
 
 //! "better than nothing" settings for complex numbers
-template<typename T>
+template<typename eT>
 inline
 std::streamsize
-arma_ostream::modify_stream(std::ostream& o, typename SpMat<T>::const_iterator begin, const uword n_elem, const typename arma_cx_only<T>::result* junk)
+arma_ostream::modify_stream(std::ostream& o, typename SpMat<eT>::const_iterator begin, const uword n_elem, const typename arma_cx_only<eT>::result* junk)
   {
   arma_ignore(begin);
   arma_ignore(n_elem);
@@ -474,6 +474,14 @@ arma_ostream::print(std::ostream& o, const Mat<eT>& m, const bool modify)
     }
   else
     {
+    if(modify)
+      {
+      o.unsetf(ios::showbase);
+      o.unsetf(ios::uppercase);
+      o.unsetf(ios::showpos);
+      o.setf(ios::fixed);
+      }
+    
     o << "[matrix size: " << m_n_rows << 'x' << m_n_cols << "]\n";
     }
   
@@ -500,16 +508,24 @@ arma_ostream::print(std::ostream& o, const Cube<eT>& x, const bool modify)
       {
       const Mat<eT> tmp(const_cast<eT*>(x.slice_memptr(slice)), x.n_rows, x.n_cols, false);
       
-      o << "[cube slice " << slice << ']' << '\n';
+      o << "[cube slice: " << slice << ']' << '\n';
       arma_ostream::print(o, tmp, modify);
       o << '\n';
       }
     }
   else
     {
+    if(modify)
+      {
+      o.unsetf(ios::showbase);
+      o.unsetf(ios::uppercase);
+      o.unsetf(ios::showpos);
+      o.setf(ios::fixed);
+      }
+    
     o << "[cube size: " << x.n_rows << 'x' << x.n_cols << 'x' << x.n_slices <<  "]\n";
     }
-
+  
   stream_state.restore(o);
   }
 
@@ -538,11 +554,11 @@ arma_ostream::print(std::ostream& o, const field<oT>& x)
     {
     if(x_n_slices == 1)
       {
-      for(uword col=0; col<x_n_cols; ++col)
+      for(uword col=0; col < x_n_cols; ++col)
         {
-        o << "[field column " << col << ']' << '\n'; 
+        o << "[field column: " << col << ']' << '\n'; 
         
-        for(uword row=0; row<x_n_rows; ++row)
+        for(uword row=0; row < x_n_rows; ++row)
           {
           o.width(cell_width);
           o << x.at(row,col) << '\n';
@@ -553,15 +569,15 @@ arma_ostream::print(std::ostream& o, const field<oT>& x)
       }
     else
       {
-      for(uword slice=0; slice<x_n_slices; ++slice)
+      for(uword slice=0; slice < x_n_slices; ++slice)
         {
-        o << "[field slice " << slice << ']' << '\n';
+        o << "[field slice: " << slice << ']' << '\n';
         
-        for(uword col=0; col<x_n_cols; ++col)
+        for(uword col=0; col < x_n_cols; ++col)
           {
-          o << "[field column " << col << ']' << '\n';
+          o << "[field column: " << col << ']' << '\n';
           
-          for(uword row=0; row<x_n_rows; ++row)
+          for(uword row=0; row < x_n_rows; ++row)
             {
             o.width(cell_width);
             o << x.at(row,col,slice) << '\n';
@@ -576,6 +592,11 @@ arma_ostream::print(std::ostream& o, const field<oT>& x)
     }
   else
     {
+    o.unsetf(ios::showbase);
+    o.unsetf(ios::uppercase);
+    o.unsetf(ios::showpos);
+    o.setf(ios::fixed);
+    
     o << "[field size: " << x_n_rows << 'x' << x_n_cols << 'x' << x_n_slices << "]\n";
     }
   
@@ -607,9 +628,9 @@ arma_ostream::print(std::ostream& o, const subview_field<oT>& x)
     {
     if(x_n_slices == 1)
       {
-      for(uword col=0; col<x_n_cols; ++col)
+      for(uword col=0; col < x_n_cols; ++col)
         {
-        o << "[field column " << col << ']' << '\n'; 
+        o << "[field column: " << col << ']' << '\n'; 
         for(uword row=0; row<x_n_rows; ++row)
           {
           o.width(cell_width);
@@ -621,15 +642,15 @@ arma_ostream::print(std::ostream& o, const subview_field<oT>& x)
       }
     else
       {
-      for(uword slice=0; slice<x_n_slices; ++slice)
+      for(uword slice=0; slice < x_n_slices; ++slice)
         {
-        o << "[field slice " << slice << ']' << '\n';
+        o << "[field slice: " << slice << ']' << '\n';
         
-        for(uword col=0; col<x_n_cols; ++col)
+        for(uword col=0; col < x_n_cols; ++col)
           {
-          o << "[field column " << col << ']' << '\n';
+          o << "[field column: " << col << ']' << '\n';
           
-          for(uword row=0; row<x_n_rows; ++row)
+          for(uword row=0; row < x_n_rows; ++row)
             {
             o.width(cell_width);
             o << x.at(row,col,slice) << '\n';
@@ -644,6 +665,11 @@ arma_ostream::print(std::ostream& o, const subview_field<oT>& x)
     }
   else
     {
+    o.unsetf(ios::showbase);
+    o.unsetf(ios::uppercase);
+    o.unsetf(ios::showpos);
+    o.setf(ios::fixed);
+    
     o << "[field size: " << x_n_rows << 'x' << x_n_cols << 'x' << x_n_slices << "]\n";
     }
   
@@ -719,6 +745,14 @@ arma_ostream::print_dense(std::ostream& o, const SpMat<eT>& m, const bool modify
     }
   else
     {
+    if(modify)
+      {
+      o.unsetf(ios::showbase);
+      o.unsetf(ios::uppercase);
+      o.unsetf(ios::showpos);
+      o.setf(ios::fixed);
+      }
+    
     o << "[matrix size: " << m_n_rows << 'x' << m_n_cols << "]\n";
     }
   
@@ -789,37 +823,38 @@ arma_ostream::print(std::ostream& o, const SpMat<eT>& m, const bool modify)
     {
     const std::streamsize cell_width = modify ? arma_ostream::modify_stream<eT>(o, m.begin(), m_n_nonzero) : o.width();
     
-    typename SpMat<eT>::const_iterator begin = m.begin();
-    typename SpMat<eT>::const_iterator m_end = m.end();
+    typename SpMat<eT>::const_iterator it     = m.begin();
+    typename SpMat<eT>::const_iterator it_end = m.end();
     
-    while(begin != m_end)
+    while(it != it_end)
       {
-      const uword row = begin.row();
+      const uword row = it.row();
+      const uword col = it.col();
       
       // TODO: change the maximum number of spaces before and after each location to be dependent on n_rows and n_cols
       
-           if(row < 10)      { o << "     "; }
-      else if(row < 100)     { o << "    ";  }
-      else if(row < 1000)    { o << "   ";   }
-      else if(row < 10000)   { o << "  ";    }
-      else if(row < 100000)  { o << ' ';     }
-      
-      const uword col = begin.col();
+           if(row < 10)       { o << "      "; }
+      else if(row < 100)      { o << "     ";  }
+      else if(row < 1000)     { o << "    ";   }
+      else if(row < 10000)    { o << "   ";    }
+      else if(row < 100000)   { o << "  ";     }
+      else if(row < 1000000)  { o << ' ';      }
       
       o << '(' << row << ", " << col << ") ";
       
-           if(col < 10)      { o << "     "; }
-      else if(col < 100)     { o << "    ";  }
-      else if(col < 1000)    { o << "   ";   }
-      else if(col < 10000)   { o << "  ";    }
-      else if(col < 100000)  { o << ' ';     }
+           if(col < 10)       { o << "      "; }
+      else if(col < 100)      { o << "     ";  }
+      else if(col < 1000)     { o << "    ";   }
+      else if(col < 10000)    { o << "   ";    }
+      else if(col < 100000)   { o << "  ";     }
+      else if(col < 1000000)  { o << ' ';      }
       
       if(cell_width > 0) { o.width(cell_width); }
         
-      arma_ostream::print_elem(o, eT(*begin), modify);
+      arma_ostream::print_elem(o, eT(*it), modify);
       o << '\n';
       
-      ++begin;
+      ++it;
       }
     
     o << '\n';
@@ -870,6 +905,372 @@ arma_ostream::print(std::ostream& o, const SizeCube& S)
     
   o << S.n_rows << 'x' << S.n_cols << 'x' << S.n_slices;
   
+  stream_state.restore(o);
+  }
+
+
+
+template<typename eT>
+arma_cold
+inline
+void
+arma_ostream::brief_print(std::ostream& o, const Mat<eT>& m, const bool print_size)
+  {
+  arma_extra_debug_sigprint();
+  
+  const arma_ostream_state stream_state(o);
+  
+  if(print_size)
+    {
+    o.unsetf(ios::showbase);
+    o.unsetf(ios::uppercase);
+    o.unsetf(ios::showpos);
+    o.setf(ios::fixed);
+    
+    o << "[matrix size: " << m.n_rows << 'x' << m.n_cols << "]\n";
+    }
+  
+  if(m.n_elem == 0)  { o.flush(); stream_state.restore(o); return; }
+  
+  if((m.n_rows <= 5) && (m.n_cols <= 5))  { arma_ostream::print(o, m, true); return; }
+  
+  const bool print_row_ellipsis = (m.n_rows >= 6);
+  const bool print_col_ellipsis = (m.n_cols >= 6);
+  
+  if( (print_row_ellipsis == true) && (print_col_ellipsis == true) )
+    {
+    Mat<eT> X(4,4);
+    
+    X( span(0,2), span(0,2) ) = m( span(0,2),  span(0,2)  );  // top left submatrix
+    X( 3,         span(0,2) ) = m( m.n_rows-1, span(0,2)  );  // truncated last row
+    X( span(0,2), 3         ) = m( span(0,2),  m.n_cols-1 );  // truncated last column
+    X( 3,         3         ) = m( m.n_rows-1, m.n_cols-1 );  // bottom right element
+    
+    const std::streamsize cell_width = arma_ostream::modify_stream(o, X.memptr(), X.n_elem);
+    
+    for(uword row=0; row <= 2; ++row)
+      {
+      for(uword col=0; col <= 2; ++col)
+        {
+        o.width(cell_width);
+        arma_ostream::print_elem(o, X.at(row,col), true);
+        }
+      
+      o.width(6);
+      o << "...";
+      
+      o.width(cell_width);
+      o << X.at(row,3) << '\n';
+      }
+    
+    for(uword col=0; col <= 2; ++col)
+      {
+      o.width(cell_width);
+      o << ':';
+      }
+    
+    o.width(6);
+    o << "...";
+    
+    o.width(cell_width);
+    o << ':' << '\n';
+    
+    const uword row = 3;
+      {
+      for(uword col=0; col <= 2; ++col)
+        {
+        o.width(cell_width);
+        arma_ostream::print_elem(o, X.at(row,col), true);
+        }
+      
+      o.width(6);
+      o << "...";
+      
+      o.width(cell_width);
+      o << X.at(row,3) << '\n';
+      }
+    }
+  
+  
+  if( (print_row_ellipsis == true) && (print_col_ellipsis == false) )
+    {
+    Mat<eT> X(4, m.n_cols);
+    
+    X( span(0,2), span::all ) = m( span(0,2),  span::all );  // top
+    X( 3,         span::all ) = m( m.n_rows-1, span::all );  // bottom
+    
+    const std::streamsize cell_width = arma_ostream::modify_stream(o, X.memptr(), X.n_elem);
+    
+    for(uword row=0; row <= 2; ++row)  // first 3 rows
+      {
+      for(uword col=0; col < m.n_cols; ++col)
+        {
+        o.width(cell_width);
+        arma_ostream::print_elem(o, X.at(row,col), true);
+        }
+      
+      o << '\n';
+      }
+    
+    for(uword col=0; col < m.n_cols; ++col)
+      {
+      o.width(cell_width);
+      o << ':';
+      }
+    
+    o.width(cell_width);
+    o << '\n';
+    
+    const uword row = 3;
+      {
+      for(uword col=0; col < m.n_cols; ++col)
+        {
+        o.width(cell_width);
+        arma_ostream::print_elem(o, X.at(row,col), true);
+        }
+      }
+    
+    o << '\n';
+    }
+  
+  
+  if( (print_row_ellipsis == false) && (print_col_ellipsis == true) )
+    {
+    Mat<eT> X(m.n_rows, 4);
+    
+    X( span::all, span(0,2) ) = m( span::all, span(0,2)  );  // left
+    X( span::all, 3         ) = m( span::all, m.n_cols-1 );  // right
+    
+    const std::streamsize cell_width = arma_ostream::modify_stream(o, X.memptr(), X.n_elem);
+    
+    for(uword row=0; row < m.n_rows; ++row)
+      {
+      for(uword col=0; col <= 2; ++col)
+        {
+        o.width(cell_width);
+        arma_ostream::print_elem(o, X.at(row,col), true);
+        }
+      
+      o.width(6);
+      o << "...";
+      
+      o.width(cell_width);
+      o << X.at(row,3) << '\n';
+      }
+    }
+  
+  
+  o.flush();
+  stream_state.restore(o);
+  }
+
+
+
+template<typename eT>
+arma_cold
+inline
+void
+arma_ostream::brief_print(std::ostream& o, const Cube<eT>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  const arma_ostream_state stream_state(o);
+  
+  o.unsetf(ios::showbase);
+  o.unsetf(ios::uppercase);
+  o.unsetf(ios::showpos);
+  o.setf(ios::fixed);
+  
+  o << "[cube size: " << x.n_rows << 'x' << x.n_cols << 'x' << x.n_slices << "]\n";
+  
+  if(x.n_elem == 0)  { o.flush(); stream_state.restore(o); return; }
+  
+  if(x.n_slices <= 3)
+    {
+    for(uword slice=0; slice < x.n_slices; ++slice)
+      {
+      const Mat<eT> tmp(const_cast<eT*>(x.slice_memptr(slice)), x.n_rows, x.n_cols, false);
+      
+      o << "[cube slice: " << slice << ']' << '\n';
+      arma_ostream::brief_print(o, tmp, false);
+      o << '\n';
+      }
+    }
+  else
+    {
+    for(uword slice=0; slice <= 1; ++slice)
+      {
+      const Mat<eT> tmp(const_cast<eT*>(x.slice_memptr(slice)), x.n_rows, x.n_cols, false);
+      
+      o << "[cube slice: " << slice << ']' << '\n';
+      arma_ostream::brief_print(o, tmp, false);
+      o << '\n';
+      }
+      
+    o << "[cube slice: ...]\n\n";
+    
+    const uword slice = x.n_slices-1;
+      {
+      const Mat<eT> tmp(const_cast<eT*>(x.slice_memptr(slice)), x.n_rows, x.n_cols, false);
+      
+      o << "[cube slice: " << slice << ']' << '\n';
+      arma_ostream::brief_print(o, tmp, false);
+      o << '\n';
+      }
+    }
+  
+  stream_state.restore(o);
+  }
+
+
+
+template<typename eT>
+arma_cold
+inline
+void
+arma_ostream::brief_print(std::ostream& o, const SpMat<eT>& m)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(m.n_nonzero <= 10)  { arma_ostream::print(o, m, true); return; }
+  
+  const arma_ostream_state stream_state(o);
+  
+  o.unsetf(ios::showbase);
+  o.unsetf(ios::uppercase);
+  o.unsetf(ios::showpos);
+  o.unsetf(ios::scientific);
+  o.setf(ios::right);
+  o.setf(ios::fixed);
+  
+  const uword  m_n_nonzero = m.n_nonzero;
+  const double density     = (m.n_elem > 0) ? (double(m_n_nonzero) / double(m.n_elem) * double(100)) : double(0);
+  
+  o << "[matrix size: " << m.n_rows << 'x' << m.n_cols << "; n_nonzero: " << m_n_nonzero;
+  
+  if(density == double(0))
+    {
+    o.precision(0);
+    }
+  else
+  if(density >= (double(10.0)-std::numeric_limits<double>::epsilon()))
+    {
+    o.precision(1);
+    }
+  else
+  if(density > (double(0.01)-std::numeric_limits<double>::epsilon()))
+    {
+    o.precision(2);
+    }
+  else
+  if(density > (double(0.001)-std::numeric_limits<double>::epsilon()))
+    {
+    o.precision(3);
+    }
+  else
+  if(density > (double(0.0001)-std::numeric_limits<double>::epsilon()))
+    {
+    o.precision(4);
+    }
+  else
+    {
+    o.unsetf(ios::fixed);
+    o.setf(ios::scientific);
+    o.precision(2);
+    }
+  
+  o << "; density: " << density  << "%]\n\n";
+  
+  // get the first 9 elements and the last element
+  
+  typename SpMat<eT>::const_iterator it     = m.begin();
+  typename SpMat<eT>::const_iterator it_end = m.end();
+  
+  uvec    storage_row(10);
+  uvec    storage_col(10);
+  Col<eT> storage_val(10);
+  
+  uword count = 0;
+  
+  while( (it != it_end) && (count < 9) )
+    {
+    storage_row(count) = it.row();
+    storage_col(count) = it.col();
+    storage_val(count) = (*it);
+    
+    ++it;
+    ++count;
+    }
+  
+  it = it_end;
+  --it;
+  
+  storage_row(count) = it.row();
+  storage_col(count) = it.col();
+  storage_val(count) = (*it);
+  
+  const std::streamsize cell_width = arma_ostream::modify_stream(o, storage_val.memptr(), 10);
+  
+  for(uword i=0; i < 9; ++i)
+    {
+    const uword row = storage_row(i);
+    const uword col = storage_col(i);
+    
+         if(row < 10)       { o << "      "; }
+    else if(row < 100)      { o << "     ";  }
+    else if(row < 1000)     { o << "    ";   }
+    else if(row < 10000)    { o << "   ";    }
+    else if(row < 100000)   { o << "  ";     }
+    else if(row < 1000000)  { o << ' ';      }
+    
+    o << '(' << row << ", " << col << ") ";
+    
+         if(col < 10)       { o << "      "; }
+    else if(col < 100)      { o << "     ";  }
+    else if(col < 1000)     { o << "    ";   }
+    else if(col < 10000)    { o << "   ";    }
+    else if(col < 100000)   { o << "  ";     }
+    else if(col < 1000000)  { o << ' ';      }
+    
+    if(cell_width > 0)  { o.width(cell_width); }
+    
+    arma_ostream::print_elem(o, storage_val(i), true);
+    o << '\n';
+    }
+  
+  o << "      (:, :)     ";
+  if(cell_width > 0)  { o.width(cell_width); }
+  o << "...\n";
+  
+  
+  const uword i = 9;
+    {
+    const uword row = storage_row(i);
+    const uword col = storage_col(i);
+    
+         if(row < 10)       { o << "      "; }
+    else if(row < 100)      { o << "     ";  }
+    else if(row < 1000)     { o << "    ";   }
+    else if(row < 10000)    { o << "   ";    }
+    else if(row < 100000)   { o << "  ";     }
+    else if(row < 1000000)  { o << ' ';      }
+    
+    o << '(' << row << ", " << col << ") ";
+    
+         if(col < 10)       { o << "      "; }
+    else if(col < 100)      { o << "     ";  }
+    else if(col < 1000)     { o << "    ";   }
+    else if(col < 10000)    { o << "   ";    }
+    else if(col < 100000)   { o << "  ";     }
+    else if(col < 1000000)  { o << ' ';      }
+    
+    if(cell_width > 0) { o.width(cell_width); }
+      
+    arma_ostream::print_elem(o, storage_val(i), true);
+    o << '\n';
+    }
+  
+  o.flush();
   stream_state.restore(o);
   }
 
