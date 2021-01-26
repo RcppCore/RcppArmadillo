@@ -41,7 +41,7 @@ inline
 typename
 enable_if2
   <
-  ( (is_arma_type<T1>::value == true) && (is_same_type<T2, char>::value == true) ),
+  ( (is_arma_type<T1>::value) && (is_same_type<T2, char>::value) ),
   const mtOp<uword,T1,op_sort_index>
   >::result
 sort_index
@@ -87,7 +87,7 @@ inline
 typename
 enable_if2
   <
-  ( (is_arma_type<T1>::value == true) && (is_same_type<T2, char>::value == true) ),
+  ( (is_arma_type<T1>::value) && (is_same_type<T2, char>::value) ),
   const mtOp<uword,T1,op_stable_sort_index>
   >::result
 stable_sort_index

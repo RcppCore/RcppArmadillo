@@ -534,7 +534,7 @@ diskio::convert_token(std::complex<T>& val, const std::string& token)
     const bool state_real = diskio::convert_token(val_real, token_real);
     const bool state_imag = diskio::convert_token(val_imag, token_imag);
     
-    state = ((state_real == true) && (state_imag == true));
+    state = (state_real && state_imag);
     
     val = std::complex<T>(val_real, val_imag);
     }

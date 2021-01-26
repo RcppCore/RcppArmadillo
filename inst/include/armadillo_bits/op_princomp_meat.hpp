@@ -264,6 +264,7 @@ op_princomp::direct_princomp
   arma_extra_debug_sigprint();
   
   typedef typename T1::elem_type eT;
+  typedef typename T1::pod_type   T;
   
   const unwrap<T1>    Y( X.get_ref() );
   const Mat<eT>& in = Y.M;
@@ -274,7 +275,7 @@ op_princomp::direct_princomp
     
     // singular value decomposition
     Mat<eT> U;
-    Col<eT> s;
+    Col< T> s;
     
     const bool svd_ok = (in.n_rows >= in.n_cols) ? svd_econ(U, s, coeff_out, tmp) : svd(U, s, coeff_out, tmp);
     
@@ -301,12 +302,7 @@ op_princomp::apply
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
-  
-  const unwrap_check<T1> tmp(in.m, out);
-  const Mat<eT>& A     = tmp.M;
-  
-  const bool status = op_princomp::direct_princomp(out, A);
+  const bool status = op_princomp::direct_princomp(out, in.m);
   
   if(status == false)
     {

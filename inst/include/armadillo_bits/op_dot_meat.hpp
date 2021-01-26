@@ -474,7 +474,7 @@ op_cdot::apply(const T1& X, const T2& Y)
   {
   arma_extra_debug_sigprint();
   
-  if( (is_Mat<T1>::value == true) && (is_Mat<T2>::value == true) )
+  if(is_Mat<T1>::value && is_Mat<T2>::value)
     {
     return op_cdot::apply_unwrap(X,Y);
     }

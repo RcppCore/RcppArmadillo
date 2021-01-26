@@ -20,6 +20,15 @@
 
 template<typename eT>
 inline
+SpSubview<eT>::~SpSubview()
+  {
+  arma_extra_debug_sigprint_this(this);
+  }
+
+
+
+template<typename eT>
+inline
 SpSubview<eT>::SpSubview(const SpMat<eT>& in_m, const uword in_row1, const uword in_col1, const uword in_n_rows, const uword in_n_cols)
   : m(in_m)
   , aux_row1(in_row1)
@@ -29,7 +38,7 @@ SpSubview<eT>::SpSubview(const SpMat<eT>& in_m, const uword in_row1, const uword
   , n_elem(in_n_rows * in_n_cols)
   , n_nonzero(0)
   {
-  arma_extra_debug_sigprint();
+  arma_extra_debug_sigprint_this(this);
   
   m.sync_csc();
   
@@ -54,9 +63,41 @@ SpSubview<eT>::SpSubview(const SpMat<eT>& in_m, const uword in_row1, const uword
 
 template<typename eT>
 inline
-SpSubview<eT>::~SpSubview()
+SpSubview<eT>::SpSubview(const SpSubview<eT>& in)
+  : m        (in.m        )
+  , aux_row1 (in.aux_row1 )
+  , aux_col1 (in.aux_col1 )
+  , n_rows   (in.n_rows   )
+  , n_cols   (in.n_cols   )
+  , n_elem   (in.n_elem   )
+  , n_nonzero(in.n_nonzero)
   {
-  arma_extra_debug_sigprint();
+  arma_extra_debug_sigprint(arma_str::format("this = %x   in = %x") % this % &in);
+  }
+
+
+
+template<typename eT>
+inline
+SpSubview<eT>::SpSubview(SpSubview<eT>&& in)
+  : m        (in.m        )
+  , aux_row1 (in.aux_row1 )
+  , aux_col1 (in.aux_col1 )
+  , n_rows   (in.n_rows   )
+  , n_cols   (in.n_cols   )
+  , n_elem   (in.n_elem   )
+  , n_nonzero(in.n_nonzero)
+  {
+  arma_extra_debug_sigprint(arma_str::format("this = %x   in = %x") % this % &in);
+  
+  // for paranoia
+  
+  access::rw(in.aux_row1 ) = 0;
+  access::rw(in.aux_col1 ) = 0;
+  access::rw(in.n_rows   ) = 0;
+  access::rw(in.n_cols   ) = 0;
+  access::rw(in.n_elem   ) = 0;
+  access::rw(in.n_nonzero) = 0;
   }
 
 
@@ -435,7 +476,6 @@ SpSubview<eT>::operator%=(const SpBase<eT, T1>& x)
 
 
 
-//! If you are using this function, you are probably misguided.
 template<typename eT>
 template<typename T1>
 inline
@@ -443,6 +483,8 @@ const SpSubview<eT>&
 SpSubview<eT>::operator/=(const SpBase<eT, T1>& x)
   {
   arma_extra_debug_sigprint();
+  
+  // NOTE: use of this function is not advised; it is implemented only for completeness
   
   SpProxy<T1> p(x.get_ref());
   

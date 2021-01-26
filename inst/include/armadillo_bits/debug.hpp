@@ -780,6 +780,28 @@ arma_assert_same_size(const subview_cube<eT1>& A, const subview_cube<eT2>& B, co
 
 
 
+template<typename eT, typename T1>
+arma_hot
+inline
+void
+arma_assert_same_size(const subview_cube<eT>& A, const ProxyCube<T1>& B, const char* x)
+  {
+  const uword A_n_rows   = A.n_rows;
+  const uword A_n_cols   = A.n_cols;
+  const uword A_n_slices = A.n_slices;
+  
+  const uword B_n_rows   = B.get_n_rows();
+  const uword B_n_cols   = B.get_n_cols();
+  const uword B_n_slices = B.get_n_slices();
+  
+  if( (A_n_rows != B_n_rows) || (A_n_cols != B_n_cols) || (A_n_slices != B_n_slices) )
+    {
+    arma_stop_logic_error( arma_incompat_size_string(A_n_rows, A_n_cols, A_n_slices, B_n_rows, B_n_cols, B_n_slices, x) );
+    }
+  }
+
+
+
 //! stop if given cube proxies have different sizes
 template<typename eT1, typename eT2>
 arma_hot

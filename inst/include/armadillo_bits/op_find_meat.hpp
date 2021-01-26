@@ -137,8 +137,8 @@ op_find::helper
       else if(is_same_type<op_type, op_rel_noteq    >::yes)  { not_zero_j = (tpj != val); }
       else { not_zero_j = false; }
       
-      if(not_zero_i == true)  { indices_mem[n_nz] = i;  ++n_nz; }
-      if(not_zero_j == true)  { indices_mem[n_nz] = j;  ++n_nz; }
+      if(not_zero_i)  { indices_mem[n_nz] = i;  ++n_nz; }
+      if(not_zero_j)  { indices_mem[n_nz] = j;  ++n_nz; }
       }
     
     if(i < n_elem)
@@ -159,7 +159,7 @@ op_find::helper
       else if(is_same_type<op_type, op_rel_noteq    >::yes)  { not_zero = (tmp != val); }
       else { not_zero = false; }
       
-      if(not_zero == true)  { indices_mem[n_nz] = i;  ++n_nz; }
+      if(not_zero)  { indices_mem[n_nz] = i;  ++n_nz; }
       }
     }
   else
@@ -188,7 +188,7 @@ op_find::helper
       else if(is_same_type<op_type, op_rel_noteq    >::yes)  { not_zero = (tmp != val); }
       else { not_zero = false; }
       
-      if(not_zero == true)  { indices_mem[n_nz] = i;  ++n_nz; }
+      if(not_zero)  { indices_mem[n_nz] = i;  ++n_nz; }
       
       ++i;
       }
@@ -242,7 +242,7 @@ op_find::helper
       else if(is_same_type<op_type, op_rel_noteq>::yes)  { not_zero = (tmp != val); }
       else { not_zero = false; }
       
-      if(not_zero == true) { indices_mem[n_nz] = i;  ++n_nz; }
+      if(not_zero) { indices_mem[n_nz] = i;  ++n_nz; }
       }
     }
   else
@@ -263,7 +263,7 @@ op_find::helper
       else if(is_same_type<op_type, op_rel_noteq>::yes)  { not_zero = (tmp != val); }
       else { not_zero = false; }
       
-      if(not_zero == true) { indices_mem[n_nz] = i;  ++n_nz; }
+      if(not_zero) { indices_mem[n_nz] = i;  ++n_nz; }
       
       i++;
       }
@@ -329,7 +329,7 @@ op_find::helper
     else if(is_same_type<glue_type, glue_rel_or    >::yes)  { not_zero = (tmp1 || tmp2); }
     else { not_zero = false; }
     
-    if(not_zero == true)  { indices_mem[n_nz] = i;  ++n_nz; }
+    if(not_zero)  { indices_mem[n_nz] = i;  ++n_nz; }
     }
   
   return n_nz;
@@ -383,7 +383,7 @@ op_find::helper
       else if(is_same_type<glue_type, glue_rel_noteq >::yes)  { not_zero = (PA[i] != PB[i]); }
       else { not_zero = false; }
       
-      if(not_zero == true)  { indices_mem[n_nz] = i;  ++n_nz; }
+      if(not_zero)  { indices_mem[n_nz] = i;  ++n_nz; }
       }
     }
   else
@@ -402,7 +402,7 @@ op_find::helper
       else if(is_same_type<glue_type, glue_rel_noteq >::yes)  { not_zero = (A.at(row,col) != B.at(row,col)); }
       else { not_zero = false; }
       
-      if(not_zero == true)  { indices_mem[n_nz] = i;  ++n_nz; }
+      if(not_zero)  { indices_mem[n_nz] = i;  ++n_nz; }
       
       i++;
       }

@@ -242,7 +242,7 @@ op_vectorise_row::apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>&
   
   if(n_cols == 1)
     {
-    if(is_Mat<typename Proxy<T1>::stored_type>::value == true)
+    if(is_Mat<typename Proxy<T1>::stored_type>::value)
       {
       const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
       
@@ -365,7 +365,7 @@ op_vectorise_cube_col::apply_proxy(Mat<typename T1::elem_type>& out, const Proxy
   
   out.set_size(N, 1);
   
-  if(is_Cube<typename ProxyCube<T1>::stored_type>::value == true)
+  if(is_Cube<typename ProxyCube<T1>::stored_type>::value)
     {
     const unwrap_cube<typename ProxyCube<T1>::stored_type> tmp(P.Q);
     

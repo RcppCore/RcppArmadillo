@@ -33,8 +33,6 @@ subview_elem1<eT,T1>::subview_elem1(const Mat<eT>& in_m, const Base<uword,T1>& i
   , a(in_a)
   {
   arma_extra_debug_sigprint();
-  
-  // TODO: refactor to unwrap 'in_a' instead of storing a ref to it; this will allow removal of carrying T1 around and repetition of size checks
   }
 
 

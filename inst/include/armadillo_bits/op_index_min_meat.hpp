@@ -98,7 +98,7 @@ op_index_min::apply_noalias(Mat<uword>& out, const Mat<eT>& X, const uword dim)
       
       for(uword row=0; row < X_n_rows; ++row)
         {
-        tmp_mem[row] = std::abs(col_mem[row]);
+        tmp_mem[row] = eop_aux::arma_abs(col_mem[row]);
         }
       }
     else
@@ -113,7 +113,7 @@ op_index_min::apply_noalias(Mat<uword>& out, const Mat<eT>& X, const uword dim)
       for(uword row=0; row < X_n_rows; ++row)
         {
         T& min_val = tmp_mem[row];
-        T  col_val = (is_cx<eT>::yes) ? T(std::abs(col_mem[row])) : T(access::tmp_real(col_mem[row]));
+        T  col_val = (is_cx<eT>::yes) ? T(eop_aux::arma_abs(col_mem[row])) : T(access::tmp_real(col_mem[row]));
         
         if(min_val > col_val)
           {

@@ -126,8 +126,12 @@ class eop_aux
   template<typename eT> arma_inline static typename     arma_real_only<eT>::result lgamma (const eT  x) { return std::lgamma(x);               }
   template<typename eT> arma_inline static typename       arma_cx_only<eT>::result lgamma (const eT& x) { arma_ignore(x); return eT(0);        }
   
+  template<typename eT> arma_inline static typename arma_integral_only<eT>::result tgamma (const eT  x) { return eT( std::tgamma(double(x)) ); }
+  template<typename eT> arma_inline static typename     arma_real_only<eT>::result tgamma (const eT  x) { return std::tgamma(x);               }
+  template<typename eT> arma_inline static typename       arma_cx_only<eT>::result tgamma (const eT& x) { arma_ignore(x); return eT(0);        }
+  
   template<typename T1, typename T2> arma_inline static typename   arma_integral_only<T1>::result pow (const T1 base, const T2 exponent) { return T1( std::pow( double(base), double(exponent) ) ); }
-  template<typename T1, typename T2> arma_inline static typename arma_real_or_cx_only<T1>::result pow (const T1 base, const T2 exponent) { return std::pow(base, exponent);                         }
+  template<typename T1, typename T2> arma_inline static typename arma_real_or_cx_only<T1>::result pow (const T1 base, const T2 exponent) { return T1( std::pow(        base,         exponent  ) ); }
   
   
   template<typename eT>

@@ -48,6 +48,9 @@ class SpSubview : public SpBase< eT, SpSubview<eT> >
   inline ~SpSubview();
   inline  SpSubview() = delete;
   
+  inline  SpSubview(const SpSubview&  in);
+  inline  SpSubview(      SpSubview&& in);
+  
   inline const SpSubview& operator+= (const eT val);
   inline const SpSubview& operator-= (const eT val);
   inline const SpSubview& operator*= (const eT val);

@@ -57,7 +57,7 @@ linspace
     
     const uword num_m1 = num - 1;
     
-    if(is_non_integral<T>::value == true)
+    if(is_non_integral<T>::value)
       {
       const T delta = (end-start)/T(num_m1);
       

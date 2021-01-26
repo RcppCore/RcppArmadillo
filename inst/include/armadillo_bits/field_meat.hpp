@@ -74,6 +74,7 @@ field<oT>::operator=(const field& x)
   arma_extra_debug_sigprint();
   
   init(x);
+  
   return *this;
   }
 
@@ -105,6 +106,7 @@ field<oT>::operator=(const subview_field<oT>& X)
   arma_extra_debug_sigprint();
   
   subview_field<oT>::extract(*this, X);
+  
   return *this;
   }
 
@@ -280,10 +282,7 @@ field<oT>::operator=(const std::vector<oT>& x)
   
   set_size(N, 1);
   
-  for(uword i=0; i<N; ++i)
-    {
-    operator[](i) = x[i];
-    }
+  for(uword i=0; i<N; ++i)  { operator[](i) = x[i]; }
   
   return *this;
   }
@@ -318,10 +317,7 @@ field<oT>::operator=(const std::initializer_list<oT>& list)
   
   const oT* item_ptr = list.begin();
   
-  for(uword i=0; i<N; ++i)
-    {
-    operator[](i) = item_ptr[i];
-    }
+  for(uword i=0; i<N; ++i)  { operator[](i) = item_ptr[i]; }
   
   return *this;
   }
@@ -356,10 +352,7 @@ field<oT>::operator=(const std::initializer_list< std::initializer_list<oT> >& l
   auto it     = list.begin();
   auto it_end = list.end();
   
-  for(; it != it_end; ++it)
-    {
-    x_n_cols = (std::max)(x_n_cols, uword((*it).size()));
-    }
+  for(; it != it_end; ++it)  { x_n_cols = (std::max)(x_n_cols, uword((*it).size())); }
   
   field<oT>& t = (*this);
   
@@ -525,6 +518,7 @@ oT&
 field<oT>::operator() (const uword i)
   {
   arma_debug_check( (i >= n_elem), "field::operator(): index out of bounds" );
+  
   return (*mem[i]);
   }
 
@@ -537,6 +531,7 @@ const oT&
 field<oT>::operator() (const uword i) const
   {
   arma_debug_check( (i >= n_elem), "field::operator(): index out of bounds" );
+  
   return (*mem[i]);
   }
 
@@ -549,6 +544,7 @@ oT&
 field<oT>::operator() (const uword in_row, const uword in_col)
   {
   arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols) || (0 >= n_slices) ), "field::operator(): index out of bounds" );
+  
   return (*mem[in_row + in_col*n_rows]);
   }
 
@@ -561,6 +557,7 @@ const oT&
 field<oT>::operator() (const uword in_row, const uword in_col) const
   {
   arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols) || (0 >= n_slices) ), "field::operator(): index out of bounds" );
+  
   return (*mem[in_row + in_col*n_rows]);
   }
 
@@ -573,6 +570,7 @@ oT&
 field<oT>::operator() (const uword in_row, const uword in_col, const uword in_slice)
   {
   arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols) || (in_slice >= n_slices)), "field::operator(): index out of bounds" );
+  
   return (*mem[in_row + in_col*n_rows + in_slice*(n_rows*n_cols)]);
   }
 
@@ -585,6 +583,7 @@ const oT&
 field<oT>::operator() (const uword in_row, const uword in_col, const uword in_slice) const
   {
   arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols) || (in_slice >= n_slices)), "field::operator(): index out of bounds" );
+  
   return (*mem[in_row + in_col*n_rows + in_slice*(n_rows*n_cols)]);
   }
 
@@ -1420,10 +1419,7 @@ field<oT>::for_each(const std::function< void(oT&) >& F)
   {
   arma_extra_debug_sigprint();
   
-  for(uword i=0; i < n_elem; ++i)
-    {
-    F(operator[](i));
-    }
+  for(uword i=0; i < n_elem; ++i)  { F(operator[](i)); }
   
   return *this;
   }
@@ -1437,10 +1433,7 @@ field<oT>::for_each(const std::function< void(const oT&) >& F) const
   {
   arma_extra_debug_sigprint();
   
-  for(uword i=0; i < n_elem; ++i)
-    {
-    F(operator[](i));
-    }
+  for(uword i=0; i < n_elem; ++i)  { F(operator[](i)); }
   
   return *this;
   }
@@ -1457,10 +1450,7 @@ field<oT>::fill(const oT& x)
   
   field<oT>& t = *this;
   
-  for(uword i=0; i<n_elem; ++i)
-    {
-    t[i] = x;
-    }
+  for(uword i=0; i<n_elem; ++i)  { t[i] = x; }
   
   return *this;
   }
@@ -1525,7 +1515,7 @@ field<oT>::in_range(const span& x) const
   {
   arma_extra_debug_sigprint();
   
-  if(x.whole == true)
+  if(x.whole)
     {
     return true;
     }
@@ -1560,7 +1550,7 @@ field<oT>::in_range(const span& row_span, const uword in_col) const
   {
   arma_extra_debug_sigprint();
   
-  if(row_span.whole == true)
+  if(row_span.whole)
     {
     return (in_col < n_cols);
     }
@@ -1583,7 +1573,7 @@ field<oT>::in_range(const uword in_row, const span& col_span) const
   {
   arma_extra_debug_sigprint();
   
-  if(col_span.whole == true)
+  if(col_span.whole)
     {
     return (in_row < n_rows);
     }
@@ -1615,7 +1605,7 @@ field<oT>::in_range(const span& row_span, const span& col_span) const
   const bool rows_ok = row_span.whole ? true : ( (in_row1 <= in_row2) && (in_row2 < n_rows) );
   const bool cols_ok = col_span.whole ? true : ( (in_col1 <= in_col2) && (in_col2 < n_cols) );
   
-  return ( (rows_ok == true) && (cols_ok == true) );
+  return ( rows_ok && cols_ok );
   }
 
 
@@ -1673,7 +1663,7 @@ field<oT>::in_range(const span& row_span, const span& col_span, const span& slic
   const bool   cols_ok =   col_span.whole ? true : ( (in_col1   <= in_col2  ) && (in_col2   < n_cols  ) );
   const bool slices_ok = slice_span.whole ? true : ( (in_slice1 <= in_slice2) && (in_slice2 < n_slices) );
   
-  return ( (rows_ok == true) && (cols_ok == true) && (slices_ok == true) );
+  return ( rows_ok && cols_ok && slices_ok );
   }
 
 
@@ -1709,9 +1699,10 @@ field<oT>::save(const std::string name, const file_type type, const bool print_s
   arma_extra_debug_sigprint();
   
   std::string err_msg;
+  
   const bool save_okay = field_aux::save(*this, name, type, err_msg);
   
-  if( (print_status == true) && (save_okay == false) )
+  if(print_status && (save_okay == false))
     {
     if(err_msg.length() > 0)
       {
@@ -1737,9 +1728,10 @@ field<oT>::save(std::ostream& os, const file_type type, const bool print_status)
   arma_extra_debug_sigprint();
   
   std::string err_msg;
+  
   const bool save_okay = field_aux::save(*this, os, type, err_msg);
   
-  if( (print_status == true) && (save_okay == false) )
+  if(print_status && (save_okay == false))
     {
     if(err_msg.length() > 0)
       {
@@ -1765,9 +1757,10 @@ field<oT>::load(const std::string name, const file_type type, const bool print_s
   arma_extra_debug_sigprint();
   
   std::string err_msg;
+  
   const bool load_okay = field_aux::load(*this, name, type, err_msg);
   
-  if( (print_status == true) && (load_okay == false) )
+  if(print_status && (load_okay == false))
     {
     if(err_msg.length() > 0)
       {
@@ -1779,10 +1772,7 @@ field<oT>::load(const std::string name, const file_type type, const bool print_s
       }
     }
   
-  if(load_okay == false)
-    {
-    (*this).reset();
-    }
+  if(load_okay == false)  { (*this).reset(); }
   
   return load_okay;
   }
@@ -1800,7 +1790,7 @@ field<oT>::load(std::istream& is, const file_type type, const bool print_status)
   std::string err_msg;
   const bool load_okay = field_aux::load(*this, is, type, err_msg);
   
-  if( (print_status == true) && (load_okay == false) )
+  if(print_status && (load_okay == false))
     {
     if(err_msg.length() > 0)
       {
@@ -1812,10 +1802,7 @@ field<oT>::load(std::istream& is, const file_type type, const bool print_status)
       }
     }
   
-  if(load_okay == false)
-    {
-    (*this).reset();
-    }
+  if(load_okay == false)  { (*this).reset(); }
   
   return load_okay;
   }
@@ -1961,25 +1948,16 @@ field<oT>::init(const uword n_rows_in, const uword n_cols_in, const uword n_slic
     {
     delete_objects();
     
-    if(n_elem > field_prealloc_n_elem::val)
-      {
-      delete [] mem;
-      }
+    if(n_elem > field_prealloc_n_elem::val)  { delete [] mem; }
     
     if(n_elem_new <= field_prealloc_n_elem::val)
       {
-      if(n_elem_new == 0)
-        {
-        mem = nullptr;
-        }
-      else
-        {
-        mem = mem_local;
-        }
+      mem = (n_elem_new == 0) ? nullptr : mem_local;
       }
     else
       {
       mem = new(std::nothrow) oT* [n_elem_new];
+      
       arma_check_bad_alloc( (mem == nullptr), "field::init(): out of memory" );
       }
     
@@ -2020,10 +1998,7 @@ field<oT>::create_objects()
   {
   arma_extra_debug_sigprint( arma_str::format("n_elem = %d") % n_elem );
   
-  for(uword i=0; i<n_elem; ++i)
-    {
-    mem[i] = new oT;
-    }
+  for(uword i=0; i<n_elem; ++i)  { mem[i] = new oT; }
   }
 
 
@@ -2076,10 +2051,7 @@ inline
 typename field<oT>::iterator&
 field<oT>::iterator::operator--()
   {
-  if(i > 0)
-    {
-    --i;
-    }
+  if(i > 0)  { --i; }
   
   return *this;
   }
@@ -2175,10 +2147,7 @@ inline
 typename field<oT>::const_iterator&
 field<oT>::const_iterator::operator--()
   {
-  if(i > 0)
-    {
-    --i;
-    }
+  if(i > 0)  { --i; }
   
   return *this;
   }
@@ -2343,10 +2312,7 @@ field_aux::reset_objects(field< Mat<eT> >& x)
   {
   arma_extra_debug_sigprint();
   
-  for(uword i=0; i<x.n_elem; ++i)
-    {
-    (*(x.mem[i])).reset();
-    }
+  for(uword i=0; i < x.n_elem; ++i)  { (*(x.mem[i])).reset(); }
   }
 
 
@@ -2358,10 +2324,7 @@ field_aux::reset_objects(field< Col<eT> >& x)
   {
   arma_extra_debug_sigprint();
   
-  for(uword i=0; i<x.n_elem; ++i)
-    {
-    (*(x.mem[i])).reset();
-    }
+  for(uword i=0; i < x.n_elem; ++i)  { (*(x.mem[i])).reset(); }
   }
 
 
@@ -2373,10 +2336,7 @@ field_aux::reset_objects(field< Row<eT> >& x)
   {
   arma_extra_debug_sigprint();
   
-  for(uword i=0; i<x.n_elem; ++i)
-    {
-    (*(x.mem[i])).reset();
-    }
+  for(uword i=0; i < x.n_elem; ++i)  { (*(x.mem[i])).reset(); }
   }
 
 
@@ -2388,10 +2348,7 @@ field_aux::reset_objects(field< Cube<eT> >& x)
   {
   arma_extra_debug_sigprint();
   
-  for(uword i=0; i<x.n_elem; ++i)
-    {
-    (*(x.mem[i])).reset();
-    }
+  for(uword i=0; i < x.n_elem; ++i)  { (*(x.mem[i])).reset(); }
   }
 
 
@@ -2402,10 +2359,7 @@ field_aux::reset_objects(field< std::string >& x)
   {
   arma_extra_debug_sigprint();
   
-  for(uword i=0; i<x.n_elem; ++i)
-    {
-    (*(x.mem[i])).clear();
-    }
+  for(uword i=0; i < x.n_elem; ++i)  { (*(x.mem[i])).clear(); }
   }
 
 

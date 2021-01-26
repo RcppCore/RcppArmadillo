@@ -113,7 +113,7 @@ namespace priv
 
 
 //! various constants.
-//! Physical constants taken from NIST 2014 CODATA values, and some from WolframAlpha (values provided as of 2009-06-23)
+//! Physical constants taken from NIST 2018 CODATA values, and some from WolframAlpha (values provided as of 2009-06-23)
 //! http://physics.nist.gov/cuu/Constants
 //! http://www.wolframalpha.com
 //! See also http://en.wikipedia.org/wiki/Physical_constant
@@ -124,15 +124,14 @@ class Datum
   {
   public:
   
-  static constexpr eT pi          = eT(3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679);  //!< ratio of any circle's circumference to its diameter
-  static constexpr eT e           = eT(2.7182818284590452353602874713526624977572470936999595749669676277240766303535475945713821785251664274);  //!< base of the natural logarithm
-  static constexpr eT euler       = eT(0.5772156649015328606065120900824024310421593359399235988057672348848677267776646709369470632917467495);  //!< Euler's constant, aka Euler-Mascheroni constant
-  static constexpr eT gratio      = eT(1.6180339887498948482045868343656381177203091798057628621354486227052604628189024497072072041893911374);  //!< golden ratio
-  static constexpr eT sqrt2       = eT(1.4142135623730950488016887242096980785696718753769480731766797379907324784621070388503875343276415727);  //!< square root of 2
-  static constexpr eT sqrt2pi     = eT(2.5066282746310005024157652848110452530069867406099383166299235763422936546078419749465958383780572661);  //!< square root of 2*pi
-  static constexpr eT log_sqrt2pi = eT(0.9189385332046727417803297364056176398613974736377834128171515404827656959272603976947432986359541976);  //!< log of square root of 2*pi
-  static constexpr eT eps         = std::numeric_limits<eT>::epsilon();  //!< the difference between 1 and the least value greater than 1 that is representable
-  
+  static const eT pi;           //!< ratio of any circle's circumference to its diameter
+  static const eT e;            //!< base of the natural logarithm
+  static const eT euler;        //!< Euler's constant, aka Euler-Mascheroni constant
+  static const eT gratio;       //!< golden ratio
+  static const eT sqrt2;        //!< square root of 2
+  static const eT sqrt2pi;      //!< square root of 2*pi
+  static const eT log_sqrt2pi;  //!< log of square root of 2*pi
+  static const eT eps;          //!< the difference between 1 and the least value greater than 1 that is representable
   static const eT log_min;      //!< log of the minimum representable value
   static const eT log_max;      //!< log of the maximum representable value
   static const eT nan;          //!< "not a number"
@@ -175,14 +174,14 @@ class Datum
 // the long lengths of the constants are for future support of "long double"
 // and any smart compiler that does high-precision computation at compile-time
   
-// template<typename eT> const eT Datum<eT>::pi          = eT(3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679);
-// template<typename eT> const eT Datum<eT>::e           = eT(2.7182818284590452353602874713526624977572470936999595749669676277240766303535475945713821785251664274);
-// template<typename eT> const eT Datum<eT>::euler       = eT(0.5772156649015328606065120900824024310421593359399235988057672348848677267776646709369470632917467495);
-// template<typename eT> const eT Datum<eT>::gratio      = eT(1.6180339887498948482045868343656381177203091798057628621354486227052604628189024497072072041893911374);
-// template<typename eT> const eT Datum<eT>::sqrt2       = eT(1.4142135623730950488016887242096980785696718753769480731766797379907324784621070388503875343276415727);
-// template<typename eT> const eT Datum<eT>::sqrt2pi     = eT(2.5066282746310005024157652848110452530069867406099383166299235763422936546078419749465958383780572661);
-// template<typename eT> const eT Datum<eT>::log_sqrt2pi = eT(0.9189385332046727417803297364056176398613974736377834128171515404827656959272603976947432986359541976);
-// template<typename eT> const eT Datum<eT>::eps         = std::numeric_limits<eT>::epsilon();
+template<typename eT> const eT Datum<eT>::pi          = eT(3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679);
+template<typename eT> const eT Datum<eT>::e           = eT(2.7182818284590452353602874713526624977572470936999595749669676277240766303535475945713821785251664274);
+template<typename eT> const eT Datum<eT>::euler       = eT(0.5772156649015328606065120900824024310421593359399235988057672348848677267776646709369470632917467495);
+template<typename eT> const eT Datum<eT>::gratio      = eT(1.6180339887498948482045868343656381177203091798057628621354486227052604628189024497072072041893911374);
+template<typename eT> const eT Datum<eT>::sqrt2       = eT(1.4142135623730950488016887242096980785696718753769480731766797379907324784621070388503875343276415727);
+template<typename eT> const eT Datum<eT>::sqrt2pi     = eT(2.5066282746310005024157652848110452530069867406099383166299235763422936546078419749465958383780572661);
+template<typename eT> const eT Datum<eT>::log_sqrt2pi = eT(0.9189385332046727417803297364056176398613974736377834128171515404827656959272603976947432986359541976);
+template<typename eT> const eT Datum<eT>::eps         = std::numeric_limits<eT>::epsilon();
 template<typename eT> const eT Datum<eT>::log_min     = std::log(std::numeric_limits<eT>::min());
 template<typename eT> const eT Datum<eT>::log_max     = std::log(std::numeric_limits<eT>::max());
 template<typename eT> const eT Datum<eT>::nan         = priv::Datum_helper::nan<eT>();

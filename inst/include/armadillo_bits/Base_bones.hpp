@@ -22,7 +22,7 @@
 template<typename elem_type, typename derived>
 struct Base_extra_yes
   {
-  arma_inline const Op<derived,op_inv> i() const;   //!< matrix inverse
+  inline arma_warn_unused const Op<derived,op_inv> i() const;   //!< matrix inverse
   
   inline arma_warn_unused bool is_sympd() const;
   inline arma_warn_unused bool is_sympd(typename get_pod_type<elem_type>::result tol) const;
@@ -119,6 +119,9 @@ struct Base
   arma_cold inline void raw_print(                           const std::string extra_text = "") const;
   arma_cold inline void raw_print(std::ostream& user_stream, const std::string extra_text = "") const;
   
+  arma_cold inline void brief_print(                           const std::string extra_text = "") const;
+  arma_cold inline void brief_print(std::ostream& user_stream, const std::string extra_text = "") const;
+  
   inline arma_warn_unused elem_type min() const;
   inline arma_warn_unused elem_type max() const;
   
@@ -151,8 +154,8 @@ struct Base
   inline arma_warn_unused bool has_inf()    const;
   inline arma_warn_unused bool has_nan()    const;
   
-  arma_inline const Op<derived,op_vectorise_col> as_col() const;
-  arma_inline const Op<derived,op_vectorise_row> as_row() const;
+  inline arma_warn_unused const Op<derived,op_vectorise_col> as_col() const;
+  inline arma_warn_unused const Op<derived,op_vectorise_row> as_row() const;
   };
 
 

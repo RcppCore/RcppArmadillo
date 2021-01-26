@@ -41,7 +41,7 @@ op_median::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_median>& in)
   
   const bool is_alias = P.is_alias(out);
   
-  if( (is_Mat<P_stored_type>::value == true) || is_alias )
+  if(is_Mat<P_stored_type>::value || is_alias)
     {
     const unwrap_check<P_stored_type> tmp(P.Q, is_alias);
     
@@ -242,7 +242,7 @@ op_median::median_vec
   
   std::vector<eT> tmp_vec(n_elem);
   
-  if(is_Mat<P_stored_type>::value == true)
+  if(is_Mat<P_stored_type>::value)
     {
     const unwrap<P_stored_type> tmp(P.Q);
     

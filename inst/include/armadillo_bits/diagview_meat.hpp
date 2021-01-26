@@ -22,20 +22,56 @@ template<typename eT>
 inline
 diagview<eT>::~diagview()
   {
-  arma_extra_debug_sigprint();
+  arma_extra_debug_sigprint_this(this);
   }
+
 
 
 template<typename eT>
 arma_inline
 diagview<eT>::diagview(const Mat<eT>& in_m, const uword in_row_offset, const uword in_col_offset, const uword in_len)
-  : m(in_m)
+  : m         (in_m         )
   , row_offset(in_row_offset)
   , col_offset(in_col_offset)
-  , n_rows(in_len)
-  , n_elem(in_len)
+  , n_rows    (in_len       )
+  , n_elem    (in_len       )
   {
-  arma_extra_debug_sigprint();
+  arma_extra_debug_sigprint_this(this);
+  }
+
+
+
+template<typename eT>
+inline
+diagview<eT>::diagview(const diagview<eT>& in)
+  : m         (in.m         )
+  , row_offset(in.row_offset)
+  , col_offset(in.col_offset)
+  , n_rows    (in.n_rows    )
+  , n_elem    (in.n_elem    )
+  {
+  arma_extra_debug_sigprint(arma_str::format("this = %x   in = %x") % this % &in);
+  }
+
+
+
+template<typename eT>
+inline
+diagview<eT>::diagview(diagview<eT>&& in)
+  : m         (in.m         )
+  , row_offset(in.row_offset)
+  , col_offset(in.col_offset)
+  , n_rows    (in.n_rows    )
+  , n_elem    (in.n_elem    )
+  {
+  arma_extra_debug_sigprint(arma_str::format("this = %x   in = %x") % this % &in);
+  
+  // for paranoia
+  
+  access::rw(in.row_offset) = 0;
+  access::rw(in.col_offset) = 0;
+  access::rw(in.n_rows    ) = 0;
+  access::rw(in.n_elem    ) = 0;
   }
 
 

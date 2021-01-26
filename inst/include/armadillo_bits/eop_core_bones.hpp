@@ -99,6 +99,7 @@ class eop_sign              : public eop_core<eop_sign>              , public eo
 class eop_erf               : public eop_core<eop_erf>               , public eop_use_mp_true  {};
 class eop_erfc              : public eop_core<eop_erfc>              , public eop_use_mp_true  {};
 class eop_lgamma            : public eop_core<eop_lgamma>            , public eop_use_mp_true  {};
+class eop_tgamma            : public eop_core<eop_tgamma>            , public eop_use_mp_true  {};
 
 
 
