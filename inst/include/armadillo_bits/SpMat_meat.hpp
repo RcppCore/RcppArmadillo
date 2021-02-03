@@ -2721,7 +2721,7 @@ SpMat<eT>::head_rows(const uword N)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > n_rows), "SpMat::head_rows(): size out of bounds");
+  arma_debug_check( (N > n_rows), "SpMat::head_rows(): size out of bounds" );
   
   return SpSubview<eT>(*this, 0, 0, N, n_cols);
   }
@@ -2735,7 +2735,7 @@ SpMat<eT>::head_rows(const uword N) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > n_rows), "SpMat::head_rows(): size out of bounds");
+  arma_debug_check( (N > n_rows), "SpMat::head_rows(): size out of bounds" );
   
   return SpSubview<eT>(*this, 0, 0, N, n_cols);
   }
@@ -2749,7 +2749,7 @@ SpMat<eT>::tail_rows(const uword N)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > n_rows), "SpMat::tail_rows(): size out of bounds");
+  arma_debug_check( (N > n_rows), "SpMat::tail_rows(): size out of bounds" );
   
   const uword start_row = n_rows - N;
   
@@ -2765,7 +2765,7 @@ SpMat<eT>::tail_rows(const uword N) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > n_rows), "SpMat::tail_rows(): size out of bounds");
+  arma_debug_check( (N > n_rows), "SpMat::tail_rows(): size out of bounds" );
   
   const uword start_row = n_rows - N;
   
@@ -2781,7 +2781,7 @@ SpMat<eT>::head_cols(const uword N)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > n_cols), "SpMat::head_cols(): size out of bounds");
+  arma_debug_check( (N > n_cols), "SpMat::head_cols(): size out of bounds" );
   
   return SpSubview<eT>(*this, 0, 0, n_rows, N);
   }
@@ -2795,7 +2795,7 @@ SpMat<eT>::head_cols(const uword N) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > n_cols), "SpMat::head_cols(): size out of bounds");
+  arma_debug_check( (N > n_cols), "SpMat::head_cols(): size out of bounds" );
   
   return SpSubview<eT>(*this, 0, 0, n_rows, N);
   }
@@ -2809,7 +2809,7 @@ SpMat<eT>::tail_cols(const uword N)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > n_cols), "SpMat::tail_cols(): size out of bounds");
+  arma_debug_check( (N > n_cols), "SpMat::tail_cols(): size out of bounds" );
   
   const uword start_col = n_cols - N;
   
@@ -2825,7 +2825,7 @@ SpMat<eT>::tail_cols(const uword N) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > n_cols), "SpMat::tail_cols(): size out of bounds");
+  arma_debug_check( (N > n_cols), "SpMat::tail_cols(): size out of bounds" );
   
   const uword start_col = n_cols - N;
   
@@ -3299,7 +3299,7 @@ arma_warn_unused
 SpMat_MapMat_val<eT>
 SpMat<eT>::operator()(const uword i)
   {
-  arma_debug_check( (i >= n_elem), "SpMat::operator(): out of bounds");
+  arma_debug_check( (i >= n_elem), "SpMat::operator(): out of bounds" );
   
   const uword in_col = i / n_rows;
   const uword in_row = i % n_rows;
@@ -3315,7 +3315,7 @@ arma_warn_unused
 eT
 SpMat<eT>::operator()(const uword i) const
   {
-  arma_debug_check( (i >= n_elem), "SpMat::operator(): out of bounds");
+  arma_debug_check( (i >= n_elem), "SpMat::operator(): out of bounds" );
   
   return get_value(i);
   }
@@ -3355,7 +3355,7 @@ arma_warn_unused
 SpMat_MapMat_val<eT>
 SpMat<eT>::operator()(const uword in_row, const uword in_col)
   {
-  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols)), "SpMat::operator(): out of bounds");
+  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols)), "SpMat::operator(): out of bounds" );
   
   return SpMat_MapMat_val<eT>((*this), cache, in_row, in_col);
   }
@@ -3368,7 +3368,7 @@ arma_warn_unused
 eT
 SpMat<eT>::operator()(const uword in_row, const uword in_col) const
   {
-  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols)), "SpMat::operator(): out of bounds");
+  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols)), "SpMat::operator(): out of bounds" );
   
   return get_value(in_row, in_col);
   }

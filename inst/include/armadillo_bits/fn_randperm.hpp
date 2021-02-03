@@ -118,7 +118,7 @@ randperm(const uword N, const uword M)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (M > N), "randperm(): 'M' must be less than or equal to 'N'");
+  arma_debug_check( (M > N), "randperm(): 'M' must be less than or equal to 'N'" );
   
   obj_type x;
   
@@ -136,7 +136,7 @@ randperm(const uword N, const uword M)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (M > N), "randperm(): 'M' must be less than or equal to 'N'");
+  arma_debug_check( (M > N), "randperm(): 'M' must be less than or equal to 'N'" );
   
   uvec x;
   

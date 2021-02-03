@@ -99,7 +99,7 @@ struct distance {};
 template<typename eT>
 struct distance<eT, uword(1)>
   {
-  arma_inline arma_hot static eT eval(const uword N, const eT* A, const eT* B, const eT*);
+  arma_inline static eT eval(const uword N, const eT* A, const eT* B, const eT*);
   };
 
 
@@ -107,7 +107,7 @@ struct distance<eT, uword(1)>
 template<typename eT>
 struct distance<eT, uword(2)>
   {
-  arma_inline arma_hot static eT eval(const uword N, const eT* A, const eT* B, const eT* C);
+  arma_inline static eT eval(const uword N, const eT* A, const eT* B, const eT* C);
   };
 
 

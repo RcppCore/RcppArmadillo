@@ -1217,7 +1217,7 @@ inline
 eT&
 subview<eT>::operator()(const uword ii)
   {
-  arma_debug_check( (ii >= n_elem), "subview::operator(): index out of bounds");
+  arma_debug_check( (ii >= n_elem), "subview::operator(): index out of bounds" );
     
   const uword in_col = ii / n_rows;
   const uword in_row = ii % n_rows;
@@ -1234,7 +1234,7 @@ inline
 eT
 subview<eT>::operator()(const uword ii) const
   {
-  arma_debug_check( (ii >= n_elem), "subview::operator(): index out of bounds");
+  arma_debug_check( (ii >= n_elem), "subview::operator(): index out of bounds" );
   
   const uword in_col = ii / n_rows;
   const uword in_row = ii % n_rows;
@@ -1251,7 +1251,7 @@ inline
 eT&
 subview<eT>::operator()(const uword in_row, const uword in_col)
   {
-  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols)), "subview::operator(): index out of bounds");
+  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols)), "subview::operator(): index out of bounds" );
   
   const uword index = (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
   
@@ -1265,7 +1265,7 @@ inline
 eT
 subview<eT>::operator()(const uword in_row, const uword in_col) const
   {
-  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols)), "subview::operator(): index out of bounds");
+  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols)), "subview::operator(): index out of bounds" );
   
   const uword index = (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
   
@@ -1874,7 +1874,7 @@ subview<eT>::col(const uword col_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( col_num >= n_cols, "subview::col(): out of bounds");
+  arma_debug_check( col_num >= n_cols, "subview::col(): out of bounds" );
   
   const uword base_col = aux_col1 + col_num;
   
@@ -1891,7 +1891,7 @@ subview<eT>::col(const uword col_num) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( col_num >= n_cols, "subview::col(): out of bounds");
+  arma_debug_check( col_num >= n_cols, "subview::col(): out of bounds" );
   
   const uword base_col = aux_col1 + col_num;
   
@@ -1976,7 +1976,7 @@ subview<eT>::unsafe_col(const uword col_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( col_num >= n_cols, "subview::unsafe_col(): out of bounds");
+  arma_debug_check( col_num >= n_cols, "subview::unsafe_col(): out of bounds" );
   
   return Col<eT>(colptr(col_num), n_rows, false, true);
   }
@@ -1995,7 +1995,7 @@ subview<eT>::unsafe_col(const uword col_num) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( col_num >= n_cols, "subview::unsafe_col(): out of bounds");
+  arma_debug_check( col_num >= n_cols, "subview::unsafe_col(): out of bounds" );
   
   return Col<eT>(const_cast<eT*>(colptr(col_num)), n_rows, false, true);
   }
@@ -3439,7 +3439,7 @@ inline
 eT&
 subview_col<eT>::operator()(const uword ii)
   {
-  arma_debug_check( (ii >= subview<eT>::n_elem), "subview::operator(): index out of bounds");
+  arma_debug_check( (ii >= subview<eT>::n_elem), "subview::operator(): index out of bounds" );
     
   return access::rw( colmem[ii] );
   }
@@ -3451,7 +3451,7 @@ inline
 eT
 subview_col<eT>::operator()(const uword ii) const
   {
-  arma_debug_check( (ii >= subview<eT>::n_elem), "subview::operator(): index out of bounds");
+  arma_debug_check( (ii >= subview<eT>::n_elem), "subview::operator(): index out of bounds" );
   
   return colmem[ii];
   }
@@ -3463,7 +3463,7 @@ inline
 eT&
 subview_col<eT>::operator()(const uword in_row, const uword in_col)
   {
-  arma_debug_check( ((in_row >= subview<eT>::n_rows) || (in_col > 0)), "subview::operator(): index out of bounds");
+  arma_debug_check( ((in_row >= subview<eT>::n_rows) || (in_col > 0)), "subview::operator(): index out of bounds" );
   
   return access::rw( colmem[in_row] );
   }
@@ -3475,7 +3475,7 @@ inline
 eT
 subview_col<eT>::operator()(const uword in_row, const uword in_col) const
   {
-  arma_debug_check( ((in_row >= subview<eT>::n_rows) || (in_col > 0)), "subview::operator(): index out of bounds");
+  arma_debug_check( ((in_row >= subview<eT>::n_rows) || (in_col > 0)), "subview::operator(): index out of bounds" );
   
   return colmem[in_row];
   }
@@ -3527,7 +3527,7 @@ subview_col<eT>::rows(const uword in_row1, const uword in_row2)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( ( (in_row1 > in_row2) || (in_row2 >= subview<eT>::n_rows) ), "subview_col::rows(): indices out of bounds or incorrectly used");
+  arma_debug_check( ( (in_row1 > in_row2) || (in_row2 >= subview<eT>::n_rows) ), "subview_col::rows(): indices out of bounds or incorrectly used" );
   
   const uword subview_n_rows = in_row2 - in_row1 + 1;
   
@@ -3545,7 +3545,7 @@ subview_col<eT>::rows(const uword in_row1, const uword in_row2) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( ( (in_row1 > in_row2) || (in_row2 >= subview<eT>::n_rows) ), "subview_col::rows(): indices out of bounds or incorrectly used");
+  arma_debug_check( ( (in_row1 > in_row2) || (in_row2 >= subview<eT>::n_rows) ), "subview_col::rows(): indices out of bounds or incorrectly used" );
   
   const uword subview_n_rows = in_row2 - in_row1 + 1;
   
@@ -3563,7 +3563,7 @@ subview_col<eT>::subvec(const uword in_row1, const uword in_row2)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( ( (in_row1 > in_row2) || (in_row2 >= subview<eT>::n_rows) ), "subview_col::subvec(): indices out of bounds or incorrectly used");
+  arma_debug_check( ( (in_row1 > in_row2) || (in_row2 >= subview<eT>::n_rows) ), "subview_col::subvec(): indices out of bounds or incorrectly used" );
   
   const uword subview_n_rows = in_row2 - in_row1 + 1;
   
@@ -3581,7 +3581,7 @@ subview_col<eT>::subvec(const uword in_row1, const uword in_row2) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( ( (in_row1 > in_row2) || (in_row2 >= subview<eT>::n_rows) ), "subview_col::subvec(): indices out of bounds or incorrectly used");
+  arma_debug_check( ( (in_row1 > in_row2) || (in_row2 >= subview<eT>::n_rows) ), "subview_col::subvec(): indices out of bounds or incorrectly used" );
   
   const uword subview_n_rows = in_row2 - in_row1 + 1;
   
@@ -3635,7 +3635,7 @@ subview_col<eT>::head(const uword N)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > subview<eT>::n_rows), "subview_col::head(): size out of bounds");
+  arma_debug_check( (N > subview<eT>::n_rows), "subview_col::head(): size out of bounds" );
   
   return subview_col<eT>(this->m, this->aux_col1, this->aux_row1, N);
   }
@@ -3649,7 +3649,7 @@ subview_col<eT>::head(const uword N) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > subview<eT>::n_rows), "subview_col::head(): size out of bounds");
+  arma_debug_check( (N > subview<eT>::n_rows), "subview_col::head(): size out of bounds" );
   
   return subview_col<eT>(this->m, this->aux_col1, this->aux_row1, N);
   }
@@ -3663,7 +3663,7 @@ subview_col<eT>::tail(const uword N)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > subview<eT>::n_rows), "subview_col::tail(): size out of bounds");
+  arma_debug_check( (N > subview<eT>::n_rows), "subview_col::tail(): size out of bounds" );
   
   const uword start_row = subview<eT>::aux_row1 + subview<eT>::n_rows - N;
   
@@ -3679,7 +3679,7 @@ subview_col<eT>::tail(const uword N) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > subview<eT>::n_rows), "subview_col::tail(): size out of bounds");
+  arma_debug_check( (N > subview<eT>::n_rows), "subview_col::tail(): size out of bounds" );
   
   const uword start_row = subview<eT>::aux_row1 + subview<eT>::n_rows - N;
   
@@ -4035,7 +4035,7 @@ inline
 eT&
 subview_row<eT>::operator()(const uword ii)
   {
-  arma_debug_check( (ii >= subview<eT>::n_elem), "subview::operator(): index out of bounds");
+  arma_debug_check( (ii >= subview<eT>::n_elem), "subview::operator(): index out of bounds" );
     
   const uword index = (ii + (subview<eT>::aux_col1))*(subview<eT>::m).n_rows + (subview<eT>::aux_row1);
   
@@ -4049,7 +4049,7 @@ inline
 eT
 subview_row<eT>::operator()(const uword ii) const
   {
-  arma_debug_check( (ii >= subview<eT>::n_elem), "subview::operator(): index out of bounds");
+  arma_debug_check( (ii >= subview<eT>::n_elem), "subview::operator(): index out of bounds" );
   
   const uword index = (ii + (subview<eT>::aux_col1))*(subview<eT>::m).n_rows + (subview<eT>::aux_row1);
   
@@ -4063,7 +4063,7 @@ inline
 eT&
 subview_row<eT>::operator()(const uword in_row, const uword in_col)
   {
-  arma_debug_check( ((in_row > 0) || (in_col >= subview<eT>::n_cols)), "subview::operator(): index out of bounds");
+  arma_debug_check( ((in_row > 0) || (in_col >= subview<eT>::n_cols)), "subview::operator(): index out of bounds" );
   
   const uword index = (in_col + (subview<eT>::aux_col1))*(subview<eT>::m).n_rows + (subview<eT>::aux_row1);
   
@@ -4077,7 +4077,7 @@ inline
 eT
 subview_row<eT>::operator()(const uword in_row, const uword in_col) const
   {
-  arma_debug_check( ((in_row > 0) || (in_col >= subview<eT>::n_cols)), "subview::operator(): index out of bounds");
+  arma_debug_check( ((in_row > 0) || (in_col >= subview<eT>::n_cols)), "subview::operator(): index out of bounds" );
   
   const uword index = (in_col + (subview<eT>::aux_col1))*(subview<eT>::m).n_rows + (subview<eT>::aux_row1);
   
@@ -4135,7 +4135,7 @@ subview_row<eT>::cols(const uword in_col1, const uword in_col2) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( ( (in_col1 > in_col2) || (in_col2 >= subview<eT>::n_cols) ), "subview_row::cols(): indices out of bounds or incorrectly used");
+  arma_debug_check( ( (in_col1 > in_col2) || (in_col2 >= subview<eT>::n_cols) ), "subview_row::cols(): indices out of bounds or incorrectly used" );
   
   const uword subview_n_cols = in_col2 - in_col1 + 1;
   
@@ -4153,7 +4153,7 @@ subview_row<eT>::subvec(const uword in_col1, const uword in_col2)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( ( (in_col1 > in_col2) || (in_col2 >= subview<eT>::n_cols) ), "subview_row::subvec(): indices out of bounds or incorrectly used");
+  arma_debug_check( ( (in_col1 > in_col2) || (in_col2 >= subview<eT>::n_cols) ), "subview_row::subvec(): indices out of bounds or incorrectly used" );
   
   const uword subview_n_cols = in_col2 - in_col1 + 1;
   
@@ -4171,7 +4171,7 @@ subview_row<eT>::subvec(const uword in_col1, const uword in_col2) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( ( (in_col1 > in_col2) || (in_col2 >= subview<eT>::n_cols) ), "subview_row::subvec(): indices out of bounds or incorrectly used");
+  arma_debug_check( ( (in_col1 > in_col2) || (in_col2 >= subview<eT>::n_cols) ), "subview_row::subvec(): indices out of bounds or incorrectly used" );
   
   const uword subview_n_cols = in_col2 - in_col1 + 1;
   
@@ -4225,7 +4225,7 @@ subview_row<eT>::head(const uword N)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > subview<eT>::n_cols), "subview_row::head(): size out of bounds");
+  arma_debug_check( (N > subview<eT>::n_cols), "subview_row::head(): size out of bounds" );
   
   return subview_row<eT>(this->m, this->aux_row1, this->aux_col1, N);
   }
@@ -4239,7 +4239,7 @@ subview_row<eT>::head(const uword N) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > subview<eT>::n_cols), "subview_row::head(): size out of bounds");
+  arma_debug_check( (N > subview<eT>::n_cols), "subview_row::head(): size out of bounds" );
   
   return subview_row<eT>(this->m, this->aux_row1, this->aux_col1, N);
   }
@@ -4253,7 +4253,7 @@ subview_row<eT>::tail(const uword N)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > subview<eT>::n_cols), "subview_row::tail(): size out of bounds");
+  arma_debug_check( (N > subview<eT>::n_cols), "subview_row::tail(): size out of bounds" );
   
   const uword start_col = subview<eT>::aux_col1 + subview<eT>::n_cols - N;
   
@@ -4269,7 +4269,7 @@ subview_row<eT>::tail(const uword N) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > subview<eT>::n_cols), "subview_row::tail(): size out of bounds");
+  arma_debug_check( (N > subview<eT>::n_cols), "subview_row::tail(): size out of bounds" );
   
   const uword start_col = subview<eT>::aux_col1 + subview<eT>::n_cols - N;
   

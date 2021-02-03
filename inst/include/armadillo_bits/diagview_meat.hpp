@@ -86,7 +86,7 @@ diagview<eT>::operator= (const diagview<eT>& x)
   
   diagview<eT>& d = *this;
   
-  arma_debug_check( (d.n_elem != x.n_elem), "diagview: diagonals have incompatible lengths");
+  arma_debug_check( (d.n_elem != x.n_elem), "diagview: diagonals have incompatible lengths" );
   
         Mat<eT>& d_m = const_cast< Mat<eT>& >(d.m);
   const Mat<eT>& x_m = x.m;

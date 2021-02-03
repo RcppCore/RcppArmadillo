@@ -238,7 +238,7 @@ SpCol<eT>::shed_row(const uword row_num)
   {
   arma_extra_debug_sigprint();
 
-  arma_debug_check( row_num >= SpMat<eT>::n_rows, "SpCol::shed_row(): out of bounds");
+  arma_debug_check( row_num >= SpMat<eT>::n_rows, "SpCol::shed_row(): out of bounds" );
   
   shed_rows(row_num, row_num);
   }
@@ -364,7 +364,7 @@ SpCol<eT>::begin_row(const uword row_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (row_num >= SpMat<eT>::n_rows), "SpCol::begin_row(): index out of bounds");
+  arma_debug_check( (row_num >= SpMat<eT>::n_rows), "SpCol::begin_row(): index out of bounds" );
   
   SpMat<eT>::sync_csc();
   
@@ -380,7 +380,7 @@ SpCol<eT>::begin_row(const uword row_num) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (row_num >= SpMat<eT>::n_rows), "SpCol::begin_row(): index out of bounds");
+  arma_debug_check( (row_num >= SpMat<eT>::n_rows), "SpCol::begin_row(): index out of bounds" );
   
   SpMat<eT>::sync_csc();
   
@@ -396,7 +396,7 @@ SpCol<eT>::end_row(const uword row_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (row_num >= SpMat<eT>::n_rows), "SpCol::end_row(): index out of bounds");
+  arma_debug_check( (row_num >= SpMat<eT>::n_rows), "SpCol::end_row(): index out of bounds" );
   
   SpMat<eT>::sync_csc();
   
@@ -412,7 +412,7 @@ SpCol<eT>::end_row(const uword row_num) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (row_num >= SpMat<eT>::n_rows), "SpCol::end_row(): index out of bounds");
+  arma_debug_check( (row_num >= SpMat<eT>::n_rows), "SpCol::end_row(): index out of bounds" );
   
   SpMat<eT>::sync_csc();
   
