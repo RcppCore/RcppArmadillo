@@ -3,9 +3,9 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.10.2.0.0 (2021-01-26)}{
+\section{Changes in RcppArmadillo version 0.10.2.1.0 (2021-02-xx)}{
   \itemize{
-    \item Upgraded to Armadillo release 10.2.0 (Cicada Swarm)
+    \item Upgraded to Armadillo release 10.2.1 (Cicada Swarm)
     \itemize{
       \item faster handling of subcubes
       \item added \code{tgamma()}

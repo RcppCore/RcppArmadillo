@@ -2974,7 +2974,7 @@ Mat<eT>::col(const uword col_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( col_num >= n_cols, "Mat::col(): index out of bounds");
+  arma_debug_check( col_num >= n_cols, "Mat::col(): index out of bounds" );
   
   return subview_col<eT>(*this, col_num);
   }
@@ -2989,7 +2989,7 @@ Mat<eT>::col(const uword col_num) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( col_num >= n_cols, "Mat::col(): index out of bounds");
+  arma_debug_check( col_num >= n_cols, "Mat::col(): index out of bounds" );
   
   return subview_col<eT>(*this, col_num);
   }
@@ -3066,7 +3066,7 @@ Mat<eT>::unsafe_col(const uword col_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( col_num >= n_cols, "Mat::unsafe_col(): index out of bounds");
+  arma_debug_check( col_num >= n_cols, "Mat::unsafe_col(): index out of bounds" );
   
   return Col<eT>(colptr(col_num), n_rows, false, true);
   }
@@ -3085,7 +3085,7 @@ Mat<eT>::unsafe_col(const uword col_num) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( col_num >= n_cols, "Mat::unsafe_col(): index out of bounds");
+  arma_debug_check( col_num >= n_cols, "Mat::unsafe_col(): index out of bounds" );
   
   typedef const Col<eT> out_type;
   
@@ -3511,7 +3511,7 @@ Mat<eT>::head_rows(const uword N)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > n_rows), "Mat::head_rows(): size out of bounds");
+  arma_debug_check( (N > n_rows), "Mat::head_rows(): size out of bounds" );
   
   return subview<eT>(*this, 0, 0, N, n_cols);
   }
@@ -3525,7 +3525,7 @@ Mat<eT>::head_rows(const uword N) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > n_rows), "Mat::head_rows(): size out of bounds");
+  arma_debug_check( (N > n_rows), "Mat::head_rows(): size out of bounds" );
   
   return subview<eT>(*this, 0, 0, N, n_cols);
   }
@@ -3539,7 +3539,7 @@ Mat<eT>::tail_rows(const uword N)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > n_rows), "Mat::tail_rows(): size out of bounds");
+  arma_debug_check( (N > n_rows), "Mat::tail_rows(): size out of bounds" );
   
   const uword start_row = n_rows - N;
   
@@ -3555,7 +3555,7 @@ Mat<eT>::tail_rows(const uword N) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > n_rows), "Mat::tail_rows(): size out of bounds");
+  arma_debug_check( (N > n_rows), "Mat::tail_rows(): size out of bounds" );
   
   const uword start_row = n_rows - N;
   
@@ -3571,7 +3571,7 @@ Mat<eT>::head_cols(const uword N)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > n_cols), "Mat::head_cols(): size out of bounds");
+  arma_debug_check( (N > n_cols), "Mat::head_cols(): size out of bounds" );
   
   return subview<eT>(*this, 0, 0, n_rows, N);
   }
@@ -3585,7 +3585,7 @@ Mat<eT>::head_cols(const uword N) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > n_cols), "Mat::head_cols(): size out of bounds");
+  arma_debug_check( (N > n_cols), "Mat::head_cols(): size out of bounds" );
   
   return subview<eT>(*this, 0, 0, n_rows, N);
   }
@@ -3599,7 +3599,7 @@ Mat<eT>::tail_cols(const uword N)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > n_cols), "Mat::tail_cols(): size out of bounds");
+  arma_debug_check( (N > n_cols), "Mat::tail_cols(): size out of bounds" );
   
   const uword start_col = n_cols - N;
   
@@ -3615,7 +3615,7 @@ Mat<eT>::tail_cols(const uword N) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > n_cols), "Mat::tail_cols(): size out of bounds");
+  arma_debug_check( (N > n_cols), "Mat::tail_cols(): size out of bounds" );
   
   const uword start_col = n_cols - N;
   
@@ -4175,7 +4175,7 @@ Mat<eT>::shed_row(const uword row_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( row_num >= n_rows, "Mat::shed_row(): index out of bounds");
+  arma_debug_check( row_num >= n_rows, "Mat::shed_row(): index out of bounds" );
   
   shed_rows(row_num, row_num);
   }
@@ -4190,7 +4190,7 @@ Mat<eT>::shed_col(const uword col_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( col_num >= n_cols, "Mat::shed_col(): index out of bounds");
+  arma_debug_check( col_num >= n_cols, "Mat::shed_col(): index out of bounds" );
   
   shed_cols(col_num, col_num);
   }
@@ -4421,7 +4421,7 @@ Mat<eT>::insert_rows(const uword row_num, const uword N, const bool set_to_zero)
   const uword B_n_rows = t_n_rows - row_num;
   
   // insertion at row_num == n_rows is in effect an append operation
-  arma_debug_check( (row_num > t_n_rows), "Mat::insert_rows(): index out of bounds");
+  arma_debug_check( (row_num > t_n_rows), "Mat::insert_rows(): index out of bounds" );
   
   if(N > 0)
     {
@@ -4464,7 +4464,7 @@ Mat<eT>::insert_cols(const uword col_num, const uword N, const bool set_to_zero)
   const uword B_n_cols = t_n_cols - col_num;
   
   // insertion at col_num == n_cols is in effect an append operation
-  arma_debug_check( (col_num > t_n_cols), "Mat::insert_cols(): index out of bounds");
+  arma_debug_check( (col_num > t_n_cols), "Mat::insert_cols(): index out of bounds" );
   
   if(N > 0)
     {
@@ -5854,7 +5854,7 @@ arma_warn_unused
 eT&
 Mat<eT>::operator() (const uword ii)
   {
-  arma_debug_check( (ii >= n_elem), "Mat::operator(): index out of bounds");
+  arma_debug_check( (ii >= n_elem), "Mat::operator(): index out of bounds" );
   
   return access::rw(mem[ii]);
   }
@@ -5868,7 +5868,7 @@ arma_warn_unused
 const eT&
 Mat<eT>::operator() (const uword ii) const
   {
-  arma_debug_check( (ii >= n_elem), "Mat::operator(): index out of bounds");
+  arma_debug_check( (ii >= n_elem), "Mat::operator(): index out of bounds" );
   
   return mem[ii];
   }
@@ -5929,7 +5929,7 @@ arma_warn_unused
 eT&
 Mat<eT>::operator() (const uword in_row, const uword in_col)
   {
-  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols)), "Mat::operator(): index out of bounds");
+  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols)), "Mat::operator(): index out of bounds" );
   
   return access::rw(mem[in_row + in_col*n_rows]);
   }
@@ -5943,7 +5943,7 @@ arma_warn_unused
 const eT&
 Mat<eT>::operator() (const uword in_row, const uword in_col) const
   {
-  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols)), "Mat::operator(): index out of bounds");
+  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols)), "Mat::operator(): index out of bounds" );
   
   return mem[in_row + in_col*n_rows];
   }
@@ -8742,7 +8742,7 @@ Mat<eT>::begin_col(const uword col_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (col_num >= n_cols), "Mat::begin_col(): index out of bounds");
+  arma_debug_check( (col_num >= n_cols), "Mat::begin_col(): index out of bounds" );
   
   return colptr(col_num);
   }
@@ -8756,7 +8756,7 @@ Mat<eT>::begin_col(const uword col_num) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (col_num >= n_cols), "Mat::begin_col(): index out of bounds");
+  arma_debug_check( (col_num >= n_cols), "Mat::begin_col(): index out of bounds" );
   
   return colptr(col_num);
   }
@@ -8770,7 +8770,7 @@ Mat<eT>::end_col(const uword col_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (col_num >= n_cols), "Mat::end_col(): index out of bounds");
+  arma_debug_check( (col_num >= n_cols), "Mat::end_col(): index out of bounds" );
   
   return colptr(col_num) + n_rows;
   }
@@ -8784,7 +8784,7 @@ Mat<eT>::end_col(const uword col_num) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (col_num >= n_cols), "Mat::end_col(): index out of bounds");
+  arma_debug_check( (col_num >= n_cols), "Mat::end_col(): index out of bounds" );
   
   return colptr(col_num) + n_rows;
   }
@@ -9351,7 +9351,7 @@ arma_warn_unused
 eT&
 Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::operator() (const uword ii)
   {
-  arma_debug_check( (ii >= fixed_n_elem), "Mat::operator(): index out of bounds");
+  arma_debug_check( (ii >= fixed_n_elem), "Mat::operator(): index out of bounds" );
   
   return (use_extra) ? mem_local_extra[ii] : mem_local[ii];
   }
@@ -9365,7 +9365,7 @@ arma_warn_unused
 const eT&
 Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::operator() (const uword ii) const
   {
-  arma_debug_check( (ii >= fixed_n_elem), "Mat::operator(): index out of bounds");
+  arma_debug_check( (ii >= fixed_n_elem), "Mat::operator(): index out of bounds" );
   
   return (use_extra) ? mem_local_extra[ii] : mem_local[ii];
   }
@@ -9407,7 +9407,7 @@ arma_warn_unused
 eT&
 Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::operator() (const uword in_row, const uword in_col)
   {
-  arma_debug_check( ((in_row >= fixed_n_rows) || (in_col >= fixed_n_cols)), "Mat::operator(): index out of bounds");
+  arma_debug_check( ((in_row >= fixed_n_rows) || (in_col >= fixed_n_cols)), "Mat::operator(): index out of bounds" );
   
   const uword iq = in_row + in_col*fixed_n_rows;
   
@@ -9423,7 +9423,7 @@ arma_warn_unused
 const eT&
 Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::operator() (const uword in_row, const uword in_col) const
   {
-  arma_debug_check( ((in_row >= fixed_n_rows) || (in_col >= fixed_n_cols)), "Mat::operator(): index out of bounds");
+  arma_debug_check( ((in_row >= fixed_n_rows) || (in_col >= fixed_n_cols)), "Mat::operator(): index out of bounds" );
   
   const uword iq = in_row + in_col*fixed_n_rows;
   

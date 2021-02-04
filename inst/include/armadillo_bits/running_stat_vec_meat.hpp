@@ -427,7 +427,7 @@ running_stat_vec_aux::update_stats
     }
   else
     {
-    arma_debug_check( (sample.is_vec() == false), "running_stat_vec(): given sample is not a vector");
+    arma_debug_check( (sample.is_vec() == false), "running_stat_vec(): given sample is not a vector" );
     
     x.r_mean.set_size(sample.n_rows, sample.n_cols);
     
@@ -588,7 +588,7 @@ running_stat_vec_aux::update_stats
     }
   else
     {
-    arma_debug_check( (sample.is_vec() == false), "running_stat_vec(): given sample is not a vector");
+    arma_debug_check( (sample.is_vec() == false), "running_stat_vec(): given sample is not a vector" );
     
     x.r_mean.set_size(sample.n_rows, sample.n_cols);
     

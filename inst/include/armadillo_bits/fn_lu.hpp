@@ -34,7 +34,7 @@ lu
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  arma_debug_check( (&L == &U), "lu(): L and U are the same object");
+  arma_debug_check( (&L == &U), "lu(): L and U are the same object" );
   
   const bool status = auxlib::lu(L, U, X);
   
@@ -66,7 +66,7 @@ lu
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  arma_debug_check( ( (&L == &U) || (&L == &P) || (&U == &P) ), "lu(): two or more output objects are the same object");
+  arma_debug_check( ( (&L == &U) || (&L == &P) || (&U == &P) ), "lu(): two or more output objects are the same object" );
   
   const bool status = auxlib::lu(L, U, P, X);
   

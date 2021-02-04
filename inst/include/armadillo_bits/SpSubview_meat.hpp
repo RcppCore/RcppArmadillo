@@ -912,7 +912,7 @@ inline
 SpSubview_MapMat_val<eT>
 SpSubview<eT>::operator()(const uword i)
   {
-  arma_debug_check( (i >= n_elem), "SpSubview::operator(): index out of bounds");
+  arma_debug_check( (i >= n_elem), "SpSubview::operator(): index out of bounds" );
   
   const uword lrow = i % n_rows;
   const uword lcol = i / n_rows;
@@ -928,7 +928,7 @@ inline
 eT
 SpSubview<eT>::operator()(const uword i) const
   {
-  arma_debug_check( (i >= n_elem), "SpSubview::operator(): index out of bounds");
+  arma_debug_check( (i >= n_elem), "SpSubview::operator(): index out of bounds" );
   
   const uword lrow = i % n_rows;
   const uword lcol = i / n_rows;
@@ -944,7 +944,7 @@ inline
 SpSubview_MapMat_val<eT>
 SpSubview<eT>::operator()(const uword in_row, const uword in_col)
   {
-  arma_debug_check( (in_row >= n_rows) || (in_col >= n_cols), "SpSubview::operator(): index out of bounds");
+  arma_debug_check( (in_row >= n_rows) || (in_col >= n_cols), "SpSubview::operator(): index out of bounds" );
   
   return (*this).at(in_row, in_col);
   }
@@ -957,7 +957,7 @@ inline
 eT
 SpSubview<eT>::operator()(const uword in_row, const uword in_col) const
   {
-  arma_debug_check( (in_row >= n_rows) || (in_col >= n_cols), "SpSubview::operator(): index out of bounds");
+  arma_debug_check( (in_row >= n_rows) || (in_col >= n_cols), "SpSubview::operator(): index out of bounds" );
   
   return (*this).at(in_row, in_col);
   }

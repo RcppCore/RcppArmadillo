@@ -29,7 +29,7 @@ op_index_min::apply(Mat<uword>& out, const mtOp<uword,T1,op_index_min>& in)
   typedef typename T1::elem_type eT;
   
   const uword dim = in.aux_uword_a;
-  arma_debug_check( (dim > 1), "index_min(): parameter 'dim' must be 0 or 1");
+  arma_debug_check( (dim > 1), "index_min(): parameter 'dim' must be 0 or 1" );
   
   const quasi_unwrap<T1> U(in.m);
   const Mat<eT>& X = U.M;

@@ -20,7 +20,6 @@
 
 
 template<typename eT>
-arma_hot
 arma_inline
 void
 op_htrans::apply_mat_noalias(Mat<eT>& out, const Mat<eT>& A, const typename arma_not_cx<eT>::result* junk)
@@ -163,7 +162,6 @@ op_htrans::apply_mat_noalias_large(Mat< std::complex<T> >& out, const Mat< std::
 
 
 template<typename eT>
-arma_hot
 arma_inline
 void
 op_htrans::apply_mat_inplace(Mat<eT>& out, const typename arma_not_cx<eT>::result* junk)
@@ -221,7 +219,6 @@ op_htrans::apply_mat_inplace(Mat<eT>& out, const typename arma_cx_only<eT>::resu
 
 
 template<typename eT>
-arma_hot
 arma_inline
 void
 op_htrans::apply_mat(Mat<eT>& out, const Mat<eT>& A, const typename arma_not_cx<eT>::result* junk)

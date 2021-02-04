@@ -238,7 +238,7 @@ SpRow<eT>::shed_col(const uword col_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( col_num >= SpMat<eT>::n_cols, "SpRow::shed_col(): out of bounds");
+  arma_debug_check( col_num >= SpMat<eT>::n_cols, "SpRow::shed_col(): out of bounds" );
   
   shed_cols(col_num, col_num);
   }
@@ -336,9 +336,9 @@ SpRow<eT>::shed_cols(const uword in_col1, const uword in_col2)
 //   arma_extra_debug_sigprint();
 // 
 //   // insertion at col_num == n_cols is in effect an append operation
-//   arma_debug_check( (col_num > SpMat<eT>::n_cols), "SpRow::insert_cols(): out of bounds");
+//   arma_debug_check( (col_num > SpMat<eT>::n_cols), "SpRow::insert_cols(): out of bounds" );
 // 
-//   arma_debug_check( (set_to_zero == false), "SpRow::insert_cols(): cannot set elements to nonzero values");
+//   arma_debug_check( (set_to_zero == false), "SpRow::insert_cols(): cannot set elements to nonzero values" );
 // 
 //   uword newVal = (col_num == 0) ? 0 : SpMat<eT>::col_ptrs[col_num];
 //   SpMat<eT>::col_ptrs.insert(col_num, N, newVal);

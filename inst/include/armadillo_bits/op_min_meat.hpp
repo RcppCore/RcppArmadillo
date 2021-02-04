@@ -29,7 +29,7 @@ op_min::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_min>& in)
   typedef typename T1::elem_type eT;
   
   const uword dim = in.aux_uword_a;
-  arma_debug_check( (dim > 1), "min(): parameter 'dim' must be 0 or 1");
+  arma_debug_check( (dim > 1), "min(): parameter 'dim' must be 0 or 1" );
   
   const quasi_unwrap<T1> U(in.m);
   const Mat<eT>& X = U.M;
