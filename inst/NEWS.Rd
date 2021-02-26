@@ -3,6 +3,12 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.10.2.2.0 (2021-02-26) [github]}{
+  \itemize{
+    \item Upgraded to Armadillo release 10.2.2 (Cicada Swarm)
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.10.2.1.0 (2021-02-09)}{
   \itemize{
     \item Upgraded to Armadillo release 10.2.1 (Cicada Swarm)
