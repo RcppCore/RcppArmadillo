@@ -129,11 +129,11 @@ class subview : public Base< eT, subview<eT> >
   inline eT&         at(const uword in_row, const uword in_col);
   inline eT          at(const uword in_row, const uword in_col) const;
   
-  inline eT&         front();
-  inline eT          front() const;
+  inline eT& front();
+  inline eT  front() const;
   
-  inline eT&         back();
-  inline eT          back() const;
+  inline eT& back();
+  inline eT  back() const;
   
   arma_inline       eT* colptr(const uword in_col);
   arma_inline const eT* colptr(const uword in_col) const;
@@ -548,8 +548,9 @@ class subview_row_strans : public Base< eT, subview_row_strans<eT> >
   
   arma_aligned const subview_row<eT>& sv_row;
   
-         const     uword n_rows;     // equal to n_elem
-         const     uword n_elem;
+  const uword n_rows;     // equal to n_elem
+  const uword n_elem;
+  
   static constexpr uword n_cols = 1;
   
   
@@ -582,8 +583,9 @@ class subview_row_htrans : public Base< eT, subview_row_htrans<eT> >
   
   arma_aligned const subview_row<eT>& sv_row;
   
-         const     uword n_rows;     // equal to n_elem
-         const     uword n_elem;
+  const uword n_rows;     // equal to n_elem
+  const uword n_elem;
+  
   static constexpr uword n_cols = 1;
   
   

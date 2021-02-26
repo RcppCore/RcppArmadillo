@@ -119,7 +119,7 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
       {
       const T val = s_mem[i];
       
-      if(val >= tol)  {  s2_mem[count2] = T(1) / val;  ++count2; }
+      if(val >= tol)  { s2_mem[count2] = (val > T(0)) ? T(T(1) / val) : T(0); ++count2; }
       }
     
     

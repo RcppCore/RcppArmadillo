@@ -82,7 +82,6 @@ wishrnd(Mat<typename T1::elem_type>& W, const Base<typename T1::elem_type, T1>& 
 
 
 template<typename T1, typename T2>
-arma_warn_unused
 inline
 typename
 enable_if2
@@ -167,7 +166,6 @@ iwishrnd(Mat<typename T1::elem_type>& W, const Base<typename T1::elem_type, T1>&
 
 
 template<typename T1, typename T2>
-arma_warn_unused
 inline
 typename
 enable_if2
