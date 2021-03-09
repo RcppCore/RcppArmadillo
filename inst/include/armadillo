@@ -482,7 +482,7 @@ namespace arma
   #include "armadillo_bits/fn_cumsum.hpp"
   #include "armadillo_bits/fn_cumprod.hpp"
   #include "armadillo_bits/fn_symmat.hpp"
-  #include "armadillo_bits/fn_syl_lyap.hpp"
+  #include "armadillo_bits/fn_sylvester.hpp"
   #include "armadillo_bits/fn_hist.hpp"
   #include "armadillo_bits/fn_histc.hpp"
   #include "armadillo_bits/fn_unique.hpp"

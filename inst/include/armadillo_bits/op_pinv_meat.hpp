@@ -55,17 +55,34 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   
   arma_debug_check((tol < T(0)), "pinv(): tolerance must be >= 0");
   
-  const Proxy<T1> P(expr.get_ref());
+  Mat<eT> A(expr.get_ref());
   
-  const uword n_rows = P.get_n_rows();
-  const uword n_cols = P.get_n_cols();
+  const uword n_rows = A.n_rows;
+  const uword n_cols = A.n_cols;
   
-  if( (n_rows*n_cols) == 0 )
+  if(A.is_empty())  { out.set_size(n_cols,n_rows); return true; }
+  
+  #if defined(ARMA_OPTIMISE_SYMPD)
+    const bool try_sympd = (auxlib::crippled_lapack(A) == false) && (tol == T(0)) && sympd_helper::guess_sympd_anysize(A);
+  #else
+    const bool try_sympd = false;
+  #endif
+  
+  if(try_sympd)
     {
-    out.set_size(n_cols,n_rows);
-    return true;
+    arma_extra_debug_print("op_pinv: attempting sympd optimisation");
+    
+    out = A;
+    
+    const T rcond_threshold = T((std::max)(uword(100), uword(A.n_rows))) * std::numeric_limits<T>::epsilon();
+    
+    const bool status = auxlib::inv_sympd_rcond(out, rcond_threshold);
+    
+    if(status)  { return true; }
+    
+    arma_extra_debug_print("op_pinv: sympd optimisation failed");
+    // auxlib::inv_sympd_rcond() will fail if A isn't really positive definite or its rcond is below rcond_threshold
     }
-  
   
   // economical SVD decomposition 
   Mat<eT> U;
@@ -74,20 +91,11 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   
   bool status = false;
   
-  if(use_divide_and_conquer)
-    {
-    status = (n_cols > n_rows) ? auxlib::svd_dc_econ(U, s, V, trans(P.Q)) : auxlib::svd_dc_econ(U, s, V, P.Q);
-    }
-  else
-    {
-    status = (n_cols > n_rows) ? auxlib::svd_econ(U, s, V, trans(P.Q), 'b') : auxlib::svd_econ(U, s, V, P.Q, 'b');
-    }
+  if(n_cols > n_rows)  { A = trans(A); }
   
-  if(status == false)
-    {
-    out.soft_reset();
-    return false;
-    }
+  status = (use_divide_and_conquer) ? auxlib::svd_dc_econ(U, s, V, A) : auxlib::svd_econ(U, s, V, A, 'b');
+  
+  if(status == false)  { out.soft_reset(); return false; }
   
   const uword s_n_elem = s.n_elem;
   const T*    s_mem    = s.memptr();
@@ -101,80 +109,69 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   
   uword count = 0;
   
-  for(uword i = 0; i < s_n_elem; ++i)
+  for(uword i = 0; i < s_n_elem; ++i)  { count += (s_mem[i] >= tol) ? uword(1) : uword(0); }
+  
+  if(count == 0)  { out.zeros(n_cols, n_rows); return true; }
+  
+  Col<T> s2(count);
+  
+  T* s2_mem = s2.memptr();
+  
+  uword count2 = 0;
+  
+  for(uword i=0; i < s_n_elem; ++i)
     {
-    count += (s_mem[i] >= tol) ? uword(1) : uword(0);
+    const T val = s_mem[i];
+    
+    if(val >= tol)  { s2_mem[count2] = (val > T(0)) ? T(T(1) / val) : T(0); ++count2; }
     }
   
   
-  if(count > 0)
+  Mat<eT> tmp;
+    
+  if(n_rows >= n_cols)
     {
-    Col<T> s2(count);
+    // out = ( (V.n_cols > count) ? V.cols(0,count-1) : V ) * diagmat(s2) * trans( (U.n_cols > count) ? U.cols(0,count-1) : U );
     
-    T* s2_mem = s2.memptr();
-    
-    uword count2 = 0;
-    
-    for(uword i=0; i < s_n_elem; ++i)
+    if(count < V.n_cols)
       {
-      const T val = s_mem[i];
-      
-      if(val >= tol)  { s2_mem[count2] = (val > T(0)) ? T(T(1) / val) : T(0); ++count2; }
-      }
-    
-    
-    if(n_rows >= n_cols)
-      {
-      // out = ( (V.n_cols > count) ? V.cols(0,count-1) : V ) * diagmat(s2) * trans( (U.n_cols > count) ? U.cols(0,count-1) : U );
-      
-      Mat<eT> tmp;
-      
-      if(count < V.n_cols)
-        {
-        tmp = V.cols(0,count-1) * diagmat(s2);
-        }
-      else
-        {
-        tmp = V * diagmat(s2);
-        }
-      
-      if(count < U.n_cols)
-        {
-        out = tmp * trans(U.cols(0,count-1));
-        }
-      else
-        {
-        out = tmp * trans(U);
-        }
+      tmp = V.cols(0,count-1) * diagmat(s2);
       }
     else
       {
-      // out = ( (U.n_cols > count) ? U.cols(0,count-1) : U ) * diagmat(s2) * trans( (V.n_cols > count) ? V.cols(0,count-1) : V );
-      
-      Mat<eT> tmp;
-      
-      if(count < U.n_cols)
-        {
-        tmp = U.cols(0,count-1) * diagmat(s2);
-        }
-      else
-        {
-        tmp = U * diagmat(s2);
-        }
-      
-      if(count < V.n_cols)
-        {
-        out = tmp * trans(V.cols(0,count-1));
-        }
-      else
-        {
-        out = tmp * trans(V);
-        }
+      tmp = V * diagmat(s2);
+      }
+    
+    if(count < U.n_cols)
+      {
+      out = tmp * trans(U.cols(0,count-1));
+      }
+    else
+      {
+      out = tmp * trans(U);
       }
     }
   else
     {
-    out.zeros(n_cols, n_rows);
+    // out = ( (U.n_cols > count) ? U.cols(0,count-1) : U ) * diagmat(s2) * trans( (V.n_cols > count) ? V.cols(0,count-1) : V );
+    
+    if(count < U.n_cols)
+      {
+      tmp = U.cols(0,count-1) * diagmat(s2);
+      }
+    else
+      {
+      tmp = U * diagmat(s2);
+      }
+    
+    if(count < V.n_cols)
+      {
+      out = tmp * trans(V.cols(0,count-1));
+      }
+    else
+      {
+      out = tmp * trans(V);
+      }
     }
   
   return true;

@@ -811,7 +811,7 @@ arma_inline
 eT&
 diagview<eT>::operator()(const uword ii)
   {
-  arma_debug_check( (ii >= n_elem), "diagview::operator(): out of bounds" );
+  arma_debug_check_bounds( (ii >= n_elem), "diagview::operator(): out of bounds" );
   
   return (const_cast< Mat<eT>& >(m)).at(ii+row_offset, ii+col_offset);
   }
@@ -823,7 +823,7 @@ arma_inline
 eT
 diagview<eT>::operator()(const uword ii) const
   {
-  arma_debug_check( (ii >= n_elem), "diagview::operator(): out of bounds" );
+  arma_debug_check_bounds( (ii >= n_elem), "diagview::operator(): out of bounds" );
   
   return m.at(ii+row_offset, ii+col_offset);
   }
@@ -855,7 +855,7 @@ arma_inline
 eT&
 diagview<eT>::operator()(const uword row, const uword col)
   {
-  arma_debug_check( ((row >= n_elem) || (col > 0)), "diagview::operator(): out of bounds" );
+  arma_debug_check_bounds( ((row >= n_elem) || (col > 0)), "diagview::operator(): out of bounds" );
   
   return (const_cast< Mat<eT>& >(m)).at(row+row_offset, row+col_offset);
   }
@@ -867,7 +867,7 @@ arma_inline
 eT
 diagview<eT>::operator()(const uword row, const uword col) const
   {
-  arma_debug_check( ((row >= n_elem) || (col > 0)), "diagview::operator(): out of bounds" );
+  arma_debug_check_bounds( ((row >= n_elem) || (col > 0)), "diagview::operator(): out of bounds" );
   
   return m.at(row+row_offset, row+col_offset);
   }

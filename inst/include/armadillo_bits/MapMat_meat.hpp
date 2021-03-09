@@ -435,7 +435,7 @@ arma_warn_unused
 MapMat_val<eT>
 MapMat<eT>::operator()(const uword index)
   {
-  arma_debug_check( (index >= n_elem), "MapMat::operator(): index out of bounds" );
+  arma_debug_check_bounds( (index >= n_elem), "MapMat::operator(): index out of bounds" );
   
   return MapMat_val<eT>(*this, index);
   }
@@ -448,7 +448,7 @@ arma_warn_unused
 eT
 MapMat<eT>::operator()(const uword index) const
   {
-  arma_debug_check( (index >= n_elem), "MapMat::operator(): index out of bounds" );
+  arma_debug_check_bounds( (index >= n_elem), "MapMat::operator(): index out of bounds" );
   
   map_type& map_ref = (*map_ptr);
   
@@ -497,7 +497,7 @@ arma_warn_unused
 MapMat_val<eT>
 MapMat<eT>::operator()(const uword in_row, const uword in_col)
   {
-  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols)), "MapMat::operator(): index out of bounds" );
+  arma_debug_check_bounds( ((in_row >= n_rows) || (in_col >= n_cols)), "MapMat::operator(): index out of bounds" );
   
   const uword index = (n_rows * in_col) + in_row;
   
@@ -512,7 +512,7 @@ arma_warn_unused
 eT
 MapMat<eT>::operator()(const uword in_row, const uword in_col) const
   {
-  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols)), "MapMat::operator(): index out of bounds" );
+  arma_debug_check_bounds( ((in_row >= n_rows) || (in_col >= n_cols)), "MapMat::operator(): index out of bounds" );
   
   const uword index = (n_rows * in_col) + in_row;
   

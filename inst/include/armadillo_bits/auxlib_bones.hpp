@@ -51,6 +51,11 @@ class auxlib
   template<typename eT>
   arma_cold inline static bool inv_sympd_tiny(Mat<eT>& out, const Mat<eT>& X);
   
+  template<typename eT>
+  inline static bool inv_sympd_rcond(Mat<eT>& A, const eT rcond_threshold);
+  
+  template<typename T>
+  inline static bool inv_sympd_rcond(Mat< std::complex<T> >& A, const T rcond_threshold);
   
   
   //
@@ -213,55 +218,44 @@ class auxlib
   //
   // svd
   
-  template<typename eT, typename T1>
-  inline static bool svd(Col<eT>& S, const Base<eT,T1>& X, uword& n_rows, uword& n_cols);
+  template<typename eT>
+  inline static bool svd(Col<eT>& S, Mat<eT>& A);
   
-  template<typename T, typename T1>
-  inline static bool svd(Col<T>& S, const Base<std::complex<T>, T1>& X, uword& n_rows, uword& n_cols);
-  
-  template<typename eT, typename T1>
-  inline static bool svd(Col<eT>& S, const Base<eT,T1>& X);
-  
-  template<typename T, typename T1>
-  inline static bool svd(Col<T>& S, const Base<std::complex<T>, T1>& X);
-  
-  template<typename eT, typename T1>
-  inline static bool svd(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X);
-  
-  template<typename T, typename T1>
-  inline static bool svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, const Base< std::complex<T>, T1>& X);
-  
-  template<typename eT, typename T1>
-  inline static bool svd_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X, const char mode);
-  
-  template<typename T, typename T1>
-  inline static bool svd_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, const Base< std::complex<T>, T1>& X, const char mode);
+  template<typename T>
+  inline static bool svd(Col<T>& S, Mat< std::complex<T> >& A);
   
   
-  template<typename eT, typename T1>
-  inline static bool svd_dc(Col<eT>& S, const Base<eT,T1>& X, uword& n_rows, uword& n_cols);
+  template<typename eT>
+  inline static bool svd(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, Mat<eT>& A);
   
-  template<typename T, typename T1>
-  inline static bool svd_dc(Col<T>& S, const Base<std::complex<T>, T1>& X, uword& n_rows, uword& n_cols);
+  template<typename T>
+  inline static bool svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, Mat< std::complex<T> >& A);
   
-  template<typename eT, typename T1>
-  inline static bool svd_dc(Col<eT>& S, const Base<eT,T1>& X);
+  template<typename eT>
+  inline static bool svd_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, Mat<eT>& A, const char mode);
   
-  template<typename T, typename T1>
-  inline static bool svd_dc(Col<T>& S, const Base<std::complex<T>, T1>& X);
+  template<typename T>
+  inline static bool svd_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, Mat< std::complex<T> >& A, const char mode);
   
   
-  template<typename eT, typename T1>
-  inline static bool svd_dc(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X);
+  template<typename eT>
+  inline static bool svd_dc(Col<eT>& S, Mat<eT>& A);
   
-  template<typename T, typename T1>
-  inline static bool svd_dc(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, const Base< std::complex<T>, T1>& X);
+  template<typename T>
+  inline static bool svd_dc(Col<T>& S, Mat< std::complex<T> >& A);
   
-  template<typename eT, typename T1>
-  inline static bool svd_dc_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X);
   
-  template<typename T, typename T1>
-  inline static bool svd_dc_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, const Base< std::complex<T>, T1>& X);
+  template<typename eT>
+  inline static bool svd_dc(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, Mat<eT>& A);
+  
+  template<typename T>
+  inline static bool svd_dc(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, Mat< std::complex<T> >& A);
+  
+  template<typename eT>
+  inline static bool svd_dc_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, Mat<eT>& A);
+  
+  template<typename T>
+  inline static bool svd_dc_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, Mat< std::complex<T> >& A);
   
   
   //
@@ -377,7 +371,7 @@ class auxlib
   inline static bool schur(Mat< std::complex<T> >& U, Mat< std::complex<T> >& S, const bool calc_U = true);
   
   //
-  // syl (solution of the Sylvester equation AX + XB = C)
+  // solve the Sylvester equation AX + XB = C
   
   template<typename eT>
   inline static bool syl(Mat<eT>& X, const Mat<eT>& A, const Mat<eT>& B, const Mat<eT>& C);

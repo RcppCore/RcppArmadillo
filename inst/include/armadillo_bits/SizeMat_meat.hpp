@@ -48,7 +48,7 @@ SizeMat::operator()(const uword dim) const
   if(dim == 0)  { return n_rows; }
   if(dim == 1)  { return n_cols; }
   
-  arma_debug_check(true, "size(): index out of bounds");
+  arma_debug_check_bounds(true, "size(): index out of bounds");
   
   return uword(1);
   }

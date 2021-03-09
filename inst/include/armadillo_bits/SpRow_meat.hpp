@@ -238,7 +238,7 @@ SpRow<eT>::shed_col(const uword col_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( col_num >= SpMat<eT>::n_cols, "SpRow::shed_col(): out of bounds" );
+  arma_debug_check_bounds( col_num >= SpMat<eT>::n_cols, "SpRow::shed_col(): out of bounds" );
   
   shed_cols(col_num, col_num);
   }
@@ -253,7 +253,7 @@ SpRow<eT>::shed_cols(const uword in_col1, const uword in_col2)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     (in_col1 > in_col2) || (in_col2 >= SpMat<eT>::n_cols),
     "SpRow::shed_cols(): indices out of bounds or incorrectly used"
@@ -336,7 +336,7 @@ SpRow<eT>::shed_cols(const uword in_col1, const uword in_col2)
 //   arma_extra_debug_sigprint();
 // 
 //   // insertion at col_num == n_cols is in effect an append operation
-//   arma_debug_check( (col_num > SpMat<eT>::n_cols), "SpRow::insert_cols(): out of bounds" );
+//   arma_debug_check_bounds( (col_num > SpMat<eT>::n_cols), "SpRow::insert_cols(): out of bounds" );
 // 
 //   arma_debug_check( (set_to_zero == false), "SpRow::insert_cols(): cannot set elements to nonzero values" );
 // 
@@ -366,7 +366,7 @@ SpRow<eT>::begin_row(const uword row_num)
 
   // Since this is a row, row_num can only be 0.  But the option is provided for
   // compatibility.
-  arma_debug_check((row_num >= 1), "SpRow::begin_row(): index out of bounds");
+  arma_debug_check_bounds((row_num >= 1), "SpRow::begin_row(): index out of bounds");
   
   return SpMat<eT>::begin();
   }
@@ -382,7 +382,7 @@ SpRow<eT>::begin_row(const uword row_num) const
   
   // Since this is a row, row_num can only be 0.  But the option is provided for
   // compatibility.
-  arma_debug_check((row_num >= 1), "SpRow::begin_row(): index out of bounds");
+  arma_debug_check_bounds((row_num >= 1), "SpRow::begin_row(): index out of bounds");
   
   return SpMat<eT>::begin();
   }
@@ -398,7 +398,7 @@ SpRow<eT>::end_row(const uword row_num)
   
   // Since this is a row, row_num can only be 0.  But the option is provided for
   // compatibility.
-  arma_debug_check((row_num >= 1), "SpRow::end_row(): index out of bounds");
+  arma_debug_check_bounds((row_num >= 1), "SpRow::end_row(): index out of bounds");
   
   return SpMat<eT>::end();
   }
@@ -414,7 +414,7 @@ SpRow<eT>::end_row(const uword row_num) const
   
   // Since this is a row, row_num can only be 0.  But the option is provided for
   // compatibility.
-  arma_debug_check((row_num >= 1), "SpRow::end_row(): index out of bounds");
+  arma_debug_check_bounds((row_num >= 1), "SpRow::end_row(): index out of bounds");
   
   return SpMat<eT>::end();
   }

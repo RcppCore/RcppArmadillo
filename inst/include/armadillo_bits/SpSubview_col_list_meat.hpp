@@ -47,14 +47,14 @@ SpSubview_col_list<eT,T1>::SpSubview_col_list
   arma_debug_check
     (
     ( (ci.is_vec() == false) && (ci.is_empty() == false) ),
-    "SpMat::cols(): given object is not a vector"
+    "SpMat::cols(): given object must be a vector"
     );
   
   for(uword ci_count=0; ci_count < ci_n_elem; ++ci_count)
     {
     const uword i = ci_mem[ci_count];
     
-    arma_debug_check( (i >= in_m.n_cols), "SpMat::cols(): index out of bounds" );
+    arma_debug_check_bounds( (i >= in_m.n_cols), "SpMat::cols(): index out of bounds" );
     }
   }
 

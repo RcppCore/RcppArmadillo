@@ -524,7 +524,7 @@ spop_diagvec::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_diagv
   const uword row_offset = (b >  0) ? a : 0;
   const uword col_offset = (b == 0) ? a : 0;
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     ((row_offset > 0) && (row_offset >= X.n_rows)) || ((col_offset > 0) && (col_offset >= X.n_cols)),
     "diagvec(): requested diagonal out of bounds"

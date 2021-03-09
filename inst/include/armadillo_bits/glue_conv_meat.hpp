@@ -181,7 +181,7 @@ glue_conv::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_conv>& 
   arma_debug_check
     (
     ( ((A.is_vec() == false) && (A.is_empty() == false)) || ((B.is_vec() == false) && (B.is_empty() == false)) ),
-    "conv(): given object is not a vector"
+    "conv(): given object must be a vector"
     );
   
   const bool A_is_col = ((T1::is_col) || (A.n_cols == 1));

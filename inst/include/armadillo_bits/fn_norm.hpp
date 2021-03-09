@@ -37,10 +37,7 @@ norm
   
   const Proxy<T1> P(X);
   
-  if(P.get_n_elem() == 0)
-    {
-    return T(0);
-    }
+  if(P.get_n_elem() == 0)  { return T(0); }
   
   const bool is_vec = (T1::is_xvec) || (T1::is_row) || (T1::is_col) || (P.get_n_rows() == 1) || (P.get_n_cols() == 1);
   
@@ -104,10 +101,7 @@ norm
   
   const Proxy<T1> P(X);
   
-  if(P.get_n_elem() == 0)
-    {
-    return T(0);
-    }
+  if(P.get_n_elem() == 0)  { return T(0); }
   
   const char sig    = (method != nullptr) ? method[0] : char(0);
   const bool is_vec = (T1::is_xvec) || (T1::is_row) || (T1::is_col) || (P.get_n_rows() == 1) || (P.get_n_cols() == 1);
@@ -151,6 +145,8 @@ norm
       return T(0);
       }
     }
+  
+  return T(0);  // prevent erroneous compiler warnings
   }
 
 
@@ -178,12 +174,9 @@ norm
   
   const SpProxy<T1> P(X);
   
-  if(P.get_n_nonzero() == 0)
-    {
-    return T(0);
-    }
+  if(P.get_n_nonzero() == 0)  { return T(0); }
   
-  const bool is_vec = (P.get_n_rows() == 1) || (P.get_n_cols() == 1);
+  const bool is_vec = (T1::is_xvec) || (T1::is_row) || (T1::is_col) || (P.get_n_rows() == 1) || (P.get_n_cols() == 1);
   
   if(is_vec)
     {
@@ -207,7 +200,7 @@ norm
       
       default:
         {
-        arma_debug_check( (k == 0), "norm(): k must be greater than zero"   );
+        arma_debug_check( (k == 0), "norm(): k must be greater than zero" );
         return op_norm::vec_norm_k(P_fake_vector, int(k));
         }
       }
@@ -229,6 +222,8 @@ norm
         return T(0);
       }
     }
+  
+  return T(0);  // prevent erroneous compiler warnings
   }
 
 
@@ -252,10 +247,7 @@ norm
   
   const SpProxy<T1> P(X);
   
-  if(P.get_n_nonzero() == 0)
-    {
-    return T(0);
-    }
+  if(P.get_n_nonzero() == 0)  { return T(0); }
   
   
   const unwrap_spmat<typename SpProxy<T1>::stored_type> tmp(P.Q);
@@ -268,7 +260,7 @@ norm
   
   
   const char sig    = (method != nullptr) ? method[0] : char(0);
-  const bool is_vec = (P.get_n_rows() == 1) || (P.get_n_cols() == 1);  // TODO: (T1::is_row) || (T1::is_col) || ...
+  const bool is_vec = (T1::is_xvec) || (T1::is_row) || (T1::is_col) || (P.get_n_rows() == 1) || (P.get_n_cols() == 1);
   
   if(is_vec)
     {
@@ -318,6 +310,8 @@ norm
       return T(0);
       }
     }
+  
+  return T(0);  // prevent erroneous compiler warnings
   }
 
 

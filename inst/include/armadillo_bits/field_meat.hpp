@@ -517,7 +517,7 @@ arma_inline
 oT&
 field<oT>::operator() (const uword i)
   {
-  arma_debug_check( (i >= n_elem), "field::operator(): index out of bounds" );
+  arma_debug_check_bounds( (i >= n_elem), "field::operator(): index out of bounds" );
   
   return (*mem[i]);
   }
@@ -530,7 +530,7 @@ arma_inline
 const oT&
 field<oT>::operator() (const uword i) const
   {
-  arma_debug_check( (i >= n_elem), "field::operator(): index out of bounds" );
+  arma_debug_check_bounds( (i >= n_elem), "field::operator(): index out of bounds" );
   
   return (*mem[i]);
   }
@@ -543,7 +543,7 @@ arma_inline
 oT&
 field<oT>::operator() (const uword in_row, const uword in_col)
   {
-  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols) || (0 >= n_slices) ), "field::operator(): index out of bounds" );
+  arma_debug_check_bounds( ((in_row >= n_rows) || (in_col >= n_cols) || (0 >= n_slices) ), "field::operator(): index out of bounds" );
   
   return (*mem[in_row + in_col*n_rows]);
   }
@@ -556,7 +556,7 @@ arma_inline
 const oT&
 field<oT>::operator() (const uword in_row, const uword in_col) const
   {
-  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols) || (0 >= n_slices) ), "field::operator(): index out of bounds" );
+  arma_debug_check_bounds( ((in_row >= n_rows) || (in_col >= n_cols) || (0 >= n_slices) ), "field::operator(): index out of bounds" );
   
   return (*mem[in_row + in_col*n_rows]);
   }
@@ -569,7 +569,7 @@ arma_inline
 oT&
 field<oT>::operator() (const uword in_row, const uword in_col, const uword in_slice)
   {
-  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols) || (in_slice >= n_slices)), "field::operator(): index out of bounds" );
+  arma_debug_check_bounds( ((in_row >= n_rows) || (in_col >= n_cols) || (in_slice >= n_slices)), "field::operator(): index out of bounds" );
   
   return (*mem[in_row + in_col*n_rows + in_slice*(n_rows*n_cols)]);
   }
@@ -582,7 +582,7 @@ arma_inline
 const oT&
 field<oT>::operator() (const uword in_row, const uword in_col, const uword in_slice) const
   {
-  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols) || (in_slice >= n_slices)), "field::operator(): index out of bounds" );
+  arma_debug_check_bounds( ((in_row >= n_rows) || (in_col >= n_cols) || (in_slice >= n_slices)), "field::operator(): index out of bounds" );
   
   return (*mem[in_row + in_col*n_rows + in_slice*(n_rows*n_cols)]);
   }
@@ -665,7 +665,7 @@ field<oT>::row(const uword row_num)
   
   arma_debug_check( (n_slices >= 2), "field::row(): field must be 2D" );
 
-  arma_debug_check( (row_num >= n_rows), "field::row(): row out of bounds" );
+  arma_debug_check_bounds( (row_num >= n_rows), "field::row(): row out of bounds" );
   
   return subview_field<oT>(*this, row_num, 0, 1, n_cols);
   }
@@ -682,7 +682,7 @@ field<oT>::row(const uword row_num) const
   
   arma_debug_check( (n_slices >= 2), "field::row(): field must be 2D" );
 
-  arma_debug_check( (row_num >= n_rows), "field::row(): row out of bounds" );
+  arma_debug_check_bounds( (row_num >= n_rows), "field::row(): row out of bounds" );
   
   return subview_field<oT>(*this, row_num, 0, 1, n_cols);
   }
@@ -699,7 +699,7 @@ field<oT>::col(const uword col_num)
   
   arma_debug_check( (n_slices >= 2), "field::col(): field must be 2D" );
 
-  arma_debug_check( (col_num >= n_cols), "field::col(): out of bounds" );
+  arma_debug_check_bounds( (col_num >= n_cols), "field::col(): out of bounds" );
   
   return subview_field<oT>(*this, 0, col_num, n_rows, 1);
   }
@@ -716,7 +716,7 @@ field<oT>::col(const uword col_num) const
   
   arma_debug_check( (n_slices >= 2), "field::col(): field must be 2D" );
 
-  arma_debug_check( (col_num >= n_cols), "field::col(): out of bounds" );
+  arma_debug_check_bounds( (col_num >= n_cols), "field::col(): out of bounds" );
   
   return subview_field<oT>(*this, 0, col_num, n_rows, 1);
   }
@@ -731,7 +731,7 @@ field<oT>::slice(const uword slice_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (slice_num >= n_slices), "field::slice(): out of bounds" );
+  arma_debug_check_bounds( (slice_num >= n_slices), "field::slice(): out of bounds" );
   
   return subview_field<oT>(*this, 0, 0, slice_num, n_rows, n_cols, 1);
   }
@@ -746,7 +746,7 @@ field<oT>::slice(const uword slice_num) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (slice_num >= n_slices), "field::slice(): out of bounds" );
+  arma_debug_check_bounds( (slice_num >= n_slices), "field::slice(): out of bounds" );
   
   return subview_field<oT>(*this, 0, 0, slice_num, n_rows, n_cols, 1);
   }
@@ -763,7 +763,7 @@ field<oT>::rows(const uword in_row1, const uword in_row2)
   
   arma_debug_check( (n_slices >= 2), "field::rows(): field must be 2D" );
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     ( (in_row1 > in_row2) || (in_row2 >= n_rows) ),
     "field::rows(): indicies out of bounds or incorrectly used"
@@ -786,7 +786,7 @@ field<oT>::rows(const uword in_row1, const uword in_row2) const
   
   arma_debug_check( (n_slices >= 2), "field::rows(): field must be 2D" );
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     ( (in_row1 > in_row2) || (in_row2 >= n_rows) ),
     "field::rows(): indicies out of bounds or incorrectly used"
@@ -809,7 +809,7 @@ field<oT>::cols(const uword in_col1, const uword in_col2)
   
   arma_debug_check( (n_slices >= 2), "field::cols(): field must be 2D" );
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     ( (in_col1 > in_col2) || (in_col2 >= n_cols) ),
     "field::cols(): indicies out of bounds or incorrectly used"
@@ -832,7 +832,7 @@ field<oT>::cols(const uword in_col1, const uword in_col2) const
   
   arma_debug_check( (n_slices >= 2), "field::cols(): field must be 2D" );
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     ( (in_col1 > in_col2) || (in_col2 >= n_cols) ),
     "field::cols(): indicies out of bounds or incorrectly used"
@@ -853,7 +853,7 @@ field<oT>::slices(const uword in_slice1, const uword in_slice2)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     ( (in_slice1 > in_slice2) || (in_slice2 >= n_slices) ),
     "field::slices(): indicies out of bounds or incorrectly used"
@@ -874,7 +874,7 @@ field<oT>::slices(const uword in_slice1, const uword in_slice2) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     ( (in_slice1 > in_slice2) || (in_slice2 >= n_slices) ),
     "field::slices(): indicies out of bounds or incorrectly used"
@@ -897,7 +897,7 @@ field<oT>::subfield(const uword in_row1, const uword in_col1, const uword in_row
   
   arma_debug_check( (n_slices >= 2), "field::subfield(): field must be 2D" );
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     (in_row1 > in_row2) || (in_col1 > in_col2) || (in_row2 >= n_rows) || (in_col2 >= n_cols),
     "field::subfield(): indices out of bounds or incorrectly used"
@@ -921,7 +921,7 @@ field<oT>::subfield(const uword in_row1, const uword in_col1, const uword in_row
   
   arma_debug_check( (n_slices >= 2), "field::subfield(): field must be 2D" );
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     (in_row1 > in_row2) || (in_col1 > in_col2) || (in_row2 >= n_rows) || (in_col2 >= n_cols),
     "field::subfield(): indices out of bounds or incorrectly used"
@@ -943,7 +943,7 @@ field<oT>::subfield(const uword in_row1, const uword in_col1, const uword in_sli
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     (in_row1 > in_row2) || (in_col1 > in_col2) || (in_slice1 > in_slice2) || (in_row2 >= n_rows) || (in_col2 >= n_cols) || (in_slice2 >= n_slices),
     "field::subfield(): indices out of bounds or incorrectly used"
@@ -966,7 +966,7 @@ field<oT>::subfield(const uword in_row1, const uword in_col1, const uword in_sli
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     (in_row1 > in_row2) || (in_col1 > in_col2) || (in_slice1 > in_slice2) || (in_row2 >= n_rows) || (in_col2 >= n_cols) || (in_slice2 >= n_slices),
     "field::subfield(): indices out of bounds or incorrectly used"
@@ -997,7 +997,7 @@ field<oT>::subfield(const uword in_row1, const uword in_col1, const SizeMat& s)
   const uword s_n_rows = s.n_rows;
   const uword s_n_cols = s.n_cols;
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     ((in_row1 >= l_n_rows) || (in_col1 >= l_n_cols) || ((in_row1 + s_n_rows) > l_n_rows) || ((in_col1 + s_n_cols) > l_n_cols)),
     "field::subfield(): indices or size out of bounds"
@@ -1024,7 +1024,7 @@ field<oT>::subfield(const uword in_row1, const uword in_col1, const SizeMat& s) 
   const uword s_n_rows = s.n_rows;
   const uword s_n_cols = s.n_cols;
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     ((in_row1 >= l_n_rows) || (in_col1 >= l_n_cols) || ((in_row1 + s_n_rows) > l_n_rows) || ((in_col1 + s_n_cols) > l_n_cols)),
     "field::subfield(): indices or size out of bounds"
@@ -1051,7 +1051,7 @@ field<oT>::subfield(const uword in_row1, const uword in_col1, const uword in_sli
   const uword s_n_cols     = s.n_cols;
   const uword sub_n_slices = s.n_slices;
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     ((in_row1 >= l_n_rows) || (in_col1 >= l_n_cols) || (in_slice1 >= l_n_slices) || ((in_row1 + s_n_rows) > l_n_rows) || ((in_col1 + s_n_cols) > l_n_cols) || ((in_slice1 + sub_n_slices) > l_n_slices)),
     "field::subfield(): indices or size out of bounds"
@@ -1078,7 +1078,7 @@ field<oT>::subfield(const uword in_row1, const uword in_col1, const uword in_sli
   const uword s_n_cols = s.n_cols;
   const uword sub_n_slices = s.n_slices;
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     ((in_row1 >= l_n_rows) || (in_col1 >= l_n_cols) || (in_slice1 >= l_n_slices) || ((in_row1 + s_n_rows) > l_n_rows) || ((in_col1 + s_n_cols) > l_n_cols) || ((in_slice1 + sub_n_slices) > l_n_slices)),
     "field::subfield(): indices or size out of bounds"
@@ -1113,7 +1113,7 @@ field<oT>::subfield(const span& row_span, const span& col_span)
   const uword in_col2    =                          col_span.b;
   const uword sub_n_cols = col_all ? local_n_cols : in_col2 - in_col1 + 1;
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     ( row_all ? false : ((in_row1 > in_row2) || (in_row2 >= local_n_rows)) )
     ||
@@ -1151,7 +1151,7 @@ field<oT>::subfield(const span& row_span, const span& col_span) const
   const uword in_col2    =                          col_span.b;
   const uword sub_n_cols = col_all ? local_n_cols : in_col2 - in_col1 + 1;
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     ( row_all ? false : ((in_row1 > in_row2) || (in_row2 >= local_n_rows)) )
     ||
@@ -1193,7 +1193,7 @@ field<oT>::subfield(const span& row_span, const span& col_span, const span& slic
   const uword in_slice2    =                              slice_span.b;
   const uword sub_n_slices = slice_all ? local_n_slices : in_slice2 - in_slice1 + 1;
 
-  arma_debug_check
+  arma_debug_check_bounds
     (
     ( row_all ? false : ((in_row1 > in_row2) || (in_row2 >= local_n_rows)) )
     ||
@@ -1237,7 +1237,7 @@ field<oT>::subfield(const span& row_span, const span& col_span, const span& slic
   const uword in_slice2    =                              slice_span.b;
   const uword sub_n_slices = slice_all ? local_n_slices : in_slice2 - in_slice1 + 1;
 
-  arma_debug_check
+  arma_debug_check_bounds
     (
     ( row_all ? false : ((in_row1 > in_row2) || (in_row2 >= local_n_rows)) )
     ||
@@ -1706,11 +1706,11 @@ field<oT>::save(const std::string name, const file_type type, const bool print_s
     {
     if(err_msg.length() > 0)
       {
-      arma_debug_warn("field::save(): ", err_msg, name);
+      arma_debug_warn("field::save(): ", err_msg, "; file: ", name);
       }
     else
       {
-      arma_debug_warn("field::save(): couldn't write to ", name);
+      arma_debug_warn("field::save(): couldn't write; file: ", name);
       }
     }
   
@@ -1735,11 +1735,11 @@ field<oT>::save(std::ostream& os, const file_type type, const bool print_status)
     {
     if(err_msg.length() > 0)
       {
-      arma_debug_warn("field::save(): ", err_msg, "[ostream]");
+      arma_debug_warn("field::save(): ", err_msg);
       }
     else
       {
-      arma_debug_warn("field::save(): couldn't write to [ostream]");
+      arma_debug_warn("field::save(): couldn't write to the given stream");
       }
     }
   
@@ -1764,11 +1764,11 @@ field<oT>::load(const std::string name, const file_type type, const bool print_s
     {
     if(err_msg.length() > 0)
       {
-      arma_debug_warn("field::load(): ", err_msg, name);
+      arma_debug_warn("field::load(): ", err_msg, "; file: ", name);
       }
     else
       {
-      arma_debug_warn("field::load(): couldn't read from ", name);
+      arma_debug_warn("field::load(): couldn't read; file: ", name);
       }
     }
   
@@ -1794,11 +1794,11 @@ field<oT>::load(std::istream& is, const file_type type, const bool print_status)
     {
     if(err_msg.length() > 0)
       {
-      arma_debug_warn("field::load(): ", err_msg, "[istream]");
+      arma_debug_warn("field::load(): ", err_msg);
       }
     else
       {
-      arma_debug_warn("field::load(): couldn't read from [istream]");
+      arma_debug_warn("field::load(): couldn't read from the given stream");
       }
     }
   

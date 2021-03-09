@@ -104,12 +104,15 @@ op_inv::apply_noalias(Mat<eT>& out, const Mat<eT>& A)
       
       if(try_sympd)
         {
+        arma_extra_debug_print("op_inv: attempting sympd optimisation");
+        
         status = auxlib::inv_sympd(out, A);
         
-        if(status == false)  { arma_extra_debug_print("warning: sympd optimisation failed"); }
+        if(status)  { return true; }
+        
+        arma_extra_debug_print("op_inv: sympd optimisation failed");
+        // auxlib::inv_sympd() will fail if A isn't really positive definite
         }
-      
-      // auxlib::inv_sympd() may have failed because A isn't really sympd
       }
     }
   

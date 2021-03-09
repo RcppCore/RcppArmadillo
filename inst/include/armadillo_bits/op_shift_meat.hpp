@@ -66,8 +66,8 @@ op_shift::apply_direct(Mat<eT>& out, const Mat<eT>& X, const uword len, const uw
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( ((dim == 0) && (len >= X.n_rows)), "shift(): shift amount out of bounds" );
-  arma_debug_check( ((dim == 1) && (len >= X.n_cols)), "shift(): shift amount out of bounds" );
+  arma_debug_check_bounds( ((dim == 0) && (len >= X.n_rows)), "shift(): shift amount out of bounds" );
+  arma_debug_check_bounds( ((dim == 1) && (len >= X.n_cols)), "shift(): shift amount out of bounds" );
   
   if(&out == &X)
     {

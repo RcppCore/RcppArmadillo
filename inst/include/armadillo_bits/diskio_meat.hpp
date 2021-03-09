@@ -885,6 +885,124 @@ diskio::save_csv_ascii(const Mat< std::complex<T> >& x, std::ostream& f)
 
 
 
+template<typename eT>
+inline
+bool
+diskio::save_coord_ascii(const Mat<eT>& x, const std::string& final_name)
+  {
+  arma_extra_debug_sigprint();
+  
+  const std::string tmp_name = diskio::gen_tmp_name(final_name);
+  
+  std::ofstream f(tmp_name.c_str());
+  
+  bool save_okay = f.is_open();
+  
+  if(save_okay)
+    {
+    save_okay = diskio::save_coord_ascii(x, f);
+    
+    f.flush();
+    f.close();
+    
+    if(save_okay)  { save_okay = diskio::safe_rename(tmp_name, final_name); }
+    }
+  
+  return save_okay;
+  }
+
+
+
+template<typename eT>
+inline
+bool
+diskio::save_coord_ascii(const Mat<eT>& x, std::ostream& f)
+  {
+  arma_extra_debug_sigprint();
+  
+  const arma_ostream_state stream_state(f);
+  
+  diskio::prepare_stream<eT>(f);
+  
+  for(uword col=0; col < x.n_cols; ++col)
+  for(uword row=0; row < x.n_rows; ++row)
+    {
+    const eT val = x.at(row,col);
+    
+    if(val != eT(0))
+      {
+      f << row << ' ' << col << ' ' << val << '\n';
+      }
+    }
+  
+  // make sure it's possible to figure out the matrix size later
+  if( (x.n_rows > 0) && (x.n_cols > 0) )
+    {
+    const uword max_row = (x.n_rows > 0) ? x.n_rows-1 : 0;
+    const uword max_col = (x.n_cols > 0) ? x.n_cols-1 : 0;
+    
+    if( x.at(max_row, max_col) == eT(0) )
+      {
+      f << max_row << ' ' << max_col << " 0\n";
+      }
+    }
+  
+  const bool save_okay = f.good();
+  
+  stream_state.restore(f);
+  
+  return save_okay;
+  }
+
+
+
+template<typename T>
+inline
+bool
+diskio::save_coord_ascii(const Mat< std::complex<T> >& x, std::ostream& f)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename std::complex<T> eT;
+  
+  const arma_ostream_state stream_state(f);
+  
+  diskio::prepare_stream<eT>(f);
+  
+  const eT eT_zero = eT(0);
+  
+  for(uword col=0; col < x.n_cols; ++col)
+  for(uword row=0; row < x.n_rows; ++row)
+    {
+    const eT val = x.at(row,col);
+    
+    if(val != eT_zero)
+      {
+      f << row << ' ' << col << ' ' << val.real() << ' ' << val.imag() << '\n';
+      }
+    }
+  
+  // make sure it's possible to figure out the matrix size later
+  if( (x.n_rows > 0) && (x.n_cols > 0) )
+    {
+    const uword max_row = (x.n_rows > 0) ? x.n_rows-1 : 0;
+    const uword max_col = (x.n_cols > 0) ? x.n_cols-1 : 0;
+    
+    if( x.at(max_row, max_col) == eT_zero )
+      {
+      f << max_row << ' ' << max_col << " 0 0\n";
+      }
+    }
+  
+  const bool save_okay = f.good();
+  
+  stream_state.restore(f);
+  
+  return save_okay;
+  }
+
+
+
 //! Save a matrix in binary format,
 //! with a header that stores the matrix type as well as its dimensions
 template<typename eT>
@@ -1110,7 +1228,7 @@ diskio::save_hdf5_binary(const Mat<eT>& x, const hdf5_name& spec, std::string& e
       {
       save_okay = false;
       
-      err_msg = "couldn't create dataset in ";
+      err_msg = "couldn't create dataset";
       }
     else
       {
@@ -1221,7 +1339,7 @@ diskio::load_raw_ascii(Mat<eT>& x, std::istream& f, std::string& err_msg)
       if(line_n_cols != f_n_cols)
         {
         load_okay = false;
-        err_msg = "inconsistent number of columns in ";
+        err_msg = "inconsistent number of columns";
         }
       }
     
@@ -1244,7 +1362,7 @@ diskio::load_raw_ascii(Mat<eT>& x, std::istream& f, std::string& err_msg)
       if(diskio::convert_token(x.at(row,col), token) == false)
         {
         load_okay = false;
-        err_msg = "couldn't interpret data in ";
+        err_msg = "couldn't interpret data";
         }
       }
     }
@@ -1381,7 +1499,7 @@ diskio::load_arma_ascii(Mat<eT>& x, std::istream& f, std::string& err_msg)
   else
     {
     load_okay = false;
-    err_msg = "incorrect header in ";
+    err_msg = "incorrect header";
     }
   
   
@@ -1802,6 +1920,242 @@ diskio::load_csv_ascii(Mat< std::complex<T> >& x, std::istream& f, std::string&)
 
 
 
+template<typename eT>
+inline
+bool
+diskio::load_coord_ascii(Mat<eT>& x, const std::string& name, std::string& err_msg)
+  {
+  arma_extra_debug_sigprint();
+  
+  std::fstream f;
+  f.open(name.c_str(), std::fstream::in);
+  
+  bool load_okay = f.is_open();
+  
+  if(load_okay == false)  { return false; }
+  
+  if(load_okay)
+    {
+    load_okay = diskio::load_coord_ascii(x, f, err_msg);
+    }
+  
+  f.close();
+  
+  return load_okay;
+  }
+
+
+
+//! Load a matrix in CSV text format (human readable)
+template<typename eT>
+inline
+bool
+diskio::load_coord_ascii(Mat<eT>& x, std::istream& f, std::string& err_msg)
+  {
+  arma_extra_debug_sigprint();
+  
+  bool load_okay = f.good();
+  
+  f.clear();
+  const std::fstream::pos_type pos1 = f.tellg();
+  
+  // work out the size
+  
+  uword f_n_rows = 0;
+  uword f_n_cols = 0;
+  
+  bool size_found = false;
+  
+  std::string       line_string;
+  std::stringstream line_stream;
+  
+  std::string token;
+  
+  while( f.good() && load_okay )
+    {
+    std::getline(f, line_string);
+    
+    if(line_string.size() == 0)  { break; }
+    
+    line_stream.clear();
+    line_stream.str(line_string);
+    
+    uword line_row = 0;
+    uword line_col = 0;
+    
+    // a valid line in co-ord format has at least 2 entries
+    
+    line_stream >> line_row;
+    
+    if(line_stream.good() == false)  { load_okay = false; break; }
+    
+    line_stream >> line_col;
+    
+    size_found = true;
+    
+    if(f_n_rows < line_row)  { f_n_rows = line_row; }
+    if(f_n_cols < line_col)  { f_n_cols = line_col; }
+    }
+  
+  
+  // take into account that indices start at 0
+  if(size_found)  { ++f_n_rows;  ++f_n_cols; }
+  
+  
+  if(load_okay)
+    {
+    f.clear();
+    f.seekg(pos1);
+    
+    Mat<eT> tmp;
+    
+    try { tmp.zeros(f_n_rows, f_n_cols); } catch(...) { err_msg = "not enough memory"; return false; }
+    
+    while(f.good())
+      {
+      std::getline(f, line_string);
+      
+      if(line_string.size() == 0)  { break; }
+      
+      line_stream.clear();
+      line_stream.str(line_string);
+      
+      uword line_row = 0;
+      uword line_col = 0;
+      
+      line_stream >> line_row;
+      line_stream >> line_col;
+      
+      eT val = eT(0);
+      
+      line_stream >> token;
+      
+      if(line_stream.fail() == false)
+        {
+        diskio::convert_token( val, token );
+        }
+      
+      if(val != eT(0))  { tmp(line_row,line_col) = val; }
+      }
+    
+    x.steal_mem(tmp);
+    }
+  
+  return load_okay;
+  }
+
+
+
+template<typename T>
+inline
+bool
+diskio::load_coord_ascii(Mat< std::complex<T> >& x, std::istream& f, std::string& err_msg)
+  {
+  arma_extra_debug_sigprint();
+  
+  bool load_okay = f.good();
+  
+  f.clear();
+  const std::fstream::pos_type pos1 = f.tellg();
+  
+  // work out the size
+  
+  uword f_n_rows = 0;
+  uword f_n_cols = 0;
+  
+  bool size_found = false;
+  
+  std::string       line_string;
+  std::stringstream line_stream;
+  
+  std::string token_real;
+  std::string token_imag;
+  
+  while( f.good() && load_okay )
+    {
+    std::getline(f, line_string);
+    
+    if(line_string.size() == 0)  { break; }
+    
+    line_stream.clear();
+    line_stream.str(line_string);
+    
+    uword line_row = 0;
+    uword line_col = 0;
+    
+    // a valid line in co-ord format has at least 2 entries
+    
+    line_stream >> line_row;
+    
+    if(line_stream.good() == false)  { load_okay = false; break; }
+    
+    line_stream >> line_col;
+    
+    size_found = true;
+    
+    if(f_n_rows < line_row)  f_n_rows = line_row;
+    if(f_n_cols < line_col)  f_n_cols = line_col;
+    }
+  
+  // take into account that indices start at 0
+  if(size_found)  { ++f_n_rows;  ++f_n_cols; }
+  
+  if(load_okay)
+    {
+    f.clear();
+    f.seekg(pos1);
+    
+    Mat< std::complex<T> > tmp;
+    
+    try { tmp.zeros(f_n_rows, f_n_cols); } catch(...) { err_msg = "not enough memory"; return false; }
+    
+    while(f.good())
+      {
+      std::getline(f, line_string);
+      
+      if(line_string.size() == 0)  { break; }
+      
+      line_stream.clear();
+      line_stream.str(line_string);
+      
+      uword line_row = 0;
+      uword line_col = 0;
+      
+      line_stream >> line_row;
+      line_stream >> line_col;
+      
+      T val_real = T(0);
+      T val_imag = T(0);
+      
+      line_stream >> token_real;
+      
+      if(line_stream.fail() == false)
+        {
+        diskio::convert_token( val_real, token_real );
+        }
+      
+      
+      line_stream >> token_imag;
+      
+      if(line_stream.fail() == false)
+        {
+        diskio::convert_token( val_imag, token_imag );
+        }
+      
+      if( (val_real != T(0)) || (val_imag != T(0)) )
+        {
+        tmp(line_row,line_col) = std::complex<T>(val_real, val_imag);
+        }
+      }
+    
+    x.steal_mem(tmp);
+    }
+  
+  return load_okay;
+  }
+
+
+
 //! Load a matrix in binary format,
 //! with a header that indicates the matrix type as well as its dimensions
 template<typename eT>
@@ -1859,7 +2213,7 @@ diskio::load_arma_binary(Mat<eT>& x, std::istream& f, std::string& err_msg)
   else
     {
     load_okay = false;
-    err_msg = "incorrect header in ";
+    err_msg = "incorrect header";
     }
   
   
@@ -2012,7 +2366,7 @@ diskio::load_pgm_binary(Mat<eT>& x, std::istream& f, std::string& err_msg)
     else
       {
       load_okay = false;
-      err_msg = "functionality unimplemented to handle loading ";
+      err_msg = "functionality unimplemented";
       }
     
     if(f.good() == false)  { load_okay = false; }
@@ -2020,7 +2374,7 @@ diskio::load_pgm_binary(Mat<eT>& x, std::istream& f, std::string& err_msg)
   else
     {
     load_okay = false;
-    err_msg = "unsupported header in ";
+    err_msg = "unsupported header";
     }
   
   return load_okay;
@@ -2116,7 +2470,7 @@ diskio::load_hdf5_binary(Mat<eT>& x, const hdf5_name& spec, std::string& err_msg
         // arma_check(query_status < 0, "Mat::load(): cannot get size of HDF5 dataset");
         if(query_status < 0)
           {
-          err_msg = "cannot get size of HDF5 dataset in ";
+          err_msg = "cannot get size of HDF5 dataset";
           
           arma_H5Sclose(filespace);
           arma_H5Dclose(dataset);
@@ -2161,12 +2515,12 @@ diskio::load_hdf5_binary(Mat<eT>& x, const hdf5_name& spec, std::string& err_msg
       
       if(load_okay == false)
         {
-        err_msg = "unsupported or missing HDF5 data in ";
+        err_msg = "unsupported or missing HDF5 data";
         }
       }
     else
       {
-      err_msg = "cannot open file ";
+      err_msg = "cannot open";
       }
     
     return load_okay;
@@ -2276,7 +2630,7 @@ diskio::load_auto_detect(Mat<eT>& x, std::istream& f, std::string& err_msg)
         break;
       
       default:
-        err_msg = "unknown data in ";
+        err_msg = "unknown data";
         return false;
       }
     }
@@ -3069,7 +3423,7 @@ diskio::load_arma_binary(SpMat<eT>& x, std::istream& f, std::string& err_msg)
     if((check1 == false) || (check2 == false) || (check3 == false))
       {
       load_okay = false;
-      err_msg = "inconsistent data in ";
+      err_msg = "inconsistent data";
       }
     else
       {
@@ -3079,7 +3433,7 @@ diskio::load_arma_binary(SpMat<eT>& x, std::istream& f, std::string& err_msg)
   else
     {
     load_okay = false;
-    err_msg = "incorrect header in ";
+    err_msg = "incorrect header";
     }
   
   return load_okay;
@@ -3404,7 +3758,7 @@ diskio::save_hdf5_binary(const Cube<eT>& x, const hdf5_name& spec, std::string& 
       {
       save_okay = false;
       
-      err_msg = "couldn't create dataset in ";
+      err_msg = "couldn't create dataset";
       }
     else
       {
@@ -3620,7 +3974,7 @@ diskio::load_arma_ascii(Cube<eT>& x, std::istream& f, std::string& err_msg)
   else
     {
     load_okay = false;
-    err_msg = "incorrect header in ";
+    err_msg = "incorrect header";
     }
   
   
@@ -3719,7 +4073,7 @@ diskio::load_arma_binary(Cube<eT>& x, std::istream& f, std::string& err_msg)
   else
     {
     load_okay = false;
-    err_msg = "incorrect header in ";
+    err_msg = "incorrect header";
     }
   
   
@@ -3811,7 +4165,7 @@ diskio::load_hdf5_binary(Cube<eT>& x, const hdf5_name& spec, std::string& err_ms
         // arma_check(query_status < 0, "Cube::load(): cannot get size of HDF5 dataset");
         if(query_status < 0)
           {
-          err_msg = "cannot get size of HDF5 dataset in ";
+          err_msg = "cannot get size of HDF5 dataset";
           
           arma_H5Sclose(filespace);
           arma_H5Dclose(dataset);
@@ -3857,12 +4211,12 @@ diskio::load_hdf5_binary(Cube<eT>& x, const hdf5_name& spec, std::string& err_ms
       
       if(load_okay == false)
         {
-        err_msg = "unsupported or missing HDF5 data in ";
+        err_msg = "unsupported or missing HDF5 data";
         }
       }
     else
       {
-      err_msg = "cannot open file ";
+      err_msg = "cannot open";
       }
     
     return load_okay;
@@ -3972,7 +4326,7 @@ diskio::load_auto_detect(Cube<eT>& x, std::istream& f, std::string& err_msg)
         break;
         
       default:
-        err_msg = "unknown data in ";
+        err_msg = "unknown data";
         return false;
       }
     }
@@ -4133,7 +4487,7 @@ diskio::load_arma_binary(field<T1>& x, std::istream& f, std::string& err_msg)
   else
     {
     load_okay = false;
-    err_msg = "unsupported field type in ";
+    err_msg = "unsupported field type";
     }
   
   return load_okay;
@@ -4256,7 +4610,7 @@ diskio::load_std_string(field<std::string>& x, std::istream& f, std::string& err
       if(line_n_cols != f_n_cols)
         {
         load_okay = false;
-        err_msg = "inconsistent number of columns in ";
+        err_msg = "inconsistent number of columns";
         }
       }
     
@@ -4352,7 +4706,7 @@ diskio::load_auto_detect(field<T1>& x, std::istream& f, std::string& err_msg)
     }
   else
     {
-    err_msg = "unsupported header in ";
+    err_msg = "unsupported header";
     return false;
     }
   }
@@ -4463,7 +4817,7 @@ diskio::load_ppm_binary(Cube<eT>& x, std::istream& f, std::string& err_msg)
     else
       {
       load_okay = false;
-      err_msg = "currently no code available to handle loading ";
+      err_msg = "functionality unimplemented";
       }
     
     if(f.good() == false)  { load_okay = false; }
@@ -4471,7 +4825,7 @@ diskio::load_ppm_binary(Cube<eT>& x, std::istream& f, std::string& err_msg)
   else
     {
     load_okay = false;
-    err_msg = "unsupported header in ";
+    err_msg = "unsupported header";
     }
   
   return load_okay;
@@ -4663,7 +5017,7 @@ diskio::load_ppm_binary(field<T1>& x, std::istream& f, std::string& err_msg)
     else
       {
       load_okay = false;
-      err_msg = "currently no code available to handle loading ";
+      err_msg = "functionality unimplemented";
       }
     
     if(f.good() == false)  { load_okay = false; }
@@ -4671,7 +5025,7 @@ diskio::load_ppm_binary(field<T1>& x, std::istream& f, std::string& err_msg)
   else
     {
     load_okay = false;
-    err_msg = "unsupported header in ";
+    err_msg = "unsupported header";
     }
   
   return load_okay;
