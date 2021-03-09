@@ -1,7 +1,7 @@
 #!/usr/bin/r -t
 #
-# Copyright (C) 2015 - 2019  Dirk Eddelbuettel and Nathan Russell
-# Copyright (C) 2019  - 2019       Dirk Eddelbuettel
+# Copyright (C) 2015 - 2021  Dirk Eddelbuettel and Nathan Russell
+# Copyright (C) 2019         Dirk Eddelbuettel
 #
 # This file is part of RcppArmadillo.
 #
@@ -23,6 +23,9 @@ library(RcppArmadillo)
 
 Rcpp::sourceCpp("cpp/cube.cpp")
 
+.onWindows <- .Platform$OS.type == "windows"
+critTol <- if (.onWindows) 1.0e-6 else 1.5e-7
+
 ## test arrays
 dbl_cube <- array(1.5:27.5, rep(3, 3))
 int_cube <- array(1L:27L, rep(3, 3))
@@ -39,7 +42,7 @@ expect_equal(ucube_test(int_cube), (int_cube ** 2)) #, "ucube_test")
 ## check cx_cube (Cube<cx_double>) and cx_fcube (Cube<cx_float>)
 expect_equal(cx_cube_test(cplx_cube), (cplx_cube ** 2)) #, "cx_cube_test")
 expect_equivalent(cx_fcube_test(cplx_cube), (cplx_cube ** 2), #"cx_fcube_test",
-                  tolerance = 1.5e-7)
+                  tolerance = critTol)
 
 
 ## test that exception is thrown with dims(x) != 3
@@ -76,4 +79,4 @@ expect_equal(as_ucube(int_cube), (int_cube ** 2))#, "as_ucube")
 ## check cx_cube (Cube<cx_double>) and cx_fcube (Cube<cx_float>)
 expect_equal(as_cx_cube(cplx_cube), (cplx_cube ** 2))#, "as_cx_cube")
 expect_equivalent(as_cx_fcube(cplx_cube), (cplx_cube ** 2), #"as_cx_fcube",
-                  tolerance = 1.5e-7)
+                  tolerance = critTol)

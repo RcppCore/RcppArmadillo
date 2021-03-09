@@ -1,3 +1,8 @@
+2021-03-08  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/tinytest/test_cube.R: On Windows, lower tolerance for two
+	tests to accomodate tests on gcc10-UCRT
+
 2021-02-26  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/armadillo_bits/: Armadillo 10.2.2
