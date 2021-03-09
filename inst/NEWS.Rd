@@ -3,9 +3,21 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.10.2.2.0 (2021-02-26) [github]}{
+\section{Changes in RcppArmadillo version 0.10.2.2.0 (2021-03-09)}{
   \itemize{
     \item Upgraded to Armadillo release 10.2.2 (Cicada Swarm)
+    \itemize{
+      \item faster handling of subcubes
+      \item added \code{tgamma()}
+      \item added \code{.brief_print()} for abridged printing of matrices & cubes
+      \item expanded forms of \code{trimatu()} and \code{trimatl()} with
+      diagonal specification to handle sparse matrices
+      \item expanded \code{eigs_sym()} and \code{eigs_gen()} with optional shift-invert mode
+    }
+    \item Removed \code{debian/} directory from repository as packaging
+    is on salsa.debian.org.
+    \item Relaxed tolerance on two \code{cube} tests on Windows to
+    accomodate new 'gcc10-UCRT' builder.
   }
 }
 
