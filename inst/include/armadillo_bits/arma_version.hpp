@@ -20,9 +20,9 @@
 
 
 #define ARMA_VERSION_MAJOR 10
-#define ARMA_VERSION_MINOR 2
-#define ARMA_VERSION_PATCH 92
-#define ARMA_VERSION_NAME  "10.3 RC2"
+#define ARMA_VERSION_MINOR 3
+#define ARMA_VERSION_PATCH 0
+#define ARMA_VERSION_NAME  "Sunrise Chaos"
 
 
 
