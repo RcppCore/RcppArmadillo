@@ -3,9 +3,9 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.10.2.92.0 (2021-03-10)}{
+\section{Changes in RcppArmadillo version 0.10.3.0.0 (2021-03-10)}{
   \itemize{
-    \item Upgraded to Armadillo release 10.3-rc2
+    \item Upgraded to Armadillo release 10.3
     \itemize{
       \item faster handling of symmetric positive definite matrices by
       \code{pinv()}
