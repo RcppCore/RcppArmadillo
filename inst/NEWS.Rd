@@ -3,6 +3,22 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.10.2.92.0 (2021-03-10)}{
+  \itemize{
+    \item Upgraded to Armadillo release 10.3-rc2
+    \itemize{
+      \item faster handling of symmetric positive definite matrices by
+      \code{pinv()}
+      \item expanded \code{.save()} / \code{.load()} for dense matrices
+      to handle coord_ascii format
+      \item for out of bounds access, element accessors now throw the
+      more nuanced \code{std::out_of_range} exception, instead of only
+      \code{std::logic_error}
+      \item improved quality of random numbers
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.10.2.2.0 (2021-03-09)}{
   \itemize{
     \item Upgraded to Armadillo release 10.2.2 (Cicada Swarm)

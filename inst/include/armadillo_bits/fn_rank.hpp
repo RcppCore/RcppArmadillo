@@ -33,13 +33,14 @@ rank
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  typedef typename T1::pod_type T;
+  typedef typename T1::elem_type eT;
+  typedef typename T1::pod_type   T;
   
-  uword  X_n_rows;
-  uword  X_n_cols;
+  Mat<eT> A(X.get_ref());
+  
   Col<T> s;
   
-  const bool status = auxlib::svd_dc(s, X, X_n_rows, X_n_cols);
+  const bool status = auxlib::svd_dc(s, A);
   
   if(status == false)
     {
@@ -54,7 +55,7 @@ rank
   // set tolerance to default if it hasn't been specified
   if( (tol == T(0)) && (s_n_elem > 0) )
     {
-    tol = (std::max)(X_n_rows, X_n_cols) * s_mem[0] * std::numeric_limits<T>::epsilon();
+    tol = (std::max)(A.n_rows, A.n_cols) * s_mem[0] * std::numeric_limits<T>::epsilon();
     }
   
   uword count = 0;

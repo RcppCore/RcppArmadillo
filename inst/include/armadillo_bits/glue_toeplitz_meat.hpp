@@ -38,7 +38,7 @@ glue_toeplitz::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue_t
   arma_debug_check
     (
     ( ((A.is_vec() == false) && (A.is_empty() == false)) || ((B.is_vec() == false) && (B.is_empty() == false)) ),
-    "toeplitz(): given object is not a vector"
+    "toeplitz(): given object must be a vector"
     );
   
   const uword A_N = A.n_elem;

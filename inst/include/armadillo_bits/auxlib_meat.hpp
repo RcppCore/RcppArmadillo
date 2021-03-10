@@ -306,7 +306,7 @@ auxlib::inv_sympd(Mat<eT>& out, const Base<eT,T1>& X)
     
     const bool status = auxlib::inv_sympd_tiny(tmp, out);
     
-    if(status == true)  { out = tmp; return true; }
+    if(status)  { out = tmp; return true; }
     }
   
   #if defined(ARMA_USE_ATLAS)
@@ -376,6 +376,122 @@ auxlib::inv_sympd_tiny(Mat<eT>& out, const Mat<eT>& X)
   // if(sympd_helper::guess_sympd(X) == false)  { return false; }
   
   return auxlib::inv_tiny(out, X);
+  }
+
+
+
+template<typename eT>
+inline
+bool
+auxlib::inv_sympd_rcond(Mat<eT>& A, const eT rcond_threshold)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(A.is_empty())  { return true; }
+  
+  #if defined(ARMA_USE_LAPACK)
+    {
+    typedef typename get_pod_type<eT>::result T;
+    
+    arma_debug_assert_blas_size(A);
+    
+    char     norm_id  = '1';
+    char     uplo     = 'L';
+    blas_int n        = blas_int(A.n_rows);
+    blas_int info     = 0;
+    T        norm_val = T(0);
+    
+    podarray<T> work(A.n_rows);
+    
+    arma_extra_debug_print("lapack::lansy()");
+    norm_val = lapack::lansy(&norm_id, &uplo, &n, A.memptr(), &n, work.memptr());
+    
+    arma_extra_debug_print("lapack::potrf()");
+    lapack::potrf(&uplo, &n, A.memptr(), &n, &info);
+    
+    if(info != 0)  { return false; }
+    
+    const T rcond = auxlib::lu_rcond_sympd<T>(A, norm_val);
+    
+    if(rcond < rcond_threshold)  { return false; }
+    
+    arma_extra_debug_print("lapack::potri()");
+    lapack::potri(&uplo, &n, A.memptr(), &n, &info);
+    
+    if(info != 0)  { return false; }
+    
+    A = symmatl(A);
+    
+    return true;
+    }
+  #else
+    {
+    arma_ignore(A);
+    arma_ignore(rcond_threshold);
+    arma_stop_logic_error("inv_sympd_rcond(): use LAPACK must be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
+template<typename T>
+inline
+bool
+auxlib::inv_sympd_rcond(Mat< std::complex<T> >& A, const T rcond_threshold)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(A.is_empty())  { return true; }
+  
+  #if defined(ARMA_CRIPPLED_LAPACK)
+    {
+    arma_ignore(A);
+    arma_ignore(rcond_threshold);
+    return false;
+    }
+  #elif defined(ARMA_USE_LAPACK)
+    {
+    arma_debug_assert_blas_size(A);
+    
+    char     norm_id  = '1';
+    char     uplo     = 'L';
+    blas_int n        = blas_int(A.n_rows);
+    blas_int info     = 0;
+    T        norm_val = T(0);
+    
+    podarray<T> work(A.n_rows);
+    
+    arma_extra_debug_print("lapack::lanhe()");
+    norm_val = lapack::lanhe(&norm_id, &uplo, &n, A.memptr(), &n, work.memptr());
+    
+    arma_extra_debug_print("lapack::potrf()");
+    lapack::potrf(&uplo, &n, A.memptr(), &n, &info);
+    
+    if(info != 0)  { return false; }
+    
+    const T rcond = auxlib::lu_rcond_sympd<T>(A, norm_val);
+    
+    if(rcond < rcond_threshold)  { return false; }
+    
+    arma_extra_debug_print("lapack::potri()");
+    lapack::potri(&uplo, &n, A.memptr(), &n, &info);
+    
+    if(info != 0)  { return false; }
+    
+    A = symmatl(A);
+    
+    return true;
+    }
+  #else
+    {
+    arma_ignore(A);
+    arma_ignore(rcond_threshold);
+    arma_stop_logic_error("inv_sympd_rcond(): use LAPACK must be enabled");
+    return false;
+    }
+  #endif
   }
 
 
@@ -3172,25 +3288,16 @@ auxlib::qr_pivot(Mat< std::complex<T> >& Q, Mat< std::complex<T> >& R, Mat<uword
 
 
 
-template<typename eT, typename T1>
+template<typename eT>
 inline
 bool
-auxlib::svd(Col<eT>& S, const Base<eT,T1>& X, uword& X_n_rows, uword& X_n_cols)
+auxlib::svd(Col<eT>& S, Mat<eT>& A)
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_LAPACK)
     {
-    Mat<eT> A(X.get_ref());
-    
-    X_n_rows = A.n_rows;
-    X_n_cols = A.n_cols;
-    
-    if(A.is_empty())
-      {
-      S.reset();
-      return true;
-      }
+    if(A.is_empty())  { S.reset(); return true; }
     
     arma_debug_assert_blas_size(A);
     
@@ -3200,12 +3307,12 @@ auxlib::svd(Col<eT>& S, const Base<eT,T1>& X, uword& X_n_rows, uword& X_n_cols)
     char jobu  = 'N';
     char jobvt = 'N';
     
-    blas_int m          = A.n_rows;
-    blas_int n          = A.n_cols;
+    blas_int m          = blas_int(A.n_rows);
+    blas_int n          = blas_int(A.n_cols);
     blas_int min_mn     = (std::min)(m,n);
-    blas_int lda        = A.n_rows;
-    blas_int ldu        = U.n_rows;
-    blas_int ldvt       = V.n_rows;
+    blas_int lda        = blas_int(A.n_rows);
+    blas_int ldu        = blas_int(U.n_rows);
+    blas_int ldvt       = blas_int(V.n_rows);
     blas_int lwork_min  = (std::max)( blas_int(1), (std::max)( (3*min_mn + (std::max)(m,n)), 5*min_mn ) );
     blas_int info   = 0;
     
@@ -3238,9 +3345,7 @@ auxlib::svd(Col<eT>& S, const Base<eT,T1>& X, uword& X_n_rows, uword& X_n_cols)
   #else
     {
     arma_ignore(S);
-    arma_ignore(X);
-    arma_ignore(X_n_rows);
-    arma_ignore(X_n_cols);
+    arma_ignore(A);
     arma_stop_logic_error("svd(): use of LAPACK must be enabled");
     return false;
     }
@@ -3249,10 +3354,10 @@ auxlib::svd(Col<eT>& S, const Base<eT,T1>& X, uword& X_n_rows, uword& X_n_cols)
 
 
 
-template<typename T, typename T1>
+template<typename T>
 inline
 bool
-auxlib::svd(Col<T>& S, const Base<std::complex<T>, T1>& X, uword& X_n_rows, uword& X_n_cols)
+auxlib::svd(Col<T>& S, Mat< std::complex<T> >& A)
   {
   arma_extra_debug_sigprint();
   
@@ -3260,16 +3365,7 @@ auxlib::svd(Col<T>& S, const Base<std::complex<T>, T1>& X, uword& X_n_rows, uwor
     {
     typedef std::complex<T> eT;
     
-    Mat<eT> A(X.get_ref());
-    
-    X_n_rows = A.n_rows;
-    X_n_cols = A.n_cols;
-    
-    if(A.is_empty())
-      {
-      S.reset();
-      return true;
-      }
+    if(A.is_empty())  { S.reset(); return true; }
     
     arma_debug_assert_blas_size(A);
     
@@ -3279,12 +3375,12 @@ auxlib::svd(Col<T>& S, const Base<std::complex<T>, T1>& X, uword& X_n_rows, uwor
     char jobu  = 'N';
     char jobvt = 'N';
     
-    blas_int  m         = A.n_rows;
-    blas_int  n         = A.n_cols;
+    blas_int  m         = blas_int(A.n_rows);
+    blas_int  n         = blas_int(A.n_cols);
     blas_int  min_mn    = (std::min)(m,n);
-    blas_int  lda       = A.n_rows;
-    blas_int  ldu       = U.n_rows;
-    blas_int  ldvt      = V.n_rows;
+    blas_int  lda       = blas_int(A.n_rows);
+    blas_int  ldu       = blas_int(U.n_rows);
+    blas_int  ldvt      = blas_int(V.n_rows);
     blas_int  lwork_min = (std::max)( blas_int(1), 2*min_mn+(std::max)(m,n) );
     blas_int  info      = 0;
     
@@ -3319,10 +3415,7 @@ auxlib::svd(Col<T>& S, const Base<std::complex<T>, T1>& X, uword& X_n_rows, uwor
   #else
     {
     arma_ignore(S);
-    arma_ignore(X);
-    arma_ignore(X_n_rows);
-    arma_ignore(X_n_cols);
-
+    arma_ignore(A);
     arma_stop_logic_error("svd(): use of LAPACK must be enabled");
     return false;
     }
@@ -3331,43 +3424,15 @@ auxlib::svd(Col<T>& S, const Base<std::complex<T>, T1>& X, uword& X_n_rows, uwor
 
 
 
-template<typename eT, typename T1>
+template<typename eT>
 inline
 bool
-auxlib::svd(Col<eT>& S, const Base<eT,T1>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  uword junk;
-  return auxlib::svd(S, X, junk, junk);
-  }
-
-
-
-template<typename T, typename T1>
-inline
-bool
-auxlib::svd(Col<T>& S, const Base<std::complex<T>, T1>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  uword junk;
-  return auxlib::svd(S, X, junk, junk);
-  }
-
-
-
-template<typename eT, typename T1>
-inline
-bool
-auxlib::svd(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
+auxlib::svd(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, Mat<eT>& A)
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_LAPACK)
     {
-    Mat<eT> A(X.get_ref());
-    
     if(A.is_empty())
       {
       U.eye(A.n_rows, A.n_rows);
@@ -3429,7 +3494,7 @@ auxlib::svd(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
     arma_ignore(U);
     arma_ignore(S);
     arma_ignore(V);
-    arma_ignore(X);
+    arma_ignore(A);
     arma_stop_logic_error("svd(): use of LAPACK must be enabled");
     return false;
     }
@@ -3438,18 +3503,16 @@ auxlib::svd(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
 
 
 
-template<typename T, typename T1>
+template<typename T>
 inline
 bool
-auxlib::svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, const Base< std::complex<T>, T1>& X)
+auxlib::svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, Mat< std::complex<T> >& A)
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_LAPACK)
     {
     typedef std::complex<T> eT;
-    
-    Mat<eT> A(X.get_ref());
     
     if(A.is_empty())
       {
@@ -3513,7 +3576,7 @@ auxlib::svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, con
     arma_ignore(U);
     arma_ignore(S);
     arma_ignore(V);
-    arma_ignore(X);
+    arma_ignore(A);
     arma_stop_logic_error("svd(): use of LAPACK must be enabled");
     return false;
     }
@@ -3522,17 +3585,15 @@ auxlib::svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, con
 
 
 
-template<typename eT, typename T1>
+template<typename eT>
 inline
 bool
-auxlib::svd_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X, const char mode)
+auxlib::svd_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, Mat<eT>& A, const char mode)
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_LAPACK)
     {
-    Mat<eT> A(X.get_ref());
-    
     if(A.is_empty())
       {
       U.eye();
@@ -3629,7 +3690,7 @@ auxlib::svd_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X, const
     arma_ignore(U);
     arma_ignore(S);
     arma_ignore(V);
-    arma_ignore(X);
+    arma_ignore(A);
     arma_ignore(mode);
     arma_stop_logic_error("svd(): use of LAPACK must be enabled");
     return false;
@@ -3639,18 +3700,16 @@ auxlib::svd_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X, const
 
 
 
-template<typename T, typename T1>
+template<typename T>
 inline
 bool
-auxlib::svd_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, const Base< std::complex<T>, T1>& X, const char mode)
+auxlib::svd_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, Mat< std::complex<T> >& A, const char mode)
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_LAPACK)
     {
     typedef std::complex<T> eT;
-    
-    Mat<eT> A(X.get_ref());
     
     if(A.is_empty())
       {
@@ -3749,7 +3808,7 @@ auxlib::svd_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V
     arma_ignore(U);
     arma_ignore(S);
     arma_ignore(V);
-    arma_ignore(X);
+    arma_ignore(A);
     arma_ignore(mode);
     arma_stop_logic_error("svd(): use of LAPACK must be enabled");
     return false;
@@ -3759,25 +3818,16 @@ auxlib::svd_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V
 
 
 
-template<typename eT, typename T1>
+template<typename eT>
 inline
 bool
-auxlib::svd_dc(Col<eT>& S, const Base<eT,T1>& X, uword& X_n_rows, uword& X_n_cols)
+auxlib::svd_dc(Col<eT>& S, Mat<eT>& A)
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_LAPACK)
     {
-    Mat<eT> A(X.get_ref());
-    
-    X_n_rows = A.n_rows;
-    X_n_cols = A.n_cols;
-    
-    if(A.is_empty())
-      {
-      S.reset();
-      return true;
-      }
+    if(A.is_empty())  { S.reset(); return true; }
     
     arma_debug_assert_blas_size(A);
     
@@ -3827,9 +3877,7 @@ auxlib::svd_dc(Col<eT>& S, const Base<eT,T1>& X, uword& X_n_rows, uword& X_n_col
   #else
     {
     arma_ignore(S);
-    arma_ignore(X);
-    arma_ignore(X_n_rows);
-    arma_ignore(X_n_cols);
+    arma_ignore(A);
     arma_stop_logic_error("svd(): use of LAPACK must be enabled");
     return false;
     }
@@ -3838,10 +3886,10 @@ auxlib::svd_dc(Col<eT>& S, const Base<eT,T1>& X, uword& X_n_rows, uword& X_n_col
 
 
 
-template<typename T, typename T1>
+template<typename T>
 inline
 bool
-auxlib::svd_dc(Col<T>& S, const Base<std::complex<T>, T1>& X, uword& X_n_rows, uword& X_n_cols)
+auxlib::svd_dc(Col<T>& S, Mat< std::complex<T> >& A)
   {
   arma_extra_debug_sigprint();
   
@@ -3849,16 +3897,7 @@ auxlib::svd_dc(Col<T>& S, const Base<std::complex<T>, T1>& X, uword& X_n_rows, u
     {
     typedef std::complex<T> eT;
     
-    Mat<eT> A(X.get_ref());
-    
-    X_n_rows = A.n_rows;
-    X_n_cols = A.n_cols;
-    
-    if(A.is_empty())
-      {
-      S.reset();
-      return true;
-      }
+    if(A.is_empty())  { S.reset(); return true; }
     
     arma_debug_assert_blas_size(A);
     
@@ -3909,9 +3948,7 @@ auxlib::svd_dc(Col<T>& S, const Base<std::complex<T>, T1>& X, uword& X_n_rows, u
   #else
     {
     arma_ignore(S);
-    arma_ignore(X);
-    arma_ignore(X_n_rows);
-    arma_ignore(X_n_cols);
+    arma_ignore(A);
     arma_stop_logic_error("svd(): use of LAPACK must be enabled");
     return false;
     }
@@ -3920,43 +3957,15 @@ auxlib::svd_dc(Col<T>& S, const Base<std::complex<T>, T1>& X, uword& X_n_rows, u
 
 
 
-template<typename eT, typename T1>
+template<typename eT>
 inline
 bool
-auxlib::svd_dc(Col<eT>& S, const Base<eT,T1>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  uword junk;
-  return auxlib::svd_dc(S, X, junk, junk);
-  }
-
-
-
-template<typename T, typename T1>
-inline
-bool
-auxlib::svd_dc(Col<T>& S, const Base<std::complex<T>, T1>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  uword junk;
-  return auxlib::svd_dc(S, X, junk, junk);
-  }
-
-
-
-template<typename eT, typename T1>
-inline
-bool
-auxlib::svd_dc(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
+auxlib::svd_dc(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, Mat<eT>& A)
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_LAPACK)
     {
-    Mat<eT> A(X.get_ref());
-    
     if(A.is_empty())
       {
       U.eye(A.n_rows, A.n_rows);
@@ -4021,7 +4030,7 @@ auxlib::svd_dc(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
     arma_ignore(U);
     arma_ignore(S);
     arma_ignore(V);
-    arma_ignore(X);
+    arma_ignore(A);
     arma_stop_logic_error("svd(): use of LAPACK must be enabled");
     return false;
     }
@@ -4030,18 +4039,16 @@ auxlib::svd_dc(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
 
 
 
-template<typename T, typename T1>
+template<typename T>
 inline
 bool
-auxlib::svd_dc(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, const Base< std::complex<T>, T1>& X)
+auxlib::svd_dc(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, Mat< std::complex<T> >& A)
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_LAPACK)
     {
     typedef std::complex<T> eT;
-    
-    Mat<eT> A(X.get_ref());
     
     if(A.is_empty())
       {
@@ -4107,7 +4114,7 @@ auxlib::svd_dc(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, 
     arma_ignore(U);
     arma_ignore(S);
     arma_ignore(V);
-    arma_ignore(X);
+    arma_ignore(A);
     arma_stop_logic_error("svd(): use of LAPACK must be enabled");
     return false;
     }
@@ -4116,17 +4123,15 @@ auxlib::svd_dc(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, 
 
 
 
-template<typename eT, typename T1>
+template<typename eT>
 inline
 bool
-auxlib::svd_dc_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
+auxlib::svd_dc_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, Mat<eT>& A)
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_LAPACK)
     {
-    Mat<eT> A(X.get_ref());
-    
     arma_debug_assert_blas_size(A);
     
     char jobz = 'S';
@@ -4192,7 +4197,7 @@ auxlib::svd_dc_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
     arma_ignore(U);
     arma_ignore(S);
     arma_ignore(V);
-    arma_ignore(X);
+    arma_ignore(A);
     arma_stop_logic_error("svd(): use of LAPACK must be enabled");
     return false;
     }
@@ -4201,18 +4206,16 @@ auxlib::svd_dc_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
 
 
 
-template<typename T, typename T1>
+template<typename T>
 inline
 bool
-auxlib::svd_dc_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, const Base< std::complex<T>, T1>& X)
+auxlib::svd_dc_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, Mat< std::complex<T> >& A)
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_LAPACK)
     {
     typedef std::complex<T> eT;
-    
-    Mat<eT> A(X.get_ref());
     
     arma_debug_assert_blas_size(A);
     
@@ -4279,7 +4282,7 @@ auxlib::svd_dc_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >
     arma_ignore(U);
     arma_ignore(S);
     arma_ignore(V);
-    arma_ignore(X);
+    arma_ignore(A);
     arma_stop_logic_error("svd(): use of LAPACK must be enabled");
     return false;
     }
@@ -4351,15 +4354,13 @@ auxlib::solve_square_fast(Mat<typename T1::elem_type>& out, Mat<typename T1::ele
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
-  
   const uword A_n_rows = A.n_rows;
   
   if(A_n_rows <= 4)
     {
     const bool status = auxlib::solve_square_tiny(out, A, B_expr.get_ref());
     
-    if(status == true)  { return true; }
+    if(status)  { return true; }
     }
   
   out = B_expr.get_ref();
@@ -4377,6 +4378,8 @@ auxlib::solve_square_fast(Mat<typename T1::elem_type>& out, Mat<typename T1::ele
   
   #if defined(ARMA_USE_ATLAS)
     {
+    typedef typename T1::elem_type eT;
+    
     arma_debug_assert_atlas_size(A);
     
     podarray<int> ipiv(A_n_rows + 2);  // +2 for paranoia: old versions of Atlas might be trashing memory
@@ -4388,6 +4391,8 @@ auxlib::solve_square_fast(Mat<typename T1::elem_type>& out, Mat<typename T1::ele
     }
   #elif defined(ARMA_USE_LAPACK)
     {
+    typedef typename T1::elem_type eT;
+    
     arma_debug_assert_blas_size(A);
     
     blas_int n    = blas_int(A_n_rows);  // assuming A is square
@@ -4727,7 +4732,7 @@ auxlib::solve_sympd_fast_common(Mat<typename T1::elem_type>& out, Mat<typename T
     {
     const bool status = auxlib::solve_square_tiny(out, A, B_expr.get_ref());
     
-    if(status == true)  { return true; }
+    if(status)  { return true; }
     }
   
   out = B_expr.get_ref();
@@ -6372,7 +6377,7 @@ auxlib::schur(Mat< std::complex<T> >& U, Mat< std::complex<T> >& S, const bool c
 
 
 //
-// syl (solution of the Sylvester equation AX + XB = C)
+// solve the Sylvester equation AX + XB = C
 
 template<typename eT>
 inline
@@ -6387,21 +6392,14 @@ auxlib::syl(Mat<eT>& X, const Mat<eT>& A, const Mat<eT>& B, const Mat<eT>& C)
       
     arma_debug_check( (C.n_rows != A.n_rows) || (C.n_cols != B.n_cols), "syl(): matrices are not conformant" );
     
-    if(A.is_empty() || B.is_empty() || C.is_empty())
-      {
-      X.reset();
-      return true;
-      }
-  
+    if(A.is_empty() || B.is_empty() || C.is_empty())  { X.reset(); return true; }
+    
     Mat<eT> Z1, Z2, T1, T2;
     
     const bool status_sd1 = auxlib::schur(Z1, T1, A);
     const bool status_sd2 = auxlib::schur(Z2, T2, B);
     
-    if( (status_sd1 == false) || (status_sd2 == false) )
-      {
-      return false;
-      }
+    if( (status_sd1 == false) || (status_sd2 == false) )  { return false; }
     
     char     trana = 'N';
     char     tranb = 'N';

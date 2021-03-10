@@ -740,7 +740,7 @@ op_diagmat2::apply(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const u
     }
   else  // P represents a matrix 
     {
-    arma_debug_check
+    arma_debug_check_bounds
       (
       ((row_offset > 0) && (row_offset >= n_rows)) || ((col_offset > 0) && (col_offset >= n_cols)),
       "diagmat(): requested diagonal out of bounds"

@@ -198,7 +198,7 @@ arma_inline
 oT&
 subview_field<oT>::operator()(const uword i)
   {
-  arma_debug_check( (i >= n_elem), "subview_field::operator(): index out of bounds" );
+  arma_debug_check_bounds( (i >= n_elem), "subview_field::operator(): index out of bounds" );
   
   return operator[](i);
   }
@@ -210,7 +210,7 @@ arma_inline
 const oT&
 subview_field<oT>::operator()(const uword i) const
   {
-  arma_debug_check( (i >= n_elem), "subview_field::operator(): index out of bounds" );
+  arma_debug_check_bounds( (i >= n_elem), "subview_field::operator(): index out of bounds" );
   
   return operator[](i);
   }
@@ -242,7 +242,7 @@ arma_inline
 oT&
 subview_field<oT>::operator()(const uword in_row, const uword in_col, const uword in_slice)
   {
-  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols) || (in_slice >= n_slices)), "subview_field::operator(): index out of bounds" );
+  arma_debug_check_bounds( ((in_row >= n_rows) || (in_col >= n_cols) || (in_slice >= n_slices)), "subview_field::operator(): index out of bounds" );
   
   const uword index = (in_slice + aux_slice1)*(f.n_rows*f.n_cols) + (in_col + aux_col1)*f.n_rows + aux_row1 + in_row;
   
@@ -256,7 +256,7 @@ arma_inline
 const oT&
 subview_field<oT>::operator()(const uword in_row, const uword in_col, const uword in_slice) const
   {
-  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols) || (in_slice >= n_slices)), "subview_field::operator(): index out of bounds" );
+  arma_debug_check_bounds( ((in_row >= n_rows) || (in_col >= n_cols) || (in_slice >= n_slices)), "subview_field::operator(): index out of bounds" );
   
   const uword index = (in_slice + aux_slice1)*(f.n_rows*f.n_cols) + (in_col + aux_col1)*f.n_rows + aux_row1 + in_row;
   

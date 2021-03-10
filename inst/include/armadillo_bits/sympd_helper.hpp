@@ -32,14 +32,14 @@ namespace sympd_helper
 // http://mathworld.wolfram.com/PositiveDefiniteMatrix.html
 // http://mathworld.wolfram.com/DiagonallyDominantMatrix.html
   
-template<uword threshold, typename eT>
+template<typename eT>
 inline
 typename enable_if2<is_cx<eT>::no, bool>::result
 guess_sympd_worker(const Mat<eT>& A)
   {
   arma_extra_debug_sigprint();
   
-  if((A.n_rows != A.n_cols) || (A.n_rows < threshold))  { return false; }
+  // NOTE: assuming A is square-sized
   
   const eT tol = eT(100) * std::numeric_limits<eT>::epsilon();  // allow some leeway
   
@@ -106,16 +106,16 @@ guess_sympd_worker(const Mat<eT>& A)
 
 
 
-template<uword threshold, typename eT>
+template<typename eT>
 inline
 typename enable_if2<is_cx<eT>::yes, bool>::result
 guess_sympd_worker(const Mat<eT>& A)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename get_pod_type<eT>::result T;
+  // NOTE: assuming A is square-sized
   
-  if((A.n_rows != A.n_cols) || (A.n_rows < threshold))  { return false; }
+  typedef typename get_pod_type<eT>::result T;
   
   const T tol = T(100) * std::numeric_limits<T>::epsilon();  // allow some leeway
   
@@ -214,7 +214,10 @@ bool
 guess_sympd(const Mat<eT>& A)
   {
   // analyse matrices with size >= 16x16
-  return guess_sympd_worker<16u>(A);
+  
+  if((A.n_rows != A.n_cols) || (A.n_rows < uword(16)))  { return false; }
+  
+  return guess_sympd_worker(A);
   }
 
 
@@ -226,7 +229,9 @@ guess_sympd_anysize(const Mat<eT>& A)
   {
   // analyse matrices with size >= 2x2
   
-  return guess_sympd_worker<2u>(A);
+  if((A.n_rows != A.n_cols) || (A.n_rows < uword(2)))  { return false; }
+  
+  return guess_sympd_worker(A);
   }
 
 

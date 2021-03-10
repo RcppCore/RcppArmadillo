@@ -501,7 +501,7 @@ op_diagvec2::apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, c
   const uword n_rows = P.get_n_rows();
   const uword n_cols = P.get_n_cols();
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     ((row_offset > 0) && (row_offset >= n_rows)) || ((col_offset > 0) && (col_offset >= n_cols)),
     "diagvec(): requested diagonal is out of bounds"

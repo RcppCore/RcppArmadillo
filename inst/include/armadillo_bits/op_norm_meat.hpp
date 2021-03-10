@@ -900,7 +900,7 @@ op_norm::mat_norm_2(const Proxy<T1>& P)
   Col<T> S;
   svd(S, P.Q);
   
-  return (S.n_elem > 0) ? max(S) : T(0);
+  return (S.n_elem > 0) ? S[0] : T(0);
   }
 
 

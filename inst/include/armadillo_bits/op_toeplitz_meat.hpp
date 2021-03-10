@@ -31,7 +31,7 @@ op_toeplitz::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_toeplitz>& i
   const unwrap_check<T1>  tmp(in.m, out);
   const Mat<eT>& X      = tmp.M;
   
-  arma_debug_check( ((X.is_vec() == false) && (X.is_empty() == false)), "toeplitz(): given object is not a vector" );
+  arma_debug_check( ((X.is_vec() == false) && (X.is_empty() == false)), "toeplitz(): given object must be a vector" );
   
   const uword N     = X.n_elem;
   const eT*   X_mem = X.memptr();
@@ -66,7 +66,7 @@ op_toeplitz_c::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_toeplitz_c
   const unwrap_check<T1>  tmp(in.m, out);
   const Mat<eT>& X      = tmp.M;
   
-  arma_debug_check( ((X.is_vec() == false) && (X.is_empty() == false)), "circ_toeplitz(): given object is not a vector" );
+  arma_debug_check( ((X.is_vec() == false) && (X.is_empty() == false)), "circ_toeplitz(): given object must be a vector" );
   
   const uword N     = X.n_elem;
   const eT*   X_mem = X.memptr();

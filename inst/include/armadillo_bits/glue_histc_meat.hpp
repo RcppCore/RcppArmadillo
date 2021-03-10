@@ -25,7 +25,7 @@ glue_histc::apply_noalias(Mat<uword>& C, const Mat<eT>& A, const Mat<eT>& B, con
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( ((B.is_vec() == false) && (B.is_empty() == false)), "histc(): parameter 'edges' is not a vector" );
+  arma_debug_check( ((B.is_vec() == false) && (B.is_empty() == false)), "histc(): parameter 'edges' must be a vector" );
   
   const uword A_n_rows = A.n_rows;
   const uword A_n_cols = A.n_cols;

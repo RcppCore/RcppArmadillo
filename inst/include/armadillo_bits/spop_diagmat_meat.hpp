@@ -425,7 +425,7 @@ spop_diagmat2::apply_noalias(SpMat<eT>& out, const SpMat<eT>& X, const uword row
     }
   else   // generate a diagonal matrix out of a matrix
     {
-    arma_debug_check
+    arma_debug_check_bounds
       (
       ((row_offset > 0) && (row_offset >= n_rows)) || ((col_offset > 0) && (col_offset >= n_cols)),
       "diagmat(): requested diagonal out of bounds"

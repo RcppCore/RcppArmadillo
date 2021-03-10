@@ -790,7 +790,7 @@ inline
 SpMat_MapMat_val<eT>
 spdiagview<eT>::operator()(const uword i)
   {
-  arma_debug_check( (i >= n_elem), "spdiagview::operator(): out of bounds" );
+  arma_debug_check_bounds( (i >= n_elem), "spdiagview::operator(): out of bounds" );
   
   return (const_cast< SpMat<eT>& >(m)).at(i+row_offset, i+col_offset);
   }
@@ -802,7 +802,7 @@ inline
 eT
 spdiagview<eT>::operator()(const uword i) const
   {
-  arma_debug_check( (i >= n_elem), "spdiagview::operator(): out of bounds" );
+  arma_debug_check_bounds( (i >= n_elem), "spdiagview::operator(): out of bounds" );
   
   return m.at(i+row_offset, i+col_offset);
   }
@@ -834,7 +834,7 @@ inline
 SpMat_MapMat_val<eT>
 spdiagview<eT>::operator()(const uword row, const uword col)
   {
-  arma_debug_check( ((row >= n_elem) || (col > 0)), "spdiagview::operator(): out of bounds" );
+  arma_debug_check_bounds( ((row >= n_elem) || (col > 0)), "spdiagview::operator(): out of bounds" );
   
   return (const_cast< SpMat<eT>& >(m)).at(row+row_offset, row+col_offset);
   }
@@ -846,7 +846,7 @@ inline
 eT
 spdiagview<eT>::operator()(const uword row, const uword col) const
   {
-  arma_debug_check( ((row >= n_elem) || (col > 0)), "spdiagview::operator(): out of bounds" );
+  arma_debug_check_bounds( ((row >= n_elem) || (col > 0)), "spdiagview::operator(): out of bounds" );
   
   return m.at(row+row_offset, row+col_offset);
   }

@@ -76,7 +76,7 @@ glue_polyfit::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename
   arma_debug_check
     (
     ( ((X.is_vec() == false) && (X.is_empty() == false)) || ((Y.is_vec() == false) && (Y.is_empty() == false)) ),
-    "polyfit(): given object is not a vector"
+    "polyfit(): given object must be a vector"
     );
   
   arma_debug_check( (X.n_elem != Y.n_elem), "polyfit(): given vectors must have the same number of elements" );

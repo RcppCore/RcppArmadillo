@@ -295,7 +295,7 @@ subview_cube_each2<eT,TB>::operator= (const Base<eT,T1>& in)
     {
     const uword slice = indices_mem[i];
     
-    arma_debug_check( (slice >= p_n_slices), "each_slice(): index out of bounds" );
+    arma_debug_check_bounds( (slice >= p_n_slices), "each_slice(): index out of bounds" );
     
     arrayops::copy(p.slice_memptr(slice), A_mem, p_n_elem_slice);
     }
@@ -334,7 +334,7 @@ subview_cube_each2<eT,TB>::operator+= (const Base<eT,T1>& in)
     {
     const uword slice = indices_mem[i];
     
-    arma_debug_check( (slice >= p_n_slices), "each_slice(): index out of bounds" );
+    arma_debug_check_bounds( (slice >= p_n_slices), "each_slice(): index out of bounds" );
     
     arrayops::inplace_plus(p.slice_memptr(slice), A_mem, p_n_elem_slice);
     }
@@ -373,7 +373,7 @@ subview_cube_each2<eT,TB>::operator-= (const Base<eT,T1>& in)
     {
     const uword slice = indices_mem[i];
     
-    arma_debug_check( (slice >= p_n_slices), "each_slice(): index out of bounds" );
+    arma_debug_check_bounds( (slice >= p_n_slices), "each_slice(): index out of bounds" );
     
     arrayops::inplace_minus(p.slice_memptr(slice), A_mem, p_n_elem_slice);
     }
@@ -412,7 +412,7 @@ subview_cube_each2<eT,TB>::operator%= (const Base<eT,T1>& in)
     {
     const uword slice = indices_mem[i];
     
-    arma_debug_check( (slice >= p_n_slices), "each_slice(): index out of bounds" );
+    arma_debug_check_bounds( (slice >= p_n_slices), "each_slice(): index out of bounds" );
     
     arrayops::inplace_mul(p.slice_memptr(slice), A_mem, p_n_elem_slice);
     }
@@ -451,7 +451,7 @@ subview_cube_each2<eT,TB>::operator/= (const Base<eT,T1>& in)
     {
     const uword slice = indices_mem[i];
     
-    arma_debug_check( (slice >= p_n_slices), "each_slice(): index out of bounds" );
+    arma_debug_check_bounds( (slice >= p_n_slices), "each_slice(): index out of bounds" );
     
     arrayops::inplace_div(p.slice_memptr(slice), A_mem, p_n_elem_slice);
     }
@@ -790,7 +790,7 @@ subview_cube_each2_aux::operator_plus
     {
     const uword slice = indices_mem[i];
     
-    arma_debug_check( (slice >= p_n_slices), "each_slice(): index out of bounds" );
+    arma_debug_check_bounds( (slice >= p_n_slices), "each_slice(): index out of bounds" );
     
     arrayops::inplace_plus(out.slice_memptr(slice), A_mem, p_n_elem_slice);
     }
@@ -835,7 +835,7 @@ subview_cube_each2_aux::operator_minus
     {
     const uword slice = indices_mem[i];
     
-    arma_debug_check( (slice >= p_n_slices), "each_slice(): index out of bounds" );
+    arma_debug_check_bounds( (slice >= p_n_slices), "each_slice(): index out of bounds" );
     
     arrayops::inplace_minus(out.slice_memptr(slice), A_mem, p_n_elem_slice);
     }
@@ -879,7 +879,7 @@ subview_cube_each2_aux::operator_minus
     {
     const uword slice = indices_mem[i];
     
-    arma_debug_check( (slice >= p_n_slices), "each_slice(): index out of bounds" );
+    arma_debug_check_bounds( (slice >= p_n_slices), "each_slice(): index out of bounds" );
     
           Mat<eT> out_slice(              out.slice_memptr(slice),  p_n_rows, p_n_cols, false, true);
     const Mat<eT>   p_slice(const_cast<eT*>(p.slice_memptr(slice)), p_n_rows, p_n_cols, false, true);
@@ -927,7 +927,7 @@ subview_cube_each2_aux::operator_schur
     {
     const uword slice = indices_mem[i];
     
-    arma_debug_check( (slice >= p_n_slices), "each_slice(): index out of bounds" );
+    arma_debug_check_bounds( (slice >= p_n_slices), "each_slice(): index out of bounds" );
     
     arrayops::inplace_mul(out.slice_memptr(slice), A_mem, p_n_elem_slice);
     }
@@ -972,7 +972,7 @@ subview_cube_each2_aux::operator_div
     {
     const uword slice = indices_mem[i];
     
-    arma_debug_check( (slice >= p_n_slices), "each_slice(): index out of bounds" );
+    arma_debug_check_bounds( (slice >= p_n_slices), "each_slice(): index out of bounds" );
     
     arrayops::inplace_div(out.slice_memptr(slice), A_mem, p_n_elem_slice);
     }
@@ -1016,7 +1016,7 @@ subview_cube_each2_aux::operator_div
     {
     const uword slice = indices_mem[i];
     
-    arma_debug_check( (slice >= p_n_slices), "each_slice(): index out of bounds" );
+    arma_debug_check_bounds( (slice >= p_n_slices), "each_slice(): index out of bounds" );
     
           Mat<eT> out_slice(              out.slice_memptr(slice),  p_n_rows, p_n_cols, false, true);
     const Mat<eT>   p_slice(const_cast<eT*>(p.slice_memptr(slice)), p_n_rows, p_n_cols, false, true);

@@ -193,7 +193,7 @@ arma_inline
 eT
 podarray<eT>::operator() (const uword i) const
   {
-  arma_debug_check( (i >= n_elem), "podarray::operator(): index out of bounds" );
+  arma_debug_check_bounds( (i >= n_elem), "podarray::operator(): index out of bounds" );
   
   return mem[i];
   }
@@ -205,7 +205,7 @@ arma_inline
 eT&
 podarray<eT>::operator() (const uword i)
   {
-  arma_debug_check( (i >= n_elem), "podarray::operator(): index out of bounds" );
+  arma_debug_check_bounds( (i >= n_elem), "podarray::operator(): index out of bounds" );
   
   return access::rw(mem[i]);
   }
