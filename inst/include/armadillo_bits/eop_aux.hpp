@@ -22,6 +22,8 @@
 //! use of the SFINAE approach to work around compiler limitations
 //! http://en.wikipedia.org/wiki/SFINAE
 
+#undef log1p
+
 class eop_aux
   {
   public:
