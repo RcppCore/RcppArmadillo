@@ -703,15 +703,7 @@ op_norm::vec_norm_k(const Proxy<T1>& P, const int k)
     
     const uword N = P.get_n_elem();
     
-    uword i,j;
-    
-    for(i=0, j=1; j<N; i+=2, j+=2)
-      {
-      acc += std::pow(std::abs(A[i]), k);
-      acc += std::pow(std::abs(A[j]), k);
-      }
-    
-    if(i < N)
+    for(uword i=0; i<N; ++i)
       {
       acc += std::pow(std::abs(A[i]), k);
       }
@@ -875,139 +867,47 @@ op_norm::vec_norm_min(const Proxy<T1>& P)
 
 
 
-template<typename T1>
+template<typename eT>
 inline
-typename T1::pod_type
-op_norm::mat_norm_1(const Proxy<T1>& P)
+typename get_pod_type<eT>::result
+op_norm::mat_norm_1(const Mat<eT>& X)
   {
   arma_extra_debug_sigprint();
   
   // TODO: this can be sped up with a dedicated implementation
-  return as_scalar( max( sum(abs(P.Q), 0), 1) );
+  return as_scalar( max( sum(abs(X), 0), 1) );
   }
 
 
 
-template<typename T1>
+template<typename eT>
 inline
-typename T1::pod_type
-op_norm::mat_norm_2(const Proxy<T1>& P)
+typename get_pod_type<eT>::result
+op_norm::mat_norm_2(const Mat<eT>& X)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::pod_type   T;
+  typedef typename get_pod_type<eT>::result T;
+  
+  if(X.is_finite() == false)  { arma_debug_warn_level(1, "norm(): given matrix has non-finite elements"); }
   
   Col<T> S;
-  svd(S, P.Q);
+  svd(S, X);
   
   return (S.n_elem > 0) ? S[0] : T(0);
   }
 
 
 
-template<typename T1>
+template<typename eT>
 inline
-typename T1::pod_type
-op_norm::mat_norm_inf(const Proxy<T1>& P)
+typename get_pod_type<eT>::result
+op_norm::mat_norm_inf(const Mat<eT>& X)
   {
   arma_extra_debug_sigprint();
   
   // TODO: this can be sped up with a dedicated implementation
-  return as_scalar( max( sum(abs(P.Q), 1), 0) );
-  }
-
-
-
-//
-// norms for sparse matrices
-
-
-
-template<typename T1>
-inline
-typename T1::pod_type
-op_norm::mat_norm_1(const SpProxy<T1>& P)
-  {
-  arma_extra_debug_sigprint();
-  
-  // TODO: this can be sped up with a dedicated implementation
-  return as_scalar( max( sum(abs(P.Q), 0), 1) );
-  }
-
-
-
-template<typename T1>
-inline
-typename T1::pod_type
-op_norm::mat_norm_2(const SpProxy<T1>& P, const typename arma_real_only<typename T1::elem_type>::result* junk)
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk);
-  
-  // norm = sqrt( largest eigenvalue of (A^H)*A ), where ^H is the conjugate transpose
-  // http://math.stackexchange.com/questions/4368/computing-the-largest-eigenvalue-of-a-very-large-sparse-matrix
-  
-  typedef typename T1::elem_type eT;
-  typedef typename T1::pod_type   T;
-  
-  const unwrap_spmat<typename SpProxy<T1>::stored_type> tmp(P.Q);
-  
-  const SpMat<eT>& A = tmp.M;
-  const SpMat<eT>  B = trans(A);
-  
-  const SpMat<eT>  C = (A.n_rows <= A.n_cols) ? (A*B) : (B*A);
-  
-  Col<T> eigval;
-  eigs_sym(eigval, C, 1);
-  
-  return (eigval.n_elem > 0) ? std::sqrt(eigval[0]) : T(0);
-  }
-
-
-
-template<typename T1>
-inline
-typename T1::pod_type
-op_norm::mat_norm_2(const SpProxy<T1>& P, const typename arma_cx_only<typename T1::elem_type>::result* junk)
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk);
-  
-  typedef typename T1::elem_type eT;
-  typedef typename T1::pod_type   T;
-  
-  // we're calling eigs_gen(), which currently requires ARPACK
-  #if !defined(ARMA_USE_ARPACK)
-    {
-    arma_stop_logic_error("norm(): use of ARPACK must be enabled for norm of complex matrices");
-    return T(0);
-    }
-  #endif
-  
-  const unwrap_spmat<typename SpProxy<T1>::stored_type> tmp(P.Q);
-  
-  const SpMat<eT>& A = tmp.M;
-  const SpMat<eT>  B = trans(A);
-  
-  const SpMat<eT>  C = (A.n_rows <= A.n_cols) ? (A*B) : (B*A);
-  
-  Col<eT> eigval;
-  eigs_gen(eigval, C, 1);
-  
-  return (eigval.n_elem > 0) ? std::sqrt(std::real(eigval[0])) : T(0);
-  }
-
-
-
-template<typename T1>
-inline
-typename T1::pod_type
-op_norm::mat_norm_inf(const SpProxy<T1>& P)
-  {
-  arma_extra_debug_sigprint();
-  
-  // TODO: this can be sped up with a dedicated implementation
-  return as_scalar( max( sum(abs(P.Q), 1), 0) );
+  return as_scalar( max( sum(abs(X), 1), 0) );
   }
 
 

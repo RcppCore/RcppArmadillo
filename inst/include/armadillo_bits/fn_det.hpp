@@ -27,89 +27,41 @@ det(const Base<typename T1::elem_type,T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  const quasi_unwrap<T1> U(X.get_ref());
+  typedef typename T1::elem_type eT;
   
-  arma_debug_check( (U.M.is_square() == false), "det(): given matrix must be square sized" );
+  eT out_val = eT(0);
   
-  if( (U.M.n_rows > 4) && (U.M.is_diagmat()) )
+  const bool status = op_det::apply_direct(out_val, X.get_ref());
+  
+  if(status == false)
     {
-    return det(diagmat(U.M));  // call the specialised version of det()
+    out_val = eT(0);
+    arma_stop_runtime_error("det(): failed to find determinant");
     }
   
-  return auxlib::det(U.M);
+  return out_val;
   }
 
 
 
 template<typename T1>
-arma_warn_unused
 inline
-typename T1::elem_type
-det(const Op<T1, op_diagmat>& X)
+typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, bool >::result
+det(typename T1::elem_type& out_val, const Base<typename T1::elem_type,T1>& X)
   {
   arma_extra_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
-  const diagmat_proxy<T1> A(X.m);
+  const bool status = op_det::apply_direct(out_val, X.get_ref());
   
-  arma_debug_check( (A.n_rows != A.n_cols), "det(): given matrix must be square sized" );
-  
-  const uword N = (std::min)(A.n_rows, A.n_cols);
-  
-  eT val1 = eT(1);
-  eT val2 = eT(1);
-  
-  uword i,j;
-  for(i=0, j=1; j<N; i+=2, j+=2)
+  if(status == false)
     {
-    val1 *= A[i];
-    val2 *= A[j];
+    out_val = eT(0);
+    arma_debug_warn_level(3, "det(): failed to find determinant");
     }
   
-  
-  if(i < N)
-    {
-    val1 *= A[i];
-    }
-  
-  return val1 * val2;
-  }
-
-
-
-template<typename T1>
-arma_warn_unused
-inline
-typename T1::elem_type
-det(const Op<T1, op_trimat>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  const Proxy<T1> P(X.m);
-  
-  const uword N = P.get_n_rows();
-  
-  arma_debug_check( (N != P.get_n_cols()), "det(): given matrix must be square sized" );
-  
-  eT val1 = eT(1);
-  eT val2 = eT(1);
-  
-  uword i,j;
-  for(i=0, j=1; j<N; i+=2, j+=2)
-    {
-    val1 *= P.at(i,i);
-    val2 *= P.at(j,j);
-    }
-  
-  if(i < N)
-    {
-    val1 *= P.at(i,i);
-    }
-  
-  return val1 * val2;
+  return status;
   }
 
 

@@ -177,7 +177,7 @@ eigs_gen
   if(status == false)
     {
     eigval.soft_reset();
-    arma_debug_warn("eigs_gen(): decomposition failed");
+    arma_debug_warn_level(3, "eigs_gen(): decomposition failed");
     }
   
   return status;
@@ -243,7 +243,7 @@ eigs_gen
   if(status == false)
     {
     eigval.soft_reset();
-    arma_debug_warn("eigs_gen(): decomposition failed");
+    arma_debug_warn_level(3, "eigs_gen(): decomposition failed");
     }
   
   return status;
@@ -274,7 +274,7 @@ eigs_gen
   if(status == false)
     {
     eigval.soft_reset();
-    arma_debug_warn("eigs_gen(): decomposition failed");
+    arma_debug_warn_level(3, "eigs_gen(): decomposition failed");
     }
   
   return status;
@@ -310,7 +310,7 @@ eigs_gen
     {
     eigval.soft_reset();
     eigvec.soft_reset();
-    arma_debug_warn("eigs_gen(): decomposition failed");
+    arma_debug_warn_level(3, "eigs_gen(): decomposition failed");
     }
   
   return status;
@@ -379,7 +379,7 @@ eigs_gen
     {
     eigval.soft_reset();
     eigvec.soft_reset();
-    arma_debug_warn("eigs_gen(): decomposition failed");
+    arma_debug_warn_level(3, "eigs_gen(): decomposition failed");
     }
   
   return status;
@@ -412,7 +412,7 @@ eigs_gen
     {
     eigval.soft_reset();
     eigvec.soft_reset();
-    arma_debug_warn("eigs_gen(): decomposition failed");
+    arma_debug_warn_level(3, "eigs_gen(): decomposition failed");
     }
   
   return status;

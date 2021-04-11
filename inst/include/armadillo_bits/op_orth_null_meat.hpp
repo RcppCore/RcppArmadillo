@@ -35,6 +35,7 @@ op_orth::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_orth>& expr)
   
   if(status == false)
     {
+    out.soft_reset();
     arma_stop_runtime_error("orth(): svd failed");
     }
   }
@@ -63,7 +64,7 @@ op_orth::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   
   V.reset();
   
-  if(status == false)  { out.soft_reset(); return false; }
+  if(status == false)  { return false; }
   
   if(s.is_empty())  { out.reset(); return true; }
   
@@ -110,6 +111,7 @@ op_null::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_null>& expr)
   
   if(status == false)
     {
+    out.soft_reset();
     arma_stop_runtime_error("null(): svd failed");
     }
   }
@@ -138,7 +140,7 @@ op_null::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   
   U.reset();
   
-  if(status == false)  { out.soft_reset(); return false; }
+  if(status == false)  { return false; }
   
   if(s.is_empty())  { out.reset(); return true; }
   

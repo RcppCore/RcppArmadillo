@@ -23,8 +23,6 @@ class op_norm
   {
   public:
   
-  // norms for dense vectors and matrices
-  
   template<typename T1> arma_hot inline static typename T1::pod_type vec_norm_1(const Proxy<T1>& P, const typename  arma_not_cx<typename T1::elem_type>::result* junk = nullptr);
   template<typename T1> arma_hot inline static typename T1::pod_type vec_norm_1(const Proxy<T1>& P, const typename arma_cx_only<typename T1::elem_type>::result* junk = nullptr);
   template<typename eT> arma_hot inline static eT                    vec_norm_1_direct_std(const Mat<eT>& X);
@@ -41,20 +39,10 @@ class op_norm
   template<typename T1> arma_hot inline static typename T1::pod_type vec_norm_max(const Proxy<T1>& P);
   template<typename T1> arma_hot inline static typename T1::pod_type vec_norm_min(const Proxy<T1>& P);
   
-  template<typename T1> inline static typename T1::pod_type mat_norm_1(const Proxy<T1>& P);
-  template<typename T1> inline static typename T1::pod_type mat_norm_2(const Proxy<T1>& P);
+  template<typename eT> inline static typename get_pod_type<eT>::result mat_norm_1(const Mat<eT>& X);
+  template<typename eT> inline static typename get_pod_type<eT>::result mat_norm_2(const Mat<eT>& X);
   
-  template<typename T1> inline static typename T1::pod_type mat_norm_inf(const Proxy<T1>& P);
-  
-  
-  // norms for sparse matrices
-  
-  template<typename T1> inline static typename T1::pod_type mat_norm_1(const SpProxy<T1>& P);
-
-  template<typename T1> inline static typename T1::pod_type mat_norm_2(const SpProxy<T1>& P, const typename arma_real_only<typename T1::elem_type>::result* junk = nullptr);
-  template<typename T1> inline static typename T1::pod_type mat_norm_2(const SpProxy<T1>& P, const typename   arma_cx_only<typename T1::elem_type>::result* junk = nullptr);
-
-  template<typename T1> inline static typename T1::pod_type mat_norm_inf(const SpProxy<T1>& P);
+  template<typename eT> inline static typename get_pod_type<eT>::result mat_norm_inf(const Mat<eT>& X);
   };
 
 

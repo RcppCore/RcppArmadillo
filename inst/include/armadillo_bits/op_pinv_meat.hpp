@@ -29,14 +29,14 @@ op_pinv::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_pinv>& in)
   
   typedef typename T1::pod_type T;
   
-  const T tol = access::tmp_real(in.aux);
+  const T     tol       = access::tmp_real(in.aux);
+  const uword method_id = in.aux_uword_a;
   
-  const bool use_divide_and_conquer = (in.aux_uword_a == 1);
-  
-  const bool status = op_pinv::apply_direct(out, in.m, tol, use_divide_and_conquer);
+  const bool status = op_pinv::apply_direct(out, in.m, tol, method_id);
   
   if(status == false)
     {
+    out.soft_reset();
     arma_stop_runtime_error("pinv(): svd failed");
     }
   }
@@ -46,7 +46,7 @@ op_pinv::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_pinv>& in)
 template<typename T1>
 inline
 bool
-op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& expr, typename T1::pod_type tol, const bool use_divide_and_conquer)
+op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& expr, typename T1::pod_type tol, const uword method_id)
   {
   arma_extra_debug_sigprint();
   
@@ -54,6 +54,10 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   typedef typename T1::pod_type   T;
   
   arma_debug_check((tol < T(0)), "pinv(): tolerance must be >= 0");
+  
+  // method_id = 0 -> default setting
+  // method_id = 1 -> use standard algorithm
+  // method_id = 2 -> use divide and conquer algorithm
   
   Mat<eT> A(expr.get_ref());
   
@@ -63,7 +67,7 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   if(A.is_empty())  { out.set_size(n_cols,n_rows); return true; }
   
   #if defined(ARMA_OPTIMISE_SYMPD)
-    const bool try_sympd = (auxlib::crippled_lapack(A) == false) && (tol == T(0)) && sympd_helper::guess_sympd_anysize(A);
+    const bool try_sympd = (auxlib::crippled_lapack(A) == false) && (tol == T(0)) && (method_id == uword(0)) && sympd_helper::guess_sympd_anysize(A);
   #else
     const bool try_sympd = false;
   #endif
@@ -89,13 +93,11 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   Col< T> s;
   Mat<eT> V;
   
-  bool status = false;
-  
   if(n_cols > n_rows)  { A = trans(A); }
   
-  status = (use_divide_and_conquer) ? auxlib::svd_dc_econ(U, s, V, A) : auxlib::svd_econ(U, s, V, A, 'b');
+  const bool status = ((method_id == uword(0)) || (method_id == uword(2))) ? auxlib::svd_dc_econ(U, s, V, A) : auxlib::svd_econ(U, s, V, A, 'b');
   
-  if(status == false)  { out.soft_reset(); return false; }
+  if(status == false)  { return false; }
   
   const uword s_n_elem = s.n_elem;
   const T*    s_mem    = s.memptr();

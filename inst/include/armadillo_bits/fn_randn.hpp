@@ -63,14 +63,10 @@ randn(const uword n_elem, const arma_empty_class junk1 = arma_empty_class(), con
   arma_ignore(junk1);
   arma_ignore(junk2);
   
-  if(is_Row<obj_type>::value)
-    {
-    return Gen<obj_type, gen_randn>(1, n_elem);
-    }
-  else
-    {
-    return Gen<obj_type, gen_randn>(n_elem, 1);
-    }
+  const uword n_rows = (is_Row<obj_type>::value) ? uword(1) : n_elem;
+  const uword n_cols = (is_Row<obj_type>::value) ? n_elem   : uword(1);
+  
+  return Gen<obj_type, gen_randn>(n_rows, n_cols);
   }
 
 

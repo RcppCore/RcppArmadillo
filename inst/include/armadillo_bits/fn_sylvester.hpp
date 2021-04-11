@@ -49,7 +49,7 @@ syl
   if(status == false)
     {
     out.soft_reset();
-    arma_debug_warn("syl(): solution not found");
+    arma_debug_warn_level(3, "syl(): solution not found");
     }
   
   return status;

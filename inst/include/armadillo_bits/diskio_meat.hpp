@@ -2741,7 +2741,7 @@ diskio::save_csv_ascii(const SpMat< std::complex<T> >& x, std::ostream& f)
   arma_ignore(x);
   arma_ignore(f);
   
-  arma_warn("saving complex sparse matrices as csv_ascii not yet implemented");
+  arma_debug_warn_level(1, "saving complex sparse matrices as csv_ascii not yet implemented");
   
   return false;
   }
@@ -3082,7 +3082,7 @@ diskio::load_csv_ascii(SpMat< std::complex<T> >& x, std::istream& f, std::string
   arma_ignore(f);
   arma_ignore(err_msg);
   
-  arma_warn("loading complex sparse matrices as csv_ascii not yet implemented");
+  arma_debug_warn_level(1, "loading complex sparse matrices as csv_ascii not yet implemented");
   
   return false;
   }
@@ -4770,7 +4770,7 @@ diskio::load_ppm_binary(Cube<eT>& x, std::istream& f, std::string& err_msg)
     f >> f_maxval;
     f.get();
     
-    if( (f_maxval > 0) || (f_maxval <= 65535) )
+    if( (f_maxval > 0) && (f_maxval <= 65535) )
       {
       x.set_size(f_n_rows, f_n_cols, 3);
       
@@ -4959,7 +4959,7 @@ diskio::load_ppm_binary(field<T1>& x, std::istream& f, std::string& err_msg)
     f >> f_maxval;
     f.get();
     
-    if( (f_maxval > 0) || (f_maxval <= 65535) )
+    if( (f_maxval > 0) && (f_maxval <= 65535) )
       {
       x.set_size(3);
       Mat<eT>& R = x(0);

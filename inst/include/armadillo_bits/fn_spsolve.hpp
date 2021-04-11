@@ -72,7 +72,7 @@ spsolve_helper
     {
     if( (settings.id != 0) && ((opts.symmetric) || (opts.pivot_thresh != double(1))) )
       {
-      arma_debug_warn("spsolve(): ignoring settings not applicable to LAPACK based solver");
+      arma_debug_warn_level(1, "spsolve(): ignoring settings not applicable to LAPACK based solver");
       }
     
     Mat<eT> AA;
@@ -89,7 +89,7 @@ spsolve_helper
       }
     catch(std::bad_alloc&)
       {
-      arma_debug_warn("spsolve(): not enough memory to use LAPACK based solver");
+      arma_debug_warn_level(1, "spsolve(): not enough memory to use LAPACK based solver");
       }
     
     if(conversion_ok)
@@ -107,17 +107,14 @@ spsolve_helper
     }
   
   
-  if(status == false)
+  if( (status == false) && (rcond > T(0)) )
     {
-    if(rcond > T(0))  { arma_debug_warn("spsolve(): system seems singular (rcond: ", rcond, ")"); }
-    else              { arma_debug_warn("spsolve(): system seems singular");                      }
-    
-    out.soft_reset();
+    arma_debug_warn_level(2, "spsolve(): system is singular (rcond: ", rcond, ")");
     }
   
   if( (status == true) && (rcond > T(0)) && (rcond < auxlib::epsilon_lapack(out)) )
     {
-    arma_debug_warn("solve(): solution computed, but system seems singular to working precision (rcond: ", rcond, ")");
+    arma_debug_warn_level(2, "solve(): solution computed, but system is singular to working precision (rcond: ", rcond, ")");
     }
   
   return status;
@@ -142,6 +139,12 @@ spsolve
   arma_ignore(junk);
   
   const bool status = spsolve_helper(out, A.get_ref(), B.get_ref(), solver, settings);
+  
+  if(status == false)
+    {
+    out.soft_reset();
+    arma_debug_warn_level(3, "spsolve(): solution not found");
+    }
   
   return status;
   }
@@ -172,6 +175,7 @@ spsolve
   
   if(status == false)
     {
+    out.soft_reset();
     arma_stop_runtime_error("spsolve(): solution not found");
     }
   
