@@ -1,7 +1,7 @@
 2021-04-12  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/armadillo_bits/arma_rng.hpp: Apply upstream correction
-	for Normal RNG draw issue discovered during full reverse depends check
+	* inst/include/armadillo_bits/arma_rng.hpp: Apply two upstream
+	corrections for RNG draws discovered during reverse depends checks
 
 2021-04-11  Dirk Eddelbuettel  <edd@debian.org>
 

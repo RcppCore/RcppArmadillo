@@ -759,7 +759,7 @@ struct arma_rng::randg
       std::mt19937_64                 local_engine;
       std::gamma_distribution<double> local_g_distr(a,b);
 
-      local_engine.seed( local_seed_type(std::rand()) );
+      local_engine.seed( local_seed_type(arma_rng::randi<local_seed_type>()) );
 
       for(uword i=0; i<N; ++i)  { mem[i] = eT(local_g_distr(local_engine)); }
       }
