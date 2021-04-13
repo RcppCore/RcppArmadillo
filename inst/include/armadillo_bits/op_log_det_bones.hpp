@@ -14,20 +14,35 @@
 // ------------------------------------------------------------------------
 
 
-
-//! \addtogroup op_pinv
+//! \addtogroup op_log_det
 //! @{
 
 
 
-class op_pinv
+class op_log_det
   : public traits_op_default
   {
   public:
   
-  template<typename T1> inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_pinv>& in);
+  template<typename T1>
+  inline static bool apply_direct(typename T1::elem_type& out_val, typename T1::pod_type& out_sign, const Base<typename T1::elem_type,T1>& expr);
   
-  template<typename T1> inline static bool apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& expr, typename T1::pod_type tol, const uword method_id);
+  template<typename T1>
+  inline static bool apply_diagmat(typename T1::elem_type& out_val, typename T1::pod_type& out_sign, const Base<typename T1::elem_type,T1>& expr);
+  
+  template<typename T1>
+  inline static bool apply_trimat(typename T1::elem_type& out_val, typename T1::pod_type& out_sign, const Base<typename T1::elem_type,T1>& expr);
+  };
+
+
+
+class op_log_det_sympd
+  : public traits_op_default
+  {
+  public:
+  
+  template<typename T1>
+  inline static bool apply_direct(typename T1::pod_type& out_val, const Base<typename T1::elem_type,T1>& expr);
   };
 
 

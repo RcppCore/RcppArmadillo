@@ -219,10 +219,7 @@ podarray<eT>::set_min_size(const uword min_n_elem)
   {
   arma_extra_debug_sigprint();
   
-  if(min_n_elem > n_elem)
-    {  
-    init_warm(min_n_elem);
-    }
+  if(min_n_elem > n_elem)  { init_warm(min_n_elem); }
   }
 
 
@@ -310,7 +307,6 @@ podarray<eT>::memptr() const
 
 
 template<typename eT>
-arma_hot
 inline
 void
 podarray<eT>::copy_row(const Mat<eT>& A, const uword row)

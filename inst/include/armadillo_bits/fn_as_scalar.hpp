@@ -59,7 +59,7 @@ as_scalar_redirect<N>::apply(const T1& X)
   
   if(P.get_n_elem() != 1)
     {
-    arma_debug_check(true, "as_scalar(): expression doesn't evaluate to exactly one element");
+    arma_debug_check(true, "as_scalar(): expression must evaluate to exactly one element");
     
     return Datum<eT>::nan;
     }
@@ -154,7 +154,7 @@ as_scalar_redirect<3>::apply(const Glue< Glue<T1, T2, glue_times>, T3, glue_time
     
     if(tmp.n_elem != 1)
       {
-      arma_debug_check(true, "as_scalar(): expression doesn't evaluate to exactly one element");
+      arma_debug_check(true, "as_scalar(): expression must evaluate to exactly one element");
       
       return Datum<eT>::nan;
       }
@@ -236,7 +236,7 @@ as_scalar_diag(const Base<typename T1::elem_type,T1>& X)
   
   if(A.n_elem != 1)
     {
-    arma_debug_check(true, "as_scalar(): expression doesn't evaluate to exactly one element");
+    arma_debug_check(true, "as_scalar(): expression must evaluate to exactly one element");
     
     return Datum<eT>::nan;
     }
@@ -346,7 +346,7 @@ as_scalar(const Base<typename T1::elem_type,T1>& X)
   
   if(P.get_n_elem() != 1)
     {
-    arma_debug_check(true, "as_scalar(): expression doesn't evaluate to exactly one element");
+    arma_debug_check(true, "as_scalar(): expression must evaluate to exactly one element");
     
     return Datum<eT>::nan;
     }
@@ -367,7 +367,7 @@ as_scalar(const Gen<T1, gen_randu>& X)
   
   if( (X.n_rows != 1) || (X.n_cols != 1) )
     {
-    arma_debug_check(true, "as_scalar(): expression doesn't evaluate to exactly one element");
+    arma_debug_check(true, "as_scalar(): expression must evaluate to exactly one element");
     
     return Datum<eT>::nan;
     }
@@ -389,7 +389,7 @@ as_scalar(const Gen<T1, gen_randn>& X)
   
   if( (X.n_rows != 1) || (X.n_cols != 1) )
     {
-    arma_debug_check(true, "as_scalar(): expression doesn't evaluate to exactly one element");
+    arma_debug_check(true, "as_scalar(): expression must evaluate to exactly one element");
     
     return Datum<eT>::nan;
     }
@@ -413,7 +413,7 @@ as_scalar(const BaseCube<typename T1::elem_type,T1>& X)
   
   if(P.get_n_elem() != 1)
     {
-    arma_debug_check(true, "as_scalar(): expression doesn't evaluate to exactly one element");
+    arma_debug_check(true, "as_scalar(): expression must evaluate to exactly one element");
     
     return Datum<eT>::nan;
     }
@@ -447,7 +447,7 @@ as_scalar(const SpBase<typename T1::elem_type, T1>& X)
   
   if(A.n_elem != 1)
     {
-    arma_debug_check(true, "as_scalar(): expression doesn't evaluate to exactly one element");
+    arma_debug_check(true, "as_scalar(): expression must evaluate to exactly one element");
     
     return Datum<eT>::nan;
     }

@@ -97,8 +97,8 @@ glue_times_redirect2_helper<true>::apply(Mat<typename T1::elem_type>& out, const
       {
       // if(auxlib::rudimentary_sym_check(A) == false)
       //   {
-      //   if(is_cx<eT>::no )  { arma_debug_warn("inv_sympd(): given matrix is not symmetric"); }
-      //   if(is_cx<eT>::yes)  { arma_debug_warn("inv_sympd(): given matrix is not hermitian"); }
+      //   if(is_cx<eT>::no )  { arma_debug_warn_level(1, "inv_sympd(): given matrix is not symmetric"); }
+      //   if(is_cx<eT>::yes)  { arma_debug_warn_level(1, "inv_sympd(): given matrix is not hermitian"); }
       //   
       //   out.soft_reset();
       //   arma_stop_runtime_error("matrix multiplication: problem with matrix inverse; suggest to use solve() instead");
@@ -108,8 +108,8 @@ glue_times_redirect2_helper<true>::apply(Mat<typename T1::elem_type>& out, const
       
       if( (arma_config::debug) && (auxlib::rudimentary_sym_check(A) == false) )
         {
-        if(is_cx<eT>::no )  { arma_debug_warn("inv_sympd(): given matrix is not symmetric"); }
-        if(is_cx<eT>::yes)  { arma_debug_warn("inv_sympd(): given matrix is not hermitian"); }
+        if(is_cx<eT>::no )  { arma_debug_warn_level(1, "inv_sympd(): given matrix is not symmetric"); }
+        if(is_cx<eT>::yes)  { arma_debug_warn_level(1, "inv_sympd(): given matrix is not hermitian"); }
         }
       }
     
@@ -154,8 +154,8 @@ glue_times_redirect2_helper<true>::apply(Mat<typename T1::elem_type>& out, const
       
       // if(auxlib::rudimentary_sym_check(B) == false)
       //   {
-      //   if(is_cx<eT>::no )  { arma_debug_warn("inv_sympd(): given matrix is not symmetric"); }
-      //   if(is_cx<eT>::yes)  { arma_debug_warn("inv_sympd(): given matrix is not hermitian"); }
+      //   if(is_cx<eT>::no )  { arma_debug_warn_level(1, "inv_sympd(): given matrix is not symmetric"); }
+      //   if(is_cx<eT>::yes)  { arma_debug_warn_level(1, "inv_sympd(): given matrix is not hermitian"); }
       //   
       //   out.soft_reset();
       //   arma_stop_runtime_error("matrix multiplication: problem with matrix inverse; suggest to use solve() instead");
@@ -165,8 +165,8 @@ glue_times_redirect2_helper<true>::apply(Mat<typename T1::elem_type>& out, const
       
       if( (arma_config::debug) && (auxlib::rudimentary_sym_check(B) == false) )
         {
-        if(is_cx<eT>::no )  { arma_debug_warn("inv_sympd(): given matrix is not symmetric"); }
-        if(is_cx<eT>::yes)  { arma_debug_warn("inv_sympd(): given matrix is not hermitian"); }
+        if(is_cx<eT>::no )  { arma_debug_warn_level(1, "inv_sympd(): given matrix is not symmetric"); }
+        if(is_cx<eT>::yes)  { arma_debug_warn_level(1, "inv_sympd(): given matrix is not hermitian"); }
         }
       
       arma_debug_assert_mul_size(At.n_cols, At.n_rows, B.n_rows, B.n_cols, "matrix multiplication");

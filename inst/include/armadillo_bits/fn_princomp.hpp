@@ -50,7 +50,7 @@ princomp
     latent_out.soft_reset();
     tsquared_out.soft_reset();
     
-    arma_debug_warn("princomp(): decomposition failed");
+    arma_debug_warn_level(3, "princomp(): decomposition failed");
     }
   
   return status;
@@ -86,7 +86,7 @@ princomp
     score_out.soft_reset();
     latent_out.soft_reset();
     
-    arma_debug_warn("princomp(): decomposition failed");
+    arma_debug_warn_level(3, "princomp(): decomposition failed");
     }
   
   return status;
@@ -119,7 +119,7 @@ princomp
     coeff_out.soft_reset();
     score_out.soft_reset();
     
-    arma_debug_warn("princomp(): decomposition failed");
+    arma_debug_warn_level(3, "princomp(): decomposition failed");
     }
   
   return status;
@@ -149,7 +149,7 @@ princomp
     {
     coeff_out.soft_reset();
     
-    arma_debug_warn("princomp(): decomposition failed");
+    arma_debug_warn_level(3, "princomp(): decomposition failed");
     }
   
   return status;

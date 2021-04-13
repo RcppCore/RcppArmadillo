@@ -67,8 +67,8 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
   
   if((arma_config::debug) && (sp_auxlib::rudimentary_sym_check(U.M) == false))
     {
-    if(is_cx<eT>::no )  { arma_debug_warn("eigs_sym(): given matrix is not symmetric"); }
-    if(is_cx<eT>::yes)  { arma_debug_warn("eigs_sym(): given matrix is not hermitian"); }
+    if(is_cx<eT>::no )  { arma_debug_warn_level(1, "eigs_sym(): given matrix is not symmetric"); }
+    if(is_cx<eT>::yes)  { arma_debug_warn_level(1, "eigs_sym(): given matrix is not hermitian"); }
     }
   
   // TODO: investigate optional redirection of "sm" to ARPACK as it's capable of shift-invert;
@@ -114,8 +114,8 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
   
   if((arma_config::debug) && (sp_auxlib::rudimentary_sym_check(U.M) == false))
     {
-    if(is_cx<eT>::no )  { arma_debug_warn("eigs_sym(): given matrix is not symmetric"); }
-    if(is_cx<eT>::yes)  { arma_debug_warn("eigs_sym(): given matrix is not hermitian"); }
+    if(is_cx<eT>::no )  { arma_debug_warn_level(1, "eigs_sym(): given matrix is not symmetric"); }
+    if(is_cx<eT>::yes)  { arma_debug_warn_level(1, "eigs_sym(): given matrix is not hermitian"); }
     }
   
   #if   (defined(ARMA_USE_NEWARP) && defined(ARMA_USE_SUPERLU))
@@ -181,13 +181,13 @@ sp_auxlib::eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
       {
       if(opts.subdim < (n_eigvals + 1))
         {
-        arma_debug_warn("eigs_sym(): opts.subdim must be greater than k; using k+1 instead of ", opts.subdim);
+        arma_debug_warn_level(1, "eigs_sym(): opts.subdim must be greater than k; using k+1 instead of ", opts.subdim);
         ncv = uword(n_eigvals + 1);
         }
       else
       if(opts.subdim > n)
         {
-        arma_debug_warn("eigs_sym(): opts.subdim cannot be greater than n_rows; using n_rows instead of ", opts.subdim);
+        arma_debug_warn_level(1, "eigs_sym(): opts.subdim cannot be greater than n_rows; using n_rows instead of ", opts.subdim);
         ncv = n;
         }
       else
@@ -314,13 +314,13 @@ sp_auxlib::eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
       {
       if(opts.subdim < (n_eigvals + 1))
         {
-        arma_debug_warn("eigs_sym(): opts.subdim must be greater than k; using k+1 instead of ", opts.subdim);
+        arma_debug_warn_level(1, "eigs_sym(): opts.subdim must be greater than k; using k+1 instead of ", opts.subdim);
         ncv = uword(n_eigvals + 1);
         }
       else
       if(opts.subdim > n)
         {
-        arma_debug_warn("eigs_sym(): opts.subdim cannot be greater than n_rows; using n_rows instead of ", opts.subdim);
+        arma_debug_warn_level(1, "eigs_sym(): opts.subdim cannot be greater than n_rows; using n_rows instead of ", opts.subdim);
         ncv = n;
         }
       else
@@ -443,13 +443,13 @@ sp_auxlib::eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
       {
       if(opts.subdim < (n_eigvals + 1))
         {
-        arma_debug_warn("eigs_sym(): opts.subdim must be greater than k; using k+1 instead of ", opts.subdim);
+        arma_debug_warn_level(1, "eigs_sym(): opts.subdim must be greater than k; using k+1 instead of ", opts.subdim);
         ncv = blas_int(n_eigvals + 1);
         }
       else
       if(blas_int(opts.subdim) > n)
         {
-        arma_debug_warn("eigs_sym(): opts.subdim cannot be greater than n_rows; using n_rows instead of ", opts.subdim);
+        arma_debug_warn_level(1, "eigs_sym(): opts.subdim cannot be greater than n_rows; using n_rows instead of ", opts.subdim);
         ncv = n;
         }
       else
@@ -487,7 +487,7 @@ sp_auxlib::eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
     arpack::seupd(&rvec, &howmny, select.memptr(), eigval.memptr(), eigvec.memptr(), &ldz, (eT*) &sigma, &bmat, &n, which, &nev, &tol, resid.memptr(), &ncv, v.memptr(), &ldv, iparam.memptr(), ipntr.memptr(), workd.memptr(), workl.memptr(), &lworkl, &info);
     
     // Check for errors.
-    if(info != 0)  { arma_debug_warn("eigs_sym(): ARPACK error ", info, " in seupd()"); return false; }
+    if(info != 0)  { arma_debug_warn_level(1, "eigs_sym(): ARPACK error ", info, " in seupd()"); return false; }
     
     return (info == 0);
     }
@@ -620,13 +620,13 @@ sp_auxlib::eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
       {
       if(opts.subdim < (n_eigvals + 3))
         {
-        arma_debug_warn("eigs_gen(): opts.subdim must be greater than k+2; using k+3 instead of ", opts.subdim);
+        arma_debug_warn_level(1, "eigs_gen(): opts.subdim must be greater than k+2; using k+3 instead of ", opts.subdim);
         ncv = uword(n_eigvals + 3);
         }
       else
       if(opts.subdim > n)
         {
-        arma_debug_warn("eigs_gen(): opts.subdim cannot be greater than n_rows; using n_rows instead of ", opts.subdim);
+        arma_debug_warn_level(1, "eigs_gen(): opts.subdim cannot be greater than n_rows; using n_rows instead of ", opts.subdim);
         ncv = n;
         }
       else
@@ -802,13 +802,13 @@ sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
       {
       if(opts.subdim < (n_eigvals + 3))
         {
-        arma_debug_warn("eigs_gen(): opts.subdim must be greater than k+2; using k+3 instead of ", opts.subdim);
+        arma_debug_warn_level(1, "eigs_gen(): opts.subdim must be greater than k+2; using k+3 instead of ", opts.subdim);
         ncv = blas_int(n_eigvals + 3);
         }
       else
       if(blas_int(opts.subdim) > n)
         {
-        arma_debug_warn("eigs_gen(): opts.subdim cannot be greater than n_rows; using n_rows instead of ", opts.subdim);
+        arma_debug_warn_level(1, "eigs_gen(): opts.subdim cannot be greater than n_rows; using n_rows instead of ", opts.subdim);
         ncv = n;
         }
       else
@@ -863,7 +863,7 @@ sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
     arpack::neupd(&rvec, &howmny, select.memptr(), dr.memptr(), di.memptr(), z.memptr(), &ldz, (T*) &sigmar, (T*) &sigmai, workev.memptr(), &bmat, &n, which, &nev, &tol, resid.memptr(), &ncv, v.memptr(), &ldv, iparam.memptr(), ipntr.memptr(), workd.memptr(), workl.memptr(), &lworkl, rwork.memptr(), &info);
     
     // Check for errors.
-    if(info != 0)  { arma_debug_warn("eigs_gen(): ARPACK error ", info, " in neupd()"); return false; }
+    if(info != 0)  { arma_debug_warn_level(1, "eigs_gen(): ARPACK error ", info, " in neupd()"); return false; }
     
     // Put it into the outputs.
     eigval.set_size(n_eigvals);
@@ -1048,13 +1048,13 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
       {
       if(opts.subdim < (n_eigvals + 3))
         {
-        arma_debug_warn("eigs_gen(): opts.subdim must be greater than k+2; using k+3 instead of ", opts.subdim);
+        arma_debug_warn_level(1, "eigs_gen(): opts.subdim must be greater than k+2; using k+3 instead of ", opts.subdim);
         ncv = blas_int(n_eigvals + 3);
         }
       else
       if(blas_int(opts.subdim) > n)
         {
-        arma_debug_warn("eigs_gen(): opts.subdim cannot be greater than n_rows; using n_rows instead of ", opts.subdim);
+        arma_debug_warn_level(1, "eigs_gen(): opts.subdim cannot be greater than n_rows; using n_rows instead of ", opts.subdim);
         ncv = n;
         }
       else
@@ -1096,7 +1096,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
 (std::complex<T>*) NULL, eigvec.memptr(), &ldz, (std::complex<T>*) &sigma, (std::complex<T>*) NULL, workev.memptr(), &bmat, &n, which, &nev, &tol, resid.memptr(), &ncv, v.memptr(), &ldv, iparam.memptr(), ipntr.memptr(), workd.memptr(), workl.memptr(), &lworkl, rwork.memptr(), &info);
     
     // Check for errors.
-    if(info != 0)  { arma_debug_warn("eigs_gen(): ARPACK error ", info, " in neupd()"); return false; }
+    if(info != 0)  { arma_debug_warn_level(1, "eigs_gen(): ARPACK error ", info, " in neupd()"); return false; }
     
     return (info == 0);
     }
@@ -1207,17 +1207,17 @@ sp_auxlib::spsolve_simple(Mat<typename T1::elem_type>& X, const SpBase<typename 
       {
       // std::ostringstream tmp;
       // tmp << "spsolve(): could not solve system; LU factorisation completed, but detected zero in U(" << (info-1) << ',' << (info-1) << ')';
-      // arma_debug_warn(tmp.str());
+      // arma_debug_warn_level(1, tmp.str());
       }
     else
     if(info > int(A.n_cols))
       {
-      arma_debug_warn("spsolve(): memory allocation failure: could not allocate ", (info - int(A.n_cols)), " bytes");
+      arma_debug_warn_level(1, "spsolve(): memory allocation failure: could not allocate ", (info - int(A.n_cols)), " bytes");
       }
     else
     if(info < 0)
       {
-      arma_debug_warn("spsolve(): unknown SuperLU error code from gssv(): ", info);
+      arma_debug_warn_level(1, "spsolve(): unknown SuperLU error code from gssv(): ", info);
       }
     
     // No need to extract the data from x, since it's using the same memory as X
@@ -1363,23 +1363,23 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
       {
       // std::ostringstream tmp;
       // tmp << "spsolve(): could not solve system; LU factorisation completed, but detected zero in U(" << (info-1) << ',' << (info-1) << ')';
-      // arma_debug_warn(tmp.str());
+      // arma_debug_warn_level(1, tmp.str());
       }
     else
     if( (info == int(A.n_cols+1)) && (user_opts.allow_ugly) )
       {
-      arma_debug_warn("spsolve(): system is singular to working precision (rcond: ", rcond, ")");
+      arma_debug_warn_level(2, "spsolve(): system is singular to working precision (rcond: ", rcond, ")");
       status = true;
       }
     else
     if(info > int(A.n_cols+1))
       {
-      arma_debug_warn("spsolve(): memory allocation failure: could not allocate ", (info - int(A.n_cols)), " bytes");
+      arma_debug_warn_level(1, "spsolve(): memory allocation failure: could not allocate ", (info - int(A.n_cols)), " bytes");
       }
     else
     if(info < 0)
       {
-      arma_debug_warn("spsolve(): unknown SuperLU error code from gssvx(): ", info);
+      arma_debug_warn_level(1, "spsolve(): unknown SuperLU error code from gssvx(): ", info);
       }
     
     // No need to extract the data from x, since it's using the same memory as X
@@ -1914,7 +1914,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
       if(out.Stype == superlu::SLU_DN)      { tmp << "SLU_DN";     }
       if(out.Stype == superlu::SLU_NR_loc)  { tmp << "SLU_NR_loc"; }
       
-      arma_debug_warn(tmp.str());
+      arma_debug_warn_level(1, tmp.str());
       arma_stop_runtime_error("internal error: sp_auxlib::destroy_supermatrix()");
       }
     }
@@ -2058,11 +2058,11 @@ sp_auxlib::run_aupd_plain
       
       if(sym)
         {
-        arma_debug_warn("eigs_sym(): ARPACK error ", info, " in saupd()");
+        arma_debug_warn_level(1, "eigs_sym(): ARPACK error ", info, " in saupd()");
         }
       else
         {
-        arma_debug_warn("eigs_gen(): ARPACK error ", info, " in naupd()");
+        arma_debug_warn_level(1, "eigs_gen(): ARPACK error ", info, " in naupd()");
         }
       
       return; // Parent frame can look at the value of info.
@@ -2228,7 +2228,7 @@ sp_auxlib::run_aupd_shiftinvert
     
     if(slu_info != 0)
       {
-      arma_warn("matrix is singular to working precision");
+      arma_debug_warn_level(2, "matrix is singular to working precision");
       info = blas_int(-1);
       return;
       }
@@ -2238,7 +2238,7 @@ sp_auxlib::run_aupd_shiftinvert
     
     if( (x_rcond < std::numeric_limits<eT>::epsilon()) || arma_isnan(x_rcond) )
       {
-      arma_warn("matrix is singular to working precision (rcond: ", x_rcond, ")");
+      arma_debug_warn_level(2, "matrix is singular to working precision (rcond: ", x_rcond, ")");
       info = blas_int(-1);
       return;
       }
@@ -2313,11 +2313,11 @@ sp_auxlib::run_aupd_shiftinvert
       
       if(sym)
         {
-        arma_debug_warn("eigs_sym(): ARPACK error ", info, " in saupd()");
+        arma_debug_warn_level(2, "eigs_sym(): ARPACK error ", info, " in saupd()");
         }
       else
         {
-        arma_debug_warn("eigs_gen(): ARPACK error ", info, " in naupd()");
+        arma_debug_warn_level(2, "eigs_gen(): ARPACK error ", info, " in naupd()");
         }
       
       return; // Parent frame can look at the value of info.

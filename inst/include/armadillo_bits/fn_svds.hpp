@@ -129,7 +129,7 @@ svds_helper
       }
     }
   
-  if(S.n_elem < k)  { arma_debug_warn("svds(): found fewer singular values than specified"); }
+  if(S.n_elem < k)  { arma_debug_warn_level(1, "svds(): found fewer singular values than specified"); }
   
   return true;
   }
@@ -255,7 +255,7 @@ svds_helper
       }
     }
   
-  if(S.n_elem < k)  { arma_debug_warn("svds(): found fewer singular values than specified"); }
+  if(S.n_elem < k)  { arma_debug_warn_level(1, "svds(): found fewer singular values than specified"); }
   
   return true;
   }
@@ -282,7 +282,7 @@ svds
   
   const bool status = svds_helper(U, S, V, X.get_ref(), k, tol, true);
   
-  if(status == false)  { arma_debug_warn("svds(): decomposition failed"); }
+  if(status == false)  { arma_debug_warn_level(3, "svds(): decomposition failed"); }
 
   return status;
   }
@@ -310,7 +310,7 @@ svds
   
   const bool status = svds_helper(U, S, V, X.get_ref(), k, tol, false);
   
-  if(status == false)  { arma_debug_warn("svds(): decomposition failed"); }
+  if(status == false)  { arma_debug_warn_level(3, "svds(): decomposition failed"); }
   
   return status;
   }

@@ -48,7 +48,7 @@ hess
   if(status == false)
     {
     H.soft_reset();
-    arma_debug_warn("hess(): decomposition failed");
+    arma_debug_warn_level(3, "hess(): decomposition failed");
     }
   
   return status;
@@ -161,7 +161,7 @@ hess
     {
     U.soft_reset();
     H.soft_reset();
-    arma_debug_warn("hess(): decomposition failed");
+    arma_debug_warn_level(3, "hess(): decomposition failed");
     }
   
   return status;

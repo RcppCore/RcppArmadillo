@@ -54,7 +54,7 @@ reshape(const Base<typename T1::elem_type,T1>& X, const uword in_n_rows, const u
   {
   arma_extra_debug_sigprint();
   
-  // arma_debug_warn("this form of reshape() is deprecated and will be removed");
+  // arma_debug_warn_level(1, "this form of reshape() is deprecated and will be removed");
   
   arma_debug_check( (dim > 1), "reshape(): parameter 'dim' must be 0 or 1" );
   

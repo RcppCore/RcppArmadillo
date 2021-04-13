@@ -37,7 +37,7 @@ op_cond::cond(const Base<typename T1::elem_type, T1>& X)
   
   if(status == false)
     {
-    arma_debug_warn("cond(): svd failed");
+    arma_debug_warn_level(3, "cond(): svd failed");
     
     return T(0);
     }

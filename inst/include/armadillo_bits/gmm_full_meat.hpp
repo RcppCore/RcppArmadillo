@@ -291,7 +291,7 @@ gmm_full<eT>::load(const std::string name)
   if( (status == false) || (storage.n_elem < 2) )
     {
     reset();
-    arma_debug_warn("gmm_full::load(): problem with loading or incompatible format");
+    arma_debug_warn_level(3, "gmm_full::load(): problem with loading or incompatible format");
     return false;
     }
   
@@ -306,7 +306,7 @@ gmm_full<eT>::load(const std::string name)
   if( (storage.n_elem != (N_gaus + 2)) || (storage_hefts.n_rows != 1) || (storage_hefts.n_cols != N_gaus) )
     {
     reset();
-    arma_debug_warn("gmm_full::load(): incompatible format");
+    arma_debug_warn_level(3, "gmm_full::load(): incompatible format");
     return false;
     }
   
@@ -322,7 +322,7 @@ gmm_full<eT>::load(const std::string name)
     if( (storage_fcov.n_rows != N_dims) || (storage_fcov.n_cols != N_dims) )
       {
       reset();
-      arma_debug_warn("gmm_full::load(): incompatible format");
+      arma_debug_warn_level(3, "gmm_full::load(): incompatible format");
       return false;
       }
     
@@ -727,8 +727,8 @@ gmm_full<eT>::learn
   const unwrap<T1>   tmp_X(data.get_ref());
   const Mat<eT>& X = tmp_X.M;
   
-  if(X.is_empty()          )  { arma_debug_warn("gmm_full::learn(): given matrix is empty"             ); return false; }
-  if(X.is_finite() == false)  { arma_debug_warn("gmm_full::learn(): given matrix has non-finite values"); return false; }
+  if(X.is_empty()          )  { arma_debug_warn_level(3, "gmm_full::learn(): given matrix is empty"             ); return false; }
+  if(X.is_finite() == false)  { arma_debug_warn_level(3, "gmm_full::learn(): given matrix has non-finite values"); return false; }
   
   if(N_gaus == 0)  { reset(); return true; }
   
@@ -757,14 +757,14 @@ gmm_full<eT>::learn
   
   if(seed_mode == keep_existing)
     {
-    if(means.is_empty()        )  { arma_debug_warn("gmm_full::learn(): no existing means"      ); return false; }
-    if(X.n_rows != means.n_rows)  { arma_debug_warn("gmm_full::learn(): dimensionality mismatch"); return false; }
+    if(means.is_empty()        )  { arma_debug_warn_level(3, "gmm_full::learn(): no existing means"      ); return false; }
+    if(X.n_rows != means.n_rows)  { arma_debug_warn_level(3, "gmm_full::learn(): dimensionality mismatch"); return false; }
     
     // TODO: also check for number of vectors?
     }
   else
     {
-    if(X.n_cols < N_gaus)  { arma_debug_warn("gmm_full::learn(): number of vectors is less than number of gaussians"); return false; }
+    if(X.n_cols < N_gaus)  { arma_debug_warn_level(3, "gmm_full::learn(): number of vectors is less than number of gaussians"); return false; }
     
     reset(X.n_rows, N_gaus);
     
@@ -788,7 +788,7 @@ gmm_full<eT>::learn
     
     stream_state.restore(get_cout_stream());
     
-    if(status == false)  { arma_debug_warn("gmm_full::learn(): k-means algorithm failed; not enough data, or too many gaussians requested"); init(orig); return false; }
+    if(status == false)  { arma_debug_warn_level(3, "gmm_full::learn(): k-means algorithm failed; not enough data, or too many gaussians requested"); init(orig); return false; }
     }
   
   
@@ -815,7 +815,7 @@ gmm_full<eT>::learn
     
     stream_state.restore(get_cout_stream());
     
-    if(status == false)  { arma_debug_warn("gmm_full::learn(): EM algorithm failed"); init(orig); return false; }
+    if(status == false)  { arma_debug_warn_level(3, "gmm_full::learn(): EM algorithm failed"); init(orig); return false; }
     }
   
   mah_aux.reset();
@@ -940,9 +940,9 @@ gmm_full<eT>::init_constants(const bool calc_chol)
     eT log_det_val  = eT(0);
     eT log_det_sign = eT(0);
     
-    log_det(log_det_val, log_det_sign, fcov);
+    const bool log_det_status = log_det(log_det_val, log_det_sign, fcov);
     
-    const bool log_det_ok = ( (arma_isfinite(log_det_val)) && (log_det_sign > eT(0)) );
+    const bool log_det_ok = ( log_det_status && (arma_isfinite(log_det_val)) && (log_det_sign > eT(0)) );
     
     if(inv_ok && log_det_ok)
       {
@@ -2540,9 +2540,9 @@ gmm_full<eT>::em_update_params
     eT log_det_val  = eT(0);
     eT log_det_sign = eT(0);
     
-    log_det(log_det_val, log_det_sign, acc_fcov);
+    const bool log_det_status = log_det(log_det_val, log_det_sign, acc_fcov);
     
-    const bool log_det_ok = ( (arma_isfinite(log_det_val)) && (log_det_sign > eT(0)) );
+    const bool log_det_ok = ( log_det_status && (arma_isfinite(log_det_val)) && (log_det_sign > eT(0)) );
     
     const bool inv_ok = (log_det_ok) ? bool(auxlib::inv_sympd(mean_outer, acc_fcov)) : bool(false);  // mean_outer is used as a junk matrix
     

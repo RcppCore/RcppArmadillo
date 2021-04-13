@@ -4077,7 +4077,7 @@ SpMat<eT>::replace(const eT old_val, const eT new_val)
   
   if(old_val == eT(0))
     {
-    arma_debug_warn("SpMat::replace(): replacement not done, as old_val = 0");
+    arma_debug_warn_level(1, "SpMat::replace(): replacement not done, as old_val = 0");
     }
   else
     {
@@ -4513,7 +4513,7 @@ template<typename eT>
 inline
 arma_cold
 bool
-SpMat<eT>::save(const std::string name, const file_type type, const bool print_status) const
+SpMat<eT>::save(const std::string name, const file_type type) const
   {
   arma_extra_debug_sigprint();
   
@@ -4524,7 +4524,7 @@ SpMat<eT>::save(const std::string name, const file_type type, const bool print_s
   switch(type)
     {
     case csv_ascii:
-      return (*this).save(csv_name(name), type, print_status);
+      return (*this).save(csv_name(name), type);
       break;
     
     case arma_binary:
@@ -4536,11 +4536,11 @@ SpMat<eT>::save(const std::string name, const file_type type, const bool print_s
       break;
     
     default:
-      if(print_status)  { arma_debug_warn("SpMat::save(): unsupported file type"); }
+      arma_debug_warn_level(1, "SpMat::save(): unsupported file type");
       save_okay = false;
     }
   
-  if(print_status && (save_okay == false))  { arma_debug_warn("SpMat::save(): couldn't write; file: ", name); }
+  if(save_okay == false)  { arma_debug_warn_level(3, "SpMat::save(): couldn't write; file: ", name); }
   
   return save_okay;
   }
@@ -4551,13 +4551,13 @@ template<typename eT>
 inline
 arma_cold
 bool
-SpMat<eT>::save(const csv_name& spec, const file_type type, const bool print_status) const
+SpMat<eT>::save(const csv_name& spec, const file_type type) const
   {
   arma_extra_debug_sigprint();
   
   if(type != csv_ascii)
     {
-    arma_debug_check(true, "SpMat::save(): unsupported file type for csv_name()");
+    arma_stop_runtime_error("SpMat::save(): unsupported file type for csv_name()");
     return false;
     }
   
@@ -4577,7 +4577,7 @@ SpMat<eT>::save(const csv_name& spec, const file_type type, const bool print_sta
     {
     if( (spec.header_ro.n_cols != 1) && (spec.header_ro.n_rows != 1) )
       {
-      if(print_status)  { arma_debug_warn("SpMat::save(): given header must have a vector layout"); }
+      arma_debug_warn_level(1, "SpMat::save(): given header must have a vector layout");
       return false;
       }
     
@@ -4587,7 +4587,7 @@ SpMat<eT>::save(const csv_name& spec, const file_type type, const bool print_sta
       
       if(token.find(',') != std::string::npos)
         {
-        if(print_status)  { arma_debug_warn("SpMat::save(): token within the header contains a comma: '", token, "'"); }
+        arma_debug_warn_level(1, "SpMat::save(): token within the header contains a comma: '", token, "'");
         return false;
         }
       }
@@ -4596,7 +4596,7 @@ SpMat<eT>::save(const csv_name& spec, const file_type type, const bool print_sta
     
     if(spec.header_ro.n_elem != save_n_cols)
       {
-      if(print_status)  { arma_debug_warn("SpMat::save(): size mistmach between header and matrix"); }
+      arma_debug_warn_level(1, "SpMat::save(): size mistmach between header and matrix");
       return false;
       }
     }
@@ -4614,10 +4614,7 @@ SpMat<eT>::save(const csv_name& spec, const file_type type, const bool print_sta
     save_okay = diskio::save_csv_ascii(*this, spec.filename, spec.header_ro, with_header);
     }
   
-  if(print_status && (save_okay == false))
-    {
-    arma_debug_warn("SpMat::save(): couldn't write; file: ", spec.filename);
-    }
+  if(save_okay == false)  { arma_debug_warn_level(3, "SpMat::save(): couldn't write; file: ", spec.filename); }
   
   return save_okay;
   }
@@ -4629,7 +4626,7 @@ template<typename eT>
 inline
 arma_cold
 bool
-SpMat<eT>::save(std::ostream& os, const file_type type, const bool print_status) const
+SpMat<eT>::save(std::ostream& os, const file_type type) const
   {
   arma_extra_debug_sigprint();
   
@@ -4652,11 +4649,11 @@ SpMat<eT>::save(std::ostream& os, const file_type type, const bool print_status)
       break;
     
     default:
-      if(print_status)  { arma_debug_warn("SpMat::save(): unsupported file type"); }
+      arma_debug_warn_level(1, "SpMat::save(): unsupported file type");
       save_okay = false;
     }
   
-  if(print_status && (save_okay == false))  { arma_debug_warn("SpMat::save(): couldn't write to the given stream"); }
+  if(save_okay == false)  { arma_debug_warn_level(3, "SpMat::save(): couldn't write to stream"); }
   
   return save_okay;
   }
@@ -4668,7 +4665,7 @@ template<typename eT>
 inline
 arma_cold
 bool
-SpMat<eT>::load(const std::string name, const file_type type, const bool print_status)
+SpMat<eT>::load(const std::string name, const file_type type)
   {
   arma_extra_debug_sigprint();
   
@@ -4684,7 +4681,7 @@ SpMat<eT>::load(const std::string name, const file_type type, const bool print_s
     //   break;
     
     case csv_ascii:
-      return (*this).load(csv_name(name), type, print_status);
+      return (*this).load(csv_name(name), type);
       break;
     
     case arma_binary:
@@ -4696,19 +4693,19 @@ SpMat<eT>::load(const std::string name, const file_type type, const bool print_s
       break;
     
     default:
-      if(print_status)  { arma_debug_warn("SpMat::load(): unsupported file type"); }
+      arma_debug_warn_level(1, "SpMat::load(): unsupported file type");
       load_okay = false;
     }
   
-  if(print_status && (load_okay == false))
+  if(load_okay == false)
     {
     if(err_msg.length() > 0)
       {
-      arma_debug_warn("SpMat::load(): ", err_msg, "; file: ", name);
+      arma_debug_warn_level(3, "SpMat::load(): ", err_msg, "; file: ", name);
       }
     else
       {
-      arma_debug_warn("SpMat::load(): couldn't read; file: ", name);
+      arma_debug_warn_level(3, "SpMat::load(): couldn't read; file: ", name);
       }
     }
   
@@ -4723,13 +4720,13 @@ template<typename eT>
 inline
 arma_cold
 bool
-SpMat<eT>::load(const csv_name& spec, const file_type type, const bool print_status)
+SpMat<eT>::load(const csv_name& spec, const file_type type)
   {
   arma_extra_debug_sigprint();
   
   if(type != csv_ascii)
     {
-    arma_debug_check(true, "SpMat::load(): unsupported file type for csv_name()");
+    arma_stop_runtime_error("SpMat::load(): unsupported file type for csv_name()");
     return false;
     }
   
@@ -4770,27 +4767,24 @@ SpMat<eT>::load(const csv_name& spec, const file_type type, const bool print_sta
     load_okay = diskio::load_csv_ascii(*this, spec.filename, err_msg, spec.header_rw, with_header);
     }
   
-  if(print_status)
+  if(load_okay == false)
     {
-    if(load_okay == false)
+    if(err_msg.length() > 0)
       {
-      if(err_msg.length() > 0)
-        {
-        arma_debug_warn("SpMat::load(): ", err_msg, "; file: ", spec.filename);
-        }
-      else
-        {
-        arma_debug_warn("SpMat::load(): couldn't read; file: ", spec.filename);
-        }
+      arma_debug_warn_level(3, "SpMat::load(): ", err_msg, "; file: ", spec.filename);
       }
     else
       {
-      const uword load_n_cols = (do_trans) ? (*this).n_rows : (*this).n_cols;
-      
-      if(with_header && (spec.header_rw.n_elem != load_n_cols))
-        {
-        arma_debug_warn("SpMat::load(): size mistmach between header and matrix");
-        }
+      arma_debug_warn_level(3, "SpMat::load(): couldn't read; file: ", spec.filename);
+      }
+    }
+  else
+    {
+    const uword load_n_cols = (do_trans) ? (*this).n_rows : (*this).n_cols;
+    
+    if(with_header && (spec.header_rw.n_elem != load_n_cols))
+      {
+      arma_debug_warn_level(3, "SpMat::load(): size mistmach between header and matrix");
       }
     }
   
@@ -4811,7 +4805,7 @@ template<typename eT>
 inline
 arma_cold
 bool
-SpMat<eT>::load(std::istream& is, const file_type type, const bool print_status)
+SpMat<eT>::load(std::istream& is, const file_type type)
   {
   arma_extra_debug_sigprint();
   
@@ -4839,19 +4833,19 @@ SpMat<eT>::load(std::istream& is, const file_type type, const bool print_status)
       break;
     
     default:
-      if(print_status)  { arma_debug_warn("SpMat::load(): unsupported file type"); }
+      arma_debug_warn_level(1, "SpMat::load(): unsupported file type");
       load_okay = false;
     }
   
-  if(print_status && (load_okay == false))
+  if(load_okay == false)
     {
     if(err_msg.length() > 0)
       {
-      arma_debug_warn("SpMat::load(): ", err_msg);
+      arma_debug_warn_level(3, "SpMat::load(): ", err_msg);
       }
     else
       {
-      arma_debug_warn("SpMat::load(): couldn't load from the given stream");
+      arma_debug_warn_level(3, "SpMat::load(): couldn't load from stream");
       }
     }
   
@@ -4871,7 +4865,7 @@ SpMat<eT>::quiet_save(const std::string name, const file_type type) const
   {
   arma_extra_debug_sigprint();
   
-  return (*this).save(name, type, false);
+  return (*this).save(name, type);
   }
 
 
@@ -4885,7 +4879,7 @@ SpMat<eT>::quiet_save(std::ostream& os, const file_type type) const
   {
   arma_extra_debug_sigprint();
   
-  return (*this).save(os, type, false);
+  return (*this).save(os, type);
   }
 
 
@@ -4899,7 +4893,7 @@ SpMat<eT>::quiet_load(const std::string name, const file_type type)
   {
   arma_extra_debug_sigprint();
   
-  return (*this).load(name, type, false);
+  return (*this).load(name, type);
   }
 
 
@@ -4913,7 +4907,7 @@ SpMat<eT>::quiet_load(std::istream& is, const file_type type)
   {
   arma_extra_debug_sigprint();
   
-  return (*this).load(is, type, false);
+  return (*this).load(is, type);
   }
 
 

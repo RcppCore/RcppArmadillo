@@ -1694,7 +1694,7 @@ template<typename oT>
 inline
 arma_cold
 bool
-field<oT>::save(const std::string name, const file_type type, const bool print_status) const
+field<oT>::save(const std::string name, const file_type type) const
   {
   arma_extra_debug_sigprint();
   
@@ -1702,15 +1702,15 @@ field<oT>::save(const std::string name, const file_type type, const bool print_s
   
   const bool save_okay = field_aux::save(*this, name, type, err_msg);
   
-  if(print_status && (save_okay == false))
+  if(save_okay == false)
     {
     if(err_msg.length() > 0)
       {
-      arma_debug_warn("field::save(): ", err_msg, "; file: ", name);
+      arma_debug_warn_level(3, "field::save(): ", err_msg, "; file: ", name);
       }
     else
       {
-      arma_debug_warn("field::save(): couldn't write; file: ", name);
+      arma_debug_warn_level(3, "field::save(): couldn't write; file: ", name);
       }
     }
   
@@ -1723,7 +1723,7 @@ template<typename oT>
 inline
 arma_cold
 bool
-field<oT>::save(std::ostream& os, const file_type type, const bool print_status) const
+field<oT>::save(std::ostream& os, const file_type type) const
   {
   arma_extra_debug_sigprint();
   
@@ -1731,15 +1731,15 @@ field<oT>::save(std::ostream& os, const file_type type, const bool print_status)
   
   const bool save_okay = field_aux::save(*this, os, type, err_msg);
   
-  if(print_status && (save_okay == false))
+  if(save_okay == false)
     {
     if(err_msg.length() > 0)
       {
-      arma_debug_warn("field::save(): ", err_msg);
+      arma_debug_warn_level(3, "field::save(): ", err_msg);
       }
     else
       {
-      arma_debug_warn("field::save(): couldn't write to the given stream");
+      arma_debug_warn_level(3, "field::save(): couldn't write to stream");
       }
     }
   
@@ -1752,7 +1752,7 @@ template<typename oT>
 inline
 arma_cold
 bool
-field<oT>::load(const std::string name, const file_type type, const bool print_status)
+field<oT>::load(const std::string name, const file_type type)
   {
   arma_extra_debug_sigprint();
   
@@ -1760,15 +1760,15 @@ field<oT>::load(const std::string name, const file_type type, const bool print_s
   
   const bool load_okay = field_aux::load(*this, name, type, err_msg);
   
-  if(print_status && (load_okay == false))
+  if(load_okay == false)
     {
     if(err_msg.length() > 0)
       {
-      arma_debug_warn("field::load(): ", err_msg, "; file: ", name);
+      arma_debug_warn_level(3, "field::load(): ", err_msg, "; file: ", name);
       }
     else
       {
-      arma_debug_warn("field::load(): couldn't read; file: ", name);
+      arma_debug_warn_level(3, "field::load(): couldn't read; file: ", name);
       }
     }
   
@@ -1783,22 +1783,22 @@ template<typename oT>
 inline
 arma_cold
 bool
-field<oT>::load(std::istream& is, const file_type type, const bool print_status)
+field<oT>::load(std::istream& is, const file_type type)
   {
   arma_extra_debug_sigprint();
   
   std::string err_msg;
   const bool load_okay = field_aux::load(*this, is, type, err_msg);
   
-  if(print_status && (load_okay == false))
+  if(load_okay == false)
     {
     if(err_msg.length() > 0)
       {
-      arma_debug_warn("field::load(): ", err_msg);
+      arma_debug_warn_level(3, "field::load(): ", err_msg);
       }
     else
       {
-      arma_debug_warn("field::load(): couldn't read from the given stream");
+      arma_debug_warn_level(3, "field::load(): couldn't read from stream");
       }
     }
   
@@ -1817,7 +1817,7 @@ field<oT>::quiet_save(const std::string name, const file_type type) const
   {
   arma_extra_debug_sigprint();
   
-  return (*this).save(name, type, false);
+  return (*this).save(name, type);
   }
 
 
@@ -1830,7 +1830,7 @@ field<oT>::quiet_save(std::ostream& os, const file_type type) const
   {
   arma_extra_debug_sigprint();
   
-  return (*this).save(os, type, false);
+  return (*this).save(os, type);
   }
 
 
@@ -1843,7 +1843,7 @@ field<oT>::quiet_load(const std::string name, const file_type type)
   {
   arma_extra_debug_sigprint();
   
-  return (*this).load(name, type, false);
+  return (*this).load(name, type);
   }
 
 
@@ -1856,7 +1856,7 @@ field<oT>::quiet_load(std::istream& is, const file_type type)
   {
   arma_extra_debug_sigprint();
   
-  return (*this).load(is, type, false);
+  return (*this).load(is, type);
   }
 
 

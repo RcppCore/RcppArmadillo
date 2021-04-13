@@ -175,6 +175,9 @@ struct arma_config
   #else
     static constexpr bool hidden_args = false;
   #endif
+  
+  
+  static constexpr uword warn_level = (sword(ARMA_WARN_LEVEL) > 0) ? uword(ARMA_WARN_LEVEL) : 0;
   };
 
 

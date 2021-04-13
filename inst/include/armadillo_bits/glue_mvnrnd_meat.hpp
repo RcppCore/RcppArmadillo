@@ -36,6 +36,7 @@ glue_mvnrnd_vec::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_m
   
   if(status == false)
     {
+    out.soft_reset();
     arma_stop_runtime_error("mvnrnd(): given covariance matrix is not symmetric positive semi-definite");
     }
   }
@@ -53,6 +54,7 @@ glue_mvnrnd::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_mvnrn
   
   if(status == false)
     {
+    out.soft_reset();
     arma_stop_runtime_error("mvnrnd(): given covariance matrix is not symmetric positive semi-definite");
     }
   }
@@ -83,13 +85,13 @@ glue_mvnrnd::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename 
   
   // if(auxlib::rudimentary_sym_check(UC.M) == false)
   //   {
-  //   arma_debug_warn("mvnrnd(): given matrix is not symmetric");
+  //   arma_debug_warn_level(1, "mvnrnd(): given matrix is not symmetric");
   //   return false;
   //   }
   
   if((arma_config::debug) && (auxlib::rudimentary_sym_check(UC.M) == false))
     {
-    arma_debug_warn("mvnrnd(): given matrix is not symmetric");
+    arma_debug_warn_level(1, "mvnrnd(): given matrix is not symmetric");
     }
   
   bool status = false;
@@ -106,8 +108,6 @@ glue_mvnrnd::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename 
     {
     status = glue_mvnrnd::apply_noalias(out, UM.M, UC.M, N);
     }
-  
-  if(status == false)  { out.soft_reset(); }
   
   return status;
   }

@@ -38,7 +38,7 @@ op_sqrtmat::apply(Mat< std::complex<typename T1::elem_type> >& out, const mtOp<s
   
   if(status == false)
     {
-    arma_debug_warn("sqrtmat(): given matrix seems singular; may not have a square root");
+    arma_debug_warn_level(3, "sqrtmat(): given matrix is singular; may not have a square root");
     }
   }
 
@@ -225,7 +225,7 @@ op_sqrtmat_cx::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sqrtmat_cx
   
   if(status == false)
     {
-    arma_debug_warn("sqrtmat(): given matrix seems singular; may not have a square root");
+    arma_debug_warn_level(3, "sqrtmat(): given matrix is singular; may not have a square root");
     }
   }
 

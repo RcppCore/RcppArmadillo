@@ -191,11 +191,11 @@ class field
   arma_inline arma_warn_unused bool in_range(const uword   in_row, const uword in_col, const uword in_slice, const SizeCube& s) const;
   
   
-  inline arma_cold bool save(const std::string   name, const file_type type = arma_binary, const bool print_status = true) const;
-  inline arma_cold bool save(      std::ostream& os,   const file_type type = arma_binary, const bool print_status = true) const;
+  inline arma_cold bool save(const std::string   name, const file_type type = arma_binary) const;
+  inline arma_cold bool save(      std::ostream& os,   const file_type type = arma_binary) const;
   
-  inline arma_cold bool load(const std::string   name, const file_type type = auto_detect, const bool print_status = true);
-  inline arma_cold bool load(      std::istream& is,   const file_type type = auto_detect, const bool print_status = true);
+  inline arma_cold bool load(const std::string   name, const file_type type = auto_detect);
+  inline arma_cold bool load(      std::istream& is,   const file_type type = auto_detect);
   
   
   inline arma_cold bool quiet_save(const std::string   name, const file_type type = arma_binary) const;

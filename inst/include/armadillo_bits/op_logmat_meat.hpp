@@ -402,7 +402,7 @@ op_logmat_cx::apply_common(Mat< std::complex<T> >& out, Mat< std::complex<T> >& 
     iter++;
     }
   
-  if(iter >= n_iters)  { arma_debug_warn("logmat(): reached max iterations without full convergence"); }
+  if(iter >= n_iters)  { arma_debug_warn_level(2, "logmat(): reached max iterations without full convergence"); }
   
   S.diag() -= eT(1);
   

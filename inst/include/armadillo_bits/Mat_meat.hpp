@@ -6601,7 +6601,7 @@ Mat<eT>::reshape(const uword in_rows, const uword in_cols, const uword dim)
   {
   arma_extra_debug_sigprint();
   
-  // arma_debug_warn("this form of reshape() is deprecated and will be removed");
+  // arma_debug_warn_level(1, "this form of reshape() is deprecated and will be removed");
   
   arma_debug_check( (dim > 1), "reshape(): parameter 'dim' must be 0 or 1" );
   
@@ -7299,7 +7299,7 @@ template<typename eT>
 inline
 arma_cold
 bool
-Mat<eT>::save(const std::string name, const file_type type, const bool print_status) const
+Mat<eT>::save(const std::string name, const file_type type) const
   {
   arma_extra_debug_sigprint();
   
@@ -7316,7 +7316,7 @@ Mat<eT>::save(const std::string name, const file_type type, const bool print_sta
       break;
     
     case csv_ascii:
-      return (*this).save(csv_name(name), type, print_status);
+      return (*this).save(csv_name(name), type);
       break;
     
     case coord_ascii:
@@ -7344,11 +7344,11 @@ Mat<eT>::save(const std::string name, const file_type type, const bool print_sta
       break;
     
     default:
-      if(print_status)  { arma_debug_warn("Mat::save(): unsupported file type"); }
+      arma_debug_warn_level(1, "Mat::save(): unsupported file type");
       save_okay = false;
     }
   
-  if(print_status && (save_okay == false))  { arma_debug_warn("Mat::save(): couldn't write; file: ", name); }
+  if(save_okay == false)  { arma_debug_warn_level(3, "Mat::save(): couldn't write; file: ", name); }
   
   return save_okay;
   }
@@ -7359,7 +7359,7 @@ template<typename eT>
 inline
 arma_cold
 bool
-Mat<eT>::save(const hdf5_name& spec, const file_type type, const bool print_status) const
+Mat<eT>::save(const hdf5_name& spec, const file_type type) const
   {
   arma_extra_debug_sigprint();
   
@@ -7367,7 +7367,7 @@ Mat<eT>::save(const hdf5_name& spec, const file_type type, const bool print_stat
   
   if( (type != hdf5_binary) && (type != hdf5_binary_trans) )
     {
-    arma_debug_check(true, "Mat::save(): unsupported file type for hdf5_name()");
+    arma_stop_runtime_error("Mat::save(): unsupported file type for hdf5_name()");
     return false;
     }
   
@@ -7377,7 +7377,7 @@ Mat<eT>::save(const hdf5_name& spec, const file_type type, const bool print_stat
   
   if(append && replace)
     {
-    arma_debug_check(true, "Mat::save(): only one of 'append' or 'replace' options can be used");
+    arma_stop_runtime_error("Mat::save(): only one of 'append' or 'replace' options can be used");
     return false;
     }
   
@@ -7398,15 +7398,15 @@ Mat<eT>::save(const hdf5_name& spec, const file_type type, const bool print_stat
     save_okay = diskio::save_hdf5_binary(*this, spec, err_msg);
     }
   
-  if(print_status && (save_okay == false))
+  if(save_okay == false)
     {
     if(err_msg.length() > 0)
       {
-      arma_debug_warn("Mat::save(): ", err_msg, "; file: ", spec.filename);
+      arma_debug_warn_level(3, "Mat::save(): ", err_msg, "; file: ", spec.filename);
       }
     else
       {
-      arma_debug_warn("Mat::save(): couldn't write; file: ", spec.filename);
+      arma_debug_warn_level(3, "Mat::save(): couldn't write; file: ", spec.filename);
       }
     }
   
@@ -7419,13 +7419,13 @@ template<typename eT>
 inline
 arma_cold
 bool
-Mat<eT>::save(const csv_name& spec, const file_type type, const bool print_status) const
+Mat<eT>::save(const csv_name& spec, const file_type type) const
   {
   arma_extra_debug_sigprint();
   
   if(type != csv_ascii)
     {
-    arma_debug_check(true, "Mat::save(): unsupported file type for csv_name()");
+    arma_stop_runtime_error("Mat::save(): unsupported file type for csv_name()");
     return false;
     }
   
@@ -7445,7 +7445,7 @@ Mat<eT>::save(const csv_name& spec, const file_type type, const bool print_statu
     {
     if( (spec.header_ro.n_cols != 1) && (spec.header_ro.n_rows != 1) )
       {
-      if(print_status)  { arma_debug_warn("Mat::save(): given header must have a vector layout"); }
+      arma_debug_warn_level(1, "Mat::save(): given header must have a vector layout");
       return false;
       }
     
@@ -7455,7 +7455,7 @@ Mat<eT>::save(const csv_name& spec, const file_type type, const bool print_statu
       
       if(token.find(',') != std::string::npos)
         {
-        if(print_status)  { arma_debug_warn("Mat::save(): token within the header contains a comma: '", token, "'"); }
+        arma_debug_warn_level(1, "Mat::save(): token within the header contains a comma: '", token, "'");
         return false;
         }
       }
@@ -7464,7 +7464,7 @@ Mat<eT>::save(const csv_name& spec, const file_type type, const bool print_statu
     
     if(spec.header_ro.n_elem != save_n_cols)
       {
-      if(print_status)  { arma_debug_warn("Mat::save(): size mistmach between header and matrix"); }
+      arma_debug_warn_level(1, "Mat::save(): size mistmach between header and matrix");
       return false;
       }
     }
@@ -7482,10 +7482,7 @@ Mat<eT>::save(const csv_name& spec, const file_type type, const bool print_statu
     save_okay = diskio::save_csv_ascii(*this, spec.filename, spec.header_ro, with_header);
     }
   
-  if(print_status && (save_okay == false))
-    {
-    arma_debug_warn("Mat::save(): couldn't write; file: ", spec.filename);
-    }
+  if(save_okay == false)  { arma_debug_warn_level(3, "Mat::save(): couldn't write; file: ", spec.filename); }
   
   return save_okay;
   }
@@ -7497,7 +7494,7 @@ template<typename eT>
 inline
 arma_cold
 bool
-Mat<eT>::save(std::ostream& os, const file_type type, const bool print_status) const
+Mat<eT>::save(std::ostream& os, const file_type type) const
   {
   arma_extra_debug_sigprint();
   
@@ -7534,11 +7531,11 @@ Mat<eT>::save(std::ostream& os, const file_type type, const bool print_status) c
       break;
     
     default:
-      if(print_status)  { arma_debug_warn("Mat::save(): unsupported file type"); }
+      arma_debug_warn_level(1, "Mat::save(): unsupported file type");
       save_okay = false;
     }
   
-  if(print_status && (save_okay == false))  { arma_debug_warn("Mat::save(): couldn't write to the given stream"); }
+  if(save_okay == false)  { arma_debug_warn_level(3, "Mat::save(): couldn't write to stream"); }
   
   return save_okay;
   }
@@ -7550,7 +7547,7 @@ template<typename eT>
 inline
 arma_cold
 bool
-Mat<eT>::load(const std::string name, const file_type type, const bool print_status)
+Mat<eT>::load(const std::string name, const file_type type)
   {
   arma_extra_debug_sigprint();
   
@@ -7572,7 +7569,7 @@ Mat<eT>::load(const std::string name, const file_type type, const bool print_sta
       break;
     
     case csv_ascii:
-      return (*this).load(csv_name(name), type, print_status);
+      return (*this).load(csv_name(name), type);
       break;
     
     case coord_ascii:
@@ -7600,19 +7597,19 @@ Mat<eT>::load(const std::string name, const file_type type, const bool print_sta
       break;
     
     default:
-      if(print_status)  { arma_debug_warn("Mat::load(): unsupported file type"); }
+      arma_debug_warn_level(1, "Mat::load(): unsupported file type");
       load_okay = false;
     }
   
-  if( print_status && (load_okay == false) )
+  if(load_okay == false)
     {
     if(err_msg.length() > 0)
       {
-      arma_debug_warn("Mat::load(): ", err_msg, "; file: ", name);
+      arma_debug_warn_level(3, "Mat::load(): ", err_msg, "; file: ", name);
       }
     else
       {
-      arma_debug_warn("Mat::load(): couldn't read; file: ", name);
+      arma_debug_warn_level(3, "Mat::load(): couldn't read; file: ", name);
       }
     }
   
@@ -7627,14 +7624,13 @@ template<typename eT>
 inline
 arma_cold
 bool
-Mat<eT>::load(const hdf5_name& spec, const file_type type, const bool print_status)
+Mat<eT>::load(const hdf5_name& spec, const file_type type)
   {
   arma_extra_debug_sigprint();
   
   if( (type != hdf5_binary) && (type != hdf5_binary_trans) )
     {
-    if(print_status)  { arma_debug_warn("Mat::load(): unsupported file type for hdf5_name()"); }
-    (*this).soft_reset();
+    arma_stop_runtime_error("Mat::load(): unsupported file type for hdf5_name()");
     return false;
     }
   
@@ -7657,15 +7653,15 @@ Mat<eT>::load(const hdf5_name& spec, const file_type type, const bool print_stat
     }
   
   
-  if( print_status && (load_okay == false) )
+  if(load_okay == false)
     {
     if(err_msg.length() > 0)
       {
-      arma_debug_warn("Mat::load(): ", err_msg, "; file: ", spec.filename);
+      arma_debug_warn_level(3, "Mat::load(): ", err_msg, "; file: ", spec.filename);
       }
     else
       {
-      arma_debug_warn("Mat::load(): couldn't read; file: ", spec.filename);
+      arma_debug_warn_level(3, "Mat::load(): couldn't read; file: ", spec.filename);
       }
     }
   
@@ -7680,13 +7676,13 @@ template<typename eT>
 inline
 arma_cold
 bool
-Mat<eT>::load(const csv_name& spec, const file_type type, const bool print_status)
+Mat<eT>::load(const csv_name& spec, const file_type type)
   {
   arma_extra_debug_sigprint();
   
   if(type != csv_ascii)
     {
-    arma_debug_check(true, "Mat::load(): unsupported file type for csv_name()");
+    arma_stop_runtime_error("Mat::load(): unsupported file type for csv_name()");
     return false;
     }
   
@@ -7727,27 +7723,24 @@ Mat<eT>::load(const csv_name& spec, const file_type type, const bool print_statu
     load_okay = diskio::load_csv_ascii(*this, spec.filename, err_msg, spec.header_rw, with_header);
     }
   
-  if(print_status)
+  if(load_okay == false)
     {
-    if(load_okay == false)
+    if(err_msg.length() > 0)
       {
-      if(err_msg.length() > 0)
-        {
-        arma_debug_warn("Mat::load(): ", err_msg, "; file: ", spec.filename);
-        }
-      else
-        {
-        arma_debug_warn("Mat::load(): couldn't read; file: ", spec.filename);
-        }
+      arma_debug_warn_level(3, "Mat::load(): ", err_msg, "; file: ", spec.filename);
       }
     else
       {
-      const uword load_n_cols = (do_trans) ? (*this).n_rows : (*this).n_cols;
-      
-      if(with_header && (spec.header_rw.n_elem != load_n_cols))
-        {
-        arma_debug_warn("Mat::load(): size mistmach between header and matrix");
-        }
+      arma_debug_warn_level(3, "Mat::load(): couldn't read; file: ", spec.filename);
+      }
+    }
+  else
+    {
+    const uword load_n_cols = (do_trans) ? (*this).n_rows : (*this).n_cols;
+    
+    if(with_header && (spec.header_rw.n_elem != load_n_cols))
+      {
+      arma_debug_warn_level(3, "Mat::load(): size mistmach between header and matrix");
       }
     }
   
@@ -7768,7 +7761,7 @@ template<typename eT>
 inline
 arma_cold
 bool
-Mat<eT>::load(std::istream& is, const file_type type, const bool print_status)
+Mat<eT>::load(std::istream& is, const file_type type)
   {
   arma_extra_debug_sigprint();
   
@@ -7810,19 +7803,19 @@ Mat<eT>::load(std::istream& is, const file_type type, const bool print_status)
       break;
     
     default:
-      if(print_status)  { arma_debug_warn("Mat::load(): unsupported file type"); }
+      arma_debug_warn_level(1, "Mat::load(): unsupported file type");
       load_okay = false;
     }
   
-  if( print_status && (load_okay == false) )
+  if(load_okay == false)
     {
     if(err_msg.length() > 0)
       {
-      arma_debug_warn("Mat::load(): ", err_msg);
+      arma_debug_warn_level(3, "Mat::load(): ", err_msg);
       }
     else
       {
-      arma_debug_warn("Mat::load(): couldn't load from the given stream");
+      arma_debug_warn_level(3, "Mat::load(): couldn't load from stream");
       }
     }
   
@@ -7842,7 +7835,7 @@ Mat<eT>::quiet_save(const std::string name, const file_type type) const
   {
   arma_extra_debug_sigprint();
   
-  return (*this).save(name, type, false);
+  return (*this).save(name, type);
   }
 
 
@@ -7855,7 +7848,7 @@ Mat<eT>::quiet_save(const hdf5_name& spec, const file_type type) const
   {
   arma_extra_debug_sigprint();
   
-  return (*this).save(spec, type, false);
+  return (*this).save(spec, type);
   }
 
 
@@ -7868,7 +7861,7 @@ Mat<eT>::quiet_save(const csv_name& spec, const file_type type) const
   {
   arma_extra_debug_sigprint();
   
-  return (*this).save(spec, type, false);
+  return (*this).save(spec, type);
   }
 
 
@@ -7882,7 +7875,7 @@ Mat<eT>::quiet_save(std::ostream& os, const file_type type) const
   {
   arma_extra_debug_sigprint();
   
-  return (*this).save(os, type, false);
+  return (*this).save(os, type);
   }
 
 
@@ -7896,7 +7889,7 @@ Mat<eT>::quiet_load(const std::string name, const file_type type)
   {
   arma_extra_debug_sigprint();
   
-  return (*this).load(name, type, false);
+  return (*this).load(name, type);
   }
 
 
@@ -7909,7 +7902,7 @@ Mat<eT>::quiet_load(const hdf5_name& spec, const file_type type)
   {
   arma_extra_debug_sigprint();
   
-  return (*this).load(spec, type, false);
+  return (*this).load(spec, type);
   }
 
 
@@ -7922,7 +7915,7 @@ Mat<eT>::quiet_load(const csv_name& spec, const file_type type)
   {
   arma_extra_debug_sigprint();
   
-  return (*this).load(spec, type, false);
+  return (*this).load(spec, type);
   }
 
 
@@ -7936,7 +7929,7 @@ Mat<eT>::quiet_load(std::istream& is, const file_type type)
   {
   arma_extra_debug_sigprint();
   
-  return (*this).load(is, type, false);
+  return (*this).load(is, type);
   }
 
 

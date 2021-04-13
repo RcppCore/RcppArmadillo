@@ -3,9 +3,27 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.10.3.0.0 (2021-04-12)}{
+  \itemize{
+    \item Upgraded to Armadillo release 10.4.0 (Pressure Cooker)
+    \itemize{
+      \item faster handling of triangular matrices by \code{log_det()}
+      \item added \code{log_det_sympd()} for log determinant of
+      symmetric positive matrices
+      \item added ARMA_WARN_LEVEL configuration option, to control the
+      degree of emitted warning messages
+      \item reduced the default degree of warning messages, so that
+      failed decompositions, failed saving/loading, etc, no longer emit
+      warnings
+    }
+    \item Apply one upstream correction for \code{arma::randn} draws
+    when using alternative (here R) generator
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.10.3.0.0 (2021-03-10)}{
   \itemize{
-    \item Upgraded to Armadillo release 10.3
+    \item Upgraded to Armadillo release 10.3 (Sunrise Chaos)
     \itemize{
       \item faster handling of symmetric positive definite matrices by
       \code{pinv()}

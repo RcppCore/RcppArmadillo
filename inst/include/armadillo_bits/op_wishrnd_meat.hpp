@@ -40,6 +40,7 @@ op_wishrnd::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_wishrnd>& exp
   
   if(status == false)
     {
+    out.soft_reset();
     arma_stop_runtime_error("wishrnd(): given matrix is not symmetric positive definite");
     }
   }
@@ -73,8 +74,6 @@ op_wishrnd::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T
     if(mode == 1)  { status = op_wishrnd::apply_noalias_mode1(out, U.M, df); }
     if(mode == 2)  { status = op_wishrnd::apply_noalias_mode2(out, U.M, df); }
     }
-  
-  if(status == false)  { out.soft_reset(); }
   
   return status;
   }
@@ -179,6 +178,7 @@ op_iwishrnd::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_iwishrnd>& e
   
   if(status == false)
     {
+    out.soft_reset();
     arma_stop_runtime_error("iwishrnd(): given matrix is not symmetric positive definite and/or df is too low");
     }
   }
@@ -212,8 +212,6 @@ op_iwishrnd::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename 
     if(mode == 1)  { status = op_iwishrnd::apply_noalias_mode1(out, U.M, df); }
     if(mode == 2)  { status = op_iwishrnd::apply_noalias_mode2(out, U.M, df); }
     }
-  
-  if(status == false)  { out.soft_reset(); }
   
   return status;
   }

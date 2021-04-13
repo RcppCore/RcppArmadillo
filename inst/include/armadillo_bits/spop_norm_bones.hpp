@@ -14,22 +14,22 @@
 // ------------------------------------------------------------------------
 
 
-
-//! \addtogroup op_pinv
+//! \addtogroup spop_norm
 //! @{
 
 
-
-class op_pinv
+class spop_norm
   : public traits_op_default
   {
   public:
   
-  template<typename T1> inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_pinv>& in);
-  
-  template<typename T1> inline static bool apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& expr, typename T1::pod_type tol, const uword method_id);
-  };
+  template<typename eT> inline static typename get_pod_type<eT>::result mat_norm_1(const SpMat<eT>& X);
 
+  template<typename eT> inline static typename get_pod_type<eT>::result mat_norm_2(const SpMat<eT>& X, const typename arma_real_only<eT>::result* junk = nullptr);
+  template<typename eT> inline static typename get_pod_type<eT>::result mat_norm_2(const SpMat<eT>& X, const typename   arma_cx_only<eT>::result* junk = nullptr);
+
+  template<typename eT> inline static typename get_pod_type<eT>::result mat_norm_inf(const SpMat<eT>& X);
+  };
 
 
 //! @}
