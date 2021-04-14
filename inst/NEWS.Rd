@@ -3,7 +3,7 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.10.3.0.0 (2021-04-12)}{
+\section{Changes in RcppArmadillo version 0.10.4.0.0 (2021-04-12)}{
   \itemize{
     \item Upgraded to Armadillo release 10.4.0 (Pressure Cooker)
     \itemize{
@@ -16,8 +16,8 @@
       failed decompositions, failed saving/loading, etc, no longer emit
       warnings
     }
-    \item Apply one upstream correction for \code{arma::randn} draws
-    when using alternative (here R) generator
+    \item Apply one upstream corrections for \code{arma::randn} draws
+    when using alternative (here R) generator, and \code{arma::randg}.
   }
 }
 
