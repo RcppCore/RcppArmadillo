@@ -102,7 +102,7 @@ namespace superlu
   void
   gstrf(superlu_options_t* options,
         SuperMatrix* A,
-        typename get_pod_type<eT>::result drop_tol, int relax,
+        int relax,
         int panel_size, int *etree,
         void  *work,  int  lwork,
         int* perm_c, int* perm_r,
@@ -114,26 +114,22 @@ namespace superlu
 
     if(is_float<eT>::value)
       {
-      typedef float T;
-      arma_wrapper(sgstrf)(options, A, (T)drop_tol, relax, panel_size, etree, work, lwork, perm_c, perm_r, L, U, Glu, stat, info);
+      arma_wrapper(sgstrf)(options, A, relax, panel_size, etree, work, lwork, perm_c, perm_r, L, U, Glu, stat, info);
       }
     else
     if(is_double<eT>::value)
       {
-      typedef double T;
-      arma_wrapper(dgstrf)(options, A, (T)drop_tol, relax, panel_size, etree, work, lwork, perm_c, perm_r, L, U, Glu, stat, info);
+      arma_wrapper(dgstrf)(options, A, relax, panel_size, etree, work, lwork, perm_c, perm_r, L, U, Glu, stat, info);
       }
     else
     if(is_cx_float<eT>::value)
       {
-      typedef float T;
-      arma_wrapper(cgstrf)(options, A, (T)drop_tol, relax, panel_size, etree, work, lwork, perm_c, perm_r, L, U, Glu, stat, info);
+      arma_wrapper(cgstrf)(options, A, relax, panel_size, etree, work, lwork, perm_c, perm_r, L, U, Glu, stat, info);
       }
     else
     if(is_cx_double<eT>::value)
       {
-      typedef double T;
-      arma_wrapper(zgstrf)(options, A, (T)drop_tol, relax, panel_size, etree, work, lwork, perm_c, perm_r, L, U, Glu, stat, info);
+      arma_wrapper(zgstrf)(options, A, relax, panel_size, etree, work, lwork, perm_c, perm_r, L, U, Glu, stat, info);
       }
     }
 
