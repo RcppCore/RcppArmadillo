@@ -27,10 +27,10 @@ extern "C"
   extern void arma_wrapper(cgssvx)(superlu::superlu_options_t*, superlu::SuperMatrix*, int*, int*, int*, char*,  float*,  float*, superlu::SuperMatrix*, superlu::SuperMatrix*, void*, int, superlu::SuperMatrix*, superlu::SuperMatrix*,  float*,  float*,  float*,  float*, superlu::GlobalLU_t*, superlu::mem_usage_t*, superlu::SuperLUStat_t*, int*);
   extern void arma_wrapper(zgssvx)(superlu::superlu_options_t*, superlu::SuperMatrix*, int*, int*, int*, char*, double*, double*, superlu::SuperMatrix*, superlu::SuperMatrix*, void*, int, superlu::SuperMatrix*, superlu::SuperMatrix*, double*, double*, double*, double*, superlu::GlobalLU_t*, superlu::mem_usage_t*, superlu::SuperLUStat_t*, int*);
   
-  extern void arma_wrapper(sgstrf)(superlu::superlu_options_t*, superlu::SuperMatrix*,  float, int, int, int*, void*, int, int*, int*, superlu::SuperMatrix*, superlu::SuperMatrix*, superlu::GlobalLU_t*, superlu::SuperLUStat_t*, int*);
-  extern void arma_wrapper(dgstrf)(superlu::superlu_options_t*, superlu::SuperMatrix*, double, int, int, int*, void*, int, int*, int*, superlu::SuperMatrix*, superlu::SuperMatrix*, superlu::GlobalLU_t*, superlu::SuperLUStat_t*, int*);
-  extern void arma_wrapper(cgstrf)(superlu::superlu_options_t*, superlu::SuperMatrix*,  float, int, int, int*, void*, int, int*, int*, superlu::SuperMatrix*, superlu::SuperMatrix*, superlu::GlobalLU_t*, superlu::SuperLUStat_t*, int*);
-  extern void arma_wrapper(zgstrf)(superlu::superlu_options_t*, superlu::SuperMatrix*, double, int, int, int*, void*, int, int*, int*, superlu::SuperMatrix*, superlu::SuperMatrix*, superlu::GlobalLU_t*, superlu::SuperLUStat_t*, int*);
+  extern void arma_wrapper(sgstrf)(superlu::superlu_options_t*, superlu::SuperMatrix*, int, int, int*, void*, int, int*, int*, superlu::SuperMatrix*, superlu::SuperMatrix*, superlu::GlobalLU_t*, superlu::SuperLUStat_t*, int*);
+  extern void arma_wrapper(dgstrf)(superlu::superlu_options_t*, superlu::SuperMatrix*, int, int, int*, void*, int, int*, int*, superlu::SuperMatrix*, superlu::SuperMatrix*, superlu::GlobalLU_t*, superlu::SuperLUStat_t*, int*);
+  extern void arma_wrapper(cgstrf)(superlu::superlu_options_t*, superlu::SuperMatrix*, int, int, int*, void*, int, int*, int*, superlu::SuperMatrix*, superlu::SuperMatrix*, superlu::GlobalLU_t*, superlu::SuperLUStat_t*, int*);
+  extern void arma_wrapper(zgstrf)(superlu::superlu_options_t*, superlu::SuperMatrix*, int, int, int*, void*, int, int*, int*, superlu::SuperMatrix*, superlu::SuperMatrix*, superlu::GlobalLU_t*, superlu::SuperLUStat_t*, int*);
   
   extern void arma_wrapper(sgstrs)(superlu::trans_t, superlu::SuperMatrix*, superlu::SuperMatrix*, int*, int*, superlu::SuperMatrix*, superlu::SuperLUStat_t*, int*);
   extern void arma_wrapper(dgstrs)(superlu::trans_t, superlu::SuperMatrix*, superlu::SuperMatrix*, int*, int*, superlu::SuperMatrix*, superlu::SuperLUStat_t*, int*);

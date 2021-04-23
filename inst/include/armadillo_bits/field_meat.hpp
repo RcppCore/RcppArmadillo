@@ -2377,7 +2377,7 @@ field_aux::save(const field<oT>&, const std::string&, const file_type, std::stri
   {
   arma_extra_debug_sigprint();
   
-  err_msg = " [saving/loading this type of field is currently not supported] filename = ";
+  err_msg = "saving/loading this type of field is currently not supported";
   
   return false;
   }
@@ -2391,7 +2391,7 @@ field_aux::save(const field<oT>&, std::ostream&, const file_type, std::string& e
   {
   arma_extra_debug_sigprint();
   
-  err_msg = " [saving/loading this type of field is currently not supported] filename = ";
+  err_msg = "saving/loading this type of field is currently not supported";
   
   return false;
   }
@@ -2405,7 +2405,7 @@ field_aux::load(field<oT>&, const std::string&, const file_type, std::string& er
   {
   arma_extra_debug_sigprint();
   
-  err_msg = " [saving/loading this type of field is currently not supported] filename = ";
+  err_msg = "saving/loading this type of field is currently not supported";
   
   return false;
   }
@@ -2419,7 +2419,7 @@ field_aux::load(field<oT>&, std::istream&, const file_type, std::string& err_msg
   {
   arma_extra_debug_sigprint();
   
-  err_msg = " [saving/loading this type of field is currently not supported] filename = ";
+  err_msg = "saving/loading this type of field is currently not supported";
   
   return false;
   }
@@ -2444,7 +2444,7 @@ field_aux::save(const field< Mat<eT> >& x, const std::string& name, const file_t
       break;
     
     default:
-      err_msg = " [unsupported type] filename = ";
+      err_msg = "unsupported type";
       return false;
     }
   }
@@ -2469,7 +2469,7 @@ field_aux::save(const field< Mat<eT> >& x, std::ostream& os, const file_type typ
       break;
     
     default:
-      err_msg = " [unsupported type] filename = ";
+      err_msg = "unsupported type";
       return false;
     }
   }
@@ -2498,7 +2498,7 @@ field_aux::load(field< Mat<eT> >& x, const std::string& name, const file_type ty
       break;
     
     default:
-      err_msg = " [unsupported type] filename = ";
+      err_msg = "unsupported type";
       return false;
     }
   }
@@ -2527,7 +2527,7 @@ field_aux::load(field< Mat<eT> >& x, std::istream& is, const file_type type, std
       break;
     
     default:
-      err_msg = " [unsupported type] filename = ";
+      err_msg = "unsupported type";
       return false;
     }
   }
@@ -2552,7 +2552,7 @@ field_aux::save(const field< Col<eT> >& x, const std::string& name, const file_t
       break;
     
     default:
-      err_msg = " [unsupported type] filename = ";
+      err_msg = "unsupported type";
       return false;
     }
   }
@@ -2577,7 +2577,7 @@ field_aux::save(const field< Col<eT> >& x, std::ostream& os, const file_type typ
       break;
     
     default:
-      err_msg = " [unsupported type] filename = ";
+      err_msg = "unsupported type";
       return false;
     }
   }
@@ -2606,7 +2606,7 @@ field_aux::load(field< Col<eT> >& x, const std::string& name, const file_type ty
       break;
     
     default:
-      err_msg = " [unsupported type] filename = ";
+      err_msg = "unsupported type";
       return false;
     }
   }
@@ -2635,7 +2635,7 @@ field_aux::load(field< Col<eT> >& x, std::istream& is, const file_type type, std
       break;
     
     default:
-      err_msg = " [unsupported type] filename = ";
+      err_msg = "unsupported type";
       return false;
     }
   }
@@ -2660,7 +2660,7 @@ field_aux::save(const field< Row<eT> >& x, const std::string& name, const file_t
       break;
     
     default:
-      err_msg = " [unsupported type] filename = ";
+      err_msg = "unsupported type";
       return false;
     }
   }
@@ -2685,7 +2685,7 @@ field_aux::save(const field< Row<eT> >& x, std::ostream& os, const file_type typ
       break;
     
     default:
-      err_msg = " [unsupported type] filename = ";
+      err_msg = "unsupported type";
       return false;
     }
   }
@@ -2714,7 +2714,7 @@ field_aux::load(field< Row<eT> >& x, const std::string& name, const file_type ty
       break;
     
     default:
-      err_msg = " [unsupported type] filename = ";
+      err_msg = "unsupported type";
       return false;
     }
   }
@@ -2743,7 +2743,7 @@ field_aux::load(field< Row<eT> >& x, std::istream& is, const file_type type, std
       break;
     
     default:
-      err_msg = " [unsupported type] filename = ";
+      err_msg = "unsupported type";
       return false;
     }
   }
@@ -2764,7 +2764,7 @@ field_aux::save(const field< Cube<eT> >& x, const std::string& name, const file_
       break;
     
     default:
-      err_msg = " [unsupported type] filename = ";
+      err_msg = "unsupported type";
       return false;
     }
   }
@@ -2785,7 +2785,7 @@ field_aux::save(const field< Cube<eT> >& x, std::ostream& os, const file_type ty
       break;
     
     default:
-      err_msg = " [unsupported type] filename = ";
+      err_msg = "unsupported type";
       return false;
     }
   }
@@ -2807,7 +2807,7 @@ field_aux::load(field< Cube<eT> >& x, const std::string& name, const file_type t
       break;
     
     default:
-      err_msg = " [unsupported type] filename = ";
+      err_msg = "unsupported type";
       return false;
     }
   }
@@ -2829,7 +2829,7 @@ field_aux::load(field< Cube<eT> >& x, std::istream& is, const file_type type, st
       break;
       
     default:
-      err_msg = " [unsupported type] filename = ";
+      err_msg = "unsupported type";
       return false;
     }
   }

@@ -49,18 +49,17 @@ SparseGenRealShiftSolve<eT>::SparseGenRealShiftSolve(const SpMat<eT>& mat_obj, c
     
     if(status_x == false)  { arma_stop_runtime_error("newarp::SparseGenRealShiftSolve::SparseGenRealShiftSolve(): could not construct SuperLU matrix"); return; }
     
-    int   panel_size = superlu::sp_ispec_environ(1);
-    int   relax      = superlu::sp_ispec_environ(2);
-    float drop_tol   = 0.0;
-    int   slu_info   = 0; // Return code
-    int   lwork      = 0; // lwork = 0: allocate space internally by system malloc
+    int panel_size = superlu::sp_ispec_environ(1);
+    int relax      = superlu::sp_ispec_environ(2);
+    int slu_info   = 0; // Return code
+    int lwork      = 0; // lwork = 0: allocate space internally by system malloc
     
     superlu_stat_wrangler stat;
     
     arma_extra_debug_print("superlu::gstrf()");
     superlu::get_permutation_c(options.ColPerm, x.get_ptr(), perm_c.get_ptr());
     superlu::sp_preorder_mat(&options, x.get_ptr(), perm_c.get_ptr(), etree.get_ptr(), xC.get_ptr());
-    superlu::gstrf<eT>(&options, xC.get_ptr(), drop_tol, relax, panel_size, etree.get_ptr(), NULL, lwork, perm_c.get_ptr(), perm_r.get_ptr(), l.get_ptr(), u.get_ptr(), &Glu, stat.get_ptr(), &slu_info);
+    superlu::gstrf<eT>(&options, xC.get_ptr(), relax, panel_size, etree.get_ptr(), NULL, lwork, perm_c.get_ptr(), perm_r.get_ptr(), l.get_ptr(), u.get_ptr(), &Glu, stat.get_ptr(), &slu_info);
     
     if(slu_info != 0)
       {
