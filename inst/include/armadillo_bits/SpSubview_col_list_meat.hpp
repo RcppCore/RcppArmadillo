@@ -150,7 +150,7 @@ SpSubview_col_list<eT,T1>::fill(const eT val)
   {
   arma_extra_debug_sigprint();
   
-  Mat<eT> tmp(m.n_rows, U_ci.M.n_elem);  tmp.fill(val);
+  Mat<eT> tmp(m.n_rows, U_ci.M.n_elem, arma_nozeros_indicator());  tmp.fill(val);
   
   (*this).operator=(tmp);
   }
@@ -217,7 +217,7 @@ SpSubview_col_list<eT,T1>::operator+= (const eT val)
   
   const SpMat<eT> tmp1(*this);
   
-  Mat<eT> tmp2(tmp1.n_rows, tmp1.n_cols);  tmp2.fill(val);
+  Mat<eT> tmp2(tmp1.n_rows, tmp1.n_cols, arma_nozeros_indicator());  tmp2.fill(val);
   
   const Mat<eT> tmp3 = tmp1 + tmp2;
   
@@ -235,7 +235,7 @@ SpSubview_col_list<eT,T1>::operator-= (const eT val)
   
   const SpMat<eT> tmp1(*this);
   
-  Mat<eT> tmp2(tmp1.n_rows, tmp1.n_cols);  tmp2.fill(val);
+  Mat<eT> tmp2(tmp1.n_rows, tmp1.n_cols, arma_nozeros_indicator());  tmp2.fill(val);
   
   const Mat<eT> tmp3 = tmp1 - tmp2;
   
@@ -298,7 +298,7 @@ SpSubview_col_list<eT,T1>::operator/= (const eT val)
   
   const SpMat<eT> tmp1(*this);
   
-  Mat<eT> tmp2(tmp1.n_rows, tmp1.n_cols);  tmp2.fill(val);
+  Mat<eT> tmp2(tmp1.n_rows, tmp1.n_cols, arma_nozeros_indicator());  tmp2.fill(val);
   
   const SpMat<eT> tmp3 = tmp1 / tmp2;
   

@@ -21,8 +21,8 @@
 
 #define ARMA_VERSION_MAJOR 10
 #define ARMA_VERSION_MINOR 4
-#define ARMA_VERSION_PATCH 1
-#define ARMA_VERSION_NAME  "Pressure Cooker"
+#define ARMA_VERSION_PATCH 91
+#define ARMA_VERSION_NAME  "10.5 RC1"
 
 
 

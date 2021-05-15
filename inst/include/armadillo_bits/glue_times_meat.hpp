@@ -81,7 +81,7 @@ glue_times_redirect2_helper<true>::apply(Mat<typename T1::elem_type>& out, const
   
   typedef typename T1::elem_type eT;
   
-  if(strip_inv<T1>::do_inv == true)
+  if(strip_inv<T1>::do_inv)
     {
     // replace inv(A)*B with solve(A,B)
     
@@ -260,7 +260,7 @@ glue_times_redirect3_helper<true>::apply(Mat<typename T1::elem_type>& out, const
   
   typedef typename T1::elem_type eT;
   
-  if(strip_inv<T1>::do_inv == true)
+  if(strip_inv<T1>::do_inv)
     {
     // replace inv(A)*B*C with solve(A,B*C);
     
@@ -312,7 +312,7 @@ glue_times_redirect3_helper<true>::apply(Mat<typename T1::elem_type>& out, const
     }
   
   
-  if(strip_inv<T2>::do_inv == true)
+  if(strip_inv<T2>::do_inv)
     {
     // replace A*inv(B)*C with A*solve(B,C)
     

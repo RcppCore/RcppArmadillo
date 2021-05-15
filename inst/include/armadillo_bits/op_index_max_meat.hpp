@@ -88,7 +88,7 @@ op_index_max::apply_noalias(Mat<uword>& out, const Mat<eT>& X, const uword dim)
     
     uword* out_mem = out.memptr();
     
-    Col<T> tmp(X_n_rows);
+    Col<T> tmp(X_n_rows, arma_nozeros_indicator());
     
     T* tmp_mem = tmp.memptr();
     
@@ -195,7 +195,7 @@ op_index_max::apply_noalias(Cube<uword>& out, const Cube<eT>& X, const uword dim
     
     if(out.is_empty() || X.is_empty())  { return; }
     
-    Col<eT> tmp(X_n_rows);
+    Col<eT> tmp(X_n_rows, arma_nozeros_indicator());
     
     eT* tmp_mem = tmp.memptr();
     
@@ -299,7 +299,7 @@ op_index_max::apply_noalias(Cube<uword>& out, const Cube<eT>& X, const uword dim
     
     if(out.is_empty() || X.is_empty())  { return; }
     
-    Col<T> tmp(X_n_rows);
+    Col<T> tmp(X_n_rows, arma_nozeros_indicator());
     
     T* tmp_mem = tmp.memptr();
     
@@ -342,7 +342,7 @@ op_index_max::apply_noalias(Cube<uword>& out, const Cube<eT>& X, const uword dim
     
     uword* out_mem = out.memptr();
     
-    Mat<T> tmp(X_n_rows, X_n_cols);
+    Mat<T> tmp(X_n_rows, X_n_cols, arma_nozeros_indicator());
     
            T*      tmp_mem = tmp.memptr();
     const eT* X_slice0_mem = X.slice_memptr(0);

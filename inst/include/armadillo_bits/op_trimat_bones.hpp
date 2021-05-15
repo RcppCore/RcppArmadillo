@@ -19,6 +19,7 @@
 
 
 
+// TODO: split into seperate op_trimatu and op_trimatl classes ?
 class op_trimat
   : public traits_op_default
   {

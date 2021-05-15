@@ -115,7 +115,7 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   
   if(count == 0)  { out.zeros(n_cols, n_rows); return true; }
   
-  Col<T> s2(count);
+  Col<T> s2(count, arma_nozeros_indicator());
   
   T* s2_mem = s2.memptr();
   

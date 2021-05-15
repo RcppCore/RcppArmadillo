@@ -121,8 +121,8 @@ svds_helper
     
     if(calc_UV)
       {
-      uvec U_row_indices(A.n_rows);  for(uword i=0; i < A.n_rows; ++i)  { U_row_indices[i] = i;            }
-      uvec V_row_indices(A.n_cols);  for(uword i=0; i < A.n_cols; ++i)  { V_row_indices[i] = i + A.n_rows; }
+      uvec U_row_indices(A.n_rows, arma_nozeros_indicator());  for(uword i=0; i < A.n_rows; ++i)  { U_row_indices[i] = i;            }
+      uvec V_row_indices(A.n_cols, arma_nozeros_indicator());  for(uword i=0; i < A.n_cols; ++i)  { V_row_indices[i] = i + A.n_rows; }
       
       U = Datum<T>::sqrt2 * eigvec(U_row_indices, sorted_indices);
       V = Datum<T>::sqrt2 * eigvec(V_row_indices, sorted_indices);
@@ -247,8 +247,8 @@ svds_helper
     
     if(calc_UV)
       {
-      uvec U_row_indices(A.n_rows);  for(uword i=0; i < A.n_rows; ++i)  { U_row_indices[i] = i;            }
-      uvec V_row_indices(A.n_cols);  for(uword i=0; i < A.n_cols; ++i)  { V_row_indices[i] = i + A.n_rows; }
+      uvec U_row_indices(A.n_rows, arma_nozeros_indicator());  for(uword i=0; i < A.n_rows; ++i)  { U_row_indices[i] = i;            }
+      uvec V_row_indices(A.n_cols, arma_nozeros_indicator());  for(uword i=0; i < A.n_cols; ++i)  { V_row_indices[i] = i + A.n_rows; }
       
       U = Datum<T>::sqrt2 * eigvec(U_row_indices, sorted_indices);
       V = Datum<T>::sqrt2 * eigvec(V_row_indices, sorted_indices);

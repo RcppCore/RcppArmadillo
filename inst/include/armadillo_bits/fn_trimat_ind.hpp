@@ -35,7 +35,7 @@ trimatu_ind(const SizeMat& s, const sword k = 0)
   
   const uword N = (std::min)(n_rows - row_offset, n_cols - col_offset);
   
-  uvec   tmp(n_rows * n_cols);  // worst case scenario
+  uvec   tmp(n_rows * n_cols, arma_nozeros_indicator());  // worst case scenario
   uword* tmp_mem = tmp.memptr();
   uword  count   = 0;
   
@@ -96,7 +96,7 @@ trimatl_ind(const SizeMat& s, const sword k = 0)
   
   const uword N = (std::min)(n_rows - row_offset, n_cols - col_offset);
   
-  uvec   tmp(n_rows * n_cols);  // worst case scenario
+  uvec   tmp(n_rows * n_cols, arma_nozeros_indicator());  // worst case scenario
   uword* tmp_mem = tmp.memptr();
   uword  count   = 0;
   

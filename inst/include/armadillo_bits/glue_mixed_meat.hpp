@@ -59,7 +59,7 @@ glue_mixed_times::apply(Mat<typename eT_promoter<T1,T2>::eT>& out, const mtGlue<
     }
   else
     {
-    Mat<out_eT> tmp(out_n_rows, out_n_cols);
+    Mat<out_eT> tmp(out_n_rows, out_n_cols, arma_nozeros_indicator());
     
     gemm_mixed<do_trans_A, do_trans_B, use_alpha, false>::apply(tmp, A, B, alpha);
     

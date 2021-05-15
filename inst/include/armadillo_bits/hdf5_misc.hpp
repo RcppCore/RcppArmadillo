@@ -511,7 +511,7 @@ load_and_convert_hdf5
   
   if(is_equal)
     {
-    Col<u8> v(n_elem);
+    Col<u8> v(n_elem, arma_nozeros_indicator());
     hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
     arrayops::convert(dest, v.memptr(), n_elem);
 
@@ -526,7 +526,7 @@ load_and_convert_hdf5
   
   if(is_equal)
     {
-    Col<s8> v(n_elem);
+    Col<s8> v(n_elem, arma_nozeros_indicator());
     hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
     arrayops::convert(dest, v.memptr(), n_elem);
 
@@ -541,7 +541,7 @@ load_and_convert_hdf5
   
   if(is_equal)
     {
-    Col<u16> v(n_elem);
+    Col<u16> v(n_elem, arma_nozeros_indicator());
     hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
     arrayops::convert(dest, v.memptr(), n_elem);
 
@@ -556,7 +556,7 @@ load_and_convert_hdf5
   
   if(is_equal)
     {
-    Col<s16> v(n_elem);
+    Col<s16> v(n_elem, arma_nozeros_indicator());
     hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
     arrayops::convert(dest, v.memptr(), n_elem);
 
@@ -571,7 +571,7 @@ load_and_convert_hdf5
   
   if(is_equal)
     {
-    Col<u32> v(n_elem);
+    Col<u32> v(n_elem, arma_nozeros_indicator());
     hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
     arrayops::convert(dest, v.memptr(), n_elem);
 
@@ -586,7 +586,7 @@ load_and_convert_hdf5
   
   if(is_equal)
     {
-    Col<s32> v(n_elem);
+    Col<s32> v(n_elem, arma_nozeros_indicator());
     hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
     arrayops::convert(dest, v.memptr(), n_elem);
 
@@ -601,7 +601,7 @@ load_and_convert_hdf5
   
   if(is_equal)
     {
-    Col<u64> v(n_elem);
+    Col<u64> v(n_elem, arma_nozeros_indicator());
     hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
     arrayops::convert(dest, v.memptr(), n_elem);
 
@@ -616,7 +616,7 @@ load_and_convert_hdf5
   
   if(is_equal)
     {
-    Col<s64> v(n_elem);
+    Col<s64> v(n_elem, arma_nozeros_indicator());
     hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
     arrayops::convert(dest, v.memptr(), n_elem);
 
@@ -631,7 +631,7 @@ load_and_convert_hdf5
   
   if(is_equal)
     {
-    Col<ulng_t> v(n_elem);
+    Col<ulng_t> v(n_elem, arma_nozeros_indicator());
     hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
     arrayops::convert(dest, v.memptr(), n_elem);
 
@@ -646,7 +646,7 @@ load_and_convert_hdf5
   
   if(is_equal)
     {
-    Col<slng_t> v(n_elem);
+    Col<slng_t> v(n_elem, arma_nozeros_indicator());
     hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
     arrayops::convert(dest, v.memptr(), n_elem);
 
@@ -661,7 +661,7 @@ load_and_convert_hdf5
   
   if(is_equal)
     {
-    Col<float> v(n_elem);
+    Col<float> v(n_elem, arma_nozeros_indicator());
     hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
     arrayops::convert(dest, v.memptr(), n_elem);
 
@@ -676,7 +676,7 @@ load_and_convert_hdf5
   
   if(is_equal)
     {
-    Col<double> v(n_elem);
+    Col<double> v(n_elem, arma_nozeros_indicator());
     hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
     arrayops::convert(dest, v.memptr(), n_elem);
 
@@ -696,7 +696,7 @@ load_and_convert_hdf5
       return -1; // can't read complex data into non-complex matrix/cube
       }
     
-    Col< std::complex<float> > v(n_elem);
+    Col< std::complex<float> > v(n_elem, arma_nozeros_indicator());
     hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
     arrayops::convert_cx(dest, v.memptr(), n_elem);
     
@@ -716,7 +716,7 @@ load_and_convert_hdf5
       return -1; // can't read complex data into non-complex matrix/cube
       }
     
-    Col< std::complex<double> > v(n_elem);
+    Col< std::complex<double> > v(n_elem, arma_nozeros_indicator());
     hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
     arrayops::convert_cx(dest, v.memptr(), n_elem);
     

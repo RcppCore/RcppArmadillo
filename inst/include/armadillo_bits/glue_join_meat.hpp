@@ -362,7 +362,7 @@ glue_join_slices::apply(Cube<typename T1::elem_type>& out, const GlueCube<T1,T2,
     }
   else  // we have aliasing
     {
-    Cube<eT> C(A.n_rows, A.n_cols, A.n_slices + B.n_slices);
+    Cube<eT> C(A.n_rows, A.n_cols, A.n_slices + B.n_slices, arma_nozeros_indicator());
     
     C.slices(0,          A.n_slices-1) = A;
     C.slices(A.n_slices, C.n_slices-1) = B;

@@ -47,7 +47,7 @@ spop_sum::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_sum>& in)
   
   if(dim == 0) // find the sum in each column
     {
-    Row<eT> acc(p_n_cols, fill::zeros);
+    Row<eT> acc(p_n_cols, arma_zeros_indicator());
     
     eT* acc_mem = acc.memptr();
     
@@ -80,7 +80,7 @@ spop_sum::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_sum>& in)
   else
   if(dim == 1)  // find the sum in each row
     {
-    Col<eT> acc(p_n_rows, fill::zeros);
+    Col<eT> acc(p_n_rows, arma_zeros_indicator());
     
     eT* acc_mem = acc.memptr();
     

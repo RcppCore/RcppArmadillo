@@ -26,7 +26,7 @@ Cube<eT>::~Cube()
   
   delete_mat();
   
-  if( (mem_state == 0) && (n_alloc > Cube_prealloc::mem_n_elem) )
+  if( (mem_state == 0) && (n_alloc > 0) )
     {
     arma_extra_debug_print("Cube::destructor: releasing memory");
     memory::release( access::rw(mem) );
@@ -79,6 +79,13 @@ Cube<eT>::Cube(const uword in_n_rows, const uword in_n_cols, const uword in_n_sl
   arma_extra_debug_sigprint_this(this);
   
   init_cold();
+  
+  #if (!defined(ARMA_DONT_ZERO_INIT))
+    {
+    arma_extra_debug_print("Cube::constructor: zeroing memory");
+    arrayops::fill_zeros(memptr(), n_elem);
+    }
+  #endif
   }
 
 
@@ -99,6 +106,69 @@ Cube<eT>::Cube(const SizeCube& s)
   arma_extra_debug_sigprint_this(this);
   
   init_cold();
+  
+  #if (!defined(ARMA_DONT_ZERO_INIT))
+    {
+    arma_extra_debug_print("Cube::constructor: zeroing memory");
+    arrayops::fill_zeros(memptr(), n_elem);
+    }
+  #endif
+  }
+
+
+
+//! internal use only
+template<typename eT>
+template<bool do_zeros>
+inline
+Cube<eT>::Cube(const uword in_n_rows, const uword in_n_cols, const uword in_n_slices, const arma_initmode_indicator<do_zeros>&)
+  : n_rows(in_n_rows)
+  , n_cols(in_n_cols)
+  , n_elem_slice(in_n_rows*in_n_cols)
+  , n_slices(in_n_slices)
+  , n_elem(in_n_rows*in_n_cols*in_n_slices)
+  , n_alloc()
+  , mem_state(0)
+  , mem()
+  , mat_ptrs(nullptr)
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  init_cold();
+  
+  if(do_zeros)
+    {
+    arma_extra_debug_print("Cube::constructor: zeroing memory");
+    arrayops::fill_zeros(memptr(), n_elem);
+    }
+  }
+
+
+
+//! internal use only
+template<typename eT>
+template<bool do_zeros>
+inline
+Cube<eT>::Cube(const SizeCube& s, const arma_initmode_indicator<do_zeros>&)
+  : n_rows(s.n_rows)
+  , n_cols(s.n_cols)
+  , n_elem_slice(s.n_rows*s.n_cols)
+  , n_slices(s.n_slices)
+  , n_elem(s.n_rows*s.n_cols*s.n_slices)
+  , n_alloc()
+  , mem_state(0)
+  , mem()
+  , mat_ptrs(nullptr)
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  init_cold();
+  
+  if(do_zeros)
+    {
+    arma_extra_debug_print("Cube::constructor: zeroing memory");
+    arrayops::fill_zeros(memptr(), n_elem);
+    }
   }
 
 
@@ -122,10 +192,10 @@ Cube<eT>::Cube(const uword in_n_rows, const uword in_n_cols, const uword in_n_sl
   
   init_cold();
   
-  if(is_same_type<fill_type, fill::fill_zeros>::yes)  (*this).zeros();
-  if(is_same_type<fill_type, fill::fill_ones >::yes)  (*this).ones();
-  if(is_same_type<fill_type, fill::fill_randu>::yes)  (*this).randu();
-  if(is_same_type<fill_type, fill::fill_randn>::yes)  (*this).randn();
+  if(is_same_type<fill_type, fill::fill_zeros>::yes)  { (*this).zeros(); }
+  if(is_same_type<fill_type, fill::fill_ones >::yes)  { (*this).ones();  }
+  if(is_same_type<fill_type, fill::fill_randu>::yes)  { (*this).randu(); }
+  if(is_same_type<fill_type, fill::fill_randn>::yes)  { (*this).randn(); }
   
   if(is_same_type<fill_type, fill::fill_eye  >::yes)  { arma_debug_check(true, "Cube::Cube(): unsupported fill type"); }
   }
@@ -150,10 +220,10 @@ Cube<eT>::Cube(const SizeCube& s, const fill::fill_class<fill_type>&)
   
   init_cold();
   
-  if(is_same_type<fill_type, fill::fill_zeros>::yes)  (*this).zeros();
-  if(is_same_type<fill_type, fill::fill_ones >::yes)  (*this).ones();
-  if(is_same_type<fill_type, fill::fill_randu>::yes)  (*this).randu();
-  if(is_same_type<fill_type, fill::fill_randn>::yes)  (*this).randn();
+  if(is_same_type<fill_type, fill::fill_zeros>::yes)  { (*this).zeros(); }
+  if(is_same_type<fill_type, fill::fill_ones >::yes)  { (*this).ones();  }
+  if(is_same_type<fill_type, fill::fill_randu>::yes)  { (*this).randu(); }
+  if(is_same_type<fill_type, fill::fill_randn>::yes)  { (*this).randn(); }
   
   if(is_same_type<fill_type, fill::fill_eye  >::yes)  { arma_debug_check(true, "Cube::Cube(): unsupported fill type"); }
   }
@@ -319,6 +389,7 @@ Cube<eT>::init_warm(const uword in_n_rows, const uword in_n_cols, const uword in
         {
         arma_extra_debug_print("Cube::init(): releasing memory");
         memory::release( access::rw(mem) );
+        access::rw(n_alloc) = 0;   // in case memory::acquire() throws an exception
         }
       
       arma_extra_debug_print("Cube::init(): acquiring memory");
@@ -1979,7 +2050,7 @@ Cube<eT>::shed_rows(const uword in_row1, const uword in_row2)
   const uword n_keep_front = in_row1;
   const uword n_keep_back  = n_rows - (in_row2 + 1);
   
-  Cube<eT> X(n_keep_front + n_keep_back, n_cols, n_slices);
+  Cube<eT> X(n_keep_front + n_keep_back, n_cols, n_slices, arma_nozeros_indicator());
   
   if(n_keep_front > 0)
     {
@@ -2013,7 +2084,7 @@ Cube<eT>::shed_cols(const uword in_col1, const uword in_col2)
   const uword n_keep_front = in_col1;
   const uword n_keep_back  = n_cols - (in_col2 + 1);
   
-  Cube<eT> X(n_rows, n_keep_front + n_keep_back, n_slices);
+  Cube<eT> X(n_rows, n_keep_front + n_keep_back, n_slices, arma_nozeros_indicator());
   
   if(n_keep_front > 0)
     {
@@ -2047,7 +2118,7 @@ Cube<eT>::shed_slices(const uword in_slice1, const uword in_slice2)
   const uword n_keep_front = in_slice1;
   const uword n_keep_back  = n_slices - (in_slice2 + 1);
   
-  Cube<eT> X(n_rows, n_cols, n_keep_front + n_keep_back);
+  Cube<eT> X(n_rows, n_cols, n_keep_front + n_keep_back, arma_nozeros_indicator());
   
   if(n_keep_front > 0)
     {
@@ -2097,7 +2168,7 @@ Cube<eT>::shed_slices(const Base<uword, T1>& indices)
       }
     }
   
-  Col<uword> tmp3(n_slices);
+  Col<uword> tmp3(n_slices, arma_nozeros_indicator());
   
   uword* tmp3_mem = tmp3.memptr();
   
@@ -2151,7 +2222,7 @@ Cube<eT>::insert_rows(const uword row_num, const uword N, const bool set_to_zero
   
   if(N > 0)
     {
-    Cube<eT> out(t_n_rows + N, n_cols, n_slices);
+    Cube<eT> out(t_n_rows + N, n_cols, n_slices, arma_nozeros_indicator());
     
     if(A_n_rows > 0)
       {
@@ -2191,7 +2262,7 @@ Cube<eT>::insert_cols(const uword col_num, const uword N, const bool set_to_zero
   
   if(N > 0)
     {
-    Cube<eT> out(n_rows, t_n_cols + N, n_slices);
+    Cube<eT> out(n_rows, t_n_cols + N, n_slices, arma_nozeros_indicator());
     
     if(A_n_cols > 0)
       {
@@ -2233,7 +2304,7 @@ Cube<eT>::insert_slices(const uword slice_num, const uword N, const bool set_to_
   
   if(N > 0)
     {
-    Cube<eT> out(n_rows, n_cols, t_n_slices + N);
+    Cube<eT> out(n_rows, n_cols, t_n_slices + N, arma_nozeros_indicator());
     
     if(A_n_slices > 0)
       {
@@ -2290,7 +2361,7 @@ Cube<eT>::insert_rows(const uword row_num, const BaseCube<eT,T1>& X)
   
   if(N > 0)
     {
-    Cube<eT> out(t_n_rows + N, n_cols, n_slices);
+    Cube<eT> out(t_n_rows + N, n_cols, n_slices, arma_nozeros_indicator());
     
     if(A_n_rows > 0)
       {
@@ -2339,7 +2410,7 @@ Cube<eT>::insert_cols(const uword col_num, const BaseCube<eT,T1>& X)
   
   if(N > 0)
     {
-    Cube<eT> out(n_rows, t_n_cols + N, n_slices);
+    Cube<eT> out(n_rows, t_n_cols + N, n_slices, arma_nozeros_indicator());
     
     if(A_n_cols > 0)
       {
@@ -2390,7 +2461,7 @@ Cube<eT>::insert_slices(const uword slice_num, const BaseCube<eT,T1>& X)
   
   if(N > 0)
     {
-    Cube<eT> out(n_rows, n_cols, t_n_slices + N);
+    Cube<eT> out(n_rows, n_cols, t_n_slices + N, arma_nozeros_indicator());
     
     if(A_n_slices > 0)
       {
@@ -3875,6 +3946,30 @@ Cube<eT>::clean(const typename get_pod_type<eT>::result threshold)
 
 
 
+template<typename eT>
+inline
+const Cube<eT>&
+Cube<eT>::clamp(const eT min_val, const eT max_val)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(is_cx<eT>::no)
+    {
+    arma_debug_check( (access::tmp_real(min_val) > access::tmp_real(max_val)), "Cube::clamp(): min_val must be less than max_val" );
+    }
+  else
+    {
+    arma_debug_check( (access::tmp_real(min_val) > access::tmp_real(max_val)), "Cube::clamp(): real(min_val) must be less than real(max_val)" );
+    arma_debug_check( (access::tmp_imag(min_val) > access::tmp_imag(max_val)), "Cube::clamp(): imag(min_val) must be less than imag(max_val)" );
+    }
+  
+  arrayops::clamp(memptr(), n_elem, min_val, max_val);
+  
+  return *this;
+  }
+
+
+
 //! fill the cube with the specified value
 template<typename eT>
 inline
@@ -5066,6 +5161,16 @@ Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::fixed()
   arma_extra_debug_sigprint_this(this);
   
   mem_setup();
+  
+  #if (!defined(ARMA_DONT_ZERO_INIT))
+    {
+    arma_extra_debug_print("Cube::fixed::constructor: zeroing memory");
+    
+    eT* mem_use = (use_extra) ? &(mem_local_extra[0]) : &(mem_local[0]);
+    
+    arrayops::fill_zeros(mem_use, fixed_n_elem);
+    }
+  #endif
   }
 
 
@@ -5097,10 +5202,10 @@ Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::fixed(const fill::f
   
   mem_setup();
   
-  if(is_same_type<fill_type, fill::fill_zeros>::yes)  (*this).zeros();
-  if(is_same_type<fill_type, fill::fill_ones >::yes)  (*this).ones();
-  if(is_same_type<fill_type, fill::fill_randu>::yes)  (*this).randu();
-  if(is_same_type<fill_type, fill::fill_randn>::yes)  (*this).randn();
+  if(is_same_type<fill_type, fill::fill_zeros>::yes)  { (*this).zeros(); }
+  if(is_same_type<fill_type, fill::fill_ones >::yes)  { (*this).ones();  }
+  if(is_same_type<fill_type, fill::fill_randu>::yes)  { (*this).randu(); }
+  if(is_same_type<fill_type, fill::fill_randn>::yes)  { (*this).randn(); }
   
   if(is_same_type<fill_type, fill::fill_eye  >::yes)  { arma_debug_check(true, "Cube::fixed::fixed(): unsupported fill type"); }
   }

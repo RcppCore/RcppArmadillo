@@ -51,7 +51,7 @@ op_diagmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_diagmat>& X)
         const eT*   out_mem = out.memptr();
         const uword N       = out.n_elem;
         
-        Mat<eT> tmp(N,N);  tmp.zeros();
+        Mat<eT> tmp(N,N, arma_zeros_indicator());
         
         for(uword i=0; i<N; ++i)  { tmp.at(i,i) = out_mem[i]; }
         

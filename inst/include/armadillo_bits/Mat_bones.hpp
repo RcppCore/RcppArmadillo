@@ -61,6 +61,9 @@ class Mat : public Base< eT, Mat<eT> >
   inline explicit Mat(const uword in_rows, const uword in_cols);
   inline explicit Mat(const SizeMat& s);
   
+  template<bool do_zeros> inline explicit Mat(const uword in_rows, const uword in_cols, const arma_initmode_indicator<do_zeros>&);
+  template<bool do_zeros> inline explicit Mat(const SizeMat& s,                         const arma_initmode_indicator<do_zeros>&);
+  
   template<typename fill_type> inline Mat(const uword in_rows, const uword in_cols, const fill::fill_class<fill_type>& f);
   template<typename fill_type> inline Mat(const SizeMat& s,                         const fill::fill_class<fill_type>& f);
   
@@ -463,6 +466,8 @@ class Mat : public Base< eT, Mat<eT> >
   inline const Mat& replace(const eT old_val, const eT new_val);
   
   inline const Mat& clean(const pod_type threshold);
+  
+  inline const Mat& clamp(const eT min_val, const eT max_val);
   
   inline const Mat& fill(const eT val);
   

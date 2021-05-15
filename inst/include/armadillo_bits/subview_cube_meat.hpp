@@ -1117,7 +1117,7 @@ subview_cube<eT>::each_slice(const std::function< void(Mat<eT>&) >& F)
   {
   arma_extra_debug_sigprint();
   
-  Mat<eT> tmp1(n_rows, n_cols);
+  Mat<eT> tmp1(n_rows, n_cols, arma_nozeros_indicator());
   Mat<eT> tmp2('j', tmp1.memptr(), n_rows, n_cols);
   
   for(uword slice_id=0; slice_id < n_slices; ++slice_id)
@@ -1145,7 +1145,7 @@ subview_cube<eT>::each_slice(const std::function< void(const Mat<eT>&) >& F) con
   {
   arma_extra_debug_sigprint();
   
-        Mat<eT> tmp1(n_rows, n_cols);
+        Mat<eT> tmp1(n_rows, n_cols, arma_nozeros_indicator());
   const Mat<eT> tmp2('j', tmp1.memptr(), n_rows, n_cols);
   
   for(uword slice_id=0; slice_id < n_slices; ++slice_id)
@@ -1199,6 +1199,38 @@ subview_cube<eT>::clean(const typename get_pod_type<eT>::result threshold)
     for(uword col = 0; col < local_n_cols; ++col)
       {
       arrayops::clean( slice_colptr(slice,col), local_n_rows, threshold );
+      }
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
+subview_cube<eT>::clamp(const eT min_val, const eT max_val)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(is_cx<eT>::no)
+    {
+    arma_debug_check( (access::tmp_real(min_val) > access::tmp_real(max_val)), "subview_cube::clamp(): min_val must be less than max_val" );
+    }
+  else
+    {
+    arma_debug_check( (access::tmp_real(min_val) > access::tmp_real(max_val)), "subview_cube::clamp(): real(min_val) must be less than real(max_val)" );
+    arma_debug_check( (access::tmp_imag(min_val) > access::tmp_imag(max_val)), "subview_cube::clamp(): imag(min_val) must be less than imag(max_val)" );
+    }
+  
+  const uword local_n_rows   = n_rows;
+  const uword local_n_cols   = n_cols;
+  const uword local_n_slices = n_slices;
+  
+  for(uword slice = 0; slice < local_n_slices; ++slice)
+    {
+    for(uword col = 0; col < local_n_cols; ++col)
+      {
+      arrayops::clamp( slice_colptr(slice,col), local_n_rows, min_val, max_val );
       }
     }
   }

@@ -40,7 +40,7 @@ spop_reverse::apply_spmat(SpMat<eT>& out, const SpMat<eT>& X, const uword dim)
     return;
     }
   
-  umat locs(2, N);
+  umat locs(2, N, arma_nozeros_indicator());
   
   uword* locs_mem = locs.memptr();
   
@@ -108,8 +108,8 @@ spop_reverse::apply_proxy(SpMat<typename T1::elem_type>& out, const T1& X, const
     return;
     }
   
-  umat    locs(2, N);
-  Col<eT> vals(   N);
+  umat    locs(2, N, arma_nozeros_indicator());
+  Col<eT> vals(   N, arma_nozeros_indicator());
   
   uword* locs_mem = locs.memptr();
   eT*    vals_mem = vals.memptr();

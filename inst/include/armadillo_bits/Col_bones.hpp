@@ -31,11 +31,16 @@ class Col : public Mat<eT>
   static constexpr bool is_row  = false;
   static constexpr bool is_xvec = false;
   
-  inline          Col();
-  inline          Col(const Col<eT>& X);
+  inline Col();
+  inline Col(const Col<eT>& X);
+  
   inline explicit Col(const uword n_elem);
   inline explicit Col(const uword in_rows, const uword in_cols);
   inline explicit Col(const SizeMat& s);
+  
+  template<bool do_zeros> inline explicit Col(const uword n_elem,                       const arma_initmode_indicator<do_zeros>&);
+  template<bool do_zeros> inline explicit Col(const uword in_rows, const uword in_cols, const arma_initmode_indicator<do_zeros>&);
+  template<bool do_zeros> inline explicit Col(const SizeMat& s,                         const arma_initmode_indicator<do_zeros>&);
   
   template<typename fill_type> inline Col(const uword n_elem,                       const fill::fill_class<fill_type>& f);
   template<typename fill_type> inline Col(const uword in_rows, const uword in_cols, const fill::fill_class<fill_type>& f);

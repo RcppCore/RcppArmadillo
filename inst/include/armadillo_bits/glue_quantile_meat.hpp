@@ -105,7 +105,7 @@ glue_quantile::apply_noalias(Mat<eTb>& out, const Mat<eTa>& X, const Mat<eTb>& P
     
     if(out.is_empty())  { return; }
     
-    Col<eTa> Y(X_n_rows);
+    Col<eTa> Y(X_n_rows, arma_nozeros_indicator());
     
     if(X_n_cols == 1)
       {
@@ -130,7 +130,7 @@ glue_quantile::apply_noalias(Mat<eTb>& out, const Mat<eTa>& X, const Mat<eTb>& P
     
     if(out.is_empty())  { return; }
     
-    Col<eTa> Y(X_n_cols);
+    Col<eTa> Y(X_n_cols, arma_nozeros_indicator());
     
     if(X_n_rows == 1)
       {
@@ -140,7 +140,7 @@ glue_quantile::apply_noalias(Mat<eTb>& out, const Mat<eTa>& X, const Mat<eTb>& P
       }
     else
       {
-      Col<eTb> tmp(P_n_elem);
+      Col<eTb> tmp(P_n_elem, arma_nozeros_indicator());
       
       eTb* tmp_mem = tmp.memptr();
       

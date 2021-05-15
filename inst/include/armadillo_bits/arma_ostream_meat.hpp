@@ -940,7 +940,7 @@ arma_ostream::brief_print(std::ostream& o, const Mat<eT>& m, const bool print_si
   
   if( (print_row_ellipsis == true) && (print_col_ellipsis == true) )
     {
-    Mat<eT> X(4,4);
+    Mat<eT> X(4, 4, arma_nozeros_indicator());
     
     X( span(0,2), span(0,2) ) = m( span(0,2),  span(0,2)  );  // top left submatrix
     X( 3,         span(0,2) ) = m( m.n_rows-1, span(0,2)  );  // truncated last row
@@ -997,7 +997,7 @@ arma_ostream::brief_print(std::ostream& o, const Mat<eT>& m, const bool print_si
   
   if( (print_row_ellipsis == true) && (print_col_ellipsis == false) )
     {
-    Mat<eT> X(4, m.n_cols);
+    Mat<eT> X(4, m.n_cols, arma_nozeros_indicator());
     
     X( span(0,2), span::all ) = m( span(0,2),  span::all );  // top
     X( 3,         span::all ) = m( m.n_rows-1, span::all );  // bottom
@@ -1039,7 +1039,7 @@ arma_ostream::brief_print(std::ostream& o, const Mat<eT>& m, const bool print_si
   
   if( (print_row_ellipsis == false) && (print_col_ellipsis == true) )
     {
-    Mat<eT> X(m.n_rows, 4);
+    Mat<eT> X(m.n_rows, 4, arma_nozeros_indicator());
     
     X( span::all, span(0,2) ) = m( span::all, span(0,2)  );  // left
     X( span::all, 3         ) = m( span::all, m.n_cols-1 );  // right

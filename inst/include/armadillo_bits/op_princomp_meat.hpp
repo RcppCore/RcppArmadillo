@@ -72,7 +72,7 @@ op_princomp::direct_princomp
       {
       score_out.cols(n_rows-1,n_cols-1).zeros();
       
-      Col<T> s_tmp(n_cols, fill::zeros);
+      Col<T> s_tmp(n_cols, arma_zeros_indicator());
       
       s_tmp.rows(0,n_rows-2) = s.rows(0,n_rows-2);
       s = s_tmp;
@@ -164,7 +164,7 @@ op_princomp::direct_princomp
       {
       score_out.cols(n_rows-1,n_cols-1).zeros();
       
-      Col<T> s_tmp(n_cols, fill::zeros);
+      Col<T> s_tmp(n_cols, arma_zeros_indicator());
       
       s_tmp.rows(0,n_rows-2) = s.rows(0,n_rows-2);
       s = s_tmp;

@@ -479,7 +479,7 @@ op_find_finite::apply(Mat<uword>& out, const mtOp<uword, T1, op_find_finite>& X)
   
   const uword n_elem = P.get_n_elem();
   
-  Mat<uword> indices(n_elem,1);
+  Mat<uword> indices(n_elem, 1, arma_nozeros_indicator());
   
   uword* indices_mem = indices.memptr();
   uword  count       = 0;
@@ -525,7 +525,7 @@ op_find_nonfinite::apply(Mat<uword>& out, const mtOp<uword, T1, op_find_nonfinit
   
   const uword n_elem = P.get_n_elem();
   
-  Mat<uword> indices(n_elem,1);
+  Mat<uword> indices(n_elem, 1, arma_nozeros_indicator());
   
   uword* indices_mem = indices.memptr();
   uword  count       = 0;

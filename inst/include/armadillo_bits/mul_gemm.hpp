@@ -261,7 +261,7 @@ class gemm
         }
       else
         {
-        Mat<eT> BB(B.n_rows, B.n_rows);
+        Mat<eT> BB(B.n_rows, B.n_rows, arma_nozeros_indicator());
         
         op_strans::apply_mat_noalias_tinysq(BB, B);
         

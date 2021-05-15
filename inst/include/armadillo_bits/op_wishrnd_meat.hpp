@@ -134,7 +134,7 @@ op_wishrnd::apply_noalias_mode2(Mat<eT>& out, const Mat<eT>& D, const eT df)
     
     op_chi2rnd_varying_df<eT> chi2rnd_generator;
     
-    Mat<eT> A(N, N, fill::zeros);
+    Mat<eT> A(N, N, arma_zeros_indicator());
     
     for(uword i=0; i<N; ++i)
       {

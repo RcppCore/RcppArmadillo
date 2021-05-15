@@ -654,7 +654,7 @@ subview_each1_aux::operator_plus
   const uword p_n_rows = p.n_rows;
   const uword p_n_cols = p.n_cols;
   
-  Mat<eT> out(p_n_rows, p_n_cols);
+  Mat<eT> out(p_n_rows, p_n_cols, arma_nozeros_indicator());
   
   const quasi_unwrap<T2> tmp(Y.get_ref());
   const Mat<eT>& A     = tmp.M;
@@ -716,7 +716,7 @@ subview_each1_aux::operator_minus
   const uword p_n_rows = p.n_rows;
   const uword p_n_cols = p.n_cols;
   
-  Mat<eT> out(p_n_rows, p_n_cols);
+  Mat<eT> out(p_n_rows, p_n_cols, arma_nozeros_indicator());
   
   const quasi_unwrap<T2> tmp(Y.get_ref());
   const Mat<eT>& A     = tmp.M;
@@ -778,7 +778,7 @@ subview_each1_aux::operator_minus
   const uword p_n_rows = p.n_rows;
   const uword p_n_cols = p.n_cols;
   
-  Mat<eT> out(p_n_rows, p_n_cols);
+  Mat<eT> out(p_n_rows, p_n_cols, arma_nozeros_indicator());
   
   const quasi_unwrap<T1> tmp(X.get_ref());
   const Mat<eT>& A     = tmp.M;
@@ -840,7 +840,7 @@ subview_each1_aux::operator_schur
   const uword p_n_rows = p.n_rows;
   const uword p_n_cols = p.n_cols;
   
-  Mat<eT> out(p_n_rows, p_n_cols);
+  Mat<eT> out(p_n_rows, p_n_cols, arma_nozeros_indicator());
   
   const quasi_unwrap<T2> tmp(Y.get_ref());
   const Mat<eT>& A     = tmp.M;
@@ -902,7 +902,7 @@ subview_each1_aux::operator_div
   const uword p_n_rows = p.n_rows;
   const uword p_n_cols = p.n_cols;
   
-  Mat<eT> out(p_n_rows, p_n_cols);
+  Mat<eT> out(p_n_rows, p_n_cols, arma_nozeros_indicator());
   
   const quasi_unwrap<T2> tmp(Y.get_ref());
   const Mat<eT>& A     = tmp.M;
@@ -964,7 +964,7 @@ subview_each1_aux::operator_div
   const uword p_n_rows = p.n_rows;
   const uword p_n_cols = p.n_cols;
   
-  Mat<eT> out(p_n_rows, p_n_cols);
+  Mat<eT> out(p_n_rows, p_n_cols, arma_nozeros_indicator());
   
   const quasi_unwrap<T1> tmp(X.get_ref());
   const Mat<eT>& A     = tmp.M;

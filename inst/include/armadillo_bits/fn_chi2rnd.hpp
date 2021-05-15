@@ -89,7 +89,7 @@ chi2rnd(const typename obj_type::elem_type df, const uword n_rows, const uword n
     arma_debug_check( (n_rows != 1), "chi2rnd(): incompatible size" );
     }
   
-  obj_type out(n_rows, n_cols);
+  obj_type out(n_rows, n_cols, arma_nozeros_indicator());
   
   op_chi2rnd::fill_constant_df(out, df);
   

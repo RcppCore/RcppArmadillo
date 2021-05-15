@@ -41,7 +41,7 @@ op_vectorise_col::apply_direct(Mat<typename T1::elem_type>& out, const T1& expr)
   
   typedef typename T1::elem_type eT;
   
-  if(is_Mat<T1>::value || is_Mat<typename Proxy<T1>::stored_type>::value)
+  if(is_Mat<T1>::value || is_Mat<typename Proxy<T1>::stored_type>::value || (arma_config::openmp && Proxy<T1>::use_mp))
     {
     const unwrap<T1> U(expr);
     
@@ -365,7 +365,7 @@ op_vectorise_cube_col::apply_proxy(Mat<typename T1::elem_type>& out, const Proxy
   
   out.set_size(N, 1);
   
-  if(is_Cube<typename ProxyCube<T1>::stored_type>::value)
+  if(is_Cube<typename ProxyCube<T1>::stored_type>::value || (arma_config::openmp && ProxyCube<T1>::use_mp))
     {
     const unwrap_cube<typename ProxyCube<T1>::stored_type> tmp(P.Q);
     

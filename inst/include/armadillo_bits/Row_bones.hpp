@@ -31,11 +31,16 @@ class Row : public Mat<eT>
   static constexpr bool is_row  = true;
   static constexpr bool is_xvec = false;
   
-  inline          Row();
-  inline          Row(const Row<eT>& X);
+  inline Row();
+  inline Row(const Row<eT>& X);
+  
   inline explicit Row(const uword N);
   inline explicit Row(const uword in_rows, const uword in_cols);
   inline explicit Row(const SizeMat& s);
+  
+  template<bool do_zeros> inline explicit Row(const uword N,                            const arma_initmode_indicator<do_zeros>&);
+  template<bool do_zeros> inline explicit Row(const uword in_rows, const uword in_cols, const arma_initmode_indicator<do_zeros>&);
+  template<bool do_zeros> inline explicit Row(const SizeMat& s,                         const arma_initmode_indicator<do_zeros>&);
   
   template<typename fill_type> inline Row(const uword n_elem,                       const fill::fill_class<fill_type>& f);
   template<typename fill_type> inline Row(const uword in_rows, const uword in_cols, const fill::fill_class<fill_type>& f);

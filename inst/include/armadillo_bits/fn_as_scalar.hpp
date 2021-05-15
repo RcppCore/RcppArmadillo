@@ -53,16 +53,9 @@ as_scalar_redirect<N>::apply(const T1& X)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
-  
   const Proxy<T1> P(X);
   
-  if(P.get_n_elem() != 1)
-    {
-    arma_debug_check(true, "as_scalar(): expression must evaluate to exactly one element");
-    
-    return Datum<eT>::nan;
-    }
+  arma_debug_check( (P.get_n_elem() != 1), "as_scalar(): expression must evaluate to exactly one element" );
   
   return (Proxy<T1>::use_at) ? P.at(0,0) : P[0];
   }
@@ -152,12 +145,7 @@ as_scalar_redirect<3>::apply(const Glue< Glue<T1, T2, glue_times>, T3, glue_time
     {
     const Mat<eT> tmp(X);
     
-    if(tmp.n_elem != 1)
-      {
-      arma_debug_check(true, "as_scalar(): expression must evaluate to exactly one element");
-      
-      return Datum<eT>::nan;
-      }
+    arma_debug_check( (tmp.n_elem != 1), "as_scalar(): expression must evaluate to exactly one element" );
     
     return tmp[0];
     }
@@ -234,12 +222,7 @@ as_scalar_diag(const Base<typename T1::elem_type,T1>& X)
   const unwrap<T1>   tmp(X.get_ref());
   const Mat<eT>& A = tmp.M;
   
-  if(A.n_elem != 1)
-    {
-    arma_debug_check(true, "as_scalar(): expression must evaluate to exactly one element");
-    
-    return Datum<eT>::nan;
-    }
+  arma_debug_check( (A.n_elem != 1), "as_scalar(): expression must evaluate to exactly one element" );
   
   return A.mem[0];
   }
@@ -340,16 +323,9 @@ as_scalar(const Base<typename T1::elem_type,T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
-  
   const Proxy<T1> P(X.get_ref());
   
-  if(P.get_n_elem() != 1)
-    {
-    arma_debug_check(true, "as_scalar(): expression must evaluate to exactly one element");
-    
-    return Datum<eT>::nan;
-    }
+  arma_debug_check( (P.get_n_elem() != 1), "as_scalar(): expression must evaluate to exactly one element" );
   
   return (Proxy<T1>::use_at) ? P.at(0,0) : P[0];
   }
@@ -365,12 +341,7 @@ as_scalar(const Gen<T1, gen_randu>& X)
   
   typedef typename T1::elem_type eT;
   
-  if( (X.n_rows != 1) || (X.n_cols != 1) )
-    {
-    arma_debug_check(true, "as_scalar(): expression must evaluate to exactly one element");
-    
-    return Datum<eT>::nan;
-    }
+  arma_debug_check( ((X.n_rows != 1) || (X.n_cols != 1)), "as_scalar(): expression must evaluate to exactly one element" );
   
   return eT(arma_rng::randu<eT>());
   }
@@ -387,12 +358,7 @@ as_scalar(const Gen<T1, gen_randn>& X)
   
   typedef typename T1::elem_type eT;
   
-  if( (X.n_rows != 1) || (X.n_cols != 1) )
-    {
-    arma_debug_check(true, "as_scalar(): expression must evaluate to exactly one element");
-    
-    return Datum<eT>::nan;
-    }
+  arma_debug_check( ((X.n_rows != 1) || (X.n_cols != 1)), "as_scalar(): expression must evaluate to exactly one element" );
   
   return eT(arma_rng::randn<eT>());
   }
@@ -407,16 +373,9 @@ as_scalar(const BaseCube<typename T1::elem_type,T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
-  
   const ProxyCube<T1> P(X.get_ref());
   
-  if(P.get_n_elem() != 1)
-    {
-    arma_debug_check(true, "as_scalar(): expression must evaluate to exactly one element");
-    
-    return Datum<eT>::nan;
-    }
+  arma_debug_check( (P.get_n_elem() != 1), "as_scalar(): expression must evaluate to exactly one element" );
   
   return (ProxyCube<T1>::use_at) ? P.at(0,0,0) : P[0];
   }
@@ -445,12 +404,7 @@ as_scalar(const SpBase<typename T1::elem_type, T1>& X)
   const unwrap_spmat<T1>  tmp(X.get_ref());
   const SpMat<eT>& A    = tmp.M;
   
-  if(A.n_elem != 1)
-    {
-    arma_debug_check(true, "as_scalar(): expression must evaluate to exactly one element");
-    
-    return Datum<eT>::nan;
-    }
+  arma_debug_check( (A.n_elem != 1), "as_scalar(): expression must evaluate to exactly one element" );
   
   return A.at(0,0);
   }

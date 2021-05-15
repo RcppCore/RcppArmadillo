@@ -48,6 +48,13 @@ Col<eT>::Col(const uword in_n_elem)
   : Mat<eT>(arma_vec_indicator(), in_n_elem, 1, 1)
   {
   arma_extra_debug_sigprint();
+  
+  #if (!defined(ARMA_DONT_ZERO_INIT))
+    {
+    arma_extra_debug_print("Col::constructor: zeroing memory");
+    arrayops::fill_zeros(Mat<eT>::memptr(), Mat<eT>::n_elem);
+    }
+  #endif
   }
 
 
@@ -60,6 +67,13 @@ Col<eT>::Col(const uword in_n_rows, const uword in_n_cols)
   arma_extra_debug_sigprint();
   
   Mat<eT>::init_warm(in_n_rows, in_n_cols);
+  
+  #if (!defined(ARMA_DONT_ZERO_INIT))
+    {
+    arma_extra_debug_print("Col::constructor: zeroing memory");
+    arrayops::fill_zeros(Mat<eT>::memptr(), Mat<eT>::n_elem);
+    }
+  #endif
   }
 
 
@@ -72,6 +86,71 @@ Col<eT>::Col(const SizeMat& s)
   arma_extra_debug_sigprint();
   
   Mat<eT>::init_warm(s.n_rows, s.n_cols);
+  
+  #if (!defined(ARMA_DONT_ZERO_INIT))
+    {
+    arma_extra_debug_print("Col::constructor: zeroing memory");
+    arrayops::fill_zeros(Mat<eT>::memptr(), Mat<eT>::n_elem);
+    }
+  #endif
+  }
+
+
+
+//! internal use only
+template<typename eT>
+template<bool do_zeros>
+inline
+Col<eT>::Col(const uword in_n_elem, const arma_initmode_indicator<do_zeros>&)
+  : Mat<eT>(arma_vec_indicator(), in_n_elem, 1, 1)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(do_zeros)
+    {
+    arma_extra_debug_print("Col::constructor: zeroing memory");
+    arrayops::fill_zeros(Mat<eT>::memptr(), Mat<eT>::n_elem);
+    }
+  }
+
+
+
+//! internal use only
+template<typename eT>
+template<bool do_zeros>
+inline
+Col<eT>::Col(const uword in_n_rows, const uword in_n_cols, const arma_initmode_indicator<do_zeros>&)
+  : Mat<eT>(arma_vec_indicator(), 0, 0, 1)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>::init_warm(in_n_rows, in_n_cols);
+  
+  if(do_zeros)
+    {
+    arma_extra_debug_print("Col::constructor: zeroing memory");
+    arrayops::fill_zeros(Mat<eT>::memptr(), Mat<eT>::n_elem);
+    }
+  }
+
+
+
+//! internal use only
+template<typename eT>
+template<bool do_zeros>
+inline
+Col<eT>::Col(const SizeMat& s, const arma_initmode_indicator<do_zeros>&)
+  : Mat<eT>(arma_vec_indicator(), 0, 0, 1)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT>::init_warm(s.n_rows, s.n_cols);
+  
+  if(do_zeros)
+    {
+    arma_extra_debug_print("Col::constructor: zeroing memory");
+    arrayops::fill_zeros(Mat<eT>::memptr(), Mat<eT>::n_elem);
+    }
   }
 
 
@@ -909,7 +988,7 @@ Col<eT>::shed_rows(const uword in_row1, const uword in_row2)
   const uword n_keep_front = in_row1;
   const uword n_keep_back  = Mat<eT>::n_rows - (in_row2 + 1);
   
-  Col<eT> X(n_keep_front + n_keep_back);
+  Col<eT> X(n_keep_front + n_keep_back, arma_nozeros_indicator());
   
         eT* X_mem = X.memptr();
   const eT* t_mem = (*this).memptr();
@@ -962,7 +1041,7 @@ Col<eT>::insert_rows(const uword row_num, const uword N, const bool set_to_zero)
   
   if(N > 0)
     {
-    Col<eT> out(t_n_rows + N);
+    Col<eT> out(t_n_rows + N, arma_nozeros_indicator());
     
           eT* out_mem = out.memptr();
     const eT*   t_mem = (*this).memptr();
@@ -1110,6 +1189,16 @@ Col<eT>::fixed<fixed_n_elem>::fixed()
   : Col<eT>( arma_fixed_indicator(), fixed_n_elem, ((use_extra) ? mem_local_extra : Mat<eT>::mem_local) )
   {
   arma_extra_debug_sigprint_this(this);
+  
+  #if (!defined(ARMA_DONT_ZERO_INIT))
+    {
+    arma_extra_debug_print("Col::fixed::constructor: zeroing memory");
+    
+    eT* mem_use = (use_extra) ? &(mem_local_extra[0]) : &(Mat<eT>::mem_local[0]);
+    
+    arrayops::inplace_set_fixed<eT,fixed_n_elem>( mem_use, eT(0) );
+    }
+  #endif
   }
 
 
@@ -1152,11 +1241,11 @@ Col<eT>::fixed<fixed_n_elem>::fixed(const fill::fill_class<fill_type>&)
   {
   arma_extra_debug_sigprint_this(this);
   
-  if(is_same_type<fill_type, fill::fill_zeros>::yes)  (*this).zeros();
-  if(is_same_type<fill_type, fill::fill_ones >::yes)  (*this).ones();
-  if(is_same_type<fill_type, fill::fill_eye  >::yes)  (*this).eye();
-  if(is_same_type<fill_type, fill::fill_randu>::yes)  (*this).randu();
-  if(is_same_type<fill_type, fill::fill_randn>::yes)  (*this).randn();
+  if(is_same_type<fill_type, fill::fill_zeros>::yes)  { (*this).zeros(); }
+  if(is_same_type<fill_type, fill::fill_ones >::yes)  { (*this).ones();  }
+  if(is_same_type<fill_type, fill::fill_eye  >::yes)  { (*this).eye();   }
+  if(is_same_type<fill_type, fill::fill_randu>::yes)  { (*this).randu(); }
+  if(is_same_type<fill_type, fill::fill_randn>::yes)  { (*this).randn(); }
   }
 
 
