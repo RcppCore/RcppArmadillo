@@ -1,3 +1,12 @@
+2021-05-15  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.10.499.1.0 [github-only]
+        * inst/NEWS.Rd: Idem
+	* configure.ac: Idem
+	* configure: Idem
+
+	* inst/include/armadillo_bits/: Armadillo 10.5 RC1
+
 2021-04-23  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 0.10.4.1.0
