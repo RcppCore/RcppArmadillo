@@ -1,0 +1,6 @@
+coverage:
+  precision: 1
+
+ignore:
+  - "inst/include/armadillo"
+  - "inst/include/armadillo_bits"
