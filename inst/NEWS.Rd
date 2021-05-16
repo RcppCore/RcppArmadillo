@@ -3,6 +3,14 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.10.499.1.0 (2021-05-13)}{
+  \itemize{
+    \item Upgraded to Armadillo release 10.5 RC1
+    \item GitHub-only release
+  }
+  \item Added \code{codecov.yml} to exclude Armadillo from coverage analysis
+}
+
 \section{Changes in RcppArmadillo version 0.10.4.1.0 (2021-04-23)}{
   \itemize{
     \item Upgraded to Armadillo release 10.4.1 (Pressure Cooker)

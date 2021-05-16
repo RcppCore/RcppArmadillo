@@ -28,9 +28,9 @@ op_norm::vec_norm_1(const Proxy<T1>& P, const typename arma_not_cx<typename T1::
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  const bool have_direct_mem = (is_Mat<typename Proxy<T1>::stored_type>::value) || (is_subview_col<typename Proxy<T1>::stored_type>::value);
+  const bool use_direct_mem = (is_Mat<typename Proxy<T1>::stored_type>::value) || (is_subview_col<typename Proxy<T1>::stored_type>::value) || (arma_config::openmp && Proxy<T1>::use_mp);
   
-  if(have_direct_mem)
+  if(use_direct_mem)
     {
     const quasi_unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
     
@@ -311,9 +311,9 @@ op_norm::vec_norm_2(const Proxy<T1>& P, const typename arma_not_cx<typename T1::
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  const bool have_direct_mem = (is_Mat<typename Proxy<T1>::stored_type>::value) || (is_subview_col<typename Proxy<T1>::stored_type>::value);
+  const bool use_direct_mem = (is_Mat<typename Proxy<T1>::stored_type>::value) || (is_subview_col<typename Proxy<T1>::stored_type>::value) || (arma_config::openmp && Proxy<T1>::use_mp);
   
-  if(have_direct_mem)
+  if(use_direct_mem)
     {
     const quasi_unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
     

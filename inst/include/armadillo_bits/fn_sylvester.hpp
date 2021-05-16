@@ -69,6 +69,7 @@ sylvester
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
+  arma_ignore(junk);
   return syl(out, in_A, in_B, in_C);
   }
 
@@ -126,6 +127,7 @@ sylvester
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
+  arma_ignore(junk);
   return syl(in_A, in_B, in_C);
   }
 

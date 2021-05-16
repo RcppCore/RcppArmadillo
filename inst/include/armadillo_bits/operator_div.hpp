@@ -300,7 +300,7 @@ operator/
   
   arma_debug_assert_same_size(n_rows, n_cols, pb.get_n_rows(), pb.get_n_cols(), "element-wise division");
   
-  Mat<eT> result(n_rows, n_cols);
+  Mat<eT> result(n_rows, n_cols, arma_nozeros_indicator());
   
   for(uword col=0; col < n_cols; ++col)
   for(uword row=0; row < n_rows; ++row)

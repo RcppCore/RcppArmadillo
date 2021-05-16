@@ -112,7 +112,7 @@ op_trimat::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_trimat>& in)
     
     if(P.is_alias(out))
       {
-      Mat<eT> tmp(N,N);
+      Mat<eT> tmp(N, N, arma_nozeros_indicator());
       
       if(upper)
         {

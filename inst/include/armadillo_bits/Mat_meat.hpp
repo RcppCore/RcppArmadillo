@@ -24,7 +24,7 @@ Mat<eT>::~Mat()
   {
   arma_extra_debug_sigprint_this(this);
   
-  if(n_alloc > arma_config::mat_prealloc)
+  if(n_alloc > 0)
     {
     arma_extra_debug_print("Mat::destructor: releasing memory");
     memory::release( access::rw(mem) );
@@ -69,6 +69,13 @@ Mat<eT>::Mat(const uword in_n_rows, const uword in_n_cols)
   arma_extra_debug_sigprint_this(this);
   
   init_cold();
+  
+  #if (!defined(ARMA_DONT_ZERO_INIT))
+    {
+    arma_extra_debug_print("Mat::constructor: zeroing memory");
+    arrayops::fill_zeros(memptr(), n_elem);
+    }
+  #endif
   }
 
 
@@ -87,6 +94,65 @@ Mat<eT>::Mat(const SizeMat& s)
   arma_extra_debug_sigprint_this(this);
   
   init_cold();
+  
+  #if (!defined(ARMA_DONT_ZERO_INIT))
+    {
+    arma_extra_debug_print("Mat::constructor: zeroing memory");
+    arrayops::fill_zeros(memptr(), n_elem);
+    }
+  #endif
+  }
+
+
+
+//! internal use only
+template<typename eT>
+template<bool do_zeros>
+inline
+Mat<eT>::Mat(const uword in_n_rows, const uword in_n_cols, const arma_initmode_indicator<do_zeros>&)
+  : n_rows(in_n_rows)
+  , n_cols(in_n_cols)
+  , n_elem(in_n_rows*in_n_cols)
+  , n_alloc()
+  , vec_state(0)
+  , mem_state(0)
+  , mem()
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  init_cold();
+  
+  if(do_zeros)
+    {
+    arma_extra_debug_print("Mat::constructor: zeroing memory");
+    arrayops::fill_zeros(memptr(), n_elem);
+    }
+  }
+
+
+
+//! internal use only
+template<typename eT>
+template<bool do_zeros>
+inline
+Mat<eT>::Mat(const SizeMat& s, const arma_initmode_indicator<do_zeros>&)
+  : n_rows(s.n_rows)
+  , n_cols(s.n_cols)
+  , n_elem(s.n_rows*s.n_cols)
+  , n_alloc()
+  , vec_state(0)
+  , mem_state(0)
+  , mem()
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  init_cold();
+  
+  if(do_zeros)
+    {
+    arma_extra_debug_print("Mat::constructor: zeroing memory");
+    arrayops::fill_zeros(memptr(), n_elem);
+    }
   }
 
 
@@ -305,8 +371,8 @@ Mat<eT>::init_warm(uword in_n_rows, uword in_n_cols)
     
     if(new_n_elem > 0)  { arma_extra_debug_print("Mat::init(): using local memory"); }
     
-    access::rw(mem)       = (new_n_elem == 0) ? nullptr : mem_local;
-    access::rw(n_alloc)   = 0;
+    access::rw(mem)     = (new_n_elem == 0) ? nullptr : mem_local;
+    access::rw(n_alloc) = 0;
     }
   else  // condition: new_n_elem > arma_config::mat_prealloc
     {
@@ -316,11 +382,12 @@ Mat<eT>::init_warm(uword in_n_rows, uword in_n_cols)
         {
         arma_extra_debug_print("Mat::init(): releasing memory");
         memory::release( access::rw(mem) );
+        access::rw(n_alloc) = 0;   // in case memory::acquire() throws an exception
         }
       
       arma_extra_debug_print("Mat::init(): acquiring memory");
-      access::rw(mem)       = memory::acquire<eT>(new_n_elem);
-      access::rw(n_alloc)   = new_n_elem;
+      access::rw(mem)     = memory::acquire<eT>(new_n_elem);
+      access::rw(n_alloc) = new_n_elem;
       }
     else // condition: new_n_elem <= n_alloc
       {
@@ -1175,7 +1242,7 @@ Mat<eT>::steal_mem_col(Mat<eT>& x, const uword max_n_rows)
     }
   else
     {
-    Mat<eT> tmp(alt_n_rows, 1);
+    Mat<eT> tmp(alt_n_rows, 1, arma_nozeros_indicator());
     
     arrayops::copy( tmp.memptr(), x.memptr(), alt_n_rows );
     
@@ -4214,7 +4281,7 @@ Mat<eT>::shed_rows(const uword in_row1, const uword in_row2)
   const uword n_keep_front = in_row1;
   const uword n_keep_back  = n_rows - (in_row2 + 1);
   
-  Mat<eT> X(n_keep_front + n_keep_back, n_cols);
+  Mat<eT> X(n_keep_front + n_keep_back, n_cols, arma_nozeros_indicator());
   
   if(n_keep_front > 0)
     {
@@ -4248,7 +4315,7 @@ Mat<eT>::shed_cols(const uword in_col1, const uword in_col2)
   const uword n_keep_front = in_col1;
   const uword n_keep_back  = n_cols - (in_col2 + 1);
   
-  Mat<eT> X(n_rows, n_keep_front + n_keep_back);
+  Mat<eT> X(n_rows, n_keep_front + n_keep_back, arma_nozeros_indicator());
   
   if(n_keep_front > 0)
     {
@@ -4298,7 +4365,7 @@ Mat<eT>::shed_rows(const Base<uword, T1>& indices)
       }
     }
   
-  Col<uword> tmp3(n_rows);
+  Col<uword> tmp3(n_rows, arma_nozeros_indicator());
   
   uword* tmp3_mem = tmp3.memptr();
   
@@ -4368,7 +4435,7 @@ Mat<eT>::shed_cols(const Base<uword, T1>& indices)
       }
     }
   
-  Col<uword> tmp3(n_cols);
+  Col<uword> tmp3(n_cols, arma_nozeros_indicator());
   
   uword* tmp3_mem = tmp3.memptr();
   
@@ -4425,7 +4492,7 @@ Mat<eT>::insert_rows(const uword row_num, const uword N, const bool set_to_zero)
   
   if(N > 0)
     {
-    Mat<eT> out(t_n_rows + N, t_n_cols);
+    Mat<eT> out(t_n_rows + N, t_n_cols, arma_nozeros_indicator());
     
     if(A_n_rows > 0)
       {
@@ -4468,7 +4535,7 @@ Mat<eT>::insert_cols(const uword col_num, const uword N, const bool set_to_zero)
   
   if(N > 0)
     {
-    Mat<eT> out(t_n_rows, t_n_cols + N);
+    Mat<eT> out(t_n_rows, t_n_cols + N, arma_nozeros_indicator());
     
     if(A_n_cols > 0)
       {
@@ -4538,7 +4605,7 @@ Mat<eT>::insert_rows(const uword row_num, const Base<eT,T1>& X)
   
   if(C_n_rows > 0)
     {
-    Mat<eT> out( t_n_rows + C_n_rows, (std::max)(t_n_cols, C_n_cols) );
+    Mat<eT> out( t_n_rows + C_n_rows, (std::max)(t_n_cols, C_n_cols), arma_nozeros_indicator() );
     
     if(t_n_cols > 0)
       {
@@ -4611,7 +4678,7 @@ Mat<eT>::insert_cols(const uword col_num, const Base<eT,T1>& X)
   
   if(C_n_cols > 0)
     {
-    Mat<eT> out( (std::max)(t_n_rows, C_n_rows), t_n_cols + C_n_cols );
+    Mat<eT> out( (std::max)(t_n_rows, C_n_rows), t_n_cols + C_n_cols, arma_nozeros_indicator() );
     
     if(t_n_rows > 0)
       {
@@ -6797,6 +6864,30 @@ Mat<eT>::clean(const typename get_pod_type<eT>::result threshold)
 
 
 
+template<typename eT>
+inline
+const Mat<eT>&
+Mat<eT>::clamp(const eT min_val, const eT max_val)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(is_cx<eT>::no)
+    {
+    arma_debug_check( (access::tmp_real(min_val) > access::tmp_real(max_val)), "Mat::clamp(): min_val must be less than max_val" );
+    }
+  else
+    {
+    arma_debug_check( (access::tmp_real(min_val) > access::tmp_real(max_val)), "Mat::clamp(): real(min_val) must be less than real(max_val)" );
+    arma_debug_check( (access::tmp_imag(min_val) > access::tmp_imag(max_val)), "Mat::clamp(): imag(min_val) must be less than imag(max_val)" );
+    }
+  
+  arrayops::clamp(memptr(), n_elem, min_val, max_val);
+  
+  return *this;
+  }
+
+
+
 //! fill the matrix with the specified value
 template<typename eT>
 inline
@@ -6821,11 +6912,11 @@ Mat<eT>::fill(const fill::fill_class<fill_type>&)
   {
   arma_extra_debug_sigprint();
   
-  if(is_same_type<fill_type, fill::fill_zeros>::yes)  (*this).zeros();
-  if(is_same_type<fill_type, fill::fill_ones >::yes)  (*this).ones();
-  if(is_same_type<fill_type, fill::fill_eye  >::yes)  (*this).eye();
-  if(is_same_type<fill_type, fill::fill_randu>::yes)  (*this).randu();
-  if(is_same_type<fill_type, fill::fill_randn>::yes)  (*this).randn();
+  if(is_same_type<fill_type, fill::fill_zeros>::yes)  { (*this).zeros(); }
+  if(is_same_type<fill_type, fill::fill_ones >::yes)  { (*this).ones();  }
+  if(is_same_type<fill_type, fill::fill_eye  >::yes)  { (*this).eye();   }
+  if(is_same_type<fill_type, fill::fill_randu>::yes)  { (*this).randu(); }
+  if(is_same_type<fill_type, fill::fill_randn>::yes)  { (*this).randn(); }
   
   return *this;
   }
@@ -8982,6 +9073,16 @@ Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::fixed()
   : Mat<eT>( arma_fixed_indicator(), fixed_n_rows, fixed_n_cols, 0, ((use_extra) ? mem_local_extra : Mat<eT>::mem_local) )
   {
   arma_extra_debug_sigprint_this(this);
+  
+  #if (!defined(ARMA_DONT_ZERO_INIT))
+    {
+    arma_extra_debug_print("Mat::fixed::constructor: zeroing memory");
+    
+    eT* mem_use = (use_extra) ? &(mem_local_extra[0]) : &(mem_local[0]);
+    
+    arrayops::inplace_set_fixed<eT,fixed_n_elem>( mem_use, eT(0) );
+    }
+  #endif
   }
 
 
@@ -9011,11 +9112,11 @@ Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::fixed(const fill::fill_class<fill_ty
   {
   arma_extra_debug_sigprint_this(this);
   
-  if(is_same_type<fill_type, fill::fill_zeros>::yes)  (*this).zeros();
-  if(is_same_type<fill_type, fill::fill_ones >::yes)  (*this).ones();
-  if(is_same_type<fill_type, fill::fill_eye  >::yes)  (*this).eye();
-  if(is_same_type<fill_type, fill::fill_randu>::yes)  (*this).randu();
-  if(is_same_type<fill_type, fill::fill_randn>::yes)  (*this).randn();
+  if(is_same_type<fill_type, fill::fill_zeros>::yes)  { (*this).zeros(); }
+  if(is_same_type<fill_type, fill::fill_ones >::yes)  { (*this).ones();  }
+  if(is_same_type<fill_type, fill::fill_eye  >::yes)  { (*this).eye();   }
+  if(is_same_type<fill_type, fill::fill_randu>::yes)  { (*this).randu(); }
+  if(is_same_type<fill_type, fill::fill_randn>::yes)  { (*this).randn(); }
   }
 
 

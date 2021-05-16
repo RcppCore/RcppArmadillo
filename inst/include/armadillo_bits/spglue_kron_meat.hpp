@@ -109,8 +109,8 @@ spglue_kron::apply_noalias(SpMat<eT>& out, const SpMat<eT>& A, const SpMat<eT>& 
 //   const SpMat<eT>& A = UA.M;
 //   const SpMat<eT>& B = UB.M;
 //   
-//   umat    locs(2, A.n_nonzero * B.n_nonzero);
-//   Col<eT> vals(   A.n_nonzero * B.n_nonzero);
+//   umat    locs(2, A.n_nonzero * B.n_nonzero, arma_nozeros_indicator());
+//   Col<eT> vals(   A.n_nonzero * B.n_nonzero, arma_nozeros_indicator());
 //   
 //   uword* locs_mem = locs.memptr();
 //   eT*    vals_mem = vals.memptr();

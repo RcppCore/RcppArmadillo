@@ -374,8 +374,8 @@ gmm_full<eT>::generate() const
   const uword N_dims = means.n_rows;
   const uword N_gaus = means.n_cols;
   
-  Col<eT> out( (N_gaus > 0) ? N_dims : uword(0)              );
-  Col<eT> tmp( (N_gaus > 0) ? N_dims : uword(0), fill::randn );
+  Col<eT> out( (N_gaus > 0) ? N_dims : uword(0), arma_nozeros_indicator() );
+  Col<eT> tmp( (N_gaus > 0) ? N_dims : uword(0), fill::randn              );
   
   if(N_gaus > 0)
     {
@@ -410,8 +410,8 @@ gmm_full<eT>::generate(const uword N_vec) const
   const uword N_dims = means.n_rows;
   const uword N_gaus = means.n_cols;
   
-  Mat<eT> out( ( (N_gaus > 0) ? N_dims : uword(0) ), N_vec              );
-  Mat<eT> tmp( ( (N_gaus > 0) ? N_dims : uword(0) ), N_vec, fill::randn );
+  Mat<eT> out( ( (N_gaus > 0) ? N_dims : uword(0) ), N_vec, arma_nozeros_indicator() );
+  Mat<eT> tmp( ( (N_gaus > 0) ? N_dims : uword(0) ), N_vec, fill::randn              );
   
   if(N_gaus > 0)
     {
@@ -682,7 +682,7 @@ gmm_full<eT>::norm_hist(const Base<eT,T1>& expr, const gmm_dist_mode& dist_mode)
   
   if(acc == eT(0))  { acc = eT(1); }
   
-  Row<eT> out(hist_n_elem);
+  Row<eT> out(hist_n_elem, arma_nozeros_indicator());
   
   eT* out_mem = out.memptr();
   
@@ -1035,7 +1035,7 @@ gmm_full<eT>::internal_gen_boundaries(const uword N) const
   
   // get_cout_stream() << "gmm_full::internal_gen_boundaries(): n_threads: " << n_threads << '\n';
   
-  umat boundaries(2, n_threads);
+  umat boundaries(2, n_threads, arma_nozeros_indicator());
   
   if(N > 0)
     {
@@ -1143,7 +1143,7 @@ gmm_full<eT>::internal_vec_log_p(const Mat<eT>& X) const
   
   arma_debug_check( (X.n_rows != N_dims), "gmm_full::log_p(): incompatible dimensions" );
   
-  Row<eT> out(N_samples);
+  Row<eT> out(N_samples, arma_nozeros_indicator());
   
   if(N_samples > 0)
     {
@@ -1197,7 +1197,7 @@ gmm_full<eT>::internal_vec_log_p(const Mat<eT>& X, const uword gaus_id) const
   arma_debug_check( (X.n_rows != N_dims),       "gmm_full::log_p(): incompatible dimensions"            );
   arma_debug_check( (gaus_id  >= means.n_cols), "gmm_full::log_p(): specified gaussian is out of range" );
   
-  Row<eT> out(N_samples);
+  Row<eT> out(N_samples, arma_nozeros_indicator());
   
   if(N_samples > 0)
     {
@@ -1258,7 +1258,7 @@ gmm_full<eT>::internal_sum_log_p(const Mat<eT>& X) const
     
     const uword n_threads = boundaries.n_cols;
     
-    Col<eT> t_accs(n_threads, fill::zeros);
+    Col<eT> t_accs(n_threads, arma_zeros_indicator());
     
     #pragma omp parallel for schedule(static)
     for(uword t=0; t < n_threads; ++t)
@@ -1315,7 +1315,7 @@ gmm_full<eT>::internal_sum_log_p(const Mat<eT>& X, const uword gaus_id) const
     
     const uword n_threads = boundaries.n_cols;
     
-    Col<eT> t_accs(n_threads, fill::zeros);
+    Col<eT> t_accs(n_threads, arma_zeros_indicator());
     
     #pragma omp parallel for schedule(static)
     for(uword t=0; t < n_threads; ++t)
@@ -1938,10 +1938,10 @@ gmm_full<eT>::generate_initial_params(const Mat<eT>& X, const eT var_floor)
   // as the covariances are calculated via accumulators,
   // the means also need to be calculated via accumulators to ensure numerical consistency
   
-  Mat<eT> acc_means(N_dims, N_gaus, fill::zeros);
-  Mat<eT> acc_dcovs(N_dims, N_gaus, fill::zeros);
+  Mat<eT> acc_means(N_dims, N_gaus);
+  Mat<eT> acc_dcovs(N_dims, N_gaus);
   
-  Row<uword> acc_hefts(N_gaus, fill::zeros);
+  Row<uword> acc_hefts(N_gaus, arma_zeros_indicator());
   
   uword* acc_hefts_mem = acc_hefts.memptr();
   
@@ -2101,9 +2101,9 @@ gmm_full<eT>::km_iterate(const Mat<eT>& X, const uword max_iter, const bool verb
   
   const eT* mah_aux_mem = mah_aux.memptr();
   
-  Mat<eT>    acc_means(N_dims, N_gaus, fill::zeros);
-  Row<uword> acc_hefts(N_gaus, fill::zeros);
-  Row<uword> last_indx(N_gaus, fill::zeros);
+  Mat<eT>    acc_means(N_dims, N_gaus, arma_zeros_indicator());
+  Row<uword> acc_hefts(        N_gaus, arma_zeros_indicator());
+  Row<uword> last_indx(        N_gaus, arma_zeros_indicator());
   
   Mat<eT> new_means = means;
   Mat<eT> old_means = means;
@@ -2341,7 +2341,7 @@ gmm_full<eT>::em_iterate(const Mat<eT>& X, const uword max_iter, const eT var_fl
   field< Col<eT> > t_acc_norm_lhoods(n_threads);
   field< Col<eT> > t_gaus_log_lhoods(n_threads);
   
-  Col<eT>          t_progress_log_lhood(n_threads);
+  Col<eT>          t_progress_log_lhood(n_threads, arma_nozeros_indicator());
   
   for(uword t=0; t<n_threads; t++)
     {
@@ -2476,7 +2476,7 @@ gmm_full<eT>::em_update_params
   
   eT* hefts_mem = access::rw(hefts).memptr();
   
-  Mat<eT> mean_outer(N_dims, N_dims);
+  Mat<eT> mean_outer(N_dims, N_dims, arma_nozeros_indicator());
   
   
   //// update each component without sanity checking

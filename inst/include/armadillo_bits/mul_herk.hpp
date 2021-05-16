@@ -345,7 +345,7 @@ class herk
           typedef typename std::complex<T> eT;
           
           // use a temporary matrix, as we can't assume that matrix C is already symmetric
-          Mat<eT> D(C.n_rows, C.n_cols);
+          Mat<eT> D(C.n_rows, C.n_cols, arma_nozeros_indicator());
           
           herk<do_trans_A, use_alpha, false>::apply_blas_type(D,A,alpha);
           
@@ -379,7 +379,7 @@ class herk
           typedef typename std::complex<T> eT;
           
           // use a temporary matrix, as we can't assume that matrix C is already symmetric
-          Mat<eT> D(C.n_rows, C.n_cols);
+          Mat<eT> D(C.n_rows, C.n_cols, arma_nozeros_indicator());
           
           herk<do_trans_A, use_alpha, false>::apply_blas_type(D,A,alpha);
           

@@ -1026,6 +1026,36 @@ subview<eT>::clean(const typename get_pod_type<eT>::result threshold)
 template<typename eT>
 inline
 void
+subview<eT>::clamp(const eT min_val, const eT max_val)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(is_cx<eT>::no)
+    {
+    arma_debug_check( (access::tmp_real(min_val) > access::tmp_real(max_val)), "subview::clamp(): min_val must be less than max_val" );
+    }
+  else
+    {
+    arma_debug_check( (access::tmp_real(min_val) > access::tmp_real(max_val)), "subview::clamp(): real(min_val) must be less than real(max_val)" );
+    arma_debug_check( (access::tmp_imag(min_val) > access::tmp_imag(max_val)), "subview::clamp(): imag(min_val) must be less than imag(max_val)" );
+    }
+  
+  subview<eT>& s = *this;
+  
+  const uword s_n_cols = s.n_cols;
+  const uword s_n_rows = s.n_rows;
+  
+  for(uword ucol=0; ucol < s_n_cols; ++ucol)
+    {
+    arrayops::clamp( s.colptr(ucol), s_n_rows, min_val, max_val );
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
 subview<eT>::fill(const eT val)
   {
   arma_extra_debug_sigprint();
@@ -1128,10 +1158,13 @@ subview<eT>::randu()
   
   if(local_n_rows == 1)
     {
-    for(uword ii=0; ii < local_n_cols; ++ii)
-      {
-      at(0,ii) = eT(arma_rng::randu<eT>());
-      }
+    podarray<eT> tmp(local_n_cols);
+    
+    eT* tmp_mem = tmp.memptr();
+    
+    arma_rng::randu<eT>::fill( tmp_mem, local_n_cols );
+    
+    for(uword ii=0; ii < local_n_cols; ++ii)  { at(0,ii) = tmp_mem[ii]; }
     }
   else
     {
@@ -1156,10 +1189,13 @@ subview<eT>::randn()
   
   if(local_n_rows == 1)
     {
-    for(uword ii=0; ii < local_n_cols; ++ii)
-      {
-      at(0,ii) = eT(arma_rng::randn<eT>());
-      }
+    podarray<eT> tmp(local_n_cols);
+    
+    eT* tmp_mem = tmp.memptr();
+    
+    arma_rng::randn<eT>::fill( tmp_mem, local_n_cols );
+    
+    for(uword ii=0; ii < local_n_cols; ++ii)  { at(0,ii) = tmp_mem[ii]; }
     }
   else
     {

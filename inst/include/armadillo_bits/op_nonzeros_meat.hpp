@@ -31,7 +31,7 @@ op_nonzeros::apply_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& P)
   
   const uword N_max = P.get_n_elem();
   
-  Mat<eT> tmp(N_max, 1);
+  Mat<eT> tmp(N_max, 1, arma_nozeros_indicator());
   
   eT* tmp_mem = tmp.memptr();
   

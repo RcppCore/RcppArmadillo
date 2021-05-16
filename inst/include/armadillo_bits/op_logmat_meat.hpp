@@ -174,7 +174,7 @@ op_logmat::apply_direct(Mat< std::complex<typename T1::elem_type> >& out, const 
     }
   
   
-  Mat<out_T> S(A.n_rows, A.n_cols);
+  Mat<out_T> S(A.n_rows, A.n_cols, arma_nozeros_indicator());
   
   const  in_T* Amem = A.memptr();
         out_T* Smem = S.memptr();
@@ -433,7 +433,7 @@ op_logmat_cx::helper(Mat<eT>& A, const uword m)
   
   const vec indices = regspace<vec>(1,m-1);
   
-  mat tmp(m,m,fill::zeros);
+  mat tmp(m, m, arma_zeros_indicator());
   
   tmp.diag(-1) = indices / sqrt(square(2.0*indices) - 1.0);
   tmp.diag(+1) = indices / sqrt(square(2.0*indices) - 1.0);
@@ -450,7 +450,7 @@ op_logmat_cx::helper(Mat<eT>& A, const uword m)
   
   const uword N = A.n_rows;
   
-  Mat<eT> B(N,N,fill::zeros);
+  Mat<eT> B(N, N, arma_zeros_indicator());
   
   Mat<eT> X;
   

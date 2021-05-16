@@ -29,7 +29,7 @@ SymEigsSolver<eT, SelectionRule, OpType>::factorise_from(uword from_k, uword to_
 
   fac_f = fk;
 
-  Col<eT> w(dim_n);
+  Col<eT> w(dim_n, arma_zeros_indicator());
   // Norm of f
   eT beta = norm(fac_f);
   // Used to test beta~=0
@@ -138,7 +138,7 @@ SymEigsSolver<eT, SelectionRule, OpType>::restart(uword k)
   if(k >= ncv) { return; }
 
   TridiagQR<eT> decomp;
-  Mat<eT> Q = eye< Mat<eT> >(ncv, ncv);
+  Mat<eT> Q(ncv, ncv, fill::eye);
 
   for(uword i = k; i < ncv; i++)
     {
@@ -159,22 +159,27 @@ SymEigsSolver<eT, SelectionRule, OpType>::restart(uword k)
   // V -> VQ, only need to update the first k+1 columns
   // Q has some elements being zero
   // The first (ncv - k + i) elements of the i-th column of Q are non-zero
-  Mat<eT> Vs(dim_n, k + 1);
+  Mat<eT> Vs(dim_n, k + 1, arma_nozeros_indicator());
   uword nnz;
   for(uword i = 0; i < k; i++)
     {
     nnz = ncv - k + i + 1;
     Mat<eT> V(fac_V.memptr(), dim_n, nnz, false);
     Col<eT> q(Q.colptr(i), nnz, false);
-    Vs.col(i) = V * q;
+    // OLD CODE:
+    // Vs.col(i) = V * q;
+    // NEW CODE:
+    Col<eT> v(Vs.colptr(i), dim_n, false, true);
+    v = V * q;
     }
+  
   Vs.col(k) = fac_V * Q.col(k);
   fac_V.head_cols(k + 1) = Vs;
 
   Col<eT> fk = fac_f * Q(ncv - 1, k - 1) + fac_V.col(k) * fac_H(k, k - 1);
   factorise_from(k, ncv, fk);
   retrieve_ritzpair();
-}
+  }
 
 
 
@@ -189,7 +194,7 @@ SymEigsSolver<eT, SelectionRule, OpType>::num_converged(eT tol)
   const eT f_norm = norm(fac_f);
   for(uword i = 0; i < nev; i++)
     {
-    eT thresh = tol * std::max(eps23, std::abs(ritz_val(i)));
+    eT thresh = tol * (std::max)(eps23, std::abs(ritz_val(i)));
     eT resid = std::abs(ritz_est(i)) * f_norm;
     ritz_conv[i] = (resid < thresh);
     }
@@ -213,7 +218,7 @@ SymEigsSolver<eT, SelectionRule, OpType>::nev_adjusted(uword nconv)
     }
 
   // Adjust nev_new, according to dsaup2.f line 677~684 in ARPACK
-  nev_new += std::min(nconv, (ncv - nev_new) / 2);
+  nev_new += (std::min)(nconv, (ncv - nev_new) / 2);
   if(nev_new >= ncv) { nev_new = ncv - 1; }
   if(nev_new == 1 && ncv >= 6)
     {
@@ -291,8 +296,8 @@ SymEigsSolver<eT, SelectionRule, OpType>::sort_ritzpair()
   
   std::vector<uword> ind = sorting.index();
   
-  Col<eT>           new_ritz_val(ncv);
-  Mat<eT>           new_ritz_vec(ncv, nev);
+  Col<eT>           new_ritz_val(ncv,      arma_zeros_indicator()  );
+  Mat<eT>           new_ritz_vec(ncv, nev, arma_nozeros_indicator());
   std::vector<bool> new_ritz_conv(nev);
   
   for(uword i = 0; i < nev; i++)
@@ -356,7 +361,7 @@ SymEigsSolver<eT, SelectionRule, OpType>::init(eT* init_resid)
   arma_check( (rnorm < near0), "newarp::SymEigsSolver::init(): initial residual vector cannot be zero" );
   v = r / rnorm;
 
-  Col<eT> w(dim_n);
+  Col<eT> w(dim_n, arma_zeros_indicator());
   op.perform_op(v.memptr(), w.memptr());
   nmatop++;
 
@@ -412,7 +417,7 @@ SymEigsSolver<eT, SelectionRule, OpType>::compute(uword maxit, eT tol)
 
   niter = i + 1;
 
-  return std::min(nev, nconv);
+  return (std::min)(nev, nconv);
   }
 
 
@@ -425,7 +430,7 @@ SymEigsSolver<eT, SelectionRule, OpType>::eigenvalues()
   arma_extra_debug_sigprint();
   
   uword nconv = std::count(ritz_conv.begin(), ritz_conv.end(), true);
-  Col<eT> res(nconv);
+  Col<eT> res(nconv, arma_zeros_indicator());
   
   if(nconv > 0)
     {
@@ -453,12 +458,12 @@ SymEigsSolver<eT, SelectionRule, OpType>::eigenvectors(uword nvec)
   arma_extra_debug_sigprint();
   
   uword nconv = std::count(ritz_conv.begin(), ritz_conv.end(), true);
-  nvec = std::min(nvec, nconv);
+  nvec = (std::min)(nvec, nconv);
   Mat<eT> res(dim_n, nvec);
   
   if(nvec > 0)
     {
-    Mat<eT> ritz_vec_conv(ncv, nvec);
+    Mat<eT> ritz_vec_conv(ncv, nvec, arma_zeros_indicator());
     
     uword j = 0;
     for(uword i = 0; i < nev && j < nvec; i++)

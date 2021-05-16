@@ -40,7 +40,7 @@ randi(const uword n_rows, const uword n_cols, const distr_param& param = distr_p
     arma_debug_check( (n_rows != 1), "randi(): incompatible size" );
     }
   
-  obj_type out(n_rows, n_cols);
+  obj_type out(n_rows, n_cols, arma_nozeros_indicator());
   
   int a;
   int b;
@@ -196,7 +196,7 @@ randi(const uword n_rows, const uword n_cols, const uword n_slices, const distr_
   
   typedef typename cube_type::elem_type eT;
   
-  cube_type out(n_rows, n_cols, n_slices);
+  cube_type out(n_rows, n_cols, n_slices, arma_nozeros_indicator());
   
   int a;
   int b;

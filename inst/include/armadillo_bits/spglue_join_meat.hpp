@@ -250,8 +250,8 @@ spglue_join_rows::apply_noalias(SpMat<eT>& out, const SpMat<eT>& A, const SpMat<
   
   // // OLD METHOD
   // 
-  // umat    locs(2, C_n_nz);
-  // Col<eT> vals(   C_n_nz);
+  // umat    locs(2, C_n_nz, arma_nozeros_indicator());
+  // Col<eT> vals(   C_n_nz, arma_nozeros_indicator());
   // 
   // uword* locs_mem = locs.memptr();
   // eT*    vals_mem = vals.memptr();

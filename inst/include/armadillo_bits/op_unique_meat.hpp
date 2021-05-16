@@ -56,7 +56,7 @@ op_unique::apply_helper(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, co
     return true;
     }
   
-  Mat<eT> X(n_elem,1);
+  Mat<eT> X(n_elem, 1, arma_nozeros_indicator());
   
   eT* X_mem = X.memptr();
   

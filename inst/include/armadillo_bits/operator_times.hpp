@@ -178,7 +178,7 @@ operator*
   
   arma_debug_assert_mul_size(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "matrix multiplication");
   
-  Mat<out_eT> out(A.n_rows, B.n_cols, fill::zeros);
+  Mat<out_eT> out(A.n_rows, B.n_cols, arma_zeros_indicator());
   
   const uword A_length = (std::min)(A.n_rows, A.n_cols);
   const uword B_length = (std::min)(B.n_rows, B.n_cols);

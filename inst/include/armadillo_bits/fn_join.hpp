@@ -258,7 +258,7 @@ join_slices(const Base<typename T1::elem_type,T1>& A, const Base<typename T1::el
   
   arma_debug_assert_same_size(UA.M.n_rows, UA.M.n_cols, UB.M.n_rows, UB.M.n_cols, "join_slices(): incompatible dimensions");
   
-  Cube<eT> out(UA.M.n_rows, UA.M.n_cols, 2);
+  Cube<eT> out(UA.M.n_rows, UA.M.n_cols, 2, arma_nozeros_indicator());
   
   arrayops::copy(out.slice_memptr(0), UA.M.memptr(), UA.M.n_elem);
   arrayops::copy(out.slice_memptr(1), UB.M.memptr(), UB.M.n_elem);

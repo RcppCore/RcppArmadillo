@@ -198,8 +198,8 @@ interp1_helper(const Mat<eT>& X, const Mat<eT>& Y, const Mat<eT>& XI, Mat<eT>& Y
   
   arma_debug_check( (N_subset < 2), "interp1(): X must have at least two unique elements" );
   
-  Mat<eT> X_sanitised(N_subset,1);
-  Mat<eT> Y_sanitised(N_subset,1);
+  Mat<eT> X_sanitised(N_subset, 1, arma_nozeros_indicator());
+  Mat<eT> Y_sanitised(N_subset, 1, arma_nozeros_indicator());
   
   eT* X_sanitised_mem = X_sanitised.memptr();
   eT* Y_sanitised_mem = Y_sanitised.memptr();

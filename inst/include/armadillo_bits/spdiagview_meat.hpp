@@ -186,6 +186,28 @@ spdiagview<eT>::operator= (const Base<eT,T1>& o)
   const uword d_row_offset = d.row_offset;
   const uword d_col_offset = d.col_offset;
   
+  if(is_same_type< T1, Gen<Col<eT>, gen_zeros> >::yes)
+    {
+    const Proxy<T1> P(o.get_ref());
+    
+    arma_debug_check( (d_n_elem != P.get_n_elem()), "spdiagview: given object has incompatible size" );
+    
+    (*this).zeros();
+    
+    return;
+    }
+  
+  if(is_same_type< T1, Gen<Col<eT>, gen_ones> >::yes)
+    {
+    const Proxy<T1> P(o.get_ref());
+    
+    arma_debug_check( (d_n_elem != P.get_n_elem()), "spdiagview: given object has incompatible size" );
+    
+    (*this).ones();
+    
+    return;
+    }
+  
   const quasi_unwrap<T1> U(o.get_ref());
   const Mat<eT>& x     = U.M;
   
@@ -215,6 +237,8 @@ spdiagview<eT>::operator= (const Base<eT,T1>& o)
       }
     
     if(has_zero)  { tmp1.remove_zeros(); }
+    
+    if(tmp1.n_nonzero == 0)  { (*this).zeros(); return; }
     
     SpMat<eT> tmp2;
     
@@ -683,7 +707,7 @@ spdiagview<eT>::extract(SpMat<eT>& out, const spdiagview<eT>& d)
   const uword d_row_offset = d.row_offset;
   const uword d_col_offset = d.col_offset;
   
-  Col<eT> cache(d_n_elem);
+  Col<eT> cache(d_n_elem, arma_nozeros_indicator());
   eT* cache_mem = cache.memptr();
   
   uword d_n_nonzero = 0;
@@ -849,6 +873,61 @@ spdiagview<eT>::operator()(const uword row, const uword col) const
   arma_debug_check_bounds( ((row >= n_elem) || (col > 0)), "spdiagview::operator(): out of bounds" );
   
   return m.at(row+row_offset, row+col_offset);
+  }
+
+
+
+template<typename eT>
+inline
+void
+spdiagview<eT>::replace(const eT old_val, const eT new_val)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(old_val == eT(0))
+    {
+    arma_debug_warn_level(1, "spdiagview::replace(): replacement not done, as old_val = 0");
+    }
+  else
+    {
+    Mat<eT> tmp(*this);
+    
+    tmp.replace(old_val, new_val);
+    
+    (*this).operator=(tmp);
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
+spdiagview<eT>::clean(const typename get_pod_type<eT>::result threshold)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT> tmp(*this);
+  
+  tmp.clean(threshold);
+  
+  (*this).operator=(tmp);
+  }
+
+
+
+template<typename eT>
+inline
+void
+spdiagview<eT>::clamp(const eT min_val, const eT max_val)
+  {
+  arma_extra_debug_sigprint();
+  
+  SpMat<eT> tmp(*this);
+  
+  tmp.clamp(min_val, max_val);
+  
+  (*this).operator=(tmp);
   }
 
 

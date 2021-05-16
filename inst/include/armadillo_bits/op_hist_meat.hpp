@@ -67,7 +67,7 @@ op_hist::apply_noalias(Mat<uword>& out, const Mat<eT>& A, const uword n_bins, co
   if(arma_isfinite(min_val) == false) { min_val = priv::most_neg<eT>(); }
   if(arma_isfinite(max_val) == false) { max_val = priv::most_pos<eT>(); }
   
-  Col<eT> c(n_bins);
+  Col<eT> c(n_bins, arma_nozeros_indicator());
   eT* c_mem = c.memptr();
   
   for(uword ii=0; ii < n_bins; ++ii)

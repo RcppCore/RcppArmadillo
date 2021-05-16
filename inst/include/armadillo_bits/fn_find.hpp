@@ -162,7 +162,7 @@ find(const SpBase<typename T1::elem_type,T1>& X, const uword k = 0)
   const uword n_rows = P.get_n_rows();
   const uword n_nz   = P.get_n_nonzero();
   
-  Mat<uword> tmp(n_nz,1);
+  Mat<uword> tmp(n_nz, 1, arma_nozeros_indicator());
   
   uword* tmp_mem = tmp.memptr();
   
@@ -308,7 +308,7 @@ find_finite(const SpBase<typename T1::elem_type,T1>& X)
   const uword n_rows = P.get_n_rows();
   const uword n_nz   = P.get_n_nonzero();
   
-  Mat<uword> tmp(n_nz,1);
+  Mat<uword> tmp(n_nz, 1, arma_nozeros_indicator());
   
   uword* tmp_mem = tmp.memptr();
   
@@ -352,7 +352,7 @@ find_nonfinite(const SpBase<typename T1::elem_type,T1>& X)
   const uword n_rows = P.get_n_rows();
   const uword n_nz   = P.get_n_nonzero();
   
-  Mat<uword> tmp(n_nz,1);
+  Mat<uword> tmp(n_nz, 1, arma_nozeros_indicator());
   
   uword* tmp_mem = tmp.memptr();
   

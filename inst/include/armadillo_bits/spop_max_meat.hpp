@@ -71,8 +71,8 @@ spop_max::apply_proxy
   
   if(dim == 0) // find the maximum in each column
     {
-    Row<eT> value(p_n_cols, fill::zeros);
-    urowvec count(p_n_cols, fill::zeros);
+    Row<eT> value(p_n_cols, arma_zeros_indicator());
+    urowvec count(p_n_cols, arma_zeros_indicator());
     
     while(it != it_end)
       {
@@ -93,8 +93,8 @@ spop_max::apply_proxy
   else
   if(dim == 1)  // find the maximum in each row
     {
-    Col<eT> value(p_n_rows, fill::zeros);
-    ucolvec count(p_n_rows, fill::zeros);
+    Col<eT> value(p_n_rows, arma_zeros_indicator());
+    ucolvec count(p_n_rows, arma_zeros_indicator());
     
     while(it != it_end)
       {
@@ -150,7 +150,7 @@ spop_max::vector_max
       }
     else
       {
-      return std::max(eT(0), op_max::direct_max(p.get_values(), p.get_n_nonzero()));
+      return (std::max)(eT(0), op_max::direct_max(p.get_values(), p.get_n_nonzero()));
       }
     }
   else
@@ -175,7 +175,7 @@ spop_max::vector_max
       }
     else
       {
-      return std::max(eT(0), result);
+      return (std::max)(eT(0), result);
       }
     }
   }
@@ -234,7 +234,7 @@ spop_max::max(const SpBase<typename T1::elem_type, T1>& X)
     }
   else
     {
-    return std::max(eT(0), max_val);
+    return (std::max)(eT(0), max_val);
     }
   }
 
@@ -298,7 +298,7 @@ spop_max::max_with_index(const SpProxy<T1>& P, uword& index_of_max_val)
   
   if(n_elem != n_nonzero)
     {
-    max_val = std::max(eT(0), max_val);
+    max_val = (std::max)(eT(0), max_val);
     
     // If the max_val is a nonzero element, we need its actual position in the matrix.
     if(max_val == eT(0))
@@ -373,8 +373,8 @@ spop_max::apply_proxy
   
   if(dim == 0) // find the maximum in each column
     {
-    Row<eT> rawval(p_n_cols, fill::zeros);
-    Row< T> absval(p_n_cols, fill::zeros);
+    Row<eT> rawval(p_n_cols, arma_zeros_indicator());
+    Row< T> absval(p_n_cols, arma_zeros_indicator());
     
     while(it != it_end)
       {
@@ -397,8 +397,8 @@ spop_max::apply_proxy
   else
   if(dim == 1)  // find the maximum in each row
     {
-    Col<eT> rawval(p_n_rows, fill::zeros);
-    Col< T> absval(p_n_rows, fill::zeros);
+    Col<eT> rawval(p_n_rows, arma_zeros_indicator());
+    Col< T> absval(p_n_rows, arma_zeros_indicator());
     
     while(it != it_end)
       {
@@ -631,7 +631,7 @@ spop_max::max_with_index(const SpProxy<T1>& P, uword& index_of_max_val)
   
   if(n_elem != n_nonzero)
     {
-    max_val = std::max(T(0), max_val);
+    max_val = (std::max)(T(0), max_val);
 
     // If the max_val is a nonzero element, we need its actual position in the matrix.
     if(max_val == T(0))

@@ -26,30 +26,33 @@ class arrayops
   arma_inline static void
   copy(eT* dest, const eT* src, const uword n_elem);
   
-  
   template<typename eT>
   arma_cold inline static void
   copy_small(eT* dest, const eT* src, const uword n_elem);
-  
   
   template<typename eT>
   inline static void
   fill_zeros(eT* dest, const uword n_elem);
   
-  
   template<typename eT>
   arma_hot inline static void
   replace(eT* mem, const uword n_elem, const eT old_val, const eT new_val);
-  
   
   template<typename eT>
   arma_hot inline static void
   clean(eT* mem, const uword n_elem, const eT abs_limit, const typename arma_not_cx<eT>::result* junk = nullptr);
   
-  
   template<typename T>
   arma_hot inline static void
   clean(std::complex<T>* mem, const uword n_elem, const T abs_limit);
+  
+  template<typename eT>
+  inline static void
+  clamp(eT* mem, const uword n_elem, const eT min_val, const eT max_val, const typename arma_not_cx<eT>::result* junk = nullptr);
+  
+  template<typename T>
+  inline static void
+  clamp(std::complex<T>* mem, const uword n_elem, const std::complex<T>& min_val, const std::complex<T>& max_val);
   
   
   // 

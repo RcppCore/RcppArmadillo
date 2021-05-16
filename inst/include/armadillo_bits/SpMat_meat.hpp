@@ -343,8 +343,8 @@ SpMat<eT>::SpMat(const Base<uword,T1>& locations_expr, const Base<eT,T2>& vals_e
   
   if(N_new != N_old)
     {
-    Col<eT>    filtered_vals(N_new);
-    Mat<uword> filtered_locs(2, N_new);
+    Col<eT>    filtered_vals(   N_new, arma_nozeros_indicator());
+    Mat<uword> filtered_locs(2, N_new, arma_nozeros_indicator());
     
     uword index = 0;
     for(uword i = 0; i < N_old; ++i)
@@ -413,8 +413,8 @@ SpMat<eT>::SpMat(const Base<uword,T1>& locations_expr, const Base<eT,T2>& vals_e
     
     if(N_new != N_old)
       {
-      Col<eT>    filtered_vals(N_new);
-      Mat<uword> filtered_locs(2, N_new);
+      Col<eT>    filtered_vals(   N_new, arma_nozeros_indicator());
+      Mat<uword> filtered_locs(2, N_new, arma_nozeros_indicator());
       
       uword index = 0;
       for(uword i = 0; i < N_old; ++i)
@@ -482,8 +482,8 @@ SpMat<eT>::SpMat(const bool add_values, const Base<uword,T1>& locations_expr, co
     
     if(N_new != N_old)
       {
-      Col<eT>    filtered_vals(N_new);
-      Mat<uword> filtered_locs(2, N_new);
+      Col<eT>    filtered_vals(   N_new, arma_nozeros_indicator());
+      Mat<uword> filtered_locs(2, N_new, arma_nozeros_indicator());
       
       uword index = 0;
       for(uword i = 0; i < N_old; ++i)
@@ -4118,6 +4118,37 @@ SpMat<eT>::clean(const typename get_pod_type<eT>::result threshold)
 template<typename eT>
 inline
 const SpMat<eT>&
+SpMat<eT>::clamp(const eT min_val, const eT max_val)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(is_cx<eT>::no)
+    {
+    arma_debug_check( (access::tmp_real(min_val) > access::tmp_real(max_val)), "SpMat::clamp(): min_val must be less than max_val" );
+    }
+  else
+    {
+    arma_debug_check( (access::tmp_real(min_val) > access::tmp_real(max_val)), "SpMat::clamp(): real(min_val) must be less than real(max_val)" );
+    arma_debug_check( (access::tmp_imag(min_val) > access::tmp_imag(max_val)), "SpMat::clamp(): imag(min_val) must be less than imag(max_val)" );
+    }
+  
+  if(n_nonzero == 0)  { return *this; }
+  
+  sync_csc();
+  invalidate_cache();
+  
+  arrayops::clamp(access::rwp(values), n_nonzero, min_val, max_val);
+  
+  if( (min_val == eT(0)) || (max_val == eT(0)) )  { remove_zeros(); }
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+inline
+const SpMat<eT>&
 SpMat<eT>::zeros()
   {
   arma_extra_debug_sigprint();
@@ -5365,7 +5396,7 @@ SpMat<eT>::init_batch_add(const Mat<uword>& locs, const Mat<eT>& vals, const boo
     if(actually_sorted == false)
       {
       // This may not be the fastest possible implementation but it maximizes code reuse.
-      Col<uword> abslocs(locs.n_cols);
+      Col<uword> abslocs(locs.n_cols, arma_nozeros_indicator());
       
       for(uword i = 0; i < locs.n_cols; ++i)
         {

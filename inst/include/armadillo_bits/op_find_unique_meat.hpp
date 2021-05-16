@@ -33,7 +33,7 @@ op_find_unique::apply_helper(Mat<uword>& out, const Proxy<T1>& P, const bool asc
   if(n_elem == 0)  { out.set_size(0,1);             return true; }
   if(n_elem == 1)  { out.set_size(1,1); out[0] = 0; return true; }
   
-  uvec indices(n_elem);
+  uvec indices(n_elem, arma_nozeros_indicator());
   
   std::vector< arma_find_unique_packet<eT> > packet_vec(n_elem);
   

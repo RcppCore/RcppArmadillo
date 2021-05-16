@@ -88,6 +88,38 @@ size(const Col<eT>& X)
 
 
 
+arma_warn_unused
+inline
+const SizeMat
+size(const arma::span& row_span, const arma::span& col_span)
+  {
+  arma_extra_debug_sigprint();
+  
+  uword n_rows = 0;
+  uword n_cols = 0;
+  
+  if(row_span.whole || col_span.whole)
+    {
+    arma_debug_check(true, "size(): span::all not supported");
+    }
+  else
+    {
+    if((row_span.a > row_span.b) || (col_span.a > col_span.b))
+      {
+      arma_debug_check_bounds(true, "size(): span indices incorrectly used");
+      }
+    else
+      {
+      n_rows = row_span.b - row_span.a + 1;
+      n_cols = col_span.b - col_span.a + 1;
+      }
+    }
+  
+  return SizeMat(n_rows, n_cols);
+  }
+
+
+
 template<typename T1>
 arma_warn_unused
 inline
@@ -155,6 +187,40 @@ size(const BaseCube<typename T1::elem_type, T1>& X, const uword dim)
   const ProxyCube<T1> P(X.get_ref());
   
   return SizeCube( P.get_n_rows(), P.get_n_cols(), P.get_n_slices() )( dim );
+  }
+
+
+
+arma_warn_unused
+inline
+const SizeCube
+size(const arma::span& row_span, const arma::span& col_span, const arma::span& slice_span)
+  {
+  arma_extra_debug_sigprint();
+  
+  uword n_rows   = 0;
+  uword n_cols   = 0;
+  uword n_slices = 0;
+  
+  if(row_span.whole || col_span.whole || slice_span.whole)
+    {
+    arma_debug_check(true, "size(): span::all not supported");
+    }
+  else
+    {
+    if((row_span.a > row_span.b) || (col_span.a > col_span.b) || (slice_span.a > slice_span.b))
+      {
+      arma_debug_check_bounds(true, "size(): span indices incorrectly used");
+      }
+    else
+      {
+      n_rows   =   row_span.b -   row_span.a + 1;
+      n_cols   =   col_span.b -   col_span.a + 1;
+      n_slices = slice_span.b - slice_span.a + 1;
+      }
+    }
+  
+  return SizeCube(n_rows, n_cols, n_slices);
   }
 
 

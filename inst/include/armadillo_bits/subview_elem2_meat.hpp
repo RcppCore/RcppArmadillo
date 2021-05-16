@@ -337,6 +337,22 @@ subview_elem2<eT,T1,T2>::clean(const pod_type threshold)
 template<typename eT, typename T1, typename T2>
 inline
 void
+subview_elem2<eT,T1,T2>::clamp(const eT min_val, const eT max_val)
+  {
+  arma_extra_debug_sigprint();
+  
+  Mat<eT> tmp(*this);
+  
+  tmp.clamp(min_val, max_val);
+  
+  (*this).operator=(tmp);
+  }
+
+
+
+template<typename eT, typename T1, typename T2>
+inline
+void
 subview_elem2<eT,T1,T2>::fill(const eT val)
   {
   arma_extra_debug_sigprint();

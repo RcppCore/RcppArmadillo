@@ -28,7 +28,7 @@ glue_polyfit::apply_noalias(Mat<eT>& out, const Col<eT>& X, const Col<eT>& Y, co
   
   // create Vandermonde matrix
   
-  Mat<eT> V(X.n_elem, N+1);
+  Mat<eT> V(X.n_elem, N+1, arma_nozeros_indicator());
   
   V.tail_cols(1).ones();
   

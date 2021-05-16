@@ -347,7 +347,7 @@ op_strans::apply_proxy(Mat<typename T1::elem_type>& out, const T1& X)
       }
     else  // aliasing
       {
-      Mat<eT> out2(n_cols, n_rows);
+      Mat<eT> out2(n_cols, n_rows, arma_nozeros_indicator());
       
       eT* out_mem = out2.memptr();
       
@@ -405,7 +405,7 @@ op_strans::apply_proxy(Mat<typename T1::elem_type>& out, const T1& X)
       }
     else // aliasing
       {
-      Mat<eT> out2(n_cols, n_rows);
+      Mat<eT> out2(n_cols, n_rows, arma_nozeros_indicator());
       
       eT* out2ptr = out2.memptr();
       
@@ -447,7 +447,7 @@ op_strans::apply_direct(Mat<typename T1::elem_type>& out, const T1& X)
   arma_extra_debug_sigprint();
   
   // allow detection of in-place transpose
-  if(is_Mat<T1>::value || is_Mat<typename Proxy<T1>::stored_type>::value)
+  if(is_Mat<T1>::value || is_Mat<typename Proxy<T1>::stored_type>::value || (arma_config::openmp && Proxy<T1>::use_mp))
     {
     const unwrap<T1> U(X);
     

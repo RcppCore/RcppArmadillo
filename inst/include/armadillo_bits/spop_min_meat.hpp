@@ -71,8 +71,8 @@ spop_min::apply_proxy
   
   if(dim == 0) // find the minimum in each column
     {
-    Row<eT> value(p_n_cols, fill::zeros);
-    urowvec count(p_n_cols, fill::zeros);
+    Row<eT> value(p_n_cols, arma_zeros_indicator());
+    urowvec count(p_n_cols, arma_zeros_indicator());
     
     while(it != it_end)
       {
@@ -93,8 +93,8 @@ spop_min::apply_proxy
   else
   if(dim == 1)  // find the minimum in each row
     {
-    Col<eT> value(p_n_rows, fill::zeros);
-    ucolvec count(p_n_rows, fill::zeros);
+    Col<eT> value(p_n_rows, arma_zeros_indicator());
+    ucolvec count(p_n_rows, arma_zeros_indicator());
     
     while(it != it_end)
       {
@@ -150,7 +150,7 @@ spop_min::vector_min
       }
     else
       {
-      return std::min(eT(0), op_min::direct_min(p.get_values(), p.get_n_nonzero()));
+      return (std::min)(eT(0), op_min::direct_min(p.get_values(), p.get_n_nonzero()));
       }
     }
   else
@@ -175,7 +175,7 @@ spop_min::vector_min
       }
     else
       {
-      return std::min(eT(0), result);
+      return (std::min)(eT(0), result);
       }
     }
   }
@@ -234,7 +234,7 @@ spop_min::min(const SpBase<typename T1::elem_type, T1>& X)
     }
   else
     {
-    return std::min(eT(0), min_val);
+    return (std::min)(eT(0), min_val);
     }
   }
 
@@ -298,7 +298,7 @@ spop_min::min_with_index(const SpProxy<T1>& P, uword& index_of_min_val)
   
   if(n_elem != n_nonzero)
     {
-    min_val = std::min(eT(0), min_val);
+    min_val = (std::min)(eT(0), min_val);
 
     // If the min_val is a nonzero element, we need its actual position in the matrix.
     if(min_val == eT(0))
@@ -373,9 +373,9 @@ spop_min::apply_proxy
   
   if(dim == 0) // find the minimum in each column
     {
-    Row<eT> rawval(p_n_cols, fill::zeros);
-    Row< T> absval(p_n_cols, fill::zeros);
-    urowvec  count(p_n_cols, fill::zeros);
+    Row<eT> rawval(p_n_cols, arma_zeros_indicator());
+    Row< T> absval(p_n_cols, arma_zeros_indicator());
+    urowvec  count(p_n_cols, arma_zeros_indicator());
     
     while(it != it_end)
       {
@@ -415,9 +415,9 @@ spop_min::apply_proxy
   else
   if(dim == 1)  // find the minimum in each row
     {
-    Col<eT> rawval(p_n_rows, fill::zeros);
-    Col< T> absval(p_n_rows, fill::zeros);
-    ucolvec  count(p_n_rows, fill::zeros);
+    Col<eT> rawval(p_n_rows, arma_zeros_indicator());
+    Col< T> absval(p_n_rows, arma_zeros_indicator());
+    ucolvec  count(p_n_rows, arma_zeros_indicator());
     
     while(it != it_end)
       {
@@ -667,7 +667,7 @@ spop_min::min_with_index(const SpProxy<T1>& P, uword& index_of_min_val)
   
   if(n_elem != n_nonzero)
     {
-    min_val = std::min(T(0), min_val);
+    min_val = (std::min)(T(0), min_val);
 
     // If the min_val is a nonzero element, we need its actual position in the matrix.
     if(min_val == T(0))

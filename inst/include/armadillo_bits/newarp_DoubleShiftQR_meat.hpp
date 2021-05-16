@@ -123,7 +123,7 @@ DoubleShiftQR<eT>::update_block(uword il, uword iu)
 
   // Apply the first reflector
   apply_PX(mat_H, il, il, 3, n - il, il);
-  apply_XP(mat_H, 0, il, il + std::min(bsize, uword(4)), 3, il);
+  apply_XP(mat_H, 0, il, il + (std::min)(bsize, uword(4)), 3, il);
 
   // Calculate the following reflectors
   // If entering this loop, block size is at least 4.
@@ -132,7 +132,7 @@ DoubleShiftQR<eT>::update_block(uword il, uword iu)
     compute_reflector(mat_H.colptr(il + i - 1) + il + i, il + i);
     // Apply the reflector to X
     apply_PX(mat_H, il + i, il + i - 1, 3, n + 1 - il - i, il + i);
-    apply_XP(mat_H, 0, il + i, il + std::min(bsize, uword(i + 4)), 3, il + i);
+    apply_XP(mat_H, 0, il + i, il + (std::min)(bsize, uword(i + 4)), 3, il + i);
     }
 
   // The last reflector

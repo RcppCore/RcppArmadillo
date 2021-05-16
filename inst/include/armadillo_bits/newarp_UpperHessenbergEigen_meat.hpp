@@ -122,7 +122,7 @@ UpperHessenbergEigen<eT>::eigenvectors()
   arma_debug_check( (computed == false), "newarp::UpperHessenbergEigen::eigenvectors(): need to call compute() first" );
 
   // Lapack will set the imaginary parts of real eigenvalues to be exact zero
-  Mat< std::complex<eT> > evecs(n, n);
+  Mat< std::complex<eT> > evecs(n, n, arma_zeros_indicator());
   
   std::complex<eT>* col_ptr = evecs.memptr();
   

@@ -102,7 +102,7 @@ enable_if2
   >::result
 normalise(const T& val)
   {
-  Col<T> out(1);
+  Col<T> out(1, arma_nozeros_indicator());
   
   out[0] = (val != T(0)) ? T(val / (std::abs)(val)) : T(val);
   

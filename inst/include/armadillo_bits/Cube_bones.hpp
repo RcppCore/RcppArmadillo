@@ -69,6 +69,9 @@ class Cube : public BaseCube< eT, Cube<eT> >
   inline explicit Cube(const uword in_rows, const uword in_cols, const uword in_slices);
   inline explicit Cube(const SizeCube& s);
   
+  template<bool do_zeros> inline explicit Cube(const uword in_rows, const uword in_cols, const uword in_slices, const arma_initmode_indicator<do_zeros>&);
+  template<bool do_zeros> inline explicit Cube(const SizeCube& s,                                               const arma_initmode_indicator<do_zeros>&);
+  
   template<typename fill_type> inline Cube(const uword in_rows, const uword in_cols, const uword in_slices, const fill::fill_class<fill_type>& f);
   template<typename fill_type> inline Cube(const SizeCube& s,                                               const fill::fill_class<fill_type>& f);
   
@@ -319,6 +322,8 @@ class Cube : public BaseCube< eT, Cube<eT> >
   inline const Cube& replace(const eT old_val, const eT new_val);
   
   inline const Cube& clean(const pod_type threshold);
+  
+  inline const Cube& clamp(const eT min_val, const eT max_val);
   
   inline const Cube& fill(const eT val);
   

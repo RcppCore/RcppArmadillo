@@ -482,7 +482,7 @@ subview_cube_each1_aux::operator_plus
   const uword p_n_cols   = p.n_cols;
   const uword p_n_slices = p.n_slices;
   
-  Cube<eT> out(p_n_rows, p_n_cols, p_n_slices);
+  Cube<eT> out(p_n_rows, p_n_cols, p_n_slices, arma_nozeros_indicator());
   
   const unwrap<T2>   tmp(Y.get_ref());
   const Mat<eT>& A = tmp.M;
@@ -519,7 +519,7 @@ subview_cube_each1_aux::operator_minus
   const uword p_n_cols   = p.n_cols;
   const uword p_n_slices = p.n_slices;
   
-  Cube<eT> out(p_n_rows, p_n_cols, p_n_slices);
+  Cube<eT> out(p_n_rows, p_n_cols, p_n_slices, arma_nozeros_indicator());
   
   const unwrap<T2>   tmp(Y.get_ref());
   const Mat<eT>& A = tmp.M;
@@ -556,7 +556,7 @@ subview_cube_each1_aux::operator_minus
   const uword p_n_cols   = p.n_cols;
   const uword p_n_slices = p.n_slices;
   
-  Cube<eT> out(p_n_rows, p_n_cols, p_n_slices);
+  Cube<eT> out(p_n_rows, p_n_cols, p_n_slices, arma_nozeros_indicator());
   
   const unwrap<T1>   tmp(X.get_ref());
   const Mat<eT>& A = tmp.M;
@@ -593,7 +593,7 @@ subview_cube_each1_aux::operator_schur
   const uword p_n_cols   = p.n_cols;
   const uword p_n_slices = p.n_slices;
   
-  Cube<eT> out(p_n_rows, p_n_cols, p_n_slices);
+  Cube<eT> out(p_n_rows, p_n_cols, p_n_slices, arma_nozeros_indicator());
   
   const unwrap<T2>   tmp(Y.get_ref());
   const Mat<eT>& A = tmp.M;
@@ -630,7 +630,7 @@ subview_cube_each1_aux::operator_div
   const uword p_n_cols   = p.n_cols;
   const uword p_n_slices = p.n_slices;
   
-  Cube<eT> out(p_n_rows, p_n_cols, p_n_slices);
+  Cube<eT> out(p_n_rows, p_n_cols, p_n_slices, arma_nozeros_indicator());
   
   const unwrap<T2>   tmp(Y.get_ref());
   const Mat<eT>& A = tmp.M;
@@ -667,7 +667,7 @@ subview_cube_each1_aux::operator_div
   const uword p_n_cols   = p.n_cols;
   const uword p_n_slices = p.n_slices;
   
-  Cube<eT> out(p_n_rows, p_n_cols, p_n_slices);
+  Cube<eT> out(p_n_rows, p_n_cols, p_n_slices, arma_nozeros_indicator());
   
   const unwrap<T1>   tmp(X.get_ref());
   const Mat<eT>& A = tmp.M;
@@ -703,7 +703,7 @@ subview_cube_each1_aux::operator_times
   const unwrap<T2>   tmp(Y.get_ref());
   const Mat<eT>& M = tmp.M;
   
-  Cube<eT> out(C.n_rows, M.n_cols, C.n_slices);
+  Cube<eT> out(C.n_rows, M.n_cols, C.n_slices, arma_nozeros_indicator());
   
   for(uword i=0; i < C.n_slices; ++i)
     {
@@ -734,7 +734,7 @@ subview_cube_each1_aux::operator_times
   
   const Cube<eT>& C = Y.P;
   
-  Cube<eT> out(M.n_rows, C.n_cols, C.n_slices);
+  Cube<eT> out(M.n_rows, C.n_cols, C.n_slices, arma_nozeros_indicator());
   
   for(uword i=0; i < C.n_slices; ++i)
     {

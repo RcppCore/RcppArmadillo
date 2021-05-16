@@ -279,7 +279,7 @@ ind2sub(const SizeMat& s, const uword i)
   const uword row = i % s_n_rows;
   const uword col = i / s_n_rows;
   
-  uvec out(2);
+  uvec out(2, arma_nozeros_indicator());
   
   uword* out_mem = out.memptr();
   
@@ -313,7 +313,7 @@ ind2sub(const SizeMat& s, const T1& indices)
   
   arma_debug_check( ((P_is_empty == false) && (P_is_vec == false)), "ind2sub(): parameter 'indices' must be a vector" );
   
-  umat out(2,P_n_elem);
+  umat out(2, P_n_elem, arma_nozeros_indicator());
   
   if(Proxy<T1>::use_at == false)
     {
@@ -395,7 +395,7 @@ ind2sub(const SizeCube& s, const uword i)
   const uword row    = j % s_n_rows;
   const uword col    = j / s_n_rows;
   
-  uvec out(3);
+  uvec out(3, arma_nozeros_indicator());
   
   uword* out_mem = out.memptr();
   
@@ -427,7 +427,7 @@ ind2sub(const SizeCube& s, const T1& indices)
   const uword  U_n_elem = U.M.n_elem;
   const uword* U_mem    = U.M.memptr();
   
-  umat out(3,U_n_elem);
+  umat out(3, U_n_elem, arma_nozeros_indicator());
   
   for(uword count=0; count < U_n_elem; ++count)
     {
@@ -485,7 +485,7 @@ sub2ind(const SizeMat& s, const Base<uword,T1>& subscripts)
   
   const uword U_M_n_cols = U.M.n_cols;
   
-  uvec out(U_M_n_cols);
+  uvec out(U_M_n_cols, arma_nozeros_indicator());
   
         uword* out_mem = out.memptr();
   const uword* U_M_mem = U.M.memptr();
@@ -542,7 +542,7 @@ sub2ind(const SizeCube& s, const Base<uword,T1>& subscripts)
   
   const uword U_M_n_cols = U.M.n_cols;
   
-  uvec out(U_M_n_cols);
+  uvec out(U_M_n_cols, arma_nozeros_indicator());
   
         uword* out_mem = out.memptr();
   const uword* U_M_mem = U.M.memptr();

@@ -19,24 +19,46 @@
 
 
 
-class op_symmat
+class op_symmatu
   : public traits_op_default
   {
   public:
   
   template<typename T1>
-  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_symmat>& in);
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_symmatu>& in);
   };
 
 
 
-class op_symmat_cx
+class op_symmatl
   : public traits_op_default
   {
   public:
   
   template<typename T1>
-  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_symmat_cx>& in);
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_symmatl>& in);
+  };
+
+
+
+class op_symmatu_cx
+  : public traits_op_default
+  {
+  public:
+  
+  template<typename T1>
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_symmatu_cx>& in);
+  };
+
+
+
+class op_symmatl_cx
+  : public traits_op_default
+  {
+  public:
+  
+  template<typename T1>
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_symmatl_cx>& in);
   };
 
 

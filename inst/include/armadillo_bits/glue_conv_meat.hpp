@@ -38,7 +38,7 @@ glue_conv::apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const bool A_
   if( (h_n_elem == 0) || (x_n_elem == 0) )  { out.zeros(); return; }
   
   
-  Col<eT> hh(h_n_elem);  // flipped version of h
+  Col<eT> hh(h_n_elem, arma_nozeros_indicator());  // flipped version of h
   
   const eT*   h_mem =  h.memptr();
         eT*  hh_mem = hh.memptr();
@@ -49,7 +49,7 @@ glue_conv::apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const bool A_
     }
   
   
-  Col<eT> xx( (x_n_elem + 2*h_n_elem_m1), fill::zeros );  // zero padded version of x
+  Col<eT> xx( (x_n_elem + 2*h_n_elem_m1), arma_zeros_indicator() );  // zero padded version of x
   
   const eT*  x_mem =  x.memptr();
         eT* xx_mem = xx.memptr();
@@ -90,7 +90,7 @@ glue_conv::apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const bool A_
 //   if( (h_n_elem == 0) || (x_n_elem == 0) )  { out.zeros(); return; }
 //   
 //   
-//   Col<eT> hh(h_n_elem);  // flipped version of h
+//   Col<eT> hh(h_n_elem, arma_nozeros_indicator());  // flipped version of h
 //   
 //   const eT*   h_mem =  h.memptr();
 //         eT*  hh_mem = hh.memptr();
@@ -106,7 +106,7 @@ glue_conv::apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const bool A_
 //   
 //   const uword HH_n_rows = h_n_elem + (N_copies-1);
 //   
-//   Mat<eT> HH(HH_n_rows, N_copies, fill::zeros);
+//   Mat<eT> HH(HH_n_rows, N_copies, arma_zeros_indicator());
 //   
 //   for(uword i=0; i<N_copies; ++i)
 //     {
@@ -115,7 +115,7 @@ glue_conv::apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const bool A_
 //   
 //   
 //   
-//   Col<eT> xx( (x_n_elem + 2*h_n_elem_m1), fill::zeros );  // zero padded version of x
+//   Col<eT> xx( (x_n_elem + 2*h_n_elem_m1), arma_zeros_indicator() );  // zero padded version of x
 //   
 //   const eT*  x_mem =  x.memptr();
 //         eT* xx_mem = xx.memptr();
@@ -235,7 +235,7 @@ glue_conv2::apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
   if(G.is_empty() || W.is_empty())  { out.zeros(); return; }
   
   
-  Mat<eT> H(G.n_rows, G.n_cols);  // flipped filter coefficients
+  Mat<eT> H(G.n_rows, G.n_cols, arma_nozeros_indicator());  // flipped filter coefficients
   
   const uword H_n_rows = H.n_rows;
   const uword H_n_cols = H.n_cols;
@@ -255,7 +255,7 @@ glue_conv2::apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
     }
   
   
-  Mat<eT> X( (W.n_rows + 2*H_n_rows_m1), (W.n_cols + 2*H_n_cols_m1), fill::zeros );
+  Mat<eT> X( (W.n_rows + 2*H_n_rows_m1), (W.n_cols + 2*H_n_cols_m1), arma_zeros_indicator() );
   
   X( H_n_rows_m1, H_n_cols_m1, arma::size(W) ) = W;  // zero padded version of 2D image
   

@@ -473,6 +473,8 @@ spglue_merge::diagview_merge(SpMat<eT>& out, const SpMat<eT>& A, const SpMat<eT>
   {
   arma_extra_debug_sigprint();
   
+  // NOTE: assuming that B has non-zero elements only on the main diagonal
+  
   out.reserve(A.n_rows, A.n_cols, A.n_nonzero + B.n_nonzero); // worst case scenario
   
   typename SpMat<eT>::const_iterator x_it  = A.begin();
@@ -485,7 +487,7 @@ spglue_merge::diagview_merge(SpMat<eT>& out, const SpMat<eT>& A, const SpMat<eT>
   
   while( (x_it != x_end) || (y_it != y_end) )
     {
-    eT out_val;
+    eT out_val = eT(0);
     
     const uword x_it_col = x_it.col();
     const uword x_it_row = x_it.row();
@@ -508,28 +510,29 @@ spglue_merge::diagview_merge(SpMat<eT>& out, const SpMat<eT>& A, const SpMat<eT>
       {
       if((x_it_col < y_it_col) || ((x_it_col == y_it_col) && (x_it_row < y_it_row))) // if y is closer to the end
         {
-        out_val = (*x_it);
+        if(x_it_col != x_it_row)  { out_val = (*x_it); }  // don't take values from the main diagonal of A
         
         ++x_it;
         }
       else
         {
-        out_val = (*y_it);
+        if(y_it_col == y_it_row)  { out_val = (*y_it); use_y_loc = true; }  // take values only from the main diagonal of B
         
         ++y_it;
-        
-        use_y_loc = true;
         }
       }
     
-    access::rw(out.values[count]) = out_val;
-    
-    const uword out_row = (use_y_loc == false) ? x_it_row : y_it_row;
-    const uword out_col = (use_y_loc == false) ? x_it_col : y_it_col;
-    
-    access::rw(out.row_indices[count]) = out_row;
-    access::rw(out.col_ptrs[out_col + 1])++;
-    ++count;
+    if(out_val != eT(0))
+      {
+      access::rw(out.values[count]) = out_val;
+      
+      const uword out_row = (use_y_loc == false) ? x_it_row : y_it_row;
+      const uword out_col = (use_y_loc == false) ? x_it_col : y_it_col;
+      
+      access::rw(out.row_indices[count]) = out_row;
+      access::rw(out.col_ptrs[out_col + 1])++;
+      ++count;
+      }
     }
   
   const uword out_n_cols = out.n_cols;
