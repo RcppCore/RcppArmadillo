@@ -382,7 +382,13 @@ Mat<eT>::init_warm(uword in_n_rows, uword in_n_cols)
         {
         arma_extra_debug_print("Mat::init(): releasing memory");
         memory::release( access::rw(mem) );
-        access::rw(n_alloc) = 0;   // in case memory::acquire() throws an exception
+        
+        // in case memory::acquire() throws an exception
+        access::rw(mem)     = nullptr;
+        access::rw(n_rows)  = 0;
+        access::rw(n_cols)  = 0;
+        access::rw(n_elem)  = 0;
+        access::rw(n_alloc) = 0;
         }
       
       arma_extra_debug_print("Mat::init(): acquiring memory");

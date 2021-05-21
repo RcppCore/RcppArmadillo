@@ -1,3 +1,7 @@
+2021-05-21  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/armadillo_bits/: Armadillo 10.5
+
 2021-05-15  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.10.499.1.0 [github-only]

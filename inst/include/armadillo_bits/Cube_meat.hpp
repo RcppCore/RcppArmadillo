@@ -389,7 +389,15 @@ Cube<eT>::init_warm(const uword in_n_rows, const uword in_n_cols, const uword in
         {
         arma_extra_debug_print("Cube::init(): releasing memory");
         memory::release( access::rw(mem) );
-        access::rw(n_alloc) = 0;   // in case memory::acquire() throws an exception
+        
+        // in case memory::acquire() throws an exception
+        access::rw(mem)          = nullptr;
+        access::rw(n_rows)       = 0;
+        access::rw(n_cols)       = 0;
+        access::rw(n_elem_slice) = 0;
+        access::rw(n_slices)     = 0;
+        access::rw(n_elem)       = 0;
+        access::rw(n_alloc)      = 0;
         }
       
       arma_extra_debug_print("Cube::init(): acquiring memory");

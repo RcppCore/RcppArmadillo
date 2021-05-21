@@ -521,9 +521,9 @@ glue_times::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>
   {
   arma_extra_debug_sigprint();
   
-  const sword N_mat = 1 + depth_lhs< glue_times, Glue<T1,T2,glue_times> >::num;
+  constexpr uword N_mat = 1 + depth_lhs< glue_times, Glue<T1,T2,glue_times> >::num;
   
-  arma_extra_debug_print(arma_str::format("N_mat = %d") % N_mat);
+  arma_extra_debug_print(arma_str::format("N_mat = %u") % N_mat);
   
   glue_times_redirect<N_mat>::apply(out, X);
   }
