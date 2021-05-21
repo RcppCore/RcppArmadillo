@@ -3,12 +3,19 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.10.499.1.0 (2021-05-13)}{
+\section{Changes in RcppArmadillo version 0.10.5.0 (2021-05-21)}{
   \itemize{
-    \item Upgraded to Armadillo release 10.5 RC1
-    \item GitHub-only release
+    \item Upgraded to Armadillo release 10.5 (Antipodean Fortress)
+    \itemize{
+      \item added \code{.clamp()} member function
+      \item expanded the standalone \code{clamp()} function to handle complex values
+      \item more efficient use of OpenMP
+      \item vector, matrix and cube constructors now initialise elements
+      to zero by default; use the \code{fill::none} specifier,
+      eg. \code{mat X(4,5,fill::none)}, to disable element initialisation
+    }
+    \item Added \code{codecov.yml} to exclude Armadillo from coverage analysis
   }
-  \item Added \code{codecov.yml} to exclude Armadillo from coverage analysis
 }
 
 \section{Changes in RcppArmadillo version 0.10.4.1.0 (2021-04-23)}{

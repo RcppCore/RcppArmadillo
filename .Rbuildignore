@@ -9,3 +9,4 @@ src/lapack
 ^vignettes/rmd
 ^.editorconfig
 ^\.github
+^\.codecov.yml
