@@ -20,9 +20,9 @@
 
 
 #define ARMA_VERSION_MAJOR 10
-#define ARMA_VERSION_MINOR 4
-#define ARMA_VERSION_PATCH 91
-#define ARMA_VERSION_NAME  "10.5 RC1"
+#define ARMA_VERSION_MINOR 5
+#define ARMA_VERSION_PATCH 0
+#define ARMA_VERSION_NAME  "Antipodean Fortress"
 
 
 

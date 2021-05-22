@@ -4960,6 +4960,15 @@ SpMat<eT>::init(uword in_rows, uword in_cols, const uword new_n_nonzero)
   if(row_indices)  { memory::release(access::rw(row_indices)); }
   if(col_ptrs   )  { memory::release(access::rw(col_ptrs));    }
   
+  // in case init_cold() throws an exception
+  access::rw(n_rows)      = 0;
+  access::rw(n_cols)      = 0;
+  access::rw(n_elem)      = 0;
+  access::rw(n_nonzero)   = 0;
+  access::rw(values)      = nullptr;
+  access::rw(row_indices) = nullptr;
+  access::rw(col_ptrs)    = nullptr;
+  
   init_cold(in_rows, in_cols, new_n_nonzero);
   }
 

@@ -2075,6 +2075,7 @@ sp_auxlib::run_aupd_plain
     arma_ignore(sym);
     arma_ignore(n);
     arma_ignore(tol);
+    arma_ignore(maxiter);
     arma_ignore(resid);
     arma_ignore(ncv);
     arma_ignore(v);
@@ -2329,6 +2330,7 @@ sp_auxlib::run_aupd_shiftinvert
     arma_ignore(sym);
     arma_ignore(n);
     arma_ignore(tol);
+    arma_ignore(maxiter);
     arma_ignore(resid);
     arma_ignore(ncv);
     arma_ignore(v);
