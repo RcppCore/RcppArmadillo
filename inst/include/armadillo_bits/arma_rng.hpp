@@ -36,6 +36,16 @@
 // #endif
 
 
+// NOTE: workaround for another thread_local issue on macOS
+// NOTE: where GCC (not Clang) may not have support for thread_local
+
+#if (defined(__APPLE__) && defined(__GNUG__) && !defined(__clang__))
+  #if !defined(ARMA_DONT_DISABLE_EXTERN_RNG)
+    #undef ARMA_USE_EXTERN_RNG
+  #endif
+#endif
+
+
 
 #if defined(ARMA_USE_EXTERN_RNG)
   extern thread_local std::mt19937_64 mt19937_64_instance;
