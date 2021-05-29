@@ -1352,7 +1352,7 @@ diskio::load_raw_ascii(Mat<eT>& x, std::istream& f, std::string& err_msg)
     f.clear();
     f.seekg(pos1);
     
-    x.set_size(f_n_rows, f_n_cols);
+    try { x.set_size(f_n_rows, f_n_cols); } catch(...) { err_msg = "not enough memory"; return false; }
     
     for(uword row=0; ((row < x.n_rows) && load_okay); ++row)
     for(uword col=0; ((col < x.n_cols) && load_okay); ++col)
@@ -1408,7 +1408,6 @@ bool
 diskio::load_raw_binary(Mat<eT>& x, std::istream& f, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
-  arma_ignore(err_msg);
   
   f.clear();
   const std::streampos pos1 = f.tellg();
@@ -1425,7 +1424,7 @@ diskio::load_raw_binary(Mat<eT>& x, std::istream& f, std::string& err_msg)
   //f.seekg(0, ios::beg);
   f.seekg(pos1);
   
-  x.set_size(N / uword(sizeof(eT)), 1);
+  try { x.set_size(N / uword(sizeof(eT)), 1); } catch(...) { err_msg = "not enough memory"; return false; }
   
   f.clear();
   f.read( reinterpret_cast<char *>(x.memptr()), std::streamsize(x.n_elem * uword(sizeof(eT))) );
@@ -1482,7 +1481,7 @@ diskio::load_arma_ascii(Mat<eT>& x, std::istream& f, std::string& err_msg)
   
   if(f_header == diskio::gen_txt_header(x))
     {
-    x.zeros(f_n_rows, f_n_cols);
+    try { x.zeros(f_n_rows, f_n_cols); } catch(...) { err_msg = "not enough memory"; return false; }
     
     std::string token;
     
@@ -1611,13 +1610,13 @@ diskio::load_csv_ascii(Mat<eT>& x, const std::string& name, std::string& err_msg
 template<typename eT>
 inline
 bool
-diskio::load_csv_ascii(Mat<eT>& x, std::istream& f, std::string&)
+diskio::load_csv_ascii(Mat<eT>& x, std::istream& f, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
   
   // TODO: replace with more efficient implementation
   
-  bool load_okay = f.good();
+  if(f.good() == false)  { return false; }
   
   f.clear();
   const std::fstream::pos_type pos1 = f.tellg();
@@ -1633,7 +1632,7 @@ diskio::load_csv_ascii(Mat<eT>& x, std::istream& f, std::string&)
   
   std::string token;
   
-  while( f.good() && load_okay )
+  while(f.good())
     {
     std::getline(f, line_string);
     
@@ -1658,7 +1657,7 @@ diskio::load_csv_ascii(Mat<eT>& x, std::istream& f, std::string&)
   f.clear();
   f.seekg(pos1);
   
-  x.zeros(f_n_rows, f_n_cols);
+  try { x.zeros(f_n_rows, f_n_cols); } catch(...) { err_msg = "not enough memory"; return false; }
   
   uword row = 0;
   
@@ -1685,7 +1684,7 @@ diskio::load_csv_ascii(Mat<eT>& x, std::istream& f, std::string&)
     ++row;
     }
   
-  return load_okay;
+  return true;
   }
 
 
@@ -1694,13 +1693,13 @@ diskio::load_csv_ascii(Mat<eT>& x, std::istream& f, std::string&)
 template<typename T>
 inline
 bool
-diskio::load_csv_ascii(Mat< std::complex<T> >& x, std::istream& f, std::string&)
+diskio::load_csv_ascii(Mat< std::complex<T> >& x, std::istream& f, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
   
   // TODO: replace with more efficient implementation
   
-  bool load_okay = f.good();
+  if(f.good() == false)  { return false; }
   
   f.clear();
   const std::fstream::pos_type pos1 = f.tellg();
@@ -1716,7 +1715,7 @@ diskio::load_csv_ascii(Mat< std::complex<T> >& x, std::istream& f, std::string&)
   
   std::string token;
   
-  while( f.good() && load_okay )
+  while(f.good())
     {
     std::getline(f, line_string);
     
@@ -1741,7 +1740,7 @@ diskio::load_csv_ascii(Mat< std::complex<T> >& x, std::istream& f, std::string&)
   f.clear();
   f.seekg(pos1);
   
-  x.zeros(f_n_rows, f_n_cols);
+  try { x.zeros(f_n_rows, f_n_cols); } catch(...) { err_msg = "not enough memory"; return false; }
   
   uword row = 0;
   
@@ -1915,7 +1914,7 @@ diskio::load_csv_ascii(Mat< std::complex<T> >& x, std::istream& f, std::string&)
     ++row;
     }
   
-  return load_okay;
+  return true;
   }
 
 
@@ -1954,7 +1953,7 @@ diskio::load_coord_ascii(Mat<eT>& x, std::istream& f, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
   
-  bool load_okay = f.good();
+  if(f.good() == false)  { return false; }
   
   f.clear();
   const std::fstream::pos_type pos1 = f.tellg();
@@ -1971,7 +1970,7 @@ diskio::load_coord_ascii(Mat<eT>& x, std::istream& f, std::string& err_msg)
   
   std::string token;
   
-  while( f.good() && load_okay )
+  while(f.good())
     {
     std::getline(f, line_string);
     
@@ -1987,7 +1986,7 @@ diskio::load_coord_ascii(Mat<eT>& x, std::istream& f, std::string& err_msg)
     
     line_stream >> line_row;
     
-    if(line_stream.good() == false)  { load_okay = false; break; }
+    if(line_stream.good() == false)  { err_msg = "incorrect format"; return false; }
     
     line_stream >> line_col;
     
@@ -1997,19 +1996,15 @@ diskio::load_coord_ascii(Mat<eT>& x, std::istream& f, std::string& err_msg)
     if(f_n_cols < line_col)  { f_n_cols = line_col; }
     }
   
-  
   // take into account that indices start at 0
   if(size_found)  { ++f_n_rows;  ++f_n_cols; }
   
+  f.clear();
+  f.seekg(pos1);
   
-  if(load_okay)
+  try
     {
-    f.clear();
-    f.seekg(pos1);
-    
-    Mat<eT> tmp;
-    
-    try { tmp.zeros(f_n_rows, f_n_cols); } catch(...) { err_msg = "not enough memory"; return false; }
+    Mat<eT> tmp(f_n_rows, f_n_cols, arma_zeros_indicator());
     
     while(f.good())
       {
@@ -2040,8 +2035,13 @@ diskio::load_coord_ascii(Mat<eT>& x, std::istream& f, std::string& err_msg)
     
     x.steal_mem(tmp);
     }
+  catch(...)
+    {
+    err_msg = "not enough memory";
+    return false;
+    }
   
-  return load_okay;
+  return true;
   }
 
 
@@ -2053,7 +2053,7 @@ diskio::load_coord_ascii(Mat< std::complex<T> >& x, std::istream& f, std::string
   {
   arma_extra_debug_sigprint();
   
-  bool load_okay = f.good();
+  if(f.good() == false)  { return false; }
   
   f.clear();
   const std::fstream::pos_type pos1 = f.tellg();
@@ -2071,7 +2071,7 @@ diskio::load_coord_ascii(Mat< std::complex<T> >& x, std::istream& f, std::string
   std::string token_real;
   std::string token_imag;
   
-  while( f.good() && load_okay )
+  while(f.good())
     {
     std::getline(f, line_string);
     
@@ -2087,7 +2087,7 @@ diskio::load_coord_ascii(Mat< std::complex<T> >& x, std::istream& f, std::string
     
     line_stream >> line_row;
     
-    if(line_stream.good() == false)  { load_okay = false; break; }
+    if(line_stream.good() == false)  { err_msg = "incorrect format"; return false; }
     
     line_stream >> line_col;
     
@@ -2100,14 +2100,12 @@ diskio::load_coord_ascii(Mat< std::complex<T> >& x, std::istream& f, std::string
   // take into account that indices start at 0
   if(size_found)  { ++f_n_rows;  ++f_n_cols; }
   
-  if(load_okay)
+  f.clear();
+  f.seekg(pos1);
+  
+  try
     {
-    f.clear();
-    f.seekg(pos1);
-    
-    Mat< std::complex<T> > tmp;
-    
-    try { tmp.zeros(f_n_rows, f_n_cols); } catch(...) { err_msg = "not enough memory"; return false; }
+    Mat< std::complex<T> > tmp(f_n_rows, f_n_cols, arma_zeros_indicator());
     
     while(f.good())
       {
@@ -2150,8 +2148,13 @@ diskio::load_coord_ascii(Mat< std::complex<T> >& x, std::istream& f, std::string
     
     x.steal_mem(tmp);
     }
+  catch(...)
+    {
+    err_msg = "not enough memory";
+    return false;
+    }
   
-  return load_okay;
+  return true;
   }
 
 
@@ -2205,7 +2208,8 @@ diskio::load_arma_binary(Mat<eT>& x, std::istream& f, std::string& err_msg)
     //f.seekg(1, ios::cur);  // NOTE: this may not be portable, as on a Windows machine a newline could be two characters
     f.get();
     
-    x.set_size(f_n_rows,f_n_cols);
+    try { x.set_size(f_n_rows,f_n_cols); } catch(...) { err_msg = "not enough memory"; return false; }
+    
     f.read( reinterpret_cast<char *>(x.memptr()), std::streamsize(x.n_elem*sizeof(eT)) );
     
     load_okay = f.good();
@@ -2325,7 +2329,7 @@ diskio::load_pgm_binary(Mat<eT>& x, std::istream& f, std::string& err_msg)
     
     if( (f_maxval > 0) && (f_maxval <= 65535) )
       {
-      x.set_size(f_n_rows,f_n_cols);
+      try { x.set_size(f_n_rows,f_n_cols); } catch(...) { err_msg = "not enough memory"; return false; }
       
       if(f_maxval <= 255)
         {
@@ -2481,7 +2485,7 @@ diskio::load_hdf5_binary(Mat<eT>& x, const hdf5_name& spec, std::string& err_msg
         
         if(ndims == 1) { dims[1] = 1; }  // Vector case; fake second dimension (one column).
         
-        x.set_size(dims[1], dims[0]);
+        try { x.set_size(dims[1], dims[0]); } catch(...) { err_msg = "not enough memory"; return false; }
         
         // Now we have to see what type is stored to figure out how to load it.
         hid_t datatype = arma_H5Dget_type(dataset);
@@ -2990,11 +2994,10 @@ bool
 diskio::load_csv_ascii(SpMat<eT>& x, std::istream& f, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
-  arma_ignore(err_msg);
   
   // TODO: replace with more efficient implementation
   
-  bool load_okay = f.good();
+  if(f.good() == false)  { return false; }
   
   f.clear();
   const std::fstream::pos_type pos1 = f.tellg();
@@ -3010,7 +3013,7 @@ diskio::load_csv_ascii(SpMat<eT>& x, std::istream& f, std::string& err_msg)
   
   std::string token;
   
-  while( f.good() && load_okay )
+  while(f.good())
     {
     std::getline(f, line_string);
     
@@ -3035,38 +3038,48 @@ diskio::load_csv_ascii(SpMat<eT>& x, std::istream& f, std::string& err_msg)
   f.clear();
   f.seekg(pos1);
   
-  x.zeros(f_n_rows, f_n_cols);
-  
-  uword row = 0;
-  
-  while(f.good())
+  try
     {
-    std::getline(f, line_string);
+    MapMat<eT> tmp(f_n_rows, f_n_cols);
     
-    if(line_string.size() == 0)  { break; }
+    uword row = 0;
     
-    line_stream.clear();
-    line_stream.str(line_string);
-    
-    uword col = 0;
-    
-    while(line_stream.good())
+    while(f.good())
       {
-      std::getline(line_stream, token, ',');
+      std::getline(f, line_string);
       
-      eT val = eT(0);
+      if(line_string.size() == 0)  { break; }
       
-      diskio::convert_token( val, token );
+      line_stream.clear();
+      line_stream.str(line_string);
       
-      if(val != eT(0))  { x(row,col) = val; }
+      uword col = 0;
       
-      ++col;
+      while(line_stream.good())
+        {
+        std::getline(line_stream, token, ',');
+        
+        eT val = eT(0);
+        
+        diskio::convert_token( val, token );
+        
+        if(val != eT(0))  { tmp(row,col) = val; }
+        
+        ++col;
+        }
+      
+      ++row;
       }
     
-    ++row;
+    x = tmp;
+    }
+  catch(...)
+    {
+    err_msg = "not enough memory";
+    return false;
     }
   
-  return load_okay;
+  return true;
   }
 
 
@@ -3118,9 +3131,8 @@ bool
 diskio::load_coord_ascii(SpMat<eT>& x, std::istream& f, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
-  arma_ignore(err_msg);
   
-  bool load_okay = f.good();
+  if(f.good() == false)  { return false; }
   
   f.clear();
   const std::fstream::pos_type pos1 = f.tellg();
@@ -3137,7 +3149,7 @@ diskio::load_coord_ascii(SpMat<eT>& x, std::istream& f, std::string& err_msg)
   
   std::string token;
   
-  while( f.good() && load_okay )
+  while(f.good())
     {
     std::getline(f, line_string);
     
@@ -3153,7 +3165,7 @@ diskio::load_coord_ascii(SpMat<eT>& x, std::istream& f, std::string& err_msg)
     
     line_stream >> line_row;
     
-    if(line_stream.good() == false)  { load_okay = false; break; }
+    if(line_stream.good() == false)  { err_msg = "incorrect format"; return false; }
     
     line_stream >> line_col;
     
@@ -3163,16 +3175,14 @@ diskio::load_coord_ascii(SpMat<eT>& x, std::istream& f, std::string& err_msg)
     if(f_n_cols < line_col)  { f_n_cols = line_col; }
     }
   
-  
   // take into account that indices start at 0
   if(size_found)  { ++f_n_rows;  ++f_n_cols; }
   
+  f.clear();
+  f.seekg(pos1);
   
-  if(load_okay)
+  try
     {
-    f.clear();
-    f.seekg(pos1);
-    
     MapMat<eT> tmp(f_n_rows, f_n_cols);
     
     while(f.good())
@@ -3204,8 +3214,13 @@ diskio::load_coord_ascii(SpMat<eT>& x, std::istream& f, std::string& err_msg)
     
     x = tmp;
     }
+  catch(...)
+    {
+    err_msg = "not enough memory";
+    return false;
+    }
   
-  return load_okay;
+  return true;
   }
 
 
@@ -3216,9 +3231,8 @@ bool
 diskio::load_coord_ascii(SpMat< std::complex<T> >& x, std::istream& f, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
-  arma_ignore(err_msg);
   
-  bool load_okay = f.good();
+  if(f.good() == false)  { return false; }
   
   f.clear();
   const std::fstream::pos_type pos1 = f.tellg();
@@ -3236,7 +3250,7 @@ diskio::load_coord_ascii(SpMat< std::complex<T> >& x, std::istream& f, std::stri
   std::string token_real;
   std::string token_imag;
   
-  while( f.good() && load_okay )
+  while(f.good())
     {
     std::getline(f, line_string);
     
@@ -3252,7 +3266,7 @@ diskio::load_coord_ascii(SpMat< std::complex<T> >& x, std::istream& f, std::stri
     
     line_stream >> line_row;
     
-    if(line_stream.good() == false)  { load_okay = false; break; }
+    if(line_stream.good() == false)  { err_msg = "incorrect format"; return false; }
     
     line_stream >> line_col;
     
@@ -3265,11 +3279,11 @@ diskio::load_coord_ascii(SpMat< std::complex<T> >& x, std::istream& f, std::stri
   // take into account that indices start at 0
   if(size_found)  { ++f_n_rows;  ++f_n_cols; }
   
-  if(load_okay)
+  f.clear();
+  f.seekg(pos1);
+  
+  try
     {
-    f.clear();
-    f.seekg(pos1);
-    
     MapMat< std::complex<T> > tmp(f_n_rows, f_n_cols);
     
     while(f.good())
@@ -3313,8 +3327,13 @@ diskio::load_coord_ascii(SpMat< std::complex<T> >& x, std::istream& f, std::stri
     
     x = tmp;
     }
+  catch(...)
+    {
+    err_msg = "not enough memory";
+    return false;
+    }
   
-  return load_okay;
+  return true;
   }
 
 
@@ -3370,7 +3389,7 @@ diskio::load_arma_binary(SpMat<eT>& x, std::istream& f, std::string& err_msg)
     //f.seekg(1, ios::cur);  // NOTE: this may not be portable, as on a Windows machine a newline could be two characters
     f.get();
     
-    x.reserve(f_n_rows, f_n_cols, f_n_nz);
+    try { x.reserve(f_n_rows, f_n_cols, f_n_nz); } catch(...) { err_msg = "not enough memory"; return false; }
     
     f.read( reinterpret_cast<char*>(access::rwp(x.values)),      std::streamsize(x.n_nonzero*sizeof(eT))     );
     
@@ -3807,7 +3826,7 @@ diskio::load_raw_ascii(Cube<eT>& x, const std::string& name, std::string& err_ms
     {
     if(tmp.is_empty() == false)
       {
-      x.set_size(tmp.n_rows, tmp.n_cols, 1);
+      try { x.set_size(tmp.n_rows, tmp.n_cols, 1); } catch(...) { err_msg = "not enough memory"; return false; }
       
       x.slice(0) = tmp;
       }
@@ -3838,7 +3857,7 @@ diskio::load_raw_ascii(Cube<eT>& x, std::istream& f, std::string& err_msg)
     {
     if(tmp.is_empty() == false)
       {
-      x.set_size(tmp.n_rows, tmp.n_cols, 1);
+      try { x.set_size(tmp.n_rows, tmp.n_cols, 1); } catch(...) { err_msg = "not enough memory"; return false; }
       
       x.slice(0) = tmp;
       }
@@ -3884,7 +3903,6 @@ bool
 diskio::load_raw_binary(Cube<eT>& x, std::istream& f, std::string& err_msg)
   {
   arma_extra_debug_sigprint();
-  arma_ignore(err_msg);
   
   f.clear();
   const std::streampos pos1 = f.tellg();
@@ -3901,7 +3919,7 @@ diskio::load_raw_binary(Cube<eT>& x, std::istream& f, std::string& err_msg)
   //f.seekg(0, ios::beg);
   f.seekg(pos1);
   
-  x.set_size(N / uword(sizeof(eT)), 1, 1);
+  try { x.set_size(N / uword(sizeof(eT)), 1, 1); } catch(...) { err_msg = "not enough memory"; return false; }
   
   f.clear();
   f.read( reinterpret_cast<char *>(x.memptr()), std::streamsize(x.n_elem * uword(sizeof(eT))) );
@@ -3960,7 +3978,7 @@ diskio::load_arma_ascii(Cube<eT>& x, std::istream& f, std::string& err_msg)
   
   if(f_header == diskio::gen_txt_header(x))
     {
-    x.set_size(f_n_rows, f_n_cols, f_n_slices);
+    try { x.set_size(f_n_rows, f_n_cols, f_n_slices); } catch(...) { err_msg = "not enough memory"; return false; }
 
     for(uword slice = 0; slice < x.n_slices; ++slice)
     for(uword   row = 0;   row < x.n_rows;   ++row  )
@@ -4065,7 +4083,8 @@ diskio::load_arma_binary(Cube<eT>& x, std::istream& f, std::string& err_msg)
     //f.seekg(1, ios::cur);  // NOTE: this may not be portable, as on a Windows machine a newline could be two characters
     f.get();
     
-    x.set_size(f_n_rows, f_n_cols, f_n_slices);
+    try { x.set_size(f_n_rows, f_n_cols, f_n_slices); } catch(...) { err_msg = "not enough memory"; return false; }
+    
     f.read( reinterpret_cast<char *>(x.memptr()), std::streamsize(x.n_elem*sizeof(eT)) );
     
     load_okay = f.good();
@@ -4177,7 +4196,7 @@ diskio::load_hdf5_binary(Cube<eT>& x, const hdf5_name& spec, std::string& err_ms
         if(ndims == 1) { dims[1] = 1; dims[2] = 1; }  // Vector case; one row/colum, several slices
         if(ndims == 2) {              dims[2] = 1; }  // Matrix case; one column, several rows/slices
         
-        x.set_size(dims[2], dims[1], dims[0]);
+        try { x.set_size(dims[2], dims[1], dims[0]); } catch(...) { err_msg = "not enough memory"; return false; }
         
         // Now we have to see what type is stored to figure out how to load it.
         hid_t datatype = arma_H5Dget_type(dataset);
@@ -4451,7 +4470,7 @@ diskio::load_arma_binary(field<T1>& x, std::istream& f, std::string& err_msg)
     f >> f_n_rows;
     f >> f_n_cols;
     
-    x.set_size(f_n_rows, f_n_cols);
+    try { x.set_size(f_n_rows, f_n_cols); } catch(...) { err_msg = "not enough memory"; return false; }
     
     f.get();
     
@@ -4473,7 +4492,7 @@ diskio::load_arma_binary(field<T1>& x, std::istream& f, std::string& err_msg)
     f >> f_n_cols;
     f >> f_n_slices;
     
-    x.set_size(f_n_rows, f_n_cols, f_n_slices);
+    try { x.set_size(f_n_rows, f_n_cols, f_n_slices); } catch(...) { err_msg = "not enough memory"; return false; }
     
     f.get();
     
@@ -4623,7 +4642,7 @@ diskio::load_std_string(field<std::string>& x, std::istream& f, std::string& err
     f.seekg(0, ios::beg);
     //f.seekg(start);
     
-    x.set_size(f_n_rows, f_n_cols);
+    try { x.set_size(f_n_rows, f_n_cols); } catch(...) { err_msg = "not enough memory"; return false; }
     
     for(uword row=0; row < x.n_rows; ++row)
     for(uword col=0; col < x.n_cols; ++col)
@@ -4772,7 +4791,7 @@ diskio::load_ppm_binary(Cube<eT>& x, std::istream& f, std::string& err_msg)
     
     if( (f_maxval > 0) && (f_maxval <= 65535) )
       {
-      x.set_size(f_n_rows, f_n_cols, 3);
+      try { x.set_size(f_n_rows, f_n_cols, 3); } catch(...) { err_msg = "not enough memory"; return false; }
       
       if(f_maxval <= 255)
         {
@@ -4966,9 +4985,9 @@ diskio::load_ppm_binary(field<T1>& x, std::istream& f, std::string& err_msg)
       Mat<eT>& G = x(1);
       Mat<eT>& B = x(2);
       
-      R.set_size(f_n_rows,f_n_cols);
-      G.set_size(f_n_rows,f_n_cols);
-      B.set_size(f_n_rows,f_n_cols);
+      try { R.set_size(f_n_rows,f_n_cols); } catch(...) { err_msg = "not enough memory"; return false; }
+      try { G.set_size(f_n_rows,f_n_cols); } catch(...) { err_msg = "not enough memory"; return false; }
+      try { B.set_size(f_n_rows,f_n_cols); } catch(...) { err_msg = "not enough memory"; return false; }
       
       if(f_maxval <= 255)
         {

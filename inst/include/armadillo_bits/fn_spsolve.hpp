@@ -87,7 +87,7 @@ spsolve_helper
       
       conversion_ok = true;
       }
-    catch(std::bad_alloc&)
+    catch(...)
       {
       arma_debug_warn_level(1, "spsolve(): not enough memory to use LAPACK based solver");
       }
