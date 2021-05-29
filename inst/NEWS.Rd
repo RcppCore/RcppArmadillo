@@ -3,6 +3,13 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.10.5.1.0 (2021-05-28)}{
+  \itemize{
+    \item Upgraded to Armadillo release 10.5.1 (Antipodean Fortress)
+    \item GitHub-only release
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.10.5.0 (2021-05-21)}{
   \itemize{
     \item Upgraded to Armadillo release 10.5 (Antipodean Fortress)
