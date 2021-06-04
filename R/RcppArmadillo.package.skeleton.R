@@ -23,7 +23,7 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
                                            code_files=character(),
                                            example_code=TRUE) {
 
-    env <- parent.frame(1)
+    env <- parent.frame(1)              # #nocov start
 
     if (! length(list)) {
         fake <- TRUE
@@ -129,5 +129,5 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
         unlink(file.path(root, "man", "Rcpp.fake.fun.Rd"))
     }
 
-    invisible(NULL)
+    invisible(NULL) 						# #nocov env
 }

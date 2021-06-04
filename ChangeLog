@@ -2,7 +2,8 @@
 
 	* inst/tinytest/test_misc.R: Add tests for several miscellaneous
 	functions in src/RcppArmadillo.cpp, R/flags.R
-	* R/SciPy2R.R (.SciPy2R): Set nocov tags for deprecated code
+	* R/SciPy2R.R: Set nocov tags for deprecated code
+	* R/RcppArmadillo.package.skeleton.R: Set nocov
 
 	* .codecov.yml (comment): Set to false
 
