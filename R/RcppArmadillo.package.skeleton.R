@@ -129,5 +129,5 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
         unlink(file.path(root, "man", "Rcpp.fake.fun.Rd"))
     }
 
-    invisible(NULL) 						# #nocov env
+    invisible(NULL) 						# #nocov end
 }

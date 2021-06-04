@@ -1,8 +1,8 @@
 coverage:
   precision: 1
 
+comment: false
+
 ignore:
   - "inst/include/armadillo"
   - "inst/include/armadillo_bits"
-
-comment: false
