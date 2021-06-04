@@ -33,7 +33,6 @@ armadillo_set_seed(42L)                 # no test as we have no (current) access
 
 
 ## -- R/flags.R
-cxxflags <- RcppArmadilloCxxFlags()
+cxxflags <- RcppArmadillo:::RcppArmadilloCxxFlags()
 expect_true(is.character(cxxflags))
-cxxflags <- CxxFlags()
-expect_true(is.character(cxxflags))
+expect_stdout(RcppArmadillo:::CxxFlags())
