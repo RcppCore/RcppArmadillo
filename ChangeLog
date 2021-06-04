@@ -1,5 +1,8 @@
 2021-06-04  Dirk Eddelbuettel  <edd@debian.org>
 
+	* inst/tinytest/test_misc.R: Add tests for several miscellaneous
+	functions in src/RcppArmadillo.cpp
+
 	* .codecov.yml (comment): Set to false
 
 2021-05-29  Dirk Eddelbuettel  <edd@debian.org>
