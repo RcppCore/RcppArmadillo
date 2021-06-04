@@ -10,3 +10,4 @@ src/lapack
 ^.editorconfig
 ^\.github
 ^\.codecov.yml
+^\.covrignore
