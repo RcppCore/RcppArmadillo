@@ -2,6 +2,7 @@
 
 	* inst/tinytest/test_misc.R: Add tests for several miscellaneous
 	functions in src/RcppArmadillo.cpp, R/flags.R
+	* inst/tinytest/test_fastLm.R: Additional fastLm() tests
 	* R/SciPy2R.R: Set nocov tags for deprecated code
 	* R/RcppArmadillo.package.skeleton.R: Set nocov
 

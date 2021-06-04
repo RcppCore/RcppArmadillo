@@ -78,3 +78,10 @@ expect_equal(as.numeric(flm$stderr), as.numeric(coef(summary(fit))[,2]))#,msg="f
 expect_equal(as.numeric(flm$df.residual), as.numeric(fit$df.residual))#,msg="fastLm.formula.df.residual")
 expect_equal(as.numeric(flm$residuals), as.numeric(fit$residuals))#,msg="fastLm.formula.residuals")
 expect_equal(as.numeric(flm$fitted.values), as.numeric(fit$fitted.values))#,msg="fastLm.formula.fitted.values")
+
+## also tickle print and preditct methods
+expect_stdout(print(flm))
+expect_stdout(print(summary(flm)))
+vec <- predict(flm, newdata=data.frame(Girth=c(1,2,3), Volume=c(2,3,4)))
+expect_equal(class(vec), "numeric")
+expect_equal(length(vec), 3L)
