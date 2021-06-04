@@ -19,6 +19,7 @@
 
 library(RcppArmadillo)
 
+## -- src/RcppArmadillo.cpp
 arma <- armadillo_version(FALSE)
 expect_equal(length(arma), 3)           # major minor patch
 expect_equal(names(arma), c("major","minor","patch"))
@@ -29,3 +30,10 @@ expect_equal(length(arma), 1L)
 ## no tests as we have no (current) accessor as we prefer R RNGs
 expect_warning(armadillo_set_seed_random())
 armadillo_set_seed(42L)                 # no test as we have no (current) accessor as we prefer R RNGs
+
+
+## -- R/flags.R
+cxxflags <- RcppArmadilloCxxFlags()
+expect_true(is.character(cxxflags))
+cxxflags <- CxxFlags()
+expect_true(is.character(cxxflags))

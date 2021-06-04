@@ -17,7 +17,7 @@
 ## You should have received a copy of the GNU General Public License
 ## along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
-.SciPy2R <- function(spmat) {
+.SciPy2R <- function(spmat) {           # #nocov start
     .Deprecated("This function is no longer needed as 'reticulate' now converts from 'scipy'.",
                 package="reticulate")
 
@@ -49,4 +49,4 @@
         stop("Only CSC, COO and CSR matrices from SciPy are supported.", call.=FALSE)
     }
     return(res)
-}
+}										# #nocov end

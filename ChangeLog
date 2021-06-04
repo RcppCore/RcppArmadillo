@@ -1,7 +1,8 @@
 2021-06-04  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/tinytest/test_misc.R: Add tests for several miscellaneous
-	functions in src/RcppArmadillo.cpp
+	functions in src/RcppArmadillo.cpp, R/flags.R
+	* R/SciPy2R.R (.SciPy2R): Set nocov tags for deprecated code
 
 	* .codecov.yml (comment): Set to false
 
