@@ -4,3 +4,5 @@ coverage:
 ignore:
   - "inst/include/armadillo"
   - "inst/include/armadillo_bits"
+
+comment: false

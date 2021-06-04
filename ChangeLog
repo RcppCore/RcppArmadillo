@@ -1,6 +1,6 @@
 2021-06-04  Dirk Eddelbuettel  <edd@debian.org>
 
-	* .covrignore: Ignore Armadillo upstream code from aggregation count
+	* .codecov.yml (comment): Set to false
 
 2021-05-29  Dirk Eddelbuettel  <edd@debian.org>
 
