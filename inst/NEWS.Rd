@@ -8,6 +8,7 @@
     \item Upgraded to Armadillo release 10.5.1 (Antipodean Fortress)
     \item GitHub-only release
   }
+  \item Extended test coverage with several new tests, added a coverage badge.
 }
 
 \section{Changes in RcppArmadillo version 0.10.5.0 (2021-05-21)}{
