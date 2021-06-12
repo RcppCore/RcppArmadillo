@@ -1210,6 +1210,7 @@ subview<eT>::randn()
 
 template<typename eT>
 inline
+arma_warn_unused
 eT
 subview<eT>::at_alt(const uword ii) const
   {
@@ -1220,6 +1221,7 @@ subview<eT>::at_alt(const uword ii) const
 
 template<typename eT>
 inline
+arma_warn_unused
 eT&
 subview<eT>::operator[](const uword ii)
   {
@@ -1235,6 +1237,7 @@ subview<eT>::operator[](const uword ii)
 
 template<typename eT>
 inline
+arma_warn_unused
 eT
 subview<eT>::operator[](const uword ii) const
   {
@@ -1250,6 +1253,7 @@ subview<eT>::operator[](const uword ii) const
 
 template<typename eT>
 inline
+arma_warn_unused
 eT&
 subview<eT>::operator()(const uword ii)
   {
@@ -1267,6 +1271,7 @@ subview<eT>::operator()(const uword ii)
 
 template<typename eT>
 inline
+arma_warn_unused
 eT
 subview<eT>::operator()(const uword ii) const
   {
@@ -1284,6 +1289,7 @@ subview<eT>::operator()(const uword ii) const
 
 template<typename eT>
 inline
+arma_warn_unused
 eT&
 subview<eT>::operator()(const uword in_row, const uword in_col)
   {
@@ -1298,6 +1304,7 @@ subview<eT>::operator()(const uword in_row, const uword in_col)
 
 template<typename eT>
 inline
+arma_warn_unused
 eT
 subview<eT>::operator()(const uword in_row, const uword in_col) const
   {
@@ -1312,6 +1319,7 @@ subview<eT>::operator()(const uword in_row, const uword in_col) const
 
 template<typename eT>
 inline
+arma_warn_unused
 eT&
 subview<eT>::at(const uword in_row, const uword in_col)
   {
@@ -1324,6 +1332,7 @@ subview<eT>::at(const uword in_row, const uword in_col)
 
 template<typename eT>
 inline
+arma_warn_unused
 eT
 subview<eT>::at(const uword in_row, const uword in_col) const
   {
@@ -1336,6 +1345,7 @@ subview<eT>::at(const uword in_row, const uword in_col) const
 
 template<typename eT>
 inline
+arma_warn_unused
 eT&
 subview<eT>::front()
   {
@@ -1348,6 +1358,7 @@ subview<eT>::front()
 
 template<typename eT>
 inline
+arma_warn_unused
 eT
 subview<eT>::front() const
   {
@@ -1360,6 +1371,7 @@ subview<eT>::front() const
 
 template<typename eT>
 inline
+arma_warn_unused
 eT&
 subview<eT>::back()
   {
@@ -1375,6 +1387,7 @@ subview<eT>::back()
 
 template<typename eT>
 inline
+arma_warn_unused
 eT
 subview<eT>::back() const
   {

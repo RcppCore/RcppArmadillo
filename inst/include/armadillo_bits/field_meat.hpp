@@ -470,6 +470,7 @@ field<oT>::copy_size(const field<oT2>& x)
 //! linear element accessor (treats the field as a vector); no bounds check
 template<typename oT>
 arma_inline
+arma_warn_unused
 oT&
 field<oT>::operator[] (const uword i)
   {
@@ -481,6 +482,7 @@ field<oT>::operator[] (const uword i)
 //! linear element accessor (treats the field as a vector); no bounds check
 template<typename oT>
 arma_inline
+arma_warn_unused
 const oT&
 field<oT>::operator[] (const uword i) const
   {
@@ -492,6 +494,7 @@ field<oT>::operator[] (const uword i) const
 //! linear element accessor (treats the field as a vector); no bounds check
 template<typename oT>
 arma_inline
+arma_warn_unused
 oT&
 field<oT>::at(const uword i)
   {
@@ -503,6 +506,7 @@ field<oT>::at(const uword i)
 //! linear element accessor (treats the field as a vector); no bounds check
 template<typename oT>
 arma_inline
+arma_warn_unused
 const oT&
 field<oT>::at(const uword i) const
   {
@@ -514,6 +518,7 @@ field<oT>::at(const uword i) const
 //! linear element accessor (treats the field as a vector); bounds checking not done when ARMA_NO_DEBUG is defined
 template<typename oT>
 arma_inline
+arma_warn_unused
 oT&
 field<oT>::operator() (const uword i)
   {
@@ -527,6 +532,7 @@ field<oT>::operator() (const uword i)
 //! linear element accessor (treats the field as a vector); bounds checking not done when ARMA_NO_DEBUG is defined
 template<typename oT>
 arma_inline
+arma_warn_unused
 const oT&
 field<oT>::operator() (const uword i) const
   {
@@ -540,6 +546,7 @@ field<oT>::operator() (const uword i) const
 //! element accessor; bounds checking not done when ARMA_NO_DEBUG is defined
 template<typename oT>
 arma_inline
+arma_warn_unused
 oT&
 field<oT>::operator() (const uword in_row, const uword in_col)
   {
@@ -553,6 +560,7 @@ field<oT>::operator() (const uword in_row, const uword in_col)
 //! element accessor; bounds checking not done when ARMA_NO_DEBUG is defined
 template<typename oT>
 arma_inline
+arma_warn_unused
 const oT&
 field<oT>::operator() (const uword in_row, const uword in_col) const
   {
@@ -566,6 +574,7 @@ field<oT>::operator() (const uword in_row, const uword in_col) const
 //! element accessor; bounds checking not done when ARMA_NO_DEBUG is defined
 template<typename oT>
 arma_inline
+arma_warn_unused
 oT&
 field<oT>::operator() (const uword in_row, const uword in_col, const uword in_slice)
   {
@@ -579,6 +588,7 @@ field<oT>::operator() (const uword in_row, const uword in_col, const uword in_sl
 //! element accessor; bounds checking not done when ARMA_NO_DEBUG is defined
 template<typename oT>
 arma_inline
+arma_warn_unused
 const oT&
 field<oT>::operator() (const uword in_row, const uword in_col, const uword in_slice) const
   {
@@ -592,6 +602,7 @@ field<oT>::operator() (const uword in_row, const uword in_col, const uword in_sl
 //! element accessor; no bounds check
 template<typename oT>
 arma_inline
+arma_warn_unused
 oT&
 field<oT>::at(const uword in_row, const uword in_col)
   {
@@ -603,6 +614,7 @@ field<oT>::at(const uword in_row, const uword in_col)
 //! element accessor; no bounds check
 template<typename oT>
 arma_inline
+arma_warn_unused
 const oT&
 field<oT>::at(const uword in_row, const uword in_col) const
   {
@@ -614,6 +626,7 @@ field<oT>::at(const uword in_row, const uword in_col) const
 //! element accessor; no bounds check
 template<typename oT>
 arma_inline
+arma_warn_unused
 oT&
 field<oT>::at(const uword in_row, const uword in_col, const uword in_slice)
   {
@@ -625,10 +638,63 @@ field<oT>::at(const uword in_row, const uword in_col, const uword in_slice)
 //! element accessor; no bounds check
 template<typename oT>
 arma_inline
+arma_warn_unused
 const oT&
 field<oT>::at(const uword in_row, const uword in_col, const uword in_slice) const
   {
   return (*mem[in_row + in_col*n_rows + in_slice*(n_rows*n_cols)]);
+  }
+
+
+
+template<typename oT>
+arma_inline
+arma_warn_unused
+oT&
+field<oT>::front()
+  {
+  arma_debug_check( (n_elem == 0), "field::front(): field is empty" );
+  
+  return (*mem[0]);
+  }
+
+
+
+template<typename oT>
+arma_inline
+arma_warn_unused
+const oT&
+field<oT>::front() const
+  {
+  arma_debug_check( (n_elem == 0), "field::front(): field is empty" );
+  
+  return (*mem[0]);
+  }
+
+
+
+template<typename oT>
+arma_inline
+arma_warn_unused
+oT&
+field<oT>::back()
+  {
+  arma_debug_check( (n_elem == 0), "field::back(): field is empty" );
+  
+  return (*mem[n_elem-1]);
+  }
+
+
+
+template<typename oT>
+arma_inline
+arma_warn_unused
+const oT&
+field<oT>::back() const
+  {
+  arma_debug_check( (n_elem == 0), "field::back(): field is empty" );
+  
+  return (*mem[n_elem-1]);
   }
 
 

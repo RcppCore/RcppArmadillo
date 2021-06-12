@@ -117,25 +117,25 @@ class subview : public Base< eT, subview<eT> >
   inline void randu();
   inline void randn();
   
-  inline eT  at_alt    (const uword ii) const;
+  inline arma_warn_unused eT  at_alt    (const uword ii) const;
   
-  inline eT& operator[](const uword ii);
-  inline eT  operator[](const uword ii) const;
+  inline arma_warn_unused eT& operator[](const uword ii);
+  inline arma_warn_unused eT  operator[](const uword ii) const;
   
-  inline eT& operator()(const uword ii);
-  inline eT  operator()(const uword ii) const;
+  inline arma_warn_unused eT& operator()(const uword ii);
+  inline arma_warn_unused eT  operator()(const uword ii) const;
   
-  inline eT& operator()(const uword in_row, const uword in_col);
-  inline eT  operator()(const uword in_row, const uword in_col) const;
+  inline arma_warn_unused eT& operator()(const uword in_row, const uword in_col);
+  inline arma_warn_unused eT  operator()(const uword in_row, const uword in_col) const;
   
-  inline eT&         at(const uword in_row, const uword in_col);
-  inline eT          at(const uword in_row, const uword in_col) const;
+  inline arma_warn_unused eT&         at(const uword in_row, const uword in_col);
+  inline arma_warn_unused eT          at(const uword in_row, const uword in_col) const;
   
-  inline eT& front();
-  inline eT  front() const;
+  inline arma_warn_unused eT& front();
+  inline arma_warn_unused eT  front() const;
   
-  inline eT& back();
-  inline eT  back() const;
+  inline arma_warn_unused eT& back();
+  inline arma_warn_unused eT  back() const;
   
   arma_inline       eT* colptr(const uword in_col);
   arma_inline const eT* colptr(const uword in_col) const;

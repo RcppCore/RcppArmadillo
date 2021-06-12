@@ -86,26 +86,33 @@ class field
   template<typename oT2>
   inline void copy_size(const field<oT2>& x);
   
-  arma_inline       oT& operator[](const uword i);
-  arma_inline const oT& operator[](const uword i) const;
+  arma_inline arma_warn_unused       oT& operator[](const uword i);
+  arma_inline arma_warn_unused const oT& operator[](const uword i) const;
   
-  arma_inline       oT&         at(const uword i);
-  arma_inline const oT&         at(const uword i) const;
+  arma_inline arma_warn_unused       oT&         at(const uword i);
+  arma_inline arma_warn_unused const oT&         at(const uword i) const;
   
-  arma_inline       oT& operator()(const uword i);
-  arma_inline const oT& operator()(const uword i) const;
+  arma_inline arma_warn_unused       oT& operator()(const uword i);
+  arma_inline arma_warn_unused const oT& operator()(const uword i) const;
   
-  arma_inline       oT&         at(const uword row, const uword col);
-  arma_inline const oT&         at(const uword row, const uword col) const;
+  arma_inline arma_warn_unused       oT&         at(const uword row, const uword col);
+  arma_inline arma_warn_unused const oT&         at(const uword row, const uword col) const;
 
-  arma_inline       oT&         at(const uword row, const uword col, const uword slice);
-  arma_inline const oT&         at(const uword row, const uword col, const uword slice) const;
+  arma_inline arma_warn_unused       oT&         at(const uword row, const uword col, const uword slice);
+  arma_inline arma_warn_unused const oT&         at(const uword row, const uword col, const uword slice) const;
   
-  arma_inline       oT& operator()(const uword row, const uword col);
-  arma_inline const oT& operator()(const uword row, const uword col) const;
+  arma_inline arma_warn_unused       oT& operator()(const uword row, const uword col);
+  arma_inline arma_warn_unused const oT& operator()(const uword row, const uword col) const;
 
-  arma_inline       oT& operator()(const uword row, const uword col, const uword slice);
-  arma_inline const oT& operator()(const uword row, const uword col, const uword slice) const;
+  arma_inline arma_warn_unused       oT& operator()(const uword row, const uword col, const uword slice);
+  arma_inline arma_warn_unused const oT& operator()(const uword row, const uword col, const uword slice) const;
+  
+  
+  arma_inline arma_warn_unused       oT& front();
+  arma_inline arma_warn_unused const oT& front() const;
+  
+  arma_inline arma_warn_unused       oT& back();
+  arma_inline arma_warn_unused const oT& back() const;
   
   
   arma_cold inline field_injector<field> operator<<(const oT& val);
