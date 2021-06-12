@@ -121,6 +121,8 @@ struct arma_config
       || defined(ARMA_EXTRA_SPMAT_PROTO) || defined(ARMA_EXTRA_SPMAT_MEAT) \
       || defined(ARMA_EXTRA_SPCOL_PROTO) || defined(ARMA_EXTRA_SPCOL_MEAT) \
       || defined(ARMA_EXTRA_SPROW_PROTO) || defined(ARMA_EXTRA_SPROW_MEAT) \
+      || defined(ARMA_ALIEN_MEM_ALLOC_FUNCTION) \
+      || defined(ARMA_ALIEN_MEM_FREE_FUNCTION) \
       )
     static constexpr bool extra_code = true;
   #else

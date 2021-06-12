@@ -404,11 +404,11 @@ class Cube : public BaseCube< eT, Cube<eT> >
   inline bool  empty() const;
   inline uword size()  const;
   
-  inline       eT& front();
-  inline const eT& front() const;
+  inline arma_warn_unused       eT& front();
+  inline arma_warn_unused const eT& front() const;
   
-  inline       eT& back();
-  inline const eT& back() const;
+  inline arma_warn_unused       eT& back();
+  inline arma_warn_unused const eT& back() const;
   
   inline void swap(Cube& B);
   

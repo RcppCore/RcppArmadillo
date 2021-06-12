@@ -49,7 +49,11 @@ memory::acquire(const uword n_elem)
   
   eT* out_memptr;
   
-  #if   defined(ARMA_USE_TBB_ALLOC)
+  #if   defined(ARMA_ALIEN_MEM_ALLOC_FUNCTION)
+    {
+    out_memptr = (eT *) ARMA_ALIEN_MEM_ALLOC_FUNCTION(sizeof(eT)*n_elem);
+    }
+  #elif defined(ARMA_USE_TBB_ALLOC)
     {
     out_memptr = (eT *) scalable_malloc(sizeof(eT)*n_elem);
     }
@@ -102,7 +106,11 @@ memory::release(eT* mem)
   {
   if(mem == nullptr)  { return; }
   
-  #if   defined(ARMA_USE_TBB_ALLOC)
+  #if   defined(ARMA_ALIEN_MEM_FREE_FUNCTION)
+    {
+    ARMA_ALIEN_MEM_FREE_FUNCTION( (void *)(mem) );
+    }
+  #elif defined(ARMA_USE_TBB_ALLOC)
     {
     scalable_free( (void *)(mem) );
     }
