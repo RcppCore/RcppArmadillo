@@ -27,7 +27,7 @@ class spop_normalise
   inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_normalise>& expr);
   
   template<typename eT>
-  inline static void apply_direct(SpMat<eT>& out, const SpMat<eT>& X, const uword p, const uword dim);
+  inline static void apply_direct(SpMat<eT>& out, const SpMat<eT>& X, const uword p);
   };
 
 
