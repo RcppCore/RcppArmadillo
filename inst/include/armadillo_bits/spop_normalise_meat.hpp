@@ -26,6 +26,8 @@ spop_normalise::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_nor
   {
   arma_extra_debug_sigprint();
   
+  typedef typename T1::elem_type eT;
+  
   const uword p   = expr.aux_uword_a;
   const uword dim = expr.aux_uword_b;
   
@@ -34,7 +36,28 @@ spop_normalise::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_nor
   
   const unwrap_spmat<T1> U(expr.m);
   
-  spop_normalise::apply_direct(out, U.M, p, dim);
+  const SpMat<eT>& X = U.M;
+  
+  X.sync();
+  
+  if( X.is_empty() || (X.n_nonzero == 0) )  { out.zeros(X.n_rows, X.n_cols); return; }
+  
+  if(dim == 0)
+    {
+    spop_normalise::apply_direct(out, X, p);
+    }
+  else
+  if(dim == 1)
+    {
+    SpMat<eT> tmp1;
+    SpMat<eT> tmp2;
+    
+    spop_strans::apply_noalias(tmp1, X);
+    
+    spop_normalise::apply_direct(tmp2, tmp1, p);
+    
+    spop_strans::apply_noalias(out, tmp2);
+    }
   }
 
 
@@ -42,162 +65,65 @@ spop_normalise::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_nor
 template<typename eT>
 inline
 void
-spop_normalise::apply_direct(SpMat<eT>& out, const SpMat<eT>& X, const uword p, const uword dim)
+spop_normalise::apply_direct(SpMat<eT>& out, const SpMat<eT>& X, const uword p)
   {
   arma_extra_debug_sigprint();
   
   typedef typename get_pod_type<eT>::result T;
   
-  X.sync();
+  SpMat<eT> tmp(arma_reserve_indicator(), X.n_rows, X.n_cols, X.n_nonzero);
   
-  if( X.is_empty() || (X.n_nonzero == 0) )  { return; }
+  bool has_zero = false;
   
-  if(dim == 0)
+  podarray<T> norm_vals(X.n_cols);
+  
+  T* norm_vals_mem = norm_vals.memptr();
+  
+  for(uword col=0; col < X.n_cols; ++col)
     {
-    podarray<T> norm_vals(X.n_cols);
+    const uword      col_offset = X.col_ptrs[col    ];
+    const uword next_col_offset = X.col_ptrs[col + 1];
     
-    T* norm_vals_mem = norm_vals.memptr();
+    const eT* start_ptr = &X.values[     col_offset];
+    const eT*   end_ptr = &X.values[next_col_offset];
     
-    for(uword i=0; i < norm_vals.n_elem; ++i)
-      {
-      const uword      col_offset = X.col_ptrs[i    ];
-      const uword next_col_offset = X.col_ptrs[i + 1];
-      
-      const eT* start_ptr = &X.values[     col_offset];
-      const eT*   end_ptr = &X.values[next_col_offset];
-      
-      const uword n_elem = end_ptr - start_ptr;
-      
-      const Col<eT> fake_vec(const_cast<eT*>(start_ptr), n_elem, false, false);
-      
-      const T norm_val = norm(fake_vec, p);
-      
-      norm_vals_mem[i] = (norm_val != T(0)) ? norm_val : T(1);
-      }
+    const uword n_elem = end_ptr - start_ptr;
     
-    const uword N = X.n_nonzero;
+    const Col<eT> fake_vec(const_cast<eT*>(start_ptr), n_elem, false, false);
     
-    umat    locs(2, N, arma_nozeros_indicator());
-    Col<eT> vals(   N, arma_nozeros_indicator());
+    const T norm_val = norm(fake_vec, p);
     
-    uword* locs_mem = locs.memptr();
-    eT*    vals_mem = vals.memptr();
-    
-    typename SpMat<eT>::const_iterator it = X.begin();
-    
-    uword new_n_nonzero = 0;
-    
-    for(uword i=0; i < N; ++i)
-      {
-      const uword row = it.row();
-      const uword col = it.col();
-        
-      const eT val = (*it) / norm_vals_mem[col];
-      
-      if(val != eT(0))
-        {
-        (*vals_mem) = val;  vals_mem++;
-        
-        (*locs_mem) = row;  locs_mem++;
-        (*locs_mem) = col;  locs_mem++;
-        
-        new_n_nonzero++;
-        }
-      
-      ++it;
-      }
-    
-    const umat    tmp_locs(locs.memptr(), 2, new_n_nonzero, false, false);
-    const Col<eT> tmp_vals(vals.memptr(),    new_n_nonzero, false, false);
-    
-    SpMat<eT> tmp(tmp_locs, tmp_vals, X.n_rows, X.n_cols, false, false);
-    
-    out.steal_mem(tmp);
+    norm_vals_mem[col] = (norm_val != T(0)) ? norm_val : T(1);
     }
-  else
-  if(dim == 1)
+  
+  const uword N = X.n_nonzero;
+  
+  typename SpMat<eT>::const_iterator it = X.begin();
+  
+  for(uword i=0; i < N; ++i)
     {
-    podarray< T> norm_vals(X.n_rows);
-    podarray<eT>  row_vals(X.n_cols);  // worst case scenario
+    const uword row = it.row();
+    const uword col = it.col();
     
-    T* norm_vals_mem = norm_vals.memptr();
-    eT* row_vals_mem =  row_vals.memptr();
+    const eT val = (*it) / norm_vals_mem[col];
     
-    for(uword i=0; i < norm_vals.n_elem; ++i)
-      {
-      // typename SpMat<eT>::const_row_iterator row_it     = X.begin_row(i);
-      // typename SpMat<eT>::const_row_iterator row_it_end = X.end_row(i);
-      // 
-      // uword count = 0;
-      // 
-      // for(; row_it != row_it_end; ++row_it)
-      //   {
-      //   row_vals_mem[count] = (*row_it);
-      //   ++count;
-      //   }
-      
-      
-      // using the .at() accessor, as it's faster than const_row_iterator for accessing a single row
-      
-      uword count = 0;
-      
-      for(uword col=0; col < X.n_cols; ++col)
-        {
-        const eT val = X.at(i,col);
-        
-        if(val != eT(0))
-          {
-          row_vals_mem[count] = val;
-          ++count;
-          }
-        }
-      
-      const Row<eT> fake_vec(row_vals_mem, count, false, false);
-      
-      const T norm_val = norm(fake_vec, p);
-      
-      norm_vals_mem[i] = (norm_val != T(0)) ? norm_val : T(1);
-      }
+    if(val == eT(0))  { has_zero = true; }
     
-    const uword N = X.n_nonzero;
+    access::rw(tmp.values[i])      = val;
+    access::rw(tmp.row_indices[i]) = row;
+    access::rw(tmp.col_ptrs[col + 1])++;
     
-    umat    locs(2, N, arma_nozeros_indicator());
-    Col<eT> vals(   N, arma_nozeros_indicator());
-    
-    uword* locs_mem = locs.memptr();
-    eT*    vals_mem = vals.memptr();
-    
-    typename SpMat<eT>::const_iterator it = X.begin();
-    
-    uword new_n_nonzero = 0;
-    
-    for(uword i=0; i < N; ++i)
-      {
-      const uword row = it.row();
-      const uword col = it.col();
-        
-      const eT val = (*it) / norm_vals_mem[row];
-      
-      if(val != eT(0))
-        {
-        (*vals_mem) = val;  vals_mem++;
-        
-        (*locs_mem) = row;  locs_mem++;
-        (*locs_mem) = col;  locs_mem++;
-        
-        new_n_nonzero++;
-        }
-      
-      ++it;
-      }
-    
-    const umat    tmp_locs(locs.memptr(), 2, new_n_nonzero, false, false);
-    const Col<eT> tmp_vals(vals.memptr(),    new_n_nonzero, false, false);
-    
-    SpMat<eT> tmp(tmp_locs, tmp_vals, X.n_rows, X.n_cols, false, false);
-    
-    out.steal_mem(tmp);
+    ++it;
     }
+  
+  for(uword c=0; c < tmp.n_cols; ++c)
+    {
+    access::rw(tmp.col_ptrs[c + 1]) += tmp.col_ptrs[c];
+    }
+  
+  if(has_zero)  { tmp.remove_zeros(); }
+  
+  out.steal_mem(tmp);
   }
 
 
