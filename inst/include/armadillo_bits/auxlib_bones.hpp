@@ -174,6 +174,9 @@ class auxlib
   template<typename eT>
   inline static bool chol_band_common(Mat<eT>& X, const uword KD, const uword layout);
   
+  template<typename eT>
+  inline static bool chol_pivot(Mat<eT>& X, Mat<uword>& P, const uword layout);
+  
   
   //
   // hessenberg decomposition

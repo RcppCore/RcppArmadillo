@@ -75,6 +75,9 @@ class Cube : public BaseCube< eT, Cube<eT> >
   template<typename fill_type> inline Cube(const uword in_rows, const uword in_cols, const uword in_slices, const fill::fill_class<fill_type>& f);
   template<typename fill_type> inline Cube(const SizeCube& s,                                               const fill::fill_class<fill_type>& f);
   
+  inline Cube(const uword in_rows, const uword in_cols, const uword in_slices, const fill::scalar_holder<eT> f);
+  inline Cube(const SizeCube& s,                                               const fill::scalar_holder<eT> f);
+  
   inline            Cube(Cube&& m);
   inline Cube& operator=(Cube&& m);
   
@@ -465,6 +468,7 @@ class Cube<eT>::fixed : public Cube<eT>
   inline fixed();
   inline fixed(const fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>& X);
   
+                                     inline fixed(const fill::scalar_holder<eT> f);
   template<typename fill_type>       inline fixed(const fill::fill_class<fill_type>& f);
   template<typename T1>              inline fixed(const BaseCube<eT,T1>& A);
   template<typename T1, typename T2> inline fixed(const BaseCube<pod_type,T1>& A, const BaseCube<pod_type,T2>& B);

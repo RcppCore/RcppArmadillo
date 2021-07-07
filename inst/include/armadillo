@@ -101,6 +101,7 @@ namespace arma
   #include "armadillo_bits/constants_old.hpp"
   #include "armadillo_bits/mp_misc.hpp"
   #include "armadillo_bits/arma_rel_comparators.hpp"
+  #include "armadillo_bits/fill.hpp"
   
   #ifdef ARMA_RNG_ALT
     #include ARMA_INCFILE_WRAP(ARMA_RNG_ALT)

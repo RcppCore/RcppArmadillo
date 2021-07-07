@@ -200,6 +200,47 @@ Mat<eT>::Mat(const SizeMat& s, const fill::fill_class<fill_type>& f)
 
 
 
+//! construct the matrix to have user specified dimensions and fill with specified value
+template<typename eT>
+inline
+Mat<eT>::Mat(const uword in_n_rows, const uword in_n_cols, const fill::scalar_holder<eT> f)
+  : n_rows(in_n_rows)
+  , n_cols(in_n_cols)
+  , n_elem(in_n_rows*in_n_cols)
+  , n_alloc()
+  , vec_state(0)
+  , mem_state(0)
+  , mem()
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  init_cold();
+  
+  (*this).fill(f.scalar);
+  }
+
+
+
+template<typename eT>
+inline
+Mat<eT>::Mat(const SizeMat& s, const fill::scalar_holder<eT> f)
+  : n_rows(s.n_rows)
+  , n_cols(s.n_cols)
+  , n_elem(s.n_rows*s.n_cols)
+  , n_alloc()
+  , vec_state(0)
+  , mem_state(0)
+  , mem()
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  init_cold();
+  
+  (*this).fill(f.scalar);
+  }
+
+
+
 //! constructor used by Row and Col classes
 template<typename eT>
 inline
@@ -6909,7 +6950,7 @@ Mat<eT>::fill(const eT val)
 
 
 
-//! fill the matrix with the specified value
+//! fill the matrix with the specified pattern
 template<typename eT>
 template<typename fill_type>
 inline
@@ -7415,6 +7456,10 @@ Mat<eT>::save(const std::string name, const file_type type) const
       return (*this).save(csv_name(name), type);
       break;
     
+    case ssv_ascii:
+      return (*this).save(csv_name(name), type);
+      break;
+    
     case coord_ascii:
       save_okay = diskio::save_coord_ascii(*this, name);
       break;
@@ -7519,21 +7564,25 @@ Mat<eT>::save(const csv_name& spec, const file_type type) const
   {
   arma_extra_debug_sigprint();
   
-  if(type != csv_ascii)
+  if( (type != csv_ascii) && (type != ssv_ascii) ) 
     {
     arma_stop_runtime_error("Mat::save(): unsupported file type for csv_name()");
     return false;
     }
   
-  const bool   do_trans  = bool(spec.opts.flags & csv_opts::flag_trans      );
-  const bool   no_header = bool(spec.opts.flags & csv_opts::flag_no_header  );
-        bool with_header = bool(spec.opts.flags & csv_opts::flag_with_header);
+  const bool   do_trans     = bool(spec.opts.flags & csv_opts::flag_trans      );
+  const bool   no_header    = bool(spec.opts.flags & csv_opts::flag_no_header  );
+        bool with_header    = bool(spec.opts.flags & csv_opts::flag_with_header);
+  const bool  use_semicolon = bool(spec.opts.flags & csv_opts::flag_semicolon  ) || (type == ssv_ascii);
   
   arma_extra_debug_print("Mat::save(csv_name): enabled flags:");
   
-  if(do_trans   )  { arma_extra_debug_print("trans");       }
-  if(no_header  )  { arma_extra_debug_print("no_header");   }
-  if(with_header)  { arma_extra_debug_print("with_header"); }
+  if(do_trans     )  { arma_extra_debug_print("trans");       }
+  if(no_header    )  { arma_extra_debug_print("no_header");   }
+  if(with_header  )  { arma_extra_debug_print("with_header"); }
+  if(use_semicolon)  { arma_extra_debug_print("semicolon");   }
+  
+  const char separator = (use_semicolon) ? char(';') : char(',');
   
   if(no_header)  { with_header = false; }
   
@@ -7549,9 +7598,9 @@ Mat<eT>::save(const csv_name& spec, const file_type type) const
       {
       const std::string& token = spec.header_ro.at(i);
       
-      if(token.find(',') != std::string::npos)
+      if(token.find(separator) != std::string::npos)
         {
-        arma_debug_warn_level(1, "Mat::save(): token within the header contains a comma: '", token, "'");
+        arma_debug_warn_level(1, "Mat::save(): token within the header contains the separator character: '", token, "'");
         return false;
         }
       }
@@ -7571,11 +7620,11 @@ Mat<eT>::save(const csv_name& spec, const file_type type) const
     {
     const Mat<eT> tmp = (*this).st();
     
-    save_okay = diskio::save_csv_ascii(tmp, spec.filename, spec.header_ro, with_header);
+    save_okay = diskio::save_csv_ascii(tmp, spec.filename, spec.header_ro, with_header, separator);
     }
   else
     {
-    save_okay = diskio::save_csv_ascii(*this, spec.filename, spec.header_ro, with_header);
+    save_okay = diskio::save_csv_ascii(*this, spec.filename, spec.header_ro, with_header, separator);
     }
   
   if(save_okay == false)  { arma_debug_warn_level(3, "Mat::save(): couldn't write; file: ", spec.filename); }
@@ -7607,7 +7656,11 @@ Mat<eT>::save(std::ostream& os, const file_type type) const
       break;
     
     case csv_ascii:
-      save_okay = diskio::save_csv_ascii(*this, os);
+      save_okay = diskio::save_csv_ascii(*this, os, char(','));
+      break;
+    
+    case ssv_ascii:
+      save_okay = diskio::save_csv_ascii(*this, os, char(';'));
       break;
     
     case coord_ascii:
@@ -7665,6 +7718,10 @@ Mat<eT>::load(const std::string name, const file_type type)
       break;
     
     case csv_ascii:
+      return (*this).load(csv_name(name), type);
+      break;
+    
+    case ssv_ascii:
       return (*this).load(csv_name(name), type);
       break;
     
@@ -7776,21 +7833,25 @@ Mat<eT>::load(const csv_name& spec, const file_type type)
   {
   arma_extra_debug_sigprint();
   
-  if(type != csv_ascii)
+  if( (type != csv_ascii) && (type != ssv_ascii) ) 
     {
     arma_stop_runtime_error("Mat::load(): unsupported file type for csv_name()");
     return false;
     }
   
-  const bool   do_trans  = bool(spec.opts.flags & csv_opts::flag_trans      );
-  const bool   no_header = bool(spec.opts.flags & csv_opts::flag_no_header  );
-        bool with_header = bool(spec.opts.flags & csv_opts::flag_with_header);
+  const bool   do_trans     = bool(spec.opts.flags & csv_opts::flag_trans      );
+  const bool   no_header    = bool(spec.opts.flags & csv_opts::flag_no_header  );
+        bool with_header    = bool(spec.opts.flags & csv_opts::flag_with_header);
+  const bool  use_semicolon = bool(spec.opts.flags & csv_opts::flag_semicolon  ) || (type == ssv_ascii);
   
   arma_extra_debug_print("Mat::load(csv_name): enabled flags:");
   
-  if(do_trans   )  { arma_extra_debug_print("trans");       }
-  if(no_header  )  { arma_extra_debug_print("no_header");   }
-  if(with_header)  { arma_extra_debug_print("with_header"); }
+  if(do_trans     )  { arma_extra_debug_print("trans");       }
+  if(no_header    )  { arma_extra_debug_print("no_header");   }
+  if(with_header  )  { arma_extra_debug_print("with_header"); }
+  if(use_semicolon)  { arma_extra_debug_print("semicolon");   }
+  
+  const char separator = (use_semicolon) ? char(';') : char(',');
   
   if(no_header)  { with_header = false; }
   
@@ -7801,7 +7862,7 @@ Mat<eT>::load(const csv_name& spec, const file_type type)
     {
     Mat<eT> tmp_mat;
     
-    load_okay = diskio::load_csv_ascii(tmp_mat, spec.filename, err_msg, spec.header_rw, with_header);
+    load_okay = diskio::load_csv_ascii(tmp_mat, spec.filename, err_msg, spec.header_rw, with_header, separator);
     
     if(load_okay)
       {
@@ -7816,7 +7877,7 @@ Mat<eT>::load(const csv_name& spec, const file_type type)
     }
   else
     {
-    load_okay = diskio::load_csv_ascii(*this, spec.filename, err_msg, spec.header_rw, with_header);
+    load_okay = diskio::load_csv_ascii(*this, spec.filename, err_msg, spec.header_rw, with_header, separator);
     }
   
   if(load_okay == false)
@@ -7879,7 +7940,11 @@ Mat<eT>::load(std::istream& is, const file_type type)
       break;
     
     case csv_ascii:
-      load_okay = diskio::load_csv_ascii(*this, is, err_msg);
+      load_okay = diskio::load_csv_ascii(*this, is, err_msg, char(','));
+      break;
+    
+    case ssv_ascii:
+      load_okay = diskio::load_csv_ascii(*this, is, err_msg, char(';'));
       break;
     
     case coord_ascii:
@@ -9108,6 +9173,19 @@ Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::fixed(const fixed<fixed_n_rows, fixe
   const eT* src  = (use_extra) ? X.mem_local_extra : X.mem_local;
   
   arrayops::copy( dest, src, fixed_n_elem );
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols>
+inline
+Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::fixed(const fill::scalar_holder<eT> f)
+  : Mat<eT>( arma_fixed_indicator(), fixed_n_rows, fixed_n_cols, 0, ((use_extra) ? mem_local_extra : Mat<eT>::mem_local) )
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  (*this).fill(f.scalar);
   }
 
 

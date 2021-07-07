@@ -367,8 +367,9 @@ enum struct file_type : unsigned int
   pgm_binary,         //!< Portable Grey Map (greyscale image)
   ppm_binary,         //!< Portable Pixel Map (colour image), used by the field and cube classes
   hdf5_binary,        //!< HDF5: open binary format, not specific to Armadillo, which can store arbitrary data
-  hdf5_binary_trans,  //!< [DO NOT USE - deprecated] as per hdf5_binary, but save/load the data with columns transposed to rows
-  coord_ascii         //!< simple co-ordinate format for sparse matrices (indices start at zero)
+  hdf5_binary_trans,  //!< [NOTE: DO NOT USE - deprecated] as per hdf5_binary, but save/load the data with columns transposed to rows
+  coord_ascii,        //!< simple co-ordinate format for sparse matrices (indices start at zero)
+  ssv_ascii,          //!< similar to csv_ascii; uses semicolon (;) instead of comma (,) as the separator
   };
 
 
@@ -384,38 +385,12 @@ static constexpr file_type ppm_binary         = file_type::ppm_binary;
 static constexpr file_type hdf5_binary        = file_type::hdf5_binary;
 static constexpr file_type hdf5_binary_trans  = file_type::hdf5_binary_trans;
 static constexpr file_type coord_ascii        = file_type::coord_ascii;
+static constexpr file_type ssv_ascii          = file_type::ssv_ascii;
 
 
 struct hdf5_name;
 struct  csv_name;
 
-
-//! @}
-
-
-
-//! \addtogroup fill
-//! @{
-
-namespace fill
-  {
-  struct fill_none  {};
-  struct fill_zeros {};
-  struct fill_ones  {};
-  struct fill_eye   {};
-  struct fill_randu {};
-  struct fill_randn {};
-  
-  template<typename fill_type> 
-  struct fill_class { inline fill_class() {} };
-  
-  static const fill_class<fill_none > none;
-  static const fill_class<fill_zeros> zeros;
-  static const fill_class<fill_ones > ones;
-  static const fill_class<fill_eye  > eye;
-  static const fill_class<fill_randu> randu;
-  static const fill_class<fill_randn> randn;
-  }
 
 //! @}
 

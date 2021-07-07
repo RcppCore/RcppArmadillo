@@ -67,6 +67,9 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename fill_type> inline Mat(const uword in_rows, const uword in_cols, const fill::fill_class<fill_type>& f);
   template<typename fill_type> inline Mat(const SizeMat& s,                         const fill::fill_class<fill_type>& f);
   
+  inline Mat(const uword in_rows, const uword in_cols, const fill::scalar_holder<eT> f);
+  inline Mat(const SizeMat& s,                         const fill::scalar_holder<eT> f);
+  
   inline arma_cold            Mat(const char*        text);
   inline arma_cold Mat& operator=(const char*        text);
   
@@ -813,6 +816,7 @@ class Mat<eT>::fixed : public Mat<eT>
   arma_inline fixed();
   arma_inline fixed(const fixed<fixed_n_rows, fixed_n_cols>& X);
   
+                                     inline fixed(const fill::scalar_holder<eT> f);
   template<typename fill_type>       inline fixed(const fill::fill_class<fill_type>& f);
   template<typename T1>              inline fixed(const Base<eT,T1>& A);
   template<typename T1, typename T2> inline fixed(const Base<pod_type,T1>& A, const Base<pod_type,T2>& B);
