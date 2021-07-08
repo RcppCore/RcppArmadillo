@@ -1329,6 +1329,28 @@ namespace lapack
     }
   
   
+  
+  template<typename eT>
+  inline
+  void
+  pstrf(const char* uplo, const blas_int* n, eT* a, const blas_int* lda, blas_int* piv, blas_int* rank, const typename get_pod_type<eT>::result* tol, const typename get_pod_type<eT>::result* work, blas_int* info)
+    {
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
+    
+    #if defined(ARMA_USE_FORTRAN_HIDDEN_ARGS)
+           if(    is_float<eT>::value)  { typedef float  pod_T; typedef float    T; arma_fortran(arma_spstrf)(uplo, n, (T*)a, lda, piv, rank, (const pod_T*)tol, (pod_T*)work, info, 1); }
+      else if(   is_double<eT>::value)  { typedef double pod_T; typedef double   T; arma_fortran(arma_dpstrf)(uplo, n, (T*)a, lda, piv, rank, (const pod_T*)tol, (pod_T*)work, info, 1); }
+      else if( is_cx_float<eT>::value)  { typedef float  pod_T; typedef blas_cxf T; arma_fortran(arma_cpstrf)(uplo, n, (T*)a, lda, piv, rank, (const pod_T*)tol, (pod_T*)work, info, 1); }
+      else if(is_cx_double<eT>::value)  { typedef double pod_T; typedef blas_cxd T; arma_fortran(arma_zpstrf)(uplo, n, (T*)a, lda, piv, rank, (const pod_T*)tol, (pod_T*)work, info, 1); }
+    #else
+           if(    is_float<eT>::value)  { typedef float  pod_T; typedef float    T; arma_fortran(arma_spstrf)(uplo, n, (T*)a, lda, piv, rank, (const pod_T*)tol, (pod_T*)work, info); }
+      else if(   is_double<eT>::value)  { typedef double pod_T; typedef double   T; arma_fortran(arma_dpstrf)(uplo, n, (T*)a, lda, piv, rank, (const pod_T*)tol, (pod_T*)work, info); }
+      else if( is_cx_float<eT>::value)  { typedef float  pod_T; typedef blas_cxf T; arma_fortran(arma_cpstrf)(uplo, n, (T*)a, lda, piv, rank, (const pod_T*)tol, (pod_T*)work, info); }
+      else if(is_cx_double<eT>::value)  { typedef double pod_T; typedef blas_cxd T; arma_fortran(arma_zpstrf)(uplo, n, (T*)a, lda, piv, rank, (const pod_T*)tol, (pod_T*)work, info); }
+    #endif
+    }
+  
+  
   }
 
 

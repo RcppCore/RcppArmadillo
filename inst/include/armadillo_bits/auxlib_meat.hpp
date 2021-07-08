@@ -2636,6 +2636,61 @@ auxlib::chol_band_common(Mat<eT>& X, const uword KD, const uword layout)
   }
 
 
+
+template<typename eT>
+inline
+bool
+auxlib::chol_pivot(Mat<eT>& X, Mat<uword>& P, const uword layout)
+  {
+  arma_extra_debug_sigprint();
+  
+  #if defined(ARMA_USE_LAPACK)
+    {
+    typedef typename get_pod_type<eT>::result T;
+    
+    arma_debug_assert_blas_size(X);
+    
+    char     uplo = (layout == 0) ? 'U' : 'L';
+    blas_int n    = blas_int(X.n_rows);
+    blas_int rank = 0;
+    T        tol  = T(-1);
+    blas_int info = 0;
+    
+    podarray<blas_int> ipiv(  X.n_rows);
+    podarray<T>        work(2*X.n_rows);
+    
+    ipiv.zeros();
+    
+    arma_extra_debug_print("lapack::pstrf()");
+    lapack::pstrf(&uplo, &n, X.memptr(), &n, ipiv.memptr(), &rank, &tol, work.memptr(), &info);
+    
+    if(info != 0)  { return false; }
+    
+    X = (layout == 0) ? trimatu(X) : trimatl(X);  // trimatu() and trimatl() return the same type
+    
+    P.set_size(X.n_rows, 1);
+    
+    for(uword i=0; i < X.n_rows; ++i)
+      {
+      P[i] = uword(ipiv[i] - 1);  // take into account that Fortran counts from 1
+      }
+    
+    return true;
+    }
+  #else
+    {
+    arma_ignore(X);
+    arma_ignore(P);
+    arma_ignore(layout);
+    
+    arma_stop_logic_error("chol(): use of LAPACK must be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
 //
 // hessenberg decomposition
 template<typename eT, typename T1>

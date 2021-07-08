@@ -252,7 +252,11 @@ arrayops::convert_cx_scalar
   {
   arma_ignore(junk);
   
-  out = out_eT( in.real() );
+  const in_T val = in.real();
+  
+  const bool conversion_ok = (std::is_integral<out_eT>::value && std::is_floating_point<in_T>::value) ? arma_isfinite(val) : true;
+  
+  out = conversion_ok ? out_eT(val) : out_eT(0);
   }
 
 
@@ -288,6 +292,7 @@ arrayops::convert(out_eT* dest, const in_eT* src, const uword n_elem)
     return;
     }
   
+  const bool check_finite = (std::is_integral<out_eT>::value && std::is_floating_point<in_eT>::value);
   
   uword j;
   
@@ -299,15 +304,26 @@ arrayops::convert(out_eT* dest, const in_eT* src, const uword n_elem)
     // dest[i] = out_eT( tmp_i );
     // dest[j] = out_eT( tmp_j );
     
-    (*dest) = (is_signed<out_eT>::value)
-              ? out_eT( tmp_i )
-              : ( cond_rel< is_signed<in_eT>::value >::lt(tmp_i, in_eT(0)) ? out_eT(0) : out_eT(tmp_i) );
+    const bool ok_i = check_finite ? arma_isfinite(tmp_i) : true;
+    const bool ok_j = check_finite ? arma_isfinite(tmp_j) : true;
+    
+    (*dest) = ok_i
+              ? (
+                (is_signed<out_eT>::value)
+                ? out_eT( tmp_i )
+                : ( cond_rel< is_signed<in_eT>::value >::lt(tmp_i, in_eT(0)) ? out_eT(0) : out_eT(tmp_i) )
+                )
+              : out_eT(0);
     
     dest++;
     
-    (*dest) = (is_signed<out_eT>::value)
-              ? out_eT( tmp_j )
-              : ( cond_rel< is_signed<in_eT>::value >::lt(tmp_j, in_eT(0)) ? out_eT(0) : out_eT(tmp_j) );
+    (*dest) = ok_j
+              ? (
+                (is_signed<out_eT>::value)
+                ? out_eT( tmp_j )
+                : ( cond_rel< is_signed<in_eT>::value >::lt(tmp_j, in_eT(0)) ? out_eT(0) : out_eT(tmp_j) )
+                )
+              : out_eT(0);
     dest++;
     }
   
@@ -317,9 +333,15 @@ arrayops::convert(out_eT* dest, const in_eT* src, const uword n_elem)
     
     // dest[i] = out_eT( tmp_i );
     
-    (*dest) = (is_signed<out_eT>::value)
-              ? out_eT( tmp_i )
-              : ( cond_rel< is_signed<in_eT>::value >::lt(tmp_i, in_eT(0)) ? out_eT(0) : out_eT(tmp_i) );
+    const bool ok_i = check_finite ? arma_isfinite(tmp_i) : true;
+    
+    (*dest) = ok_i
+              ? (
+                (is_signed<out_eT>::value)
+                ? out_eT( tmp_i )
+                : ( cond_rel< is_signed<in_eT>::value >::lt(tmp_i, in_eT(0)) ? out_eT(0) : out_eT(tmp_i) )
+                )
+              : out_eT(0);
     }
   }
 
