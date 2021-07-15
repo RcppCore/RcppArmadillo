@@ -3,9 +3,17 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.10.5.99.0 (2021-07-01)}{
+\section{Changes in RcppArmadillo version 0.10.6.0.0 (2021-07-16)}{
   \itemize{
-    \item Upgraded to Armadillo release 10.6-rc1 (10.6 RC1)
+    \item Upgraded to Armadillo release 10.6.0 (Keep Calm)
+    \itemize{
+    \item expanded \code{chol()} to optionally use pivoted decomposition
+    \item expanded vector, matrix and cube constructors to allow element
+    initialisation via \code{fill::value(scalar)}, eg. \code{mat X(4,5,fill::value(123))}
+    \item faster loading of CSV files when using OpenMP
+    \item added \code{csv_opts::semicolon} option to allow saving/loading of
+      CSV files with semicolon (;) instead of comma (,) as the separator
+    }
   }
 }
 
@@ -13,8 +21,8 @@
   \itemize{
     \item Upgraded to Armadillo release 10.5.3 (Antipodean Fortress)
     \item GitHub-only release
+    \item Extended test coverage with several new tests, added a coverage badge.
   }
-  \item Extended test coverage with several new tests, added a coverage badge.
 }
 
 \section{Changes in RcppArmadillo version 0.10.5.0 (2021-05-21)}{

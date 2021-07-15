@@ -62,7 +62,7 @@
 \section{Support}{
   Please use the Rcpp-devel mailing list on r-forge
   for questions about RcppArmadillo (subscribe first).
-  \url{http://lists.r-forge.r-project.org/cgi-bin/mailman/listinfo/rcpp-devel}
+  \url{https://lists.r-forge.r-project.org/cgi-bin/mailman/listinfo/rcpp-devel}
 
 }
 
