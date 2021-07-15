@@ -4504,6 +4504,45 @@ SpMat<eT>::reset()
 template<typename eT>
 inline
 void
+SpMat<eT>::reset_cache()
+  {
+  arma_extra_debug_sigprint();
+  
+  sync_csc();
+  
+  #if defined(ARMA_USE_OPENMP)
+    {
+    #pragma omp critical (arma_SpMat_cache)
+      {
+      cache.reset();
+      
+      sync_state = 0;
+      }
+    }
+  #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
+    {
+    cache_mutex.lock();
+    
+    cache.reset();
+    
+    sync_state = 0;
+    
+    cache_mutex.unlock();
+    }
+  #else
+    {
+    cache.reset();
+    
+    sync_state = 0;
+    }
+  #endif
+  }
+
+
+
+template<typename eT>
+inline
+void
 SpMat<eT>::reserve(const uword in_rows, const uword in_cols, const uword new_n_nonzero)
   {
   arma_extra_debug_sigprint();

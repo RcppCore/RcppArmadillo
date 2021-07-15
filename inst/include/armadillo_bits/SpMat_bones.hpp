@@ -360,6 +360,7 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   inline const SpMat& sprandn(const SizeMat& s,                         const double density);
   
   inline void reset();
+  inline void reset_cache();
   
   //! don't use this unless you're writing internal Armadillo code
   inline void reserve(const uword in_rows, const uword in_cols, const uword new_n_nonzero);
