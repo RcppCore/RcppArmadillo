@@ -89,9 +89,18 @@ struct Proxy_fixed
     arma_extra_debug_sigprint();
     }
   
-  static constexpr uword get_n_rows() { return T1::n_rows; }
-  static constexpr uword get_n_cols() { return T1::n_cols; }
-  static constexpr uword get_n_elem() { return T1::n_elem; }
+  //// this may require T1::n_elem etc to be declared as static constexpr inline variables (C++17)
+  //// see also the notes in Mat::fixed
+  //// https://en.cppreference.com/w/cpp/language/static
+  //// https://en.cppreference.com/w/cpp/language/inline
+  // 
+  // static constexpr uword get_n_rows() { return T1::n_rows; }
+  // static constexpr uword get_n_cols() { return T1::n_cols; }
+  // static constexpr uword get_n_elem() { return T1::n_elem; }
+  
+  arma_inline uword get_n_rows() const { return is_row ? 1 : T1::n_rows; }
+  arma_inline uword get_n_cols() const { return is_col ? 1 : T1::n_cols; }
+  arma_inline uword get_n_elem() const { return              T1::n_elem; }
   
   arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
   arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
