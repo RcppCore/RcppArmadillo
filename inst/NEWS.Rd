@@ -3,6 +3,16 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.10.6.1.0 (2021-07-19)}{
+  \itemize{
+    \item Upgraded to Armadillo release 10.6.1 (Keep Calm)
+    \itemize{
+    \item fix incorrect use of \code{constexpr} for handling fixed-size matrices and vectors
+    }
+    \item GitHub- and drat-only release
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.10.6.0.0 (2021-07-16)}{
   \itemize{
     \item Upgraded to Armadillo release 10.6.0 (Keep Calm)
