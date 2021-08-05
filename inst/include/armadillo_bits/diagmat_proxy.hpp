@@ -143,9 +143,15 @@ class diagmat_proxy_fixed
   
   const T1& P;
   
-  static constexpr bool  P_is_vec = (T1::n_rows == 1) || (T1::n_cols == 1);
-  static constexpr uword n_rows   = P_is_vec ? T1::n_elem : T1::n_rows;
-  static constexpr uword n_cols   = P_is_vec ? T1::n_elem : T1::n_cols;
+  //// this may require T1::n_elem etc to be declared as static constexpr inline variables (C++17)
+  //// see also the notes in Mat::fixed
+  // static constexpr bool  P_is_vec = (T1::n_rows == 1) || (T1::n_cols == 1);
+  // static constexpr uword n_rows   = P_is_vec ? T1::n_elem : T1::n_rows;
+  // static constexpr uword n_cols   = P_is_vec ? T1::n_elem : T1::n_cols;
+  
+  static const bool  P_is_vec = (T1::n_rows == 1) || (T1::n_cols == 1);
+  static const uword n_rows   = P_is_vec ? T1::n_elem : T1::n_rows;
+  static const uword n_cols   = P_is_vec ? T1::n_elem : T1::n_cols;
   };
 
 

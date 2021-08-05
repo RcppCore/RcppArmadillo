@@ -1502,6 +1502,33 @@ struct partial_unwrap< Op< Col<eT>, op_htrans> >
 
 
 template<typename eT>
+struct partial_unwrap< Op< subview<eT>, op_htrans> >
+  {
+  typedef Mat<eT> stored_type;
+  
+  inline
+  partial_unwrap(const Op< subview<eT>, op_htrans>& A)
+    : sv( A.m                                                        )
+    , M ( A.m, ((A.m.aux_row1 == 0) && (A.m.n_rows == A.m.m.n_rows)) )  // reuse memory if the subview is a contiguous chunk
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  constexpr eT get_val() const { return eT(1); }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return ( ((sv.aux_row1 == 0) && (sv.n_rows == sv.m.n_rows)) ? (void_ptr(&(sv.m)) == void_ptr(&X)) : false ); }
+  
+  static constexpr bool do_trans = true;
+  static constexpr bool do_times = false;
+  
+  const subview<eT>& sv;
+  const Mat<eT>      M;
+  };
+
+
+
+template<typename eT>
 struct partial_unwrap< Op< subview_col<eT>, op_htrans> >
   {
   typedef Col<eT> stored_type;

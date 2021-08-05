@@ -427,7 +427,6 @@ arma_warn(const T1& arg1, const T2& arg2, const T3& arg3, const T4& arg4)
 
 template<typename T1>
 inline
-static
 void
 arma_warn_level(const uword level, const T1& arg1)
   {
