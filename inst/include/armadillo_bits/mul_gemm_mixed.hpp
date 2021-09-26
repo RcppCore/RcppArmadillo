@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -22,7 +24,7 @@
 //! \brief
 //! Matrix multplication where the matrices have differing element types.
 //! Uses caching for speedup.
-//! Matrix 'C' is assumed to have been set to the correct size (i.e. taking into account transposes)
+//! Matrix 'C' is assumed to have been set to the correct size (ie. taking into account transposes)
 
 template<const bool do_trans_A=false, const bool do_trans_B=false, const bool use_alpha=false, const bool use_beta=false>
 class gemm_mixed_large

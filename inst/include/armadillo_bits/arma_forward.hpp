@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -35,6 +37,7 @@ template<typename eT, bool do_conj> class xtrans_mat;
 
 template<typename eT> class subview;
 template<typename eT> class subview_col;
+template<typename eT> class subview_cols;
 template<typename eT> class subview_row;
 template<typename eT> class subview_row_strans;
 template<typename eT> class subview_row_htrans;
@@ -255,8 +258,8 @@ template<                 typename T1, typename T2, typename eglue_type> class  
 template<typename out_eT, typename T1, typename T2, typename  glue_type> class mtGlueCube;
 
 
-template<typename T1> class Proxy;
-template<typename T1> class ProxyCube;
+template<typename T1> struct Proxy;
+template<typename T1> struct ProxyCube;
 
 template<typename T1> class diagmat_proxy;
 
@@ -323,7 +326,7 @@ template<                 typename T1, typename T2, typename spglue_type> class 
 template<typename out_eT, typename T1, typename T2, typename spglue_type> class mtSpGlue;
 
 
-template<typename T1> class SpProxy;
+template<typename T1> struct SpProxy;
 
 
 

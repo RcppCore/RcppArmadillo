@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -61,7 +63,7 @@ struct upgrade_val<T,T>
 
 
 //! upgrade a type to allow multiplication with a complex type
-//! e.g. the int in "int * complex<double>" is upgraded to a double
+//! eg. the int in "int * complex<double>" is upgraded to a double
 // template<>
 template<typename T, typename T2>
 struct upgrade_val< std::complex<T>, T2 >

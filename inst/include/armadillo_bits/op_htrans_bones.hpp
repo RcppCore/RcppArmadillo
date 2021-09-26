@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -33,7 +35,7 @@ class op_htrans
     };
   
   template<typename eT>
-      arma_inline static void apply_mat_noalias(Mat<eT>& out, const Mat<eT>& A, const typename arma_not_cx<eT>::result* junk = nullptr);
+  arma_hot inline static void apply_mat_noalias(Mat<eT>& out, const Mat<eT>& A, const typename arma_not_cx<eT>::result* junk = nullptr);
   
   template<typename eT>
   arma_hot inline static void apply_mat_noalias(Mat<eT>& out, const Mat<eT>& A, const typename arma_cx_only<eT>::result* junk = nullptr);
@@ -49,7 +51,7 @@ class op_htrans
   //
   
   template<typename eT>
-      arma_inline static void apply_mat_inplace(Mat<eT>& out, const typename arma_not_cx<eT>::result* junk = nullptr);
+  arma_hot inline static void apply_mat_inplace(Mat<eT>& out, const typename arma_not_cx<eT>::result* junk = nullptr);
   
   template<typename eT>
   arma_hot inline static void apply_mat_inplace(Mat<eT>& out, const typename arma_cx_only<eT>::result* junk = nullptr);
@@ -57,26 +59,26 @@ class op_htrans
   //
   
   template<typename eT>
-      arma_inline static void apply_mat(Mat<eT>& out, const Mat<eT>& A, const typename arma_not_cx<eT>::result* junk = nullptr);
+  inline static void apply_mat(Mat<eT>& out, const Mat<eT>& A, const typename arma_not_cx<eT>::result* junk = nullptr);
   
   template<typename eT>
-  arma_hot inline static void apply_mat(Mat<eT>& out, const Mat<eT>& A, const typename arma_cx_only<eT>::result* junk = nullptr);
+  inline static void apply_mat(Mat<eT>& out, const Mat<eT>& A, const typename arma_cx_only<eT>::result* junk = nullptr);
   
   //
   
   template<typename T1>
-  arma_hot inline static void apply_proxy(Mat<typename T1::elem_type>& out, const T1& X);
+  inline static void apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P);
   
   //
   
   template<typename T1>
-  arma_hot inline static void apply_direct(Mat<typename T1::elem_type>& out, const T1& X);
+  inline static void apply_direct(Mat<typename T1::elem_type>& out, const T1& X);
   
   template<typename T1>
-  arma_hot inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_htrans>& in, const typename arma_not_cx<typename T1::elem_type>::result* junk = nullptr);
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_htrans>& in, const typename arma_not_cx<typename T1::elem_type>::result* junk = nullptr);
   
   template<typename T1>
-  arma_hot inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_htrans>& in, const typename arma_cx_only<typename T1::elem_type>::result* junk = nullptr);
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_htrans>& in, const typename arma_cx_only<typename T1::elem_type>::result* junk = nullptr);
   };
 
 

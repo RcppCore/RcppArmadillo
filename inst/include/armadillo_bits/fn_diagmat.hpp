@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -18,7 +20,7 @@
 //! @{
 
 
-//! interpret a matrix or a vector as a diagonal matrix (i.e. off-diagonal entries are zero)
+//! interpret a matrix or a vector as a diagonal matrix (ie. off-diagonal entries are zero)
 template<typename T1>
 arma_warn_unused
 arma_inline

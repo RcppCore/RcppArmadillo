@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -355,9 +357,9 @@ class SpSubview_col : public SpSubview<eT>
   template<typename T1> inline void operator= (const SpBase<eT,T1>& x);
   template<typename T1> inline void operator= (const   Base<eT,T1>& x);
   
-  inline const SpOp<SpSubview_col<eT>,spop_htrans>  t() const;
-  inline const SpOp<SpSubview_col<eT>,spop_htrans> ht() const;
-  inline const SpOp<SpSubview_col<eT>,spop_strans> st() const;
+  inline arma_warn_unused const SpOp<SpSubview_col<eT>,spop_htrans>  t() const;
+  inline arma_warn_unused const SpOp<SpSubview_col<eT>,spop_htrans> ht() const;
+  inline arma_warn_unused const SpOp<SpSubview_col<eT>,spop_strans> st() const;
   
   
   protected:
@@ -393,9 +395,9 @@ class SpSubview_row : public SpSubview<eT>
   template<typename T1> inline void operator= (const SpBase<eT,T1>& x);
   template<typename T1> inline void operator= (const   Base<eT,T1>& x);
   
-  inline const SpOp<SpSubview_row<eT>,spop_htrans>  t() const;
-  inline const SpOp<SpSubview_row<eT>,spop_htrans> ht() const;
-  inline const SpOp<SpSubview_row<eT>,spop_strans> st() const;
+  inline arma_warn_unused const SpOp<SpSubview_row<eT>,spop_htrans>  t() const;
+  inline arma_warn_unused const SpOp<SpSubview_row<eT>,spop_htrans> ht() const;
+  inline arma_warn_unused const SpOp<SpSubview_row<eT>,spop_strans> st() const;
   
   
   protected:

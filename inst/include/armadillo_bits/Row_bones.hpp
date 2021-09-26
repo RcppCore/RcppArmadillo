@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -88,11 +90,11 @@ class Row : public Mat<eT>
   
   arma_cold inline mat_injector<Row> operator<<(const eT val);
   
-  arma_inline const Op<Row<eT>,op_htrans>  t() const;
-  arma_inline const Op<Row<eT>,op_htrans> ht() const;
-  arma_inline const Op<Row<eT>,op_strans> st() const;
+  arma_inline arma_warn_unused const Op<Row<eT>,op_htrans>  t() const;
+  arma_inline arma_warn_unused const Op<Row<eT>,op_htrans> ht() const;
+  arma_inline arma_warn_unused const Op<Row<eT>,op_strans> st() const;
   
-  arma_inline const Op<Row<eT>,op_strans> as_col() const;
+  arma_inline arma_warn_unused const Op<Row<eT>,op_strans> as_col() const;
   
   arma_inline       subview_row<eT> col(const uword col_num);
   arma_inline const subview_row<eT> col(const uword col_num) const;
@@ -233,9 +235,9 @@ class Row<eT>::fixed : public Row<eT>
     template<typename T1, typename T2, typename eglue_type> inline Row& operator=(const eGlue<T1, T2, eglue_type>& X);
   #endif
   
-  arma_inline const Op< Row_fixed_type, op_htrans >  t() const;
-  arma_inline const Op< Row_fixed_type, op_htrans > ht() const;
-  arma_inline const Op< Row_fixed_type, op_strans > st() const;
+  arma_inline arma_warn_unused const Op< Row_fixed_type, op_htrans >  t() const;
+  arma_inline arma_warn_unused const Op< Row_fixed_type, op_htrans > ht() const;
+  arma_inline arma_warn_unused const Op< Row_fixed_type, op_strans > st() const;
   
   arma_inline arma_warn_unused const eT& at_alt     (const uword i) const;
   

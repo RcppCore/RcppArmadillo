@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -22,14 +24,14 @@
 template<typename elem_type, typename derived>
 struct SpBase_eval_SpMat
   {
-  inline const derived& eval() const;
+  inline arma_warn_unused const derived& eval() const;
   };
 
 
 template<typename elem_type, typename derived>
 struct SpBase_eval_expr
   {
-  inline SpMat<elem_type> eval() const;   //!< force the immediate evaluation of a delayed expression
+  inline arma_warn_unused SpMat<elem_type> eval() const;   //!< force the immediate evaluation of a delayed expression
   };
 
 
@@ -52,9 +54,9 @@ struct SpBase
   
   arma_inline bool is_alias(const SpMat<elem_type>& X) const;
   
-  inline const SpOp<derived,spop_htrans>  t() const;  //!< Hermitian transpose
-  inline const SpOp<derived,spop_htrans> ht() const;  //!< Hermitian transpose
-  inline const SpOp<derived,spop_strans> st() const;  //!< simple transpose
+  inline arma_warn_unused const SpOp<derived,spop_htrans>  t() const;  //!< Hermitian transpose
+  inline arma_warn_unused const SpOp<derived,spop_htrans> ht() const;  //!< Hermitian transpose
+  inline arma_warn_unused const SpOp<derived,spop_strans> st() const;  //!< simple transpose
   
   arma_cold inline void print(                           const std::string extra_text = "") const;
   arma_cold inline void print(std::ostream& user_stream, const std::string extra_text = "") const;

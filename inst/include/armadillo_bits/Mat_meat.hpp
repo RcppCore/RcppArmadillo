@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -1952,7 +1954,7 @@ Mat<eT>::Mat(const subview<eT>& X, const bool use_colmem)
 
 
 
-//! construct a matrix from subview (e.g. construct a matrix from a delayed submatrix operation)
+//! construct a matrix from subview (eg. construct a matrix from a delayed submatrix operation)
 template<typename eT>
 inline
 Mat<eT>::Mat(const subview<eT>& X)
@@ -1973,7 +1975,7 @@ Mat<eT>::Mat(const subview<eT>& X)
 
 
 
-//! construct a matrix from subview (e.g. construct a matrix from a delayed submatrix operation)
+//! construct a matrix from subview (eg. construct a matrix from a delayed submatrix operation)
 template<typename eT>
 inline
 Mat<eT>&
@@ -2266,7 +2268,7 @@ Mat<eT>::operator/=(const subview_cube<eT>& X)
 
 
 
-//! construct a matrix from diagview (e.g. construct a matrix from a delayed diag operation)
+//! construct a matrix from diagview (eg. construct a matrix from a delayed diag operation)
 template<typename eT>
 inline
 Mat<eT>::Mat(const diagview<eT>& X)
@@ -2287,7 +2289,7 @@ Mat<eT>::Mat(const diagview<eT>& X)
 
 
 
-//! construct a matrix from diagview (e.g. construct a matrix from a delayed diag operation)
+//! construct a matrix from diagview (eg. construct a matrix from a delayed diag operation)
 template<typename eT>
 inline
 Mat<eT>&
@@ -3253,7 +3255,7 @@ Mat<eT>::rows(const uword in_row1, const uword in_row2) const
 //! creation of subview (submatrix comprised of specified column vectors)
 template<typename eT>
 arma_inline
-subview<eT>
+subview_cols<eT>
 Mat<eT>::cols(const uword in_col1, const uword in_col2)
   {
   arma_extra_debug_sigprint();
@@ -3266,7 +3268,7 @@ Mat<eT>::cols(const uword in_col1, const uword in_col2)
   
   const uword subview_n_cols = in_col2 - in_col1 + 1;
   
-  return subview<eT>(*this, 0, in_col1, n_rows, subview_n_cols);
+  return subview_cols<eT>(*this, in_col1, subview_n_cols);
   }
 
 
@@ -3274,7 +3276,7 @@ Mat<eT>::cols(const uword in_col1, const uword in_col2)
 //! creation of subview (submatrix comprised of specified column vectors)
 template<typename eT>
 arma_inline
-const subview<eT>
+const subview_cols<eT>
 Mat<eT>::cols(const uword in_col1, const uword in_col2) const
   {
   arma_extra_debug_sigprint();
@@ -3287,7 +3289,7 @@ Mat<eT>::cols(const uword in_col1, const uword in_col2) const
   
   const uword subview_n_cols = in_col2 - in_col1 + 1;
   
-  return subview<eT>(*this, 0, in_col1, n_rows, subview_n_cols);
+  return subview_cols<eT>(*this, in_col1, subview_n_cols);
   }
 
 
@@ -3351,7 +3353,7 @@ Mat<eT>::rows(const span& row_span) const
 //! creation of subview (submatrix comprised of specified column vectors)
 template<typename eT>
 arma_inline
-subview<eT>
+subview_cols<eT>
 Mat<eT>::cols(const span& col_span)
   {
   arma_extra_debug_sigprint();
@@ -3371,7 +3373,7 @@ Mat<eT>::cols(const span& col_span)
     "Mat::cols(): indices out of bounds or incorrectly used"
     );
   
-  return subview<eT>(*this, 0, in_col1, n_rows, submat_n_cols);
+  return subview_cols<eT>(*this, in_col1, submat_n_cols);
   }
 
 
@@ -3379,7 +3381,7 @@ Mat<eT>::cols(const span& col_span)
 //! creation of subview (submatrix comprised of specified column vectors)
 template<typename eT>
 arma_inline
-const subview<eT>
+const subview_cols<eT>
 Mat<eT>::cols(const span& col_span) const
   {
   arma_extra_debug_sigprint();
@@ -3399,7 +3401,7 @@ Mat<eT>::cols(const span& col_span) const
     "Mat::cols(): indices out of bounds or incorrectly used"
     );
   
-  return subview<eT>(*this, 0, in_col1, n_rows, submat_n_cols);
+  return subview_cols<eT>(*this, in_col1, submat_n_cols);
   }
 
 
@@ -4878,7 +4880,7 @@ Mat<eT>::operator/=(const Gen<T1, gen_type>& X)
 
 
 
-//! create a matrix from Op, i.e. run the previously delayed unary operations
+//! create a matrix from Op, ie. run the previously delayed unary operations
 template<typename eT>
 template<typename T1, typename op_type>
 inline
@@ -4900,7 +4902,7 @@ Mat<eT>::Mat(const Op<T1, op_type>& X)
 
 
 
-//! create a matrix from Op, i.e. run the previously delayed unary operations
+//! create a matrix from Op, ie. run the previously delayed unary operations
 template<typename eT>
 template<typename T1, typename op_type>
 inline
@@ -5008,7 +5010,7 @@ Mat<eT>::operator/=(const Op<T1, op_type>& X)
 
 
 
-//! create a matrix from eOp, i.e. run the previously delayed unary operations
+//! create a matrix from eOp, ie. run the previously delayed unary operations
 template<typename eT>
 template<typename T1, typename eop_type>
 inline
@@ -5032,7 +5034,7 @@ Mat<eT>::Mat(const eOp<T1, eop_type>& X)
 
 
 
-//! create a matrix from eOp, i.e. run the previously delayed unary operations
+//! create a matrix from eOp, ie. run the previously delayed unary operations
 template<typename eT>
 template<typename T1, typename eop_type>
 inline
@@ -5403,7 +5405,7 @@ Mat<eT>::Mat(const SpToDOp<T1, op_type>& X)
 
 
 
-//! create a matrix from an SpToDOp, i.e. run the previously delayed unary operations
+//! create a matrix from an SpToDOp, ie. run the previously delayed unary operations
 template<typename eT>
 template<typename T1, typename op_type>
 inline
@@ -5511,7 +5513,7 @@ Mat<eT>::operator/=(const SpToDOp<T1, op_type>& X)
 
 
 
-//! create a matrix from Glue, i.e. run the previously delayed binary operations
+//! create a matrix from Glue, ie. run the previously delayed binary operations
 template<typename eT>
 template<typename T1, typename T2, typename glue_type>
 inline
@@ -5534,7 +5536,7 @@ Mat<eT>::Mat(const Glue<T1, T2, glue_type>& X)
 
 
 
-//! create a matrix from Glue, i.e. run the previously delayed binary operations
+//! create a matrix from Glue, ie. run the previously delayed binary operations
 template<typename eT>
 template<typename T1, typename T2, typename glue_type>
 inline
@@ -5678,7 +5680,7 @@ Mat<eT>::operator-=(const Glue<T1, T2, glue_times>& X)
 
 
 
-//! create a matrix from eGlue, i.e. run the previously delayed binary operations
+//! create a matrix from eGlue, ie. run the previously delayed binary operations
 template<typename eT>
 template<typename T1, typename T2, typename eglue_type>
 inline
@@ -5703,7 +5705,7 @@ Mat<eT>::Mat(const eGlue<T1, T2, eglue_type>& X)
 
 
 
-//! create a matrix from eGlue, i.e. run the previously delayed binary operations
+//! create a matrix from eGlue, ie. run the previously delayed binary operations
 template<typename eT>
 template<typename T1, typename T2, typename eglue_type>
 inline
@@ -9441,6 +9443,7 @@ Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::operator=(const fixed<fixed_n_rows, 
 template<typename eT>
 template<uword fixed_n_rows, uword fixed_n_cols>
 arma_inline
+arma_warn_unused
 const Op< typename Mat<eT>::template fixed<fixed_n_rows, fixed_n_cols>::Mat_fixed_type, op_htrans >
 Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::t() const
   {
@@ -9452,6 +9455,7 @@ Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::t() const
 template<typename eT>
 template<uword fixed_n_rows, uword fixed_n_cols>
 arma_inline
+arma_warn_unused
 const Op< typename Mat<eT>::template fixed<fixed_n_rows, fixed_n_cols>::Mat_fixed_type, op_htrans >
 Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::ht() const
   {
@@ -9463,6 +9467,7 @@ Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::ht() const
 template<typename eT>
 template<uword fixed_n_rows, uword fixed_n_cols>
 arma_inline
+arma_warn_unused
 const Op< typename Mat<eT>::template fixed<fixed_n_rows, fixed_n_cols>::Mat_fixed_type, op_strans >
 Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::st() const
   {

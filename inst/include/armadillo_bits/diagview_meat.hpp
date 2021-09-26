@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -870,36 +872,6 @@ diagview<eT>::operator()(const uword row, const uword col) const
   arma_debug_check_bounds( ((row >= n_elem) || (col > 0)), "diagview::operator(): out of bounds" );
   
   return m.at(row+row_offset, row+col_offset);
-  }
-
-
-
-template<typename eT>
-arma_inline
-const Op<diagview<eT>,op_htrans>
-diagview<eT>::t() const
-  {
-  return Op<diagview<eT>,op_htrans>(*this);
-  }
-
-
-
-template<typename eT>
-arma_inline
-const Op<diagview<eT>,op_htrans>
-diagview<eT>::ht() const
-  {
-  return Op<diagview<eT>,op_htrans>(*this);
-  }
-
-
-
-template<typename eT>
-arma_inline
-const Op<diagview<eT>,op_strans>
-diagview<eT>::st() const
-  {
-  return Op<diagview<eT>,op_strans>(*this);
   }
 
 

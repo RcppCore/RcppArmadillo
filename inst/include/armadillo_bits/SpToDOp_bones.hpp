@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -21,7 +23,7 @@
 
 //! Class for storing data required for delayed unary operations on a sparse
 //! matrix that produce a dense matrix; the data for storage may include
-//! the operand (e.g. the matrix to which the operation is to be applied) and the unary operator (e.g. inverse).
+//! the operand (eg. the matrix to which the operation is to be applied) and the unary operator (eg. inverse).
 //! The operand is stored as a reference (which can be optimised away),
 //! while the operator is "stored" through the template definition (op_type).
 //! The operands can be 'SpMat', 'SpRow', 'SpCol', 'SpOp', and 'SpGlue'.

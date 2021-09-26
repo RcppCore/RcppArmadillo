@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -102,9 +104,9 @@ struct Proxy_fixed
   arma_inline uword get_n_cols() const { return is_col ? 1 : T1::n_cols; }
   arma_inline uword get_n_elem() const { return              T1::n_elem; }
   
-  arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
-  arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
-  arma_inline elem_type at_alt     (const uword i)                    const { return Q.at_alt(i);    }
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
+  arma_inline elem_type at         (const uword r, const uword c) const { return Q.at(r, c);  }
+  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
@@ -139,9 +141,8 @@ struct Proxy_redirect<T1, true>  { typedef Proxy_fixed<T1>   result; };
 
 
 template<typename T1>
-class Proxy : public Proxy_redirect<T1, is_Mat_fixed<T1>::value>::result
+struct Proxy : public Proxy_redirect<T1, is_Mat_fixed<T1>::value>::result
   {
-  public:
   inline Proxy(const T1& A)
     : Proxy_redirect<T1, is_Mat_fixed<T1>::value>::result(A)
     {
@@ -151,10 +152,8 @@ class Proxy : public Proxy_redirect<T1, is_Mat_fixed<T1>::value>::result
 
 
 template<typename eT>
-class Proxy< Mat<eT> >
+struct Proxy< Mat<eT> >
   {
-  public:
-  
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Mat<eT>                                  stored_type;
@@ -181,9 +180,9 @@ class Proxy< Mat<eT> >
   arma_inline uword get_n_cols() const { return Q.n_cols; }
   arma_inline uword get_n_elem() const { return Q.n_elem; }
   
-  arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
-  arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
-  arma_inline elem_type at_alt     (const uword i)                    const { return Q.at_alt(i);    }
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
+  arma_inline elem_type at         (const uword r, const uword c) const { return Q.at(r, c);  }
+  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
@@ -200,10 +199,8 @@ class Proxy< Mat<eT> >
 
 
 template<typename eT>
-class Proxy< Col<eT> >
+struct Proxy< Col<eT> >
   {
-  public:
-  
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Col<eT>                                  stored_type;
@@ -230,9 +227,9 @@ class Proxy< Col<eT> >
   constexpr   uword get_n_cols() const { return 1;        }
   arma_inline uword get_n_elem() const { return Q.n_elem; }
   
-  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
-  arma_inline elem_type at         (const uword row, const uword) const { return Q[row];      }
-  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
+  arma_inline elem_type operator[] (const uword i)              const { return Q[i];        }
+  arma_inline elem_type at         (const uword r, const uword) const { return Q[r];        }
+  arma_inline elem_type at_alt     (const uword i)              const { return Q.at_alt(i); }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
@@ -249,10 +246,8 @@ class Proxy< Col<eT> >
 
 
 template<typename eT>
-class Proxy< Row<eT> >
+struct Proxy< Row<eT> >
   {
-  public:
-  
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Row<eT>                                  stored_type;
@@ -279,9 +274,9 @@ class Proxy< Row<eT> >
   arma_inline uword get_n_cols() const { return Q.n_cols; }
   arma_inline uword get_n_elem() const { return Q.n_elem; }
   
-  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
-  arma_inline elem_type at         (const uword, const uword col) const { return Q[col];      }
-  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
+  arma_inline elem_type operator[] (const uword i)              const { return Q[i];        }
+  arma_inline elem_type at         (const uword, const uword c) const { return Q[c];        }
+  arma_inline elem_type at_alt     (const uword i)              const { return Q.at_alt(i); }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
@@ -298,10 +293,8 @@ class Proxy< Row<eT> >
 
 
 template<typename T1, typename gen_type>
-class Proxy< Gen<T1, gen_type> >
+struct Proxy< Gen<T1, gen_type> >
   {
-  public:
-  
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Gen<T1, gen_type>                        stored_type;
@@ -328,9 +321,9 @@ class Proxy< Gen<T1, gen_type> >
   arma_inline uword get_n_cols() const { return (is_col ? 1 : Q.n_cols);                           }
   arma_inline uword get_n_elem() const { return (is_row ? 1 : Q.n_rows) * (is_col ? 1 : Q.n_cols); }
   
-  arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
-  arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
-  arma_inline elem_type at_alt     (const uword i)                    const { return Q[i];           }
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];       }
+  arma_inline elem_type at         (const uword r, const uword c) const { return Q.at(r, c); }
+  arma_inline elem_type at_alt     (const uword i)                const { return Q[i];       }
   
   arma_inline         ea_type         get_ea() const { return Q; }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q; }
@@ -347,10 +340,8 @@ class Proxy< Gen<T1, gen_type> >
 
 
 template<typename T1>
-class Proxy< Gen<T1, gen_randu> >
+struct Proxy< Gen<T1, gen_randu> >
   {
-  public:
-  
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Mat<elem_type>                           stored_type;
@@ -377,9 +368,9 @@ class Proxy< Gen<T1, gen_randu> >
   arma_inline uword get_n_cols() const { return (is_col ? 1 : Q.n_cols);                           }
   arma_inline uword get_n_elem() const { return (is_row ? 1 : Q.n_rows) * (is_col ? 1 : Q.n_cols); }
   
-  arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
-  arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
-  arma_inline elem_type at_alt     (const uword i)                    const { return Q.at_alt(i);    }
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
+  arma_inline elem_type at         (const uword r, const uword c) const { return Q.at(r, c);  }
+  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
@@ -396,10 +387,8 @@ class Proxy< Gen<T1, gen_randu> >
 
 
 template<typename T1>
-class Proxy< Gen<T1, gen_randn> >
+struct Proxy< Gen<T1, gen_randn> >
   {
-  public:
-  
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Mat<elem_type>                           stored_type;
@@ -426,9 +415,9 @@ class Proxy< Gen<T1, gen_randn> >
   arma_inline uword get_n_cols() const { return (is_col ? 1 : Q.n_cols);                           }
   arma_inline uword get_n_elem() const { return (is_row ? 1 : Q.n_rows) * (is_col ? 1 : Q.n_cols); }
   
-  arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
-  arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
-  arma_inline elem_type at_alt     (const uword i)                    const { return Q.at_alt(i);    }
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
+  arma_inline elem_type at         (const uword r, const uword c) const { return Q.at(r, c);  }
+  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
@@ -445,10 +434,8 @@ class Proxy< Gen<T1, gen_randn> >
 
 
 template<typename T1, typename eop_type>
-class Proxy< eOp<T1, eop_type> >
+struct Proxy< eOp<T1, eop_type> >
   {
-  public:
-  
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef eOp<T1, eop_type>                        stored_type;
@@ -475,9 +462,9 @@ class Proxy< eOp<T1, eop_type> >
   arma_inline uword get_n_cols() const { return is_col ? 1 : Q.get_n_cols(); }
   arma_inline uword get_n_elem() const { return Q.get_n_elem();              }
   
-  arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
-  arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
-  arma_inline elem_type at_alt     (const uword i)                    const { return Q.at_alt(i);    }
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
+  arma_inline elem_type at         (const uword r, const uword c) const { return Q.at(r, c);  }
+  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
   
   arma_inline         ea_type         get_ea() const { return Q; }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q; }
@@ -494,10 +481,8 @@ class Proxy< eOp<T1, eop_type> >
 
 
 template<typename T1, typename T2, typename eglue_type>
-class Proxy< eGlue<T1, T2, eglue_type> >
+struct Proxy< eGlue<T1, T2, eglue_type> >
   {
-  public:
-  
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef eGlue<T1, T2, eglue_type>                stored_type;
@@ -524,9 +509,9 @@ class Proxy< eGlue<T1, T2, eglue_type> >
   arma_inline uword get_n_cols() const { return is_col ? 1 : Q.get_n_cols(); }
   arma_inline uword get_n_elem() const { return Q.get_n_elem();              }
   
-  arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
-  arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
-  arma_inline elem_type at_alt     (const uword i)                    const { return Q.at_alt(i);    }
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
+  arma_inline elem_type at         (const uword r, const uword c) const { return Q.at(r, c);  }
+  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
   
   arma_inline         ea_type         get_ea() const { return Q; }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q; }
@@ -543,10 +528,8 @@ class Proxy< eGlue<T1, T2, eglue_type> >
 
 
 template<typename T1, typename op_type>
-class Proxy< Op<T1, op_type> >
+struct Proxy< Op<T1, op_type> >
   {
-  public:
-  
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Mat<elem_type>                           stored_type;
@@ -573,9 +556,9 @@ class Proxy< Op<T1, op_type> >
   arma_inline uword get_n_cols() const { return is_col ? 1 : Q.n_cols; }
   arma_inline uword get_n_elem() const { return Q.n_elem;              }
   
-  arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
-  arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
-  arma_inline elem_type at_alt     (const uword i)                    const { return Q.at_alt(i);    }
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
+  arma_inline elem_type at         (const uword r, const uword c) const { return Q.at(r, c);  }
+  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
@@ -592,10 +575,8 @@ class Proxy< Op<T1, op_type> >
 
 
 template<typename T1, typename T2, typename glue_type>
-class Proxy< Glue<T1, T2, glue_type> >
+struct Proxy< Glue<T1, T2, glue_type> >
   {
-  public:
-  
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Mat<elem_type>                           stored_type;
@@ -603,8 +584,8 @@ class Proxy< Glue<T1, T2, glue_type> >
   typedef const Mat<elem_type>&                    aligned_ea_type;
   
   static constexpr bool use_at      = false;
-  static constexpr bool has_subview = false;
   static constexpr bool use_mp      = false;
+  static constexpr bool has_subview = false;
   
   static constexpr bool is_row  = Glue<T1, T2, glue_type>::is_row;
   static constexpr bool is_col  = Glue<T1, T2, glue_type>::is_col;
@@ -622,9 +603,9 @@ class Proxy< Glue<T1, T2, glue_type> >
   arma_inline uword get_n_cols() const { return is_col ? 1 : Q.n_cols; }
   arma_inline uword get_n_elem() const { return Q.n_elem;              }
   
-  arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
-  arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
-  arma_inline elem_type at_alt     (const uword i)                    const { return Q.at_alt(i);    }
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
+  arma_inline elem_type at         (const uword r, const uword c) const { return Q.at(r, c);  }
+  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
@@ -640,11 +621,125 @@ class Proxy< Glue<T1, T2, glue_type> >
 
 
 
-template<typename out_eT, typename T1, typename op_type>
-class Proxy< mtOp<out_eT, T1, op_type> >
+template<typename T1, typename T2>
+struct Proxy< Glue<T1, T2, glue_min> >
   {
-  public:
+  typedef        Glue<T1, T2, glue_min>   this_Glue_type;
+  typedef Proxy< Glue<T1, T2, glue_min> > this_Proxy_type;
   
+  typedef typename T1::elem_type                   elem_type;
+  typedef typename get_pod_type<elem_type>::result pod_type;
+  typedef this_Glue_type                           stored_type;
+  typedef const this_Proxy_type&                   ea_type;
+  typedef const this_Proxy_type&                   aligned_ea_type;
+  
+  static constexpr bool use_at      = (Proxy<T1>::use_at      || Proxy<T2>::use_at     );
+  static constexpr bool use_mp      = (Proxy<T1>::use_mp      || Proxy<T2>::use_mp     );
+  static constexpr bool has_subview = (Proxy<T1>::has_subview || Proxy<T2>::has_subview);
+  
+  static constexpr bool is_row  = this_Glue_type::is_row;
+  static constexpr bool is_col  = this_Glue_type::is_col;
+  static constexpr bool is_xvec = this_Glue_type::is_xvec;
+  
+  arma_aligned const this_Glue_type& Q;
+  arma_aligned const Proxy<T1>       P1;
+  arma_aligned const Proxy<T2>       P2;
+  
+  arma_lt_comparator<elem_type> comparator;
+  
+  inline explicit Proxy(const this_Glue_type& X)
+    : Q (X  )
+    , P1(X.A)
+    , P2(X.B)
+    {
+    arma_extra_debug_sigprint();
+    
+    arma_debug_assert_same_size(P1, P2, "element-wise min()");
+    }
+  
+  arma_inline uword get_n_rows() const { return is_row ? 1 : P1.get_n_rows(); }
+  arma_inline uword get_n_cols() const { return is_col ? 1 : P1.get_n_cols(); }
+  arma_inline uword get_n_elem() const { return P1.get_n_elem();              }
+  
+  arma_inline elem_type operator[] (const uword i)                const { const elem_type A = P1[i];        const elem_type B = P2[i];        return comparator(A,B) ? A : B; }
+  arma_inline elem_type at         (const uword r, const uword c) const { const elem_type A = P1.at(r,c);   const elem_type B = P2.at(r,c);   return comparator(A,B) ? A : B; }
+  arma_inline elem_type at_alt     (const uword i)                const { const elem_type A = P1.at_alt(i); const elem_type B = P2.at_alt(i); return comparator(A,B) ? A : B; }
+  
+  arma_inline         ea_type         get_ea() const { return *this; }
+  arma_inline aligned_ea_type get_aligned_ea() const { return *this; }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (P1.is_alias(X) || P2.is_alias(X)); }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return (P1.has_overlap(X) || P2.has_overlap(X)); }
+  
+  arma_inline bool is_aligned() const { return (P1.is_aligned() && P2.is_aligned()); }
+  };
+
+
+
+template<typename T1, typename T2>
+struct Proxy< Glue<T1, T2, glue_max> >
+  {
+  typedef        Glue<T1, T2, glue_max>   this_Glue_type;
+  typedef Proxy< Glue<T1, T2, glue_max> > this_Proxy_type;
+  
+  typedef typename T1::elem_type                   elem_type;
+  typedef typename get_pod_type<elem_type>::result pod_type;
+  typedef this_Glue_type                           stored_type;
+  typedef const this_Proxy_type&                   ea_type;
+  typedef const this_Proxy_type&                   aligned_ea_type;
+  
+  static constexpr bool use_at      = (Proxy<T1>::use_at      || Proxy<T2>::use_at     );
+  static constexpr bool use_mp      = (Proxy<T1>::use_mp      || Proxy<T2>::use_mp     );
+  static constexpr bool has_subview = (Proxy<T1>::has_subview || Proxy<T2>::has_subview);
+  
+  static constexpr bool is_row  = this_Glue_type::is_row;
+  static constexpr bool is_col  = this_Glue_type::is_col;
+  static constexpr bool is_xvec = this_Glue_type::is_xvec;
+  
+  arma_aligned const this_Glue_type& Q;
+  arma_aligned const Proxy<T1>       P1;
+  arma_aligned const Proxy<T2>       P2;
+  
+  arma_gt_comparator<elem_type> comparator;
+  
+  inline explicit Proxy(const this_Glue_type& X)
+    : Q (X  )
+    , P1(X.A)
+    , P2(X.B)
+    {
+    arma_extra_debug_sigprint();
+    
+    arma_debug_assert_same_size(P1, P2, "element-wise max()");
+    }
+  
+  arma_inline uword get_n_rows() const { return is_row ? 1 : P1.get_n_rows(); }
+  arma_inline uword get_n_cols() const { return is_col ? 1 : P1.get_n_cols(); }
+  arma_inline uword get_n_elem() const { return P1.get_n_elem();              }
+  
+  arma_inline elem_type operator[] (const uword i)                const { const elem_type A = P1[i];        const elem_type B = P2[i];        return comparator(A,B) ? A : B; }
+  arma_inline elem_type at         (const uword r, const uword c) const { const elem_type A = P1.at(r,c);   const elem_type B = P2.at(r,c);   return comparator(A,B) ? A : B; }
+  arma_inline elem_type at_alt     (const uword i)                const { const elem_type A = P1.at_alt(i); const elem_type B = P2.at_alt(i); return comparator(A,B) ? A : B; }
+  
+  arma_inline         ea_type         get_ea() const { return *this; }
+  arma_inline aligned_ea_type get_aligned_ea() const { return *this; }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (P1.is_alias(X) || P2.is_alias(X)); }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return (P1.has_overlap(X) || P2.has_overlap(X)); }
+  
+  arma_inline bool is_aligned() const { return (P1.is_aligned() && P2.is_aligned()); }
+  };
+
+
+
+template<typename out_eT, typename T1, typename op_type>
+struct Proxy< mtOp<out_eT, T1, op_type> >
+  {
   typedef          out_eT                       elem_type;
   typedef typename get_pod_type<out_eT>::result pod_type;
   typedef          Mat<out_eT>                  stored_type;
@@ -671,9 +766,9 @@ class Proxy< mtOp<out_eT, T1, op_type> >
   arma_inline uword get_n_cols() const { return is_col ? 1 : Q.n_cols; }
   arma_inline uword get_n_elem() const { return Q.n_elem;              }
   
-  arma_inline elem_type operator[] (const uword i)                    const { return Q[i];          }
-  arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row,col); }
-  arma_inline elem_type at_alt     (const uword i)                    const { return Q.at_alt(i);   }
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
+  arma_inline elem_type at         (const uword r, const uword c) const { return Q.at(r,c);   }
+  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
@@ -690,10 +785,8 @@ class Proxy< mtOp<out_eT, T1, op_type> >
 
 
 template<typename out_eT, typename T1, typename T2, typename glue_type>
-class Proxy< mtGlue<out_eT, T1, T2, glue_type> >
+struct Proxy< mtGlue<out_eT, T1, T2, glue_type> >
   {
-  public:
-  
   typedef          out_eT                       elem_type;
   typedef typename get_pod_type<out_eT>::result pod_type;
   typedef          Mat<out_eT>                  stored_type;
@@ -720,9 +813,9 @@ class Proxy< mtGlue<out_eT, T1, T2, glue_type> >
   arma_inline uword get_n_cols() const { return is_col ? 1 : Q.n_cols; }
   arma_inline uword get_n_elem() const { return Q.n_elem;              }
   
-  arma_inline elem_type operator[] (const uword i)                    const { return Q[i];          }
-  arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row,col); }
-  arma_inline elem_type at_alt     (const uword i)                    const { return Q.at_alt(i);   }
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
+  arma_inline elem_type at         (const uword r, const uword c) const { return Q.at(r,c);   }
+  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
@@ -739,10 +832,8 @@ class Proxy< mtGlue<out_eT, T1, T2, glue_type> >
 
 
 template<typename T1, typename op_type>
-class Proxy< CubeToMatOp<T1, op_type> >
+struct Proxy< CubeToMatOp<T1, op_type> >
   {
-  public:
-  
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Mat<elem_type>                           stored_type;
@@ -769,9 +860,9 @@ class Proxy< CubeToMatOp<T1, op_type> >
   arma_inline uword get_n_cols() const { return is_col ? 1 : Q.n_cols; }
   arma_inline uword get_n_elem() const { return Q.n_elem;              }
   
-  arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
-  arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
-  arma_inline elem_type at_alt     (const uword i)                    const { return Q.at_alt(i);    }
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
+  arma_inline elem_type at         (const uword r, const uword c) const { return Q.at(r, c);  }
+  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
@@ -788,10 +879,8 @@ class Proxy< CubeToMatOp<T1, op_type> >
 
 
 template<typename T1>
-class Proxy< CubeToMatOp<T1, op_vectorise_cube_col> >
+struct Proxy< CubeToMatOp<T1, op_vectorise_cube_col> >
   {
-  public:
-  
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Mat<elem_type>                           stored_type;
@@ -820,9 +909,9 @@ class Proxy< CubeToMatOp<T1, op_vectorise_cube_col> >
   constexpr   uword get_n_cols() const { return 1;        }
   arma_inline uword get_n_elem() const { return Q.n_elem; }
   
-  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
-  arma_inline elem_type at         (const uword row, const uword) const { return Q[row];      }
-  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
+  arma_inline elem_type operator[] (const uword i)              const { return Q[i];        }
+  arma_inline elem_type at         (const uword r, const uword) const { return Q[r];        }
+  arma_inline elem_type at_alt     (const uword i)              const { return Q.at_alt(i); }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
@@ -839,10 +928,8 @@ class Proxy< CubeToMatOp<T1, op_vectorise_cube_col> >
 
 
 template<typename T1, typename op_type>
-class Proxy< SpToDOp<T1, op_type> >
+struct Proxy< SpToDOp<T1, op_type> >
   {
-  public:
-  
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Mat<elem_type>                           stored_type;
@@ -869,9 +956,9 @@ class Proxy< SpToDOp<T1, op_type> >
   arma_inline uword get_n_cols() const { return is_col ? 1 : Q.n_cols; }
   arma_inline uword get_n_elem() const { return Q.n_elem;              }
   
-  arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
-  arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
-  arma_inline elem_type at_alt     (const uword i)                    const { return Q.at_alt(i);    }
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
+  arma_inline elem_type at         (const uword r, const uword c) const { return Q.at(r, c);  }
+  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
@@ -888,10 +975,8 @@ class Proxy< SpToDOp<T1, op_type> >
 
 
 template<typename T1>
-class Proxy< SpToDOp<T1, op_nonzeros_spmat> >
+struct Proxy< SpToDOp<T1, op_nonzeros_spmat> >
   {
-  public:
-  
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Mat<elem_type>                           stored_type;
@@ -920,9 +1005,9 @@ class Proxy< SpToDOp<T1, op_nonzeros_spmat> >
   constexpr   uword get_n_cols() const { return 1;        }
   arma_inline uword get_n_elem() const { return Q.n_elem; }
   
-  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
-  arma_inline elem_type at         (const uword row, const uword) const { return Q[row];      }
-  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
+  arma_inline elem_type operator[] (const uword i)              const { return Q[i];        }
+  arma_inline elem_type at         (const uword r, const uword) const { return Q[r];        }
+  arma_inline elem_type at_alt     (const uword i)              const { return Q.at_alt(i); }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
@@ -939,10 +1024,8 @@ class Proxy< SpToDOp<T1, op_nonzeros_spmat> >
 
 
 template<typename eT>
-class Proxy< subview<eT> >
+struct Proxy< subview<eT> >
   {
-  public:
-  
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef subview<eT>                              stored_type;
@@ -969,9 +1052,9 @@ class Proxy< subview<eT> >
   arma_inline uword get_n_cols() const { return Q.n_cols; }
   arma_inline uword get_n_elem() const { return Q.n_elem; }
   
-  arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
-  arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
-  arma_inline elem_type at_alt     (const uword i)                    const { return Q[i];           }
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];       }
+  arma_inline elem_type at         (const uword r, const uword c) const { return Q.at(r, c); }
+  arma_inline elem_type at_alt     (const uword i)                const { return Q[i];       }
   
   arma_inline         ea_type         get_ea() const { return Q; }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q; }
@@ -988,10 +1071,8 @@ class Proxy< subview<eT> >
 
 
 template<typename eT>
-class Proxy< subview_col<eT> >
+struct Proxy< subview_col<eT> >
   {
-  public:
-  
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef subview_col<eT>                          stored_type;
@@ -1018,9 +1099,9 @@ class Proxy< subview_col<eT> >
   constexpr   uword get_n_cols() const { return 1;        }
   arma_inline uword get_n_elem() const { return Q.n_elem; }
   
-  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
-  arma_inline elem_type at         (const uword row, const uword) const { return Q[row];      }
-  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
+  arma_inline elem_type operator[] (const uword i)              const { return Q[i];        }
+  arma_inline elem_type at         (const uword r, const uword) const { return Q[r];        }
+  arma_inline elem_type at_alt     (const uword i)              const { return Q.at_alt(i); }
   
   arma_inline         ea_type         get_ea() const { return Q.colmem; }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;        }
@@ -1037,10 +1118,57 @@ class Proxy< subview_col<eT> >
 
 
 template<typename eT>
-class Proxy< subview_row<eT> >
+struct Proxy< subview_cols<eT> >
   {
-  public:
+  typedef eT                                       elem_type;
+  typedef typename get_pod_type<elem_type>::result pod_type;
+  typedef Mat<eT>                                  stored_type;
+  typedef const eT*                                ea_type;
+  typedef const Mat<eT>&                           aligned_ea_type;
   
+  static constexpr bool use_at      = false;
+  static constexpr bool use_mp      = false;
+  static constexpr bool has_subview = true;
+  
+  static constexpr bool is_row  = false;
+  static constexpr bool is_col  = false;
+  static constexpr bool is_xvec = false;
+  
+  arma_aligned const subview_cols<eT>& sv;
+  arma_aligned const Mat<eT>           Q;
+  
+  inline explicit Proxy(const subview_cols<eT>& A)
+    : sv(A)
+    , Q ( const_cast<eT*>( A.colptr(0) ), A.n_rows, A.n_cols, false, false )
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  arma_inline uword get_n_rows() const { return Q.n_rows; }
+  arma_inline uword get_n_cols() const { return Q.n_cols; }
+  arma_inline uword get_n_elem() const { return Q.n_elem; }
+  
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
+  arma_inline elem_type at         (const uword r, const uword c) const { return Q.at(r,c);   }
+  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
+  
+  arma_inline         ea_type         get_ea() const { return Q.memptr(); }
+  arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (is_same_type<eT,eT2>::value) ? (void_ptr(&(sv.m)) == void_ptr(&X)) : false; }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return sv.check_overlap(X); }
+  
+  arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
+  };
+
+
+
+template<typename eT>
+struct Proxy< subview_row<eT> >
+  {
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef subview_row<eT>                          stored_type;
@@ -1067,9 +1195,9 @@ class Proxy< subview_row<eT> >
   arma_inline uword get_n_cols() const { return Q.n_cols; }
   arma_inline uword get_n_elem() const { return Q.n_elem; }
   
-  arma_inline elem_type operator[] (const uword i)                const { return Q[i];   }
-  arma_inline elem_type at         (const uword, const uword col) const { return Q[col]; }
-  arma_inline elem_type at_alt     (const uword i)                const { return Q[i];   }
+  arma_inline elem_type operator[] (const uword i)              const { return Q[i]; }
+  arma_inline elem_type at         (const uword, const uword c) const { return Q[c]; }
+  arma_inline elem_type at_alt     (const uword i)              const { return Q[i]; }
   
   arma_inline         ea_type         get_ea() const { return Q; }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q; }
@@ -1086,10 +1214,8 @@ class Proxy< subview_row<eT> >
 
 
 template<typename eT, typename T1>
-class Proxy< subview_elem1<eT,T1> >
+struct Proxy< subview_elem1<eT,T1> >
   {
-  public:
-  
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef subview_elem1<eT,T1>                     stored_type;
@@ -1123,9 +1249,9 @@ class Proxy< subview_elem1<eT,T1> >
   constexpr   uword get_n_cols() const { return 1;              }
   arma_inline uword get_n_elem() const { return R.get_n_elem(); }
   
-  arma_inline elem_type operator[] (const uword i)                const { const uword ii = (Proxy<T1>::use_at) ? R.at(i,  0) : R[i  ]; arma_debug_check_bounds( (ii >= Q.m.n_elem), "Mat::elem(): index out of bounds" ); return Q.m[ii]; }
-  arma_inline elem_type at         (const uword row, const uword) const { const uword ii = (Proxy<T1>::use_at) ? R.at(row,0) : R[row]; arma_debug_check_bounds( (ii >= Q.m.n_elem), "Mat::elem(): index out of bounds" ); return Q.m[ii]; }
-  arma_inline elem_type at_alt     (const uword i)                const { const uword ii = (Proxy<T1>::use_at) ? R.at(i,  0) : R[i  ]; arma_debug_check_bounds( (ii >= Q.m.n_elem), "Mat::elem(): index out of bounds" ); return Q.m[ii]; }
+  arma_inline elem_type operator[] (const uword i)              const { const uword ii = (Proxy<T1>::use_at) ? R.at(i,0) : R[i]; arma_debug_check_bounds( (ii >= Q.m.n_elem), "Mat::elem(): index out of bounds" ); return Q.m[ii]; }
+  arma_inline elem_type at         (const uword r, const uword) const { const uword ii = (Proxy<T1>::use_at) ? R.at(r,0) : R[r]; arma_debug_check_bounds( (ii >= Q.m.n_elem), "Mat::elem(): index out of bounds" ); return Q.m[ii]; }
+  arma_inline elem_type at_alt     (const uword i)              const { const uword ii = (Proxy<T1>::use_at) ? R.at(i,0) : R[i]; arma_debug_check_bounds( (ii >= Q.m.n_elem), "Mat::elem(): index out of bounds" ); return Q.m[ii]; }
   
   arma_inline         ea_type         get_ea() const { return (*this); }
   arma_inline aligned_ea_type get_aligned_ea() const { return (*this); }
@@ -1142,10 +1268,8 @@ class Proxy< subview_elem1<eT,T1> >
 
 
 template<typename eT, typename T1, typename T2>
-class Proxy< subview_elem2<eT,T1,T2> >
+struct Proxy< subview_elem2<eT,T1,T2> >
   {
-  public:
-  
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Mat<eT>                                  stored_type;
@@ -1172,9 +1296,9 @@ class Proxy< subview_elem2<eT,T1,T2> >
   arma_inline uword get_n_cols() const { return Q.n_cols; }
   arma_inline uword get_n_elem() const { return Q.n_elem; }
   
-  arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
-  arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
-  arma_inline elem_type at_alt     (const uword i)                    const { return Q.at_alt(i);    }
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
+  arma_inline elem_type at         (const uword r, const uword c) const { return Q.at(r, c);  }
+  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
@@ -1191,10 +1315,8 @@ class Proxy< subview_elem2<eT,T1,T2> >
 
 
 template<typename eT>
-class Proxy< diagview<eT> >
+struct Proxy< diagview<eT> >
   {
-  public:
-  
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef diagview<eT>                             stored_type;
@@ -1221,9 +1343,9 @@ class Proxy< diagview<eT> >
   constexpr   uword get_n_cols() const { return 1;        }
   arma_inline uword get_n_elem() const { return Q.n_elem; }
   
-  arma_inline elem_type operator[] (const uword i)                const { return Q[i];         }
-  arma_inline elem_type at         (const uword row, const uword) const { return Q.at(row, 0); }
-  arma_inline elem_type at_alt     (const uword i)                const { return Q[i];         }
+  arma_inline elem_type operator[] (const uword i)              const { return Q[i];       }
+  arma_inline elem_type at         (const uword r, const uword) const { return Q.at(r, 0); }
+  arma_inline elem_type at_alt     (const uword i)              const { return Q[i];       }
   
   arma_inline         ea_type         get_ea() const { return Q; }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q; }
@@ -1240,7 +1362,7 @@ class Proxy< diagview<eT> >
 
 
 template<typename T1>
-class Proxy_diagvec_mat
+struct Proxy_diagvec_mat
   {
   inline Proxy_diagvec_mat(const T1&) {}
   };
@@ -1248,10 +1370,8 @@ class Proxy_diagvec_mat
 
 
 template<typename T1>
-class Proxy_diagvec_mat< Op<T1, op_diagvec> >
+struct Proxy_diagvec_mat< Op<T1, op_diagvec> >
   {
-  public:
-  
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef diagview<elem_type>                      stored_type;
@@ -1279,9 +1399,9 @@ class Proxy_diagvec_mat< Op<T1, op_diagvec> >
   constexpr   uword get_n_cols() const { return 1;        }
   arma_inline uword get_n_elem() const { return Q.n_elem; }
   
-  arma_inline elem_type operator[] (const uword i)                const { return Q[i];         }
-  arma_inline elem_type at         (const uword row, const uword) const { return Q.at(row, 0); }
-  arma_inline elem_type at_alt     (const uword i)                const { return Q[i];         }
+  arma_inline elem_type operator[] (const uword i)              const { return Q[i];       }
+  arma_inline elem_type at         (const uword r, const uword) const { return Q.at(r, 0); }
+  arma_inline elem_type at_alt     (const uword i)              const { return Q[i];       }
   
   arma_inline         ea_type         get_ea() const { return Q; }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q; }
@@ -1298,7 +1418,7 @@ class Proxy_diagvec_mat< Op<T1, op_diagvec> >
 
 
 template<typename T1>
-class Proxy_diagvec_expr
+struct Proxy_diagvec_expr
   {
   inline Proxy_diagvec_expr(const T1&) {}
   };
@@ -1306,10 +1426,8 @@ class Proxy_diagvec_expr
 
 
 template<typename T1>
-class Proxy_diagvec_expr< Op<T1, op_diagvec> >
+struct Proxy_diagvec_expr< Op<T1, op_diagvec> >
   {
-  public:
-  
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Mat<elem_type>                           stored_type;
@@ -1336,9 +1454,9 @@ class Proxy_diagvec_expr< Op<T1, op_diagvec> >
   constexpr   uword get_n_cols() const { return 1;        }
   arma_inline uword get_n_elem() const { return Q.n_elem; }
   
-  arma_inline elem_type operator[] (const uword i)                const { return Q[i];         }
-  arma_inline elem_type at         (const uword row, const uword) const { return Q.at(row, 0); }
-  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i);  }
+  arma_inline elem_type operator[] (const uword i)              const { return Q[i];        }
+  arma_inline elem_type at         (const uword r, const uword) const { return Q.at(r, 0);  }
+  arma_inline elem_type at_alt     (const uword i)              const { return Q.at_alt(i); }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
@@ -1366,11 +1484,9 @@ struct Proxy_diagvec_redirect< Op<T1, op_diagvec>, false> { typedef Proxy_diagve
 
 
 template<typename T1>
-class Proxy< Op<T1, op_diagvec> >
+struct Proxy< Op<T1, op_diagvec> >
   : public Proxy_diagvec_redirect< Op<T1, op_diagvec>, is_Mat<T1>::value >::result
   {
-  public:
-  
   typedef typename Proxy_diagvec_redirect< Op<T1, op_diagvec>, is_Mat<T1>::value >::result Proxy_diagvec;
   
   inline explicit Proxy(const Op<T1, op_diagvec>& A)
@@ -1383,10 +1499,8 @@ class Proxy< Op<T1, op_diagvec> >
 
 
 template<typename T1>
-class Proxy< Op<T1, op_diagvec2> >
+struct Proxy< Op<T1, op_diagvec2> >
   {
-  public:
-  
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Mat<elem_type>                           stored_type;
@@ -1413,9 +1527,9 @@ class Proxy< Op<T1, op_diagvec2> >
   constexpr   uword get_n_cols() const { return 1;        }
   arma_inline uword get_n_elem() const { return Q.n_elem; }
   
-  arma_inline elem_type operator[] (const uword i)                const { return Q[i];         }
-  arma_inline elem_type at         (const uword row, const uword) const { return Q.at(row, 0); }
-  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i);  }
+  arma_inline elem_type operator[] (const uword i)              const { return Q[i];        }
+  arma_inline elem_type at         (const uword r, const uword) const { return Q.at(r, 0);  }
+  arma_inline elem_type at_alt     (const uword i)              const { return Q.at_alt(i); }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
@@ -1442,8 +1556,6 @@ struct Proxy_xtrans_default
 template<typename T1>
 struct Proxy_xtrans_default< Op<T1, op_htrans> >
   {
-  public:
-  
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef xtrans_mat<elem_type,true>               stored_type;
@@ -1485,8 +1597,6 @@ struct Proxy_xtrans_default< Op<T1, op_htrans> >
 template<typename T1>
 struct Proxy_xtrans_default< Op<T1, op_strans> >
   {
-  public:
-  
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef xtrans_mat<elem_type,false>              stored_type;
@@ -1629,7 +1739,7 @@ struct Proxy_xtrans_redirect<T1, true>  { typedef Proxy_xtrans_vector<T1>  resul
 
 
 template<typename T1>
-class Proxy< Op<T1, op_htrans> >
+struct Proxy< Op<T1, op_htrans> >
   : public
     Proxy_xtrans_redirect
       <
@@ -1637,8 +1747,6 @@ class Proxy< Op<T1, op_htrans> >
       ((is_cx<typename T1::elem_type>::no) && ((Op<T1, op_htrans>::is_row) || (Op<T1, op_htrans>::is_col)) )
       >::result
   {
-  public:
-  
   typedef
   typename
   Proxy_xtrans_redirect
@@ -1674,9 +1782,9 @@ class Proxy< Op<T1, op_htrans> >
   arma_inline uword get_n_cols() const { return is_col ? 1 : Q.n_cols; }
   arma_inline uword get_n_elem() const { return Q.n_elem;              }
   
-  arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
-  arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
-  arma_inline elem_type at_alt     (const uword i)                    const { return Q.at_alt(i);    }
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
+  arma_inline elem_type at         (const uword r, const uword c) const { return Q.at(r, c);  }
+  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
   
   arma_inline         ea_type         get_ea() const { return Proxy_xtrans::get_ea();         }
   arma_inline aligned_ea_type get_aligned_ea() const { return Proxy_xtrans::get_aligned_ea(); }
@@ -1693,7 +1801,7 @@ class Proxy< Op<T1, op_htrans> >
 
 
 template<typename T1>
-class Proxy< Op<T1, op_strans> >
+struct Proxy< Op<T1, op_strans> >
   : public
     Proxy_xtrans_redirect
       <
@@ -1701,8 +1809,6 @@ class Proxy< Op<T1, op_strans> >
       ( (Op<T1, op_strans>::is_row) || (Op<T1, op_strans>::is_col) )
       >::result
   {
-  public:
-  
   typedef
   typename
   Proxy_xtrans_redirect
@@ -1738,9 +1844,9 @@ class Proxy< Op<T1, op_strans> >
   arma_inline uword get_n_cols() const { return is_col ? 1 : Q.n_cols; }
   arma_inline uword get_n_elem() const { return Q.n_elem;              }
   
-  arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
-  arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
-  arma_inline elem_type at_alt     (const uword i)                    const { return Q.at_alt(i);    }
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
+  arma_inline elem_type at         (const uword r, const uword c) const { return Q.at(r, c);  }
+  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
   
   arma_inline         ea_type         get_ea() const { return Proxy_xtrans::get_ea();         }
   arma_inline aligned_ea_type get_aligned_ea() const { return Proxy_xtrans::get_aligned_ea(); }
@@ -1836,7 +1942,7 @@ struct Proxy_subview_row_htrans_redirect<eT, false> { typedef Proxy_subview_row_
 
 
 template<typename eT>
-class Proxy< Op<subview_row<eT>, op_htrans> >
+struct Proxy< Op<subview_row<eT>, op_htrans> >
   : public
     Proxy_subview_row_htrans_redirect
       <
@@ -1844,8 +1950,6 @@ class Proxy< Op<subview_row<eT>, op_htrans> >
       is_cx<eT>::yes
       >::result
   {
-  public:
-  
   typedef
   typename
   Proxy_subview_row_htrans_redirect
@@ -1881,9 +1985,9 @@ class Proxy< Op<subview_row<eT>, op_htrans> >
   constexpr   uword get_n_cols() const { return 1;        }
   arma_inline uword get_n_elem() const { return Q.n_elem; }
   
-  arma_inline elem_type operator[] (const uword i)                const { return Q[i];   }
-  arma_inline elem_type at         (const uword row, const uword) const { return Q[row]; }
-  arma_inline elem_type at_alt     (const uword i)                const { return Q[i];   }
+  arma_inline elem_type operator[] (const uword i)              const { return Q[i]; }
+  arma_inline elem_type at         (const uword r, const uword) const { return Q[r]; }
+  arma_inline elem_type at_alt     (const uword i)              const { return Q[i]; }
   
   arma_inline         ea_type         get_ea() const { return Q; }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q; }
@@ -1900,10 +2004,8 @@ class Proxy< Op<subview_row<eT>, op_htrans> >
 
 
 template<typename eT>
-class Proxy< Op<subview_row<eT>, op_strans> >
+struct Proxy< Op<subview_row<eT>, op_strans> >
   {
-  public:
-  
   typedef eT                                elem_type;
   typedef typename get_pod_type<eT>::result pod_type;
   typedef subview_row_strans<eT>            stored_type;
@@ -1930,9 +2032,9 @@ class Proxy< Op<subview_row<eT>, op_strans> >
   constexpr   uword get_n_cols() const { return 1;        }
   arma_inline uword get_n_elem() const { return Q.n_elem; }
   
-  arma_inline elem_type operator[] (const uword i)                const { return Q[i];   }
-  arma_inline elem_type at         (const uword row, const uword) const { return Q[row]; }
-  arma_inline elem_type at_alt     (const uword i)                const { return Q[i];   }
+  arma_inline elem_type operator[] (const uword i)              const { return Q[i]; }
+  arma_inline elem_type at         (const uword r, const uword) const { return Q[r]; }
+  arma_inline elem_type at_alt     (const uword i)              const { return Q[i]; }
   
   arma_inline         ea_type         get_ea() const { return Q; }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q; }
@@ -1949,10 +2051,8 @@ class Proxy< Op<subview_row<eT>, op_strans> >
 
 
 template<typename T>
-class Proxy< Op< Row< std::complex<T> >, op_htrans> >
+struct Proxy< Op< Row< std::complex<T> >, op_htrans> >
   {
-  public:
-  
   typedef typename std::complex<T>  eT;
   
   typedef typename std::complex<T>  elem_type;
@@ -1983,9 +2083,9 @@ class Proxy< Op< Row< std::complex<T> >, op_htrans> >
   constexpr   uword get_n_cols() const { return 1;        }
   arma_inline uword get_n_elem() const { return Q.n_elem; }
   
-  arma_inline elem_type operator[] (const uword i)                const { return Q[i];   }
-  arma_inline elem_type at         (const uword row, const uword) const { return Q[row]; }
-  arma_inline elem_type at_alt     (const uword i)                const { return Q[i];   }
+  arma_inline elem_type operator[] (const uword i)              const { return Q[i]; }
+  arma_inline elem_type at         (const uword r, const uword) const { return Q[r]; }
+  arma_inline elem_type at_alt     (const uword i)              const { return Q[i]; }
   
   arma_inline         ea_type         get_ea() const { return Q; }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q; }
@@ -2002,10 +2102,8 @@ class Proxy< Op< Row< std::complex<T> >, op_htrans> >
 
 
 template<typename T>
-class Proxy< Op< Col< std::complex<T> >, op_htrans> >
+struct Proxy< Op< Col< std::complex<T> >, op_htrans> >
   {
-  public:
-  
   typedef typename std::complex<T>  eT;
 
   typedef typename std::complex<T>  elem_type;
@@ -2036,9 +2134,9 @@ class Proxy< Op< Col< std::complex<T> >, op_htrans> >
   arma_inline uword get_n_cols() const { return Q.n_cols; }
   arma_inline uword get_n_elem() const { return Q.n_elem; }
   
-  arma_inline elem_type operator[] (const uword i)                const { return Q[i];   }
-  arma_inline elem_type at         (const uword, const uword col) const { return Q[col]; }
-  arma_inline elem_type at_alt     (const uword i)                const { return Q[i];   }
+  arma_inline elem_type operator[] (const uword i)              const { return Q[i]; }
+  arma_inline elem_type at         (const uword, const uword c) const { return Q[c]; }
+  arma_inline elem_type at_alt     (const uword i)              const { return Q[i]; }
   
   arma_inline         ea_type         get_ea() const { return Q; }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q; }
@@ -2055,10 +2153,8 @@ class Proxy< Op< Col< std::complex<T> >, op_htrans> >
 
 
 template<typename T>
-class Proxy< Op< subview_col< std::complex<T> >, op_htrans> >
+struct Proxy< Op< subview_col< std::complex<T> >, op_htrans> >
   {
-  public:
-  
   typedef typename std::complex<T>  eT;
   
   typedef typename std::complex<T>  elem_type;
@@ -2089,9 +2185,9 @@ class Proxy< Op< subview_col< std::complex<T> >, op_htrans> >
   arma_inline uword get_n_cols() const { return Q.n_cols; }
   arma_inline uword get_n_elem() const { return Q.n_elem; }
   
-  arma_inline elem_type operator[] (const uword i)                const { return Q[i];   }
-  arma_inline elem_type at         (const uword, const uword col) const { return Q[col]; }
-  arma_inline elem_type at_alt     (const uword i)                const { return Q[i];   }
+  arma_inline elem_type operator[] (const uword i)              const { return Q[i]; }
+  arma_inline elem_type at         (const uword, const uword c) const { return Q[c]; }
+  arma_inline elem_type at_alt     (const uword i)              const { return Q[i]; }
   
   arma_inline         ea_type         get_ea() const { return Q; }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q; }
@@ -2108,10 +2204,8 @@ class Proxy< Op< subview_col< std::complex<T> >, op_htrans> >
 
 
 template<typename T1>
-class Proxy< Op<T1, op_htrans2> >
+struct Proxy< Op<T1, op_htrans2> >
   {
-  public:
-  
   typedef typename T1::elem_type                           elem_type;
   typedef typename get_pod_type<elem_type>::result         pod_type;
   typedef       eOp< Op<T1, op_htrans>, eop_scalar_times>  stored_type;
@@ -2141,9 +2235,9 @@ class Proxy< Op<T1, op_htrans2> >
   arma_inline uword get_n_cols() const { return is_col ? 1 : Q.get_n_cols(); }
   arma_inline uword get_n_elem() const { return Q.get_n_elem();              }
   
-  arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
-  arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
-  arma_inline elem_type at_alt     (const uword i)                    const { return Q.at_alt(i);    }
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
+  arma_inline elem_type at         (const uword r, const uword c) const { return Q.at(r, c);  }
+  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
   
   arma_inline         ea_type         get_ea() const { return Q; }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q; }
@@ -2160,10 +2254,8 @@ class Proxy< Op<T1, op_htrans2> >
 
 
 template<typename eT>
-class Proxy< subview_row_strans<eT> >
+struct Proxy< subview_row_strans<eT> >
   {
-  public:
-  
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef subview_row_strans<eT>                   stored_type;
@@ -2190,9 +2282,9 @@ class Proxy< subview_row_strans<eT> >
   constexpr   uword get_n_cols() const { return 1;        }
   arma_inline uword get_n_elem() const { return Q.n_elem; }
   
-  arma_inline elem_type operator[] (const uword i)                const { return Q[i];   }
-  arma_inline elem_type at         (const uword row, const uword) const { return Q[row]; }
-  arma_inline elem_type at_alt     (const uword i)                const { return Q[i];   }
+  arma_inline elem_type operator[] (const uword i)              const { return Q[i]; }
+  arma_inline elem_type at         (const uword r, const uword) const { return Q[r]; }
+  arma_inline elem_type at_alt     (const uword i)              const { return Q[i]; }
   
   arma_inline         ea_type         get_ea() const { return Q; }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q; }
@@ -2209,10 +2301,8 @@ class Proxy< subview_row_strans<eT> >
 
 
 template<typename eT>
-class Proxy< subview_row_htrans<eT> >
+struct Proxy< subview_row_htrans<eT> >
   {
-  public:
-  
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef subview_row_htrans<eT>                   stored_type;
@@ -2239,9 +2329,9 @@ class Proxy< subview_row_htrans<eT> >
   constexpr   uword get_n_cols() const { return 1;        }
   arma_inline uword get_n_elem() const { return Q.n_elem; }
   
-  arma_inline elem_type operator[] (const uword i)                const { return Q[i];   }
-  arma_inline elem_type at         (const uword row, const uword) const { return Q[row]; }
-  arma_inline elem_type at_alt     (const uword i)                const { return Q[i];   }
+  arma_inline elem_type operator[] (const uword i)              const { return Q[i]; }
+  arma_inline elem_type at         (const uword r, const uword) const { return Q[r]; }
+  arma_inline elem_type at_alt     (const uword i)              const { return Q[i]; }
   
   arma_inline         ea_type         get_ea() const { return Q; }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q; }
@@ -2258,10 +2348,8 @@ class Proxy< subview_row_htrans<eT> >
 
 
 template<typename eT, bool do_conj>
-class Proxy< xtrans_mat<eT, do_conj> >
+struct Proxy< xtrans_mat<eT, do_conj> >
   {
-  public:
-  
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Mat<eT>                                  stored_type;
@@ -2288,9 +2376,9 @@ class Proxy< xtrans_mat<eT, do_conj> >
   arma_inline uword get_n_cols() const { return Q.n_cols; }
   arma_inline uword get_n_elem() const { return Q.n_elem; }
   
-  arma_inline elem_type operator[] (const uword i)                    const { return Q[i];          }
-  arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row,col); }
-  arma_inline elem_type at_alt     (const uword i)                    const { return Q.at_alt(i);   }
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
+  arma_inline elem_type at         (const uword r, const uword c) const { return Q.at(r,c);   }
+  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
@@ -2307,10 +2395,8 @@ class Proxy< xtrans_mat<eT, do_conj> >
 
 
 template<typename eT>
-class Proxy< xvec_htrans<eT> >
+struct Proxy< xvec_htrans<eT> >
   {
-  public:
-  
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Mat<eT>                                  stored_type;
@@ -2337,9 +2423,9 @@ class Proxy< xvec_htrans<eT> >
   arma_inline uword get_n_cols() const { return Q.n_cols; }
   arma_inline uword get_n_elem() const { return Q.n_elem; }
   
-  arma_inline elem_type operator[] (const uword i)                    const { return Q[i];          }
-  arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row,col); }
-  arma_inline elem_type at_alt     (const uword i)                    const { return Q.at_alt(i);   }
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
+  arma_inline elem_type at         (const uword r, const uword c) const { return Q.at(r,c);   }
+  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
@@ -2356,7 +2442,7 @@ class Proxy< xvec_htrans<eT> >
 
 
 template<typename T1>
-class Proxy_vectorise_col_mat
+struct Proxy_vectorise_col_mat
   {
   inline Proxy_vectorise_col_mat(const T1&) {}
   };
@@ -2364,10 +2450,8 @@ class Proxy_vectorise_col_mat
 
 
 template<typename T1>
-class Proxy_vectorise_col_mat< Op<T1, op_vectorise_col> >
+struct Proxy_vectorise_col_mat< Op<T1, op_vectorise_col> >
   {
-  public:
-  
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Mat<elem_type>                           stored_type;
@@ -2396,9 +2480,9 @@ class Proxy_vectorise_col_mat< Op<T1, op_vectorise_col> >
   constexpr   uword get_n_cols() const { return 1;        }
   arma_inline uword get_n_elem() const { return Q.n_elem; }
   
-  arma_inline elem_type operator[] (const uword i)                const { return Q[i];           }
-  arma_inline elem_type at         (const uword row, const uword) const { return Q[row];         }
-  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i);    }
+  arma_inline elem_type operator[] (const uword i)              const { return Q[i];        }
+  arma_inline elem_type at         (const uword r, const uword) const { return Q[r];        }
+  arma_inline elem_type at_alt     (const uword i)              const { return Q.at_alt(i); }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
@@ -2415,7 +2499,7 @@ class Proxy_vectorise_col_mat< Op<T1, op_vectorise_col> >
 
 
 template<typename T1>
-class Proxy_vectorise_col_expr
+struct Proxy_vectorise_col_expr
   {
   inline Proxy_vectorise_col_expr(const T1&) {}
   };
@@ -2423,10 +2507,8 @@ class Proxy_vectorise_col_expr
 
 
 template<typename T1>
-class Proxy_vectorise_col_expr< Op<T1, op_vectorise_col> >
+struct Proxy_vectorise_col_expr< Op<T1, op_vectorise_col> >
   {
-  public:
-  
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef          Op<T1, op_vectorise_col>        stored_type;
@@ -2455,9 +2537,9 @@ class Proxy_vectorise_col_expr< Op<T1, op_vectorise_col> >
   constexpr   uword get_n_cols() const { return 1;              }
   arma_inline uword get_n_elem() const { return R.get_n_elem(); }
   
-  arma_inline elem_type operator[] (const uword i)                const { return R[i];         }
-  arma_inline elem_type at         (const uword row, const uword) const { return R.at(row, 0); }
-  arma_inline elem_type at_alt     (const uword i)                const { return R.at_alt(i);  }
+  arma_inline elem_type operator[] (const uword i)              const { return R[i];        }
+  arma_inline elem_type at         (const uword r, const uword) const { return R.at(r, 0);  }
+  arma_inline elem_type at_alt     (const uword i)              const { return R.at_alt(i); }
   
   arma_inline         ea_type         get_ea() const { return R.get_ea();         }
   arma_inline aligned_ea_type get_aligned_ea() const { return R.get_aligned_ea(); }
@@ -2485,11 +2567,9 @@ struct Proxy_vectorise_col_redirect< Op<T1, op_vectorise_col>, false> { typedef 
 
 
 template<typename T1>
-class Proxy< Op<T1, op_vectorise_col> >
+struct Proxy< Op<T1, op_vectorise_col> >
   : public Proxy_vectorise_col_redirect< Op<T1, op_vectorise_col>, (Proxy<T1>::use_at) >::result
   {
-  public:
-  
   typedef typename Proxy_vectorise_col_redirect< Op<T1, op_vectorise_col>, (Proxy<T1>::use_at) >::result Proxy_vectorise_col;
   
   inline explicit Proxy(const Op<T1, op_vectorise_col>& A)

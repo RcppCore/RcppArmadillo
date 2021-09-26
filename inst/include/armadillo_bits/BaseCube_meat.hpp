@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -415,6 +417,7 @@ BaseCube<elem_type,derived>::has_nan() const
 
 template<typename elem_type, typename derived>
 arma_inline
+arma_warn_unused
 const derived&
 BaseCube_eval_Cube<elem_type, derived>::eval() const
   {
@@ -429,7 +432,8 @@ BaseCube_eval_Cube<elem_type, derived>::eval() const
 // extra functions defined in BaseCube_eval_expr
 
 template<typename elem_type, typename derived>
-arma_inline
+inline
+arma_warn_unused
 Cube<elem_type>
 BaseCube_eval_expr<elem_type, derived>::eval() const
   {

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -534,7 +536,7 @@ arma_ostream::print(std::ostream& o, const Cube<eT>& x, const bool modify)
 
 
 //! Print a field to the specified stream
-//! Assumes type oT can be printed, i.e. oT has std::ostream& operator<< (std::ostream&, const oT&) 
+//! Assumes type oT can be printed, ie. oT has std::ostream& operator<< (std::ostream&, const oT&) 
 template<typename oT>
 arma_cold
 inline
@@ -608,7 +610,7 @@ arma_ostream::print(std::ostream& o, const field<oT>& x)
 
 
 //! Print a subfield to the specified stream
-//! Assumes type oT can be printed, i.e. oT has std::ostream& operator<< (std::ostream&, const oT&) 
+//! Assumes type oT can be printed, ie. oT has std::ostream& operator<< (std::ostream&, const oT&) 
 template<typename oT>
 arma_cold
 inline

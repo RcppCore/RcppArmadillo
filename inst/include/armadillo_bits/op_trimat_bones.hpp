@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -19,7 +21,8 @@
 
 
 
-// TODO: split into seperate op_trimatu and op_trimatl classes ?
+// NOTE: don't split op_trimat into seperate op_trimatu and op_trimatl classes,
+// NOTE: as several instances elsewhere rely on trimatu() and trimatl() producing the same type
 class op_trimat
   : public traits_op_default
   {
@@ -32,6 +35,12 @@ class op_trimat
   
   template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_trimat>& in);
+  
+  template<typename eT>
+  inline static void apply_unwrap(Mat<eT>& out, const Mat<eT>& A, const bool upper);
+  
+  template<typename T1>
+  inline static void apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const bool upper);
   };
 
 

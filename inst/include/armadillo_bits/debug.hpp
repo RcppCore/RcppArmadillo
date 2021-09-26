@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -936,7 +938,7 @@ arma_assert_same_size(const ProxyCube<eT1>& A, const ProxyCube<eT2>& B, const ch
 
 
 //
-// functions for checking whether a cube or subcube can be interpreted as a matrix (i.e. single slice)
+// functions for checking whether a cube or subcube can be interpreted as a matrix (ie. single slice)
 
 
 

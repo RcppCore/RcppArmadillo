@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -19,7 +21,7 @@
 
 
 //! Class for storing data required to construct or apply operations to a submatrix
-//! (i.e. where the submatrix starts and ends as well as a reference/pointer to the original matrix),
+//! (ie. where the submatrix starts and ends as well as a reference/pointer to the original matrix),
 template<typename eT>
 class subview : public Base< eT, subview<eT> >
   {
@@ -380,11 +382,11 @@ class subview_col : public subview<eT>
   template<typename T1, typename gen_type>
   inline typename enable_if2< is_same_type<typename T1::elem_type, eT>::value, void>::result operator=(const Gen<T1,gen_type>& x);
   
-  arma_inline const Op<subview_col<eT>,op_htrans>  t() const;
-  arma_inline const Op<subview_col<eT>,op_htrans> ht() const;
-  arma_inline const Op<subview_col<eT>,op_strans> st() const;
+  arma_inline arma_warn_unused const Op<subview_col<eT>,op_htrans>  t() const;
+  arma_inline arma_warn_unused const Op<subview_col<eT>,op_htrans> ht() const;
+  arma_inline arma_warn_unused const Op<subview_col<eT>,op_strans> st() const;
   
-  arma_inline const Op<subview_col<eT>,op_strans> as_row() const;
+  arma_inline arma_warn_unused const Op<subview_col<eT>,op_strans> as_row() const;
   
   inline void fill(const eT val);
   inline void zeros();
@@ -450,6 +452,67 @@ class subview_col : public subview<eT>
 
 
 template<typename eT>
+class subview_cols : public subview<eT>
+  {
+  public:
+  
+  typedef eT                                       elem_type;
+  typedef typename get_pod_type<elem_type>::result pod_type;
+  
+  static constexpr bool is_row  = false;
+  static constexpr bool is_col  = false;
+  static constexpr bool is_xvec = false;
+  
+  inline  subview_cols(const subview_cols&  in);
+  inline  subview_cols(      subview_cols&& in);
+  
+  inline void operator= (const subview<eT>&  x);
+  inline void operator= (const subview_cols& x);
+  inline void operator= (const eT val);
+  inline void operator= (const std::initializer_list<eT>& list);
+  inline void operator= (const std::initializer_list< std::initializer_list<eT> >& list);
+  
+  template<typename T1>
+  inline void operator= (const Base<eT,T1>& x);
+  
+  template<typename T1, typename gen_type>
+  inline typename enable_if2< is_same_type<typename T1::elem_type, eT>::value, void>::result operator=(const Gen<T1,gen_type>& x);
+  
+  arma_inline arma_warn_unused const Op<subview_cols<eT>,op_htrans>  t() const;
+  arma_inline arma_warn_unused const Op<subview_cols<eT>,op_htrans> ht() const;
+  arma_inline arma_warn_unused const Op<subview_cols<eT>,op_strans> st() const;
+  
+  arma_inline arma_warn_unused const Op<subview_cols<eT>,op_vectorise_col> as_col() const;
+  
+  inline arma_warn_unused eT  at_alt    (const uword ii) const;
+  
+  inline arma_warn_unused eT& operator[](const uword ii);
+  inline arma_warn_unused eT  operator[](const uword ii) const;
+  
+  inline arma_warn_unused eT& operator()(const uword ii);
+  inline arma_warn_unused eT  operator()(const uword ii) const;
+  
+  inline arma_warn_unused eT& operator()(const uword in_row, const uword in_col);
+  inline arma_warn_unused eT  operator()(const uword in_row, const uword in_col) const;
+  
+  inline arma_warn_unused eT&         at(const uword in_row, const uword in_col);
+  inline arma_warn_unused eT          at(const uword in_row, const uword in_col) const;
+  
+  arma_inline       eT* colptr(const uword in_col);
+  arma_inline const eT* colptr(const uword in_col) const;
+  
+  protected:
+  
+  inline subview_cols(const Mat<eT>& in_m, const uword in_col1, const uword in_n_cols);
+  inline subview_cols() = delete;
+  
+  friend class Mat<eT>;
+  friend class subview<eT>;
+  };
+
+
+
+template<typename eT>
 class subview_row : public subview<eT>
   {
   public:
@@ -472,11 +535,11 @@ class subview_row : public subview<eT>
   template<typename T1, typename gen_type>
   inline typename enable_if2< is_same_type<typename T1::elem_type, eT>::value, void>::result operator=(const Gen<T1,gen_type>& x);
   
-  arma_inline const Op<subview_row<eT>,op_htrans>  t() const;
-  arma_inline const Op<subview_row<eT>,op_htrans> ht() const;
-  arma_inline const Op<subview_row<eT>,op_strans> st() const;
+  arma_inline arma_warn_unused const Op<subview_row<eT>,op_htrans>  t() const;
+  arma_inline arma_warn_unused const Op<subview_row<eT>,op_htrans> ht() const;
+  arma_inline arma_warn_unused const Op<subview_row<eT>,op_strans> st() const;
   
-  arma_inline const Op<subview_row<eT>,op_strans> as_col() const;
+  arma_inline arma_warn_unused const Op<subview_row<eT>,op_strans> as_col() const;
   
   inline eT  at_alt    (const uword i) const;
   

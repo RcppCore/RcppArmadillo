@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -134,6 +136,11 @@
 #else 
   #define ARMA_FNSIG  __func__
 #endif
+
+
+// #if defined(ARMA_HAVE_CXX17)
+//   #define arma_warn_unused  [[nodiscard]]
+// #endif
 
 
 #if !defined(ARMA_ALLOW_FAKE_GCC)

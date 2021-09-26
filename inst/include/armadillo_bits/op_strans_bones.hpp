@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -56,16 +58,16 @@ class op_strans
   arma_hot inline static void apply_mat_inplace(Mat<eT>& out);
   
   template<typename eT, typename TA>
-  arma_hot inline static void apply_mat(Mat<eT>& out, const TA& A);
+  inline static void apply_mat(Mat<eT>& out, const TA& A);
   
   template<typename T1>
-  arma_hot inline static void apply_proxy(Mat<typename T1::elem_type>& out, const T1& X);
+  inline static void apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P);
   
   template<typename T1>
-  arma_hot inline static void apply_direct(Mat<typename T1::elem_type>& out, const T1& X);
+  inline static void apply_direct(Mat<typename T1::elem_type>& out, const T1& X);
   
   template<typename T1>
-  arma_hot inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_strans>& in);
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_strans>& in);
   };
 
 

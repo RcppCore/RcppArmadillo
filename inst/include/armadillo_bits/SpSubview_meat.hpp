@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -1760,6 +1762,7 @@ SpSubview_col<eT>::operator=(const Base<eT,T1>& x)
 
 template<typename eT>
 inline
+arma_warn_unused
 const SpOp<SpSubview_col<eT>,spop_htrans>
 SpSubview_col<eT>::t() const
   {
@@ -1770,6 +1773,7 @@ SpSubview_col<eT>::t() const
 
 template<typename eT>
 inline
+arma_warn_unused
 const SpOp<SpSubview_col<eT>,spop_htrans>
 SpSubview_col<eT>::ht() const
   {
@@ -1780,6 +1784,7 @@ SpSubview_col<eT>::ht() const
 
 template<typename eT>
 inline
+arma_warn_unused
 const SpOp<SpSubview_col<eT>,spop_strans>
 SpSubview_col<eT>::st() const
   {
@@ -1866,6 +1871,7 @@ SpSubview_row<eT>::operator=(const Base<eT,T1>& x)
 
 template<typename eT>
 inline
+arma_warn_unused
 const SpOp<SpSubview_row<eT>,spop_htrans>
 SpSubview_row<eT>::t() const
   {
@@ -1876,6 +1882,7 @@ SpSubview_row<eT>::t() const
 
 template<typename eT>
 inline
+arma_warn_unused
 const SpOp<SpSubview_row<eT>,spop_htrans>
 SpSubview_row<eT>::ht() const
   {
@@ -1886,6 +1893,7 @@ SpSubview_row<eT>::ht() const
 
 template<typename eT>
 inline
+arma_warn_unused
 const SpOp<SpSubview_row<eT>,spop_strans>
 SpSubview_row<eT>::st() const
   {

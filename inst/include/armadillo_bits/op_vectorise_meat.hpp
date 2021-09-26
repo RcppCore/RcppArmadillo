@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -41,7 +43,8 @@ op_vectorise_col::apply_direct(Mat<typename T1::elem_type>& out, const T1& expr)
   
   typedef typename T1::elem_type eT;
   
-  if(is_Mat<T1>::value || is_Mat<typename Proxy<T1>::stored_type>::value || (arma_config::openmp && Proxy<T1>::use_mp))
+  // allow detection of in-place operation
+  if(is_Mat<T1>::value)
     {
     const unwrap<T1> U(expr);
     
@@ -80,17 +83,39 @@ op_vectorise_col::apply_direct(Mat<typename T1::elem_type>& out, const T1& expr)
     {
     const Proxy<T1> P(expr);
     
-    if(P.is_alias(out))
+    const bool is_alias = P.is_alias(out);
+    
+    if(is_Mat<typename Proxy<T1>::stored_type>::value || (arma_config::openmp && Proxy<T1>::use_mp))
       {
-      Mat<eT> tmp;
+      const quasi_unwrap<typename Proxy<T1>::stored_type> U(P.Q);
       
-      op_vectorise_col::apply_proxy(tmp, P);
-      
-      out.steal_mem(tmp);
+      if(is_alias)
+        {
+        Mat<eT> tmp(U.M.memptr(), U.M.n_elem, 1);
+        
+        out.steal_mem(tmp);
+        }
+      else
+        {
+        out.set_size(U.M.n_elem, 1);
+        
+        arrayops::copy(out.memptr(), U.M.memptr(), U.M.n_elem);
+        }
       }
     else
       {
-      op_vectorise_col::apply_proxy(out, P);
+      if(is_alias)
+        {
+        Mat<eT> tmp;
+        
+        op_vectorise_col::apply_proxy(tmp, P);
+        
+        out.steal_mem(tmp);
+        }
+      else
+        {
+        op_vectorise_col::apply_proxy(out, P);
+        }
       }
     }
   }

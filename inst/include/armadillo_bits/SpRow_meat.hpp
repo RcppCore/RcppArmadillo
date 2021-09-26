@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -202,6 +204,7 @@ SpRow<eT>::SpRow
 
 template<typename eT>
 inline
+arma_warn_unused
 const SpOp<SpRow<eT>,spop_htrans>
 SpRow<eT>::t() const
   {
@@ -212,6 +215,7 @@ SpRow<eT>::t() const
 
 template<typename eT>
 inline
+arma_warn_unused
 const SpOp<SpRow<eT>,spop_htrans>
 SpRow<eT>::ht() const
   {
@@ -222,6 +226,7 @@ SpRow<eT>::ht() const
 
 template<typename eT>
 inline
+arma_warn_unused
 const SpOp<SpRow<eT>,spop_strans>
 SpRow<eT>::st() const
   {

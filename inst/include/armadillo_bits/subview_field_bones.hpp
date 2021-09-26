@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -19,7 +21,7 @@
 
 
 //! Class for storing data required to construct or apply operations to a subfield
-//! (i.e. where the subfield starts and ends as well as a reference/pointer to the original field),
+//! (ie. where the subfield starts and ends as well as a reference/pointer to the original field),
 template<typename oT>
 class subview_field
   {

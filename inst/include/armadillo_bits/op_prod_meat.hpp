@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -28,7 +30,7 @@ op_prod::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim)
   const uword X_n_rows = X.n_rows;
   const uword X_n_cols = X.n_cols;
     
-  if(dim == 0)  // traverse across rows (i.e. find the product in each column)
+  if(dim == 0)  // traverse across rows (ie. find the product in each column)
     {
     out.set_size(1, X_n_cols);
     
@@ -39,7 +41,7 @@ op_prod::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim)
       out_mem[col] = arrayops::product(X.colptr(col), X_n_rows);
       }
     }
-  else  // traverse across columns (i.e. find the product in each row)
+  else  // traverse across columns (ie. find the product in each row)
     {
     out.ones(X_n_rows, 1);
     

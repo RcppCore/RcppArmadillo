@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -24,7 +26,7 @@ class GenEigsSolver
   {
   protected:
 
-  const OpType&           op;        // object to conduct matrix operation, e.g. matrix-vector product
+  const OpType&           op;        // object to conduct matrix operation, eg. matrix-vector product
   const uword             nev;       // number of eigenvalues requested
   Col< std::complex<eT> > ritz_val;  // ritz values
 
@@ -46,7 +48,7 @@ class GenEigsSolver
   Col< std::complex<eT> > ritz_est;  // last row of ritz_vec
   std::vector<bool>       ritz_conv; // indicator of the convergence of ritz values
   const eT                eps;       // the machine precision
-                                     // e.g. ~= 1e-16 for double type
+                                     // eg. ~= 1e-16 for double type
   const eT                approx0;   // a number that is approximately zero
                                      // approx0 = eps^(2/3)
                                      // used to test the orthogonality of vectors,

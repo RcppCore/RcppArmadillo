@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -22,7 +24,7 @@
 //! Format: "ARMA_MAT_TXT_ABXYZ".
 //! A is one of: I (for integral types) or F (for floating point types).
 //! B is one of: U (for unsigned types), S (for signed types), N (for not applicable) or C (for complex types).
-//! XYZ specifies the width of each element in terms of bytes, e.g. "008" indicates eight bytes.
+//! XYZ specifies the width of each element in terms of bytes, eg. "008" indicates eight bytes.
 template<typename eT>
 inline
 arma_cold
@@ -72,7 +74,7 @@ diskio::gen_txt_header(const Mat<eT>&)
 //! Format: "ARMA_MAT_BIN_ABXYZ".
 //! A is one of: I (for integral types) or F (for floating point types).
 //! B is one of: U (for unsigned types), S (for signed types), N (for not applicable) or C (for complex types).
-//! XYZ specifies the width of each element in terms of bytes, e.g. "008" indicates eight bytes.
+//! XYZ specifies the width of each element in terms of bytes, eg. "008" indicates eight bytes.
 template<typename eT>
 inline
 arma_cold
@@ -122,7 +124,7 @@ diskio::gen_bin_header(const Mat<eT>&)
 //! Format: "ARMA_SPM_BIN_ABXYZ".
 //! A is one of: I (for integral types) or F (for floating point types).
 //! B is one of: U (for unsigned types), S (for signed types), N (for not applicable) or C (for complex types).
-//! XYZ specifies the width of each element in terms of bytes, e.g. "008" indicates eight bytes.
+//! XYZ specifies the width of each element in terms of bytes, eg. "008" indicates eight bytes.
 template<typename eT>
 inline
 arma_cold
@@ -171,7 +173,7 @@ diskio::gen_bin_header(const SpMat<eT>&)
 //! Format: "ARMA_CUB_TXT_ABXYZ".
 //! A is one of: I (for integral types) or F (for floating point types).
 //! B is one of: U (for unsigned types), S (for signed types), N (for not applicable) or C (for complex types).
-//! XYZ specifies the width of each element in terms of bytes, e.g. "008" indicates eight bytes.
+//! XYZ specifies the width of each element in terms of bytes, eg. "008" indicates eight bytes.
 template<typename eT>
 inline
 arma_cold
@@ -221,7 +223,7 @@ diskio::gen_txt_header(const Cube<eT>&)
 //! Format: "ARMA_CUB_BIN_ABXYZ".
 //! A is one of: I (for integral types) or F (for floating point types).
 //! B is one of: U (for unsigned types), S (for signed types), N (for not applicable) or C (for complex types).
-//! XYZ specifies the width of each element in terms of bytes, e.g. "008" indicates eight bytes.
+//! XYZ specifies the width of each element in terms of bytes, eg. "008" indicates eight bytes.
 template<typename eT>
 inline
 arma_cold
@@ -1093,7 +1095,7 @@ diskio::save_pgm_binary(const Mat<eT>& x, const std::string& final_name)
 //
 // TODO:
 // add functionality to save the image in a normalised format,
-// i.e. scaled so that every value falls in the [0,255] range.
+// ie. scaled so that every value falls in the [0,255] range.
 
 //! Save a matrix as a PGM greyscale image
 template<typename eT>
