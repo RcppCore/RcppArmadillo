@@ -3,13 +3,27 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.10.6.99.1 (2021-09-26)}{
+  \itemize{
+    \item Upgraded to Armadillo release 10.7-RC1 (Keep Calm)
+    \itemize{
+      \item faster handling of submatrix views accessed by
+      \code{X.cols(first_col,last_col)}
+      \item faster handling of element-wise \code{min()} and \code{max()}
+      in compound expressions
+      \item expanded \code{solve()} with \code{solve_opts::force_approx}
+      option to force use of the approximate solver
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.10.6.2.0 (2021-08-05)}{
   \itemize{
     \item Upgraded to Armadillo release 10.6.2 (Keep Calm)
     \itemize{
-    \item fix incorrect use of \code{constexpr} for handling fixed-size
-    matrices and vectors
-    \item improved documentation
+      \item fix incorrect use of \code{constexpr} for handling fixed-size
+      matrices and vectors
+      \item improved documentation
     }
     \item GitHub- and drat-only release
   }
