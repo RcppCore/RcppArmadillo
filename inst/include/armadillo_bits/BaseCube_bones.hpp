@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -22,14 +24,14 @@
 template<typename elem_type, typename derived>
 struct BaseCube_eval_Cube
   {
-  arma_inline const derived& eval() const;
+  arma_inline arma_warn_unused const derived& eval() const;
   };
 
 
 template<typename elem_type, typename derived>
 struct BaseCube_eval_expr
   {
-  arma_inline Cube<elem_type> eval() const;   //!< force the immediate evaluation of a delayed expression
+  inline arma_warn_unused Cube<elem_type> eval() const;   //!< force the immediate evaluation of a delayed expression
   };
 
 

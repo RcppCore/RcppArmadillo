@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -17,7 +19,7 @@
 //! \addtogroup fn_spsolve
 //! @{
 
-//! Solve a system of linear equations, i.e., A*X = B, where X is unknown,
+//! Solve a system of linear equations, A*X = B, where X is unknown,
 //! A is sparse, and B is dense.  X will be dense too.
 
 template<typename T1, typename T2>

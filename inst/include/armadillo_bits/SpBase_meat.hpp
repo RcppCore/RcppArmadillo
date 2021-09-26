@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -41,6 +43,7 @@ SpBase<elem_type,derived>::is_alias(const SpMat<elem_type>& X) const
 
 template<typename elem_type, typename derived>
 inline
+arma_warn_unused
 const SpOp<derived, spop_htrans>
 SpBase<elem_type,derived>::t() const
   {
@@ -50,6 +53,7 @@ SpBase<elem_type,derived>::t() const
 
 template<typename elem_type, typename derived>
 inline
+arma_warn_unused
 const SpOp<derived, spop_htrans>
 SpBase<elem_type,derived>::ht() const
   {
@@ -60,6 +64,7 @@ SpBase<elem_type,derived>::ht() const
 
 template<typename elem_type, typename derived>
 inline
+arma_warn_unused
 const SpOp<derived, spop_strans>
 SpBase<elem_type,derived>::st() const
   {
@@ -313,6 +318,7 @@ SpBase<elem_type,derived>::brief_print(std::ostream& user_stream, const std::str
 
 template<typename elem_type, typename derived>
 inline
+arma_warn_unused
 const derived&
 SpBase_eval_SpMat<elem_type, derived>::eval() const
   {
@@ -328,6 +334,7 @@ SpBase_eval_SpMat<elem_type, derived>::eval() const
 
 template<typename elem_type, typename derived>
 inline
+arma_warn_unused
 SpMat<elem_type>
 SpBase_eval_expr<elem_type, derived>::eval() const
   {

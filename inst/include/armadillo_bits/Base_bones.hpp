@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -49,14 +51,14 @@ struct Base_extra<elem_type, derived, false> { typedef Base_extra_no<elem_type, 
 template<typename elem_type, typename derived>
 struct Base_eval_Mat
   {
-  arma_inline const derived& eval() const;
+  arma_inline arma_warn_unused const derived& eval() const;
   };
 
 
 template<typename elem_type, typename derived>
 struct Base_eval_expr
   {
-  arma_inline Mat<elem_type> eval() const;   //!< force the immediate evaluation of a delayed expression
+  inline arma_warn_unused Mat<elem_type> eval() const;   //!< force the immediate evaluation of a delayed expression
   };
 
 
@@ -74,18 +76,18 @@ struct Base_eval<elem_type, derived, false> { typedef Base_eval_expr<elem_type, 
 template<typename derived>
 struct Base_trans_cx
   {
-  arma_inline const Op<derived,op_htrans>  t() const;
-  arma_inline const Op<derived,op_htrans> ht() const;
-  arma_inline const Op<derived,op_strans> st() const;  // simple transpose: no complex conjugates
+  arma_inline arma_warn_unused const Op<derived,op_htrans>  t() const;
+  arma_inline arma_warn_unused const Op<derived,op_htrans> ht() const;
+  arma_inline arma_warn_unused const Op<derived,op_strans> st() const;  // simple transpose: no complex conjugates
   };
 
 
 template<typename derived>
 struct Base_trans_default
   {
-  arma_inline const Op<derived,op_htrans>  t() const;
-  arma_inline const Op<derived,op_htrans> ht() const;
-  arma_inline const Op<derived,op_htrans> st() const;  // return op_htrans instead of op_strans, as it's handled better by matrix multiplication code
+  arma_inline arma_warn_unused const Op<derived,op_htrans>  t() const;
+  arma_inline arma_warn_unused const Op<derived,op_htrans> ht() const;
+  arma_inline arma_warn_unused const Op<derived,op_htrans> st() const;  // return op_htrans instead of op_strans, as it's handled better by matrix multiplication code
   };
 
 
@@ -102,7 +104,7 @@ struct Base_trans<derived, false> { typedef Base_trans_default<derived> result; 
 
 //! Class for static polymorphism, modelled after the "Curiously Recurring Template Pattern" (CRTP).
 //! Used for type-safe downcasting in functions that restrict their input(s) to be classes that are
-//! derived from Base (e.g. Mat, Op, Glue, diagview, subview).
+//! derived from Base (eg. Mat, Op, Glue, diagview, subview).
 //! A Base object can be converted to a Mat object by the unwrap class.
 
 template<typename elem_type, typename derived>

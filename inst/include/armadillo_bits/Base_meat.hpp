@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -906,6 +908,7 @@ Base_extra_yes<elem_type,derived>::is_sympd(typename get_pod_type<elem_type>::re
 
 template<typename elem_type, typename derived>
 arma_inline
+arma_warn_unused
 const derived&
 Base_eval_Mat<elem_type, derived>::eval() const
   {
@@ -920,7 +923,8 @@ Base_eval_Mat<elem_type, derived>::eval() const
 // extra functions defined in Base_eval_expr
 
 template<typename elem_type, typename derived>
-arma_inline
+inline
+arma_warn_unused
 Mat<elem_type>
 Base_eval_expr<elem_type, derived>::eval() const
   {
@@ -936,6 +940,7 @@ Base_eval_expr<elem_type, derived>::eval() const
 
 template<typename derived>
 arma_inline
+arma_warn_unused
 const Op<derived,op_htrans>
 Base_trans_cx<derived>::t() const
   {
@@ -946,6 +951,7 @@ Base_trans_cx<derived>::t() const
 
 template<typename derived>
 arma_inline
+arma_warn_unused
 const Op<derived,op_htrans>
 Base_trans_cx<derived>::ht() const
   {
@@ -956,6 +962,7 @@ Base_trans_cx<derived>::ht() const
 
 template<typename derived>
 arma_inline
+arma_warn_unused
 const Op<derived,op_strans>
 Base_trans_cx<derived>::st() const
   {
@@ -969,6 +976,7 @@ Base_trans_cx<derived>::st() const
 
 template<typename derived>
 arma_inline
+arma_warn_unused
 const Op<derived,op_htrans>
 Base_trans_default<derived>::t() const
   {
@@ -979,6 +987,7 @@ Base_trans_default<derived>::t() const
 
 template<typename derived>
 arma_inline
+arma_warn_unused
 const Op<derived,op_htrans>
 Base_trans_default<derived>::ht() const
   {
@@ -989,6 +998,7 @@ Base_trans_default<derived>::ht() const
 
 template<typename derived>
 arma_inline
+arma_warn_unused
 const Op<derived,op_htrans>
 Base_trans_default<derived>::st() const
   {

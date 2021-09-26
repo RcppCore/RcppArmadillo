@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -1157,24 +1159,33 @@ subview<eT>::randu()
   {
   arma_extra_debug_sigprint();
   
-  const uword local_n_rows = n_rows;
-  const uword local_n_cols = n_cols;
+  subview<eT>& s = (*this);
   
-  if(local_n_rows == 1)
+  const uword s_n_rows = s.n_rows;
+  const uword s_n_cols = s.n_cols;
+  
+  if(s_n_rows == 1)
     {
-    podarray<eT> tmp(local_n_cols);
+    podarray<eT> tmp(s_n_cols);
     
     eT* tmp_mem = tmp.memptr();
     
-    arma_rng::randu<eT>::fill( tmp_mem, local_n_cols );
+    arma_rng::randu<eT>::fill( tmp_mem, s_n_cols );
     
-    for(uword ii=0; ii < local_n_cols; ++ii)  { at(0,ii) = tmp_mem[ii]; }
+    for(uword ii=0; ii < s_n_cols; ++ii)  { at(0,ii) = tmp_mem[ii]; }
     }
   else
     {
-    for(uword ii=0; ii < local_n_cols; ++ii)
+    if( (s.aux_row1 == 0) && (s_n_rows == s.m.n_rows) )
       {
-      arma_rng::randu<eT>::fill( colptr(ii), local_n_rows );
+      arma_rng::randu<eT>::fill( s.colptr(0), s.n_elem );
+      }
+    else
+      {
+      for(uword ii=0; ii < s_n_cols; ++ii)
+        {
+        arma_rng::randu<eT>::fill( s.colptr(ii), s_n_rows );
+        }
       }
     }
   }
@@ -1188,24 +1199,33 @@ subview<eT>::randn()
   {
   arma_extra_debug_sigprint();
   
-  const uword local_n_rows = n_rows;
-  const uword local_n_cols = n_cols;
+  subview<eT>& s = (*this);
   
-  if(local_n_rows == 1)
+  const uword s_n_rows = s.n_rows;
+  const uword s_n_cols = s.n_cols;
+  
+  if(s_n_rows == 1)
     {
-    podarray<eT> tmp(local_n_cols);
+    podarray<eT> tmp(s_n_cols);
     
     eT* tmp_mem = tmp.memptr();
     
-    arma_rng::randn<eT>::fill( tmp_mem, local_n_cols );
+    arma_rng::randn<eT>::fill( tmp_mem, s_n_cols );
     
-    for(uword ii=0; ii < local_n_cols; ++ii)  { at(0,ii) = tmp_mem[ii]; }
+    for(uword ii=0; ii < s_n_cols; ++ii)  { at(0,ii) = tmp_mem[ii]; }
     }
   else
     {
-    for(uword ii=0; ii < local_n_cols; ++ii)
+    if( (s.aux_row1 == 0) && (s_n_rows == s.m.n_rows) )
       {
-      arma_rng::randn<eT>::fill( colptr(ii), local_n_rows );
+      arma_rng::randn<eT>::fill( s.colptr(0), s.n_elem );
+      }
+    else
+      {
+      for(uword ii=0; ii < s_n_cols; ++ii)
+        {
+        arma_rng::randn<eT>::fill( s.colptr(ii), s_n_rows );
+        }
       }
     }
   }
@@ -3380,6 +3400,7 @@ subview_col<eT>::operator= (const Gen<T1,gen_type>& in)
 
 template<typename eT>
 arma_inline
+arma_warn_unused
 const Op<subview_col<eT>,op_htrans>
 subview_col<eT>::t() const
   {
@@ -3390,6 +3411,7 @@ subview_col<eT>::t() const
 
 template<typename eT>
 arma_inline
+arma_warn_unused
 const Op<subview_col<eT>,op_htrans>
 subview_col<eT>::ht() const
   {
@@ -3400,6 +3422,7 @@ subview_col<eT>::ht() const
 
 template<typename eT>
 arma_inline
+arma_warn_unused
 const Op<subview_col<eT>,op_strans>
 subview_col<eT>::st() const
   {
@@ -3410,6 +3433,7 @@ subview_col<eT>::st() const
 
 template<typename eT>
 arma_inline
+arma_warn_unused
 const Op<subview_col<eT>,op_strans>
 subview_col<eT>::as_row() const
   {
@@ -3880,6 +3904,314 @@ subview_col<eT>::index_max() const
 //
 
 
+template<typename eT>
+inline
+subview_cols<eT>::subview_cols(const Mat<eT>& in_m, const uword in_col1, const uword in_n_cols)
+  : subview<eT>(in_m, 0, in_col1, in_m.n_rows, in_n_cols)
+  {
+  arma_extra_debug_sigprint();
+  }
+
+
+
+template<typename eT>
+inline
+subview_cols<eT>::subview_cols(const subview_cols<eT>& in)
+  : subview<eT>(in)   // interprets 'subview_cols' as 'subview'
+  {
+  arma_extra_debug_sigprint();
+  }
+
+
+
+template<typename eT>
+inline
+subview_cols<eT>::subview_cols(subview_cols<eT>&& in)
+  : subview<eT>(std::move(in))  // interprets 'subview_cols' as 'subview'
+  {
+  arma_extra_debug_sigprint();
+  }
+
+
+
+template<typename eT>
+inline
+void
+subview_cols<eT>::operator=(const subview<eT>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview<eT>::operator=(X);
+  }
+
+
+
+template<typename eT>
+inline
+void
+subview_cols<eT>::operator=(const subview_cols<eT>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview<eT>::operator=(X); // interprets 'subview_cols' as 'subview'
+  }
+
+
+
+template<typename eT>
+inline
+void
+subview_cols<eT>::operator=(const std::initializer_list<eT>& list)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview<eT>::operator=(list);
+  }
+
+
+
+template<typename eT>
+inline
+void
+subview_cols<eT>::operator=(const std::initializer_list< std::initializer_list<eT> >& list)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview<eT>::operator=(list);
+  }
+
+
+
+template<typename eT>
+inline
+void
+subview_cols<eT>::operator=(const eT val)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview<eT>::operator=(val);
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+void
+subview_cols<eT>::operator=(const Base<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview<eT>::operator=(X.get_ref());
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename gen_type>
+inline
+typename enable_if2< is_same_type<typename T1::elem_type, eT>::value, void>::result
+subview_cols<eT>::operator= (const Gen<T1,gen_type>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview<eT>::operator=(in);
+  }
+
+
+
+template<typename eT>
+arma_inline
+arma_warn_unused
+const Op<subview_cols<eT>,op_htrans>
+subview_cols<eT>::t() const
+  {
+  return Op<subview_cols<eT>,op_htrans>(*this);
+  }
+
+
+
+template<typename eT>
+arma_inline
+arma_warn_unused
+const Op<subview_cols<eT>,op_htrans>
+subview_cols<eT>::ht() const
+  {
+  return Op<subview_cols<eT>,op_htrans>(*this);
+  }
+
+
+
+template<typename eT>
+arma_inline
+arma_warn_unused
+const Op<subview_cols<eT>,op_strans>
+subview_cols<eT>::st() const
+  {
+  return Op<subview_cols<eT>,op_strans>(*this);
+  }
+
+
+
+template<typename eT>
+arma_inline
+arma_warn_unused
+const Op<subview_cols<eT>,op_vectorise_col>
+subview_cols<eT>::as_col() const
+  {
+  return Op<subview_cols<eT>,op_vectorise_col>(*this);
+  }
+
+
+
+template<typename eT>
+inline
+arma_warn_unused
+eT
+subview_cols<eT>::at_alt(const uword ii) const
+  {
+  return operator[](ii);
+  }
+
+
+
+template<typename eT>
+inline
+arma_warn_unused
+eT&
+subview_cols<eT>::operator[](const uword ii)
+  {
+  const uword index = subview<eT>::aux_col1 * subview<eT>::m.n_rows + ii;
+  
+  return access::rw( (const_cast< Mat<eT>& >(subview<eT>::m)).mem[index] );
+  }
+
+
+
+template<typename eT>
+inline
+arma_warn_unused
+eT
+subview_cols<eT>::operator[](const uword ii) const
+  {
+  const uword index = subview<eT>::aux_col1 * subview<eT>::m.n_rows + ii;
+  
+  return subview<eT>::m.mem[index];
+  }
+
+
+
+template<typename eT>
+inline
+arma_warn_unused
+eT&
+subview_cols<eT>::operator()(const uword ii)
+  {
+  arma_debug_check_bounds( (ii >= subview<eT>::n_elem), "subview::operator(): index out of bounds" );
+    
+  const uword index = subview<eT>::aux_col1 * subview<eT>::m.n_rows + ii;
+  
+  return access::rw( (const_cast< Mat<eT>& >(subview<eT>::m)).mem[index] );
+  }
+
+
+
+template<typename eT>
+inline
+arma_warn_unused
+eT
+subview_cols<eT>::operator()(const uword ii) const
+  {
+  arma_debug_check_bounds( (ii >= subview<eT>::n_elem), "subview::operator(): index out of bounds" );
+    
+  const uword index = subview<eT>::aux_col1 * subview<eT>::m.n_rows + ii;
+  
+  return subview<eT>::m.mem[index];
+  }
+
+
+
+template<typename eT>
+inline
+arma_warn_unused
+eT&
+subview_cols<eT>::operator()(const uword in_row, const uword in_col)
+  {
+  arma_debug_check_bounds( ((in_row >= subview<eT>::n_rows) || (in_col >= subview<eT>::n_cols)), "subview::operator(): index out of bounds" );
+  
+  const uword index = (in_col + subview<eT>::aux_col1) * subview<eT>::m.n_rows + in_row;
+  
+  return access::rw( (const_cast< Mat<eT>& >(subview<eT>::m)).mem[index] );
+  }
+
+
+
+template<typename eT>
+inline
+arma_warn_unused
+eT
+subview_cols<eT>::operator()(const uword in_row, const uword in_col) const
+  {
+  arma_debug_check_bounds( ((in_row >= subview<eT>::n_rows) || (in_col >= subview<eT>::n_cols)), "subview::operator(): index out of bounds" );
+  
+  const uword index = (in_col + subview<eT>::aux_col1) * subview<eT>::m.n_rows + in_row;
+  
+  return subview<eT>::m.mem[index];
+  }
+
+
+
+template<typename eT>
+inline
+arma_warn_unused
+eT&
+subview_cols<eT>::at(const uword in_row, const uword in_col)
+  {
+  const uword index = (in_col + subview<eT>::aux_col1) * subview<eT>::m.n_rows + in_row;
+  
+  return access::rw( (const_cast< Mat<eT>& >(subview<eT>::m)).mem[index] );
+  }
+
+
+
+template<typename eT>
+inline
+arma_warn_unused
+eT
+subview_cols<eT>::at(const uword in_row, const uword in_col) const
+  {
+  const uword index = (in_col + subview<eT>::aux_col1) * subview<eT>::m.n_rows + in_row;
+  
+  return subview<eT>::m.mem[index];
+  }
+
+
+
+template<typename eT>
+arma_inline
+eT*
+subview_cols<eT>::colptr(const uword in_col)
+  {
+  return & access::rw((const_cast< Mat<eT>& >(subview<eT>::m)).mem[ (in_col + subview<eT>::aux_col1) * subview<eT>::m.n_rows ]);
+  }
+
+
+
+template<typename eT>
+arma_inline
+const eT*
+subview_cols<eT>::colptr(const uword in_col) const
+  {
+  return & subview<eT>::m.mem[ (in_col + subview<eT>::aux_col1) * subview<eT>::m.n_rows ];
+  }
+
+
+
+//
+//
+//
+
+
 
 template<typename eT>
 inline
@@ -4009,6 +4341,7 @@ subview_row<eT>::operator= (const Gen<T1,gen_type>& in)
 
 template<typename eT>
 arma_inline
+arma_warn_unused
 const Op<subview_row<eT>,op_htrans>
 subview_row<eT>::t() const
   {
@@ -4019,6 +4352,7 @@ subview_row<eT>::t() const
 
 template<typename eT>
 arma_inline
+arma_warn_unused
 const Op<subview_row<eT>,op_htrans>
 subview_row<eT>::ht() const
   {
@@ -4029,6 +4363,7 @@ subview_row<eT>::ht() const
 
 template<typename eT>
 arma_inline
+arma_warn_unused
 const Op<subview_row<eT>,op_strans>
 subview_row<eT>::st() const
   {
@@ -4039,6 +4374,7 @@ subview_row<eT>::st() const
 
 template<typename eT>
 arma_inline
+arma_warn_unused
 const Op<subview_row<eT>,op_strans>
 subview_row<eT>::as_col() const
   {

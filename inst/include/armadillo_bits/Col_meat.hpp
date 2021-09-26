@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -634,6 +636,7 @@ Col<eT>::operator<<(const eT val)
 
 template<typename eT>
 arma_inline
+arma_warn_unused
 const Op<Col<eT>,op_htrans>
 Col<eT>::t() const
   {
@@ -644,6 +647,7 @@ Col<eT>::t() const
 
 template<typename eT>
 arma_inline
+arma_warn_unused
 const Op<Col<eT>,op_htrans>
 Col<eT>::ht() const
   {
@@ -654,6 +658,7 @@ Col<eT>::ht() const
 
 template<typename eT>
 arma_inline
+arma_warn_unused
 const Op<Col<eT>,op_strans>
 Col<eT>::st() const
   {
@@ -664,6 +669,7 @@ Col<eT>::st() const
 
 template<typename eT>
 arma_inline
+arma_warn_unused
 const Op<Col<eT>,op_strans>
 Col<eT>::as_row() const
   {
@@ -1579,6 +1585,7 @@ Col<eT>::fixed<fixed_n_elem>::operator=(const fixed<fixed_n_elem>& X)
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
+arma_warn_unused
 const Op< typename Col<eT>::template fixed<fixed_n_elem>::Col_fixed_type, op_htrans >
 Col<eT>::fixed<fixed_n_elem>::t() const
   {
@@ -1590,6 +1597,7 @@ Col<eT>::fixed<fixed_n_elem>::t() const
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
+arma_warn_unused
 const Op< typename Col<eT>::template fixed<fixed_n_elem>::Col_fixed_type, op_htrans >
 Col<eT>::fixed<fixed_n_elem>::ht() const
   {
@@ -1601,6 +1609,7 @@ Col<eT>::fixed<fixed_n_elem>::ht() const
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
+arma_warn_unused
 const Op< typename Col<eT>::template fixed<fixed_n_elem>::Col_fixed_type, op_strans >
 Col<eT>::fixed<fixed_n_elem>::st() const
   {

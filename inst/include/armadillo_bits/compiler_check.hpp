@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -17,6 +19,7 @@
 #undef ARMA_HAVE_CXX11
 #undef ARMA_HAVE_CXX14
 #undef ARMA_HAVE_CXX17
+#undef ARMA_HAVE_CXX20
 
 #if (__cplusplus >= 201103L)
   #define ARMA_HAVE_CXX11
@@ -30,14 +33,32 @@
   #define ARMA_HAVE_CXX17
 #endif
 
+#if (__cplusplus >= 202002L)
+  #define ARMA_HAVE_CXX20
+#endif
+
 
 // MS really can't get its proverbial shit together
-#if (defined(_MSVC_LANG) && (_MSVC_LANG >= 201402L))
+#if defined(_MSVC_LANG)
+  
+  #if (_MSVC_LANG >= 201402L)
   #undef  ARMA_HAVE_CXX11
   #undef  ARMA_HAVE_CXX14
   
   #define ARMA_HAVE_CXX11
   #define ARMA_HAVE_CXX14
+  #endif
+  
+  #if (_MSVC_LANG >= 201703L)
+    #undef  ARMA_HAVE_CXX17
+    #define ARMA_HAVE_CXX17
+  #endif
+  
+  #if (_MSVC_LANG >= 202002L)
+    #undef  ARMA_HAVE_CXX20
+    #define ARMA_HAVE_CXX20
+  #endif
+  
 #endif
 
 

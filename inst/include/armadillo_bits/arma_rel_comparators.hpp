@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -67,6 +69,33 @@ struct arma_lt_comparator< std::complex<T> >
   //   
   //   return ( (abs_a != abs_b) ? (abs_a < abs_b) : (std::arg(a) < std::arg(b)) );
   //   }
+  
+  // inline
+  // bool
+  // operator() (const eT& a, const eT& b) const
+  //   {
+  //   const T a_real = a.real();
+  //   const T a_imag = a.imag();
+  //   
+  //   const T a_mag_squared = a_real*a_real + a_imag*a_imag;
+  //   
+  //   const T b_real = b.real();
+  //   const T b_imag = b.imag();
+  //   
+  //   const T b_mag_squared = b_real*b_real + b_imag*b_imag;
+  //   
+  //   if( (a_mag_squared != T(0)) && (b_mag_squared != T(0)) && std::isfinite(a_mag_squared) && std::isfinite(b_mag_squared) )
+  //     {
+  //     return ( (a_mag_squared != b_mag_squared) ? (a_mag_squared < b_mag_squared) : (std::arg(a) < std::arg(b)) );
+  //     }
+  //   else
+  //     {
+  //     const T abs_a = std::abs(a);
+  //     const T abs_b = std::abs(b);
+  //     
+  //     return ( (abs_a != abs_b) ? (abs_a < abs_b) : (std::arg(a) < std::arg(b)) );
+  //     }
+  //   }
   };
 
 
@@ -86,6 +115,33 @@ struct arma_gt_comparator< std::complex<T> >
   //   const T abs_b = std::abs(b);
   //   
   //   return ( (abs_a != abs_b) ? (abs_a > abs_b) : (std::arg(a) > std::arg(b)) );
+  //   }
+  
+  // inline
+  // bool
+  // operator() (const eT& a, const eT& b) const
+  //   {
+  //   const T a_real = a.real();
+  //   const T a_imag = a.imag();
+  //   
+  //   const T a_mag_squared = a_real*a_real + a_imag*a_imag;
+  //   
+  //   const T b_real = b.real();
+  //   const T b_imag = b.imag();
+  //   
+  //   const T b_mag_squared = b_real*b_real + b_imag*b_imag;
+  //   
+  //   if( (a_mag_squared != T(0)) && (b_mag_squared != T(0)) && std::isfinite(a_mag_squared) && std::isfinite(b_mag_squared) )
+  //     {
+  //     return ( (a_mag_squared != b_mag_squared) ? (a_mag_squared > b_mag_squared) : (std::arg(a) > std::arg(b)) );
+  //     }
+  //   else
+  //     {
+  //     const T abs_a = std::abs(a);
+  //     const T abs_b = std::abs(b);
+  //     
+  //     return ( (abs_a != abs_b) ? (abs_a > abs_b) : (std::arg(a) > std::arg(b)) );
+  //     }
   //   }
   };
 

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -126,6 +128,40 @@ struct unwrap< Col<eT> >
     }
   
   const Col<eT>& M;
+  };
+
+
+
+template<typename eT>
+struct unwrap< subview_col<eT> >
+  {
+  typedef Col<eT> stored_type;
+
+  inline
+  unwrap(const subview_col<eT>& A)
+    : M(A.colmem, A.n_rows)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const Col<eT> M;
+  };
+
+
+
+template<typename eT>
+struct unwrap< subview_cols<eT> >
+  {
+  typedef Mat<eT> stored_type;
+  
+  inline
+  unwrap(const subview_cols<eT>& A)
+    : M(A.colptr(0), A.n_rows, A.n_cols)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const Mat<eT> M;
   };
 
 
@@ -369,13 +405,37 @@ struct quasi_unwrap< subview_col<eT> >
   inline
   quasi_unwrap(const subview_col<eT>& A)
     : orig( A.m )
-    , M  ( const_cast<eT*>( A.colptr(0) ), A.n_rows, false, false )
+    , M  ( const_cast<eT*>( A.colmem ), A.n_rows, false, false )
     {
     arma_extra_debug_sigprint();
     }
   
   const Mat<eT>& orig;
   const Col<eT>  M;
+  
+  static constexpr bool is_const     = true;
+  static constexpr bool has_subview  = true;
+  static constexpr bool has_orig_mem = true;
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&orig) == void_ptr(&X)); }
+  };
+
+
+
+template<typename eT>
+struct quasi_unwrap< subview_cols<eT> >
+  {
+  inline
+  quasi_unwrap(const subview_cols<eT>& A)
+    : orig( A.m )
+    , M   ( const_cast<eT*>( A.colptr(0) ), A.n_rows, A.n_cols, false, false )
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const Mat<eT>& orig;
+  const Mat<eT>  M;
   
   static constexpr bool is_const     = true;
   static constexpr bool has_subview  = true;
@@ -444,15 +504,15 @@ struct quasi_unwrap< Op<T1, op_vectorise_col> >
     arma_extra_debug_sigprint();
     }
   
-  const unwrap<T1> U;
-  const Mat<eT>    M;
+  const quasi_unwrap<T1> U;
+  const Mat<eT>          M;
   
   static constexpr bool is_const     = true;
   static constexpr bool has_subview  = true;
   static constexpr bool has_orig_mem = true;
   
   template<typename eT2>
-  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&(U.M)) == void_ptr(&X)); }
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return U.is_alias(X); }
   };
 
 
@@ -511,7 +571,7 @@ struct quasi_unwrap< Op<subview_col<eT>, op_strans> >
   inline
   quasi_unwrap(const Op<subview_col<eT>, op_strans>& A)
     : orig( A.m.m )
-    , M   ( const_cast<eT*>( A.m.colptr(0) ), A.m.n_rows, false, false )
+    , M   ( const_cast<eT*>( A.m.colmem ), A.m.n_rows, false, false )
     {
     arma_extra_debug_sigprint();
     }
@@ -671,7 +731,7 @@ struct quasi_unwrap_subview_col_htrans< Op<subview_col<eT>, op_htrans> >
   inline
   quasi_unwrap_subview_col_htrans(const Op<subview_col<eT>, op_htrans>& A)
     : orig(A.m.m)
-    , M   (const_cast<eT*>(A.m.colptr(0)), A.m.n_rows, false, false)
+    , M   (const_cast<eT*>(A.m.colmem), A.m.n_rows, false, false)
     {
     arma_extra_debug_sigprint();
     }
@@ -1311,7 +1371,7 @@ struct partial_unwrap< subview_col<eT> >
   inline
   partial_unwrap(const subview_col<eT>& A)
     : orig( A.m )
-    , M   ( const_cast<eT*>( A.colptr(0) ), A.n_rows, false, false )
+    , M   ( const_cast<eT*>( A.colmem ), A.n_rows, false, false )
     {
     arma_extra_debug_sigprint();
     }
@@ -1326,6 +1386,33 @@ struct partial_unwrap< subview_col<eT> >
   
   const Mat<eT>& orig;
   const Col<eT>  M;
+  };
+
+
+
+template<typename eT>
+struct partial_unwrap< subview_cols<eT> >
+  {
+  typedef Mat<eT> stored_type;
+  
+  inline
+  partial_unwrap(const subview_cols<eT>& A)
+    : orig( A.m )
+    , M   ( const_cast<eT*>( A.colptr(0) ), A.n_rows, A.n_cols, false, false )
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  constexpr eT get_val() const { return eT(1); }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&X) == void_ptr(&orig)); }
+  
+  static constexpr bool do_trans = false;
+  static constexpr bool do_times = false;
+  
+  const Mat<eT>& orig;
+  const Mat<eT>  M;
   };
 
 
@@ -1529,6 +1616,33 @@ struct partial_unwrap< Op< subview<eT>, op_htrans> >
 
 
 template<typename eT>
+struct partial_unwrap< Op< subview_cols<eT>, op_htrans> >
+  {
+  typedef Mat<eT> stored_type;
+  
+  inline
+  partial_unwrap(const Op< subview_cols<eT>, op_htrans>& A)
+    : orig( A.m.m )
+    , M   ( const_cast<eT*>( A.m.colptr(0) ), A.m.n_rows, A.m.n_cols, false, false )
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  constexpr eT get_val() const { return eT(1); }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&orig) == void_ptr(&X)); }
+  
+  static constexpr bool do_trans = true;
+  static constexpr bool do_times = false;
+  
+  const Mat<eT>& orig;
+  const Mat<eT>  M;
+  };
+
+
+
+template<typename eT>
 struct partial_unwrap< Op< subview_col<eT>, op_htrans> >
   {
   typedef Col<eT> stored_type;
@@ -1536,7 +1650,7 @@ struct partial_unwrap< Op< subview_col<eT>, op_htrans> >
   inline
   partial_unwrap(const Op< subview_col<eT>, op_htrans>& A)
     : orig( A.m.m )
-    , M   ( const_cast<eT*>( A.m.colptr(0) ), A.m.n_rows, false, false )
+    , M   ( const_cast<eT*>( A.m.colmem ), A.m.n_rows, false, false )
     {
     arma_extra_debug_sigprint();
     }
@@ -1737,6 +1851,64 @@ struct partial_unwrap< Op< Col<eT>, op_htrans2> >
 
 
 template<typename eT>
+struct partial_unwrap< Op< subview<eT>, op_htrans2> >
+  {
+  typedef Mat<eT> stored_type;
+  
+  inline
+  partial_unwrap(const Op< subview<eT>, op_htrans2>& A)
+    : sv ( A.m   )
+    , val( A.aux )
+    , M  ( A.m, ((A.m.aux_row1 == 0) && (A.m.n_rows == A.m.m.n_rows)) )  // reuse memory if the subview is a contiguous chunk
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  inline eT get_val() const { return val; }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return ( ((sv.aux_row1 == 0) && (sv.n_rows == sv.m.n_rows)) ? (void_ptr(&(sv.m)) == void_ptr(&X)) : false ); }
+  
+  static constexpr bool do_trans = true;
+  static constexpr bool do_times = true;
+  
+  const subview<eT>& sv;
+  const eT           val;
+  const Mat<eT>      M;
+  };
+
+
+
+template<typename eT>
+struct partial_unwrap< Op< subview_cols<eT>, op_htrans2> >
+  {
+  typedef Mat<eT> stored_type;
+  
+  inline
+  partial_unwrap(const Op< subview_cols<eT>, op_htrans2>& A)
+    : orig( A.m.m )
+    , val ( A.aux )
+    , M   ( const_cast<eT*>( A.m.colptr(0) ), A.m.n_rows, A.m.n_cols, false, false )
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  inline eT get_val() const { return val; }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&orig) == void_ptr(&X)); }
+  
+  static constexpr bool do_trans = true;
+  static constexpr bool do_times = true;
+  
+  const Mat<eT>& orig;
+  const eT       val;
+  const Mat<eT>  M;
+  };
+
+
+
+template<typename eT>
 struct partial_unwrap< Op< subview_col<eT>, op_htrans2> >
   {
   typedef Col<eT> stored_type;
@@ -1745,7 +1917,7 @@ struct partial_unwrap< Op< subview_col<eT>, op_htrans2> >
   partial_unwrap(const Op< subview_col<eT>, op_htrans2>& A)
     : orig( A.m.m )
     , val ( A.aux )
-    , M   ( const_cast<eT*>( A.m.colptr(0) ), A.m.n_rows, false, false )
+    , M   ( const_cast<eT*>( A.m.colmem ), A.m.n_rows, false, false )
     {
     arma_extra_debug_sigprint();
     }
@@ -1963,7 +2135,7 @@ struct partial_unwrap< eOp<subview_col<eT>, eop_scalar_times> >
   partial_unwrap(const eOp<subview_col<eT>,eop_scalar_times>& A)
     : orig( A.P.Q.m )
     , val ( A.aux   )
-    , M   ( const_cast<eT*>( A.P.Q.colptr(0) ), A.P.Q.n_rows, false, false )
+    , M   ( const_cast<eT*>( A.P.Q.colmem ), A.P.Q.n_rows, false, false )
     {
     arma_extra_debug_sigprint();
     }
@@ -2170,7 +2342,7 @@ struct partial_unwrap< eOp<subview_col<eT>, eop_neg> >
   inline
   partial_unwrap(const eOp<subview_col<eT>,eop_neg>& A)
     : orig( A.P.Q.m )
-    , M   ( const_cast<eT*>( A.P.Q.colptr(0) ), A.P.Q.n_rows, false, false )
+    , M   ( const_cast<eT*>( A.P.Q.colmem ), A.P.Q.n_rows, false, false )
     {
     arma_extra_debug_sigprint();
     }
@@ -2406,7 +2578,7 @@ struct partial_unwrap_check< subview_col<eT> >
   
   inline
   partial_unwrap_check(const subview_col<eT>& A, const Mat<eT>& B)
-    : M  ( const_cast<eT*>( A.colptr(0) ), A.n_rows, (&(A.m) == &B), false )
+    : M  ( const_cast<eT*>( A.colmem ), A.n_rows, (&(A.m) == &B), false )
     {
     arma_extra_debug_sigprint();
     }
@@ -2607,7 +2779,7 @@ struct partial_unwrap_check< Op< subview_col<eT>, op_htrans> >
   
   inline
   partial_unwrap_check(const Op< subview_col<eT>, op_htrans>& A, const Mat<eT>& B)
-    : M  ( const_cast<eT*>( A.m.colptr(0) ), A.m.n_rows, (&(A.m.m) == &B), false )
+    : M  ( const_cast<eT*>( A.m.colmem ), A.m.n_rows, (&(A.m.m) == &B), false )
     {
     arma_extra_debug_sigprint();
     }
@@ -2820,7 +2992,7 @@ struct partial_unwrap_check< Op< subview_col<eT>, op_htrans2> >
   inline
   partial_unwrap_check(const Op< subview_col<eT>, op_htrans2>& A, const Mat<eT>& B)
     : val( A.aux )
-    , M  ( const_cast<eT*>( A.m.colptr(0) ), A.m.n_rows, (&(A.m.m) == &B), false )
+    , M  ( const_cast<eT*>( A.m.colmem ), A.m.n_rows, (&(A.m.m) == &B), false )
     {
     arma_extra_debug_sigprint();
     }
@@ -3031,7 +3203,7 @@ struct partial_unwrap_check< eOp<subview_col<eT>, eop_scalar_times> >
   inline
   partial_unwrap_check(const eOp<subview_col<eT>,eop_scalar_times>& A, const Mat<eT>& B)
     : val( A.aux )
-    , M  ( const_cast<eT*>( A.P.Q.colptr(0) ), A.P.Q.n_rows, (&(A.P.Q.m) == &B), false )
+    , M  ( const_cast<eT*>( A.P.Q.colmem ), A.P.Q.n_rows, (&(A.P.Q.m) == &B), false )
     {
     arma_extra_debug_sigprint();
     }
@@ -3231,7 +3403,7 @@ struct partial_unwrap_check< eOp<subview_col<eT>, eop_neg> >
   
   inline
   partial_unwrap_check(const eOp<subview_col<eT>,eop_neg>& A, const Mat<eT>& B)
-    : M  ( const_cast<eT*>( A.P.Q.colptr(0) ), A.P.Q.n_rows, (&(A.P.Q.m) == &B), false )
+    : M  ( const_cast<eT*>( A.P.Q.colmem ), A.P.Q.n_rows, (&(A.P.Q.m) == &B), false )
     {
     arma_extra_debug_sigprint();
     }

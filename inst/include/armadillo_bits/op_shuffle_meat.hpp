@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -118,7 +120,7 @@ op_shuffle::apply_direct(Mat<eT>& out, const Mat<eT>& X, const uword dim)
       
       if(dim == 0)
         {
-        if(X.n_rows > 1)  // i.e. column vector
+        if(X.n_rows > 1)  // ie. column vector
           {
           for(uword i=0; i<N; ++i) { out[i] = X[ packet_vec[i].index ]; }
           }
@@ -129,7 +131,7 @@ op_shuffle::apply_direct(Mat<eT>& out, const Mat<eT>& X, const uword dim)
         }
       else
         {
-        if(X.n_cols > 1)  // i.e. row vector
+        if(X.n_cols > 1)  // ie. row vector
           {
           for(uword i=0; i<N; ++i) { out[i] = X[ packet_vec[i].index ]; }
           }
@@ -154,7 +156,7 @@ op_shuffle::apply_direct(Mat<eT>& out, const Mat<eT>& X, const uword dim)
         
       if(dim == 0)
         {
-        if(X.n_rows > 1)  // i.e. column vector
+        if(X.n_rows > 1)  // ie. column vector
           {
           for(uword i=0; i<N; ++i)
             {
@@ -171,7 +173,7 @@ op_shuffle::apply_direct(Mat<eT>& out, const Mat<eT>& X, const uword dim)
         }
       else
         {
-        if(X.n_cols > 1)  // i.e. row vector
+        if(X.n_cols > 1)  // ie. row vector
           {
           for(uword i=0; i<N; ++i)
             {

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -21,8 +23,8 @@
 //! \brief
 //! Delayed product of elements of a matrix along a specified dimension (either rows or columns).
 //! The result is stored in a dense matrix that has either one column or one row.
-//! For dim = 0, find the sum of each column (i.e. traverse across rows)
-//! For dim = 1, find the sum of each row (i.e. traverse across columns)
+//! For dim = 0, find the sum of each column (ie. traverse across rows)
+//! For dim = 1, find the sum of each row (ie. traverse across columns)
 //! The default is dim = 0.
 //! NOTE: this function works differently than in Matlab/Octave.
 

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -59,6 +61,7 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
   const bool likely_sympd = bool(flags & solve_opts::flag_likely_sympd);
   const bool refine       = bool(flags & solve_opts::flag_refine      );
   const bool no_trimat    = bool(flags & solve_opts::flag_no_trimat   );
+  const bool force_approx = bool(flags & solve_opts::flag_force_approx);
   
   arma_extra_debug_print("glue_solve_gen::apply(): enabled flags:");
   
@@ -71,15 +74,30 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
   if(likely_sympd)  { arma_extra_debug_print("likely_sympd"); }
   if(refine      )  { arma_extra_debug_print("refine");       }
   if(no_trimat   )  { arma_extra_debug_print("no_trimat");    }
+  if(force_approx)  { arma_extra_debug_print("force_approx"); }
   
   arma_debug_check( (fast     && equilibrate ), "solve(): options 'fast' and 'equilibrate' are mutually exclusive"      );
   arma_debug_check( (fast     && refine      ), "solve(): options 'fast' and 'refine' are mutually exclusive"           );
   arma_debug_check( (no_sympd && likely_sympd), "solve(): options 'no_sympd' and 'likely_sympd' are mutually exclusive" );
   
+  Mat<eT> A = A_expr.get_ref();
+  
+  if(force_approx)
+    {
+    arma_extra_debug_print("glue_solve_gen::apply(): forced approximate solution");
+    
+    arma_debug_check( no_approx, "solve(): options 'no_approx' and 'force_approx' are mutually exclusive" );
+    
+    if(fast)          { arma_debug_warn_level(1,  "solve(): option 'fast' ignored for forced approximate solution"         ); }
+    if(equilibrate)   { arma_debug_warn_level(1,  "solve(): option 'equilibrate' ignored for forced approximate solution"  ); }
+    if(refine)        { arma_debug_warn_level(1,  "solve(): option 'refine' ignored for forced approximate solution"       ); }
+    if(likely_sympd)  { arma_debug_warn_level(1,  "solve(): option 'likely_sympd' ignored for forced approximate solution" ); }
+    
+    return auxlib::solve_approx_svd(out, A, B_expr.get_ref());  // A is overwritten
+    }
+  
   T    rcond  = T(0);
   bool status = false;
-  
-  Mat<eT> A = A_expr.get_ref();
   
   if(A.n_rows == A.n_cols)
     {
@@ -434,6 +452,7 @@ glue_solve_tri::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const Base
   const bool likely_sympd = bool(flags & solve_opts::flag_likely_sympd);
   const bool refine       = bool(flags & solve_opts::flag_refine      );
   const bool no_trimat    = bool(flags & solve_opts::flag_no_trimat   );
+  const bool force_approx = bool(flags & solve_opts::flag_force_approx);
   
   arma_extra_debug_print("glue_solve_tri::apply(): enabled flags:");
   
@@ -446,8 +465,9 @@ glue_solve_tri::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const Base
   if(likely_sympd)  { arma_extra_debug_print("likely_sympd"); }
   if(refine      )  { arma_extra_debug_print("refine");       }
   if(no_trimat   )  { arma_extra_debug_print("no_trimat");    }
+  if(force_approx)  { arma_extra_debug_print("force_approx"); }
   
-  if(no_trimat || equilibrate || refine)
+  if(no_trimat || equilibrate || refine || force_approx)
     {
     const uword mask = ~(solve_opts::flag_triu | solve_opts::flag_tril);
     
