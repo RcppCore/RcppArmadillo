@@ -4,6 +4,7 @@
 // RcppArmadilloForward.h: Rcpp/Armadillo glue
 //
 // Copyright (C)  2010 - 2014  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2021  Conrad Sanderson
 //
 // This file is part of RcppArmadillo.
 //
@@ -57,6 +58,7 @@ namespace Rcpp {
     template <typename T> SEXP wrap ( const arma::field<T>& ) ;
     template <typename T> SEXP wrap ( const arma::Cube<T>& ) ;
     template <typename T> SEXP wrap ( const arma::subview<T>& ) ;
+    template <typename T> SEXP wrap ( const arma::subview_cols<T>& ) ;
     template <typename T> SEXP wrap ( const arma::SpMat<T>& ) ;
     
     template <typename T1, typename T2, typename glue_type> 
