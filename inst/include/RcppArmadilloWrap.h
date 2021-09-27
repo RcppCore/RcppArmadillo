@@ -4,6 +4,7 @@
 // RcppArmadilloWrap.h: Rcpp/Armadillo glue
 //
 // Copyright (C)  2010 - 2013  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2021 Conrad Sanderson
 //
 // This file is part of RcppArmadillo.
 //
@@ -53,6 +54,17 @@ namespace Rcpp{
             return mat ;
 	}
 	
+	template <typename T>
+	SEXP arma_subview_wrap( const arma::subview_cols<T>& data, int nrows, int ncols ){
+            const int RTYPE = Rcpp::traits::r_sexptype_traits<T>::rtype ;
+            Rcpp::Matrix<RTYPE> mat( nrows, ncols ) ;
+            const int nelem = nrows*ncols;
+            const T* svcmem = data.colptr(0);
+            for( int i=0; i<nelem; i++)
+                mat[i] = svcmem[i] ;
+            return mat ;
+	}
+
     } /* namespace RcppArmadillo */
 	
     /* wrap */
@@ -84,6 +96,11 @@ namespace Rcpp{
     template <typename T> SEXP wrap( const arma::subview<T>& data ){
         return RcppArmadillo::arma_subview_wrap<T>( data, data.n_rows, data.n_cols ) ;
     }
+
+    template <typename T> SEXP wrap( const arma::subview_cols<T>& data ){
+        return RcppArmadillo::arma_subview_wrap<T>( data, data.n_rows, data.n_cols ) ;
+    }
+
     
     template <typename T> SEXP wrap ( const arma::SpMat<T>& sm ){
         const int  RTYPE = Rcpp::traits::r_sexptype_traits<T>::rtype;
