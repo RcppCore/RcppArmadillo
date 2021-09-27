@@ -50,7 +50,7 @@ namespace Rcpp{
             Rcpp::Matrix<RTYPE> mat( nrows, ncols ) ;
             for( int j=0, k=0; j<ncols; j++)
                 for( int i=0; i<nrows; i++, k++) 
-                    mat[k] = data(i,j) ;
+                    mat[k] = data.at(i,j) ;   // use .at() to skip unnecessary bounds checks
             return mat ;
 	}
 	
