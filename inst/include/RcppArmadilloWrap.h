@@ -4,7 +4,7 @@
 // RcppArmadilloWrap.h: Rcpp/Armadillo glue
 //
 // Copyright (C)  2010 - 2013  Dirk Eddelbuettel, Romain Francois and Douglas Bates
-// Copyright (C)  2021 Conrad Sanderson
+// Copyright (C)  2021  Conrad Sanderson
 //
 // This file is part of RcppArmadillo.
 //
