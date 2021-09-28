@@ -92,7 +92,7 @@ to install from your nearest CRAN mirror.
 
 ### Authors
 
-Dirk Eddelbuettel, Romain Francois, Doug Bates and Binxiang Ni
+Dirk Eddelbuettel, Romain Francois, Doug Bates, Binxiang Ni, and Conrad Sanderson
 
 ### License
 
