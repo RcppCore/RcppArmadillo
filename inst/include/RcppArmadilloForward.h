@@ -1,10 +1,8 @@
-// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
-/* :tabSize=4:indentSize=4:noTabs=false:folding=explicit:collapseFolds=1: */
 //
 // RcppArmadilloForward.h: Rcpp/Armadillo glue
 //
-// Copyright (C)  2010 - 2014  Dirk Eddelbuettel, Romain Francois and Douglas Bates
-// Copyright (C)  2021  Conrad Sanderson
+// Copyright (C)  2010 - 2021  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2019 - 2021  Conrad Sanderson
 //
 // This file is part of RcppArmadillo.
 //
@@ -60,28 +58,28 @@ namespace Rcpp {
     template <typename T> SEXP wrap ( const arma::subview<T>& ) ;
     template <typename T> SEXP wrap ( const arma::subview_cols<T>& ) ;
     template <typename T> SEXP wrap ( const arma::SpMat<T>& ) ;
-    
-    template <typename T1, typename T2, typename glue_type> 
+
+    template <typename T1, typename T2, typename glue_type>
     SEXP wrap(const arma::Glue<T1, T2, glue_type>& X ) ;
-    
+
     template <typename T1, typename op_type>
     SEXP wrap(const arma::Op<T1, op_type>& X ) ;
-    
-    template <typename T1, typename T2, typename glue_type> 
+
+    template <typename T1, typename T2, typename glue_type>
     SEXP wrap(const arma::eGlue<T1, T2, glue_type>& X ) ;
-    
+
     template <typename T1, typename op_type>
     SEXP wrap(const arma::eOp<T1, op_type>& X ) ;
-    
+
     template <typename T1, typename op_type>
     SEXP wrap(const arma::OpCube<T1,op_type>& X ) ;
-    
+
     template <typename T1, typename T2, typename glue_type>
     SEXP wrap(const arma::GlueCube<T1,T2,glue_type>& X ) ;
-    
+
     template <typename T1, typename op_type>
     SEXP wrap(const arma::eOpCube<T1,op_type>& X ) ;
-    
+
     template <typename T1, typename T2, typename glue_type>
     SEXP wrap(const arma::eGlueCube<T1,T2,glue_type>& X ) ;
 
@@ -90,13 +88,13 @@ namespace Rcpp {
 
     template<typename out_eT, typename T1, typename T2, typename glue_type>
     SEXP wrap( const arma::mtGlue<out_eT,T1,T2,glue_type>& X );
-    
+
     template <typename eT, typename gen_type>
     SEXP wrap( const arma::Gen<eT,gen_type>& X) ;
-    
+
     template<typename eT, typename gen_type>
     SEXP wrap( const arma::GenCube<eT,gen_type>& X) ;
-    
+
     namespace traits {
 
 	/* support for as */
@@ -104,24 +102,24 @@ namespace Rcpp {
 	template <typename T> class Exporter< arma::Row<T> > ;
 	template <typename T> class Exporter< arma::Col<T> > ;
 	template <typename T> class Exporter< arma::SpMat<T> > ;
-    
+
 	template <typename T> class Exporter< arma::field<T> > ;
     // template <typename T> class Exporter< arma::Cube<T> > ;
 
-    } // namespace traits 
+    } // namespace traits
 
     template <typename T> class ConstReferenceInputParameter< arma::Mat<T> > ;
     template <typename T> class ReferenceInputParameter< arma::Mat<T> > ;
     template <typename T> class ConstInputParameter< arma::Mat<T> > ;
-    
+
     template <typename T> class ConstReferenceInputParameter< arma::Col<T> > ;
     template <typename T> class ReferenceInputParameter< arma::Col<T> > ;
     template <typename T> class ConstInputParameter< arma::Col<T> > ;
-    
+
     template <typename T> class ConstReferenceInputParameter< arma::Row<T> > ;
     template <typename T> class ReferenceInputParameter< arma::Row<T> > ;
     template <typename T> class ConstInputParameter< arma::Row<T> > ;
-    
+
 }
 
 #endif

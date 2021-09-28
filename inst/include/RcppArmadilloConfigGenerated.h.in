@@ -1,8 +1,7 @@
-// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
-//
+
 // RcppArmadilloGenerated.h: Autoconf-updated file for LAPACK and OpenMP choices
 //
-// Copyright (C)  2013 - 2017  Dirk Eddelbuettel
+// Copyright (C)  2013 - 2021  Dirk Eddelbuettel
 //
 // This file is part of RcppArmadillo.
 //

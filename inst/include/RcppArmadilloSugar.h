@@ -1,9 +1,8 @@
-// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
-/* :tabSize=4:indentSize=4:noTabs=false:folding=explicit:collapseFolds=1: */
-//
+
 // RcppArmadilloSugar.h: Rcpp/Armadillo glue
 //
-// Copyright (C)  2010 - 2013  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2010 - 2021  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2017 - 2021  Serguei Sokol
 //
 // This file is part of RcppArmadillo.
 //

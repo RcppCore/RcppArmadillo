@@ -1,9 +1,9 @@
-// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
-/* :tabSize=4:indentSize=4:noTabs=false:folding=explicit:collapseFolds=1: */
-//
+
 // RcppArmadilloConfig.h: Rcpp/Armadillo glue
 //
-// Copyright (C)  2010 - 2016  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2010 - 2021  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2016 - 2021  George G. Vega Yon
+// Copyright (C)  2017 - 2021  Serguei Sokol
 //
 // This file is part of RcppArmadillo.
 //
@@ -42,9 +42,9 @@
 #undef ARMA_HAVE_STD_SNPRINTF
 #endif
 
-/* 
+/*
    suncc does not have std::isfinite (which is not standard)
-   so we tell armadillo not to use it, and comment out a few 
+   so we tell armadillo not to use it, and comment out a few
    others while we are at it
 */
 #if defined(__SUNPRO_CC)
@@ -78,7 +78,7 @@
 //
 // As of Armadillo 8.100.1, this has been renamed to ARMA_COUT_STREAM and
 // ARMA_CERR_STREAM was added
-// 
+//
 #if !defined(ARMA_COUT_STREAM)
 #define ARMA_COUT_STREAM Rcpp::Rcout
 #endif
@@ -96,7 +96,7 @@
 // On Windows do not read autoconf-updated header
 #if defined(WIN32) || defined(_WIN32)
   // R can be built with its own Rlapack library, or use an external
-  // one. Only the latter has zgesdd, a complex-valued SVD using divide-and-conquer 
+  // one. Only the latter has zgesdd, a complex-valued SVD using divide-and-conquer
   // on Windows we do not assume ZGESDD
   #define ARMA_CRIPPLED_LAPACK 1
   // on Windows we can now assume OpenMP with Rtools / gcc 4.9.3
@@ -137,4 +137,3 @@
 
 
 #endif
-
