@@ -88,10 +88,10 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
     
     arma_debug_check( no_approx, "solve(): options 'no_approx' and 'force_approx' are mutually exclusive" );
     
-    if(fast)          { arma_debug_warn_level(1,  "solve(): option 'fast' ignored for forced approximate solution"         ); }
-    if(equilibrate)   { arma_debug_warn_level(1,  "solve(): option 'equilibrate' ignored for forced approximate solution"  ); }
-    if(refine)        { arma_debug_warn_level(1,  "solve(): option 'refine' ignored for forced approximate solution"       ); }
-    if(likely_sympd)  { arma_debug_warn_level(1,  "solve(): option 'likely_sympd' ignored for forced approximate solution" ); }
+    if(fast)          { arma_debug_warn_level(2,  "solve(): option 'fast' ignored for forced approximate solution"         ); }
+    if(equilibrate)   { arma_debug_warn_level(2,  "solve(): option 'equilibrate' ignored for forced approximate solution"  ); }
+    if(refine)        { arma_debug_warn_level(2,  "solve(): option 'refine' ignored for forced approximate solution"       ); }
+    if(likely_sympd)  { arma_debug_warn_level(2,  "solve(): option 'likely_sympd' ignored for forced approximate solution" ); }
     
     return auxlib::solve_approx_svd(out, A, B_expr.get_ref());  // A is overwritten
     }
@@ -285,9 +285,9 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
     {
     arma_extra_debug_print("glue_solve_gen::apply(): detected non-square system");
     
-    if(equilibrate)   { arma_debug_warn_level(1,  "solve(): option 'equilibrate' ignored for non-square matrix"  ); }
-    if(refine)        { arma_debug_warn_level(1,  "solve(): option 'refine' ignored for non-square matrix"       ); }
-    if(likely_sympd)  { arma_debug_warn_level(1,  "solve(): option 'likely_sympd' ignored for non-square matrix" ); }
+    if(equilibrate)   { arma_debug_warn_level(2,  "solve(): option 'equilibrate' ignored for non-square matrix"  ); }
+    if(refine)        { arma_debug_warn_level(2,  "solve(): option 'refine' ignored for non-square matrix"       ); }
+    if(likely_sympd)  { arma_debug_warn_level(2,  "solve(): option 'likely_sympd' ignored for non-square matrix" ); }
     
     if(fast)
       {
@@ -474,7 +474,7 @@ glue_solve_tri::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const Base
     return glue_solve_gen::apply(actual_out, ((triu) ? trimatu(A_expr.get_ref()) : trimatl(A_expr.get_ref())), B_expr, (flags & mask));
     }
   
-  if(likely_sympd)  { arma_debug_warn_level(1, "solve(): option 'likely_sympd' ignored for triangular matrix"); }
+  if(likely_sympd)  { arma_debug_warn_level(2, "solve(): option 'likely_sympd' ignored for triangular matrix"); }
   
   const quasi_unwrap<T1> U(A_expr.get_ref());
   const Mat<eT>& A     = U.M;
