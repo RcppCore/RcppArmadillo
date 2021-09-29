@@ -381,7 +381,7 @@ op_strans::apply_direct(Mat<typename T1::elem_type>& out, const T1& X)
   typedef typename T1::elem_type eT;
   
   // allow detection of in-place transpose
-  if(is_Mat<T1>::value)
+  if(is_Mat<T1>::value || (arma_config::openmp && Proxy<T1>::use_mp))
     {
     const unwrap<T1> U(X);
     
@@ -393,7 +393,7 @@ op_strans::apply_direct(Mat<typename T1::elem_type>& out, const T1& X)
     
     const bool is_alias = P.is_alias(out);
     
-    if(is_Mat<typename Proxy<T1>::stored_type>::value || (arma_config::openmp && Proxy<T1>::use_mp))
+    if(is_Mat<typename Proxy<T1>::stored_type>::value)
       {
       const quasi_unwrap<typename Proxy<T1>::stored_type> U(P.Q);
       

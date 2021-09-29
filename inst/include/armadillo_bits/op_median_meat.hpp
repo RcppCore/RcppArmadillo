@@ -390,6 +390,8 @@ op_median::direct_median(std::vector<eT>& X)
   {
   arma_extra_debug_sigprint();
   
+  // TODO: if NaN is detected, return NaN
+  
   const uword n_elem = uword(X.size());
   const uword half   = n_elem/2;
   
@@ -430,6 +432,8 @@ op_median::direct_cx_median_index
   arma_extra_debug_sigprint();
   
   typedef arma_cx_median_packet<T> eT;
+  
+  // TODO: if NaN is detected, return bool set to false, indicating presence of NaN
   
   const uword n_elem = uword(X.size());
   const uword half   = n_elem/2;

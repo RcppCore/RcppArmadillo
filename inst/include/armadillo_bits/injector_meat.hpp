@@ -302,7 +302,7 @@ operator<<(const mat_injector<T1>& ref, const injector_end_of_row<>& x)
 
 
 //// using a mixture of operator << and , doesn't work yet
-//// eg A << 1, 2, 3 << endr
+//// eg. A << 1, 2, 3 << endr
 //// in the above "3 << endr" requires special handling.
 //// similarly, special handling is necessary for "endr << 3"
 //// 
