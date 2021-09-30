@@ -3,9 +3,9 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.10.6.99.2 (2021-09-29)}{
+\section{Changes in RcppArmadillo version 0.10.7.0.0 (2021-09-30)}{
   \itemize{
-    \item Upgraded to Armadillo release 10.7-RC2 (Keep Calm)
+    \item Upgraded to Armadillo release 10.7.0 (Entropy Maximizer)
     \itemize{
       \item faster handling of submatrix views accessed by
       \code{X.cols(first_col,last_col)}
