@@ -3384,6 +3384,19 @@ subview_col<eT>::operator=(const Base<eT,T1>& X)
 
 
 template<typename eT>
+template<typename T1>
+inline
+void
+subview_col<eT>::operator=(const SpBase<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview<eT>::operator=(X.get_ref());
+  }
+
+
+
+template<typename eT>
 template<typename T1, typename gen_type>
 inline
 typename enable_if2< is_same_type<typename T1::elem_type, eT>::value, void>::result
@@ -4008,6 +4021,19 @@ subview_cols<eT>::operator=(const Base<eT,T1>& X)
 
 
 template<typename eT>
+template<typename T1>
+inline
+void
+subview_cols<eT>::operator=(const SpBase<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview<eT>::operator=(X.get_ref());
+  }
+
+
+
+template<typename eT>
 template<typename T1, typename gen_type>
 inline
 typename enable_if2< is_same_type<typename T1::elem_type, eT>::value, void>::result
@@ -4320,6 +4346,19 @@ subview_row<eT>::operator=(const Base<eT,T1>& X)
   arma_extra_debug_sigprint();
   
   subview<eT>::operator=(X);
+  }
+
+
+
+template<typename eT>
+template<typename T1>
+inline
+void
+subview_row<eT>::operator=(const SpBase<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview<eT>::operator=(X.get_ref());
   }
 
 

@@ -243,11 +243,11 @@ class Mat : public Base< eT, Mat<eT> >
   inline       subview<eT> tail_rows(const uword N);
   inline const subview<eT> tail_rows(const uword N) const;
   
-  inline       subview<eT> head_cols(const uword N);
-  inline const subview<eT> head_cols(const uword N) const;
+  inline       subview_cols<eT> head_cols(const uword N);
+  inline const subview_cols<eT> head_cols(const uword N) const;
   
-  inline       subview<eT> tail_cols(const uword N);
-  inline const subview<eT> tail_cols(const uword N) const;
+  inline       subview_cols<eT> tail_cols(const uword N);
+  inline const subview_cols<eT> tail_cols(const uword N) const;
   
   template<typename T1> arma_inline       subview_elem1<eT,T1> elem(const Base<uword,T1>& a);
   template<typename T1> arma_inline const subview_elem1<eT,T1> elem(const Base<uword,T1>& a) const;
