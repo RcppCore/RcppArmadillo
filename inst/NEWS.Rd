@@ -3,6 +3,16 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.10.7.1.0 (2021-10-08)}{
+  \itemize{
+    \item Upgraded to Armadillo release 10.7.1
+    \itemize{
+      \item fix regression in interactions between dense matrix subviews
+      and sparse matrices
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.10.7.0.0 (2021-09-30)}{
   \itemize{
     \item Upgraded to Armadillo release 10.7.0 (Entropy Maximizer)

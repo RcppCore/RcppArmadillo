@@ -7,11 +7,11 @@
 ##
 ##  Licensed under GPL-2 or later
 
-## require at least autoconf 2.61
-AC_PREREQ(2.61)
+## require at least autoconf 2.69
+AC_PREREQ([2.69])
 
 ## Process this file with autoconf to produce a configure script.
-AC_INIT([RcppArmadillo], [0.10.7.0.0], [edd@debian.org])
+AC_INIT([RcppArmadillo],[0.10.7.1.0],[edd@debian.org])
 
 ## Set R_HOME, respecting an environment variable if one is set
 : ${R_HOME=$(R RHOME)}

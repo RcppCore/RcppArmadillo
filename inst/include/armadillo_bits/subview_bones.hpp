@@ -376,8 +376,8 @@ class subview_col : public subview<eT>
   inline void operator= (const eT val);
   inline void operator= (const std::initializer_list<eT>& list);
   
-  template<typename T1>
-  inline void operator= (const Base<eT,T1>& x);
+  template<typename T1> inline void operator= (const   Base<eT,T1>& x);
+  template<typename T1> inline void operator= (const SpBase<eT,T1>& x);
   
   template<typename T1, typename gen_type>
   inline typename enable_if2< is_same_type<typename T1::elem_type, eT>::value, void>::result operator=(const Gen<T1,gen_type>& x);
@@ -472,8 +472,8 @@ class subview_cols : public subview<eT>
   inline void operator= (const std::initializer_list<eT>& list);
   inline void operator= (const std::initializer_list< std::initializer_list<eT> >& list);
   
-  template<typename T1>
-  inline void operator= (const Base<eT,T1>& x);
+  template<typename T1> inline void operator= (const   Base<eT,T1>& x);
+  template<typename T1> inline void operator= (const SpBase<eT,T1>& x);
   
   template<typename T1, typename gen_type>
   inline typename enable_if2< is_same_type<typename T1::elem_type, eT>::value, void>::result operator=(const Gen<T1,gen_type>& x);
@@ -529,8 +529,8 @@ class subview_row : public subview<eT>
   inline void operator= (const eT val);
   inline void operator= (const std::initializer_list<eT>& list);
   
-  template<typename T1>
-  inline void operator= (const Base<eT,T1>& x);
+  template<typename T1> inline void operator= (const   Base<eT,T1>& x);
+  template<typename T1> inline void operator= (const SpBase<eT,T1>& x);
   
   template<typename T1, typename gen_type>
   inline typename enable_if2< is_same_type<typename T1::elem_type, eT>::value, void>::result operator=(const Gen<T1,gen_type>& x);

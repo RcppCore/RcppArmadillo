@@ -1123,10 +1123,7 @@ SpMat<eT>::operator*=(const Base<eT, T1>& y)
 
 
 
-/**
- * Don't use this function.  It's not mathematically well-defined and wastes
- * cycles to trash all your data.  This is dumb.
- */
+// NOTE: use of this function is not advised; it is implemented only for completeness
 template<typename eT>
 template<typename T1>
 inline

@@ -3682,35 +3682,35 @@ Mat<eT>::tail_rows(const uword N) const
 
 template<typename eT>
 inline
-subview<eT>
+subview_cols<eT>
 Mat<eT>::head_cols(const uword N)
   {
   arma_extra_debug_sigprint();
   
   arma_debug_check_bounds( (N > n_cols), "Mat::head_cols(): size out of bounds" );
   
-  return subview<eT>(*this, 0, 0, n_rows, N);
+  return subview_cols<eT>(*this, 0, N);
   }
 
 
 
 template<typename eT>
 inline
-const subview<eT>
+const subview_cols<eT>
 Mat<eT>::head_cols(const uword N) const
   {
   arma_extra_debug_sigprint();
   
   arma_debug_check_bounds( (N > n_cols), "Mat::head_cols(): size out of bounds" );
   
-  return subview<eT>(*this, 0, 0, n_rows, N);
+  return subview_cols<eT>(*this, 0, N);
   }
 
 
 
 template<typename eT>
 inline
-subview<eT>
+subview_cols<eT>
 Mat<eT>::tail_cols(const uword N)
   {
   arma_extra_debug_sigprint();
@@ -3719,14 +3719,14 @@ Mat<eT>::tail_cols(const uword N)
   
   const uword start_col = n_cols - N;
   
-  return subview<eT>(*this, 0, start_col, n_rows, N);
+  return subview_cols<eT>(*this, start_col, N);
   }
 
 
 
 template<typename eT>
 inline
-const subview<eT>
+const subview_cols<eT>
 Mat<eT>::tail_cols(const uword N) const
   {
   arma_extra_debug_sigprint();
@@ -3735,7 +3735,7 @@ Mat<eT>::tail_cols(const uword N) const
   
   const uword start_col = n_cols - N;
   
-  return subview<eT>(*this, 0, start_col, n_rows, N);
+  return subview_cols<eT>(*this, start_col, N);
   }
 
 
