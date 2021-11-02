@@ -68,6 +68,45 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   
   if(A.is_empty())  { out.set_size(n_cols,n_rows); return true; }
   
+  if(A.is_diagmat())
+    {
+    arma_extra_debug_print("op_pinv: detected diagonal matrix");
+    
+    out.zeros(n_cols, n_rows);
+    
+    const uword N = (std::min)(n_rows, n_cols);
+    
+    podarray<T> diag_abs_vals(N);
+    
+    T max_abs_Aii = T(0);
+    
+    for(uword i=0; i<N; ++i)
+      {
+      const eT     Aii = A.at(i,i);
+      const  T abs_Aii = std::abs(Aii);
+      
+      if(arma_isnan(Aii))  { return false; }
+      
+      diag_abs_vals[i] = abs_Aii;
+      
+      max_abs_Aii = (abs_Aii > max_abs_Aii) ? abs_Aii : max_abs_Aii;
+      }
+    
+    if(tol == T(0))  { tol = (std::max)(n_rows, n_cols) * max_abs_Aii * std::numeric_limits<T>::epsilon(); }
+    
+    for(uword i=0; i<N; ++i)
+      {
+      if(diag_abs_vals[i] >= tol)
+        {
+        const eT Aii = A.at(i,i);
+        
+        if(Aii != eT(0))  { out.at(i,i) = eT(eT(1) / Aii); }
+        }
+      }
+    
+    return true;
+    }
+    
   #if defined(ARMA_OPTIMISE_SYMPD)
     const bool try_sympd = (auxlib::crippled_lapack(A) == false) && (tol == T(0)) && (method_id == uword(0)) && sympd_helper::guess_sympd_anysize(A);
   #else
