@@ -28,17 +28,30 @@ op_flipud::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_flipud>& in)
   {
   arma_extra_debug_sigprint();
   
-  const Proxy<T1> P(in.m);
+  typedef typename T1::elem_type eT;
   
-  if(is_Mat<typename Proxy<T1>::stored_type>::value || P.is_alias(out))
+  if(is_Mat<T1>::value)
     {
-    const unwrap<typename Proxy<T1>::stored_type> U(P.Q);
+    const unwrap<T1> U(in.m);
     
     op_flipud::apply_direct(out, U.M);
     }
   else
     {
-    op_flipud::apply_proxy_noalias(out, P);
+    const Proxy<T1> P(in.m);
+    
+    if(P.is_alias(out))
+      {
+      Mat<eT> tmp;
+      
+      op_flipud::apply_proxy_noalias(tmp, P);
+      
+      out.steal_mem(tmp);
+      }
+    else
+      {
+      op_flipud::apply_proxy_noalias(out, P);
+      }
     }
   }
 
@@ -168,17 +181,30 @@ op_fliplr::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_fliplr>& in)
   {
   arma_extra_debug_sigprint();
   
-  const Proxy<T1> P(in.m);
+  typedef typename T1::elem_type eT;
   
-  if(is_Mat<typename Proxy<T1>::stored_type>::value || P.is_alias(out))
+  if(is_Mat<T1>::value)
     {
-    const unwrap<typename Proxy<T1>::stored_type> U(P.Q);
+    const unwrap<T1> U(in.m);
     
     op_fliplr::apply_direct(out, U.M);
     }
   else
     {
-    op_fliplr::apply_proxy_noalias(out, P);
+    const Proxy<T1> P(in.m);
+    
+    if(P.is_alias(out))
+      {
+      Mat<eT> tmp;
+      
+      op_fliplr::apply_proxy_noalias(tmp, P);
+      
+      out.steal_mem(tmp);
+      }
+    else
+      {
+      op_fliplr::apply_proxy_noalias(out, P);
+      }
     }
   }
 

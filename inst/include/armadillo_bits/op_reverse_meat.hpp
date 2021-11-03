@@ -28,15 +28,15 @@ op_reverse::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reverse>& in)
   {
   arma_extra_debug_sigprint();
   
+  typedef typename T1::elem_type eT;
+  
   const uword dim = in.aux_uword_a;
   
   arma_debug_check( (dim > 1), "reverse(): parameter 'dim' must be 0 or 1" );
   
-  const Proxy<T1> P(in.m);
-  
-  if(is_Mat<typename Proxy<T1>::stored_type>::value || P.is_alias(out))
+  if(is_Mat<T1>::value)
     {
-    const unwrap<typename Proxy<T1>::stored_type> U(P.Q);
+    const unwrap<T1> U(in.m);
     
     if(dim == 0)
       {
@@ -50,14 +50,35 @@ op_reverse::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reverse>& in)
     }
   else
     {
-    if(dim == 0)
+    const Proxy<T1> P(in.m);
+    
+    if(P.is_alias(out))
       {
-      op_flipud::apply_proxy_noalias(out, P);
+      Mat<eT> tmp;
+      
+      if(dim == 0)
+        {
+        op_flipud::apply_proxy_noalias(tmp, P);
+        }
+      else
+      if(dim == 1)
+        {
+        op_fliplr::apply_proxy_noalias(tmp, P);
+        }
+      
+      out.steal_mem(tmp);
       }
     else
-    if(dim == 1)
       {
-      op_fliplr::apply_proxy_noalias(out, P);
+      if(dim == 0)
+        {
+        op_flipud::apply_proxy_noalias(out, P);
+        }
+      else
+      if(dim == 1)
+        {
+        op_fliplr::apply_proxy_noalias(out, P);
+        }
       }
     }
   }
@@ -71,11 +92,11 @@ op_reverse_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reverse_v
   {
   arma_extra_debug_sigprint();
   
-  const Proxy<T1> P(in.m);
+  typedef typename T1::elem_type eT;
   
-  if(is_Mat<typename Proxy<T1>::stored_type>::value || P.is_alias(out))
+  if(is_Mat<T1>::value)
     {
-    const unwrap<typename Proxy<T1>::stored_type> U(P.Q);
+    const unwrap<T1> U(in.m);
     
     if((T1::is_xvec) ? bool(U.M.is_rowvec()) : bool(T1::is_row))
       {
@@ -88,13 +109,33 @@ op_reverse_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reverse_v
     }
   else
     {
-    if((T1::is_xvec) ? bool(P.get_n_rows() == 1) : bool(T1::is_row))
+    const Proxy<T1> P(in.m);
+    
+    if(P.is_alias(out))
       {
-      op_fliplr::apply_proxy_noalias(out, P);
+      Mat<eT> tmp;
+      
+      if((T1::is_xvec) ? bool(P.get_n_rows() == 1) : bool(T1::is_row))
+        {
+        op_fliplr::apply_proxy_noalias(tmp, P);
+        }
+      else
+        {
+        op_flipud::apply_proxy_noalias(tmp, P);
+        }
+      
+      out.steal_mem(tmp);
       }
     else
       {
-      op_flipud::apply_proxy_noalias(out, P);
+      if((T1::is_xvec) ? bool(P.get_n_rows() == 1) : bool(T1::is_row))
+        {
+        op_fliplr::apply_proxy_noalias(out, P);
+        }
+      else
+        {
+        op_flipud::apply_proxy_noalias(out, P);
+        }
       }
     }
   }
