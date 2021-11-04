@@ -36,17 +36,12 @@ op_reverse::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reverse>& in)
   
   if(is_Mat<T1>::value)
     {
+    // allow detection of in-place operation
+    
     const unwrap<T1> U(in.m);
     
-    if(dim == 0)
-      {
-      op_flipud::apply_direct(out, U.M);
-      }
-    else
-    if(dim == 1)
-      {
-      op_fliplr::apply_direct(out, U.M);
-      }
+    if(dim == 0)  { op_flipud::apply_direct(out, U.M); }
+    if(dim == 1)  { op_fliplr::apply_direct(out, U.M); }
     }
   else
     {
@@ -56,29 +51,15 @@ op_reverse::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reverse>& in)
       {
       Mat<eT> tmp;
       
-      if(dim == 0)
-        {
-        op_flipud::apply_proxy_noalias(tmp, P);
-        }
-      else
-      if(dim == 1)
-        {
-        op_fliplr::apply_proxy_noalias(tmp, P);
-        }
+      if(dim == 0)  { op_flipud::apply_proxy_noalias(tmp, P); }
+      if(dim == 1)  { op_fliplr::apply_proxy_noalias(tmp, P); }
       
       out.steal_mem(tmp);
       }
     else
       {
-      if(dim == 0)
-        {
-        op_flipud::apply_proxy_noalias(out, P);
-        }
-      else
-      if(dim == 1)
-        {
-        op_fliplr::apply_proxy_noalias(out, P);
-        }
+      if(dim == 0)  { op_flipud::apply_proxy_noalias(out, P); }
+      if(dim == 1)  { op_fliplr::apply_proxy_noalias(out, P); }
       }
     }
   }
@@ -96,6 +77,8 @@ op_reverse_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reverse_v
   
   if(is_Mat<T1>::value)
     {
+    // allow detection of in-place operation
+    
     const unwrap<T1> U(in.m);
     
     if((T1::is_xvec) ? bool(U.M.is_rowvec()) : bool(T1::is_row))

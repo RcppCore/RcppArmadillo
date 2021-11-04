@@ -32,6 +32,8 @@ op_flipud::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_flipud>& in)
   
   if(is_Mat<T1>::value)
     {
+    // allow detection of in-place operation
+    
     const unwrap<T1> U(in.m);
     
     op_flipud::apply_direct(out, U.M);
@@ -136,6 +138,17 @@ op_flipud::apply_proxy_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>
   
   typedef typename T1::elem_type eT;
   
+  typedef typename Proxy<T1>::stored_type P_stored_type;
+  
+  if(is_Mat<P_stored_type>::value)
+    {
+    const unwrap<P_stored_type> U(P.Q);
+    
+    op_flipud::apply_direct(out, U.M);
+    
+    return;
+    }
+  
   const uword P_n_rows = P.get_n_rows();
   const uword P_n_cols = P.get_n_cols();
   
@@ -185,6 +198,8 @@ op_fliplr::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_fliplr>& in)
   
   if(is_Mat<T1>::value)
     {
+    // allow detection of in-place operation
+    
     const unwrap<T1> U(in.m);
     
     op_fliplr::apply_direct(out, U.M);
@@ -277,6 +292,17 @@ op_fliplr::apply_proxy_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>
   arma_extra_debug_sigprint();
   
   typedef typename T1::elem_type eT;
+  
+  typedef typename Proxy<T1>::stored_type P_stored_type;
+  
+  if(is_Mat<P_stored_type>::value)
+    {
+    const unwrap<P_stored_type> U(P.Q);
+    
+    op_fliplr::apply_direct(out, U.M);
+    
+    return;
+    }
   
   const uword P_n_rows = P.get_n_rows();
   const uword P_n_cols = P.get_n_cols();
