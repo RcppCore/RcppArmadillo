@@ -1,3 +1,7 @@
+2021-11-02  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/armadillo_bits/: Armadillo 10.7.2
+
 2021-10-08  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION (Version, Date): RcppArmadillo 0.10.7.1

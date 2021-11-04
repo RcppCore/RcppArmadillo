@@ -64,7 +64,7 @@
 
 // warn about ignored option used in old versions of Armadillo
 #if defined(ARMA_DONT_USE_CXX11)
-  #pragma message ("WARNING: ARMA_DONT_USE_CXX11 ignored")
+  #pragma message ("WARNING: option ARMA_DONT_USE_CXX11 ignored")
 #endif
 
 
