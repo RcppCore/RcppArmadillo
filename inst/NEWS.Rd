@@ -3,6 +3,15 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.10.7.2.0 (2021-11-02)}{
+  \itemize{
+    \item Upgraded to Armadillo release 10.7.2
+    \itemize{
+      \item more robust handling of diagonal matrices by \code{pinv()}
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.10.7.1.0 (2021-10-08)}{
   \itemize{
     \item Upgraded to Armadillo release 10.7.1
