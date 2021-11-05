@@ -3,6 +3,16 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.10.7.3.0 (2021-11-04)}{
+  \itemize{
+    \item Upgraded to Armadillo release 10.7.3
+    \itemize{
+      \item fix regression in alias handling by \code{fliplr()},
+      \code{flipud()}, \code{reverse()}
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.10.7.2.0 (2021-11-02)}{
   \itemize{
     \item Upgraded to Armadillo release 10.7.2
