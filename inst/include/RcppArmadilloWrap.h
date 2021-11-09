@@ -149,7 +149,7 @@ namespace Rcpp{
     template <typename T>
     SEXP wrap( const arma::field<T>& data){
         RObject x = wrap( RcppArmadillo::FieldImporter<T>( data ) ) ;
-        x.attr("dim" ) = Dimension( data.n_rows, data.n_cols ) ;
+        x.attr("dim" ) = Dimension( data.n_rows, data.n_cols, data.n_slices ) ;
         return x ;
     }
 
