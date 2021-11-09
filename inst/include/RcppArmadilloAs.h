@@ -22,8 +22,6 @@
 #ifndef RcppArmadillo__RcppArmadilloAs__h
 #define RcppArmadillo__RcppArmadilloAs__h
 
-#define RCPP_ARMADILLO_FIX_FieldExporter
-
 namespace Rcpp{
 
 namespace traits {
