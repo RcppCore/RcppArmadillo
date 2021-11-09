@@ -33,22 +33,22 @@ namespace traits {
 
         inline arma::field<T> get() {
             size_t n = data.size();
-            arma::ivec dims = data.attr("dim");
-            arma::field<T> out;
-
-            if (dims.n_elem == 1)
-            {
-                out.set_size(n);
-            }
-            else if (dims.n_elem == 2)
-            {
-                out.set_size(dims(0), dims(1));
-            }
-            else if (dims.n_elem == 3)
-            {
-                out.set_size(dims(0), dims(1), dims(2));
-            }
-
+            arma::field<T> out(n);
+            # if defined(RCPP_ARMADILLO_FIX_FieldExporter)
+                arma::ivec dims = data.attr("dim");
+                if (dims.n_elem == 1)
+                {
+                    out.set_size(n);
+                }
+                else if (dims.n_elem == 2)
+                {
+                    out.set_size(dims(0), dims(1));
+                }
+                else if (dims.n_elem == 3)
+                {
+                    out.set_size(dims(0), dims(1), dims(2));
+                }
+            # endif
             for (size_t i = 0; i < n; i++)
             {
                 out(i) = as<T>(data[i]);
