@@ -22,6 +22,8 @@
 #ifndef RcppArmadillo__RcppArmadilloAs__h
 #define RcppArmadillo__RcppArmadilloAs__h
 
+#define RCPP_ARMADILLO_FIX_FieldExporter
+
 namespace Rcpp{
 
 namespace traits {
@@ -30,23 +32,24 @@ namespace traits {
     class Exporter< arma::field<T> > {
     public:
         Exporter(SEXP x) : data(x){}
-
         inline arma::field<T> get() {
             size_t n = data.size();
             arma::field<T> out(n);
             # if defined(RCPP_ARMADILLO_FIX_FieldExporter)
-                arma::ivec dims = data.attr("dim");
-                if (dims.n_elem == 1)
-                {
-                    out.set_size(n);
-                }
-                else if (dims.n_elem == 2)
-                {
-                    out.set_size(dims(0), dims(1));
-                }
-                else if (dims.n_elem == 3)
-                {
-                    out.set_size(dims(0), dims(1), dims(2));
+                if(!Rf_isNull(data.attr("dim"))){
+                    arma::ivec dims = data.attr("dim");
+                    if (dims.n_elem == 1)
+                    {
+                        out.set_size(n);
+                    }
+                    else if (dims.n_elem == 2)
+                    {
+                        out.set_size(dims(0), dims(1));
+                    }
+                    else if (dims.n_elem == 3)
+                    {
+                        out.set_size(dims(0), dims(1), dims(2));
+                    }
                 }
             # endif
             for (size_t i = 0; i < n; i++)
