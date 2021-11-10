@@ -3,6 +3,14 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.10.7.x.y (2021-xx-yy)}{
+  \itemize{
+    \item Correct dimensions setting in import/export of
+    \code{arma::field} types, protected by \code{#define} (Jonathan
+    Berrisch in \phrp{352} fixing \ghit{351})
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.10.7.3.0 (2021-11-04)}{
   \itemize{
     \item Upgraded to Armadillo release 10.7.3

@@ -1,3 +1,10 @@
+2021-11-09  Jonathan Berrisch  <jonathan@berrisch.biz>
+
+	* inst/include/RcppArmadilloAs.h: Update arma::field conversion
+	* inst/include/RcppArmadilloWrap.h: Idem
+	* inst/include/RcppArmadilloConfig.h: define guards for changes
+	* inst/tinytest/test_rcpparmadillo.R: New tests
+
 2021-11-08  Dirk Eddelbuettel  <edd@debian.org>
 
 	* local/armafield.cpp: Add an arma::field test file
