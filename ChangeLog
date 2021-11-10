@@ -2,6 +2,9 @@
 
         * DESCRIPTION (Version, Date): RcppArmadillo 0.10.7.3.1
 
+	* inst/tinytest/test_fields.R: Added field tests
+	* inst/tinytest/cpp/fields.cpp: Idem
+
 2021-11-09  Jonathan Berrisch  <jonathan@berrisch.biz>
 
 	* inst/include/RcppArmadilloAs.h: Update arma::field conversion
