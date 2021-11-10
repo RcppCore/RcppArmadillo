@@ -1,3 +1,7 @@
+2021-11-09  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION (Version, Date): RcppArmadillo 0.10.7.3.1
+
 2021-11-09  Jonathan Berrisch  <jonathan@berrisch.biz>
 
 	* inst/include/RcppArmadilloAs.h: Update arma::field conversion
@@ -10,6 +14,9 @@
 	* local/armafield.cpp: Add an arma::field test file
 
 2021-11-04  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION (Version, Date): RcppArmadillo 0.10.7.3.0
+        * inst/NEWS.Rd: Idem
 
 	* inst/include/armadillo_bits/: Armadillo 10.7.3
 
