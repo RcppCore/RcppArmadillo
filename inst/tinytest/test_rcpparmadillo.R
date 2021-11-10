@@ -37,6 +37,7 @@ expect_equal( res[[2]][[2]], matrix(0, ncol = 5, nrow=1))#, msg = "zeros<fmat>(5
 expect_equal( res[[3]][[1]], matrix(0, ncol = 1, nrow=5))#, msg = "zeros<mat>(1,5)" )
 expect_equal( res[[3]][[2]], matrix(0, ncol = 1, nrow=5))#, msg = "zeros<mat>(1,5)" )
 
+# TODO: Revisit field tests later and fix see https://github.com/RcppCore/RcppArmadillo/pull/352
 expect_equal( res[[4]][[1]], matrix(0:3, ncol = 2, nrow=2))#, msg = "field<int>" )
 expect_equal( res[[4]][[2]], matrix(letters[1:4], ncol = 2, nrow=2))#, msg = "field<std::string>" )
 

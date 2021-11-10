@@ -135,5 +135,14 @@
 //#define RCPP_ARMADILLO_RETURN_ROWVEC_AS_VECTOR
 //#define RCPP_ARMADILLO_RETURN_ANYVEC_AS_VECTOR
 
+// To preserve all dims of arma::field when passing to R the following macro 
+// can be defined before including RcppArmadillo.h. 
+// see https://github.com/RcppCore/RcppArmadillo/pull/352
+// #define RCPP_ARMADILLO_FIX_FieldImporter
+
+// To preserve all dims of and arma::field input argument when passing to C++
+// the following macro can be defined before including RcppArmadillo.h.
+// see https://github.com/RcppCore/RcppArmadillo/pull/352
+// #define RCPP_ARMADILLO_FIX_FieldExporter
 
 #endif
