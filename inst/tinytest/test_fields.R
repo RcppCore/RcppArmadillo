@@ -22,6 +22,12 @@ Rcpp::sourceCpp("cpp/fields.cpp")
 
 .onWindows <- .Platform$OS.type == "windows"
 
+f1m22 <- field1m22()
+expect_true(inherits(f1m22, "array"))
+expect_true(inherits(f1m22[[1]], "matrix"))
+expect_equal(dim(f1m22), c(1,1))        # should this be just 1 ?
+expect_equal(dim(f1m22[[1]]), c(2,2))
+
 f11m22 <- field11m22()
 expect_true(inherits(f11m22, "array"))
 expect_true(inherits(f11m22[[1]], "matrix"))

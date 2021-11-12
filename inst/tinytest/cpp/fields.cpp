@@ -21,6 +21,16 @@
 #include <RcppArmadillo.h>
 
 // [[Rcpp::export]]
+arma::field<arma::mat> field1m22() {
+    arma::mat A = arma::randn(2,2);
+
+    arma::field<arma::mat> F(1);
+    F(0) = A;
+
+    return F;
+}
+
+// [[Rcpp::export]]
 arma::field<arma::mat> field11m22() {
     arma::mat A = arma::randn(2,2);
 
