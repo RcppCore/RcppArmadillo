@@ -75,3 +75,17 @@ arma::field<arma::mat> field22m2233() {
 
     return F;
 }
+
+// [[Rcpp::export]]
+arma::field<arma::mat> field222m223344() {
+    arma::mat A = arma::randn(2,2);
+    arma::mat B = arma::randn(3,3);
+    arma::mat C = arma::randn(4,4);
+
+    arma::field<arma::mat> F(2,2,2);
+    F(0,1,0) = A;
+    F(1,0,0) = B;
+    F(0,0,1) = B;
+
+    return F;
+}
