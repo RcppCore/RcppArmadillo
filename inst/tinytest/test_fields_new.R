@@ -62,3 +62,22 @@ expect_equal(dim(f222m223344), c(2,2,2))
 expect_equal(dim(f222m223344[[2]]), c(3,3))
 expect_equal(dim(f222m223344[[3]]), c(2,2))
 expect_equal(dim(f222m223344[[5]]), c(4,4))
+
+
+v <- infield1m22n( field1m22n() )
+expect_equal(v, matrix(c(1L, 1L, 1L),3,1))
+
+v <- infield11m22n( field11m22n() )
+expect_equal(v, matrix(c(1L, 1L, 1L),3,1))
+
+v <- infield12m22n( field12m22n() )
+expect_equal(v, matrix(c(1L, 2L, 1L),3,1))
+
+v <- infield21m22n( field21m22n() )
+expect_equal(v, matrix(c(2L, 1L, 1L),3,1))
+
+v <- infield22m2233n( field22m2233n() )
+expect_equal(v, matrix(c(2L, 2L, 1L),3,1))
+
+v <- infield222m223344n( field222m223344n() )
+expect_equal(v, matrix(c(2L, 2L, 2L),3,1))

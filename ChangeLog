@@ -1,7 +1,9 @@
 2021-11-16  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/tinytest/cpp/fields.cpp: Added tests for R -> C++
+	* inst/tinytest/cpp/fields_new.cpp: Idem
 	* inst/tinytest/test_fields.R: Idem
+	* inst/tinytest/test_fields_new.R: Idem
 
 2021-11-15  Dirk Eddelbuettel  <edd@debian.org>
 

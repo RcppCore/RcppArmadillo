@@ -94,3 +94,43 @@ arma::field<arma::mat> field222m223344n() {
 
     return F;
 }
+
+
+
+
+
+// [[Rcpp::export]]
+arma::ivec infield1m22n(arma::field<arma::mat> F) {
+    arma::uvec v = { F.n_rows, F.n_cols, F.n_slices };
+    return arma::conv_to<arma::ivec>::from(v);
+}
+
+// [[Rcpp::export]]
+arma::ivec infield11m22n(arma::field<arma::mat> F) {
+    arma::uvec v = { F.n_rows, F.n_cols, F.n_slices };
+    return arma::conv_to<arma::ivec>::from(v);
+}
+
+// [[Rcpp::export]]
+arma::ivec infield12m22n(arma::field<arma::mat> F) {
+    arma::uvec v = { F.n_rows, F.n_cols, F.n_slices };
+    return arma::conv_to<arma::ivec>::from(v);
+}
+
+// [[Rcpp::export]]
+arma::ivec infield21m22n(arma::field<arma::mat> F) {
+    arma::uvec v = { F.n_rows, F.n_cols, F.n_slices };
+    return arma::conv_to<arma::ivec>::from(v);
+}
+
+// [[Rcpp::export]]
+arma::ivec infield22m2233n(arma::field<arma::mat> F) {
+    arma::uvec v = { F.n_rows, F.n_cols, F.n_slices };
+    return arma::conv_to<arma::ivec>::from(v);
+}
+
+// [[Rcpp::export]]
+arma::ivec infield222m223344n(arma::field<arma::mat> F) {
+    arma::uvec v = { F.n_rows, F.n_cols, F.n_slices };
+    return arma::conv_to<arma::ivec>::from(v);
+}
