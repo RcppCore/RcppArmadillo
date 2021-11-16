@@ -6,6 +6,9 @@
 	* inst/tinytest/test_fields.R: Idem
 	* inst/tinytest/test_fields_new.R: Idem
 
+	* inst/tinytest/cpp/fields.cpp: Initial tests for R -> C++
+	* inst/tinytest/test_fields.R: Idem
+
 2021-11-13  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/tinytest/cpp/fields_new.cpp: Test for 'new' (i.e. corrected)

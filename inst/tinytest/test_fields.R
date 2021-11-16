@@ -61,3 +61,13 @@ expect_equal(dim(f22m2233[[3]]), c(2,2))
 #expect_equal(dim(f222m223344), c(2,2,2))
 #expect_equal(dim(f222m223344[[2]]), c(3,3))
 #expect_equal(dim(f222m223344[[3]]), c(2,2))
+
+
+v <- infield1m22( field1m22() )
+expect_equal(v, matrix(c(1L, 1L, 1L),3,1))
+
+v <- infield11m22( field11m22() )
+expect_equal(v, matrix(c(1L, 1L, 1L),3,1))
+
+v <- infield12m22( field12m22() )
+expect_equal(v, matrix(c(2L, 1L, 1L),3,1))
