@@ -70,4 +70,14 @@ v <- infield11m22( field11m22() )
 expect_equal(v, matrix(c(1L, 1L, 1L),3,1))
 
 v <- infield12m22( field12m22() )
+expect_equal(v, matrix(c(2L, 1L, 1L),3,1))  # should be 1,2,1 ?
+
+v <- infield21m22( field21m22() )
 expect_equal(v, matrix(c(2L, 1L, 1L),3,1))
+
+v <- infield22m2233( field22m2233() )
+expect_equal(v, matrix(c(4L, 1L, 1L),3,1))  # should 2,2,1 ?
+
+#v <- infield222m223344( field222m223344() )
+#expect_equal(v, matrix(c(4L, 1L, 1L),3,1))  # should 2,2,1 ?
+#print(v);

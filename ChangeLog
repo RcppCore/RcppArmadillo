@@ -1,3 +1,8 @@
+2021-11-16  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/tinytest/cpp/fields.cpp: Added tests for R -> C++
+	* inst/tinytest/test_fields.R: Idem
+
 2021-11-15  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/tinytest/cpp/fields.cpp: Additional test using 3d field
