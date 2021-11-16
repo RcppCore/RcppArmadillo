@@ -8,6 +8,8 @@
     \item Correct dimensions setting in import/export of
     \code{arma::field} types, protected by \code{#define} (Jonathan
     Berrisch in \phrp{352} fixing \ghit{351})
+    \item Add unit tests for \code{fields} both with and without new
+    \code{#define} (Dirk)
   }
 }
 
