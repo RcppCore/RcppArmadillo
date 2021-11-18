@@ -1,5 +1,7 @@
 2021-11-18  Dirk Eddelbuettel  <edd@debian.org>
 
+        * DESCRIPTION (Version, Date): RcppArmadillo 0.10.7.3.1
+
 	* inst/include/RcppArmadilloConfig.h: Simplify to using just one new
 	#define for the two changes to Fields import/export
 	* inst/include/RcppArmadilloAs.h (get): Updated
@@ -36,8 +38,6 @@
 	* inst/tinytest/cpp/fields.cpp: Idem
 
 2021-11-09  Dirk Eddelbuettel  <edd@debian.org>
-
-        * DESCRIPTION (Version, Date): RcppArmadillo 0.10.7.3.1
 
 	* inst/tinytest/test_fields.R: Added field tests (for C++ to R)
 	* inst/tinytest/cpp/fields.cpp: Idem
