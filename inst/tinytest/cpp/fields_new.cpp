@@ -18,8 +18,7 @@
 // You should have received a copy of the GNU General Public License
 // along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
-#define RCPP_ARMADILLO_FIX_FieldImporter 1
-#define RCPP_ARMADILLO_FIX_FieldExporter 1
+#define RCPP_ARMADILLO_FIX_Field 1
 
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>

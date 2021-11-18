@@ -1,3 +1,11 @@
+2021-11-18  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/RcppArmadilloConfig.h: Simplify to using just one new
+	#define for the two changes to Fields import/export
+	* inst/include/RcppArmadilloAs.h (get): Updated
+	* inst/include/RcppArmadilloWrap.h (wrap): Idem
+	* inst/tinytest/cpp/fields_new.cpp: Idem
+
 2021-11-16  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/tinytest/cpp/fields.cpp: Added tests for R -> C++
@@ -38,7 +46,7 @@
 
 	* inst/include/RcppArmadilloAs.h: Update arma::field conversion
 	* inst/include/RcppArmadilloWrap.h: Idem
-	* inst/include/RcppArmadilloConfig.h: define guards for changes
+	* inst/include/RcppArmadilloConfig.h: Define guards for changes
 	* inst/tinytest/test_rcpparmadillo.R: New tests
 
 2021-11-08  Dirk Eddelbuettel  <edd@debian.org>

@@ -152,7 +152,7 @@ namespace Rcpp{
         //data.print("data");
         //Rcpp::Rcout << "rows " << data.n_rows << " cols " << data.n_cols
         //            << " slices " << data.n_slices << " elem " << data.n_elem << std::endl;
-        # if defined(RCPP_ARMADILLO_FIX_FieldImporter)
+        # if defined(RCPP_ARMADILLO_FIX_Field)
         x.attr("dim") = Dimension(data.n_rows , data.n_cols , data.n_slices);
         #else
         x.attr("dim") = Dimension(data.n_rows, data.n_cols);
