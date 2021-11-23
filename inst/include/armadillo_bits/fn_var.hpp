@@ -77,7 +77,7 @@ var(const T1& X, const uword norm_type, const uword dim)
 
 template<typename T>
 arma_warn_unused
-arma_inline
+inline
 typename arma_scalar_only<T>::result
 var(const T&)
   {

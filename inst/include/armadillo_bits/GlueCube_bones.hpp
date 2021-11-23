@@ -30,8 +30,8 @@ class GlueCube : public BaseCube< typename T1::elem_type, GlueCube<T1, T2, glue_
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  arma_inline  GlueCube(const BaseCube<typename T1::elem_type, T1>& in_A, const BaseCube<typename T1::elem_type, T2>& in_B);
-  arma_inline ~GlueCube();
+  inline  GlueCube(const BaseCube<typename T1::elem_type, T1>& in_A, const BaseCube<typename T1::elem_type, T2>& in_B);
+  inline ~GlueCube();
   
   const T1& A;  //!< first operand;  must be derived from BaseCube
   const T2& B;  //!< second operand; must be derived from BaseCube

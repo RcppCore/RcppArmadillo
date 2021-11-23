@@ -68,7 +68,7 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   
   if(A.is_empty())  { out.set_size(n_cols,n_rows); return true; }
   
-  if(A.is_diagmat())
+  if(is_op_diagmat<T1>::value || A.is_diagmat())
     {
     arma_extra_debug_print("op_pinv: detected diagonal matrix");
     

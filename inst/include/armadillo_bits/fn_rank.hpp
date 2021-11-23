@@ -40,6 +40,39 @@ rank
   
   Mat<eT> A(X.get_ref());
   
+  if(A.is_empty())  { return uword(0); }
+  
+  if(is_op_diagmat<T1>::value || A.is_diagmat())
+    {
+    arma_extra_debug_print("rank(): detected diagonal matrix");
+    
+    const uword N = (std::min)(A.n_rows, A.n_cols);
+    
+    podarray<T> diag_abs_vals(N);
+    
+    T max_abs_Aii = T(0);
+    
+    for(uword i=0; i<N; ++i)
+      {
+      const eT     Aii = A.at(i,i);
+      const  T abs_Aii = std::abs(Aii);
+      
+      if(arma_isnan(Aii))  { arma_stop_runtime_error("rank(): detected NaN"); return uword(0); }
+      
+      diag_abs_vals[i] = abs_Aii;
+      
+      max_abs_Aii = (abs_Aii > max_abs_Aii) ? abs_Aii : max_abs_Aii;
+      }
+    
+    if(tol == T(0))  { tol = (std::max)(A.n_rows, A.n_cols) * max_abs_Aii * std::numeric_limits<T>::epsilon(); }
+    
+    uword count = 0;
+    
+    for(uword i=0; i<N; ++i)  { count += (diag_abs_vals[i] > tol) ? uword(1) : uword(0); }
+    
+    return count;
+    }
+  
   Col<T> s;
   
   const bool status = auxlib::svd_dc(s, A);
