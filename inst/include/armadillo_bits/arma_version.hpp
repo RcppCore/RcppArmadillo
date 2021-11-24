@@ -23,7 +23,7 @@
 
 #define ARMA_VERSION_MAJOR 10
 #define ARMA_VERSION_MINOR 7
-#define ARMA_VERSION_PATCH 3
+#define ARMA_VERSION_PATCH 4
 #define ARMA_VERSION_NAME  "Entropy Maximiser"
 
 

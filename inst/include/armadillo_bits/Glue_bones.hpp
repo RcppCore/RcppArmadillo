@@ -52,9 +52,9 @@ class Glue
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  arma_inline  Glue(const T1& in_A, const T2& in_B);
-  arma_inline  Glue(const T1& in_A, const T2& in_B, const uword in_aux_uword);
-  arma_inline ~Glue();
+  inline  Glue(const T1& in_A, const T2& in_B);
+  inline  Glue(const T1& in_A, const T2& in_B, const uword in_aux_uword);
+  inline ~Glue();
   
   const T1&   A;          //!< first operand;  must be derived from Base
   const T2&   B;          //!< second operand; must be derived from Base

@@ -294,25 +294,20 @@ as_scalar_diag(const Glue< Glue<T1, T2, glue_times_diag>, T3, glue_times >& X)
 
 template<typename T1, typename T2>
 arma_warn_unused
-arma_inline
+inline
 typename T1::elem_type
 as_scalar(const Glue<T1, T2, glue_times>& X, const typename arma_not_cx<typename T1::elem_type>::result* junk = nullptr)
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  if(is_glue_times_diag<T1>::value == false)
-    {
-    constexpr uword N_mat = 1 + depth_lhs< glue_times, Glue<T1,T2,glue_times> >::num;
-    
-    arma_extra_debug_print(arma_str::format("N_mat = %u") % N_mat);
-    
-    return as_scalar_redirect<N_mat>::apply(X);
-    }
-  else
-    {
-    return as_scalar_diag(X);
-    }
+  if(is_glue_times_diag<T1>::value)  { return as_scalar_diag(X); }
+  
+  constexpr uword N_mat = 1 + depth_lhs< glue_times, Glue<T1,T2,glue_times> >::num;
+  
+  arma_extra_debug_print(arma_str::format("N_mat = %u") % N_mat);
+  
+  return as_scalar_redirect<N_mat>::apply(X);
   }
 
 

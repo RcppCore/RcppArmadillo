@@ -3,11 +3,18 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.10.7.3.1 (2021-11-18)}{
+\section{Changes in RcppArmadillo version 0.10.7.4.0 (2021-11-23)}{
   \itemize{
+    \item Upgraded to Armadillo release 10.7.4
+    \itemize{
+      \item faster handling of diagonal matrices by \code{inv_sympd()},
+      \code{pinv()}, \code{rank()}
+      \item more robust detection of incorrect data format by
+      \code{.load()}
+    }
     \item Correct dimensions setting in import/export of
     \code{arma::field} types, protected by \code{#define} (Jonathan
-    Berrisch in \phrp{352} fixing \ghit{351})
+    Berrisch in \ghpr{352} fixing \ghit{351})
     \item Add unit tests for \code{fields} both with and without new
     \code{#define} (Dirk)
   }
