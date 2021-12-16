@@ -3,6 +3,16 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.10.7.5.0 (2021-12-16)}{
+  \itemize{
+    \item Upgraded to Armadillo release 10.7.5
+    \itemize{
+      \item fix aliasing bug in \code{diagmat()}
+      \item fix detection of 2x2 triangular matrices
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.10.7.4.0 (2021-11-23)}{
   \itemize{
     \item Upgraded to Armadillo release 10.7.4
