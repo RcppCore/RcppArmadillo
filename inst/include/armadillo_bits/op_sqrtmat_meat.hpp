@@ -116,6 +116,8 @@ op_sqrtmat::apply_direct(Mat< std::complex<typename T1::elem_type> >& out, const
   
   if(A.is_diagmat())
     {
+    arma_extra_debug_print("op_sqrtmat: detected diagonal matrix");
+    
     const uword N = A.n_rows;
     
     out.zeros(N,N);  // aliasing can't happen as op_sqrtmat is defined as cx_mat = op(mat)
@@ -327,6 +329,8 @@ op_sqrtmat_cx::apply_direct(Mat<typename T1::elem_type>& out, const Base<typenam
   
   if(S.is_diagmat())
     {
+    arma_extra_debug_print("op_sqrtmat_cx: detected diagonal matrix");
+    
     const uword N = S.n_rows;
     
     out.zeros(N,N);  // aliasing can't happen as S is generated

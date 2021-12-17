@@ -39,18 +39,14 @@ is_triu(const Mat<eT>& A)
   
   if(N < 2)  { return false; }
   
-  const eT*   A_mem   = A.memptr();
+  const eT*   A_col   = A.memptr();
   const eT    eT_zero = eT(0);
   
-  // quickly check bottom-left corner
-  const eT* A_col0 = A_mem;
-  const eT* A_col1 = A_col0 + N;
+  // quickly check element at bottom-left
   
-  if( (A_col0[N-2] != eT_zero) || (A_col0[Nm1] != eT_zero) || (A_col1[Nm1] != eT_zero) )  { return false; }
+  if(A_col[Nm1] != eT_zero)  { return false; }
   
   // if we got to this point, do a thorough check
-  
-  const eT* A_col = A_mem;
   
   for(uword j=0; j < Nm1; ++j)
     {
@@ -84,11 +80,11 @@ is_tril(const Mat<eT>& A)
   
   const eT eT_zero = eT(0);
   
-  // quickly check top-right corner
-  const eT* A_colNm2 = A.colptr(N-2);
-  const eT* A_colNm1 = A_colNm2 + N;
+  // quickly check element at top-right
   
-  if( (A_colNm2[0] != eT_zero) || (A_colNm1[0] != eT_zero) || (A_colNm1[1] != eT_zero) )  { return false; }
+  const eT* A_colNm1 = A.colptr(N-1);
+  
+  if(A_colNm1[0] != eT_zero)  { return false; }
   
   // if we got to this point, do a thorough check
   

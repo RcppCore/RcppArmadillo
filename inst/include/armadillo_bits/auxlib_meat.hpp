@@ -7111,8 +7111,7 @@ auxlib::rudimentary_sym_check(const Mat< std::complex<T> >& X)
   
   const T tol = T(10000)*std::numeric_limits<T>::epsilon();  // allow some leeway
   
-  if(std::abs(X_mem[0         ].imag()) > tol)  { return false; }  // check top-left
-  if(std::abs(X_mem[X.n_elem-1].imag()) > tol)  { return false; }  // check bottom-right
+  if(std::abs(X_mem[0].imag()) > tol)  { return false; }
   
   const eT& A = X_mem[Nm1  ];  // bottom-left corner (ie. last value in first column)
   const eT& B = X_mem[Nm1*N];  // top-right   corner (ie. first value in last column)

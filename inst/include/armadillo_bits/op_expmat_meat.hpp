@@ -74,6 +74,8 @@ op_expmat::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1
     
     if(A.is_diagmat())
       {
+      arma_extra_debug_print("op_expmat: detected diagonal matrix");
+      
       const uword N = (std::min)(A.n_rows, A.n_cols);
       
       out.zeros(N,N);

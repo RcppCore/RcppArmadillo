@@ -92,7 +92,7 @@ class diagmat_proxy_default
     }
   
   
-  constexpr bool is_alias(const Mat<elem_type>&) const { return false; }
+  inline bool is_alias(const Mat<elem_type>& X) const { return P.is_alias(X); }
   
   const Proxy<T1> P;
   const bool      P_is_vec;
