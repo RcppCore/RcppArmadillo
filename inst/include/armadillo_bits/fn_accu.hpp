@@ -540,29 +540,35 @@ accu(const subview<eT>& X)
   const uword X_n_rows = X.n_rows;
   const uword X_n_cols = X.n_cols;
   
-  eT val = eT(0);
-  
   if(X_n_rows == 1)
     {
-    typedef subview_row<eT> sv_type;
+    const Mat<eT>& m = X.m;
     
-    const sv_type& sv = reinterpret_cast<const sv_type&>(X);  // subview_row<eT> is a child class of subview<eT> and has no extra data
+    const uword col_offset = X.aux_col1;
+    const uword row_offset = X.aux_row1;
     
-    const Proxy<sv_type> P(sv);
+    eT val1 = eT(0);
+    eT val2 = eT(0);
     
-    val = accu_proxy_linear(P);
-    }
-  else
-  if(X_n_cols == 1)
-    {
-    val = arrayops::accumulate( X.colptr(0), X_n_rows );
-    }
-  else
-    {
-    for(uword col=0; col < X_n_cols; ++col)
+    uword i,j;
+    for(i=0, j=1; j < X_n_cols; i+=2, j+=2)
       {
-      val += arrayops::accumulate( X.colptr(col), X_n_rows );
+      val1 += m.at(row_offset, col_offset + i);
+      val2 += m.at(row_offset, col_offset + j);
       }
+    
+    if(i < X_n_cols)  { val1 += m.at(row_offset, col_offset + i); }
+    
+    return val1 + val2;
+    }
+  
+  if(X_n_cols == 1)  { return arrayops::accumulate( X.colptr(0), X_n_rows ); }
+  
+  eT val = eT(0);
+  
+  for(uword col=0; col < X_n_cols; ++col)
+    {
+    val += arrayops::accumulate( X.colptr(col), X_n_rows );
     }
   
   return val;

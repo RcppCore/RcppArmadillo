@@ -139,11 +139,11 @@ class auxlib
   //
   // eig_sym
   
-  template<typename eT, typename T1> 
-  inline static bool eig_sym(Col<eT>& eigval, const Base<eT,T1>& X);
+  template<typename eT> 
+  inline static bool eig_sym(Col<eT>& eigval, Mat<eT>& A);
   
-  template<typename T, typename T1> 
-  inline static bool eig_sym(Col<T>& eigval, const Base<std::complex<T>,T1>& X);
+  template<typename T> 
+  inline static bool eig_sym(Col<T>& eigval, Mat< std::complex<T> >& A);
   
   template<typename eT>
   inline static bool eig_sym(Col<eT>& eigval, Mat<eT>& eigvec, const Mat<eT>& X);

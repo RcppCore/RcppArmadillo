@@ -3,6 +3,19 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.10.7.99.0 (2021-12-21)}{
+  \itemize{
+    \item Upgraded to Armadillo release 10.8-rc1
+    \itemize{
+      \item faster handling of symmetric matrices by \code{pinv()} and
+      \code{rank()}
+      \item faster handling of diagonal matrices by \code{inv_sympd()},
+      \code{pinv()}, \code{rank()}
+      \item expanded \code{norm()} to handle integer vectors and matrices
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.10.7.5.0 (2021-12-16)}{
   \itemize{
     \item Upgraded to Armadillo release 10.7.5

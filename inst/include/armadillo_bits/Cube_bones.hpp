@@ -68,14 +68,14 @@ class Cube : public BaseCube< eT, Cube<eT> >
   inline ~Cube();
   inline  Cube();
   
-  inline explicit Cube(const uword in_rows, const uword in_cols, const uword in_slices);
+  inline explicit Cube(const uword in_n_rows, const uword in_n_cols, const uword in_n_slices);
   inline explicit Cube(const SizeCube& s);
   
-  template<bool do_zeros> inline explicit Cube(const uword in_rows, const uword in_cols, const uword in_slices, const arma_initmode_indicator<do_zeros>&);
-  template<bool do_zeros> inline explicit Cube(const SizeCube& s,                                               const arma_initmode_indicator<do_zeros>&);
+  template<bool do_zeros> inline explicit Cube(const uword in_n_rows, const uword in_n_cols, const uword in_n_slices, const arma_initmode_indicator<do_zeros>&);
+  template<bool do_zeros> inline explicit Cube(const SizeCube& s,                                                     const arma_initmode_indicator<do_zeros>&);
   
-  template<typename fill_type> inline Cube(const uword in_rows, const uword in_cols, const uword in_slices, const fill::fill_class<fill_type>& f);
-  template<typename fill_type> inline Cube(const SizeCube& s,                                               const fill::fill_class<fill_type>& f);
+  template<typename fill_type> inline Cube(const uword in_n_rows, const uword in_n_cols, const uword in_n_slices, const fill::fill_class<fill_type>& f);
+  template<typename fill_type> inline Cube(const SizeCube& s,                                                     const fill::fill_class<fill_type>& f);
   
   inline Cube(const uword in_rows, const uword in_cols, const uword in_slices, const fill::scalar_holder<eT> f);
   inline Cube(const SizeCube& s,                                               const fill::scalar_holder<eT> f);
@@ -306,13 +306,13 @@ class Cube : public BaseCube< eT, Cube<eT> >
   arma_inline arma_warn_unused       eT* slice_colptr(const uword in_slice, const uword in_col);
   arma_inline arma_warn_unused const eT* slice_colptr(const uword in_slice, const uword in_col) const;
   
-  inline void set_size(const uword in_rows, const uword in_cols, const uword in_slices);
+  inline void set_size(const uword new_n_rows, const uword new_n_cols, const uword new_n_slices);
   inline void set_size(const SizeCube& s);
   
-  inline void reshape(const uword in_rows, const uword in_cols, const uword in_slices);
+  inline void reshape(const uword new_n_rows, const uword new_n_cols, const uword new_n_slices);
   inline void reshape(const SizeCube& s);
                   
-  inline void resize(const uword in_rows, const uword in_cols, const uword in_slices);
+  inline void resize(const uword new_n_rows, const uword new_n_cols, const uword new_n_slices);
   inline void resize(const SizeCube& s);
   
   
@@ -333,19 +333,19 @@ class Cube : public BaseCube< eT, Cube<eT> >
   inline const Cube& fill(const eT val);
   
   inline const Cube& zeros();
-  inline const Cube& zeros(const uword in_rows, const uword in_cols, const uword in_slices);
+  inline const Cube& zeros(const uword new_n_rows, const uword new_n_cols, const uword new_n_slices);
   inline const Cube& zeros(const SizeCube& s);
   
   inline const Cube& ones();
-  inline const Cube& ones(const uword in_rows, const uword in_cols, const uword in_slices);
+  inline const Cube& ones(const uword new_n_rows, const uword new_n_cols, const uword new_n_slices);
   inline const Cube& ones(const SizeCube& s);
   
   inline const Cube& randu();
-  inline const Cube& randu(const uword in_rows, const uword in_cols, const uword in_slices);
+  inline const Cube& randu(const uword new_n_rows, const uword new_n_cols, const uword new_n_slices);
   inline const Cube& randu(const SizeCube& s);
   
   inline const Cube& randn();
-  inline const Cube& randn(const uword in_rows, const uword in_cols, const uword in_slices);
+  inline const Cube& randn(const uword new_n_rows, const uword new_n_cols, const uword new_n_slices);
   inline const Cube& randn(const SizeCube& s);
   
   inline void      reset();
@@ -425,7 +425,7 @@ class Cube : public BaseCube< eT, Cube<eT> >
   protected:
   
   inline void init_cold();
-  inline void init_warm(const uword in_rows, const uword in_cols, const uword in_slices);
+  inline void init_warm(const uword in_n_rows, const uword in_n_cols, const uword in_n_slices);
   
   template<typename T1, typename T2>
   inline void init(const BaseCube<pod_type,T1>& A, const BaseCube<pod_type,T2>& B);

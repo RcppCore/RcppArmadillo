@@ -32,10 +32,11 @@ eig_sym
   {
   arma_extra_debug_sigprint();
   
-  // unwrap_check not used as T1::elem_type and T1::pod_type may not be the same.
-  // furthermore, it doesn't matter if X is an alias of eigval, as auxlib::eig_sym() makes a copy of X
+  typedef typename T1::elem_type eT;
   
-  const bool status = auxlib::eig_sym(eigval, X);
+  Mat<eT> A(X.get_ref());
+  
+  const bool status = auxlib::eig_sym(eigval, A);
   
   if(status == false)
     {
@@ -60,16 +61,21 @@ eig_sym
   {
   arma_extra_debug_sigprint();
   
-  Col<typename T1::pod_type> out;
-  const bool status = auxlib::eig_sym(out, X);
+  typedef typename T1::elem_type eT;
+  typedef typename T1::pod_type   T;
+  
+  Col< T> eigval;
+  Mat<eT> A(X.get_ref());
+  
+  const bool status = auxlib::eig_sym(eigval, A);
 
   if(status == false)
     {
-    out.soft_reset();
+    eigval.reset();
     arma_stop_runtime_error("eig_sym(): decomposition failed");
     }
   
-  return out;
+  return eigval;
   }
 
 

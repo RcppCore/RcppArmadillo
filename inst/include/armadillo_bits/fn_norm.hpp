@@ -120,6 +120,50 @@ norm
 
 
 
+template<typename T1>
+inline
+arma_warn_unused
+typename enable_if2< is_arma_type<T1>::value, double >::result
+norm
+  (
+  const T1&   X,
+  const uword k = uword(2),
+  const typename arma_integral_only<typename T1::elem_type>::result* junk = nullptr
+  )
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  if(resolves_to_colvector<T1>::value)  { return norm(conv_to< Col<double> >::from(X), k); }
+  if(resolves_to_rowvector<T1>::value)  { return norm(conv_to< Row<double> >::from(X), k); }
+  
+  return norm(conv_to< Mat<double> >::from(X), k);
+  }
+
+
+
+template<typename T1>
+inline
+arma_warn_unused
+typename enable_if2< is_arma_type<T1>::value, double >::result
+norm
+  (
+  const T1&   X,
+  const char* method,
+  const typename arma_integral_only<typename T1::elem_type>::result* junk = nullptr
+  )
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  if(resolves_to_colvector<T1>::value)  { return norm(conv_to< Col<double> >::from(X), method); }
+  if(resolves_to_rowvector<T1>::value)  { return norm(conv_to< Row<double> >::from(X), method); }
+  
+  return norm(conv_to< Mat<double> >::from(X), method);
+  }
+
+
+
 //
 // norms for sparse matrices
 
