@@ -68,6 +68,13 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   
   if(A.is_empty())  { out.set_size(n_cols,n_rows); return true; }
   
+  if(is_op_diagmat<T1>::value || A.is_diagmat())
+    {
+    arma_extra_debug_print("op_pinv: detected diagonal matrix");
+    
+    return op_pinv::apply_diag(out, A, tol);
+    }
+  
   #if defined(ARMA_OPTIMISE_SYMPD)
     const bool try_sympd = (auxlib::crippled_lapack(A) == false) && (tol == T(0)) && (method_id == uword(0)) && sympd_helper::guess_sympd_anysize(A);
   #else
@@ -90,6 +97,14 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
     // auxlib::inv_sympd_rcond() will fail if A isn't really positive definite or its rcond is below rcond_threshold
     }
   
+  // if(try_sympd || (is_real<eT>::yes && A.is_symmetric()) || (is_cx<eT>::yes && A.is_hermitian()))
+  if((is_real<eT>::yes) && (try_sympd || A.is_symmetric()))
+    {
+    arma_extra_debug_print("op_pinv: detected symmetric matrix");
+    
+    return op_pinv::apply_sym(out, A, tol, method_id);
+    }
+  
   // economical SVD decomposition 
   Mat<eT> U;
   Col< T> s;
@@ -101,82 +116,149 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   
   if(status == false)  { return false; }
   
-  const uword s_n_elem = s.n_elem;
-  const T*    s_mem    = s.memptr();
-  
   // set tolerance to default if it hasn't been specified
-  if( (tol == T(0)) && (s_n_elem > 0) )
-    {
-    tol = (std::max)(n_rows, n_cols) * s_mem[0] * std::numeric_limits<T>::epsilon();
-    }
-  
+  if( (tol == T(0)) && (s.n_elem > 0) )  { tol = (std::max)(n_rows, n_cols) * s[0] * std::numeric_limits<T>::epsilon(); }
   
   uword count = 0;
   
-  for(uword i = 0; i < s_n_elem; ++i)  { count += (s_mem[i] >= tol) ? uword(1) : uword(0); }
+  for(uword i=0; i < s.n_elem; ++i)  { count += (s[i] >= tol) ? uword(1) : uword(0); }
   
   if(count == 0)  { out.zeros(n_cols, n_rows); return true; }
   
   Col<T> s2(count, arma_nozeros_indicator());
   
-  T* s2_mem = s2.memptr();
-  
   uword count2 = 0;
   
-  for(uword i=0; i < s_n_elem; ++i)
+  for(uword i=0; i < s.n_elem; ++i)
     {
-    const T val = s_mem[i];
+    const T val = s[i];
     
-    if(val >= tol)  { s2_mem[count2] = (val > T(0)) ? T(T(1) / val) : T(0); ++count2; }
+    if(val >= tol)  { s2[count2] = (val > T(0)) ? T(T(1) / val) : T(0); ++count2; }
     }
   
+  const Mat<eT> U_use(U.memptr(), U.n_rows, count, false);
+  const Mat<eT> V_use(V.memptr(), V.n_rows, count, false);
   
   Mat<eT> tmp;
-    
+  
   if(n_rows >= n_cols)
     {
     // out = ( (V.n_cols > count) ? V.cols(0,count-1) : V ) * diagmat(s2) * trans( (U.n_cols > count) ? U.cols(0,count-1) : U );
     
-    if(count < V.n_cols)
-      {
-      tmp = V.cols(0,count-1) * diagmat(s2);
-      }
-    else
-      {
-      tmp = V * diagmat(s2);
-      }
+    tmp = V_use * diagmat(s2);
     
-    if(count < U.n_cols)
-      {
-      out = tmp * trans(U.cols(0,count-1));
-      }
-    else
-      {
-      out = tmp * trans(U);
-      }
+    out = tmp * trans(U_use);
     }
   else
     {
     // out = ( (U.n_cols > count) ? U.cols(0,count-1) : U ) * diagmat(s2) * trans( (V.n_cols > count) ? V.cols(0,count-1) : V );
     
-    if(count < U.n_cols)
-      {
-      tmp = U.cols(0,count-1) * diagmat(s2);
-      }
-    else
-      {
-      tmp = U * diagmat(s2);
-      }
+    tmp = U_use * diagmat(s2);
     
-    if(count < V.n_cols)
+    out = tmp * trans(V_use);
+    }
+  
+  return true;
+  }
+
+
+
+template<typename eT>
+inline
+bool
+op_pinv::apply_diag(Mat<eT>& out, const Mat<eT>& A, typename get_pod_type<eT>::result tol)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename get_pod_type<eT>::result T;
+  
+  out.zeros(A.n_cols, A.n_rows);
+  
+  const uword N = (std::min)(A.n_rows, A.n_cols);
+  
+  podarray<T> diag_abs_vals(N);
+  
+  T max_abs_Aii = T(0);
+  
+  for(uword i=0; i<N; ++i)
+    {
+    const eT     Aii = A.at(i,i);
+    const  T abs_Aii = std::abs(Aii);
+    
+    if(arma_isnan(Aii))  { return false; }
+    
+    diag_abs_vals[i] = abs_Aii;
+    
+    max_abs_Aii = (abs_Aii > max_abs_Aii) ? abs_Aii : max_abs_Aii;
+    }
+  
+  if(tol == T(0))  { tol = (std::max)(A.n_rows, A.n_cols) * max_abs_Aii * std::numeric_limits<T>::epsilon(); }
+  
+  for(uword i=0; i<N; ++i)
+    {
+    if(diag_abs_vals[i] >= tol)
       {
-      out = tmp * trans(V.cols(0,count-1));
-      }
-    else
-      {
-      out = tmp * trans(V);
+      const eT Aii = A.at(i,i);
+      
+      if(Aii != eT(0))  { out.at(i,i) = eT(eT(1) / Aii); }
       }
     }
+  
+  return true;
+  }
+
+
+
+template<typename eT>
+inline
+bool
+op_pinv::apply_sym(Mat<eT>& out, const Mat<eT>& A, typename get_pod_type<eT>::result tol, const uword method_id)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename get_pod_type<eT>::result T;
+  
+  Col< T> eigval;
+  Mat<eT> eigvec;
+  
+  const bool status = ((method_id == uword(0)) || (method_id == uword(2))) ? auxlib::eig_sym_dc(eigval, eigvec, A) : auxlib::eig_sym(eigval, eigvec, A);
+  
+  if(status == false)  { return false; }
+  
+  if(eigval.n_elem == 0)  { out.zeros(A.n_cols, A.n_rows); return true; }
+  
+  Col<T> abs_eigval = arma::abs(eigval);
+  
+  const uvec indices = sort_index(abs_eigval, "descend");
+  
+  abs_eigval = abs_eigval.elem(indices);
+      eigval =     eigval.elem(indices);
+      eigvec =     eigvec.cols(indices);
+  
+  // set tolerance to default if it hasn't been specified
+  if(tol == T(0))  { tol = (std::max)(A.n_rows, A.n_cols) * abs_eigval[0] * std::numeric_limits<T>::epsilon(); }
+  
+  uword count = 0;
+  
+  for(uword i=0; i < abs_eigval.n_elem; ++i)  { count += (abs_eigval[i] >= tol) ? uword(1) : uword(0); }
+  
+  if(count == 0)  { out.zeros(A.n_cols, A.n_rows); return true; }
+  
+  Col<T> eigval2(count, arma_nozeros_indicator());
+  
+  uword count2 = 0;
+  
+  for(uword i=0; i < eigval.n_elem; ++i)
+    {
+    const T abs_val = abs_eigval[i];
+    const T     val =     eigval[i];
+    
+    if(abs_val >= tol)  { eigval2[count2] = (val != T(0)) ? T(T(1) / val) : T(0); ++count2; }
+    }
+  
+  const Mat<eT> eigvec_use(eigvec.memptr(), eigvec.n_rows, count, false);
+  
+  out = (eigvec_use * diagmat(eigval2)).eval() * eigvec_use.t();
   
   return true;
   }

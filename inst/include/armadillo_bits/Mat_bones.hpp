@@ -60,17 +60,17 @@ class Mat : public Base< eT, Mat<eT> >
   inline ~Mat();
   inline  Mat();
   
-  inline explicit Mat(const uword in_rows, const uword in_cols);
+  inline explicit Mat(const uword in_n_rows, const uword in_n_cols);
   inline explicit Mat(const SizeMat& s);
   
-  template<bool do_zeros> inline explicit Mat(const uword in_rows, const uword in_cols, const arma_initmode_indicator<do_zeros>&);
-  template<bool do_zeros> inline explicit Mat(const SizeMat& s,                         const arma_initmode_indicator<do_zeros>&);
+  template<bool do_zeros> inline explicit Mat(const uword in_n_rows, const uword in_n_cols, const arma_initmode_indicator<do_zeros>&);
+  template<bool do_zeros> inline explicit Mat(const SizeMat& s,                             const arma_initmode_indicator<do_zeros>&);
   
-  template<typename fill_type> inline Mat(const uword in_rows, const uword in_cols, const fill::fill_class<fill_type>& f);
-  template<typename fill_type> inline Mat(const SizeMat& s,                         const fill::fill_class<fill_type>& f);
+  template<typename fill_type> inline Mat(const uword in_n_rows, const uword in_n_cols, const fill::fill_class<fill_type>& f);
+  template<typename fill_type> inline Mat(const SizeMat& s,                             const fill::fill_class<fill_type>& f);
   
-  inline Mat(const uword in_rows, const uword in_cols, const fill::scalar_holder<eT> f);
-  inline Mat(const SizeMat& s,                         const fill::scalar_holder<eT> f);
+  inline Mat(const uword in_n_rows, const uword in_n_cols, const fill::scalar_holder<eT> f);
+  inline Mat(const SizeMat& s,                             const fill::scalar_holder<eT> f);
   
   inline arma_cold            Mat(const char*        text);
   inline arma_cold Mat& operator=(const char*        text);
@@ -447,18 +447,18 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename eT2, typename expr>
   inline void copy_size(const Base<eT2,expr>& X);
   
-  inline void set_size(const uword in_elem);
-  inline void set_size(const uword in_rows, const uword in_cols);
+  inline void set_size(const uword new_n_elem);
+  inline void set_size(const uword new_n_rows, const uword new_n_cols);
   inline void set_size(const SizeMat& s);
   
-  inline void   resize(const uword in_elem);
-  inline void   resize(const uword in_rows, const uword in_cols);
+  inline void   resize(const uword new_n_elem);
+  inline void   resize(const uword new_n_rows, const uword new_n_cols);
   inline void   resize(const SizeMat& s);
   
-  inline void  reshape(const uword in_rows, const uword in_cols);
+  inline void  reshape(const uword new_n_rows, const uword new_n_cols);
   inline void  reshape(const SizeMat& s);
   
-  arma_deprecated inline void reshape(const uword in_rows, const uword in_cols, const uword dim);  //!< NOTE: don't use this form: it will be removed
+  arma_deprecated inline void reshape(const uword new_n_rows, const uword new_n_cols, const uword dim);  //!< NOTE: don't use this form: it will be removed
   
   
   template<typename functor> inline const Mat&  for_each(functor F);
@@ -480,27 +480,27 @@ class Mat : public Base< eT, Mat<eT> >
   inline const Mat& fill(const fill::fill_class<fill_type>& f);
   
   inline const Mat& zeros();
-  inline const Mat& zeros(const uword in_elem);
-  inline const Mat& zeros(const uword in_rows, const uword in_cols);
+  inline const Mat& zeros(const uword new_n_elem);
+  inline const Mat& zeros(const uword new_n_rows, const uword new_n_cols);
   inline const Mat& zeros(const SizeMat& s);
   
   inline const Mat& ones();
-  inline const Mat& ones(const uword in_elem);
-  inline const Mat& ones(const uword in_rows, const uword in_cols);
+  inline const Mat& ones(const uword new_n_elem);
+  inline const Mat& ones(const uword new_n_rows, const uword new_n_cols);
   inline const Mat& ones(const SizeMat& s);
   
   inline const Mat& randu();
-  inline const Mat& randu(const uword in_elem);
-  inline const Mat& randu(const uword in_rows, const uword in_cols);
+  inline const Mat& randu(const uword new_n_elem);
+  inline const Mat& randu(const uword new_n_rows, const uword new_n_cols);
   inline const Mat& randu(const SizeMat& s);
   
   inline const Mat& randn();
-  inline const Mat& randn(const uword in_elem);
-  inline const Mat& randn(const uword in_rows, const uword in_cols);
+  inline const Mat& randn(const uword new_n_elem);
+  inline const Mat& randn(const uword new_n_rows, const uword new_n_cols);
   inline const Mat& randn(const SizeMat& s);
   
   inline const Mat& eye();
-  inline const Mat& eye(const uword in_rows, const uword in_cols);
+  inline const Mat& eye(const uword new_n_rows, const uword new_n_cols);
   inline const Mat& eye(const SizeMat& s);
   
   inline arma_cold void      reset();
@@ -750,7 +750,7 @@ class Mat : public Base< eT, Mat<eT> >
   protected:
   
   inline void init_cold();
-  inline void init_warm(uword in_rows, uword in_cols);
+  inline void init_warm(uword in_n_rows, uword in_n_cols);
   
   inline arma_cold void init(const std::string& text);
   

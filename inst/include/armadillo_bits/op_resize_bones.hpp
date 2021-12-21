@@ -27,8 +27,19 @@ class op_resize
   {
   public:
   
-  template<typename T1> inline static void apply( Mat<typename T1::elem_type>& out, const     Op<T1,op_resize>& in);
+  template<typename T1> inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_resize>& in);
+  
+  template<typename eT> inline static void apply_mat_inplace(Mat<eT>& A, const uword new_n_rows, const uword new_n_cols);
+  
+  template<typename eT> inline static void apply_mat_noalias(Mat<eT>& out, const Mat<eT>& A, const uword new_n_rows, const uword new_n_cols);
+  
+  //
+  
   template<typename T1> inline static void apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_resize>& in);
+  
+  template<typename eT> inline static void apply_cube_inplace(Cube<eT>& A, const uword new_n_rows, const uword new_n_cols, const uword new_n_slices);
+  
+  template<typename eT> inline static void apply_cube_noalias(Cube<eT>& out, const Cube<eT>& A, const uword new_n_rows, const uword new_n_cols, const uword new_n_slices);
   };
 
 

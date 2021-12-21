@@ -16,44 +16,24 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup arma_version
+
+//! \addtogroup op_rank
 //! @{
 
 
 
-#define ARMA_VERSION_MAJOR 10
-#define ARMA_VERSION_MINOR 7
-#define ARMA_VERSION_PATCH 91
-#define ARMA_VERSION_NAME  "10.8-RC1"
-
-
-
-struct arma_version
+class op_rank
+  : public traits_op_default
   {
-  static constexpr unsigned int major = ARMA_VERSION_MAJOR;
-  static constexpr unsigned int minor = ARMA_VERSION_MINOR;
-  static constexpr unsigned int patch = ARMA_VERSION_PATCH;
+  public:
   
-  static
-  inline
-  std::string
-  as_string()
-    {
-    const char* nickname = ARMA_VERSION_NAME;
-    
-    std::ostringstream ss;
-    
-    ss << arma_version::major
-       << '.'
-       << arma_version::minor
-       << '.'
-       << arma_version::patch
-       << " ("
-       << nickname
-       << ')';
-    
-    return ss.str();
-    }
+  template<typename T1> inline static bool apply(uword& out, const Base<typename T1::elem_type,T1>& expr, const typename T1::pod_type tol);
+  
+  template<typename eT> inline static bool  apply_gen(uword& out, Mat<eT>& A, typename get_pod_type<eT>::result tol);
+  
+  template<typename eT> inline static bool  apply_sym(uword& out, Mat<eT>& A, typename get_pod_type<eT>::result tol);
+  
+  template<typename eT> inline static bool apply_diag(uword& out, Mat<eT>& A, typename get_pod_type<eT>::result tol);
   };
 
 

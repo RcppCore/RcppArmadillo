@@ -25,121 +25,142 @@
 template<typename T1>
 inline
 void
-op_resize::apply(Mat<typename T1::elem_type>& actual_out, const Op<T1,op_resize>& in)
+op_resize::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_resize>& in)
   {
   arma_extra_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
-  const uword out_n_rows = in.aux_uword_a;
-  const uword out_n_cols = in.aux_uword_b;
+  const uword new_n_rows = in.aux_uword_a;
+  const uword new_n_cols = in.aux_uword_b;
   
   const unwrap<T1>   tmp(in.m);
   const Mat<eT>& A = tmp.M;
   
-  const uword A_n_rows = A.n_rows;
-  const uword A_n_cols = A.n_cols;
-  
-  const bool alias = (&actual_out == &A);
-  
-  if(alias)
+  if(&out == &A)
     {
-    if( (A_n_rows == out_n_rows) && (A_n_cols == out_n_cols) )
-      {
-      return;
-      }
-    
-    if(actual_out.is_empty())
-      {
-      actual_out.zeros(out_n_rows, out_n_cols);
-      return;
-      }
+    op_resize::apply_mat_inplace(out, new_n_rows, new_n_cols);
     }
-  
-  Mat<eT>  B;
-  Mat<eT>& out = alias ? B : actual_out;
-  
-  out.set_size(out_n_rows, out_n_cols);
-  
-  if( (out_n_rows > A_n_rows) || (out_n_cols > A_n_cols) )
+  else
     {
-    out.zeros();
+    op_resize::apply_mat_noalias(out, A, new_n_rows, new_n_cols);
     }
+  }
+
+
+
+template<typename eT>
+inline
+void
+op_resize::apply_mat_inplace(Mat<eT>& A, const uword new_n_rows, const uword new_n_cols)
+  {
+  arma_extra_debug_sigprint();
+  
+  if( (A.n_rows == new_n_rows) && (A.n_cols == new_n_cols) )  { return; }
+  
+  if(A.is_empty())  { A.zeros(new_n_rows, new_n_cols); return; }
+  
+  Mat<eT> B;
+  
+  op_resize::apply_mat_noalias(B, A, new_n_rows, new_n_cols);
+  
+  A.steal_mem(B);
+  }
+
+
+
+template<typename eT>
+inline
+void
+op_resize::apply_mat_noalias(Mat<eT>& out, const Mat<eT>& A, const uword new_n_rows, const uword new_n_cols)
+  {
+  arma_extra_debug_sigprint();
+  
+  out.set_size(new_n_rows, new_n_cols);
+  
+  if( (new_n_rows > A.n_rows) || (new_n_cols > A.n_cols) )  { out.zeros(); }
   
   if( (out.n_elem > 0) && (A.n_elem > 0) )
     {
-    const uword end_row = (std::min)(out_n_rows, A_n_rows) - 1;
-    const uword end_col = (std::min)(out_n_cols, A_n_cols) - 1;
+    const uword end_row = (std::min)(new_n_rows, A.n_rows) - 1;
+    const uword end_col = (std::min)(new_n_cols, A.n_cols) - 1;
     
     out.submat(0, 0, end_row, end_col) = A.submat(0, 0, end_row, end_col);
     }
-  
-  if(alias)
-    {
-    actual_out.steal_mem(B);
-    }
   }
+
+
+
+//
 
 
 
 template<typename T1>
 inline
 void
-op_resize::apply(Cube<typename T1::elem_type>& actual_out, const OpCube<T1,op_resize>& in)
+op_resize::apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_resize>& in)
   {
   arma_extra_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
-  const uword out_n_rows   = in.aux_uword_a;
-  const uword out_n_cols   = in.aux_uword_b;
-  const uword out_n_slices = in.aux_uword_c;
+  const uword new_n_rows   = in.aux_uword_a;
+  const uword new_n_cols   = in.aux_uword_b;
+  const uword new_n_slices = in.aux_uword_c;
   
   const unwrap_cube<T1> tmp(in.m);
   const Cube<eT>& A   = tmp.M;
   
-  const uword A_n_rows   = A.n_rows;
-  const uword A_n_cols   = A.n_cols;
-  const uword A_n_slices = A.n_slices;
-  
-  const bool alias = (&actual_out == &A);
-  
-  if(alias)
+  if(&out == &A)
     {
-    if( (A_n_rows == out_n_rows) && (A_n_cols == out_n_cols) && (A_n_slices == out_n_slices) )
-      {
-      return;
-      }
-    
-    if(actual_out.is_empty())
-      {
-      actual_out.zeros(out_n_rows, out_n_cols, out_n_slices);
-      return;
-      }
+    op_resize::apply_cube_inplace(out, new_n_rows, new_n_cols, new_n_slices);
     }
-  
-  Cube<eT>  B;
-  Cube<eT>& out = alias ? B : actual_out;
-  
-  out.set_size(out_n_rows, out_n_cols, out_n_slices);
-  
-  if( (out_n_rows > A_n_rows) || (out_n_cols > A_n_cols) || (out_n_slices > A_n_slices) )
+  else
     {
-    out.zeros();
+    op_resize::apply_cube_noalias(out, A, new_n_rows, new_n_cols, new_n_slices);
     }
+  }
+
+
+
+template<typename eT>
+inline
+void
+op_resize::apply_cube_inplace(Cube<eT>& A, const uword new_n_rows, const uword new_n_cols, const uword new_n_slices)
+  {
+  arma_extra_debug_sigprint();
+  
+  if( (A.n_rows == new_n_rows) && (A.n_cols == new_n_cols) && (A.n_slices == new_n_slices) )  { return; }
+  
+  if(A.is_empty())  { A.zeros(new_n_rows, new_n_cols, new_n_slices); return; }
+  
+  Cube<eT> B;
+  
+  op_resize::apply_cube_noalias(B, A, new_n_rows, new_n_cols, new_n_slices);
+  
+  A.steal_mem(B);
+  }
+
+
+
+template<typename eT>
+inline
+void
+op_resize::apply_cube_noalias(Cube<eT>& out, const Cube<eT>& A, const uword new_n_rows, const uword new_n_cols, const uword new_n_slices)
+  {
+  arma_extra_debug_sigprint();
+  
+  out.set_size(new_n_rows, new_n_cols, new_n_slices);
+  
+  if( (new_n_rows > A.n_rows) || (new_n_cols > A.n_cols) || (new_n_slices > A.n_slices) )  { out.zeros(); }
   
   if( (out.n_elem > 0) && (A.n_elem > 0) )
     {
-    const uword end_row   = (std::min)(out_n_rows,   A_n_rows)   - 1;
-    const uword end_col   = (std::min)(out_n_cols,   A_n_cols)   - 1;
-    const uword end_slice = (std::min)(out_n_slices, A_n_slices) - 1;
+    const uword end_row   = (std::min)(new_n_rows,   A.n_rows)   - 1;
+    const uword end_col   = (std::min)(new_n_cols,   A.n_cols)   - 1;
+    const uword end_slice = (std::min)(new_n_slices, A.n_slices) - 1;
     
     out.subcube(0, 0, 0, end_row, end_col, end_slice) = A.subcube(0, 0, 0, end_row, end_col, end_slice);
-    }
-  
-  if(alias)
-    {
-    actual_out.steal_mem(B);
     }
   }
 

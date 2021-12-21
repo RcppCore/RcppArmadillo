@@ -24,47 +24,32 @@
 template<typename T1>
 arma_warn_unused
 inline
-uword
-rank
-  (
-  const Base<typename T1::elem_type,T1>& X,
-        typename T1::pod_type            tol = 0.0,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
-  )
+typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, uword >::result
+rank(const Base<typename T1::elem_type,T1>& expr, const typename T1::pod_type tol = 0)
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
-  typedef typename T1::elem_type eT;
-  typedef typename T1::pod_type   T;
+  uword out = uword(0);
   
-  Mat<eT> A(X.get_ref());
+  const bool status = op_rank::apply(out, expr.get_ref(), tol);
   
-  Col<T> s;
+  if(status == false)  { arma_stop_runtime_error("rank(): failed"); return uword(0); }
   
-  const bool status = auxlib::svd_dc(s, A);
+  return out;
+  }
+
+
+
+template<typename T1>
+inline
+typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, bool >::result
+rank(uword& out, const Base<typename T1::elem_type,T1>& expr, const typename T1::pod_type tol = 0)
+  {
+  arma_extra_debug_sigprint();
   
-  if(status == false)
-    {
-    arma_stop_runtime_error("rank(): svd failed");
-    
-    return uword(0);
-    }
+  out = uword(0);
   
-  const uword s_n_elem = s.n_elem;
-  const T*    s_mem    = s.memptr();
-  
-  // set tolerance to default if it hasn't been specified
-  if( (tol == T(0)) && (s_n_elem > 0) )
-    {
-    tol = (std::max)(A.n_rows, A.n_cols) * s_mem[0] * std::numeric_limits<T>::epsilon();
-    }
-  
-  uword count = 0;
-  
-  for(uword i=0; i < s_n_elem; ++i)  { count += (s_mem[i] > tol) ? uword(1) : uword(0); }
-  
-  return count;
+  return op_rank::apply(out, expr.get_ref(), tol);
   }
 
 

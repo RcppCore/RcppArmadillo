@@ -2066,24 +2066,18 @@ auxlib::eig_pair_twosided
 
 
 //! eigenvalues of a symmetric real matrix
-template<typename eT, typename T1>
+template<typename eT>
 inline
 bool
-auxlib::eig_sym(Col<eT>& eigval, const Base<eT,T1>& X)
+auxlib::eig_sym(Col<eT>& eigval, Mat<eT>& A)
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_LAPACK)
     {
-    Mat<eT> A(X.get_ref());
-    
     arma_debug_check( (A.is_square() == false), "eig_sym(): given matrix must be square sized" );
     
-    if(A.is_empty())
-      {
-      eigval.reset();
-      return true;
-      }
+    if(A.is_empty())  { eigval.reset(); return true; }
     
     // if(auxlib::rudimentary_sym_check(A) == false)
     //   {
@@ -2117,7 +2111,7 @@ auxlib::eig_sym(Col<eT>& eigval, const Base<eT,T1>& X)
   #else
     {
     arma_ignore(eigval);
-    arma_ignore(X);
+    arma_ignore(A);
     arma_stop_logic_error("eig_sym(): use of LAPACK must be enabled");
     return false;
     }
@@ -2127,10 +2121,10 @@ auxlib::eig_sym(Col<eT>& eigval, const Base<eT,T1>& X)
 
 
 //! eigenvalues of a hermitian complex matrix
-template<typename T, typename T1>
+template<typename T>
 inline
 bool
-auxlib::eig_sym(Col<T>& eigval, const Base<std::complex<T>,T1>& X)
+auxlib::eig_sym(Col<T>& eigval, Mat< std::complex<T> >& A)
   {
   arma_extra_debug_sigprint();
   
@@ -2138,15 +2132,9 @@ auxlib::eig_sym(Col<T>& eigval, const Base<std::complex<T>,T1>& X)
     {
     typedef typename std::complex<T> eT;
     
-    Mat<eT> A(X.get_ref());
-    
     arma_debug_check( (A.is_square() == false), "eig_sym(): given matrix must be square sized" );
     
-    if(A.is_empty())
-      {
-      eigval.reset();
-      return true;
-      }
+    if(A.is_empty())  { eigval.reset(); return true; }
     
     // if(auxlib::rudimentary_sym_check(A) == false)
     //   {
@@ -2181,7 +2169,7 @@ auxlib::eig_sym(Col<T>& eigval, const Base<std::complex<T>,T1>& X)
   #else
     {
     arma_ignore(eigval);
-    arma_ignore(X);
+    arma_ignore(A);
     arma_stop_logic_error("eig_sym(): use of LAPACK must be enabled");
     return false;
     }
@@ -2200,9 +2188,9 @@ auxlib::eig_sym(Col<eT>& eigval, Mat<eT>& eigvec, const Mat<eT>& X)
   
   #if defined(ARMA_USE_LAPACK)
     {
-    eigvec = X;
+    arma_debug_check( (X.is_square() == false), "eig_sym(): given matrix must be square sized" );
     
-    arma_debug_check( (eigvec.is_square() == false), "eig_sym(): given matrix must be square sized" );
+    eigvec = X;
     
     if(eigvec.is_empty())
       {
@@ -2254,9 +2242,9 @@ auxlib::eig_sym(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Mat< std::
     {
     typedef typename std::complex<T> eT;
     
-    eigvec = X;
+    arma_debug_check( (X.is_square() == false), "eig_sym(): given matrix must be square sized" );
     
-    arma_debug_check( (eigvec.is_square() == false), "eig_sym(): given matrix must be square sized" );
+    eigvec = X;
     
     if(eigvec.is_empty())
       {
@@ -2307,9 +2295,9 @@ auxlib::eig_sym_dc(Col<eT>& eigval, Mat<eT>& eigvec, const Mat<eT>& X)
   
   #if defined(ARMA_USE_LAPACK)
     {
-    eigvec = X;
+    arma_debug_check( (X.is_square() == false), "eig_sym(): given matrix must be square sized" );
     
-    arma_debug_check( (eigvec.is_square() == false), "eig_sym(): given matrix must be square sized" );
+    eigvec = X;
     
     if(eigvec.is_empty())
       {
@@ -2386,9 +2374,9 @@ auxlib::eig_sym_dc(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Mat< st
     {
     typedef typename std::complex<T> eT;
     
-    eigvec = X;
+    arma_debug_check( (X.is_square() == false), "eig_sym(): given matrix must be square sized" );
     
-    arma_debug_check( (eigvec.is_square() == false), "eig_sym(): given matrix must be square sized" );
+    eigvec = X;
     
     if(eigvec.is_empty())
       {
@@ -7111,7 +7099,8 @@ auxlib::rudimentary_sym_check(const Mat< std::complex<T> >& X)
   
   const T tol = T(10000)*std::numeric_limits<T>::epsilon();  // allow some leeway
   
-  if(std::abs(X_mem[0].imag()) > tol)  { return false; }
+  if(std::abs(X_mem[0         ].imag()) > tol)  { return false; }  // check top-left
+  if(std::abs(X_mem[X.n_elem-1].imag()) > tol)  { return false; }  // check bottom-right
   
   const eT& A = X_mem[Nm1  ];  // bottom-left corner (ie. last value in first column)
   const eT& B = X_mem[Nm1*N];  // top-right   corner (ie. first value in last column)

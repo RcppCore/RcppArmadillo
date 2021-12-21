@@ -22,190 +22,149 @@
 
 
 
-template<typename eT>
-inline
-void
-op_reshape::apply_unwrap(Mat<eT>& out, const Mat<eT>& A, const uword in_n_rows, const uword in_n_cols)
-  {
-  arma_extra_debug_sigprint();
-  
-  const bool is_alias = (&out == &A);
-  
-  const uword in_n_elem = in_n_rows * in_n_cols;
-  
-  if(A.n_elem == in_n_elem)
-    {
-    if(is_alias == false)
-      {
-      out.set_size(in_n_rows, in_n_cols);
-      arrayops::copy( out.memptr(), A.memptr(), out.n_elem );
-      }
-    else  // &out == &A, ie. inplace reshape
-      {
-      out.set_size(in_n_rows, in_n_cols);
-      // set_size() doesn't destroy data as long as the number of elements in the matrix remains the same
-      }
-    }
-  else
-    {
-    const unwrap_check< Mat<eT> > B_tmp(A, is_alias);
-    const Mat<eT>& B            = B_tmp.M;
-    
-    const uword n_elem_to_copy = (std::min)(B.n_elem, in_n_elem);
-    
-    out.set_size(in_n_rows, in_n_cols);
-    
-    eT* out_mem = out.memptr();
-    
-    arrayops::copy( out_mem, B.memptr(), n_elem_to_copy );
-    
-    for(uword i=n_elem_to_copy; i<in_n_elem; ++i)  { out_mem[i] = eT(0); }
-    }
-  }
-
-
-
 template<typename T1>
 inline
 void
-op_reshape::apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const uword in_n_rows, const uword in_n_cols)
+op_reshape::apply(Mat<typename T1::elem_type>& actual_out, const Op<T1,op_reshape>& in)
   {
   arma_extra_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
-  out.set_size(in_n_rows, in_n_cols);
+  const uword new_n_rows = in.aux_uword_a;
+  const uword new_n_cols = in.aux_uword_b;
   
-  eT* out_mem = out.memptr();
-  
-  const uword in_n_elem = in_n_rows * in_n_cols;
-  
-  if(P.get_n_elem() == in_n_elem)
-    {
-    if(Proxy<T1>::use_at == false)
-      {
-      typename Proxy<T1>::ea_type Pea = P.get_ea();
-      
-      for(uword i=0; i < in_n_elem; ++i)  { out_mem[i] = Pea[i]; }
-      }
-    else
-      {
-      const uword P_n_rows = P.get_n_rows();
-      const uword P_n_cols = P.get_n_cols();
-      
-      for(uword col=0; col < P_n_cols; ++col)
-        {
-        uword i,j;
-        
-        for(i=0, j=1; j < P_n_rows; i+=2, j+=2)
-          {
-          const eT tmp_i = P.at(i,col);
-          const eT tmp_j = P.at(j,col);
-          
-          *out_mem = tmp_i;  out_mem++;
-          *out_mem = tmp_j;  out_mem++;
-          }
-        
-        if(i < P_n_rows)
-          {
-          *out_mem = P.at(i,col);  out_mem++;
-          }
-        }
-      }
-    }
-  else
-    {
-    const uword n_elem_to_copy = (std::min)(P.get_n_elem(), in_n_elem);
-    
-    if(Proxy<T1>::use_at == false)
-      {
-      typename Proxy<T1>::ea_type Pea = P.get_ea();
-      
-      for(uword i=0; i < n_elem_to_copy; ++i)  { out_mem[i] = Pea[i]; }
-      }
-    else
-      {
-      uword i = 0;
-      
-      const uword P_n_rows = P.get_n_rows();
-      const uword P_n_cols = P.get_n_cols();
-      
-      for(uword col=0; col < P_n_cols; ++col)
-      for(uword row=0; row < P_n_rows; ++row)
-        {
-        if(i >= n_elem_to_copy)  { goto nested_loop_end; }
-        
-        out_mem[i] = P.at(row,col);
-        
-        ++i;
-        }
-      
-      nested_loop_end: ;
-      }
-    
-    for(uword i=n_elem_to_copy; i < in_n_elem; ++i)  { out_mem[i] = eT(0); }
-    }
-  }
-
-
-
-template<typename T1>
-inline
-void
-op_reshape::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reshape>& in)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  const uword in_n_rows = in.aux_uword_a;
-  const uword in_n_cols = in.aux_uword_b;
-  
-  // allow detection of in-place reshape
   if(is_Mat<T1>::value || (arma_config::openmp && Proxy<T1>::use_mp))
     {
-    const unwrap<T1> U(in.m);
+    const unwrap<T1>   U(in.m);
+    const Mat<eT>& A = U.M;
     
-    op_reshape::apply_unwrap(out, U.M, in_n_rows, in_n_cols);
+    if(&actual_out == &A)
+      {
+      op_reshape::apply_mat_inplace(actual_out, new_n_rows, new_n_cols);
+      }
+    else
+      {
+      op_reshape::apply_mat_noalias(actual_out, A, new_n_rows, new_n_cols);
+      }
     }
   else
     {
     const Proxy<T1> P(in.m);
     
-    const bool is_alias = P.is_alias(out);
+    const bool is_alias = P.is_alias(actual_out);
+    
+    Mat<eT>  tmp;
+    Mat<eT>& out = (is_alias) ? tmp : actual_out;
     
     if(is_Mat<typename Proxy<T1>::stored_type>::value)
       {
       const quasi_unwrap<typename Proxy<T1>::stored_type> U(P.Q);
       
-      if(is_alias)
-        {
-        Mat<eT> tmp;
-        
-        op_reshape::apply_unwrap(tmp, U.M, in_n_rows, in_n_cols);
-        
-        out.steal_mem(tmp);
-        }
-      else
-        {
-        op_reshape::apply_unwrap(out, U.M, in_n_rows, in_n_cols);
-        }
+      op_reshape::apply_mat_noalias(out, U.M, new_n_rows, new_n_cols);
       }
     else
       {
-      if(is_alias)
-        {
-        Mat<eT> tmp;
-        
-        op_reshape::apply_proxy(tmp, P, in_n_rows, in_n_cols);
-        
-        out.steal_mem(tmp);
-        }
-      else
-        {
-        op_reshape::apply_proxy(out, P, in_n_rows, in_n_cols);
-        }
+      op_reshape::apply_proxy_noalias(out, P, new_n_rows, new_n_cols);
       }
+    
+    if(is_alias)  { actual_out.steal_mem(tmp); }
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
+op_reshape::apply_mat_inplace(Mat<eT>& A, const uword new_n_rows, const uword new_n_cols)
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword new_n_elem = new_n_rows * new_n_cols;
+  
+  if(A.n_elem == new_n_elem)  { A.set_size(new_n_rows, new_n_cols); return; }
+  
+  Mat<eT> B;
+  
+  op_reshape::apply_mat_noalias(B, A, new_n_rows, new_n_cols);
+  
+  A.steal_mem(B);
+  }
+
+
+
+template<typename eT>
+inline
+void
+op_reshape::apply_mat_noalias(Mat<eT>& out, const Mat<eT>& A, const uword new_n_rows, const uword new_n_cols)
+  {
+  arma_extra_debug_sigprint();
+  
+  out.set_size(new_n_rows, new_n_cols);
+  
+  const uword n_elem_to_copy = (std::min)(A.n_elem, out.n_elem);
+  
+  eT* out_mem = out.memptr();
+  
+  arrayops::copy( out_mem, A.memptr(), n_elem_to_copy );
+  
+  if(n_elem_to_copy < out.n_elem)
+    {
+    const uword n_elem_leftover = out.n_elem - n_elem_to_copy;
+    
+    arrayops::fill_zeros(&(out_mem[n_elem_to_copy]), n_elem_leftover);
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_reshape::apply_proxy_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const uword new_n_rows, const uword new_n_cols)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  out.set_size(new_n_rows, new_n_cols);
+  
+  const uword n_elem_to_copy = (std::min)(P.get_n_elem(), out.n_elem);
+  
+  eT* out_mem = out.memptr();
+  
+  if(Proxy<T1>::use_at == false)
+    {
+    typename Proxy<T1>::ea_type Pea = P.get_ea();
+    
+    for(uword i=0; i < n_elem_to_copy; ++i)  { out_mem[i] = Pea[i]; }
+    }
+  else
+    {
+    uword i = 0;
+    
+    const uword P_n_rows = P.get_n_rows();
+    const uword P_n_cols = P.get_n_cols();
+    
+    for(uword col=0; col < P_n_cols; ++col)
+    for(uword row=0; row < P_n_rows; ++row)
+      {
+      if(i >= n_elem_to_copy)  { goto nested_loop_end; }
+      
+      out_mem[i] = P.at(row,col);
+      
+      ++i;
+      }
+    
+    nested_loop_end: ;
+    }
+  
+  if(n_elem_to_copy < out.n_elem)
+    {
+    const uword n_elem_leftover = out.n_elem - n_elem_to_copy;
+    
+    arrayops::fill_zeros(&(out_mem[n_elem_to_copy]), n_elem_leftover);
     }
   }
 
@@ -220,48 +179,74 @@ op_reshape::apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_reshape>
   
   typedef typename T1::elem_type eT;
   
-  const unwrap_cube<T1> A_tmp(in.m);
-  const Cube<eT>& A   = A_tmp.M;
+  const unwrap_cube<T1> U(in.m);
+  const Cube<eT>& A   = U.M;
   
-  const uword in_n_rows   = in.aux_uword_a;
-  const uword in_n_cols   = in.aux_uword_b;
-  const uword in_n_slices = in.aux_uword_c;
+  const uword new_n_rows   = in.aux_uword_a;
+  const uword new_n_cols   = in.aux_uword_b;
+  const uword new_n_slices = in.aux_uword_c;
   
-  const uword in_n_elem = in_n_rows * in_n_cols * in_n_slices;
-  
-  if(A.n_elem == in_n_elem)
+  if(&out == &A)
     {
-    if(&out != &A)
-      {
-      out.set_size(in_n_rows, in_n_cols, in_n_slices);
-      arrayops::copy( out.memptr(), A.memptr(), out.n_elem );
-      }
-    else  // &out == &A, ie. inplace resize
-      {
-      out.set_size(in_n_rows, in_n_cols, in_n_slices);
-      // set_size() doesn't destroy data as long as the number of elements in the cube remains the same
-      }
+    op_reshape::apply_cube_inplace(out, new_n_rows, new_n_cols, new_n_slices);
     }
   else
     {
-    const unwrap_cube_check< Cube<eT> > B_tmp(A, out);
-    const Cube<eT>& B                 = B_tmp.M;
+    op_reshape::apply_cube_noalias(out, A, new_n_rows, new_n_cols, new_n_slices);
+    }
+  }
+  
+
+
+template<typename eT>
+inline
+void
+op_reshape::apply_cube_inplace(Cube<eT>& A, const uword new_n_rows, const uword new_n_cols, const uword new_n_slices)
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword new_n_elem = new_n_rows * new_n_cols * new_n_slices;
+  
+  if(A.n_elem == new_n_elem)  { A.set_size(new_n_rows, new_n_cols, new_n_slices); return; }
+  
+  Cube<eT> B;
+  
+  op_reshape::apply_cube_noalias(B, A, new_n_rows, new_n_cols, new_n_slices);
+  
+  A.steal_mem(B);
+  }
+
+
+
+template<typename eT>
+inline
+void
+op_reshape::apply_cube_noalias(Cube<eT>& out, const Cube<eT>& A, const uword new_n_rows, const uword new_n_cols, const uword new_n_slices)
+  {
+  arma_extra_debug_sigprint();
+  
+  out.set_size(new_n_rows, new_n_cols, new_n_slices);
+  
+  const uword n_elem_to_copy = (std::min)(A.n_elem, out.n_elem);
+  
+  eT* out_mem = out.memptr();
+  
+  arrayops::copy( out_mem, A.memptr(), n_elem_to_copy );
+  
+  if(n_elem_to_copy < out.n_elem)
+    {
+    const uword n_elem_leftover = out.n_elem - n_elem_to_copy;
     
-    const uword n_elem_to_copy = (std::min)(B.n_elem, in_n_elem);
-    
-    out.set_size(in_n_rows, in_n_cols, in_n_slices);
-    
-    eT* out_mem = out.memptr();
-    
-    arrayops::copy( out_mem, B.memptr(), n_elem_to_copy );
-    
-    for(uword i=n_elem_to_copy; i < in_n_elem; ++i)  { out_mem[i] = eT(0); }
+    arrayops::fill_zeros(&(out_mem[n_elem_to_copy]), n_elem_leftover);
     }
   }
 
 
 
-//! NOTE: deprecated
+//
+
+
+
 template<typename T1>
 arma_cold
 inline
@@ -270,20 +255,72 @@ op_reshape_old::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reshape_o
   {
   arma_extra_debug_sigprint();
   
-  const uword in_n_rows = in.aux_uword_a;
-  const uword in_n_cols = in.aux_uword_b;
-  const uword in_dim    = in.aux_uword_c;
+  typedef typename T1::elem_type eT;
   
-  if(in_dim == 0)
+  const uword new_n_rows = in.aux_uword_a;
+  const uword new_n_cols = in.aux_uword_b;
+  const uword dim        = in.aux_uword_c;
+  
+  const unwrap<T1>   U(in.m);
+  const Mat<eT>& A = U.M;
+  
+  if(&out == &A)
     {
-    out = reshape(in.m, in_n_rows, in_n_cols);
+    op_reshape_old::apply_mat_inplace(out, new_n_rows, new_n_cols, dim);
     }
   else
-  if(in_dim == 1)
     {
-    const unwrap<T1> U(in.m);
+    op_reshape_old::apply_mat_noalias(out, A, new_n_rows, new_n_cols, dim);
+    }
+  }
+
+
+
+template<typename eT>
+arma_cold
+inline
+void
+op_reshape_old::apply_mat_inplace(Mat<eT>& A, const uword new_n_rows, const uword new_n_cols, const uword dim)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(dim == 0)
+    {
+    op_reshape::apply_mat_inplace(A, new_n_rows, new_n_cols);
+    }
+  else
+  if(dim == 1)
+    {
+    Mat<eT> tmp;
     
-    out = reshape(strans(U.M), in_n_rows, in_n_cols);
+    op_strans::apply_mat_noalias(tmp, A);
+    
+    op_reshape::apply_mat_noalias(A, tmp, new_n_rows, new_n_cols);
+    }
+  }
+
+
+
+template<typename eT>
+arma_cold
+inline
+void
+op_reshape_old::apply_mat_noalias(Mat<eT>& out, const Mat<eT>& A, const uword new_n_rows, const uword new_n_cols, const uword dim)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(dim == 0)
+    {
+    op_reshape::apply_mat_noalias(out, A, new_n_rows, new_n_cols);
+    }
+  else
+  if(dim == 1)
+    {
+    Mat<eT> tmp;
+    
+    op_strans::apply_mat_noalias(tmp, A);
+    
+    op_reshape::apply_mat_noalias(out, tmp, new_n_rows, new_n_cols);
     }
   }
 
