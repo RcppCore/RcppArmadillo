@@ -30,7 +30,6 @@ op_rank::apply(uword& out, const Base<typename T1::elem_type,T1>& expr, const ty
   arma_extra_debug_sigprint();
   
   typedef typename T1::elem_type eT;
-  typedef typename T1::pod_type   T;
   
   Mat<eT> A(expr.get_ref());
   
@@ -44,25 +43,27 @@ op_rank::apply(uword& out, const Base<typename T1::elem_type,T1>& expr, const ty
     }
   
   #if defined(ARMA_OPTIMISE_SYMPD)
-    // const bool try_sympd = (auxlib::crippled_lapack(A) == false) && (tol == T(0)) && sympd_helper::guess_sympd_anysize(A);
-    const bool try_sympd = (is_cx<eT>::no) && (auxlib::crippled_lapack(A) == false) && (tol == T(0)) && sympd_helper::guess_sympd_anysize(A);
+    bool do_sym = false;
+    
+    if(auxlib::crippled_lapack(A) == false)
+      {
+      bool is_approx_sym   = false;
+      bool is_approx_sympd = false;
+      
+      sympd_helper::analyse_matrix(is_approx_sym, is_approx_sympd, A);
+      
+      do_sym = (is_cx<eT>::no) ? (is_approx_sym) : (is_approx_sym && is_approx_sympd);
+      }
   #else
-    const bool try_sympd = false;
+    const bool do_sym = false;
   #endif
   
-  if(is_cx<eT>::no && (try_sympd || A.is_symmetric()))
+  if(do_sym)
     {
-    arma_extra_debug_print("op_rank::apply(): detected symmetric matrix");
+    arma_extra_debug_print("op_rank::apply(): symmetric/hermitian optimisation");
     
     return op_rank::apply_sym(out, A, tol);
     }
-  
-  // if(is_cx<eT>::yes && (try_sympd || A.is_hermitian()))
-  //   {
-  //   arma_extra_debug_print("op_rank::apply(): detected hermitian matrix");
-  //   
-  //   return op_rank::apply_sym(out, A, tol);
-  //   }
   
   return op_rank::apply_gen(out, A, tol);
   }

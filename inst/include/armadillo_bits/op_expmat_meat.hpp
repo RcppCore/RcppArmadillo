@@ -86,7 +86,7 @@ op_expmat::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1
       }
     
     #if defined(ARMA_OPTIMISE_SYMPD)
-      const bool try_sympd = sympd_helper::guess_sympd_anysize(A);
+      const bool try_sympd = sympd_helper::guess_sympd(A);
     #else
       const bool try_sympd = false;
     #endif
