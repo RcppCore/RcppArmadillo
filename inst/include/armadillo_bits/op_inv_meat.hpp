@@ -89,7 +89,7 @@ op_inv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::e
   if(is_triu || is_tril)  { return auxlib::inv_tr(out, ((is_triu) ? uword(0) : uword(1))); }
 
   #if defined(ARMA_OPTIMISE_SYMPD)
-    const bool try_sympd = sympd_helper::guess_sympd_anysize(out);
+    const bool try_sympd = sympd_helper::guess_sympd(out);
   #else
     const bool try_sympd = false;
   #endif

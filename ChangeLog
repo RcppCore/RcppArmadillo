@@ -1,3 +1,10 @@
+2021-12-27  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version): RcppArmadillo 0.10.7.99.1
+
+	* inst/include/armadillo: Armadillo 10.8-rc2
+	* inst/include/armadillo_bits/: Idem
+
 2021-12-21  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version): RcppArmadillo 0.10.7.99.0
