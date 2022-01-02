@@ -922,7 +922,7 @@ gmm_full<eT>::init_constants(const bool calc_chol)
   const uword N_dims = means.n_rows;
   const uword N_gaus = means.n_cols;
   
-  const eT tmp = (eT(N_dims)/eT(2)) * std::log(eT(2) * Datum<eT>::pi);
+  const eT tmp = (eT(N_dims)/eT(2)) * std::log(Datum<eT>::tau);
   
   //
   

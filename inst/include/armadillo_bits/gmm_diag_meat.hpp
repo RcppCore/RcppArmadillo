@@ -972,7 +972,7 @@ gmm_diag<eT>::init_constants()
   
   //
   
-  const eT tmp = (eT(N_dims)/eT(2)) * std::log(eT(2) * Datum<eT>::pi);
+  const eT tmp = (eT(N_dims)/eT(2)) * std::log(Datum<eT>::tau);
   
   log_det_etc.set_size(N_gaus);
   
