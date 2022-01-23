@@ -215,6 +215,8 @@ op_powmat_cx::apply_direct(Mat< std::complex<typename T1::pod_type> >& out, cons
   
   if(try_sympd)
     {
+    arma_extra_debug_print("op_powmat_cx: attempting sympd optimisation");
+    
     Col<in_T>  eigval;
     Mat<in_eT> eigvec;
     
@@ -231,7 +233,9 @@ op_powmat_cx::apply_direct(Mat< std::complex<typename T1::pod_type> >& out, cons
       return true;
       }
     
-    // fallthrough
+    arma_extra_debug_print("op_powmat_cx: sympd optimisation failed");
+    
+    // fallthrough if optimisation failed
     }
   
   bool powmat_status = false;
