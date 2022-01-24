@@ -93,6 +93,11 @@ op_find::helper
   
   const eT val = X.aux;
   
+  if((is_same_type<op_type, op_rel_eq>::yes || is_same_type<op_type, op_rel_noteq>::yes) && arma_config::debug && arma_isnan(val))
+    {
+    arma_debug_warn_level(1, "find(): NaN is not equal to anything; suggest to use find_nonfinite() instead");
+    }
+  
   const Proxy<T1> A(X.m);
   
   const uword n_elem = A.get_n_elem();
@@ -221,9 +226,13 @@ op_find::helper
   
   const eT val = X.aux;
   
+  if((is_same_type<op_type, op_rel_eq>::yes || is_same_type<op_type, op_rel_noteq>::yes) && arma_config::debug && arma_isnan(val))
+    {
+    arma_debug_warn_level(1, "find(): NaN is not equal to anything; suggest to use find_nonfinite() instead");
+    }
+  
   const Proxy<T1> A(X.m);
   
-  ea_type     PA     = A.get_ea();
   const uword n_elem = A.get_n_elem();
   
   indices.set_size(n_elem, 1);
@@ -234,6 +243,8 @@ op_find::helper
   
   if(Proxy<T1>::use_at == false)
     {
+    ea_type PA = A.get_ea();
+    
     for(uword i=0; i<n_elem; ++i)
       {
       const eT tmp = PA[i];
@@ -304,34 +315,67 @@ op_find::helper
   
   arma_debug_assert_same_size(A, B, "relational operator");
   
-  ea_type1 PA = A.get_ea();
-  ea_type2 PB = B.get_ea();
-  
-  const uword n_elem = B.get_n_elem();
+  const uword n_elem = A.get_n_elem();
   
   indices.set_size(n_elem, 1);
   
   uword* indices_mem = indices.memptr();
   uword  n_nz        = 0;
   
-  for(uword i=0; i<n_elem; ++i)
+  if((Proxy<T1>::use_at == false) && (Proxy<T2>::use_at == false))
     {
-    const eT1 tmp1 = PA[i];
-    const eT2 tmp2 = PB[i];
+    ea_type1 PA = A.get_ea();
+    ea_type2 PB = B.get_ea();
     
-    bool not_zero;
+    for(uword i=0; i<n_elem; ++i)
+      {
+      const eT1 tmp1 = PA[i];
+      const eT2 tmp2 = PB[i];
+      
+      bool not_zero;
+      
+           if(is_same_type<glue_type, glue_rel_lt    >::yes)  { not_zero = (tmp1 <  tmp2); }
+      else if(is_same_type<glue_type, glue_rel_gt    >::yes)  { not_zero = (tmp1 >  tmp2); }
+      else if(is_same_type<glue_type, glue_rel_lteq  >::yes)  { not_zero = (tmp1 <= tmp2); }
+      else if(is_same_type<glue_type, glue_rel_gteq  >::yes)  { not_zero = (tmp1 >= tmp2); }
+      else if(is_same_type<glue_type, glue_rel_eq    >::yes)  { not_zero = (tmp1 == tmp2); }
+      else if(is_same_type<glue_type, glue_rel_noteq >::yes)  { not_zero = (tmp1 != tmp2); }
+      else if(is_same_type<glue_type, glue_rel_and   >::yes)  { not_zero = (tmp1 && tmp2); }
+      else if(is_same_type<glue_type, glue_rel_or    >::yes)  { not_zero = (tmp1 || tmp2); }
+      else { not_zero = false; }
+      
+      if(not_zero)  { indices_mem[n_nz] = i;  ++n_nz; }
+      }
+    }
+  else
+    {
+    const uword n_rows = A.get_n_rows();
+    const uword n_cols = A.get_n_cols();
     
-         if(is_same_type<glue_type, glue_rel_lt    >::yes)  { not_zero = (tmp1 <  tmp2); }
-    else if(is_same_type<glue_type, glue_rel_gt    >::yes)  { not_zero = (tmp1 >  tmp2); }
-    else if(is_same_type<glue_type, glue_rel_lteq  >::yes)  { not_zero = (tmp1 <= tmp2); }
-    else if(is_same_type<glue_type, glue_rel_gteq  >::yes)  { not_zero = (tmp1 >= tmp2); }
-    else if(is_same_type<glue_type, glue_rel_eq    >::yes)  { not_zero = (tmp1 == tmp2); }
-    else if(is_same_type<glue_type, glue_rel_noteq >::yes)  { not_zero = (tmp1 != tmp2); }
-    else if(is_same_type<glue_type, glue_rel_and   >::yes)  { not_zero = (tmp1 && tmp2); }
-    else if(is_same_type<glue_type, glue_rel_or    >::yes)  { not_zero = (tmp1 || tmp2); }
-    else { not_zero = false; }
+    uword i = 0;
     
-    if(not_zero)  { indices_mem[n_nz] = i;  ++n_nz; }
+    for(uword col=0; col < n_cols; ++col)
+    for(uword row=0; row < n_rows; ++row)
+      {
+      const eT1 tmp1 = A.at(row,col);
+      const eT2 tmp2 = B.at(row,col);
+      
+      bool not_zero;
+      
+           if(is_same_type<glue_type, glue_rel_lt    >::yes)  { not_zero = (tmp1 <  tmp2); }
+      else if(is_same_type<glue_type, glue_rel_gt    >::yes)  { not_zero = (tmp1 >  tmp2); }
+      else if(is_same_type<glue_type, glue_rel_lteq  >::yes)  { not_zero = (tmp1 <= tmp2); }
+      else if(is_same_type<glue_type, glue_rel_gteq  >::yes)  { not_zero = (tmp1 >= tmp2); }
+      else if(is_same_type<glue_type, glue_rel_eq    >::yes)  { not_zero = (tmp1 == tmp2); }
+      else if(is_same_type<glue_type, glue_rel_noteq >::yes)  { not_zero = (tmp1 != tmp2); }
+      else if(is_same_type<glue_type, glue_rel_and   >::yes)  { not_zero = (tmp1 && tmp2); }
+      else if(is_same_type<glue_type, glue_rel_or    >::yes)  { not_zero = (tmp1 || tmp2); }
+      else { not_zero = false; }
+      
+      if(not_zero)  { indices_mem[n_nz] = i;  ++n_nz; }
+      
+      i++;
+      }
     }
   
   return n_nz;
@@ -364,19 +408,18 @@ op_find::helper
   
   arma_debug_assert_same_size(A, B, "relational operator");
   
-  ea_type1 PA = A.get_ea();
-  ea_type2 PB = B.get_ea();
-  
-  const uword n_elem = B.get_n_elem();
+  const uword n_elem = A.get_n_elem();
   
   indices.set_size(n_elem, 1);
   
   uword* indices_mem = indices.memptr();
   uword  n_nz        = 0;
   
-  
-  if(Proxy<T1>::use_at == false)
+  if((Proxy<T1>::use_at == false) && (Proxy<T2>::use_at == false))
     {
+    ea_type1 PA = A.get_ea();
+    ea_type2 PB = B.get_ea();
+    
     for(uword i=0; i<n_elem; ++i)
       {
       bool not_zero;
@@ -408,7 +451,7 @@ op_find::helper
       
       i++;
       }
-   }
+    }
   
   return n_nz;
   }

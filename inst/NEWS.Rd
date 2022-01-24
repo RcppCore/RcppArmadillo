@@ -3,6 +3,17 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.10.8.1.0 (2022-01-23)}{
+  \itemize{
+    \item Upgraded to Armadillo release 10.8.1 (Realm Raider)
+    \itemize{
+      \item fix interaction between OpenBLAS and LAPACK
+      \item emit warning if \code{find()} is incorrectly used to locate
+      NaN elements
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.10.8.0.0 (2022-01-02)}{
   \itemize{
     \item Upgraded to Armadillo release 10.8 (Realm Raider)
