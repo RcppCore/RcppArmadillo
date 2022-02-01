@@ -96,11 +96,15 @@ op_cond::rcond(const Base<typename T1::elem_type, T1>& X)
   
   if(try_sympd)
     {
+    arma_extra_debug_print("op_cond::rcond(): attempting sympd optimisation");
+    
     bool calc_ok = false;
     
     const T out_val = auxlib::rcond_sympd(A, calc_ok);
     
     if(calc_ok)  { return out_val; }
+    
+    arma_extra_debug_print("op_cond::rcond(): sympd optimisation failed");
     
     // auxlib::rcond_sympd() may have failed because A isn't really sympd
     // restore A, as auxlib::rcond_sympd() may have destroyed it

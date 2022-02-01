@@ -215,6 +215,8 @@ inline
 bool
 guess_sympd(const Mat<eT>& A)
   {
+  arma_extra_debug_sigprint();
+  
   // analyse matrices with size >= 4x4
   
   if((A.n_rows != A.n_cols) || (A.n_rows < uword(4)))  { return false; }
@@ -229,6 +231,8 @@ inline
 bool
 guess_sympd(const Mat<eT>& A, const uword min_n_rows)
   {
+  arma_extra_debug_sigprint();
+  
   if((A.n_rows != A.n_cols) || (A.n_rows < min_n_rows))  { return false; }
   
   return guess_sympd_worker(A);
