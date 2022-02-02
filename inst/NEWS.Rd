@@ -3,6 +3,15 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.10.8.2.0 (2022-02-01)}{
+  \itemize{
+    \item Upgraded to Armadillo release 10.8.2 (Realm Raider)
+    \itemize{
+      \item fix potential speed regression in \code{pinv()} and \code{rank()}
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.10.8.1.0 (2022-01-23)}{
   \itemize{
     \item Upgraded to Armadillo release 10.8.1 (Realm Raider)

@@ -72,11 +72,15 @@ op_inv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::e
   
   if((out.n_rows <= 4) && is_cx<eT>::no)
     {
+    arma_extra_debug_print("op_inv: attempting tinymatrix optimisation");
+    
     Mat<eT> tmp(out.n_rows, out.n_rows, arma_nozeros_indicator());
     
     const bool status = op_inv::apply_tiny_noalias(tmp, out);
     
     if(status)  { arrayops::copy(out.memptr(), tmp.memptr(), tmp.n_elem); return true; }
+    
+    arma_extra_debug_print("op_inv: tinymatrix optimisation failed");
     
     // fallthrough if optimisation failed
     }
@@ -320,11 +324,15 @@ op_inv_sympd::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename
   
   if((out.n_rows <= 4) && is_cx<eT>::no)
     {
+    arma_extra_debug_print("op_inv_sympd: attempting tinymatrix optimisation");
+    
     Mat<eT> tmp(out.n_rows, out.n_rows, arma_nozeros_indicator());
     
     const bool status = op_inv::apply_tiny_noalias(tmp, out);
     
     if(status)  { arrayops::copy(out.memptr(), tmp.memptr(), tmp.n_elem); return true; }
+    
+    arma_extra_debug_print("op_inv_sympd: tinymatrix optimisation failed");
     
     // fallthrough if optimisation failed
     }

@@ -58,7 +58,7 @@ spglue_max::apply_noalias(SpMat<eT>& out, const SpProxy<T1>& pa, const SpProxy<T
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "element-wise max");
+  arma_debug_assert_same_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "element-wise max()");
   
   const uword max_n_nonzero = pa.get_n_nonzero() + pb.get_n_nonzero();
   
@@ -184,7 +184,7 @@ spglue_max::dense_sparse_max(Mat<eT>& out, const Base<eT,T1>& X, const SpBase<eT
   const uword n_rows = pa.get_n_rows();
   const uword n_cols = pa.get_n_cols();
   
-  arma_debug_assert_same_size( n_rows, n_cols, pb.get_n_rows(), pb.get_n_cols(), "element-wise maximum" );
+  arma_debug_assert_same_size( n_rows, n_cols, pb.get_n_rows(), pb.get_n_cols(), "element-wise max()" );
   
   out.set_size(n_rows, n_cols);
   
