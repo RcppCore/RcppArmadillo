@@ -1,6 +1,6 @@
 // fields.cpp: RcppArmadillo unit test code for field types
 //
-// Copyright (C) 2021         Dirk Eddelbuettel
+// Copyright (C) 2021 - 2022  Dirk Eddelbuettel
 //
 // This file is part of RcppArmadillo.
 //
@@ -19,6 +19,15 @@
 
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
+
+// [[Rcpp::export]]
+bool has_old_field_behavior() {
+#if defined(RCPP_ARMADILLO_OLD_Field_BEHAVIOR)
+    return true;
+#else
+    return false;
+#endif
+}
 
 // [[Rcpp::export]]
 arma::field<arma::mat> field1m22() {

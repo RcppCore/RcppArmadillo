@@ -37,9 +37,10 @@ expect_equal( res[[2]][[2]], matrix(0, ncol = 5, nrow=1))#, msg = "zeros<fmat>(5
 expect_equal( res[[3]][[1]], matrix(0, ncol = 1, nrow=5))#, msg = "zeros<mat>(1,5)" )
 expect_equal( res[[3]][[2]], matrix(0, ncol = 1, nrow=5))#, msg = "zeros<mat>(1,5)" )
 
-expect_equal( res[[4]][[1]], array(0:3, dim=c(2,2,1)))#, msg = "field<int>" )
-expect_equal( res[[4]][[2]], array(letters[1:4], dim=c(2,2,1)))#, msg = "field<std::string>" )
-
+if (!has_old_field_behavior()) {
+    expect_equal( res[[4]][[1]], array(0:3, dim=c(2,2,1)))#, msg = "field<int>" )
+    expect_equal( res[[4]][[2]], array(letters[1:4], dim=c(2,2,1)))#, msg = "field<std::string>" )
+}
 
 # test.wrap.Glue <- function(){
 fx <- wrapGlue_

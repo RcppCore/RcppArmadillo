@@ -3,7 +3,7 @@
 // armadillo.cpp: RcppArmadillo unit test code
 //
 // Copyright (C) 2010 - 2019  Dirk Eddelbuettel, Romain Francois and Douglas Bates
-// Copyright (C) 2019         Dirk Eddelbuettel
+// Copyright (C) 2019 - 2022  Dirk Eddelbuettel
 //
 // This file is part of RcppArmadillo.
 //
@@ -24,6 +24,15 @@
 #include <RcppArmadillo.h>
 
 using namespace Rcpp;
+
+// [[Rcpp::export]]
+bool has_old_field_behavior() {
+#if defined(RCPP_ARMADILLO_OLD_Field_BEHAVIOR)
+    return true;
+#else
+    return false;
+#endif
+}
 
 // [[Rcpp::export]]
 List wrap_() {
