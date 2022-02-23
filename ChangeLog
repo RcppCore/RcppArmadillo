@@ -1,5 +1,7 @@
 2022-02-23  Dirk Eddelbuettel  <edd@debian.org>
 
+	* DESCRIPTION (Version, Date): Roll minor version
+
 	* inst/include/RcppArmadilloWrap.h (wrap): Deprecation transition:
 	until May 1, only correct Fields if RCPP_ARMADILLO_FIX_Field defined
 
@@ -12,7 +14,7 @@
 2022-02-14  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/RcppArmadilloWrap.h (wrap): Unless
-	RCPP_ARMADILLO_OLD_Field_BEHAVIOR is defines use correction
+	RCPP_ARMADILLO_OLD_FielBEHAVIOR is defines use correction
 
 2022-02-01  Dirk Eddelbuettel  <edd@debian.org>
 
