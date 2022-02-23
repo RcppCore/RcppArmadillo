@@ -27,7 +27,8 @@ using namespace Rcpp;
 
 // [[Rcpp::export]]
 bool has_old_field_behavior() {
-#if defined(RCPP_ARMADILLO_OLD_Field_BEHAVIOR)
+//#if defined(RCPP_ARMADILLO_OLD_Field_BEHAVIOR)
+#if !defined(RCPP_ARMADILLO_FIX_Field)
     return true;
 #else
     return false;

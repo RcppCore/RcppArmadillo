@@ -55,8 +55,8 @@ if (!has_old_field_behavior()) expect_equal(dim(f22m2233), c(2,2,1))
 expect_equal(dim(f22m2233[[2]]), c(3,3))
 expect_equal(dim(f22m2233[[3]]), c(2,2))
 
-f222m223344 <- field222m223344()
 if (!has_old_field_behavior()) {
+    f222m223344 <- field222m223344()
     expect_true(inherits(f222m223344, "array"))
     expect_true(inherits(f222m223344[[1]], "matrix"))
     expect_equal(dim(f222m223344), c(2,2,2))
