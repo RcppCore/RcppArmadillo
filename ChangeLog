@@ -1,7 +1,18 @@
+2022-02-23  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/RcppArmadilloWrap.h (wrap): Deprecation transition:
+	until May 1, only correct Fields if RCPP_ARMADILLO_FIX_Field defined
+
+	* inst/tinytest/cpp/armadillo.cpp (has_old_field_behavior): Adjust
+	* inst/tinytest/cpp/fields.cpp (has_old_field_behavior): Idem
+	* inst/tinytest/test_fields.R: Idem
+
+	* tests/tinytest.R: Simplified reflecting long-updated tinytest
+
 2022-02-14  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/RcppArmadilloWrap.h (wrap): Unless
-	RCPP_ARMADILLO_OLD_Field_BEHAVIOR is define use correction
+	RCPP_ARMADILLO_OLD_Field_BEHAVIOR is defines use correction
 
 2022-02-01  Dirk Eddelbuettel  <edd@debian.org>
 
