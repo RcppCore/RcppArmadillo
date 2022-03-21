@@ -451,12 +451,6 @@ op_cdot::direct_cdot(const uword n_elem, const eT* const A, const eT* const B)
       
       return result[0];
       }
-    #elif defined(ARMA_USE_ATLAS)
-      {
-      // TODO: use dedicated atlas functions cblas_cdotc_sub() and cblas_zdotc_sub() and retune threshold
-
-      return op_cdot::direct_cdot_arma(n_elem, A, B);
-      }
     #else
       {
       return op_cdot::direct_cdot_arma(n_elem, A, B);

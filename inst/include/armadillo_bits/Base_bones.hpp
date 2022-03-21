@@ -24,7 +24,7 @@
 template<typename elem_type, typename derived>
 struct Base_extra_yes
   {
-  inline arma_warn_unused const Op<derived,op_inv> i() const;   //!< matrix inverse
+  inline arma_warn_unused const Op<derived,op_inv_gen_default> i() const;   //!< matrix inverse
   
   inline arma_warn_unused bool is_sympd() const;
   inline arma_warn_unused bool is_sympd(typename get_pod_type<elem_type>::result tol) const;

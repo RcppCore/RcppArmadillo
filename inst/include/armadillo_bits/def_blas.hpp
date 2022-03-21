@@ -17,7 +17,7 @@
 
 
 
-#ifdef ARMA_USE_BLAS
+#if defined(ARMA_USE_BLAS)
 
 #if defined(dgemm) || defined(DGEMM)
   #pragma message ("WARNING: detected possible interference with definitions of BLAS functions;")

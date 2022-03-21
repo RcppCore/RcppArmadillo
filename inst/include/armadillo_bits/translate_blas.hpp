@@ -17,7 +17,7 @@
 
 
 
-#ifdef ARMA_USE_BLAS
+#if defined(ARMA_USE_BLAS)
 
 
 //! \namespace blas namespace for BLAS functions

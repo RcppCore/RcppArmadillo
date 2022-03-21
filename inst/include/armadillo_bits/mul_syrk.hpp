@@ -286,7 +286,7 @@ class syrk
     
     if(A.is_vec())
       {
-      // work around poor handling of vectors by syrk() in ATLAS 3.8.4 and standard BLAS
+      // work around poor handling of vectors by syrk() in standard BLAS
       
       syrk_vec<do_trans_A, use_alpha, use_beta>::apply(C,A,alpha,beta);
       
@@ -318,9 +318,9 @@ class syrk
         
         atlas::cblas_syrk<eT>
           (
-          atlas::CblasColMajor,
-          atlas::CblasUpper,
-          (do_trans_A) ? atlas::CblasTrans : atlas::CblasNoTrans,
+          atlas_CblasColMajor,
+          atlas_CblasUpper,
+          (do_trans_A) ? atlas_CblasTrans : atlas_CblasNoTrans,
           C.n_cols,
           (do_trans_A) ? A.n_rows : A.n_cols,
           (use_alpha) ? alpha : eT(1),

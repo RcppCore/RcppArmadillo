@@ -482,6 +482,8 @@ sp_auxlib::eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
     podarray<blas_int> select(ncv); // Logical array of dimension NCV.
     blas_int ldz = n;
     
+    select.zeros();
+    
     // seupd() will output directly into the eigval and eigvec objects.
     eigval.zeros(n_eigvals);
     eigvec.zeros(n, n_eigvals);
@@ -843,7 +845,7 @@ sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
       }
     
     if(info != 0)  { return false; }
-
+    
     // The process has converged, and now we need to recover the actual eigenvectors using neupd().
     blas_int rvec = 1; // .TRUE
     blas_int nev  = blas_int(n_eigvals);
@@ -858,9 +860,11 @@ sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
     blas_int ldz = n;
     podarray<T>        workev(3 * ncv);
     
+    select.zeros();
     dr.zeros();
     di.zeros();
     z.zeros();
+    workev.zeros();
     
     arpack::neupd(&rvec, &howmny, select.memptr(), dr.memptr(), di.memptr(), z.memptr(), &ldz, (T*) &sigmar, (T*) &sigmai, workev.memptr(), &bmat, &n, which, &nev, &tol, resid.memptr(), &ncv, v.memptr(), &ldv, iparam.memptr(), ipntr.memptr(), workd.memptr(), workl.memptr(), &lworkl, rwork.memptr(), &info);
     
@@ -1089,6 +1093,11 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     podarray<std::complex<T>> z(n * nev);  // complex N by NEV array if HOWMNY = 'A'
     blas_int ldz = n;
     podarray<std::complex<T>> workev(2 * ncv);
+    
+    select.zeros();
+    d.zeros();
+    z.zeros();
+    workev.zeros();
     
     // Prepare the outputs; neupd() will write directly to them.
     eigval.zeros(n_eigvals);
@@ -1343,13 +1352,13 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     
     superlu_stat_wrangler stat;
     
-    char equed[8];       // extra characters for paranoia
-    T    rpg   = T(0);
-    T    rcond = T(0);
-    int  info  = int(0); // Return code.
+    char equed[8] = {};     // extra characters for paranoia
+    T    rpg      = T(0);
+    T    rcond    = T(0);
+    int  info     = int(0); // Return code.
     
-    char  work[8];
-    int  lwork = int(0);  // 0 means superlu will allocate memory
+    char  work[8] = {};
+    int  lwork    = int(0);  // 0 means superlu will allocate memory
     
     arma_extra_debug_print("superlu::gssvx()");
     superlu::gssvx<eT>(&options, a.get_ptr(), perm_c.get_ptr(), perm_r.get_ptr(), etree.get_ptr(), equed, R.get_ptr(), C.get_ptr(), l.get_ptr(), u.get_ptr(), &work[0], lwork, b.get_ptr(), x.get_ptr(), &rpg, &rcond, ferr.get_ptr(), berr.get_ptr(), &glu, &mu, stat.get_ptr(), &info);
@@ -1952,7 +1961,7 @@ sp_auxlib::run_aupd_plain
     n = X.n_rows; // The size of the matrix (should already be set outside).
     blas_int nev = n_eigvals;
     
-    resid.set_size(n);
+    resid.zeros(n);
     
     // Two contraints on NCV: (NCV > NEV) for sym problems or
     // (NCV > NEV + 2) for gen problems and (NCV <= N)
@@ -1965,8 +1974,8 @@ sp_auxlib::run_aupd_plain
     if(ncv < (nev + (sym ? 1 : 3))) { ncv = (nev + (sym ? 1 : 3)); }
     if(ncv > n                    ) { ncv = n;                     }
     
-    v.set_size(n * ncv); // Array N by NCV (output).
-    rwork.set_size(ncv); // Work array of size NCV for complex calls.
+    v.zeros(n * ncv); // Array N by NCV (output).
+    rwork.zeros(ncv); // Work array of size NCV for complex calls.
     ldv = n; // "Leading dimension of V exactly as declared in the calling program."
     
     // IPARAM: integer array of length 11.
@@ -1976,16 +1985,16 @@ sp_auxlib::run_aupd_plain
     iparam(6) = 1; // Mode 1: A * x = lambda * x.
     
     // IPNTR: integer array of length 14 (output).
-    ipntr.set_size(14);
+    ipntr.zeros(14);
     
     // Real work array used in the basic Arnoldi iteration for reverse communication.
-    workd.set_size(3 * n);
+    workd.zeros(3 * n);
     
     // lworkl must be at least 3 * NCV^2 + 6 * NCV.
     lworkl = 3 * (ncv * ncv) + 6 * ncv;
     
     // Real work array of length lworkl.
-    workl.set_size(lworkl);
+    workl.zeros(lworkl);
     
     info = 0; // Set to 0 initially to use random initial vector.
     
@@ -2124,7 +2133,7 @@ sp_auxlib::run_aupd_shiftinvert
     n = X.n_rows; // The size of the matrix (should already be set outside).
     blas_int nev = n_eigvals;
     
-    resid.set_size(n);
+    resid.zeros(n);
     
     // Two contraints on NCV: (NCV > NEV) for sym problems or
     // (NCV > NEV + 2) for gen problems and (NCV <= N)
@@ -2137,8 +2146,8 @@ sp_auxlib::run_aupd_shiftinvert
     if(ncv < (nev + (sym ? 1 : 3))) { ncv = (nev + (sym ? 1 : 3)); }
     if(ncv > n                    ) { ncv = n;                     }
     
-    v.set_size(n * ncv); // Array N by NCV (output).
-    rwork.set_size(ncv); // Work array of size NCV for complex calls.
+    v.zeros(n * ncv); // Array N by NCV (output).
+    rwork.zeros(ncv); // Work array of size NCV for complex calls.
     ldv = n; // "Leading dimension of V exactly as declared in the calling program."
     
     // IPARAM: integer array of length 11.
@@ -2151,16 +2160,16 @@ sp_auxlib::run_aupd_shiftinvert
     iparam(6) = 3; // Mode 3:  A * x = lambda * M * x, M symmetric semi-definite. OP = inv[A - sigma*M]*M  (A complex)  or  Real_Part{ inv[A - sigma*M]*M }  (A real)  and  B = M.
     
     // IPNTR: integer array of length 14 (output).
-    ipntr.set_size(14);
+    ipntr.zeros(14);
     
     // Real work array used in the basic Arnoldi iteration for reverse communication.
-    workd.set_size(3 * n);
+    workd.zeros(3 * n);
     
     // lworkl must be at least 3 * NCV^2 + 6 * NCV.
     lworkl = 3 * (ncv * ncv) + 6 * ncv;
     
     // Real work array of length lworkl.
-    workl.set_size(lworkl);
+    workl.zeros(lworkl);
     
     info = 0; // Set to 0 initially to use random initial vector.
     

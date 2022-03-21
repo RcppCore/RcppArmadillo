@@ -104,7 +104,7 @@ spsolve_helper
       if(opts.equilibrate == true                  )  { flags |= solve_opts::flag_equilibrate; }
       if(opts.allow_ugly  == true                  )  { flags |= solve_opts::flag_allow_ugly;  }
       
-      status = glue_solve_gen::apply(out, AA, B.get_ref(), flags);
+      status = glue_solve_gen_full::apply(out, AA, B.get_ref(), flags);
       }
     }
   

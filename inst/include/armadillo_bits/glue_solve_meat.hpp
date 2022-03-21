@@ -22,17 +22,17 @@
 
 
 //
-// glue_solve_gen
+// glue_solve_gen_default
 
 
 template<typename T1, typename T2>
 inline
 void
-glue_solve_gen::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_solve_gen>& X)
+glue_solve_gen_default::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_solve_gen_default>& X)
   {
   arma_extra_debug_sigprint();
   
-  const bool status = glue_solve_gen::apply( out, X.A, X.B, X.aux_uword );
+  const bool status = glue_solve_gen_default::apply(out, X.A, X.B);
   
   if(status == false)
     {
@@ -46,24 +46,61 @@ glue_solve_gen::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_so
 template<typename eT, typename T1, typename T2>
 inline
 bool
-glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>& B_expr, const uword flags)
+glue_solve_gen_default::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>& B_expr)
+  {
+  arma_extra_debug_sigprint();
+  
+  return glue_solve_gen_full::apply<eT,T1,T2,false>( out, A_expr, B_expr, uword(0));
+  }
+
+
+
+//
+// glue_solve_gen_full
+
+
+template<typename T1, typename T2>
+inline
+void
+glue_solve_gen_full::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_solve_gen_full>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool status = glue_solve_gen_full::apply( out, X.A, X.B, X.aux_uword );
+  
+  if(status == false)
+    {
+    out.soft_reset();
+    arma_stop_runtime_error("solve(): solution not found");
+    }
+  }
+
+
+
+template<typename eT, typename T1, typename T2, const bool has_user_flags>
+inline
+bool
+glue_solve_gen_full::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>& B_expr, const uword flags)
   {
   arma_extra_debug_sigprint();
   
   typedef typename get_pod_type<eT>::result T;
   
-  const bool fast         = bool(flags & solve_opts::flag_fast        );
-  const bool equilibrate  = bool(flags & solve_opts::flag_equilibrate );
-  const bool no_approx    = bool(flags & solve_opts::flag_no_approx   );
-  const bool no_band      = bool(flags & solve_opts::flag_no_band     );
-  const bool no_sympd     = bool(flags & solve_opts::flag_no_sympd    );
-  const bool allow_ugly   = bool(flags & solve_opts::flag_allow_ugly  );
-  const bool likely_sympd = bool(flags & solve_opts::flag_likely_sympd);
-  const bool refine       = bool(flags & solve_opts::flag_refine      );
-  const bool no_trimat    = bool(flags & solve_opts::flag_no_trimat   );
-  const bool force_approx = bool(flags & solve_opts::flag_force_approx);
+  if(has_user_flags == true )  { arma_extra_debug_print("glue_solve_gen_full::apply(): has_user_flags = true" ); }
+  if(has_user_flags == false)  { arma_extra_debug_print("glue_solve_gen_full::apply(): has_user_flags = false"); }
   
-  arma_extra_debug_print("glue_solve_gen::apply(): enabled flags:");
+  const bool fast         = has_user_flags && bool(flags & solve_opts::flag_fast        );
+  const bool equilibrate  = has_user_flags && bool(flags & solve_opts::flag_equilibrate );
+  const bool no_approx    = has_user_flags && bool(flags & solve_opts::flag_no_approx   );
+  const bool no_band      = has_user_flags && bool(flags & solve_opts::flag_no_band     );
+  const bool no_sympd     = has_user_flags && bool(flags & solve_opts::flag_no_sympd    );
+  const bool allow_ugly   = has_user_flags && bool(flags & solve_opts::flag_allow_ugly  );
+  const bool likely_sympd = has_user_flags && bool(flags & solve_opts::flag_likely_sympd);
+  const bool refine       = has_user_flags && bool(flags & solve_opts::flag_refine      );
+  const bool no_trimat    = has_user_flags && bool(flags & solve_opts::flag_no_trimat   );
+  const bool force_approx = has_user_flags && bool(flags & solve_opts::flag_force_approx);
+  
+  arma_extra_debug_print("glue_solve_gen_full::apply(): enabled flags:");
   
   if(fast        )  { arma_extra_debug_print("fast");         }
   if(equilibrate )  { arma_extra_debug_print("equilibrate");  }
@@ -84,7 +121,7 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
   
   if(force_approx)
     {
-    arma_extra_debug_print("glue_solve_gen::apply(): forced approximate solution");
+    arma_extra_debug_print("glue_solve_gen_full::apply(): forced approximate solution");
     
     arma_debug_check( no_approx, "solve(): options 'no_approx' and 'force_approx' are mutually exclusive" );
     
@@ -101,43 +138,35 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
   
   if(A.n_rows == A.n_cols)
     {
-    arma_extra_debug_print("glue_solve_gen::apply(): detected square system");
+    arma_extra_debug_print("glue_solve_gen_full::apply(): detected square system");
     
     uword KL = 0;
     uword KU = 0;
     
-    #if defined(ARMA_OPTIMISE_BAND)
-      const bool is_band  = (no_band || auxlib::crippled_lapack(A)) ? false : band_helper::is_band(KL, KU, A, uword(32));
-    #else
-      const bool is_band  = false;
-    #endif
+    const bool is_band  = arma_config::optimise_band && ((no_band || auxlib::crippled_lapack(A)) ? false : band_helper::is_band(KL, KU, A, uword(32)));
     
     const bool is_triu = (no_trimat || refine || equilibrate || likely_sympd || is_band           ) ? false : trimat_helper::is_triu(A);
     const bool is_tril = (no_trimat || refine || equilibrate || likely_sympd || is_band || is_triu) ? false : trimat_helper::is_tril(A);
     
-    #if defined(ARMA_OPTIMISE_SYMPD)
-      const bool try_sympd = (no_sympd || auxlib::crippled_lapack(A) || is_band || is_triu || is_tril) ? false : (likely_sympd ? true : sympd_helper::guess_sympd(A, uword(16)));
-    #else
-      const bool try_sympd = false;
-    #endif
+    const bool try_sympd = arma_config::optimise_sympd && ((no_sympd || auxlib::crippled_lapack(A) || is_band || is_triu || is_tril) ? false : (likely_sympd ? true : sympd_helper::guess_sympd(A, uword(16))));
     
     if(fast)
       {
       // fast mode: solvers without refinement and without rcond estimate
       
-      arma_extra_debug_print("glue_solve_gen::apply(): fast mode");
+      arma_extra_debug_print("glue_solve_gen_full::apply(): fast mode");
       
       if(is_band)
         {
         if( (KL == 1) && (KU == 1) )
           {
-          arma_extra_debug_print("glue_solve_gen::apply(): fast + tridiagonal");
+          arma_extra_debug_print("glue_solve_gen_full::apply(): fast + tridiagonal");
           
           status = auxlib::solve_tridiag_fast(out, A, B_expr.get_ref());
           }
         else
           {
-          arma_extra_debug_print("glue_solve_gen::apply(): fast + band");
+          arma_extra_debug_print("glue_solve_gen_full::apply(): fast + band");
           
           status = auxlib::solve_band_fast(out, A, KL, KU, B_expr.get_ref());
           }
@@ -145,8 +174,8 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
       else
       if(is_triu || is_tril)
         {
-        if(is_triu)  { arma_extra_debug_print("glue_solve_gen::apply(): fast + upper triangular matrix"); }
-        if(is_tril)  { arma_extra_debug_print("glue_solve_gen::apply(): fast + lower triangular matrix"); }
+        if(is_triu)  { arma_extra_debug_print("glue_solve_gen_full::apply(): fast + upper triangular matrix"); }
+        if(is_tril)  { arma_extra_debug_print("glue_solve_gen_full::apply(): fast + lower triangular matrix"); }
         
         const uword layout = (is_triu) ? uword(0) : uword(1);
         
@@ -155,22 +184,23 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
       else
       if(try_sympd)
         {
-        arma_extra_debug_print("glue_solve_gen::apply(): fast + try_sympd");
+        arma_extra_debug_print("glue_solve_gen_full::apply(): fast + try_sympd");
         
         status = auxlib::solve_sympd_fast(out, A, B_expr.get_ref());  // A is overwritten
         
         if(status == false)
           {
-          arma_extra_debug_print("glue_solve_gen::apply(): auxlib::solve_sympd_fast() failed; retrying");
-          
           // auxlib::solve_sympd_fast() may have failed because A isn't really sympd
+          
+          arma_extra_debug_print("glue_solve_gen_full::apply(): auxlib::solve_sympd_fast() failed; retrying");
+          
           A = A_expr.get_ref();
           status = auxlib::solve_square_fast(out, A, B_expr.get_ref());  // A is overwritten
           }
         }
       else
         {
-        arma_extra_debug_print("glue_solve_gen::apply(): fast + dense");
+        arma_extra_debug_print("glue_solve_gen_full::apply(): fast + dense");
         
         status = auxlib::solve_square_fast(out, A, B_expr.get_ref());  // A is overwritten
         }
@@ -180,33 +210,35 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
       {
       // refine mode: solvers with refinement and with rcond estimate
       
-      arma_extra_debug_print("glue_solve_gen::apply(): refine mode");
+      arma_extra_debug_print("glue_solve_gen_full::apply(): refine mode");
       
       if(is_band)
         {
-        arma_extra_debug_print("glue_solve_gen::apply(): refine + band");
+        arma_extra_debug_print("glue_solve_gen_full::apply(): refine + band");
         
         status = auxlib::solve_band_refine(out, rcond, A, KL, KU, B_expr, equilibrate, allow_ugly);
         }
       else
       if(try_sympd)
         {
-        arma_extra_debug_print("glue_solve_gen::apply(): refine + try_sympd");
+        arma_extra_debug_print("glue_solve_gen_full::apply(): refine + try_sympd");
         
         status = auxlib::solve_sympd_refine(out, rcond, A, B_expr.get_ref(), equilibrate, allow_ugly);  // A is overwritten
         
-        if(status == false)
+        if( (status == false) && (rcond == T(0)) )
           {
-          arma_extra_debug_print("glue_solve_gen::apply(): auxlib::solve_sympd_refine() failed; retrying");
+          // auxlib::solve_sympd_refine() may have failed because A isn't really sympd;
+          // in that case rcond is set to zero
           
-          // auxlib::solve_sympd_refine() may have failed because A isn't really sympd
+          arma_extra_debug_print("glue_solve_gen_full::apply(): auxlib::solve_sympd_refine() failed; retrying");
+          
           A = A_expr.get_ref();
           status = auxlib::solve_square_refine(out, rcond, A, B_expr.get_ref(), equilibrate, allow_ugly);  // A is overwritten
           }
         }
       else
         {
-        arma_extra_debug_print("glue_solve_gen::apply(): refine + dense");
+        arma_extra_debug_print("glue_solve_gen_full::apply(): refine + dense");
         
         status = auxlib::solve_square_refine(out, rcond, A, B_expr, equilibrate, allow_ugly);  // A is overwritten
         }
@@ -215,19 +247,19 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
       {
       // default mode: solvers without refinement but with rcond estimate
       
-      arma_extra_debug_print("glue_solve_gen::apply(): default mode");
+      arma_extra_debug_print("glue_solve_gen_full::apply(): default mode");
       
       if(is_band)
         {
-        arma_extra_debug_print("glue_solve_gen::apply(): rcond + band");
+        arma_extra_debug_print("glue_solve_gen_full::apply(): rcond + band");
         
         status = auxlib::solve_band_rcond(out, rcond, A, KL, KU, B_expr.get_ref(), allow_ugly);
         }
       else
       if(is_triu || is_tril)
         {
-        if(is_triu)  { arma_extra_debug_print("glue_solve_gen::apply(): rcond + upper triangular matrix"); }
-        if(is_tril)  { arma_extra_debug_print("glue_solve_gen::apply(): rcond + lower triangular matrix"); }
+        if(is_triu)  { arma_extra_debug_print("glue_solve_gen_full::apply(): rcond + upper triangular matrix"); }
+        if(is_tril)  { arma_extra_debug_print("glue_solve_gen_full::apply(): rcond + lower triangular matrix"); }
         
         const uword layout = (is_triu) ? uword(0) : uword(1);
         
@@ -236,13 +268,14 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
       else
       if(try_sympd)
         {
-        status = auxlib::solve_sympd_rcond(out, rcond, A, B_expr.get_ref(), allow_ugly);  // A is overwritten
+        bool sympd_state = false;
         
-        if(status == false)
+        status = auxlib::solve_sympd_rcond(out, sympd_state, rcond, A, B_expr.get_ref(), allow_ugly);  // A is overwritten
+        
+        if( (status == false) && (sympd_state == false) )
           {
-          arma_extra_debug_print("glue_solve_gen::apply(): auxlib::solve_sympd_rcond() failed; retrying");
+          arma_extra_debug_print("glue_solve_gen_full::apply(): auxlib::solve_sympd_rcond() failed; retrying");
           
-          // auxlib::solve_sympd_rcond() may have failed because A isn't really sympd
           A = A_expr.get_ref();
           status = auxlib::solve_square_rcond(out, rcond, A, B_expr.get_ref(), allow_ugly);  // A is overwritten
           }
@@ -263,7 +296,7 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
     
     if( (status == false) && (no_approx == false) )
       {
-      arma_extra_debug_print("glue_solve_gen::apply(): solving rank deficient system");
+      arma_extra_debug_print("glue_solve_gen_full::apply(): solving rank deficient system");
       
       if(rcond > T(0))
         {
@@ -283,7 +316,7 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
     }
   else
     {
-    arma_extra_debug_print("glue_solve_gen::apply(): detected non-square system");
+    arma_extra_debug_print("glue_solve_gen_full::apply(): detected non-square system");
     
     if(equilibrate)   { arma_debug_warn_level(2,  "solve(): option 'equilibrate' ignored for non-square matrix"  ); }
     if(refine)        { arma_debug_warn_level(2,  "solve(): option 'refine' ignored for non-square matrix"       ); }
@@ -305,7 +338,7 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
     
     if( (status == false) && (no_approx == false) )
       {
-      arma_extra_debug_print("glue_solve_gen::apply(): solving rank deficient system");
+      arma_extra_debug_print("glue_solve_gen_full::apply(): solving rank deficient system");
       
       if(rcond > T(0))
         {
@@ -329,7 +362,7 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
 
 
 //
-// glue_solve_tri
+// glue_solve_tri_default
 
 
 template<typename T1, typename T2>
@@ -392,7 +425,7 @@ glue_solve_tri_default::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, co
   
   if(status == false)
     {
-    arma_extra_debug_print("glue_solve_tri::apply(): solving rank deficient system");
+    arma_extra_debug_print("glue_solve_tri_default::apply(): solving rank deficient system");
     
     if(rcond > T(0))
       {
@@ -416,14 +449,18 @@ glue_solve_tri_default::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, co
 
 
 
+//
+// glue_solve_tri_full
+
+
 template<typename T1, typename T2>
 inline
 void
-glue_solve_tri::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_solve_tri>& X)
+glue_solve_tri_full::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_solve_tri_full>& X)
   {
   arma_extra_debug_sigprint();
   
-  const bool status = glue_solve_tri::apply( out, X.A, X.B, X.aux_uword );
+  const bool status = glue_solve_tri_full::apply( out, X.A, X.B, X.aux_uword );
   
   if(status == false)
     {
@@ -437,7 +474,7 @@ glue_solve_tri::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_so
 template<typename eT, typename T1, typename T2>
 inline
 bool
-glue_solve_tri::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const Base<eT,T2>& B_expr, const uword flags)
+glue_solve_tri_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const Base<eT,T2>& B_expr, const uword flags)
   {
   arma_extra_debug_sigprint();
   
@@ -454,7 +491,7 @@ glue_solve_tri::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const Base
   const bool no_trimat    = bool(flags & solve_opts::flag_no_trimat   );
   const bool force_approx = bool(flags & solve_opts::flag_force_approx);
   
-  arma_extra_debug_print("glue_solve_tri::apply(): enabled flags:");
+  arma_extra_debug_print("glue_solve_tri_full::apply(): enabled flags:");
   
   if(fast        )  { arma_extra_debug_print("fast");         }
   if(equilibrate )  { arma_extra_debug_print("equilibrate");  }
@@ -471,7 +508,7 @@ glue_solve_tri::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const Base
     {
     const uword mask = ~(solve_opts::flag_triu | solve_opts::flag_tril);
     
-    return glue_solve_gen::apply(actual_out, ((triu) ? trimatu(A_expr.get_ref()) : trimatl(A_expr.get_ref())), B_expr, (flags & mask));
+    return glue_solve_gen_full::apply(actual_out, ((triu) ? trimatu(A_expr.get_ref()) : trimatl(A_expr.get_ref())), B_expr, (flags & mask));
     }
   
   if(likely_sympd)  { arma_debug_warn_level(2, "solve(): option 'likely_sympd' ignored for triangular matrix"); }
@@ -507,7 +544,7 @@ glue_solve_tri::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const Base
   
   if( (status == false) && (no_approx == false) )
     {
-    arma_extra_debug_print("glue_solve_tri::apply(): solving rank deficient system");
+    arma_extra_debug_print("glue_solve_tri_full::apply(): solving rank deficient system");
     
     if(rcond > T(0))
       {

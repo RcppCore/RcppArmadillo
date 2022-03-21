@@ -23,7 +23,7 @@ namespace newarp
 template<typename eT>
 inline
 UpperHessenbergEigen<eT>::UpperHessenbergEigen()
-  : n(0)
+  : n_rows(0)
   , computed(false)
   {
   arma_extra_debug_sigprint();
@@ -34,7 +34,7 @@ UpperHessenbergEigen<eT>::UpperHessenbergEigen()
 template<typename eT>
 inline
 UpperHessenbergEigen<eT>::UpperHessenbergEigen(const Mat<eT>& mat_obj)
-  : n(mat_obj.n_rows)
+  : n_rows(mat_obj.n_rows)
   , computed(false)
   {
   arma_extra_debug_sigprint();
@@ -53,11 +53,11 @@ UpperHessenbergEigen<eT>::compute(const Mat<eT>& mat_obj)
   
   arma_debug_check( (mat_obj.is_square() == false), "newarp::UpperHessenbergEigen::compute(): matrix must be square" );
   
-  n = blas_int(mat_obj.n_rows);
+  n_rows = mat_obj.n_rows;
   
-  mat_Z.set_size(n, n);
-  mat_T.set_size(n, n);
-  evals.set_size(n);
+  mat_Z.set_size(n_rows, n_rows);
+  mat_T.set_size(n_rows, n_rows);
+  evals.set_size(n_rows);
   
   mat_Z.eye();
   mat_T = mat_obj;
@@ -65,35 +65,34 @@ UpperHessenbergEigen<eT>::compute(const Mat<eT>& mat_obj)
   blas_int want_T = blas_int(1);
   blas_int want_Z = blas_int(1);
   
+  blas_int n    = blas_int(n_rows);
   blas_int ilo  = blas_int(1);
-  blas_int ihi  = blas_int(n);
+  blas_int ihi  = blas_int(n_rows);
   blas_int iloz = blas_int(1);
-  blas_int ihiz = blas_int(n);
+  blas_int ihiz = blas_int(n_rows);
   
   blas_int info = blas_int(0);
   
-  podarray<eT> wr(static_cast<uword>(n));
-  podarray<eT> wi(static_cast<uword>(n));
+  podarray<eT> wr(n_rows);
+  podarray<eT> wi(n_rows);
   
-  
+  arma_extra_debug_print("lapack::lahqr()");
   lapack::lahqr(&want_T, &want_Z, &n, &ilo, &ihi, mat_T.memptr(), &n, wr.memptr(), wi.memptr(), &iloz, &ihiz, mat_Z.memptr(), &n, &info);
   
-  for(blas_int i = 0; i < n; i++)
-    {
-    evals(i) = std::complex<eT>(wr[i], wi[i]);
-    }
+  if(info != 0)  { arma_stop_runtime_error("lapack::lahqr(): failed to compute all eigenvalues"); return; }
   
-  if(info > 0)  { arma_stop_runtime_error("lapack::lahqr(): failed to compute all eigenvalues"); return; }
+  for(uword i=0; i < n_rows; i++)  { evals(i) = std::complex<eT>(wr[i], wi[i]); }
   
   char     side   = 'R';
   char     howmny = 'B';
   blas_int m      = blas_int(0);
   
-  podarray<eT> work(static_cast<uword>(3 * n));
+  podarray<eT> work(3*n);
   
+  arma_extra_debug_print("lapack::trevc()");
   lapack::trevc(&side, &howmny, (blas_int*) NULL, &n, mat_T.memptr(), &n, (eT*) NULL, &n, mat_Z.memptr(), &n, &n, &m, work.memptr(), &info);
   
-  if(info < 0)  { arma_stop_logic_error("lapack::trevc(): illegal value"); return; }
+  if(info != 0)  { arma_stop_runtime_error("lapack::trevc(): illegal value"); return; }
   
   computed = true;
   }
@@ -108,7 +107,7 @@ UpperHessenbergEigen<eT>::eigenvalues()
   arma_extra_debug_sigprint();
   
   arma_debug_check( (computed == false), "newarp::UpperHessenbergEigen::eigenvalues(): need to call compute() first" );
-
+  
   return evals;
   }
 
@@ -122,46 +121,46 @@ UpperHessenbergEigen<eT>::eigenvectors()
   arma_extra_debug_sigprint();
   
   arma_debug_check( (computed == false), "newarp::UpperHessenbergEigen::eigenvectors(): need to call compute() first" );
-
+  
   // Lapack will set the imaginary parts of real eigenvalues to be exact zero
-  Mat< std::complex<eT> > evecs(n, n, arma_zeros_indicator());
+  Mat< std::complex<eT> > evecs(n_rows, n_rows, arma_zeros_indicator());
   
   std::complex<eT>* col_ptr = evecs.memptr();
   
-  for(blas_int i = 0; i < n; i++)
+  for(uword i=0; i < n_rows; i++)
     {
     if(cx_attrib::is_real(evals(i), eT(0)))
       {
       // for real eigenvector, normalise and copy
-      eT z_norm = norm(mat_Z.col(i));
+      const eT z_norm = norm(mat_Z.col(i));
       
-      for(blas_int j = 0; j < n; j++)
+      for(uword j=0; j < n_rows; j++)
         {
         col_ptr[j] = std::complex<eT>(mat_Z(j, i) / z_norm, eT(0));
         }
-
-      col_ptr += n;
+      
+      col_ptr += n_rows;
       }
     else
       {
       // complex eigenvectors are stored in consecutive columns
-      eT r2 = dot(mat_Z.col(i), mat_Z.col(i));
-      eT i2 = dot(mat_Z.col(i + 1), mat_Z.col(i + 1));
+      const eT r2 = dot(mat_Z.col(i  ), mat_Z.col(i  ));
+      const eT i2 = dot(mat_Z.col(i+1), mat_Z.col(i+1));
       
-      eT  z_norm = std::sqrt(r2 + i2);
-      eT* z_ptr  = mat_Z.colptr(i);
+      const eT  z_norm = std::sqrt(r2 + i2);
+      const eT* z_ptr  = mat_Z.colptr(i);
       
-      for(blas_int j = 0; j < n; j++)
+      for(uword j=0; j < n_rows; j++)
         {
-        col_ptr[j    ] = std::complex<eT>(z_ptr[j] / z_norm, z_ptr[j + n] / z_norm);
-        col_ptr[j + n] = std::conj(col_ptr[j]);
+        col_ptr[j         ] = std::complex<eT>(z_ptr[j] / z_norm, z_ptr[j + n_rows] / z_norm);
+        col_ptr[j + n_rows] = std::conj(col_ptr[j]);
         }
-
+      
       i++;
-      col_ptr += 2 * n;
+      col_ptr += 2 * n_rows;
       }
     }
-
+  
   return evecs;
   }
 

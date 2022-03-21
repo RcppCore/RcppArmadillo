@@ -3326,6 +3326,32 @@ SpMat<eT>::operator()(const uword i) const
  * If there is nothing at that position, 0 is returned.
  */
 
+#if defined(__cpp_multidimensional_subscript)
+  
+  template<typename eT>
+  arma_inline
+  arma_warn_unused
+  SpMat_MapMat_val<eT>
+  SpMat<eT>::operator[] (const uword in_row, const uword in_col)
+    {
+    return SpMat_MapMat_val<eT>((*this), cache, in_row, in_col);
+    }
+  
+  
+  
+  template<typename eT>
+  arma_inline
+  arma_warn_unused
+  eT
+  SpMat<eT>::operator[] (const uword in_row, const uword in_col) const
+    {
+    return get_value(in_row, in_col);
+    }
+  
+#endif
+
+
+
 template<typename eT>
 arma_inline
 arma_warn_unused
@@ -6931,7 +6957,7 @@ SpMat_aux::set_imag(SpMat< std::complex<T> >& out, const SpBase<T,T1>& X)
 
 
 
-#ifdef ARMA_EXTRA_SPMAT_MEAT
+#if defined(ARMA_EXTRA_SPMAT_MEAT)
   #include ARMA_INCFILE_WRAP(ARMA_EXTRA_SPMAT_MEAT)
 #endif
 

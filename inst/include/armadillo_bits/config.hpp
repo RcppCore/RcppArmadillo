@@ -68,6 +68,11 @@
 //// Make sure the directory has a trailing /
 #endif
 
+#if !defined(ARMA_USE_ATLAS)
+// #define ARMA_USE_ATLAS
+//// NOTE: support for ATLAS is deprecated and will be removed.
+#endif
+
 // #define ARMA_USE_WRAPPER
 //// Comment out the above line if you're getting linking errors when compiling your programs,
 //// or if you prefer to directly link with LAPACK, BLAS + etc instead of the Armadillo runtime library.
@@ -111,12 +116,6 @@
 //// You may also need to enable or disable the following options:
 //// ARMA_BLAS_LONG, ARMA_BLAS_LONG_LONG, ARMA_USE_FORTRAN_HIDDEN_ARGS
 
-// #define ARMA_USE_ATLAS
-// #define ARMA_ATLAS_INCLUDE_DIR /usr/include/
-//// If you're using ATLAS and the compiler can't find cblas.h and/or clapack.h
-//// uncomment the above define and specify the appropriate include directory.
-//// Make sure the directory has a trailing /
-
 #if !defined(ARMA_USE_OPENMP)
 // #define ARMA_USE_OPENMP
 //// Uncomment the above line to forcefully enable use of OpenMP for parallelisation.
@@ -146,7 +145,13 @@
   #define ARMA_OPTIMISE_SYMPD
   //// Comment out the above line if you don't want automatically optimised handling
   //// of symmetric/hermitian positive definite matrices by various functions:
-  //// solve(), inv(), pinv(), expmat(), logmat(), sqrtmat(), rcond()
+  //// solve(), inv(), pinv(), expmat(), logmat(), sqrtmat(), rcond(), rank()
+#endif
+
+#if !defined(ARMA_OPTIMISE_INVEXPR)
+  #define ARMA_OPTIMISE_INVEXPR
+  //// Comment out the above line if you don't want automatically optimised handling
+  //// of inv() and inv_sympd() within compound expressions
 #endif
 
 // #define ARMA_USE_HDF5_ALT
@@ -214,14 +219,12 @@
 #endif
 
 
-#if !defined(ARMA_PRINT_ERRORS)
-#define ARMA_PRINT_ERRORS
-//// Comment out the above line if you don't want errors and warnings printed (eg. failed decompositions)
-#endif
-
 #if !defined(ARMA_PRINT_EXCEPTIONS)
-// #define ARMA_PRINT_EXCEPTIONS
-//// see also compiler_setup.hpp
+  // #define ARMA_PRINT_EXCEPTIONS
+  #if defined(ARMA_PRINT_EXCEPTIONS_INTERNAL)
+    #undef  ARMA_PRINT_EXCEPTIONS
+    #define ARMA_PRINT_EXCEPTIONS
+  #endif
 #endif
 
 #if !defined(ARMA_PRINT_HDF5_ERRORS)
@@ -251,7 +254,6 @@
 
 #if defined(ARMA_DONT_USE_ATLAS)
   #undef ARMA_USE_ATLAS
-  #undef ARMA_ATLAS_INCLUDE_DIR
 #endif
 
 #if defined(ARMA_DONT_USE_WRAPPER)
@@ -314,9 +316,14 @@
   #undef ARMA_OPTIMISE_SYMPD
 #endif
 
-#if defined(ARMA_DONT_PRINT_ERRORS)
-  #undef ARMA_PRINT_ERRORS
+#if defined(ARMA_DONT_OPTIMISE_INVEXPR)
+  #undef ARMA_OPTIMISE_INVEXPR
 #endif
+
+// #if defined(ARMA_DONT_PRINT_ERRORS)
+//     #pragma message ("WARNING: support for ARMA_DONT_PRINT_ERRORS option has been removed;")
+//     #pragma message ("WARNING: use ARMA_WARN_LEVEL and ARMA_DONT_PRINT_EXCEPTIONS options instead.")
+// #endif
 
 #if defined(ARMA_DONT_PRINT_EXCEPTIONS)
   #undef ARMA_PRINT_EXCEPTIONS

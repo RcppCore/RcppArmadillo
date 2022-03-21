@@ -25,18 +25,18 @@ template<typename eT, int SelectionRule, typename OpType>
 class SymEigsSolver
   {
   protected:
-
+  
   const OpType&     op;        // object to conduct matrix operation, eg. matrix-vector product
   const uword       nev;       // number of eigenvalues requested
   Col<eT>           ritz_val;  // ritz values
-
+  
   // Sort the first nev Ritz pairs in ascending algebraic order
   // This is used to return the final results
   virtual void sort_ritzpair();
-
-
+  
+  
   private:
-
+  
   const uword       dim_n;     // dimension of matrix A
   const uword       ncv;       // number of ritz values
   uword             nmatop;    // number of matrix operations called
@@ -52,48 +52,53 @@ class SymEigsSolver
   const eT          eps23;     // eps^(2/3), used in convergence test
                                // tol*eps23 is the absolute tolerance
   const eT          near0;     // a very small value, but 1/near0 does not overflow
-
+  
+  std::mt19937_64   local_rng; // local random number generator
+  
+  inline void fill_rand(eT* dest, const uword N, const uword seed_val);
+  
   // Arnoldi factorisation starting from step-k
   inline void factorise_from(uword from_k, uword to_m, const Col<eT>& fk);
-
+  
   // Implicitly restarted Arnoldi factorisation
   inline void restart(uword k);
-
+  
   // Calculate the number of converged Ritz values
   inline uword num_converged(eT tol);
-
+  
   // Return the adjusted nev for restarting
   inline uword nev_adjusted(uword nconv);
-
+  
   // Retrieve and sort ritz values and ritz vectors
   inline void retrieve_ritzpair();
-
-
+  
+  
   public:
-
+  
   //! Constructor to create a solver object.
   inline SymEigsSolver(const OpType& op_, uword nev_, uword ncv_);
-
+  
   //! Providing the initial residual vector for the algorithm.
   inline void init(eT* init_resid);
-
+  
   //! Providing a random initial residual vector.
   inline void init();
-
+  
   //! Conducting the major computation procedure.
   inline uword compute(uword maxit = 1000, eT tol = 1e-10);
-
+  
   //! Returning the number of iterations used in the computation.
   inline uword num_iterations() { return niter; }
-
+  
   //! Returning the number of matrix operations used in the computation.
   inline uword num_operations() { return nmatop; }
-
+  
   //! Returning the converged eigenvalues.
   inline Col<eT> eigenvalues();
-
+  
   //! Returning the eigenvectors associated with the converged eigenvalues.
   inline Mat<eT> eigenvectors(uword nvec);
+  
   //! Returning all converged eigenvectors.
   inline Mat<eT> eigenvectors() { return eigenvectors(nev); }
   };

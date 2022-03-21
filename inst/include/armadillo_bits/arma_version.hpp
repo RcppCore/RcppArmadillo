@@ -22,9 +22,9 @@
 
 
 #define ARMA_VERSION_MAJOR 10
-#define ARMA_VERSION_MINOR 8
-#define ARMA_VERSION_PATCH 2
-#define ARMA_VERSION_NAME  "Realm Raider"
+#define ARMA_VERSION_MINOR 9
+#define ARMA_VERSION_PATCH 91
+#define ARMA_VERSION_NAME  "11.0-RC1"
 
 
 

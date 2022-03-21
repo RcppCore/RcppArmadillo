@@ -209,7 +209,7 @@ class gemv_emul_helper
 
 
 //! \brief
-//! Partial emulation of ATLAS/BLAS gemv().
+//! Partial emulation of BLAS gemv().
 //! 'y' is assumed to have been set to the correct size (ie. taking into account the transpose)
 
 template<const bool do_trans_A=false, const bool use_alpha=false, const bool use_beta=false>
@@ -293,7 +293,7 @@ class gemv_emul
 
 
 //! \brief
-//! Wrapper for ATLAS/BLAS gemv function, using template arguments to control the arguments passed to gemv.
+//! Wrapper for BLAS gemv function, using template arguments to control the arguments passed to gemv.
 //! 'y' is assumed to have been set to the correct size (ie. taking into account the transpose)
 
 template<const bool do_trans_A=false, const bool use_alpha=false, const bool use_beta=false>
@@ -327,9 +327,9 @@ class gemv
           
           atlas::cblas_gemm<eT>
             (
-            atlas::CblasColMajor,
-            (do_trans_A) ? ( is_cx<eT>::yes ? CblasConjTrans : atlas::CblasTrans ) : atlas::CblasNoTrans,
-            atlas::CblasNoTrans,
+            atlas_CblasColMajor,
+            (do_trans_A) ? ( is_cx<eT>::yes ? atlas_CblasConjTrans : atlas_CblasTrans ) : atlas_CblasNoTrans,
+            atlas_CblasNoTrans,
             (do_trans_A) ? A.n_cols : A.n_rows,
             1,
             (do_trans_A) ? A.n_rows : A.n_cols,
@@ -349,8 +349,8 @@ class gemv
           
           atlas::cblas_gemv<eT>
             (
-            atlas::CblasColMajor,
-            (do_trans_A) ? ( is_cx<eT>::yes ? CblasConjTrans : atlas::CblasTrans ) : atlas::CblasNoTrans,
+            atlas_CblasColMajor,
+            (do_trans_A) ? ( is_cx<eT>::yes ? atlas_CblasConjTrans : atlas_CblasTrans ) : atlas_CblasNoTrans,
             A.n_rows,
             A.n_cols,
             (use_alpha) ? alpha : eT(1),

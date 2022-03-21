@@ -17,7 +17,7 @@
 
 
 
-#ifdef ARMA_USE_LAPACK
+#if defined(ARMA_USE_LAPACK)
 
 
 //! \namespace lapack namespace for LAPACK functions
@@ -1303,18 +1303,6 @@ namespace lapack
     #endif
     }
   
-  
-  
-  template<typename eT>
-  inline
-  void
-  larnv(blas_int* idist, blas_int* iseed, const blas_int* n, eT* x)
-    {
-    arma_type_check(( is_supported_blas_type<eT>::value == false ));
-    
-         if( is_float<eT>::value)  { typedef float  T; arma_fortran(arma_slarnv)(idist, iseed, n, (T*)x); }
-    else if(is_double<eT>::value)  { typedef double T; arma_fortran(arma_dlarnv)(idist, iseed, n, (T*)x); }
-    }
   
   
   template<typename eT>

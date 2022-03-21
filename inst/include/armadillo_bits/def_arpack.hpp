@@ -16,7 +16,7 @@
 // ------------------------------------------------------------------------
 
 
-#ifdef ARMA_USE_ARPACK
+#if defined(ARMA_USE_ARPACK)
 
 // I'm not sure this is necessary.
 #if !defined(ARMA_BLAS_CAPITALS)

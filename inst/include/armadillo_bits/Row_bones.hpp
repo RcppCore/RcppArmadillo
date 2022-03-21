@@ -169,7 +169,7 @@ class Row : public Mat<eT>
   
   public:
   
-  #ifdef ARMA_EXTRA_ROW_PROTO
+  #if defined(ARMA_EXTRA_ROW_PROTO)
     #include ARMA_INCFILE_WRAP(ARMA_EXTRA_ROW_PROTO)
   #endif
   };

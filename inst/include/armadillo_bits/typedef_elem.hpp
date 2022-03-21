@@ -123,7 +123,7 @@ typedef void* void_ptr;
 //
 
 
-#ifdef ARMA_USE_MKL_TYPES
+#if defined(ARMA_USE_MKL_TYPES)
   // for compatibility with MKL
   typedef MKL_Complex8  blas_cxf;
   typedef MKL_Complex16 blas_cxd;

@@ -16,12 +16,12 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup arma_rng_cxx98
+//! \addtogroup arma_rng_cxx03
 //! @{
 
 
 
-class arma_rng_cxx98
+class arma_rng_cxx03
   {
   public:
   
@@ -46,7 +46,7 @@ class arma_rng_cxx98
 
 inline
 void
-arma_rng_cxx98::set_seed(const arma_rng_cxx98::seed_type val)
+arma_rng_cxx03::set_seed(const arma_rng_cxx03::seed_type val)
   {
   std::srand(val);
   }
@@ -55,12 +55,12 @@ arma_rng_cxx98::set_seed(const arma_rng_cxx98::seed_type val)
 
 arma_inline
 int
-arma_rng_cxx98::randi_val()
+arma_rng_cxx03::randi_val()
   {
   #if (RAND_MAX == 32767)
     {
     // NOTE: this is a better-than-nothing solution
-    // NOTE: see also arma_rng_cxx98::randi_max_val()
+    // NOTE: see also arma_rng_cxx03::randi_max_val()
     
     u32 val1 = u32(std::rand());
     u32 val2 = u32(std::rand());
@@ -80,7 +80,7 @@ arma_rng_cxx98::randi_val()
 
 arma_inline
 double
-arma_rng_cxx98::randu_val()
+arma_rng_cxx03::randu_val()
   {
   return double( double(randi_val()) * ( double(1) / double(randi_max_val()) ) );
   }
@@ -89,7 +89,7 @@ arma_rng_cxx98::randu_val()
 
 inline
 double
-arma_rng_cxx98::randn_val()
+arma_rng_cxx03::randn_val()
   {
   // polar form of the Box-Muller transformation:
   // http://en.wikipedia.org/wiki/Box-Muller_transformation
@@ -116,7 +116,7 @@ arma_rng_cxx98::randn_val()
 template<typename eT>
 inline
 void
-arma_rng_cxx98::randn_dual_val(eT& out1, eT& out2)
+arma_rng_cxx03::randn_dual_val(eT& out1, eT& out2)
   {
   // make sure we are internally using at least floats
   typedef typename promote_type<eT,float>::result eTp;
@@ -145,7 +145,7 @@ arma_rng_cxx98::randn_dual_val(eT& out1, eT& out2)
 template<typename eT>
 inline
 void
-arma_rng_cxx98::randi_fill(eT* mem, const uword N, const int a, const int b)
+arma_rng_cxx03::randi_fill(eT* mem, const uword N, const int a, const int b)
   {
   if( (a == 0) && (b == RAND_MAX) )
     {
@@ -171,7 +171,7 @@ arma_rng_cxx98::randi_fill(eT* mem, const uword N, const int a, const int b)
 
 inline
 int
-arma_rng_cxx98::randi_max_val()
+arma_rng_cxx03::randi_max_val()
   {
   #if (RAND_MAX == 32767)
     return ( (32767 << 15) + 32767);

@@ -76,7 +76,7 @@ class SpCol : public SpMat<eT>
   inline const_row_iterator end_row  (const uword row_num = 0) const;
   
   
-  #ifdef ARMA_EXTRA_SPCOL_PROTO
+  #if defined(ARMA_EXTRA_SPCOL_PROTO)
     #include ARMA_INCFILE_WRAP(ARMA_EXTRA_SPCOL_PROTO)
   #endif
   };

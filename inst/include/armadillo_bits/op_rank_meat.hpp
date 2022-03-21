@@ -42,21 +42,17 @@ op_rank::apply(uword& out, const Base<typename T1::elem_type,T1>& expr, const ty
     return op_rank::apply_diag(out, A, tol);
     }
   
-  #if defined(ARMA_OPTIMISE_SYMPD)
-    bool do_sym = false;
+  bool do_sym = false;
+  
+  if((arma_config::optimise_sympd) && (auxlib::crippled_lapack(A) == false) && (A.n_rows >= (is_cx<eT>::yes ? uword(64) : uword(128))))
+    {
+    bool is_approx_sym   = false;
+    bool is_approx_sympd = false;
     
-    if((auxlib::crippled_lapack(A) == false) && (A.n_rows >= (is_cx<eT>::yes ? uword(64) : uword(128))))
-      {
-      bool is_approx_sym   = false;
-      bool is_approx_sympd = false;
-      
-      sympd_helper::analyse_matrix(is_approx_sym, is_approx_sympd, A);
-      
-      do_sym = (is_cx<eT>::no) ? (is_approx_sym) : (is_approx_sym && is_approx_sympd);
-      }
-  #else
-    const bool do_sym = false;
-  #endif
+    sympd_helper::analyse_matrix(is_approx_sym, is_approx_sympd, A);
+    
+    do_sym = (is_cx<eT>::no) ? (is_approx_sym) : (is_approx_sym && is_approx_sympd);
+    }
   
   if(do_sym)
     {

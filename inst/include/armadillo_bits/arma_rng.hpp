@@ -80,7 +80,7 @@ class arma_rng
   #elif defined(ARMA_USE_EXTERN_RNG)
     typedef std::mt19937_64::result_type seed_type;
   #else
-    typedef arma_rng_cxx98::seed_type    seed_type;
+    typedef arma_rng_cxx03::seed_type    seed_type;
   #endif
   
   #if   defined(ARMA_RNG_ALT)
@@ -116,7 +116,7 @@ arma_rng::set_seed(const arma_rng::seed_type val)
     }
   #else
     {
-    arma_rng_cxx98::set_seed(val);
+    arma_rng_cxx03::set_seed(val);
     }
   #endif
   }
@@ -226,7 +226,7 @@ struct arma_rng::randi
       }
     #else
       {
-      return eT( arma_rng_cxx98::randi_val() );
+      return eT( arma_rng_cxx03::randi_val() );
       }
     #endif
     }
@@ -247,7 +247,7 @@ struct arma_rng::randi
       }
     #else
       {
-      return arma_rng_cxx98::randi_max_val();
+      return arma_rng_cxx03::randi_max_val();
       }
     #endif
     }
@@ -270,7 +270,7 @@ struct arma_rng::randi
       }
     #else
       {
-      if(N == uword(1))  { arma_rng_cxx98::randi_fill(mem, uword(1), a, b); return; }
+      if(N == uword(1))  { arma_rng_cxx03::randi_fill(mem, uword(1), a, b); return; }
       
       typedef typename std::mt19937_64::result_type local_seed_type;
       
@@ -309,7 +309,7 @@ struct arma_rng::randu
       }
     #else
       {
-      return eT( arma_rng_cxx98::randu_val() );
+      return eT( arma_rng_cxx03::randu_val() );
       }
     #endif
     }
@@ -332,7 +332,7 @@ struct arma_rng::randu
       }
     #else
       {
-      if(N == uword(1))  { mem[0] = eT( arma_rng_cxx98::randu_val() ); return; }
+      if(N == uword(1))  { mem[0] = eT( arma_rng_cxx03::randu_val() ); return; }
       
       typedef typename std::mt19937_64::result_type local_seed_type;
       
@@ -373,8 +373,8 @@ struct arma_rng::randu< std::complex<T> >
       }
     #else
       {
-      const T a = T( arma_rng_cxx98::randu_val() );
-      const T b = T( arma_rng_cxx98::randu_val() );
+      const T a = T( arma_rng_cxx03::randu_val() );
+      const T b = T( arma_rng_cxx03::randu_val() );
       
       return std::complex<T>(a, b);
       }
@@ -413,8 +413,8 @@ struct arma_rng::randu< std::complex<T> >
       {
       if(N == uword(1))
         {
-        const T a = T( arma_rng_cxx98::randu_val() );
-        const T b = T( arma_rng_cxx98::randu_val() );
+        const T a = T( arma_rng_cxx03::randu_val() );
+        const T b = T( arma_rng_cxx03::randu_val() );
         
         mem[0] = std::complex<T>(a, b);
         
@@ -464,7 +464,7 @@ struct arma_rng::randn
       }
     #else
       {
-      return eT( arma_rng_cxx98::randn_val() );
+      return eT( arma_rng_cxx03::randn_val() );
       }
     #endif
     }
@@ -488,7 +488,7 @@ struct arma_rng::randn
       }
     #else
       {
-      arma_rng_cxx98::randn_dual_val(out1, out2);
+      arma_rng_cxx03::randn_dual_val(out1, out2);
       }
     #endif
     }
@@ -517,7 +517,7 @@ struct arma_rng::randn
       }
     #else
       {
-      if(N == uword(1))  { mem[0] = eT( arma_rng_cxx98::randn_val() ); return; }
+      if(N == uword(1))  { mem[0] = eT( arma_rng_cxx03::randn_val() ); return; }
       
       typedef typename std::mt19937_64::result_type local_seed_type;
       
@@ -656,7 +656,7 @@ struct arma_rng::randn< std::complex<T> >
         T a = T(0);
         T b = T(0);
         
-        arma_rng_cxx98::randn_dual_val(a,b);
+        arma_rng_cxx03::randn_dual_val(a,b);
         
         mem[0] = std::complex<T>(a,b);
         

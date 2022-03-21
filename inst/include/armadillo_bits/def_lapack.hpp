@@ -17,7 +17,7 @@
 
 
 
-#ifdef ARMA_USE_LAPACK
+#if defined(ARMA_USE_LAPACK)
 
 #if defined(dgetrf) || defined(DGETRF)
   #pragma message ("WARNING: detected possible interference with definitions of LAPACK functions;")
@@ -259,9 +259,6 @@
   #define arma_strevc strevc
   #define arma_dtrevc dtrevc
   
-  #define arma_slarnv slarnv
-  #define arma_dlarnv dlarnv
-  
   #define arma_sgehrd sgehrd
   #define arma_dgehrd dgehrd
   #define arma_cgehrd cgehrd
@@ -497,9 +494,6 @@
   
   #define arma_strevc STREVC
   #define arma_dtrevc DTREVC
-  
-  #define arma_slarnv SLARNV
-  #define arma_dlarnv DLARNV
   
   #define arma_sgehrd SGEHRD
   #define arma_dgehrd DGEHRD
@@ -840,10 +834,6 @@ extern "C"
   void arma_fortran(arma_strevc)(const char* side, const char* howmny, blas_int* select, const blas_int* n, const  float* t, const blas_int* ldt,  float* vl, const blas_int* ldvl,  float* vr, const blas_int* ldvr, const blas_int* mm, blas_int* m,  float* work, blas_int* info, blas_len side_len, blas_len howmny_len) ARMA_NOEXCEPT;
   void arma_fortran(arma_dtrevc)(const char* side, const char* howmny, blas_int* select, const blas_int* n, const double* t, const blas_int* ldt, double* vl, const blas_int* ldvl, double* vr, const blas_int* ldvr, const blas_int* mm, blas_int* m, double* work, blas_int* info, blas_len side_len, blas_len howmny_len) ARMA_NOEXCEPT;
   
-  // generate a vector of random numbers
-  void arma_fortran(arma_slarnv)(const blas_int* idist, blas_int* iseed, const blas_int* n,  float* x) ARMA_NOEXCEPT;
-  void arma_fortran(arma_dlarnv)(const blas_int* idist, blas_int* iseed, const blas_int* n, double* x) ARMA_NOEXCEPT;
-  
   // hessenberg decomposition
   void arma_fortran(arma_sgehrd)(const blas_int* n, const blas_int* ilo, const blas_int* ihi,    float* a, const blas_int* lda,    float* tao,    float* work, const blas_int* lwork, blas_int* info) ARMA_NOEXCEPT;
   void arma_fortran(arma_dgehrd)(const blas_int* n, const blas_int* ilo, const blas_int* ihi,   double* a, const blas_int* lda,   double* tao,   double* work, const blas_int* lwork, blas_int* info) ARMA_NOEXCEPT;
@@ -1167,10 +1157,6 @@ extern "C"
   // calculate eigenvectors of a Schur form matrix
   void arma_fortran(arma_strevc)(const char* side, const char* howmny, blas_int* select, const blas_int* n, const  float* t, const blas_int* ldt,  float* vl, const blas_int* ldvl,  float* vr, const blas_int* ldvr, const blas_int* mm, blas_int* m,  float* work, blas_int* info) ARMA_NOEXCEPT;
   void arma_fortran(arma_dtrevc)(const char* side, const char* howmny, blas_int* select, const blas_int* n, const double* t, const blas_int* ldt, double* vl, const blas_int* ldvl, double* vr, const blas_int* ldvr, const blas_int* mm, blas_int* m, double* work, blas_int* info) ARMA_NOEXCEPT;
-  
-  // generate a vector of random numbers
-  void arma_fortran(arma_slarnv)(const blas_int* idist, blas_int* iseed, const blas_int* n,  float* x) ARMA_NOEXCEPT;
-  void arma_fortran(arma_dlarnv)(const blas_int* idist, blas_int* iseed, const blas_int* n, double* x) ARMA_NOEXCEPT;
   
   // hessenberg decomposition
   void arma_fortran(arma_sgehrd)(const blas_int* n, const blas_int* ilo, const blas_int* ihi,    float* a, const blas_int* lda,    float* tao,    float* work, const blas_int* lwork, blas_int* info) ARMA_NOEXCEPT;

@@ -75,7 +75,7 @@ class SpRow : public SpMat<eT>
   inline       row_iterator end_row(const uword row_num = 0);
   inline const_row_iterator end_row(const uword row_num = 0) const;
   
-  #ifdef ARMA_EXTRA_SPROW_PROTO
+  #if defined(ARMA_EXTRA_SPROW_PROTO)
     #include ARMA_INCFILE_WRAP(ARMA_EXTRA_SPROW_PROTO)
   #endif
   };
