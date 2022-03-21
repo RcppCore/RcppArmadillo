@@ -18,6 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
+exit_file("Skipping for now")
 library(RcppArmadillo)
 
 Rcpp::sourceCpp("cpp/Rlapack.cpp")
