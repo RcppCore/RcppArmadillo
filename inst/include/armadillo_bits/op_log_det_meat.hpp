@@ -29,6 +29,7 @@ op_log_det::apply_direct(typename T1::elem_type& out_val, typename T1::pod_type&
   arma_extra_debug_sigprint();
   
   typedef typename T1::elem_type eT;
+  // typedef typename T1::pod_type   T;
   
   if(strip_diagmat<T1>::do_diagmat)
     {
@@ -54,6 +55,32 @@ op_log_det::apply_direct(typename T1::elem_type& out_val, typename T1::pod_type&
   const bool is_tril = is_triu ? false : trimat_helper::is_tril(A);
   
   if(is_triu || is_tril)  { return op_log_det::apply_trimat(out_val, out_sign, A); }
+  
+  // const bool try_sympd = arma_config::optimise_sympd && sympd_helper::guess_sympd(A);
+  // 
+  // if(try_sympd)
+  //   {
+  //   arma_extra_debug_print("op_log_det: attempting sympd optimisation");
+  //   
+  //   T out_val_real = T(0);
+  //   
+  //   const bool status = auxlib::log_det_sympd(out_val_real, A);
+  //   
+  //   if(status)
+  //     {
+  //     out_val  = eT(out_val_real);
+  //     out_sign =  T(1);
+  //     
+  //     return true;
+  //     }
+  //   
+  //   arma_extra_debug_print("op_log_det: sympd optimisation failed");
+  //   
+  //   // restore A as it's destroyed by auxlib::log_det_sympd()
+  //   A = expr.get_ref();
+  //   
+  //   // fallthrough to the next return statement
+  //   }
   
   return auxlib::log_det(out_val, out_sign, A);
   }
@@ -162,10 +189,41 @@ op_log_det_sympd::apply_direct(typename T1::pod_type& out_val, const Base<typena
   arma_extra_debug_sigprint();
   
   typedef typename T1::elem_type eT;
+  typedef typename T1::pod_type   T;
   
   Mat<eT> A(expr.get_ref());
   
   arma_debug_check( (A.is_square() == false), "log_det_sympd(): given matrix must be square sized" );
+  
+  if((arma_config::debug) && (arma_config::warn_level > 0) && (is_cx<eT>::yes) && (sympd_helper::check_diag_imag(A) == false))
+    {
+    arma_debug_warn_level(1, "log_det_sympd(): imaginary components on diagonal are non-zero");
+    }
+  
+  if(is_op_diagmat<T1>::value || A.is_diagmat())
+    {
+    arma_extra_debug_print("op_log_det_sympd: detected diagonal matrix");
+    
+    eT* colmem = A.memptr();
+    
+    out_val = T(0);
+    
+    const uword N = A.n_rows;
+    
+    for(uword i=0; i<N; ++i)
+      {
+      const eT& A_ii      = colmem[i];
+      const  T  A_ii_real = access::tmp_real(A_ii);
+      
+      if(A_ii_real <= T(0))  { return false; }
+      
+      out_val += std::log(A_ii_real);
+      
+      colmem += N;
+      }
+    
+    return true;
+    }
   
   if((arma_config::debug) && (auxlib::rudimentary_sym_check(A) == false))
     {

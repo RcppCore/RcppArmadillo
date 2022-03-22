@@ -447,6 +447,38 @@ analyse_matrix(bool& is_approx_sym, bool& is_approx_sympd, const Mat<eT>& A)
 
 
 
+template<typename eT>
+inline
+bool
+check_diag_imag(const Mat<eT>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  // NOTE: assuming matrix A is square-sized
+  
+  typedef typename get_pod_type<eT>::result T;
+  
+  const T tol = T(10000) * std::numeric_limits<T>::epsilon();  // allow some leeway
+  
+  const eT* colmem = A.memptr();
+  
+  const uword N = A.n_rows;
+  
+  for(uword i=0; i<N; ++i)
+    {
+    const eT& A_ii      = colmem[i];
+    const  T  A_ii_imag = access::tmp_imag(A_ii);
+    
+    if(std::abs(A_ii_imag) > tol)  { return false; }
+    
+    colmem += N;
+    }
+  
+  return true;
+  }
+
+
+
 }  // end of namespace sympd_helper
 
 

@@ -1856,7 +1856,7 @@ Col<eT>::Col(const arma_fixed_indicator&, const uword in_n_elem, const eT* in_me
 
 
 
-#ifdef ARMA_EXTRA_COL_MEAT
+#if defined(ARMA_EXTRA_COL_MEAT)
   #include ARMA_INCFILE_WRAP(ARMA_EXTRA_COL_MEAT)
 #endif
 

@@ -1,7 +1,7 @@
 #!/usr/bin/r -t
 #
-# Copyright (C) 2018  Keith O'Hara and Dirk Eddelbuettel
-# Copyright (C) 2019  Dirk Eddelbuettel
+# Copyright (C) 2018 - 2022  Keith O'Hara and Dirk Eddelbuettel
+# Copyright (C) 2019 - 2022  Dirk Eddelbuettel
 #
 # This file is part of RcppArmadillo.
 #
@@ -19,6 +19,9 @@
 # along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
 library(RcppArmadillo)
+
+if (isFALSE(tryCatch({svd(matrix(complex(1, 1, 1),1,1)); TRUE}, error=function(e) FALSE)))
+    exit_file("Skipping for lack of Fortran complex functions in this R build")
 
 Rcpp::sourceCpp("cpp/Rlapack.cpp")
 

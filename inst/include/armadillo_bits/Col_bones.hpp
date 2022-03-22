@@ -169,7 +169,7 @@ class Col : public Mat<eT>
   
   public:
   
-  #ifdef ARMA_EXTRA_COL_PROTO
+  #if defined(ARMA_EXTRA_COL_PROTO)
     #include ARMA_INCFILE_WRAP(ARMA_EXTRA_COL_PROTO)
   #endif
   };

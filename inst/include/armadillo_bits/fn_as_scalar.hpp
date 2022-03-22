@@ -140,7 +140,7 @@ as_scalar_redirect<3>::apply(const Glue< Glue<T1, T2, glue_times>, T3, glue_time
   const strip_inv    <T2>            strip1(X.A.B);
   const strip_diagmat<T2_stripped_1> strip2(strip1.M);
   
-  const bool tmp2_do_inv     = strip1.do_inv;
+  const bool tmp2_do_inv_gen = strip1.do_inv_gen && arma_config::optimise_invexpr;
   const bool tmp2_do_diagmat = strip2.do_diagmat;
   
   if(tmp2_do_diagmat == false)
@@ -187,7 +187,7 @@ as_scalar_redirect<3>::apply(const Glue< Glue<T1, T2, glue_times>, T3, glue_time
     
     if(B_is_vec)
       {
-      if(tmp2_do_inv)
+      if(tmp2_do_inv_gen)
         {
         return val * op_dotext::direct_rowvec_invdiagvec_colvec(A.mem, B, C.mem);
         }
@@ -198,7 +198,7 @@ as_scalar_redirect<3>::apply(const Glue< Glue<T1, T2, glue_times>, T3, glue_time
       }
     else
       {
-      if(tmp2_do_inv)
+      if(tmp2_do_inv_gen)
         {
         return val * op_dotext::direct_rowvec_invdiagmat_colvec(A.mem, B, C.mem);
         }

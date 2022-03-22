@@ -73,7 +73,6 @@
 #endif
 
 
-#include "armadillo_bits/include_atlas.hpp"
 #include "armadillo_bits/include_hdf5.hpp"
 #include "armadillo_bits/include_superlu.hpp"
 
@@ -105,13 +104,12 @@ namespace arma
   #include "armadillo_bits/arma_rel_comparators.hpp"
   #include "armadillo_bits/fill.hpp"
   
-  #ifdef ARMA_RNG_ALT
+  #if defined(ARMA_RNG_ALT)
     #include ARMA_INCFILE_WRAP(ARMA_RNG_ALT)
   #else
-    #include "armadillo_bits/arma_rng_cxx98.hpp"
+    #include "armadillo_bits/arma_rng_cxx03.hpp"
   #endif
   
-  #include "armadillo_bits/arma_rng_cxx11.hpp"
   #include "armadillo_bits/arma_rng.hpp"
   
   
@@ -123,15 +121,15 @@ namespace arma
   #include "armadillo_bits/SpBase_bones.hpp"
   
   #include "armadillo_bits/def_blas.hpp"
-  #include "armadillo_bits/def_lapack.hpp"
   #include "armadillo_bits/def_atlas.hpp"
+  #include "armadillo_bits/def_lapack.hpp"
   #include "armadillo_bits/def_arpack.hpp"
   #include "armadillo_bits/def_superlu.hpp"
   #include "armadillo_bits/def_hdf5.hpp"
   
   #include "armadillo_bits/translate_blas.hpp"
-  #include "armadillo_bits/translate_lapack.hpp"
   #include "armadillo_bits/translate_atlas.hpp"
+  #include "armadillo_bits/translate_lapack.hpp"
   #include "armadillo_bits/translate_arpack.hpp"
   #include "armadillo_bits/translate_superlu.hpp"
   
@@ -216,7 +214,8 @@ namespace arma
   #include "armadillo_bits/op_dot_bones.hpp"
   #include "armadillo_bits/op_det_bones.hpp"
   #include "armadillo_bits/op_log_det_bones.hpp"
-  #include "armadillo_bits/op_inv_bones.hpp"
+  #include "armadillo_bits/op_inv_gen_bones.hpp"
+  #include "armadillo_bits/op_inv_spd_bones.hpp"
   #include "armadillo_bits/op_htrans_bones.hpp"
   #include "armadillo_bits/op_max_bones.hpp"
   #include "armadillo_bits/op_min_bones.hpp"
@@ -646,7 +645,8 @@ namespace arma
   #include "armadillo_bits/op_dot_meat.hpp"
   #include "armadillo_bits/op_det_meat.hpp"
   #include "armadillo_bits/op_log_det_meat.hpp"
-  #include "armadillo_bits/op_inv_meat.hpp"
+  #include "armadillo_bits/op_inv_gen_meat.hpp"
+  #include "armadillo_bits/op_inv_spd_meat.hpp"
   #include "armadillo_bits/op_htrans_meat.hpp"
   #include "armadillo_bits/op_max_meat.hpp"
   #include "armadillo_bits/op_index_max_meat.hpp"

@@ -844,10 +844,10 @@ Base<elem_type, derived>::as_row() const
 template<typename elem_type, typename derived>
 inline
 arma_warn_unused
-const Op<derived,op_inv>
+const Op<derived,op_inv_gen_default>
 Base_extra_yes<elem_type, derived>::i() const
   {
-  return Op<derived,op_inv>(static_cast<const derived&>(*this));
+  return Op<derived,op_inv_gen_default>(static_cast<const derived&>(*this));
   }
 
 

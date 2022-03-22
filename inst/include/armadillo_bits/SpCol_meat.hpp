@@ -426,7 +426,7 @@ SpCol<eT>::end_row(const uword row_num) const
 
 
 
-#ifdef ARMA_EXTRA_SPCOL_MEAT
+#if defined(ARMA_EXTRA_SPCOL_MEAT)
   #include ARMA_INCFILE_WRAP(ARMA_EXTRA_SPCOL_MEAT)
 #endif
 

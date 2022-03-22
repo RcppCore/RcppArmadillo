@@ -16,7 +16,7 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup op_inv
+//! \addtogroup op_inv_gen
 //! @{
 
 
@@ -24,11 +24,11 @@
 template<typename T1>
 inline
 void
-op_inv::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv>& X)
+op_inv_gen_default::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv_gen_default>& X)
   {
   arma_extra_debug_sigprint();
   
-  const bool status = op_inv::apply_direct(out, X.m, "inv()");
+  const bool status = op_inv_gen_default::apply_direct(out, X.m, "inv()");
   
   if(status == false)
     {
@@ -42,73 +42,135 @@ op_inv::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv>& X)
 template<typename T1>
 inline
 bool
-op_inv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& expr, const char* caller_sig)
+op_inv_gen_default::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& expr, const char* caller_sig)
+  {
+  arma_extra_debug_sigprint();
+  
+  return op_inv_gen_full::apply_direct<T1,false>(out, expr, caller_sig, uword(0));
+  }
+
+
+
+//
+
+
+
+template<typename T1>
+inline
+void
+op_inv_gen_full::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv_gen_full>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword flags = X.in_aux_uword_a;
+  
+  const bool status = op_inv_gen_full::apply_direct(out, X.m, "inv()", flags);
+  
+  if(status == false)
+    {
+    out.soft_reset();
+    arma_stop_runtime_error("inv(): matrix is singular");
+    }
+  }
+
+
+
+template<typename T1, const bool has_user_flags>
+inline
+bool
+op_inv_gen_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& expr, const char* caller_sig, const uword flags)
   {
   arma_extra_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
-  if(strip_diagmat<T1>::do_diagmat)
-    {
-    const strip_diagmat<T1> strip(expr.get_ref());
-    
-    return op_inv::apply_diagmat(out, strip.M, caller_sig);
-    }
+  if(has_user_flags == true )  { arma_extra_debug_print("op_inv_gen_full: has_user_flags = true");  }
+  if(has_user_flags == false)  { arma_extra_debug_print("op_inv_gen_full: has_user_flags = false"); }
   
-  if(strip_trimat<T1>::do_trimat)
-    {
-    const strip_trimat<T1> strip(expr.get_ref());
-    
-    out = strip.M;
-    
-    arma_debug_check( (out.is_square() == false), caller_sig, ": given matrix must be square sized" );
-    
-    return auxlib::inv_tr(out, (strip.do_triu ? uword(0) : uword(1)));
-    }
+  const bool tiny         = has_user_flags && bool(flags & inv_opts::flag_tiny        );
+  const bool likely_sympd = has_user_flags && bool(flags & inv_opts::flag_likely_sympd);
+  const bool no_sympd     = has_user_flags && bool(flags & inv_opts::flag_no_sympd    );
+  
+  arma_extra_debug_print("op_inv_gen_full: enabled flags:");
+  
+  if(tiny        )  { arma_extra_debug_print("tiny");         }
+  if(likely_sympd)  { arma_extra_debug_print("likely_sympd"); }
+  if(no_sympd    )  { arma_extra_debug_print("no_sympd");     }
+  
+  arma_debug_check( (no_sympd && likely_sympd), "inv(): options 'no_sympd' and 'likely_sympd' are mutually exclusive" );
   
   out = expr.get_ref();
   
   arma_debug_check( (out.is_square() == false), caller_sig, ": given matrix must be square sized" );
   
-  if((out.n_rows <= 4) && is_cx<eT>::no)
+  if(tiny && (out.n_rows <= 4) && is_cx<eT>::no)
     {
-    arma_extra_debug_print("op_inv: attempting tinymatrix optimisation");
+    arma_extra_debug_print("op_inv_gen_full: attempting tinymatrix optimisation");
     
-    Mat<eT> tmp(out.n_rows, out.n_rows, arma_nozeros_indicator());
+    const bool status = op_inv_gen_full::apply_tiny(out);
     
-    const bool status = op_inv::apply_tiny_noalias(tmp, out);
+    if(status)  { return true; }
     
-    if(status)  { arrayops::copy(out.memptr(), tmp.memptr(), tmp.n_elem); return true; }
-    
-    arma_extra_debug_print("op_inv: tinymatrix optimisation failed");
+    arma_extra_debug_print("op_inv_gen_full: tinymatrix optimisation failed");
     
     // fallthrough if optimisation failed
     }
   
-  if(out.is_diagmat())  { return op_inv::apply_diagmat(out, out, caller_sig); }
+  if(is_op_diagmat<T1>::value || out.is_diagmat())
+    {
+    arma_extra_debug_print("op_inv_gen_full: detected diagonal matrix");
+    
+    const uword N = out.n_rows;
+    
+    eT* colmem = out.memptr();
+    
+    for(uword i=0; i<N; ++i)
+      {
+      eT& out_ii = colmem[i];
+      
+      const eT src_val = out_ii;
+      const eT inv_val = eT(1) / src_val;
+      
+      if(src_val == eT(0))  { return false; }
+      
+      out_ii = inv_val;
+      
+      colmem += N;
+      }
+    
+    return true;
+    }
   
-  const bool is_triu =                     trimat_helper::is_triu(out);
-  const bool is_tril = (is_triu) ? false : trimat_helper::is_tril(out);
+  const strip_trimat<T1> strip(expr.get_ref());
   
-  if(is_triu || is_tril)  { return auxlib::inv_tr(out, ((is_triu) ? uword(0) : uword(1))); }
-
-  #if defined(ARMA_OPTIMISE_SYMPD)
-    const bool try_sympd = sympd_helper::guess_sympd(out);
-  #else
-    const bool try_sympd = false;
-  #endif
+  const bool is_triu_expr = strip.do_triu;
+  const bool is_tril_expr = strip.do_tril;
+  
+  const bool is_triu_mat = (is_triu_expr || is_tril_expr) ? false : (                        trimat_helper::is_triu(out));
+  const bool is_tril_mat = (is_triu_expr || is_tril_expr) ? false : ((is_triu_mat) ? false : trimat_helper::is_tril(out));
+  
+  if(is_triu_expr || is_tril_expr || is_triu_mat || is_tril_mat)
+    {
+    return auxlib::inv_tr(out, ((is_triu_expr || is_triu_mat) ? uword(0) : uword(1)));
+    }
+  
+  const bool try_sympd = arma_config::optimise_sympd && ((no_sympd) ? false : (likely_sympd ? true : sympd_helper::guess_sympd(out)));
   
   if(try_sympd)
     {
-    arma_extra_debug_print("op_inv: attempting sympd optimisation");
+    arma_extra_debug_print("op_inv_gen_full: attempting sympd optimisation");
     
     Mat<eT> tmp = out;
     
-    const bool status = auxlib::inv_sympd(tmp);
+    bool sympd_state = false;
+    
+    const bool status = auxlib::inv_sympd(tmp, sympd_state);
     
     if(status)  { out.steal_mem(tmp); return true; }
     
-    arma_extra_debug_print("op_inv: sympd optimisation failed");
+    if((status == false) && (sympd_state == true))  { return false; }
+    
+    arma_extra_debug_print("op_inv_gen_full: sympd optimisation failed");
     
     // fallthrough if optimisation failed
     }
@@ -118,62 +180,11 @@ op_inv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::e
 
 
 
-template<typename T1>
-inline
-bool
-op_inv::apply_diagmat(Mat<typename T1::elem_type>& out, const T1& X, const char* caller_sig)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  const diagmat_proxy<T1> A(X);
-  
-  arma_debug_check( (A.n_rows != A.n_cols), caller_sig, ": given matrix must be square sized" );
-  
-  const uword N = (std::min)(A.n_rows, A.n_cols);
-  
-  bool status = true;
-  
-  if(A.is_alias(out) == false)
-    {
-    out.zeros(N,N);
-    
-    for(uword i=0; i<N; ++i)
-      {
-      const eT val = A[i];
-      
-      status = (val == eT(0)) ? false : status;
-      
-      out.at(i,i) = eT(1) / val;
-      }
-    }
-  else
-    {
-    Mat<eT> tmp(N, N, arma_zeros_indicator());
-    
-    for(uword i=0; i<N; ++i)
-      {
-      const eT val = A[i];
-      
-      status = (val == eT(0)) ? false : status;
-      
-      tmp.at(i,i) = eT(1) / val;
-      }
-    
-    out.steal_mem(tmp);
-    }
-  
-  return status;
-  }
-
-
-
 template<typename eT>
 arma_cold
 inline
 bool
-op_inv::apply_tiny_noalias(Mat<eT>& out, const Mat<eT>& X)
+op_inv_gen_full::apply_tiny(Mat<eT>& X)
   {
   arma_extra_debug_sigprint();
   
@@ -183,7 +194,7 @@ op_inv::apply_tiny_noalias(Mat<eT>& out, const Mat<eT>& X)
   
   const uword N = X.n_rows;
   
-  out.set_size(N,N);
+  Mat<eT> out(N, N, arma_nozeros_indicator());
   
   constexpr T det_min =        std::numeric_limits<T>::epsilon();
   constexpr T det_max = T(1) / std::numeric_limits<T>::epsilon();
@@ -191,11 +202,9 @@ op_inv::apply_tiny_noalias(Mat<eT>& out, const Mat<eT>& X)
   const eT* Xm   =   X.memptr();
         eT* outm = out.memptr();
   
-  if(N == 0)  { return true; }
-  
-  if(N == 1)  { outm[0] = eT(1) / Xm[0]; return true; };
-  
-  if(N == 2)
+       if(N == 0)  { return true; }
+  else if(N == 1)  { outm[0] = eT(1) / Xm[0]; }
+  else if(N == 2)
     {
     const eT a = Xm[pos<0,0>::n2];
     const eT b = Xm[pos<0,1>::n2];
@@ -211,11 +220,8 @@ op_inv::apply_tiny_noalias(Mat<eT>& out, const Mat<eT>& X)
     outm[pos<0,1>::n2] = -b / det_val;
     outm[pos<1,0>::n2] = -c / det_val;
     outm[pos<1,1>::n2] =  a / det_val;
-    
-    return true;
     }
-  
-  if(N == 3)
+  else if(N == 3)
     {
     const eT     det_val = op_det::apply_tiny(X);
     const  T abs_det_val = std::abs(det_val);
@@ -239,11 +245,8 @@ op_inv::apply_tiny_noalias(Mat<eT>& out, const Mat<eT>& X)
     const  T max_diff  = (is_float<T>::value) ? T(1e-4) : T(1e-10);  // empirically determined; may need tuning
     
     if(std::abs(T(1) - check_val) >= max_diff)  { return false; }
-    
-    return true;
     }
-  
-  if(N == 4)
+  else if(N == 4)
     {
     const eT     det_val = op_det::apply_tiny(X);
     const  T abs_det_val = std::abs(det_val);
@@ -275,29 +278,15 @@ op_inv::apply_tiny_noalias(Mat<eT>& out, const Mat<eT>& X)
     const  T max_diff  = (is_float<T>::value) ? T(1e-4) : T(1e-10);  // empirically determined; may need tuning
     
     if(std::abs(T(1) - check_val) >= max_diff)  { return false; }
-    
-    return true;
     }
-  
-  return false;
-  }
-
-
-
-template<typename T1>
-inline
-void
-op_inv_sympd::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv_sympd>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  const bool status = op_inv_sympd::apply_direct(out, X.m);
-  
-  if(status == false)
+  else
     {
-    out.soft_reset();
-    arma_stop_runtime_error("inv_sympd(): matrix is singular or not positive definite");
+    return false;
     }
+  
+  arrayops::copy(X.memptr(), out.memptr(), out.n_elem);
+  
+  return true;
   }
 
 
@@ -305,63 +294,89 @@ op_inv_sympd::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv_sympd>&
 template<typename T1>
 inline
 bool
-op_inv_sympd::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& expr)
+op_inv_gen_rcond::apply_direct(Mat<typename T1::elem_type>& out, typename T1::pod_type& out_rcond, const Base<typename T1::elem_type,T1>& expr)
   {
   arma_extra_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
   
-  out = expr.get_ref();
+  out       = expr.get_ref();
+  out_rcond = T(0);
   
-  arma_debug_check( (out.is_square() == false), "inv_sympd(): given matrix must be square sized" );
+  arma_debug_check( (out.is_square() == false), "inv(): given matrix must be square sized" );
   
-  if((arma_config::debug) && (auxlib::rudimentary_sym_check(out) == false))
+  const uword N = out.n_rows;
+  
+  if(is_op_diagmat<T1>::value || out.is_diagmat())
     {
-    if(is_cx<eT>::no )  { arma_debug_warn_level(1, "inv_sympd(): given matrix is not symmetric"); }
-    if(is_cx<eT>::yes)  { arma_debug_warn_level(1, "inv_sympd(): given matrix is not hermitian"); }
+    arma_extra_debug_print("op_inv_gen_rcond: detected diagonal matrix");
+    
+    eT* colmem = out.memptr();
+    
+    T max_abs_src_val = T(0);
+    T max_abs_inv_val = T(0);
+    
+    for(uword i=0; i<N; ++i)
+      {
+      eT& out_ii = colmem[i];
+      
+      const eT src_val = out_ii;
+      const eT inv_val = eT(1) / src_val;
+      
+      if(src_val == eT(0))  { return false; }
+      
+      out_ii = inv_val;
+      
+      const T abs_src_val = std::abs(src_val);
+      const T abs_inv_val = std::abs(inv_val);
+      
+      max_abs_src_val = (abs_src_val > max_abs_src_val) ? abs_src_val : max_abs_src_val;
+      max_abs_inv_val = (abs_inv_val > max_abs_inv_val) ? abs_inv_val : max_abs_inv_val;
+      
+      colmem += N;
+      }
+    
+    out_rcond = T(1) / (max_abs_src_val * max_abs_inv_val);
+    
+    return true;
     }
   
-  if((out.n_rows <= 4) && is_cx<eT>::no)
+  const strip_trimat<T1> strip(expr.get_ref());
+  
+  const bool is_triu_expr = strip.do_triu;
+  const bool is_tril_expr = strip.do_tril;
+  
+  const bool is_triu_mat = (is_triu_expr || is_tril_expr) ? false : (                        trimat_helper::is_triu(out));
+  const bool is_tril_mat = (is_triu_expr || is_tril_expr) ? false : ((is_triu_mat) ? false : trimat_helper::is_tril(out));
+  
+  if(is_triu_expr || is_tril_expr || is_triu_mat || is_tril_mat)
     {
-    arma_extra_debug_print("op_inv_sympd: attempting tinymatrix optimisation");
+    return auxlib::inv_tr_rcond(out, out_rcond, ((is_triu_expr || is_triu_mat) ? uword(0) : uword(1)));
+    }
+  
+  const bool try_sympd = arma_config::optimise_sympd && ((auxlib::crippled_lapack(out)) ? false : sympd_helper::guess_sympd(out));
+  
+  if(try_sympd)
+    {
+    arma_extra_debug_print("op_inv_gen_rcond: attempting sympd optimisation");
     
-    Mat<eT> tmp(out.n_rows, out.n_rows, arma_nozeros_indicator());
+    Mat<eT> tmp = out;
     
-    const bool status = op_inv::apply_tiny_noalias(tmp, out);
+    bool sympd_state = false;
     
-    if(status)  { arrayops::copy(out.memptr(), tmp.memptr(), tmp.n_elem); return true; }
+    const bool status = auxlib::inv_sympd_rcond(tmp, sympd_state, out_rcond, T(-1));
     
-    arma_extra_debug_print("op_inv_sympd: tinymatrix optimisation failed");
+    if(status)  { out.steal_mem(tmp); return true; }
+    
+    if((status == false) && (sympd_state == true))  { return false; }
+    
+    arma_extra_debug_print("op_inv_gen_rcond: sympd optimisation failed");
     
     // fallthrough if optimisation failed
     }
   
-  if((is_cx<eT>::no) && (is_op_diagmat<T1>::value || out.is_diagmat()))
-    {
-    arma_extra_debug_print("op_inv_sympd: detected diagonal matrix");
-    
-    // specialised handling of real matrices only;
-    // currently auxlib::inv_sympd() does not enforce that 
-    // imaginary components of diagonal elements must be zero;
-    // strictly enforcing this constraint may break existing user software.
-    
-    const uword N = (std::min)(out.n_rows, out.n_cols);
-    
-    for(uword i=0; i<N; ++i)
-      {
-            eT&      out_ii = out.at(i,i);
-      const  T  real_out_ii = access::tmp_real(out_ii);
-      
-      if(real_out_ii <= T(0))  { return false; }
-      
-      out_ii = eT(T(1) / real_out_ii);
-      }
-      
-    return true;
-    }
-  
-  return auxlib::inv_sympd(out);
+  return auxlib::inv_rcond(out, out_rcond);
   }
 
 

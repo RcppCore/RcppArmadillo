@@ -3,6 +3,23 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+
+\section{Changes in RcppArmadillo version 0.10.99.1.0 (2022-03-20)}{
+  \itemize{
+    \item Upgraded to Armadillo release 11.0-rc1 (11.0-RC1)
+    \itemize{
+      \item added variants of \code{inv()} and \code{inv_sympd()} that
+      provide rcond (reciprocal condition number)
+      \item more robust handling of rank deficient matrices by
+      \code{solve()}
+      \item faster handling of diagonal matrices by \code{rcond()}
+      \item changed \code{eigs_sym()} and \code{eigs_gen()} to use
+      higher quality RNG
+      \item stricter handling of sympd matrices by \code{inv_sympd()}
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.10.8.2.0 (2022-02-01)}{
   \itemize{
     \item Upgraded to Armadillo release 10.8.2 (Realm Raider)

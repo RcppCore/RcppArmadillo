@@ -16,49 +16,49 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup op_inv
+//! \addtogroup op_inv_spd
 //! @{
 
 
 
-class op_inv
+class op_inv_spd_default
   : public traits_op_default
   {
   public:
   
-  template<const uword row, const uword col>
-  struct pos
-    {
-    static constexpr uword n2 = row + col*2;
-    static constexpr uword n3 = row + col*3;
-    static constexpr uword n4 = row + col*4;
-    };
+  template<typename T1>
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv_spd_default>& in);
   
   template<typename T1>
-  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv>& in);
-  
-  template<typename T1>
-  inline static bool apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& expr, const char* caller_sig);
-  
-  template<typename T1>
-  inline static bool apply_diagmat(Mat<typename T1::elem_type>& out, const T1& X, const char* caller_sig);
-  
-  template<typename eT>
-  arma_cold inline static bool apply_tiny_noalias(Mat<eT>& out, const Mat<eT>& X);
+  inline static bool apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& expr);
   };
 
 
 
-class op_inv_sympd
+class op_inv_spd_full
   : public traits_op_default
   {
   public:
   
   template<typename T1>
-  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv_sympd>& in);
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv_spd_full>& in);
+  
+  template<typename T1, const bool has_user_flags = true>
+  inline static bool apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& expr, const uword flags);
+  
+  template<typename eT>
+  inline static bool apply_tiny(Mat<eT>& out);
+  };
+
+
+
+class op_inv_spd_rcond
+  : public traits_op_default
+  {
+  public:
   
   template<typename T1>
-  inline static bool apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& expr);
+  inline static bool apply_direct(Mat<typename T1::elem_type>& out_inv, typename T1::pod_type& out_rcond, const Base<typename T1::elem_type,T1>& expr);
   };
 
 

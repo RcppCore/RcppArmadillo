@@ -75,27 +75,22 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
     return op_pinv::apply_diag(out, A, tol);
     }
   
-  #if defined(ARMA_OPTIMISE_SYMPD)
-    bool do_sym   = false;
-    bool do_sympd = false;
+  bool do_sym   = false;
+  bool do_sympd = false;
+  
+  const bool is_sym_size_ok = (n_rows > (is_cx<eT>::yes ? uword(20) : uword(40)));
+  const bool is_arg_default = ((tol == T(0)) && (method_id == uword(0)));
+  
+  if( (arma_config::optimise_sympd) && (auxlib::crippled_lapack(A) == false) && (is_arg_default || is_sym_size_ok) )
+    {
+    bool is_approx_sym   = false;
+    bool is_approx_sympd = false;
     
-    const bool is_sym_size_ok = (n_rows > (is_cx<eT>::yes ? uword(20) : uword(40)));
-    const bool is_arg_default = ((tol == T(0)) && (method_id == uword(0)));
+    sympd_helper::analyse_matrix(is_approx_sym, is_approx_sympd, A);
     
-    if( (auxlib::crippled_lapack(A) == false) && (is_arg_default || is_sym_size_ok) )
-      {
-      bool is_approx_sym   = false;
-      bool is_approx_sympd = false;
-      
-      sympd_helper::analyse_matrix(is_approx_sym, is_approx_sympd, A);
-      
-      do_sym   = is_sym_size_ok && ((is_cx<eT>::no) ? (is_approx_sym) : (is_approx_sym && is_approx_sympd));
-      do_sympd = is_arg_default && is_approx_sympd;
-      }
-  #else
-    const bool do_sym   = false;
-    const bool do_sympd = false;
-  #endif
+    do_sym   = is_sym_size_ok && ((is_cx<eT>::no) ? (is_approx_sym) : (is_approx_sym && is_approx_sympd));
+    do_sympd = is_arg_default && is_approx_sympd;
+    }
   
   if(do_sympd)
     {
@@ -103,9 +98,11 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
     
     out = A;
     
-    const T rcond_threshold = T((std::max)(uword(100), uword(A.n_rows))) * std::numeric_limits<T>::epsilon();
+          bool is_sympd_junk   = false;
+          T    rcond_junk      = T(0);
+    const T    rcond_threshold = T((std::max)(uword(100), uword(A.n_rows))) * std::numeric_limits<T>::epsilon();
     
-    const bool status = auxlib::inv_sympd_rcond(out, rcond_threshold);
+    const bool status = auxlib::inv_sympd_rcond(out, is_sympd_junk, rcond_junk, rcond_threshold);
     
     if(status)  { return true; }
     

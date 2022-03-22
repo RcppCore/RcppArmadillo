@@ -333,6 +333,10 @@
   #pragma warning(disable: 4800)  // value forced to bool
   #pragma warning(disable: 4519)  // C++11: default template args are only allowed on a class template
   
+  #if defined(ARMA_HAVE_CXX17)
+  #pragma warning(disable: 26812)  // unscoped enum
+  #pragma warning(disable: 26819)  // unannotated fallthrough
+  #endif
   
   // #if (_MANAGED == 1) || (_M_CEE == 1)
   //   
@@ -415,9 +419,9 @@
 #endif
 
 
-#if ( defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER) || defined(__MINGW32__) || defined(__MINGW64__) )
-  #undef  ARMA_PRINT_EXCEPTIONS
-  #define ARMA_PRINT_EXCEPTIONS
+#if ( (defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)) && (!defined(__MINGW32__) && !defined(__MINGW64__)) )
+  #undef  ARMA_PRINT_EXCEPTIONS_INTERNAL
+  #define ARMA_PRINT_EXCEPTIONS_INTERNAL
 #endif
 
 

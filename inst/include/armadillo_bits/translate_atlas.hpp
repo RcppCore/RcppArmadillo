@@ -16,10 +16,12 @@
 // ------------------------------------------------------------------------
 
 
-#ifdef ARMA_USE_ATLAS
+#if defined(ARMA_USE_ATLAS)
 
 
-//! \namespace atlas namespace for ATLAS functions (imported from the global namespace)
+// TODO: remove support for ATLAS in next major version
+
+//! \namespace atlas namespace for ATLAS functions
 namespace atlas
   {
   
@@ -140,7 +142,7 @@ namespace atlas
   void
   cblas_gemv
     (
-    const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA,
+    const atlas_CBLAS_LAYOUT layout, const atlas_CBLAS_TRANS TransA,
     const int M, const int N,
     const eT alpha,
     const eT *A, const int lda,
@@ -154,25 +156,25 @@ namespace atlas
     if(is_float<eT>::value)
       {
       typedef float T;
-      arma_wrapper(cblas_sgemv)(Order, TransA, M, N, (const T)tmp_real(alpha), (const T*)A, lda, (const T*)X, incX, (const T)tmp_real(beta), (T*)Y, incY);
+      arma_wrapper(cblas_sgemv)(layout, TransA, M, N, (const T)tmp_real(alpha), (const T*)A, lda, (const T*)X, incX, (const T)tmp_real(beta), (T*)Y, incY);
       }
     else
     if(is_double<eT>::value)
       {
       typedef double T;
-      arma_wrapper(cblas_dgemv)(Order, TransA, M, N, (const T)tmp_real(alpha), (const T*)A, lda, (const T*)X, incX, (const T)tmp_real(beta), (T*)Y, incY);
+      arma_wrapper(cblas_dgemv)(layout, TransA, M, N, (const T)tmp_real(alpha), (const T*)A, lda, (const T*)X, incX, (const T)tmp_real(beta), (T*)Y, incY);
       }
     else
     if(is_cx_float<eT>::value)
       {
       typedef std::complex<float> T;
-      arma_wrapper(cblas_cgemv)(Order, TransA, M, N, (const T*)&alpha, (const T*)A, lda, (const T*)X, incX, (const T*)&beta, (T*)Y, incY);
+      arma_wrapper(cblas_cgemv)(layout, TransA, M, N, (const T*)&alpha, (const T*)A, lda, (const T*)X, incX, (const T*)&beta, (T*)Y, incY);
       }
     else
     if(is_cx_double<eT>::value)
       {
       typedef std::complex<double> T;
-      arma_wrapper(cblas_zgemv)(Order, TransA, M, N, (const T*)&alpha, (const T*)A, lda, (const T*)X, incX, (const T*)&beta, (T*)Y, incY);
+      arma_wrapper(cblas_zgemv)(layout, TransA, M, N, (const T*)&alpha, (const T*)A, lda, (const T*)X, incX, (const T*)&beta, (T*)Y, incY);
       }
     }
   
@@ -183,8 +185,8 @@ namespace atlas
   void
   cblas_gemm
     (
-    const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA,
-    const enum CBLAS_TRANSPOSE TransB, const int M, const int N,
+    const atlas_CBLAS_LAYOUT layout, const atlas_CBLAS_TRANS TransA,
+    const atlas_CBLAS_TRANS TransB, const int M, const int N,
     const int K, const eT alpha, const eT *A,
     const int lda, const eT *B, const int ldb,
     const eT beta, eT *C, const int ldc
@@ -195,25 +197,25 @@ namespace atlas
     if(is_float<eT>::value)
       {
       typedef float T;
-      arma_wrapper(cblas_sgemm)(Order, TransA, TransB, M, N, K, (const T)tmp_real(alpha), (const T*)A, lda, (const T*)B, ldb, (const T)tmp_real(beta), (T*)C, ldc);
+      arma_wrapper(cblas_sgemm)(layout, TransA, TransB, M, N, K, (const T)tmp_real(alpha), (const T*)A, lda, (const T*)B, ldb, (const T)tmp_real(beta), (T*)C, ldc);
       }
     else
     if(is_double<eT>::value)
       {
       typedef double T;
-      arma_wrapper(cblas_dgemm)(Order, TransA, TransB, M, N, K, (const T)tmp_real(alpha), (const T*)A, lda, (const T*)B, ldb, (const T)tmp_real(beta), (T*)C, ldc);
+      arma_wrapper(cblas_dgemm)(layout, TransA, TransB, M, N, K, (const T)tmp_real(alpha), (const T*)A, lda, (const T*)B, ldb, (const T)tmp_real(beta), (T*)C, ldc);
       }
     else
     if(is_cx_float<eT>::value)
       {
       typedef std::complex<float> T;
-      arma_wrapper(cblas_cgemm)(Order, TransA, TransB, M, N, K, (const T*)&alpha, (const T*)A, lda, (const T*)B, ldb, (const T*)&beta, (T*)C, ldc);
+      arma_wrapper(cblas_cgemm)(layout, TransA, TransB, M, N, K, (const T*)&alpha, (const T*)A, lda, (const T*)B, ldb, (const T*)&beta, (T*)C, ldc);
       }
     else
     if(is_cx_double<eT>::value)
       {
       typedef std::complex<double> T;
-      arma_wrapper(cblas_zgemm)(Order, TransA, TransB, M, N, K, (const T*)&alpha, (const T*)A, lda, (const T*)B, ldb, (const T*)&beta, (T*)C, ldc);
+      arma_wrapper(cblas_zgemm)(layout, TransA, TransB, M, N, K, (const T*)&alpha, (const T*)A, lda, (const T*)B, ldb, (const T*)&beta, (T*)C, ldc);
       }
     }
   
@@ -224,7 +226,7 @@ namespace atlas
   void
   cblas_syrk
     (
-    const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo, const enum CBLAS_TRANSPOSE Trans,
+    const atlas_CBLAS_LAYOUT layout, const atlas_CBLAS_UPLO Uplo, const atlas_CBLAS_TRANS Trans,
     const int N, const int K, const eT alpha,
     const eT* A, const int lda, const eT beta, eT* C, const int ldc
     )
@@ -234,13 +236,13 @@ namespace atlas
     if(is_float<eT>::value)
       {
       typedef float T;
-      arma_wrapper(cblas_ssyrk)(Order, Uplo, Trans, N, K, (const T)alpha, (const T*)A, lda, (const T)beta, (T*)C, ldc);
+      arma_wrapper(cblas_ssyrk)(layout, Uplo, Trans, N, K, (const T)alpha, (const T*)A, lda, (const T)beta, (T*)C, ldc);
       }
     else
     if(is_double<eT>::value)
       {
       typedef double T;
-      arma_wrapper(cblas_dsyrk)(Order, Uplo, Trans, N, K, (const T)alpha, (const T*)A, lda, (const T)beta, (T*)C, ldc);
+      arma_wrapper(cblas_dsyrk)(layout, Uplo, Trans, N, K, (const T)alpha, (const T*)A, lda, (const T)beta, (T*)C, ldc);
       }
     }
   
@@ -251,7 +253,7 @@ namespace atlas
   void
   cblas_herk
     (
-    const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo, const enum CBLAS_TRANSPOSE Trans,
+    const atlas_CBLAS_LAYOUT layout, const atlas_CBLAS_UPLO Uplo, const atlas_CBLAS_TRANS Trans,
     const int N, const int K, const T alpha,
     const std::complex<T>* A, const int lda, const T beta, std::complex<T>* C, const int ldc
     )
@@ -263,7 +265,7 @@ namespace atlas
       typedef float                  TT;
       typedef std::complex<float> cx_TT;
       
-      arma_wrapper(cblas_cherk)(Order, Uplo, Trans, N, K, (const TT)alpha, (const cx_TT*)A, lda, (const TT)beta, (cx_TT*)C, ldc);
+      arma_wrapper(cblas_cherk)(layout, Uplo, Trans, N, K, (const TT)alpha, (const cx_TT*)A, lda, (const TT)beta, (cx_TT*)C, ldc);
       }
     else
     if(is_double<T>::value)
@@ -271,239 +273,10 @@ namespace atlas
       typedef double                  TT;
       typedef std::complex<double> cx_TT;
       
-      arma_wrapper(cblas_zherk)(Order, Uplo, Trans, N, K, (const TT)alpha, (const cx_TT*)A, lda, (const TT)beta, (cx_TT*)C, ldc);
+      arma_wrapper(cblas_zherk)(layout, Uplo, Trans, N, K, (const TT)alpha, (const cx_TT*)A, lda, (const TT)beta, (cx_TT*)C, ldc);
       }
     }
   
-  
-  
-  template<typename eT>
-  inline
-  int
-  clapack_getrf
-    (
-    const enum CBLAS_ORDER Order, const int M, const int N,
-    eT *A, const int lda, int *ipiv
-    )
-    {
-    arma_type_check((is_supported_blas_type<eT>::value == false));
-    
-    if(is_float<eT>::value)
-      {
-      typedef float T;
-      return arma_wrapper(clapack_sgetrf)(Order, M, N, (T*)A, lda, ipiv);
-      }
-    else
-    if(is_double<eT>::value)
-      {
-      typedef double T;
-      return arma_wrapper(clapack_dgetrf)(Order, M, N, (T*)A, lda, ipiv);
-      }
-    else
-    if(is_cx_float<eT>::value)
-      {
-      typedef std::complex<float> T;
-      return arma_wrapper(clapack_cgetrf)(Order, M, N, (T*)A, lda, ipiv);
-      }
-    else
-    if(is_cx_double<eT>::value)
-      {
-      typedef std::complex<double> T;
-      return arma_wrapper(clapack_zgetrf)(Order, M, N, (T*)A, lda, ipiv);
-      }
-    
-    return -1;
-    }
-  
-  
-  
-  template<typename eT>
-  inline
-  int
-  clapack_getri
-    (
-    const enum CBLAS_ORDER Order, const int N, eT *A,
-    const int lda, const int *ipiv
-    )
-    {
-    arma_type_check((is_supported_blas_type<eT>::value == false));
-    
-    if(is_float<eT>::value)
-      {
-      typedef float T;
-      return arma_wrapper(clapack_sgetri)(Order, N, (T*)A, lda, ipiv);
-      }
-    else
-    if(is_double<eT>::value)
-      {
-      typedef double T;
-      return arma_wrapper(clapack_dgetri)(Order, N, (T*)A, lda, ipiv);
-      }
-    else
-    if(is_cx_float<eT>::value)
-      {
-      typedef std::complex<float> T;
-      return arma_wrapper(clapack_cgetri)(Order, N, (T*)A, lda, ipiv);
-      }
-    else
-    if(is_cx_double<eT>::value)
-      {
-      typedef std::complex<double> T;
-      return arma_wrapper(clapack_zgetri)(Order, N, (T*)A, lda, ipiv);
-      }
-    
-    return -1;
-    }
-  
-  
-  
-  template<typename eT>
-  inline
-  int
-  clapack_gesv
-    (
-    const enum CBLAS_ORDER Order,
-    const int N, const int NRHS,
-    eT* A, const int lda, int* ipiv,
-    eT* B, const int ldb
-    )
-    {
-    arma_type_check((is_supported_blas_type<eT>::value == false));
-    
-    if(is_float<eT>::value)
-      {
-      typedef float T;
-      return arma_wrapper(clapack_sgesv)(Order, N, NRHS, (T*)A, lda, ipiv, (T*)B, ldb);
-      }
-    else
-    if(is_double<eT>::value)
-      {
-      typedef double T;
-      return arma_wrapper(clapack_dgesv)(Order, N, NRHS, (T*)A, lda, ipiv, (T*)B, ldb);
-      }
-    else
-    if(is_cx_float<eT>::value)
-      {
-      typedef std::complex<float> T;
-      return arma_wrapper(clapack_cgesv)(Order, N, NRHS, (T*)A, lda, ipiv, (T*)B, ldb);
-      }
-    else
-    if(is_cx_double<eT>::value)
-      {
-      typedef std::complex<double> T;
-      return arma_wrapper(clapack_zgesv)(Order, N, NRHS, (T*)A, lda, ipiv, (T*)B, ldb);
-      }
-    
-    return -1;
-    }
-
-
-
-  template<typename eT>
-  inline
-  int
-  clapack_potrf(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo, const int N, eT *A, const int lda)
-    {
-    arma_type_check((is_supported_blas_type<eT>::value == false));
-    
-    if(is_float<eT>::value)
-      {
-      typedef float T;
-      return arma_wrapper(clapack_spotrf)(Order, Uplo, N, (T*)A, lda);
-      }
-    else
-    if(is_double<eT>::value)
-      {
-      typedef double T;
-      return arma_wrapper(clapack_dpotrf)(Order, Uplo, N, (T*)A, lda);
-      }
-    else
-    if(is_cx_float<eT>::value)
-      {
-      typedef std::complex<float> T;
-      return arma_wrapper(clapack_cpotrf)(Order, Uplo, N, (T*)A, lda);
-      }
-    else
-    if(is_cx_double<eT>::value)
-      {
-      typedef std::complex<double> T;
-      return arma_wrapper(clapack_zpotrf)(Order, Uplo, N, (T*)A, lda);
-      }
-    
-    return -1;
-    }
-  
-  
-  
-  template<typename eT>
-  inline
-  int
-  clapack_potri(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo, const int N, eT *A, const int lda)
-    {
-    arma_type_check((is_supported_blas_type<eT>::value == false));
-    
-    if(is_float<eT>::value)
-      {
-      typedef float T;
-      return arma_wrapper(clapack_spotri)(Order, Uplo, N, (T*)A, lda);
-      }
-    else
-    if(is_double<eT>::value)
-      {
-      typedef double T;
-      return arma_wrapper(clapack_dpotri)(Order, Uplo, N, (T*)A, lda);
-      }
-    else
-    if(is_cx_float<eT>::value)
-      {
-      typedef std::complex<float> T;
-      return arma_wrapper(clapack_cpotri)(Order, Uplo, N, (T*)A, lda);
-      }
-    else
-    if(is_cx_double<eT>::value)
-      {
-      typedef std::complex<double> T;
-      return arma_wrapper(clapack_zpotri)(Order, Uplo, N, (T*)A, lda);
-      }
-    
-    return -1;
-    }
-  
-  
-  
-  template<typename eT>
-  inline
-  int
-  clapack_posv(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo, const int N, const int NRHS, eT *A, const int lda, eT *B, const int ldb)
-    {
-    arma_type_check((is_supported_blas_type<eT>::value == false));
-    
-    if(is_float<eT>::value)
-      {
-      typedef float T;
-      return arma_wrapper(clapack_sposv)(Order, Uplo, N, NRHS, (T*)A, lda, (T*)B, ldb);
-      }
-    else
-    if(is_double<eT>::value)
-      {
-      typedef double T;
-      return arma_wrapper(clapack_dposv)(Order, Uplo, N, NRHS, (T*)A, lda, (T*)B, ldb);
-      }
-    else
-    if(is_cx_float<eT>::value)
-      {
-      typedef std::complex<float> T;
-      return arma_wrapper(clapack_cposv)(Order, Uplo, N, NRHS, (T*)A, lda, (T*)B, ldb);
-      }
-    else
-    if(is_cx_double<eT>::value)
-      {
-      typedef std::complex<double> T;
-      return arma_wrapper(clapack_zposv)(Order, Uplo, N, NRHS, (T*)A, lda, (T*)B, ldb);
-      }
-    
-    return -1;
-    }
   }
 
 #endif

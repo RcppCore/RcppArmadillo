@@ -61,37 +61,40 @@ TridiagEigen<eT>::compute(const Mat<eT>& mat_obj)
   evecs.set_size(n, n);
   
   char     compz      = 'I';
-  blas_int lwork      = blas_int(-1);
-  eT       lwork_opt  = eT(0);
-  
-  blas_int liwork     = blas_int(-1);
-  blas_int liwork_opt = blas_int(0);
+  blas_int lwork_min  = 1 + 4*n + n*n;
+  blas_int liwork_min = 3 + 5*n;
   blas_int info       = blas_int(0);
   
-  // query for lwork and liwork
-  lapack::stedc(&compz, &n, main_diag.memptr(), sub_diag.memptr(), evecs.memptr(), &n, &lwork_opt, &lwork, &liwork_opt, &liwork, &info);
+  blas_int  lwork_proposed = 0;
+  blas_int liwork_proposed = 0;
   
-  if(info == 0)
+  if(n >= 32)
     {
-    lwork  = blas_int(lwork_opt);
-    liwork = liwork_opt;
+    eT        work_query[2] = {};
+    blas_int lwork_query    = blas_int(-1);
+    
+    blas_int  iwork_query[2] = {};
+    blas_int liwork_query    = blas_int(-1);
+    
+    arma_extra_debug_print("lapack::stedc()");
+    lapack::stedc(&compz, &n, main_diag.memptr(), sub_diag.memptr(), evecs.memptr(), &n, &work_query[0], &lwork_query, &iwork_query[0], &liwork_query, &info);
+    
+    if(info != 0)  { arma_stop_runtime_error("lapack::stedc(): couldn't get size of work arrays"); return; }
+    
+     lwork_proposed = static_cast<blas_int>( work_query[0] );
+    liwork_proposed = iwork_query[0];
     }
-  else
-    {
-    lwork  = 1 + 4 * n + n * n;
-    liwork = 3 + 5 * n;
-    }
   
-  info = blas_int(0);
+  blas_int  lwork = (std::max)( lwork_min,  lwork_proposed);
+  blas_int liwork = (std::max)(liwork_min, liwork_proposed);
   
-  podarray<eT>        work(static_cast<uword>(lwork) );
-  podarray<blas_int> iwork(static_cast<uword>(liwork));
+  podarray<eT>        work( static_cast<uword>( lwork) );
+  podarray<blas_int> iwork( static_cast<uword>(liwork) );
   
+  arma_extra_debug_print("lapack::stedc()");
   lapack::stedc(&compz, &n, main_diag.memptr(), sub_diag.memptr(), evecs.memptr(), &n, work.memptr(), &lwork, iwork.memptr(), &liwork, &info);
   
-  if(info < 0)  { arma_stop_logic_error("lapack::stedc(): illegal value"); return; }
-  
-  if(info > 0)  { arma_stop_runtime_error("lapack::stedc(): failed to compute all eigenvalues"); return; }
+  if(info != 0)  { arma_stop_runtime_error("lapack::stedc(): failed to compute all eigenvalues"); return; }
   
   computed = true;
   }

@@ -23,6 +23,24 @@ namespace newarp
 template<typename eT, int SelectionRule, typename OpType>
 inline
 void
+GenEigsSolver<eT, SelectionRule, OpType>::fill_rand(eT* dest, const uword N, const uword seed_val)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename std::mt19937_64::result_type seed_type;
+  
+  local_rng.seed( seed_type(seed_val) );
+  
+  std::uniform_real_distribution<double> dist(-1.0, +1.0);
+  
+  for(uword i=0; i < N; ++i)  { dest[i] = eT(dist(local_rng)); }
+  }
+
+
+
+template<typename eT, int SelectionRule, typename OpType>
+inline
+void
 GenEigsSolver<eT, SelectionRule, OpType>::factorise_from(uword from_k, uword to_m, const Col<eT>& fk)
   {
   arma_extra_debug_sigprint();
@@ -44,12 +62,16 @@ GenEigsSolver<eT, SelectionRule, OpType>::factorise_from(uword from_k, uword to_
     // to the current V, which we call a restart
     if(beta < eps)
       {
+      // // Generate new random vector for fac_f
+      // blas_int idist = 2;
+      // blas_int iseed[4] = {1, 3, 5, 7};
+      // iseed[0] = (i + 100) % 4095;
+      // blas_int n = dim_n;
+      // lapack::larnv(&idist, &iseed[0], &n, fac_f.memptr());
+      
       // Generate new random vector for fac_f
-      blas_int idist = 2;
-      blas_int iseed[4] = {1, 3, 5, 7};
-      iseed[0] = (i + 100) % 4095;
-      blas_int n = dim_n;
-      lapack::larnv(&idist, &iseed[0], &n, fac_f.memptr());
+      fill_rand(fac_f.memptr(), dim_n, i+1);
+      
       // f <- f - V * V' * f, so that f is orthogonal to V
       Mat<eT> Vs(fac_V.memptr(), dim_n, i, false); // First i columns
       Col<eT> Vf = Vs.t() * fac_f;
@@ -362,11 +384,17 @@ GenEigsSolver<eT, SelectionRule, OpType>::init()
   {
   arma_extra_debug_sigprint();
   
+  // podarray<eT> init_resid(dim_n);
+  // blas_int idist = 2;                // Uniform(-1, 1)
+  // blas_int iseed[4] = {1, 3, 5, 7};  // Fixed random seed
+  // blas_int n = dim_n;
+  // lapack::larnv(&idist, &iseed[0], &n, init_resid.memptr());
+  // init(init_resid.memptr());
+  
   podarray<eT> init_resid(dim_n);
-  blas_int idist = 2;                // Uniform(-1, 1)
-  blas_int iseed[4] = {1, 3, 5, 7};  // Fixed random seed
-  blas_int n = dim_n;
-  lapack::larnv(&idist, &iseed[0], &n, init_resid.memptr());
+  
+  fill_rand(init_resid.memptr(), dim_n, 0);
+  
   init(init_resid.memptr());
   }
 

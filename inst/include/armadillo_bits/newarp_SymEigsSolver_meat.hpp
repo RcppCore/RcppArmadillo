@@ -23,6 +23,24 @@ namespace newarp
 template<typename eT, int SelectionRule, typename OpType>
 inline
 void
+SymEigsSolver<eT, SelectionRule, OpType>::fill_rand(eT* dest, const uword N, const uword seed_val)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename std::mt19937_64::result_type seed_type;
+  
+  local_rng.seed( seed_type(seed_val) );
+  
+  std::uniform_real_distribution<double> dist(-1.0, +1.0);
+  
+  for(uword i=0; i < N; ++i)  { dest[i] = eT(dist(local_rng)); }
+  }
+
+
+
+template<typename eT, int SelectionRule, typename OpType>
+inline
+void
 SymEigsSolver<eT, SelectionRule, OpType>::factorise_from(uword from_k, uword to_m, const Col<eT>& fk)
   {
   arma_extra_debug_sigprint();
@@ -47,12 +65,16 @@ SymEigsSolver<eT, SelectionRule, OpType>::factorise_from(uword from_k, uword to_
     // to the current V, which we call a restart
     if(beta < near0)
       {
+      // // Generate new random vector for fac_f
+      // blas_int idist = 2;
+      // blas_int iseed[4] = {1, 3, 5, 7};
+      // iseed[0] = (i + 100) % 4095;
+      // blas_int n = dim_n;
+      // lapack::larnv(&idist, &iseed[0], &n, fac_f.memptr());
+      
       // Generate new random vector for fac_f
-      blas_int idist = 2;
-      blas_int iseed[4] = {1, 3, 5, 7};
-      iseed[0] = (i + 100) % 4095;
-      blas_int n = dim_n;
-      lapack::larnv(&idist, &iseed[0], &n, fac_f.memptr());
+      fill_rand(fac_f.memptr(), dim_n, i+1);
+      
       // f <- f - V * V' * f, so that f is orthogonal to V
       Mat<eT> Vs(fac_V.memptr(), dim_n, i, false); // First i columns
       Col<eT> Vf = Vs.t() * fac_f;
@@ -221,15 +243,13 @@ SymEigsSolver<eT, SelectionRule, OpType>::nev_adjusted(uword nconv)
 
   // Adjust nev_new, according to dsaup2.f line 677~684 in ARPACK
   nev_new += (std::min)(nconv, (ncv - nev_new) / 2);
+  
   if(nev_new >= ncv) { nev_new = ncv - 1; }
-  if(nev_new == 1 && ncv >= 6)
+  
+  if(nev_new == 1)
     {
-    nev_new = ncv / 2;
-    }
-  else
-  if(nev_new == 1 && ncv > 2)
-    {
-    nev_new = 2;
+         if(ncv >= 6)  { nev_new = ncv / 2; }
+    else if(ncv >  2)  { nev_new = 2;       }
     }
 
   return nev_new;
@@ -266,7 +286,8 @@ SymEigsSolver<eT, SelectionRule, OpType>::retrieve_ritzpair()
       {
       // If i is even, pick values from the left (large values)
       // If i is odd, pick values from the right (small values)
-      if(i % 2 == 0) { ind[i] = ind_copy[i / 2]; } else { ind[i] = ind_copy[ncv - 1 - i / 2]; }
+      
+      ind[i] = (i % 2 == 0) ? ind_copy[i / 2] : ind_copy[ncv - 1 - i / 2];
       }
     }
 
@@ -384,11 +405,17 @@ SymEigsSolver<eT, SelectionRule, OpType>::init()
   {
   arma_extra_debug_sigprint();
   
+  // podarray<eT> init_resid(dim_n);
+  // blas_int idist = 2;                // Uniform(-1, 1)
+  // blas_int iseed[4] = {1, 3, 5, 7};  // Fixed random seed
+  // blas_int n = dim_n;
+  // lapack::larnv(&idist, &iseed[0], &n, init_resid.memptr());
+  // init(init_resid.memptr());
+  
   podarray<eT> init_resid(dim_n);
-  blas_int idist = 2;                // Uniform(-1, 1)
-  blas_int iseed[4] = {1, 3, 5, 7};  // Fixed random seed
-  blas_int n = dim_n;
-  lapack::larnv(&idist, &iseed[0], &n, init_resid.memptr());
+  
+  fill_rand(init_resid.memptr(), dim_n, 0);
+  
   init(init_resid.memptr());
   }
 
@@ -437,13 +464,10 @@ SymEigsSolver<eT, SelectionRule, OpType>::eigenvalues()
   if(nconv > 0)
     {
     uword j = 0;
-    for(uword i = 0; i < nev; i++)
+    
+    for(uword i=0; i < nev; i++)
       {
-      if(ritz_conv[i])
-        {
-        res(j) = ritz_val(i);
-        j++;
-        }
+      if(ritz_conv[i])  { res(j) = ritz_val(i); j++; }
       }
     }
   
@@ -468,13 +492,10 @@ SymEigsSolver<eT, SelectionRule, OpType>::eigenvectors(uword nvec)
     Mat<eT> ritz_vec_conv(ncv, nvec, arma_zeros_indicator());
     
     uword j = 0;
-    for(uword i = 0; i < nev && j < nvec; i++)
+    
+    for(uword i=0; i < nev && j < nvec; i++)
       {
-      if(ritz_conv[i])
-        {
-        ritz_vec_conv.col(j) = ritz_vec.col(i);
-        j++;
-        }
+      if(ritz_conv[i])  { ritz_vec_conv.col(j) = ritz_vec.col(i); j++; }
       }
     
     res = fac_V * ritz_vec_conv;

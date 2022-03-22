@@ -134,11 +134,7 @@ op_logmat::apply_direct(Mat< std::complex<typename T1::elem_type> >& out, const 
     return true;
     }
   
-  #if defined(ARMA_OPTIMISE_SYMPD)
-    const bool try_sympd = sympd_helper::guess_sympd(A);
-  #else
-    const bool try_sympd = false;
-  #endif
+  const bool try_sympd = arma_config::optimise_sympd && sympd_helper::guess_sympd(A);
   
   if(try_sympd)
     {
@@ -174,7 +170,7 @@ op_logmat::apply_direct(Mat< std::complex<typename T1::elem_type> >& out, const 
     
     arma_extra_debug_print("op_logmat: sympd optimisation failed");
     
-    // fallthrough if eigen decomposition failed or an eigenvalue is zero
+    // fallthrough if eigen decomposition failed or an eigenvalue is <= 0
     }
   
   
@@ -307,11 +303,7 @@ op_logmat_cx::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename
     return true;
     }
   
-  #if defined(ARMA_OPTIMISE_SYMPD)
-    const bool try_sympd = sympd_helper::guess_sympd(S);
-  #else
-    const bool try_sympd = false;
-  #endif
+  const bool try_sympd = arma_config::optimise_sympd && sympd_helper::guess_sympd(S);
   
   if(try_sympd)
     {
@@ -347,7 +339,7 @@ op_logmat_cx::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename
     
     arma_extra_debug_print("op_logmat_cx: sympd optimisation failed");
     
-    // fallthrough if eigen decomposition failed or an eigenvalue is zero
+    // fallthrough if eigen decomposition failed or an eigenvalue is <= 0
     }
   
   return op_logmat_cx::apply_common(out, S, n_iters);
@@ -370,9 +362,8 @@ op_logmat_cx::apply_common(Mat< std::complex<T> >& out, Mat< std::complex<T> >& 
   
   if(schur_ok == false)  { arma_extra_debug_print("logmat(): schur decomposition failed"); return false; }
   
-//double theta[] = { 1.10e-5, 1.82e-3, 1.62e-2,               5.39e-2,               1.14e-1,               1.87e-1,               2.64e-1              };
-  double theta[] = { 0.0,     0.0,     1.6206284795015624e-2, 5.3873532631381171e-2, 1.1352802267628681e-1, 1.8662860613541288e-1, 2.642960831111435e-1 };
-  // theta[0] and theta[1] not really used
+  // NOTE: theta[0] and theta[1] not really used
+  double theta[] = { 1.10e-5, 1.82e-3, 1.6206284795015624e-2, 5.3873532631381171e-2, 1.1352802267628681e-1, 1.8662860613541288e-1, 2.642960831111435e-1 };
   
   const uword N = S.n_rows;
   
@@ -513,6 +504,36 @@ op_logmat_sympd::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
     const Mat<eT>& X = U.M;
     
     arma_debug_check( (X.is_square() == false), "logmat_sympd(): given matrix must be square sized" );
+    
+    if((arma_config::debug) && (arma_config::warn_level > 0) && (is_cx<eT>::yes) && (sympd_helper::check_diag_imag(X) == false))
+      {
+      arma_debug_warn_level(1, "logmat_sympd(): imaginary components on diagonal are non-zero");
+      }
+    
+    if(is_op_diagmat<T1>::value || X.is_diagmat())
+      {
+      arma_extra_debug_print("op_logmat_sympd: detected diagonal matrix");
+      
+      out = X;
+      
+      eT* colmem = out.memptr();
+      
+      const uword N = X.n_rows;
+      
+      for(uword i=0; i<N; ++i)
+        {
+        eT& out_ii      = colmem[i];
+         T  out_ii_real = access::tmp_real(out_ii);
+        
+        if(out_ii_real <= T(0))  { return false; }
+        
+        out_ii = std::log(out_ii);
+        
+        colmem += N;
+        }
+      
+      return true;
+      }
     
     Col< T> eigval;
     Mat<eT> eigvec;

@@ -137,7 +137,7 @@ static
 void
 arma_stop_logic_error(const T1& x)
   {
-  #if (defined(ARMA_PRINT_EXCEPTIONS) && defined(ARMA_PRINT_ERRORS))
+  #if defined(ARMA_PRINT_EXCEPTIONS)
     {
     get_cerr_stream() << "\nerror: " << x << std::endl;
     }
@@ -167,7 +167,7 @@ static
 void
 arma_stop_bounds_error(const T1& x)
   {
-  #if (defined(ARMA_PRINT_EXCEPTIONS) && defined(ARMA_PRINT_ERRORS))
+  #if defined(ARMA_PRINT_EXCEPTIONS)
     {
     get_cerr_stream() << "\nerror: " << x << std::endl;
     }
@@ -186,7 +186,7 @@ static
 void
 arma_stop_bad_alloc(const T1& x)
   {
-  #if (defined(ARMA_PRINT_EXCEPTIONS) && defined(ARMA_PRINT_ERRORS))
+  #if defined(ARMA_PRINT_EXCEPTIONS)
     {
     get_cerr_stream() << "\nerror: " << x << std::endl;
     }
@@ -209,7 +209,7 @@ static
 void
 arma_stop_runtime_error(const T1& x)
   {
-  #if (defined(ARMA_PRINT_EXCEPTIONS) && defined(ARMA_PRINT_ERRORS))
+  #if defined(ARMA_PRINT_EXCEPTIONS)
     {
     get_cerr_stream() << "\nerror: " << x << std::endl;
     }
@@ -347,15 +347,7 @@ static
 void
 arma_warn(const T1& arg1)
   {
-  #if defined(ARMA_PRINT_ERRORS)
-    {
-    get_cerr_stream() << "\nwarning: " << arg1 << '\n';
-    }
-  #else
-    {
-    arma_ignore(arg1);
-    }
-  #endif
+  get_cerr_stream() << "\nwarning: " << arg1 << '\n';
   }
 
 
@@ -366,16 +358,7 @@ static
 void
 arma_warn(const T1& arg1, const T2& arg2)
   {
-  #if defined(ARMA_PRINT_ERRORS)
-    {
-    get_cerr_stream() << "\nwarning: " << arg1 << arg2 << '\n';
-    }
-  #else
-    {
-    arma_ignore(arg1);
-    arma_ignore(arg2);
-    }
-  #endif
+  get_cerr_stream() << "\nwarning: " << arg1 << arg2 << '\n';
   }
 
 
@@ -386,17 +369,7 @@ static
 void
 arma_warn(const T1& arg1, const T2& arg2, const T3& arg3)
   {
-  #if defined(ARMA_PRINT_ERRORS)
-    {
-    get_cerr_stream() << "\nwarning: " << arg1 << arg2 << arg3 << '\n';
-    }
-  #else
-    {
-    arma_ignore(arg1);
-    arma_ignore(arg2);
-    arma_ignore(arg3);
-    }
-  #endif
+  get_cerr_stream() << "\nwarning: " << arg1 << arg2 << arg3 << '\n';
   }
 
 
@@ -407,18 +380,7 @@ static
 void
 arma_warn(const T1& arg1, const T2& arg2, const T3& arg3, const T4& arg4)
   {
-  #if defined(ARMA_PRINT_ERRORS)
-    {
-    get_cerr_stream() << "\nwarning: " << arg1 << arg2 << arg3 << arg4 << '\n';
-    }
-  #else
-    {
-    arma_ignore(arg1);
-    arma_ignore(arg2);
-    arma_ignore(arg3);
-    arma_ignore(arg4);
-    }
-  #endif
+  get_cerr_stream() << "\nwarning: " << arg1 << arg2 << arg3 << arg4 << '\n';
   }
 
 
@@ -1313,6 +1275,7 @@ arma_assert_blas_size(const T1& A, const T2& B)
 
 
 
+// TODO: remove support for ATLAS in next major version
 template<typename T1>
 arma_hot
 inline
@@ -1335,6 +1298,7 @@ arma_assert_atlas_size(const T1& A)
 
 
 
+// TODO: remove support for ATLAS in next major version
 template<typename T1, typename T2>
 arma_hot
 inline
@@ -1451,25 +1415,28 @@ arma_assert_atlas_size(const T1& A, const T2& B)
             << arma_version::major << '.' << arma_version::minor << '.' << arma_version::patch
             << " (" << nickname << ")\n";
         
-        out << "@ arma_config::wrapper      = " << arma_config::wrapper      << '\n';
-        out << "@ arma_config::cxx14        = " << arma_config::cxx14        << '\n';
-        out << "@ arma_config::cxx17        = " << arma_config::cxx17        << '\n';
-        out << "@ arma_config::std_mutex    = " << arma_config::std_mutex    << '\n';
-        out << "@ arma_config::posix        = " << arma_config::posix        << '\n';
-        out << "@ arma_config::openmp       = " << arma_config::openmp       << '\n';
-        out << "@ arma_config::lapack       = " << arma_config::lapack       << '\n';
-        out << "@ arma_config::blas         = " << arma_config::blas         << '\n';
-        out << "@ arma_config::newarp       = " << arma_config::newarp       << '\n';
-        out << "@ arma_config::arpack       = " << arma_config::arpack       << '\n';
-        out << "@ arma_config::superlu      = " << arma_config::superlu      << '\n';
-        out << "@ arma_config::atlas        = " << arma_config::atlas        << '\n';
-        out << "@ arma_config::hdf5         = " << arma_config::hdf5         << '\n';
-        out << "@ arma_config::good_comp    = " << arma_config::good_comp    << '\n';
-        out << "@ arma_config::extra_code   = " << arma_config::extra_code   << '\n';
-        out << "@ arma_config::hidden_args  = " << arma_config::hidden_args  << '\n';
-        out << "@ arma_config::mat_prealloc = " << arma_config::mat_prealloc << '\n';
-        out << "@ arma_config::mp_threshold = " << arma_config::mp_threshold << '\n';
-        out << "@ arma_config::mp_threads   = " << arma_config::mp_threads   << '\n';
+        out << "@ arma_config::wrapper          = " << arma_config::wrapper          << '\n';
+        out << "@ arma_config::cxx14            = " << arma_config::cxx14            << '\n';
+        out << "@ arma_config::cxx17            = " << arma_config::cxx17            << '\n';
+        out << "@ arma_config::std_mutex        = " << arma_config::std_mutex        << '\n';
+        out << "@ arma_config::posix            = " << arma_config::posix            << '\n';
+        out << "@ arma_config::openmp           = " << arma_config::openmp           << '\n';
+        out << "@ arma_config::lapack           = " << arma_config::lapack           << '\n';
+        out << "@ arma_config::blas             = " << arma_config::blas             << '\n';
+        out << "@ arma_config::newarp           = " << arma_config::newarp           << '\n';
+        out << "@ arma_config::arpack           = " << arma_config::arpack           << '\n';
+        out << "@ arma_config::superlu          = " << arma_config::superlu          << '\n';
+        out << "@ arma_config::atlas            = " << arma_config::atlas            << '\n';
+        out << "@ arma_config::hdf5             = " << arma_config::hdf5             << '\n';
+        out << "@ arma_config::good_comp        = " << arma_config::good_comp        << '\n';
+        out << "@ arma_config::extra_code       = " << arma_config::extra_code       << '\n';
+        out << "@ arma_config::hidden_args      = " << arma_config::hidden_args      << '\n';
+        out << "@ arma_config::mat_prealloc     = " << arma_config::mat_prealloc     << '\n';
+        out << "@ arma_config::mp_threshold     = " << arma_config::mp_threshold     << '\n';
+        out << "@ arma_config::mp_threads       = " << arma_config::mp_threads       << '\n';
+        out << "@ arma_config::optimise_band    = " << arma_config::optimise_band    << '\n';
+        out << "@ arma_config::optimise_sympd   = " << arma_config::optimise_sympd   << '\n';
+        out << "@ arma_config::optimise_invexpr = " << arma_config::optimise_invexpr << '\n';
         out << "@ sizeof(void*)    = " << sizeof(void*)    << '\n';
         out << "@ sizeof(int)      = " << sizeof(int)      << '\n';
         out << "@ sizeof(long)     = " << sizeof(long)     << '\n';
