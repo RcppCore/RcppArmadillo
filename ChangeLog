@@ -1,3 +1,8 @@
+2022-03-22  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/tinytest/test_Rlapack.R: If a non-suitable LAPACK installation
+	is seen (as currently on Ubuntu under 3.9.0) skip the file
+
 2022-03-20  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version): RcppArmadillo 0.10.99.0
@@ -5,7 +10,7 @@
 	* inst/include/armadillo: Armadillo 11.0-rc1
 	* inst/include/armadillo_bits/: Idem
 
-	* inst/tinytest/test_Rlapack.R: Skipping while into linker issue
+	* inst/tinytest/test_Rlapack.R: Skipping while investigating
 
 2022-02-23  Dirk Eddelbuettel  <edd@debian.org>
 
