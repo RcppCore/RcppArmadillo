@@ -1991,12 +1991,6 @@ auxlib::eig_sym(Col<eT>& eigval, Mat<eT>& A)
     
     if(A.is_empty())  { eigval.reset(); return true; }
     
-    // if(auxlib::rudimentary_sym_check(A) == false)
-    //   {
-    //   arma_debug_warn_level(1, "eig_sym(): given matrix is not symmetric");
-    //   return false;
-    //   }
-    
     if((arma_config::debug) && (auxlib::rudimentary_sym_check(A) == false))
       {
       arma_debug_warn_level(1, "eig_sym(): given matrix is not symmetric");
@@ -2047,12 +2041,6 @@ auxlib::eig_sym(Col<T>& eigval, Mat< std::complex<T> >& A)
     arma_debug_check( (A.is_square() == false), "eig_sym(): given matrix must be square sized" );
     
     if(A.is_empty())  { eigval.reset(); return true; }
-    
-    // if(auxlib::rudimentary_sym_check(A) == false)
-    //   {
-    //   arma_debug_warn_level(1, "eig_sym(): given matrix is not hermitian");
-    //   return false;
-    //   }
     
     if((arma_config::debug) && (auxlib::rudimentary_sym_check(A) == false))
       {

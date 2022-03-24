@@ -55,7 +55,13 @@ class op_inv_gen_full
   inline static bool apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& expr, const char* caller_sig, const uword flags);
   
   template<typename eT>
-  arma_cold inline static bool apply_tiny(Mat<eT>& X);
+  arma_cold inline static bool apply_tiny_2x2(Mat<eT>& X);
+  
+  template<typename eT>
+  arma_cold inline static bool apply_tiny_3x3(Mat<eT>& X);
+  
+  template<typename eT>
+  arma_cold inline static bool apply_tiny_4x4(Mat<eT>& X);
   };
 
 
@@ -101,16 +107,19 @@ namespace inv_opts
   
   static constexpr uword flag_none         = uword(0       );
   static constexpr uword flag_tiny         = uword(1u <<  0);
-  static constexpr uword flag_likely_sympd = uword(1u <<  1);
-  static constexpr uword flag_no_sympd     = uword(1u <<  2);
+  static constexpr uword flag_allow_approx = uword(1u <<  1);
+  static constexpr uword flag_likely_sympd = uword(1u <<  2);
+  static constexpr uword flag_no_sympd     = uword(1u <<  3);
   
   struct opts_none         : public opts { inline opts_none()         : opts(flag_none        ) {} };
   struct opts_tiny         : public opts { inline opts_tiny()         : opts(flag_tiny        ) {} };
+  struct opts_allow_approx : public opts { inline opts_allow_approx() : opts(flag_allow_approx) {} };
   struct opts_likely_sympd : public opts { inline opts_likely_sympd() : opts(flag_likely_sympd) {} };
   struct opts_no_sympd     : public opts { inline opts_no_sympd()     : opts(flag_no_sympd    ) {} };
   
   static const opts_none         none;
   static const opts_tiny         tiny;
+  static const opts_allow_approx allow_approx;
   static const opts_likely_sympd likely_sympd;
   static const opts_no_sympd     no_sympd;
   }

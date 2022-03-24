@@ -54,13 +54,6 @@ op_chol::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   
   if(out.is_empty())  { return true; }
   
-  // if(auxlib::rudimentary_sym_check(out) == false)
-  //   {
-  //   if(is_cx<eT>::no )  { arma_debug_warn_level(1, "chol(): given matrix is not symmetric"); }
-  //   if(is_cx<eT>::yes)  { arma_debug_warn_level(1, "chol(): given matrix is not hermitian"); }
-  //   return false;
-  //   }
-  
   if((arma_config::debug) && (auxlib::rudimentary_sym_check(out) == false))
     {
     if(is_cx<eT>::no )  { arma_debug_warn_level(1, "chol(): given matrix is not symmetric"); }
