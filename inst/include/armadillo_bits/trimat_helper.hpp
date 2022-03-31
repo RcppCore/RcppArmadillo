@@ -107,6 +107,58 @@ is_tril(const Mat<eT>& A)
 
 
 
+template<typename eT>
+inline
+bool
+has_nonfinite_tril(const Mat<eT>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  // NOTE: assuming that A has a square size
+  
+  const eT*   colptr = A.memptr();
+  const uword N      = A.n_rows;
+  
+  for(uword i=0; i<N; ++i)
+    {
+    const uword len = N-i;
+    
+    if(arrayops::is_finite(&(colptr[i]), len) == false)  { return true; }
+    
+    colptr += N;
+    }
+  
+  return false;
+  }
+
+
+
+template<typename eT>
+inline
+bool
+has_nonfinite_triu(const Mat<eT>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  // NOTE: assuming that A has a square size
+  
+  const eT*   colptr = A.memptr();
+  const uword N      = A.n_rows;
+  
+  for(uword i=0; i<N; ++i)
+    {
+    const uword len = i+1;
+    
+    if(arrayops::is_finite(colptr, len) == false)  { return true; }
+    
+    colptr += N;
+    }
+  
+  return false;
+  }
+
+
+
 }  // end of namespace trimat_helper
 
 

@@ -1156,18 +1156,13 @@ arrayops::is_finite(const eT* src, const uword n_elem)
     const eT val_i = (*src);  src++;
     const eT val_j = (*src);  src++;
     
-    if( (arma_isfinite(val_i) == false) || (arma_isfinite(val_j) == false) )
-      {
-      return false;
-      }
+    if(arma_isfinite(val_i) == false)  { return false; }
+    if(arma_isfinite(val_j) == false)  { return false; }
     }
   
   if((j-1) < n_elem)
     {
-    if(arma_isfinite(*src) == false)
-      {
-      return false;
-      }
+    if(arma_isfinite(*src) == false)  { return false; }
     }
   
   return true;

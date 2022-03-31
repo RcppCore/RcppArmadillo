@@ -3604,6 +3604,21 @@ SpMat<eT>::has_nan() const
 
 
 
+template<typename eT>
+inline
+arma_warn_unused
+bool
+SpMat<eT>::has_nonfinite() const
+  {
+  arma_extra_debug_sigprint();
+  
+  sync_csc();
+  
+  return (arrayops::is_finite(values, n_nonzero) == false);
+  }
+
+
+
 //! returns true if the given index is currently in range
 template<typename eT>
 arma_inline

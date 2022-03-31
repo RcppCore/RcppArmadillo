@@ -173,7 +173,7 @@ auxlib::inv_tr(Mat<eT>& A, const uword layout)
   #if defined(ARMA_USE_LAPACK)
     {
     if(A.is_empty())  { return true; }
-  
+    
     arma_debug_assert_blas_size(A);
     
     char     uplo = (layout == 0) ? 'U' : 'L';
@@ -212,7 +212,7 @@ auxlib::inv_tr_rcond(Mat<eT>& A, typename get_pod_type<eT>::result& out_rcond, c
     typedef typename get_pod_type<eT>::result T;
     
     if(A.is_empty())  { return true; }
-  
+    
     out_rcond = auxlib::rcond_trimat(A, layout);
     
     arma_debug_assert_blas_size(A);
@@ -813,7 +813,7 @@ auxlib::eig_gen
     
     if(X.is_empty())  { vals.reset(); vecs.reset(); return true; }
     
-    if(X.is_finite() == false)  { return false; }
+    if(arma_config::check_nonfinite && X.has_nonfinite())  { return false; }
     
     vals.set_size(X.n_rows, 1);
     
@@ -921,7 +921,7 @@ auxlib::eig_gen
     
     if(X.is_empty())  { vals.reset(); vecs.reset(); return true; }
     
-    if(X.is_finite() == false)  { return false; }
+    if(arma_config::check_nonfinite && X.has_nonfinite())  { return false; }
     
     vals.set_size(X.n_rows, 1);
     
@@ -988,7 +988,7 @@ auxlib::eig_gen_balance
     
     if(X.is_empty())  { vals.reset(); vecs.reset(); return true; }
     
-    if(X.is_finite() == false)  { return false; }
+    if(arma_config::check_nonfinite && X.has_nonfinite())  { return false; }
     
     vals.set_size(X.n_rows, 1);
     
@@ -1112,7 +1112,7 @@ auxlib::eig_gen_balance
     
     if(X.is_empty())  { vals.reset(); vecs.reset(); return true; }
     
-    if(X.is_finite() == false)  { return false; }
+    if(arma_config::check_nonfinite && X.has_nonfinite())  { return false; }
     
     vals.set_size(X.n_rows, 1);
     
@@ -1188,7 +1188,7 @@ auxlib::eig_gen_twosided
     
     if(X.is_empty())  { vals.reset(); lvecs.reset(); rvecs.reset(); return true; }
     
-    if(X.is_finite() == false)  { return false; }
+    if(arma_config::check_nonfinite && X.has_nonfinite())  { return false; }
     
     vals.set_size(X.n_rows, 1);
     
@@ -1289,7 +1289,7 @@ auxlib::eig_gen_twosided
     
     if(X.is_empty())  { vals.reset(); lvecs.reset(); rvecs.reset(); return true; }
     
-    if(X.is_finite() == false)  { return false; }
+    if(arma_config::check_nonfinite && X.has_nonfinite())  { return false; }
     
     vals.set_size(X.n_rows, 1);
     
@@ -1353,7 +1353,7 @@ auxlib::eig_gen_twosided_balance
     
     if(X.is_empty())  { vals.reset(); lvecs.reset(); rvecs.reset(); return true; }
     
-    if(X.is_finite() == false)  { return false; }
+    if(arma_config::check_nonfinite && X.has_nonfinite())  { return false; }
     
     vals.set_size(X.n_rows, 1);
     
@@ -1470,7 +1470,7 @@ auxlib::eig_gen_twosided_balance
     
     if(X.is_empty())  { vals.reset(); lvecs.reset(); rvecs.reset(); return true; }
     
-    if(X.is_finite() == false)  { return false; }
+    if(arma_config::check_nonfinite && X.has_nonfinite())  { return false; }
     
     vals.set_size(X.n_rows, 1);
     
@@ -1548,8 +1548,8 @@ auxlib::eig_pair
     
     if(A.is_empty())  { vals.reset(); vecs.reset(); return true; }
     
-    if(A.is_finite() == false)  { return false; }
-    if(B.is_finite() == false)  { return false; }
+    if(arma_config::check_nonfinite && A.has_nonfinite())  { return false; }
+    if(arma_config::check_nonfinite && B.has_nonfinite())  { return false; }
     
     vals.set_size(A.n_rows, 1);
     
@@ -1686,8 +1686,8 @@ auxlib::eig_pair
     
     if(A.is_empty())  { vals.reset(); vecs.reset(); return true; }
     
-    if(A.is_finite() == false)  { return false; }
-    if(B.is_finite() == false)  { return false; }
+    if(arma_config::check_nonfinite && A.has_nonfinite())  { return false; }
+    if(arma_config::check_nonfinite && B.has_nonfinite())  { return false; }
     
     vals.set_size(A.n_rows, 1);
     
@@ -1783,8 +1783,8 @@ auxlib::eig_pair_twosided
     
     if(A.is_empty())  { vals.reset(); lvecs.reset(); rvecs.reset(); return true; }
     
-    if(A.is_finite() == false)  { return false; }
-    if(B.is_finite() == false)  { return false; }
+    if(arma_config::check_nonfinite && A.has_nonfinite())  { return false; }
+    if(arma_config::check_nonfinite && B.has_nonfinite())  { return false; }
     
     vals.set_size(A.n_rows, 1);
     
@@ -1914,8 +1914,8 @@ auxlib::eig_pair_twosided
     
     if(A.is_empty())  { vals.reset(); lvecs.reset(); rvecs.reset(); return true; }
     
-    if(A.is_finite() == false)  { return false; }
-    if(B.is_finite() == false)  { return false; }
+    if(arma_config::check_nonfinite && A.has_nonfinite())  { return false; }
+    if(arma_config::check_nonfinite && B.has_nonfinite())  { return false; }
     
     vals.set_size(A.n_rows, 1);
     
@@ -1996,6 +1996,8 @@ auxlib::eig_sym(Col<eT>& eigval, Mat<eT>& A)
       arma_debug_warn_level(1, "eig_sym(): given matrix is not symmetric");
       }
     
+    if(arma_config::check_nonfinite && trimat_helper::has_nonfinite_triu(A))  { return false; }
+    
     arma_debug_assert_blas_size(A);
     
     eigval.set_size(A.n_rows);
@@ -2047,6 +2049,8 @@ auxlib::eig_sym(Col<T>& eigval, Mat< std::complex<T> >& A)
       arma_debug_warn_level(1, "eig_sym(): given matrix is not hermitian");
       }
     
+    if(arma_config::check_nonfinite && trimat_helper::has_nonfinite_triu(A))  { return false; }
+    
     arma_debug_assert_blas_size(A);
     
     eigval.set_size(A.n_rows);
@@ -2089,6 +2093,8 @@ auxlib::eig_sym(Col<eT>& eigval, Mat<eT>& eigvec, const Mat<eT>& X)
   #if defined(ARMA_USE_LAPACK)
     {
     arma_debug_check( (X.is_square() == false), "eig_sym(): given matrix must be square sized" );
+    
+    if(arma_config::check_nonfinite && trimat_helper::has_nonfinite_triu(X))  { return false; }
     
     eigvec = X;
     
@@ -2139,6 +2145,8 @@ auxlib::eig_sym(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Mat< std::
     
     arma_debug_check( (X.is_square() == false), "eig_sym(): given matrix must be square sized" );
     
+    if(arma_config::check_nonfinite && trimat_helper::has_nonfinite_triu(X))  { return false; }
+    
     eigvec = X;
     
     if(eigvec.is_empty())  { eigval.reset(); eigvec.reset(); return true; }
@@ -2186,6 +2194,8 @@ auxlib::eig_sym_dc(Col<eT>& eigval, Mat<eT>& eigvec, const Mat<eT>& X)
   #if defined(ARMA_USE_LAPACK)
     {
     arma_debug_check( (X.is_square() == false), "eig_sym(): given matrix must be square sized" );
+    
+    if(arma_config::check_nonfinite && trimat_helper::has_nonfinite_triu(X))  { return false; }
     
     eigvec = X;
     
@@ -2260,6 +2270,8 @@ auxlib::eig_sym_dc(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Mat< st
     typedef typename std::complex<T> eT;
     
     arma_debug_check( (X.is_square() == false), "eig_sym(): given matrix must be square sized" );
+    
+    if(arma_config::check_nonfinite && trimat_helper::has_nonfinite_triu(X))  { return false; }
     
     eigvec = X;
     
@@ -2965,6 +2977,8 @@ auxlib::svd(Col<eT>& S, Mat<eT>& A)
     {
     if(A.is_empty())  { S.reset(); return true; }
     
+    if(arma_config::check_nonfinite && A.has_nonfinite())  { return false; }
+    
     arma_debug_assert_blas_size(A);
     
     Mat<eT> U(1, 1,        arma_nozeros_indicator());
@@ -3033,6 +3047,8 @@ auxlib::svd(Col<T>& S, Mat< std::complex<T> >& A)
     
     if(A.is_empty())  { S.reset(); return true; }
     
+    if(arma_config::check_nonfinite && A.has_nonfinite())  { return false; }
+    
     arma_debug_assert_blas_size(A);
     
     Mat<eT> U(1, 1,        arma_nozeros_indicator());
@@ -3100,6 +3116,8 @@ auxlib::svd(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, Mat<eT>& A)
   #if defined(ARMA_USE_LAPACK)
     {
     if(A.is_empty())  { U.eye(A.n_rows, A.n_rows); S.reset(); V.eye(A.n_cols, A.n_cols); return true; }
+    
+    if(arma_config::check_nonfinite && A.has_nonfinite())  { return false; }
     
     arma_debug_assert_blas_size(A);
     
@@ -3176,6 +3194,8 @@ auxlib::svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, Mat
     
     if(A.is_empty())  { U.eye(A.n_rows, A.n_rows); S.reset(); V.eye(A.n_cols, A.n_cols); return true; }
     
+    if(arma_config::check_nonfinite && A.has_nonfinite())  { return false; }
+    
     arma_debug_assert_blas_size(A);
     
     U.set_size(A.n_rows, A.n_rows);
@@ -3249,6 +3269,8 @@ auxlib::svd_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, Mat<eT>& A, const char mode
   #if defined(ARMA_USE_LAPACK)
     {
     if(A.is_empty())  { U.eye(); S.reset(); V.eye(); return true; }
+    
+    if(arma_config::check_nonfinite && A.has_nonfinite())  { return false; }
     
     arma_debug_assert_blas_size(A);
     
@@ -3361,6 +3383,8 @@ auxlib::svd_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V
     
     if(A.is_empty())  { U.eye(); S.reset(); V.eye(); return true; }
     
+    if(arma_config::check_nonfinite && A.has_nonfinite())  { return false; }
+    
     arma_debug_assert_blas_size(A);
     
     blas_int m      = blas_int(A.n_rows);
@@ -3471,6 +3495,8 @@ auxlib::svd_dc(Col<eT>& S, Mat<eT>& A)
     {
     if(A.is_empty())  { S.reset(); return true; }
     
+    if(arma_config::check_nonfinite && A.has_nonfinite())  { return false; }
+    
     arma_debug_assert_blas_size(A);
     
     Mat<eT> U(1, 1, arma_nozeros_indicator());
@@ -3541,6 +3567,8 @@ auxlib::svd_dc(Col<T>& S, Mat< std::complex<T> >& A)
     
     if(A.is_empty())  { S.reset(); return true; }
     
+    if(arma_config::check_nonfinite && A.has_nonfinite())  { return false; }
+    
     arma_debug_assert_blas_size(A);
     
     Mat<eT> U(1, 1, arma_nozeros_indicator());
@@ -3609,6 +3637,8 @@ auxlib::svd_dc(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, Mat<eT>& A)
   #if defined(ARMA_USE_LAPACK)
     {
     if(A.is_empty())  { U.eye(A.n_rows, A.n_rows); S.reset(); V.eye(A.n_cols, A.n_cols); return true; }
+    
+    if(arma_config::check_nonfinite && A.has_nonfinite())  { return false; }
     
     arma_debug_assert_blas_size(A);
     
@@ -3688,6 +3718,8 @@ auxlib::svd_dc(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, 
     
     if(A.is_empty())  { U.eye(A.n_rows, A.n_rows); S.reset(); V.eye(A.n_cols, A.n_cols); return true; }
     
+    if(arma_config::check_nonfinite && A.has_nonfinite())  { return false; }
+    
     arma_debug_assert_blas_size(A);
     
     U.set_size(A.n_rows, A.n_rows);
@@ -3762,6 +3794,8 @@ auxlib::svd_dc_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, Mat<eT>& A)
   
   #if defined(ARMA_USE_LAPACK)
     {
+    if(arma_config::check_nonfinite && A.has_nonfinite())  { return false; }
+    
     arma_debug_assert_blas_size(A);
     
     char jobz = 'S';
@@ -3846,6 +3880,8 @@ auxlib::svd_dc_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >
   #if defined(ARMA_USE_LAPACK)
     {
     typedef std::complex<T> eT;
+    
+    if(arma_config::check_nonfinite && A.has_nonfinite())  { return false; }
     
     arma_debug_assert_blas_size(A);
     
@@ -4877,6 +4913,9 @@ auxlib::solve_approx_svd(Mat<typename T1::pod_type>& out, Mat<typename T1::pod_t
     
     if(A.is_empty() || B.is_empty())  { out.zeros(A.n_cols, B.n_cols); return true; }
     
+    if(arma_config::check_nonfinite && A.has_nonfinite())  { return false; }
+    if(arma_config::check_nonfinite && B.has_nonfinite())  { return false; }
+    
     arma_debug_assert_blas_size(A,B);
     
     Mat<eT> tmp( (std::max)(A.n_rows, A.n_cols), B.n_cols, arma_nozeros_indicator() );
@@ -4994,6 +5033,9 @@ auxlib::solve_approx_svd(Mat< std::complex<typename T1::pod_type> >& out, Mat< s
     arma_debug_check( (A.n_rows != B.n_rows), "solve(): number of rows in the given matrices must be the same" );
     
     if(A.is_empty() || B.is_empty())  { out.zeros(A.n_cols, B.n_cols); return true; }
+    
+    if(arma_config::check_nonfinite && A.has_nonfinite())  { return false; }
+    if(arma_config::check_nonfinite && B.has_nonfinite())  { return false; }
     
     arma_debug_assert_blas_size(A,B);
     
@@ -5916,6 +5958,9 @@ auxlib::qz(Mat<T>& A, Mat<T>& B, Mat<T>& vsl, Mat<T>& vsr, const Base<T,T1>& X_e
     
     if(A.is_empty())  { A.reset();  B.reset();  vsl.reset(); vsr.reset(); return true; }
     
+    if(arma_config::check_nonfinite && A.has_nonfinite())  { return false; }
+    if(arma_config::check_nonfinite && B.has_nonfinite())  { return false; }
+    
     arma_debug_assert_blas_size(A);
     
     vsl.set_size(A.n_rows, A.n_rows);
@@ -5999,6 +6044,9 @@ auxlib::qz(Mat< std::complex<T> >& A, Mat< std::complex<T> >& B, Mat< std::compl
     arma_debug_check( (A.n_rows != B.n_rows), "qz(): given matrices must have the same size" );
     
     if(A.is_empty())  { A.reset(); B.reset(); vsl.reset(); vsr.reset(); return true; }
+    
+    if(arma_config::check_nonfinite && A.has_nonfinite())  { return false; }
+    if(arma_config::check_nonfinite && B.has_nonfinite())  { return false; }
     
     arma_debug_assert_blas_size(A);
     

@@ -43,7 +43,7 @@ op_cond::cond(const Base<typename T1::elem_type, T1>& X)
     {
     arma_debug_warn_level(3, "cond(): svd failed");
     
-    return T(0);
+    return Datum<T>::nan;
     }
   
   return (S.n_elem > 0) ? T( max(S) / min(S) ) : T(0);

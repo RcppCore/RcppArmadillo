@@ -161,7 +161,7 @@ op_inv_gen_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
       
       if(status)  { return true; }
       }
-      
+    
     // fallthrough if optimisation failed
     }
   
@@ -284,7 +284,7 @@ op_inv_gen_full::apply_tiny_3x3(Mat<eT>& X)
   eT* Xm = X.memptr();
   eT* Ym = Y.memptr();
   
-  const eT     det_val = op_det::apply_tiny(X);
+  const eT     det_val = op_det::apply_tiny_3x3(X);
   const  T abs_det_val = std::abs(det_val);
   
   if((abs_det_val < det_min) || (abs_det_val > det_max))  { return false; }
@@ -334,7 +334,7 @@ op_inv_gen_full::apply_tiny_4x4(Mat<eT>& X)
   eT* Xm = X.memptr();
   eT* Ym = Y.memptr();
   
-  const eT     det_val = op_det::apply_tiny(X);
+  const eT     det_val = op_det::apply_tiny_4x4(X);
   const  T abs_det_val = std::abs(det_val);
   
   if((abs_det_val < det_min) || (abs_det_val > det_max))  { return false; }
