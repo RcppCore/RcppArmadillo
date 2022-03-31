@@ -89,17 +89,39 @@ op_inv_spd_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
   if(has_user_flags == false)  { arma_extra_debug_print("op_inv_spd_full: has_user_flags = false"); }
   
   const bool tiny         = has_user_flags && bool(flags & inv_opts::flag_tiny        );
+  const bool allow_approx = has_user_flags && bool(flags & inv_opts::flag_allow_approx);
   const bool likely_sympd = has_user_flags && bool(flags & inv_opts::flag_likely_sympd);
   const bool no_sympd     = has_user_flags && bool(flags & inv_opts::flag_no_sympd    );
   
   arma_extra_debug_print("op_inv_spd_full: enabled flags:");
   
   if(tiny        )  { arma_extra_debug_print("tiny");         }
+  if(allow_approx)  { arma_extra_debug_print("allow_approx"); }
   if(likely_sympd)  { arma_extra_debug_print("likely_sympd"); }
   if(no_sympd    )  { arma_extra_debug_print("no_sympd");     }
   
   if(likely_sympd)  { arma_debug_warn_level(1, "inv_sympd(): option 'likely_sympd' ignored" ); }
   if(no_sympd)      { arma_debug_warn_level(1, "inv_sympd(): option 'no_sympd' ignored" );     }
+  
+  if(allow_approx)
+    {
+    T rcond = T(0);
+    
+    Mat<eT> tmp;
+    
+    const bool status = op_inv_spd_rcond::apply_direct(tmp, rcond, expr);
+    
+    if((status == false) || (rcond < auxlib::epsilon_lapack(tmp)))
+      {
+      const Mat<eT> A = expr.get_ref();
+      
+      return op_pinv::apply_sym(out, A, T(0), uword(0));
+      }
+    
+    out.steal_mem(tmp);
+    
+    return true;
+    }
   
   out = expr.get_ref();
   
@@ -119,17 +141,39 @@ op_inv_spd_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
       }
     }
   
-  const uword N = (std::min)(out.n_rows, out.n_cols);
+  const uword N = out.n_rows;
   
-  if(tiny && (N <= 4) && (is_cx<eT>::no))
+  if(is_cx<eT>::no)
     {
-    arma_extra_debug_print("op_inv_spd_full: attempting tinymatrix optimisation");
-    
-    const bool status = op_inv_spd_full::apply_tiny(out);
-    
-    if(status)  { return true; }
-    
-    arma_extra_debug_print("op_inv_spd_full: tinymatrix optimisation failed");
+    if(N == 1)
+      {
+      const T a = access::tmp_real(out[0]);
+      
+      out[0] = eT(T(1) / a);
+      
+      return (a > T(0));
+      }
+    else
+    if(N == 2)
+      {
+      const bool status = op_inv_spd_full::apply_tiny_2x2(out);
+      
+      if(status)  { return true; }
+      }
+    else
+    if((N == 3) && tiny)
+      {
+      const bool status = op_inv_spd_full::apply_tiny_3x3(out);
+      
+      if(status)  { return true; }
+      }
+    else
+    if((N == 4) && tiny)
+      {
+      const bool status = op_inv_spd_full::apply_tiny_4x4(out);
+      
+      if(status)  { return true; }
+      }
     
     // fallthrough if optimisation failed
     }
@@ -163,56 +207,111 @@ op_inv_spd_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
 
 
 template<typename eT>
+arma_cold
 inline
 bool
-op_inv_spd_full::apply_tiny(Mat<eT>& out)
+op_inv_spd_full::apply_tiny_2x2(Mat<eT>& X)
   {
   arma_extra_debug_sigprint();
   
   typedef typename get_pod_type<eT>::result T;
   
-  const uword N = out.n_rows;
+  // NOTE: assuming matrix X is square sized
+  // NOTE: assuming matrix X is symmetric
+  // NOTE: assuming matrix X is real
   
-  if((arma_config::debug) && (arma_config::warn_level > 0))
-    {
-    bool print_warning = false;
-    
-    T max_diag = T(0);
-    
-    const eT* colmem = out.memptr();
-    
-    for(uword i=0; i<N; ++i)
-      {
-      const eT& out_ii      = colmem[i];
-      const  T  out_ii_real = access::tmp_real(out_ii);
-      
-      // NOTE: inv_opts::tiny is also used as a workaround for broken user software
-        
-      print_warning = (out_ii_real <= T(0)) ? true : print_warning;
-      
-      max_diag = (out_ii_real > max_diag) ? out_ii_real : max_diag;
-      
-      colmem += N;
-      }
-    
-    colmem = out.memptr();
-    
-    for(uword c=0; c < N; ++c)
-      {
-      for(uword r=(c+1); r < N; ++r)
-        {
-        const T abs_val = std::abs(colmem[r]);
-        
-        print_warning = (abs_val > max_diag) ? true : print_warning;
-        }
-      
-      colmem += N;
-      }
-    
-    if(print_warning)  { arma_debug_warn_level(1, "inv_sympd(): given matrix is not positive definite"); }
-    }
+  constexpr T det_min =        std::numeric_limits<T>::epsilon();
+  constexpr T det_max = T(1) / std::numeric_limits<T>::epsilon();
   
-  return op_inv_gen_full::apply_tiny(out);
+  eT* Xm = X.memptr();
+  
+  T a = access::tmp_real(Xm[0]);
+  T c = access::tmp_real(Xm[1]);
+  T d = access::tmp_real(Xm[3]);
+  
+  const T det_val = (a*d - c*c);
+  
+  // positive definite iff all leading principal minors are positive
+  // a       = first  leading principal minor (top-left 1x1 submatrix)
+  // det_val = second leading principal minor (top-left 2x2 submatrix)
+  
+  if(a <= T(0))  { return false; }
+  
+  // NOTE: since det_min is positive, this also checks whether det_val is positive
+  if((det_val < det_min) || (det_val > det_max))  { return false; }
+  
+  d /= det_val;
+  c /= det_val;
+  a /= det_val;
+  
+  Xm[0] =  d;
+  Xm[1] = -c;
+  Xm[2] = -c;
+  Xm[3] =  a;
+  
+  return true;
+  }
+
+
+
+template<typename eT>
+arma_cold
+inline
+bool
+op_inv_spd_full::apply_tiny_3x3(Mat<eT>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  // NOTE: assuming matrix X is square sized
+  // NOTE: assuming matrix X is symmetric
+  // NOTE: assuming matrix X is real
+  
+  Mat<eT> Y(3, 3, arma_nozeros_indicator());
+  
+  arrayops::copy(Y.memptr(), X.memptr(), uword(3*3));
+  
+  const bool is_posdef = auxlib::chol_simple(Y);
+  
+  if(is_posdef == false)  { return false; }
+  
+  const bool status = op_inv_gen_full::apply_tiny_3x3(X);
+  
+  if(status == false)  { return false; }
+  
+  X = symmatl(X);
+  
+  return true;
+  }
+
+
+
+template<typename eT>
+arma_cold
+inline
+bool
+op_inv_spd_full::apply_tiny_4x4(Mat<eT>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  // NOTE: assuming matrix X is square sized
+  // NOTE: assuming matrix X is symmetric
+  // NOTE: assuming matrix X is real
+  
+  Mat<eT> Y(4, 4, arma_nozeros_indicator());
+  
+  arrayops::copy(Y.memptr(), X.memptr(), uword(4*4));
+  
+  const bool is_posdef = auxlib::chol_simple(Y);
+  
+  if(is_posdef == false)  { return false; }
+  
+  const bool status = op_inv_gen_full::apply_tiny_4x4(X);
+  
+  if(status == false)  { return false; }
+  
+  X = symmatl(X);
+  
+  return true;
   }
 
 

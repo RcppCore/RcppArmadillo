@@ -425,6 +425,7 @@ namespace arma
   #include "armadillo_bits/fn_diagmat.hpp"
   #include "armadillo_bits/fn_diagvec.hpp"
   #include "armadillo_bits/fn_inv.hpp"
+  #include "armadillo_bits/fn_inv_sympd.hpp"
   #include "armadillo_bits/fn_trace.hpp"
   #include "armadillo_bits/fn_trans.hpp"
   #include "armadillo_bits/fn_det.hpp"
