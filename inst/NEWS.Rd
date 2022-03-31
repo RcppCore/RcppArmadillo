@@ -4,18 +4,23 @@
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
 
-\section{Changes in RcppArmadillo version 0.10.99.1.0 (2022-03-20)}{
+\section{Changes in RcppArmadillo version 0.10.99.2.0 (2022-03-24)}{
   \itemize{
-    \item Upgraded to Armadillo release 11.0-rc1 (11.0-RC1)
+    \item Upgraded to Armadillo release 11.0-rc2 (11.0-RC2)
     \itemize{
       \item added variants of \code{inv()} and \code{inv_sympd()} that
       provide rcond (reciprocal condition number)
+      \item expanded \code{inv()} and \code{inv_sympd()} with options
+      \code{inv_opts::tiny} and \code{inv_opts::allow_approx}
+      \item stricter handling of singular matrices by \code{inv()} and
+      \code{inv_sympd()}
+      \item stricter handling of non-sympd matrices by \code{inv()} and
+      \code{inv_sympd()}
       \item more robust handling of rank deficient matrices by
       \code{solve()}
       \item faster handling of diagonal matrices by \code{rcond()}
       \item changed \code{eigs_sym()} and \code{eigs_gen()} to use
       higher quality RNG
-      \item stricter handling of sympd matrices by \code{inv_sympd()}
     }
   }
 }
