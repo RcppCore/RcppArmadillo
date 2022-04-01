@@ -96,12 +96,12 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
     out = A;
     
           bool is_sympd_junk   = false;
-          T    rcond_junk      = T(0);
+          T    rcond_calc      = T(0);
     const T    rcond_threshold = T((std::max)(uword(100), uword(A.n_rows))) * std::numeric_limits<T>::epsilon();
     
-    const bool status = auxlib::inv_sympd_rcond(out, is_sympd_junk, rcond_junk, rcond_threshold);
+    const bool status = auxlib::inv_sympd_rcond(out, is_sympd_junk, rcond_calc, rcond_threshold);
     
-    if(status)  { return true; }
+    if(status && arma_isfinite(rcond_calc))  { return true; }
     
     arma_extra_debug_print("op_pinv: sympd optimisation failed");
     // auxlib::inv_sympd_rcond() will fail if A isn't really positive definite or its rcond is below rcond_threshold

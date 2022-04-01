@@ -143,6 +143,8 @@ op_inv_spd_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
   
   const uword N = out.n_rows;
   
+  if(N == 0)  { return true; }
+  
   if(is_cx<eT>::no)
     {
     if(N == 1)
@@ -364,8 +366,8 @@ op_inv_spd_rcond::apply_direct(Mat<typename T1::elem_type>& out, typename T1::po
       {
       eT& out_ii = colmem[i];
       
-      const eT src_val = out_ii;
-      const eT inv_val = eT(1) / src_val;
+      const eT  src_val = out_ii;
+      const eT  inv_val = eT(1) / src_val;
       
       if( (src_val == eT(0)) || (access::tmp_real(src_val) <= T(0)) )  { return false; }
       

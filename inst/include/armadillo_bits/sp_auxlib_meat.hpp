@@ -73,6 +73,12 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
     if(is_cx<eT>::yes)  { arma_debug_warn_level(1, "eigs_sym(): given matrix is not hermitian"); }
     }
   
+  if(arma_config::check_nonfinite && U.M.has_nonfinite())
+    {
+    arma_debug_warn_level(3, "eigs_sym(): detected non-finite elements");
+    return false;
+    }
+  
   // TODO: investigate optional redirection of "sm" to ARPACK as it's capable of shift-invert;
   // TODO: in shift-invert mode, "sm" maps to "lm" of the shift-inverted matrix (with sigma = 0)
   
@@ -118,6 +124,12 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
     {
     if(is_cx<eT>::no )  { arma_debug_warn_level(1, "eigs_sym(): given matrix is not symmetric"); }
     if(is_cx<eT>::yes)  { arma_debug_warn_level(1, "eigs_sym(): given matrix is not hermitian"); }
+    }
+  
+  if(arma_config::check_nonfinite && U.M.has_nonfinite())
+    {
+    arma_debug_warn_level(3, "eigs_sym(): detected non-finite elements");
+    return false;
     }
   
   #if   (defined(ARMA_USE_NEWARP) && defined(ARMA_USE_SUPERLU))
@@ -524,6 +536,12 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
   
   arma_debug_check( (U.M.is_square() == false), "eigs_gen(): given matrix must be square sized" );
   
+  if(arma_config::check_nonfinite && U.M.has_nonfinite())
+    {
+    arma_debug_warn_level(3, "eigs_gen(): detected non-finite elements");
+    return false;
+    }
+  
   // TODO: investigate optional redirection of "sm" to ARPACK as it's capable of shift-invert;
   // TODO: in shift-invert mode, "sm" maps to "lm" of the shift-inverted matrix (with sigma = 0)
   
@@ -564,6 +582,12 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
   const unwrap_spmat<T1> U(X.get_ref());
   
   arma_debug_check( (U.M.is_square() == false), "eigs_gen(): given matrix must be square sized" );
+  
+  if(arma_config::check_nonfinite && U.M.has_nonfinite())
+    {
+    arma_debug_warn_level(3, "eigs_gen(): detected non-finite elements");
+    return false;
+    }
   
   #if (defined(ARMA_USE_ARPACK) && defined(ARMA_USE_SUPERLU))
     {
@@ -944,6 +968,12 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
   
   arma_debug_check( (U.M.is_square() == false), "eigs_gen(): given matrix must be square sized" );
   
+  if(arma_config::check_nonfinite && U.M.has_nonfinite())
+    {
+    arma_debug_warn_level(3, "eigs_gen(): detected non-finite elements");
+    return false;
+    }
+  
   constexpr std::complex<T> sigma = T(0);
   
   return sp_auxlib::eigs_gen<T, false>(eigval, eigvec, U.M, n_eigvals, form_val, sigma, opts);
@@ -962,6 +992,12 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
   const unwrap_spmat<T1> U(X.get_ref());
   
   arma_debug_check( (U.M.is_square() == false), "eigs_gen(): given matrix must be square sized" );
+  
+  if(arma_config::check_nonfinite && U.M.has_nonfinite())
+    {
+    arma_debug_warn_level(3, "eigs_gen(): detected non-finite elements");
+    return false;
+    }
   
   #if (defined(ARMA_USE_ARPACK) && defined(ARMA_USE_SUPERLU))
     {
@@ -1172,6 +1208,12 @@ sp_auxlib::spsolve_simple(Mat<typename T1::elem_type>& X, const SpBase<typename 
     
     if(A.n_nonzero == uword(0))  { X.soft_reset(); return false; }
     
+    if(arma_config::check_nonfinite && (A.has_nonfinite() || X.has_nonfinite()))
+      {
+      arma_debug_warn_level(3, "spsolve(): detected non-finite elements");
+      return false;
+      }
+    
     if(arma_config::debug)
       {
       bool overflow = false;
@@ -1294,12 +1336,15 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     
     X.zeros(A.n_cols, B.n_cols);  // set the elements to zero, as we don't trust the SuperLU spaghetti code
     
-    if(A.is_empty() || B.is_empty())
-      {
-      return true;
-      }
+    if(A.is_empty() || B.is_empty())  { return true; }
     
     if(A.n_nonzero == uword(0))  { X.soft_reset(); return false; }
+    
+    if(arma_config::check_nonfinite && (A.has_nonfinite() || X.has_nonfinite()))
+      {
+      arma_debug_warn_level(3, "spsolve(): detected non-finite elements");
+      return false;
+      }
     
     if(arma_config::debug)
       {

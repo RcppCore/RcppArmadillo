@@ -31,6 +31,7 @@ internal_randperm_helper(obj_type& x, const uword N, const uword N_keep)
   typedef typename obj_type::elem_type eT;
   
   // see op_sort_index_bones.hpp for the definition of arma_sort_index_packet
+  // and the associated comparison functor
   
   typedef arma_sort_index_packet<int> packet;
   

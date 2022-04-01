@@ -3564,7 +3564,7 @@ Cube<eT>::is_finite() const
   {
   arma_extra_debug_sigprint();
   
-  return arrayops::is_finite( memptr(), n_elem );
+  return arrayops::is_finite(memptr(), n_elem);
   }
 
 
@@ -3589,7 +3589,7 @@ Cube<eT>::has_inf() const
   {
   arma_extra_debug_sigprint();
   
-  return arrayops::has_inf( memptr(), n_elem );
+  return arrayops::has_inf(memptr(), n_elem);
   }
 
 
@@ -3602,7 +3602,20 @@ Cube<eT>::has_nan() const
   {
   arma_extra_debug_sigprint();
   
-  return arrayops::has_nan( memptr(), n_elem );
+  return arrayops::has_nan(memptr(), n_elem);
+  }
+
+
+
+template<typename eT>
+inline
+arma_warn_unused
+bool
+Cube<eT>::has_nonfinite() const
+  {
+  arma_extra_debug_sigprint();
+  
+  return (arrayops::is_finite(memptr(), n_elem) == false);
   }
 
 

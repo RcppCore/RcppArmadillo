@@ -44,7 +44,13 @@ class op_det
   inline static typename T1::elem_type apply_trimat(const Base<typename T1::elem_type,T1>& expr);
   
   template<typename eT>
-  arma_cold inline static eT apply_tiny(const Mat<eT>& X);
+  arma_cold inline static eT apply_tiny_2x2(const Mat<eT>& X);
+  
+  template<typename eT>
+  arma_cold inline static eT apply_tiny_3x3(const Mat<eT>& X);
+  
+  template<typename eT>
+  arma_cold inline static eT apply_tiny_4x4(const Mat<eT>& X);
   };
 
 

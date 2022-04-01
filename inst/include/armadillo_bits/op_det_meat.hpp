@@ -53,13 +53,23 @@ op_det::apply_direct(typename T1::elem_type& out_val, const Base<typename T1::el
   
   arma_debug_check( (A.is_square() == false), "det(): given matrix must be square sized" );
   
-  if((A.n_rows <= 4) && is_cx<eT>::no)
+  const uword N = A.n_rows;
+  
+  if(N == 0)  { out_val = eT(1); return true; }
+  if(N == 1)  { out_val =  A[0]; return true; }
+  
+  if((is_cx<eT>::no) && (N <= 4))
     {
     constexpr T det_min =        std::numeric_limits<T>::epsilon();
     constexpr T det_max = T(1) / std::numeric_limits<T>::epsilon();
     
-    const eT     det_val = op_det::apply_tiny(A);
-    const  T abs_det_val = std::abs(det_val);
+    eT det_val = eT(0);
+    
+    if(N == 2)  { det_val = op_det::apply_tiny_2x2(A); }
+    if(N == 3)  { det_val = op_det::apply_tiny_3x3(A); }
+    if(N == 4)  { det_val = op_det::apply_tiny_4x4(A); }
+    
+    const T abs_det_val = std::abs(det_val);
     
     if((abs_det_val > det_min) && (abs_det_val < det_max))  { out_val = det_val; return true; }
     
@@ -130,106 +140,114 @@ template<typename eT>
 arma_cold
 inline
 eT
-op_det::apply_tiny(const Mat<eT>& X)
+op_det::apply_tiny_2x2(const Mat<eT>& X)
   {
   arma_extra_debug_sigprint();
   
-  // NOTE: assuming matrix X is square sized
+  const eT* Xm = X.memptr();
   
-  const uword N  = X.n_rows;
-  const eT*   Xm = X.memptr();
+  return ( Xm[pos<0,0>::n2]*Xm[pos<1,1>::n2] - Xm[pos<0,1>::n2]*Xm[pos<1,0>::n2] );
+  }
+
+
+
+template<typename eT>
+arma_cold
+inline
+eT
+op_det::apply_tiny_3x3(const Mat<eT>& X)
+  {
+  arma_extra_debug_sigprint();
   
-  if(N == 0)  { return eT(1); }
+  const eT* Xm = X.memptr();
   
-  if(N == 1)  { return Xm[0]; }
+  // const double tmp1 = X.at(0,0) * X.at(1,1) * X.at(2,2);
+  // const double tmp2 = X.at(0,1) * X.at(1,2) * X.at(2,0);
+  // const double tmp3 = X.at(0,2) * X.at(1,0) * X.at(2,1);
+  // const double tmp4 = X.at(2,0) * X.at(1,1) * X.at(0,2);
+  // const double tmp5 = X.at(2,1) * X.at(1,2) * X.at(0,0);
+  // const double tmp6 = X.at(2,2) * X.at(1,0) * X.at(0,1);
+  // return (tmp1+tmp2+tmp3) - (tmp4+tmp5+tmp6);
   
-  if(N == 2)
-    {
-    return ( Xm[pos<0,0>::n2]*Xm[pos<1,1>::n2] - Xm[pos<0,1>::n2]*Xm[pos<1,0>::n2] );
-    }
-    
-  if(N == 3)
-    {
-    // const double tmp1 = X.at(0,0) * X.at(1,1) * X.at(2,2);
-    // const double tmp2 = X.at(0,1) * X.at(1,2) * X.at(2,0);
-    // const double tmp3 = X.at(0,2) * X.at(1,0) * X.at(2,1);
-    // const double tmp4 = X.at(2,0) * X.at(1,1) * X.at(0,2);
-    // const double tmp5 = X.at(2,1) * X.at(1,2) * X.at(0,0);
-    // const double tmp6 = X.at(2,2) * X.at(1,0) * X.at(0,1);
-    // return (tmp1+tmp2+tmp3) - (tmp4+tmp5+tmp6);
-    
-    const eT val1 = Xm[pos<0,0>::n3]*(Xm[pos<2,2>::n3]*Xm[pos<1,1>::n3] - Xm[pos<2,1>::n3]*Xm[pos<1,2>::n3]);
-    const eT val2 = Xm[pos<1,0>::n3]*(Xm[pos<2,2>::n3]*Xm[pos<0,1>::n3] - Xm[pos<2,1>::n3]*Xm[pos<0,2>::n3]);
-    const eT val3 = Xm[pos<2,0>::n3]*(Xm[pos<1,2>::n3]*Xm[pos<0,1>::n3] - Xm[pos<1,1>::n3]*Xm[pos<0,2>::n3]);
-    
-    return ( val1 - val2 + val3 );
-    }
+  const eT val1 = Xm[pos<0,0>::n3]*(Xm[pos<2,2>::n3]*Xm[pos<1,1>::n3] - Xm[pos<2,1>::n3]*Xm[pos<1,2>::n3]);
+  const eT val2 = Xm[pos<1,0>::n3]*(Xm[pos<2,2>::n3]*Xm[pos<0,1>::n3] - Xm[pos<2,1>::n3]*Xm[pos<0,2>::n3]);
+  const eT val3 = Xm[pos<2,0>::n3]*(Xm[pos<1,2>::n3]*Xm[pos<0,1>::n3] - Xm[pos<1,1>::n3]*Xm[pos<0,2>::n3]);
   
-  if(N == 4)
-    {
-    const eT val_03_12 = Xm[pos<0,3>::n4] * Xm[pos<1,2>::n4];
-    const eT val_02_13 = Xm[pos<0,2>::n4] * Xm[pos<1,3>::n4];
-    const eT val_03_11 = Xm[pos<0,3>::n4] * Xm[pos<1,1>::n4];
-    
-    const eT val_01_13 = Xm[pos<0,1>::n4] * Xm[pos<1,3>::n4];
-    const eT val_02_11 = Xm[pos<0,2>::n4] * Xm[pos<1,1>::n4];
-    const eT val_01_12 = Xm[pos<0,1>::n4] * Xm[pos<1,2>::n4];
-    
-    const eT val_03_10 = Xm[pos<0,3>::n4] * Xm[pos<1,0>::n4];
-    const eT val_00_13 = Xm[pos<0,0>::n4] * Xm[pos<1,3>::n4];
-    const eT val_02_10 = Xm[pos<0,2>::n4] * Xm[pos<1,0>::n4];
-    const eT val_00_12 = Xm[pos<0,0>::n4] * Xm[pos<1,2>::n4];
-    
-    const eT val_01_10 = Xm[pos<0,1>::n4] * Xm[pos<1,0>::n4];
-    const eT val_00_11 = Xm[pos<0,0>::n4] * Xm[pos<1,1>::n4];
-    
-    const eT val_21_30 = Xm[pos<2,1>::n4] * Xm[pos<3,0>::n4];
-    const eT val_22_30 = Xm[pos<2,2>::n4] * Xm[pos<3,0>::n4];
-    const eT val_23_30 = Xm[pos<2,3>::n4] * Xm[pos<3,0>::n4];
-    
-    const eT val_20_31 = Xm[pos<2,0>::n4] * Xm[pos<3,1>::n4];
-    const eT val_22_31 = Xm[pos<2,2>::n4] * Xm[pos<3,1>::n4];
-    const eT val_23_31 = Xm[pos<2,3>::n4] * Xm[pos<3,1>::n4];
-    
-    const eT val_20_32 = Xm[pos<2,0>::n4] * Xm[pos<3,2>::n4];
-    const eT val_21_32 = Xm[pos<2,1>::n4] * Xm[pos<3,2>::n4];
-    const eT val_23_32 = Xm[pos<2,3>::n4] * Xm[pos<3,2>::n4];
-    
-    const eT val_20_33 = Xm[pos<2,0>::n4] * Xm[pos<3,3>::n4];
-    const eT val_21_33 = Xm[pos<2,1>::n4] * Xm[pos<3,3>::n4];
-    const eT val_22_33 = Xm[pos<2,2>::n4] * Xm[pos<3,3>::n4];
-    
-    const eT val = \
-        val_03_12 * val_21_30 \
-      - val_02_13 * val_21_30 \
-      - val_03_11 * val_22_30 \
-      + val_01_13 * val_22_30 \
-      + val_02_11 * val_23_30 \
-      - val_01_12 * val_23_30 \
-      - val_03_12 * val_20_31 \
-      + val_02_13 * val_20_31 \
-      + val_03_10 * val_22_31 \
-      - val_00_13 * val_22_31 \
-      - val_02_10 * val_23_31 \
-      + val_00_12 * val_23_31 \
-      + val_03_11 * val_20_32 \
-      - val_01_13 * val_20_32 \
-      - val_03_10 * val_21_32 \
-      + val_00_13 * val_21_32 \
-      + val_01_10 * val_23_32 \
-      - val_00_11 * val_23_32 \
-      - val_02_11 * val_20_33 \
-      + val_01_12 * val_20_33 \
-      + val_02_10 * val_21_33 \
-      - val_00_12 * val_21_33 \
-      - val_01_10 * val_22_33 \
-      + val_00_11 * val_22_33 \
-      ;
-    
-    return val;
-    }
+  return ( val1 - val2 + val3 );
+  }
+
+
+
+template<typename eT>
+arma_cold
+inline
+eT
+op_det::apply_tiny_4x4(const Mat<eT>& X)
+  {
+  arma_extra_debug_sigprint();
   
-  return eT(0);
+  const eT* Xm = X.memptr();
+  
+  const eT val_03_12 = Xm[pos<0,3>::n4] * Xm[pos<1,2>::n4];
+  const eT val_02_13 = Xm[pos<0,2>::n4] * Xm[pos<1,3>::n4];
+  const eT val_03_11 = Xm[pos<0,3>::n4] * Xm[pos<1,1>::n4];
+  
+  const eT val_01_13 = Xm[pos<0,1>::n4] * Xm[pos<1,3>::n4];
+  const eT val_02_11 = Xm[pos<0,2>::n4] * Xm[pos<1,1>::n4];
+  const eT val_01_12 = Xm[pos<0,1>::n4] * Xm[pos<1,2>::n4];
+  
+  const eT val_03_10 = Xm[pos<0,3>::n4] * Xm[pos<1,0>::n4];
+  const eT val_00_13 = Xm[pos<0,0>::n4] * Xm[pos<1,3>::n4];
+  const eT val_02_10 = Xm[pos<0,2>::n4] * Xm[pos<1,0>::n4];
+  const eT val_00_12 = Xm[pos<0,0>::n4] * Xm[pos<1,2>::n4];
+  
+  const eT val_01_10 = Xm[pos<0,1>::n4] * Xm[pos<1,0>::n4];
+  const eT val_00_11 = Xm[pos<0,0>::n4] * Xm[pos<1,1>::n4];
+  
+  const eT val_21_30 = Xm[pos<2,1>::n4] * Xm[pos<3,0>::n4];
+  const eT val_22_30 = Xm[pos<2,2>::n4] * Xm[pos<3,0>::n4];
+  const eT val_23_30 = Xm[pos<2,3>::n4] * Xm[pos<3,0>::n4];
+  
+  const eT val_20_31 = Xm[pos<2,0>::n4] * Xm[pos<3,1>::n4];
+  const eT val_22_31 = Xm[pos<2,2>::n4] * Xm[pos<3,1>::n4];
+  const eT val_23_31 = Xm[pos<2,3>::n4] * Xm[pos<3,1>::n4];
+  
+  const eT val_20_32 = Xm[pos<2,0>::n4] * Xm[pos<3,2>::n4];
+  const eT val_21_32 = Xm[pos<2,1>::n4] * Xm[pos<3,2>::n4];
+  const eT val_23_32 = Xm[pos<2,3>::n4] * Xm[pos<3,2>::n4];
+  
+  const eT val_20_33 = Xm[pos<2,0>::n4] * Xm[pos<3,3>::n4];
+  const eT val_21_33 = Xm[pos<2,1>::n4] * Xm[pos<3,3>::n4];
+  const eT val_22_33 = Xm[pos<2,2>::n4] * Xm[pos<3,3>::n4];
+  
+  const eT val = \
+      val_03_12 * val_21_30 \
+    - val_02_13 * val_21_30 \
+    - val_03_11 * val_22_30 \
+    + val_01_13 * val_22_30 \
+    + val_02_11 * val_23_30 \
+    - val_01_12 * val_23_30 \
+    - val_03_12 * val_20_31 \
+    + val_02_13 * val_20_31 \
+    + val_03_10 * val_22_31 \
+    - val_00_13 * val_22_31 \
+    - val_02_10 * val_23_31 \
+    + val_00_12 * val_23_31 \
+    + val_03_11 * val_20_32 \
+    - val_01_13 * val_20_32 \
+    - val_03_10 * val_21_32 \
+    + val_00_13 * val_21_32 \
+    + val_01_10 * val_23_32 \
+    - val_00_11 * val_23_32 \
+    - val_02_11 * val_20_33 \
+    + val_01_12 * val_20_33 \
+    + val_02_10 * val_21_33 \
+    - val_00_12 * val_21_33 \
+    - val_01_10 * val_22_33 \
+    + val_00_11 * val_22_33 \
+    ;
+  
+  return val;
   }
 
 
