@@ -4,9 +4,9 @@
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
 
-\section{Changes in RcppArmadillo version 0.10.99.2.0 (2022-03-24)}{
+\section{Changes in RcppArmadillo version 0.10.99.3.0 (2022-03-31)}{
   \itemize{
-    \item Upgraded to Armadillo release 11.0-rc2 (11.0-RC2)
+    \item Upgraded to Armadillo release 11.0-rc3 (11.0-RC3)
     \itemize{
       \item added variants of \code{inv()} and \code{inv_sympd()} that
       provide rcond (reciprocal condition number)
