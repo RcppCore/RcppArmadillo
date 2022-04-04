@@ -1,6 +1,6 @@
 ## py2r.R: Conversion of SciPy sparse matrix to R
 ##
-## Copyright (C) 2017 - 2020  Binxiang Ni and Dirk Eddelbuettel
+## Copyright (C) 2017 - 2022  Binxiang Ni and Dirk Eddelbuettel
 ##
 ## This file is part of RcppArmadillo.
 ##
@@ -25,7 +25,8 @@
 .onWindows <- .Platform$OS.type == "windows"
 .is32bit <- .Platform$r_arch == "i386"
 
-if (.onWindows && .is32bit) exit_file("Do not bother on 32-bit Windows")
+#if (.onWindows && .is32bit) exit_file("Do not bother on 32-bit Windows")
+if (.onWindows) exit_file("Do not bother on Windows")
 
 if (!requireNamespace("Matrix", quietly=TRUE)) exit_file("Package Matrix missing")
 if (!requireNamespace("reticulate", quietly=TRUE)) exit_file("Package reticulate missing")

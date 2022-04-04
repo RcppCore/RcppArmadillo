@@ -1,3 +1,7 @@
+2022-04-04  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/tinytest/test_scipy2r.R: Skip on Windows
+
 2022-03-31  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version): RcppArmadillo 0.10.99.3.0
@@ -42,7 +46,7 @@
 2022-02-14  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/RcppArmadilloWrap.h (wrap): Unless
-	RCPP_ARMADILLO_OLD_FielBEHAVIOR is defines use correction
+	RCPP_ARMADILLO_OLD_Field_BEHAVIOR is defines use correction
 
 2022-02-01  Dirk Eddelbuettel  <edd@debian.org>
 
