@@ -4,9 +4,9 @@
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
 
-\section{Changes in RcppArmadillo version 0.10.99.3.0 (2022-03-31)}{
+\section{Changes in RcppArmadillo version 0.11.0.0 (2022-04-04)}{
   \itemize{
-    \item Upgraded to Armadillo release 11.0-rc3 (11.0-RC3)
+    \item Upgraded to Armadillo release 11.0.0 (Creme Brulee)
     \itemize{
       \item added variants of \code{inv()} and \code{inv_sympd()} that
       provide rcond (reciprocal condition number)
@@ -16,12 +16,21 @@
       \code{inv_sympd()}
       \item stricter handling of non-sympd matrices by \code{inv()} and
       \code{inv_sympd()}
+      \item stricter handling of non-finitie matrices by \code{pinv()}
       \item more robust handling of rank deficient matrices by
       \code{solve()}
       \item faster handling of diagonal matrices by \code{rcond()}
       \item changed \code{eigs_sym()} and \code{eigs_gen()} to use
       higher quality RNG
+      \item \code{quantile()} and \code{median()} will now throw an
+      exception if given matrices/vectors have NaN elements
+      \item workaround for yet another bug in Intel MKL
     }
+    \item Until May 2022, protect correction to Field behavior via
+    define of \code{RCPP_ARMADILLO_FIX_Field}
+    \item If a LAPACK installation with missing complex routines is
+    found (as e.g. Ubuntu using 3.9.0) then the LAPACK unit test is
+    skipped.
   }
 }
 
