@@ -62,7 +62,7 @@ op_inv_spd_full::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv_spd_
   {
   arma_extra_debug_sigprint();
   
-  const uword flags = X.in_aux_uword_a;
+  const uword flags = X.aux_uword_a;
   
   const bool status = op_inv_spd_full::apply_direct(out, X.m, flags);
   
