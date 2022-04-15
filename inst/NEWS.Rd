@@ -3,8 +3,18 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.11.0.1.0 (2022-04-14)}{
+  \itemize{
+    \item Upgraded to Armadillo release 11.0.1 (Creme Brulee)
+    \itemize{
+      \item fix miscompilation of \code{inv()} and \code{inv_sympd()}
+      functions when using \code{inv_opts::allow_approx} and
+      \code{inv_opts::tiny} options
+    }
+  }
+}
 
-\section{Changes in RcppArmadillo version 0.11.0.0 (2022-04-04)}{
+\section{Changes in RcppArmadillo version 0.11.0.0.0 (2022-04-04)}{
   \itemize{
     \item Upgraded to Armadillo release 11.0.0 (Creme Brulee)
     \itemize{
