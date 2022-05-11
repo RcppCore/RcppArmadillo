@@ -25,8 +25,11 @@ class op_cond
   {
   public:
   
-  template<typename T1> static inline typename T1::pod_type  cond(const Base<typename T1::elem_type, T1>& X);
-  template<typename T1> static inline typename T1::pod_type rcond(const Base<typename T1::elem_type, T1>& X);
+  template<typename T1> static inline typename T1::pod_type apply(const Base<typename T1::elem_type, T1>& X);
+  
+  template<typename eT> static inline typename get_pod_type<eT>::result apply_diag(const Mat<eT>& A);
+  template<typename eT> static inline typename get_pod_type<eT>::result apply_sym (      Mat<eT>& A);
+  template<typename eT> static inline typename get_pod_type<eT>::result apply_gen (      Mat<eT>& A);
   };
 
 

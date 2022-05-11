@@ -209,6 +209,13 @@ struct arma_config
   #endif
   
   
+  #if defined(ARMA_DONT_ZERO_INIT)
+    static constexpr bool zero_init = false;
+  #else
+    static constexpr bool zero_init = true;
+  #endif
+  
+  
   static constexpr uword warn_level = (sword(ARMA_WARN_LEVEL) > 0) ? uword(ARMA_WARN_LEVEL) : 0;
   };
 

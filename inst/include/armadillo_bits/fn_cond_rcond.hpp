@@ -29,7 +29,7 @@ cond(const Base<typename T1::elem_type, T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  return op_cond::cond(X.get_ref());
+  return op_cond::apply(X.get_ref());
   }
 
 
@@ -42,7 +42,7 @@ rcond(const Base<typename T1::elem_type, T1>& X)
   {
   arma_extra_debug_sigprint();
   
-  return op_cond::rcond(X.get_ref());
+  return op_rcond::apply(X.get_ref());
   }
 
 

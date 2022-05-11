@@ -29,10 +29,6 @@ class arrayops
   copy(eT* dest, const eT* src, const uword n_elem);
   
   template<typename eT>
-  arma_cold inline static void
-  copy_small(eT* dest, const eT* src, const uword n_elem);
-  
-  template<typename eT>
   inline static void
   fill_zeros(eT* dest, const uword n_elem);
   

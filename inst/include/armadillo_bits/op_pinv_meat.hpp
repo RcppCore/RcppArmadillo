@@ -25,6 +25,45 @@
 template<typename T1>
 inline
 void
+op_pinv_default::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_pinv_default>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool status = op_pinv_default::apply_direct(out, in.m);
+  
+  if(status == false)
+    {
+    out.soft_reset();
+    arma_stop_runtime_error("pinv(): svd failed");
+    }
+  }
+
+
+
+template<typename T1>
+inline
+bool
+op_pinv_default::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& expr)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::pod_type T;
+  
+  constexpr T     tol       = T(0);
+  constexpr uword method_id = uword(0);
+  
+  return op_pinv::apply_direct(out, expr, tol, method_id);
+  }
+
+
+
+//
+
+
+
+template<typename T1>
+inline
+void
 op_pinv::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_pinv>& in)
   {
   arma_extra_debug_sigprint();
