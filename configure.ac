@@ -184,6 +184,7 @@ arma_have_openmp="#define ARMA_DONT_USE_OPENMP 1"
 
 if test x"${openmp_already_works}" = x"yes"; then
     arma_have_openmp="#define ARMA_USE_OPENMP 1"
+    openmp_flag='$(SHLIB_OPENMP_CXXFLAGS)'
 fi
 
 if test x"${can_use_openmp}" = x"yes"; then
