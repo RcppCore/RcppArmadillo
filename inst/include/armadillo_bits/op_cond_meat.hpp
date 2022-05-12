@@ -24,16 +24,129 @@
 template<typename T1>
 inline
 typename T1::pod_type
-op_cond::cond(const Base<typename T1::elem_type, T1>& X)
+op_cond::apply(const Base<typename T1::elem_type, T1>& X)
   {
   arma_extra_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
   
-  // TODO: implement speed up for symmetric matrices, similar to op_pinv::apply_sym()
-  
   Mat<eT> A(X.get_ref());
+  
+  if(A.n_elem == 0)  { return T(0); }
+  
+  if(is_op_diagmat<T1>::value || A.is_diagmat())
+    {
+    arma_extra_debug_print("op_cond::apply(): detected diagonal matrix");
+    
+    return op_cond::apply_diag(A);
+    }
+  
+  bool is_approx_sym   = false;
+  bool is_approx_sympd = false;
+  
+  sympd_helper::analyse_matrix(is_approx_sym, is_approx_sympd, A);
+  
+  const bool do_sym = (is_cx<eT>::no) ? (is_approx_sym) : (is_approx_sym && is_approx_sympd);
+  
+  if(do_sym)
+    {
+    arma_extra_debug_print("op_cond: symmetric/hermitian optimisation");
+    
+    return op_cond::apply_sym(A);
+    }
+  
+  return op_cond::apply_gen(A);
+  }
+
+
+
+template<typename eT>
+inline
+typename get_pod_type<eT>::result
+op_cond::apply_diag(const Mat<eT>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename get_pod_type<eT>::result T;
+  
+  const uword N = (std::min)(A.n_rows, A.n_cols);
+  
+  T abs_min = Datum<T>::inf;
+  T abs_max = T(0);
+  
+  for(uword i=0; i < N; ++i)
+    {
+    const T abs_val = std::abs(A.at(i,i));
+    
+    if(arma_isnan(abs_val))
+      {
+      arma_debug_warn_level(3, "cond(): failed");
+      
+      return Datum<T>::nan;
+      }
+    
+    abs_min = (abs_val < abs_min) ? abs_val : abs_min;
+    abs_max = (abs_val > abs_max) ? abs_val : abs_max;
+    }
+  
+  if((abs_min == T(0)) || (abs_max == T(0)))  { return Datum<T>::inf; }
+  
+  return T(abs_max / abs_min);
+  }
+
+
+
+template<typename eT>
+inline
+typename get_pod_type<eT>::result
+op_cond::apply_sym(Mat<eT>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename get_pod_type<eT>::result T;
+  
+  Col<T> eigval;
+  
+  const bool status = auxlib::eig_sym(eigval, A);
+  
+  if(status == false)
+    {
+    arma_debug_warn_level(3, "cond(): failed");
+    
+    return Datum<T>::nan;
+    }
+  
+  if(eigval.n_elem == 0)  { return T(0); }
+  
+  const T* eigval_mem = eigval.memptr();
+  
+  T abs_min = std::abs(eigval_mem[0]);
+  T abs_max = abs_min;
+  
+  for(uword i=1; i < eigval.n_elem; ++i)
+    {
+    const T abs_val = std::abs(eigval_mem[i]);
+    
+    abs_min = (abs_val < abs_min) ? abs_val : abs_min;
+    abs_max = (abs_val > abs_max) ? abs_val : abs_max;
+    }
+  
+  if((abs_min == T(0)) || (abs_max == T(0)))  { return Datum<T>::inf; }
+  
+  return T(abs_max / abs_min);
+  }
+
+
+
+template<typename eT>
+inline
+typename get_pod_type<eT>::result
+op_cond::apply_gen(Mat<eT>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename get_pod_type<eT>::result T;
   
   Col<T> S;
   
@@ -41,105 +154,19 @@ op_cond::cond(const Base<typename T1::elem_type, T1>& X)
   
   if(status == false)
     {
-    arma_debug_warn_level(3, "cond(): svd failed");
+    arma_debug_warn_level(3, "cond(): failed");
     
     return Datum<T>::nan;
     }
   
-  return (S.n_elem > 0) ? T( max(S) / min(S) ) : T(0);
-  }
-
-
-
-template<typename T1>
-inline
-typename T1::pod_type
-op_cond::rcond(const Base<typename T1::elem_type, T1>& X)
-  {
-  arma_extra_debug_sigprint();
+  if(S.n_elem == 0)  { return T(0); }
   
-  typedef typename T1::elem_type eT;
-  typedef typename T1::pod_type   T;
+  const T S_max = S[0];
+  const T S_min = S[S.n_elem-1];
   
-  if(strip_trimat<T1>::do_trimat)
-    {
-    const strip_trimat<T1> S(X.get_ref());
-    
-    const quasi_unwrap<typename strip_trimat<T1>::stored_type> U(S.M);
-    
-    arma_debug_check( (U.M.is_square() == false), "rcond(): matrix must be square sized" );
-    
-    const uword layout = (S.do_triu) ? uword(0) : uword(1);
-    
-    return auxlib::rcond_trimat(U.M, layout);
-    }
+  if((S_max == T(0)) || (S_min == T(0)))  { return Datum<T>::inf; }
   
-  Mat<eT> A = X.get_ref();
-  
-  arma_debug_check( (A.is_square() == false), "rcond(): matrix must be square sized" );
-  
-  if(A.is_empty()) { return Datum<T>::inf; }
-  
-  if(is_op_diagmat<T1>::value || A.is_diagmat())
-    {
-    arma_extra_debug_print("op_cond::rcond(): detected diagonal matrix");
-    
-    const eT*   colmem = A.memptr();
-    const uword N      = A.n_rows;
-    
-    T max_abs_src_val = T(0);
-    T max_abs_inv_val = T(0);
-    
-    for(uword i=0; i<N; ++i)
-      {
-      const eT src_val = colmem[i];
-      const eT inv_val = eT(1) / src_val;
-      
-      if(src_val == eT(0))  { return T(0); }
-      
-      const T abs_src_val = std::abs(src_val);
-      const T abs_inv_val = std::abs(inv_val);
-      
-      max_abs_src_val = (abs_src_val > max_abs_src_val) ? abs_src_val : max_abs_src_val;
-      max_abs_inv_val = (abs_inv_val > max_abs_inv_val) ? abs_inv_val : max_abs_inv_val;
-      
-      colmem += N;
-      }
-    
-    return T(1) / (max_abs_src_val * max_abs_inv_val);
-    }
-  
-  const bool is_triu =                     trimat_helper::is_triu(A);
-  const bool is_tril = (is_triu) ? false : trimat_helper::is_tril(A);
-  
-  if(is_triu || is_tril)
-    {
-    const uword layout = (is_triu) ? uword(0) : uword(1);
-    
-    return auxlib::rcond_trimat(A, layout);
-    }
-  
-  const bool try_sympd = arma_config::optimise_sympd && (auxlib::crippled_lapack(A) ? false : sympd_helper::guess_sympd(A));
-  
-  if(try_sympd)
-    {
-    arma_extra_debug_print("op_cond::rcond(): attempting sympd optimisation");
-    
-    bool calc_ok = false;
-    
-    const T out_val = auxlib::rcond_sympd(A, calc_ok);
-    
-    if(calc_ok)  { return out_val; }
-    
-    arma_extra_debug_print("op_cond::rcond(): sympd optimisation failed");
-    
-    // auxlib::rcond_sympd() may have failed because A isn't really sympd
-    // restore A, as auxlib::rcond_sympd() may have destroyed it
-    A = X.get_ref();
-    // fallthrough to the next return statement
-    }
-  
-  return auxlib::rcond(A);
+  return T(S_max / S_min);
   }
 
 

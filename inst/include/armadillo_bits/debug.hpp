@@ -389,6 +389,12 @@ arma_warn(const T1& arg1, const T2& arg2, const T3& arg3, const T4& arg4)
 // arma_warn_level
 
 
+#if defined(ARMA_EXTRA_DEBUG)
+  #undef  ARMA_WARN_LEVEL
+  #define ARMA_WARN_LEVEL 3
+#endif
+
+
 template<typename T1>
 inline
 void
@@ -1368,19 +1374,16 @@ arma_assert_atlas_size(const T1& A, const T2& B)
 
 #if defined(ARMA_EXTRA_DEBUG)
   
-  #undef  ARMA_WARN_LEVEL
-  #define ARMA_WARN_LEVEL 3
-  
   #define arma_extra_debug_sigprint       arma_sigprint(ARMA_FNSIG); arma_bktprint
   #define arma_extra_debug_sigprint_this  arma_sigprint(ARMA_FNSIG); arma_thisprint
   #define arma_extra_debug_print          arma_print
-
+  
 #else
   
   #define arma_extra_debug_sigprint        true ? (void)0 : arma_bktprint
   #define arma_extra_debug_sigprint_this   true ? (void)0 : arma_thisprint
   #define arma_extra_debug_print           true ? (void)0 : arma_print
- 
+  
 #endif
 
 
@@ -1438,6 +1441,7 @@ arma_assert_atlas_size(const T1& A, const T2& B)
         out << "@ arma_config::optimise_sympd   = " << arma_config::optimise_sympd   << '\n';
         out << "@ arma_config::optimise_invexpr = " << arma_config::optimise_invexpr << '\n';
         out << "@ arma_config::check_nonfinite  = " << arma_config::check_nonfinite  << '\n';
+        out << "@ arma_config::zero_init        = " << arma_config::zero_init        << '\n';
         out << "@ sizeof(void*)    = " << sizeof(void*)    << '\n';
         out << "@ sizeof(int)      = " << sizeof(int)      << '\n';
         out << "@ sizeof(long)     = " << sizeof(long)     << '\n';

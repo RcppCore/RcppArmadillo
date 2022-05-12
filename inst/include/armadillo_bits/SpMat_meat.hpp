@@ -3842,10 +3842,7 @@ SpMat<eT>::resize(const uword in_rows, const uword in_cols)
   {
   arma_extra_debug_sigprint();
   
-  if( (n_rows == in_rows) && (n_cols == in_cols) )
-    {
-    return;
-    }
+  if( (n_rows == in_rows) && (n_cols == in_cols) )  { return; }
   
   if( (n_elem == 0) || (n_nonzero == 0) )
     {

@@ -22,6 +22,18 @@
 
 
 
+class op_pinv_default
+  : public traits_op_default
+  {
+  public:
+  
+  template<typename T1> inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_pinv_default>& in);
+  
+  template<typename T1> inline static bool apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& expr);
+  };
+
+
+
 class op_pinv
   : public traits_op_default
   {

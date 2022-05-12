@@ -82,12 +82,11 @@ Cube<eT>::Cube(const uword in_n_rows, const uword in_n_cols, const uword in_n_sl
   
   init_cold();
   
-  #if (!defined(ARMA_DONT_ZERO_INIT))
+  if(arma_config::zero_init)
     {
     arma_extra_debug_print("Cube::constructor: zeroing memory");
     arrayops::fill_zeros(memptr(), n_elem);
     }
-  #endif
   }
 
 
@@ -109,12 +108,11 @@ Cube<eT>::Cube(const SizeCube& s)
   
   init_cold();
   
-  #if (!defined(ARMA_DONT_ZERO_INIT))
+  if(arma_config::zero_init)
     {
     arma_extra_debug_print("Cube::constructor: zeroing memory");
     arrayops::fill_zeros(memptr(), n_elem);
     }
-  #endif
   }
 
 
@@ -5262,7 +5260,7 @@ Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::fixed()
   
   mem_setup();
   
-  #if (!defined(ARMA_DONT_ZERO_INIT))
+  if(arma_config::zero_init)
     {
     arma_extra_debug_print("Cube::fixed::constructor: zeroing memory");
     
@@ -5270,7 +5268,6 @@ Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::fixed()
     
     arrayops::fill_zeros(mem_use, fixed_n_elem);
     }
-  #endif
   }
 
 

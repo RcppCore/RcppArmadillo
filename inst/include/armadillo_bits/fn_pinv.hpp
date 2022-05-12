@@ -24,11 +24,27 @@
 template<typename T1>
 arma_warn_unused
 inline
+typename enable_if2< is_real<typename T1::pod_type>::value, const Op<T1, op_pinv_default> >::result
+pinv
+  (
+  const Base<typename T1::elem_type,T1>& X
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  return Op<T1, op_pinv_default>(X.get_ref());
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+inline
 typename enable_if2< is_real<typename T1::pod_type>::value, const Op<T1, op_pinv> >::result
 pinv
   (
   const Base<typename T1::elem_type,T1>& X,
-  const typename T1::pod_type            tol    = 0.0,
+  const typename T1::pod_type            tol,
   const char*                            method = nullptr
   )
   {

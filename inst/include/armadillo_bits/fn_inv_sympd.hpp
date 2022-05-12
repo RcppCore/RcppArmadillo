@@ -115,10 +115,17 @@ inv_sympd
   {
   arma_extra_debug_sigprint();
   
-  const bool status = op_inv_spd_rcond::apply_direct(out_inv, out_rcond, X.get_ref());
+  typedef typename T1::pod_type T;
+  
+  op_inv_spd_state<T> inv_state;
+  
+  const bool status = op_inv_spd_rcond::apply_direct(out_inv, inv_state, X.get_ref());
+  
+  out_rcond = inv_state.rcond;
   
   if(status == false)
     {
+    out_rcond = T(0);
     out_inv.soft_reset();
     arma_debug_warn_level(3, "inv_sympd(): matrix is singular or not positive definite");
     }

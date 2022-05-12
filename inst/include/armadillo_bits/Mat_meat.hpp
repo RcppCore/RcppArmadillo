@@ -72,12 +72,11 @@ Mat<eT>::Mat(const uword in_n_rows, const uword in_n_cols)
   
   init_cold();
   
-  #if (!defined(ARMA_DONT_ZERO_INIT))
+  if(arma_config::zero_init)
     {
     arma_extra_debug_print("Mat::constructor: zeroing memory");
     arrayops::fill_zeros(memptr(), n_elem);
     }
-  #endif
   }
 
 
@@ -97,12 +96,11 @@ Mat<eT>::Mat(const SizeMat& s)
   
   init_cold();
   
-  #if (!defined(ARMA_DONT_ZERO_INIT))
+  if(arma_config::zero_init)
     {
     arma_extra_debug_print("Mat::constructor: zeroing memory");
     arrayops::fill_zeros(memptr(), n_elem);
     }
-  #endif
   }
 
 
@@ -9183,7 +9181,7 @@ Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::fixed()
   {
   arma_extra_debug_sigprint_this(this);
   
-  #if (!defined(ARMA_DONT_ZERO_INIT))
+  if(arma_config::zero_init)
     {
     arma_extra_debug_print("Mat::fixed::constructor: zeroing memory");
     
@@ -9191,7 +9189,6 @@ Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::fixed()
     
     arrayops::inplace_set_fixed<eT,fixed_n_elem>( mem_use, eT(0) );
     }
-  #endif
   }
 
 

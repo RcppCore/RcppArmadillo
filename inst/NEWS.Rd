@@ -3,6 +3,13 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+
+\section{Changes in RcppArmadillo version 0.11.0.99.0 (2022-05-10)}{
+  \itemize{
+    \item Upgraded to Armadillo release 11.0.99 (11.1-rc1)
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.11.0.1.0 (2022-04-14)}{
   \itemize{
     \item Upgraded to Armadillo release 11.0.1 (Creme Brulee)
