@@ -4,9 +4,20 @@
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
 
-\section{Changes in RcppArmadillo version 0.11.0.99.0 (2022-05-10)}{
+\section{Changes in RcppArmadillo version 0.11.1.0.0 (2022-05-13)}{
   \itemize{
-    \item Upgraded to Armadillo release 11.0.99 (11.1-rc1)
+    \item Upgraded to Armadillo release 11.1.0 (Angry Kitchen Appliance)
+    \itemize{
+      \item added \code{inv_opts::no_ugly} option to \code{inv()} and
+      \code{inv_sympd()} to disallow inverses of poorly conditioned matrices
+      \item more efficient handling of rank-deficient matrices via
+      \code{inv_opts::allow_approx} option in \code{inv()} and \code{inv_sympd()}
+      \item better detection of rank deficient matrices by \code{solve()}
+      \item faster handling of symmetric and diagonal matrices by \code{cond()}
+    }
+    \item The \code{configure} script again propagates the'found' case again,
+    thanks to Justin Silverman for the heads-up and suggested fix (Dirk
+    and Justin in \ghpr{376} and \ghpr{377} fixing \ghit{375}).
   }
 }
 
