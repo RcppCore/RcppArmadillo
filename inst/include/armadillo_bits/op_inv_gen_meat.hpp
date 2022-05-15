@@ -114,7 +114,9 @@ op_inv_gen_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
     
     const bool status = op_inv_gen_rcond::apply_direct(out, inv_state, expr);
     
-    if((status == false) || (inv_state.rcond < std::numeric_limits<T>::epsilon()) || arma_isnan(inv_state.rcond))  { return false; }
+    const T local_rcond = inv_state.rcond;  // workaround for bug in gcc 4.8
+    
+    if((status == false) || (local_rcond < std::numeric_limits<T>::epsilon()) || arma_isnan(local_rcond))  { return false; }
     
     return true;
     }
@@ -127,7 +129,9 @@ op_inv_gen_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
     
     const bool status = op_inv_gen_rcond::apply_direct(tmp, inv_state, expr);
     
-    if((status == false) || (inv_state.rcond < std::numeric_limits<T>::epsilon()) || arma_isnan(inv_state.rcond))
+    const T local_rcond = inv_state.rcond;  // workaround for bug in gcc 4.8
+
+    if((status == false) || (local_rcond < std::numeric_limits<T>::epsilon()) || arma_isnan(local_rcond))
       {
       Mat<eT> A = expr.get_ref();
       

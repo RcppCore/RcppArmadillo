@@ -633,14 +633,7 @@ arrayops::inplace_set(eT* dest, const eT val, const uword n_elem)
     }
   else
     {
-    if( (n_elem <= 8) && (is_cx<eT>::no) )
-      {
-      arrayops::inplace_set_small(dest, val, n_elem);
-      }
-    else
-      {
-      arrayops::inplace_set_simple(dest, val, n_elem);
-      }
+    arrayops::inplace_set_simple(dest, val, n_elem);
     }
   }
 
@@ -695,36 +688,6 @@ arrayops::inplace_set_base(eT* dest, const eT val, const uword n_elem)
       }
     }
   #endif
-  }
-
-
-
-template<typename eT>
-arma_cold
-inline
-void
-arrayops::inplace_set_small(eT* dest, const eT val, const uword n_elem)
-  {
-  switch(n_elem)
-    {
-    case  8: dest[ 7] = val;
-    // fallthrough
-    case  7: dest[ 6] = val;
-    // fallthrough
-    case  6: dest[ 5] = val;
-    // fallthrough
-    case  5: dest[ 4] = val;
-    // fallthrough
-    case  4: dest[ 3] = val;
-    // fallthrough
-    case  3: dest[ 2] = val;
-    // fallthrough
-    case  2: dest[ 1] = val;
-    // fallthrough
-    case  1: dest[ 0] = val;
-    // fallthrough
-    default:;
-    }
   }
 
 

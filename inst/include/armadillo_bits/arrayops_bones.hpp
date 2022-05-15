@@ -140,11 +140,6 @@ class arrayops
   void
   inplace_set_base(eT* dest, const eT val, const uword n_elem);
   
-  template<typename eT>
-  arma_cold inline static
-  void
-  inplace_set_small(eT* dest, const eT val, const uword n_elem);
-  
   template<typename eT, const uword n_elem>
   arma_hot inline static
   void
