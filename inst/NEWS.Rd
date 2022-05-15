@@ -4,9 +4,9 @@
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
 
-\section{Changes in RcppArmadillo version 0.11.1.0.0 (2022-05-13)}{
+\section{Changes in RcppArmadillo version 0.11.1.1.0 (2022-05-15)}{
   \itemize{
-    \item Upgraded to Armadillo release 11.1.0 (Angry Kitchen Appliance)
+    \item Upgraded to Armadillo release 11.1.1 (Angry Kitchen Appliance)
     \itemize{
       \item added \code{inv_opts::no_ugly} option to \code{inv()} and
       \code{inv_sympd()} to disallow inverses of poorly conditioned matrices
