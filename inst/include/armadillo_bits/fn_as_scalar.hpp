@@ -332,40 +332,6 @@ template<typename T1>
 arma_warn_unused
 inline
 typename T1::elem_type
-as_scalar(const Gen<T1, gen_randu>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  arma_debug_check( ((X.n_rows != 1) || (X.n_cols != 1)), "as_scalar(): expression must evaluate to exactly one element" );
-  
-  return eT(arma_rng::randu<eT>());
-  }
-
-
-
-template<typename T1>
-arma_warn_unused
-inline
-typename T1::elem_type
-as_scalar(const Gen<T1, gen_randn>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  arma_debug_check( ((X.n_rows != 1) || (X.n_cols != 1)), "as_scalar(): expression must evaluate to exactly one element" );
-  
-  return eT(arma_rng::randn<eT>());
-  }
-
-
-
-template<typename T1>
-arma_warn_unused
-inline
-typename T1::elem_type
 as_scalar(const BaseCube<typename T1::elem_type,T1>& X)
   {
   arma_extra_debug_sigprint();

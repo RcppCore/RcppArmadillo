@@ -42,29 +42,14 @@ randg(const uword n_rows, const uword n_cols, const distr_param& param = distr_p
     arma_debug_check( (n_rows != 1), "randg(): incompatible size" );
     }
   
+  double a = double(1);
+  double b = double(1);
+  
+  param.get_double_vals(a,b);
+  
+  arma_debug_check( ((a <= double(0)) || (b <= double(0))), "randg(): incorrect distribution parameters; a and b must be greater than zero" );
+  
   obj_type out(n_rows, n_cols, arma_nozeros_indicator());
-  
-  double a;
-  double b;
-  
-  if(param.state == 0)
-    {
-    a = double(1);
-    b = double(1);
-    }
-  else
-  if(param.state == 1)
-    {
-    a = double(param.a_int);
-    b = double(param.b_int);
-    }
-  else
-    {
-    a = param.a_double;
-    b = param.b_double;
-    }
-  
-  arma_debug_check( ((a <= double(0)) || (b <= double(0))), "randg(): a and b must be greater than zero" );
   
   arma_rng::randg<eT>::fill(out.memptr(), out.n_elem, a, b);
   
@@ -175,29 +160,14 @@ randg(const uword n_rows, const uword n_cols, const uword n_slices, const distr_
   
   typedef typename cube_type::elem_type eT;
   
+  double a = double(1);
+  double b = double(1);
+  
+  param.get_double_vals(a,b);
+  
+  arma_debug_check( ((a <= double(0)) || (b <= double(0))), "randg(): incorrect distribution parameters; a and b must be greater than zero" );
+  
   cube_type out(n_rows, n_cols, n_slices, arma_nozeros_indicator());
-  
-  double a;
-  double b;
-  
-  if(param.state == 0)
-    {
-    a = double(1);
-    b = double(1);
-    }
-  else
-  if(param.state == 1)
-    {
-    a = double(param.a_int);
-    b = double(param.b_int);
-    }
-  else
-    {
-    a = param.a_double;
-    b = param.b_double;
-    }
-  
-  arma_debug_check( ((a <= double(0)) || (b <= double(0))), "randg(): a and b must be greater than zero" );
   
   arma_rng::randg<eT>::fill(out.memptr(), out.n_elem, a, b);
   

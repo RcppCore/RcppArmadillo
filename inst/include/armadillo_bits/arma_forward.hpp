@@ -117,8 +117,6 @@ class op_rel_noteq;
 class gen_eye;
 class gen_ones;
 class gen_zeros;
-class gen_randu;
-class gen_randn;
 
 
 

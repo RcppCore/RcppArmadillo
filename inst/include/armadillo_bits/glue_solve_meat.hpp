@@ -139,7 +139,7 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
   // A_expr and B_expr can be used more than once (sympd optimisation fails or approximate solution required),
   // so ensure they are not overwritten in case we have aliasing
   
-  bool is_alias = true;
+  bool is_alias = true;  // assume we have aliasing until we can prove otherwise
   
   if(is_Mat<T1>::value && is_Mat<T2>::value)
     {

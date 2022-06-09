@@ -43,14 +43,10 @@ ones(const uword n_elem, const arma_empty_class junk1 = arma_empty_class(), cons
   arma_ignore(junk1);
   arma_ignore(junk2);
   
-  if(is_Row<obj_type>::value)
-    {
-    return Gen<obj_type, gen_ones>(1, n_elem);
-    }
-  else
-    {
-    return Gen<obj_type, gen_ones>(n_elem, 1);
-    }
+  const uword n_rows = (is_Row<obj_type>::value) ? uword(1) : n_elem;
+  const uword n_cols = (is_Row<obj_type>::value) ? n_elem   : uword(1);
+  
+  return Gen<obj_type, gen_ones>(n_rows, n_cols);
   }
 
 
@@ -88,15 +84,8 @@ ones(const uword n_rows, const uword n_cols, const typename arma_Mat_Col_Row_onl
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  if(is_Col<obj_type>::value)
-    {
-    arma_debug_check( (n_cols != 1), "ones(): incompatible size" );
-    }
-  else
-  if(is_Row<obj_type>::value)
-    {
-    arma_debug_check( (n_rows != 1), "ones(): incompatible size" );
-    }
+  if(is_Col<obj_type>::value)  { arma_debug_check( (n_cols != 1), "ones(): incompatible size" ); }
+  if(is_Row<obj_type>::value)  { arma_debug_check( (n_rows != 1), "ones(): incompatible size" ); }
   
   return Gen<obj_type, gen_ones>(n_rows, n_cols);
   }

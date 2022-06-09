@@ -5161,6 +5161,8 @@ Cube<eT>::steal_mem(Cube<eT>& x)
   
   if( (mem_state <= 1) && ( (x.n_alloc > Cube_prealloc::mem_n_elem) || (x.mem_state == 1) ) )
     {
+    arma_extra_debug_print("Cube::steal_mem(): stealing memory");
+    
     reset();
     
     const uword x_n_slices = x.n_slices;
@@ -5201,6 +5203,8 @@ Cube<eT>::steal_mem(Cube<eT>& x)
     }
   else
     {
+    arma_extra_debug_print("Cube::steal_mem(): copying memory");
+    
     (*this).operator=(x);
     }
   }

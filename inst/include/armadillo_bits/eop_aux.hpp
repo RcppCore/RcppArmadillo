@@ -92,7 +92,7 @@ class eop_aux
   template<typename eT> arma_inline static typename     arma_real_only<eT>::result trunc (const eT  x) { return std::trunc(x);                                            }
   template<typename eT> arma_inline static typename       arma_cx_only<eT>::result trunc (const eT& x) { return eT( std::trunc(x.real()), std::trunc(x.imag()) );         }
   
-  template<typename eT> arma_inline static typename   arma_integral_only<eT>::result log2 (const eT  x) { return eT( std::log(double(x))/ double(0.69314718055994530942) );                            }
+  template<typename eT> arma_inline static typename   arma_integral_only<eT>::result log2 (const eT  x) { return eT( std::log2(double(x)) );                                                           }
   template<typename eT> arma_inline static typename       arma_real_only<eT>::result log2 (const eT  x) { return std::log2(x);                                                                         }
   template<typename eT> arma_inline static typename         arma_cx_only<eT>::result log2 (const eT& x) { typedef typename get_pod_type<eT>::result T; return std::log(x) / T(0.69314718055994530942); }
   
@@ -100,7 +100,7 @@ class eop_aux
   template<typename eT> arma_inline static typename       arma_real_only<eT>::result log1p (const eT  x) { return std::log1p(x);               }
   template<typename eT> arma_inline static typename         arma_cx_only<eT>::result log1p (const eT& x) { arma_ignore(x); return eT(0);       }
   
-  template<typename eT> arma_inline static typename   arma_integral_only<eT>::result exp2 (const eT  x) { return eT( std::pow(double(2), double(x)) );                            }
+  template<typename eT> arma_inline static typename   arma_integral_only<eT>::result exp2 (const eT  x) { return eT( std::exp2(double(x)) );                                      }
   template<typename eT> arma_inline static typename       arma_real_only<eT>::result exp2 (const eT  x) { return std::exp2(x);                                                    }
   template<typename eT> arma_inline static typename         arma_cx_only<eT>::result exp2 (const eT& x) { typedef typename get_pod_type<eT>::result T; return std::pow( T(2), x); }
   
