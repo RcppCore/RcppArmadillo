@@ -4,9 +4,9 @@
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
 
-\section{Changes in RcppArmadillo version 0.11.1.99.0 (2022-06-07)}{
+\section{Changes in RcppArmadillo version 0.11.2.0.0 (2022-06-10)}{
   \itemize{
-    \item Upgraded to Armadillo release 11.2 (rc1)
+    \item Upgraded to Armadillo release 11.2 (Classic Roast)
     \itemize{
       \item faster handling of sparse submatrix column views by
       \code{norm()}, \code{accu()}, \code{nonzeros() }

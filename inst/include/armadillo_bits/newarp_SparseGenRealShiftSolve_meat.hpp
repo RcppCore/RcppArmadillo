@@ -28,6 +28,9 @@ SparseGenRealShiftSolve<eT>::SparseGenRealShiftSolve(const SpMat<eT>& mat_obj, c
     , perm_r(mat_obj.n_rows + 1)
     , n_rows(mat_obj.n_rows)
     , n_cols(mat_obj.n_cols)
+  #else
+    : n_rows(0)
+    , n_cols(0)
   #endif
   {
   arma_extra_debug_sigprint();
