@@ -22,9 +22,9 @@
 
 
 #define ARMA_VERSION_MAJOR 11
-#define ARMA_VERSION_MINOR 1
-#define ARMA_VERSION_PATCH 1
-#define ARMA_VERSION_NAME  "Angry Kitchen Appliance"
+#define ARMA_VERSION_MINOR 2
+#define ARMA_VERSION_PATCH 0
+#define ARMA_VERSION_NAME  "Classic Roast"
 
 
 

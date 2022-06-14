@@ -31,6 +31,8 @@ class spop_norm
   template<typename eT> inline static typename get_pod_type<eT>::result mat_norm_2(const SpMat<eT>& X, const typename   arma_cx_only<eT>::result* junk = nullptr);
 
   template<typename eT> inline static typename get_pod_type<eT>::result mat_norm_inf(const SpMat<eT>& X);
+  
+  template<typename eT> inline static typename get_pod_type<eT>::result vec_norm_k(const eT* mem, const uword N, const uword k);
   };
 
 

@@ -1355,8 +1355,8 @@ SpMat<eT>::operator=(const SpSubview<eT>& X)
       const uword sv_col_start = X.aux_col1;
       const uword sv_col_end   = X.aux_col1 + X.n_cols - 1;
       
-      typename SpMat<eT>::const_col_iterator m_it     = X.m.begin_col(sv_col_start);
-      typename SpMat<eT>::const_col_iterator m_it_end = X.m.end_col(sv_col_end);
+      typename SpMat<eT>::const_col_iterator m_it     = X.m.begin_col_no_sync(sv_col_start);
+      typename SpMat<eT>::const_col_iterator m_it_end = X.m.end_col_no_sync(sv_col_end);
       
       uword count = 0;
       
@@ -5815,6 +5815,8 @@ SpMat<eT>::steal_mem(SpMat<eT>& x)
   
   if(layout_ok)
     {
+    arma_extra_debug_print("SpMat::steal_mem(): stealing memory");
+    
     x.sync_csc();
     
     steal_mem_simple(x);
@@ -5825,6 +5827,8 @@ SpMat<eT>::steal_mem(SpMat<eT>& x)
     }
   else
     {
+    arma_extra_debug_print("SpMat::steal_mem(): copying memory");
+    
     (*this).operator=(x);
     }
   }

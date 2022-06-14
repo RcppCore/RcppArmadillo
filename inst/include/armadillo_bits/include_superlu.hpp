@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0 AND BSD-3-Clause
 // 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
@@ -54,8 +54,7 @@
 
 #if defined(ARMA_USE_SUPERLU)
 
-
-#if defined(ARMA_USE_SUPERLU_HEADERS) || defined(ARMA_SUPERLU_INCLUDE_DIR)
+#undef ARMA_SLU_HEADERS_FOUND
 
 // Since we need to suport float, double, cx_float and cx_double,
 // as well as preserve the sanity of the user,
@@ -70,142 +69,173 @@
 
 namespace arma
 {
-
 namespace superlu
   {
   // slu_*defs.h has int typedefed to int_t.
   // I'll just write it as int for simplicity, where I can, but supermatrix.h needs int_t.
   typedef int int_t;
-  
+  }
+}
+
+#if defined(ARMA_USE_SUPERLU_HEADERS) || defined(ARMA_SUPERLU_INCLUDE_DIR)
+
+namespace arma
+{
+namespace superlu
+  {
   // Include supermatrix.h.  This gives us SuperMatrix.
   // Put it in the slu namespace.
   // For versions of SuperLU I am familiar with, supermatrix.h does not include any other files.
   // Therefore, putting it in the superlu namespace is reasonably safe.
   // This same reasoning is true for superlu_enum_consts.h.
   
+  #undef ARMA_SLU_HEADER_A
+  #undef ARMA_SLU_HEADER_B
+  
   #if defined(ARMA_SUPERLU_INCLUDE_DIR)
-    #define ARMA_SLU_STR(x) x
-    #define ARMA_SLU_STR2(x) ARMA_SLU_STR(x)
+    #undef ARMA_SLU_STR1
+    #undef ARMA_SLU_STR2
     
-    #define ARMA_SLU_SUPERMATRIX_H         ARMA_SLU_STR2(ARMA_SUPERLU_INCLUDE_DIR)ARMA_SLU_STR2(supermatrix.h)
-    #define ARMA_SLU_SUPERLU_ENUM_CONSTS_H ARMA_SLU_STR2(ARMA_SUPERLU_INCLUDE_DIR)ARMA_SLU_STR2(superlu_enum_consts.h)
+    #define ARMA_SLU_STR1(x) x
+    #define ARMA_SLU_STR2(x) ARMA_SLU_STR1(x)
+    
+    #define ARMA_SLU_HEADER_A ARMA_SLU_STR2(ARMA_SUPERLU_INCLUDE_DIR)ARMA_SLU_STR2(supermatrix.h)
+    #define ARMA_SLU_HEADER_B ARMA_SLU_STR2(ARMA_SUPERLU_INCLUDE_DIR)ARMA_SLU_STR2(superlu_enum_consts.h)
   #else
-    #define ARMA_SLU_SUPERMATRIX_H         supermatrix.h
-    #define ARMA_SLU_SUPERLU_ENUM_CONSTS_H superlu_enum_consts.h
+    #define ARMA_SLU_HEADER_A supermatrix.h
+    #define ARMA_SLU_HEADER_B superlu_enum_consts.h
   #endif
   
-  #include ARMA_INCFILE_WRAP(ARMA_SLU_SUPERMATRIX_H)
-  #include ARMA_INCFILE_WRAP(ARMA_SLU_SUPERLU_ENUM_CONSTS_H)
+  #if defined(__has_include)
+    #if __has_include(ARMA_INCFILE_WRAP(ARMA_SLU_HEADER_A)) && __has_include(ARMA_INCFILE_WRAP(ARMA_SLU_HEADER_B))
+      #include ARMA_INCFILE_WRAP(ARMA_SLU_HEADER_A)
+      #include ARMA_INCFILE_WRAP(ARMA_SLU_HEADER_B)
+      #define  ARMA_SLU_HEADERS_FOUND
+    #endif
+  #else
+    #include ARMA_INCFILE_WRAP(ARMA_SLU_HEADER_A)
+    #include ARMA_INCFILE_WRAP(ARMA_SLU_HEADER_B)
+    #define  ARMA_SLU_HEADERS_FOUND
+  #endif
   
-  #undef ARMA_SLU_SUPERMATRIX_H
-  #undef ARMA_SLU_SUPERLU_ENUM_CONSTS_H
+  #undef ARMA_SLU_STR1
+  #undef ARMA_SLU_STR2
+    
+  #undef ARMA_SLU_HEADER_A
+  #undef ARMA_SLU_HEADER_B
   
-  
-  typedef struct
-    {
-    int*    panel_histo;
-    double* utime;
-    float*  ops;
-    int     TinyPivots;
-    int     RefineSteps;
-    int     expansions;
-    } SuperLUStat_t;
-  
-  
-  typedef struct
-    {
-    fact_t        Fact;
-    yes_no_t      Equil;
-    colperm_t     ColPerm;
-    trans_t       Trans;
-    IterRefine_t  IterRefine;
-    double        DiagPivotThresh;
-    yes_no_t      SymmetricMode;
-    yes_no_t      PivotGrowth;
-    yes_no_t      ConditionNumber;
-    rowperm_t     RowPerm;
-    int           ILU_DropRule;
-    double        ILU_DropTol;
-    double        ILU_FillFactor;
-    norm_t        ILU_Norm;
-    double        ILU_FillTol;
-    milu_t        ILU_MILU;
-    double        ILU_MILU_Dim;
-    yes_no_t      ParSymbFact;
-    yes_no_t      ReplaceTinyPivot;
-    yes_no_t      SolveInitialized;
-    yes_no_t      RefineInitialized;
-    yes_no_t      PrintStat;
-    int           nnzL, nnzU;
-    int           num_lookaheads;
-    yes_no_t      lookahead_etree;
-    yes_no_t      SymPattern;
-    } superlu_options_t;
-
-
-  typedef struct
-    {
-    float for_lu;
-    float total_needed;
-    } mem_usage_t;
-  
-  
-  typedef struct e_node
-    {
-    int   size;
-    void* mem;
-    } ExpHeader;
-  
-  
-  typedef struct
-    {
-    int   size;
-    int   used;
-    int   top1;
-    int   top2;
-    void* array;
-    } LU_stack_t;
-  
-  
-  typedef struct
-    {
-    int*       xsup;
-    int*       supno;   
-    int*       lsub;
-    int*       xlsub;
-    void*      lusup;
-    int*       xlusup;
-    void*      ucol;
-    int*       usub;
-    int*       xusub;
-    int        nzlmax;
-    int        nzumax;
-    int        nzlumax;
-    int        n;
-    LU_space_t MemModel;
-    int        num_expansions;
-    ExpHeader* expanders;
-    LU_stack_t stack;
-    } GlobalLU_t;
+  #if defined(ARMA_SLU_HEADERS_FOUND)
+    
+    typedef struct
+      {
+      int*    panel_histo;
+      double* utime;
+      float*  ops;
+      int     TinyPivots;
+      int     RefineSteps;
+      int     expansions;
+      } SuperLUStat_t;
+    
+    typedef struct
+      {
+      fact_t        Fact;
+      yes_no_t      Equil;
+      colperm_t     ColPerm;
+      trans_t       Trans;
+      IterRefine_t  IterRefine;
+      double        DiagPivotThresh;
+      yes_no_t      SymmetricMode;
+      yes_no_t      PivotGrowth;
+      yes_no_t      ConditionNumber;
+      rowperm_t     RowPerm;
+      int           ILU_DropRule;
+      double        ILU_DropTol;
+      double        ILU_FillFactor;
+      norm_t        ILU_Norm;
+      double        ILU_FillTol;
+      milu_t        ILU_MILU;
+      double        ILU_MILU_Dim;
+      yes_no_t      ParSymbFact;
+      yes_no_t      ReplaceTinyPivot;
+      yes_no_t      SolveInitialized;
+      yes_no_t      RefineInitialized;
+      yes_no_t      PrintStat;
+      int           nnzL, nnzU;
+      int           num_lookaheads;
+      yes_no_t      lookahead_etree;
+      yes_no_t      SymPattern;
+      } superlu_options_t;
+    
+    typedef struct
+      {
+      float for_lu;
+      float total_needed;
+      } mem_usage_t;
+    
+    typedef struct e_node
+      {
+      int   size;
+      void* mem;
+      } ExpHeader;
+    
+    typedef struct
+      {
+      int   size;
+      int   used;
+      int   top1;
+      int   top2;
+      void* array;
+      } LU_stack_t;
+    
+    typedef struct
+      {
+      int*       xsup;
+      int*       supno;   
+      int*       lsub;
+      int*       xlsub;
+      void*      lusup;
+      int*       xlusup;
+      void*      ucol;
+      int*       usub;
+      int*       xusub;
+      int        nzlmax;
+      int        nzumax;
+      int        nzlumax;
+      int        n;
+      LU_space_t MemModel;
+      int        num_expansions;
+      ExpHeader* expanders;
+      LU_stack_t stack;
+      } GlobalLU_t;
+    
+  #endif
   }
 }
 
 
-#else
+#endif
+
+#if defined(ARMA_USE_SUPERLU_HEADERS) && !defined(ARMA_SLU_HEADERS_FOUND)
+  #undef ARMA_USE_SUPERLU
+  #pragma message ("WARNING: use of SuperLU disabled; required headers not found")
+#endif
+
+#endif
+
+
+
+#if defined(ARMA_USE_SUPERLU) && !defined(ARMA_SLU_HEADERS_FOUND)
 
 // Not using any SuperLU headers, so define all required enums and structs.
-// 
-// CAVEAT:
-// This code requires SuperLU version 5.2,
-// and assumes that newer 5.x versions will have no API changes.
+
+#if defined(ARMA_SUPERLU_INCLUDE_DIR)
+  #pragma message ("WARNING: SuperLU headers not found; using built-in definitions")
+#endif
 
 namespace arma
 {
-
 namespace superlu
   {
-  typedef int int_t;
-  
   typedef enum
     {
     SLU_NC,
@@ -218,7 +248,6 @@ namespace superlu
     SLU_NR_loc
     } Stype_t;
   
-  
   typedef enum
     {
     SLU_S,
@@ -226,7 +255,6 @@ namespace superlu
     SLU_C,
     SLU_Z
     } Dtype_t;
-  
   
   typedef enum
     {
@@ -241,7 +269,6 @@ namespace superlu
     SLU_HEU
     } Mtype_t;
   
-  
   typedef struct
     {
     Stype_t Stype;
@@ -251,7 +278,6 @@ namespace superlu
     int_t   ncol;
     void*   Store;
     } SuperMatrix;
-  
   
   typedef struct
     {
@@ -263,7 +289,6 @@ namespace superlu
     int     expansions;
     } SuperLUStat_t;
   
-  
   typedef enum {NO, YES}                                          yes_no_t;
   typedef enum {DOFACT, SamePattern, SamePattern_SameRowPerm, FACTORED} fact_t;
   typedef enum {NOROWPERM, LargeDiag, MY_PERMR}                   rowperm_t;
@@ -274,7 +299,6 @@ namespace superlu
   typedef enum {SYSTEM, USER}                                     LU_space_t;
   typedef enum {ONE_NORM, TWO_NORM, INF_NORM}                     norm_t;
   typedef enum {SILU, SMILU_1, SMILU_2, SMILU_3}                  milu_t;
-
 
   typedef struct
     {
@@ -306,13 +330,11 @@ namespace superlu
     yes_no_t      SymPattern;
     } superlu_options_t;
   
-  
   typedef struct
     {
     float for_lu;
     float total_needed;
     } mem_usage_t;
-  
   
   typedef struct
     {
@@ -322,20 +344,17 @@ namespace superlu
     int_t* colptr;
     } NCformat;
   
-  
   typedef struct
     {
     int_t lda;
     void* nzval;
     } DNformat;
   
-  
   typedef struct e_node
     {
     int   size;
     void* mem;
     } ExpHeader;
-  
   
   typedef struct
     {
@@ -345,7 +364,6 @@ namespace superlu
     int   top2;
     void* array;
     } LU_stack_t;
-  
   
   typedef struct
     {
@@ -370,7 +388,6 @@ namespace superlu
   }
 }
 
-#endif
-
+#undef ARMA_SLU_HEADERS_FOUND
 
 #endif

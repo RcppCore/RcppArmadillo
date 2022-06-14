@@ -113,23 +113,37 @@ op_nonzeros_spmat::apply(Mat<typename T1::elem_type>& out, const SpToDOp<T1, op_
   
   out.set_size(N,1);
   
-  if(N > 0)
+  if(N == 0)  { return; }
+  
+  if(is_SpMat<typename SpProxy<T1>::stored_type>::value)
     {
-    if(is_SpMat<typename SpProxy<T1>::stored_type>::value)
+    const unwrap_spmat<typename SpProxy<T1>::stored_type> U(P.Q);
+    
+    arrayops::copy(out.memptr(), U.M.values, N);
+    
+    return;
+    }
+  
+  if(is_SpSubview<typename SpProxy<T1>::stored_type>::value)
+    {
+    const SpSubview<eT>& sv = reinterpret_cast< const SpSubview<eT>& >(P.Q);
+    
+    if(sv.n_rows == sv.m.n_rows)
       {
-      const unwrap_spmat<typename SpProxy<T1>::stored_type> U(P.Q);
+      const SpMat<eT>& m   = sv.m;
+      const uword      col = sv.aux_col1;
       
-      arrayops::copy(out.memptr(), U.M.values, N);
-      }
-    else
-      {
-      eT* out_mem = out.memptr();
+      arrayops::copy(out.memptr(), &(m.values[ m.col_ptrs[col] ]), N);
       
-      typename SpProxy<T1>::const_iterator_type it = P.begin();
-      
-      for(uword i=0; i<N; ++i)  { out_mem[i] = (*it); ++it; }
+      return;
       }
     }
+  
+  eT* out_mem = out.memptr();
+  
+  typename SpProxy<T1>::const_iterator_type it = P.begin();
+  
+  for(uword i=0; i<N; ++i)  { out_mem[i] = (*it); ++it; }
   }
 
 

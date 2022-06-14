@@ -53,11 +53,29 @@
 #endif
 
 #if defined(ARMA_USE_TBB_ALLOC)
-  #include <tbb/scalable_allocator.h>
+  #if defined(__has_include)
+    #if __has_include(<tbb/scalable_allocator.h>)
+      #include <tbb/scalable_allocator.h>
+    #else
+      #undef ARMA_USE_TBB_ALLOC
+      #pragma message ("WARNING: use of TBB alloc disabled; tbb/scalable_allocator.h header not found")
+    #endif
+  #else
+    #include <tbb/scalable_allocator.h>
+  #endif
 #endif
 
 #if defined(ARMA_USE_MKL_ALLOC)
-  #include <mkl_service.h>
+  #if defined(__has_include)
+    #if __has_include(<mkl_service.h>)
+      #include <mkl_service.h>
+    #else
+      #undef ARMA_USE_MKL_ALLOC
+      #pragma message ("WARNING: use of MKL alloc disabled; mkl_service.h header not found")
+    #endif
+  #else
+    #include <mkl_service.h>
+  #endif
 #endif
 
 #if ( defined(__unix__) || defined(__unix) || defined(_POSIX_C_SOURCE) || (defined(__APPLE__) && defined(__MACH__)) ) && !defined(_WIN32)
@@ -69,7 +87,16 @@
 
 
 #if defined(ARMA_USE_OPENMP)
-  #include <omp.h>
+  #if defined(__has_include)
+    #if __has_include(<omp.h>)
+      #include <omp.h>
+    #else
+      #undef ARMA_USE_OPENMP
+      #pragma message ("WARNING: use of OpenMP disabled; omp.h header not found")
+    #endif
+  #else
+    #include <omp.h>
+  #endif
 #endif
 
 
@@ -205,7 +232,6 @@ namespace arma
   #include "armadillo_bits/eop_core_bones.hpp"
   #include "armadillo_bits/eglue_core_bones.hpp"
   
-  #include "armadillo_bits/GenSpecialiser.hpp"
   #include "armadillo_bits/Gen_bones.hpp"
   #include "armadillo_bits/GenCube_bones.hpp"
   

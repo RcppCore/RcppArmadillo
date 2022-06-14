@@ -4,6 +4,19 @@
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
 
+\section{Changes in RcppArmadillo version 0.11.2.0.0 (2022-06-10)}{
+  \itemize{
+    \item Upgraded to Armadillo release 11.2 (Classic Roast)
+    \itemize{
+      \item faster handling of sparse submatrix column views by
+      \code{norm()}, \code{accu()}, \code{nonzeros() }
+      \item extended \code{randu()} and \code{randn()} to allow
+      specification of distribution parameters
+      \item internal refactoring, leading to faster compilation times
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.11.1.1.0 (2022-05-15)}{
   \itemize{
     \item Upgraded to Armadillo release 11.1.1 (Angry Kitchen Appliance)

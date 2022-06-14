@@ -20,11 +20,10 @@
 //! @{
 
 
-//! support class for generator functions (eg. zeros, randu, randn, ...)
+//! support class for generator functions (zeros, ones, eye)
 template<typename T1, typename gen_type>
 class Gen
   : public Base< typename T1::elem_type, Gen<T1, gen_type> >
-  , public GenSpecialiser<typename T1::elem_type, is_same_type<gen_type, gen_zeros>::yes, is_same_type<gen_type, gen_ones>::yes, is_same_type<gen_type, gen_randu>::yes, is_same_type<gen_type, gen_randn>::yes>
   {
   public:
   
@@ -32,7 +31,7 @@ class Gen
   typedef typename get_pod_type<elem_type>::result pod_type;
   
   static constexpr bool use_at    = (is_same_type<gen_type, gen_eye>::value);
-  static constexpr bool is_simple = (is_same_type<gen_type, gen_ones>::value) || (is_same_type<gen_type, gen_zeros>::value); 
+  static constexpr bool is_simple = (is_same_type<gen_type, gen_ones>::value) || (is_same_type<gen_type, gen_zeros>::value);
   
   static constexpr bool is_row  = T1::is_row;
   static constexpr bool is_col  = T1::is_col;
@@ -44,9 +43,9 @@ class Gen
   arma_inline  Gen(const uword in_n_rows, const uword in_n_cols);
   arma_inline ~Gen();
   
-  arma_inline elem_type operator[] (const uword ii)                   const;
-  arma_inline elem_type at         (const uword row, const uword col) const;
-  arma_inline elem_type at_alt     (const uword ii)                   const;
+  arma_inline elem_type operator[] (const uword ii)               const;
+  arma_inline elem_type at         (const uword r, const uword c) const;
+  arma_inline elem_type at_alt     (const uword ii)               const;
   
   inline void apply              (Mat<elem_type>& out) const;
   inline void apply_inplace_plus (Mat<elem_type>& out) const;
