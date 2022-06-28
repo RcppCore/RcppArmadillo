@@ -3,6 +3,18 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.11.2.1.0 (2022-06-28) (GitHub Only)}{
+  \itemize{
+    \item Upgraded to Armadillo release 11.2.1 (Classic Roast)
+    \itemize{
+      \item old style matrix initialisation via the \code{<<} operator
+      will now emit a compile-time deprecation warning
+      \item use of the old and inactive \code{ARMA_DONT_PRINT_ERRORS}
+      option will now emit a compile-time deprecation warning
+      \item the option \code{ARMA_WARN_LEVEL} can be used instead
+    }
+  }
+}
 
 \section{Changes in RcppArmadillo version 0.11.2.0.0 (2022-06-10)}{
   \itemize{
