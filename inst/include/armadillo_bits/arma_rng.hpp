@@ -685,6 +685,8 @@ struct arma_rng::randn
     {
     arma_rng::randn<eT>::fill(mem, N);
     
+    if( (mu == double(0)) && (sd == double(1)) )  { return; }
+    
     for(uword i=0; i<N; ++i)
       {
       const eT val = mem[i];
@@ -862,6 +864,8 @@ struct arma_rng::randn< std::complex<T> >
   fill(std::complex<T>* mem, const uword N, const double mu, const double sd)
     {
     arma_rng::randn< std::complex<T> >::fill(mem, N);
+    
+    if( (mu == double(0)) && (sd == double(1)) )  { return; }
     
     for(uword i=0; i<N; ++i)
       {

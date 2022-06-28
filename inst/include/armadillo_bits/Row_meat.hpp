@@ -622,7 +622,7 @@ Row<eT>::operator=(const subview_cube<eT>& X)
 
 template<typename eT>
 inline
-arma_cold
+arma_deprecated
 mat_injector< Row<eT> >
 Row<eT>::operator<<(const eT val)
   {

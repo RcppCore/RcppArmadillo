@@ -188,8 +188,8 @@ class Mat : public Base< eT, Mat<eT> >
   inline Mat& operator/=(const spdiagview<eT>& X);
   
   
-  arma_cold inline mat_injector<Mat> operator<<(const eT val);
-  arma_cold inline mat_injector<Mat> operator<<(const injector_end_of_row<>& x);
+  arma_deprecated inline mat_injector<Mat> operator<<(const eT val);
+  arma_deprecated inline mat_injector<Mat> operator<<(const injector_end_of_row<>& x);
   
   
   arma_inline       subview_row<eT> row(const uword row_num);
