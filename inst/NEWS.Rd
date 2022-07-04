@@ -3,6 +3,17 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.11.2.2.0 (2022-07-04) (GitHub Only)}{
+  \itemize{
+    \item Upgraded to Armadillo release 11.2.2 (Classic Roast)
+    \itemize{
+      \item fix incorrect and/or slow convergence in single-threaded
+      versions of \code{kmeans()}, \code{gmm_diag::learn()},
+      \code{gmm_full::learn()}
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.11.2.1.0 (2022-06-28) (GitHub Only)}{
   \itemize{
     \item Upgraded to Armadillo release 11.2.1 (Classic Roast)

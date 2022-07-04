@@ -2188,6 +2188,10 @@ gmm_full<eT>::km_iterate(const Mat<eT>& X, const uword max_iter, const bool verb
       }
     #else
       {
+      acc_hefts.zeros();
+      acc_means.zeros();
+      last_indx.zeros();
+      
       uword* acc_hefts_mem = acc_hefts.memptr();
       uword* last_indx_mem = last_indx.memptr();
       
