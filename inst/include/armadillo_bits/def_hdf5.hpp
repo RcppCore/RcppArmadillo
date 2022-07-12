@@ -18,7 +18,7 @@
 
 #if defined(ARMA_USE_HDF5)
 
-#if !defined(ARMA_USE_HDF5_ALT)
+#if !defined(ARMA_USE_HDF5_CMAKE)
   
   // macros needed if the wrapper run-time library is not being used
   

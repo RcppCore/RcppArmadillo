@@ -159,8 +159,8 @@
   //// Comment out the above line if you don't want automatic checking for nonfinite matrices
 #endif
 
-// #define ARMA_USE_HDF5_ALT
-#if defined(ARMA_USE_HDF5_ALT) && defined(ARMA_USE_WRAPPER)
+// #define ARMA_USE_HDF5_CMAKE
+#if defined(ARMA_USE_HDF5_CMAKE) && defined(ARMA_USE_WRAPPER)
   #undef  ARMA_USE_HDF5
   #define ARMA_USE_HDF5
   
@@ -263,7 +263,7 @@
 
 #if defined(ARMA_DONT_USE_WRAPPER)
   #undef ARMA_USE_WRAPPER
-  #undef ARMA_USE_HDF5_ALT
+  #undef ARMA_USE_HDF5_CMAKE
 #endif
 
 #if defined(ARMA_DONT_USE_FORTRAN_HIDDEN_ARGS)
@@ -310,7 +310,7 @@
 
 #if defined(ARMA_DONT_USE_HDF5)
   #undef ARMA_USE_HDF5
-  #undef ARMA_USE_HDF5_ALT
+  #undef ARMA_USE_HDF5_CMAKE
 #endif
 
 #if defined(ARMA_DONT_OPTIMISE_BAND) || defined(ARMA_DONT_OPTIMISE_SOLVE_BAND)

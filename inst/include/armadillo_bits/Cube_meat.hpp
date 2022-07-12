@@ -2534,6 +2534,23 @@ Cube<eT>::insert_slices(const uword slice_num, const BaseCube<eT,T1>& X)
 
 
 
+template<typename eT>
+template<typename T1>
+inline
+void
+Cube<eT>::insert_slices(const uword slice_num, const Base<eT,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  const quasi_unwrap<T1> U(X.get_ref());
+  
+  const Cube<eT> C(const_cast<eT*>(U.M.memptr()), U.M.n_rows, U.M.n_cols, uword(1), false, true);
+  
+  (*this).insert_slices(slice_num, C);
+  }
+
+
+
 //! create a cube from GenCube, ie. run the previously delayed element generation operations
 template<typename eT>
 template<typename gen_type>

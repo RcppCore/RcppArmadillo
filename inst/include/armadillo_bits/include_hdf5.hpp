@@ -27,7 +27,7 @@
         #include <hdf5.h>
       #else
         #undef ARMA_USE_HDF5
-        #undef ARMA_USE_HDF5_ALT
+        #undef ARMA_USE_HDF5_CMAKE
         #pragma message ("WARNING: use of HDF5 disabled; hdf5.h header not found")
       #endif
     #else
@@ -48,7 +48,7 @@
         #include ARMA_INCFILE_WRAP(ARMA_HDF5_HEADER)
       #else
         #undef ARMA_USE_HDF5
-        #undef ARMA_USE_HDF5_ALT
+        #undef ARMA_USE_HDF5_CMAKE
         #pragma message ("WARNING: use of HDF5 disabled; hdf5.h header not found")
       #endif
     #else
@@ -60,10 +60,10 @@
     #undef ARMA_HDF5_HEADER
   #endif
   
-  #if defined(H5_USE_16_API) || defined(H5_USE_16_API_DEFAULT) || defined(H5_USE_18_API) || defined(H5_USE_18_API_DEFAULT) 
-    #pragma message ("WARNING: use of HDF5 disabled; incompatible configuration: H5_USE_16_API or H5_USE_18_API")
+  #if defined(H5_USE_16_API) || defined(H5_USE_16_API_DEFAULT)
+    #pragma message ("WARNING: use of HDF5 disabled; incompatible configuration: H5_USE_16_API or H5_USE_16_API_DEFAULT")
     #undef ARMA_USE_HDF5
-    #undef ARMA_USE_HDF5_ALT
+    #undef ARMA_USE_HDF5_CMAKE
   #endif
   
 #endif
