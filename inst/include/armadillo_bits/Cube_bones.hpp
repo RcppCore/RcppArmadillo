@@ -208,6 +208,7 @@ class Cube : public BaseCube< eT, Cube<eT> >
   template<typename T1> inline void insert_rows(const uword row_num, const BaseCube<eT,T1>& X);
   template<typename T1> inline void insert_cols(const uword col_num, const BaseCube<eT,T1>& X);
   template<typename T1> inline void insert_slices(const uword slice_num, const BaseCube<eT,T1>& X);
+  template<typename T1> inline void insert_slices(const uword slice_num, const     Base<eT,T1>& X);
   
   
   template<typename gen_type> inline             Cube(const GenCube<eT, gen_type>& X);
