@@ -3,6 +3,15 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.11.2.3.0 (2022-07-12) (GitHub Only)}{
+  \itemize{
+    \item Upgraded to Armadillo release 11.2.3 (Classic Roast)
+    \itemize{
+      \item fix \code{Cube::insert_slices()} to accept \code{Cube::slice()} as input
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.11.2.2.0 (2022-07-04) (GitHub Only)}{
   \itemize{
     \item Upgraded to Armadillo release 11.2.2 (Classic Roast)
