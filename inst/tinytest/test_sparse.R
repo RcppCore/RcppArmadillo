@@ -1,6 +1,6 @@
 #!/usr/bin/r -t
 ##
-##  Copyright (C) 2014 - 2019  Dirk Eddelbuettel
+##  Copyright (C) 2014 - 2022  Dirk Eddelbuettel
 ##
 ##  This file is part of RcppArmadillo.
 ##
@@ -72,7 +72,7 @@ expect_equal(SM^2, sparseSquare(SM))#, msg="squareSparse")
 #test.sparse.iterators <- function() {
 SM <- matrix(0, 5, 5)
 diag(SM) <- 1:5
-SM <- methods::as(SM, "dgCMatrix")
+SM <- methods::as(methods::as(SM, "generalMatrix"), "CsparseMatrix")
 spM <- sparseIterators(SM, -1.5)
 diag(SM) <- diag(SM) - 1.5
 expect_equal(SM, spM)#, msg="sparseIterators")
@@ -80,7 +80,7 @@ expect_equal(SM, spM)#, msg="sparseIterators")
 #test.sparse.list <- function() {
 SM <- matrix(0, 5, 5)
 diag(SM) <- 1:5
-SM <- methods::as(SM, "dgCMatrix")
+SM <- methods::as(methods::as(SM, "generalMatrix"), "CsparseMatrix")
 l  <- list(SM, SM)
 expect_equal(l, sparseList(l))#, msg="sparseList")
 
