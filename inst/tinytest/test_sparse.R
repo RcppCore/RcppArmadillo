@@ -69,6 +69,7 @@ expect_equal(sqrt(SM), sparseSqrt(SM))#, msg="sqrtSparse")
 #test.sparse.square <- function() {
 expect_equal(SM^2, sparseSquare(SM))#, msg="squareSparse")
 
+if (utils::packageVersion("Matrix") < "1.4-2") exit_file("Remainder needs Matrix 1.4-2 or later")
 #test.sparse.iterators <- function() {
 SM <- matrix(0, 5, 5)
 diag(SM) <- 1:5
