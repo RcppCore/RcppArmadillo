@@ -1,6 +1,6 @@
 #!/usr/bin/r -t
 ##
-## Copyright (C) 2017 - 2021  Binxiang Ni and Dirk Eddelbuettel
+## Copyright (C) 2017 - 2022  Binxiang Ni and Dirk Eddelbuettel
 ##
 ## This file is part of RcppArmadillo. It is based on the documentation
 ## of package Matrix, slam, SparseM, spam and SciPy, which are
@@ -32,6 +32,7 @@
 ## [SciPy]: https://docs.scipy.org/doc/scipy/reference/sparse.html
 
 if (!requireNamespace("Matrix", quietly=TRUE)) exit_file("No Matrix package")
+if (utils::packageVersion("Matrix") < "1.4-2") exit_file("Need Matrix 1.4-2 or later")
 
 ## It now (Nov 2020) appears to fail on Windows starting around line 115
 .onWindows <- .Platform$OS.type == "windows"
@@ -55,7 +56,8 @@ suppressMessages({
     a <- rnorm(n1*p)
     a[abs(a)<0.5] <- 0
     A <- matrix(a,n1,p)
-    RA <- as(A, "dgRMatrix")
+    RA <- as(A, "RsparseMatrix")
+
     dgt <- RA %x% matrix(1:4,2,2)
 })
 
@@ -111,7 +113,7 @@ if (.onWindows) exit_file("Skipping remainder on Windows")
 if (utils::packageVersion("Matrix") >= "1.3.0") {
     x <- matrix(c(1, 0, 0, 2), nrow = 2)
     SM <- Matrix(x, sparse = TRUE, doDiag=FALSE)
-    dgc <- as(SM, "dgCMatrix")
+    dgc <- as(SM, "generalMatrix")
     expect_equal(dgc, asSpMat(SM))#, msg="dgC2dgC_9")
 }
 
@@ -120,14 +122,14 @@ set.seed(21)
 a <- rnorm(20*5)
 A <- matrix(a,20,5)
 A[row(A)>col(A)+4|row(A)<col(A)+3] <- 0
-CA <- as(A, "dgCMatrix")
+CA <- as(A, "CsparseMatrix")
 expect_equal(CA, asSpMat(CA))#, msg="dgC2dgC_10")
 
 set.seed(22)
 b <- rnorm(20*5)
 B <- matrix(b,20,5)
 B[row(A)>col(A)+2|row(A)<col(A)+2] <- 0
-CB <- as(B, "dgCMatrix")
+CB <- as(B, "CsparseMatrix")
 expect_equal(CB, asSpMat(CB))#, msg="dgC2dgC_11")
 
 cp <- crossprod(CA, CB)
@@ -149,7 +151,7 @@ expect_equal((A * V), asSpMat(A * V))#, msg="dgC2dgC_14")
 #test.as.dtc2dgc <- function() {
 ## [Matrix] p42 (dtCMatrix)
 I4 <- .sparseDiagonal(4, shape="t")
-dgc <- as(I4, "dgCMatrix")
+dgc <- as(as(I4, "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(I4))#, msg="dtC2dgC_1")
 
 ## [Matrix] p49 (dtCMatrix)
@@ -157,53 +159,53 @@ t5 <- new("dtCMatrix", Dim = c(5L, 5L), uplo = "L",
           x = c(10, 1, 3, 10, 1, 10, 1, 10, 10),
           i = c(0L,2L,4L, 1L, 3L,2L,4L, 3L, 4L),
           p = c(0L, 3L, 5L, 7:9))
-dgc <- as(t5, "dgCMatrix")
+dgc <- as(as(t5, "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(t5))#, msg="dtC2dgC_2")
 
 ## [Matrix] p56 (dtCMatrix)
 t1 <- new("dtTMatrix", x= c(3,7), i= 0:1, j=3:2, Dim= as.integer(c(4,4)))
 tu <- t1 ; tu@diag <- "U"
-cu <- as(tu, "dtCMatrix")
-dgc <- as(cu, "dgCMatrix")
+cu <- as(tu, "CsparseMatrix")
+dgc <- as(cu, "generalMatrix")
 expect_equal(dgc, asSpMat(cu))#, msg="dtC2dgC_3")
 
 ## [Matrix] p56 (dtCMatrix)
 U5 <- new("dtCMatrix", i= c(1L, 0:3), p=c(0L,0L,0:2, 5L), Dim = c(5L, 5L),
           x = rep(1, 5), diag = "U")
-dgc <- as(U5, "dgCMatrix")
+dgc <- as(U5, "generalMatrix")
 expect_equal(dgc, asSpMat(U5))#, msg="dtC2dgC_4")
 
 ## [Matrix] p142 (dtCMatrix)
 i <- c(1,3:8); j <- c(2,9,6:10); x <- 7 * (1:7)
 tA <- sparseMatrix(i, j, x = x, triangular= TRUE)
-dgc <- as(tA, "dgCMatrix")
+dgc <- as(tA, "generalMatrix")
 expect_equal(dgc, asSpMat(tA))#, msg="dtC2dgC_5")
-
 
 #test.as.dsc2dgc <- function() {
 ## [Matrix] p42 (dsCMatrix)
 S <- crossprod(Matrix(rbinom(60, size=1, prob=0.1), 10,6))
-dgc <- as(S, "dgCMatrix")
+dgc <- as(S, "generalMatrix")
 expect_equal(dgc, asSpMat(S))#, msg="dsC2dgC_1")
 
-SI <- S + 10*.symDiagonal(6)
-dgc <- as(SI, "dgCMatrix")
-expect_equal(dgc, asSpMat(SI))#, msg="dsC2dgC_2")
+#SI <- S + 10*.symDiagonal(6)
+#dgc <- as(SI, "generalMatrix")
+#expect_equal(dgc, asSpMat(SI))#, msg="dsC2dgC_2")
+
 
 ## [Matrix] p50 (dsCMatrix)
 mm <- Matrix(toeplitz(c(10, 0, 1, 0, 3)), sparse = TRUE)
-dgc <- as(mm, "dgCMatrix")
+dgc <- as(mm, "generalMatrix")
 expect_equal(dgc, asSpMat(mm))#, msg="dsC2dgC_3")
 
 mm <- t(mm)
-dgc <- as(mm, "dgCMatrix")
+dgc <- as(mm, "generalMatrix")
 expect_equal(dgc, asSpMat(mm))#, msg="dsC2dgC_4")
 
 ## [Matrix] p51 (dsCMatrix)
 mm <- Matrix(toeplitz(c(10, 0, 1, 0, 3)), sparse = TRUE)
-mT <- as(mm, "dgTMatrix")
+mT <- as(mm, "TsparseMatrix")
 symM <- as(mT, "symmetricMatrix")
-symC <- as(symM, "CsparseMatrix")
+symC <- as(symM, "generalMatrix")
 expect_equal(dgc, asSpMat(symC))#, msg="dsC2dgC_5")
 
 sC <- Matrix(mT, sparse=TRUE, forceCheck=TRUE)
@@ -211,61 +213,60 @@ expect_equal(dgc, asSpMat(sC))#, msg="dsC2dgC_6")
 
 ## [Matrix] p129 (dsCMatrix)
 S9 <- rsparsematrix(9, 9, nnz = 10, symmetric=TRUE)
-dgc <- as(S9, "dgCMatrix")
+dgc <- as(S9, "generalMatrix")
 expect_equal(dgc, asSpMat(S9))#, msg="dsC2dgC_7")
 
 ## [Matrix] p142 (dsCMatrix)
 i <- c(1,3:8); j <- c(2,9,6:10); x <- 7 * (1:7)
 sA <- sparseMatrix(i, j, x = x, symmetric = TRUE)
-dgc <- as(sA, "dgCMatrix")
+dgc <- as(sA, "generalMatrix")
 expect_equal(dgc, asSpMat(sA))#, msg="dsC2dgC_8")
-
 
 #test.as.dgt2dgc <- function() {
 ## [Matrix] p40 (dgTMatrix)
 m <- Matrix(0+1:28, nrow = 4)
 m[-3,c(2,4:5,7)] <- m[ 3, 1:4] <- m[1:3, 6] <- 0
-mT <- as(m, "dgTMatrix")
-dgc <- as(m, "dgCMatrix")
+mT <- as(m, "TsparseMatrix")
+dgc <- as(m, "CsparseMatrix")
 expect_equal(dgc, asSpMat(mT))#, msg="dgT2dgC_1")
 
 ## [Matrix] p40 (dgTMatrix)
 T2 <- new("dgTMatrix",
           i = as.integer(c(1,1,0,3,3)),
           j = as.integer(c(2,2,4,0,0)), x=10*1:5, Dim=4:5)
-dgc <- as(T2, "dgCMatrix")
+dgc <- as(T2, "CsparseMatrix")
 expect_equal(dgc, asSpMat(T2))#, msg="dgT2dgC_2")
 
 ## [Matrix] p42 (dgTMatrix)
 M1 <- Matrix(0+0:5, 2,3)
 M <- kronecker(Diagonal(3), M1)
-dgc <- as(M, "dgCMatrix")
+dgc <- as(M, "CsparseMatrix")
 expect_equal(dgc, asSpMat(M))#, msg="dgT2dgC_3")
 
 ## [Matrix] p49 (dgTMatrix)
 m <- spMatrix(10,20, i= 1:8, j=2:9, x = c(0:2,3:-1))
-dgc <- as(m, "dgCMatrix")
+dgc <- as(m, "CsparseMatrix")
 expect_equal(dgc, asSpMat(m))#, msg="dgT2dgC_4")
 expect_equal(drop0(m), asSpMat(drop0(m)))#, msg="dgT2dgC_5")
 
 ## [Matrix] p51 (dgTMatrix)
 mm <- Matrix(toeplitz(c(10, 0, 1, 0, 3)), sparse = TRUE)
-mT <- as(mm, "dgTMatrix")
-dgc <- as(mm, "dgCMatrix")
+mT <- as(mm, "TsparseMatrix")
+dgc <- as(mm, "generalMatrix")
 expect_equal(dgc, asSpMat(mT))#, msg="dgT2dgC_6")
 
 ## [Matrix] p77 (dgTMatrix)
 A <- spMatrix(10,20, i = c(1,3:8),
               j = c(2,9,6:10),
               x = 7 * (1:7))
-dgc <- as(A, "dgCMatrix")
+dgc <- as(A, "CsparseMatrix")
 expect_equal(dgc, asSpMat(A))#, msg="dgT2dgC_7")
 
 ## [Matrix] p129 (dgTMatrix)
 if (utils::packageVersion("Matrix") >= "1.3.0") {
     set.seed(129)
     T2 <- rsparsematrix(40, 12, nnz = 99, repr="T")
-    dgc <- as(T2, "dgCMatrix")
+    dgc <- as(T2, "CsparseMatrix")
     expect_equal(dgc, asSpMat(T2))#, msg="dgT2dgC_8")
 }
 
@@ -273,7 +274,7 @@ if (utils::packageVersion("Matrix") >= "1.3.0") {
 A <- spMatrix(10,20, i = c(1,3:8),
               j = c(2,9,6:10),
               x = 7 * (1:7))
-dgc <- as(A, "dgCMatrix")
+dgc <- as(A, "CsparseMatrix")
 expect_equal(dgc, asSpMat(A))#, msg="dgT2dgC_9")
 
 ## [SparseM] p21 (dgTMatrix)
@@ -281,16 +282,16 @@ set.seed(21)
 a <- rnorm(20*5)
 A <- matrix(a,20,5)
 A[row(A)>col(A)+4|row(A)<col(A)+3] <- 0
-TA <- as(A, "dgTMatrix")
-CA <- as(A, "dgCMatrix")
+TA <- as(A, "TsparseMatrix")
+CA <- as(A, "CsparseMatrix")
 expect_equal(CA, asSpMat(TA))#, msg="dgT2dgC_10")
 
 set.seed(22)
 b <- rnorm(20*5)
 B <- matrix(b,20,5)
 B[row(A)>col(A)+2|row(A)<col(A)+2] <- 0
-TB <- as(B, "dgTMatrix")
-CB <- as(B, "dgCMatrix")
+TB <- as(B, "TsparseMatrix")
+CB <- as(B, "CsparseMatrix")
 expect_equal(CB, asSpMat(TB))#, msg="dgT2dgC_11")
 
 ## (dgTMatrix)
@@ -299,37 +300,37 @@ p <- 5
 a <- rnorm(n1*p)
 a[abs(a)<0.5] <- 0
 A <- matrix(a,n1,p)
-RA <- as(A, "dgRMatrix")
+RA <- as(A, "RsparseMatrix")
 dgt <- RA %x% matrix(1:4,2,2)
-dgc <- as(dgt, "dgCMatrix")
+dgc <- as(dgt, "CsparseMatrix")
 expect_equal(dgc, asSpMat(dgt))#, msg="dgT2dgC_12")
 
 ## [spam] p4 (dgTMatrix)
 x <- matrix(c(1, 0, 0, 2, 1, 0), nrow = 3)
-dgt <- as(x, "dgTMatrix")
-dgc <- as(x, "dgCMatrix")
+dgt <- as(x, "TsparseMatrix")
+dgc <- as(x, "CsparseMatrix")
 expect_equal(dgc, asSpMat(dgt))#, msg="dgT2dgC_13")
 
 ## [spam] p12 (dgTMatrix)
 x <- matrix(c(1, 0, 0, 2), nrow = 2)
-dgt <- as(x, "dgTMatrix")
-dgc <- as(x, "dgCMatrix")
+dgt <- as(x, "TsparseMatrix")
+dgc <- as(as(x, "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(dgt))#, msg="dgT2dgC_14")
 
 ## [spam] p14 (dgTMatrix)
 x <- matrix(c(1, 0, 0, 2, 1, NA), nrow = 3)
-dgt <- as(x, "dgTMatrix")
-dgc <- as(x, "dgCMatrix")
+dgt <- as(x, "TsparseMatrix")
+dgc <- as(x, "CsparseMatrix")
 expect_equal(dgc, asSpMat(dgt))#, msg="dgT2dgC_15")
 
 ## [SciPy] (dgTMatrix)
 dgt <- new("dgTMatrix", x = c(4, 5, 7, 9), i = as.integer(c(0, 3, 1, 0)), j = as.integer(c(0, 3, 1, 2)), Dim= as.integer(c(4,4)))
-dgc <- as(dgt, "dgCMatrix")
+dgc <- as(dgt, "CsparseMatrix")
 expect_equal(dgc, asSpMat(dgt))#, msg="dgT2dgC_16")
 
 ## [SciPy] (dgTMatrix)
 dgt <- new("dgTMatrix", x = rep(1, 7), i = as.integer(c(0, 0, 1, 3, 1, 0, 0)), j = as.integer(c(0, 2, 1, 3, 1, 0, 0)), Dim= as.integer(c(4, 4)))
-dgc <- as(dgt, "dgCMatrix")
+dgc <- as(dgt, "CsparseMatrix")
 expect_equal(dgc, asSpMat(dgt))#, msg="dgT2dgC_17")
 
 ## (dgTMatrix)
@@ -340,7 +341,7 @@ mtxt <- c("11   0   0  14   0  16",
 M <- as.matrix(read.table(text=mtxt))
 dimnames(M) <- NULL
 SM <- Matrix(M, sparse=TRUE)
-dgt <- as(SM, "dgTMatrix")
+dgt <- as(SM, "TsparseMatrix")
 expect_equal(SM, asSpMat(dgt))#, msg="dgT2dgC_18")
 
 
@@ -353,7 +354,7 @@ mtxt <- c("0 0 0 3",
           "0 0 0 0")
 M <- as.matrix(read.table(text=mtxt))
 dimnames(M) <- NULL
-dgc <- as(M, "dgCMatrix")
+dgc <- as(as(M, "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(t1))#, msg="dtT2dgC_1")
 
 tu <- t1 ; tu@diag <- "U"
@@ -363,7 +364,7 @@ mtxt <- c("1 0 0 3",
           "0 0 0 1")
 M <- as.matrix(read.table(text=mtxt))
 dimnames(M) <- NULL
-dgc <- as(M, "dgCMatrix")
+dgc <- as(as(M, "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(tu))#, msg="dtT2dgC_2")
 
 ## [Matrix] p56 (dtTMatrix)
@@ -374,7 +375,7 @@ mtxt <- c("0 -1 -2 3",
           "0  0  0 0")
 M <- as.matrix(read.table(text=mtxt))
 dimnames(M) <- NULL
-dgc <- as(M, "dgCMatrix")
+dgc <- as(as(M, "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(t1))#, msg="dtT2dgC_3")
 
 diag(t1) <- 10*c(1:2,3:2)
@@ -384,23 +385,21 @@ mtxt <- c("10 -1 -2 3",
           "0  0  0 20")
 M <- as.matrix(read.table(text=mtxt))
 dimnames(M) <- NULL
-dgc <- as(M, "dgCMatrix")
+dgc <- as(as(M, "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(t1))#, msg="dtT2dgC_4")
-
 
 #test.as.dst2dgc <- function() {
 ## [Matrix] p51 (dsTMatrix)
 mm <- Matrix(toeplitz(c(10, 0, 1, 0, 3)), sparse = TRUE)
-mT <- as(mm, "dgTMatrix")
+mT <- as(as(mm, "generalMatrix"), "TsparseMatrix")
 symM <- as(mT, "symmetricMatrix")
-dgc <- as(mm, "dgCMatrix")
+dgc <- as(mm, "generalMatrix")
 expect_equal(dgc, asSpMat(symM))#, msg="dsT2dgC_1")
 
 ## [Matrix] p51 (dsTMatrix)
 symC <- as(symM, "CsparseMatrix")
 sym2 <- as(symC, "TsparseMatrix")
 expect_equal(dgc, asSpMat(sym2))#, msg="dsT2dgC_2")
-
 
 #test.as.dgr2dgc <- function() {
 ## [SparseM] p23 (dgRMatrix)
@@ -409,9 +408,10 @@ p <- 5
 a <- rnorm(n1*p)
 a[abs(a)<0.5] <- 0
 A <- matrix(a,n1,p)
-RA <- as(A, "dgRMatrix")
-CA <- as(A, "dgCMatrix")
+RA <- as(A, "RsparseMatrix")
+CA <- as(A, "CsparseMatrix")
 expect_equal(CA, asSpMat(RA))#, msg="dgR2dgC_1")
+
 
 ## [SparseM] p25 (dgRMatrix)
 n1 <- 10
@@ -421,22 +421,22 @@ set.seed(16)
 a <- rnorm(n1*p)
 a[abs(a) < 0.5] <- 0
 A <- matrix(a,n1,p)
-RA <- as(A, "dgRMatrix")
-CA <- as(A, "dgCMatrix")
+RA <- as(A, "RsparseMatrix")
+CA <- as(A, "CsparseMatrix")
 expect_equal(CA, asSpMat(RA))#, msg="dgR2dgC_2")
 
 set.seed(25)
 b <- rnorm(n2*p)
 b[abs(b)<1.0] <- 0
 B <- matrix(b,n2,p)
-RB <- as(B, "dgRMatrix")
-CB <- as(B, "dgCMatrix")
+RB <- as(B, "RsparseMatrix")
+CB <- as(B, "CsparseMatrix")
 expect_equal(CB, asSpMat(RB))#, msg="dgR2dgC_3")
 
 ## [SciPy] (dgRMatrix)
 dgt <- new("dgTMatrix", x = rep(1, 7), i = as.integer(c(0, 0, 1, 3, 1, 0, 0)), j = as.integer(c(0, 2, 1, 3, 1, 0, 0)), Dim= as.integer(c(4, 4)))
-dgr <- as(as(dgt, "matrix"), "dgRMatrix")
-dgc <- as(dgt, "dgCMatrix")
+dgr <- as(as(dgt, "generalMatrix"), "RsparseMatrix")
+dgc <- as(dgt, "CsparseMatrix")
 expect_equal(dgc, asSpMat(dgr))#, msg="dgR2dgC_4")
 
 ## (dgRMatrix)
@@ -447,7 +447,7 @@ mtxt <- c("11   0   0  14   0  16",
 M <- as.matrix(read.table(text=mtxt))
 dimnames(M) <- NULL
 SM <- Matrix(M, sparse=TRUE)
-dgr <- as(M, "dgRMatrix")
+dgr <- as(M, "RsparseMatrix")
 expect_equal(SM, asSpMat(dgr))#, msg="dgR2dgC_5")
 
 
@@ -459,7 +459,7 @@ mtxt <- c("5 1",
           "0 2")
 M <- as.matrix(read.table(text=mtxt))
 dimnames(M) <- NULL
-dgc <- as(M, "dgCMatrix")
+dgc <- as(as(M, "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(m2))#, msg="dtR2dgC_1")
 
 m3 <- as(Diagonal(2), "RsparseMatrix")
@@ -467,7 +467,7 @@ mtxt <- c("1 0",
           "0 1")
 M <- as.matrix(read.table(text=mtxt))
 dimnames(M) <- NULL
-dgc <- as(M, "dgCMatrix")
+dgc <- as(as(M, "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(m3))#, msg="dtR2dgC_2")
 
 ## (dtRMatrix)
@@ -478,15 +478,14 @@ mtxt <- c("0 0 0 3",
 M <- as.matrix(read.table(text=mtxt))
 dimnames(M) <- NULL
 dtc <- Matrix(M, sparse=TRUE)
-dgc <- methods::as(dtc, "dgCMatrix")
-dtr <- methods::as(dtc, "RsparseMatrix")
+dgc <- as(dtc, "generalMatrix")
+dtr <- as(dtc, "RsparseMatrix")
 expect_equal(dgc, asSpMat(dtr))#, msg="dtR2dgC_3")
 
 dtc@diag <- "U"
-dgc <- methods::as(dtc, "dgCMatrix")
-dtr <- methods::as(dtc, "RsparseMatrix")
+dgc <- as(dtc, "generalMatrix")
+dtr <- as(dtc, "RsparseMatrix")
 expect_equal(dgc, asSpMat(dtr))#, msg="dtR2dgC_4")
-
 
 #test.as.dsr2dgc <- function() {
 ## [Matrix] p53 (dsRMatrix)
@@ -496,7 +495,7 @@ mtxt <- c("0 3",
           "3 1")
 M <- as.matrix(read.table(text=mtxt))
 dimnames(M) <- NULL
-dgc <- as(M, "dgCMatrix")
+dgc <- as(as(M, "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(m2))#, msg="dsR2dgC_1")
 
 ds2 <- forceSymmetric(diag(2))
@@ -505,7 +504,7 @@ mtxt <- c("1 0",
           "0 1")
 M <- as.matrix(read.table(text=mtxt))
 dimnames(M) <- NULL
-dgc <- as(M, "dgCMatrix")
+dgc <- as(as(M, "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(dR))#, msg="dsR2dgC_2")
 
 ## (dsRMatrix)
@@ -517,15 +516,14 @@ mtxt <- c("10  0  1  0  3",
 M <- as.matrix(read.table(text=mtxt))
 dimnames(M) <- NULL
 dsc <- Matrix(M, sparse=TRUE)
-dgc <- methods::as(dsc, "dgCMatrix")
-dsr <- methods::as(dsc, "RsparseMatrix")
+dgc <- as(dsc, "generalMatrix")
+dsr <- as(dsc, "RsparseMatrix")
 expect_equal(dgc, asSpMat(dsr))#, msg="dsR2dgC_3")
 
 dsc <- t(dsc)
-dgc <- methods::as(dsc, "dgCMatrix")
-dsr <- methods::as(dsc, "RsparseMatrix")
+dgc <- as(dsc, "generalMatrix")
+dsr <- as(dsc, "RsparseMatrix")
 expect_equal(dgc, asSpMat(dsr))#, msg="dsR2dgC_4")
-
 
 #test.as.p2dgc <- function() {
 ## [Matrix] p74 (pMatrix)
@@ -535,29 +533,28 @@ mtxt <- c("0 1 0",
           "1 0 0")
 M <- as.matrix(read.table(text=mtxt))
 dimnames(M) <- NULL
-dgc <- as(M, "dgCMatrix")
+dgc <- as(as(M, "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(p1))#, msg="p2dgC_1")
 
 ## [Matrix] p74 (pMatrix)
 I2 <- as(7:1, "pMatrix")
-dgc <- as(as(I2, "matrix"), "dgCMatrix")
+dgc <- as(as(as(as(I2, "matrix"), "dMatrix"), "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(I2))#, msg="p2dgC_2")
 
 ## [Matrix] p116 (pMatrix)
 pm1 <- as(as.integer(c(2,3,1)), "pMatrix")
-dgc <- as(as(pm1, "matrix"), "dgCMatrix")
+dgc <- as(as(as(as(pm1, "matrix"), "dMatrix"), "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(pm1))#, msg="p2dgC_3")
 
 pm2 <- t(pm1)
-dgc <- as(as(pm2, "matrix"), "dgCMatrix")
+dgc <- as(as(as(as(pm2, "matrix"), "dMatrix"), "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(pm2))#, msg="p2dgC_4")
 
 ## [Matrix] p116 (pMatrix)
 set.seed(11)
 p10 <- as(sample(10),"pMatrix")
-dgc <- as(as(p10, "matrix"), "dgCMatrix")
+dgc <- as(as(as(as(p10, "matrix"), "dMatrix"), "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(p10))#, msg="p2dgC_5")
-
 
 #test.as.ddi2dgc <- function() {
 ## [Matrix] p35 (ddiMatrix)
@@ -566,11 +563,11 @@ mtxt <- c("10 0",
           "0 1")
 M <- as.matrix(read.table(text=mtxt))
 dimnames(M) <- NULL
-dgc <- as(M, "dgCMatrix")
+dgc <- as(as(M, "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(d2))#, msg="ddi2dgC_1")
 
 cd2 <- chol(d2)
-dgc <- as(chol(dgc), "dgCMatrix")
+dgc <- as(chol(dgc), "generalMatrix")
 expect_equal(dgc, asSpMat(cd2))#, msg="ddi2dgC_2")
 
                                         # [Matrix] p42 (ddiMatrix)
@@ -579,7 +576,7 @@ mtxt <- c("1 0 0",
           "0 0 1")
 M <- as.matrix(read.table(text=mtxt))
 dimnames(M) <- NULL
-dgc <- as(M, "dgCMatrix")
+dgc <- as(as(M, "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(Diagonal(3)))#, msg="ddi2dgC_3")
 
 mtxt <- c("1000 0   0",
@@ -587,7 +584,7 @@ mtxt <- c("1000 0   0",
           "0    0   10")
 M <- as.matrix(read.table(text=mtxt))
 dimnames(M) <- NULL
-dgc <- as(M, "dgCMatrix")
+dgc <- as(as(M, "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(Diagonal(x = 10^(3:1))))#, msg="ddi2dgC_4")
 
 ## [Matrix] p43 (ddiMatrix)
@@ -599,7 +596,7 @@ mtxt <- c("1 0 0 0 0",
           "0 0 0 0 1")
 M <- as.matrix(read.table(text=mtxt))
 dimnames(M) <- NULL
-dgc <- as(M, "dgCMatrix")
+dgc <- as(as(M, "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(I5))#, msg="ddi2dgC_5")
 
 D5 <- Diagonal(x = 10*(1:5))
@@ -610,7 +607,7 @@ mtxt <- c("10 0 0 0 0",
           "0 0 0 0 50")
 M <- as.matrix(read.table(text=mtxt))
 dimnames(M) <- NULL
-dgc <- as(M, "dgCMatrix")
+dgc <- as(as(M, "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(D5))#, msg="ddi2dgC_6")
 
 D6 <- Diagonal(x = c(10, 20, 40, 50))
@@ -620,7 +617,7 @@ mtxt <- c("0.1 0    0     0",
           "0   0    0     0.02")
 M <- as.matrix(read.table(text=mtxt))
 dimnames(M) <- NULL
-dgc <- as(M, "dgCMatrix")
+dgc <- as(as(M, "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(solve(D6)))#, msg="ddi2dgC_7")
 
 ## [Matrix] p85 (ddiMatrix)
@@ -631,54 +628,53 @@ mtxt <- c("1 0 0",
           "0 0 0")
 M <- as.matrix(read.table(text=mtxt))
 dimnames(M) <- NULL
-dgc <- as(M, "dgCMatrix")
+dgc <- as(as(M, "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(ddi))#, msg="ddi2dgC_8")
-
 
 #test.as.ind2dgc <- function() {
 ## [Matrix] p74 (indMatrix)
 sm1 <- as(rep(c(2,3,1), e=3), "indMatrix")
-dgc <- as(as(sm1, "matrix"), "dgCMatrix")
+dgc <- as(as(as(sm1, "dMatrix"), "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(sm1))#, msg="ind2dgc_1")
 
 set.seed(27)
 s10 <- as(sample(10, 30, replace=TRUE),"indMatrix")
-dgc <- as(as(s10, "matrix"), "dgCMatrix")
+dgc <- as(as(as(s10, "dMatrix"), "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(s10))#, msg="ind2dgc_2")
 
 set.seed(27)
 IM1 <- as(sample(1:20, 100, replace=TRUE), "indMatrix")
-dgc <- as(as(IM1, "matrix"), "dgCMatrix")
+dgc <- as(as(as(IM1, "dMatrix"), "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(IM1))#, msg="ind2dgc_3")
 
 set.seed(27)
 IM2 <- as(sample(1:18, 100, replace=TRUE), "indMatrix")
-dgc <- as(as(IM2, "matrix"), "dgCMatrix")
+dgc <- as(as(as(IM2, "dMatrix"), "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(IM2))#, msg="ind2dgc_4")
 
 ## [Matrix] p74 (indMatrix)
 ind <- as(2:4, "indMatrix")
-dgc <- as(as(ind, "matrix"), "dgCMatrix")
+dgc <- as(as(as(ind, "dMatrix"), "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(ind))#, msg="ind2dgc_5")
 
 ind <- as(list(2:4, 5), "indMatrix")
-dgc <- as(as(ind, "matrix"), "dgCMatrix")
+dgc <- as(as(as(ind, "dMatrix"), "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(ind))#, msg="ind2dgc_6")
 
 ## [Matrix] p74 (indMatrix)
 ind <- s10[1:4, ]
-dgc <- as(as(ind, "matrix"), "dgCMatrix")
+dgc <- as(as(as(ind, "dMatrix"), "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(ind))#, msg="ind2dgC_7")
 
 I1 <- as(c(5:1,6:4,7:3), "indMatrix")
-dgc <- as(as(I1, "matrix"), "dgCMatrix")
+dgc <- as(as(as(I1, "dMatrix"), "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(I1))#, msg="ind2dgC_8")
 
 ## [Matrix] p116 (indMatrix)
 set.seed(11)
 p10 <- as(sample(10),"pMatrix")
 ind <- p10[1:3, ]
-dgc <- as(as(ind, "matrix"), "dgCMatrix")
+dgc <- as(as(as(ind, "dMatrix"), "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(ind))#, msg="ind2dgC_9")
 
 if (suppressMessages(require(slam))) {

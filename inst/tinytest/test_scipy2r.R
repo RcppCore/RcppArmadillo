@@ -55,7 +55,7 @@ dimnames(M) <- NULL
 
 #test.csc2dgc <- function() {
 csc <- sp$csc_matrix(mat)
-dgC <- methods::as(M, "dgCMatrix")
+dgC <- methods::as(M, "CsparseMatrix")
 expect_equal(dgC, csc, info="csc2dgc")
 
 #test.coo2dgt <- function() {
@@ -69,7 +69,7 @@ expect_equal(dgT, coo, info="coo2dgt") #RcppArmadillo:::.SciPy2R(coo))
 
 #test.csr2dgr <- function() {
 csr <- sp$csr_matrix(mat)
-dgR <- methods::as(M, "dgRMatrix")
+dgR <- methods::as(M, "RsparseMatrix")
 expect_equal(dgR, csr, info="csr2dgr") #RcppArmadillo:::.SciPy2R(csr))
 
 #test.other <- function() {
