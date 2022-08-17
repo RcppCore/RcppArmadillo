@@ -44,7 +44,7 @@ Rcpp::List fastLm(const arma::mat& X, const arma::colvec& y) {
     arma::colvec res  = y - X*coef;           // residuals
 
     // std.errors of coefficients
-    double s2 = std::inner_product(res.begin(), res.end(), res.begin(), 0.0)/(n - k);
+    double s2 = arma::dot(res,res) / (n - k);
 
     arma::colvec std_err = arma::sqrt(s2 * arma::diagvec(arma::pinv(arma::trans(X)*X)));
 
