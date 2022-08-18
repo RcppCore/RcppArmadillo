@@ -1,3 +1,10 @@
+2022-08-18  Conrad Sanderson <noemail>
+
+        * use arma::dot() instead of std::inner_product() in example
+	and src/fastLm.cpp
+        * add ARMA_IGNORE_DEPRECATED_MARKER option to suppress
+	deprecation messages at compile time
+
 2022-08-15  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/tinytest/test_sparseConversion.R: Further refinements, tests
