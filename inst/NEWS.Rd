@@ -5,7 +5,7 @@
 
 \section{Changes in RcppArmadillo version 0.11.2.3.1 (2022-08-16)}{
   \itemize{
-    \item Accomodate upcoming pkg{Matrix} 1.4-2 deprecation for
+    \item Accomodate upcoming \pkg{Matrix} 1.4-2 deprecation for
     conversion (Dirk in \ghpr{387})
     \item CRAN release with small upstream changes in Armadillo
     11.2.{1,2,3} made since the last CRAN release 0.11.2.0.0
