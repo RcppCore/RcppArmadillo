@@ -49,7 +49,7 @@
 // bottom of compiler_setup.hpp. In combination this allows an opt-out of the (hopefully
 // temporary) suppression of deprecation warning we need while 25 CRAN packages are affected
 // as discussed and detailed in issue #391)
-#if !defined(RCPPARMADILLO_FORCE_DEPRECATE)
+#if !defined(RCPPARMADILLO_FORCE_NO_DEPRECATE)
 #define ARMA_IGNORE_DEPRECATED_MARKER
 #endif
 
