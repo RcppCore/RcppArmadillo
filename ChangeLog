@@ -1,3 +1,8 @@
+2022-08-31  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/armadillo_bits/compiler_setup.hpp: Use version from
+	merge request #119 with optional use of ARMA_IGNORE_DEPRECATED_MARKER
+
 2022-08-18  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/fastLm.cpp: Using dot() as proposed by Conrad in #388
