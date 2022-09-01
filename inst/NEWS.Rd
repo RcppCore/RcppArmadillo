@@ -3,6 +3,18 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.11.2.3.1.1 (rc, 2022-09-01)}{
+  \itemize{
+    \item In the \code{fastLm()} examples, use \code{arma::dot()} to
+    compute to the inner product (as proposed by Conrad), plus small edits
+    \item Add a \code{#define} named \code{ARMA_IGNORE_DEPRECATED_MARKER}
+    which when set suppressed the \code{arma_deprecation} definition
+    \item Support optional \code{#define} named \code{RCPPARMADILLO_FORCE_DEPRECATE}
+    to suppress use of \code{ARMA_IGNORE_DEPRECATED_MARKER} permitting
+    development under deprecation
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.11.2.3.1 (2022-08-16)}{
   \itemize{
     \item Accomodate upcoming \pkg{Matrix} 1.4-2 deprecation for
