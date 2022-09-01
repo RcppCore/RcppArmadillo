@@ -1,8 +1,8 @@
 //
 // RcppArmadilloForward.h: Rcpp/Armadillo glue
 //
-// Copyright (C)  2010 - 2021  Dirk Eddelbuettel, Romain Francois and Douglas Bates
-// Copyright (C)  2019 - 2021  Conrad Sanderson
+// Copyright (C)  2010 - 2022  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2019 - 2022  Conrad Sanderson
 //
 // This file is part of RcppArmadillo.
 //
@@ -33,7 +33,7 @@
 #define ARMA_EXTRA_ROW_PROTO RcppArmadillo/Row_proto.h
 #define ARMA_EXTRA_ROW_MEAT  RcppArmadillo/Row_meat.h
 
-// using this define makes the R RNG have precedent over both the
+// Using this define makes the R RNG have precedent over both the
 // C++11-based RNG provided by Armadillo, as well as the C++98-based
 // fallback.
 //
@@ -42,8 +42,16 @@
 // DESCRIPTION file) and/or defining #define-ing ARMA_USE_CXX11_RNG
 #define ARMA_RNG_ALT         RcppArmadillo/Alt_R_RNG.h
 
-// workaround to mitigate possible interference from a system-level installation of Armadillo
+// Workaround to mitigate possible interference from a system-level installation of Armadillo
 #define ARMA_DONT_USE_WRAPPER
+
+// Unless this is defined to enable deprecation warning, define the ignore var (used at
+// bottom of compiler_setup.hpp. In combination this allows an opt-out of the (hopefully
+// temporary) suppression of deprecation warning we need while 25 CRAN packages are affected
+// as discussed and detailed in issue #391)
+#if !defined(RCPPARMADILLO_FORCE_DEPRECATE)
+#define ARMA_IGNORE_DEPRECATED_MARKER
+#endif
 
 #include "armadillo"
 

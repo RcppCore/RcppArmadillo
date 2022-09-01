@@ -3,6 +3,9 @@
 	* README.md: Edited fastLm() example for more compact display
 	* src/fastLm.cpp: Idem
 
+	* inst/include/RcppArmadilloForward.h: Permit opt-out of deprecation
+	suppresion (useful to develop under full deprecation warnings)
+
 2022-08-31  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/armadillo_bits/compiler_setup.hpp: Use version from
