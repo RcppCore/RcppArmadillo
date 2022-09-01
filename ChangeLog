@@ -1,3 +1,8 @@
+2022-09-01  Dirk Eddelbuettel  <edd@debian.org>
+
+	* README.md: Edited fastLm() example for more compact display
+	* src/fastLm.cpp: Idem
+
 2022-08-31  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/armadillo_bits/compiler_setup.hpp: Use version from
