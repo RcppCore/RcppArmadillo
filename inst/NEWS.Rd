@@ -3,7 +3,7 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.11.2.3.1.1 (rc, 2022-09-01)}{
+\section{Changes in RcppArmadillo version 0.11.2.3.1.2 (rc, 2022-09-02)}{
   \itemize{
     \item In the \code{fastLm()} examples, use \code{arma::dot()} to
     compute to the inner product (as proposed by Conrad), plus small edits
