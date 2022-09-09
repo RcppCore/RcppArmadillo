@@ -3,15 +3,18 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.11.2.3.1.2 (rc, 2022-09-02)}{
+\section{Changes in RcppArmadillo version 0.11.2.4.0 (2022-09-09}{
   \itemize{
+    \item Upgraded to Armadillo release 11.2.4 (Classic Roast)
+    \itemize{
+      \item fix handling of \code{std::move()} involving matrices
+      constructed with auxiliary memory
+    }
     \item In the \code{fastLm()} examples, use \code{arma::dot()} to
     compute to the inner product (as proposed by Conrad), plus small edits
-    \item Add a \code{#define} named \code{ARMA_IGNORE_DEPRECATED_MARKER}
-    which when set suppressed the \code{arma_deprecation} definition
     \item Support optional \code{#define} named \code{RCPPARMADILLO_FORCE_DEPRECATE}
     to suppress use of \code{ARMA_IGNORE_DEPRECATED_MARKER} permitting
-    development under deprecation
+    use and development under deprecation
   }
 }
 
