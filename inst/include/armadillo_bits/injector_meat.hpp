@@ -274,6 +274,7 @@ mat_injector<T1>::end_of_row() const
 
 template<typename T1>
 arma_cold
+inline
 const mat_injector<T1>&
 operator<<(const mat_injector<T1>& ref, const typename mat_injector<T1>::elem_type val)
   {
@@ -288,6 +289,7 @@ operator<<(const mat_injector<T1>& ref, const typename mat_injector<T1>::elem_ty
 
 template<typename T1>
 arma_cold
+inline
 const mat_injector<T1>&
 operator<<(const mat_injector<T1>& ref, const injector_end_of_row<>& x)
   {
@@ -579,6 +581,7 @@ field_injector<T1>::end_of_row() const
 
 template<typename T1>
 arma_cold
+inline
 const field_injector<T1>&
 operator<<(const field_injector<T1>& ref, const typename field_injector<T1>::object_type& val)
   {
@@ -593,6 +596,7 @@ operator<<(const field_injector<T1>& ref, const typename field_injector<T1>::obj
 
 template<typename T1>
 arma_cold
+inline
 const field_injector<T1>&
 operator<<(const field_injector<T1>& ref, const injector_end_of_row<>& x)
   {

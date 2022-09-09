@@ -792,7 +792,7 @@ Mat<eT>::operator=(Mat<eT>&& X)
   {
   arma_extra_debug_sigprint(arma_str::format("this = %x   X = %x") % this % &X);
   
-  (*this).steal_mem(X);
+  (*this).steal_mem(X, true);
   
   if( (X.mem_state == 0) && (X.n_alloc <= arma_config::mat_prealloc) && (this != &X) )
     {
@@ -1197,6 +1197,18 @@ Mat<eT>::steal_mem(Mat<eT>& x)
   {
   arma_extra_debug_sigprint();
   
+  (*this).steal_mem(x, false);
+  }
+
+
+
+template<typename eT>
+inline
+void
+Mat<eT>::steal_mem(Mat<eT>& x, const bool is_move)
+  {
+  arma_extra_debug_sigprint();
+  
   if(this == &x)  { return; }
   
   const uword  x_n_rows    = x.n_rows;
@@ -1211,7 +1223,7 @@ Mat<eT>::steal_mem(Mat<eT>& x)
   
   const bool layout_ok = (t_vec_state == x_vec_state) || ((t_vec_state == 1) && (x_n_cols == 1)) || ((t_vec_state == 2) && (x_n_rows == 1));
   
-  if( layout_ok && (t_mem_state <= 1) && ((x_n_alloc > arma_config::mat_prealloc) || (x_mem_state == 1)) )
+  if( layout_ok && (t_mem_state <= 1) && ( (x_n_alloc > arma_config::mat_prealloc) || (x_mem_state == 1) || (is_move && (x_mem_state == 2)) ) )
     {
     arma_extra_debug_print("Mat::steal_mem(): stealing memory");
     

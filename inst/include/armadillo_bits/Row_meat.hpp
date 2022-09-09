@@ -421,14 +421,14 @@ Row<eT>::operator=(Row<eT>&& X)
   {
   arma_extra_debug_sigprint(arma_str::format("this = %x   X = %x") % this % &X);
   
-  (*this).steal_mem(X);
+  (*this).steal_mem(X, true);
   
   if( (X.mem_state == 0) && (X.n_alloc <= arma_config::mat_prealloc) && (this != &X) )
     {
-    access::rw(X.n_rows)  = 1;
-    access::rw(X.n_cols)  = 0;
-    access::rw(X.n_elem)  = 0;
-    access::rw(X.mem)     = nullptr;
+    access::rw(X.n_rows) = 1;
+    access::rw(X.n_cols) = 0;
+    access::rw(X.n_elem) = 0;
+    access::rw(X.mem)    = nullptr;
     }
   
   return *this;
