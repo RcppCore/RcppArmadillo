@@ -424,7 +424,8 @@ class Cube : public BaseCube< eT, Cube<eT> >
   
   inline void swap(Cube& B);
   
-  inline void steal_mem(Cube& X);  //!< don't use this unless you're writing code internal to Armadillo
+  inline void steal_mem(Cube& X);                      //!< don't use this unless you're writing code internal to Armadillo
+  inline void steal_mem(Cube& X, const bool is_move);  //!< don't use this unless you're writing code internal to Armadillo
   
   template<uword fixed_n_rows, uword fixed_n_cols, uword fixed_n_slices> class fixed;
   

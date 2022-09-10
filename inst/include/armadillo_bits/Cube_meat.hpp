@@ -291,7 +291,7 @@ Cube<eT>::Cube(Cube<eT>&& in_cube)
   arma_extra_debug_sigprint_this(this);
   arma_extra_debug_sigprint(arma_str::format("this = %x   in_cube = %x") % this % &in_cube);
   
-  (*this).steal_mem(in_cube);
+  (*this).steal_mem(in_cube, true);
   }
   
 
@@ -303,7 +303,7 @@ Cube<eT>::operator=(Cube<eT>&& in_cube)
   {
   arma_extra_debug_sigprint(arma_str::format("this = %x   in_cube = %x") % this % &in_cube);
   
-  (*this).steal_mem(in_cube);
+  (*this).steal_mem(in_cube, true);
   
   return *this;
   }
@@ -5174,9 +5174,21 @@ Cube<eT>::steal_mem(Cube<eT>& x)
   {
   arma_extra_debug_sigprint();
   
+  (*this).steal_mem(x, false);
+  }
+
+
+
+template<typename eT>
+inline
+void
+Cube<eT>::steal_mem(Cube<eT>& x, const bool is_move)
+  {
+  arma_extra_debug_sigprint();
+  
   if(this == &x)  { return; }
   
-  if( (mem_state <= 1) && ( (x.n_alloc > Cube_prealloc::mem_n_elem) || (x.mem_state == 1) ) )
+  if( (mem_state <= 1) && ( (x.n_alloc > Cube_prealloc::mem_n_elem) || (x.mem_state == 1) || (is_move && (x.mem_state == 2)) ) )
     {
     arma_extra_debug_print("Cube::steal_mem(): stealing memory");
     

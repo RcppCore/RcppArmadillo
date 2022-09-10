@@ -745,7 +745,8 @@ class Mat : public Base< eT, Mat<eT> >
   
   inline void swap(Mat& B);
   
-  inline void steal_mem(Mat& X);  //!< don't use this unless you're writing code internal to Armadillo
+  inline void steal_mem(Mat& X);                      //!< don't use this unless you're writing code internal to Armadillo
+  inline void steal_mem(Mat& X, const bool is_move);  //!< don't use this unless you're writing code internal to Armadillo
   
   inline void steal_mem_col(Mat& X, const uword max_n_rows);
   
