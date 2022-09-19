@@ -605,4 +605,50 @@ op_find_nonfinite::apply(Mat<uword>& out, const mtOp<uword, T1, op_find_nonfinit
 
 
 
+template<typename T1>
+inline
+void
+op_find_nan::apply(Mat<uword>& out, const mtOp<uword, T1, op_find_nan>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  const Proxy<T1> P(X.m);
+  
+  const uword n_elem = P.get_n_elem();
+  
+  Mat<uword> indices(n_elem, 1, arma_nozeros_indicator());
+  
+  uword* indices_mem = indices.memptr();
+  uword  count       = 0;
+  
+  if(Proxy<T1>::use_at == false)
+    {
+    const typename Proxy<T1>::ea_type Pea = P.get_ea();
+    
+    for(uword i=0; i<n_elem; ++i)
+      {
+      if( arma_isnan(Pea[i]) )  { indices_mem[count] = i; count++; }
+      }
+    }
+  else
+    {
+    const uword n_rows = P.get_n_rows(); 
+    const uword n_cols = P.get_n_cols(); 
+    
+    uword i = 0;
+    
+    for(uword col=0; col<n_cols; ++col)
+    for(uword row=0; row<n_rows; ++row)
+      {
+      if( arma_isnan(P.at(row,col)) )  { indices_mem[count] = i; count++; }
+      
+      i++;
+      }
+    }
+  
+  out.steal_mem_col(indices, count);
+  }
+
+
+
 //! @}

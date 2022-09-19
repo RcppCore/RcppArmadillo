@@ -308,8 +308,11 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename T1> inline void shed_rows(const Base<uword, T1>& indices);
   template<typename T1> inline void shed_cols(const Base<uword, T1>& indices);
   
-  inline void insert_rows(const uword row_num, const uword N, const bool set_to_zero = true);
-  inline void insert_cols(const uword col_num, const uword N, const bool set_to_zero = true);
+  arma_deprecated inline void insert_rows(const uword row_num, const uword N, const bool set_to_zero);
+  arma_deprecated inline void insert_cols(const uword col_num, const uword N, const bool set_to_zero);
+  
+  inline void insert_rows(const uword row_num, const uword N);
+  inline void insert_cols(const uword col_num, const uword N);
   
   template<typename T1> inline void insert_rows(const uword row_num, const Base<eT,T1>& X);
   template<typename T1> inline void insert_cols(const uword col_num, const Base<eT,T1>& X);

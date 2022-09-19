@@ -330,6 +330,7 @@ namespace arma
   #include "armadillo_bits/glue_affmul_bones.hpp"
   #include "armadillo_bits/glue_mvnrnd_bones.hpp"
   #include "armadillo_bits/glue_quantile_bones.hpp"
+  #include "armadillo_bits/glue_powext_bones.hpp"
   
   #include "armadillo_bits/gmm_misc_bones.hpp"
   #include "armadillo_bits/gmm_diag_bones.hpp"
@@ -559,6 +560,7 @@ namespace arma
   #include "armadillo_bits/fn_randperm.hpp"
   #include "armadillo_bits/fn_quantile.hpp"
   #include "armadillo_bits/fn_powmat.hpp"
+  #include "armadillo_bits/fn_powext.hpp"
   
   #include "armadillo_bits/fn_speye.hpp"
   #include "armadillo_bits/fn_spones.hpp"
@@ -763,6 +765,7 @@ namespace arma
   #include "armadillo_bits/glue_affmul_meat.hpp"
   #include "armadillo_bits/glue_mvnrnd_meat.hpp"
   #include "armadillo_bits/glue_quantile_meat.hpp"
+  #include "armadillo_bits/glue_powext_meat.hpp"
   
   #include "armadillo_bits/gmm_misc_meat.hpp"
   #include "armadillo_bits/gmm_diag_meat.hpp"

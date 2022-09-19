@@ -22,9 +22,9 @@
 
 
 #define ARMA_VERSION_MAJOR 11
-#define ARMA_VERSION_MINOR 2
-#define ARMA_VERSION_PATCH 4
-#define ARMA_VERSION_NAME  "Classic Roast"
+#define ARMA_VERSION_MINOR 3
+#define ARMA_VERSION_PATCH 91
+#define ARMA_VERSION_NAME  "11.4-RC1"
 
 
 

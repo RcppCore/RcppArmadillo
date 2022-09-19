@@ -454,12 +454,32 @@ arma_check(const bool state, const T1& x)
   }
 
 
+template<typename Functor>
+arma_hot
+inline
+void
+arma_check(const bool state, const char* x, const Functor& fn)
+  {
+  if(state)  { fn(); arma_stop_logic_error(x); }
+  }
+
+
 arma_hot
 inline
 void
 arma_check(const bool state, const char* x, const char* y)
   {
   if(state)  { arma_stop_logic_error(x,y); }
+  }
+
+
+template<typename Functor>
+arma_hot
+inline
+void
+arma_check(const bool state, const char* x, const char* y, const Functor& fn)
+  {
+  if(state)  { fn(); arma_stop_logic_error(x,y); }
   }
 
 

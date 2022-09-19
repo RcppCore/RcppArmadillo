@@ -2259,9 +2259,24 @@ Cube<eT>::shed_slices(const Base<uword, T1>& indices)
 
 
 template<typename eT>
+arma_deprecated
 inline
 void
 Cube<eT>::insert_rows(const uword row_num, const uword N, const bool set_to_zero)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_ignore(set_to_zero);
+  
+  (*this).insert_rows(row_num, N);
+  }
+
+
+
+template<typename eT>
+inline
+void
+Cube<eT>::insert_rows(const uword row_num, const uword N)
   {
   arma_extra_debug_sigprint();
   
@@ -2273,27 +2288,38 @@ Cube<eT>::insert_rows(const uword row_num, const uword N, const bool set_to_zero
   // insertion at row_num == n_rows is in effect an append operation
   arma_debug_check_bounds( (row_num > t_n_rows), "Cube::insert_rows(): index out of bounds" );
   
-  if(N > 0)
+  if(N == 0)  { return; }
+  
+  Cube<eT> out(t_n_rows + N, n_cols, n_slices, arma_nozeros_indicator());
+  
+  if(A_n_rows > 0)
     {
-    Cube<eT> out(t_n_rows + N, n_cols, n_slices, arma_nozeros_indicator());
-    
-    if(A_n_rows > 0)
-      {
-      out.rows(0, A_n_rows-1) = rows(0, A_n_rows-1);
-      }
-    
-    if(B_n_rows > 0)
-      {
-      out.rows(row_num + N, t_n_rows + N - 1) = rows(row_num, t_n_rows-1);
-      }
-    
-    if(set_to_zero)
-      {
-      out.rows(row_num, row_num + N - 1).zeros();
-      }
-    
-    steal_mem(out);
+    out.rows(0, A_n_rows-1) = rows(0, A_n_rows-1);
     }
+  
+  if(B_n_rows > 0)
+    {
+    out.rows(row_num + N, t_n_rows + N - 1) = rows(row_num, t_n_rows-1);
+    }
+  
+  out.rows(row_num, row_num + N - 1).zeros();
+  
+  steal_mem(out);
+  }
+
+
+
+template<typename eT>
+arma_deprecated
+inline
+void
+Cube<eT>::insert_cols(const uword col_num, const uword N, const bool set_to_zero)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_ignore(set_to_zero);
+  
+  (*this).insert_cols(col_num, N);
   }
 
 
@@ -2301,7 +2327,7 @@ Cube<eT>::insert_rows(const uword row_num, const uword N, const bool set_to_zero
 template<typename eT>
 inline
 void
-Cube<eT>::insert_cols(const uword col_num, const uword N, const bool set_to_zero)
+Cube<eT>::insert_cols(const uword col_num, const uword N)
   {
   arma_extra_debug_sigprint();
   
@@ -2313,37 +2339,46 @@ Cube<eT>::insert_cols(const uword col_num, const uword N, const bool set_to_zero
   // insertion at col_num == n_cols is in effect an append operation
   arma_debug_check_bounds( (col_num > t_n_cols), "Cube::insert_cols(): index out of bounds" );
   
-  if(N > 0)
+  if(N == 0)  { return; }
+  
+  Cube<eT> out(n_rows, t_n_cols + N, n_slices, arma_nozeros_indicator());
+  
+  if(A_n_cols > 0)
     {
-    Cube<eT> out(n_rows, t_n_cols + N, n_slices, arma_nozeros_indicator());
-    
-    if(A_n_cols > 0)
-      {
-      out.cols(0, A_n_cols-1) = cols(0, A_n_cols-1);
-      }
-    
-    if(B_n_cols > 0)
-      {
-      out.cols(col_num + N, t_n_cols + N - 1) = cols(col_num, t_n_cols-1);
-      }
-    
-    if(set_to_zero)
-      {
-      out.cols(col_num, col_num + N - 1).zeros();
-      }
-    
-    steal_mem(out);
+    out.cols(0, A_n_cols-1) = cols(0, A_n_cols-1);
     }
+  
+  if(B_n_cols > 0)
+    {
+    out.cols(col_num + N, t_n_cols + N - 1) = cols(col_num, t_n_cols-1);
+    }
+  
+  out.cols(col_num, col_num + N - 1).zeros();
+  
+  steal_mem(out);
   }
 
 
 
-//! insert N slices at the specified slice position,
-//! optionally setting the elements of the inserted slices to zero
 template<typename eT>
+arma_deprecated
 inline
 void
 Cube<eT>::insert_slices(const uword slice_num, const uword N, const bool set_to_zero)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_ignore(set_to_zero);
+  
+  (*this).insert_slices(slice_num, N);
+  }
+
+
+
+template<typename eT>
+inline
+void
+Cube<eT>::insert_slices(const uword slice_num, const uword N)
   {
   arma_extra_debug_sigprint();
   
@@ -2355,32 +2390,28 @@ Cube<eT>::insert_slices(const uword slice_num, const uword N, const bool set_to_
   // insertion at slice_num == n_slices is in effect an append operation
   arma_debug_check_bounds( (slice_num > t_n_slices), "Cube::insert_slices(): index out of bounds" );
   
-  if(N > 0)
+  if(N == 0)  { return; }
+  
+  Cube<eT> out(n_rows, n_cols, t_n_slices + N, arma_nozeros_indicator());
+  
+  if(A_n_slices > 0)
     {
-    Cube<eT> out(n_rows, n_cols, t_n_slices + N, arma_nozeros_indicator());
-    
-    if(A_n_slices > 0)
-      {
-      out.slices(0, A_n_slices-1) = slices(0, A_n_slices-1);
-      }
-    
-    if(B_n_slices > 0)
-      {
-      out.slices(slice_num + N, t_n_slices + N - 1) = slices(slice_num, t_n_slices-1);
-      }
-    
-    if(set_to_zero)
-      {
-      //out.slices(slice_num, slice_num + N - 1).zeros();
-      
-      for(uword i=slice_num; i < (slice_num + N); ++i)
-        {
-        arrayops::fill_zeros(out.slice_memptr(i), out.n_elem_slice);
-        }
-      }
-    
-    steal_mem(out);
+    out.slices(0, A_n_slices-1) = slices(0, A_n_slices-1);
     }
+  
+  if(B_n_slices > 0)
+    {
+    out.slices(slice_num + N, t_n_slices + N - 1) = slices(slice_num, t_n_slices-1);
+    }
+  
+  //out.slices(slice_num, slice_num + N - 1).zeros();
+  
+  for(uword i=slice_num; i < (slice_num + N); ++i)
+    {
+    arrayops::fill_zeros(out.slice_memptr(i), out.n_elem_slice);
+    }
+  
+  steal_mem(out);
   }
 
 
@@ -2412,24 +2443,23 @@ Cube<eT>::insert_rows(const uword row_num, const BaseCube<eT,T1>& X)
     "Cube::insert_rows(): given object has incompatible dimensions"
     );
   
-  if(N > 0)
+  if(N == 0)  { return; }
+  
+  Cube<eT> out(t_n_rows + N, n_cols, n_slices, arma_nozeros_indicator());
+  
+  if(A_n_rows > 0)
     {
-    Cube<eT> out(t_n_rows + N, n_cols, n_slices, arma_nozeros_indicator());
-    
-    if(A_n_rows > 0)
-      {
-      out.rows(0, A_n_rows-1) = rows(0, A_n_rows-1);
-      }
-    
-    if(B_n_rows > 0)
-      {
-      out.rows(row_num + N, t_n_rows + N - 1) = rows(row_num, t_n_rows - 1);
-      }
-    
-    out.rows(row_num, row_num + N - 1) = C;
-    
-    steal_mem(out);
+    out.rows(0, A_n_rows-1) = rows(0, A_n_rows-1);
     }
+  
+  if(B_n_rows > 0)
+    {
+    out.rows(row_num + N, t_n_rows + N - 1) = rows(row_num, t_n_rows - 1);
+    }
+  
+  out.rows(row_num, row_num + N - 1) = C;
+  
+  steal_mem(out);
   }
 
 
@@ -2461,24 +2491,23 @@ Cube<eT>::insert_cols(const uword col_num, const BaseCube<eT,T1>& X)
     "Cube::insert_cols(): given object has incompatible dimensions"
     );
   
-  if(N > 0)
+  if(N == 0)  { return; }
+  
+  Cube<eT> out(n_rows, t_n_cols + N, n_slices, arma_nozeros_indicator());
+  
+  if(A_n_cols > 0)
     {
-    Cube<eT> out(n_rows, t_n_cols + N, n_slices, arma_nozeros_indicator());
-    
-    if(A_n_cols > 0)
-      {
-      out.cols(0, A_n_cols-1) = cols(0, A_n_cols-1);
-      }
-    
-    if(B_n_cols > 0)
-      {
-      out.cols(col_num + N, t_n_cols + N - 1) = cols(col_num, t_n_cols - 1);
-      }
-    
-    out.cols(col_num, col_num + N - 1) = C;
-    
-    steal_mem(out);
+    out.cols(0, A_n_cols-1) = cols(0, A_n_cols-1);
     }
+  
+  if(B_n_cols > 0)
+    {
+    out.cols(col_num + N, t_n_cols + N - 1) = cols(col_num, t_n_cols - 1);
+    }
+  
+  out.cols(col_num, col_num + N - 1) = C;
+  
+  steal_mem(out);
   }
 
 
@@ -2512,24 +2541,23 @@ Cube<eT>::insert_slices(const uword slice_num, const BaseCube<eT,T1>& X)
     "Cube::insert_slices(): given object has incompatible dimensions"
     );
   
-  if(N > 0)
+  if(N == 0)  { return; }
+  
+  Cube<eT> out(n_rows, n_cols, t_n_slices + N, arma_nozeros_indicator());
+  
+  if(A_n_slices > 0)
     {
-    Cube<eT> out(n_rows, n_cols, t_n_slices + N, arma_nozeros_indicator());
-    
-    if(A_n_slices > 0)
-      {
-      out.slices(0, A_n_slices-1) = slices(0, A_n_slices-1);
-      }
-    
-    if(B_n_slices > 0)
-      {
-      out.slices(slice_num + N, t_n_slices + N - 1) = slices(slice_num, t_n_slices - 1);
-      }
-    
-    out.slices(slice_num, slice_num + N - 1) = C;
-    
-    steal_mem(out);
+    out.slices(0, A_n_slices-1) = slices(0, A_n_slices-1);
     }
+  
+  if(B_n_slices > 0)
+    {
+    out.slices(slice_num + N, t_n_slices + N - 1) = slices(slice_num, t_n_slices - 1);
+    }
+  
+  out.slices(slice_num, slice_num + N - 1) = C;
+  
+  steal_mem(out);
   }
 
 
@@ -5794,11 +5822,7 @@ Cube_aux::set_real(Cube< std::complex<T> >& out, const BaseCube<T,T1>& X)
     
     const uword N = out.n_elem;
     
-    for(uword i=0; i<N; ++i)
-      {
-      //out_mem[i].real() = PA[i];
-      out_mem[i] = std::complex<T>( A[i], out_mem[i].imag() );
-      }
+    for(uword i=0; i<N; ++i)  { out_mem[i].real(A[i]); }
     }
   else
     {
@@ -5806,7 +5830,7 @@ Cube_aux::set_real(Cube< std::complex<T> >& out, const BaseCube<T,T1>& X)
     for(uword col   = 0; col   < local_n_cols;   ++col  )
     for(uword row   = 0; row   < local_n_rows;   ++row  )
       {
-      (*out_mem) = std::complex<T>( P.at(row,col,slice), (*out_mem).imag() );
+      (*out_mem).real(P.at(row,col,slice));
       out_mem++;
       }
     }
@@ -5846,11 +5870,7 @@ Cube_aux::set_imag(Cube< std::complex<T> >& out, const BaseCube<T,T1>& X)
     
     const uword N = out.n_elem;
     
-    for(uword i=0; i<N; ++i)
-      {
-      //out_mem[i].imag() = PA[i];
-      out_mem[i] = std::complex<T>( out_mem[i].real(), A[i] );
-      }
+    for(uword i=0; i<N; ++i)  { out_mem[i].imag(A[i]); }
     }
   else
     {
@@ -5858,7 +5878,7 @@ Cube_aux::set_imag(Cube< std::complex<T> >& out, const BaseCube<T,T1>& X)
     for(uword col   = 0; col   < local_n_cols;   ++col  )
     for(uword row   = 0; row   < local_n_rows;   ++row  )
       {
-      (*out_mem) = std::complex<T>( (*out_mem).real(), P.at(row,col,slice) );
+      (*out_mem).imag(P.at(row,col,slice));
       out_mem++;
       }
     }
