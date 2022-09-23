@@ -28,7 +28,8 @@ class subview_cube_each_common
   
   const Cube<eT>& P;
   
-  inline void check_size(const Mat<eT>& A) const;
+  template<typename eT2>
+  inline void check_size(const Mat<eT2>& A) const;
   
   
   protected:
@@ -36,7 +37,8 @@ class subview_cube_each_common
   arma_inline subview_cube_each_common(const Cube<eT>& in_p);
        inline subview_cube_each_common() = delete;
   
-  arma_cold inline const std::string incompat_size_string(const Mat<eT>& A) const;
+  template<typename eT2>
+  arma_cold inline const std::string incompat_size_string(const Mat<eT2>& A) const;
   };
 
 
@@ -104,7 +106,7 @@ class subview_cube_each1_aux
   
   template<typename eT, typename T2>
   static inline Cube<eT> operator_plus(const subview_cube_each1<eT>& X, const Base<eT,T2>& Y);
-    
+  
   template<typename eT, typename T2>
   static inline Cube<eT> operator_minus(const subview_cube_each1<eT>& X, const Base<eT,T2>& Y);
   
@@ -135,7 +137,7 @@ class subview_cube_each2_aux
   
   template<typename eT, typename TB, typename T2>
   static inline Cube<eT> operator_plus(const subview_cube_each2<eT,TB>& X, const Base<eT,T2>& Y);
-    
+  
   template<typename eT, typename TB, typename T2>
   static inline Cube<eT> operator_minus(const subview_cube_each2<eT,TB>& X, const Base<eT,T2>& Y);
   

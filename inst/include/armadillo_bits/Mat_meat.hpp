@@ -794,14 +794,6 @@ Mat<eT>::operator=(Mat<eT>&& X)
   
   (*this).steal_mem(X, true);
   
-  if( (X.mem_state == 0) && (X.n_alloc <= arma_config::mat_prealloc) && (this != &X) )
-    {
-    access::rw(X.n_rows) = 0;
-    access::rw(X.n_cols) = 0;
-    access::rw(X.n_elem) = 0;
-    access::rw(X.mem)    = nullptr;
-    }
-  
   return *this;
   }
 
@@ -937,7 +929,7 @@ Mat<eT>::init(const std::initializer_list<eT>& list)
   
   set_size(1, N);
   
-  arrayops::copy( memptr(), list.begin(), N );
+  if(N > 0)  { arrayops::copy( memptr(), list.begin(), N ); }
   }
 
 
@@ -1236,8 +1228,8 @@ Mat<eT>::steal_mem(Mat<eT>& x, const bool is_move)
     access::rw(mem_state) = x_mem_state;
     access::rw(mem)       = x.mem;
     
-    access::rw(x.n_rows)    = 0;
-    access::rw(x.n_cols)    = 0;
+    access::rw(x.n_rows)    = (x_vec_state == 2) ? 1 : 0;
+    access::rw(x.n_cols)    = (x_vec_state == 1) ? 1 : 0;
     access::rw(x.n_elem)    = 0;
     access::rw(x.n_alloc)   = 0;
     access::rw(x.mem_state) = 0;
@@ -1248,6 +1240,14 @@ Mat<eT>::steal_mem(Mat<eT>& x, const bool is_move)
     arma_extra_debug_print("Mat::steal_mem(): copying memory");
     
     (*this).operator=(x);
+    
+    if( (is_move) && (x_mem_state == 0) && (x_n_alloc <= arma_config::mat_prealloc) )
+      {
+      access::rw(x.n_rows) = (x_vec_state == 2) ? 1 : 0;
+      access::rw(x.n_cols) = (x_vec_state == 1) ? 1 : 0;
+      access::rw(x.n_elem) = 0;
+      access::rw(x.mem)    = nullptr;
+      }
     }
   }
 
@@ -4539,12 +4539,25 @@ Mat<eT>::shed_cols(const Base<uword, T1>& indices)
 
 
 
-//! insert N rows at the specified row position,
-//! optionally setting the elements of the inserted rows to zero
 template<typename eT>
+arma_deprecated
 inline
 void
 Mat<eT>::insert_rows(const uword row_num, const uword N, const bool set_to_zero)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_ignore(set_to_zero);
+  
+  (*this).insert_rows(row_num, N);
+  }
+
+
+
+template<typename eT>
+inline
+void
+Mat<eT>::insert_rows(const uword row_num, const uword N)
   {
   arma_extra_debug_sigprint();
   
@@ -4557,37 +4570,46 @@ Mat<eT>::insert_rows(const uword row_num, const uword N, const bool set_to_zero)
   // insertion at row_num == n_rows is in effect an append operation
   arma_debug_check_bounds( (row_num > t_n_rows), "Mat::insert_rows(): index out of bounds" );
   
-  if(N > 0)
+  if(N == 0)  { return; }
+  
+  Mat<eT> out(t_n_rows + N, t_n_cols, arma_nozeros_indicator());
+  
+  if(A_n_rows > 0)
     {
-    Mat<eT> out(t_n_rows + N, t_n_cols, arma_nozeros_indicator());
-    
-    if(A_n_rows > 0)
-      {
-      out.rows(0, A_n_rows-1) = rows(0, A_n_rows-1);
-      }
-    
-    if(B_n_rows > 0)
-      {
-      out.rows(row_num + N, t_n_rows + N - 1) = rows(row_num, t_n_rows-1);
-      }
-    
-    if(set_to_zero)
-      {
-      out.rows(row_num, row_num + N - 1).zeros();
-      }
-    
-    steal_mem(out);
+    out.rows(0, A_n_rows-1) = rows(0, A_n_rows-1);
     }
+  
+  if(B_n_rows > 0)
+    {
+    out.rows(row_num + N, t_n_rows + N - 1) = rows(row_num, t_n_rows-1);
+    }
+  
+  out.rows(row_num, row_num + N - 1).zeros();
+  
+  steal_mem(out);
   }
 
 
 
-//! insert N columns at the specified column position,
-//! optionally setting the elements of the inserted columns to zero
 template<typename eT>
+arma_deprecated
 inline
 void
 Mat<eT>::insert_cols(const uword col_num, const uword N, const bool set_to_zero)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_ignore(set_to_zero);
+  
+  (*this).insert_cols(col_num, N);
+  }
+
+
+
+template<typename eT>
+inline
+void
+Mat<eT>::insert_cols(const uword col_num, const uword N)
   {
   arma_extra_debug_sigprint();
   
@@ -4600,27 +4622,23 @@ Mat<eT>::insert_cols(const uword col_num, const uword N, const bool set_to_zero)
   // insertion at col_num == n_cols is in effect an append operation
   arma_debug_check_bounds( (col_num > t_n_cols), "Mat::insert_cols(): index out of bounds" );
   
-  if(N > 0)
+  if(N == 0)  { return; }
+  
+  Mat<eT> out(t_n_rows, t_n_cols + N, arma_nozeros_indicator());
+  
+  if(A_n_cols > 0)
     {
-    Mat<eT> out(t_n_rows, t_n_cols + N, arma_nozeros_indicator());
-    
-    if(A_n_cols > 0)
-      {
-      out.cols(0, A_n_cols-1) = cols(0, A_n_cols-1);
-      }
-    
-    if(B_n_cols > 0)
-      {
-      out.cols(col_num + N, t_n_cols + N - 1) = cols(col_num, t_n_cols-1);
-      }
-    
-    if(set_to_zero)
-      {
-      out.cols(col_num, col_num + N - 1).zeros();
-      }
-    
-    steal_mem(out);
+    out.cols(0, A_n_cols-1) = cols(0, A_n_cols-1);
     }
+  
+  if(B_n_cols > 0)
+    {
+    out.cols(col_num + N, t_n_cols + N - 1) = cols(col_num, t_n_cols-1);
+    }
+  
+  out.cols(col_num, col_num + N - 1).zeros();
+  
+  steal_mem(out);
   }
 
 
@@ -10028,17 +10046,14 @@ Mat_aux::set_real(Mat< std::complex<T> >& out, const Base<T,T1>& X)
     
     const uword N = out.n_elem;
     
-    for(uword i=0; i<N; ++i)
-      {
-      out_mem[i] = std::complex<T>( A[i], out_mem[i].imag() );
-      }
+    for(uword i=0; i<N; ++i)  { out_mem[i].real(A[i]); }
     }
   else
     {
     for(uword col=0; col < local_n_cols; ++col)
     for(uword row=0; row < local_n_rows; ++row)
       {
-      (*out_mem) = std::complex<T>( P.at(row,col), (*out_mem).imag() );
+      (*out_mem).real(P.at(row,col));
       out_mem++;
       }
     }
@@ -10072,17 +10087,14 @@ Mat_aux::set_imag(Mat< std::complex<T> >& out, const Base<T,T1>& X)
     
     const uword N = out.n_elem;
     
-    for(uword i=0; i<N; ++i)
-      {
-      out_mem[i] = std::complex<T>( out_mem[i].real(), A[i] );
-      }
+    for(uword i=0; i<N; ++i)  { out_mem[i].imag(A[i]); }
     }
   else
     {
     for(uword col=0; col < local_n_cols; ++col)
     for(uword row=0; row < local_n_rows; ++row)
       {
-      (*out_mem) = std::complex<T>( (*out_mem).real(), P.at(row,col) );
+      (*out_mem).imag(P.at(row,col));
       out_mem++;
       }
     }

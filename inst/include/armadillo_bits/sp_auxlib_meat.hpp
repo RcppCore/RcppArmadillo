@@ -1184,21 +1184,14 @@ sp_auxlib::spsolve_simple(Mat<typename T1::elem_type>& X, const SpBase<typename 
     
     X = B_expr.get_ref();   // superlu::gssv() uses X as input (the B matrix) and as output (the solution)
     
-    if(A.n_rows > A.n_cols)
+    if(A.is_square() == false)
       {
-      arma_stop_logic_error("spsolve(): solving over-determined systems currently not supported");
       X.soft_reset();
-      return false;
-      }
-    else
-    if(A.n_rows < A.n_cols)
-      {
-      arma_stop_logic_error("spsolve(): solving under-determined systems currently not supported");
-      X.soft_reset();
+      arma_stop_logic_error("spsolve(): solving under-determined / over-determined systems is currently not supported");
       return false;
       }
     
-    arma_debug_check( (A.n_rows != X.n_rows), "spsolve(): number of rows in the given objects must be the same" );
+    arma_debug_check( (A.n_rows != X.n_rows), "spsolve(): number of rows in the given objects must be the same", [&](){ X.soft_reset(); } );
     
     if(A.is_empty() || X.is_empty())
       {
@@ -1318,21 +1311,14 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     
     const Mat<eT>& B = (B_is_modified) ?  B_copy : B_unwrap;
     
-    if(A.n_rows > A.n_cols)
+    if(A.is_square() == false)
       {
-      arma_stop_logic_error("spsolve(): solving over-determined systems currently not supported");
       X.soft_reset();
-      return false;
-      }
-    else
-    if(A.n_rows < A.n_cols)
-      {
-      arma_stop_logic_error("spsolve(): solving under-determined systems currently not supported");
-      X.soft_reset();
+      arma_stop_logic_error("spsolve(): solving under-determined / over-determined systems is currently not supported");
       return false;
       }
     
-    arma_debug_check( (A.n_rows != B.n_rows), "spsolve(): number of rows in the given objects must be the same" );
+    arma_debug_check( (A.n_rows != B.n_rows), "spsolve(): number of rows in the given objects must be the same", [&](){ X.soft_reset(); } );
     
     X.zeros(A.n_cols, B.n_cols);  // set the elements to zero, as we don't trust the SuperLU spaghetti code
     

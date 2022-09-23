@@ -251,6 +251,24 @@ find_nonfinite(const T1& X)
 
 
 
+template<typename T1>
+arma_warn_unused
+inline
+typename
+enable_if2
+  <
+  is_arma_type<T1>::value,
+  const mtOp<uword, T1, op_find_nan>
+  >::result
+find_nan(const T1& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  return mtOp<uword, T1, op_find_nan>(X);
+  }
+
+
+
 //
 
 
@@ -289,6 +307,25 @@ find_nonfinite(const BaseCube<typename T1::elem_type,T1>& X)
   const Mat<eT> R( const_cast< eT* >(tmp.M.memptr()), tmp.M.n_elem, 1, false );
   
   return find_nonfinite(R);
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+inline
+uvec
+find_nan(const BaseCube<typename T1::elem_type,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const unwrap_cube<T1> tmp(X.get_ref());
+  
+  const Mat<eT> R( const_cast< eT* >(tmp.M.memptr()), tmp.M.n_elem, 1, false );
+  
+  return find_nan(R);
   }
 
 
@@ -365,6 +402,50 @@ find_nonfinite(const SpBase<typename T1::elem_type,T1>& X)
   for(uword i=0; i<n_nz; ++i)
     {
     if(arma_isfinite(*it) == false)
+      {
+      const uword index = it.row() + it.col()*n_rows;
+      
+      tmp_mem[count] = index;
+      
+      ++count;
+      }
+    
+    ++it;
+    }
+  
+  Col<uword> out;
+  
+  if(count > 0)  { out.steal_mem_col(tmp, count); }
+  
+  return out;
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+inline
+Col<uword>
+find_nan(const SpBase<typename T1::elem_type,T1>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  const SpProxy<T1> P(X.get_ref());
+  
+  const uword n_rows = P.get_n_rows();
+  const uword n_nz   = P.get_n_nonzero();
+  
+  Mat<uword> tmp(n_nz, 1, arma_nozeros_indicator());
+  
+  uword* tmp_mem = tmp.memptr();
+  
+  typename SpProxy<T1>::const_iterator_type it = P.begin();
+  
+  uword count = 0;
+  
+  for(uword i=0; i<n_nz; ++i)
+    {
+    if(arma_isnan(*it))
       {
       const uword index = it.row() + it.col()*n_rows;
       

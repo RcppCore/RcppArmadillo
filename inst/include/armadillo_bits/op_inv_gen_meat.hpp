@@ -148,7 +148,7 @@ op_inv_gen_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
   
   out = expr.get_ref();
   
-  arma_debug_check( (out.is_square() == false), caller_sig, ": given matrix must be square sized" );
+  arma_debug_check( (out.is_square() == false), caller_sig, ": given matrix must be square sized", [&](){ out.soft_reset(); } );
   
   const uword N = out.n_rows;
   
@@ -409,7 +409,7 @@ op_inv_gen_rcond::apply_direct(Mat<typename T1::elem_type>& out, op_inv_gen_stat
   out             = expr.get_ref();
   out_state.rcond = T(0);
   
-  arma_debug_check( (out.is_square() == false), "inv(): given matrix must be square sized" );
+  arma_debug_check( (out.is_square() == false), "inv(): given matrix must be square sized", [&](){ out.soft_reset(); } );
   
   if(is_op_diagmat<T1>::value || out.is_diagmat())
     {
