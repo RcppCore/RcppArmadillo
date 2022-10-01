@@ -76,10 +76,10 @@
   For Armadillo: Conrad Sanderson
 }
 \references{
-  Armadillo project: \url{http://arma.sourceforge.net/}
+  Armadillo project: \url{https://arma.sourceforge.net/}
 
   Conrad Sanderson and Ryan Curtin.
-  \href{http://arma.sourceforge.net/armadillo_joss_2016.pdf}{Armadillo:
+  \href{https://arma.sourceforge.net/armadillo_joss_2016.pdf}{Armadillo:
   a template-based C++ library for linear algebra}.
   Journal of Open Source Software, Vol. 1, pp. 26, 2016.
 

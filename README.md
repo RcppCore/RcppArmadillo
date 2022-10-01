@@ -18,15 +18,15 @@
 
 ### Synopsis
 
-RcppArmadillo provides an interface from R to and from [Armadillo](http://arma.sourceforge.net) by
+RcppArmadillo provides an interface from R to and from [Armadillo](https://arma.sourceforge.net) by
 utilising the [Rcpp R/C++ interface library](http://dirk.eddelbuettel.com/code/rcpp.html).
 
 ### What is Armadillo?
 
-[Armadillo](http://arma.sourceforge.net) is a high-quality linear algebra library for the C++ language,
+[Armadillo](https://arma.sourceforge.net) is a high-quality linear algebra library for the C++ language,
 aiming towards a good balance between speed and ease of use. It provides high-level syntax and
-[functionality](http://arma.sourceforge.net/docs.html) deliberately similar to Matlab (TM).
-See [its website](http://arma.sourceforge.net) more information about Armadillo.
+[functionality](https://arma.sourceforge.net/docs.html) deliberately similar to Matlab (TM).
+See [its website](https://arma.sourceforge.net) more information about Armadillo.
 
 ### So give me an example!
 

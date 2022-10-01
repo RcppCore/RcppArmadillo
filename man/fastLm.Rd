@@ -29,7 +29,7 @@ fastLm(X, \dots)
 
   The \code{fastLmPure} function provides a reference use case of the \code{Armadillo}
   library via the wrapper functions in the \pkg{RcppArmadillo} package.
-  
+
   The \code{fastLm} function provides a more standard implementation of
   a linear model fit, offering both a default and a formula interface as
   well as \code{print}, \code{summary} and \code{predict} methods.
@@ -57,13 +57,13 @@ fastLm(X, \dots)
   \item{coefficients}{a vector of coefficients}
   \item{stderr}{a vector of the (estimated) standard errors of the coefficient estimates}
   \item{df.residual}{a scalar denoting the degrees of freedom in the model}
- 
+
   \code{fastLm} returns a richer object which also includes the
   residuals, fitted values and call argument similar to the \code{\link{lm}} or
   \code{\link[MASS]{rlm}} functions..
 }
-\seealso{\code{\link{lm}}, \code{\link{lm.fit}}} 
-\references{Armadillo project: \url{http://arma.sourceforge.net/}}
+\seealso{\code{\link{lm}}, \code{\link{lm.fit}}}
+\references{Armadillo project: \url{https://arma.sourceforge.net/}}
 \author{
   Armadillo is written by Conrad Sanderson. RcppArmadillo is written by
   Romain Francois, Dirk Eddelbuettel, Douglas Bates and Binxiang Ni.
@@ -91,7 +91,3 @@ fastLm(X, \dots)
   summary(fastLm(y ~ f1 * f2, dd)) # some huge coefficients
 }
 \keyword{regression}
-
-
-
-
