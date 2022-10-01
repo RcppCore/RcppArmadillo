@@ -1376,10 +1376,10 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     superlu_array_wrangler<T> berr(B.n_cols+1);
     
     superlu::GlobalLU_t glu;
-    arrayops::inplace_set(reinterpret_cast<char*>(&glu), char(0), sizeof(superlu::GlobalLU_t));
+    arrayops::fill_zeros(reinterpret_cast<char*>(&glu), sizeof(superlu::GlobalLU_t));
     
     superlu::mem_usage_t  mu;
-    arrayops::inplace_set(reinterpret_cast<char*>(&mu), char(0), sizeof(superlu::mem_usage_t));
+    arrayops::fill_zeros(reinterpret_cast<char*>(&mu), sizeof(superlu::mem_usage_t));
     
     superlu_stat_wrangler stat;
     

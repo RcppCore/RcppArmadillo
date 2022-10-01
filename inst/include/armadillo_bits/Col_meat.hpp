@@ -1054,12 +1054,25 @@ Col<eT>::shed_rows(const Base<uword, T1>& indices)
 
 
 
-//! insert N rows at the specified row position,
-//! optionally setting the elements of the inserted rows to zero
 template<typename eT>
+arma_deprecated
 inline
 void
 Col<eT>::insert_rows(const uword row_num, const uword N, const bool set_to_zero)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_ignore(set_to_zero);
+  
+  (*this).insert_rows(row_num, N);
+  }
+
+
+
+template<typename eT>
+inline
+void
+Col<eT>::insert_rows(const uword row_num, const uword N)
   {
   arma_extra_debug_sigprint();
   
@@ -1071,30 +1084,26 @@ Col<eT>::insert_rows(const uword row_num, const uword N, const bool set_to_zero)
   // insertion at row_num == n_rows is in effect an append operation
   arma_debug_check_bounds( (row_num > t_n_rows), "Col::insert_rows(): index out of bounds" );
   
-  if(N > 0)
+  if(N == 0)  { return; }
+  
+  Col<eT> out(t_n_rows + N, arma_nozeros_indicator());
+  
+        eT* out_mem = out.memptr();
+  const eT*   t_mem = (*this).memptr();
+  
+  if(A_n_rows > 0)
     {
-    Col<eT> out(t_n_rows + N, arma_nozeros_indicator());
-    
-          eT* out_mem = out.memptr();
-    const eT*   t_mem = (*this).memptr();
-    
-    if(A_n_rows > 0)
-      {
-      arrayops::copy( out_mem, t_mem, A_n_rows );
-      }
-    
-    if(B_n_rows > 0)
-      {
-      arrayops::copy( &(out_mem[row_num + N]), &(t_mem[row_num]), B_n_rows );
-      }
-    
-    if(set_to_zero)
-      {
-      arrayops::inplace_set( &(out_mem[row_num]), eT(0), N );
-      }
-    
-    Mat<eT>::steal_mem(out);
+    arrayops::copy( out_mem, t_mem, A_n_rows );
     }
+  
+  if(B_n_rows > 0)
+    {
+    arrayops::copy( &(out_mem[row_num + N]), &(t_mem[row_num]), B_n_rows );
+    }
+  
+  arrayops::fill_zeros( &(out_mem[row_num]), N );
+  
+  Mat<eT>::steal_mem(out);
   }
 
 

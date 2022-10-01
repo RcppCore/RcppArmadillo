@@ -427,6 +427,8 @@ field<oT>::operator=(field<oT>&& X)
   {
   arma_extra_debug_sigprint(arma_str::format("this = %x   X = %x") % this % &X);
   
+  if(this == &X)  { return *this; }
+  
   reset();
   
   access::rw(n_rows  ) = X.n_rows;

@@ -198,6 +198,8 @@ MapMat<eT>::operator=(MapMat<eT>&& x)
   {
   arma_extra_debug_sigprint();
   
+  if(this == &x)  { return; }
+  
   reset();
   
   if(map_ptr)  { delete map_ptr; }

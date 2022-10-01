@@ -368,12 +368,14 @@ Cube<eT>::init_warm(const uword in_n_rows, const uword in_n_cols, const uword in
   bool  err_state = false;
   char* err_msg   = nullptr;
   
-  arma_debug_set_error( err_state, err_msg, (t_mem_state == 3), "Cube::init(): size is fixed and hence cannot be changed" );
+  const char* error_message_1 = "Cube::init(): size is fixed and hence cannot be changed";
+  
+  arma_debug_set_error( err_state, err_msg, (t_mem_state == 3), error_message_1 );
   
   #if defined(ARMA_64BIT_WORD)
-    const char* error_message = "Cube::init(): requested size is too large";
+    const char* error_message_2 = "Cube::init(): requested size is too large";
   #else
-    const char* error_message = "Cube::init(): requested size is too large; suggest to enable ARMA_64BIT_WORD";
+    const char* error_message_2 = "Cube::init(): requested size is too large; suggest to enable ARMA_64BIT_WORD";
   #endif
   
   arma_debug_set_error
@@ -385,7 +387,7 @@ Cube<eT>::init_warm(const uword in_n_rows, const uword in_n_cols, const uword in
         ? ( (double(in_n_rows) * double(in_n_cols) * double(in_n_slices)) > double(ARMA_MAX_UWORD) )
         : false
       ),
-    error_message
+    error_message_2
     );
   
   arma_debug_check(err_state, err_msg);

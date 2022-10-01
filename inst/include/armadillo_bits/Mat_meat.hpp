@@ -351,7 +351,11 @@ Mat<eT>::init_warm(uword in_n_rows, uword in_n_cols)
   const uhword t_vec_state = vec_state;
   const uhword t_mem_state = mem_state;
   
-  arma_debug_set_error( err_state, err_msg, (t_mem_state == 3), "Mat::init(): size is fixed and hence cannot be changed" );
+  const char* error_message_1 = "Mat::init(): size is fixed and hence cannot be changed";
+  const char* error_message_2 = "Mat::init(): requested size is not compatible with column vector layout";
+  const char* error_message_3 = "Mat::init(): requested size is not compatible with row vector layout";
+  
+  arma_debug_set_error( err_state, err_msg, (t_mem_state == 3), error_message_1 );
   
   if(t_vec_state > 0)
     {
@@ -362,17 +366,17 @@ Mat<eT>::init_warm(uword in_n_rows, uword in_n_cols)
       }
     else
       {
-      if(t_vec_state == 1)  { arma_debug_set_error( err_state, err_msg, (in_n_cols != 1), "Mat::init(): requested size is not compatible with column vector layout" ); }
-      if(t_vec_state == 2)  { arma_debug_set_error( err_state, err_msg, (in_n_rows != 1), "Mat::init(): requested size is not compatible with row vector layout"    ); }
+      if(t_vec_state == 1)  { arma_debug_set_error( err_state, err_msg, (in_n_cols != 1), error_message_2 ); }
+      if(t_vec_state == 2)  { arma_debug_set_error( err_state, err_msg, (in_n_rows != 1), error_message_3 ); }
       }
     }
   
   // ensure that n_elem can hold the result of (n_rows * n_cols)
   
   #if defined(ARMA_64BIT_WORD)
-    const char* error_message = "Mat::init(): requested size is too large";
+    const char* error_message_4 = "Mat::init(): requested size is too large";
   #else
-    const char* error_message = "Mat::init(): requested size is too large; suggest to enable ARMA_64BIT_WORD";
+    const char* error_message_4 = "Mat::init(): requested size is too large; suggest to enable ARMA_64BIT_WORD";
   #endif
   
   arma_debug_set_error
@@ -384,7 +388,7 @@ Mat<eT>::init_warm(uword in_n_rows, uword in_n_cols)
         ? ( (double(in_n_rows) * double(in_n_cols)) > double(ARMA_MAX_UWORD) )
         : false
       ),
-    error_message
+    error_message_4
     );
   
   arma_debug_check(err_state, err_msg);
@@ -2758,7 +2762,7 @@ Mat<eT>::operator%=(const SpBase<eT, T1>& m)
   typename SpProxy<T1>::const_iterator_type it_end = p.end();
   
   // We have to zero everything that isn't being used.
-  arrayops::inplace_set(memptr(), eT(0), (it.col() * n_rows) + it.row());
+  arrayops::fill_zeros(memptr(), (it.col() * n_rows) + it.row());
   
   while(it != it_end)
     {
@@ -2772,7 +2776,7 @@ Mat<eT>::operator%=(const SpBase<eT, T1>& m)
       ? (p.get_n_cols() * n_rows)
       : (it.col() * n_rows) + it.row();
     
-    arrayops::inplace_set(memptr() + cur_loc + 1, eT(0), (next_loc - cur_loc - 1));
+    arrayops::fill_zeros(memptr() + cur_loc + 1, (next_loc - cur_loc - 1));
     }
   
   return *this;
@@ -4668,6 +4672,9 @@ Mat<eT>::insert_rows(const uword row_num, const Base<eT,T1>& X)
   bool  err_state = false;
   char* err_msg   = nullptr;
   
+  const char* error_message_1 = "Mat::insert_rows(): index out of bounds";
+  const char* error_message_2 = "Mat::insert_rows(): given object has an incompatible number of columns";
+  
   // insertion at row_num == n_rows is in effect an append operation
   
   arma_debug_set_error
@@ -4675,7 +4682,7 @@ Mat<eT>::insert_rows(const uword row_num, const Base<eT,T1>& X)
     err_state,
     err_msg,
     (row_num > t_n_rows),
-    "Mat::insert_rows(): index out of bounds"
+    error_message_1
     );
   
   arma_debug_set_error
@@ -4683,7 +4690,7 @@ Mat<eT>::insert_rows(const uword row_num, const Base<eT,T1>& X)
     err_state,
     err_msg,
     ( (C_n_cols != t_n_cols) && ( (t_n_rows > 0) || (t_n_cols > 0) ) && ( (C_n_rows > 0) || (C_n_cols > 0) ) ),
-    "Mat::insert_rows(): given object has an incompatible number of columns"
+    error_message_2
     );
   
   arma_debug_check_bounds(err_state, err_msg);
@@ -4741,6 +4748,9 @@ Mat<eT>::insert_cols(const uword col_num, const Base<eT,T1>& X)
   bool  err_state = false;
   char* err_msg   = nullptr;
   
+  const char* error_message_1 = "Mat::insert_cols(): index out of bounds";
+  const char* error_message_2 = "Mat::insert_cols(): given object has an incompatible number of rows";
+  
   // insertion at col_num == n_cols is in effect an append operation
   
   arma_debug_set_error
@@ -4748,7 +4758,7 @@ Mat<eT>::insert_cols(const uword col_num, const Base<eT,T1>& X)
     err_state,
     err_msg,
     (col_num > t_n_cols),
-    "Mat::insert_cols(): index out of bounds"
+    error_message_1
     );
   
   arma_debug_set_error
@@ -4756,7 +4766,7 @@ Mat<eT>::insert_cols(const uword col_num, const Base<eT,T1>& X)
     err_state,
     err_msg,
     ( (C_n_rows != t_n_rows) && ( (t_n_rows > 0) || (t_n_cols > 0) ) && ( (C_n_rows > 0) || (C_n_cols > 0) ) ),
-    "Mat::insert_cols(): given object has an incompatible number of rows"
+    error_message_2
     );
   
   arma_debug_check_bounds(err_state, err_msg);
