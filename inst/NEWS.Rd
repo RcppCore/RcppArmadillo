@@ -3,7 +3,7 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.11.4.0.1 (2022-10-01}{
+\section{Changes in RcppArmadillo version 0.11.4.0.1 (2022-10-01)}{
   \itemize{
     \item Upgraded to Armadillo release 11.4.0 (Ship of Theseus)
     \itemize{
@@ -16,7 +16,7 @@
   }
 }
 
-\section{Changes in RcppArmadillo version 0.11.2.4.0 (2022-09-09}{
+\section{Changes in RcppArmadillo version 0.11.2.4.0 (2022-09-09)}{
   \itemize{
     \item Upgraded to Armadillo release 11.2.4 (Classic Roast)
     \itemize{
