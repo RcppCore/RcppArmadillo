@@ -39,13 +39,13 @@ class Cube : public BaseCube< eT, Cube<eT> >
   typedef eT                                elem_type; //!< the type of elements stored in the cube
   typedef typename get_pod_type<eT>::result  pod_type; //!< if eT is std::complex<T>, pod_type is T; otherwise pod_type is eT
   
-  const uword  n_rows;       //!< number of rows     in each slice (read-only)
-  const uword  n_cols;       //!< number of columns  in each slice (read-only)
-  const uword  n_elem_slice; //!< number of elements in each slice (read-only)
-  const uword  n_slices;     //!< number of slices   in the cube   (read-only)
-  const uword  n_elem;       //!< number of elements in the cube   (read-only)
-  const uword  n_alloc;      //!< number of allocated elements     (read-only); NOTE: n_alloc can be 0, even if n_elem > 0
-  const uword  mem_state;
+  const uword n_rows;       //!< number of rows     in each slice (read-only)
+  const uword n_cols;       //!< number of columns  in each slice (read-only)
+  const uword n_elem_slice; //!< number of elements in each slice (read-only)
+  const uword n_slices;     //!< number of slices   in the cube   (read-only)
+  const uword n_elem;       //!< number of elements in the cube   (read-only)
+  const uword n_alloc;      //!< number of allocated elements     (read-only); NOTE: n_alloc can be 0, even if n_elem > 0
+  const uword mem_state;
   
   // mem_state = 0: normal cube which manages its own memory
   // mem_state = 1: use auxiliary memory until a size change
@@ -57,10 +57,27 @@ class Cube : public BaseCube< eT, Cube<eT> >
   
   protected:
   
-  arma_aligned const Mat<eT>** const mat_ptrs;
+  using mat_type = Mat<eT>;
   
-  arma_align_mem Mat<eT>* mat_ptrs_local[ Cube_prealloc::mat_ptrs_size ];
-  arma_align_mem eT            mem_local[ Cube_prealloc::mem_n_elem    ];  // local storage, for small cubes
+  #if defined(ARMA_USE_OPENMP)
+    using    raw_mat_ptr_type = mat_type*;
+    using atomic_mat_ptr_type = mat_type*;
+  #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
+    using    raw_mat_ptr_type = mat_type*;
+    using atomic_mat_ptr_type = std::atomic<mat_type*>;
+  #else
+    using    raw_mat_ptr_type = mat_type*;
+    using atomic_mat_ptr_type = mat_type*;
+  #endif
+  
+  atomic_mat_ptr_type* mat_ptrs = nullptr;
+  
+  #if (!defined(ARMA_DONT_USE_STD_MUTEX))
+    mutable std::mutex mat_mutex;   // required for slice()
+  #endif
+  
+  arma_aligned   atomic_mat_ptr_type mat_ptrs_local[ Cube_prealloc::mat_ptrs_size ];
+  arma_align_mem eT                       mem_local[ Cube_prealloc::mem_n_elem    ];  // local storage, for small cubes
   
   
   public:
@@ -124,7 +141,7 @@ class Cube : public BaseCube< eT, Cube<eT> >
   
   inline       Mat<eT>& slice(const uword in_slice);
   inline const Mat<eT>& slice(const uword in_slice) const;
-
+  
   arma_inline       subview_cube<eT> rows(const uword in_row1, const uword in_row2);
   arma_inline const subview_cube<eT> rows(const uword in_row1, const uword in_row2) const;
   
@@ -445,6 +462,9 @@ class Cube : public BaseCube< eT, Cube<eT> >
   inline void delete_mat();
   inline void create_mat();
   
+  inline void     create_mat_ptr(const uword in_slice) const;
+  inline Mat<eT>*    get_mat_ptr(const uword in_slice) const;
+  
   friend class glue_join;
   friend class op_reshape;
   friend class op_resize;
@@ -471,8 +491,8 @@ class Cube<eT>::fixed : public Cube<eT>
   
   static constexpr bool use_extra = (fixed_n_elem > Cube_prealloc::mem_n_elem);
   
-  arma_aligned   Mat<eT>* mat_ptrs_local_extra[ (fixed_n_slices > Cube_prealloc::mat_ptrs_size) ? fixed_n_slices : 1 ];
-  arma_align_mem eT       mem_local_extra     [ use_extra                                       ? fixed_n_elem   : 1 ];
+  arma_aligned   atomic_mat_ptr_type mat_ptrs_local_extra[ (fixed_n_slices > Cube_prealloc::mat_ptrs_size) ? fixed_n_slices : 1 ];
+  arma_align_mem eT                       mem_local_extra[ use_extra                                       ? fixed_n_elem   : 1 ];
   
   arma_inline void mem_setup();
   
