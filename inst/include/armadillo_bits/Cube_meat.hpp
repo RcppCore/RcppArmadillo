@@ -35,11 +35,7 @@ Cube<eT>::~Cube()
     }
   
   // try to expose buggy user code that accesses deleted objects
-  if(arma_config::debug)
-    {
-    access::rw(mem)      = nullptr;
-    access::rw(mat_ptrs) = nullptr;
-    }
+  if(arma_config::debug)  { access::rw(mem) = nullptr; }
   
   arma_type_check(( is_supported_elem_type<eT>::value == false ));
   }
@@ -57,7 +53,6 @@ Cube<eT>::Cube()
   , n_alloc(0)
   , mem_state(0)
   , mem()
-  , mat_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   }
@@ -76,7 +71,6 @@ Cube<eT>::Cube(const uword in_n_rows, const uword in_n_cols, const uword in_n_sl
   , n_alloc()
   , mem_state(0)
   , mem()
-  , mat_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -102,7 +96,6 @@ Cube<eT>::Cube(const SizeCube& s)
   , n_alloc()
   , mem_state(0)
   , mem()
-  , mat_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -130,7 +123,6 @@ Cube<eT>::Cube(const uword in_n_rows, const uword in_n_cols, const uword in_n_sl
   , n_alloc()
   , mem_state(0)
   , mem()
-  , mat_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -158,7 +150,6 @@ Cube<eT>::Cube(const SizeCube& s, const arma_initmode_indicator<do_zeros>&)
   , n_alloc()
   , mem_state(0)
   , mem()
-  , mat_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -186,7 +177,6 @@ Cube<eT>::Cube(const uword in_n_rows, const uword in_n_cols, const uword in_n_sl
   , n_alloc()
   , mem_state(0)
   , mem()
-  , mat_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -214,7 +204,6 @@ Cube<eT>::Cube(const SizeCube& s, const fill::fill_class<fill_type>&)
   , n_alloc()
   , mem_state(0)
   , mem()
-  , mat_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -242,7 +231,6 @@ Cube<eT>::Cube(const uword in_n_rows, const uword in_n_cols, const uword in_n_sl
   , n_alloc()
   , mem_state(0)
   , mem()
-  , mat_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -264,7 +252,6 @@ Cube<eT>::Cube(const SizeCube& s, const fill::scalar_holder<eT> f)
   , n_alloc()
   , mem_state(0)
   , mem()
-  , mat_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -286,9 +273,7 @@ Cube<eT>::Cube(Cube<eT>&& in_cube)
   , n_alloc(0)
   , mem_state(0)
   , mem()
-  , mat_ptrs(nullptr)
   {
-  arma_extra_debug_sigprint_this(this);
   arma_extra_debug_sigprint(arma_str::format("this = %x   in_cube = %x") % this % &in_cube);
   
   (*this).steal_mem(in_cube, true);
@@ -542,14 +527,23 @@ Cube<eT>::delete_mat()
   
   if((n_slices > 0) && (mat_ptrs != nullptr))
     {
-    for(uword uslice = 0; uslice < n_slices; ++uslice)
+    for(uword s=0; s < n_slices; ++s)
       {
-      if(mat_ptrs[uslice] != nullptr)  { delete access::rw(mat_ptrs[uslice]); }
+      raw_mat_ptr_type mat_ptr = raw_mat_ptr_type(mat_ptrs[s]);  // explicit cast to indicate load from std::atomic<Mat<eT>*>
+      
+      if(mat_ptr != nullptr)
+        {
+        arma_extra_debug_print( arma_str::format("Cube::delete_mat(): destroying matrix %d") % s );
+        delete mat_ptr;
+        mat_ptrs[s] = nullptr;
+        }
       }
     
     if( (mem_state <= 2) && (n_slices > Cube_prealloc::mat_ptrs_size) )
       {
+      arma_extra_debug_print("Cube::delete_mat(): freeing mat_ptrs array");
       delete [] mat_ptrs;
+      mat_ptrs = nullptr;
       }
     }
   }
@@ -563,31 +557,101 @@ Cube<eT>::create_mat()
   {
   arma_extra_debug_sigprint();
   
-  if(n_slices == 0)
+  if(n_slices == 0)  { mat_ptrs = nullptr; return; }
+  
+  if(mem_state <= 2)
     {
-    access::rw(mat_ptrs) = nullptr;
-    }
-  else
-    {
-    if(mem_state <= 2)
+    if(n_slices <= Cube_prealloc::mat_ptrs_size)
       {
-      if(n_slices <= Cube_prealloc::mat_ptrs_size)
+      arma_extra_debug_print("Cube::create_mat(): using local memory for mat_ptrs array");
+      
+      mat_ptrs = mat_ptrs_local;
+      }
+    else
+      {
+      arma_extra_debug_print("Cube::create_mat(): allocating mat_ptrs array");
+      
+      mat_ptrs = new(std::nothrow) atomic_mat_ptr_type[n_slices];
+      
+      arma_check_bad_alloc( (mat_ptrs == nullptr), "Cube::create_mat(): out of memory" );
+      }
+    }
+  
+  for(uword s=0; s < n_slices; ++s)  { mat_ptrs[s] = nullptr; }
+  }
+
+
+
+template<typename eT>
+inline
+void
+Cube<eT>::create_mat_ptr(const uword in_slice) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_extra_debug_print( arma_str::format("Cube::create_mat_ptr(): creating matrix %d") % in_slice );
+  
+  const eT* mat_mem = (n_elem_slice > 0) ? slice_memptr(in_slice) : nullptr;
+  
+  mat_ptrs[in_slice] = new Mat<eT>('j', mat_mem, n_rows, n_cols);
+  }
+
+
+
+template<typename eT>
+inline
+Mat<eT>*
+Cube<eT>::get_mat_ptr(const uword in_slice) const
+  {
+  arma_extra_debug_sigprint();
+  
+  raw_mat_ptr_type mat_ptr = nullptr;
+  
+  #if defined(ARMA_USE_OPENMP)
+    {
+    #pragma omp atomic read
+    mat_ptr = mat_ptrs[in_slice];
+    }
+  #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
+    {
+    mat_ptr = mat_ptrs[in_slice].load();
+    }
+  #else
+    {
+    mat_ptr = mat_ptrs[in_slice];
+    }
+  #endif
+  
+  if(mat_ptr == nullptr)
+    {
+    #if defined(ARMA_USE_OPENMP)
+      {
+      #pragma omp critical (arma_Cube_mat_ptrs)
         {
-        access::rw(mat_ptrs) = const_cast< const Mat<eT>** >(mat_ptrs_local);
-        }
-      else
-        {
-        access::rw(mat_ptrs) = new(std::nothrow) const Mat<eT>*[n_slices];
+        #pragma omp atomic read
+        mat_ptr = mat_ptrs[in_slice];
         
-        arma_check_bad_alloc( (mat_ptrs == nullptr), "Cube::create_mat(): out of memory" );
+        if(mat_ptr == nullptr)  { create_mat_ptr(in_slice); }
         }
       }
-    
-    for(uword uslice = 0; uslice < n_slices; ++uslice)
+    #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
       {
-      mat_ptrs[uslice] = nullptr;
+      mat_mutex.lock();
+      
+      mat_ptr = mat_ptrs[in_slice].load();
+      
+      if(mat_ptr == nullptr)  { create_mat_ptr(in_slice); }
+      
+      mat_mutex.unlock();
       }
+    #else
+      {
+      create_mat_ptr(in_slice);
+      }
+    #endif
     }
+  
+  return raw_mat_ptr_type(mat_ptrs[in_slice]);  // explicit cast to indicate load from std::atomic<Mat<eT>*>
   }
 
 
@@ -682,7 +746,6 @@ Cube<eT>::Cube(const Cube<eT>& x)
   , n_alloc()
   , mem_state(0)
   , mem()
-  , mat_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   arma_extra_debug_sigprint(arma_str::format("this = %x   in_cube = %x") % this % &x);
@@ -728,11 +791,10 @@ Cube<eT>::Cube(eT* aux_mem, const uword aux_n_rows, const uword aux_n_cols, cons
   , n_alloc     ( 0                                   )
   , mem_state   ( copy_aux_mem ? 0 : (strict ? 2 : 1) )
   , mem         ( copy_aux_mem ? nullptr : aux_mem    )
-  , mat_ptrs    ( nullptr                             )
   {
   arma_extra_debug_sigprint_this(this);
   
-  if(prealloc_mat)  { arma_debug_warn_level(3, "Cube::Cube(): parameter 'prealloc_mat' ignored as it's no longer used"); }
+  arma_ignore(prealloc_mat);  // kept only for compatibility with old user code
   
   if(copy_aux_mem)
     {
@@ -761,7 +823,6 @@ Cube<eT>::Cube(const eT* aux_mem, const uword aux_n_rows, const uword aux_n_cols
   , n_alloc()
   , mem_state(0)
   , mem()
-  , mat_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -857,7 +918,6 @@ Cube<eT>::Cube
   , n_alloc(0)
   , mem_state(0)
   , mem()
-  , mat_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -878,7 +938,6 @@ Cube<eT>::Cube(const subview_cube<eT>& X)
   , n_alloc()
   , mem_state(0)
   , mem()
-  , mat_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -989,7 +1048,6 @@ Cube<eT>::Cube(const subview_cube_slices<eT,T1>& X)
   , n_alloc(0)
   , mem_state(0)
   , mem()
-  , mat_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -1154,14 +1212,7 @@ Cube<eT>::slice(const uword in_slice)
   
   arma_debug_check_bounds( (in_slice >= n_slices), "Cube::slice(): index out of bounds" );
   
-  if(mat_ptrs[in_slice] == nullptr)
-    {
-    const eT* ptr = (n_elem_slice > 0) ? slice_memptr(in_slice) : nullptr;
-    
-    mat_ptrs[in_slice] = new Mat<eT>('j', ptr, n_rows, n_cols);
-    }
-  
-  return const_cast< Mat<eT>& >( *(mat_ptrs[in_slice]) );
+  return *(get_mat_ptr(in_slice));
   }
 
 
@@ -1176,14 +1227,7 @@ Cube<eT>::slice(const uword in_slice) const
   
   arma_debug_check_bounds( (in_slice >= n_slices), "Cube::slice(): index out of bounds" );
   
-  if(mat_ptrs[in_slice] == nullptr)
-    {
-    const eT* ptr = (n_elem_slice > 0) ? slice_memptr(in_slice) : nullptr;
-    
-    mat_ptrs[in_slice] = new Mat<eT>('j', ptr, n_rows, n_cols);
-    }
-  
-  return *(mat_ptrs[in_slice]);
+  return *(get_mat_ptr(in_slice));
   }
 
 
@@ -2594,7 +2638,6 @@ Cube<eT>::Cube(const GenCube<eT, gen_type>& X)
   , n_alloc()
   , mem_state(0)
   , mem()
-  , mat_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -2695,7 +2738,6 @@ Cube<eT>::Cube(const OpCube<T1, op_type>& X)
   , n_alloc(0)
   , mem_state(0)
   , mem()
-  , mat_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
 
@@ -2809,7 +2851,6 @@ Cube<eT>::Cube(const eOpCube<T1, eop_type>& X)
   , n_alloc()
   , mem_state(0)
   , mem()
-  , mat_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -2937,7 +2978,6 @@ Cube<eT>::Cube(const mtOpCube<eT, T1, op_type>& X)
   , n_alloc(0)
   , mem_state(0)
   , mem()
-  , mat_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -3034,7 +3074,6 @@ Cube<eT>::Cube(const GlueCube<T1, T2, glue_type>& X)
   , n_alloc(0)
   , mem_state(0)
   , mem()
-  , mat_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -3150,7 +3189,6 @@ Cube<eT>::Cube(const eGlueCube<T1, T2, eglue_type>& X)
   , n_alloc()
   , mem_state(0)
   , mem()
-  , mat_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -3284,7 +3322,6 @@ Cube<eT>::Cube(const mtGlueCube<eT, T1, T2, glue_type>& X)
   , n_alloc(0)
   , mem_state(0)
   , mem()
-  , mat_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -5237,16 +5274,20 @@ Cube<eT>::steal_mem(Cube<eT>& x, const bool is_move)
     
     if(x_n_slices > Cube_prealloc::mat_ptrs_size)
       {
-      access::rw(  mat_ptrs) = x.mat_ptrs;
-      access::rw(x.mat_ptrs) = nullptr;
+      arma_extra_debug_print("Cube::steal_mem(): stealing mat_ptrs array");
+      
+        mat_ptrs = x.mat_ptrs;
+      x.mat_ptrs = nullptr;
       }
     else
       {
-      access::rw(mat_ptrs) = const_cast< const Mat<eT>** >(mat_ptrs_local);
+      arma_extra_debug_print("Cube::steal_mem(): copying mat_ptrs array");
+      
+      mat_ptrs = mat_ptrs_local;
       
       for(uword i=0; i < x_n_slices; ++i)
         {
-          mat_ptrs[i] = x.mat_ptrs[i];
+          mat_ptrs[i] = raw_mat_ptr_type(x.mat_ptrs[i]);  // cast required by std::atomic
         x.mat_ptrs[i] = nullptr;
         }
       }
@@ -5265,6 +5306,11 @@ Cube<eT>::steal_mem(Cube<eT>& x, const bool is_move)
     arma_extra_debug_print("Cube::steal_mem(): copying memory");
     
     (*this).operator=(x);
+    
+    if( (is_move) && (x.mem_state == 0) && (x.n_alloc <= Cube_prealloc::mem_n_elem) )
+      {
+      x.reset();
+      }
     }
   }
 
@@ -5293,8 +5339,7 @@ Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::mem_setup()
     access::rw(Cube<eT>::n_alloc)      = 0;
     access::rw(Cube<eT>::mem_state)    = 3;
     access::rw(Cube<eT>::mem)          = (fixed_n_elem   > Cube_prealloc::mem_n_elem)    ? mem_local_extra      : mem_local;
-    access::rw(Cube<eT>::mat_ptrs)     = const_cast< const Mat<eT>** >( \
-                                         (fixed_n_slices > Cube_prealloc::mat_ptrs_size) ? mat_ptrs_local_extra : mat_ptrs_local );
+               Cube<eT>::mat_ptrs      = (fixed_n_slices > Cube_prealloc::mat_ptrs_size) ? mat_ptrs_local_extra : mat_ptrs_local;
     
     create_mat();
     }
@@ -5308,7 +5353,7 @@ Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::mem_setup()
     access::rw(Cube<eT>::n_alloc)      = 0;
     access::rw(Cube<eT>::mem_state)    = 3;
     access::rw(Cube<eT>::mem)          = nullptr;
-    access::rw(Cube<eT>::mat_ptrs)     = nullptr;
+               Cube<eT>::mat_ptrs      = nullptr;
     }
   }
 
