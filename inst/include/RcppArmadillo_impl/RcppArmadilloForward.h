@@ -24,14 +24,14 @@
 
 #include <RcppCommon.h>
 #include <Rconfig.h>
-#include <RcppArmadilloConfig.h>
+#include <RcppArmadillo_impl/RcppArmadilloConfig.h>
 
-#define ARMA_EXTRA_MAT_PROTO RcppArmadillo/Mat_proto.h
-#define ARMA_EXTRA_MAT_MEAT  RcppArmadillo/Mat_meat.h
-#define ARMA_EXTRA_COL_PROTO RcppArmadillo/Col_proto.h
-#define ARMA_EXTRA_COL_MEAT  RcppArmadillo/Col_meat.h
-#define ARMA_EXTRA_ROW_PROTO RcppArmadillo/Row_proto.h
-#define ARMA_EXTRA_ROW_MEAT  RcppArmadillo/Row_meat.h
+#define ARMA_EXTRA_MAT_PROTO RcppArmadillo_impl/RcppArmadillo_bits/Mat_proto.h
+#define ARMA_EXTRA_MAT_MEAT  RcppArmadillo_impl/RcppArmadillo_bits/Mat_meat.h
+#define ARMA_EXTRA_COL_PROTO RcppArmadillo_impl/RcppArmadillo_bits/Col_proto.h
+#define ARMA_EXTRA_COL_MEAT  RcppArmadillo_impl/RcppArmadillo_bits/Col_meat.h
+#define ARMA_EXTRA_ROW_PROTO RcppArmadillo_impl/RcppArmadillo_bits/Row_proto.h
+#define ARMA_EXTRA_ROW_MEAT  RcppArmadillo_impl/RcppArmadillo_bits/Row_meat.h
 
 // Using this define makes the R RNG have precedent over both the
 // C++11-based RNG provided by Armadillo, as well as the C++98-based
@@ -40,7 +40,7 @@
 // One can use the C++11-based on by commenting out the following
 // #define and also selecting C++11 (eg via src/Makevars* or the
 // DESCRIPTION file) and/or defining #define-ing ARMA_USE_CXX11_RNG
-#define ARMA_RNG_ALT         RcppArmadillo/Alt_R_RNG.h
+#define ARMA_RNG_ALT         RcppArmadillo_impl/RcppArmadillo_bits/Alt_R_RNG.h
 
 // Workaround to mitigate possible interference from a system-level installation of Armadillo
 #define ARMA_DONT_USE_WRAPPER

@@ -26,14 +26,14 @@
 #endif
 
 // Set up actual #include <armadillo> after first #include <RcppArmadilloConfig> and more config
-#include <RcppArmadilloForward.h>
+#include <RcppArmadillo_impl/RcppArmadilloForward.h>
 
 // Now automatically include Rcpp as well
 #include <Rcpp.h>
 
 // Remaining RcppArmadillo code
-#include <RcppArmadilloWrap.h>
-#include <RcppArmadilloAs.h>
-#include <RcppArmadilloSugar.h>
+#include <RcppArmadillo_impl/RcppArmadilloWrap.h>
+#include <RcppArmadillo_impl/RcppArmadilloAs.h>
+#include <RcppArmadillo_impl/RcppArmadilloSugar.h>
 
 #endif
