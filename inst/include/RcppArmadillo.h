@@ -32,8 +32,8 @@
 #include <Rcpp.h>
 
 // Remaining RcppArmadillo code
-#include <RcppArmadillo_impl/RcppArmadilloWrap.h>
-#include <RcppArmadillo_impl/RcppArmadilloAs.h>
-#include <RcppArmadillo_impl/RcppArmadilloSugar.h>
+#include <RcppArmadilloWrap.h>
+#include <RcppArmadilloAs.h>
+#include <RcppArmadilloSugar.h>
 
 #endif
