@@ -7,6 +7,7 @@
 	* inst/include/RcppArmadillo/Lightest: Header accessing Rcpp/Lightest, idem
 
 	* inst/include/RcppArmadillo/internal/: Regroup internal headers here
+	* inst/include/RcppArmadillo_bits/: Move to new internal location
 	* configure.ac: Support new location of generated config
 	* configure: Idem
 	* cleanup: Idem
