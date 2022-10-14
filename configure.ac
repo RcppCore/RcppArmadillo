@@ -207,5 +207,5 @@ fi
 AC_SUBST([ARMA_LAPACK],["${arma_lapack}"])
 AC_SUBST([ARMA_HAVE_OPENMP], ["${arma_have_openmp}"])
 AC_SUBST([OPENMP_FLAG], ["${openmp_flag}"])
-AC_CONFIG_FILES([inst/include/RcppArmadillo_impl/RcppArmadilloConfigGenerated.h src/Makevars])
+AC_CONFIG_FILES([inst/include/RcppArmadillo/internal/RcppArmadilloConfigGenerated.h src/Makevars])
 AC_OUTPUT
