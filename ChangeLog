@@ -1,3 +1,11 @@
+2022-10-14  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/RcppArmadillo/RcppArmadillo: Header accessing
+	Rcpp/Rcpp, and not imposing column-as-matrix return
+	* inst/include/RcppArmadillo/Light: Header accessing Rcpp/Light, idem
+	* inst/include/RcppArmadillo/Lighter: Header accessing Rcpp/Lighter, idem
+	* inst/include/RcppArmadillo/Lightest: Header accessing Rcpp/Lightest, idem
+
 2022-10-10  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version): RcppArmadillo 0.11.4.1.0
