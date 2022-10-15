@@ -26,12 +26,12 @@
 #include <Rconfig.h>
 #include <RcppArmadilloConfig.h>
 
-#define ARMA_EXTRA_MAT_PROTO RcppArmadillo/Mat_proto.h
-#define ARMA_EXTRA_MAT_MEAT  RcppArmadillo/Mat_meat.h
-#define ARMA_EXTRA_COL_PROTO RcppArmadillo/Col_proto.h
-#define ARMA_EXTRA_COL_MEAT  RcppArmadillo/Col_meat.h
-#define ARMA_EXTRA_ROW_PROTO RcppArmadillo/Row_proto.h
-#define ARMA_EXTRA_ROW_MEAT  RcppArmadillo/Row_meat.h
+#define ARMA_EXTRA_MAT_PROTO RcppArmadillo/internal/Mat_proto.h
+#define ARMA_EXTRA_MAT_MEAT  RcppArmadillo/internal/Mat_meat.h
+#define ARMA_EXTRA_COL_PROTO RcppArmadillo/internal/Col_proto.h
+#define ARMA_EXTRA_COL_MEAT  RcppArmadillo/internal/Col_meat.h
+#define ARMA_EXTRA_ROW_PROTO RcppArmadillo/internal/Row_proto.h
+#define ARMA_EXTRA_ROW_MEAT  RcppArmadillo/internal/Row_meat.h
 
 // Using this define makes the R RNG have precedent over both the
 // C++11-based RNG provided by Armadillo, as well as the C++98-based

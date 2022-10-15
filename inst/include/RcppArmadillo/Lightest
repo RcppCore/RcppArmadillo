@@ -1,0 +1,44 @@
+// Emacs, please make this  -*- mode: C++; -*-
+
+// RcppArmadillo: Rcpp/Armadillo glue
+//
+// Copyright (C)  2010 - 2022  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+//
+// This file is part of RcppArmadillo.
+//
+// RcppArmadillo is free software: you can redistribute it and/or modify it
+// under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// RcppArmadillo is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
+
+#ifndef RcppArmadillo__RcppArmadillo
+#define RcppArmadillo__RcppArmadillo
+
+#if defined(Rcpp_hpp) && !defined(COMPILING_RCPPARMADILLO)
+    #error "The file 'Rcpp.h' should not be included. Please correct to include only 'RcppArmadillo.h'."
+#endif
+
+// We are undoing a design decision from early on by allowing vectors be returned
+// as standard 'one-dimension' objects -- as opposed to the matrix form we imposed
+#define RCPP_ARMADILLO_RETURN_ANYVEC_AS_VECTOR
+
+// Set up actual #include <armadillo> after first #include <RcppArmadilloConfig> and more config
+#include <RcppArmadilloForward.h>
+
+// Automatically include Rcpp as well -- but only the 'lightest' mode sans modules, rtti, sugar
+#include <Rcpp/Lightest>
+
+// Remaining RcppArmadillo code
+#include <RcppArmadilloWrap.h>
+#include <RcppArmadilloAs.h>
+#include <RcppArmadilloSugar.h>
+
+#endif

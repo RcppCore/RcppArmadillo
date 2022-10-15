@@ -17,7 +17,7 @@ rm -f  config.log config.status confdefs.h \
        vignettes/*~ \
        */*~ *~ \
        inst/include/RcppArmadilloLapack.h \
-       inst/include/RcppArmadilloConfigGenerated.h \
+       inst/include/RcppArmadillo/internal/RcppArmadilloConfigGenerated.h \
        src/Makevars \
        vignettes/jss.bst vignettes/pinp.cls
 
