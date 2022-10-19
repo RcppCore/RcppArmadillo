@@ -106,7 +106,7 @@
 #else
   // on the other OSs we test via LAPACK_LIBS (in configure) which
   // updates this include file
-  #include <RcppArmadillo/internal/RcppArmadilloConfigGenerated.h>
+  #include <RcppArmadillo/config/RcppArmadilloConfigGenerated.h>
 #endif
 
 // Many client packages do not set the OpenMP compiler flag in their src/Makevars

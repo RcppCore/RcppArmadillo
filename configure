@@ -3407,7 +3407,7 @@ ARMA_HAVE_OPENMP="${arma_have_openmp}"
 
 OPENMP_FLAG="${openmp_flag}"
 
-ac_config_files="$ac_config_files inst/include/RcppArmadillo/internal/RcppArmadilloConfigGenerated.h src/Makevars"
+ac_config_files="$ac_config_files inst/include/RcppArmadillo/config/RcppArmadilloConfigGenerated.h src/Makevars"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -4109,7 +4109,7 @@ cat >>$CONFIG_STATUS <<\_ACEOF || ac_write_fail=1
 for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
-    "inst/include/RcppArmadillo/internal/RcppArmadilloConfigGenerated.h") CONFIG_FILES="$CONFIG_FILES inst/include/RcppArmadillo/internal/RcppArmadilloConfigGenerated.h" ;;
+    "inst/include/RcppArmadillo/config/RcppArmadilloConfigGenerated.h") CONFIG_FILES="$CONFIG_FILES inst/include/RcppArmadillo/config/RcppArmadilloConfigGenerated.h" ;;
     "src/Makevars") CONFIG_FILES="$CONFIG_FILES src/Makevars" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
