@@ -11,6 +11,10 @@
 	* configure.ac: Support new location of generated config
 	* configure: Idem
 	* cleanup: Idem
+2022-10-19  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/tinytest/test_sparseConversion.R: Refine one conversion as
+	suggested by the 'Matrix' team
 
 2022-10-10  Dirk Eddelbuettel  <edd@debian.org>
 

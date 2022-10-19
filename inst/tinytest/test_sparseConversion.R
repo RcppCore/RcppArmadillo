@@ -78,7 +78,7 @@ set.seed(27)
 IM1 <- as(sample(1:20, 100, replace=TRUE), "indMatrix")
 set.seed(27)
 IM2 <- as(sample(1:18, 100, replace=TRUE), "indMatrix")
-c12 <- crossprod(IM1,IM2)
+c12 <- as(crossprod(IM1,IM2), "CsparseMatrix")
 expect_equal(c12, asSpMat(c12))#, msg="dgC2dgC_3")
 
 ## [Matrix] p87 (dgCMatrix)
