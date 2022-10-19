@@ -40,7 +40,7 @@
 // One can use the C++11-based on by commenting out the following
 // #define and also selecting C++11 (eg via src/Makevars* or the
 // DESCRIPTION file) and/or defining #define-ing ARMA_USE_CXX11_RNG
-#define ARMA_RNG_ALT         RcppArmadillo/Alt_R_RNG.h
+#define ARMA_RNG_ALT         RcppArmadillo/rng/Alt_R_RNG.h
 
 // Workaround to mitigate possible interference from a system-level installation of Armadillo
 #define ARMA_DONT_USE_WRAPPER
