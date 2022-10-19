@@ -24,7 +24,7 @@
 
 #include <RcppCommon.h>
 #include <Rconfig.h>
-#include <RcppArmadilloConfig.h>
+#include <RcppArmadillo/config/RcppArmadilloConfig.h>
 
 #define ARMA_EXTRA_MAT_PROTO RcppArmadillo/internal/Mat_proto.h
 #define ARMA_EXTRA_MAT_MEAT  RcppArmadillo/internal/Mat_meat.h
