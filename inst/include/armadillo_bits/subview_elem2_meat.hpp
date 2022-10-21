@@ -699,7 +699,7 @@ subview_elem2<eT,T1,T2>::extract(Mat<eT>& actual_out, const subview_elem2<eT,T1,
   
   if(alias)  { arma_extra_debug_print("subview_elem2::extract(): aliasing detected"); }
   
-  Mat<eT>* tmp_out = alias ? new Mat<eT>() : 0;
+  Mat<eT>* tmp_out = alias ? new Mat<eT>() : nullptr;
   Mat<eT>& out     = alias ? *tmp_out      : actual_out;
   
   if( (in.all_rows == false) && (in.all_cols == false) )

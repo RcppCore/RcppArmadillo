@@ -584,7 +584,7 @@ Cube<eT>::create_mat()
 
 template<typename eT>
 inline
-void
+Mat<eT>*
 Cube<eT>::create_mat_ptr(const uword in_slice) const
   {
   arma_extra_debug_sigprint();
@@ -593,7 +593,9 @@ Cube<eT>::create_mat_ptr(const uword in_slice) const
   
   const eT* mat_mem = (n_elem_slice > 0) ? slice_memptr(in_slice) : nullptr;
   
-  mat_ptrs[in_slice] = new Mat<eT>('j', mat_mem, n_rows, n_cols);
+  Mat<eT>* mat_ptr = new(std::nothrow) Mat<eT>('j', mat_mem, n_rows, n_cols);
+  
+  return mat_ptr;
   }
 
 
@@ -631,27 +633,34 @@ Cube<eT>::get_mat_ptr(const uword in_slice) const
         #pragma omp atomic read
         mat_ptr = mat_ptrs[in_slice];
         
-        if(mat_ptr == nullptr)  { create_mat_ptr(in_slice); }
+        if(mat_ptr == nullptr)  { mat_ptr = create_mat_ptr(in_slice); }
+        
+        #pragma omp atomic write
+        mat_ptrs[in_slice] = mat_ptr;
         }
       }
     #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
       {
-      mat_mutex.lock();
+      const std::lock_guard<std::mutex> lock(mat_mutex);
       
       mat_ptr = mat_ptrs[in_slice].load();
       
-      if(mat_ptr == nullptr)  { create_mat_ptr(in_slice); }
+      if(mat_ptr == nullptr)  { mat_ptr = create_mat_ptr(in_slice); }
       
-      mat_mutex.unlock();
+      mat_ptrs[in_slice].store(mat_ptr);
       }
     #else
       {
-      create_mat_ptr(in_slice);
+      mat_ptr = create_mat_ptr(in_slice);
+      
+      mat_ptrs[in_slice] = mat_ptr;
       }
     #endif
+    
+    arma_check_bad_alloc( (mat_ptr == nullptr), "Cube::get_mat_ptr(): out of memory" );
     }
   
-  return raw_mat_ptr_type(mat_ptrs[in_slice]);  // explicit cast to indicate load from std::atomic<Mat<eT>*>
+  return mat_ptr;
   }
 
 

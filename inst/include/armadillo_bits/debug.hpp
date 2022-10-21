@@ -389,12 +389,6 @@ arma_warn(const T1& arg1, const T2& arg2, const T3& arg3, const T4& arg4)
 // arma_warn_level
 
 
-#if defined(ARMA_EXTRA_DEBUG)
-  #undef  ARMA_WARN_LEVEL
-  #define ARMA_WARN_LEVEL 3
-#endif
-
-
 template<typename T1>
 inline
 void

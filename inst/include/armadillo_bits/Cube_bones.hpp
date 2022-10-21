@@ -462,7 +462,7 @@ class Cube : public BaseCube< eT, Cube<eT> >
   inline void delete_mat();
   inline void create_mat();
   
-  inline void     create_mat_ptr(const uword in_slice) const;
+  inline Mat<eT>* create_mat_ptr(const uword in_slice) const;
   inline Mat<eT>*    get_mat_ptr(const uword in_slice) const;
   
   friend class glue_join;
