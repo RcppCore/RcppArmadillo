@@ -1,3 +1,12 @@
+2022-10-21  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version): RcppArmadillo 0.11.4.2.0
+        * inst/NEWS.Rd: Idem
+        * configure.ac: Idem
+        * configure: Idem
+
+ 	* inst/include/armadillo_bits/: Armadillo 11.4.2
+
 2022-10-20  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version): Roll minor version
