@@ -3,6 +3,17 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.11.4.2.0 (2022-10-21) (GitHub Only)}{
+  \itemize{
+    \item Upgraded to Armadillo release 11.4.2 (Ship of Theseus)
+    \itemize{
+      \item more robust handling of corner cases in multi-threaded contexts
+    }
+    \item Internal header organisation using with subdirectories while
+    provide full compatibility via existing paths (\ghpr{395} \ghpr{396})
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.11.4.1.0 (2022-10-10) (GitHub Only)}{
   \itemize{
     \item Upgraded to Armadillo release 11.4.1 (Ship of Theseus)

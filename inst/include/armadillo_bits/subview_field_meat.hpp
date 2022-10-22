@@ -514,7 +514,7 @@ subview_field<oT>::extract(field<oT>& actual_out, const subview_field<oT>& in)
   //
   const bool alias = (&actual_out == &in.f);
   
-  field<oT>* tmp = (alias) ? new field<oT> : 0;
+  field<oT>* tmp = (alias) ? new field<oT> : nullptr;
   field<oT>& out = (alias) ? (*tmp)        : actual_out;
   
   //
