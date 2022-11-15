@@ -42,7 +42,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // fastLm_impl
-List fastLm_impl(const arma::mat& X, const arma::colvec& y);
+Rcpp::List fastLm_impl(const arma::mat& X, const arma::colvec& y);
 RcppExport SEXP _RcppArmadillo_fastLm_impl(SEXP XSEXP, SEXP ySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
