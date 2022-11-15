@@ -1,9 +1,9 @@
 
 // RcppArmadilloConfig.h: Rcpp/Armadillo glue
 //
-// Copyright (C)  2010 - 2021  Dirk Eddelbuettel, Romain Francois and Douglas Bates
-// Copyright (C)  2016 - 2021  George G. Vega Yon
-// Copyright (C)  2017 - 2021  Serguei Sokol
+// Copyright (C)  2010 - 2022  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2016 - 2022  George G. Vega Yon
+// Copyright (C)  2017 - 2022  Serguei Sokol
 //
 // This file is part of RcppArmadillo.
 //
@@ -89,8 +89,9 @@
 
 // R now defines NDEBUG which suppresses a number of useful Armadillo tests
 // Users can still defined it later, and/or define ARMA_NO_DEBUG
-#if defined(NDEBUG)
-#undef NDEBUG
+// Updated 2022-Nov to only undefined if opt-in define has been set
+#if defined(RCPPARMADILLO_UNDEFINE_NDEBUG) && defined(NDEBUG)
+  #undef NDEBUG
 #endif
 
 // On Windows do not read autoconf-updated header
