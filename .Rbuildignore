@@ -11,3 +11,6 @@ src/lapack
 ^\.github
 ^\.codecov.yml
 ^\.covrignore
+^GPATH
+^GRTAGS
+^GTAGS

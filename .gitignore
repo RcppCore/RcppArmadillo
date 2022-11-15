@@ -8,3 +8,6 @@ src/*.so
 src/*.dll
 *tar.gz
 local/sparse-matrix-paper.bib
+GPATH
+GRTAGS
+GTAGS
