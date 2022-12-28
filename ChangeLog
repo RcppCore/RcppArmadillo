@@ -1,3 +1,12 @@
+2022-12-28  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version): RcppArmadillo 0.11.4.3.0
+        * inst/NEWS.Rd: Idem
+        * configure.ac: Idem
+        * configure: Idem
+
+ 	* inst/include/armadillo_bits/: Armadillo 11.4.3
+
 2022-11-15  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/RcppArmadillo/config/RcppArmadilloConfig.h: Protect

@@ -49,6 +49,7 @@ arma_cerr_stream(std::ostream* user_stream)
 
 
 
+arma_deprecated
 inline
 void
 set_cout_stream(std::ostream& user_stream)
@@ -58,6 +59,7 @@ set_cout_stream(std::ostream& user_stream)
 
 
 
+arma_deprecated
 inline
 void
 set_cerr_stream(std::ostream& user_stream)
@@ -86,30 +88,30 @@ get_cerr_stream()
 
 
 //! do not use this function - it's deprecated and will be removed
-inline
 arma_deprecated
+inline
 void
 set_stream_err1(std::ostream& user_stream)
   {
-  set_cerr_stream(user_stream);
+  arma_cerr_stream<char>(&user_stream);
   }
 
 
 
 //! do not use this function - it's deprecated and will be removed
-inline
 arma_deprecated
+inline
 void
 set_stream_err2(std::ostream& user_stream)
   {
-  set_cerr_stream(user_stream);
+  arma_cerr_stream<char>(&user_stream);
   }
 
 
 
 //! do not use this function - it's deprecated and will be removed
-inline
 arma_deprecated
+inline
 std::ostream&
 get_stream_err1()
   {
@@ -119,8 +121,8 @@ get_stream_err1()
 
 
 //! do not use this function - it's deprecated and will be removed
-inline
 arma_deprecated
+inline
 std::ostream&
 get_stream_err2()
   {
@@ -1435,6 +1437,7 @@ arma_assert_atlas_size(const T1& A, const T2& B)
         out << "@ arma_config::wrapper          = " << arma_config::wrapper          << '\n';
         out << "@ arma_config::cxx14            = " << arma_config::cxx14            << '\n';
         out << "@ arma_config::cxx17            = " << arma_config::cxx17            << '\n';
+        out << "@ arma_config::cxx20            = " << arma_config::cxx20            << '\n';
         out << "@ arma_config::std_mutex        = " << arma_config::std_mutex        << '\n';
         out << "@ arma_config::posix            = " << arma_config::posix            << '\n';
         out << "@ arma_config::openmp           = " << arma_config::openmp           << '\n';

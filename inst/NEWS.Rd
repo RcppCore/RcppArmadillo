@@ -3,6 +3,16 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.11.4.3.0 (2022-11-08)}{
+  \itemize{
+    \item Upgraded to Armadillo release 11.4.3 (Ship of Theseus)
+    \itemize{
+      \item fix corner case in \code{pinv()} when processing symmetric matrices
+    }
+    \item Protect the undefine of \code{NDEBUG} behind additional opt-in define
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.11.4.2.1 (2022-11-08)}{
   \itemize{
     \item Upgraded to Armadillo release 11.4.2 (Ship of Theseus)

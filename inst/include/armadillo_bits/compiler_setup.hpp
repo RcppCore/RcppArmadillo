@@ -401,7 +401,7 @@
   #pragma message ("WARNING: use of OpenMP disabled; compiler support for OpenMP 3.1+ not detected")
   
   #if (defined(_OPENMP) && (_OPENMP < 201107))
-    #pragma message ("NOTE: your compiler appears to have an ancient version of OpenMP")
+    #pragma message ("NOTE: your compiler has an outdated version of OpenMP")
     #pragma message ("NOTE: consider upgrading to a better compiler")
   #endif
 #endif

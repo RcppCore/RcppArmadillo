@@ -111,39 +111,18 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
     return op_pinv::apply_diag(out, A, tol);
     }
   
-  bool do_sym   = false;
-  bool do_sympd = false;
+  bool do_sym = false;
   
-  const bool is_sym_size_ok = (A.n_rows > (is_cx<eT>::yes ? uword(20) : uword(40)));
-  const bool is_arg_default = ((tol == T(0)) && (method_id == uword(0)));
+  const bool is_sym_size_ok = (A.n_rows == A.n_cols) && (A.n_rows > (is_cx<eT>::yes ? uword(20) : uword(40)));
   
-  if( (arma_config::optimise_sympd) && (auxlib::crippled_lapack(A) == false) && (is_arg_default || is_sym_size_ok) )
+  if( (is_sym_size_ok) && (arma_config::optimise_sympd) && (auxlib::crippled_lapack(A) == false) )
     {
     bool is_approx_sym   = false;
     bool is_approx_sympd = false;
     
     sympd_helper::analyse_matrix(is_approx_sym, is_approx_sympd, A);
     
-    do_sym   = is_sym_size_ok && ((is_cx<eT>::no) ? (is_approx_sym) : (is_approx_sym && is_approx_sympd));
-    do_sympd = is_arg_default && is_approx_sympd;
-    }
-  
-  if(do_sympd)
-    {
-    arma_extra_debug_print("op_pinv: attempting sympd optimisation");
-    
-    out = A;
-    
-          bool is_sympd_junk   = false;
-          T    rcond_calc      = T(0);
-    const T    rcond_threshold = T((std::max)(uword(100), uword(A.n_rows))) * std::numeric_limits<T>::epsilon();
-    
-    const bool status = auxlib::inv_sympd_rcond(out, is_sympd_junk, rcond_calc, rcond_threshold);
-    
-    if(status && arma_isfinite(rcond_calc))  { return true; }
-    
-    arma_extra_debug_print("op_pinv: sympd optimisation failed");
-    // auxlib::inv_sympd_rcond() will fail if A isn't really positive definite or its rcond is below rcond_threshold
+    do_sym = ((is_cx<eT>::no) ? (is_approx_sym) : (is_approx_sym && is_approx_sympd));
     }
   
   if(do_sym)

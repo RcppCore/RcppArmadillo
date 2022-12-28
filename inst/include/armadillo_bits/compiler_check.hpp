@@ -42,11 +42,11 @@
 #if defined(_MSVC_LANG)
   
   #if (_MSVC_LANG >= 201402L)
-  #undef  ARMA_HAVE_CXX11
-  #undef  ARMA_HAVE_CXX14
-  
-  #define ARMA_HAVE_CXX11
-  #define ARMA_HAVE_CXX14
+    #undef  ARMA_HAVE_CXX11
+    #define ARMA_HAVE_CXX11
+    
+    #undef  ARMA_HAVE_CXX14
+    #define ARMA_HAVE_CXX14
   #endif
   
   #if (_MSVC_LANG >= 201703L)
