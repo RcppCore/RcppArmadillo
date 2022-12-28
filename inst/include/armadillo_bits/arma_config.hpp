@@ -174,6 +174,13 @@ struct arma_config
   #endif
   
   
+  #if defined(ARMA_HAVE_CXX20)
+    static constexpr bool cxx20 = true;
+  #else
+    static constexpr bool cxx20 = false;
+  #endif
+  
+  
   #if (!defined(ARMA_DONT_USE_STD_MUTEX))
     static constexpr bool std_mutex = true;
   #else
