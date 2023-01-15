@@ -3,7 +3,15 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.11.4.3.0 (2022-11-08)}{
+\section{Changes in RcppArmadillo version 0.11.4.3.1 (2023-01-14)}{
+  \itemize{
+    \item The \code{#define ARMA_IGNORE_DEPRECATED_MARKER} remains active
+    to suppress the (upstream) deprecation warnings, see \ghit{391} and
+    \ghit{402} for details.
+  }
+}
+
+\section{Changes in RcppArmadillo version 0.11.4.3.0 (2022-12-28) (GitHub Only)}{
   \itemize{
     \item Upgraded to Armadillo release 11.4.3 (Ship of Theseus)
     \itemize{
