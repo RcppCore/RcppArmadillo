@@ -3,7 +3,7 @@
 PKG_CXXFLAGS = -I../inst/include @OPENMP_FLAG@
 PKG_LIBS= @OPENMP_FLAG@ $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
 
-## With R 3.1.0 or later, you can uncomment the following line to tell R to 
+## With R 3.1.0 or later, you can uncomment the following line to tell R to
 ## enable compilation with C++11 (where available)
 ##
 ## Also, OpenMP support in Armadillo prefers C++11 support. However, for wider
@@ -12,13 +12,9 @@ PKG_LIBS= @OPENMP_FLAG@ $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
 ##
 ## And with R 3.4.0, and RcppArmadillo 0.7.960.*, we turn C++11 on as OpenMP
 ## support within Armadillo prefers / requires it
-CXX_STD = CXX11
-
-## Armadillo itself use the following define which we also set
-## automatically if we see USE_CXX1X defined; outside of a package it
-## may be needed explicitly
-## In general, this can be enabled here via
-##    PKG_CXXFLAGS = -DARMA_USE_CXX11
-## or via 
-##    #define ARMA_USE_CXX11 
-## before RcppArmadillo.h is included
+##
+## R 4.0.0 made C++11 the default, R 4.1.0 switched to C++14, R 4.3.0 to C++17
+## _In general_ we should no longer need to set a standard as any recent R
+## installation will do the right thing. Should you need it, uncomment it and
+## set the appropriate value, possibly CXX17.
+#CXX_STD = CXX11

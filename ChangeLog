@@ -1,3 +1,10 @@
+2023-02-05  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/Makevars.in: No longer set a compilation standard
+	* src/Makevars.win: Idem
+	* inst/skeleton/Makevars: Idem
+	* inst/skeleton/Makevars.win: Idem
+
 2023-01-20  Dirk Eddelbuettel  <edd@debian.org>
 
 	* README.md: Update package count
