@@ -1,5 +1,7 @@
 2023-02-05  Dirk Eddelbuettel  <edd@debian.org>
 
+	* DESCRIPTION (Version, Date): Roll minor version and date
+
 	* src/Makevars.in: No longer set a compilation standard
 	* src/Makevars.win: Idem
 	* inst/skeleton/Makevars: Idem
