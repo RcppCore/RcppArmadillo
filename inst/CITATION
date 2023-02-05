@@ -13,6 +13,5 @@ bibentry("Article",
          volume = "71",
          month = "March",
          pages = "1054--1063",
-         url = "http://dx.doi.org/10.1016/j.csda.2013.02.005",
          doi = "10.1016/j.csda.2013.02.005"
          )
