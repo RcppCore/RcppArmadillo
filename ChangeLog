@@ -5,6 +5,8 @@
 	* inst/skeleton/Makevars: Idem
 	* inst/skeleton/Makevars.win: Idem
 
+	* inst/CITATION: Convert to bibentry() style with person()
+
 2023-01-20  Dirk Eddelbuettel  <edd@debian.org>
 
 	* README.md: Update package count

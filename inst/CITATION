@@ -1,19 +1,18 @@
-citHeader("To cite RcppArmadillo in publications use:")
+bibentry("Manual",
+         other = unlist(citation(auto = meta), recursive = FALSE))
 
-citEntry(entry = "Article",
-  title        = "RcppArmadillo: Accelerating R with high-performance C++ linear algebra",
-  author       = personList(as.person("Dirk Eddelbuettel"),
-                   as.person("Conrad Sanderson")),
-  journal      = "Computational	Statistics and Data Analysis",
-  year         = "2014",
-  volume       = "71",
-  month        = "March",
-  pages        = "1054--1063",
-  url          = "http://dx.doi.org/10.1016/j.csda.2013.02.005",
-
-  textVersion  =
-  paste("Dirk Eddelbuettel, Conrad Sanderson (2014).",
-        "RcppArmadillo: Accelerating R with high-performance C++ linear algebra.",
-        "Computational Statistics and Data Analysis, Volume 71, March 2014, pages 1054-1063.",
-        "URL http://dx.doi.org/10.1016/j.csda.2013.02.005")
-)
+bibentry("Article",
+         title = "RcppArmadillo: Accelerating R with high-performance C++ linear algebra",
+         author = c(person("Dirk", "Eddelbuettel",
+                           email = "edd@debian.org",
+                           comment = c(ORCID = "0000-0001-6419-907X")),
+                    person("Conrad", "Sanderson",
+                           comment = c(ORCID = "0000-0002-0049-4501"))),
+         journal = "Computational Statistics and Data Analysis",
+         year = "2014",
+         volume = "71",
+         month = "March",
+         pages = "1054--1063",
+         url = "http://dx.doi.org/10.1016/j.csda.2013.02.005",
+         doi = "10.1016/j.csda.2013.02.005"
+         )
