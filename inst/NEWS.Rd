@@ -3,6 +3,20 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.11.4.4.0 (2023-02-09)}{
+  \itemize{
+    \item Upgraded to Armadillo release 11.4.4 (Ship of Theseus)
+    \itemize{
+      \item extended \code{pow()} with various forms of element-wise power operations
+      \item added \code{find_nan()} to find indices of NaN elements
+      \item faster handling of compound expressions by \code{sum()}
+    }
+    \item The package no longer sets a compilation standard, or progagates on
+    in the generated packages as R ensures C++11 on all non-ancient versions
+    \item The CITATION file was updated to the current format
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.11.4.3.1 (2023-01-14)}{
   \itemize{
     \item The \code{#define ARMA_IGNORE_DEPRECATED_MARKER} remains active
