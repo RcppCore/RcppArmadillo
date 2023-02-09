@@ -8068,10 +8068,9 @@ Mat<eT>::load(std::istream& is, const file_type type)
 
 
 
-//! save the matrix to a file, without printing any error messages
 template<typename eT>
+arma_deprecated
 inline
-arma_cold
 bool
 Mat<eT>::quiet_save(const std::string name, const file_type type) const
   {
@@ -8083,8 +8082,8 @@ Mat<eT>::quiet_save(const std::string name, const file_type type) const
 
 
 template<typename eT>
+arma_deprecated
 inline
-arma_cold
 bool
 Mat<eT>::quiet_save(const hdf5_name& spec, const file_type type) const
   {
@@ -8096,8 +8095,8 @@ Mat<eT>::quiet_save(const hdf5_name& spec, const file_type type) const
 
 
 template<typename eT>
+arma_deprecated
 inline
-arma_cold
 bool
 Mat<eT>::quiet_save(const csv_name& spec, const file_type type) const
   {
@@ -8108,10 +8107,9 @@ Mat<eT>::quiet_save(const csv_name& spec, const file_type type) const
 
 
 
-//! save the matrix to a stream, without printing any error messages
 template<typename eT>
+arma_deprecated
 inline
-arma_cold
 bool
 Mat<eT>::quiet_save(std::ostream& os, const file_type type) const
   {
@@ -8122,10 +8120,9 @@ Mat<eT>::quiet_save(std::ostream& os, const file_type type) const
 
 
 
-//! load a matrix from a file, without printing any error messages
 template<typename eT>
+arma_deprecated
 inline
-arma_cold
 bool
 Mat<eT>::quiet_load(const std::string name, const file_type type)
   {
@@ -8137,8 +8134,8 @@ Mat<eT>::quiet_load(const std::string name, const file_type type)
 
 
 template<typename eT>
+arma_deprecated
 inline
-arma_cold
 bool
 Mat<eT>::quiet_load(const hdf5_name& spec, const file_type type)
   {
@@ -8150,8 +8147,8 @@ Mat<eT>::quiet_load(const hdf5_name& spec, const file_type type)
 
 
 template<typename eT>
+arma_deprecated
 inline
-arma_cold
 bool
 Mat<eT>::quiet_load(const csv_name& spec, const file_type type)
   {
@@ -8162,10 +8159,9 @@ Mat<eT>::quiet_load(const csv_name& spec, const file_type type)
 
 
 
-//! load a matrix from a stream, without printing any error messages
 template<typename eT>
+arma_deprecated
 inline
-arma_cold
 bool
 Mat<eT>::quiet_load(std::istream& is, const file_type type)
   {

@@ -54,6 +54,11 @@ interp1_helper_nearest(const Mat<eT>& XG, const Mat<eT>& YG, const Mat<eT>& XI, 
       YI_mem[i] = extrap_val;
       }
     else
+    if(arma_isnan(XI_val))
+      {
+      YI_mem[i] = Datum<eT>::nan;
+      }
+    else
       {
       // XG and XI are guaranteed to be sorted in ascending manner,
       // so start searching XG from last known optimum position 
@@ -112,6 +117,11 @@ interp1_helper_linear(const Mat<eT>& XG, const Mat<eT>& YG, const Mat<eT>& XI, M
     if((XI_val < XG_min) || (XI_val > XG_max))
       {
       YI_mem[i] = extrap_val;
+      }
+    else
+    if(arma_isnan(XI_val))
+      {
+      YI_mem[i] = Datum<eT>::nan;
       }
     else
       {
@@ -223,11 +233,11 @@ interp1_helper(const Mat<eT>& X, const Mat<eT>& Y, const Mat<eT>& XI, Mat<eT>& Y
   Mat<eT> XI_tmp;
   uvec    XI_indices;
   
-  const bool XI_is_sorted = XI.is_sorted();
+  const bool XI_is_sorted = XI.is_sorted();  // NOTE: .is_sorted() currently doesn't detect NaN
   
   if(XI_is_sorted == false)
     {
-    XI_indices = sort_index(XI);
+    XI_indices = sort_index(XI);  // NOTE: sort_index() will throw if XI has NaN
     
     const uword N = XI.n_elem;
     
@@ -245,6 +255,8 @@ interp1_helper(const Mat<eT>& X, const Mat<eT>& Y, const Mat<eT>& XI, Mat<eT>& Y
     }
   
   const Mat<eT>& XI_sorted = (XI_is_sorted) ? XI : XI_tmp;
+  
+  // NOTE: XI_sorted may have NaN
   
   
        if(sig == 10)  { interp1_helper_nearest(X_sanitised, Y_sanitised, XI_sorted, YI, extrap_val); }

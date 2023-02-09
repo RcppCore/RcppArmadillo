@@ -19,6 +19,10 @@
 #ifndef ARMA_INCLUDES
 #define ARMA_INCLUDES
 
+// NOTE: functions that are designed to be user accessible are described in the documentation (docs.html).
+// NOTE: all other functions and classes (ie. not explicitly described in the documentation)
+// NOTE: are considered as internal implementation details, and may be changed or removed without notice.
+
 #include "armadillo_bits/config.hpp"
 #include "armadillo_bits/compiler_check.hpp"
 
