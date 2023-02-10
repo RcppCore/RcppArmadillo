@@ -21,10 +21,11 @@
 
 
 
+//! internal use only; subject to removal
 template<typename T>
 inline
 std::ostream&
-arma_cout_stream(std::ostream* user_stream)
+internal_cout_stream(std::ostream* user_stream)
   {
   static std::ostream* cout_stream = &(ARMA_COUT_STREAM);
   
@@ -35,10 +36,11 @@ arma_cout_stream(std::ostream* user_stream)
 
 
 
+//! internal use only; subject to removal
 template<typename T>
 inline
 std::ostream&
-arma_cerr_stream(std::ostream* user_stream)
+internal_cerr_stream(std::ostream* user_stream)
   {
   static std::ostream* cerr_stream = &(ARMA_CERR_STREAM);
   
@@ -49,12 +51,34 @@ arma_cerr_stream(std::ostream* user_stream)
 
 
 
+template<typename T>
+arma_deprecated
+inline
+std::ostream&
+arma_cout_stream(std::ostream* user_stream)
+  {
+  return internal_cout_stream<T>(user_stream);
+  }
+
+
+
+template<typename T>
+arma_deprecated
+inline
+std::ostream&
+arma_cerr_stream(std::ostream* user_stream)
+  {
+  return internal_cerr_stream<T>(user_stream);
+  }
+
+
+
 arma_deprecated
 inline
 void
 set_cout_stream(std::ostream& user_stream)
   {
-  arma_cout_stream<char>(&user_stream);
+  internal_cout_stream<char>(&user_stream);
   }
 
 
@@ -64,7 +88,7 @@ inline
 void
 set_cerr_stream(std::ostream& user_stream)
   {
-  arma_cerr_stream<char>(&user_stream);
+  internal_cerr_stream<char>(&user_stream);
   }
 
 
@@ -73,7 +97,7 @@ inline
 std::ostream&
 get_cout_stream()
   {
-  return arma_cout_stream<char>(nullptr);
+  return internal_cout_stream<char>(nullptr);
   }
 
 
@@ -82,7 +106,7 @@ inline
 std::ostream&
 get_cerr_stream()
   {
-  return arma_cerr_stream<char>(nullptr);
+  return internal_cerr_stream<char>(nullptr);
   }
 
 
@@ -93,7 +117,7 @@ inline
 void
 set_stream_err1(std::ostream& user_stream)
   {
-  arma_cerr_stream<char>(&user_stream);
+  internal_cerr_stream<char>(&user_stream);
   }
 
 
@@ -104,7 +128,7 @@ inline
 void
 set_stream_err2(std::ostream& user_stream)
   {
-  arma_cerr_stream<char>(&user_stream);
+  internal_cerr_stream<char>(&user_stream);
   }
 
 

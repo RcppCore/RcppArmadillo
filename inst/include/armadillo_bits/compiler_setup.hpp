@@ -440,34 +440,33 @@
 
 
 
+// undefine conflicting macros
+
 #if defined(log2)
   #undef log2
-  #pragma message ("WARNING: detected 'log2' macro and undefined it")
+  #pragma message ("WARNING: undefined conflicting 'log2' macro")
 #endif
 
-
-
-// 
-// whoever defined macros with the names "min" and "max" should be permanently removed from the gene pool
+#if defined(check)
+  #undef check
+  #pragma message ("WARNING: undefined conflicting 'check' macro")
+#endif
 
 #if defined(min) || defined(max)
   #undef min
   #undef max
-  #pragma message ("WARNING: detected 'min' and/or 'max' macros and undefined them;")
-  #pragma message ("WARNING: you may wish to define NOMINMAX before including any windows header")
+  #pragma message ("WARNING: undefined conflicting 'min' and/or 'max' macros;")
+  #pragma message ("WARNING: suggest to define NOMINMAX before including any windows header")
 #endif
 
-
-
-//
-// handle more stupid macros
 // https://sourceware.org/bugzilla/show_bug.cgi?id=19239
-
 #undef minor
 #undef major
 
 
 // optionally allow disabling of compile-time deprecation messages (not recommended)
+// NOTE: option 'ARMA_IGNORE_DEPRECATED_MARKER' will be removed
+// NOTE: disabling deprecation messages is counter-productive
 
 #if defined(ARMA_IGNORE_DEPRECATED_MARKER) && (!defined(ARMA_DONT_IGNORE_DEPRECATED_MARKER)) && (!defined(ARMA_EXTRA_DEBUG))
   #undef  arma_deprecated

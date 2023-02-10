@@ -23,7 +23,7 @@
 
 #define ARMA_VERSION_MAJOR 11
 #define ARMA_VERSION_MINOR 4
-#define ARMA_VERSION_PATCH 3
+#define ARMA_VERSION_PATCH 4
 #define ARMA_VERSION_NAME  "Ship of Theseus"
 
 

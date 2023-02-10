@@ -1936,8 +1936,8 @@ field<oT>::load(std::istream& is, const file_type type)
 
 
 template<typename oT>
+arma_deprecated
 inline
-arma_cold
 bool
 field<oT>::quiet_save(const std::string name, const file_type type) const
   {
@@ -1949,8 +1949,8 @@ field<oT>::quiet_save(const std::string name, const file_type type) const
 
 
 template<typename oT>
+arma_deprecated
 inline
-arma_cold
 bool
 field<oT>::quiet_save(std::ostream& os, const file_type type) const
   {
@@ -1962,8 +1962,8 @@ field<oT>::quiet_save(std::ostream& os, const file_type type) const
 
 
 template<typename oT>
+arma_deprecated
 inline
-arma_cold
 bool
 field<oT>::quiet_load(const std::string name, const file_type type)
   {
@@ -1975,8 +1975,8 @@ field<oT>::quiet_load(const std::string name, const file_type type)
 
 
 template<typename oT>
+arma_deprecated
 inline
-arma_cold
 bool
 field<oT>::quiet_load(std::istream& is, const file_type type)
   {
