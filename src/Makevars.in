@@ -1,6 +1,7 @@
 ## -*- mode: makefile; -*-
 
-PKG_CXXFLAGS = -I../inst/include @OPENMP_FLAG@
+PKG_CPPFLAGS = -I../inst/include
+PKG_CXXFLAGS = @OPENMP_FLAG@
 PKG_LIBS= @OPENMP_FLAG@ $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
 
 ## With R 3.1.0 or later, you can uncomment the following line to tell R to
