@@ -84,7 +84,6 @@ running_stat_vec<obj_type>::operator=(const running_stat_vec<obj_type>& in_rsv)
 //! update statistics to reflect new sample
 template<typename obj_type>
 template<typename T1>
-arma_hot
 inline
 void
 running_stat_vec<obj_type>::operator() (const Base<typename running_stat_vec<obj_type>::T, T1>& X)
@@ -112,7 +111,6 @@ running_stat_vec<obj_type>::operator() (const Base<typename running_stat_vec<obj
 
 template<typename obj_type>
 template<typename T1>
-arma_hot
 inline
 void
 running_stat_vec<obj_type>::operator() (const Base< std::complex<typename running_stat_vec<obj_type>::T>, T1>& X)

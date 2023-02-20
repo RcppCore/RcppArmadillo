@@ -23,7 +23,6 @@
 
 //! for tiny square matrices (size <= 4x4)
 template<typename eT, typename TA>
-arma_cold
 inline
 void
 op_strans::apply_mat_noalias_tinysq(Mat<eT>& out, const TA& A)
@@ -98,7 +97,6 @@ op_strans::apply_mat_noalias_tinysq(Mat<eT>& out, const TA& A)
 
 
 template<typename eT>
-arma_hot
 inline
 void
 op_strans::block_worker(eT* Y, const eT* X, const uword X_n_rows, const uword Y_n_rows, const uword n_rows, const uword n_cols)
@@ -119,7 +117,6 @@ op_strans::block_worker(eT* Y, const eT* X, const uword X_n_rows, const uword Y_
 
 
 template<typename eT>
-arma_hot
 inline
 void
 op_strans::apply_mat_noalias_large(Mat<eT>& out, const Mat<eT>& A)
@@ -176,7 +173,6 @@ op_strans::apply_mat_noalias_large(Mat<eT>& out, const Mat<eT>& A)
 
 //! Immediate transpose of a dense matrix
 template<typename eT, typename TA>
-arma_hot
 inline
 void
 op_strans::apply_mat_noalias(Mat<eT>& out, const TA& A)
@@ -233,7 +229,6 @@ op_strans::apply_mat_noalias(Mat<eT>& out, const TA& A)
 
 
 template<typename eT>
-arma_hot
 inline
 void
 op_strans::apply_mat_inplace(Mat<eT>& out)

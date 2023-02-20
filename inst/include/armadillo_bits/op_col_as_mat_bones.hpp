@@ -16,28 +16,18 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup wall_clock
+//! \addtogroup op_col_as_mat
 //! @{
 
 
-//! Class for measuring time intervals
-class wall_clock
+class op_col_as_mat
+  : public traits_op_default
   {
   public:
   
-  inline  wall_clock();
-  inline ~wall_clock();
-  
-                   inline void   tic();  //!< start the timer
-  arma_warn_unused inline double toc();  //!< return the number of seconds since the last call to tic()
-  
-  
-  private:
-  
-  bool valid = false;
-  
-  std::chrono::steady_clock::time_point chrono_time1;
+  template<typename T1> inline static void apply(Mat<typename T1::elem_type>& out, const CubeToMatOp<T1, op_col_as_mat>& expr);
   };
+
 
 
 //! @}

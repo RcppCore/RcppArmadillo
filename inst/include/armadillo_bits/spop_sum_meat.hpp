@@ -22,7 +22,6 @@
 
 
 template<typename T1>
-arma_hot
 inline
 void
 spop_sum::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_sum>& in)

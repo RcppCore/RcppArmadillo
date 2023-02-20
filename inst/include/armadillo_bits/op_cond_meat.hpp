@@ -45,7 +45,7 @@ op_cond::apply(const Base<typename T1::elem_type, T1>& X)
   bool is_approx_sym   = false;
   bool is_approx_sympd = false;
   
-  sympd_helper::analyse_matrix(is_approx_sym, is_approx_sympd, A);
+  sym_helper::analyse_matrix(is_approx_sym, is_approx_sympd, A);
   
   const bool do_sym = (is_cx<eT>::no) ? (is_approx_sym) : (is_approx_sym && is_approx_sympd);
   

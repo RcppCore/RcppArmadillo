@@ -114,9 +114,11 @@ op_inv_gen_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
     
     const bool status = op_inv_gen_rcond::apply_direct(out, inv_state, expr);
     
-    const T local_rcond = inv_state.rcond;  // workaround for bug in gcc 4.8
+    // workaround for bug in gcc 4.8
+    const uword local_size  = inv_state.size;  
+    const T     local_rcond = inv_state.rcond;
     
-    if((status == false) || (local_rcond < std::numeric_limits<T>::epsilon()) || arma_isnan(local_rcond))  { return false; }
+    if((status == false) || (local_rcond < ((std::max)(local_size, uword(1)) * std::numeric_limits<T>::epsilon())) || arma_isnan(local_rcond))  { return false; }
     
     return true;
     }
@@ -129,9 +131,11 @@ op_inv_gen_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
     
     const bool status = op_inv_gen_rcond::apply_direct(tmp, inv_state, expr);
     
-    const T local_rcond = inv_state.rcond;  // workaround for bug in gcc 4.8
-
-    if((status == false) || (local_rcond < std::numeric_limits<T>::epsilon()) || arma_isnan(local_rcond))
+    // workaround for bug in gcc 4.8
+    const uword local_size  = inv_state.size;  
+    const T     local_rcond = inv_state.rcond;
+    
+    if((status == false) || (local_rcond < ((std::max)(local_size, uword(1)) * std::numeric_limits<T>::epsilon())) || arma_isnan(local_rcond))
       {
       Mat<eT> A = expr.get_ref();
       
@@ -225,7 +229,7 @@ op_inv_gen_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
     return auxlib::inv_tr(out, ((is_triu_expr || is_triu_mat) ? uword(0) : uword(1)));
     }
   
-  const bool try_sympd = arma_config::optimise_sympd && ((no_sympd) ? false : (likely_sympd ? true : sympd_helper::guess_sympd(out)));
+  const bool try_sympd = arma_config::optimise_sym && ((no_sympd) ? false : (likely_sympd ? true : sym_helper::guess_sympd(out)));
   
   if(try_sympd)
     {
@@ -252,7 +256,6 @@ op_inv_gen_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
 
 
 template<typename eT>
-arma_cold
 inline
 bool
 op_inv_gen_full::apply_tiny_2x2(Mat<eT>& X)
@@ -276,7 +279,7 @@ op_inv_gen_full::apply_tiny_2x2(Mat<eT>& X)
   const eT     det_val = (a*d - b*c);
   const  T abs_det_val = std::abs(det_val);
   
-  if((abs_det_val < det_min) || (abs_det_val > det_max))  { return false; }
+  if((abs_det_val < det_min) || (abs_det_val > det_max) || arma_isnan(det_val))  { return false; }
   
   Xm[pos<0,0>::n2] =  d / det_val;
   Xm[pos<0,1>::n2] = -b / det_val;
@@ -289,7 +292,6 @@ op_inv_gen_full::apply_tiny_2x2(Mat<eT>& X)
 
 
 template<typename eT>
-arma_cold
 inline
 bool
 op_inv_gen_full::apply_tiny_3x3(Mat<eT>& X)
@@ -311,7 +313,7 @@ op_inv_gen_full::apply_tiny_3x3(Mat<eT>& X)
   const eT     det_val = op_det::apply_tiny_3x3(X);
   const  T abs_det_val = std::abs(det_val);
   
-  if((abs_det_val < det_min) || (abs_det_val > det_max))  { return false; }
+  if((abs_det_val < det_min) || (abs_det_val > det_max) || arma_isnan(det_val))  { return false; }
   
   Ym[pos<0,0>::n3] =  (Xm[pos<2,2>::n3]*Xm[pos<1,1>::n3] - Xm[pos<2,1>::n3]*Xm[pos<1,2>::n3]) / det_val;
   Ym[pos<1,0>::n3] = -(Xm[pos<2,2>::n3]*Xm[pos<1,0>::n3] - Xm[pos<2,0>::n3]*Xm[pos<1,2>::n3]) / det_val;
@@ -339,7 +341,6 @@ op_inv_gen_full::apply_tiny_3x3(Mat<eT>& X)
 
 
 template<typename eT>
-arma_cold
 inline
 bool
 op_inv_gen_full::apply_tiny_4x4(Mat<eT>& X)
@@ -361,7 +362,7 @@ op_inv_gen_full::apply_tiny_4x4(Mat<eT>& X)
   const eT     det_val = op_det::apply_tiny_4x4(X);
   const  T abs_det_val = std::abs(det_val);
   
-  if((abs_det_val < det_min) || (abs_det_val > det_max))  { return false; }
+  if((abs_det_val < det_min) || (abs_det_val > det_max) || arma_isnan(det_val))  { return false; }
   
   Ym[pos<0,0>::n4] = ( Xm[pos<1,2>::n4]*Xm[pos<2,3>::n4]*Xm[pos<3,1>::n4] - Xm[pos<1,3>::n4]*Xm[pos<2,2>::n4]*Xm[pos<3,1>::n4] + Xm[pos<1,3>::n4]*Xm[pos<2,1>::n4]*Xm[pos<3,2>::n4] - Xm[pos<1,1>::n4]*Xm[pos<2,3>::n4]*Xm[pos<3,2>::n4] - Xm[pos<1,2>::n4]*Xm[pos<2,1>::n4]*Xm[pos<3,3>::n4] + Xm[pos<1,1>::n4]*Xm[pos<2,2>::n4]*Xm[pos<3,3>::n4] ) / det_val;
   Ym[pos<1,0>::n4] = ( Xm[pos<1,3>::n4]*Xm[pos<2,2>::n4]*Xm[pos<3,0>::n4] - Xm[pos<1,2>::n4]*Xm[pos<2,3>::n4]*Xm[pos<3,0>::n4] - Xm[pos<1,3>::n4]*Xm[pos<2,0>::n4]*Xm[pos<3,2>::n4] + Xm[pos<1,0>::n4]*Xm[pos<2,3>::n4]*Xm[pos<3,2>::n4] + Xm[pos<1,2>::n4]*Xm[pos<2,0>::n4]*Xm[pos<3,3>::n4] - Xm[pos<1,0>::n4]*Xm[pos<2,2>::n4]*Xm[pos<3,3>::n4] ) / det_val;
@@ -407,6 +408,7 @@ op_inv_gen_rcond::apply_direct(Mat<typename T1::elem_type>& out, op_inv_gen_stat
   typedef typename T1::pod_type   T;
   
   out             = expr.get_ref();
+  out_state.size  = out.n_rows;
   out_state.rcond = T(0);
   
   arma_debug_check( (out.is_square() == false), "inv(): given matrix must be square sized", [&](){ out.soft_reset(); } );
@@ -462,7 +464,7 @@ op_inv_gen_rcond::apply_direct(Mat<typename T1::elem_type>& out, op_inv_gen_stat
     return auxlib::inv_tr_rcond(out, out_state.rcond, ((is_triu_expr || is_triu_mat) ? uword(0) : uword(1)));
     }
   
-  const bool try_sympd = arma_config::optimise_sympd && ((auxlib::crippled_lapack(out)) ? false : sympd_helper::guess_sympd(out));
+  const bool try_sympd = arma_config::optimise_sym && ((auxlib::crippled_lapack(out)) ? false : sym_helper::guess_sympd(out));
   
   if(try_sympd)
     {
@@ -474,7 +476,7 @@ op_inv_gen_rcond::apply_direct(Mat<typename T1::elem_type>& out, op_inv_gen_stat
     
     bool sympd_state = false;
     
-    const bool status = auxlib::inv_sympd_rcond(tmp, sympd_state, out_state.rcond, T(-1));
+    const bool status = auxlib::inv_sympd_rcond(tmp, sympd_state, out_state.rcond);
     
     if(status)  { out.steal_mem(tmp); return true; }
     

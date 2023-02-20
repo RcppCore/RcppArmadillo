@@ -85,7 +85,7 @@ op_rcond::apply(const Base<typename T1::elem_type, T1>& X)
     return auxlib::rcond_trimat(A, layout);
     }
   
-  const bool try_sympd = arma_config::optimise_sympd && (auxlib::crippled_lapack(A) ? false : sympd_helper::guess_sympd(A));
+  const bool try_sympd = arma_config::optimise_sym && (auxlib::crippled_lapack(A) ? false : sym_helper::guess_sympd(A));
   
   if(try_sympd)
     {

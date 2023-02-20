@@ -27,6 +27,11 @@
 //// 2 = as per level 1, and warnings about poorly conditioned systems (low rcond) detected by solve(), spsolve(), etc
 //// 3 = as per level 2, and warnings about failed decompositions, failed saving/loading, etc
 
+// #define ARMA_USE_WRAPPER
+//// Comment out the above line if you prefer to directly link with BLAS, LAPACK, etc
+//// instead of the Armadillo runtime library.
+//// You will need to link your programs directly with -lopenblas -llapack instead of -larmadillo
+
 #if !defined(ARMA_USE_LAPACK)
 #define ARMA_USE_LAPACK
 //// Comment out the above line if you don't have LAPACK or a high-speed replacement for LAPACK,
@@ -73,10 +78,22 @@
 //// NOTE: support for ATLAS is deprecated and will be removed.
 #endif
 
-// #define ARMA_USE_WRAPPER
-//// Comment out the above line if you're getting linking errors when compiling your programs,
-//// or if you prefer to directly link with LAPACK, BLAS + etc instead of the Armadillo runtime library.
-//// You will then need to link your programs directly with -llapack -lblas instead of -larmadillo
+#if !defined(ARMA_USE_HDF5)
+// #define ARMA_USE_HDF5
+//// Uncomment the above line to allow the ability to save and load matrices stored in HDF5 format;
+//// the hdf5.h header file must be available on your system,
+//// and you will need to link with the hdf5 library (eg. -lhdf5)
+#endif
+
+#if !defined(ARMA_USE_FFTW3)
+// #define ARMA_USE_FFTW3
+//// Uncomment the above line to allow the use of the FFTW3 library by fft() and ifft() functions;
+//// you will need to link with the FFTW3 library (eg. -lfftw3)
+#endif
+
+#if defined(ARMA_USE_FFTW)
+  #error "use ARMA_USE_FFTW3 instead of ARMA_USE_FFTW"
+#endif
 
 // #define ARMA_BLAS_CAPITALS
 //// Uncomment the above line if your BLAS and LAPACK libraries have capitalised function names
@@ -128,27 +145,16 @@
 //// Note that ARMA_64BIT_WORD is automatically enabled when std::size_t has 64 bits and ARMA_32BIT_WORD is not defined.
 #endif
 
-#if !defined(ARMA_USE_HDF5)
-// #define ARMA_USE_HDF5
-//// Uncomment the above line to allow the ability to save and load matrices stored in HDF5 format;
-//// the hdf5.h header file must be available on your system,
-//// and you will need to link with the hdf5 library (eg. -lhdf5)
-#endif
-
-#if defined(ARMA_USE_FFTW3)
-  #pragma message ("WARNING: use of FFTW3 is not supported in this version of Armadillo")
-#endif
-
 #if !defined(ARMA_OPTIMISE_BAND)
   #define ARMA_OPTIMISE_BAND
   //// Comment out the above line to disable optimised handling
   //// of band matrices by solve() and chol()
 #endif
 
-#if !defined(ARMA_OPTIMISE_SYMPD)
-  #define ARMA_OPTIMISE_SYMPD
+#if !defined(ARMA_OPTIMISE_SYM)
+  #define ARMA_OPTIMISE_SYM
   //// Comment out the above line to disable optimised handling
-  //// of symmetric/hermitian positive definite matrices by various functions:
+  //// of symmetric/hermitian matrices by various functions:
   //// solve(), inv(), pinv(), expmat(), logmat(), sqrtmat(), rcond(), rank()
 #endif
 
@@ -161,14 +167,6 @@
 #if !defined(ARMA_CHECK_NONFINITE)
   #define ARMA_CHECK_NONFINITE
   //// Comment out the above line to disable checking for nonfinite matrices
-#endif
-
-// #define ARMA_USE_HDF5_CMAKE
-#if defined(ARMA_USE_HDF5_CMAKE) && defined(ARMA_USE_WRAPPER)
-  #undef  ARMA_USE_HDF5
-  #define ARMA_USE_HDF5
-  
-  // #define ARMA_HDF5_INCLUDE_DIR /usr/include/
 #endif
 
 #if !defined(ARMA_MAT_PREALLOC)
@@ -241,10 +239,6 @@
   #endif
 #endif
 
-#if !defined(ARMA_PRINT_HDF5_ERRORS)
-// #define ARMA_PRINT_HDF5_ERRORS
-#endif
-
 #if defined(ARMA_DONT_USE_LAPACK)
   #undef ARMA_USE_LAPACK
 #endif
@@ -270,9 +264,16 @@
   #undef ARMA_USE_ATLAS
 #endif
 
+#if defined(ARMA_DONT_USE_HDF5)
+  #undef ARMA_USE_HDF5
+#endif
+
+#if defined(ARMA_DONT_USE_FFTW3)
+  #undef ARMA_USE_FFTW3
+#endif
+
 #if defined(ARMA_DONT_USE_WRAPPER)
   #undef ARMA_USE_WRAPPER
-  #undef ARMA_USE_HDF5_CMAKE
 #endif
 
 #if defined(ARMA_DONT_USE_FORTRAN_HIDDEN_ARGS)
@@ -317,17 +318,12 @@
   #undef ARMA_64BIT_WORD
 #endif
 
-#if defined(ARMA_DONT_USE_HDF5)
-  #undef ARMA_USE_HDF5
-  #undef ARMA_USE_HDF5_CMAKE
-#endif
-
 #if defined(ARMA_DONT_OPTIMISE_BAND) || defined(ARMA_DONT_OPTIMISE_SOLVE_BAND)
   #undef ARMA_OPTIMISE_BAND
 #endif
 
 #if defined(ARMA_DONT_OPTIMISE_SYM) || defined(ARMA_DONT_OPTIMISE_SYMPD) || defined(ARMA_DONT_OPTIMISE_SOLVE_SYMPD)
-  #undef ARMA_OPTIMISE_SYMPD
+  #undef ARMA_OPTIMISE_SYM
 #endif
 
 #if defined(ARMA_DONT_OPTIMISE_INVEXPR)
@@ -357,10 +353,6 @@
 #if !defined(ARMA_DONT_ZERO_INIT)
   // #define ARMA_DONT_ZERO_INIT
   //// Uncomment the above line to disable initialising elements to zero during construction of dense matrices and cubes
-#endif
-
-#if defined(ARMA_DONT_PRINT_HDF5_ERRORS)
-  #undef ARMA_PRINT_HDF5_ERRORS
 #endif
 
 #if defined(ARMA_NO_CRIPPLED_LAPACK)

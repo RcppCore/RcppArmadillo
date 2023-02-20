@@ -56,7 +56,7 @@ op_log_det::apply_direct(typename T1::elem_type& out_val, typename T1::pod_type&
   
   if(is_triu || is_tril)  { return op_log_det::apply_trimat(out_val, out_sign, A); }
   
-  // const bool try_sympd = arma_config::optimise_sympd && sympd_helper::guess_sympd(A);
+  // const bool try_sympd = arma_config::optimise_sym && sym_helper::guess_sympd(A);
   // 
   // if(try_sympd)
   //   {
@@ -195,7 +195,7 @@ op_log_det_sympd::apply_direct(typename T1::pod_type& out_val, const Base<typena
   
   arma_debug_check( (A.is_square() == false), "log_det_sympd(): given matrix must be square sized" );
   
-  if((arma_config::debug) && (arma_config::warn_level > 0) && (is_cx<eT>::yes) && (sympd_helper::check_diag_imag(A) == false))
+  if((arma_config::debug) && (arma_config::warn_level > 0) && (is_cx<eT>::yes) && (sym_helper::check_diag_imag(A) == false))
     {
     arma_debug_warn_level(1, "log_det_sympd(): imaginary components on diagonal are non-zero");
     }

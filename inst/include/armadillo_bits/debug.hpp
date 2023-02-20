@@ -21,83 +21,11 @@
 
 
 
-//! internal use only; subject to removal
-template<typename T>
-inline
-std::ostream&
-internal_cout_stream(std::ostream* user_stream)
-  {
-  static std::ostream* cout_stream = &(ARMA_COUT_STREAM);
-  
-  if(user_stream != nullptr)  { cout_stream = user_stream; }
-  
-  return (*cout_stream);
-  }
-
-
-
-//! internal use only; subject to removal
-template<typename T>
-inline
-std::ostream&
-internal_cerr_stream(std::ostream* user_stream)
-  {
-  static std::ostream* cerr_stream = &(ARMA_CERR_STREAM);
-  
-  if(user_stream != nullptr)  { cerr_stream = user_stream; }
-  
-  return (*cerr_stream);
-  }
-
-
-
-template<typename T>
-arma_deprecated
-inline
-std::ostream&
-arma_cout_stream(std::ostream* user_stream)
-  {
-  return internal_cout_stream<T>(user_stream);
-  }
-
-
-
-template<typename T>
-arma_deprecated
-inline
-std::ostream&
-arma_cerr_stream(std::ostream* user_stream)
-  {
-  return internal_cerr_stream<T>(user_stream);
-  }
-
-
-
-arma_deprecated
-inline
-void
-set_cout_stream(std::ostream& user_stream)
-  {
-  internal_cout_stream<char>(&user_stream);
-  }
-
-
-
-arma_deprecated
-inline
-void
-set_cerr_stream(std::ostream& user_stream)
-  {
-  internal_cerr_stream<char>(&user_stream);
-  }
-
-
-
 inline
 std::ostream&
 get_cout_stream()
   {
-  return internal_cout_stream<char>(nullptr);
+  return (ARMA_COUT_STREAM);
   }
 
 
@@ -106,34 +34,11 @@ inline
 std::ostream&
 get_cerr_stream()
   {
-  return internal_cerr_stream<char>(nullptr);
+  return (ARMA_CERR_STREAM);
   }
 
 
 
-//! do not use this function - it's deprecated and will be removed
-arma_deprecated
-inline
-void
-set_stream_err1(std::ostream& user_stream)
-  {
-  internal_cerr_stream<char>(&user_stream);
-  }
-
-
-
-//! do not use this function - it's deprecated and will be removed
-arma_deprecated
-inline
-void
-set_stream_err2(std::ostream& user_stream)
-  {
-  internal_cerr_stream<char>(&user_stream);
-  }
-
-
-
-//! do not use this function - it's deprecated and will be removed
 arma_deprecated
 inline
 std::ostream&
@@ -144,13 +49,70 @@ get_stream_err1()
 
 
 
-//! do not use this function - it's deprecated and will be removed
 arma_deprecated
 inline
 std::ostream&
 get_stream_err2()
   {
   return get_cerr_stream();
+  }
+
+
+
+arma_frown("this function does nothing; instead use ARMA_COUT_STREAM or ARMA_WARN_LEVEL; see documentation")
+inline
+void
+set_cout_stream(const std::ostream&)
+  {
+  }
+
+
+
+arma_frown("this function does nothing; instead use ARMA_CERR_STREAM or ARMA_WARN_LEVEL; see documentation")
+inline
+void
+set_cerr_stream(const std::ostream&)
+  {
+  }
+
+
+
+arma_frown("this function does nothing; instead use ARMA_CERR_STREAM or ARMA_WARN_LEVEL; see documentation")
+inline
+void
+set_stream_err1(const std::ostream&)
+  {
+  }
+
+
+
+arma_frown("this function does nothing; instead use ARMA_CERR_STREAM or ARMA_WARN_LEVEL; see documentation")
+inline
+void
+set_stream_err2(const std::ostream&)
+  {
+  }
+
+
+
+template<typename T>
+arma_frown("this function does nothing; instead use ARMA_COUT_STREAM or ARMA_WARN_LEVEL; see documentation")
+inline
+std::ostream&
+arma_cout_stream(std::ostream*)
+  {
+  return (ARMA_COUT_STREAM);
+  }
+
+
+
+template<typename T>
+arma_frown("this function does nothing; instead use ARMA_CERR_STREAM or ARMA_WARN_LEVEL; see documentation")
+inline
+std::ostream&
+arma_cerr_stream(std::ostream*)
+  {
+  return (ARMA_CERR_STREAM);
   }
 
 
@@ -605,8 +567,8 @@ arma_incompat_size_string(const subview_cube<eT>& Q, const Mat<eT>& A, const cha
 
 
 
-arma_inline
 arma_hot
+arma_inline
 void
 arma_assert_same_size(const uword A_n_rows, const uword A_n_cols, const uword B_n_rows, const uword B_n_cols, const char* x)
   {
@@ -1479,7 +1441,7 @@ arma_assert_atlas_size(const T1& A, const T2& B)
         out << "@ arma_config::mp_threshold     = " << arma_config::mp_threshold     << '\n';
         out << "@ arma_config::mp_threads       = " << arma_config::mp_threads       << '\n';
         out << "@ arma_config::optimise_band    = " << arma_config::optimise_band    << '\n';
-        out << "@ arma_config::optimise_sympd   = " << arma_config::optimise_sympd   << '\n';
+        out << "@ arma_config::optimise_sym     = " << arma_config::optimise_sym     << '\n';
         out << "@ arma_config::optimise_invexpr = " << arma_config::optimise_invexpr << '\n';
         out << "@ arma_config::check_nonfinite  = " << arma_config::check_nonfinite  << '\n';
         out << "@ arma_config::zero_init        = " << arma_config::zero_init        << '\n';

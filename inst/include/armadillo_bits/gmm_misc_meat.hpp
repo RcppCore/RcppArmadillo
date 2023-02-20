@@ -62,7 +62,6 @@ running_mean_scalar<eT>::operator=(const running_mean_scalar<eT>& in)
 
 
 template<typename eT>
-arma_hot
 inline
 void
 running_mean_scalar<eT>::operator() (const eT X)

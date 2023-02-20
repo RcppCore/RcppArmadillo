@@ -46,7 +46,7 @@ inline
 hid_t
 get_hdf5_type< unsigned char >()
   {
-  return arma_H5Tcopy(arma_H5T_NATIVE_UCHAR);
+  return H5Tcopy(H5T_NATIVE_UCHAR);
   }
 
 template<>
@@ -54,7 +54,7 @@ inline
 hid_t
 get_hdf5_type< char >()
   {
-  return arma_H5Tcopy(arma_H5T_NATIVE_CHAR);
+  return H5Tcopy(H5T_NATIVE_CHAR);
   }
 
 template<>
@@ -62,7 +62,7 @@ inline
 hid_t
 get_hdf5_type< short >()
   {
-  return arma_H5Tcopy(arma_H5T_NATIVE_SHORT);
+  return H5Tcopy(H5T_NATIVE_SHORT);
   }
 
 template<>
@@ -70,7 +70,7 @@ inline
 hid_t
 get_hdf5_type< unsigned short >()
   {
-  return arma_H5Tcopy(arma_H5T_NATIVE_USHORT);
+  return H5Tcopy(H5T_NATIVE_USHORT);
   }
 
 template<>
@@ -78,7 +78,7 @@ inline
 hid_t
 get_hdf5_type< int >()
   {
-  return arma_H5Tcopy(arma_H5T_NATIVE_INT);
+  return H5Tcopy(H5T_NATIVE_INT);
   }
 
 template<>
@@ -86,7 +86,7 @@ inline
 hid_t
 get_hdf5_type< unsigned int >()
   {
-  return arma_H5Tcopy(arma_H5T_NATIVE_UINT);
+  return H5Tcopy(H5T_NATIVE_UINT);
   }
 
 template<>
@@ -94,7 +94,7 @@ inline
 hid_t
 get_hdf5_type< long >()
   {
-  return arma_H5Tcopy(arma_H5T_NATIVE_LONG);
+  return H5Tcopy(H5T_NATIVE_LONG);
   }
 
 template<>
@@ -102,7 +102,7 @@ inline
 hid_t
 get_hdf5_type< unsigned long >()
   {
-  return arma_H5Tcopy(arma_H5T_NATIVE_ULONG);
+  return H5Tcopy(H5T_NATIVE_ULONG);
   }
 
 template<>
@@ -110,7 +110,7 @@ inline
 hid_t
 get_hdf5_type< long long >()
   {
-  return arma_H5Tcopy(arma_H5T_NATIVE_LLONG);
+  return H5Tcopy(H5T_NATIVE_LLONG);
   }
 
 template<>
@@ -118,7 +118,7 @@ inline
 hid_t
 get_hdf5_type< unsigned long long >()
   {
-  return arma_H5Tcopy(arma_H5T_NATIVE_ULLONG);
+  return H5Tcopy(H5T_NATIVE_ULLONG);
   }
 
 template<>
@@ -126,7 +126,7 @@ inline
 hid_t
 get_hdf5_type< float >()
   {
-  return arma_H5Tcopy(arma_H5T_NATIVE_FLOAT);
+  return H5Tcopy(H5T_NATIVE_FLOAT);
   }
 
 template<>
@@ -134,7 +134,7 @@ inline
 hid_t
 get_hdf5_type< double >()
   {
-  return arma_H5Tcopy(arma_H5T_NATIVE_DOUBLE);
+  return H5Tcopy(H5T_NATIVE_DOUBLE);
   }
 
 
@@ -154,10 +154,10 @@ inline
 hid_t
 get_hdf5_type< std::complex<float> >()
   {
-  hid_t type = arma_H5Tcreate(H5T_COMPOUND, sizeof(hdf5_complex_t<float>));
+  hid_t type = H5Tcreate(H5T_COMPOUND, sizeof(hdf5_complex_t<float>));
   
-  arma_H5Tinsert(type, "real", HOFFSET(hdf5_complex_t<float>, real), arma_H5T_NATIVE_FLOAT);
-  arma_H5Tinsert(type, "imag", HOFFSET(hdf5_complex_t<float>, imag), arma_H5T_NATIVE_FLOAT);
+  H5Tinsert(type, "real", HOFFSET(hdf5_complex_t<float>, real), H5T_NATIVE_FLOAT);
+  H5Tinsert(type, "imag", HOFFSET(hdf5_complex_t<float>, imag), H5T_NATIVE_FLOAT);
   
   return type;
   }
@@ -169,10 +169,10 @@ inline
 hid_t
 get_hdf5_type< std::complex<double> >()
   {
-  hid_t type = arma_H5Tcreate(H5T_COMPOUND, sizeof(hdf5_complex_t<double>));
+  hid_t type = H5Tcreate(H5T_COMPOUND, sizeof(hdf5_complex_t<double>));
 
-  arma_H5Tinsert(type, "real", HOFFSET(hdf5_complex_t<double>, real), arma_H5T_NATIVE_DOUBLE);
-  arma_H5Tinsert(type, "imag", HOFFSET(hdf5_complex_t<double>, imag), arma_H5T_NATIVE_DOUBLE);
+  H5Tinsert(type, "real", HOFFSET(hdf5_complex_t<double>, real), H5T_NATIVE_DOUBLE);
+  H5Tinsert(type, "imag", HOFFSET(hdf5_complex_t<double>, imag), H5T_NATIVE_DOUBLE);
 
   return type;
   }
@@ -192,76 +192,76 @@ is_supported_arma_hdf5_type(hid_t datatype)
   // start with most likely used types: double, complex<double>, float, complex<float>
   
   search_type = get_hdf5_type<double>();
-  is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
-  arma_H5Tclose(search_type);
+  is_equal = ( H5Tequal(datatype, search_type) > 0 );
+  H5Tclose(search_type);
   if(is_equal) { return true; }
   
   search_type = get_hdf5_type< std::complex<double> >();
-  is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
-  arma_H5Tclose(search_type);
+  is_equal = ( H5Tequal(datatype, search_type) > 0 );
+  H5Tclose(search_type);
   if(is_equal) { return true; }
   
   search_type = get_hdf5_type<float>();
-  is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
-  arma_H5Tclose(search_type);
+  is_equal = ( H5Tequal(datatype, search_type) > 0 );
+  H5Tclose(search_type);
   if(is_equal) { return true; }
   
   search_type = get_hdf5_type< std::complex<float> >();
-  is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
-  arma_H5Tclose(search_type);
+  is_equal = ( H5Tequal(datatype, search_type) > 0 );
+  H5Tclose(search_type);
   if(is_equal) { return true; }
   
   
   // remaining supported types: u8, s8, u16, s16, u32, s32, u64, s64, ulng_t, slng_t
   
   search_type = get_hdf5_type<u8>();
-  is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
-  arma_H5Tclose(search_type);
+  is_equal = ( H5Tequal(datatype, search_type) > 0 );
+  H5Tclose(search_type);
   if(is_equal) { return true; }
   
   search_type = get_hdf5_type<s8>();
-  is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
-  arma_H5Tclose(search_type);
+  is_equal = ( H5Tequal(datatype, search_type) > 0 );
+  H5Tclose(search_type);
   if(is_equal) { return true; }
   
   search_type = get_hdf5_type<u16>();
-  is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
-  arma_H5Tclose(search_type);
+  is_equal = ( H5Tequal(datatype, search_type) > 0 );
+  H5Tclose(search_type);
   if(is_equal) { return true; }
   
   search_type = get_hdf5_type<s16>();
-  is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
-  arma_H5Tclose(search_type);
+  is_equal = ( H5Tequal(datatype, search_type) > 0 );
+  H5Tclose(search_type);
   if(is_equal) { return true; }
   
   search_type = get_hdf5_type<u32>();
-  is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
-  arma_H5Tclose(search_type);
+  is_equal = ( H5Tequal(datatype, search_type) > 0 );
+  H5Tclose(search_type);
   if(is_equal) { return true; }
   
   search_type = get_hdf5_type<s32>();
-  is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
-  arma_H5Tclose(search_type);
+  is_equal = ( H5Tequal(datatype, search_type) > 0 );
+  H5Tclose(search_type);
   if(is_equal) { return true; }
   
   search_type = get_hdf5_type<u64>();
-  is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
-  arma_H5Tclose(search_type);
+  is_equal = ( H5Tequal(datatype, search_type) > 0 );
+  H5Tclose(search_type);
   if(is_equal) { return true; }
   
   search_type = get_hdf5_type<s64>();
-  is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
-  arma_H5Tclose(search_type);
+  is_equal = ( H5Tequal(datatype, search_type) > 0 );
+  H5Tclose(search_type);
   if(is_equal) { return true; }
   
   search_type = get_hdf5_type<ulng_t>();
-  is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
-  arma_H5Tclose(search_type);
+  is_equal = ( H5Tequal(datatype, search_type) > 0 );
+  H5Tclose(search_type);
   if(is_equal) { return true; }
   
   search_type = get_hdf5_type<slng_t>();
-  is_equal = ( arma_H5Tequal(datatype, search_type) > 0 );
-  arma_H5Tclose(search_type);
+  is_equal = ( H5Tequal(datatype, search_type) > 0 );
+  H5Tclose(search_type);
   if(is_equal) { return true; }
   
   return false;
@@ -297,13 +297,13 @@ hdf5_search_callback
   if(info->type == H5O_TYPE_DATASET)
     {
     // Check type of dataset to see if we could even load it.
-    hid_t dataset  = arma_H5Dopen(loc_id, name, H5P_DEFAULT);
-    hid_t datatype = arma_H5Dget_type(dataset);
+    hid_t dataset  = H5Dopen(loc_id, name, H5P_DEFAULT);
+    hid_t datatype = H5Dget_type(dataset);
     
     const bool is_supported = is_supported_arma_hdf5_type(datatype);
     
-    arma_H5Tclose(datatype);
-    arma_H5Dclose(dataset);
+    H5Tclose(datatype);
+    H5Dclose(dataset);
     
     if(is_supported == false)
       {
@@ -340,7 +340,7 @@ hdf5_search_callback
       if(str == search_info->names[string_pos])
         {
         // We found it exactly.
-        hid_t match_candidate = arma_H5Dopen(loc_id, name, H5P_DEFAULT);
+        hid_t match_candidate = H5Dopen(loc_id, name, H5P_DEFAULT);
 
         if(match_candidate < 0)
           {
@@ -348,8 +348,8 @@ hdf5_search_callback
           }
 
         // Ensure that the dataset is valid and of the correct dimensionality.
-        hid_t filespace = arma_H5Dget_space(match_candidate);
-        int num_dims = arma_H5Sget_simple_extent_ndims(filespace);
+        hid_t filespace = H5Dget_space(match_candidate);
+        int num_dims = H5Sget_simple_extent_ndims(filespace);
         
         if(num_dims <= search_info->num_dims)
           {
@@ -357,14 +357,14 @@ hdf5_search_callback
           // If we already have an existing match we have to close it.
           if(search_info->best_match != -1)
             {
-            arma_H5Dclose(search_info->best_match);
+            H5Dclose(search_info->best_match);
             }
 
           search_info->best_match_position = string_pos;
           search_info->best_match          = match_candidate;
           }
         
-        arma_H5Sclose(filespace);
+        H5Sclose(filespace);
         // There is no possibility of anything better, so terminate the search.
         return 1;
         }
@@ -393,7 +393,7 @@ hdf5_search_callback
         if(substring == search_info->names[string_pos])
           {
           // We have found the object; it must be better than our existing match.
-          hid_t match_candidate = arma_H5Dopen(loc_id, name, H5P_DEFAULT);
+          hid_t match_candidate = H5Dopen(loc_id, name, H5P_DEFAULT);
 
 
           // arma_check(match_candidate < 0, "Mat::load(): cannot open an HDF5 dataset");
@@ -404,8 +404,8 @@ hdf5_search_callback
           
           
           // Ensure that the dataset is valid and of the correct dimensionality.
-          hid_t filespace = arma_H5Dget_space(match_candidate);
-          int num_dims = arma_H5Sget_simple_extent_ndims(filespace);
+          hid_t filespace = H5Dget_space(match_candidate);
+          int num_dims = H5Sget_simple_extent_ndims(filespace);
           
           if(num_dims <= search_info->num_dims)
             {
@@ -413,14 +413,14 @@ hdf5_search_callback
             // If we already have an existing match we have to close it.
             if(search_info->best_match != -1)
               {
-              arma_H5Dclose(search_info->best_match);
+              H5Dclose(search_info->best_match);
               }
 
             search_info->best_match_position = string_pos;
             search_info->best_match          = match_candidate;
             }
           
-          arma_H5Sclose(filespace);
+          H5Sclose(filespace);
           }
         }
       
@@ -428,7 +428,7 @@ hdf5_search_callback
       // If they are not the same, but we have not found anything and we don't need an exact match, take this.
       if((search_info->exact == false) && (search_info->best_match == -1))
         {
-        hid_t match_candidate = arma_H5Dopen(loc_id, name, H5P_DEFAULT);
+        hid_t match_candidate = H5Dopen(loc_id, name, H5P_DEFAULT);
         
         // arma_check(match_candidate < 0, "Mat::load(): cannot open an HDF5 dataset");
         if(match_candidate < 0)
@@ -436,16 +436,16 @@ hdf5_search_callback
           return -1;
           }
         
-        hid_t filespace = arma_H5Dget_space(match_candidate);
-        int num_dims = arma_H5Sget_simple_extent_ndims(filespace);
+        hid_t filespace = H5Dget_space(match_candidate);
+        int num_dims = H5Sget_simple_extent_ndims(filespace);
         
         if(num_dims <= search_info->num_dims)
           {
           // Valid dataset -- we'll keep it.
-          search_info->best_match = arma_H5Dopen(loc_id, name, H5P_DEFAULT);
+          search_info->best_match = H5Dopen(loc_id, name, H5P_DEFAULT);
           }
         
-        arma_H5Sclose(filespace);
+        H5Sclose(filespace);
         }
       }
     }
@@ -475,7 +475,7 @@ search_hdf5_file
   hdf5_search_info search_info = { names, num_dims, exact, -1, names.size() };
   
   // We'll use the H5Ovisit to track potential entries.
-  herr_t status = arma_H5Ovisit(hdf5_file, H5_INDEX_NAME, H5_ITER_NATIVE, hdf5_search_callback, void_ptr(&search_info));
+  herr_t status = H5Ovisit(hdf5_file, H5_INDEX_NAME, H5_ITER_NATIVE, hdf5_search_callback, void_ptr(&search_info));
   
   // Return the best match; it will be -1 if there was a problem.
   return (status < 0) ? -1 : search_info.best_match;
@@ -508,13 +508,13 @@ load_and_convert_hdf5
   
   // u8
   search_type = get_hdf5_type<u8>();
-  is_equal = (arma_H5Tequal(datatype, search_type) > 0);
-  arma_H5Tclose(search_type);
+  is_equal = (H5Tequal(datatype, search_type) > 0);
+  H5Tclose(search_type);
   
   if(is_equal)
     {
     Col<u8> v(n_elem, arma_nozeros_indicator());
-    hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
+    hid_t status = H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
     arrayops::convert(dest, v.memptr(), n_elem);
 
     return status;
@@ -523,13 +523,13 @@ load_and_convert_hdf5
   
   // s8
   search_type = get_hdf5_type<s8>();
-  is_equal = (arma_H5Tequal(datatype, search_type) > 0);
-  arma_H5Tclose(search_type);
+  is_equal = (H5Tequal(datatype, search_type) > 0);
+  H5Tclose(search_type);
   
   if(is_equal)
     {
     Col<s8> v(n_elem, arma_nozeros_indicator());
-    hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
+    hid_t status = H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
     arrayops::convert(dest, v.memptr(), n_elem);
 
     return status;
@@ -538,13 +538,13 @@ load_and_convert_hdf5
   
   // u16
   search_type = get_hdf5_type<u16>();
-  is_equal = (arma_H5Tequal(datatype, search_type) > 0);
-  arma_H5Tclose(search_type);
+  is_equal = (H5Tequal(datatype, search_type) > 0);
+  H5Tclose(search_type);
   
   if(is_equal)
     {
     Col<u16> v(n_elem, arma_nozeros_indicator());
-    hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
+    hid_t status = H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
     arrayops::convert(dest, v.memptr(), n_elem);
 
     return status;
@@ -553,13 +553,13 @@ load_and_convert_hdf5
   
   // s16
   search_type = get_hdf5_type<s16>();
-  is_equal = (arma_H5Tequal(datatype, search_type) > 0);
-  arma_H5Tclose(search_type);
+  is_equal = (H5Tequal(datatype, search_type) > 0);
+  H5Tclose(search_type);
   
   if(is_equal)
     {
     Col<s16> v(n_elem, arma_nozeros_indicator());
-    hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
+    hid_t status = H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
     arrayops::convert(dest, v.memptr(), n_elem);
 
     return status;
@@ -568,13 +568,13 @@ load_and_convert_hdf5
   
   // u32
   search_type = get_hdf5_type<u32>();
-  is_equal = (arma_H5Tequal(datatype, search_type) > 0);
-  arma_H5Tclose(search_type);
+  is_equal = (H5Tequal(datatype, search_type) > 0);
+  H5Tclose(search_type);
   
   if(is_equal)
     {
     Col<u32> v(n_elem, arma_nozeros_indicator());
-    hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
+    hid_t status = H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
     arrayops::convert(dest, v.memptr(), n_elem);
 
     return status;
@@ -583,13 +583,13 @@ load_and_convert_hdf5
   
   // s32
   search_type = get_hdf5_type<s32>();
-  is_equal = (arma_H5Tequal(datatype, search_type) > 0);
-  arma_H5Tclose(search_type);
+  is_equal = (H5Tequal(datatype, search_type) > 0);
+  H5Tclose(search_type);
   
   if(is_equal)
     {
     Col<s32> v(n_elem, arma_nozeros_indicator());
-    hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
+    hid_t status = H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
     arrayops::convert(dest, v.memptr(), n_elem);
 
     return status;
@@ -598,13 +598,13 @@ load_and_convert_hdf5
   
   // u64
   search_type = get_hdf5_type<u64>();
-  is_equal = (arma_H5Tequal(datatype, search_type) > 0);
-  arma_H5Tclose(search_type);
+  is_equal = (H5Tequal(datatype, search_type) > 0);
+  H5Tclose(search_type);
   
   if(is_equal)
     {
     Col<u64> v(n_elem, arma_nozeros_indicator());
-    hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
+    hid_t status = H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
     arrayops::convert(dest, v.memptr(), n_elem);
 
     return status;
@@ -613,13 +613,13 @@ load_and_convert_hdf5
   
   // s64
   search_type = get_hdf5_type<s64>();
-  is_equal = (arma_H5Tequal(datatype, search_type) > 0);
-  arma_H5Tclose(search_type);
+  is_equal = (H5Tequal(datatype, search_type) > 0);
+  H5Tclose(search_type);
   
   if(is_equal)
     {
     Col<s64> v(n_elem, arma_nozeros_indicator());
-    hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
+    hid_t status = H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
     arrayops::convert(dest, v.memptr(), n_elem);
 
     return status;
@@ -628,13 +628,13 @@ load_and_convert_hdf5
   
   // ulng_t
   search_type = get_hdf5_type<ulng_t>();
-  is_equal = (arma_H5Tequal(datatype, search_type) > 0);
-  arma_H5Tclose(search_type);
+  is_equal = (H5Tequal(datatype, search_type) > 0);
+  H5Tclose(search_type);
   
   if(is_equal)
     {
     Col<ulng_t> v(n_elem, arma_nozeros_indicator());
-    hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
+    hid_t status = H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
     arrayops::convert(dest, v.memptr(), n_elem);
 
     return status;
@@ -643,13 +643,13 @@ load_and_convert_hdf5
   
   // slng_t
   search_type = get_hdf5_type<slng_t>();
-  is_equal = (arma_H5Tequal(datatype, search_type) > 0);
-  arma_H5Tclose(search_type);
+  is_equal = (H5Tequal(datatype, search_type) > 0);
+  H5Tclose(search_type);
   
   if(is_equal)
     {
     Col<slng_t> v(n_elem, arma_nozeros_indicator());
-    hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
+    hid_t status = H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
     arrayops::convert(dest, v.memptr(), n_elem);
 
     return status;
@@ -658,13 +658,13 @@ load_and_convert_hdf5
   
   // float
   search_type = get_hdf5_type<float>();
-  is_equal = (arma_H5Tequal(datatype, search_type) > 0);
-  arma_H5Tclose(search_type);
+  is_equal = (H5Tequal(datatype, search_type) > 0);
+  H5Tclose(search_type);
   
   if(is_equal)
     {
     Col<float> v(n_elem, arma_nozeros_indicator());
-    hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
+    hid_t status = H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
     arrayops::convert(dest, v.memptr(), n_elem);
 
     return status;
@@ -673,13 +673,13 @@ load_and_convert_hdf5
   
   // double
   search_type = get_hdf5_type<double>();
-  is_equal = (arma_H5Tequal(datatype, search_type) > 0);
-  arma_H5Tclose(search_type);
+  is_equal = (H5Tequal(datatype, search_type) > 0);
+  H5Tclose(search_type);
   
   if(is_equal)
     {
     Col<double> v(n_elem, arma_nozeros_indicator());
-    hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
+    hid_t status = H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
     arrayops::convert(dest, v.memptr(), n_elem);
 
     return status;
@@ -688,8 +688,8 @@ load_and_convert_hdf5
   
   // complex float
   search_type = get_hdf5_type< std::complex<float> >();
-  is_equal = (arma_H5Tequal(datatype, search_type) > 0);
-  arma_H5Tclose(search_type);
+  is_equal = (H5Tequal(datatype, search_type) > 0);
+  H5Tclose(search_type);
   
   if(is_equal)
     {
@@ -699,7 +699,7 @@ load_and_convert_hdf5
       }
     
     Col< std::complex<float> > v(n_elem, arma_nozeros_indicator());
-    hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
+    hid_t status = H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
     arrayops::convert_cx(dest, v.memptr(), n_elem);
     
     return status;
@@ -708,8 +708,8 @@ load_and_convert_hdf5
   
   // complex double
   search_type = get_hdf5_type< std::complex<double> >();
-  is_equal = (arma_H5Tequal(datatype, search_type) > 0);
-  arma_H5Tclose(search_type);
+  is_equal = (H5Tequal(datatype, search_type) > 0);
+  H5Tclose(search_type);
   
   if(is_equal)
     {
@@ -719,7 +719,7 @@ load_and_convert_hdf5
       }
     
     Col< std::complex<double> > v(n_elem, arma_nozeros_indicator());
-    hid_t status = arma_H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
+    hid_t status = H5Dread(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, void_ptr(v.memptr()));
     arrayops::convert_cx(dest, v.memptr(), n_elem);
     
     return status;
@@ -733,7 +733,7 @@ load_and_convert_hdf5
 
 struct hdf5_suspend_printing_errors
   {
-  #if defined(ARMA_PRINT_HDF5_ERRORS)
+  #if (ARMA_WARN_LEVEL >= 3)
     
     inline
     hdf5_suspend_printing_errors() {}
@@ -747,16 +747,16 @@ struct hdf5_suspend_printing_errors
     hdf5_suspend_printing_errors()
       {
       // Save old error handler.
-      arma_H5Eget_auto(H5E_DEFAULT, &old_client_func, &old_client_data);
+      H5Eget_auto(H5E_DEFAULT, &old_client_func, &old_client_data);
       
       // Disable annoying HDF5 error messages.
-      arma_H5Eset_auto(H5E_DEFAULT, NULL, NULL);
+      H5Eset_auto(H5E_DEFAULT, NULL, NULL);
       }
     
     inline
     ~hdf5_suspend_printing_errors()
       {
-      arma_H5Eset_auto(H5E_DEFAULT, old_client_func, old_client_data);
+      H5Eset_auto(H5E_DEFAULT, old_client_func, old_client_data);
       }
     
   #endif

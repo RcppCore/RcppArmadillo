@@ -30,14 +30,14 @@ namespace fill
   struct fill_randn {};
   
   template<typename fill_type> 
-  struct fill_class { inline fill_class() {} };
+  struct fill_class { inline constexpr fill_class() {} };
   
-  static const fill_class<fill_none > none;
-  static const fill_class<fill_zeros> zeros;
-  static const fill_class<fill_ones > ones;
-  static const fill_class<fill_eye  > eye;
-  static const fill_class<fill_randu> randu;
-  static const fill_class<fill_randn> randn;
+  static constexpr fill_class<fill_none > none;
+  static constexpr fill_class<fill_zeros> zeros;
+  static constexpr fill_class<fill_ones > ones;
+  static constexpr fill_class<fill_eye  > eye;
+  static constexpr fill_class<fill_randu> randu;
+  static constexpr fill_class<fill_randn> randn;
   
   //
   

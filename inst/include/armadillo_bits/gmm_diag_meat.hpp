@@ -1052,7 +1052,6 @@ gmm_diag<eT>::internal_gen_boundaries(const uword N) const
 
 
 template<typename eT>
-arma_hot
 inline
 eT
 gmm_diag<eT>::internal_scalar_log_p(const eT* x) const
@@ -1085,7 +1084,6 @@ gmm_diag<eT>::internal_scalar_log_p(const eT* x) const
 
 
 template<typename eT>
-arma_hot
 inline
 eT
 gmm_diag<eT>::internal_scalar_log_p(const eT* x, const uword g) const

@@ -61,8 +61,9 @@ class op_inv_spd_full
 template<typename T>
 struct op_inv_spd_state
   {
-  T    rcond   = T(0);
-  bool is_diag = false;
+  uword size    = uword(0);
+  T     rcond   = T(0);
+  bool  is_diag = false;
   };
 
 

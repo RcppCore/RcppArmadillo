@@ -28,12 +28,13 @@ namespace csv_opts
     {
     const flag_type flags;
     
-    inline explicit opts(const flag_type in_flags);
+    inline constexpr explicit opts(const flag_type in_flags);
     
     inline const opts operator+(const opts& rhs) const;
     };
   
   inline
+  constexpr
   opts::opts(const flag_type in_flags)
     : flags(in_flags)
     {}
@@ -50,23 +51,26 @@ namespace csv_opts
   // The values below (eg. 1u << 0) are for internal Armadillo use only.
   // The values can change without notice.
   
-  static const flag_type flag_none        = flag_type(0      );
-  static const flag_type flag_trans       = flag_type(1u << 0);
-  static const flag_type flag_no_header   = flag_type(1u << 1);
-  static const flag_type flag_with_header = flag_type(1u << 2);
-  static const flag_type flag_semicolon   = flag_type(1u << 3);
+  static constexpr flag_type flag_none        = flag_type(0      );
+  static constexpr flag_type flag_trans       = flag_type(1u << 0);
+  static constexpr flag_type flag_no_header   = flag_type(1u << 1);
+  static constexpr flag_type flag_with_header = flag_type(1u << 2);
+  static constexpr flag_type flag_semicolon   = flag_type(1u << 3);
+  static constexpr flag_type flag_strict      = flag_type(1u << 4);
   
-  struct opts_none        : public opts { inline opts_none()        : opts(flag_none       ) {} };
-  struct opts_trans       : public opts { inline opts_trans()       : opts(flag_trans      ) {} };
-  struct opts_no_header   : public opts { inline opts_no_header()   : opts(flag_no_header  ) {} };
-  struct opts_with_header : public opts { inline opts_with_header() : opts(flag_with_header) {} };
-  struct opts_semicolon   : public opts { inline opts_semicolon()   : opts(flag_semicolon  ) {} };
+  struct opts_none        : public opts { inline constexpr opts_none()        : opts(flag_none       ) {} };
+  struct opts_trans       : public opts { inline constexpr opts_trans()       : opts(flag_trans      ) {} };
+  struct opts_no_header   : public opts { inline constexpr opts_no_header()   : opts(flag_no_header  ) {} };
+  struct opts_with_header : public opts { inline constexpr opts_with_header() : opts(flag_with_header) {} };
+  struct opts_semicolon   : public opts { inline constexpr opts_semicolon()   : opts(flag_semicolon  ) {} };
+  struct opts_strict      : public opts { inline constexpr opts_strict()      : opts(flag_strict     ) {} };
   
-  static const opts_none        none;
-  static const opts_trans       trans;
-  static const opts_no_header   no_header;
-  static const opts_with_header with_header;
-  static const opts_semicolon   semicolon;
+  static constexpr opts_none        none;
+  static constexpr opts_trans       trans;
+  static constexpr opts_no_header   no_header;
+  static constexpr opts_with_header with_header;
+  static constexpr opts_semicolon   semicolon;
+  static constexpr opts_strict      strict;
   }
 
 
@@ -82,11 +86,19 @@ struct csv_name
         header_type& header_rw;
   
   inline
-  csv_name(const std::string& in_filename, const csv_opts::opts& in_opts = csv_opts::no_header)
-    : filename (in_filename)
-    , opts     (in_opts    )
-    , header_ro(header_junk)
-    , header_rw(header_junk)
+  csv_name(const std::string& in_filename)
+    : filename (in_filename        )
+    , opts     (csv_opts::no_header)
+    , header_ro(header_junk        )
+    , header_rw(header_junk        )
+    {}
+  
+  inline
+  csv_name(const std::string& in_filename, const csv_opts::opts& in_opts)
+    : filename (in_filename                  )
+    , opts     (csv_opts::no_header + in_opts)
+    , header_ro(header_junk                  )
+    , header_rw(header_junk                  )
     {}
   
   inline

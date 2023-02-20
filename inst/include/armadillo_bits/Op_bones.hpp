@@ -56,14 +56,12 @@ class Op
   inline          Op(const T1& in_m, const elem_type in_aux);
   inline          Op(const T1& in_m, const elem_type in_aux,         const uword in_aux_uword_a, const uword in_aux_uword_b);
   inline          Op(const T1& in_m, const uword     in_aux_uword_a, const uword in_aux_uword_b);
-  inline          Op(const T1& in_m, const uword     in_aux_uword_a, const uword in_aux_uword_b, const uword in_aux_uword_c, const char junk);
   inline         ~Op();
   
   arma_aligned const T1&       m;            //!< the operand; must be derived from Base
   arma_aligned       elem_type aux;          //!< auxiliary data, using the element type as used by T1
   arma_aligned       uword     aux_uword_a;  //!< auxiliary data, uword format
   arma_aligned       uword     aux_uword_b;  //!< auxiliary data, uword format
-  arma_aligned       uword     aux_uword_c;  //!< auxiliary data, uword format
   };
 
 

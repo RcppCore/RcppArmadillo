@@ -93,7 +93,6 @@ subview_each_common<parent,mode>::check_size(const Mat<eT2>& A) const
 
 template<typename parent, unsigned int mode>
 template<typename eT2>
-arma_cold
 inline
 const std::string
 subview_each_common<parent,mode>::incompat_size_string(const Mat<eT2>& A) const

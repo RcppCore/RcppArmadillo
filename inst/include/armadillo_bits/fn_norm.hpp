@@ -22,8 +22,8 @@
 
 
 template<typename T1>
-inline
 arma_warn_unused
+inline
 typename enable_if2< is_arma_type<T1>::value, typename T1::pod_type >::result
 norm
   (
@@ -68,8 +68,8 @@ norm
 
 
 template<typename T1>
-inline
 arma_warn_unused
+inline
 typename enable_if2< is_arma_type<T1>::value, typename T1::pod_type >::result
 norm
   (
@@ -121,8 +121,8 @@ norm
 
 
 template<typename T1>
-inline
 arma_warn_unused
+inline
 typename enable_if2< is_arma_type<T1>::value, double >::result
 norm
   (
@@ -143,8 +143,8 @@ norm
 
 
 template<typename T1>
-inline
 arma_warn_unused
+inline
 typename enable_if2< is_arma_type<T1>::value, double >::result
 norm
   (
@@ -169,8 +169,8 @@ norm
 
 
 template<typename T1>
-inline
 arma_warn_unused
+inline
 typename enable_if2< is_arma_sparse_type<T1>::value, typename T1::pod_type >::result
 norm
   (
@@ -224,8 +224,8 @@ norm
 
 
 template<typename T1>
-inline
 arma_warn_unused
+inline
 typename enable_if2< is_arma_sparse_type<T1>::value, typename T1::pod_type >::result
 norm
   (

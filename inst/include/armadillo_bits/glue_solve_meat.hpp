@@ -167,7 +167,7 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
     const bool is_triu = (no_trimat || refine || equilibrate || likely_sympd || is_band           ) ? false : trimat_helper::is_triu(A);
     const bool is_tril = (no_trimat || refine || equilibrate || likely_sympd || is_band || is_triu) ? false : trimat_helper::is_tril(A);
     
-    const bool try_sympd = arma_config::optimise_sympd && ((no_sympd || auxlib::crippled_lapack(A) || is_band || is_triu || is_tril) ? false : (likely_sympd ? true : sympd_helper::guess_sympd(A, uword(16))));
+    const bool try_sympd = arma_config::optimise_sym && ((no_sympd || auxlib::crippled_lapack(A) || is_band || is_triu || is_tril) ? false : (likely_sympd ? true : sym_helper::guess_sympd(A, uword(16))));
     
     if(fast)
       {

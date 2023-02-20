@@ -23,7 +23,6 @@
 
 template<bool do_inv_detect>
 template<typename T1, typename T2>
-arma_hot
 inline
 void
 glue_times_redirect2_helper<do_inv_detect>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X)
@@ -74,7 +73,6 @@ glue_times_redirect2_helper<do_inv_detect>::apply(Mat<typename T1::elem_type>& o
 
 
 template<typename T1, typename T2>
-arma_hot
 inline
 void
 glue_times_redirect2_helper<true>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X)
@@ -160,7 +158,6 @@ glue_times_redirect2_helper<true>::apply(Mat<typename T1::elem_type>& out, const
 
 template<bool do_inv_detect>
 template<typename T1, typename T2, typename T3>
-arma_hot
 inline
 void
 glue_times_redirect3_helper<do_inv_detect>::apply(Mat<typename T1::elem_type>& out, const Glue< Glue<T1,T2,glue_times>, T3, glue_times>& X)
@@ -218,7 +215,6 @@ glue_times_redirect3_helper<do_inv_detect>::apply(Mat<typename T1::elem_type>& o
 
 
 template<typename T1, typename T2, typename T3>
-arma_hot
 inline
 void
 glue_times_redirect3_helper<true>::apply(Mat<typename T1::elem_type>& out, const Glue< Glue<T1,T2,glue_times>, T3, glue_times>& X)
@@ -340,7 +336,6 @@ glue_times_redirect3_helper<true>::apply(Mat<typename T1::elem_type>& out, const
 
 template<uword N>
 template<typename T1, typename T2>
-arma_hot
 inline
 void
 glue_times_redirect<N>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X)
@@ -391,7 +386,6 @@ glue_times_redirect<N>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2
 
 
 template<typename T1, typename T2>
-arma_hot
 inline
 void
 glue_times_redirect<2>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X)
@@ -406,7 +400,6 @@ glue_times_redirect<2>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2
 
 
 template<typename T1, typename T2, typename T3>
-arma_hot
 inline
 void
 glue_times_redirect<3>::apply(Mat<typename T1::elem_type>& out, const Glue< Glue<T1,T2,glue_times>, T3, glue_times>& X)
@@ -421,7 +414,6 @@ glue_times_redirect<3>::apply(Mat<typename T1::elem_type>& out, const Glue< Glue
 
 
 template<typename T1, typename T2, typename T3, typename T4>
-arma_hot
 inline
 void
 glue_times_redirect<4>::apply(Mat<typename T1::elem_type>& out, const Glue< Glue< Glue<T1,T2,glue_times>, T3, glue_times>, T4, glue_times>& X)
@@ -483,7 +475,6 @@ glue_times_redirect<4>::apply(Mat<typename T1::elem_type>& out, const Glue< Glue
 
 
 template<typename T1, typename T2>
-arma_hot
 inline
 void
 glue_times::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X)
@@ -500,7 +491,6 @@ glue_times::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>
 
 
 template<typename T1>
-arma_hot
 inline
 void
 glue_times::apply_inplace(Mat<typename T1::elem_type>& out, const T1& X)
@@ -513,7 +503,6 @@ glue_times::apply_inplace(Mat<typename T1::elem_type>& out, const T1& X)
 
 
 template<typename T1, typename T2>
-arma_hot
 inline
 void
 glue_times::apply_inplace_plus(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue_times>& X, const sword sign)
@@ -646,7 +635,6 @@ template
   typename   TA,
   typename   TB
   >
-arma_hot
 inline
 void
 glue_times::apply
@@ -745,7 +733,6 @@ template
   typename   TB,
   typename   TC
   >
-arma_hot
 inline
 void
 glue_times::apply
@@ -795,7 +782,6 @@ template
   typename   TC,
   typename   TD
   >
-arma_hot
 inline
 void
 glue_times::apply
@@ -840,7 +826,6 @@ glue_times::apply
 
 
 template<typename T1, typename T2>
-arma_hot
 inline
 void
 glue_times_diag::apply(Mat<typename T1::elem_type>& actual_out, const Glue<T1, T2, glue_times_diag>& X)

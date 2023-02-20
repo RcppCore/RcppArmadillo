@@ -1,3 +1,8 @@
+2023-02-20  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/armadillo: Armadillo 12.0.0
+ 	* inst/include/armadillo_bits/: Idem
+
 2023-02-11  Kevin Ushey  <kevinushey@gmail.com>
 
 	* src/Makevars.in: Use PKG_CPPFLAGS for RcppArmadillo includes

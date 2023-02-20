@@ -32,7 +32,6 @@ BaseCube<elem_type,derived>::get_ref() const
 
 
 template<typename elem_type, typename derived>
-arma_cold
 inline
 void
 BaseCube<elem_type,derived>::print(const std::string extra_text) const
@@ -56,7 +55,6 @@ BaseCube<elem_type,derived>::print(const std::string extra_text) const
 
 
 template<typename elem_type, typename derived>
-arma_cold
 inline
 void
 BaseCube<elem_type,derived>::print(std::ostream& user_stream, const std::string extra_text) const
@@ -80,7 +78,6 @@ BaseCube<elem_type,derived>::print(std::ostream& user_stream, const std::string 
 
 
 template<typename elem_type, typename derived>
-arma_cold
 inline
 void
 BaseCube<elem_type,derived>::raw_print(const std::string extra_text) const
@@ -104,7 +101,6 @@ BaseCube<elem_type,derived>::raw_print(const std::string extra_text) const
 
 
 template<typename elem_type, typename derived>
-arma_cold
 inline
 void
 BaseCube<elem_type,derived>::raw_print(std::ostream& user_stream, const std::string extra_text) const
@@ -128,7 +124,6 @@ BaseCube<elem_type,derived>::raw_print(std::ostream& user_stream, const std::str
 
 
 template<typename elem_type, typename derived>
-arma_cold
 inline
 void
 BaseCube<elem_type,derived>::brief_print(const std::string extra_text) const
@@ -152,7 +147,6 @@ BaseCube<elem_type,derived>::brief_print(const std::string extra_text) const
 
 
 template<typename elem_type, typename derived>
-arma_cold
 inline
 void
 BaseCube<elem_type,derived>::brief_print(std::ostream& user_stream, const std::string extra_text) const
@@ -177,7 +171,6 @@ BaseCube<elem_type,derived>::brief_print(std::ostream& user_stream, const std::s
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 elem_type
 BaseCube<elem_type,derived>::min() const
   {
@@ -188,7 +181,6 @@ BaseCube<elem_type,derived>::min() const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 elem_type
 BaseCube<elem_type,derived>::max() const
   {
@@ -199,7 +191,6 @@ BaseCube<elem_type,derived>::max() const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 uword
 BaseCube<elem_type,derived>::index_min() const
   {
@@ -223,7 +214,6 @@ BaseCube<elem_type,derived>::index_min() const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 uword
 BaseCube<elem_type,derived>::index_max() const
   {
@@ -247,7 +237,6 @@ BaseCube<elem_type,derived>::index_max() const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 bool
 BaseCube<elem_type,derived>::is_zero(const typename get_pod_type<elem_type>::result tol) const
   {
@@ -300,7 +289,6 @@ BaseCube<elem_type,derived>::is_zero(const typename get_pod_type<elem_type>::res
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 bool
 BaseCube<elem_type,derived>::is_empty() const
   {
@@ -315,7 +303,6 @@ BaseCube<elem_type,derived>::is_empty() const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 bool
 BaseCube<elem_type,derived>::is_finite() const
   {
@@ -348,7 +335,6 @@ BaseCube<elem_type,derived>::is_finite() const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 bool
 BaseCube<elem_type,derived>::has_inf() const
   {
@@ -381,7 +367,6 @@ BaseCube<elem_type,derived>::has_inf() const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 bool
 BaseCube<elem_type,derived>::has_nan() const
   {
@@ -412,12 +397,31 @@ BaseCube<elem_type,derived>::has_nan() const
 
 
 
+template<typename elem_type, typename derived>
+inline
+const CubeToMatOp<derived, op_row_as_mat>
+BaseCube<elem_type,derived>::row_as_mat(const uword in_row) const
+  {
+  return CubeToMatOp<derived, op_row_as_mat>( (*this).get_ref(), in_row );
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+const CubeToMatOp<derived, op_col_as_mat>
+BaseCube<elem_type,derived>::col_as_mat(const uword in_col) const
+  {
+  return CubeToMatOp<derived, op_col_as_mat>( (*this).get_ref(), in_col );
+  }
+
+
+
 //
 // extra functions defined in BaseCube_eval_Cube
 
 template<typename elem_type, typename derived>
 arma_inline
-arma_warn_unused
 const derived&
 BaseCube_eval_Cube<elem_type, derived>::eval() const
   {
@@ -433,7 +437,6 @@ BaseCube_eval_Cube<elem_type, derived>::eval() const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 Cube<elem_type>
 BaseCube_eval_expr<elem_type, derived>::eval() const
   {

@@ -941,7 +941,6 @@ SpSubview<eT>::randn()
 
 
 template<typename eT>
-arma_hot
 inline
 SpSubview_MapMat_val<eT>
 SpSubview<eT>::operator[](const uword i)
@@ -955,7 +954,6 @@ SpSubview<eT>::operator[](const uword i)
 
 
 template<typename eT>
-arma_hot
 inline
 eT
 SpSubview<eT>::operator[](const uword i) const
@@ -969,7 +967,6 @@ SpSubview<eT>::operator[](const uword i) const
 
 
 template<typename eT>
-arma_hot
 inline
 SpSubview_MapMat_val<eT>
 SpSubview<eT>::operator()(const uword i)
@@ -985,7 +982,6 @@ SpSubview<eT>::operator()(const uword i)
 
 
 template<typename eT>
-arma_hot
 inline
 eT
 SpSubview<eT>::operator()(const uword i) const
@@ -1001,7 +997,6 @@ SpSubview<eT>::operator()(const uword i) const
 
 
 template<typename eT>
-arma_hot
 inline
 SpSubview_MapMat_val<eT>
 SpSubview<eT>::operator()(const uword in_row, const uword in_col)
@@ -1014,7 +1009,6 @@ SpSubview<eT>::operator()(const uword in_row, const uword in_col)
 
 
 template<typename eT>
-arma_hot
 inline
 eT
 SpSubview<eT>::operator()(const uword in_row, const uword in_col) const
@@ -1027,7 +1021,6 @@ SpSubview<eT>::operator()(const uword in_row, const uword in_col) const
 
 
 template<typename eT>
-arma_hot
 inline
 SpSubview_MapMat_val<eT>
 SpSubview<eT>::at(const uword i)
@@ -1041,7 +1034,6 @@ SpSubview<eT>::at(const uword i)
 
 
 template<typename eT>
-arma_hot
 inline
 eT
 SpSubview<eT>::at(const uword i) const
@@ -1055,7 +1047,6 @@ SpSubview<eT>::at(const uword i) const
 
 
 template<typename eT>
-arma_hot
 inline
 SpSubview_MapMat_val<eT>
 SpSubview<eT>::at(const uword in_row, const uword in_col)
@@ -1066,7 +1057,6 @@ SpSubview<eT>::at(const uword in_row, const uword in_col)
 
 
 template<typename eT>
-arma_hot
 inline
 eT
 SpSubview<eT>::at(const uword in_row, const uword in_col) const
@@ -1642,7 +1632,6 @@ SpSubview<eT>::is_alias(const SpMat<eT>& X) const
 
 template<typename eT>
 inline
-arma_warn_unused
 eT&
 SpSubview<eT>::insert_element(const uword in_row, const uword in_col, const eT in_val)
   {
@@ -1764,7 +1753,6 @@ SpSubview_col<eT>::operator=(const Base<eT,T1>& x)
 
 template<typename eT>
 inline
-arma_warn_unused
 const SpOp<SpSubview_col<eT>,spop_htrans>
 SpSubview_col<eT>::t() const
   {
@@ -1775,7 +1763,6 @@ SpSubview_col<eT>::t() const
 
 template<typename eT>
 inline
-arma_warn_unused
 const SpOp<SpSubview_col<eT>,spop_htrans>
 SpSubview_col<eT>::ht() const
   {
@@ -1786,7 +1773,6 @@ SpSubview_col<eT>::ht() const
 
 template<typename eT>
 inline
-arma_warn_unused
 const SpOp<SpSubview_col<eT>,spop_strans>
 SpSubview_col<eT>::st() const
   {
@@ -1873,7 +1859,6 @@ SpSubview_row<eT>::operator=(const Base<eT,T1>& x)
 
 template<typename eT>
 inline
-arma_warn_unused
 const SpOp<SpSubview_row<eT>,spop_htrans>
 SpSubview_row<eT>::t() const
   {
@@ -1884,7 +1869,6 @@ SpSubview_row<eT>::t() const
 
 template<typename eT>
 inline
-arma_warn_unused
 const SpOp<SpSubview_row<eT>,spop_htrans>
 SpSubview_row<eT>::ht() const
   {
@@ -1895,7 +1879,6 @@ SpSubview_row<eT>::ht() const
 
 template<typename eT>
 inline
-arma_warn_unused
 const SpOp<SpSubview_row<eT>,spop_strans>
 SpSubview_row<eT>::st() const
   {

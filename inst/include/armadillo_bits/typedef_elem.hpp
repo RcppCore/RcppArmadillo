@@ -35,9 +35,8 @@
   #endif
 #endif
 
-// NOTE:
-// "char" is not guaranteed to be the same as "signed char" 
-// https://en.wikipedia.org/wiki/C_data_types
+// NOTE: "char" can be either "signed char" or "unsigned char"
+// NOTE: https://en.wikipedia.org/wiki/C_data_types
 
 
 #if   USHRT_MAX >= 0xffff

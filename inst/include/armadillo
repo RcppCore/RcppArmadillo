@@ -56,6 +56,15 @@
   #include <atomic>
 #endif
 
+// #if defined(ARMA_HAVE_CXX17)
+//   #include <charconv>
+//   #include <system_error>
+// #endif
+
+#if ( defined(__unix__) || defined(__unix) || defined(_POSIX_C_SOURCE) || (defined(__APPLE__) && defined(__MACH__)) ) && !defined(_WIN32)
+  #include <unistd.h>
+#endif
+
 #if defined(ARMA_USE_TBB_ALLOC)
   #if defined(__has_include)
     #if __has_include(<tbb/scalable_allocator.h>)
@@ -80,10 +89,6 @@
   #else
     #include <mkl_service.h>
   #endif
-#endif
-
-#if ( defined(__unix__) || defined(__unix) || defined(_POSIX_C_SOURCE) || (defined(__APPLE__) && defined(__MACH__)) ) && !defined(_WIN32)
-  #include <unistd.h>
 #endif
 
 
@@ -156,13 +161,14 @@ namespace arma
   #include "armadillo_bits/def_lapack.hpp"
   #include "armadillo_bits/def_arpack.hpp"
   #include "armadillo_bits/def_superlu.hpp"
-  #include "armadillo_bits/def_hdf5.hpp"
+  #include "armadillo_bits/def_fftw3.hpp"
   
   #include "armadillo_bits/translate_blas.hpp"
   #include "armadillo_bits/translate_atlas.hpp"
   #include "armadillo_bits/translate_lapack.hpp"
   #include "armadillo_bits/translate_arpack.hpp"
   #include "armadillo_bits/translate_superlu.hpp"
+  #include "armadillo_bits/translate_fftw3.hpp"
   
   #include "armadillo_bits/cond_rel_bones.hpp"
   #include "armadillo_bits/arrayops_bones.hpp"
@@ -309,6 +315,8 @@ namespace arma
   #include "armadillo_bits/op_sp_minus_bones.hpp"
   #include "armadillo_bits/op_powmat_bones.hpp"
   #include "armadillo_bits/op_rank_bones.hpp"
+  #include "armadillo_bits/op_row_as_mat_bones.hpp"
+  #include "armadillo_bits/op_col_as_mat_bones.hpp"
   
   #include "armadillo_bits/glue_times_bones.hpp"
   #include "armadillo_bits/glue_mixed_bones.hpp"
@@ -579,9 +587,10 @@ namespace arma
   // misc stuff
   
   #include "armadillo_bits/hdf5_misc.hpp"
-  #include "armadillo_bits/fft_engine.hpp"
+  #include "armadillo_bits/fft_engine_kissfft.hpp"
+  #include "armadillo_bits/fft_engine_fftw3.hpp"
   #include "armadillo_bits/band_helper.hpp"
-  #include "armadillo_bits/sympd_helper.hpp"
+  #include "armadillo_bits/sym_helper.hpp"
   #include "armadillo_bits/trimat_helper.hpp"
   
   //
@@ -744,6 +753,8 @@ namespace arma
   #include "armadillo_bits/op_sp_minus_meat.hpp"
   #include "armadillo_bits/op_powmat_meat.hpp"
   #include "armadillo_bits/op_rank_meat.hpp"
+  #include "armadillo_bits/op_row_as_mat_meat.hpp"
+  #include "armadillo_bits/op_col_as_mat_meat.hpp"
   
   #include "armadillo_bits/glue_times_meat.hpp"
   #include "armadillo_bits/glue_mixed_meat.hpp"

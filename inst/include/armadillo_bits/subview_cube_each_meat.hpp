@@ -53,7 +53,6 @@ subview_cube_each_common<eT>::check_size(const Mat<eT2>& A) const
 
 template<typename eT>
 template<typename eT2>
-arma_cold
 inline
 const std::string
 subview_cube_each_common<eT>::incompat_size_string(const Mat<eT2>& A) const
