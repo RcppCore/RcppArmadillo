@@ -16,11 +16,11 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup sympd_helper
+//! \addtogroup sym_helper
 //! @{
 
 
-namespace sympd_helper
+namespace sym_helper
 {
 
 // computationally inexpensive algorithm to guess whether a matrix is positive definite:
@@ -479,7 +479,7 @@ check_diag_imag(const Mat<eT>& A)
 
 
 
-}  // end of namespace sympd_helper
+}  // end of namespace sym_helper
 
 
 //! @}

@@ -84,7 +84,6 @@ spglue_times::apply(SpMat<typename T1::elem_type>& out, const SpGlue<SpOp<T1,spo
 
 
 template<typename eT>
-arma_hot
 inline
 void
 spglue_times::apply_noalias(SpMat<eT>& c, const SpMat<eT>& x, const SpMat<eT>& y)

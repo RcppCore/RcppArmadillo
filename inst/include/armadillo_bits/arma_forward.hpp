@@ -91,6 +91,10 @@ class op_diagmat;
 class op_trimat;
 class op_vectorise_row;
 class op_vectorise_col;
+
+class op_row_as_mat;
+class op_col_as_mat;
+
 class glue_times;
 class glue_times_diag;
 

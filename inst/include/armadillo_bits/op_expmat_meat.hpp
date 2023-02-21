@@ -86,34 +86,39 @@ op_expmat::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1
     return true;
     }
   
-  const bool try_sympd = arma_config::optimise_sympd && sympd_helper::guess_sympd(A);
+  bool do_sym = false;
   
-  if(try_sympd)
+  if( (arma_config::optimise_sym) && (auxlib::crippled_lapack(A) == false) )
     {
-    arma_extra_debug_print("op_expmat: attempting sympd optimisation");
+    bool is_approx_sym   = false;
+    bool is_approx_sympd = false;
     
-    // if matrix A is sympd, all its eigenvalues are positive
+    sym_helper::analyse_matrix(is_approx_sym, is_approx_sympd, A);
+    
+    do_sym = ((is_cx<eT>::no) ? (is_approx_sym) : (is_approx_sym && is_approx_sympd));
+    }
+  
+  if(do_sym)
+    {
+    arma_extra_debug_print("op_expmat: symmetric/hermitian optimisation");
     
     Col< T> eigval;
     Mat<eT> eigvec;
     
     const bool eig_status = eig_sym_helper(eigval, eigvec, A, 'd', "expmat()");
     
-    if(eig_status)
-      {
-      eigval = exp(eigval);
-      
-      out = eigvec * diagmat(eigval) * eigvec.t();
-      
-      return true;
-      }
+    if(eig_status == false)  { return false; }
     
-    arma_extra_debug_print("op_expmat: sympd optimisation failed");
+    eigval = exp(eigval);
     
-    // fallthrough if eigen decomposition failed
+    out = eigvec * diagmat(eigval) * eigvec.t();
+    
+    return true;
     }
   
   const T norm_val = arma::norm(A, "inf");
+  
+  if(arma_isfinite(norm_val) == false)  { return false; }
   
   const double log2_val = (norm_val > T(0)) ? double(eop_aux::log2(norm_val)) : double(0);
   
@@ -195,7 +200,7 @@ op_expmat_sym::apply_direct(Mat<typename T1::elem_type>& out, const Base<typenam
     
     arma_debug_check( (X.is_square() == false), "expmat_sym(): given matrix must be square sized" );
     
-    if((arma_config::debug) && (arma_config::warn_level > 0) && (is_cx<eT>::yes) && (sympd_helper::check_diag_imag(X) == false))
+    if((arma_config::debug) && (arma_config::warn_level > 0) && (is_cx<eT>::yes) && (sym_helper::check_diag_imag(X) == false))
       {
       arma_debug_warn_level(1, "inv_sympd(): imaginary components on diagonal are non-zero");
       }

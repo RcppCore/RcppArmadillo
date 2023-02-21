@@ -77,19 +77,6 @@ OpCube<T1, op_type>::OpCube(const BaseCube<typename T1::elem_type, T1>& in_m, co
 
 
 template<typename T1, typename op_type>
-OpCube<T1, op_type>::OpCube(const BaseCube<typename T1::elem_type, T1>& in_m, const uword in_aux_uword_a, const uword in_aux_uword_b, const uword in_aux_uword_c, const uword in_aux_uword_d, const char)
-  : m(in_m.get_ref())
-  , aux_uword_a(in_aux_uword_a)
-  , aux_uword_b(in_aux_uword_b)
-  , aux_uword_c(in_aux_uword_c)
-  , aux_uword_d(in_aux_uword_d)
-  {
-  arma_extra_debug_sigprint();
-  }
-
-
-
-template<typename T1, typename op_type>
 OpCube<T1, op_type>::~OpCube()
   {
   arma_extra_debug_sigprint();

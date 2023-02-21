@@ -16,28 +16,38 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup wall_clock
+//! \addtogroup op_col_as_mat
 //! @{
 
 
-//! Class for measuring time intervals
-class wall_clock
+
+template<typename T1>
+inline
+void
+op_col_as_mat::apply(Mat<typename T1::elem_type>& out, const CubeToMatOp<T1, op_col_as_mat>& expr)
   {
-  public:
+  arma_extra_debug_sigprint();
   
-  inline  wall_clock();
-  inline ~wall_clock();
+  typedef typename T1::elem_type eT;
   
-                   inline void   tic();  //!< start the timer
-  arma_warn_unused inline double toc();  //!< return the number of seconds since the last call to tic()
+  const unwrap_cube<T1> U(expr.m);
+  const Cube<eT>&   A = U.M;
   
+  const uword in_col = expr.aux_uword;
   
-  private:
+  arma_debug_check_bounds( (in_col >= A.n_cols), "Cube::col_as_mat(): index out of bounds" );
   
-  bool valid = false;
+  const uword A_n_rows   = A.n_rows;
+  const uword A_n_slices = A.n_slices;
   
-  std::chrono::steady_clock::time_point chrono_time1;
-  };
+  out.set_size(A_n_rows, A_n_slices);
+  
+  for(uword s=0; s < A_n_slices; ++s)
+    {
+    arrayops::copy(out.colptr(s), A.slice_colptr(s, in_col), A_n_rows);
+    }
+  }
+
 
 
 //! @}

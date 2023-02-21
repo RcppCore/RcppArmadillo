@@ -207,7 +207,7 @@ op_powmat_cx::apply_direct(Mat< std::complex<typename T1::pod_type> >& out, cons
     return true;
     }
   
-  const bool try_sympd = arma_config::optimise_sympd && sympd_helper::guess_sympd(A);
+  const bool try_sympd = arma_config::optimise_sym && sym_helper::guess_sympd(A);
   
   if(try_sympd)
     {

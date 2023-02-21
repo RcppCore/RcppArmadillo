@@ -23,6 +23,7 @@
 #undef arma_align_mem
 #undef arma_warn_unused
 #undef arma_deprecated
+#undef arma_frown
 #undef arma_malloc
 #undef arma_inline
 #undef arma_noinline
@@ -34,6 +35,7 @@
 #define arma_align_mem
 #define arma_warn_unused
 #define arma_deprecated
+#define arma_frown(msg)
 #define arma_malloc
 #define arma_inline            inline
 #define arma_noinline
@@ -138,11 +140,6 @@
 #endif
 
 
-// #if defined(ARMA_HAVE_CXX17)
-//   #define arma_warn_unused  [[nodiscard]]
-// #endif
-
-
 #if !defined(ARMA_ALLOW_FAKE_GCC)
   #if (defined(__GNUG__) || defined(__GNUC__)) && (defined(__INTEL_COMPILER) || defined(__NVCC__) || defined(__CUDACC__) || defined(__PGI) || defined(__PATHSCALE__) || defined(__ARMCC_VERSION) || defined(__IBMCPP__))
     #undef  ARMA_DETECTED_FAKE_GCC
@@ -166,6 +163,10 @@
     #error "*** newer compiler required; need gcc 4.8 or later ***"
   #endif
   
+  // #if (ARMA_GCC_VERSION < 60100)
+  //   #pragma message ("WARNING: support for gcc versions older than 6.1 is deprecated")
+  // #endif
+  
   #define ARMA_GOOD_COMPILER
   
   #undef  arma_hot
@@ -174,19 +175,21 @@
   #undef  arma_align_mem
   #undef  arma_warn_unused
   #undef  arma_deprecated
+  #undef  arma_frown
   #undef  arma_malloc
   #undef  arma_inline
   #undef  arma_noinline
   
-  #define arma_hot                __attribute__((__hot__))
-  #define arma_cold               __attribute__((__cold__))
-  #define arma_aligned            __attribute__((__aligned__))
-  #define arma_align_mem          __attribute__((__aligned__(16)))
-  #define arma_warn_unused        __attribute__((__warn_unused_result__))
-  #define arma_deprecated         __attribute__((__deprecated__))
-  #define arma_malloc             __attribute__((__malloc__))
-  #define arma_inline      inline __attribute__((__always_inline__))
-  #define arma_noinline           __attribute__((__noinline__))
+  #define arma_hot         __attribute__((__hot__))
+  #define arma_cold        __attribute__((__cold__))
+  #define arma_aligned     __attribute__((__aligned__))
+  #define arma_align_mem   __attribute__((__aligned__(16)))
+  #define arma_warn_unused __attribute__((__warn_unused_result__))
+  #define arma_deprecated  __attribute__((__deprecated__))
+  #define arma_frown(msg)  __attribute__((__deprecated__(msg)))
+  #define arma_malloc      __attribute__((__malloc__))
+  #define arma_inline      __attribute__((__always_inline__)) inline
+  #define arma_noinline    __attribute__((__noinline__))
   
   #undef  ARMA_HAVE_ALIGNED_ATTRIBUTE
   #define ARMA_HAVE_ALIGNED_ATTRIBUTE
@@ -247,6 +250,11 @@
     #define arma_deprecated __attribute__((__deprecated__))
   #endif
   
+  #if __has_attribute(__deprecated__)
+    #undef  arma_frown
+    #define arma_frown(msg) __attribute__((__deprecated__(msg)))
+  #endif
+  
   #if __has_attribute(__malloc__)
     #undef  arma_malloc
     #define arma_malloc __attribute__((__malloc__))
@@ -254,7 +262,7 @@
   
   #if __has_attribute(__always_inline__)
     #undef  arma_inline
-    #define arma_inline inline __attribute__((__always_inline__))
+    #define arma_inline __attribute__((__always_inline__)) inline
   #endif
   
   #if __has_attribute(__noinline__)
@@ -309,7 +317,7 @@
   #undef  arma_deprecated
   #define arma_deprecated __declspec(deprecated)
   // #undef  arma_inline
-  // #define arma_inline inline __forceinline
+  // #define arma_inline __forceinline inline
   
   #pragma warning(push)
   
@@ -321,6 +329,7 @@
   #pragma warning(disable: 4512)  // assignment operator can't be generated
   #pragma warning(disable: 4513)  // destructor can't be generated
   #pragma warning(disable: 4514)  // unreferenced inline function has been removed
+  #pragma warning(disable: 4519)  // default template args are only allowed on a class template (C++11)
   #pragma warning(disable: 4522)  // multiple assignment operators specified
   #pragma warning(disable: 4623)  // default constructor can't be generated
   #pragma warning(disable: 4624)  // destructor can't be generated
@@ -331,7 +340,8 @@
   #pragma warning(disable: 4711)  // call was inlined
   #pragma warning(disable: 4714)  // __forceinline can't be inlined
   #pragma warning(disable: 4800)  // value forced to bool
-  #pragma warning(disable: 4519)  // C++11: default template args are only allowed on a class template
+  
+  // NOTE: also possible to disable 4146 (unary minus operator applied to unsigned type, result still unsigned)
   
   #if defined(ARMA_HAVE_CXX17)
   #pragma warning(disable: 26812)  // unscoped enum
@@ -375,8 +385,18 @@
 #endif
 
 
-#if defined(__CYGWIN__) && !defined(ARMA_DONT_PRINT_CXX11_WARNING)
-  #pragma message ("WARNING: Cygwin may have incomplete support for C++11 features.")
+#if defined(ARMA_HAVE_CXX14)
+  #undef  arma_deprecated
+  #define arma_deprecated [[deprecated]]
+
+  #undef  arma_frown
+  #define arma_frown(msg) [[deprecated(msg)]]
+#endif
+
+
+#if defined(ARMA_HAVE_CXX17)
+  #undef  arma_warn_unused
+  #define arma_warn_unused  [[nodiscard]]
 #endif
 
 
@@ -410,7 +430,6 @@
 #if defined(ARMA_USE_OPENMP)
   #if (defined(ARMA_GCC_VERSION) && (ARMA_GCC_VERSION < 50400))
     // due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=57580
-    // TODO: gcc 4.9.4 is also fixed, so use a more fine-grained gcc version check?
     #undef ARMA_USE_OPENMP
     #if !defined(ARMA_DONT_PRINT_OPENMP_WARNING)
       #pragma message ("WARNING: use of OpenMP disabled due to compiler bug in gcc <= 5.3")
@@ -471,4 +490,7 @@
 #if defined(ARMA_IGNORE_DEPRECATED_MARKER) && (!defined(ARMA_DONT_IGNORE_DEPRECATED_MARKER)) && (!defined(ARMA_EXTRA_DEBUG))
   #undef  arma_deprecated
   #define arma_deprecated
+
+  #undef  arma_frown
+  #define arma_frown(msg)
 #endif

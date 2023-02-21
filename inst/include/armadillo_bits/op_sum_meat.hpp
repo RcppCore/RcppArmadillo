@@ -22,7 +22,6 @@
 
 
 template<typename T1>
-arma_hot
 inline
 void
 op_sum::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sum>& in)
@@ -53,7 +52,6 @@ op_sum::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sum>& in)
 
 
 template<typename T1>
-arma_hot
 inline
 void
 op_sum::apply_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const uword dim)
@@ -73,7 +71,6 @@ op_sum::apply_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, cons
 
 
 template<typename T1>
-arma_hot
 inline
 void
 op_sum::apply_noalias_unwrap(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const uword dim)
@@ -128,7 +125,6 @@ op_sum::apply_noalias_unwrap(Mat<typename T1::elem_type>& out, const Proxy<T1>& 
 
 
 template<typename T1>
-arma_hot
 inline
 void
 op_sum::apply_noalias_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const uword dim)
@@ -239,7 +235,6 @@ op_sum::apply_noalias_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P
 
 
 template<typename T1>
-arma_hot
 inline
 void
 op_sum::apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_sum>& in)
@@ -270,7 +265,6 @@ op_sum::apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_sum>& in)
 
 
 template<typename T1>
-arma_hot
 inline
 void
 op_sum::apply_noalias(Cube<typename T1::elem_type>& out, const ProxyCube<T1>& P, const uword dim)
@@ -290,7 +284,6 @@ op_sum::apply_noalias(Cube<typename T1::elem_type>& out, const ProxyCube<T1>& P,
 
 
 template<typename T1>
-arma_hot
 inline
 void
 op_sum::apply_noalias_unwrap(Cube<typename T1::elem_type>& out, const ProxyCube<T1>& P, const uword dim)
@@ -355,7 +348,6 @@ op_sum::apply_noalias_unwrap(Cube<typename T1::elem_type>& out, const ProxyCube<
 
 
 template<typename T1>
-arma_hot
 inline
 void
 op_sum::apply_noalias_proxy(Cube<typename T1::elem_type>& out, const ProxyCube<T1>& P, const uword dim)

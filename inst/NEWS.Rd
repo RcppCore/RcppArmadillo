@@ -3,6 +3,30 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.12.0.0.0 (2023-02-20) (github-only)}{
+  \itemize{
+    \item Upgraded to Armadillo release 12.0.0 (Cortisol Profusion)
+    \itemize{
+      \item faster \code{fft()} and \code{ifft()} via optional use of FFTW3
+      \item faster \code{min()} and \code{max()}
+      \item faster \code{index_min()} and \code{index_max()}
+      \item added \code{.col_as_mat()} and \code{.row_as_mat()} which return
+      matrix representation of cube column and cube row
+      \item added \code{csv_opts::strict} option to loading CSV files to
+      interpret missing values as NaN
+      \item added \code{check_for_zeros} option to form 4 of sparse matrix batch constructors
+      \item \code{inv()} and \code{inv_sympd()} with options
+      \code{inv_opts::no_ugly} or \code{inv_opts::allow_approx} now use a scaled
+      threshold similar to \code{pinv()}
+      \item \code{set_cout_stream()} and \code{set_cerr_stream()} are now
+      no-ops; instead use the options \code{ARMA_WARN_LEVEL}, or
+      \code{ARMA_COUT_STREAM}, or \code{ARMA_CERR_STREAM}
+    }
+    \item The include directory order is now more robust (Kevin Ushey in
+    \ghpr{407} addressing \ghit{406})
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.11.4.4.0 (2023-02-09)}{
   \itemize{
     \item Upgraded to Armadillo release 11.4.4 (Ship of Theseus)

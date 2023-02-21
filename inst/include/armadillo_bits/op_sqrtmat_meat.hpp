@@ -139,7 +139,7 @@ op_sqrtmat::apply_direct(Mat< std::complex<typename T1::elem_type> >& out, const
     return true;
     }
   
-  const bool try_sympd = arma_config::optimise_sympd && sympd_helper::guess_sympd(A);
+  const bool try_sympd = arma_config::optimise_sym && sym_helper::guess_sympd(A);
   
   if(try_sympd)
     {
@@ -336,7 +336,7 @@ op_sqrtmat_cx::apply_direct(Mat<typename T1::elem_type>& out, const Base<typenam
     return true;
     }
   
-  const bool try_sympd = arma_config::optimise_sympd && sympd_helper::guess_sympd(S);
+  const bool try_sympd = arma_config::optimise_sym && sym_helper::guess_sympd(S);
   
   if(try_sympd)
     {
@@ -482,7 +482,7 @@ op_sqrtmat_sympd::apply_direct(Mat<typename T1::elem_type>& out, const Base<type
     
     arma_debug_check( (X.is_square() == false), "sqrtmat_sympd(): given matrix must be square sized" );
     
-    if((arma_config::debug) && (is_cx<eT>::yes) && (sympd_helper::check_diag_imag(X) == false))
+    if((arma_config::debug) && (is_cx<eT>::yes) && (sym_helper::check_diag_imag(X) == false))
       {
       arma_debug_warn_level(1, "sqrtmat_sympd(): imaginary components on the diagonal are non-zero");
       }

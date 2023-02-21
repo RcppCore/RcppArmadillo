@@ -16,28 +16,34 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup wall_clock
-//! @{
+#if defined(ARMA_USE_FFTW3)
 
 
-//! Class for measuring time intervals
-class wall_clock
+extern "C"
   {
-  public:
-  
-  inline  wall_clock();
-  inline ~wall_clock();
-  
-                   inline void   tic();  //!< start the timer
-  arma_warn_unused inline double toc();  //!< return the number of seconds since the last call to tic()
+  // function prefix for single precision: fftwf_
+  // function prefix for double precision: fftw_
   
   
-  private:
+  // single precision (float)
   
-  bool valid = false;
+  void_ptr fftwf_plan_dft_1d(int N, void* input, void* output, int fftw3_sign, unsigned int fftw3_flags);
   
-  std::chrono::steady_clock::time_point chrono_time1;
-  };
+  void      fftwf_execute(void_ptr plan);
+  void fftwf_destroy_plan(void_ptr plan);
+  
+  void fftwf_cleanup();
+  
+  
+  // double precision (double)
+  
+  void_ptr fftw_plan_dft_1d(int N, void* input, void* output, int fftw3_sign, unsigned int fftw3_flags);
+  
+  void      fftw_execute(void_ptr plan);
+  void fftw_destroy_plan(void_ptr plan);
+  
+  void fftw_cleanup();
+  }
 
 
-//! @}
+#endif

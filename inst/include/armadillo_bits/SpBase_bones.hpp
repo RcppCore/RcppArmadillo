@@ -24,14 +24,14 @@
 template<typename elem_type, typename derived>
 struct SpBase_eval_SpMat
   {
-  inline arma_warn_unused const derived& eval() const;
+  arma_warn_unused inline const derived& eval() const;
   };
 
 
 template<typename elem_type, typename derived>
 struct SpBase_eval_expr
   {
-  inline arma_warn_unused SpMat<elem_type> eval() const;   //!< force the immediate evaluation of a delayed expression
+  arma_warn_unused inline SpMat<elem_type> eval() const;   //!< force the immediate evaluation of a delayed expression
   };
 
 
@@ -54,9 +54,9 @@ struct SpBase
   
   arma_inline bool is_alias(const SpMat<elem_type>& X) const;
   
-  inline arma_warn_unused const SpOp<derived,spop_htrans>  t() const;  //!< Hermitian transpose
-  inline arma_warn_unused const SpOp<derived,spop_htrans> ht() const;  //!< Hermitian transpose
-  inline arma_warn_unused const SpOp<derived,spop_strans> st() const;  //!< simple transpose
+  arma_warn_unused inline const SpOp<derived,spop_htrans>  t() const;  //!< Hermitian transpose
+  arma_warn_unused inline const SpOp<derived,spop_htrans> ht() const;  //!< Hermitian transpose
+  arma_warn_unused inline const SpOp<derived,spop_strans> st() const;  //!< simple transpose
   
   arma_cold inline void print(                           const std::string extra_text = "") const;
   arma_cold inline void print(std::ostream& user_stream, const std::string extra_text = "") const;
@@ -73,8 +73,8 @@ struct SpBase
   arma_cold inline void brief_print(                           const std::string extra_text = "") const;
   arma_cold inline void brief_print(std::ostream& user_stream, const std::string extra_text = "") const;
   
-  inline arma_warn_unused elem_type min() const;
-  inline arma_warn_unused elem_type max() const;
+  arma_warn_unused inline elem_type min() const;
+  arma_warn_unused inline elem_type max() const;
   
   inline elem_type min(uword& index_of_min_val) const;
   inline elem_type max(uword& index_of_max_val) const;
@@ -82,31 +82,31 @@ struct SpBase
   inline elem_type min(uword& row_of_min_val, uword& col_of_min_val) const;
   inline elem_type max(uword& row_of_max_val, uword& col_of_max_val) const;
   
-  inline arma_warn_unused uword index_min() const;
-  inline arma_warn_unused uword index_max() const;
+  arma_warn_unused inline uword index_min() const;
+  arma_warn_unused inline uword index_max() const;
   
-  inline arma_warn_unused bool is_symmetric() const;
-  inline arma_warn_unused bool is_symmetric(const typename get_pod_type<elem_type>::result tol) const;
+  arma_warn_unused inline bool is_symmetric() const;
+  arma_warn_unused inline bool is_symmetric(const typename get_pod_type<elem_type>::result tol) const;
   
-  inline arma_warn_unused bool is_hermitian() const;
-  inline arma_warn_unused bool is_hermitian(const typename get_pod_type<elem_type>::result tol) const;
+  arma_warn_unused inline bool is_hermitian() const;
+  arma_warn_unused inline bool is_hermitian(const typename get_pod_type<elem_type>::result tol) const;
   
-  inline arma_warn_unused bool is_zero(const typename get_pod_type<elem_type>::result tol = 0) const;
+  arma_warn_unused inline bool is_zero(const typename get_pod_type<elem_type>::result tol = 0) const;
   
-  inline arma_warn_unused bool is_trimatu() const;
-  inline arma_warn_unused bool is_trimatl() const;
-  inline arma_warn_unused bool is_diagmat() const;
-  inline arma_warn_unused bool is_empty()   const;
-  inline arma_warn_unused bool is_square()  const;
-  inline arma_warn_unused bool is_vec()     const;
-  inline arma_warn_unused bool is_colvec()  const;
-  inline arma_warn_unused bool is_rowvec()  const;
-  inline arma_warn_unused bool is_finite()  const;
-  inline arma_warn_unused bool has_inf()    const;
-  inline arma_warn_unused bool has_nan()    const;
+  arma_warn_unused inline bool is_trimatu() const;
+  arma_warn_unused inline bool is_trimatl() const;
+  arma_warn_unused inline bool is_diagmat() const;
+  arma_warn_unused inline bool is_empty()   const;
+  arma_warn_unused inline bool is_square()  const;
+  arma_warn_unused inline bool is_vec()     const;
+  arma_warn_unused inline bool is_colvec()  const;
+  arma_warn_unused inline bool is_rowvec()  const;
+  arma_warn_unused inline bool is_finite()  const;
+  arma_warn_unused inline bool has_inf()    const;
+  arma_warn_unused inline bool has_nan()    const;
   
-  inline arma_warn_unused const SpOp<derived,spop_vectorise_col> as_col() const;
-  inline arma_warn_unused const SpOp<derived,spop_vectorise_row> as_row() const;
+  arma_warn_unused inline const SpOp<derived,spop_vectorise_col> as_col() const;
+  arma_warn_unused inline const SpOp<derived,spop_vectorise_row> as_row() const;
   };
 
 

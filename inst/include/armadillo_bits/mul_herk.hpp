@@ -48,9 +48,9 @@ class herk_helper
   
   
   template<typename eT>
-  static
   arma_hot
   inline
+  static
   eT
   dot_conj_row(const uword n_elem, const eT* const A, const Mat<eT>& B, const uword row)
     {

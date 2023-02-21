@@ -32,7 +32,6 @@ Base<elem_type,derived>::get_ref() const
 
 
 template<typename elem_type, typename derived>
-arma_cold
 inline
 void
 Base<elem_type,derived>::print(const std::string extra_text) const
@@ -56,7 +55,6 @@ Base<elem_type,derived>::print(const std::string extra_text) const
 
 
 template<typename elem_type, typename derived>
-arma_cold
 inline
 void
 Base<elem_type,derived>::print(std::ostream& user_stream, const std::string extra_text) const
@@ -80,7 +78,6 @@ Base<elem_type,derived>::print(std::ostream& user_stream, const std::string extr
 
 
 template<typename elem_type, typename derived>
-arma_cold
 inline
 void
 Base<elem_type,derived>::raw_print(const std::string extra_text) const
@@ -104,7 +101,6 @@ Base<elem_type,derived>::raw_print(const std::string extra_text) const
 
 
 template<typename elem_type, typename derived>
-arma_cold
 inline
 void
 Base<elem_type,derived>::raw_print(std::ostream& user_stream, const std::string extra_text) const
@@ -128,7 +124,6 @@ Base<elem_type,derived>::raw_print(std::ostream& user_stream, const std::string 
 
 
 template<typename elem_type, typename derived>
-arma_cold
 inline
 void
 Base<elem_type,derived>::brief_print(const std::string extra_text) const
@@ -152,7 +147,6 @@ Base<elem_type,derived>::brief_print(const std::string extra_text) const
 
 
 template<typename elem_type, typename derived>
-arma_cold
 inline
 void
 Base<elem_type,derived>::brief_print(std::ostream& user_stream, const std::string extra_text) const
@@ -177,7 +171,6 @@ Base<elem_type,derived>::brief_print(std::ostream& user_stream, const std::strin
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 elem_type
 Base<elem_type,derived>::min() const
   {
@@ -188,7 +181,6 @@ Base<elem_type,derived>::min() const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 elem_type
 Base<elem_type,derived>::max() const
   {
@@ -265,7 +257,6 @@ Base<elem_type,derived>::max(uword& row_of_max_val, uword& col_of_max_val) const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 uword
 Base<elem_type,derived>::index_min() const
   {
@@ -289,7 +280,6 @@ Base<elem_type,derived>::index_min() const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 uword
 Base<elem_type,derived>::index_max() const
   {
@@ -313,7 +303,6 @@ Base<elem_type,derived>::index_max() const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 bool
 Base<elem_type,derived>::is_symmetric() const
   {
@@ -354,7 +343,6 @@ Base<elem_type,derived>::is_symmetric() const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 bool
 Base<elem_type,derived>::is_symmetric(const typename get_pod_type<elem_type>::result tol) const
   {
@@ -386,7 +374,6 @@ Base<elem_type,derived>::is_symmetric(const typename get_pod_type<elem_type>::re
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 bool
 Base<elem_type,derived>::is_hermitian() const
   {
@@ -439,7 +426,6 @@ Base<elem_type,derived>::is_hermitian() const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 bool
 Base<elem_type,derived>::is_hermitian(const typename get_pod_type<elem_type>::result tol) const
   {
@@ -471,7 +457,6 @@ Base<elem_type,derived>::is_hermitian(const typename get_pod_type<elem_type>::re
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 bool
 Base<elem_type,derived>::is_zero(const typename get_pod_type<elem_type>::result tol) const
   {
@@ -524,7 +509,6 @@ Base<elem_type,derived>::is_zero(const typename get_pod_type<elem_type>::result 
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 bool
 Base<elem_type,derived>::is_trimatu() const
   {
@@ -543,7 +527,6 @@ Base<elem_type,derived>::is_trimatu() const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 bool
 Base<elem_type,derived>::is_trimatl() const
   {
@@ -562,7 +545,6 @@ Base<elem_type,derived>::is_trimatl() const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 bool
 Base<elem_type,derived>::is_diagmat() const
   {
@@ -602,7 +584,6 @@ Base<elem_type,derived>::is_diagmat() const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 bool
 Base<elem_type,derived>::is_empty() const
   {
@@ -617,7 +598,6 @@ Base<elem_type,derived>::is_empty() const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 bool
 Base<elem_type,derived>::is_square() const
   {
@@ -632,7 +612,6 @@ Base<elem_type,derived>::is_square() const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 bool
 Base<elem_type,derived>::is_vec() const
   {
@@ -649,7 +628,6 @@ Base<elem_type,derived>::is_vec() const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 bool
 Base<elem_type,derived>::is_colvec() const
   {
@@ -666,7 +644,6 @@ Base<elem_type,derived>::is_colvec() const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 bool
 Base<elem_type,derived>::is_rowvec() const
   {
@@ -683,7 +660,6 @@ Base<elem_type,derived>::is_rowvec() const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 bool
 Base<elem_type,derived>::is_finite() const
   {
@@ -728,7 +704,6 @@ Base<elem_type,derived>::is_finite() const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 bool
 Base<elem_type,derived>::has_inf() const
   {
@@ -773,7 +748,6 @@ Base<elem_type,derived>::has_inf() const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 bool
 Base<elem_type,derived>::has_nan() const
   {
@@ -818,7 +792,6 @@ Base<elem_type,derived>::has_nan() const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 const Op<derived,op_vectorise_col>
 Base<elem_type, derived>::as_col() const
   {
@@ -829,7 +802,6 @@ Base<elem_type, derived>::as_col() const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 const Op<derived,op_vectorise_row>
 Base<elem_type, derived>::as_row() const
   {
@@ -843,7 +815,6 @@ Base<elem_type, derived>::as_row() const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 const Op<derived,op_inv_gen_default>
 Base_extra_yes<elem_type, derived>::i() const
   {
@@ -854,7 +825,6 @@ Base_extra_yes<elem_type, derived>::i() const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 bool
 Base_extra_yes<elem_type,derived>::is_sympd() const
   {
@@ -880,7 +850,6 @@ Base_extra_yes<elem_type,derived>::is_sympd() const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 bool
 Base_extra_yes<elem_type,derived>::is_sympd(typename get_pod_type<elem_type>::result tol) const
   {
@@ -908,7 +877,6 @@ Base_extra_yes<elem_type,derived>::is_sympd(typename get_pod_type<elem_type>::re
 
 template<typename elem_type, typename derived>
 arma_inline
-arma_warn_unused
 const derived&
 Base_eval_Mat<elem_type, derived>::eval() const
   {
@@ -924,7 +892,6 @@ Base_eval_Mat<elem_type, derived>::eval() const
 
 template<typename elem_type, typename derived>
 inline
-arma_warn_unused
 Mat<elem_type>
 Base_eval_expr<elem_type, derived>::eval() const
   {
@@ -940,7 +907,6 @@ Base_eval_expr<elem_type, derived>::eval() const
 
 template<typename derived>
 arma_inline
-arma_warn_unused
 const Op<derived,op_htrans>
 Base_trans_cx<derived>::t() const
   {
@@ -951,7 +917,6 @@ Base_trans_cx<derived>::t() const
 
 template<typename derived>
 arma_inline
-arma_warn_unused
 const Op<derived,op_htrans>
 Base_trans_cx<derived>::ht() const
   {
@@ -962,7 +927,6 @@ Base_trans_cx<derived>::ht() const
 
 template<typename derived>
 arma_inline
-arma_warn_unused
 const Op<derived,op_strans>
 Base_trans_cx<derived>::st() const
   {
@@ -976,7 +940,6 @@ Base_trans_cx<derived>::st() const
 
 template<typename derived>
 arma_inline
-arma_warn_unused
 const Op<derived,op_htrans>
 Base_trans_default<derived>::t() const
   {
@@ -987,7 +950,6 @@ Base_trans_default<derived>::t() const
 
 template<typename derived>
 arma_inline
-arma_warn_unused
 const Op<derived,op_htrans>
 Base_trans_default<derived>::ht() const
   {
@@ -998,7 +960,6 @@ Base_trans_default<derived>::ht() const
 
 template<typename derived>
 arma_inline
-arma_warn_unused
 const Op<derived,op_htrans>
 Base_trans_default<derived>::st() const
   {

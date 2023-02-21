@@ -22,7 +22,6 @@
 
 
 template<typename eT>
-arma_hot
 inline
 void
 op_htrans::apply_mat_noalias(Mat<eT>& out, const Mat<eT>& A, const typename arma_not_cx<eT>::result* junk)
@@ -36,7 +35,6 @@ op_htrans::apply_mat_noalias(Mat<eT>& out, const Mat<eT>& A, const typename arma
 
 
 template<typename eT>
-arma_hot
 inline
 void
 op_htrans::apply_mat_noalias(Mat<eT>& out, const Mat<eT>& A, const typename arma_cx_only<eT>::result* junk)
@@ -88,7 +86,6 @@ op_htrans::apply_mat_noalias(Mat<eT>& out, const Mat<eT>& A, const typename arma
 
 
 template<typename T>
-arma_hot
 inline
 void
 op_htrans::block_worker(std::complex<T>* Y, const std::complex<T>* X, const uword X_n_rows, const uword Y_n_rows, const uword n_rows, const uword n_cols)
@@ -109,7 +106,6 @@ op_htrans::block_worker(std::complex<T>* Y, const std::complex<T>* X, const uwor
 
 
 template<typename T>
-arma_hot
 inline
 void
 op_htrans::apply_mat_noalias_large(Mat< std::complex<T> >& out, const Mat< std::complex<T> >& A)
@@ -165,7 +161,6 @@ op_htrans::apply_mat_noalias_large(Mat< std::complex<T> >& out, const Mat< std::
 
 
 template<typename eT>
-arma_hot
 inline
 void
 op_htrans::apply_mat_inplace(Mat<eT>& out, const typename arma_not_cx<eT>::result* junk)
@@ -179,7 +174,6 @@ op_htrans::apply_mat_inplace(Mat<eT>& out, const typename arma_not_cx<eT>::resul
 
 
 template<typename eT>
-arma_hot
 inline
 void
 op_htrans::apply_mat_inplace(Mat<eT>& out, const typename arma_cx_only<eT>::result* junk)

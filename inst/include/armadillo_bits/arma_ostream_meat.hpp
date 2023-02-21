@@ -425,7 +425,6 @@ arma_ostream::raw_print_elem(std::ostream& o, const std::complex<T>& x)
 
 //! Print a matrix to the specified stream
 template<typename eT>
-arma_cold
 inline
 void
 arma_ostream::print(std::ostream& o, const Mat<eT>& m, const bool modify)
@@ -495,7 +494,6 @@ arma_ostream::print(std::ostream& o, const Mat<eT>& m, const bool modify)
 
 //! Print a cube to the specified stream
 template<typename eT>
-arma_cold
 inline
 void
 arma_ostream::print(std::ostream& o, const Cube<eT>& x, const bool modify)
@@ -538,7 +536,6 @@ arma_ostream::print(std::ostream& o, const Cube<eT>& x, const bool modify)
 //! Print a field to the specified stream
 //! Assumes type oT can be printed, ie. oT has std::ostream& operator<< (std::ostream&, const oT&) 
 template<typename oT>
-arma_cold
 inline
 void
 arma_ostream::print(std::ostream& o, const field<oT>& x)
@@ -612,7 +609,6 @@ arma_ostream::print(std::ostream& o, const field<oT>& x)
 //! Print a subfield to the specified stream
 //! Assumes type oT can be printed, ie. oT has std::ostream& operator<< (std::ostream&, const oT&) 
 template<typename oT>
-arma_cold
 inline
 void
 arma_ostream::print(std::ostream& o, const subview_field<oT>& x)
@@ -683,7 +679,6 @@ arma_ostream::print(std::ostream& o, const subview_field<oT>& x)
 
 
 template<typename eT>
-arma_cold
 inline
 void
 arma_ostream::print_dense(std::ostream& o, const SpMat<eT>& m, const bool modify)
@@ -766,7 +761,6 @@ arma_ostream::print_dense(std::ostream& o, const SpMat<eT>& m, const bool modify
 
 
 template<typename eT>
-arma_cold
 inline
 void
 arma_ostream::print(std::ostream& o, const SpMat<eT>& m, const bool modify)
@@ -869,7 +863,6 @@ arma_ostream::print(std::ostream& o, const SpMat<eT>& m, const bool modify)
 
 
 
-arma_cold
 inline
 void
 arma_ostream::print(std::ostream& o, const SizeMat& S)
@@ -891,7 +884,6 @@ arma_ostream::print(std::ostream& o, const SizeMat& S)
 
 
 
-arma_cold
 inline
 void
 arma_ostream::print(std::ostream& o, const SizeCube& S)
@@ -914,7 +906,6 @@ arma_ostream::print(std::ostream& o, const SizeCube& S)
 
 
 template<typename eT>
-arma_cold
 inline
 void
 arma_ostream::brief_print(std::ostream& o, const Mat<eT>& m, const bool print_size)
@@ -1073,7 +1064,6 @@ arma_ostream::brief_print(std::ostream& o, const Mat<eT>& m, const bool print_si
 
 
 template<typename eT>
-arma_cold
 inline
 void
 arma_ostream::brief_print(std::ostream& o, const Cube<eT>& x)
@@ -1131,7 +1121,6 @@ arma_ostream::brief_print(std::ostream& o, const Cube<eT>& x)
 
 
 template<typename eT>
-arma_cold
 inline
 void
 arma_ostream::brief_print(std::ostream& o, const SpMat<eT>& m)

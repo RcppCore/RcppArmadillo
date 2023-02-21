@@ -16,37 +16,46 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup CubeToMatOp
+//! \addtogroup op_row_as_mat
 //! @{
 
 
 
-template<typename T1, typename op_type>
+template<typename T1>
 inline
-CubeToMatOp<T1, op_type>::CubeToMatOp(const T1& in_m)
-  : m(in_m)
+void
+op_row_as_mat::apply(Mat<typename T1::elem_type>& out, const CubeToMatOp<T1, op_row_as_mat>& expr)
   {
   arma_extra_debug_sigprint();
-  }
-
-
-
-template<typename T1, typename op_type>
-inline
-CubeToMatOp<T1, op_type>::CubeToMatOp(const T1& in_m, const uword in_aux_uword)
-  : m(in_m)
-  , aux_uword(in_aux_uword)
-  {
-  arma_extra_debug_sigprint();
-  }
-
-
-
-template<typename T1, typename op_type>
-inline
-CubeToMatOp<T1, op_type>::~CubeToMatOp()
-  {
-  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const unwrap_cube<T1> U(expr.m);
+  const Cube<eT>&   A = U.M;
+  
+  const uword in_row = expr.aux_uword;
+  
+  arma_debug_check_bounds( (in_row >= A.n_rows), "Cube::row_as_mat(): index out of bounds" );
+  
+  const uword A_n_cols   = A.n_cols;
+  const uword A_n_rows   = A.n_rows;
+  const uword A_n_slices = A.n_slices;
+  
+  out.set_size(A_n_slices, A_n_cols);
+  
+  for(uword s=0; s < A_n_slices; ++s)
+    {
+    const eT*   A_mem = &(A.at(in_row, 0, s));
+          eT* out_mem = &(out.at(s,0));
+    
+    for(uword c=0; c < A_n_cols; ++c)
+      {
+      (*out_mem) = (*A_mem);
+      
+        A_mem += A_n_rows;
+      out_mem += A_n_slices;
+      }
+    }
   }
 
 

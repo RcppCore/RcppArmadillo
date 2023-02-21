@@ -116,9 +116,11 @@ op_inv_spd_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
     
     const bool status = op_inv_spd_rcond::apply_direct(out, inv_state, expr);
     
-    const T local_rcond = inv_state.rcond;  // workaround for bug in gcc 4.8
+    // workaround for bug in gcc 4.8
+    const uword local_size  = inv_state.size;
+    const T     local_rcond = inv_state.rcond;
     
-    if((status == false) || (local_rcond < std::numeric_limits<T>::epsilon()) || arma_isnan(local_rcond))  { return false; }
+    if((status == false) || (local_rcond < ((std::max)(local_size, uword(1)) * std::numeric_limits<T>::epsilon())) || arma_isnan(local_rcond))  { return false; }
     
     return true;
     }
@@ -131,9 +133,11 @@ op_inv_spd_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
     
     const bool status = op_inv_spd_rcond::apply_direct(tmp, inv_state, expr);
     
-    const T local_rcond = inv_state.rcond;  // workaround for bug in gcc 4.8
+    // workaround for bug in gcc 4.8
+    const uword local_size  = inv_state.size;
+    const T     local_rcond = inv_state.rcond;
     
-    if((status == false) || (local_rcond < std::numeric_limits<T>::epsilon()) || arma_isnan(local_rcond))
+    if((status == false) || (local_rcond < ((std::max)(local_size, uword(1)) * std::numeric_limits<T>::epsilon())) || arma_isnan(local_rcond))
       {
       const Mat<eT> A = expr.get_ref();
       
@@ -159,7 +163,7 @@ op_inv_spd_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
       if(is_cx<eT>::yes)  { arma_debug_warn_level(1, "inv_sympd(): given matrix is not hermitian"); }
       }
     else
-    if((is_cx<eT>::yes) && (sympd_helper::check_diag_imag(out) == false))
+    if((is_cx<eT>::yes) && (sym_helper::check_diag_imag(out) == false))
       {
       arma_debug_warn_level(1, "inv_sympd(): imaginary components on diagonal are non-zero");
       }
@@ -233,7 +237,6 @@ op_inv_spd_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
 
 
 template<typename eT>
-arma_cold
 inline
 bool
 op_inv_spd_full::apply_tiny_2x2(Mat<eT>& X)
@@ -264,7 +267,7 @@ op_inv_spd_full::apply_tiny_2x2(Mat<eT>& X)
   if(a <= T(0))  { return false; }
   
   // NOTE: since det_min is positive, this also checks whether det_val is positive
-  if((det_val < det_min) || (det_val > det_max))  { return false; }
+  if((det_val < det_min) || (det_val > det_max) || arma_isnan(det_val))  { return false; }
   
   d /= det_val;
   c /= det_val;
@@ -281,7 +284,6 @@ op_inv_spd_full::apply_tiny_2x2(Mat<eT>& X)
 
 
 template<typename eT>
-arma_cold
 inline
 bool
 op_inv_spd_full::apply_tiny_3x3(Mat<eT>& X)
@@ -312,7 +314,6 @@ op_inv_spd_full::apply_tiny_3x3(Mat<eT>& X)
 
 
 template<typename eT>
-arma_cold
 inline
 bool
 op_inv_spd_full::apply_tiny_4x4(Mat<eT>& X)
@@ -357,6 +358,7 @@ op_inv_spd_rcond::apply_direct(Mat<typename T1::elem_type>& out, op_inv_spd_stat
   typedef typename T1::pod_type   T;
   
   out             = expr.get_ref();
+  out_state.size  = out.n_rows;
   out_state.rcond = T(0);
   
   arma_debug_check( (out.is_square() == false), "inv_sympd(): given matrix must be square sized", [&](){ out.soft_reset(); } );
@@ -369,7 +371,7 @@ op_inv_spd_rcond::apply_direct(Mat<typename T1::elem_type>& out, op_inv_spd_stat
       if(is_cx<eT>::yes)  { arma_debug_warn_level(1, "inv_sympd(): given matrix is not hermitian"); }
       }
     else
-    if((is_cx<eT>::yes) && (sympd_helper::check_diag_imag(out) == false))
+    if((is_cx<eT>::yes) && (sym_helper::check_diag_imag(out) == false))
       {
       arma_debug_warn_level(1, "inv_sympd(): imaginary components on diagonal are non-zero");
       }
@@ -434,7 +436,7 @@ op_inv_spd_rcond::apply_direct(Mat<typename T1::elem_type>& out, op_inv_spd_stat
   
   bool is_sympd_junk = false;
   
-  return auxlib::inv_sympd_rcond(out, is_sympd_junk, out_state.rcond, T(-1));
+  return auxlib::inv_sympd_rcond(out, is_sympd_junk, out_state.rcond);
   }
 
 

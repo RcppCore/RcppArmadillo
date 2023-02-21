@@ -491,13 +491,11 @@ sp_auxlib::eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
     char howmny = 'A';
     char bmat   = 'I'; // We are considering the standard eigenvalue problem.
     
-    podarray<blas_int> select(ncv); // Logical array of dimension NCV.
+    podarray<blas_int> select(ncv, arma_zeros_indicator()); // Logical array of dimension NCV.
     blas_int ldz = n;
     
-    select.zeros();
-    
     // seupd() will output directly into the eigval and eigvec objects.
-    eigval.zeros(n_eigvals);
+    eigval.zeros(   n_eigvals);
     eigvec.zeros(n, n_eigvals);
     
     arpack::seupd(&rvec, &howmny, select.memptr(), eigval.memptr(), eigvec.memptr(), &ldz, (eT*) &sigma, &bmat, &n, which, &nev, &tol, resid.memptr(), &ncv, v.memptr(), &ldv, iparam.memptr(), ipntr.memptr(), workd.memptr(), workl.memptr(), &lworkl, &info);
@@ -877,18 +875,13 @@ sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
     char howmny = 'A';
     char bmat   = 'I'; // We are considering the standard eigenvalue problem.
     
-    podarray<blas_int> select(ncv);      // logical array of dimension NCV
-    podarray<T>        dr(nev + 1);      // real array of dimension NEV + 1
-    podarray<T>        di(nev + 1);      // real array of dimension NEV + 1
-    podarray<T>        z(n * (nev + 1)); // real N by NEV array if HOWMNY = 'A'
-    blas_int ldz = n;
-    podarray<T>        workev(3 * ncv);
+    podarray<blas_int> select(ncv,          arma_zeros_indicator());  // logical array of dimension NCV
+    podarray<T>            dr(nev + 1,      arma_zeros_indicator());  // real array of dimension NEV + 1
+    podarray<T>            di(nev + 1,      arma_zeros_indicator());  // real array of dimension NEV + 1
+    podarray<T>            z(n * (nev + 1), arma_zeros_indicator());  // real N by NEV array if HOWMNY = 'A'
+    podarray<T>       workev(3 * ncv,       arma_zeros_indicator());
     
-    select.zeros();
-    dr.zeros();
-    di.zeros();
-    z.zeros();
-    workev.zeros();
+    blas_int ldz = n;
     
     arpack::neupd(&rvec, &howmny, select.memptr(), dr.memptr(), di.memptr(), z.memptr(), &ldz, (T*) &sigmar, (T*) &sigmai, workev.memptr(), &bmat, &n, which, &nev, &tol, resid.memptr(), &ncv, v.memptr(), &ldv, iparam.memptr(), ipntr.memptr(), workd.memptr(), workl.memptr(), &lworkl, rwork.memptr(), &info);
     
@@ -1124,16 +1117,12 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     char howmny = 'A';
     char bmat   = 'I'; // We are considering the standard eigenvalue problem.
     
-    podarray<blas_int>        select(ncv); // logical array of dimension NCV
-    podarray<std::complex<T>> d(nev + 1);  // complex array of dimension NEV + 1
-    podarray<std::complex<T>> z(n * nev);  // complex N by NEV array if HOWMNY = 'A'
-    blas_int ldz = n;
-    podarray<std::complex<T>> workev(2 * ncv);
+    podarray<blas_int>        select(ncv,     arma_zeros_indicator());  // logical array of dimension NCV
+    podarray<std::complex<T>>      d(nev + 1, arma_zeros_indicator());  // complex array of dimension NEV + 1
+    podarray<std::complex<T>>      z(n * nev, arma_zeros_indicator());  // complex N by NEV array if HOWMNY = 'A'
+    podarray<std::complex<T>> workev(2 * ncv, arma_zeros_indicator());
     
-    select.zeros();
-    d.zeros();
-    z.zeros();
-    workev.zeros();
+    blas_int ldz = n;
     
     // Prepare the outputs; neupd() will write directly to them.
     eigval.zeros(n_eigvals);

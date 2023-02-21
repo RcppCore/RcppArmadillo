@@ -611,7 +611,6 @@ Row<eT>::operator=(const subview_cube<eT>& X)
 
 template<typename eT>
 inline
-arma_deprecated
 mat_injector< Row<eT> >
 Row<eT>::operator<<(const eT val)
   {
@@ -622,7 +621,6 @@ Row<eT>::operator<<(const eT val)
 
 template<typename eT>
 arma_inline
-arma_warn_unused
 const Op<Row<eT>,op_htrans>
 Row<eT>::t() const
   {
@@ -633,7 +631,6 @@ Row<eT>::t() const
 
 template<typename eT>
 arma_inline
-arma_warn_unused
 const Op<Row<eT>,op_htrans>
 Row<eT>::ht() const
   {
@@ -644,7 +641,6 @@ Row<eT>::ht() const
 
 template<typename eT>
 arma_inline
-arma_warn_unused
 const Op<Row<eT>,op_strans>
 Row<eT>::st() const
   {
@@ -655,7 +651,6 @@ Row<eT>::st() const
 
 template<typename eT>
 arma_inline
-arma_warn_unused
 const Op<Row<eT>,op_strans>
 Row<eT>::as_col() const
   {
@@ -1055,7 +1050,6 @@ Row<eT>::shed_cols(const Base<uword, T1>& indices)
 
 
 template<typename eT>
-arma_deprecated
 inline
 void
 Row<eT>::insert_cols(const uword col_num, const uword N, const bool set_to_zero)
@@ -1125,7 +1119,6 @@ Row<eT>::insert_cols(const uword col_num, const Base<eT,T1>& X)
 
 template<typename eT>
 arma_inline
-arma_warn_unused
 eT&
 Row<eT>::at(const uword i)
   {
@@ -1136,7 +1129,6 @@ Row<eT>::at(const uword i)
 
 template<typename eT>
 arma_inline
-arma_warn_unused
 const eT&
 Row<eT>::at(const uword i) const
   {
@@ -1147,7 +1139,6 @@ Row<eT>::at(const uword i) const
 
 template<typename eT>
 arma_inline
-arma_warn_unused
 eT&
 Row<eT>::at(const uword, const uword in_col)
   {
@@ -1158,7 +1149,6 @@ Row<eT>::at(const uword, const uword in_col)
 
 template<typename eT>
 arma_inline
-arma_warn_unused
 const eT&
 Row<eT>::at(const uword, const uword in_col) const
   {
@@ -1579,7 +1569,6 @@ Row<eT>::fixed<fixed_n_elem>::operator=(const fixed<fixed_n_elem>& X)
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 const Op< typename Row<eT>::template fixed<fixed_n_elem>::Row_fixed_type, op_htrans >
 Row<eT>::fixed<fixed_n_elem>::t() const
   {
@@ -1591,7 +1580,6 @@ Row<eT>::fixed<fixed_n_elem>::t() const
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 const Op< typename Row<eT>::template fixed<fixed_n_elem>::Row_fixed_type, op_htrans >
 Row<eT>::fixed<fixed_n_elem>::ht() const
   {
@@ -1603,7 +1591,6 @@ Row<eT>::fixed<fixed_n_elem>::ht() const
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 const Op< typename Row<eT>::template fixed<fixed_n_elem>::Row_fixed_type, op_strans >
 Row<eT>::fixed<fixed_n_elem>::st() const
   {
@@ -1615,7 +1602,6 @@ Row<eT>::fixed<fixed_n_elem>::st() const
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 const eT&
 Row<eT>::fixed<fixed_n_elem>::at_alt(const uword ii) const
   {
@@ -1637,7 +1623,6 @@ Row<eT>::fixed<fixed_n_elem>::at_alt(const uword ii) const
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 eT&
 Row<eT>::fixed<fixed_n_elem>::operator[] (const uword ii)
   {
@@ -1649,7 +1634,6 @@ Row<eT>::fixed<fixed_n_elem>::operator[] (const uword ii)
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 const eT&
 Row<eT>::fixed<fixed_n_elem>::operator[] (const uword ii) const
   {
@@ -1661,7 +1645,6 @@ Row<eT>::fixed<fixed_n_elem>::operator[] (const uword ii) const
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 eT&
 Row<eT>::fixed<fixed_n_elem>::at(const uword ii)
   {
@@ -1673,7 +1656,6 @@ Row<eT>::fixed<fixed_n_elem>::at(const uword ii)
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 const eT&
 Row<eT>::fixed<fixed_n_elem>::at(const uword ii) const
   {
@@ -1685,7 +1667,6 @@ Row<eT>::fixed<fixed_n_elem>::at(const uword ii) const
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 eT&
 Row<eT>::fixed<fixed_n_elem>::operator() (const uword ii)
   {
@@ -1699,7 +1680,6 @@ Row<eT>::fixed<fixed_n_elem>::operator() (const uword ii)
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 const eT&
 Row<eT>::fixed<fixed_n_elem>::operator() (const uword ii) const
   {
@@ -1713,7 +1693,6 @@ Row<eT>::fixed<fixed_n_elem>::operator() (const uword ii) const
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 eT&
 Row<eT>::fixed<fixed_n_elem>::at(const uword, const uword in_col)
   {
@@ -1725,7 +1704,6 @@ Row<eT>::fixed<fixed_n_elem>::at(const uword, const uword in_col)
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 const eT&
 Row<eT>::fixed<fixed_n_elem>::at(const uword, const uword in_col) const
   {
@@ -1737,7 +1715,6 @@ Row<eT>::fixed<fixed_n_elem>::at(const uword, const uword in_col) const
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 eT&
 Row<eT>::fixed<fixed_n_elem>::operator() (const uword in_row, const uword in_col)
   {
@@ -1751,7 +1728,6 @@ Row<eT>::fixed<fixed_n_elem>::operator() (const uword in_row, const uword in_col
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 const eT&
 Row<eT>::fixed<fixed_n_elem>::operator() (const uword in_row, const uword in_col) const
   {
@@ -1765,7 +1741,6 @@ Row<eT>::fixed<fixed_n_elem>::operator() (const uword in_row, const uword in_col
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 eT*
 Row<eT>::fixed<fixed_n_elem>::memptr()
   {
@@ -1777,7 +1752,6 @@ Row<eT>::fixed<fixed_n_elem>::memptr()
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 const eT*
 Row<eT>::fixed<fixed_n_elem>::memptr() const
   {
@@ -1788,7 +1762,6 @@ Row<eT>::fixed<fixed_n_elem>::memptr() const
 
 template<typename eT>
 template<uword fixed_n_elem>
-arma_hot
 inline
 const Row<eT>&
 Row<eT>::fixed<fixed_n_elem>::fill(const eT val)
@@ -1806,7 +1779,6 @@ Row<eT>::fixed<fixed_n_elem>::fill(const eT val)
 
 template<typename eT>
 template<uword fixed_n_elem>
-arma_hot
 inline
 const Row<eT>&
 Row<eT>::fixed<fixed_n_elem>::zeros()
@@ -1824,7 +1796,6 @@ Row<eT>::fixed<fixed_n_elem>::zeros()
 
 template<typename eT>
 template<uword fixed_n_elem>
-arma_hot
 inline
 const Row<eT>&
 Row<eT>::fixed<fixed_n_elem>::ones()

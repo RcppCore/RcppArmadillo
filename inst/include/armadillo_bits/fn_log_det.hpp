@@ -55,8 +55,8 @@ log_det
 
 
 template<typename T1>
-inline
 arma_warn_unused
+inline
 std::complex<typename T1::pod_type>
 log_det
   (
@@ -124,8 +124,8 @@ log_det_sympd
 
 
 template<typename T1>
-inline
 arma_warn_unused
+inline
 typename T1::pod_type
 log_det_sympd
   (

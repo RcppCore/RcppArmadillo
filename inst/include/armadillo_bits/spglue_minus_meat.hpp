@@ -22,7 +22,6 @@
 
 
 template<typename T1, typename T2>
-arma_hot
 inline
 void
 spglue_minus::apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglue_minus>& X)
@@ -53,7 +52,6 @@ spglue_minus::apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglu
 
 
 template<typename eT, typename T1, typename T2>
-arma_hot
 inline
 void
 spglue_minus::apply_noalias(SpMat<eT>& out, const SpProxy<T1>& pa, const SpProxy<T2>& pb)
@@ -160,7 +158,6 @@ spglue_minus::apply_noalias(SpMat<eT>& out, const SpProxy<T1>& pa, const SpProxy
 
 
 template<typename eT>
-arma_hot
 inline
 void
 spglue_minus::apply_noalias(SpMat<eT>& out, const SpMat<eT>& A, const SpMat<eT>& B)

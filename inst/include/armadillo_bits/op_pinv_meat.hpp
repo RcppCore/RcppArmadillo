@@ -115,12 +115,12 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   
   const bool is_sym_size_ok = (A.n_rows == A.n_cols) && (A.n_rows > (is_cx<eT>::yes ? uword(20) : uword(40)));
   
-  if( (is_sym_size_ok) && (arma_config::optimise_sympd) && (auxlib::crippled_lapack(A) == false) )
+  if( (is_sym_size_ok) && (arma_config::optimise_sym) && (auxlib::crippled_lapack(A) == false) )
     {
     bool is_approx_sym   = false;
     bool is_approx_sympd = false;
     
-    sympd_helper::analyse_matrix(is_approx_sym, is_approx_sympd, A);
+    sym_helper::analyse_matrix(is_approx_sym, is_approx_sympd, A);
     
     do_sym = ((is_cx<eT>::no) ? (is_approx_sym) : (is_approx_sym && is_approx_sympd));
     }

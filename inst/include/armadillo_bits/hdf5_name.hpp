@@ -28,12 +28,13 @@ namespace hdf5_opts
     {
     const flag_type flags;
     
-    inline explicit opts(const flag_type in_flags);
+    inline constexpr explicit opts(const flag_type in_flags);
     
     inline const opts operator+(const opts& rhs) const;
     };
   
   inline
+  constexpr
   opts::opts(const flag_type in_flags)
     : flags(in_flags)
     {}
@@ -50,20 +51,20 @@ namespace hdf5_opts
   // The values below (eg. 1u << 0) are for internal Armadillo use only.
   // The values can change without notice.
   
-  static const flag_type flag_none    = flag_type(0      );
-  static const flag_type flag_trans   = flag_type(1u << 0);
-  static const flag_type flag_append  = flag_type(1u << 1);
-  static const flag_type flag_replace = flag_type(1u << 2);
+  static constexpr flag_type flag_none    = flag_type(0      );
+  static constexpr flag_type flag_trans   = flag_type(1u << 0);
+  static constexpr flag_type flag_append  = flag_type(1u << 1);
+  static constexpr flag_type flag_replace = flag_type(1u << 2);
   
-  struct opts_none    : public opts { inline opts_none()    : opts(flag_none   ) {} };
-  struct opts_trans   : public opts { inline opts_trans()   : opts(flag_trans  ) {} };
-  struct opts_append  : public opts { inline opts_append()  : opts(flag_append ) {} };
-  struct opts_replace : public opts { inline opts_replace() : opts(flag_replace) {} };
+  struct opts_none    : public opts { inline constexpr opts_none()    : opts(flag_none   ) {} };
+  struct opts_trans   : public opts { inline constexpr opts_trans()   : opts(flag_trans  ) {} };
+  struct opts_append  : public opts { inline constexpr opts_append()  : opts(flag_append ) {} };
+  struct opts_replace : public opts { inline constexpr opts_replace() : opts(flag_replace) {} };
   
-  static const opts_none    none;
-  static const opts_trans   trans;
-  static const opts_append  append;
-  static const opts_replace replace;
+  static constexpr opts_none    none;
+  static constexpr opts_trans   trans;
+  static constexpr opts_append  append;
+  static constexpr opts_replace replace;
   }
 
 

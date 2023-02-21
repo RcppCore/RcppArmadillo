@@ -361,7 +361,8 @@ op_min::direct_min(const eT* const X, const uword n_elem)
   {
   arma_extra_debug_sigprint();
   
-  eT min_val = priv::most_pos<eT>();
+  eT min_val_i = priv::most_pos<eT>();
+  eT min_val_j = priv::most_pos<eT>();
   
   uword i,j;
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
@@ -369,32 +370,34 @@ op_min::direct_min(const eT* const X, const uword n_elem)
     const eT X_i = X[i];
     const eT X_j = X[j];
     
-    if(X_i < min_val) { min_val = X_i; }
-    if(X_j < min_val) { min_val = X_j; }
+    if(X_i < min_val_i) { min_val_i = X_i; }
+    if(X_j < min_val_j) { min_val_j = X_j; }
     }
   
   if(i < n_elem)
     {
     const eT X_i = X[i];
     
-    if(X_i < min_val) { min_val = X_i; }
+    if(X_i < min_val_i) { min_val_i = X_i; }
     }
   
-  return min_val;
+  return (min_val_i < min_val_j) ? min_val_i : min_val_j;
   }
 
 
 
 template<typename eT>
-inline 
+inline
 eT
 op_min::direct_min(const eT* const X, const uword n_elem, uword& index_of_min_val)
   {
   arma_extra_debug_sigprint();
   
-  eT min_val = priv::most_pos<eT>();
+  eT min_val_i = priv::most_pos<eT>();
+  eT min_val_j = priv::most_pos<eT>();
   
-  uword best_index = 0;
+  uword best_index_i = 0;
+  uword best_index_j = 0;
   
   uword i,j;
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
@@ -402,33 +405,20 @@ op_min::direct_min(const eT* const X, const uword n_elem, uword& index_of_min_va
     const eT X_i = X[i];
     const eT X_j = X[j];
     
-    if(X_i < min_val)
-      {
-      min_val    = X_i;
-      best_index = i;
-      }
-    
-    if(X_j < min_val)
-      {
-      min_val    = X_j;
-      best_index = j;
-      }
+    if(X_i < min_val_i)  { min_val_i = X_i; best_index_i = i; }
+    if(X_j < min_val_j)  { min_val_j = X_j; best_index_j = j; }
     }
   
   if(i < n_elem)
     {
     const eT X_i = X[i];
     
-    if(X_i < min_val)
-      {
-      min_val    = X_i;
-      best_index = i;
-      }
+    if(X_i < min_val_i)  { min_val_i = X_i; best_index_i = i; }
     }
   
-  index_of_min_val = best_index;
+  index_of_min_val = (min_val_i < min_val_j) ? best_index_i : best_index_j;
   
-  return min_val;
+  return (min_val_i < min_val_j) ? min_val_i : min_val_j;
   }
 
 
@@ -442,7 +432,8 @@ op_min::direct_min(const Mat<eT>& X, const uword row)
   
   const uword X_n_cols = X.n_cols;
   
-  eT min_val = priv::most_pos<eT>();
+  eT min_val_i = priv::most_pos<eT>();
+  eT min_val_j = priv::most_pos<eT>();
   
   uword i,j;
   for(i=0, j=1; j < X_n_cols; i+=2, j+=2)
@@ -450,18 +441,18 @@ op_min::direct_min(const Mat<eT>& X, const uword row)
     const eT tmp_i = X.at(row,i);
     const eT tmp_j = X.at(row,j);
     
-    if(tmp_i < min_val) { min_val = tmp_i; }
-    if(tmp_j < min_val) { min_val = tmp_j; }
+    if(tmp_i < min_val_i) { min_val_i = tmp_i; }
+    if(tmp_j < min_val_j) { min_val_j = tmp_j; }
     }
   
   if(i < X_n_cols)
     {
     const eT tmp_i = X.at(row,i);
     
-    if(tmp_i < min_val) { min_val = tmp_i; }
+    if(tmp_i < min_val_i) { min_val_i = tmp_i; }
     }
   
-  return min_val;
+  return (min_val_i < min_val_j) ? min_val_i : min_val_j;
   }
 
 
@@ -479,14 +470,15 @@ op_min::min(const subview<eT>& X)
     
     return Datum<eT>::nan;
     }
-    
+  
   const uword X_n_rows = X.n_rows;
   const uword X_n_cols = X.n_cols;
   
-  eT min_val = priv::most_pos<eT>();
-  
   if(X_n_rows == 1)
     {
+    eT min_val_i = priv::most_pos<eT>();
+    eT min_val_j = priv::most_pos<eT>();
+    
     const Mat<eT>& A = X.m;
     
     const uword start_row = X.aux_row1;
@@ -500,23 +492,25 @@ op_min::min(const subview<eT>& X)
       const eT tmp_i = A.at(start_row, i);
       const eT tmp_j = A.at(start_row, j);
       
-      if(tmp_i < min_val) { min_val = tmp_i; }
-      if(tmp_j < min_val) { min_val = tmp_j; }
+      if(tmp_i < min_val_i) { min_val_i = tmp_i; }
+      if(tmp_j < min_val_j) { min_val_j = tmp_j; }
       }
     
     if(i < end_col_p1)
       {
       const eT tmp_i = A.at(start_row, i);
       
-      if(tmp_i < min_val) { min_val = tmp_i; }
+      if(tmp_i < min_val_i) { min_val_i = tmp_i; }
       }
+    
+    return (min_val_i < min_val_j) ? min_val_i : min_val_j;
     }
-  else
+  
+  eT min_val = priv::most_pos<eT>();
+  
+  for(uword col=0; col < X_n_cols; ++col)
     {
-    for(uword col=0; col < X_n_cols; ++col)
-      {
-      min_val = (std::min)(min_val, op_min::direct_min(X.colptr(col), X_n_rows));
-      }
+    min_val = (std::min)(min_val, op_min::direct_min(X.colptr(col), X_n_rows));
     }
   
   return min_val;
@@ -544,7 +538,8 @@ op_min::min(const Base<typename T1::elem_type,T1>& X)
     return Datum<eT>::nan;
     }
   
-  eT min_val = priv::most_pos<eT>();
+  eT min_val_i = priv::most_pos<eT>();
+  eT min_val_j = priv::most_pos<eT>();
   
   if(Proxy<T1>::use_at == false)
     {
@@ -559,15 +554,15 @@ op_min::min(const Base<typename T1::elem_type,T1>& X)
       const eT tmp_i = A[i];
       const eT tmp_j = A[j];
       
-      if(tmp_i < min_val) { min_val = tmp_i; }
-      if(tmp_j < min_val) { min_val = tmp_j; }
+      if(tmp_i < min_val_i) { min_val_i = tmp_i; }
+      if(tmp_j < min_val_j) { min_val_j = tmp_j; }
       }
     
     if(i < n_elem)
       {
       const eT tmp_i = A[i];
       
-      if(tmp_i < min_val) { min_val = tmp_i; }
+      if(tmp_i < min_val_i) { min_val_i = tmp_i; }
       }
     }
   else
@@ -583,15 +578,15 @@ op_min::min(const Base<typename T1::elem_type,T1>& X)
         const eT tmp_i = P.at(0,i);
         const eT tmp_j = P.at(0,j);
         
-        if(tmp_i < min_val) { min_val = tmp_i; }
-        if(tmp_j < min_val) { min_val = tmp_j; }
+        if(tmp_i < min_val_i) { min_val_i = tmp_i; }
+        if(tmp_j < min_val_j) { min_val_j = tmp_j; }
         }
       
       if(i < n_cols)
         {
         const eT tmp_i = P.at(0,i);
         
-        if(tmp_i < min_val) { min_val = tmp_i; }
+        if(tmp_i < min_val_i) { min_val_i = tmp_i; }
         }
       }
     else
@@ -604,21 +599,21 @@ op_min::min(const Base<typename T1::elem_type,T1>& X)
           const eT tmp_i = P.at(i,col);
           const eT tmp_j = P.at(j,col);
           
-          if(tmp_i < min_val) { min_val = tmp_i; }
-          if(tmp_j < min_val) { min_val = tmp_j; }
+          if(tmp_i < min_val_i) { min_val_i = tmp_i; }
+          if(tmp_j < min_val_j) { min_val_j = tmp_j; }
           }
           
         if(i < n_rows)
           {
           const eT tmp_i = P.at(i,col);
           
-          if(tmp_i < min_val) { min_val = tmp_i; }
+          if(tmp_i < min_val_i) { min_val_i = tmp_i; }
           }
         }
       }
     }
   
-  return min_val;
+  return (min_val_i < min_val_j) ? min_val_i : min_val_j;
   }
 
 
@@ -647,6 +642,9 @@ op_min::min(const BaseCube<typename T1::elem_type,T1>& X)
   
   if(ProxyCube<T1>::use_at == false)
     {
+    eT min_val_i = priv::most_pos<eT>();
+    eT min_val_j = priv::most_pos<eT>();
+    
     typedef typename ProxyCube<T1>::ea_type ea_type;
     
     ea_type A = P.get_ea();
@@ -658,16 +656,18 @@ op_min::min(const BaseCube<typename T1::elem_type,T1>& X)
       const eT tmp_i = A[i];
       const eT tmp_j = A[j];
       
-      if(tmp_i < min_val) { min_val = tmp_i; }
-      if(tmp_j < min_val) { min_val = tmp_j; }
+      if(tmp_i < min_val_i) { min_val_i = tmp_i; }
+      if(tmp_j < min_val_j) { min_val_j = tmp_j; }
       }
     
     if(i < n_elem)
       {
       const eT tmp_i = A[i];
       
-      if(tmp_i < min_val) { min_val = tmp_i; }
+      if(tmp_i < min_val_i) { min_val_i = tmp_i; }
       }
+    
+    min_val = (min_val_i < min_val_j) ? min_val_i : min_val_j;
     }
   else
     {

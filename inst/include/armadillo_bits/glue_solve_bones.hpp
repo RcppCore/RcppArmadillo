@@ -104,12 +104,13 @@ namespace solve_opts
     {
     const uword flags;
     
-    inline explicit opts(const uword in_flags);
+    inline constexpr explicit opts(const uword in_flags);
     
     inline const opts operator+(const opts& rhs) const;
     };
   
   inline
+  constexpr
   opts::opts(const uword in_flags)
     : flags(in_flags)
     {}
@@ -140,33 +141,33 @@ namespace solve_opts
   static constexpr uword flag_no_trimat    = uword(1u << 10);
   static constexpr uword flag_force_approx = uword(1u << 11);
   
-  struct opts_none         : public opts { inline opts_none()         : opts(flag_none        ) {} };
-  struct opts_fast         : public opts { inline opts_fast()         : opts(flag_fast        ) {} };
-  struct opts_equilibrate  : public opts { inline opts_equilibrate()  : opts(flag_equilibrate ) {} };
-  struct opts_no_approx    : public opts { inline opts_no_approx()    : opts(flag_no_approx   ) {} };
-  struct opts_triu         : public opts { inline opts_triu()         : opts(flag_triu        ) {} };
-  struct opts_tril         : public opts { inline opts_tril()         : opts(flag_tril        ) {} };
-  struct opts_no_band      : public opts { inline opts_no_band()      : opts(flag_no_band     ) {} };
-  struct opts_no_sympd     : public opts { inline opts_no_sympd()     : opts(flag_no_sympd    ) {} };
-  struct opts_allow_ugly   : public opts { inline opts_allow_ugly()   : opts(flag_allow_ugly  ) {} };
-  struct opts_likely_sympd : public opts { inline opts_likely_sympd() : opts(flag_likely_sympd) {} };
-  struct opts_refine       : public opts { inline opts_refine()       : opts(flag_refine      ) {} };
-  struct opts_no_trimat    : public opts { inline opts_no_trimat()    : opts(flag_no_trimat   ) {} };
-  struct opts_force_approx : public opts { inline opts_force_approx() : opts(flag_force_approx) {} };
+  struct opts_none         : public opts { inline constexpr opts_none()         : opts(flag_none        ) {} };
+  struct opts_fast         : public opts { inline constexpr opts_fast()         : opts(flag_fast        ) {} };
+  struct opts_equilibrate  : public opts { inline constexpr opts_equilibrate()  : opts(flag_equilibrate ) {} };
+  struct opts_no_approx    : public opts { inline constexpr opts_no_approx()    : opts(flag_no_approx   ) {} };
+  struct opts_triu         : public opts { inline constexpr opts_triu()         : opts(flag_triu        ) {} };
+  struct opts_tril         : public opts { inline constexpr opts_tril()         : opts(flag_tril        ) {} };
+  struct opts_no_band      : public opts { inline constexpr opts_no_band()      : opts(flag_no_band     ) {} };
+  struct opts_no_sympd     : public opts { inline constexpr opts_no_sympd()     : opts(flag_no_sympd    ) {} };
+  struct opts_allow_ugly   : public opts { inline constexpr opts_allow_ugly()   : opts(flag_allow_ugly  ) {} };
+  struct opts_likely_sympd : public opts { inline constexpr opts_likely_sympd() : opts(flag_likely_sympd) {} };
+  struct opts_refine       : public opts { inline constexpr opts_refine()       : opts(flag_refine      ) {} };
+  struct opts_no_trimat    : public opts { inline constexpr opts_no_trimat()    : opts(flag_no_trimat   ) {} };
+  struct opts_force_approx : public opts { inline constexpr opts_force_approx() : opts(flag_force_approx) {} };
   
-  static const opts_none         none;
-  static const opts_fast         fast;
-  static const opts_equilibrate  equilibrate;
-  static const opts_no_approx    no_approx;
-  static const opts_triu         triu;
-  static const opts_tril         tril;
-  static const opts_no_band      no_band;
-  static const opts_no_sympd     no_sympd;
-  static const opts_allow_ugly   allow_ugly;
-  static const opts_likely_sympd likely_sympd;
-  static const opts_refine       refine;
-  static const opts_no_trimat    no_trimat;
-  static const opts_force_approx force_approx;
+  static constexpr opts_none         none;
+  static constexpr opts_fast         fast;
+  static constexpr opts_equilibrate  equilibrate;
+  static constexpr opts_no_approx    no_approx;
+  static constexpr opts_triu         triu;
+  static constexpr opts_tril         tril;
+  static constexpr opts_no_band      no_band;
+  static constexpr opts_no_sympd     no_sympd;
+  static constexpr opts_allow_ugly   allow_ugly;
+  static constexpr opts_likely_sympd likely_sympd;
+  static constexpr opts_refine       refine;
+  static constexpr opts_no_trimat    no_trimat;
+  static constexpr opts_force_approx force_approx;
   }
 
 

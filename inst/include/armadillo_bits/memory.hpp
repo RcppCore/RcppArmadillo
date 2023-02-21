@@ -24,7 +24,7 @@ class memory
   {
   public:
   
-  template<typename eT> inline arma_malloc static eT* acquire(const uword n_elem);
+  template<typename eT> arma_malloc inline static eT* acquire(const uword n_elem);
   
   template<typename eT> arma_inline static void release(eT* mem);
   
@@ -36,8 +36,8 @@ class memory
 
 
 template<typename eT>
-inline
 arma_malloc
+inline
 eT*
 memory::acquire(const uword n_elem)
   {

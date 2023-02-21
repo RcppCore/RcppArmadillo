@@ -24,14 +24,14 @@
 template<typename elem_type, typename derived>
 struct BaseCube_eval_Cube
   {
-  arma_inline arma_warn_unused const derived& eval() const;
+  arma_warn_unused arma_inline const derived& eval() const;
   };
 
 
 template<typename elem_type, typename derived>
 struct BaseCube_eval_expr
   {
-  inline arma_warn_unused Cube<elem_type> eval() const;   //!< force the immediate evaluation of a delayed expression
+  arma_warn_unused inline Cube<elem_type> eval() const;   //!< force the immediate evaluation of a delayed expression
   };
 
 
@@ -39,7 +39,7 @@ template<typename elem_type, typename derived, bool condition>
 struct BaseCube_eval {};
 
 template<typename elem_type, typename derived>
-struct BaseCube_eval<elem_type, derived, true>  { typedef BaseCube_eval_Cube<elem_type, derived>  result; };
+struct BaseCube_eval<elem_type, derived, true>  { typedef BaseCube_eval_Cube<elem_type, derived> result; };
 
 template<typename elem_type, typename derived>
 struct BaseCube_eval<elem_type, derived, false> { typedef BaseCube_eval_expr<elem_type, derived> result; };
@@ -62,18 +62,21 @@ struct BaseCube
   arma_cold inline void brief_print(                           const std::string extra_text = "") const;
   arma_cold inline void brief_print(std::ostream& user_stream, const std::string extra_text = "") const;
   
-  inline arma_warn_unused elem_type min() const;
-  inline arma_warn_unused elem_type max() const;
+  arma_warn_unused inline elem_type min() const;
+  arma_warn_unused inline elem_type max() const;
   
-  inline arma_warn_unused uword index_min() const;
-  inline arma_warn_unused uword index_max() const;
+  arma_warn_unused inline uword index_min() const;
+  arma_warn_unused inline uword index_max() const;
   
-  inline arma_warn_unused bool is_zero(const typename get_pod_type<elem_type>::result tol = 0) const;
+  arma_warn_unused inline bool is_zero(const typename get_pod_type<elem_type>::result tol = 0) const;
   
-  inline arma_warn_unused bool is_empty()  const;
-  inline arma_warn_unused bool is_finite() const;
-  inline arma_warn_unused bool has_inf()   const;
-  inline arma_warn_unused bool has_nan()   const;
+  arma_warn_unused inline bool is_empty()  const;
+  arma_warn_unused inline bool is_finite() const;
+  arma_warn_unused inline bool has_inf()   const;
+  arma_warn_unused inline bool has_nan()   const;
+  
+  arma_warn_unused inline const CubeToMatOp<derived, op_row_as_mat> row_as_mat(const uword in_row) const;
+  arma_warn_unused inline const CubeToMatOp<derived, op_col_as_mat> col_as_mat(const uword in_col) const;
   };
 
 

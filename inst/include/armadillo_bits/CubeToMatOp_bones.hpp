@@ -30,11 +30,11 @@ class CubeToMatOp : public Base< typename T1::elem_type, CubeToMatOp<T1, op_type
   typedef typename get_pod_type<elem_type>::result pod_type;
   
   inline explicit CubeToMatOp(const T1& in_m);
-  inline          CubeToMatOp(const T1& in_m, const elem_type in_aux);
+  inline          CubeToMatOp(const T1& in_m, const uword in_aux_uword);
   inline         ~CubeToMatOp();
   
-  arma_aligned const T1&       m;            //!< the operand; must be derived from BaseCube
-  arma_aligned       elem_type aux;          //!< auxiliary data, using the element type as used by T1
+  arma_aligned const T1&   m;            //!< the operand; must be derived from BaseCube
+  arma_aligned       uword aux_uword;    //!< auxiliary data, uword format
   
   static constexpr bool is_row  = op_type::template traits<T1>::is_row;
   static constexpr bool is_col  = op_type::template traits<T1>::is_col;

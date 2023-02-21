@@ -51,58 +51,24 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup fft_engine
+//! \addtogroup fft_engine_kissfft
 //! @{
 
 
-template<typename cx_type, uword fixed_N, bool> struct fft_store {};
-
-template<typename cx_type, uword fixed_N>
-struct fft_store<cx_type, fixed_N, true>
-  {
-  static constexpr uword N = fixed_N;
-  
-  arma_aligned cx_type coeffs_array[fixed_N];
-  
-  inline fft_store()      {}
-  inline fft_store(uword) {}
-  
-  arma_inline       cx_type* coeffs_ptr()       { return &coeffs_array[0]; }
-  arma_inline const cx_type* coeffs_ptr() const { return &coeffs_array[0]; }
-  };
-
-
-
-template<typename cx_type, uword fixed_N>
-struct fft_store<cx_type, fixed_N, false>
-  {
-  const uword N;
-  
-  podarray<cx_type> coeffs_array;
-  
-  inline fft_store()           : N(0)    {}
-  inline fft_store(uword in_N) : N(in_N) { coeffs_array.set_size(N); }
-  
-  arma_inline       cx_type* coeffs_ptr()       { return coeffs_array.memptr(); }
-  arma_inline const cx_type* coeffs_ptr() const { return coeffs_array.memptr(); }
-  };
-
-
-
-template<typename cx_type, bool inverse, uword fixed_N = 0>
-class fft_engine : public fft_store<cx_type, fixed_N, (fixed_N > 0)>
+template<typename cx_type, bool inverse>
+class fft_engine_kissfft
   {
   public:
   
   typedef typename get_pod_type<cx_type>::result T;
   
-  using fft_store<cx_type, fixed_N, (fixed_N > 0)>::N;
-  using fft_store<cx_type, fixed_N, (fixed_N > 0)>::coeffs_ptr;
+  const uword N;
+  
+  podarray<cx_type> coeffs_array;
+  podarray<cx_type> tmp_array;
   
   podarray<uword>   residue;
   podarray<uword>   radix;
-  
-  podarray<cx_type> tmp_array;
   
   
   template<bool fill>
@@ -141,8 +107,8 @@ class fft_engine : public fft_store<cx_type, fixed_N, (fixed_N > 0)>
   
   
   inline
-  fft_engine(const uword in_N)
-    : fft_store< cx_type, fixed_N, (fixed_N > 0) >(in_N)
+  fft_engine_kissfft(const uword in_N)
+    : N(in_N)
     {
     arma_extra_debug_sigprint();
     
@@ -156,7 +122,9 @@ class fft_engine : public fft_store<cx_type, fixed_N, (fixed_N > 0)>
     
     // calculate the constant coefficients
     
-    cx_type* coeffs = coeffs_ptr();
+    coeffs_array.set_size(N);
+    
+    cx_type* coeffs = coeffs_array.memptr();
     
     const T k = T( (inverse) ? +2 : -2 ) * std::acos( T(-1) ) / T(N);
     
@@ -168,11 +136,11 @@ class fft_engine : public fft_store<cx_type, fixed_N, (fixed_N > 0)>
   arma_hot
   inline
   void
-  butterfly_2(cx_type* Y, const uword stride, const uword m)
+  butterfly_2(cx_type* Y, const uword stride, const uword m) const
     {
-    arma_extra_debug_sigprint();
+    // arma_extra_debug_sigprint();
     
-    const cx_type* coeffs = coeffs_ptr();
+    const cx_type* coeffs = coeffs_array.memptr();
     
     for(uword i=0; i < m; ++i)
       {
@@ -188,14 +156,14 @@ class fft_engine : public fft_store<cx_type, fixed_N, (fixed_N > 0)>
   arma_hot
   inline
   void
-  butterfly_3(cx_type* Y, const uword stride, const uword m)
+  butterfly_3(cx_type* Y, const uword stride, const uword m) const
     {
-    arma_extra_debug_sigprint();
+    // arma_extra_debug_sigprint();
     
     arma_aligned cx_type tmp[5];
     
-    cx_type* coeffs1 = coeffs_ptr();
-    cx_type* coeffs2 = coeffs1;
+    const cx_type* coeffs1 = coeffs_array.memptr();
+    const cx_type* coeffs2 = coeffs1;
     
     const T coeff_sm_imag = coeffs1[stride*m].imag();
     
@@ -234,13 +202,13 @@ class fft_engine : public fft_store<cx_type, fixed_N, (fixed_N > 0)>
   arma_hot
   inline
   void
-  butterfly_4(cx_type* Y, const uword stride, const uword m)
+  butterfly_4(cx_type* Y, const uword stride, const uword m) const
     {
-    arma_extra_debug_sigprint();
+    // arma_extra_debug_sigprint();
     
     arma_aligned cx_type tmp[7];
     
-    const cx_type* coeffs = coeffs_ptr();
+    const cx_type* coeffs = coeffs_array.memptr();
     
     const uword m2 = m*2;
     const uword m3 = m*3;
@@ -274,16 +242,16 @@ class fft_engine : public fft_store<cx_type, fixed_N, (fixed_N > 0)>
   
   
   
-  inline
   arma_hot
+  inline
   void
-  butterfly_5(cx_type* Y, const uword stride, const uword m)
+  butterfly_5(cx_type* Y, const uword stride, const uword m) const
     {
-    arma_extra_debug_sigprint();
+    // arma_extra_debug_sigprint();
     
     arma_aligned cx_type tmp[13];
     
-    const cx_type* coeffs = coeffs_ptr();
+    const cx_type* coeffs = coeffs_array.memptr();
     
     const T a_real = coeffs[stride*1*m].real();
     const T a_imag = coeffs[stride*1*m].imag();
@@ -343,9 +311,9 @@ class fft_engine : public fft_store<cx_type, fixed_N, (fixed_N > 0)>
   void
   butterfly_N(cx_type* Y, const uword stride, const uword m, const uword r)
     {
-    arma_extra_debug_sigprint();
+    // arma_extra_debug_sigprint();
     
-    const cx_type* coeffs = coeffs_ptr();
+    const cx_type* coeffs = coeffs_array.memptr();
     
     tmp_array.set_min_size(r);
     cx_type* tmp = tmp_array.memptr();

@@ -137,7 +137,6 @@ op_det::apply_trimat(const Base<typename T1::elem_type,T1>& expr)
 
 
 template<typename eT>
-arma_cold
 inline
 eT
 op_det::apply_tiny_2x2(const Mat<eT>& X)
@@ -152,7 +151,6 @@ op_det::apply_tiny_2x2(const Mat<eT>& X)
 
 
 template<typename eT>
-arma_cold
 inline
 eT
 op_det::apply_tiny_3x3(const Mat<eT>& X)
@@ -179,7 +177,6 @@ op_det::apply_tiny_3x3(const Mat<eT>& X)
 
 
 template<typename eT>
-arma_cold
 inline
 eT
 op_det::apply_tiny_4x4(const Mat<eT>& X)

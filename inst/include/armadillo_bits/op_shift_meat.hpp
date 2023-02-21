@@ -29,55 +29,26 @@ op_shift_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_shift_vec>&
   {
   arma_extra_debug_sigprint();
   
-  const unwrap<T1> U(in.m);
+  typedef typename T1::elem_type eT;
+  
+  const quasi_unwrap<T1> U(in.m);
   
   const uword len = in.aux_uword_a;
   const uword neg = in.aux_uword_b;
   
   const uword dim = (T1::is_xvec) ? uword(U.M.is_rowvec() ? 1 : 0) : uword((T1::is_row) ? 1 : 0);
   
-  op_shift::apply_direct(out, U.M, len, neg, dim);
-  }
-
-
-
-template<typename T1>
-inline
-void
-op_shift::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_shift>& in)
-  {
-  arma_extra_debug_sigprint();
-  
-  const unwrap<T1> U(in.m);
-  
-  const uword len = in.aux_uword_a;
-  const uword neg = in.aux_uword_b;
-  const uword dim = in.aux_uword_c;
-  
-  arma_debug_check( (dim > 1), "shift(): parameter 'dim' must be 0 or 1" );
-  
-  op_shift::apply_direct(out, U.M, len, neg, dim);
-  }
-
-
-
-template<typename eT>
-inline
-void
-op_shift::apply_direct(Mat<eT>& out, const Mat<eT>& X, const uword len, const uword neg, const uword dim)
-  {
-  arma_extra_debug_sigprint();
-  
-  arma_debug_check_bounds( ((dim == 0) && (len >= X.n_rows)), "shift(): shift amount out of bounds" );
-  arma_debug_check_bounds( ((dim == 1) && (len >= X.n_cols)), "shift(): shift amount out of bounds" );
-  
-  if(&out == &X)
+  if(U.is_alias(out))
     {
-    op_shift::apply_alias(out, len, neg, dim);
+    Mat<eT> tmp;
+    
+    op_shift::apply_noalias(tmp, U.M, len, neg, dim);
+    
+    out.steal_mem(tmp);
     }
   else
     {
-    op_shift::apply_noalias(out, X, len, neg, dim);
+    op_shift::apply_noalias(out, U.M, len, neg, dim);
     }
   }
 
@@ -89,6 +60,9 @@ void
 op_shift::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword len, const uword neg, const uword dim)
   {
   arma_extra_debug_sigprint();
+  
+  arma_debug_check_bounds( ((dim == 0) && (len >= X.n_rows)), "shift(): shift amount out of bounds" );
+  arma_debug_check_bounds( ((dim == 1) && (len >= X.n_cols)), "shift(): shift amount out of bounds" );
   
   out.copy_size(X);
   
@@ -200,24 +174,6 @@ op_shift::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword len, const u
         }
       }
     }
-  }
-
-
-
-template<typename eT>
-inline
-void
-op_shift::apply_alias(Mat<eT>& X, const uword len, const uword neg, const uword dim)
-  {
-  arma_extra_debug_sigprint();
-  
-  // TODO: replace with better implementation
-  
-  Mat<eT> tmp;
-  
-  op_shift::apply_noalias(tmp, X, len, neg, dim);
-  
-  X.steal_mem(tmp);
   }
 
 

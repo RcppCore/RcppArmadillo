@@ -30,16 +30,16 @@ class Math
   {
   public:
   
-  arma_deprecated static eT pi()      { return eT(Datum<eT>::pi);      }
-  arma_deprecated static eT e()       { return eT(Datum<eT>::e);       }
-  arma_deprecated static eT euler()   { return eT(Datum<eT>::euler);   }
-  arma_deprecated static eT gratio()  { return eT(Datum<eT>::gratio);  }
-  arma_deprecated static eT sqrt2()   { return eT(Datum<eT>::sqrt2);   }
-  arma_deprecated static eT eps()     { return eT(Datum<eT>::eps);     }
-  arma_deprecated static eT log_min() { return eT(Datum<eT>::log_min); }
-  arma_deprecated static eT log_max() { return eT(Datum<eT>::log_max); }
-  arma_deprecated static eT nan()     { return eT(Datum<eT>::nan);     }
-  arma_deprecated static eT inf()     { return eT(Datum<eT>::inf);     }
+  arma_frown("use datum::pi instead")      static eT pi()      { return eT(Datum<eT>::pi);      }
+  arma_frown("use datum::e instead")       static eT e()       { return eT(Datum<eT>::e);       }
+  arma_frown("use datum::euler instead")   static eT euler()   { return eT(Datum<eT>::euler);   }
+  arma_frown("use datum::gratio instead")  static eT gratio()  { return eT(Datum<eT>::gratio);  }
+  arma_frown("use datum::sqrt2 instead")   static eT sqrt2()   { return eT(Datum<eT>::sqrt2);   }
+  arma_frown("use datum::eps instead")     static eT eps()     { return eT(Datum<eT>::eps);     }
+  arma_frown("use datum::log_min instead") static eT log_min() { return eT(Datum<eT>::log_min); }
+  arma_frown("use datum::log_max instead") static eT log_max() { return eT(Datum<eT>::log_max); }
+  arma_frown("use datum::nan instead")     static eT nan()     { return eT(Datum<eT>::nan);     }
+  arma_frown("use datum::inf instead")     static eT inf()     { return eT(Datum<eT>::inf);     }
   };
 
 

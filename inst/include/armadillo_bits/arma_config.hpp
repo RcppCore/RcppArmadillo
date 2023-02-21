@@ -51,10 +51,10 @@ struct arma_config
   #endif
   
   
-  #if defined(ARMA_OPTIMISE_SYMPD)
-    static constexpr bool optimise_sympd = true;
+  #if defined(ARMA_OPTIMISE_SYM)
+    static constexpr bool optimise_sym = true;
   #else
-    static constexpr bool optimise_sympd = false;
+    static constexpr bool optimise_sym = false;
   #endif
   
   
