@@ -23,7 +23,7 @@
 
 #define ARMA_VERSION_MAJOR 12
 #define ARMA_VERSION_MINOR 0
-#define ARMA_VERSION_PATCH 0
+#define ARMA_VERSION_PATCH 1
 #define ARMA_VERSION_NAME  "Cortisol Profusion"
 
 

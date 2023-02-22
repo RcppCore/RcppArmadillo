@@ -41,7 +41,7 @@ shift
   const uword len = (N < 0) ? uword(-N) : uword(N);
   const uword neg = (N < 0) ? uword( 1) : uword(0);
   
-  return Op<T1, op_shift_vec>(X, len, neg, uword(0), 'j');
+  return Op<T1, op_shift_vec>(X, len, neg);
   }
 
 
