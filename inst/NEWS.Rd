@@ -3,9 +3,9 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.12.0.0.0 (2023-02-20) (github-only)}{
+\section{Changes in RcppArmadillo version 0.12.0.1.0 (2023-02-20)}{
   \itemize{
-    \item Upgraded to Armadillo release 12.0.0 (Cortisol Profusion)
+    \item Upgraded to Armadillo release 12.0.1 (Cortisol Profusion)
     \itemize{
       \item faster \code{fft()} and \code{ifft()} via optional use of FFTW3
       \item faster \code{min()} and \code{max()}
@@ -21,6 +21,8 @@
       \item \code{set_cout_stream()} and \code{set_cerr_stream()} are now
       no-ops; instead use the options \code{ARMA_WARN_LEVEL}, or
       \code{ARMA_COUT_STREAM}, or \code{ARMA_CERR_STREAM}
+      \item fix regression (mis-compilation) in \code{shift()} function
+      (reported by us in \ghit{409})
     }
     \item The include directory order is now more robust (Kevin Ushey in
     \ghpr{407} addressing \ghit{406})
