@@ -18,4 +18,3 @@ PKG_LIBS= @OPENMP_FLAG@ $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
 ## _In general_ we should no longer need to set a standard as any recent R
 ## installation will do the right thing. Should you need it, uncomment it and
 ## set the appropriate value, possibly CXX17.
-#CXX_STD = CXX11
