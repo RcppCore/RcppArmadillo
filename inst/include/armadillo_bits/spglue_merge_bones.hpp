@@ -26,16 +26,16 @@ class spglue_merge
   public:
   
   template<typename eT>
-  arma_hot inline static void subview_merge(SpSubview<eT>& sv, const SpMat<eT>& B);
+  inline static void subview_merge(SpSubview<eT>& sv, const SpMat<eT>& B);
   
   template<typename eT>
-  arma_hot inline static void subview_merge(SpSubview<eT>& sv, const   Mat<eT>& B);
+  inline static void subview_merge(SpSubview<eT>& sv, const   Mat<eT>& B);
   
   template<typename eT>
-  arma_hot inline static void symmat_merge(SpMat<eT>& out, const SpMat<eT>& A, const SpMat<eT>& B);
+  inline static void symmat_merge(SpMat<eT>& out, const SpMat<eT>& A, const SpMat<eT>& B);
   
   template<typename eT>
-  arma_hot inline static void diagview_merge(SpMat<eT>& out, const SpMat<eT>& A, const SpMat<eT>& B);
+  inline static void diagview_merge(SpMat<eT>& out, const SpMat<eT>& A, const SpMat<eT>& B);
   };
 
 

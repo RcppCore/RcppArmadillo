@@ -30,14 +30,12 @@ namespace fftw3
     
     if(is_cx_float<eT>::value)
       {
-      typedef float cx_T;
-      return fftwf_plan_dft_1d(N, (cx_T*)input, (cx_T*)output, fftw3_sign, fftw3_flags);
+      return fftwf_plan_dft_1d(N, (cx_float*)input, (cx_float*)output, fftw3_sign, fftw3_flags);
       }
     else
     if(is_cx_double<eT>::value)
       {
-      typedef double cx_T;
-      return fftw_plan_dft_1d(N, (cx_T*)input, (cx_T*)output, fftw3_sign, fftw3_flags);
+      return fftw_plan_dft_1d(N, (cx_double*)input, (cx_double*)output, fftw3_sign, fftw3_flags);
       }
     
     return nullptr;

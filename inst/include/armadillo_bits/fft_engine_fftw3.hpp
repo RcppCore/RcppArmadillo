@@ -59,6 +59,8 @@ class fft_engine_fftw3
     {
     arma_extra_debug_sigprint();
     
+    if(N == 0)  { return; }
+    
     if(N > uword(std::numeric_limits<int>::max()))
       {
       arma_stop_runtime_error("integer overflow: FFT size too large for integer type used by FFTW3");

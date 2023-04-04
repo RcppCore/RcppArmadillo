@@ -258,9 +258,9 @@ class Row<eT>::fixed : public Row<eT>
   arma_warn_unused arma_inline       eT* memptr();
   arma_warn_unused arma_inline const eT* memptr() const;
   
-  arma_hot inline const Row<eT>& fill(const eT val);
-  arma_hot inline const Row<eT>& zeros();
-  arma_hot inline const Row<eT>& ones();
+  inline const Row<eT>& fill(const eT val);
+  inline const Row<eT>& zeros();
+  inline const Row<eT>& ones();
   };
 
 

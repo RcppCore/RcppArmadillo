@@ -258,9 +258,9 @@ class Col<eT>::fixed : public Col<eT>
   arma_warn_unused arma_inline       eT* memptr();
   arma_warn_unused arma_inline const eT* memptr() const;
   
-  arma_hot inline const Col<eT>& fill(const eT val);
-  arma_hot inline const Col<eT>& zeros();
-  arma_hot inline const Col<eT>& ones();
+  inline const Col<eT>& fill(const eT val);
+  inline const Col<eT>& zeros();
+  inline const Col<eT>& ones();
   };
 
 

@@ -207,6 +207,7 @@
 #endif
 
 
+// TODO: __INTEL_CLANG_COMPILER indicates the clang based intel compiler, distinct from the classic intel compiler
 #if !defined(ARMA_ALLOW_FAKE_CLANG)
   #if defined(__clang__) && (defined(__INTEL_COMPILER) || defined(__NVCC__) || defined(__CUDACC__) || defined(__PGI) || defined(__PATHSCALE__) || defined(__ARMCC_VERSION) || defined(__IBMCPP__))
     #undef  ARMA_DETECTED_FAKE_CLANG
