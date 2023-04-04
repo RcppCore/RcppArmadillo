@@ -3,6 +3,19 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.12.2.0.0 (2023-04-04)}{
+  \itemize{
+    \item Upgraded to Armadillo release 12.2.0 (Cortisol Profusion)
+    \itemize{
+      \item more efficient use of FFTW3 by \code{fft()} and \code{ifft()}
+      \item faster in-place element-wise multiplication of sparse matrices by
+      dense matrices
+      \item added spsolve_factoriser class to allow reuse of sparse matrix
+      factorisation for solving systems of linear equations
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.12.0.1.0 (2023-02-20)}{
   \itemize{
     \item Upgraded to Armadillo release 12.0.1 (Cortisol Profusion)
