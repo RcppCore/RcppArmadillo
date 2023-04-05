@@ -19,8 +19,7 @@
 //! \addtogroup fn_spsolve
 //! @{
 
-//! Solve a system of linear equations, A*X = B, where X is unknown,
-//! A is sparse, and B is dense.  X will be dense too.
+
 
 template<typename T1, typename T2>
 inline
@@ -30,8 +29,8 @@ spsolve_helper
            Mat<typename T1::elem_type>&     out,
   const SpBase<typename T1::elem_type, T1>& A,
   const   Base<typename T1::elem_type, T2>& B,
-  const char*                          solver,
-  const spsolve_opts_base&             settings,
+  const char*                               solver,
+  const spsolve_opts_base&                  settings,
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
@@ -124,6 +123,10 @@ spsolve_helper
 
 
 
+//
+
+
+
 template<typename T1, typename T2>
 inline
 bool
@@ -132,8 +135,8 @@ spsolve
            Mat<typename T1::elem_type>&     out,
   const SpBase<typename T1::elem_type, T1>& A,
   const   Base<typename T1::elem_type, T2>& B,
-  const char*                          solver   = "superlu",
-  const spsolve_opts_base&             settings = spsolve_opts_none(),
+  const char*                               solver   = "superlu",
+  const spsolve_opts_base&                  settings = spsolve_opts_none(),
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
@@ -161,8 +164,8 @@ spsolve
   (
   const SpBase<typename T1::elem_type, T1>& A,
   const   Base<typename T1::elem_type, T2>& B,
-  const char*                          solver   = "superlu",
-  const spsolve_opts_base&             settings = spsolve_opts_none(),
+  const char*                               solver   = "superlu",
+  const spsolve_opts_base&                  settings = spsolve_opts_none(),
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {

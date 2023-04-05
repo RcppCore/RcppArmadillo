@@ -26,7 +26,7 @@ class spop_sum
   public:
   
   template<typename T1>
-  arma_hot inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_sum>& in);
+  inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_sum>& in);
   };
 
 

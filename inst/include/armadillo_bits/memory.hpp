@@ -182,6 +182,9 @@ memory::mark_as_aligned(eT*& mem)
     }
   #endif
   
+  // TODO: look into C++20 std::assume_aligned()
+  // TODO: https://en.cppreference.com/w/cpp/memory/assume_aligned
+  
   // TODO: MSVC?  __assume( (mem & 0x0F) == 0 );
   //
   // http://comments.gmane.org/gmane.comp.gcc.patches/239430

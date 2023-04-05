@@ -43,12 +43,14 @@ class fft_engine_wrapper
     }
   
   inline
-  fft_engine_wrapper(const uword N)
+  fft_engine_wrapper(const uword N_samples, const uword N_exec)
     {
     arma_extra_debug_sigprint();
     
-    worker_kissfft = (N <  threshold) ? new fft_engine_kissfft<cx_type,inverse>(N) : nullptr;
-    worker_fftw3   = (N >= threshold) ? new fft_engine_fftw3  <cx_type,inverse>(N) : nullptr;
+    const bool use_fftw3 = N_samples >= (threshold / N_exec);
+    
+    worker_kissfft = (use_fftw3 == false) ? new fft_engine_kissfft<cx_type,inverse>(N_samples) : nullptr;
+    worker_fftw3   = (use_fftw3 == true ) ? new fft_engine_fftw3  <cx_type,inverse>(N_samples) : nullptr;
     }
   
   inline
@@ -94,7 +96,8 @@ op_fft_real::apply( Mat< std::complex<typename T1::pod_type> >& out, const mtOp<
   const uword N_user = (in.aux_uword_b == 0) ? in.aux_uword_a : N_orig;
   
   #if defined(ARMA_USE_FFTW3)
-    fft_engine_wrapper<out_eT,false> worker(N_user);
+    const uword N_exec = (is_vec) ? uword(1) : n_cols;
+    fft_engine_wrapper<out_eT,false> worker(N_user, N_exec);
   #else
     fft_engine_kissfft<out_eT,false> worker(N_user);
   #endif
@@ -198,7 +201,8 @@ op_fft_cx::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword a, const uw
   const uword N_user = (b == 0) ? a      : N_orig;
   
   #if defined(ARMA_USE_FFTW3)
-    fft_engine_wrapper<eT,inverse> worker(N_user);
+    const uword N_exec = (is_vec) ? uword(1) : n_cols;
+    fft_engine_wrapper<eT,inverse> worker(N_user, N_exec);
   #else
     fft_engine_kissfft<eT,inverse> worker(N_user);
   #endif

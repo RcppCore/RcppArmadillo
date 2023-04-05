@@ -86,12 +86,6 @@ class sp_auxlib
   template<typename T1, typename T2>
   inline static bool spsolve_refine(Mat<typename T1::elem_type>& out, typename T1::pod_type& out_rcond, const SpBase<typename T1::elem_type, T1>& A, const Base<typename T1::elem_type, T2>& B, const superlu_opts& user_opts);
   
-  // //
-  // // rcond() via SuperLU
-  // 
-  // template<typename T1>
-  // sinline static typename T1::pod_type rcond(const SpBase<typename T1::elem_type, T1>& A);
-  
   //
   // support functions
   
@@ -215,13 +209,45 @@ class superlu_array_wrangler
   public:
   
   inline ~superlu_array_wrangler();
+  inline  superlu_array_wrangler();
   inline  superlu_array_wrangler(const uword n_elem);
   
-  inline superlu_array_wrangler()                              = delete;
+  inline void set_size(const uword n_elem);
+  inline void reset();
+  
   inline superlu_array_wrangler(const superlu_array_wrangler&) = delete;
   inline void operator=        (const superlu_array_wrangler&) = delete;
   
   inline eT* get_ptr();
+  };
+
+
+template<typename eT>
+class superlu_worker
+  {
+  private:
+  
+  bool factorisation_valid = false;
+  
+  superlu_supermatrix_wrangler* l = nullptr;
+  superlu_supermatrix_wrangler* u = nullptr;
+  
+  superlu_array_wrangler<int> perm_c;
+  superlu_array_wrangler<int> perm_r;
+  
+  superlu_stat_wrangler stat;
+  
+  public:
+  
+  inline ~superlu_worker();
+  inline  superlu_worker();
+  
+  inline bool factorise(typename get_pod_type<eT>::result& out_rcond, const SpMat<eT>& A, const superlu_opts& user_opts);
+  
+  inline bool solve(Mat<eT>& X, const Mat<eT>& B);
+  
+  inline      superlu_worker(const superlu_worker&) = delete;
+  inline void operator=     (const superlu_worker&) = delete;
   };
 
 #endif

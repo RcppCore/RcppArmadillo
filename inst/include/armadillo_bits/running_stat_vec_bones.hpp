@@ -64,8 +64,8 @@ class running_stat_vec
   
   inline running_stat_vec& operator=(const running_stat_vec& in_rsv);
   
-  template<typename T1> arma_hot inline void operator() (const Base<              T, T1>& X);
-  template<typename T1> arma_hot inline void operator() (const Base<std::complex<T>, T1>& X);
+  template<typename T1> inline void operator() (const Base<              T, T1>& X);
+  template<typename T1> inline void operator() (const Base<std::complex<T>, T1>& X);
   
   inline void reset();
   

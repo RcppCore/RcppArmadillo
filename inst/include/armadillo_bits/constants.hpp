@@ -33,14 +33,7 @@ namespace priv
       {
       arma_ignore(junk);
       
-      if(std::numeric_limits<eT>::has_quiet_NaN)
-        {
-        return std::numeric_limits<eT>::quiet_NaN();
-        }
-      else
-        {
-        return eT(0);
-        }
+      return (std::numeric_limits<eT>::has_quiet_NaN) ? eT(std::numeric_limits<eT>::quiet_NaN()) : eT(0);
       }
     
     
@@ -75,14 +68,7 @@ namespace priv
       {
       arma_ignore(junk);
       
-      if(std::numeric_limits<eT>::has_infinity)
-        {
-        return std::numeric_limits<eT>::infinity();
-        }
-      else
-        {
-        return std::numeric_limits<eT>::max();
-        }
+      return (std::numeric_limits<eT>::has_infinity) ? eT(std::numeric_limits<eT>::infinity()) : eT(std::numeric_limits<eT>::max());
       }
     
     
@@ -98,7 +84,7 @@ namespace priv
       return eT( Datum_helper::inf<T>(), Datum_helper::inf<T>() );
       }
     
-
+    
     template<typename eT>
     static
     typename arma_integral_only<eT>::result
@@ -108,7 +94,6 @@ namespace priv
       
       return std::numeric_limits<eT>::max();
       }
-    
     };
   }
 
@@ -223,8 +208,8 @@ template<typename eT> const eT Datum<eT>::b         = eT(2.897771955e-3);
 
 
 
-typedef Datum<float>  fdatum;
-typedef Datum<double> datum;
+typedef Datum<float >  fdatum;
+typedef Datum<double>   datum;
 
 
 

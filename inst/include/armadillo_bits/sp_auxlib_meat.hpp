@@ -1145,7 +1145,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     arma_ignore(form_val);
     arma_ignore(sigma);
     arma_ignore(opts);
-
+    
     arma_stop_logic_error("eigs_gen(): use of ARPACK must be enabled for decomposition of complex matrices");
     return false;
     }
@@ -1247,7 +1247,7 @@ sp_auxlib::spsolve_simple(Mat<typename T1::elem_type>& X, const SpBase<typename 
     else
     if(info > int(A.n_cols))
       {
-      arma_debug_warn_level(1, "spsolve(): memory allocation failure: could not allocate ", (info - int(A.n_cols)), " bytes");
+      arma_debug_warn_level(1, "spsolve(): memory allocation failure");
       }
     else
     if(info < 0)
@@ -1434,79 +1434,6 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
 
 
 
-// template<typename T1>
-// inline
-// typename T1::pod_type
-// sp_auxlib::rcond(const SpBase<typename T1::elem_type, T1>& A_expr)
-//   {
-//   arma_extra_debug_sigprint();
-//   
-//   #if defined(ARMA_USE_SUPERLU)
-//     {
-//     typedef typename T1::pod_type   T;
-//     typedef typename T1::elem_type eT;
-//     
-//     const unwrap_spmat<T1> tmp1(A_expr.get_ref());
-//     const SpMat<eT>& A =   tmp1.M;
-//     
-//     arma_debug_check( (A.is_square() == false), "rcond(): matrix must be square sized" );
-//     
-//     superlu_opts superlu_opts_default;
-//     superlu::superlu_options_t options;
-//     sp_auxlib::set_superlu_opts(options, superlu_opts_default);
-//     int lwork = 0;
-//     
-//     superlu::GlobalLU_t Glu;
-//     arrayops::fill_zeros(reinterpret_cast<char*>(&Glu), sizeof(superlu::GlobalLU_t));
-//     
-//     superlu_supermatrix_wrangler a;
-//     superlu_supermatrix_wrangler aC;
-//     
-//     const bool status_a = sp_auxlib::copy_to_supermatrix(a.get_ref(), A);
-//     
-//     if(status_a == false)  { arma_stop_runtime_error("rcond(): could not construct SuperLU matrix"); return T(0); }
-//     
-//     superlu_supermatrix_wrangler l;
-//     superlu_supermatrix_wrangler u;
-//     
-//     superlu_array_wrangler<int> perm_c(A.n_cols+1);  // paranoia: increase array length by 1
-//     superlu_array_wrangler<int> perm_r(A.n_rows+1);
-//     superlu_array_wrangler<int>  etree(A.n_cols+1);
-//     
-//     superlu_stat_wrangler stat;
-//     
-//     int panel_size = superlu::sp_ispec_environ(1);
-//     int relax      = superlu::sp_ispec_environ(2);
-//     int slu_info   = 0; // Return code.
-//     
-//     arma_extra_debug_print("superlu::gstrf()");
-//     superlu::get_permutation_c(options.ColPerm, a.get_ptr(), perm_c.get_ptr());
-//     superlu::sp_preorder_mat(&options, a.get_ptr(), perm_c.get_ptr(), etree.get_ptr(), aC.get_ptr());
-//     superlu::gstrf<T>(&options, aC.get_ptr(), relax, panel_size, etree.get_ptr(), NULL, lwork, perm_c.get_ptr(), perm_r.get_ptr(), l.get_ptr(), u.get_ptr(), &Glu, stat.get_ptr(), &slu_info);
-//     
-//     if(slu_info != 0)  { return T(0); }
-//     
-//     T a_norm_val = sp_auxlib::norm1<eT>(a.get_ptr());
-//     T a_rcond    = sp_auxlib::lu_rcond<eT>(l.get_ptr(), u.get_ptr(), a_norm_val);
-//     
-//     if(arma_isnan(a_rcond))  { return T(0); }
-//     
-//     return a_rcond;
-//     }
-//   #else
-//     {
-//     typename T1::pod_type T;
-//     
-//     arma_ignore(A_expr);
-//     arma_stop_logic_error("rcond(): use of SuperLU must be enabled");
-//     
-//     return T(0);
-//     }
-//   #endif
-//   }
-
-
-
 #if defined(ARMA_USE_SUPERLU)
   
   template<typename eT>
@@ -1518,6 +1445,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     
     char norm_id = '1';
     
+    arma_extra_debug_print("superlu::langs()");
     return superlu::langs<eT>(&norm_id, A);
     }
   
@@ -1538,6 +1466,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     
     superlu_stat_wrangler stat;
     
+    arma_extra_debug_print("superlu::gscon()");
     superlu::gscon<eT>(&norm_id, L, U, norm_val, &rcond_out, stat.get_ptr(), &info);
     
     return (info == 0) ? T(rcond_out) : T(0);
@@ -1833,6 +1762,9 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
 //     arma_debug_check( (type_matched == false),      "copy_to_spmat(): type mismatch"  );
 //     arma_debug_check( (A.Mtype != superlu::SLU_GE), "copy_to_spmat(): unknown layout" );
 //     
+//     // NOTE: the l and u instances of SuperMatrix resulting from superlu::gstrf()
+//     // NOTE: do not have the superlu::SLU_GE layout
+//     
 //     const superlu::NCformat* nc = (const superlu::NCformat*)(A.Store);
 //     
 //     if(nc == nullptr)  { out.reset(); return; }
@@ -1851,6 +1783,8 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
 //     
 //     arrayops::convert(access::rwp(out.col_ptrs),    nc->colptr, A_n_cols+1 );
 //     arrayops::convert(access::rwp(out.row_indices), nc->rowind, A_n_nonzero);
+//     
+//     out.remove_zeros();  // in case SuperLU has bugs and stores zeros in sparse matrices
 //     }
   
   
@@ -2263,6 +2197,7 @@ sp_auxlib::run_aupd_shiftinvert
       return;
       }
     
+    // NOTE: potential problem with inconsistent/mismatched use of eT and T types
     eT x_norm_val = sp_auxlib::norm1<T>(x.get_ptr());
     eT x_rcond    = sp_auxlib::lu_rcond<T>(l.get_ptr(), u.get_ptr(), x_norm_val);
     
@@ -2570,18 +2505,35 @@ superlu_array_wrangler<eT>::~superlu_array_wrangler()
   {
   arma_extra_debug_sigprint_this(this);
   
-  if(mem != nullptr)
-    {
-    superlu::free(mem);
-    mem = nullptr;
-    }
+  (*this).reset();
+  }
+
+template<typename eT>
+inline
+superlu_array_wrangler<eT>::superlu_array_wrangler()
+  : mem(nullptr)
+  {
+  arma_extra_debug_sigprint_this(this);
   }
 
 template<typename eT>
 inline
 superlu_array_wrangler<eT>::superlu_array_wrangler(const uword n_elem)
+  : mem(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
+  
+  (*this).set_size(n_elem);
+  }
+
+template<typename eT>
+inline
+void
+superlu_array_wrangler<eT>::set_size(const uword n_elem)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(mem != nullptr)  { (*this).reset(); }
   
   mem = (eT*)(superlu::malloc(n_elem * sizeof(eT)));
   
@@ -2592,11 +2544,165 @@ superlu_array_wrangler<eT>::superlu_array_wrangler(const uword n_elem)
 
 template<typename eT>
 inline
+void
+superlu_array_wrangler<eT>::reset()
+  {
+  arma_extra_debug_sigprint();
+  
+  if(mem != nullptr)
+    {
+    superlu::free(mem);
+    mem = nullptr;
+    }
+  }
+
+template<typename eT>
+inline
 eT*
 superlu_array_wrangler<eT>::get_ptr()
   {
   return mem;
   }
+
+
+//
+
+
+template<typename eT>
+inline
+superlu_worker<eT>::~superlu_worker()
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  if(l != nullptr)  { delete l; l = nullptr; }
+  if(u != nullptr)  { delete u; u = nullptr; }
+  }
+
+
+template<typename eT>
+inline
+superlu_worker<eT>::superlu_worker()
+  {
+  arma_extra_debug_sigprint_this(this);
+  }
+
+
+template<typename eT>
+inline
+bool
+superlu_worker<eT>::factorise(typename get_pod_type<eT>::result& out_rcond, const SpMat<eT>& A, const superlu_opts& user_opts)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename get_pod_type<eT>::result T;
+  
+  factorisation_valid = false;
+  
+  if(l != nullptr)  { delete l; l = nullptr; }
+  if(u != nullptr)  { delete u; u = nullptr; }
+  
+  l = new(std::nothrow) superlu_supermatrix_wrangler;
+  u = new(std::nothrow) superlu_supermatrix_wrangler;
+  
+  if( (l == nullptr) || (u == nullptr) )
+    {
+    arma_debug_warn_level(3, "superlu_worker()::factorise(): could not construct SuperLU matrix");
+    return false;
+    }
+  
+  superlu_supermatrix_wrangler& l_ref = (*l);
+  superlu_supermatrix_wrangler& u_ref = (*u);
+  
+  superlu::superlu_options_t options;
+  sp_auxlib::set_superlu_opts(options, user_opts);
+  
+  superlu_supermatrix_wrangler AA;
+  superlu_supermatrix_wrangler AAc;
+  
+  const bool status_AA = sp_auxlib::copy_to_supermatrix(AA.get_ref(), A);
+  
+  if(status_AA == false)
+    {
+    arma_debug_warn_level(3, "superlu_worker()::factorise(): could not construct SuperLU matrix");
+    return false;
+    }
+  
+  (*this).perm_c.set_size(A.n_cols+1);  // paranoia: increase array length by 1
+  (*this).perm_r.set_size(A.n_rows+1);
+  
+  superlu_array_wrangler<int> etree(A.n_cols+1);
+  
+  superlu::GlobalLU_t Glu;
+  arrayops::fill_zeros(reinterpret_cast<char*>(&Glu), sizeof(superlu::GlobalLU_t));
+  
+  int panel_size = superlu::sp_ispec_environ(1);
+  int relax      = superlu::sp_ispec_environ(2);
+  int lwork      = 0;
+  int info       = 0;
+  
+  arma_extra_debug_print("superlu::superlu::get_permutation_c()");
+  superlu::get_permutation_c(options.ColPerm, AA.get_ptr(), perm_c.get_ptr());
+  
+  arma_extra_debug_print("superlu::superlu::sp_preorder_mat()");
+  superlu::sp_preorder_mat(&options, AA.get_ptr(), perm_c.get_ptr(), etree.get_ptr(), AAc.get_ptr());
+  
+  arma_extra_debug_print("superlu::gstrf()");
+  superlu::gstrf<eT>(&options, AAc.get_ptr(), relax, panel_size, etree.get_ptr(), NULL, lwork, perm_c.get_ptr(), perm_r.get_ptr(), l_ref.get_ptr(), u_ref.get_ptr(), &Glu, stat.get_ptr(), &info);
+  
+  if(info != 0)
+    {
+    arma_debug_warn_level(3, "superlu_worker()::factorise(): LU factorisation failed");
+    return false;
+    }
+  
+  const T AA_norm  = sp_auxlib::norm1<T>(AA.get_ptr());
+  const T AA_rcond = sp_auxlib::lu_rcond<eT>(l_ref.get_ptr(), u_ref.get_ptr(), AA_norm);
+  
+  out_rcond = AA_rcond;
+  
+  if(arma_isnan(AA_rcond))  { return false; }
+  // if(AA_rcond == T(0))      { return false; }
+  
+  factorisation_valid = true;
+  
+  return true;
+  }
+
+
+template<typename eT>
+inline
+bool
+superlu_worker<eT>::solve(Mat<eT>& X, const Mat<eT>& B)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(factorisation_valid == false)        { return false; }
+  if( (l == nullptr) || (u == nullptr) )  { return false; }
+  
+  superlu_supermatrix_wrangler& l_ref = (*l);
+  superlu_supermatrix_wrangler& u_ref = (*u);
+  
+  X = B;
+  
+  superlu_supermatrix_wrangler XX;
+  
+  const bool status_XX = sp_auxlib::wrap_to_supermatrix(XX.get_ref(), X);
+  
+  if(status_XX == false)
+    {
+    arma_debug_warn_level(3, "superlu_worker()::solve(): could not construct SuperLU matrix");
+    return false;
+    }
+  
+  superlu::trans_t trans = superlu::NOTRANS;
+  int              info  = 0;
+  
+  arma_extra_debug_print("superlu::gstrs()");
+  superlu::gstrs<eT>(trans, l_ref.get_ptr(), u_ref.get_ptr(), perm_c.get_ptr(), perm_r.get_ptr(), XX.get_ptr(), stat.get_ptr(), &info);
+  
+  return (info == 0);
+  }
+
 
 #endif
 
