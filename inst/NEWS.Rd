@@ -5,7 +5,7 @@
 
 \section{Changes in RcppArmadillo version 0.12.2.0.0 (2023-04-04)}{
   \itemize{
-    \item Upgraded to Armadillo release 12.2.0 (Cortisol Profusion)
+    \item Upgraded to Armadillo release 12.2.0 (Cortisol Profusion Deluxe)
     \itemize{
       \item more efficient use of FFTW3 by \code{fft()} and \code{ifft()}
       \item faster in-place element-wise multiplication of sparse matrices by
