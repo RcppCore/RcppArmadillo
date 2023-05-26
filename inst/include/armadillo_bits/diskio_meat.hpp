@@ -1302,7 +1302,7 @@ diskio::save_hdf5_binary(const Mat<eT>& x, const hdf5_name& spec, std::string& e
       {
       save_okay = false;
       
-      err_msg = "couldn't create dataset";
+      err_msg = "failed to create dataset";
       }
     else
       {
@@ -1436,7 +1436,7 @@ diskio::load_raw_ascii(Mat<eT>& x, std::istream& f, std::string& err_msg)
       if(diskio::convert_token(x.at(row,col), token) == false)
         {
         load_okay = false;
-        err_msg = "couldn't interpret data";
+        err_msg = "data interpretation failure";
         }
       }
     }
@@ -3947,7 +3947,7 @@ diskio::save_hdf5_binary(const Cube<eT>& x, const hdf5_name& spec, std::string& 
       {
       save_okay = false;
       
-      err_msg = "couldn't create dataset";
+      err_msg = "failed to create dataset";
       }
     else
       {

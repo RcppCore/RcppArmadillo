@@ -111,7 +111,7 @@ spop_norm::vec_norm_k(const eT* mem, const uword N, const uword k)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (k == 0), "norm(): k must be greater than zero" );
+  arma_debug_check( (k == 0), "norm(): unsupported vector norm type" );
   
   // create a fake dense vector to allow reuse of code for dense vectors
   Col<eT> fake_vector( access::rwp(mem), N, false );

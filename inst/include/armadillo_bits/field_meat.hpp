@@ -205,7 +205,7 @@ inline
 void
 field<oT>::set_size(const uword n_elem_in)
   {
-  arma_extra_debug_sigprint(arma_str::format("n_elem_in = %d") % n_elem_in);
+  arma_extra_debug_sigprint(arma_str::format("n_elem_in = %u") % n_elem_in);
   
   init(n_elem_in, 1);
   }
@@ -218,7 +218,7 @@ inline
 void
 field<oT>::set_size(const uword n_rows_in, const uword n_cols_in)
   {
-  arma_extra_debug_sigprint(arma_str::format("n_rows_in = %d, n_cols_in = %d") % n_rows_in % n_cols_in);
+  arma_extra_debug_sigprint(arma_str::format("n_rows_in = %u, n_cols_in = %u") % n_rows_in % n_cols_in);
   
   init(n_rows_in, n_cols_in);
   }
@@ -231,7 +231,7 @@ inline
 void
 field<oT>::set_size(const uword n_rows_in, const uword n_cols_in, const uword n_slices_in)
   {
-  arma_extra_debug_sigprint(arma_str::format("n_rows_in = %d, n_cols_in = %d, n_slices_in = %d") % n_rows_in % n_cols_in % n_slices_in);
+  arma_extra_debug_sigprint(arma_str::format("n_rows_in = %u, n_cols_in = %u, n_slices_in = %u") % n_rows_in % n_cols_in % n_slices_in);
   
   init(n_rows_in, n_cols_in, n_slices_in);
   }
@@ -1799,7 +1799,7 @@ field<oT>::save(const std::string name, const file_type type) const
       }
     else
       {
-      arma_debug_warn_level(3, "field::save(): couldn't write; file: ", name);
+      arma_debug_warn_level(3, "field::save(): write failed; file: ", name);
       }
     }
   
@@ -1827,7 +1827,7 @@ field<oT>::save(std::ostream& os, const file_type type) const
       }
     else
       {
-      arma_debug_warn_level(3, "field::save(): couldn't write to stream");
+      arma_debug_warn_level(3, "field::save(): stream write failed");
       }
     }
   
@@ -1855,7 +1855,7 @@ field<oT>::load(const std::string name, const file_type type)
       }
     else
       {
-      arma_debug_warn_level(3, "field::load(): couldn't read; file: ", name);
+      arma_debug_warn_level(3, "field::load(): read failed; file: ", name);
       }
     }
   
@@ -1884,7 +1884,7 @@ field<oT>::load(std::istream& is, const file_type type)
       }
     else
       {
-      arma_debug_warn_level(3, "field::load(): couldn't read from stream");
+      arma_debug_warn_level(3, "field::load(): stream read failed");
       }
     }
   
@@ -1998,7 +1998,7 @@ inline
 void
 field<oT>::init(const uword n_rows_in, const uword n_cols_in, const uword n_slices_in)
   {
-  arma_extra_debug_sigprint( arma_str::format("n_rows_in = %d, n_cols_in = %d, n_slices_in = %d") % n_rows_in % n_cols_in % n_slices_in );
+  arma_extra_debug_sigprint( arma_str::format("n_rows_in = %u, n_cols_in = %u, n_slices_in = %u") % n_rows_in % n_cols_in % n_slices_in );
   
   #if defined(ARMA_64BIT_WORD)
     const char* error_message = "field::init(): requested size is too large";
@@ -2059,7 +2059,7 @@ inline
 void
 field<oT>::delete_objects()
   {
-  arma_extra_debug_sigprint( arma_str::format("n_elem = %d") % n_elem );
+  arma_extra_debug_sigprint( arma_str::format("n_elem = %u") % n_elem );
   
   for(uword i=0; i<n_elem; ++i)
     {
@@ -2078,7 +2078,7 @@ inline
 void
 field<oT>::create_objects()
   {
-  arma_extra_debug_sigprint( arma_str::format("n_elem = %d") % n_elem );
+  arma_extra_debug_sigprint( arma_str::format("n_elem = %u") % n_elem );
   
   for(uword i=0; i<n_elem; ++i)  { mem[i] = new oT; }
   }

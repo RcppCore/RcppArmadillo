@@ -4562,7 +4562,7 @@ SpMat<eT>::save(const std::string name, const file_type type) const
       save_okay = false;
     }
   
-  if(save_okay == false)  { arma_debug_warn_level(3, "SpMat::save(): couldn't write; file: ", name); }
+  if(save_okay == false)  { arma_debug_warn_level(3, "SpMat::save(): write failed; file: ", name); }
   
   return save_okay;
   }
@@ -4637,7 +4637,7 @@ SpMat<eT>::save(const csv_name& spec, const file_type type) const
     save_okay = diskio::save_csv_ascii(*this, spec.filename, spec.header_ro, with_header, separator);
     }
   
-  if(save_okay == false)  { arma_debug_warn_level(3, "SpMat::save(): couldn't write; file: ", spec.filename); }
+  if(save_okay == false)  { arma_debug_warn_level(3, "SpMat::save(): write failed; file: ", spec.filename); }
   
   return save_okay;
   }
@@ -4679,7 +4679,7 @@ SpMat<eT>::save(std::ostream& os, const file_type type) const
       save_okay = false;
     }
   
-  if(save_okay == false)  { arma_debug_warn_level(3, "SpMat::save(): couldn't write to stream"); }
+  if(save_okay == false)  { arma_debug_warn_level(3, "SpMat::save(): stream write failed"); }
   
   return save_okay;
   }
@@ -4734,7 +4734,7 @@ SpMat<eT>::load(const std::string name, const file_type type)
       }
     else
       {
-      arma_debug_warn_level(3, "SpMat::load(): couldn't read; file: ", name);
+      arma_debug_warn_level(3, "SpMat::load(): read failed; file: ", name);
       }
     }
   
@@ -4809,7 +4809,7 @@ SpMat<eT>::load(const csv_name& spec, const file_type type)
       }
     else
       {
-      arma_debug_warn_level(3, "SpMat::load(): couldn't read; file: ", spec.filename);
+      arma_debug_warn_level(3, "SpMat::load(): read failed; file: ", spec.filename);
       }
     }
   else
@@ -4882,7 +4882,7 @@ SpMat<eT>::load(std::istream& is, const file_type type)
       }
     else
       {
-      arma_debug_warn_level(3, "SpMat::load(): couldn't load from stream");
+      arma_debug_warn_level(3, "SpMat::load(): stream read failed");
       }
     }
   

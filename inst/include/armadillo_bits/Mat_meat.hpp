@@ -298,7 +298,7 @@ inline
 void
 Mat<eT>::init_cold()
   {
-  arma_extra_debug_sigprint( arma_str::format("n_rows = %d, n_cols = %d") % n_rows % n_cols );
+  arma_extra_debug_sigprint( arma_str::format("n_rows = %u, n_cols = %u") % n_rows % n_cols );
   
   // ensure that n_elem can hold the result of (n_rows * n_cols)
   
@@ -341,7 +341,7 @@ inline
 void
 Mat<eT>::init_warm(uword in_n_rows, uword in_n_cols)
   {
-  arma_extra_debug_sigprint( arma_str::format("in_n_rows = %d, in_n_cols = %d") % in_n_rows % in_n_cols );
+  arma_extra_debug_sigprint( arma_str::format("in_n_rows = %u, in_n_cols = %u") % in_n_rows % in_n_cols );
   
   if( (n_rows == in_n_rows) && (n_cols == in_n_cols) )  { return; }
   
@@ -7529,7 +7529,7 @@ Mat<eT>::save(const std::string name, const file_type type) const
       save_okay = false;
     }
   
-  if(save_okay == false)  { arma_debug_warn_level(3, "Mat::save(): couldn't write; file: ", name); }
+  if(save_okay == false)  { arma_debug_warn_level(3, "Mat::save(): write failed; file: ", name); }
   
   return save_okay;
   }
@@ -7586,7 +7586,7 @@ Mat<eT>::save(const hdf5_name& spec, const file_type type) const
       }
     else
       {
-      arma_debug_warn_level(3, "Mat::save(): couldn't write; file: ", spec.filename);
+      arma_debug_warn_level(3, "Mat::save(): write failed; file: ", spec.filename);
       }
     }
   
@@ -7663,7 +7663,7 @@ Mat<eT>::save(const csv_name& spec, const file_type type) const
     save_okay = diskio::save_csv_ascii(*this, spec.filename, spec.header_ro, with_header, separator);
     }
   
-  if(save_okay == false)  { arma_debug_warn_level(3, "Mat::save(): couldn't write; file: ", spec.filename); }
+  if(save_okay == false)  { arma_debug_warn_level(3, "Mat::save(): write failed; file: ", spec.filename); }
   
   return save_okay;
   }
@@ -7719,7 +7719,7 @@ Mat<eT>::save(std::ostream& os, const file_type type) const
       save_okay = false;
     }
   
-  if(save_okay == false)  { arma_debug_warn_level(3, "Mat::save(): couldn't write to stream"); }
+  if(save_okay == false)  { arma_debug_warn_level(3, "Mat::save(): stream write failed"); }
   
   return save_okay;
   }
@@ -7796,7 +7796,7 @@ Mat<eT>::load(const std::string name, const file_type type)
       }
     else
       {
-      arma_debug_warn_level(3, "Mat::load(): couldn't read; file: ", name);
+      arma_debug_warn_level(3, "Mat::load(): read failed; file: ", name);
       }
     }
   
@@ -7847,7 +7847,7 @@ Mat<eT>::load(const hdf5_name& spec, const file_type type)
       }
     else
       {
-      arma_debug_warn_level(3, "Mat::load(): couldn't read; file: ", spec.filename);
+      arma_debug_warn_level(3, "Mat::load(): read failed; file: ", spec.filename);
       }
     }
   
@@ -7920,7 +7920,7 @@ Mat<eT>::load(const csv_name& spec, const file_type type)
       }
     else
       {
-      arma_debug_warn_level(3, "Mat::load(): couldn't read; file: ", spec.filename);
+      arma_debug_warn_level(3, "Mat::load(): read failed; file: ", spec.filename);
       }
     }
   else
@@ -8007,7 +8007,7 @@ Mat<eT>::load(std::istream& is, const file_type type)
       }
     else
       {
-      arma_debug_warn_level(3, "Mat::load(): couldn't load from stream");
+      arma_debug_warn_level(3, "Mat::load(): stream read failed");
       }
     }
   
