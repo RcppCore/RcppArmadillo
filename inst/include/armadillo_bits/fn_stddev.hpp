@@ -33,7 +33,7 @@ enable_if2
 stddev(const T1& X, const uword norm_type = 0)
   {
   arma_extra_debug_sigprint();
-
+  
   return std::sqrt( op_var::var_vec(X, norm_type) );
   }
 
@@ -51,7 +51,7 @@ enable_if2
 stddev(const T1& X, const uword norm_type = 0)
   {
   arma_extra_debug_sigprint();
-
+  
   return mtOp<typename T1::pod_type, T1, op_stddev>(X, norm_type, 0);
   }
 
@@ -69,7 +69,7 @@ enable_if2
 stddev(const T1& X, const uword norm_type, const uword dim)
   {
   arma_extra_debug_sigprint();
-
+  
   return mtOp<typename T1::pod_type, T1, op_stddev>(X, norm_type, dim);
   }
 

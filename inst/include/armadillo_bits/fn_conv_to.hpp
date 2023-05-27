@@ -57,7 +57,7 @@ conv_to<out_eT>::from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_e
   
   const Proxy<T1> P(in.get_ref());
   
-  arma_debug_check( (P.get_n_elem() != 1), "conv_to(): given object doesn't have exactly one element" );
+  arma_debug_check( (P.get_n_elem() != 1), "conv_to(): given object does not have exactly one element" );
   
   return out_eT(Proxy<T1>::use_at ? P.at(0,0) : P[0]);
   }
@@ -78,7 +78,7 @@ conv_to<out_eT>::from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_
   
   const Proxy<T1> P(in.get_ref());
   
-  arma_debug_check( (P.get_n_elem() != 1), "conv_to(): given object doesn't have exactly one element" );
+  arma_debug_check( (P.get_n_elem() != 1), "conv_to(): given object does not have exactly one element" );
   
   out_eT out;
   
@@ -103,7 +103,7 @@ conv_to<out_eT>::from(const BaseCube<in_eT, T1>& in, const typename arma_not_cx<
   
   const ProxyCube<T1> P(in.get_ref());
   
-  arma_debug_check( (P.get_n_elem() != 1), "conv_to(): given object doesn't have exactly one element" );
+  arma_debug_check( (P.get_n_elem() != 1), "conv_to(): given object does not have exactly one element" );
   
   return out_eT(ProxyCube<T1>::use_at ? P.at(0,0,0) : P[0]);
   }
@@ -124,7 +124,7 @@ conv_to<out_eT>::from(const BaseCube<in_eT, T1>& in, const typename arma_cx_only
   
   const ProxyCube<T1> P(in.get_ref());
   
-  arma_debug_check( (P.get_n_elem() != 1), "conv_to(): given object doesn't have exactly one element" );
+  arma_debug_check( (P.get_n_elem() != 1), "conv_to(): given object does not have exactly one element" );
   
   out_eT out;
   
@@ -303,7 +303,7 @@ conv_to< Row<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_not_
   const quasi_unwrap<T1> tmp(in.get_ref());
   const Mat<in_eT>& X  = tmp.M;
   
-  arma_debug_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object can't be interpreted as a vector" );
+  arma_debug_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object cannot be interpreted as a vector" );
   
   Row<out_eT> out(X.n_elem, arma_nozeros_indicator());
   
@@ -327,7 +327,7 @@ conv_to< Row<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_cx_o
   const quasi_unwrap<T1> tmp(in.get_ref());
   const Mat<in_eT>& X  = tmp.M;
   
-  arma_debug_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object can't be interpreted as a vector" );
+  arma_debug_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object cannot be interpreted as a vector" );
   
   Row<out_eT> out(X.n_rows, X.n_cols, arma_nozeros_indicator());
   
@@ -422,7 +422,7 @@ conv_to< Col<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_not_
   const quasi_unwrap<T1> tmp(in.get_ref());
   const Mat<in_eT>& X  = tmp.M;
   
-  arma_debug_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object can't be interpreted as a vector" );
+  arma_debug_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object cannot be interpreted as a vector" );
   
   Col<out_eT> out(X.n_elem, arma_nozeros_indicator());
   
@@ -446,7 +446,7 @@ conv_to< Col<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_cx_o
   const quasi_unwrap<T1> tmp(in.get_ref());
   const Mat<in_eT>& X  = tmp.M;
   
-  arma_debug_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object can't be interpreted as a vector" );
+  arma_debug_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object cannot be interpreted as a vector" );
   
   Col<out_eT> out(X.n_rows, X.n_cols, arma_nozeros_indicator());
   
@@ -672,7 +672,7 @@ conv_to< std::vector<out_eT> >::from(const Base<in_eT, T1>& in, const typename a
   const quasi_unwrap<T1> tmp(in.get_ref());
   const Mat<in_eT>& X  = tmp.M;
   
-  arma_debug_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object can't be interpreted as a vector" );
+  arma_debug_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object cannot be interpreted as a vector" );
   
   const uword N = X.n_elem;
   
@@ -701,7 +701,7 @@ conv_to< std::vector<out_eT> >::from(const Base<in_eT, T1>& in, const typename a
   const quasi_unwrap<T1> tmp(in.get_ref());
   const Mat<in_eT>& X  = tmp.M;
   
-  arma_debug_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object can't be interpreted as a vector" );
+  arma_debug_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object cannot be interpreted as a vector" );
   
   const uword N = X.n_elem;
   

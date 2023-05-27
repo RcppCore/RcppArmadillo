@@ -1636,10 +1636,10 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     
     const uword out_n_nonzero = A.n_nonzero - n_nonzero_diag_old + n_nonzero_diag_new;
     
-    arma_extra_debug_print( arma_str::format("A.n_nonzero:        %d") % A.n_nonzero        );
-    arma_extra_debug_print( arma_str::format("n_nonzero_diag_old: %d") % n_nonzero_diag_old );
-    arma_extra_debug_print( arma_str::format("n_nonzero_diag_new: %d") % n_nonzero_diag_new );
-    arma_extra_debug_print( arma_str::format("out_n_nonzero:      %d") % out_n_nonzero      );
+    arma_extra_debug_print( arma_str::format("A.n_nonzero:        %u") % A.n_nonzero        );
+    arma_extra_debug_print( arma_str::format("n_nonzero_diag_old: %u") % n_nonzero_diag_old );
+    arma_extra_debug_print( arma_str::format("n_nonzero_diag_new: %u") % n_nonzero_diag_new );
+    arma_extra_debug_print( arma_str::format("out_n_nonzero:      %u") % out_n_nonzero      );
     
     nc->nnz    = out_n_nonzero;
     nc->nzval  = (void*)          superlu::malloc(sizeof(eT)             * out_n_nonzero );
@@ -1731,7 +1731,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
       nc->colptr[j + 1] = superlu::int_t(nc->colptr[j] + nnz_col);
       }
     
-    arma_extra_debug_print( arma_str::format("count: %d") % count );
+    arma_extra_debug_print( arma_str::format("count: %u") % count );
     
     arma_check( (count != out_n_nonzero), "internal error: sp_auxlib::copy_to_supermatrix_with_shift(): count != out_n_nonzero" );
     

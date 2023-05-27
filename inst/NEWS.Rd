@@ -3,6 +3,18 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.12.4.0.0 (2023-05-26)}{
+  \itemize{
+    \item Upgraded to Armadillo release 12.4.0 (Cortisol Profusion Redux)
+    \itemize{
+      \item Added \code{norm2est()} for finding fast estimates of matrix
+      2-norm (spectral norm)
+      \item Added \code{vecnorm()} for obtaining the vector norm of each row
+      or column of a matrix
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.12.2.0.0 (2023-04-04)}{
   \itemize{
     \item Upgraded to Armadillo release 12.2.0 (Cortisol Profusion Deluxe)

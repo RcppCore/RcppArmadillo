@@ -21,7 +21,6 @@
 
 
 
-//! Class for finding variance values of a matrix
 class op_var
   : public traits_op_xvec
   {
@@ -30,12 +29,14 @@ class op_var
   template<typename T1>
   inline static void apply(Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_type, T1, op_var>& in);
   
+  template<typename in_eT>
+  inline static void apply_noalias(Mat<typename get_pod_type<in_eT>::result>& out, const Mat<in_eT>& X, const uword norm_type, const uword dim);
   
   //
   
   template<typename eT>
   inline static typename get_pod_type<eT>::result var_vec(const subview_col<eT>& X, const uword norm_type = 0);
-
+  
   template<typename eT>
   inline static typename get_pod_type<eT>::result var_vec(const subview_row<eT>& X, const uword norm_type = 0);
   

@@ -33,8 +33,8 @@ spop_normalise::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_nor
   const uword p   = expr.aux_uword_a;
   const uword dim = expr.aux_uword_b;
   
-  arma_debug_check( (p   == 0), "normalise(): parameter 'p' must be greater than zero" );
-  arma_debug_check( (dim >  1), "normalise(): parameter 'dim' must be 0 or 1"          );
+  arma_debug_check( (p   == 0), "normalise(): unsupported vector norm type"   );
+  arma_debug_check( (dim >  1), "normalise(): parameter 'dim' must be 0 or 1" );
   
   const unwrap_spmat<T1> U(expr.m);
   
