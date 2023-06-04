@@ -383,10 +383,9 @@ namespace traits {
 
                 if (!mat.hasSlot("margin") ||
                     as<IntegerVector>(mat.slot("margin"))[0] == 1) {
-                    for (int jj = 0; jj < ncol; ++jj)
-                        i[perm[jj] - 1] = jj;
                     for (int jj = 0; jj < ncol; ++jj) {
                         p[jj] = jj;
+                        i[perm[jj] - 1] = jj;
                         x[jj] = 1;
                     }
                 } else {
