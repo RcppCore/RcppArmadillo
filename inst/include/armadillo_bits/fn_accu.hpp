@@ -70,7 +70,7 @@ accu_proxy_linear(const Proxy<T1>& P)
     }
   else
     {
-    #if defined(__FINITE_MATH_ONLY__) && (__FINITE_MATH_ONLY__ > 0)
+    #if defined(__FAST_MATH__)
       {
       if(P.is_aligned())
         {
@@ -643,7 +643,7 @@ accu_cube_proxy_linear(const ProxyCube<T1>& P)
     }
   else
     {
-    #if defined(__FINITE_MATH_ONLY__) && (__FINITE_MATH_ONLY__ > 0)
+    #if defined(__FAST_MATH__)
       {
       if(P.is_aligned())
         {

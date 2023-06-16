@@ -123,8 +123,9 @@ class subview_cube : public BaseCube< eT, subview_cube<eT> >
   arma_warn_unused inline bool is_finite() const;
   arma_warn_unused inline bool is_zero(const pod_type tol = 0) const;
   
-  arma_warn_unused inline bool has_inf() const;
-  arma_warn_unused inline bool has_nan() const;
+  arma_warn_unused inline bool has_inf()       const;
+  arma_warn_unused inline bool has_nan()       const;
+  arma_warn_unused inline bool has_nonfinite() const;
   
   inline eT  at_alt    (const uword i) const;
   

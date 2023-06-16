@@ -665,35 +665,39 @@ Base<elem_type,derived>::is_finite() const
   {
   arma_extra_debug_sigprint();
   
-  const Proxy<derived> P( (*this).get_ref() );
+  if(arma_config::fast_math)  { arma_debug_warn_level(2, "is_finite(): detection of non-finite values is not reliable in fast math mode"); }
   
   if(is_Mat<typename Proxy<derived>::stored_type>::value)
     {
-    const quasi_unwrap<typename Proxy<derived>::stored_type> U(P.Q);
+    const quasi_unwrap<derived> U( (*this).get_ref() );
     
     return arrayops::is_finite( U.M.memptr(), U.M.n_elem );
     }
-  
-  if(Proxy<derived>::use_at == false)
-    {
-    const typename Proxy<derived>::ea_type Pea = P.get_ea();
-    
-    const uword n_elem = P.get_n_elem();
-    
-    for(uword i=0; i<n_elem; ++i)
-      {
-      if(arma_isfinite(Pea[i]) == false)  { return false; }
-      }
-    }
   else
     {
-    const uword n_rows = P.get_n_rows();
-    const uword n_cols = P.get_n_cols();
+    const Proxy<derived> P( (*this).get_ref() );
     
-    for(uword col=0; col<n_cols; ++col)
-    for(uword row=0; row<n_rows; ++row)
+    if(Proxy<derived>::use_at == false)
       {
-      if(arma_isfinite(P.at(row,col)) == false)  { return false; }
+      const typename Proxy<derived>::ea_type Pea = P.get_ea();
+      
+      const uword n_elem = P.get_n_elem();
+      
+      for(uword i=0; i<n_elem; ++i)
+        {
+        if(arma_isfinite(Pea[i]) == false)  { return false; }
+        }
+      }
+    else
+      {
+      const uword n_rows = P.get_n_rows();
+      const uword n_cols = P.get_n_cols();
+      
+      for(uword col=0; col<n_cols; ++col)
+      for(uword row=0; row<n_rows; ++row)
+        {
+        if(arma_isfinite(P.at(row,col)) == false)  { return false; }
+        }
       }
     }
   
@@ -709,35 +713,39 @@ Base<elem_type,derived>::has_inf() const
   {
   arma_extra_debug_sigprint();
   
-  const Proxy<derived> P( (*this).get_ref() );
+  if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_inf(): detection of non-finite values is not reliable in fast math mode"); }
   
   if(is_Mat<typename Proxy<derived>::stored_type>::value)
     {
-    const quasi_unwrap<typename Proxy<derived>::stored_type> U(P.Q);
+    const quasi_unwrap<derived> U( (*this).get_ref() );
     
     return arrayops::has_inf( U.M.memptr(), U.M.n_elem );
     }
-  
-  if(Proxy<derived>::use_at == false)
-    {
-    const typename Proxy<derived>::ea_type Pea = P.get_ea();
-    
-    const uword n_elem = P.get_n_elem();
-    
-    for(uword i=0; i<n_elem; ++i)
-      {
-      if(arma_isinf(Pea[i]))  { return true; }
-      }
-    }
   else
     {
-    const uword n_rows = P.get_n_rows();
-    const uword n_cols = P.get_n_cols();
+    const Proxy<derived> P( (*this).get_ref() );
     
-    for(uword col=0; col<n_cols; ++col)
-    for(uword row=0; row<n_rows; ++row)
+    if(Proxy<derived>::use_at == false)
       {
-      if(arma_isinf(P.at(row,col)))  { return true; }
+      const typename Proxy<derived>::ea_type Pea = P.get_ea();
+      
+      const uword n_elem = P.get_n_elem();
+      
+      for(uword i=0; i<n_elem; ++i)
+        {
+        if(arma_isinf(Pea[i]))  { return true; }
+        }
+      }
+    else
+      {
+      const uword n_rows = P.get_n_rows();
+      const uword n_cols = P.get_n_cols();
+      
+      for(uword col=0; col<n_cols; ++col)
+      for(uword row=0; row<n_rows; ++row)
+        {
+        if(arma_isinf(P.at(row,col)))  { return true; }
+        }
       }
     }
   
@@ -753,35 +761,87 @@ Base<elem_type,derived>::has_nan() const
   {
   arma_extra_debug_sigprint();
   
-  const Proxy<derived> P( (*this).get_ref() );
+  if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_nan(): detection of non-finite values is not reliable in fast math mode"); }
   
   if(is_Mat<typename Proxy<derived>::stored_type>::value)
     {
-    const quasi_unwrap<typename Proxy<derived>::stored_type> U(P.Q);
+    const quasi_unwrap<derived> U( (*this).get_ref() );
     
     return arrayops::has_nan( U.M.memptr(), U.M.n_elem );
     }
-  
-  if(Proxy<derived>::use_at == false)
+  else
     {
-    const typename Proxy<derived>::ea_type Pea = P.get_ea();
+    const Proxy<derived> P( (*this).get_ref() );
     
-    const uword n_elem = P.get_n_elem();
-    
-    for(uword i=0; i<n_elem; ++i)
+    if(Proxy<derived>::use_at == false)
       {
-      if(arma_isnan(Pea[i]))  { return true; }
+      const typename Proxy<derived>::ea_type Pea = P.get_ea();
+      
+      const uword n_elem = P.get_n_elem();
+      
+      for(uword i=0; i<n_elem; ++i)
+        {
+        if(arma_isnan(Pea[i]))  { return true; }
+        }
       }
+    else
+      {
+      const uword n_rows = P.get_n_rows();
+      const uword n_cols = P.get_n_cols();
+      
+      for(uword col=0; col<n_cols; ++col)
+      for(uword row=0; row<n_rows; ++row)
+        {
+        if(arma_isnan(P.at(row,col)))  { return true; }
+        }
+      }
+    }
+  
+  return false;
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+bool
+Base<elem_type,derived>::has_nonfinite() const
+  {
+  arma_extra_debug_sigprint();
+  
+  if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_nonfinite(): detection of non-finite values is not reliable in fast math mode"); }
+  
+  if(is_Mat<typename Proxy<derived>::stored_type>::value)
+    {
+    const quasi_unwrap<derived> U( (*this).get_ref() );
+    
+    return (arrayops::is_finite( U.M.memptr(), U.M.n_elem ) == false);
     }
   else
     {
-    const uword n_rows = P.get_n_rows();
-    const uword n_cols = P.get_n_cols();
+    const Proxy<derived> P( (*this).get_ref() );
     
-    for(uword col=0; col<n_cols; ++col)
-    for(uword row=0; row<n_rows; ++row)
+    if(Proxy<derived>::use_at == false)
       {
-      if(arma_isnan(P.at(row,col)))  { return true; }
+      const typename Proxy<derived>::ea_type Pea = P.get_ea();
+      
+      const uword n_elem = P.get_n_elem();
+      
+      for(uword i=0; i<n_elem; ++i)
+        {
+        if(arma_isfinite(Pea[i]) == false)  { return true; }
+        }
+      }
+    else
+      {
+      const uword n_rows = P.get_n_rows();
+      const uword n_cols = P.get_n_cols();
+      
+      for(uword col=0; col<n_cols; ++col)
+      for(uword row=0; row<n_rows; ++row)
+        {
+        if(arma_isfinite(P.at(row,col)) == false)  { return true; }
+        }
       }
     }
   

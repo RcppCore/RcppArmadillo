@@ -72,8 +72,10 @@ struct BaseCube
   
   arma_warn_unused inline bool is_empty()  const;
   arma_warn_unused inline bool is_finite() const;
-  arma_warn_unused inline bool has_inf()   const;
-  arma_warn_unused inline bool has_nan()   const;
+  
+  arma_warn_unused inline bool has_inf()       const;
+  arma_warn_unused inline bool has_nan()       const;
+  arma_warn_unused inline bool has_nonfinite() const;
   
   arma_warn_unused inline const CubeToMatOp<derived, op_row_as_mat> row_as_mat(const uword in_row) const;
   arma_warn_unused inline const CubeToMatOp<derived, op_col_as_mat> col_as_mat(const uword in_col) const;

@@ -3630,19 +3630,6 @@ Cube<eT>::operator--(int)
 
 
 
-//! returns true if all of the elements are finite
-template<typename eT>
-inline
-bool
-Cube<eT>::is_finite() const
-  {
-  arma_extra_debug_sigprint();
-  
-  return arrayops::is_finite(memptr(), n_elem);
-  }
-
-
-
 //! returns true if the cube has no elements
 template<typename eT>
 arma_inline
@@ -3657,7 +3644,19 @@ Cube<eT>::is_empty() const
 template<typename eT>
 inline
 bool
-Cube<eT>::has_inf() const
+Cube<eT>::internal_is_finite() const
+  {
+  arma_extra_debug_sigprint();
+  
+  return arrayops::is_finite(memptr(), n_elem);
+  }
+
+
+
+template<typename eT>
+inline
+bool
+Cube<eT>::internal_has_inf() const
   {
   arma_extra_debug_sigprint();
   
@@ -3669,7 +3668,7 @@ Cube<eT>::has_inf() const
 template<typename eT>
 inline
 bool
-Cube<eT>::has_nan() const
+Cube<eT>::internal_has_nan() const
   {
   arma_extra_debug_sigprint();
   
@@ -3681,7 +3680,7 @@ Cube<eT>::has_nan() const
 template<typename eT>
 inline
 bool
-Cube<eT>::has_nonfinite() const
+Cube<eT>::internal_has_nonfinite() const
   {
   arma_extra_debug_sigprint();
   

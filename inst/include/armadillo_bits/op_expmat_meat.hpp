@@ -152,7 +152,7 @@ op_expmat::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1
     positive = (positive) ? false : true;
     }
   
-  if( (D.is_finite() == false) || (E.is_finite() == false) )  { return false; }
+  if( (D.internal_has_nonfinite()) || (E.internal_has_nonfinite()) )  { return false; }
   
   const bool status = solve(out, D, E, solve_opts::no_approx);
   

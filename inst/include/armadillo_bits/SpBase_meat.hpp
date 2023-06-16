@@ -731,16 +731,18 @@ SpBase<elem_type,derived>::is_finite() const
   {
   arma_extra_debug_sigprint();
   
-  const SpProxy<derived> P( (*this).get_ref() );
+  if(arma_config::fast_math)  { arma_debug_warn_level(2, "is_finite(): detection of non-finite values is not reliable in fast math mode"); }
   
   if(is_SpMat<typename SpProxy<derived>::stored_type>::value)
     {
-    const unwrap_spmat<typename SpProxy<derived>::stored_type> U(P.Q);
+    const unwrap_spmat<derived> U( (*this).get_ref() );
     
-    return U.M.is_finite();
+    return U.M.internal_is_finite();
     }
   else
     {
+    const SpProxy<derived> P( (*this).get_ref() );
+    
     typename SpProxy<derived>::const_iterator_type it     = P.begin();
     typename SpProxy<derived>::const_iterator_type it_end = P.end();
     
@@ -763,16 +765,18 @@ SpBase<elem_type,derived>::has_inf() const
   {
   arma_extra_debug_sigprint();
   
-  const SpProxy<derived> P( (*this).get_ref() );
+  if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_inf(): detection of non-finite values is not reliable in fast math mode"); }
   
   if(is_SpMat<typename SpProxy<derived>::stored_type>::value)
     {
-    const unwrap_spmat<typename SpProxy<derived>::stored_type> U(P.Q);
+    const unwrap_spmat<derived> U( (*this).get_ref() );
     
-    return U.M.has_inf();
+    return U.M.internal_has_inf();
     }
   else
     {
+    const SpProxy<derived> P( (*this).get_ref() );
+    
     typename SpProxy<derived>::const_iterator_type it     = P.begin();
     typename SpProxy<derived>::const_iterator_type it_end = P.end();
     
@@ -795,22 +799,58 @@ SpBase<elem_type,derived>::has_nan() const
   {
   arma_extra_debug_sigprint();
   
-  const SpProxy<derived> P( (*this).get_ref() );
+  if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_nan(): detection of non-finite values is not reliable in fast math mode"); }
   
   if(is_SpMat<typename SpProxy<derived>::stored_type>::value)
     {
-    const unwrap_spmat<typename SpProxy<derived>::stored_type> U(P.Q);
+    const unwrap_spmat<derived> U( (*this).get_ref() );
     
-    return U.M.has_nan();
+    return U.M.internal_has_nan();
     }
   else
     {
+    const SpProxy<derived> P( (*this).get_ref() );
+    
     typename SpProxy<derived>::const_iterator_type it     = P.begin();
     typename SpProxy<derived>::const_iterator_type it_end = P.end();
     
     while(it != it_end)
       {
       if(arma_isnan(*it))  { return true; }
+      ++it;
+      }
+    }
+  
+  return false;
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+bool
+SpBase<elem_type,derived>::has_nonfinite() const
+  {
+  arma_extra_debug_sigprint();
+  
+  if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_nonfinite(): detection of non-finite values is not reliable in fast math mode"); }
+  
+  if(is_SpMat<typename SpProxy<derived>::stored_type>::value)
+    {
+    const unwrap_spmat<derived> U( (*this).get_ref() );
+    
+    return U.M.internal_has_nonfinite();
+    }
+  else
+    {
+    const SpProxy<derived> P( (*this).get_ref() );
+    
+    typename SpProxy<derived>::const_iterator_type it     = P.begin();
+    typename SpProxy<derived>::const_iterator_type it_end = P.end();
+    
+    while(it != it_end)
+      {
+      if(arma_isfinite(*it) == false)  { return true; }
       ++it;
       }
     }

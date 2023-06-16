@@ -102,8 +102,10 @@ struct SpBase
   arma_warn_unused inline bool is_colvec()  const;
   arma_warn_unused inline bool is_rowvec()  const;
   arma_warn_unused inline bool is_finite()  const;
-  arma_warn_unused inline bool has_inf()    const;
-  arma_warn_unused inline bool has_nan()    const;
+  
+  arma_warn_unused inline bool has_inf()       const;
+  arma_warn_unused inline bool has_nan()       const;
+  arma_warn_unused inline bool has_nonfinite() const;
   
   arma_warn_unused inline const SpOp<derived,spop_vectorise_col> as_col() const;
   arma_warn_unused inline const SpOp<derived,spop_vectorise_row> as_row() const;

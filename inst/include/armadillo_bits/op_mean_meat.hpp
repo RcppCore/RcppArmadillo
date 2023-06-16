@@ -194,7 +194,7 @@ op_mean::apply_noalias_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& 
     out /= T(P_n_cols);
     }
   
-  if(out.is_finite() == false)
+  if(out.internal_has_nonfinite())
     {
     // TODO: replace with dedicated handling to avoid unwrapping
     op_mean::apply_noalias_unwrap(out, P, dim);

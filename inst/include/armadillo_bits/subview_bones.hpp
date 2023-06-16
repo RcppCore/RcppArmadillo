@@ -149,8 +149,9 @@ class subview : public Base< eT, subview<eT> >
   arma_warn_unused inline bool is_finite() const;
   arma_warn_unused inline bool is_zero(const pod_type tol = 0) const;
   
-  arma_warn_unused inline bool has_inf() const;
-  arma_warn_unused inline bool has_nan() const;
+  arma_warn_unused inline bool has_inf()       const;
+  arma_warn_unused inline bool has_nan()       const;
+  arma_warn_unused inline bool has_nonfinite() const;
   
   inline       subview_row<eT> row(const uword row_num);
   inline const subview_row<eT> row(const uword row_num) const;

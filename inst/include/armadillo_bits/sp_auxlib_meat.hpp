@@ -73,7 +73,7 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
     if(is_cx<eT>::yes)  { arma_debug_warn_level(1, "eigs_sym(): given matrix is not hermitian"); }
     }
   
-  if(arma_config::check_nonfinite && U.M.has_nonfinite())
+  if(arma_config::check_nonfinite && U.M.internal_has_nonfinite())
     {
     arma_debug_warn_level(3, "eigs_sym(): detected non-finite elements");
     return false;
@@ -126,7 +126,7 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
     if(is_cx<eT>::yes)  { arma_debug_warn_level(1, "eigs_sym(): given matrix is not hermitian"); }
     }
   
-  if(arma_config::check_nonfinite && U.M.has_nonfinite())
+  if(arma_config::check_nonfinite && U.M.internal_has_nonfinite())
     {
     arma_debug_warn_level(3, "eigs_sym(): detected non-finite elements");
     return false;
@@ -534,7 +534,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
   
   arma_debug_check( (U.M.is_square() == false), "eigs_gen(): given matrix must be square sized" );
   
-  if(arma_config::check_nonfinite && U.M.has_nonfinite())
+  if(arma_config::check_nonfinite && U.M.internal_has_nonfinite())
     {
     arma_debug_warn_level(3, "eigs_gen(): detected non-finite elements");
     return false;
@@ -581,7 +581,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
   
   arma_debug_check( (U.M.is_square() == false), "eigs_gen(): given matrix must be square sized" );
   
-  if(arma_config::check_nonfinite && U.M.has_nonfinite())
+  if(arma_config::check_nonfinite && U.M.internal_has_nonfinite())
     {
     arma_debug_warn_level(3, "eigs_gen(): detected non-finite elements");
     return false;
@@ -961,7 +961,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
   
   arma_debug_check( (U.M.is_square() == false), "eigs_gen(): given matrix must be square sized" );
   
-  if(arma_config::check_nonfinite && U.M.has_nonfinite())
+  if(arma_config::check_nonfinite && U.M.internal_has_nonfinite())
     {
     arma_debug_warn_level(3, "eigs_gen(): detected non-finite elements");
     return false;
@@ -986,7 +986,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
   
   arma_debug_check( (U.M.is_square() == false), "eigs_gen(): given matrix must be square sized" );
   
-  if(arma_config::check_nonfinite && U.M.has_nonfinite())
+  if(arma_config::check_nonfinite && U.M.internal_has_nonfinite())
     {
     arma_debug_warn_level(3, "eigs_gen(): detected non-finite elements");
     return false;
@@ -1190,7 +1190,7 @@ sp_auxlib::spsolve_simple(Mat<typename T1::elem_type>& X, const SpBase<typename 
     
     if(A.n_nonzero == uword(0))  { X.soft_reset(); return false; }
     
-    if(arma_config::check_nonfinite && (A.has_nonfinite() || X.has_nonfinite()))
+    if(arma_config::check_nonfinite && (A.internal_has_nonfinite() || X.internal_has_nonfinite()))
       {
       arma_debug_warn_level(3, "spsolve(): detected non-finite elements");
       return false;
@@ -1315,7 +1315,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     
     if(A.n_nonzero == uword(0))  { X.soft_reset(); return false; }
     
-    if(arma_config::check_nonfinite && (A.has_nonfinite() || X.has_nonfinite()))
+    if(arma_config::check_nonfinite && (A.internal_has_nonfinite() || B.internal_has_nonfinite()))
       {
       arma_debug_warn_level(3, "spsolve(): detected non-finite elements");
       return false;

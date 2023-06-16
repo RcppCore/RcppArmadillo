@@ -116,7 +116,7 @@ op_norm2est::norm2est
   
   if(A.n_elem == 0)  { return T(0); }
   
-  if(A.is_finite() == false)  { arma_debug_warn_level(1, "norm2est(): given matrix has non-finite elements"); }
+  if(A.internal_has_nonfinite())  { arma_debug_warn_level(1, "norm2est(): given matrix has non-finite elements"); }
   
   if((A.n_rows == 1) || (A.n_cols == 1))  { return op_norm::vec_norm_2( Proxy< Mat<eT> >(A) ); }
   
@@ -138,7 +138,7 @@ op_norm2est::norm2est
     
     T x_norm = op_norm::vec_norm_2( Proxy< Col<eT> >(x) );
     
-    if(x_norm == T(0) || (arma_isfinite(x_norm) == false) || (x.is_finite() == false))
+    if(x_norm == T(0) || (arma_isfinite(x_norm) == false) || (x.internal_has_nonfinite()))
       {
       randu_filler.fill(x.memptr(), x.n_elem);
       
@@ -196,7 +196,7 @@ op_norm2est::norm2est
   
   if(A.n_nonzero == 0)  { return T(0); }
   
-  if(A.is_finite() == false)  { arma_debug_warn_level(1, "norm2est(): given matrix has non-finite elements"); }
+  if(A.internal_has_nonfinite())  { arma_debug_warn_level(1, "norm2est(): given matrix has non-finite elements"); }
   
   if((A.n_rows == 1) || (A.n_cols == 1))  { return spop_norm::vec_norm_k(A.values, A.n_nonzero, 2); }
   
@@ -218,7 +218,7 @@ op_norm2est::norm2est
     
     T x_norm = op_norm::vec_norm_2( Proxy< Mat<eT> >(x) );
     
-    if(x_norm == T(0) || (arma_isfinite(x_norm) == false) || (x.is_finite() == false))
+    if(x_norm == T(0) || (arma_isfinite(x_norm) == false) || (x.internal_has_nonfinite()))
       {
       randu_filler.fill(x.memptr(), x.n_elem);
       

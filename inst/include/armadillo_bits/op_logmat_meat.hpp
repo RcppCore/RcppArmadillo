@@ -426,7 +426,7 @@ op_logmat_cx::helper(Mat<eT>& A, const uword m)
   {
   arma_extra_debug_sigprint();
   
-  if(A.is_finite() == false)  { return false; }
+  if(A.internal_has_nonfinite())  { return false; }
   
   const vec indices = regspace<vec>(1,m-1);
   
