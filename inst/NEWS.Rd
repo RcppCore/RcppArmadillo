@@ -3,6 +3,20 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.12.4.1.0 (2023-06-17)}{
+  \itemize{
+    \item Upgraded to Armadillo release 12.4.1 (Cortisol Profusion Redux)
+    \itemize{
+      \item fix bug in \code{SpMat::shed_cols()}
+      \item functions such as \code{.is_finite()} and \code{find_nonfinite()}
+      will now emit a runtime warning when compiled in fast math mode; such
+      compilation mode disables detection of non-finite values
+    }
+    \item Accommodate upcoming change in package \pkg{Matrix} (Mikael Jagan
+    in \ghpr{417} addressing \ghit{415})
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.12.4.0.0 (2023-05-26)}{
   \itemize{
     \item Upgraded to Armadillo release 12.4.0 (Cortisol Profusion Redux)
