@@ -98,7 +98,7 @@ running_stat_vec<obj_type>::operator() (const Base<typename running_stat_vec<obj
     return;
     }
   
-  if( sample.is_finite() == false )
+  if( sample.internal_has_nonfinite() )
     {
     arma_debug_warn_level(3, "running_stat_vec: sample ignored as it has non-finite elements");
     return;
@@ -126,7 +126,7 @@ running_stat_vec<obj_type>::operator() (const Base< std::complex<typename runnin
     return;
     }
   
-  if( sample.is_finite() == false )
+  if( sample.internal_has_nonfinite() )
     {
     arma_debug_warn_level(3, "running_stat_vec: sample ignored as it has non-finite elements");
     return;

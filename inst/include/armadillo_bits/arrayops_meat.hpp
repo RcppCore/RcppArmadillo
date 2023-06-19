@@ -898,7 +898,7 @@ inline
 eT
 arrayops::accumulate(const eT* src, const uword n_elem)
   {
-  #if defined(__FINITE_MATH_ONLY__) && (__FINITE_MATH_ONLY__ > 0)
+  #if defined(__FAST_MATH__)
     {
     eT acc = eT(0);
     

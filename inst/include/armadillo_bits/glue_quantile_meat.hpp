@@ -178,7 +178,7 @@ glue_quantile::apply(Mat<typename T2::elem_type>& out, const mtGlue<typename T2:
   const quasi_unwrap<T1> UA(expr.A);
   const quasi_unwrap<T2> UB(expr.B);
   
-  arma_debug_check((UA.M.has_nan() || UB.M.has_nan()), "quantile(): detected NaN");
+  arma_debug_check((UA.M.internal_has_nan() || UB.M.internal_has_nan()), "quantile(): detected NaN");
   
   if(UA.is_alias(out) || UB.is_alias(out))
     {
@@ -210,7 +210,7 @@ glue_quantile_default::apply(Mat<typename T2::elem_type>& out, const mtGlue<type
   
   const uword dim = (T1::is_xvec) ? uword(UA.M.is_rowvec() ? 1 : 0) : uword((T1::is_row) ? 1 : 0);
   
-  arma_debug_check((UA.M.has_nan() || UB.M.has_nan()), "quantile(): detected NaN");
+  arma_debug_check((UA.M.internal_has_nan() || UB.M.internal_has_nan()), "quantile(): detected NaN");
   
   if(UA.is_alias(out) || UB.is_alias(out))
     {

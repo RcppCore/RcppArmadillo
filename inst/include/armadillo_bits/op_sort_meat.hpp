@@ -177,9 +177,9 @@ op_sort::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort>& in)
   const uword sort_type = in.aux_uword_a;
   const uword dim       = in.aux_uword_b;
   
-  arma_debug_check( (sort_type > 1), "sort(): parameter 'sort_type' must be 0 or 1" );
-  arma_debug_check( (dim > 1),       "sort(): parameter 'dim' must be 0 or 1"       );
-  arma_debug_check( (X.has_nan()),   "sort(): detected NaN"                         );
+  arma_debug_check( (sort_type > 1),        "sort(): parameter 'sort_type' must be 0 or 1" );
+  arma_debug_check( (dim > 1),              "sort(): parameter 'dim' must be 0 or 1"       );
+  arma_debug_check( (X.internal_has_nan()), "sort(): detected NaN"                         );
   
   if(U.is_alias(out))
     {
@@ -211,8 +211,8 @@ op_sort_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort_vec>& i
   
   const uword sort_type = in.aux_uword_a;
   
-  arma_debug_check( (sort_type > 1), "sort(): parameter 'sort_type' must be 0 or 1" );
-  arma_debug_check( (X.has_nan()),   "sort(): detected NaN"                         );
+  arma_debug_check( (sort_type > 1),        "sort(): parameter 'sort_type' must be 0 or 1" );
+  arma_debug_check( (X.internal_has_nan()), "sort(): detected NaN"                         );
   
   out = X;  // not checking for aliasing, to allow inplace sorting of vectors
   

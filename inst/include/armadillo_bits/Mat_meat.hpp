@@ -6245,12 +6245,13 @@ Mat<eT>::is_square() const
 
 
 
-//! returns true if all of the elements are finite
 template<typename eT>
 inline
 bool
-Mat<eT>::is_finite() const
+Mat<eT>::internal_is_finite() const
   {
+  arma_extra_debug_sigprint();
+  
   return arrayops::is_finite(memptr(), n_elem);
   }
 
@@ -6259,7 +6260,7 @@ Mat<eT>::is_finite() const
 template<typename eT>
 inline
 bool
-Mat<eT>::has_inf() const
+Mat<eT>::internal_has_inf() const
   {
   arma_extra_debug_sigprint();
   
@@ -6271,7 +6272,7 @@ Mat<eT>::has_inf() const
 template<typename eT>
 inline
 bool
-Mat<eT>::has_nan() const
+Mat<eT>::internal_has_nan() const
   {
   arma_extra_debug_sigprint();
   
@@ -6283,7 +6284,7 @@ Mat<eT>::has_nan() const
 template<typename eT>
 inline
 bool
-Mat<eT>::has_nonfinite() const
+Mat<eT>::internal_has_nonfinite() const
   {
   arma_extra_debug_sigprint();
   

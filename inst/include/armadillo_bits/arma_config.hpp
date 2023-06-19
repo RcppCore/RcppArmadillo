@@ -223,6 +223,13 @@ struct arma_config
   #endif
   
   
+  #if (defined(__FAST_MATH__) || (defined(__FINITE_MATH_ONLY__) && (__FINITE_MATH_ONLY__ > 0)) || defined(_M_FP_FAST))
+    static constexpr bool fast_math = true;
+  #else
+    static constexpr bool fast_math = false;
+  #endif
+  
+  
   static constexpr uword warn_level = (sword(ARMA_WARN_LEVEL) > 0) ? uword(ARMA_WARN_LEVEL) : 0;
   };
 

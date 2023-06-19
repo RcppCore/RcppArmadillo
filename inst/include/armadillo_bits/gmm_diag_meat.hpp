@@ -151,9 +151,9 @@ gmm_diag<eT>::set_params(const Base<eT,T1>& in_means_expr, const Base<eT,T2>& in
     "gmm_diag::set_params(): given parameters have inconsistent and/or wrong sizes"
     );
   
-  arma_debug_check( (in_means.is_finite() == false), "gmm_diag::set_params(): given means have non-finite values" );
-  arma_debug_check( (in_dcovs.is_finite() == false), "gmm_diag::set_params(): given dcovs have non-finite values" );
-  arma_debug_check( (in_hefts.is_finite() == false), "gmm_diag::set_params(): given hefts have non-finite values" );
+  arma_debug_check( (in_means.internal_has_nonfinite()), "gmm_diag::set_params(): given means have non-finite values" );
+  arma_debug_check( (in_dcovs.internal_has_nonfinite()), "gmm_diag::set_params(): given dcovs have non-finite values" );
+  arma_debug_check( (in_hefts.internal_has_nonfinite()), "gmm_diag::set_params(): given hefts have non-finite values" );
   
   arma_debug_check( (any(vectorise(in_dcovs) <= eT(0))), "gmm_diag::set_params(): given dcovs have negative or zero values" );
   arma_debug_check( (any(vectorise(in_hefts) <  eT(0))), "gmm_diag::set_params(): given hefts have negative values"         );
@@ -184,7 +184,7 @@ gmm_diag<eT>::set_means(const Base<eT,T1>& in_means_expr)
   const Mat<eT>& in_means = tmp.M;
   
   arma_debug_check( (arma::size(in_means) != arma::size(means)), "gmm_diag::set_means(): given means have incompatible size" );
-  arma_debug_check( (in_means.is_finite() == false),             "gmm_diag::set_means(): given means have non-finite values" );
+  arma_debug_check( (in_means.internal_has_nonfinite()),         "gmm_diag::set_means(): given means have non-finite values" );
   
   access::rw(means) = in_means;
   }
@@ -204,7 +204,7 @@ gmm_diag<eT>::set_dcovs(const Base<eT,T1>& in_dcovs_expr)
   const Mat<eT>& in_dcovs = tmp.M;
   
   arma_debug_check( (arma::size(in_dcovs) != arma::size(dcovs)), "gmm_diag::set_dcovs(): given dcovs have incompatible size"       );
-  arma_debug_check( (in_dcovs.is_finite() == false),             "gmm_diag::set_dcovs(): given dcovs have non-finite values"       );
+  arma_debug_check( (in_dcovs.internal_has_nonfinite()),         "gmm_diag::set_dcovs(): given dcovs have non-finite values"       );
   arma_debug_check( (any(vectorise(in_dcovs) <= eT(0))),         "gmm_diag::set_dcovs(): given dcovs have negative or zero values" );
   
   access::rw(dcovs) = in_dcovs;
@@ -227,7 +227,7 @@ gmm_diag<eT>::set_hefts(const Base<eT,T1>& in_hefts_expr)
   const Mat<eT>& in_hefts = tmp.M;
   
   arma_debug_check( (arma::size(in_hefts) != arma::size(hefts)), "gmm_diag::set_hefts(): given hefts have incompatible size" );
-  arma_debug_check( (in_hefts.is_finite() == false),             "gmm_diag::set_hefts(): given hefts have non-finite values" );
+  arma_debug_check( (in_hefts.internal_has_nonfinite()),         "gmm_diag::set_hefts(): given hefts have non-finite values" );
   arma_debug_check( (any(vectorise(in_hefts) <  eT(0))),         "gmm_diag::set_hefts(): given hefts have negative values"   );
   
   const eT s = accu(in_hefts);
@@ -690,8 +690,8 @@ gmm_diag<eT>::learn
   const unwrap<T1>   tmp_X(data.get_ref());
   const Mat<eT>& X = tmp_X.M;
   
-  if(X.is_empty()          )  { arma_debug_warn_level(3, "gmm_diag::learn(): given matrix is empty"             ); return false; }
-  if(X.is_finite() == false)  { arma_debug_warn_level(3, "gmm_diag::learn(): given matrix has non-finite values"); return false; }
+  if(X.is_empty()              )  { arma_debug_warn_level(3, "gmm_diag::learn(): given matrix is empty"             ); return false; }
+  if(X.internal_has_nonfinite())  { arma_debug_warn_level(3, "gmm_diag::learn(): given matrix has non-finite values"); return false; }
   
   if(N_gaus == 0)  { reset(); return true; }
   
@@ -818,8 +818,8 @@ gmm_diag<eT>::kmeans_wrapper
   const unwrap<T1>   tmp_X(data.get_ref());
   const Mat<eT>& X = tmp_X.M;
   
-  if(X.is_empty()          )  { arma_debug_warn_level(3, "kmeans(): given matrix is empty"             ); return false; }
-  if(X.is_finite() == false)  { arma_debug_warn_level(3, "kmeans(): given matrix has non-finite values"); return false; }
+  if(X.is_empty()              )  { arma_debug_warn_level(3, "kmeans(): given matrix is empty"             ); return false; }
+  if(X.internal_has_nonfinite())  { arma_debug_warn_level(3, "kmeans(): given matrix has non-finite values"); return false; }
   
   if(N_gaus == 0)  { reset(); return true; }
   
@@ -2277,7 +2277,7 @@ gmm_diag<eT>::km_iterate(const Mat<eT>& X, const uword max_iter, const bool verb
   
   access::rw(means) = old_means;
   
-  if(means.is_finite() == false)  { return false; }
+  if(means.internal_has_nonfinite())  { return false; }
   
   return true;
   }
@@ -2371,9 +2371,9 @@ gmm_diag<eT>::em_iterate(const Mat<eT>& X, const uword max_iter, const eT var_fl
   
   
   if(any(vectorise(dcovs) <= eT(0)))  { return false; }
-  if(means.is_finite() == false    )  { return false; }
-  if(dcovs.is_finite() == false    )  { return false; }
-  if(hefts.is_finite() == false    )  { return false; }
+  if(means.internal_has_nonfinite())  { return false; }
+  if(dcovs.internal_has_nonfinite())  { return false; }
+  if(hefts.internal_has_nonfinite())  { return false; }
   
   return true;
   }

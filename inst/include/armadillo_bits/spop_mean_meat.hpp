@@ -125,7 +125,7 @@ spop_mean::apply_noalias_fast
     out = acc;
     }
   
-  if(out.is_finite() == false)
+  if(out.internal_has_nonfinite())
     {
     spop_mean::apply_noalias_slow(out, p, dim);
     }

@@ -301,7 +301,6 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   arma_warn_unused arma_inline bool is_rowvec() const;
   arma_warn_unused arma_inline bool is_colvec() const;
   arma_warn_unused arma_inline bool is_square() const;
-  arma_warn_unused      inline bool is_finite() const;
   
   arma_warn_unused inline bool is_symmetric() const;
   arma_warn_unused inline bool is_symmetric(const typename get_pod_type<eT>::result tol) const;
@@ -309,9 +308,10 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   arma_warn_unused inline bool is_hermitian() const;
   arma_warn_unused inline bool is_hermitian(const typename get_pod_type<eT>::result tol) const;
   
-  arma_warn_unused inline bool has_inf()       const;
-  arma_warn_unused inline bool has_nan()       const;
-  arma_warn_unused inline bool has_nonfinite() const;
+  arma_warn_unused inline bool internal_is_finite()     const;
+  arma_warn_unused inline bool internal_has_inf()       const;
+  arma_warn_unused inline bool internal_has_nan()       const;
+  arma_warn_unused inline bool internal_has_nonfinite() const;
   
   arma_warn_unused arma_inline bool in_range(const uword i) const;
   arma_warn_unused arma_inline bool in_range(const span& x) const;

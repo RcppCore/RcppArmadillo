@@ -310,12 +310,12 @@ class Cube : public BaseCube< eT, Cube<eT> >
   arma_inline const Cube& operator--();
   arma_inline void        operator--(int);
   
-  arma_warn_unused      inline bool is_finite() const;
   arma_warn_unused arma_inline bool is_empty()  const;
   
-  arma_warn_unused inline bool has_inf()       const;
-  arma_warn_unused inline bool has_nan()       const;
-  arma_warn_unused inline bool has_nonfinite() const;
+  arma_warn_unused inline bool internal_is_finite()     const;
+  arma_warn_unused inline bool internal_has_inf()       const;
+  arma_warn_unused inline bool internal_has_nan()       const;
+  arma_warn_unused inline bool internal_has_nonfinite() const;
   
   arma_warn_unused arma_inline bool in_range(const uword i) const;
   arma_warn_unused arma_inline bool in_range(const span& x) const;

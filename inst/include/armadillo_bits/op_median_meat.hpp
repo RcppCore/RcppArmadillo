@@ -34,8 +34,8 @@ op_median::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_median>& expr)
   
   const uword dim = expr.aux_uword_a;
   
-  arma_debug_check( U.M.has_nan(), "median(): detected NaN"                   );
-  arma_debug_check( (dim > 1),     "median(): parameter 'dim' must be 0 or 1" );
+  arma_debug_check( U.M.internal_has_nan(), "median(): detected NaN"                   );
+  arma_debug_check( (dim > 1),              "median(): parameter 'dim' must be 0 or 1" );
   
   if(U.is_alias(out))
     {
@@ -202,7 +202,7 @@ op_median::median_vec
     return Datum<eT>::nan;
     }
   
-  arma_debug_check( U.M.has_nan(), "median(): detected NaN" );
+  arma_debug_check( U.M.internal_has_nan(), "median(): detected NaN" );
   
   std::vector<eT> tmp_vec(n_elem);
   
@@ -239,7 +239,7 @@ op_median::median_vec
     return Datum<eT>::nan;
     }
   
-  arma_debug_check( U.M.has_nan(), "median(): detected NaN" );
+  arma_debug_check( U.M.internal_has_nan(), "median(): detected NaN" );
   
   std::vector< arma_cx_median_packet<T> > tmp_vec(n_elem);
   

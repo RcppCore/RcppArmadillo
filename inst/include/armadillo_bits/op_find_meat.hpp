@@ -520,6 +520,8 @@ op_find_finite::apply(Mat<uword>& out, const mtOp<uword, T1, op_find_finite>& X)
   {
   arma_extra_debug_sigprint();
   
+  if(arma_config::fast_math)  { arma_debug_warn_level(2, "find_finite(): detection of non-finite values is not reliable in fast math mode"); }
+  
   const Proxy<T1> P(X.m);
   
   const uword n_elem = P.get_n_elem();
@@ -566,6 +568,8 @@ op_find_nonfinite::apply(Mat<uword>& out, const mtOp<uword, T1, op_find_nonfinit
   {
   arma_extra_debug_sigprint();
   
+  if(arma_config::fast_math)  { arma_debug_warn_level(2, "find_nonfinite(): detection of non-finite values is not reliable in fast math mode"); }
+  
   const Proxy<T1> P(X.m);
   
   const uword n_elem = P.get_n_elem();
@@ -611,6 +615,8 @@ void
 op_find_nan::apply(Mat<uword>& out, const mtOp<uword, T1, op_find_nan>& X)
   {
   arma_extra_debug_sigprint();
+  
+  if(arma_config::fast_math)  { arma_debug_warn_level(2, "find_nan(): detection of non-finite values is not reliable in fast math mode"); }
   
   const Proxy<T1> P(X.m);
   

@@ -308,24 +308,28 @@ BaseCube<elem_type,derived>::is_finite() const
   {
   arma_extra_debug_sigprint();
   
-  const ProxyCube<derived> P( (*this).get_ref() );
+  if(arma_config::fast_math)  { arma_debug_warn_level(2, "is_finite(): detection of non-finite values is not reliable in fast math mode"); }
   
   if(is_Cube<typename ProxyCube<derived>::stored_type>::value)
     {
-    const unwrap_cube<typename ProxyCube<derived>::stored_type> U(P.Q);
+    const unwrap_cube<derived> U( (*this).get_ref() );
     
     return arrayops::is_finite( U.M.memptr(), U.M.n_elem );
     }
-  
-  const uword n_r = P.get_n_rows();
-  const uword n_c = P.get_n_cols();
-  const uword n_s = P.get_n_slices();
-  
-  for(uword s=0; s<n_s; ++s)
-  for(uword c=0; c<n_c; ++c)
-  for(uword r=0; r<n_r; ++r)
+  else
     {
-    if( arma_isfinite(P.at(r,c,s)) == false )  { return false; }
+    const ProxyCube<derived> P( (*this).get_ref() );
+    
+    const uword n_r = P.get_n_rows();
+    const uword n_c = P.get_n_cols();
+    const uword n_s = P.get_n_slices();
+    
+    for(uword s=0; s<n_s; ++s)
+    for(uword c=0; c<n_c; ++c)
+    for(uword r=0; r<n_r; ++r)
+      {
+      if( arma_isfinite(P.at(r,c,s)) == false )  { return false; }
+      }
     }
   
   return true;
@@ -340,24 +344,28 @@ BaseCube<elem_type,derived>::has_inf() const
   {
   arma_extra_debug_sigprint();
   
-  const ProxyCube<derived> P( (*this).get_ref() );
+  if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_inf(): detection of non-finite values is not reliable in fast math mode"); }
   
   if(is_Cube<typename ProxyCube<derived>::stored_type>::value)
     {
-    const unwrap_cube<typename ProxyCube<derived>::stored_type> U(P.Q);
+    const unwrap_cube<derived> U( (*this).get_ref() );
     
     return arrayops::has_inf( U.M.memptr(), U.M.n_elem );
     }
-  
-  const uword n_r = P.get_n_rows();
-  const uword n_c = P.get_n_cols();
-  const uword n_s = P.get_n_slices();
-  
-  for(uword s=0; s<n_s; ++s)
-  for(uword c=0; c<n_c; ++c)
-  for(uword r=0; r<n_r; ++r)
+  else
     {
-    if(arma_isinf(P.at(r,c,s)))  { return true; }
+    const ProxyCube<derived> P( (*this).get_ref() );
+    
+    const uword n_r = P.get_n_rows();
+    const uword n_c = P.get_n_cols();
+    const uword n_s = P.get_n_slices();
+    
+    for(uword s=0; s<n_s; ++s)
+    for(uword c=0; c<n_c; ++c)
+    for(uword r=0; r<n_r; ++r)
+      {
+      if(arma_isinf(P.at(r,c,s)))  { return true; }
+      }
     }
   
   return false;
@@ -372,24 +380,64 @@ BaseCube<elem_type,derived>::has_nan() const
   {
   arma_extra_debug_sigprint();
   
-  const ProxyCube<derived> P( (*this).get_ref() );
+  if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_nan(): detection of non-finite values is not reliable in fast math mode"); }
   
   if(is_Cube<typename ProxyCube<derived>::stored_type>::value)
     {
-    const unwrap_cube<typename ProxyCube<derived>::stored_type> U(P.Q);
+    const unwrap_cube<derived> U( (*this).get_ref() );
     
     return arrayops::has_nan( U.M.memptr(), U.M.n_elem );
     }
-  
-  const uword n_r = P.get_n_rows();
-  const uword n_c = P.get_n_cols();
-  const uword n_s = P.get_n_slices();
-  
-  for(uword s=0; s<n_s; ++s)
-  for(uword c=0; c<n_c; ++c)
-  for(uword r=0; r<n_r; ++r)
+  else
     {
-    if(arma_isnan(P.at(r,c,s)))  { return true; }
+    const ProxyCube<derived> P( (*this).get_ref() );
+    
+    const uword n_r = P.get_n_rows();
+    const uword n_c = P.get_n_cols();
+    const uword n_s = P.get_n_slices();
+    
+    for(uword s=0; s<n_s; ++s)
+    for(uword c=0; c<n_c; ++c)
+    for(uword r=0; r<n_r; ++r)
+      {
+      if(arma_isnan(P.at(r,c,s)))  { return true; }
+      }
+    }
+  
+  return false;
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+bool
+BaseCube<elem_type,derived>::has_nonfinite() const
+  {
+  arma_extra_debug_sigprint();
+  
+  if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_nonfinite(): detection of non-finite values is not reliable in fast math mode"); }
+  
+  if(is_Cube<typename ProxyCube<derived>::stored_type>::value)
+    {
+    const unwrap_cube<derived> U( (*this).get_ref() );
+    
+    return (arrayops::is_finite( U.M.memptr(), U.M.n_elem ) == false);
+    }
+  else
+    {
+    const ProxyCube<derived> P( (*this).get_ref() );
+    
+    const uword n_r = P.get_n_rows();
+    const uword n_c = P.get_n_cols();
+    const uword n_s = P.get_n_slices();
+    
+    for(uword s=0; s<n_s; ++s)
+    for(uword c=0; c<n_c; ++c)
+    for(uword r=0; r<n_r; ++r)
+      {
+      if(arma_isfinite(P.at(r,c,s)) == false)  { return true; }
+      }
     }
   
   return false;
