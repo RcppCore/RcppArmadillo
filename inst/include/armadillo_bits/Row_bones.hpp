@@ -67,6 +67,9 @@ class Row : public Mat<eT>
   inline            Row(Row&& m);
   inline Row& operator=(Row&& m);
   
+  inline            Row(Mat<eT>&& m);
+  inline Row& operator=(Mat<eT>&& m);
+  
   inline Row& operator=(const eT val);
   inline Row& operator=(const Row& X);
   

@@ -164,4 +164,68 @@ struct strip_trimat< Op<T1, op_trimat> >
 
 
 
+//
+
+
+
+template<typename T1>
+struct sp_strip_trans
+  {
+  typedef T1 stored_type;
+  
+  inline
+  sp_strip_trans(const T1& X)
+    : M(X)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  static constexpr bool do_htrans = false;
+  static constexpr bool do_strans = false;
+  
+  const T1& M;
+  };
+
+
+
+template<typename T1>
+struct sp_strip_trans< SpOp<T1, spop_htrans> >
+  {
+  typedef T1 stored_type;
+  
+  inline
+  sp_strip_trans(const SpOp<T1, spop_htrans>& X)
+    : M(X.m)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  static constexpr bool do_htrans = true;
+  static constexpr bool do_strans = false;
+  
+  const T1& M;
+  };
+
+
+
+template<typename T1>
+struct sp_strip_trans< SpOp<T1, spop_strans> >
+  {
+  typedef T1 stored_type;
+  
+  inline
+  sp_strip_trans(const SpOp<T1, spop_strans>& X)
+    : M(X.m)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  static constexpr bool do_htrans = false;
+  static constexpr bool do_strans = true;
+  
+  const T1& M;
+  };
+
+
+
 //! @}

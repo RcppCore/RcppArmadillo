@@ -1346,7 +1346,7 @@ subview_cube<eT>::is_finite() const
   {
   arma_extra_debug_sigprint();
   
-  if(arma_config::fast_math)  { arma_debug_warn_level(2, "is_finite(): detection of non-finite values is not reliable in fast math mode"); }
+  if(arma_config::fast_math_warn)  { arma_debug_warn_level(1, "is_finite(): detection of non-finite values is not reliable in fast math mode"); }
   
   const uword local_n_rows   = n_rows;
   const uword local_n_cols   = n_cols;
@@ -1396,7 +1396,7 @@ subview_cube<eT>::has_inf() const
   {
   arma_extra_debug_sigprint();
   
-  if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_inf(): detection of non-finite values is not reliable in fast math mode"); }
+  if(arma_config::fast_math_warn)  { arma_debug_warn_level(1, "has_inf(): detection of non-finite values is not reliable in fast math mode"); }
   
   const uword local_n_rows   = n_rows;
   const uword local_n_cols   = n_cols;
@@ -1422,7 +1422,7 @@ subview_cube<eT>::has_nan() const
   {
   arma_extra_debug_sigprint();
   
-  if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_nan(): detection of non-finite values is not reliable in fast math mode"); }
+  if(arma_config::fast_math_warn)  { arma_debug_warn_level(1, "has_nan(): detection of non-finite values is not reliable in fast math mode"); }
   
   const uword local_n_rows   = n_rows;
   const uword local_n_cols   = n_cols;
@@ -1448,7 +1448,7 @@ subview_cube<eT>::has_nonfinite() const
   {
   arma_extra_debug_sigprint();
   
-  if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_nonfinite(): detection of non-finite values is not reliable in fast math mode"); }
+  if(arma_config::fast_math_warn)  { arma_debug_warn_level(1, "has_nonfinite(): detection of non-finite values is not reliable in fast math mode"); }
   
   const uword local_n_rows   = n_rows;
   const uword local_n_cols   = n_cols;

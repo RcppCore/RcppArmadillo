@@ -16,44 +16,28 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup arma_version
+//! \addtogroup SpToDGlue
 //! @{
 
 
 
-#define ARMA_VERSION_MAJOR 12
-#define ARMA_VERSION_MINOR 6
-#define ARMA_VERSION_PATCH 0
-#define ARMA_VERSION_NAME  "Cortisol Retox"
-
-
-
-struct arma_version
+template<typename T1, typename T2, typename glue_type>
+class SpToDGlue : public Base< typename T1::elem_type, SpToDGlue<T1, T2, glue_type> >
   {
-  static constexpr unsigned int major = ARMA_VERSION_MAJOR;
-  static constexpr unsigned int minor = ARMA_VERSION_MINOR;
-  static constexpr unsigned int patch = ARMA_VERSION_PATCH;
+  public:
   
-  static
-  inline
-  std::string
-  as_string()
-    {
-    const char* nickname = ARMA_VERSION_NAME;
-    
-    std::ostringstream ss;
-    
-    ss << arma_version::major
-       << '.'
-       << arma_version::minor
-       << '.'
-       << arma_version::patch
-       << " ("
-       << nickname
-       << ')';
-    
-    return ss.str();
-    }
+  typedef typename T1::elem_type                   elem_type;
+  typedef typename get_pod_type<elem_type>::result pod_type;
+  
+  inline explicit SpToDGlue(const T1& in_A, const T2& in_B);
+  inline         ~SpToDGlue();
+  
+  const T1& A;  //!< first operand;  must be derived from Base or SpBase
+  const T2& B;  //!< second operand; must be derived from Base or SpBase
+  
+  static constexpr bool is_row  = glue_type::template traits<T1,T2>::is_row;
+  static constexpr bool is_col  = glue_type::template traits<T1,T2>::is_col;
+  static constexpr bool is_xvec = glue_type::template traits<T1,T2>::is_xvec;
   };
 
 

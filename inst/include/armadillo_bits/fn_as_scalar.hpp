@@ -362,6 +362,8 @@ inline
 typename T1::elem_type
 as_scalar(const SpBase<typename T1::elem_type, T1>& X)
   {
+  arma_extra_debug_sigprint();
+  
   typedef typename T1::elem_type eT;
   
   const unwrap_spmat<T1>  tmp(X.get_ref());

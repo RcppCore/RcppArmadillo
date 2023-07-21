@@ -28,6 +28,8 @@ SparseGenMatProd<eT>::SparseGenMatProd(const SpMat<eT>& mat_obj)
   , n_cols(mat_obj.n_cols)
   {
   arma_extra_debug_sigprint();
+  
+  op_mat_st = op_mat.st(); // pre-calculate transpose
   }
 
 
@@ -41,10 +43,20 @@ SparseGenMatProd<eT>::perform_op(eT* x_in, eT* y_out) const
   {
   arma_extra_debug_sigprint();
   
-  const Col<eT> x(x_in , n_cols, false, true);
-        Col<eT> y(y_out, n_rows, false, true);
+  // // OLD METHOD
+  // 
+  // const Col<eT> x(x_in , n_cols, false, true);
+  //       Col<eT> y(y_out, n_rows, false, true);
+  // 
+  // y = op_mat * x;
   
-  y = op_mat * x;
+  
+  // NEW METHOD
+  
+  const Row<eT> x(x_in , n_cols, false, true);
+        Row<eT> y(y_out, n_rows, false, true);
+  
+  y =  x * op_mat_st;
   }
 
 

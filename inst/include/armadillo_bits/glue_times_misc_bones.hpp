@@ -16,12 +16,12 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup spglue_times
+//! \addtogroup glue_times_misc
 //! @{
 
 
 
-class spglue_times
+class glue_times_dense_sparse
   {
   public:
   
@@ -34,18 +34,18 @@ class spglue_times
     };
   
   template<typename T1, typename T2>
-  inline static void apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglue_times>& X);
+  inline static void apply(Mat<typename T1::elem_type>& out, const SpToDGlue<T1,T2,glue_times_dense_sparse>& expr);
   
   template<typename T1, typename T2>
-  inline static void apply(SpMat<typename T1::elem_type>& out, const SpGlue<SpOp<T1,spop_scalar_times>,T2,spglue_times>& X);
+  inline static void apply_noalias(Mat<typename T1::elem_type>& out, const T1& x, const T2& y);
   
-  template<typename eT>
-  inline static void apply_noalias(SpMat<eT>& c, const SpMat<eT>& x, const SpMat<eT>& y);
+  template<typename T1, typename T2>
+  inline static void apply_mixed(Mat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result >& out, const T1& X, const T2& Y);
   };
 
 
 
-class spglue_times_mixed
+class glue_times_sparse_dense
   {
   public:
   
@@ -58,7 +58,16 @@ class spglue_times_mixed
     };
   
   template<typename T1, typename T2>
-  inline static void apply(SpMat<typename eT_promoter<T1,T2>::eT>& out, const mtSpGlue<typename eT_promoter<T1,T2>::eT, T1, T2, spglue_times_mixed>& expr);
+  inline static void apply(Mat<typename T1::elem_type>& out, const SpToDGlue<T1,T2,glue_times_sparse_dense>& expr);
+  
+  template<typename T1, typename T2>
+  inline static void apply_noalias(Mat<typename T1::elem_type>& out, const T1& x, const T2& y);
+  
+  template<typename T1, typename T2>
+  inline static void apply_noalias_trans(Mat<typename T1::elem_type>& out, const T1& x, const T2& y);
+  
+  template<typename T1, typename T2>
+  inline static void apply_mixed(Mat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result >& out, const T1& X, const T2& Y);
   };
 
 

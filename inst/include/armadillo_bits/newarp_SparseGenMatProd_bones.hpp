@@ -27,6 +27,7 @@ class SparseGenMatProd
   private:
   
   const SpMat<eT>& op_mat;
+        SpMat<eT>  op_mat_st;
   
   
   public:

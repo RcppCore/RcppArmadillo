@@ -324,51 +324,51 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   arma_warn_unused arma_inline bool in_range(const uword in_row, const uword in_col, const SizeMat& s) const;
   
   
-  template<typename eT2> inline void copy_size(const SpMat<eT2>& m);
-  template<typename eT2> inline void copy_size(const   Mat<eT2>& m);
+  template<typename eT2> inline SpMat& copy_size(const SpMat<eT2>& m);
+  template<typename eT2> inline SpMat& copy_size(const   Mat<eT2>& m);
   
-  inline void set_size(const uword in_elem);
-  inline void set_size(const uword in_rows, const uword in_cols);
-  inline void set_size(const SizeMat& s);
+  inline SpMat& set_size(const uword in_elem);
+  inline SpMat& set_size(const uword in_rows, const uword in_cols);
+  inline SpMat& set_size(const SizeMat& s);
   
-  inline void   resize(const uword in_rows, const uword in_cols);
-  inline void   resize(const SizeMat& s);
+  inline SpMat&   resize(const uword in_rows, const uword in_cols);
+  inline SpMat&   resize(const SizeMat& s);
   
-  inline void  reshape(const uword in_rows, const uword in_cols);
-  inline void  reshape(const SizeMat& s);
+  inline SpMat&  reshape(const uword in_rows, const uword in_cols);
+  inline SpMat&  reshape(const SizeMat& s);
   
   inline void  reshape_helper_generic(const uword in_rows, const uword in_cols);  //! internal use only
   inline void  reshape_helper_intovec();                                          //! internal use only
   
-  template<typename functor> inline const SpMat&  for_each(functor F);
+  template<typename functor> inline       SpMat&  for_each(functor F);
   template<typename functor> inline const SpMat&  for_each(functor F) const;
   
-  template<typename functor> inline const SpMat& transform(functor F);
+  template<typename functor> inline       SpMat& transform(functor F);
   
-  inline const SpMat& replace(const eT old_val, const eT new_val);
+  inline SpMat& replace(const eT old_val, const eT new_val);
   
-  inline const SpMat& clean(const pod_type threshold);
+  inline SpMat& clean(const pod_type threshold);
   
-  inline const SpMat& clamp(const eT min_val, const eT max_val);
+  inline SpMat& clamp(const eT min_val, const eT max_val);
   
-  inline const SpMat& zeros();
-  inline const SpMat& zeros(const uword in_elem);
-  inline const SpMat& zeros(const uword in_rows, const uword in_cols);
-  inline const SpMat& zeros(const SizeMat& s);
+  inline SpMat& zeros();
+  inline SpMat& zeros(const uword in_elem);
+  inline SpMat& zeros(const uword in_rows, const uword in_cols);
+  inline SpMat& zeros(const SizeMat& s);
   
-  inline const SpMat& eye();
-  inline const SpMat& eye(const uword in_rows, const uword in_cols);
-  inline const SpMat& eye(const SizeMat& s);
+  inline SpMat& eye();
+  inline SpMat& eye(const uword in_rows, const uword in_cols);
+  inline SpMat& eye(const SizeMat& s);
   
-  inline const SpMat& speye();
-  inline const SpMat& speye(const uword in_rows, const uword in_cols);
-  inline const SpMat& speye(const SizeMat& s);
+  inline SpMat& speye();
+  inline SpMat& speye(const uword in_rows, const uword in_cols);
+  inline SpMat& speye(const SizeMat& s);
   
-  inline const SpMat& sprandu(const uword in_rows, const uword in_cols, const double density);
-  inline const SpMat& sprandu(const SizeMat& s,                         const double density);
+  inline SpMat& sprandu(const uword in_rows, const uword in_cols, const double density);
+  inline SpMat& sprandu(const SizeMat& s,                         const double density);
   
-  inline const SpMat& sprandn(const uword in_rows, const uword in_cols, const double density);
-  inline const SpMat& sprandn(const SizeMat& s,                         const double density);
+  inline SpMat& sprandn(const uword in_rows, const uword in_cols, const double density);
+  inline SpMat& sprandn(const SizeMat& s,                         const double density);
   
   inline void reset();
   inline void reset_cache();

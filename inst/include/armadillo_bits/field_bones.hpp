@@ -67,11 +67,11 @@ class field
   inline explicit field(const SizeMat&  s);
   inline explicit field(const SizeCube& s);
   
-  inline void  set_size(const uword n_obj_in);
-  inline void  set_size(const uword n_rows_in, const uword n_cols_in);
-  inline void  set_size(const uword n_rows_in, const uword n_cols_in, const uword n_slices_in);
-  inline void  set_size(const SizeMat&  s);
-  inline void  set_size(const SizeCube& s);
+  inline field& set_size(const uword n_obj_in);
+  inline field& set_size(const uword n_rows_in, const uword n_cols_in);
+  inline field& set_size(const uword n_rows_in, const uword n_cols_in, const uword n_slices_in);
+  inline field& set_size(const SizeMat&  s);
+  inline field& set_size(const SizeCube& s);
   
   inline            field(const std::vector<oT>& x);
   inline field& operator=(const std::vector<oT>& x);
@@ -86,7 +86,7 @@ class field
   inline field& operator=(field&& X);
   
   template<typename oT2>
-  inline void copy_size(const field<oT2>& x);
+  inline field& copy_size(const field<oT2>& x);
   
   arma_warn_unused arma_inline       oT& operator[](const uword i);
   arma_warn_unused arma_inline const oT& operator[](const uword i) const;
@@ -183,10 +183,10 @@ class field
   arma_cold inline void print(                           const std::string extra_text = "") const;
   arma_cold inline void print(std::ostream& user_stream, const std::string extra_text = "") const;
   
-  inline const field& for_each(const std::function< void(      oT&) >& F);
+  inline       field& for_each(const std::function< void(      oT&) >& F);
   inline const field& for_each(const std::function< void(const oT&) >& F) const;
   
-  inline const field& fill(const oT& x);
+  inline field& fill(const oT& x);
   
   inline void reset();
   inline void reset_objects();

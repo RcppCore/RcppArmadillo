@@ -223,10 +223,17 @@ struct arma_config
   #endif
   
   
-  #if (defined(__FAST_MATH__) || (defined(__FINITE_MATH_ONLY__) && (__FINITE_MATH_ONLY__ > 0)) || defined(_M_FP_FAST))
+  #if defined(ARMA_FAST_MATH)
     static constexpr bool fast_math = true;
   #else
     static constexpr bool fast_math = false;
+  #endif
+  
+  
+  #if defined(ARMA_FAST_MATH) && !defined(ARMA_DONT_PRINT_FAST_MATH_WARNING)
+    static constexpr bool fast_math_warn = true;
+  #else
+    static constexpr bool fast_math_warn = false;
   #endif
   
   

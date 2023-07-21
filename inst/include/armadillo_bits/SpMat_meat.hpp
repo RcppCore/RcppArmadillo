@@ -3676,12 +3676,12 @@ SpMat<eT>::in_range(const uword in_row, const uword in_col, const SizeMat& s) co
 template<typename eT>
 template<typename eT2>
 inline
-void
+SpMat<eT>&
 SpMat<eT>::copy_size(const SpMat<eT2>& m)
   {
   arma_extra_debug_sigprint();
   
-  set_size(m.n_rows, m.n_cols);
+  return set_size(m.n_rows, m.n_cols);
   }
 
 
@@ -3689,19 +3689,19 @@ SpMat<eT>::copy_size(const SpMat<eT2>& m)
 template<typename eT>
 template<typename eT2>
 inline
-void
+SpMat<eT>&
 SpMat<eT>::copy_size(const Mat<eT2>& m)
   {
   arma_extra_debug_sigprint();
   
-  set_size(m.n_rows, m.n_cols);
+  return set_size(m.n_rows, m.n_cols);
   }
 
 
 
 template<typename eT>
 inline
-void
+SpMat<eT>&
 SpMat<eT>::set_size(const uword in_elem)
   {
   arma_extra_debug_sigprint();
@@ -3715,57 +3715,52 @@ SpMat<eT>::set_size(const uword in_elem)
     {
     set_size(in_elem, 1);
     }
+  
+  return *this;
   }
 
 
 
 template<typename eT>
 inline
-void
+SpMat<eT>&
 SpMat<eT>::set_size(const uword in_rows, const uword in_cols)
   {
   arma_extra_debug_sigprint();
   
   invalidate_cache(); // placed here, as set_size() is used during matrix modification
   
-  if( (n_rows == in_rows) && (n_cols == in_cols) )
-    {
-    return;
-    }
-  else
-    {
-    init(in_rows, in_cols);
-    }
+  if( (n_rows == in_rows) && (n_cols == in_cols) )  { return *this; }
+  
+  init(in_rows, in_cols);
+  
+  return *this;
   }
 
 
 
 template<typename eT>
 inline
-void
+SpMat<eT>&
 SpMat<eT>::set_size(const SizeMat& s)
   {
   arma_extra_debug_sigprint();
   
-  (*this).set_size(s.n_rows, s.n_cols);
+  return (*this).set_size(s.n_rows, s.n_cols);
   }
 
 
 
 template<typename eT>
 inline
-void
+SpMat<eT>&
 SpMat<eT>::resize(const uword in_rows, const uword in_cols)
   {
   arma_extra_debug_sigprint();
   
-  if( (n_rows == in_rows) && (n_cols == in_cols) )  { return; }
+  if( (n_rows == in_rows) && (n_cols == in_cols) )  { return *this; }
   
-  if( (n_elem == 0) || (n_nonzero == 0) )
-    {
-    set_size(in_rows, in_cols);
-    return;
-    }
+  if( (n_elem == 0) || (n_nonzero == 0) )  { return set_size(in_rows, in_cols); }
   
   SpMat<eT> tmp(in_rows, in_cols);
   
@@ -3780,41 +3775,39 @@ SpMat<eT>::resize(const uword in_rows, const uword in_cols)
     }
   
   steal_mem(tmp);
+  
+  return *this;
   }
 
 
 
 template<typename eT>
 inline
-void
+SpMat<eT>&
 SpMat<eT>::resize(const SizeMat& s)
   {
   arma_extra_debug_sigprint();
   
-  (*this).resize(s.n_rows, s.n_cols);
+  return (*this).resize(s.n_rows, s.n_cols);
   }
 
 
 
 template<typename eT>
 inline
-void
+SpMat<eT>&
 SpMat<eT>::reshape(const uword in_rows, const uword in_cols)
   {
   arma_extra_debug_sigprint();
   
   arma_check( ((in_rows*in_cols) != n_elem), "SpMat::reshape(): changing the number of elements in a sparse matrix is currently not supported" );
   
-  if( (n_rows == in_rows) && (n_cols == in_cols) )  { return; }
+  if( (n_rows == in_rows) && (n_cols == in_cols) )  { return *this; }
   
   if(vec_state == 1)  { arma_debug_check( (in_cols != 1), "SpMat::reshape(): object is a column vector; requested size is not compatible" ); }
   if(vec_state == 2)  { arma_debug_check( (in_rows != 1), "SpMat::reshape(): object is a row vector; requested size is not compatible"    ); }
   
-  if(n_nonzero == 0)
-    {
-    (*this).zeros(in_rows, in_cols);
-    return;
-    }
+  if(n_nonzero == 0)  { return (*this).zeros(in_rows, in_cols); }
   
   if(in_cols == 1)
     {
@@ -3824,18 +3817,20 @@ SpMat<eT>::reshape(const uword in_rows, const uword in_cols)
     {
     (*this).reshape_helper_generic(in_rows, in_cols);
     }
+  
+  return *this;
   }
 
 
 
 template<typename eT>
 inline
-void
+SpMat<eT>&
 SpMat<eT>::reshape(const SizeMat& s)
   {
   arma_extra_debug_sigprint();
   
-  (*this).reshape(s.n_rows, s.n_cols);
+  return (*this).reshape(s.n_rows, s.n_cols);
   }
 
 
@@ -3933,7 +3928,7 @@ SpMat<eT>::reshape_helper_intovec()
 template<typename eT>
 template<typename functor>
 inline
-const SpMat<eT>&
+SpMat<eT>&
 SpMat<eT>::for_each(functor F)
   {
   arma_extra_debug_sigprint();
@@ -3978,10 +3973,7 @@ SpMat<eT>::for_each(functor F) const
   
   const uword N = (*this).n_nonzero;
   
-  for(uword i=0; i < N; ++i)
-    {
-    F(values[i]);
-    }
+  for(uword i=0; i < N; ++i)  { F(values[i]); }
   
   return *this;
   }
@@ -3992,7 +3984,7 @@ SpMat<eT>::for_each(functor F) const
 template<typename eT>
 template<typename functor>
 inline
-const SpMat<eT>&
+SpMat<eT>&
 SpMat<eT>::transform(functor F)
   {
   arma_extra_debug_sigprint();
@@ -4024,7 +4016,7 @@ SpMat<eT>::transform(functor F)
 
 template<typename eT>
 inline
-const SpMat<eT>&
+SpMat<eT>&
 SpMat<eT>::replace(const eT old_val, const eT new_val)
   {
   arma_extra_debug_sigprint();
@@ -4050,7 +4042,7 @@ SpMat<eT>::replace(const eT old_val, const eT new_val)
 
 template<typename eT>
 inline
-const SpMat<eT>&
+SpMat<eT>&
 SpMat<eT>::clean(const typename get_pod_type<eT>::result threshold)
   {
   arma_extra_debug_sigprint();
@@ -4071,7 +4063,7 @@ SpMat<eT>::clean(const typename get_pod_type<eT>::result threshold)
 
 template<typename eT>
 inline
-const SpMat<eT>&
+SpMat<eT>&
 SpMat<eT>::clamp(const eT min_val, const eT max_val)
   {
   arma_extra_debug_sigprint();
@@ -4102,17 +4094,14 @@ SpMat<eT>::clamp(const eT min_val, const eT max_val)
 
 template<typename eT>
 inline
-const SpMat<eT>&
+SpMat<eT>&
 SpMat<eT>::zeros()
   {
   arma_extra_debug_sigprint();
   
   const bool already_done = ( (sync_state != 1) && (n_nonzero == 0) );
   
-  if(already_done == false)
-    {
-    init(n_rows, n_cols);
-    }
+  if(already_done == false)  { init(n_rows, n_cols); }
   
   return *this;
   }
@@ -4121,7 +4110,7 @@ SpMat<eT>::zeros()
 
 template<typename eT>
 inline
-const SpMat<eT>&
+SpMat<eT>&
 SpMat<eT>::zeros(const uword in_elem)
   {
   arma_extra_debug_sigprint();
@@ -4142,17 +4131,14 @@ SpMat<eT>::zeros(const uword in_elem)
 
 template<typename eT>
 inline
-const SpMat<eT>&
+SpMat<eT>&
 SpMat<eT>::zeros(const uword in_rows, const uword in_cols)
   {
   arma_extra_debug_sigprint();
   
   const bool already_done = ( (sync_state != 1) && (n_nonzero == 0) && (n_rows == in_rows) && (n_cols == in_cols) );
   
-  if(already_done == false)
-    {
-    init(in_rows, in_cols);
-    }
+  if(already_done == false)  { init(in_rows, in_cols); }
   
   return *this;
   }
@@ -4161,7 +4147,7 @@ SpMat<eT>::zeros(const uword in_rows, const uword in_cols)
 
 template<typename eT>
 inline
-const SpMat<eT>&
+SpMat<eT>&
 SpMat<eT>::zeros(const SizeMat& s)
   {
   arma_extra_debug_sigprint();
@@ -4173,7 +4159,7 @@ SpMat<eT>::zeros(const SizeMat& s)
 
 template<typename eT>
 inline
-const SpMat<eT>&
+SpMat<eT>&
 SpMat<eT>::eye()
   {
   arma_extra_debug_sigprint();
@@ -4185,7 +4171,7 @@ SpMat<eT>::eye()
 
 template<typename eT>
 inline
-const SpMat<eT>&
+SpMat<eT>&
 SpMat<eT>::eye(const uword in_rows, const uword in_cols)
   {
   arma_extra_debug_sigprint();
@@ -4212,7 +4198,7 @@ SpMat<eT>::eye(const uword in_rows, const uword in_cols)
 
 template<typename eT>
 inline
-const SpMat<eT>&
+SpMat<eT>&
 SpMat<eT>::eye(const SizeMat& s)
   {
   arma_extra_debug_sigprint();
@@ -4224,7 +4210,7 @@ SpMat<eT>::eye(const SizeMat& s)
 
 template<typename eT>
 inline
-const SpMat<eT>&
+SpMat<eT>&
 SpMat<eT>::speye()
   {
   arma_extra_debug_sigprint();
@@ -4236,7 +4222,7 @@ SpMat<eT>::speye()
 
 template<typename eT>
 inline
-const SpMat<eT>&
+SpMat<eT>&
 SpMat<eT>::speye(const uword in_n_rows, const uword in_n_cols)
   {
   arma_extra_debug_sigprint();
@@ -4248,7 +4234,7 @@ SpMat<eT>::speye(const uword in_n_rows, const uword in_n_cols)
 
 template<typename eT>
 inline
-const SpMat<eT>&
+SpMat<eT>&
 SpMat<eT>::speye(const SizeMat& s)
   {
   arma_extra_debug_sigprint();
@@ -4260,7 +4246,7 @@ SpMat<eT>::speye(const SizeMat& s)
 
 template<typename eT>
 inline
-const SpMat<eT>&
+SpMat<eT>&
 SpMat<eT>::sprandu(const uword in_rows, const uword in_cols, const double density)
   {
   arma_extra_debug_sigprint();
@@ -4334,7 +4320,7 @@ SpMat<eT>::sprandu(const uword in_rows, const uword in_cols, const double densit
 
 template<typename eT>
 inline
-const SpMat<eT>&
+SpMat<eT>&
 SpMat<eT>::sprandu(const SizeMat& s, const double density)
   {
   arma_extra_debug_sigprint();
@@ -4346,7 +4332,7 @@ SpMat<eT>::sprandu(const SizeMat& s, const double density)
 
 template<typename eT>
 inline
-const SpMat<eT>&
+SpMat<eT>&
 SpMat<eT>::sprandn(const uword in_rows, const uword in_cols, const double density)
   {
   arma_extra_debug_sigprint();
@@ -4420,7 +4406,7 @@ SpMat<eT>::sprandn(const uword in_rows, const uword in_cols, const double densit
 
 template<typename eT>
 inline
-const SpMat<eT>&
+SpMat<eT>&
 SpMat<eT>::sprandn(const SizeMat& s, const double density)
   {
   arma_extra_debug_sigprint();
@@ -4436,20 +4422,12 @@ void
 SpMat<eT>::reset()
   {
   arma_extra_debug_sigprint();
-
+  
   switch(vec_state)
     {
-    default:
-      init(0, 0);
-      break;
-      
-    case 1:
-      init(0, 1);
-      break;
-    
-    case 2:
-      init(1, 0);
-      break;
+    default:  init(0, 0); break;
+    case 1:   init(0, 1); break;
+    case 2:   init(1, 0); break;
     }
   }
 

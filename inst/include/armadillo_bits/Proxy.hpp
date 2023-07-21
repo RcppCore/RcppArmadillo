@@ -929,6 +929,53 @@ struct Proxy< SpToDOp<T1, op_nonzeros_spmat> >
 
 
 
+template<typename T1, typename T2, typename glue_type>
+struct Proxy< SpToDGlue<T1, T2, glue_type> >
+  {
+  typedef typename T1::elem_type                   elem_type;
+  typedef typename get_pod_type<elem_type>::result pod_type;
+  typedef Mat<elem_type>                           stored_type;
+  typedef const elem_type*                         ea_type;
+  typedef const Mat<elem_type>&                    aligned_ea_type;
+  
+  static constexpr bool use_at      = false;
+  static constexpr bool use_mp      = false;
+  static constexpr bool has_subview = false;
+  
+  static constexpr bool is_row  = SpToDGlue<T1, T2, glue_type>::is_row;
+  static constexpr bool is_col  = SpToDGlue<T1, T2, glue_type>::is_col;
+  static constexpr bool is_xvec = SpToDGlue<T1, T2, glue_type>::is_xvec;
+  
+  arma_aligned const Mat<elem_type> Q;
+  
+  inline explicit Proxy(const SpToDGlue<T1, T2, glue_type>& A)
+    : Q(A)
+    {
+    arma_extra_debug_sigprint();
+    }
+
+  arma_inline uword get_n_rows() const { return is_row ? 1 : Q.n_rows; }
+  arma_inline uword get_n_cols() const { return is_col ? 1 : Q.n_cols; }
+  arma_inline uword get_n_elem() const { return Q.n_elem;              }
+  
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
+  arma_inline elem_type at         (const uword r, const uword c) const { return Q.at(r, c);  }
+  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
+  
+  arma_inline         ea_type         get_ea() const { return Q.memptr(); }
+  arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
+  
+  template<typename eT2>
+  constexpr bool is_alias(const Mat<eT2>&) const { return false; }
+  
+  template<typename eT2>
+  constexpr bool has_overlap(const subview<eT2>&) const { return false; }
+  
+  arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
+  };
+
+
+
 template<typename eT>
 struct Proxy< subview<eT> >
   {

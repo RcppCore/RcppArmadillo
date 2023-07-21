@@ -133,7 +133,18 @@ randg(const distr_param& param = distr_param())
   {
   arma_extra_debug_sigprint();
   
-  return as_scalar( randg<vec>(uword(1), uword(1), param) );
+  double a = double(1);
+  double b = double(1);
+  
+  param.get_double_vals(a,b);
+  
+  arma_debug_check( ((a <= double(0)) || (b <= double(0))), "randg(): incorrect distribution parameters; a and b must be greater than zero" );
+  
+  double out_val = double(0);
+  
+  arma_rng::randg<double>::fill(&out_val, uword(1), a, b);
+  
+  return out_val;
   }
 
 
@@ -144,7 +155,20 @@ inline
 typename arma_real_or_cx_only<eT>::result
 randg(const distr_param& param = distr_param())
   {
-  return eT( as_scalar( randg< Col<eT> >(uword(1), uword(1), param) ) );
+  arma_extra_debug_sigprint();
+  
+  double a = double(1);
+  double b = double(1);
+  
+  param.get_double_vals(a,b);
+  
+  arma_debug_check( ((a <= double(0)) || (b <= double(0))), "randg(): incorrect distribution parameters; a and b must be greater than zero" );
+  
+  eT out_val = eT(0);
+  
+  arma_rng::randg<eT>::fill(&out_val, uword(1), a, b);
+  
+  return out_val;
   }
 
 

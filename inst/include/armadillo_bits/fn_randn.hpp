@@ -28,6 +28,8 @@ inline
 double
 randn()
   {
+  arma_extra_debug_sigprint();
+  
   return double(arma_rng::randn<double>());
   }
 
@@ -39,6 +41,8 @@ inline
 typename arma_real_or_cx_only<eT>::result
 randn()
   {
+  arma_extra_debug_sigprint();
+  
   return eT(arma_rng::randn<eT>());
   }
 

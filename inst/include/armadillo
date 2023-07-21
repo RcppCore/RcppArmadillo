@@ -234,6 +234,7 @@ namespace arma
   #include "armadillo_bits/mtGlue_bones.hpp"
   #include "armadillo_bits/SpGlue_bones.hpp"
   #include "armadillo_bits/mtSpGlue_bones.hpp"
+  #include "armadillo_bits/SpToDGlue_bones.hpp"
   
   #include "armadillo_bits/GlueCube_bones.hpp"
   #include "armadillo_bits/eGlueCube_bones.hpp"
@@ -321,6 +322,7 @@ namespace arma
   #include "armadillo_bits/op_col_as_mat_bones.hpp"
   
   #include "armadillo_bits/glue_times_bones.hpp"
+  #include "armadillo_bits/glue_times_misc_bones.hpp"
   #include "armadillo_bits/glue_mixed_bones.hpp"
   #include "armadillo_bits/glue_cov_bones.hpp"
   #include "armadillo_bits/glue_cor_bones.hpp"
@@ -579,6 +581,7 @@ namespace arma
   #include "armadillo_bits/fn_quantile.hpp"
   #include "armadillo_bits/fn_powmat.hpp"
   #include "armadillo_bits/fn_powext.hpp"
+  #include "armadillo_bits/fn_diags_spdiags.hpp"
   
   #include "armadillo_bits/fn_speye.hpp"
   #include "armadillo_bits/fn_spones.hpp"
@@ -625,6 +628,7 @@ namespace arma
   #include "armadillo_bits/GlueCube_meat.hpp"
   #include "armadillo_bits/SpGlue_meat.hpp"
   #include "armadillo_bits/mtSpGlue_meat.hpp"
+  #include "armadillo_bits/SpToDGlue_meat.hpp"
   
   #include "armadillo_bits/eOp_meat.hpp"
   #include "armadillo_bits/eOpCube_meat.hpp"
@@ -765,6 +769,7 @@ namespace arma
   #include "armadillo_bits/op_col_as_mat_meat.hpp"
   
   #include "armadillo_bits/glue_times_meat.hpp"
+  #include "armadillo_bits/glue_times_misc_meat.hpp"
   #include "armadillo_bits/glue_mixed_meat.hpp"
   #include "armadillo_bits/glue_cov_meat.hpp"
   #include "armadillo_bits/glue_cor_meat.hpp"

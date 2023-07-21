@@ -202,12 +202,14 @@ field<oT>::field(const SizeCube& s)
 //! assuming a column-major layout (data is not preserved)
 template<typename oT>
 inline
-void
+field<oT>&
 field<oT>::set_size(const uword n_elem_in)
   {
   arma_extra_debug_sigprint(arma_str::format("n_elem_in = %u") % n_elem_in);
   
   init(n_elem_in, 1);
+  
+  return *this;
   }
 
 
@@ -215,12 +217,14 @@ field<oT>::set_size(const uword n_elem_in)
 //! change the field to have the specified dimensions (data is not preserved)
 template<typename oT>
 inline
-void
+field<oT>&
 field<oT>::set_size(const uword n_rows_in, const uword n_cols_in)
   {
   arma_extra_debug_sigprint(arma_str::format("n_rows_in = %u, n_cols_in = %u") % n_rows_in % n_cols_in);
   
   init(n_rows_in, n_cols_in);
+  
+  return *this;
   }
 
 
@@ -228,32 +232,42 @@ field<oT>::set_size(const uword n_rows_in, const uword n_cols_in)
 //! change the field to have the specified dimensions (data is not preserved)
 template<typename oT>
 inline
-void
+field<oT>&
 field<oT>::set_size(const uword n_rows_in, const uword n_cols_in, const uword n_slices_in)
   {
   arma_extra_debug_sigprint(arma_str::format("n_rows_in = %u, n_cols_in = %u, n_slices_in = %u") % n_rows_in % n_cols_in % n_slices_in);
   
   init(n_rows_in, n_cols_in, n_slices_in);
+  
+  return *this;
   }
 
 
 
 template<typename oT>
 inline
-void
+field<oT>&
 field<oT>::set_size(const SizeMat& s)
   {
+  arma_extra_debug_sigprint();
+  
   init(s.n_rows, s.n_cols);
+  
+  return *this;
   }
 
 
 
 template<typename oT>
 inline
-void
+field<oT>&
 field<oT>::set_size(const SizeCube& s)
   {
+  arma_extra_debug_sigprint();
+  
   init(s.n_rows, s.n_cols, s.n_slices);
+  
+  return *this;
   }
 
 
@@ -461,12 +475,14 @@ field<oT>::operator=(field<oT>&& X)
 template<typename oT>
 template<typename oT2>
 inline
-void
+field<oT>&
 field<oT>::copy_size(const field<oT2>& x)
   {
   arma_extra_debug_sigprint();
   
   init(x.n_rows, x.n_cols, x.n_slices);
+  
+  return *this;
   }
 
 
@@ -1514,7 +1530,7 @@ field<oT>::print(std::ostream& user_stream, const std::string extra_text) const
 //! apply a lambda function to each object
 template<typename oT>
 inline
-const field<oT>&
+field<oT>&
 field<oT>::for_each(const std::function< void(oT&) >& F)
   {
   arma_extra_debug_sigprint();
@@ -1543,7 +1559,7 @@ field<oT>::for_each(const std::function< void(const oT&) >& F) const
 //! fill the field with an object
 template<typename oT>
 inline
-const field<oT>&
+field<oT>&
 field<oT>::fill(const oT& x)
   {
   arma_extra_debug_sigprint();

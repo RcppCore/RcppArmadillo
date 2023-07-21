@@ -128,7 +128,7 @@ class sp_auxlib
   inline static void run_aupd_plain
     (
     const uword n_eigvals, char* which,
-    const SpMat<T>& X, const bool sym,
+    const SpMat<T>& X, const SpMat<T>& Xst, const bool sym,
     blas_int& n, eT& tol, blas_int& maxiter,
     podarray<T>& resid, blas_int& ncv, podarray<T>& v, blas_int& ldv,
     podarray<blas_int>& iparam, podarray<blas_int>& ipntr,

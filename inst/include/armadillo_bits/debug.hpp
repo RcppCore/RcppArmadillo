@@ -147,7 +147,7 @@ arma_stop_logic_error(const char* x, const char* y)
 
 
 
-//! print a message to get_cerr_stream() and throw logic_error exception
+//! print a message to get_cerr_stream() and throw out_of_range exception
 template<typename T1>
 arma_cold
 arma_noinline

@@ -197,10 +197,10 @@ class Cube : public BaseCube< eT, Cube<eT> >
   template<typename T1> inline       subview_cube_each2<eT, T1> each_slice(const Base<uword, T1>& indices);
   template<typename T1> inline const subview_cube_each2<eT, T1> each_slice(const Base<uword, T1>& indices) const;
   
-  inline const Cube& each_slice(const std::function< void(      Mat<eT>&) >& F);
+  inline       Cube& each_slice(const std::function< void(      Mat<eT>&) >& F);
   inline const Cube& each_slice(const std::function< void(const Mat<eT>&) >& F) const;
   
-  inline const Cube& each_slice(const std::function< void(      Mat<eT>&) >& F, const bool use_mp);
+  inline       Cube& each_slice(const std::function< void(      Mat<eT>&) >& F, const bool use_mp);
   inline const Cube& each_slice(const std::function< void(const Mat<eT>&) >& F, const bool use_mp) const;
   
   
@@ -334,47 +334,47 @@ class Cube : public BaseCube< eT, Cube<eT> >
   arma_warn_unused arma_inline       eT* slice_colptr(const uword in_slice, const uword in_col);
   arma_warn_unused arma_inline const eT* slice_colptr(const uword in_slice, const uword in_col) const;
   
-  inline void set_size(const uword new_n_rows, const uword new_n_cols, const uword new_n_slices);
-  inline void set_size(const SizeCube& s);
+  inline Cube& set_size(const uword new_n_rows, const uword new_n_cols, const uword new_n_slices);
+  inline Cube& set_size(const SizeCube& s);
   
-  inline void reshape(const uword new_n_rows, const uword new_n_cols, const uword new_n_slices);
-  inline void reshape(const SizeCube& s);
+  inline Cube& reshape(const uword new_n_rows, const uword new_n_cols, const uword new_n_slices);
+  inline Cube& reshape(const SizeCube& s);
                   
-  inline void resize(const uword new_n_rows, const uword new_n_cols, const uword new_n_slices);
-  inline void resize(const SizeCube& s);
+  inline Cube& resize(const uword new_n_rows, const uword new_n_cols, const uword new_n_slices);
+  inline Cube& resize(const SizeCube& s);
   
   
-  template<typename eT2> inline void copy_size(const Cube<eT2>& m);
+  template<typename eT2> inline Cube& copy_size(const Cube<eT2>& m);
   
-  template<typename functor> inline const Cube&  for_each(functor F);
+  template<typename functor> inline       Cube&  for_each(functor F);
   template<typename functor> inline const Cube&  for_each(functor F) const;
   
-  template<typename functor> inline const Cube& transform(functor F);
-  template<typename functor> inline const Cube&     imbue(functor F);
+  template<typename functor> inline       Cube& transform(functor F);
+  template<typename functor> inline       Cube&     imbue(functor F);
   
-  inline const Cube& replace(const eT old_val, const eT new_val);
+  inline Cube& replace(const eT old_val, const eT new_val);
   
-  inline const Cube& clean(const pod_type threshold);
+  inline Cube& clean(const pod_type threshold);
   
-  inline const Cube& clamp(const eT min_val, const eT max_val);
+  inline Cube& clamp(const eT min_val, const eT max_val);
   
-  inline const Cube& fill(const eT val);
+  inline Cube& fill(const eT val);
   
-  inline const Cube& zeros();
-  inline const Cube& zeros(const uword new_n_rows, const uword new_n_cols, const uword new_n_slices);
-  inline const Cube& zeros(const SizeCube& s);
+  inline Cube& zeros();
+  inline Cube& zeros(const uword new_n_rows, const uword new_n_cols, const uword new_n_slices);
+  inline Cube& zeros(const SizeCube& s);
   
-  inline const Cube& ones();
-  inline const Cube& ones(const uword new_n_rows, const uword new_n_cols, const uword new_n_slices);
-  inline const Cube& ones(const SizeCube& s);
+  inline Cube& ones();
+  inline Cube& ones(const uword new_n_rows, const uword new_n_cols, const uword new_n_slices);
+  inline Cube& ones(const SizeCube& s);
   
-  inline const Cube& randu();
-  inline const Cube& randu(const uword new_n_rows, const uword new_n_cols, const uword new_n_slices);
-  inline const Cube& randu(const SizeCube& s);
+  inline Cube& randu();
+  inline Cube& randu(const uword new_n_rows, const uword new_n_cols, const uword new_n_slices);
+  inline Cube& randu(const SizeCube& s);
   
-  inline const Cube& randn();
-  inline const Cube& randn(const uword new_n_rows, const uword new_n_cols, const uword new_n_slices);
-  inline const Cube& randn(const SizeCube& s);
+  inline Cube& randn();
+  inline Cube& randn(const uword new_n_rows, const uword new_n_cols, const uword new_n_slices);
+  inline Cube& randn(const SizeCube& s);
   
   inline void      reset();
   inline void soft_reset();
