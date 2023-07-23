@@ -10,7 +10,6 @@
       \item faster multiplication of dense vectors by sparse matrices (and vice versa)
       \item faster \code{eigs_sym()} and \code{eigs_gen()}
       \item faster \code{conv()} and \code{conv2()} when using OpenMP
-      \item more efficient move constructors in dense vector classes
       \item added \code{diags()} and \code{spdiags()} for generating band matrices from set of vectors
     }
   }
