@@ -3962,8 +3962,6 @@ auxlib::solve_square_fast(Mat<typename T1::elem_type>& out, Mat<typename T1::ele
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
-  
   out = B_expr.get_ref();
   
   const uword B_n_rows = out.n_rows;
@@ -3975,6 +3973,8 @@ auxlib::solve_square_fast(Mat<typename T1::elem_type>& out, Mat<typename T1::ele
   
   #if defined(ARMA_USE_LAPACK)
     {
+    typedef typename T1::elem_type eT;
+    
     arma_debug_assert_blas_size(A);
     
     blas_int n    = blas_int(A.n_rows);  // assuming A is square
@@ -4291,8 +4291,6 @@ auxlib::solve_sympd_fast_common(Mat<typename T1::elem_type>& out, Mat<typename T
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
-  
   out = B_expr.get_ref();
   
   const uword B_n_rows = out.n_rows;
@@ -4304,6 +4302,8 @@ auxlib::solve_sympd_fast_common(Mat<typename T1::elem_type>& out, Mat<typename T
   
   #if defined(ARMA_USE_LAPACK)
     {
+    typedef typename T1::elem_type eT;
+    
     arma_debug_assert_blas_size(A, out);
     
     char     uplo = 'L';

@@ -67,8 +67,8 @@ class Col : public Mat<eT>
   inline            Col(Col&& m);
   inline Col& operator=(Col&& m);
   
-  inline            Col(Mat<eT>&& m);
-  inline Col& operator=(Mat<eT>&& m);
+  // inline            Col(Mat<eT>&& m);
+  // inline Col& operator=(Mat<eT>&& m);
   
   inline Col& operator=(const eT val);
   inline Col& operator=(const Col& m);
