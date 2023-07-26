@@ -14,3 +14,4 @@ src/lapack
 ^GPATH
 ^GRTAGS
 ^GTAGS
+^inst/include/armadillo_bits/config.hpp.cmake

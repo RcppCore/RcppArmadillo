@@ -7,7 +7,8 @@ src/*.o
 src/*.so
 src/*.dll
 *tar.gz
-local/sparse-matrix-paper.bib
+local/*
 GPATH
 GRTAGS
 GTAGS
+inst/include/armadillo_bits/config.hpp.cmake
