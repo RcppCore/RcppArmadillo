@@ -559,10 +559,7 @@ struct is_arma_type2
   =  is_Mat<T1>::value
   || is_Gen<T1>::value
   || is_Op<T1>::value
-  || is_CubeToMatOp<T1>::value
-  || is_SpToDOp<T1>::value
   || is_Glue<T1>::value
-  || is_SpToDGlue<T1>::value
   || is_eOp<T1>::value
   || is_eGlue<T1>::value
   || is_mtOp<T1>::value
@@ -574,6 +571,9 @@ struct is_arma_type2
   || is_subview_cols<T1>::value
   || is_subview_elem1<T1>::value
   || is_subview_elem2<T1>::value
+  || is_CubeToMatOp<T1>::value
+  || is_SpToDOp<T1>::value
+  || is_SpToDGlue<T1>::value
   ;
   };
 

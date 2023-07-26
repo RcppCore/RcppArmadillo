@@ -21,6 +21,81 @@
 
 
 
+template<typename eT>
+arma_inline
+typename arma_not_cx<eT>::result
+dense_sparse_helper::dot(const eT* A_mem, const SpMat<eT>& B, const uword col)
+  {
+  arma_extra_debug_sigprint();
+  
+        uword      col_offset = B.col_ptrs[col    ];
+  const uword next_col_offset = B.col_ptrs[col + 1];
+  
+  const uword* start_ptr = &(B.row_indices[     col_offset]);
+  const uword*   end_ptr = &(B.row_indices[next_col_offset]);
+  
+  const eT* B_values = B.values;
+  
+  eT acc = eT(0);
+  
+  for(const uword* ptr = start_ptr; ptr != end_ptr; ++ptr)
+    {
+    const uword index = (*ptr);
+    
+    acc += A_mem[index] * B_values[col_offset];
+    
+    ++col_offset;
+    }
+  
+  return acc;
+  }
+
+
+
+template<typename eT>
+arma_inline
+typename arma_cx_only<eT>::result
+dense_sparse_helper::dot(const eT* A_mem, const SpMat<eT>& B, const uword col)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename get_pod_type<eT>::result T;
+  
+        uword      col_offset = B.col_ptrs[col    ];
+  const uword next_col_offset = B.col_ptrs[col + 1];
+  
+  const uword* start_ptr = &(B.row_indices[     col_offset]);
+  const uword*   end_ptr = &(B.row_indices[next_col_offset]);
+  
+  const eT* B_values = B.values;
+  
+  T acc_real = T(0);
+  T acc_imag = T(0);
+  
+  for(const uword* ptr = start_ptr; ptr != end_ptr; ++ptr)
+    {
+    const uword index = (*ptr);
+    
+    const std::complex<T>& X = A_mem[index];
+    const std::complex<T>& Y = B_values[col_offset];
+    
+    const T a = X.real();
+    const T b = X.imag();
+    
+    const T c = Y.real();
+    const T d = Y.imag();
+    
+    acc_real += (a*c) - (b*d);
+    acc_imag += (a*d) + (b*c);
+    
+    ++col_offset;
+    }
+  
+  return std::complex<T>(acc_real, acc_imag);
+  }
+
+
+
 template<typename T1, typename T2>
 inline
 void
@@ -69,7 +144,7 @@ glue_times_dense_sparse::apply_noalias(Mat<typename T1::elem_type>& out, const T
   
   out.set_size(A.n_rows, B.n_cols);
   
-  if((A.n_elem == 0) || (B.n_nonzero == 0))  { return; }
+  if((A.n_elem == 0) || (B.n_nonzero == 0))  { out.zeros(); return; }
   
   if((resolves_to_rowvector<T1>::value) || (A.n_rows == 1))
     {
@@ -81,9 +156,8 @@ glue_times_dense_sparse::apply_noalias(Mat<typename T1::elem_type>& out, const T
         {
         arma_extra_debug_print("openmp implementation");
         
-              eT*  out_mem = out.memptr();
-        const eT*    A_mem =   A.memptr();
-        const eT* B_values =   B.values;
+              eT* out_mem = out.memptr();
+        const eT*   A_mem =   A.memptr();
         
         const uword B_n_cols  = B.n_cols;
         const int   n_threads = mp_thread_limit::get();
@@ -91,24 +165,7 @@ glue_times_dense_sparse::apply_noalias(Mat<typename T1::elem_type>& out, const T
         #pragma omp parallel for schedule(static) num_threads(n_threads)
         for(uword col=0; col < B_n_cols; ++col)
           {
-                uword      col_offset = B.col_ptrs[col    ];
-          const uword next_col_offset = B.col_ptrs[col + 1];
-          
-          const uword* start_ptr = &(B.row_indices[     col_offset]);
-          const uword*   end_ptr = &(B.row_indices[next_col_offset]);
-          
-          eT acc = eT(0);
-          
-          for(const uword* ptr = start_ptr; ptr != end_ptr; ++ptr)
-            {
-            const uword index = (*ptr);
-            
-            acc += A_mem[index] * B_values[col_offset];
-            
-            ++col_offset;
-            }
-          
-          out_mem[col] = acc;
+          out_mem[col] = dense_sparse_helper::dot(A_mem, B, col);
           }
         }
       #endif
@@ -117,32 +174,14 @@ glue_times_dense_sparse::apply_noalias(Mat<typename T1::elem_type>& out, const T
       {
       arma_extra_debug_print("serial implementation");
       
-            eT*  out_mem = out.memptr();
-      const eT*    A_mem =   A.memptr();
-      const eT* B_values =   B.values;
+            eT* out_mem = out.memptr();
+      const eT*   A_mem =   A.memptr();
       
       const uword B_n_cols = B.n_cols;
       
       for(uword col=0; col < B_n_cols; ++col)
         {
-              uword      col_offset = B.col_ptrs[col    ];
-        const uword next_col_offset = B.col_ptrs[col + 1];
-        
-        const uword* start_ptr = &(B.row_indices[     col_offset]);
-        const uword*   end_ptr = &(B.row_indices[next_col_offset]);
-        
-        eT acc = eT(0);
-        
-        for(const uword* ptr = start_ptr; ptr != end_ptr; ++ptr)
-          {
-          const uword index = (*ptr);
-          
-          acc += A_mem[index] * B_values[col_offset];
-          
-          ++col_offset;
-          }
-        
-        out_mem[col] = acc;
+        out_mem[col] = dense_sparse_helper::dot(A_mem, B, col);
         }
       }
     }
@@ -457,33 +496,15 @@ glue_times_sparse_dense::apply_noalias_trans(Mat<typename T1::elem_type>& out, c
         {
         out.zeros(A_n_cols, 1);
         
-              eT*  out_mem = out.memptr();
-        const eT* A_values =   A.values;
-        const eT*    B_mem =   B.memptr();
+              eT* out_mem = out.memptr();
+        const eT*   B_mem =   B.memptr();
         
         const int n_threads = mp_thread_limit::get();
         
         #pragma omp parallel for schedule(static) num_threads(n_threads)
         for(uword col=0; col < A_n_cols; ++col)
           {
-                uword      col_offset = A.col_ptrs[col    ];
-          const uword next_col_offset = A.col_ptrs[col + 1];
-          
-          const uword* start_ptr = &(A.row_indices[     col_offset]);
-          const uword*   end_ptr = &(A.row_indices[next_col_offset]);
-          
-          eT acc = eT(0);
-          
-          for(const uword* ptr = start_ptr; ptr != end_ptr; ++ptr)
-            {
-            const uword index = (*ptr);
-            
-            acc += A_values[col_offset] * B_mem[index];
-            
-            ++col_offset;
-            }
-          
-          out_mem[col] = acc;
+          out_mem[col] = dense_sparse_helper::dot(B_mem, A, col);
           }
         }
       #endif
@@ -494,30 +515,12 @@ glue_times_sparse_dense::apply_noalias_trans(Mat<typename T1::elem_type>& out, c
       
       out.zeros(A_n_cols, 1);
       
-            eT*  out_mem = out.memptr();
-      const eT* A_values =   A.values;
-      const eT*    B_mem =   B.memptr();
+            eT* out_mem = out.memptr();
+      const eT*   B_mem =   B.memptr();
       
       for(uword col=0; col < A_n_cols; ++col)
         {
-              uword      col_offset = A.col_ptrs[col    ];
-        const uword next_col_offset = A.col_ptrs[col + 1];
-        
-        const uword* start_ptr = &(A.row_indices[     col_offset]);
-        const uword*   end_ptr = &(A.row_indices[next_col_offset]);
-        
-        eT acc = eT(0);
-        
-        for(const uword* ptr = start_ptr; ptr != end_ptr; ++ptr)
-          {
-          const uword index = (*ptr);
-          
-          acc += A_values[col_offset] * B_mem[index];
-          
-          ++col_offset;
-          }
-        
-        out_mem[col] = acc;
+        out_mem[col] = dense_sparse_helper::dot(B_mem, A, col);
         }
       }
     }

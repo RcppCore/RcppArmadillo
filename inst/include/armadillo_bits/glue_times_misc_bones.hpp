@@ -21,6 +21,19 @@
 
 
 
+class dense_sparse_helper
+  {
+  public:
+  
+  template<typename eT>
+  arma_inline static typename  arma_not_cx<eT>::result dot(const eT* A_mem, const SpMat<eT>& B, const uword col);
+  
+  template<typename eT>
+  arma_inline static typename arma_cx_only<eT>::result dot(const eT* A_mem, const SpMat<eT>& B, const uword col);
+  };
+
+
+
 class glue_times_dense_sparse
   {
   public:
