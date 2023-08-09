@@ -297,23 +297,6 @@
   #undef ARMA_USE_OPENMP
 #endif
 
-#if defined(ARMA_USE_WRAPPER)
-  #if !defined(ARMA_USE_EXTERN_RNG)
-    // #define ARMA_USE_EXTERN_RNG
-  #endif
-#endif
-
-#if defined(ARMA_DONT_USE_EXTERN_RNG)
-  #undef ARMA_USE_EXTERN_RNG
-#endif
-
-// for compatibility with earlier versions of Armadillo
-#if defined(ARMA_DONT_USE_EXTERN_CXX11_RNG)
-  #pragma message ("WARNING: support for ARMA_DONT_USE_EXTERN_CXX11_RNG is deprecated and will be removed;")
-  #pragma message ("WARNING: use ARMA_DONT_USE_EXTERN_RNG instead")
-  #undef ARMA_USE_EXTERN_RNG
-#endif
-
 #if defined(ARMA_32BIT_WORD)
   #undef ARMA_64BIT_WORD
 #endif

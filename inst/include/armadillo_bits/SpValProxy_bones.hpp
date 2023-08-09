@@ -28,9 +28,9 @@ template<typename T1>
 class SpValProxy
   {
   public:
-
+  
   typedef typename T1::elem_type eT; // Convenience typedef
-
+  
   friend class SpMat<eT>;
   friend class SpSubview<eT>;
   
@@ -49,16 +49,17 @@ class SpValProxy
   //! Overload all of the potential operators.
   
   //! First, the ones that could modify a value.
-  arma_inline SpValProxy& operator=(const eT rhs);
-  arma_inline SpValProxy& operator+=(const eT rhs);
-  arma_inline SpValProxy& operator-=(const eT rhs);
-  arma_inline SpValProxy& operator*=(const eT rhs);
-  arma_inline SpValProxy& operator/=(const eT rhs);
+  inline SpValProxy& operator= (const eT rhs);
+  inline SpValProxy& operator+=(const eT rhs);
+  inline SpValProxy& operator-=(const eT rhs);
+  inline SpValProxy& operator*=(const eT rhs);
+  inline SpValProxy& operator/=(const eT rhs);
   
-  arma_inline SpValProxy& operator++();
-  arma_inline SpValProxy& operator--();
-  arma_inline eT operator++(const int);
-  arma_inline eT operator--(const int);
+  inline SpValProxy& operator++();
+  inline SpValProxy& operator--();
+  
+  inline eT          operator++(const int);
+  inline eT          operator--(const int);
   
   //! This will work for any other operations that do not modify a value.
   arma_inline operator eT() const;

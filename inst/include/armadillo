@@ -50,10 +50,10 @@
 #include <random>
 #include <functional>
 #include <chrono>
+#include <atomic>
 
 #if !defined(ARMA_DONT_USE_STD_MUTEX)
   #include <mutex>
-  #include <atomic>
 #endif
 
 // #if defined(ARMA_HAVE_CXX17)

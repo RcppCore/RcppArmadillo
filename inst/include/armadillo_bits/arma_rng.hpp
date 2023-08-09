@@ -20,55 +20,63 @@
 //! @{
 
 
-#if defined(ARMA_RNG_ALT)
-  #undef ARMA_USE_EXTERN_RNG
+#undef  ARMA_USE_CXX11_RNG
+#define ARMA_USE_CXX11_RNG
+
+#undef  ARMA_USE_THREAD_LOCAL
+#define ARMA_USE_THREAD_LOCAL
+
+#if (defined(ARMA_RNG_ALT) || defined(ARMA_DONT_USE_CXX11_RNG))
+  #undef ARMA_USE_CXX11_RNG
+#endif
+
+#if defined(ARMA_DONT_USE_THREAD_LOCAL)
+  #undef ARMA_USE_THREAD_LOCAL
 #endif
 
 
-// NOTE: mt19937_64_instance_warmup is used as a workaround
+// NOTE: ARMA_WARMUP_PRODUCER enables a workaround 
 // NOTE: for thread_local issue on macOS 11 and/or AppleClang 12.0
 // NOTE: see https://gitlab.com/conradsnicta/armadillo-code/-/issues/173
 // NOTE: if this workaround causes problems, please report it and 
-// NOTE: disable the workaround by uncommenting the code block below:
+// NOTE: disable the workaround by commenting out the code block below:
 
-// #if defined(__APPLE__) || defined(__apple_build_version__)
-//   #if !defined(ARMA_DONT_DISABLE_EXTERN_RNG)
-//     #undef ARMA_USE_EXTERN_RNG
-//   #endif
-// #endif
+#if defined(__APPLE__) || defined(__apple_build_version__)
+  #undef  ARMA_WARMUP_PRODUCER
+  #define ARMA_WARMUP_PRODUCER
+#endif
 
+#if defined(ARMA_DONT_WARMUP_PRODUCER)
+  #undef ARMA_WARMUP_PRODUCER
+#endif
 
 // NOTE: workaround for another thread_local issue on macOS
 // NOTE: where GCC (not Clang) may not have support for thread_local
 
 #if (defined(__APPLE__) && defined(__GNUG__) && !defined(__clang__))
-  #if !defined(ARMA_DONT_DISABLE_EXTERN_RNG)
-    #undef ARMA_USE_EXTERN_RNG
-  #endif
+  #undef ARMA_USE_THREAD_LOCAL
 #endif
 
+// NOTE: disable use of thread_local on MinGW et al;
+// NOTE: i don't have the patience to keep looking into these broken platforms
 
-
-#if defined(ARMA_USE_EXTERN_RNG)
-  extern thread_local std::mt19937_64 mt19937_64_instance;
-  
-  #if defined(__APPLE__) || defined(__apple_build_version__)
-    namespace
-      {
-      struct mt19937_64_instance_warmup
-        {
-        inline mt19937_64_instance_warmup()
-          {
-          typename std::mt19937_64::result_type junk = mt19937_64_instance();
-          arma_ignore(junk);
-          }
-        };
-      
-      static mt19937_64_instance_warmup mt19937_64_instance_warmup_run;
-      }
-  #endif
+#if (defined(__MINGW32__) || defined(__MINGW64__) || defined(__CYGWIN__) || defined(__MSYS__) || defined(__MSYS2__))
+  #undef ARMA_USE_THREAD_LOCAL
 #endif
 
+#if defined(ARMA_FORCE_USE_THREAD_LOCAL)
+  #undef  ARMA_USE_THREAD_LOCAL
+  #define ARMA_USE_THREAD_LOCAL
+#endif
+
+#if (!defined(ARMA_USE_THREAD_LOCAL))
+  #undef  ARMA_GUARD_PRODUCER
+  #define ARMA_GUARD_PRODUCER
+#endif
+
+#if (defined(ARMA_DONT_GUARD_PRODUCER) || defined(ARMA_DONT_USE_STD_MUTEX))
+  #undef ARMA_GUARD_PRODUCER
+#endif
 
 
 class arma_rng
@@ -77,7 +85,7 @@ class arma_rng
   
   #if   defined(ARMA_RNG_ALT)
     typedef arma_rng_alt::seed_type      seed_type;
-  #elif defined(ARMA_USE_EXTERN_RNG)
+  #elif defined(ARMA_USE_CXX11_RNG)
     typedef std::mt19937_64::result_type seed_type;
   #else
     typedef arma_rng_cxx03::seed_type    seed_type;
@@ -85,10 +93,22 @@ class arma_rng
   
   #if   defined(ARMA_RNG_ALT)
     static constexpr int rng_method = 2;
-  #elif defined(ARMA_USE_EXTERN_RNG)
+  #elif defined(ARMA_USE_CXX11_RNG)
     static constexpr int rng_method = 1;
   #else
     static constexpr int rng_method = 0;
+  #endif
+  
+  #if defined(ARMA_USE_CXX11_RNG)
+    inline static std::mt19937_64&    get_producer();
+    inline static void             warmup_producer(std::mt19937_64& producer);
+    
+    inline static void   lock_producer();
+    inline static void unlock_producer();
+    
+    #if defined(ARMA_GUARD_PRODUCER)
+      inline static std::mutex& get_producer_mutex();
+    #endif
   #endif
   
   inline static void set_seed(const seed_type val);
@@ -102,6 +122,101 @@ class arma_rng
 
 
 
+#if defined(ARMA_USE_CXX11_RNG)
+
+inline
+std::mt19937_64&
+arma_rng::get_producer()
+  {
+  #if defined(ARMA_USE_THREAD_LOCAL)
+    
+    // use a thread-safe RNG, with each thread having its own unique starting seed
+    
+    static std::atomic<std::size_t> mt19937_64_producer_counter(0);
+    
+    static thread_local std::mt19937_64 mt19937_64_producer( std::mt19937_64::default_seed + mt19937_64_producer_counter++ );
+    
+    arma_rng::warmup_producer(mt19937_64_producer);
+    
+  #else
+    
+    // use a plain RNG in case we don't have thread_local
+    
+    static std::mt19937_64 mt19937_64_producer( std::mt19937_64::default_seed );
+    
+    arma_rng::warmup_producer(mt19937_64_producer);
+    
+  #endif
+  
+  return mt19937_64_producer;
+  }
+
+
+inline
+void
+arma_rng::warmup_producer(std::mt19937_64& producer)
+  {
+  #if defined(ARMA_WARMUP_PRODUCER)
+    
+    static std::atomic_flag warmup_done = ATOMIC_FLAG_INIT;  // init to false
+    
+    if(warmup_done.test_and_set() == false)
+      {
+      typename std::mt19937_64::result_type junk = producer();
+      
+      arma_ignore(junk);
+      }
+    
+  #else
+    
+    arma_ignore(producer);
+    
+  #endif
+  }
+
+
+inline
+void
+arma_rng::lock_producer()
+  {
+  #if defined(ARMA_GUARD_PRODUCER)
+    
+    std::mutex& producer_mutex = arma_rng::get_producer_mutex();
+    
+    producer_mutex.lock();
+    
+  #endif
+  }
+
+
+inline
+void
+arma_rng::unlock_producer()
+  {
+  #if defined(ARMA_GUARD_PRODUCER)
+    
+    std::mutex& producer_mutex = arma_rng::get_producer_mutex();
+    
+    producer_mutex.unlock();
+    
+  #endif
+  }
+
+
+#if defined(ARMA_GUARD_PRODUCER)
+  inline
+  std::mutex&
+  arma_rng::get_producer_mutex()
+    {
+    static std::mutex producer_mutex;
+    
+    return producer_mutex;
+    }
+#endif
+
+#endif
+
+
 inline
 void
 arma_rng::set_seed(const arma_rng::seed_type val)
@@ -110,9 +225,11 @@ arma_rng::set_seed(const arma_rng::seed_type val)
     {
     arma_rng_alt::set_seed(val);
     }
-  #elif defined(ARMA_USE_EXTERN_RNG)
+  #elif defined(ARMA_USE_CXX11_RNG)
     {
-    mt19937_64_instance.seed(val);
+    arma_rng::lock_producer();
+    arma_rng::get_producer().seed(val);
+    arma_rng::unlock_producer();
     }
   #else
     {
@@ -141,7 +258,7 @@ arma_rng::set_seed_random()
     
     if(rd.entropy() > double(0))  { seed1 = static_cast<seed_type>( rd() ); }
     
-    if(seed1 != seed_type(0))  { have_seed = true; }
+    have_seed = (seed1 != seed_type(0));
     }
   catch(...) {}
   
@@ -162,12 +279,9 @@ arma_rng::set_seed_random()
       
       if(f.good())  { f.read((char*)(&(tmp.b[0])), sizeof(seed_type)); }
       
-      if(f.good())
-        {
-        seed2 = tmp.a;
+      if(f.good())  { seed2 = tmp.a; }
         
-        if(seed2 != seed_type(0))  { have_seed = true; }
-        }
+      have_seed = (seed2 != seed_type(0));
       }
     catch(...) {}
     }
@@ -199,7 +313,7 @@ arma_rng::set_seed_random()
       }
     }
   
-  arma_rng::set_seed( seed1 + seed2 + seed3 + seed4 );
+  arma_rng::set_seed(seed1 + seed2 + seed3 + seed4);
   }
 
 
@@ -218,11 +332,17 @@ struct arma_rng::randi
       {
       return eT( arma_rng_alt::randi_val() );
       }
-    #elif defined(ARMA_USE_EXTERN_RNG)
+    #elif defined(ARMA_USE_CXX11_RNG)
       {
       constexpr double scale = double(std::numeric_limits<int>::max()) / double(std::mt19937_64::max());
       
-      return eT( double(mt19937_64_instance()) * scale );
+      arma_rng::lock_producer();
+      
+      const eT out = eT(double(arma_rng::get_producer()()) * scale);
+      
+      arma_rng::unlock_producer();
+      
+      return out;
       }
     #else
       {
@@ -241,7 +361,7 @@ struct arma_rng::randi
       {
       return arma_rng_alt::randi_max_val();
       }
-    #elif defined(ARMA_USE_EXTERN_RNG)
+    #elif defined(ARMA_USE_CXX11_RNG)
       {
       return std::numeric_limits<int>::max();
       }
@@ -262,11 +382,17 @@ struct arma_rng::randi
       {
       arma_rng_alt::randi_fill(mem, N, a, b);
       }
-    #elif defined(ARMA_USE_EXTERN_RNG)
+    #elif defined(ARMA_USE_CXX11_RNG)
       {
       std::uniform_int_distribution<int> local_i_distr(a, b);
       
-      for(uword i=0; i<N; ++i)  { mem[i] = eT(local_i_distr(mt19937_64_instance)); }
+      std::mt19937_64& producer = arma_rng::get_producer();
+      
+      arma_rng::lock_producer();
+      
+      for(uword i=0; i<N; ++i)  { mem[i] = eT(local_i_distr(producer)); }
+      
+      arma_rng::unlock_producer();
       }
     #else
       {
@@ -301,11 +427,17 @@ struct arma_rng::randu
       {
       return eT( arma_rng_alt::randu_val() );
       }
-    #elif defined(ARMA_USE_EXTERN_RNG)
+    #elif defined(ARMA_USE_CXX11_RNG)
       {
       constexpr double scale = double(1.0) / double(std::mt19937_64::max());
       
-      return eT( double(mt19937_64_instance()) * scale );
+      arma_rng::lock_producer();
+      
+      const eT out = eT( double(arma_rng::get_producer()()) * scale );
+      
+      arma_rng::unlock_producer();
+      
+      return out;
       }
     #else
       {
@@ -324,11 +456,17 @@ struct arma_rng::randu
       {
       for(uword i=0; i < N; ++i)  { mem[i] = eT( arma_rng_alt::randu_val() ); }
       }
-    #elif defined(ARMA_USE_EXTERN_RNG)
+    #elif defined(ARMA_USE_CXX11_RNG)
       {
       std::uniform_real_distribution<double> local_u_distr;
       
-      for(uword i=0; i < N; ++i)  { mem[i] = eT( local_u_distr(mt19937_64_instance) ); }
+      std::mt19937_64& producer = arma_rng::get_producer();
+      
+      arma_rng::lock_producer();
+      
+      for(uword i=0; i < N; ++i)  { mem[i] = eT( local_u_distr(producer) ); }
+      
+      arma_rng::unlock_producer();
       }
     #else
       {
@@ -358,11 +496,17 @@ struct arma_rng::randu
       
       for(uword i=0; i < N; ++i)  { mem[i] = eT( arma_rng_alt::randu_val() * r + a ); }
       }
-    #elif defined(ARMA_USE_EXTERN_RNG)
+    #elif defined(ARMA_USE_CXX11_RNG)
       {
       std::uniform_real_distribution<double> local_u_distr(a,b);
       
-      for(uword i=0; i < N; ++i)  { mem[i] = eT( local_u_distr(mt19937_64_instance) ); }
+      std::mt19937_64& producer = arma_rng::get_producer();
+      
+      arma_rng::lock_producer();
+      
+      for(uword i=0; i < N; ++i)  { mem[i] = eT( local_u_distr(producer) ); }
+      
+      arma_rng::unlock_producer();
       }
     #else
       {
@@ -396,12 +540,18 @@ struct arma_rng::randu< std::complex<T> >
       
       return std::complex<T>(a, b);
       }
-    #elif defined(ARMA_USE_EXTERN_RNG)
+    #elif defined(ARMA_USE_CXX11_RNG)
       {
       std::uniform_real_distribution<double> local_u_distr;
       
-      const T a = T( local_u_distr(mt19937_64_instance) );
-      const T b = T( local_u_distr(mt19937_64_instance) );
+      std::mt19937_64& producer = arma_rng::get_producer();
+      
+      arma_rng::lock_producer();
+      
+      const T a = T( local_u_distr(producer) );
+      const T b = T( local_u_distr(producer) );
+      
+      arma_rng::unlock_producer();
       
       return std::complex<T>(a, b);
       }
@@ -431,17 +581,23 @@ struct arma_rng::randu< std::complex<T> >
         mem[i] = std::complex<T>(a, b);
         }
       }
-    #elif defined(ARMA_USE_EXTERN_RNG)
+    #elif defined(ARMA_USE_CXX11_RNG)
       {
       std::uniform_real_distribution<double> local_u_distr;
       
+      std::mt19937_64& producer = arma_rng::get_producer();
+      
+      arma_rng::lock_producer();
+      
       for(uword i=0; i < N; ++i)
         {
-        const T a = T( local_u_distr(mt19937_64_instance) );
-        const T b = T( local_u_distr(mt19937_64_instance) );
+        const T a = T( local_u_distr(producer) );
+        const T b = T( local_u_distr(producer) );
         
         mem[i] = std::complex<T>(a, b);
         }
+      
+      arma_rng::unlock_producer();
       }
     #else
       {
@@ -491,17 +647,23 @@ struct arma_rng::randu< std::complex<T> >
         mem[i] = std::complex<T>(tmp1, tmp2);
         }
       }
-    #elif defined(ARMA_USE_EXTERN_RNG)
+    #elif defined(ARMA_USE_CXX11_RNG)
       {
       std::uniform_real_distribution<double> local_u_distr(a,b);
       
+      std::mt19937_64& producer = arma_rng::get_producer();
+      
+      arma_rng::lock_producer();
+      
       for(uword i=0; i < N; ++i)
         {
-        const T tmp1 = T( local_u_distr(mt19937_64_instance) );
-        const T tmp2 = T( local_u_distr(mt19937_64_instance) );
+        const T tmp1 = T( local_u_distr(producer) );
+        const T tmp2 = T( local_u_distr(producer) );
         
         mem[i] = std::complex<T>(tmp1, tmp2);
         }
+      
+      arma_rng::unlock_producer();
       }
     #else
       {
@@ -552,11 +714,17 @@ struct arma_rng::randn
       {
       return eT( arma_rng_alt::randn_val() );
       }
-    #elif defined(ARMA_USE_EXTERN_RNG)
+    #elif defined(ARMA_USE_CXX11_RNG)
       {
       std::normal_distribution<double> local_n_distr;
       
-      return eT( local_n_distr(mt19937_64_instance) );
+      arma_rng::lock_producer();
+      
+      const eT out = eT( local_n_distr(arma_rng::get_producer()) );
+      
+      arma_rng::unlock_producer();
+      
+      return out;
       }
     #else
       {
@@ -575,12 +743,18 @@ struct arma_rng::randn
       {
       arma_rng_alt::randn_dual_val(out1, out2);
       }
-    #elif defined(ARMA_USE_EXTERN_RNG)
+    #elif defined(ARMA_USE_CXX11_RNG)
       {
       std::normal_distribution<double> local_n_distr;
       
-      out1 = eT( local_n_distr(mt19937_64_instance) );
-      out2 = eT( local_n_distr(mt19937_64_instance) );
+      std::mt19937_64& producer = arma_rng::get_producer();
+      
+      arma_rng::lock_producer();
+      
+      out1 = eT( local_n_distr(producer) );
+      out2 = eT( local_n_distr(producer) );
+      
+      arma_rng::unlock_producer();
       }
     #else
       {
@@ -605,11 +779,17 @@ struct arma_rng::randn
       
       if(i < N)  { mem[i] = eT( arma_rng_alt::randn_val() ); }
       }
-    #elif defined(ARMA_USE_EXTERN_RNG)
+    #elif defined(ARMA_USE_CXX11_RNG)
       {
       std::normal_distribution<double> local_n_distr;
       
-      for(uword i=0; i < N; ++i)  { mem[i] = eT( local_n_distr(mt19937_64_instance) ); }
+      std::mt19937_64& producer = arma_rng::get_producer();
+      
+      arma_rng::lock_producer();
+      
+      for(uword i=0; i < N; ++i)  { mem[i] = eT( local_n_distr(producer) ); }
+      
+      arma_rng::unlock_producer();
       }
     #else
       {
@@ -657,11 +837,17 @@ struct arma_rng::randn
         mem[i] = (val_i * sd) + mu;
         }
       }
-    #elif defined(ARMA_USE_EXTERN_RNG)
+    #elif defined(ARMA_USE_CXX11_RNG)
       {
       std::normal_distribution<double> local_n_distr(mu, sd);
       
-      for(uword i=0; i < N; ++i)  { mem[i] = eT( local_n_distr(mt19937_64_instance) ); }
+      std::mt19937_64& producer = arma_rng::get_producer();
+      
+      arma_rng::lock_producer();
+      
+      for(uword i=0; i < N; ++i)  { mem[i] = eT( local_n_distr(producer) ); }
+      
+      arma_rng::unlock_producer();
       }
     #else
       {
@@ -741,17 +927,23 @@ struct arma_rng::randn< std::complex<T> >
       {
       for(uword i=0; i < N; ++i)  { mem[i] = std::complex<T>( arma_rng::randn< std::complex<T> >() ); }
       }
-    #elif defined(ARMA_USE_EXTERN_RNG)
+    #elif defined(ARMA_USE_CXX11_RNG)
       {
       std::normal_distribution<double> local_n_distr;
       
+      std::mt19937_64& producer = arma_rng::get_producer();
+      
+      arma_rng::lock_producer();
+      
       for(uword i=0; i < N; ++i)
         {
-        const T a = T( local_n_distr(mt19937_64_instance) );
-        const T b = T( local_n_distr(mt19937_64_instance) );
+        const T a = T( local_n_distr(producer) );
+        const T b = T( local_n_distr(producer) );
         
         mem[i] = std::complex<T>(a,b);
         }
+      
+      arma_rng::unlock_producer();
       }
     #else
       {
@@ -818,11 +1010,17 @@ struct arma_rng::randg
   void
   fill(eT* mem, const uword N, const double a, const double b)
     {
-    #if defined(ARMA_USE_EXTERN_RNG)
+    #if defined(ARMA_USE_CXX11_RNG)
       {
       std::gamma_distribution<double> local_g_distr(a,b);
       
-      for(uword i=0; i<N; ++i)  { mem[i] = eT(local_g_distr(mt19937_64_instance)); }
+      std::mt19937_64& producer = arma_rng::get_producer();
+      
+      arma_rng::lock_producer();
+      
+      for(uword i=0; i<N; ++i)  { mem[i] = eT(local_g_distr(producer)); }
+      
+      arma_rng::unlock_producer();
       }
     #else
       {
