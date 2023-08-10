@@ -56,48 +56,43 @@ SpValProxy<T1>::operator=(const SpValProxy<T2>& rhs)
 
 
 template<typename T1>
-arma_inline
+inline
 SpValProxy<T1>&
 SpValProxy<T1>::operator=(const eT rhs)
   {
   if(rhs != eT(0)) // A nonzero element is being assigned.
     {
-
     if(val_ptr)
       {
       // The value exists and merely needs to be updated.
       *val_ptr = rhs;
       parent.invalidate_cache();
       }
-
     else
       {
       // The value is nonzero and must be inserted.
       val_ptr = &parent.insert_element(row, col, rhs);
       }
-
     }
   else // A zero is being assigned.~
     {
-
     if(val_ptr)
       {
       // The element exists, but we need to remove it, because it is being set to 0.
       parent.delete_element(row, col);
       val_ptr = nullptr;
       }
-
+    
     // If the element does not exist, we do not need to do anything at all.
-
     }
-
+  
   return *this;
   }
 
 
 
 template<typename T1>
-arma_inline
+inline
 SpValProxy<T1>&
 SpValProxy<T1>::operator+=(const eT rhs)
   {
@@ -123,7 +118,7 @@ SpValProxy<T1>::operator+=(const eT rhs)
 
 
 template<typename T1>
-arma_inline
+inline
 SpValProxy<T1>&
 SpValProxy<T1>::operator-=(const eT rhs)
   {
@@ -142,20 +137,19 @@ SpValProxy<T1>::operator-=(const eT rhs)
       val_ptr = &parent.insert_element(row, col, -rhs);
       }
     }
-
+  
   return *this;
   }
 
 
 
 template<typename T1>
-arma_inline
+inline
 SpValProxy<T1>&
 SpValProxy<T1>::operator*=(const eT rhs)
   {
   if(rhs != eT(0))
     {
-
     if(val_ptr)
       {
       // The value already exists and merely needs to be updated.
@@ -163,44 +157,38 @@ SpValProxy<T1>::operator*=(const eT rhs)
       parent.invalidate_cache();
       check_zero();
       }
-
     }
   else
     {
-
     if(val_ptr)
       {
       // Since we are multiplying by zero, the value can be deleted.
       parent.delete_element(row, col);
       val_ptr = nullptr;
       }
-
     }
-
+  
   return *this;
   }
 
 
 
 template<typename T1>
-arma_inline
+inline
 SpValProxy<T1>&
 SpValProxy<T1>::operator/=(const eT rhs)
   {
   if(rhs != eT(0)) // I hope this is true!
     {
-
     if(val_ptr)
       {
       *val_ptr /= rhs;
       parent.invalidate_cache();
       check_zero();
       }
-
     }
   else
     {
-
     if(val_ptr)
       {
       *val_ptr /= rhs; // That is where it gets ugly.
@@ -211,27 +199,25 @@ SpValProxy<T1>::operator/=(const eT rhs)
         val_ptr = nullptr;
         }
       }
-
     else
       {
       eT val = eT(0) / rhs; // This may vary depending on type and implementation.
-
+      
       if(val != eT(0))
         {
         // Ok, now we have to insert it.
         val_ptr = &parent.insert_element(row, col, val);
         }
-
       }
     }
-
+  
   return *this;
   }
 
 
 
 template<typename T1>
-arma_inline
+inline
 SpValProxy<T1>&
 SpValProxy<T1>::operator++()
   {
@@ -241,19 +227,18 @@ SpValProxy<T1>::operator++()
     parent.invalidate_cache();
     check_zero();
     }
-
   else
     {
     val_ptr = &parent.insert_element(row, col, eT(1));
     }
-
+  
   return *this;
   }
 
 
 
 template<typename T1>
-arma_inline
+inline
 SpValProxy<T1>&
 SpValProxy<T1>::operator--()
   {
@@ -263,19 +248,18 @@ SpValProxy<T1>::operator--()
     parent.invalidate_cache();
     check_zero();
     }
-
   else
     {
     val_ptr = &parent.insert_element(row, col, eT(-1));
     }
-
+  
   return *this;
   }
 
 
 
 template<typename T1>
-arma_inline
+inline
 typename T1::elem_type
 SpValProxy<T1>::operator++(const int)
   {
@@ -285,12 +269,11 @@ SpValProxy<T1>::operator++(const int)
     parent.invalidate_cache();
     check_zero();
     }
-
   else
     {
     val_ptr = &parent.insert_element(row, col, eT(1));
     }
-
+  
   if(val_ptr) // It may have changed to now be 0.
     {
     return *(val_ptr) - eT(1);
@@ -304,7 +287,7 @@ SpValProxy<T1>::operator++(const int)
 
 
 template<typename T1>
-arma_inline
+inline
 typename T1::elem_type
 SpValProxy<T1>::operator--(const int)
   {
@@ -314,12 +297,11 @@ SpValProxy<T1>::operator--(const int)
     parent.invalidate_cache();
     check_zero();
     }
-
   else
     {
     val_ptr = &parent.insert_element(row, col, eT(-1));
     }
-
+  
   if(val_ptr) // It may have changed to now be 0.
     {
     return *(val_ptr) + eT(1);
