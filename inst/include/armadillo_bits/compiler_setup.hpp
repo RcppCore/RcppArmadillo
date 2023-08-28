@@ -159,8 +159,8 @@
   #undef  ARMA_GCC_VERSION
   #define ARMA_GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
   
-  #if (ARMA_GCC_VERSION < 40800)
-    #error "*** newer compiler required; need gcc 4.8 or later ***"
+  #if (ARMA_GCC_VERSION < 40803)
+    #error "*** newer compiler required; need gcc 4.8.3 or newer ***"
   #endif
   
   // #if (ARMA_GCC_VERSION < 60100)
@@ -488,8 +488,7 @@
 #if defined(min) || defined(max)
   #undef min
   #undef max
-  #pragma message ("WARNING: undefined conflicting 'min' and/or 'max' macros;")
-  #pragma message ("WARNING: suggest to define NOMINMAX before including any windows header")
+  #pragma message ("WARNING: undefined conflicting 'min' and/or 'max' macros")
 #endif
 
 // https://sourceware.org/bugzilla/show_bug.cgi?id=19239

@@ -191,7 +191,7 @@ class field
   inline void reset();
   inline void reset_objects();
   
-  arma_inline bool is_empty() const;
+  arma_warn_unused arma_inline bool is_empty() const;
   
   
   arma_warn_unused arma_inline bool in_range(const uword i) const;

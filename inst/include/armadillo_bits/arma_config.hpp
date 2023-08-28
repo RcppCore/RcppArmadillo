@@ -237,6 +237,13 @@ struct arma_config
   #endif
   
   
+  #if (!defined(ARMA_DONT_TREAT_TEXT_AS_BINARY))
+    static constexpr bool text_as_binary = true;
+  #else
+    static constexpr bool text_as_binary = false;
+  #endif
+  
+  
   static constexpr uword warn_level = (sword(ARMA_WARN_LEVEL) > 0) ? uword(ARMA_WARN_LEVEL) : 0;
   };
 
