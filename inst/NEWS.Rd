@@ -3,6 +3,17 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.12.6.3.0 (2023-08-28)}{
+  \itemize{
+    \item Upgraded to Armadillo release 12.6.3 (Cortisol Retox)
+    \itemize{
+      \item Fix for corner-case in loading CSV files with headers
+      \item For consistent file handling, all \code{.load()} functions now
+      open text files in binary mode
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.12.6.2.0 (2023-08-08)}{
   \itemize{
     \item Upgraded to Armadillo release 12.6.2 (Cortisol Retox)
