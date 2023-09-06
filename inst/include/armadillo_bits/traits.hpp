@@ -1078,6 +1078,18 @@ struct is_supported_blas_type
 
 
 
+template<typename T1>
+struct has_blas_float_bug
+  {
+  #if defined(ARMA_BLAS_FLOAT_BUG)
+    static constexpr bool value = is_float<typename get_pod_type<T1>::result>::value;
+  #else
+    static constexpr bool value = false;
+  #endif
+  };
+
+
+
 template<typename T>
 struct is_signed
   {

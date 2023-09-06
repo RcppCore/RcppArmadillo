@@ -433,6 +433,15 @@ class auxlib
   
   template<typename T>
   inline static bool rudimentary_sym_check(const Mat< std::complex<T> >& X);
+  
+  template<typename eT>
+  inline static typename get_pod_type<eT>::result norm1_gen(const Mat<eT>& A);
+  
+  template<typename eT>
+  inline static typename get_pod_type<eT>::result norm1_sym(const Mat<eT>& A);
+  
+  template<typename eT>
+  inline static typename get_pod_type<eT>::result norm1_band(const Mat<eT>& A, const uword KL, const uword KU);
   };
 
 
