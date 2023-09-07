@@ -48,12 +48,6 @@ class op_inv_spd_full
   
   template<typename eT>
   arma_cold inline static bool apply_tiny_2x2(Mat<eT>& X);
-  
-  template<typename eT>
-  arma_cold inline static bool apply_tiny_3x3(Mat<eT>& X);
-  
-  template<typename eT>
-  arma_cold inline static bool apply_tiny_4x4(Mat<eT>& X);
   };
 
 

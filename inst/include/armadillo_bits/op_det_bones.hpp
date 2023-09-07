@@ -31,7 +31,6 @@ class op_det
     {
     static constexpr uword n2 = row + col*2;
     static constexpr uword n3 = row + col*3;
-    static constexpr uword n4 = row + col*4;
     };
   
   template<typename T1>
@@ -48,9 +47,6 @@ class op_det
   
   template<typename eT>
   arma_cold inline static eT apply_tiny_3x3(const Mat<eT>& X);
-  
-  template<typename eT>
-  arma_cold inline static eT apply_tiny_4x4(const Mat<eT>& X);
   };
 
 

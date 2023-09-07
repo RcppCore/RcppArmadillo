@@ -130,7 +130,7 @@ namespace blas
     
     if(is_float<eT>::value)
       {
-      #if defined(ARMA_BLAS_SDOT_BUG)
+      #if defined(ARMA_BLAS_FLOAT_BUG)
         {
         if(n_elem == 0)  { return eT(0); }
         

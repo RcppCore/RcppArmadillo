@@ -88,25 +88,20 @@ op_inv_spd_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
   if(has_user_flags == true )  { arma_extra_debug_print("op_inv_spd_full: has_user_flags = true");  }
   if(has_user_flags == false)  { arma_extra_debug_print("op_inv_spd_full: has_user_flags = false"); }
   
-  const bool tiny         = has_user_flags && bool(flags & inv_opts::flag_tiny        );
+  const bool fast         = has_user_flags && bool(flags & inv_opts::flag_fast        );
   const bool allow_approx = has_user_flags && bool(flags & inv_opts::flag_allow_approx);
-  const bool likely_sympd = has_user_flags && bool(flags & inv_opts::flag_likely_sympd);
-  const bool no_sympd     = has_user_flags && bool(flags & inv_opts::flag_no_sympd    );
   const bool no_ugly      = has_user_flags && bool(flags & inv_opts::flag_no_ugly     );
   
   if(has_user_flags)
     {
     arma_extra_debug_print("op_inv_spd_full: enabled flags:");
     
-    if(tiny        )  { arma_extra_debug_print("tiny");         }
+    if(fast        )  { arma_extra_debug_print("fast");         }
     if(allow_approx)  { arma_extra_debug_print("allow_approx"); }
-    if(likely_sympd)  { arma_extra_debug_print("likely_sympd"); }
-    if(no_sympd    )  { arma_extra_debug_print("no_sympd");     }
     if(no_ugly     )  { arma_extra_debug_print("no_ugly");      }
     
-    if(likely_sympd)  { arma_debug_warn_level(1, "inv_sympd(): option 'likely_sympd' ignored" ); }
-    if(no_sympd)      { arma_debug_warn_level(1, "inv_sympd(): option 'no_sympd' ignored" );     }
-    
+    arma_debug_check( (fast    && allow_approx), "inv_sympd(): options 'fast' and 'allow_approx' are mutually exclusive"    );
+    arma_debug_check( (fast    && no_ugly     ), "inv_sympd(): options 'fast' and 'no_ugly' are mutually exclusive"         );
     arma_debug_check( (no_ugly && allow_approx), "inv_sympd(): options 'no_ugly' and 'allow_approx' are mutually exclusive" );
     }
   
@@ -190,20 +185,6 @@ op_inv_spd_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
       
       if(status)  { return true; }
       }
-    else
-    if((N == 3) && tiny)
-      {
-      const bool status = op_inv_spd_full::apply_tiny_3x3(out);
-      
-      if(status)  { return true; }
-      }
-    else
-    if((N == 4) && tiny)
-      {
-      const bool status = op_inv_spd_full::apply_tiny_4x4(out);
-      
-      if(status)  { return true; }
-      }
     
     // fallthrough if optimisation failed
     }
@@ -277,66 +258,6 @@ op_inv_spd_full::apply_tiny_2x2(Mat<eT>& X)
   Xm[1] = -c;
   Xm[2] = -c;
   Xm[3] =  a;
-  
-  return true;
-  }
-
-
-
-template<typename eT>
-inline
-bool
-op_inv_spd_full::apply_tiny_3x3(Mat<eT>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  // NOTE: assuming matrix X is square sized
-  // NOTE: assuming matrix X is symmetric
-  // NOTE: assuming matrix X is real
-  
-  Mat<eT> Y(3, 3, arma_nozeros_indicator());
-  
-  arrayops::copy(Y.memptr(), X.memptr(), uword(3*3));
-  
-  const bool is_posdef = auxlib::chol_simple(Y);
-  
-  if(is_posdef == false)  { return false; }
-  
-  const bool status = op_inv_gen_full::apply_tiny_3x3(X);
-  
-  if(status == false)  { return false; }
-  
-  X = symmatl(X);
-  
-  return true;
-  }
-
-
-
-template<typename eT>
-inline
-bool
-op_inv_spd_full::apply_tiny_4x4(Mat<eT>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  // NOTE: assuming matrix X is square sized
-  // NOTE: assuming matrix X is symmetric
-  // NOTE: assuming matrix X is real
-  
-  Mat<eT> Y(4, 4, arma_nozeros_indicator());
-  
-  arrayops::copy(Y.memptr(), X.memptr(), uword(4*4));
-  
-  const bool is_posdef = auxlib::chol_simple(Y);
-  
-  if(is_posdef == false)  { return false; }
-  
-  const bool status = op_inv_gen_full::apply_tiny_4x4(X);
-  
-  if(status == false)  { return false; }
-  
-  X = symmatl(X);
   
   return true;
   }

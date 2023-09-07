@@ -114,8 +114,10 @@
 
 
 #if defined(__APPLE__) || defined(__apple_build_version__)
-  #undef  ARMA_BLAS_SDOT_BUG
-  #define ARMA_BLAS_SDOT_BUG
+  // NOTE: Apple accelerate framework has broken implementations of functions that return a float value,
+  // NOTE: such as sdot(), slange(), clange(), slansy(), clanhe(), slangb()
+  #undef  ARMA_BLAS_FLOAT_BUG
+  #define ARMA_BLAS_FLOAT_BUG
   
   // #undef  ARMA_HAVE_POSIX_MEMALIGN
   // NOTE: posix_memalign() is available since macOS 10.6 (late 2009 onwards)

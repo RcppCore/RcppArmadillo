@@ -121,7 +121,7 @@ auxlib::inv_rcond(Mat<eT>& A, typename get_pod_type<eT>::result& out_rcond)
     podarray<blas_int> ipiv(A.n_rows);
     
     arma_extra_debug_print("lapack::lange()");
-    norm_val = lapack::lange<eT>(&norm_id, &n, &n, A.memptr(), &lda, junk.memptr());
+    norm_val = (has_blas_float_bug<eT>::value) ? auxlib::norm1_gen(A) : lapack::lange<eT>(&norm_id, &n, &n, A.memptr(), &lda, junk.memptr());
     
     arma_extra_debug_print("lapack::getrf()");
     lapack::getrf(&n, &n, A.memptr(), &lda, ipiv.memptr(), &info);
@@ -333,7 +333,7 @@ auxlib::inv_sympd_rcond(Mat<eT>& A, bool& out_sympd_state, eT& out_rcond)
     podarray<T> work(A.n_rows);
     
     arma_extra_debug_print("lapack::lansy()");
-    norm_val = lapack::lansy(&norm_id, &uplo, &n, A.memptr(), &n, work.memptr());
+    norm_val = (has_blas_float_bug<eT>::value) ? auxlib::norm1_sym(A) : lapack::lansy(&norm_id, &uplo, &n, A.memptr(), &n, work.memptr());
     
     arma_extra_debug_print("lapack::potrf()");
     lapack::potrf(&uplo, &n, A.memptr(), &n, &info);
@@ -399,7 +399,7 @@ auxlib::inv_sympd_rcond(Mat< std::complex<T> >& A, bool& out_sympd_state, T& out
     podarray<T> work(A.n_rows);
     
     arma_extra_debug_print("lapack::lanhe()");
-    norm_val = lapack::lanhe(&norm_id, &uplo, &n, A.memptr(), &n, work.memptr());
+    norm_val = (has_blas_float_bug<T>::value) ? auxlib::norm1_sym(A) : lapack::lanhe(&norm_id, &uplo, &n, A.memptr(), &n, work.memptr());
     
     arma_extra_debug_print("lapack::potrf()");
     lapack::potrf(&uplo, &n, A.memptr(), &n, &info);
@@ -4039,7 +4039,7 @@ auxlib::solve_square_rcond(Mat<typename T1::elem_type>& out, typename T1::pod_ty
     podarray<blas_int> ipiv(A.n_rows + 2);  // +2 for paranoia
     
     arma_extra_debug_print("lapack::lange()");
-    norm_val = lapack::lange<eT>(&norm_id, &n, &n, A.memptr(), &lda, junk.memptr());
+    norm_val = (has_blas_float_bug<eT>::value) ? auxlib::norm1_gen(A) : lapack::lange<eT>(&norm_id, &n, &n, A.memptr(), &lda, junk.memptr());
     
     arma_extra_debug_print("lapack::getrf()");
     lapack::getrf<eT>(&n, &n, A.memptr(), &n, ipiv.memptr(), &info);
@@ -4368,7 +4368,7 @@ auxlib::solve_sympd_rcond(Mat<typename T1::pod_type>& out, bool& out_sympd_state
     podarray<T> work(A.n_rows);
     
     arma_extra_debug_print("lapack::lansy()");
-    norm_val = lapack::lansy(&norm_id, &uplo, &n, A.memptr(), &n, work.memptr());
+    norm_val = (has_blas_float_bug<eT>::value) ? auxlib::norm1_sym(A) : lapack::lansy(&norm_id, &uplo, &n, A.memptr(), &n, work.memptr());
     
     arma_extra_debug_print("lapack::potrf()");
     lapack::potrf<eT>(&uplo, &n, A.memptr(), &n, &info);
@@ -4446,7 +4446,7 @@ auxlib::solve_sympd_rcond(Mat< std::complex<typename T1::pod_type> >& out, bool&
     podarray<T> work(A.n_rows);
     
     arma_extra_debug_print("lapack::lanhe()");
-    norm_val = lapack::lanhe(&norm_id, &uplo, &n, A.memptr(), &n, work.memptr());
+    norm_val = (has_blas_float_bug<eT>::value) ? auxlib::norm1_sym(A) : lapack::lanhe(&norm_id, &uplo, &n, A.memptr(), &n, work.memptr());
     
     arma_extra_debug_print("lapack::potrf()");
     lapack::potrf<eT>(&uplo, &n, A.memptr(), &n, &info);
@@ -5387,7 +5387,7 @@ auxlib::solve_band_rcond_common(Mat<typename T1::elem_type>& out, typename T1::p
     
     arma_debug_assert_blas_size(AB,out);
     
-    char     norm_id  = '1';
+  //char     norm_id  = '1';
     char     trans    = 'N';
     blas_int n        = blas_int(N);  // assuming square matrix
     blas_int kl       = blas_int(KL);
@@ -5398,11 +5398,14 @@ auxlib::solve_band_rcond_common(Mat<typename T1::elem_type>& out, typename T1::p
     blas_int info     = blas_int(0);
     T        norm_val = T(0);
     
-    podarray<T>        junk(1);
+  //podarray<T>        junk(1);
     podarray<blas_int> ipiv(N + 2);  // +2 for paranoia
     
-    arma_extra_debug_print("lapack::langb()");
-    norm_val = lapack::langb<eT>(&norm_id, &n, &kl, &ku, AB.memptr(), &ldab, junk.memptr());
+    // // NOTE: lapack::langb() and lapack::gbtrf() use incompatible storage formats for the band matrix
+    // arma_extra_debug_print("lapack::langb()");
+    // norm_val = lapack::langb<eT>(&norm_id, &n, &kl, &ku, AB.memptr(), &ldab, junk.memptr());
+    
+    norm_val = auxlib::norm1_band(A,KL,KU);
     
     arma_extra_debug_print("lapack::gbtrf()");
     lapack::gbtrf<eT>(&n, &n, &kl, &ku, AB.memptr(), &ldab, ipiv.memptr(), &info);
@@ -6098,7 +6101,7 @@ auxlib::rcond(Mat<eT>& A)
     podarray<blas_int> ipiv( (std::min)(A.n_rows, A.n_cols) );
     
     arma_extra_debug_print("lapack::lange()");
-    norm_val = lapack::lange(&norm_id, &m, &n, A.memptr(), &lda, work.memptr());
+    norm_val = (has_blas_float_bug<eT>::value) ? auxlib::norm1_gen(A) : lapack::lange(&norm_id, &m, &n, A.memptr(), &lda, work.memptr());
     
     arma_extra_debug_print("lapack::getrf()");
     lapack::getrf(&m, &n, A.memptr(), &lda, ipiv.memptr(), &info);
@@ -6148,7 +6151,7 @@ auxlib::rcond(Mat< std::complex<T> >& A)
     podarray<blas_int> ipiv( (std::min)(A.n_rows, A.n_cols) );
     
     arma_extra_debug_print("lapack::lange()");
-    norm_val = lapack::lange(&norm_id, &m, &n, A.memptr(), &lda, junk.memptr());
+    norm_val = (has_blas_float_bug<eT>::value) ? auxlib::norm1_gen(A) : lapack::lange(&norm_id, &m, &n, A.memptr(), &lda, junk.memptr());
     
     arma_extra_debug_print("lapack::getrf()");
     lapack::getrf(&m, &n, A.memptr(), &lda, ipiv.memptr(), &info);
@@ -6196,7 +6199,7 @@ auxlib::rcond_sympd(Mat<eT>& A, bool& calc_ok)
     podarray<blas_int> iwork(  A.n_rows);
     
     arma_extra_debug_print("lapack::lansy()");
-    norm_val = lapack::lansy(&norm_id, &uplo, &n, A.memptr(), &lda, work.memptr());
+    norm_val = (has_blas_float_bug<eT>::value) ? auxlib::norm1_sym(A) : lapack::lansy(&norm_id, &uplo, &n, A.memptr(), &lda, work.memptr());
     
     arma_extra_debug_print("lapack::potrf()");
     lapack::potrf(&uplo, &n, A.memptr(), &lda, &info);
@@ -6257,7 +6260,7 @@ auxlib::rcond_sympd(Mat< std::complex<T> >& A, bool& calc_ok)
     podarray< T> rwork(  A.n_rows);
     
     arma_extra_debug_print("lapack::lanhe()");
-    norm_val = lapack::lanhe(&norm_id, &uplo, &n, A.memptr(), &lda, rwork.memptr());
+    norm_val = (has_blas_float_bug<eT>::value) ? auxlib::norm1_sym(A) : lapack::lanhe(&norm_id, &uplo, &n, A.memptr(), &lda, rwork.memptr());
     
     arma_extra_debug_print("lapack::potrf()");
     lapack::potrf(&uplo, &n, A.memptr(), &lda, &info);
@@ -6697,6 +6700,105 @@ auxlib::rudimentary_sym_check(const Mat< std::complex<T> >& X)
   const bool okay_imag = ( (delta_imag <= tol) || (delta_imag <= (C_imag * tol)) );
   
   return (okay_real && okay_imag);
+  }
+
+
+
+template<typename eT>
+inline
+typename get_pod_type<eT>::result
+auxlib::norm1_gen(const Mat<eT>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename get_pod_type<eT>::result T;
+  
+  if(A.n_elem == 0)  { return T(0); }
+  
+  const uword n_rows = A.n_rows;
+  const uword n_cols = A.n_cols;
+  
+  T max_val = T(0);
+  
+  for(uword c=0; c < n_cols; ++c)
+    {
+    const eT* colmem  = A.colptr(c);
+           T  acc_val = T(0);
+    
+    for(uword r=0; r < n_rows; ++r)  { acc_val += std::abs(colmem[r]); }
+    
+    max_val = (acc_val > max_val) ? acc_val : max_val;
+    }
+  
+  return max_val;
+  }
+
+
+
+template<typename eT>
+inline
+typename get_pod_type<eT>::result
+auxlib::norm1_sym(const Mat<eT>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename get_pod_type<eT>::result T;
+  
+  if(A.n_elem == 0)  { return T(0); }
+  
+  const uword N = (std::min)(A.n_rows, A.n_cols);
+  
+  T max_val = T(0);
+  
+  for(uword col=0; col < N; ++col)
+    {
+    const eT* colmem  = A.colptr(col);
+           T  acc_val = T(0);
+    
+    for(uword c=0; c < col; ++c)  { acc_val += std::abs(A.at(col,c)); }
+    
+    for(uword r=col; r < N; ++r)  { acc_val += std::abs(colmem[r]);   }
+    
+    max_val = (acc_val > max_val) ? acc_val : max_val;
+    }
+  
+  return max_val;
+  }
+
+
+
+template<typename eT>
+inline
+typename get_pod_type<eT>::result
+auxlib::norm1_band(const Mat<eT>& A, const uword KL, const uword KU)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename get_pod_type<eT>::result T;
+  
+  if(A.n_elem == 0)  { return T(0); }
+  
+  const uword n_rows = A.n_rows;
+  const uword n_cols = A.n_cols;
+  
+  T max_val = T(0);
+  
+  for(uword c=0; c < n_cols; ++c)
+    {
+    const eT* colmem  = A.colptr(c);
+           T  acc_val = T(0);
+    
+    // use values only from main diagonal + KU upper diagonals + KL lower diagonals
+    
+    const uword start = ( c       > KU    ) ? (c - KU) : 0;
+    const uword   end = ((c + KL) < n_rows) ? (c + KL) : (n_rows-1);
+    
+    for(uword r=start; r <= end; ++r)  { acc_val += std::abs(colmem[r]); }
+    
+    max_val = (acc_val > max_val) ? acc_val : max_val;
+    }
+  
+  return max_val;
   }
 
 

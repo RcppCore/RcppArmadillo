@@ -3,6 +3,18 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.12.6.4.0 (2023-09-06)}{
+  \itemize{
+    \item Upgraded to Armadillo release 12.6.4 (Cortisol Retox)
+    \itemize{
+      \item Workarounds for bugs in Apple accelerate framework
+      \item Fix incorrect calculation of rcond for band matrices in \code{solve()}
+      \item Remove expensive and seldom used optimisations, leading to faster
+      compilation times
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.12.6.3.0 (2023-08-28)}{
   \itemize{
     \item Upgraded to Armadillo release 12.6.3 (Cortisol Retox)
