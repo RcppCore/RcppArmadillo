@@ -3,6 +3,16 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.12.6.5.0 (2023-10-14)}{
+  \itemize{
+    \item Upgraded to Armadillo release 12.6.5 (Cortisol Retox)
+    \itemize{
+      \item Fix for corner-case bug in handling sparse matrices with no
+      non-zero elements
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.12.6.4.0 (2023-09-06)}{
   \itemize{
     \item Upgraded to Armadillo release 12.6.4 (Cortisol Retox)
