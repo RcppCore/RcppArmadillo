@@ -2971,12 +2971,11 @@ SpMat<eT>::swap_cols(const uword in_col1, const uword in_col2)
   
   // TODO: this is a rudimentary implementation
   
-  SpMat<eT> tmp = (*this);
+  const SpMat<eT> tmp1 = (*this).col(in_col1);
+  const SpMat<eT> tmp2 = (*this).col(in_col2);
   
-  tmp.col(in_col1) = (*this).col(in_col2);
-  tmp.col(in_col2) = (*this).col(in_col1);
-  
-  steal_mem(tmp);
+  (*this).col(in_col2) = tmp1;
+  (*this).col(in_col1) = tmp2;
   
   // for(uword lrow = 0; lrow < n_rows; ++lrow)
   //   {
@@ -4099,9 +4098,14 @@ SpMat<eT>::zeros()
   {
   arma_extra_debug_sigprint();
   
-  const bool already_done = ( (sync_state != 1) && (n_nonzero == 0) );
-  
-  if(already_done == false)  { init(n_rows, n_cols); }
+  if((n_nonzero == 0) && (values != nullptr))
+    {
+    invalidate_cache();
+    }
+  else
+    {
+    init(n_rows, n_cols);
+    }
   
   return *this;
   }
@@ -4136,9 +4140,14 @@ SpMat<eT>::zeros(const uword in_rows, const uword in_cols)
   {
   arma_extra_debug_sigprint();
   
-  const bool already_done = ( (sync_state != 1) && (n_nonzero == 0) && (n_rows == in_rows) && (n_cols == in_cols) );
-  
-  if(already_done == false)  { init(in_rows, in_cols); }
+  if((n_nonzero == 0) && (n_rows == in_rows) && (n_cols == in_cols) && (values != nullptr))
+    {
+    invalidate_cache();
+    }
+  else
+    {
+    init(in_rows, in_cols);
+    }
   
   return *this;
   }
@@ -5197,11 +5206,21 @@ SpMat<eT>::init_simple(const SpMat<eT>& x)
   
   if(this == &x)  { return; }
   
-  init(x.n_rows, x.n_cols, x.n_nonzero);
+  if((x.n_nonzero == 0) && (n_nonzero == 0) && (n_rows == x.n_rows) && (n_cols == x.n_cols) && (values != nullptr))
+    {
+    invalidate_cache();
+    }
+  else
+    {
+    init(x.n_rows, x.n_cols, x.n_nonzero);
+    }
   
-  if(x.values     )  { arrayops::copy(access::rwp(values),      x.values,      x.n_nonzero + 1); }
-  if(x.row_indices)  { arrayops::copy(access::rwp(row_indices), x.row_indices, x.n_nonzero + 1); }
-  if(x.col_ptrs   )  { arrayops::copy(access::rwp(col_ptrs),    x.col_ptrs,    x.n_cols    + 1); }
+  if(x.n_nonzero != 0)
+    {
+    if(x.values     )  { arrayops::copy(access::rwp(values),      x.values,      x.n_nonzero + 1); }
+    if(x.row_indices)  { arrayops::copy(access::rwp(row_indices), x.row_indices, x.n_nonzero + 1); }
+    if(x.col_ptrs   )  { arrayops::copy(access::rwp(col_ptrs),    x.col_ptrs,    x.n_cols    + 1); }
+    }
   }
 
 

@@ -2657,6 +2657,8 @@ Mat<eT>::operator=(const SpBase<eT, T1>& m)
   
   (*this).zeros(x.n_rows, x_n_cols);
   
+  if(x.n_nonzero == 0)  { return *this; }
+  
   const    eT* x_values      = x.values;
   const uword* x_row_indices = x.row_indices;
   const uword* x_col_ptrs    = x.col_ptrs;
