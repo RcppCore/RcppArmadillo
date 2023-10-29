@@ -53,6 +53,21 @@ armadillo_set_seed <- function(val) {
     invisible(.Call(`_RcppArmadillo_armadillo_set_seed`, val))
 }
 
+#' Report (or Set) Maximum Number of OpenMP Threads
+#'
+#' @param n Number of threads to be set
+#' @return For the getter, and on a system with OpenMP, the maximum
+#' number of threads that OpenMP may be using and on systems without it,
+#' one. The setter does not return a value.
+armadillo_get_number_of_omp_threads <- function() {
+    .Call(`_RcppArmadillo_armadillo_get_number_of_omp_threads`)
+}
+
+#' @rdname armadillo_get_number_of_omp_threads
+armadillo_set_number_of_omp_threads <- function(n) {
+    invisible(.Call(`_RcppArmadillo_armadillo_set_number_of_omp_threads`, n))
+}
+
 fastLm_impl <- function(X, y) {
     .Call(`_RcppArmadillo_fastLm_impl`, X, y)
 }

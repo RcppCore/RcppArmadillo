@@ -69,6 +69,11 @@ fastLm(X, \dots)
   Romain Francois, Dirk Eddelbuettel, Douglas Bates and Binxiang Ni.
 }
 \examples{
+  \dontshow{
+      ## as an illustration, the example is computationally inexpensive
+      ## and does not require this per se
+      armadillo_throttle_cores(2)
+  }
   data(trees, package="datasets")
 
   ## bare-bones direct interface
@@ -89,5 +94,7 @@ fastLm(X, \dots)
   dd$y <- mm \%*\% seq_len(ncol(mm)) + rnorm(nrow(mm), sd = 0.1)
   summary(lm(y ~ f1 * f2, dd))     # detects rank deficiency
   summary(fastLm(y ~ f1 * f2, dd)) # some huge coefficients
+
+  \dontshow{armadillo_reset_cores()}
 }
 \keyword{regression}

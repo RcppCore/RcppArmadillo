@@ -1,3 +1,19 @@
+2023-10-29  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/RcppArmadillo.cpp (armadillo_get_number_of_omp_threads)
+	(armadillo_set_number_of_omp_threads): New helper functions
+        * src/RcppExports.cpp: Regenerated
+        * R/RcppExports.R: Idem
+	* man/armadillo_get_number_of_omp_threads.Rd: Documentation
+
+	* R/init.R (.onLoad): Store initial thread count
+	* R/init.R (armadillo_throttle_cores, armadillo_reset_cores):
+	Tread throtte and reset helper functions
+	* man/armadillo_throttle_cores.Rd: Documentation
+
+	* man/fastLm.Rd: Illustration of use of throttle and reset function
+	* NAMESPACE: Export new functions
+
 2023-10-14  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 0.12.6.5.0

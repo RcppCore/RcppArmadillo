@@ -26,3 +26,4 @@ Imports: Rcpp (>= 0.11.0), stats, utils, methods
 Suggests: tinytest, Matrix (>= 1.3.0), pkgKitten, reticulate, slam
 URL: https://github.com/RcppCore/RcppArmadillo, https://dirk.eddelbuettel.com/code/rcpp.armadillo.html
 BugReports: https://github.com/RcppCore/RcppArmadillo/issues
+RoxygenNote: 6.0.1
