@@ -41,6 +41,26 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// armadillo_get_number_of_omp_threads
+int armadillo_get_number_of_omp_threads();
+RcppExport SEXP _RcppArmadillo_armadillo_get_number_of_omp_threads() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(armadillo_get_number_of_omp_threads());
+    return rcpp_result_gen;
+END_RCPP
+}
+// armadillo_set_number_of_omp_threads
+void armadillo_set_number_of_omp_threads(int n);
+RcppExport SEXP _RcppArmadillo_armadillo_set_number_of_omp_threads(SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    armadillo_set_number_of_omp_threads(n);
+    return R_NilValue;
+END_RCPP
+}
 // fastLm_impl
 Rcpp::List fastLm_impl(const arma::mat& X, const arma::colvec& y);
 RcppExport SEXP _RcppArmadillo_fastLm_impl(SEXP XSEXP, SEXP ySEXP) {
@@ -58,6 +78,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RcppArmadillo_armadillo_version", (DL_FUNC) &_RcppArmadillo_armadillo_version, 1},
     {"_RcppArmadillo_armadillo_set_seed_random", (DL_FUNC) &_RcppArmadillo_armadillo_set_seed_random, 0},
     {"_RcppArmadillo_armadillo_set_seed", (DL_FUNC) &_RcppArmadillo_armadillo_set_seed, 1},
+    {"_RcppArmadillo_armadillo_get_number_of_omp_threads", (DL_FUNC) &_RcppArmadillo_armadillo_get_number_of_omp_threads, 0},
+    {"_RcppArmadillo_armadillo_set_number_of_omp_threads", (DL_FUNC) &_RcppArmadillo_armadillo_set_number_of_omp_threads, 1},
     {"_RcppArmadillo_fastLm_impl", (DL_FUNC) &_RcppArmadillo_fastLm_impl, 2},
     {NULL, NULL, 0}
 };

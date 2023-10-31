@@ -1,6 +1,15 @@
 coverage:
   precision: 1
 
+  status:
+    project:
+      default:
+        target: 70%    # the (on purpose low) required coverage value
+        threshold: 2%  # the permitted delta in hitting the target
+    patch:
+      default:
+        target: 0%     # the (on purpose low) required coverage value
+
 comment: false
 
 ignore:

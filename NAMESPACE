@@ -10,12 +10,16 @@ export("fastLmPure",
        "RcppArmadillo.package.skeleton",
        "armadillo_version",
        "armadillo_set_seed",
-       "armadillo_set_seed_random")
+       "armadillo_set_seed_random",
+
+       "armadillo_throttle_cores",
+       "armadillo_reset_cores",
+       "armadillo_get_number_of_omp_threads",
+       "armadillo_set_number_of_omp_threads"
+       )
 S3method("fastLm", "default")
 S3method("fastLm", "formula")
 S3method("predict", "fastLm")
 S3method("print", "fastLm")
 S3method("summary", "fastLm")
 S3method("print", "summary.fastLm")
-
-

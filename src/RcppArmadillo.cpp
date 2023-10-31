@@ -1,7 +1,7 @@
 
 // RcppArmadillo.cpp: Rcpp/Armadillo glue
 //
-// Copyright (C)  2010 - 2020  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2010 - 2023  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 //
 // This file is part of RcppArmadillo.
 //
@@ -89,4 +89,29 @@ void armadillo_set_seed_random() {
 void armadillo_set_seed(unsigned int val) {
     //Rcpp::Rcout << "Setting value " << val << std::endl;
     arma::arma_rng::set_seed(val);  			    // set the seed to given value
+}
+
+//' Report (or Set) Maximum Number of OpenMP Threads
+//'
+//' @param n Number of threads to be set
+//' @return For the getter, and on a system with OpenMP, the maximum
+//' number of threads that OpenMP may be using and on systems without it,
+//' one. The setter does not return a value.
+// [[Rcpp::export]]
+int armadillo_get_number_of_omp_threads() {
+#ifdef _OPENMP
+    return omp_get_max_threads();
+#else
+    return 1;
+#endif
+}
+
+//' @rdname armadillo_get_number_of_omp_threads
+// [[Rcpp::export]]
+void armadillo_set_number_of_omp_threads(int n) {
+#ifdef _OPENMP
+    omp_set_num_threads(n);
+#else
+    (void)(n);                  // prevent unused variable warning
+#endif
 }
