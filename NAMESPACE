@@ -14,7 +14,7 @@ export("fastLmPure",
 
        "armadillo_throttle_cores",
        "armadillo_reset_cores",
-       "armadillo_set_number_of_omp_threads",
+       "armadillo_get_number_of_omp_threads",
        "armadillo_set_number_of_omp_threads"
        )
 S3method("fastLm", "default")
