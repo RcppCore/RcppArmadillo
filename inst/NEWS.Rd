@@ -3,6 +3,19 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.12.6.6.0 (2023-10-31)}{
+  \itemize{
+    \item Upgraded to Armadillo release 12.6.6 (Cortisol Retox)
+    \itemize{
+      \item Fix \code{eigs_sym()}, \code{eigs_gen()} and \code{svds()} to
+      generate deterministic results in ARPACK mode
+    }
+    \item Add helper functions to set and get the number of OpenMP threads
+    \item Store initial thread count at package load and use in
+    thread-throttling helper (and resetter) suitable for CRAN constraints
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.12.6.5.0 (2023-10-14)}{
   \itemize{
     \item Upgraded to Armadillo release 12.6.5 (Cortisol Retox)
