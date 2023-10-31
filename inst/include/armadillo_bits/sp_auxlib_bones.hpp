@@ -158,6 +158,31 @@ class sp_auxlib
 
 
 
+template<typename eT>
+struct eigs_randu_filler
+  {
+  std::mt19937_64                    local_engine;
+  std::uniform_real_distribution<eT> local_u_distr;
+  
+  inline eigs_randu_filler();
+  
+  inline void fill(podarray<eT>& X, const uword N);
+  };
+
+
+template<typename T>
+struct eigs_randu_filler< std::complex<T> >
+  {
+  std::mt19937_64                   local_engine;
+  std::uniform_real_distribution<T> local_u_distr;
+  
+  inline eigs_randu_filler();
+  
+  inline void fill(podarray< std::complex<T> >& X, const uword N);
+  };
+
+
+
 #if defined(ARMA_USE_SUPERLU)
 
 class superlu_supermatrix_wrangler
