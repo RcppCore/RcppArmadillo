@@ -3,6 +3,19 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.12.6.6.0 (2023-10-31)}{
+  \itemize{
+    \item Upgraded to Armadillo release 12.6.6 (Cortisol Retox)
+    \itemize{
+      \item Fix \code{eigs_sym()}, \code{eigs_gen()} and \code{svds()} to
+      generate deterministic results in ARPACK mode
+    }
+    \item Add helper functions to set and get the number of OpenMP threads
+    \item Store initial thread count at package load and use in
+    thread-throttling helper (and resetter) suitable for CRAN constraints
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.12.6.5.0 (2023-10-14)}{
   \itemize{
     \item Upgraded to Armadillo release 12.6.5 (Cortisol Retox)
@@ -219,7 +232,7 @@
     \item Accomodate upcoming \pkg{Matrix} 1.4-2 deprecation for
     conversion (Dirk in \ghpr{387})
     \item CRAN release with small upstream changes in Armadillo
-    11.2.{1,2,3} made since the last CRAN release 0.11.2.0.0
+    11.2.(1,2,3) made since the last CRAN release 0.11.2.0.0
     (Dirk in \ghpr{383}, \ghpr{384} and \ghpr{386})
     \item Undefine \code{arma_deprecated} warning as it affects a number
     of CRAN packages which will likely need a small transition
@@ -921,7 +934,7 @@
       \item smarter use of the element cache in sparse matrices
     }
     \item Aligned OpenMP flags in the RcppArmadillo.package.skeleton
-    used Makevars{,.win} to not use one C and C++ flag.
+    used Makevars(,.win) to not use one C and C++ flag.
   }
 }
 

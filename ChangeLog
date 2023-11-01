@@ -1,3 +1,12 @@
+2023-10-31  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): RcppArmadillo 0.12.6.6.0
+        * inst/NEWS.Rd: Idem
+        * configure.ac: Idem
+        * configure: Idem
+
+ 	* inst/include/armadillo_bits/: Armadillo 12.6.6
+
 2023-10-29  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/RcppArmadillo.cpp (armadillo_get_number_of_omp_threads)

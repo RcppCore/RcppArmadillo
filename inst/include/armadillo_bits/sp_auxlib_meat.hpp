@@ -1921,7 +1921,9 @@ sp_auxlib::run_aupd_plain
     n = X.n_rows; // The size of the matrix (should already be set outside).
     blas_int nev = n_eigvals;
     
-    resid.zeros(n);
+    // resid.zeros(n);
+    eigs_randu_filler<T> randu_filler;
+    randu_filler.fill(resid, n);  // use deterministic starting point
     
     // Two contraints on NCV: (NCV > NEV) for sym problems or
     // (NCV > NEV + 2) for gen problems and (NCV <= N)
@@ -1956,7 +1958,8 @@ sp_auxlib::run_aupd_plain
     // Real work array of length lworkl.
     workl.zeros(lworkl);
     
-    info = 0; // Set to 0 initially to use random initial vector.
+    // info = 0; // resid to be filled with random values by ARPACK (non-deterministic)
+    info = 1; // resid is already filled with random values (deterministic)
     
     // All the parameters have been set or created.  Time to loop a lot.
     while(ido != 99)
@@ -2109,7 +2112,9 @@ sp_auxlib::run_aupd_shiftinvert
     n = X.n_rows; // The size of the matrix (should already be set outside).
     blas_int nev = n_eigvals;
     
-    resid.zeros(n);
+    // resid.zeros(n);
+    eigs_randu_filler<T> randu_filler;
+    randu_filler.fill(resid, n);  // use deterministic starting point
     
     // Two contraints on NCV: (NCV > NEV) for sym problems or
     // (NCV > NEV + 2) for gen problems and (NCV <= N)
@@ -2147,7 +2152,8 @@ sp_auxlib::run_aupd_shiftinvert
     // Real work array of length lworkl.
     workl.zeros(lworkl);
     
-    info = 0; // Set to 0 initially to use random initial vector.
+    // info = 0; // resid to be filled with random values by ARPACK (non-deterministic)
+    info = 1; // resid is already filled with random values (deterministic)
     
     superlu_opts superlu_opts_default;
     superlu::superlu_options_t options;
@@ -2436,6 +2442,85 @@ sp_auxlib::rudimentary_sym_check(const SpMat< std::complex<T> >& X)
   
   return true;
   }
+
+
+
+//
+
+
+
+template<typename eT>
+inline
+eigs_randu_filler<eT>::eigs_randu_filler()
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename std::mt19937_64::result_type local_seed_type;
+  
+  local_engine.seed(local_seed_type(123));
+  
+  typedef typename std::uniform_real_distribution<eT>::param_type local_param_type;
+  
+  local_u_distr.param(local_param_type(-1.0, +1.0));
+  }
+
+
+template<typename eT>
+inline
+void
+eigs_randu_filler<eT>::fill(podarray<eT>& X, const uword N)
+  {
+  arma_extra_debug_sigprint();
+  
+  X.set_size(N);
+  
+  eT* X_mem = X.memptr();
+  
+  for(uword i=0; i<N; ++i)  { X_mem[i] = eT( local_u_distr(local_engine) ); }
+  }
+
+
+template<typename T>
+inline
+eigs_randu_filler< std::complex<T> >::eigs_randu_filler()
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename std::mt19937_64::result_type local_seed_type;
+  
+  local_engine.seed(local_seed_type(123));
+  
+  typedef typename std::uniform_real_distribution<T>::param_type local_param_type;
+  
+  local_u_distr.param(local_param_type(-1.0, +1.0));
+  }
+
+
+template<typename T>
+inline
+void
+eigs_randu_filler< std::complex<T> >::fill(podarray< std::complex<T> >& X, const uword N)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename std::complex<T> eT;
+  
+  X.set_size(N);
+  
+  eT* X_mem = X.memptr();
+  
+  for(uword i=0; i<N; ++i)
+    {
+    eT& X_mem_i = X_mem[i];
+    
+    X_mem_i.real( T(local_u_distr(local_engine)) );
+    X_mem_i.imag( T(local_u_distr(local_engine)) );
+    }
+  }
+
+
+
+//
 
 
 
