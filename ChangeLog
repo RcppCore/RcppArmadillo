@@ -1,3 +1,8 @@
+2023-12-02  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/RcppArmadillo/interface/RcppArmadilloForward.h: Update
+	discussion of 'ARMA_IGNORE_DEPRECATED_MARKER' which is no longer set
+
 2023-10-31  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 0.12.6.6.0

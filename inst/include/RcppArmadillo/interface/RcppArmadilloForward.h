@@ -46,13 +46,13 @@
 // installation of Armadillo
 #define ARMA_DONT_USE_WRAPPER
 
-// Unless 'RCPPARMADILLO_FORCE_DEPRECATE' is defined to force deprecation, we define the
-// setting to ignored deprecation (used at bottom of compiler_setup.hpp). This allows an
-// opt-out of the (hopefully temporary) suppression of deprecation warning we need while a
-// number of CRAN packages are affected as discussed and detailed in issues #391 and #402.
-#if !defined(RCPPARMADILLO_FORCE_DEPRECATE)
-#define ARMA_IGNORE_DEPRECATED_MARKER
-#endif
+// Armadillo has deprecation warnings (which RcppArmadillo suppressed at time to
+// minimise issies at CRAN).  Should your package display any, and you decide
+// _not_ to fix the root causes (see RcppArmadillo GitHub Issues #391 and #402
+// for details) then defining the following macro will help. You can add a
+// #define in your source code before including the RcppArmadillo header, or add
+// a -DARMA_IGNORE_DEPRECATED_MARKER to the PKG_CPPFLAGS in src/Makevars.
+//#define ARMA_IGNORE_DEPRECATED_MARKER
 
 #include "armadillo"
 
