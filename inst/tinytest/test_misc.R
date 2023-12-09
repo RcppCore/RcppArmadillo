@@ -1,6 +1,6 @@
 #!/usr/bin/r -t
 #
-# Copyright (C) 2021         Dirk Eddelbuettel
+# Copyright (C) 2021-2023  Dirk Eddelbuettel
 #
 # This file is part of RcppArmadillo.
 #
@@ -36,3 +36,10 @@ armadillo_set_seed(42L)                 # no test as we have no (current) access
 cxxflags <- RcppArmadillo:::RcppArmadilloCxxFlags()
 expect_true(is.character(cxxflags))
 expect_stdout(RcppArmadillo:::CxxFlags())
+
+## 'set number of threads' helper -- adding simple test
+expect_true(is.integer(armadillo_get_number_of_omp_threads()))
+expect_silent(armadillo_set_number_of_omp_threads(2))
+## startup throttle/restore helpers
+expect_silent(armadillo_throttle_cores())
+expect_silent(armadillo_reset_cores())
