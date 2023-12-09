@@ -20,7 +20,7 @@
 .pkgenv <- new.env(parent=emptyenv())
 
 .onLoad <- function(libname, pkgname) {
-    .pkgenv[["omp_threads"]] <- armadillo_get_number_of_omp_threads()
+    .pkgenv[["omp_threads"]] <- armadillo_get_number_of_omp_threads()		# #nocov
 }
 
 ##' Throttle (or Reset) (Rcpp)Armadillo to Two Cores
