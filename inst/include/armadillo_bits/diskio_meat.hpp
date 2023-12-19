@@ -445,9 +445,9 @@ diskio::convert_token(eT& val, const std::string& token)
   {
   const size_t N = size_t(token.length());
   
-  if(N == 0)  { val = eT(0); return true; }
-  
   const char* str = token.c_str();
+  
+  if( (N == 0) || ((N == 1) && (str[0] == '0')) )  { val = eT(0); return true; }
   
   if( (N == 3) || (N == 4) )
     {
@@ -1075,7 +1075,7 @@ diskio::save_coord_ascii(const Mat< std::complex<T> >& x, std::ostream& f)
   for(uword col=0; col < x.n_cols; ++col)
   for(uword row=0; row < x.n_rows; ++row)
     {
-    const eT val = x.at(row,col);
+    const eT& val = x.at(row,col);
     
     if(val != eT_zero)
       {
@@ -1181,11 +1181,6 @@ diskio::save_pgm_binary(const Mat<eT>& x, const std::string& final_name)
   }
 
 
-
-//
-// TODO:
-// add functionality to save the image in a normalised format,
-// ie. scaled so that every value falls in the [0,255] range.
 
 //! Save a matrix as a PGM greyscale image
 template<typename eT>
@@ -2221,10 +2216,7 @@ diskio::load_coord_ascii(Mat<eT>& x, std::istream& f, std::string& err_msg)
       
       line_stream >> token;
       
-      if(line_stream.fail() == false)
-        {
-        diskio::convert_token( val, token );
-        }
+      if(line_stream.fail() == false)  { diskio::convert_token( val, token ); }
       
       if(val != eT(0))  { tmp(line_row,line_col) = val; }
       }
@@ -2325,18 +2317,11 @@ diskio::load_coord_ascii(Mat< std::complex<T> >& x, std::istream& f, std::string
       
       line_stream >> token_real;
       
-      if(line_stream.fail() == false)
-        {
-        diskio::convert_token( val_real, token_real );
-        }
-      
+      if(line_stream.fail() == false)  { diskio::convert_token( val_real, token_real ); }
       
       line_stream >> token_imag;
       
-      if(line_stream.fail() == false)
-        {
-        diskio::convert_token( val_imag, token_imag );
-        }
+      if(line_stream.fail() == false)  { diskio::convert_token( val_imag, token_imag ); }
       
       if( (val_real != T(0)) || (val_imag != T(0)) )
         {
@@ -2919,13 +2904,22 @@ diskio::save_csv_ascii(const SpMat<eT>& x, std::ostream& f, const char separator
   uword x_n_rows = x.n_rows;
   uword x_n_cols = x.n_cols;
   
+  const eT eT_zero = eT(0);
+  
   for(uword row=0; row < x_n_rows; ++row)
     {
     for(uword col=0; col < x_n_cols; ++col)
       {
       const eT val = x.at(row,col);
       
-      if(val != eT(0))  { arma_ostream::raw_print_elem(f, val); }
+      if(val == eT_zero)
+        {
+        f.put('0');
+        }
+      else
+        {
+        arma_ostream::raw_print_elem(f, val);
+        }
       
       if( col < (x_n_cols-1) )  { f.put(separator); }
       }
@@ -3426,10 +3420,7 @@ diskio::load_coord_ascii(SpMat<eT>& x, std::istream& f, std::string& err_msg)
       
       line_stream >> token;
       
-      if(line_stream.fail() == false)
-        {
-        diskio::convert_token( val, token );
-        }
+      if(line_stream.fail() == false)  { diskio::convert_token( val, token ); }
       
       if(val != eT(0))  { tmp(line_row,line_col) = val; }
       }
@@ -3530,18 +3521,11 @@ diskio::load_coord_ascii(SpMat< std::complex<T> >& x, std::istream& f, std::stri
       
       line_stream >> token_real;
       
-      if(line_stream.fail() == false)
-        {
-        diskio::convert_token( val_real, token_real );
-        }
-      
+      if(line_stream.fail() == false)  { diskio::convert_token( val_real, token_real ); }
       
       line_stream >> token_imag;
       
-      if(line_stream.fail() == false)
-        {
-        diskio::convert_token( val_imag, token_imag );
-        }
+      if(line_stream.fail() == false)  { diskio::convert_token( val_imag, token_imag ); }
       
       if( (val_real != T(0)) || (val_imag != T(0)) )
         {

@@ -4609,7 +4609,7 @@ SpMat<eT>::save(const csv_name& spec, const file_type type) const
     
     if(spec.header_ro.n_elem != save_n_cols)
       {
-      arma_debug_warn_level(1, "SpMat::save(): size mistmach between header and matrix");
+      arma_debug_warn_level(1, "SpMat::save(): size mismatch between header and matrix");
       return false;
       }
     }
@@ -4808,7 +4808,7 @@ SpMat<eT>::load(const csv_name& spec, const file_type type)
     
     if(with_header && (spec.header_rw.n_elem != load_n_cols))
       {
-      arma_debug_warn_level(3, "SpMat::load(): size mistmach between header and matrix");
+      arma_debug_warn_level(3, "SpMat::load(): size mismatch between header and matrix");
       }
     }
   
