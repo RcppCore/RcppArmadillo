@@ -3,6 +3,16 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.12.6.7.0 (2023-12-18)}{
+  \itemize{
+    \item Upgraded to Armadillo release 12.6.7 (Cortisol Retox)
+    \itemize{
+      \item Fix for saving sparse matrices as CSV files
+    }
+    \item Added unit tests for thread throttling
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.12.6.6.1 (2023-12-03)}{
   \itemize{
     \item Following the extendeded transition in \ghit{391} and \ghit{402},
