@@ -3,6 +3,13 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.12.6.7.1 (unreleased)}{
+  \itemize{
+    \item Five non-user facing top-level include files have been removed
+    (\ghpr{432} closing \ghit{400} and building on \ghpr{395} and \ghpr{396})
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.12.6.7.0 (2023-12-18)}{
   \itemize{
     \item Upgraded to Armadillo release 12.6.7 (Cortisol Retox)
