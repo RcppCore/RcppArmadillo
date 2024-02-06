@@ -148,6 +148,29 @@ spop_sqrt::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_sqrt>& i
 
 namespace priv
   {
+  struct functor_cbrt
+    {
+    template<typename eT>
+    arma_inline eT operator()(const eT val) const { return eop_aux::cbrt(val); }
+    };
+  }
+
+
+
+template<typename T1>
+inline
+void
+spop_cbrt::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_cbrt>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  out.init_xform(in.m, priv::functor_cbrt());
+  }
+
+
+
+namespace priv
+  {
   struct functor_abs
     {
     template<typename eT>
@@ -328,8 +351,8 @@ spop_repelem::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_repe
   
   if( (out_n_rows > 0) && (out_n_cols > 0) && (out_nnz > 0) )
     {
-    umat    locs(2, out_nnz, arma_nozeros_indicator());
-    Col<eT> vals(   out_nnz, arma_nozeros_indicator());
+    Mat<uword> locs(2, out_nnz, arma_nozeros_indicator());
+    Col<eT>    vals(   out_nnz, arma_nozeros_indicator());
     
     uword* locs_mem = locs.memptr();
     eT*    vals_mem = vals.memptr();

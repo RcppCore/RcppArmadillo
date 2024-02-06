@@ -116,6 +116,10 @@ class eop_aux
   template<typename eT> arma_inline static typename              arma_real_only<eT>::result arma_abs (const eT               x) { return std::abs(x); }
   template<typename  T> arma_inline static typename              arma_real_only< T>::result arma_abs (const std::complex<T>& x) { return std::abs(x); }
   
+  template<typename eT> arma_inline static typename arma_integral_only<eT>::result cbrt (const eT  x) { return eT( std::cbrt(double(x)) ); }
+  template<typename eT> arma_inline static typename     arma_real_only<eT>::result cbrt (const eT  x) { return std::cbrt(x);               }
+  template<typename eT> arma_inline static typename       arma_cx_only<eT>::result cbrt (const eT& x) { arma_ignore(x); return eT(0);      }
+  
   template<typename eT> arma_inline static typename arma_integral_only<eT>::result erf (const eT  x) { return eT( std::erf(double(x)) ); }
   template<typename eT> arma_inline static typename     arma_real_only<eT>::result erf (const eT  x) { return std::erf(x);               }
   template<typename eT> arma_inline static typename       arma_cx_only<eT>::result erf (const eT& x) { arma_ignore(x); return eT(0);     }

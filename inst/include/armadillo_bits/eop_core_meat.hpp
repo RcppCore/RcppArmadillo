@@ -1143,6 +1143,9 @@ template<> template<typename eT> arma_inline eT
 eop_core<eop_sign             >::process(const eT val, const eT  ) { return arma_sign(val);           }
 
 template<> template<typename eT> arma_inline eT
+eop_core<eop_cbrt             >::process(const eT val, const eT  ) { return eop_aux::cbrt(val);       }
+
+template<> template<typename eT> arma_inline eT
 eop_core<eop_erf              >::process(const eT val, const eT  ) { return eop_aux::erf(val);        }
 
 template<> template<typename eT> arma_inline eT

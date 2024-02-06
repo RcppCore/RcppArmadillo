@@ -64,6 +64,8 @@ op_shift::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword len, const u
   arma_debug_check_bounds( ((dim == 0) && (len >= X.n_rows)), "shift(): shift amount out of bounds" );
   arma_debug_check_bounds( ((dim == 1) && (len >= X.n_cols)), "shift(): shift amount out of bounds" );
   
+  if(len == 0)  { out = X; return; }
+  
   out.copy_size(X);
   
   const uword X_n_rows = X.n_rows;

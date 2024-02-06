@@ -44,14 +44,21 @@ op_rank::apply(uword& out, const Base<typename T1::elem_type,T1>& expr, const ty
   
   bool do_sym = false;
   
-  if((arma_config::optimise_sym) && (auxlib::crippled_lapack(A) == false) && (A.n_rows >= (is_cx<eT>::yes ? uword(64) : uword(128))))
+  const bool is_sym_size_ok = (A.n_rows == A.n_cols) && (A.n_rows > (is_cx<eT>::yes ? uword(20) : uword(40)));  // for consistency with op_pinv
+  
+  if( (is_sym_size_ok) && (arma_config::optimise_sym) && (auxlib::crippled_lapack(A) == false) )
     {
-    bool is_approx_sym   = false;
-    bool is_approx_sympd = false;
+    do_sym = is_sym_expr<T1>::eval(expr.get_ref());
     
-    sym_helper::analyse_matrix(is_approx_sym, is_approx_sympd, A);
-    
-    do_sym = (is_cx<eT>::no) ? (is_approx_sym) : (is_approx_sym && is_approx_sympd);
+    if(do_sym == false)
+      {
+      bool is_approx_sym   = false;
+      bool is_approx_sympd = false;
+      
+      sym_helper::analyse_matrix(is_approx_sym, is_approx_sympd, A);
+      
+      do_sym = (is_cx<eT>::no) ? (is_approx_sym) : (is_approx_sym && is_approx_sympd);
+      }
     }
   
   if(do_sym)
