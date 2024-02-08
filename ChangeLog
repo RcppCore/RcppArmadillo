@@ -1,3 +1,17 @@
+2024-02-08  Dirk Eddelbuettel  <edd@debian.org>
+
+	* .github/workflows/ci.yaml (jobs): Switch to actions/checkout@v4 and
+	eddelbuettel/github-actions/r-ci-setup@master
+
+2024-02-06  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): RcppArmadillo 0.12.8.0.0
+        * inst/NEWS.Rd: Idem
+        * configure.ac: Idem
+        * configure: Idem
+
+ 	* inst/include/armadillo_bits/: Armadillo 12.8.0
+
 2024-01-18  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/RcppArmadilloAs.h: Remove non-user facing include

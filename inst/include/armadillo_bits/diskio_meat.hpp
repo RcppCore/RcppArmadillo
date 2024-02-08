@@ -915,11 +915,18 @@ diskio::save_csv_ascii(const Mat<eT>& x, std::ostream& f, const char separator)
   uword x_n_rows = x.n_rows;
   uword x_n_cols = x.n_cols;
   
+  const eT eT_int_lowest = eT(std::numeric_limits<int>::lowest());
+  const eT eT_int_max    = eT(std::numeric_limits<int>::max());
+  
   for(uword row=0; row < x_n_rows; ++row)
     {
     for(uword col=0; col < x_n_cols; ++col)
       {
-      arma_ostream::raw_print_elem(f, x.at(row,col));
+      const eT val = x.at(row,col);
+      
+      const bool is_real_int = (is_real<eT>::yes) && arma_isfinite(val) && (val > eT_int_lowest) && (val < eT_int_max) && (eT(int(val)) == val);
+      
+      (is_real_int) ? arma_ostream::raw_print_elem(f, int(val)) : arma_ostream::raw_print_elem(f, val);
       
       if( col < (x_n_cols-1) )  { f.put(separator); }
       }
@@ -950,6 +957,9 @@ diskio::save_csv_ascii(const Mat< std::complex<T> >& x, std::ostream& f, const c
   
   diskio::prepare_stream<eT>(f);
   
+  const T T_int_lowest = T(std::numeric_limits<int>::lowest());
+  const T T_int_max    = T(std::numeric_limits<int>::max());
+  
   uword x_n_rows = x.n_rows;
   uword x_n_cols = x.n_cols;
   
@@ -959,14 +969,20 @@ diskio::save_csv_ascii(const Mat< std::complex<T> >& x, std::ostream& f, const c
       {
       const eT& val = x.at(row,col);
       
-      const T    tmp_r     = std::real(val);
-      const T    tmp_i     = std::imag(val);
-      const T    tmp_i_abs = (tmp_i < T(0)) ? T(-tmp_i) : T(tmp_i);
-      const char tmp_sign  = (tmp_i < T(0)) ? char('-') : char('+');
+      const T    val_r = std::real(val);
+      const T    val_i = std::imag(val);
+      const T    abs_i = (val_i < T(0)) ? T(-val_i) : T(val_i);
+      const char sgn_i = (val_i < T(0)) ? char('-') : char('+');
       
-      arma_ostream::raw_print_elem(f, tmp_r    );
-      f.put(tmp_sign);
-      arma_ostream::raw_print_elem(f, tmp_i_abs);
+      const bool val_r_is_real_int = (is_real<T>::yes) && arma_isfinite(val_r) && (val_r > T_int_lowest) && (val_r < T_int_max) && (T(int(val_r)) == val_r);
+      const bool abs_i_is_real_int = (is_real<T>::yes) && arma_isfinite(abs_i)                           && (abs_i < T_int_max) && (T(int(abs_i)) == abs_i);
+      
+      (val_r_is_real_int) ? arma_ostream::raw_print_elem(f, int(val_r)) : arma_ostream::raw_print_elem(f, val_r);
+      
+      f.put(sgn_i);
+      
+      (abs_i_is_real_int) ? arma_ostream::raw_print_elem(f, int(abs_i)) : arma_ostream::raw_print_elem(f, abs_i);
+      
       f.put('i');
       
       if( col < (x_n_cols-1) )  { f.put(separator); }
@@ -1025,15 +1041,25 @@ diskio::save_coord_ascii(const Mat<eT>& x, std::ostream& f)
   
   diskio::prepare_stream<eT>(f);
   
+  const eT eT_zero       = eT(0);
+  const eT eT_int_lowest = eT(std::numeric_limits<int>::lowest());
+  const eT eT_int_max    = eT(std::numeric_limits<int>::max());
+  
   for(uword col=0; col < x.n_cols; ++col)
   for(uword row=0; row < x.n_rows; ++row)
     {
     const eT val = x.at(row,col);
     
-    if(val != eT(0))
-      {
-      f << row << ' ' << col << ' ' << val << '\n';
-      }
+    if(val == eT_zero)  { continue; }
+    
+    f << row;  f.put(' ');
+    f << col;  f.put(' ');
+    
+    const bool is_real_int = (is_real<eT>::yes) && arma_isfinite(val) && (val > eT_int_lowest) && (val < eT_int_max) && (eT(int(val)) == val);
+    
+    (is_real_int) ? arma_ostream::raw_print_elem(f, int(val)) : arma_ostream::raw_print_elem(f, val);
+    
+    f.put('\n');
     }
   
   // make sure it's possible to figure out the matrix size later
@@ -1070,17 +1096,33 @@ diskio::save_coord_ascii(const Mat< std::complex<T> >& x, std::ostream& f)
   
   diskio::prepare_stream<eT>(f);
   
-  const eT eT_zero = eT(0);
+  const eT eT_zero       = eT(0);
+  const  T  T_int_lowest = T(std::numeric_limits<int>::lowest());
+  const  T  T_int_max    = T(std::numeric_limits<int>::max());
   
   for(uword col=0; col < x.n_cols; ++col)
   for(uword row=0; row < x.n_rows; ++row)
     {
     const eT& val = x.at(row,col);
     
-    if(val != eT_zero)
-      {
-      f << row << ' ' << col << ' ' << val.real() << ' ' << val.imag() << '\n';
-      }
+    if(val == eT_zero)  { continue; }
+    
+    f << row;  f.put(' ');
+    f << col;  f.put(' ');
+    
+    const T val_r = std::real(val);
+    const T val_i = std::imag(val);
+    
+    const bool val_r_is_real_int = (is_real<T>::yes) && arma_isfinite(val_r) && (val_r > T_int_lowest) && (val_r < T_int_max) && (T(int(val_r)) == val_r);
+    const bool val_i_is_real_int = (is_real<T>::yes) && arma_isfinite(val_i) && (val_i > T_int_lowest) && (val_i < T_int_max) && (T(int(val_i)) == val_i);
+    
+    (val_r_is_real_int) ? arma_ostream::raw_print_elem(f, int(val_r)) : arma_ostream::raw_print_elem(f, val_r);
+    
+    f.put(' ');
+    
+    (val_i_is_real_int) ? arma_ostream::raw_print_elem(f, int(val_i)) : arma_ostream::raw_print_elem(f, val_i);
+    
+    f.put('\n');
     }
   
   // make sure it's possible to figure out the matrix size later
@@ -2904,7 +2946,9 @@ diskio::save_csv_ascii(const SpMat<eT>& x, std::ostream& f, const char separator
   uword x_n_rows = x.n_rows;
   uword x_n_cols = x.n_cols;
   
-  const eT eT_zero = eT(0);
+  const eT eT_zero       = eT(0);
+  const eT eT_int_lowest = eT(std::numeric_limits<int>::lowest());
+  const eT eT_int_max    = eT(std::numeric_limits<int>::max());
   
   for(uword row=0; row < x_n_rows; ++row)
     {
@@ -2918,7 +2962,9 @@ diskio::save_csv_ascii(const SpMat<eT>& x, std::ostream& f, const char separator
         }
       else
         {
-        arma_ostream::raw_print_elem(f, val);
+        const bool is_real_int = (is_real<eT>::yes) && arma_isfinite(val) && (val > eT_int_lowest) && (val < eT_int_max) && (eT(int(val)) == val);
+        
+        (is_real_int) ? arma_ostream::raw_print_elem(f, int(val)) : arma_ostream::raw_print_elem(f, val);
         }
       
       if( col < (x_n_cols-1) )  { f.put(separator); }
@@ -2998,14 +3044,24 @@ diskio::save_coord_ascii(const SpMat<eT>& x, std::ostream& f)
   
   diskio::prepare_stream<eT>(f);
   
+  const eT eT_int_lowest = eT(std::numeric_limits<int>::lowest());
+  const eT eT_int_max    = eT(std::numeric_limits<int>::max());
+  
   typename SpMat<eT>::const_iterator iter     = x.begin();
   typename SpMat<eT>::const_iterator iter_end = x.end();
   
   for(; iter != iter_end; ++iter)
     {
+    f << iter.row();  f.put(' ');
+    f << iter.col();  f.put(' ');
+    
     const eT val = (*iter);
     
-    f << iter.row() << ' ' << iter.col() << ' ' << val << '\n';
+    const bool is_real_int = (is_real<eT>::yes) && arma_isfinite(val) && (val > eT_int_lowest) && (val < eT_int_max) && (eT(int(val)) == val);
+    
+    (is_real_int) ? arma_ostream::raw_print_elem(f, int(val)) : arma_ostream::raw_print_elem(f, val);
+    
+    f.put('\n');
     }
   
   
@@ -3044,14 +3100,32 @@ diskio::save_coord_ascii(const SpMat< std::complex<T> >& x, std::ostream& f)
   
   diskio::prepare_stream<eT>(f);
   
+  const T T_int_lowest = T(std::numeric_limits<int>::lowest());
+  const T T_int_max    = T(std::numeric_limits<int>::max());
+  
   typename SpMat<eT>::const_iterator iter     = x.begin();
   typename SpMat<eT>::const_iterator iter_end = x.end();
   
   for(; iter != iter_end; ++iter)
     {
+    f << iter.row();  f.put(' ');
+    f << iter.col();  f.put(' ');
+    
     const eT val = (*iter);
     
-    f << iter.row() << ' ' << iter.col() << ' ' << val.real() << ' ' << val.imag() << '\n';
+    const T val_r = std::real(val);
+    const T val_i = std::imag(val);
+    
+    const bool val_r_is_real_int = (is_real<T>::yes) && arma_isfinite(val_r) && (val_r > T_int_lowest) && (val_r < T_int_max) && (T(int(val_r)) == val_r);
+    const bool val_i_is_real_int = (is_real<T>::yes) && arma_isfinite(val_i) && (val_i > T_int_lowest) && (val_i < T_int_max) && (T(int(val_i)) == val_i);
+    
+    (val_r_is_real_int) ? arma_ostream::raw_print_elem(f, int(val_r)) : arma_ostream::raw_print_elem(f, val_r);
+    
+    f.put(' ');
+    
+    (val_i_is_real_int) ? arma_ostream::raw_print_elem(f, int(val_i)) : arma_ostream::raw_print_elem(f, val_i);
+    
+    f.put('\n');
     }
   
   // make sure it's possible to figure out the matrix size later

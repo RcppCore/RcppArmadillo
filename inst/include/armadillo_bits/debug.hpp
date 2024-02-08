@@ -263,8 +263,7 @@ arma_print(const T1& x, const T2& y, const T3& z)
 //
 // arma_sigprint
 
-//! print a message to the log stream with a preceding @ character.
-//! by default the log stream is cout.
+//! print a message to the cerr stream with a preceding @ character.
 //! used for printing the signature of a function
 //! (see the arma_extra_debug_sigprint macro) 
 inline
@@ -1424,6 +1423,7 @@ arma_assert_atlas_size(const T1& A, const T2& B)
         out << "@ arma_config::cxx14            = " << arma_config::cxx14            << '\n';
         out << "@ arma_config::cxx17            = " << arma_config::cxx17            << '\n';
         out << "@ arma_config::cxx20            = " << arma_config::cxx20            << '\n';
+        out << "@ arma_config::cxx23            = " << arma_config::cxx23            << '\n';
         out << "@ arma_config::std_mutex        = " << arma_config::std_mutex        << '\n';
         out << "@ arma_config::posix            = " << arma_config::posix            << '\n';
         out << "@ arma_config::openmp           = " << arma_config::openmp           << '\n';

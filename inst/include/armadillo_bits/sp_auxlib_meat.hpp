@@ -1984,49 +1984,14 @@ sp_auxlib::run_aupd_plain
         case 1:
           {
           // We need to calculate the matrix-vector multiplication y = OP * x
-          // where x is of length n and starts at workd(ipntr(0)), and y is of
-          // length n and starts at workd(ipntr(1)).
-          
-          // // OLD METHOD
-          // 
-          // // operator*(sp_mat, vec) doesn't properly put the result into the
-          // // right place so we'll just reimplement it here for now...
-          // 
-          // // Set the output to point at the right memory.  We have to subtract
-          // // one from FORTRAN pointers...
-          // Col<T> out(workd.memptr() + ipntr(1) - 1, n, false /* don't copy */);
-          // // Set the input to point at the right memory.
-          // Col<T>  in(workd.memptr() + ipntr(0) - 1, n, false /* don't copy */);
-          // 
-          // out.zeros();
-          // 
-          //       T* out_mem = out.memptr();
-          // const T*  in_mem =  in.memptr();
-          // 
-          // typename SpMat<T>::const_iterator X_it = X.begin();
-          // 
-          // const uword X_nnz = X.n_nonzero;
-          // 
-          // for(uword count=0; count < X_nnz; ++count, ++X_it)
-          //   {
-          //   const eT    X_it_val = (*X_it);
-          //   const uword X_it_row = X_it.row();
-          //   const uword X_it_col = X_it.col();
-          //   
-          //   out_mem[X_it_row] += X_it_val * in_mem[X_it_col];
-          //   }
-          // 
-          // // No need to modify memory further since it was all done in-place.
-          
-          
-          // NEW METHOD
-          // 
-          // both operator*(rowvec, sp_mat) and operator*(sp_mat, colvec) can now write to an existing object
+          // where x is of length n and starts at workd(ipntr(0)),
+          // and y is of length n and starts at workd(ipntr(1)).
+          // We have to subtract one from FORTRAN pointers.
           
           Row<T> out(workd.memptr() + ipntr(1) - 1, n, false, true);
           Row<T>  in(workd.memptr() + ipntr(0) - 1, n, false, true);
           
-          out = in * Xst;
+          out = in * Xst;  // using transposed version
           
           break;
           }
@@ -2259,14 +2224,12 @@ sp_auxlib::run_aupd_shiftinvert
         case 1:
           {
           // We need to calculate the matrix-vector multiplication y = OP * x
-          // where x is of length n and starts at workd(ipntr(0)), and y is of
-          // length n and starts at workd(ipntr(1)).
+          // where x is of length n and starts at workd(ipntr(0)),
+          // and y is of length n and starts at workd(ipntr(1)).
+          // We have to subtract one from FORTRAN pointers.
           
-          // Set the output to point at the right memory.  We have to subtract
-          // one from FORTRAN pointers...
-          Col<T> out(workd.memptr() + ipntr(1) - 1, n, false /* don't copy */);
-          // Set the input to point at the right memory.
-          Col<T> in(workd.memptr() + ipntr(0) - 1, n, false /* don't copy */);
+          Col<T> out(workd.memptr() + ipntr(1) - 1, n, false, true);
+          Col<T>  in(workd.memptr() + ipntr(0) - 1, n, false, true);
           
           // Consider getting the LU factorization from ZGSTRF, and then
           // solve the system L*U*out = in (possibly with permutation matrix?)

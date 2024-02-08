@@ -1312,4 +1312,43 @@ struct has_nested_glue_traits
   };
 
 
+
+
+template<typename T1>
+struct is_sym_expr
+  {
+  static constexpr bool eval(const T1&)  { return false; }
+  };
+
+template<typename eT>
+struct is_sym_expr< Glue< Mat<eT>, Op<Mat<eT>, op_htrans>, glue_times > >
+  {
+  static
+  arma_inline
+  bool
+  eval(const Glue< Mat<eT>, Op<Mat<eT>, op_htrans>, glue_times >& expr)
+    {
+    const Mat<eT>& X = expr.A;
+    const Mat<eT>& Y = expr.B.m;
+    
+    return (&X == &Y);
+    }
+  };
+
+template<typename eT>
+struct is_sym_expr< Glue< Op<Mat<eT>, op_htrans>, Mat<eT>, glue_times > >
+  {
+  static
+  arma_inline
+  bool
+  eval(const Glue< Op<Mat<eT>, op_htrans>, Mat<eT>, glue_times >& expr)
+    {
+    const Mat<eT>& X = expr.A.m;
+    const Mat<eT>& Y = expr.B;
+    
+    return (&X == &Y);
+    }
+  };
+
+
 //! @}

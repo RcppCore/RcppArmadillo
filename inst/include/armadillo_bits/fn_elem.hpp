@@ -678,6 +678,48 @@ sqrt(const SpBase<typename T1::elem_type,T1>& A)
 
 
 //
+// cbrt
+
+template<typename T1>
+arma_warn_unused
+arma_inline
+typename enable_if2< (is_arma_type<T1>::value && is_cx<typename T1::elem_type>::no), const eOp<T1, eop_cbrt> >::result
+cbrt(const T1& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  return eOp<T1, eop_cbrt>(A);
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+arma_inline
+typename enable_if2< is_cx<typename T1::elem_type>::no, const eOpCube<T1, eop_cbrt> >::result
+cbrt(const BaseCube<typename T1::elem_type,T1>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  return eOpCube<T1, eop_cbrt>(A.get_ref());
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+arma_inline
+typename enable_if2< is_cx<typename T1::elem_type>::no, const SpOp<T1, spop_cbrt> >::result
+cbrt(const SpBase<typename T1::elem_type,T1>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  return SpOp<T1, spop_cbrt>(A.get_ref());
+  }
+
+
+
+//
 // conj
 
 template<typename T1>

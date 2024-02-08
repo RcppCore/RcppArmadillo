@@ -64,6 +64,17 @@ class spop_sqrt
 
 
 
+class spop_cbrt
+  : public traits_op_passthru
+  {
+  public:
+  
+  template<typename T1>
+  inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_cbrt>& in);
+  };
+
+
+
 class spop_abs
   : public traits_op_passthru
   {

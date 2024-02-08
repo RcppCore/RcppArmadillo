@@ -3,8 +3,17 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.12.6.7.1 (unreleased)}{
+\section{Changes in RcppArmadillo version 0.12.8.0.0 (2024-02-06)}{
   \itemize{
+    \item Upgraded to Armadillo release 12.8.0 (Cortisol Injector)
+    \itemize{
+      \item Faster detection of symmetric expressions by \code{pinv()} and \code{rank()}
+      \item Expanded \code{shift()} to handle sparse matrices
+      \item Expanded \code{conv_to} for more flexible conversions between
+      sparse and dense matrices
+      \item Added \code{cbrt()}
+      \item More compact representation of integers when saving matrices in CSV format
+    }
     \item Five non-user facing top-level include files have been removed
     (\ghpr{432} closing \ghit{400} and building on \ghpr{395} and \ghpr{396})
   }

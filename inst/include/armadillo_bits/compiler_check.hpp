@@ -20,6 +20,7 @@
 #undef ARMA_HAVE_CXX14
 #undef ARMA_HAVE_CXX17
 #undef ARMA_HAVE_CXX20
+#undef ARMA_HAVE_CXX23
 
 #if (__cplusplus >= 201103L)
   #define ARMA_HAVE_CXX11
@@ -35,6 +36,10 @@
 
 #if (__cplusplus >= 202002L)
   #define ARMA_HAVE_CXX20
+#endif
+
+#if (__cplusplus >= 202302L)
+  #define ARMA_HAVE_CXX23
 #endif
 
 
@@ -57,6 +62,11 @@
   #if (_MSVC_LANG >= 202002L)
     #undef  ARMA_HAVE_CXX20
     #define ARMA_HAVE_CXX20
+  #endif
+  
+  #if (_MSVC_LANG >= 202302L)
+    #undef  ARMA_HAVE_CXX23
+    #define ARMA_HAVE_CXX23
   #endif
   
 #endif
