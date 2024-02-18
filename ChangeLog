@@ -1,3 +1,7 @@
+2024-02-18  Dirk Eddelbuettel  <edd@debian.org>
+
+	* README.md (Rcpp): Update count to February 2024 numbers
+
 2024-02-08  Dirk Eddelbuettel  <edd@debian.org>
 
 	* .github/workflows/ci.yaml (jobs): Switch to actions/checkout@v4 and

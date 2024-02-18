@@ -64,7 +64,7 @@ The package is mature yet under active development with releases to
 [CRAN](https://cran.r-project.org) about once every other month, and
 widely-used by other CRAN packages as can be seen from the
 [CRAN package page](https://cran.r-project.org/package=RcppArmadillo).
-As of January 2023, there are 1035 CRAN packages using RcppArmadillo.
+As of February 2024, there are 1118 CRAN packages using RcppArmadillo.
 
 ### Documentation
 
