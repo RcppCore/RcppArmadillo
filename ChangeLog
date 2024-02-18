@@ -1,6 +1,6 @@
 2024-02-18  Dirk Eddelbuettel  <edd@debian.org>
 
-	* src/fastLm.cpp: Switch to RcppArmadillo/Lightest
+	* src/fastLm.cpp: Switch to RcppArmadillo/Lighter
 	* src/RcppArmadillo.cpp: Idem
 
 	* README.md: Update count to February 2024, update example, edits

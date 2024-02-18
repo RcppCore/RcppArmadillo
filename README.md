@@ -34,7 +34,7 @@ a good balance between speed and ease of use. It provides high-level syntax and
 Glad you asked. Here is a light-weight and fast implementation of linear regression:
 
 ```c++
-#include <RcppArmadillo/Lightest>
+#include <RcppArmadillo/Lighter>
 // [[Rcpp::depends(RcppArmadillo)]]
 
 // [[Rcpp::export]]
@@ -58,10 +58,10 @@ the file above to compile the function.  A version is also included in the
 package [as the `fastLm()`](https://github.com/RcppCore/RcppArmadillo/blob/master/R/fastLm.R)
 function.
 
-The `RcppArmadillo/Lightest` header includes [Rcpp][rcpp] via its `Rcpp/Lightest` header which
+The `RcppArmadillo/Lighter` header includes [Rcpp][rcpp] via its `Rcpp/Lighter` header which
 precludes some more compile-time heavy features such as 'Rcpp Modules' which we may not need. See
 the [Rcpp][rcpp] docs more details about 'Light', 'Lighter' and 'Lightest'.  In the example above,
-the switch saves about 15% to 20% of total compilation time.
+the switch saves about 15% of total compilation time.
 
 ### Status
 
