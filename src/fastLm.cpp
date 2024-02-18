@@ -2,7 +2,7 @@
 //
 // fastLm.cpp: Rcpp/Armadillo glue example of a simple lm() alternative
 //
-// Copyright (C)  2010 - 2022  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2010 - 2024  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 //
 // This file is part of RcppArmadillo.
 //
@@ -19,7 +19,7 @@
 // You should have received a copy of the GNU General Public License
 // along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <RcppArmadillo.h>
+#include <RcppArmadillo/Lightest>
 
 // [[Rcpp::export]]
 Rcpp::List fastLm_impl(const arma::mat& X, const arma::colvec& y) {
