@@ -19,22 +19,22 @@
 
 ### Synopsis
 
-RcppArmadillo provides an interface from R to and from [Armadillo](https://arma.sourceforge.net) by
-utilising the [Rcpp R/C++ interface library](http://dirk.eddelbuettel.com/code/rcpp.html).
+RcppArmadillo provides an interface from R to and from [Armadillo][armadillo] by utilising the [Rcpp
+R/C++ interface library][rcpp].
 
 ### What is Armadillo?
 
-[Armadillo](https://arma.sourceforge.net) is a high-quality linear algebra library for the C++ language,
-aiming towards a good balance between speed and ease of use. It provides high-level syntax and
-[functionality](https://arma.sourceforge.net/docs.html) deliberately similar to Matlab (TM).
-See [its website](https://arma.sourceforge.net) more information about Armadillo.
+[Armadillo][armadillo] is a high-quality linear algebra library for the C++ language, aiming towards
+a good balance between speed and ease of use. It provides high-level syntax and
+[functionality](https://arma.sourceforge.net/docs.html) deliberately similar to Matlab (TM).  See
+[its website][armadillo] more information about Armadillo.
 
 ### So give me an example!
 
 Glad you asked. Here is a light-weight and fast implementation of linear regression:
 
 ```c++
-#include <RcppArmadillo.h>
+#include <RcppArmadillo/Lightest>
 // [[Rcpp::depends(RcppArmadillo)]]
 
 // [[Rcpp::export]]
@@ -58,13 +58,16 @@ the file above to compile the function.  A version is also included in the
 package [as the `fastLm()`](https://github.com/RcppCore/RcppArmadillo/blob/master/R/fastLm.R)
 function.
 
+The `RcppArmadillo/Lightest` header includes [Rcpp][rcpp] via its `Rcpp/Lightest` header which
+precludes some more compile-time heavy features such as 'Rcpp Modules' which we may not need. See
+the [Rcpp][rcpp] docs more details about 'Light', 'Lighter' and 'Lightest'.  In the example above,
+the switch saves about 15% to 20% of total compilation time.
+
 ### Status
 
-The package is mature yet under active development with releases to
-[CRAN](https://cran.r-project.org) about once every other month, and
-widely-used by other CRAN packages as can be seen from the
-[CRAN package page](https://cran.r-project.org/package=RcppArmadillo).
-As of February 2024, there are 1118 CRAN packages using RcppArmadillo.
+The package is mature yet under active development with releases to [CRAN][cran] about once every
+other month, and widely-used by other CRAN packages as can be seen from the [CRAN package page][cran
+pkg].  As of February 2024, there are 1118 CRAN packages using RcppArmadillo.
 
 ### Documentation
 
@@ -75,8 +78,8 @@ matrix conversions.
 
 ### Installation
 
-RcppArmadillo is a [CRAN package](https://cran.r-project.org/package=RcppArmadillo), and lives
-otherwise in its own habitat on [GitHub](https://github.com/RcppCore/RcppArmadillo) within the
+RcppArmadillo is a [CRAN package][cran pkg], and lives otherwise in its own habitat on
+[GitHub](https://github.com/RcppCore/RcppArmadillo) within the
 [RcppCore](https://github.com/RcppCore) GitHub organization.
 
 Run
@@ -94,3 +97,9 @@ Dirk Eddelbuettel, Romain Francois, Doug Bates, Binxiang Ni, and Conrad Sanderso
 ### License
 
 GPL (>= 2)
+
+
+[armadillo]: https://arma.sourceforge.net
+[rcpp]: https://www.rcpp.org
+[cran]: https://cran.r-project.org
+[cran pkg]: https://cran.r-project.org/package=RcppArmadillo
