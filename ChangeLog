@@ -1,3 +1,7 @@
+2024-02-19  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Increment version counter
+
 2024-02-18  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/fastLm.cpp: Switch to RcppArmadillo/Lighter
