@@ -115,7 +115,7 @@
 
 #if defined(__APPLE__) || defined(__apple_build_version__)
   // NOTE: Apple accelerate framework has broken implementations of functions that return a float value,
-  // NOTE: such as sdot(), slange(), clange(), slansy(), clanhe(), slangb()
+  // NOTE: such as sdot(), slange(), clange(), slansy(), clanhe(), slangb(), snrm2(), sasum()
   #undef  ARMA_BLAS_FLOAT_BUG
   #define ARMA_BLAS_FLOAT_BUG
   
