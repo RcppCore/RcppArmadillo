@@ -3,6 +3,19 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.12.8.1.0 (2024-03-02)}{
+  \itemize{
+    \item Upgraded to Armadillo release 12.8.1 (Cortisol Injector)
+    \itemize{
+      \item Workaround in \code{norm()} for yet another bug in macOS
+      accelerate framework
+    }
+    \item Update README for RcppArmadillo usage counts
+    \item Update examples to use '#include <RcppArmadillo/Lighter>' for
+    faster compilation excluding unused Rcpp features
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.12.8.0.0 (2024-02-06)}{
   \itemize{
     \item Upgraded to Armadillo release 12.8.0 (Cortisol Injector)
