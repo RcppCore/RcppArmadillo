@@ -1,3 +1,7 @@
+2024-03-05  Dirk Eddelbuettel  <edd@debian.org>
+
+	* README.md: Correct a badge URL
+
 2024-02-19  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Increment version counter
