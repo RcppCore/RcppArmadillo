@@ -34,9 +34,9 @@ class wall_clock
   
   private:
   
-  bool valid = false;
-  
   std::chrono::steady_clock::time_point chrono_time1;
+  
+  bool valid = false;
   };
 
 
