@@ -3,6 +3,18 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.12.8.2.0 (2024-04-02)}{
+  \itemize{
+    \item Upgraded to Armadillo release 12.8.2 (Cortisol Injector)
+    \itemize{
+      \item Workaround for FFTW3 header clash
+      \item Workaround in testing framework for issue under macOS
+      \item Minor cleanups to reduce code bloat
+      \item Improved documentation
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.12.8.1.0 (2024-03-02)}{
   \itemize{
     \item Upgraded to Armadillo release 12.8.1 (Cortisol Injector)

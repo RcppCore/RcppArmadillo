@@ -3701,21 +3701,14 @@ SpMat<eT>::copy_size(const Mat<eT2>& m)
 template<typename eT>
 inline
 SpMat<eT>&
-SpMat<eT>::set_size(const uword in_elem)
+SpMat<eT>::set_size(const uword new_n_elem)
   {
   arma_extra_debug_sigprint();
   
-  // If this is a row vector, we resize to a row vector.
-  if(vec_state == 2)
-    {
-    set_size(1, in_elem);
-    }
-  else
-    {
-    set_size(in_elem, 1);
-    }
+  const uword new_n_rows = (vec_state == 2) ? uword(1         ) : uword(new_n_elem);
+  const uword new_n_cols = (vec_state == 2) ? uword(new_n_elem) : uword(1         );
   
-  return *this;
+  return set_size(new_n_rows, new_n_cols);
   }
 
 
@@ -4115,20 +4108,14 @@ SpMat<eT>::zeros()
 template<typename eT>
 inline
 SpMat<eT>&
-SpMat<eT>::zeros(const uword in_elem)
+SpMat<eT>::zeros(const uword new_n_elem)
   {
   arma_extra_debug_sigprint();
   
-  if(vec_state == 2)
-    {
-    zeros(1, in_elem); // Row vector
-    }
-  else
-    {
-    zeros(in_elem, 1);
-    }
+  const uword new_n_rows = (vec_state == 2) ? uword(1         ) : uword(new_n_elem);
+  const uword new_n_cols = (vec_state == 2) ? uword(new_n_elem) : uword(1         );
   
-  return *this;
+  return zeros(new_n_rows, new_n_cols);
   }
 
 
@@ -4432,12 +4419,10 @@ SpMat<eT>::reset()
   {
   arma_extra_debug_sigprint();
   
-  switch(vec_state)
-    {
-    default:  init(0, 0); break;
-    case 1:   init(0, 1); break;
-    case 2:   init(1, 0); break;
-    }
+  const uword new_n_rows = (vec_state == 2) ? 1 : 0;
+  const uword new_n_cols = (vec_state == 1) ? 1 : 0;
+  
+  init(new_n_rows, new_n_cols);
   }
 
 
