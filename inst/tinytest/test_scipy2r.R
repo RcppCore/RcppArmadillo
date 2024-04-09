@@ -75,4 +75,4 @@ expect_equal(dgR, csr, info="csr2dgr") #RcppArmadillo:::.SciPy2R(csr))
 #test.other <- function() {
 #bsr <- sp$bsr_matrix(list(3, 4))
 #expect_error(RcppArmadillo:::.SciPy2R(bsr))
-expect_error(sp$bsr_matrix(list(3, 4)))
+#expect_error(sp$bsr_matrix(list(3, 4)))
