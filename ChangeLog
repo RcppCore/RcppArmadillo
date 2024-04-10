@@ -1,3 +1,8 @@
+2024-04-10  Tomasz Kalinowski  <kalinowskit@gmail.com>
+
+	* inst/tinytest/test_scipy2r.R: Update for reticulate v1.36;
+        disable test checking error from scipy.sparse.bsr_matrix()
+
 2024-04-02  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 0.12.8.2.0
