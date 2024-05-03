@@ -1,5 +1,7 @@
 2024-05-03  Dirk Eddelbuettel  <edd@debian.org>
 
+	* DESCRIPTION (Version, Date): Increment micro version, update date
+
 	* R/inline.R (inlineCxxPlugin): No longer set C++11 for the plugin as
 	this choice has long been obsoleted by what R does for us
 
