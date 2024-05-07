@@ -579,7 +579,7 @@ arma_assert_same_size(const uword A_n_rows, const uword A_n_cols, const uword B_
 
 
 
-//! stop if given matrices have different sizes
+//! stop if given matrices do not have the same size
 template<typename eT1, typename eT2>
 arma_hot
 inline
@@ -600,7 +600,7 @@ arma_assert_same_size(const Mat<eT1>& A, const Mat<eT2>& B, const char* x)
 
 
 
-//! stop if given proxies have different sizes
+//! stop if given proxies do not have the same size
 template<typename eT1, typename eT2>
 arma_hot
 inline
@@ -804,7 +804,7 @@ arma_assert_same_size(const uword A_n_rows, const uword A_n_cols, const uword A_
 
 
 
-//! stop if given cubes have different sizes
+//! stop if given cubes do not have the same size
 template<typename eT1, typename eT2>
 arma_hot
 inline
@@ -883,7 +883,7 @@ arma_assert_same_size(const subview_cube<eT>& A, const ProxyCube<T1>& B, const c
 
 
 
-//! stop if given cube proxies have different sizes
+//! stop if given cube proxies do not have the same size
 template<typename eT1, typename eT2>
 arma_hot
 inline
