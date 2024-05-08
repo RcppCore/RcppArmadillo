@@ -3,6 +3,18 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.12.8.3.0 (2024-05-07)}{
+  \itemize{
+    \item Upgraded to Armadillo release 12.8.3 (Cortisol Injector)
+    \itemize{
+      \item Fix issue in \code{fft()} and \code{fft2()} in multi-threaded
+      contexts with FFTW3 enabled
+    }
+    \item No longer set C++11 for the \pkg{Rcpp} plugin as this standard has
+    been the default by R for very long time now.
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.12.8.2.1 (2024-04-15)}{
   \itemize{
     \item One-char bug fix release commenting out one test that upsets

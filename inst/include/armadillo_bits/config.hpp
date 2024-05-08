@@ -201,6 +201,11 @@
 
 #if defined(ARMA_EXTRA_DEBUG)
   #undef  ARMA_NO_DEBUG
+  #undef  ARMA_DONT_CHECK_NONFINITE
+  
+  #undef  ARMA_CHECK_NONFINITE
+  #define ARMA_CHECK_NONFINITE
+  
   #undef  ARMA_WARN_LEVEL
   #define ARMA_WARN_LEVEL 3
 #endif
