@@ -1,3 +1,8 @@
+2024-05-17  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Imports): Updated versioned constraint on Rcpp to
+	1.0.8 or later as we use Light/Lighter/Lightest
+
 2024-05-16  Dirk Eddelbuettel  <edd@debian.org>
 
 	* README.md: Use tinyverse.netlify.app for dependency badge
