@@ -30,7 +30,7 @@ class conv_to
   
   template<typename in_eT, typename T1>
   inline static out_eT from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = nullptr);
-
+  
   template<typename in_eT, typename T1>
   inline static out_eT from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = nullptr);
   
