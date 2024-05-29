@@ -44,18 +44,28 @@ SpSubview<eT>::SpSubview(const SpMat<eT>& in_m, const uword in_row1, const uword
   
   m.sync_csc();
   
-  // There must be a O(1) way to do this
-  uword lend     = m.col_ptrs[in_col1 + in_n_cols];
-  uword lend_row = in_row1 + in_n_rows;
-  uword count   = 0;
+  // count the number of non-zeros in the subview
+  uword count = 0;
   
-  for(uword i = m.col_ptrs[in_col1]; i < lend; ++i)
+  if(n_rows == m.n_rows)
     {
-    const uword m_row_indices_i = m.row_indices[i];
+    count = m.col_ptrs[aux_col1 + n_cols] - m.col_ptrs[aux_col1];
+    }
+  else
+    {
+    arma_extra_debug_print("counting non-zeros in sparse subview");
     
-    const bool condition = (m_row_indices_i >= in_row1) && (m_row_indices_i < lend_row);
+    uword lend     = m.col_ptrs[in_col1 + in_n_cols];
+    uword lend_row = in_row1 + in_n_rows;
     
-    count += condition ? uword(1) : uword(0);
+    for(uword i = m.col_ptrs[in_col1]; i < lend; ++i)
+      {
+      const uword m_row_indices_i = m.row_indices[i];
+      
+      const bool condition = (m_row_indices_i >= in_row1) && (m_row_indices_i < lend_row);
+      
+      count += condition ? uword(1) : uword(0);
+      }
     }
   
   access::rw(n_nonzero) = count;
