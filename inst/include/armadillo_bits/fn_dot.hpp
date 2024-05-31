@@ -305,6 +305,8 @@ dot
       
       arma_debug_assert_same_size(U.M.n_elem, uword(1), yy.n_elem, uword(1), "dot()");
       
+      yy.m.sync();
+      
       return dense_sparse_helper::dot(U.M.memptr(), yy.m, yy.aux_col1);
       }
     }
