@@ -39,7 +39,7 @@ inline
 typename enable_if2<is_cx<eT>::no, bool>::result
 guess_sympd_worker(const Mat<eT>& A)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // NOTE: assuming A is square-sized
   
@@ -113,7 +113,7 @@ inline
 typename enable_if2<is_cx<eT>::yes, bool>::result
 guess_sympd_worker(const Mat<eT>& A)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // NOTE: assuming A is square-sized
   
@@ -215,7 +215,7 @@ inline
 bool
 guess_sympd(const Mat<eT>& A)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // analyse matrices with size >= 4x4
   
@@ -231,7 +231,7 @@ inline
 bool
 guess_sympd(const Mat<eT>& A, const uword min_n_rows)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if((A.n_rows != A.n_cols) || (A.n_rows < min_n_rows))  { return false; }
   
@@ -249,7 +249,7 @@ inline
 typename enable_if2<is_cx<eT>::no, void>::result
 analyse_matrix_worker(bool& is_approx_sym, bool& is_approx_sympd, const Mat<eT>& A)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   is_approx_sym   = true;
   is_approx_sympd = true;
@@ -325,7 +325,7 @@ inline
 typename enable_if2<is_cx<eT>::yes, void>::result
 analyse_matrix_worker(bool& is_approx_sym, bool& is_approx_sympd, const Mat<eT>& A)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename get_pod_type<eT>::result T;
   
@@ -431,7 +431,7 @@ inline
 void
 analyse_matrix(bool& is_approx_sym, bool& is_approx_sympd, const Mat<eT>& A)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if((A.n_rows != A.n_cols) || (A.n_rows < uword(4)))
     {
@@ -452,7 +452,7 @@ inline
 bool
 check_diag_imag(const Mat<eT>& A)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // NOTE: assuming matrix A is square-sized
   

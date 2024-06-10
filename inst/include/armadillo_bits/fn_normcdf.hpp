@@ -26,7 +26,7 @@ inline
 typename enable_if2< (is_real<typename T1::elem_type>::value), void >::result
 normcdf_helper(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type, T1>& X_expr, const Base<typename T1::elem_type, T2>& M_expr, const Base<typename T1::elem_type, T3>& S_expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -45,7 +45,7 @@ normcdf_helper(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_ty
   const Proxy<T2> PM(M_expr.get_ref());
   const Proxy<T3> PS(S_expr.get_ref());
   
-  arma_debug_check( ( (PX.get_n_rows() != PM.get_n_rows()) || (PX.get_n_cols() != PM.get_n_cols()) || (PM.get_n_rows() != PS.get_n_rows()) || (PM.get_n_cols() != PS.get_n_cols()) ), "normcdf(): size mismatch" );
+  arma_conform_check( ( (PX.get_n_rows() != PM.get_n_rows()) || (PX.get_n_cols() != PM.get_n_cols()) || (PM.get_n_rows() != PS.get_n_rows()) || (PM.get_n_cols() != PS.get_n_cols()) ), "normcdf(): size mismatch" );
   
   out.set_size(PX.get_n_rows(), PX.get_n_cols());
   
@@ -121,7 +121,7 @@ inline
 typename enable_if2< (is_real<eT>::value), Mat<eT> >::result
 normcdf(const eT x, const Base<eT, T2>& M_expr, const Base<eT, T3>& S_expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const quasi_unwrap<T2> UM(M_expr.get_ref());
   const Mat<eT>&     M = UM.M;
@@ -141,7 +141,7 @@ inline
 typename enable_if2< (is_real<typename T1::elem_type>::value), Mat<typename T1::elem_type> >::result
 normcdf(const Base<typename T1::elem_type, T1>& X_expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -163,7 +163,7 @@ inline
 typename enable_if2< (is_real<typename T1::elem_type>::value), Mat<typename T1::elem_type> >::result
 normcdf(const Base<typename T1::elem_type, T1>& X_expr, const typename T1::elem_type mu, const typename T1::elem_type sigma)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -185,7 +185,7 @@ inline
 typename enable_if2< (is_real<typename T1::elem_type>::value), Mat<typename T1::elem_type> >::result
 normcdf(const Base<typename T1::elem_type, T1>& X_expr, const Base<typename T1::elem_type, T2>& M_expr, const Base<typename T1::elem_type, T3>& S_expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   

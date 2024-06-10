@@ -35,7 +35,7 @@ n_unique
   const op_n_unique_type junk
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const SpProxy<T1> pa(x.get_ref());
   const SpProxy<T2> pb(y.get_ref());
@@ -56,7 +56,7 @@ n_unique
   const op_n_unique_type junk
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   typename SpProxy<T1>::const_iterator_type x_it     = pa.begin();

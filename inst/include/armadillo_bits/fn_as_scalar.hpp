@@ -53,11 +53,11 @@ inline
 typename T1::elem_type
 as_scalar_redirect<N>::apply(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const Proxy<T1> P(X);
   
-  arma_debug_check( (P.get_n_elem() != 1), "as_scalar(): expression must evaluate to exactly one element" );
+  arma_conform_check( (P.get_n_elem() != 1), "as_scalar(): expression must evaluate to exactly one element" );
   
   return (Proxy<T1>::use_at) ? P.at(0,0) : P[0];
   }
@@ -69,20 +69,21 @@ inline
 typename T1::elem_type
 as_scalar_redirect<2>::apply(const Glue<T1, T2, glue_times>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
   // T1 must result in a matrix with one row
   // T2 must result in a matrix with one column
+  // element type must non-complex
   
-  const bool has_all_mat = (is_Mat<T1>::value || is_Mat_trans<T1>::value) && (is_Mat<T2>::value || is_Mat_trans<T2>::value);
+  constexpr bool proxy_is_mat = (is_Mat<typename Proxy<T1>::stored_type>::value && is_Mat<typename Proxy<T2>::stored_type>::value);
   
-  const bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);
+  constexpr bool use_at = (Proxy<T1>::use_at) || (Proxy<T2>::use_at);
   
-  const bool do_partial_unwrap = (has_all_mat || use_at);
+  constexpr bool fast_unwrap = (partial_unwrap<T1>::is_fast && partial_unwrap<T2>::is_fast);
   
-  if(do_partial_unwrap)
+  if(proxy_is_mat || use_at || fast_unwrap)
     {
     const partial_unwrap<T1> tmp1(X.A);
     const partial_unwrap<T2> tmp2(X.B);
@@ -99,7 +100,7 @@ as_scalar_redirect<2>::apply(const Glue<T1, T2, glue_times>& X)
     const uword B_n_rows = (tmp2.do_trans == false) ? (TB::is_row ? 1 : B.n_rows) : (TB::is_col ? 1 : B.n_cols);
     const uword B_n_cols = (tmp2.do_trans == false) ? (TB::is_col ? 1 : B.n_cols) : (TB::is_row ? 1 : B.n_rows);
     
-    arma_debug_check( (A_n_rows != 1) || (B_n_cols != 1) || (A_n_cols != B_n_rows), "as_scalar(): incompatible dimensions" );
+    arma_conform_check( (A_n_rows != 1) || (B_n_cols != 1) || (A_n_cols != B_n_rows), "as_scalar(): incompatible dimensions" );
     
     const eT val = op_dot::direct_dot(A.n_elem, A.memptr(), B.memptr());
     
@@ -110,7 +111,7 @@ as_scalar_redirect<2>::apply(const Glue<T1, T2, glue_times>& X)
     const Proxy<T1> PA(X.A);
     const Proxy<T2> PB(X.B);
     
-    arma_debug_check
+    arma_conform_check
       (
       (PA.get_n_rows() != 1) || (PB.get_n_cols() != 1) || (PA.get_n_cols() != PB.get_n_rows()),
       "as_scalar(): incompatible dimensions"
@@ -127,12 +128,13 @@ inline
 typename T1::elem_type
 as_scalar_redirect<3>::apply(const Glue< Glue<T1, T2, glue_times>, T3, glue_times >& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
   // T1 * T2 must result in a matrix with one row
   // T3 must result in a matrix with one column
+  // element type must non-complex
   
   typedef typename strip_inv    <T2           >::stored_type T2_stripped_1;
   typedef typename strip_diagmat<T2_stripped_1>::stored_type T2_stripped_2;
@@ -140,14 +142,14 @@ as_scalar_redirect<3>::apply(const Glue< Glue<T1, T2, glue_times>, T3, glue_time
   const strip_inv    <T2>            strip1(X.A.B);
   const strip_diagmat<T2_stripped_1> strip2(strip1.M);
   
-  const bool tmp2_do_inv_gen = strip1.do_inv_gen && arma_config::optimise_invexpr;
-  const bool tmp2_do_diagmat = strip2.do_diagmat;
+  constexpr bool tmp2_do_inv_gen = strip1.do_inv_gen && arma_config::optimise_invexpr;
+  constexpr bool tmp2_do_diagmat = strip2.do_diagmat;
   
   if(tmp2_do_diagmat == false)
     {
     const Mat<eT> tmp(X);
     
-    arma_debug_check( (tmp.n_elem != 1), "as_scalar(): expression must evaluate to exactly one element" );
+    arma_conform_check( (tmp.n_elem != 1), "as_scalar(): expression must evaluate to exactly one element" );
     
     return tmp[0];
     }
@@ -174,7 +176,7 @@ as_scalar_redirect<3>::apply(const Glue< Glue<T1, T2, glue_times>, T3, glue_time
     
     const eT val = tmp1.get_val() * tmp2.get_val() * tmp3.get_val();
     
-    arma_debug_check
+    arma_conform_check
       (
       (A_n_rows != 1)        ||
       (C_n_cols != 1)        ||
@@ -217,14 +219,14 @@ inline
 typename T1::elem_type
 as_scalar_diag(const Base<typename T1::elem_type,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
   const unwrap<T1>   tmp(X.get_ref());
   const Mat<eT>& A = tmp.M;
   
-  arma_debug_check( (A.n_elem != 1), "as_scalar(): expression must evaluate to exactly one element" );
+  arma_conform_check( (A.n_elem != 1), "as_scalar(): expression must evaluate to exactly one element" );
   
   return A.mem[0];
   }
@@ -236,7 +238,7 @@ inline
 typename T1::elem_type
 as_scalar_diag(const Glue< Glue<T1, T2, glue_times_diag>, T3, glue_times >& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -269,7 +271,7 @@ as_scalar_diag(const Glue< Glue<T1, T2, glue_times_diag>, T3, glue_times >& X)
   
   const eT val = tmp1.get_val() * tmp2.get_val() * tmp3.get_val();
   
-  arma_debug_check
+  arma_conform_check
     (
     (A_n_rows != 1)        ||
     (C_n_cols != 1)        ||
@@ -298,14 +300,14 @@ inline
 typename T1::elem_type
 as_scalar(const Glue<T1, T2, glue_times>& X, const typename arma_not_cx<typename T1::elem_type>::result* junk = nullptr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   if(is_glue_times_diag<T1>::value)  { return as_scalar_diag(X); }
   
   constexpr uword N_mat = 1 + depth_lhs< glue_times, Glue<T1,T2,glue_times> >::num;
   
-  arma_extra_debug_print(arma_str::format("N_mat = %u") % N_mat);
+  arma_debug_print(arma_str::format("N_mat: %u") % N_mat);
   
   return as_scalar_redirect<N_mat>::apply(X);
   }
@@ -318,11 +320,11 @@ inline
 typename T1::elem_type
 as_scalar(const Base<typename T1::elem_type,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const Proxy<T1> P(X.get_ref());
   
-  arma_debug_check( (P.get_n_elem() != 1), "as_scalar(): expression must evaluate to exactly one element" );
+  arma_conform_check( (P.get_n_elem() != 1), "as_scalar(): expression must evaluate to exactly one element" );
   
   return (Proxy<T1>::use_at) ? P.at(0,0) : P[0];
   }
@@ -334,11 +336,11 @@ inline
 typename T1::elem_type
 as_scalar(const BaseCube<typename T1::elem_type,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const ProxyCube<T1> P(X.get_ref());
   
-  arma_debug_check( (P.get_n_elem() != 1), "as_scalar(): expression must evaluate to exactly one element" );
+  arma_conform_check( (P.get_n_elem() != 1), "as_scalar(): expression must evaluate to exactly one element" );
   
   return (ProxyCube<T1>::use_at) ? P.at(0,0,0) : P[0];
   }
@@ -362,14 +364,14 @@ inline
 typename T1::elem_type
 as_scalar(const SpBase<typename T1::elem_type, T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
   const unwrap_spmat<T1>  tmp(X.get_ref());
   const SpMat<eT>& A    = tmp.M;
   
-  arma_debug_check( (A.n_elem != 1), "as_scalar(): expression must evaluate to exactly one element" );
+  arma_conform_check( (A.n_elem != 1), "as_scalar(): expression must evaluate to exactly one element" );
   
   return A.at(0,0);
   }

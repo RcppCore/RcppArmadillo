@@ -27,14 +27,14 @@ inline
 void
 glue_cross::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue_cross>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
   const Proxy<T1> PA(X.A);
   const Proxy<T2> PB(X.B);
   
-  arma_debug_check( ((PA.get_n_elem() != 3) || (PB.get_n_elem() != 3)), "cross(): each vector must have 3 elements" );
+  arma_conform_check( ((PA.get_n_elem() != 3) || (PB.get_n_elem() != 3)), "cross(): each vector must have 3 elements" );
   
   out.set_size(PA.get_n_rows(), PA.get_n_cols());
   

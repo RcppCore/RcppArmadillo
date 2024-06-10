@@ -31,7 +31,7 @@ enable_if2
   >::result
 quantile(const T1& X, const Base<typename T2::elem_type,T2>& P)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return mtGlue<typename T2::elem_type,T1,T2,glue_quantile_default>(X, P.get_ref());
   }
@@ -49,7 +49,7 @@ enable_if2
   >::result
 quantile(const T1& X, const Base<typename T2::elem_type,T2>& P, const uword dim)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return mtGlue<typename T2::elem_type,T1,T2,glue_quantile>(X, P.get_ref(), dim);
   }

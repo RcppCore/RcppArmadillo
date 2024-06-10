@@ -244,6 +244,7 @@ template<                 typename T1, typename eop_type> class         eOp;
 template<                 typename T1, typename  op_type> class     SpToDOp; 
 template<                 typename T1, typename  op_type> class CubeToMatOp;
 template<typename out_eT, typename T1, typename  op_type> class        mtOp;
+template<typename out_eT, typename T1, typename  op_type> class   mtSpToDOp;
 
 template<                 typename T1, typename T2, typename  glue_type> class      Glue;
 template<                 typename T1, typename T2, typename eglue_type> class     eGlue;
@@ -280,7 +281,7 @@ struct state_type
   {
   #if   defined(ARMA_USE_OPENMP)
                 int  state;
-  #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
+  #elif defined(ARMA_USE_STD_MUTEX)
     std::atomic<int> state;
   #else
                 int  state;
@@ -299,7 +300,7 @@ struct state_type
     #if   defined(ARMA_USE_OPENMP)
       #pragma omp atomic read
       out = state;
-    #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
+    #elif defined(ARMA_USE_STD_MUTEX)
       out = state.load();
     #else
       out = state;
@@ -315,7 +316,7 @@ struct state_type
     #if   defined(ARMA_USE_OPENMP)
       #pragma omp atomic write
       state = in_state;
-    #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
+    #elif defined(ARMA_USE_STD_MUTEX)
       state.store(in_state);
     #else
       state = in_state;

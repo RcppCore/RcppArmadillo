@@ -27,7 +27,7 @@ inline
 typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, uword >::result
 rank(const Base<typename T1::elem_type,T1>& expr, const typename T1::pod_type tol = 0)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   uword out = uword(0);
   
@@ -45,7 +45,7 @@ inline
 typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, bool >::result
 rank(uword& out, const Base<typename T1::elem_type,T1>& expr, const typename T1::pod_type tol = 0)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   out = uword(0);
   

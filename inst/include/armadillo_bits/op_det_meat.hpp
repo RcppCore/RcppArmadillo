@@ -26,7 +26,7 @@ inline
 bool
 op_det::apply_direct(typename T1::elem_type& out_val, const Base<typename T1::elem_type,T1>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
@@ -51,7 +51,7 @@ op_det::apply_direct(typename T1::elem_type& out_val, const Base<typename T1::el
   
   Mat<eT> A(expr.get_ref());
   
-  arma_debug_check( (A.is_square() == false), "det(): given matrix must be square sized" );
+  arma_conform_check( (A.is_square() == false), "det(): given matrix must be square sized" );
   
   const uword N = A.n_rows;
   
@@ -92,13 +92,13 @@ inline
 typename T1::elem_type
 op_det::apply_diagmat(const Base<typename T1::elem_type,T1>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
   const diagmat_proxy<T1> A(expr.get_ref());
   
-  arma_debug_check( (A.n_rows != A.n_cols), "det(): given matrix must be square sized" );
+  arma_conform_check( (A.n_rows != A.n_cols), "det(): given matrix must be square sized" );
   
   const uword N = (std::min)(A.n_rows, A.n_cols);
   
@@ -116,7 +116,7 @@ inline
 typename T1::elem_type
 op_det::apply_trimat(const Base<typename T1::elem_type,T1>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -124,7 +124,7 @@ op_det::apply_trimat(const Base<typename T1::elem_type,T1>& expr)
   
   const uword N = P.get_n_rows();
   
-  arma_debug_check( (N != P.get_n_cols()), "det(): given matrix must be square sized" );
+  arma_conform_check( (N != P.get_n_cols()), "det(): given matrix must be square sized" );
   
   eT val = eT(1);
   
@@ -140,7 +140,7 @@ inline
 eT
 op_det::apply_tiny_2x2(const Mat<eT>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const eT* Xm = X.memptr();
   
@@ -154,7 +154,7 @@ inline
 eT
 op_det::apply_tiny_3x3(const Mat<eT>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const eT* Xm = X.memptr();
   

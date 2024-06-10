@@ -33,7 +33,7 @@ enable_if2
   >::result
 cross(const T1& X, const T2& Y)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Glue<T1, T2, glue_cross>(X, Y);
   }

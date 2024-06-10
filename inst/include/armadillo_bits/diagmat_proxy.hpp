@@ -37,7 +37,7 @@ class diagmat_proxy_default
     , n_rows  ( P_is_vec ? P.get_n_elem() : P.get_n_rows() )
     , n_cols  ( P_is_vec ? P.get_n_elem() : P.get_n_cols() )
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   
@@ -115,7 +115,7 @@ class diagmat_proxy_fixed
   diagmat_proxy_fixed(const T1& X)
     : P(X)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   
@@ -195,7 +195,7 @@ class diagmat_proxy< Mat<eT> >
     , n_rows  ( P_is_vec ? X.n_elem : X.n_rows )
     , n_cols  ( P_is_vec ? X.n_elem : X.n_cols )
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline elem_type operator[] (const uword i)                    const { return P_is_vec ? P[i] : P.at(i,i);                                         }
@@ -226,7 +226,7 @@ class diagmat_proxy< Row<eT> >
     , n_rows(X.n_elem)
     , n_cols(X.n_elem)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline elem_type operator[] (const uword i)                    const { return P[i];                                 }
@@ -258,7 +258,7 @@ class diagmat_proxy< Col<eT> >
     , n_rows(X.n_elem)
     , n_cols(X.n_elem)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline elem_type operator[] (const uword i)                    const { return P[i];                                 }
@@ -290,7 +290,7 @@ class diagmat_proxy< subview_row<eT> >
     , n_rows(X.n_elem)
     , n_cols(X.n_elem)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline elem_type operator[] (const uword i)                    const { return P[i];                                 }
@@ -322,7 +322,7 @@ class diagmat_proxy< subview_col<eT> >
     , n_rows(X.n_elem)
     , n_cols(X.n_elem)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline elem_type operator[] (const uword i)                    const { return P[i];                                 }
@@ -355,7 +355,7 @@ class diagmat_proxy< Glue<T1,T2,glue_times> >
     n_rows = P.n_rows;
     n_cols = P.n_cols;
     
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline elem_type operator[] (const uword i)                    const { return P.at(i,i);                                   }

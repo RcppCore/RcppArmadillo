@@ -26,7 +26,7 @@ inline
 typename get_pod_type<eT>::result
 spop_norm::mat_norm_1(const SpMat<eT>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // TODO: this can be sped up with a dedicated implementation
   return as_scalar( max( sum(abs(X), 0), 1) );
@@ -39,7 +39,7 @@ inline
 typename get_pod_type<eT>::result
 spop_norm::mat_norm_2(const SpMat<eT>& X, const typename arma_real_only<eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   // norm = sqrt( largest eigenvalue of (A^H)*A ), where ^H is the conjugate transpose
@@ -68,7 +68,7 @@ inline
 typename get_pod_type<eT>::result
 spop_norm::mat_norm_2(const SpMat<eT>& X, const typename arma_cx_only<eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename get_pod_type<eT>::result T;
@@ -102,7 +102,7 @@ inline
 typename get_pod_type<eT>::result
 spop_norm::mat_norm_inf(const SpMat<eT>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // TODO: this can be sped up with a dedicated implementation
   return as_scalar( max( sum(abs(X), 1), 0) );
@@ -115,9 +115,9 @@ inline
 typename get_pod_type<eT>::result
 spop_norm::vec_norm_k(const eT* mem, const uword N, const uword k)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check( (k == 0), "norm(): unsupported vector norm type" );
+  arma_conform_check( (k == 0), "norm(): unsupported vector norm type" );
   
   // create a fake dense vector to allow reuse of code for dense vectors
   Col<eT> fake_vector( access::rwp(mem), N, false );

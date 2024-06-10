@@ -27,7 +27,7 @@ arma_inline
 typename arma_not_cx<eT>::result
 op_dot::direct_dot_arma(const uword n_elem, const eT* const A, const eT* const B)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   #if defined(__FAST_MATH__)
     {
@@ -71,7 +71,7 @@ inline
 typename arma_cx_only<eT>::result
 op_dot::direct_dot_arma(const uword n_elem, const eT* const A, const eT* const B)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename get_pod_type<eT>::result T;
   
@@ -104,7 +104,7 @@ inline
 typename arma_real_only<eT>::result
 op_dot::direct_dot(const uword n_elem, const eT* const A, const eT* const B)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if( n_elem <= 32u )
     {
@@ -114,13 +114,13 @@ op_dot::direct_dot(const uword n_elem, const eT* const A, const eT* const B)
     {
     #if defined(ARMA_USE_ATLAS)
       {
-      arma_extra_debug_print("atlas::cblas_dot()");
+      arma_debug_print("atlas::cblas_dot()");
       
       return atlas::cblas_dot(n_elem, A, B);
       }
     #elif defined(ARMA_USE_BLAS)
       {
-      arma_extra_debug_print("blas::dot()");
+      arma_debug_print("blas::dot()");
       
       return blas::dot(n_elem, A, B);
       }
@@ -148,13 +148,13 @@ op_dot::direct_dot(const uword n_elem, const eT* const A, const eT* const B)
     {
     #if defined(ARMA_USE_ATLAS)
       {
-      arma_extra_debug_print("atlas::cblas_cx_dot()");
+      arma_debug_print("atlas::cblas_cx_dot()");
       
       return atlas::cblas_cx_dot(n_elem, A, B);
       }
     #elif defined(ARMA_USE_BLAS)
       {
-      arma_extra_debug_print("blas::dot()");
+      arma_debug_print("blas::dot()");
       
       return blas::dot(n_elem, A, B);
       }
@@ -186,7 +186,7 @@ inline
 eT
 op_dot::direct_dot(const uword n_elem, const eT* const A, const eT* const B, const eT* C)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   eT val = eT(0);
   
@@ -205,56 +205,65 @@ inline
 typename T1::elem_type
 op_dot::apply(const T1& X, const T2& Y)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  const bool use_at = (Proxy<T1>::use_at) || (Proxy<T2>::use_at);
+  typedef typename T1::elem_type eT;
   
-  const bool have_direct_mem = (quasi_unwrap<T1>::has_orig_mem) && (quasi_unwrap<T2>::has_orig_mem);
+  if(is_subview_row<T1>::value && is_subview_row<T2>::value)
+    {
+    const subview_row<eT>& A = reinterpret_cast< const subview_row<eT>& >(X);
+    const subview_row<eT>& B = reinterpret_cast< const subview_row<eT>& >(Y);
+    
+    if( (A.m.n_rows == 1) && (B.m.n_rows == 1) )
+      {
+      arma_conform_check( (A.n_elem != B.n_elem), "dot(): objects must have the same number of elements" );
+      
+      const eT* A_mem = A.m.memptr();
+      const eT* B_mem = B.m.memptr();
+      
+      return op_dot::direct_dot(A.n_elem, &A_mem[A.aux_col1], &B_mem[B.aux_col1]);
+      }
+    }
   
-  if(use_at || have_direct_mem)
+  // if possible, bypass transposes of non-complex vectors
+  
+  if( (is_cx<eT>::no) && (resolves_to_vector<T1>::value) && (resolves_to_vector<T2>::value) && (partial_unwrap<T1>::is_fast) && (partial_unwrap<T2>::is_fast) )
+    {
+    const partial_unwrap<T1> UA(X);
+    const partial_unwrap<T2> UB(Y);
+    
+    const typename partial_unwrap<T1>::stored_type& A = UA.M;
+    const typename partial_unwrap<T2>::stored_type& B = UB.M;
+    
+    arma_conform_check( (A.n_elem != B.n_elem), "dot(): objects must have the same number of elements" );
+    
+    const eT val = op_dot::direct_dot(A.n_elem, A.memptr(), B.memptr());
+    
+    return (UA.do_times || UB.do_times) ? (val * UA.get_val() * UB.get_val()) : val;
+    }
+  
+  constexpr bool proxy_is_mat = (is_Mat<typename Proxy<T1>::stored_type>::value && is_Mat<typename Proxy<T2>::stored_type>::value);
+  
+  constexpr bool use_at = (Proxy<T1>::use_at) || (Proxy<T2>::use_at);
+  
+  constexpr bool have_direct_mem = (quasi_unwrap<T1>::has_orig_mem) && (quasi_unwrap<T2>::has_orig_mem);
+  
+  if(proxy_is_mat || use_at || have_direct_mem)
     {
     const quasi_unwrap<T1> A(X);
     const quasi_unwrap<T2> B(Y);
     
-    arma_debug_check( (A.M.n_elem != B.M.n_elem), "dot(): objects must have the same number of elements" );
+    arma_conform_check( (A.M.n_elem != B.M.n_elem), "dot(): objects must have the same number of elements" );
     
     return op_dot::direct_dot(A.M.n_elem, A.M.memptr(), B.M.memptr());
     }
-  else
-    {
-    if(is_subview_row<T1>::value && is_subview_row<T2>::value)
-      {
-      typedef typename T1::elem_type eT;
-      
-      const subview_row<eT>& A = reinterpret_cast< const subview_row<eT>& >(X);
-      const subview_row<eT>& B = reinterpret_cast< const subview_row<eT>& >(Y);
-      
-      if( (A.m.n_rows == 1) && (B.m.n_rows == 1) )
-        {
-        arma_debug_check( (A.n_elem != B.n_elem), "dot(): objects must have the same number of elements" );
-        
-        const eT* A_mem = A.m.memptr();
-        const eT* B_mem = B.m.memptr();
-        
-        return op_dot::direct_dot(A.n_elem, &A_mem[A.aux_col1], &B_mem[B.aux_col1]);
-        }
-      }
-    
-    const Proxy<T1> PA(X);
-    const Proxy<T2> PB(Y);
-    
-    arma_debug_check( (PA.get_n_elem() != PB.get_n_elem()), "dot(): objects must have the same number of elements" );
-    
-    if(is_Mat<typename Proxy<T1>::stored_type>::value && is_Mat<typename Proxy<T2>::stored_type>::value)
-      {
-      const quasi_unwrap<typename Proxy<T1>::stored_type> A(PA.Q);
-      const quasi_unwrap<typename Proxy<T2>::stored_type> B(PB.Q);
-      
-      return op_dot::direct_dot(A.M.n_elem, A.M.memptr(), B.M.memptr());
-      }
-    
-    return op_dot::apply_proxy(PA,PB);
-    }
+  
+  const Proxy<T1> PA(X);
+  const Proxy<T2> PB(Y);
+  
+  arma_conform_check( (PA.get_n_elem() != PB.get_n_elem()), "dot(): objects must have the same number of elements" );
+  
+  return op_dot::apply_proxy(PA,PB);
   }
 
 
@@ -264,7 +273,7 @@ inline
 typename arma_not_cx<typename T1::elem_type>::result
 op_dot::apply_proxy(const Proxy<T1>& PA, const Proxy<T2>& PB)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type      eT;
   typedef typename Proxy<T1>::ea_type ea_type1;
@@ -301,7 +310,7 @@ inline
 typename arma_cx_only<typename T1::elem_type>::result
 op_dot::apply_proxy(const Proxy<T1>& PA, const Proxy<T2>& PB)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type            eT;
   typedef typename get_pod_type<eT>::result  T;
@@ -347,7 +356,7 @@ inline
 typename T1::elem_type
 op_norm_dot::apply(const T1& X, const T2& Y)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
@@ -358,7 +367,7 @@ op_norm_dot::apply(const T1& X, const T2& Y)
   const Col<eT> A( const_cast<eT*>(tmp1.M.memptr()), tmp1.M.n_elem, false );
   const Col<eT> B( const_cast<eT*>(tmp2.M.memptr()), tmp2.M.n_elem, false );
   
-  arma_debug_check( (A.n_elem != B.n_elem), "norm_dot(): objects must have the same number of elements" );
+  arma_conform_check( (A.n_elem != B.n_elem), "norm_dot(): objects must have the same number of elements" );
   
   const T denom = norm(A,2) * norm(B,2);
   
@@ -377,7 +386,7 @@ inline
 eT
 op_cdot::direct_cdot_arma(const uword n_elem, const eT* const A, const eT* const B)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename get_pod_type<eT>::result T;
   
@@ -409,7 +418,7 @@ inline
 eT
 op_cdot::direct_cdot(const uword n_elem, const eT* const A, const eT* const B)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if( n_elem <= 32u )
     {
@@ -419,7 +428,7 @@ op_cdot::direct_cdot(const uword n_elem, const eT* const A, const eT* const B)
     {
     #if defined(ARMA_USE_BLAS)
       {
-      arma_extra_debug_print("blas::gemv()");
+      arma_debug_print("blas::gemv()");
       
       // using gemv() workaround due to compatibility issues with cdotc() and zdotc()
       
@@ -455,7 +464,7 @@ inline
 typename T1::elem_type
 op_cdot::apply(const T1& X, const T2& Y)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if(is_Mat<T1>::value && is_Mat<T2>::value)
     {
@@ -474,7 +483,7 @@ inline
 typename T1::elem_type
 op_cdot::apply_unwrap(const T1& X, const T2& Y)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -484,7 +493,7 @@ op_cdot::apply_unwrap(const T1& X, const T2& Y)
   const Mat<eT>& A = tmp1.M;
   const Mat<eT>& B = tmp2.M;
   
-  arma_debug_check( (A.n_elem != B.n_elem), "cdot(): objects must have the same number of elements" );
+  arma_conform_check( (A.n_elem != B.n_elem), "cdot(): objects must have the same number of elements" );
   
   return op_cdot::direct_cdot( A.n_elem, A.mem, B.mem );
   }
@@ -496,7 +505,7 @@ inline
 typename T1::elem_type
 op_cdot::apply_proxy(const T1& X, const T2& Y)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type            eT;
   typedef typename get_pod_type<eT>::result  T;
@@ -504,7 +513,7 @@ op_cdot::apply_proxy(const T1& X, const T2& Y)
   typedef typename Proxy<T1>::ea_type ea_type1;
   typedef typename Proxy<T2>::ea_type ea_type2;
   
-  const bool use_at = (Proxy<T1>::use_at) || (Proxy<T2>::use_at);
+  constexpr bool use_at = (Proxy<T1>::use_at) || (Proxy<T2>::use_at);
   
   if(use_at == false)
     {
@@ -513,7 +522,7 @@ op_cdot::apply_proxy(const T1& X, const T2& Y)
     
     const uword N = PA.get_n_elem();
     
-    arma_debug_check( (N != PB.get_n_elem()), "cdot(): objects must have the same number of elements" );
+    arma_conform_check( (N != PB.get_n_elem()), "cdot(): objects must have the same number of elements" );
     
     ea_type1 A = PA.get_ea();
     ea_type2 B = PB.get_ea();
@@ -551,7 +560,7 @@ inline
 typename promote_type<typename T1::elem_type, typename T2::elem_type>::result
 op_dot_mixed::apply(const T1& A, const T2& B)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type in_eT1;
   typedef typename T2::elem_type in_eT2;
@@ -563,7 +572,7 @@ op_dot_mixed::apply(const T1& A, const T2& B)
   
   const uword N = PA.get_n_elem();
   
-  arma_debug_check( (N != PB.get_n_elem()), "dot(): objects must have the same number of elements" );
+  arma_conform_check( (N != PB.get_n_elem()), "dot(): objects must have the same number of elements" );
   
   out_eT acc = out_eT(0);
   

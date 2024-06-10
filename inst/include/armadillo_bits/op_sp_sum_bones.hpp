@@ -16,17 +16,17 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup spop_sum
+//! \addtogroup op_sp_sum
 //! @{
 
 
-class spop_sum
+class op_sp_sum
   : public traits_op_xvec
   {
   public:
   
   template<typename T1>
-  inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_sum>& in);
+  inline static void apply(Mat<typename T1::elem_type>& out, const SpToDOp<T1, op_sp_sum>& in);
   };
 
 

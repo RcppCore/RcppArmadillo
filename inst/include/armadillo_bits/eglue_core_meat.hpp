@@ -259,7 +259,7 @@ inline
 void
 eglue_core<eglue_type>::apply(outT& out, const eGlue<T1, T2, eglue_type>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -358,12 +358,12 @@ inline
 void
 eglue_core<eglue_type>::apply_inplace_plus(Mat<typename T1::elem_type>& out, const eGlue<T1, T2, eglue_type>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword n_rows = x.get_n_rows();
   const uword n_cols = x.get_n_cols();
     
-  arma_debug_assert_same_size(out.n_rows, out.n_cols, n_rows, n_cols, "addition");
+  arma_conform_assert_same_size(out.n_rows, out.n_cols, n_rows, n_cols, "addition");
   
   typedef typename T1::elem_type eT;
   
@@ -455,12 +455,12 @@ inline
 void
 eglue_core<eglue_type>::apply_inplace_minus(Mat<typename T1::elem_type>& out, const eGlue<T1, T2, eglue_type>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword n_rows = x.get_n_rows();
   const uword n_cols = x.get_n_cols();
   
-  arma_debug_assert_same_size(out.n_rows, out.n_cols, n_rows, n_cols, "subtraction");
+  arma_conform_assert_same_size(out.n_rows, out.n_cols, n_rows, n_cols, "subtraction");
   
   typedef typename T1::elem_type eT;
   
@@ -552,12 +552,12 @@ inline
 void
 eglue_core<eglue_type>::apply_inplace_schur(Mat<typename T1::elem_type>& out, const eGlue<T1, T2, eglue_type>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword n_rows = x.get_n_rows();
   const uword n_cols = x.get_n_cols();
   
-  arma_debug_assert_same_size(out.n_rows, out.n_cols, n_rows, n_cols, "element-wise multiplication");
+  arma_conform_assert_same_size(out.n_rows, out.n_cols, n_rows, n_cols, "element-wise multiplication");
   
   typedef typename T1::elem_type eT;
   
@@ -649,12 +649,12 @@ inline
 void
 eglue_core<eglue_type>::apply_inplace_div(Mat<typename T1::elem_type>& out, const eGlue<T1, T2, eglue_type>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword n_rows = x.get_n_rows();
   const uword n_cols = x.get_n_cols();
   
-  arma_debug_assert_same_size(out.n_rows, out.n_cols, n_rows, n_cols, "element-wise division");
+  arma_conform_assert_same_size(out.n_rows, out.n_cols, n_rows, n_cols, "element-wise division");
   
   typedef typename T1::elem_type eT;
   
@@ -751,7 +751,7 @@ inline
 void
 eglue_core<eglue_type>::apply(Cube<typename T1::elem_type>& out, const eGlueCube<T1, T2, eglue_type>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -851,13 +851,13 @@ inline
 void
 eglue_core<eglue_type>::apply_inplace_plus(Cube<typename T1::elem_type>& out, const eGlueCube<T1, T2, eglue_type>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword n_rows   = x.get_n_rows();
   const uword n_cols   = x.get_n_cols();
   const uword n_slices = x.get_n_slices();
   
-  arma_debug_assert_same_size(out.n_rows, out.n_cols, out.n_slices, n_rows, n_cols, n_slices, "addition");
+  arma_conform_assert_same_size(out.n_rows, out.n_cols, out.n_slices, n_rows, n_cols, n_slices, "addition");
   
   typedef typename T1::elem_type eT;
   
@@ -949,13 +949,13 @@ inline
 void
 eglue_core<eglue_type>::apply_inplace_minus(Cube<typename T1::elem_type>& out, const eGlueCube<T1, T2, eglue_type>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword n_rows   = x.get_n_rows();
   const uword n_cols   = x.get_n_cols();
   const uword n_slices = x.get_n_slices();
   
-  arma_debug_assert_same_size(out.n_rows, out.n_cols, out.n_slices, n_rows, n_cols, n_slices, "subtraction");
+  arma_conform_assert_same_size(out.n_rows, out.n_cols, out.n_slices, n_rows, n_cols, n_slices, "subtraction");
   
   typedef typename T1::elem_type eT;
   
@@ -1047,13 +1047,13 @@ inline
 void
 eglue_core<eglue_type>::apply_inplace_schur(Cube<typename T1::elem_type>& out, const eGlueCube<T1, T2, eglue_type>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword n_rows   = x.get_n_rows();
   const uword n_cols   = x.get_n_cols();
   const uword n_slices = x.get_n_slices();
   
-  arma_debug_assert_same_size(out.n_rows, out.n_cols, out.n_slices, n_rows, n_cols, n_slices, "element-wise multiplication");
+  arma_conform_assert_same_size(out.n_rows, out.n_cols, out.n_slices, n_rows, n_cols, n_slices, "element-wise multiplication");
   
   typedef typename T1::elem_type eT;
   
@@ -1145,13 +1145,13 @@ inline
 void
 eglue_core<eglue_type>::apply_inplace_div(Cube<typename T1::elem_type>& out, const eGlueCube<T1, T2, eglue_type>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword n_rows   = x.get_n_rows();
   const uword n_cols   = x.get_n_cols();
   const uword n_slices = x.get_n_slices();
   
-  arma_debug_assert_same_size(out.n_rows, out.n_cols, out.n_slices, n_rows, n_cols, n_slices, "element-wise division");
+  arma_conform_assert_same_size(out.n_rows, out.n_cols, out.n_slices, n_rows, n_cols, n_slices, "element-wise division");
   
   typedef typename T1::elem_type eT;
   

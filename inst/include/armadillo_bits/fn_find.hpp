@@ -32,7 +32,7 @@ enable_if2
   >::result
 find(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return mtOp<uword, T1, op_find_simple>(X);
   }
@@ -45,11 +45,11 @@ inline
 const mtOp<uword, T1, op_find>
 find(const Base<typename T1::elem_type,T1>& X, const uword k, const char* direction = "first")
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const char sig = (direction != nullptr) ? direction[0] : char(0);
   
-  arma_debug_check
+  arma_conform_check
     (
     ( (sig != 'f') && (sig != 'F') && (sig != 'l') && (sig != 'L') ),
     "find(): direction must be \"first\" or \"last\""
@@ -72,7 +72,7 @@ inline
 uvec
 find(const BaseCube<typename T1::elem_type,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -91,7 +91,7 @@ inline
 uvec
 find(const BaseCube<typename T1::elem_type,T1>& X, const uword k, const char* direction = "first")
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -110,7 +110,7 @@ inline
 uvec
 find(const mtOpCube<uword, T1, op_rel_type>& X, const uword k = 0, const char* direction = "first")
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -129,7 +129,7 @@ inline
 uvec
 find(const mtGlueCube<uword, T1, T2, glue_rel_type>& X, const uword k = 0, const char* direction = "first")
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT1;
   typedef typename T2::elem_type eT2;
@@ -137,7 +137,7 @@ find(const mtGlueCube<uword, T1, T2, glue_rel_type>& X, const uword k = 0, const
   const unwrap_cube<T1> tmp1(X.A);
   const unwrap_cube<T2> tmp2(X.B);
   
-  arma_debug_assert_same_size( tmp1.M, tmp2.M, "relational operator" );
+  arma_conform_assert_same_size( tmp1.M, tmp2.M, "relational operator" );
   
   const Mat<eT1> R1( const_cast< eT1* >(tmp1.M.memptr()), tmp1.M.n_elem, 1, false );
   const Mat<eT2> R2( const_cast< eT2* >(tmp2.M.memptr()), tmp2.M.n_elem, 1, false );
@@ -157,7 +157,7 @@ inline
 Col<uword>
 find(const SpBase<typename T1::elem_type,T1>& X, const uword k = 0)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const SpProxy<T1> P(X.get_ref());
   
@@ -196,7 +196,7 @@ inline
 Col<uword>
 find(const SpBase<typename T1::elem_type,T1>& X, const uword k, const char* direction)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_ignore(X);
   arma_ignore(k);
@@ -226,7 +226,7 @@ enable_if2
   >::result
 find_finite(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return mtOp<uword, T1, op_find_finite>(X);
   }
@@ -244,7 +244,7 @@ enable_if2
   >::result
 find_nonfinite(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return mtOp<uword, T1, op_find_nonfinite>(X);
   }
@@ -262,7 +262,7 @@ enable_if2
   >::result
 find_nan(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return mtOp<uword, T1, op_find_nan>(X);
   }
@@ -279,7 +279,7 @@ inline
 uvec
 find_finite(const BaseCube<typename T1::elem_type,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -298,7 +298,7 @@ inline
 uvec
 find_nonfinite(const BaseCube<typename T1::elem_type,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -317,7 +317,7 @@ inline
 uvec
 find_nan(const BaseCube<typename T1::elem_type,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -340,7 +340,7 @@ inline
 Col<uword>
 find_finite(const SpBase<typename T1::elem_type,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const SpProxy<T1> P(X.get_ref());
   
@@ -384,7 +384,7 @@ inline
 Col<uword>
 find_nonfinite(const SpBase<typename T1::elem_type,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const SpProxy<T1> P(X.get_ref());
   
@@ -428,7 +428,7 @@ inline
 Col<uword>
 find_nan(const SpBase<typename T1::elem_type,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const SpProxy<T1> P(X.get_ref());
   

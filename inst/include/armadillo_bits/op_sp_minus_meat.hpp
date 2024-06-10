@@ -26,7 +26,7 @@ inline
 void
 op_sp_minus_pre::apply(Mat<typename T1::elem_type>& out, const SpToDOp<T1,op_sp_minus_pre>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // Note that T1 will be a sparse type, so we use SpProxy.
   const SpProxy<T1> proxy(in.m);
@@ -51,7 +51,7 @@ inline
 void
 op_sp_minus_pre::apply(SpMat<typename T1::elem_type>& out, const SpToDOp<T1,op_sp_minus_pre>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
 
   typedef typename T1::elem_type eT;
 
@@ -80,12 +80,12 @@ inline
 void
 op_sp_minus_pre::apply_inside_schur(SpMat<eT>& out, const T2& x, const SpToDOp<T3, op_sp_minus_pre>& y)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
 
   const SpProxy<T2> proxy2(x);
   const SpProxy<T3> proxy3(y.m);
 
-  arma_debug_assert_same_size(proxy2.get_n_rows(), proxy2.get_n_cols(), proxy3.get_n_rows(), proxy3.get_n_cols(), "element-wise multiplication");
+  arma_conform_assert_same_size(proxy2.get_n_rows(), proxy2.get_n_cols(), proxy3.get_n_rows(), proxy3.get_n_cols(), "element-wise multiplication");
 
   out.zeros(proxy2.get_n_rows(), proxy2.get_n_cols());
   
@@ -111,12 +111,12 @@ inline
 void
 op_sp_minus_pre::apply_inside_div(SpMat<eT>& out, const T2& x, const SpToDOp<T3, op_sp_minus_pre>& y)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
 
   const SpProxy<T2> proxy2(x);
   const SpProxy<T3> proxy3(y.m);
 
-  arma_debug_assert_same_size(proxy2.get_n_rows(), proxy2.get_n_cols(), proxy3.get_n_rows(), proxy3.get_n_cols(), "element-wise multiplication");
+  arma_conform_assert_same_size(proxy2.get_n_rows(), proxy2.get_n_cols(), proxy3.get_n_rows(), proxy3.get_n_cols(), "element-wise multiplication");
 
   out.zeros(proxy2.get_n_rows(), proxy2.get_n_cols());
   
@@ -142,7 +142,7 @@ inline
 void
 op_sp_minus_post::apply(Mat<typename T1::elem_type>& out, const SpToDOp<T1,op_sp_minus_post>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // Note that T1 will be a sparse type, so we use SpProxy.
   const SpProxy<T1> proxy(in.m);
@@ -167,7 +167,7 @@ inline
 void
 op_sp_minus_post::apply(SpMat<typename T1::elem_type>& out, const SpToDOp<T1,op_sp_minus_post>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
 
   typedef typename T1::elem_type eT;
 
@@ -196,12 +196,12 @@ inline
 void
 op_sp_minus_post::apply_inside_schur(SpMat<eT>& out, const T2& x, const SpToDOp<T3, op_sp_minus_post>& y)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
 
   const SpProxy<T2> proxy2(x);
   const SpProxy<T3> proxy3(y.m);
 
-  arma_debug_assert_same_size(proxy2.get_n_rows(), proxy2.get_n_cols(), proxy3.get_n_rows(), proxy3.get_n_cols(), "element-wise multiplication");
+  arma_conform_assert_same_size(proxy2.get_n_rows(), proxy2.get_n_cols(), proxy3.get_n_rows(), proxy3.get_n_cols(), "element-wise multiplication");
 
   out.zeros(proxy2.get_n_rows(), proxy2.get_n_cols());
   
@@ -227,12 +227,12 @@ inline
 void
 op_sp_minus_post::apply_inside_div(SpMat<eT>& out, const T2& x, const SpToDOp<T3, op_sp_minus_post>& y)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
 
   const SpProxy<T2> proxy2(x);
   const SpProxy<T3> proxy3(y.m);
 
-  arma_debug_assert_same_size(proxy2.get_n_rows(), proxy2.get_n_cols(), proxy3.get_n_rows(), proxy3.get_n_cols(), "element-wise multiplication");
+  arma_conform_assert_same_size(proxy2.get_n_rows(), proxy2.get_n_cols(), proxy3.get_n_rows(), proxy3.get_n_cols(), "element-wise multiplication");
 
   out.zeros(proxy2.get_n_rows(), proxy2.get_n_cols());
   

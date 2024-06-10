@@ -27,10 +27,10 @@ inline
 void
 spop_shift::apply_noalias(SpMat<eT>& out, const SpMat<eT>& X, const uword len, const uword neg, const uword dim)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check_bounds( ((dim == 0) && (len >= X.n_rows)), "shift(): shift amount out of bounds" );
-  arma_debug_check_bounds( ((dim == 1) && (len >= X.n_cols)), "shift(): shift amount out of bounds" );
+  arma_conform_check_bounds( ((dim == 0) && (len >= X.n_rows)), "shift(): shift amount out of bounds" );
+  arma_conform_check_bounds( ((dim == 1) && (len >= X.n_cols)), "shift(): shift amount out of bounds" );
   
   if(X.n_nonzero == 0)  { out.zeros(X.n_rows, X.n_cols); return; }
   

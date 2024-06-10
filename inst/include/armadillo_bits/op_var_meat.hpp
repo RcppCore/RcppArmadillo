@@ -26,15 +26,15 @@ inline
 void
 op_var::apply(Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_type, T1, op_var>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::pod_type out_eT;
   
   const uword norm_type = in.aux_uword_a;
   const uword dim       = in.aux_uword_b;
   
-  arma_debug_check( (norm_type > 1), "var(): parameter 'norm_type' must be 0 or 1" );
-  arma_debug_check( (dim > 1),       "var(): parameter 'dim' must be 0 or 1"       );
+  arma_conform_check( (norm_type > 1), "var(): parameter 'norm_type' must be 0 or 1" );
+  arma_conform_check( (dim > 1),       "var(): parameter 'dim' must be 0 or 1"       );
   
   const quasi_unwrap<T1> U(in.m);
   
@@ -59,7 +59,7 @@ inline
 void
 op_var::apply_noalias(Mat<typename get_pod_type<in_eT>::result>& out, const Mat<in_eT>& X, const uword norm_type, const uword dim)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename get_pod_type<in_eT>::result out_eT;
   
@@ -68,7 +68,7 @@ op_var::apply_noalias(Mat<typename get_pod_type<in_eT>::result>& out, const Mat<
   
   if(dim == 0)
     {
-    arma_extra_debug_print("op_var::apply_noalias(): dim = 0");
+    arma_debug_print("op_var::apply_noalias(): dim = 0");
     
     out.set_size((X_n_rows > 0) ? 1 : 0, X_n_cols);
     
@@ -85,7 +85,7 @@ op_var::apply_noalias(Mat<typename get_pod_type<in_eT>::result>& out, const Mat<
   else
   if(dim == 1)
     {
-    arma_extra_debug_print("op_var::apply_noalias(): dim = 1");
+    arma_debug_print("op_var::apply_noalias(): dim = 1");
     
     out.set_size(X_n_rows, (X_n_cols > 0) ? 1 : 0);
     
@@ -113,11 +113,20 @@ inline
 typename T1::pod_type
 op_var::var_vec(const Base<typename T1::elem_type, T1>& X, const uword norm_type)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check( (norm_type > 1), "var(): parameter 'norm_type' must be 0 or 1" );
+  typedef typename T1::pod_type T;
+  
+  arma_conform_check( (norm_type > 1), "var(): parameter 'norm_type' must be 0 or 1" );
   
   const quasi_unwrap<T1> U(X.get_ref());
+  
+  if(U.M.n_elem == 0)
+    {
+    arma_conform_check(true, "var(): object has no elements");
+    
+    return Datum<T>::nan;
+    }
   
   return op_var::direct_var(U.M.memptr(), U.M.n_elem, norm_type);
   }
@@ -129,9 +138,18 @@ inline
 typename get_pod_type<eT>::result
 op_var::var_vec(const subview_col<eT>& X, const uword norm_type)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check( (norm_type > 1), "var(): parameter 'norm_type' must be 0 or 1" );
+  typedef typename get_pod_type<eT>::result T;
+  
+  arma_conform_check( (norm_type > 1), "var(): parameter 'norm_type' must be 0 or 1" );
+  
+  if(X.n_elem == 0)
+    {
+    arma_conform_check(true, "var(): object has no elements");
+    
+    return Datum<T>::nan;
+    }
   
   return op_var::direct_var(X.colptr(0), X.n_rows, norm_type);
   }
@@ -144,9 +162,18 @@ inline
 typename get_pod_type<eT>::result
 op_var::var_vec(const subview_row<eT>& X, const uword norm_type)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check( (norm_type > 1), "var(): parameter 'norm_type' must be 0 or 1" );
+  typedef typename get_pod_type<eT>::result T;
+  
+  arma_conform_check( (norm_type > 1), "var(): parameter 'norm_type' must be 0 or 1" );
+  
+  if(X.n_elem == 0)
+    {
+    arma_conform_check(true, "var(): object has no elements");
+    
+    return Datum<T>::nan;
+    }
   
   const Mat<eT>& A = X.m;
   
@@ -174,7 +201,7 @@ inline
 eT
 op_var::direct_var(const eT* const X, const uword n_elem, const uword norm_type)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if(n_elem >= 2)
     {
@@ -226,7 +253,7 @@ inline
 eT
 op_var::direct_var_robust(const eT* const X, const uword n_elem, const uword norm_type)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if(n_elem > 1)
     {
@@ -259,7 +286,7 @@ inline
 T
 op_var::direct_var(const std::complex<T>* const X, const uword n_elem, const uword norm_type)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename std::complex<T> eT;
   
@@ -297,7 +324,7 @@ inline
 T
 op_var::direct_var_robust(const std::complex<T>* const X, const uword n_elem, const uword norm_type)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename std::complex<T> eT;
   

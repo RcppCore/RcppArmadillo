@@ -37,7 +37,7 @@ linspace
   const uword                       num = 100u
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename out_type::elem_type eT;
   typedef typename out_type::pod_type   T;
@@ -93,7 +93,7 @@ inline
 vec
 linspace(const double start, const double end, const uword num = 100u)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   return linspace<vec>(start, end, num);
   }
 
@@ -115,7 +115,7 @@ logspace
   const uword                       N = 50u
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename out_type::elem_type eT;
   typedef typename out_type::pod_type   T;
@@ -141,7 +141,7 @@ inline
 vec
 logspace(const double A, const double B, const uword N = 50u)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   return logspace<vec>(A, B, N);
   }
 
@@ -208,7 +208,7 @@ inline
 bool
 is_finite(const Base<typename T1::elem_type,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return X.is_finite();
   }
@@ -222,7 +222,7 @@ inline
 bool
 is_finite(const SpBase<typename T1::elem_type,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return X.is_finite();
   }
@@ -236,7 +236,7 @@ inline
 bool
 is_finite(const BaseCube<typename T1::elem_type,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return X.is_finite();
   }
@@ -248,7 +248,7 @@ inline
 void
 swap(Mat<eT>& A, Mat<eT>& B)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   A.swap(B);
   }
@@ -260,7 +260,7 @@ inline
 void
 swap(Cube<eT>& A, Cube<eT>& B)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   A.swap(B);
   }
@@ -272,11 +272,11 @@ inline
 uvec
 ind2sub(const SizeMat& s, const uword i)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword s_n_rows = s.n_rows;
   
-  arma_debug_check( (i >= (s_n_rows * s.n_cols) ), "ind2sub(): index out of range" );
+  arma_conform_check( (i >= (s_n_rows * s.n_cols) ), "ind2sub(): index out of range" );
   
   const uword row = i % s_n_rows;
   const uword col = i / s_n_rows;
@@ -299,7 +299,7 @@ inline
 typename enable_if2< (is_arma_type<T1>::value && is_same_type<uword,typename T1::elem_type>::yes), umat >::result
 ind2sub(const SizeMat& s, const T1& indices)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword s_n_rows = s.n_rows;
   const uword s_n_elem = s_n_rows * s.n_cols;
@@ -313,7 +313,7 @@ ind2sub(const SizeMat& s, const T1& indices)
   const bool P_is_empty = (P_n_elem == 0);
   const bool P_is_vec   = ((P_n_rows == 1) || (P_n_cols == 1));
   
-  arma_debug_check( ((P_is_empty == false) && (P_is_vec == false)), "ind2sub(): parameter 'indices' must be a vector" );
+  arma_conform_check( ((P_is_empty == false) && (P_is_vec == false)), "ind2sub(): parameter 'indices' must be a vector" );
   
   umat out(2, P_n_elem, arma_nozeros_indicator());
   
@@ -325,7 +325,7 @@ ind2sub(const SizeMat& s, const T1& indices)
       {
       const uword i = Pea[count];
       
-      arma_debug_check( (i >= s_n_elem), "ind2sub(): index out of range" );
+      arma_conform_check( (i >= s_n_elem), "ind2sub(): index out of range" );
       
       const uword row = i % s_n_rows;
       const uword col = i / s_n_rows;
@@ -344,7 +344,7 @@ ind2sub(const SizeMat& s, const T1& indices)
         {
         const uword i = P.at(0,count);
         
-        arma_debug_check( (i >= s_n_elem), "ind2sub(): index out of range" );
+        arma_conform_check( (i >= s_n_elem), "ind2sub(): index out of range" );
         
         const uword row = i % s_n_rows;
         const uword col = i / s_n_rows;
@@ -362,7 +362,7 @@ ind2sub(const SizeMat& s, const T1& indices)
         {
         const uword i = P.at(count,0);
         
-        arma_debug_check( (i >= s_n_elem), "ind2sub(): index out of range" );
+        arma_conform_check( (i >= s_n_elem), "ind2sub(): index out of range" );
         
         const uword row = i % s_n_rows;
         const uword col = i / s_n_rows;
@@ -385,12 +385,12 @@ inline
 uvec
 ind2sub(const SizeCube& s, const uword i)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword s_n_rows       = s.n_rows;
   const uword s_n_elem_slice = s_n_rows * s.n_cols;
   
-  arma_debug_check( (i >= (s_n_elem_slice * s.n_slices) ), "ind2sub(): index out of range" );
+  arma_conform_check( (i >= (s_n_elem_slice * s.n_slices) ), "ind2sub(): index out of range" );
   
   const uword slice  = i / s_n_elem_slice;
   const uword j      = i - (slice * s_n_elem_slice);
@@ -416,7 +416,7 @@ inline
 typename enable_if2< (is_arma_type<T1>::value && is_same_type<uword,typename T1::elem_type>::yes), umat >::result
 ind2sub(const SizeCube& s, const T1& indices)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword s_n_rows       = s.n_rows;
   const uword s_n_elem_slice = s_n_rows * s.n_cols;
@@ -424,7 +424,7 @@ ind2sub(const SizeCube& s, const T1& indices)
     
   const quasi_unwrap<T1> U(indices);
   
-  arma_debug_check( ((U.M.is_empty() == false) && (U.M.is_vec() == false)), "ind2sub(): parameter 'indices' must be a vector" );
+  arma_conform_check( ((U.M.is_empty() == false) && (U.M.is_vec() == false)), "ind2sub(): parameter 'indices' must be a vector" );
   
   const uword  U_n_elem = U.M.n_elem;
   const uword* U_mem    = U.M.memptr();
@@ -435,7 +435,7 @@ ind2sub(const SizeCube& s, const T1& indices)
     {
     const uword i = U_mem[count];
     
-    arma_debug_check( (i >= s_n_elem), "ind2sub(): index out of range" );
+    arma_conform_check( (i >= s_n_elem), "ind2sub(): index out of range" );
     
     const uword slice  = i / s_n_elem_slice;
     const uword j      = i - (slice * s_n_elem_slice);
@@ -459,11 +459,11 @@ arma_inline
 uword
 sub2ind(const SizeMat& s, const uword row, const uword col)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword s_n_rows = s.n_rows;
   
-  arma_debug_check( ((row >= s_n_rows) || (col >= s.n_cols)), "sub2ind(): subscript out of range" );
+  arma_conform_check( ((row >= s_n_rows) || (col >= s.n_cols)), "sub2ind(): subscript out of range" );
   
   return uword(row + col*s_n_rows);
   }
@@ -476,14 +476,14 @@ inline
 uvec
 sub2ind(const SizeMat& s, const Base<uword,T1>& subscripts)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword s_n_rows = s.n_rows;
   const uword s_n_cols = s.n_cols;
   
   const quasi_unwrap<T1> U(subscripts.get_ref());
   
-  arma_debug_check( (U.M.n_rows != 2), "sub2ind(): matrix of subscripts must have 2 rows" );
+  arma_conform_check( (U.M.n_rows != 2), "sub2ind(): matrix of subscripts must have 2 rows" );
   
   const uword U_M_n_cols = U.M.n_cols;
   
@@ -499,7 +499,7 @@ sub2ind(const SizeMat& s, const Base<uword,T1>& subscripts)
     
     U_M_mem += 2; // next column
     
-    arma_debug_check( ((row >= s_n_rows) || (col >= s_n_cols)), "sub2ind(): subscript out of range" );
+    arma_conform_check( ((row >= s_n_rows) || (col >= s_n_cols)), "sub2ind(): subscript out of range" );
     
     out_mem[count] = uword(row + col*s_n_rows);
     }
@@ -514,12 +514,12 @@ arma_inline
 uword
 sub2ind(const SizeCube& s, const uword row, const uword col, const uword slice)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword s_n_rows = s.n_rows;
   const uword s_n_cols = s.n_cols;
   
-  arma_debug_check( ((row >= s_n_rows) || (col >= s_n_cols) || (slice >= s.n_slices)), "sub2ind(): subscript out of range" );
+  arma_conform_check( ((row >= s_n_rows) || (col >= s_n_cols) || (slice >= s.n_slices)), "sub2ind(): subscript out of range" );
   
   return uword( (slice * s_n_rows * s_n_cols) + (col * s_n_rows) + row );
   }
@@ -532,7 +532,7 @@ inline
 uvec
 sub2ind(const SizeCube& s, const Base<uword,T1>& subscripts)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword s_n_rows   = s.n_rows;
   const uword s_n_cols   = s.n_cols;
@@ -540,7 +540,7 @@ sub2ind(const SizeCube& s, const Base<uword,T1>& subscripts)
   
   const quasi_unwrap<T1> U(subscripts.get_ref());
   
-  arma_debug_check( (U.M.n_rows != 3), "sub2ind(): matrix of subscripts must have 3 rows" );
+  arma_conform_check( (U.M.n_rows != 3), "sub2ind(): matrix of subscripts must have 3 rows" );
   
   const uword U_M_n_cols = U.M.n_cols;
   
@@ -557,7 +557,7 @@ sub2ind(const SizeCube& s, const Base<uword,T1>& subscripts)
     
     U_M_mem += 3; // next column
     
-    arma_debug_check( ((row >= s_n_rows) || (col >= s_n_cols) || (slice >= s_n_slices)), "sub2ind(): subscript out of range" );
+    arma_conform_check( ((row >= s_n_rows) || (col >= s_n_cols) || (slice >= s_n_slices)), "sub2ind(): subscript out of range" );
     
     out_mem[count] = uword( (slice * s_n_rows * s_n_cols) + (col * s_n_rows) + row );
     }
@@ -577,7 +577,7 @@ enable_if2
   >::result
 affmul(const T1& A, const T2& B)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Glue<T1, T2, glue_affmul>(A,B);
   }

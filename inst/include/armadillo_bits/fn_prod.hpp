@@ -34,7 +34,7 @@ inline
 typename enable_if2< is_arma_type<T1>::value && resolves_to_vector<T1>::yes, typename T1::elem_type >::result
 prod(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return op_prod::prod(X);
   }
@@ -47,7 +47,7 @@ arma_inline
 typename enable_if2< is_arma_type<T1>::value && resolves_to_vector<T1>::no, const Op<T1, op_prod> >::result
 prod(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_prod>(X, 0, 0);
   }
@@ -60,7 +60,7 @@ arma_inline
 typename enable_if2< is_arma_type<T1>::value, const Op<T1, op_prod> >::result
 prod(const T1& X, const uword dim)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_prod>(X, dim, 0);
   }

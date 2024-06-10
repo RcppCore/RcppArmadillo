@@ -88,7 +88,7 @@ struct Proxy_fixed
   inline explicit Proxy_fixed(const T1& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   //// this may require T1::n_elem etc to be declared as static constexpr inline variables (C++17)
@@ -173,7 +173,7 @@ struct Proxy< Mat<eT> >
   inline explicit Proxy(const Mat<eT>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return Q.n_rows; }
@@ -220,7 +220,7 @@ struct Proxy< Col<eT> >
   inline explicit Proxy(const Col<eT>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return Q.n_rows; }
@@ -267,7 +267,7 @@ struct Proxy< Row<eT> >
   inline explicit Proxy(const Row<eT>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   constexpr   uword get_n_rows() const { return 1;        }
@@ -314,7 +314,7 @@ struct Proxy< Gen<T1, gen_type> >
   inline explicit Proxy(const Gen<T1, gen_type>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return (is_row ? 1 : Q.n_rows);                           }
@@ -361,7 +361,7 @@ struct Proxy< eOp<T1, eop_type> >
   inline explicit Proxy(const eOp<T1, eop_type>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return is_row ? 1 : Q.get_n_rows(); }
@@ -408,7 +408,7 @@ struct Proxy< eGlue<T1, T2, eglue_type> >
   inline explicit Proxy(const eGlue<T1, T2, eglue_type>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return is_row ? 1 : Q.get_n_rows(); }
@@ -455,7 +455,7 @@ struct Proxy< Op<T1, op_type> >
   inline explicit Proxy(const Op<T1, op_type>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return is_row ? 1 : Q.n_rows; }
@@ -502,7 +502,7 @@ struct Proxy< Glue<T1, T2, glue_type> >
   inline explicit Proxy(const Glue<T1, T2, glue_type>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
 
   arma_inline uword get_n_rows() const { return is_row ? 1 : Q.n_rows; }
@@ -558,9 +558,9 @@ struct Proxy< Glue<T1, T2, glue_min> >
     , P1(X.A)
     , P2(X.B)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     
-    arma_debug_assert_same_size(P1, P2, "element-wise min()");
+    arma_conform_assert_same_size(P1, P2, "element-wise min()");
     }
   
   arma_inline uword get_n_rows() const { return is_row ? 1 : P1.get_n_rows(); }
@@ -616,9 +616,9 @@ struct Proxy< Glue<T1, T2, glue_max> >
     , P1(X.A)
     , P2(X.B)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     
-    arma_debug_assert_same_size(P1, P2, "element-wise max()");
+    arma_conform_assert_same_size(P1, P2, "element-wise max()");
     }
   
   arma_inline uword get_n_rows() const { return is_row ? 1 : P1.get_n_rows(); }
@@ -665,7 +665,7 @@ struct Proxy< mtOp<out_eT, T1, op_type> >
   inline explicit Proxy(const mtOp<out_eT, T1, op_type>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return is_row ? 1 : Q.n_rows; }
@@ -712,7 +712,7 @@ struct Proxy< mtGlue<out_eT, T1, T2, glue_type> >
   inline explicit Proxy(const mtGlue<out_eT, T1, T2, glue_type>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return is_row ? 1 : Q.n_rows; }
@@ -759,7 +759,7 @@ struct Proxy< CubeToMatOp<T1, op_type> >
   inline explicit Proxy(const CubeToMatOp<T1, op_type>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return is_row ? 1 : Q.n_rows; }
@@ -808,7 +808,7 @@ struct Proxy< CubeToMatOp<T1, op_vectorise_cube_col> >
     : U(A.m)
     , Q(const_cast<elem_type*>(U.M.memptr()), U.M.n_elem, 1, false, true)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return Q.n_rows; }
@@ -855,7 +855,7 @@ struct Proxy< SpToDOp<T1, op_type> >
   inline explicit Proxy(const SpToDOp<T1, op_type>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return is_row ? 1 : Q.n_rows; }
@@ -904,7 +904,7 @@ struct Proxy< SpToDOp<T1, op_nonzeros_spmat> >
     : U(A.m)
     , Q(const_cast<elem_type*>(U.M.values), U.M.n_nonzero, 1, false, true)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return Q.n_rows; }
@@ -914,6 +914,53 @@ struct Proxy< SpToDOp<T1, op_nonzeros_spmat> >
   arma_inline elem_type operator[] (const uword i)              const { return Q[i];        }
   arma_inline elem_type at         (const uword r, const uword) const { return Q[r];        }
   arma_inline elem_type at_alt     (const uword i)              const { return Q.at_alt(i); }
+  
+  arma_inline         ea_type         get_ea() const { return Q.memptr(); }
+  arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
+  
+  template<typename eT2>
+  constexpr bool is_alias(const Mat<eT2>&) const { return false; }
+  
+  template<typename eT2>
+  constexpr bool has_overlap(const subview<eT2>&) const { return false; }
+  
+  arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
+  };
+
+
+
+template<typename out_eT, typename T1, typename op_type>
+struct Proxy< mtSpToDOp<out_eT, T1, op_type> >
+  {
+  typedef          out_eT                       elem_type;
+  typedef typename get_pod_type<out_eT>::result pod_type;
+  typedef          Mat<out_eT>                  stored_type;
+  typedef          const elem_type*             ea_type;
+  typedef          const Mat<out_eT>&           aligned_ea_type;
+  
+  static constexpr bool use_at      = false;
+  static constexpr bool use_mp      = false;
+  static constexpr bool has_subview = false;
+  
+  static constexpr bool is_row  = mtSpToDOp<out_eT, T1, op_type>::is_row;
+  static constexpr bool is_col  = mtSpToDOp<out_eT, T1, op_type>::is_col;
+  static constexpr bool is_xvec = mtSpToDOp<out_eT, T1, op_type>::is_xvec;
+  
+  arma_aligned const Mat<out_eT> Q;
+  
+  inline explicit Proxy(const mtSpToDOp<out_eT, T1, op_type>& A)
+    : Q(A)
+    {
+    arma_debug_sigprint();
+    }
+  
+  arma_inline uword get_n_rows() const { return is_row ? 1 : Q.n_rows; }
+  arma_inline uword get_n_cols() const { return is_col ? 1 : Q.n_cols; }
+  arma_inline uword get_n_elem() const { return Q.n_elem;              }
+  
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
+  arma_inline elem_type at         (const uword r, const uword c) const { return Q.at(r, c);  }
+  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
@@ -951,7 +998,7 @@ struct Proxy< SpToDGlue<T1, T2, glue_type> >
   inline explicit Proxy(const SpToDGlue<T1, T2, glue_type>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
 
   arma_inline uword get_n_rows() const { return is_row ? 1 : Q.n_rows; }
@@ -998,7 +1045,7 @@ struct Proxy< subview<eT> >
   inline explicit Proxy(const subview<eT>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return Q.n_rows; }
@@ -1045,7 +1092,7 @@ struct Proxy< subview_col<eT> >
   inline explicit Proxy(const subview_col<eT>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return Q.n_rows; }
@@ -1094,7 +1141,7 @@ struct Proxy< subview_cols<eT> >
     : sv(A)
     , Q ( const_cast<eT*>( A.colptr(0) ), A.n_rows, A.n_cols, false, false )
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return Q.n_rows; }
@@ -1141,7 +1188,7 @@ struct Proxy< subview_row<eT> >
   inline explicit Proxy(const subview_row<eT>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   constexpr   uword get_n_rows() const { return 1;        }
@@ -1190,21 +1237,21 @@ struct Proxy< subview_elem1<eT,T1> >
     : Q(A)
     , R(A.a.get_ref())
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     
     const bool R_is_vec   = ((R.get_n_rows() == 1) || (R.get_n_cols() == 1));
     const bool R_is_empty = (R.get_n_elem() == 0);
     
-    arma_debug_check( ((R_is_vec == false) && (R_is_empty == false)), "Mat::elem(): given object must be a vector" );
+    arma_conform_check( ((R_is_vec == false) && (R_is_empty == false)), "Mat::elem(): given object must be a vector" );
     }
   
   arma_inline uword get_n_rows() const { return R.get_n_elem(); }
   constexpr   uword get_n_cols() const { return 1;              }
   arma_inline uword get_n_elem() const { return R.get_n_elem(); }
   
-  arma_inline elem_type operator[] (const uword i)              const { const uword ii = (Proxy<T1>::use_at) ? R.at(i,0) : R[i]; arma_debug_check_bounds( (ii >= Q.m.n_elem), "Mat::elem(): index out of bounds" ); return Q.m[ii]; }
-  arma_inline elem_type at         (const uword r, const uword) const { const uword ii = (Proxy<T1>::use_at) ? R.at(r,0) : R[r]; arma_debug_check_bounds( (ii >= Q.m.n_elem), "Mat::elem(): index out of bounds" ); return Q.m[ii]; }
-  arma_inline elem_type at_alt     (const uword i)              const { const uword ii = (Proxy<T1>::use_at) ? R.at(i,0) : R[i]; arma_debug_check_bounds( (ii >= Q.m.n_elem), "Mat::elem(): index out of bounds" ); return Q.m[ii]; }
+  arma_inline elem_type operator[] (const uword i)              const { const uword ii = (Proxy<T1>::use_at) ? R.at(i,0) : R[i]; arma_conform_check_bounds( (ii >= Q.m.n_elem), "Mat::elem(): index out of bounds" ); return Q.m[ii]; }
+  arma_inline elem_type at         (const uword r, const uword) const { const uword ii = (Proxy<T1>::use_at) ? R.at(r,0) : R[r]; arma_conform_check_bounds( (ii >= Q.m.n_elem), "Mat::elem(): index out of bounds" ); return Q.m[ii]; }
+  arma_inline elem_type at_alt     (const uword i)              const { const uword ii = (Proxy<T1>::use_at) ? R.at(i,0) : R[i]; arma_conform_check_bounds( (ii >= Q.m.n_elem), "Mat::elem(): index out of bounds" ); return Q.m[ii]; }
   
   arma_inline         ea_type         get_ea() const { return (*this); }
   arma_inline aligned_ea_type get_aligned_ea() const { return (*this); }
@@ -1242,7 +1289,7 @@ struct Proxy< subview_elem2<eT,T1,T2> >
   inline explicit Proxy(const subview_elem2<eT,T1,T2>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return Q.n_rows; }
@@ -1289,7 +1336,7 @@ struct Proxy< diagview<eT> >
   inline explicit Proxy(const diagview<eT>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return Q.n_rows; }
@@ -1345,7 +1392,7 @@ struct Proxy_diagvec_mat< Op<T1, op_diagvec> >
   inline explicit Proxy_diagvec_mat(const Op<T1, op_diagvec>& A)
     : R(A.m), Q( R.diag() )
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return Q.n_rows; }
@@ -1400,7 +1447,7 @@ struct Proxy_diagvec_expr< Op<T1, op_diagvec> >
   inline explicit Proxy_diagvec_expr(const Op<T1, op_diagvec>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return Q.n_rows; }
@@ -1445,7 +1492,7 @@ struct Proxy< Op<T1, op_diagvec> >
   inline explicit Proxy(const Op<T1, op_diagvec>& A)
     : Proxy_diagvec(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   };
 
@@ -1473,7 +1520,7 @@ struct Proxy< Op<T1, op_diagvec2> >
   inline explicit Proxy(const Op<T1, op_diagvec2>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return Q.n_rows; }
@@ -1530,7 +1577,7 @@ struct Proxy_xtrans_default< Op<T1, op_htrans> >
     : U(A.m)
     , Q(U.M)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline         ea_type         get_ea() const { return Q; }
@@ -1571,7 +1618,7 @@ struct Proxy_xtrans_default< Op<T1, op_strans> >
     : U(A.m)
     , Q(U.M)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline         ea_type         get_ea() const { return Q; }
@@ -1621,7 +1668,7 @@ struct Proxy_xtrans_vector< Op<T1, op_htrans> >
     : U(A.m)
     , Q(const_cast<elem_type*>(U.M.memptr()), U.M.n_cols, U.M.n_rows, false, false)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
@@ -1663,7 +1710,7 @@ struct Proxy_xtrans_vector< Op<T1, op_strans> >
     : U(A.m)
     , Q(const_cast<elem_type*>(U.M.memptr()), U.M.n_cols, U.M.n_rows, false, false)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
@@ -1728,7 +1775,7 @@ struct Proxy< Op<T1, op_htrans> >
   inline explicit Proxy(const Op<T1, op_htrans>& A)
     : Proxy_xtrans(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return is_row ? 1 : Q.n_rows; }
@@ -1790,7 +1837,7 @@ struct Proxy< Op<T1, op_strans> >
   inline explicit Proxy(const Op<T1, op_strans>& A)
     : Proxy_xtrans(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return is_row ? 1 : Q.n_rows; }
@@ -1837,7 +1884,7 @@ struct Proxy_subview_row_htrans_cx
   inline explicit Proxy_subview_row_htrans_cx(const Op<subview_row<eT>, op_htrans>& A)
     : Q(A.m)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   template<typename eT2>
@@ -1871,7 +1918,7 @@ struct Proxy_subview_row_htrans_non_cx
   inline explicit Proxy_subview_row_htrans_non_cx(const Op<subview_row<eT>, op_htrans>& A)
     : Q(A.m)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   template<typename eT2>
@@ -1931,7 +1978,7 @@ struct Proxy< Op<subview_row<eT>, op_htrans> >
   inline explicit Proxy(const Op<subview_row<eT>, op_htrans>& A)
     : Proxy_sv_row_ht(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return Q.n_rows; }
@@ -1978,7 +2025,7 @@ struct Proxy< Op<subview_row<eT>, op_strans> >
   inline explicit Proxy(const Op<subview_row<eT>, op_strans>& A)
     : Q(A.m)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return Q.n_rows; }
@@ -2029,7 +2076,7 @@ struct Proxy< Op< Row< std::complex<T> >, op_htrans> >
     : Q  (A.m.memptr(), A.m.n_rows, A.m.n_cols)
     , src(A.m)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return Q.n_rows; }
@@ -2080,7 +2127,7 @@ struct Proxy< Op< Col< std::complex<T> >, op_htrans> >
     : Q  (A.m.memptr(), A.m.n_rows, A.m.n_cols)
     , src(A.m)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   constexpr   uword get_n_rows() const { return 1;        }
@@ -2131,7 +2178,7 @@ struct Proxy< Op< subview_col< std::complex<T> >, op_htrans> >
     : Q  (A.m.colptr(0), A.m.n_rows, A.m.n_cols)
     , src(A.m)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   constexpr   uword get_n_rows() const { return 1;        }
@@ -2181,7 +2228,7 @@ struct Proxy< Op<T1, op_htrans2> >
     : R(A.m)
     , Q(R, A.aux)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return is_row ? 1 : Q.get_n_rows(); }
@@ -2228,7 +2275,7 @@ struct Proxy< subview_row_strans<eT> >
   inline explicit Proxy(const subview_row_strans<eT>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return Q.n_rows; }
@@ -2275,7 +2322,7 @@ struct Proxy< subview_row_htrans<eT> >
   inline explicit Proxy(const subview_row_htrans<eT>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return Q.n_rows; }
@@ -2322,7 +2369,7 @@ struct Proxy< xtrans_mat<eT, do_conj> >
   inline explicit Proxy(const xtrans_mat<eT, do_conj>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return Q.n_rows; }
@@ -2369,7 +2416,7 @@ struct Proxy< xvec_htrans<eT> >
   inline explicit Proxy(const xvec_htrans<eT>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return Q.n_rows; }
@@ -2426,7 +2473,7 @@ struct Proxy_vectorise_col_mat< Op<T1, op_vectorise_col> >
     : U(A.m)
     , Q(const_cast<elem_type*>(U.M.memptr()), U.M.n_elem, 1, false, false)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return Q.n_rows; }
@@ -2483,7 +2530,7 @@ struct Proxy_vectorise_col_expr< Op<T1, op_vectorise_col> >
     : Q(A)
     , R(A.m)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows() const { return R.get_n_elem(); }
@@ -2528,7 +2575,7 @@ struct Proxy< Op<T1, op_vectorise_col> >
   inline explicit Proxy(const Op<T1, op_vectorise_col>& A)
     : Proxy_vectorise_col(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   };
 

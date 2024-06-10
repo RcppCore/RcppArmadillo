@@ -124,7 +124,7 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   inline SpMat& operator%=(const SpMat& m);
   inline SpMat& operator/=(const SpMat& m);
   
-  template<typename T1> inline explicit    SpMat(const Base<eT, T1>& m);
+  template<typename T1> inline             SpMat(const Base<eT, T1>& m);
   template<typename T1> inline SpMat& operator= (const Base<eT, T1>& m);
   template<typename T1> inline SpMat& operator+=(const Base<eT, T1>& m);
   template<typename T1> inline SpMat& operator-=(const Base<eT, T1>& m);
@@ -132,7 +132,7 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   template<typename T1> inline SpMat& operator/=(const Base<eT, T1>& m);
   template<typename T1> inline SpMat& operator%=(const Base<eT, T1>& m);
   
-  template<typename T1> inline explicit    SpMat(const Op<T1, op_diagmat>& expr);
+  template<typename T1> inline             SpMat(const Op<T1, op_diagmat>& expr);
   template<typename T1> inline SpMat& operator= (const Op<T1, op_diagmat>& expr);
   template<typename T1> inline SpMat& operator+=(const Op<T1, op_diagmat>& expr);
   template<typename T1> inline SpMat& operator-=(const Op<T1, op_diagmat>& expr);
@@ -140,8 +140,8 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   template<typename T1> inline SpMat& operator/=(const Op<T1, op_diagmat>& expr);
   template<typename T1> inline SpMat& operator%=(const Op<T1, op_diagmat>& expr);
   
-  //! explicit specification of sparse +/- scalar
-  template<typename T1, typename op_type> inline explicit SpMat(const SpToDOp<T1, op_type>& expr);
+  // template<typename T1, typename op_type> inline SpMat(const   SpToDOp<    T1, op_type>& expr);
+  // template<typename T1, typename op_type> inline SpMat(const mtSpToDOp<eT, T1, op_type>& expr);
   
   //! construction of complex matrix out of two non-complex matrices
   template<typename T1, typename T2>
@@ -695,7 +695,7 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   // 1: CSC needs to be updated from cache (ie. cache has more recent data)
   // 2: no update required                 (ie. CSC and cache contain the same data)
   
-  #if (!defined(ARMA_DONT_USE_STD_MUTEX))
+  #if defined(ARMA_USE_STD_MUTEX)
   arma_aligned mutable std::mutex cache_mutex;
   #endif
   

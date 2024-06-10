@@ -27,7 +27,7 @@ inline
 typename enable_if2< is_arma_type<T1>::value, uword >::result
 numel(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const Proxy<T1> P(X);
   
@@ -42,7 +42,7 @@ inline
 typename enable_if2< is_arma_cube_type<T1>::value, uword >::result
 numel(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const ProxyCube<T1> P(X);
   
@@ -57,7 +57,7 @@ inline
 typename enable_if2< is_arma_sparse_type<T1>::value, uword >::result
 numel(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const SpProxy<T1> P(X);
   
@@ -72,7 +72,7 @@ inline
 uword
 numel(const field<oT>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return X.n_elem;
   }
@@ -85,7 +85,7 @@ inline
 uword
 numel(const subview_field<oT>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return X.n_elem;
   }

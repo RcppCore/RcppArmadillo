@@ -343,6 +343,19 @@ struct is_SpToDOp< const SpToDOp<T1,op_type> >
 
 
 template<typename T>
+struct is_mtSpToDOp
+  { static constexpr bool value = false; };
+ 
+template<typename eT, typename T1, typename op_type>
+struct is_mtSpToDOp< mtSpToDOp<eT, T1, op_type> >
+  { static constexpr bool value = true; };
+ 
+template<typename eT, typename T1, typename op_type>
+struct is_mtSpToDOp< const mtSpToDOp<eT, T1, op_type> >
+  { static constexpr bool value = true; };
+
+
+template<typename T>
 struct is_SpToDGlue
   { static constexpr bool value = false; };
  
@@ -468,23 +481,6 @@ struct is_op_diagmat< const Op<T1,op_diagmat> >
 
 
 template<typename T>
-struct is_Mat_trans
-  { static constexpr bool value = false; };
-
-template<typename T1>
-struct is_Mat_trans< Op<T1,op_htrans> >
-  { static constexpr bool value = is_Mat<T1>::value; };
-
-template<typename T1>
-struct is_Mat_trans< Op<T1,op_htrans2> >
-  { static constexpr bool value = is_Mat<T1>::value; };
-
-
-//
-//
-
-
-template<typename T>
 struct is_GenCube
   { static constexpr bool value = false; };
  
@@ -574,6 +570,7 @@ struct is_arma_type2
   || is_CubeToMatOp<T1>::value
   || is_SpToDOp<T1>::value
   || is_SpToDGlue<T1>::value
+  || is_mtSpToDOp<T1>::value
   ;
   };
 

@@ -28,7 +28,7 @@ inline
 void
 glue_kron::direct_kron(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword A_rows = A.n_rows;
   const uword A_cols = A.n_cols;
@@ -58,7 +58,7 @@ inline
 void
 glue_kron::direct_kron(Mat< std::complex<T> >& out, const Mat< std::complex<T> >& A, const Mat<T>& B)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename std::complex<T> eT;
   
@@ -92,7 +92,7 @@ inline
 void
 glue_kron::direct_kron(Mat< std::complex<T> >& out, const Mat<T>& A, const Mat< std::complex<T> >& B)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword A_rows = A.n_rows;
   const uword A_cols = A.n_cols;
@@ -121,7 +121,7 @@ inline
 void
 glue_kron::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_kron>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   

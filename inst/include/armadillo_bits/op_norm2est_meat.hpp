@@ -25,7 +25,7 @@ template<typename eT>
 inline
 norm2est_randu_filler<eT>::norm2est_randu_filler()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename std::mt19937_64::result_type local_seed_type;
   
@@ -42,7 +42,7 @@ inline
 void
 norm2est_randu_filler<eT>::fill(eT* mem, const uword N)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   for(uword i=0; i<N; ++i)  { mem[i] = eT( local_u_distr(local_engine) ); }
   }
@@ -55,7 +55,7 @@ template<typename T>
 inline
 norm2est_randu_filler< std::complex<T> >::norm2est_randu_filler()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename std::mt19937_64::result_type local_seed_type;
   
@@ -72,7 +72,7 @@ inline
 void
 norm2est_randu_filler< std::complex<T> >::fill(std::complex<T>* mem, const uword N)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   for(uword i=0; i<N; ++i)
     {
@@ -101,13 +101,13 @@ op_norm2est::norm2est
   const uword                             max_iter
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::pod_type   T;
   typedef typename T1::elem_type eT;
   
-  arma_debug_check( (tolerance <      T(0)), "norm2est(): parameter 'tolerance' must be > 0" );
-  arma_debug_check( (max_iter  == uword(0)), "norm2est(): parameter 'max_iter' must be > 0"  );
+  arma_conform_check( (tolerance <      T(0)), "norm2est(): parameter 'tolerance' must be > 0" );
+  arma_conform_check( (max_iter  == uword(0)), "norm2est(): parameter 'max_iter' must be > 0"  );
   
   const T tol = (tolerance == T(0)) ? T(1e-6) : T(tolerance);
   
@@ -116,7 +116,7 @@ op_norm2est::norm2est
   
   if(A.n_elem == 0)  { return T(0); }
   
-  if(A.internal_has_nonfinite())  { arma_debug_warn_level(1, "norm2est(): given matrix has non-finite elements"); }
+  if(A.internal_has_nonfinite())  { arma_conform_warn(1, "norm2est(): given matrix has non-finite elements"); }
   
   if((A.n_rows == 1) || (A.n_cols == 1))  { return op_norm::vec_norm_2( Proxy< Mat<eT> >(A) ); }
   
@@ -132,7 +132,7 @@ op_norm2est::norm2est
   
   for(uword i=0; i<max_iter; ++i)
     {
-    arma_extra_debug_print(arma_str::format("norm2est(): iteration: %u") % i);
+    arma_debug_print(arma_str::format("norm2est(): iteration: %u") % i);
     
     x = A * y;
     
@@ -152,8 +152,8 @@ op_norm2est::norm2est
     est_old = est_cur;
     est_cur = op_norm::vec_norm_2( Proxy< Col<eT> >(y) );
     
-    arma_extra_debug_print(arma_str::format("norm2est(): est_old: %e") % est_old);
-    arma_extra_debug_print(arma_str::format("norm2est(): est_cur: %e") % est_cur);
+    arma_debug_print(arma_str::format("norm2est(): est_old: %e") % est_old);
+    arma_debug_print(arma_str::format("norm2est(): est_cur: %e") % est_cur);
     
     if(arma_isfinite(est_cur) == false)  { return est_old; }
     
@@ -181,13 +181,13 @@ op_norm2est::norm2est
   const uword                               max_iter
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::pod_type   T;
   typedef typename T1::elem_type eT;
   
-  arma_debug_check( (tolerance <      T(0)), "norm2est(): parameter 'tolerance' must be > 0" );
-  arma_debug_check( (max_iter  == uword(0)), "norm2est(): parameter 'max_iter' must be > 0"  );
+  arma_conform_check( (tolerance <      T(0)), "norm2est(): parameter 'tolerance' must be > 0" );
+  arma_conform_check( (max_iter  == uword(0)), "norm2est(): parameter 'max_iter' must be > 0"  );
   
   const T tol = (tolerance == T(0)) ? T(1e-6) : T(tolerance);
   
@@ -196,7 +196,7 @@ op_norm2est::norm2est
   
   if(A.n_nonzero == 0)  { return T(0); }
   
-  if(A.internal_has_nonfinite())  { arma_debug_warn_level(1, "norm2est(): given matrix has non-finite elements"); }
+  if(A.internal_has_nonfinite())  { arma_conform_warn(1, "norm2est(): given matrix has non-finite elements"); }
   
   if((A.n_rows == 1) || (A.n_cols == 1))  { return spop_norm::vec_norm_k(A.values, A.n_nonzero, 2); }
   
@@ -212,7 +212,7 @@ op_norm2est::norm2est
   
   for(uword i=0; i<max_iter; ++i)
     {
-    arma_extra_debug_print(arma_str::format("norm2est(): iteration: %u") % i);
+    arma_debug_print(arma_str::format("norm2est(): iteration: %u") % i);
     
     x = A * y;
     
@@ -232,8 +232,8 @@ op_norm2est::norm2est
     est_old = est_cur;
     est_cur = op_norm::vec_norm_2( Proxy< Mat<eT> >(y) );
     
-    arma_extra_debug_print(arma_str::format("norm2est(): est_old: %e") % est_old);
-    arma_extra_debug_print(arma_str::format("norm2est(): est_cur: %e") % est_cur);
+    arma_debug_print(arma_str::format("norm2est(): est_old: %e") % est_old);
+    arma_debug_print(arma_str::format("norm2est(): est_cur: %e") % est_cur);
     
     if(arma_isfinite(est_cur) == false)  { return est_old; }
     

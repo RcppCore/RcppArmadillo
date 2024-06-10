@@ -24,7 +24,7 @@ template<typename eT>
 inline
 diagview<eT>::~diagview()
   {
-  arma_extra_debug_sigprint_this(this);
+  arma_debug_sigprint_this(this);
   }
 
 
@@ -38,7 +38,7 @@ diagview<eT>::diagview(const Mat<eT>& in_m, const uword in_row_offset, const uwo
   , n_rows    (in_len       )
   , n_elem    (in_len       )
   {
-  arma_extra_debug_sigprint_this(this);
+  arma_debug_sigprint_this(this);
   }
 
 
@@ -52,7 +52,7 @@ diagview<eT>::diagview(const diagview<eT>& in)
   , n_rows    (in.n_rows    )
   , n_elem    (in.n_elem    )
   {
-  arma_extra_debug_sigprint(arma_str::format("this = %x   in = %x") % this % &in);
+  arma_debug_sigprint(arma_str::format("this: %x; in: %x") % this % &in);
   }
 
 
@@ -66,7 +66,7 @@ diagview<eT>::diagview(diagview<eT>&& in)
   , n_rows    (in.n_rows    )
   , n_elem    (in.n_elem    )
   {
-  arma_extra_debug_sigprint(arma_str::format("this = %x   in = %x") % this % &in);
+  arma_debug_sigprint(arma_str::format("this: %x; in: %x") % this % &in);
   
   // for paranoia
   
@@ -84,11 +84,11 @@ inline
 void
 diagview<eT>::operator= (const diagview<eT>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   diagview<eT>& d = *this;
   
-  arma_debug_check( (d.n_elem != x.n_elem), "diagview: diagonals have incompatible lengths" );
+  arma_conform_check( (d.n_elem != x.n_elem), "diagview: diagonals have incompatible lengths" );
   
         Mat<eT>& d_m = const_cast< Mat<eT>& >(d.m);
   const Mat<eT>& x_m = x.m;
@@ -132,7 +132,7 @@ inline
 void
 diagview<eT>::operator+=(const eT val)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   Mat<eT>& t_m = const_cast< Mat<eT>& >(m);
   
@@ -153,7 +153,7 @@ inline
 void
 diagview<eT>::operator-=(const eT val)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   Mat<eT>& t_m = const_cast< Mat<eT>& >(m);
   
@@ -174,7 +174,7 @@ inline
 void
 diagview<eT>::operator*=(const eT val)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   Mat<eT>& t_m = const_cast< Mat<eT>& >(m);
   
@@ -195,7 +195,7 @@ inline
 void
 diagview<eT>::operator/=(const eT val)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   Mat<eT>& t_m = const_cast< Mat<eT>& >(m);
   
@@ -218,7 +218,7 @@ inline
 void
 diagview<eT>::operator= (const Base<eT,T1>& o)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   diagview<eT>& d = *this;
   
@@ -230,7 +230,7 @@ diagview<eT>::operator= (const Base<eT,T1>& o)
     
   const Proxy<T1> P( o.get_ref() );
   
-  arma_debug_check
+  arma_conform_check
     (
     ( (d_n_elem != P.get_n_elem()) || ((P.get_n_rows() != 1) && (P.get_n_cols() != 1)) ),
     "diagview: given object has incompatible size"
@@ -238,7 +238,7 @@ diagview<eT>::operator= (const Base<eT,T1>& o)
   
   const bool is_alias = P.is_alias(d_m);
   
-  if(is_alias)  { arma_extra_debug_print("aliasing detected"); }
+  if(is_alias)  { arma_debug_print("aliasing detected"); }
   
   if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::use_at) || (is_alias) )
     {
@@ -291,7 +291,7 @@ inline
 void
 diagview<eT>::operator+=(const Base<eT,T1>& o)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   diagview<eT>& d = *this;
   
@@ -303,7 +303,7 @@ diagview<eT>::operator+=(const Base<eT,T1>& o)
     
   const Proxy<T1> P( o.get_ref() );
   
-  arma_debug_check
+  arma_conform_check
     (
     ( (d_n_elem != P.get_n_elem()) || ((P.get_n_rows() != 1) && (P.get_n_cols() != 1)) ),
     "diagview: given object has incompatible size"
@@ -311,7 +311,7 @@ diagview<eT>::operator+=(const Base<eT,T1>& o)
   
   const bool is_alias = P.is_alias(d_m);
   
-  if(is_alias)  { arma_extra_debug_print("aliasing detected"); }
+  if(is_alias)  { arma_debug_print("aliasing detected"); }
   
   if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::use_at) || (is_alias) )
     {
@@ -364,7 +364,7 @@ inline
 void
 diagview<eT>::operator-=(const Base<eT,T1>& o)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   diagview<eT>& d = *this;
   
@@ -376,7 +376,7 @@ diagview<eT>::operator-=(const Base<eT,T1>& o)
     
   const Proxy<T1> P( o.get_ref() );
   
-  arma_debug_check
+  arma_conform_check
     (
     ( (d_n_elem != P.get_n_elem()) || ((P.get_n_rows() != 1) && (P.get_n_cols() != 1)) ),
     "diagview: given object has incompatible size"
@@ -384,7 +384,7 @@ diagview<eT>::operator-=(const Base<eT,T1>& o)
   
   const bool is_alias = P.is_alias(d_m);
   
-  if(is_alias)  { arma_extra_debug_print("aliasing detected"); }
+  if(is_alias)  { arma_debug_print("aliasing detected"); }
   
   if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::use_at) || (is_alias) )
     {
@@ -437,7 +437,7 @@ inline
 void
 diagview<eT>::operator%=(const Base<eT,T1>& o)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   diagview<eT>& d = *this;
   
@@ -449,7 +449,7 @@ diagview<eT>::operator%=(const Base<eT,T1>& o)
     
   const Proxy<T1> P( o.get_ref() );
   
-  arma_debug_check
+  arma_conform_check
     (
     ( (d_n_elem != P.get_n_elem()) || ((P.get_n_rows() != 1) && (P.get_n_cols() != 1)) ),
     "diagview: given object has incompatible size"
@@ -457,7 +457,7 @@ diagview<eT>::operator%=(const Base<eT,T1>& o)
   
   const bool is_alias = P.is_alias(d_m);
   
-  if(is_alias)  { arma_extra_debug_print("aliasing detected"); }
+  if(is_alias)  { arma_debug_print("aliasing detected"); }
   
   if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::use_at) || (is_alias) )
     {
@@ -510,7 +510,7 @@ inline
 void
 diagview<eT>::operator/=(const Base<eT,T1>& o)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   diagview<eT>& d = *this;
   
@@ -522,7 +522,7 @@ diagview<eT>::operator/=(const Base<eT,T1>& o)
     
   const Proxy<T1> P( o.get_ref() );
   
-  arma_debug_check
+  arma_conform_check
     (
     ( (d_n_elem != P.get_n_elem()) || ((P.get_n_rows() != 1) && (P.get_n_cols() != 1)) ),
     "diagview: given object has incompatible size"
@@ -530,7 +530,7 @@ diagview<eT>::operator/=(const Base<eT,T1>& o)
   
   const bool is_alias = P.is_alias(d_m);
   
-  if(is_alias)  { arma_extra_debug_print("aliasing detected"); }
+  if(is_alias)  { arma_debug_print("aliasing detected"); }
   
   if( (is_Mat<typename Proxy<T1>::stored_type>::value) || (Proxy<T1>::use_at) || (is_alias) )
     {
@@ -583,7 +583,7 @@ inline
 void
 diagview<eT>::extract(Mat<eT>& out, const diagview<eT>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // NOTE: we're assuming that the matrix has already been set to the correct size and there is no aliasing;
   // size setting and alias checking is done by either the Mat contructor or operator=()
@@ -620,9 +620,9 @@ inline
 void
 diagview<eT>::plus_inplace(Mat<eT>& out, const diagview<eT>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_assert_same_size(out.n_rows, out.n_cols, in.n_rows, in.n_cols, "addition");
+  arma_conform_assert_same_size(out.n_rows, out.n_cols, in.n_rows, in.n_cols, "addition");
   
   const Mat<eT>& in_m = in.m;
   
@@ -656,9 +656,9 @@ inline
 void
 diagview<eT>::minus_inplace(Mat<eT>& out, const diagview<eT>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_assert_same_size(out.n_rows, out.n_cols, in.n_rows, in.n_cols, "subtraction");
+  arma_conform_assert_same_size(out.n_rows, out.n_cols, in.n_rows, in.n_cols, "subtraction");
   
   const Mat<eT>& in_m = in.m;
   
@@ -692,9 +692,9 @@ inline
 void
 diagview<eT>::schur_inplace(Mat<eT>& out, const diagview<eT>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_assert_same_size(out.n_rows, out.n_cols, in.n_rows, in.n_cols, "element-wise multiplication");
+  arma_conform_assert_same_size(out.n_rows, out.n_cols, in.n_rows, in.n_cols, "element-wise multiplication");
   
   const Mat<eT>& in_m = in.m;
   
@@ -728,9 +728,9 @@ inline
 void
 diagview<eT>::div_inplace(Mat<eT>& out, const diagview<eT>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_assert_same_size(out.n_rows, out.n_cols, in.n_rows, in.n_cols, "element-wise division");
+  arma_conform_assert_same_size(out.n_rows, out.n_cols, in.n_rows, in.n_cols, "element-wise division");
   
   const Mat<eT>& in_m = in.m;
   
@@ -813,7 +813,7 @@ arma_inline
 eT&
 diagview<eT>::operator()(const uword ii)
   {
-  arma_debug_check_bounds( (ii >= n_elem), "diagview::operator(): out of bounds" );
+  arma_conform_check_bounds( (ii >= n_elem), "diagview::operator(): out of bounds" );
   
   return (const_cast< Mat<eT>& >(m)).at(ii+row_offset, ii+col_offset);
   }
@@ -825,7 +825,7 @@ arma_inline
 eT
 diagview<eT>::operator()(const uword ii) const
   {
-  arma_debug_check_bounds( (ii >= n_elem), "diagview::operator(): out of bounds" );
+  arma_conform_check_bounds( (ii >= n_elem), "diagview::operator(): out of bounds" );
   
   return m.at(ii+row_offset, ii+col_offset);
   }
@@ -857,7 +857,7 @@ arma_inline
 eT&
 diagview<eT>::operator()(const uword row, const uword col)
   {
-  arma_debug_check_bounds( ((row >= n_elem) || (col > 0)), "diagview::operator(): out of bounds" );
+  arma_conform_check_bounds( ((row >= n_elem) || (col > 0)), "diagview::operator(): out of bounds" );
   
   return (const_cast< Mat<eT>& >(m)).at(row+row_offset, row+col_offset);
   }
@@ -869,7 +869,7 @@ arma_inline
 eT
 diagview<eT>::operator()(const uword row, const uword col) const
   {
-  arma_debug_check_bounds( ((row >= n_elem) || (col > 0)), "diagview::operator(): out of bounds" );
+  arma_conform_check_bounds( ((row >= n_elem) || (col > 0)), "diagview::operator(): out of bounds" );
   
   return m.at(row+row_offset, row+col_offset);
   }
@@ -881,7 +881,7 @@ inline
 void
 diagview<eT>::replace(const eT old_val, const eT new_val)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   Mat<eT>& x = const_cast< Mat<eT>& >(m);
   
@@ -914,7 +914,7 @@ inline
 void
 diagview<eT>::clean(const typename get_pod_type<eT>::result threshold)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   Mat<eT> tmp(*this);
   
@@ -930,7 +930,7 @@ inline
 void
 diagview<eT>::clamp(const eT min_val, const eT max_val)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   Mat<eT> tmp(*this);
   
@@ -946,7 +946,7 @@ inline
 void
 diagview<eT>::fill(const eT val)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   Mat<eT>& x = const_cast< Mat<eT>& >(m);
   
@@ -965,7 +965,7 @@ inline
 void
 diagview<eT>::zeros()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   (*this).fill(eT(0));
   }
@@ -977,7 +977,7 @@ inline
 void
 diagview<eT>::ones()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   (*this).fill(eT(1));
   }
@@ -989,7 +989,7 @@ inline
 void
 diagview<eT>::randu()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   Mat<eT>& x = const_cast< Mat<eT>& >(m);
   
@@ -1008,7 +1008,7 @@ inline
 void
 diagview<eT>::randn()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   Mat<eT>& x = const_cast< Mat<eT>& >(m);
   

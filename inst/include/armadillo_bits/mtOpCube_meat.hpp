@@ -26,7 +26,7 @@ inline
 mtOpCube<out_eT, T1, op_type>::mtOpCube(const T1& in_m)
   : m(in_m)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   }
   
 
@@ -37,7 +37,7 @@ mtOpCube<out_eT, T1, op_type>::mtOpCube(const T1& in_m, const typename T1::elem_
   : m(in_m)
   , aux(in_aux)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   }
   
 
@@ -50,7 +50,7 @@ mtOpCube<out_eT, T1, op_type>::mtOpCube(const T1& in_m, const uword in_aux_uword
   , aux_uword_b(in_aux_uword_b)
   , aux_uword_c(in_aux_uword_c)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   }
 
 
@@ -64,7 +64,7 @@ mtOpCube<out_eT, T1, op_type>::mtOpCube(const T1& in_m, const typename T1::elem_
   , aux_uword_b(in_aux_uword_b)
   , aux_uword_c(in_aux_uword_c)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   }
 
 
@@ -75,7 +75,7 @@ mtOpCube<out_eT, T1, op_type>::mtOpCube(const char junk, const T1& in_m, const o
   : m(in_m)
   , aux_out_eT(in_aux)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   }
 
@@ -88,7 +88,7 @@ mtOpCube<out_eT, T1, op_type>::mtOpCube(const mtOpCube_dual_aux_indicator&, cons
   , aux       (in_aux_a)
   , aux_out_eT(in_aux_b)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   }
 
 
@@ -97,7 +97,7 @@ template<typename out_eT, typename T1, typename op_type>
 inline
 mtOpCube<out_eT, T1, op_type>::~mtOpCube()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   }
 
 

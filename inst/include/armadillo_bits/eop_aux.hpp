@@ -156,7 +156,7 @@ class eop_aux
   typename arma_real_only<eT>::result
   direct_eps(const eT x)
     {
-    //arma_extra_debug_sigprint();
+    //arma_debug_sigprint();
     
     // acording to IEEE Standard for Floating-Point Arithmetic (IEEE 754)
     // the mantissa length for double is 53 bits = std::numeric_limits<double>::digits
@@ -178,7 +178,7 @@ class eop_aux
   typename arma_real_only<T>::result
   direct_eps(const std::complex<T>& x)
     {
-    //arma_extra_debug_sigprint();
+    //arma_debug_sigprint();
     
     //return std::pow( std::numeric_limits<T>::radix, (std::floor(std::log10(std::abs(x))/std::log10(std::numeric_limits<T>::radix))-(std::numeric_limits<T>::digits-1)) );
     

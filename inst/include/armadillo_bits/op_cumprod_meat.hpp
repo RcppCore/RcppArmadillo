@@ -26,7 +26,7 @@ inline
 void
 op_cumprod::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   uword n_rows = X.n_rows;
   uword n_cols = X.n_cols;
@@ -115,13 +115,13 @@ inline
 void
 op_cumprod::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumprod>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
   const uword dim = in.aux_uword_a;
   
-  arma_debug_check( (dim > 1), "cumprod(): parameter 'dim' must be 0 or 1" );
+  arma_conform_check( (dim > 1), "cumprod(): parameter 'dim' must be 0 or 1" );
   
   const quasi_unwrap<T1> U(in.m);
   
@@ -146,7 +146,7 @@ inline
 void
 op_cumprod_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumprod_vec>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   

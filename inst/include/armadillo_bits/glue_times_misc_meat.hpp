@@ -26,7 +26,7 @@ arma_inline
 typename arma_not_cx<eT>::result
 dense_sparse_helper::dot(const eT* A_mem, const SpMat<eT>& B, const uword col)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
         uword      col_offset = B.col_ptrs[col    ];
   const uword next_col_offset = B.col_ptrs[col + 1];
@@ -57,7 +57,7 @@ arma_inline
 typename arma_cx_only<eT>::result
 dense_sparse_helper::dot(const eT* A_mem, const SpMat<eT>& B, const uword col)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename get_pod_type<eT>::result T;
   
@@ -101,7 +101,7 @@ inline
 void
 glue_times_dense_sparse::apply(Mat<typename T1::elem_type>& out, const SpToDGlue<T1,T2,glue_times_dense_sparse>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -130,7 +130,7 @@ inline
 void
 glue_times_dense_sparse::apply_noalias(Mat<typename T1::elem_type>& out, const T1& x, const T2& y)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -140,7 +140,7 @@ glue_times_dense_sparse::apply_noalias(Mat<typename T1::elem_type>& out, const T
   const unwrap_spmat<T2> UB(y);
   const SpMat<eT>&   B = UB.M;
   
-  arma_debug_assert_mul_size(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "matrix multiplication");
+  arma_conform_assert_mul_size(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "matrix multiplication");
   
   out.set_size(A.n_rows, B.n_cols);
   
@@ -148,13 +148,13 @@ glue_times_dense_sparse::apply_noalias(Mat<typename T1::elem_type>& out, const T
   
   if((resolves_to_rowvector<T1>::value) || (A.n_rows == 1))
     {
-    arma_extra_debug_print("using row vector specialisation");
+    arma_debug_print("using row vector specialisation");
     
     if( (arma_config::openmp) && (mp_thread_limit::in_parallel() == false) && (B.n_cols >= 2) && mp_gate<eT>::eval(B.n_nonzero) )
       {
       #if defined(ARMA_USE_OPENMP)
         {
-        arma_extra_debug_print("openmp implementation");
+        arma_debug_print("openmp implementation");
         
               eT* out_mem = out.memptr();
         const eT*   A_mem =   A.memptr();
@@ -172,7 +172,7 @@ glue_times_dense_sparse::apply_noalias(Mat<typename T1::elem_type>& out, const T
       }
     else
       {
-      arma_extra_debug_print("serial implementation");
+      arma_debug_print("serial implementation");
       
             eT* out_mem = out.memptr();
       const eT*   A_mem =   A.memptr();
@@ -190,7 +190,7 @@ glue_times_dense_sparse::apply_noalias(Mat<typename T1::elem_type>& out, const T
     {
     #if defined(ARMA_USE_OPENMP)
       {
-      arma_extra_debug_print("using parallelised multiplication");
+      arma_debug_print("using parallelised multiplication");
       
       const uword B_n_cols  = B.n_cols;
       const int   n_threads = mp_thread_limit::get();
@@ -213,7 +213,7 @@ glue_times_dense_sparse::apply_noalias(Mat<typename T1::elem_type>& out, const T
     }
   else
     {
-    arma_extra_debug_print("using standard multiplication");
+    arma_debug_print("using standard multiplication");
     
     out.zeros();
     
@@ -246,7 +246,7 @@ inline
 void
 glue_times_dense_sparse::apply_mixed(Mat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result >& out, const T1& X, const T2& Y)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT1;
   typedef typename T2::elem_type eT2;
@@ -321,7 +321,7 @@ inline
 void
 glue_times_sparse_dense::apply(Mat<typename T1::elem_type>& out, const SpToDGlue<T1,T2,glue_times_sparse_dense>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -331,7 +331,7 @@ glue_times_sparse_dense::apply(Mat<typename T1::elem_type>& out, const SpToDGlue
   
   if((sp_strip_trans<T1>::do_htrans && is_cx<eT>::no) || (sp_strip_trans<T1>::do_strans))
     {
-    arma_extra_debug_print("detected non-conjugate transpose of A");
+    arma_debug_print("detected non-conjugate transpose of A");
     
     const sp_strip_trans<T1> x_strip(expr.A);
     
@@ -372,7 +372,7 @@ inline
 void
 glue_times_sparse_dense::apply_noalias(Mat<typename T1::elem_type>& out, const T1& x, const T2& y)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -388,11 +388,11 @@ glue_times_sparse_dense::apply_noalias(Mat<typename T1::elem_type>& out, const T
   const uword B_n_rows = B.n_rows;
   const uword B_n_cols = B.n_cols;
   
-  arma_debug_assert_mul_size(A_n_rows, A_n_cols, B_n_rows, B_n_cols, "matrix multiplication");
+  arma_conform_assert_mul_size(A_n_rows, A_n_cols, B_n_rows, B_n_cols, "matrix multiplication");
   
   if((resolves_to_colvector<T2>::value) || (B_n_cols == 1))
     {
-    arma_extra_debug_print("using column vector specialisation");
+    arma_debug_print("using column vector specialisation");
     
     out.zeros(A_n_rows, 1);
     
@@ -415,7 +415,7 @@ glue_times_sparse_dense::apply_noalias(Mat<typename T1::elem_type>& out, const T
   else
   if(B_n_cols >= (B_n_rows / uword(100)))
     {
-    arma_extra_debug_print("using transpose-based multiplication");
+    arma_debug_print("using transpose-based multiplication");
     
     const SpMat<eT> At = A.st();
     const   Mat<eT> Bt = B.st();
@@ -437,7 +437,7 @@ glue_times_sparse_dense::apply_noalias(Mat<typename T1::elem_type>& out, const T
     }
   else
     {
-    arma_extra_debug_print("using standard multiplication");
+    arma_debug_print("using standard multiplication");
     
     out.zeros(A_n_rows, B_n_cols);
     
@@ -466,7 +466,7 @@ inline
 void
 glue_times_sparse_dense::apply_noalias_trans(Mat<typename T1::elem_type>& out, const T1& x, const T2& y)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -482,15 +482,15 @@ glue_times_sparse_dense::apply_noalias_trans(Mat<typename T1::elem_type>& out, c
   const uword B_n_rows = B.n_rows;
   const uword B_n_cols = B.n_cols;
   
-  arma_debug_assert_mul_size(A_n_cols, A_n_rows, B_n_rows, B_n_cols, "matrix multiplication");
+  arma_conform_assert_mul_size(A_n_cols, A_n_rows, B_n_rows, B_n_cols, "matrix multiplication");
   
   if((resolves_to_colvector<T2>::value) || (B_n_cols == 1))
     {
-    arma_extra_debug_print("using column vector specialisation (avoiding transpose of A)");
+    arma_debug_print("using column vector specialisation (avoiding transpose of A)");
     
     if( (arma_config::openmp) && (mp_thread_limit::in_parallel() == false) && (A_n_cols >= 2) && mp_gate<eT>::eval(A.n_nonzero) )
       {
-      arma_extra_debug_print("opemp implementation");
+      arma_debug_print("opemp implementation");
       
       #if defined(ARMA_USE_OPENMP)
         {
@@ -511,7 +511,7 @@ glue_times_sparse_dense::apply_noalias_trans(Mat<typename T1::elem_type>& out, c
       }
     else
       {
-      arma_extra_debug_print("serial implementation");
+      arma_debug_print("serial implementation");
       
       out.zeros(A_n_cols, 1);
       
@@ -527,7 +527,7 @@ glue_times_sparse_dense::apply_noalias_trans(Mat<typename T1::elem_type>& out, c
   else
   if(B_n_cols >= (B_n_rows / uword(100)))
     {
-    arma_extra_debug_print("using transpose-based multiplication (avoiding transpose of A)");
+    arma_debug_print("using transpose-based multiplication (avoiding transpose of A)");
     
     const Mat<eT> Bt = B.st();
     
@@ -548,7 +548,7 @@ glue_times_sparse_dense::apply_noalias_trans(Mat<typename T1::elem_type>& out, c
     }
   else
     {
-    arma_extra_debug_print("using standard multiplication (avoiding transpose of A)");
+    arma_debug_print("using standard multiplication (avoiding transpose of A)");
     
     out.zeros(A_n_cols, B_n_cols);
     
@@ -577,7 +577,7 @@ inline
 void
 glue_times_sparse_dense::apply_mixed(Mat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result >& out, const T1& X, const T2& Y)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT1;
   typedef typename T2::elem_type eT2;

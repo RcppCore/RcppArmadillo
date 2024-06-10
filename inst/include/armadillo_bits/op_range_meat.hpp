@@ -26,12 +26,12 @@ inline
 void
 op_range::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_range>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
   const uword dim = in.aux_uword_a;
-  arma_debug_check( (dim > 1), "range(): parameter 'dim' must be 0 or 1" );
+  arma_conform_check( (dim > 1), "range(): parameter 'dim' must be 0 or 1" );
   
   const quasi_unwrap<T1> U(in.m);
   const Mat<eT>& X = U.M;
@@ -57,7 +57,7 @@ inline
 void
 op_range::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // TODO: replace with dedicated implementation which finds min and max at the same time
   out = max(X,dim) - min(X,dim);
@@ -70,7 +70,7 @@ inline
 typename T1::elem_type
 op_range::vector_range(const T1& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -82,7 +82,7 @@ op_range::vector_range(const T1& expr)
   
   if(N == 0)
     {
-    arma_debug_check(true, "range(): object has no elements");
+    arma_conform_check(true, "range(): object has no elements");
     
     return Datum<eT>::nan;
     }

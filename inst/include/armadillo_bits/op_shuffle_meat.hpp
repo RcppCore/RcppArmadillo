@@ -27,7 +27,7 @@ inline
 void
 op_shuffle::apply_direct(Mat<eT>& out, const Mat<eT>& X, const uword dim)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if(X.is_empty()) { out.copy_size(X); return; }
   
@@ -56,7 +56,7 @@ op_shuffle::apply_direct(Mat<eT>& out, const Mat<eT>& X, const uword dim)
     {
     if(is_alias == false)
       {
-      arma_extra_debug_print("op_shuffle::apply(): matrix");
+      arma_debug_print("op_shuffle::apply(): matrix");
       
       out.copy_size(X);
       
@@ -71,7 +71,7 @@ op_shuffle::apply_direct(Mat<eT>& out, const Mat<eT>& X, const uword dim)
       }
     else  // in-place shuffle
       {
-      arma_extra_debug_print("op_shuffle::apply(): in-place matrix");
+      arma_debug_print("op_shuffle::apply(): in-place matrix");
       
       // reuse the val member variable of packet_vec
       // to indicate whether a particular row or column
@@ -116,7 +116,7 @@ op_shuffle::apply_direct(Mat<eT>& out, const Mat<eT>& X, const uword dim)
     {
     if(is_alias == false)
       {
-      arma_extra_debug_print("op_shuffle::apply(): vector");
+      arma_debug_print("op_shuffle::apply(): vector");
       
       out.copy_size(X);
       
@@ -145,7 +145,7 @@ op_shuffle::apply_direct(Mat<eT>& out, const Mat<eT>& X, const uword dim)
       }
     else  // in-place shuffle
       {
-      arma_extra_debug_print("op_shuffle::apply(): in-place vector");
+      arma_debug_print("op_shuffle::apply(): in-place vector");
       
       // reuse the val member variable of packet_vec
       // to indicate whether a particular row or column
@@ -202,13 +202,13 @@ inline
 void
 op_shuffle::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_shuffle>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const unwrap<T1> U(in.m);
   
   const uword dim = in.aux_uword_a;
   
-  arma_debug_check( (dim > 1), "shuffle(): parameter 'dim' must be 0 or 1" );
+  arma_conform_check( (dim > 1), "shuffle(): parameter 'dim' must be 0 or 1" );
   
   op_shuffle::apply_direct(out, U.M, dim);
   }
@@ -220,7 +220,7 @@ inline
 void
 op_shuffle_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_shuffle_vec>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const unwrap<T1> U(in.m);
   

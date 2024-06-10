@@ -32,7 +32,7 @@ enable_if2
   >::result
 all(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return op_all::all_vec(X);
   }
@@ -50,7 +50,7 @@ enable_if2
   >::result
 all(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return mtOp<uword, T1, op_all>(X, 0, 0);
   }
@@ -68,7 +68,7 @@ enable_if2
   >::result
 all(const T1& X, const uword dim)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return mtOp<uword, T1, op_all>(X, dim, 0);
   }

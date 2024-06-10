@@ -35,7 +35,7 @@ shuffle
   const T1& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_shuffle_vec>(X);
   }
@@ -56,7 +56,7 @@ shuffle
   const T1& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_shuffle>(X, 0, 0);
   }
@@ -78,7 +78,7 @@ shuffle
   const uword dim
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_shuffle>(X, dim, 0);
   }

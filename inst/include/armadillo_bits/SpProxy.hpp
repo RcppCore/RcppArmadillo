@@ -87,7 +87,7 @@ struct SpProxy< SpMat<eT> >
   inline explicit SpProxy(const SpMat<eT>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     Q.sync();
     }
 
@@ -139,7 +139,7 @@ struct SpProxy< SpCol<eT> >
   inline explicit SpProxy(const SpCol<eT>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     Q.sync();
     }
   
@@ -191,7 +191,7 @@ struct SpProxy< SpRow<eT> >
   inline explicit SpProxy(const SpRow<eT>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     Q.sync();
     }
   
@@ -243,7 +243,7 @@ struct SpProxy< SpSubview<eT> >
   inline explicit SpProxy(const SpSubview<eT>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     Q.m.sync();
     }
 
@@ -295,7 +295,7 @@ struct SpProxy< SpSubview_col<eT> >
   inline explicit SpProxy(const SpSubview_col<eT>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     Q.m.sync();
     }
   
@@ -347,7 +347,7 @@ struct SpProxy< SpSubview_col_list<eT,T1> >
   inline explicit SpProxy(const SpSubview_col_list<eT,T1>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows()    const { return Q.n_rows;    }
@@ -398,7 +398,7 @@ struct SpProxy< SpSubview_row<eT> >
   inline explicit SpProxy(const SpSubview_row<eT>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     Q.m.sync();
     }
   
@@ -450,7 +450,7 @@ struct SpProxy< spdiagview<eT> >
   inline explicit SpProxy(const spdiagview<eT>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows()    const { return Q.n_rows;    }
@@ -502,7 +502,7 @@ struct SpProxy< SpOp<T1, spop_type> >
   inline explicit SpProxy(const SpOp<T1, spop_type>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows()    const { return is_row ? 1 : Q.n_rows; }
@@ -554,7 +554,7 @@ struct SpProxy< SpGlue<T1, T2, spglue_type> >
   inline explicit SpProxy(const SpGlue<T1, T2, spglue_type>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows()    const { return is_row ? 1 : Q.n_rows; }
@@ -605,7 +605,7 @@ struct SpProxy< mtSpOp<out_eT, T1, spop_type> >
   inline explicit SpProxy(const mtSpOp<out_eT, T1, spop_type>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows()    const { return is_row ? 1 : Q.n_rows; }
@@ -656,7 +656,7 @@ struct SpProxy< mtSpGlue<out_eT, T1, T2, spglue_type> >
   inline explicit SpProxy(const mtSpGlue<out_eT, T1, T2, spglue_type>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows()    const { return is_row ? 1 : Q.n_rows; }

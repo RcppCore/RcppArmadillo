@@ -26,7 +26,7 @@ SizeMat::SizeMat(const uword in_n_rows, const uword in_n_cols)
   : n_rows(in_n_rows)
   , n_cols(in_n_cols)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   }
 
 
@@ -50,7 +50,7 @@ SizeMat::operator()(const uword dim) const
   if(dim == 0)  { return n_rows; }
   if(dim == 1)  { return n_cols; }
   
-  arma_debug_check_bounds(true, "size(): index out of bounds");
+  arma_conform_check_bounds(true, "size(): index out of bounds");
   
   return uword(1);
   }

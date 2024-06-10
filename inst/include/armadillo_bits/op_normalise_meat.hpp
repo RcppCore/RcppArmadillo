@@ -27,14 +27,14 @@ inline
 void
 op_normalise_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_normalise_vec>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
   
   const uword p = in.aux_uword_a;
   
-  arma_debug_check( (p == 0), "normalise(): unsupported vector norm type" );
+  arma_conform_check( (p == 0), "normalise(): unsupported vector norm type" );
   
   const quasi_unwrap<T1> U(in.m);
   
@@ -60,15 +60,15 @@ inline
 void
 op_normalise_mat::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_normalise_mat>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
   const uword p   = in.aux_uword_a;
   const uword dim = in.aux_uword_b;
   
-  arma_debug_check( (p   == 0), "normalise(): unsupported vector norm type"   );
-  arma_debug_check( (dim >  1), "normalise(): parameter 'dim' must be 0 or 1" );
+  arma_conform_check( (p   == 0), "normalise(): unsupported vector norm type"   );
+  arma_conform_check( (dim >  1), "normalise(): parameter 'dim' must be 0 or 1" );
   
   const quasi_unwrap<T1> U(in.m);
   
@@ -93,7 +93,7 @@ inline
 void
 op_normalise_mat::apply(Mat<eT>& out, const Mat<eT>& A, const uword p, const uword dim)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename get_pod_type<eT>::result T;
   

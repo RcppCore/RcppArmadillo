@@ -36,7 +36,7 @@ diff
   const uword k = 1
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_diff_vec>(X, k, 0);
   }
@@ -58,7 +58,7 @@ diff
   const uword k = 1
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_diff>(X, k, 0);
   }
@@ -81,7 +81,7 @@ diff
   const uword dim
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_diff>(X, k, dim);
   }

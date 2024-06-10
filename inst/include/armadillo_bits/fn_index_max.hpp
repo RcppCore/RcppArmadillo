@@ -26,7 +26,7 @@ inline
 typename enable_if2< is_arma_type<T1>::value && resolves_to_vector<T1>::yes, uword>::result
 index_max(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return X.index_max();
   }
@@ -39,7 +39,7 @@ arma_inline
 typename enable_if2< is_arma_type<T1>::value && resolves_to_vector<T1>::no, const mtOp<uword, T1, op_index_max> >::result
 index_max(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return mtOp<uword, T1, op_index_max>(X, 0, 0);
   }
@@ -52,7 +52,7 @@ arma_inline
 typename enable_if2< is_arma_type<T1>::value, const mtOp<uword, T1, op_index_max> >::result
 index_max(const T1& X, const uword dim)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return mtOp<uword, T1, op_index_max>(X, dim, 0);
   }
@@ -69,7 +69,7 @@ index_max
   const uword dim = 0
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return mtOpCube<uword, T1, op_index_max>(X.get_ref(), dim, 0, 0);
   }
@@ -87,7 +87,7 @@ enable_if2
   >::result
 index_max(const T1& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return x.index_max();
   }
@@ -105,7 +105,7 @@ enable_if2
   >::result
 index_max(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   Mat<uword> out;
   
@@ -127,7 +127,7 @@ enable_if2
   >::result
 index_max(const T1& X, const uword dim)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   Mat<uword> out;
   

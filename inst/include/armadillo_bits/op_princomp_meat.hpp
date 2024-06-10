@@ -40,7 +40,7 @@ op_princomp::direct_princomp
   const Base<typename T1::elem_type, T1>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
@@ -132,7 +132,7 @@ op_princomp::direct_princomp
   const Base<typename T1::elem_type, T1>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
@@ -206,7 +206,7 @@ op_princomp::direct_princomp
   const Base<typename T1::elem_type, T1>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
@@ -263,7 +263,7 @@ op_princomp::direct_princomp
   const Base<typename T1::elem_type, T1>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
@@ -302,7 +302,7 @@ op_princomp::apply
   const Op<T1,op_princomp>&          in
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const bool status = op_princomp::direct_princomp(out, in.m);
   

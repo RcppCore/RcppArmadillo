@@ -27,7 +27,7 @@ SpToDGlue<T1,T2,glue_type>::SpToDGlue(const T1& in_A, const T2& in_B)
   : A(in_A)
   , B(in_B)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   }
 
 
@@ -36,7 +36,7 @@ template<typename T1, typename T2, typename glue_type>
 inline
 SpToDGlue<T1,T2,glue_type>::~SpToDGlue()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   }
 
 

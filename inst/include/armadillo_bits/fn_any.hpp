@@ -32,7 +32,7 @@ enable_if2
   >::result
 any(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return op_any::any_vec(X);
   }
@@ -50,7 +50,7 @@ enable_if2
   >::result
 any(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return mtOp<uword, T1, op_any>(X, 0, 0);
   }
@@ -68,7 +68,7 @@ enable_if2
   >::result
 any(const T1& X, const uword dim)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return mtOp<uword, T1, op_any>(X, dim, 0);
   }

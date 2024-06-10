@@ -27,7 +27,7 @@ inline
 typename T1::elem_type
 accu_proxy_linear(const Proxy<T1>& P)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -109,7 +109,7 @@ inline
 typename T1::elem_type
 accu_proxy_at_mp(const Proxy<T1>& P)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -209,7 +209,7 @@ inline
 typename T1::elem_type
 accu_proxy_at(const Proxy<T1>& P)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -256,7 +256,7 @@ inline
 typename enable_if2< is_arma_type<T1>::value, typename T1::elem_type >::result
 accu(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const Proxy<T1> P(X);
   
@@ -272,6 +272,59 @@ accu(const T1& X)
 
 
 
+//! explicit handling of dot product expressed as matrix multiplication
+template<typename T1, typename T2>
+arma_warn_unused
+inline
+typename T1::elem_type
+accu(const Glue<T1,T2,glue_times>& expr)
+  {
+  arma_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  if( (is_cx<eT>::no) && (resolves_to_rowvector<T1>::value && resolves_to_colvector<T2>::value) )
+    {
+    arma_debug_print("accu(): dot product optimisation");
+    
+    constexpr bool proxy_is_mat = (is_Mat<typename Proxy<T1>::stored_type>::value && is_Mat<typename Proxy<T2>::stored_type>::value);
+    
+    constexpr bool use_at = (Proxy<T1>::use_at) || (Proxy<T2>::use_at);
+    
+    constexpr bool fast_unwrap = (partial_unwrap<T1>::is_fast && partial_unwrap<T2>::is_fast);
+    
+    if(proxy_is_mat || use_at || fast_unwrap)
+      {
+      const partial_unwrap<T1> UA(expr.A);
+      const partial_unwrap<T2> UB(expr.B);
+      
+      const typename partial_unwrap<T1>::stored_type& A = UA.M;
+      const typename partial_unwrap<T2>::stored_type& B = UB.M;
+      
+      arma_conform_assert_mul_size(A, B, UA.do_trans, UB.do_trans, "matrix multiplication");
+      
+      const eT val = op_dot::direct_dot(A.n_elem, A.memptr(), B.memptr());
+      
+      return (UA.do_times || UB.do_times) ? (val * UA.get_val() * UB.get_val()) : val;
+      }
+    else
+      {
+      const Proxy<T1> PA(expr.A);
+      const Proxy<T2> PB(expr.B);
+      
+      arma_conform_assert_mul_size(PA.get_n_rows(), PA.get_n_cols(), PB.get_n_rows(), PB.get_n_cols(), "matrix multiplication");
+      
+      return op_dot::apply_proxy(PA,PB);
+      }
+    }
+  
+  const Mat<eT> tmp(expr);
+  
+  return arrayops::accumulate( tmp.memptr(), tmp.n_elem );
+  }
+
+
+
 //! explicit handling of multiply-and-accumulate
 template<typename T1, typename T2>
 arma_warn_unused
@@ -279,15 +332,15 @@ inline
 typename T1::elem_type
 accu(const eGlue<T1,T2,eglue_schur>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef eGlue<T1,T2,eglue_schur> expr_type;
   
   typedef typename expr_type::proxy1_type::stored_type P1_stored_type;
   typedef typename expr_type::proxy2_type::stored_type P2_stored_type;
   
-  const bool have_direct_mem_1 = (is_Mat<P1_stored_type>::value) || (is_subview_col<P1_stored_type>::value);
-  const bool have_direct_mem_2 = (is_Mat<P2_stored_type>::value) || (is_subview_col<P2_stored_type>::value);
+  constexpr bool have_direct_mem_1 = (is_Mat<P1_stored_type>::value) || (is_subview_col<P1_stored_type>::value);
+  constexpr bool have_direct_mem_2 = (is_Mat<P2_stored_type>::value) || (is_subview_col<P2_stored_type>::value);
   
   if(have_direct_mem_1 && have_direct_mem_2)
     {
@@ -311,7 +364,7 @@ inline
 uword
 accu(const mtOp<uword,T1,op_rel_noteq>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -366,7 +419,7 @@ inline
 uword
 accu(const mtOp<uword,T1,op_rel_eq>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -421,12 +474,12 @@ inline
 uword
 accu(const mtGlue<uword,T1,T2,glue_rel_noteq>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const Proxy<T1> PA(X.A);
   const Proxy<T2> PB(X.B);
   
-  arma_debug_assert_same_size(PA, PB, "operator!=");
+  arma_conform_assert_same_size(PA, PB, "operator!=");
   
   uword n_nonzero = 0;
   
@@ -477,12 +530,12 @@ inline
 uword
 accu(const mtGlue<uword,T1,T2,glue_rel_eq>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const Proxy<T1> PA(X.A);
   const Proxy<T2> PB(X.B);
   
-  arma_debug_assert_same_size(PA, PB, "operator==");
+  arma_conform_assert_same_size(PA, PB, "operator==");
   
   uword n_nonzero = 0;
   
@@ -535,7 +588,7 @@ inline
 eT
 accu(const subview<eT>& X)
   {
-  arma_extra_debug_sigprint();  
+  arma_debug_sigprint();  
   
   const uword X_n_rows = X.n_rows;
   const uword X_n_cols = X.n_cols;
@@ -583,7 +636,7 @@ inline
 eT
 accu(const subview_col<eT>& X)
   {
-  arma_extra_debug_sigprint();  
+  arma_debug_sigprint();  
   
   return arrayops::accumulate( X.colmem, X.n_rows );
   }
@@ -600,7 +653,7 @@ inline
 typename T1::elem_type
 accu_cube_proxy_linear(const ProxyCube<T1>& P)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -682,7 +735,7 @@ inline
 typename T1::elem_type
 accu_cube_proxy_at_mp(const ProxyCube<T1>& P)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -734,7 +787,7 @@ inline
 typename T1::elem_type
 accu_cube_proxy_at(const ProxyCube<T1>& P)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -772,7 +825,7 @@ inline
 typename T1::elem_type
 accu(const BaseCube<typename T1::elem_type,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const ProxyCube<T1> P(X.get_ref());
   
@@ -795,7 +848,7 @@ inline
 typename T1::elem_type
 accu(const eGlueCube<T1,T2,eglue_schur>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef eGlueCube<T1,T2,eglue_schur> expr_type;
   
@@ -839,7 +892,7 @@ inline
 typename T1::elem_type
 accu(const SpBase<typename T1::elem_type,T1>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -886,12 +939,12 @@ inline
 typename T1::elem_type
 accu(const SpGlue<T1,T2,spglue_plus>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const unwrap_spmat<T1> UA(expr.A);
   const unwrap_spmat<T2> UB(expr.B);
   
-  arma_debug_assert_same_size(UA.M.n_rows, UA.M.n_cols, UB.M.n_rows, UB.M.n_cols, "addition");
+  arma_conform_assert_same_size(UA.M.n_rows, UA.M.n_cols, UB.M.n_rows, UB.M.n_cols, "addition");
   
   return (accu(UA.M) + accu(UB.M));
   }
@@ -905,12 +958,12 @@ inline
 typename T1::elem_type
 accu(const SpGlue<T1,T2,spglue_minus>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const unwrap_spmat<T1> UA(expr.A);
   const unwrap_spmat<T2> UB(expr.B);
   
-  arma_debug_assert_same_size(UA.M.n_rows, UA.M.n_cols, UB.M.n_rows, UB.M.n_cols, "subtraction");
+  arma_conform_assert_same_size(UA.M.n_rows, UA.M.n_cols, UB.M.n_rows, UB.M.n_cols, "subtraction");
   
   return (accu(UA.M) - accu(UB.M));
   }
@@ -924,7 +977,7 @@ inline
 typename T1::elem_type
 accu(const SpGlue<T1,T2,spglue_schur>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -978,19 +1031,16 @@ inline
 typename T1::elem_type
 accu(const SpOp<T1, spop_type>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
-  const bool is_vectorise = \
+  constexpr bool is_vectorise = \
        (is_same_type<spop_type, spop_vectorise_row>::yes)
     || (is_same_type<spop_type, spop_vectorise_col>::yes)
     || (is_same_type<spop_type, spop_vectorise_all>::yes);
   
-  if(is_vectorise)
-    {
-    return accu(expr.m);
-    }
+  if(is_vectorise)  { return accu(expr.m); }
   
   const SpMat<eT> tmp = expr;
   

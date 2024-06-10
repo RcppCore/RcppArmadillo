@@ -33,7 +33,7 @@
   const Proxy<T1> P1(X.A);\
   const Proxy<T2> P2(X.B);\
   \
-  arma_debug_assert_same_size(P1, P2, operator_str);\
+  arma_conform_assert_same_size(P1, P2, operator_str);\
   \
   const bool bad_alias = (Proxy<T1>::has_subview && P1.is_alias(out)) || (Proxy<T2>::has_subview && P2.is_alias(out));\
   \
@@ -47,7 +47,7 @@
     \
     uword* out_mem = out.memptr();\
     \
-    const bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);\
+    constexpr bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);\
     \
     if(use_at == false)\
       {\
@@ -98,7 +98,7 @@
   const ProxyCube<T1> P1(X.A);\
   const ProxyCube<T2> P2(X.B);\
   \
-  arma_debug_assert_same_size(P1, P2, operator_str);\
+  arma_conform_assert_same_size(P1, P2, operator_str);\
   \
   const bool bad_alias = (ProxyCube<T1>::has_subview && P1.is_alias(out)) || (ProxyCube<T2>::has_subview && P2.is_alias(out));\
   \
@@ -113,7 +113,7 @@
     \
     uword* out_mem = out.memptr();\
     \
-    const bool use_at = (ProxyCube<T1>::use_at || ProxyCube<T2>::use_at);\
+    constexpr bool use_at = (ProxyCube<T1>::use_at || ProxyCube<T2>::use_at);\
     \
     if(use_at == false)\
       {\
@@ -158,7 +158,7 @@ glue_rel_lt::apply
   const mtGlue<uword, T1, T2, glue_rel_lt>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_applier_mat(<, "operator<");
   }
@@ -174,7 +174,7 @@ glue_rel_gt::apply
   const mtGlue<uword, T1, T2, glue_rel_gt>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_applier_mat(>, "operator>");
   }
@@ -190,7 +190,7 @@ glue_rel_lteq::apply
   const mtGlue<uword, T1, T2, glue_rel_lteq>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_applier_mat(<=, "operator<=");
   }
@@ -206,7 +206,7 @@ glue_rel_gteq::apply
   const mtGlue<uword, T1, T2, glue_rel_gteq>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_applier_mat(>=, "operator>=");
   }
@@ -222,7 +222,7 @@ glue_rel_eq::apply
   const mtGlue<uword, T1, T2, glue_rel_eq>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_applier_mat(==, "operator==");
   }
@@ -238,7 +238,7 @@ glue_rel_noteq::apply
   const mtGlue<uword, T1, T2, glue_rel_noteq>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_applier_mat(!=, "operator!=");
   }
@@ -254,7 +254,7 @@ glue_rel_and::apply
   const mtGlue<uword, T1, T2, glue_rel_and>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_applier_mat(&&, "operator&&");
   }
@@ -270,7 +270,7 @@ glue_rel_or::apply
   const mtGlue<uword, T1, T2, glue_rel_or>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_applier_mat(||, "operator||");
   }
@@ -292,7 +292,7 @@ glue_rel_lt::apply
   const mtGlueCube<uword, T1, T2, glue_rel_lt>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_applier_cube(<, "operator<");
   }
@@ -308,7 +308,7 @@ glue_rel_gt::apply
   const mtGlueCube<uword, T1, T2, glue_rel_gt>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_applier_cube(>, "operator>");
   }
@@ -324,7 +324,7 @@ glue_rel_lteq::apply
   const mtGlueCube<uword, T1, T2, glue_rel_lteq>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_applier_cube(<=, "operator<=");
   }
@@ -340,7 +340,7 @@ glue_rel_gteq::apply
   const mtGlueCube<uword, T1, T2, glue_rel_gteq>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_applier_cube(>=, "operator>=");
   }
@@ -356,7 +356,7 @@ glue_rel_eq::apply
   const mtGlueCube<uword, T1, T2, glue_rel_eq>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_applier_cube(==, "operator==");
   }
@@ -372,7 +372,7 @@ glue_rel_noteq::apply
   const mtGlueCube<uword, T1, T2, glue_rel_noteq>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_applier_cube(!=, "operator!=");
   }
@@ -388,7 +388,7 @@ glue_rel_and::apply
   const mtGlueCube<uword, T1, T2, glue_rel_and>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_applier_cube(&&, "operator&&");
   }
@@ -404,7 +404,7 @@ glue_rel_or::apply
   const mtGlueCube<uword, T1, T2, glue_rel_or>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_applier_cube(||, "operator||");
   }

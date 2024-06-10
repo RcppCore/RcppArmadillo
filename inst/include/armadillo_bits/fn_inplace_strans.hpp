@@ -30,11 +30,11 @@ inplace_strans
   const char*    method = "std"
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const char sig = (method != nullptr) ? method[0] : char(0);
   
-  arma_debug_check( ((sig != 's') && (sig != 'l')), "inplace_strans(): unknown method specified" );
+  arma_conform_check( ((sig != 's') && (sig != 'l')), "inplace_strans(): unknown method specified" );
   
   const bool low_memory = (sig == 'l');
   

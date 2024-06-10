@@ -25,7 +25,7 @@ inline
 void
 SymEigsShiftSolver<eT, SelectionRule, OpType>::sort_ritzpair()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
 
   // First transform back the Ritz values, and then sort
   for(uword i = 0; i < this->nev; i++)
@@ -43,7 +43,7 @@ SymEigsShiftSolver<eT, SelectionRule, OpType>::SymEigsShiftSolver(const OpType& 
   : SymEigsSolver<eT, SelectionRule, OpType>::SymEigsSolver(op_, nev_, ncv_)
   , sigma(sigma_)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   }
 
 

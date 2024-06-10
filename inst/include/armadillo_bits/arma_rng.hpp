@@ -74,7 +74,7 @@
   #define ARMA_GUARD_PRODUCER
 #endif
 
-#if (defined(ARMA_DONT_GUARD_PRODUCER) || defined(ARMA_DONT_USE_STD_MUTEX))
+#if (defined(ARMA_DONT_GUARD_PRODUCER) || (!defined(ARMA_USE_STD_MUTEX)))
   #undef ARMA_GUARD_PRODUCER
 #endif
 

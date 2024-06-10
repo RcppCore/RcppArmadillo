@@ -27,7 +27,7 @@ inline
 typename enable_if2<is_supported_blas_type<typename T1::elem_type>::value, typename T1::pod_type>::result
 cond(const Base<typename T1::elem_type, T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return op_cond::apply(X.get_ref());
   }
@@ -40,7 +40,7 @@ inline
 typename enable_if2<is_supported_blas_type<typename T1::elem_type>::value, typename T1::pod_type>::result
 rcond(const Base<typename T1::elem_type, T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return op_rcond::apply(X.get_ref());
   }
@@ -53,7 +53,7 @@ rcond(const Base<typename T1::elem_type, T1>& X)
 // typename enable_if2<is_supported_blas_type<typename T1::elem_type>::value, typename T1::pod_type>::result
 // rcond(const SpBase<typename T1::elem_type, T1>& X)
 //   {
-//   arma_extra_debug_sigprint();
+//   arma_debug_sigprint();
 //   
 //   return sp_auxlib::rcond(X.get_ref());
 //   }

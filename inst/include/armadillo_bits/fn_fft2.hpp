@@ -36,7 +36,7 @@ enable_if2
   >::result
 fft2(const T1& A)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // not exactly efficient, but "better-than-nothing" implementation
   
@@ -65,7 +65,7 @@ enable_if2
   >::result
 fft2(const T1& A, const uword n_rows, const uword n_cols)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -90,7 +90,7 @@ enable_if2
   >::result
 ifft2(const T1& A)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // not exactly efficient, but "better-than-nothing" implementation
   
@@ -119,7 +119,7 @@ enable_if2
   >::result
 ifft2(const T1& A, const uword n_rows, const uword n_cols)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   

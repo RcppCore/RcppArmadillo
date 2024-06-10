@@ -42,7 +42,7 @@ class gemm_emul_tinysq
     const eT       beta  = eT(0)
     )
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     
     switch(A.n_rows)
       {
@@ -82,7 +82,7 @@ class gemm_emul_large
     const eT       beta  = eT(0)
     )
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
 
     const uword A_n_rows = A.n_rows;
     const uword A_n_cols = A.n_cols;
@@ -194,7 +194,7 @@ class gemm_emul
     const typename arma_not_cx<eT>::result* junk = nullptr
     )
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     arma_ignore(junk);
     
     gemm_emul_large<do_trans_A, do_trans_B, use_alpha, use_beta>::apply(C, A, B, alpha, beta);
@@ -217,7 +217,7 @@ class gemm_emul
     const typename arma_cx_only<eT>::result* junk = nullptr
     )
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     arma_ignore(junk);
     
     // "better than nothing" handling of hermitian transposes for complex number matrices
@@ -253,7 +253,7 @@ class gemm
   void
   apply_blas_type( Mat<eT>& C, const TA& A, const TB& B, const eT alpha = eT(1), const eT beta = eT(0) )
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     
     if( (A.n_rows <= 4) && (A.n_rows == A.n_cols) && (A.n_rows == B.n_rows) && (B.n_rows == B.n_cols) && (is_cx<eT>::no) ) 
       {
@@ -274,9 +274,9 @@ class gemm
       {
       #if defined(ARMA_USE_ATLAS)
         {
-        arma_extra_debug_print("atlas::cblas_gemm()");
+        arma_debug_print("atlas::cblas_gemm()");
         
-        arma_debug_assert_atlas_size(A,B);
+        arma_conform_assert_atlas_size(A,B);
         
         atlas::cblas_gemm<eT>
           (
@@ -298,9 +298,9 @@ class gemm
         }
       #elif defined(ARMA_USE_BLAS)
         {
-        arma_extra_debug_print("blas::gemm()");
+        arma_debug_print("blas::gemm()");
         
-        arma_debug_assert_blas_size(A,B);
+        arma_conform_assert_blas_size(A,B);
         
         const char trans_A = (do_trans_A) ? ( is_cx<eT>::yes ? 'C' : 'T' ) : 'N';
         const char trans_B = (do_trans_B) ? ( is_cx<eT>::yes ? 'C' : 'T' ) : 'N';
@@ -316,8 +316,8 @@ class gemm
         
         const eT local_beta  = (use_beta) ? beta : eT(0);
         
-        arma_extra_debug_print( arma_str::format("blas::gemm(): trans_A = %c") % trans_A );
-        arma_extra_debug_print( arma_str::format("blas::gemm(): trans_B = %c") % trans_B );
+        arma_debug_print( arma_str::format("blas::gemm(): trans_A = %c") % trans_A );
+        arma_debug_print( arma_str::format("blas::gemm(): trans_B = %c") % trans_B );
         
         blas::gemm<eT>
           (

@@ -36,7 +36,7 @@ pow
   const Base<typename T1::elem_type, T2>& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Glue<T1, T2, glue_powext>(X, Y.get_ref());
   }
@@ -53,7 +53,7 @@ pow
   const Base<typename parent::elem_type,T2>& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return glue_powext::apply(X,Y);
   }
@@ -70,7 +70,7 @@ pow
   const BaseCube<typename T1::elem_type, T2>& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return GlueCube<T1, T2, glue_powext>(X.get_ref(), Y.get_ref());
   }
@@ -87,7 +87,7 @@ pow
   const Base<eT,T2>&            Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return glue_powext::apply(X,Y);
   }
@@ -113,7 +113,7 @@ pow
   const Base<typename T1::pod_type, T2>& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return mtGlue<typename T1::elem_type, T1, T2, glue_powext_cx>(X, Y.get_ref());
   }
@@ -135,7 +135,7 @@ pow
   const Base<typename parent::pod_type,T2>& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return glue_powext_cx::apply(X,Y);
   }
@@ -152,7 +152,7 @@ pow
   const BaseCube<              typename T1::pod_type , T2>& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return mtGlueCube<typename T1::elem_type, T1, T2, glue_powext_cx>(X.get_ref(), Y.get_ref());
   }
@@ -169,7 +169,7 @@ pow
   const Base<T,T2>&                            Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return glue_powext_cx::apply(X,Y);
   }

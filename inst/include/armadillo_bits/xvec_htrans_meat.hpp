@@ -28,7 +28,7 @@ xvec_htrans<eT>::xvec_htrans(const eT* const in_mem, const uword in_n_rows, cons
   , n_cols(in_n_rows          )
   , n_elem(in_n_rows*in_n_cols)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   }
 
 
@@ -38,7 +38,7 @@ inline
 void
 xvec_htrans<eT>::extract(Mat<eT>& out) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // NOTE: this function assumes that matrix 'out' has already been set to the correct size
   

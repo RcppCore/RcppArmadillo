@@ -38,7 +38,7 @@ normalise
   const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk2 = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk1);
   arma_ignore(junk2);
   
@@ -64,7 +64,7 @@ normalise
   const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   return Op<T1, op_normalise_mat>(X, p, dim);
@@ -84,7 +84,7 @@ normalise
   const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   return SpOp<T1, spop_normalise>(expr.get_ref(), p, dim);

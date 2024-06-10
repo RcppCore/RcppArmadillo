@@ -27,7 +27,7 @@ mtGlue<out_eT,T1,T2,glue_type>::mtGlue(const T1& in_A, const T2& in_B)
   : A(in_A)
   , B(in_B)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   }
 
 
@@ -39,7 +39,7 @@ mtGlue<out_eT,T1,T2,glue_type>::mtGlue(const T1& in_A, const T2& in_B, const uwo
   , B(in_B)
   , aux_uword(in_aux_uword)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   }
 
 
@@ -48,7 +48,7 @@ template<typename out_eT, typename T1, typename T2, typename glue_type>
 inline
 mtGlue<out_eT,T1,T2,glue_type>::~mtGlue()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   }
 
 

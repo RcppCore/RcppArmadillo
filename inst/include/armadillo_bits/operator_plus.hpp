@@ -28,7 +28,7 @@ typename enable_if2< is_arma_type<T1>::value, const T1& >::result
 operator+
 (const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return X;
   }
@@ -42,7 +42,7 @@ typename enable_if2< is_arma_type<T1>::value, const eOp<T1, eop_scalar_plus> >::
 operator+
 (const T1& X, const typename T1::elem_type k)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return eOp<T1, eop_scalar_plus>(X, k);
   }
@@ -56,7 +56,7 @@ typename enable_if2< is_arma_type<T1>::value, const eOp<T1, eop_scalar_plus> >::
 operator+
 (const typename T1::elem_type k, const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return eOp<T1, eop_scalar_plus>(X, k);  // NOTE: order is swapped
   }
@@ -78,7 +78,7 @@ operator+
   const std::complex<typename T1::pod_type>& k
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_plus>('j', X, k);
   }
@@ -100,7 +100,7 @@ operator+
   const T1&                                  X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_plus>('j', X, k);  // NOTE: order is swapped
   }
@@ -122,7 +122,7 @@ operator+
   const T2& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return eGlue<T1, T2, eglue_plus>(X, Y);
   }
@@ -144,7 +144,7 @@ operator+
   const T2& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT1;
   typedef typename T2::elem_type eT2;
@@ -173,7 +173,7 @@ operator+
   const T2& y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return SpGlue<T1,T2,spglue_plus>(x, y);
   }
@@ -195,13 +195,13 @@ operator+
   const T2& y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   Mat<typename T1::elem_type> result(x);
   
   const SpProxy<T2> pb(y);
   
-  arma_debug_assert_same_size( result.n_rows, result.n_cols, pb.get_n_rows(), pb.get_n_cols(), "addition" );
+  arma_conform_assert_same_size( result.n_rows, result.n_cols, pb.get_n_rows(), pb.get_n_cols(), "addition" );
   
   typename SpProxy<T2>::const_iterator_type it     = pb.begin();
   typename SpProxy<T2>::const_iterator_type it_end = pb.end();
@@ -232,13 +232,13 @@ operator+
   const T2& y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const SpProxy<T1> pa(x);
   
   Mat<typename T1::elem_type> result(y);
   
-  arma_debug_assert_same_size( pa.get_n_rows(), pa.get_n_cols(), result.n_rows, result.n_cols, "addition" );
+  arma_conform_assert_same_size( pa.get_n_rows(), pa.get_n_cols(), result.n_rows, result.n_cols, "addition" );
   
   typename SpProxy<T1>::const_iterator_type it     = pa.begin();
   typename SpProxy<T1>::const_iterator_type it_end = pa.end();
@@ -269,7 +269,7 @@ operator+
   const T2& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT1;
   typedef typename T2::elem_type eT2;
@@ -298,7 +298,7 @@ operator+
   const T2& y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   Mat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result > out;
   
@@ -324,7 +324,7 @@ operator+
   const T2& y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   Mat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result > out;
   
@@ -347,7 +347,7 @@ operator+
   const typename T1::elem_type k
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return SpToDOp<T1, op_sp_plus>(X, k);
   }
@@ -363,7 +363,7 @@ operator+
   const T1&                    X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
 
   return SpToDOp<T1, op_sp_plus>(X, k);  // NOTE: swapped order
   }
@@ -388,7 +388,7 @@ operator+
   const typename T1::elem_type k
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
 
   const typename T1::elem_type aux = (is_same_type<op_type, op_sp_plus>::value) ? x.aux : -x.aux;
 
@@ -414,7 +414,7 @@ operator+
   const typename T1::elem_type k
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
 
   return SpToDOp<T1, op_sp_minus_pre>(x.m, x.aux + k);
   }
@@ -439,7 +439,7 @@ operator+
   const SpToDOp<T1, op_type>&  x
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
 
   const typename T1::elem_type aux = (is_same_type<op_type, op_sp_plus>::value) ? x.aux : -x.aux;
 
@@ -465,7 +465,7 @@ operator+
   const SpToDOp<T1, op_type>&  x
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
 
   return SpToDOp<T1, op_sp_minus_pre>(x.m, x.aux + k);
   }
@@ -482,7 +482,7 @@ operator+
   const Base<typename parent::elem_type,T2>& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return subview_each1_aux::operator_plus(X, Y.get_ref());
   }
@@ -498,7 +498,7 @@ operator+
   const subview_each1<parent,mode>&          Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return subview_each1_aux::operator_plus(Y, X.get_ref());  // NOTE: swapped order
   }
@@ -514,7 +514,7 @@ operator+
   const Base<typename parent::elem_type,T2>& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return subview_each2_aux::operator_plus(X, Y.get_ref());
   }
@@ -530,7 +530,7 @@ operator+
   const subview_each2<parent,mode,TB>&       Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return subview_each2_aux::operator_plus(Y, X.get_ref());  // NOTE: swapped order
   }

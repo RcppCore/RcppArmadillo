@@ -19,9 +19,6 @@
 //! \addtogroup mtSpOp
 //! @{
 
-// Class for delayed multi-type sparse operations.  These are operations where
-// the resulting type is different than the stored type.
-
 
 
 template<typename out_eT, typename T1, typename spop_type>

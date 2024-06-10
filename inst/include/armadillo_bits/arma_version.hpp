@@ -21,10 +21,10 @@
 
 
 
-#define ARMA_VERSION_MAJOR 12
-#define ARMA_VERSION_MINOR 8
-#define ARMA_VERSION_PATCH 4
-#define ARMA_VERSION_NAME  "Cortisol Injector"
+#define ARMA_VERSION_MAJOR 13
+#define ARMA_VERSION_MINOR 90
+#define ARMA_VERSION_PATCH 0
+#define ARMA_VERSION_NAME  "unstable - not for production use"
 
 
 

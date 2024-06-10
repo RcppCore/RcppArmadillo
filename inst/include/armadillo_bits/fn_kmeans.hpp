@@ -34,7 +34,7 @@ kmeans
   const bool                             print_mode
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   

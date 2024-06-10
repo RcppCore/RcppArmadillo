@@ -27,7 +27,7 @@ mtSpGlue<out_eT,T1,T2,spglue_type>::mtSpGlue(const T1& in_A, const T2& in_B)
   : A(in_A)
   , B(in_B)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   }
 
 
@@ -36,7 +36,7 @@ template<typename out_eT, typename T1, typename T2, typename spglue_type>
 inline
 mtSpGlue<out_eT,T1,T2,spglue_type>::~mtSpGlue()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   }
 
 

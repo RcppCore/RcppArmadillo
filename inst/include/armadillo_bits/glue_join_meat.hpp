@@ -26,7 +26,7 @@ inline
 void
 glue_join_cols::apply_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& A, const Proxy<T2>& B)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword A_n_rows = A.get_n_rows();
   const uword A_n_cols = A.get_n_cols();
@@ -34,7 +34,7 @@ glue_join_cols::apply_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>&
   const uword B_n_rows = B.get_n_rows();
   const uword B_n_cols = B.get_n_cols();
   
-  arma_debug_check
+  arma_conform_check
     (
     ( (A_n_cols != B_n_cols) && ( (A_n_rows > 0) || (A_n_cols > 0) ) && ( (B_n_rows > 0) || (B_n_cols > 0) ) ),
     "join_cols() / join_vert(): number of columns must be the same"
@@ -64,7 +64,7 @@ inline
 void
 glue_join_cols::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_join_cols>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -92,7 +92,7 @@ inline
 void
 glue_join_cols::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>& B_expr, const Base<eT,T3>& C_expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const quasi_unwrap<T1> UA(A_expr.get_ref());
   const quasi_unwrap<T2> UB(B_expr.get_ref());
@@ -105,9 +105,9 @@ glue_join_cols::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
   const uword out_n_rows = A.n_rows + B.n_rows + C.n_rows;
   const uword out_n_cols = (std::max)((std::max)(A.n_cols, B.n_cols), C.n_cols);
   
-  arma_debug_check( ((A.n_cols != out_n_cols) && ((A.n_rows > 0) || (A.n_cols > 0))), "join_cols() / join_vert(): number of columns must be the same" );
-  arma_debug_check( ((B.n_cols != out_n_cols) && ((B.n_rows > 0) || (B.n_cols > 0))), "join_cols() / join_vert(): number of columns must be the same" );
-  arma_debug_check( ((C.n_cols != out_n_cols) && ((C.n_rows > 0) || (C.n_cols > 0))), "join_cols() / join_vert(): number of columns must be the same" );
+  arma_conform_check( ((A.n_cols != out_n_cols) && ((A.n_rows > 0) || (A.n_cols > 0))), "join_cols() / join_vert(): number of columns must be the same" );
+  arma_conform_check( ((B.n_cols != out_n_cols) && ((B.n_rows > 0) || (B.n_cols > 0))), "join_cols() / join_vert(): number of columns must be the same" );
+  arma_conform_check( ((C.n_cols != out_n_cols) && ((C.n_rows > 0) || (C.n_cols > 0))), "join_cols() / join_vert(): number of columns must be the same" );
   
   out.set_size(out_n_rows, out_n_cols);
   
@@ -134,7 +134,7 @@ inline
 void
 glue_join_cols::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>& B_expr, const Base<eT,T3>& C_expr, const Base<eT,T4>& D_expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const quasi_unwrap<T1> UA(A_expr.get_ref());
   const quasi_unwrap<T2> UB(B_expr.get_ref());
@@ -149,10 +149,10 @@ glue_join_cols::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
   const uword out_n_rows = A.n_rows + B.n_rows + C.n_rows + D.n_rows;
   const uword out_n_cols = (std::max)(((std::max)((std::max)(A.n_cols, B.n_cols), C.n_cols)), D.n_cols);
   
-  arma_debug_check( ((A.n_cols != out_n_cols) && ((A.n_rows > 0) || (A.n_cols > 0))), "join_cols() / join_vert(): number of columns must be the same" );
-  arma_debug_check( ((B.n_cols != out_n_cols) && ((B.n_rows > 0) || (B.n_cols > 0))), "join_cols() / join_vert(): number of columns must be the same" );
-  arma_debug_check( ((C.n_cols != out_n_cols) && ((C.n_rows > 0) || (C.n_cols > 0))), "join_cols() / join_vert(): number of columns must be the same" );
-  arma_debug_check( ((D.n_cols != out_n_cols) && ((D.n_rows > 0) || (D.n_cols > 0))), "join_cols() / join_vert(): number of columns must be the same" );
+  arma_conform_check( ((A.n_cols != out_n_cols) && ((A.n_rows > 0) || (A.n_cols > 0))), "join_cols() / join_vert(): number of columns must be the same" );
+  arma_conform_check( ((B.n_cols != out_n_cols) && ((B.n_rows > 0) || (B.n_cols > 0))), "join_cols() / join_vert(): number of columns must be the same" );
+  arma_conform_check( ((C.n_cols != out_n_cols) && ((C.n_rows > 0) || (C.n_cols > 0))), "join_cols() / join_vert(): number of columns must be the same" );
+  arma_conform_check( ((D.n_cols != out_n_cols) && ((D.n_rows > 0) || (D.n_cols > 0))), "join_cols() / join_vert(): number of columns must be the same" );
   
   out.set_size(out_n_rows, out_n_cols);
   
@@ -183,7 +183,7 @@ inline
 void
 glue_join_rows::apply_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& A, const Proxy<T2>& B)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword A_n_rows = A.get_n_rows();
   const uword A_n_cols = A.get_n_cols();
@@ -191,7 +191,7 @@ glue_join_rows::apply_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>&
   const uword B_n_rows = B.get_n_rows();
   const uword B_n_cols = B.get_n_cols();
   
-  arma_debug_check
+  arma_conform_check
     (
     ( (A_n_rows != B_n_rows) && ( (A_n_rows > 0) || (A_n_cols > 0) ) && ( (B_n_rows > 0) || (B_n_cols > 0) ) ),
     "join_rows() / join_horiz(): number of rows must be the same"
@@ -221,7 +221,7 @@ inline
 void
 glue_join_rows::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_join_rows>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -249,7 +249,7 @@ inline
 void
 glue_join_rows::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>& B_expr, const Base<eT,T3>& C_expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const quasi_unwrap<T1> UA(A_expr.get_ref());
   const quasi_unwrap<T2> UB(B_expr.get_ref());
@@ -262,9 +262,9 @@ glue_join_rows::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
   const uword out_n_rows = (std::max)((std::max)(A.n_rows, B.n_rows), C.n_rows);
   const uword out_n_cols = A.n_cols + B.n_cols + C.n_cols;
   
-  arma_debug_check( ((A.n_rows != out_n_rows) && ((A.n_rows > 0) || (A.n_cols > 0))), "join_rows() / join_horiz(): number of rows must be the same" );
-  arma_debug_check( ((B.n_rows != out_n_rows) && ((B.n_rows > 0) || (B.n_cols > 0))), "join_rows() / join_horiz(): number of rows must be the same" );
-  arma_debug_check( ((C.n_rows != out_n_rows) && ((C.n_rows > 0) || (C.n_cols > 0))), "join_rows() / join_horiz(): number of rows must be the same" );
+  arma_conform_check( ((A.n_rows != out_n_rows) && ((A.n_rows > 0) || (A.n_cols > 0))), "join_rows() / join_horiz(): number of rows must be the same" );
+  arma_conform_check( ((B.n_rows != out_n_rows) && ((B.n_rows > 0) || (B.n_cols > 0))), "join_rows() / join_horiz(): number of rows must be the same" );
+  arma_conform_check( ((C.n_rows != out_n_rows) && ((C.n_rows > 0) || (C.n_cols > 0))), "join_rows() / join_horiz(): number of rows must be the same" );
   
   out.set_size(out_n_rows, out_n_cols);
   
@@ -291,7 +291,7 @@ inline
 void
 glue_join_rows::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>& B_expr, const Base<eT,T3>& C_expr, const Base<eT,T4>& D_expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const quasi_unwrap<T1> UA(A_expr.get_ref());
   const quasi_unwrap<T2> UB(B_expr.get_ref());
@@ -306,10 +306,10 @@ glue_join_rows::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
   const uword out_n_rows = (std::max)(((std::max)((std::max)(A.n_rows, B.n_rows), C.n_rows)), D.n_rows);
   const uword out_n_cols = A.n_cols + B.n_cols + C.n_cols + D.n_cols;
   
-  arma_debug_check( ((A.n_rows != out_n_rows) && ((A.n_rows > 0) || (A.n_cols > 0))), "join_rows() / join_horiz(): number of rows must be the same" );
-  arma_debug_check( ((B.n_rows != out_n_rows) && ((B.n_rows > 0) || (B.n_cols > 0))), "join_rows() / join_horiz(): number of rows must be the same" );
-  arma_debug_check( ((C.n_rows != out_n_rows) && ((C.n_rows > 0) || (C.n_cols > 0))), "join_rows() / join_horiz(): number of rows must be the same" );
-  arma_debug_check( ((D.n_rows != out_n_rows) && ((D.n_rows > 0) || (D.n_cols > 0))), "join_rows() / join_horiz(): number of rows must be the same" );
+  arma_conform_check( ((A.n_rows != out_n_rows) && ((A.n_rows > 0) || (A.n_cols > 0))), "join_rows() / join_horiz(): number of rows must be the same" );
+  arma_conform_check( ((B.n_rows != out_n_rows) && ((B.n_rows > 0) || (B.n_cols > 0))), "join_rows() / join_horiz(): number of rows must be the same" );
+  arma_conform_check( ((C.n_rows != out_n_rows) && ((C.n_rows > 0) || (C.n_cols > 0))), "join_rows() / join_horiz(): number of rows must be the same" );
+  arma_conform_check( ((D.n_rows != out_n_rows) && ((D.n_rows > 0) || (D.n_cols > 0))), "join_rows() / join_horiz(): number of rows must be the same" );
   
   out.set_size(out_n_rows, out_n_cols);
   
@@ -340,7 +340,7 @@ inline
 void
 glue_join_slices::apply(Cube<typename T1::elem_type>& out, const GlueCube<T1,T2,glue_join_slices>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
 
@@ -353,7 +353,7 @@ glue_join_slices::apply(Cube<typename T1::elem_type>& out, const GlueCube<T1,T2,
   if(A.n_elem == 0)  { out = B; return; }
   if(B.n_elem == 0)  { out = A; return; }
   
-  arma_debug_check( ( (A.n_rows != B.n_rows) || (A.n_cols != B.n_cols) ), "join_slices(): size of slices must be the same" );
+  arma_conform_check( ( (A.n_rows != B.n_rows) || (A.n_cols != B.n_cols) ), "join_slices(): size of slices must be the same" );
   
   if( (&out != &A) && (&out != &B) )
     {

@@ -25,7 +25,7 @@ inline
 void
 glue_quantile::worker(eTb* out_mem, Col<eTa>& Y, const Mat<eTb>& P)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // NOTE: assuming out_mem is an array with P.n_elem elements
   
@@ -90,9 +90,9 @@ inline
 void
 glue_quantile::apply_noalias(Mat<eTb>& out, const Mat<eTa>& X, const Mat<eTb>& P, const uword dim)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check( ((P.is_vec() == false) && (P.is_empty() == false)), "quantile(): parameter 'P' must be a vector" );
+  arma_conform_check( ((P.is_vec() == false) && (P.is_empty() == false)), "quantile(): parameter 'P' must be a vector" );
   
   if(X.is_empty())  { out.reset(); return; }
   
@@ -167,18 +167,18 @@ inline
 void
 glue_quantile::apply(Mat<typename T2::elem_type>& out, const mtGlue<typename T2::elem_type,T1,T2,glue_quantile>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T2::elem_type eTb;
   
   const uword dim = expr.aux_uword;
   
-  arma_debug_check( (dim > 1), "quantile(): parameter 'dim' must be 0 or 1" );
+  arma_conform_check( (dim > 1), "quantile(): parameter 'dim' must be 0 or 1" );
   
   const quasi_unwrap<T1> UA(expr.A);
   const quasi_unwrap<T2> UB(expr.B);
   
-  arma_debug_check((UA.M.internal_has_nan() || UB.M.internal_has_nan()), "quantile(): detected NaN");
+  arma_conform_check((UA.M.internal_has_nan() || UB.M.internal_has_nan()), "quantile(): detected NaN");
   
   if(UA.is_alias(out) || UB.is_alias(out))
     {
@@ -201,7 +201,7 @@ inline
 void
 glue_quantile_default::apply(Mat<typename T2::elem_type>& out, const mtGlue<typename T2::elem_type,T1,T2,glue_quantile_default>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T2::elem_type eTb;
   
@@ -210,7 +210,7 @@ glue_quantile_default::apply(Mat<typename T2::elem_type>& out, const mtGlue<type
   
   const uword dim = (T1::is_xvec) ? uword(UA.M.is_rowvec() ? 1 : 0) : uword((T1::is_row) ? 1 : 0);
   
-  arma_debug_check((UA.M.internal_has_nan() || UB.M.internal_has_nan()), "quantile(): detected NaN");
+  arma_conform_check((UA.M.internal_has_nan() || UB.M.internal_has_nan()), "quantile(): detected NaN");
   
   if(UA.is_alias(out) || UB.is_alias(out))
     {

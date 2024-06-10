@@ -30,7 +30,7 @@ operator+
   const BaseCube<typename T1::elem_type,T1>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return X;
   }
@@ -47,7 +47,7 @@ operator+
   const typename T1::elem_type               k
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return eOpCube<T1, eop_scalar_plus>(X.get_ref(), k);
   }
@@ -64,7 +64,7 @@ operator+
   const BaseCube<typename T1::elem_type,T1>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return eOpCube<T1, eop_scalar_plus>(X.get_ref(), k);
   }
@@ -81,7 +81,7 @@ operator+
   const std::complex<typename T1::pod_type>& k
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return mtOpCube<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_plus>('j', X.get_ref(), k);
   }
@@ -98,7 +98,7 @@ operator+
   const BaseCube<typename T1::pod_type, T1>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return mtOpCube<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_plus>('j', X.get_ref(), k);  // NOTE: order is swapped
   }
@@ -115,7 +115,7 @@ operator+
   const BaseCube<typename T1::elem_type,T2>& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return eGlueCube<T1, T2, eglue_plus>(X.get_ref(), Y.get_ref());
   }
@@ -132,7 +132,7 @@ operator+
   const BaseCube< typename force_different_type<typename T1::elem_type, typename T2::elem_type>::T2_result, T2>& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT1;
   typedef typename T2::elem_type eT2;
@@ -155,7 +155,7 @@ operator+
   const Base<eT,T2>&            Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return subview_cube_each1_aux::operator_plus(X, Y.get_ref());
   }
@@ -171,7 +171,7 @@ operator+
   const subview_cube_each1<eT>& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return subview_cube_each1_aux::operator_plus(Y, X.get_ref());  // NOTE: swapped order
   }
@@ -187,7 +187,7 @@ operator+
   const Base<eT,T2>&               Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return subview_cube_each2_aux::operator_plus(X, Y.get_ref());
   }
@@ -203,7 +203,7 @@ operator+
   const subview_cube_each2<eT,TB>& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return subview_cube_each2_aux::operator_plus(Y, X.get_ref());  // NOTE: swapped order
   }

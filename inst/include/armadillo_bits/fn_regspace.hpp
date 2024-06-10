@@ -31,7 +31,7 @@ internal_regspace_default_delta
   const typename Mat<eT>::pod_type end
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename Mat<eT>::pod_type T;
   
@@ -66,8 +66,8 @@ internal_regspace_var_delta
   const typename Mat<eT>::pod_type end
   )
   {
-  arma_extra_debug_sigprint();
-  arma_extra_debug_print("internal_regspace_var_delta(): signed version");
+  arma_debug_sigprint();
+  arma_debug_print("internal_regspace_var_delta(): signed version");
   
   typedef typename Mat<eT>::pod_type T;
   
@@ -108,8 +108,8 @@ internal_regspace_var_delta
   const typename Mat<eT>::pod_type end
   )
   {
-  arma_extra_debug_sigprint();
-  arma_extra_debug_print("internal_regspace_var_delta(): unsigned version");
+  arma_debug_sigprint();
+  arma_debug_print("internal_regspace_var_delta(): unsigned version");
   
   typedef typename Mat<eT>::pod_type T;
   
@@ -149,8 +149,8 @@ regspace
   const typename vec_type::pod_type end
   )
   {
-  arma_extra_debug_sigprint();
-  arma_extra_debug_print("regspace(): signed version");
+  arma_debug_sigprint();
+  arma_debug_print("regspace(): signed version");
   
   vec_type x;
   
@@ -183,8 +183,8 @@ regspace
   const typename vec_type::pod_type end
   )
   {
-  arma_extra_debug_sigprint();
-  arma_extra_debug_print("regspace(): unsigned version");
+  arma_debug_sigprint();
+  arma_debug_print("regspace(): unsigned version");
   
   vec_type x;
   
@@ -222,7 +222,7 @@ regspace
   const typename vec_type::pod_type end
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   vec_type x;
   
@@ -243,7 +243,7 @@ inline
 vec
 regspace(const double start, const double delta, const double end)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return regspace<vec>(start, delta, end);
   }
@@ -255,7 +255,7 @@ inline
 vec
 regspace(const double start, const double end)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return regspace<vec>(start, end);
   }

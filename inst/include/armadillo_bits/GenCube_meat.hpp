@@ -28,7 +28,7 @@ GenCube<eT, gen_type>::GenCube(const uword in_n_rows, const uword in_n_cols, con
   , n_cols  (in_n_cols  )
   , n_slices(in_n_slices)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   }
 
 
@@ -37,7 +37,7 @@ template<typename eT, typename gen_type>
 arma_inline
 GenCube<eT, gen_type>::~GenCube()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   }
 
 
@@ -86,7 +86,7 @@ inline
 void
 GenCube<eT, gen_type>::apply(Cube<eT>& out) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // NOTE: we're assuming that the cube has already been set to the correct size;
   // this is done by either the Cube contructor or operator=()
@@ -102,9 +102,9 @@ inline
 void
 GenCube<eT, gen_type>::apply_inplace_plus(Cube<eT>& out) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_assert_same_size(out.n_rows, out.n_cols, out.n_slices, n_rows, n_cols, n_slices, "addition");
+  arma_conform_assert_same_size(out.n_rows, out.n_cols, out.n_slices, n_rows, n_cols, n_slices, "addition");
   
   if(is_same_type<gen_type, gen_ones>::yes)
     {
@@ -120,9 +120,9 @@ inline
 void
 GenCube<eT, gen_type>::apply_inplace_minus(Cube<eT>& out) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_assert_same_size(out.n_rows, out.n_cols, out.n_slices, n_rows, n_cols, n_slices, "subtraction");
+  arma_conform_assert_same_size(out.n_rows, out.n_cols, out.n_slices, n_rows, n_cols, n_slices, "subtraction");
   
   if(is_same_type<gen_type, gen_ones>::yes)
     {
@@ -138,9 +138,9 @@ inline
 void
 GenCube<eT, gen_type>::apply_inplace_schur(Cube<eT>& out) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_assert_same_size(out.n_rows, out.n_cols, out.n_slices, n_rows, n_cols, n_slices, "element-wise multiplication");
+  arma_conform_assert_same_size(out.n_rows, out.n_cols, out.n_slices, n_rows, n_cols, n_slices, "element-wise multiplication");
   
   if(is_same_type<gen_type, gen_zeros>::yes)
     {
@@ -157,9 +157,9 @@ inline
 void
 GenCube<eT, gen_type>::apply_inplace_div(Cube<eT>& out) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_assert_same_size(out.n_rows, out.n_cols, out.n_slices, n_rows, n_cols, n_slices, "element-wise division");
+  arma_conform_assert_same_size(out.n_rows, out.n_cols, out.n_slices, n_rows, n_cols, n_slices, "element-wise division");
   
   if(is_same_type<gen_type, gen_zeros>::yes)
     {
@@ -174,7 +174,7 @@ inline
 void
 GenCube<eT, gen_type>::apply(subview_cube<eT>& out) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // NOTE: we're assuming that the subcube has the same dimensions as the GenCube object
   // this is checked by subview_cube::operator=()

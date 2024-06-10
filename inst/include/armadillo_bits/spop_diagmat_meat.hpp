@@ -26,7 +26,7 @@ inline
 void
 spop_diagmat::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_diagmat>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -51,7 +51,7 @@ inline
 void
 spop_diagmat::apply_noalias(SpMat<typename T1::elem_type>& out, const SpBase<typename T1::elem_type, T1>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -142,7 +142,7 @@ inline
 void
 spop_diagmat::apply_noalias(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglue_plus>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -152,7 +152,7 @@ spop_diagmat::apply_noalias(SpMat<typename T1::elem_type>& out, const SpGlue<T1,
   const SpMat<eT>& A = UA.M;
   const SpMat<eT>& B = UB.M;
   
-  arma_debug_assert_same_size(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "addition");
+  arma_conform_assert_same_size(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "addition");
   
   const bool is_vec = (A.n_rows == 1) || (A.n_cols == 1);
   
@@ -187,7 +187,7 @@ inline
 void
 spop_diagmat::apply_noalias(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglue_minus>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -197,7 +197,7 @@ spop_diagmat::apply_noalias(SpMat<typename T1::elem_type>& out, const SpGlue<T1,
   const SpMat<eT>& A = UA.M;
   const SpMat<eT>& B = UB.M;
   
-  arma_debug_assert_same_size(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "subtraction");
+  arma_conform_assert_same_size(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "subtraction");
   
   const bool is_vec = (A.n_rows == 1) || (A.n_cols == 1);
   
@@ -232,7 +232,7 @@ inline
 void
 spop_diagmat::apply_noalias(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglue_schur>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -242,7 +242,7 @@ spop_diagmat::apply_noalias(SpMat<typename T1::elem_type>& out, const SpGlue<T1,
   const SpMat<eT>& A = UA.M;
   const SpMat<eT>& B = UB.M;
   
-  arma_debug_assert_same_size(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "element-wise multiplication");
+  arma_conform_assert_same_size(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "element-wise multiplication");
   
   const bool is_vec = (A.n_rows == 1) || (A.n_cols == 1);
   
@@ -277,7 +277,7 @@ inline
 void
 spop_diagmat::apply_noalias(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglue_times>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -287,7 +287,7 @@ spop_diagmat::apply_noalias(SpMat<typename T1::elem_type>& out, const SpGlue<T1,
   const SpMat<eT>& A = UA.M;
   const SpMat<eT>& B = UB.M;
   
-  arma_debug_assert_mul_size(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "matrix multiplication");
+  arma_conform_assert_mul_size(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "matrix multiplication");
   
   const uword C_n_rows = A.n_rows;
   const uword C_n_cols = B.n_cols;
@@ -349,7 +349,7 @@ inline
 void
 spop_diagmat2::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_diagmat2>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -379,7 +379,7 @@ inline
 void
 spop_diagmat2::apply_noalias(SpMat<eT>& out, const SpMat<eT>& X, const uword row_offset, const uword col_offset)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword n_rows = X.n_rows;
   const uword n_cols = X.n_cols;
@@ -427,7 +427,7 @@ spop_diagmat2::apply_noalias(SpMat<eT>& out, const SpMat<eT>& X, const uword row
     }
   else   // generate a diagonal matrix out of a matrix
     {
-    arma_debug_check_bounds
+    arma_conform_check_bounds
       (
       ((row_offset > 0) && (row_offset >= n_rows)) || ((col_offset > 0) && (col_offset >= n_cols)),
       "diagmat(): requested diagonal out of bounds"

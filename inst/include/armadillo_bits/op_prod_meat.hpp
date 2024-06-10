@@ -25,7 +25,7 @@ inline
 void
 op_prod::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword X_n_rows = X.n_rows;
   const uword X_n_cols = X.n_cols;
@@ -66,13 +66,13 @@ inline
 void
 op_prod::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_prod>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
   const uword dim = in.aux_uword_a;
   
-  arma_debug_check( (dim > 1), "prod(): parameter 'dim' must be 0 or 1" );
+  arma_conform_check( (dim > 1), "prod(): parameter 'dim' must be 0 or 1" );
   
   const quasi_unwrap<T1> U(in.m);
   
@@ -97,7 +97,7 @@ inline
 eT
 op_prod::prod(const subview<eT>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   eT val = eT(1);
   
@@ -143,7 +143,7 @@ inline
 typename T1::elem_type
 op_prod::prod(const Base<typename T1::elem_type,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   

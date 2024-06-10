@@ -26,7 +26,7 @@ inline
 void
 op_diagvec::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_diagvec>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -53,7 +53,7 @@ inline
 void
 op_diagvec::apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -89,7 +89,7 @@ inline
 void
 op_diagvec::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,glue_times>, op_diagvec>& X, const typename arma_not_cx<typename T1::elem_type>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
@@ -100,12 +100,12 @@ op_diagvec::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   const typename partial_unwrap<T1>::stored_type& A = UA.M;
   const typename partial_unwrap<T2>::stored_type& B = UB.M;
   
-  arma_debug_assert_trans_mul_size< partial_unwrap<T1>::do_trans, partial_unwrap<T2>::do_trans >(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "matrix multiplication");
+  arma_conform_assert_trans_mul_size< partial_unwrap<T1>::do_trans, partial_unwrap<T2>::do_trans >(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "matrix multiplication");
   
   if( (A.n_elem == 0) || (B.n_elem == 0) )  { actual_out.reset(); return; }
   
-  const bool use_alpha = partial_unwrap<T1>::do_times || partial_unwrap<T2>::do_times;
-  const eT       alpha = use_alpha ? (UA.get_val() * UB.get_val()) : eT(0);
+  constexpr bool use_alpha = partial_unwrap<T1>::do_times || partial_unwrap<T2>::do_times;
+  const     eT       alpha = use_alpha ? (UA.get_val() * UB.get_val()) : eT(0);
   
   const bool is_alias  = (UA.is_alias(actual_out) || UB.is_alias(actual_out));
   
@@ -120,7 +120,7 @@ op_diagvec::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   
   if( (partial_unwrap<T1>::do_trans == false) && (partial_unwrap<T2>::do_trans == false) )
     {
-    arma_extra_debug_print("trans_A = false; trans_B = false;");
+    arma_debug_print("trans_A = false; trans_B = false;");
     
     const uword N = (std::min)(A_n_rows, B_n_cols);
     
@@ -165,7 +165,7 @@ op_diagvec::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   else
   if( (partial_unwrap<T1>::do_trans == true ) && (partial_unwrap<T2>::do_trans == false) )
     {
-    arma_extra_debug_print("trans_A = true; trans_B = false;");
+    arma_debug_print("trans_A = true; trans_B = false;");
     
     const uword N = (std::min)(A_n_cols, B_n_cols);
     
@@ -188,7 +188,7 @@ op_diagvec::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   else
   if( (partial_unwrap<T1>::do_trans == false) && (partial_unwrap<T2>::do_trans == true ) )
     {
-    arma_extra_debug_print("trans_A = false; trans_B = true;");
+    arma_debug_print("trans_A = false; trans_B = true;");
     
     const uword N = (std::min)(A_n_rows, B_n_rows);
     
@@ -213,7 +213,7 @@ op_diagvec::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   else
   if( (partial_unwrap<T1>::do_trans == true ) && (partial_unwrap<T2>::do_trans == true ) )
     {
-    arma_extra_debug_print("trans_A = true; trans_B = true;");
+    arma_debug_print("trans_A = true; trans_B = true;");
     
     const uword N = (std::min)(A_n_cols, B_n_rows);
     
@@ -248,7 +248,7 @@ inline
 void
 op_diagvec::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,glue_times>, op_diagvec>& X, const typename arma_cx_only<typename T1::elem_type>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename T1::pod_type   T;
@@ -260,12 +260,12 @@ op_diagvec::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   const typename partial_unwrap<T1>::stored_type& A = UA.M;
   const typename partial_unwrap<T2>::stored_type& B = UB.M;
   
-  arma_debug_assert_trans_mul_size< partial_unwrap<T1>::do_trans, partial_unwrap<T2>::do_trans >(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "matrix multiplication");
+  arma_conform_assert_trans_mul_size< partial_unwrap<T1>::do_trans, partial_unwrap<T2>::do_trans >(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "matrix multiplication");
   
   if( (A.n_elem == 0) || (B.n_elem == 0) )  { actual_out.reset(); return; }
   
-  const bool use_alpha = partial_unwrap<T1>::do_times || partial_unwrap<T2>::do_times;
-  const eT       alpha = use_alpha ? (UA.get_val() * UB.get_val()) : eT(0);
+  constexpr bool use_alpha = partial_unwrap<T1>::do_times || partial_unwrap<T2>::do_times;
+  const     eT       alpha = use_alpha ? (UA.get_val() * UB.get_val()) : eT(0);
   
   const bool is_alias  = (UA.is_alias(actual_out) || UB.is_alias(actual_out));
   
@@ -280,7 +280,7 @@ op_diagvec::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   
   if( (partial_unwrap<T1>::do_trans == false) && (partial_unwrap<T2>::do_trans == false) )
     {
-    arma_extra_debug_print("trans_A = false; trans_B = false;");
+    arma_debug_print("trans_A = false; trans_B = false;");
     
     const uword N = (std::min)(A_n_rows, B_n_cols);
     
@@ -322,7 +322,7 @@ op_diagvec::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   else
   if( (partial_unwrap<T1>::do_trans == true) && (partial_unwrap<T2>::do_trans == false) )
     {
-    arma_extra_debug_print("trans_A = true; trans_B = false;");
+    arma_debug_print("trans_A = true; trans_B = false;");
     
     const uword N = (std::min)(A_n_cols, B_n_cols);
     
@@ -367,7 +367,7 @@ op_diagvec::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   else
   if( (partial_unwrap<T1>::do_trans == false) && (partial_unwrap<T2>::do_trans == true) )
     {
-    arma_extra_debug_print("trans_A = false; trans_B = true;");
+    arma_debug_print("trans_A = false; trans_B = true;");
     
     const uword N = (std::min)(A_n_rows, B_n_rows);
     
@@ -407,7 +407,7 @@ op_diagvec::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   else
   if( (partial_unwrap<T1>::do_trans == true) && (partial_unwrap<T2>::do_trans == true) )
     {
-    arma_extra_debug_print("trans_A = true; trans_B = true;");
+    arma_debug_print("trans_A = true; trans_B = true;");
     
     const uword N = (std::min)(A_n_cols, B_n_rows);
     
@@ -463,7 +463,7 @@ inline
 void
 op_diagvec2::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_diagvec2>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -496,14 +496,14 @@ inline
 void
 op_diagvec2::apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const uword row_offset, const uword col_offset)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
   const uword n_rows = P.get_n_rows();
   const uword n_cols = P.get_n_cols();
   
-  arma_debug_check_bounds
+  arma_conform_check_bounds
     (
     ((row_offset > 0) && (row_offset >= n_rows)) || ((col_offset > 0) && (col_offset >= n_cols)),
     "diagvec(): requested diagonal is out of bounds"

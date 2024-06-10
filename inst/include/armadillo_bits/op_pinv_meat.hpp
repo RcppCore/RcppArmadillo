@@ -27,7 +27,7 @@ inline
 void
 op_pinv_default::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_pinv_default>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const bool status = op_pinv_default::apply_direct(out, in.m);
   
@@ -45,7 +45,7 @@ inline
 bool
 op_pinv_default::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::pod_type T;
   
@@ -66,7 +66,7 @@ inline
 void
 op_pinv::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_pinv>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::pod_type T;
   
@@ -89,12 +89,12 @@ inline
 bool
 op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& expr, typename T1::pod_type tol, const uword method_id)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
   
-  arma_debug_check((tol < T(0)), "pinv(): tolerance must be >= 0");
+  arma_conform_check((tol < T(0)), "pinv(): tolerance must be >= 0");
   
   // method_id = 0 -> default setting
   // method_id = 1 -> use standard algorithm
@@ -106,7 +106,7 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   
   if(is_op_diagmat<T1>::value || A.is_diagmat())
     {
-    arma_extra_debug_print("op_pinv: detected diagonal matrix");
+    arma_debug_print("op_pinv: detected diagonal matrix");
     
     return op_pinv::apply_diag(out, A, tol);
     }
@@ -132,7 +132,7 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   
   if(do_sym)
     {
-    arma_extra_debug_print("op_pinv: symmetric/hermitian optimisation");
+    arma_debug_print("op_pinv: symmetric/hermitian optimisation");
     
     return op_pinv::apply_sym(out, A, tol, method_id);
     }
@@ -147,7 +147,7 @@ inline
 bool
 op_pinv::apply_diag(Mat<eT>& out, const Mat<eT>& A, typename get_pod_type<eT>::result tol)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename get_pod_type<eT>::result T;
   
@@ -193,7 +193,7 @@ inline
 bool
 op_pinv::apply_sym(Mat<eT>& out, const Mat<eT>& A, typename get_pod_type<eT>::result tol, const uword method_id)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename get_pod_type<eT>::result T;
   
@@ -250,7 +250,7 @@ inline
 bool
 op_pinv::apply_gen(Mat<eT>& out, Mat<eT>& A, typename get_pod_type<eT>::result tol, const uword method_id)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename get_pod_type<eT>::result T;
   

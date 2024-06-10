@@ -32,7 +32,7 @@ struct unwrap_spmat
   unwrap_spmat(const T1& A)
     : M(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   const SpMat<eT> M;
@@ -52,7 +52,7 @@ struct unwrap_spmat< SpMat<eT> >
   unwrap_spmat(const SpMat<eT>& A)
     : M(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     
     M.sync();
     }
@@ -74,7 +74,7 @@ struct unwrap_spmat< SpRow<eT> >
   unwrap_spmat(const SpRow<eT>& A)
     : M(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     
     M.sync();
     }
@@ -96,7 +96,7 @@ struct unwrap_spmat< SpCol<eT> >
   unwrap_spmat(const SpCol<eT>& A)
     : M(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     
     M.sync();
     }
@@ -120,7 +120,7 @@ struct unwrap_spmat< SpOp<T1, spop_type> >
   unwrap_spmat(const SpOp<T1, spop_type>& A)
     : M(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   const SpMat<eT> M;
@@ -142,7 +142,7 @@ struct unwrap_spmat< SpGlue<T1, T2, spglue_type> >
   unwrap_spmat(const SpGlue<T1, T2, spglue_type>& A)
     : M(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   const SpMat<eT> M;
@@ -162,7 +162,7 @@ struct unwrap_spmat< mtSpOp<out_eT, T1, spop_type> >
   unwrap_spmat(const mtSpOp<out_eT, T1, spop_type>& A)
     : M(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   const SpMat<out_eT> M;
@@ -182,7 +182,7 @@ struct unwrap_spmat< mtSpGlue<out_eT, T1, T2, spglue_type> >
   unwrap_spmat(const mtSpGlue<out_eT, T1, T2, spglue_type>& A)
     : M(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   const SpMat<out_eT> M;

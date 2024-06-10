@@ -26,7 +26,7 @@ inline
 void
 glue_cov::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_cov>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -46,7 +46,7 @@ glue_cov::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_cov>& X)
                       ? Mat<eT>(const_cast<eT*>(B.memptr()), B.n_cols, B.n_rows, false, false)
                       : Mat<eT>(const_cast<eT*>(B.memptr()), B.n_rows, B.n_cols, false, false);
   
-  arma_debug_assert_mul_size(AA, BB, true, false, "cov()");
+  arma_conform_assert_mul_size(AA, BB, true, false, "cov()");
   
   if( (A.n_elem == 0) || (B.n_elem == 0) )
     {

@@ -65,7 +65,7 @@ class gemv_emul_tinysq
   void
   apply( eT* y, const TA& A, const eT* x, const eT alpha = eT(1), const eT beta = eT(0) )
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     
     const eT*  Am = A.memptr();
     
@@ -224,7 +224,7 @@ class gemv_emul
   void
   apply( eT* y, const TA& A, const eT* x, const eT alpha = eT(1), const eT beta = eT(0) )
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     
     const uword A_n_rows = A.n_rows;
     const uword A_n_cols = A.n_cols;
@@ -307,7 +307,7 @@ class gemv
   void
   apply_blas_type( eT* y, const TA& A, const eT* x, const eT alpha = eT(1), const eT beta = eT(0) )
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     
     if( (A.n_rows <= 4) && (A.n_rows == A.n_cols) && (is_cx<eT>::no) )
       {
@@ -317,13 +317,13 @@ class gemv
       {
       #if defined(ARMA_USE_ATLAS)
         {
-        arma_debug_assert_atlas_size(A);
+        arma_conform_assert_atlas_size(A);
         
         if(is_cx<eT>::no)
           {
           // use gemm() instead of gemv() to work around a speed issue in Atlas 3.8.4
           
-          arma_extra_debug_print("atlas::cblas_gemm()");
+          arma_debug_print("atlas::cblas_gemm()");
           
           atlas::cblas_gemm<eT>
             (
@@ -345,7 +345,7 @@ class gemv
           }
         else
           {
-          arma_extra_debug_print("atlas::cblas_gemv()");
+          arma_debug_print("atlas::cblas_gemv()");
           
           atlas::cblas_gemv<eT>
             (
@@ -366,9 +366,9 @@ class gemv
         }
       #elif defined(ARMA_USE_BLAS)
         {
-        arma_extra_debug_print("blas::gemv()");
+        arma_debug_print("blas::gemv()");
         
-        arma_debug_assert_blas_size(A);
+        arma_conform_assert_blas_size(A);
         
         const char      trans_A     = (do_trans_A) ? ( is_cx<eT>::yes ? 'C' : 'T' ) : 'N';
         const blas_int  m           = blas_int(A.n_rows);
@@ -378,7 +378,7 @@ class gemv
         const blas_int  inc         = blas_int(1);
         const eT        local_beta  = (use_beta) ? beta : eT(0);
         
-        arma_extra_debug_print( arma_str::format("blas::gemv(): trans_A = %c") % trans_A );
+        arma_debug_print( arma_str::format("blas::gemv(): trans_A = %c") % trans_A );
         
         blas::gemv<eT>
           (
