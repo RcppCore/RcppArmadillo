@@ -16,10 +16,15 @@
 // ------------------------------------------------------------------------
 
 
+#undef ARMA_HAVE_CXX11
 #undef ARMA_HAVE_CXX14
 #undef ARMA_HAVE_CXX17
 #undef ARMA_HAVE_CXX20
 #undef ARMA_HAVE_CXX23
+
+#if (__cplusplus >= 201103L)
+  #define ARMA_HAVE_CXX11
+#endif
 
 #if (__cplusplus >= 201402L)
   #define ARMA_HAVE_CXX14
@@ -42,6 +47,9 @@
 #if defined(_MSVC_LANG)
   
   #if (_MSVC_LANG >= 201402L)
+    #undef  ARMA_HAVE_CXX11
+    #define ARMA_HAVE_CXX11
+    
     #undef  ARMA_HAVE_CXX14
     #define ARMA_HAVE_CXX14
   #endif
@@ -70,8 +78,15 @@
 #endif
 
 
-#if !defined(ARMA_HAVE_CXX14)
-  #error "*** C++14 compiler required; enable C++14 mode in your compiler, or use an earlier version of Armadillo"
+#if !defined(ARMA_HAVE_CXX11)
+  #error "*** C++11 compiler required; enable C++11 mode in your compiler, or use an earlier version of Armadillo"
+#endif
+
+
+#if (!defined(ARMA_HAVE_CXX14))
+  #if (!defined(ARMA_IGNORE_DEPRECATED_MARKER)) || defined(ARMA_DONT_IGNORE_DEPRECATED_MARKER) || defined(ARMA_DEBUG)
+    #pragma message ("INFO: support for C++11 is deprecated")
+  #endif
 #endif
 
 

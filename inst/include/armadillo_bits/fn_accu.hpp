@@ -314,7 +314,7 @@ accu(const Glue<T1,T2,glue_times>& expr)
       
       arma_conform_assert_mul_size(PA.get_n_rows(), PA.get_n_cols(), PB.get_n_rows(), PB.get_n_cols(), "matrix multiplication");
       
-      return op_dot::apply_proxy(PA,PB);
+      return op_dot::apply_proxy_linear(PA,PB);
       }
     }
   
@@ -339,11 +339,42 @@ accu(const eGlue<T1,T2,eglue_schur>& expr)
   typedef typename expr_type::proxy1_type::stored_type P1_stored_type;
   typedef typename expr_type::proxy2_type::stored_type P2_stored_type;
   
+  constexpr bool is_sv = (is_subview<P1_stored_type>::value) || (is_subview<P2_stored_type>::value);
+  
+  if( (is_sv) && (expr.get_n_rows() >= 4) )
+    {
+    arma_debug_print("accu(): eglue_schur subview optimisation");
+    
+    typedef typename T1::elem_type eT;
+    
+    const sv_keep_unwrap<P1_stored_type>& UA(expr.P1.Q);
+    const sv_keep_unwrap<P2_stored_type>& UB(expr.P2.Q);
+    
+    typedef typename sv_keep_unwrap<T1>::stored_type UA_M_type;
+    typedef typename sv_keep_unwrap<T2>::stored_type UB_M_type;
+    
+    const UA_M_type& A = UA.M;
+    const UB_M_type& B = UB.M;
+    
+    // A and B have the same size (checked by the eGlue constructor)
+    
+    const uword A_n_rows = A.n_rows;
+    const uword A_n_cols = A.n_cols;
+    
+    eT acc = eT(0);
+    
+    for(uword c=0; c < A_n_cols; ++c)  { acc += op_dot::direct_dot(A_n_rows, A.colptr(c), B.colptr(c)); }
+    
+    return acc;
+    }
+  
   constexpr bool have_direct_mem_1 = (is_Mat<P1_stored_type>::value) || (is_subview_col<P1_stored_type>::value);
   constexpr bool have_direct_mem_2 = (is_Mat<P2_stored_type>::value) || (is_subview_col<P2_stored_type>::value);
   
   if(have_direct_mem_1 && have_direct_mem_2)
     {
+    arma_debug_print("accu(): eglue_schur direct_mem optimisation");
+    
     const quasi_unwrap<P1_stored_type> tmp1(expr.P1.Q);
     const quasi_unwrap<P2_stored_type> tmp2(expr.P2.Q);
     

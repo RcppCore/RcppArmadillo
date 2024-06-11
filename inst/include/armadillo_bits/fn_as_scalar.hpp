@@ -117,7 +117,7 @@ as_scalar_redirect<2>::apply(const Glue<T1, T2, glue_times>& X)
       "as_scalar(): incompatible dimensions"
       );
     
-    return op_dot::apply_proxy(PA,PB);
+    return op_dot::apply_proxy_linear(PA,PB);
     }
   }
 

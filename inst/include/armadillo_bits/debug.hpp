@@ -1420,6 +1420,7 @@ inline void arma_debug_check(bool state, const char* msg)  { arma_conform_check(
             << " (" << nickname << ')';
         
         out << "\n@ arma_config::wrapper            = " << arma_config::wrapper;
+        out << "\n@ arma_config::cxx14              = " << arma_config::cxx14;
         out << "\n@ arma_config::cxx17              = " << arma_config::cxx17;
         out << "\n@ arma_config::cxx20              = " << arma_config::cxx20;
         out << "\n@ arma_config::cxx23              = " << arma_config::cxx23;

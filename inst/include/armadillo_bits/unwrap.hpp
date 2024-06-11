@@ -1361,7 +1361,7 @@ struct partial_unwrap< subview<eT> >
   
   static constexpr bool do_trans = false;
   static constexpr bool do_times = false;
-  static constexpr bool is_fast  = false;  // can't guarantee that memory is reused
+  static constexpr bool is_fast  = false;  // can't determine at compile time that memory is reused
   
   const subview<eT>& sv;
   const Mat<eT>      M;
@@ -1622,7 +1622,7 @@ struct partial_unwrap< Op< subview<eT>, op_htrans> >
   
   static constexpr bool do_trans = true;
   static constexpr bool do_times = false;
-  static constexpr bool is_fast  = false;  // can't guarantee that memory is reused
+  static constexpr bool is_fast  = false;  // can't determine at compile time that memory is reused
   
   const subview<eT>& sv;
   const Mat<eT>      M;
@@ -1894,7 +1894,7 @@ struct partial_unwrap< Op< subview<eT>, op_htrans2> >
   
   static constexpr bool do_trans = true;
   static constexpr bool do_times = true;
-  static constexpr bool is_fast  = false;  // can't guarantee that memory is reused
+  static constexpr bool is_fast  = false;  // can't determine at compile time that memory is reused
   
   const subview<eT>& sv;
   const eT           val;
@@ -3455,6 +3455,132 @@ struct partial_unwrap_check< eOp<subview_col<eT>, eop_neg> >
   static constexpr bool do_times = true;
   
   const Col<eT> M;
+  };
+
+
+
+//
+//
+//
+
+
+
+template<typename T1>
+struct sv_keep_unwrap
+  {
+  typedef typename T1::elem_type eT;
+  typedef Mat<eT>                stored_type;
+  
+  inline
+  sv_keep_unwrap(const T1& A)
+    : M(A)
+    {
+    arma_debug_sigprint();
+    }
+  
+  const Mat<eT> M;
+  };
+
+
+
+template<typename eT>
+struct sv_keep_unwrap< subview<eT> >
+  {
+  typedef subview<eT> stored_type;
+  
+  inline
+  sv_keep_unwrap(const subview<eT>& A)
+    : M(A)
+    {
+    arma_debug_sigprint();
+    }
+  
+  const subview<eT>& M;
+  };
+
+
+
+template<typename eT>
+struct sv_keep_unwrap< subview_row<eT> >
+  {
+  typedef subview_row<eT> stored_type;
+  
+  inline
+  sv_keep_unwrap(const subview_row<eT>& A)
+    : M(A)
+    {
+    arma_debug_sigprint();
+    }
+  
+  const subview_row<eT>& M;
+  };
+
+
+
+template<typename eT>
+struct sv_keep_unwrap< subview_col<eT> >
+  {
+  typedef subview_col<eT> stored_type;
+  
+  inline
+  sv_keep_unwrap(const subview_col<eT>& A)
+    : M(A)
+    {
+    arma_debug_sigprint();
+    }
+  
+  const subview_col<eT>& M;
+  };
+
+
+
+template<typename eT>
+struct sv_keep_unwrap< Mat<eT> >
+  {
+  typedef Mat<eT> stored_type;
+  
+  inline
+  sv_keep_unwrap(const Mat<eT>& A)
+    : M(A)
+    {
+    arma_debug_sigprint();
+    }
+  
+  const Mat<eT>& M;
+  };
+
+
+
+template<typename eT>
+struct sv_keep_unwrap< Row<eT> >
+  {
+  typedef Row<eT> stored_type;
+  
+  inline
+  sv_keep_unwrap(const Row<eT>& A)
+    : M(A)
+    {
+    arma_debug_sigprint();
+    }
+  
+  const Row<eT>& M;
+  };
+
+
+
+template<typename eT>
+struct sv_keep_unwrap< Col<eT> >
+  {
+  typedef Col<eT> stored_type;
+  
+  inline
+  sv_keep_unwrap(const Col<eT>& A)
+    : M(A)
+    {
+    arma_debug_sigprint();
+    }
+  
+  const Col<eT>& M;
   };
 
 
