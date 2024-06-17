@@ -24,7 +24,7 @@
 template<typename T1>
 inline
 void
-op_sp_mean::apply(Mat<typename T1::elem_type>& out, const SpToDOp<T1, op_sp_mean>& in)
+op_sp_mean::apply(Mat<typename T1::elem_type>& out, const mtSpReduceOp<typename T1::elem_type, T1, op_sp_mean>& in)
   {
   arma_debug_sigprint();
   

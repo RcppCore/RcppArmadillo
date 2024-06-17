@@ -343,19 +343,6 @@ struct is_SpToDOp< const SpToDOp<T1,op_type> >
 
 
 template<typename T>
-struct is_mtSpToDOp
-  { static constexpr bool value = false; };
- 
-template<typename eT, typename T1, typename op_type>
-struct is_mtSpToDOp< mtSpToDOp<eT, T1, op_type> >
-  { static constexpr bool value = true; };
- 
-template<typename eT, typename T1, typename op_type>
-struct is_mtSpToDOp< const mtSpToDOp<eT, T1, op_type> >
-  { static constexpr bool value = true; };
-
-
-template<typename T>
 struct is_SpToDGlue
   { static constexpr bool value = false; };
  
@@ -570,7 +557,6 @@ struct is_arma_type2
   || is_CubeToMatOp<T1>::value
   || is_SpToDOp<T1>::value
   || is_SpToDGlue<T1>::value
-  || is_mtSpToDOp<T1>::value
   ;
   };
 
@@ -731,6 +717,15 @@ struct is_mtSpGlue< mtSpGlue<eT, T1, T2, spglue_type> >
   { static constexpr bool value = true; };
 
 
+template<typename T>
+struct is_mtSpReduceOp
+  { static constexpr bool value = false; };
+ 
+template<typename eT, typename T1, typename op_type>
+struct is_mtSpReduceOp< mtSpReduceOp<eT, T1, op_type> >
+  { static constexpr bool value = true; };
+
+
 
 template<typename T1>
 struct is_arma_sparse_type
@@ -746,6 +741,7 @@ struct is_arma_sparse_type
   || is_SpGlue<T1>::value
   || is_mtSpOp<T1>::value
   || is_mtSpGlue<T1>::value
+  || is_mtSpReduceOp<T1>::value
   ;
   };
 

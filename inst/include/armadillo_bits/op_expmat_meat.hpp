@@ -200,7 +200,7 @@ op_expmat_sym::apply_direct(Mat<typename T1::elem_type>& out, const Base<typenam
     
     arma_conform_check( (X.is_square() == false), "expmat_sym(): given matrix must be square sized" );
     
-    if((arma_config::check_conformance) && (arma_config::warn_level > 0) && (is_cx<eT>::yes) && (sym_helper::check_diag_imag(X) == false))
+    if((arma_config::check_conform) && (arma_config::warn_level > 0) && (is_cx<eT>::yes) && (sym_helper::check_diag_imag(X) == false))
       {
       arma_conform_warn(1, "inv_sympd(): imaginary components on diagonal are non-zero");
       }

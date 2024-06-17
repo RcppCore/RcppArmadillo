@@ -25,7 +25,7 @@ template<typename eT>
 class SpRow : public SpMat<eT>
   {
   public:
-
+  
   typedef eT                                elem_type;
   typedef typename get_pod_type<eT>::result pod_type;
   
@@ -47,7 +47,9 @@ class SpRow : public SpMat<eT>
   
   inline SpRow& operator=(const eT val);
   
-  template<typename T1> inline            SpRow(const Base<eT,T1>& X);
+  inline SpRow(const Row<eT>& X);  // for backwards compatibility
+  
+  template<typename T1> inline explicit   SpRow(const Base<eT,T1>& X);
   template<typename T1> inline SpRow& operator=(const Base<eT,T1>& X);
   
   template<typename T1> inline            SpRow(const SpBase<eT,T1>& X);
@@ -59,6 +61,8 @@ class SpRow : public SpMat<eT>
   arma_warn_unused inline const SpOp<SpRow<eT>,spop_htrans>  t() const;
   arma_warn_unused inline const SpOp<SpRow<eT>,spop_htrans> ht() const;
   arma_warn_unused inline const SpOp<SpRow<eT>,spop_strans> st() const;
+  
+  arma_warn_unused inline const SpToDOp<SpRow<eT>,op_sp_as_dense> as_dense() const;
   
   inline void shed_col (const uword col_num);
   inline void shed_cols(const uword in_col1, const uword in_col2);

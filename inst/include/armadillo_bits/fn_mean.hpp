@@ -113,13 +113,13 @@ typename
 enable_if2
   <
   is_arma_sparse_type<T1>::value && resolves_to_sparse_vector<T1>::no,
-  const SpToDOp<T1,op_sp_mean>
+  const mtSpReduceOp<typename T1::elem_type, T1, op_sp_mean>
   >::result
 mean(const T1& x)
   {
   arma_debug_sigprint();
   
-  return SpToDOp<T1,op_sp_mean>(x, 0, 0);
+  return mtSpReduceOp<typename T1::elem_type, T1, op_sp_mean>(x, 0, 0);
   }
 
 
@@ -131,13 +131,13 @@ typename
 enable_if2
   <
   is_arma_sparse_type<T1>::value,
-  const SpToDOp<T1,op_sp_mean>
+  const mtSpReduceOp<typename T1::elem_type, T1, op_sp_mean>
   >::result
 mean(const T1& x, const uword dim)
   {
   arma_debug_sigprint();
   
-  return SpToDOp<T1,op_sp_mean>(x, dim, 0);
+  return mtSpReduceOp<typename T1::elem_type, T1, op_sp_mean>(x, dim, 0);
   }
 
 

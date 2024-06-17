@@ -40,7 +40,7 @@ inline
 void
 subview_cube_each_common<eT>::check_size(const Mat<eT2>& A) const
   {
-  if(arma_config::check_conformance)
+  if(arma_config::check_conform)
     {
     if( (A.n_rows != P.n_rows) || (A.n_cols != P.n_cols) )
       {

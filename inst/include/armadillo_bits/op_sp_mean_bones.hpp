@@ -28,7 +28,7 @@ class op_sp_mean
   
   // Apply mean into an output sparse matrix (or vector).
   template<typename T1>
-  inline static void apply(Mat<typename T1::elem_type>& out, const SpToDOp<T1, op_sp_mean>& in);
+  inline static void apply(Mat<typename T1::elem_type>& out, const mtSpReduceOp<typename T1::elem_type, T1, op_sp_mean>& in);
   
   template<typename T1>
   inline static void apply_fast(Mat<typename T1::elem_type>& out, const SpProxy<T1>& p, const uword dim);

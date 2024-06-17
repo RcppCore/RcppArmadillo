@@ -16,55 +16,21 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup wall_clock
+
+//! \addtogroup op_sp_nonzeros
 //! @{
 
 
-inline
-wall_clock::wall_clock()
+
+class op_sp_nonzeros
+  : public traits_op_col
   {
-  arma_debug_sigprint();
+  public:
   
-  chrono_time1 = std::chrono::steady_clock::now();  // warmup
-  }
+  template<typename T1>
+  static inline void apply(Mat<typename T1::elem_type>& out, const SpToDOp<T1, op_sp_nonzeros>& X);
+  };
 
-
-
-inline
-wall_clock::~wall_clock()
-  {
-  arma_debug_sigprint();
-  }
-
-
-
-inline
-void
-wall_clock::tic()
-  {
-  arma_debug_sigprint();
-  
-  valid = true;
-  
-  chrono_time1 = std::chrono::steady_clock::now();
-  }
-
-
-
-inline
-double
-wall_clock::toc()
-  {
-  arma_debug_sigprint();
-  
-  const std::chrono::steady_clock::time_point chrono_time2 = std::chrono::steady_clock::now();
-  
-  typedef std::chrono::duration<double> duration_type;  // TODO: check this
-  
-  const duration_type chrono_span = std::chrono::duration_cast< duration_type >(chrono_time2 - chrono_time1);
-  
-  return (valid) ? double(chrono_span.count()) : double(0);
-  }
 
 
 //! @}

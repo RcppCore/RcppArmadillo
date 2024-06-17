@@ -1907,6 +1907,16 @@ SpSubview_col<eT>::st() const
 
 
 
+template<typename eT>
+inline
+const SpToDOp<SpSubview_col<eT>,op_sp_as_dense>
+SpSubview_col<eT>::as_dense() const
+  {
+  return SpToDOp<SpSubview_col<eT>,op_sp_as_dense>(*this);
+  }
+
+
+
 //
 //
 //
@@ -2009,6 +2019,16 @@ const SpOp<SpSubview_row<eT>,spop_strans>
 SpSubview_row<eT>::st() const
   {
   return SpOp<SpSubview_row<eT>,spop_strans>(*this);
+  }
+
+
+
+template<typename eT>
+inline
+const SpToDOp<SpSubview_row<eT>,op_sp_as_dense>
+SpSubview_row<eT>::as_dense() const
+  {
+  return SpToDOp<SpSubview_row<eT>,op_sp_as_dense>(*this);
   }
 
 

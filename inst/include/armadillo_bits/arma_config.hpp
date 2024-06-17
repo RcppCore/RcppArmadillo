@@ -66,9 +66,9 @@ struct arma_config
   
   
   #if defined(ARMA_CHECK_CONFORMANCE)
-    static constexpr bool check_conformance = true;
+    static constexpr bool check_conform = true;
   #else
-    static constexpr bool check_conformance = false;
+    static constexpr bool check_conform = false;
   #endif
   
   

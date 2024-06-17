@@ -880,4 +880,14 @@ SpBase<elem_type, derived>::as_row() const
 
 
 
+template<typename elem_type, typename derived>
+inline
+const SpToDOp<derived,op_sp_as_dense>
+SpBase<elem_type, derived>::as_dense() const
+  {
+  return SpToDOp<derived,op_sp_as_dense>( (*this).get_ref() );
+  }
+
+
+
 //! @}

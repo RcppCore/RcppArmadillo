@@ -57,7 +57,7 @@ conv_to<out_eT>::from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_e
   
   const Proxy<T1> P(in.get_ref());
   
-  arma_conform_check( (P.get_n_elem() != 1), "conv_to(): given object does not have exactly one element" );
+  arma_conform_check( (P.get_n_elem() != 1), "conv_to(): expected 1x1 matrix" );
   
   return out_eT(Proxy<T1>::use_at ? P.at(0,0) : P[0]);
   }
@@ -78,7 +78,7 @@ conv_to<out_eT>::from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_
   
   const Proxy<T1> P(in.get_ref());
   
-  arma_conform_check( (P.get_n_elem() != 1), "conv_to(): given object does not have exactly one element" );
+  arma_conform_check( (P.get_n_elem() != 1), "conv_to(): expected 1x1 matrix" );
   
   out_eT out;
   
@@ -103,7 +103,7 @@ conv_to<out_eT>::from(const BaseCube<in_eT, T1>& in, const typename arma_not_cx<
   
   const ProxyCube<T1> P(in.get_ref());
   
-  arma_conform_check( (P.get_n_elem() != 1), "conv_to(): given object does not have exactly one element" );
+  arma_conform_check( (P.get_n_elem() != 1), "conv_to(): expected 1x1x1 cube" );
   
   return out_eT(ProxyCube<T1>::use_at ? P.at(0,0,0) : P[0]);
   }
@@ -124,7 +124,7 @@ conv_to<out_eT>::from(const BaseCube<in_eT, T1>& in, const typename arma_cx_only
   
   const ProxyCube<T1> P(in.get_ref());
   
-  arma_conform_check( (P.get_n_elem() != 1), "conv_to(): given object does not have exactly one element" );
+  arma_conform_check( (P.get_n_elem() != 1), "conv_to(): expected 1x1x1 cube" );
   
   out_eT out;
   

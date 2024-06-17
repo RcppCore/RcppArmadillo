@@ -2264,7 +2264,7 @@ Cube<eT>::shed_slices(const Base<uword, T1>& indices)
   const uword* slices_to_shed_mem = slices_to_shed.memptr();
   const uword  N                  = slices_to_shed.n_elem;
   
-  if(arma_config::check_conformance)
+  if(arma_config::check_conform)
     {
     for(uword i=0; i<N; ++i)
       {

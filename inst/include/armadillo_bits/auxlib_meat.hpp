@@ -1988,7 +1988,7 @@ auxlib::eig_sym(Col<eT>& eigval, Mat<eT>& A)
     
     if(A.is_empty())  { eigval.reset(); return true; }
     
-    if((arma_config::check_conformance) && (auxlib::rudimentary_sym_check(A) == false))
+    if((arma_config::check_conform) && (auxlib::rudimentary_sym_check(A) == false))
       {
       arma_conform_warn(1, "eig_sym(): given matrix is not symmetric");
       }
@@ -2041,7 +2041,7 @@ auxlib::eig_sym(Col<T>& eigval, Mat< std::complex<T> >& A)
     
     if(A.is_empty())  { eigval.reset(); return true; }
     
-    if((arma_config::check_conformance) && (auxlib::rudimentary_sym_check(A) == false))
+    if((arma_config::check_conform) && (auxlib::rudimentary_sym_check(A) == false))
       {
       arma_conform_warn(1, "eig_sym(): given matrix is not hermitian");
       }

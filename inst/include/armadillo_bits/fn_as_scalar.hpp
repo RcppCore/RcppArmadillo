@@ -21,6 +21,37 @@
 
 
 
+struct as_scalar_errmsg
+  {
+  arma_cold
+  arma_noinline
+  static
+  std::string
+  incompat_size_string(const uword n_rows, const uword n_cols)
+    {
+    std::ostringstream tmp;
+    
+    tmp << "as_scalar(): expected 1x1 matrix; got " << n_rows << 'x' << n_cols;
+    
+    return tmp.str();
+    }
+  
+  arma_cold
+  arma_noinline
+  static
+  std::string
+  incompat_size_string(const uword n_rows, const uword n_cols, const uword n_slices)
+    {
+    std::ostringstream tmp;
+    
+    tmp << "as_scalar(): expected 1x1x1 cube; got " << n_rows << 'x' << n_cols << 'x' << n_slices;
+    
+    return tmp.str();
+    }
+  };
+
+
+
 template<uword N>
 struct as_scalar_redirect
   {
@@ -35,6 +66,8 @@ struct as_scalar_redirect<2>
   {
   template<typename T1, typename T2>
   inline static typename T1::elem_type apply(const Glue<T1,T2,glue_times>& X);
+  
+  inline static void check_size(const uword A_n_rows, const uword A_n_cols, const uword B_n_rows, const uword B_n_cols);
   };
 
 
@@ -57,7 +90,10 @@ as_scalar_redirect<N>::apply(const T1& X)
   
   const Proxy<T1> P(X);
   
-  arma_conform_check( (P.get_n_elem() != 1), "as_scalar(): expression must evaluate to exactly one element" );
+  if( (arma_config::check_conform) && (P.get_n_elem() != 1) )
+    {
+    arma_conform_check_bounds( true, as_scalar_errmsg::incompat_size_string(P.get_n_rows(), P.get_n_cols()) );
+    }
   
   return (Proxy<T1>::use_at) ? P.at(0,0) : P[0];
   }
@@ -100,7 +136,10 @@ as_scalar_redirect<2>::apply(const Glue<T1, T2, glue_times>& X)
     const uword B_n_rows = (tmp2.do_trans == false) ? (TB::is_row ? 1 : B.n_rows) : (TB::is_col ? 1 : B.n_cols);
     const uword B_n_cols = (tmp2.do_trans == false) ? (TB::is_col ? 1 : B.n_cols) : (TB::is_row ? 1 : B.n_rows);
     
-    arma_conform_check( (A_n_rows != 1) || (B_n_cols != 1) || (A_n_cols != B_n_rows), "as_scalar(): incompatible dimensions" );
+    if( (arma_config::check_conform) && ((A_n_rows != 1) || (B_n_cols != 1) || (A_n_cols != B_n_rows)) )
+      {
+      as_scalar_redirect<2>::check_size(A_n_rows, A_n_cols, B_n_rows, B_n_cols);
+      }
     
     const eT val = op_dot::direct_dot(A.n_elem, A.memptr(), B.memptr());
     
@@ -111,14 +150,30 @@ as_scalar_redirect<2>::apply(const Glue<T1, T2, glue_times>& X)
     const Proxy<T1> PA(X.A);
     const Proxy<T2> PB(X.B);
     
-    arma_conform_check
-      (
-      (PA.get_n_rows() != 1) || (PB.get_n_cols() != 1) || (PA.get_n_cols() != PB.get_n_rows()),
-      "as_scalar(): incompatible dimensions"
-      );
+    const uword A_n_rows = PA.get_n_rows();
+    const uword A_n_cols = PA.get_n_cols();
+    
+    const uword B_n_rows = PB.get_n_rows();
+    const uword B_n_cols = PB.get_n_cols();
+    
+    if( (arma_config::check_conform) && ((A_n_rows != 1) || (B_n_cols != 1) || (A_n_cols != B_n_rows)) )
+      {
+      as_scalar_redirect<2>::check_size(A_n_rows, A_n_cols, B_n_rows, B_n_cols);
+      }
     
     return op_dot::apply_proxy_linear(PA,PB);
     }
+  }
+
+
+
+inline
+void
+as_scalar_redirect<2>::check_size(const uword A_n_rows, const uword A_n_cols, const uword B_n_rows, const uword B_n_cols)
+  {
+  arma_conform_assert_mul_size(A_n_rows, A_n_cols, B_n_rows, B_n_cols, "matrix multiplication");
+  
+  arma_conform_check_bounds( ((A_n_rows != 1) || (B_n_cols != 1)), as_scalar_errmsg::incompat_size_string(A_n_rows, B_n_cols) );
   }
 
 
@@ -149,7 +204,10 @@ as_scalar_redirect<3>::apply(const Glue< Glue<T1, T2, glue_times>, T3, glue_time
     {
     const Mat<eT> tmp(X);
     
-    arma_conform_check( (tmp.n_elem != 1), "as_scalar(): expression must evaluate to exactly one element" );
+    if( (arma_config::check_conform) && (tmp.n_elem != 1) )
+      {
+      arma_conform_check_bounds(true,  as_scalar_errmsg::incompat_size_string(tmp.n_rows, tmp.n_cols) );
+      }
     
     return tmp[0];
     }
@@ -176,14 +234,14 @@ as_scalar_redirect<3>::apply(const Glue< Glue<T1, T2, glue_times>, T3, glue_time
     
     const eT val = tmp1.get_val() * tmp2.get_val() * tmp3.get_val();
     
-    arma_conform_check
+    arma_conform_check_bounds
       (
       (A_n_rows != 1)        ||
       (C_n_cols != 1)        ||
       (A_n_cols != B_n_rows) ||
       (B_n_cols != C_n_rows)
       ,
-      "as_scalar(): incompatible dimensions"
+      "as_scalar(): expected 1x1 matrix"
       );
     
     
@@ -226,7 +284,7 @@ as_scalar_diag(const Base<typename T1::elem_type,T1>& X)
   const unwrap<T1>   tmp(X.get_ref());
   const Mat<eT>& A = tmp.M;
   
-  arma_conform_check( (A.n_elem != 1), "as_scalar(): expression must evaluate to exactly one element" );
+  arma_conform_check_bounds( (A.n_elem != 1), "as_scalar(): expected 1x1 matrix" );
   
   return A.mem[0];
   }
@@ -271,14 +329,14 @@ as_scalar_diag(const Glue< Glue<T1, T2, glue_times_diag>, T3, glue_times >& X)
   
   const eT val = tmp1.get_val() * tmp2.get_val() * tmp3.get_val();
   
-  arma_conform_check
+  arma_conform_check_bounds
     (
     (A_n_rows != 1)        ||
     (C_n_cols != 1)        ||
     (A_n_cols != B_n_rows) ||
     (B_n_cols != C_n_rows)
     ,
-    "as_scalar(): incompatible dimensions"
+    "as_scalar(): expected 1x1 matrix"
     );
   
   
@@ -324,7 +382,10 @@ as_scalar(const Base<typename T1::elem_type,T1>& X)
   
   const Proxy<T1> P(X.get_ref());
   
-  arma_conform_check( (P.get_n_elem() != 1), "as_scalar(): expression must evaluate to exactly one element" );
+  if( (arma_config::check_conform) && (P.get_n_elem() != 1) )
+    {
+    arma_conform_check_bounds( true, as_scalar_errmsg::incompat_size_string(P.get_n_rows(), P.get_n_cols()) );
+    }
   
   return (Proxy<T1>::use_at) ? P.at(0,0) : P[0];
   }
@@ -340,7 +401,10 @@ as_scalar(const BaseCube<typename T1::elem_type,T1>& X)
   
   const ProxyCube<T1> P(X.get_ref());
   
-  arma_conform_check( (P.get_n_elem() != 1), "as_scalar(): expression must evaluate to exactly one element" );
+  if( (arma_config::check_conform) && (P.get_n_elem() != 1) )
+    {
+    arma_conform_check_bounds( true, as_scalar_errmsg::incompat_size_string(P.get_n_rows(), P.get_n_cols(), P.get_n_slices()) );
+    }
   
   return (ProxyCube<T1>::use_at) ? P.at(0,0,0) : P[0];
   }
@@ -371,7 +435,10 @@ as_scalar(const SpBase<typename T1::elem_type, T1>& X)
   const unwrap_spmat<T1>  tmp(X.get_ref());
   const SpMat<eT>& A    = tmp.M;
   
-  arma_conform_check( (A.n_elem != 1), "as_scalar(): expression must evaluate to exactly one element" );
+  if( (arma_config::check_conform) && (A.n_elem != 1) )
+    {
+    arma_conform_check_bounds(true, as_scalar_errmsg::incompat_size_string(A.n_rows, A.n_cols) );
+    }
   
   return A.at(0,0);
   }

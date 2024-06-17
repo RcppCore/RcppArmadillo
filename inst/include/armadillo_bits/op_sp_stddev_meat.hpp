@@ -24,7 +24,7 @@
 template<typename T1>
 inline
 void
-op_sp_stddev::apply(Mat<typename T1::pod_type>& out, const mtSpToDOp<typename T1::pod_type, T1, op_sp_stddev>& in)
+op_sp_stddev::apply(Mat<typename T1::pod_type>& out, const mtSpReduceOp<typename T1::pod_type, T1, op_sp_stddev>& in)
   {
   arma_debug_sigprint();
   

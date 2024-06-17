@@ -807,24 +807,22 @@ struct quasi_unwrap< CubeToMatOp<T1, op_vectorise_cube_col> >
 
 
 
-template<typename T1>
-struct quasi_unwrap< SpToDOp<T1, op_nonzeros_spmat> >
+template<typename eT>
+struct quasi_unwrap< SpToDOp<SpMat<eT>, op_sp_nonzeros> >
   {
-  typedef typename T1::elem_type eT;
-  
   inline
-  quasi_unwrap(const SpToDOp<T1, op_nonzeros_spmat>& A)
-    : U( A.m )
-    , M( const_cast<eT*>(U.M.values), U.M.n_nonzero, 1, false, true )
+  quasi_unwrap(const SpToDOp<SpMat<eT>, op_sp_nonzeros>& A)
+    : orig( A.m )
+    , M( const_cast<eT*>(orig.values), orig.n_nonzero, 1, false, true )
     {
     arma_debug_sigprint();
     }
   
-  const unwrap_spmat<T1> U;
-  const Mat<eT>          M;
+  const SpMat<eT>& orig;
+  const Mat<eT>    M;
   
   static constexpr bool is_const     = true;
-  static constexpr bool has_subview  = true;
+  static constexpr bool has_subview  = false;
   static constexpr bool has_orig_mem = true;
   
   template<typename eT2>

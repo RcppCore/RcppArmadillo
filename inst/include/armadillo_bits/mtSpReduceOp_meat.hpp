@@ -16,55 +16,40 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup wall_clock
+//! \addtogroup mtSpReduceOp
 //! @{
 
 
+
+template<typename out_eT, typename T1, typename op_type>
 inline
-wall_clock::wall_clock()
-  {
-  arma_debug_sigprint();
-  
-  chrono_time1 = std::chrono::steady_clock::now();  // warmup
-  }
-
-
-
-inline
-wall_clock::~wall_clock()
+mtSpReduceOp<out_eT, T1, op_type>::mtSpReduceOp(const T1& in_m)
+  : m(in_m)
   {
   arma_debug_sigprint();
   }
 
 
 
+template<typename out_eT, typename T1, typename op_type>
 inline
-void
-wall_clock::tic()
+mtSpReduceOp<out_eT, T1, op_type>::mtSpReduceOp(const T1& in_m, const uword in_aux_uword_a, const uword in_aux_uword_b)
+  : m(in_m)
+  , aux_uword_a(in_aux_uword_a)
+  , aux_uword_b(in_aux_uword_b)
   {
   arma_debug_sigprint();
-  
-  valid = true;
-  
-  chrono_time1 = std::chrono::steady_clock::now();
   }
 
 
 
+template<typename out_eT, typename T1, typename op_type>
 inline
-double
-wall_clock::toc()
+mtSpReduceOp<out_eT, T1, op_type>::~mtSpReduceOp()
   {
   arma_debug_sigprint();
-  
-  const std::chrono::steady_clock::time_point chrono_time2 = std::chrono::steady_clock::now();
-  
-  typedef std::chrono::duration<double> duration_type;  // TODO: check this
-  
-  const duration_type chrono_span = std::chrono::duration_cast< duration_type >(chrono_time2 - chrono_time1);
-  
-  return (valid) ? double(chrono_span.count()) : double(0);
   }
+
 
 
 //! @}

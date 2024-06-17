@@ -249,7 +249,7 @@ typename
 enable_if2
   <
   is_arma_sparse_type<T1>::value && resolves_to_sparse_vector<T1>::no,
-  const mtSpToDOp<typename T1::pod_type, T1, op_sp_vecnorm>
+  const mtSpReduceOp<typename T1::pod_type, T1, op_sp_vecnorm>
   >::result
 vecnorm
   (
@@ -265,7 +265,7 @@ vecnorm
   
   const uword dim = 0;
   
-  return mtSpToDOp<typename T1::pod_type, T1, op_sp_vecnorm>(X, k, dim);
+  return mtSpReduceOp<typename T1::pod_type, T1, op_sp_vecnorm>(X, k, dim);
   }
 
 
@@ -273,7 +273,7 @@ vecnorm
 template<typename T1>
 arma_warn_unused
 inline
-const mtSpToDOp<typename T1::pod_type, T1, op_sp_vecnorm>
+const mtSpReduceOp<typename T1::pod_type, T1, op_sp_vecnorm>
 vecnorm
   (
   const SpBase<typename T1::elem_type,T1>& X,
@@ -285,7 +285,7 @@ vecnorm
   arma_debug_sigprint();
   arma_ignore(junk);
   
-  return mtSpToDOp<typename T1::pod_type, T1, op_sp_vecnorm>(X.get_ref(), k, dim);
+  return mtSpReduceOp<typename T1::pod_type, T1, op_sp_vecnorm>(X.get_ref(), k, dim);
   }
 
 
@@ -327,7 +327,7 @@ typename
 enable_if2
   <
   is_arma_sparse_type<T1>::value && resolves_to_sparse_vector<T1>::no,
-  const mtSpToDOp<typename T1::pod_type, T1, op_sp_vecnorm_ext>
+  const mtSpReduceOp<typename T1::pod_type, T1, op_sp_vecnorm_ext>
   >::result
 vecnorm
   (
@@ -350,7 +350,7 @@ vecnorm
   
   const uword dim = 0;
   
-  return mtSpToDOp<typename T1::pod_type, T1, op_sp_vecnorm_ext>(X, method_id, dim);
+  return mtSpReduceOp<typename T1::pod_type, T1, op_sp_vecnorm_ext>(X, method_id, dim);
   }
 
 
@@ -358,7 +358,7 @@ vecnorm
 template<typename T1>
 arma_warn_unused
 inline
-const mtSpToDOp<typename T1::pod_type, T1, op_sp_vecnorm_ext>
+const mtSpReduceOp<typename T1::pod_type, T1, op_sp_vecnorm_ext>
 vecnorm
   (
   const SpBase<typename T1::elem_type,T1>& X,
@@ -377,7 +377,7 @@ vecnorm
   if( (sig == 'i') || (sig == 'I') || (sig == '+') )  { method_id = 1; }
   if( (sig == '-')                                 )  { method_id = 2; }
   
-  return mtSpToDOp<typename T1::pod_type, T1, op_sp_vecnorm_ext>(X.get_ref(), method_id, dim);
+  return mtSpReduceOp<typename T1::pod_type, T1, op_sp_vecnorm_ext>(X.get_ref(), method_id, dim);
   }
 
 

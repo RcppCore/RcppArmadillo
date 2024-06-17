@@ -361,6 +361,8 @@ class SpSubview_col : public SpSubview<eT>
   arma_warn_unused inline const SpOp<SpSubview_col<eT>,spop_htrans> ht() const;
   arma_warn_unused inline const SpOp<SpSubview_col<eT>,spop_strans> st() const;
   
+  arma_warn_unused inline const SpToDOp<SpSubview_col<eT>,op_sp_as_dense> as_dense() const;
+  
   
   protected:
   
@@ -398,6 +400,8 @@ class SpSubview_row : public SpSubview<eT>
   arma_warn_unused inline const SpOp<SpSubview_row<eT>,spop_htrans>  t() const;
   arma_warn_unused inline const SpOp<SpSubview_row<eT>,spop_htrans> ht() const;
   arma_warn_unused inline const SpOp<SpSubview_row<eT>,spop_strans> st() const;
+  
+  arma_warn_unused inline const SpToDOp<SpSubview_row<eT>,op_sp_as_dense> as_dense() const;
   
   
   protected:

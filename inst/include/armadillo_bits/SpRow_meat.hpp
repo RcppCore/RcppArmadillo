@@ -142,6 +142,20 @@ SpRow<eT>::SpRow(const Base<eT,T1>& X)
 
 
 
+
+template<typename eT>
+inline
+SpRow<eT>::SpRow(const Row<eT>& X)
+  : SpMat<eT>(arma_vec_indicator(), 2)
+  {
+  arma_debug_sigprint();
+  
+  SpMat<eT>::operator=(X);
+  }
+
+
+
+
 template<typename eT>
 template<typename T1>
 inline
@@ -228,6 +242,16 @@ const SpOp<SpRow<eT>,spop_strans>
 SpRow<eT>::st() const
   {
   return SpOp<SpRow<eT>,spop_strans>(*this);
+  }
+
+
+
+template<typename eT>
+inline
+const SpToDOp<SpRow<eT>,op_sp_as_dense>
+SpRow<eT>::as_dense() const
+  {
+  return SpToDOp<SpRow<eT>,op_sp_as_dense>(*this);
   }
 
 

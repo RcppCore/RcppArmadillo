@@ -560,7 +560,7 @@ subview_cube<eT>::operator= (const Base<eT,T1>& in)
     }
   else
     {
-    if(arma_config::check_conformance)
+    if(arma_config::check_conform)
       {
       arma_stop_logic_error( arma_incompat_size_string(t, x, "copy into subcube") );
       }
@@ -663,7 +663,7 @@ subview_cube<eT>::operator+= (const Base<eT,T1>& in)
     }
   else
     {
-    if(arma_config::check_conformance)
+    if(arma_config::check_conform)
       {
       arma_stop_logic_error( arma_incompat_size_string(t, x, "addition") );
       }
@@ -766,7 +766,7 @@ subview_cube<eT>::operator-= (const Base<eT,T1>& in)
     }
   else
     {
-    if(arma_config::check_conformance)
+    if(arma_config::check_conform)
       {
       arma_stop_logic_error( arma_incompat_size_string(t, x, "subtraction") );
       }
@@ -869,7 +869,7 @@ subview_cube<eT>::operator%= (const Base<eT,T1>& in)
     }
   else
     {
-    if(arma_config::check_conformance)
+    if(arma_config::check_conform)
       {
       arma_stop_logic_error( arma_incompat_size_string(t, x, "element-wise multiplication") );
       }
@@ -972,7 +972,7 @@ subview_cube<eT>::operator/= (const Base<eT,T1>& in)
     }
   else
     {
-    if(arma_config::check_conformance)
+    if(arma_config::check_conform)
       {
       arma_stop_logic_error( arma_incompat_size_string(t, x, "element-wise division") );
       }
@@ -1947,7 +1947,7 @@ subview_cube<eT>::plus_inplace(Mat<eT>& out, const subview_cube<eT>& in)
   
   if(in_n_slices == 1)
     {
-    if( (arma_config::check_conformance) && ((out_n_rows != in_n_rows) || (out_n_cols != in_n_cols)) )
+    if( (arma_config::check_conform) && ((out_n_rows != in_n_rows) || (out_n_cols != in_n_cols)) )
       {
       std::ostringstream tmp;
       
@@ -2048,7 +2048,7 @@ subview_cube<eT>::minus_inplace(Mat<eT>& out, const subview_cube<eT>& in)
   
   if(in_n_slices == 1)
     {
-    if( (arma_config::check_conformance) && ((out_n_rows != in_n_rows) || (out_n_cols != in_n_cols)) )
+    if( (arma_config::check_conform) && ((out_n_rows != in_n_rows) || (out_n_cols != in_n_cols)) )
       {
       std::ostringstream tmp;
       
@@ -2149,7 +2149,7 @@ subview_cube<eT>::schur_inplace(Mat<eT>& out, const subview_cube<eT>& in)
   
   if(in_n_slices == 1)
     {
-    if( (arma_config::check_conformance) && ((out_n_rows != in_n_rows) || (out_n_cols != in_n_cols)) )
+    if( (arma_config::check_conform) && ((out_n_rows != in_n_rows) || (out_n_cols != in_n_cols)) )
       {
       std::ostringstream tmp;
       
@@ -2250,7 +2250,7 @@ subview_cube<eT>::div_inplace(Mat<eT>& out, const subview_cube<eT>& in)
   
   if(in_n_slices == 1)
     {
-    if( (arma_config::check_conformance) && ((out_n_rows != in_n_rows) || (out_n_cols != in_n_cols)) )
+    if( (arma_config::check_conform) && ((out_n_rows != in_n_rows) || (out_n_cols != in_n_cols)) )
       {
       std::ostringstream tmp;
       

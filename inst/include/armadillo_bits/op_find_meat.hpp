@@ -93,7 +93,7 @@ op_find::helper
   
   const eT val = X.aux;
   
-  if((is_same_type<op_type, op_rel_eq>::yes || is_same_type<op_type, op_rel_noteq>::yes) && arma_config::check_conformance && arma_isnan(val))
+  if((is_same_type<op_type, op_rel_eq>::yes || is_same_type<op_type, op_rel_noteq>::yes) && arma_config::check_conform && arma_isnan(val))
     {
     arma_conform_warn(1, "find(): NaN is not equal to anything; suggest to use find_nonfinite() instead");
     }
@@ -226,7 +226,7 @@ op_find::helper
   
   const eT val = X.aux;
   
-  if((is_same_type<op_type, op_rel_eq>::yes || is_same_type<op_type, op_rel_noteq>::yes) && arma_config::check_conformance && arma_isnan(val))
+  if((is_same_type<op_type, op_rel_eq>::yes || is_same_type<op_type, op_rel_noteq>::yes) && arma_config::check_conform && arma_isnan(val))
     {
     arma_conform_warn(1, "find(): NaN is not equal to anything; suggest to use find_nonfinite() instead");
     }

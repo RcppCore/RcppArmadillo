@@ -143,6 +143,18 @@ SpCol<eT>::SpCol(const Base<eT,T1>& X)
 
 
 template<typename eT>
+inline
+SpCol<eT>::SpCol(const Col<eT>& X)
+  : SpMat<eT>(arma_vec_indicator(), 1)
+  {
+  arma_debug_sigprint();
+  
+  SpMat<eT>::operator=(X);
+  }
+
+
+
+template<typename eT>
 template<typename T1>
 inline
 SpCol<eT>&
@@ -228,6 +240,16 @@ const SpOp<SpCol<eT>,spop_strans>
 SpCol<eT>::st() const
   {
   return SpOp<SpCol<eT>,spop_strans>(*this);
+  }
+
+
+
+template<typename eT>
+inline
+const SpToDOp<SpCol<eT>,op_sp_as_dense>
+SpCol<eT>::as_dense() const
+  {
+  return SpToDOp<SpCol<eT>,op_sp_as_dense>(*this);
   }
 
 

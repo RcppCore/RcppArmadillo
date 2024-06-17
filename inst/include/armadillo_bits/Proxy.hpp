@@ -22,36 +22,36 @@
 
 // within each specialisation of the Proxy class:
 // 
-// elem_type        = the type of the elements obtained from object Q
-// pod_type         = the underlying type of elements if elem_type is std::complex
-// stored_type      = the type of the Q object
-// ea_type          = the type of the object that provides access to elements via operator[i]
-// aligned_ea_type  = the type of the object that provides access to elements via at_alt(i)
+// elem_type        = type of the elements obtained from object Q
+// pod_type         = underlying type of elements if elem_type is std::complex
+// stored_type      = type of Q object
+// ea_type          = type of object that provides access to elements via operator[i]
+// aligned_ea_type  = type of object that provides access to elements via at_alt(i)
 // 
-// use_at           = boolean indicating whether at(row,col) must be used to get elements
-// use_mp           = boolean indicating whether OpenMP can be used while processing elements
-// has_subview      = boolean indicating whether the Q object has a subview
+// use_at           = boolean to indicate at(row,col) must be used to get elements
+// use_mp           = boolean to indicate OpenMP can be used while processing elements
+// has_subview      = boolean to indicate Q object has a subview
 // 
-// is_row           = boolean indicating whether the Q object can be treated a row vector
-// is_col           = boolean indicating whether the Q object can be treated a column vector
-// is_xvec          = boolean indicating whether the Q object is a vector with unknown orientation
+// is_row           = boolean to indicate Q object can be treated a row vector
+// is_col           = boolean to indicate Q object can be treated a column vector
+// is_xvec          = boolean to indicate Q object is a vector with unknown orientation
 // 
-// Q                = object that can be unwrapped via the unwrap family of classes (ie. Q must be convertible to Mat)
+// Q                = object that can be unwrapped via unwrap family of classes (ie. Q must be convertible to Mat)
 // 
-// get_n_rows()     = return the number of rows in Q
-// get_n_cols()     = return the number of columns in Q
-// get_n_elem()     = return the number of elements in Q
+// get_n_rows()     = return number of rows in Q
+// get_n_cols()     = return number of columns in Q
+// get_n_elem()     = return number of elements in Q
 // 
-// operator[i]      = linear element accessor; valid only if the 'use_at' boolean is false
-// at(row,col)      = access elements via (row,col); valid only if the 'use_at' boolean is true
-// at_alt(i)        = aligned linear element accessor; valid only if the 'use_at' boolean is false and is_aligned() returns true
+// operator[i]      = linear element accessor; valid only if 'use_at' boolean is false
+// at(row,col)      = access elements via (row,col); valid only if 'use_at' boolean is true
+// at_alt(i)        = aligned linear element accessor; valid only if 'use_at' boolean is false and is_aligned() returns true
 // 
-// get_ea()         = return the object that provides linear access to elements via operator[i]
-// get_aligned_ea() = return the object that provides linear access to elements via at_alt(i); valid only if is_aligned() returns true
+// get_ea()         = return object that provides linear access to elements via operator[i]
+// get_aligned_ea() = return object that provides linear access to elements via at_alt(i); valid only if is_aligned() returns true
 // 
-// is_alias(X)      = return true/false indicating whether the Q object aliases matrix X
-// has_overlap(X)   = return true/false indicating whether the Q object has overlap with subview X
-// is_aligned()     = return true/false indicating whether the Q object has aligned memory
+// is_alias(X)      = return true/false to indicate Q object aliases matrix X
+// has_overlap(X)   = return true/false to indicate Q object has overlap with subview X
+// is_aligned()     = return true/false to indicate Q object has aligned memory
 
 
 
@@ -880,10 +880,10 @@ struct Proxy< SpToDOp<T1, op_type> >
 
 
 
-template<typename T1>
-struct Proxy< SpToDOp<T1, op_nonzeros_spmat> >
+template<typename eT>
+struct Proxy< SpToDOp<SpMat<eT>, op_sp_nonzeros> >
   {
-  typedef typename T1::elem_type                   elem_type;
+  typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Mat<elem_type>                           stored_type;
   typedef const elem_type*                         ea_type;
@@ -897,12 +897,12 @@ struct Proxy< SpToDOp<T1, op_nonzeros_spmat> >
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
   
-  arma_aligned const unwrap_spmat<T1> U;
-  arma_aligned const Mat<elem_type>   Q;
+  arma_aligned const SpMat<elem_type>& R;
+  arma_aligned const Mat<elem_type>    Q;
   
-  inline explicit Proxy(const SpToDOp<T1, op_nonzeros_spmat>& A)
-    : U(A.m)
-    , Q(const_cast<elem_type*>(U.M.values), U.M.n_nonzero, 1, false, true)
+  inline explicit Proxy(const SpToDOp<SpMat<eT>, op_sp_nonzeros>& A)
+    : R(A.m)
+    , Q(const_cast<elem_type*>(R.values), R.n_nonzero, 1, false, true)
     {
     arma_debug_sigprint();
     }
@@ -914,53 +914,6 @@ struct Proxy< SpToDOp<T1, op_nonzeros_spmat> >
   arma_inline elem_type operator[] (const uword i)              const { return Q[i];        }
   arma_inline elem_type at         (const uword r, const uword) const { return Q[r];        }
   arma_inline elem_type at_alt     (const uword i)              const { return Q.at_alt(i); }
-  
-  arma_inline         ea_type         get_ea() const { return Q.memptr(); }
-  arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
-  
-  template<typename eT2>
-  constexpr bool is_alias(const Mat<eT2>&) const { return false; }
-  
-  template<typename eT2>
-  constexpr bool has_overlap(const subview<eT2>&) const { return false; }
-  
-  arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
-  };
-
-
-
-template<typename out_eT, typename T1, typename op_type>
-struct Proxy< mtSpToDOp<out_eT, T1, op_type> >
-  {
-  typedef          out_eT                       elem_type;
-  typedef typename get_pod_type<out_eT>::result pod_type;
-  typedef          Mat<out_eT>                  stored_type;
-  typedef          const elem_type*             ea_type;
-  typedef          const Mat<out_eT>&           aligned_ea_type;
-  
-  static constexpr bool use_at      = false;
-  static constexpr bool use_mp      = false;
-  static constexpr bool has_subview = false;
-  
-  static constexpr bool is_row  = mtSpToDOp<out_eT, T1, op_type>::is_row;
-  static constexpr bool is_col  = mtSpToDOp<out_eT, T1, op_type>::is_col;
-  static constexpr bool is_xvec = mtSpToDOp<out_eT, T1, op_type>::is_xvec;
-  
-  arma_aligned const Mat<out_eT> Q;
-  
-  inline explicit Proxy(const mtSpToDOp<out_eT, T1, op_type>& A)
-    : Q(A)
-    {
-    arma_debug_sigprint();
-    }
-  
-  arma_inline uword get_n_rows() const { return is_row ? 1 : Q.n_rows; }
-  arma_inline uword get_n_cols() const { return is_col ? 1 : Q.n_cols; }
-  arma_inline uword get_n_elem() const { return Q.n_elem;              }
-  
-  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
-  arma_inline elem_type at         (const uword r, const uword c) const { return Q.at(r, c);  }
-  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
   
   arma_inline         ea_type         get_ea() const { return Q.memptr(); }
   arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }

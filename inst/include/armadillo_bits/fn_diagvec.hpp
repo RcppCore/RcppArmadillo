@@ -51,12 +51,12 @@ diagvec(const Base<typename T1::elem_type,T1>& X, const sword diag_id)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const SpToDOp<T1, op_sp_diagvec>
+const mtSpReduceOp<typename T1::elem_type, T1, op_sp_diagvec>
 diagvec(const SpBase<typename T1::elem_type,T1>& X, const sword diag_id = 0)
   {
   arma_debug_sigprint();
   
-  return SpToDOp<T1, op_sp_diagvec>(X.get_ref(), ((diag_id < 0) ? -diag_id : diag_id), ((diag_id < 0) ? 1 : 0) );
+  return mtSpReduceOp<typename T1::elem_type, T1, op_sp_diagvec>(X.get_ref(), ((diag_id < 0) ? -diag_id : diag_id), ((diag_id < 0) ? 1 : 0) );
   }
 
 

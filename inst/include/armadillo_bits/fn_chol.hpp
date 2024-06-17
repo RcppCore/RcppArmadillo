@@ -103,7 +103,7 @@ chol
     return true;
     }
   
-  if((arma_config::check_conformance) && (auxlib::rudimentary_sym_check(out) == false))
+  if((arma_config::check_conform) && (auxlib::rudimentary_sym_check(out) == false))
     {
     if(is_cx<eT>::no )  { arma_conform_warn(1, "chol(): given matrix is not symmetric"); }
     if(is_cx<eT>::yes)  { arma_conform_warn(1, "chol(): given matrix is not hermitian"); }

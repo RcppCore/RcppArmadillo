@@ -24,7 +24,7 @@
 template<typename T1>
 inline
 void
-op_sp_vecnorm::apply(Mat<typename T1::pod_type>& out, const mtSpToDOp<typename T1::pod_type,T1,op_sp_vecnorm>& expr)
+op_sp_vecnorm::apply(Mat<typename T1::pod_type>& out, const mtSpReduceOp<typename T1::pod_type, T1, op_sp_vecnorm>& expr)
   {
   arma_debug_sigprint();
   
@@ -110,7 +110,7 @@ op_sp_vecnorm::apply_direct(Mat< typename get_pod_type<eT>::result >& out, const
 template<typename T1>
 inline
 void
-op_sp_vecnorm_ext::apply(Mat<typename T1::pod_type>& out, const mtSpToDOp<typename T1::pod_type,T1,op_sp_vecnorm_ext>& expr)
+op_sp_vecnorm_ext::apply(Mat<typename T1::pod_type>& out, const mtSpReduceOp<typename T1::pod_type, T1, op_sp_vecnorm_ext>& expr)
   {
   arma_debug_sigprint();
   

@@ -85,7 +85,7 @@ glue_mvnrnd::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename 
     return true;
     }
   
-  if((arma_config::check_conformance) && (auxlib::rudimentary_sym_check(UC.M) == false))
+  if((arma_config::check_conform) && (auxlib::rudimentary_sym_check(UC.M) == false))
     {
     arma_conform_warn(1, "mvnrnd(): given matrix is not symmetric");
     }

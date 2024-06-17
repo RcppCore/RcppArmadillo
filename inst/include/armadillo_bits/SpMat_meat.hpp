@@ -787,48 +787,6 @@ SpMat<eT>::operator/=(const SpMat<eT>& x)
 
 
 
-// template<typename eT>
-// template<typename T1, typename op_type>
-// inline
-// SpMat<eT>::SpMat(const SpToDOp<T1, op_type>& expr)
-//   : n_rows(0)
-//   , n_cols(0)
-//   , n_elem(0)
-//   , n_nonzero(0)
-//   , vec_state(0)
-//   , values(nullptr)
-//   , row_indices(nullptr)
-//   , col_ptrs(nullptr)
-//   {
-//   arma_debug_sigprint_this(this);
-//   
-//   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
-//   
-//   (*this) = Mat<eT>(expr);
-//   }
-
-
-
-// template<typename eT>
-// template<typename T1, typename op_type>
-// inline
-// SpMat<eT>::SpMat(const mtSpToDOp<eT, T1, op_type>& expr)
-//   : n_rows(0)
-//   , n_cols(0)
-//   , n_elem(0)
-//   , n_nonzero(0)
-//   , vec_state(0)
-//   , values(nullptr)
-//   , row_indices(nullptr)
-//   , col_ptrs(nullptr)
-//   {
-//   arma_debug_sigprint_this(this);
-//   
-//   (*this) = Mat<eT>(expr);
-//   }
-
-
-
 // Construct a complex matrix out of two non-complex matrices
 template<typename eT>
 template<typename T1, typename T2>
@@ -2226,6 +2184,118 @@ SpMat<eT>::operator/=(const mtSpGlue<eT, T1, T2, spglue_type>& X)
   const SpMat<eT> m(X);
   
   return (*this).operator/=(m);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+SpMat<eT>::SpMat(const mtSpReduceOp<eT, T1, op_type>& X)
+  : n_rows(0)
+  , n_cols(0)
+  , n_elem(0)
+  , n_nonzero(0)
+  , vec_state(0)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
+  {
+  arma_debug_sigprint_this(this);
+  
+  const Mat<eT> tmp(X);
+  
+  (*this).operator=(tmp);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+SpMat<eT>&
+SpMat<eT>::operator=(const mtSpReduceOp<eT, T1, op_type>& X)
+  {
+  arma_debug_sigprint();
+  
+  const Mat<eT> tmp(X);
+  
+  return (*this).operator=(tmp);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+SpMat<eT>&
+SpMat<eT>::operator+=(const mtSpReduceOp<eT, T1, op_type>& X)
+  {
+  arma_debug_sigprint();
+  
+  const Mat<eT> tmp(X);
+  
+  return (*this).operator+=(tmp);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+SpMat<eT>&
+SpMat<eT>::operator-=(const mtSpReduceOp<eT, T1, op_type>& X)
+  {
+  arma_debug_sigprint();
+  
+  const Mat<eT> tmp(X);
+  
+  return (*this).operator-=(tmp);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+SpMat<eT>&
+SpMat<eT>::operator*=(const mtSpReduceOp<eT, T1, op_type>& X)
+  {
+  arma_debug_sigprint();
+  
+  const Mat<eT> tmp(X);
+  
+  return (*this).operator*=(tmp);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+SpMat<eT>&
+SpMat<eT>::operator%=(const mtSpReduceOp<eT, T1, op_type>& X)
+  {
+  arma_debug_sigprint();
+  
+  const Mat<eT> tmp(X);
+  
+  return (*this).operator%=(tmp);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+SpMat<eT>&
+SpMat<eT>::operator/=(const mtSpReduceOp<eT, T1, op_type>& X)
+  {
+  arma_debug_sigprint();
+  
+  const Mat<eT> tmp(X);
+  
+  return (*this).operator/=(tmp);
   }
 
 
@@ -4312,26 +4382,15 @@ SpMat<eT>::sprandu(const uword in_rows, const uword in_cols, const double densit
       }
     }
   
-  uword cur_index = 0;
-  uword count     = 0;  
-  
-  for(uword lcol = 0; lcol < in_cols; ++lcol)
-  for(uword lrow = 0; lrow < in_rows; ++lrow)
+  for(uword i=0; i<new_n_nonzero; ++i)
     {
-    if(count == indices[cur_index])
-      {
-      access::rw(row_indices[cur_index]) = lrow;
-      access::rw(col_ptrs[lcol + 1])++;
-      ++cur_index;
-      }
+    const uword index = indices[i];
     
-    ++count;
-    }
-  
-  if(cur_index != new_n_nonzero)
-    {
-    // Fix size to correct size.
-    mem_resize(cur_index);
+    const uword lcol = index / in_rows;
+    const uword lrow = index % in_rows;
+    
+    access::rw(row_indices[i]) = lrow;
+    access::rw(col_ptrs[lcol + 1])++;
     }
   
   // Sum column pointers.
@@ -4398,26 +4457,15 @@ SpMat<eT>::sprandn(const uword in_rows, const uword in_cols, const double densit
       }
     }
   
-  uword cur_index = 0;
-  uword count     = 0;  
-  
-  for(uword lcol = 0; lcol < in_cols; ++lcol)
-  for(uword lrow = 0; lrow < in_rows; ++lrow)
+  for(uword i=0; i<new_n_nonzero; ++i)
     {
-    if(count == indices[cur_index])
-      {
-      access::rw(row_indices[cur_index]) = lrow;
-      access::rw(col_ptrs[lcol + 1])++;
-      ++cur_index;
-      }
+    const uword index = indices[i];
     
-    ++count;
-    }
-  
-  if(cur_index != new_n_nonzero)
-    {
-    // Fix size to correct size.
-    mem_resize(cur_index);
+    const uword lcol = index / in_rows;
+    const uword lrow = index % in_rows;
+    
+    access::rw(row_indices[i]) = lrow;
+    access::rw(col_ptrs[lcol + 1])++;
     }
   
   // Sum column pointers.

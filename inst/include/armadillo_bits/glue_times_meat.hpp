@@ -108,7 +108,7 @@ glue_times_redirect2_helper<true>::apply(Mat<typename T1::elem_type>& out, const
     
     arma_conform_check( (A.is_square() == false), "inv(): given matrix must be square sized" );
     
-    if( (strip_inv<T1>::do_inv_spd) && (arma_config::check_conformance) && (auxlib::rudimentary_sym_check(A) == false) )
+    if( (strip_inv<T1>::do_inv_spd) && (arma_config::check_conform) && (auxlib::rudimentary_sym_check(A) == false) )
       {
       if(is_cx<eT>::no )  { arma_conform_warn(1, "inv_sympd(): given matrix is not symmetric"); }
       if(is_cx<eT>::yes)  { arma_conform_warn(1, "inv_sympd(): given matrix is not hermitian"); }
@@ -145,7 +145,7 @@ glue_times_redirect2_helper<true>::apply(Mat<typename T1::elem_type>& out, const
     
     arma_conform_check( (B.is_square() == false), "inv_sympd(): given matrix must be square sized" );
     
-    if( (arma_config::check_conformance) && (auxlib::rudimentary_sym_check(B) == false) )
+    if( (arma_config::check_conform) && (auxlib::rudimentary_sym_check(B) == false) )
       {
       if(is_cx<eT>::no )  { arma_conform_warn(1, "inv_sympd(): given matrix is not symmetric"); }
       if(is_cx<eT>::yes)  { arma_conform_warn(1, "inv_sympd(): given matrix is not hermitian"); }
@@ -272,7 +272,7 @@ glue_times_redirect3_helper<true>::apply(Mat<typename T1::elem_type>& out, const
     
     arma_conform_assert_mul_size(A, BC, "matrix multiplication");
     
-    if( (strip_inv<T1>::do_inv_spd) && (arma_config::check_conformance) && (auxlib::rudimentary_sym_check(A) == false)  )
+    if( (strip_inv<T1>::do_inv_spd) && (arma_config::check_conform) && (auxlib::rudimentary_sym_check(A) == false)  )
       {
       if(is_cx<eT>::no )  { arma_conform_warn(1, "inv_sympd(): given matrix is not symmetric"); }
       if(is_cx<eT>::yes)  { arma_conform_warn(1, "inv_sympd(): given matrix is not hermitian"); }
@@ -307,7 +307,7 @@ glue_times_redirect3_helper<true>::apply(Mat<typename T1::elem_type>& out, const
     
     arma_conform_assert_mul_size(B, C, "matrix multiplication");
     
-    if( (strip_inv<T2>::do_inv_spd) && (arma_config::check_conformance) && (auxlib::rudimentary_sym_check(B) == false)  )
+    if( (strip_inv<T2>::do_inv_spd) && (arma_config::check_conform) && (auxlib::rudimentary_sym_check(B) == false)  )
       {
       if(is_cx<eT>::no )  { arma_conform_warn(1, "inv_sympd(): given matrix is not symmetric"); }
       if(is_cx<eT>::yes)  { arma_conform_warn(1, "inv_sympd(): given matrix is not hermitian"); }

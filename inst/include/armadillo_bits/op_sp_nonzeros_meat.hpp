@@ -16,7 +16,8 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup op_sp_diagvec
+
+//! \addtogroup op_sp_nonzeros
 //! @{
 
 
@@ -24,37 +25,49 @@
 template<typename T1>
 inline
 void
-op_sp_diagvec::apply(Mat<typename T1::elem_type>& out, const mtSpReduceOp<typename T1::elem_type, T1,op_sp_diagvec>& in)
+op_sp_nonzeros::apply(Mat<typename T1::elem_type>& out, const SpToDOp<T1, op_sp_nonzeros>& X)
   {
   arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
-  const unwrap_spmat<T1> U(in.m);
-  const SpMat<eT>& X =   U.M;
+  const SpProxy<T1> P(X.m);
   
-  const uword a = in.aux_uword_a;
-  const uword b = in.aux_uword_b;
+  const uword N = P.get_n_nonzero();
   
-  const uword row_offset = (b >  0) ? a : 0;
-  const uword col_offset = (b == 0) ? a : 0;
+  out.set_size(N,1);
   
-  arma_conform_check_bounds
-    (
-    ((row_offset > 0) && (row_offset >= X.n_rows)) || ((col_offset > 0) && (col_offset >= X.n_cols)),
-    "diagvec(): requested diagonal out of bounds"
-    );
+  if(N == 0)  { return; }
   
-  const uword len = (std::min)(X.n_rows - row_offset, X.n_cols - col_offset);
+  if(is_SpMat<typename SpProxy<T1>::stored_type>::value)
+    {
+    const unwrap_spmat<typename SpProxy<T1>::stored_type> U(P.Q);
+    
+    arrayops::copy(out.memptr(), U.M.values, N);
+    
+    return;
+    }
   
-  out.set_size(len, 1);
+  if(is_SpSubview<typename SpProxy<T1>::stored_type>::value)
+    {
+    const SpSubview<eT>& sv = reinterpret_cast< const SpSubview<eT>& >(P.Q);
+    
+    if(sv.n_rows == sv.m.n_rows)
+      {
+      const SpMat<eT>& m   = sv.m;
+      const uword      col = sv.aux_col1;
+      
+      arrayops::copy(out.memptr(), &(m.values[ m.col_ptrs[col] ]), N);
+      
+      return;
+      }
+    }
   
   eT* out_mem = out.memptr();
   
-  for(uword i=0; i < len; ++i)
-    {
-    out_mem[i] = X.at(i + row_offset, i + col_offset);
-    }
+  typename SpProxy<T1>::const_iterator_type it = P.begin();
+  
+  for(uword i=0; i<N; ++i)  { out_mem[i] = (*it); ++it; }
   }
 
 

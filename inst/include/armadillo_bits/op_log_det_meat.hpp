@@ -195,7 +195,7 @@ op_log_det_sympd::apply_direct(typename T1::pod_type& out_val, const Base<typena
   
   arma_conform_check( (A.is_square() == false), "log_det_sympd(): given matrix must be square sized" );
   
-  if((arma_config::check_conformance) && (arma_config::warn_level > 0) && (is_cx<eT>::yes) && (sym_helper::check_diag_imag(A) == false))
+  if((arma_config::check_conform) && (arma_config::warn_level > 0) && (is_cx<eT>::yes) && (sym_helper::check_diag_imag(A) == false))
     {
     arma_conform_warn(1, "log_det_sympd(): imaginary components on diagonal are non-zero");
     }
@@ -225,7 +225,7 @@ op_log_det_sympd::apply_direct(typename T1::pod_type& out_val, const Base<typena
     return true;
     }
   
-  if((arma_config::check_conformance) && (auxlib::rudimentary_sym_check(A) == false))
+  if((arma_config::check_conform) && (auxlib::rudimentary_sym_check(A) == false))
     {
     if(is_cx<eT>::no )  { arma_conform_warn(1, "log_det_sympd(): given matrix is not symmetric"); }
     if(is_cx<eT>::yes)  { arma_conform_warn(1, "log_det_sympd(): given matrix is not hermitian"); }

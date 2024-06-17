@@ -47,7 +47,9 @@ class SpCol : public SpMat<eT>
   
   inline SpCol& operator=(const eT val);
   
-  template<typename T1> inline            SpCol(const Base<eT,T1>& X);
+  inline SpCol(const Col<eT>& X);  // for backwards compatibility
+  
+  template<typename T1> inline explicit   SpCol(const Base<eT,T1>& X);
   template<typename T1> inline SpCol& operator=(const Base<eT,T1>& X);
   
   template<typename T1> inline            SpCol(const SpBase<eT,T1>& X);
@@ -59,6 +61,8 @@ class SpCol : public SpMat<eT>
   arma_warn_unused inline const SpOp<SpCol<eT>,spop_htrans>  t() const;
   arma_warn_unused inline const SpOp<SpCol<eT>,spop_htrans> ht() const;
   arma_warn_unused inline const SpOp<SpCol<eT>,spop_strans> st() const;
+  
+  arma_warn_unused inline const SpToDOp<SpCol<eT>,op_sp_as_dense> as_dense() const;
   
   inline void shed_row (const uword row_num);
   inline void shed_rows(const uword in_row1, const uword in_row2);

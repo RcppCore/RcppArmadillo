@@ -318,8 +318,10 @@
   
   #undef  arma_deprecated
   #define arma_deprecated __declspec(deprecated)
-  // #undef  arma_inline
-  // #define arma_inline __forceinline inline
+  
+  #undef  arma_noinline
+  #define arma_noinline __declspec(noinline)
+  
   
   #pragma warning(push)
   

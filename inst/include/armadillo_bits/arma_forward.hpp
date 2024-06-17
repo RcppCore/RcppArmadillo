@@ -138,7 +138,7 @@ class spglue_min;
 class spglue_rel_lt;
 class spglue_rel_gt;
 
-
+class op_sp_as_dense;
 
 class op_internal_equ;
 class op_internal_plus;
@@ -244,7 +244,6 @@ template<                 typename T1, typename eop_type> class         eOp;
 template<                 typename T1, typename  op_type> class     SpToDOp; 
 template<                 typename T1, typename  op_type> class CubeToMatOp;
 template<typename out_eT, typename T1, typename  op_type> class        mtOp;
-template<typename out_eT, typename T1, typename  op_type> class   mtSpToDOp;
 
 template<                 typename T1, typename T2, typename  glue_type> class      Glue;
 template<                 typename T1, typename T2, typename eglue_type> class     eGlue;
@@ -327,6 +326,7 @@ struct state_type
 
 template<                 typename T1, typename spop_type> class   SpOp;
 template<typename out_eT, typename T1, typename spop_type> class mtSpOp;
+template<typename out_eT, typename T1, typename   op_type> class mtSpReduceOp;
 
 template<                 typename T1, typename T2, typename spglue_type> class   SpGlue;
 template<typename out_eT, typename T1, typename T2, typename spglue_type> class mtSpGlue;
