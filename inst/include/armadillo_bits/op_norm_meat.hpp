@@ -889,7 +889,7 @@ op_norm::mat_norm_2(const Mat<eT>& X)
   
   typedef typename get_pod_type<eT>::result T;
   
-  if(X.internal_has_nonfinite())  { arma_conform_warn(1, "norm(): given matrix has non-finite elements"); }
+  if(X.internal_has_nonfinite())  { arma_warn(1, "norm(): given matrix has non-finite elements"); }
   
   Col<T> S;
   

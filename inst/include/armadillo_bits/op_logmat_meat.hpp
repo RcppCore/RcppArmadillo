@@ -399,7 +399,7 @@ op_logmat_cx::apply_common(Mat< std::complex<T> >& out, Mat< std::complex<T> >& 
     iter++;
     }
   
-  if(iter >= n_iters)  { arma_conform_warn(2, "logmat(): reached max iterations without full convergence"); }
+  if(iter >= n_iters)  { arma_warn(2, "logmat(): reached max iterations without full convergence"); }
   
   S.diag() -= eT(1);
   
@@ -507,7 +507,7 @@ op_logmat_sympd::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
     
     if((arma_config::check_conform) && (arma_config::warn_level > 0) && (is_cx<eT>::yes) && (sym_helper::check_diag_imag(X) == false))
       {
-      arma_conform_warn(1, "logmat_sympd(): imaginary components on diagonal are non-zero");
+      arma_warn(1, "logmat_sympd(): imaginary components on diagonal are non-zero");
       }
     
     if(is_op_diagmat<T1>::value || X.is_diagmat())

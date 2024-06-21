@@ -95,7 +95,7 @@ op_find::helper
   
   if((is_same_type<op_type, op_rel_eq>::yes || is_same_type<op_type, op_rel_noteq>::yes) && arma_config::check_conform && arma_isnan(val))
     {
-    arma_conform_warn(1, "find(): NaN is not equal to anything; suggest to use find_nonfinite() instead");
+    arma_warn(1, "find(): NaN is not equal to anything; suggest to use find_nonfinite() instead");
     }
   
   const Proxy<T1> A(X.m);
@@ -228,7 +228,7 @@ op_find::helper
   
   if((is_same_type<op_type, op_rel_eq>::yes || is_same_type<op_type, op_rel_noteq>::yes) && arma_config::check_conform && arma_isnan(val))
     {
-    arma_conform_warn(1, "find(): NaN is not equal to anything; suggest to use find_nonfinite() instead");
+    arma_warn(1, "find(): NaN is not equal to anything; suggest to use find_nonfinite() instead");
     }
   
   const Proxy<T1> A(X.m);
@@ -520,7 +520,7 @@ op_find_finite::apply(Mat<uword>& out, const mtOp<uword, T1, op_find_finite>& X)
   {
   arma_debug_sigprint();
   
-  if(arma_config::fast_math_warn)  { arma_conform_warn(1, "find_finite(): detection of non-finite values is not reliable in fast math mode"); }
+  if(arma_config::fast_math_warn)  { arma_warn(1, "find_finite(): detection of non-finite values is not reliable in fast math mode"); }
   
   const Proxy<T1> P(X.m);
   
@@ -568,7 +568,7 @@ op_find_nonfinite::apply(Mat<uword>& out, const mtOp<uword, T1, op_find_nonfinit
   {
   arma_debug_sigprint();
   
-  if(arma_config::fast_math_warn)  { arma_conform_warn(1, "find_nonfinite(): detection of non-finite values is not reliable in fast math mode"); }
+  if(arma_config::fast_math_warn)  { arma_warn(1, "find_nonfinite(): detection of non-finite values is not reliable in fast math mode"); }
   
   const Proxy<T1> P(X.m);
   
@@ -616,7 +616,7 @@ op_find_nan::apply(Mat<uword>& out, const mtOp<uword, T1, op_find_nan>& X)
   {
   arma_debug_sigprint();
   
-  if(arma_config::fast_math_warn)  { arma_conform_warn(1, "find_nan(): detection of non-finite values is not reliable in fast math mode"); }
+  if(arma_config::fast_math_warn)  { arma_warn(1, "find_nan(): detection of non-finite values is not reliable in fast math mode"); }
   
   const Proxy<T1> P(X.m);
   

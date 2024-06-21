@@ -56,7 +56,7 @@ roots(Mat< std::complex<typename T1::pod_type> >& out, const Base<typename T1::e
   if(status == false)
     {
     out.soft_reset();
-    arma_conform_warn(3, "roots(): eigen decomposition failed");
+    arma_warn(3, "roots(): eigen decomposition failed");
     }
   
   return status;

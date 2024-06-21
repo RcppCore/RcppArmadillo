@@ -75,7 +75,7 @@ wishrnd(Mat<typename T1::elem_type>& W, const Base<typename T1::elem_type, T1>& 
   if(status == false)
     {
     W.soft_reset();
-    arma_conform_warn(3, "wishrnd(): given matrix is not symmetric positive definite");
+    arma_warn(3, "wishrnd(): given matrix is not symmetric positive definite");
     }
   
   return status;
@@ -101,7 +101,7 @@ wishrnd(Mat<typename T1::elem_type>& W, const Base<typename T1::elem_type, T1>& 
   if(status == false)
     {
     W.soft_reset();
-    arma_conform_warn(3, "wishrnd(): problem with given 'D' matrix");
+    arma_warn(3, "wishrnd(): problem with given 'D' matrix");
     }
   
   return status;
@@ -167,7 +167,7 @@ iwishrnd(Mat<typename T1::elem_type>& W, const Base<typename T1::elem_type, T1>&
   if(status == false)
     {
     W.soft_reset();
-    arma_conform_warn(3, "iwishrnd(): given matrix is not symmetric positive definite and/or df is too low");
+    arma_warn(3, "iwishrnd(): given matrix is not symmetric positive definite and/or df is too low");
     }
   
   return status;
@@ -193,7 +193,7 @@ iwishrnd(Mat<typename T1::elem_type>& W, const Base<typename T1::elem_type, T1>&
   if(status == false)
     {
     W.soft_reset();
-    arma_conform_warn(3, "wishrnd(): problem with given 'Dinv' matrix and/or df is too low");
+    arma_warn(3, "wishrnd(): problem with given 'Dinv' matrix and/or df is too low");
     }
   
   return status;

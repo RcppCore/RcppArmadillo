@@ -59,7 +59,7 @@ solve
   if(status == false)
     {
     out.soft_reset();
-    arma_conform_warn(3, "solve(): solution not found");
+    arma_warn(3, "solve(): solution not found");
     }
   
   return status;
@@ -103,7 +103,7 @@ solve
   if(status == false)
     {
     out.soft_reset();
-    arma_conform_warn(3, "solve(): solution not found");
+    arma_warn(3, "solve(): solution not found");
     }
   
   return status;
@@ -182,7 +182,7 @@ solve
   if(status == false)
     {
     out.soft_reset();
-    arma_conform_warn(3, "solve(): solution not found");
+    arma_warn(3, "solve(): solution not found");
     }
   
   return status;
@@ -213,7 +213,7 @@ solve
   if(status == false)
     {
     out.soft_reset();
-    arma_conform_warn(3, "solve(): solution not found");
+    arma_warn(3, "solve(): solution not found");
     }
   
   return status;

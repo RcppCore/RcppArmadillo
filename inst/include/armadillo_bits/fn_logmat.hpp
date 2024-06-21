@@ -59,7 +59,7 @@ logmat(Mat< std::complex<typename T1::elem_type> >& Y, const Base<typename T1::e
   if(status == false)
     {
     Y.soft_reset();
-    arma_conform_warn(3, "logmat(): transformation failed");
+    arma_warn(3, "logmat(): transformation failed");
     }
   
   return status;
@@ -79,7 +79,7 @@ logmat(Mat<typename T1::elem_type>& Y, const Base<typename T1::elem_type,T1>& X,
   if(status == false)
     {
     Y.soft_reset();
-    arma_conform_warn(3, "logmat(): transformation failed");
+    arma_warn(3, "logmat(): transformation failed");
     }
   
   return status;
@@ -116,7 +116,7 @@ logmat_sympd(Mat<typename T1::elem_type>& Y, const Base<typename T1::elem_type,T
   if(status == false)
     {
     Y.soft_reset();
-    arma_conform_warn(3, "logmat_sympd(): transformation failed");
+    arma_warn(3, "logmat_sympd(): transformation failed");
     }
   
   return status;

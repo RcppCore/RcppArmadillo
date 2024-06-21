@@ -326,6 +326,7 @@
   #pragma warning(push)
   
   #pragma warning(disable: 4127)  // conditional expression is constant
+  #pragma warning(disable: 4146)  // unary minus operator applied to unsigned type, result still unsigned
   #pragma warning(disable: 4180)  // qualifier has no meaning
   #pragma warning(disable: 4244)  // possible loss of data when converting types (see also 4305)
   #pragma warning(disable: 4510)  // default constructor could not be generated
@@ -344,8 +345,6 @@
   #pragma warning(disable: 4711)  // call was inlined
   #pragma warning(disable: 4714)  // __forceinline can't be inlined
   #pragma warning(disable: 4800)  // value forced to bool
-  
-  // NOTE: also possible to disable 4146 (unary minus operator applied to unsigned type, result still unsigned)
   
   #if defined(ARMA_HAVE_CXX17)
   #pragma warning(disable: 26812)  // unscoped enum

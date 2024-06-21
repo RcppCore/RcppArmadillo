@@ -42,7 +42,7 @@ schur
   if(status == false)
     {
     S.soft_reset();
-    arma_conform_warn(3, "schur(): decomposition failed");
+    arma_warn(3, "schur(): decomposition failed");
     }
   
   return status;
@@ -103,7 +103,7 @@ schur
     {
     U.soft_reset();
     S.soft_reset();
-    arma_conform_warn(3, "schur(): decomposition failed");
+    arma_warn(3, "schur(): decomposition failed");
     }
   
   return status;

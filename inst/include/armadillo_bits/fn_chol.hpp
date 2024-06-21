@@ -63,7 +63,7 @@ chol
   if(status == false)
     {
     out.soft_reset();
-    arma_conform_warn(3, "chol(): decomposition failed");
+    arma_warn(3, "chol(): decomposition failed");
     }
   
   return status;
@@ -105,8 +105,8 @@ chol
   
   if((arma_config::check_conform) && (auxlib::rudimentary_sym_check(out) == false))
     {
-    if(is_cx<eT>::no )  { arma_conform_warn(1, "chol(): given matrix is not symmetric"); }
-    if(is_cx<eT>::yes)  { arma_conform_warn(1, "chol(): given matrix is not hermitian"); }
+    if(is_cx<eT>::no )  { arma_warn(1, "chol(): given matrix is not symmetric"); }
+    if(is_cx<eT>::yes)  { arma_warn(1, "chol(): given matrix is not hermitian"); }
     }
   
   bool status = false;
@@ -138,7 +138,7 @@ chol
     {
     out.soft_reset();
       P.soft_reset();
-    arma_conform_warn(3, "chol(): decomposition failed");
+    arma_warn(3, "chol(): decomposition failed");
     }
   
   return status;

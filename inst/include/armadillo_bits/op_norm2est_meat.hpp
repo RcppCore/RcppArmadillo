@@ -116,7 +116,7 @@ op_norm2est::norm2est
   
   if(A.n_elem == 0)  { return T(0); }
   
-  if(A.internal_has_nonfinite())  { arma_conform_warn(1, "norm2est(): given matrix has non-finite elements"); }
+  if(A.internal_has_nonfinite())  { arma_warn(1, "norm2est(): given matrix has non-finite elements"); }
   
   if((A.n_rows == 1) || (A.n_cols == 1))  { return op_norm::vec_norm_2( Proxy< Mat<eT> >(A) ); }
   
@@ -196,7 +196,7 @@ op_norm2est::norm2est
   
   if(A.n_nonzero == 0)  { return T(0); }
   
-  if(A.internal_has_nonfinite())  { arma_conform_warn(1, "norm2est(): given matrix has non-finite elements"); }
+  if(A.internal_has_nonfinite())  { arma_warn(1, "norm2est(): given matrix has non-finite elements"); }
   
   if((A.n_rows == 1) || (A.n_cols == 1))  { return spop_norm::vec_norm_k(A.values, A.n_nonzero, 2); }
   

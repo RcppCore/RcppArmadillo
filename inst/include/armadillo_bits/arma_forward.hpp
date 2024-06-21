@@ -129,6 +129,17 @@ class spop_htrans;
 class spop_vectorise_row;
 class spop_vectorise_col;
 
+class spop_rel_lt_pre;
+class spop_rel_lt_post;
+class spop_rel_gt_pre;
+class spop_rel_gt_post;
+class spop_rel_lteq_pre;
+class spop_rel_lteq_post;
+class spop_rel_gteq_pre;
+class spop_rel_gteq_post;
+class spop_rel_eq;
+class spop_rel_noteq;
+
 class spglue_plus;
 class spglue_minus;
 class spglue_schur;

@@ -1341,7 +1341,6 @@ arma_assert_atlas_size(const T1& A, const T2& B)
 
 #if defined(ARMA_CHECK_CONFORMANCE)
   
-  #define arma_conform_warn                  arma_warn
   #define arma_conform_check                 arma_check
   #define arma_conform_check_bounds          arma_check_bounds
   #define arma_conform_set_error             arma_set_error
@@ -1354,7 +1353,6 @@ arma_assert_atlas_size(const T1& A, const T2& B)
   
 #else
   
-  #define arma_conform_warn                    true ? (void)0 : arma_warn
   #define arma_conform_check                   true ? (void)0 : arma_check
   #define arma_conform_check_bounds            true ? (void)0 : arma_check_bounds
   #define arma_conform_set_error               true ? (void)0 : arma_set_error

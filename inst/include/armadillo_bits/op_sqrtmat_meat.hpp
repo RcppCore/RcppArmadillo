@@ -40,7 +40,7 @@ op_sqrtmat::apply(Mat< std::complex<typename T1::elem_type> >& out, const mtOp<s
   
   if(status == false)
     {
-    arma_conform_warn(3, "sqrtmat(): given matrix is singular; may not have a square root");
+    arma_warn(3, "sqrtmat(): given matrix is singular; may not have a square root");
     }
   }
 
@@ -225,7 +225,7 @@ op_sqrtmat_cx::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sqrtmat_cx
   
   if(status == false)
     {
-    arma_conform_warn(3, "sqrtmat(): given matrix is singular; may not have a square root");
+    arma_warn(3, "sqrtmat(): given matrix is singular; may not have a square root");
     }
   }
 
@@ -484,7 +484,7 @@ op_sqrtmat_sympd::apply_direct(Mat<typename T1::elem_type>& out, const Base<type
     
     if((arma_config::check_conform) && (is_cx<eT>::yes) && (sym_helper::check_diag_imag(X) == false))
       {
-      arma_conform_warn(1, "sqrtmat_sympd(): imaginary components on the diagonal are non-zero");
+      arma_warn(1, "sqrtmat_sympd(): imaginary components on the diagonal are non-zero");
       }
     
     if(is_op_diagmat<T1>::value || X.is_diagmat())

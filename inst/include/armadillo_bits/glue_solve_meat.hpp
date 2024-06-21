@@ -128,10 +128,10 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
     
     arma_conform_check( no_approx, "solve(): options 'no_approx' and 'force_approx' are mutually exclusive" );
     
-    if(fast)          { arma_conform_warn(2,  "solve(): option 'fast' ignored for forced approximate solution"         ); }
-    if(equilibrate)   { arma_conform_warn(2,  "solve(): option 'equilibrate' ignored for forced approximate solution"  ); }
-    if(refine)        { arma_conform_warn(2,  "solve(): option 'refine' ignored for forced approximate solution"       ); }
-    if(likely_sympd)  { arma_conform_warn(2,  "solve(): option 'likely_sympd' ignored for forced approximate solution" ); }
+    if(fast)          { arma_warn(2,  "solve(): option 'fast' ignored for forced approximate solution"         ); }
+    if(equilibrate)   { arma_warn(2,  "solve(): option 'equilibrate' ignored for forced approximate solution"  ); }
+    if(refine)        { arma_warn(2,  "solve(): option 'refine' ignored for forced approximate solution"       ); }
+    if(likely_sympd)  { arma_warn(2,  "solve(): option 'likely_sympd' ignored for forced approximate solution" ); }
     
     return auxlib::solve_approx_svd(actual_out, A, B_expr.get_ref());  // A is overwritten
     }
@@ -312,9 +312,9 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
     {
     arma_debug_print("glue_solve_gen_full::apply(): detected non-square system");
     
-    if(equilibrate)   { arma_conform_warn(2,  "solve(): option 'equilibrate' ignored for non-square matrix"  ); }
-    if(refine)        { arma_conform_warn(2,  "solve(): option 'refine' ignored for non-square matrix"       ); }
-    if(likely_sympd)  { arma_conform_warn(2,  "solve(): option 'likely_sympd' ignored for non-square matrix" ); }
+    if(equilibrate)   { arma_warn(2,  "solve(): option 'equilibrate' ignored for non-square matrix"  ); }
+    if(refine)        { arma_warn(2,  "solve(): option 'refine' ignored for non-square matrix"       ); }
+    if(likely_sympd)  { arma_warn(2,  "solve(): option 'likely_sympd' ignored for non-square matrix" ); }
     
     if(fast)
       {
@@ -339,11 +339,11 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
     
     if(rcond == T(0))
       {
-      arma_conform_warn(2, "solve(): system is singular; attempting approx solution");
+      arma_warn(2, "solve(): system is singular; attempting approx solution");
       }
     else
       {
-      arma_conform_warn(2, "solve(): system is singular (rcond: ", rcond, "); attempting approx solution");
+      arma_warn(2, "solve(): system is singular (rcond: ", rcond, "); attempting approx solution");
       }
     
     // TODO: conditionally recreate A: have a separate state flag which indicates whether A was previously overwritten
@@ -436,11 +436,11 @@ glue_solve_tri_default::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, co
     
     if(rcond == T(0))
       {
-      arma_conform_warn(2, "solve(): system is singular; attempting approx solution");
+      arma_warn(2, "solve(): system is singular; attempting approx solution");
       }
     else
       {
-      arma_conform_warn(2, "solve(): system is singular (rcond: ", rcond, "); attempting approx solution");
+      arma_warn(2, "solve(): system is singular (rcond: ", rcond, "); attempting approx solution");
       }
     
     Mat<eT> triA = (triu) ? trimatu(A) : trimatl(A);  // trimatu() and trimatl() return the same type
@@ -518,7 +518,7 @@ glue_solve_tri_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
     return glue_solve_gen_full::apply(actual_out, ((triu) ? trimatu(A_expr.get_ref()) : trimatl(A_expr.get_ref())), B_expr, (flags & mask));
     }
   
-  if(likely_sympd)  { arma_conform_warn(2, "solve(): option 'likely_sympd' ignored for triangular matrix"); }
+  if(likely_sympd)  { arma_warn(2, "solve(): option 'likely_sympd' ignored for triangular matrix"); }
   
   const quasi_unwrap<T1> UA(A_expr.get_ref());
   const Mat<eT>& A     = UA.M;
@@ -564,11 +564,11 @@ glue_solve_tri_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
     
     if(rcond == T(0))
       {
-      arma_conform_warn(2, "solve(): system is singular; attempting approx solution");
+      arma_warn(2, "solve(): system is singular; attempting approx solution");
       }
     else
       {
-      arma_conform_warn(2, "solve(): system is singular (rcond: ", rcond, "); attempting approx solution");
+      arma_warn(2, "solve(): system is singular (rcond: ", rcond, "); attempting approx solution");
       }
     
     Mat<eT> triA = (triu) ? trimatu(A) : trimatl(A);  // trimatu() and trimatl() return the same type

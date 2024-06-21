@@ -888,7 +888,7 @@ spdiagview<eT>::replace(const eT old_val, const eT new_val)
   
   if(old_val == eT(0))
     {
-    arma_conform_warn(1, "spdiagview::replace(): replacement not done, as old_val = 0");
+    arma_warn(1, "spdiagview::replace(): replacement not done, as old_val = 0");
     }
   else
     {

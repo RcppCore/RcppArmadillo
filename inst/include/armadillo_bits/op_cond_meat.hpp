@@ -81,7 +81,7 @@ op_cond::apply_diag(const Mat<eT>& A)
     
     if(arma_isnan(abs_val))
       {
-      arma_conform_warn(3, "cond(): failed");
+      arma_warn(3, "cond(): failed");
       
       return Datum<T>::nan;
       }
@@ -112,7 +112,7 @@ op_cond::apply_sym(Mat<eT>& A)
   
   if(status == false)
     {
-    arma_conform_warn(3, "cond(): failed");
+    arma_warn(3, "cond(): failed");
     
     return Datum<T>::nan;
     }
@@ -154,7 +154,7 @@ op_cond::apply_gen(Mat<eT>& A)
   
   if(status == false)
     {
-    arma_conform_warn(3, "cond(): failed");
+    arma_warn(3, "cond(): failed");
     
     return Datum<T>::nan;
     }

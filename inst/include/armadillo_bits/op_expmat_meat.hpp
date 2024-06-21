@@ -202,7 +202,7 @@ op_expmat_sym::apply_direct(Mat<typename T1::elem_type>& out, const Base<typenam
     
     if((arma_config::check_conform) && (arma_config::warn_level > 0) && (is_cx<eT>::yes) && (sym_helper::check_diag_imag(X) == false))
       {
-      arma_conform_warn(1, "inv_sympd(): imaginary components on diagonal are non-zero");
+      arma_warn(1, "inv_sympd(): imaginary components on diagonal are non-zero");
       }
     
     if(is_op_diagmat<T1>::value || X.is_diagmat())

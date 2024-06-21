@@ -1609,7 +1609,7 @@ auxlib::eig_pair
         }
       }
     
-    if(beta_has_zero)  { arma_conform_warn(1, "eig_pair(): given matrices appear ill-conditioned"); }
+    if(beta_has_zero)  { arma_warn(1, "eig_pair(): given matrices appear ill-conditioned"); }
     
     if(vecs_on)
       {
@@ -1730,7 +1730,7 @@ auxlib::eig_pair
       beta_has_zero = (beta_has_zero || (beta_val == zero));
       }
     
-    if(beta_has_zero)  { arma_conform_warn(1, "eig_pair(): given matrices appear ill-conditioned"); }
+    if(beta_has_zero)  { arma_warn(1, "eig_pair(): given matrices appear ill-conditioned"); }
     
     return true;
     }
@@ -1838,7 +1838,7 @@ auxlib::eig_pair_twosided
         }
       }
     
-    if(beta_has_zero)  { arma_conform_warn(1, "eig_pair(): given matrices appear ill-conditioned"); }
+    if(beta_has_zero)  { arma_warn(1, "eig_pair(): given matrices appear ill-conditioned"); }
     
     for(uword j=0; j < A.n_rows; ++j)
       {
@@ -1955,7 +1955,7 @@ auxlib::eig_pair_twosided
       beta_has_zero = (beta_has_zero || (beta_val == zero));
       }
     
-    if(beta_has_zero)  { arma_conform_warn(1, "eig_pair(): given matrices appear ill-conditioned"); }
+    if(beta_has_zero)  { arma_warn(1, "eig_pair(): given matrices appear ill-conditioned"); }
     
     return true;
     }
@@ -1990,7 +1990,7 @@ auxlib::eig_sym(Col<eT>& eigval, Mat<eT>& A)
     
     if((arma_config::check_conform) && (auxlib::rudimentary_sym_check(A) == false))
       {
-      arma_conform_warn(1, "eig_sym(): given matrix is not symmetric");
+      arma_warn(1, "eig_sym(): given matrix is not symmetric");
       }
     
     if(arma_config::check_nonfinite && trimat_helper::has_nonfinite_triu(A))  { return false; }
@@ -2043,7 +2043,7 @@ auxlib::eig_sym(Col<T>& eigval, Mat< std::complex<T> >& A)
     
     if((arma_config::check_conform) && (auxlib::rudimentary_sym_check(A) == false))
       {
-      arma_conform_warn(1, "eig_sym(): given matrix is not hermitian");
+      arma_warn(1, "eig_sym(): given matrix is not hermitian");
       }
     
     if(arma_config::check_nonfinite && trimat_helper::has_nonfinite_triu(A))  { return false; }

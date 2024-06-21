@@ -41,7 +41,7 @@ eig_sym
   if(status == false)
     {
     eigval.soft_reset();
-    arma_conform_warn(3, "eig_sym(): decomposition failed");
+    arma_warn(3, "eig_sym(): decomposition failed");
     }
   
   return status;
@@ -97,8 +97,8 @@ eig_sym_helper
   
   if((arma_config::check_conform) && (auxlib::rudimentary_sym_check(X) == false))
     {
-    if(is_cx<eT>::no )  { arma_conform_warn(1, caller_sig, ": given matrix is not symmetric"); }
-    if(is_cx<eT>::yes)  { arma_conform_warn(1, caller_sig, ": given matrix is not hermitian"); }
+    if(is_cx<eT>::no )  { arma_warn(1, caller_sig, ": given matrix is not symmetric"); }
+    if(is_cx<eT>::yes)  { arma_warn(1, caller_sig, ": given matrix is not hermitian"); }
     }
   
   bool status = false;
@@ -146,7 +146,7 @@ eig_sym
     {
     eigval.soft_reset();
     eigvec.soft_reset();
-    arma_conform_warn(3, "eig_sym(): decomposition failed");
+    arma_warn(3, "eig_sym(): decomposition failed");
     }
   else
     {

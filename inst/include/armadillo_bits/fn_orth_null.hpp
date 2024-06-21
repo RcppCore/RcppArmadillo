@@ -48,7 +48,7 @@ orth(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type, T1>& X
   if(status == false)
     {
     out.soft_reset();
-    arma_conform_warn(3, "orth(): svd failed");
+    arma_warn(3, "orth(): svd failed");
     }
   
   return status;
@@ -87,7 +87,7 @@ null(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type, T1>& X
   if(status == false)
     {
     out.soft_reset();
-    arma_conform_warn(3, "null(): svd failed");
+    arma_warn(3, "null(): svd failed");
     }
   
   return status;

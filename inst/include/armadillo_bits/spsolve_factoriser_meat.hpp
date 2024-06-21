@@ -134,7 +134,7 @@ spsolve_factoriser::factorise
     
     if(A.is_square() == false)
       {
-      arma_conform_warn(1, "spsolve_factoriser::factorise(): solving under-determined / over-determined systems is currently not supported");
+      arma_warn(1, "spsolve_factoriser::factorise(): solving under-determined / over-determined systems is currently not supported");
       return false;
       }
     
@@ -148,7 +148,7 @@ spsolve_factoriser::factorise
     
     if( (opts.pivot_thresh < double(0)) || (opts.pivot_thresh > double(1)) )
       {
-      arma_conform_warn(1, "spsolve_factoriser::factorise(): pivot_thresh must be in the [0,1] interval" );
+      arma_warn(1, "spsolve_factoriser::factorise(): pivot_thresh must be in the [0,1] interval" );
       return false;
       }
     
@@ -158,7 +158,7 @@ spsolve_factoriser::factorise
     
     if(worker_ptr == nullptr)
       {
-      arma_conform_warn(3, "spsolve_factoriser::factorise(): could not construct worker object");
+      arma_warn(3, "spsolve_factoriser::factorise(): could not construct worker object");
       return false;
       }
     
@@ -184,7 +184,7 @@ spsolve_factoriser::factorise
     
     if( (status == false) || arma_isnan(local_rcond_value) || ((opts.allow_ugly == false) && (local_rcond_value < std::numeric_limits<T>::epsilon())) )
       {
-      arma_conform_warn(3, "spsolve_factoriser::factorise(): factorisation failed; rcond: ", local_rcond_value);
+      arma_warn(3, "spsolve_factoriser::factorise(): factorisation failed; rcond: ", local_rcond_value);
       delete_worker<worker_type>();
       return false;
       }
@@ -224,7 +224,7 @@ spsolve_factoriser::solve
     
     if(worker_ptr == nullptr)
       {
-      arma_conform_warn(2, "spsolve_factoriser::solve(): no factorisation available");
+      arma_warn(2, "spsolve_factoriser::solve(): no factorisation available");
       X.soft_reset();
       return false;
       }
@@ -238,7 +238,7 @@ spsolve_factoriser::solve
     
     if(type_mismatch)
       {
-      arma_conform_warn(1, "spsolve_factoriser::solve(): matrix type mismatch");
+      arma_warn(1, "spsolve_factoriser::solve(): matrix type mismatch");
       X.soft_reset();
       return false;
       }
@@ -248,7 +248,7 @@ spsolve_factoriser::solve
     
     if(n_rows != B.n_rows)
       {
-      arma_conform_warn(1, "spsolve_factoriser::solve(): matrix size mismatch");
+      arma_warn(1, "spsolve_factoriser::solve(): matrix size mismatch");
       X.soft_reset();
       return false;
       }
@@ -267,7 +267,7 @@ spsolve_factoriser::solve
     
     if(status == false)
       {
-      arma_conform_warn(3, "spsolve_factoriser::solve(): solution not found");
+      arma_warn(3, "spsolve_factoriser::solve(): solution not found");
       X.soft_reset();
       return false;
       }

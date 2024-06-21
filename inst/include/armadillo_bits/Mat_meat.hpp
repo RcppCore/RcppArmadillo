@@ -7891,11 +7891,11 @@ Mat<eT>::save(const std::string name, const file_type type) const
       break;
     
     default:
-      arma_conform_warn(1, "Mat::save(): unsupported file type");
+      arma_warn(1, "Mat::save(): unsupported file type");
       save_okay = false;
     }
   
-  if(save_okay == false)  { arma_conform_warn(3, "Mat::save(): write failed; file: ", name); }
+  if(save_okay == false)  { arma_warn(3, "Mat::save(): write failed; file: ", name); }
   
   return save_okay;
   }
@@ -7948,11 +7948,11 @@ Mat<eT>::save(const hdf5_name& spec, const file_type type) const
     {
     if(err_msg.length() > 0)
       {
-      arma_conform_warn(3, "Mat::save(): ", err_msg, "; file: ", spec.filename);
+      arma_warn(3, "Mat::save(): ", err_msg, "; file: ", spec.filename);
       }
     else
       {
-      arma_conform_warn(3, "Mat::save(): write failed; file: ", spec.filename);
+      arma_warn(3, "Mat::save(): write failed; file: ", spec.filename);
       }
     }
   
@@ -7992,7 +7992,7 @@ Mat<eT>::save(const csv_name& spec, const file_type type) const
     {
     if( (spec.header_ro.n_cols != 1) && (spec.header_ro.n_rows != 1) )
       {
-      arma_conform_warn(1, "Mat::save(): given header must have a vector layout");
+      arma_warn(1, "Mat::save(): given header must have a vector layout");
       return false;
       }
     
@@ -8002,7 +8002,7 @@ Mat<eT>::save(const csv_name& spec, const file_type type) const
       
       if(token.find(separator) != std::string::npos)
         {
-        arma_conform_warn(1, "Mat::save(): token within the header contains the separator character: '", token, "'");
+        arma_warn(1, "Mat::save(): token within the header contains the separator character: '", token, "'");
         return false;
         }
       }
@@ -8011,7 +8011,7 @@ Mat<eT>::save(const csv_name& spec, const file_type type) const
     
     if(spec.header_ro.n_elem != save_n_cols)
       {
-      arma_conform_warn(1, "Mat::save(): size mismatch between header and matrix");
+      arma_warn(1, "Mat::save(): size mismatch between header and matrix");
       return false;
       }
     }
@@ -8029,7 +8029,7 @@ Mat<eT>::save(const csv_name& spec, const file_type type) const
     save_okay = diskio::save_csv_ascii(*this, spec.filename, spec.header_ro, with_header, separator);
     }
   
-  if(save_okay == false)  { arma_conform_warn(3, "Mat::save(): write failed; file: ", spec.filename); }
+  if(save_okay == false)  { arma_warn(3, "Mat::save(): write failed; file: ", spec.filename); }
   
   return save_okay;
   }
@@ -8081,11 +8081,11 @@ Mat<eT>::save(std::ostream& os, const file_type type) const
       break;
     
     default:
-      arma_conform_warn(1, "Mat::save(): unsupported file type");
+      arma_warn(1, "Mat::save(): unsupported file type");
       save_okay = false;
     }
   
-  if(save_okay == false)  { arma_conform_warn(3, "Mat::save(): stream write failed"); }
+  if(save_okay == false)  { arma_warn(3, "Mat::save(): stream write failed"); }
   
   return save_okay;
   }
@@ -8150,7 +8150,7 @@ Mat<eT>::load(const std::string name, const file_type type)
       break;
     
     default:
-      arma_conform_warn(1, "Mat::load(): unsupported file type");
+      arma_warn(1, "Mat::load(): unsupported file type");
       load_okay = false;
     }
   
@@ -8158,11 +8158,11 @@ Mat<eT>::load(const std::string name, const file_type type)
     {
     if(err_msg.length() > 0)
       {
-      arma_conform_warn(3, "Mat::load(): ", err_msg, "; file: ", name);
+      arma_warn(3, "Mat::load(): ", err_msg, "; file: ", name);
       }
     else
       {
-      arma_conform_warn(3, "Mat::load(): read failed; file: ", name);
+      arma_warn(3, "Mat::load(): read failed; file: ", name);
       }
     }
   
@@ -8209,11 +8209,11 @@ Mat<eT>::load(const hdf5_name& spec, const file_type type)
     {
     if(err_msg.length() > 0)
       {
-      arma_conform_warn(3, "Mat::load(): ", err_msg, "; file: ", spec.filename);
+      arma_warn(3, "Mat::load(): ", err_msg, "; file: ", spec.filename);
       }
     else
       {
-      arma_conform_warn(3, "Mat::load(): read failed; file: ", spec.filename);
+      arma_warn(3, "Mat::load(): read failed; file: ", spec.filename);
       }
     }
   
@@ -8282,11 +8282,11 @@ Mat<eT>::load(const csv_name& spec, const file_type type)
     {
     if(err_msg.length() > 0)
       {
-      arma_conform_warn(3, "Mat::load(): ", err_msg, "; file: ", spec.filename);
+      arma_warn(3, "Mat::load(): ", err_msg, "; file: ", spec.filename);
       }
     else
       {
-      arma_conform_warn(3, "Mat::load(): read failed; file: ", spec.filename);
+      arma_warn(3, "Mat::load(): read failed; file: ", spec.filename);
       }
     }
   else
@@ -8295,7 +8295,7 @@ Mat<eT>::load(const csv_name& spec, const file_type type)
     
     if(with_header && (spec.header_rw.n_elem != load_n_cols))
       {
-      arma_conform_warn(3, "Mat::load(): size mismatch between header and matrix");
+      arma_warn(3, "Mat::load(): size mismatch between header and matrix");
       }
     }
   
@@ -8361,7 +8361,7 @@ Mat<eT>::load(std::istream& is, const file_type type)
       break;
     
     default:
-      arma_conform_warn(1, "Mat::load(): unsupported file type");
+      arma_warn(1, "Mat::load(): unsupported file type");
       load_okay = false;
     }
   
@@ -8369,11 +8369,11 @@ Mat<eT>::load(std::istream& is, const file_type type)
     {
     if(err_msg.length() > 0)
       {
-      arma_conform_warn(3, "Mat::load(): ", err_msg);
+      arma_warn(3, "Mat::load(): ", err_msg);
       }
     else
       {
-      arma_conform_warn(3, "Mat::load(): stream read failed");
+      arma_warn(3, "Mat::load(): stream read failed");
       }
     }
   

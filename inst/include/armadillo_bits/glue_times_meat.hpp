@@ -110,8 +110,8 @@ glue_times_redirect2_helper<true>::apply(Mat<typename T1::elem_type>& out, const
     
     if( (strip_inv<T1>::do_inv_spd) && (arma_config::check_conform) && (auxlib::rudimentary_sym_check(A) == false) )
       {
-      if(is_cx<eT>::no )  { arma_conform_warn(1, "inv_sympd(): given matrix is not symmetric"); }
-      if(is_cx<eT>::yes)  { arma_conform_warn(1, "inv_sympd(): given matrix is not hermitian"); }
+      if(is_cx<eT>::no )  { arma_warn(1, "inv_sympd(): given matrix is not symmetric"); }
+      if(is_cx<eT>::yes)  { arma_warn(1, "inv_sympd(): given matrix is not hermitian"); }
       }
     
     const unwrap_check<T2> B_tmp(X.B, out);
@@ -147,8 +147,8 @@ glue_times_redirect2_helper<true>::apply(Mat<typename T1::elem_type>& out, const
     
     if( (arma_config::check_conform) && (auxlib::rudimentary_sym_check(B) == false) )
       {
-      if(is_cx<eT>::no )  { arma_conform_warn(1, "inv_sympd(): given matrix is not symmetric"); }
-      if(is_cx<eT>::yes)  { arma_conform_warn(1, "inv_sympd(): given matrix is not hermitian"); }
+      if(is_cx<eT>::no )  { arma_warn(1, "inv_sympd(): given matrix is not symmetric"); }
+      if(is_cx<eT>::yes)  { arma_warn(1, "inv_sympd(): given matrix is not hermitian"); }
       }
     
     arma_conform_assert_mul_size(At.n_cols, At.n_rows, B.n_rows, B.n_cols, "matrix multiplication");
@@ -274,8 +274,8 @@ glue_times_redirect3_helper<true>::apply(Mat<typename T1::elem_type>& out, const
     
     if( (strip_inv<T1>::do_inv_spd) && (arma_config::check_conform) && (auxlib::rudimentary_sym_check(A) == false)  )
       {
-      if(is_cx<eT>::no )  { arma_conform_warn(1, "inv_sympd(): given matrix is not symmetric"); }
-      if(is_cx<eT>::yes)  { arma_conform_warn(1, "inv_sympd(): given matrix is not hermitian"); }
+      if(is_cx<eT>::no )  { arma_warn(1, "inv_sympd(): given matrix is not symmetric"); }
+      if(is_cx<eT>::yes)  { arma_warn(1, "inv_sympd(): given matrix is not hermitian"); }
       }
     
     const bool status = (strip_inv<T1>::do_inv_spd) ? auxlib::solve_sympd_fast(out, A, BC) : auxlib::solve_square_fast(out, A, BC);
@@ -309,8 +309,8 @@ glue_times_redirect3_helper<true>::apply(Mat<typename T1::elem_type>& out, const
     
     if( (strip_inv<T2>::do_inv_spd) && (arma_config::check_conform) && (auxlib::rudimentary_sym_check(B) == false)  )
       {
-      if(is_cx<eT>::no )  { arma_conform_warn(1, "inv_sympd(): given matrix is not symmetric"); }
-      if(is_cx<eT>::yes)  { arma_conform_warn(1, "inv_sympd(): given matrix is not hermitian"); }
+      if(is_cx<eT>::no )  { arma_warn(1, "inv_sympd(): given matrix is not symmetric"); }
+      if(is_cx<eT>::yes)  { arma_warn(1, "inv_sympd(): given matrix is not hermitian"); }
       }
     
     Mat<eT> solve_result;

@@ -71,7 +71,7 @@ eig_pair
   if(status == false)
     {
     eigvals.soft_reset();
-    arma_conform_warn(3, "eig_pair(): decomposition failed");
+    arma_warn(3, "eig_pair(): decomposition failed");
     }
   
   return status;
@@ -100,7 +100,7 @@ eig_pair
     {
     eigvals.soft_reset();
     eigvecs.soft_reset();
-    arma_conform_warn(3, "eig_pair(): decomposition failed");
+    arma_warn(3, "eig_pair(): decomposition failed");
     }
   
   return status;
@@ -133,7 +133,7 @@ eig_pair
      eigvals.soft_reset();
     leigvecs.soft_reset();
     reigvecs.soft_reset();
-    arma_conform_warn(3, "eig_pair(): decomposition failed");
+    arma_warn(3, "eig_pair(): decomposition failed");
     }
   
   return status;

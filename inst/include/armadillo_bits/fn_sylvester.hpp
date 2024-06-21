@@ -51,7 +51,7 @@ syl
   if(status == false)
     {
     out.soft_reset();
-    arma_conform_warn(3, "syl(): solution not found");
+    arma_warn(3, "syl(): solution not found");
     }
   
   return status;

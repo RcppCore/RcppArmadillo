@@ -164,7 +164,7 @@ running_stat<eT>::operator() (const typename running_stat<eT>::T sample)
   
   if( arma_isfinite(sample) == false )
     {
-    arma_conform_warn(3, "running_stat: sample ignored as it is non-finite" );
+    arma_warn(3, "running_stat: sample ignored as it is non-finite" );
     return;
     }
   
@@ -183,7 +183,7 @@ running_stat<eT>::operator() (const std::complex< typename running_stat<eT>::T >
   
   if( arma_isfinite(sample) == false )
     {
-    arma_conform_warn(3, "running_stat: sample ignored as it is non-finite" );
+    arma_warn(3, "running_stat: sample ignored as it is non-finite" );
     return;
     }
   

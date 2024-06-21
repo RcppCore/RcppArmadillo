@@ -53,7 +53,7 @@ inv_sympd
   if(status == false)
     {
     out.soft_reset();
-    arma_conform_warn(3, "inv_sympd(): matrix is singular or not positive definite");
+    arma_warn(3, "inv_sympd(): matrix is singular or not positive definite");
     }
   
   return status;
@@ -95,7 +95,7 @@ inv_sympd
   if(status == false)
     {
     out.soft_reset();
-    arma_conform_warn(3, "inv_sympd(): matrix is singular or not positive definite");
+    arma_warn(3, "inv_sympd(): matrix is singular or not positive definite");
     }
   
   return status;
@@ -127,7 +127,7 @@ inv_sympd
     {
     out_rcond = T(0);
     out_inv.soft_reset();
-    arma_conform_warn(3, "inv_sympd(): matrix is singular or not positive definite");
+    arma_warn(3, "inv_sympd(): matrix is singular or not positive definite");
     }
   
   return status;

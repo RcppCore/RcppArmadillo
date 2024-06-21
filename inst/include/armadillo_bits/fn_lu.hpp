@@ -44,7 +44,7 @@ lu
     {
     L.soft_reset();
     U.soft_reset();
-    arma_conform_warn(3, "lu(): decomposition failed");
+    arma_warn(3, "lu(): decomposition failed");
     }
   
   return status;
@@ -77,7 +77,7 @@ lu
     L.soft_reset();
     U.soft_reset();
     P.soft_reset();
-    arma_conform_warn(3, "lu(): decomposition failed");
+    arma_warn(3, "lu(): decomposition failed");
     }
   
   return status;

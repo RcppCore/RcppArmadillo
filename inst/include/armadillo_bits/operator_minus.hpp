@@ -36,6 +36,36 @@ operator-
 
 
 
+// //! unary -
+// template<typename T1>
+// arma_inline
+// typename
+// enable_if2< (is_arma_type<T1>::value && is_signed<typename T1::elem_type>::value), const eOp<T1, eop_neg> >::result
+// operator-
+// (const T1& X)
+//   {
+//   arma_debug_sigprint();
+//   
+//   return eOp<T1,eop_neg>(X);
+//   }
+// 
+// 
+// 
+// template<typename T1>
+// arma_inline
+// typename enable_if2< (is_arma_type<T1>::value && (is_signed<typename T1::elem_type>::value == false)), const eOp<T1, eop_scalar_times> >::result
+// operator-
+// (const T1& X)
+//   {
+//   arma_debug_sigprint();
+//   
+//   typedef typename T1::elem_type eT;
+//   
+//   return eOp<T1, eop_scalar_times>(X, eT(-1));
+//   }
+
+
+
 //! Base - scalar
 template<typename T1>
 arma_inline
@@ -227,19 +257,26 @@ operator-
   {
   arma_debug_sigprint();
   
+  typedef typename T1::elem_type eT;
+  
   const SpProxy<T1> pa(x);
   
-  Mat<typename T1::elem_type> result(-y);
+  const quasi_unwrap<T2> UB(y);
+  const Mat<eT>& B     = UB.M;
+  
+  Mat<eT> result = -B;
   
   arma_conform_assert_same_size( pa.get_n_rows(), pa.get_n_cols(), result.n_rows, result.n_cols, "subtraction" );
   
   typename SpProxy<T1>::const_iterator_type it     = pa.begin();
   typename SpProxy<T1>::const_iterator_type it_end = pa.end();
   
-  while(it != it_end)
+  for(; it != it_end; ++it)
     {
-    result.at(it.row(), it.col()) += (*it);
-    ++it;
+    const uword r = it.row();
+    const uword c = it.col();
+    
+    result.at(r, c) = (*it) - B.at(r,c);
     }
   
   return result;

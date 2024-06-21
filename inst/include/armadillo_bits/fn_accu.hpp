@@ -388,22 +388,23 @@ accu(const eGlue<T1,T2,eglue_schur>& expr)
 
 
 
-//! explicit handling of Hamming norm (also known as zero norm)
-template<typename T1>
+template<typename T1, typename op_type>
 arma_warn_unused
 inline
 uword
-accu(const mtOp<uword,T1,op_rel_noteq>& X)
+accu(const mtOp<uword,T1,op_type>& X, const typename arma_op_rel_only<op_type>::result* junk1 = nullptr, const typename arma_not_cx<typename T1::elem_type>::result* junk2 = nullptr)
   {
   arma_debug_sigprint();
+  arma_ignore(junk1);
+  arma_ignore(junk2);
   
   typedef typename T1::elem_type eT;
   
-  const eT val = X.aux;
+  const eT k = X.aux;
   
   const Proxy<T1> P(X.m);
   
-  uword n_nonzero = 0;
+  uword count = 0;
   
   if(Proxy<T1>::use_at == false)
     {
@@ -414,7 +415,23 @@ accu(const mtOp<uword,T1,op_rel_noteq>& X)
     
     for(uword i=0; i<n_elem; ++i)
       {
-      n_nonzero += (A[i] != val) ? uword(1) : uword(0);
+      const eT val = A[i];
+      
+      bool condition;
+      
+           if(is_same_type<op_type, op_rel_eq       >::yes)  { condition = (val == k  ); }
+      else if(is_same_type<op_type, op_rel_noteq    >::yes)  { condition = (val != k  ); }
+      else if(is_same_type<op_type, op_rel_lt_pre   >::yes)  { condition = (k   <  val); }
+      else if(is_same_type<op_type, op_rel_lt_post  >::yes)  { condition = (val <  k  ); }
+      else if(is_same_type<op_type, op_rel_gt_pre   >::yes)  { condition = (k   >  val); }
+      else if(is_same_type<op_type, op_rel_gt_post  >::yes)  { condition = (val >  k  ); }
+      else if(is_same_type<op_type, op_rel_lteq_pre >::yes)  { condition = (k   <= val); }
+      else if(is_same_type<op_type, op_rel_lteq_post>::yes)  { condition = (val <= k  ); }
+      else if(is_same_type<op_type, op_rel_gteq_pre >::yes)  { condition = (k   >= val); }
+      else if(is_same_type<op_type, op_rel_gteq_post>::yes)  { condition = (val >= k  ); }
+      else { condition = false; }
+      
+      count += (condition) ? uword(1) : uword(0);
       }
     }
   else
@@ -422,43 +439,51 @@ accu(const mtOp<uword,T1,op_rel_noteq>& X)
     const uword P_n_cols = P.get_n_cols();
     const uword P_n_rows = P.get_n_rows();
     
-    if(P_n_rows == 1)
+    for(uword col=0; col < P_n_cols; ++col)
+    for(uword row=0; row < P_n_rows; ++row)
       {
-      for(uword col=0; col < P_n_cols; ++col)
-        {
-        n_nonzero += (P.at(0,col) != val) ? uword(1) : uword(0);
-        }
-      }
-    else
-      {
-      for(uword col=0; col < P_n_cols; ++col)
-      for(uword row=0; row < P_n_rows; ++row)
-        {
-        n_nonzero += (P.at(row,col) != val) ? uword(1) : uword(0);
-        }
+      const eT val = P.at(row,col);
+      
+      bool condition;
+      
+           if(is_same_type<op_type, op_rel_eq       >::yes)  { condition = (val == k  ); }
+      else if(is_same_type<op_type, op_rel_noteq    >::yes)  { condition = (val != k  ); }
+      else if(is_same_type<op_type, op_rel_lt_pre   >::yes)  { condition = (k   <  val); }
+      else if(is_same_type<op_type, op_rel_lt_post  >::yes)  { condition = (val <  k  ); }
+      else if(is_same_type<op_type, op_rel_gt_pre   >::yes)  { condition = (k   >  val); }
+      else if(is_same_type<op_type, op_rel_gt_post  >::yes)  { condition = (val >  k  ); }
+      else if(is_same_type<op_type, op_rel_lteq_pre >::yes)  { condition = (k   <= val); }
+      else if(is_same_type<op_type, op_rel_lteq_post>::yes)  { condition = (val <= k  ); }
+      else if(is_same_type<op_type, op_rel_gteq_pre >::yes)  { condition = (k   >= val); }
+      else if(is_same_type<op_type, op_rel_gteq_post>::yes)  { condition = (val >= k  ); }
+      else { condition = false; }
+      
+      count += (condition) ? uword(1) : uword(0);
       }
     }
   
-  return n_nonzero;
+  return count;
   }
 
 
 
-template<typename T1>
+template<typename T1, typename op_type>
 arma_warn_unused
 inline
 uword
-accu(const mtOp<uword,T1,op_rel_eq>& X)
+accu(const mtOp<uword,T1,op_type>& X, const typename arma_op_rel_only<op_type>::result* junk1 = nullptr, const typename arma_cx_only<typename T1::elem_type>::result* junk2 = nullptr)
   {
   arma_debug_sigprint();
+  arma_ignore(junk1);
+  arma_ignore(junk2);
   
   typedef typename T1::elem_type eT;
   
-  const eT val = X.aux;
+  const eT k = X.aux;
   
   const Proxy<T1> P(X.m);
   
-  uword n_nonzero = 0;
+  uword count = 0;
   
   if(Proxy<T1>::use_at == false)
     {
@@ -469,7 +494,15 @@ accu(const mtOp<uword,T1,op_rel_eq>& X)
     
     for(uword i=0; i<n_elem; ++i)
       {
-      n_nonzero += (A[i] == val) ? uword(1) : uword(0);
+      const eT val = A[i];
+      
+      bool condition;
+      
+           if(is_same_type<op_type, op_rel_eq   >::yes)  { condition = (val == k); }
+      else if(is_same_type<op_type, op_rel_noteq>::yes)  { condition = (val != k); }
+      else { condition = false; }
+      
+      count += (condition) ? uword(1) : uword(0);
       }
     }
   else
@@ -477,24 +510,22 @@ accu(const mtOp<uword,T1,op_rel_eq>& X)
     const uword P_n_cols = P.get_n_cols();
     const uword P_n_rows = P.get_n_rows();
     
-    if(P_n_rows == 1)
+    for(uword col=0; col < P_n_cols; ++col)
+    for(uword row=0; row < P_n_rows; ++row)
       {
-      for(uword col=0; col < P_n_cols; ++col)
-        {
-        n_nonzero += (P.at(0,col) == val) ? uword(1) : uword(0);
-        }
-      }
-    else
-      {
-      for(uword col=0; col < P_n_cols; ++col)
-      for(uword row=0; row < P_n_rows; ++row)
-        {
-        n_nonzero += (P.at(row,col) == val) ? uword(1) : uword(0);
-        }
+      const eT val = P.at(row,col);
+      
+      bool condition;
+      
+           if(is_same_type<op_type, op_rel_eq   >::yes)  { condition = (val == k); }
+      else if(is_same_type<op_type, op_rel_noteq>::yes)  { condition = (val != k); }
+      else { condition = false; }
+      
+      count += (condition) ? uword(1) : uword(0);
       }
     }
   
-  return n_nonzero;
+  return count;
   }
 
 
@@ -1076,6 +1107,138 @@ accu(const SpOp<T1, spop_type>& expr)
   const SpMat<eT> tmp = expr;
   
   return accu(tmp);
+  }
+
+
+
+template<typename T1, typename spop_type>
+arma_warn_unused
+inline
+uword
+accu(const mtSpOp<uword,T1,spop_type>& X, const typename arma_spop_rel_only<spop_type>::result* junk1 = nullptr, const typename arma_not_cx<typename T1::elem_type>::result* junk2 = nullptr)
+  {
+  arma_debug_sigprint();
+  arma_ignore(junk1);
+  arma_ignore(junk2);
+  
+  typedef typename T1::elem_type eT;
+  
+  const eT k = X.aux;
+  
+  const SpProxy<T1> P(X.m);
+  
+  const uword n_zeros = P.get_n_elem() - P.get_n_nonzero();
+  
+  const eT zero = eT(0);
+  
+  // shortcuts
+  
+  if( (is_same_type<spop_type, spop_rel_eq   >::yes) && (k == zero) )  { return n_zeros;           }
+  if( (is_same_type<spop_type, spop_rel_noteq>::yes) && (k == zero) )  { return P.get_n_nonzero(); }
+  
+  // take into account all implicit zeros
+  
+  bool use_n_zeros;
+  
+       if(is_same_type<spop_type, spop_rel_eq       >::yes)  { use_n_zeros = (zero == k   ); }
+  else if(is_same_type<spop_type, spop_rel_noteq    >::yes)  { use_n_zeros = (zero != k   ); }
+  else if(is_same_type<spop_type, spop_rel_lt_pre   >::yes)  { use_n_zeros = (k    <  zero); }
+  else if(is_same_type<spop_type, spop_rel_lt_post  >::yes)  { use_n_zeros = (zero <  k   ); }
+  else if(is_same_type<spop_type, spop_rel_gt_pre   >::yes)  { use_n_zeros = (k    >  zero); }
+  else if(is_same_type<spop_type, spop_rel_gt_post  >::yes)  { use_n_zeros = (zero >  k   ); }
+  else if(is_same_type<spop_type, spop_rel_lteq_pre >::yes)  { use_n_zeros = (k    <= zero); }
+  else if(is_same_type<spop_type, spop_rel_lteq_post>::yes)  { use_n_zeros = (zero <= k   ); }
+  else if(is_same_type<spop_type, spop_rel_gteq_pre >::yes)  { use_n_zeros = (k    >= zero); }
+  else if(is_same_type<spop_type, spop_rel_gteq_post>::yes)  { use_n_zeros = (zero >= k   ); }
+  else { use_n_zeros = false; }
+  
+  uword count = (use_n_zeros) ? n_zeros : 0;
+  
+  typename SpProxy<T1>::const_iterator_type it     = P.begin();
+  typename SpProxy<T1>::const_iterator_type it_end = P.end();
+  
+  // take into account all non-zero elements
+  
+  for(; it != it_end; ++it)
+    {
+    const eT val = (*it);
+    
+    bool condition;
+    
+         if(is_same_type<spop_type, spop_rel_eq       >::yes)  { condition = (val == k  ); }
+    else if(is_same_type<spop_type, spop_rel_noteq    >::yes)  { condition = (val != k  ); }
+    else if(is_same_type<spop_type, spop_rel_lt_pre   >::yes)  { condition = (k   <  val); }
+    else if(is_same_type<spop_type, spop_rel_lt_post  >::yes)  { condition = (val <  k  ); }
+    else if(is_same_type<spop_type, spop_rel_gt_pre   >::yes)  { condition = (k   >  val); }
+    else if(is_same_type<spop_type, spop_rel_gt_post  >::yes)  { condition = (val >  k  ); }
+    else if(is_same_type<spop_type, spop_rel_lteq_pre >::yes)  { condition = (k   <= val); }
+    else if(is_same_type<spop_type, spop_rel_lteq_post>::yes)  { condition = (val <= k  ); }
+    else if(is_same_type<spop_type, spop_rel_gteq_pre >::yes)  { condition = (k   >= val); }
+    else if(is_same_type<spop_type, spop_rel_gteq_post>::yes)  { condition = (val >= k  ); }
+    else { condition = false; }
+    
+    count += (condition) ? uword(1) : uword(0);
+    }
+  
+  return count;
+  }
+
+
+
+template<typename T1, typename spop_type>
+arma_warn_unused
+inline
+uword
+accu(const mtSpOp<uword,T1,spop_type>& X, const typename arma_spop_rel_only<spop_type>::result* junk1 = nullptr, const typename arma_cx_only<typename T1::elem_type>::result* junk2 = nullptr)
+  {
+  arma_debug_sigprint();
+  arma_ignore(junk1);
+  arma_ignore(junk2);
+  
+  typedef typename T1::elem_type eT;
+  
+  const eT k = X.aux;
+  
+  const SpProxy<T1> P(X.m);
+  
+  const uword n_zeros = P.get_n_elem() - P.get_n_nonzero();
+  
+  const eT zero = eT(0);
+  
+  // shortcuts
+  
+  if( (is_same_type<spop_type, spop_rel_eq   >::yes) && (k == zero) )  { return n_zeros;           }
+  if( (is_same_type<spop_type, spop_rel_noteq>::yes) && (k == zero) )  { return P.get_n_nonzero(); }
+  
+  // take into account all implicit zeros
+  
+  bool use_n_zeros;
+  
+       if(is_same_type<spop_type, spop_rel_eq   >::yes)  { use_n_zeros = (zero == k); }
+  else if(is_same_type<spop_type, spop_rel_noteq>::yes)  { use_n_zeros = (zero != k); }
+  else { use_n_zeros = false; }
+  
+  uword count = (use_n_zeros) ? n_zeros : 0;
+  
+  typename SpProxy<T1>::const_iterator_type it     = P.begin();
+  typename SpProxy<T1>::const_iterator_type it_end = P.end();
+  
+  // take into account all non-zero elements
+  
+  for(; it != it_end; ++it)
+    {
+    const eT val = (*it);
+    
+    bool condition;
+    
+         if(is_same_type<spop_type, spop_rel_eq   >::yes)  { condition = (val == k); }
+    else if(is_same_type<spop_type, spop_rel_noteq>::yes)  { condition = (val != k); }
+    else { condition = false; }
+    
+    count += (condition) ? uword(1) : uword(0);
+    }
+  
+  return count;
   }
 
 

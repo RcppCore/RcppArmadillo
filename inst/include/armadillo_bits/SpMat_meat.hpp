@@ -4116,7 +4116,7 @@ SpMat<eT>::replace(const eT old_val, const eT new_val)
   
   if(old_val == eT(0))
     {
-    arma_conform_warn(1, "SpMat::replace(): replacement not done, as old_val = 0");
+    arma_warn(1, "SpMat::replace(): replacement not done, as old_val = 0");
     }
   else
     {
@@ -4399,6 +4399,8 @@ SpMat<eT>::sprandu(const uword in_rows, const uword in_cols, const double densit
     access::rw(col_ptrs[lcol]) += col_ptrs[lcol - 1];
     }
   
+  (*this).remove_zeros();
+  
   return *this;
   }
 
@@ -4473,6 +4475,8 @@ SpMat<eT>::sprandn(const uword in_rows, const uword in_cols, const double densit
     {
     access::rw(col_ptrs[lcol]) += col_ptrs[lcol - 1];
     }
+  
+  (*this).remove_zeros();
   
   return *this;
   }
@@ -4612,11 +4616,11 @@ SpMat<eT>::save(const std::string name, const file_type type) const
       break;
     
     default:
-      arma_conform_warn(1, "SpMat::save(): unsupported file type");
+      arma_warn(1, "SpMat::save(): unsupported file type");
       save_okay = false;
     }
   
-  if(save_okay == false)  { arma_conform_warn(3, "SpMat::save(): write failed; file: ", name); }
+  if(save_okay == false)  { arma_warn(3, "SpMat::save(): write failed; file: ", name); }
   
   return save_okay;
   }
@@ -4654,7 +4658,7 @@ SpMat<eT>::save(const csv_name& spec, const file_type type) const
     {
     if( (spec.header_ro.n_cols != 1) && (spec.header_ro.n_rows != 1) )
       {
-      arma_conform_warn(1, "SpMat::save(): given header must have a vector layout");
+      arma_warn(1, "SpMat::save(): given header must have a vector layout");
       return false;
       }
     
@@ -4664,7 +4668,7 @@ SpMat<eT>::save(const csv_name& spec, const file_type type) const
       
       if(token.find(separator) != std::string::npos)
         {
-        arma_conform_warn(1, "SpMat::save(): token within the header contains the separator character: '", token, "'");
+        arma_warn(1, "SpMat::save(): token within the header contains the separator character: '", token, "'");
         return false;
         }
       }
@@ -4673,7 +4677,7 @@ SpMat<eT>::save(const csv_name& spec, const file_type type) const
     
     if(spec.header_ro.n_elem != save_n_cols)
       {
-      arma_conform_warn(1, "SpMat::save(): size mismatch between header and matrix");
+      arma_warn(1, "SpMat::save(): size mismatch between header and matrix");
       return false;
       }
     }
@@ -4691,7 +4695,7 @@ SpMat<eT>::save(const csv_name& spec, const file_type type) const
     save_okay = diskio::save_csv_ascii(*this, spec.filename, spec.header_ro, with_header, separator);
     }
   
-  if(save_okay == false)  { arma_conform_warn(3, "SpMat::save(): write failed; file: ", spec.filename); }
+  if(save_okay == false)  { arma_warn(3, "SpMat::save(): write failed; file: ", spec.filename); }
   
   return save_okay;
   }
@@ -4729,11 +4733,11 @@ SpMat<eT>::save(std::ostream& os, const file_type type) const
       break;
     
     default:
-      arma_conform_warn(1, "SpMat::save(): unsupported file type");
+      arma_warn(1, "SpMat::save(): unsupported file type");
       save_okay = false;
     }
   
-  if(save_okay == false)  { arma_conform_warn(3, "SpMat::save(): stream write failed"); }
+  if(save_okay == false)  { arma_warn(3, "SpMat::save(): stream write failed"); }
   
   return save_okay;
   }
@@ -4776,7 +4780,7 @@ SpMat<eT>::load(const std::string name, const file_type type)
       break;
     
     default:
-      arma_conform_warn(1, "SpMat::load(): unsupported file type");
+      arma_warn(1, "SpMat::load(): unsupported file type");
       load_okay = false;
     }
   
@@ -4784,11 +4788,11 @@ SpMat<eT>::load(const std::string name, const file_type type)
     {
     if(err_msg.length() > 0)
       {
-      arma_conform_warn(3, "SpMat::load(): ", err_msg, "; file: ", name);
+      arma_warn(3, "SpMat::load(): ", err_msg, "; file: ", name);
       }
     else
       {
-      arma_conform_warn(3, "SpMat::load(): read failed; file: ", name);
+      arma_warn(3, "SpMat::load(): read failed; file: ", name);
       }
     }
   
@@ -4826,7 +4830,7 @@ SpMat<eT>::load(const csv_name& spec, const file_type type)
   if(use_semicolon)  { arma_debug_print("semicolon");   }
   if(strict       )  { arma_debug_print("strict");      }
   
-  if(strict)  { arma_conform_warn(1, "SpMat::load(): option 'strict' not implemented for sparse matrices"); }
+  if(strict)  { arma_warn(1, "SpMat::load(): option 'strict' not implemented for sparse matrices"); }
   
   const char separator = (use_semicolon) ? char(';') : char(',');
   
@@ -4859,11 +4863,11 @@ SpMat<eT>::load(const csv_name& spec, const file_type type)
     {
     if(err_msg.length() > 0)
       {
-      arma_conform_warn(3, "SpMat::load(): ", err_msg, "; file: ", spec.filename);
+      arma_warn(3, "SpMat::load(): ", err_msg, "; file: ", spec.filename);
       }
     else
       {
-      arma_conform_warn(3, "SpMat::load(): read failed; file: ", spec.filename);
+      arma_warn(3, "SpMat::load(): read failed; file: ", spec.filename);
       }
     }
   else
@@ -4872,7 +4876,7 @@ SpMat<eT>::load(const csv_name& spec, const file_type type)
     
     if(with_header && (spec.header_rw.n_elem != load_n_cols))
       {
-      arma_conform_warn(3, "SpMat::load(): size mismatch between header and matrix");
+      arma_warn(3, "SpMat::load(): size mismatch between header and matrix");
       }
     }
   
@@ -4924,7 +4928,7 @@ SpMat<eT>::load(std::istream& is, const file_type type)
       break;
     
     default:
-      arma_conform_warn(1, "SpMat::load(): unsupported file type");
+      arma_warn(1, "SpMat::load(): unsupported file type");
       load_okay = false;
     }
   
@@ -4932,11 +4936,11 @@ SpMat<eT>::load(std::istream& is, const file_type type)
     {
     if(err_msg.length() > 0)
       {
-      arma_conform_warn(3, "SpMat::load(): ", err_msg);
+      arma_warn(3, "SpMat::load(): ", err_msg);
       }
     else
       {
-      arma_conform_warn(3, "SpMat::load(): stream read failed");
+      arma_warn(3, "SpMat::load(): stream read failed");
       }
     }
   

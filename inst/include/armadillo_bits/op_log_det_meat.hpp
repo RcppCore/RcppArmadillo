@@ -197,7 +197,7 @@ op_log_det_sympd::apply_direct(typename T1::pod_type& out_val, const Base<typena
   
   if((arma_config::check_conform) && (arma_config::warn_level > 0) && (is_cx<eT>::yes) && (sym_helper::check_diag_imag(A) == false))
     {
-    arma_conform_warn(1, "log_det_sympd(): imaginary components on diagonal are non-zero");
+    arma_warn(1, "log_det_sympd(): imaginary components on diagonal are non-zero");
     }
   
   if(is_op_diagmat<T1>::value || A.is_diagmat())
@@ -227,8 +227,8 @@ op_log_det_sympd::apply_direct(typename T1::pod_type& out_val, const Base<typena
   
   if((arma_config::check_conform) && (auxlib::rudimentary_sym_check(A) == false))
     {
-    if(is_cx<eT>::no )  { arma_conform_warn(1, "log_det_sympd(): given matrix is not symmetric"); }
-    if(is_cx<eT>::yes)  { arma_conform_warn(1, "log_det_sympd(): given matrix is not hermitian"); }
+    if(is_cx<eT>::no )  { arma_warn(1, "log_det_sympd(): given matrix is not symmetric"); }
+    if(is_cx<eT>::yes)  { arma_warn(1, "log_det_sympd(): given matrix is not hermitian"); }
     }
   
   return auxlib::log_det_sympd(out_val, A);

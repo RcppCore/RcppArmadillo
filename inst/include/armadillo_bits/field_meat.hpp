@@ -1811,11 +1811,11 @@ field<oT>::save(const std::string name, const file_type type) const
     {
     if(err_msg.length() > 0)
       {
-      arma_conform_warn(3, "field::save(): ", err_msg, "; file: ", name);
+      arma_warn(3, "field::save(): ", err_msg, "; file: ", name);
       }
     else
       {
-      arma_conform_warn(3, "field::save(): write failed; file: ", name);
+      arma_warn(3, "field::save(): write failed; file: ", name);
       }
     }
   
@@ -1839,11 +1839,11 @@ field<oT>::save(std::ostream& os, const file_type type) const
     {
     if(err_msg.length() > 0)
       {
-      arma_conform_warn(3, "field::save(): ", err_msg);
+      arma_warn(3, "field::save(): ", err_msg);
       }
     else
       {
-      arma_conform_warn(3, "field::save(): stream write failed");
+      arma_warn(3, "field::save(): stream write failed");
       }
     }
   
@@ -1867,11 +1867,11 @@ field<oT>::load(const std::string name, const file_type type)
     {
     if(err_msg.length() > 0)
       {
-      arma_conform_warn(3, "field::load(): ", err_msg, "; file: ", name);
+      arma_warn(3, "field::load(): ", err_msg, "; file: ", name);
       }
     else
       {
-      arma_conform_warn(3, "field::load(): read failed; file: ", name);
+      arma_warn(3, "field::load(): read failed; file: ", name);
       }
     }
   
@@ -1896,11 +1896,11 @@ field<oT>::load(std::istream& is, const file_type type)
     {
     if(err_msg.length() > 0)
       {
-      arma_conform_warn(3, "field::load(): ", err_msg);
+      arma_warn(3, "field::load(): ", err_msg);
       }
     else
       {
-      arma_conform_warn(3, "field::load(): stream read failed");
+      arma_warn(3, "field::load(): stream read failed");
       }
     }
   

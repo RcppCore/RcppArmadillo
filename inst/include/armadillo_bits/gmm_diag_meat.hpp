@@ -285,7 +285,7 @@ gmm_diag<eT>::load(const std::string name)
   if( (status == false) || (Q.n_slices != 2) )
     {
     reset();
-    arma_conform_warn(3, "gmm_diag::load(): problem with loading or incompatible format");
+    arma_warn(3, "gmm_diag::load(): problem with loading or incompatible format");
     return false;
     }
   
@@ -690,8 +690,8 @@ gmm_diag<eT>::learn
   const unwrap<T1>   tmp_X(data.get_ref());
   const Mat<eT>& X = tmp_X.M;
   
-  if(X.is_empty()              )  { arma_conform_warn(3, "gmm_diag::learn(): given matrix is empty"             ); return false; }
-  if(X.internal_has_nonfinite())  { arma_conform_warn(3, "gmm_diag::learn(): given matrix has non-finite values"); return false; }
+  if(X.is_empty()              )  { arma_warn(3, "gmm_diag::learn(): given matrix is empty"             ); return false; }
+  if(X.internal_has_nonfinite())  { arma_warn(3, "gmm_diag::learn(): given matrix has non-finite values"); return false; }
   
   if(N_gaus == 0)  { reset(); return true; }
   
@@ -720,14 +720,14 @@ gmm_diag<eT>::learn
   
   if(seed_mode == keep_existing)
     {
-    if(means.is_empty()        )  { arma_conform_warn(3, "gmm_diag::learn(): no existing means"      ); return false; }
-    if(X.n_rows != means.n_rows)  { arma_conform_warn(3, "gmm_diag::learn(): dimensionality mismatch"); return false; }
+    if(means.is_empty()        )  { arma_warn(3, "gmm_diag::learn(): no existing means"      ); return false; }
+    if(X.n_rows != means.n_rows)  { arma_warn(3, "gmm_diag::learn(): dimensionality mismatch"); return false; }
     
     // TODO: also check for number of vectors?
     }
   else
     {
-    if(X.n_cols < N_gaus)  { arma_conform_warn(3, "gmm_diag::learn(): number of vectors is less than number of gaussians"); return false; }
+    if(X.n_cols < N_gaus)  { arma_warn(3, "gmm_diag::learn(): number of vectors is less than number of gaussians"); return false; }
     
     reset(X.n_rows, N_gaus);
     
@@ -751,7 +751,7 @@ gmm_diag<eT>::learn
     
     stream_state.restore(get_cout_stream());
     
-    if(status == false)  { arma_conform_warn(3, "gmm_diag::learn(): k-means algorithm failed; not enough data, or too many gaussians requested"); init(orig); return false; }
+    if(status == false)  { arma_warn(3, "gmm_diag::learn(): k-means algorithm failed; not enough data, or too many gaussians requested"); init(orig); return false; }
     }
   
   
@@ -778,7 +778,7 @@ gmm_diag<eT>::learn
     
     stream_state.restore(get_cout_stream());
     
-    if(status == false)  { arma_conform_warn(3, "gmm_diag::learn(): EM algorithm failed"); init(orig); return false; }
+    if(status == false)  { arma_warn(3, "gmm_diag::learn(): EM algorithm failed"); init(orig); return false; }
     }
   
   mah_aux.reset();
@@ -818,8 +818,8 @@ gmm_diag<eT>::kmeans_wrapper
   const unwrap<T1>   tmp_X(data.get_ref());
   const Mat<eT>& X = tmp_X.M;
   
-  if(X.is_empty()              )  { arma_conform_warn(3, "kmeans(): given matrix is empty"             ); return false; }
-  if(X.internal_has_nonfinite())  { arma_conform_warn(3, "kmeans(): given matrix has non-finite values"); return false; }
+  if(X.is_empty()              )  { arma_warn(3, "kmeans(): given matrix is empty"             ); return false; }
+  if(X.internal_has_nonfinite())  { arma_warn(3, "kmeans(): given matrix has non-finite values"); return false; }
   
   if(N_gaus == 0)  { reset(); return true; }
   
@@ -830,14 +830,14 @@ gmm_diag<eT>::kmeans_wrapper
     {
     access::rw(means) = user_means;
     
-    if(means.is_empty()        )  { arma_conform_warn(3, "kmeans(): no existing means"      ); return false; }
-    if(X.n_rows != means.n_rows)  { arma_conform_warn(3, "kmeans(): dimensionality mismatch"); return false; }
+    if(means.is_empty()        )  { arma_warn(3, "kmeans(): no existing means"      ); return false; }
+    if(X.n_rows != means.n_rows)  { arma_warn(3, "kmeans(): dimensionality mismatch"); return false; }
     
     // TODO: also check for number of vectors?
     }
   else
     {
-    if(X.n_cols < N_gaus)  { arma_conform_warn(3, "kmeans(): number of vectors is less than number of means"); return false; }
+    if(X.n_cols < N_gaus)  { arma_warn(3, "kmeans(): number of vectors is less than number of means"); return false; }
     
     access::rw(means).zeros(X.n_rows, N_gaus);
     
@@ -859,7 +859,7 @@ gmm_diag<eT>::kmeans_wrapper
     
     stream_state.restore(get_cout_stream());
     
-    if(status == false)  { arma_conform_warn(3, "kmeans(): clustering failed; not enough data, or too many means requested"); return false; }
+    if(status == false)  { arma_warn(3, "kmeans(): clustering failed; not enough data, or too many means requested"); return false; }
     }
   
   return true;

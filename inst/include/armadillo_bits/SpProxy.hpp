@@ -112,7 +112,7 @@ struct SpProxy< SpMat<eT> >
   arma_inline const_row_iterator_type end_row(const uword row_num) const { return Q.end_row(row_num); }
   
   template<typename eT2>
-  arma_inline bool is_alias(const SpMat<eT2>& X) const { return (void_ptr(&Q) == void_ptr(&X)); }
+  arma_inline bool is_alias(const SpMat<eT2>& X) const { return (is_same_type<eT,eT2>::yes) && (void_ptr(&Q) == void_ptr(&X)); }
   };
 
 
@@ -164,7 +164,7 @@ struct SpProxy< SpCol<eT> >
   arma_inline const_row_iterator_type end_row(const uword row_num) const { return Q.end_row(row_num); }
   
   template<typename eT2>
-  arma_inline bool is_alias(const SpMat<eT2>& X) const { return (void_ptr(&Q) == void_ptr(&X)); }
+  arma_inline bool is_alias(const SpMat<eT2>& X) const { return (is_same_type<eT,eT2>::yes) && (void_ptr(&Q) == void_ptr(&X)); }
   };
 
 
@@ -216,7 +216,7 @@ struct SpProxy< SpRow<eT> >
   arma_inline const_row_iterator_type end_row(const uword row_num) const { return Q.end_row(row_num); }
   
   template<typename eT2>
-  arma_inline bool is_alias(const SpMat<eT2>& X) const { return (void_ptr(&Q) == void_ptr(&X)); }
+  arma_inline bool is_alias(const SpMat<eT2>& X) const { return (is_same_type<eT,eT2>::yes) && (void_ptr(&Q) == void_ptr(&X)); }
   };
 
 
@@ -268,7 +268,7 @@ struct SpProxy< SpSubview<eT> >
   arma_inline const_row_iterator_type end_row(const uword row_num) const { return Q.end_row(row_num); }
   
   template<typename eT2>
-  arma_inline bool is_alias(const SpMat<eT2>& X) const { return (void_ptr(&Q.m) == void_ptr(&X)); }
+  arma_inline bool is_alias(const SpMat<eT2>& X) const { return (is_same_type<eT,eT2>::yes) && (void_ptr(&Q.m) == void_ptr(&X)); }
   };
 
 
@@ -320,7 +320,7 @@ struct SpProxy< SpSubview_col<eT> >
   arma_inline const_row_iterator_type end_row(const uword row_num) const { return Q.end_row(row_num); }
   
   template<typename eT2>
-  arma_inline bool is_alias(const SpMat<eT2>& X) const { return (void_ptr(&Q.m) == void_ptr(&X)); }
+  arma_inline bool is_alias(const SpMat<eT2>& X) const { return (is_same_type<eT,eT2>::yes) && (void_ptr(&Q.m) == void_ptr(&X)); }
   };
 
 
@@ -423,7 +423,7 @@ struct SpProxy< SpSubview_row<eT> >
   arma_inline const_row_iterator_type end_row(const uword row_num) const { return Q.end_row(row_num); }
   
   template<typename eT2>
-  arma_inline bool is_alias(const SpMat<eT2>& X) const { return (void_ptr(&Q.m) == void_ptr(&X)); }
+  arma_inline bool is_alias(const SpMat<eT2>& X) const { return (is_same_type<eT,eT2>::yes) && (void_ptr(&Q.m) == void_ptr(&X)); }
   };
 
 

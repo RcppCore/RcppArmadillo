@@ -99,7 +99,7 @@ pinv
   if(status == false)
     {
     out.soft_reset();
-    arma_conform_warn(3, "pinv(): svd failed");
+    arma_warn(3, "pinv(): svd failed");
     }
   
   return status;

@@ -60,7 +60,7 @@ det(typename T1::elem_type& out_val, const Base<typename T1::elem_type,T1>& X)
   if(status == false)
     {
     out_val = eT(0);
-    arma_conform_warn(3, "det(): failed to find determinant");
+    arma_warn(3, "det(): failed to find determinant");
     }
   
   return status;

@@ -132,7 +132,7 @@ eigs_sym
   if(status == false)
     {
     eigval.soft_reset();
-    arma_conform_warn(3, "eigs_sym(): decomposition failed");
+    arma_warn(3, "eigs_sym(): decomposition failed");
     }
   
   return status;
@@ -187,7 +187,7 @@ eigs_sym
   if(status == false)
     {
     eigval.soft_reset();
-    arma_conform_warn(3, "eigs_sym(): decomposition failed");
+    arma_warn(3, "eigs_sym(): decomposition failed");
     }
   
   return status;
@@ -221,7 +221,7 @@ eigs_sym
     {
     eigval.soft_reset();
     eigvec.soft_reset();
-    arma_conform_warn(3, "eigs_sym(): decomposition failed");
+    arma_warn(3, "eigs_sym(): decomposition failed");
     }
   
   return status;
@@ -279,7 +279,7 @@ eigs_sym
     {
     eigval.soft_reset();
     eigvec.soft_reset();
-    arma_conform_warn(3, "eigs_sym(): decomposition failed");
+    arma_warn(3, "eigs_sym(): decomposition failed");
     }
   
   return status;

@@ -53,7 +53,7 @@ inv
   if(status == false)
     {
     out.soft_reset();
-    arma_conform_warn(3, "inv(): matrix is singular");
+    arma_warn(3, "inv(): matrix is singular");
     }
   
   return status;
@@ -95,7 +95,7 @@ inv
   if(status == false)
     {
     out.soft_reset();
-    arma_conform_warn(3, "inv(): matrix is singular");
+    arma_warn(3, "inv(): matrix is singular");
     }
   
   return status;
@@ -127,7 +127,7 @@ inv
     {
     out_rcond = T(0);
     out_inv.soft_reset();
-    arma_conform_warn(3, "inv(): matrix is singular");
+    arma_warn(3, "inv(): matrix is singular");
     }
   
   return status;

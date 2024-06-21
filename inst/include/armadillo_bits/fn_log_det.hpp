@@ -46,7 +46,7 @@ log_det
     out_val  = eT(Datum<T>::nan);
     out_sign = T(0);
     
-    arma_conform_warn(3, "log_det(): failed to find determinant");
+    arma_warn(3, "log_det(): failed to find determinant");
     }
   
   return status;
@@ -115,7 +115,7 @@ log_det_sympd
     {
     out_val = Datum<T>::nan;
     
-    arma_conform_warn(3, "log_det_sympd(): given matrix is not symmetric positive definite");
+    arma_warn(3, "log_det_sympd(): given matrix is not symmetric positive definite");
     }
   
   return status;

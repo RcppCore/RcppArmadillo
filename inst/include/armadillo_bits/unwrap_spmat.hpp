@@ -60,7 +60,7 @@ struct unwrap_spmat< SpMat<eT> >
   const SpMat<eT>& M;
   
   template<typename eT2>
-  arma_inline bool is_alias(const SpMat<eT2>& X) const { return (void_ptr(&M) == void_ptr(&X)); }
+  arma_inline bool is_alias(const SpMat<eT2>& X) const { return (is_same_type<eT,eT2>::yes) && (void_ptr(&M) == void_ptr(&X)); }
   };
 
 
@@ -82,7 +82,7 @@ struct unwrap_spmat< SpRow<eT> >
   const SpRow<eT>& M;
   
   template<typename eT2>
-  arma_inline bool is_alias(const SpMat<eT2>& X) const { return (void_ptr(&M) == void_ptr(&X)); }
+  arma_inline bool is_alias(const SpMat<eT2>& X) const { return (is_same_type<eT,eT2>::yes) && (void_ptr(&M) == void_ptr(&X)); }
   };
 
 
@@ -104,7 +104,7 @@ struct unwrap_spmat< SpCol<eT> >
   const SpCol<eT>& M;
   
   template<typename eT2>
-  arma_inline bool is_alias(const SpMat<eT2>& X) const { return (void_ptr(&M) == void_ptr(&X)); }
+  arma_inline bool is_alias(const SpMat<eT2>& X) const { return (is_same_type<eT,eT2>::yes) && (void_ptr(&M) == void_ptr(&X)); }
   };
 
 

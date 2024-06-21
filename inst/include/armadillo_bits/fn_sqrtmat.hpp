@@ -58,7 +58,7 @@ sqrtmat(Mat< std::complex<typename T1::elem_type> >& Y, const Base<typename T1::
   
   if(status == false)
     {
-    arma_conform_warn(3, "sqrtmat(): given matrix is singular; may not have a square root");
+    arma_warn(3, "sqrtmat(): given matrix is singular; may not have a square root");
     }
   
   return status;
@@ -77,7 +77,7 @@ sqrtmat(Mat<typename T1::elem_type>& Y, const Base<typename T1::elem_type,T1>& X
   
   if(status == false)
     {
-    arma_conform_warn(3, "sqrtmat(): given matrix is singular; may not have a square root");
+    arma_warn(3, "sqrtmat(): given matrix is singular; may not have a square root");
     }
   
   return status;
@@ -114,7 +114,7 @@ sqrtmat_sympd(Mat<typename T1::elem_type>& Y, const Base<typename T1::elem_type,
   if(status == false)
     {
     Y.soft_reset();
-    arma_conform_warn(3, "sqrtmat_sympd(): transformation failed");
+    arma_warn(3, "sqrtmat_sympd(): transformation failed");
     }
   
   return status;

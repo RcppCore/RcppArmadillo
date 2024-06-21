@@ -44,7 +44,7 @@ qr
     {
     Q.soft_reset();
     R.soft_reset();
-    arma_conform_warn(3, "qr(): decomposition failed");
+    arma_warn(3, "qr(): decomposition failed");
     }
   
   return status;
@@ -75,7 +75,7 @@ qr_econ
     {
     Q.soft_reset();
     R.soft_reset();
-    arma_conform_warn(3, "qr_econ(): decomposition failed");
+    arma_warn(3, "qr_econ(): decomposition failed");
     }
   
   return status;
@@ -134,7 +134,7 @@ qr
     Q.soft_reset();
     R.soft_reset();
     P.soft_reset();
-    arma_conform_warn(3, "qr(): decomposition failed");
+    arma_warn(3, "qr(): decomposition failed");
     }
   
   return status;
