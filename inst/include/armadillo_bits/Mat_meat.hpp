@@ -123,6 +123,10 @@ Mat<eT>::Mat(const uword in_n_rows, const uword in_n_cols, const arma_initmode_i
     arma_debug_print("Mat::constructor: zeroing memory");
     arrayops::fill_zeros(memptr(), n_elem);
     }
+  else
+    {
+    arma_debug_print("Mat::constructor: not zeroing memory");
+    }
   }
 
 
@@ -148,6 +152,10 @@ Mat<eT>::Mat(const SizeMat& s, const arma_initmode_indicator<do_zeros>&)
     {
     arma_debug_print("Mat::constructor: zeroing memory");
     arrayops::fill_zeros(memptr(), n_elem);
+    }
+  else
+    {
+    arma_debug_print("Mat::constructor: not zeroing memory");
     }
   }
 

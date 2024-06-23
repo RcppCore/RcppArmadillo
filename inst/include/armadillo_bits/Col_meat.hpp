@@ -104,6 +104,10 @@ Col<eT>::Col(const uword in_n_elem, const arma_initmode_indicator<do_zeros>&)
     arma_debug_print("Col::constructor: zeroing memory");
     arrayops::fill_zeros(Mat<eT>::memptr(), Mat<eT>::n_elem);
     }
+  else
+    {
+    arma_debug_print("Col::constructor: not zeroing memory");
+    }
   }
 
 
@@ -124,6 +128,10 @@ Col<eT>::Col(const uword in_n_rows, const uword in_n_cols, const arma_initmode_i
     arma_debug_print("Col::constructor: zeroing memory");
     arrayops::fill_zeros(Mat<eT>::memptr(), Mat<eT>::n_elem);
     }
+  else
+    {
+    arma_debug_print("Col::constructor: not zeroing memory");
+    }
   }
 
 
@@ -143,6 +151,10 @@ Col<eT>::Col(const SizeMat& s, const arma_initmode_indicator<do_zeros>&)
     {
     arma_debug_print("Col::constructor: zeroing memory");
     arrayops::fill_zeros(Mat<eT>::memptr(), Mat<eT>::n_elem);
+    }
+  else
+    {
+    arma_debug_print("Col::constructor: not zeroing memory");
     }
   }
 
