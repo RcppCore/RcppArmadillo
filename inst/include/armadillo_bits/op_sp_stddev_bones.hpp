@@ -16,37 +16,26 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup spop_vecnorm
+//! \addtogroup op_sp_stddev
 //! @{
 
 
-class spop_vecnorm
+
+class op_sp_stddev
   : public traits_op_xvec
   {
   public:
   
   template<typename T1>
-  inline static void apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1::pod_type,T1,spop_vecnorm>& expr);
-  
-  template<typename eT>
-  inline static void apply_direct(Mat< typename get_pod_type<eT>::result >& out, const SpMat<eT>& X, const uword k);
-  };
-
-
-//
-
-
-class spop_vecnorm_ext
-  : public traits_op_xvec
-  {
-  public:
+  inline static void apply(Mat<typename T1::pod_type>& out, const mtSpReduceOp<typename T1::pod_type, T1, op_sp_stddev>& in);
   
   template<typename T1>
-  inline static void apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1::pod_type,T1,spop_vecnorm_ext>& expr);
+  inline static void apply_slow(Mat<typename T1::pod_type>& out, const SpProxy<T1>& p, const uword norm_type, const uword dim);
   
-  template<typename eT>
-  inline static void apply_direct(Mat< typename get_pod_type<eT>::result >& out, const SpMat<eT>& X, const uword method_id);
+  template<typename T1>
+  inline static typename T1::pod_type stddev_vec(const T1& X, const uword norm_type = 0);
   };
+
 
 
 //! @}

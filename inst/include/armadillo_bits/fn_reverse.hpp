@@ -35,7 +35,7 @@ reverse
   const T1& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_reverse_vec>(X);
   }
@@ -56,7 +56,7 @@ reverse
   const T1& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_reverse>(X, 0, 0);
   }
@@ -73,7 +73,7 @@ reverse
   const uword dim
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_reverse>(X, dim, 0);
   }
@@ -90,7 +90,7 @@ reverse
   const uword dim = 0
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return SpOp<T1, spop_reverse>(X.get_ref(), dim, 0);
   }

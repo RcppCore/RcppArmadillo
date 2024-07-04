@@ -26,15 +26,15 @@ inline
 void
 spop_normalise::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_normalise>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
   const uword p   = expr.aux_uword_a;
   const uword dim = expr.aux_uword_b;
   
-  arma_debug_check( (p   == 0), "normalise(): unsupported vector norm type"   );
-  arma_debug_check( (dim >  1), "normalise(): parameter 'dim' must be 0 or 1" );
+  arma_conform_check( (p   == 0), "normalise(): unsupported vector norm type"   );
+  arma_conform_check( (dim >  1), "normalise(): parameter 'dim' must be 0 or 1" );
   
   const unwrap_spmat<T1> U(expr.m);
   
@@ -69,7 +69,7 @@ inline
 void
 spop_normalise::apply_direct(SpMat<eT>& out, const SpMat<eT>& X, const uword p)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename get_pod_type<eT>::result T;
   

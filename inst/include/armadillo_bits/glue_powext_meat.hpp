@@ -26,7 +26,7 @@ inline
 void
 glue_powext::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue_powext>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -36,7 +36,7 @@ glue_powext::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue_pow
   const Mat<eT>& A = UA.M;
   const Mat<eT>& B = UB.M;
   
-  arma_debug_assert_same_size(A, B, "element-wise pow()");
+  arma_conform_assert_same_size(A, B, "element-wise pow()");
   
   const bool UA_bad_alias = UA.is_alias(out) && (UA.has_subview);  // allow inplace operation
   const bool UB_bad_alias = UB.is_alias(out);
@@ -62,7 +62,7 @@ inline
 void
 glue_powext::apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   out.set_size(A.n_rows, A.n_cols);
   
@@ -106,7 +106,7 @@ glue_powext::apply
   const Base<typename parent::elem_type,T2>& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename parent::elem_type eT;
   
@@ -212,7 +212,7 @@ inline
 void
 glue_powext::apply(Cube<typename T1::elem_type>& out, const GlueCube<T1, T2, glue_powext>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -222,7 +222,7 @@ glue_powext::apply(Cube<typename T1::elem_type>& out, const GlueCube<T1, T2, glu
   const Cube<eT>& A = UA.M;
   const Cube<eT>& B = UB.M;
   
-  arma_debug_assert_same_size(A, B, "element-wise pow()");
+  arma_conform_assert_same_size(A, B, "element-wise pow()");
   
   if(UB.is_alias(out))
     {
@@ -245,7 +245,7 @@ inline
 void
 glue_powext::apply(Cube<eT>& out, const Cube<eT>& A, const Cube<eT>& B)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   out.set_size(A.n_rows, A.n_cols, A.n_slices);
   
@@ -289,7 +289,7 @@ glue_powext::apply
   const Base<eT,T2>&            Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const Cube<eT>& A = X.P;
   
@@ -355,7 +355,7 @@ inline
 void
 glue_powext_cx::apply(Mat<typename T1::elem_type>& out, const mtGlue<typename T1::elem_type, T1, T2, glue_powext_cx>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
@@ -366,7 +366,7 @@ glue_powext_cx::apply(Mat<typename T1::elem_type>& out, const mtGlue<typename T1
   const Mat<eT>& A = UA.M;
   const Mat< T>& B = UB.M;
   
-  arma_debug_assert_same_size(A, B, "element-wise pow()");
+  arma_conform_assert_same_size(A, B, "element-wise pow()");
   
   if(UA.is_alias(out) && (UA.has_subview))
     {
@@ -389,7 +389,7 @@ inline
 void
 glue_powext_cx::apply(Mat< std::complex<T> >& out, const Mat< std::complex<T> >& A, const Mat<T>& B)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename std::complex<T> eT;
   
@@ -435,7 +435,7 @@ glue_powext_cx::apply
   const Base<typename T2::elem_type,T2>& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename parent::elem_type eT;
   typedef typename parent::pod_type   T;
@@ -542,7 +542,7 @@ inline
 void
 glue_powext_cx::apply(Cube<typename T1::elem_type>& out, const mtGlueCube<typename T1::elem_type,T1,T2,glue_powext_cx>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -554,7 +554,7 @@ glue_powext_cx::apply(Cube<typename T1::elem_type>& out, const mtGlueCube<typena
   const Cube<eT>& A = UA.M;
   const Cube< T>& B = UB.M;
   
-  arma_debug_assert_same_size(A, B, "element-wise pow()");
+  arma_conform_assert_same_size(A, B, "element-wise pow()");
   
   glue_powext_cx::apply(out, A, B);
   }
@@ -566,7 +566,7 @@ inline
 void
 glue_powext_cx::apply(Cube< std::complex<T> >& out, const Cube< std::complex<T> >& A, const Cube<T>& B)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename std::complex<T> eT;
   
@@ -612,7 +612,7 @@ glue_powext_cx::apply
   const Base<T,T2>&                            Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename std::complex<T> eT;
   

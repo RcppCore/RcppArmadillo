@@ -35,17 +35,17 @@ sprandu
   const typename arma_SpMat_SpCol_SpRow_only<obj_type>::result* junk = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   if(is_SpCol<obj_type>::value)
     {
-    arma_debug_check( (n_cols != 1), "sprandu(): incompatible size" );
+    arma_conform_check( (n_cols != 1), "sprandu(): incompatible size" );
     }
   else
   if(is_SpRow<obj_type>::value)
     {
-    arma_debug_check( (n_rows != 1), "sprandu(): incompatible size" );
+    arma_conform_check( (n_rows != 1), "sprandu(): incompatible size" );
     }
   
   obj_type out;
@@ -63,7 +63,7 @@ inline
 obj_type
 sprandu(const SizeMat& s, const double density, const typename arma_SpMat_SpCol_SpRow_only<obj_type>::result* junk = nullptr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   return sprandu<obj_type>(s.n_rows, s.n_cols, density);
@@ -76,7 +76,7 @@ inline
 sp_mat
 sprandu(const uword n_rows, const uword n_cols, const double density)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sp_mat out;
   
@@ -92,7 +92,7 @@ inline
 sp_mat
 sprandu(const SizeMat& s, const double density)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sp_mat out;
   
@@ -111,7 +111,7 @@ inline
 SpMat<typename T1::elem_type>
 sprandu(const SpBase<typename T1::elem_type, T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   

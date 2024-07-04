@@ -32,7 +32,7 @@ operator/
   const typename T1::elem_type k
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return eOp<T1, eop_scalar_div_post>(X, k);
   }
@@ -50,7 +50,7 @@ operator/
   const T1&                    X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return eOp<T1, eop_scalar_div_pre>(X, k);
   }
@@ -72,7 +72,7 @@ operator/
   const T1&                                  X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_div_pre>('j', X, k);
   }
@@ -94,7 +94,7 @@ operator/
   const std::complex<typename T1::pod_type>& k
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_div_post>('j', X, k);
   }
@@ -116,7 +116,7 @@ operator/
   const T2& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return eGlue<T1, T2, eglue_div>(X, Y);
   }
@@ -138,7 +138,7 @@ operator/
   const T2& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT1;
   typedef typename T2::elem_type eT2;
@@ -163,7 +163,7 @@ operator/
   const typename T1::elem_type y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   SpMat<typename T1::elem_type> result(X);
   
@@ -189,7 +189,7 @@ operator/
   const T2& y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -199,7 +199,7 @@ operator/
   const uword n_rows = pa.get_n_rows();
   const uword n_cols = pa.get_n_cols();
   
-  arma_debug_assert_same_size(n_rows, n_cols, pb.get_n_rows(), pb.get_n_cols(), "element-wise division");
+  arma_conform_assert_same_size(n_rows, n_cols, pb.get_n_rows(), pb.get_n_cols(), "element-wise division");
   
   uword new_n_nonzero = 0;
   
@@ -264,7 +264,7 @@ operator/
   const SpToDOp<T2, op_type>& y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   SpMat<typename T1::elem_type> out;
   
@@ -290,7 +290,7 @@ operator/
   const T2& y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -300,7 +300,7 @@ operator/
   const uword n_rows = pa.get_n_rows();
   const uword n_cols = pa.get_n_cols();
   
-  arma_debug_assert_same_size(n_rows, n_cols, pb.get_n_rows(), pb.get_n_cols(), "element-wise division");
+  arma_conform_assert_same_size(n_rows, n_cols, pb.get_n_rows(), pb.get_n_cols(), "element-wise division");
   
   Mat<eT> result(n_rows, n_cols, arma_nozeros_indicator());
   
@@ -324,7 +324,7 @@ operator/
   const Base<typename parent::elem_type,T2>& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return subview_each1_aux::operator_div(X, Y.get_ref());
   }
@@ -340,7 +340,7 @@ operator/
   const subview_each1<parent,mode>&          Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return subview_each1_aux::operator_div(X.get_ref(), Y);
   }
@@ -356,7 +356,7 @@ operator/
   const Base<typename parent::elem_type,T2>& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return subview_each2_aux::operator_div(X, Y.get_ref());
   }
@@ -372,7 +372,7 @@ operator/
   const subview_each2<parent,mode,TB>&       Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return subview_each2_aux::operator_div(X.get_ref(), Y);
   }

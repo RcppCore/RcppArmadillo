@@ -38,7 +38,7 @@ vecnorm
   const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk2 = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk1);
   arma_ignore(junk2);
   
@@ -51,7 +51,7 @@ vecnorm
   if(k == uword(1))  { return op_norm::vec_norm_1(P); }
   if(k == uword(2))  { return op_norm::vec_norm_2(P); }
   
-  arma_debug_check( (k == 0), "vecnorm(): unsupported vector norm type" );
+  arma_conform_check( (k == 0), "vecnorm(): unsupported vector norm type" );
   
   return op_norm::vec_norm_k(P, int(k));
   }
@@ -75,7 +75,7 @@ vecnorm
   const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk2 = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk1);
   arma_ignore(junk2);
   
@@ -98,7 +98,7 @@ vecnorm
   const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   return mtOp<typename T1::pod_type, T1, op_vecnorm>(X.get_ref(), k, dim);
@@ -127,7 +127,7 @@ vecnorm
   const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk2 = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk1);
   arma_ignore(junk2);
   
@@ -166,7 +166,7 @@ vecnorm
   const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk2 = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk1);
   arma_ignore(junk2);
   
@@ -196,7 +196,7 @@ vecnorm
   const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const char sig = (method != nullptr) ? method[0] : char(0);
@@ -233,7 +233,7 @@ vecnorm
   const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk2 = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk1);
   arma_ignore(junk2);
   
@@ -249,7 +249,7 @@ typename
 enable_if2
   <
   is_arma_sparse_type<T1>::value && resolves_to_sparse_vector<T1>::no,
-  const mtSpOp<typename T1::pod_type, T1, spop_vecnorm>
+  const mtSpReduceOp<typename T1::pod_type, T1, op_sp_vecnorm>
   >::result
 vecnorm
   (
@@ -259,13 +259,13 @@ vecnorm
   const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk2 = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk1);
   arma_ignore(junk2);
   
   const uword dim = 0;
   
-  return mtSpOp<typename T1::pod_type, T1, spop_vecnorm>(X, k, dim);
+  return mtSpReduceOp<typename T1::pod_type, T1, op_sp_vecnorm>(X, k, dim);
   }
 
 
@@ -273,7 +273,7 @@ vecnorm
 template<typename T1>
 arma_warn_unused
 inline
-const mtSpOp<typename T1::pod_type, T1, spop_vecnorm>
+const mtSpReduceOp<typename T1::pod_type, T1, op_sp_vecnorm>
 vecnorm
   (
   const SpBase<typename T1::elem_type,T1>& X,
@@ -282,10 +282,10 @@ vecnorm
   const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
-  return mtSpOp<typename T1::pod_type, T1, spop_vecnorm>(X.get_ref(), k, dim);
+  return mtSpReduceOp<typename T1::pod_type, T1, op_sp_vecnorm>(X.get_ref(), k, dim);
   }
 
 
@@ -311,7 +311,7 @@ vecnorm
   const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk2 = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk1);
   arma_ignore(junk2);
   
@@ -327,7 +327,7 @@ typename
 enable_if2
   <
   is_arma_sparse_type<T1>::value && resolves_to_sparse_vector<T1>::no,
-  const mtSpOp<typename T1::pod_type, T1, spop_vecnorm_ext>
+  const mtSpReduceOp<typename T1::pod_type, T1, op_sp_vecnorm_ext>
   >::result
 vecnorm
   (
@@ -337,7 +337,7 @@ vecnorm
   const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk2 = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk1);
   arma_ignore(junk2);
   
@@ -350,7 +350,7 @@ vecnorm
   
   const uword dim = 0;
   
-  return mtSpOp<typename T1::pod_type, T1, spop_vecnorm_ext>(X, method_id, dim);
+  return mtSpReduceOp<typename T1::pod_type, T1, op_sp_vecnorm_ext>(X, method_id, dim);
   }
 
 
@@ -358,7 +358,7 @@ vecnorm
 template<typename T1>
 arma_warn_unused
 inline
-const mtSpOp<typename T1::pod_type, T1, spop_vecnorm_ext>
+const mtSpReduceOp<typename T1::pod_type, T1, op_sp_vecnorm_ext>
 vecnorm
   (
   const SpBase<typename T1::elem_type,T1>& X,
@@ -367,7 +367,7 @@ vecnorm
   const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const char sig = (method != nullptr) ? method[0] : char(0);
@@ -377,7 +377,7 @@ vecnorm
   if( (sig == 'i') || (sig == 'I') || (sig == '+') )  { method_id = 1; }
   if( (sig == '-')                                 )  { method_id = 2; }
   
-  return mtSpOp<typename T1::pod_type, T1, spop_vecnorm_ext>(X.get_ref(), method_id, dim);
+  return mtSpReduceOp<typename T1::pod_type, T1, op_sp_vecnorm_ext>(X.get_ref(), method_id, dim);
   }
 
 

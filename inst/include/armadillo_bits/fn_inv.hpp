@@ -30,7 +30,7 @@ inv
   const Base<typename T1::elem_type,T1>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_inv_gen_default>(X.get_ref());
   }
@@ -46,14 +46,14 @@ inv
   const Base<typename T1::elem_type,T1>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const bool status = op_inv_gen_default::apply_direct(out, X.get_ref(), "inv()");
   
   if(status == false)
     {
     out.soft_reset();
-    arma_debug_warn_level(3, "inv(): matrix is singular");
+    arma_warn(3, "inv(): matrix is singular");
     }
   
   return status;
@@ -71,7 +71,7 @@ inv
   const inv_opts::opts&                  opts
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_inv_gen_full>(X.get_ref(), opts.flags, uword(0));
   }
@@ -88,14 +88,14 @@ inv
   const inv_opts::opts&                  opts
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const bool status = op_inv_gen_full::apply_direct(out, X.get_ref(), "inv()", opts.flags);
   
   if(status == false)
     {
     out.soft_reset();
-    arma_debug_warn_level(3, "inv(): matrix is singular");
+    arma_warn(3, "inv(): matrix is singular");
     }
   
   return status;
@@ -113,7 +113,7 @@ inv
   const Base<typename T1::elem_type,T1>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::pod_type T;
   
@@ -127,7 +127,7 @@ inv
     {
     out_rcond = T(0);
     out_inv.soft_reset();
-    arma_debug_warn_level(3, "inv(): matrix is singular");
+    arma_warn(3, "inv(): matrix is singular");
     }
   
   return status;

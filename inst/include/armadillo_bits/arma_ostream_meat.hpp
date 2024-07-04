@@ -190,7 +190,7 @@ inline
 std::streamsize
 arma_ostream::modify_stream(std::ostream& o, typename SpMat<eT>::const_iterator begin, const uword n_elem, const typename arma_not_cx<eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   o.unsetf(ios::showbase);
@@ -429,7 +429,7 @@ inline
 void
 arma_ostream::print(std::ostream& o, const Mat<eT>& m, const bool modify)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const arma_ostream_state stream_state(o);
   
@@ -498,7 +498,7 @@ inline
 void
 arma_ostream::print(std::ostream& o, const Cube<eT>& x, const bool modify)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const arma_ostream_state stream_state(o);
   
@@ -540,7 +540,7 @@ inline
 void
 arma_ostream::print(std::ostream& o, const field<oT>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const arma_ostream_state stream_state(o);
   
@@ -613,7 +613,7 @@ inline
 void
 arma_ostream::print(std::ostream& o, const subview_field<oT>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const arma_ostream_state stream_state(o);
   
@@ -683,7 +683,7 @@ inline
 void
 arma_ostream::print_dense(std::ostream& o, const SpMat<eT>& m, const bool modify)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const arma_ostream_state stream_state(o);
   
@@ -765,7 +765,7 @@ inline
 void
 arma_ostream::print(std::ostream& o, const SpMat<eT>& m, const bool modify)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const arma_ostream_state stream_state(o);
   
@@ -867,7 +867,7 @@ inline
 void
 arma_ostream::print(std::ostream& o, const SizeMat& S)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const arma_ostream_state stream_state(o);
   
@@ -888,7 +888,7 @@ inline
 void
 arma_ostream::print(std::ostream& o, const SizeCube& S)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const arma_ostream_state stream_state(o);
   
@@ -910,7 +910,7 @@ inline
 void
 arma_ostream::brief_print(std::ostream& o, const Mat<eT>& m, const bool print_size)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const arma_ostream_state stream_state(o);
   
@@ -1068,7 +1068,7 @@ inline
 void
 arma_ostream::brief_print(std::ostream& o, const Cube<eT>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const arma_ostream_state stream_state(o);
   
@@ -1125,7 +1125,7 @@ inline
 void
 arma_ostream::brief_print(std::ostream& o, const SpMat<eT>& m)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if(m.n_nonzero <= 10)  { arma_ostream::print(o, m, true); return; }
   

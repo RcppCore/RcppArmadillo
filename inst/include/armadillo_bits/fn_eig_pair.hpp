@@ -30,7 +30,7 @@ eig_pair
   const Base<typename T1::elem_type, T2>& B_expr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::pod_type T;
   
@@ -60,7 +60,7 @@ eig_pair
   const Base< typename T1::elem_type, T2 >&          B_expr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::pod_type T;
   
@@ -71,7 +71,7 @@ eig_pair
   if(status == false)
     {
     eigvals.soft_reset();
-    arma_debug_warn_level(3, "eig_pair(): decomposition failed");
+    arma_warn(3, "eig_pair(): decomposition failed");
     }
   
   return status;
@@ -90,9 +90,9 @@ eig_pair
   const Base< typename T1::elem_type, T2 >&          B_expr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check( (void_ptr(&eigvals) == void_ptr(&eigvecs)), "eig_pair(): parameter 'eigval' is an alias of parameter 'eigvec'" );
+  arma_conform_check( (void_ptr(&eigvals) == void_ptr(&eigvecs)), "eig_pair(): parameter 'eigval' is an alias of parameter 'eigvec'" );
   
   const bool status = auxlib::eig_pair(eigvals, eigvecs, true, A_expr.get_ref(), B_expr.get_ref());
   
@@ -100,7 +100,7 @@ eig_pair
     {
     eigvals.soft_reset();
     eigvecs.soft_reset();
-    arma_debug_warn_level(3, "eig_pair(): decomposition failed");
+    arma_warn(3, "eig_pair(): decomposition failed");
     }
   
   return status;
@@ -120,11 +120,11 @@ eig_pair
   const Base< typename T1::elem_type, T2 >&          B_expr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check( (void_ptr(&eigvals)  == void_ptr(&leigvecs)), "eig_pair(): parameter 'eigval' is an alias of parameter 'leigvec'" );
-  arma_debug_check( (void_ptr(&eigvals)  == void_ptr(&reigvecs)), "eig_pair(): parameter 'eigval' is an alias of parameter 'reigvec'" );
-  arma_debug_check( (void_ptr(&leigvecs) == void_ptr(&reigvecs)), "eig_pair(): parameter 'leigvec' is an alias of parameter 'reigvec'" );
+  arma_conform_check( (void_ptr(&eigvals)  == void_ptr(&leigvecs)), "eig_pair(): parameter 'eigval' is an alias of parameter 'leigvec'" );
+  arma_conform_check( (void_ptr(&eigvals)  == void_ptr(&reigvecs)), "eig_pair(): parameter 'eigval' is an alias of parameter 'reigvec'" );
+  arma_conform_check( (void_ptr(&leigvecs) == void_ptr(&reigvecs)), "eig_pair(): parameter 'leigvec' is an alias of parameter 'reigvec'" );
   
   const bool status = auxlib::eig_pair_twosided(eigvals, leigvecs, reigvecs, A_expr.get_ref(), B_expr.get_ref());
   
@@ -133,7 +133,7 @@ eig_pair
      eigvals.soft_reset();
     leigvecs.soft_reset();
     reigvecs.soft_reset();
-    arma_debug_warn_level(3, "eig_pair(): decomposition failed");
+    arma_warn(3, "eig_pair(): decomposition failed");
     }
   
   return status;

@@ -27,7 +27,7 @@ inline
 typename T1::elem_type
 accu_proxy_linear(const Proxy<T1>& P)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -109,7 +109,7 @@ inline
 typename T1::elem_type
 accu_proxy_at_mp(const Proxy<T1>& P)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -209,7 +209,7 @@ inline
 typename T1::elem_type
 accu_proxy_at(const Proxy<T1>& P)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -256,7 +256,7 @@ inline
 typename enable_if2< is_arma_type<T1>::value, typename T1::elem_type >::result
 accu(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const Proxy<T1> P(X);
   
@@ -272,6 +272,59 @@ accu(const T1& X)
 
 
 
+//! explicit handling of dot product expressed as matrix multiplication
+template<typename T1, typename T2>
+arma_warn_unused
+inline
+typename T1::elem_type
+accu(const Glue<T1,T2,glue_times>& expr)
+  {
+  arma_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  if( (is_cx<eT>::no) && (resolves_to_rowvector<T1>::value && resolves_to_colvector<T2>::value) )
+    {
+    arma_debug_print("accu(): dot product optimisation");
+    
+    constexpr bool proxy_is_mat = (is_Mat<typename Proxy<T1>::stored_type>::value && is_Mat<typename Proxy<T2>::stored_type>::value);
+    
+    constexpr bool use_at = (Proxy<T1>::use_at) || (Proxy<T2>::use_at);
+    
+    constexpr bool fast_unwrap = (partial_unwrap<T1>::is_fast && partial_unwrap<T2>::is_fast);
+    
+    if(proxy_is_mat || use_at || fast_unwrap)
+      {
+      const partial_unwrap<T1> UA(expr.A);
+      const partial_unwrap<T2> UB(expr.B);
+      
+      const typename partial_unwrap<T1>::stored_type& A = UA.M;
+      const typename partial_unwrap<T2>::stored_type& B = UB.M;
+      
+      arma_conform_assert_mul_size(A, B, UA.do_trans, UB.do_trans, "matrix multiplication");
+      
+      const eT val = op_dot::direct_dot(A.n_elem, A.memptr(), B.memptr());
+      
+      return (UA.do_times || UB.do_times) ? (val * UA.get_val() * UB.get_val()) : val;
+      }
+    else
+      {
+      const Proxy<T1> PA(expr.A);
+      const Proxy<T2> PB(expr.B);
+      
+      arma_conform_assert_mul_size(PA.get_n_rows(), PA.get_n_cols(), PB.get_n_rows(), PB.get_n_cols(), "matrix multiplication");
+      
+      return op_dot::apply_proxy_linear(PA,PB);
+      }
+    }
+  
+  const Mat<eT> tmp(expr);
+  
+  return arrayops::accumulate( tmp.memptr(), tmp.n_elem );
+  }
+
+
+
 //! explicit handling of multiply-and-accumulate
 template<typename T1, typename T2>
 arma_warn_unused
@@ -279,18 +332,49 @@ inline
 typename T1::elem_type
 accu(const eGlue<T1,T2,eglue_schur>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef eGlue<T1,T2,eglue_schur> expr_type;
   
   typedef typename expr_type::proxy1_type::stored_type P1_stored_type;
   typedef typename expr_type::proxy2_type::stored_type P2_stored_type;
   
-  const bool have_direct_mem_1 = (is_Mat<P1_stored_type>::value) || (is_subview_col<P1_stored_type>::value);
-  const bool have_direct_mem_2 = (is_Mat<P2_stored_type>::value) || (is_subview_col<P2_stored_type>::value);
+  constexpr bool is_sv = (is_subview<P1_stored_type>::value) || (is_subview<P2_stored_type>::value);
+  
+  if( (is_sv) && (expr.get_n_rows() >= 4) )
+    {
+    arma_debug_print("accu(): eglue_schur subview optimisation");
+    
+    typedef typename T1::elem_type eT;
+    
+    const sv_keep_unwrap<P1_stored_type>& UA(expr.P1.Q);
+    const sv_keep_unwrap<P2_stored_type>& UB(expr.P2.Q);
+    
+    typedef typename sv_keep_unwrap<T1>::stored_type UA_M_type;
+    typedef typename sv_keep_unwrap<T2>::stored_type UB_M_type;
+    
+    const UA_M_type& A = UA.M;
+    const UB_M_type& B = UB.M;
+    
+    // A and B have the same size (checked by the eGlue constructor)
+    
+    const uword A_n_rows = A.n_rows;
+    const uword A_n_cols = A.n_cols;
+    
+    eT acc = eT(0);
+    
+    for(uword c=0; c < A_n_cols; ++c)  { acc += op_dot::direct_dot(A_n_rows, A.colptr(c), B.colptr(c)); }
+    
+    return acc;
+    }
+  
+  constexpr bool have_direct_mem_1 = (is_Mat<P1_stored_type>::value) || (is_subview_col<P1_stored_type>::value);
+  constexpr bool have_direct_mem_2 = (is_Mat<P2_stored_type>::value) || (is_subview_col<P2_stored_type>::value);
   
   if(have_direct_mem_1 && have_direct_mem_2)
     {
+    arma_debug_print("accu(): eglue_schur direct_mem optimisation");
+    
     const quasi_unwrap<P1_stored_type> tmp1(expr.P1.Q);
     const quasi_unwrap<P2_stored_type> tmp2(expr.P2.Q);
     
@@ -304,22 +388,23 @@ accu(const eGlue<T1,T2,eglue_schur>& expr)
 
 
 
-//! explicit handling of Hamming norm (also known as zero norm)
-template<typename T1>
+template<typename T1, typename op_type>
 arma_warn_unused
 inline
 uword
-accu(const mtOp<uword,T1,op_rel_noteq>& X)
+accu(const mtOp<uword,T1,op_type>& X, const typename arma_op_rel_only<op_type>::result* junk1 = nullptr, const typename arma_not_cx<typename T1::elem_type>::result* junk2 = nullptr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
+  arma_ignore(junk1);
+  arma_ignore(junk2);
   
   typedef typename T1::elem_type eT;
   
-  const eT val = X.aux;
+  const eT k = X.aux;
   
   const Proxy<T1> P(X.m);
   
-  uword n_nonzero = 0;
+  uword count = 0;
   
   if(Proxy<T1>::use_at == false)
     {
@@ -330,7 +415,23 @@ accu(const mtOp<uword,T1,op_rel_noteq>& X)
     
     for(uword i=0; i<n_elem; ++i)
       {
-      n_nonzero += (A[i] != val) ? uword(1) : uword(0);
+      const eT val = A[i];
+      
+      bool condition;
+      
+           if(is_same_type<op_type, op_rel_eq       >::yes)  { condition = (val == k  ); }
+      else if(is_same_type<op_type, op_rel_noteq    >::yes)  { condition = (val != k  ); }
+      else if(is_same_type<op_type, op_rel_lt_pre   >::yes)  { condition = (k   <  val); }
+      else if(is_same_type<op_type, op_rel_lt_post  >::yes)  { condition = (val <  k  ); }
+      else if(is_same_type<op_type, op_rel_gt_pre   >::yes)  { condition = (k   >  val); }
+      else if(is_same_type<op_type, op_rel_gt_post  >::yes)  { condition = (val >  k  ); }
+      else if(is_same_type<op_type, op_rel_lteq_pre >::yes)  { condition = (k   <= val); }
+      else if(is_same_type<op_type, op_rel_lteq_post>::yes)  { condition = (val <= k  ); }
+      else if(is_same_type<op_type, op_rel_gteq_pre >::yes)  { condition = (k   >= val); }
+      else if(is_same_type<op_type, op_rel_gteq_post>::yes)  { condition = (val >= k  ); }
+      else { condition = false; }
+      
+      count += (condition) ? uword(1) : uword(0);
       }
     }
   else
@@ -338,43 +439,51 @@ accu(const mtOp<uword,T1,op_rel_noteq>& X)
     const uword P_n_cols = P.get_n_cols();
     const uword P_n_rows = P.get_n_rows();
     
-    if(P_n_rows == 1)
+    for(uword col=0; col < P_n_cols; ++col)
+    for(uword row=0; row < P_n_rows; ++row)
       {
-      for(uword col=0; col < P_n_cols; ++col)
-        {
-        n_nonzero += (P.at(0,col) != val) ? uword(1) : uword(0);
-        }
-      }
-    else
-      {
-      for(uword col=0; col < P_n_cols; ++col)
-      for(uword row=0; row < P_n_rows; ++row)
-        {
-        n_nonzero += (P.at(row,col) != val) ? uword(1) : uword(0);
-        }
+      const eT val = P.at(row,col);
+      
+      bool condition;
+      
+           if(is_same_type<op_type, op_rel_eq       >::yes)  { condition = (val == k  ); }
+      else if(is_same_type<op_type, op_rel_noteq    >::yes)  { condition = (val != k  ); }
+      else if(is_same_type<op_type, op_rel_lt_pre   >::yes)  { condition = (k   <  val); }
+      else if(is_same_type<op_type, op_rel_lt_post  >::yes)  { condition = (val <  k  ); }
+      else if(is_same_type<op_type, op_rel_gt_pre   >::yes)  { condition = (k   >  val); }
+      else if(is_same_type<op_type, op_rel_gt_post  >::yes)  { condition = (val >  k  ); }
+      else if(is_same_type<op_type, op_rel_lteq_pre >::yes)  { condition = (k   <= val); }
+      else if(is_same_type<op_type, op_rel_lteq_post>::yes)  { condition = (val <= k  ); }
+      else if(is_same_type<op_type, op_rel_gteq_pre >::yes)  { condition = (k   >= val); }
+      else if(is_same_type<op_type, op_rel_gteq_post>::yes)  { condition = (val >= k  ); }
+      else { condition = false; }
+      
+      count += (condition) ? uword(1) : uword(0);
       }
     }
   
-  return n_nonzero;
+  return count;
   }
 
 
 
-template<typename T1>
+template<typename T1, typename op_type>
 arma_warn_unused
 inline
 uword
-accu(const mtOp<uword,T1,op_rel_eq>& X)
+accu(const mtOp<uword,T1,op_type>& X, const typename arma_op_rel_only<op_type>::result* junk1 = nullptr, const typename arma_cx_only<typename T1::elem_type>::result* junk2 = nullptr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
+  arma_ignore(junk1);
+  arma_ignore(junk2);
   
   typedef typename T1::elem_type eT;
   
-  const eT val = X.aux;
+  const eT k = X.aux;
   
   const Proxy<T1> P(X.m);
   
-  uword n_nonzero = 0;
+  uword count = 0;
   
   if(Proxy<T1>::use_at == false)
     {
@@ -385,7 +494,15 @@ accu(const mtOp<uword,T1,op_rel_eq>& X)
     
     for(uword i=0; i<n_elem; ++i)
       {
-      n_nonzero += (A[i] == val) ? uword(1) : uword(0);
+      const eT val = A[i];
+      
+      bool condition;
+      
+           if(is_same_type<op_type, op_rel_eq   >::yes)  { condition = (val == k); }
+      else if(is_same_type<op_type, op_rel_noteq>::yes)  { condition = (val != k); }
+      else { condition = false; }
+      
+      count += (condition) ? uword(1) : uword(0);
       }
     }
   else
@@ -393,24 +510,22 @@ accu(const mtOp<uword,T1,op_rel_eq>& X)
     const uword P_n_cols = P.get_n_cols();
     const uword P_n_rows = P.get_n_rows();
     
-    if(P_n_rows == 1)
+    for(uword col=0; col < P_n_cols; ++col)
+    for(uword row=0; row < P_n_rows; ++row)
       {
-      for(uword col=0; col < P_n_cols; ++col)
-        {
-        n_nonzero += (P.at(0,col) == val) ? uword(1) : uword(0);
-        }
-      }
-    else
-      {
-      for(uword col=0; col < P_n_cols; ++col)
-      for(uword row=0; row < P_n_rows; ++row)
-        {
-        n_nonzero += (P.at(row,col) == val) ? uword(1) : uword(0);
-        }
+      const eT val = P.at(row,col);
+      
+      bool condition;
+      
+           if(is_same_type<op_type, op_rel_eq   >::yes)  { condition = (val == k); }
+      else if(is_same_type<op_type, op_rel_noteq>::yes)  { condition = (val != k); }
+      else { condition = false; }
+      
+      count += (condition) ? uword(1) : uword(0);
       }
     }
   
-  return n_nonzero;
+  return count;
   }
 
 
@@ -421,12 +536,12 @@ inline
 uword
 accu(const mtGlue<uword,T1,T2,glue_rel_noteq>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const Proxy<T1> PA(X.A);
   const Proxy<T2> PB(X.B);
   
-  arma_debug_assert_same_size(PA, PB, "operator!=");
+  arma_conform_assert_same_size(PA, PB, "operator!=");
   
   uword n_nonzero = 0;
   
@@ -477,12 +592,12 @@ inline
 uword
 accu(const mtGlue<uword,T1,T2,glue_rel_eq>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const Proxy<T1> PA(X.A);
   const Proxy<T2> PB(X.B);
   
-  arma_debug_assert_same_size(PA, PB, "operator==");
+  arma_conform_assert_same_size(PA, PB, "operator==");
   
   uword n_nonzero = 0;
   
@@ -535,7 +650,7 @@ inline
 eT
 accu(const subview<eT>& X)
   {
-  arma_extra_debug_sigprint();  
+  arma_debug_sigprint();  
   
   const uword X_n_rows = X.n_rows;
   const uword X_n_cols = X.n_cols;
@@ -583,7 +698,7 @@ inline
 eT
 accu(const subview_col<eT>& X)
   {
-  arma_extra_debug_sigprint();  
+  arma_debug_sigprint();  
   
   return arrayops::accumulate( X.colmem, X.n_rows );
   }
@@ -600,7 +715,7 @@ inline
 typename T1::elem_type
 accu_cube_proxy_linear(const ProxyCube<T1>& P)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -682,7 +797,7 @@ inline
 typename T1::elem_type
 accu_cube_proxy_at_mp(const ProxyCube<T1>& P)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -734,7 +849,7 @@ inline
 typename T1::elem_type
 accu_cube_proxy_at(const ProxyCube<T1>& P)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -772,7 +887,7 @@ inline
 typename T1::elem_type
 accu(const BaseCube<typename T1::elem_type,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const ProxyCube<T1> P(X.get_ref());
   
@@ -795,7 +910,7 @@ inline
 typename T1::elem_type
 accu(const eGlueCube<T1,T2,eglue_schur>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef eGlueCube<T1,T2,eglue_schur> expr_type;
   
@@ -839,7 +954,7 @@ inline
 typename T1::elem_type
 accu(const SpBase<typename T1::elem_type,T1>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -886,12 +1001,12 @@ inline
 typename T1::elem_type
 accu(const SpGlue<T1,T2,spglue_plus>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const unwrap_spmat<T1> UA(expr.A);
   const unwrap_spmat<T2> UB(expr.B);
   
-  arma_debug_assert_same_size(UA.M.n_rows, UA.M.n_cols, UB.M.n_rows, UB.M.n_cols, "addition");
+  arma_conform_assert_same_size(UA.M.n_rows, UA.M.n_cols, UB.M.n_rows, UB.M.n_cols, "addition");
   
   return (accu(UA.M) + accu(UB.M));
   }
@@ -905,12 +1020,12 @@ inline
 typename T1::elem_type
 accu(const SpGlue<T1,T2,spglue_minus>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const unwrap_spmat<T1> UA(expr.A);
   const unwrap_spmat<T2> UB(expr.B);
   
-  arma_debug_assert_same_size(UA.M.n_rows, UA.M.n_cols, UB.M.n_rows, UB.M.n_cols, "subtraction");
+  arma_conform_assert_same_size(UA.M.n_rows, UA.M.n_cols, UB.M.n_rows, UB.M.n_cols, "subtraction");
   
   return (accu(UA.M) - accu(UB.M));
   }
@@ -924,7 +1039,7 @@ inline
 typename T1::elem_type
 accu(const SpGlue<T1,T2,spglue_schur>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -978,23 +1093,152 @@ inline
 typename T1::elem_type
 accu(const SpOp<T1, spop_type>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
-  const bool is_vectorise = \
+  constexpr bool is_vectorise = \
        (is_same_type<spop_type, spop_vectorise_row>::yes)
     || (is_same_type<spop_type, spop_vectorise_col>::yes)
     || (is_same_type<spop_type, spop_vectorise_all>::yes);
   
-  if(is_vectorise)
-    {
-    return accu(expr.m);
-    }
+  if(is_vectorise)  { return accu(expr.m); }
   
   const SpMat<eT> tmp = expr;
   
   return accu(tmp);
+  }
+
+
+
+template<typename T1, typename spop_type>
+arma_warn_unused
+inline
+uword
+accu(const mtSpOp<uword,T1,spop_type>& X, const typename arma_spop_rel_only<spop_type>::result* junk1 = nullptr, const typename arma_not_cx<typename T1::elem_type>::result* junk2 = nullptr)
+  {
+  arma_debug_sigprint();
+  arma_ignore(junk1);
+  arma_ignore(junk2);
+  
+  typedef typename T1::elem_type eT;
+  
+  const eT k = X.aux;
+  
+  const SpProxy<T1> P(X.m);
+  
+  const uword n_zeros = P.get_n_elem() - P.get_n_nonzero();
+  
+  const eT zero = eT(0);
+  
+  // shortcuts
+  
+  if( (is_same_type<spop_type, spop_rel_eq   >::yes) && (k == zero) )  { return n_zeros;           }
+  if( (is_same_type<spop_type, spop_rel_noteq>::yes) && (k == zero) )  { return P.get_n_nonzero(); }
+  
+  // take into account all implicit zeros
+  
+  bool use_n_zeros;
+  
+       if(is_same_type<spop_type, spop_rel_eq       >::yes)  { use_n_zeros = (zero == k   ); }
+  else if(is_same_type<spop_type, spop_rel_noteq    >::yes)  { use_n_zeros = (zero != k   ); }
+  else if(is_same_type<spop_type, spop_rel_lt_pre   >::yes)  { use_n_zeros = (k    <  zero); }
+  else if(is_same_type<spop_type, spop_rel_lt_post  >::yes)  { use_n_zeros = (zero <  k   ); }
+  else if(is_same_type<spop_type, spop_rel_gt_pre   >::yes)  { use_n_zeros = (k    >  zero); }
+  else if(is_same_type<spop_type, spop_rel_gt_post  >::yes)  { use_n_zeros = (zero >  k   ); }
+  else if(is_same_type<spop_type, spop_rel_lteq_pre >::yes)  { use_n_zeros = (k    <= zero); }
+  else if(is_same_type<spop_type, spop_rel_lteq_post>::yes)  { use_n_zeros = (zero <= k   ); }
+  else if(is_same_type<spop_type, spop_rel_gteq_pre >::yes)  { use_n_zeros = (k    >= zero); }
+  else if(is_same_type<spop_type, spop_rel_gteq_post>::yes)  { use_n_zeros = (zero >= k   ); }
+  else { use_n_zeros = false; }
+  
+  uword count = (use_n_zeros) ? n_zeros : 0;
+  
+  typename SpProxy<T1>::const_iterator_type it     = P.begin();
+  typename SpProxy<T1>::const_iterator_type it_end = P.end();
+  
+  // take into account all non-zero elements
+  
+  for(; it != it_end; ++it)
+    {
+    const eT val = (*it);
+    
+    bool condition;
+    
+         if(is_same_type<spop_type, spop_rel_eq       >::yes)  { condition = (val == k  ); }
+    else if(is_same_type<spop_type, spop_rel_noteq    >::yes)  { condition = (val != k  ); }
+    else if(is_same_type<spop_type, spop_rel_lt_pre   >::yes)  { condition = (k   <  val); }
+    else if(is_same_type<spop_type, spop_rel_lt_post  >::yes)  { condition = (val <  k  ); }
+    else if(is_same_type<spop_type, spop_rel_gt_pre   >::yes)  { condition = (k   >  val); }
+    else if(is_same_type<spop_type, spop_rel_gt_post  >::yes)  { condition = (val >  k  ); }
+    else if(is_same_type<spop_type, spop_rel_lteq_pre >::yes)  { condition = (k   <= val); }
+    else if(is_same_type<spop_type, spop_rel_lteq_post>::yes)  { condition = (val <= k  ); }
+    else if(is_same_type<spop_type, spop_rel_gteq_pre >::yes)  { condition = (k   >= val); }
+    else if(is_same_type<spop_type, spop_rel_gteq_post>::yes)  { condition = (val >= k  ); }
+    else { condition = false; }
+    
+    count += (condition) ? uword(1) : uword(0);
+    }
+  
+  return count;
+  }
+
+
+
+template<typename T1, typename spop_type>
+arma_warn_unused
+inline
+uword
+accu(const mtSpOp<uword,T1,spop_type>& X, const typename arma_spop_rel_only<spop_type>::result* junk1 = nullptr, const typename arma_cx_only<typename T1::elem_type>::result* junk2 = nullptr)
+  {
+  arma_debug_sigprint();
+  arma_ignore(junk1);
+  arma_ignore(junk2);
+  
+  typedef typename T1::elem_type eT;
+  
+  const eT k = X.aux;
+  
+  const SpProxy<T1> P(X.m);
+  
+  const uword n_zeros = P.get_n_elem() - P.get_n_nonzero();
+  
+  const eT zero = eT(0);
+  
+  // shortcuts
+  
+  if( (is_same_type<spop_type, spop_rel_eq   >::yes) && (k == zero) )  { return n_zeros;           }
+  if( (is_same_type<spop_type, spop_rel_noteq>::yes) && (k == zero) )  { return P.get_n_nonzero(); }
+  
+  // take into account all implicit zeros
+  
+  bool use_n_zeros;
+  
+       if(is_same_type<spop_type, spop_rel_eq   >::yes)  { use_n_zeros = (zero == k); }
+  else if(is_same_type<spop_type, spop_rel_noteq>::yes)  { use_n_zeros = (zero != k); }
+  else { use_n_zeros = false; }
+  
+  uword count = (use_n_zeros) ? n_zeros : 0;
+  
+  typename SpProxy<T1>::const_iterator_type it     = P.begin();
+  typename SpProxy<T1>::const_iterator_type it_end = P.end();
+  
+  // take into account all non-zero elements
+  
+  for(; it != it_end; ++it)
+    {
+    const eT val = (*it);
+    
+    bool condition;
+    
+         if(is_same_type<spop_type, spop_rel_eq   >::yes)  { condition = (val == k); }
+    else if(is_same_type<spop_type, spop_rel_noteq>::yes)  { condition = (val != k); }
+    else { condition = false; }
+    
+    count += (condition) ? uword(1) : uword(0);
+    }
+  
+  return count;
   }
 
 

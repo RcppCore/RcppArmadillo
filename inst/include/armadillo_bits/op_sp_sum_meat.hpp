@@ -16,7 +16,7 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup spop_sum
+//! \addtogroup op_sp_sum
 //! @{
 
 
@@ -24,43 +24,39 @@
 template<typename T1>
 inline
 void
-spop_sum::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_sum>& in)
+op_sp_sum::apply(Mat<typename T1::elem_type>& out, const mtSpReduceOp<typename T1::elem_type, T1, op_sp_sum>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
   const uword dim = in.aux_uword_a;
-  arma_debug_check( (dim > 1), "sum(): parameter 'dim' must be 0 or 1" );
+  
+  arma_conform_check( (dim > 1), "sum(): parameter 'dim' must be 0 or 1" );
   
   const SpProxy<T1> p(in.m);
   
   const uword p_n_rows = p.get_n_rows();
   const uword p_n_cols = p.get_n_cols();
   
-  if(p.get_n_nonzero() == 0)
-    {
-    if(dim == 0)  { out.zeros(1,p_n_cols); }
-    if(dim == 1)  { out.zeros(p_n_rows,1); }
-    
-    return;
-    }
+  if(dim == 0)  { out.zeros(1, p_n_cols); }
+  if(dim == 1)  { out.zeros(p_n_rows, 1); }
   
+  if(p.get_n_nonzero() == 0)  { return; }
+  
+  eT* out_mem = out.memptr();
+    
   if(dim == 0) // find the sum in each column
     {
-    Row<eT> acc(p_n_cols, arma_zeros_indicator());
-    
-    eT* acc_mem = acc.memptr();
-    
     if(SpProxy<T1>::use_iterator)
       {
       typename SpProxy<T1>::const_iterator_type it = p.begin();
       
       const uword N = p.get_n_nonzero();
-
+      
       for(uword i=0; i < N; ++i)
         {
-        acc_mem[it.col()] += (*it);
+        out_mem[it.col()] += (*it);
         ++it;
         }
       }
@@ -68,34 +64,26 @@ spop_sum::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_sum>& in)
       {
       for(uword col = 0; col < p_n_cols; ++col)
         {
-        acc_mem[col] = arrayops::accumulate
+        out_mem[col] = arrayops::accumulate
           (
           &p.get_values()[p.get_col_ptrs()[col]],
           p.get_col_ptrs()[col + 1] - p.get_col_ptrs()[col]
           );
         }
       }
-    
-    out = acc;
     }
   else
   if(dim == 1)  // find the sum in each row
     {
-    Col<eT> acc(p_n_rows, arma_zeros_indicator());
-    
-    eT* acc_mem = acc.memptr();
-    
     typename SpProxy<T1>::const_iterator_type it = p.begin();
     
     const uword N = p.get_n_nonzero();
     
     for(uword i=0; i < N; ++i)
       {
-      acc_mem[it.row()] += (*it);
+      out_mem[it.row()] += (*it);
       ++it;
       }
-    
-    out = acc;
     }
   }
 

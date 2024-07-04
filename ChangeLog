@@ -1,3 +1,10 @@
+2024-06-23  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): RcppArmadillo 0.12.8.4.0.14.4 ie the
+	fourth test package of the 14.0.0 development branch
+
+ 	* inst/include/armadillo_bits/: Armadillo 14.0.0 rc1
+
 2024-05-30  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 0.12.8.4.0

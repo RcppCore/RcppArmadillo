@@ -26,7 +26,7 @@ UpperHessenbergEigen<eT>::UpperHessenbergEigen()
   : n_rows(0)
   , computed(false)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   }
 
 
@@ -37,7 +37,7 @@ UpperHessenbergEigen<eT>::UpperHessenbergEigen(const Mat<eT>& mat_obj)
   : n_rows(mat_obj.n_rows)
   , computed(false)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   compute(mat_obj);
   }
@@ -49,9 +49,9 @@ inline
 void
 UpperHessenbergEigen<eT>::compute(const Mat<eT>& mat_obj)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check( (mat_obj.is_square() == false), "newarp::UpperHessenbergEigen::compute(): matrix must be square" );
+  arma_conform_check( (mat_obj.is_square() == false), "newarp::UpperHessenbergEigen::compute(): matrix must be square" );
   
   n_rows = mat_obj.n_rows;
   
@@ -76,7 +76,7 @@ UpperHessenbergEigen<eT>::compute(const Mat<eT>& mat_obj)
   podarray<eT> wr(n_rows);
   podarray<eT> wi(n_rows);
   
-  arma_extra_debug_print("lapack::lahqr()");
+  arma_debug_print("lapack::lahqr()");
   lapack::lahqr(&want_T, &want_Z, &n, &ilo, &ihi, mat_T.memptr(), &n, wr.memptr(), wi.memptr(), &iloz, &ihiz, mat_Z.memptr(), &n, &info);
   
   if(info != 0)  { arma_stop_runtime_error("lapack::lahqr(): failed to compute all eigenvalues"); return; }
@@ -89,7 +89,7 @@ UpperHessenbergEigen<eT>::compute(const Mat<eT>& mat_obj)
   
   podarray<eT> work(3*n);
   
-  arma_extra_debug_print("lapack::trevc()");
+  arma_debug_print("lapack::trevc()");
   lapack::trevc(&side, &howmny, (blas_int*) NULL, &n, mat_T.memptr(), &n, (eT*) NULL, &n, mat_Z.memptr(), &n, &n, &m, work.memptr(), &info);
   
   if(info != 0)  { arma_stop_runtime_error("lapack::trevc(): illegal value"); return; }
@@ -104,9 +104,9 @@ inline
 Col< std::complex<eT> >
 UpperHessenbergEigen<eT>::eigenvalues()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check( (computed == false), "newarp::UpperHessenbergEigen::eigenvalues(): need to call compute() first" );
+  arma_conform_check( (computed == false), "newarp::UpperHessenbergEigen::eigenvalues(): need to call compute() first" );
   
   return evals;
   }
@@ -118,9 +118,9 @@ inline
 Mat< std::complex<eT> >
 UpperHessenbergEigen<eT>::eigenvectors()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check( (computed == false), "newarp::UpperHessenbergEigen::eigenvectors(): need to call compute() first" );
+  arma_conform_check( (computed == false), "newarp::UpperHessenbergEigen::eigenvectors(): need to call compute() first" );
   
   // Lapack will set the imaginary parts of real eigenvalues to be exact zero
   Mat< std::complex<eT> > evecs(n_rows, n_rows, arma_zeros_indicator());

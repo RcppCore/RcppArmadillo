@@ -25,7 +25,7 @@ inline
 void
 op_diff::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword k, const uword dim)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   uword n_rows = X.n_rows;
   uword n_cols = X.n_cols;
@@ -158,14 +158,14 @@ inline
 void
 op_diff::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_diff>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
   const uword k   = in.aux_uword_a;
   const uword dim = in.aux_uword_b;
   
-  arma_debug_check( (dim > 1), "diff(): parameter 'dim' must be 0 or 1" );
+  arma_conform_check( (dim > 1), "diff(): parameter 'dim' must be 0 or 1" );
   
   if(k == 0)  { out = in.m; return; }
   
@@ -192,7 +192,7 @@ inline
 void
 op_diff_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_diff_vec>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   

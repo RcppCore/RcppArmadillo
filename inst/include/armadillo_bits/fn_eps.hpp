@@ -28,7 +28,7 @@ inline
 const eOp<T1, eop_eps>
 eps(const Base<typename T1::elem_type, T1>& X, const typename arma_not_cx<typename T1::elem_type>::result* junk = nullptr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   return eOp<T1, eop_eps>(X.get_ref());
@@ -42,7 +42,7 @@ inline
 Mat< typename T1::pod_type >
 eps(const Base< std::complex<typename T1::pod_type>, T1>& X, const typename arma_cx_only<typename T1::elem_type>::result* junk = nullptr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename T1::pod_type   T;

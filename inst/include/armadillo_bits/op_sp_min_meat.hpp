@@ -16,7 +16,7 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup spop_min
+//! \addtogroup op_sp_min
 //! @{
 
 
@@ -24,12 +24,13 @@
 template<typename T1>
 inline
 void
-spop_min::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_min>& in)
+op_sp_min::apply(Mat<typename T1::elem_type>& out, const mtSpReduceOp<typename T1::elem_type, T1, op_sp_min>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword dim = in.aux_uword_a;
-  arma_debug_check( (dim > 1), "min(): parameter 'dim' must be 0 or 1" );
+  
+  arma_conform_check( (dim > 1), "min(): parameter 'dim' must be 0 or 1" );
   
   const SpProxy<T1> p(in.m);
   
@@ -44,7 +45,7 @@ spop_min::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_min>& in)
     return;
     }
   
-  spop_min::apply_proxy(out, p, dim);
+  op_sp_min::apply_proxy(out, p, dim);
   }
 
 
@@ -52,15 +53,15 @@ spop_min::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_min>& in)
 template<typename T1>
 inline
 void
-spop_min::apply_proxy
+op_sp_min::apply_proxy
   (
-        SpMat<typename T1::elem_type>& out,
-  const SpProxy<T1>&                   p,
-  const uword                          dim,
+        Mat<typename T1::elem_type>& out,
+  const SpProxy<T1>&                 p,
+  const uword                        dim,
   const typename arma_not_cx<typename T1::elem_type>::result* junk
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
@@ -73,46 +74,44 @@ spop_min::apply_proxy
   
   if(dim == 0) // find the minimum in each column
     {
-    Row<eT> value(p_n_cols, arma_zeros_indicator());
+    out.zeros(1, p_n_cols);
+    
     urowvec count(p_n_cols, arma_zeros_indicator());
     
     while(it != it_end)
       {
       const uword col = it.col();
       
-      value[col] = (count[col] == 0) ? (*it) : (std::min)(value[col], (*it));
+        out[col] = (count[col] == 0) ? (*it) : (std::min)(out[col], (*it));
       count[col]++;
       ++it;
       }
     
     for(uword col=0; col<p_n_cols; ++col)
       {
-      if(count[col] < p_n_rows)  { value[col] = (std::min)(value[col], eT(0)); }
+      if(count[col] < p_n_rows)  { out[col] = (std::min)(out[col], eT(0)); }
       }
-    
-    out = value;
     }
   else
   if(dim == 1)  // find the minimum in each row
     {
-    Col<eT> value(p_n_rows, arma_zeros_indicator());
+    out.zeros(p_n_rows, 1);
+    
     ucolvec count(p_n_rows, arma_zeros_indicator());
     
     while(it != it_end)
       {
       const uword row = it.row();
       
-      value[row] = (count[row] == 0) ? (*it) : (std::min)(value[row], (*it));
+        out[row] = (count[row] == 0) ? (*it) : (std::min)(out[row], (*it));
       count[row]++;
       ++it;
       }
     
     for(uword row=0; row<p_n_rows; ++row)
       {
-      if(count[row] < p_n_cols)  { value[row] = (std::min)(value[row], eT(0)); }
+      if(count[row] < p_n_cols)  { out[row] = (std::min)(out[row], eT(0)); }
       }
-    
-    out = value;
     }
   }
 
@@ -121,13 +120,13 @@ spop_min::apply_proxy
 template<typename T1>
 inline
 typename T1::elem_type
-spop_min::vector_min
+op_sp_min::vector_min
   (
   const T1& x,
   const typename arma_not_cx<typename T1::elem_type>::result* junk
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
@@ -136,7 +135,7 @@ spop_min::vector_min
   
   if(p.get_n_elem() == 0)
     {
-    arma_debug_check(true, "min(): object has no elements");
+    arma_conform_check(true, "min(): object has no elements");
     
     return Datum<eT>::nan;
     }
@@ -187,34 +186,34 @@ spop_min::vector_min
 template<typename T1>
 inline
 typename arma_not_cx<typename T1::elem_type>::result
-spop_min::min(const SpBase<typename T1::elem_type, T1>& X)
+op_sp_min::min(const SpBase<typename T1::elem_type, T1>& X)
   {
-  arma_extra_debug_sigprint();
-
+  arma_debug_sigprint();
+  
   typedef typename T1::elem_type eT;
-
+  
   const SpProxy<T1> P(X.get_ref());
-
+  
   const uword n_elem    = P.get_n_elem();
   const uword n_nonzero = P.get_n_nonzero();
-
+  
   if(n_elem == 0)
     {
-    arma_debug_check(true, "min(): object has no elements");
+    arma_conform_check(true, "min(): object has no elements");
     
     return Datum<eT>::nan;
     }
-
+  
   eT min_val = priv::most_pos<eT>();
-
+  
   if(SpProxy<T1>::use_iterator)
     {
     // We have to iterate over the elements.
     typedef typename SpProxy<T1>::const_iterator_type it_type;
-
+    
     it_type it     = P.begin();
     it_type it_end = P.end();
-
+    
     while(it != it_end)
       {
       if((*it) < min_val)  { min_val = *it; }
@@ -229,7 +228,7 @@ spop_min::min(const SpBase<typename T1::elem_type, T1>& X)
     // other functions...
     min_val = op_min::direct_min(P.get_values(), n_nonzero);
     }
-
+  
   if(n_elem == n_nonzero)
     {
     return min_val;
@@ -245,9 +244,9 @@ spop_min::min(const SpBase<typename T1::elem_type, T1>& X)
 template<typename T1>
 inline
 typename arma_not_cx<typename T1::elem_type>::result
-spop_min::min_with_index(const SpProxy<T1>& P, uword& index_of_min_val)
+op_sp_min::min_with_index(const SpProxy<T1>& P, uword& index_of_min_val)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -257,7 +256,7 @@ spop_min::min_with_index(const SpProxy<T1>& P, uword& index_of_min_val)
   
   if(n_elem == 0)
     {
-    arma_debug_check(true, "min(): object has no elements");
+    arma_conform_check(true, "min(): object has no elements");
     
     index_of_min_val = uword(0);
     
@@ -301,7 +300,7 @@ spop_min::min_with_index(const SpProxy<T1>& P, uword& index_of_min_val)
   if(n_elem != n_nonzero)
     {
     min_val = (std::min)(eT(0), min_val);
-
+    
     // If the min_val is a nonzero element, we need its actual position in the matrix.
     if(min_val == eT(0))
       {
@@ -353,15 +352,15 @@ spop_min::min_with_index(const SpProxy<T1>& P, uword& index_of_min_val)
 template<typename T1>
 inline
 void
-spop_min::apply_proxy
+op_sp_min::apply_proxy
   (
-        SpMat<typename T1::elem_type>& out,
-  const SpProxy<T1>&                   p,
-  const uword                          dim,
+        Mat<typename T1::elem_type>& out,
+  const SpProxy<T1>&                 p,
+  const uword                        dim,
   const typename arma_cx_only<typename T1::elem_type>::result* junk
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename T1::elem_type            eT;
@@ -375,8 +374,9 @@ spop_min::apply_proxy
   
   if(dim == 0) // find the minimum in each column
     {
-    Row<eT> rawval(p_n_cols, arma_zeros_indicator());
-    Row< T> absval(p_n_cols, arma_zeros_indicator());
+    out.zeros(1, p_n_cols);
+    
+    Row<T>  absval(p_n_cols, arma_zeros_indicator());
     urowvec  count(p_n_cols, arma_zeros_indicator());
     
     while(it != it_end)
@@ -389,14 +389,14 @@ spop_min::apply_proxy
       if(count[col] == 0)
         {
         absval[col] = a;
-        rawval[col] = v;
+           out[col] = v;
         }
       else
         {
         if(a < absval[col])
           {
           absval[col] = a;
-          rawval[col] = v;
+             out[col] = v;
           }
         }
       
@@ -408,17 +408,16 @@ spop_min::apply_proxy
       {
       if(count[col] < p_n_rows)
         {
-        if(T(0) < absval[col])  { rawval[col] = eT(0); }
+        if(T(0) < absval[col])  { out[col] = eT(0); }
         }
       }
-    
-    out = rawval;
     }
   else
   if(dim == 1)  // find the minimum in each row
     {
-    Col<eT> rawval(p_n_rows, arma_zeros_indicator());
-    Col< T> absval(p_n_rows, arma_zeros_indicator());
+    out.zeros(p_n_rows, 1);
+    
+    Col<T>  absval(p_n_rows, arma_zeros_indicator());
     ucolvec  count(p_n_rows, arma_zeros_indicator());
     
     while(it != it_end)
@@ -431,14 +430,14 @@ spop_min::apply_proxy
       if(count[row] == 0)
         {
         absval[row] = a;
-        rawval[row] = v;
+           out[row] = v;
         }
       else
         {
         if(a < absval[row])
           {
           absval[row] = a;
-          rawval[row] = v;
+             out[row] = v;
           }
         }
       
@@ -450,11 +449,9 @@ spop_min::apply_proxy
       {
       if(count[row] < p_n_cols)
         {
-        if(T(0) < absval[row])  { rawval[row] = eT(0); }
+        if(T(0) < absval[row])  { out[row] = eT(0); }
         }
       }
-    
-    out = rawval;
     }
   }
 
@@ -463,23 +460,23 @@ spop_min::apply_proxy
 template<typename T1>
 inline
 typename T1::elem_type
-spop_min::vector_min
+op_sp_min::vector_min
   (
   const T1& x,
   const typename arma_cx_only<typename T1::elem_type>::result* junk
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename T1::elem_type            eT;
   typedef typename get_pod_type<eT>::result  T;
-
+  
   const SpProxy<T1> p(x);
   
   if(p.get_n_elem() == 0)
     {
-    arma_debug_check(true, "min(): object has no elements");
+    arma_conform_check(true, "min(): object has no elements");
     
     return Datum<eT>::nan;
     }
@@ -544,9 +541,9 @@ spop_min::vector_min
 template<typename T1>
 inline
 typename arma_cx_only<typename T1::elem_type>::result
-spop_min::min(const SpBase<typename T1::elem_type, T1>& X)
+op_sp_min::min(const SpBase<typename T1::elem_type, T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
 
   typedef typename T1::elem_type            eT;
   typedef typename get_pod_type<eT>::result  T;
@@ -558,14 +555,14 @@ spop_min::min(const SpBase<typename T1::elem_type, T1>& X)
 
   if(n_elem == 0)
     {
-    arma_debug_check(true, "min(): object has no elements");
+    arma_conform_check(true, "min(): object has no elements");
     
     return Datum<eT>::nan;
     }
-
+  
    T min_val = priv::most_pos<T>();
   eT ret_val;
-
+  
   if(SpProxy<T1>::use_iterator)
     {
     // We have to iterate over the elements.
@@ -611,9 +608,9 @@ spop_min::min(const SpBase<typename T1::elem_type, T1>& X)
 template<typename T1>
 inline
 typename arma_cx_only<typename T1::elem_type>::result
-spop_min::min_with_index(const SpProxy<T1>& P, uword& index_of_min_val)
+op_sp_min::min_with_index(const SpProxy<T1>& P, uword& index_of_min_val)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type            eT;
   typedef typename get_pod_type<eT>::result  T;
@@ -624,7 +621,7 @@ spop_min::min_with_index(const SpProxy<T1>& P, uword& index_of_min_val)
   
   if(n_elem == 0)
     {
-    arma_debug_check(true, "min(): object has no elements");
+    arma_conform_check(true, "min(): object has no elements");
     
     index_of_min_val = uword(0);
     

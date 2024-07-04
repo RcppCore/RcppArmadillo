@@ -26,13 +26,13 @@ inline
 void
 op_reverse::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reverse>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
   const uword dim = in.aux_uword_a;
   
-  arma_debug_check( (dim > 1), "reverse(): parameter 'dim' must be 0 or 1" );
+  arma_conform_check( (dim > 1), "reverse(): parameter 'dim' must be 0 or 1" );
   
   if(is_Mat<T1>::value)
     {
@@ -71,7 +71,7 @@ inline
 void
 op_reverse_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reverse_vec>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   

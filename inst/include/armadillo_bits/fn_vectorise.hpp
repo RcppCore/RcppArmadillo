@@ -32,7 +32,7 @@ enable_if2
   >::result
 vectorise(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_vectorise_col>(X);
   }
@@ -50,9 +50,9 @@ enable_if2
   >::result
 vectorise(const T1& X, const uword dim)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check( (dim > 1), "vectorise(): parameter 'dim' must be 0 or 1" );
+  arma_conform_check( (dim > 1), "vectorise(): parameter 'dim' must be 0 or 1" );
   
   return Op<T1, op_vectorise_all>(X, dim, 0);
   }
@@ -65,7 +65,7 @@ inline
 CubeToMatOp<T1, op_vectorise_cube_col>
 vectorise(const BaseCube<typename T1::elem_type, T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return CubeToMatOp<T1, op_vectorise_cube_col>(X.get_ref());
   }
@@ -84,7 +84,7 @@ enable_if2
   >::result
 vectorise(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
 
   return SpOp<T1, spop_vectorise_col>(X);
   }
@@ -103,9 +103,9 @@ enable_if2
   >::result
 vectorise(const T1& X, const uword dim)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
 
-  arma_debug_check( (dim > 1), "vectorise(): parameter 'dim' must be 0 or 1" );
+  arma_conform_check( (dim > 1), "vectorise(): parameter 'dim' must be 0 or 1" );
 
   return SpOp<T1, spop_vectorise_all>(X, dim, 0);
   }

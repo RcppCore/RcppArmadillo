@@ -28,7 +28,7 @@ inline
 double
 randn()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return double(arma_rng::randn<double>());
   }
@@ -41,7 +41,7 @@ inline
 typename arma_real_or_cx_only<eT>::result
 randn()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return eT(arma_rng::randn<eT>());
   }
@@ -53,7 +53,7 @@ inline
 double
 randn(const distr_param& param)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if(param.state == 0)  { return double(arma_rng::randn<double>()); }
   
@@ -62,7 +62,7 @@ randn(const distr_param& param)
   
   param.get_double_vals(mu,sd);
   
-  arma_debug_check( (sd <= double(0)), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
+  arma_conform_check( (sd <= double(0)), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
   
   const double val = double(arma_rng::randn<double>());
   
@@ -77,7 +77,7 @@ inline
 typename arma_real_or_cx_only<eT>::result
 randn(const distr_param& param)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if(param.state == 0)  { return eT(arma_rng::randn<eT>()); }
   
@@ -86,7 +86,7 @@ randn(const distr_param& param)
   
   param.get_double_vals(mu,sd);
   
-  arma_debug_check( (sd <= double(0)), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
+  arma_conform_check( (sd <= double(0)), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
   
   eT val = eT(0);
   
@@ -104,7 +104,7 @@ inline
 vec
 randn(const uword n_elem, const distr_param& param = distr_param())
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   vec out(n_elem, arma_nozeros_indicator());
   
@@ -119,7 +119,7 @@ randn(const uword n_elem, const distr_param& param = distr_param())
     
     param.get_double_vals(mu,sd);
     
-    arma_debug_check( (sd <= double(0)), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
+    arma_conform_check( (sd <= double(0)), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
     
     arma_rng::randn<double>::fill(out.memptr(), n_elem, mu, sd);
     }
@@ -135,7 +135,7 @@ inline
 obj_type
 randn(const uword n_elem, const distr_param& param = distr_param(), const typename arma_Mat_Col_Row_only<obj_type>::result* junk = nullptr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename obj_type::elem_type eT;
@@ -156,7 +156,7 @@ randn(const uword n_elem, const distr_param& param = distr_param(), const typena
     
     param.get_double_vals(mu,sd);
     
-    arma_debug_check( (sd <= double(0)), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
+    arma_conform_check( (sd <= double(0)), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
     
     arma_rng::randn<eT>::fill(out.memptr(), out.n_elem, mu, sd);
     }
@@ -173,7 +173,7 @@ inline
 mat
 randn(const uword n_rows, const uword n_cols, const distr_param& param = distr_param())
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   mat out(n_rows, n_cols, arma_nozeros_indicator());
   
@@ -188,7 +188,7 @@ randn(const uword n_rows, const uword n_cols, const distr_param& param = distr_p
     
     param.get_double_vals(mu,sd);
     
-    arma_debug_check( (sd <= double(0)), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
+    arma_conform_check( (sd <= double(0)), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
     
     arma_rng::randn<double>::fill(out.memptr(), out.n_elem, mu, sd);
     }
@@ -203,7 +203,7 @@ inline
 mat
 randn(const SizeMat& s, const distr_param& param = distr_param())
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return randn(s.n_rows, s.n_cols, param);
   }
@@ -216,13 +216,13 @@ inline
 obj_type
 randn(const uword n_rows, const uword n_cols, const distr_param& param = distr_param(), const typename arma_Mat_Col_Row_only<obj_type>::result* junk = nullptr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename obj_type::elem_type eT;
   
-  if(is_Col<obj_type>::value)  { arma_debug_check( (n_cols != 1), "randn(): incompatible size" ); }
-  if(is_Row<obj_type>::value)  { arma_debug_check( (n_rows != 1), "randn(): incompatible size" ); }
+  if(is_Col<obj_type>::value)  { arma_conform_check( (n_cols != 1), "randn(): incompatible size" ); }
+  if(is_Row<obj_type>::value)  { arma_conform_check( (n_rows != 1), "randn(): incompatible size" ); }
   
   obj_type out(n_rows, n_cols, arma_nozeros_indicator());
   
@@ -237,7 +237,7 @@ randn(const uword n_rows, const uword n_cols, const distr_param& param = distr_p
     
     param.get_double_vals(mu,sd);
     
-    arma_debug_check( (sd <= double(0)), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
+    arma_conform_check( (sd <= double(0)), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
     
     arma_rng::randn<eT>::fill(out.memptr(), out.n_elem, mu, sd);
     }
@@ -253,7 +253,7 @@ inline
 obj_type
 randn(const SizeMat& s, const distr_param& param = distr_param(), const typename arma_Mat_Col_Row_only<obj_type>::result* junk = nullptr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   return randn<obj_type>(s.n_rows, s.n_cols, param);
@@ -269,7 +269,7 @@ inline
 cube
 randn(const uword n_rows, const uword n_cols, const uword n_slices, const distr_param& param = distr_param())
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   cube out(n_rows, n_cols, n_slices, arma_nozeros_indicator());
   
@@ -284,7 +284,7 @@ randn(const uword n_rows, const uword n_cols, const uword n_slices, const distr_
     
     param.get_double_vals(mu,sd);
     
-    arma_debug_check( (sd <= double(0)), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
+    arma_conform_check( (sd <= double(0)), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
     
     arma_rng::randn<double>::fill(out.memptr(), out.n_elem, mu, sd);
     }
@@ -299,7 +299,7 @@ inline
 cube
 randn(const SizeCube& s, const distr_param& param = distr_param())
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return randn(s.n_rows, s.n_cols, s.n_slices, param);
   }
@@ -312,7 +312,7 @@ inline
 cube_type
 randn(const uword n_rows, const uword n_cols, const uword n_slices, const distr_param& param = distr_param(), const typename arma_Cube_only<cube_type>::result* junk = nullptr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename cube_type::elem_type eT;
@@ -330,7 +330,7 @@ randn(const uword n_rows, const uword n_cols, const uword n_slices, const distr_
     
     param.get_double_vals(mu,sd);
     
-    arma_debug_check( (sd <= double(0)), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
+    arma_conform_check( (sd <= double(0)), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
     
     arma_rng::randn<eT>::fill(out.memptr(), out.n_elem, mu, sd);
     }
@@ -346,7 +346,7 @@ inline
 cube_type
 randn(const SizeCube& s, const distr_param& param = distr_param(), const typename arma_Cube_only<cube_type>::result* junk = nullptr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   return randn<cube_type>(s.n_rows, s.n_cols, s.n_slices, param);

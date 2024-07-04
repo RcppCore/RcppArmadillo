@@ -31,14 +31,14 @@ enable_if2
   >::result
 polyfit(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type, T1>& X, const Base<typename T1::elem_type, T2>& Y, const uword N)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const bool status = glue_polyfit::apply_direct(out, X.get_ref(), Y.get_ref(), N);
   
   if(status == false)
     {
     out.soft_reset();
-    arma_debug_warn_level(3, "polyfit(): failed");
+    arma_warn(3, "polyfit(): failed");
     }
   
   return status;
@@ -57,7 +57,7 @@ enable_if2
   >::result
 polyfit(const Base<typename T1::elem_type, T1>& X, const Base<typename T1::elem_type, T2>& Y, const uword N)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Glue<T1, T2, glue_polyfit>(X.get_ref(), Y.get_ref(), N);
   }

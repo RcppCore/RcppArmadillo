@@ -36,7 +36,7 @@ find_unique
   const bool ascending_indices = true
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return mtOp<uword,T1,op_find_unique>(X, ((ascending_indices) ? uword(1) : uword(0)), uword(0));
   }
@@ -53,7 +53,7 @@ find_unique
   const bool ascending_indices = true
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   

@@ -31,7 +31,7 @@ op_find::helper
   const Base<typename T1::elem_type, T1>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -85,7 +85,7 @@ op_find::helper
   const typename arma_not_cx<typename T1::elem_type>::result* junk2
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk1);
   arma_ignore(junk2);
   
@@ -93,9 +93,9 @@ op_find::helper
   
   const eT val = X.aux;
   
-  if((is_same_type<op_type, op_rel_eq>::yes || is_same_type<op_type, op_rel_noteq>::yes) && arma_config::debug && arma_isnan(val))
+  if((is_same_type<op_type, op_rel_eq>::yes || is_same_type<op_type, op_rel_noteq>::yes) && arma_config::check_conform && arma_isnan(val))
     {
-    arma_debug_warn_level(1, "find(): NaN is not equal to anything; suggest to use find_nonfinite() instead");
+    arma_warn(1, "find(): NaN is not equal to anything; suggest to use find_nonfinite() instead");
     }
   
   const Proxy<T1> A(X.m);
@@ -217,7 +217,7 @@ op_find::helper
   const typename arma_cx_only<typename T1::elem_type>::result* junk2
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk1);
   arma_ignore(junk2);
   
@@ -226,9 +226,9 @@ op_find::helper
   
   const eT val = X.aux;
   
-  if((is_same_type<op_type, op_rel_eq>::yes || is_same_type<op_type, op_rel_noteq>::yes) && arma_config::debug && arma_isnan(val))
+  if((is_same_type<op_type, op_rel_eq>::yes || is_same_type<op_type, op_rel_noteq>::yes) && arma_config::check_conform && arma_isnan(val))
     {
-    arma_debug_warn_level(1, "find(): NaN is not equal to anything; suggest to use find_nonfinite() instead");
+    arma_warn(1, "find(): NaN is not equal to anything; suggest to use find_nonfinite() instead");
     }
   
   const Proxy<T1> A(X.m);
@@ -299,7 +299,7 @@ op_find::helper
   const typename arma_not_cx<typename T2::elem_type>::result* junk3
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk1);
   arma_ignore(junk2);
   arma_ignore(junk3);
@@ -313,7 +313,7 @@ op_find::helper
   const Proxy<T1> A(X.A);
   const Proxy<T2> B(X.B);
   
-  arma_debug_assert_same_size(A, B, "relational operator");
+  arma_conform_assert_same_size(A, B, "relational operator");
   
   const uword n_elem = A.get_n_elem();
   
@@ -395,7 +395,7 @@ op_find::helper
   const typename arma_cx_only<typename T2::elem_type>::result* junk3
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk1);
   arma_ignore(junk2);
   arma_ignore(junk3);
@@ -406,7 +406,7 @@ op_find::helper
   const Proxy<T1> A(X.A);
   const Proxy<T2> B(X.B);
   
-  arma_debug_assert_same_size(A, B, "relational operator");
+  arma_conform_assert_same_size(A, B, "relational operator");
   
   const uword n_elem = A.get_n_elem();
   
@@ -463,7 +463,7 @@ inline
 void
 op_find::apply(Mat<uword>& out, const mtOp<uword, T1, op_find>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword k    = X.aux_uword_a;
   const uword type = X.aux_uword_b;
@@ -499,7 +499,7 @@ inline
 void
 op_find_simple::apply(Mat<uword>& out, const mtOp<uword, T1, op_find_simple>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   Mat<uword> indices;
   const uword n_nz = op_find::helper(indices, X.m);
@@ -518,9 +518,9 @@ inline
 void
 op_find_finite::apply(Mat<uword>& out, const mtOp<uword, T1, op_find_finite>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  if(arma_config::fast_math_warn)  { arma_debug_warn_level(1, "find_finite(): detection of non-finite values is not reliable in fast math mode"); }
+  if(arma_config::fast_math_warn)  { arma_warn(1, "find_finite(): detection of non-finite values is not reliable in fast math mode"); }
   
   const Proxy<T1> P(X.m);
   
@@ -566,9 +566,9 @@ inline
 void
 op_find_nonfinite::apply(Mat<uword>& out, const mtOp<uword, T1, op_find_nonfinite>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  if(arma_config::fast_math_warn)  { arma_debug_warn_level(1, "find_nonfinite(): detection of non-finite values is not reliable in fast math mode"); }
+  if(arma_config::fast_math_warn)  { arma_warn(1, "find_nonfinite(): detection of non-finite values is not reliable in fast math mode"); }
   
   const Proxy<T1> P(X.m);
   
@@ -614,9 +614,9 @@ inline
 void
 op_find_nan::apply(Mat<uword>& out, const mtOp<uword, T1, op_find_nan>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  if(arma_config::fast_math_warn)  { arma_debug_warn_level(1, "find_nan(): detection of non-finite values is not reliable in fast math mode"); }
+  if(arma_config::fast_math_warn)  { arma_warn(1, "find_nan(): detection of non-finite values is not reliable in fast math mode"); }
   
   const Proxy<T1> P(X.m);
   

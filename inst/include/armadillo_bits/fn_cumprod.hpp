@@ -32,7 +32,7 @@ enable_if2
   >::result
 cumprod(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_cumprod_vec>(X);
   }
@@ -50,7 +50,7 @@ enable_if2
   >::result
 cumprod(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_cumprod>(X, 0, 0);
   }
@@ -68,7 +68,7 @@ enable_if2
   >::result
 cumprod(const T1& X, const uword dim)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_cumprod>(X, dim, 0);
   }

@@ -103,15 +103,15 @@ internal_approx_equal_worker
   const typename T1::pod_type rel_tol
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
   
-  arma_debug_check( ((use_abs_diff == false) && (use_rel_diff == false)), "internal_approx_equal_worker(): both 'use_abs_diff' and 'use_rel_diff' are false" );
+  arma_conform_check( ((use_abs_diff == false) && (use_rel_diff == false)), "internal_approx_equal_worker(): both 'use_abs_diff' and 'use_rel_diff' are false" );
   
-  if(use_abs_diff)  { arma_debug_check( cond_rel< is_signed<T>::value >::lt(abs_tol, T(0)), "approx_equal(): argument 'abs_tol' must be >= 0" ); }
-  if(use_rel_diff)  { arma_debug_check( cond_rel< is_signed<T>::value >::lt(rel_tol, T(0)), "approx_equal(): argument 'rel_tol' must be >= 0" ); }
+  if(use_abs_diff)  { arma_conform_check( cond_rel< is_signed<T>::value >::lt(abs_tol, T(0)), "approx_equal(): argument 'abs_tol' must be >= 0" ); }
+  if(use_rel_diff)  { arma_conform_check( cond_rel< is_signed<T>::value >::lt(rel_tol, T(0)), "approx_equal(): argument 'rel_tol' must be >= 0" ); }
   
   const Proxy<T1> PA(A.get_ref());
   const Proxy<T2> PB(B.get_ref());
@@ -196,15 +196,15 @@ internal_approx_equal_worker
   const typename T1::pod_type rel_tol
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
   
-  arma_debug_check( ((use_abs_diff == false) && (use_rel_diff == false)), "internal_approx_equal_worker(): both 'use_abs_diff' and 'use_rel_diff' are false" );
+  arma_conform_check( ((use_abs_diff == false) && (use_rel_diff == false)), "internal_approx_equal_worker(): both 'use_abs_diff' and 'use_rel_diff' are false" );
   
-  if(use_abs_diff)  { arma_debug_check( cond_rel< is_signed<T>::value >::lt(abs_tol, T(0)), "approx_equal(): argument 'abs_tol' must be >= 0" ); }
-  if(use_rel_diff)  { arma_debug_check( cond_rel< is_signed<T>::value >::lt(rel_tol, T(0)), "approx_equal(): argument 'rel_tol' must be >= 0" ); }
+  if(use_abs_diff)  { arma_conform_check( cond_rel< is_signed<T>::value >::lt(abs_tol, T(0)), "approx_equal(): argument 'abs_tol' must be >= 0" ); }
+  if(use_rel_diff)  { arma_conform_check( cond_rel< is_signed<T>::value >::lt(rel_tol, T(0)), "approx_equal(): argument 'rel_tol' must be >= 0" ); }
   
   const ProxyCube<T1> PA(A.get_ref());
   const ProxyCube<T2> PB(B.get_ref());
@@ -285,13 +285,13 @@ inline
 bool
 internal_approx_equal_handler(const T1& A, const T2& B, const char* method, const typename T1::pod_type abs_tol, const typename T1::pod_type rel_tol)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::pod_type T;
   
   const char sig = (method != nullptr) ? method[0] : char(0);
   
-  arma_debug_check( ((sig != 'a') && (sig != 'r') && (sig != 'b')), "approx_equal(): argument 'method' must be \"absdiff\" or \"reldiff\" or \"both\"" );
+  arma_conform_check( ((sig != 'a') && (sig != 'r') && (sig != 'b')), "approx_equal(): argument 'method' must be \"absdiff\" or \"reldiff\" or \"both\"" );
   
   bool status = false;
   
@@ -320,15 +320,15 @@ inline
 bool
 internal_approx_equal_handler(const T1& A, const T2& B, const char* method, const typename T1::pod_type tol)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::pod_type T;
   
   const char sig = (method != nullptr) ? method[0] : char(0);
   
-  arma_debug_check( ((sig != 'a') && (sig != 'r') && (sig != 'b')), "approx_equal(): argument 'method' must be \"absdiff\" or \"reldiff\" or \"both\"" );
+  arma_conform_check( ((sig != 'a') && (sig != 'r') && (sig != 'b')), "approx_equal(): argument 'method' must be \"absdiff\" or \"reldiff\" or \"both\"" );
   
-  arma_debug_check( (sig == 'b'), "approx_equal(): argument 'method' is \"both\", but only one 'tol' argument has been given" );
+  arma_conform_check( (sig == 'b'), "approx_equal(): argument 'method' is \"both\", but only one 'tol' argument has been given" );
   
   bool status = false;
   
@@ -353,7 +353,7 @@ inline
 bool
 approx_equal(const Base<typename T1::elem_type,T1>& A, const Base<typename T1::elem_type,T2>& B, const char* method, const typename T1::pod_type tol)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return internal_approx_equal_handler(A.get_ref(), B.get_ref(), method, tol);
   }
@@ -366,7 +366,7 @@ inline
 bool
 approx_equal(const BaseCube<typename T1::elem_type,T1>& A, const BaseCube<typename T1::elem_type,T2>& B, const char* method, const typename T1::pod_type tol)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return internal_approx_equal_handler(A.get_ref(), B.get_ref(), method, tol);
   }
@@ -379,7 +379,7 @@ inline
 bool
 approx_equal(const Base<typename T1::elem_type,T1>& A, const Base<typename T1::elem_type,T2>& B, const char* method, const typename T1::pod_type abs_tol, const typename T1::pod_type rel_tol)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return internal_approx_equal_handler(A.get_ref(), B.get_ref(), method, abs_tol, rel_tol);
   }
@@ -392,7 +392,7 @@ inline
 bool
 approx_equal(const BaseCube<typename T1::elem_type,T1>& A, const BaseCube<typename T1::elem_type,T2>& B, const char* method, const typename T1::pod_type abs_tol, const typename T1::pod_type rel_tol)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return internal_approx_equal_handler(A.get_ref(), B.get_ref(), method, abs_tol, rel_tol);
   }
@@ -405,20 +405,20 @@ inline
 bool
 approx_equal(const SpBase<typename T1::elem_type,T1>& A, const SpBase<typename T1::elem_type,T2>& B, const char* method, const typename T1::pod_type tol)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
   
   const char sig = (method != nullptr) ? method[0] : char(0);
   
-  arma_debug_check( ((sig != 'a') && (sig != 'r') && (sig != 'b')), "approx_equal(): argument 'method' must be \"absdiff\" or \"reldiff\" or \"both\"" );
+  arma_conform_check( ((sig != 'a') && (sig != 'r') && (sig != 'b')), "approx_equal(): argument 'method' must be \"absdiff\" or \"reldiff\" or \"both\"" );
   
-  arma_debug_check( (sig == 'b'), "approx_equal(): argument 'method' is \"both\", but only one 'tol' argument has been given" );
+  arma_conform_check( (sig == 'b'), "approx_equal(): argument 'method' is \"both\", but only one 'tol' argument has been given" );
   
-  arma_debug_check( (sig == 'r'), "approx_equal(): only the \"absdiff\" method is currently implemented for sparse matrices" );
+  arma_conform_check( (sig == 'r'), "approx_equal(): only the \"absdiff\" method is currently implemented for sparse matrices" );
   
-  arma_debug_check( cond_rel< is_signed<T>::value >::lt(tol, T(0)), "approx_equal(): argument 'tol' must be >= 0" );
+  arma_conform_check( cond_rel< is_signed<T>::value >::lt(tol, T(0)), "approx_equal(): argument 'tol' must be >= 0" );
   
   const unwrap_spmat<T1> UA(A.get_ref());
   const unwrap_spmat<T2> UB(B.get_ref());
@@ -450,18 +450,18 @@ inline
 bool
 approx_equal(const SpBase<typename T1::elem_type,T1>& A, const SpBase<typename T1::elem_type,T2>& B, const char* method, const typename T1::pod_type abs_tol, const typename T1::pod_type rel_tol)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::pod_type T;
   
   const char sig = (method != nullptr) ? method[0] : char(0);
   
-  arma_debug_check( ((sig != 'a') && (sig != 'r') && (sig != 'b')), "approx_equal(): argument 'method' must be \"absdiff\" or \"reldiff\" or \"both\"" );
+  arma_conform_check( ((sig != 'a') && (sig != 'r') && (sig != 'b')), "approx_equal(): argument 'method' must be \"absdiff\" or \"reldiff\" or \"both\"" );
   
-  arma_debug_check( ((sig == 'r') || (sig == 'b')), "approx_equal(): only the \"absdiff\" method is currently implemented for sparse matrices" );
+  arma_conform_check( ((sig == 'r') || (sig == 'b')), "approx_equal(): only the \"absdiff\" method is currently implemented for sparse matrices" );
   
-  arma_debug_check( cond_rel< is_signed<T>::value >::lt(abs_tol, T(0)), "approx_equal(): argument 'abs_tol' must be >= 0" );
-  arma_debug_check( cond_rel< is_signed<T>::value >::lt(rel_tol, T(0)), "approx_equal(): argument 'rel_tol' must be >= 0" );
+  arma_conform_check( cond_rel< is_signed<T>::value >::lt(abs_tol, T(0)), "approx_equal(): argument 'abs_tol' must be >= 0" );
+  arma_conform_check( cond_rel< is_signed<T>::value >::lt(rel_tol, T(0)), "approx_equal(): argument 'rel_tol' must be >= 0" );
   
   return approx_equal(A.get_ref(), B.get_ref(), "abs", abs_tol);
   }

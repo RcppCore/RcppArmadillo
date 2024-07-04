@@ -178,6 +178,8 @@ class Mat : public Base< eT, Mat<eT> >
   
   inline explicit    Mat(const SpSubview<eT>& X);
   inline Mat& operator= (const SpSubview<eT>& X);
+  inline Mat& operator+=(const SpSubview<eT>& X);
+  inline Mat& operator-=(const SpSubview<eT>& X);
   
   inline explicit    Mat(const spdiagview<eT>& X);
   inline Mat& operator= (const spdiagview<eT>& X);
@@ -308,8 +310,8 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename T1> inline void shed_rows(const Base<uword, T1>& indices);
   template<typename T1> inline void shed_cols(const Base<uword, T1>& indices);
   
-  arma_deprecated inline void insert_rows(const uword row_num, const uword N, const bool set_to_zero);
-  arma_deprecated inline void insert_cols(const uword col_num, const uword N, const bool set_to_zero);
+  arma_frown("use insert_rows(row_num, N) instead") inline void insert_rows(const uword row_num, const uword N, const bool set_to_zero);
+  arma_frown("use insert_cols(col_num, N) instead") inline void insert_cols(const uword col_num, const uword N, const bool set_to_zero);
   
   inline void insert_rows(const uword row_num, const uword N);
   inline void insert_cols(const uword col_num, const uword N);
@@ -365,6 +367,14 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename T1, typename op_type> inline Mat& operator*=(const SpToDOp<T1, op_type>& X);
   template<typename T1, typename op_type> inline Mat& operator%=(const SpToDOp<T1, op_type>& X);
   template<typename T1, typename op_type> inline Mat& operator/=(const SpToDOp<T1, op_type>& X);
+  
+  template<typename T1, typename op_type> inline explicit    Mat(const mtSpReduceOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat& operator= (const mtSpReduceOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat& operator+=(const mtSpReduceOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat& operator-=(const mtSpReduceOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat& operator*=(const mtSpReduceOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat& operator%=(const mtSpReduceOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat& operator/=(const mtSpReduceOp<eT, T1, op_type>& X);
   
   template<typename T1, typename T2, typename glue_type> inline             Mat(const Glue<T1, T2, glue_type>& X);
   template<typename T1, typename T2, typename glue_type> inline Mat& operator= (const Glue<T1, T2, glue_type>& X);
@@ -475,7 +485,7 @@ class Mat : public Base< eT, Mat<eT> >
   inline Mat&  reshape(const uword new_n_rows, const uword new_n_cols);
   inline Mat&  reshape(const SizeMat& s);
   
-  arma_deprecated inline void reshape(const uword new_n_rows, const uword new_n_cols, const uword dim);  //!< NOTE: don't use this form: it will be removed
+  arma_frown("use reshape(n_rows, n_cols) instead") inline void reshape(const uword new_n_rows, const uword new_n_cols, const uword dim);  //!< NOTE: don't use this form: it will be removed
   
   
   template<typename functor> inline       Mat&  for_each(functor F);
@@ -548,15 +558,15 @@ class Mat : public Base< eT, Mat<eT> >
   arma_cold inline bool load(const  csv_name&    spec, const file_type type =   csv_ascii);
   arma_cold inline bool load(      std::istream& is,   const file_type type = auto_detect);
   
-  arma_deprecated inline bool quiet_save(const std::string   name, const file_type type = arma_binary) const;
-  arma_deprecated inline bool quiet_save(const hdf5_name&    spec, const file_type type = hdf5_binary) const;
-  arma_deprecated inline bool quiet_save(const  csv_name&    spec, const file_type type =   csv_ascii) const;
-  arma_deprecated inline bool quiet_save(      std::ostream& os,   const file_type type = arma_binary) const;
+  arma_frown("use save() instead") inline bool quiet_save(const std::string   name, const file_type type = arma_binary) const;
+  arma_frown("use save() instead") inline bool quiet_save(const hdf5_name&    spec, const file_type type = hdf5_binary) const;
+  arma_frown("use save() instead") inline bool quiet_save(const  csv_name&    spec, const file_type type =   csv_ascii) const;
+  arma_frown("use save() instead") inline bool quiet_save(      std::ostream& os,   const file_type type = arma_binary) const;
   
-  arma_deprecated inline bool quiet_load(const std::string   name, const file_type type = auto_detect);
-  arma_deprecated inline bool quiet_load(const hdf5_name&    spec, const file_type type = hdf5_binary);
-  arma_deprecated inline bool quiet_load(const  csv_name&    spec, const file_type type =   csv_ascii);
-  arma_deprecated inline bool quiet_load(      std::istream& is,   const file_type type = auto_detect);
+  arma_frown("use load() instead") inline bool quiet_load(const std::string   name, const file_type type = auto_detect);
+  arma_frown("use load() instead") inline bool quiet_load(const hdf5_name&    spec, const file_type type = hdf5_binary);
+  arma_frown("use load() instead") inline bool quiet_load(const  csv_name&    spec, const file_type type =   csv_ascii);
+  arma_frown("use load() instead") inline bool quiet_load(      std::istream& is,   const file_type type = auto_detect);
   
   
   // for container-like functionality

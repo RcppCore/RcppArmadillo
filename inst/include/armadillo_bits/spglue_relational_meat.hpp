@@ -26,7 +26,7 @@ inline
 void
 spglue_rel_lt::apply(SpMat<uword>& out, const mtSpGlue<uword, T1, T2, spglue_rel_lt>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const SpProxy<T1> PA(X.A);
   const SpProxy<T2> PB(X.B);
@@ -54,11 +54,11 @@ inline
 void
 spglue_rel_lt::apply_noalias(SpMat<uword>& out, const SpProxy<T1>& PA, const SpProxy<T2>& PB)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
-  arma_debug_assert_same_size(PA.get_n_rows(), PA.get_n_cols(), PB.get_n_rows(), PB.get_n_cols(), "operator<");
+  arma_conform_assert_same_size(PA.get_n_rows(), PA.get_n_cols(), PB.get_n_rows(), PB.get_n_cols(), "operator<");
   
   const uword max_n_nonzero = PA.get_n_nonzero() + PB.get_n_nonzero();
   
@@ -163,7 +163,7 @@ inline
 void
 spglue_rel_gt::apply(SpMat<uword>& out, const mtSpGlue<uword, T1, T2, spglue_rel_gt>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const SpProxy<T1> PA(X.A);
   const SpProxy<T2> PB(X.B);
@@ -191,11 +191,11 @@ inline
 void
 spglue_rel_gt::apply_noalias(SpMat<uword>& out, const SpProxy<T1>& PA, const SpProxy<T2>& PB)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
-  arma_debug_assert_same_size(PA.get_n_rows(), PA.get_n_cols(), PB.get_n_rows(), PB.get_n_cols(), "operator>");
+  arma_conform_assert_same_size(PA.get_n_rows(), PA.get_n_cols(), PB.get_n_rows(), PB.get_n_cols(), "operator>");
   
   const uword max_n_nonzero = PA.get_n_nonzero() + PB.get_n_nonzero();
   
@@ -300,7 +300,7 @@ inline
 void
 spglue_rel_and::apply(SpMat<uword>& out, const mtSpGlue<uword, T1, T2, spglue_rel_and>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const SpProxy<T1> PA(X.A);
   const SpProxy<T2> PB(X.B);
@@ -328,11 +328,11 @@ inline
 void
 spglue_rel_and::apply_noalias(SpMat<uword>& out, const SpProxy<T1>& PA, const SpProxy<T2>& PB)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
-  arma_debug_assert_same_size(PA.get_n_rows(), PA.get_n_cols(), PB.get_n_rows(), PB.get_n_cols(), "operator&&");
+  arma_conform_assert_same_size(PA.get_n_rows(), PA.get_n_cols(), PB.get_n_rows(), PB.get_n_cols(), "operator&&");
   
   if( (PA.get_n_nonzero() == 0) || (PB.get_n_nonzero() == 0) )
     {
@@ -425,7 +425,7 @@ inline
 void
 spglue_rel_or::apply(SpMat<uword>& out, const mtSpGlue<uword, T1, T2, spglue_rel_or>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const SpProxy<T1> PA(X.A);
   const SpProxy<T2> PB(X.B);
@@ -453,11 +453,11 @@ inline
 void
 spglue_rel_or::apply_noalias(SpMat<uword>& out, const SpProxy<T1>& PA, const SpProxy<T2>& PB)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
-  arma_debug_assert_same_size(PA.get_n_rows(), PA.get_n_cols(), PB.get_n_rows(), PB.get_n_cols(), "operator||");
+  arma_conform_assert_same_size(PA.get_n_rows(), PA.get_n_cols(), PB.get_n_rows(), PB.get_n_cols(), "operator||");
   
   const uword max_n_nonzero = PA.get_n_nonzero() + PB.get_n_nonzero();
   

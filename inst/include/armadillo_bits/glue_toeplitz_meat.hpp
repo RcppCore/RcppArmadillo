@@ -27,7 +27,7 @@ inline
 void
 glue_toeplitz::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue_toeplitz>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -37,7 +37,7 @@ glue_toeplitz::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue_t
   const Mat<eT>& A = tmp1.M;
   const Mat<eT>& B = tmp2.M;
   
-  arma_debug_check
+  arma_conform_check
     (
     ( ((A.is_vec() == false) && (A.is_empty() == false)) || ((B.is_vec() == false) && (B.is_empty() == false)) ),
     "toeplitz(): given object must be a vector"

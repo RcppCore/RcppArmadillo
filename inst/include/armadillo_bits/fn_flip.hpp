@@ -27,7 +27,7 @@ arma_inline
 typename enable_if2< is_arma_type<T1>::value, const Op<T1, op_flipud> >::result
 flipud(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_flipud>(X);
   }
@@ -40,7 +40,7 @@ arma_inline
 typename enable_if2< is_arma_type<T1>::value, const Op<T1, op_fliplr> >::result
 fliplr(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_fliplr>(X);
   }
@@ -53,7 +53,7 @@ arma_inline
 const SpOp<T1, spop_flipud>
 flipud(const SpBase<typename T1::elem_type,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return SpOp<T1, spop_flipud>(X.get_ref());
   }
@@ -66,7 +66,7 @@ arma_inline
 const SpOp<T1, spop_fliplr>
 fliplr(const SpBase<typename T1::elem_type,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return SpOp<T1, spop_fliplr>(X.get_ref());
   }

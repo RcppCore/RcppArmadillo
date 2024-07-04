@@ -26,7 +26,7 @@ inline
 typename enable_if2< is_arma_type<T1>::value && resolves_to_vector<T1>::yes, typename T1::elem_type >::result
 max(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return op_max::max(X);
   }
@@ -39,7 +39,7 @@ arma_inline
 typename enable_if2< is_arma_type<T1>::value && resolves_to_vector<T1>::no, const Op<T1, op_max> >::result
 max(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_max>(X, 0, 0);
   }
@@ -52,7 +52,7 @@ arma_inline
 typename enable_if2< is_arma_type<T1>::value, const Op<T1, op_max> >::result
 max(const T1& X, const uword dim)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_max>(X, dim, 0);
   }
@@ -86,7 +86,7 @@ max
   const T2& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Glue<T1, T2, glue_max>(X, Y);
   }
@@ -103,7 +103,7 @@ max
   const uword dim = 0
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return OpCube<T1, op_max>(X.get_ref(), dim, 0);
   }
@@ -120,7 +120,7 @@ max
   const BaseCube<typename T1::elem_type, T2>& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return GlueCube<T1, T2, glue_max>(X.get_ref(), Y.get_ref());
   }
@@ -138,9 +138,9 @@ enable_if2
   >::result
 max(const T1& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  return spop_max::vector_max(x);
+  return op_sp_max::vector_max(x);
   }
 
 
@@ -152,13 +152,13 @@ typename
 enable_if2
   <
   is_arma_sparse_type<T1>::value && resolves_to_sparse_vector<T1>::no,
-  const SpOp<T1, spop_max>
+  const mtSpReduceOp<typename T1::elem_type, T1, op_sp_max>
   >::result
 max(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  return SpOp<T1, spop_max>(X, 0, 0);
+  return mtSpReduceOp<typename T1::elem_type, T1, op_sp_max>(X, 0, 0);
   }
 
 
@@ -170,13 +170,13 @@ typename
 enable_if2
   <
   is_arma_sparse_type<T1>::value,
-  const SpOp<T1, spop_max>
+  const mtSpReduceOp<typename T1::elem_type, T1, op_sp_max>
   >::result
 max(const T1& X, const uword dim)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  return SpOp<T1, spop_max>(X, dim, 0);
+  return mtSpReduceOp<typename T1::elem_type, T1, op_sp_max>(X, dim, 0);
   }
 
 
@@ -193,7 +193,7 @@ enable_if2
   >::result
 max(const T1& x, const T2& y)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
 
   return SpGlue<T1, T2, spglue_max>(x, y);
   }
@@ -215,7 +215,7 @@ max
   const T2& y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   Mat<typename T1::elem_type> out;
   
@@ -241,7 +241,7 @@ max
   const T2& y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   Mat<typename T1::elem_type> out;
   

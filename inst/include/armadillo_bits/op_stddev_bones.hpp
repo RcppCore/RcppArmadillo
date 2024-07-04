@@ -31,6 +31,17 @@ class op_stddev
   
   template<typename in_eT>
   inline static void apply_noalias(Mat<typename get_pod_type<in_eT>::result>& out, const Mat<in_eT>& X, const uword norm_type, const uword dim);
+  
+  //
+  
+  template<typename eT>
+  inline static typename get_pod_type<eT>::result stddev_vec(const subview_col<eT>& X, const uword norm_type = 0);
+  
+  template<typename eT>
+  inline static typename get_pod_type<eT>::result stddev_vec(const subview_row<eT>& X, const uword norm_type = 0);
+  
+  template<typename T1>
+  inline static typename T1::pod_type stddev_vec(const Base<typename T1::elem_type, T1>& X, const uword norm_type = 0);
   };
 
 

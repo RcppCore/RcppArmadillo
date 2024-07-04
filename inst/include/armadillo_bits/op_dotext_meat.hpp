@@ -31,7 +31,7 @@ op_dotext::direct_rowvec_mat_colvec
   const eT*      C_mem
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword cost_AB = B.n_cols;
   const uword cost_BC = B.n_rows;
@@ -88,7 +88,7 @@ op_dotext::direct_rowvec_transmat_colvec
   const eT*      C_mem
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword cost_AB = B.n_rows;
   const uword cost_BC = B.n_cols;
@@ -147,7 +147,7 @@ op_dotext::direct_rowvec_diagmat_colvec
   const eT*      C_mem
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   eT val = eT(0);
 
@@ -171,7 +171,7 @@ op_dotext::direct_rowvec_invdiagmat_colvec
   const eT*      C_mem
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   eT val = eT(0);
 
@@ -195,7 +195,7 @@ op_dotext::direct_rowvec_invdiagvec_colvec
   const eT*      C_mem
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const eT* B_mem = B.mem;
   

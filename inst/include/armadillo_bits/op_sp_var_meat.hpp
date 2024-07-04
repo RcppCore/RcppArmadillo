@@ -16,7 +16,7 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup spop_var
+//! \addtogroup op_sp_var
 //! @{
 
 
@@ -24,33 +24,30 @@
 template<typename T1>
 inline
 void
-spop_var::apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1::pod_type, T1, spop_var>& in)
+op_sp_var::apply(Mat<typename T1::pod_type>& out, const mtSpReduceOp<typename T1::pod_type, T1, op_sp_var>& in)
   {
-  arma_extra_debug_sigprint();
-  
-  //typedef typename T1::elem_type  in_eT;
-  typedef typename T1::pod_type  out_eT;
+  arma_debug_sigprint();
   
   const uword norm_type = in.aux_uword_a;
   const uword dim       = in.aux_uword_b;
   
-  arma_debug_check( (norm_type > 1), "var(): parameter 'norm_type' must be 0 or 1" );
-  arma_debug_check( (dim > 1),       "var(): parameter 'dim' must be 0 or 1"       );
+  arma_conform_check( (norm_type > 1), "var(): parameter 'norm_type' must be 0 or 1" );
+  arma_conform_check( (dim > 1),       "var(): parameter 'dim' must be 0 or 1"       );
   
   const SpProxy<T1> p(in.m);
   
-  if(p.is_alias(out) == false)
+  const uword p_n_rows = p.get_n_rows();
+  const uword p_n_cols = p.get_n_cols();
+  
+  if( (p_n_rows == 0) || (p_n_cols == 0) || (p.get_n_nonzero() == 0) )
     {
-    spop_var::apply_noalias(out, p, norm_type, dim);
-    }
-  else
-    {
-    SpMat<out_eT> tmp;
+    if(dim == 0)  { out.zeros((p_n_rows > 0) ? 1 : 0, p_n_cols); }
+    if(dim == 1)  { out.zeros(p_n_rows, (p_n_cols > 0) ? 1 : 0); }
     
-    spop_var::apply_noalias(tmp, p, norm_type, dim);
-    
-    out.steal_mem(tmp);
+    return;
     }
+  
+  op_sp_var::apply_slow(out, p, norm_type, dim);
   }
 
 
@@ -58,15 +55,15 @@ spop_var::apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1::pod
 template<typename T1>
 inline
 void
-spop_var::apply_noalias
+op_sp_var::apply_slow
   (
-        SpMat<typename T1::pod_type>& out,
-  const SpProxy<T1>&                  p,
-  const uword                         norm_type,
-  const uword                         dim
+        Mat<typename T1::pod_type>& out,
+  const SpProxy<T1>&                p,
+  const uword                       norm_type,
+  const uword                       dim
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type  in_eT;
   //typedef typename T1::pod_type  out_eT;
@@ -74,15 +71,11 @@ spop_var::apply_noalias
   const uword p_n_rows = p.get_n_rows();
   const uword p_n_cols = p.get_n_cols();
   
-  // TODO: this is slow; rewrite based on the approach used by sparse mean()
-  
   if(dim == 0)  // find variance in each column
     {
-    arma_extra_debug_print("spop_var::apply_noalias(): dim = 0");
+    arma_debug_print("op_sp_var::apply_slow(): dim = 0");
     
-    out.set_size((p_n_rows > 0) ? 1 : 0, p_n_cols);
-    
-    if( (p_n_rows == 0) || (p.get_n_nonzero() == 0) )  { return; }
+    out.zeros(1, p_n_cols);
     
     for(uword col = 0; col < p_n_cols; ++col)
       {
@@ -95,12 +88,12 @@ spop_var::apply_noalias
         const uword n_zero = p_n_rows - (end.pos() - it.pos());
         
         // in_eT is used just to get the specialization right (complex / noncomplex)
-        out.at(0, col) = spop_var::iterator_var(it, end, n_zero, norm_type, in_eT(0));
+        out.at(0, col) = op_sp_var::iterator_var(it, end, n_zero, norm_type, in_eT(0));
         }
       else
         {
         // We can use direct memory access to calculate the variance.
-        out.at(0, col) = spop_var::direct_var
+        out.at(0, col) = op_sp_var::direct_var
           (
           &p.get_values()[p.get_col_ptrs()[col]],
           p.get_col_ptrs()[col + 1] - p.get_col_ptrs()[col],
@@ -113,11 +106,9 @@ spop_var::apply_noalias
   else
   if(dim == 1)  // find variance in each row
     {
-    arma_extra_debug_print("spop_var::apply_noalias(): dim = 1");
+    arma_debug_print("op_sp_var::apply_slow(): dim = 1");
     
-    out.set_size(p_n_rows, (p_n_cols > 0) ? 1 : 0);
-    
-    if( (p_n_cols == 0) || (p.get_n_nonzero() == 0) )  { return; }
+    out.zeros(p_n_rows, 1);
     
     for(uword row = 0; row < p_n_rows; ++row)
       {
@@ -128,7 +119,7 @@ spop_var::apply_noalias
       
       const uword n_zero = p_n_cols - (end.pos() - it.pos());
       
-      out.at(row, 0) = spop_var::iterator_var(it, end, n_zero, norm_type, in_eT(0));
+      out.at(row, 0) = op_sp_var::iterator_var(it, end, n_zero, norm_type, in_eT(0));
       }
     }
   }
@@ -138,19 +129,28 @@ spop_var::apply_noalias
 template<typename T1>
 inline
 typename T1::pod_type
-spop_var::var_vec
+op_sp_var::var_vec
   (
   const T1& X,
   const uword norm_type
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check( (norm_type > 1), "var(): parameter 'norm_type' must be 0 or 1" );
+  typedef typename T1::elem_type eT;
+  
+  arma_conform_check( (norm_type > 1), "var(): parameter 'norm_type' must be 0 or 1" );
   
   // conditionally unwrap it into a temporary and then directly operate.
   
   const unwrap_spmat<T1> tmp(X);
+  
+  if(tmp.M.n_elem == 0)
+    {
+    arma_conform_check(true, "var(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
   
   return direct_var(tmp.M.values, tmp.M.n_nonzero, tmp.M.n_elem, norm_type);
   }
@@ -160,7 +160,7 @@ spop_var::var_vec
 template<typename eT>
 inline
 eT
-spop_var::direct_var
+op_sp_var::direct_var
   (
   const eT* const X,
   const uword length,
@@ -168,11 +168,11 @@ spop_var::direct_var
   const uword norm_type
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
 
   if(length >= 2 && N >= 2)
     {
-    const eT acc1 = spop_mean::direct_mean(X, length, N);
+    const eT acc1 = op_sp_mean::direct_mean(X, length, N);
 
     eT acc2 = eT(0);
     eT acc3 = eT(0);
@@ -234,7 +234,7 @@ spop_var::direct_var
 template<typename T>
 inline
 T
-spop_var::direct_var
+op_sp_var::direct_var
   (
   const std::complex<T>* const X,
   const uword length,
@@ -242,13 +242,13 @@ spop_var::direct_var
   const uword norm_type
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
 
   typedef typename std::complex<T> eT;
 
   if(length >= 2 && N >= 2)
     {
-    const eT acc1 = spop_mean::direct_mean(X, length, N);
+    const eT acc1 = op_sp_mean::direct_mean(X, length, N);
 
      T acc2 =  T(0);
     eT acc3 = eT(0);
@@ -294,7 +294,7 @@ spop_var::direct_var
 template<typename T1, typename eT>
 inline
 eT
-spop_var::iterator_var
+op_sp_var::iterator_var
   (
   T1& it,
   const T1& end,
@@ -304,13 +304,13 @@ spop_var::iterator_var
   const typename arma_not_cx<eT>::result* junk2
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk1);
   arma_ignore(junk2);
 
   T1 new_it(it); // for mean
   // T1 backup_it(it); // in case we have to call robust iterator_var
-  eT mean = spop_mean::iterator_mean(new_it, end, n_zero, eT(0));
+  eT mean = op_sp_mean::iterator_mean(new_it, end, n_zero, eT(0));
 
   eT acc2 = eT(0);
   eT acc3 = eT(0);
@@ -353,7 +353,7 @@ spop_var::iterator_var
 template<typename T1, typename eT>
 inline
 typename get_pod_type<eT>::result
-spop_var::iterator_var
+op_sp_var::iterator_var
   (
   T1& it,
   const T1& end,
@@ -363,7 +363,7 @@ spop_var::iterator_var
   const typename arma_cx_only<eT>::result* junk2
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk1);
   arma_ignore(junk2);
 
@@ -371,7 +371,7 @@ spop_var::iterator_var
 
   T1 new_it(it); // for mean
   // T1 backup_it(it); // in case we have to call robust iterator_var
-  eT mean = spop_mean::iterator_mean(new_it, end, n_zero, eT(0));
+  eT mean = op_sp_mean::iterator_mean(new_it, end, n_zero, eT(0));
 
    T acc2 =  T(0);
   eT acc3 = eT(0);

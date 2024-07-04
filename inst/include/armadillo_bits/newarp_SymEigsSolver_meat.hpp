@@ -25,7 +25,7 @@ inline
 void
 SymEigsSolver<eT, SelectionRule, OpType>::fill_rand(eT* dest, const uword N, const uword seed_val)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename std::mt19937_64::result_type seed_type;
   
@@ -43,7 +43,7 @@ inline
 void
 SymEigsSolver<eT, SelectionRule, OpType>::factorise_from(uword from_k, uword to_m, const Col<eT>& fk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if(to_m <= from_k) { return; }
 
@@ -157,7 +157,7 @@ inline
 void
 SymEigsSolver<eT, SelectionRule, OpType>::restart(uword k)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if(k >= ncv) { return; }
 
@@ -212,7 +212,7 @@ inline
 uword
 SymEigsSolver<eT, SelectionRule, OpType>::num_converged(eT tol)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // thresh = tol * max(approx0, abs(theta)), theta for ritz value
   const eT f_norm = norm(fac_f);
@@ -233,7 +233,7 @@ inline
 uword
 SymEigsSolver<eT, SelectionRule, OpType>::nev_adjusted(uword nconv)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   uword nev_new = nev;
   for(uword i = nev; i < ncv; i++)
@@ -262,7 +262,7 @@ inline
 void
 SymEigsSolver<eT, SelectionRule, OpType>::retrieve_ritzpair()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   TridiagEigen<eT> decomp(fac_H);
   Col<eT> evals = decomp.eigenvalues();
@@ -310,7 +310,7 @@ inline
 void
 SymEigsSolver<eT, SelectionRule, OpType>::sort_ritzpair()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // SortEigenvalue<eT, EigsSelect::LARGEST_MAGN> sorting(ritz_val.memptr(), nev);
   
@@ -350,10 +350,10 @@ SymEigsSolver<eT, SelectionRule, OpType>::SymEigsSolver(const OpType& op_, uword
   , eps23(std::pow(eps, eT(2.0) / 3))
   , near0(std::numeric_limits<eT>::min() * eT(10))
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check( (nev_ < 1 || nev_ > dim_n - 1), "newarp::SymEigsSolver: nev must satisfy 1 <= nev <= n - 1, n is the size of matrix" );
-  arma_debug_check( (ncv_ <= nev_ || ncv_ > dim_n), "newarp::SymEigsSolver: ncv must satisfy nev < ncv <= n, n is the size of matrix" );
+  arma_conform_check( (nev_ < 1 || nev_ > dim_n - 1), "newarp::SymEigsSolver: nev must satisfy 1 <= nev <= n - 1, n is the size of matrix" );
+  arma_conform_check( (ncv_ <= nev_ || ncv_ > dim_n), "newarp::SymEigsSolver: ncv must satisfy nev < ncv <= n, n is the size of matrix" );
   }
 
 
@@ -363,7 +363,7 @@ inline
 void
 SymEigsSolver<eT, SelectionRule, OpType>::init(eT* init_resid)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // Reset all matrices/vectors to zero
   fac_V.zeros(dim_n, ncv);
@@ -403,7 +403,7 @@ inline
 void
 SymEigsSolver<eT, SelectionRule, OpType>::init()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // podarray<eT> init_resid(dim_n);
   // blas_int idist = 2;                // Uniform(-1, 1)
@@ -426,7 +426,7 @@ inline
 uword
 SymEigsSolver<eT, SelectionRule, OpType>::compute(uword maxit, eT tol)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // The m-step Arnoldi factorisation
   factorise_from(1, ncv, fac_f);
@@ -456,7 +456,7 @@ inline
 Col<eT>
 SymEigsSolver<eT, SelectionRule, OpType>::eigenvalues()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   uword nconv = std::count(ritz_conv.begin(), ritz_conv.end(), true);
   Col<eT> res(nconv, arma_zeros_indicator());
@@ -481,7 +481,7 @@ inline
 Mat<eT>
 SymEigsSolver<eT, SelectionRule, OpType>::eigenvectors(uword nvec)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   uword nconv = std::count(ritz_conv.begin(), ritz_conv.end(), true);
   nvec = (std::min)(nvec, nconv);

@@ -65,6 +65,13 @@ struct arma_config
   #endif
   
   
+  #if defined(ARMA_CHECK_CONFORMANCE)
+    static constexpr bool check_conform = true;
+  #else
+    static constexpr bool check_conform = false;
+  #endif
+  
+  
   #if defined(ARMA_CHECK_NONFINITE)
     static constexpr bool check_nonfinite = true;
   #else
@@ -121,20 +128,6 @@ struct arma_config
   #endif
   
   
-  #if defined(ARMA_NO_DEBUG)
-    static constexpr bool debug = false;
-  #else
-    static constexpr bool debug = true;
-  #endif
-  
-  
-  #if defined(ARMA_EXTRA_DEBUG)
-    static constexpr bool extra_debug = true;
-  #else
-    static constexpr bool extra_debug = false;
-  #endif
-  
-  
   #if defined(ARMA_GOOD_COMPILER)
     static constexpr bool good_comp = true;
   #else
@@ -188,7 +181,7 @@ struct arma_config
   #endif
   
   
-  #if (!defined(ARMA_DONT_USE_STD_MUTEX))
+  #if defined(ARMA_USE_STD_MUTEX)
     static constexpr bool std_mutex = true;
   #else
     static constexpr bool std_mutex = false;
@@ -220,13 +213,6 @@ struct arma_config
     static constexpr bool hidden_args = true;
   #else
     static constexpr bool hidden_args = false;
-  #endif
-  
-  
-  #if defined(ARMA_DONT_ZERO_INIT)
-    static constexpr bool zero_init = false;
-  #else
-    static constexpr bool zero_init = true;
   #endif
   
   

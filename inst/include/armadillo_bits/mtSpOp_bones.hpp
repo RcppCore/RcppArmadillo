@@ -19,9 +19,6 @@
 //! \addtogroup mtSpOp
 //! @{
 
-// Class for delayed multi-type sparse operations.  These are operations where
-// the resulting type is different than the stored type.
-
 
 
 template<typename out_eT, typename T1, typename spop_type>
@@ -39,6 +36,7 @@ class mtSpOp : public SpBase< out_eT, mtSpOp<out_eT, T1, spop_type> >
   static constexpr bool is_xvec = spop_type::template traits<T1>::is_xvec;
   
   inline explicit  mtSpOp(const T1& in_m);
+  inline           mtSpOp(const T1& in_m, const in_eT in_aux);
   inline           mtSpOp(const T1& in_m, const uword aux_uword_a, const uword aux_uword_b);
   inline           mtSpOp(const char junk, const T1& in_m, const out_eT in_aux);
   inline          ~mtSpOp();
@@ -47,6 +45,7 @@ class mtSpOp : public SpBase< out_eT, mtSpOp<out_eT, T1, spop_type> >
   arma_inline bool is_alias(const SpMat<eT2>& X) const;
   
   arma_aligned const T1&    m;            //!< the operand; must be derived from SpBase
+  arma_aligned       in_eT  aux;          //!< auxiliary data, using the element type as used by T1
   arma_aligned       out_eT aux_out_eT;   //!< auxiliary data, using the element type as specified by the out_eT template parameter
   arma_aligned       uword  aux_uword_a;
   arma_aligned       uword  aux_uword_b;

@@ -43,7 +43,7 @@ memory::acquire(const uword n_elem)
   {
   if(n_elem == 0)  { return nullptr; }
   
-  arma_debug_check
+  arma_conform_check
     (
     ( size_t(n_elem) > (std::numeric_limits<size_t>::max() / sizeof(eT)) ),
     "arma::memory::acquire(): requested size is too large"

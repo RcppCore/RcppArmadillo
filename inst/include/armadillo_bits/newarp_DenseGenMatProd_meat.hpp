@@ -27,7 +27,7 @@ DenseGenMatProd<eT>::DenseGenMatProd(const Mat<eT>& mat_obj)
   , n_rows(mat_obj.n_rows)
   , n_cols(mat_obj.n_cols)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   }
 
 
@@ -39,7 +39,7 @@ inline
 void
 DenseGenMatProd<eT>::perform_op(eT* x_in, eT* y_out) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const Col<eT> x(x_in , n_cols, false, true);
         Col<eT> y(y_out, n_rows, false, true);

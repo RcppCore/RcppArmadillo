@@ -31,7 +31,7 @@ operator*
   const typename T1::elem_type               k
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return eOpCube<T1, eop_scalar_times>(X.get_ref(), k);
   }
@@ -48,7 +48,7 @@ operator*
   const BaseCube<typename T1::elem_type,T1>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return eOpCube<T1, eop_scalar_times>(X.get_ref(), k);
   }
@@ -65,7 +65,7 @@ operator*
   const std::complex<typename T1::pod_type>& k
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return mtOpCube<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_times>('j', X.get_ref(), k);
   }
@@ -82,7 +82,7 @@ operator*
   const BaseCube<typename T1::pod_type, T1>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return mtOpCube<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_times>('j', X.get_ref(), k);
   }
@@ -98,7 +98,7 @@ operator*
   const Base<eT,T2>&            Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return subview_cube_each1_aux::operator_times(X, Y.get_ref());
   }
@@ -114,7 +114,7 @@ operator*
   const subview_cube_each1<eT>& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return subview_cube_each1_aux::operator_times(X.get_ref(), Y);
   }

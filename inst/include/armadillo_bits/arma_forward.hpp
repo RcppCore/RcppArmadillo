@@ -129,6 +129,17 @@ class spop_htrans;
 class spop_vectorise_row;
 class spop_vectorise_col;
 
+class spop_rel_lt_pre;
+class spop_rel_lt_post;
+class spop_rel_gt_pre;
+class spop_rel_gt_post;
+class spop_rel_lteq_pre;
+class spop_rel_lteq_post;
+class spop_rel_gteq_pre;
+class spop_rel_gteq_post;
+class spop_rel_eq;
+class spop_rel_noteq;
+
 class spglue_plus;
 class spglue_minus;
 class spglue_schur;
@@ -138,7 +149,7 @@ class spglue_min;
 class spglue_rel_lt;
 class spglue_rel_gt;
 
-
+class op_sp_as_dense;
 
 class op_internal_equ;
 class op_internal_plus;
@@ -280,7 +291,7 @@ struct state_type
   {
   #if   defined(ARMA_USE_OPENMP)
                 int  state;
-  #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
+  #elif defined(ARMA_USE_STD_MUTEX)
     std::atomic<int> state;
   #else
                 int  state;
@@ -299,7 +310,7 @@ struct state_type
     #if   defined(ARMA_USE_OPENMP)
       #pragma omp atomic read
       out = state;
-    #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
+    #elif defined(ARMA_USE_STD_MUTEX)
       out = state.load();
     #else
       out = state;
@@ -315,7 +326,7 @@ struct state_type
     #if   defined(ARMA_USE_OPENMP)
       #pragma omp atomic write
       state = in_state;
-    #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
+    #elif defined(ARMA_USE_STD_MUTEX)
       state.store(in_state);
     #else
       state = in_state;
@@ -326,6 +337,7 @@ struct state_type
 
 template<                 typename T1, typename spop_type> class   SpOp;
 template<typename out_eT, typename T1, typename spop_type> class mtSpOp;
+template<typename out_eT, typename T1, typename   op_type> class mtSpReduceOp;
 
 template<                 typename T1, typename T2, typename spglue_type> class   SpGlue;
 template<typename out_eT, typename T1, typename T2, typename spglue_type> class mtSpGlue;

@@ -35,7 +35,7 @@ SpMat<eT>::SpMat()
   , row_indices(nullptr)
   , col_ptrs(nullptr)
   {
-  arma_extra_debug_sigprint_this(this);
+  arma_debug_sigprint_this(this);
   
   init_cold(0,0);
   }
@@ -49,7 +49,7 @@ template<typename eT>
 inline
 SpMat<eT>::~SpMat()
   {
-  arma_extra_debug_sigprint_this(this);
+  arma_debug_sigprint_this(this);
   
   if(values     )  { memory::release(access::rw(values));      }
   if(row_indices)  { memory::release(access::rw(row_indices)); }
@@ -73,7 +73,7 @@ SpMat<eT>::SpMat(const uword in_rows, const uword in_cols)
   , row_indices(nullptr)
   , col_ptrs(nullptr)
   {
-  arma_extra_debug_sigprint_this(this);
+  arma_debug_sigprint_this(this);
   
   init_cold(in_rows, in_cols);
   }
@@ -92,7 +92,7 @@ SpMat<eT>::SpMat(const SizeMat& s)
   , row_indices(nullptr)
   , col_ptrs(nullptr)
   {
-  arma_extra_debug_sigprint_this(this);
+  arma_debug_sigprint_this(this);
   
   init_cold(s.n_rows, s.n_cols);
   }
@@ -111,7 +111,7 @@ SpMat<eT>::SpMat(const arma_reserve_indicator&, const uword in_rows, const uword
   , row_indices(nullptr)
   , col_ptrs(nullptr)
   {
-  arma_extra_debug_sigprint_this(this);
+  arma_debug_sigprint_this(this);
   
   init_cold(in_rows, in_cols, new_n_nonzero);
   }
@@ -131,7 +131,7 @@ SpMat<eT>::SpMat(const arma_layout_indicator&, const SpMat<eT2>& x)
   , row_indices(nullptr)
   , col_ptrs(nullptr)
   {
-  arma_extra_debug_sigprint_this(this);
+  arma_debug_sigprint_this(this);
   
   init_cold(x.n_rows, x.n_cols, x.n_nonzero);
   
@@ -160,7 +160,7 @@ SpMat<eT>::SpMat(const char* text)
   , row_indices(nullptr)
   , col_ptrs(nullptr)
   {
-  arma_extra_debug_sigprint_this(this);
+  arma_debug_sigprint_this(this);
   
   init(std::string(text));
   }
@@ -172,7 +172,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator=(const char* text)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   init(std::string(text));
   
@@ -193,7 +193,7 @@ SpMat<eT>::SpMat(const std::string& text)
   , row_indices(nullptr)
   , col_ptrs(nullptr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   init(text);
   }
@@ -205,7 +205,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator=(const std::string& text)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   init(text);
   
@@ -226,7 +226,7 @@ SpMat<eT>::SpMat(const SpMat<eT>& x)
   , row_indices(nullptr)
   , col_ptrs(nullptr)
   {
-  arma_extra_debug_sigprint_this(this);
+  arma_debug_sigprint_this(this);
   
   init(x);
   }
@@ -245,8 +245,8 @@ SpMat<eT>::SpMat(SpMat<eT>&& in_mat)
   , row_indices(nullptr)
   , col_ptrs(nullptr)
   {
-  arma_extra_debug_sigprint_this(this);
-  arma_extra_debug_sigprint(arma_str::format("this = %x   in_mat = %x") % this % &in_mat);
+  arma_debug_sigprint_this(this);
+  arma_debug_sigprint(arma_str::format("this: %x; in_mat: %x") % this % &in_mat);
   
   (*this).steal_mem(in_mat);
   }
@@ -258,7 +258,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator=(SpMat<eT>&& in_mat)
   {
-  arma_extra_debug_sigprint(arma_str::format("this = %x   in_mat = %x") % this % &in_mat);
+  arma_debug_sigprint(arma_str::format("this: %x; in_mat: %x") % this % &in_mat);
   
   (*this).steal_mem(in_mat);
   
@@ -279,7 +279,7 @@ SpMat<eT>::SpMat(const MapMat<eT>& x)
   , row_indices(nullptr)
   , col_ptrs(nullptr)
   {
-  arma_extra_debug_sigprint_this(this);
+  arma_debug_sigprint_this(this);
   
   init(x);
   }
@@ -291,7 +291,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator=(const MapMat<eT>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   init(x);
   
@@ -318,7 +318,7 @@ SpMat<eT>::SpMat(const Base<uword,T1>& locations_expr, const Base<eT,T2>& vals_e
   , row_indices(nullptr)
   , col_ptrs(nullptr)
   {
-  arma_extra_debug_sigprint_this(this);
+  arma_debug_sigprint_this(this);
   
   const quasi_unwrap<T1> locs_tmp( locations_expr.get_ref() );
   const quasi_unwrap<T2> vals_tmp(      vals_expr.get_ref() );
@@ -326,9 +326,9 @@ SpMat<eT>::SpMat(const Base<uword,T1>& locations_expr, const Base<eT,T2>& vals_e
   const Mat<uword>& locs = locs_tmp.M;
   const Mat<eT>&    vals = vals_tmp.M;
   
-  arma_debug_check( (vals.is_vec() == false),     "SpMat::SpMat(): given 'values' object must be a vector"                 );
-  arma_debug_check( (locs.n_rows != 2),           "SpMat::SpMat(): locations matrix must have two rows"                    );
-  arma_debug_check( (locs.n_cols != vals.n_elem), "SpMat::SpMat(): number of locations is different than number of values" );
+  arma_conform_check( (vals.is_vec() == false),     "SpMat::SpMat(): given 'values' object must be a vector"                 );
+  arma_conform_check( (locs.n_rows != 2),           "SpMat::SpMat(): locations matrix must have two rows"                    );
+  arma_conform_check( (locs.n_cols != vals.n_elem), "SpMat::SpMat(): number of locations is different than number of values" );
 
   // If there are no elements in the list, max() will fail.
   if(locs.n_cols == 0)  { init_cold(0, 0); return; }
@@ -391,7 +391,7 @@ SpMat<eT>::SpMat(const Base<uword,T1>& locations_expr, const Base<eT,T2>& vals_e
   , row_indices(nullptr)
   , col_ptrs(nullptr)
   {
-  arma_extra_debug_sigprint_this(this);
+  arma_debug_sigprint_this(this);
   
   const quasi_unwrap<T1> locs_tmp( locations_expr.get_ref() );
   const quasi_unwrap<T2> vals_tmp(      vals_expr.get_ref() );
@@ -399,9 +399,9 @@ SpMat<eT>::SpMat(const Base<uword,T1>& locations_expr, const Base<eT,T2>& vals_e
   const Mat<uword>& locs = locs_tmp.M;
   const Mat<eT>&    vals = vals_tmp.M;
   
-  arma_debug_check( (vals.is_vec() == false),     "SpMat::SpMat(): given 'values' object must be a vector"                 );
-  arma_debug_check( (locs.n_rows != 2),           "SpMat::SpMat(): locations matrix must have two rows"                    );
-  arma_debug_check( (locs.n_cols != vals.n_elem), "SpMat::SpMat(): number of locations is different than number of values" );
+  arma_conform_check( (vals.is_vec() == false),     "SpMat::SpMat(): given 'values' object must be a vector"                 );
+  arma_conform_check( (locs.n_rows != 2),           "SpMat::SpMat(): locations matrix must have two rows"                    );
+  arma_conform_check( (locs.n_cols != vals.n_elem), "SpMat::SpMat(): number of locations is different than number of values" );
   
   init_cold(in_n_rows, in_n_cols);
   
@@ -460,7 +460,7 @@ SpMat<eT>::SpMat(const bool add_values, const Base<uword,T1>& locations_expr, co
   , row_indices(nullptr)
   , col_ptrs(nullptr)
   {
-  arma_extra_debug_sigprint_this(this);
+  arma_debug_sigprint_this(this);
   
   const quasi_unwrap<T1> locs_tmp( locations_expr.get_ref() );
   const quasi_unwrap<T2> vals_tmp(      vals_expr.get_ref() );
@@ -468,9 +468,9 @@ SpMat<eT>::SpMat(const bool add_values, const Base<uword,T1>& locations_expr, co
   const Mat<uword>& locs = locs_tmp.M;
   const Mat<eT>&    vals = vals_tmp.M;
   
-  arma_debug_check( (vals.is_vec() == false),     "SpMat::SpMat(): given 'values' object must be a vector"                 );
-  arma_debug_check( (locs.n_rows != 2),           "SpMat::SpMat(): locations matrix must have two rows"                    );
-  arma_debug_check( (locs.n_cols != vals.n_elem), "SpMat::SpMat(): number of locations is different than number of values" );
+  arma_conform_check( (vals.is_vec() == false),     "SpMat::SpMat(): given 'values' object must be a vector"                 );
+  arma_conform_check( (locs.n_rows != 2),           "SpMat::SpMat(): locations matrix must have two rows"                    );
+  arma_conform_check( (locs.n_cols != vals.n_elem), "SpMat::SpMat(): number of locations is different than number of values" );
   
   init_cold(in_n_rows, in_n_cols);
   
@@ -544,7 +544,7 @@ SpMat<eT>::SpMat
   , row_indices(nullptr)
   , col_ptrs(nullptr)
   {
-  arma_extra_debug_sigprint_this(this);
+  arma_debug_sigprint_this(this);
   
   const quasi_unwrap<T1> rowind_tmp( rowind_expr.get_ref() );
   const quasi_unwrap<T2> colptr_tmp( colptr_expr.get_ref() );
@@ -554,15 +554,15 @@ SpMat<eT>::SpMat
   const Mat<uword>& colptr = colptr_tmp.M;
   const Mat<eT>&      vals = vals_tmp.M;
   
-  arma_debug_check( (rowind.is_vec() == false), "SpMat::SpMat(): given 'rowind' object must be a vector" );
-  arma_debug_check( (colptr.is_vec() == false), "SpMat::SpMat(): given 'colptr' object must be a vector" );
-  arma_debug_check( (vals.is_vec()   == false), "SpMat::SpMat(): given 'values' object must be a vector" );
+  arma_conform_check( (rowind.is_vec() == false), "SpMat::SpMat(): given 'rowind' object must be a vector" );
+  arma_conform_check( (colptr.is_vec() == false), "SpMat::SpMat(): given 'colptr' object must be a vector" );
+  arma_conform_check( (vals.is_vec()   == false), "SpMat::SpMat(): given 'values' object must be a vector" );
   
   // Resize to correct number of elements (this also sets n_nonzero)
   init_cold(in_n_rows, in_n_cols, vals.n_elem);
   
-  arma_debug_check( (rowind.n_elem != vals.n_elem), "SpMat::SpMat(): number of row indices is not equal to number of values" );
-  arma_debug_check( (colptr.n_elem != (n_cols+1) ), "SpMat::SpMat(): number of column pointers is not equal to n_cols+1" );
+  arma_conform_check( (rowind.n_elem != vals.n_elem), "SpMat::SpMat(): number of row indices is not equal to number of values" );
+  arma_conform_check( (colptr.n_elem != (n_cols+1) ), "SpMat::SpMat(): number of column pointers is not equal to n_cols+1" );
   
   // copy supplied values into sparse matrix -- not checked for consistency
   arrayops::copy(access::rwp(row_indices), rowind.memptr(), rowind.n_elem );
@@ -583,7 +583,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator=(const eT val)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if(val != eT(0))
     {
@@ -610,7 +610,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator*=(const eT val)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if(val != eT(0))
     {
@@ -649,9 +649,9 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator/=(const eT val)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check( (val == eT(0)), "element-wise division: division by zero" );
+  arma_conform_check( (val == eT(0)), "element-wise division: division by zero" );
   
   sync_csc();
   invalidate_cache();
@@ -683,7 +683,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator=(const SpMat<eT>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   init(x);
   
@@ -697,7 +697,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator+=(const SpMat<eT>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -715,7 +715,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator-=(const SpMat<eT>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -733,7 +733,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator*=(const SpMat<eT>& y)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -752,7 +752,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator%=(const SpMat<eT>& y)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -770,11 +770,11 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator/=(const SpMat<eT>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // NOTE: use of this function is not advised; it is implemented only for completeness
   
-  arma_debug_assert_same_size(n_rows, n_cols, x.n_rows, x.n_cols, "element-wise division");
+  arma_conform_assert_same_size(n_rows, n_cols, x.n_rows, x.n_cols, "element-wise division");
   
   for(uword c = 0; c < n_cols; ++c)
   for(uword r = 0; r < n_rows; ++r)
@@ -783,31 +783,6 @@ SpMat<eT>::operator/=(const SpMat<eT>& x)
     }
   
   return *this;
-  }
-
-
-
-template<typename eT>
-template<typename T1, typename op_type>
-inline
-SpMat<eT>::SpMat(const SpToDOp<T1, op_type>& expr)
-  : n_rows(0)
-  , n_cols(0)
-  , n_elem(0)
-  , n_nonzero(0)
-  , vec_state(0)
-  , values(nullptr)
-  , row_indices(nullptr)
-  , col_ptrs(nullptr)
-  {
-  arma_extra_debug_sigprint_this(this);
-  
-  typedef typename T1::elem_type T;
-  
-  // Make sure the type is compatible.
-  arma_type_check(( is_same_type< eT, T >::no ));
-  
-  op_type::apply(*this, expr);
   }
 
 
@@ -830,7 +805,7 @@ SpMat<eT>::SpMat
   , row_indices(nullptr)
   , col_ptrs(nullptr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type T;
   
@@ -847,7 +822,7 @@ SpMat<eT>::SpMat
   const SpMat<T>& X = tmp1.M;
   const SpMat<T>& Y = tmp2.M;
   
-  arma_debug_assert_same_size(X.n_rows, X.n_cols, Y.n_rows, Y.n_cols, "SpMat()");
+  arma_conform_assert_same_size(X.n_rows, X.n_cols, Y.n_rows, Y.n_cols, "SpMat()");
   
   const uword l_n_rows = X.n_rows;
   const uword l_n_cols = X.n_cols;
@@ -921,7 +896,7 @@ SpMat<eT>::SpMat(const Base<eT, T1>& x)
   , row_indices(nullptr)
   , col_ptrs(nullptr)
   {
-  arma_extra_debug_sigprint_this(this);
+  arma_debug_sigprint_this(this);
   
   (*this).operator=(x);
   }
@@ -934,7 +909,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator=(const Base<eT, T1>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if(is_same_type< T1, Gen<Mat<eT>, gen_zeros> >::yes)
     {
@@ -1005,7 +980,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator+=(const Base<eT, T1>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -1020,7 +995,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator-=(const Base<eT, T1>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -1035,7 +1010,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator*=(const Base<eT, T1>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -1051,7 +1026,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator/=(const Base<eT, T1>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -1070,12 +1045,12 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator%=(const Base<eT, T1>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const quasi_unwrap<T1> U(x.get_ref());
   const Mat<eT>& B     = U.M;
   
-  arma_debug_assert_same_size(n_rows, n_cols, B.n_rows, B.n_cols, "element-wise multiplication");
+  arma_conform_assert_same_size(n_rows, n_cols, B.n_rows, B.n_cols, "element-wise multiplication");
   
   sync_csc();
   invalidate_cache();
@@ -1123,8 +1098,10 @@ SpMat<eT>::SpMat(const Op<T1, op_diagmat>& expr)
   , row_indices(nullptr)
   , col_ptrs(nullptr)
   {
-  arma_extra_debug_sigprint_this(this);
-
+  arma_debug_sigprint_this(this);
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+  
   (*this).operator=(expr);
   }
 
@@ -1136,7 +1113,9 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator=(const Op<T1, op_diagmat>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   const diagmat_proxy<T1> P(expr.m);
   
@@ -1182,7 +1161,9 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator+=(const Op<T1, op_diagmat>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   const SpMat<eT> tmp(expr);
   
@@ -1197,7 +1178,9 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator-=(const Op<T1, op_diagmat>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   const SpMat<eT> tmp(expr);
   
@@ -1212,7 +1195,9 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator*=(const Op<T1, op_diagmat>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   const SpMat<eT> tmp(expr);
   
@@ -1227,7 +1212,9 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator/=(const Op<T1, op_diagmat>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   const SpMat<eT> tmp(expr);
   
@@ -1242,7 +1229,9 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator%=(const Op<T1, op_diagmat>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   const SpMat<eT> tmp(expr);
   
@@ -1266,7 +1255,7 @@ SpMat<eT>::SpMat(const SpSubview<eT>& X)
   , row_indices(nullptr)
   , col_ptrs(nullptr)
   {
-  arma_extra_debug_sigprint_this(this);
+  arma_debug_sigprint_this(this);
   
   (*this).operator=(X);
   }
@@ -1278,7 +1267,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator=(const SpSubview<eT>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if(X.n_nonzero == 0)  { zeros(X.n_rows, X.n_cols); return *this; }
   
@@ -1352,7 +1341,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator+=(const SpSubview<eT>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -1370,7 +1359,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator-=(const SpSubview<eT>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -1388,7 +1377,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator*=(const SpSubview<eT>& y)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -1406,7 +1395,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator%=(const SpSubview<eT>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -1424,9 +1413,9 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator/=(const SpSubview<eT>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_assert_same_size(n_rows, n_cols, x.n_rows, x.n_cols, "element-wise division");
+  arma_conform_assert_same_size(n_rows, n_cols, x.n_rows, x.n_cols, "element-wise division");
   
   // There is no pretty way to do this.
   for(uword elem = 0; elem < n_elem; elem++)
@@ -1452,7 +1441,7 @@ SpMat<eT>::SpMat(const SpSubview_col_list<eT,T1>& X)
   , row_indices(nullptr)
   , col_ptrs(nullptr)
   {
-  arma_extra_debug_sigprint_this(this);
+  arma_debug_sigprint_this(this);
   
   SpSubview_col_list<eT,T1>::extract(*this, X);
   }
@@ -1465,7 +1454,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator=(const SpSubview_col_list<eT,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const bool alias = (this == &(X.m));
   
@@ -1491,7 +1480,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator+=(const SpSubview_col_list<eT,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   SpSubview_col_list<eT,T1>::plus_inplace(*this, X);
   
@@ -1506,7 +1495,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator-=(const SpSubview_col_list<eT,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   SpSubview_col_list<eT,T1>::minus_inplace(*this, X);
   
@@ -1521,7 +1510,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator*=(const SpSubview_col_list<eT,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -1540,7 +1529,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator%=(const SpSubview_col_list<eT,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   SpSubview_col_list<eT,T1>::schur_inplace(*this, X);
   
@@ -1555,7 +1544,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator/=(const SpSubview_col_list<eT,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   SpSubview_col_list<eT,T1>::div_inplace(*this, X);
   
@@ -1576,7 +1565,7 @@ SpMat<eT>::SpMat(const spdiagview<eT>& X)
   , row_indices(nullptr)
   , col_ptrs(nullptr)
   {
-  arma_extra_debug_sigprint_this(this);
+  arma_debug_sigprint_this(this);
   
   spdiagview<eT>::extract(*this, X);
   }
@@ -1588,7 +1577,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator=(const spdiagview<eT>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   spdiagview<eT>::extract(*this, X);
   
@@ -1602,7 +1591,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator+=(const spdiagview<eT>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const SpMat<eT> tmp(X);
   
@@ -1616,7 +1605,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator-=(const spdiagview<eT>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const SpMat<eT> tmp(X);
   
@@ -1630,7 +1619,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator*=(const spdiagview<eT>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const SpMat<eT> tmp(X);
   
@@ -1644,7 +1633,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator%=(const spdiagview<eT>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const SpMat<eT> tmp(X);
   
@@ -1658,7 +1647,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator/=(const spdiagview<eT>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const SpMat<eT> tmp(X);
   
@@ -1680,7 +1669,7 @@ SpMat<eT>::SpMat(const SpOp<T1, spop_type>& X)
   , row_indices(nullptr)
   , col_ptrs(nullptr)
   {
-  arma_extra_debug_sigprint_this(this);
+  arma_debug_sigprint_this(this);
   
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
@@ -1698,7 +1687,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator=(const SpOp<T1, spop_type>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
@@ -1718,7 +1707,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator+=(const SpOp<T1, spop_type>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
@@ -1737,7 +1726,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator-=(const SpOp<T1, spop_type>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
@@ -1756,7 +1745,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator*=(const SpOp<T1, spop_type>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
@@ -1775,7 +1764,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator%=(const SpOp<T1, spop_type>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
@@ -1794,7 +1783,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator/=(const SpOp<T1, spop_type>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
@@ -1820,7 +1809,7 @@ SpMat<eT>::SpMat(const SpGlue<T1, T2, spglue_type>& X)
   , row_indices(nullptr)
   , col_ptrs(nullptr)
   {
-  arma_extra_debug_sigprint_this(this);
+  arma_debug_sigprint_this(this);
   
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
@@ -1838,7 +1827,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator=(const SpGlue<T1, T2, spglue_type>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
@@ -1858,7 +1847,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator+=(const SpGlue<T1, T2, spglue_type>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
@@ -1877,7 +1866,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator-=(const SpGlue<T1, T2, spglue_type>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
@@ -1896,7 +1885,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator*=(const SpGlue<T1, T2, spglue_type>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
@@ -1915,7 +1904,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator%=(const SpGlue<T1, T2, spglue_type>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
@@ -1934,7 +1923,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator/=(const SpGlue<T1, T2, spglue_type>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
@@ -1960,7 +1949,7 @@ SpMat<eT>::SpMat(const mtSpOp<eT, T1, spop_type>& X)
   , row_indices(nullptr)
   , col_ptrs(nullptr)
   {
-  arma_extra_debug_sigprint_this(this);
+  arma_debug_sigprint_this(this);
   
   spop_type::apply(*this, X);
   
@@ -1976,7 +1965,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator=(const mtSpOp<eT, T1, spop_type>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   spop_type::apply(*this, X);
   
@@ -1994,7 +1983,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator+=(const mtSpOp<eT, T1, spop_type>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -2011,7 +2000,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator-=(const mtSpOp<eT, T1, spop_type>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -2028,7 +2017,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator*=(const mtSpOp<eT, T1, spop_type>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -2045,7 +2034,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator%=(const mtSpOp<eT, T1, spop_type>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -2062,7 +2051,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator/=(const mtSpOp<eT, T1, spop_type>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -2086,7 +2075,7 @@ SpMat<eT>::SpMat(const mtSpGlue<eT, T1, T2, spglue_type>& X)
   , row_indices(nullptr)
   , col_ptrs(nullptr)
   {
-  arma_extra_debug_sigprint_this(this);
+  arma_debug_sigprint_this(this);
   
   spglue_type::apply(*this, X);
   
@@ -2102,7 +2091,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator=(const mtSpGlue<eT, T1, T2, spglue_type>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   spglue_type::apply(*this, X);
   
@@ -2120,7 +2109,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator+=(const mtSpGlue<eT, T1, T2, spglue_type>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -2137,7 +2126,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator-=(const mtSpGlue<eT, T1, T2, spglue_type>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -2154,7 +2143,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator*=(const mtSpGlue<eT, T1, T2, spglue_type>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -2171,7 +2160,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator%=(const mtSpGlue<eT, T1, T2, spglue_type>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -2188,7 +2177,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::operator/=(const mtSpGlue<eT, T1, T2, spglue_type>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -2200,13 +2189,125 @@ SpMat<eT>::operator/=(const mtSpGlue<eT, T1, T2, spglue_type>& X)
 
 
 template<typename eT>
+template<typename T1, typename op_type>
+inline
+SpMat<eT>::SpMat(const mtSpReduceOp<eT, T1, op_type>& X)
+  : n_rows(0)
+  , n_cols(0)
+  , n_elem(0)
+  , n_nonzero(0)
+  , vec_state(0)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
+  {
+  arma_debug_sigprint_this(this);
+  
+  const Mat<eT> tmp(X);
+  
+  (*this).operator=(tmp);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+SpMat<eT>&
+SpMat<eT>::operator=(const mtSpReduceOp<eT, T1, op_type>& X)
+  {
+  arma_debug_sigprint();
+  
+  const Mat<eT> tmp(X);
+  
+  return (*this).operator=(tmp);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+SpMat<eT>&
+SpMat<eT>::operator+=(const mtSpReduceOp<eT, T1, op_type>& X)
+  {
+  arma_debug_sigprint();
+  
+  const Mat<eT> tmp(X);
+  
+  return (*this).operator+=(tmp);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+SpMat<eT>&
+SpMat<eT>::operator-=(const mtSpReduceOp<eT, T1, op_type>& X)
+  {
+  arma_debug_sigprint();
+  
+  const Mat<eT> tmp(X);
+  
+  return (*this).operator-=(tmp);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+SpMat<eT>&
+SpMat<eT>::operator*=(const mtSpReduceOp<eT, T1, op_type>& X)
+  {
+  arma_debug_sigprint();
+  
+  const Mat<eT> tmp(X);
+  
+  return (*this).operator*=(tmp);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+SpMat<eT>&
+SpMat<eT>::operator%=(const mtSpReduceOp<eT, T1, op_type>& X)
+  {
+  arma_debug_sigprint();
+  
+  const Mat<eT> tmp(X);
+  
+  return (*this).operator%=(tmp);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+SpMat<eT>&
+SpMat<eT>::operator/=(const mtSpReduceOp<eT, T1, op_type>& X)
+  {
+  arma_debug_sigprint();
+  
+  const Mat<eT> tmp(X);
+  
+  return (*this).operator/=(tmp);
+  }
+
+
+
+template<typename eT>
 arma_inline
 SpSubview_row<eT>
 SpMat<eT>::row(const uword row_num)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check_bounds(row_num >= n_rows, "SpMat::row(): out of bounds");
+  arma_conform_check_bounds(row_num >= n_rows, "SpMat::row(): out of bounds");
   
   return SpSubview_row<eT>(*this, row_num);
   }
@@ -2218,9 +2319,9 @@ arma_inline
 const SpSubview_row<eT>
 SpMat<eT>::row(const uword row_num) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check_bounds(row_num >= n_rows, "SpMat::row(): out of bounds");
+  arma_conform_check_bounds(row_num >= n_rows, "SpMat::row(): out of bounds");
   
   return SpSubview_row<eT>(*this, row_num);
   }
@@ -2232,7 +2333,7 @@ inline
 SpSubview_row<eT>
 SpMat<eT>::operator()(const uword row_num, const span& col_span)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const bool col_all = col_span.whole;
   
@@ -2242,7 +2343,7 @@ SpMat<eT>::operator()(const uword row_num, const span& col_span)
   const uword in_col2       =                          col_span.b;
   const uword submat_n_cols = col_all ? local_n_cols : in_col2 - in_col1 + 1;
   
-  arma_debug_check_bounds
+  arma_conform_check_bounds
     (
     (row_num >= n_rows)
     ||
@@ -2261,7 +2362,7 @@ inline
 const SpSubview_row<eT>
 SpMat<eT>::operator()(const uword row_num, const span& col_span) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const bool col_all = col_span.whole;
   
@@ -2271,7 +2372,7 @@ SpMat<eT>::operator()(const uword row_num, const span& col_span) const
   const uword in_col2       =                          col_span.b;
   const uword submat_n_cols = col_all ? local_n_cols : in_col2 - in_col1 + 1;
   
-  arma_debug_check_bounds
+  arma_conform_check_bounds
     (
     (row_num >= n_rows)
     ||
@@ -2290,9 +2391,9 @@ arma_inline
 SpSubview_col<eT>
 SpMat<eT>::col(const uword col_num)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check_bounds(col_num >= n_cols, "SpMat::col(): out of bounds");
+  arma_conform_check_bounds(col_num >= n_cols, "SpMat::col(): out of bounds");
   
   return SpSubview_col<eT>(*this, col_num);
   }
@@ -2304,9 +2405,9 @@ arma_inline
 const SpSubview_col<eT>
 SpMat<eT>::col(const uword col_num) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check_bounds(col_num >= n_cols, "SpMat::col(): out of bounds");
+  arma_conform_check_bounds(col_num >= n_cols, "SpMat::col(): out of bounds");
   
   return SpSubview_col<eT>(*this, col_num);
   }
@@ -2318,7 +2419,7 @@ inline
 SpSubview_col<eT>
 SpMat<eT>::operator()(const span& row_span, const uword col_num)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const bool row_all = row_span.whole;
   
@@ -2328,7 +2429,7 @@ SpMat<eT>::operator()(const span& row_span, const uword col_num)
   const uword in_row2       =                          row_span.b;
   const uword submat_n_rows = row_all ? local_n_rows : in_row2 - in_row1 + 1;
   
-  arma_debug_check_bounds
+  arma_conform_check_bounds
     (
     (col_num >= n_cols)
     ||
@@ -2347,7 +2448,7 @@ inline
 const SpSubview_col<eT>
 SpMat<eT>::operator()(const span& row_span, const uword col_num) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const bool row_all = row_span.whole;
   
@@ -2357,7 +2458,7 @@ SpMat<eT>::operator()(const span& row_span, const uword col_num) const
   const uword in_row2       =                          row_span.b;
   const uword submat_n_rows = row_all ? local_n_rows : in_row2 - in_row1 + 1;
   
-  arma_debug_check_bounds
+  arma_conform_check_bounds
     (
     (col_num >= n_cols)
     ||
@@ -2376,9 +2477,9 @@ arma_inline
 SpSubview<eT>
 SpMat<eT>::rows(const uword in_row1, const uword in_row2)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check_bounds
+  arma_conform_check_bounds
     (
     (in_row1 > in_row2) || (in_row2 >= n_rows),
     "SpMat::rows(): indices out of bounds or incorrectly used"
@@ -2396,9 +2497,9 @@ arma_inline
 const SpSubview<eT>
 SpMat<eT>::rows(const uword in_row1, const uword in_row2) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check_bounds
+  arma_conform_check_bounds
     (
     (in_row1 > in_row2) || (in_row2 >= n_rows),
     "SpMat::rows(): indices out of bounds or incorrectly used"
@@ -2416,9 +2517,9 @@ arma_inline
 SpSubview<eT>
 SpMat<eT>::cols(const uword in_col1, const uword in_col2)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check_bounds
+  arma_conform_check_bounds
     (
     (in_col1 > in_col2) || (in_col2 >= n_cols),
     "SpMat::cols(): indices out of bounds or incorrectly used"
@@ -2436,9 +2537,9 @@ arma_inline
 const SpSubview<eT>
 SpMat<eT>::cols(const uword in_col1, const uword in_col2) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check_bounds
+  arma_conform_check_bounds
     (
     (in_col1 > in_col2) || (in_col2 >= n_cols),
     "SpMat::cols(): indices out of bounds or incorrectly used"
@@ -2456,9 +2557,9 @@ arma_inline
 SpSubview<eT>
 SpMat<eT>::submat(const uword in_row1, const uword in_col1, const uword in_row2, const uword in_col2)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check_bounds
+  arma_conform_check_bounds
     (
     (in_row1 > in_row2) || (in_col1 >  in_col2) || (in_row2 >= n_rows) || (in_col2 >= n_cols),
     "SpMat::submat(): indices out of bounds or incorrectly used"
@@ -2477,9 +2578,9 @@ arma_inline
 const SpSubview<eT>
 SpMat<eT>::submat(const uword in_row1, const uword in_col1, const uword in_row2, const uword in_col2) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check_bounds
+  arma_conform_check_bounds
     (
     (in_row1 > in_row2) || (in_col1 >  in_col2) || (in_row2 >= n_rows) || (in_col2 >= n_cols),
     "SpMat::submat(): indices out of bounds or incorrectly used"
@@ -2498,7 +2599,7 @@ arma_inline
 SpSubview<eT>
 SpMat<eT>::submat(const uword in_row1, const uword in_col1, const SizeMat& s)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword l_n_rows = n_rows;
   const uword l_n_cols = n_cols;
@@ -2506,7 +2607,7 @@ SpMat<eT>::submat(const uword in_row1, const uword in_col1, const SizeMat& s)
   const uword s_n_rows = s.n_rows;
   const uword s_n_cols = s.n_cols;
   
-  arma_debug_check_bounds
+  arma_conform_check_bounds
     (
     ((in_row1 >= l_n_rows) || (in_col1 >= l_n_cols) || ((in_row1 + s_n_rows) > l_n_rows) || ((in_col1 + s_n_cols) > l_n_cols)),
     "SpMat::submat(): indices or size out of bounds"
@@ -2522,7 +2623,7 @@ arma_inline
 const SpSubview<eT>
 SpMat<eT>::submat(const uword in_row1, const uword in_col1, const SizeMat& s) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword l_n_rows = n_rows;
   const uword l_n_cols = n_cols;
@@ -2530,7 +2631,7 @@ SpMat<eT>::submat(const uword in_row1, const uword in_col1, const SizeMat& s) co
   const uword s_n_rows = s.n_rows;
   const uword s_n_cols = s.n_cols;
   
-  arma_debug_check_bounds
+  arma_conform_check_bounds
     (
     ((in_row1 >= l_n_rows) || (in_col1 >= l_n_cols) || ((in_row1 + s_n_rows) > l_n_rows) || ((in_col1 + s_n_cols) > l_n_cols)),
     "SpMat::submat(): indices or size out of bounds"
@@ -2546,7 +2647,7 @@ inline
 SpSubview<eT>
 SpMat<eT>::submat(const span& row_span, const span& col_span)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const bool row_all = row_span.whole;
   const bool col_all = col_span.whole;
@@ -2562,7 +2663,7 @@ SpMat<eT>::submat(const span& row_span, const span& col_span)
   const uword in_col2       =                          col_span.b;
   const uword submat_n_cols = col_all ? local_n_cols : in_col2 - in_col1 + 1; 
   
-  arma_debug_check_bounds
+  arma_conform_check_bounds
     (    
     ( row_all ? false : ((in_row1 > in_row2) || (in_row2 >= local_n_rows)) )
     ||   
@@ -2581,7 +2682,7 @@ inline
 const SpSubview<eT>
 SpMat<eT>::submat(const span& row_span, const span& col_span) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const bool row_all = row_span.whole;
   const bool col_all = col_span.whole;
@@ -2597,7 +2698,7 @@ SpMat<eT>::submat(const span& row_span, const span& col_span) const
   const uword in_col2       =                          col_span.b;
   const uword submat_n_cols = col_all ? local_n_cols : in_col2 - in_col1 + 1; 
   
-  arma_debug_check_bounds
+  arma_conform_check_bounds
     (    
     ( row_all ? false : ((in_row1 > in_row2) || (in_row2 >= local_n_rows)) )
     ||   
@@ -2616,7 +2717,7 @@ inline
 SpSubview<eT>
 SpMat<eT>::operator()(const span& row_span, const span& col_span)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return submat(row_span, col_span);
   }
@@ -2628,7 +2729,7 @@ inline
 const SpSubview<eT>
 SpMat<eT>::operator()(const span& row_span, const span& col_span) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return submat(row_span, col_span);
   }
@@ -2640,7 +2741,7 @@ arma_inline
 SpSubview<eT>
 SpMat<eT>::operator()(const uword in_row1, const uword in_col1, const SizeMat& s)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return (*this).submat(in_row1, in_col1, s);
   }
@@ -2652,7 +2753,7 @@ arma_inline
 const SpSubview<eT>
 SpMat<eT>::operator()(const uword in_row1, const uword in_col1, const SizeMat& s) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return (*this).submat(in_row1, in_col1, s);
   }
@@ -2664,9 +2765,9 @@ inline
 SpSubview<eT>
 SpMat<eT>::head_rows(const uword N)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check_bounds( (N > n_rows), "SpMat::head_rows(): size out of bounds" );
+  arma_conform_check_bounds( (N > n_rows), "SpMat::head_rows(): size out of bounds" );
   
   return SpSubview<eT>(*this, 0, 0, N, n_cols);
   }
@@ -2678,9 +2779,9 @@ inline
 const SpSubview<eT>
 SpMat<eT>::head_rows(const uword N) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check_bounds( (N > n_rows), "SpMat::head_rows(): size out of bounds" );
+  arma_conform_check_bounds( (N > n_rows), "SpMat::head_rows(): size out of bounds" );
   
   return SpSubview<eT>(*this, 0, 0, N, n_cols);
   }
@@ -2692,9 +2793,9 @@ inline
 SpSubview<eT>
 SpMat<eT>::tail_rows(const uword N)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check_bounds( (N > n_rows), "SpMat::tail_rows(): size out of bounds" );
+  arma_conform_check_bounds( (N > n_rows), "SpMat::tail_rows(): size out of bounds" );
   
   const uword start_row = n_rows - N;
   
@@ -2708,9 +2809,9 @@ inline
 const SpSubview<eT>
 SpMat<eT>::tail_rows(const uword N) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check_bounds( (N > n_rows), "SpMat::tail_rows(): size out of bounds" );
+  arma_conform_check_bounds( (N > n_rows), "SpMat::tail_rows(): size out of bounds" );
   
   const uword start_row = n_rows - N;
   
@@ -2724,9 +2825,9 @@ inline
 SpSubview<eT>
 SpMat<eT>::head_cols(const uword N)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check_bounds( (N > n_cols), "SpMat::head_cols(): size out of bounds" );
+  arma_conform_check_bounds( (N > n_cols), "SpMat::head_cols(): size out of bounds" );
   
   return SpSubview<eT>(*this, 0, 0, n_rows, N);
   }
@@ -2738,9 +2839,9 @@ inline
 const SpSubview<eT>
 SpMat<eT>::head_cols(const uword N) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check_bounds( (N > n_cols), "SpMat::head_cols(): size out of bounds" );
+  arma_conform_check_bounds( (N > n_cols), "SpMat::head_cols(): size out of bounds" );
   
   return SpSubview<eT>(*this, 0, 0, n_rows, N);
   }
@@ -2752,9 +2853,9 @@ inline
 SpSubview<eT>
 SpMat<eT>::tail_cols(const uword N)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check_bounds( (N > n_cols), "SpMat::tail_cols(): size out of bounds" );
+  arma_conform_check_bounds( (N > n_cols), "SpMat::tail_cols(): size out of bounds" );
   
   const uword start_col = n_cols - N;
   
@@ -2768,9 +2869,9 @@ inline
 const SpSubview<eT>
 SpMat<eT>::tail_cols(const uword N) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check_bounds( (N > n_cols), "SpMat::tail_cols(): size out of bounds" );
+  arma_conform_check_bounds( (N > n_cols), "SpMat::tail_cols(): size out of bounds" );
   
   const uword start_col = n_cols - N;
   
@@ -2785,7 +2886,7 @@ arma_inline
 SpSubview_col_list<eT, T1>
 SpMat<eT>::cols(const Base<uword, T1>& indices)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return SpSubview_col_list<eT, T1>(*this, indices);
   }
@@ -2798,7 +2899,7 @@ arma_inline
 const SpSubview_col_list<eT, T1>
 SpMat<eT>::cols(const Base<uword, T1>& indices) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return SpSubview_col_list<eT, T1>(*this, indices);
   }
@@ -2811,12 +2912,12 @@ inline
 spdiagview<eT>
 SpMat<eT>::diag(const sword in_id)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword row_offset = (in_id < 0) ? uword(-in_id) : 0;
   const uword col_offset = (in_id > 0) ? uword( in_id) : 0;
   
-  arma_debug_check_bounds
+  arma_conform_check_bounds
     (
     ((row_offset > 0) && (row_offset >= n_rows)) || ((col_offset > 0) && (col_offset >= n_cols)),
     "SpMat::diag(): requested diagonal out of bounds"
@@ -2835,12 +2936,12 @@ inline
 const spdiagview<eT>
 SpMat<eT>::diag(const sword in_id) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword row_offset = uword( (in_id < 0) ? -in_id : 0 );
   const uword col_offset = uword( (in_id > 0) ?  in_id : 0 );
   
-  arma_debug_check_bounds
+  arma_conform_check_bounds
     (
     ((row_offset > 0) && (row_offset >= n_rows)) || ((col_offset > 0) && (col_offset >= n_cols)),
     "SpMat::diag(): requested diagonal out of bounds"
@@ -2858,9 +2959,9 @@ inline
 void
 SpMat<eT>::swap_rows(const uword in_row1, const uword in_row2)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check_bounds( ((in_row1 >= n_rows) || (in_row2 >= n_rows)), "SpMat::swap_rows(): out of bounds" );
+  arma_conform_check_bounds( ((in_row1 >= n_rows) || (in_row2 >= n_rows)), "SpMat::swap_rows(): out of bounds" );
   
   if(in_row1 == in_row2)  { return; }
   
@@ -2963,9 +3064,9 @@ inline
 void
 SpMat<eT>::swap_cols(const uword in_col1, const uword in_col2)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check_bounds( ((in_col1 >= n_cols) || (in_col2 >= n_cols)), "SpMat::swap_cols(): out of bounds" );
+  arma_conform_check_bounds( ((in_col1 >= n_cols) || (in_col2 >= n_cols)), "SpMat::swap_cols(): out of bounds" );
   
   if(in_col1 == in_col2)  { return; }
   
@@ -2992,9 +3093,9 @@ inline
 void
 SpMat<eT>::shed_row(const uword row_num)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check_bounds(row_num >= n_rows, "SpMat::shed_row(): out of bounds");
+  arma_conform_check_bounds(row_num >= n_rows, "SpMat::shed_row(): out of bounds");
   
   shed_rows (row_num, row_num);
   }
@@ -3006,9 +3107,9 @@ inline
 void
 SpMat<eT>::shed_col(const uword col_num)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check_bounds(col_num >= n_cols, "SpMat::shed_col(): out of bounds");
+  arma_conform_check_bounds(col_num >= n_cols, "SpMat::shed_col(): out of bounds");
   
   shed_cols(col_num, col_num);
   }
@@ -3020,9 +3121,9 @@ inline
 void
 SpMat<eT>::shed_rows(const uword in_row1, const uword in_row2)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check_bounds
+  arma_conform_check_bounds
     (
     (in_row1 > in_row2) || (in_row2 >= n_rows),
     "SpMat::shed_rows(): indices out of bounds or incorectly used"
@@ -3106,9 +3207,9 @@ inline
 void
 SpMat<eT>::shed_cols(const uword in_col1, const uword in_col2)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check_bounds
+  arma_conform_check_bounds
     (
     (in_col1 > in_col2) || (in_col2 >= n_cols),
     "SpMat::shed_cols(): indices out of bounds or incorrectly used"
@@ -3242,7 +3343,7 @@ arma_inline
 SpMat_MapMat_val<eT>
 SpMat<eT>::operator()(const uword i)
   {
-  arma_debug_check_bounds( (i >= n_elem), "SpMat::operator(): out of bounds" );
+  arma_conform_check_bounds( (i >= n_elem), "SpMat::operator(): out of bounds" );
   
   const uword in_col = i / n_rows;
   const uword in_row = i % n_rows;
@@ -3257,7 +3358,7 @@ arma_inline
 eT
 SpMat<eT>::operator()(const uword i) const
   {
-  arma_debug_check_bounds( (i >= n_elem), "SpMat::operator(): out of bounds" );
+  arma_conform_check_bounds( (i >= n_elem), "SpMat::operator(): out of bounds" );
   
   return get_value(i);
   }
@@ -3318,7 +3419,7 @@ arma_inline
 SpMat_MapMat_val<eT>
 SpMat<eT>::operator()(const uword in_row, const uword in_col)
   {
-  arma_debug_check_bounds( ((in_row >= n_rows) || (in_col >= n_cols)), "SpMat::operator(): out of bounds" );
+  arma_conform_check_bounds( ((in_row >= n_rows) || (in_col >= n_cols)), "SpMat::operator(): out of bounds" );
   
   return SpMat_MapMat_val<eT>((*this), cache, in_row, in_col);
   }
@@ -3330,7 +3431,7 @@ arma_inline
 eT
 SpMat<eT>::operator()(const uword in_row, const uword in_col) const
   {
-  arma_debug_check_bounds( ((in_row >= n_rows) || (in_col >= n_cols)), "SpMat::operator(): out of bounds" );
+  arma_conform_check_bounds( ((in_row >= n_rows) || (in_col >= n_cols)), "SpMat::operator(): out of bounds" );
   
   return get_value(in_row, in_col);
   }
@@ -3399,7 +3500,7 @@ inline
 bool
 SpMat<eT>::is_symmetric() const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const SpMat<eT>& A = (*this);
   
@@ -3417,13 +3518,13 @@ inline
 bool
 SpMat<eT>::is_symmetric(const typename get_pod_type<elem_type>::result tol) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename get_pod_type<eT>::result T;
   
   if(tol == T(0))  { return (*this).is_symmetric(); }
   
-  arma_debug_check( (tol < T(0)), "is_symmetric(): parameter 'tol' must be >= 0" );
+  arma_conform_check( (tol < T(0)), "is_symmetric(): parameter 'tol' must be >= 0" );
   
   const SpMat<eT>& A = (*this);
   
@@ -3445,7 +3546,7 @@ inline
 bool
 SpMat<eT>::is_hermitian() const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const SpMat<eT>& A = (*this);
   
@@ -3463,13 +3564,13 @@ inline
 bool
 SpMat<eT>::is_hermitian(const typename get_pod_type<elem_type>::result tol) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename get_pod_type<eT>::result T;
   
   if(tol == T(0))  { return (*this).is_hermitian(); }
   
-  arma_debug_check( (tol < T(0)), "is_hermitian(): parameter 'tol' must be >= 0" );
+  arma_conform_check( (tol < T(0)), "is_hermitian(): parameter 'tol' must be >= 0" );
   
   const SpMat<eT>& A = (*this);
   
@@ -3491,7 +3592,7 @@ inline
 bool
 SpMat<eT>::internal_is_finite() const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -3505,7 +3606,7 @@ inline
 bool
 SpMat<eT>::internal_has_inf() const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -3519,7 +3620,7 @@ inline
 bool
 SpMat<eT>::internal_has_nan() const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -3533,7 +3634,7 @@ inline
 bool
 SpMat<eT>::internal_has_nonfinite() const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -3558,7 +3659,7 @@ arma_inline
 bool
 SpMat<eT>::in_range(const span& x) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if(x.whole)
     {
@@ -3591,7 +3692,7 @@ arma_inline
 bool
 SpMat<eT>::in_range(const span& row_span, const uword in_col) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if(row_span.whole)
     {
@@ -3613,7 +3714,7 @@ arma_inline
 bool
 SpMat<eT>::in_range(const uword in_row, const span& col_span) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if(col_span.whole)
     {
@@ -3635,7 +3736,7 @@ arma_inline
 bool
 SpMat<eT>::in_range(const span& row_span, const span& col_span) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword in_row1 = row_span.a;
   const uword in_row2 = row_span.b;
@@ -3678,7 +3779,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::copy_size(const SpMat<eT2>& m)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return set_size(m.n_rows, m.n_cols);
   }
@@ -3691,7 +3792,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::copy_size(const Mat<eT2>& m)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return set_size(m.n_rows, m.n_cols);
   }
@@ -3703,7 +3804,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::set_size(const uword new_n_elem)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword new_n_rows = (vec_state == 2) ? uword(1         ) : uword(new_n_elem);
   const uword new_n_cols = (vec_state == 2) ? uword(new_n_elem) : uword(1         );
@@ -3718,7 +3819,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::set_size(const uword in_rows, const uword in_cols)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   invalidate_cache(); // placed here, as set_size() is used during matrix modification
   
@@ -3736,7 +3837,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::set_size(const SizeMat& s)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return (*this).set_size(s.n_rows, s.n_cols);
   }
@@ -3748,7 +3849,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::resize(const uword in_rows, const uword in_cols)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if( (n_rows == in_rows) && (n_cols == in_cols) )  { return *this; }
   
@@ -3778,7 +3879,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::resize(const SizeMat& s)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return (*this).resize(s.n_rows, s.n_cols);
   }
@@ -3790,14 +3891,14 @@ inline
 SpMat<eT>&
 SpMat<eT>::reshape(const uword in_rows, const uword in_cols)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_check( ((in_rows*in_cols) != n_elem), "SpMat::reshape(): changing the number of elements in a sparse matrix is currently not supported" );
   
   if( (n_rows == in_rows) && (n_cols == in_cols) )  { return *this; }
   
-  if(vec_state == 1)  { arma_debug_check( (in_cols != 1), "SpMat::reshape(): object is a column vector; requested size is not compatible" ); }
-  if(vec_state == 2)  { arma_debug_check( (in_rows != 1), "SpMat::reshape(): object is a row vector; requested size is not compatible"    ); }
+  if(vec_state == 1)  { arma_conform_check( (in_cols != 1), "SpMat::reshape(): object is a column vector; requested size is not compatible" ); }
+  if(vec_state == 2)  { arma_conform_check( (in_rows != 1), "SpMat::reshape(): object is a row vector; requested size is not compatible"    ); }
   
   if(n_nonzero == 0)  { return (*this).zeros(in_rows, in_cols); }
   
@@ -3820,7 +3921,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::reshape(const SizeMat& s)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return (*this).reshape(s.n_rows, s.n_cols);
   }
@@ -3832,7 +3933,7 @@ inline
 void
 SpMat<eT>::reshape_helper_generic(const uword in_rows, const uword in_cols)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   invalidate_cache();
@@ -3883,7 +3984,7 @@ inline
 void
 SpMat<eT>::reshape_helper_intovec()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   invalidate_cache();
@@ -3923,7 +4024,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::for_each(functor F)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -3959,7 +4060,7 @@ inline
 const SpMat<eT>&
 SpMat<eT>::for_each(functor F) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -3979,7 +4080,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::transform(functor F)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   invalidate_cache();
@@ -4011,11 +4112,11 @@ inline
 SpMat<eT>&
 SpMat<eT>::replace(const eT old_val, const eT new_val)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if(old_val == eT(0))
     {
-    arma_debug_warn_level(1, "SpMat::replace(): replacement not done, as old_val = 0");
+    arma_warn(1, "SpMat::replace(): replacement not done, as old_val = 0");
     }
   else
     {
@@ -4037,7 +4138,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::clean(const typename get_pod_type<eT>::result threshold)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if(n_nonzero == 0)  { return *this; }
   
@@ -4058,16 +4159,16 @@ inline
 SpMat<eT>&
 SpMat<eT>::clamp(const eT min_val, const eT max_val)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if(is_cx<eT>::no)
     {
-    arma_debug_check( (access::tmp_real(min_val) > access::tmp_real(max_val)), "SpMat::clamp(): min_val must be less than max_val" );
+    arma_conform_check( (access::tmp_real(min_val) > access::tmp_real(max_val)), "SpMat::clamp(): min_val must be less than max_val" );
     }
   else
     {
-    arma_debug_check( (access::tmp_real(min_val) > access::tmp_real(max_val)), "SpMat::clamp(): real(min_val) must be less than real(max_val)" );
-    arma_debug_check( (access::tmp_imag(min_val) > access::tmp_imag(max_val)), "SpMat::clamp(): imag(min_val) must be less than imag(max_val)" );
+    arma_conform_check( (access::tmp_real(min_val) > access::tmp_real(max_val)), "SpMat::clamp(): real(min_val) must be less than real(max_val)" );
+    arma_conform_check( (access::tmp_imag(min_val) > access::tmp_imag(max_val)), "SpMat::clamp(): imag(min_val) must be less than imag(max_val)" );
     }
   
   if(n_nonzero == 0)  { return *this; }
@@ -4089,7 +4190,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::zeros()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if((n_nonzero == 0) && (values != nullptr))
     {
@@ -4110,7 +4211,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::zeros(const uword new_n_elem)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword new_n_rows = (vec_state == 2) ? uword(1         ) : uword(new_n_elem);
   const uword new_n_cols = (vec_state == 2) ? uword(new_n_elem) : uword(1         );
@@ -4125,7 +4226,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::zeros(const uword in_rows, const uword in_cols)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if((n_nonzero == 0) && (n_rows == in_rows) && (n_cols == in_cols) && (values != nullptr))
     {
@@ -4146,7 +4247,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::zeros(const SizeMat& s)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return (*this).zeros(s.n_rows, s.n_cols);
   }
@@ -4158,7 +4259,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::eye()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return (*this).eye(n_rows, n_cols);
   }
@@ -4170,7 +4271,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::eye(const uword in_rows, const uword in_cols)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword N = (std::min)(in_rows, in_cols);
   
@@ -4197,7 +4298,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::eye(const SizeMat& s)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return (*this).eye(s.n_rows, s.n_cols);
   }
@@ -4209,7 +4310,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::speye()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return (*this).eye(n_rows, n_cols);
   }
@@ -4221,7 +4322,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::speye(const uword in_n_rows, const uword in_n_cols)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return (*this).eye(in_n_rows, in_n_cols);
   }
@@ -4233,7 +4334,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::speye(const SizeMat& s)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return (*this).eye(s.n_rows, s.n_cols);
   }
@@ -4245,9 +4346,9 @@ inline
 SpMat<eT>&
 SpMat<eT>::sprandu(const uword in_rows, const uword in_cols, const double density)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check( ( (density < double(0)) || (density > double(1)) ), "sprandu(): density must be in the [0,1] interval" );
+  arma_conform_check( ( (density < double(0)) || (density > double(1)) ), "sprandu(): density must be in the [0,1] interval" );
   
   const uword new_n_nonzero = uword(density * double(in_rows) * double(in_cols) + 0.5);
   
@@ -4281,26 +4382,15 @@ SpMat<eT>::sprandu(const uword in_rows, const uword in_cols, const double densit
       }
     }
   
-  uword cur_index = 0;
-  uword count     = 0;  
-  
-  for(uword lcol = 0; lcol < in_cols; ++lcol)
-  for(uword lrow = 0; lrow < in_rows; ++lrow)
+  for(uword i=0; i<new_n_nonzero; ++i)
     {
-    if(count == indices[cur_index])
-      {
-      access::rw(row_indices[cur_index]) = lrow;
-      access::rw(col_ptrs[lcol + 1])++;
-      ++cur_index;
-      }
+    const uword index = indices[i];
     
-    ++count;
-    }
-  
-  if(cur_index != new_n_nonzero)
-    {
-    // Fix size to correct size.
-    mem_resize(cur_index);
+    const uword lcol = index / in_rows;
+    const uword lrow = index % in_rows;
+    
+    access::rw(row_indices[i]) = lrow;
+    access::rw(col_ptrs[lcol + 1])++;
     }
   
   // Sum column pointers.
@@ -4308,6 +4398,8 @@ SpMat<eT>::sprandu(const uword in_rows, const uword in_cols, const double densit
     {
     access::rw(col_ptrs[lcol]) += col_ptrs[lcol - 1];
     }
+  
+  (*this).remove_zeros();
   
   return *this;
   }
@@ -4319,7 +4411,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::sprandu(const SizeMat& s, const double density)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return (*this).sprandu(s.n_rows, s.n_cols, density);
   }
@@ -4331,9 +4423,9 @@ inline
 SpMat<eT>&
 SpMat<eT>::sprandn(const uword in_rows, const uword in_cols, const double density)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check( ( (density < double(0)) || (density > double(1)) ), "sprandn(): density must be in the [0,1] interval" );
+  arma_conform_check( ( (density < double(0)) || (density > double(1)) ), "sprandn(): density must be in the [0,1] interval" );
   
   const uword new_n_nonzero = uword(density * double(in_rows) * double(in_cols) + 0.5);
   
@@ -4367,26 +4459,15 @@ SpMat<eT>::sprandn(const uword in_rows, const uword in_cols, const double densit
       }
     }
   
-  uword cur_index = 0;
-  uword count     = 0;  
-  
-  for(uword lcol = 0; lcol < in_cols; ++lcol)
-  for(uword lrow = 0; lrow < in_rows; ++lrow)
+  for(uword i=0; i<new_n_nonzero; ++i)
     {
-    if(count == indices[cur_index])
-      {
-      access::rw(row_indices[cur_index]) = lrow;
-      access::rw(col_ptrs[lcol + 1])++;
-      ++cur_index;
-      }
+    const uword index = indices[i];
     
-    ++count;
-    }
-  
-  if(cur_index != new_n_nonzero)
-    {
-    // Fix size to correct size.
-    mem_resize(cur_index);
+    const uword lcol = index / in_rows;
+    const uword lrow = index % in_rows;
+    
+    access::rw(row_indices[i]) = lrow;
+    access::rw(col_ptrs[lcol + 1])++;
     }
   
   // Sum column pointers.
@@ -4394,6 +4475,8 @@ SpMat<eT>::sprandn(const uword in_rows, const uword in_cols, const double densit
     {
     access::rw(col_ptrs[lcol]) += col_ptrs[lcol - 1];
     }
+  
+  (*this).remove_zeros();
   
   return *this;
   }
@@ -4405,7 +4488,7 @@ inline
 SpMat<eT>&
 SpMat<eT>::sprandn(const SizeMat& s, const double density)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return (*this).sprandn(s.n_rows, s.n_cols, density);
   }
@@ -4417,7 +4500,7 @@ inline
 void
 SpMat<eT>::reset()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword new_n_rows = (vec_state == 2) ? 1 : 0;
   const uword new_n_cols = (vec_state == 1) ? 1 : 0;
@@ -4432,7 +4515,7 @@ inline
 void
 SpMat<eT>::reset_cache()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -4445,7 +4528,7 @@ SpMat<eT>::reset_cache()
       sync_state = 0;
       }
     }
-  #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
+  #elif defined(ARMA_USE_STD_MUTEX)
     {
     const std::lock_guard<std::mutex> lock(cache_mutex);
     
@@ -4469,7 +4552,7 @@ inline
 void
 SpMat<eT>::reserve(const uword in_rows, const uword in_cols, const uword new_n_nonzero)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   init(in_rows, in_cols, new_n_nonzero);
   }
@@ -4482,7 +4565,7 @@ inline
 void
 SpMat<eT>::set_real(const SpBase<typename SpMat<eT>::pod_type,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   SpMat_aux::set_real(*this, X);
   }
@@ -4495,7 +4578,7 @@ inline
 void
 SpMat<eT>::set_imag(const SpBase<typename SpMat<eT>::pod_type,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   SpMat_aux::set_imag(*this, X);
   }
@@ -4508,7 +4591,7 @@ inline
 bool
 SpMat<eT>::save(const std::string name, const file_type type) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -4533,11 +4616,11 @@ SpMat<eT>::save(const std::string name, const file_type type) const
       break;
     
     default:
-      arma_debug_warn_level(1, "SpMat::save(): unsupported file type");
+      arma_warn(1, "SpMat::save(): unsupported file type");
       save_okay = false;
     }
   
-  if(save_okay == false)  { arma_debug_warn_level(3, "SpMat::save(): write failed; file: ", name); }
+  if(save_okay == false)  { arma_warn(3, "SpMat::save(): write failed; file: ", name); }
   
   return save_okay;
   }
@@ -4549,7 +4632,7 @@ inline
 bool
 SpMat<eT>::save(const csv_name& spec, const file_type type) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if( (type != csv_ascii) && (type != ssv_ascii) ) 
     {
@@ -4562,12 +4645,12 @@ SpMat<eT>::save(const csv_name& spec, const file_type type) const
   const bool with_header   = bool(spec.opts.flags & csv_opts::flag_with_header) && (no_header == false);
   const bool use_semicolon = bool(spec.opts.flags & csv_opts::flag_semicolon  ) || (type == ssv_ascii);
   
-  arma_extra_debug_print("SpMat::save(csv_name): enabled flags:");
+  arma_debug_print("SpMat::save(csv_name): enabled flags:");
   
-  if(do_trans     )  { arma_extra_debug_print("trans");       }
-  if(no_header    )  { arma_extra_debug_print("no_header");   }
-  if(with_header  )  { arma_extra_debug_print("with_header"); }
-  if(use_semicolon)  { arma_extra_debug_print("semicolon");   }
+  if(do_trans     )  { arma_debug_print("trans");       }
+  if(no_header    )  { arma_debug_print("no_header");   }
+  if(with_header  )  { arma_debug_print("with_header"); }
+  if(use_semicolon)  { arma_debug_print("semicolon");   }
   
   const char separator = (use_semicolon) ? char(';') : char(',');
   
@@ -4575,7 +4658,7 @@ SpMat<eT>::save(const csv_name& spec, const file_type type) const
     {
     if( (spec.header_ro.n_cols != 1) && (spec.header_ro.n_rows != 1) )
       {
-      arma_debug_warn_level(1, "SpMat::save(): given header must have a vector layout");
+      arma_warn(1, "SpMat::save(): given header must have a vector layout");
       return false;
       }
     
@@ -4585,7 +4668,7 @@ SpMat<eT>::save(const csv_name& spec, const file_type type) const
       
       if(token.find(separator) != std::string::npos)
         {
-        arma_debug_warn_level(1, "SpMat::save(): token within the header contains the separator character: '", token, "'");
+        arma_warn(1, "SpMat::save(): token within the header contains the separator character: '", token, "'");
         return false;
         }
       }
@@ -4594,7 +4677,7 @@ SpMat<eT>::save(const csv_name& spec, const file_type type) const
     
     if(spec.header_ro.n_elem != save_n_cols)
       {
-      arma_debug_warn_level(1, "SpMat::save(): size mismatch between header and matrix");
+      arma_warn(1, "SpMat::save(): size mismatch between header and matrix");
       return false;
       }
     }
@@ -4612,7 +4695,7 @@ SpMat<eT>::save(const csv_name& spec, const file_type type) const
     save_okay = diskio::save_csv_ascii(*this, spec.filename, spec.header_ro, with_header, separator);
     }
   
-  if(save_okay == false)  { arma_debug_warn_level(3, "SpMat::save(): write failed; file: ", spec.filename); }
+  if(save_okay == false)  { arma_warn(3, "SpMat::save(): write failed; file: ", spec.filename); }
   
   return save_okay;
   }
@@ -4625,7 +4708,7 @@ inline
 bool
 SpMat<eT>::save(std::ostream& os, const file_type type) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -4650,11 +4733,11 @@ SpMat<eT>::save(std::ostream& os, const file_type type) const
       break;
     
     default:
-      arma_debug_warn_level(1, "SpMat::save(): unsupported file type");
+      arma_warn(1, "SpMat::save(): unsupported file type");
       save_okay = false;
     }
   
-  if(save_okay == false)  { arma_debug_warn_level(3, "SpMat::save(): stream write failed"); }
+  if(save_okay == false)  { arma_warn(3, "SpMat::save(): stream write failed"); }
   
   return save_okay;
   }
@@ -4667,7 +4750,7 @@ inline
 bool
 SpMat<eT>::load(const std::string name, const file_type type)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   invalidate_cache();
   
@@ -4697,7 +4780,7 @@ SpMat<eT>::load(const std::string name, const file_type type)
       break;
     
     default:
-      arma_debug_warn_level(1, "SpMat::load(): unsupported file type");
+      arma_warn(1, "SpMat::load(): unsupported file type");
       load_okay = false;
     }
   
@@ -4705,11 +4788,11 @@ SpMat<eT>::load(const std::string name, const file_type type)
     {
     if(err_msg.length() > 0)
       {
-      arma_debug_warn_level(3, "SpMat::load(): ", err_msg, "; file: ", name);
+      arma_warn(3, "SpMat::load(): ", err_msg, "; file: ", name);
       }
     else
       {
-      arma_debug_warn_level(3, "SpMat::load(): read failed; file: ", name);
+      arma_warn(3, "SpMat::load(): read failed; file: ", name);
       }
     }
   
@@ -4725,7 +4808,7 @@ inline
 bool
 SpMat<eT>::load(const csv_name& spec, const file_type type)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if( (type != csv_ascii) && (type != ssv_ascii) ) 
     {
@@ -4739,15 +4822,15 @@ SpMat<eT>::load(const csv_name& spec, const file_type type)
   const bool use_semicolon = bool(spec.opts.flags & csv_opts::flag_semicolon  ) || (type == ssv_ascii);
   const bool strict        = bool(spec.opts.flags & csv_opts::flag_strict     );
   
-  arma_extra_debug_print("SpMat::load(csv_name): enabled flags:");
+  arma_debug_print("SpMat::load(csv_name): enabled flags:");
   
-  if(do_trans     )  { arma_extra_debug_print("trans");       }
-  if(no_header    )  { arma_extra_debug_print("no_header");   }
-  if(with_header  )  { arma_extra_debug_print("with_header"); }
-  if(use_semicolon)  { arma_extra_debug_print("semicolon");   }
-  if(strict       )  { arma_extra_debug_print("strict");      }
+  if(do_trans     )  { arma_debug_print("trans");       }
+  if(no_header    )  { arma_debug_print("no_header");   }
+  if(with_header  )  { arma_debug_print("with_header"); }
+  if(use_semicolon)  { arma_debug_print("semicolon");   }
+  if(strict       )  { arma_debug_print("strict");      }
   
-  if(strict)  { arma_debug_warn_level(1, "SpMat::load(): option 'strict' not implemented for sparse matrices"); }
+  if(strict)  { arma_warn(1, "SpMat::load(): option 'strict' not implemented for sparse matrices"); }
   
   const char separator = (use_semicolon) ? char(';') : char(',');
   
@@ -4780,11 +4863,11 @@ SpMat<eT>::load(const csv_name& spec, const file_type type)
     {
     if(err_msg.length() > 0)
       {
-      arma_debug_warn_level(3, "SpMat::load(): ", err_msg, "; file: ", spec.filename);
+      arma_warn(3, "SpMat::load(): ", err_msg, "; file: ", spec.filename);
       }
     else
       {
-      arma_debug_warn_level(3, "SpMat::load(): read failed; file: ", spec.filename);
+      arma_warn(3, "SpMat::load(): read failed; file: ", spec.filename);
       }
     }
   else
@@ -4793,7 +4876,7 @@ SpMat<eT>::load(const csv_name& spec, const file_type type)
     
     if(with_header && (spec.header_rw.n_elem != load_n_cols))
       {
-      arma_debug_warn_level(3, "SpMat::load(): size mismatch between header and matrix");
+      arma_warn(3, "SpMat::load(): size mismatch between header and matrix");
       }
     }
   
@@ -4815,7 +4898,7 @@ inline
 bool
 SpMat<eT>::load(std::istream& is, const file_type type)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   invalidate_cache();
   
@@ -4845,7 +4928,7 @@ SpMat<eT>::load(std::istream& is, const file_type type)
       break;
     
     default:
-      arma_debug_warn_level(1, "SpMat::load(): unsupported file type");
+      arma_warn(1, "SpMat::load(): unsupported file type");
       load_okay = false;
     }
   
@@ -4853,11 +4936,11 @@ SpMat<eT>::load(std::istream& is, const file_type type)
     {
     if(err_msg.length() > 0)
       {
-      arma_debug_warn_level(3, "SpMat::load(): ", err_msg);
+      arma_warn(3, "SpMat::load(): ", err_msg);
       }
     else
       {
-      arma_debug_warn_level(3, "SpMat::load(): stream read failed");
+      arma_warn(3, "SpMat::load(): stream read failed");
       }
     }
   
@@ -4873,7 +4956,7 @@ inline
 bool
 SpMat<eT>::quiet_save(const std::string name, const file_type type) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return (*this).save(name, type);
   }
@@ -4885,7 +4968,7 @@ inline
 bool
 SpMat<eT>::quiet_save(std::ostream& os, const file_type type) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return (*this).save(os, type);
   }
@@ -4897,7 +4980,7 @@ inline
 bool
 SpMat<eT>::quiet_load(const std::string name, const file_type type)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return (*this).load(name, type);
   }
@@ -4909,7 +4992,7 @@ inline
 bool
 SpMat<eT>::quiet_load(std::istream& is, const file_type type)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return (*this).load(is, type);
   }
@@ -4924,7 +5007,7 @@ inline
 void
 SpMat<eT>::init(uword in_rows, uword in_cols, const uword new_n_nonzero)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   invalidate_cache(); // placed here, as init() is used during matrix modification
   
@@ -4952,7 +5035,7 @@ inline
 void
 SpMat<eT>::init_cold(uword in_rows, uword in_cols, const uword new_n_nonzero)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // Verify that we are allowed to do this.
   if(vec_state > 0)
@@ -4964,8 +5047,8 @@ SpMat<eT>::init_cold(uword in_rows, uword in_cols, const uword new_n_nonzero)
       }
     else
       {
-      if(vec_state == 1)  { arma_debug_check( (in_cols != 1), "SpMat::init(): object is a column vector; requested size is not compatible" ); }
-      if(vec_state == 2)  { arma_debug_check( (in_rows != 1), "SpMat::init(): object is a row vector; requested size is not compatible"    ); }
+      if(vec_state == 1)  { arma_conform_check( (in_cols != 1), "SpMat::init(): object is a column vector; requested size is not compatible" ); }
+      if(vec_state == 2)  { arma_conform_check( (in_rows != 1), "SpMat::init(): object is a row vector; requested size is not compatible"    ); }
       }
     }
   
@@ -4976,7 +5059,7 @@ SpMat<eT>::init_cold(uword in_rows, uword in_cols, const uword new_n_nonzero)
   #endif
   
   // Ensure that n_elem can hold the result of (n_rows * n_cols)
-  arma_debug_check
+  arma_conform_check
     (
       (
       ( (in_rows > ARMA_MAX_UHWORD) || (in_cols > ARMA_MAX_UHWORD) )
@@ -5014,7 +5097,7 @@ inline
 void
 SpMat<eT>::init(const std::string& text)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   Mat<eT> tmp(text);
   
@@ -5046,7 +5129,7 @@ inline
 void
 SpMat<eT>::init(const SpMat<eT>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if(this == &x)  { return; }
   
@@ -5062,7 +5145,7 @@ SpMat<eT>::init(const SpMat<eT>& x)
         init_done = true;
         }
       }
-  #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
+  #elif defined(ARMA_USE_STD_MUTEX)
     if(x.sync_state == 1)
       {
       const std::lock_guard<std::mutex> lock(x.cache_mutex);
@@ -5094,7 +5177,7 @@ inline
 void
 SpMat<eT>::init(const MapMat<eT>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword x_n_rows = x.n_rows;
   const uword x_n_cols = x.n_cols;
@@ -5187,7 +5270,7 @@ inline
 void
 SpMat<eT>::init_simple(const SpMat<eT>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if(this == &x)  { return; }
   
@@ -5215,7 +5298,7 @@ inline
 void
 SpMat<eT>::init_batch_std(const Mat<uword>& locs, const Mat<eT>& vals, const bool sort_locations)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // Resize to correct number of elements.
   mem_resize(vals.n_elem);
@@ -5280,7 +5363,7 @@ SpMat<eT>::init_batch_std(const Mat<uword>& locs, const Mat<eT>& vals, const boo
         const uword row_i = locs_i[0];
         const uword col_i = locs_i[1];
         
-        arma_debug_check( ( (row_i >= n_rows) || (col_i >= n_cols) ), "SpMat::SpMat(): invalid row or column index" );
+        arma_conform_check( ( (row_i >= n_rows) || (col_i >= n_cols) ), "SpMat::SpMat(): invalid row or column index" );
         
         if(i > 0)
           {
@@ -5291,7 +5374,7 @@ SpMat<eT>::init_batch_std(const Mat<uword>& locs, const Mat<eT>& vals, const boo
           const uword row_im1 = locs_im1[0];
           const uword col_im1 = locs_im1[1];
           
-          arma_debug_check( ( (row_i == row_im1) && (col_i == col_im1) ), "SpMat::SpMat(): detected identical locations" );
+          arma_conform_check( ( (row_i == row_im1) && (col_i == col_im1) ), "SpMat::SpMat(): detected identical locations" );
           }
         
         access::rw(values[i])      = vals[index];
@@ -5316,7 +5399,7 @@ SpMat<eT>::init_batch_std(const Mat<uword>& locs, const Mat<eT>& vals, const boo
       const uword row_i = locs_i[0];
       const uword col_i = locs_i[1];
       
-      arma_debug_check( ( (row_i >= n_rows) || (col_i >= n_cols) ), "SpMat::SpMat(): invalid row or column index" );
+      arma_conform_check( ( (row_i >= n_rows) || (col_i >= n_cols) ), "SpMat::SpMat(): invalid row or column index" );
       
       if(i > 0)
         {
@@ -5325,13 +5408,13 @@ SpMat<eT>::init_batch_std(const Mat<uword>& locs, const Mat<eT>& vals, const boo
         const uword row_im1 = locs_im1[0];
         const uword col_im1 = locs_im1[1];
         
-        arma_debug_check
+        arma_conform_check
           (
           ( (col_i < col_im1) || ((col_i == col_im1) && (row_i < row_im1)) ),
           "SpMat::SpMat(): out of order points; either pass sort_locations = true, or sort points in column-major ordering"
           );
         
-        arma_debug_check( ( (col_i == col_im1) && (row_i == row_im1) ), "SpMat::SpMat(): detected identical locations" );
+        arma_conform_check( ( (col_i == col_im1) && (row_i == row_im1) ), "SpMat::SpMat(): detected identical locations" );
         }
       
       access::rw(values[i])      = vals[i];
@@ -5355,7 +5438,7 @@ inline
 void
 SpMat<eT>::init_batch_add(const Mat<uword>& locs, const Mat<eT>& vals, const bool sort_locations)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if(locs.n_cols < 2)
     {
@@ -5420,7 +5503,7 @@ SpMat<eT>::init_batch_add(const Mat<uword>& locs, const Mat<eT>& vals, const boo
         const uword  i      = 0;
         const uword* locs_i = locs.colptr( sorted_indices[i] );
         
-        arma_debug_check( ( (locs_i[0] >= n_rows) || (locs_i[1] >= n_cols) ), "SpMat::SpMat(): invalid row or column index" );
+        arma_conform_check( ( (locs_i[0] >= n_rows) || (locs_i[1] >= n_cols) ), "SpMat::SpMat(): invalid row or column index" );
         
         access::rw(values[count])      = vals[ sorted_indices[i] ];
         access::rw(row_indices[count]) = locs_i[0];
@@ -5433,7 +5516,7 @@ SpMat<eT>::init_batch_add(const Mat<uword>& locs, const Mat<eT>& vals, const boo
         const uword* locs_i   = locs.colptr( sorted_indices[i  ] );
         const uword* locs_im1 = locs.colptr( sorted_indices[i-1] );
         
-        arma_debug_check( ( (locs_i[0] >= n_rows) || (locs_i[1] >= n_cols) ), "SpMat::SpMat(): invalid row or column index" );
+        arma_conform_check( ( (locs_i[0] >= n_rows) || (locs_i[1] >= n_cols) ), "SpMat::SpMat(): invalid row or column index" );
         
         if( (locs_i[1] == locs_im1[1]) && (locs_i[0] == locs_im1[0]) )
           {
@@ -5477,7 +5560,7 @@ SpMat<eT>::init_batch_add(const Mat<uword>& locs, const Mat<eT>& vals, const boo
       const uword  i      = 0;
       const uword* locs_i = locs.colptr(i);
       
-      arma_debug_check( ( (locs_i[0] >= n_rows) || (locs_i[1] >= n_cols) ), "SpMat::SpMat(): invalid row or column index" );
+      arma_conform_check( ( (locs_i[0] >= n_rows) || (locs_i[1] >= n_cols) ), "SpMat::SpMat(): invalid row or column index" );
       
       access::rw(values[count])      = vals[i];
       access::rw(row_indices[count]) = locs_i[0];
@@ -5490,9 +5573,9 @@ SpMat<eT>::init_batch_add(const Mat<uword>& locs, const Mat<eT>& vals, const boo
       const uword* locs_i   = locs.colptr(i  );
       const uword* locs_im1 = locs.colptr(i-1);
       
-      arma_debug_check( ( (locs_i[0] >= n_rows) || (locs_i[1] >= n_cols) ), "SpMat::SpMat(): invalid row or column index" );
+      arma_conform_check( ( (locs_i[0] >= n_rows) || (locs_i[1] >= n_cols) ), "SpMat::SpMat(): invalid row or column index" );
       
-      arma_debug_check
+      arma_conform_check
         (
         ( (locs_i[1] < locs_im1[1]) || (locs_i[1] == locs_im1[1]  &&  locs_i[0] < locs_im1[0]) ),
         "SpMat::SpMat(): out of order points; either pass sort_locations = true, or sort points in column-major ordering"
@@ -5536,7 +5619,7 @@ SpMat<eT>::SpMat(const arma_vec_indicator&, const uword in_vec_state)
   , row_indices(nullptr)
   , col_ptrs(nullptr)
   {
-  arma_extra_debug_sigprint_this(this);
+  arma_debug_sigprint_this(this);
   
   const uword in_n_rows = (in_vec_state == 2) ? 1 : 0;
   const uword in_n_cols = (in_vec_state == 1) ? 1 : 0;
@@ -5559,7 +5642,7 @@ SpMat<eT>::SpMat(const arma_vec_indicator&, const uword in_n_rows, const uword i
   , row_indices(nullptr)
   , col_ptrs(nullptr)
   {
-  arma_extra_debug_sigprint_this(this);
+  arma_debug_sigprint_this(this);
   
   init_cold(in_n_rows, in_n_cols);
   }
@@ -5571,7 +5654,7 @@ inline
 void
 SpMat<eT>::mem_resize(const uword new_n_nonzero)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   invalidate_cache();  // placed here, as mem_resize() is used during matrix modification
   
@@ -5610,7 +5693,7 @@ inline
 void
 SpMat<eT>::sync() const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   }
@@ -5622,7 +5705,7 @@ inline
 void
 SpMat<eT>::remove_zeros()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -5684,7 +5767,7 @@ inline
 void
 SpMat<eT>::steal_mem(SpMat<eT>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if(this == &x)  { return; }
   
@@ -5702,7 +5785,7 @@ SpMat<eT>::steal_mem(SpMat<eT>& x)
   
   if(layout_ok)
     {
-    arma_extra_debug_print("SpMat::steal_mem(): stealing memory");
+    arma_debug_print("SpMat::steal_mem(): stealing memory");
     
     x.sync_csc();
     
@@ -5714,7 +5797,7 @@ SpMat<eT>::steal_mem(SpMat<eT>& x)
     }
   else
     {
-    arma_extra_debug_print("SpMat::steal_mem(): copying memory");
+    arma_debug_print("SpMat::steal_mem(): copying memory");
     
     (*this).operator=(x);
     }
@@ -5727,7 +5810,7 @@ inline
 void
 SpMat<eT>::steal_mem_simple(SpMat<eT>& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if(this == &x)  { return; }
   
@@ -5763,7 +5846,7 @@ inline
 void
 SpMat<eT>::init_xform(const SpBase<eT,T1>& A, const Functor& func)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // if possible, avoid doing a copy and instead apply func to the generated elements
   if(SpProxy<T1>::Q_is_generated)
@@ -5801,7 +5884,7 @@ inline
 void
 SpMat<eT>::init_xform_mt(const SpBase<eT2,T1>& A, const Functor& func)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const SpProxy<T1> P(A.get_ref());
   
@@ -5892,7 +5975,7 @@ inline
 typename SpMat<eT>::iterator
 SpMat<eT>::begin()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -5906,7 +5989,7 @@ inline
 typename SpMat<eT>::const_iterator
 SpMat<eT>::begin() const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -5920,7 +6003,7 @@ inline
 typename SpMat<eT>::const_iterator
 SpMat<eT>::cbegin() const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   
@@ -6207,7 +6290,7 @@ arma_inline
 SpMat_MapMat_val<eT>
 SpMat<eT>::front()
   {
-  arma_debug_check( (n_elem == 0), "SpMat::front(): matrix is empty" );
+  arma_conform_check( (n_elem == 0), "SpMat::front(): matrix is empty" );
   
   return SpMat_MapMat_val<eT>((*this), cache, 0, 0);
   }
@@ -6219,7 +6302,7 @@ arma_inline
 eT
 SpMat<eT>::front() const
   {
-  arma_debug_check( (n_elem == 0), "SpMat::front(): matrix is empty" );
+  arma_conform_check( (n_elem == 0), "SpMat::front(): matrix is empty" );
   
   return get_value(0,0);
   }
@@ -6231,7 +6314,7 @@ arma_inline
 SpMat_MapMat_val<eT>
 SpMat<eT>::back()
   {
-  arma_debug_check( (n_elem == 0), "SpMat::back(): matrix is empty" );
+  arma_conform_check( (n_elem == 0), "SpMat::back(): matrix is empty" );
   
   return SpMat_MapMat_val<eT>((*this), cache, n_rows-1, n_cols-1);
   }
@@ -6243,7 +6326,7 @@ arma_inline
 eT
 SpMat<eT>::back() const
   {
-  arma_debug_check( (n_elem == 0), "SpMat::back(): matrix is empty" );
+  arma_conform_check( (n_elem == 0), "SpMat::back(): matrix is empty" );
   
   return get_value(n_rows-1, n_cols-1);
   }
@@ -6458,7 +6541,7 @@ inline
 eT&
 SpMat<eT>::insert_element(const uword in_row, const uword in_col, const eT val)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   invalidate_cache();
@@ -6545,7 +6628,7 @@ inline
 void
 SpMat<eT>::delete_element(const uword in_row, const uword in_col)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_csc();
   invalidate_cache();
@@ -6607,7 +6690,7 @@ arma_inline
 void
 SpMat<eT>::invalidate_cache() const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if(sync_state == 0)  { return; }
   
@@ -6623,7 +6706,7 @@ arma_inline
 void
 SpMat<eT>::invalidate_csc() const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sync_state = 1;
   }
@@ -6635,7 +6718,7 @@ inline
 void
 SpMat<eT>::sync_cache() const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // using approach adapted from http://preshing.com/20130930/double-checked-locking-is-fixed-in-cpp11/
   // 
@@ -6659,7 +6742,7 @@ SpMat<eT>::sync_cache() const
         }
       }
     }
-  #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
+  #elif defined(ARMA_USE_STD_MUTEX)
     {
     if(sync_state == 0)
       {
@@ -6683,7 +6766,7 @@ inline
 void
 SpMat<eT>::sync_cache_simple() const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if(sync_state == 0)
     {
@@ -6700,7 +6783,7 @@ inline
 void
 SpMat<eT>::sync_csc() const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   #if defined(ARMA_USE_OPENMP)
     if(sync_state == 1)
@@ -6710,7 +6793,7 @@ SpMat<eT>::sync_csc() const
         sync_csc_simple();
         }
       }
-  #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
+  #elif defined(ARMA_USE_STD_MUTEX)
     if(sync_state == 1)
       {
       const std::lock_guard<std::mutex> lock(cache_mutex);
@@ -6731,7 +6814,7 @@ inline
 void
 SpMat<eT>::sync_csc_simple() const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // method:
   // 1. construct temporary matrix to prevent the cache from getting zapped
@@ -6767,12 +6850,12 @@ inline
 void
 SpMat_aux::set_real(SpMat<eT>& out, const SpBase<eT,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const unwrap_spmat<T1> tmp(X.get_ref());
   const SpMat<eT>&   A = tmp.M;
   
-  arma_debug_assert_same_size( out, A, "SpMat::set_real()" );
+  arma_conform_assert_same_size( out, A, "SpMat::set_real()" );
   
   out = A;
   }
@@ -6784,7 +6867,7 @@ inline
 void
 SpMat_aux::set_imag(SpMat<eT>&, const SpBase<eT,T1>&)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   }
 
 
@@ -6794,14 +6877,14 @@ inline
 void
 SpMat_aux::set_real(SpMat< std::complex<T> >& out, const SpBase<T,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename std::complex<T> eT;
   
   const unwrap_spmat<T1> U(X.get_ref());
   const SpMat<T>&    Y = U.M;
   
-  arma_debug_assert_same_size(out, Y, "SpMat::set_real()");
+  arma_conform_assert_same_size(out, Y, "SpMat::set_real()");
   
   SpMat<eT> tmp(Y,arma::imag(out));  // arma:: prefix required due to bugs in GCC 4.4 - 4.6
   
@@ -6815,14 +6898,14 @@ inline
 void
 SpMat_aux::set_imag(SpMat< std::complex<T> >& out, const SpBase<T,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename std::complex<T> eT;
   
   const unwrap_spmat<T1> U(X.get_ref());
   const SpMat<T>&    Y = U.M;
   
-  arma_debug_assert_same_size(out, Y, "SpMat::set_imag()");
+  arma_conform_assert_same_size(out, Y, "SpMat::set_imag()");
   
   SpMat<eT> tmp(arma::real(out),Y);  // arma:: prefix required due to bugs in GCC 4.4 - 4.6
   

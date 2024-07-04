@@ -27,19 +27,19 @@ inline
 obj_type
 randi(const uword n_rows, const uword n_cols, const distr_param& param = distr_param(), const typename arma_Mat_Col_Row_only<obj_type>::result* junk = nullptr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename obj_type::elem_type eT;
   
   if(is_Col<obj_type>::value)
     {
-    arma_debug_check( (n_cols != 1), "randi(): incompatible size" );
+    arma_conform_check( (n_cols != 1), "randi(): incompatible size" );
     }
   else
   if(is_Row<obj_type>::value)
     {
-    arma_debug_check( (n_rows != 1), "randi(): incompatible size" );
+    arma_conform_check( (n_rows != 1), "randi(): incompatible size" );
     }
   
   int a = 0;
@@ -47,7 +47,7 @@ randi(const uword n_rows, const uword n_cols, const distr_param& param = distr_p
   
   param.get_int_vals(a,b);
   
-  arma_debug_check( (a > b), "randi(): incorrect distribution parameters; a must be less than b" );
+  arma_conform_check( (a > b), "randi(): incorrect distribution parameters; a must be less than b" );
   
   obj_type out(n_rows, n_cols, arma_nozeros_indicator());
   
@@ -64,7 +64,7 @@ inline
 obj_type
 randi(const SizeMat& s, const distr_param& param = distr_param(), const typename arma_Mat_Col_Row_only<obj_type>::result* junk = nullptr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   return randi<obj_type>(s.n_rows, s.n_cols, param);
@@ -78,7 +78,7 @@ inline
 obj_type
 randi(const uword n_elem, const distr_param& param = distr_param(), const arma_empty_class junk1 = arma_empty_class(), const typename arma_Mat_Col_Row_only<obj_type>::result* junk2 = nullptr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk1);
   arma_ignore(junk2);
   
@@ -99,7 +99,7 @@ inline
 imat
 randi(const uword n_rows, const uword n_cols, const distr_param& param = distr_param())
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return randi<imat>(n_rows, n_cols, param);
   }
@@ -111,7 +111,7 @@ inline
 imat
 randi(const SizeMat& s, const distr_param& param = distr_param())
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return randi<imat>(s.n_rows, s.n_cols, param);
   }
@@ -123,7 +123,7 @@ inline
 ivec
 randi(const uword n_elem, const distr_param& param = distr_param())
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return randi<ivec>(n_elem, uword(1), param);
   }
@@ -135,14 +135,14 @@ inline
 sword
 randi(const distr_param& param)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   int a = 0;
   int b = arma_rng::randi<sword>::max_val();
   
   param.get_int_vals(a,b);
   
-  arma_debug_check( (a > b), "randi(): incorrect distribution parameters; a must be less than b" );
+  arma_conform_check( (a > b), "randi(): incorrect distribution parameters; a must be less than b" );
   
   sword out_val = sword(0);
   
@@ -159,14 +159,14 @@ inline
 typename arma_scalar_only<eT>::result
 randi(const distr_param& param)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   int a = 0;
   int b = arma_rng::randi<eT>::max_val();
   
   param.get_int_vals(a,b);
   
-  arma_debug_check( (a > b), "randi(): incorrect distribution parameters; a must be less than b" );
+  arma_conform_check( (a > b), "randi(): incorrect distribution parameters; a must be less than b" );
   
   eT out_val = eT(0);
   
@@ -182,7 +182,7 @@ inline
 sword
 randi()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return sword( arma_rng::randi<sword>() );
   }
@@ -195,7 +195,7 @@ inline
 typename arma_scalar_only<eT>::result
 randi()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return eT( arma_rng::randi<eT>() );
   }
@@ -208,7 +208,7 @@ inline
 cube_type
 randi(const uword n_rows, const uword n_cols, const uword n_slices, const distr_param& param = distr_param(), const typename arma_Cube_only<cube_type>::result* junk = nullptr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename cube_type::elem_type eT;
@@ -218,7 +218,7 @@ randi(const uword n_rows, const uword n_cols, const uword n_slices, const distr_
   
   param.get_int_vals(a,b);
   
-  arma_debug_check( (a > b), "randi(): incorrect distribution parameters; a must be less than b" );
+  arma_conform_check( (a > b), "randi(): incorrect distribution parameters; a must be less than b" );
   
   cube_type out(n_rows, n_cols, n_slices, arma_nozeros_indicator());
   
@@ -235,7 +235,7 @@ inline
 cube_type
 randi(const SizeCube& s, const distr_param& param = distr_param(), const typename arma_Cube_only<cube_type>::result* junk = nullptr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   return randi<cube_type>(s.n_rows, s.n_cols, s.n_slices, param);
@@ -248,7 +248,7 @@ inline
 icube
 randi(const uword n_rows, const uword n_cols, const uword n_slices, const distr_param& param = distr_param())
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return randi<icube>(n_rows, n_cols, n_slices, param);
   }
@@ -260,7 +260,7 @@ inline
 icube
 randi(const SizeCube& s, const distr_param& param = distr_param())
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return randi<icube>(s.n_rows, s.n_cols, s.n_slices, param);
   }

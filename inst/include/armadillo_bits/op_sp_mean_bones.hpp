@@ -16,43 +16,43 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup spop_mean
+//! \addtogroup op_sp_mean
 //! @{
 
 
 //! Class for finding mean values of a sparse matrix
-class spop_mean
+class op_sp_mean
   : public traits_op_xvec
   {
   public:
-
+  
   // Apply mean into an output sparse matrix (or vector).
   template<typename T1>
-  inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_mean>& in);
-
-  template<typename T1>
-  inline static void apply_noalias_fast(SpMat<typename T1::elem_type>& out, const SpProxy<T1>& p, const uword dim);
+  inline static void apply(Mat<typename T1::elem_type>& out, const mtSpReduceOp<typename T1::elem_type, T1, op_sp_mean>& in);
   
   template<typename T1>
-  inline static void apply_noalias_slow(SpMat<typename T1::elem_type>& out, const SpProxy<T1>& p, const uword dim);
+  inline static void apply_fast(Mat<typename T1::elem_type>& out, const SpProxy<T1>& p, const uword dim);
+  
+  template<typename T1>
+  inline static void apply_slow(Mat<typename T1::elem_type>& out, const SpProxy<T1>& p, const uword dim);
   
   // Take direct mean of a set of values.  Length of array and number of values can be different.
   template<typename eT>
   inline static eT direct_mean(const eT* const X, const uword length, const uword N);
-
+  
   template<typename eT>
   inline static eT direct_mean_robust(const eT* const X, const uword length, const uword N);
-
+  
   template<typename T1>
   inline static typename T1::elem_type mean_all(const SpBase<typename T1::elem_type, T1>& X);
-
+  
   template<typename T1, typename spop_type>
   inline static typename T1::elem_type mean_all(const SpOp<T1, spop_type>& expr);
-
+  
   // Take the mean using an iterator.
   template<typename T1, typename eT>
   inline static eT iterator_mean(T1& it, const T1& end, const uword n_zero, const eT junk);
-
+  
   template<typename T1, typename eT>
   inline static eT iterator_mean_robust(T1& it, const T1& end, const uword n_zero, const eT junk);
   };

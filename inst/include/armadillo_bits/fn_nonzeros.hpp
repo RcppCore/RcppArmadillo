@@ -26,7 +26,7 @@ inline
 const Op<T1,op_nonzeros>
 nonzeros(const Base<typename T1::elem_type,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1,op_nonzeros>(X.get_ref());
   }
@@ -36,12 +36,12 @@ nonzeros(const Base<typename T1::elem_type,T1>& X)
 template<typename T1>
 arma_warn_unused
 inline
-const SpToDOp<T1, op_nonzeros_spmat>
+const SpToDOp<T1, op_sp_nonzeros>
 nonzeros(const SpBase<typename T1::elem_type,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  return SpToDOp<T1, op_nonzeros_spmat>(X.get_ref());
+  return SpToDOp<T1, op_sp_nonzeros>(X.get_ref());
   }
 
 

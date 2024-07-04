@@ -33,7 +33,7 @@ SparseGenRealShiftSolve<eT>::SparseGenRealShiftSolve(const SpMat<eT>& mat_obj, c
     , n_cols(0)
   #endif
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   #if defined(ARMA_USE_SUPERLU)
     {
@@ -61,14 +61,14 @@ SparseGenRealShiftSolve<eT>::SparseGenRealShiftSolve(const SpMat<eT>& mat_obj, c
     
     superlu_stat_wrangler stat;
     
-    arma_extra_debug_print("superlu::gstrf()");
+    arma_debug_print("superlu::gstrf()");
     superlu::get_permutation_c(options.ColPerm, x.get_ptr(), perm_c.get_ptr());
     superlu::sp_preorder_mat(&options, x.get_ptr(), perm_c.get_ptr(), etree.get_ptr(), xC.get_ptr());
     superlu::gstrf<eT>(&options, xC.get_ptr(), relax, panel_size, etree.get_ptr(), NULL, lwork, perm_c.get_ptr(), perm_r.get_ptr(), l.get_ptr(), u.get_ptr(), &Glu, stat.get_ptr(), &slu_info);
     
     if(slu_info != 0)
       {
-      arma_debug_warn_level(2, "matrix is singular to working precision");
+      arma_warn(2, "matrix is singular to working precision");
       return;
       }
     
@@ -77,8 +77,8 @@ SparseGenRealShiftSolve<eT>::SparseGenRealShiftSolve(const SpMat<eT>& mat_obj, c
     
     if( (x_rcond < std::numeric_limits<eT>::epsilon()) || arma_isnan(x_rcond) )
       {
-      if(x_rcond == eT(0))  { arma_debug_warn_level(2, "matrix is singular to working precision");                        }
-      else                  { arma_debug_warn_level(2, "matrix is singular to working precision (rcond: ", x_rcond, ")"); }
+      if(x_rcond == eT(0))  { arma_warn(2, "matrix is singular to working precision");                        }
+      else                  { arma_warn(2, "matrix is singular to working precision (rcond: ", x_rcond, ")"); }
       return;
       }
     
@@ -101,7 +101,7 @@ inline
 void
 SparseGenRealShiftSolve<eT>::perform_op(eT* x_in, eT* y_out) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   #if defined(ARMA_USE_SUPERLU)
     {
@@ -119,7 +119,7 @@ SparseGenRealShiftSolve<eT>::perform_op(eT* x_in, eT* y_out) const
     superlu_stat_wrangler stat;
     int info = 0;
     
-    arma_extra_debug_print("superlu::gstrs()");
+    arma_debug_print("superlu::gstrs()");
     superlu::gstrs<eT>(superlu::NOTRANS, l.get_ptr(), u.get_ptr(), perm_c.get_ptr(), perm_r.get_ptr(), out_slu.get_ptr(), stat.get_ptr(), &info);
     
     if(info != 0)  { arma_stop_runtime_error("newarp::SparseGenRealShiftSolve::perform_op(): could not solve linear equation"); return; }

@@ -26,18 +26,14 @@ class op_sp_minus_pre
   : public traits_op_passthru
   {
   public:
-
+  
   template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const SpToDOp<T1,op_sp_minus_pre>& in);
-
-  // force apply into sparse matrix
-  template<typename T1>
-  inline static void apply(SpMat<typename T1::elem_type>& out, const SpToDOp<T1,op_sp_minus_pre>& in);
-
+  
   // used for the optimization of sparse % (scalar - sparse)
   template<typename eT, typename T2, typename T3>
   inline static void apply_inside_schur(SpMat<eT>& out, const T2& x, const SpToDOp<T3, op_sp_minus_pre>& y);
-
+  
   // used for the optimization of sparse / (scalar - sparse)
   template<typename eT, typename T2, typename T3>
   inline static void apply_inside_div(SpMat<eT>& out, const T2& x, const SpToDOp<T3, op_sp_minus_pre>& y);
@@ -50,18 +46,14 @@ class op_sp_minus_post
   : public traits_op_passthru
   {
   public:
-
+  
   template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const SpToDOp<T1,op_sp_minus_post>& in);
-
-  // force apply into sparse matrix
-  template<typename T1>
-  inline static void apply(SpMat<typename T1::elem_type>& out, const SpToDOp<T1,op_sp_minus_post>& in);
-
+  
   // used for the optimization of sparse % (sparse - scalar)
   template<typename eT, typename T2, typename T3>
   inline static void apply_inside_schur(SpMat<eT>& out, const T2& x, const SpToDOp<T3, op_sp_minus_post>& y);
-
+  
   // used for the optimization of sparse / (sparse - scalar)
   template<typename eT, typename T2, typename T3>
   inline static void apply_inside_div(SpMat<eT>& out, const T2& x, const SpToDOp<T3, op_sp_minus_post>& y);

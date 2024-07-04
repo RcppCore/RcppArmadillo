@@ -26,7 +26,7 @@ inline
 SpRow<eT>::SpRow()
   : SpMat<eT>(arma_vec_indicator(), 2)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   }
 
 
@@ -36,7 +36,7 @@ inline
 SpRow<eT>::SpRow(const uword in_n_elem)
   : SpMat<eT>(arma_vec_indicator(), 1, in_n_elem, 2)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   }
 
 
@@ -46,7 +46,7 @@ inline
 SpRow<eT>::SpRow(const uword in_n_rows, const uword in_n_cols)
   : SpMat<eT>(arma_vec_indicator(), in_n_rows, in_n_cols, 2)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   }
 
 
@@ -56,7 +56,7 @@ inline
 SpRow<eT>::SpRow(const SizeMat& s)
   : SpMat<eT>(arma_vec_indicator(), 0, 0, 2)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   SpMat<eT>::init(s.n_rows, s.n_cols);
   }
@@ -68,7 +68,7 @@ inline
 SpRow<eT>::SpRow(const char* text)
   : SpMat<eT>(arma_vec_indicator(), 2)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   SpMat<eT>::init(std::string(text));
   }
@@ -80,7 +80,7 @@ inline
 SpRow<eT>&
 SpRow<eT>::operator=(const char* text)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   SpMat<eT>::init(std::string(text));
   
@@ -94,7 +94,7 @@ inline
 SpRow<eT>::SpRow(const std::string& text)
   : SpMat<eT>(arma_vec_indicator(), 2)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   SpMat<eT>::init(text);
   }
@@ -106,7 +106,7 @@ inline
 SpRow<eT>&
 SpRow<eT>::operator=(const std::string& text)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   SpMat<eT>::init(text);
   
@@ -120,7 +120,7 @@ inline
 SpRow<eT>&
 SpRow<eT>::operator=(const eT val)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   SpMat<eT>::operator=(val);
   
@@ -135,10 +135,24 @@ inline
 SpRow<eT>::SpRow(const Base<eT,T1>& X)
   : SpMat<eT>(arma_vec_indicator(), 2)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   SpMat<eT>::operator=(X.get_ref());
   }
+
+
+
+
+template<typename eT>
+inline
+SpRow<eT>::SpRow(const Row<eT>& X)
+  : SpMat<eT>(arma_vec_indicator(), 2)
+  {
+  arma_debug_sigprint();
+  
+  SpMat<eT>::operator=(X);
+  }
+
 
 
 
@@ -148,7 +162,7 @@ inline
 SpRow<eT>&
 SpRow<eT>::operator=(const Base<eT,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   SpMat<eT>::operator=(X.get_ref());
   
@@ -163,7 +177,7 @@ inline
 SpRow<eT>::SpRow(const SpBase<eT,T1>& X)
   : SpMat<eT>(arma_vec_indicator(), 2)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   SpMat<eT>::operator=(X.get_ref());
   }
@@ -176,7 +190,7 @@ inline
 SpRow<eT>&
 SpRow<eT>::operator=(const SpBase<eT,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   SpMat<eT>::operator=(X.get_ref());
   
@@ -195,7 +209,7 @@ SpRow<eT>::SpRow
   )
   : SpMat<eT>(arma_vec_indicator(), 2)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   SpMat<eT>::init(A,B);
   }
@@ -232,15 +246,25 @@ SpRow<eT>::st() const
 
 
 
+template<typename eT>
+inline
+const SpToDOp<SpRow<eT>,op_sp_as_dense>
+SpRow<eT>::as_dense() const
+  {
+  return SpToDOp<SpRow<eT>,op_sp_as_dense>(*this);
+  }
+
+
+
 //! remove specified columns
 template<typename eT>
 inline
 void
 SpRow<eT>::shed_col(const uword col_num)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check_bounds( col_num >= SpMat<eT>::n_cols, "SpRow::shed_col(): out of bounds" );
+  arma_conform_check_bounds( col_num >= SpMat<eT>::n_cols, "SpRow::shed_col(): out of bounds" );
   
   shed_cols(col_num, col_num);
   }
@@ -253,9 +277,9 @@ inline
 void
 SpRow<eT>::shed_cols(const uword in_col1, const uword in_col2)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check_bounds
+  arma_conform_check_bounds
     (
     (in_col1 > in_col2) || (in_col2 >= SpMat<eT>::n_cols),
     "SpRow::shed_cols(): indices out of bounds or incorrectly used"
@@ -335,12 +359,12 @@ SpRow<eT>::shed_cols(const uword in_col1, const uword in_col2)
 // void
 // SpRow<eT>::insert_cols(const uword col_num, const uword N, const bool set_to_zero)
 //   {
-//   arma_extra_debug_sigprint();
+//   arma_debug_sigprint();
 // 
 //   // insertion at col_num == n_cols is in effect an append operation
-//   arma_debug_check_bounds( (col_num > SpMat<eT>::n_cols), "SpRow::insert_cols(): out of bounds" );
+//   arma_conform_check_bounds( (col_num > SpMat<eT>::n_cols), "SpRow::insert_cols(): out of bounds" );
 // 
-//   arma_debug_check( (set_to_zero == false), "SpRow::insert_cols(): cannot set elements to nonzero values" );
+//   arma_conform_check( (set_to_zero == false), "SpRow::insert_cols(): cannot set elements to nonzero values" );
 // 
 //   uword newVal = (col_num == 0) ? 0 : SpMat<eT>::col_ptrs[col_num];
 //   SpMat<eT>::col_ptrs.insert(col_num, N, newVal);
@@ -364,11 +388,11 @@ inline
 typename SpRow<eT>::row_iterator
 SpRow<eT>::begin_row(const uword row_num)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
 
   // Since this is a row, row_num can only be 0.  But the option is provided for
   // compatibility.
-  arma_debug_check_bounds((row_num >= 1), "SpRow::begin_row(): index out of bounds");
+  arma_conform_check_bounds((row_num >= 1), "SpRow::begin_row(): index out of bounds");
   
   return SpMat<eT>::begin();
   }
@@ -380,11 +404,11 @@ inline
 typename SpRow<eT>::const_row_iterator
 SpRow<eT>::begin_row(const uword row_num) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // Since this is a row, row_num can only be 0.  But the option is provided for
   // compatibility.
-  arma_debug_check_bounds((row_num >= 1), "SpRow::begin_row(): index out of bounds");
+  arma_conform_check_bounds((row_num >= 1), "SpRow::begin_row(): index out of bounds");
   
   return SpMat<eT>::begin();
   }
@@ -396,11 +420,11 @@ inline
 typename SpRow<eT>::row_iterator
 SpRow<eT>::end_row(const uword row_num)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // Since this is a row, row_num can only be 0.  But the option is provided for
   // compatibility.
-  arma_debug_check_bounds((row_num >= 1), "SpRow::end_row(): index out of bounds");
+  arma_conform_check_bounds((row_num >= 1), "SpRow::end_row(): index out of bounds");
   
   return SpMat<eT>::end();
   }
@@ -412,11 +436,11 @@ inline
 typename SpRow<eT>::const_row_iterator
 SpRow<eT>::end_row(const uword row_num) const
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // Since this is a row, row_num can only be 0.  But the option is provided for
   // compatibility.
-  arma_debug_check_bounds((row_num >= 1), "SpRow::end_row(): index out of bounds");
+  arma_conform_check_bounds((row_num >= 1), "SpRow::end_row(): index out of bounds");
   
   return SpMat<eT>::end();
   }

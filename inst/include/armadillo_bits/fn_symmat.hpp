@@ -26,7 +26,7 @@ arma_inline
 typename enable_if2< is_cx<typename T1::elem_type>::no, const Op<T1, op_symmatu> >::result
 symmatu(const Base<typename T1::elem_type,T1>& X, const bool do_conj = false)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(do_conj);
   
   return Op<T1, op_symmatu>(X.get_ref());
@@ -40,7 +40,7 @@ arma_inline
 typename enable_if2< is_cx<typename T1::elem_type>::no, const Op<T1, op_symmatl> >::result
 symmatl(const Base<typename T1::elem_type,T1>& X, const bool do_conj = false)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(do_conj);
   
   return Op<T1, op_symmatl>(X.get_ref());
@@ -54,7 +54,7 @@ arma_inline
 typename enable_if2< is_cx<typename T1::elem_type>::yes, const Op<T1, op_symmatu_cx> >::result
 symmatu(const Base<typename T1::elem_type,T1>& X, const bool do_conj = true)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_symmatu_cx>(X.get_ref(), 0, (do_conj ? 1 : 0));
   }
@@ -67,7 +67,7 @@ arma_inline
 typename enable_if2< is_cx<typename T1::elem_type>::yes, const Op<T1, op_symmatl_cx> >::result
 symmatl(const Base<typename T1::elem_type,T1>& X, const bool do_conj = true)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_symmatl_cx>(X.get_ref(), 0, (do_conj ? 1 : 0));
   }
@@ -84,7 +84,7 @@ arma_inline
 typename enable_if2< is_cx<typename T1::elem_type>::no, const SpOp<T1, spop_symmat> >::result
 symmatu(const SpBase<typename T1::elem_type,T1>& X, const bool do_conj = false)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(do_conj);
   
   return SpOp<T1, spop_symmat>(X.get_ref(), 0, 0);
@@ -98,7 +98,7 @@ arma_inline
 typename enable_if2< is_cx<typename T1::elem_type>::no, const SpOp<T1, spop_symmat> >::result
 symmatl(const SpBase<typename T1::elem_type,T1>& X, const bool do_conj = false)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(do_conj);
   
   return SpOp<T1, spop_symmat>(X.get_ref(), 1, 0);
@@ -112,7 +112,7 @@ arma_inline
 typename enable_if2< is_cx<typename T1::elem_type>::yes, const SpOp<T1, spop_symmat_cx> >::result
 symmatu(const SpBase<typename T1::elem_type,T1>& X, const bool do_conj = true)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return SpOp<T1, spop_symmat_cx>(X.get_ref(), 0, (do_conj ? 1 : 0));
   }
@@ -125,7 +125,7 @@ arma_inline
 typename enable_if2< is_cx<typename T1::elem_type>::yes, const SpOp<T1, spop_symmat_cx> >::result
 symmatl(const SpBase<typename T1::elem_type,T1>& X, const bool do_conj = true)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return SpOp<T1, spop_symmat_cx>(X.get_ref(), 1, (do_conj ? 1 : 0));
   }

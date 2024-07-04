@@ -27,7 +27,7 @@ inline
 bool
 op_rank::apply(uword& out, const Base<typename T1::elem_type,T1>& expr, const typename T1::pod_type tol)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -37,7 +37,7 @@ op_rank::apply(uword& out, const Base<typename T1::elem_type,T1>& expr, const ty
   
   if(is_op_diagmat<T1>::value || A.is_diagmat())
     {
-    arma_extra_debug_print("op_rank::apply(): detected diagonal matrix");
+    arma_debug_print("op_rank::apply(): detected diagonal matrix");
     
     return op_rank::apply_diag(out, A, tol);
     }
@@ -63,7 +63,7 @@ op_rank::apply(uword& out, const Base<typename T1::elem_type,T1>& expr, const ty
   
   if(do_sym)
     {
-    arma_extra_debug_print("op_rank::apply(): symmetric/hermitian optimisation");
+    arma_debug_print("op_rank::apply(): symmetric/hermitian optimisation");
     
     return op_rank::apply_sym(out, A, tol);
     }
@@ -78,7 +78,7 @@ inline
 bool
 op_rank::apply_diag(uword& out, Mat<eT>& A, typename get_pod_type<eT>::result tol)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename get_pod_type<eT>::result T;
   
@@ -119,7 +119,7 @@ inline
 bool
 op_rank::apply_sym(uword& out, Mat<eT>& A, typename get_pod_type<eT>::result tol)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename get_pod_type<eT>::result T;
   
@@ -159,7 +159,7 @@ inline
 bool
 op_rank::apply_gen(uword& out, Mat<eT>& A, typename get_pod_type<eT>::result tol)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename get_pod_type<eT>::result T;
   

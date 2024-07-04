@@ -30,7 +30,7 @@ hess
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
@@ -50,7 +50,7 @@ hess
   if(status == false)
     {
     H.soft_reset();
-    arma_debug_warn_level(3, "hess(): decomposition failed");
+    arma_warn(3, "hess(): decomposition failed");
     }
   
   return status;
@@ -68,7 +68,7 @@ hess
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
@@ -108,10 +108,10 @@ hess
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
-  arma_debug_check( void_ptr(&U) == void_ptr(&H), "hess(): 'U' is an alias of 'H'" );
+  arma_conform_check( void_ptr(&U) == void_ptr(&H), "hess(): 'U' is an alias of 'H'" );
   
   typedef typename T1::elem_type eT;
   
@@ -163,7 +163,7 @@ hess
     {
     U.soft_reset();
     H.soft_reset();
-    arma_debug_warn_level(3, "hess(): decomposition failed");
+    arma_warn(3, "hess(): decomposition failed");
     }
   
   return status;

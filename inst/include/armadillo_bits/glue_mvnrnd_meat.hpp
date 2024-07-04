@@ -32,7 +32,7 @@ inline
 void
 glue_mvnrnd_vec::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_mvnrnd_vec>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const bool status = glue_mvnrnd::apply_direct(out, expr.A, expr.B, uword(1));
   
@@ -50,7 +50,7 @@ inline
 void
 glue_mvnrnd::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_mvnrnd>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const bool status = glue_mvnrnd::apply_direct(out, expr.A, expr.B, expr.aux_uword);
   
@@ -68,16 +68,16 @@ inline
 bool
 glue_mvnrnd::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& M, const Base<typename T1::elem_type,T2>& C, const uword N)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
   const quasi_unwrap<T1> UM(M.get_ref());
   const quasi_unwrap<T2> UC(C.get_ref());
   
-  arma_debug_check( (UM.M.is_colvec() == false) && (UM.M.is_empty() == false),  "mvnrnd(): given mean must be a column vector"     );
-  arma_debug_check( (UC.M.is_square() == false),  "mvnrnd(): given covariance matrix must be square sized"                         );
-  arma_debug_check( (UM.M.n_rows != UC.M.n_rows), "mvnrnd(): number of rows in given mean vector and covariance matrix must match" );
+  arma_conform_check( (UM.M.is_colvec() == false) && (UM.M.is_empty() == false),  "mvnrnd(): given mean must be a column vector"     );
+  arma_conform_check( (UC.M.is_square() == false),  "mvnrnd(): given covariance matrix must be square sized"                         );
+  arma_conform_check( (UM.M.n_rows != UC.M.n_rows), "mvnrnd(): number of rows in given mean vector and covariance matrix must match" );
   
   if( UM.M.is_empty() || UC.M.is_empty() )
     {
@@ -85,9 +85,9 @@ glue_mvnrnd::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename 
     return true;
     }
   
-  if((arma_config::debug) && (auxlib::rudimentary_sym_check(UC.M) == false))
+  if((arma_config::check_conform) && (auxlib::rudimentary_sym_check(UC.M) == false))
     {
-    arma_debug_warn_level(1, "mvnrnd(): given matrix is not symmetric");
+    arma_warn(1, "mvnrnd(): given matrix is not symmetric");
     }
   
   bool status = false;
@@ -115,7 +115,7 @@ inline
 bool
 glue_mvnrnd::apply_noalias(Mat<eT>& out, const Mat<eT>& M, const Mat<eT>& C, const uword N)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   Mat<eT> D;
   

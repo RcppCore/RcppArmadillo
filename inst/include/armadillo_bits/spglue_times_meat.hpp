@@ -26,7 +26,7 @@ inline
 void
 spglue_times::apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglue_times>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -56,7 +56,7 @@ inline
 void
 spglue_times::apply(SpMat<typename T1::elem_type>& out, const SpGlue<SpOp<T1,spop_scalar_times>,T2,spglue_times>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -88,14 +88,14 @@ inline
 void
 spglue_times::apply_noalias(SpMat<eT>& c, const SpMat<eT>& x, const SpMat<eT>& y)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword x_n_rows = x.n_rows;
   const uword x_n_cols = x.n_cols;
   const uword y_n_rows = y.n_rows;
   const uword y_n_cols = y.n_cols;
   
-  arma_debug_assert_mul_size(x_n_rows, x_n_cols, y_n_rows, y_n_cols, "matrix multiplication");
+  arma_conform_assert_mul_size(x_n_rows, x_n_cols, y_n_rows, y_n_cols, "matrix multiplication");
   
   // First we must determine the structure of the new matrix (column pointers).
   // This follows the algorithm described in 'Sparse Matrix Multiplication
@@ -300,7 +300,7 @@ inline
 void
 spglue_times_mixed::apply(SpMat<typename eT_promoter<T1,T2>::eT>& out, const mtSpGlue<typename eT_promoter<T1,T2>::eT, T1, T2, spglue_times_mixed>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT1;
   typedef typename T2::elem_type eT2;

@@ -25,7 +25,7 @@ template<typename T1, typename T2, typename eglue_type>
 arma_inline
 eGlueCube<T1,T2,eglue_type>::~eGlueCube()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   }
 
 
@@ -36,9 +36,9 @@ eGlueCube<T1,T2,eglue_type>::eGlueCube(const T1& in_A, const T2& in_B)
   : P1(in_A)
   , P2(in_B)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_assert_same_size
+  arma_conform_assert_same_size
     (
     P1.get_n_rows(), P1.get_n_cols(), P1.get_n_slices(),
     P2.get_n_rows(), P2.get_n_cols(), P2.get_n_slices(), 

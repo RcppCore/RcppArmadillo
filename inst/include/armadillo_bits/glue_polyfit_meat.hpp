@@ -26,7 +26,7 @@ inline
 bool
 glue_polyfit::apply_noalias(Mat<eT>& out, const Col<eT>& X, const Col<eT>& Y, const uword N)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // create Vandermonde matrix
   
@@ -65,7 +65,7 @@ inline
 bool
 glue_polyfit::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& X_expr, const Base<typename T1::elem_type, T2>& Y_expr, const uword N)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -75,13 +75,13 @@ glue_polyfit::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename
   const Mat<eT>& X = UX.M;
   const Mat<eT>& Y = UY.M;
   
-  arma_debug_check
+  arma_conform_check
     (
     ( ((X.is_vec() == false) && (X.is_empty() == false)) || ((Y.is_vec() == false) && (Y.is_empty() == false)) ),
     "polyfit(): given object must be a vector"
     );
   
-  arma_debug_check( (X.n_elem != Y.n_elem), "polyfit(): given vectors must have the same number of elements" );
+  arma_conform_check( (X.n_elem != Y.n_elem), "polyfit(): given vectors must have the same number of elements" );
   
   if(X.n_elem == 0)
     {
@@ -89,7 +89,7 @@ glue_polyfit::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename
     return true;
     }
   
-  arma_debug_check( (N >= X.n_elem), "polyfit(): N must be less than the number of elements in X" );
+  arma_conform_check( (N >= X.n_elem), "polyfit(): N must be less than the number of elements in X" );
   
   const Col<eT> X_as_colvec( const_cast<eT*>(X.memptr()), X.n_elem, false, false);
   const Col<eT> Y_as_colvec( const_cast<eT*>(Y.memptr()), Y.n_elem, false, false);
@@ -117,7 +117,7 @@ inline
 void
 glue_polyfit::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_polyfit>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const bool status = glue_polyfit::apply_direct(out, expr.A, expr.B, expr.aux_uword);
   

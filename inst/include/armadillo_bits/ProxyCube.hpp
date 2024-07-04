@@ -53,7 +53,7 @@ struct ProxyCube< Cube<eT> >
   inline explicit ProxyCube(const Cube<eT>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows()       const { return Q.n_rows;       }
@@ -98,7 +98,7 @@ struct ProxyCube< GenCube<eT, gen_type> >
   inline explicit ProxyCube(const GenCube<eT, gen_type>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows()       const { return Q.n_rows;                     }
@@ -143,7 +143,7 @@ struct ProxyCube< OpCube<T1, op_type> >
   inline explicit ProxyCube(const OpCube<T1, op_type>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows()       const { return Q.n_rows;       }
@@ -188,7 +188,7 @@ struct ProxyCube< GlueCube<T1, T2, glue_type> >
   inline explicit ProxyCube(const GlueCube<T1, T2, glue_type>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
 
   arma_inline uword get_n_rows()       const { return Q.n_rows;       }
@@ -233,7 +233,7 @@ struct ProxyCube< subview_cube<eT> >
   inline explicit ProxyCube(const subview_cube<eT>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows()       const { return Q.n_rows;       }
@@ -278,7 +278,7 @@ struct ProxyCube< subview_cube_slices<eT,T1> >
   inline explicit ProxyCube(const subview_cube_slices<eT,T1>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows()       const { return Q.n_rows;       }
@@ -323,7 +323,7 @@ struct ProxyCube< eOpCube<T1, eop_type > >
   inline explicit ProxyCube(const eOpCube<T1, eop_type>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows()       const { return Q.get_n_rows();       }
@@ -368,7 +368,7 @@ struct ProxyCube< eGlueCube<T1, T2, eglue_type > >
   inline explicit ProxyCube(const eGlueCube<T1, T2, eglue_type>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows()       const { return Q.get_n_rows();       }
@@ -413,7 +413,7 @@ struct ProxyCube< mtOpCube<out_eT, T1, op_type> >
   inline explicit ProxyCube(const mtOpCube<out_eT, T1, op_type>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows()       const { return Q.n_rows;       }
@@ -458,7 +458,7 @@ struct ProxyCube< mtGlueCube<out_eT, T1, T2, glue_type > >
   inline explicit ProxyCube(const mtGlueCube<out_eT, T1, T2, glue_type>& A)
     : Q(A)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     }
   
   arma_inline uword get_n_rows()       const { return Q.n_rows;       }

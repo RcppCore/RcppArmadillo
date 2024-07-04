@@ -468,23 +468,6 @@ struct is_op_diagmat< const Op<T1,op_diagmat> >
 
 
 template<typename T>
-struct is_Mat_trans
-  { static constexpr bool value = false; };
-
-template<typename T1>
-struct is_Mat_trans< Op<T1,op_htrans> >
-  { static constexpr bool value = is_Mat<T1>::value; };
-
-template<typename T1>
-struct is_Mat_trans< Op<T1,op_htrans2> >
-  { static constexpr bool value = is_Mat<T1>::value; };
-
-
-//
-//
-
-
-template<typename T>
 struct is_GenCube
   { static constexpr bool value = false; };
  
@@ -734,6 +717,15 @@ struct is_mtSpGlue< mtSpGlue<eT, T1, T2, spglue_type> >
   { static constexpr bool value = true; };
 
 
+template<typename T>
+struct is_mtSpReduceOp
+  { static constexpr bool value = false; };
+ 
+template<typename eT, typename T1, typename op_type>
+struct is_mtSpReduceOp< mtSpReduceOp<eT, T1, op_type> >
+  { static constexpr bool value = true; };
+
+
 
 template<typename T1>
 struct is_arma_sparse_type
@@ -749,6 +741,7 @@ struct is_arma_sparse_type
   || is_SpGlue<T1>::value
   || is_mtSpOp<T1>::value
   || is_mtSpGlue<T1>::value
+  || is_mtSpReduceOp<T1>::value
   ;
   };
 

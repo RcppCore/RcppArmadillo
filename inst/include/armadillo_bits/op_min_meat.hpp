@@ -26,12 +26,12 @@ inline
 void
 op_min::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_min>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
   const uword dim = in.aux_uword_a;
-  arma_debug_check( (dim > 1), "min(): parameter 'dim' must be 0 or 1" );
+  arma_conform_check( (dim > 1), "min(): parameter 'dim' must be 0 or 1" );
   
   const quasi_unwrap<T1> U(in.m);
   const Mat<eT>& X = U.M;
@@ -57,7 +57,7 @@ inline
 void
 op_min::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim, const typename arma_not_cx<eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const uword X_n_rows = X.n_rows;
@@ -65,7 +65,7 @@ op_min::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim, const typ
   
   if(dim == 0)
     {
-    arma_extra_debug_print("op_min::apply(): dim = 0");
+    arma_debug_print("op_min::apply(): dim = 0");
     
     out.set_size((X_n_rows > 0) ? 1 : 0, X_n_cols);
     
@@ -81,7 +81,7 @@ op_min::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim, const typ
   else
   if(dim == 1)
     {
-    arma_extra_debug_print("op_min::apply(): dim = 1");
+    arma_debug_print("op_min::apply(): dim = 1");
     
     out.set_size(X_n_rows, (X_n_cols > 0) ? 1 : 0);
     
@@ -112,7 +112,7 @@ inline
 void
 op_min::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim, const typename arma_cx_only<eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const uword X_n_rows = X.n_rows;
@@ -120,7 +120,7 @@ op_min::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim, const typ
   
   if(dim == 0)
     {
-    arma_extra_debug_print("op_min::apply(): dim = 0");
+    arma_debug_print("op_min::apply(): dim = 0");
     
     out.set_size((X_n_rows > 0) ? 1 : 0, X_n_cols);
     
@@ -136,7 +136,7 @@ op_min::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim, const typ
   else
   if(dim == 1)
     {
-    arma_extra_debug_print("op_min::apply(): dim = 1");
+    arma_debug_print("op_min::apply(): dim = 1");
     
     out.set_size(X_n_rows, (X_n_cols > 0) ? 1 : 0);
     
@@ -158,12 +158,12 @@ inline
 void
 op_min::apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_min>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
   const uword dim = in.aux_uword_a;
-  arma_debug_check( (dim > 2), "min(): parameter 'dim' must be 0 or 1 or 2" );
+  arma_conform_check( (dim > 2), "min(): parameter 'dim' must be 0 or 1 or 2" );
   
   const unwrap_cube<T1> U(in.m);
   
@@ -188,7 +188,7 @@ inline
 void
 op_min::apply_noalias(Cube<eT>& out, const Cube<eT>& X, const uword dim, const typename arma_not_cx<eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const uword X_n_rows   = X.n_rows;
@@ -197,7 +197,7 @@ op_min::apply_noalias(Cube<eT>& out, const Cube<eT>& X, const uword dim, const t
   
   if(dim == 0)
     {
-    arma_extra_debug_print("op_min::apply(): dim = 0");
+    arma_debug_print("op_min::apply(): dim = 0");
     
     out.set_size((X_n_rows > 0) ? 1 : 0, X_n_cols, X_n_slices);
     
@@ -216,7 +216,7 @@ op_min::apply_noalias(Cube<eT>& out, const Cube<eT>& X, const uword dim, const t
   else
   if(dim == 1)
     {
-    arma_extra_debug_print("op_min::apply(): dim = 1");
+    arma_debug_print("op_min::apply(): dim = 1");
     
     out.set_size(X_n_rows, (X_n_cols > 0) ? 1 : 0, X_n_slices);
     
@@ -244,7 +244,7 @@ op_min::apply_noalias(Cube<eT>& out, const Cube<eT>& X, const uword dim, const t
   else
   if(dim == 2)
     {
-    arma_extra_debug_print("op_min::apply(): dim = 2");
+    arma_debug_print("op_min::apply(): dim = 2");
     
     out.set_size(X_n_rows, X_n_cols, (X_n_slices > 0) ? 1 : 0);
     
@@ -277,7 +277,7 @@ inline
 void
 op_min::apply_noalias(Cube<eT>& out, const Cube<eT>& X, const uword dim, const typename arma_cx_only<eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const uword X_n_rows   = X.n_rows;
@@ -286,7 +286,7 @@ op_min::apply_noalias(Cube<eT>& out, const Cube<eT>& X, const uword dim, const t
   
   if(dim == 0)
     {
-    arma_extra_debug_print("op_min::apply(): dim = 0");
+    arma_debug_print("op_min::apply(): dim = 0");
     
     out.set_size((X_n_rows > 0) ? 1 : 0, X_n_cols, X_n_slices);
     
@@ -305,7 +305,7 @@ op_min::apply_noalias(Cube<eT>& out, const Cube<eT>& X, const uword dim, const t
   else
   if(dim == 1)
     {
-    arma_extra_debug_print("op_min::apply(): dim = 1");
+    arma_debug_print("op_min::apply(): dim = 1");
     
     out.set_size(X_n_rows, (X_n_cols > 0) ? 1 : 0, X_n_slices);
     
@@ -326,7 +326,7 @@ op_min::apply_noalias(Cube<eT>& out, const Cube<eT>& X, const uword dim, const t
   else
   if(dim == 2)
     {
-    arma_extra_debug_print("op_min::apply(): dim = 2");
+    arma_debug_print("op_min::apply(): dim = 2");
     
     out.set_size(X_n_rows, X_n_cols, (X_n_slices > 0) ? 1 : 0);
     
@@ -359,7 +359,7 @@ inline
 eT
 op_min::direct_min(const eT* const X, const uword n_elem)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   eT min_val_i = priv::most_pos<eT>();
   eT min_val_j = priv::most_pos<eT>();
@@ -391,7 +391,7 @@ inline
 eT
 op_min::direct_min(const eT* const X, const uword n_elem, uword& index_of_min_val)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   eT min_val_i = priv::most_pos<eT>();
   eT min_val_j = priv::most_pos<eT>();
@@ -428,7 +428,7 @@ inline
 eT
 op_min::direct_min(const Mat<eT>& X, const uword row)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword X_n_cols = X.n_cols;
   
@@ -462,11 +462,11 @@ inline
 eT
 op_min::min(const subview<eT>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if(X.n_elem == 0)
     {
-    arma_debug_check(true, "min(): object has no elements");
+    arma_conform_check(true, "min(): object has no elements");
     
     return Datum<eT>::nan;
     }
@@ -523,7 +523,7 @@ inline
 typename arma_not_cx<typename T1::elem_type>::result
 op_min::min(const Base<typename T1::elem_type,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -533,7 +533,7 @@ op_min::min(const Base<typename T1::elem_type,T1>& X)
   
   if(n_elem == 0)
     {
-    arma_debug_check(true, "min(): object has no elements");
+    arma_conform_check(true, "min(): object has no elements");
     
     return Datum<eT>::nan;
     }
@@ -623,7 +623,7 @@ inline
 typename arma_not_cx<typename T1::elem_type>::result
 op_min::min(const BaseCube<typename T1::elem_type,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -633,7 +633,7 @@ op_min::min(const BaseCube<typename T1::elem_type,T1>& X)
   
   if(n_elem == 0)
     {
-    arma_debug_check(true, "min(): object has no elements");
+    arma_conform_check(true, "min(): object has no elements");
     
     return Datum<eT>::nan;
     }
@@ -695,7 +695,7 @@ inline
 typename arma_not_cx<typename T1::elem_type>::result
 op_min::min_with_index(const Proxy<T1>& P, uword& index_of_min_val)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -703,7 +703,7 @@ op_min::min_with_index(const Proxy<T1>& P, uword& index_of_min_val)
   
   if(n_elem == 0)
     {
-    arma_debug_check(true, "min(): object has no elements");
+    arma_conform_check(true, "min(): object has no elements");
     
     return Datum<eT>::nan;
     }
@@ -776,7 +776,7 @@ inline
 typename arma_not_cx<typename T1::elem_type>::result
 op_min::min_with_index(const ProxyCube<T1>& P, uword& index_of_min_val)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -784,7 +784,7 @@ op_min::min_with_index(const ProxyCube<T1>& P, uword& index_of_min_val)
   
   if(n_elem == 0)
     {
-    arma_debug_check(true, "min(): object has no elements");
+    arma_conform_check(true, "min(): object has no elements");
     
     return Datum<eT>::nan;
     }
@@ -837,7 +837,7 @@ inline
 std::complex<T>
 op_min::direct_min(const std::complex<T>* const X, const uword n_elem)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   uword index   = 0;
   T     min_val = priv::most_pos<T>();
@@ -863,7 +863,7 @@ inline
 std::complex<T>
 op_min::direct_min(const std::complex<T>* const X, const uword n_elem, uword& index_of_min_val)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   uword index   = 0;
   T     min_val = priv::most_pos<T>();
@@ -891,7 +891,7 @@ inline
 std::complex<T>
 op_min::direct_min(const Mat< std::complex<T> >& X, const uword row)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword X_n_cols = X.n_cols;
   
@@ -919,13 +919,13 @@ inline
 std::complex<T>
 op_min::min(const subview< std::complex<T> >& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename std::complex<T> eT;
   
   if(X.n_elem == 0)
     {
-    arma_debug_check(true, "min(): object has no elements");
+    arma_conform_check(true, "min(): object has no elements");
     
     return Datum<eT>::nan;
     }
@@ -989,7 +989,7 @@ inline
 typename arma_cx_only<typename T1::elem_type>::result
 op_min::min(const Base<typename T1::elem_type,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type            eT;
   typedef typename get_pod_type<eT>::result T;
@@ -1000,7 +1000,7 @@ op_min::min(const Base<typename T1::elem_type,T1>& X)
   
   if(n_elem == 0)
     {
-    arma_debug_check(true, "min(): object has no elements");
+    arma_conform_check(true, "min(): object has no elements");
     
     return Datum<eT>::nan;
     }
@@ -1077,7 +1077,7 @@ inline
 typename arma_cx_only<typename T1::elem_type>::result
 op_min::min(const BaseCube<typename T1::elem_type,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type            eT;
   typedef typename get_pod_type<eT>::result T;
@@ -1088,7 +1088,7 @@ op_min::min(const BaseCube<typename T1::elem_type,T1>& X)
   
   if(n_elem == 0)
     {
-    arma_debug_check(true, "min(): object has no elements");
+    arma_conform_check(true, "min(): object has no elements");
     
     return Datum<eT>::nan;
     }
@@ -1149,7 +1149,7 @@ inline
 typename arma_cx_only<typename T1::elem_type>::result
 op_min::min_with_index(const Proxy<T1>& P, uword& index_of_min_val)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type            eT;
   typedef typename get_pod_type<eT>::result T;
@@ -1158,7 +1158,7 @@ op_min::min_with_index(const Proxy<T1>& P, uword& index_of_min_val)
   
   if(n_elem == 0)
     {
-    arma_debug_check(true, "min(): object has no elements");
+    arma_conform_check(true, "min(): object has no elements");
     
     return Datum<eT>::nan;
     }
@@ -1252,7 +1252,7 @@ inline
 typename arma_cx_only<typename T1::elem_type>::result
 op_min::min_with_index(const ProxyCube<T1>& P, uword& index_of_min_val)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type            eT;
   typedef typename get_pod_type<eT>::result T;
@@ -1261,7 +1261,7 @@ op_min::min_with_index(const ProxyCube<T1>& P, uword& index_of_min_val)
   
   if(n_elem == 0)
     {
-    arma_debug_check(true, "min(): object has no elements");
+    arma_conform_check(true, "min(): object has no elements");
     
     return Datum<eT>::nan;
     }

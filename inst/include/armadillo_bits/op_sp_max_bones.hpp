@@ -16,22 +16,21 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup spop_max
+//! \addtogroup op_sp_max
 //! @{
 
-
-class spop_max
+class op_sp_max
   : public traits_op_xvec
   {
   public:
   
   template<typename T1>
-  inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_max>& in);
+  inline static void apply(Mat<typename T1::elem_type>& out, const mtSpReduceOp<typename T1::elem_type, T1, op_sp_max>& in);
   
   //
   
   template<typename T1>
-  inline static void apply_proxy(SpMat<typename T1::elem_type>& out, const SpProxy<T1>& p, const uword dim, const typename arma_not_cx<typename T1::elem_type>::result* junk = nullptr);
+  inline static void apply_proxy(Mat<typename T1::elem_type>& out, const SpProxy<T1>& p, const uword dim, const typename arma_not_cx<typename T1::elem_type>::result* junk = nullptr);
   
   template<typename T1>
   inline static typename T1::elem_type vector_max(const T1& X, const typename arma_not_cx<typename T1::elem_type>::result* junk = nullptr);
@@ -45,7 +44,7 @@ class spop_max
   //
   
   template<typename T1>
-  inline static void apply_proxy(SpMat<typename T1::elem_type>& out, const SpProxy<T1>& p, const uword dim, const typename arma_cx_only<typename T1::elem_type>::result* junk = nullptr);
+  inline static void apply_proxy(Mat<typename T1::elem_type>& out, const SpProxy<T1>& p, const uword dim, const typename arma_cx_only<typename T1::elem_type>::result* junk = nullptr);
   
   template<typename T1>
   inline static typename T1::elem_type vector_max(const T1& X, const typename arma_cx_only<typename T1::elem_type>::result* junk = nullptr);

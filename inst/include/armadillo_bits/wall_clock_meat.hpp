@@ -23,7 +23,7 @@
 inline
 wall_clock::wall_clock()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   chrono_time1 = std::chrono::steady_clock::now();  // warmup
   }
@@ -33,7 +33,7 @@ wall_clock::wall_clock()
 inline
 wall_clock::~wall_clock()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   }
 
 
@@ -42,11 +42,11 @@ inline
 void
 wall_clock::tic()
   {
-  arma_extra_debug_sigprint();
-  
-  chrono_time1 = std::chrono::steady_clock::now();
+  arma_debug_sigprint();
   
   valid = true;
+  
+  chrono_time1 = std::chrono::steady_clock::now();
   }
 
 
@@ -55,7 +55,7 @@ inline
 double
 wall_clock::toc()
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const std::chrono::steady_clock::time_point chrono_time2 = std::chrono::steady_clock::now();
   

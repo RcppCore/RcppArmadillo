@@ -35,7 +35,7 @@ solve
   const Base<typename T1::elem_type,T2>& B
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Glue<T1, T2, glue_solve_gen_default>(A.get_ref(), B.get_ref());
   }
@@ -52,14 +52,14 @@ solve
   const Base<typename T1::elem_type,T2>& B
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const bool status = glue_solve_gen_default::apply(out, A.get_ref(), B.get_ref());
   
   if(status == false)
     {
     out.soft_reset();
-    arma_debug_warn_level(3, "solve(): solution not found");
+    arma_warn(3, "solve(): solution not found");
     }
   
   return status;
@@ -78,7 +78,7 @@ solve
   const solve_opts::opts&                opts
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Glue<T1, T2, glue_solve_gen_full>(A.get_ref(), B.get_ref(), opts.flags);
   }
@@ -96,14 +96,14 @@ solve
   const solve_opts::opts&                opts
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const bool status = glue_solve_gen_full::apply(out, A.get_ref(), B.get_ref(), opts.flags);
   
   if(status == false)
     {
     out.soft_reset();
-    arma_debug_warn_level(3, "solve(): solution not found");
+    arma_warn(3, "solve(): solution not found");
     }
   
   return status;
@@ -125,7 +125,7 @@ solve
   const Base<typename T1::elem_type,T2>& B
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   uword flags = uword(0);
   
@@ -148,7 +148,7 @@ solve
   const solve_opts::opts&                opts
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   uword flags = opts.flags;
   
@@ -170,7 +170,7 @@ solve
   const Base<typename T1::elem_type,T2>& B
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   uword flags = uword(0);
   
@@ -182,7 +182,7 @@ solve
   if(status == false)
     {
     out.soft_reset();
-    arma_debug_warn_level(3, "solve(): solution not found");
+    arma_warn(3, "solve(): solution not found");
     }
   
   return status;
@@ -201,7 +201,7 @@ solve
   const solve_opts::opts&                opts
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   uword flags = opts.flags;
   
@@ -213,7 +213,7 @@ solve
   if(status == false)
     {
     out.soft_reset();
-    arma_debug_warn_level(3, "solve(): solution not found");
+    arma_warn(3, "solve(): solution not found");
     }
   
   return status;

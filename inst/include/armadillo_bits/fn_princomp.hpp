@@ -40,7 +40,7 @@ princomp
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const bool status = op_princomp::direct_princomp(coeff_out, score_out, latent_out, tsquared_out, X);
@@ -52,7 +52,7 @@ princomp
     latent_out.soft_reset();
     tsquared_out.soft_reset();
     
-    arma_debug_warn_level(3, "princomp(): decomposition failed");
+    arma_warn(3, "princomp(): decomposition failed");
     }
   
   return status;
@@ -77,7 +77,7 @@ princomp
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const bool status = op_princomp::direct_princomp(coeff_out, score_out, latent_out, X); 
@@ -88,7 +88,7 @@ princomp
     score_out.soft_reset();
     latent_out.soft_reset();
     
-    arma_debug_warn_level(3, "princomp(): decomposition failed");
+    arma_warn(3, "princomp(): decomposition failed");
     }
   
   return status;
@@ -111,7 +111,7 @@ princomp
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const bool status = op_princomp::direct_princomp(coeff_out, score_out, X); 
@@ -121,7 +121,7 @@ princomp
     coeff_out.soft_reset();
     score_out.soft_reset();
     
-    arma_debug_warn_level(3, "princomp(): decomposition failed");
+    arma_warn(3, "princomp(): decomposition failed");
     }
   
   return status;
@@ -142,7 +142,7 @@ princomp
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const bool status = op_princomp::direct_princomp(coeff_out, X);
@@ -151,7 +151,7 @@ princomp
     {
     coeff_out.soft_reset();
     
-    arma_debug_warn_level(3, "princomp(): decomposition failed");
+    arma_warn(3, "princomp(): decomposition failed");
     }
   
   return status;
@@ -169,7 +169,7 @@ princomp
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   return Op<T1, op_princomp>(X.get_ref());

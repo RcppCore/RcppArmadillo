@@ -33,7 +33,7 @@ log_det
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
@@ -46,7 +46,7 @@ log_det
     out_val  = eT(Datum<T>::nan);
     out_sign = T(0);
     
-    arma_debug_warn_level(3, "log_det(): failed to find determinant");
+    arma_warn(3, "log_det(): failed to find determinant");
     }
   
   return status;
@@ -64,7 +64,7 @@ log_det
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
@@ -102,7 +102,7 @@ log_det_sympd
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename T1::pod_type T;
@@ -115,7 +115,7 @@ log_det_sympd
     {
     out_val = Datum<T>::nan;
     
-    arma_debug_warn_level(3, "log_det_sympd(): given matrix is not symmetric positive definite");
+    arma_warn(3, "log_det_sympd(): given matrix is not symmetric positive definite");
     }
   
   return status;
@@ -133,7 +133,7 @@ log_det_sympd
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename T1::pod_type T;

@@ -26,7 +26,7 @@ inline
 void
 spglue_max::apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglue_max>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -56,9 +56,9 @@ inline
 void
 spglue_max::apply_noalias(SpMat<eT>& out, const SpProxy<T1>& pa, const SpProxy<T2>& pb)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_assert_same_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "element-wise max()");
+  arma_conform_assert_same_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "element-wise max()");
   
   const uword max_n_nonzero = pa.get_n_nonzero() + pb.get_n_nonzero();
   
@@ -159,7 +159,7 @@ inline
 void
 spglue_max::apply_noalias(SpMat<eT>& out, const SpMat<eT>& A, const SpMat<eT>& B)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const SpProxy< SpMat<eT> > pa(A);
   const SpProxy< SpMat<eT> > pb(B);
@@ -174,7 +174,7 @@ inline
 void
 spglue_max::dense_sparse_max(Mat<eT>& out, const Base<eT,T1>& X, const SpBase<eT,T2>& Y)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // NOTE: this function assumes there is no aliasing between matrix 'out' and X
   
@@ -184,7 +184,7 @@ spglue_max::dense_sparse_max(Mat<eT>& out, const Base<eT,T1>& X, const SpBase<eT
   const uword n_rows = pa.get_n_rows();
   const uword n_cols = pa.get_n_cols();
   
-  arma_debug_assert_same_size( n_rows, n_cols, pb.get_n_rows(), pb.get_n_cols(), "element-wise max()" );
+  arma_conform_assert_same_size( n_rows, n_cols, pb.get_n_rows(), pb.get_n_cols(), "element-wise max()" );
   
   out.set_size(n_rows, n_cols);
   

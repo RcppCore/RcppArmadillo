@@ -26,7 +26,7 @@ inline
 typename T1::pod_type
 op_rcond::apply(const Base<typename T1::elem_type, T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
@@ -37,7 +37,7 @@ op_rcond::apply(const Base<typename T1::elem_type, T1>& X)
     
     const quasi_unwrap<typename strip_trimat<T1>::stored_type> U(S.M);
     
-    arma_debug_check( (U.M.is_square() == false), "rcond(): matrix must be square sized" );
+    arma_conform_check( (U.M.is_square() == false), "rcond(): matrix must be square sized" );
     
     const uword layout = (S.do_triu) ? uword(0) : uword(1);
     
@@ -46,13 +46,13 @@ op_rcond::apply(const Base<typename T1::elem_type, T1>& X)
   
   Mat<eT> A = X.get_ref();
   
-  arma_debug_check( (A.is_square() == false), "rcond(): matrix must be square sized" );
+  arma_conform_check( (A.is_square() == false), "rcond(): matrix must be square sized" );
   
   if(A.is_empty()) { return Datum<T>::inf; }
   
   if(is_op_diagmat<T1>::value || A.is_diagmat())
     {
-    arma_extra_debug_print("op_rcond::apply(): detected diagonal matrix");
+    arma_debug_print("op_rcond::apply(): detected diagonal matrix");
     
     const eT*   colmem = A.memptr();
     const uword N      = A.n_rows;
@@ -89,7 +89,7 @@ op_rcond::apply(const Base<typename T1::elem_type, T1>& X)
   
   if(try_sympd)
     {
-    arma_extra_debug_print("op_rcond::apply(): attempting sympd optimisation");
+    arma_debug_print("op_rcond::apply(): attempting sympd optimisation");
     
     bool calc_ok = false;
     
@@ -97,7 +97,7 @@ op_rcond::apply(const Base<typename T1::elem_type, T1>& X)
     
     if(calc_ok)  { return out_val; }
     
-    arma_extra_debug_print("op_rcond::apply(): sympd optimisation failed");
+    arma_debug_print("op_rcond::apply(): sympd optimisation failed");
     
     // auxlib::rcond_sympd() may have failed because A isn't really sympd
     // restore A, as auxlib::rcond_sympd() may have destroyed it

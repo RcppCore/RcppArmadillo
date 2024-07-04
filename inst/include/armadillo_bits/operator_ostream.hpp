@@ -26,7 +26,7 @@ inline
 std::ostream&
 operator<< (std::ostream& o, const Base<eT,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const unwrap<T1> tmp(X.get_ref());
   
@@ -42,7 +42,7 @@ inline
 std::ostream&
 operator<< (std::ostream& o, const SpBase<eT,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const unwrap_spmat<T1> tmp(X.get_ref());
   
@@ -58,7 +58,7 @@ inline
 std::ostream&
 operator<< (std::ostream& o, const SpValProxy<T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -74,7 +74,7 @@ inline
 std::ostream&
 operator<< (std::ostream& o, const MapMat_val<eT>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   o << eT(X);
   
@@ -88,7 +88,7 @@ inline
 std::ostream&
 operator<< (std::ostream& o, const SpMat_MapMat_val<eT>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   o << eT(X);
   
@@ -102,7 +102,7 @@ inline
 std::ostream&
 operator<< (std::ostream& o, const SpSubview_MapMat_val<eT>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   o << eT(X);
   
@@ -116,7 +116,7 @@ inline
 std::ostream&
 operator<< (std::ostream& o, const BaseCube<typename T1::elem_type,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const unwrap_cube<T1> tmp(X.get_ref());
   
@@ -133,7 +133,7 @@ inline
 std::ostream&
 operator<< (std::ostream& o, const field<T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_ostream::print(o, X);
   
@@ -148,7 +148,7 @@ inline
 std::ostream&
 operator<< (std::ostream& o, const subview_field<T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_ostream::print(o, X);
 
@@ -161,7 +161,7 @@ inline
 std::ostream&
 operator<< (std::ostream& o, const SizeMat& S)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_ostream::print(o, S);
   
@@ -174,7 +174,7 @@ inline
 std::ostream&
 operator<< (std::ostream& o, const SizeCube& S)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_ostream::print(o, S);
   

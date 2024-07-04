@@ -29,16 +29,16 @@ class conv_to
   public:
   
   template<typename in_eT, typename T1>
-  inline static out_eT from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = nullptr);
+  arma_frown("use as_scalar() instead") inline static out_eT from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = nullptr);
   
   template<typename in_eT, typename T1>
-  inline static out_eT from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = nullptr);
+  arma_frown("use as_scalar() instead") inline static out_eT from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = nullptr);
   
   template<typename in_eT, typename T1>
-  inline static out_eT from(const BaseCube<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = nullptr);
+  arma_frown("use as_scalar() instead") inline static out_eT from(const BaseCube<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = nullptr);
   
   template<typename in_eT, typename T1>
-  inline static out_eT from(const BaseCube<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = nullptr);
+  arma_frown("use as_scalar() instead") inline static out_eT from(const BaseCube<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = nullptr);
   };
 
 
@@ -50,14 +50,14 @@ inline
 out_eT
 conv_to<out_eT>::from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   arma_type_check(( is_supported_elem_type<out_eT>::value == false ));
   
   const Proxy<T1> P(in.get_ref());
   
-  arma_debug_check( (P.get_n_elem() != 1), "conv_to(): given object does not have exactly one element" );
+  arma_conform_check( (P.get_n_elem() != 1), "conv_to(): expected 1x1 matrix" );
   
   return out_eT(Proxy<T1>::use_at ? P.at(0,0) : P[0]);
   }
@@ -71,14 +71,14 @@ inline
 out_eT
 conv_to<out_eT>::from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   arma_type_check(( is_supported_elem_type<out_eT>::value == false ));
   
   const Proxy<T1> P(in.get_ref());
   
-  arma_debug_check( (P.get_n_elem() != 1), "conv_to(): given object does not have exactly one element" );
+  arma_conform_check( (P.get_n_elem() != 1), "conv_to(): expected 1x1 matrix" );
   
   out_eT out;
   
@@ -96,14 +96,14 @@ inline
 out_eT
 conv_to<out_eT>::from(const BaseCube<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   arma_type_check(( is_supported_elem_type<out_eT>::value == false ));
   
   const ProxyCube<T1> P(in.get_ref());
   
-  arma_debug_check( (P.get_n_elem() != 1), "conv_to(): given object does not have exactly one element" );
+  arma_conform_check( (P.get_n_elem() != 1), "conv_to(): expected 1x1x1 cube" );
   
   return out_eT(ProxyCube<T1>::use_at ? P.at(0,0,0) : P[0]);
   }
@@ -117,14 +117,14 @@ inline
 out_eT
 conv_to<out_eT>::from(const BaseCube<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   arma_type_check(( is_supported_elem_type<out_eT>::value == false ));
   
   const ProxyCube<T1> P(in.get_ref());
   
-  arma_debug_check( (P.get_n_elem() != 1), "conv_to(): given object does not have exactly one element" );
+  arma_conform_check( (P.get_n_elem() != 1), "conv_to(): expected 1x1x1 cube" );
   
   out_eT out;
   
@@ -173,7 +173,7 @@ inline
 Mat<out_eT>
 conv_to< Mat<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const quasi_unwrap<T1> tmp(in.get_ref());
@@ -195,7 +195,7 @@ inline
 Mat<out_eT>
 conv_to< Mat<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const quasi_unwrap<T1> tmp(in.get_ref());
@@ -217,7 +217,7 @@ inline
 Mat<out_eT>
 conv_to< Mat<out_eT> >::from(const SpBase<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const unwrap_spmat<T1> U(in.get_ref());
@@ -246,7 +246,7 @@ inline
 Mat<out_eT>
 conv_to< Mat<out_eT> >::from(const SpBase<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const unwrap_spmat<T1> U(in.get_ref());
@@ -275,7 +275,7 @@ inline
 Mat<out_eT>
 conv_to< Mat<out_eT> >::from(const std::vector<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const uword N = uword( in.size() );
@@ -299,7 +299,7 @@ inline
 Mat<out_eT>
 conv_to< Mat<out_eT> >::from(const std::vector<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const uword N = uword( in.size() );
@@ -346,13 +346,13 @@ inline
 Row<out_eT>
 conv_to< Row<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const quasi_unwrap<T1> tmp(in.get_ref());
   const Mat<in_eT>& X  = tmp.M;
   
-  arma_debug_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object cannot be interpreted as a vector" );
+  arma_conform_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object cannot be interpreted as a vector" );
   
   Row<out_eT> out(X.n_elem, arma_nozeros_indicator());
   
@@ -370,13 +370,13 @@ inline
 Row<out_eT>
 conv_to< Row<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const quasi_unwrap<T1> tmp(in.get_ref());
   const Mat<in_eT>& X  = tmp.M;
   
-  arma_debug_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object cannot be interpreted as a vector" );
+  arma_conform_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object cannot be interpreted as a vector" );
   
   Row<out_eT> out(X.n_rows, X.n_cols, arma_nozeros_indicator());
   
@@ -394,7 +394,7 @@ inline
 Row<out_eT>
 conv_to< Row<out_eT> >::from(const std::vector<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const uword N = uword( in.size() );
@@ -418,7 +418,7 @@ inline
 Row<out_eT>
 conv_to< Row<out_eT> >::from(const std::vector<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const uword N = uword( in.size() );
@@ -465,13 +465,13 @@ inline
 Col<out_eT>
 conv_to< Col<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const quasi_unwrap<T1> tmp(in.get_ref());
   const Mat<in_eT>& X  = tmp.M;
   
-  arma_debug_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object cannot be interpreted as a vector" );
+  arma_conform_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object cannot be interpreted as a vector" );
   
   Col<out_eT> out(X.n_elem, arma_nozeros_indicator());
   
@@ -489,13 +489,13 @@ inline
 Col<out_eT>
 conv_to< Col<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const quasi_unwrap<T1> tmp(in.get_ref());
   const Mat<in_eT>& X  = tmp.M;
   
-  arma_debug_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object cannot be interpreted as a vector" );
+  arma_conform_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object cannot be interpreted as a vector" );
   
   Col<out_eT> out(X.n_rows, X.n_cols, arma_nozeros_indicator());
   
@@ -513,7 +513,7 @@ inline
 Col<out_eT>
 conv_to< Col<out_eT> >::from(const std::vector<in_eT>& in, const typename arma_not_cx<in_eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const uword N = uword( in.size() );
@@ -537,7 +537,7 @@ inline
 Col<out_eT>
 conv_to< Col<out_eT> >::from(const std::vector<in_eT>& in, const typename arma_cx_only<in_eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const uword N = uword( in.size() );
@@ -584,7 +584,7 @@ inline
 SpMat<out_eT>
 conv_to< SpMat<out_eT> >::from(const SpBase<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const unwrap_spmat<T1>  tmp(in.get_ref());
@@ -608,7 +608,7 @@ inline
 SpMat<out_eT>
 conv_to< SpMat<out_eT> >::from(const SpBase<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const unwrap_spmat<T1>  tmp(in.get_ref());
@@ -632,7 +632,7 @@ inline
 SpMat<out_eT>
 conv_to< SpMat<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   SpMat<out_eT> out;
@@ -653,7 +653,7 @@ conv_to< SpMat<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_no
     const uword X_n_rows = X.n_rows;
     const uword X_n_cols = X.n_cols;
     const uword X_n_elem = X.n_elem;
-  
+    
     const in_eT* X_mem = X.memptr();
     
     uword X_nnz = 0;
@@ -720,7 +720,7 @@ inline
 SpMat<out_eT>
 conv_to< SpMat<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   SpMat<out_eT> out;
@@ -741,7 +741,7 @@ conv_to< SpMat<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_cx
     const uword X_n_rows = X.n_rows;
     const uword X_n_cols = X.n_cols;
     const uword X_n_elem = X.n_elem;
-  
+    
     const in_eT* X_mem = X.memptr();
     
     uword X_nnz = 0;
@@ -823,7 +823,7 @@ inline
 Cube<out_eT>
 conv_to< Cube<out_eT> >::from(const BaseCube<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const unwrap_cube<T1>  tmp( in.get_ref() );
@@ -845,7 +845,7 @@ inline
 Cube<out_eT>
 conv_to< Cube<out_eT> >::from(const BaseCube<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const unwrap_cube<T1>  tmp( in.get_ref() );
@@ -882,13 +882,13 @@ inline
 std::vector<out_eT>
 conv_to< std::vector<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const quasi_unwrap<T1> tmp(in.get_ref());
   const Mat<in_eT>& X  = tmp.M;
   
-  arma_debug_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object cannot be interpreted as a vector" );
+  arma_conform_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object cannot be interpreted as a vector" );
   
   const uword N = X.n_elem;
   
@@ -911,13 +911,13 @@ inline
 std::vector<out_eT>
 conv_to< std::vector<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   const quasi_unwrap<T1> tmp(in.get_ref());
   const Mat<in_eT>& X  = tmp.M;
   
-  arma_debug_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object cannot be interpreted as a vector" );
+  arma_conform_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object cannot be interpreted as a vector" );
   
   const uword N = X.n_elem;
   

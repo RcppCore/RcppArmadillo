@@ -16,7 +16,7 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup spop_max
+//! \addtogroup op_sp_max
 //! @{
 
 
@@ -24,12 +24,13 @@
 template<typename T1>
 inline
 void
-spop_max::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_max>& in)
+op_sp_max::apply(Mat<typename T1::elem_type>& out, const mtSpReduceOp<typename T1::elem_type, T1, op_sp_max>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword dim = in.aux_uword_a;
-  arma_debug_check( (dim > 1), "max(): parameter 'dim' must be 0 or 1" );
+  
+  arma_conform_check( (dim > 1), "max(): parameter 'dim' must be 0 or 1" );
   
   const SpProxy<T1> p(in.m);
   
@@ -44,7 +45,7 @@ spop_max::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_max>& in)
     return;
     }
   
-  spop_max::apply_proxy(out, p, dim);
+  op_sp_max::apply_proxy(out, p, dim);
   }
 
 
@@ -52,15 +53,15 @@ spop_max::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_max>& in)
 template<typename T1>
 inline
 void
-spop_max::apply_proxy
+op_sp_max::apply_proxy
   (
-        SpMat<typename T1::elem_type>& out,
-  const SpProxy<T1>&                   p,
-  const uword                          dim,
+        Mat<typename T1::elem_type>& out,
+  const SpProxy<T1>&                 p,
+  const uword                        dim,
   const typename arma_not_cx<typename T1::elem_type>::result* junk
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
@@ -73,46 +74,44 @@ spop_max::apply_proxy
   
   if(dim == 0) // find the maximum in each column
     {
-    Row<eT> value(p_n_cols, arma_zeros_indicator());
+    out.zeros(1, p_n_cols);
+    
     urowvec count(p_n_cols, arma_zeros_indicator());
     
     while(it != it_end)
       {
       const uword col = it.col();
       
-      value[col] = (count[col] == 0) ? (*it) : (std::max)(value[col], (*it));
+        out[col] = (count[col] == 0) ? (*it) : (std::max)(out[col], (*it));
       count[col]++;
       ++it;
       }
     
     for(uword col=0; col<p_n_cols; ++col)
       {
-      if(count[col] < p_n_rows)  { value[col] = (std::max)(value[col], eT(0)); }
+      if(count[col] < p_n_rows)  { out[col] = (std::max)(out[col], eT(0)); }
       }
-    
-    out = value;
     }
   else
   if(dim == 1)  // find the maximum in each row
     {
-    Col<eT> value(p_n_rows, arma_zeros_indicator());
+    out.zeros(p_n_rows, 1);
+    
     ucolvec count(p_n_rows, arma_zeros_indicator());
     
     while(it != it_end)
       {
       const uword row = it.row();
       
-      value[row] = (count[row] == 0) ? (*it) : (std::max)(value[row], (*it));
+        out[row] = (count[row] == 0) ? (*it) : (std::max)(out[row], (*it));
       count[row]++;
       ++it;
       }
     
     for(uword row=0; row<p_n_rows; ++row)
       {
-      if(count[row] < p_n_cols)  { value[row] = (std::max)(value[row], eT(0)); }
+      if(count[row] < p_n_cols)  { out[row] = (std::max)(out[row], eT(0)); }
       }
-    
-    out = value;
     }
   }
 
@@ -121,13 +120,13 @@ spop_max::apply_proxy
 template<typename T1>
 inline
 typename T1::elem_type
-spop_max::vector_max
+op_sp_max::vector_max
   (
   const T1& x,
   const typename arma_not_cx<typename T1::elem_type>::result* junk
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
@@ -136,7 +135,7 @@ spop_max::vector_max
   
   if(p.get_n_elem() == 0)
     {
-    arma_debug_check(true, "max(): object has no elements");
+    arma_conform_check(true, "max(): object has no elements");
     
     return Datum<eT>::nan;
     }
@@ -187,9 +186,9 @@ spop_max::vector_max
 template<typename T1>
 inline
 typename arma_not_cx<typename T1::elem_type>::result
-spop_max::max(const SpBase<typename T1::elem_type, T1>& X)
+op_sp_max::max(const SpBase<typename T1::elem_type, T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -200,7 +199,7 @@ spop_max::max(const SpBase<typename T1::elem_type, T1>& X)
   
   if(n_elem == 0)
     {
-    arma_debug_check(true, "max(): object has no elements");
+    arma_conform_check(true, "max(): object has no elements");
     
     return Datum<eT>::nan;
     }
@@ -245,9 +244,9 @@ spop_max::max(const SpBase<typename T1::elem_type, T1>& X)
 template<typename T1>
 inline
 typename arma_not_cx<typename T1::elem_type>::result
-spop_max::max_with_index(const SpProxy<T1>& P, uword& index_of_max_val)
+op_sp_max::max_with_index(const SpProxy<T1>& P, uword& index_of_max_val)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -257,7 +256,7 @@ spop_max::max_with_index(const SpProxy<T1>& P, uword& index_of_max_val)
   
   if(n_elem == 0)
     {
-    arma_debug_check(true, "max(): object has no elements");
+    arma_conform_check(true, "max(): object has no elements");
     
     index_of_max_val = uword(0);
     
@@ -353,15 +352,15 @@ spop_max::max_with_index(const SpProxy<T1>& P, uword& index_of_max_val)
 template<typename T1>
 inline
 void
-spop_max::apply_proxy
+op_sp_max::apply_proxy
   (
-        SpMat<typename T1::elem_type>& out,
-  const SpProxy<T1>&                   p,
-  const uword                          dim,
+        Mat<typename T1::elem_type>& out,
+  const SpProxy<T1>&                 p,
+  const uword                        dim,
   const typename arma_cx_only<typename T1::elem_type>::result* junk
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename T1::elem_type            eT;
@@ -375,8 +374,9 @@ spop_max::apply_proxy
   
   if(dim == 0) // find the maximum in each column
     {
-    Row<eT> rawval(p_n_cols, arma_zeros_indicator());
-    Row< T> absval(p_n_cols, arma_zeros_indicator());
+    out.zeros(1, p_n_cols);
+    
+    Row<T> absval(p_n_cols, arma_zeros_indicator());
     
     while(it != it_end)
       {
@@ -388,19 +388,18 @@ spop_max::apply_proxy
       if(a > absval[col])
         {
         absval[col] = a;
-        rawval[col] = v;
+           out[col] = v;
         }
       
       ++it;
       }
-    
-    out = rawval;
     }
   else
   if(dim == 1)  // find the maximum in each row
     {
-    Col<eT> rawval(p_n_rows, arma_zeros_indicator());
-    Col< T> absval(p_n_rows, arma_zeros_indicator());
+    out.zeros(p_n_rows, 1);
+    
+    Col<T> absval(p_n_rows, arma_zeros_indicator());
     
     while(it != it_end)
       {
@@ -412,13 +411,11 @@ spop_max::apply_proxy
       if(a > absval[row])
         {
         absval[row] = a;
-        rawval[row] = v;
+           out[row] = v;
         }
       
       ++it;
       }
-    
-    out = rawval;
     }
   }
 
@@ -427,13 +424,13 @@ spop_max::apply_proxy
 template<typename T1>
 inline
 typename T1::elem_type
-spop_max::vector_max
+op_sp_max::vector_max
   (
   const T1& x,
   const typename arma_cx_only<typename T1::elem_type>::result* junk
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename T1::elem_type            eT;
@@ -443,7 +440,7 @@ spop_max::vector_max
   
   if(p.get_n_elem() == 0)
     {
-    arma_debug_check(true, "max(): object has no elements");
+    arma_conform_check(true, "max(): object has no elements");
     
     return Datum<eT>::nan;
     }
@@ -508,9 +505,9 @@ spop_max::vector_max
 template<typename T1>
 inline
 typename arma_cx_only<typename T1::elem_type>::result
-spop_max::max(const SpBase<typename T1::elem_type, T1>& X)
+op_sp_max::max(const SpBase<typename T1::elem_type, T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
 
   typedef typename T1::elem_type            eT;
   typedef typename get_pod_type<eT>::result  T;
@@ -522,7 +519,7 @@ spop_max::max(const SpBase<typename T1::elem_type, T1>& X)
 
   if(n_elem == 0)
     {
-    arma_debug_check(true, "max(): object has no elements");
+    arma_conform_check(true, "max(): object has no elements");
     
     return Datum<eT>::nan;
     }
@@ -575,9 +572,9 @@ spop_max::max(const SpBase<typename T1::elem_type, T1>& X)
 template<typename T1>
 inline
 typename arma_cx_only<typename T1::elem_type>::result
-spop_max::max_with_index(const SpProxy<T1>& P, uword& index_of_max_val)
+op_sp_max::max_with_index(const SpProxy<T1>& P, uword& index_of_max_val)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type            eT;
   typedef typename get_pod_type<eT>::result  T;
@@ -588,7 +585,7 @@ spop_max::max_with_index(const SpProxy<T1>& P, uword& index_of_max_val)
   
   if(n_elem == 0)
     {
-    arma_debug_check(true, "max(): object has no elements");
+    arma_conform_check(true, "max(): object has no elements");
     
     index_of_max_val = uword(0);
     

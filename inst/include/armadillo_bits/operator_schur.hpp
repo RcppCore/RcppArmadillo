@@ -38,7 +38,7 @@ operator%
   const T2& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return eGlue<T1, T2, eglue_schur>(X, Y);
   }
@@ -60,7 +60,7 @@ operator%
   const T2& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT1;
   typedef typename T2::elem_type eT2;
@@ -89,7 +89,7 @@ operator%
   const T2& y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return SpGlue<T1,T2,spglue_schur>(x, y);
   }
@@ -111,7 +111,7 @@ operator%
   const T2& y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   SpMat<typename T1::elem_type> out;
   
@@ -137,7 +137,7 @@ operator%
   const T2& y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   SpMat<typename T1::elem_type> out;
   
@@ -171,7 +171,7 @@ operator%
   const SpToDOp<T2, op_type>& y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   SpMat<typename T1::elem_type> out;
   
@@ -203,7 +203,7 @@ operator%
   const T2& y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   SpMat<typename T1::elem_type> out;
   
@@ -231,7 +231,7 @@ operator%
   const T2& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT1;
   typedef typename T2::elem_type eT2;
@@ -260,7 +260,7 @@ operator%
   const T2& y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   SpMat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result > out;
   
@@ -286,7 +286,7 @@ operator%
   const T2& y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   SpMat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result > out;
   
@@ -308,7 +308,7 @@ operator%
   const Base<typename parent::elem_type,T2>& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return subview_each1_aux::operator_schur(X, Y.get_ref());
   }
@@ -324,7 +324,7 @@ operator%
   const subview_each1<parent,mode>&          Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return subview_each1_aux::operator_schur(Y, X.get_ref());  // NOTE: swapped order
   }
@@ -340,7 +340,7 @@ operator%
   const Base<typename parent::elem_type,T2>& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return subview_each2_aux::operator_schur(X, Y.get_ref());
   }
@@ -356,7 +356,7 @@ operator%
   const subview_each2<parent,mode,TB>&       Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return subview_each2_aux::operator_schur(Y, X.get_ref());  // NOTE: swapped order
   }

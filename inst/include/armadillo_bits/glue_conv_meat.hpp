@@ -27,7 +27,7 @@ inline
 void
 glue_conv::apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const bool A_is_col)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const Mat<eT>& h = (A.n_elem <= B.n_elem) ? A : B;
   const Mat<eT>& x = (A.n_elem <= B.n_elem) ? B : A;
@@ -96,7 +96,7 @@ glue_conv::apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const bool A_
 // void
 // glue_conv::apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const bool A_is_col)
 //   {
-//   arma_extra_debug_sigprint();
+//   arma_debug_sigprint();
 //   
 //   const Mat<eT>& h = (A.n_elem <= B.n_elem) ? A : B;
 //   const Mat<eT>& x = (A.n_elem <= B.n_elem) ? B : A;
@@ -187,7 +187,7 @@ inline
 void
 glue_conv::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_conv>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -197,7 +197,7 @@ glue_conv::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_conv>& 
   const Mat<eT>& A = UA.M;
   const Mat<eT>& B = UB.M;
   
-  arma_debug_check
+  arma_conform_check
     (
     ( ((A.is_vec() == false) && (A.is_empty() == false)) || ((B.is_vec() == false) && (B.is_empty() == false)) ),
     "conv(): given object must be a vector"
@@ -243,7 +243,7 @@ inline
 void
 glue_conv2::apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const Mat<eT>& G = (A.n_elem <= B.n_elem) ? A : B;   // unflipped filter coefficients
   const Mat<eT>& W = (A.n_elem <= B.n_elem) ? B : A;   // original 2D image
@@ -343,7 +343,7 @@ inline
 void
 glue_conv2::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_conv2>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   

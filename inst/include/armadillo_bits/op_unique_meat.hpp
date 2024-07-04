@@ -27,7 +27,7 @@ inline
 bool
 op_unique::apply_helper(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const bool P_is_row)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -142,13 +142,13 @@ inline
 void
 op_unique::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_unique>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const Proxy<T1> P(in.m);
   
   const bool all_non_nan = op_unique::apply_helper(out, P, false);
   
-  arma_debug_check( (all_non_nan == false), "unique(): detected NaN" );
+  arma_conform_check( (all_non_nan == false), "unique(): detected NaN" );
   }
 
 
@@ -158,7 +158,7 @@ inline
 void
 op_unique_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_unique_vec>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const Proxy<T1> P(in.m);
   
@@ -166,7 +166,7 @@ op_unique_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_unique_ve
   
   const bool all_non_nan = op_unique::apply_helper(out, P, P_is_row);
   
-  arma_debug_check( (all_non_nan == false), "unique(): detected NaN" );
+  arma_conform_check( (all_non_nan == false), "unique(): detected NaN" );
   }
 
 

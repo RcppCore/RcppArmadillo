@@ -26,7 +26,7 @@ inline
 typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, const Op<T1,op_powmat> >::result
 powmat(const Base<typename T1::elem_type,T1>& X, const int y)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword aux_a = (y < int(0)) ? uword(-y) : uword(y);
   const uword aux_b = (y < int(0)) ? uword(1)  : uword(0);
@@ -46,7 +46,7 @@ powmat
   const int                              y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword y_val = (y < int(0)) ? uword(-y) : uword(y);
   const bool  y_neg = (y < int(0));
@@ -56,7 +56,7 @@ powmat
   if(status == false)
     {
     out.soft_reset();
-    arma_debug_warn_level(3, "powmat(): transformation failed");
+    arma_warn(3, "powmat(): transformation failed");
     }
   
   return status;
@@ -70,7 +70,7 @@ inline
 typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, const mtOp<std::complex<typename T1::pod_type>,T1,op_powmat_cx> >::result
 powmat(const Base<typename T1::elem_type,T1>& X, const double y)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef std::complex<typename T1::pod_type> out_eT;
   
@@ -89,7 +89,7 @@ powmat
   const double                                       y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::pod_type T;
   
@@ -98,7 +98,7 @@ powmat
   if(status == false)
     {
     out.soft_reset();
-    arma_debug_warn_level(3, "powmat(): transformation failed");
+    arma_warn(3, "powmat(): transformation failed");
     }
   
   return status;

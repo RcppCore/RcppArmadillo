@@ -26,14 +26,14 @@ inline
 void
 op_symmatu::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_symmatu>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
   const unwrap<T1>   tmp(in.m);
   const Mat<eT>& A = tmp.M;
   
-  arma_debug_check( (A.is_square() == false), "symmatu(): given matrix must be square sized" );
+  arma_conform_check( (A.is_square() == false), "symmatu(): given matrix must be square sized" );
   
   const uword N = A.n_rows;
   
@@ -77,14 +77,14 @@ inline
 void
 op_symmatl::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_symmatl>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
   const unwrap<T1>   tmp(in.m);
   const Mat<eT>& A = tmp.M;
   
-  arma_debug_check( (A.is_square() == false), "symmatl(): given matrix must be square sized" );
+  arma_conform_check( (A.is_square() == false), "symmatl(): given matrix must be square sized" );
   
   const uword N = A.n_rows;
   
@@ -132,14 +132,14 @@ inline
 void
 op_symmatu_cx::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_symmatu_cx>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
   const unwrap<T1>   tmp(in.m);
   const Mat<eT>& A = tmp.M;
   
-  arma_debug_check( (A.is_square() == false), "symmatu(): given matrix must be square sized" );
+  arma_conform_check( (A.is_square() == false), "symmatu(): given matrix must be square sized" );
   
   const uword N  = A.n_rows;
   
@@ -206,14 +206,14 @@ inline
 void
 op_symmatl_cx::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_symmatl_cx>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
   const unwrap<T1>   tmp(in.m);
   const Mat<eT>& A = tmp.M;
   
-  arma_debug_check( (A.is_square() == false), "symmatl(): given matrix must be square sized" );
+  arma_conform_check( (A.is_square() == false), "symmatl(): given matrix must be square sized" );
   
   const uword N  = A.n_rows;
   

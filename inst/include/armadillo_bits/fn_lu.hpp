@@ -33,10 +33,10 @@ lu
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
-  arma_debug_check( (&L == &U), "lu(): L and U are the same object" );
+  arma_conform_check( (&L == &U), "lu(): L and U are the same object" );
   
   const bool status = auxlib::lu(L, U, X);
   
@@ -44,7 +44,7 @@ lu
     {
     L.soft_reset();
     U.soft_reset();
-    arma_debug_warn_level(3, "lu(): decomposition failed");
+    arma_warn(3, "lu(): decomposition failed");
     }
   
   return status;
@@ -65,10 +65,10 @@ lu
   const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
-  arma_debug_check( ( (&L == &U) || (&L == &P) || (&U == &P) ), "lu(): two or more output objects are the same object" );
+  arma_conform_check( ( (&L == &U) || (&L == &P) || (&U == &P) ), "lu(): two or more output objects are the same object" );
   
   const bool status = auxlib::lu(L, U, P, X);
   
@@ -77,7 +77,7 @@ lu
     L.soft_reset();
     U.soft_reset();
     P.soft_reset();
-    arma_debug_warn_level(3, "lu(): decomposition failed");
+    arma_warn(3, "lu(): decomposition failed");
     }
   
   return status;

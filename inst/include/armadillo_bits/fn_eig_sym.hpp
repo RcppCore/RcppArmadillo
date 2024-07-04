@@ -30,7 +30,7 @@ eig_sym
   const Base<typename T1::elem_type,T1>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -41,7 +41,7 @@ eig_sym
   if(status == false)
     {
     eigval.soft_reset();
-    arma_debug_warn_level(3, "eig_sym(): decomposition failed");
+    arma_warn(3, "eig_sym(): decomposition failed");
     }
   
   return status;
@@ -59,7 +59,7 @@ eig_sym
   const Base<typename T1::elem_type,T1>& X
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
@@ -93,12 +93,12 @@ eig_sym_helper
   const char*                                   caller_sig
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  if((arma_config::debug) && (auxlib::rudimentary_sym_check(X) == false))
+  if((arma_config::check_conform) && (auxlib::rudimentary_sym_check(X) == false))
     {
-    if(is_cx<eT>::no )  { arma_debug_warn_level(1, caller_sig, ": given matrix is not symmetric"); }
-    if(is_cx<eT>::yes)  { arma_debug_warn_level(1, caller_sig, ": given matrix is not hermitian"); }
+    if(is_cx<eT>::no )  { arma_warn(1, caller_sig, ": given matrix is not symmetric"); }
+    if(is_cx<eT>::yes)  { arma_warn(1, caller_sig, ": given matrix is not hermitian"); }
     }
   
   bool status = false;
@@ -124,14 +124,14 @@ eig_sym
   const char* method =                   "dc"
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
   const char sig = (method != nullptr) ? method[0] : char(0);
   
-  arma_debug_check( ((sig != 's') && (sig != 'd')),         "eig_sym(): unknown method specified"                             );
-  arma_debug_check( void_ptr(&eigval) == void_ptr(&eigvec), "eig_sym(): parameter 'eigval' is an alias of parameter 'eigvec'" );
+  arma_conform_check( ((sig != 's') && (sig != 'd')),         "eig_sym(): unknown method specified"                             );
+  arma_conform_check( void_ptr(&eigval) == void_ptr(&eigvec), "eig_sym(): parameter 'eigval' is an alias of parameter 'eigvec'" );
   
   const quasi_unwrap<T1> U(expr.get_ref());
   
@@ -146,7 +146,7 @@ eig_sym
     {
     eigval.soft_reset();
     eigvec.soft_reset();
-    arma_debug_warn_level(3, "eig_sym(): decomposition failed");
+    arma_warn(3, "eig_sym(): decomposition failed");
     }
   else
     {

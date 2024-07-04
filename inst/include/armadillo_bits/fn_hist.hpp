@@ -31,7 +31,7 @@ enable_if2
   >::result
 hist(const T1& A, const uword n_bins = 10)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return mtOp<uword,T1,op_hist>(A, n_bins, 0);
   }
@@ -49,7 +49,7 @@ enable_if2
   >::result
 hist(const T1& X, const T2& Y)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return mtGlue<uword,T1,T2,glue_hist_default>(X, Y);
   }
@@ -67,7 +67,7 @@ enable_if2
   >::result
 hist(const T1& X, const T2& Y, const uword dim)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return mtGlue<uword,T1,T2,glue_hist>(X, Y, dim);
   }

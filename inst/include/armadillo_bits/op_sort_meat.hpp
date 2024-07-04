@@ -26,7 +26,7 @@ inline
 void
 op_sort::direct_sort(eT* X, const uword n_elem, const uword sort_type)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if(sort_type == 0)
     {
@@ -49,7 +49,7 @@ inline
 void
 op_sort::direct_sort_ascending(eT* X, const uword n_elem)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   arma_lt_comparator<eT> comparator;
     
@@ -109,13 +109,13 @@ inline
 void
 op_sort::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword sort_type, const uword dim)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   if((X.n_rows * X.n_cols) <= 1)  { out = X; return; }
   
   if(dim == 0)  // sort the contents of each column
     {
-    arma_extra_debug_print("op_sort::apply(): dim = 0");
+    arma_debug_print("op_sort::apply(): dim = 0");
     
     out = X;
     
@@ -132,14 +132,14 @@ op_sort::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword sort_type, co
     {
     if(X.n_rows == 1)  // a row vector
       {
-      arma_extra_debug_print("op_sort::apply(): dim = 1, vector specific");
+      arma_debug_print("op_sort::apply(): dim = 1, vector specific");
       
       out = X;
       op_sort::direct_sort(out.memptr(), out.n_elem, sort_type);
       }
     else  // not a row vector
       {
-      arma_extra_debug_print("op_sort::apply(): dim = 1, generic");
+      arma_debug_print("op_sort::apply(): dim = 1, generic");
       
       out.copy_size(X);
       
@@ -167,7 +167,7 @@ inline
 void
 op_sort::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -177,9 +177,9 @@ op_sort::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort>& in)
   const uword sort_type = in.aux_uword_a;
   const uword dim       = in.aux_uword_b;
   
-  arma_debug_check( (sort_type > 1),        "sort(): parameter 'sort_type' must be 0 or 1" );
-  arma_debug_check( (dim > 1),              "sort(): parameter 'dim' must be 0 or 1"       );
-  arma_debug_check( (X.internal_has_nan()), "sort(): detected NaN"                         );
+  arma_conform_check( (sort_type > 1),        "sort(): parameter 'sort_type' must be 0 or 1" );
+  arma_conform_check( (dim > 1),              "sort(): parameter 'dim' must be 0 or 1"       );
+  arma_conform_check( (X.internal_has_nan()), "sort(): detected NaN"                         );
   
   if(U.is_alias(out))
     {
@@ -202,7 +202,7 @@ inline
 void
 op_sort_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort_vec>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -211,8 +211,8 @@ op_sort_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort_vec>& i
   
   const uword sort_type = in.aux_uword_a;
   
-  arma_debug_check( (sort_type > 1),        "sort(): parameter 'sort_type' must be 0 or 1" );
-  arma_debug_check( (X.internal_has_nan()), "sort(): detected NaN"                         );
+  arma_conform_check( (sort_type > 1),        "sort(): parameter 'sort_type' must be 0 or 1" );
+  arma_conform_check( (X.internal_has_nan()), "sort(): detected NaN"                         );
   
   out = X;  // not checking for aliasing, to allow inplace sorting of vectors
   

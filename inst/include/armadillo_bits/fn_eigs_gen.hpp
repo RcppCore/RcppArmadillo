@@ -33,7 +33,7 @@ eigs_gen
   const eigs_opts                           opts = eigs_opts()
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::pod_type T;
   
@@ -68,7 +68,7 @@ eigs_gen
   const typename T1::pod_type               tol
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   eigs_opts opts;
   opts.tol = tol;
@@ -90,7 +90,7 @@ eigs_gen
   const eigs_opts                           opts = eigs_opts()
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::pod_type T;
   
@@ -133,7 +133,7 @@ eigs_gen
   const eigs_opts                           opts = eigs_opts()
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::pod_type T;
   
@@ -166,7 +166,7 @@ eigs_gen
   const eigs_opts                                      opts = eigs_opts()
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::pod_type T;
   
@@ -179,7 +179,7 @@ eigs_gen
   if(status == false)
     {
     eigval.soft_reset();
-    arma_debug_warn_level(3, "eigs_gen(): decomposition failed");
+    arma_warn(3, "eigs_gen(): decomposition failed");
     }
   
   return status;
@@ -201,7 +201,7 @@ eigs_gen
   const typename T1::pod_type                          tol
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   eigs_opts opts;
   opts.tol = tol;
@@ -223,7 +223,7 @@ eigs_gen
   const eigs_opts                                      opts = eigs_opts()
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::pod_type T;
   
@@ -245,7 +245,7 @@ eigs_gen
   if(status == false)
     {
     eigval.soft_reset();
-    arma_debug_warn_level(3, "eigs_gen(): decomposition failed");
+    arma_warn(3, "eigs_gen(): decomposition failed");
     }
   
   return status;
@@ -265,7 +265,7 @@ eigs_gen
   const eigs_opts                                      opts = eigs_opts()
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::pod_type T;
   
@@ -276,7 +276,7 @@ eigs_gen
   if(status == false)
     {
     eigval.soft_reset();
-    arma_debug_warn_level(3, "eigs_gen(): decomposition failed");
+    arma_warn(3, "eigs_gen(): decomposition failed");
     }
   
   return status;
@@ -298,11 +298,11 @@ eigs_gen
   const eigs_opts                                    opts = eigs_opts()
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   // typedef typename T1::pod_type T;
   
-  arma_debug_check( void_ptr(&eigval) == void_ptr(&eigvec), "eigs_gen(): parameter 'eigval' is an alias of parameter 'eigvec'" );
+  arma_conform_check( void_ptr(&eigval) == void_ptr(&eigvec), "eigs_gen(): parameter 'eigval' is an alias of parameter 'eigvec'" );
   
   sp_auxlib::form_type form_val = sp_auxlib::interpret_form_str(form);
   
@@ -312,7 +312,7 @@ eigs_gen
     {
     eigval.soft_reset();
     eigvec.soft_reset();
-    arma_debug_warn_level(3, "eigs_gen(): decomposition failed");
+    arma_warn(3, "eigs_gen(): decomposition failed");
     }
   
   return status;
@@ -335,7 +335,7 @@ eigs_gen
   const typename T1::pod_type                        tol
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   eigs_opts opts;
   opts.tol = tol;
@@ -358,11 +358,11 @@ eigs_gen
   const eigs_opts                                    opts = eigs_opts()
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::pod_type T;
   
-  arma_debug_check( void_ptr(&eigval) == void_ptr(&eigvec), "eigs_gen(): parameter 'eigval' is an alias of parameter 'eigvec'" );
+  arma_conform_check( void_ptr(&eigval) == void_ptr(&eigvec), "eigs_gen(): parameter 'eigval' is an alias of parameter 'eigvec'" );
   
   bool status = false;
   
@@ -381,7 +381,7 @@ eigs_gen
     {
     eigval.soft_reset();
     eigvec.soft_reset();
-    arma_debug_warn_level(3, "eigs_gen(): decomposition failed");
+    arma_warn(3, "eigs_gen(): decomposition failed");
     }
   
   return status;
@@ -402,11 +402,11 @@ eigs_gen
   const eigs_opts                                    opts = eigs_opts()
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::pod_type T;
   
-  arma_debug_check( void_ptr(&eigval) == void_ptr(&eigvec), "eigs_gen(): parameter 'eigval' is an alias of parameter 'eigvec'" );
+  arma_conform_check( void_ptr(&eigval) == void_ptr(&eigvec), "eigs_gen(): parameter 'eigval' is an alias of parameter 'eigvec'" );
   
   const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, std::complex<T>(T(sigma)), opts);
   
@@ -414,7 +414,7 @@ eigs_gen
     {
     eigval.soft_reset();
     eigvec.soft_reset();
-    arma_debug_warn_level(3, "eigs_gen(): decomposition failed");
+    arma_warn(3, "eigs_gen(): decomposition failed");
     }
   
   return status;

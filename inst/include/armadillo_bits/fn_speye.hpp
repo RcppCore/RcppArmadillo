@@ -28,11 +28,11 @@ inline
 obj_type
 speye(const uword n_rows, const uword n_cols, const typename arma_SpMat_SpCol_SpRow_only<obj_type>::result* junk = nullptr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
-  if(is_SpCol<obj_type>::value)  { arma_debug_check( (n_cols != 1), "speye(): incompatible size" ); }
-  if(is_SpRow<obj_type>::value)  { arma_debug_check( (n_rows != 1), "speye(): incompatible size" ); }
+  if(is_SpCol<obj_type>::value)  { arma_conform_check( (n_cols != 1), "speye(): incompatible size" ); }
+  if(is_SpRow<obj_type>::value)  { arma_conform_check( (n_rows != 1), "speye(): incompatible size" ); }
   
   obj_type out;
   
@@ -49,7 +49,7 @@ inline
 obj_type
 speye(const SizeMat& s, const typename arma_SpMat_SpCol_SpRow_only<obj_type>::result* junk = nullptr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   return speye<obj_type>(s.n_rows, s.n_cols);
@@ -63,7 +63,7 @@ inline
 sp_mat
 speye(const uword n_rows, const uword n_cols)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sp_mat out;
   
@@ -79,7 +79,7 @@ inline
 sp_mat
 speye(const SizeMat& s)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   sp_mat out;
   

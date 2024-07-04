@@ -32,7 +32,7 @@ trapz
   const uword                            dim = 0
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Glue<T1, T2, glue_trapz>(X.get_ref(), Y.get_ref(), dim);
   }
@@ -49,7 +49,7 @@ trapz
   const uword                            dim = 0
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_trapz>(Y.get_ref(), dim, uword(0));
   }

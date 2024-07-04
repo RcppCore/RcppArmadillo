@@ -26,7 +26,7 @@ inline
 typename enable_if2< is_arma_type<T1>::value && resolves_to_vector<T1>::yes, typename T1::elem_type >::result
 min(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return op_min::min(X);
   }
@@ -39,7 +39,7 @@ arma_inline
 typename enable_if2< is_arma_type<T1>::value && resolves_to_vector<T1>::no, const Op<T1, op_min> >::result
 min(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_min>(X, 0, 0);
   }
@@ -52,7 +52,7 @@ arma_inline
 typename enable_if2< is_arma_type<T1>::value, const Op<T1, op_min> >::result
 min(const T1& X, const uword dim)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_min>(X, dim, 0);
   }
@@ -86,7 +86,7 @@ min
   const T2& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Glue<T1, T2, glue_min>(X, Y);
   }
@@ -103,7 +103,7 @@ min
   const uword dim = 0
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return OpCube<T1, op_min>(X.get_ref(), dim, 0);
   }
@@ -120,7 +120,7 @@ min
   const BaseCube<typename T1::elem_type, T2>& Y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return GlueCube<T1, T2, glue_min>(X.get_ref(), Y.get_ref());
   }
@@ -138,9 +138,9 @@ enable_if2
   >::result
 min(const T1& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  return spop_min::vector_min(x);
+  return op_sp_min::vector_min(x);
   }
 
 
@@ -152,13 +152,13 @@ typename
 enable_if2
   <
   is_arma_sparse_type<T1>::value && resolves_to_sparse_vector<T1>::no,
-  const SpOp<T1, spop_min>
+  const mtSpReduceOp<typename T1::elem_type, T1, op_sp_min>
   >::result
 min(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  return SpOp<T1, spop_min>(X, 0, 0);
+  return mtSpReduceOp<typename T1::elem_type, T1, op_sp_min>(X, 0, 0);
   }
 
 
@@ -170,13 +170,13 @@ typename
 enable_if2
   <
   is_arma_sparse_type<T1>::value,
-  const SpOp<T1, spop_min>
+  const mtSpReduceOp<typename T1::elem_type, T1, op_sp_min>
   >::result
 min(const T1& X, const uword dim)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  return SpOp<T1, spop_min>(X, dim, 0);
+  return mtSpReduceOp<typename T1::elem_type, T1, op_sp_min>(X, dim, 0);
   }
 
 
@@ -193,7 +193,7 @@ enable_if2
   >::result
 min(const T1& x, const T2& y)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
 
   return SpGlue<T1, T2, spglue_min>(x, y);
   }
@@ -215,7 +215,7 @@ min
   const T2& y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   Mat<typename T1::elem_type> out;
   
@@ -241,7 +241,7 @@ min
   const T2& y
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   Mat<typename T1::elem_type> out;
   

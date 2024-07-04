@@ -27,7 +27,7 @@ inline
 typename enable_if2< is_arma_type<T1>::value && resolves_to_vector<T1>::yes, typename T1::elem_type >::result
 mean(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return op_mean::mean_all(X);
   }
@@ -40,7 +40,7 @@ arma_inline
 typename enable_if2< is_arma_type<T1>::value && resolves_to_vector<T1>::no, const Op<T1, op_mean> >::result
 mean(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_mean>(X, 0, 0);
   }
@@ -53,7 +53,7 @@ arma_inline
 typename enable_if2< is_arma_type<T1>::value, const Op<T1, op_mean> >::result
 mean(const T1& X, const uword dim)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_mean>(X, dim, 0);
   }
@@ -81,7 +81,7 @@ mean
   const uword dim = 0
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return OpCube<T1, op_mean>(X.get_ref(), dim, 0);
   }
@@ -99,9 +99,9 @@ enable_if2
   >::result
 mean(const T1& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  return spop_mean::mean_all(x);
+  return op_sp_mean::mean_all(x);
   }
 
 
@@ -113,13 +113,13 @@ typename
 enable_if2
   <
   is_arma_sparse_type<T1>::value && resolves_to_sparse_vector<T1>::no,
-  const SpOp<T1,spop_mean>
+  const mtSpReduceOp<typename T1::elem_type, T1, op_sp_mean>
   >::result
 mean(const T1& x)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  return SpOp<T1,spop_mean>(x, 0, 0);
+  return mtSpReduceOp<typename T1::elem_type, T1, op_sp_mean>(x, 0, 0);
   }
 
 
@@ -131,13 +131,13 @@ typename
 enable_if2
   <
   is_arma_sparse_type<T1>::value,
-  const SpOp<T1,spop_mean>
+  const mtSpReduceOp<typename T1::elem_type, T1, op_sp_mean>
   >::result
 mean(const T1& x, const uword dim)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  return SpOp<T1,spop_mean>(x, dim, 0);
+  return mtSpReduceOp<typename T1::elem_type, T1, op_sp_mean>(x, dim, 0);
   }
 
 

@@ -26,7 +26,7 @@ inline
 void
 op_chol::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_chol>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const bool status = op_chol::apply_direct(out, X.m, X.aux_uword_a);
   
@@ -44,20 +44,20 @@ inline
 bool
 op_chol::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& A_expr, const uword layout)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
   out = A_expr.get_ref();
   
-  arma_debug_check( (out.is_square() == false), "chol(): given matrix must be square sized", [&](){ out.soft_reset(); } );
+  arma_conform_check( (out.is_square() == false), "chol(): given matrix must be square sized", [&](){ out.soft_reset(); } );
   
   if(out.is_empty())  { return true; }
   
-  if((arma_config::debug) && (auxlib::rudimentary_sym_check(out) == false))
+  if((arma_config::check_conform) && (auxlib::rudimentary_sym_check(out) == false))
     {
-    if(is_cx<eT>::no )  { arma_debug_warn_level(1, "chol(): given matrix is not symmetric"); }
-    if(is_cx<eT>::yes)  { arma_debug_warn_level(1, "chol(): given matrix is not hermitian"); }
+    if(is_cx<eT>::no )  { arma_warn(1, "chol(): given matrix is not symmetric"); }
+    if(is_cx<eT>::yes)  { arma_warn(1, "chol(): given matrix is not hermitian"); }
     }
   
   uword KD = 0;

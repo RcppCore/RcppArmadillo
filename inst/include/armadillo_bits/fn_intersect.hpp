@@ -36,7 +36,7 @@ intersect
   const T2& B
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Glue<T1, T2, glue_intersect>(A, B);
   }
@@ -55,7 +55,7 @@ intersect
   const Base<typename T1::elem_type,T2>&  B
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   glue_intersect::apply(C, iA, iB, A.get_ref(), B.get_ref(), true);  
   }

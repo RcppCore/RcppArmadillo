@@ -27,7 +27,7 @@ inline
 void
 op_reshape::apply(Mat<typename T1::elem_type>& actual_out, const Op<T1,op_reshape>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -79,7 +79,7 @@ inline
 void
 op_reshape::apply_mat_inplace(Mat<eT>& A, const uword new_n_rows, const uword new_n_cols)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword new_n_elem = new_n_rows * new_n_cols;
   
@@ -99,7 +99,7 @@ inline
 void
 op_reshape::apply_mat_noalias(Mat<eT>& out, const Mat<eT>& A, const uword new_n_rows, const uword new_n_cols)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   out.set_size(new_n_rows, new_n_cols);
   
@@ -124,7 +124,7 @@ inline
 void
 op_reshape::apply_proxy_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const uword new_n_rows, const uword new_n_cols)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -175,7 +175,7 @@ inline
 void
 op_reshape::apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_reshape>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -203,7 +203,7 @@ inline
 void
 op_reshape::apply_cube_inplace(Cube<eT>& A, const uword new_n_rows, const uword new_n_cols, const uword new_n_slices)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword new_n_elem = new_n_rows * new_n_cols * new_n_slices;
   
@@ -223,7 +223,7 @@ inline
 void
 op_reshape::apply_cube_noalias(Cube<eT>& out, const Cube<eT>& A, const uword new_n_rows, const uword new_n_cols, const uword new_n_slices)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   out.set_size(new_n_rows, new_n_cols, new_n_slices);
   
