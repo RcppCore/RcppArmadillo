@@ -21,10 +21,10 @@
 
 
 
-#define ARMA_VERSION_MAJOR 13
-#define ARMA_VERSION_MINOR 91
+#define ARMA_VERSION_MAJOR 14
+#define ARMA_VERSION_MINOR 0
 #define ARMA_VERSION_PATCH 0
-#define ARMA_VERSION_NAME  "14.0-RC1"
+#define ARMA_VERSION_NAME  "Stochastic Parrot"
 
 
 

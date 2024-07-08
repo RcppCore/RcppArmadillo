@@ -52,7 +52,8 @@
 // for details) then defining the following macro will help. You can add a
 // #define in your source code before including the RcppArmadillo header, or add
 // a -DARMA_IGNORE_DEPRECATED_MARKER to the PKG_CPPFLAGS in src/Makevars.
-//#define ARMA_IGNORE_DEPRECATED_MARKER
+// Renabling globally for 14.0.0 release
+#define ARMA_IGNORE_DEPRECATED_MARKER
 
 #include "armadillo"
 

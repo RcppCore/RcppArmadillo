@@ -1,3 +1,17 @@
+2024-07-05  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): RcppArmadillo 14.0.0
+        * inst/NEWS.Rd: Idem
+        * configure.ac: Idem
+        * configure: Idem
+
+	* inst/include/RcppArmadillo/interface/RcppArmadilloForward.h:
+	Re-enable ARMA_IGNORE_DEPRECATED_MARKER
+
+2024-06-24  Dirk Eddelbuettel  <edd@debian.org>
+
+ 	* inst/include/armadillo_bits/: Armadillo 14.0.0
+
 2024-06-23  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 0.12.8.4.0.14.4 ie the

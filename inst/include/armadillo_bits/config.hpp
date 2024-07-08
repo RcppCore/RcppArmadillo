@@ -319,6 +319,10 @@
 #endif
 
 #if defined(ARMA_DONT_CHECK_CONFORMANCE)
+  #if defined(ARMA_CHECK_CONFORMANCE) && (ARMA_WARN_LEVEL >= 2)
+    #pragma message ("WARNING: conformance checks disabled")
+  #endif
+  
   #undef ARMA_CHECK_CONFORMANCE
 #endif
 

@@ -5,7 +5,7 @@
 [![License](https://eddelbuettel.github.io/badges/GPL2+.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
 [![CRAN](https://www.r-pkg.org/badges/version/RcppArmadillo)](https://cran.r-project.org/package=RcppArmadillo)
 [![Debian package](https://img.shields.io/debian/v/r-cran-rcpparmadillo/sid?color=brightgreen)](https://packages.debian.org/sid/r-cran-rcpparmadillo)
-[![r-universe](https://rcppcore.r-universe.dev/badges/RcppArmadillo)](https://rcppcore.r-universe.dev/rcpparmadillo)
+[![r-universe](https://rcppcore.r-universe.dev/badges/RcppArmadillo)](https://rcppcore.r-universe.dev/RcppArmadillo)
 [![Dependencies](https://tinyverse.netlify.app/badge/RcppArmadillo)](https://cran.r-project.org/package=RcppArmadillo)
 [![Coverage Status](https://codecov.io/gh/RcppCore/RcppArmadillo/graph/badge.svg)](https://app.codecov.io/github/RcppCore/RcppArmadillo?branch=master)
 [![Last Commit](https://img.shields.io/github/last-commit/RcppCore/RcppArmadillo)](https://github.com/RcppCore/RcppArmadillo)
