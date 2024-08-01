@@ -1,6 +1,3 @@
-bibentry("Manual",
-         other = unlist(citation(auto = meta), recursive = FALSE))
-
 bibentry("Article",
          title = "RcppArmadillo: Accelerating R with high-performance C++ linear algebra",
          author = c(person("Dirk", "Eddelbuettel",
@@ -15,3 +12,6 @@ bibentry("Article",
          pages = "1054--1063",
          doi = "10.1016/j.csda.2013.02.005"
          )
+
+bibentry("Manual",
+         other = unlist(citation(auto = meta), recursive = FALSE))
