@@ -1,3 +1,11 @@
+2024-08-01  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Increment micro version, update date
+
+2024-08-01  Conrad Sanderson  <conradsand@gmail.com>
+
+	* inst/CITATION: Reverse order of items displayed
+
 2024-07-05  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 14.0.0
