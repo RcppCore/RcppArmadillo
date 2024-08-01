@@ -9,6 +9,8 @@
 
 	* DESCRIPTION (Version, Date): Increment micro version, update date
 
+	* DESCRIPTION (Authors@R): Added, with ORDIDs for Dirk, Romain, Doug
+
 2024-08-01  Conrad Sanderson  <conradsand@gmail.com>
 
 	* inst/CITATION: Reverse order of items displayed

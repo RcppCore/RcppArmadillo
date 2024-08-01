@@ -5,6 +5,16 @@ Version: 14.0.2-0
 Date: 2024-08-06
 Author: Dirk Eddelbuettel, Romain Francois, Doug Bates, Binxiang Ni, and Conrad Sanderson
 Maintainer: Dirk Eddelbuettel <edd@debian.org>
+Version: 14.0.0-1-1
+Date: 2024-08-01
+Authors@R: c(person("Dirk", "Eddelbuettel", role = c("aut", "cre"), email = "edd@debian.org",
+                    comment = c(ORCID = "0000-0001-6419-907X")),
+             person("Romain", "Francois", role = "aut",
+                    comment = c(ORDID = "0000-0002-2444-4226")),
+             person("Doug", "Bates", role = "aut",
+                    comment = c(ORCID="0000-0001-8316-9503")),
+             person("Binxiang", "Ni", role = "aut"),
+             person("Conrad", "Sanderson", role = "aut"))
 Description: 'Armadillo' is a templated C++ linear algebra library (by Conrad
  Sanderson) that aims towards a good balance between speed and ease of
  use. Integer, floating point and complex numbers are supported, as
