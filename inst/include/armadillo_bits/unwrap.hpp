@@ -822,7 +822,7 @@ struct quasi_unwrap< SpToDOp<SpMat<eT>, op_sp_nonzeros> >
   const Mat<eT>    M;
   
   static constexpr bool is_const     = true;
-  static constexpr bool has_subview  = false;
+  static constexpr bool has_subview  = true;
   static constexpr bool has_orig_mem = true;
   
   template<typename eT2>

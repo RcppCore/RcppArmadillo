@@ -3374,7 +3374,7 @@ SpMat<eT>::operator()(const uword i) const
   
   template<typename eT>
   arma_inline
-    SpMat_MapMat_val<eT>
+  SpMat_MapMat_val<eT>
   SpMat<eT>::operator[] (const uword in_row, const uword in_col)
     {
     return SpMat_MapMat_val<eT>((*this), cache, in_row, in_col);
@@ -3384,7 +3384,7 @@ SpMat<eT>::operator()(const uword i) const
   
   template<typename eT>
   arma_inline
-    eT
+  eT
   SpMat<eT>::operator[] (const uword in_row, const uword in_col) const
     {
     return get_value(in_row, in_col);

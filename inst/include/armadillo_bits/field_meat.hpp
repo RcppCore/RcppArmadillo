@@ -614,7 +614,7 @@ field<oT>::operator() (const uword in_row, const uword in_col, const uword in_sl
   //! element accessor; no bounds check
   template<typename oT>
   arma_inline
-    oT&
+  oT&
   field<oT>::operator[] (const uword in_row, const uword in_col)
     {
     return (*mem[in_row + in_col*n_rows]);
@@ -625,7 +625,7 @@ field<oT>::operator() (const uword in_row, const uword in_col, const uword in_sl
   //! element accessor; no bounds check
   template<typename oT>
   arma_inline
-    const oT&
+  const oT&
   field<oT>::operator[] (const uword in_row, const uword in_col) const
     {
     return (*mem[in_row + in_col*n_rows]);
