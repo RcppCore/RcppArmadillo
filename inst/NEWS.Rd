@@ -3,8 +3,13 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 14.x.y-z (2024-xx-yy)}{
+\section{Changes in RcppArmadillo version 14.0.2-0 (2024-08-06) (GitHub Only){
   \itemize{
+    \item Upgraded to Armadillo release 14.0.2 (Stochastic Parrot)
+    \itemize{
+      \item Optionally use C++20 memory alignment
+      \item Minor corrections for several corner-cases
+    }
     \item The order of items displayed by \code{citation()} is reversed (Conrad
     in \ghpr{449})
   }
