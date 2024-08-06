@@ -362,7 +362,7 @@ class syrk
         
         const blas_int lda = (do_trans_A) ? k : n;
         
-        arma_debug_print( arma_str::format("blas::syrk(): trans_A = %c") % trans_A );
+        arma_debug_print( arma_str::format("blas::syrk(): trans_A: %c") % trans_A );
         
         blas::syrk<eT>
           (

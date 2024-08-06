@@ -35,6 +35,7 @@
 #include <cmath>
 #include <ctime>
 
+#include <memory>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -52,7 +53,7 @@
 #include <chrono>
 #include <atomic>
 
-#if !defined(ARMA_DONT_USE_STD_MUTEX)
+#if defined(ARMA_USE_STD_MUTEX)
   #include <mutex>
 #endif
 

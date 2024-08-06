@@ -1062,7 +1062,7 @@ diskio::save_coord_ascii(const Mat<eT>& x, std::ostream& f)
     f.put('\n');
     }
   
-  // make sure it's possible to figure out the matrix size later
+  // make sure it's possible to determine the matrix size
   if( (x.n_rows > 0) && (x.n_cols > 0) )
     {
     const uword max_row = (x.n_rows > 0) ? x.n_rows-1 : 0;
@@ -1125,7 +1125,7 @@ diskio::save_coord_ascii(const Mat< std::complex<T> >& x, std::ostream& f)
     f.put('\n');
     }
   
-  // make sure it's possible to figure out the matrix size later
+  // make sure it's possible to determine the matrix size
   if( (x.n_rows > 0) && (x.n_cols > 0) )
     {
     const uword max_row = (x.n_rows > 0) ? x.n_rows-1 : 0;
@@ -1319,8 +1319,8 @@ diskio::save_hdf5_binary(const Mat<eT>& x, const hdf5_name& spec, std::string& e
     hid_t dataspace = H5Screate_simple(2, dims, NULL);   // treat the matrix as a 2d array dataspace
     hid_t datatype  = hdf5_misc::get_hdf5_type<eT>();
     
-    // If this returned something invalid, well, it's time to crash.
-    arma_check(datatype == -1, "Mat::save(): unknown datatype for HDF5");
+    // fail if we can't handle the datatype
+    if(datatype == -1)  { err_msg = "unknown datatype for HDF5"; return false; }
     
     // MATLAB forces the users to specify a name at save time for HDF5;
     // Octave will use the default of 'dataset' unless otherwise specified.
@@ -3065,7 +3065,7 @@ diskio::save_coord_ascii(const SpMat<eT>& x, std::ostream& f)
     }
   
   
-  // make sure it's possible to figure out the matrix size later
+  // make sure it's possible to determine the matrix size
   if( (x.n_rows > 0) && (x.n_cols > 0) )
     {
     const uword max_row = (x.n_rows > 0) ? x.n_rows-1 : 0;
@@ -3128,7 +3128,7 @@ diskio::save_coord_ascii(const SpMat< std::complex<T> >& x, std::ostream& f)
     f.put('\n');
     }
   
-  // make sure it's possible to figure out the matrix size later
+  // make sure it's possible to determine the matrix size
   if( (x.n_rows > 0) && (x.n_cols > 0) )
     {
     const uword max_row = (x.n_rows > 0) ? x.n_rows-1 : 0;
@@ -4016,8 +4016,8 @@ diskio::save_hdf5_binary(const Cube<eT>& x, const hdf5_name& spec, std::string& 
     hid_t dataspace = H5Screate_simple(3, dims, NULL);   // treat the cube as a 3d array dataspace
     hid_t datatype  = hdf5_misc::get_hdf5_type<eT>();
     
-    // If this returned something invalid, well, it's time to crash.
-    arma_check(datatype == -1, "Cube::save(): unknown datatype for HDF5");
+    // fail if we can't handle the datatype
+    if(datatype == -1)  { err_msg = "unknown datatype for HDF5"; return false; }
     
     // MATLAB forces the users to specify a name at save time for HDF5;
     // Octave will use the default of 'dataset' unless otherwise specified.

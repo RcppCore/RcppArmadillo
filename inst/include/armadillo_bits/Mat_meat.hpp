@@ -6500,7 +6500,7 @@ Mat<eT>::at(const uword in_row, const uword in_col) const
   //! element accessor; no bounds check
   template<typename eT>
   arma_inline
-    eT&
+  eT&
   Mat<eT>::operator[] (const uword in_row, const uword in_col)
     {
     return access::rw( mem[in_row + in_col*n_rows] );
@@ -6511,7 +6511,7 @@ Mat<eT>::at(const uword in_row, const uword in_col) const
   //! element accessor; no bounds check
   template<typename eT>
   arma_inline
-    const eT&
+  const eT&
   Mat<eT>::operator[] (const uword in_row, const uword in_col) const
     {
     return mem[in_row + in_col*n_rows];

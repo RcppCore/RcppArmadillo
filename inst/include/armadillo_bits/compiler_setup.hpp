@@ -304,8 +304,6 @@
   #endif
   
   #undef  ARMA_HAVE_GCC_ASSUME_ALIGNED
-  #undef  ARMA_HAVE_ICC_ASSUME_ALIGNED
-  #define ARMA_HAVE_ICC_ASSUME_ALIGNED
   
 #endif
 

@@ -3562,7 +3562,7 @@ Cube<eT>::operator() (const uword in_row, const uword in_col, const uword in_sli
   //! element accessor; no bounds check
   template<typename eT>
   arma_inline
-    eT&
+  eT&
   Cube<eT>::operator[] (const uword in_row, const uword in_col, const uword in_slice)
     {
     return access::rw( mem[in_slice*n_elem_slice + in_col*n_rows + in_row] );
@@ -3573,7 +3573,7 @@ Cube<eT>::operator() (const uword in_row, const uword in_col, const uword in_sli
   //! element accessor; no bounds check
   template<typename eT>
   arma_inline
-    const eT&
+  const eT&
   Cube<eT>::operator[] (const uword in_row, const uword in_col, const uword in_slice) const
     {
     return mem[in_slice*n_elem_slice + in_col*n_rows + in_row];

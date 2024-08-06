@@ -272,59 +272,6 @@ accu(const T1& X)
 
 
 
-//! explicit handling of dot product expressed as matrix multiplication
-template<typename T1, typename T2>
-arma_warn_unused
-inline
-typename T1::elem_type
-accu(const Glue<T1,T2,glue_times>& expr)
-  {
-  arma_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  if( (is_cx<eT>::no) && (resolves_to_rowvector<T1>::value && resolves_to_colvector<T2>::value) )
-    {
-    arma_debug_print("accu(): dot product optimisation");
-    
-    constexpr bool proxy_is_mat = (is_Mat<typename Proxy<T1>::stored_type>::value && is_Mat<typename Proxy<T2>::stored_type>::value);
-    
-    constexpr bool use_at = (Proxy<T1>::use_at) || (Proxy<T2>::use_at);
-    
-    constexpr bool fast_unwrap = (partial_unwrap<T1>::is_fast && partial_unwrap<T2>::is_fast);
-    
-    if(proxy_is_mat || use_at || fast_unwrap)
-      {
-      const partial_unwrap<T1> UA(expr.A);
-      const partial_unwrap<T2> UB(expr.B);
-      
-      const typename partial_unwrap<T1>::stored_type& A = UA.M;
-      const typename partial_unwrap<T2>::stored_type& B = UB.M;
-      
-      arma_conform_assert_mul_size(A, B, UA.do_trans, UB.do_trans, "matrix multiplication");
-      
-      const eT val = op_dot::direct_dot(A.n_elem, A.memptr(), B.memptr());
-      
-      return (UA.do_times || UB.do_times) ? (val * UA.get_val() * UB.get_val()) : val;
-      }
-    else
-      {
-      const Proxy<T1> PA(expr.A);
-      const Proxy<T2> PB(expr.B);
-      
-      arma_conform_assert_mul_size(PA.get_n_rows(), PA.get_n_cols(), PB.get_n_rows(), PB.get_n_cols(), "matrix multiplication");
-      
-      return op_dot::apply_proxy_linear(PA,PB);
-      }
-    }
-  
-  const Mat<eT> tmp(expr);
-  
-  return arrayops::accumulate( tmp.memptr(), tmp.n_elem );
-  }
-
-
-
 //! explicit handling of multiply-and-accumulate
 template<typename T1, typename T2>
 arma_warn_unused

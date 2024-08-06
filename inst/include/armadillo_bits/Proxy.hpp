@@ -795,7 +795,7 @@ struct Proxy< CubeToMatOp<T1, op_vectorise_cube_col> >
   
   static constexpr bool use_at      = false;
   static constexpr bool use_mp      = false;
-  static constexpr bool has_subview = false;
+  static constexpr bool has_subview = true;
   
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = true;
@@ -891,7 +891,7 @@ struct Proxy< SpToDOp<SpMat<eT>, op_sp_nonzeros> >
   
   static constexpr bool use_at      = false;
   static constexpr bool use_mp      = false;
-  static constexpr bool has_subview = false;
+  static constexpr bool has_subview = true;
   
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = true;

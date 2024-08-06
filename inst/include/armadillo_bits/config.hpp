@@ -349,18 +349,6 @@
   #define ARMA_WARN_LEVEL 3
 #endif
 
-#if defined(ARMA_DONT_PRINT_ERRORS)
-  #pragma message ("INFO: support for ARMA_DONT_PRINT_ERRORS option has been removed")
-  
-  #if defined(ARMA_PRINT_EXCEPTIONS)
-    #pragma message ("INFO: suggest to use ARMA_WARN_LEVEL and ARMA_DONT_PRINT_EXCEPTIONS options instead")
-  #else
-    #pragma message ("INFO: suggest to use ARMA_WARN_LEVEL option instead")
-  #endif
-  
-  #pragma message ("INFO: see the documentation for details")
-#endif
-
 #if defined(ARMA_DONT_PRINT_EXCEPTIONS)
   #undef ARMA_PRINT_EXCEPTIONS
 #endif

@@ -316,8 +316,8 @@ class gemm
         
         const eT local_beta  = (use_beta) ? beta : eT(0);
         
-        arma_debug_print( arma_str::format("blas::gemm(): trans_A = %c") % trans_A );
-        arma_debug_print( arma_str::format("blas::gemm(): trans_B = %c") % trans_B );
+        arma_debug_print( arma_str::format("blas::gemm(): trans_A: %c") % trans_A );
+        arma_debug_print( arma_str::format("blas::gemm(): trans_B: %c") % trans_B );
         
         blas::gemm<eT>
           (
