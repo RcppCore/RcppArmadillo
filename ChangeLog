@@ -1,3 +1,7 @@
+2024-09-11  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): RcppArmadillo 14.0.2-1 CRAN release
+
 2024-08-06  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version): Increment micro version in branch

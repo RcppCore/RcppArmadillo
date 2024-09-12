@@ -3,7 +3,7 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 14.0.2-0 (2024-08-06) (GitHub Only){
+\section{Changes in RcppArmadillo version 14.0.2-1 (2024-09-11)}{
   \itemize{
     \item Upgraded to Armadillo release 14.0.2 (Stochastic Parrot)
     \itemize{
@@ -12,6 +12,7 @@
     }
     \item The order of items displayed by \code{citation()} is reversed (Conrad
     in \ghpr{449})
+    \item The DESCRIPTION file now uses an Authors@R field with ORCID IDs
   }
 }
 
