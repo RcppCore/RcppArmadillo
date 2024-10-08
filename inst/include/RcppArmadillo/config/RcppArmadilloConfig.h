@@ -126,8 +126,7 @@
 // only used int32_t -- so we select the shorter representation here.
 // Unless int64_t is explicitly required during compilation.
 #if !defined(ARMA_64BIT_WORD)
-  //#define ARMA_32BIT_WORD 1
-  #define ARMA_64BIT_WORD 1
+  #define ARMA_32BIT_WORD 1
 #endif
 
 // To return arma::vec or arma::rowvec as R vector (i.e. dimensionless),

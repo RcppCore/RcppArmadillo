@@ -1,3 +1,8 @@
+2024-09-29  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/RcppArmadillo/interface/RcppArmadilloAs.h: Add icube
+	exporter specialisation under ARMA_64BIT_CASE
+
 2024-09-11  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 14.0.2-1 CRAN release
