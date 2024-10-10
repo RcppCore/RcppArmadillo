@@ -52,7 +52,8 @@ expect_true(max(a) < 1)#, msg="randu max")
 set.seed(123)
 a <- randi(10)
 expect_true(min(a) > 0)#, msg="randi min")
-expect_true(typeof(a) == "integer")#, msg="randi type")
+## under ARMA_64BIT_WORD we get 'double'
+expect_true(typeof(a) == "integer" || typeof(a) == "double")#, msg="randi type")
 
 #test.randn <- function() {
 set.seed(123)

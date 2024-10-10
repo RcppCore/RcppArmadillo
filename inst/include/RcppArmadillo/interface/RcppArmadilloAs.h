@@ -483,9 +483,31 @@ namespace traits {
         Rcpp::Vector<RTYPE> vec;
     };
 
-    // specializations for 3 cube typedefs that fail above
-    // first use viable conversion SEXP -> Cube<other_t>
+    // specializations for 3 (or 4, see below) cube typedefs that
+    // fail above first use viable conversion SEXP -> Cube<other_t>
     // then use conv_to<cube_t>::from(other_t other)
+#ifdef ARMA_64BIT_WORD
+    // if we use ARMA_64BIT_WORD we cannot pass int through and
+    // need a fourth specialization similar to the other three
+    template <>
+    class Exporter<arma::icube> {
+    public:
+        typedef arma::icube cube_t;
+
+        Exporter(SEXP x)
+            : tmp(Exporter<arma::cube>(x).get()) {}
+
+        cube_t get() {
+            cube_t result = arma::conv_to<cube_t>::from(tmp);
+            return result;
+        }
+
+    private:
+        typedef arma::cube other_t;
+        other_t tmp;
+    };
+#endif
+
     template <>
     class Exporter<arma::fcube> {
     public:
