@@ -76,11 +76,11 @@ struct SpBase
   arma_warn_unused inline elem_type min() const;
   arma_warn_unused inline elem_type max() const;
   
-  inline elem_type min(uword& index_of_min_val) const;
-  inline elem_type max(uword& index_of_max_val) const;
+  arma_frown("use .index_min() instead") inline elem_type min(uword& index_of_min_val) const;
+  arma_frown("use .index_max() instead") inline elem_type max(uword& index_of_max_val) const;
   
-  inline elem_type min(uword& row_of_min_val, uword& col_of_min_val) const;
-  inline elem_type max(uword& row_of_max_val, uword& col_of_max_val) const;
+  arma_deprecated inline elem_type min(uword& row_of_min_val, uword& col_of_min_val) const;
+  arma_deprecated inline elem_type max(uword& row_of_max_val, uword& col_of_max_val) const;
   
   arma_warn_unused inline uword index_min() const;
   arma_warn_unused inline uword index_max() const;

@@ -355,9 +355,7 @@ op_inv_spd_rcond::apply_direct(Mat<typename T1::elem_type>& out, op_inv_spd_stat
     return true;
     }
   
-  bool is_sympd_junk = false;
-  
-  return auxlib::inv_sympd_rcond(out, is_sympd_junk, out_state.rcond);
+  return auxlib::inv_sympd_rcond(out, out_state.rcond);
   }
 
 

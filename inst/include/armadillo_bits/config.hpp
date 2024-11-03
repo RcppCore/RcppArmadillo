@@ -95,18 +95,15 @@
   #error "use ARMA_USE_FFTW3 instead of ARMA_USE_FFTW"
 #endif
 
+// #define ARMA_BLAS_64BIT_INT
+//// Uncomment the above line if your BLAS and LAPACK libraries use 64 bit integers
+
 // #define ARMA_BLAS_CAPITALS
 //// Uncomment the above line if your BLAS and LAPACK libraries have capitalised function names
 
 #define ARMA_BLAS_UNDERSCORE
 //// Uncomment the above line if your BLAS and LAPACK libraries have function names with a trailing underscore.
 //// Conversely, comment it out if the function names don't have a trailing underscore.
-
-// #define ARMA_BLAS_LONG
-//// Uncomment the above line if your BLAS and LAPACK libraries use "long" instead of "int"
-
-// #define ARMA_BLAS_LONG_LONG
-//// Uncomment the above line if your BLAS and LAPACK libraries use "long long" instead of "int"
 
 // #define ARMA_BLAS_NOEXCEPT
 //// Uncomment the above line if you require BLAS functions to have the 'noexcept' specification
@@ -306,6 +303,12 @@
   #undef ARMA_64BIT_WORD
 #endif
 
+// for compatibility with earlier versions of Armadillo
+#if defined(ARMA_BLAS_LONG) || defined(ARMA_BLAS_LONG_LONG)
+  #undef  ARMA_BLAS_64BIT_INT
+  #define ARMA_BLAS_64BIT_INT
+#endif
+
 #if defined(ARMA_DONT_OPTIMISE_BAND) || defined(ARMA_DONT_OPTIMISE_SOLVE_BAND)
   #undef ARMA_OPTIMISE_BAND
 #endif
@@ -330,6 +333,10 @@
   #undef ARMA_CHECK_NONFINITE
 #endif
 
+#if defined(ARMA_DONT_IGNORE_DEPRECATED_MARKER)
+  #undef ARMA_IGNORE_DEPRECATED_MARKER
+#endif
+
 #if defined(ARMA_NO_DEBUG)
   #undef ARMA_DEBUG
   #undef ARMA_EXTRA_DEBUG
@@ -347,6 +354,8 @@
   
   #undef  ARMA_WARN_LEVEL
   #define ARMA_WARN_LEVEL 3
+  
+  #undef  ARMA_IGNORE_DEPRECATED_MARKER
 #endif
 
 #if defined(ARMA_DONT_PRINT_EXCEPTIONS)
@@ -355,6 +364,12 @@
 
 #if defined(ARMA_NO_CRIPPLED_LAPACK)
   #undef ARMA_CRIPPLED_LAPACK
+#endif
+
+#if defined(ARMA_CRIPPLED_LAPACK)
+  #if (!defined(ARMA_IGNORE_DEPRECATED_MARKER))
+    #pragma message ("option ARMA_CRIPPLED_LAPACK is deprecated and will be removed")
+  #endif
 #endif
 
 

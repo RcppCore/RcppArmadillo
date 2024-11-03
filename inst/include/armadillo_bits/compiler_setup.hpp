@@ -168,6 +168,10 @@
   // gcc 6.1 has proper C++14 support and fixes an OpenMP related bug:
   // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=57580
   
+  #if (ARMA_GCC_VERSION < 80100)
+    #pragma message("INFO: support for GCC versions older than 8.1 is deprecated"
+  #endif
+  
   #define ARMA_GOOD_COMPILER
   
   #undef  arma_hot
@@ -310,7 +314,7 @@
 
 #if defined(_MSC_VER)
   
-  #if (_MSC_VER < 1900)
+  #if (_MSC_VER < 1910)
     #error "*** newer compiler required ***"
   #endif
   
@@ -477,7 +481,7 @@
 // NOTE: option 'ARMA_IGNORE_DEPRECATED_MARKER' will be removed
 // NOTE: disabling deprecation messages is counter-productive
 
-#if defined(ARMA_IGNORE_DEPRECATED_MARKER) && (!defined(ARMA_DONT_IGNORE_DEPRECATED_MARKER)) && (!defined(ARMA_DEBUG))
+#if defined(ARMA_IGNORE_DEPRECATED_MARKER)
   #undef  arma_deprecated
   #define arma_deprecated
 
