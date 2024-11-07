@@ -28,7 +28,7 @@ auxlib::inv(Mat<eT>& A)
   {
   arma_debug_sigprint();
   
-  // NOTE: given a matrix with NaN values, getrf() and getri() do not necessarily fail,
+  // NOTE: given a matrix with NaN values, lapack::getrf() and lapack::getri() do not necessarily fail,
   // NOTE: and can produce matrices with NaN values.
   // NOTE: we're not checking for non-finite values to avoid breaking existing user code.
   

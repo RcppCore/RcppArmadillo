@@ -37,7 +37,7 @@ op_cond::apply(const Base<typename T1::elem_type, T1>& X)
   
   if(is_op_diagmat<T1>::value || A.is_diagmat())
     {
-    arma_debug_print("op_cond::apply(): detected diagonal matrix");
+    arma_debug_print("op_cond::apply(): diag optimisation");
     
     return op_cond::apply_diag(A);
     }

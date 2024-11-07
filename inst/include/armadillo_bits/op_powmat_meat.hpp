@@ -96,7 +96,7 @@ op_powmat::apply_direct_positive(Mat<eT>& out, const Mat<eT>& X, const uword y)
   
   if(X.is_diagmat())
     {
-    arma_debug_print("op_powmat: detected diagonal matrix");
+    arma_debug_print("op_powmat: diag optimisation");
     
     podarray<eT> tmp(N);  // use temporary array in case we have aliasing
     
@@ -194,11 +194,11 @@ op_powmat_cx::apply_direct(Mat< std::complex<typename T1::pod_type> >& out, cons
   
   if(A.is_diagmat())
     {
-    arma_debug_print("op_powmat_cx: detected diagonal matrix");
+    arma_debug_print("op_powmat_cx: diag optimisation");
     
     podarray<out_eT> tmp(N);  // use temporary array in case we have aliasing
     
-    for(uword i=0; i<N; ++i)  { tmp[i] = eop_aux::pow( std::complex<in_T>(A.at(i,i)), y) ; }
+    for(uword i=0; i<N; ++i)  { tmp[i] = eop_aux::pow( std::complex<in_T>(A.at(i,i)), y ); }
     
     out.zeros(N,N);
     
@@ -207,11 +207,11 @@ op_powmat_cx::apply_direct(Mat< std::complex<typename T1::pod_type> >& out, cons
     return true;
     }
   
-  const bool try_sympd = arma_config::optimise_sym && sym_helper::guess_sympd(A);
+  const bool try_sym = arma_config::optimise_sym && sym_helper::is_approx_sym(A);
   
-  if(try_sympd)
+  if(try_sym)
     {
-    arma_debug_print("op_powmat_cx: attempting sympd optimisation");
+    arma_debug_print("op_powmat_cx: symmetric/hermitian optimisation");
     
     Col<in_T>  eigval;
     Mat<in_eT> eigvec;
@@ -220,16 +220,39 @@ op_powmat_cx::apply_direct(Mat< std::complex<typename T1::pod_type> >& out, cons
     
     if(eig_status)
       {
-      eigval = pow(eigval, y);
+      bool all_pos = true;
       
-      const Mat<in_eT> tmp = diagmat(eigval) * eigvec.t();
+      for(uword i=0; i<N; ++i)  { all_pos = (eigval[i] <= in_T(0)) ? false : all_pos; }
       
-      out = conv_to< Mat<out_eT> >::from(eigvec * tmp);
+      if(all_pos)
+        {
+        arma_debug_print("op_powmat_cx: all_pos = true");
+        
+        eigval = pow(eigval, y);
+        
+        const Mat<in_eT> tmp = eigvec * diagmat(eigval);
+        
+        out = conv_to< Mat<out_eT> >::from(tmp  * eigvec.t());
+        }
+      else
+        {
+        arma_debug_print("op_powmat_cx: all_pos = false");
+        
+        Col<out_eT> cx_eigval_pow(N, arma_nozeros_indicator());
+        
+        for(uword i=0; i<N; ++i)  { cx_eigval_pow[i] = eop_aux::pow( std::complex<in_T>(eigval[i]), y ); }
+        
+        const Mat<out_eT> cx_eigvec = conv_to< Mat<out_eT> >::from(eigvec);
+        
+        const Mat<out_eT> tmp = cx_eigvec * diagmat(cx_eigval_pow);
+        
+        out = tmp * cx_eigvec.t();
+        }
       
       return true;
       }
     
-    arma_debug_print("op_powmat_cx: sympd optimisation failed");
+    arma_debug_print("op_powmat_cx: symmetric/hermitian optimisation failed");
     
     // fallthrough if optimisation failed
     }

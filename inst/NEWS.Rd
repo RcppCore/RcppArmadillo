@@ -3,7 +3,7 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 14.1.99-1 (2024-11-05)}{
+\section{Changes in RcppArmadillo version 14.1.99-1 (2024-11-07)}{
   \itemize{
     \item Upgraded to Armadillo release 14.2.0-rc0 (Stochastic Parrot)
     \itemize{

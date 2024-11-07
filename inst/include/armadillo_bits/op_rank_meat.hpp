@@ -37,7 +37,7 @@ op_rank::apply(uword& out, const Base<typename T1::elem_type,T1>& expr, const ty
   
   if(is_op_diagmat<T1>::value || A.is_diagmat())
     {
-    arma_debug_print("op_rank::apply(): detected diagonal matrix");
+    arma_debug_print("op_rank::apply(): diag optimisation");
     
     return op_rank::apply_diag(out, A, tol);
     }

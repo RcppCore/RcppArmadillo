@@ -75,7 +75,7 @@ op_expmat::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1
   
   if(A.is_diagmat())
     {
-    arma_debug_print("op_expmat: detected diagonal matrix");
+    arma_debug_print("op_expmat: diag optimisation");
     
     const uword N = (std::min)(A.n_rows, A.n_cols);
     
@@ -195,7 +195,7 @@ op_expmat_sym::apply_direct(Mat<typename T1::elem_type>& out, const Base<typenam
     
     if(is_op_diagmat<T1>::value || X.is_diagmat())
       {
-      arma_debug_print("op_expmat_sym: detected diagonal matrix");
+      arma_debug_print("op_expmat_sym: diag optimisation");
       
       out = X;
       
