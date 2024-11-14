@@ -53,4 +53,17 @@ mtGlue<out_eT,T1,T2,glue_type>::~mtGlue()
 
 
 
+template<typename out_eT, typename T1, typename T2, typename glue_type>
+template<typename eT2>
+inline
+bool
+mtGlue<out_eT,T1,T2,glue_type>::is_alias(const Mat<eT2>& X) const
+  {
+  arma_debug_sigprint();
+  
+  return (A.is_alias(X) || B.is_alias(X));
+  }
+
+
+
 //! @}

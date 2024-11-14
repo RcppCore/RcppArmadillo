@@ -76,4 +76,17 @@ Op<T1, op_type>::~Op()
 
 
 
+template<typename T1, typename op_type>
+template<typename eT2>
+inline
+bool
+Op<T1, op_type>::is_alias(const Mat<eT2>& X) const
+  {
+  arma_debug_sigprint();
+  
+  return m.is_alias(X);
+  }
+
+
+
 //! @}

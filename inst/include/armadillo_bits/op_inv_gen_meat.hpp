@@ -221,7 +221,7 @@ op_inv_gen_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
     return auxlib::inv_tr(out, ((is_triu_expr || is_triu_mat) ? uword(0) : uword(1)));
     }
   
-  if( (arma_config::optimise_sym) && (auxlib::crippled_lapack(out) == false) && (sym_helper::is_approx_sym(out)) )
+  if( (arma_config::optimise_sym) && (auxlib::crippled_lapack(out) == false) && ( is_sym_expr<T1>::eval(expr.get_ref()) || sym_helper::is_approx_sym(out, uword(100)) ) )
     {
     arma_debug_print("op_inv_gen_full: symmetric/hermitian optimisation");
     
@@ -387,7 +387,7 @@ op_inv_gen_rcond::apply_direct(Mat<typename T1::elem_type>& out, op_inv_gen_stat
     return auxlib::inv_tr_rcond(out, out_state.rcond, ((is_triu_expr || is_triu_mat) ? uword(0) : uword(1)));
     }
   
-  if( (arma_config::optimise_sym) && (auxlib::crippled_lapack(out) == false) && (sym_helper::is_approx_sym(out)) )
+  if( (arma_config::optimise_sym) && (auxlib::crippled_lapack(out) == false) && ( is_sym_expr<T1>::eval(expr.get_ref()) || sym_helper::is_approx_sym(out, uword(100)) ) )
     {
     arma_debug_print("op_inv_gen_rcond: symmetric/hermitian optimisation");
     

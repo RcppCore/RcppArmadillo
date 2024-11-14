@@ -2618,6 +2618,19 @@ subview<eT>::swap_cols(const uword in_col1, const uword in_col2)
 
 
 template<typename eT>
+template<typename eT2>
+inline
+bool
+subview<eT>::is_alias(const Mat<eT2>& X) const
+  {
+  arma_debug_sigprint();
+  
+  return m.is_alias(X);
+  }
+
+
+
+template<typename eT>
 inline
 typename subview<eT>::iterator
 subview<eT>::begin()

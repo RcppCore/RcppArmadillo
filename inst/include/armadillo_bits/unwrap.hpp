@@ -1075,8 +1075,8 @@ struct unwrap_check_mixed< Mat<eT1> >
   template<typename eT2>
   inline
   unwrap_check_mixed(const Mat<eT1>& A, const Mat<eT2>& B)
-    : M_local( (void_ptr(&A) == void_ptr(&B)) ? new Mat<eT1>(A) : nullptr )
-    , M      ( (void_ptr(&A) == void_ptr(&B)) ? (*M_local)      : A       )
+    : M_local( ((is_same_type<eT1,eT2>::yes) && (void_ptr(&A) == void_ptr(&B))) ? new Mat<eT1>(A) : nullptr )
+    , M      ( ((is_same_type<eT1,eT2>::yes) && (void_ptr(&A) == void_ptr(&B))) ? (*M_local)      : A       )
     {
     arma_debug_sigprint();
     }
@@ -1112,8 +1112,8 @@ struct unwrap_check_mixed< Row<eT1> >
   template<typename eT2>
   inline
   unwrap_check_mixed(const Row<eT1>& A, const Mat<eT2>& B)
-    : M_local( (void_ptr(&A) == void_ptr(&B)) ? new Row<eT1>(A) : nullptr )
-    , M      ( (void_ptr(&A) == void_ptr(&B)) ? (*M_local)      : A       )
+    : M_local( ((is_same_type<eT1,eT2>::yes) && (void_ptr(&A) == void_ptr(&B))) ? new Row<eT1>(A) : nullptr )
+    , M      ( ((is_same_type<eT1,eT2>::yes) && (void_ptr(&A) == void_ptr(&B))) ? (*M_local)      : A       )
     {
     arma_debug_sigprint();
     }
@@ -1150,8 +1150,8 @@ struct unwrap_check_mixed< Col<eT1> >
   template<typename eT2>
   inline
   unwrap_check_mixed(const Col<eT1>& A, const Mat<eT2>& B)
-    : M_local( (void_ptr(&A) == void_ptr(&B)) ? new Col<eT1>(A) : nullptr )
-    , M      ( (void_ptr(&A) == void_ptr(&B)) ? (*M_local)      : A       )
+    : M_local( ((is_same_type<eT1,eT2>::yes) && (void_ptr(&A) == void_ptr(&B))) ? new Col<eT1>(A) : nullptr )
+    , M      ( ((is_same_type<eT1,eT2>::yes) && (void_ptr(&A) == void_ptr(&B))) ? (*M_local)      : A       )
     {
     arma_debug_sigprint();
     }

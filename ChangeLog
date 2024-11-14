@@ -1,9 +1,13 @@
-2024-11-07  Dirk Eddelbuettel  <edd@debian.org>
+2024-11-14  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): RcppArmadillo 12.1.99-1
+	* DESCRIPTION (Version, Date): RcppArmadillo 12.1.99-2
         * inst/NEWS.Rd: Idem
         * configure.ac: Idem
         * configure: Idem
+
+	* inst/include/armadillo_bits/: Re-sync Armadillo 12.2.0-rc1
+
+2024-11-07  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Depends): Increase to Rcpp (>= 1.0.12) as it supplies
 	the required printf format change more current R versions need

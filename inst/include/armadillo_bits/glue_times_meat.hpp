@@ -119,7 +119,9 @@ glue_times_redirect2_helper<true>::apply(Mat<typename T1::elem_type>& out, const
     
     arma_conform_assert_mul_size(A, B, "matrix multiplication");
     
-    const bool status = (strip_inv<T1>::do_inv_spd) ? auxlib::solve_sympd_fast(out, A, B) : auxlib::solve_square_fast(out, A, B);
+    const bool is_sym = (strip_inv<T1>::do_inv_spd) ? false : ( arma_config::optimise_sym && (auxlib::crippled_lapack(A) == false) && (is_sym_expr<T1>::eval(X.A) || sym_helper::is_approx_sym(A, uword(100))) );
+    
+    const bool status = (strip_inv<T1>::do_inv_spd) ? auxlib::solve_sympd_fast(out, A, B) : ( (is_sym) ? auxlib::solve_sym_fast(out, A, B) : auxlib::solve_square_fast(out, A, B) );
     
     if(status == false)
       {
@@ -278,7 +280,9 @@ glue_times_redirect3_helper<true>::apply(Mat<typename T1::elem_type>& out, const
       if(is_cx<eT>::yes)  { arma_warn(1, "inv_sympd(): given matrix is not hermitian"); }
       }
     
-    const bool status = (strip_inv<T1>::do_inv_spd) ? auxlib::solve_sympd_fast(out, A, BC) : auxlib::solve_square_fast(out, A, BC);
+    const bool is_sym = (strip_inv<T1>::do_inv_spd) ? false : ( arma_config::optimise_sym && (auxlib::crippled_lapack(A) == false) && (is_sym_expr<T1>::eval(X.A.A) || sym_helper::is_approx_sym(A, uword(100))) );
+    
+    const bool status = (strip_inv<T1>::do_inv_spd) ? auxlib::solve_sympd_fast(out, A, BC) : ( (is_sym) ? auxlib::solve_sym_fast(out, A, BC) : auxlib::solve_square_fast(out, A, BC) );
     
     if(status == false)
       {
@@ -315,7 +319,9 @@ glue_times_redirect3_helper<true>::apply(Mat<typename T1::elem_type>& out, const
     
     Mat<eT> solve_result;
     
-    const bool status = (strip_inv<T2>::do_inv_spd) ? auxlib::solve_sympd_fast(solve_result, B, C) : auxlib::solve_square_fast(solve_result, B, C);
+    const bool is_sym = (strip_inv<T1>::do_inv_spd) ? false : ( arma_config::optimise_sym && (auxlib::crippled_lapack(B) == false) && (is_sym_expr<T2>::eval(X.A.B) || sym_helper::is_approx_sym(B, uword(100))) );
+    
+    const bool status = (strip_inv<T2>::do_inv_spd) ? auxlib::solve_sympd_fast(solve_result, B, C) : ( (is_sym) ? auxlib::solve_sym_fast(solve_result, B, C) : auxlib::solve_square_fast(solve_result, B, C) );
     
     if(status == false)
       {

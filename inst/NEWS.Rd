@@ -3,7 +3,7 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 14.1.99-1 (2024-11-07)}{
+\section{Changes in RcppArmadillo version 14.1.99-2 (2024-11-14)}{
   \itemize{
     \item Upgraded to Armadillo release 14.2.0-rc0 (Stochastic Parrot)
     \itemize{
@@ -11,6 +11,9 @@
       \code{rcond()}
       \item Faster handling of hermitian matrices by \code{inv()},
       \code{rcond()}, \code{cond()}, \code{pinv()}, \code{rank()}
+      \item Added \code{solve_opts::force_sym} option to \code{solve()} to
+      force the use of the symmetric solver
+      \item More efficient handling of compound expressions by \code{solve()}
     }
     \item Added exporter specialisation for \code{icube} for the
     \code{ARMA_64BIT_WORD} case

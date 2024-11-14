@@ -771,6 +771,9 @@ class Mat : public Base< eT, Mat<eT> >
   
   inline void steal_mem_col(Mat& X, const uword max_n_rows);
   
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const; //!< don't use this unless you're writing code internal to Armadillo
+  
   
   template<uword fixed_n_rows, uword fixed_n_cols> class fixed;
   

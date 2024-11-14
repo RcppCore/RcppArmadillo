@@ -74,7 +74,20 @@ eOp<T1, eop_type>::~eOp()
   arma_debug_sigprint();
   }
 
+
+
+template<typename T1, typename eop_type>
+template<typename eT2>
+inline
+bool
+eOp<T1, eop_type>::is_alias(const Mat<eT2>& X) const
+  {
+  arma_debug_sigprint();
   
+  return P.is_alias(X);
+  }
+
+
 
 template<typename T1, typename eop_type>
 arma_inline

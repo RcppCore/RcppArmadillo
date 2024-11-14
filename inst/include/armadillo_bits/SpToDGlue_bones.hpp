@@ -36,6 +36,9 @@ class SpToDGlue : public Base< typename T1::elem_type, SpToDGlue<T1, T2, glue_ty
   inline explicit SpToDGlue(const T1& in_A, const T2& in_B);
   inline         ~SpToDGlue();
   
+  template<typename eT2>
+  constexpr bool is_alias(const Mat<eT2>&) const { return false; }
+  
   const T1& A;  //!< first operand;  must be derived from Base or SpBase
   const T2& B;  //!< second operand; must be derived from Base or SpBase
   };

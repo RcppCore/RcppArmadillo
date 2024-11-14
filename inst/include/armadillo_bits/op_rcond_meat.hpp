@@ -89,7 +89,7 @@ op_rcond::apply(const Base<typename T1::elem_type, T1>& X)
     return auxlib::rcond_trimat(A, layout);
     }
   
-  if( (arma_config::optimise_sym) && (auxlib::crippled_lapack(A) == false) && (sym_helper::is_approx_sym(A)) )
+  if( (arma_config::optimise_sym) && (auxlib::crippled_lapack(A) == false) && ( is_sym_expr<T1>::eval(X.get_ref()) || sym_helper::is_approx_sym(A, uword(100)) ) )
     {
     arma_debug_print("op_rcond::apply(): symmetric/hermitian optimisation");
     

@@ -44,6 +44,9 @@ class eGlue : public Base< typename T1::elem_type, eGlue<T1, T2, eglue_type> >
   arma_inline ~eGlue();
   arma_inline  eGlue(const T1& in_A, const T2& in_B);
   
+  template<typename eT2>
+  inline bool is_alias(const Mat<eT2>& X) const;
+  
   arma_inline uword get_n_rows() const;
   arma_inline uword get_n_cols() const;
   arma_inline uword get_n_elem() const;

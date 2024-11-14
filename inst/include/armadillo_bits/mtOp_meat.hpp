@@ -101,4 +101,17 @@ mtOp<out_eT, T1, op_type>::~mtOp()
 
 
 
+template<typename out_eT, typename T1, typename op_type>
+template<typename eT2>
+inline
+bool
+mtOp<out_eT, T1, op_type>::is_alias(const Mat<eT2>& X) const
+  {
+  arma_debug_sigprint();
+  
+  return m.is_alias(X);
+  }
+
+
+
 //! @}

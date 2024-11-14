@@ -403,6 +403,20 @@ is_approx_sym(const Mat<eT>& A)
 
 
 
+template<typename eT>
+inline
+bool
+is_approx_sym(const Mat<eT>& A, const uword min_n_rows)
+  {
+  arma_debug_sigprint();
+  
+  if((A.n_rows != A.n_cols) || (A.n_rows < min_n_rows))  { return false; }
+  
+  return is_approx_sym_worker(A);
+  }
+
+
+
 //
 
 

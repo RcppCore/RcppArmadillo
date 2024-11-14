@@ -233,9 +233,9 @@ subview_elem1<eT,T1>::inplace_op(const Base<eT,T2>& x)
   
   arma_conform_check( (aa_n_elem != P.get_n_elem()), "Mat::elem(): size mismatch" );
   
-  const bool is_alias = P.is_alias(m);
+  const bool have_alias = P.is_alias(m);
   
-  if( (is_alias == false) && (Proxy<T2>::use_at == false) )
+  if( (have_alias == false) && (Proxy<T2>::use_at == false) )
     {
     typename Proxy<T2>::ea_type X = P.get_ea();
     
@@ -271,7 +271,7 @@ subview_elem1<eT,T1>::inplace_op(const Base<eT,T2>& x)
     {
     arma_debug_print("subview_elem1::inplace_op(): aliasing or use_at detected");
     
-    const unwrap_check<typename Proxy<T2>::stored_type> tmp(P.Q, is_alias);
+    const unwrap_check<typename Proxy<T2>::stored_type> tmp(P.Q, have_alias);
     const Mat<eT>& M = tmp.M;
     
     const eT* X = M.memptr();
@@ -946,6 +946,19 @@ subview_elem1<eT,T1>::div_inplace(Mat<eT>& out, const subview_elem1& in)
   arma_debug_sigprint();
   
   mat_inplace_op<op_internal_div>(out, in);
+  }
+
+
+
+template<typename eT, typename T1>
+template<typename eT2>
+inline
+bool
+subview_elem1<eT,T1>::is_alias(const Mat<eT2>& X) const
+  {
+  arma_debug_sigprint();
+  
+  return (m.is_alias(X) || a.get_ref().is_alias(X));
   }
 
 

@@ -50,6 +50,9 @@ class eOp : public Base< typename T1::elem_type, eOp<T1, eop_type> >
   inline          eOp(const T1& in_m, const uword in_aux_uword_a, const uword in_aux_uword_b);
   inline          eOp(const T1& in_m, const elem_type in_aux, const uword in_aux_uword_a, const uword in_aux_uword_b);
   
+  template<typename eT2>
+  inline bool is_alias(const Mat<eT2>& X) const;
+  
   arma_inline uword get_n_rows() const;
   arma_inline uword get_n_cols() const;
   arma_inline uword get_n_elem() const;
