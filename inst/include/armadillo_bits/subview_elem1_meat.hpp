@@ -67,11 +67,10 @@ subview_elem1<eT,T1>::inplace_op(const eT val)
   const unwrap_check_mixed<T1> tmp(a.get_ref(), m_local);
   const umat& aa = tmp.M;
   
-  arma_conform_check
-    (
-    ( (aa.is_vec() == false) && (aa.is_empty() == false) ),
-    "Mat::elem(): given object must be a vector"
-    );
+  if(resolves_to_vector<T1>::no)
+    {
+    arma_conform_check( ( (aa.is_vec() == false) && (aa.is_empty() == false) ), "Mat::elem(): given object must be a vector" );
+    }
   
   const uword* aa_mem    = aa.memptr();
   const uword  aa_n_elem = aa.n_elem;
@@ -220,11 +219,10 @@ subview_elem1<eT,T1>::inplace_op(const Base<eT,T2>& x)
   const unwrap_check_mixed<T1> aa_tmp(a.get_ref(), m_local);
   const umat& aa = aa_tmp.M;
   
-  arma_conform_check
-    (
-    ( (aa.is_vec() == false) && (aa.is_empty() == false) ),
-    "Mat::elem(): given object must be a vector"
-    );
+  if(resolves_to_vector<T1>::no)
+    {
+    arma_conform_check( ( (aa.is_vec() == false) && (aa.is_empty() == false) ), "Mat::elem(): given object must be a vector" );
+    }
   
   const uword* aa_mem    = aa.memptr();
   const uword  aa_n_elem = aa.n_elem;
@@ -358,11 +356,10 @@ subview_elem1<eT,T1>::replace(const eT old_val, const eT new_val)
   const unwrap_check_mixed<T1> tmp(a.get_ref(), m_local);
   const umat& aa = tmp.M;
   
-  arma_conform_check
-    (
-    ( (aa.is_vec() == false) && (aa.is_empty() == false) ),
-    "Mat::elem(): given object must be a vector"
-    );
+  if(resolves_to_vector<T1>::no)
+    {
+    arma_conform_check( ( (aa.is_vec() == false) && (aa.is_empty() == false) ), "Mat::elem(): given object must be a vector" );
+    }
   
   const uword* aa_mem    = aa.memptr();
   const uword  aa_n_elem = aa.n_elem;
@@ -480,11 +477,10 @@ subview_elem1<eT,T1>::randu()
   const unwrap_check_mixed<T1> tmp(a.get_ref(), m_local);
   const umat& aa = tmp.M;
   
-  arma_conform_check
-    (
-    ( (aa.is_vec() == false) && (aa.is_empty() == false) ),
-    "Mat::elem(): given object must be a vector"
-    );
+  if(resolves_to_vector<T1>::no)
+    {
+    arma_conform_check( ( (aa.is_vec() == false) && (aa.is_empty() == false) ), "Mat::elem(): given object must be a vector" );
+    }
   
   const uword* aa_mem    = aa.memptr();
   const uword  aa_n_elem = aa.n_elem;
@@ -531,11 +527,10 @@ subview_elem1<eT,T1>::randn()
   const unwrap_check_mixed<T1> tmp(a.get_ref(), m_local);
   const umat& aa = tmp.M;
   
-  arma_conform_check
-    (
-    ( (aa.is_vec() == false) && (aa.is_empty() == false) ),
-    "Mat::elem(): given object must be a vector"
-    );
+  if(resolves_to_vector<T1>::no)
+    {
+    arma_conform_check( ( (aa.is_vec() == false) && (aa.is_empty() == false) ), "Mat::elem(): given object must be a vector" );
+    }
   
   const uword* aa_mem    = aa.memptr();
   const uword  aa_n_elem = aa.n_elem;
@@ -788,11 +783,10 @@ subview_elem1<eT,T1>::extract(Mat<eT>& actual_out, const subview_elem1<eT,T1>& i
   const unwrap_check_mixed<T1> tmp1(in.a.get_ref(), actual_out);
   const umat& aa = tmp1.M;
   
-  arma_conform_check
-    (
-    ( (aa.is_vec() == false) && (aa.is_empty() == false) ),
-    "Mat::elem(): given object must be a vector"
-    );
+  if(resolves_to_vector<T1>::no)
+    {
+    arma_conform_check( ( (aa.is_vec() == false) && (aa.is_empty() == false) ), "Mat::elem(): given object must be a vector" );
+    }
   
   const uword* aa_mem    = aa.memptr();
   const uword  aa_n_elem = aa.n_elem;
@@ -854,11 +848,10 @@ subview_elem1<eT,T1>::mat_inplace_op(Mat<eT>& out, const subview_elem1& in)
   const unwrap<T1> tmp1(in.a.get_ref());
   const umat& aa = tmp1.M;
   
-  arma_conform_check
-    (
-    ( (aa.is_vec() == false) && (aa.is_empty() == false) ),
-    "Mat::elem(): given object must be a vector"
-    );
+  if(resolves_to_vector<T1>::no)
+    {
+    arma_conform_check( ( (aa.is_vec() == false) && (aa.is_empty() == false) ), "Mat::elem(): given object must be a vector" );
+    }
   
   const uword* aa_mem    = aa.memptr();
   const uword  aa_n_elem = aa.n_elem;
