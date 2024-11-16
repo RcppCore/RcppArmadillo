@@ -3,9 +3,9 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 14.1.99-2 (2024-11-14)}{
+\section{Changes in RcppArmadillo version 14.2.0-1 (2024-11-16)}{
   \itemize{
-    \item Upgraded to Armadillo release 14.2.0-rc0 (Stochastic Parrot)
+    \item Upgraded to Armadillo release 14.2.0 (Smooth Caffeine)
     \itemize{
       \item Faster handling of symmetric matrices by \code{inv()} and
       \code{rcond()}
