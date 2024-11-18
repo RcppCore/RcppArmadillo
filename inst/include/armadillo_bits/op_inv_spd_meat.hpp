@@ -191,7 +191,7 @@ op_inv_spd_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
   
   if(is_op_diagmat<T1>::value || out.is_diagmat())
     {
-    arma_debug_print("op_inv_spd_full: detected diagonal matrix");
+    arma_debug_print("op_inv_spd_full: diag optimisation");
     
     eT* colmem = out.memptr();
     
@@ -300,7 +300,7 @@ op_inv_spd_rcond::apply_direct(Mat<typename T1::elem_type>& out, op_inv_spd_stat
   
   if(is_op_diagmat<T1>::value || out.is_diagmat())
     {
-    arma_debug_print("op_inv_spd_rcond: detected diagonal matrix");
+    arma_debug_print("op_inv_spd_rcond: diag optimisation");
     
     out_state.is_diag = true;
     
@@ -355,9 +355,7 @@ op_inv_spd_rcond::apply_direct(Mat<typename T1::elem_type>& out, op_inv_spd_stat
     return true;
     }
   
-  bool is_sympd_junk = false;
-  
-  return auxlib::inv_sympd_rcond(out, is_sympd_junk, out_state.rcond);
+  return auxlib::inv_sympd_rcond(out, out_state.rcond);
   }
 
 

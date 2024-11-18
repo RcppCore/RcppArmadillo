@@ -1087,7 +1087,7 @@ gmm_full<eT>::internal_scalar_log_p(const eT* x) const
       {
       const eT log_val = internal_scalar_log_p(x, g) + log_hefts_mem[g];
       
-      log_sum = log_add_exp(log_sum, log_val);
+      log_sum = priv::internal_log_add_exp(log_sum, log_val);
       }
     
     return log_sum;
@@ -2618,7 +2618,7 @@ gmm_full<eT>::em_generate_acc
     
     for(uword g=1; g < N_gaus; ++g)
       {
-      log_lhood_sum = log_add_exp(log_lhood_sum, gaus_log_lhoods_mem[g]);
+      log_lhood_sum = priv::internal_log_add_exp(log_lhood_sum, gaus_log_lhoods_mem[g]);
       }
     
     progress_log_lhood += log_lhood_sum;

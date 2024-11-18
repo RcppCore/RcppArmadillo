@@ -50,7 +50,7 @@ class subview_each_common
 
 
 
-
+// NOTE: deliberately not derived from Base
 template<typename parent, unsigned int mode>
 class subview_each1 : public subview_each_common<parent, mode>
   {
@@ -80,6 +80,7 @@ class subview_each1 : public subview_each_common<parent, mode>
 
 
 
+// NOTE: deliberately not derived from Base
 template<typename parent, unsigned int mode, typename TB>
 class subview_each2 : public subview_each_common<parent, mode>
   {

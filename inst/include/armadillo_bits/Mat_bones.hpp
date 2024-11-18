@@ -541,11 +541,11 @@ class Mat : public Base< eT, Mat<eT> >
   arma_warn_unused inline eT min() const;
   arma_warn_unused inline eT max() const;
   
-  inline eT min(uword& index_of_min_val) const;
-  inline eT max(uword& index_of_max_val) const;
+  arma_frown("use .index_min() instead") inline eT min(uword& index_of_min_val) const;
+  arma_frown("use .index_max() instead") inline eT max(uword& index_of_max_val) const;
   
-  inline eT min(uword& row_of_min_val, uword& col_of_min_val) const;
-  inline eT max(uword& row_of_max_val, uword& col_of_max_val) const;
+  arma_deprecated inline eT min(uword& row_of_min_val, uword& col_of_min_val) const;
+  arma_deprecated inline eT max(uword& row_of_max_val, uword& col_of_max_val) const;
   
   
   arma_cold inline bool save(const std::string   name, const file_type type = arma_binary) const;
@@ -770,6 +770,9 @@ class Mat : public Base< eT, Mat<eT> >
   inline void steal_mem(Mat& X, const bool is_move);  //!< don't use this unless you're writing code internal to Armadillo
   
   inline void steal_mem_col(Mat& X, const uword max_n_rows);
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const; //!< don't use this unless you're writing code internal to Armadillo
   
   
   template<uword fixed_n_rows, uword fixed_n_cols> class fixed;

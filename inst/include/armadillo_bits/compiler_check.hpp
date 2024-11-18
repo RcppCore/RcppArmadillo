@@ -83,10 +83,8 @@
 #endif
 
 
-#if (!defined(ARMA_HAVE_CXX14))
-  #if (!defined(ARMA_IGNORE_DEPRECATED_MARKER)) || defined(ARMA_DONT_IGNORE_DEPRECATED_MARKER) || defined(ARMA_DEBUG)
-    #pragma message ("INFO: support for C++11 is deprecated")
-  #endif
+#if (!defined(ARMA_HAVE_CXX14)) && (!defined(ARMA_IGNORE_DEPRECATED_MARKER))
+  #pragma message ("INFO: support for C++11 is deprecated; minimum recommended standard is C++14")
 #endif
 
 

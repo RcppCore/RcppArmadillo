@@ -58,6 +58,9 @@ class Op
   inline          Op(const T1& in_m, const uword     in_aux_uword_a, const uword in_aux_uword_b);
   inline         ~Op();
   
+  template<typename eT2>
+  inline bool is_alias(const Mat<eT2>& X) const;
+  
   arma_aligned const T1&       m;            //!< the operand; must be derived from Base
   arma_aligned       elem_type aux;          //!< auxiliary data, using the element type as used by T1
   arma_aligned       uword     aux_uword_a;  //!< auxiliary data, uword format

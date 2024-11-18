@@ -22,9 +22,9 @@
 
 
 #define ARMA_VERSION_MAJOR 14
-#define ARMA_VERSION_MINOR 0
-#define ARMA_VERSION_PATCH 2
-#define ARMA_VERSION_NAME  "Stochastic Parrot"
+#define ARMA_VERSION_MINOR 2
+#define ARMA_VERSION_PATCH 0
+#define ARMA_VERSION_NAME  "Smooth Caffeine"
 
 
 

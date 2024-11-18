@@ -37,19 +37,12 @@ op_cond::apply(const Base<typename T1::elem_type, T1>& X)
   
   if(is_op_diagmat<T1>::value || A.is_diagmat())
     {
-    arma_debug_print("op_cond::apply(): detected diagonal matrix");
+    arma_debug_print("op_cond::apply(): diag optimisation");
     
     return op_cond::apply_diag(A);
     }
   
-  bool is_approx_sym   = false;
-  bool is_approx_sympd = false;
-  
-  sym_helper::analyse_matrix(is_approx_sym, is_approx_sympd, A);
-  
-  const bool do_sym = (is_cx<eT>::no) ? (is_approx_sym) : (is_approx_sym && is_approx_sympd);
-  
-  if(do_sym)
+  if(sym_helper::is_approx_sym(A))
     {
     arma_debug_print("op_cond: symmetric/hermitian optimisation");
     

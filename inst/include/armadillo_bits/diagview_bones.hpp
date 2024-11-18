@@ -108,6 +108,9 @@ class diagview : public Base< eT, diagview<eT> >
   inline static void schur_inplace(Mat<eT>& out, const diagview& in);
   inline static void   div_inplace(Mat<eT>& out, const diagview& in);
   
+  template<typename eT2>
+  inline bool is_alias(const Mat<eT2>& X) const;
+  
   
   friend class Mat<eT>;
   friend class subview<eT>;

@@ -47,7 +47,10 @@ class mtOp : public Base< out_eT, mtOp<out_eT, T1, op_type> >
   inline          mtOp(const mtOp_dual_aux_indicator&, const T1& in_m, const in_eT in_aux_a, const out_eT in_aux_b);
   
   inline         ~mtOp();
-    
+  
+  template<typename eT2>
+  inline bool is_alias(const Mat<eT2>& X) const;
+  
   
   arma_aligned const T1&    m;            //!< the operand; must be derived from Base
   arma_aligned       in_eT  aux;          //!< auxiliary data, using the element type as used by T1

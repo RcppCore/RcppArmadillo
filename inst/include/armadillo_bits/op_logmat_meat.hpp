@@ -111,7 +111,7 @@ op_logmat::apply_direct(Mat< std::complex<typename T1::elem_type> >& out, const 
   
   if(A.is_diagmat())
     {
-    arma_debug_print("op_logmat: detected diagonal matrix");
+    arma_debug_print("op_logmat: diag optimisation");
     
     const uword N = A.n_rows;
     
@@ -292,7 +292,7 @@ op_logmat_cx::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename
   
   if(S.is_diagmat())
     {
-    arma_debug_print("op_logmat_cx: detected diagonal matrix");
+    arma_debug_print("op_logmat_cx: diag optimisation");
     
     const uword N = S.n_rows;
     
@@ -512,7 +512,7 @@ op_logmat_sympd::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
     
     if(is_op_diagmat<T1>::value || X.is_diagmat())
       {
-      arma_debug_print("op_logmat_sympd: detected diagonal matrix");
+      arma_debug_print("op_logmat_sympd: diag optimisation");
       
       out = X;
       

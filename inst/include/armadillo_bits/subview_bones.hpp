@@ -201,6 +201,9 @@ class subview : public Base< eT, subview<eT> >
   inline void swap_rows(const uword in_row1, const uword in_row2);
   inline void swap_cols(const uword in_col1, const uword in_col2);
   
+  template<typename eT2>
+  inline bool is_alias(const Mat<eT2>& X) const;
+  
   
   class const_iterator;
   
@@ -428,8 +431,8 @@ class subview_col : public subview<eT>
   arma_warn_unused inline eT min() const;
   arma_warn_unused inline eT max() const;
   
-  inline eT min(uword& index_of_min_val) const;
-  inline eT max(uword& index_of_max_val) const;
+  arma_frown("use .index_min() instead") inline eT min(uword& index_of_min_val) const;
+  arma_frown("use .index_max() instead") inline eT max(uword& index_of_max_val) const;
   
   arma_warn_unused inline uword index_min() const;
   arma_warn_unused inline uword index_max() const;

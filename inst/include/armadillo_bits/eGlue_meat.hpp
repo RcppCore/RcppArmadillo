@@ -50,6 +50,17 @@ eGlue<T1,T2,eglue_type>::eGlue(const T1& in_A, const T2& in_B)
 
 
 template<typename T1, typename T2, typename eglue_type>
+template<typename eT2>
+inline
+bool
+eGlue<T1,T2,eglue_type>::is_alias(const Mat<eT2>& X) const
+  {
+  return (P1.is_alias(X) || P2.is_alias(X));
+  }
+
+
+
+template<typename T1, typename T2, typename eglue_type>
 arma_inline
 uword
 eGlue<T1,T2,eglue_type>::get_n_rows() const

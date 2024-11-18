@@ -147,46 +147,6 @@ logspace(const double A, const double B, const uword N = 50u)
 
 
 
-//
-// log_exp_add
-
-template<typename eT>
-arma_warn_unused
-inline
-typename arma_real_only<eT>::result
-log_add_exp(eT log_a, eT log_b)
-  {
-  if(log_a < log_b)
-    {
-    std::swap(log_a, log_b);
-    }
-  
-  const eT negdelta = log_b - log_a;
-  
-  if( (negdelta < Datum<eT>::log_min) || (arma_isfinite(negdelta) == false) )
-    {
-    return log_a;
-    }
-  else
-    {
-    return (log_a + std::log1p(std::exp(negdelta)));
-    }
-  }
-
-
-
-// for compatibility with earlier versions
-template<typename eT>
-arma_warn_unused
-inline
-typename arma_real_only<eT>::result
-log_add(eT log_a, eT log_b)
-  {
-  return log_add_exp(log_a, log_b);
-  }
-  
-
-
 //! kept for compatibility with old user code
 template<typename eT>
 arma_warn_unused
@@ -580,6 +540,56 @@ affmul(const T1& A, const T2& B)
   arma_debug_sigprint();
   
   return Glue<T1, T2, glue_affmul>(A,B);
+  }
+
+
+
+namespace priv
+  {
+  // internal use only
+  template<typename eT>
+  arma_warn_unused
+  inline
+  typename arma_real_only<eT>::result
+  internal_log_add_exp(eT log_a, eT log_b)
+    {
+    if(log_a < log_b)  { std::swap(log_a, log_b); }
+    
+    const eT negdelta = log_b - log_a;
+    
+    if( (negdelta < Datum<eT>::log_min) || (arma_isfinite(negdelta) == false) )
+      {
+      return log_a;
+      }
+    else
+      {
+      return (log_a + std::log1p(std::exp(negdelta)));
+      }
+    }
+  }
+
+
+
+// DO NOT USE; kept only for compatibility with old user code
+template<typename eT>
+arma_deprecated
+inline
+typename arma_real_only<eT>::result
+log_add_exp(eT log_a, eT log_b)
+  {
+  return priv::internal_log_add_exp(log_a, log_b);
+  }
+
+
+
+// DO NOT USE; kept only for compatibility with old user code
+template<typename eT>
+arma_deprecated
+inline
+typename arma_real_only<eT>::result
+log_add(eT log_a, eT log_b)
+  {
+  return priv::internal_log_add_exp(log_a, log_b);
   }
 
 

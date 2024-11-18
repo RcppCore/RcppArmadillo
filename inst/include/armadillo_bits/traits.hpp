@@ -1343,5 +1343,29 @@ struct is_sym_expr< Glue< Op<Mat<eT>, op_htrans>, Mat<eT>, glue_times > >
     }
   };
 
+template<typename T1>
+struct is_sym_expr< Op<T1, op_symmatu> >
+  {
+  static
+  arma_inline
+  bool
+  eval(const Op<T1, op_symmatu>&)
+    {
+    return true;
+    }
+  };
+
+template<typename T1>
+struct is_sym_expr< Op<T1, op_symmatl> >
+  {
+  static
+  arma_inline
+  bool
+  eval(const Op<T1, op_symmatl>&)
+    {
+    return true;
+    }
+  };
+
 
 //! @}

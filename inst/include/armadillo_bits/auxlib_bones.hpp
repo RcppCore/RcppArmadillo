@@ -44,16 +44,28 @@ class auxlib
   inline static bool inv_tr_rcond(Mat<eT>& A, typename get_pod_type<eT>::result& out_rcond, const uword layout);
   
   template<typename eT>
+  inline static bool inv_sym(Mat<eT>& A);
+  
+  template<typename T>
+  inline static bool inv_sym(Mat< std::complex<T> >& A);
+  
+  template<typename eT>
+  inline static bool inv_sym_rcond(Mat<eT>& A, eT& out_rcond);
+  
+  template<typename T>
+  inline static bool inv_sym_rcond(Mat< std::complex<T> >& A, T& out_rcond);
+  
+  template<typename eT>
   inline static bool inv_sympd(Mat<eT>& A, bool& out_sympd_state);
   
   template<typename eT>
   inline static bool inv_sympd(Mat<eT>& out, const Mat<eT>& X);
   
   template<typename eT>
-  inline static bool inv_sympd_rcond(Mat<eT>& A, bool& out_sympd_state, eT& out_rcond);
+  inline static bool inv_sympd_rcond(Mat<eT>& A, eT& out_rcond);
   
   template<typename T>
-  inline static bool inv_sympd_rcond(Mat< std::complex<T> >& A, bool& out_sympd_state, T& out_rcond);
+  inline static bool inv_sympd_rcond(Mat< std::complex<T> >& A, T& out_rcond);
   
   
   //
@@ -270,6 +282,20 @@ class auxlib
   //
   
   template<typename T1>
+  inline static bool solve_sym_fast(Mat<typename T1::pod_type>& out, Mat<typename T1::pod_type>& A, const Base<typename T1::pod_type,T1>& B_expr);
+  
+  template<typename T1>
+  inline static bool solve_sym_fast(Mat< std::complex<typename T1::pod_type> >& out, Mat< std::complex<typename T1::pod_type> >& A, const Base< std::complex<typename T1::pod_type>, T1 >& B_expr);
+  
+  template<typename T1>
+  inline static bool solve_sym_rcond(Mat<typename T1::pod_type>& out, typename T1::pod_type& out_rcond, Mat<typename T1::pod_type>& A, const Base<typename T1::pod_type,T1>& B_expr);
+  
+  template<typename T1>
+  inline static bool solve_sym_rcond(Mat< std::complex<typename T1::pod_type> >& out, typename T1::pod_type& out_rcond, Mat< std::complex<typename T1::pod_type> >& A, const Base< std::complex<typename T1::pod_type>,T1>& B_expr);
+  
+  //
+  
+  template<typename T1>
   inline static bool solve_sympd_fast(Mat<typename T1::elem_type>& out, Mat<typename T1::elem_type>& A, const Base<typename T1::elem_type,T1>& B_expr);
   
   template<typename T1>
@@ -388,10 +414,10 @@ class auxlib
   inline static  T rcond(Mat< std::complex<T> >& A);
   
   template<typename eT>
-  inline static eT rcond_sympd(Mat<eT>& A, bool& calc_ok);
+  inline static eT rcond_sym(Mat<eT>& A);
   
-  template<typename T>
-  inline static  T rcond_sympd(Mat< std::complex<T> >& A, bool& calc_ok);
+  template<typename  T>
+  inline static  T rcond_sym(Mat< std::complex<T> >& A);
   
   template<typename eT>
   inline static eT rcond_trimat(const Mat<eT>& A, const uword layout);

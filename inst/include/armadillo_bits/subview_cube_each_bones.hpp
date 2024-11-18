@@ -43,7 +43,7 @@ class subview_cube_each_common
 
 
 
-
+// NOTE: deliberately not derived from BaseCube
 template<typename eT>
 class subview_cube_each1 : public subview_cube_each_common<eT>
   {
@@ -71,6 +71,7 @@ class subview_cube_each1 : public subview_cube_each_common<eT>
 
 
 
+// NOTE: deliberately not derived from BaseCube
 template<typename eT, typename TB>
 class subview_cube_each2 : public subview_cube_each_common<eT>
   {

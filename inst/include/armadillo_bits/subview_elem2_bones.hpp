@@ -103,6 +103,9 @@ class subview_elem2 : public Base< eT, subview_elem2<eT,T1,T2> >
   inline static void schur_inplace(Mat<eT>& out, const subview_elem2& in);
   inline static void   div_inplace(Mat<eT>& out, const subview_elem2& in);
   
+  template<typename eT2>
+  inline bool is_alias(const Mat<eT2>& X) const;
+  
   
   friend class Mat<eT>;
   };

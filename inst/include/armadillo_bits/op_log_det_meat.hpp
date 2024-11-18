@@ -202,7 +202,7 @@ op_log_det_sympd::apply_direct(typename T1::pod_type& out_val, const Base<typena
   
   if(is_op_diagmat<T1>::value || A.is_diagmat())
     {
-    arma_debug_print("op_log_det_sympd: detected diagonal matrix");
+    arma_debug_print("op_log_det_sympd: diag optimisation");
     
     eT* colmem = A.memptr();
     

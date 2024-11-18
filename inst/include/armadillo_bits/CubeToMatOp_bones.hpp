@@ -36,6 +36,9 @@ class CubeToMatOp : public Base< typename T1::elem_type, CubeToMatOp<T1, op_type
   arma_aligned const T1&   m;            //!< the operand; must be derived from BaseCube
   arma_aligned       uword aux_uword;    //!< auxiliary data, uword format
   
+  template<typename eT2>
+  constexpr bool is_alias(const Mat<eT2>&) const { return false; }
+  
   static constexpr bool is_row  = op_type::template traits<T1>::is_row;
   static constexpr bool is_col  = op_type::template traits<T1>::is_col;
   static constexpr bool is_xvec = op_type::template traits<T1>::is_xvec;

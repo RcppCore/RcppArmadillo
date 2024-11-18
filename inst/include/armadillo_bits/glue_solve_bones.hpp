@@ -140,6 +140,7 @@ namespace solve_opts
   static constexpr uword flag_refine       = uword(1u <<  9);
   static constexpr uword flag_no_trimat    = uword(1u << 10);
   static constexpr uword flag_force_approx = uword(1u << 11);
+  static constexpr uword flag_force_sym    = uword(1u << 12);
   
   struct opts_none         : public opts { inline constexpr opts_none()         : opts(flag_none        ) {} };
   struct opts_fast         : public opts { inline constexpr opts_fast()         : opts(flag_fast        ) {} };
@@ -154,6 +155,7 @@ namespace solve_opts
   struct opts_refine       : public opts { inline constexpr opts_refine()       : opts(flag_refine      ) {} };
   struct opts_no_trimat    : public opts { inline constexpr opts_no_trimat()    : opts(flag_no_trimat   ) {} };
   struct opts_force_approx : public opts { inline constexpr opts_force_approx() : opts(flag_force_approx) {} };
+  struct opts_force_sym    : public opts { inline constexpr opts_force_sym()    : opts(flag_force_sym   ) {} };
   
   static constexpr opts_none         none;
   static constexpr opts_fast         fast;
@@ -168,6 +170,7 @@ namespace solve_opts
   static constexpr opts_refine       refine;
   static constexpr opts_no_trimat    no_trimat;
   static constexpr opts_force_approx force_approx;
+  static constexpr opts_force_sym    force_sym;
   }
 
 

@@ -107,12 +107,9 @@ typedef void* void_ptr;
 //
 
 
-#if   defined(ARMA_BLAS_LONG_LONG)
+#if defined(ARMA_BLAS_64BIT_INT)
   typedef long long blas_int;
   #define ARMA_MAX_BLAS_INT 0x7fffffffffffffffULL
-#elif defined(ARMA_BLAS_LONG)
-  typedef long      blas_int;
-  #define ARMA_MAX_BLAS_INT 0x7fffffffffffffffUL
 #else
   typedef int       blas_int;
   #define ARMA_MAX_BLAS_INT 0x7fffffffU

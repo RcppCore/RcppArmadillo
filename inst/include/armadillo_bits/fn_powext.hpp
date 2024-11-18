@@ -23,7 +23,7 @@
 
 template<typename T1, typename T2>
 arma_warn_unused
-arma_inline
+inline
 typename
 enable_if2
   <
@@ -44,7 +44,7 @@ pow
 
 
 template<typename parent, unsigned int mode, typename T2>
-arma_warn_unused
+arma_deprecated
 inline
 Mat<typename parent::elem_type>
 pow
@@ -62,7 +62,7 @@ pow
 
 template<typename T1, typename T2>
 arma_warn_unused
-arma_inline
+inline
 const GlueCube<T1, T2, glue_powext>
 pow
   (
@@ -78,7 +78,7 @@ pow
 
 
 template<typename eT, typename T2>
-arma_warn_unused
+arma_deprecated
 inline
 Cube<eT>
 pow
@@ -100,7 +100,7 @@ pow
 
 template<typename T1, typename T2>
 arma_warn_unused
-arma_inline
+inline
 typename
 enable_if2
   <
@@ -121,7 +121,7 @@ pow
 
 
 template<typename parent, unsigned int mode, typename T2>
-arma_warn_unused
+arma_deprecated
 inline
 typename
 enable_if2
@@ -144,7 +144,7 @@ pow
 
 template<typename T1, typename T2>
 arma_warn_unused
-arma_inline
+inline
 const mtGlueCube<typename T1::elem_type, T1, T2, glue_powext_cx>
 pow
   (
@@ -160,7 +160,7 @@ pow
 
 
 template<typename T, typename T2>
-arma_warn_unused
+arma_deprecated
 inline
 Cube< std::complex<T> >
 pow
