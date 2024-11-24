@@ -393,32 +393,19 @@ op_min::direct_min(const eT* const X, const uword n_elem, uword& index_of_min_va
   {
   arma_debug_sigprint();
   
-  eT min_val_i = priv::most_pos<eT>();
-  eT min_val_j = priv::most_pos<eT>();
+  eT    best_val   = priv::most_pos<eT>();
+  uword best_index = 0;
   
-  uword best_index_i = 0;
-  uword best_index_j = 0;
-  
-  uword i,j;
-  for(i=0, j=1; j<n_elem; i+=2, j+=2)
+  for(uword i=0; i < n_elem; ++i)
     {
-    const eT X_i = X[i];
-    const eT X_j = X[j];
+    const eT val = X[i];
     
-    if(X_i < min_val_i)  { min_val_i = X_i; best_index_i = i; }
-    if(X_j < min_val_j)  { min_val_j = X_j; best_index_j = j; }
+    if(val < best_val)  { best_val = val; best_index = i; }
     }
   
-  if(i < n_elem)
-    {
-    const eT X_i = X[i];
-    
-    if(X_i < min_val_i)  { min_val_i = X_i; best_index_i = i; }
-    }
+  index_of_min_val = best_index;
   
-  index_of_min_val = (min_val_i < min_val_j) ? best_index_i : best_index_j;
-  
-  return (min_val_i < min_val_j) ? min_val_i : min_val_j;
+  return best_val;
   }
 
 
@@ -705,6 +692,8 @@ op_min::min_with_index(const Proxy<T1>& P, uword& index_of_min_val)
     {
     arma_conform_check(true, "min(): object has no elements");
     
+    index_of_min_val = 0;
+    
     return Datum<eT>::nan;
     }
   
@@ -785,6 +774,8 @@ op_min::min_with_index(const ProxyCube<T1>& P, uword& index_of_min_val)
   if(n_elem == 0)
     {
     arma_conform_check(true, "min(): object has no elements");
+    
+    index_of_min_val = 0;
     
     return Datum<eT>::nan;
     }
@@ -1160,6 +1151,8 @@ op_min::min_with_index(const Proxy<T1>& P, uword& index_of_min_val)
     {
     arma_conform_check(true, "min(): object has no elements");
     
+    index_of_min_val = 0;
+    
     return Datum<eT>::nan;
     }
   
@@ -1262,6 +1255,8 @@ op_min::min_with_index(const ProxyCube<T1>& P, uword& index_of_min_val)
   if(n_elem == 0)
     {
     arma_conform_check(true, "min(): object has no elements");
+    
+    index_of_min_val = 0;
     
     return Datum<eT>::nan;
     }

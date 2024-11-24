@@ -1,3 +1,7 @@
+2024-11-24  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/armadillo_bits/: Armadillo 14.2.1 bug fixes
+
 2024-11-16  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 14.2.0-1
