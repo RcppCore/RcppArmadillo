@@ -3,6 +3,16 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 14.2.1-1 (2024-11-24) (GitHub Only)}{
+  \itemize{
+    \item Upgraded to Armadillo release 14.2.1 (Smooth Caffeine)
+    \itemize{
+      Fix for \code{index_min()} and \code{index_max()} to ensure that the
+      first index of equal extremum values is found
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 14.2.0-1 (2024-11-16)}{
   \itemize{
     \item Upgraded to Armadillo release 14.2.0 (Smooth Caffeine)
