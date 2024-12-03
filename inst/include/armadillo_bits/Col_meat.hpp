@@ -1345,11 +1345,11 @@ Col<eT>::fixed<fixed_n_elem>::fixed(const fill::fill_class<fill_type>&)
   {
   arma_debug_sigprint_this(this);
   
-  if(is_same_type<fill_type, fill::fill_zeros>::yes)  { (*this).zeros(); }
-  if(is_same_type<fill_type, fill::fill_ones >::yes)  { (*this).ones();  }
-  if(is_same_type<fill_type, fill::fill_eye  >::yes)  { (*this).eye();   }
-  if(is_same_type<fill_type, fill::fill_randu>::yes)  { (*this).randu(); }
-  if(is_same_type<fill_type, fill::fill_randn>::yes)  { (*this).randn(); }
+  if(is_same_type<fill_type, fill::fill_zeros>::yes)  {  (*this).zeros(); }
+  if(is_same_type<fill_type, fill::fill_ones >::yes)  {  (*this).ones();  }
+  if(is_same_type<fill_type, fill::fill_eye  >::yes)  { Mat<eT>::eye();   }
+  if(is_same_type<fill_type, fill::fill_randu>::yes)  { Mat<eT>::randu(); }
+  if(is_same_type<fill_type, fill::fill_randn>::yes)  { Mat<eT>::randn(); }
   }
 
 
