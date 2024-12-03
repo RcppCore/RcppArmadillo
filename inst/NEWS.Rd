@@ -3,6 +3,15 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 14.2.1-2 (2024-12-03) (GitHub Only)}{
+  \itemize{
+    \item Upgraded to Armadillo release 14.2.1 (Smooth Caffeine)
+    \itemize{
+      Upstream sync to accommodate the yet-unreleased build of gcc 15
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 14.2.1-1 (2024-11-24) (GitHub Only)}{
   \itemize{
     \item Upgraded to Armadillo release 14.2.1 (Smooth Caffeine)
