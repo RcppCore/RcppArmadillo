@@ -825,6 +825,8 @@ class Mat<eT>::fixed : public Mat<eT>
   {
   private:
   
+  using Mat<eT>::mem_local;
+  
   static constexpr uword fixed_n_elem = fixed_n_rows * fixed_n_cols;
   static constexpr bool  use_extra    = (fixed_n_elem > arma_config::mat_prealloc);
   
