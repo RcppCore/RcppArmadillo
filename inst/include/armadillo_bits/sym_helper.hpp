@@ -50,18 +50,25 @@ guess_sympd_worker(const Mat<eT>& A)
   const eT* A_mem = A.memptr();
   const eT* A_col = A_mem;
   
+  bool diag_below_tol = true;
+  
   eT max_diag = eT(0);
   
   for(uword j=0; j < N; ++j)
     {
     const eT A_jj = A_col[j];
     
-    if(A_jj <= eT(0))  { return false; }
+    if(              A_jj  <= eT(0))  { return false; }
+    if(arma_isfinite(A_jj) == false)  { return false; }
+    
+    if(A_jj >= tol)  { diag_below_tol = false; }
     
     max_diag = (A_jj > max_diag) ? A_jj : max_diag;
     
     A_col += N;
     }
+  
+  if(diag_below_tol)  { return false; }  // assume matrix is suspect if all diagonal elements are close to zero
   
   A_col = A_mem;
   
@@ -128,6 +135,8 @@ guess_sympd_worker(const Mat<eT>& A)
   const eT* A_mem = A.memptr();
   const eT* A_col = A_mem;
   
+  bool diag_below_tol = true;
+  
   T max_diag = T(0);
   
   for(uword j=0; j < N; ++j)
@@ -138,14 +147,20 @@ guess_sympd_worker(const Mat<eT>& A)
     const  T  A_jj_rabs =  std::abs(A_jj_r);
     const  T  A_jj_iabs =  std::abs(A_jj_i);
     
-    if(A_jj_r    <= T(0)     )  { return false; }  // real should be positive
-    if(A_jj_iabs >  tol      )  { return false; }  // imag should be approx zero
-    if(A_jj_iabs >  A_jj_rabs)  { return false; }  // corner case: real and imag are close to zero, and imag is dominant
+    if(              A_jj_r  <= T(0) )  { return false; }  // real should be positive
+    if(arma_isfinite(A_jj_r) == false)  { return false; }
+    
+    if(A_jj_iabs > tol      )  { return false; }  // imag should be approx zero
+    if(A_jj_iabs > A_jj_rabs)  { return false; }  // corner case: real and imag are close to zero, and imag is dominant
+    
+    if(A_jj_r >= tol)  { diag_below_tol = false; }
     
     max_diag = (A_jj_r > max_diag) ? A_jj_r : max_diag;
     
     A_col += N;
     }
+  
+  if(diag_below_tol)  { return false; }  // assume matrix is suspect if all diagonal elements are close to zero
   
   const T square_max_diag = max_diag * max_diag;
   
@@ -264,14 +279,20 @@ is_approx_sym_worker(const Mat<eT>& A)
   const eT* A_mem = A.memptr();
   const eT* A_col = A_mem;
   
+  bool diag_below_tol = true;
+  
   for(uword j=0; j < N; ++j)
     {
-    const eT& A_jj = A_col[j];
+    const eT A_jj = A_col[j];
     
     if(arma_isfinite(A_jj) == false)  { return false; }
     
+    if(std::abs(A_jj) >= tol)  { diag_below_tol = false; }
+    
     A_col += N;
     }
+  
+  if(diag_below_tol)  { return false; }  // assume matrix is suspect if all diagonal elements are close to zero
   
   A_col = A_mem;
   
@@ -324,6 +345,8 @@ is_approx_sym_worker(const Mat<eT>& A)
   const eT* A_mem = A.memptr();
   const eT* A_col = A_mem;
   
+  bool diag_below_tol = true;
+  
   // ensure diagonal has approx real-only elements
   for(uword j=0; j < N; ++j)
     {
@@ -338,8 +361,12 @@ is_approx_sym_worker(const Mat<eT>& A)
     
     if(arma_isfinite(A_jj_r) == false)  { return false; }
     
+    if(A_jj_rabs >= tol)  { diag_below_tol = false; }
+    
     A_col += N;
     }
+  
+  if(diag_below_tol)  { return false; }  // assume matrix is suspect if all diagonal elements are close to zero
   
   A_col = A_mem;
   

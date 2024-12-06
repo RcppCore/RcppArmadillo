@@ -485,6 +485,9 @@ class Cube<eT>::fixed : public Cube<eT>
   {
   private:
   
+  using Cube<eT>::mat_ptrs_local;
+  using Cube<eT>::mem_local;
+  
   static constexpr uword fixed_n_elem       = fixed_n_rows * fixed_n_cols * fixed_n_slices;
   static constexpr uword fixed_n_elem_slice = fixed_n_rows * fixed_n_cols;
   
