@@ -3448,7 +3448,7 @@ Cube<eT>::at_alt(const uword i) const
 
 
 
-//! linear element accessor (treats the cube as a vector); bounds checking not done when ARMA_NO_DEBUG is defined
+//! linear element accessor (treats the cube as a vector); bounds checking not done when ARMA_DONT_CHECK_CONFORMANCE is defined
 template<typename eT>
 arma_inline
 eT&
@@ -3461,7 +3461,7 @@ Cube<eT>::operator() (const uword i)
 
 
 
-//! linear element accessor (treats the cube as a vector); bounds checking not done when ARMA_NO_DEBUG is defined
+//! linear element accessor (treats the cube as a vector); bounds checking not done when ARMA_DONT_CHECK_CONFORMANCE is defined
 template<typename eT>
 arma_inline
 const eT&
@@ -3517,7 +3517,7 @@ Cube<eT>::at(const uword i) const
 
 
 
-//! element accessor; bounds checking not done when ARMA_NO_DEBUG is defined
+//! element accessor; bounds checking not done when ARMA_DONT_CHECK_CONFORMANCE is defined
 template<typename eT>
 arma_inline
 eT&
@@ -3537,7 +3537,7 @@ Cube<eT>::operator() (const uword in_row, const uword in_col, const uword in_sli
 
 
 
-//! element accessor; bounds checking not done when ARMA_NO_DEBUG is defined
+//! element accessor; bounds checking not done when ARMA_DONT_CHECK_CONFORMANCE is defined
 template<typename eT>
 arma_inline
 const eT&

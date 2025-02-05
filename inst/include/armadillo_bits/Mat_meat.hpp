@@ -6391,7 +6391,7 @@ Mat<eT>::at_alt(const uword ii) const
 
 
 
-//! linear element accessor (treats the matrix as a vector); bounds checking not done when ARMA_NO_DEBUG is defined
+//! linear element accessor (treats the matrix as a vector); bounds checking not done when ARMA_DONT_CHECK_CONFORMANCE is defined
 template<typename eT>
 arma_inline
 eT&
@@ -6404,7 +6404,7 @@ Mat<eT>::operator() (const uword ii)
 
 
 
-//! linear element accessor (treats the matrix as a vector); bounds checking not done when ARMA_NO_DEBUG is defined
+//! linear element accessor (treats the matrix as a vector); bounds checking not done when ARMA_DONT_CHECK_CONFORMANCE is defined
 template<typename eT>
 arma_inline
 const eT&
@@ -6460,7 +6460,7 @@ Mat<eT>::at(const uword ii) const
 
 
 
-//! element accessor; bounds checking not done when ARMA_NO_DEBUG is defined
+//! element accessor; bounds checking not done when ARMA_DONT_CHECK_CONFORMANCE is defined
 template<typename eT>
 arma_inline
 eT&
@@ -6473,7 +6473,7 @@ Mat<eT>::operator() (const uword in_row, const uword in_col)
 
 
 
-//! element accessor; bounds checking not done when ARMA_NO_DEBUG is defined
+//! element accessor; bounds checking not done when ARMA_DONT_CHECK_CONFORMANCE is defined
 template<typename eT>
 arma_inline
 const eT&

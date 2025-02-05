@@ -531,7 +531,7 @@ field<oT>::at(const uword i) const
 
 
 
-//! linear element accessor (treats the field as a vector); bounds checking not done when ARMA_NO_DEBUG is defined
+//! linear element accessor (treats the field as a vector); bounds checking not done when ARMA_DONT_CHECK_CONFORMANCE is defined
 template<typename oT>
 arma_inline
 oT&
@@ -544,7 +544,7 @@ field<oT>::operator() (const uword i)
 
 
 
-//! linear element accessor (treats the field as a vector); bounds checking not done when ARMA_NO_DEBUG is defined
+//! linear element accessor (treats the field as a vector); bounds checking not done when ARMA_DONT_CHECK_CONFORMANCE is defined
 template<typename oT>
 arma_inline
 const oT&
@@ -557,7 +557,7 @@ field<oT>::operator() (const uword i) const
 
 
 
-//! element accessor; bounds checking not done when ARMA_NO_DEBUG is defined
+//! element accessor; bounds checking not done when ARMA_DONT_CHECK_CONFORMANCE is defined
 template<typename oT>
 arma_inline
 oT&
@@ -570,7 +570,7 @@ field<oT>::operator() (const uword in_row, const uword in_col)
 
 
 
-//! element accessor; bounds checking not done when ARMA_NO_DEBUG is defined
+//! element accessor; bounds checking not done when ARMA_DONT_CHECK_CONFORMANCE is defined
 template<typename oT>
 arma_inline
 const oT&
@@ -583,7 +583,7 @@ field<oT>::operator() (const uword in_row, const uword in_col) const
 
 
 
-//! element accessor; bounds checking not done when ARMA_NO_DEBUG is defined
+//! element accessor; bounds checking not done when ARMA_DONT_CHECK_CONFORMANCE is defined
 template<typename oT>
 arma_inline
 oT&
@@ -596,7 +596,7 @@ field<oT>::operator() (const uword in_row, const uword in_col, const uword in_sl
 
 
 
-//! element accessor; bounds checking not done when ARMA_NO_DEBUG is defined
+//! element accessor; bounds checking not done when ARMA_DONT_CHECK_CONFORMANCE is defined
 template<typename oT>
 arma_inline
 const oT&

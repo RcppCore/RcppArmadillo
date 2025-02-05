@@ -366,6 +366,9 @@
   #undef ARMA_CRIPPLED_LAPACK
 #endif
 
+// WARNING: option ARMA_IGNORE_DEPRECATED_MARKER will be removed
+// WARNING: option ARMA_CRIPPLED_LAPACK          will be removed
+
 #if defined(ARMA_CRIPPLED_LAPACK)
   #if (!defined(ARMA_IGNORE_DEPRECATED_MARKER))
     #pragma message ("option ARMA_CRIPPLED_LAPACK is deprecated and will be removed")

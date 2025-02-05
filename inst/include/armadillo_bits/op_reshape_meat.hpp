@@ -81,12 +81,19 @@ op_reshape::apply_mat_inplace(Mat<eT>& A, const uword new_n_rows, const uword ne
   {
   arma_debug_sigprint();
   
+  if( (A.n_rows == new_n_rows) && (A.n_cols == new_n_cols) )  { return; }
+  
   arma_conform_check( (A.vec_state == 1) && (new_n_cols != 1), "reshape(): requested size is not compatible with column vector layout" );
   arma_conform_check( (A.vec_state == 2) && (new_n_rows != 1), "reshape(): requested size is not compatible with row vector layout"    );
   
-  const uword new_n_elem = new_n_rows * new_n_cols;
+  if(A.is_empty())  { A.zeros(new_n_rows, new_n_cols); return; }
   
-  if(A.n_elem == new_n_elem)  { A.set_size(new_n_rows, new_n_cols); return; }
+  const bool is_into_empty  = ( (new_n_cols == uword(0)) || (new_n_rows == uword(0)) );
+  const bool is_into_colvec = ( (new_n_cols == uword(1)) && (new_n_rows == A.n_elem) );
+  const bool is_into_rowvec = ( (new_n_rows == uword(1)) && (new_n_cols == A.n_elem) );
+  const bool is_rowcol_swap = ( (new_n_cols == A.n_rows) && (new_n_rows == A.n_cols) );
+  
+  if(is_into_empty || is_into_colvec || is_into_rowvec || is_rowcol_swap)  { A.set_size(new_n_rows, new_n_cols); return; }
   
   Mat<eT> B;
   
@@ -208,9 +215,16 @@ op_reshape::apply_cube_inplace(Cube<eT>& A, const uword new_n_rows, const uword 
   {
   arma_debug_sigprint();
   
-  const uword new_n_elem = new_n_rows * new_n_cols * new_n_slices;
+  if( (A.n_rows == new_n_rows) && (A.n_cols == new_n_cols) && (A.n_slices == new_n_slices) )  { return; }
   
-  if(A.n_elem == new_n_elem)  { A.set_size(new_n_rows, new_n_cols, new_n_slices); return; }
+  if(A.is_empty())  { A.zeros(new_n_rows, new_n_cols, new_n_slices); return; }
+  
+  const bool is_into_empty  = ( (new_n_cols == uword(0)) || (new_n_rows == uword(0)) || (new_n_slices == uword(0)  ) );
+  const bool is_into_colvec = ( (new_n_cols == uword(1)) && (new_n_rows == A.n_elem) && (new_n_slices == uword(1)  ) );
+  const bool is_into_rowvec = ( (new_n_rows == uword(1)) && (new_n_cols == A.n_elem) && (new_n_slices == uword(1)  ) );
+  const bool is_rowcol_swap = ( (new_n_cols == A.n_rows) && (new_n_rows == A.n_cols) && (new_n_slices == A.n_slices) );
+  
+  if(is_into_empty || is_into_colvec || is_into_rowvec || is_rowcol_swap)  { A.set_size(new_n_rows, new_n_cols, new_n_slices); return; }
   
   Cube<eT> B;
   

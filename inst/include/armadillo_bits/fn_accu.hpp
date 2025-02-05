@@ -840,7 +840,7 @@ accu(const BaseCube<typename T1::elem_type,T1>& X)
   
   if(is_Cube<typename ProxyCube<T1>::stored_type>::value)
     {
-    unwrap_cube<typename ProxyCube<T1>::stored_type> tmp(P.Q);
+    const unwrap_cube<typename ProxyCube<T1>::stored_type> tmp(P.Q);
     
     return arrayops::accumulate(tmp.M.memptr(), tmp.M.n_elem);
     }
