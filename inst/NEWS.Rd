@@ -3,6 +3,16 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 14.2.3-1 (2025-02-05)}{
+  \itemize{
+    \item Upgraded to Armadillo release 14.2.3 (Smooth Caffeine)
+    \itemize{
+      \item Minor fix for declaration of \code{xSYCON} and \code{xHECON} functions in LAPACK
+      \item Fix for rare corner-case in \code{reshape()}
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 14.2.2-1 (2024-12-05)}{
   \itemize{
     \item Upgraded to Armadillo release 14.2.2 (Smooth Caffeine)
