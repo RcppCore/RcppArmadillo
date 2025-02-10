@@ -27,7 +27,10 @@ class op_sort_index
   public:
   
   template<typename T1>
-  static inline bool apply_noalias(Mat<uword>& out, const Proxy<T1>& P, const uword sort_type);
+  static inline bool apply_noalias_proxy(Mat<uword>& out, const Proxy<T1>& P, const uword sort_mode);
+  
+  template<typename eT>
+  static inline void apply_noalias_mat(Mat<uword>& out, const Mat<eT>& X, const uword sort_mode);
   
   template<typename T1>
   static inline void apply(Mat<uword>& out, const mtOp<uword,T1,op_sort_index>& in);
@@ -41,7 +44,7 @@ class op_stable_sort_index
   public:
   
   template<typename T1>
-  static inline bool apply_noalias(Mat<uword>& out, const Proxy<T1>& P, const uword sort_type);
+  static inline bool apply_noalias(Mat<uword>& out, const Proxy<T1>& P, const uword sort_mode);
   
   template<typename T1>
   static inline void apply(Mat<uword>& out, const mtOp<uword,T1,op_stable_sort_index>& in);
@@ -130,6 +133,22 @@ struct arma_sort_index_helper_descend< std::complex<T> >
   //   
   //   return ( (abs_A_val != abs_B_val) ? (abs_A_val > abs_B_val) : (std::arg(A.val) > std::arg(B.val)) );
   //   }
+  };
+
+
+
+template<typename eT>
+struct arma_sort_index_helper_prepare
+  {
+  arma_inline eT operator() (const eT val) const { return val; }
+  };
+
+
+
+template<typename T>
+struct arma_sort_index_helper_prepare< std::complex<T> >
+  {
+  arma_inline T operator() (const std::complex<T>& val) const { return std::abs(val); }
   };
 
 

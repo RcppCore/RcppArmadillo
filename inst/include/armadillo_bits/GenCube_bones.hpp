@@ -33,9 +33,9 @@ class GenCube
   static constexpr bool use_at    = false;
   static constexpr bool is_simple = (is_same_type<gen_type, gen_ones>::value) || (is_same_type<gen_type, gen_zeros>::value);
   
-  arma_aligned const uword n_rows;
-  arma_aligned const uword n_cols;
-  arma_aligned const uword n_slices;
+  const uword n_rows;
+  const uword n_cols;
+  const uword n_slices;
   
   arma_inline  GenCube(const uword in_n_rows, const uword in_n_cols, const uword in_n_slices);
   arma_inline ~GenCube();

@@ -37,10 +37,10 @@ class op_trimat
   inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_trimat>& in);
   
   template<typename eT>
-  inline static void apply_unwrap(Mat<eT>& out, const Mat<eT>& A, const bool upper);
+  inline static void apply_mat_noalias(Mat<eT>& out, const Mat<eT>& A, const bool upper);
   
   template<typename T1>
-  inline static void apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const bool upper);
+  inline static void apply_proxy_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const bool upper);
   };
 
 

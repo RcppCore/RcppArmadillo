@@ -22,9 +22,9 @@
 
 
 #define ARMA_VERSION_MAJOR 14
-#define ARMA_VERSION_MINOR 2
-#define ARMA_VERSION_PATCH 3
-#define ARMA_VERSION_NAME  "Smooth Caffeine"
+#define ARMA_VERSION_MINOR 3
+#define ARMA_VERSION_PATCH 90
+#define ARMA_VERSION_NAME  "unstable"
 
 
 

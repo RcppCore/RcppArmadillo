@@ -52,12 +52,12 @@ real(const BaseCube<typename T1::pod_type, T1>& X)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const T1&
-real(const SpBase<typename T1::pod_type,T1>& A)
+typename enable_if2< (is_arma_sparse_type<T1>::value && is_cx<typename T1::elem_type>::no), const T1& >::result
+real(const T1& X)
   {
   arma_debug_sigprint();
   
-  return A.get_ref();
+  return X;
   }
 
 
@@ -91,12 +91,12 @@ real(const BaseCube<std::complex<typename T1::pod_type>, T1>& X)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const mtSpOp<typename T1::pod_type, T1, spop_real>
-real(const SpBase<std::complex<typename T1::pod_type>,T1>& A)
+typename enable_if2< (is_arma_sparse_type<T1>::value && is_cx<typename T1::elem_type>::yes), const mtSpOp<typename T1::pod_type, T1, spop_real> >::result
+real(const T1& X)
   {
   arma_debug_sigprint();
   
-  return mtSpOp<typename T1::pod_type, T1, spop_real>(A.get_ref());
+  return mtSpOp<typename T1::pod_type, T1, spop_real>(X);
   }
 
 
@@ -107,52 +107,7 @@ real(const SpBase<std::complex<typename T1::pod_type>,T1>& A)
 template<typename T1>
 arma_warn_unused
 inline
-const Gen< Mat<typename T1::pod_type>, gen_zeros >
-imag(const Base<typename T1::pod_type,T1>& X)
-  {
-  arma_debug_sigprint();
-  
-  const Proxy<T1> A(X.get_ref());
-  
-  return Gen< Mat<typename T1::pod_type>, gen_zeros>(A.get_n_rows(), A.get_n_cols());
-  }
-
-
-
-template<typename T1>
-arma_warn_unused
-inline
-const GenCube<typename T1::pod_type, gen_zeros>
-imag(const BaseCube<typename T1::pod_type,T1>& X)
-  {
-  arma_debug_sigprint();
-  
-  const ProxyCube<T1> A(X.get_ref());
-  
-  return GenCube<typename T1::pod_type, gen_zeros>(A.get_n_rows(), A.get_n_cols(), A.get_n_slices());
-  }
-
-
-
-template<typename T1>
-arma_warn_unused
-inline
-SpMat<typename T1::pod_type>
-imag(const SpBase<typename T1::pod_type,T1>& A)
-  {
-  arma_debug_sigprint();
-  
-  const SpProxy<T1> P(A.get_ref());
-  
-  return SpMat<typename T1::pod_type>(P.get_n_rows(), P.get_n_cols());
-  }
-
-
-
-template<typename T1>
-arma_warn_unused
-inline
-typename enable_if2< (is_arma_type<T1>::value && is_cx<typename T1::elem_type>::yes), const mtOp<typename T1::pod_type, T1, op_imag> >::result
+typename enable_if2< is_arma_type<T1>::value, const mtOp<typename T1::pod_type, T1, op_imag> >::result
 imag(const T1& X)
   {
   arma_debug_sigprint();
@@ -166,7 +121,7 @@ template<typename T1>
 arma_warn_unused
 inline
 const mtOpCube<typename T1::pod_type, T1, op_imag>
-imag(const BaseCube<std::complex<typename T1::pod_type>,T1>& X)
+imag(const BaseCube<typename T1::elem_type,T1>& X)
   {
   arma_debug_sigprint();
   
@@ -178,12 +133,12 @@ imag(const BaseCube<std::complex<typename T1::pod_type>,T1>& X)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const mtSpOp<typename T1::pod_type, T1, spop_imag>
-imag(const SpBase<std::complex<typename T1::pod_type>,T1>& A)
+typename enable_if2< is_arma_sparse_type<T1>::value, const mtSpOp<typename T1::pod_type, T1, spop_imag> >::result
+imag(const T1& X)
   {
   arma_debug_sigprint();
   
-  return mtSpOp<typename T1::pod_type, T1, spop_imag>(A.get_ref());
+  return mtSpOp<typename T1::pod_type, T1, spop_imag>(X);
   }
 
 
@@ -480,27 +435,26 @@ abs(const BaseCube< std::complex<typename T1::pod_type>,T1>& X, const typename a
 template<typename T1>
 arma_warn_unused
 arma_inline
-const SpOp<T1, spop_abs>
-abs(const SpBase<typename T1::elem_type,T1>& X, const typename arma_not_cx<typename T1::elem_type>::result* junk = nullptr)
+typename enable_if2< (is_arma_sparse_type<T1>::value && is_cx<typename T1::elem_type>::no), const SpOp<T1, spop_abs> >::result
+abs(const T1& X)
   {
   arma_debug_sigprint();
-  arma_ignore(junk);
   
-  return SpOp<T1, spop_abs>(X.get_ref());
+  return SpOp<T1, spop_abs>(X);
   }
+
 
 
 
 template<typename T1>
 arma_warn_unused
 arma_inline
-const mtSpOp<typename T1::pod_type, T1, spop_cx_abs>
-abs(const SpBase< std::complex<typename T1::pod_type>, T1>& X, const typename arma_cx_only<typename T1::elem_type>::result* junk = nullptr)
+typename enable_if2< (is_arma_sparse_type<T1>::value && is_cx<typename T1::elem_type>::yes), const mtSpOp<typename T1::pod_type, T1, spop_cx_abs> >::result
+abs(const T1& X)
   {
   arma_debug_sigprint();
-  arma_ignore(junk);
   
-  return mtSpOp<typename T1::pod_type, T1, spop_cx_abs>(X.get_ref());
+  return mtSpOp<typename T1::pod_type, T1, spop_cx_abs>(X);
   }
 
 
@@ -568,13 +522,12 @@ arg(const BaseCube< std::complex<typename T1::pod_type>,T1>& X, const typename a
 template<typename T1>
 arma_warn_unused
 arma_inline
-const SpOp<T1, spop_arg>
-arg(const SpBase<typename T1::elem_type,T1>& X, const typename arma_not_cx<typename T1::elem_type>::result* junk = nullptr)
+typename enable_if2< (is_arma_sparse_type<T1>::value && is_cx<typename T1::elem_type>::no), const SpOp<T1, spop_arg> >::result
+arg(const T1& X)
   {
   arma_debug_sigprint();
-  arma_ignore(junk);
   
-  return SpOp<T1, spop_arg>(X.get_ref());
+  return SpOp<T1, spop_arg>(X);
   }
 
 
@@ -582,13 +535,12 @@ arg(const SpBase<typename T1::elem_type,T1>& X, const typename arma_not_cx<typen
 template<typename T1>
 arma_warn_unused
 arma_inline
-const mtSpOp<typename T1::pod_type, T1, spop_cx_arg>
-arg(const SpBase< std::complex<typename T1::pod_type>, T1>& X, const typename arma_cx_only<typename T1::elem_type>::result* junk = nullptr)
+typename enable_if2< (is_arma_sparse_type<T1>::value && is_cx<typename T1::elem_type>::yes), const mtSpOp<typename T1::pod_type, T1, spop_cx_arg> >::result
+arg(const T1& X)
   {
   arma_debug_sigprint();
-  arma_ignore(junk);
   
-  return mtSpOp<typename T1::pod_type, T1, spop_cx_arg>(X.get_ref());
+  return mtSpOp<typename T1::pod_type, T1, spop_cx_arg>(X);
   }
 
 
@@ -625,12 +577,12 @@ square(const BaseCube<typename T1::elem_type,T1>& A)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const SpOp<T1, spop_square>
-square(const SpBase<typename T1::elem_type,T1>& A)
+typename enable_if2< is_arma_sparse_type<T1>::value, const SpOp<T1, spop_square> >::result
+square(const T1& X)
   {
   arma_debug_sigprint();
   
-  return SpOp<T1, spop_square>(A.get_ref());
+  return SpOp<T1, spop_square>(X);
   }
 
 
@@ -667,12 +619,12 @@ sqrt(const BaseCube<typename T1::elem_type,T1>& A)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const SpOp<T1, spop_sqrt>
-sqrt(const SpBase<typename T1::elem_type,T1>& A)
+typename enable_if2< is_arma_sparse_type<T1>::value, const SpOp<T1, spop_sqrt> >::result
+sqrt(const T1& X)
   {
   arma_debug_sigprint();
   
-  return SpOp<T1, spop_sqrt>(A.get_ref());
+  return SpOp<T1, spop_sqrt>(X);
   }
 
 
@@ -709,12 +661,12 @@ cbrt(const BaseCube<typename T1::elem_type,T1>& A)
 template<typename T1>
 arma_warn_unused
 arma_inline
-typename enable_if2< is_cx<typename T1::elem_type>::no, const SpOp<T1, spop_cbrt> >::result
-cbrt(const SpBase<typename T1::elem_type,T1>& A)
+typename enable_if2< (is_arma_sparse_type<T1>::value && is_cx<typename T1::elem_type>::no), const SpOp<T1, spop_cbrt> >::result
+cbrt(const T1& X)
   {
   arma_debug_sigprint();
   
-  return SpOp<T1, spop_cbrt>(A.get_ref());
+  return SpOp<T1, spop_cbrt>(X);
   }
 
 
@@ -725,12 +677,12 @@ cbrt(const SpBase<typename T1::elem_type,T1>& A)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const T1&
-conj(const Base<typename T1::pod_type,T1>& A)
+typename enable_if2< (is_arma_type<T1>::value && is_cx<typename T1::elem_type>::no), const T1& >::result
+conj(const T1& X)
   {
   arma_debug_sigprint();
   
-  return A.get_ref();
+  return X;
   }
 
 
@@ -751,12 +703,12 @@ conj(const BaseCube<typename T1::pod_type,T1>& A)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const T1&
-conj(const SpBase<typename T1::pod_type,T1>& A)
+typename enable_if2< (is_arma_sparse_type<T1>::value && is_cx<typename T1::elem_type>::no), const T1& >::result
+conj(const T1& X)
   {
   arma_debug_sigprint();
   
-  return A.get_ref();
+  return X;
   }
 
 
@@ -764,12 +716,12 @@ conj(const SpBase<typename T1::pod_type,T1>& A)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const eOp<T1, eop_conj>
-conj(const Base<std::complex<typename T1::pod_type>,T1>& A)
+typename enable_if2< (is_arma_type<T1>::value && is_cx<typename T1::elem_type>::yes), const eOp<T1, eop_conj> >::result
+conj(const T1& A)
   {
   arma_debug_sigprint();
   
-  return eOp<T1, eop_conj>(A.get_ref());
+  return eOp<T1, eop_conj>(A);
   }
 
 
@@ -790,12 +742,12 @@ conj(const BaseCube<std::complex<typename T1::pod_type>,T1>& A)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const SpOp<T1, spop_conj>
-conj(const SpBase<std::complex<typename T1::pod_type>,T1>& A)
+typename enable_if2< (is_arma_sparse_type<T1>::value && is_cx<typename T1::elem_type>::yes), const SpOp<T1, spop_conj> >::result
+conj(const T1& X)
   {
   arma_debug_sigprint();
   
-  return SpOp<T1, spop_conj>(A.get_ref());
+  return SpOp<T1, spop_conj>(X);
   }
 
 
@@ -805,12 +757,12 @@ conj(const SpBase<std::complex<typename T1::pod_type>,T1>& A)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const eOp<T1, eop_pow>
-pow(const Base<typename T1::elem_type,T1>& A, const typename T1::elem_type exponent)
+typename enable_if2< is_arma_type<T1>::value, const eOp<T1, eop_pow> >::result
+pow(const T1& A, const typename T1::elem_type exponent)
   {
   arma_debug_sigprint();
   
-  return eOp<T1, eop_pow>(A.get_ref(), exponent);
+  return eOp<T1, eop_pow>(A, exponent);
   }
 
 
@@ -833,14 +785,14 @@ pow(const BaseCube<typename T1::elem_type,T1>& A, const typename T1::elem_type e
 template<typename T1>
 arma_warn_unused
 arma_inline
-const eOp<T1, eop_pow>
-pow(const Base<typename T1::elem_type,T1>& A, const typename T1::elem_type::value_type exponent)
+typename enable_if2< (is_arma_type<T1>::value && is_cx<typename T1::elem_type>::yes), const eOp<T1, eop_pow> >::result
+pow(const T1& A, const typename T1::elem_type::value_type exponent)
   {
   arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
-  return eOp<T1, eop_pow>(A.get_ref(), eT(exponent));
+  return eOp<T1, eop_pow>(A, eT(exponent));
   }
 
 
@@ -849,11 +801,11 @@ template<typename T1>
 arma_warn_unused
 arma_inline
 const eOpCube<T1, eop_pow>
-pow(const BaseCube<typename T1::elem_type,T1>& A, const typename T1::elem_type::value_type exponent)
+pow(const BaseCube<std::complex<typename T1::pod_type>,T1>& A, const typename T1::elem_type::value_type exponent)
   {
   arma_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
+  typedef std::complex<typename T1::pod_type> eT;
   
   return eOpCube<T1, eop_pow>(A.get_ref(), eT(exponent));
   }
@@ -892,12 +844,12 @@ floor(const BaseCube<typename T1::elem_type,T1>& A)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const SpOp<T1, spop_floor>
-floor(const SpBase<typename T1::elem_type,T1>& X)
+typename enable_if2< is_arma_sparse_type<T1>::value, const SpOp<T1, spop_floor> >::result
+floor(const T1& X)
   {
   arma_debug_sigprint();
   
-  return SpOp<T1, spop_floor>(X.get_ref());
+  return SpOp<T1, spop_floor>(X);
   }
 
 
@@ -934,12 +886,12 @@ ceil(const BaseCube<typename T1::elem_type,T1>& A)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const SpOp<T1, spop_ceil>
-ceil(const SpBase<typename T1::elem_type,T1>& X)
+typename enable_if2< is_arma_sparse_type<T1>::value, const SpOp<T1, spop_ceil> >::result
+ceil(const T1& X)
   {
   arma_debug_sigprint();
   
-  return SpOp<T1, spop_ceil>(X.get_ref());
+  return SpOp<T1, spop_ceil>(X);
   }
 
 
@@ -976,12 +928,12 @@ round(const BaseCube<typename T1::elem_type,T1>& A)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const SpOp<T1, spop_round>
-round(const SpBase<typename T1::elem_type,T1>& X)
+typename enable_if2< is_arma_sparse_type<T1>::value, const SpOp<T1, spop_round> >::result
+round(const T1& X)
   {
   arma_debug_sigprint();
   
-  return SpOp<T1, spop_round>(X.get_ref());
+  return SpOp<T1, spop_round>(X);
   }
 
 
@@ -1018,12 +970,12 @@ trunc(const BaseCube<typename T1::elem_type,T1>& A)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const SpOp<T1, spop_trunc>
-trunc(const SpBase<typename T1::elem_type,T1>& X)
+typename enable_if2< is_arma_sparse_type<T1>::value, const SpOp<T1, spop_trunc> >::result
+trunc(const T1& X)
   {
   arma_debug_sigprint();
   
-  return SpOp<T1, spop_trunc>(X.get_ref());
+  return SpOp<T1, spop_trunc>(X);
   }
 
 
@@ -1073,12 +1025,12 @@ sign(const BaseCube<typename T1::elem_type,T1>& A)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const SpOp<T1, spop_sign>
-sign(const SpBase<typename T1::elem_type,T1>& X)
+typename enable_if2< is_arma_sparse_type<T1>::value, const SpOp<T1, spop_sign> >::result
+sign(const T1& X)
   {
   arma_debug_sigprint();
   
-  return SpOp<T1, spop_sign>(X.get_ref());
+  return SpOp<T1, spop_sign>(X);
   }
 
 

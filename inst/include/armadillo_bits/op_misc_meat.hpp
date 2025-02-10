@@ -116,9 +116,14 @@ op_imag::apply( Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_typ
   {
   arma_debug_sigprint();
   
-  typedef typename T1::pod_type T;
+  typedef typename T1::elem_type eT;
+  typedef typename T1::pod_type   T;
   
   const Proxy<T1> P(X.m);
+  
+  if(is_cx<eT>::no)  { out.zeros(P.get_n_rows(), P.get_n_cols()); return; }
+  
+  // aliasing not possible at this point, as eT must be std::complex
   
   const uword n_rows = P.get_n_rows();
   const uword n_cols = P.get_n_cols();
@@ -136,7 +141,7 @@ op_imag::apply( Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_typ
     
     for(uword i=0; i < n_elem; ++i)
       {
-      out_mem[i] = std::imag( A[i] );
+      out_mem[i] = access::tmp_imag( A[i] );
       }
     }
   else
@@ -144,7 +149,7 @@ op_imag::apply( Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_typ
     for(uword col=0; col < n_cols; ++col)
     for(uword row=0; row < n_rows; ++row)
       {
-      *out_mem = std::imag( P.at(row,col) );
+      *out_mem = access::tmp_imag( P.at(row,col) );
       out_mem++;
       }
     }
@@ -159,9 +164,14 @@ op_imag::apply( Cube<typename T1::pod_type>& out, const mtOpCube<typename T1::po
   {
   arma_debug_sigprint();
   
-  typedef typename T1::pod_type T;
+  typedef typename T1::elem_type eT;
+  typedef typename T1::pod_type   T;
   
   const ProxyCube<T1> P(X.m);
+  
+  if(is_cx<eT>::no)  { out.zeros(P.get_n_rows(), P.get_n_cols(), P.get_n_slices()); return; }
+  
+  // aliasing not possible at this point, as eT must be std::complex
   
   const uword n_rows   = P.get_n_rows();
   const uword n_cols   = P.get_n_cols();
@@ -180,7 +190,7 @@ op_imag::apply( Cube<typename T1::pod_type>& out, const mtOpCube<typename T1::po
     
     for(uword i=0; i < n_elem; ++i)
       {
-      out_mem[i] = std::imag( A[i] );
+      out_mem[i] = access::tmp_imag( A[i] );
       }
     }
   else
@@ -189,7 +199,7 @@ op_imag::apply( Cube<typename T1::pod_type>& out, const mtOpCube<typename T1::po
     for(uword col=0;   col   < n_cols;   ++col  )
     for(uword row=0;   row   < n_rows;   ++row  )
       {
-      *out_mem = std::imag( P.at(row,col,slice) );
+      *out_mem = access::tmp_imag( P.at(row,col,slice) );
       out_mem++;
       }
     }

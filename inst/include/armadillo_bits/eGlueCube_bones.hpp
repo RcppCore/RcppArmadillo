@@ -27,13 +27,15 @@ class eGlueCube : public BaseCube< typename T1::elem_type, eGlueCube<T1, T2, egl
   
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
+  typedef          ProxyCube<T1>                   proxy1_type;
+  typedef          ProxyCube<T2>                   proxy2_type;
   
   static constexpr bool use_at      = (ProxyCube<T1>::use_at      || ProxyCube<T2>::use_at     );
   static constexpr bool use_mp      = (ProxyCube<T1>::use_mp      || ProxyCube<T2>::use_mp     );
   static constexpr bool has_subview = (ProxyCube<T1>::has_subview || ProxyCube<T2>::has_subview);
   
-  arma_aligned const ProxyCube<T1> P1;
-  arma_aligned const ProxyCube<T2> P2;
+  const ProxyCube<T1> P1;
+  const ProxyCube<T2> P2;
   
   arma_inline ~eGlueCube();
   arma_inline  eGlueCube(const T1& in_A, const T2& in_B);

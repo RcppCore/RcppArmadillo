@@ -33,8 +33,8 @@ struct get_pod_type< std::complex<T2> >
 template<typename T>
 struct is_Mat_fixed_only
   {
-  typedef char yes[1];
-  typedef char  no[2];
+  using yes = char[1];
+  using no  = char[2];
   
   template<typename X> static yes& check(typename X::Mat_fixed_type*);
   template<typename>   static  no& check(...);
@@ -47,8 +47,8 @@ struct is_Mat_fixed_only
 template<typename T>
 struct is_Row_fixed_only
   {
-  typedef char yes[1];
-  typedef char  no[2];
+  using yes = char[1];
+  using no  = char[2];
   
   template<typename X> static yes& check(typename X::Row_fixed_type*);
   template<typename>   static  no& check(...);
@@ -61,8 +61,8 @@ struct is_Row_fixed_only
 template<typename T>
 struct is_Col_fixed_only
   {
-  typedef char yes[1];
-  typedef char  no[2];
+  using yes = char[1];
+  using no  = char[2];
   
   template<typename X> static yes& check(typename X::Col_fixed_type*);
   template<typename>   static  no& check(...);
@@ -1283,8 +1283,8 @@ struct has_op_inv_any< Glue<T1, Op<T2,op_inv_spd_default>, glue_times> >
 template<typename T>
 struct has_nested_op_traits
   {
-  typedef char yes[1];
-  typedef char  no[2];
+  using yes = char[1];
+  using no  = char[2];
   
   template<typename X> static yes& check(typename X::template traits<void>*);
   template<typename>   static  no& check(...);
@@ -1295,8 +1295,8 @@ struct has_nested_op_traits
 template<typename T>
 struct has_nested_glue_traits
   {
-  typedef char yes[1];
-  typedef char  no[2];
+  using yes = char[1];
+  using no  = char[2];
   
   template<typename X> static yes& check(typename X::template traits<void,void>*);
   template<typename>   static  no& check(...);

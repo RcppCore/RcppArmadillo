@@ -25,7 +25,7 @@
 template<typename T1>
 inline
 void
-op_reshape::apply(Mat<typename T1::elem_type>& actual_out, const Op<T1,op_reshape>& in)
+op_reshape::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reshape>& in)
   {
   arma_debug_sigprint();
   
@@ -34,41 +34,54 @@ op_reshape::apply(Mat<typename T1::elem_type>& actual_out, const Op<T1,op_reshap
   const uword new_n_rows = in.aux_uword_a;
   const uword new_n_cols = in.aux_uword_b;
   
-  if(is_Mat<T1>::value || (arma_config::openmp && Proxy<T1>::use_mp))
+  if(is_Mat<T1>::value)
     {
     const unwrap<T1>   U(in.m);
     const Mat<eT>& A = U.M;
     
-    if(&actual_out == &A)
+    if(&out == &A)
       {
-      op_reshape::apply_mat_inplace(actual_out, new_n_rows, new_n_cols);
+      op_reshape::apply_mat_inplace(out, new_n_rows, new_n_cols);
       }
     else
       {
-      op_reshape::apply_mat_noalias(actual_out, A, new_n_rows, new_n_cols);
+      op_reshape::apply_mat_noalias(out, A, new_n_rows, new_n_cols);
+      }
+    }
+  else
+  if((is_Mat<typename Proxy<T1>::stored_type>::value) || (arma_config::openmp && Proxy<T1>::use_mp))
+    {
+    const quasi_unwrap<T1> U(in.m);
+    
+    if(U.is_alias(out))
+      {
+      Mat<eT> tmp;
+      
+      op_reshape::apply_mat_noalias(tmp, U.M, new_n_rows, new_n_cols);
+      
+      out.steal_mem(tmp);
+      }
+    else
+      {
+      op_reshape::apply_mat_noalias(out, U.M, new_n_rows, new_n_cols);
       }
     }
   else
     {
     const Proxy<T1> P(in.m);
     
-    const bool is_alias = P.is_alias(actual_out);
-    
-    Mat<eT>  tmp;
-    Mat<eT>& out = (is_alias) ? tmp : actual_out;
-    
-    if(is_Mat<typename Proxy<T1>::stored_type>::value)
+    if(P.is_alias(out))
       {
-      const quasi_unwrap<typename Proxy<T1>::stored_type> U(P.Q);
+      Mat<eT> tmp;
       
-      op_reshape::apply_mat_noalias(out, U.M, new_n_rows, new_n_cols);
+      op_reshape::apply_proxy_noalias(tmp, P, new_n_rows, new_n_cols);
+      
+      out.steal_mem(tmp);
       }
     else
       {
       op_reshape::apply_proxy_noalias(out, P, new_n_rows, new_n_cols);
       }
-    
-    if(is_alias)  { actual_out.steal_mem(tmp); }
     }
   }
 
@@ -95,7 +108,7 @@ op_reshape::apply_mat_inplace(Mat<eT>& A, const uword new_n_rows, const uword ne
   
   if(is_into_empty || is_into_colvec || is_into_rowvec || is_rowcol_swap)  { A.set_size(new_n_rows, new_n_cols); return; }
   
-  Mat<eT> B;
+  Mat<eT> B(new_n_rows, new_n_cols, arma_nozeros_indicator());
   
   op_reshape::apply_mat_noalias(B, A, new_n_rows, new_n_cols);
   
@@ -226,7 +239,7 @@ op_reshape::apply_cube_inplace(Cube<eT>& A, const uword new_n_rows, const uword 
   
   if(is_into_empty || is_into_colvec || is_into_rowvec || is_rowcol_swap)  { A.set_size(new_n_rows, new_n_cols, new_n_slices); return; }
   
-  Cube<eT> B;
+  Cube<eT> B(new_n_rows, new_n_cols, new_n_slices, arma_nozeros_indicator());
   
   op_reshape::apply_cube_noalias(B, A, new_n_rows, new_n_cols, new_n_slices);
   

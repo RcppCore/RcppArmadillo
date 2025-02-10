@@ -28,16 +28,17 @@ class eOpCube : public BaseCube< typename T1::elem_type, eOpCube<T1, eop_type> >
   
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
+  typedef          ProxyCube<T1>                   proxy_type;
   
   static constexpr bool use_at      = ProxyCube<T1>::use_at;
   static constexpr bool use_mp      = ProxyCube<T1>::use_mp || eop_type::use_mp;
   static constexpr bool has_subview = ProxyCube<T1>::has_subview;
   
-  arma_aligned const ProxyCube<T1> P;
-  arma_aligned       elem_type     aux;          //!< storage of auxiliary data, user defined format
-  arma_aligned       uword         aux_uword_a;  //!< storage of auxiliary data, uword format
-  arma_aligned       uword         aux_uword_b;  //!< storage of auxiliary data, uword format
-  arma_aligned       uword         aux_uword_c;  //!< storage of auxiliary data, uword format
+  const ProxyCube<T1> P;
+        elem_type     aux;          //!< storage of auxiliary data, user defined format
+        uword         aux_uword_a;  //!< storage of auxiliary data, uword format
+        uword         aux_uword_b;  //!< storage of auxiliary data, uword format
+        uword         aux_uword_c;  //!< storage of auxiliary data, uword format
   
   inline         ~eOpCube();
   inline explicit eOpCube(const BaseCube<typename T1::elem_type, T1>& in_m);
