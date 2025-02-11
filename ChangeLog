@@ -1,3 +1,9 @@
+2025-02-11  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/RcppArmadillo.package.skeleton.R: Generalise helper function to
+	support additional DESCRIPTION fields
+	* man/RcppArmadillo.package.skeleton.Rd: Document
+
 2025-02-05  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 14.2.3-1

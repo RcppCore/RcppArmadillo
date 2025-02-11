@@ -1,6 +1,6 @@
 ## RcppArmadillo.package.skeleton.R: makes a skeleton for a package that wants to use RcppArmadillo
 ##
-## Copyright (C)  2010 - 2021  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+## Copyright (C)  2010 - 2025  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 ##
 ## This file is part of RcppArmadillo.
 ##
@@ -17,11 +17,17 @@
 ## You should have received a copy of the GNU General Public License
 ## along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
-RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
-                                           environment=.GlobalEnv,
-                                           path=".", force=FALSE,
-                                           code_files=character(),
-                                           example_code=TRUE) {
+RcppArmadillo.package.skeleton <- function(name = "anRpackage", list = character(),
+                                           environment = .GlobalEnv,
+                                           path = ".", force = FALSE,
+                                           code_files = character(),
+                                           example_code = TRUE,
+                                           author = "Your Name",
+                                           maintainer = if (missing(author)) "Your Name"
+                                                        else author,
+                                           email = "your@email.com",
+                                           githubuser = NA_character_,
+                                           license = "GPL (>= 2)") {
 
     env <- parent.frame(1)              # #nocov start
 
@@ -67,9 +73,24 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
     ## Add Rcpp to the DESCRIPTION
     DESCRIPTION <- file.path(root, "DESCRIPTION")
     if (file.exists(DESCRIPTION)) {
+        splitname <- strsplit(author, " ")[[1]]
         x <- cbind(read.dcf(DESCRIPTION),
                    "Imports" = sprintf("Rcpp (>= %s)", packageDescription("Rcpp")[["Version"]]),
-                   "LinkingTo" = "Rcpp, RcppArmadillo")
+                   "LinkingTo" = "Rcpp, RcppArmadillo",
+                   "Authors@R" = sprintf("person(\"%s\", \"%s\", role = c(\"aut\", \"cre\"), email = \"%s\")",
+                                         paste(splitname[-length(splitname)], collapse=" "),
+                                         splitname[length(splitname)],
+                                         email),
+                   "License" = license,
+                   "Title" = "Concise Summary of What the Package Does",
+                   "Description" = "More about what it does (maybe more than one line).",
+                   "Version" = "0.0.1")
+        if (!is.na(githubuser)) {
+            x <- cbind(x, matrix("", 1, 1, dimnames=list("", "URL")))
+            x[1, "URL"] <- paste0("https://github.com/", githubuser, "/", name)
+            x <- cbind(x, matrix("", 1, 1, dimnames=list("", "BugReports")))
+            x[1, "BugReports"] <- paste0("https://github.com/", githubuser, "/", name, "/issues")
+        }
         write.dcf(x, file=DESCRIPTION)
         message(" >> added Imports: Rcpp")
         message(" >> added LinkingTo: Rcpp, RcppArmadillo")
