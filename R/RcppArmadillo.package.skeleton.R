@@ -76,21 +76,7 @@ RcppArmadillo.package.skeleton <- function(name = "anRpackage", list = character
         splitname <- strsplit(author, " ")[[1]]
         x <- cbind(read.dcf(DESCRIPTION),
                    "Imports" = sprintf("Rcpp (>= %s)", packageDescription("Rcpp")[["Version"]]),
-                   "LinkingTo" = "Rcpp, RcppArmadillo",
-                   "Authors@R" = sprintf("person(\"%s\", \"%s\", role = c(\"aut\", \"cre\"), email = \"%s\")",
-                                         paste(splitname[-length(splitname)], collapse=" "),
-                                         splitname[length(splitname)],
-                                         email),
-                   "License" = license,
-                   "Title" = "Concise Summary of What the Package Does",
-                   "Description" = "More about what it does (maybe more than one line).",
-                   "Version" = "0.0.1")
-        if (!is.na(githubuser)) {
-            x <- cbind(x, matrix("", 1, 1, dimnames=list("", "URL")))
-            x[1, "URL"] <- paste0("https://github.com/", githubuser, "/", name)
-            x <- cbind(x, matrix("", 1, 1, dimnames=list("", "BugReports")))
-            x[1, "BugReports"] <- paste0("https://github.com/", githubuser, "/", name, "/issues")
-        }
+                   "LinkingTo" = "Rcpp, RcppArmadillo")
         write.dcf(x, file=DESCRIPTION)
         message(" >> added Imports: Rcpp")
         message(" >> added LinkingTo: Rcpp, RcppArmadillo")
