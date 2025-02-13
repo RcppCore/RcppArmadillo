@@ -474,9 +474,9 @@ Mat<eT>::Mat(const char* text)
   
   init( std::string(text) );
   }
-  
-  
-  
+
+
+
 //! create the matrix from a textual description
 template<typename eT>
 inline
@@ -489,8 +489,8 @@ Mat<eT>::operator=(const char* text)
   
   return *this;
   }
-  
-  
+
+
 
 //! create the matrix from a textual description
 template<typename eT>
@@ -508,9 +508,9 @@ Mat<eT>::Mat(const std::string& text)
   
   init(text);
   }
-  
-  
-  
+
+
+
 //! create the matrix from a textual description
 template<typename eT>
 inline

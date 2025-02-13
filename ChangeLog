@@ -1,4 +1,12 @@
+2025-02-13  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/armadillo_bits/: Sync again with updated sources for
+	Armadillo 14.3.91 as a RC for 14.4.*
+
 2025-02-11  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/armadillo_bits/: Sync again with updated sources for
+	Armadillo 14.3.90 as a RC for 14.4.*
 
 	* R/RcppArmadillo.package.skeleton.R: Generalise helper function to
 	support additional DESCRIPTION fields
