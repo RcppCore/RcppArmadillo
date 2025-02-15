@@ -54,21 +54,19 @@ op_sp_sum::apply(Mat<typename T1::elem_type>& out, const mtSpReduceOp<typename T
       
       const uword N = p.get_n_nonzero();
       
-      for(uword i=0; i < N; ++i)
-        {
-        out_mem[it.col()] += (*it);
-        ++it;
-        }
+      for(uword i=0; i < N; ++i)  { out_mem[it.col()] += (*it); ++it; }
       }
     else
       {
+      const    eT* values  = p.get_values();
+      const uword* colptrs = p.get_col_ptrs();
+      
       for(uword col = 0; col < p_n_cols; ++col)
         {
-        out_mem[col] = arrayops::accumulate
-          (
-          &p.get_values()[p.get_col_ptrs()[col]],
-          p.get_col_ptrs()[col + 1] - p.get_col_ptrs()[col]
-          );
+        const eT*   coldata = &(values[ colptrs[col] ]);
+        const uword N       = colptrs[col + 1] - colptrs[col];
+        
+        out_mem[col] = arrayops::accumulate(coldata, N);
         }
       }
     }
@@ -79,11 +77,69 @@ op_sp_sum::apply(Mat<typename T1::elem_type>& out, const mtSpReduceOp<typename T
     
     const uword N = p.get_n_nonzero();
     
-    for(uword i=0; i < N; ++i)
+    for(uword i=0; i < N; ++i)  { out_mem[it.row()] += (*it); ++it; }
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_sp_sum::apply(Mat<typename T1::elem_type>& out, const mtSpReduceOp<typename T1::elem_type, SpOp<T1, spop_square>, op_sp_sum>& in)
+  {
+  arma_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const uword dim = in.aux_uword_a;
+  
+  arma_conform_check( (dim > 1), "sum(): parameter 'dim' must be 0 or 1" );
+  
+  const SpProxy<T1> p(in.m.m);
+  
+  const uword p_n_rows = p.get_n_rows();
+  const uword p_n_cols = p.get_n_cols();
+  
+  if(dim == 0)  { out.zeros(1, p_n_cols); }
+  if(dim == 1)  { out.zeros(p_n_rows, 1); }
+  
+  if(p.get_n_nonzero() == 0)  { return; }
+  
+  eT* out_mem = out.memptr();
+    
+  if(dim == 0) // find the sum of squares in each column
+    {
+    if(SpProxy<T1>::use_iterator)
       {
-      out_mem[it.row()] += (*it);
-      ++it;
+      typename SpProxy<T1>::const_iterator_type it = p.begin();
+      
+      const uword N = p.get_n_nonzero();
+      
+      for(uword i=0; i < N; ++i)  { const eT val = (*it); out_mem[it.col()] += (val*val); ++it; }
       }
+    else
+      {
+      const    eT* values  = p.get_values();
+      const uword* colptrs = p.get_col_ptrs();
+      
+      for(uword col = 0; col < p_n_cols; ++col)
+        {
+        const eT*   coldata = &(values[ colptrs[col] ]);
+        const uword N       = colptrs[col + 1] - colptrs[col];
+        
+        out_mem[col] = op_dot::direct_dot(N, coldata, coldata);
+        }
+      }
+    }
+  else
+  if(dim == 1)  // find the sum of squares in each row
+    {
+    typename SpProxy<T1>::const_iterator_type it = p.begin();
+    
+    const uword N = p.get_n_nonzero();
+    
+    for(uword i=0; i < N; ++i)  { const eT val = (*it); out_mem[it.row()] += (val*val); ++it; }
     }
   }
 

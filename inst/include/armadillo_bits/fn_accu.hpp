@@ -1119,6 +1119,22 @@ accu(const SpGlue<T1,T2,spglue_schur>& expr)
   const SpProxy<T1> px(expr.A);
   const SpProxy<T2> py(expr.B);
   
+  arma_conform_assert_same_size(px.get_n_rows(), px.get_n_cols(), py.get_n_rows(), py.get_n_cols(), "element-wise multiplication");
+  
+  typedef typename SpProxy<T1>::stored_type px_Q_type;
+  typedef typename SpProxy<T2>::stored_type py_Q_type;
+  
+  if(is_SpMat<px_Q_type>::value && is_SpMat<py_Q_type>::value)
+    {
+    const unwrap_spmat<px_Q_type> UX(px.Q);
+    const unwrap_spmat<py_Q_type> UY(py.Q);
+    
+    const SpMat<eT>& X = UX.M;
+    const SpMat<eT>& Y = UY.M;
+    
+    if(&X == &Y)  { return op_dot::direct_dot(X.n_nonzero, X.values, X.values); }
+    }
+  
   typename SpProxy<T1>::const_iterator_type x_it     = px.begin();
   typename SpProxy<T1>::const_iterator_type x_it_end = px.end();
   
@@ -1195,7 +1211,7 @@ accu(const SpOp<T1, spop_type>& expr)
       
       eT val = eT(0);
       
-      for(uword i=0; i < N; ++i)  { const eT tmp = (*it); ++it; val += tmp*tmp; }
+      for(uword i=0; i < N; ++i)  { const eT tmp = (*it); val += (tmp*tmp); ++it; }
       
       return val;
       }
