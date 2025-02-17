@@ -767,20 +767,6 @@ pow(const T1& A, const typename T1::elem_type exponent)
 
 
 
-// // workaround for old user code
-// template<typename eT>
-// arma_frown("use std::pow(arma::as_scalar(X),Y) instead")
-// inline
-// typename arma_scalar_only<eT>::result
-// pow(const eT& A, const eT exponent)
-//   {
-//   arma_debug_sigprint();
-//   
-//   return eop_aux::pow(A, exponent);
-//   }
-
-
-
 template<typename T1>
 arma_warn_unused
 arma_inline
@@ -808,20 +794,6 @@ pow(const T1& A, const typename T1::elem_type::value_type exponent)
   
   return eOp<T1, eop_pow>(A, eT(exponent));
   }
-
-
-
-// // workaround for old user code
-// template<typename eT>
-// arma_frown("use std::pow(arma::as_scalar(X),Y) instead")
-// inline
-// typename enable_if2< is_cx<eT>::yes, eT >::result
-// pow(const eT& A, const typename eT::value_type exponent)
-//   {
-//   arma_debug_sigprint();
-//   
-//   return eop_aux::pow(A, eT(exponent));
-//   }
 
 
 
