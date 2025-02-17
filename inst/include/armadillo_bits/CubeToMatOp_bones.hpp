@@ -33,8 +33,8 @@ class CubeToMatOp : public Base< typename T1::elem_type, CubeToMatOp<T1, op_type
   inline          CubeToMatOp(const T1& in_m, const uword in_aux_uword);
   inline         ~CubeToMatOp();
   
-  arma_aligned const T1&   m;            //!< the operand; must be derived from BaseCube
-  arma_aligned       uword aux_uword;    //!< auxiliary data, uword format
+  const T1&   m;            //!< the operand; must be derived from BaseCube
+        uword aux_uword;    //!< auxiliary data, uword format
   
   template<typename eT2>
   constexpr bool is_alias(const Mat<eT2>&) const { return false; }

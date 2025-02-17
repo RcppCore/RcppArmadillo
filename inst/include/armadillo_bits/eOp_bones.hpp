@@ -38,11 +38,10 @@ class eOp : public Base< typename T1::elem_type, eOp<T1, eop_type> >
   static constexpr bool is_col  = Proxy<T1>::is_col;
   static constexpr bool is_xvec = Proxy<T1>::is_xvec;
   
-  arma_aligned const Proxy<T1> P;
-  
-  arma_aligned       elem_type aux;          //!< storage of auxiliary data, user defined format
-  arma_aligned       uword     aux_uword_a;  //!< storage of auxiliary data, uword format
-  arma_aligned       uword     aux_uword_b;  //!< storage of auxiliary data, uword format
+  const Proxy<T1> P;
+        elem_type aux;          //!< storage of auxiliary data, user defined format
+        uword     aux_uword_a;  //!< storage of auxiliary data, uword format
+        uword     aux_uword_b;  //!< storage of auxiliary data, uword format
   
   inline         ~eOp();
   inline explicit eOp(const T1& in_m);

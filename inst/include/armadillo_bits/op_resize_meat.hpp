@@ -34,16 +34,36 @@ op_resize::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_resize>& in)
   const uword new_n_rows = in.aux_uword_a;
   const uword new_n_cols = in.aux_uword_b;
   
-  const unwrap<T1>   tmp(in.m);
-  const Mat<eT>& A = tmp.M;
-  
-  if(&out == &A)
+  if(is_Mat<T1>::value)
     {
-    op_resize::apply_mat_inplace(out, new_n_rows, new_n_cols);
+    const unwrap<T1>   U(in.m);
+    const Mat<eT>& A = U.M;
+    
+    if(&out == &A)
+      {
+      op_resize::apply_mat_inplace(out, new_n_rows, new_n_cols);
+      }
+    else
+      {
+      op_resize::apply_mat_noalias(out, A, new_n_rows, new_n_cols);
+      }
     }
   else
     {
-    op_resize::apply_mat_noalias(out, A, new_n_rows, new_n_cols);
+    const quasi_unwrap<T1> U(in.m);
+    
+    if(U.is_alias(out))
+      {
+      Mat<eT> tmp;
+      
+      op_resize::apply_mat_noalias(tmp, U.M, new_n_rows, new_n_cols);
+      
+      out.steal_mem(tmp);
+      }
+    else
+      {
+      op_resize::apply_mat_noalias(out, U.M, new_n_rows, new_n_cols);
+      }
     }
   }
 
@@ -63,7 +83,7 @@ op_resize::apply_mat_inplace(Mat<eT>& A, const uword new_n_rows, const uword new
   
   if(A.is_empty())  { A.zeros(new_n_rows, new_n_cols); return; }
   
-  Mat<eT> B;
+  Mat<eT> B(new_n_rows, new_n_cols, arma_nozeros_indicator());
   
   op_resize::apply_mat_noalias(B, A, new_n_rows, new_n_cols);
   
@@ -137,7 +157,7 @@ op_resize::apply_cube_inplace(Cube<eT>& A, const uword new_n_rows, const uword n
   
   if(A.is_empty())  { A.zeros(new_n_rows, new_n_cols, new_n_slices); return; }
   
-  Cube<eT> B;
+  Cube<eT> B(new_n_rows, new_n_cols, new_n_slices, arma_nozeros_indicator());
   
   op_resize::apply_cube_noalias(B, A, new_n_rows, new_n_cols, new_n_slices);
   

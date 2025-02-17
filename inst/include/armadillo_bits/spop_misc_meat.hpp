@@ -288,8 +288,11 @@ namespace priv
   {
   struct functor_imag
     {
+    template<typename eT>
+    arma_inline eT operator()(const eT                  ) const { return eT(0);      }
+    
     template<typename T>
-    arma_inline T operator()(const std::complex<T>& val) const { return val.imag(); }
+    arma_inline  T operator()(const std::complex<T>& val) const { return val.imag(); }
     };
   }
 
@@ -302,7 +305,16 @@ spop_imag::apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1::po
   {
   arma_debug_sigprint();
   
-  out.init_xform_mt(in.m, priv::functor_imag());
+  if(is_cx<typename T1::elem_type>::no)
+    {
+    const SpProxy<T1> P(in.m);
+    
+    out.zeros(P.get_n_rows(), P.get_n_cols());
+    }
+  else
+    {
+    out.init_xform_mt(in.m, priv::functor_imag());
+    }
   }
 
 

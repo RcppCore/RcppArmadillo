@@ -99,4 +99,56 @@ resize(const SpBase<typename T1::elem_type, T1>& X, const SizeMat& s)
 
 
 
+template<typename oT>
+arma_warn_unused
+inline
+field<oT>
+resize(const field<oT>& A, const uword in_n_rows, const uword in_n_cols, const uword in_n_slices = uword(1))
+  {
+  arma_debug_sigprint();
+  
+  // better-than-nothing implementation
+  
+  field<oT> B(in_n_rows, in_n_cols, in_n_slices);
+  
+  if((B.n_elem > 0) && (A.n_elem > 0))
+    {
+    const uword end_row   = (std::min)(in_n_rows,   A.n_rows  ) - 1;
+    const uword end_col   = (std::min)(in_n_cols,   A.n_cols  ) - 1;
+    const uword end_slice = (std::min)(in_n_slices, A.n_slices) - 1;
+    
+    B.subfield(0, 0, 0, end_row, end_col, end_slice) = A.subfield(0, 0, 0, end_row, end_col, end_slice);
+    }
+  
+  return B;
+  }
+
+
+
+template<typename oT>
+arma_warn_unused
+inline
+field<oT>
+resize(const field<oT>& A, const SizeMat& s)
+  {
+  arma_debug_sigprint();
+  
+  return resize(A, s.n_rows, s.n_cols);
+  }
+
+
+
+template<typename oT>
+arma_warn_unused
+inline
+field<oT>
+resize(const field<oT>& A, const SizeCube& s)
+  {
+  arma_debug_sigprint();
+  
+  return resize(A, s.n_rows, s.n_cols, s.n_slices);
+  }
+
+
+
 //! @}

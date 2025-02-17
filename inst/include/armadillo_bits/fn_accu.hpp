@@ -258,16 +258,79 @@ accu(const T1& X)
   {
   arma_debug_sigprint();
   
-  const Proxy<T1> P(X);
-  
-  if(is_Mat<typename Proxy<T1>::stored_type>::value || is_subview_col<typename Proxy<T1>::stored_type>::value)
+  if((is_Mat<T1>::value) || (is_subview_col<T1>::value) || (is_Mat<typename Proxy<T1>::stored_type>::value))
     {
-    const quasi_unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
+    const quasi_unwrap<T1> U(X);
     
-    return arrayops::accumulate(tmp.M.memptr(), tmp.M.n_elem);
+    return arrayops::accumulate(U.M.memptr(), U.M.n_elem);
     }
   
+  const Proxy<T1> P(X);
+  
   return (Proxy<T1>::use_at) ? accu_proxy_at(P) : accu_proxy_linear(P);
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+inline
+typename T1::elem_type
+accu(const eOp<T1,eop_square>& expr)
+  {
+  arma_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  typedef eOp<T1,eop_square> expr_type;
+  
+  typedef typename expr_type::proxy_type::stored_type expr_P_stored_type;
+  
+  if((is_Mat<expr_P_stored_type>::value) || (is_subview_col<expr_P_stored_type>::value))
+    {
+    const quasi_unwrap<expr_P_stored_type> U(expr.P.Q);
+    
+    const eT* X_mem = U.M.memptr();
+    
+    return op_dot::direct_dot(U.M.n_elem, X_mem, X_mem);
+    }
+  
+  const Proxy<expr_type> P(expr);
+  
+  return (Proxy<expr_type>::use_at) ? accu_proxy_at(P) : accu_proxy_linear(P);
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+inline
+typename T1::elem_type
+accu(const eOp<T1,eop_pow>& expr)
+  {
+  arma_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  typedef eOp<T1,eop_pow> expr_type;
+  
+  if(expr.aux == eT(2))
+    {
+    typedef eOp<T1,eop_square> modified_expr_type;
+    
+    return accu( reinterpret_cast< const modified_expr_type& >(expr) );
+    }
+  
+  if((expr.aux == eT(0.5)) && is_non_integral<eT>::value)
+    {
+    typedef eOp<T1,eop_sqrt> modified_expr_type;
+    
+    return accu( reinterpret_cast< const modified_expr_type& >(expr) );
+    }
+  
+  const Proxy<expr_type> P(expr);
+  
+  return (Proxy<expr_type>::use_at) ? accu_proxy_at(P) : accu_proxy_linear(P);
   }
 
 
@@ -836,16 +899,79 @@ accu(const BaseCube<typename T1::elem_type,T1>& X)
   {
   arma_debug_sigprint();
   
-  const ProxyCube<T1> P(X.get_ref());
-  
-  if(is_Cube<typename ProxyCube<T1>::stored_type>::value)
+  if((is_Cube<T1>::value) || (is_Cube<typename ProxyCube<T1>::stored_type>::value))
     {
-    const unwrap_cube<typename ProxyCube<T1>::stored_type> tmp(P.Q);
+    const unwrap_cube<T1> U(X.get_ref());
     
-    return arrayops::accumulate(tmp.M.memptr(), tmp.M.n_elem);
+    return arrayops::accumulate(U.M.memptr(), U.M.n_elem);
     }
   
+  const ProxyCube<T1> P(X.get_ref());
+  
   return (ProxyCube<T1>::use_at) ? accu_cube_proxy_at(P) : accu_cube_proxy_linear(P);
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+inline
+typename T1::elem_type
+accu(const eOpCube<T1,eop_square>& expr)
+  {
+  arma_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  typedef eOpCube<T1,eop_square> expr_type;
+  
+  typedef typename expr_type::proxy_type::stored_type expr_P_stored_type;
+  
+  if(is_Cube<expr_P_stored_type>::value)
+    {
+    const unwrap_cube<expr_P_stored_type> U(expr.P.Q);
+    
+    const eT* X_mem = U.M.memptr();
+    
+    return op_dot::direct_dot(U.M.n_elem, X_mem, X_mem);
+    }
+  
+  const ProxyCube<expr_type> P(expr);
+  
+  return (ProxyCube<expr_type>::use_at) ? accu_cube_proxy_at(P) : accu_cube_proxy_linear(P);
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+inline
+typename T1::elem_type
+accu(const eOpCube<T1,eop_pow>& expr)
+  {
+  arma_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  typedef eOpCube<T1,eop_pow> expr_type;
+  
+  if(expr.aux == eT(2))
+    {
+    typedef eOpCube<T1,eop_square> modified_expr_type;
+    
+    return accu( reinterpret_cast< const modified_expr_type& >(expr) );
+    }
+  
+  if((expr.aux == eT(0.5)) && is_non_integral<eT>::value)
+    {
+    typedef eOpCube<T1,eop_sqrt> modified_expr_type;
+    
+    return accu( reinterpret_cast< const modified_expr_type& >(expr) );
+    }
+  
+  const ProxyCube<expr_type> P(expr);
+  
+  return (ProxyCube<expr_type>::use_at) ? accu_cube_proxy_at(P) : accu_cube_proxy_linear(P);
   }
 
 
@@ -861,8 +987,8 @@ accu(const eGlueCube<T1,T2,eglue_schur>& expr)
   
   typedef eGlueCube<T1,T2,eglue_schur> expr_type;
   
-  typedef typename ProxyCube<T1>::stored_type P1_stored_type;
-  typedef typename ProxyCube<T2>::stored_type P2_stored_type;
+  typedef typename expr_type::proxy1_type::stored_type P1_stored_type;
+  typedef typename expr_type::proxy2_type::stored_type P2_stored_type;
   
   if(is_Cube<P1_stored_type>::value && is_Cube<P2_stored_type>::value)
     {
@@ -993,6 +1119,22 @@ accu(const SpGlue<T1,T2,spglue_schur>& expr)
   const SpProxy<T1> px(expr.A);
   const SpProxy<T2> py(expr.B);
   
+  arma_conform_assert_same_size(px.get_n_rows(), px.get_n_cols(), py.get_n_rows(), py.get_n_cols(), "element-wise multiplication");
+  
+  typedef typename SpProxy<T1>::stored_type px_Q_type;
+  typedef typename SpProxy<T2>::stored_type py_Q_type;
+  
+  if(is_SpMat<px_Q_type>::value && is_SpMat<py_Q_type>::value)
+    {
+    const unwrap_spmat<px_Q_type> UX(px.Q);
+    const unwrap_spmat<py_Q_type> UY(py.Q);
+    
+    const SpMat<eT>& X = UX.M;
+    const SpMat<eT>& Y = UY.M;
+    
+    if(&X == &Y)  { return op_dot::direct_dot(X.n_nonzero, X.values, X.values); }
+    }
+  
   typename SpProxy<T1>::const_iterator_type x_it     = px.begin();
   typename SpProxy<T1>::const_iterator_type x_it_end = px.end();
   
@@ -1050,6 +1192,30 @@ accu(const SpOp<T1, spop_type>& expr)
     || (is_same_type<spop_type, spop_vectorise_all>::yes);
   
   if(is_vectorise)  { return accu(expr.m); }
+  
+  if(is_same_type<spop_type, spop_square>::yes)
+    {
+    const SpProxy<T1> P(expr.m);
+    
+    const uword N = P.get_n_nonzero();
+    
+    if(N == 0)  { return eT(0); }
+    
+    if(SpProxy<T1>::use_iterator == false)
+      {
+      return op_dot::direct_dot(N, P.get_values(), P.get_values());
+      }
+    else
+      {
+      typename SpProxy<T1>::const_iterator_type it = P.begin();
+      
+      eT val = eT(0);
+      
+      for(uword i=0; i < N; ++i)  { const eT tmp = (*it); val += (tmp*tmp); ++it; }
+      
+      return val;
+      }
+    }
   
   const SpMat<eT> tmp = expr;
   

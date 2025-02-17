@@ -130,6 +130,7 @@ class spop_strans;
 class spop_htrans;
 class spop_vectorise_row;
 class spop_vectorise_col;
+class spop_square;
 
 class spop_rel_lt_pre;
 class spop_rel_lt_post;

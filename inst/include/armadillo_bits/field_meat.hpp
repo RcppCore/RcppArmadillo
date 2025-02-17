@@ -28,7 +28,7 @@ field<oT>::~field()
   
   delete_objects();
   
-  if(n_elem > field_prealloc_n_elem::val)  { delete [] mem; }
+  if(n_elem > 0)  { delete [] mem; }
   
   // try to expose buggy user code that accesses deleted objects
   mem = nullptr;
@@ -274,11 +274,179 @@ field<oT>::set_size(const SizeCube& s)
 
 template<typename oT>
 inline
+field<oT>&
+field<oT>::reshape(const uword n_elem_in)
+  {
+  arma_debug_sigprint();
+  
+  return (*this).reshape(n_elem_in, 1, 1);
+  }
+
+
+
+template<typename oT>
+inline
+field<oT>&
+field<oT>::reshape(const uword n_rows_in, const uword n_cols_in)
+  {
+  arma_debug_sigprint();
+  
+  return (*this).reshape(n_rows_in, n_cols_in, 1);
+  }
+
+
+
+template<typename oT>
+inline
+field<oT>&
+field<oT>::reshape(const uword n_rows_in, const uword n_cols_in, const uword n_slices_in)
+  {
+  arma_debug_sigprint(arma_str::format("n_rows_in: %u; n_cols_in: %u; n_slices_in: %u") % n_rows_in % n_cols_in % n_slices_in);
+  
+  if((n_rows == n_rows_in) && (n_cols == n_cols_in) && (n_slices == n_slices_in))
+    {
+    // do nothing
+    }
+  else
+  if((n_elem == 0) || ((n_rows == n_cols_in) && (n_cols == n_rows_in) && (n_slices == n_slices_in)))
+    {
+    init(n_rows_in, n_cols_in, n_slices_in);
+    }
+  else
+    {
+    field<oT> tmp(n_rows_in, n_cols_in, n_slices_in);
+    
+    const uword n_elem_to_copy = (std::min)((*this).n_elem, tmp.n_elem);
+    
+    for(uword i=0; i < n_elem_to_copy; ++i)  { tmp.at(i) = std::move((*this).at(i)); }
+    
+    (*this) = std::move(tmp);
+    }
+  
+  return *this;
+  }
+
+
+
+template<typename oT>
+inline
+field<oT>&
+field<oT>::reshape(const SizeMat& s)
+  {
+  arma_debug_sigprint();
+  
+  return (*this).reshape(s.n_rows, s.n_cols, 1);
+  }
+
+
+
+template<typename oT>
+inline
+field<oT>&
+field<oT>::reshape(const SizeCube& s)
+  {
+  arma_debug_sigprint();
+  
+  return (*this).reshape(s.n_rows, s.n_cols, s.n_slices);
+  }
+
+
+
+template<typename oT>
+inline
+field<oT>&
+field<oT>::resize(const uword n_elem_in)
+  {
+  arma_debug_sigprint();
+  
+  return (*this).resize(n_elem_in, 1, 1);
+  }
+
+
+
+template<typename oT>
+inline
+field<oT>&
+field<oT>::resize(const uword n_rows_in, const uword n_cols_in)
+  {
+  arma_debug_sigprint();
+  
+  return (*this).resize(n_rows_in, n_cols_in, 1);
+  }
+
+
+
+template<typename oT>
+inline
+field<oT>&
+field<oT>::resize(const uword n_rows_in, const uword n_cols_in, const uword n_slices_in)
+  {
+  arma_debug_sigprint(arma_str::format("n_rows_in: %u; n_cols_in: %u; n_slices_in: %u") % n_rows_in % n_cols_in % n_slices_in);
+  
+  if((n_rows == n_rows_in) && (n_cols == n_cols_in) && (n_slices == n_slices_in))
+    {
+    // do nothing
+    }
+  else
+  if(n_elem == 0)
+    {
+    (*this).set_size(n_rows_in, n_cols_in, n_slices_in);
+    }
+  else
+    {
+    // better-than-nothing implementation
+    
+    field<oT> tmp(n_rows_in, n_cols_in, n_slices_in);
+    
+    if(tmp.n_elem > 0)
+      {
+      const uword end_row   = (std::min)(n_rows_in,   n_rows  ) - 1;
+      const uword end_col   = (std::min)(n_cols_in,   n_cols  ) - 1;
+      const uword end_slice = (std::min)(n_slices_in, n_slices) - 1;
+      
+      tmp.subfield(0, 0, 0, end_row, end_col, end_slice) = (*this).subfield(0, 0, 0, end_row, end_col, end_slice);
+      }
+    
+    (*this) = std::move(tmp);
+    }
+  
+  return *this;
+  }
+
+
+
+template<typename oT>
+inline
+field<oT>&
+field<oT>::resize(const SizeMat& s)
+  {
+  arma_debug_sigprint();
+  
+  return (*this).resize(s.n_rows, s.n_cols, 1);
+  }
+
+
+
+template<typename oT>
+inline
+field<oT>&
+field<oT>::resize(const SizeCube& s)
+  {
+  arma_debug_sigprint();
+  
+  return (*this).resize(s.n_rows, s.n_cols, s.n_slices);
+  }
+
+
+
+template<typename oT>
+inline
 field<oT>::field(const std::vector<oT>& x)
   : n_rows  (0)
   , n_cols  (0)
   , n_slices(0)
   , n_elem  (0)
+  , mem     (nullptr)
   {
   arma_debug_sigprint_this(this);
   
@@ -312,6 +480,7 @@ field<oT>::field(const std::initializer_list<oT>& list)
   , n_cols  (0)
   , n_slices(0)
   , n_elem  (0)
+  , mem     (nullptr)
   {
   arma_debug_sigprint_this(this);
   
@@ -347,6 +516,7 @@ field<oT>::field(const std::initializer_list< std::initializer_list<oT> >& list)
   , n_cols  (0)
   , n_slices(0)
   , n_elem  (0)
+  , mem     (nullptr)
   {
   arma_debug_sigprint_this(this);
   
@@ -412,18 +582,9 @@ field<oT>::field(field<oT>&& X)
   , n_cols  (X.n_cols  )
   , n_slices(X.n_slices)
   , n_elem  (X.n_elem  )
+  , mem     (X.mem     )
   {
   arma_debug_sigprint(arma_str::format("this: %x; X: %x") % this % &X);
-  
-  if(n_elem > field_prealloc_n_elem::val)
-    {
-    mem = X.mem;
-    }
-  else
-    {
-    arrayops::copy(&mem_local[0], &X.mem_local[0], n_elem);
-    mem = mem_local;
-    }
   
   access::rw(X.n_rows  ) = 0;
   access::rw(X.n_cols  ) = 0;
@@ -450,15 +611,7 @@ field<oT>::operator=(field<oT>&& X)
   access::rw(n_slices) = X.n_slices;
   access::rw(n_elem  ) = X.n_elem;
   
-  if(n_elem > field_prealloc_n_elem::val)
-    {
-    mem = X.mem;
-    }
-  else
-    {
-    arrayops::copy(&mem_local[0], &X.mem_local[0], n_elem);
-    mem = mem_local;
-    }
+  mem = X.mem;
   
   access::rw(X.n_rows  ) = 0;
   access::rw(X.n_cols  ) = 0;
@@ -1967,34 +2120,15 @@ field<oT>::init(const field<oT>& x)
   {
   arma_debug_sigprint();
   
-  if(this != &x)
-    {
-    const uword x_n_rows   = x.n_rows;
-    const uword x_n_cols   = x.n_cols;
-    const uword x_n_slices = x.n_slices;
-    
-    init(x_n_rows, x_n_cols, x_n_slices);
-    
-    field& t = *this;
-    
-    if(x_n_slices == 1)
-      {
-      for(uword ucol=0; ucol < x_n_cols; ++ucol)
-      for(uword urow=0; urow < x_n_rows; ++urow)
-        {
-        t.at(urow,ucol) = x.at(urow,ucol);
-        }
-      }
-    else
-      {
-      for(uword uslice=0; uslice < x_n_slices; ++uslice)
-      for(uword ucol=0;   ucol   < x_n_cols;   ++ucol  )
-      for(uword urow=0;   urow   < x_n_rows;   ++urow  )
-        {
-        t.at(urow,ucol,uslice) = x.at(urow,ucol,uslice);
-        }
-      }
-    }
+  if(this == &x)  { return; }
+  
+  field& t = (*this);
+  
+  t.init(x.n_rows, x.n_cols, x.n_slices);
+  
+  const uword t_n_elem = t.n_elem;
+  
+  for(uword i=0; i < t_n_elem; ++i)  { t.at(i) = x.at(i); }
   }
 
 
@@ -2046,13 +2180,11 @@ field<oT>::init(const uword n_rows_in, const uword n_cols_in, const uword n_slic
     {
     delete_objects();
     
-    if(n_elem > field_prealloc_n_elem::val)  { delete [] mem; }
+    if(n_elem > 0)  { delete [] mem; }
     
-    if(n_elem_new <= field_prealloc_n_elem::val)
-      {
-      mem = (n_elem_new == 0) ? nullptr : mem_local;
-      }
-    else
+    mem = nullptr;
+    
+    if(n_elem_new > 0)
       {
       mem = new(std::nothrow) oT* [n_elem_new];
       
@@ -2079,11 +2211,7 @@ field<oT>::delete_objects()
   
   for(uword i=0; i<n_elem; ++i)
     {
-    if(mem[i] != nullptr)
-      {
-      delete mem[i];
-      mem[i] = nullptr;
-      }
+    if(mem[i] != nullptr)  { delete mem[i]; mem[i] = nullptr; }
     }
   }
 

@@ -42,10 +42,10 @@ class SpToDOp : public Base< typename T1::elem_type, SpToDOp<T1, op_type> >
   template<typename eT2>
   constexpr bool is_alias(const Mat<eT2>&) const { return false; }
   
-  arma_aligned const T1&       m;            //!< the operand; must be derived from SpBase
-  arma_aligned       elem_type aux;          //!< auxiliary data, using the element type as used by T1
-  arma_aligned       uword     aux_uword_a;  //!< auxiliary data, uword format
-  arma_aligned       uword     aux_uword_b;  //!< auxiliary data, uword format
+  const T1&       m;            //!< the operand; must be derived from SpBase
+        elem_type aux;          //!< auxiliary data, using the element type as used by T1
+        uword     aux_uword_a;  //!< auxiliary data, uword format
+        uword     aux_uword_b;  //!< auxiliary data, uword format
   };
 
 

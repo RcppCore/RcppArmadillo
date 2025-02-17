@@ -2868,6 +2868,14 @@ Cube<eT>::Cube(const eOpCube<T1, eop_type>& X)
   
   init_cold();
   
+  if(is_same_type<eop_type, eop_pow>::value)
+    {
+    constexpr bool eT_non_int = is_non_integral<eT>::value;
+    
+    if(               X.aux == eT(2)   )  { eop_square::apply(*this, reinterpret_cast< const eOpCube<T1, eop_square>& >(X)); return; }
+    if(eT_non_int && (X.aux == eT(0.5)))  {   eop_sqrt::apply(*this, reinterpret_cast< const eOpCube<T1, eop_sqrt  >& >(X)); return; }
+    }
+  
   eop_type::apply(*this, X);
   }
 
@@ -2889,6 +2897,14 @@ Cube<eT>::operator=(const eOpCube<T1, eop_type>& X)
   if(bad_alias)  { Cube<eT> tmp(X); steal_mem(tmp); return *this; }
   
   init_warm(X.get_n_rows(), X.get_n_cols(), X.get_n_slices());
+  
+  if(is_same_type<eop_type, eop_pow>::value)
+    {
+    constexpr bool eT_non_int = is_non_integral<eT>::value;
+    
+    if(               X.aux == eT(2)   )  { eop_square::apply(*this, reinterpret_cast< const eOpCube<T1, eop_square>& >(X)); return *this; }
+    if(eT_non_int && (X.aux == eT(0.5)))  {   eop_sqrt::apply(*this, reinterpret_cast< const eOpCube<T1, eop_sqrt  >& >(X)); return *this; }
+    }
   
   eop_type::apply(*this, X);
   
@@ -2912,6 +2928,14 @@ Cube<eT>::operator+=(const eOpCube<T1, eop_type>& X)
   
   if(bad_alias)  { const Cube<eT> tmp(X); return (*this).operator+=(tmp); }
   
+  if(is_same_type<eop_type, eop_pow>::value)
+    {
+    constexpr bool eT_non_int = is_non_integral<eT>::value;
+    
+    if(               X.aux == eT(2)   )  { eop_square::apply_inplace_plus(*this, reinterpret_cast< const eOpCube<T1, eop_square>& >(X)); return *this; }
+    if(eT_non_int && (X.aux == eT(0.5)))  {   eop_sqrt::apply_inplace_plus(*this, reinterpret_cast< const eOpCube<T1, eop_sqrt  >& >(X)); return *this; }
+    }
+  
   eop_type::apply_inplace_plus(*this, X);
   
   return *this;
@@ -2933,6 +2957,14 @@ Cube<eT>::operator-=(const eOpCube<T1, eop_type>& X)
   const bool bad_alias = ( X.P.has_subview  &&  X.P.is_alias(*this) );
   
   if(bad_alias)  { const Cube<eT> tmp(X); return (*this).operator-=(tmp); }
+  
+  if(is_same_type<eop_type, eop_pow>::value)
+    {
+    constexpr bool eT_non_int = is_non_integral<eT>::value;
+    
+    if(               X.aux == eT(2)   )  { eop_square::apply_inplace_minus(*this, reinterpret_cast< const eOpCube<T1, eop_square>& >(X)); return *this; }
+    if(eT_non_int && (X.aux == eT(0.5)))  {   eop_sqrt::apply_inplace_minus(*this, reinterpret_cast< const eOpCube<T1, eop_sqrt  >& >(X)); return *this; }
+    }
   
   eop_type::apply_inplace_minus(*this, X);
   
@@ -2956,6 +2988,14 @@ Cube<eT>::operator%=(const eOpCube<T1, eop_type>& X)
   
   if(bad_alias)  { const Cube<eT> tmp(X); return (*this).operator%=(tmp); }
   
+  if(is_same_type<eop_type, eop_pow>::value)
+    {
+    constexpr bool eT_non_int = is_non_integral<eT>::value;
+    
+    if(               X.aux == eT(2)   )  { eop_square::apply_inplace_schur(*this, reinterpret_cast< const eOpCube<T1, eop_square>& >(X)); return *this; }
+    if(eT_non_int && (X.aux == eT(0.5)))  {   eop_sqrt::apply_inplace_schur(*this, reinterpret_cast< const eOpCube<T1, eop_sqrt  >& >(X)); return *this; }
+    }
+  
   eop_type::apply_inplace_schur(*this, X);
   
   return *this;
@@ -2977,6 +3017,14 @@ Cube<eT>::operator/=(const eOpCube<T1, eop_type>& X)
   const bool bad_alias = ( X.P.has_subview  &&  X.P.is_alias(*this) );
   
   if(bad_alias)  { const Cube<eT> tmp(X); return (*this).operator/=(tmp); }
+  
+  if(is_same_type<eop_type, eop_pow>::value)
+    {
+    constexpr bool eT_non_int = is_non_integral<eT>::value;
+    
+    if(               X.aux == eT(2)   )  { eop_square::apply_inplace_div(*this, reinterpret_cast< const eOpCube<T1, eop_square>& >(X)); return *this; }
+    if(eT_non_int && (X.aux == eT(0.5)))  {   eop_sqrt::apply_inplace_div(*this, reinterpret_cast< const eOpCube<T1, eop_sqrt  >& >(X)); return *this; }
+    }
   
   eop_type::apply_inplace_div(*this, X);
   

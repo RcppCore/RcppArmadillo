@@ -29,7 +29,7 @@ class diagview : public Base< eT, diagview<eT> >
   typedef eT                                elem_type;
   typedef typename get_pod_type<eT>::result pod_type;
   
-  arma_aligned const Mat<eT>& m;
+  const Mat<eT>& m;
   
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = true;

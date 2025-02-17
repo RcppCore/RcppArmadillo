@@ -48,7 +48,7 @@ struct ProxyCube< Cube<eT> >
   static constexpr bool use_mp      = false;
   static constexpr bool has_subview = false;
   
-  arma_aligned const Cube<eT>& Q;
+  const Cube<eT>& Q;
   
   inline explicit ProxyCube(const Cube<eT>& A)
     : Q(A)
@@ -93,7 +93,7 @@ struct ProxyCube< GenCube<eT, gen_type> >
   static constexpr bool use_mp      = false;
   static constexpr bool has_subview = false;
   
-  arma_aligned const GenCube<eT, gen_type>& Q;
+  const GenCube<eT, gen_type>& Q;
   
   inline explicit ProxyCube(const GenCube<eT, gen_type>& A)
     : Q(A)
@@ -138,7 +138,7 @@ struct ProxyCube< OpCube<T1, op_type> >
   static constexpr bool use_mp      = false;
   static constexpr bool has_subview = false;
   
-  arma_aligned const Cube<elem_type> Q;
+  const Cube<elem_type> Q;
   
   inline explicit ProxyCube(const OpCube<T1, op_type>& A)
     : Q(A)
@@ -183,7 +183,7 @@ struct ProxyCube< GlueCube<T1, T2, glue_type> >
   static constexpr bool use_mp      = false;
   static constexpr bool has_subview = false;
   
-  arma_aligned const Cube<elem_type> Q;
+  const Cube<elem_type> Q;
   
   inline explicit ProxyCube(const GlueCube<T1, T2, glue_type>& A)
     : Q(A)
@@ -228,7 +228,7 @@ struct ProxyCube< subview_cube<eT> >
   static constexpr bool use_mp      = false;
   static constexpr bool has_subview = true;
   
-  arma_aligned const subview_cube<eT>& Q;
+  const subview_cube<eT>& Q;
   
   inline explicit ProxyCube(const subview_cube<eT>& A)
     : Q(A)
@@ -273,7 +273,7 @@ struct ProxyCube< subview_cube_slices<eT,T1> >
   static constexpr bool use_mp      = false;
   static constexpr bool has_subview = false;
   
-  arma_aligned const Cube<eT> Q;
+  const Cube<eT> Q;
   
   inline explicit ProxyCube(const subview_cube_slices<eT,T1>& A)
     : Q(A)
@@ -318,7 +318,7 @@ struct ProxyCube< eOpCube<T1, eop_type > >
   static constexpr bool use_mp      = eOpCube<T1, eop_type>::use_mp;
   static constexpr bool has_subview = eOpCube<T1, eop_type>::has_subview;
   
-  arma_aligned const eOpCube<T1, eop_type>& Q;
+  const eOpCube<T1, eop_type>& Q;
   
   inline explicit ProxyCube(const eOpCube<T1, eop_type>& A)
     : Q(A)
@@ -363,7 +363,7 @@ struct ProxyCube< eGlueCube<T1, T2, eglue_type > >
   static constexpr bool use_mp      = eGlueCube<T1, T2, eglue_type>::use_mp;
   static constexpr bool has_subview = eGlueCube<T1, T2, eglue_type>::has_subview;
   
-  arma_aligned const eGlueCube<T1, T2, eglue_type>& Q;
+  const eGlueCube<T1, T2, eglue_type>& Q;
   
   inline explicit ProxyCube(const eGlueCube<T1, T2, eglue_type>& A)
     : Q(A)
@@ -408,7 +408,7 @@ struct ProxyCube< mtOpCube<out_eT, T1, op_type> >
   static constexpr bool use_mp      = false;
   static constexpr bool has_subview = false;
   
-  arma_aligned const Cube<out_eT> Q;
+  const Cube<out_eT> Q;
   
   inline explicit ProxyCube(const mtOpCube<out_eT, T1, op_type>& A)
     : Q(A)
@@ -453,7 +453,7 @@ struct ProxyCube< mtGlueCube<out_eT, T1, T2, glue_type > >
   static constexpr bool use_mp      = false;
   static constexpr bool has_subview = false;
   
-  arma_aligned const Cube<out_eT> Q;
+  const Cube<out_eT> Q;
   
   inline explicit ProxyCube(const mtGlueCube<out_eT, T1, T2, glue_type>& A)
     : Q(A)

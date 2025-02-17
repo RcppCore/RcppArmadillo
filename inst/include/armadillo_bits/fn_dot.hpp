@@ -256,7 +256,7 @@ dot
     if( &A == &B )
       {
       // We can do it directly!
-      return op_dot::direct_dot_arma(A.n_nonzero, A.values, A.values);
+      return op_dot::direct_dot(A.n_nonzero, A.values, A.values);
       }
     else
       {

@@ -90,7 +90,7 @@ memory::acquire(const uword n_elem)
   #else
     {
     //return ( new(std::nothrow) eT[n_elem] );
-    out_memptr = (eT *) malloc(sizeof(eT)*n_elem);
+    out_memptr = (eT *) std::malloc(sizeof(eT)*n_elem);
     }
   #endif
   
@@ -124,7 +124,7 @@ memory::release(eT* mem)
     }
   #elif defined(ARMA_HAVE_POSIX_MEMALIGN)
     {
-    free( (void *)(mem) );
+    std::free( (void *)(mem) );
     }
   #elif defined(_MSC_VER)
     {
@@ -134,7 +134,7 @@ memory::release(eT* mem)
   #else
     {
     //delete [] mem;
-    free( (void *)(mem) );
+    std::free( (void *)(mem) );
     }
   #endif
   

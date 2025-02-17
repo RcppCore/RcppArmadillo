@@ -44,11 +44,11 @@ class mtSpOp : public SpBase< out_eT, mtSpOp<out_eT, T1, spop_type> >
   template<typename eT2>
   arma_inline bool is_alias(const SpMat<eT2>& X) const;
   
-  arma_aligned const T1&    m;            //!< the operand; must be derived from SpBase
-  arma_aligned       in_eT  aux;          //!< auxiliary data, using the element type as used by T1
-  arma_aligned       out_eT aux_out_eT;   //!< auxiliary data, using the element type as specified by the out_eT template parameter
-  arma_aligned       uword  aux_uword_a;
-  arma_aligned       uword  aux_uword_b;
+  const T1&    m;            //!< the operand; must be derived from SpBase
+        in_eT  aux;          //!< auxiliary data, using the element type as used by T1
+        out_eT aux_out_eT;   //!< auxiliary data, using the element type as specified by the out_eT template parameter
+        uword  aux_uword_a;
+        uword  aux_uword_b;
   };
 
 

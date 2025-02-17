@@ -180,6 +180,13 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
     const bool is_sym    = arma_config::optimise_sym && ( (refine || equilibrate || likely_sympd || force_sym || is_band || is_triu || is_tril || auxlib::crippled_lapack(A)) ? false : is_sym_expr<T1>::eval(A_expr.get_ref()) );
     const bool try_sympd = arma_config::optimise_sym && ( (          no_sympd    || is_sym       || force_sym || is_band || is_triu || is_tril || auxlib::crippled_lapack(A)) ? false : (likely_sympd ? true : sym_helper::guess_sympd(A, uword(16))) );
     
+    arma_debug_print("glue_solve_gen_full::apply(): internal flags:");
+    arma_debug_print("is_band:   ", is_band  );
+    arma_debug_print("is_triu:   ", is_triu  );
+    arma_debug_print("is_tril:   ", is_tril  );
+    arma_debug_print("is_sym:    ", is_sym   );
+    arma_debug_print("try_sympd: ", try_sympd);
+    
     if(fast)
       {
       // fast mode: solvers without refinement and without rcond estimate

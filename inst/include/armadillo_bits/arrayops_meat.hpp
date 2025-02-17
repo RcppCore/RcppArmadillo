@@ -239,7 +239,7 @@ arrayops::convert(out_eT* dest, const in_eT* src, const uword n_elem)
     {
     const out_eT* src2 = (const out_eT*)src;
     
-    if(dest != src2)  { arrayops::copy(dest, src2, n_elem); }
+    arrayops::copy(dest, src2, n_elem);
     
     return;
     }
@@ -304,6 +304,15 @@ inline
 void
 arrayops::convert_cx(out_eT* dest, const in_eT* src, const uword n_elem)
   {
+  if(is_same_type<out_eT,in_eT>::value)
+    {
+    const out_eT* src2 = (const out_eT*)src;
+    
+    arrayops::copy(dest, src2, n_elem);
+    
+    return;
+    }
+  
   uword j;
   
   for(j=1; j<n_elem; j+=2)

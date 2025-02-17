@@ -267,20 +267,14 @@ arma_rng::set_seed_random()
     {
     try
       {
-      union
-        {
-        seed_type     a;
-        unsigned char b[sizeof(seed_type)];
-        } tmp;
-      
-      tmp.a = seed_type(0);
+      char tmp[sizeof(seed_type)] = {};
       
       std::ifstream f("/dev/urandom", std::ifstream::binary);
       
-      if(f.good())  { f.read((char*)(&(tmp.b[0])), sizeof(seed_type)); }
+      if(f.good())  { f.read(&(tmp[0]), sizeof(seed_type)); }
       
-      if(f.good())  { seed2 = tmp.a; }
-        
+      if(f.good())  { std::memcpy(&seed2, &(tmp[0]), sizeof(seed_type)); }
+      
       have_seed = (seed2 != seed_type(0));
       }
     catch(...) {}
@@ -297,19 +291,17 @@ arma_rng::set_seed_random()
     
     seed3 = static_cast<seed_type>( since_epoch_usec & 0xFFFF );
     
-    union
-      {
-      uword*        a;
-      unsigned char b[sizeof(uword*)];
-      } tmp;
+    unsigned char* a = (unsigned char*)std::malloc(std::size_t(4096));
     
-    tmp.a = (uword*)malloc(sizeof(uword));
+    unsigned char  b[sizeof(unsigned char*)] = {};
     
-    if(tmp.a != nullptr)
+    if(a != nullptr)
       {
-      for(size_t i=0; i<sizeof(uword*); ++i)  { seed4 += seed_type(tmp.b[i]); }
+      std::memcpy(&(b[0]), &a, sizeof(unsigned char*));
       
-      free(tmp.a);
+      for(size_t i=0; i<sizeof(unsigned char*); ++i)  { seed4 += seed_type(b[i]); }
+      
+      std::free(a);
       }
     }
   

@@ -28,31 +28,34 @@ class op_sum
   // dense matrices
   
   template<typename T1>
-  arma_hot inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1, op_sum>& in);
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op< T1,                 op_sum >& in);
   
   template<typename T1>
-  arma_hot inline static void apply_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const uword dim);
-  
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op< eOp<T1,eop_square>, op_sum >& in);
+
   template<typename T1>
-  arma_hot inline static void apply_noalias_unwrap(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const uword dim);
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op< eOp<T1,eop_pow   >, op_sum >& in);
+
+  template<typename eT>
+  inline static void apply_mat_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim);
   
+  template<typename eT>
+  inline static void apply_mat_square_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim);
+
   template<typename T1>
-  arma_hot inline static void apply_noalias_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const uword dim);
+  inline static void apply_proxy_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const uword dim);
   
   
   // cubes
   
   template<typename T1>
-  arma_hot inline static void apply(Cube<typename T1::elem_type>& out, const OpCube<T1, op_sum>& in);
+  inline static void apply(Cube<typename T1::elem_type>& out, const OpCube<T1, op_sum>& in);
+  
+  template<typename eT>
+  inline static void apply_cube_noalias(Cube<eT>& out, const Cube<eT>& X, const uword dim);
   
   template<typename T1>
-  arma_hot inline static void apply_noalias(Cube<typename T1::elem_type>& out, const ProxyCube<T1>& P, const uword dim);
-  
-  template<typename T1>
-  arma_hot inline static void apply_noalias_unwrap(Cube<typename T1::elem_type>& out, const ProxyCube<T1>& P, const uword dim);
-  
-  template<typename T1>
-  arma_hot inline static void apply_noalias_proxy(Cube<typename T1::elem_type>& out, const ProxyCube<T1>& P, const uword dim);
+  inline static void apply_proxy_noalias(Cube<typename T1::elem_type>& out, const ProxyCube<T1>& P, const uword dim);
   };
 
 

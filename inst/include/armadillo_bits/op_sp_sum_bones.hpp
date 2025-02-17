@@ -27,6 +27,9 @@ class op_sp_sum
   
   template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const mtSpReduceOp<typename T1::elem_type, T1, op_sp_sum>& in);
+  
+  template<typename T1>
+  inline static void apply(Mat<typename T1::elem_type>& out, const mtSpReduceOp<typename T1::elem_type, SpOp<T1, spop_square>, op_sp_sum>& in);
   };
 
 

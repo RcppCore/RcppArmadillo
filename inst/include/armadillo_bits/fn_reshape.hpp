@@ -135,4 +135,53 @@ reshape(const SpBase<typename T1::elem_type, T1>& X, const SizeMat& s)
 
 
 
+//
+
+
+
+template<typename oT>
+arma_warn_unused
+inline
+field<oT>
+reshape(const field<oT>& A, const uword new_n_rows, const uword new_n_cols, const uword new_n_slices = uword(1))
+  {
+  arma_debug_sigprint();
+  
+  field<oT> B(new_n_rows, new_n_cols, new_n_slices);
+  
+  const uword n_elem_to_copy = (std::min)(A.n_elem, B.n_elem);
+  
+  for(uword i=0; i < n_elem_to_copy; ++i)  { B.at(i) = A.at(i); }
+  
+  return B;
+  }
+
+
+
+template<typename oT>
+arma_warn_unused
+inline
+field<oT>
+reshape(const field<oT>& A, const SizeMat& s)
+  {
+  arma_debug_sigprint();
+  
+  return reshape(A, s.n_rows, s.n_cols);
+  }
+
+
+
+template<typename oT>
+arma_warn_unused
+inline
+field<oT>
+reshape(const field<oT>& A, const SizeCube& s)
+  {
+  arma_debug_sigprint();
+  
+  return reshape(A, s.n_rows, s.n_cols, s.n_slices);
+  }
+
+
+
 //! @}

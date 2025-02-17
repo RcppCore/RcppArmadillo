@@ -68,9 +68,11 @@ class op_any
   static inline bool any_vec(T1& X);
   
   
-  template<typename T1>
-  static inline void apply_helper(Mat<uword>& out, const Proxy<T1>& P, const uword dim);
+  template<typename eT>
+  static inline void apply_mat_noalias(Mat<uword>& out, const Mat<eT>& X, const uword dim);
   
+  template<typename T1>
+  static inline void apply_proxy_noalias(Mat<uword>& out, const Proxy<T1>& P, const uword dim);
   
   template<typename T1>
   static inline void apply(Mat<uword>& out, const mtOp<uword, T1, op_any>& X);

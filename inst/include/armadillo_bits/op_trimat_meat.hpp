@@ -68,49 +68,54 @@ op_trimat::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_trimat>& in)
   const bool upper = (in.aux_uword_a == 0);
   
   // allow detection of in-place operation
-  if(is_Mat<T1>::value || (arma_config::openmp && Proxy<T1>::use_mp))
+  if(is_Mat<T1>::value)
     {
     const unwrap<T1> U(in.m);
     
-    op_trimat::apply_unwrap(out, U.M, upper);
+    if(&out == &(U.M))
+      {
+      arma_conform_check( (U.M.is_square() == false), "trimatu()/trimatl(): given matrix must be square sized" );
+      
+      op_trimat::fill_zeros(out, upper);
+      }
+    else
+      {
+      op_trimat::apply_mat_noalias(out, U.M, upper);
+      }
+    }
+  else
+  if((is_Mat<typename Proxy<T1>::stored_type>::value) || (arma_config::openmp && Proxy<T1>::use_mp))
+    {
+    const quasi_unwrap<T1> U(in.m);
+    
+    if(U.is_alias(out))
+      {
+      Mat<eT> tmp;
+      
+      op_trimat::apply_mat_noalias(tmp, U.M, upper);
+      
+      out.steal_mem(tmp);
+      }
+    else
+      {
+      op_trimat::apply_mat_noalias(out, U.M, upper);
+      }
     }
   else
     {
     const Proxy<T1> P(in.m);
     
-    const bool is_alias = P.is_alias(out);
-    
-    if(is_Mat<typename Proxy<T1>::stored_type>::value)
+    if(P.is_alias(out))
       {
-      const quasi_unwrap<typename Proxy<T1>::stored_type> U(P.Q);
+      Mat<eT> tmp;
       
-      if(is_alias)
-        {
-        Mat<eT> tmp;
-        
-        op_trimat::apply_unwrap(tmp, U.M, upper);
-        
-        out.steal_mem(tmp);
-        }
-      else
-        {
-        op_trimat::apply_unwrap(out, U.M, upper);
-        }
+      op_trimat::apply_proxy_noalias(tmp, P, upper);
+      
+      out.steal_mem(tmp);
       }
     else
       {
-      if(is_alias)
-        {
-        Mat<eT> tmp;
-        
-        op_trimat::apply_proxy(tmp, P, upper);
-        
-        out.steal_mem(tmp);
-        }
-      else
-        {
-        op_trimat::apply_proxy(out, P, upper);
-        }
+      op_trimat::apply_proxy_noalias(out, P, upper);
       }
     }
   }
@@ -120,39 +125,36 @@ op_trimat::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_trimat>& in)
 template<typename eT>
 inline
 void
-op_trimat::apply_unwrap(Mat<eT>& out, const Mat<eT>& A, const bool upper)
+op_trimat::apply_mat_noalias(Mat<eT>& out, const Mat<eT>& A, const bool upper)
   {
   arma_debug_sigprint();
   
   arma_conform_check( (A.is_square() == false), "trimatu()/trimatl(): given matrix must be square sized" );
   
-  if(&out != &A)
+  out.copy_size(A);
+  
+  const uword N = A.n_rows;
+  
+  if(upper)
     {
-    out.copy_size(A);
-    
-    const uword N = A.n_rows;
-    
-    if(upper)
+    // upper triangular: copy the diagonal and the elements above the diagonal
+    for(uword i=0; i<N; ++i)
       {
-      // upper triangular: copy the diagonal and the elements above the diagonal
-      for(uword i=0; i<N; ++i)
-        {
-        const eT* A_data   = A.colptr(i);
-              eT* out_data = out.colptr(i);
-        
-        arrayops::copy( out_data, A_data, i+1 );
-        }
+      const eT* A_data   = A.colptr(i);
+            eT* out_data = out.colptr(i);
+      
+      arrayops::copy( out_data, A_data, i+1 );
       }
-    else
+    }
+  else
+    {
+    // lower triangular: copy the diagonal and the elements below the diagonal
+    for(uword i=0; i<N; ++i)
       {
-      // lower triangular: copy the diagonal and the elements below the diagonal
-      for(uword i=0; i<N; ++i)
-        {
-        const eT* A_data   = A.colptr(i);
-              eT* out_data = out.colptr(i);
-        
-        arrayops::copy( &out_data[i], &A_data[i], N-i );
-        }
+      const eT* A_data   = A.colptr(i);
+            eT* out_data = out.colptr(i);
+      
+      arrayops::copy( &out_data[i], &A_data[i], N-i );
       }
     }
   
@@ -164,7 +166,7 @@ op_trimat::apply_unwrap(Mat<eT>& out, const Mat<eT>& A, const bool upper)
 template<typename T1>
 inline
 void
-op_trimat::apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const bool upper)
+op_trimat::apply_proxy_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const bool upper)
   {
   arma_debug_sigprint();
   

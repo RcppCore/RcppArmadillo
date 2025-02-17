@@ -29,7 +29,7 @@ class spdiagview : public SpBase< eT, spdiagview<eT> >
   typedef eT                                elem_type;
   typedef typename get_pod_type<eT>::result pod_type;
   
-  arma_aligned const SpMat<eT>& m;
+  const SpMat<eT>& m;
   
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = true;

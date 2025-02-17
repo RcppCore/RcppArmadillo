@@ -71,42 +71,42 @@ struct SpProxy< SpMat<eT> >
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef SpMat<eT>                                stored_type;
-
+  
   typedef typename SpMat<eT>::const_iterator       const_iterator_type;
   typedef typename SpMat<eT>::const_row_iterator   const_row_iterator_type;
-
+  
   static constexpr bool use_iterator   = false;
   static constexpr bool Q_is_generated = false;
-
+  
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
-
-  arma_aligned const SpMat<eT>& Q;
-
+  
+  const SpMat<eT>& Q;
+  
   inline explicit SpProxy(const SpMat<eT>& A)
     : Q(A)
     {
     arma_debug_sigprint();
     Q.sync();
     }
-
+  
   arma_inline uword get_n_rows()    const { return Q.n_rows;    }
   arma_inline uword get_n_cols()    const { return Q.n_cols;    }
   arma_inline uword get_n_elem()    const { return Q.n_elem;    }
   arma_inline uword get_n_nonzero() const { return Q.n_nonzero; }
-
+  
   arma_inline elem_type operator[](const uword i)                    const { return Q[i];           }
   arma_inline elem_type at        (const uword row, const uword col) const { return Q.at(row, col); }
-
+  
   arma_inline const eT*    get_values()      const { return Q.values;      }
   arma_inline const uword* get_row_indices() const { return Q.row_indices; }
   arma_inline const uword* get_col_ptrs()    const { return Q.col_ptrs;    }
-
+  
   arma_inline const_iterator_type     begin()                            const { return Q.begin();            }
   arma_inline const_iterator_type     begin_col(const uword col_num)     const { return Q.begin_col(col_num); }
   arma_inline const_row_iterator_type begin_row(const uword row_num = 0) const { return Q.begin_row(row_num); }
-
+  
   arma_inline const_iterator_type     end()                        const { return Q.end();            }
   arma_inline const_row_iterator_type end_row()                    const { return Q.end_row();        }
   arma_inline const_row_iterator_type end_row(const uword row_num) const { return Q.end_row(row_num); }
@@ -134,7 +134,7 @@ struct SpProxy< SpCol<eT> >
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
   
-  arma_aligned const SpCol<eT>& Q;
+  const SpCol<eT>& Q;
   
   inline explicit SpProxy(const SpCol<eT>& A)
     : Q(A)
@@ -186,7 +186,7 @@ struct SpProxy< SpRow<eT> >
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
   
-  arma_aligned const SpRow<eT>& Q;
+  const SpRow<eT>& Q;
   
   inline explicit SpProxy(const SpRow<eT>& A)
     : Q(A)
@@ -227,42 +227,42 @@ struct SpProxy< SpSubview<eT> >
   typedef eT                                           elem_type;
   typedef typename get_pod_type<elem_type>::result     pod_type;
   typedef SpSubview<eT>                                stored_type;
-
+  
   typedef typename SpSubview<eT>::const_iterator       const_iterator_type;
   typedef typename SpSubview<eT>::const_row_iterator   const_row_iterator_type;
-
+  
   static constexpr bool use_iterator   = true;
   static constexpr bool Q_is_generated = false;
-
+  
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
-
-  arma_aligned const SpSubview<eT>& Q;
-
+  
+  const SpSubview<eT>& Q;
+  
   inline explicit SpProxy(const SpSubview<eT>& A)
     : Q(A)
     {
     arma_debug_sigprint();
     Q.m.sync();
     }
-
+  
   arma_inline uword get_n_rows()    const { return Q.n_rows;    }
   arma_inline uword get_n_cols()    const { return Q.n_cols;    }
   arma_inline uword get_n_elem()    const { return Q.n_elem;    }
   arma_inline uword get_n_nonzero() const { return Q.n_nonzero; }
-
+  
   arma_inline elem_type operator[](const uword i)                    const { return Q[i];           }
   arma_inline elem_type at        (const uword row, const uword col) const { return Q.at(row, col); }
-
+  
   arma_inline const eT*    get_values()      const { return Q.m.values;      }
   arma_inline const uword* get_row_indices() const { return Q.m.row_indices; }
   arma_inline const uword* get_col_ptrs()    const { return Q.m.col_ptrs;    }
-
+  
   arma_inline const_iterator_type     begin()                            const { return Q.begin();            }
   arma_inline const_iterator_type     begin_col(const uword col_num)     const { return Q.begin_col(col_num); }
   arma_inline const_row_iterator_type begin_row(const uword row_num = 0) const { return Q.begin_row(row_num); }
-
+  
   arma_inline const_iterator_type     end()                        const { return Q.end();            }
   arma_inline const_row_iterator_type end_row()                    const { return Q.end_row();        }
   arma_inline const_row_iterator_type end_row(const uword row_num) const { return Q.end_row(row_num); }
@@ -290,7 +290,7 @@ struct SpProxy< SpSubview_col<eT> >
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
   
-  arma_aligned const SpSubview_col<eT>& Q;
+  const SpSubview_col<eT>& Q;
   
   inline explicit SpProxy(const SpSubview_col<eT>& A)
     : Q(A)
@@ -342,7 +342,7 @@ struct SpProxy< SpSubview_col_list<eT,T1> >
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
   
-  arma_aligned const SpMat<eT> Q;
+  const SpMat<eT> Q;
   
   inline explicit SpProxy(const SpSubview_col_list<eT,T1>& A)
     : Q(A)
@@ -385,7 +385,7 @@ struct SpProxy< SpSubview_row<eT> >
   
   typedef typename SpSubview<eT>::const_iterator       const_iterator_type;
   typedef typename SpSubview<eT>::const_row_iterator   const_row_iterator_type;
-
+  
   static constexpr bool use_iterator   = true;
   static constexpr bool Q_is_generated = false;
   
@@ -393,7 +393,7 @@ struct SpProxy< SpSubview_row<eT> >
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
   
-  arma_aligned const SpSubview_row<eT>& Q;
+  const SpSubview_row<eT>& Q;
   
   inline explicit SpProxy(const SpSubview_row<eT>& A)
     : Q(A)
@@ -445,7 +445,7 @@ struct SpProxy< spdiagview<eT> >
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
   
-  arma_aligned const SpMat<eT> Q;
+  const SpMat<eT> Q;
   
   inline explicit SpProxy(const spdiagview<eT>& A)
     : Q(A)
@@ -497,7 +497,7 @@ struct SpProxy< SpOp<T1, spop_type> >
   static constexpr bool is_col  = SpOp<T1, spop_type>::is_col;
   static constexpr bool is_xvec = SpOp<T1, spop_type>::is_xvec;
   
-  arma_aligned const SpMat<eT> Q;
+  const SpMat<eT> Q;
   
   inline explicit SpProxy(const SpOp<T1, spop_type>& A)
     : Q(A)
@@ -549,7 +549,7 @@ struct SpProxy< SpGlue<T1, T2, spglue_type> >
   static constexpr bool is_col  = SpGlue<T1, T2, spglue_type>::is_col;
   static constexpr bool is_xvec = SpGlue<T1, T2, spglue_type>::is_xvec;
   
-  arma_aligned const SpMat<eT> Q;
+  const SpMat<eT> Q;
   
   inline explicit SpProxy(const SpGlue<T1, T2, spglue_type>& A)
     : Q(A)
@@ -600,7 +600,7 @@ struct SpProxy< mtSpOp<out_eT, T1, spop_type> >
   static constexpr bool is_col  = mtSpOp<out_eT, T1, spop_type>::is_col;
   static constexpr bool is_xvec = mtSpOp<out_eT, T1, spop_type>::is_xvec;
   
-  arma_aligned const SpMat<out_eT> Q;
+  const SpMat<out_eT> Q;
   
   inline explicit SpProxy(const mtSpOp<out_eT, T1, spop_type>& A)
     : Q(A)
@@ -651,7 +651,7 @@ struct SpProxy< mtSpGlue<out_eT, T1, T2, spglue_type> >
   static constexpr bool is_col  = mtSpGlue<out_eT, T1, T2, spglue_type>::is_col;
   static constexpr bool is_xvec = mtSpGlue<out_eT, T1, T2, spglue_type>::is_xvec;
   
-  arma_aligned const SpMat<out_eT> Q;
+  const SpMat<out_eT> Q;
   
   inline explicit SpProxy(const mtSpGlue<out_eT, T1, T2, spglue_type>& A)
     : Q(A)
@@ -702,7 +702,7 @@ struct SpProxy< mtSpReduceOp<out_eT, T1, op_type> >
   static constexpr bool is_col  = mtSpReduceOp<out_eT, T1, op_type>::is_col;
   static constexpr bool is_xvec = mtSpReduceOp<out_eT, T1, op_type>::is_xvec;
   
-  arma_aligned const SpMat<out_eT> Q;
+  const SpMat<out_eT> Q;
   
   inline explicit SpProxy(const mtSpReduceOp<out_eT, T1, op_type>& A)
     : Q(A)
