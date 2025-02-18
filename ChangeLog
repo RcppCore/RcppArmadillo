@@ -1,3 +1,8 @@
+2025-02-18  Dirk Eddelbuettel  <edd@debian.org>
+
+	* vignettes/rmd/RcppArmadillo.bib: Updated, also show CRAN DOIs
+	* vignettes/pdf/RcppArmadillo-sparseMatrix.pdf: Regenerated
+
 2025-02-17  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 14.4.0-0
