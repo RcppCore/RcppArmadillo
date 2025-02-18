@@ -1,6 +1,7 @@
 2025-02-18  Dirk Eddelbuettel  <edd@debian.org>
 
 	* vignettes/rmd/RcppArmadillo.bib: Updated, also show CRAN DOIs
+	* vignettes/rmd/RcppArmadillo-sparseMatrix.Rmd: Tighter spacing
 	* vignettes/pdf/RcppArmadillo-sparseMatrix.pdf: Regenerated
 
 2025-02-17  Dirk Eddelbuettel  <edd@debian.org>
