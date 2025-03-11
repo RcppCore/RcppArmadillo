@@ -1,3 +1,7 @@
+2025-03-10  Dirk Eddelbuettel  <edd@debian.org>
+
+	* .github/workflows/ci.yaml: Switch to r-ci with implicit bootstrap
+
 2025-02-18  Dirk Eddelbuettel  <edd@debian.org>
 
 	* vignettes/rmd/RcppArmadillo.bib: Updated, also show CRAN DOIs
