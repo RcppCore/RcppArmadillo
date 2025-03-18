@@ -3,6 +3,15 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 14.4.0-1 (2025-02-17)}{
+  \itemize{
+    \item CRAN release having given a few packages time to catch-up to small
+    upstream change as discussed and managed in \ghit{462}
+    \item Updated bibliography, and small edits to sparse matrix vignette
+    \item Switched continuous integration action to r-ci with implicit bootstrap
+  }
+}
+
 \section{Changes in RcppArmadillo version 14.4.0-0 (2025-02-17) (GitHub Only)}{
   \itemize{
     \item Upgraded to Armadillo release 14.4.0 (Filtered Espresso)
