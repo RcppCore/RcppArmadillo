@@ -1706,7 +1706,7 @@ subview_cube<eT>::extract(Cube<eT>& out, const subview_cube<eT>& in)
   arma_debug_sigprint();
 
   // NOTE: we're assuming that the cube has already been set to the correct size and there is no aliasing;
-  // size setting and alias checking is done by either the Cube contructor or operator=()
+  // size setting and alias checking is done by either the Cube constructor or operator=()
   
   const uword n_rows   = in.n_rows;
   const uword n_cols   = in.n_cols;

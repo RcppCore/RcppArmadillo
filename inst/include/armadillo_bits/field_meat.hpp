@@ -1037,7 +1037,7 @@ field<oT>::rows(const uword in_row1, const uword in_row2)
   arma_conform_check_bounds
     (
     ( (in_row1 > in_row2) || (in_row2 >= n_rows) ),
-    "field::rows(): indicies out of bounds or incorrectly used"
+    "field::rows(): indices out of bounds or incorrectly used"
     );
   
   const uword sub_n_rows = in_row2 - in_row1 + 1;
@@ -1060,7 +1060,7 @@ field<oT>::rows(const uword in_row1, const uword in_row2) const
   arma_conform_check_bounds
     (
     ( (in_row1 > in_row2) || (in_row2 >= n_rows) ),
-    "field::rows(): indicies out of bounds or incorrectly used"
+    "field::rows(): indices out of bounds or incorrectly used"
     );
   
   const uword sub_n_rows = in_row2 - in_row1 + 1;
@@ -1083,7 +1083,7 @@ field<oT>::cols(const uword in_col1, const uword in_col2)
   arma_conform_check_bounds
     (
     ( (in_col1 > in_col2) || (in_col2 >= n_cols) ),
-    "field::cols(): indicies out of bounds or incorrectly used"
+    "field::cols(): indices out of bounds or incorrectly used"
     );
   
   const uword sub_n_cols = in_col2 - in_col1 + 1;
@@ -1106,7 +1106,7 @@ field<oT>::cols(const uword in_col1, const uword in_col2) const
   arma_conform_check_bounds
     (
     ( (in_col1 > in_col2) || (in_col2 >= n_cols) ),
-    "field::cols(): indicies out of bounds or incorrectly used"
+    "field::cols(): indices out of bounds or incorrectly used"
     );
   
   const uword sub_n_cols = in_col2 - in_col1 + 1;
@@ -1127,7 +1127,7 @@ field<oT>::slices(const uword in_slice1, const uword in_slice2)
   arma_conform_check_bounds
     (
     ( (in_slice1 > in_slice2) || (in_slice2 >= n_slices) ),
-    "field::slices(): indicies out of bounds or incorrectly used"
+    "field::slices(): indices out of bounds or incorrectly used"
     );
   
   const uword sub_n_slices = in_slice2 - in_slice1 + 1;
@@ -1148,7 +1148,7 @@ field<oT>::slices(const uword in_slice1, const uword in_slice2) const
   arma_conform_check_bounds
     (
     ( (in_slice1 > in_slice2) || (in_slice2 >= n_slices) ),
-    "field::slices(): indicies out of bounds or incorrectly used"
+    "field::slices(): indices out of bounds or incorrectly used"
     );
   
   const uword sub_n_slices = in_slice2 - in_slice1 + 1;

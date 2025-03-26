@@ -250,7 +250,7 @@ eop_core<eop_type>::apply(outT& out, const eOp<T1, eop_type>& x)
   typedef typename T1::elem_type eT;
   
   // NOTE: we're assuming that the matrix has already been set to the correct size and there is no aliasing;
-  // size setting and alias checking is done by either the Mat contructor or operator=()
+  // size setting and alias checking is done by either the Mat constructor or operator=()
   
   const eT  k       = x.aux;
         eT* out_mem = out.memptr();
@@ -626,7 +626,7 @@ eop_core<eop_type>::apply(Cube<typename T1::elem_type>& out, const eOpCube<T1, e
   typedef typename T1::elem_type eT;
   
   // NOTE: we're assuming that the matrix has already been set to the correct size and there is no aliasing;
-  // size setting and alias checking is done by either the Mat contructor or operator=()
+  // size setting and alias checking is done by either the Mat constructor or operator=()
   
   const eT  k       = x.aux;
         eT* out_mem = out.memptr();

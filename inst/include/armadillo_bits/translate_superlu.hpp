@@ -200,7 +200,7 @@ namespace superlu
       return arma_wrapper(zlangs)(norm, A);
       }
     
-    return T(0);  // to avoid false warnigns from the compiler
+    return T(0);  // to avoid false warnings from the compiler
     }
   
   

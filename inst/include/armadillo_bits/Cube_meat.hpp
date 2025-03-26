@@ -1019,7 +1019,7 @@ Cube<eT>::operator-=(const subview_cube<eT>& X)
 
 
 
-//! in-place element-wise cube mutiplication (using a subcube on the right-hand-side)
+//! in-place element-wise cube multiplication (using a subcube on the right-hand-side)
 template<typename eT>
 inline
 Cube<eT>&

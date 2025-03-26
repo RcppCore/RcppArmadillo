@@ -38,7 +38,7 @@ diags(const Base<typename T1::elem_type, T1>& V_expr, const Base<sword,T2>& D_ex
   
   arma_conform_check( ((D.is_vec() == false) && (D.is_empty() == false)), "D must be a vector" );
   
-  arma_conform_check( (V.n_cols != D.n_elem), "number of colums in matrix V must match the length of vector D" );
+  arma_conform_check( (V.n_cols != D.n_elem), "number of columns in matrix V must match the length of vector D" );
   
   Mat<eT> out(n_rows, n_cols, fill::zeros);
   
@@ -93,7 +93,7 @@ spdiags(const Base<typename T1::elem_type, T1>& V_expr, const Base<sword,T2>& D_
   
   arma_conform_check( ((D.is_vec() == false) && (D.is_empty() == false)), "D must be a vector" );
   
-  arma_conform_check( (V.n_cols != D.n_elem), "number of colums in matrix V must match the length of vector D" );
+  arma_conform_check( (V.n_cols != D.n_elem), "number of columns in matrix V must match the length of vector D" );
   
   MapMat<eT> tmp(n_rows, n_cols);
   

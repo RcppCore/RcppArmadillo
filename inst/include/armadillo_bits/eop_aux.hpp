@@ -158,7 +158,7 @@ class eop_aux
     {
     //arma_debug_sigprint();
     
-    // acording to IEEE Standard for Floating-Point Arithmetic (IEEE 754)
+    // according to IEEE Standard for Floating-Point Arithmetic (IEEE 754)
     // the mantissa length for double is 53 bits = std::numeric_limits<double>::digits
     // the mantissa length for float  is 24 bits = std::numeric_limits<float >::digits
     

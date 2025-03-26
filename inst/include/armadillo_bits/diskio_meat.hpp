@@ -336,7 +336,7 @@ diskio::guess_file_type_internal(std::istream& f)
   
   // ssv_ascii has to be before csv_ascii;
   // if the data has semicolons, it suggests a CSV file with semicolon as the separating character;
-  // the semicolon may be used to allow the comma character to represent the decimal seperator (eg. 1,2345 vs 1.2345)
+  // the semicolon may be used to allow the comma character to represent the decimal separator (eg. 1,2345 vs 1.2345)
   
   if(has_semicolon && (has_bracket == false))  { return ssv_ascii; }
   
@@ -479,7 +479,7 @@ diskio::convert_token(eT& val, const std::string& token)
   //   {
   //   // std::from_chars() doesn't handle leading whitespace
   //   // std::from_chars() doesn't handle leading + sign
-  //   // std::from_chars() handles only the decimal point (.) as the decimal seperator
+  //   // std::from_chars() handles only the decimal point (.) as the decimal separator
   //   
   //   const char str0     = str[0];
   //   const bool start_ok = ((str0 != ' ') && (str0 != '\t') && (str0 != '+'));
@@ -3690,7 +3690,7 @@ diskio::load_arma_binary(SpMat<eT>& x, std::istream& f, std::string& err_msg)
         {
         arma_debug_print("detected inconsistent data while loading; re-reading integer parts as u32");
         
-        // inconstency could be due to a different uword size used during saving,
+        // inconsistency could be due to a different uword size used during saving,
         // so try loading the row_indices and col_ptrs under the assumption of 32 bit unsigned integers
         
         f.clear();
@@ -4483,7 +4483,7 @@ diskio::load_hdf5_binary(Cube<eT>& x, const hdf5_name& spec, std::string& err_ms
           return false;
           }
         
-        if(ndims == 1) { dims[1] = 1; dims[2] = 1; }  // Vector case; one row/colum, several slices
+        if(ndims == 1) { dims[1] = 1; dims[2] = 1; }  // Vector case; one row/column, several slices
         if(ndims == 2) {              dims[2] = 1; }  // Matrix case; one column, several rows/slices
         
         try { x.set_size(dims[2], dims[1], dims[0]); } catch(...) { err_msg = "not enough memory"; return false; }

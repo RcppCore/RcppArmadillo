@@ -1009,7 +1009,7 @@ MapMat_val<eT>::operator/=(const eT in_val)
     }
   else
     {
-    // silly operation, but included for completness
+    // silly operation, but included for completeness
     
     const eT val = eT(0) / in_val;
     

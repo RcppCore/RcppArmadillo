@@ -267,7 +267,7 @@ eglue_core<eglue_type>::apply(outT& out, const eGlue<T1, T2, eglue_type>& x)
   constexpr bool use_mp = (Proxy<T1>::use_mp || Proxy<T2>::use_mp) && (arma_config::openmp);
   
   // NOTE: we're assuming that the matrix has already been set to the correct size and there is no aliasing;
-  // size setting and alias checking is done by either the Mat contructor or operator=()
+  // size setting and alias checking is done by either the Mat constructor or operator=()
   
   
   eT* out_mem = out.memptr();
@@ -759,7 +759,7 @@ eglue_core<eglue_type>::apply(Cube<typename T1::elem_type>& out, const eGlueCube
   constexpr bool use_mp = (ProxyCube<T1>::use_mp || ProxyCube<T2>::use_mp) && (arma_config::openmp);
   
   // NOTE: we're assuming that the cube has already been set to the correct size and there is no aliasing;
-  // size setting and alias checking is done by either the Cube contructor or operator=()
+  // size setting and alias checking is done by either the Cube constructor or operator=()
   
   
   eT* out_mem = out.memptr();

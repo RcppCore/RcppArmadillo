@@ -3126,7 +3126,7 @@ SpMat<eT>::shed_rows(const uword in_row1, const uword in_row2)
   arma_conform_check_bounds
     (
     (in_row1 > in_row2) || (in_row2 >= n_rows),
-    "SpMat::shed_rows(): indices out of bounds or incorectly used"
+    "SpMat::shed_rows(): indices out of bounds or incorrectly used"
     );
   
   sync_csc();
@@ -3288,7 +3288,7 @@ SpMat<eT>::shed_cols(const uword in_col1, const uword in_col2)
 
 
 /**
- * Element access; acces the i'th element (works identically to the Mat accessors).
+ * Element access; access the i'th element (works identically to the Mat accessors).
  * If there is nothing at element i, 0 is returned.
  */
 
@@ -3484,7 +3484,7 @@ SpMat<eT>::is_colvec() const
 
 
 
-//! returns true if the object has the same number of non-zero rows and columnns
+//! returns true if the object has the same number of non-zero rows and columns
 template<typename eT>
 arma_inline
 bool
@@ -5202,7 +5202,7 @@ SpMat<eT>::init(const MapMat<eT>& x)
     const uword x_index = x_entry.first;
     const eT    x_val   = x_entry.second;
     
-    // have we gone past the curent column?
+    // have we gone past the current column?
     if(x_index >= x_col_index_endp1)
       {
       x_col = x_index / x_n_rows;
@@ -5481,7 +5481,7 @@ SpMat<eT>::init_batch_add(const Mat<uword>& locs, const Mat<eT>& vals, const boo
       
       uvec sorted_indices = sort_index(abslocs); // Ascending sort.
       
-      // work out the number of unique elments 
+      // work out the number of unique elements 
       uword n_unique = 1;  // first element is unique
       
       for(uword i=1; i < sorted_indices.n_elem; ++i)
@@ -5536,7 +5536,7 @@ SpMat<eT>::init_batch_add(const Mat<uword>& locs, const Mat<eT>& vals, const boo
   
   if( (sort_locations == false) || (actually_sorted == true) )
     {
-    // work out the number of unique elments 
+    // work out the number of unique elements 
     uword n_unique = 1;  // first element is unique
     
     for(uword i=1; i < locs.n_cols; ++i)
@@ -5918,7 +5918,7 @@ SpMat<eT>::init_xform_mt(const SpBase<eT2,T1>& A, const Functor& func)
       {
       eT& t_values_i = t_values[i];
       
-      t_values_i = func(x_values[i]);   // NOTE: func() must produce a value of type eT (ie. act as a convertor between eT2 and eT)
+      t_values_i = func(x_values[i]);   // NOTE: func() must produce a value of type eT (ie. act as a converter between eT2 and eT)
       
       if(t_values_i == eT(0))  { has_zero = true; } 
       }
@@ -5936,7 +5936,7 @@ SpMat<eT>::init_xform_mt(const SpBase<eT2,T1>& A, const Functor& func)
     
     while(it != it_end)
       {
-      const eT val = func(*it);   // NOTE: func() must produce a value of type eT (ie. act as a convertor between eT2 and eT)
+      const eT val = func(*it);   // NOTE: func() must produce a value of type eT (ie. act as a converter between eT2 and eT)
       
       if(val == eT(0))  { has_zero = true; }
       

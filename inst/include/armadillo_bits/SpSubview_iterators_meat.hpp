@@ -816,7 +816,7 @@ SpSubview<eT>::const_row_iterator::operator++()
         else if((*pos_ptr) == next_min_row + aux_row && col < next_min_col && (*pos_ptr) < aux_row + iterator_base::M->n_rows)
           {
           // The first element in this column is in a subsequent row that we
-          // already have another elemnt for, but the column index is less so
+          // already have another element for, but the column index is less so
           // this element will come first.
           next_min_col = col;
           next_actual_pos = col_offset + (pos_ptr - start_ptr);

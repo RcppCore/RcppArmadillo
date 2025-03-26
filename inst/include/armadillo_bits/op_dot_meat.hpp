@@ -106,30 +106,25 @@ op_dot::direct_dot(const uword n_elem, const eT* const A, const eT* const B)
   {
   arma_debug_sigprint();
   
-  if( n_elem <= 32u )
+  if(n_elem <= 32u)  { return op_dot::direct_dot_arma(n_elem, A, B); }
+  
+  #if defined(ARMA_USE_ATLAS)
+    {
+    arma_debug_print("atlas::cblas_dot()");
+    
+    return atlas::cblas_dot(n_elem, A, B);
+    }
+  #elif defined(ARMA_USE_BLAS)
+    {
+    arma_debug_print("blas::dot()");
+    
+    return blas::dot(n_elem, A, B);
+    }
+  #else
     {
     return op_dot::direct_dot_arma(n_elem, A, B);
     }
-  else
-    {
-    #if defined(ARMA_USE_ATLAS)
-      {
-      arma_debug_print("atlas::cblas_dot()");
-      
-      return atlas::cblas_dot(n_elem, A, B);
-      }
-    #elif defined(ARMA_USE_BLAS)
-      {
-      arma_debug_print("blas::dot()");
-      
-      return blas::dot(n_elem, A, B);
-      }
-    #else
-      {
-      return op_dot::direct_dot_arma(n_elem, A, B);
-      }
-    #endif
-    }
+  #endif
   }
 
 
@@ -140,30 +135,25 @@ inline
 typename arma_cx_only<eT>::result
 op_dot::direct_dot(const uword n_elem, const eT* const A, const eT* const B)
   {
-  if( n_elem <= 16u )
+  if(n_elem <= 16u)  { return op_dot::direct_dot_arma(n_elem, A, B); }
+  
+  #if defined(ARMA_USE_ATLAS)
+    {
+    arma_debug_print("atlas::cblas_cx_dot()");
+    
+    return atlas::cblas_cx_dot(n_elem, A, B);
+    }
+  #elif defined(ARMA_USE_BLAS)
+    {
+    arma_debug_print("blas::dot()");
+    
+    return blas::dot(n_elem, A, B);
+    }
+  #else
     {
     return op_dot::direct_dot_arma(n_elem, A, B);
     }
-  else
-    {
-    #if defined(ARMA_USE_ATLAS)
-      {
-      arma_debug_print("atlas::cblas_cx_dot()");
-      
-      return atlas::cblas_cx_dot(n_elem, A, B);
-      }
-    #elif defined(ARMA_USE_BLAS)
-      {
-      arma_debug_print("blas::dot()");
-      
-      return blas::dot(n_elem, A, B);
-      }
-    #else
-      {
-      return op_dot::direct_dot_arma(n_elem, A, B);
-      }
-    #endif
-    }
+  #endif
   }
 
 
@@ -461,41 +451,36 @@ op_cdot::direct_cdot(const uword n_elem, const eT* const A, const eT* const B)
   {
   arma_debug_sigprint();
   
-  if( n_elem <= 32u )
+  if(n_elem <= 32u)  { return op_cdot::direct_cdot_arma(n_elem, A, B); }
+  
+  #if defined(ARMA_USE_BLAS)
+    {
+    arma_debug_print("blas::gemv()");
+    
+    // using gemv() workaround due to compatibility issues with cdotc() and zdotc()
+    
+    const char trans   = 'C';
+    
+    const blas_int m   = blas_int(n_elem);
+    const blas_int n   = 1;
+    //const blas_int lda = (n_elem > 0) ? blas_int(n_elem) : blas_int(1);
+    const blas_int inc = 1;
+    
+    const eT alpha     = eT(1);
+    const eT beta      = eT(0);
+    
+    eT result[2];  // paranoia: using two elements instead of one
+    
+    //blas::gemv(&trans, &m, &n, &alpha, A, &lda, B, &inc, &beta, &result[0], &inc);
+    blas::gemv(&trans, &m, &n, &alpha, A, &m, B, &inc, &beta, &result[0], &inc);
+    
+    return result[0];
+    }
+  #else
     {
     return op_cdot::direct_cdot_arma(n_elem, A, B);
     }
-  else
-    {
-    #if defined(ARMA_USE_BLAS)
-      {
-      arma_debug_print("blas::gemv()");
-      
-      // using gemv() workaround due to compatibility issues with cdotc() and zdotc()
-      
-      const char trans   = 'C';
-      
-      const blas_int m   = blas_int(n_elem);
-      const blas_int n   = 1;
-      //const blas_int lda = (n_elem > 0) ? blas_int(n_elem) : blas_int(1);
-      const blas_int inc = 1;
-      
-      const eT alpha     = eT(1);
-      const eT beta      = eT(0);
-      
-      eT result[2];  // paranoia: using two elements instead of one
-      
-      //blas::gemv(&trans, &m, &n, &alpha, A, &lda, B, &inc, &beta, &result[0], &inc);
-      blas::gemv(&trans, &m, &n, &alpha, A, &m, B, &inc, &beta, &result[0], &inc);
-      
-      return result[0];
-      }
-    #else
-      {
-      return op_cdot::direct_cdot_arma(n_elem, A, B);
-      }
-    #endif
-    }
+  #endif
   }
 
 

@@ -586,7 +586,7 @@ diagview<eT>::extract(Mat<eT>& out, const diagview<eT>& in)
   arma_debug_sigprint();
   
   // NOTE: we're assuming that the matrix has already been set to the correct size and there is no aliasing;
-  // size setting and alias checking is done by either the Mat contructor or operator=()
+  // size setting and alias checking is done by either the Mat constructor or operator=()
   
   const Mat<eT>& in_m = in.m;
   

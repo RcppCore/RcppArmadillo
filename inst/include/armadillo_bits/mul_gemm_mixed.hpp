@@ -22,7 +22,7 @@
 
 
 //! \brief
-//! Matrix multplication where the matrices have differing element types.
+//! Matrix multiplication where the matrices have differing element types.
 //! Uses caching for speedup.
 //! Matrix 'C' is assumed to have been set to the correct size (ie. taking into account transposes)
 
@@ -236,7 +236,7 @@ class gemm_mixed_large
 
 
 //! \brief
-//! Matrix multplication where the matrices have differing element types.
+//! Matrix multiplication where the matrices have differing element types.
 
 template<const bool do_trans_A=false, const bool do_trans_B=false, const bool use_alpha=false, const bool use_beta=false>
 class gemm_mixed

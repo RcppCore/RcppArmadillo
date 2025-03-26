@@ -321,7 +321,7 @@ interp1
     else if(c1 == 'l')  { sig = 20; }  // linear
     else
       {
-      if( (c1 == '*') && (c2 == 'n') )  { sig = 11; }  // nearest neighour, assume monotonic increase in X and XI
+      if( (c1 == '*') && (c2 == 'n') )  { sig = 11; }  // nearest neighbour, assume monotonic increase in X and XI
       if( (c1 == '*') && (c2 == 'l') )  { sig = 21; }  // linear, assume monotonic increase in X and XI
       }
     }

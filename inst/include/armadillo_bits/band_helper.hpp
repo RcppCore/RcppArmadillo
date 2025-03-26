@@ -242,7 +242,7 @@ compress(Mat<eT>& AB, const Mat<eT>& A, const uword KL, const uword KU, const bo
   // http://www.netlib.org/lapack/lug/node124.html  
   
   // for ?gbsv,  matrix AB size: 2*KL+KU+1 x N; band representation of A stored in rows KL+1 to 2*KL+KU+1  (note: fortran counts from 1)
-  // for ?gbsvx, matrix AB size:   KL+KU+1 x N; band representaiton of A stored in rows    1 to   KL+KU+1  (note: fortran counts from 1)
+  // for ?gbsvx, matrix AB size:   KL+KU+1 x N; band representation of A stored in rows    1 to   KL+KU+1  (note: fortran counts from 1)
   //
   // the +1 in the above formulas is to take into account the main diagonal
   

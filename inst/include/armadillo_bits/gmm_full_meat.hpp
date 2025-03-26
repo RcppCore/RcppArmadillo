@@ -2270,7 +2270,7 @@ gmm_full<eT>::km_iterate(const Mat<eT>& X, const uword max_iter, const bool verb
           }
         else
           {
-          // recover by using a randomly seleced sample (last resort)
+          // recover by using a randomly selected sample (last resort)
           proposed_i = as_scalar(randi<uvec>(1, distr_param(0,X_n_cols-1)));
           }
         

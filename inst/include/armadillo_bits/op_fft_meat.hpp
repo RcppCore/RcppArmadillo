@@ -123,7 +123,7 @@ op_fft_real::apply( Mat< std::complex<typename T1::pod_type> >& out, const mtOp<
     }
   else
     {
-    // process each column seperately
+    // process each column separately
     
     out.set_size(N_user, n_cols);
     
@@ -234,7 +234,7 @@ op_fft_cx::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword a, const uw
     }
   else
     {
-    // process each column seperately
+    // process each column separately
     
     out.set_size(N_user, n_cols);
     

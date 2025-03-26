@@ -1635,7 +1635,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
       else
         {
         // element on the main diagonal is zero, but sigma is non-zero,
-        // so the number of new non-zero elments on the diagonal is increased
+        // so the number of new non-zero elements on the diagonal is increased
         ++n_nonzero_diag_new;
         }
       }
@@ -1925,11 +1925,11 @@ sp_auxlib::run_aupd_plain
     eigs_randu_filler<T> randu_filler;
     randu_filler.fill(resid, n);  // use deterministic starting point
     
-    // Two contraints on NCV: (NCV > NEV) for sym problems or
+    // Two constraints on NCV: (NCV > NEV) for sym problems or
     // (NCV > NEV + 2) for gen problems and (NCV <= N)
     // 
     // We're calling either arpack::saupd() or arpack::naupd(),
-    // which have slighly different minimum constraint and recommended value for NCV:
+    // which have slightly different minimum constraint and recommended value for NCV:
     // http://www.caam.rice.edu/software/ARPACK/UG/node136.html
     // http://www.caam.rice.edu/software/ARPACK/UG/node138.html
     
@@ -2081,11 +2081,11 @@ sp_auxlib::run_aupd_shiftinvert
     eigs_randu_filler<T> randu_filler;
     randu_filler.fill(resid, n);  // use deterministic starting point
     
-    // Two contraints on NCV: (NCV > NEV) for sym problems or
+    // Two constraints on NCV: (NCV > NEV) for sym problems or
     // (NCV > NEV + 2) for gen problems and (NCV <= N)
     // 
     // We're calling either arpack::saupd() or arpack::naupd(),
-    // which have slighly different minimum constraint and recommended value for NCV:
+    // which have slightly different minimum constraint and recommended value for NCV:
     // http://www.caam.rice.edu/software/ARPACK/UG/node136.html
     // http://www.caam.rice.edu/software/ARPACK/UG/node138.html
     

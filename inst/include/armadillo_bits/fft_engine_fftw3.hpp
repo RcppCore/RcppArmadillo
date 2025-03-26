@@ -50,13 +50,46 @@ class fft_engine_fftw3
   podarray<cx_type> Y_work;  // for storing output
   
   inline
+  void
+  finish()
+    {
+    arma_debug_sigprint();
+    
+    if(fftw3_plan != nullptr)
+      {
+      arma_debug_print("fft_engine_fftw3::finish(): destroying plan");
+      fftw3::destroy_plan<cx_type>(fftw3_plan);
+      }
+    
+    // arma_debug_print("fft_engine_fftw3::finish(): cleanup");
+    // fftw3::cleanup<cx_type>();  // NOTE: this also removes any wisdom acquired by FFTW3 
+    }
+  
+  inline
   ~fft_engine_fftw3()
     {
     arma_debug_sigprint();
     
-    if(fftw3_plan != nullptr)  { fftw3::destroy_plan<cx_type>(fftw3_plan); }
-    
-    // fftw3::cleanup<cx_type>();  // NOTE: this also removes any wisdom acquired by FFTW3 
+    #if defined(ARMA_USE_OPENMP)
+      {
+      #pragma omp critical (arma_fft_engine_fftw3)
+        {
+        (*this).finish();
+        }
+      }
+    #elif defined(ARMA_USE_STD_MUTEX)
+      {
+      std::mutex& plan_mutex = fft_engine_fftw3_aux::get_plan_mutex();
+      
+      const std::lock_guard<std::mutex> lock(plan_mutex);
+      
+      (*this).finish();
+      }
+    #else
+      {
+      (*this).finish();
+      }
+    #endif
     }
   
   inline

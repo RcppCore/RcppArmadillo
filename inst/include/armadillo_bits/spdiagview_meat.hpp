@@ -753,7 +753,7 @@ spdiagview<eT>::extract(Mat<eT>& out, const spdiagview<eT>& in)
   arma_debug_sigprint();
   
   // NOTE: we're assuming that the 'out' matrix has already been set to the correct size;
-  // size setting is done by either the Mat contructor or Mat::operator=()
+  // size setting is done by either the Mat constructor or Mat::operator=()
   
   const SpMat<eT>& in_m = in.m;
   

@@ -20,7 +20,7 @@
 //! @{
 
 
-//! wrapper for accesing external functions in ARPACK and SuperLU
+//! wrapper for accessing external functions in ARPACK and SuperLU
 class sp_auxlib
   {
   public:

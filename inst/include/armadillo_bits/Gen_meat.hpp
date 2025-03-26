@@ -91,7 +91,7 @@ Gen<T1, gen_type>::apply(Mat<typename T1::elem_type>& out) const
   arma_debug_sigprint();
   
   // NOTE: we're assuming that the matrix has already been set to the correct size;
-  // this is done by either the Mat contructor or operator=()
+  // this is done by either the Mat constructor or operator=()
   
        if(is_same_type<gen_type, gen_zeros>::yes) { out.zeros(); }
   else if(is_same_type<gen_type, gen_ones >::yes) { out.ones();  }
