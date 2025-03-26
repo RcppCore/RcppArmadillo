@@ -3,7 +3,17 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 14.4.0-1 (2025-02-17)}{
+\section{Changes in RcppArmadillo version 14.4.1-0 (2025-03-26) (GitHub Only}{
+  \itemize{
+    \item Upgraded to Armadillo release 14.4.1 (Filtered Espresso)
+    \itemize{
+      \item Fix for \code{fft()} and \code{ifft()} when using FFTW3 in
+      multi-threaded contexts (such as OpenMP)
+    }
+  }
+}
+
+\section{Changes in RcppArmadillo version 14.4.0-1 (2025-03-17)}{
   \itemize{
     \item CRAN release having given a few packages time to catch-up to small
     upstream change as discussed and managed in \ghit{462}
@@ -27,7 +37,7 @@
       \code{imag()}, \code{conj()}
     }
     \item The package generator helper function now supports additional DESCRIPTIONs
-    \item This release revealead a need for very minor changes for a handful
+    \item This release revealed a need for very minor changes for a handful
     reverse-dependency packages which will be organized via GitHub issue tracking
   }
 }
