@@ -1,6 +1,6 @@
 #!/usr/bin/r -t
 ##
-##  Copyright (C) 2014 - 2022  Dirk Eddelbuettel
+##  Copyright (C) 2014 - 2025  Dirk Eddelbuettel
 ##
 ##  This file is part of RcppArmadillo.
 ##
@@ -26,8 +26,7 @@ library(RcppArmadillo)
 Rcpp::sourceCpp("cpp/sparse.cpp")
 
 ## setting up an example matrix -- using the fact that the as<sp_mat>
-## converter prefers sparse matrix objects create by the Matrix package
-suppressMessages(require(Matrix))
+## converter prefers sparse matrix objects created by the Matrix package
 ## cf http://people.sc.fsu.edu/~jburkardt/data/st/st.html
 mtxt <- c("11   0   0  14   0  16",
           " 0  22   0   0  25  26",

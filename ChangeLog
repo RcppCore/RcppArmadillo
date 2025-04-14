@@ -1,3 +1,8 @@
+2025-04-14  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/tinytest/test_sparse.R: Remove a redundant duplicate require
+	statement in unit test file
+
 2025-03-27  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 14.4.1-1
