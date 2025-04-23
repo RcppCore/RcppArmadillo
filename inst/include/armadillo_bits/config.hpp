@@ -303,6 +303,18 @@
   #undef ARMA_64BIT_WORD
 #endif
 
+#if (defined(ARMA_BLAS_LONG_LONG) && defined(ARMA_USE_WRAPPER))
+  #pragma message ("WARNING: use of ARMA_BLAS_LONG_LONG in conjunction with ARMA_USE_WRAPPER is not supported")
+#endif
+
+#if (defined(ARMA_BLAS_64BIT_INT) && defined(ARMA_USE_WRAPPER))
+  #pragma message ("WARNING: use of ARMA_BLAS_64BIT_INT in conjunction with ARMA_USE_WRAPPER is not supported")
+#endif
+
+#if (defined(ARMA_SUPERLU_64BIT_INT) && defined(ARMA_USE_WRAPPER))
+  #pragma message ("WARNING: use of ARMA_SUPERLU_64BIT_INT in conjunction with ARMA_USE_WRAPPER is not supported")
+#endif
+
 // for compatibility with earlier versions of Armadillo
 #if defined(ARMA_BLAS_LONG) || defined(ARMA_BLAS_LONG_LONG)
   #undef  ARMA_BLAS_64BIT_INT
