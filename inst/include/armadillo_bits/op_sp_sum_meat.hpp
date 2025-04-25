@@ -21,14 +21,14 @@
 
 
 
-template<typename T1>
+template<typename eT, typename T1>
 inline
 void
-op_sp_sum::apply(Mat<typename T1::elem_type>& out, const mtSpReduceOp<typename T1::elem_type, T1, op_sp_sum>& in)
+op_sp_sum::apply(Mat<eT>& out, const mtSpReduceOp<eT, T1, op_sp_sum>& in)
   {
   arma_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
+  // NOTE: assuming that eT is the same as T1::elem_type
   
   const uword dim = in.aux_uword_a;
   
@@ -83,14 +83,14 @@ op_sp_sum::apply(Mat<typename T1::elem_type>& out, const mtSpReduceOp<typename T
 
 
 
-template<typename T1>
+template<typename eT, typename T1>
 inline
 void
-op_sp_sum::apply(Mat<typename T1::elem_type>& out, const mtSpReduceOp<typename T1::elem_type, SpOp<T1, spop_square>, op_sp_sum>& in)
+op_sp_sum::apply(Mat<eT>& out, const mtSpReduceOp<eT, SpOp<T1, spop_square>, op_sp_sum>& in)
   {
   arma_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
+  // NOTE: assuming that eT is the same as T1::elem_type
   
   const uword dim = in.aux_uword_a;
   
