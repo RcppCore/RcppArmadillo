@@ -7,6 +7,10 @@
   \itemize{
     \item Upgraded to Armadillo release 14.4.2 (Filtered Espresso)
     \itemize{
+      \item Fix for \code{expmat()}
+      \item Workaround for bugs in clang 20 compiler
+    }
+    \itemize{
       \item Micro-cleanup in one test file
     }
   }
