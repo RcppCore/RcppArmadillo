@@ -104,15 +104,29 @@ op_expmat::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1
     return true;
     }
   
+  // trace reduction
+  
+  const eT     diag_shift = arma::trace(A) / T(A.n_rows);
+  const eT exp_diag_shift = std::exp(diag_shift);
+  
+  const bool do_trace_reduction = arma_isfinite(diag_shift) && arma_isfinite(exp_diag_shift) && (exp_diag_shift != eT(0)) && ( (is_cx<eT>::yes) ? (std::abs(diag_shift) > T(0)) : (access::tmp_real(diag_shift) > T(0)) );
+  
+  if(do_trace_reduction)
+    {
+    arma_debug_print("op_expmat: diag_shift: ", diag_shift);
+    
+    A.diag() -= diag_shift;
+    }
+  
   const T norm_val = arma::norm(A, "inf");
   
   if(arma_isfinite(norm_val) == false)  { return false; }
   
-  const double log2_val = (norm_val > T(0)) ? double(eop_aux::log2(norm_val)) : double(0);
+  int exponent = int(0);  std::frexp(norm_val, &exponent);
   
-  int exponent = int(0);  std::frexp(log2_val, &exponent);
+  const uword s = (std::min)( uword( (std::max)(int(0), exponent) ), uword(1023) );
   
-  const uword s = uword( (std::max)(int(0), exponent + int(1)) );
+  arma_debug_print("op_expmat: s: ", s);
   
   A /= eT(eop_aux::pow(double(2), double(s)));
   
@@ -125,7 +139,7 @@ op_expmat::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1
   
   bool positive = true;
   
-  const uword N = 6;
+  const uword N = 8;
   
   for(uword i = 2; i <= N; ++i)
     {
@@ -147,6 +161,9 @@ op_expmat::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1
   if(status == false)  { return false; }
   
   for(uword i=0; i < s; ++i)  { out = out * out; }
+  
+  // inverse trace reduction
+  if(do_trace_reduction)  { out *= exp_diag_shift; }
   
   return true;
   }

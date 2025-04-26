@@ -16,7 +16,7 @@
 // 
 // ------------------------------------------------------------------------
 // 
-// This file includes portions of SuperLU 5.2 software,
+// This file includes portions of SuperLU 7.0 software,
 // licensed under the following conditions.
 // 
 // Copyright (c) 2003, The Regents of the University of California, through
@@ -64,16 +64,23 @@
 // and manually specify a few SuperLU structures and function prototypes.
 //
 // CAVEAT:
-// This code requires SuperLU version 5.2,
-// and assumes that newer 5.x versions will have no API changes.
+// This code requires SuperLU version 7.0, and assumes that newer 7.x versions have no API changes.
 
 namespace arma
 {
 namespace superlu
   {
-  // slu_*defs.h has int typedefed to int_t.
-  // I'll just write it as int for simplicity, where I can, but supermatrix.h needs int_t.
-  typedef int int_t;
+  // superlu_config.h uses either int or int64_t as int_t
+  
+  #if defined(ARMA_SUPERLU_64BIT_INT)
+    #if defined(INT64_MAX)
+      typedef std::int64_t int_t;
+    #else
+      typedef long long    int_t;
+    #endif
+  #else
+      typedef int          int_t;
+  #endif
   }
 }
 
@@ -84,7 +91,7 @@ namespace arma
 namespace superlu
   {
   // Include supermatrix.h.  This gives us SuperMatrix.
-  // Put it in the slu namespace.
+  // Put it in the superlu namespace.
   // For versions of SuperLU I am familiar with, supermatrix.h does not include any other files.
   // Therefore, putting it in the superlu namespace is reasonably safe.
   // This same reasoning is true for superlu_enum_consts.h.
@@ -120,7 +127,7 @@ namespace superlu
   
   #undef ARMA_SLU_STR1
   #undef ARMA_SLU_STR2
-    
+  
   #undef ARMA_SLU_HEADER_A
   #undef ARMA_SLU_HEADER_B
   
@@ -130,7 +137,7 @@ namespace superlu
       {
       int*    panel_histo;
       double* utime;
-      float*  ops;
+      float*  ops;        // NOTE: orig definition is flops_t* ops, where flops_t = float
       int     TinyPivots;
       int     RefineSteps;
       int     expansions;
@@ -174,16 +181,16 @@ namespace superlu
     
     typedef struct e_node
       {
-      int   size;
+      int_t size;
       void* mem;
       } ExpHeader;
     
     typedef struct
       {
-      int   size;
-      int   used;
-      int   top1;
-      int   top2;
+      int_t size;
+      int_t used;
+      int_t top1;
+      int_t top2;
       void* array;
       } LU_stack_t;
     
@@ -191,16 +198,16 @@ namespace superlu
       {
       int*       xsup;
       int*       supno;   
-      int*       lsub;
-      int*       xlsub;
+      int_t*     lsub;
+      int_t*     xlsub;
       void*      lusup;
-      int*       xlusup;
+      int_t*     xlusup;
       void*      ucol;
-      int*       usub;
-      int*       xusub;
-      int        nzlmax;
-      int        nzumax;
-      int        nzlumax;
+      int_t*     usub;
+      int_t*     xusub;
+      int_t      nzlmax;
+      int_t      nzumax;
+      int_t      nzlumax;
       int        n;
       LU_space_t MemModel;
       int        num_expansions;
@@ -283,23 +290,23 @@ namespace superlu
     {
     int*    panel_histo;
     double* utime;
-    float*  ops;
+    float*  ops;        // NOTE: orig definition is flops_t* ops, where flops_t = float
     int     TinyPivots;
     int     RefineSteps;
     int     expansions;
     } SuperLUStat_t;
   
-  typedef enum {NO, YES}                                          yes_no_t;
+  typedef enum {NO, YES}                                                yes_no_t;
   typedef enum {DOFACT, SamePattern, SamePattern_SameRowPerm, FACTORED} fact_t;
-  typedef enum {NOROWPERM, LargeDiag, MY_PERMR}                   rowperm_t;
+  typedef enum {NOROWPERM, LargeDiag_MC64, LargeDiag_HWPM, MY_PERMR}    rowperm_t;
   typedef enum {NATURAL, MMD_ATA, MMD_AT_PLUS_A, COLAMD,
-                METIS_AT_PLUS_A, PARMETIS, ZOLTAN, MY_PERMC}      colperm_t;
-  typedef enum {NOTRANS, TRANS, CONJ}                             trans_t;
-  typedef enum {NOREFINE, SLU_SINGLE=1, SLU_DOUBLE, SLU_EXTRA}    IterRefine_t;
-  typedef enum {SYSTEM, USER}                                     LU_space_t;
-  typedef enum {ONE_NORM, TWO_NORM, INF_NORM}                     norm_t;
-  typedef enum {SILU, SMILU_1, SMILU_2, SMILU_3}                  milu_t;
-
+                METIS_AT_PLUS_A, PARMETIS, METIS_ATA, ZOLTAN, MY_PERMC} colperm_t;
+  typedef enum {NOTRANS, TRANS, CONJ}                                   trans_t;
+  typedef enum {NOREFINE, SLU_SINGLE=1, SLU_DOUBLE, SLU_EXTRA}          IterRefine_t;
+  typedef enum {SYSTEM, USER}                                           LU_space_t;
+  typedef enum {ONE_NORM, TWO_NORM, INF_NORM}			        norm_t;
+  typedef enum {SILU, SMILU_1, SMILU_2, SMILU_3}			milu_t;
+  
   typedef struct
     {
     fact_t        Fact;
@@ -352,16 +359,16 @@ namespace superlu
   
   typedef struct e_node
     {
-    int   size;
+    int_t size;
     void* mem;
     } ExpHeader;
   
   typedef struct
     {
-    int   size;
-    int   used;
-    int   top1;
-    int   top2;
+    int_t size;
+    int_t used;
+    int_t top1;
+    int_t top2;
     void* array;
     } LU_stack_t;
   
@@ -369,16 +376,16 @@ namespace superlu
     {
     int*       xsup;
     int*       supno;   
-    int*       lsub;
-    int*       xlsub;
+    int_t*     lsub;
+    int_t*     xlsub;
     void*      lusup;
-    int*       xlusup;
+    int_t*     xlusup;
     void*      ucol;
-    int*       usub;
-    int*       xusub;
-    int        nzlmax;
-    int        nzumax;
-    int        nzlumax;
+    int_t*     usub;
+    int_t*     xusub;
+    int_t      nzlmax;
+    int_t      nzumax;
+    int_t      nzlumax;
     int        n;
     LU_space_t MemModel;
     int        num_expansions;

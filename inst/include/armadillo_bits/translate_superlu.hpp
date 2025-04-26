@@ -26,7 +26,7 @@ namespace superlu
   template<typename eT>
   inline
   void
-  gssv(superlu_options_t* options, SuperMatrix* A, int* perm_c, int* perm_r, SuperMatrix* L, SuperMatrix* U, SuperMatrix* B, SuperLUStat_t* stat, int* info)
+  gssv(superlu_options_t* options, SuperMatrix* A, int* perm_c, int* perm_r, SuperMatrix* L, SuperMatrix* U, SuperMatrix* B, SuperLUStat_t* stat, superlu::int_t* info)
     {
     arma_type_check(( is_supported_blas_type<eT>::value == false ));
     
@@ -63,11 +63,11 @@ namespace superlu
         int* etree, char* equed,
         typename get_pod_type<eT>::result* R, typename get_pod_type<eT>::result* C,
         SuperMatrix* L, SuperMatrix* U,
-        void* work, int lwork,
+        void* work, superlu::int_t lwork,
         SuperMatrix* B, SuperMatrix* X,
         typename get_pod_type<eT>::result* rpg, typename get_pod_type<eT>::result* rcond,
         typename get_pod_type<eT>::result* ferr, typename get_pod_type<eT>::result* berr,
-        GlobalLU_t* glu, mem_usage_t* mu, SuperLUStat_t* stat, int* info
+        GlobalLU_t* glu, mem_usage_t* mu, SuperLUStat_t* stat, superlu::int_t* info
        )
     {
     arma_type_check(( is_supported_blas_type<eT>::value == false ));
@@ -105,11 +105,11 @@ namespace superlu
   gstrf(superlu_options_t* options,
         SuperMatrix* A,
         int relax,
-        int panel_size, int *etree,
-        void  *work,  int  lwork,
+        int panel_size, int* etree,
+        void* work, superlu::int_t lwork,
         int* perm_c, int* perm_r,
         SuperMatrix* L, SuperMatrix* U,
-        GlobalLU_t* Glu, SuperLUStat_t* stat, int* info
+        GlobalLU_t* Glu, SuperLUStat_t* stat, superlu::int_t* info
        )
     {
     arma_type_check(( is_supported_blas_type<eT>::value == false ));

@@ -1237,21 +1237,21 @@ sp_auxlib::spsolve_simple(Mat<typename T1::elem_type>& X, const SpBase<typename 
     
     superlu_stat_wrangler stat;
     
-    int info = 0; // Return code.
+    superlu::int_t info = 0; // Return code.
     
     arma_debug_print("superlu::gssv()");
     superlu::gssv<eT>(&options, a.get_ptr(), perm_c.get_ptr(), perm_r.get_ptr(), l.get_ptr(), u.get_ptr(), x.get_ptr(), stat.get_ptr(), &info);
     
     
     // Process the return code.
-    if( (info > 0) && (info <= int(A.n_cols)) )
+    if( (info > 0) && (info <= superlu::int_t(A.n_cols)) )
       {
       // std::ostringstream tmp;
       // tmp << "spsolve(): could not solve system; LU factorisation completed, but detected zero in U(" << (info-1) << ',' << (info-1) << ')';
       // arma_warn(1, tmp.str());
       }
     else
-    if(info > int(A.n_cols))
+    if(info > superlu::int_t(A.n_cols))
       {
       arma_warn(1, "spsolve(): memory allocation failure");
       }
@@ -1381,10 +1381,11 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     char equed[8] = {};     // extra characters for paranoia
     T    rpg      = T(0);
     T    rcond    = T(0);
-    int  info     = int(0); // Return code.
     
-    char  work[8] = {};
-    int  lwork    = int(0);  // 0 means superlu will allocate memory
+    char work[8] = {};
+    superlu::int_t lwork = 0;  // 0 means superlu will allocate memory
+    
+    superlu::int_t info = 0; // Return code.
     
     arma_debug_print("superlu::gssvx()");
     superlu::gssvx<eT>(&options, a.get_ptr(), perm_c.get_ptr(), perm_r.get_ptr(), etree.get_ptr(), equed, R.get_ptr(), C.get_ptr(), l.get_ptr(), u.get_ptr(), &work[0], lwork, b.get_ptr(), x.get_ptr(), &rpg, &rcond, ferr.get_ptr(), berr.get_ptr(), &glu, &mu, stat.get_ptr(), &info);
@@ -1396,20 +1397,20 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
       {
       status = true;
       }
-    if( (info > 0) && (info <= int(A.n_cols)) )
+    if( (info > 0) && (info <= superlu::int_t(A.n_cols)) )
       {
       // std::ostringstream tmp;
       // tmp << "spsolve(): could not solve system; LU factorisation completed, but detected zero in U(" << (info-1) << ',' << (info-1) << ')';
       // arma_warn(1, tmp.str());
       }
     else
-    if( (info == int(A.n_cols+1)) && (user_opts.allow_ugly) )
+    if( (info == superlu::int_t(A.n_cols+1)) && (user_opts.allow_ugly) )
       {
       arma_warn(2, "spsolve(): system is singular to working precision (rcond: ", rcond, ")");
       status = true;
       }
     else
-    if(info > int(A.n_cols+1))
+    if(info > superlu::int_t(A.n_cols+1))
       {
       arma_warn(1, "spsolve(): memory allocation failure");
       }
@@ -2123,7 +2124,7 @@ sp_auxlib::run_aupd_shiftinvert
     superlu_opts superlu_opts_default;
     superlu::superlu_options_t options;
     sp_auxlib::set_superlu_opts(options, superlu_opts_default);
-    int lwork = 0;
+    
     superlu::trans_t trans = superlu::NOTRANS;
     
     superlu::GlobalLU_t Glu; /* Not needed on return. */
@@ -2176,7 +2177,9 @@ sp_auxlib::run_aupd_shiftinvert
     
     int panel_size = superlu::sp_ispec_environ(1);
     int relax      = superlu::sp_ispec_environ(2);
-    int slu_info   = 0; // Return code.
+    
+    superlu::int_t lwork    = 0;
+    superlu::int_t slu_info = 0; // Return code.
     
     arma_debug_print("superlu::gstrf()");
     superlu::get_permutation_c(options.ColPerm, x.get_ptr(), perm_c.get_ptr());
@@ -2704,8 +2707,9 @@ superlu_worker<eT>::factorise(typename get_pod_type<eT>::result& out_rcond, cons
   
   int panel_size = superlu::sp_ispec_environ(1);
   int relax      = superlu::sp_ispec_environ(2);
-  int lwork      = 0;
-  int info       = 0;
+  
+  superlu::int_t lwork = 0;
+  superlu::int_t info  = 0;
   
   arma_debug_print("superlu::superlu::get_permutation_c()");
   superlu::get_permutation_c(options.ColPerm, AA.get_ptr(), perm_c.get_ptr());
