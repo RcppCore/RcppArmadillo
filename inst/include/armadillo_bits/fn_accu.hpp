@@ -1121,6 +1121,8 @@ accu(const SpGlue<T1,T2,spglue_schur>& expr)
   
   arma_conform_assert_same_size(px.get_n_rows(), px.get_n_cols(), py.get_n_rows(), py.get_n_cols(), "element-wise multiplication");
   
+  if( (px.get_n_nonzero() == 0) && (py.get_n_nonzero() == 0) )  { return eT(0); }
+  
   typedef typename SpProxy<T1>::stored_type px_Q_type;
   typedef typename SpProxy<T2>::stored_type py_Q_type;
   
@@ -1162,10 +1164,14 @@ accu(const SpGlue<T1,T2,spglue_schur>& expr)
       
       if((x_it_col < y_it_col) || ((x_it_col == y_it_col) && (x_it_row < y_it_row))) // if y is closer to the end
         {
+        acc += (*x_it) * eT(0);  // in case (*x_it) is inf or nan
+        
         ++x_it;
         }
       else // x is closer to the end
         {
+        acc += eT(0) * (*y_it);  // in case (*y_it) is inf or nan
+        
         ++y_it;
         }
       }

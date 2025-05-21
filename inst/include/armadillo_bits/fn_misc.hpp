@@ -149,8 +149,8 @@ logspace(const double A, const double B, const uword N = 50u)
 
 //! kept for compatibility with old user code
 template<typename eT>
-arma_warn_unused
-arma_inline
+arma_frown("change arma::is_finite(val) to std::isfinite(val)")
+inline
 bool
 is_finite(const eT x, const typename arma_scalar_only<eT>::result* junk = nullptr)
   {
@@ -163,7 +163,7 @@ is_finite(const eT x, const typename arma_scalar_only<eT>::result* junk = nullpt
 
 //! kept for compatibility with old user code
 template<typename T1>
-arma_warn_unused
+arma_frown("change arma::is_finite(X) to X.is_finite()")
 inline
 bool
 is_finite(const Base<typename T1::elem_type,T1>& X)
@@ -177,7 +177,7 @@ is_finite(const Base<typename T1::elem_type,T1>& X)
 
 //! kept for compatibility with old user code
 template<typename T1>
-arma_warn_unused
+arma_frown("change arma::is_finite(X) to X.is_finite()")
 inline
 bool
 is_finite(const SpBase<typename T1::elem_type,T1>& X)
@@ -191,7 +191,7 @@ is_finite(const SpBase<typename T1::elem_type,T1>& X)
 
 //! kept for compatibility with old user code
 template<typename T1>
-arma_warn_unused
+arma_frown("change arma::is_finite(X) to X.is_finite()")
 inline
 bool
 is_finite(const BaseCube<typename T1::elem_type,T1>& X)

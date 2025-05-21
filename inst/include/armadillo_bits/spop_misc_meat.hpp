@@ -45,16 +45,7 @@ spop_scalar_times::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_
   
   typedef typename T1::elem_type eT;
   
-  if(in.aux != eT(0))
-    {
-    out.init_xform(in.m, priv::functor_scalar_times<eT>(in.aux));
-    }
-  else
-    {
-    const SpProxy<T1> P(in.m);
-    
-    out.zeros( P.get_n_rows(), P.get_n_cols() );
-    }
+  out.init_xform(in.m, priv::functor_scalar_times<eT>(in.aux));
   }
 
 
@@ -83,19 +74,9 @@ spop_cx_scalar_times::apply(SpMat< std::complex<typename T1::pod_type> >& out, c
   {
   arma_debug_sigprint();
   
-  typedef typename T1::pod_type         T;
-  typedef typename std::complex<T> out_eT;
+  typedef typename T1::pod_type T;
   
-  if(in.aux_out_eT != out_eT(0))
-    {
-    out.init_xform_mt(in.m, priv::functor_cx_scalar_times<T>(in.aux_out_eT));
-    }
-  else
-    {
-    const SpProxy<T1> P(in.m);
-    
-    out.zeros( P.get_n_rows(), P.get_n_cols() );
-    }
+  out.init_xform_mt(in.m, priv::functor_cx_scalar_times<T>(in.aux_out_eT));
   }
 
 

@@ -3,6 +3,16 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 14.4.3-1 (2025-05-21)}{
+  \itemize{
+    \item Upgraded to Armadillo release 14.4.3 (Filtered Espresso)
+    \itemize{
+      \item Fix for several corner cases involving handling of non-finite
+      elements by sparse matrices
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 14.4.2-1 (2025-04-25)}{
   \itemize{
     \item Upgraded to Armadillo release 14.4.2 (Filtered Espresso)

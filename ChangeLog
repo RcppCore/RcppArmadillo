@@ -1,3 +1,12 @@
+2025-05-21  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): RcppArmadillo 14.4.3-1
+        * inst/NEWS.Rd: Idem
+        * configure.ac: Idem
+        * configure: Idem
+
+	* inst/include/armadillo_bits/: Sync with Armadillo 14.4.3
+
 2025-04-25  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 14.4.2-1
