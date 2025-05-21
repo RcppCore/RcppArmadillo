@@ -134,8 +134,6 @@ spdiagview<eT>::operator*=(const eT val)
   {
   arma_debug_sigprint();
   
-  if(val == eT(0))  { (*this).zeros(); return; }
-  
   SpMat<eT>& t_m = const_cast< SpMat<eT>& >(m);
   
   const uword t_n_elem     = n_elem;

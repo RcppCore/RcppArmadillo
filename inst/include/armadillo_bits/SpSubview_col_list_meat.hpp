@@ -253,8 +253,6 @@ SpSubview_col_list<eT,T1>::operator*= (const eT val)
   {
   arma_debug_sigprint();
   
-  if(val == eT(0))  { (*this).zeros(); return; }
-  
   SpMat<eT>& m_local = const_cast< SpMat<eT>& >(m);
   
   const umat&  ci        = U_ci.M;

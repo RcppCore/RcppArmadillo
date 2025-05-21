@@ -612,32 +612,25 @@ SpMat<eT>::operator*=(const eT val)
   {
   arma_debug_sigprint();
   
-  if(val != eT(0))
+  sync_csc();
+  invalidate_cache();
+  
+  const uword n_nz = n_nonzero;
+  
+  eT* vals = access::rwp(values);
+  
+  bool has_zero = false;
+  
+  for(uword i=0; i<n_nz; ++i)
     {
-    sync_csc();
-    invalidate_cache();
+    eT& vals_i = vals[i];
     
-    const uword n_nz = n_nonzero;
+    vals_i *= val;
     
-    eT* vals = access::rwp(values);
-    
-    bool has_zero = false;
-    
-    for(uword i=0; i<n_nz; ++i)
-      {
-      eT& vals_i = vals[i];
-      
-      vals_i *= val;
-      
-      if(vals_i == eT(0))  { has_zero = true; }
-      }
-    
-    if(has_zero)  { remove_zeros(); }
+    if(vals_i == eT(0))  { has_zero = true; }
     }
-  else
-    {
-    (*this).zeros();
-    }
+  
+  if(has_zero)  { remove_zeros(); }
   
   return *this;
   }
