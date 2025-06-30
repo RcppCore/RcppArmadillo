@@ -411,4 +411,38 @@ op_arg::apply( Cube<typename T1::pod_type>& out, const mtOpCube<typename T1::pod
 
 
 
+template<typename eT, typename T1>
+inline
+void
+op_replace::apply(Mat<eT>& out, const mtOp<eT,T1,op_replace>& in)
+  {
+  arma_debug_sigprint();
+  
+  const eT old_val = in.aux;
+  const eT new_val = in.aux_out_eT;
+  
+  out = in.m;
+  
+  out.replace(old_val, new_val);
+  }
+
+
+
+template<typename eT, typename T1>
+inline
+void
+op_replace::apply(Cube<eT>& out, const mtOpCube<eT,T1,op_replace>& in)
+  {
+  arma_debug_sigprint();
+  
+  const eT old_val = in.aux;
+  const eT new_val = in.aux_out_eT;
+  
+  out = in.m;
+  
+  out.replace(old_val, new_val);
+  }
+
+
+
 //! @}

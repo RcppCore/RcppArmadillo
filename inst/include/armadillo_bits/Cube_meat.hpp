@@ -784,6 +784,10 @@ Cube<eT>::operator=(const Cube<eT>& x)
     
     arrayops::copy( memptr(), x.mem, n_elem );
     }
+  else
+    {
+    arma_debug_print("Cube::operator=(): copy omitted");
+    }
   
   return *this;
   }

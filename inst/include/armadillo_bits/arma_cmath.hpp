@@ -65,6 +65,48 @@ arma_isfinite(const std::complex<T>& x)
   }
 
 
+//
+
+
+template<typename eT>
+inline
+bool
+arma_isnonfinite(eT)
+  {
+  return false;
+  }
+
+
+
+template<>
+inline
+bool
+arma_isnonfinite(float x)
+  {
+  return (std::isfinite(x) == false);
+  }
+
+
+
+template<>
+inline
+bool
+arma_isnonfinite(double x)
+  {
+  return (std::isfinite(x) == false);
+  }
+
+
+
+template<typename T>
+inline
+bool
+arma_isnonfinite(const std::complex<T>& x)
+  {
+  return ( (std::isfinite(x.real()) == false) || (std::isfinite(x.imag()) == false) );
+  }
+
+
 
 //
 // wrappers for isinf

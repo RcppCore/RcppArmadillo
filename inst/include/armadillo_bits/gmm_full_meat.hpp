@@ -2392,7 +2392,7 @@ gmm_full<eT>::em_iterate(const Mat<eT>& X, const uword max_iter, const eT var_fl
       get_cout_stream().flush();
       }
     
-    if(arma_isfinite(new_avg_log_p) == false)  { return false; }
+    if(arma_isnonfinite(new_avg_log_p))  { return false; }
     
     if(std::abs(old_avg_log_p - new_avg_log_p) <= Datum<eT>::eps)  { break; }
     
@@ -2516,7 +2516,7 @@ gmm_full<eT>::em_update_params
     {
     const eT acc_norm_lhood = (std::max)( final_acc_norm_lhoods[g], std::numeric_limits<eT>::min() );
     
-    if(arma_isfinite(acc_norm_lhood) == false)  { continue; }
+    if(arma_isnonfinite(acc_norm_lhood))  { continue; }
     
     eT* acc_mean_mem = final_acc_means.colptr(g);
     

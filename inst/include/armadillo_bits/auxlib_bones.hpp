@@ -391,7 +391,7 @@ class auxlib
   // solve the Sylvester equation AX + XB = C
   
   template<typename eT>
-  inline static bool syl(Mat<eT>& X, const Mat<eT>& A, const Mat<eT>& B, const Mat<eT>& C);
+  inline static bool sylvester(Mat<eT>& X, const Mat<eT>& A, const Mat<eT>& B, const Mat<eT>& C);
   
   
   //
@@ -402,6 +402,13 @@ class auxlib
   
   template<typename T, typename T1, typename T2>
   inline static bool qz(Mat< std::complex<T> >& A, Mat< std::complex<T> >& B, Mat< std::complex<T> >& vsl, Mat< std::complex<T> >& vsr, const Base< std::complex<T>, T1 >& X_expr, const Base< std::complex<T>, T2 >& Y_expr, const char mode);
+  
+  
+  //
+  // matrix balance
+  
+  template<typename eT>
+  inline static bool balance(Col<typename get_pod_type<eT>::result>& S, Col<uword>& P, Mat<eT>& A, const bool calc_SP, const bool do_scal, const bool do_perm);
   
   
   // 

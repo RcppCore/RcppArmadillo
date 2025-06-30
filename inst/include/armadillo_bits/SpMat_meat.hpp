@@ -5124,7 +5124,12 @@ SpMat<eT>::init(const SpMat<eT>& x)
   {
   arma_debug_sigprint();
   
-  if(this == &x)  { return; }
+  if(this == &x)
+    {
+    arma_debug_print("SpMat::init(): copy omitted");
+    
+    return;
+    }
   
   bool init_done = false;
   

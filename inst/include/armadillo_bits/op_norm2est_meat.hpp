@@ -138,7 +138,7 @@ op_norm2est::norm2est
     
     T x_norm = op_norm::vec_norm_2( Proxy< Col<eT> >(x) );
     
-    if(x_norm == T(0) || (arma_isfinite(x_norm) == false) || (x.internal_has_nonfinite()))
+    if( (x_norm == T(0)) || arma_isnonfinite(x_norm) || x.internal_has_nonfinite() )
       {
       randu_filler.fill(x.memptr(), x.n_elem);
       
@@ -155,7 +155,7 @@ op_norm2est::norm2est
     arma_debug_print(arma_str::format("norm2est(): est_old: %e") % est_old);
     arma_debug_print(arma_str::format("norm2est(): est_cur: %e") % est_cur);
     
-    if(arma_isfinite(est_cur) == false)  { return est_old; }
+    if(arma_isnonfinite(est_cur))  { return est_old; }
     
     if( ((std::abs)(est_cur - est_old)) <= (tol * (std::max)(est_cur,est_old)) )  { break; }
     }
@@ -218,7 +218,7 @@ op_norm2est::norm2est
     
     T x_norm = op_norm::vec_norm_2( Proxy< Mat<eT> >(x) );
     
-    if(x_norm == T(0) || (arma_isfinite(x_norm) == false) || (x.internal_has_nonfinite()))
+    if( (x_norm == T(0)) || arma_isnonfinite(x_norm) || x.internal_has_nonfinite() )
       {
       randu_filler.fill(x.memptr(), x.n_elem);
       
@@ -235,7 +235,7 @@ op_norm2est::norm2est
     arma_debug_print(arma_str::format("norm2est(): est_old: %e") % est_old);
     arma_debug_print(arma_str::format("norm2est(): est_cur: %e") % est_cur);
     
-    if(arma_isfinite(est_cur) == false)  { return est_old; }
+    if(arma_isnonfinite(est_cur))  { return est_old; }
     
     if( ((std::abs)(est_cur - est_old)) <= (tol * (std::max)(est_cur,est_old)) )  { break; }
     }

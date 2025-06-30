@@ -22,9 +22,9 @@
 
 
 #define ARMA_VERSION_MAJOR 14
-#define ARMA_VERSION_MINOR 4
-#define ARMA_VERSION_PATCH 3
-#define ARMA_VERSION_NAME  "Filtered Espresso"
+#define ARMA_VERSION_MINOR 5
+#define ARMA_VERSION_PATCH 91
+#define ARMA_VERSION_NAME  "14.6-RC1"
 
 
 

@@ -16,26 +16,20 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup op_stddev
+
+//! \addtogroup spop_omit
 //! @{
 
 
-
-class op_stddev
-  : public traits_op_xvec
+class spop_omit
+  : public traits_op_col
   {
   public:
   
-  template<typename T1>
-  inline static void apply(Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_type, T1, op_stddev>& in);
+  template<typename T1> inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_omit>& in);
   
-  template<typename in_eT>
-  inline static void apply_noalias(Mat<typename get_pod_type<in_eT>::result>& out, const Mat<in_eT>& X, const uword norm_type, const uword dim);
-  
-  template<typename T1>
-  inline static typename T1::pod_type stddev_vec(const T1& X, const uword norm_type = 0);
+  template<typename T1, typename functor> inline static void apply_noalias(SpMat<typename T1::elem_type>& out, const SpProxy<T1>& P, functor is_omitted);
   };
-
 
 
 //! @}

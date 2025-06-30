@@ -6486,15 +6486,15 @@ auxlib::schur(Mat< std::complex<T> >& U, Mat< std::complex<T> >& S, const bool c
 template<typename eT>
 inline
 bool
-auxlib::syl(Mat<eT>& X, const Mat<eT>& A, const Mat<eT>& B, const Mat<eT>& C)
+auxlib::sylvester(Mat<eT>& X, const Mat<eT>& A, const Mat<eT>& B, const Mat<eT>& C)
   {
   arma_debug_sigprint();
   
   #if defined(ARMA_USE_LAPACK)
     {
-    arma_conform_check( (A.is_square() == false) || (B.is_square() == false), "syl(): given matrices must be square sized" );
+    arma_conform_check( (A.is_square() == false) || (B.is_square() == false), "sylvester(): given matrices must be square sized" );
       
-    arma_conform_check( (C.n_rows != A.n_rows) || (C.n_cols != B.n_cols), "syl(): matrices are not conformant" );
+    arma_conform_check( (C.n_rows != A.n_rows) || (C.n_cols != B.n_cols), "sylvester(): matrices are not conformant" );
     
     if(A.is_empty() || B.is_empty() || C.is_empty())  { X.reset(); return true; }
     
@@ -6534,7 +6534,7 @@ auxlib::syl(Mat<eT>& X, const Mat<eT>& A, const Mat<eT>& B, const Mat<eT>& C)
     arma_ignore(A);
     arma_ignore(B);
     arma_ignore(C);
-    arma_stop_logic_error("syl(): use of LAPACK must be enabled");
+    arma_stop_logic_error("sylvester(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -6707,6 +6707,76 @@ auxlib::qz(Mat< std::complex<T> >& A, Mat< std::complex<T> >& B, Mat< std::compl
     arma_ignore(Y_expr);
     arma_ignore(mode);
     arma_stop_logic_error("qz(): use of LAPACK must be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
+template<typename eT>
+inline
+bool
+auxlib::balance(Col<typename get_pod_type<eT>::result>& S, Col<uword>& P, Mat<eT>& A, const bool calc_SP, const bool do_scal, const bool do_perm)
+  {
+  arma_debug_sigprint();
+  
+  #if defined(ARMA_USE_LAPACK)
+    {
+    typedef typename get_pod_type<eT>::result T;
+    
+    // assuming given matrix is square-sized
+    
+    if(A.n_elem == 0)  { S.reset(); P.reset(); return true; }
+    
+    const char job = (do_scal && do_perm) ? 'B' : ((do_scal) ? 'S' : ((do_perm) ? 'P' : 'N'));
+    
+    blas_int n    = blas_int(A.n_rows);
+    blas_int lda  = blas_int(A.n_rows);
+    blas_int ilo  = blas_int(0);
+    blas_int ihi  = blas_int(0);
+    blas_int info = blas_int(0);
+    
+    podarray<T> scale(A.n_rows);  scale.zeros();
+    
+    arma_debug_print("lapack::gebal()");
+    lapack::gebal(&job, &n, A.memptr(), &lda, &ilo, &ihi, scale.memptr(), &info);
+    
+    if(info != blas_int(0))  { return false; }
+    
+    if(calc_SP == false)  { return true; }
+    
+    const uword N = A.n_rows;
+    
+    // sanity check
+    if( (ilo < 1) || (uword(ihi) > N) )  { arma_debug_print("ilo and/or ihi out of bounds"); return false; }
+    
+    S.zeros(N);
+    P.zeros(N);
+    
+        T* S_mem = S.memptr();
+    uword* P_mem = P.memptr();
+    
+    const T* scale_mem = scale.memptr();
+    
+    for(uword i = 0;            i < uword(ilo)-1; ++i)  { S_mem[i] = T(1);         }
+    for(uword i = uword(ilo)-1; i < uword(ihi);   ++i)  { S_mem[i] = scale_mem[i]; }
+    for(uword i = uword(ihi);   i < N;            ++i)  { S_mem[i] = T(1);         }
+    
+    for(uword i=0; i < N; ++i)  { P_mem[i] = i; }
+    
+    for(uword i=N-1; i >= uword(ihi)  ; --i)  { const uword j = uword(scale_mem[i]) - 1; std::swap(P_mem[i], P_mem[j]); }
+    for(uword i=0;   i <  uword(ilo)-1; ++i)  { const uword j = uword(scale_mem[i]) - 1; std::swap(P_mem[i], P_mem[j]); }
+    
+    return true;
+    }
+  #else
+    {
+    arma_ignore(S);
+    arma_ignore(P);
+    arma_ignore(A);
+    arma_ignore(do_scal);
+    arma_ignore(do_perm);
     return false;
     }
   #endif

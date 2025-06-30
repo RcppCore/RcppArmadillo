@@ -77,4 +77,16 @@ class op_arg
 
 
 
+class op_replace
+  : public traits_op_passthru
+  {
+  public:
+  
+  template<typename eT, typename T1> inline static void apply(Mat<eT>& out, const mtOp<eT,T1,op_replace>& in);
+  
+  template<typename eT, typename T1> inline static void apply(Cube<eT>& out, const mtOpCube<eT,T1,op_replace>& in);
+  };
+
+
+
 //! @}

@@ -262,4 +262,15 @@ class spop_fliplr
 
 
 
+class spop_replace
+  : public traits_op_passthru
+  {
+  public:
+  
+  template<typename eT, typename T1>
+  inline static void apply(SpMat<eT>& out, const mtSpOp<eT, T1, spop_replace>& in);
+  };
+
+
+
 //! @}

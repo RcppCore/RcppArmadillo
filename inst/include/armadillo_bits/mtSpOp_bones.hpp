@@ -21,6 +21,9 @@
 
 
 
+struct mtSpOp_dual_aux_indicator {};
+
+
 template<typename out_eT, typename T1, typename spop_type>
 class mtSpOp : public SpBase< out_eT, mtSpOp<out_eT, T1, spop_type> >
   {
@@ -39,6 +42,7 @@ class mtSpOp : public SpBase< out_eT, mtSpOp<out_eT, T1, spop_type> >
   inline           mtSpOp(const T1& in_m, const in_eT in_aux);
   inline           mtSpOp(const T1& in_m, const uword aux_uword_a, const uword aux_uword_b);
   inline           mtSpOp(const char junk, const T1& in_m, const out_eT in_aux);
+  inline           mtSpOp(const mtSpOp_dual_aux_indicator&, const T1& in_m, const in_eT in_aux_a, const out_eT in_aux_b);
   inline          ~mtSpOp();
   
   template<typename eT2>

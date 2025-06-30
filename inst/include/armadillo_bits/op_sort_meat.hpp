@@ -86,7 +86,18 @@ op_sort::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword sort_mode, co
         {
         const Col<eT> X_col( const_cast<eT*>(X.colptr(col)), n_rows, false );
         
-        op_sort_index::apply_noalias_mat(indices, X_col, sort_mode);
+        const Proxy< Col<eT> > P(X_col);
+        
+        const bool all_non_nan = op_sort_index::apply_helper(indices, P, sort_mode);
+        
+        if(all_non_nan == false)
+          {
+          out.soft_reset();
+          
+          arma_conform_check(true, "sort(): detected NaN");
+          
+          return;
+          }
         
         const uword* indices_mem = indices.memptr();
         const    eT*   X_col_mem =   X_col.memptr();
@@ -115,7 +126,18 @@ op_sort::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword sort_mode, co
         {
         const Col<eT> Y_col( const_cast<eT*>(Y.colptr(col)), n_rows, false );
         
-        op_sort_index::apply_noalias_mat(indices, Y_col, sort_mode);
+        const Proxy< Col<eT> > P(Y_col);
+        
+        const bool all_non_nan = op_sort_index::apply_helper(indices, P, sort_mode);
+        
+        if(all_non_nan == false)
+          {
+          out.soft_reset();
+          
+          arma_conform_check(true, "sort(): detected NaN");
+          
+          return;
+          }
         
         const uword* indices_mem = indices.memptr();
         const    eT*   Y_col_mem =   Y_col.memptr();
@@ -195,9 +217,8 @@ op_sort::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort>& in)
   const uword sort_mode = in.aux_uword_a;
   const uword dim       = in.aux_uword_b;
   
-  arma_conform_check( (sort_mode > 1),        "sort(): parameter 'sort_mode' must be 0 or 1" );
-  arma_conform_check( (dim > 1),              "sort(): parameter 'dim' must be 0 or 1"       );
-  arma_conform_check( (X.internal_has_nan()), "sort(): detected NaN"                         );
+  arma_conform_check( (sort_mode > 1), "sort(): parameter 'sort_mode' must be 0 or 1" );
+  arma_conform_check( (dim > 1),       "sort(): parameter 'dim' must be 0 or 1"       );
   
   if(U.is_alias(out))
     {
@@ -229,8 +250,7 @@ op_sort_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort_vec>& i
   
   const uword sort_mode = in.aux_uword_a;
   
-  arma_conform_check( (sort_mode > 1),        "sort(): parameter 'sort_mode' must be 0 or 1" );
-  arma_conform_check( (X.internal_has_nan()), "sort(): detected NaN"                         );
+  arma_conform_check( (sort_mode > 1), "sort(): parameter 'sort_mode' must be 0 or 1" );
   
   if(X.n_elem <= 1)  { out = X; return; }
   
@@ -238,7 +258,18 @@ op_sort_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort_vec>& i
     {
     uvec indices;
     
-    op_sort_index::apply_noalias_mat(indices, X, sort_mode);
+    const Proxy< Mat<eT> > P(X);
+    
+    const bool all_non_nan = op_sort_index::apply_helper(indices, P, sort_mode);
+    
+    if(all_non_nan == false)
+      {
+      out.soft_reset();
+      
+      arma_conform_check(true, "sort(): detected NaN");
+      
+      return;
+      }
     
     const uword N = indices.n_elem;
     

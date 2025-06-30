@@ -40,9 +40,18 @@ op_shuffle::apply_direct(Mat<eT>& out, const Mat<eT>& X, const uword dim)
   
   std::vector<packet> packet_vec(N);
   
+  podarray<int> tmp(N);
+  
+  int* tmp_mem = tmp.memptr();
+  
+  const int a = 0;
+  const int b = arma_rng::randi<int>::max_val();
+  
+  arma_rng::randi<int>::fill(tmp_mem, N, a, b);
+  
   for(uword i=0; i<N; ++i)
     {
-    packet_vec[i].val   = int(arma_rng::randi<int>());
+    packet_vec[i].val   = tmp_mem[i];
     packet_vec[i].index = i;
     }
   

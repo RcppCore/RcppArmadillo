@@ -31,6 +31,8 @@ op_nonzeros::apply_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& P)
   
   typedef typename T1::elem_type eT;
   
+  constexpr eT eT_zero = eT(0);
+  
   const uword N_max = P.get_n_elem();
   
   Mat<eT> tmp(N_max, 1, arma_nozeros_indicator());
@@ -47,7 +49,7 @@ op_nonzeros::apply_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& P)
       {
       const eT val = Pea[i];
       
-      if(val != eT(0))  { tmp_mem[N_nz] = val; ++N_nz; }
+      if(val != eT_zero)  { tmp_mem[N_nz] = val; ++N_nz; }
       }
     }
   else
@@ -60,7 +62,7 @@ op_nonzeros::apply_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& P)
       {
       const eT val = P.at(row,col);
       
-      if(val != eT(0))  { tmp_mem[N_nz] = val; ++N_nz; }
+      if(val != eT_zero)  { tmp_mem[N_nz] = val; ++N_nz; }
       }
     }
   
@@ -84,11 +86,11 @@ op_nonzeros::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_nonzeros>& 
   
   if(P.is_alias(out))
     {
-    Mat<eT> out2;
+    Mat<eT> tmp;
     
-    op_nonzeros::apply_noalias(out2, P);
+    op_nonzeros::apply_noalias(tmp, P);
     
-    out.steal_mem(out2);
+    out.steal_mem(tmp);
     }
   else
     {

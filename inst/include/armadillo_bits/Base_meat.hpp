@@ -685,7 +685,7 @@ Base<elem_type,derived>::is_finite() const
       
       for(uword i=0; i<n_elem; ++i)
         {
-        if(arma_isfinite(Pea[i]) == false)  { return false; }
+        if(arma_isnonfinite(Pea[i]))  { return false; }
         }
       }
     else
@@ -696,7 +696,7 @@ Base<elem_type,derived>::is_finite() const
       for(uword col=0; col<n_cols; ++col)
       for(uword row=0; row<n_rows; ++row)
         {
-        if(arma_isfinite(P.at(row,col)) == false)  { return false; }
+        if(arma_isnonfinite(P.at(row,col)))  { return false; }
         }
       }
     }
@@ -829,7 +829,7 @@ Base<elem_type,derived>::has_nonfinite() const
       
       for(uword i=0; i<n_elem; ++i)
         {
-        if(arma_isfinite(Pea[i]) == false)  { return true; }
+        if(arma_isnonfinite(Pea[i]))  { return true; }
         }
       }
     else
@@ -840,7 +840,7 @@ Base<elem_type,derived>::has_nonfinite() const
       for(uword col=0; col<n_cols; ++col)
       for(uword row=0; row<n_rows; ++row)
         {
-        if(arma_isfinite(P.at(row,col)) == false)  { return true; }
+        if(arma_isnonfinite(P.at(row,col)))  { return true; }
         }
       }
     }

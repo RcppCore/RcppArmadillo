@@ -21,10 +21,10 @@
 
 
 
-template<typename T1, bool sort_stable>
+template<typename T1>
 inline
 bool
-arma_sort_index_helper(Mat<uword>& out, const Proxy<T1>& P, const uword sort_mode)
+op_sort_index::apply_helper(Mat<uword>& out, const Proxy<T1>& P, const uword sort_mode)
   {
   arma_debug_sigprint();
   
@@ -41,11 +41,13 @@ arma_sort_index_helper(Mat<uword>& out, const Proxy<T1>& P, const uword sort_mod
   
   if(Proxy<T1>::use_at == false)
     {
-    for(uword i=0; i<n_elem; ++i)
+    const typename Proxy<T1>::ea_type Pea = P.get_ea();
+    
+    for(uword i=0; i < n_elem; ++i)
       {
-      const eT val = P[i];
+      const eT val = Pea[i];
       
-      if(arma_isnan(val))  { out.soft_reset(); return false; }
+      if(arma_isnan(val))  { return false; }
       
       packet_vec[i].val   = prepare(val);
       packet_vec[i].index = i;
@@ -63,7 +65,7 @@ arma_sort_index_helper(Mat<uword>& out, const Proxy<T1>& P, const uword sort_mod
       {
       const eT val = P.at(row,col);
       
-      if(arma_isnan(val))  { out.soft_reset(); return false; }
+      if(arma_isnan(val))  { return false; }
       
       packet_vec[i].val   = prepare(val);
       packet_vec[i].index = i;
@@ -79,14 +81,7 @@ arma_sort_index_helper(Mat<uword>& out, const Proxy<T1>& P, const uword sort_mod
     
     arma_sort_index_helper_ascend<T> comparator;
     
-    if(sort_stable == false)
-      {
-      std::sort( packet_vec.begin(), packet_vec.end(), comparator );
-      }
-    else
-      {
-      std::stable_sort( packet_vec.begin(), packet_vec.end(), comparator );
-      }
+    std::stable_sort( packet_vec.begin(), packet_vec.end(), comparator );
     }
   else
     {
@@ -94,14 +89,7 @@ arma_sort_index_helper(Mat<uword>& out, const Proxy<T1>& P, const uword sort_mod
     
     arma_sort_index_helper_descend<T> comparator;
     
-    if(sort_stable == false)
-      {
-      std::sort( packet_vec.begin(), packet_vec.end(), comparator );
-      }
-    else
-      {
-      std::stable_sort( packet_vec.begin(), packet_vec.end(), comparator );
-      }
+    std::stable_sort( packet_vec.begin(), packet_vec.end(), comparator );
     }
   
   uword* out_mem = out.memptr();
@@ -112,40 +100,6 @@ arma_sort_index_helper(Mat<uword>& out, const Proxy<T1>& P, const uword sort_mod
     }
   
   return true;
-  }
-
-
-
-//
-
-
-
-template<typename T1>
-inline
-bool
-op_sort_index::apply_noalias_proxy(Mat<uword>& out, const Proxy<T1>& P, const uword sort_mode)
-  {
-  arma_debug_sigprint();
-  
-  return arma_sort_index_helper<T1,false>(out, P, sort_mode);
-  }
-
-
-
-template<typename eT>
-inline
-void
-op_sort_index::apply_noalias_mat(Mat<uword>& out, const Mat<eT>& X, const uword sort_mode)
-  {
-  arma_debug_sigprint();
-  
-  if(X.n_elem == 0)  { out.set_size(0,1); return; }
-  
-  const Proxy< Mat<eT> > P(X);
-  
-  const bool all_non_nan = op_sort_index::apply_noalias_proxy(out, P, sort_mode);
-  
-  arma_conform_check( (all_non_nan == false), "sort_index(): detected NaN" );
   }
 
 
@@ -169,65 +123,18 @@ op_sort_index::apply(Mat<uword>& out, const mtOp<uword,T1,op_sort_index>& in)
     {
     Mat<uword> tmp;
     
-    all_non_nan = op_sort_index::apply_noalias_proxy(tmp, P, sort_mode);
+    all_non_nan = op_sort_index::apply_helper(tmp, P, sort_mode);
     
     out.steal_mem(tmp);
     }
   else
     {
-    all_non_nan = op_sort_index::apply_noalias_proxy(out, P, sort_mode);
+    all_non_nan = op_sort_index::apply_helper(out, P, sort_mode);
     }
+  
+  if(all_non_nan == false)  { out.soft_reset(); }
   
   arma_conform_check( (all_non_nan == false), "sort_index(): detected NaN" );
-  }
-
-
-
-//
-
-
-
-template<typename T1>
-inline
-bool
-op_stable_sort_index::apply_noalias(Mat<uword>& out, const Proxy<T1>& P, const uword sort_mode)
-  {
-  arma_debug_sigprint();
-  
-  return arma_sort_index_helper<T1,true>(out, P, sort_mode);
-  }
-
-
-
-template<typename T1>
-inline
-void
-op_stable_sort_index::apply(Mat<uword>& out, const mtOp<uword,T1,op_stable_sort_index>& in)
-  {
-  arma_debug_sigprint();
-  
-  const Proxy<T1> P(in.m);
-  
-  if(P.get_n_elem() == 0)  { out.set_size(0,1); return; }
-  
-  const uword sort_mode = in.aux_uword_a;
-  
-  bool all_non_nan = false;
-  
-  if(P.is_alias(out))
-    {
-    Mat<uword> tmp;
-    
-    all_non_nan = op_stable_sort_index::apply_noalias(tmp, P, sort_mode);
-    
-    out.steal_mem(tmp);
-    }
-  else
-    {
-    all_non_nan = op_stable_sort_index::apply_noalias(out, P, sort_mode);
-    }
-  
-  arma_conform_check( (all_non_nan == false), "stable_sort_index(): detected NaN" );
   }
 
 

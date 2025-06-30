@@ -120,7 +120,7 @@ op_expmat::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1
   
   const T norm_val = arma::norm(A, "inf");
   
-  if(arma_isfinite(norm_val) == false)  { return false; }
+  if(arma_isnonfinite(norm_val))  { return false; }
   
   int exponent = int(0);  std::frexp(norm_val, &exponent);
   

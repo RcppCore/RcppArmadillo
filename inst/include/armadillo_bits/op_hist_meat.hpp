@@ -66,8 +66,8 @@ op_hist::apply_noalias(Mat<uword>& out, const Mat<eT>& A, const uword n_bins, co
     max_val += (n_bins/2);
     }
   
-  if(arma_isfinite(min_val) == false) { min_val = priv::most_neg<eT>(); }
-  if(arma_isfinite(max_val) == false) { max_val = priv::most_pos<eT>(); }
+  if(arma_isnonfinite(min_val)) { min_val = priv::most_neg<eT>(); }
+  if(arma_isnonfinite(max_val)) { max_val = priv::most_pos<eT>(); }
   
   Col<eT> c(n_bins, arma_nozeros_indicator());
   eT* c_mem = c.memptr();

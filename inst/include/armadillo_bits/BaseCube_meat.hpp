@@ -328,7 +328,7 @@ BaseCube<elem_type,derived>::is_finite() const
     for(uword c=0; c<n_c; ++c)
     for(uword r=0; r<n_r; ++r)
       {
-      if( arma_isfinite(P.at(r,c,s)) == false )  { return false; }
+      if( arma_isnonfinite(P.at(r,c,s)) )  { return false; }
       }
     }
   
@@ -436,7 +436,7 @@ BaseCube<elem_type,derived>::has_nonfinite() const
     for(uword c=0; c<n_c; ++c)
     for(uword r=0; r<n_r; ++r)
       {
-      if(arma_isfinite(P.at(r,c,s)) == false)  { return true; }
+      if(arma_isnonfinite(P.at(r,c,s)))  { return true; }
       }
     }
   

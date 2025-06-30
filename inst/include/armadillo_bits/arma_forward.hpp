@@ -93,6 +93,7 @@ class op_vectorise_row;
 class op_vectorise_col;
 class op_symmatu;
 class op_symmatl;
+class op_omit;
 
 class op_row_as_mat;
 class op_col_as_mat;
@@ -359,6 +360,7 @@ template<bool do_zeros> struct arma_initmode_indicator {};
 
 struct arma_zeros_indicator   : public arma_initmode_indicator<true > {};
 struct arma_nozeros_indicator : public arma_initmode_indicator<false> {};
+
 
 
 //! \addtogroup injector

@@ -27,27 +27,10 @@ class op_sort_index
   public:
   
   template<typename T1>
-  static inline bool apply_noalias_proxy(Mat<uword>& out, const Proxy<T1>& P, const uword sort_mode);
-  
-  template<typename eT>
-  static inline void apply_noalias_mat(Mat<uword>& out, const Mat<eT>& X, const uword sort_mode);
+  static inline bool apply_helper(Mat<uword>& out, const Proxy<T1>& P, const uword sort_mode);
   
   template<typename T1>
   static inline void apply(Mat<uword>& out, const mtOp<uword,T1,op_sort_index>& in);
-  };
-
-
-
-class op_stable_sort_index
-  : public traits_op_col
-  {
-  public:
-  
-  template<typename T1>
-  static inline bool apply_noalias(Mat<uword>& out, const Proxy<T1>& P, const uword sort_mode);
-  
-  template<typename T1>
-  static inline void apply(Mat<uword>& out, const mtOp<uword,T1,op_stable_sort_index>& in);
   };
 
 
@@ -98,16 +81,6 @@ struct arma_sort_index_helper_ascend< std::complex<T> >
     {
     return (std::abs(A.val) < std::abs(B.val));
     }
-  
-  // inline
-  // bool
-  // operator() (const arma_sort_index_packet<eT>& A, const arma_sort_index_packet<eT>& B) const
-  //   {
-  //   const T abs_A_val = std::abs(A.val);
-  //   const T abs_B_val = std::abs(B.val);
-  //   
-  //   return ( (abs_A_val != abs_B_val) ? (abs_A_val < abs_B_val) : (std::arg(A.val) < std::arg(B.val)) );
-  //   }
   };
 
 
@@ -123,17 +96,11 @@ struct arma_sort_index_helper_descend< std::complex<T> >
     {
     return (std::abs(A.val) > std::abs(B.val));
     }
-  
-  // inline
-  // bool
-  // operator() (const arma_sort_index_packet<eT>& A, const arma_sort_index_packet<eT>& B) const
-  //   {
-  //   const T abs_A_val = std::abs(A.val);
-  //   const T abs_B_val = std::abs(B.val);
-  //   
-  //   return ( (abs_A_val != abs_B_val) ? (abs_A_val > abs_B_val) : (std::arg(A.val) > std::arg(B.val)) );
-  //   }
   };
+
+
+
+//
 
 
 
