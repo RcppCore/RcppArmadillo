@@ -44,7 +44,7 @@ fastLm(X, \dots)
   on rank-deficient model matrices whereas the functions from the stats
   package will handle them properly due to the modified Linpack code.
   Newer Armadillo version pivot (with warning) to an approximate solutions.
-  This behavior can be control with options to the \code{solve} function,
+  This behavior can be controlled with options to the \code{solve} function,
   see the Armadillo documentation.
 
   An example of the type of situation requiring extra care in checking

@@ -3,6 +3,17 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 14.5.91-1 (2025-06-30) (GitHub Only)}{
+  \itemize{
+    \item Upgraded to Armadillo release 14.5.91 (14.6-RC1)
+    \itemize{
+      \item Changes list to follow
+    }
+    \item The \code{fastLm()} help page now mentions that options to
+    \code{solve} can control behavior.
+  }
+}
+
 \section{Changes in RcppArmadillo version 14.4.3-1 (2025-05-21)}{
   \itemize{
     \item Upgraded to Armadillo release 14.4.3 (Filtered Espresso)
@@ -20,9 +31,7 @@
       \item Fix for \code{expmat()}
       \item Workaround for bugs in clang 20 compiler
     }
-    \itemize{
-      \item Micro-cleanup in one test file
-    }
+    \item Micro-cleanup in one test file
   }
 }
 
