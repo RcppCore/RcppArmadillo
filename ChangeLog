@@ -1,3 +1,8 @@
+2025-06-21  Dirk Eddelbuettel  <edd@debian.org>
+
+	* man/fastLm.Rd: Update discussion of rank-deficient systems to note
+	that newer Armadillo versions warn and fall back to approx solution
+
 2025-05-21  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 14.4.3-1
