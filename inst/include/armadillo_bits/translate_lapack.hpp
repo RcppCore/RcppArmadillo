@@ -1485,6 +1485,28 @@ namespace lapack
     #endif
     }
   
+  
+  
+  template<typename eT>
+  inline
+  void
+  gebal(const char* job, const blas_int* n, eT* a, const blas_int* lda, blas_int* ilo, blas_int* ihi, typename get_pod_type<eT>::result* scale, blas_int* info)
+    {
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
+    
+    #if defined(ARMA_USE_FORTRAN_HIDDEN_ARGS)
+           if(    is_float<eT>::value)  { typedef float  pod_T; typedef float    T; arma_fortran(arma_sgebal)(job, n, (T*)a, lda, ilo, ihi, (pod_T*)scale, info, 1); }
+      else if(   is_double<eT>::value)  { typedef double pod_T; typedef double   T; arma_fortran(arma_dgebal)(job, n, (T*)a, lda, ilo, ihi, (pod_T*)scale, info, 1); }
+      else if( is_cx_float<eT>::value)  { typedef float  pod_T; typedef blas_cxf T; arma_fortran(arma_cgebal)(job, n, (T*)a, lda, ilo, ihi, (pod_T*)scale, info, 1); }
+      else if(is_cx_double<eT>::value)  { typedef double pod_T; typedef blas_cxd T; arma_fortran(arma_zgebal)(job, n, (T*)a, lda, ilo, ihi, (pod_T*)scale, info, 1); }
+    #else
+           if(    is_float<eT>::value)  { typedef float  pod_T; typedef float    T; arma_fortran(arma_sgebal)(job, n, (T*)a, lda, ilo, ihi, (pod_T*)scale, info); }
+      else if(   is_double<eT>::value)  { typedef double pod_T; typedef double   T; arma_fortran(arma_dgebal)(job, n, (T*)a, lda, ilo, ihi, (pod_T*)scale, info); }
+      else if( is_cx_float<eT>::value)  { typedef float  pod_T; typedef blas_cxf T; arma_fortran(arma_cgebal)(job, n, (T*)a, lda, ilo, ihi, (pod_T*)scale, info); }
+      else if(is_cx_double<eT>::value)  { typedef double pod_T; typedef blas_cxd T; arma_fortran(arma_zgebal)(job, n, (T*)a, lda, ilo, ihi, (pod_T*)scale, info); }
+    #endif
+    }
+  
   }
 
 

@@ -58,8 +58,8 @@ guess_sympd_worker(const Mat<eT>& A)
     {
     const eT A_jj = A_col[j];
     
-    if(              A_jj  <= eT(0))  { return false; }
-    if(arma_isfinite(A_jj) == false)  { return false; }
+    if(        A_jj  <= eT(0))  { return false; }
+    if(arma_isnonfinite(A_jj))  { return false; }
     
     if(A_jj >= tol)  { diag_below_tol = false; }
     
@@ -147,8 +147,8 @@ guess_sympd_worker(const Mat<eT>& A)
     const  T  A_jj_rabs =  std::abs(A_jj_r);
     const  T  A_jj_iabs =  std::abs(A_jj_i);
     
-    if(              A_jj_r  <= T(0) )  { return false; }  // real should be positive
-    if(arma_isfinite(A_jj_r) == false)  { return false; }
+    if(        A_jj_r  <= T(0) )  { return false; }  // real should be positive
+    if(arma_isnonfinite(A_jj_r))  { return false; }
     
     if(A_jj_iabs > tol      )  { return false; }  // imag should be approx zero
     if(A_jj_iabs > A_jj_rabs)  { return false; }  // corner case: real and imag are close to zero, and imag is dominant
@@ -164,7 +164,7 @@ guess_sympd_worker(const Mat<eT>& A)
   
   const T square_max_diag = max_diag * max_diag;
   
-  if(arma_isfinite(square_max_diag) == false)  { return false; }
+  if(arma_isnonfinite(square_max_diag))  { return false; }
   
   A_col = A_mem;
   
@@ -188,7 +188,7 @@ guess_sympd_worker(const Mat<eT>& A)
       // avoid using std::abs(), as that is time consuming due to division and std::sqrt()
       const T square_A_ij_abs = (A_ij_real * A_ij_real) + (A_ij_imag * A_ij_imag);
       
-      if(arma_isfinite(square_A_ij_abs) == false)  { return false; }
+      if(arma_isnonfinite(square_A_ij_abs))  { return false; }
       
       if(square_A_ij_abs >= square_max_diag)  { return false; }
       
@@ -285,7 +285,7 @@ is_approx_sym_worker(const Mat<eT>& A)
     {
     const eT A_jj = A_col[j];
     
-    if(arma_isfinite(A_jj) == false)  { return false; }
+    if(arma_isnonfinite(A_jj))  { return false; }
     
     if(std::abs(A_jj) >= tol)  { diag_below_tol = false; }
     
@@ -359,7 +359,7 @@ is_approx_sym_worker(const Mat<eT>& A)
     if(A_jj_iabs > tol      )  { return false; }  // imag should be approx zero
     if(A_jj_iabs > A_jj_rabs)  { return false; }  // corner case: real and imag are close to zero, and imag is dominant
     
-    if(arma_isfinite(A_jj_r) == false)  { return false; }
+    if(arma_isnonfinite(A_jj_r))  { return false; }
     
     if(A_jj_rabs >= tol)  { diag_below_tol = false; }
     

@@ -585,7 +585,7 @@ op_find_nonfinite::apply(Mat<uword>& out, const mtOp<uword, T1, op_find_nonfinit
     
     for(uword i=0; i<n_elem; ++i)
       {
-      if( arma_isfinite(Pea[i]) == false )  { indices_mem[count] = i; count++; }
+      if( arma_isnonfinite(Pea[i]) )  { indices_mem[count] = i; count++; }
       }
     }
   else
@@ -598,7 +598,7 @@ op_find_nonfinite::apply(Mat<uword>& out, const mtOp<uword, T1, op_find_nonfinit
     for(uword col=0; col<n_cols; ++col)
     for(uword row=0; row<n_rows; ++row)
       {
-      if( arma_isfinite(P.at(row,col)) == false )  { indices_mem[count] = i; count++; }
+      if( arma_isnonfinite(P.at(row,col)) )  { indices_mem[count] = i; count++; }
       
       i++;
       }
@@ -649,6 +649,54 @@ op_find_nan::apply(Mat<uword>& out, const mtOp<uword, T1, op_find_nan>& X)
       if( arma_isnan(P.at(row,col)) )  { indices_mem[count] = i; count++; }
       
       i++;
+      }
+    }
+  
+  out.steal_mem_col(indices, count);
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_find_nonnan::apply(Mat<uword>& out, const mtOp<uword, T1, op_find_nonnan>& X)
+  {
+  arma_debug_sigprint();
+  
+  if(arma_config::fast_math_warn)  { arma_warn(1, "find_nonnan(): detection of non-finite values is not reliable in fast math mode"); }
+  
+  const Proxy<T1> P(X.m);
+  
+  const uword n_elem = P.get_n_elem();
+  
+  Mat<uword> indices(n_elem, 1, arma_nozeros_indicator());
+  
+  uword* indices_mem = indices.memptr();
+  uword  count       = 0;
+  
+  if(Proxy<T1>::use_at == false)
+    {
+    const typename Proxy<T1>::ea_type Pea = P.get_ea();
+    
+    for(uword i=0; i < n_elem; ++i)
+      {
+      if( arma_isnan(Pea[i]) == false )  { indices_mem[count] = i; ++count; }
+      }
+    }
+  else
+    {
+    const uword n_rows = P.get_n_rows();
+    const uword n_cols = P.get_n_cols();
+    
+    uword i = 0;
+    
+    for(uword col=0; col < n_cols; ++col)
+    for(uword row=0; row < n_rows; ++row)
+      {
+      if( arma_isnan(P.at(row,col)) == false )  { indices_mem[count] = i; ++count; }
+      
+      ++i;
       }
     }
   

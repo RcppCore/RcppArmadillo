@@ -76,7 +76,7 @@ op_stddev::apply_noalias(Mat<typename get_pod_type<in_eT>::result>& out, const M
       {
       out_eT* out_mem = out.memptr();
       
-      for(uword col=0; col<X_n_cols; ++col)
+      for(uword col=0; col < X_n_cols; ++col)
         {
         out_mem[col] = std::sqrt( op_var::direct_var( X.colptr(col), X_n_rows, norm_type ) );
         }
@@ -91,16 +91,15 @@ op_stddev::apply_noalias(Mat<typename get_pod_type<in_eT>::result>& out, const M
     
     if(X_n_cols > 0)
       {
-      podarray<in_eT> dat(X_n_cols);
-      
-      in_eT*  dat_mem = dat.memptr();
       out_eT* out_mem = out.memptr();
       
-      for(uword row=0; row<X_n_rows; ++row)
+      podarray<in_eT> tmp;
+      
+      for(uword row=0; row < X_n_rows; ++row)
         {
-        dat.copy_row(X, row);
+        tmp.copy_row(X, row);
         
-        out_mem[row] = std::sqrt( op_var::direct_var( dat_mem, X_n_cols, norm_type) );
+        out_mem[row] = std::sqrt( op_var::direct_var( tmp.memptr(), tmp.n_elem, norm_type) );
         }
       }
     }
@@ -111,7 +110,7 @@ op_stddev::apply_noalias(Mat<typename get_pod_type<in_eT>::result>& out, const M
 template<typename T1>
 inline
 typename T1::pod_type
-op_stddev::stddev_vec(const Base<typename T1::elem_type, T1>& X, const uword norm_type)
+op_stddev::stddev_vec(const T1& X, const uword norm_type)
   {
   arma_debug_sigprint();
   
@@ -119,7 +118,7 @@ op_stddev::stddev_vec(const Base<typename T1::elem_type, T1>& X, const uword nor
   
   arma_conform_check( (norm_type > 1), "stddev(): parameter 'norm_type' must be 0 or 1" );
   
-  const quasi_unwrap<T1> U(X.get_ref());
+  const quasi_unwrap<T1> U(X);
   
   if(U.M.n_elem == 0)
     {
@@ -133,67 +132,4 @@ op_stddev::stddev_vec(const Base<typename T1::elem_type, T1>& X, const uword nor
 
 
 
-template<typename eT>
-inline
-typename get_pod_type<eT>::result
-op_stddev::stddev_vec(const subview_col<eT>& X, const uword norm_type)
-  {
-  arma_debug_sigprint();
-  
-  typedef typename get_pod_type<eT>::result T;
-  
-  arma_conform_check( (norm_type > 1), "stddev(): parameter 'norm_type' must be 0 or 1" );
-  
-  if(X.n_elem == 0)
-    {
-    arma_conform_check(true, "stddev(): object has no elements");
-    
-    return Datum<T>::nan;
-    }
-  
-  return std::sqrt( op_var::direct_var(X.colptr(0), X.n_rows, norm_type) );
-  }
-
-
-
-
-template<typename eT>
-inline
-typename get_pod_type<eT>::result
-op_stddev::stddev_vec(const subview_row<eT>& X, const uword norm_type)
-  {
-  arma_debug_sigprint();
-  
-  typedef typename get_pod_type<eT>::result T;
-  
-  arma_conform_check( (norm_type > 1), "stddev(): parameter 'norm_type' must be 0 or 1" );
-  
-  if(X.n_elem == 0)
-    {
-    arma_conform_check(true, "stddev(): object has no elements");
-    
-    return Datum<T>::nan;
-    }
-  
-  const Mat<eT>& A = X.m;
-  
-  const uword start_row = X.aux_row1;
-  const uword start_col = X.aux_col1;
-  
-  const uword end_col_p1 = start_col + X.n_cols;
-  
-  podarray<eT> tmp(X.n_elem);
-  eT* tmp_mem = tmp.memptr();
-  
-  for(uword i=0, col=start_col; col < end_col_p1; ++col, ++i)
-    {
-    tmp_mem[i] = A.at(start_row, col);
-    }
-  
-  return std::sqrt( op_var::direct_var(tmp.memptr(), tmp.n_elem, norm_type) );
-  }
-
-
-
 //! @}
-

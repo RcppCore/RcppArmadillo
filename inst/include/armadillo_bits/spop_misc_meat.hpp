@@ -547,4 +547,21 @@ spop_fliplr::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_fliplr
 
 
 
+template<typename eT, typename T1>
+inline
+void
+spop_replace::apply(SpMat<eT>& out, const mtSpOp<eT, T1, spop_replace>& in)
+  {
+  arma_debug_sigprint();
+  
+  const eT old_val = in.aux;
+  const eT new_val = in.aux_out_eT;
+  
+  out = in.m;
+  
+  out.replace(old_val, new_val);
+  }
+
+
+
 //! @}

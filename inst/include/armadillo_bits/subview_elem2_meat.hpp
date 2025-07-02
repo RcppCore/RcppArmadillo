@@ -299,6 +299,240 @@ subview_elem2<eT,T1,T2>::inplace_op(const Base<eT,expr>& x)
 
 
 
+template<typename eT, typename T1, typename T2>
+inline
+void
+subview_elem2<eT,T1,T2>::randu()
+  {
+  arma_debug_sigprint();
+  
+  Mat<eT>& m_local = const_cast< Mat<eT>& >(m);
+  
+  const uword m_n_rows = m_local.n_rows;
+  const uword m_n_cols = m_local.n_cols;
+  
+  if( (all_rows == false) && (all_cols == false) )
+    {
+    const unwrap_check_mixed<T1> U1(base_ri.get_ref(), m_local);
+    const unwrap_check_mixed<T2> U2(base_ci.get_ref(), m_local);
+    
+    const umat& ri = U1.M;
+    const umat& ci = U2.M;
+    
+    arma_conform_check
+      (
+      ( ((ri.is_vec() == false) && (ri.is_empty() == false)) || ((ci.is_vec() == false) && (ci.is_empty() == false)) ),
+      "Mat::elem(): given object must be a vector"
+      );
+    
+    const uword* ri_mem    = ri.memptr();
+    const uword  ri_n_elem = ri.n_elem;
+    
+    const uword* ci_mem    = ci.memptr();
+    const uword  ci_n_elem = ci.n_elem;
+    
+    podarray<eT> tmp(ri_n_elem);
+    
+    eT* tmp_mem = tmp.memptr();
+    
+    for(uword ci_count=0; ci_count < ci_n_elem; ++ci_count)
+      {
+      const uword col = ci_mem[ci_count];
+      
+      arma_conform_check_bounds( (col >= m_n_cols), "Mat::elem(): index out of bounds" );
+      
+      arma_rng::randu<eT>::fill(tmp_mem, ri_n_elem);
+      
+      for(uword ri_count=0; ri_count < ri_n_elem; ++ri_count)
+        {
+        const uword row = ri_mem[ri_count];
+        
+        arma_conform_check_bounds( (row >= m_n_rows), "Mat::elem(): index out of bounds" );
+        
+        m_local.at(row,col) = tmp_mem[ri_count];
+        }
+      }
+    }
+  else
+  if( (all_rows == true) && (all_cols == false) )
+    {
+    const unwrap_check_mixed<T2> U2(base_ci.get_ref(), m_local);
+    
+    const umat& ci = U2.M;
+    
+    arma_conform_check
+      (
+      ( (ci.is_vec() == false) && (ci.is_empty() == false) ),
+      "Mat::elem(): given object must be a vector"
+      );
+    
+    const uword* ci_mem    = ci.memptr();
+    const uword  ci_n_elem = ci.n_elem;
+    
+    for(uword ci_count=0; ci_count < ci_n_elem; ++ci_count)
+      {
+      const uword col = ci_mem[ci_count];
+      
+      arma_conform_check_bounds( (col >= m_n_cols), "Mat::elem(): index out of bounds" );
+      
+      arma_rng::randu<eT>::fill(m_local.colptr(col), m_n_rows);
+      }
+    }
+  else
+  if( (all_rows == false) && (all_cols == true) )
+    {
+    const unwrap_check_mixed<T1> U1(base_ri.get_ref(), m_local);
+    
+    const umat& ri = U1.M;
+    
+    arma_conform_check
+      (
+      ( (ri.is_vec() == false) && (ri.is_empty() == false) ),
+      "Mat::elem(): given object must be a vector"
+      );
+    
+    const uword* ri_mem    = ri.memptr();
+    const uword  ri_n_elem = ri.n_elem;
+    
+    podarray<eT> tmp(ri_n_elem);
+    
+    eT* tmp_mem = tmp.memptr();
+    
+    for(uword col=0; col < m_n_cols; ++col)
+      {
+      arma_rng::randu<eT>::fill(tmp_mem, ri_n_elem);
+      
+      for(uword ri_count=0; ri_count < ri_n_elem; ++ri_count)
+        {
+        const uword row = ri_mem[ri_count];
+        
+        arma_conform_check_bounds( (row >= m_n_rows), "Mat::elem(): index out of bounds" );
+      
+        m_local.at(row,col) = tmp_mem[ri_count];
+        }
+      }
+    }
+  }
+
+
+
+template<typename eT, typename T1, typename T2>
+inline
+void
+subview_elem2<eT,T1,T2>::randn()
+  {
+  arma_debug_sigprint();
+  
+  Mat<eT>& m_local = const_cast< Mat<eT>& >(m);
+  
+  const uword m_n_rows = m_local.n_rows;
+  const uword m_n_cols = m_local.n_cols;
+  
+  if( (all_rows == false) && (all_cols == false) )
+    {
+    const unwrap_check_mixed<T1> U1(base_ri.get_ref(), m_local);
+    const unwrap_check_mixed<T2> U2(base_ci.get_ref(), m_local);
+    
+    const umat& ri = U1.M;
+    const umat& ci = U2.M;
+    
+    arma_conform_check
+      (
+      ( ((ri.is_vec() == false) && (ri.is_empty() == false)) || ((ci.is_vec() == false) && (ci.is_empty() == false)) ),
+      "Mat::elem(): given object must be a vector"
+      );
+    
+    const uword* ri_mem    = ri.memptr();
+    const uword  ri_n_elem = ri.n_elem;
+    
+    const uword* ci_mem    = ci.memptr();
+    const uword  ci_n_elem = ci.n_elem;
+    
+    podarray<eT> tmp(ri_n_elem);
+    
+    eT* tmp_mem = tmp.memptr();
+    
+    for(uword ci_count=0; ci_count < ci_n_elem; ++ci_count)
+      {
+      const uword col = ci_mem[ci_count];
+      
+      arma_conform_check_bounds( (col >= m_n_cols), "Mat::elem(): index out of bounds" );
+      
+      arma_rng::randn<eT>::fill(tmp_mem, ri_n_elem);
+      
+      for(uword ri_count=0; ri_count < ri_n_elem; ++ri_count)
+        {
+        const uword row = ri_mem[ri_count];
+        
+        arma_conform_check_bounds( (row >= m_n_rows), "Mat::elem(): index out of bounds" );
+        
+        m_local.at(row,col) = tmp_mem[ri_count];
+        }
+      }
+    }
+  else
+  if( (all_rows == true) && (all_cols == false) )
+    {
+    const unwrap_check_mixed<T2> U2(base_ci.get_ref(), m_local);
+    
+    const umat& ci = U2.M;
+    
+    arma_conform_check
+      (
+      ( (ci.is_vec() == false) && (ci.is_empty() == false) ),
+      "Mat::elem(): given object must be a vector"
+      );
+    
+    const uword* ci_mem    = ci.memptr();
+    const uword  ci_n_elem = ci.n_elem;
+    
+    for(uword ci_count=0; ci_count < ci_n_elem; ++ci_count)
+      {
+      const uword col = ci_mem[ci_count];
+      
+      arma_conform_check_bounds( (col >= m_n_cols), "Mat::elem(): index out of bounds" );
+      
+      arma_rng::randn<eT>::fill(m_local.colptr(col), m_n_rows);
+      }
+    }
+  else
+  if( (all_rows == false) && (all_cols == true) )
+    {
+    const unwrap_check_mixed<T1> U1(base_ri.get_ref(), m_local);
+    
+    const umat& ri = U1.M;
+    
+    arma_conform_check
+      (
+      ( (ri.is_vec() == false) && (ri.is_empty() == false) ),
+      "Mat::elem(): given object must be a vector"
+      );
+    
+    const uword* ri_mem    = ri.memptr();
+    const uword  ri_n_elem = ri.n_elem;
+    
+    podarray<eT> tmp(ri_n_elem);
+    
+    eT* tmp_mem = tmp.memptr();
+    
+    for(uword col=0; col < m_n_cols; ++col)
+      {
+      arma_rng::randn<eT>::fill(tmp_mem, ri_n_elem);
+      
+      for(uword ri_count=0; ri_count < ri_n_elem; ++ri_count)
+        {
+        const uword row = ri_mem[ri_count];
+        
+        arma_conform_check_bounds( (row >= m_n_rows), "Mat::elem(): index out of bounds" );
+      
+        m_local.at(row,col) = tmp_mem[ri_count];
+        }
+      }
+    }
+  }
+
+
+
 //
 //
 

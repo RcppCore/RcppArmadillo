@@ -748,7 +748,7 @@ SpBase<elem_type,derived>::is_finite() const
     
     while(it != it_end)
       {
-      if(arma_isfinite(*it) == false)  { return false; }
+      if(arma_isnonfinite(*it))  { return false; }
       ++it;
       }
     }
@@ -850,7 +850,7 @@ SpBase<elem_type,derived>::has_nonfinite() const
     
     while(it != it_end)
       {
-      if(arma_isfinite(*it) == false)  { return true; }
+      if(arma_isnonfinite(*it))  { return true; }
       ++it;
       }
     }

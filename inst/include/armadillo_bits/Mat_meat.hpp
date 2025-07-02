@@ -915,6 +915,10 @@ Mat<eT>::operator=(const Mat<eT>& in_mat)
     
     arrayops::copy( memptr(), in_mat.mem, in_mat.n_elem );
     }
+  else
+    {
+    arma_debug_print("Mat::operator=(): copy omitted");
+    }
   
   return *this;
   }

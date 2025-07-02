@@ -2120,7 +2120,12 @@ field<oT>::init(const field<oT>& x)
   {
   arma_debug_sigprint();
   
-  if(this == &x)  { return; }
+  if(this == &x)
+    {
+    arma_debug_print("field::init(): copy omitted");
+    
+    return;
+    }
   
   field& t = (*this);
   

@@ -3,6 +3,22 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 14.6.0-1 (2025-07-02)}{
+  \itemize{
+    \item Upgraded to Armadillo release 14.6.0 (Caffe Mocha)
+    \itemize{
+      \item Added \code{balance()} to transform matrices so that column and
+      row norms are roughly the same
+      \item Added \code{omit_nan()} and \code{omit_nonfinite()} to extract
+      elements while omitting NaN and non-finite values
+      \item Added \code{find_nonnan()} for finding indices of non-NaN elements
+      \item Added standalone \code{replace()} function
+    }
+    \item The \code{fastLm()} help page now mentions that options to
+    \code{solve()} can control its behavior.
+  }
+}
+
 \section{Changes in RcppArmadillo version 14.4.3-1 (2025-05-21)}{
   \itemize{
     \item Upgraded to Armadillo release 14.4.3 (Filtered Espresso)
@@ -20,9 +36,7 @@
       \item Fix for \code{expmat()}
       \item Workaround for bugs in clang 20 compiler
     }
-    \itemize{
-      \item Micro-cleanup in one test file
-    }
+    \item Micro-cleanup in one test file
   }
 }
 

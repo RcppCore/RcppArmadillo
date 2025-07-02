@@ -11,7 +11,7 @@
 AC_PREREQ([2.69])
 
 ## Process this file with autoconf to produce a configure script.
-AC_INIT([RcppArmadillo],[14.4.3-1],[edd@debian.org])
+AC_INIT([RcppArmadillo],[14.6.0-1],[edd@debian.org])
 
 ## Set R_HOME, respecting an environment variable if one is set
 : ${R_HOME=$(R RHOME)}

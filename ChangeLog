@@ -1,3 +1,38 @@
+2025-07-02  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): RcppArmadillo 14.6.0-1
+        * inst/NEWS.Rd: Idem
+        * configure.ac: Idem
+        * configure: Idem
+
+	* inst/include/armadillo/: Armadillo 14.6.0
+	* inst/include/armadillo_bits/: Idem
+
+2025-07-01  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): RcppArmadillo 14.5.92-1
+        * inst/NEWS.Rd: Idem
+        * configure.ac: Idem
+        * configure: Idem
+
+	* inst/include/armadillo/: Armadillo 14.5.92 as RC2 for 14.6.0
+	* inst/include/armadillo_bits/: Idem
+
+2025-06-30  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): RcppArmadillo 14.5.91-1
+        * inst/NEWS.Rd: Idem
+        * configure.ac: Idem
+        * configure: Idem
+
+	* inst/include/armadillo/: Armadillo 14.5.91 as RC1 for 14.6.0
+	* inst/include/armadillo_bits/: Idem
+
+2025-06-21  Dirk Eddelbuettel  <edd@debian.org>
+
+	* man/fastLm.Rd: Update discussion of rank-deficient systems to note
+	that newer Armadillo versions warn and fall back to approx solution
+
 2025-05-21  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 14.4.3-1

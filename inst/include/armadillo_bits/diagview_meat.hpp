@@ -995,9 +995,13 @@ diagview<eT>::randu()
   
   const uword local_n_elem = n_elem;
   
+  Col<eT> tmp(local_n_elem, arma_nozeros_indicator());
+  
+  tmp.randu();
+  
   for(uword ii=0; ii < local_n_elem; ++ii)
     {
-    x.at(ii+row_offset, ii+col_offset) = eT(arma_rng::randu<eT>());
+    x.at(ii+row_offset, ii+col_offset) = tmp[ii];
     }
   }
 
@@ -1014,9 +1018,13 @@ diagview<eT>::randn()
   
   const uword local_n_elem = n_elem;
   
+  Col<eT> tmp(local_n_elem, arma_nozeros_indicator());
+  
+  tmp.randn();
+  
   for(uword ii=0; ii < local_n_elem; ++ii)
     {
-    x.at(ii+row_offset, ii+col_offset) = eT(arma_rng::randn<eT>());
+    x.at(ii+row_offset, ii+col_offset) = tmp[ii];
     }
   }
 

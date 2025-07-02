@@ -67,10 +67,11 @@ sort_index
 
 
 
+// DO NOT USE: kept only for compatibility with old user code
 template<typename T1>
 arma_warn_unused
 arma_inline
-const mtOp<uword,T1,op_stable_sort_index>
+const mtOp<uword,T1,op_sort_index>
 stable_sort_index
   (
   const Base<typename T1::elem_type,T1>& X
@@ -78,11 +79,12 @@ stable_sort_index
   {
   arma_debug_sigprint();
   
-  return mtOp<uword,T1,op_stable_sort_index>(X.get_ref(), uword(0), uword(0));
+  return mtOp<uword,T1,op_sort_index>(X.get_ref(), uword(0), uword(0));
   }
 
 
 
+// DO NOT USE: kept only for compatibility with old user code
 template<typename T1, typename T2>
 arma_warn_unused
 inline
@@ -90,7 +92,7 @@ typename
 enable_if2
   <
   ( (is_arma_type<T1>::value) && (is_same_type<T2, char>::value) ),
-  const mtOp<uword,T1,op_stable_sort_index>
+  const mtOp<uword,T1,op_sort_index>
   >::result
 stable_sort_index
   (
@@ -104,7 +106,7 @@ stable_sort_index
   
   arma_conform_check( ((sig != 'a') && (sig != 'd')), "stable_sort_index(): unknown sort direction" );
   
-  return mtOp<uword,T1,op_stable_sort_index>(X, ((sig == 'a') ? uword(0) : uword(1)), uword(0));
+  return mtOp<uword,T1,op_sort_index>(X, ((sig == 'a') ? uword(0) : uword(1)), uword(0));
   }
 
 

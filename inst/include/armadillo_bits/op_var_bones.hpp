@@ -34,23 +34,17 @@ class op_var
   
   //
   
-  template<typename eT>
-  inline static typename get_pod_type<eT>::result var_vec(const subview_col<eT>& X, const uword norm_type = 0);
-  
-  template<typename eT>
-  inline static typename get_pod_type<eT>::result var_vec(const subview_row<eT>& X, const uword norm_type = 0);
-  
   template<typename T1>
-  inline static typename T1::pod_type var_vec(const Base<typename T1::elem_type, T1>& X, const uword norm_type = 0);
+  inline static typename T1::pod_type var_vec(const T1& X, const uword norm_type = 0);
   
   
   //
   
   template<typename eT>
-  inline static eT direct_var(const eT* const X, const uword N, const uword norm_type = 0);
+  inline static eT direct_var(const eT* X, const uword N, const uword norm_type = 0);
   
   template<typename eT>
-  inline static eT direct_var_robust(const eT* const X, const uword N, const uword norm_type = 0);
+  inline static eT direct_var_robust(const eT* X, const uword N, const uword norm_type = 0);
   
   
   //

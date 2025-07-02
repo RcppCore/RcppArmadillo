@@ -304,6 +304,7 @@ namespace arma
   #include "armadillo_bits/op_clamp_bones.hpp"
   #include "armadillo_bits/op_expmat_bones.hpp"
   #include "armadillo_bits/op_nonzeros_bones.hpp"
+  #include "armadillo_bits/op_omit_bones.hpp"
   #include "armadillo_bits/op_diff_bones.hpp"
   #include "armadillo_bits/op_norm_bones.hpp"
   #include "armadillo_bits/op_vecnorm_bones.hpp"
@@ -377,6 +378,7 @@ namespace arma
   #include "armadillo_bits/spop_norm_bones.hpp"
   #include "armadillo_bits/spop_shift_bones.hpp"
   #include "armadillo_bits/spop_relational_bones.hpp"
+  #include "armadillo_bits/spop_omit_bones.hpp"
   
   #include "armadillo_bits/spglue_plus_bones.hpp"
   #include "armadillo_bits/spglue_minus_bones.hpp"
@@ -564,6 +566,7 @@ namespace arma
   #include "armadillo_bits/fn_clamp.hpp"
   #include "armadillo_bits/fn_expmat.hpp"
   #include "armadillo_bits/fn_nonzeros.hpp"
+  #include "armadillo_bits/fn_omit.hpp"
   #include "armadillo_bits/fn_interp1.hpp"
   #include "armadillo_bits/fn_interp2.hpp"
   #include "armadillo_bits/fn_qz.hpp"
@@ -590,6 +593,7 @@ namespace arma
   #include "armadillo_bits/fn_powmat.hpp"
   #include "armadillo_bits/fn_powext.hpp"
   #include "armadillo_bits/fn_diags_spdiags.hpp"
+  #include "armadillo_bits/fn_balance.hpp"
   
   #include "armadillo_bits/fn_speye.hpp"
   #include "armadillo_bits/fn_spones.hpp"
@@ -758,6 +762,7 @@ namespace arma
   #include "armadillo_bits/op_clamp_meat.hpp"
   #include "armadillo_bits/op_expmat_meat.hpp"
   #include "armadillo_bits/op_nonzeros_meat.hpp"
+  #include "armadillo_bits/op_omit_meat.hpp"
   #include "armadillo_bits/op_diff_meat.hpp"
   #include "armadillo_bits/op_norm_meat.hpp"
   #include "armadillo_bits/op_vecnorm_meat.hpp"
@@ -831,6 +836,7 @@ namespace arma
   #include "armadillo_bits/spop_norm_meat.hpp"
   #include "armadillo_bits/spop_shift_meat.hpp"
   #include "armadillo_bits/spop_relational_meat.hpp"
+  #include "armadillo_bits/spop_omit_meat.hpp"
   
   #include "armadillo_bits/spglue_plus_meat.hpp"
   #include "armadillo_bits/spglue_minus_meat.hpp"

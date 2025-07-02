@@ -37,8 +37,8 @@ podarray<eT>::~podarray()
 template<typename eT>
 inline
 podarray<eT>::podarray()
-  : n_elem(0)
-  , mem   (0)
+  : n_elem(0      )
+  , mem   (nullptr)
   {
   arma_debug_sigprint_this(this);
   }
@@ -128,7 +128,7 @@ arma_inline
 eT&
 podarray<eT>::operator[] (const uword i)
   {
-  return access::rw(mem[i]);
+  return mem[i];
   }
 
 
@@ -152,7 +152,7 @@ podarray<eT>::operator() (const uword i)
   {
   arma_conform_check_bounds( (i >= n_elem), "podarray::operator(): index out of bounds" );
   
-  return access::rw(mem[i]);
+  return mem[i];
   }
 
 
@@ -258,10 +258,10 @@ podarray<eT>::copy_row(const Mat<eT>& A, const uword row)
   {
   arma_debug_sigprint();
   
-  // note: this function assumes that the podarray has been set to the correct size beforehand
-  
   const uword n_rows = A.n_rows;
   const uword n_cols = A.n_cols;
+  
+  init_warm(n_cols);
   
   const eT*   A_mem = &(A.at(row,0));
         eT* out_mem = memptr();

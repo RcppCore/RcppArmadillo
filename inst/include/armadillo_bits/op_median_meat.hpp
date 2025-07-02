@@ -41,7 +41,7 @@ op_median::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_median>& expr)
     {
     Mat<eT> tmp;
     
-    op_median::apply_noalias(out, U.M, dim);
+    op_median::apply_noalias(tmp, U.M, dim);
     
     out.steal_mem(tmp);
     }

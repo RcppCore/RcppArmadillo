@@ -106,7 +106,12 @@ MapMat<eT>::operator=(const MapMat<eT>& x)
   {
   arma_debug_sigprint();
   
-  if(this == &x)  { return; }
+  if(this == &x)
+    {
+    arma_debug_print("MapMat::operator=(): copy omitted");
+    
+    return;
+    }
   
   access::rw(n_rows) = x.n_rows;
   access::rw(n_cols) = x.n_cols;

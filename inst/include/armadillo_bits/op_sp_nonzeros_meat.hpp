@@ -31,6 +31,37 @@ op_sp_nonzeros::apply(Mat<typename T1::elem_type>& out, const SpToDOp<T1, op_sp_
   
   typedef typename T1::elem_type eT;
   
+  if(is_SpMat<T1>::value || is_SpMat<typename SpProxy<T1>::stored_type>::value)
+    {
+    const unwrap_spmat<T1> U(X.m);
+    
+    out.set_size(U.M.n_nonzero,1);
+    
+    arrayops::copy(out.memptr(), U.M.values, U.M.n_nonzero);
+    
+    return;
+    }
+  
+  if(is_SpSubview<T1>::value)
+    {
+    const SpSubview<eT>& sv = reinterpret_cast< const SpSubview<eT>& >(X.m);
+    
+    if(sv.n_rows == sv.m.n_rows)
+      {
+      arma_debug_print("op_sp_nonzeros::apply(): SpSubview optimisation");
+      
+      const SpMat<eT>& m   = sv.m;
+      const uword      col = sv.aux_col1;
+      const uword      N   = sv.n_nonzero;
+      
+      out.set_size(N, 1);
+      
+      arrayops::copy(out.memptr(), &(m.values[ m.col_ptrs[col] ]), N);
+      
+      return;
+      }
+    }
+  
   const SpProxy<T1> P(X.m);
   
   const uword N = P.get_n_nonzero();
@@ -38,30 +69,6 @@ op_sp_nonzeros::apply(Mat<typename T1::elem_type>& out, const SpToDOp<T1, op_sp_
   out.set_size(N,1);
   
   if(N == 0)  { return; }
-  
-  if(is_SpMat<typename SpProxy<T1>::stored_type>::value)
-    {
-    const unwrap_spmat<typename SpProxy<T1>::stored_type> U(P.Q);
-    
-    arrayops::copy(out.memptr(), U.M.values, N);
-    
-    return;
-    }
-  
-  if(is_SpSubview<typename SpProxy<T1>::stored_type>::value)
-    {
-    const SpSubview<eT>& sv = reinterpret_cast< const SpSubview<eT>& >(P.Q);
-    
-    if(sv.n_rows == sv.m.n_rows)
-      {
-      const SpMat<eT>& m   = sv.m;
-      const uword      col = sv.aux_col1;
-      
-      arrayops::copy(out.memptr(), &(m.values[ m.col_ptrs[col] ]), N);
-      
-      return;
-      }
-    }
   
   eT* out_mem = out.memptr();
   

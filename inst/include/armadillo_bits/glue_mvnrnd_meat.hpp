@@ -139,13 +139,13 @@ glue_mvnrnd::apply_noalias(Mat<eT>& out, const Mat<eT>& M, const Mat<eT>& C, con
     
     const eT tol = eT(-100) * Datum<eT>::eps * norm(C, "fro");
     
-    if(arma_isfinite(tol) == false)  { return false; }
+    if(arma_isnonfinite(tol))  { return false; }
     
     for(uword i=0; i<eigval_n_elem; ++i)
       {
       const eT val = eigval_mem[i];
       
-      if( (val < tol) || (arma_isfinite(val) == false) )  { return false; }
+      if( (val < tol) || arma_isnonfinite(val) )  { return false; }
       }
     
     for(uword i=0; i<eigval_n_elem; ++i)  { if(eigval_mem[i] < eT(0))  { eigval_mem[i] = eT(0); } }

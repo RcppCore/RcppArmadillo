@@ -38,13 +38,14 @@ fastLm(X, \dots)
   \code{\link{lm}} and friends versus this approach based on
   \code{Armadillo}. The reason that \code{Armadillo} can do something
   like \code{\link{lm.fit}} faster than the functions in the stats
-  package is because \code{Armadillo} uses the Lapack version of the QR
-  decomposition while the stats package uses a \emph{modified} Linpack
-  version.  Hence \code{Armadillo} uses level-3 BLAS code whereas the
-  stats package uses level-1 BLAS.  However, \code{Armadillo} will
+  package is because \code{Armadillo} can use different solvers, including
+  fast / approximative ones. Older versions of Armadillo could therefore
   either fail or, worse, produce completely incorrect answers
   on rank-deficient model matrices whereas the functions from the stats
   package will handle them properly due to the modified Linpack code.
+  Newer Armadillo version pivot (with warning) to an approximate solutions.
+  This behavior can be controlled with options to the \code{solve} function,
+  see the Armadillo documentation.
 
   An example of the type of situation requiring extra care in checking
   for rank deficiency is a two-way layout with missing cells (see the
@@ -60,7 +61,7 @@ fastLm(X, \dots)
 
   \code{fastLm} returns a richer object which also includes the
   residuals, fitted values and call argument similar to the \code{\link{lm}} or
-  \code{\link[MASS]{rlm}} functions..
+  \code{\link[MASS]{rlm}} functions.
 }
 \seealso{\code{\link{lm}}, \code{\link{lm.fit}}}
 \references{Armadillo project: \url{https://arma.sourceforge.net/}}
@@ -93,7 +94,7 @@ fastLm(X, \dots)
   set.seed(1)
   dd$y <- mm \%*\% seq_len(ncol(mm)) + rnorm(nrow(mm), sd = 0.1)
   summary(lm(y ~ f1 * f2, dd))     # detects rank deficiency
-  summary(fastLm(y ~ f1 * f2, dd)) # some huge coefficients
+  summary(fastLm(y ~ f1 * f2, dd)) # fits all coefficients via approx solution
 
   \dontshow{armadillo_reset_cores()}
 }

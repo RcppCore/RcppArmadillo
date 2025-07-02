@@ -293,6 +293,11 @@
   #define arma_checon checon
   #define arma_zhecon zhecon
   
+  #define arma_sgebal sgebal
+  #define arma_dgebal dgebal
+  #define arma_cgebal cgebal
+  #define arma_zgebal zgebal
+  
 #else
   
   #define arma_sgetrf SGETRF
@@ -552,6 +557,11 @@
   
   #define arma_checon CHECON
   #define arma_zhecon ZHECON
+  
+  #define arma_sgebal SGEBAL
+  #define arma_dgebal DGEBAL
+  #define arma_cgebal CGEBAL
+  #define arma_zgebal ZGEBAL
   
 #endif
 
@@ -926,6 +936,12 @@ extern "C"
   void arma_fortran(arma_checon)(const char* uplo, const blas_int* n, const blas_cxf* a, const blas_int* lda, const blas_int* ipiv, const float*  anorm, float*  rcond, blas_cxf* work, blas_int* info, blas_len uplo_len) ARMA_NOEXCEPT;
   void arma_fortran(arma_zhecon)(const char* uplo, const blas_int* n, const blas_cxd* a, const blas_int* lda, const blas_int* ipiv, const double* anorm, double* rcond, blas_cxd* work, blas_int* info, blas_len uplo_len) ARMA_NOEXCEPT;
   
+  // matrix balance
+  void arma_fortran(arma_sgebal)(const char* job, const blas_int* n,    float* a, const blas_int* lda, blas_int* ilo, blas_int* ihi,  float* scale, blas_int* info, blas_len job_len) ARMA_NOEXCEPT;
+  void arma_fortran(arma_dgebal)(const char* job, const blas_int* n,   double* a, const blas_int* lda, blas_int* ilo, blas_int* ihi, double* scale, blas_int* info, blas_len job_len) ARMA_NOEXCEPT;
+  void arma_fortran(arma_cgebal)(const char* job, const blas_int* n, blas_cxf* a, const blas_int* lda, blas_int* ilo, blas_int* ihi,  float* scale, blas_int* info, blas_len job_len) ARMA_NOEXCEPT;
+  void arma_fortran(arma_zgebal)(const char* job, const blas_int* n, blas_cxd* a, const blas_int* lda, blas_int* ilo, blas_int* ihi, double* scale, blas_int* info, blas_len job_len) ARMA_NOEXCEPT;
+  
 #else
   
   // prototypes without hidden arguments
@@ -1281,6 +1297,12 @@ extern "C"
   // rcond of hermitian matrix using pre-computed factorisation (complex)
   void arma_fortran(arma_checon)(const char* uplo, const blas_int* n, const blas_cxf* a, const blas_int* lda, const blas_int* ipiv, const float*  anorm, float*  rcond, blas_cxf* work, blas_int* info) ARMA_NOEXCEPT;
   void arma_fortran(arma_zhecon)(const char* uplo, const blas_int* n, const blas_cxd* a, const blas_int* lda, const blas_int* ipiv, const double* anorm, double* rcond, blas_cxd* work, blas_int* info) ARMA_NOEXCEPT;
+  
+  // matrix balance
+  void arma_fortran(arma_sgebal)(const char* job, const blas_int* n,    float* a, const blas_int* lda, blas_int* ilo, blas_int* ihi,  float* scale, blas_int* info) ARMA_NOEXCEPT;
+  void arma_fortran(arma_dgebal)(const char* job, const blas_int* n,   double* a, const blas_int* lda, blas_int* ilo, blas_int* ihi, double* scale, blas_int* info) ARMA_NOEXCEPT;
+  void arma_fortran(arma_cgebal)(const char* job, const blas_int* n, blas_cxf* a, const blas_int* lda, blas_int* ilo, blas_int* ihi,  float* scale, blas_int* info) ARMA_NOEXCEPT;
+  void arma_fortran(arma_zgebal)(const char* job, const blas_int* n, blas_cxd* a, const blas_int* lda, blas_int* ilo, blas_int* ihi, double* scale, blas_int* info) ARMA_NOEXCEPT;
   
 #endif
 }

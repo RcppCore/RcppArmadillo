@@ -474,8 +474,8 @@ subview_elem1<eT,T1>::randu()
         eT*   m_mem    = m_local.memptr();
   const uword m_n_elem = m_local.n_elem;
   
-  const unwrap_check_mixed<T1> tmp(a.get_ref(), m_local);
-  const umat& aa = tmp.M;
+  const unwrap_check_mixed<T1> U(a.get_ref(), m_local);
+  const umat& aa = U.M;
   
   if(resolves_to_vector<T1>::no)
     {
@@ -485,28 +485,19 @@ subview_elem1<eT,T1>::randu()
   const uword* aa_mem    = aa.memptr();
   const uword  aa_n_elem = aa.n_elem;
   
-  uword iq,jq;
-  for(iq=0, jq=1; jq < aa_n_elem; iq+=2, jq+=2)
-    {
-    const uword ii = aa_mem[iq];
-    const uword jj = aa_mem[jq];
-    
-    arma_conform_check_bounds( ( (ii >= m_n_elem) || (jj >= m_n_elem) ), "Mat::elem(): index out of bounds" );
-    
-    const eT val1 = eT(arma_rng::randu<eT>());
-    const eT val2 = eT(arma_rng::randu<eT>());
-    
-    m_mem[ii] = val1;
-    m_mem[jj] = val2;
-    }
+  podarray<eT> tmp(aa_n_elem);
   
-  if(iq < aa_n_elem)
+  eT* tmp_mem = tmp.memptr();
+  
+  arma_rng::randu<eT>::fill(tmp_mem, aa_n_elem);
+  
+  for(uword iq=0; iq < aa_n_elem; ++iq)
     {
     const uword ii = aa_mem[iq];
     
-    arma_conform_check_bounds( (ii >= m_n_elem) , "Mat::elem(): index out of bounds" ); 
+    arma_conform_check_bounds( (ii >= m_n_elem), "Mat::elem(): index out of bounds" );
     
-    m_mem[ii] = eT(arma_rng::randu<eT>());
+    m_mem[ii] = tmp_mem[iq];
     }
   }
 
@@ -524,8 +515,8 @@ subview_elem1<eT,T1>::randn()
         eT*   m_mem    = m_local.memptr();
   const uword m_n_elem = m_local.n_elem;
   
-  const unwrap_check_mixed<T1> tmp(a.get_ref(), m_local);
-  const umat& aa = tmp.M;
+  const unwrap_check_mixed<T1> U(a.get_ref(), m_local);
+  const umat& aa = U.M;
   
   if(resolves_to_vector<T1>::no)
     {
@@ -535,24 +526,19 @@ subview_elem1<eT,T1>::randn()
   const uword* aa_mem    = aa.memptr();
   const uword  aa_n_elem = aa.n_elem;
   
-  uword iq,jq;
-  for(iq=0, jq=1; jq < aa_n_elem; iq+=2, jq+=2)
-    {
-    const uword ii = aa_mem[iq];
-    const uword jj = aa_mem[jq];
-    
-    arma_conform_check_bounds( ( (ii >= m_n_elem) || (jj >= m_n_elem) ), "Mat::elem(): index out of bounds" );
-    
-    arma_rng::randn<eT>::dual_val( m_mem[ii], m_mem[jj] );
-    }
+  podarray<eT> tmp(aa_n_elem);
   
-  if(iq < aa_n_elem)
+  eT* tmp_mem = tmp.memptr();
+  
+  arma_rng::randn<eT>::fill(tmp_mem, aa_n_elem);
+  
+  for(uword iq=0; iq < aa_n_elem; ++iq)
     {
     const uword ii = aa_mem[iq];
     
-    arma_conform_check_bounds( (ii >= m_n_elem) , "Mat::elem(): index out of bounds" ); 
+    arma_conform_check_bounds( (ii >= m_n_elem), "Mat::elem(): index out of bounds" );
     
-    m_mem[ii] = eT(arma_rng::randn<eT>());
+    m_mem[ii] = tmp_mem[iq];
     }
   }
 

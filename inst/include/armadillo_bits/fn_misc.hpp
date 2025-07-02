@@ -557,7 +557,7 @@ namespace priv
     
     const eT negdelta = log_b - log_a;
     
-    if( (negdelta < Datum<eT>::log_min) || (arma_isfinite(negdelta) == false) )
+    if( (negdelta < Datum<eT>::log_min) || arma_isnonfinite(negdelta) )
       {
       return log_a;
       }

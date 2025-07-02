@@ -44,7 +44,7 @@ pow
 
 
 template<typename parent, unsigned int mode, typename T2>
-arma_deprecated
+arma_frown("refactor your code to use pow() in conjunction with repmat()")
 inline
 Mat<typename parent::elem_type>
 pow
@@ -121,7 +121,7 @@ pow
 
 
 template<typename parent, unsigned int mode, typename T2>
-arma_deprecated
+arma_frown("refactor your code to use pow() in conjunction with repmat()")
 inline
 typename
 enable_if2
