@@ -3,14 +3,19 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 14.5.91-1 (2025-06-30) (GitHub Only)}{
+\section{Changes in RcppArmadillo version 14.6.0-1 (2025-07-02)}{
   \itemize{
-    \item Upgraded to Armadillo release 14.5.91 (14.6-RC1)
+    \item Upgraded to Armadillo release 14.6.0 (Caffe Mocha)
     \itemize{
-      \item Changes list to follow
+      \item Added \code{balance()} to transform matrices so that column and
+      row norms are roughly the same
+      \item Added \code{omit_nan()} and \code{omit_nonfinite()} to extract
+      elements while omitting NaN and non-finite values
+      \item Added \code{find_nonnan()} for finding indices of non-NaN elements
+      \item Added standalone \code{replace()} function
     }
     \item The \code{fastLm()} help page now mentions that options to
-    \code{solve} can control behavior.
+    \code{solve()} can control its behavior.
   }
 }
 

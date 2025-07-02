@@ -130,6 +130,7 @@ op_mean::apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_mean>& in)
   typedef typename T1::elem_type eT;
   
   const uword dim = in.aux_uword_a;
+  
   arma_conform_check( (dim > 2), "mean(): parameter 'dim' must be 0 or 1 or 2" );
   
   const unwrap_cube<T1> U(in.m);
@@ -211,7 +212,7 @@ op_mean::apply_noalias(Cube<eT>& out, const Cube<eT>& X, const uword dim)
           
           if(arma_isnonfinite(old_mean))
             {
-            tmp_vec.copy(tmp_mat, row);
+            tmp_vec.copy_row(tmp_mat, row);
             
             out_mem[row] = op_mean::direct_mean_robust(old_mean, tmp_vec.memptr(), tmp_vec.n_elem);
             }
