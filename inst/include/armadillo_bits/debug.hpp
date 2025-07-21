@@ -1441,6 +1441,7 @@ inline void arma_debug_check(bool state, const char* msg)  { arma_conform_check(
         out << "\n@ arma_config::optimise_band    = " << arma_config::optimise_band;
         out << "\n@ arma_config::optimise_sym     = " << arma_config::optimise_sym;
         out << "\n@ arma_config::optimise_invexpr = " << arma_config::optimise_invexpr;
+        out << "\n@ arma_config::optimise_powexpr = " << arma_config::optimise_powexpr;
         out << "\n@ arma_config::check_conform    = " << arma_config::check_conform;
         out << "\n@ arma_config::check_nonfinite  = " << arma_config::check_nonfinite;
         out << "\n@ arma_config::fast_math        = " << arma_config::fast_math;

@@ -166,6 +166,11 @@
   //// of inv() and inv_sympd() within compound expressions
 #endif
 
+#if !defined(ARMA_OPTIMISE_POWEXPR)
+  #define ARMA_OPTIMISE_POWEXPR
+  //// Comment out the above line to disable optimised handling of pow()
+#endif
+
 #if !defined(ARMA_CHECK_CONFORMANCE)
   #define ARMA_CHECK_CONFORMANCE
   //// Comment out the above line to disable conformance checks for bounds and size.
@@ -211,7 +216,7 @@
 
 
 #if defined(ARMA_DEFAULT_OSTREAM)
-  #pragma message ("WARNING: support for ARMA_DEFAULT_OSTREAM is deprecated and will be removed;")
+  #pragma message ("WARNING: option ARMA_DEFAULT_OSTREAM is deprecated and will be removed;")
   #pragma message ("WARNING: use ARMA_COUT_STREAM and ARMA_CERR_STREAM instead")
 #endif
 
@@ -290,7 +295,7 @@
 
 // for compatibility with earlier versions of Armadillo
 #if defined(ARMA_DONT_USE_CXX11_MUTEX)
-  #pragma message ("WARNING: support for ARMA_DONT_USE_CXX11_MUTEX is deprecated and will be removed;")
+  #pragma message ("WARNING: option ARMA_DONT_USE_CXX11_MUTEX is deprecated and will be removed;")
   #pragma message ("WARNING: use ARMA_DONT_USE_STD_MUTEX instead")
   #undef ARMA_USE_STD_MUTEX
 #endif
@@ -331,6 +336,10 @@
 
 #if defined(ARMA_DONT_OPTIMISE_INVEXPR)
   #undef ARMA_OPTIMISE_INVEXPR
+#endif
+
+#if defined(ARMA_DONT_OPTIMISE_POWEXPR)
+  #undef ARMA_OPTIMISE_POWEXPR
 #endif
 
 #if defined(ARMA_DONT_CHECK_CONFORMANCE)
@@ -378,12 +387,12 @@
   #undef ARMA_CRIPPLED_LAPACK
 #endif
 
-// WARNING: option ARMA_IGNORE_DEPRECATED_MARKER will be removed
-// WARNING: option ARMA_CRIPPLED_LAPACK          will be removed
+// WARNING: option ARMA_IGNORE_DEPRECATED_MARKER is deprecated and will be removed
+// WARNING: option ARMA_CRIPPLED_LAPACK          is deprecated and will be removed
 
 #if defined(ARMA_CRIPPLED_LAPACK)
   #if (!defined(ARMA_IGNORE_DEPRECATED_MARKER))
-    #pragma message ("option ARMA_CRIPPLED_LAPACK is deprecated and will be removed")
+    #pragma message ("WARNING: option ARMA_CRIPPLED_LAPACK is deprecated and will be removed")
   #endif
 #endif
 

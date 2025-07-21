@@ -65,6 +65,13 @@ struct arma_config
   #endif
   
   
+  #if defined(ARMA_OPTIMISE_POWEXPR)
+    static constexpr bool optimise_powexpr = true;
+  #else
+    static constexpr bool optimise_powexpr = false;
+  #endif
+  
+  
   #if defined(ARMA_CHECK_CONFORMANCE)
     static constexpr bool check_conform = true;
   #else

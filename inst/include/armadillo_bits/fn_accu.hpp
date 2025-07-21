@@ -407,14 +407,14 @@ accu(const eOp<T1,eop_pow>& expr)
   
   typedef eOp<T1,eop_pow> expr_type;
   
-  if(expr.aux == eT(2))
+  if(arma_config::optimise_powexpr && (expr.aux == eT(2)))
     {
     typedef eOp<T1,eop_square> modified_expr_type;
     
     return accu( reinterpret_cast< const modified_expr_type& >(expr) );
     }
   
-  if((expr.aux == eT(0.5)) && is_non_integral<eT>::value)
+  if(arma_config::optimise_powexpr && (expr.aux == eT(0.5)) && is_non_integral<eT>::value)
     {
     typedef eOp<T1,eop_sqrt> modified_expr_type;
     
@@ -1048,14 +1048,14 @@ accu(const eOpCube<T1,eop_pow>& expr)
   
   typedef eOpCube<T1,eop_pow> expr_type;
   
-  if(expr.aux == eT(2))
+  if(arma_config::optimise_powexpr && (expr.aux == eT(2)))
     {
     typedef eOpCube<T1,eop_square> modified_expr_type;
     
     return accu( reinterpret_cast< const modified_expr_type& >(expr) );
     }
   
-  if((expr.aux == eT(0.5)) && is_non_integral<eT>::value)
+  if(arma_config::optimise_powexpr && (expr.aux == eT(0.5)) && is_non_integral<eT>::value)
     {
     typedef eOpCube<T1,eop_sqrt> modified_expr_type;
     
